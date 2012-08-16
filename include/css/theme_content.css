@@ -1,0 +1,241 @@
+
+#theme_toolbar{
+	height:35px;
+	top:0;
+	min-width:800px;
+	position:fixed;
+	z-index: 9000;
+
+	border-bottom:1px solid #aaa;
+	width:100%;
+
+	background: #ededed;
+	background: #ededed -moz-linear-gradient(top, #fafafa 5px, #ededed 100%);
+	background: #ededed -webkit-linear-gradient(top, #fafafa 5px,#ededed 100%);
+	background: #ededed -o-linear-gradient(top, #fafafa 5px,#ededed 100%);
+	background: #ededed -ms-linear-gradient(top, #fafafa 5px,#ededed 100%);
+	background: #ededed linear-gradient(top, #fafafa 5px,#ededed 100%);
+	}
+#theme_toolbar > div{
+	padding:0 40px;
+	}
+body #gp_admin_html #theme_toolbar a{
+	color:#333;
+	}
+#theme_right,
+#theme_left{
+	height:35px;
+	float:left;
+	}
+
+#theme_right > div,
+#theme_left > div{
+	float:left;
+	padding:0 7px;
+	line-height:35px;
+	}
+#theme_right{
+	float:right;
+	margin-right:-1px;
+	}
+
+#theme_left > div{
+	border:0 none;
+	padding-right:30px;
+	height:35px;
+	}
+#theme_left > div.step{
+	background:url('../imgs/layout_arrow_35.png') no-repeat 100% 0;
+	}
+#theme_toolbar form{
+	display:inline;
+	}
+#theme_toolbar select{
+	border:1px solid #ccc;
+	background:#fff;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	padding:3px;
+	width:200px;
+	}
+#theme_right select{
+	width:130px;
+	}
+#theme_toolbar option{
+	padding-left:1.5em;
+	}
+
+
+
+#layout_ident{
+	position:absolute;
+	display:none;
+	z-index:12000;
+	}
+
+#layout_ident .colors{
+	width:140px;
+	}
+#layout_ident .color{
+	position:relative;
+	display:inline-block;
+	height:16px;
+	width:16px;
+	margin:0 1px 1px 0;
+	}
+
+#theme_content_drop{
+	position:absolute;
+	top:0;
+	left:0;
+	height:0;
+	width:0;
+}
+
+#theme_content_drop .draggable_element{
+	background:#888;
+	z-index:8100; /*  given 8100 z-index by js */
+	border:3px dotted #FFF;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	}
+
+#theme_content_drop .hover{
+	z-index:9000;
+}
+
+#theme_content_drop .target{
+	background:#FFAAAA;
+	padding:6px;
+	margin-top:-6px;
+	margin-left:-6px;
+	}
+
+#theme_content_drop .output_area_label{
+	font-weight:bold;
+	overflow:hidden;
+	padding:3px;
+	font-size:13px;
+	}
+#theme_content_drop .output_area_link{
+	/* position:relative;
+	float:right; */
+	font-weight:bold;
+	margin-bottom:7px;
+	}
+
+#theme_content_drop .output_area_link a{
+	/* position:relative;
+	float:right; */
+	float:left;
+	border:1px solid #333;
+	background-color:#555;
+	color:#fff !important;
+	font-weight:bold;
+	padding:2px 4px;
+
+	margin:3px;
+	text-decoration:none;
+
+	-moz-border-radius: 3px !important;
+	-webkit-border-radius: 3px !important;
+	-o-border-radius:3px !important;
+	border-radius:3px !important;
+	z-index:8300;
+}
+#theme_content_drop .output_area_link a:hover{
+	background-color:#444;
+	z-index:8300;
+}
+
+.titles_using{
+	margin:0;
+	padding:0;
+	}
+.titles_using li{
+	float:left;
+	display:block;
+	width:150px;
+	list-style:none;
+	padding:0;
+	}
+
+.titles_using a{
+	margin:1px 1px 0 0;
+	color:#333 !important;
+	padding:5px;
+	display:block;
+	overflow:hidden;
+	background-color:#fafafa;
+	white-space:nowrap;
+	}
+.titles_using a:hover{
+	background-color:#fdfdfd;
+	}
+
+.layout_color_id_large{
+	width:24px;
+	height:24px;
+	}
+.add_layout a{
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	padding:4px 7px;
+	color:#fff !important;
+    font-weight: bold;
+    background: none repeat scroll 0 0 #209400;
+    border: 1px solid #176B00;
+	}
+
+#theme_right .dd_list{
+	right:0;
+	}
+.dd_menu{
+	margin:5px 0;
+	}
+
+
+.layout_css{
+	width:630px;
+	height:350px;
+	}
+
+
+/**
+ * Drag n drop css
+ *
+ */
+#gp_drag_n_drop{
+	position:absolute;
+	width:300px;
+	z-index:8200;
+	cursor:pointer;
+	}
+#gp_drag_n_drop > div{
+	padding:10px;
+}
+#gp_drag_n_drop > div > div{
+	background-color:#fff;
+	border:1px solid #ddd;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	padding:10px;
+}
+
+
+.expand_row .gp_options{
+	visibility:hidden;
+	padding:7px 0 1px 20px;
+	}
+.expand_row.hover .gp_options{
+	visibility:visible;
+	}
+

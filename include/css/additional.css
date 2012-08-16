@@ -1,0 +1,181 @@
+.gpclear{
+	clear:both;
+	}
+
+body .messages{
+	position:absolute;
+	position:fixed;
+	top:0;
+	left:0;
+	right:0;
+	z-index:11010;
+	height:0;
+	overflow:visible;
+	margin-top:-1px;
+}
+body .messages *{
+	text-align:left;
+	margin:0;
+	padding:0;
+	font-weight:normal;
+	color:#333 !important;
+	}
+body .messages > div{
+	position:relative;
+	width:700px;
+	margin:0 auto;
+	display:block;
+	background-color:#FEF9B0;
+	border:1px solid #f2e098;
+	border-top:0 none;
+	/*
+	box-shadow: 0 3px 5px -2px #E4E4E4;
+	-webkit-box-shadow: 0 3px 5px -2px #E4E4E4;
+	-moz-box-shadow: 0 3px 5px -2px #E4E4E4;
+	*/
+	-moz-border-radius: 0 0 7px 7px;
+	-webkit-border-radius: 0 0 7px 7px;
+	-o-border-radius: 0 0 7px 7px;
+	border-radius:0 0 7px 7px;
+	max-height:250px;
+	overflow:auto;
+	overflow-x:visible;
+	overflow-y:auto;
+}
+body .messages ul{
+	margin:0;
+	padding:4px 2em 4px 2em;
+	}
+body .messages li{
+	list-style:none;
+	padding:0;
+	margin:0;
+	font-size:12px;
+	font-family:Arial, sans-serif;
+	font-family: "Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif;
+	line-height:normal;
+	line-height: 18px;
+	text-decoration:none;
+	}
+body .messages li li{
+	list-style:disc;
+	margin-left:2em;
+	}
+body .messages a.close_message{
+	position:absolute;
+	top:1px;
+	right:1px;
+	text-decoration:none !important;
+	font-weight:bold !important;
+	color:#666 !important;
+	font-size:17px !important;
+	display:none;
+	border:0 none !important;
+	margin:0  !important;
+	padding:3px 4px;
+	height:16px;
+	width:16px;
+	background: url('../imgs/cancel.png') 50% 50% no-repeat;;
+	}
+body .messages a{
+	color:#111 !important;
+	text-decoration:underline !important;
+	}
+
+
+
+
+.contactform{
+	margin:0;
+	width:50%;
+}
+.contactform div.captchaForm{
+	padding:0;
+	margin:0;
+}
+.contactform label{
+	width:98%;
+	font-size:12px;
+ 	display:block;
+	float:left;
+	clear:left;
+	margin:5px 0;
+}
+.contactform label span.title{
+	width:30%;
+	display:block;
+	float:left;
+    margin-right:10px;
+}
+.contactform input,.contactform textarea{
+	padding:5px;
+}
+.contactform input{
+	float:left;
+	width:60%;
+}
+.contactform textarea{
+	height:180px!important;
+	width:98%;
+}
+.contactform .submit{
+	width:50%;
+	cursor:pointer;
+	margin:12px 0;
+	float:right;
+}
+
+
+.STCLASS .req_script{
+	display:block !important; /* needs to be block and not inherit for IE */
+}
+
+.STCLASS .without_script{
+	display:none !important;
+}
+
+
+.siteinfo{
+	font-size:85%;
+}
+.siteinfo a{
+	text-decoration:none;
+	}
+.siteinfo li{
+	list-style:none;
+}
+
+.clear{clear:both;}
+
+.sitemap_xml{
+	float:right;
+	}
+
+.nodisplay{display:none;}
+
+/*
+	clearfix for editable_area heights
+	see http://www.positioniseverything.net/easyclearing.html
+		http://www.quirksmode.org/css/clearing.html
+*/
+
+/* CSS2... doesn't work for IE7 */
+div.GPAREA:after{
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+	}
+
+/* for IE7... does not validate */
+div.GPAREA{
+	zoom: 1;
+	}
+
+/* for testing
+div.GPAREA{border:1px solid #ccc;} */
+
+.cf:before,.cf:after{content:"";display:table}
+.cf:after{clear:both}
+.cf{zoom:1}

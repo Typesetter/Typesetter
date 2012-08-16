@@ -1,0 +1,179 @@
+@import url('../Blue/base.css');
+
+html{
+	background:#212126;
+}
+
+body{
+	background: #d5d5d5 url(../Blue/bg_texture.png);
+	}
+
+#fadearea{
+	margin-top:30px;
+	background: -moz-linear-gradient(top, rgba(0,0,0,0) 0, rgba(0,0,0,.2) 100%);
+	background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,.2) 100%);
+	background: -o-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,.2) 100%);
+	background: -ms-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,.2) 100%);
+	background: linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,.2) 100%);
+	height:10px;
+}
+
+#footerwrap{
+	background:#212126;
+	}
+
+#footertop{
+	position:relative;
+	text-align:center;
+
+	background:#1b1b21;
+	background: -moz-linear-gradient(top, #1b1b21 80%, #15151a 100%);
+	background: -webkit-linear-gradient(top, #1b1b21 0%, #15151a 100%);
+	background: -o-linear-gradient(top, #1b1b21 0%, #15151a 100%);
+	background: -ms-linear-gradient(top, #1b1b21 0%, #15151a 100%);
+	background: linear-gradient(top, #1b1b21 0%, #15151a 100%);
+
+	border-bottom:1px solid #37373b;
+	border-top:1px solid #aaa;
+	height:50px;
+	}
+
+
+/*
+ * CSS for a center oriented menu in #footertop
+#footertop .menu_top ul,
+#footertop .menu_top li{
+	position:relative;
+	list-style: none outside none;
+	margin:0;
+	padding:0;
+	white-space:nowrap;
+	display:inline;
+	}
+#footertop .menu_top li a{
+	display:inline-block;
+	margin:0 19px;
+	text-decoration:none;
+	}
+
+#footertop a{
+    color: #696969;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+	}
+*/
+
+
+#footareas{
+	padding:20px 0;
+}
+#footareas > div{
+	margin:0 auto;
+	width:960px;
+	padding:0 10px;
+	}
+
+.footarea{
+	width:300px;
+	min-height:100px;
+	margin:0 10px;
+	position:relative;
+	float:left;
+	background:#212126;
+	border:none;
+	color:#ddd;
+	font-size:13px;
+	line-height:140%;
+	}
+
+.footarea a{
+    color: #696969;
+    text-decoration: none;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    }
+
+.footarea h1,
+.footarea h2,
+.footarea h3,
+.footarea h4,
+.footarea b{
+	color: #EED77D;
+	font-weight: bold;
+	margin-bottom: 10px;
+	margin-top:0;
+	}
+.footarea h1 a,
+.footarea h2 a,
+.footarea h3 a,
+.footarea h4 a,
+.footarea b a{
+	color: #EED77D;
+	text-shadow:none;
+	}
+
+.footarea p{
+	margin:0 0 10px 0;
+	padding:0;
+	}
+
+/* menu within footerarea */
+#footareas .menu_top,
+#footareas .menu_top li{
+	position:relative;
+	list-style: none outside none;
+	margin:0;
+	padding:0;
+	white-space:nowrap;
+	display:inline;
+	}
+#footareas .menu_top li li{
+	padding-left:10px;
+	}
+#footareas .menu_top li a{
+	margin:3px;
+	padding-right:19px;
+	float:left;
+	text-decoration:none;
+	}
+
+#footerbottom{
+	text-align:center;
+	padding-top:20px;
+	}
+#footerbottom span{
+	margin:0 15px;
+	}
+#footerbottom *{
+    color: #4e4e54;
+    font-weight:normal;
+	font-size:11px;
+	text-decoration:none;
+	}
+
+
+/* gallery type */
+.gp_gallery li{
+	width:100px;
+	height:100px;
+	padding:10px;
+	background: #f7f7fa;
+	border:1px solid #ddd;
+	}
+.gp_gallery div{
+	display:none;
+	}
+.gp_gallery a{
+	position:relative;
+	margin:0;
+	padding:0;
+	}
+.gp_gallery img{
+	position:relative;
+	margin:0;
+	padding:0;
+	top:0;
+	left:0;
+	border:1px solid #ccc;
+	}

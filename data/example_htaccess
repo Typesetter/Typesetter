@@ -1,0 +1,8 @@
+
+# blocks direct access to data files
+# Note: this setting could conflict with some addons
+<Files ~ "\.php$">
+	Order allow,deny
+	Deny from all
+	Satisfy All
+</Files>

@@ -1,0 +1,470 @@
+
+
+
+/* ckeditor... and other inline editing toolbars */
+
+#ckeditor_area{
+	position:absolute;
+	width:207px;
+	}
+
+#ckeditor_area a{}
+
+#ckeditor_bottom{
+	width:180px;
+	overflow:hidden;
+	height:20px;
+	}
+
+
+
+
+#ckeditor_area span.cke_skin_kama{
+	border:none;
+	padding:0;
+	margin:0;
+	left:0;
+	}
+#ckeditor_area .cke_wrapper{
+	border:0 none !important;
+	padding:0 !important;
+	background:#ededed !important;
+	}
+#ckeditor_area .cke_skin_kama .cke_rcombo .cke_text{
+	width:33px;
+	}
+#ckeditor_area .cke_skin_kama .cke_rcombo a,
+#ckeditor_area .cke_skin_kama .cke_rcombo a:active,
+#ckeditor_area .cke_skin_kama .cke_rcombo a:hover{
+	margin-right: 2px;
+	margin-bottom:3px;
+	}
+#ckeditor_area .cke_skin_kama .cke_toolgroup{
+	width:193px;
+	text-align:justify;
+	}
+
+#ckeditor_area .ckeditor_control
+/*
+,
+#ckeditor_area .ckeditor_control:hover,
+#ckeditor_area .ckeditor_control:active
+*/
+	{
+	font-family:Arial, sans-serif !important;
+	font-size:12px !important;
+	text-decoration:none !important;
+	padding:3px 5px !important;
+
+	border-top:1px solid #fafafa !important;
+	border-left:1px solid #fafafa !important;
+	border-bottom:1px solid #dad9d9 !important;
+	border-right:1px solid #dad9d9 !important;
+
+	background-color:#fafafa;
+	background: -moz-linear-gradient(top, #fff 0%, #f7f7f7 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fff), color-stop(100%,#f7f7f7));
+	background: -webkit-linear-gradient(top, #fff 0%,#f7f7f7 100%);
+	background: -o-linear-gradient(top, #fff 0%,#f7f7f7 100%);
+	background: -ms-linear-gradient(top, #fff 0%,#f7f7f7 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f7f7f7',GradientType=0 );
+	background: linear-gradient(top, #fff 0%,#f7f7f7 100%);
+
+	line-height:18px;
+	display:inline-block;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	margin: 0 3px 4px 0 !important;
+	color:#444 !important;
+	text-shadow:1px 1px 0 #fff;
+	}
+
+
+#ckeditor_area .full_width,
+#ckeditor_area .full_width:hover,
+#ckeditor_area .full_width:active{
+	text-align:center !important;
+	width:182px;
+	}
+
+
+
+.inline_editor iframe{
+	overflow-y:hidden !important;
+	}
+
+.gp_editing,
+.inline_editor span.cke_skin_kama{
+	z-index:8000;
+	padding:0 !important;
+	-moz-border-radius: 0 !important;
+	-o-border-radius: 0 !important;
+	-webkit-border-radius: 0 !important;
+
+	border:1px solid #ccc !important;
+	margin:-1px !important;
+	}
+
+.inline_editor span.cke_skin_kama *{
+	padding:0 !important;
+	margin:0 !important;
+	display:block !important;
+	}
+
+/* there's an inline <style> element, and some sort of label that will be displayed because of the previous statement */
+.inline_editor span.cke_skin_kama style,
+.inline_editor span.cke_skin_kama .cke_voice_label{
+	display:none !important;
+	}
+
+/* not sure why, but we need both of the ckeditor definitions */
+/* also, prevent user styles from affecting .ckeditor and iframe */
+.inline_editor span.cke_wrapper,
+table.cke_editor,
+table.cke_editor > tbody,
+table.cke_editor > tbody > tr,
+table.cke_editor > tbody > tr > td
+	{
+	border:0 none !important;
+	padding:0 !important;
+	margin:0 !important;
+	-moz-border-radius: 0 !important;
+	-o-border-radius: 0 !important;
+	-webkit-border-radius: 0 !important;
+	border-radius: 0 !important;
+	border-spacing:0 !important;
+	-webkit-box-shadow: 0 0 0 transparent !important;
+	-moz-box-shadow:0 0 0 transparent !important;
+	box-shadow:0 0 0 transparent !important;
+
+	}
+
+
+
+
+/* gallery editing */
+.gp_drag_box{
+	border:1px dashed #ccc !important;
+	}
+
+.ui-sortable li{
+	cursor:move;
+}
+
+.gp_gallery_edit{
+	position:absolute;
+	left:5px;
+	top:5px;
+	z-index:9999;
+	padding:2px;
+	background-color:#f1f1f1;
+}
+.gp_gallery_edit img{
+	margin:3px;
+	}
+
+.gp_gallery_edit img.page_edit{
+	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -32px;
+	}
+.gp_gallery_edit img.delete{
+	background:url('../imgs/delete.png') no-repeat 0 0;
+	}
+
+
+
+#ckeditor_area .gp_edit_select{
+	position:relative;
+	}
+.gp_edit_select_options{
+	display:none;
+	position:absolute;
+	top:100%;
+	left:0;
+	width:auto;
+	z-index:10003;
+	background-color:#fafafa;
+	border:1px solid #ddd;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	padding:3px;
+
+	box-shadow:1px 1px 4px #777;
+	-moz-box-shadow: 1px 1px 4px #777;
+	-webkit-box-shadow:1px 1px 4px #777;
+	-o-box-shadow: 1px 1px 4px #777;
+	-icab-box-shadow: 1px 1px 4px #777;
+	-khtml-box-shadow: 1px 1px 4px #777;
+	}
+
+#ckeditor_area a.gp_gallery_folder{
+	display:block;
+	text-decoration:none;
+	font-size:12px;
+	height:16px;
+	overflow:hidden;
+	color:#444;
+	min-width:180px;
+	white-space:nowrap;
+	padding:3px 4px;
+	}
+
+#ckeditor_area a.gp_gallery_folder .folder,
+#ckeditor_area a.gp_gallery_folder .add{
+	display:inline-block;
+	height:16px;
+	width:16px;
+	float:left;
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	}
+#ckeditor_area .gp_edit_select > a.gp_gallery_folder:after{
+	position:absolute;
+	right:10px;
+	font-size:10px;
+	color:#aaa;
+	content:"\25BC";
+	}
+
+
+
+#ckeditor_area a.gp_gallery_folder .folder{
+	margin-right:5px;
+	background-image:url('../imgs/folder.png');
+	}
+#ckeditor_area a.gp_gallery_folder .add{
+	margin-right:5px;
+	background-image:url('../imgs/add.png');
+	}
+
+#ckeditor_area a.gp_gallery_folder:hover{
+	background-color:#ededed;
+	}
+
+#ckeditor_area .label{
+	margin-right:4px;
+	}
+
+/* the position is left leaning to allow for a scrollbar */
+#gp_gallery_avail_imgs{
+	height:280px;
+	overflow:auto;
+	overflow-x:hidden;
+
+	margin:0 0 5px 0;
+	padding:10px 4px 20px;
+	background-color:#fafafa;
+	border:1px solid #fff;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	}
+
+#gp_gallery_avail_imgs span{
+	position:relative;
+	display:block;
+	float:left;
+	width:45px;
+	height:45px;
+	margin:2px;
+
+	overflow:hidden;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	border:3px solid #ddd;
+	}
+
+#gp_gallery_avail_imgs span.expand{
+	width:70px;
+	height:70px;
+	margin:-2px -11px -19px -10px;
+	z-index:101;
+	box-shadow:1px 1px 4px #777;
+	-moz-box-shadow: 1px 1px 4px #777;
+	-webkit-box-shadow:1px 1px 4px #777;
+	-o-box-shadow: 1px 1px 4px #777;
+	-icab-box-shadow: 1px 1px 4px #777;
+	-khtml-box-shadow: 1px 1px 4px #777;
+	border:3px solid #bbb;
+	}
+
+#gp_gallery_avail_imgs span.expand:nth-child(3n+1){
+	margin-right:-19px;
+	margin-left:-2px;
+	}
+#gp_gallery_avail_imgs span.expand:nth-child(3n+3){
+	margin-left:-19px;
+	margin-right:-2px;
+	}
+
+#gp_gallery_avail_imgs img{
+	position:relative;
+	display:inline-block;
+	margin:0;
+	padding:0;
+	width:70px;
+	height:70px;
+	}
+
+
+#gp_gallery_avail_imgs a.delete{
+	position:absolute;
+	top:-3px;
+	right:-3px;
+	z-index:102;
+	background: #bbb url('../imgs/delete.png') no-repeat 50% 50%;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	height:22px;
+	width:22px;
+	display:none;
+	}
+#gp_gallery_avail_imgs span.expand a.delete{
+	display:block;
+	}
+
+
+/* upload form */
+
+
+.gp_upload_form a.ckeditor_control{
+	position:absolute;
+	z-index:10000;
+	width:180px;
+	text-align:center;
+	}
+
+#gp_upload_queue a{
+	display:block;
+	text-decoration:none;
+	font: 11px Verdana, Geneva, sans-serif;
+	border:1px solid #fafafa;
+
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	margin: 0 3px 4px 0;
+	color:#444;
+	white-space:nowrap;
+	overflow:hidden;
+
+	width:166px;
+	padding:3px 4px 3px 23px;
+	background:#fafafa url('../imgs/loaderB16.gif') 2px 50% no-repeat;
+}
+
+#gp_upload_queue a.failed{
+	background-image: url('../imgs/cancel.png');
+	background-color: #FDE5DD !important;
+	border: 2px solid #FBCBBC !important;
+	white-space:normal;
+}
+
+#gp_upload_queue a.success{
+	background-image: url('../imgs/cancel.png');
+	background-color: #BCFBBC !important;
+}
+
+#gp_upload_queue a span{
+	margin-right:4px;
+	}
+
+
+/* include  editing */
+.gp_inlude_edit{
+	font-size:12px;
+	color:#444;
+	margin:0 0 8px 0;
+	float:left;
+	display:block;
+	}
+
+.gp_inlude_edit input{
+	border:1px solid #ccc;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	padding:4px;
+	width:185px;
+	margin-right:4px;
+	}
+
+
+
+/* testing docked ckeditor_area */
+#ckeditor_wrap{
+	display:none;
+	position:fixed;
+	bottom:0;
+	left:0;
+	right:0;
+	top:0;
+	height:30px;
+	z-index:10000; /* to be above full screen editing of ckeditor */
+	}
+
+#ckeditor_area.docked{
+	width:100%;
+	position:absolute;
+	left:0;
+	right:0;
+	bottom:0;
+	border-top:none;
+	border-left:left:none;
+	border-right:none;
+	-moz-border-radius: 0;
+	-o-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+
+	box-shadow:none;
+	-moz-box-shadow:none;
+	-webkit-box-shadow:none;
+	-o-box-shadow:none;
+	-icab-box-shadow:none;
+	-khtml-box-shadow:none;
+	}
+
+#ckeditor_area.docked > div{
+	border-top:none;
+	border-left:none;
+	border-right:none;
+	border-bottom:1px solid #f1f1f1;
+	-moz-border-radius: 0;
+	-o-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	padding:7px;
+	}
+
+#ckeditor_area.docked .toolbar{float:right;clear:none;width:40px;padding:0;}
+#ckeditor_area.docked .tools{
+	margin-right:50px; /* room for the toolbar */
+	}
+#ckeditor_area.docked #ckeditor_bottom{display:block;float:left;}
+#ckeditor_area.docked #ckeditor_controls{display:block;float:left;}
+
+#ckeditor_area.docked #ckeditor_top .cke_skin_kama .cke_toolgroup{width:auto;}
+#ckeditor_area.docked #ckeditor_top .cke_toolbox{clear:none;}
+#ckeditor_area.docked #ckeditor_top .cke_editor{display:inline;}
+
+
+#ckeditor_area.docked .option_area{
+	float:left;
+	width:200px;
+	margin-right:10px;
+	}
+#ckeditor_area.docked #gp_gallery_avail_imgs{
+	display:block;
+	height:60px;
+	}
+
+

@@ -1,0 +1,35 @@
+#admincontainer{
+	min-width:500px;
+	}
+#admincontent_inner{
+	padding:0;
+	border:0 none !important;
+	background:#EDEDED !important;
+	overflow:visible !important;
+	}
+
+#elfinder{
+	border:0 none !important;
+	}
+
+.elfinder-toolbar,
+.elfinder-statusbar,
+.elfinder-navbar{
+	background:#ededed !important;
+	}
+.elfinder-workzone{
+	border-left:1px solid #aaa !important;
+	}
+/*
+.elfinder-button{
+	height:18px;
+	width:20px;
+	}
+
+.elfinder-button-icon{
+	margin:2px !important;
+	}
+.elfinder-toolbar-button-separator{
+	height:26px;
+	}
+	*/

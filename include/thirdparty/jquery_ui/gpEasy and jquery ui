@@ -1,0 +1,14 @@
+-Version
+	The latest version used is 1.8.22 (gpEasy 3.5) with the smoothness css
+
+-Usage
+	To include jquery ui in a special page, gadget... etc, use common::LoadjQueryUI(); (available since gpEasy 2.0)
+	jQuery ui is automatically added if a user is logged in
+
+-Available UI Features
+	gpEasy 3.5+
+		- All Interactions and Widgets
+	Previous to gpEasy 3.5
+		- Sortable
+		- Autocomplete
+

@@ -1,0 +1,301 @@
+/*** The Essential Code ***/
+
+body {
+	padding:0;
+	margin:0;
+	font-size:13px;
+	background: #FAFAFA;
+	font-family:Arial, sans-serif;
+	
+}
+td{vertical-align:top;}
+
+a,a:visited{color:#445577;}
+a:hover{color:#007e00;}
+
+a img{
+	border:none;
+	}
+
+		
+div.clear{clear:both;margin:0;padding:0;}
+
+/* so lists next to floated images maintain their margins */
+ul,ol{
+	overflow: hidden;
+	zoom:1;
+	}
+
+
+#container1{
+	background: #fafafa url(../images/Fade.jpg) repeat-x;
+	margin:0;
+	padding:0;
+	}
+
+#container{
+	min-width:850px;
+	margin:0 100px;
+	padding:2em 0 0 0;
+	border-left:1px solid #ccc;
+	border-right:1px solid #ccc;
+	background:#fafafa;
+}
+	
+
+#columncontainer {
+	padding-left: 200px;      /* LC fullwidth */
+	padding-right: 220px;     /* RC fullwidth + CC padding */
+	
+	height:100%;
+}
+
+#columncontainer .column {
+	position: relative;
+	float: left;
+}
+
+#maincontent {
+	padding: 0 20px 20px 20px;       /* CC padding */
+	width: 100%;
+	right:200px;
+	margin-left:0;
+}
+
+#left {
+	width: 190px;             /* LC width */
+	padding: 0;          /* LC padding */
+	right: 200px;             /* LC fullwidth + CC padding */
+	margin-right: -100%;
+}
+
+#right {
+	width: 170px;             /* RC width */
+	padding: 0;          /* RC padding */
+	margin-right: -100%;
+}
+
+
+#footer {
+	clear: both;
+}
+
+
+
+/*** Footer Fix ***/
+
+* html body, * html div {
+	overflow: hidden;
+}
+
+* html #footer-wrapper {
+	float: left;
+	position: relative;
+	width: 100%;
+	padding-bottom: 10010px;
+	margin-bottom: -10000px;
+	
+}
+
+/*** Just for Looks ***/
+
+#container h1, #container h2, #container h3{
+	color:#163F53;
+	border-bottom:1px dashed #cccccc;
+	}
+
+#container{
+	color:#111;
+	}
+	
+
+#container h2{
+	font-size:23px;
+	margin:0;
+	padding:0;
+	}
+	
+
+.links{
+	position:relative;
+	font-size:16px;
+	padding-top:7px;
+	font-weight:bold;
+	color:#163F53;
+	}
+
+#header{
+	position:relative;
+	padding:0;
+	border-bottom:9px solid #232288;
+	}
+#header2{
+	position:relative;
+	padding:0;
+	margin:0;
+	border-bottom:5px solid #3535aa;
+	}
+#header3{
+	position:relative;
+	padding:1em 100px 0 100px;
+	min-width:850px;
+	background: black url(../images/Header_Circles.jpg) repeat-x;
+	}
+
+#footer{
+	background-color:#F0F0F0;
+	border-top:1px solid #ccc;
+	padding:2em 100px 4em 100px;
+	min-width:850px;
+}
+#footercontainer a{
+	color:#333;
+}
+#footercontainer{
+	font-size:12px;
+	color:#666;
+	}
+#footercontainer span{
+	margin-right:1em;
+	}
+
+
+#columncontainer .column {}
+
+
+/*** Detailed Looks ***/
+
+#header3 h1{
+	margin:0;
+	color:#f4f3f3;
+	font-size:40px;
+}
+#header3 *{
+	color:#f4f3f3;
+	margin:0;
+	}
+
+#header3 a{
+	color:#f4f3f3;
+	text-decoration:none;
+	}
+#header3 h4{
+	color:#f4f3f3;
+	margin:0;
+}
+#header3 p{
+	margin:0;
+	}
+	
+h1 a, h2 a, h3 a, h4 a{
+	text-decoration:none;
+	}
+
+
+
+/*** left nav ***/
+.leftnav{
+ 	width:170px;
+	padding:0 10px 300px 10px;
+	color:#111;
+	}
+	
+.leftnav .menu_top,
+.leftnav .menu_top ul{
+	border-top:1px dashed #cccccc;
+	padding:0;
+	margin:0;
+	}
+.leftnav .menu_top ul{
+	border:none;
+	}
+.leftnav .menu_top li{
+	list-style: none;
+	}
+	
+.leftnav .menu_top ul a{
+	padding-left:20px;
+	}
+.leftnav .menu_top ul ul a{
+	padding-left:40px;
+	}
+	
+.leftnav .menu_top a{
+	display:block;
+	border-bottom:1px dashed #cccccc;
+	padding:8px;
+	margin: 0;
+	text-decoration:none;
+	white-space:nowrap;
+	overflow:hidden;
+	color:#183048;
+	font-size:12px;
+	}
+	
+.leftnav .menu_top a:hover, .leftnav .menu_top a.selected{
+	color:#556688;
+	background-color:#fdfdfd;
+	}
+	
+.leftnav input.text{width:90%}
+	
+.rightnav{
+	width:150px;
+	border-left:1px solid #eee;
+	padding:10px 10px 300px 10px;
+	color:#111;
+	}
+	
+
+
+/*** menu ***/
+
+#menu{	
+	position:relative;
+	clear: both;
+	margin: 1em 0 0 0; 
+	padding: 0;
+	width:100%;
+	float: right;
+	text-align:right;
+}
+#menu ul {
+	margin:0;
+	padding:0;
+	display: inline;
+	float: right;
+	list-style: none;
+
+}
+#menu li {
+	float: left;
+	list-style: none;
+}
+
+#menu li a {
+	font-size:16px;
+	font-weight:bold;
+	display: block;
+	padding: 6px 9px 4px 9px;	
+	margin: 3px 0 0 9px;
+	color: #918F8E;
+	text-decoration: none;
+	
+	-moz-border-radius: 3px 21px 0 0;
+	-o-border-radius: 3px 21px 0 0;
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-top-right-radius: 21px;
+	
+	border-radius: 3px 21px 0 0;
+	
+	background-color:#222;
+	border-left:1px solid #333;
+	border-top:1px solid #333;
+	border-right:1px solid #333;
+}
+
+#menu li:hover a , #menu li a.selected {
+	background: #3535aa;
+	color: #fff;
+	border-color:#3535aa;
+}

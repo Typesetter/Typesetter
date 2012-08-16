@@ -1,0 +1,93 @@
+
+
+.hmargin{
+	margin-top:0;
+	margin-bottom:1em;
+	color:#333;
+	}
+.hmargin a{
+	color:#888 !important;
+	}
+.hmargin a:hover{
+	color:#333 !important;
+	}
+.hmargin span{
+	color:#bbb;
+	margin:0 5px;
+	}
+
+
+#addon_install_progress{
+	position:relative;
+	}
+#addon_install_progress span{
+	position:relative;
+	display:inline-block;
+	padding:5px 15px 5px 15px;
+	margin-right:15px;
+	border:1px solid #ccc;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+	font-weight:bold;
+	color:#666;
+	min-width:10em;
+	text-align:center;
+	}
+#addon_install_progress span.completed,
+#addon_install_progress span.current{
+	background:#209400;
+	border-color:#176b00;
+	color:#fff;
+	}
+
+.gp_find_form{
+	float:right;
+}
+
+.gp_search_options{
+	padding-top:15px;
+	}
+
+.search_pages{
+	float:right;
+	}
+.search_pages a, .search_pages span{
+	text-decoration:none;
+	font-size:14px;
+	display:inline-block;
+	padding:1px 5px;
+	margin:0 7px 0 0;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	}
+.search_pages a:hover, .search_pages span:hover{
+	background-color:#eee;
+	}
+.addon_rating{
+	position:relative;
+	width:90px;
+	height:16px;
+	}
+.addon_rating img{
+	background: url(../imgs/stars.png);
+	height:16px;
+	}
+.search_order{
+	}
+.search_order a,
+.search_order span{
+	padding:5px 0;
+	font-size:15px !important;
+	display:inline-block;
+	margin-right:20px;
+	}
+
+.shot{
+    border: 1px solid #CCCCCC;
+    padding: 1px;
+    display:inline-block;
+    }

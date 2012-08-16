@@ -1,0 +1,18 @@
+@import url('../Blue/style.css');
+
+#header{
+	border-bottom:9px solid #238822;
+	}
+#header2{
+	border-bottom:5px solid #35aa35;
+	}
+
+#menu li a {
+	color: #918F8E;
+	background-color:#222;
+}
+
+#menu li:hover a , #menu li a.selected {
+	background: #35aa35;
+	border-color:#35aa35;
+}

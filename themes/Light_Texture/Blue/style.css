@@ -1,0 +1,145 @@
+@import url('../Blue/base.css');
+
+html{
+	background: #d5d5d5 url(bg_texture.png);
+}
+
+
+#fadearea{}
+#footerwrap{}
+
+#footertop{
+}
+
+
+/*
+ * CSS for a center oriented menu in #footertop
+#footertop .menu_top ul,
+#footertop .menu_top li{
+	position:relative;
+	list-style: none outside none;
+	margin:0;
+	padding:0;
+	white-space:nowrap;
+	display:inline;
+	}
+#footertop .menu_top li a{
+	display:inline-block;
+	margin:0 19px;
+	text-decoration:none;
+	}
+
+#footertop a{
+    color: #696969;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+	}
+*/
+
+
+#footareas{
+	margin:0 auto;
+	width:940px;
+}
+#footareas > div{
+	-moz-border-radius: 15px;
+	-o-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	border-radius: 15px;
+	padding:19px 9px;
+	border:1px solid #fff;
+	border:1px solid rgba(255,255,255,.6);
+	background:#e8e8e8;
+	background:rgba(255,255,255,.45);
+	}
+
+
+.footarea{
+	width:285px;
+	min-height:100px;
+	margin:0 10px;
+	position:relative;
+	float:left;
+	border:none;
+	color:#333;
+	font-size:13.5px;
+	line-height:190%;
+	text-shadow:1px 1px 0 #f5f5f5;
+	}
+
+/* for inline editing */
+body.footarea{
+	background:#e8e8e8;
+	background:rgba(255,255,255,.45);
+	}
+
+.footarea a{
+    text-decoration: none;
+	color:#156280;
+	border-bottom:1px solid #d4d4d4;
+    }
+.footarea a:hover{
+	border-color:#888;
+	}
+
+.footarea h1,
+.footarea h2,
+.footarea h3,
+.footarea h4,
+.footarea b{
+	color:#156280;
+	font-weight: bold;
+	margin-bottom: 10px;
+	margin-top:0;
+	text-shadow:1px 1px 0 #fff;
+	}
+.footarea h1 a,
+.footarea h2 a,
+.footarea h3 a,
+.footarea h4 a{
+	border:0 none;
+	color:#156280;
+	}
+
+.footarea p{
+	margin:0 0 10px 0;
+	padding:0;
+	}
+
+/* menu within footerarea */
+#footareas .menu_top,
+#footareas .menu_top li{
+	position:relative;
+	list-style: none outside none;
+	margin:0;
+	padding:0;
+	white-space:nowrap;
+	display:inline;
+	}
+#footareas .menu_top li li{
+	padding-left:10px;
+	}
+#footareas .menu_top li a{
+	margin:3px;
+	padding-right:19px;
+	display:block;
+	text-decoration:none;
+	color:#156280;
+	}
+
+#footerbottom{
+	text-align:center;
+	padding-top:20px;
+	}
+#footerbottom span{
+	margin:0 15px;
+	}
+#footerbottom *{
+    color: #4e4e54;
+    font-weight:normal;
+	font-size:11px;
+	text-decoration:none;
+	}
+

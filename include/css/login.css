@@ -1,0 +1,97 @@
+#login_container{
+	position:relative;
+	}
+
+#loginform,
+#browser_warning{
+	float:left;
+	position:relative;
+	padding:15px;
+	margin:10px;
+	width:250px;
+	color:#444;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-o-border-radius: 6px;
+	border-radius:6px;
+	}
+
+
+#loginform{
+	background-color: #f1f1f1; /* #ccffcc; */
+	border:1px solid #aaa; /*339933;*/
+}
+#loginform .login_submit{
+
+	border:1px solid #444;
+	background-color:#444;
+
+	color:#fff;
+	font-size:14px;
+	font-weight:normal;
+
+	padding:3px 10px;
+	margin:1.5em 0;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-o-border-radius: 6px;
+	border-radius:6px;
+	cursor:pointer;
+	}
+#loginform .login_submit:focus{
+	background-color:#888;
+	}
+
+
+#loginform p{
+	vertical-align:top;
+	padding:0;
+	margin:0.5em 0;
+	}
+
+#loginform .login_text{
+	display:block;
+	width:230px;
+	padding:5px;
+	font-size:14px;
+	color:#444;
+
+	border:1px solid #888;
+	background-color: #fff;
+	}
+#loginform .login_text:focus{
+	border:1px solid #000;
+	background-color: #fff;
+	color:#111;
+	}
+
+#loginform label{
+	font-size:12px;
+	color:#555;
+	margin-right:15px;
+	white-space:nowrap;
+	}
+
+#browser_warning{
+
+	background-color:#fff1a8;
+	border:1px solid #bfb178;
+	}
+#browser_warning a{
+	text-decoration:none;
+	color:#666;
+	margin-right:10px;
+	}
+
+#javascript_warning{
+	color:#444;
+	padding:10px;
+	background-color:#fff1a8;
+	border:1px solid #bfb178;
+
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-o-border-radius: 6px;
+	border-radius:6px;
+}
+

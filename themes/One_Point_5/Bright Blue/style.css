@@ -1,0 +1,44 @@
+@import url('../Blue/style.css');
+
+a{
+	color:#328a00;
+	}
+
+#header{
+	background: #0d84be url(header_big.png)  repeat-x top left;
+	}
+	
+#menu a{
+	color:#fff;
+	text-shadow: #888 1px 1px 1px;
+	}
+	
+#menu a:hover{
+	background-color:#0f94d6;
+	}
+	
+#menu a.selected, #menu a.childselected, #menu a.selected:hover, #menu a.childselected:hover {
+	background-color:#e6e6e6;
+	color:#333;
+	text-shadow: #777 1px 1px 1px;
+	}
+	
+#submenu{
+	background: #e6e6e6 url(../menu_bg.png);
+	border-bottom:1px solid #444;
+	}
+	
+#submenu a{
+	color:#333;
+	}
+#submenu a.selected, #submenu a:hover{
+	background-color:#fafafa;
+	}
+	
+#sidepanel h3{
+	background: #ddd;
+	color:#0d84be;
+	}
+#sidepanel h3 a{
+	color:#0d84be;
+	}

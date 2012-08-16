@@ -1,0 +1,9 @@
+
+
+Requirements
+
+	PHP 4.3+
+
+Installation
+
+	Upload files to your server then open the /index.php file from your web browser.

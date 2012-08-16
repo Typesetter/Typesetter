@@ -65,7 +65,7 @@ $languages = array(
 
 
 //$gpversion = '2.4';
-$gpversion = '3.0.1';
+$gpversion = '3.5b1';
 $addonDataFolder = $addonCodeFolder = false;//deprecated
 $addonPathData = $addonPathCode = false;
 $addonBrowsePath = 'http://gpeasy.com/index.php';

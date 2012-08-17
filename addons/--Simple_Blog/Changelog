@@ -1,0 +1,23 @@
+
+1.4
+------------------------------------------------------------
+* minor css additions
+* Simple_Blog Config as admin page
+* Configure separator between Date and Sub Title
+* Added Subtitles
+* Underscores removed when editing
+* Admin links in overlays instead of inline with the date
+  o More visible links to configuration
+* <div class="blog_post"> added as wrapper
+* strftime() instead of date() for localization options
+
+1.3b3
+------------------------------------------------------------
+* close commenting for each post
+* captcha when used
+* comments: ##
+* "Add Comment" button alignment
+* space between simple_blog_info <span>'s
+* Fix Allow comments configuration
+* erasing comments fixed
+* float and images <div class="clear">?

@@ -1,0 +1,194 @@
+
+
+.slideshow-container{
+	position:relative;
+	display:block;
+	position:relative;
+	width:100%;
+}
+
+a.slideshow_slide{
+	display: block;
+	/* position: absolute; */
+	width:100%;
+	text-align:center;
+	}
+
+a.slideshow_slide img{
+	position:relative;
+	border: 1px solid #ccc;
+	padding:3px;
+	}
+* html a.slideshow_slide img{
+	filter:inherit;
+	opacity:inherit;
+	}
+
+.caption-container{
+	text-align:center;
+	}
+
+.loader{
+	position:absolute;
+	top:0;
+	left:0;
+	height:100%;
+	width:100%;
+	z-index:1;
+	background:url('imgs/loader64.gif') 50% 50% no-repeat;
+	}
+.loaded .loader{
+	display:none;
+	}
+
+.gp_slide_cntrls{
+	position:absolute;
+	top:2px;
+	width:100%;
+	z-index:2;
+	text-align:center;
+	display:none;
+	}
+.hover .gp_slide_cntrls{
+	display:block;
+	}
+
+.gp_slide_cntrls span{
+	display:inline-block;
+	background-color:#fff;
+	padding:0 9px;
+
+	filter:alpha(opacity=95);
+	-moz-opacity:0.95;
+	-khtml-opacity: 0.95;
+	opacity: 0.95;
+
+	border:1px solid #ccc;
+	-moz-border-radius: 7px;
+	-o-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	}
+
+.gp_slide_cntrls a{
+	text-decoration:none;
+	font-size:11px;
+	font-weight:bold;
+	padding:5px 5px;
+	display:inline-block;
+	color:#333;
+
+	height:16px;
+	width:16px;
+	}
+
+.gp_slide_play_pause{
+	background:url('imgs/gtk-media-play-ltr.png') 50% 50% no-repeat;
+	}
+.gp_slide_play{
+	background:url('imgs/gtk-media-pause.png') 50% 50% no-repeat;
+	}
+.gp_slide_next{
+	background:url('imgs/gtk-media-next-ltr.png') 50% 50% no-repeat;
+	}
+.gp_slide_prev{
+	background:url('imgs/gtk-media-next-rtl.png') 50% 50% no-repeat;
+	}
+
+
+/* thumbnails */
+/*
+
+
+
+
+
+
+*/
+
+/* thumbnails new */
+.gp_slide_thumbs{
+	float:right;
+	position:relative;
+	left:-50%;
+	text-align:left;
+}
+.gp_slide_thumbs ul.gp_slideshow{
+	list-style:none;
+	position:relative;
+	left:50%;
+	margin: 20px 0 20px 0;
+	padding: 0;
+}
+
+.gp_slide_thumbs li{float:left;position:relative;}/* ie needs position:relative here*/
+
+ul.gp_slideshow > li{
+	padding: 0;
+	margin: 5px 10px 5px 0;
+	list-style: none;
+}
+
+ul.gp_slideshow > li > a{
+	float:left;
+	padding: 2px;
+	border: 1px solid #ccc;
+	height:75px;
+	width:75px;
+}
+
+ul.gp_slideshow .caption{
+	display:none;
+	}
+ul.gp_slideshow > li.current > a{
+	border-color: #000;
+}
+ul.gp_slideshow > li > a:focus {
+	outline: none;
+}
+ul.gp_slideshow > li > a img{
+	height:75px;
+	width:75px;
+	}
+ul.gp_slideshow > li.selected > a img {
+	border: none;
+	display: block;
+}
+.gp_slide_thumbs .gp_drag_box{
+	height:75px;
+	width:75px;
+	}
+
+
+
+
+/* CSS for captions above images
+ * the padding-top should be coordinated with the amount of area needed for the captions
+ */
+/*
+.slideshow_area{
+	position:relative;
+	padding-top:20px;
+	}
+.caption-container{
+	position:absolute;
+	top:0;
+	width:100%;
+	}
+*/
+
+
+
+/* for captions on the side
+
+Widths will need to be coordinated with the theme and images used
+
+.slideshow-container{
+	float:right;
+	width:700px;
+	}
+.caption-container{
+	float:left;
+	width:200px;
+	}
+*/

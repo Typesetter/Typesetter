@@ -1270,5 +1270,3 @@ $.fn.enableSelection = function() {
 				this.onselectstart = function() { return false; };
 			});
 };
-
-

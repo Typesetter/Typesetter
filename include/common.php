@@ -1944,7 +1944,8 @@ class common{
 				'showgplink' => true,
 				'showsitemap' => true,
 				'showlogin' => true,
-				'auto_redir' => 90, //2.5
+				'auto_redir' => 90,	//2.5
+				'resize_images' => true,	//3.5
 				);
 	}
 

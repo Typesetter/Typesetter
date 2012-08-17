@@ -642,11 +642,14 @@ class editing_page extends display{
 
 
 	function SaveSection_Text($section){
+		global $config;
 		$content =& $_POST['gpcontent'];
 		gpFiles::cleanText($content);
 		$this->file_sections[$section]['content'] = $content;
 
-		gp_edit::ResizeImages($this->file_sections[$section]['content'],$this->file_sections[$section]['resized_imgs']);
+		if( $config['resize_images'] ){
+			gp_edit::ResizeImages($this->file_sections[$section]['content'],$this->file_sections[$section]['resized_imgs']);
+		}
 
 		return true;
 	}
@@ -890,4 +893,3 @@ class editing_page extends display{
 	}
 
 }
-

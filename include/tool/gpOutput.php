@@ -437,7 +437,7 @@ class gpOutput{
 	}
 
 	function ExecInfo($info,$args=array()){
-		global $dataDir, $addonFolderName, $installed_addon;
+		global $dataDir, $addonFolderName, $installed_addon, $config;
 
 		//addonDir is deprecated as of 2.0b3
 		if( isset($info['addonDir']) ){
@@ -464,7 +464,8 @@ class gpOutput{
 				include_once($dataDir.$info['script']);
 				$has_script = true;
 			}else{
-				trigger_error('gpEasy Error: Addon hook script doesn\'t exist. Script: '.$info['script']);
+				$name =& $config['addons'][$addonFolderName]['name'];
+				trigger_error('gpEasy Error: Addon hook script doesn\'t exist. Script: '.$info['script'].' Addon: '.$name);
 			}
 		}
 
@@ -482,7 +483,8 @@ class gpOutput{
 					}
 				}
 			}elseif( $has_script ){
-				trigger_error('gpEasy Error: Addon hook class doesn\'t exist. Script: '.$info['class']);
+				$name =& $config['addons'][$addonFolderName]['name'];
+				trigger_error('gpEasy Error: Addon hook class doesn\'t exist. Script: '.$info['class'].' Addon: '.$name);
 			}
 		}elseif( !empty($info['method']) ){
 
@@ -502,7 +504,8 @@ class gpOutput{
 				$method_called = true;
 
 			}elseif( $has_script ){
-				trigger_error('gpEasy Error: Addon hook method doesn\'t exist. Script: '.$info['method']);
+				$name =& $config['addons'][$addonFolderName]['name'];
+				trigger_error('gpEasy Error: Addon hook method doesn\'t exist. Script: '.$info['method'].' Addon: '.$name);
 			}
 		}
 

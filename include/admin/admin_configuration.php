@@ -54,6 +54,7 @@ class admin_configuration{
 						'combinejs'=>'boolean',
 						'combinecss'=>'boolean',
 						'etag_headers'=>'boolean',
+						'resize_images'=>'boolean',
 
 
 						/* Contact Configuration */

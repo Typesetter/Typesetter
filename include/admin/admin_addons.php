@@ -766,6 +766,15 @@ class admin_addons extends admin_addon_install{
 			if( is_link($installFolder) ){
 				echo '<br/> <em class="admin_note">'.$langmessage['developer_install'].'</em>';
 				$developerInstall = true;
+
+				//check symbolic links, fix if necessary
+				$link_folder = readlink($installFolder);
+				$source_folder = $dataDir.'/addons/'.$info['upgrade_from'];
+				if( $source_folder != $link_folder && basename($source_folder) == basename($link_folder) ){
+					if( unlink($installFolder) ){
+						symlink($source_folder,$installFolder);
+					}
+				}
 			}
 			echo '</td>';
 			echo '<td>';
@@ -895,8 +904,3 @@ class admin_addons extends admin_addon_install{
 
 
 }
-
-
-
-
-

@@ -2,7 +2,10 @@
 
 defined('is_running') or die('Not an entry point...');
 global $dataDir, $post_quarantine;
-$_POST = $post_quarantine;
+
+if( count($post_quarantine) ){
+	$_POST = $post_quarantine;
+}
 includeFile('admin/admin_uploaded.php');
 
 

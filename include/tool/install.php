@@ -208,7 +208,7 @@ class Install_Tools{
 
 
 		$content = '<h2>Welcome!</h2>
-		<p>Welcome to your new gpEasy powered website. Now that gpEasy is installed, you can start editing the content and customizing your site.</p>
+		<p>Welcome to your new gpEasy powered website. Now that gpEasy is installed, you can start editing the content and customising your site.</p>
 		<h3>Getting Started</h3>
 		<p>You are currently viewing the default home page of your website. Here\'s a quick description of how to edit this page.</p>
 		<ol>
@@ -218,7 +218,7 @@ class Install_Tools{
 		</ol>
 		<h3>More Options</h3>
 		<ul>
-		<li>Adding, renaming, deleting and organizing your pages can all be done in the '.Install_Tools::Install_Link_Content('Admin_Menu','Page Manager').'.</li>
+		<li>Adding, renaming, deleting and organising your pages can all be done in the '.Install_Tools::Install_Link_Content('Admin_Menu','Page Manager').'.</li>
 		<li>Choose from a '.Install_Tools::Install_Link_Content('Admin_Theme_Content','variety of themes').' to give your site a custom look.</li>
 		<li>Then, you can '.Install_Tools::Install_Link_Content('Admin_Theme_Content','add, remove and rearrange','cmd=editlayout').' the content of your site without editing the html.</li>
 		<li>Take a look at the Administrator Toolbar to access all the features of gpEasy.</li>

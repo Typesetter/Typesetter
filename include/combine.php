@@ -408,7 +408,7 @@ class gp_combine_css{
 	function gp_combine_css($file,$import=false){
 		global $dataDir;
 
-		includeFile('thirdparty/cssmin_v.1.0.php');
+		includeFile('thirdparty/cssmin-v3.0.1.php');
 
 		$full_path = $dataDir.$file;
 		if( $import ){
@@ -419,7 +419,7 @@ class gp_combine_css{
 
 
 		$this->content = file_get_contents($full_path);
-		$this->content = cssmin::minify($this->content);
+		$this->content = CssMin::minify($this->content);
 
 		$this->CSS_Import(0,$file);
 		$this->CSS_FixUrls(0,$file);

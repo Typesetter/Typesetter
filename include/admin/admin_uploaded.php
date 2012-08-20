@@ -761,16 +761,23 @@ class admin_uploaded{
 		$thumb_dir = $dataDir.'/data/_uploaded/image/thumbnails';
 		admin_uploaded::SetRealPath($result,$elfinder);
 
-		//handle resized images
 		switch($cmd){
+
 			case 'rename':
-				admin_uploaded::RenameResized($result['removed'][0],$result['added'][0]);
+			admin_uploaded::RenameResized($result['removed'][0],$result['added'][0]);
 			break;
+
 			case 'rm':
-				admin_uploaded::RemoveResized($result['removed']);
+			admin_uploaded::RemoveResized($result['removed']);
 			break;
+
 			case 'paste':
-				admin_uploaded::MoveResized($result['removed'],$result['added']);
+			admin_uploaded::MoveResized($result['removed'],$result['added']);
+			break;
+
+			//check the image size
+			case 'upload':
+			admin_uploaded::MaxSize($result['added']);
 			break;
 		}
 
@@ -812,16 +819,23 @@ class admin_uploaded{
 		gp_resized::SaveIndex();
 
 		//debug
-		//$log_file = $dataDir.'/data/_temp/finder_log-'.$cmd.'.txt';
-		//$content = print_r($result,true);
-		//gpFiles::Save($log_file,$content);
-
-
-		//debug
+		/*
 		$log_file = $dataDir.'/data/_temp/finder_log-all_vars.txt';
 		$data = get_defined_vars();
 		$content = print_r($data,true);
 		gpFiles::Save($log_file,$content);
+		*/
+	}
+
+	/**
+	 * Make sure newly uploaded images are within the site's max-size setting
+	 *
+	 */
+	function MaxSize($added){
+		global $config;
+		foreach($added as $file){
+			thumbnail::CheckArea($file['realpath'],$config['maximgarea']);
+		}
 	}
 
 	/**
@@ -855,12 +869,6 @@ class admin_uploaded{
 			$rinfo = $moved[$akey];
 			admin_uploaded::RenameResized($rinfo,$ainfo);
 		}
-
-
-		//$log_file = $dataDir.'/data/_temp/finder_log-move_vars.txt';
-		//$data = get_defined_vars();
-		//$content = print_r($data,true);
-		//gpFiles::Save($log_file,$content);
 	}
 
 	/**
@@ -907,6 +915,9 @@ class admin_uploaded{
 	 */
 	function SetRealPath(&$array,$elfinder){
 		foreach($array as $type => $list){
+			if( !is_array($list) ){
+				continue;
+			}
 			foreach($list as $key => $info){
 				if( !isset($info['realpath']) ){
 					$array[$type][$key]['realpath'] = $elfinder->realpath($info['hash']);

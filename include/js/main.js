@@ -129,8 +129,14 @@ $(function(){
 		//	AJAX
 		//
 		$(document).ajaxError(function(event, XMLHttpRequest, ajaxOptions, thrownError){
+			loaded();
+
+			//don't use this error handler if another one is set for the ajax request
+			if( typeof(ajaxOptions.error) == 'function' ){
+				return;
+			}
+
 			if( typeof(debugjs) !== "undefined" ){
-				loaded();
 
 				//collect some debug info
 				var debug = {
@@ -152,12 +158,6 @@ $(function(){
 				return;
 			}
 
-			//don't use this error handler if another one is set for the ajax request
-			if( typeof(ajaxOptions.error) == 'function' ){
-				return;
-			}
-
-			loaded();
 			alert(gp_error);
 		});
 

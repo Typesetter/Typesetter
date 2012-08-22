@@ -1808,13 +1808,7 @@ class common{
 	 * @since 2.0b1
 	 */
 	function LoadjQueryUI(){
-		global $page;
-		static $loaded = false;
-		if( $loaded ) return;
-
-		array_unshift($page->head_js,'/include/thirdparty/jquery_ui/jquery-ui.custom.min.js');
-		array_unshift($page->css_admin,'/include/thirdparty/jquery_ui/jquery-ui.custom.css');
-		$loaded = true;
+		gpOutput::$jquery_ui = true;
 	}
 
 
@@ -1946,6 +1940,7 @@ class common{
 				'showlogin' => true,
 				'auto_redir' => 90,	//2.5
 				'resize_images' => true,	//3.5
+				'jquery' => 'local',
 				);
 	}
 
@@ -3076,10 +3071,10 @@ class gpFiles{
 			include($file);
 			ob_end_clean();
 
-			if( !isset($file_stats['modified']) ){
+			if( !isset($file_stats['modified']) && isset($fileModTime) ){
 				$file_stats['modified'] = $fileModTime;
 			}
-			if( !isset($file_stats['gpversion']) ){
+			if( !isset($file_stats['gpversion']) && isset($fileVersion) ){
 				$file_stats['gpversion'] = $fileVersion;
 			}
 		}else{

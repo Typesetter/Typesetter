@@ -137,9 +137,6 @@ class admin_configuration{
 		}else{
 			$show = $_POST;
 		}
-		if( empty($show['jquery']) ){
-			$show['jquery'] = 'local';
-		}
 		if( empty($show['recaptcha_language']) ){
 			$show['recaptcha_language'] = 'inherit';
 		}

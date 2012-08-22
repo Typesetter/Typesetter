@@ -59,6 +59,8 @@ $gpOutConf['Gadget']['method']			= array('gpOutput','GetGadget');
 
 class gpOutput{
 
+	public static $jquery_ui = false;
+
 	/*
 	 *
 	 * Request Type Functions
@@ -1840,11 +1842,17 @@ class gpOutput{
 			$js_files[] = '/include/js/admin.js';
 		}
 
-		if( count($js_files) == 0){
+		if( !gpOutput::$jquery_ui && !count($js_files) ){
 			echo '<!-- jquery_placeholder '.$gp_random.' -->';
 			return;
+		}elseif( $config['jquery'] == 'google' ){
+			echo '<!-- jquery_placeholder '.$gp_random.' -->';
+		}else{
+			if( gpOutput::$jquery_ui ){
+				array_unshift($js_files,'/include/thirdparty/jquery_ui/jquery-ui.custom.min.js');
+			}
+			array_unshift($js_files,'/include/thirdparty/js/jquery.js');
 		}
-		array_unshift($js_files,'/include/thirdparty/js/jquery.js');
 
 		if( !$config['combinejs'] || $page->head_force_inline ){
 			echo "\n<script type=\"text/javascript\">/* <![CDATA[ */";
@@ -1865,6 +1873,16 @@ class gpOutput{
 
 
 		$css_files = array();
+		if( gpOutput::$jquery_ui ){
+			if( $config['jquery'] == 'google' ){
+				echo "\n<link rel=\"stylesheet\" type=\"text/css\" href=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css\" />";
+			}else{
+				$css_files[] = '/include/thirdparty/jquery_ui/jquery-ui.custom.css';
+			}
+		}
+
+
+
 		$css_files[] = '/include/css/additional.css';
 
 		if( isset($page->css_user) && is_array($page->css_user) ){
@@ -1924,10 +1942,16 @@ class gpOutput{
 		//add jquery if needed
 		$replacement = '';
 		if( strpos($buffer,'<script') !== false ){
-			if( isset($config['jquery']) && $config['jquery'] == 'google' ){
-				$replacement = "\n<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js\" type=\"text/javascript\"></script>";
+			if( $config['jquery'] == 'google' ){
+				$replacement = "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js\"></script>";
+				if( gpOutput::$jquery_ui ){
+					$replacement .= "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js\"></script>";
+				}
 			}else{
 				$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/js/jquery.js')."\"></script>";
+				if( gpOutput::$jquery_ui ){
+					$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/jquery_ui/jquery-ui.custom.min.js')."\"></script>";
+				}
 			}
 		}
 		$buffer = str_replace('<!-- jquery_placeholder '.$gp_random.' -->',$replacement,$buffer);

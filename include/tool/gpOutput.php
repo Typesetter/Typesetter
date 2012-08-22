@@ -2,11 +2,13 @@
 defined('is_running') or die('Not an entry point...');
 
 //for output handlers, see admin_theme_content.php for more info
-global $GP_ARRANGE, $gpOutConf, $gpOutStarted, $GP_GADGET_CACHE, $GP_LANG_VALUES, $GP_INLINE_VARS;
+global $GP_ARRANGE, $gpOutConf, $gpOutStarted, $GP_GADGET_CACHE;
 
+$gpOutStarted = false;
 $GP_ARRANGE = true;
-$gpOutStarted = $GP_NESTED_EDIT = false;
-$gpOutConf = $GP_GADGET_CACHE = $GP_LANG_VALUES = $GP_INLINE_VARS = array();
+$GP_NESTED_EDIT = false;
+$gpOutConf = array();
+$GP_GADGET_CACHE = array();
 
 
 //named menus should just be shortcuts to the numbers in custom menu
@@ -58,8 +60,6 @@ $gpOutConf['Gadget']['method']			= array('gpOutput','GetGadget');
 
 
 class gpOutput{
-
-	public static $jquery_ui = false;
 
 	/*
 	 *
@@ -439,7 +439,7 @@ class gpOutput{
 	}
 
 	function ExecInfo($info,$args=array()){
-		global $dataDir, $addonFolderName, $installed_addon, $config;
+		global $dataDir, $addonFolderName, $installed_addon;
 
 		//addonDir is deprecated as of 2.0b3
 		if( isset($info['addonDir']) ){
@@ -466,8 +466,7 @@ class gpOutput{
 				include_once($dataDir.$info['script']);
 				$has_script = true;
 			}else{
-				$name =& $config['addons'][$addonFolderName]['name'];
-				trigger_error('gpEasy Error: Addon hook script doesn\'t exist. Script: '.$info['script'].' Addon: '.$name);
+				trigger_error('gpEasy Error: Addon hook script doesn\'t exist. Script: '.$info['script']);
 			}
 		}
 
@@ -485,8 +484,7 @@ class gpOutput{
 					}
 				}
 			}elseif( $has_script ){
-				$name =& $config['addons'][$addonFolderName]['name'];
-				trigger_error('gpEasy Error: Addon hook class doesn\'t exist. Script: '.$info['class'].' Addon: '.$name);
+				trigger_error('gpEasy Error: Addon hook class doesn\'t exist. Script: '.$info['class']);
 			}
 		}elseif( !empty($info['method']) ){
 
@@ -506,8 +504,7 @@ class gpOutput{
 				$method_called = true;
 
 			}elseif( $has_script ){
-				$name =& $config['addons'][$addonFolderName]['name'];
-				trigger_error('gpEasy Error: Addon hook method doesn\'t exist. Script: '.$info['method'].' Addon: '.$name);
+				trigger_error('gpEasy Error: Addon hook method doesn\'t exist. Script: '.$info['method']);
 			}
 		}
 
@@ -1746,34 +1743,23 @@ class gpOutput{
 	 * @static
 	 */
 	function GetHead_InlineJS(){
-		global $page, $linkPrefix, $GP_INLINE_VARS;
+		global $page, $linkPrefix;
 
 		ob_start();
-
 		if( gpdebugjs ){
-			$GP_INLINE_VARS['debugjs'] = gpdebugjs;
+			echo 'var debugjs=true;';
 		}
 
 		if( common::LoggedIn() ){
-			$GP_INLINE_VARS += array(
-				'isadmin' => true,
-				'gpBLink' => common::HrefEncode($linkPrefix),
-				'post_nonce' => common::new_nonce('post',true),
-				'gpRem' => admin_tools::CanRemoteInstall(),
-				'admin_resizable' => true,
-				);
+			echo 'var isadmin=true';
+			echo ',gpBLink="'.common::HrefEncode($linkPrefix).'"'; //here because of index.php
 			gpsession::GPUIVars();
-			gpOutput::GP_STYLES();
-		}
-
-		if( count($GP_INLINE_VARS) > 0 ){
-			echo 'var ';
-			$comma = '';
-			foreach($GP_INLINE_VARS as $key => $value){
-				echo $comma.$key.'='.json_encode($value);
-				$comma = ',';
+			if( !admin_tools::CanRemoteInstall() ){
+				echo ',gpRem=false';
 			}
+			echo ',post_nonce="'.common::new_nonce('post',true).'"';
 			echo ';';
+			gpOutput::GP_STYLES();
 		}
 
 		echo $page->head_script;
@@ -1800,18 +1786,16 @@ class gpOutput{
 	 * @static
 	 */
 	function GetHead_Lang(){
-		global $langmessage, $GP_LANG_VALUES;
-
-		if( common::LoggedIn() ){
-			$GP_LANG_VALUES += array('cancel'=>'ca','update'=>'up','caption'=>'cp');
-		}elseif( !count($GP_LANG_VALUES) ){
+		global $langmessage;
+		if( !common::LoggedIn() ){
 			return;
 		}
 
 		echo "\n<script type=\"text/javascript\">/* <![CDATA[ */";
+		$lang_values = array('cancel'=>'ca','update'=>'up','caption'=>'cp');
 		echo 'var gplang = {';
 		$comma = '';
-		foreach($GP_LANG_VALUES as $from_key => $to_key){
+		foreach($lang_values as $from_key => $to_key){
 			echo $comma;
 			echo $to_key.':"'.str_replace(array('\\','"'),array('\\\\','\"'),$langmessage[$from_key]).'"';
 			$comma = ',';
@@ -1830,7 +1814,7 @@ class gpOutput{
 		$js_files = array();
 
 		//always include javascript when there are messages
-		if( $page->admin_js || !empty($page->jQueryCode) || !empty($wbMessageBuffer) || isset($_COOKIE['cookie_cmd']) ){
+		if( $page->admin_js || !empty($page->jQueryCode) || !empty($wbMessageBuffer) ){
 			$js_files[] = '/include/js/main.js';
 		}
 
@@ -1842,17 +1826,11 @@ class gpOutput{
 			$js_files[] = '/include/js/admin.js';
 		}
 
-		if( !gpOutput::$jquery_ui && !count($js_files) ){
+		if( count($js_files) == 0){
 			echo '<!-- jquery_placeholder '.$gp_random.' -->';
 			return;
-		}elseif( $config['jquery'] == 'google' ){
-			echo '<!-- jquery_placeholder '.$gp_random.' -->';
-		}else{
-			if( gpOutput::$jquery_ui ){
-				array_unshift($js_files,'/include/thirdparty/jquery_ui/jquery-ui.custom.min.js');
-			}
-			array_unshift($js_files,'/include/thirdparty/js/jquery.js');
 		}
+		array_unshift($js_files,'/include/thirdparty/js/jquery.js');
 
 		if( !$config['combinejs'] || $page->head_force_inline ){
 			echo "\n<script type=\"text/javascript\">/* <![CDATA[ */";
@@ -1873,17 +1851,9 @@ class gpOutput{
 
 
 		$css_files = array();
-		if( gpOutput::$jquery_ui ){
-			if( $config['jquery'] == 'google' ){
-				echo "\n<link rel=\"stylesheet\" type=\"text/css\" href=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css\" />";
-			}else{
-				$css_files[] = '/include/thirdparty/jquery_ui/jquery-ui.custom.css';
-			}
+		if( isset($_COOKIE[gp_session_cookie]) ){
+			$css_files[] = '/include/css/additional.css';
 		}
-
-
-
-		$css_files[] = '/include/css/additional.css';
 
 		if( isset($page->css_user) && is_array($page->css_user) ){
 			$css_files = array_merge($css_files,$page->css_user);
@@ -1942,16 +1912,10 @@ class gpOutput{
 		//add jquery if needed
 		$replacement = '';
 		if( strpos($buffer,'<script') !== false ){
-			if( $config['jquery'] == 'google' ){
-				$replacement = "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js\"></script>";
-				if( gpOutput::$jquery_ui ){
-					$replacement .= "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js\"></script>";
-				}
+			if( isset($config['jquery']) && $config['jquery'] == 'google' ){
+				$replacement = "\n<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js\" type=\"text/javascript\"></script>";
 			}else{
 				$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/js/jquery.js')."\"></script>";
-				if( gpOutput::$jquery_ui ){
-					$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/jquery_ui/jquery-ui.custom.min.js')."\"></script>";
-				}
 			}
 		}
 		$buffer = str_replace('<!-- jquery_placeholder '.$gp_random.' -->',$replacement,$buffer);

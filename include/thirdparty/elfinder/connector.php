@@ -52,6 +52,7 @@ $opts = array(
 			'tmbPath'		=> $dataDir.'/data/_elthumbs',
 			'tmbURL'		=> common::GetDir('data/_elthumbs'),
 			'separator'		=> '/',
+			'tmbBgColor'	=> 'transparent',
 		),
 	),
 	'bind' => array(
@@ -62,6 +63,3 @@ $opts = array(
 // run elFinder
 $connector = new elFinderConnector(new elFinder($opts));
 $connector->run();
-
-
-

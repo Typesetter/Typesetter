@@ -1843,7 +1843,7 @@ class gpOutput{
 		}
 
 		//no javascript files
-		if( !count(gpOutput::$jquery_ui) && count($js_files) < 3 ){
+		if( !empty(gpOutput::$jquery_ui) && count($js_files) < 3 ){
 			echo '<!-- jquery_placeholder '.$gp_random.' -->';
 			return;
 		}
@@ -1854,11 +1854,11 @@ class gpOutput{
 		}
 
 		if( $config['jQuery_UI'] == 'local' ){
-			if( count(gpOutput::$jquery_ui) ){
-				$js_files['scripts'] = implode(',',gpOutput::$jquery_ui);
-			}else{
+			if( empty(gpOutput::$jquery_ui) ){
 				echo '<!-- jquery_ui_placeholder '.$gp_random.' -->';
 				unset($js_files['scripts']);
+			}else{
+				$js_files['scripts'] = gpOutput::$jquery_ui;
 			}
 		}
 
@@ -1884,7 +1884,7 @@ class gpOutput{
 		$css_files = array();
 
 		//only include the jquery ui css if necessary
-		if( count(gpOutput::$jquery_ui) ){
+		if( !empty(gpOutput::$jquery_ui) ){
 			$scripts = gp_combine::ScriptDependencies( gpOutput::$jquery_ui );
 			if( isset($scripts['theme']) ){
 				if( $config['jQuery_UI'] == 'google' ){
@@ -1974,10 +1974,7 @@ class gpOutput{
 			foreach($files as $file_key => $file){
 
 				if( $file_key === 'scripts' ){
-					$combine_request[] = 'scripts='.rawurlencode($file);
-					//$combine_request[] = 'etag='.gp_combine::GenerateEtag($combine_files);
-					$combine_request = implode('&amp;',$combine_request);
-					echo sprintf($html,common::GetDir('/include/combine.php',true).'?'.$combine_request,'');
+					echo gpOutput::ScriptsRequest($file);
 					continue;
 				}
 
@@ -2011,6 +2008,12 @@ class gpOutput{
 		echo sprintf($html,common::GetDir('/include/combine.php',true).'?'.$combine_request,$id);
 	}
 
+	function ScriptsRequest($scripts){
+		//$combine_request[] = 'etag='.gp_combine::GenerateEtag($combine_files);
+		$src = common::GetDir('/include/combine.php',true).'?scripts='.rawurlencode($scripts);
+		return "\n".'<script type="text/javascript" src="%s" ></script>';
+	}
+
 
 
 
@@ -2037,7 +2040,7 @@ class gpOutput{
 
 		//add jquery if needed
 		$replacement = '';
-		if( count(gpOutput::$jquery_ui) || strpos($buffer,'<script') !== false ){
+		if( !empty(gpOutput::$jquery_ui) || strpos($buffer,'<script') !== false ){
 			if( $config['jquery'] == 'google' ){
 				$replacement = "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js\"></script>";
 			}else{
@@ -2047,11 +2050,11 @@ class gpOutput{
 		$buffer = str_replace('<!-- jquery_placeholder '.$gp_random.' -->',$replacement,$buffer);
 
 		//jquery ui
-		if( count(gpOutput::$jquery_ui) ){
+		if( !empty(gpOutput::$jquery_ui) ){
 			if( $config['jQuery_UI'] == 'google' ){
 				$replacement .= "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js\"></script>";
 			}elseif( !$config['combinejs'] ){
-				$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/jquery_ui/jquery-ui.custom.min.js')."\"></script>";
+				$replacement .= gpOutput::ScriptsRequest(gpOutput::$jquery_ui);
 			}
 		}
 		$buffer = str_replace('<!-- jquery_ui_placehold '.$gp_random.' -->',$replacement,$buffer);

@@ -413,6 +413,7 @@ class gp_combine{
 
 		if( is_string($components) ){
 			$components = explode(',',strtolower($components));
+			$components = array_unique($components);
 		}
 		$scripts['theme'] = false;
 
@@ -493,6 +494,7 @@ class gp_combine{
 		$dependencies['shake'] = array('effects-core');
 		$dependencies['slide'] = array('effects-core');
 		$dependencies['transfer'] = array('effects-core');
+
 
 
 		$all_scripts = array();

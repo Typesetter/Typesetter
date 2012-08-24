@@ -1801,14 +1801,19 @@ class common{
 
 
 	/**
-	 * Add the jQuery UI javascript to the document
+	 * Add jQuery UI components to the current web page
 	 *
 	 * @static
 	 * @since 2.0b1
-	 * @param string $components A comma separated list of ui components to include. Avail since gpEasy 3.5. Defaults to 'sortable,autocomplete' for backwards compatibility
+	 * @param string $names A comma separated list of ui components to include. Avail since gpEasy 3.5. Defaults to 'sortable,autocomplete' for backwards compatibility
 	 */
-	function LoadjQueryUI( $components = 'sortable,autocomplete' ){
-		gpOutput::$jquery_ui .= ','.$components;
+	function LoadjQueryUI( $names = 'sortable,autocomplete' ){
+		gpOutput::$jquery_ui .= ','.$names.',';
+		gpOutput::$jquery_ui = str_replace(',,',',',gpOutput::$jquery_ui);
+	}
+	function LoadJS( $names ){
+		gpOutput::$scripts .= ','.$names.',';
+		gpOutput::$scripts = str_replace(',,',',',gpOutput::$scripts);
 	}
 
 
@@ -1941,7 +1946,6 @@ class common{
 				'auto_redir' => 90,	//2.5
 				'resize_images' => true,	//3.5
 				'jquery' => 'local',
-				'jQuery_UI' => 'local',
 				);
 	}
 

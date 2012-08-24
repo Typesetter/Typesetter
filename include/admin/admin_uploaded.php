@@ -28,6 +28,8 @@ class admin_uploaded{
 
 		echo '<div id="elfinder"></div>';
 
+		common::LoadjQueryUI('selectable,draggable,droppable,resizable,dialog,slider');
+
 		$this->elFinderPrep();
 	}
 

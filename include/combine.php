@@ -21,7 +21,6 @@ function combine_debug($string=''){
 }
 */
 
-
 class gp_combine{
 
 	var $last_modified = false;
@@ -60,13 +59,24 @@ class gp_combine{
 	 *
 	 * @static
 	 */
-	function GenerateEtag($array){
-
+	function GenerateEtag($files){
+		global $dataDir;
 		$modified = 0;
 		$content_length = 0;
 
-		foreach($array as $file_key => $file){
-			$full_path = gp_combine::CheckFile($file,false);
+		foreach($files as $file_key => $file){
+
+			if( $file_key === 'scripts' ){
+				$scripts = gp_combine::ScriptDependencies( $file );
+				foreach($scripts as $script){
+					if( !$script ){
+						continue;
+					}
+					$full_path = realpath($dataDir.'/include/'.$script);
+				}
+			}else{
+				$full_path = gp_combine::CheckFile($file,false);
+			}
 
 			if( $full_path === false ){
 				continue;
@@ -116,11 +126,12 @@ class gp_combine{
 
 		if( !empty($_GET['scripts']) ){
 			$scripts = gp_combine::ScriptDependencies( $_GET['scripts'] );
+
 			foreach($scripts as $script){
 				if( !$script ){
 					continue;
 				}
-				$full_path = realpath($dataDir.'/include/thirdparty/jquery_ui/'.$script);
+				$full_path = realpath($dataDir.'/include/'.$script);
 				if( $full_path === false ){
 					continue;
 				}
@@ -145,12 +156,11 @@ class gp_combine{
 			readfile($full_path);
 			echo ";\n";
 		}
-		echo '/* done */';
 	}
 
 
 	/**
-	 * Make sure the fiel is a css or js file and that it exists
+	 * Make sure the file is a css or js file and that it exists
 	 * @static
 	 */
 	function CheckFile(&$file,$css_comments = true){
@@ -409,101 +419,111 @@ class gp_combine{
 	}
 
 
-	function ScriptDependencies($components){
-
+	function ScriptDependencies( $components, $get_all = false){
+		global $config;
 		if( is_string($components) ){
 			$components = explode(',',strtolower($components));
 			$components = array_unique($components);
 		}
-		$scripts['theme'] = false;
 
-		//core
-		$scripts['ui-core'] = 'ui.core.js';
-		$scripts['mouse'] = 'ui.mouse.js';
-		$scripts['position'] = 'ui.position.js';
-		$scripts['widget'] = 'ui.widget.js';
+		//gpEasy
+		$scripts['gp-main'] = 'js/main.js';
+		$requires['gp-main'] = array('jquery');
 
-		//interactions
-		$scripts['draggable'] = 'ui.draggable.js';
-		$scripts['droppable'] = 'ui.droppable.js';
-		$scripts['resizable'] = 'ui.resizable.js';
-		$scripts['selectable'] = 'ui.selectable.js';
-		$scripts['sortable'] = 'ui.sortable.js';
+		$scripts['gp-admin'] = 'js/admin.js';
+		$requires['gp-admin'] = array('jquery','gp-main');
 
-		//widgets
-		$scripts['accordion'] = 'ui.accordion.js';
-		$scripts['autocomplete'] = 'ui.autocomplete.js';
-		$scripts['button'] = 'ui.button.js';
-		$scripts['datepicker'] = 'ui.datepicker.js';
-		$scripts['dialog'] = 'ui.dialog.js';
-		$scripts['progressbar'] = 'ui.progressbar.js';
-		$scripts['slider'] = 'ui.slider.js';
-		$scripts['tabs'] = 'ui.tabs.js';
+		//jquery
+		if( $get_all || $config['jquery'] == 'local' ){
+			$scripts['jquery'] = 'thirdparty/js/jquery.js';
+		}
 
-		//effects
-		$scripts['effects-core'] = 'effects.core.js';
-		$scripts['blind'] = 'effects.blind.js';
-		$scripts['bounce'] = 'effects.bounce.js';
-		$scripts['clip'] = 'effects.clip.js';
-		$scripts['drop'] = 'effects.drop.js';
-		$scripts['explode'] = 'effects.explode.js';
-		$scripts['fade'] = 'effects.fade.js';
-		$scripts['fold'] = 'effects.fold.js';
-		$scripts['highlight'] = 'effects.highlight.js';
-		$scripts['pulsate'] = 'effects.pulsate.js';
-		$scripts['scale'] = 'effects.scale.js';
-		$scripts['shake'] = 'effects.shake.js';
-		$scripts['slide'] = 'effects.slide.js';
-		$scripts['transfer'] = 'effects.transfer.js';
+		//jquery ui core
+		if( $get_all || $config['jquery'] != 'jquery_ui' ){
+			$requires['mouse'] = array('ui-core','widget');
+			$requires['position'] = array();
+			$requires['widget'] = array();
+
+			$scripts['theme'] = false;
+			$scripts['ui-core'] = 'thirdparty/jquery_ui/ui.core.js';
+			$scripts['mouse'] = 'thirdparty/jquery_ui/ui.mouse.js';
+			$scripts['position'] = 'thirdparty/jquery_ui/ui.position.js';
+			$scripts['widget'] = 'thirdparty/jquery_ui/ui.widget.js';
+
+			//jquery ui interactions
+			$requires['draggable'] = array('jquery', 'ui-core', 'widget', 'mouse');
+			$requires['droppable'] = array('jquery', 'ui-core', 'widget', 'mouse', 'draggable');
+			$requires['resizable'] = array('jquery', 'ui-core', 'widget', 'mouse', 'theme');
+			$requires['selectable'] = array('jquery', 'ui-core', 'widget', 'mouse', 'theme');
+			$requires['sortable'] = array('jquery', 'ui-core', 'widget', 'mouse');
+
+			$scripts['draggable'] = 'thirdparty/jquery_ui/ui.draggable.js';
+			$scripts['droppable'] = 'thirdparty/jquery_ui/ui.droppable.js';
+			$scripts['resizable'] = 'thirdparty/jquery_ui/ui.resizable.js';
+			$scripts['selectable'] = 'thirdparty/jquery_ui/ui.selectable.js';
+			$scripts['sortable'] = 'thirdparty/jquery_ui/ui.sortable.js';
 
 
-		//core
-		$dependencies['mouse'] = array('ui-core','widget');
-		$dependencies['position'] = array();
-		$dependencies['widget'] = array();
+			//jquery ui widgets
+			$requires['accordion'] = array('jquery', 'ui-core', 'widget', 'theme');
+			$requires['autocomplete'] = array('jquery', 'ui-core', 'widget', 'position', 'theme');
+			$requires['button'] = array('jquery', 'ui-core', 'widget', 'theme');
+			$requires['datepicker'] = array('jquery', 'ui-core', 'theme');
+			$requires['dialog'] = array('jquery', 'ui-core', 'widget', 'position', 'theme');
+			$requires['progressbar'] = array('jquery', 'ui-core', 'widget', 'theme');
+			$requires['slider'] = array('jquery', 'ui-core', 'widget', 'mouse', 'theme');
+			$requires['tabs'] = array('jquery', 'ui-core', 'widget', 'theme');
 
-		//interactions
-		$dependencies['draggable'] = array('ui-core', 'widget', 'mouse');
-		$dependencies['droppable'] = array('ui-core', 'widget', 'mouse', 'draggable');
-		$dependencies['resizable'] = array('ui-core', 'widget', 'mouse', 'theme');
-		$dependencies['selectable'] = array('ui-core', 'widget', 'mouse', 'theme');
-		$dependencies['sortable'] = array('ui-core', 'widget', 'mouse');
-
-		//widgets
-		$dependencies['accordion'] = array('ui-core', 'widget', 'theme');
-		$dependencies['autocomplete'] = array('ui-core', 'widget', 'position', 'theme');
-		$dependencies['button'] = array('ui-core', 'widget', 'theme');
-		$dependencies['datepicker'] = array('ui-core', 'theme');
-		$dependencies['dialog'] = array('ui-core', 'widget', 'position', 'theme');
-		$dependencies['progressbar'] = array('ui-core', 'widget', 'theme');
-		$dependencies['slider'] = array('ui-core', 'widget', 'mouse', 'theme');
-		$dependencies['tabs'] = array('ui-core', 'widget', 'theme');
+			$scripts['accordion'] = 'thirdparty/jquery_ui/ui.accordion.js';
+			$scripts['autocomplete'] = 'thirdparty/jquery_ui/ui.autocomplete.js';
+			$scripts['button'] = 'thirdparty/jquery_ui/ui.button.js';
+			$scripts['datepicker'] = 'thirdparty/jquery_ui/ui.datepicker.js';
+			$scripts['dialog'] = 'thirdparty/jquery_ui/ui.dialog.js';
+			$scripts['progressbar'] = 'thirdparty/jquery_ui/ui.progressbar.js';
+			$scripts['slider'] = 'thirdparty/jquery_ui/ui.slider.js';
+			$scripts['tabs'] = 'thirdparty/jquery_ui/ui.tabs.js';
 
 
-		//effects
-		$dependencies['blind'] = array('effects-core');
-		$dependencies['bounce'] = array('effects-core');
-		$dependencies['clip'] = array('effects-core');
-		$dependencies['drop'] = array('effects-core');
-		$dependencies['explode'] = array('effects-core');
-		$dependencies['fade'] = array('effects-core');
-		$dependencies['fold'] = array('effects-core');
-		$dependencies['highlight'] = array('effects-core');
-		$dependencies['pulsate'] = array('effects-core');
-		$dependencies['scale'] = array('effects-core');
-		$dependencies['shake'] = array('effects-core');
-		$dependencies['slide'] = array('effects-core');
-		$dependencies['transfer'] = array('effects-core');
 
+			//jquery ui effects
+			$requires['blind'] = array('jquery', 'effects-core');
+			$requires['bounce'] = array('jquery', 'effects-core');
+			$requires['clip'] = array('jquery', 'effects-core');
+			$requires['drop'] = array('jquery', 'effects-core');
+			$requires['explode'] = array('jquery', 'effects-core');
+			$requires['fade'] = array('jquery', 'effects-core');
+			$requires['fold'] = array('jquery', 'effects-core');
+			$requires['highlight'] = array('jquery', 'effects-core');
+			$requires['pulsate'] = array('jquery', 'effects-core');
+			$requires['scale'] = array('jquery', 'effects-core');
+			$requires['shake'] = array('jquery', 'effects-core');
+			$requires['slide'] = array('jquery', 'effects-core');
+			$requires['transfer'] = array('jquery', 'effects-core');
 
+			$scripts['effects-core'] = array('file'=>'thirdparty/jquery_ui/effects.core.js');
+			$scripts['blind'] = 'thirdparty/jquery_ui/effects.blind.js';
+			$scripts['bounce'] = 'thirdparty/jquery_ui/effects.bounce.js';
+			$scripts['clip'] = 'thirdparty/jquery_ui/effects.clip.js';
+			$scripts['drop'] = 'thirdparty/jquery_ui/effects.drop.js';
+			$scripts['explode'] = 'thirdparty/jquery_ui/effects.explode.js';
+			$scripts['fade'] = 'thirdparty/jquery_ui/effects.fade.js';
+			$scripts['fold'] = 'thirdparty/jquery_ui/effects.fold.js';
+			$scripts['highlight'] = 'thirdparty/jquery_ui/effects.highlight.js';
+			$scripts['pulsate'] = 'thirdparty/jquery_ui/effects.pulsate.js';
+			$scripts['scale'] = 'thirdparty/jquery_ui/effects.scale.js';
+			$scripts['shake'] = 'thirdparty/jquery_ui/effects.shake.js';
+			$scripts['slide'] = 'thirdparty/jquery_ui/effects.slide.js';
+			$scripts['transfer'] = 'thirdparty/jquery_ui/effects.transfer.js';
+		}
 
 		$all_scripts = array();
 		foreach($components as $component){
 			if( !isset($scripts[$component]) ){
+				$all_scripts[$component] = false;
 				continue;
 			}
-			if( isset($dependencies[$component]) ){
-				$all_scripts += gp_combine::ScriptDependencies($dependencies[$component]);
+			if( isset($requires[$component]) ){
+				$all_scripts += gp_combine::ScriptDependencies($requires[$component]);
 			}
 			$all_scripts[$component] = $scripts[$component];
 		}

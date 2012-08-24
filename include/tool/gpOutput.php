@@ -1649,7 +1649,6 @@ class gpOutput{
 		ob_start();
 
 		if( common::LoggedIn() ){
-			common::LoadjQueryUI();
 			common::AddColorBox();
 		}
 
@@ -1827,7 +1826,7 @@ class gpOutput{
 	function GetHead_JS(){
 		global $page, $config, $wbMessageBuffer, $gp_random;
 
-		$js_files = array();
+		$js_files = array('jquery'=>'/include/thirdparty/js/jquery.js','scripts'=>false);
 
 		//always include javascript when there are messages
 		if( $page->admin_js || !empty($page->jQueryCode) || !empty($wbMessageBuffer) || isset($_COOKIE['cookie_cmd']) ){
@@ -1842,16 +1841,26 @@ class gpOutput{
 			$js_files[] = '/include/js/admin.js';
 		}
 
-		if( !gpOutput::$jquery_ui && !count($js_files) ){
+		//no javascript files
+		if( !gpOutput::$jquery_ui && count($js_files) < 3 ){
 			echo '<!-- jquery_placeholder '.$gp_random.' -->';
 			return;
-		}elseif( $config['jquery'] == 'google' ){
+		}
+
+		if( $config['jquery'] == 'google' ){
 			echo '<!-- jquery_placeholder '.$gp_random.' -->';
-		}else{
-			if( gpOutput::$jquery_ui ){
-				array_unshift($js_files,'/include/thirdparty/jquery_ui/jquery-ui.custom.min.js');
+			unset($js_files['jquery']);
+		}
+
+		if( $config['jQuery_UI'] == 'local' ){
+			if( is_array(gpOutput::$jquery_ui) ){
+				$js_files['scripts'] = implode(',',gpOutput::$jquery_ui);
+			}elseif( gpOutput::$jquery_ui ){
+				$js_files['scripts'] = '/include/thirdparty/jquery_ui/jquery-ui.custom.min.js';
+			}else{
+				echo '<!-- jquery_ui_placeholder '.$gp_random.' -->';
+				unset($js_files['scripts']);
 			}
-			array_unshift($js_files,'/include/thirdparty/js/jquery.js');
 		}
 
 		if( !$config['combinejs'] || $page->head_force_inline ){
@@ -1860,6 +1869,7 @@ class gpOutput{
 			echo '/* ]]> */</script>';
 		}
 
+		$js_files = array_filter($js_files);//remove empty elements
 		gpOutput::CombineFiles($js_files,'js',$config['combinejs']);
 	}
 
@@ -1874,14 +1884,12 @@ class gpOutput{
 
 		$css_files = array();
 		if( gpOutput::$jquery_ui ){
-			if( $config['jquery'] == 'google' ){
+			if( $config['jQuery_UI'] == 'google' ){
 				echo "\n<link rel=\"stylesheet\" type=\"text/css\" href=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css\" />";
 			}else{
 				$css_files[] = '/include/thirdparty/jquery_ui/jquery-ui.custom.css';
 			}
 		}
-
-
 
 		$css_files[] = '/include/css/additional.css';
 
@@ -1917,6 +1925,91 @@ class gpOutput{
 	}
 
 
+	/**
+	 * Combine the files in $files into a combine.php request
+	 * If $page->head_force_inline is true, resources will be included inline in the document
+	 *
+	 * @param array $files Array of files relative to $dataDir
+	 * @param string $type The type of resource being combined
+	 * @param string $theme_stylesheet The current theme identifier
+	 *
+	 */
+	function CombineFiles($files,$type,$combine,$theme_stylesheet=false){
+		global $page;
+
+		includeFile('combine.php');
+		$files = array_unique($files);
+
+		// Force resources to be included inline
+		// CheckFile will fix the $file path if needed
+		if( $page->head_force_inline ){
+			foreach($files as $file_key => $file){
+				$full_path = gp_combine::CheckFile($file,false);
+				if( !$full_path ) continue;
+
+				echo "\n";
+				if( $type == 'css' ){
+					echo '<style type="text/css">';
+					readfile($full_path);
+					echo '</style>';
+				}else{
+					echo '<script type="text/javascript">/* <![CDATA[ */';
+					readfile($full_path);
+					echo '/* ]]> */</script>';
+				}
+			}
+			return;
+		}
+
+		$html = "\n".'<script type="text/javascript" src="%s" %s></script>';
+		if( $type == 'css' ){
+			$html = "\n".'<link rel="stylesheet" type="text/css" href="%s" %s/>';
+		}
+
+		//files not combined except for script components
+		if( !$combine || (isset($_REQUEST['no_combine']) && common::LoggedIn()) ){
+			foreach($files as $file_key => $file){
+
+				if( $file_key === 'scripts' ){
+					$combine_request[] = 'scripts='.rawurlencode($file);
+					//$combine_request[] = 'etag='.gp_combine::GenerateEtag($combine_files);
+					$combine_request = implode('&amp;',$combine_request);
+					echo sprintf($html,common::GetDir('/include/combine.php',true).'?'.$combine_request,'');
+					continue;
+				}
+
+
+				// CheckFile will fix the $file path if needed
+				$id = ( $file == $theme_stylesheet ? 'id="theme_stylesheet"' : '' );
+				gp_combine::CheckFile($file,false);
+				echo sprintf($html,common::GetDir($file,true),$id);
+			}
+			return;
+		}
+
+		//combine all files into one request
+		$combine_request = array();
+		$combine_files = array();
+		foreach($files as $file_key => $file){
+			if( $file_key === 'scripts' ){
+				$combine_request[] = 'scripts='.rawurlencode($file);
+				continue;
+			}
+			$combine_request[] = $type.'%5B%5D='.rawurlencode($file);
+			$combine_files[$file_key] = $file;
+		}
+
+		if( !count($combine_request) ) return;
+		$id = ( $type == 'css' ? 'id="theme_stylesheet"' : '' );
+
+		$combine_request[] = 'etag='.gp_combine::GenerateEtag($combine_files);
+		$combine_request = implode('&amp;',$combine_request);
+		//message('<a href="'.common::GetDir($combine_request).'">combined files: '.$type.'</a>');
+		echo sprintf($html,common::GetDir('/include/combine.php',true).'?'.$combine_request,$id);
+	}
+
+
+
 
 	/**
 	 * Complete the response by adding final content to the <head> of the document
@@ -1926,7 +2019,7 @@ class gpOutput{
 	 * @return string finalized response
 	 */
 	function BufferOut($buffer){
-		global $config,	$gp_head_content, $gp_random, $page;
+		global $config,	$gp_head_content, $gp_random;
 
 		//get just the head of the buffer to see if we need to add charset
 		$pos = strpos($buffer,'</head');
@@ -1941,21 +2034,24 @@ class gpOutput{
 
 		//add jquery if needed
 		$replacement = '';
-		if( strpos($buffer,'<script') !== false ){
+		if( gpOutput::$jquery_ui || strpos($buffer,'<script') !== false ){
 			if( $config['jquery'] == 'google' ){
 				$replacement = "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js\"></script>";
-				if( gpOutput::$jquery_ui ){
-					$replacement .= "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js\"></script>";
-				}
 			}else{
 				$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/js/jquery.js')."\"></script>";
-				if( gpOutput::$jquery_ui ){
-					$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/jquery_ui/jquery-ui.custom.min.js')."\"></script>";
-				}
 			}
 		}
 		$buffer = str_replace('<!-- jquery_placeholder '.$gp_random.' -->',$replacement,$buffer);
 
+		//jquery ui
+		if( gpOutput::$jquery_ui ){
+			if( $config['jQuery_UI'] == 'google' ){
+				$replacement .= "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js\"></script>";
+			}elseif( !$config['combinejs'] ){
+				$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/jquery_ui/jquery-ui.custom.min.js')."\"></script>";
+			}
+		}
+		$buffer = str_replace('<!-- jquery_ui_placehold '.$gp_random.' -->',$replacement,$buffer);
 
 		//if( gpdebug && count($_GET) == 0 && count($_POST) == 0 ){
 		//	$buffer .= '<h3>'.number_format(memory_get_usage()).'</h3>';
@@ -2015,82 +2111,6 @@ class gpOutput{
 		// <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
 		// <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
 		$gp_head_content = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'.$gp_head_content;
-	}
-
-
-	/**
-	 * Combine the files in $files into a combine.php request
-	 * If $page->head_force_inline is true, resources will be included inline in the document
-	 *
-	 * @param array $files Array of files relative to $dataDir
-	 * @param string $type The type of resource being combined
-	 * @param string $theme_stylesheet The current theme identifier
-	 *
-	 */
-	function CombineFiles($files,$type,$combine,$theme_stylesheet=false){
-		global $page;
-
-		includeFile('combine.php');
-
-		$html = "\n".'<script type="text/javascript" src="%s" %s></script>';
-		if( $type == 'css' ){
-			$html = "\n".'<link rel="stylesheet" type="text/css" href="%s" %s/>';
-		}
-
-		//option to prevent combining files for debugging
-		if( isset($_GET['no_combine']) && common::LoggedIn() ){
-			$combine = false;
-		}
-
-		$files = array_unique($files);
-		$combine_request = array();
-		foreach($files as $file){
-
-			$id = ( $file == $theme_stylesheet ? 'id="theme_stylesheet"' : '' );
-
-			// Force resources to be included inline
-			// CheckFile will fix the $file path if needed
-			if( $page->head_force_inline ){
-
-				$full_path = gp_combine::CheckFile($file,false);
-				if( !$full_path ) continue;
-
-				echo "\n";
-				if( $type == 'css' ){
-					echo '<style type="text/css">';
-					readfile($full_path);
-					echo '</style>';
-				}else{
-					echo '<script type="text/javascript">/* <![CDATA[ */';
-					readfile($full_path);
-					echo '/* ]]> */</script>';
-				}
-				continue;
-			}
-
-			// Combine multiple resources into one
-			// CheckFile will be
-			if( $combine ){
-				$combine_request[] = $type.'%5B%5D='.rawurlencode($file);
-				continue;
-			}
-
-			// Include resources individually
-			// CheckFile will fix the $file path if needed
-			gp_combine::CheckFile($file,false);
-			echo sprintf($html,common::GetDir($file,true),$id);
-		}
-
-		if( count($combine_request) == 0 ) return;
-
-		$id = ( $type == 'css' ? 'id="theme_stylesheet"' : '' );
-
-		$combine_request[] = 'etag='.gp_combine::GenerateEtag($files);
-		$combine_request = implode('&amp;',$combine_request);
-
-
-		//message('<a href="'.common::GetDir($combine_request).'">combined files: '.$type.'</a>');
-		echo sprintf($html,common::GetDir('/include/combine.php',true).'?'.$combine_request,$id);
 	}
 
 

@@ -467,6 +467,15 @@ class gpsession{
 		//make sure each logged in request has the gp_admin_html area
 		$gp_admin_html = '<div id="gp_admin_html"></div>';
 
+		/*load js components
+		 *
+		 * global $page not available yet.. gpOutput is
+		 *
+		common::AddColorBox();
+		array_unshift($page->head_js,'/include/js/admin.js');
+		*/
+		common::LoadjQueryUI('sortable,autocomplete');
+
 		return true;
 	}
 

@@ -39,7 +39,7 @@ class gp_combine{
 
 		if( isset($_GET['css']) ){
 			$this->Combine_CSS();
-		}elseif( isset($_GET['js']) ){
+		}elseif( isset($_GET['js']) || isset($_GET['scripts']) ){
 			$this->Combine_JS();
 		}else{
 			header('Not Implemented',true,503);
@@ -66,7 +66,7 @@ class gp_combine{
 		$modified = 0;
 		$content_length = 0;
 
-		foreach($array as $file){
+		foreach($array as $file_key => $file){
 			$full_path = gp_combine::CheckFile($file,false);
 
 			if( $full_path === false ){
@@ -106,16 +106,34 @@ class gp_combine{
 	// not minimizing javascript so we don't cache anything
 	// could potentially minimize using https://github.com/rgrove/jsmin-php/
 	function Combine_JS(){
+		global $dataDir;
 
 		header('Content-type: application/x-javascript');
 		$this->file_type = 'js';
 
-		common::jsStart();
-		//echo 'function gperr(e){if(typeof(debug)=="function"){debug(e)}else{alert(e)}};';
-		echo "\n";
+		if( count($_GET['js']) ){
+			common::jsStart();
+			echo "\n";
+		}
+
+		if( count($_GET['scripts']) ){
+			$scripts = gp_combine::ScriptDependencies( $_GET['scripts'] );
+			foreach($scripts as $script){
+				$full_path = realpath($dataDir.'/include/thirdparty/jquery_ui/components/'.$script);
+				if( $full_path === false ){
+					continue;
+				}
+
+				$this->FileStat($full_path);
+
+				readfile($full_path);
+				echo ";\n";
+			}
+		}
+
 
 		//echo "/* combined js */\n";
-		foreach($_GET[$this->file_type] as $file){
+		foreach($_GET['js'] as $file){
 			$full_path = gp_combine::CheckFile($file);
 
 			if( $full_path === false ){
@@ -123,11 +141,8 @@ class gp_combine{
 			}
 			$this->FileStat($full_path);
 
-			//wrap each file in try..catch to help prevent an error in one file from affecting another
-			//echo 'try{';
 			readfile($full_path);
-			echo ";\n"; //prevent trouble with adjacent scripts!
-			//echo '}catch(e){gperr(e)};';
+			echo ";\n";
 		}
 	}
 
@@ -392,6 +407,93 @@ class gp_combine{
 		return $modified;
 	}
 
+
+	function ScriptDependencies($components){
+
+		if( is_string($components) ){
+			$components = explode(',',strtolower($components));
+		}
+
+		//core
+		$scripts['ui-core'] = 'jquery.ui.core.min.js';
+		$scripts['effects-core'] = 'jquery.effects.core.min.js';
+
+		//effects
+		$scripts['blind'] = 'jquery.effects.blind.min.js';
+		$scripts['bounce'] = 'jquery.effects.bounce.min.js';
+		$scripts['clip'] = 'jquery.effects.clip.min.js';
+		$scripts['drop'] = 'jquery.effects.drop.min.js';
+		$scripts['explode'] = 'jquery.effects.explode.min.js';
+		$scripts['fade'] = 'jquery.effects.fade.min.js';
+		$scripts['fold'] = 'jquery.effects.fold.min.js';
+		$scripts['highlight'] = 'jquery.effects.highlight.min.js';
+		$scripts['pulsate'] = 'jquery.effects.pulsate.min.js';
+		$scripts['scale'] = 'jquery.effects.scale.min.js';
+		$scripts['shake'] = 'jquery.effects.shake.min.js';
+		$scripts['slide'] = 'jquery.effects.slide.min.js';
+		$scripts['transfer'] = 'jquery.effects.transfer.min.js';
+
+		$scripts['accordion'] = 'jquery.ui.accordion.min.js';
+		$scripts['autocomplete'] = 'jquery.ui.autocomplete.min.js';
+		$scripts['button'] = 'jquery.ui.button.min.js';
+		$scripts['datepicker'] = 'jquery.ui.datepicker.min.js';
+		$scripts['dialog'] = 'jquery.ui.dialog.min.js';
+		$scripts['draggable'] = 'jquery.ui.draggable.min.js';
+		$scripts['droppable'] = 'jquery.ui.droppable.min.js';
+		$scripts['mouse'] = 'jquery.ui.mouse.min.js';
+		$scripts['position'] = 'jquery.ui.position.min.js';
+		$scripts['progressbar'] = 'jquery.ui.progressbar.min.js';
+		$scripts['resizable'] = 'jquery.ui.resizable.min.js';
+		$scripts['selectable'] = 'jquery.ui.selectable.min.js';
+		$scripts['slider'] = 'jquery.ui.slider.min.js';
+		$scripts['sortable'] = 'jquery.ui.sortable.min.js';
+		$scripts['tabs'] = 'jquery.ui.tabs.min.js';
+		$scripts['widget'] = 'jquery.ui.widget.min.js';
+
+
+		$dependencies['blind'] = array('effects-core');
+		$dependencies['bounce'] = array('effects-core');
+		$dependencies['clip'] = array('effects-core');
+		$dependencies['drop'] = array('effects-core');
+		$dependencies['explode'] = array('effects-core');
+		$dependencies['fade'] = array('effects-core');
+		$dependencies['fold'] = array('effects-core');
+		$dependencies['highlight'] = array('effects-core');
+		$dependencies['pulsate'] = array('effects-core');
+		$dependencies['scale'] = array('effects-core');
+		$dependencies['shake'] = array('effects-core');
+		$dependencies['slide'] = array('effects-core');
+		$dependencies['transfer'] = array('effects-core');
+
+		$dependencies['accordion'] = array('ui-core', 'widget');
+		$dependencies['autocomplete'] = array('ui-core', 'widget', 'position');
+		$dependencies['button'] = array('ui-core', 'widget');
+		$dependencies['datepicker'] = array('ui-core');
+		$dependencies['dialog'] = array('resizable', 'draggable', 'button', 'position');
+		$dependencies['draggable'] = array('ui-core', 'mouse');
+		$dependencies['droppable'] = array('draggable');
+		$dependencies['mouse'] = array('widget');
+		$dependencies['position'] = array();
+		$dependencies['progressbar'] = array('widget');
+		$dependencies['resizable'] = array('ui-core', 'mouse');
+		$dependencies['selectable'] = array('ui-core', 'mouse');
+		$dependencies['slider'] = array('ui-core', 'mouse');
+		$dependencies['sortable'] = array('ui-core', 'mouse');
+		$dependencies['tabs'] = array('ui-core', 'widget');
+		$dependencies['widget'] = array();
+
+		$all_scripts = array();
+		foreach($components as $component){
+			if( !isset($scripts[$component]) ){
+				continue;
+			}
+			if( isset($dependencies[$component]) ){
+				$all_scripts += gp_combine::ScriptDependencies($dependencies[$component]);
+			}
+			$all_scripts[$component] = $scripts[$component];
+		}
+		return $all_scripts;
+	}
 }
 
 
@@ -553,7 +655,6 @@ class gp_combine_css{
 
 		return implode('/',$result);
 	}
-
 
 }
 

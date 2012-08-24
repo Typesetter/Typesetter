@@ -17,6 +17,7 @@ class admin_configuration{
 		//add examples to smtp_hosts
 		$langmessage['about_config']['smtp_hosts'] .= ' smtp.yourserver.com ; ssl://smtp.gmail.com:465';
 		$langmessage['about_config']['showgplink'] = 'Showing the "powered by" link on your site is a great way to support gpEasy CMS.';
+		$langmessage['jquery'] = 'jQuery';
 
 		$this->variables = array(
 
@@ -46,6 +47,7 @@ class admin_configuration{
 
 						'Performance'=>false,
 						'jquery'=>'',
+						'jQuery_UI'=>'',
 						'maximgarea'=>'integer',
 						'maxthumbsize'=>'integer',
 						'auto_redir'=>'integer',
@@ -194,6 +196,8 @@ class admin_configuration{
 
 		//jQuery
 		$possible['jquery'] = array('local'=>'Local','google'=>'Google CDN');
+		$possible['jQuery_UI'] = array('local'=>'Local','google'=>'Google CDN');
+
 
 		//tidy
 		if( function_exists('tidy_parse_string') ){
@@ -421,4 +425,3 @@ class admin_configuration{
 	}
 
 }
-

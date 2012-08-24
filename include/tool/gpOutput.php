@@ -59,7 +59,7 @@ $gpOutConf['Gadget']['method']			= array('gpOutput','GetGadget');
 
 class gpOutput{
 
-	public static $jquery_ui = false;
+	public static $jquery_ui = array();
 
 	/*
 	 *
@@ -1652,6 +1652,7 @@ class gpOutput{
 			common::AddColorBox();
 		}
 
+		includeFile('combine.php');
 		gpOutput::GetHead_TKD();
 		gpOutput::GetHead_CSS(); //css before js so it's available to scripts
 		gpOutput::GetHead_Lang();
@@ -1842,7 +1843,7 @@ class gpOutput{
 		}
 
 		//no javascript files
-		if( !gpOutput::$jquery_ui && count($js_files) < 3 ){
+		if( !count(gpOutput::$jquery_ui) && count($js_files) < 3 ){
 			echo '<!-- jquery_placeholder '.$gp_random.' -->';
 			return;
 		}
@@ -1853,10 +1854,8 @@ class gpOutput{
 		}
 
 		if( $config['jQuery_UI'] == 'local' ){
-			if( is_array(gpOutput::$jquery_ui) ){
+			if( count(gpOutput::$jquery_ui) ){
 				$js_files['scripts'] = implode(',',gpOutput::$jquery_ui);
-			}elseif( gpOutput::$jquery_ui ){
-				$js_files['scripts'] = '/include/thirdparty/jquery_ui/jquery-ui.custom.min.js';
 			}else{
 				echo '<!-- jquery_ui_placeholder '.$gp_random.' -->';
 				unset($js_files['scripts']);
@@ -1883,11 +1882,16 @@ class gpOutput{
 
 
 		$css_files = array();
-		if( gpOutput::$jquery_ui ){
-			if( $config['jQuery_UI'] == 'google' ){
-				echo "\n<link rel=\"stylesheet\" type=\"text/css\" href=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css\" />";
-			}else{
-				$css_files[] = '/include/thirdparty/jquery_ui/jquery-ui.custom.css';
+
+		//only include the jquery ui css if necessary
+		if( count(gpOutput::$jquery_ui) ){
+			$scripts = gp_combine::ScriptDependencies( gpOutput::$jquery_ui );
+			if( isset($scripts['theme']) ){
+				if( $config['jQuery_UI'] == 'google' ){
+					echo "\n<link rel=\"stylesheet\" type=\"text/css\" href=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css\" />";
+				}else{
+					$css_files[] = '/include/thirdparty/jquery_ui/jquery-ui.custom.css';
+				}
 			}
 		}
 
@@ -1937,7 +1941,6 @@ class gpOutput{
 	function CombineFiles($files,$type,$combine,$theme_stylesheet=false){
 		global $page;
 
-		includeFile('combine.php');
 		$files = array_unique($files);
 
 		// Force resources to be included inline
@@ -2034,7 +2037,7 @@ class gpOutput{
 
 		//add jquery if needed
 		$replacement = '';
-		if( gpOutput::$jquery_ui || strpos($buffer,'<script') !== false ){
+		if( count(gpOutput::$jquery_ui) || strpos($buffer,'<script') !== false ){
 			if( $config['jquery'] == 'google' ){
 				$replacement = "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js\"></script>";
 			}else{
@@ -2044,7 +2047,7 @@ class gpOutput{
 		$buffer = str_replace('<!-- jquery_placeholder '.$gp_random.' -->',$replacement,$buffer);
 
 		//jquery ui
-		if( gpOutput::$jquery_ui ){
+		if( count(gpOutput::$jquery_ui) ){
 			if( $config['jQuery_UI'] == 'google' ){
 				$replacement .= "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js\"></script>";
 			}elseif( !$config['combinejs'] ){

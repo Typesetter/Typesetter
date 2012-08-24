@@ -116,9 +116,12 @@ class gp_combine{
 			echo "\n";
 		}
 
-		if( count($_GET['scripts']) ){
+		if( !empty($_GET['scripts']) ){
 			$scripts = gp_combine::ScriptDependencies( $_GET['scripts'] );
 			foreach($scripts as $script){
+				if( !$script ){
+					continue;
+				}
 				$full_path = realpath($dataDir.'/include/thirdparty/jquery_ui/components/'.$script);
 				if( $full_path === false ){
 					continue;
@@ -144,6 +147,7 @@ class gp_combine{
 			readfile($full_path);
 			echo ";\n";
 		}
+		echo '/* done */';
 	}
 
 
@@ -413,44 +417,72 @@ class gp_combine{
 		if( is_string($components) ){
 			$components = explode(',',strtolower($components));
 		}
+		$scripts['theme'] = false;
 
 		//core
-		$scripts['ui-core'] = 'jquery.ui.core.min.js';
-		$scripts['effects-core'] = 'jquery.effects.core.min.js';
+		$scripts['ui-core'] = 'ui.core.js';
+		$scripts['mouse'] = 'ui.mouse.js';
+		$scripts['position'] = 'ui.position.js';
+		$scripts['widget'] = 'ui.widget.js';
+
+		//interactions
+		$scripts['draggable'] = 'ui.draggable.js';
+		$scripts['droppable'] = 'ui.droppable.js';
+		$scripts['resizable'] = 'ui.resizable.js';
+		$scripts['selectable'] = 'ui.selectable.js';
+		$scripts['sortable'] = 'ui.sortable.js';
+
+		//widgets
+		$scripts['accordion'] = 'ui.accordion.js';
+		$scripts['autocomplete'] = 'ui.autocomplete.js';
+		$scripts['button'] = 'ui.button.js';
+		$scripts['datepicker'] = 'ui.datepicker.js';
+		$scripts['dialog'] = 'ui.dialog.js';
+		$scripts['progressbar'] = 'ui.progressbar.js';
+		$scripts['slider'] = 'ui.slider.js';
+		$scripts['tabs'] = 'ui.tabs.js';
 
 		//effects
-		$scripts['blind'] = 'jquery.effects.blind.min.js';
-		$scripts['bounce'] = 'jquery.effects.bounce.min.js';
-		$scripts['clip'] = 'jquery.effects.clip.min.js';
-		$scripts['drop'] = 'jquery.effects.drop.min.js';
-		$scripts['explode'] = 'jquery.effects.explode.min.js';
-		$scripts['fade'] = 'jquery.effects.fade.min.js';
-		$scripts['fold'] = 'jquery.effects.fold.min.js';
-		$scripts['highlight'] = 'jquery.effects.highlight.min.js';
-		$scripts['pulsate'] = 'jquery.effects.pulsate.min.js';
-		$scripts['scale'] = 'jquery.effects.scale.min.js';
-		$scripts['shake'] = 'jquery.effects.shake.min.js';
-		$scripts['slide'] = 'jquery.effects.slide.min.js';
-		$scripts['transfer'] = 'jquery.effects.transfer.min.js';
-
-		$scripts['accordion'] = 'jquery.ui.accordion.min.js';
-		$scripts['autocomplete'] = 'jquery.ui.autocomplete.min.js';
-		$scripts['button'] = 'jquery.ui.button.min.js';
-		$scripts['datepicker'] = 'jquery.ui.datepicker.min.js';
-		$scripts['dialog'] = 'jquery.ui.dialog.min.js';
-		$scripts['draggable'] = 'jquery.ui.draggable.min.js';
-		$scripts['droppable'] = 'jquery.ui.droppable.min.js';
-		$scripts['mouse'] = 'jquery.ui.mouse.min.js';
-		$scripts['position'] = 'jquery.ui.position.min.js';
-		$scripts['progressbar'] = 'jquery.ui.progressbar.min.js';
-		$scripts['resizable'] = 'jquery.ui.resizable.min.js';
-		$scripts['selectable'] = 'jquery.ui.selectable.min.js';
-		$scripts['slider'] = 'jquery.ui.slider.min.js';
-		$scripts['sortable'] = 'jquery.ui.sortable.min.js';
-		$scripts['tabs'] = 'jquery.ui.tabs.min.js';
-		$scripts['widget'] = 'jquery.ui.widget.min.js';
+		$scripts['effects-core'] = 'effects.core.js';
+		$scripts['blind'] = 'effects.blind.js';
+		$scripts['bounce'] = 'effects.bounce.js';
+		$scripts['clip'] = 'effects.clip.js';
+		$scripts['drop'] = 'effects.drop.js';
+		$scripts['explode'] = 'effects.explode.js';
+		$scripts['fade'] = 'effects.fade.js';
+		$scripts['fold'] = 'effects.fold.js';
+		$scripts['highlight'] = 'effects.highlight.js';
+		$scripts['pulsate'] = 'effects.pulsate.js';
+		$scripts['scale'] = 'effects.scale.js';
+		$scripts['shake'] = 'effects.shake.js';
+		$scripts['slide'] = 'effects.slide.js';
+		$scripts['transfer'] = 'effects.transfer.js';
 
 
+		//core
+		$dependencies['mouse'] = array('ui-core','widget');
+		$dependencies['position'] = array();
+		$dependencies['widget'] = array();
+
+		//interactions
+		$dependencies['draggable'] = array('ui-core', 'widget', 'mouse');
+		$dependencies['droppable'] = array('ui-core', 'widget', 'mouse', 'draggable');
+		$dependencies['resizable'] = array('ui-core', 'widget', 'mouse', 'theme');
+		$dependencies['selectable'] = array('ui-core', 'widget', 'mouse', 'theme');
+		$dependencies['sortable'] = array('ui-core', 'widget', 'mouse');
+
+		//widgets
+		$dependencies['accordion'] = array('ui-core', 'widget', 'theme');
+		$dependencies['autocomplete'] = array('ui-core', 'widget', 'position', 'theme');
+		$dependencies['button'] = array('ui-core', 'widget', 'theme');
+		$dependencies['datepicker'] = array('ui-core', 'theme');
+		$dependencies['dialog'] = array('ui-core', 'widget', 'position', 'theme');
+		$dependencies['progressbar'] = array('ui-core', 'widget', 'theme');
+		$dependencies['slider'] = array('ui-core', 'widget', 'mouse', 'theme');
+		$dependencies['tabs'] = array('ui-core', 'widget', 'theme');
+
+
+		//effects
 		$dependencies['blind'] = array('effects-core');
 		$dependencies['bounce'] = array('effects-core');
 		$dependencies['clip'] = array('effects-core');
@@ -465,22 +497,6 @@ class gp_combine{
 		$dependencies['slide'] = array('effects-core');
 		$dependencies['transfer'] = array('effects-core');
 
-		$dependencies['accordion'] = array('ui-core', 'widget');
-		$dependencies['autocomplete'] = array('ui-core', 'widget', 'position');
-		$dependencies['button'] = array('ui-core', 'widget');
-		$dependencies['datepicker'] = array('ui-core');
-		$dependencies['dialog'] = array('resizable', 'draggable', 'button', 'position');
-		$dependencies['draggable'] = array('ui-core', 'mouse');
-		$dependencies['droppable'] = array('draggable');
-		$dependencies['mouse'] = array('widget');
-		$dependencies['position'] = array();
-		$dependencies['progressbar'] = array('widget');
-		$dependencies['resizable'] = array('ui-core', 'mouse');
-		$dependencies['selectable'] = array('ui-core', 'mouse');
-		$dependencies['slider'] = array('ui-core', 'mouse');
-		$dependencies['sortable'] = array('ui-core', 'mouse');
-		$dependencies['tabs'] = array('ui-core', 'widget');
-		$dependencies['widget'] = array();
 
 		$all_scripts = array();
 		foreach($components as $component){

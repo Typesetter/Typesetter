@@ -1805,9 +1805,9 @@ class common{
 	 *
 	 * @static
 	 * @since 2.0b1
-	 * @param string $components A comma separated list of ui components to include. Avail since gpEasy 3.5
+	 * @param string $components A comma separated list of ui components to include. Avail since gpEasy 3.5. Defaults to 'sortable,autocomplete' for backwards compatibility
 	 */
-	function LoadjQueryUI( $components = false ){
+	function LoadjQueryUI( $components = 'sortable,autocomplete' ){
 
 		//all components
 		if( !$components || gpOutput::$jquery_ui === true ){

@@ -24,7 +24,6 @@ function combine_debug($string=''){
 
 class gp_combine{
 
-	var $file_type;
 	var $last_modified = false;
 	var $content_length = 0;
 
@@ -109,7 +108,6 @@ class gp_combine{
 		global $dataDir;
 
 		header('Content-type: application/x-javascript');
-		$this->file_type = 'js';
 
 		if( count($_GET['js']) ){
 			common::jsStart();
@@ -122,7 +120,7 @@ class gp_combine{
 				if( !$script ){
 					continue;
 				}
-				$full_path = realpath($dataDir.'/include/thirdparty/jquery_ui/components/'.$script);
+				$full_path = realpath($dataDir.'/include/thirdparty/jquery_ui/'.$script);
 				if( $full_path === false ){
 					continue;
 				}
@@ -231,10 +229,9 @@ class gp_combine{
 	function Combine_CSS(){
 
 		header('Content-type: text/css');
-		$this->file_type = 'css';
 		$this->CSSDataGet();
 
-		$this->GetFiles($_GET[$this->file_type]);
+		$this->GetFiles($_GET['css']);
 
 		$this->CleanCache();
 		$this->SaveCSSData();
@@ -673,4 +670,3 @@ class gp_combine_css{
 	}
 
 }
-

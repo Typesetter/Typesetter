@@ -138,7 +138,6 @@ class gpAjax{
 
 		$scripts = array();
 		$scripts[] = '/include/js/inline_edit/inline_editing.js';
-		//$scripts[] = '/include/thirdparty/jquery_ui/jquery-ui.custom.min.js';
 
 
 		$type = 'text';
@@ -239,5 +238,3 @@ class gpAjax{
 	}
 
 }
-
-

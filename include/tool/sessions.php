@@ -468,13 +468,10 @@ class gpsession{
 		$gp_admin_html = '<div id="gp_admin_html"></div>';
 
 		/*load js components
-		 *
 		 * global $page not available yet.. gpOutput is
-		 *
 		common::AddColorBox();
-		array_unshift($page->head_js,'/include/js/admin.js');
 		*/
-		common::LoadjQueryUI('sortable,autocomplete');
+		common::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css');
 
 		return true;
 	}

@@ -1801,19 +1801,18 @@ class common{
 
 
 	/**
-	 * Add jQuery UI components to the current web page
+	 * Add js and css components to the current web page
 	 *
 	 * @static
 	 * @since 2.0b1
-	 * @param string $names A comma separated list of ui components to include. Avail since gpEasy 3.5. Defaults to 'sortable,autocomplete' for backwards compatibility
+	 * @param string $names A comma separated list of ui components to include. Avail since gpEasy 3.5.
 	 */
-	function LoadjQueryUI( $names = 'sortable,autocomplete' ){
-		gpOutput::$jquery_ui .= ','.$names.',';
-		gpOutput::$jquery_ui = str_replace(',,',',',gpOutput::$jquery_ui);
+	function LoadComponents( $names = ''){
+		gpOutput::$components .= ','.$names.',';
+		gpOutput::$components = str_replace(',,',',',gpOutput::$components);
 	}
-	function LoadJS( $names ){
-		gpOutput::$scripts .= ','.$names.',';
-		gpOutput::$scripts = str_replace(',,',',',gpOutput::$scripts);
+	function LoadjQueryUI( $names = 'sortable,autocomplete' ){
+		common::LoadComponents( $names );
 	}
 
 

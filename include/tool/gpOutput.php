@@ -59,8 +59,7 @@ $gpOutConf['Gadget']['method']			= array('gpOutput','GetGadget');
 
 class gpOutput{
 
-	public static $jquery_ui = '';
-	public static $scripts = '';
+	public static $components = '';
 
 	/*
 	 *
@@ -1644,7 +1643,7 @@ class gpOutput{
 		echo '<!-- get_head_placeholder '.$gp_random.' -->';
 	}
 	function HeadContent(){
-		global $config, $page, $gp_head_content;
+		global $config, $page, $gp_head_content, $wbMessageBuffer;
 		$gp_head_content = '';
 
 		ob_start();
@@ -1653,11 +1652,30 @@ class gpOutput{
 			common::AddColorBox();
 		}
 
+		//always include javascript when there are messages
+		if( $page->admin_js || !empty($page->jQueryCode) || !empty($wbMessageBuffer) || isset($_COOKIE['cookie_cmd']) ){
+			common::LoadComponents('gp-main');
+		}
+		//defaults
+		common::LoadComponents('jquery,gp-additional');
+
+		//get css and js info
+		$css = $js = array();
 		includeFile('combine.php');
+		$scripts = gp_combine::ScriptInfo( gpOutput::$componentsgpOutput::$components );
+		foreach($scripts as $key => $script){
+			if( isset($script['type']) && $script['type'] == 'css' ){
+				$css[$key] = $script;
+			}else{
+				$js[$key] = $script;
+			}
+		}
+
+
 		gpOutput::GetHead_TKD();
-		gpOutput::GetHead_CSS(); //css before js so it's available to scripts
+		gpOutput::GetHead_CSS($css); //css before js so it's available to scripts
 		gpOutput::GetHead_Lang();
-		gpOutput::GetHead_JS();
+		gpOutput::GetHead_JS($js);
 		gpOutput::GetHead_InlineJS();
 
 		//gadget info
@@ -1825,27 +1843,15 @@ class gpOutput{
 	 * Prepare and output the Javascript for the current page
 	 * @static
 	 */
-	function GetHead_JS(){
-		global $page, $config, $wbMessageBuffer, $gp_random;
+	function GetHead_JS($scripts){
+		global $page, $config, $gp_random;
 
-		$js_files = array('jquery'=>'/include/thirdparty/js/jquery.js','scripts'=>false);
 		$placeholder = '<!-- jquery_placeholder '.$gp_random.' -->';
 
-		//always include javascript when there are messages
-		if( $page->admin_js || !empty($page->jQueryCode) || !empty($wbMessageBuffer) || isset($_COOKIE['cookie_cmd']) ){
-			common::LoadJS('gp-main');
-		}
+		$keys_before = array_keys($scripts);
 
-		if( isset($page->head_js) && is_array($page->head_js) ){
-			$js_files = array_merge($js_files,$page->head_js);
-		}
-
-		if( common::LoggedIn() ){
-			common::LoadJS('gp-admin');
-		}
-
-		//no javascript files
-		if( empty(gpOutput::$scripts) && empty(gpOutput::$jquery_ui) && count($js_files) < 3 ){
+		//just jQuery
+		if( count($scripts) < 2 ){
 			echo $placeholder;
 			return;
 		}
@@ -1853,16 +1859,22 @@ class gpOutput{
 		//remote jquery
 		if( $config['jquery'] != 'local' ){
 			echo $placeholder;
-			$js_files['jquery'] = false;
+			unset($scripts['jquery']);
 		}
 
 		//jquery ui
-		if( $config['jquery'] == 'jquery_ui' && !empty(gpOutput::$jquery_ui) ){
-			echo "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js\"></script>";
-		}else{
-			common::LoadJS(gpOutput::$jquery_ui);
+		if( $config['jquery'] == 'jquery_ui' ){
+			$has_jquery_ui = false;
+			foreach($scripts as $key => $script){
+				if( isset($script['package']) && $script['package'] == 'jquery_ui' ){
+					$has_jquery_ui = true;
+					unset($scripts[$key]);
+				}
+			}
+			if( $has_jquery_ui ){
+				echo "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js\"></script>";
+			}
 		}
-
 
 		if( !$config['combinejs'] || $page->head_force_inline ){
 			echo "\n<script type=\"text/javascript\">/* <![CDATA[ */";
@@ -1870,8 +1882,12 @@ class gpOutput{
 			echo '/* ]]> */</script>';
 		}
 
-		$js_files['scripts'] = gpOutput::$scripts;
-
+		//create list of files to include
+		$js_files = array();
+		foreach($scripts as $key => $script){
+			$js_files[$key] = '/include/'.$script['file'];
+		}
+		$js_files += $page->head_js; //other js files
 		gpOutput::CombineFiles($js_files,'js',$config['combinejs']);
 	}
 
@@ -1880,30 +1896,22 @@ class gpOutput{
 	 * Prepare and output the css for the current page
 	 * @static
 	 */
-	function GetHead_CSS(){
+	function GetHead_CSS($scripts){
 		global $page, $config;
 
-
-		$css_files = array();
-
-		//only include the jquery ui css if necessary
-		if( !empty(gpOutput::$jquery_ui) ){
-			$scripts = gp_combine::ScriptDependencies( gpOutput::$jquery_ui, true );
-			if( isset($scripts['theme']) ){
-				if( $config['jquery'] == 'jquery_ui' ){
-					echo "\n<link rel=\"stylesheet\" type=\"text/css\" href=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css\" />";
-				}else{
-					$css_files[] = '/include/thirdparty/jquery_ui/jquery-ui.custom.css';
-				}
-			}
+		//remote jquery ui
+		if( $config['jquery'] == 'jquery_ui' && isset($scripts['ui-theme']) ){
+			echo "\n<link rel=\"stylesheet\" type=\"text/css\" href=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css\" />";
+			unset($scripts['ui-theme']);
 		}
 
-		$css_files[] = '/include/css/additional.css';
+
+		//create list of files to include
+		$css_files = array();
 
 		if( isset($page->css_user) && is_array($page->css_user) ){
 			$css_files = array_merge($css_files,$page->css_user);
 		}
-
 
 		//after other styles, so themes can overwrite defaults
 		$theme_stylesheet = false;
@@ -1916,16 +1924,14 @@ class gpOutput{
 			$css_files[] = '/data/_layouts/'.$page->gpLayout.'/custom.css';
 		}
 
-
-		//important admin css that shouldn't be overwritten by themes
-		if( common::LoggedIn() ){
-			$css_files[] = '/include/css/admin.css';
-		}
-
-
 		//styles that need to override admin.css should be added to $page->css_admin;
 		if( isset($page->css_admin) && is_array($page->css_admin) ){
 			$css_files = array_merge($css_files,$page->css_admin);
+		}
+
+		//css using Load
+		foreach($scripts as $key => $script){
+			$css_files[$key] = '/include/'.$script['file'];
 		}
 
 		gpOutput::CombineFiles($css_files,'css',$config['combinecss'],$theme_stylesheet);
@@ -1977,10 +1983,6 @@ class gpOutput{
 		//files not combined except for script components
 		if( !$combine || (isset($_REQUEST['no_combine']) && common::LoggedIn()) ){
 			foreach($files as $file_key => $file){
-				if( $file_key === 'scripts' ){
-					echo gpOutput::ScriptsRequest($file);
-					continue;
-				}
 				// CheckFile will fix the $file path if needed
 				$id = ( $file == $theme_stylesheet ? ' id="theme_stylesheet"' : '' );
 				gp_combine::CheckFile($file,false);
@@ -1989,41 +1991,31 @@ class gpOutput{
 			return;
 		}
 
-		//combine all files into one request
-		if( isset($files['jquery']) && $files['jquery'] ){
-			$files['scripts'] .= ',jquery';
-			unset($files['jquery']);
-		}
-
+		//create combine request
 		$combine_request = array();
-		foreach($files as $file_key => $file){
-			if( $file_key === 'scripts' ){
-				$combine_request[] = 'scripts='.rawurlencode($file);
-				continue;
+		$scripts = array();
+		$etag = gp_combine::GenerateEtag($files);
+		foreach( $files as $file_key => $file){
+			if( !is_numeric($file_key) ){
+				$scripts[] = $file_key;
+				unset($files[$file_key]);
 			}
+		}
+		if( count($scripts) ){
+			$combine_request[] = 'scripts='.rawurlencode(implode(',',$scripts));
+		}
+		foreach($files as $file_key => $file){
 			$combine_request[] = $type.'%5B%5D='.rawurlencode($file);
 		}
 
 		if( !count($combine_request) ) return;
 		$id = ( $type == 'css' ? ' id="theme_stylesheet"' : '' );
 
-		$combine_request[] = 'etag='.gp_combine::GenerateEtag($files);
+		$combine_request[] = 'etag='.$etag;
 		$combine_request = implode('&amp;',$combine_request);
 		//message('<a href="'.common::GetDir($combine_request).'">combined files: '.$type.'</a>');
 		echo sprintf($html,common::GetDir('/include/combine.php',true).'?'.$combine_request,$id);
 	}
-
-	/**
-	 * Create a combine.php request for
-	 *
-	 */
-	function ScriptsRequest($scripts){
-		$files['scripts'] = $scripts;
-		$src = common::GetDir('/include/combine.php',true).'?scripts='.rawurlencode($scripts).'&amp;etag='.gp_combine::GenerateEtag( $files );
-		return "\n".'<script type="text/javascript" src="'.$src.'"></script>';
-	}
-
-
 
 
 	/**
@@ -2049,7 +2041,7 @@ class gpOutput{
 
 		//add jquery if needed
 		$replacement = '';
-		if( !empty(gpOutput::$scripts) || !empty(gpOutput::$jquery_ui) || strpos($buffer,'<script') !== false ){
+		if( strpos($buffer,'<script') !== false ){
 			if( $config['jquery'] != 'local' ){
 				$replacement = "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js\"></script>";
 			}else{

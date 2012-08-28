@@ -228,7 +228,7 @@ class admin_tools{
 
 			//toolbar
 			echo '<div class="toolbar cf">';
-				echo '<a href="#" class="toggle_panel" name="toggle_panel" ></a>';
+				echo '<a class="toggle_panel" name="toggle_panel" ></a>';
 				echo common::Link('Admin_Main','','','class="icon_admin_home"');
 				echo '<span class="extra admin_arrow_out"></span>';
 			echo '</div>';
@@ -545,9 +545,9 @@ class admin_tools{
 			echo '<div id="ckeditor_top"></div>';
 
 			echo '<div id="ckeditor_controls">';
-			echo '<a href="#" name="ck_save" class="ckeditor_control">'.$langmessage['save'].'</a>';
-			echo '<a href="#" name="ck_close" class="ckeditor_control">'.$langmessage['Close'].'</a>';
-			echo '<a href="#" name="ck_save" rel="ck_close" class="ckeditor_control">'.$langmessage['Save & Close'].'</a>';
+			echo '<a name="ck_save" class="ckeditor_control">'.$langmessage['save'].'</a>';
+			echo '<a name="ck_close" class="ckeditor_control">'.$langmessage['Close'].'</a>';
+			echo '<a name="ck_save" rel="ck_close" class="ckeditor_control">'.$langmessage['Save & Close'].'</a>';
 			echo '</div>';
 
 			echo '<div id="ckeditor_bottom"></div>';
@@ -570,7 +570,7 @@ class admin_tools{
 
 		//frequently used
 		echo '<li class="expand_child">';
-			echo '<a href="#">';
+			echo '<a>';
 			echo $langmessage['frequently_used'];
 			echo '</a>';
 			if( $in_panel ){
@@ -1137,7 +1137,7 @@ class admin_tools{
 				if( $addon_permissions ){
 					echo common::Link('Admin_Addons',$addonName,'cmd=show&addon='.$addon);
 				}else{
-					echo '<a href="#">'.$addonName.'</a>';
+					echo '<a>'.$addonName.'</a>';
 				}
 				echo $sublinks;
 

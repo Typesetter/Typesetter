@@ -1662,7 +1662,7 @@ class gpOutput{
 		//get css and js info
 		$css = $js = array();
 		includeFile('combine.php');
-		$scripts = gp_combine::ScriptInfo( gpOutput::$componentsgpOutput::$components );
+		$scripts = gp_combine::ScriptInfo( gpOutput::$components );
 		foreach($scripts as $key => $script){
 			if( isset($script['type']) && $script['type'] == 'css' ){
 				$css[$key] = $script;

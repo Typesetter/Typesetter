@@ -703,7 +703,9 @@ class gpOutput{
 		//add all gadgets if $GetAllGadgets is true and the GetAllGadgets handler isn't overwritten
 		if( $GetAllGadgets && !isset($layout_info['handlers']['GetAllGadgets']) ){
 			foreach($config['gadgets'] as $gadget => $temp){
-				$temp_info[$gadget] = gpOutput::GetgpOutInfo($gadget);
+				if( isset($temp['addon']) ){
+					$temp_info[$gadget] = gpOutput::GetgpOutInfo($gadget);
+				}
 			}
 		}
 
@@ -1888,6 +1890,7 @@ class gpOutput{
 			$js_files[$key] = '/include/'.$script['file'];
 		}
 		$js_files += $page->head_js; //other js files
+
 		gpOutput::CombineFiles($js_files,'js',$config['combinejs']);
 	}
 
@@ -1990,6 +1993,15 @@ class gpOutput{
 			}
 			return;
 		}
+
+		//create combine request
+		$id = ( $type == 'css' ? ' id="theme_stylesheet"' : '' );
+		$combined_file = gp_combine::GenerateFile($files,$type);
+		if( $combined_file ){
+			echo sprintf($html,common::GetDir($combined_file,true),$id);
+			return;
+		}
+
 
 		//create combine request
 		$combine_request = array();

@@ -3,8 +3,9 @@ defined('is_running') or die('Not an entry point...');
 
 includeFile('tool/recaptcha.php');
 
-global $contact_message_sent;
+global $contact_message_sent, $message_send_attempt;
 $contact_message_sent = false;
+$message_send_attempt = false;
 
 class special_contact extends special_contact_gadget{
 	var $sent = false;
@@ -26,7 +27,7 @@ class special_contact_gadget{
 	var $sent = false;
 
 	function special_contact_gadget(){
-		global $page,$langmessage,$config,$contact_message_sent;
+		global $page,$langmessage,$config,$contact_message_sent,$message_send_attempt;
 
 		$this->sent = $contact_message_sent;
 
@@ -44,9 +45,12 @@ class special_contact_gadget{
 		$cmd = common::GetCommand();
 		switch($cmd){
 			case 'gp_send_message':
-				if( !$this->sent && $this->SendMessage() ){
-					$this->sent = $contact_message_sent = true;
-					break;
+				if( !$message_send_attempt  ){
+					$message_send_attempt  = true;
+					if( !$this->sent && $this->SendMessage() ){
+						$this->sent = $contact_message_sent = true;
+						break;
+					}
 				}
 			default:
 			break;

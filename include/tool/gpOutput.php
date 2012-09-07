@@ -1823,9 +1823,7 @@ class gpOutput{
 	function GetHead_Lang(){
 		global $langmessage, $GP_LANG_VALUES;
 
-		if( common::LoggedIn() ){
-			$GP_LANG_VALUES += array('cancel'=>'ca','update'=>'up','caption'=>'cp');
-		}elseif( !count($GP_LANG_VALUES) ){
+		if( !count($GP_LANG_VALUES) ){
 			return;
 		}
 

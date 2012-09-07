@@ -379,7 +379,7 @@ class gpsession{
 	 *
 	 */
 	function start($session_id){
-		global $langmessage, $dataDir,$gp_random,$gp_admin_html;
+		global $langmessage, $dataDir,$gp_random,$gp_admin_html,$GP_LANG_VALUES;
 
 		//get the session file
 		$sessions = gpsession::GetSessionIds();
@@ -471,6 +471,7 @@ class gpsession{
 		 * global $page not available yet.. gpOutput is
 		common::AddColorBox();
 		*/
+		$GP_LANG_VALUES += array('cancel'=>'ca','update'=>'up','caption'=>'cp');
 		common::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css');
 
 		return true;

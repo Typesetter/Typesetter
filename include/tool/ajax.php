@@ -187,7 +187,7 @@ class gpAjax{
 		}
 
 		//replace resized images with their originals
-		if( is_array($section_data['resized_imgs']) && count($section_data['resized_imgs']) ){
+		if( isset($section_data['resized_imgs']) && is_array($section_data['resized_imgs']) && count($section_data['resized_imgs']) ){
 			includeFile('tool/editing.php');
 			$section_data['content'] = gp_edit::RestoreImages($section_data['content'],$section_data['resized_imgs']);
 		}

@@ -1,12 +1,6 @@
 
-
 $(function(){
-
-	if( typeof(gpLayouts) != 'undefined' ){
-		$('body').on('AdminReady',function(){
-			LayoutSetup();
-		});
-	}
+	LayoutSetup();
 
 	$('.expand_row').on('mouseenter',function(){
 		$(this).addClass('hover');
@@ -132,6 +126,10 @@ $(function(){
  *
  */
 function LayoutSetup(){
+	if( typeof(gpLayouts) == 'undefined' ){
+		return;
+	}
+
 
 	//disable editable areas, there could be conflicts with the layout toolbar and content toolbars
 	$('a.ExtraEditLink').detach();

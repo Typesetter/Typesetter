@@ -51,12 +51,11 @@ class gp_combine{
 			}
 
 			if( count($css) ){
-				$_GET['css'] = array_merge($css,$_GET['css']);
+				$_GET['css'] = array_merge($css,(array)$_GET['css']);
 			}else{
-				$_GET['js'] = array_merge($js,$_GET['js']);
+				$_GET['js'] = array_merge($js,(array)$_GET['js']);
 			}
 		}
-
 
 		if( isset($_GET['css']) ){
 			$this->Combine_CSS();
@@ -99,6 +98,168 @@ class gp_combine{
 		return common::GenEtag( $modified, $content_length );
 	}
 
+	/**
+	 * Generate a file with all of the combined content
+	 *
+	 */
+	function GenerateFile($files,$type){
+		global $dataDir;
+
+		//get etag
+		$full_paths = array();
+		foreach($files as $file){
+			$full_path = gp_combine::CheckFile($file,false);
+
+			if( $full_path === false ){
+				continue;
+			}
+			gp_combine::FileStat_Static($full_path,$modified,$content_length);
+			$full_paths[$file] = $full_path;
+		}
+
+
+		//check css imports
+		if( $type == 'css' ){
+			$had_imported = false;
+			$import_data = array();
+			$imported_file = $dataDir.'/data/_cache/import_info.php';
+			if( file_exists($imported_file) ){
+				include_once($imported_file);
+			}
+			foreach($full_paths as $file => $full_path){
+				if( !isset($import_data[$full_path]) ){
+					continue;
+				}
+				$had_imported = true;
+				foreach($import_data[$full_path] as $imported_full){
+					gp_combine::FileStat_Static($imported_full,$modified,$content_length);
+				}
+				unset($import_data[$full_path]);
+			}
+		}
+
+
+		//check to see if file exists
+		$etag = count($files).'.'.common::GenEtag( $modified, $content_length );
+		$cache_relative = '/data/_cache/combined_'.$etag.'.'.$type;
+		$cache_file = $dataDir.$cache_relative;
+		if( file_exists($cache_file) ){
+			return $cache_relative;
+		}
+
+
+		//create file
+		if( $type == 'js' ){
+			ob_start();
+			common::jsStart();
+
+			foreach($full_paths as $full_path){
+				readfile($full_path);
+				echo ";\n";
+			}
+			$combined_content = ob_get_clean();
+
+		}else{
+			//echo '<h2>New file:'.$cache_relative.'</h2>';
+			includeFile('thirdparty/cssmin-v3.0.1.php');
+
+
+			//add any @import first
+			$combined_content = $css_content = '';
+			$current_file = false;
+			$new_imported = array();
+
+			foreach($full_paths as $file => $full_path){
+				$tokens = self::GetTokens($file,$full_path);
+
+				foreach($tokens as $token){
+					if( get_class($token) == 'CssAtImportToken' ){
+						if( $token->Imported ){
+							$new_imported[$full_path][] = $token->Imported;
+							continue;
+						}
+						$combined_content .= (string)$token;
+						continue;
+					}
+
+					if( $file !== $current_file ){
+						$css_content .= "\n/* ".$file." */\n";
+						$current_file = $file;
+					}
+					$css_content .= (string)$token;
+				}
+			}
+			$combined_content .= $css_content;
+
+			//save imported data
+			if( count($new_imported) || $had_imported ){
+				echo '<h3>imported data</h3>';
+				if( count($new_imported) ){
+					$import_data = $new_imported + $import_data;
+				}
+				gpFiles::SaveArray($imported_file,'import_data',$import_data);
+			}
+		}
+
+		if( !gpFiles::Save($cache_file,$combined_content) ){
+			return false;
+		}
+
+
+		self::CleanCacheNew();
+		return $cache_relative;
+	}
+
+
+	function GetTokens($file,$full_path){
+		$content = file_get_contents($full_path);
+		$filters = array(
+			'UrlPrefix' => array( 'BaseUrl' => $file, 'BasePath' => dirname($full_path) )
+			);
+		$minifier = new CssMinifier(null, $filters);
+		return $minifier->minifyTokens($content);
+	}
+
+
+	function CleanCacheNew(){
+		global $dataDir;
+		$dir = $dataDir.'/data/_cache';
+		$files = scandir($dir);
+		$times = array();
+		$count = 0;
+		foreach($files as $file){
+			if( $file == '.' || $file == '..' || strpos($file,'.php') !== false ){
+				continue;
+			}
+			$full_path = $dir.'/'.$file;
+			$time = filemtime($full_path);
+			$diff = time() - $time;
+			//if relatively new, don't delete it
+			if( $diff < 604800 ){
+				$count++;
+				continue;
+			}
+			//if old, delete it
+			if( $diff > 2592000 ){
+				unlink($full_path);
+				continue;
+			}
+			$times[$file] = $time;
+		}
+
+		//reduce further if needed till we have less than 100 files
+		asort($times);
+		foreach($times as $file => $time){
+			if( $count < 100 ){
+				return;
+			}
+			$full_path = $dir.'/'.$file;
+			unlink($full_path);
+			echo '<h4>unlink: '.$full_path.'</h4>';
+			$count--;
+		}
+	}
+
 
 	// !cannot use php sessions, session_start() will remove $_SERVER['HTTP_IF_NONE_MATCH']
 	function CheckLastModified(){
@@ -134,7 +295,6 @@ class gp_combine{
 
 		if( count($_GET['js']) ){
 			common::jsStart();
-			echo "\n";
 		}
 
 		//echo "/* combined js */\n";
@@ -291,6 +451,9 @@ class gp_combine{
 			if( $cache_info === false ){
 				continue;
 			}
+			echo '/* ';
+			echo showArray($cache_info);
+			echo "*/\n\n";
 
 			//prevent circular @import references
 			if( isset($files_used[$file]) ){
@@ -437,6 +600,15 @@ class gp_combine{
 		$scripts['gp-additional'] = array(
 										'file' => 'css/additional.css',
 										'type' => 'css');
+
+		//colorbox
+		$scripts['colorbox'] = array(	'file' => 'thirdparty/colorbox139/colorbox/jquery.colorbox.js',
+										'requires' => array('gp-main','colorbox-css'));
+
+
+		$scripts['colorbox-css'] = array(	'file' => 'thirdparty/colorbox139/'.$config['colorbox_style'].'/colorbox.css',
+											'type' => 'css');
+
 
 		//jquery
 		$scripts['jquery'] = array(

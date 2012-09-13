@@ -1848,16 +1848,10 @@ class common{
 		}
 		$init = true;
 
-		$style = $config['colorbox_style']; //'example1';
-
-		$page->admin_js = true;
-
-		$page->css_user[] = '/include/thirdparty/colorbox139/'.$style.'/colorbox.css';
-		$page->head_js[] = '/include/thirdparty/colorbox139/colorbox/jquery.colorbox.js';
-
-		//language values
 		$list = array('previous'=>$langmessage['Previous'],'next'=>$langmessage['Next'],'close'=>$langmessage['Close'],'caption'=>$langmessage['caption'],'current'=>sprintf($langmessage['Image_of'],'{current}','{total}')); //'Start Slideshow'=>'slideshowStart','Stop Slideshow'=>'slideshowStop'
 		$page->head_script .= "\nvar colorbox_lang = ".common::JsonEncode($list).';';
+
+		common::LoadComponents( 'colorbox' );
 	}
 
 	/**
@@ -2528,7 +2522,8 @@ class common{
 				.',gpRem=true'
 				.',isadmin=false'
 				.',gpBase="'.rtrim(common::GetDir(''),'/').'"'
-				.',post_nonce="";';
+				.',post_nonce="";'
+				."\n";
 	}
 
 

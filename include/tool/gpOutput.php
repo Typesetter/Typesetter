@@ -1935,6 +1935,8 @@ class gpOutput{
 			$css_files[$key] = '/include/'.$script['file'];
 		}
 
+		$css_files = array_reverse($css_files);
+
 		gpOutput::CombineFiles($css_files,'css',$config['combinecss'],$theme_stylesheet);
 	}
 
@@ -2230,7 +2232,7 @@ class gpOutput{
 				if( common::LoggedIn() ){
 					echo common::Link($page->title,$langmessage['logout'],'cmd=logout',' name="creq" rel="nofollow" ');
 				}else{
-					echo common::Link('Admin_Main',$langmessage['login'],'file='.$page->title,' rel="nofollow" name="login"');
+					echo common::Link('Admin_Main',$langmessage['login'],'file='.rawurlencode($page->title),' rel="nofollow" name="login"');
 				}
 			echo '</span>';
 		}

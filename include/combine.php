@@ -160,8 +160,7 @@ class gp_combine{
 			$combined_content = ob_get_clean();
 
 		}else{
-			//echo '<h2>New file:'.$cache_relative.'</h2>';
-			includeFile('thirdparty/cssmin-v3.0.1.php');
+			includeFile('thirdparty/cssmin.php');
 
 
 			//add any @import first
@@ -193,7 +192,6 @@ class gp_combine{
 
 			//save imported data
 			if( count($new_imported) || $had_imported ){
-				echo '<h3>imported data</h3>';
 				if( count($new_imported) ){
 					$import_data = $new_imported + $import_data;
 				}
@@ -785,7 +783,7 @@ class gp_combine_css{
 	function gp_combine_css($file,$import=false){
 		global $dataDir;
 
-		includeFile('thirdparty/cssmin-v3.0.1.php');
+		includeFile('thirdparty/cssmin.php');
 
 		$full_path = $dataDir.$file;
 		if( $import ){

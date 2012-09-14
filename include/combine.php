@@ -53,7 +53,6 @@ class gp_combine{
 			return $cache_relative;
 		}
 
-
 		//create file
 		if( $type == 'js' ){
 			ob_start();
@@ -77,22 +76,38 @@ class gp_combine{
 			foreach($full_paths as $file => $full_path){
 				$tokens = self::GetTokens($file,$full_path);
 
+				$open_tokens = 0;
 				foreach($tokens as $token){
-					if( get_class($token) == 'CssAtImportToken' ){
-						if( $token->Imported ){
-							$new_imported[$full_path][] = $token->Imported;
-							continue;
-						}
-						$combined_content .= (string)$token;
-						continue;
-					}
+					$token_class = get_class($token);
+					switch($token_class){
+						case 'CssAtImportToken':
+							if( $token->Imported ){
+								$new_imported[$full_path][] = $token->Imported;
+								continue;
+							}
+							$combined_content .= (string)$token;
+						continue 2;
 
+						case 'CssRulesetStartToken':
+							$open_tokens++;
+						break;
+
+						case 'CssRulesetEndToken':
+							$open_tokens--;
+						break;
+					}
 					if( $file !== $current_file ){
 						$css_content .= "\n/* ".$file." */\n";
 						$current_file = $file;
 					}
 					$css_content .= (string)$token;
 				}
+
+				//close open tokens
+				for($i=0; $i<$open_tokens; $i++){
+					$css_content .= '}';
+				}
+
 			}
 			$combined_content .= $css_content;
 

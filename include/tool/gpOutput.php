@@ -359,9 +359,9 @@ class gpOutput{
 			}
 			$innerLinks .= '<div class="output_area_link">';
 			if( !$empty_container ){
-				$innerLinks .= ' '.common::Link('Admin_Theme_Content','Remove','cmd=rm&layout='.urlencode($page->gpLayout).'&param='.$param,' name="creq"');
+				$innerLinks .= ' '.common::Link('Admin_Theme_Content',$langmessage['remove'],'cmd=rm&layout='.urlencode($page->gpLayout).'&param='.$param,' name="creq"');
 			}
-			$innerLinks .= ' '.common::Link('Admin_Theme_Content','Insert','cmd=insert&layout='.urlencode($page->gpLayout).'&param='.$param,' name="gpabox"');
+			$innerLinks .= ' '.common::Link('Admin_Theme_Content',$langmessage['insert'],'cmd=insert&layout='.urlencode($page->gpLayout).'&param='.$param,' name="gpabox"');
 			$innerLinks .= '</div>';
 			$innerLinks .= '</div>';
 
@@ -534,31 +534,6 @@ class gpOutput{
 		$attr .= ' class="ExtraEditLink nodisplay" id="ExtraEditLink'.$index.'"';
 		return common::Link($href,$label,$query,$attr);
 	}
-
-	/**
-	 * Arrange areas without clicking the "Edit This Layout" link
-	 * Not used
-	function ArrangeLinks($info){
-		global $page, $gp_current_container, $GP_ARRANGE;
-
-		if( !$gp_current_container || !$GP_ARRANGE || !isset($info['gpOutCmd']) || !gpOutput::ShowEditLink('Admin_Theme_Content') ){
-			return;
-		}
-
-		return;
-		$param = $gp_current_container.'|'.$info['gpOutCmd'];
-		$links = '';
-
-		$links .= common::Link('Admin_Theme_Content','Insert','cmd=insert&layout='.urlencode($page->gpLayout).'&param='.$param,' name="gpabox" class="nodisplay"');
-
-		if( !empty($info) ){
-			$links .= common::Link('Admin_Theme_Content','Remove aaa','cmd=rm&layout='.urlencode($page->gpLayout).'&param='.$param,' name="creq"  class="nodisplay"');
-		}
-
-		return $links;
-	}
-	*/
-
 
 
 	/**
@@ -1997,36 +1972,7 @@ class gpOutput{
 		//create combine request
 		$id = ( $type == 'css' ? ' id="theme_stylesheet"' : '' );
 		$combined_file = gp_combine::GenerateFile($files,$type);
-		if( $combined_file ){
-			echo sprintf($html,common::GetDir($combined_file,true),$id);
-			return;
-		}
-
-
-		//create combine request
-		$combine_request = array();
-		$scripts = array();
-		$etag = gp_combine::GenerateEtag($files);
-		foreach( $files as $file_key => $file){
-			if( !is_numeric($file_key) ){
-				$scripts[] = $file_key;
-				unset($files[$file_key]);
-			}
-		}
-		if( count($scripts) ){
-			$combine_request[] = 'scripts='.rawurlencode(implode(',',$scripts));
-		}
-		foreach($files as $file_key => $file){
-			$combine_request[] = $type.'%5B%5D='.rawurlencode($file);
-		}
-
-		if( !count($combine_request) ) return;
-		$id = ( $type == 'css' ? ' id="theme_stylesheet"' : '' );
-
-		$combine_request[] = 'etag='.$etag;
-		$combine_request = implode('&amp;',$combine_request);
-		//message('<a href="'.common::GetDir($combine_request).'">combined files: '.$type.'</a>');
-		echo sprintf($html,common::GetDir('/include/combine.php',true).'?'.$combine_request,$id);
+		echo sprintf($html,common::GetDir($combined_file,true),$id);
 	}
 
 

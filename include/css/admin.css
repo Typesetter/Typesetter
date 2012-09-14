@@ -1658,14 +1658,7 @@ body #gp_admin_html .layout_links a.selected{
 	background:#f5f5f5;
 	}
 
-.gp_no{
-	color:#990000;
-	font-size:20px;
+
+.ui-selectable-helper{
+	z-index:10000 !important;
 	}
-
-.gp_yes{
-	color:#009900;
-	font-size:30px;
-	}
-
-

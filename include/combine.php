@@ -80,6 +80,14 @@ class gp_combine{
 				foreach($tokens as $token){
 					$token_class = get_class($token);
 					switch($token_class){
+						//case 'CssAtPageStartToken':
+						//case 'CssAtPageDeclarationToken':
+						//case 'CssAtPageEndToken':
+						case 'CssAtFontFaceStartToken':
+						case 'CssAtFontFaceDeclarationToken':
+						case 'CssAtFontFaceEndToken':
+							$combined_content .= (string)$token;
+						continue 2;
 						case 'CssAtImportToken':
 							if( $token->Imported ){
 								$new_imported[$full_path][] = $token->Imported;

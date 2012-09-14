@@ -17,11 +17,11 @@ class CssUrlPrefixMinifierFilter extends aCssMinifierFilter {
 		foreach($tokens as $key => $token){
 
 			switch(get_class($token)){
+				case 'CssAtFontFaceDeclarationToken':
+					$this->FixUrl($token);
+				break;
 				case 'CssRulesetDeclarationToken':
-					$result = $this->FixUrl($token);
-					if( $result ){
-						$token = $result;
-					}
+					$this->FixUrl($token);
 				break;
 				case 'CssAtImportToken':
 					$this->Import($token);
@@ -66,27 +66,30 @@ class CssUrlPrefixMinifierFilter extends aCssMinifierFilter {
 		$this->tokens = array_merge($tokens,$this->tokens);
 	}
 
-	function FixUrl($token){
-		$url = $token->Value;
-		$pos = strpos($url,'url(');
-		if( !is_numeric($pos) ){
-			return false;
-		}
-		$pos += 4;
-		$pos2 = strpos($url,')',$pos);
-		if( !is_numeric($pos2) ){
-			return false;
-		}
-		$url = substr($url,$pos,$pos2-$pos);
-		$url = trim($url);
-		$url = trim($url,'"\'');
-		$replacement = $this->FixPath($url);
+	function FixUrl(&$token){
+		$offset = 0;
+		do{
+			$url = $token->Value;
+			$pos = strpos($url,'url(',$offset);
+			if( !is_numeric($pos) ){
+				return;
+			}
+			$pos += 4;
+			$pos2 = strpos($url,')',$pos);
+			if( !is_numeric($pos2) ){
+				return;
+			}
+			$url = substr($url,$pos,$pos2-$pos);
+			$url = trim($url);
+			$url = trim($url,'"\'');
+			$replacement = $this->FixPath($url);
 
-		$replacement = '"'.$replacement.'"';
-		$token->Value = substr_replace($token->Value,$replacement,$pos,$pos2-$pos);
-
-		return $token;
+			$replacement = '"'.$replacement.'"';
+			$token->Value = substr_replace($token->Value,$replacement,$pos,$pos2-$pos);
+			$offset = $pos2;
+		}while( true );
 	}
+
 
 	function FixPath($path){
 

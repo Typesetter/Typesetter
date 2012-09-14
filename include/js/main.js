@@ -135,6 +135,9 @@ $(function(){
 			if( typeof(ajaxOptions.error) == 'function' ){
 				return;
 			}
+			if( thrownError == '' ){
+				return;
+			}
 
 			if( typeof(debugjs) !== "undefined" ){
 
@@ -152,8 +155,9 @@ $(function(){
 					debug.data = ajaxOptions.data.substr(0,100);
 				}
 
-
 				LOGO( debug );
+				//LOGO( XMLHttpRequest );
+				//LOGO( event );
 				alert('Error detected. See bottom of page for details');
 				return;
 			}

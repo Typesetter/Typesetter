@@ -4,6 +4,7 @@
 class CssUrlPrefixMinifierFilter extends aCssMinifierFilter {
 
 	var $import_tokens = array();
+	var $imported_tokens = array();
 	var $tokens = array();
 
 	/**
@@ -30,7 +31,7 @@ class CssUrlPrefixMinifierFilter extends aCssMinifierFilter {
 			$this->tokens[] = $token;
 		}
 
-		$tokens = array_merge($this->import_tokens,$this->tokens);
+		$tokens = array_merge($this->import_tokens,$this->imported_tokens,$this->tokens);
 	}
 
 
@@ -63,7 +64,7 @@ class CssUrlPrefixMinifierFilter extends aCssMinifierFilter {
 		$tokens = $minifier->minifyTokens($content);
 		$token->Imported = $file_path;
 		$this->import_tokens[] = $token;
-		$this->tokens = array_merge($tokens,$this->tokens);
+		$this->imported_tokens = array_merge($this->imported_tokens,$tokens);
 	}
 
 	function FixUrl(&$token){

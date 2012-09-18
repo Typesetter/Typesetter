@@ -123,7 +123,7 @@ abstract class aCssParserPlugin
 	 *
 	 * @var string
 	 */
-	protected $buffer = "";
+	var $buffer = "";
 	/**
 	 * Constructor.
 	 *
@@ -1382,7 +1382,7 @@ class CssParser
 	 *
 	 * @var string
 	 */
-	private $buffer = "";
+	var $buffer = "";
 	/**
 	 * {@link aCssParserPlugin Plugins}.
 	 *

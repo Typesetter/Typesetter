@@ -91,9 +91,9 @@ class gp_combine{
 						case 'CssAtImportToken':
 							if( $token->Imported ){
 								$new_imported[$full_path][] = $token->Imported;
-								continue;
+							}else{
+								$combined_content .= (string)$token;
 							}
-							$combined_content .= (string)$token;
 						continue 2;
 
 						case 'CssRulesetStartToken':

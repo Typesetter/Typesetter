@@ -351,7 +351,7 @@ class gpOutput{
 			$class .= ' output_area';
 
 			$innerLinks .= '<div class="gplinks nodisplay">';
-			$innerLinks .= common::Link('Admin_Theme_Content',$param,'cmd=drag&layout='.urlencode($page->gpLayout).'&dragging='.urlencode($param).'&to=%s','name="creq" class="dragdroplink nodisplay"'); //drag-drop link
+			$innerLinks .= common::Link('Admin_Theme_Content/'.$page->gpLayout,$param,'cmd=drag&dragging='.urlencode($param).'&to=%s','name="creq" class="dragdroplink nodisplay"'); //drag-drop link
 			if( !$empty_container ){
 				$innerLinks .= '<div class="output_area_label">';
 				$innerLinks .= ' '.gpOutput::GpOutLabel($info['gpOutCmd']);
@@ -359,9 +359,9 @@ class gpOutput{
 			}
 			$innerLinks .= '<div class="output_area_link">';
 			if( !$empty_container ){
-				$innerLinks .= ' '.common::Link('Admin_Theme_Content',$langmessage['remove'],'cmd=rm&layout='.urlencode($page->gpLayout).'&param='.$param,' name="creq"');
+				$innerLinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['remove'],'cmd=rm&param='.$param,' name="creq"');
 			}
-			$innerLinks .= ' '.common::Link('Admin_Theme_Content',$langmessage['insert'],'cmd=insert&layout='.urlencode($page->gpLayout).'&param='.$param,' name="gpabox"');
+			$innerLinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['insert'],'cmd=insert&param='.$param,' name="gpabox"');
 			$innerLinks .= '</div>';
 			$innerLinks .= '</div>';
 

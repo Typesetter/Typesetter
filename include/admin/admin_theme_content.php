@@ -40,7 +40,7 @@ includeFile('admin/admin_addon_install.php');
 
 class admin_theme_content extends admin_addon_install{
 
-	var $curr_layout;
+	var $curr_layout = false;
 	var $LayoutArray;
 
 
@@ -66,8 +66,6 @@ class admin_theme_content extends admin_addon_install{
 		$page->css_admin[] = '/include/css/theme_content.css';
 		$page->css_admin[] = '/include/css/addons.css';
 
-		$this->curr_layout = $config['gpLayout'];
-		$this->SetLayoutArray();
 		$cmd = common::GetCommand();
 
 
@@ -79,6 +77,14 @@ class admin_theme_content extends admin_addon_install{
 				return;
 			}
 		}
+
+		if( isset($_REQUEST['layout']) && isset($gpLayouts[$_REQUEST['layout']]) ){
+			$this->curr_layout = $_REQUEST['layout'];
+		}else{
+			$this->curr_layout = $config['gpLayout'];
+		}
+		$this->SetLayoutArray();
+
 
 		switch($cmd){
 
@@ -142,13 +148,8 @@ class admin_theme_content extends admin_addon_install{
 
 
 
-			//editing layouts without a layout id
-			case 'restore_drag':
-			case 'addcontent':
-			case 'drag':
-			case 'editlayout': //linked from install page
-			case 'rm':
-			case 'insert':
+			//editing layouts without a layout id as part of slug
+			case 'editlayout'://linked from install page without a layout id
 			case 'details':
 				if( $this->EditLayout($this->curr_layout,$cmd) ){
 					return;
@@ -258,6 +259,7 @@ class admin_theme_content extends admin_addon_install{
 		$page->show_admin_content = false;
 
 		$this->curr_layout = $layout;
+		$this->SetLayoutArray();
 		$page->SetTheme($layout);
 
 		$this->LoremIpsum();
@@ -293,11 +295,10 @@ class admin_theme_content extends admin_addon_install{
 				$this->LayoutDetails();
 			break;
 
-			case 'restore_drag':
 			case 'restore':
 				$this->Restore($layout);
 			break;
-			case 'drag':
+			case 'drag_area':
 				$this->Drag();
 			break;
 
@@ -311,7 +312,7 @@ class admin_theme_content extends admin_addon_install{
 			break;
 
 			//remove
-			case 'rm':
+			case 'rm_area':
 				$this->RemoveArea();
 			break;
 
@@ -1978,7 +1979,7 @@ class admin_theme_content extends admin_addon_install{
 		//insert
 		$where = array_search($to_gpOutCmd,$container);
 		if( ($where === null) || ($where === false) ){
-			message($langmessage['OOPS']. '(a3)');
+			message($langmessage['OOPS']. ' (Destination Container Not Found)');
 			return false;
 		}
 		$where += $offset;
@@ -3138,7 +3139,7 @@ class admin_theme_content extends admin_addon_install{
 
 		//delete the folder
 		$dir = $dataDir.'/data/_themes/'.$theme_folder_name;
-		gpFiles::RmAll($dir);
+		$this->RmDir($dir);
 
 		//remove from settings
 		unset($config['themes'][$theme_folder_name]);

@@ -14,8 +14,7 @@ class gp_combine{
 		//get etag
 		$full_paths = array();
 		foreach($files as $file){
-			$full_path = gp_combine::CheckFile($file,false);
-
+			$full_path = gp_combine::CheckFile($file);
 			if( $full_path === false ){
 				continue;
 			}
@@ -191,18 +190,12 @@ class gp_combine{
 	 * Make sure the file is a css or js file and that it exists
 	 * @static
 	 */
-	function CheckFile(&$file,$css_comments = true){
-		global $dataDir, $dirPrefix, $dirPrefixEncoded;
+	function CheckFile(&$file){
+		global $dataDir;
+		$comment_start = '<!--';
+		$comment_end = '-->';
 
 		$file = gp_combine::TrimQuery($file);
-
-		if( $css_comments ){
-			$comment_start = '/*';
-			$comment_end = '*/';
-		}else{
-			$comment_start = '<!--';
-			$comment_end = '-->';
-		}
 
 		if( empty($file) ){
 			return false;

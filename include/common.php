@@ -1811,9 +1811,6 @@ class common{
 		gpOutput::$components .= ','.$names.',';
 		gpOutput::$components = str_replace(',,',',',gpOutput::$components);
 	}
-	function LoadjQueryUI( $names = 'sortable,autocomplete' ){
-		common::LoadComponents( $names );
-	}
 
 
 	/**

@@ -683,7 +683,7 @@ class admin_tools{
 
 		admin_tools::CheckStatus($update_status);
 		admin_tools::ScheduledTasks($update_status);
-		$gp_admin_html = ob_get_clean();
+		$gp_admin_html .= ob_get_clean();
 	}
 
 	function CheckStatus($status){
@@ -1277,4 +1277,3 @@ class admin_tools{
 	}
 
 }
-

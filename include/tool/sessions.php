@@ -379,7 +379,7 @@ class gpsession{
 	 *
 	 */
 	function start($session_id){
-		global $langmessage, $dataDir,$gp_random,$gp_admin_html,$GP_LANG_VALUES;
+		global $langmessage, $dataDir,$gp_random,$GP_LANG_VALUES;
 
 		//get the session file
 		$sessions = gpsession::GetSessionIds();
@@ -464,9 +464,6 @@ class gpsession{
 		//make sure forms have admin nonce
 		ob_start(array('gpsession','AdminBuffer'));
 
-		//make sure each logged in request has the gp_admin_html area
-		$gp_admin_html = '<div id="gp_admin_html"></div>';
-
 		/*load js components
 		 * global $page not available yet.. gpOutput is
 		common::AddColorBox();
@@ -524,20 +521,10 @@ class gpsession{
 		}
 
 		//add $gp_admin_html to the document
-		if( strlen($gp_admin_html) ){
-			$pos = false;
-			$pos_admin_html = strpos($buffer,'id="gp_admin_html"');
-			$pos_body = strpos($buffer,'<body');
-			if( $pos_admin_html !== false ){
-				$pos = $pos_admin_html;
-			}elseif( $pos_body !== false ){
-				$gp_admin_html = '<div id="gp_admin_html" class="a2">'.$gp_admin_html.'</div>';
-				$pos = $pos_body;
-			}
-			if( $pos !== false ){
-				$pos = strpos($buffer,'>',$pos);
-				$buffer = substr_replace($buffer,$gp_admin_html,$pos+1,0);
-			}
+		$pos_body = strpos($buffer,'<body');
+		if( $pos_body ){
+			$pos = strpos($buffer,'>',$pos_body)+1;
+			$buffer = substr_replace($buffer,'<div id="gp_admin_html">'.$gp_admin_html.gpOutput::$editlinks.'</div>',$pos,0);
 		}
 
 		return $buffer;
@@ -965,5 +952,3 @@ class gpsession{
 	}
 
 }
-
-

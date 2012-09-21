@@ -60,6 +60,7 @@ $gpOutConf['Gadget']['method']			= array('gpOutput','GetGadget');
 class gpOutput{
 
 	public static $components = '';
+	public static $editlinks = '';
 
 	/*
 	 *
@@ -103,7 +104,7 @@ class gpOutput{
 	 * @static
 	 */
 	function BodyAsHTML(){
-		global $page,$gp_admin_html;
+		global $page;
 
 		$page->head_script .= 'var gp_bodyashtml = true;';
 
@@ -116,14 +117,7 @@ class gpOutput{
 		echo '<body class="gpbody">';
 		GetMessages();
 
-		if( $page->pagetype == 'admin_display' ){
-			$gp_admin_html = ''; // we don't want two gp_admin_html areas
-			echo '<div id="gp_admin_html">';
-			$page->GetGpxContent();
-			echo '</div>';
-		}else{
-			$page->GetGpxContent();
-		}
+		$page->GetGpxContent();
 
 		echo '</body>';
 		echo '</html>';
@@ -371,6 +365,7 @@ class gpOutput{
 
 		//editable links only .. other editable_areas are handled by their output functions
 		if( $permission ){
+			ob_start();
 			$menu_marker = false;
 			if( isset($info['link']) ){
 				$label = $langmessage[$info['link']];
@@ -408,7 +403,7 @@ class gpOutput{
 				echo '<input type="hidden" value="'.htmlspecialchars($GP_MENU_CLASS).'" />';
 				echo '</div>';
 			}
-
+			gpOutput::$editlinks .= ob_get_clean();
 		}
 
 
@@ -1100,12 +1095,14 @@ class gpOutput{
 		$wrap = gpOutput::ShowEditLink('Admin_Extra');
 		if( $wrap ){
 
+			ob_start();
 			$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Extra',$langmessage['edit'],'cmd=edit&file='.$name,' title="'.$name.'" name="inline_edit_generic" ');
 			echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 			echo $edit_link;
 			echo common::Link('Admin_Extra',$langmessage['theme_content'],'',' class="nodisplay"');
 			//echo gpOutput::ArrangeLinks($info);
 			echo '</span>';
+			gpOutput::$editlinks .= ob_get_clean();
 
 			echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
 			echo $extra_content;
@@ -1940,7 +1937,7 @@ class gpOutput{
 				echo '<script type="text/javascript">/* <![CDATA[ */';
 			}
 			foreach($files as $file_key => $file){
-				$full_path = gp_combine::CheckFile($file,false);
+				$full_path = gp_combine::CheckFile($file);
 				if( !$full_path ) continue;
 				readfile($full_path);
 				echo ";\n";
@@ -1963,7 +1960,7 @@ class gpOutput{
 			foreach($files as $file_key => $file){
 				// CheckFile will fix the $file path if needed
 				$id = ( $file == $theme_stylesheet ? ' id="theme_stylesheet"' : '' );
-				gp_combine::CheckFile($file,false);
+				gp_combine::CheckFile($file);
 				echo sprintf($html,common::GetDir($file,true),$id);
 			}
 			return;

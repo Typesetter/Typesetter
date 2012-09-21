@@ -688,17 +688,18 @@ class editing_page extends display{
 				$link = gpOutput::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$section_key,' title="'.$title_attr.'" name="'.$link_name.'" rel="'.$link_rel.'"');
 
 				//section control links
-				$content .= '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
-				$content .= $link;
+				ob_start();
+				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
+				echo $link;
 
 				if( $section_num > 0 ){
-					$content .= common::Link($this->title,$langmessage['move_up'],'cmd=move_up&section='.$section_key,' name="creq"','move_up'.$section_key);
+					echo common::Link($this->title,$langmessage['move_up'],'cmd=move_up&section='.$section_key,' name="creq"','move_up'.$section_key);
 				}
 
-				$content .= common::Link($this->title,$langmessage['New Section'],'cmd=new_section&section='.$section_key,' name="gpabox"');
+				echo common::Link($this->title,$langmessage['New Section'],'cmd=new_section&section='.$section_key,' name="gpabox"');
 
 				$q = 'cmd=add_section&copy=copy&section='.$section_key.'&last_mod='.rawurlencode($this->fileModTime);
-				$content .= common::Link($this->title,$langmessage['Copy'],$q,' name="creq"');
+				echo common::Link($this->title,$langmessage['Copy'],$q,' name="creq"');
 
 
 				//remove section link
@@ -708,9 +709,11 @@ class editing_page extends display{
 						$title_attr .= "\n\n".$langmessage['rm_section_confirm_deleting'];
 					}
 
-					$content .= common::Link($this->title,$langmessage['Remove Section'],'cmd=rm_section&section='.$section_key.'&total='.count($this->file_sections),' title="'.$title_attr.'" name="creq" class="gpconfirm"');
+					echo common::Link($this->title,$langmessage['Remove Section'],'cmd=rm_section&section='.$section_key.'&total='.count($this->file_sections),' title="'.$title_attr.'" name="creq" class="gpconfirm"');
 				}
-				$content .= '</span>';
+				echo '</span>';
+				gpOutput::$editlinks .= ob_get_clean();
+
 				$content .= '<div class="editable_area GPAREA filetype-'.$type.'" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
 			}else{
 				$content .= '<div class="GPAREA filetype-'.$type.'">';

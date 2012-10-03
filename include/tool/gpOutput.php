@@ -345,7 +345,7 @@ class gpOutput{
 			$class .= ' output_area';
 
 			$innerLinks .= '<div class="gplinks nodisplay">';
-			$innerLinks .= common::Link('Admin_Theme_Content/'.$page->gpLayout,$param,'cmd=drag&dragging='.urlencode($param).'&to=%s','name="creq" class="dragdroplink nodisplay"'); //drag-drop link
+			$innerLinks .= common::Link('Admin_Theme_Content/'.$page->gpLayout,$param,'cmd=drag_area&dragging='.urlencode($param).'&to=%s','name="creq" class="dragdroplink nodisplay"'); //drag-drop link
 			if( !$empty_container ){
 				$innerLinks .= '<div class="output_area_label">';
 				$innerLinks .= ' '.gpOutput::GpOutLabel($info['gpOutCmd']);

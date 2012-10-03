@@ -137,6 +137,13 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'Nov'         : 'Nov',
 			'Dec'         : 'Dez',
 
+			/******************************** sort variants ********************************/
+            'sortname'          : 'nach Name', 
+            'sortkind'          : 'nach freundlicher', 
+            'sortsize'          : 'nach Größe',
+            'sortdate'          : 'nach Datum',
+            'sortFoldersFirst'  : 'Ordner zuerst',
+
 			/********************************** messages **********************************/
 			'confirmReq'      : 'Bestätigung Benötigt',
 			'confirmRm'       : 'Sollen die Dateien gelöscht werden?<br/>Dies kann nicht rückgängig gemacht werden!',
@@ -177,7 +184,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'help'            : 'Hilfe',
 			'webfm'           : 'Web Datei Manager',
 			'ver'             : 'Version',
-			'protocol'        : 'Protokol Version',
+			'protocolver'     : 'Protokol Version',
 			'homepage'        : 'Projekt Website',
 			'docs'            : 'Dokumentation',
 			'github'          : 'Forke uns auf Github',

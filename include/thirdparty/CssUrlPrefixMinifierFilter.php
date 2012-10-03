@@ -60,6 +60,8 @@ class CssUrlPrefixMinifierFilter extends aCssMinifierFilter {
 		$filters = array(
 					'UrlPrefix' => array( 'BaseUrl' => $token->Import, 'BasePath' => dirname($file_path) )
 					);
+
+
 		$minifier = new CssMinifier(null, $filters);
 		$tokens = $minifier->minifyTokens($content);
 		$token->Imported = $file_path;
@@ -94,7 +96,6 @@ class CssUrlPrefixMinifierFilter extends aCssMinifierFilter {
 
 	function FixPath($path){
 
-
 		//relative url
 		if( $path{0} == '/' ){
 			return $path;
@@ -105,8 +106,8 @@ class CssUrlPrefixMinifierFilter extends aCssMinifierFilter {
 		}
 
 		//use a relative path so sub.domain.com and domain.com/sub both work
-		// ../.. for /data/_cache/
-		$replacement = '../..'.dirname($this->configuration['BaseUrl']).'/'.$path;
+		$replacement = dirname($this->configuration['BaseUrl']).'/'.$path;
+
 		return $this->ReduceUrl($replacement);
 
 	}

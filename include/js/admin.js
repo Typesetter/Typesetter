@@ -301,7 +301,9 @@ $(function(){
 				}
 
 			});
-			$.fn.colorbox.close();
+			if( typeof($.fn.colorbox) !== 'undefined' ){
+				$.fn.colorbox.close();
+			}
 		}
 		gplinks.admin_box_close = gpinputs.admin_box_close = $gp.CloseAdminBox;
 

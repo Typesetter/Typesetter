@@ -1,8 +1,10 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-error_reporting(E_ALL);
-set_error_handler('showError');
+if( function_exists('debug_backtrace') ){
+	error_reporting(E_ALL);
+	set_error_handler('showError');
+}
 if( !defined('gpdebug') || !gpdebug ){
 	@ini_set('display_errors',0);
 }
@@ -129,6 +131,7 @@ if ( function_exists( 'date_default_timezone_set' ) )
  */
 function showError($errno, $errmsg, $filename, $linenum, $vars){
 	global $wbErrorBuffer, $addon_current_id, $page, $addon_current_version;
+	static $reported = array();
 
 	// since we're supporting php 4.3+ there are technically a lot on non-static functions being called statically
 	if( $errno === E_STRICT ){
@@ -141,30 +144,24 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	}
 
 	//get the backtrace and function where the error was thrown
-	$backtrace = array();
-	$function = false;
-	if( function_exists('debug_backtrace') ){
-		$backtrace = debug_backtrace();
-		//remove showError() from backtrace
-		if( strtolower($backtrace[0]['function']) == 'showerror' ){
-			@array_shift($backtrace);
-		}
+	$backtrace = debug_backtrace();
+	//remove showError() from backtrace
+	if( strtolower($backtrace[0]['function']) == 'showerror' ){
+		@array_shift($backtrace);
 	}
 
+	//record one error per function and only record the error once per request
+	if( !isset($backtrace[0]['function']) ){
+		return;
+	}
+	$uniq = $filename.$backtrace[0]['function'];
+	if( isset($reported[$uniq]) ){
+		return;
+	}
+	$reported[$uniq] = true;
 
 
 	if( gpdebug === false ){
-
-		if( !isset($backtrace[0]['function']) ){
-			return;
-		}
-		$function = $backtrace[0]['function'];
-
-		//try to only record one error per function and only record the error once per request
-		$uniq = $filename.$function;
-		if( isset($wbErrorBuffer[$uniq]) ){
-			return;
-		}
 
 		//if it's an addon error, determine if if was installed remotely
 		if( isset($addon_current_id) && $addon_current_id ){
@@ -248,7 +245,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 				$backtrace[$i]['object'] = get_class($trace['object']);
 			}
 		}
-		$mess .= '<div><a href="javascript:void(0)" onclick="this.nextSibling.style.display=\'block\';;return false;">Show Backtrace</a>';
+		$mess .= '<div><a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>';
 		$mess .= '<div class="nodisplay">';
 		$mess .= showArray($backtrace);
 		$mess .= '</div></div>';

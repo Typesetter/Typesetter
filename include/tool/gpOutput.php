@@ -353,7 +353,7 @@ class gpOutput{
 			}
 			$innerLinks .= '<div class="output_area_link">';
 			if( !$empty_container ){
-				$innerLinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['remove'],'cmd=rm&param='.$param,' name="creq"');
+				$innerLinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['remove'],'cmd=rm_area&param='.$param,' name="creq"');
 			}
 			$innerLinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['insert'],'cmd=insert&param='.$param,' name="gpabox"');
 			$innerLinks .= '</div>';
@@ -1991,19 +1991,24 @@ class gpOutput{
 		}
 
 		//replace the <head> placeholder with header content
-		$head_replacement = '<!-- get_head_placeholder '.$gp_random.' -->';
-		$buffer = str_replace($head_replacement,$gp_head_content,$buffer);
+		$pos = strpos($buffer,'<!-- get_head_placeholder '.$gp_random.' -->');
+		if( $pos !== false ){
+			$buffer = substr_replace($buffer,$gp_head_content,$pos,0); //uses less memory than str_replace
+		}
 
 		//add jquery if needed
-		$replacement = '';
-		if( strpos($buffer,'<script') !== false ){
-			if( $config['jquery'] != 'local' ){
-				$replacement = "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js\"></script>";
-			}else{
-				$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/js/jquery.js')."\"></script>";
+		$pos = strpos($buffer,'<!-- jquery_placeholder '.$gp_random.' -->');
+		if( $pos !== false ){
+			$replacement = '';
+			if( strpos($buffer,'<script') !== false ){
+				if( $config['jquery'] != 'local' ){
+					$replacement = "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js\"></script>";
+				}else{
+					$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/js/jquery.js')."\"></script>";
+				}
 			}
+			$buffer = substr_replace($buffer,$replacement,$pos,0); //uses less memory than str_replace
 		}
-		$buffer = str_replace('<!-- jquery_placeholder '.$gp_random.' -->',$replacement,$buffer);
 
 
 		//if( gpdebug && count($_GET) == 0 && count($_POST) == 0 ){

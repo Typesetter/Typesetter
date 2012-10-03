@@ -15,6 +15,7 @@ class admin_display extends display{
 	var $admin_html = '';
 
 	function admin_display($title){
+		global $langmessage;
 
 		$this->requested = str_replace(' ','_',$title);
 		$this->title = $title;
@@ -23,7 +24,8 @@ class admin_display extends display{
 		if( isset($scripts[$title]) && isset($scripts[$title]['label']) ){
 			$this->label = $scripts[$title]['label'];
 		}else{
-			$this->label = str_replace('_',' ',$title);
+			//$this->label = str_replace('_',' ',$title);
+			$this->label = $langmessage['administration'];
 		}
 
 		$this->head .= "\n".'<meta name="robots" content="noindex,nofollow" />';

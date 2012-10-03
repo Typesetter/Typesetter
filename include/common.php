@@ -241,6 +241,13 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 
 	//backtrace
 	if( ($errno !== E_NOTICE) && ($errno != E_STRICT) && function_exists('debug_backtrace') ){
+
+		//don't add entire object to backtrace
+		foreach($backtrace as $i => $trace){
+			if( !empty($trace['object']) ){
+				$backtrace[$i]['object'] = get_class($trace['object']);
+			}
+		}
 		$mess .= '<div><a href="javascript:void(0)" onclick="this.nextSibling.style.display=\'block\';;return false;">Show Backtrace</a>';
 		$mess .= '<div class="nodisplay">';
 		$mess .= showArray($backtrace);
@@ -1333,6 +1340,7 @@ class common{
 			@ob_start( 'ob_gzhandler' ); //ini_get() does not always work for this test
 			$ob_gzhandler = true;
 		}
+
 		common::SetGlobalPaths($level,$expecting);
 		includeFile('tool/gpOutput.php');
 		if( $sessions ){
@@ -1616,23 +1624,16 @@ class common{
 	function GetUrl($href='',$query='',$ampersands=true,$nonce_action=false){
 		global $linkPrefix, $config, $gp_index;
 
-		//translate special pages from key to title
-		if( !isset($gp_index[$href])
-				&& strpos($href,'Special_') === 0
-				&& $index_title = common::IndexToTitle(strtolower($href))
-				){
-					$href = $index_title;
-		}
+		$href = common::SpecialHref($href);
 
 		//home page link
 		if( isset($config['homepath']) && $href == $config['homepath'] ){
 			$href = '';
 		}
 
-
-
 		//redirects won't work with &amp;
 		$href = $linkPrefix.'/'.ltrim($href,'/');
+
 		if( $ampersands ){
 			$href = common::Ampersands($href);
 			$query = common::Ampersands($query);
@@ -1650,7 +1651,35 @@ class common{
 			$query = '?'.ltrim($query,'?');
 		}
 
+
 		return common::HrefEncode($href).$query;
+	}
+
+	//translate special pages from key to title
+	function SpecialHref($href){
+		global $gp_index;
+
+		$href2 = '';
+		$die = false;
+		if( strpos($href,'/') ){
+			$die = true;
+			$parts = explode('/',$href);
+			$href = array_shift($parts);
+			$href2 = implode('/',$parts);
+		}
+
+		if( !isset($gp_index[$href])
+				&& strpos($href,'Special_') === 0
+				&& $index_title = common::IndexToTitle(strtolower($href))
+				){
+					$href = $index_title;
+		}
+
+		if( !empty($href2) ){
+			$href .= '/'.$href2;
+		}
+
+		return $href;
 	}
 
 	/**
@@ -2194,13 +2223,18 @@ class common{
 			return 'special';
 		}
 
-		if( isset($gp_index[$title]) ){
-			$key = $gp_index[$title];
-			$info = $gp_titles[$key];
-			if( $info['type'] == 'special' ){
-				return 'special';
+
+		$parts = explode('/',$title);
+		do{
+			$title = implode('/',$parts);
+			if( isset($gp_index[$title]) ){
+				$key = $gp_index[$title];
+				$info = $gp_titles[$key];
+				if( $info['type'] == 'special' ){
+					return 'special';
+				}
 			}
-		}
+		}while( array_pop($parts) );
 
 		return false;
 	}

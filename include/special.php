@@ -119,24 +119,28 @@ class special_display extends display{
 		$scripts['special_missing']['script'] = '/include/special/special_missing.php';
 		$scripts['special_missing']['class'] = 'special_missing';
 
-		if( isset($gp_index[$requested]) ){
-			$index = $gp_index[$requested];
-			if( isset($scripts[$index]) ){
-				return $scripts[$index];
+		$parts = explode('/',$requested);
+		do{
+			$requested = implode('/',$parts);
+			if( isset($gp_index[$requested]) ){
+				$index = $gp_index[$requested];
+				if( isset($scripts[$index]) ){
+					return $scripts[$index];
+				}
+
+				if( isset($gp_titles[$index]) ){
+					return $gp_titles[$index];
+				}
 			}
 
-			if( isset($gp_titles[$index]) ){
-				return $gp_titles[$index];
+			//resolve if the requested path matches a data index
+			$title = common::IndexToTitle(strtolower($requested));
+			if( $title ){
+				$title = common::GetUrl($title,'',false);
+				common::Redirect($title);
 			}
-		}
 
-
-		//resolve if the requested path matches a data index
-		$title = common::IndexToTitle(strtolower($requested));
-		if( $title ){
-			$title = common::GetUrl($title,'',false);
-			common::Redirect($title);
-		}
+		}while( array_pop($parts) );
 
 		return false;
 	}

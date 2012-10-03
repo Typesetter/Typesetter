@@ -68,7 +68,6 @@ class admin_theme_content extends admin_addon_install{
 
 		$cmd = common::GetCommand();
 
-
 		//layout requests
 		if( strpos($page->requested,'/') ){
 			$parts = explode('/',$page->requested);

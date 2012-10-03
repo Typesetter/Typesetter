@@ -23,12 +23,12 @@ class admin_uploaded{
 		$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.common::GetDir('/include/thirdparty/elfinder/css/elfinder.min.css').'">';
 		$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.common::GetDir('/include/thirdparty/elfinder/style.css').'">';
 
-		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/elfinder/js/elfinder.min.js').'"></script>';
+		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/elfinder/js/elfinder.full.js').'"></script>';
 		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/elfinder/config.js').'"></script>';
 
 		echo '<div id="elfinder"></div>';
 
-		common::LoadComponents('selectable,draggable,droppable,resizable,dialog,slider');
+		common::LoadComponents('selectable,draggable,droppable,resizable,dialog,slider,button');
 
 		$this->elFinderPrep();
 	}

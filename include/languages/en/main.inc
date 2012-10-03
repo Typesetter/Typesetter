@@ -180,6 +180,7 @@ continue using your old password.</p>',
 'not_enabled'=>'Sorry, the site administrator has not enabled this feature.',
 'add'=>'Add',
 'remove'=>'Remove',
+'insert'=>'Insert',
 'disable'=>'Disable',
 'disabled'=>'Disabled',
 'enable'=>'Enable',
@@ -492,4 +493,3 @@ continue using your old password.</p>',
 //'Start Slideshow'=>'Start Slideshow',
 //'Stop Slideshow'=>'Stop Slideshow',
 );
-

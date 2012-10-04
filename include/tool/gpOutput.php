@@ -1678,8 +1678,10 @@ class gpOutput{
 
 		//start keywords;
 		$keywords = array();
-		if( !empty($page->TitleInfo['keywords']) ){
-			$keywords += explode(',',$page->TitleInfo['keywords']);
+		if( count($page->meta_keywords) ){
+			$keywords = $page->meta_keywords;
+		}elseif( !empty($page->TitleInfo['keywords']) ){
+			$keywords = explode(',',$page->TitleInfo['keywords']);
 		}
 
 		//title
@@ -1715,7 +1717,9 @@ class gpOutput{
 
 		//description
 		$description = '';
-		if( !empty($page->TitleInfo['description']) ){
+		if( !empty($page->meta_description) ){
+			$description .= $page->meta_description;
+		}elseif( !empty($page->TitleInfo['description']) ){
 			$description .= $page->TitleInfo['description'];
 		}else{
 			$description .= $page_title;
@@ -1991,13 +1995,15 @@ class gpOutput{
 		}
 
 		//replace the <head> placeholder with header content
-		$pos = strpos($buffer,'<!-- get_head_placeholder '.$gp_random.' -->');
+		$placeholder = '<!-- get_head_placeholder '.$gp_random.' -->';
+		$pos = strpos($buffer,$placeholder);
 		if( $pos !== false ){
-			$buffer = substr_replace($buffer,$gp_head_content,$pos,0); //uses less memory than str_replace
+			$buffer = substr_replace($buffer,$gp_head_content,$pos,strlen($placeholder)); //uses less memory than str_replace
 		}
 
 		//add jquery if needed
-		$pos = strpos($buffer,'<!-- jquery_placeholder '.$gp_random.' -->');
+		$placeholder = '<!-- jquery_placeholder '.$gp_random.' -->';
+		$pos = strpos($buffer,$placeholder);
 		if( $pos !== false ){
 			$replacement = '';
 			if( strpos($buffer,'<script') !== false ){
@@ -2007,7 +2013,7 @@ class gpOutput{
 					$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/js/jquery.js')."\"></script>";
 				}
 			}
-			$buffer = substr_replace($buffer,$replacement,$pos,0); //uses less memory than str_replace
+			$buffer = substr_replace($buffer,$replacement,$pos,strlen($placeholder)); //uses less memory than str_replace
 		}
 
 
@@ -2208,9 +2214,9 @@ class gpOutput{
 		}
 		$len = strspn($string,'!?.,;:',-1);
 		if( $len == 0 ){
-			$string .= '. ';
+			$string .= '.';
 		}
-		return $string;
+		return $string.' ';
 	}
 
 }

@@ -572,6 +572,8 @@ class display{
 	var $jQueryCode = false;
 	var $admin_js = false;
 	var $head_force_inline = false;
+	var $meta_description = '';
+	var $meta_keywords = array();
 
 	//css arrays
 	var $css_user = array();

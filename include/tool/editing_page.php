@@ -519,16 +519,18 @@ class editing_page extends display{
 
 		switch($type){
 			case 'include':
+				$data = array();
+				$data['type'] = $type;
 				if( !empty($_POST['gadget_include']) ){
-					$data = array();
 					$data['include_type'] = 'gadget';
 					$data['content'] = $_POST['gadget_include'];
 				}else{
-					$data = array();
 					$data['content'] = $_POST['file_include'];
 				}
 
-				$content = $this->IncludeContent($data);
+
+				includeFile('tool/SectionContent.php');
+				$content = section_content::RenderSection($data,$section,$this->title,$this->file_stats);
 				$page->ajaxReplace[] = array('gp_include_content','',$content);
 			break;
 			default:
@@ -635,7 +637,8 @@ class editing_page extends display{
 		$this->file_sections[$section] = $section_data;
 
 		//send replacement content
-		$content = $this->IncludeContent($section_data);
+		includeFile('tool/SectionContent.php');
+		$content = section_content::RenderSection($section_data,$section,$this->title,$this->file_stats);
 		$page->ajaxReplace[] = array('gp_include_content','',$content);
 		return true;
 	}
@@ -670,6 +673,7 @@ class editing_page extends display{
 
 		//add to all pages in case a user adds a gallery
 		gpPlugin::Action('GenerateContent_Admin');
+		includeFile('tool/SectionContent.php');
 		common::ShowingGallery();
 
 		$content = '';
@@ -720,7 +724,7 @@ class editing_page extends display{
 			}
 
 			$GP_NESTED_EDIT = true;
-			$content .= $this->SectionToContent($section_data,$section_num);
+			$content .= section_content::RenderSection($section_data,$section_num,$this->title,$this->file_stats);
 			$GP_NESTED_EDIT = false;
 
 			$content .= '<div class="gpclear"></div>';

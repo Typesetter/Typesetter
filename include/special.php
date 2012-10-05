@@ -119,6 +119,10 @@ class special_display extends display{
 		$scripts['special_missing']['script'] = '/include/special/special_missing.php';
 		$scripts['special_missing']['class'] = 'special_missing';
 
+		$scripts['special_gpsearch']['script'] = '/include/special/special_search.php';
+		$scripts['special_gpsearch']['class'] = 'special_gpsearch';
+
+
 		$parts = explode('/',$requested);
 		do{
 			$requested = implode('/',$parts);

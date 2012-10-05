@@ -325,6 +325,7 @@ class Install_Tools{
 		$new_index['Site_Map'] = 'special_site_map';
 		$new_index['Galleries'] = 'special_galleries';
 		$new_index['Missing'] = 'special_missing';
+		$new_index['Search'] = 'special_gpsearch';
 
 
 		//	gpmenu
@@ -361,6 +362,8 @@ class Install_Tools{
 		$new_titles['special_missing']['label'] = 'Missing';
 		$new_titles['special_missing']['type'] = 'special';
 
+		$new_titles['special_gpsearch']['label'] = 'Search';
+		$new_titles['special_gpsearch']['type'] = 'special';
 
 		$pages = array();
 		$pages['gp_index'] = $new_index;

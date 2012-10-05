@@ -1667,9 +1667,10 @@ class common{
 			$href2 = implode('/',$parts);
 		}
 
+		$lower = strtolower($href);
 		if( !isset($gp_index[$href])
-				&& strpos($href,'Special_') === 0
-				&& $index_title = common::IndexToTitle(strtolower($href))
+				&& strpos($lower,'special_') === 0
+				&& $index_title = common::IndexToTitle($lower)
 				){
 					$href = $index_title;
 		}
@@ -1984,12 +1985,6 @@ class common{
 		//update for < 2.0a3
 		if( isset($pages['gpmenu']) && isset($pages['gptitles']) ){
 
-			//1.7b2
-			if( !isset($pages['gptitles']['Special_Missing']) ){
-				$pages['gptitles']['Special_Missing']['type'] = 'special';
-				$pages['gptitles']['Special_Missing']['label'] = 'Missing';
-			}
-
 			foreach($pages['gptitles'] as $title => $info){
 				$index = common::NewFileIndex();
 				$gp_index[$title] = $index;
@@ -2006,6 +2001,14 @@ class common{
 		$gp_index = $pages['gp_index'];
 		$gp_titles = $pages['gp_titles'];
 		$gp_menu = $pages['gp_menu'];
+
+		//update for 3.5,
+		if( !isset($gp_titles['special_gpsearch']) ){
+			$gp_titles['special_gpsearch'] = array();
+			$gp_titles['special_gpsearch']['label'] = 'Search';
+			$gp_titles['special_gpsearch']['type'] = 'special';
+			$gp_index['Search'] = 'special_gpsearch'; //may overwrite special_search settings
+		}
 
 		//fix the gpmenu
 		if( version_compare($fileVersion,'3.0b1','<') ){

@@ -92,6 +92,29 @@ class special_gpsearch{
 		echo '</div>';
 	}
 
+	function Gadget(){
+
+		$query = '';
+		if( isset($_GET['q']) ){
+			$query = $_GET['q'];
+		}
+
+		echo '<h3>';
+		echo gpOutput::GetAddonText('Search');
+		echo '</h3>';
+		echo '<form action="'.common::GetUrl('special_gpsearch').'" method="get">';
+		echo '<div>';
+		echo '<input name="q" type="text" class="text" value="'.htmlspecialchars($query).'"/>';
+		echo '<input type="hidden" name="src" value="gadget" />';
+
+		$html = '<input type="submit" class="submit" name="" value="%s" />';
+		echo gpOutput::GetAddonText('Search',$html);
+
+		echo '</div>';
+		echo '</form>';
+
+	}
+
 
 	function RunQuery(){
 
@@ -110,7 +133,7 @@ class special_gpsearch{
 
 		if( !count($this->results) ){
 			echo '<p>';
-			echo gpOutput::GetAddonText('Sorry, there weren\'t any results for your search. ');
+			echo gpOutput::GetAddonText($langmessage['search_no_results']);
 			echo '</p>';
 			return;
 		}
@@ -269,15 +292,15 @@ class special_gpsearch{
 
 		echo '<form class="renameform" action="'.common::GetUrl('special_gpsearch').'" method="post">';
 		echo '<table style="width:100%" class="bordered">';
-		echo '<tr><th>Option</th><th>Value</th><th>Default</th></tr>';
+		echo '<tr><th>'.$langmessage['options'].'</th><th>'.$langmessage['Value'].'</th><th>'.$langmessage['default'].'</th></tr>';
 
-		echo '<tr><td>Search Hidden</td><td>';
+		echo '<tr><td>'.$langmessage['Search Hidden Files'].'</td><td>';
 			if( isset($array['search_hidden']) && $array['search_hidden'] ){
 				echo '<input type="checkbox" name="search_hidden" checked="checked" value="true" />';
 			}else{
 				echo '<input type="checkbox" name="search_hidden" value="true" />';
 			}
-			echo '</td><td>false</td></tr>';
+			echo '</td><td>'.$langmessage['False'].'</td></tr>';
 
 
 		echo '<tr><td></td><td>';

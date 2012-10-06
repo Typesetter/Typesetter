@@ -1657,6 +1657,9 @@ class common{
 		if( !isset($config['gadgets']['Contact']) ){
 			$config['gadgets']['Contact'] = array('script'=>'/include/special/special_contact.php','class'=>'special_contact_gadget');
 		}
+		if( !isset($config['gadgets']['Search']) ){
+			$config['gadgets']['Search'] = array('script'=>'/include/special/special_search.php','method'=>array('special_gpsearch','gadget'));
+		}
 
 		gp_defined('gp_session_cookie',common::SessionCookie($config['gpuniq']));
 

@@ -9,7 +9,6 @@ class special_gpsearch{
 
 	var $search_pattern = '';
 	var $search_hidden = false;
-	var $search_blog = false;
 	var $search_count = 0;
 	var $show_stats = false;
 	var $gpabox = false;
@@ -80,10 +79,9 @@ class special_gpsearch{
 		echo '</form>';
 
 		if( common::LoggedIn() ){
-			$this->search_hidden = $this->search_blog = true;
+			$this->search_hidden = true;
 		}else{
 			$this->search_hidden = $this->search_config['search_hidden'];
-			$this->search_blog = $this->search_config['search_blog'];
 		}
 		$this->RunQuery();
 
@@ -101,6 +99,7 @@ class special_gpsearch{
 			$this->SearchPattern();
 			$this->SearchPages();
 			$this->SearchBlog();
+			gpPlugin::Action('Search',array($this));
 		}
 
 		$this->ShowResults();
@@ -116,8 +115,20 @@ class special_gpsearch{
 			return;
 		}
 
-		//krsort($this->results);
 		usort( $this->results, array('special_gpsearch', 'sort') );
+
+		// remove duplicates
+		$links = array();
+		foreach($this->results as $key => $result){
+			$link = common::GetUrl( $result['slug'], $result['query'] );
+			$link = strtolower($link);
+			if( in_array($link,$links) ){
+				unset($this->results[$key]);
+			}else{
+				$links[] = $link;
+			}
+		}
+
 
 		$total = count($this->results);
 		$len = 20;
@@ -223,7 +234,7 @@ class special_gpsearch{
 			include($this->config_file);
 		}
 
-		$search_config += array('search_blog'=>true,'search_hidden'=>false);
+		$search_config += array('search_hidden'=>false);
 		$this->search_config = $search_config;
 	}
 
@@ -234,11 +245,6 @@ class special_gpsearch{
 			$search_config['search_hidden'] = true;
 		}else{
 			$search_config['search_hidden'] = false;
-		}
-		if( isset($_POST['search_blog']) ){
-			$search_config['search_blog'] = true;
-		}else{
-			$search_config['search_blog'] = false;
 		}
 
 		if( gpFiles::SaveArray($this->config_file,'search_config',$search_config) ){
@@ -271,20 +277,6 @@ class special_gpsearch{
 				echo '<input type="checkbox" name="search_hidden" value="true" />';
 			}
 			echo '</td><td>false</td></tr>';
-
-		echo '<tr><td>Search Blog</td><td>';
-
-			$disabled = ' disabled="disabled"';
-			if( special_gpsearch::BlogInstalled() ){
-				$disabled = '';
-			}
-
-			if( isset($array['search_blog']) && $array['search_blog'] ){
-				echo '<input type="checkbox" name="search_blog" checked="checked" value="true" '.$disabled.'/>';
-			}else{
-				echo '<input type="checkbox" name="search_blog" value="true" '.$disabled.'/>';
-			}
-			echo '</td><td>true</td></tr>';
 
 
 		echo '<tr><td></td><td>';
@@ -345,10 +337,6 @@ class special_gpsearch{
 	function SearchBlog(){
 		global $dataDir, $gp_index, $gp_titles, $config;
 
-		if( !$this->search_config['search_blog'] ){
-			return;
-		}
-
 		$blog_index = special_gpsearch::BlogInstalled();
 		if( !$blog_index ){
 			return;
@@ -390,11 +378,10 @@ class special_gpsearch{
 				$this->FindString($content, $title, $slug, '?cmd=post&id='.$id);
 			}
 			$posts = array();
-
 		}
 	}
 
-	function FindString(&$content, $label, $slug, $link_query = ''){
+	public function FindString(&$content, $label, $slug, $link_query = ''){
 		$this->search_count++;
 
 		//search all of the content include html

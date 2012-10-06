@@ -18,9 +18,7 @@ class section_content{
 	 *
 	 */
 	function Render($sections,$title,$meta = array()){
-		self::$title = $title;
-		self::$label = common::GetLabel($title);
-		self::$meta = $meta;
+		self::SetVars($title,$meta);
 
 		$content = '';
 		foreach($sections as $section_num => $section_data){
@@ -42,10 +40,17 @@ class section_content{
 	 *
 	 */
 	function RenderSection($section,$section_num,$title,$meta = array()){
+		self::SetVars($title,$meta);
+		return self::SectionToContent($section,$section_num);
+	}
+
+	function SetVars($title,$meta){
 		self::$title = $title;
 		self::$label = common::GetLabel($title);
-		self::$meta = $meta;
-		return self::SectionToContent($section,$section_num);
+		self::$meta = array();
+		if( is_array($meta) ){
+			self::$meta = $meta;
+		}
 	}
 
 
@@ -60,18 +65,16 @@ class section_content{
 
 		switch($section_data['type']){
 			case 'text':
-				return self::TextContent($section_data['content']);
+			return self::TextContent($section_data['content']);
 
 			case 'include':
-				return self::IncludeContent($section_data);
+			return self::IncludeContent($section_data);
 
 			case 'gallery':
 				common::ShowingGallery();
-				return $section_data['content'];
-			default:
-				return $section_data['content'];
+			return $section_data['content'];
 		}
-
+		return $section_data['content'];
 	}
 
 	/**
@@ -80,6 +83,7 @@ class section_content{
 	 */
 	function TextContent(&$content){
 
+		self::$meta += array('modified'=>'');
 
 		//variables
 		$vars = array(
@@ -262,7 +266,7 @@ class section_content{
 		global $langmessage;
 		includeFile('special.php');
 
-		$scriptinfo = special_display::GetScriptInfo($requested);
+		$scriptinfo = special_display::GetScriptInfo( $requested, false );
 
 		if( $scriptinfo === false ){
 			return '<p>'.$langmessage['File Include'].'</p>';

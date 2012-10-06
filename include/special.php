@@ -104,7 +104,7 @@ class special_display extends display{
 	 *
 	 * @static
 	 */
-	function GetScriptInfo(&$requested){
+	function GetScriptInfo(&$requested,$redirect=true){
 		global $dataDir,$gp_index,$gp_titles;
 
 		$scripts['special_site_map']['script'] = '/include/special/special_map.php';
@@ -123,25 +123,27 @@ class special_display extends display{
 		$scripts['special_gpsearch']['class'] = 'special_gpsearch';
 
 
+		$found = false;
 		$parts = explode('/',$requested);
 		do{
 			$requested = implode('/',$parts);
-			if( isset($gp_index[$requested]) ){
-				$index = $gp_index[$requested];
-				if( isset($scripts[$index]) ){
-					return $scripts[$index];
-				}
 
-				if( isset($gp_titles[$index]) ){
-					return $gp_titles[$index];
+			//check for use of a index instead of a page title
+			if( !isset($gp_index[$requested]) && $translated = common::IndexToTitle(strtolower($requested)) ){
+				$requested = $translated;
+				if( $redirect ){
+					$title = common::GetUrl($translated,'',false);
+					common::Redirect($translated);
 				}
 			}
 
-			//resolve if the requested path matches a data index
-			$title = common::IndexToTitle(strtolower($requested));
-			if( $title ){
-				$title = common::GetUrl($title,'',false);
-				common::Redirect($title);
+			$index = $gp_index[$requested];
+			if( isset($scripts[$index]) ){
+				return $scripts[$index];
+			}
+
+			if( isset($gp_titles[$index]) ){
+				return $gp_titles[$index];
 			}
 
 		}while( array_pop($parts) );
@@ -160,7 +162,7 @@ class special_display extends display{
 		}
 
 		if( isset($scriptinfo['script']) ){
-			require($dataDir.$scriptinfo['script']);
+			require_once($dataDir.$scriptinfo['script']);
 		}
 		if( isset($scriptinfo['class']) ){
 			new $scriptinfo['class'](); //not passing any args to class, this is being used by special_missing.php

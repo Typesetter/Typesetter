@@ -43,7 +43,7 @@ class special_gpsearch{
 		$this->show_stats = true;
 		$this->search_hidden = true;
 
-		echo '<div>';
+		echo '<div id="admin_search">';
 		echo '<form action="'.common::GetUrl('special_gpsearch').'" method="get">';
 		echo '<h3>'.$langmessage['Search'].'</h3>';
 		echo '<input name="q" type="text" class="gpinput" value="'.htmlspecialchars($_REQUEST['q']).'"/>';
@@ -150,10 +150,11 @@ class special_gpsearch{
 		echo '</p>';
 
 
+		echo '<div class="result_list">';
 		foreach($this->results as $result){
-			echo '<div><b>';
+			echo '<div><h4>';
 			echo common::Link($result['slug'],$result['label'],$result['query']);
-			echo '</b>';
+			echo '</h4>';
 
 			if( $this->show_stats ){
 				echo ' <span class="match_stats">';
@@ -161,10 +162,10 @@ class special_gpsearch{
 				echo ' </span>';
 			}
 
-			echo '<p>';
 			echo $result['content'];
-			echo '</p></div>';
+			echo '</div>';
 		}
+		echo '</div>';
 
 		if( $total_pages > 1 ){
 			echo '<p class="search_nav search_nav_bottom">';

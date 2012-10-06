@@ -58,7 +58,6 @@ body #gp_admin_html a img{
 
 
 body #gp_admin_html a,
-body #gp_admin_html a:link,
 body #gp_admin_html a:visited,
 body #gp_admin_html a:hover{
 	color:#445599;
@@ -1659,6 +1658,21 @@ body #gp_admin_html .layout_links a.selected{
 .dd_list a:hover{
 	background:#f5f5f5;
 	}
+
+#admin_search .match_stats{
+	color:#666;
+	display:block;
+	}
+#admin_search .result_list h4{
+	margin-bottom:0;
+	}
+#admin_search .result_list h4 a{
+	font-weight:bold;
+	margin-bottom:0;
+	color:#445599 !important;
+	border-bottom: 0 none;
+	}
+
 
 
 .ui-selectable-helper{

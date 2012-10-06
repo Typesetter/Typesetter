@@ -9,7 +9,11 @@ class special_gpsearch{
 
 	var $search_pattern = '';
 	var $search_hidden = false;
+	var $search_blog = false;
 	var $search_count = 0;
+	var $show_stats = false;
+	var $gpabox = false;
+
 
 	function special_gpsearch(){
 		global $page, $langmessage, $dataDir;
@@ -30,11 +34,15 @@ class special_gpsearch{
 			$this->Search();
 		}
 
-		echo '<p>'.microtime_diff($start_time,microtime()).' seconds</p>';
+		//echo '<p>'.microtime_diff($start_time,microtime()).' seconds</p>';
 	}
 
 	function AdminSearch(){
 		global $langmessage;
+
+		$this->gpabox = true;
+		$this->show_stats = true;
+		$this->search_hidden = true;
 
 		echo '<div>';
 		echo '<form action="'.common::GetUrl('special_gpsearch').'" method="get">';
@@ -45,7 +53,6 @@ class special_gpsearch{
 		echo '</form>';
 
 		echo '<p>';
-		$this->search_hidden = true;
 		if( !empty($_REQUEST['q']) ){
 			$this->RunQuery();
 		}
@@ -91,6 +98,12 @@ class special_gpsearch{
 			$this->SearchBlog();
 		}
 
+		$this->ShowResults();
+	}
+
+	function ShowResults(){
+		global $langmessage;
+
 		if( !count($this->results) ){
 			echo '<p>';
 			echo gpOutput::GetAddonText('Sorry, there weren\'t any results for your search. ');
@@ -98,11 +111,61 @@ class special_gpsearch{
 			return;
 		}
 
-		//echo '<p>Found: '.count($this->results).'</p>';
 		krsort($this->results);
-		foreach($this->results as $result){
-			echo $result;
+
+		$total = count($this->results);
+		$len = 20;
+		$total_pages = ceil($total/$len);
+		$current_page = 0;
+		if( isset($_REQUEST['pg']) && is_numeric($_REQUEST['pg']) ){
+			if( $_REQUEST['pg'] <= $total_pages ){
+				$current_page = $_REQUEST['pg'];
+			}else{
+				$current_page = ($total_pages-1);
+			}
 		}
+		$start = $current_page*$len;
+		$end = min($start+$len,$total);
+
+		$this->results = array_slice($this->results,$start,$len,true);
+		echo '<p class="search_nav search_nav_top">';
+		echo sprintf($langmessage['SHOWING'],($start+1),$end,$total);
+		echo '</p>';
+
+
+		foreach($this->results as $result){
+			echo '<div><b>';
+			echo common::Link($result['slug'],$result['label'],$result['query']);
+			echo '</b>';
+
+			if( $this->show_stats ){
+				echo ' <span class="match_stats">';
+				echo $result['matches'].' match(es) out of '.$result['words'].' words ';
+				echo ' </span>';
+			}
+
+			echo '<p>';
+			echo $result['content'];
+			echo '</p></div>';
+		}
+
+		echo '<p class="search_nav search_nav_bottom">';
+		for($i=0;$i<$total_pages;$i++){
+			if( $i == $current_page ){
+				echo '<span>'.($i+1).'</span> ';
+				continue;
+			}
+			$query = 'q='.rawurlencode($_REQUEST['q']);
+			if( $i > 0 ){
+				$query .= '&pg='.$i;
+			}
+			$attr = '';
+			if( $this->gpabox ){
+				$attr = 'name="gpabox"';
+			}
+			echo common::Link('special_gpsearch',($i+1),$query,$attr).' ';
+		}
+		echo '</p>';
 	}
 
 	function SearchPattern(){
@@ -112,12 +175,11 @@ class special_gpsearch{
 
 		$sub_pattern1 = $sub_pattern2 = array();
 		foreach($words as $word){
-			$sub_pattern1[] = '\s'.preg_quote($word,'#').'\s';
+			$sub_pattern1[] = '\b'.preg_quote($word,'#').'\b';
 			$sub_pattern2[] = preg_quote($word,'#');
 		}
 
 		$this->search_pattern = '#(?:('.implode('|',$sub_pattern1).')|('.implode('|',$sub_pattern2).'))#Si';
-		//$this->search_pattern = '#('.implode('|',$sub_pattern1).')#Si';
 	}
 
 	function Admin(){
@@ -320,24 +382,30 @@ class special_gpsearch{
 		}
 	}
 
-	function FindString(&$content, $label, $link='', $link_query = ''){
+	function FindString(&$content, $label, $slug, $link_query = ''){
 		$this->search_count++;
 
-		$content = $label.' '.str_replace('>','> ',$content);
-		$content = preg_replace('/\s\s+/', ' ', $content);
-		$content = strip_tags($content);
+		//search all of the content include html
+		$content = $label.' '.$content;
 		$match_count = preg_match_all($this->search_pattern,$content,$matches,PREG_OFFSET_CAPTURE);
 		if( $match_count < 1 ){
 			return;
 		}
-		$strength = $this->Strength($matches,strlen($content));
+		$words = str_word_count($content);
+		$strength = $this->Strength($matches,$words);
 
 
-		//result data
+		//format content, remove html
 		$label_len = strlen($label);
-		$start = $matches[0][0][1] - $label_len;
 		$content = substr($content,$label_len);
-
+		$content = str_replace('>','> ',$content);
+		$content = preg_replace('/\s\s+/', ' ', $content);
+		$content = strip_tags($content);
+		preg_match($this->search_pattern,$content,$matches,PREG_OFFSET_CAPTURE);
+		$start = 0;
+		if( isset($matches[0][1]) ){
+			$start = $matches[0][1];
+		}
 
 		//find a space at the beginning to start from
 		$i = 0;
@@ -362,17 +430,13 @@ class special_gpsearch{
 			}
 		}
 
-		$result = '<div><b>';
-		$result .= common::Link($link,$label,$link_query);
-		$result .= '</b><p>';
-		$result .= preg_replace($this->search_pattern,'<b>\1\2</b>',$content);
-		$result .= '</p></div>';
-		//$result .= showArray($matches);
-
-		//add to results
-		while( isset($this->results[(string)$strength]) ){
-			$strength *= 1.0001;
-		}
+		$result = array();
+		$result['label'] = $label;
+		$result['slug'] = $slug;
+		$result['query'] = $link_query;
+		$result['content'] = preg_replace($this->search_pattern,'<b>\1\2</b>',$content);
+		$result['words'] = $words;
+		$result['matches'] = $match_count;
 		$this->results[(string)$strength] = $result;
 	}
 
@@ -394,7 +458,14 @@ class special_gpsearch{
 		}
 
 		$strength = $factor/$len;
-		return round($strength,8);
+		$strength = round($strength,8);
+
+		//make sure we don't overwrite any results
+		while( isset($this->results[(string)$strength]) ){
+			$strength *= 1.0001;
+		}
+
+		return $strength;
 	}
 
 	/**

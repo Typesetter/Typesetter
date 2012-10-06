@@ -491,7 +491,7 @@ class gpOutput{
 			if( is_string($callback) && strpos($callback,'->') !== false ){
 				$has_script = true;
 				list($object,$method) = explode('->',$callback);
-				if( isset($GLOBALS[$object]) && method_exists($GLOBALS[$object],$method) ){
+				if( isset($GLOBALS[$object]) && is_object($GLOBALS[$object]) && method_exists($GLOBALS[$object],$method) ){
 					$callback = array($GLOBALS[$object],$method);
 				}
 			}
@@ -1570,9 +1570,8 @@ class gpOutput{
 				$title = substr($title,0,20).'...'; //javscript may shorten it as well
 			}
 
-
-			echo gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],$query,' title="'.$title.'" name="gpabox" ');
-			$result .= '<span class="editable_area" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
+			gpOutput::$editlinks .= gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],$query,' title="'.$title.'" name="gpabox" ');
+			echo '<span class="editable_area" id="ExtraEditArea'.$edit_index.'">';
 		}
 
 		$text = gpOutput::SelectText($key);

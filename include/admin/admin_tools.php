@@ -230,6 +230,7 @@ class admin_tools{
 			echo '<div class="toolbar cf">';
 				echo '<a class="toggle_panel" name="toggle_panel" ></a>';
 				echo common::Link('Admin_Main','','','class="icon_admin_home"');
+				echo common::Link('special_gpsearch','','','class="icon_admin_search" name="gpabox"');
 				echo '<span class="extra admin_arrow_out"></span>';
 			echo '</div>';
 

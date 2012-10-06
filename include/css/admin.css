@@ -138,12 +138,34 @@ body #gp_admin_html .gpdisabled{
 	-o-border-radius: 6px;
 	border-radius: 6px;
 	border:1px solid #ccc;
-	padding:6px 11px;
+
 	color:#333;
 	text-shadow:1px 1px 0 #fff;
-	display:inline-block;
 	white-space:nowrap;
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	padding:4px 8px;
 	}
+
+body #gp_admin_html .gptextarea,
+body #gp_admin_html .gpinput{
+	background:#fff;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-o-border-radius: 6px;
+	border-radius: 6px;
+	border:1px solid #ccc;
+	color:#333;
+	box-shadow: inset 0 0 1px rgba(0,0,0,0.2);
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	padding:4px 6px;
+	}
+
+body #gp_admin_html .gpinput,
 body #gp_admin_html .gpsubmit,
 body #gp_admin_html .gpcancel{
 	margin-right:7px;
@@ -168,7 +190,6 @@ body #gp_admin_html .gpcheckbox,
 body #gp_admin_html .gpcancel{
 	cursor:pointer;
 	border-color:#ddd;
-
 	background:#fff;
 	background: -moz-linear-gradient(top, #FFF 0%, #F7F7F7 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFF), color-stop(100%,#F7F7F7));
@@ -177,12 +198,6 @@ body #gp_admin_html .gpcancel{
 	background: -ms-linear-gradient(top, #FFF 0%,#F7F7F7 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#F7F7F7',GradientType=0 );
 	background: linear-gradient(top, #FFFFFF 0%,#F7F7F7 100%);
-
-	}
-body #gp_admin_html .gpcancel{
-	position:relative;
-	top:2px;
-	padding:4px 8px;
 	}
 
 body #gp_admin_html .gpdisabled{
@@ -191,10 +206,6 @@ body #gp_admin_html .gpdisabled{
 	color:#999;
 	}
 
-body #gp_admin_html .gpselect,
-body #gp_admin_html .gpbutton{
-	padding:2px 5px;
-	}
 body #gp_admin_html .gpselect option{
 	text-shadow:none;
 	padding:1px 5px;
@@ -203,19 +214,6 @@ body #gp_admin_html .gpcheckbox input{
 	margin:0;
 	float:left;
 	padding:0;
-	}
-body #gp_admin_html .gptextarea,
-body #gp_admin_html .gpinput{
-	background:#fff;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-o-border-radius: 3px;
-	border-radius: 3px;
-	border:1px solid #ccc;
-	padding:3px 5px;
-	color:#333;
-	display:inline-block;
-	box-shadow: inset 0 0 1px #ddd;
 	}
 body #gp_admin_html .gpinput{
 	white-space:nowrap;
@@ -773,7 +771,6 @@ table.tablesorter thead tr .gp_header_desc{
 	float:right;
 	}
 #simplepanel.compact .toolbar .extra,
-#simplepanel.min .toolbar .extra,
 #simplepanel.minb .toolbar .extra{
 	display:none;
 	}
@@ -822,6 +819,12 @@ table.tablesorter thead tr .gp_header_desc{
 	height:16px;
 	width:16px;
 	}
+.icon_admin_search{
+	background: url(../imgs/page_white_magnify.png) no-repeat 50% 50%;
+	height:16px;
+	width:16px;
+	}
+
 /* panelgroup */
 #simplepanel .panelgroup{
 	position:relative;
@@ -951,23 +954,22 @@ table.tablesorter thead tr .gp_header_desc{
  * Minimum display
  */
 
-#simplepanel.min .panelgroup,
-#simplepanel.min .icon_admin_home,
+#simplepanel.minb .icon_admin_search,
 #simplepanel.minb .icon_admin_home,
 #simplepanel.minb .panelgroup{
 	display:none;
 	}
-#simplepanel.min:hover .panelgroup,
 #simplepanel.minb:hover .panelgroup{
 	display:block;
 	}
-#simplepanel.min:hover .icon_admin_home,
-#simplepanel.minb:hover .icon_admin_home{
+#simplepanel.minb:hover .icon_admin_home,
+#simplepanel.minb:hover .icon_admin_search{
 	display:inline-block;
 	}
 #simplepanel.toggledmin .panelgroup,
 #simplepanel.toggledmin .extra,
-#simplepanel.toggledmin .icon_admin_home{
+#simplepanel.toggledmin .icon_admin_home,
+#simplepanel.toggledmin .icon_admin_search{
 	display:none !important;
 	}
 

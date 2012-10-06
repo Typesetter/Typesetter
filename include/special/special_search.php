@@ -9,23 +9,56 @@ class special_gpsearch{
 
 	var $search_pattern = '';
 	var $search_hidden = false;
+	var $search_count = 0;
 
 	function special_gpsearch(){
 		global $page, $langmessage, $dataDir;
 
-
 		$this->config_file = $dataDir.'/data/_site/config_search.php';
 		$this->GetConfig();
-
 
 		if( $this->Admin() ){
 			return;
 		}
-		$this->Search();
+
+		//admin popup or visitor
+		$_REQUEST += array('q'=>'');
+		$start_time = microtime();
+		if( common::LoggedIn() && isset($_REQUEST['gpx_content']) && $_REQUEST['gpx_content'] == 'gpabox' ){
+			$this->AdminSearch();
+		}else{
+			$this->Search();
+		}
+
+		echo '<p>'.microtime_diff($start_time,microtime()).' seconds</p>';
+	}
+
+	function AdminSearch(){
+		global $langmessage;
+
+		echo '<div>';
+		echo '<form action="'.common::GetUrl('special_gpsearch').'" method="get">';
+		echo '<h3>'.$langmessage['Search'].'</h3>';
+		echo '<input name="q" type="text" class="gpinput" value="'.htmlspecialchars($_REQUEST['q']).'"/>';
+		echo '<input type="submit" name="" value="'.$langmessage['Search'].'" class="gpabox gpsubmit" />';
+		echo '<input type="submit" name="" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
+		echo '</form>';
+
+		echo '<p>';
+		$this->search_hidden = true;
+		if( !empty($_REQUEST['q']) ){
+			$this->RunQuery();
+		}
+		echo '</p>';
+
+		if( $this->search_count > 0 ){
+			echo '<p>'.$this->search_count.' files searched</p>';
+		}
+		echo '</div>';
+
 	}
 
 	function Search(){
-		$_GET += array('q'=>'');
 
 		echo '<div class="search_results">';
 		echo '<form action="'.common::GetUrl('special_gpsearch').'" method="get">';
@@ -33,28 +66,14 @@ class special_gpsearch{
 		echo '<h2>';
 		echo gpOutput::GetAddonText('Search');
 		echo ' &nbsp; ';
-		echo '<input name="q" type="text" class="text" value="'.htmlspecialchars($_GET['q']).'"/>';
+		echo '<input name="q" type="text" class="text" value="'.htmlspecialchars($_REQUEST['q']).'"/>';
 		$html = '<input type="submit" name="" class="submit" value="%s" />';
 		echo gpOutput::GetAddonText('Search',$html);
 		echo '</h2>';
 		echo '</form>';
 
-
-		if( !empty($_GET['q']) ){
-			if( !$this->search_config['search_hidden'] ){
-				if( !common::LoggedIn() ){
-					$this->search_hidden = false;
-				}else{
-					$this->search_hidden = true;
-				}
-			}
-
-			$this->SearchPattern();
-			$this->SearchPages();
-			$this->SearchBlog();
-		}
-
-		$this->ShowResults();
+		$this->search_hidden = $this->search_config['search_hidden'] || common::LoggedIn();
+		$this->RunQuery();
 
 		if( common::LoggedIn() ){
 			echo common::Link('special_gpsearch','Configuration','cmd=config','name="gpabox"');
@@ -63,7 +82,14 @@ class special_gpsearch{
 		echo '</div>';
 	}
 
-	function ShowResults(){
+
+	function RunQuery(){
+
+		if( !empty($_REQUEST['q']) ){
+			$this->SearchPattern();
+			$this->SearchPages();
+			$this->SearchBlog();
+		}
 
 		if( !count($this->results) ){
 			echo '<p>';
@@ -72,24 +98,26 @@ class special_gpsearch{
 			return;
 		}
 
+		//echo '<p>Found: '.count($this->results).'</p>';
+		krsort($this->results);
 		foreach($this->results as $result){
 			echo $result;
 		}
 	}
 
 	function SearchPattern(){
-		$query = strtolower($_GET['q']);
+		$query = strtolower($_REQUEST['q']);
 		preg_match_all("/\S+/", $query, $words);
 		$words = array_unique($words[0]);
 
-		$pattern = '#(';
-		$bar = '';
+		$sub_pattern1 = $sub_pattern2 = array();
 		foreach($words as $word){
-			$pattern .= $bar.preg_quote($word,'#');
-			$bar = '|';
+			$sub_pattern1[] = '\s'.preg_quote($word,'#').'\s';
+			$sub_pattern2[] = preg_quote($word,'#');
 		}
-		$pattern .= ')#Si';
-		$this->search_pattern = $pattern;
+
+		$this->search_pattern = '#(?:('.implode('|',$sub_pattern1).')|('.implode('|',$sub_pattern2).'))#Si';
+		//$this->search_pattern = '#('.implode('|',$sub_pattern1).')#Si';
 	}
 
 	function Admin(){
@@ -202,18 +230,16 @@ class special_gpsearch{
 	function SearchPages(){
 		global $gp_index;
 		includeFile('tool/SectionContent.php');
-		includeFile('special.php');
 
 		ob_start();
 		foreach($gp_index as $title => $index){
-			$type = common::SpecialOrAdmin($title);
-			if( !$type ){
+			if( !common::SpecialOrAdmin($title) ){
 				$this->SearchPage($title,$index);
 			}
 		}
 		ob_get_clean();
-		$this->ReduceResults();
 	}
+
 
 	function SearchPage($title,$index){
 		global $gp_menu;
@@ -237,11 +263,8 @@ class special_gpsearch{
 
 		$content = section_content::Render($file_sections,$title,$file_stats);
 		$label = common::GetLabel($title);
-		$this->FindString($content, $title);
+		$this->FindString($content, $label, $title);
 	}
-
-
-
 
 
 	//try to search in the blog
@@ -295,52 +318,26 @@ class special_gpsearch{
 			$posts = array();
 
 		}
-
-		$this->ReduceResults();
 	}
 
+	function FindString(&$content, $label, $link='', $link_query = ''){
+		$this->search_count++;
 
-	/**
-	 * Reduce the results to reduce the memory used
-	 *
-	 */
-	function ReduceResults(){
-
-		//arrange in order
-		krsort($this->results);
-
-		while( count($this->results) > 20 ){
-			array_pop($this->results);
-		}
-	}
-
-	function FindString(&$content, &$title, $link='', $link_query = ''){
-
-		$content = str_replace('>','> ',$content);
+		$content = $label.' '.str_replace('>','> ',$content);
+		$content = preg_replace('/\s\s+/', ' ', $content);
 		$content = strip_tags($content);
 		$match_count = preg_match_all($this->search_pattern,$content,$matches,PREG_OFFSET_CAPTURE);
 		if( $match_count < 1 ){
 			return;
 		}
-		$rating = $match_count/strlen($content);
-		$rating = round($rating,8);
+		$strength = $this->Strength($matches,strlen($content));
 
-		$result = '<div>';
-		$result .= '<b>';
-		$label = common::GetLabel($title);
-		if(empty($link)){
-			$result .= common::Link($title,$label,$link_query);
-		}else{
-			$result .= common::Link($link,$label,$link_query);
-		}
 
-		$result .= '</b>';
-		$result .= '<p>';
+		//result data
+		$label_len = strlen($label);
+		$start = $matches[0][0][1] - $label_len;
+		$content = substr($content,$label_len);
 
-		$content = str_replace(array("\n","\r","\t"),array(' ',' ',' '),$content);
-
-		//reduce a little bit
-		$start = $matches[0][0][1];
 
 		//find a space at the beginning to start from
 		$i = 0;
@@ -365,16 +362,39 @@ class special_gpsearch{
 			}
 		}
 
-		$result .= preg_replace($this->search_pattern,'<b>\1</b>',$content);
-
-		$result .= '</p>';
-		$result .= '</div>';
+		$result = '<div><b>';
+		$result .= common::Link($link,$label,$link_query);
+		$result .= '</b><p>';
+		$result .= preg_replace($this->search_pattern,'<b>\1\2</b>',$content);
+		$result .= '</p></div>';
+		//$result .= showArray($matches);
 
 		//add to results
-		while( isset($this->results[(string)$rating]) ){
-			$rating *= 1.0001;
+		while( isset($this->results[(string)$strength]) ){
+			$strength *= 1.0001;
 		}
-		$this->results[(string)$rating] = $result;
+		$this->results[(string)$strength] = $result;
+	}
+
+	function Strength($matches,$len){
+
+		//space around search terms
+		$factor = 0;
+		foreach((array)$matches[1] as $match){
+			if( is_array($match) && $match[1] >= 0 ){
+				$factor += 3;
+			}
+		}
+
+		//no space around search term
+		foreach((array)$matches[2] as $match){
+			if( is_array($match) && $match[1] >= 0 ){
+				$factor += 1;
+			}
+		}
+
+		$strength = $factor/$len;
+		return round($strength,8);
 	}
 
 	/**

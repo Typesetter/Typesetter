@@ -162,7 +162,7 @@ class special_display extends display{
 		}
 
 		if( isset($scriptinfo['script']) ){
-			require_once($dataDir.$scriptinfo['script']);
+			require($dataDir.$scriptinfo['script']);
 		}
 		if( isset($scriptinfo['class']) ){
 			new $scriptinfo['class'](); //not passing any args to class, this is being used by special_missing.php

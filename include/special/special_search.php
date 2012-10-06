@@ -79,7 +79,12 @@ class special_gpsearch{
 		echo '</h2>';
 		echo '</form>';
 
-		$this->search_hidden = $this->search_config['search_hidden'] || common::LoggedIn();
+		if( common::LoggedIn() ){
+			$this->search_hidden = $this->search_blog = true;
+		}else{
+			$this->search_hidden = $this->search_config['search_hidden'];
+			$this->search_blog = $this->search_config['search_blog'];
+		}
 		$this->RunQuery();
 
 		if( common::LoggedIn() ){
@@ -111,7 +116,8 @@ class special_gpsearch{
 			return;
 		}
 
-		krsort($this->results);
+		//krsort($this->results);
+		usort( $this->results, array('special_gpsearch', 'sort') );
 
 		$total = count($this->results);
 		$len = 20;
@@ -149,23 +155,29 @@ class special_gpsearch{
 			echo '</p></div>';
 		}
 
-		echo '<p class="search_nav search_nav_bottom">';
-		for($i=0;$i<$total_pages;$i++){
-			if( $i == $current_page ){
-				echo '<span>'.($i+1).'</span> ';
-				continue;
+		if( $total_pages > 1 ){
+			echo '<p class="search_nav search_nav_bottom">';
+			for($i=0;$i<$total_pages;$i++){
+				if( $i == $current_page ){
+					echo '<span>'.($i+1).'</span> ';
+					continue;
+				}
+				$query = 'q='.rawurlencode($_REQUEST['q']);
+				if( $i > 0 ){
+					$query .= '&pg='.$i;
+				}
+				$attr = '';
+				if( $this->gpabox ){
+					$attr = 'name="gpabox"';
+				}
+				echo common::Link('special_gpsearch',($i+1),$query,$attr).' ';
 			}
-			$query = 'q='.rawurlencode($_REQUEST['q']);
-			if( $i > 0 ){
-				$query .= '&pg='.$i;
-			}
-			$attr = '';
-			if( $this->gpabox ){
-				$attr = 'name="gpabox"';
-			}
-			echo common::Link('special_gpsearch',($i+1),$query,$attr).' ';
+			echo '</p>';
 		}
-		echo '</p>';
+	}
+
+	function Sort($resulta,$resultb){
+		return $resulta['strength'] < $resultb['strength'];
 	}
 
 	function SearchPattern(){
@@ -437,7 +449,8 @@ class special_gpsearch{
 		$result['content'] = preg_replace($this->search_pattern,'<b>\1\2</b>',$content);
 		$result['words'] = $words;
 		$result['matches'] = $match_count;
-		$this->results[(string)$strength] = $result;
+		$result['strength'] = $strength;
+		$this->results[] = $result;
 	}
 
 	function Strength($matches,$len){
@@ -458,14 +471,7 @@ class special_gpsearch{
 		}
 
 		$strength = $factor/$len;
-		$strength = round($strength,8);
-
-		//make sure we don't overwrite any results
-		while( isset($this->results[(string)$strength]) ){
-			$strength *= 1.0001;
-		}
-
-		return $strength;
+		return round($strength,8);
 	}
 
 	/**

@@ -137,13 +137,16 @@ class special_display extends display{
 				}
 			}
 
-			$index = $gp_index[$requested];
-			if( isset($scripts[$index]) ){
-				return $scripts[$index];
-			}
+			if( isset($gp_index[$requested]) ){
 
-			if( isset($gp_titles[$index]) ){
-				return $gp_titles[$index];
+				$index = $gp_index[$requested];
+				if( isset($scripts[$index]) ){
+					return $scripts[$index];
+				}
+
+				if( isset($gp_titles[$index]) ){
+					return $gp_titles[$index];
+				}
 			}
 
 		}while( array_pop($parts) );

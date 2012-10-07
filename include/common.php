@@ -1,10 +1,8 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-if( function_exists('debug_backtrace') ){
-	error_reporting(E_ALL);
-	set_error_handler('showError');
-}
+error_reporting(E_ALL);
+set_error_handler('showError');
 if( !defined('gpdebug') || !gpdebug ){
 	@ini_set('display_errors',0);
 }
@@ -238,20 +236,17 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 		$mess .= '<br/> &nbsp; &nbsp; Mysql Error ('.mysql_errno().')'. mysql_error();
 	}
 
-	//backtrace
-	if( ($errno !== E_NOTICE) && ($errno != E_STRICT) && function_exists('debug_backtrace') ){
-
-		//don't add entire object to backtrace
-		foreach($backtrace as $i => $trace){
-			if( !empty($trace['object']) ){
-				$backtrace[$i]['object'] = get_class($trace['object']);
-			}
+	//backtrace, don't add entire object to backtrace
+	$backtrace = array_slice($backtrace,0,7);
+	foreach($backtrace as $i => $trace){
+		if( !empty($trace['object']) ){
+			$backtrace[$i]['object'] = get_class($trace['object']);
 		}
-		$mess .= '<div><a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>';
-		$mess .= '<div class="nodisplay">';
-		$mess .= showArray($backtrace);
-		$mess .= '</div></div>';
 	}
+	$mess .= '<div><a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>';
+	$mess .= '<div class="nodisplay">';
+	$mess .= showArray($backtrace);
+	$mess .= '</div></div>';
 	$mess .= '</p></fieldset>';
 
 	if( gpdebug === true ){

@@ -1,0 +1,38 @@
+<?php
+defined('is_running') or die('Not an entry point...');
+
+
+class BlogSearch{
+
+	function BlogSearch($args){
+		global $addonPathData;
+
+		$search_obj = $args[0];
+		$label = common::GetLabelIndex('special_blog');
+
+		// config of installed addon to get to know how many post files are
+		$full_path = $addonPathData.'/index.php';
+		if( !file_exists($full_path) ){
+			return;
+		}
+
+		require($full_path);
+		$fileIndexMax = floor($blogData['post_index']/20); // '20' I found in SimpleBlogCommon.php function GetPostFile (line 62)
+
+		for ($fileIndex = 0; $fileIndex <= $fileIndexMax; $fileIndex++) {
+			$postFile = $addonPathData.'/posts_'.$fileIndex.'.php';
+			if( !file_exists($postFile) ){
+				continue;
+			}
+			require($postFile);
+
+			foreach($posts as $id => $post){
+				$title = $label.': '.str_replace('_',' ',$post['title']);
+				$content = str_replace('_',' ',$post['title']).' '.$post['content'];
+				$search_obj->FindString($content, $title, 'Special_Blog', '?cmd=post&id='.$id);
+			}
+			$posts = array();
+		}
+	}
+}
+

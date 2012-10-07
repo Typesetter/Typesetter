@@ -34,6 +34,10 @@ if( !function_exists('mb_strpos') ){
 	function mb_substr(){
 		return call_user_func_array('mb_substr',func_get_args());
 	}
+
+	function mb_substr_count($haystack,$needle){
+		return substr_count($haystack,$needle);
+	}
 }
 
 

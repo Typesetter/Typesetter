@@ -1189,18 +1189,18 @@ class common{
 		$path = $_SERVER['REQUEST_URI'];
 
 		//strip the query string.. in case it contains "/"
-		$pos = strpos($path,'?');
+		$pos = mb_strpos($path,'?');
 		if( $pos > 0 ){
-			$path =  substr($path,0,$pos);
+			$path =  mb_substr($path,0,$pos);
 		}
 
 		//dirPrefix will be percent-decoded
 		$path = rawurldecode($path); //%20 ...
 
 		if( !empty($dirPrefix) ){
-			$pos = strpos($path,$dirPrefix);
+			$pos = mb_strpos($path,$dirPrefix);
 			if( $pos !== false ){
-				$path = substr($path,$pos+strlen($dirPrefix));
+				$path = mb_substr($path,$pos+mb_strlen($dirPrefix));
 			}
 		}
 
@@ -1327,15 +1327,13 @@ class common{
 		global $gp_index;
 
 		$href2 = '';
-		$die = false;
-		if( strpos($href,'/') ){
-			$die = true;
-			$parts = explode('/',$href);
-			$href = array_shift($parts);
-			$href2 = implode('/',$parts);
+		$pos = mb_strpos($href,'/');
+		if( $pos !== false ){
+			$href = mb_substr($href,0,$pos);
+			$href2 = mb_substr($href,$pos);
 		}
 
-		$lower = strtolower($href);
+		$lower = mb_strtolower($href);
 		if( !isset($gp_index[$href])
 				&& strpos($lower,'special_') === 0
 				&& $index_title = common::IndexToTitle($lower)
@@ -1343,11 +1341,7 @@ class common{
 					$href = $index_title;
 		}
 
-		if( !empty($href2) ){
-			$href .= '/'.$href2;
-		}
-
-		return $href;
+		return $href.$href2;
 	}
 
 	/**
@@ -1396,10 +1390,10 @@ class common{
 		global $dirPrefix;
 
 		$query = '';
-		if( strpos($dir,'?') !== false ){
-			$list = explode('?',$dir,2);
-			$dir = $list[0];
-			$query = '?'.$list[1];
+		$pos = mb_strpos($dir,'?');
+		if( $pos !== false ){
+			$dir = mb_substr($dir,0,$pos);
+			$query = mb_substr($dir,$pos);
 		}
 		$dir = $dirPrefix.'/'.ltrim($dir,'/');
 		if( $ampersands ){
@@ -1928,9 +1922,9 @@ class common{
 
 		$path = common::CleanRequest($_SERVER['REQUEST_URI']);
 
-		$pos = strpos($path,'?');
+		$pos = mb_strpos($path,'?');
 		if( $pos !== false ){
-			$path = substr($path,0,$pos);
+			$path = mb_substr($path,0,$pos);
 		}
 
 		$path = gpPlugin::Filter('WhichPage',array($path));

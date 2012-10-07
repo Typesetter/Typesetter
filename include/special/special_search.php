@@ -179,13 +179,13 @@ class special_gpsearch{
 			echo common::Link($result['slug'],$result['label'],$result['query']);
 			echo '</h4>';
 
+			echo $result['content'];
+
 			if( $this->show_stats ){
 				echo ' <span class="match_stats">';
 				echo $result['matches'].' match(es) out of '.$result['words'].' words ';
 				echo ' </span>';
 			}
-
-			echo $result['content'];
 			echo '</div>';
 		}
 		echo '</div>';

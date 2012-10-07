@@ -243,6 +243,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 			$backtrace[$i]['object'] = get_class($trace['object']);
 		}
 	}
+
 	$mess .= '<div><a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>';
 	$mess .= '<div class="nodisplay">';
 	$mess .= showArray($backtrace);
@@ -309,7 +310,6 @@ if( common::IniGet('register_globals') ){
 	}
 }
 
-
 function fix_magic_quotes( &$arr ) {
 	$new = array();
 	foreach( $arr as $key => $val ) {
@@ -324,6 +324,7 @@ function fix_magic_quotes( &$arr ) {
 	}
 	$arr = $new;
 }
+
 
 /**
  * Store a user message in the buffer
@@ -384,88 +385,37 @@ function includeFile( $file){
 }
 
 
-if( !function_exists('array_combine') ){
-	function array_combine($keys, $values) {
+/**
+ * Similar to print_r and var_dump, but it is output buffer handling function safe
+ * message( showArray(array(array(true))) );
+ * message( showArray(new tempo()) );
+ */
+function showArray($mixed){
+	static $level = 0;
+	$output = '';
 
-		$out = array();
-
-		$keys = array_values($keys);
-		$values = array_values($values);
-
-		foreach($keys as $key1 => $value1) {
-			$out[(string)$value1] = $values[$key1];
-		}
-
-		return $out;
-	}
-}
-
-if( !function_exists('ctype_alnum') ){
-	function ctype_alnum($string){
-		return (bool)preg_match('#^[a-z0-9]*$#i',$string);
-	}
-}
-
-if( !function_exists('ctype_digit') ){
-	function ctype_digit($string){
-		return (bool)preg_match('#^[0-9]*$#',$string);
-	}
-}
-
-function showArray($array){
-	return '<pre>'.htmlspecialchars(print_r($array,true)).'</pre>';
-	/*
-	if( is_object($array) ){
-		$array = get_object_vars($array);
-	}
-
-	$text = array();
-	$text[] = '<table cellspacing="0" cellpadding="7" class="tableRows" border="0">';
-	if(is_array($array)){
-		$odd = null;
-		$odd2 = null;
-
-		foreach($array as $key => $value){
-
-			if($odd2==1){
-				$odd = 'bgcolor="white"';
-				//$odd = ' class="tableRowEven" ';
-				$odd2 = 2;
-			}else{
-				$odd = 'bgcolor="#ddddee"';
-				//$odd = ' class="tableRowOdd" ';
-				$odd2 = 1;
+	$type = gettype($mixed);
+	switch($type){
+		case 'object':
+			$type = get_class($mixed).' object';
+		case 'array':
+			$output = $type.'('."\n";
+			foreach($mixed as $key => $value){
+				$level++;
+				$output .= str_repeat('   ',$level) . '[' . $key . '] => ' . showArray($value) . "\n";
+				$level--;
 			}
-			$text[] = '<tr '.$odd.'><td>';
- 			$text[] = $key;
-			$text[] = "</td><td>";
-			if( is_bool($value) ){
-				if($value){
-					$text[]= '<tt>TRUE</tt>';
-				}else{
-					$text[] = '<tt>FALSE</tt>';
-				}
-			}elseif( is_numeric($value) ){
-				$text[] = $value;
-			}elseif( !empty($value) ){
-
-				if( is_object($value) || is_array($value) ){
-					$text[] = showArray($value);
-				}elseif(is_string($value) ){
-					$text[] = htmlspecialchars($value);
-				}else{
-					$text[] = '<b>--unknown value--:</b> '.gettype($value);
-				}
-			}
-			$text[] = "</td></tr>";
-		}
-	}else{
-		$text[] = '<tr><td>'.$array.'</td></tr>';
+			$output .= str_repeat('   ',$level).')';
+		break;
+		default:
+			$output = '('.$type.')'.$mixed.'';
+		break;
 	}
-	$text[] = "</table>";
 
-	return "\n".implode("\n",$text)."\n";
-	*/
+	if( $level == 0 ){
+		return '<pre>'.$output.'</pre>';
+	}
+	return $output;
 }
 
 

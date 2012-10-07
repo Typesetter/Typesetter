@@ -417,28 +417,6 @@ if( !function_exists('ctype_digit') ){
 	}
 }
 
-if( !function_exists('http_build_query') ){
-	function http_build_query($data, $prefix='', $sep='', $key='') {
-		$ret = array();
-		foreach((array)$data as $k => $v) {
-
-			if (is_int($k) && $prefix != null) {
-				$k = urlencode($prefix . $k);
-			}
-			if((!empty($key)) || ($key === 0))  $k = $key.'['.urlencode($k).']';
-
-			if (is_array($v) || is_object($v)) {
-				array_push($ret, http_build_query($v, '', $sep, $k));
-			} else {
-				array_push($ret, $k.'='.urlencode($v));
-			}
-		}
-		if (empty($sep)) $sep = ini_get('arg_separator.output');
-		return implode($sep, $ret);
-	}
-}
-
-
 function showArray($array){
 	return '<pre>'.htmlspecialchars(print_r($array,true)).'</pre>';
 	/*
@@ -1698,7 +1676,6 @@ class common{
 				'maximgarea' => '691200',
 				'maxthumbsize' => '100',
 				'check_uploads' => true,
-				'shahash' => function_exists('sha1'), //1.6RC3
 				'colorbox_style' => 'example1',
 				'combinecss' => true,
 				'combinejs' => true,

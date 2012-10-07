@@ -268,9 +268,9 @@ class gp_combine{
 	 * @static
 	 */
 	function TrimQuery($file){
-		$pos = strpos($file,'?');
+		$pos = mb_strpos($file,'?');
 		if( $pos > 0 ){
-			$file = substr($file,0,$pos);
+			$file = mb_substr($file,0,$pos);
 		}
 		return trim($file);
 	}

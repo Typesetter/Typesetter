@@ -13,6 +13,13 @@ if( !function_exists('ctype_digit') ){
 	}
 }
 
+/**
+ * Also need:
+ * trim
+ * strspn
+ *
+ */
+
 if( !function_exists('mb_strpos') ){
 
 	function mb_strpos(){

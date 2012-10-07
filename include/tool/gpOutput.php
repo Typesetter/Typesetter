@@ -280,10 +280,10 @@ class gpOutput{
 		$key = $gpOutCmd = trim($gpOutCmd,':');
 		$info = false;
 		$arg = '';
-		$pos = strpos($key,':');
+		$pos = mb_strpos($key,':');
 		if( $pos > 0 ){
-			$arg = substr($key,$pos+1);
-			$key = substr($key,0,$pos);
+			$arg = mb_substr($key,$pos+1);
+			$key = mb_substr($key,0,$pos);
 		}
 
 

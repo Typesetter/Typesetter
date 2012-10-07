@@ -3,6 +3,10 @@ defined('is_running') or die('Not an entry point...');
 
 includeFile('tool/recaptcha.php');
 
+if( function_exists('mb_internal_encoding') ){
+	mb_internal_encoding('UTF-8');
+}
+
 class SimpleBlogCommon{
 
 	var $indexFile;
@@ -68,10 +72,6 @@ class SimpleBlogCommon{
 			unset($blogData['twitter_password']);
 		}
 
-		if( !empty($blogData['date_format']) && empty($blogData['strftime']) ){
-			$blogData['strftime'] = $this->DateToStrftime($blogData['date_format']);
-		}
-
 		$this->blogData = $blogData + SimpleBlogCommon::Defaults();
 		$this->GenIndexStr();
 	}
@@ -117,19 +117,16 @@ class SimpleBlogCommon{
 		$index = $this->blogData['str_index'];
 
 		$prev_key_str = ','.$key.':';
-		$prev_pos = strpos($index,$prev_key_str);
+		$prev_pos = SimpleBlogCommon::strpos($index,$prev_key_str);
 		if( $prev_pos === false ){
 			return false;
 		}
 		$offset = $prev_pos+1;
 
-		//php4 strpos
-		//$prev_comma = strpos($index,',',$offset);
-		$temp = substr($index,$offset);
-		$prev_comma = strpos($temp,',')+$offset;
+		$prev_comma = SimpleBlogCommon::strpos($index,',',$offset);
 
-		$offset = $prev_pos+strlen($prev_key_str);
-		return substr($index,$offset,$prev_comma - $offset);
+		$offset = $prev_pos+SimpleBlogCommon::strlen($prev_key_str);
+		return SimpleBlogCommon::substr($index,$offset,$prev_comma - $offset);
 	}
 
 	/**
@@ -143,6 +140,8 @@ class SimpleBlogCommon{
 		$post_pos = strpos($index,':'.$post_index.',');
 
 		$offset = $post_pos-$len;
+
+
 		$post_key_pos = strrpos($index,',',$offset);
 		$post_key_len = strspn($index,$integers,$post_key_pos+1);
 		return substr($index,$post_key_pos+1,$post_key_len);
@@ -527,7 +526,7 @@ class SimpleBlogCommon{
 		global $langmessage;
 
 		$array += array('title'=>'','content'=>'','subtitle'=>'');
-		$array['title'] = str_replace('_',' ',$array['title']);
+		$array['title'] = SimpleBlogCommon::Underscores( $array['title'] );
 
 		echo '<form action="'.common::GetUrl('Special_Blog').'" method="post">';
 		echo '<table style="width:100%">';
@@ -621,14 +620,14 @@ class SimpleBlogCommon{
 			$post =& $posts[$post_index];
 
 			echo '<entry>'."\n";
-			echo '<title>'.str_replace('_',' ',$post['title']).'</title>'."\n";
+			echo '<title>'.SimpleBlogCommon::Underscores( $post['title'] ).'</title>'."\n";
 			echo '<link href="'.$server.common::GetUrl('Special_Blog','id='.$post_index).'"></link>'."\n";
 			echo '<id>urn:uuid:'.$this->uuid($post_index).'</id>'."\n";
 			echo '<updated>'.date($atomFormat, $post['time']).'</updated>'."\n";
 
 			$content =& $post['content'];
-			if( ($this->blogData['feed_abbrev']> 0) && (strlen($content) > $this->blogData['feed_abbrev']) ){
-				$content = substr($content,0,$this->blogData['feed_abbrev']).' ... ';
+			if( ($this->blogData['feed_abbrev']> 0) && (SimpleBlogCommon::strlen($content) > $this->blogData['feed_abbrev']) ){
+				$content = SimpleBlogCommon::substr($content,0,$this->blogData['feed_abbrev']).' ... ';
 				$label = gpOutput::SelectText('Read More');
 				$content .= '<a href="'.$server.common::GetUrl('Special_Blog',$label,'id='.$post_index).'">'.$label.'</a>';
 			}
@@ -665,66 +664,55 @@ class SimpleBlogCommon{
 	 */
 	function FixLinks(&$content,$server,$offset){
 
-		//php4 strpos
-		$temp = substr($content,$offset);
-		$pos = strpos($temp,'href="')+$offset;
-		//$pos = strpos($content,'href="',$offset);
+		$pos = SimpleBlogCommon::strpos($content,'href="',$offset);
 		if( $pos <= 0 ){
 			return;
 		}
 		$pos = $pos+6;
 
-		//php4 strpos
-		//$pos2 = strpos($content,'"',$pos);
-		$temp = substr($content,$pos);
-		$pos2 = strpos($temp,'"')+$pos;
-
+		$pos2 = SimpleBlogCommon::strpos($content,'"',$pos);
 
 		if( $pos2 <= 0 ){
 			return;
 		}
 
 		//well formed link
-		//php4 strpos
-		//$check = strpos($content,'>',$pos);
-		$temp = substr($content,$pos);
-		$check = strpos($temp,'>')+$pos;
+		$check = SimpleBlogCommon::strpos($content,'>',$pos);
 		if( ($check !== false) && ($check < $pos2) ){
 			SimpleBlogCommon::FixLinks($content,$server,$pos2);
 			return;
 		}
 
-		$title = substr($content,$pos,$pos2-$pos);
+		$title = SimpleBlogCommon::substr($content,$pos,$pos2-$pos);
 
 		//internal link
-		if( strpos($title,'mailto:') !== false ){
+		if( SimpleBlogCommon::strpos($title,'mailto:') !== false ){
 			SimpleBlogCommon::FixLinks($content,$server,$pos2);
 			return;
 		}
-		if( strpos($title,'://') !== false ){
+		if( SimpleBlogCommon::strpos($title,'://') !== false ){
 			SimpleBlogCommon::FixLinks($content,$server,$pos2);
 			return;
 		}
 
-		if( strpos($title,'/') === 0 ){
+		if( SimpleBlogCommon::strpos($title,'/') === 0 ){
 			$replacement = $server.$title;
 		}else{
 			$replacement = $server.common::GetUrl($title);
 		}
 
-		$content = substr_replace($content,$replacement,$pos,$pos2-$pos);
-
+		$content = SimpleBlogCommon::substr_replace($content,$replacement,$pos,$pos2-$pos);
 
 		SimpleBlogCommon::FixLinks($content,$server,$pos2);
 	}
 
 	function uuid($str){
 		$chars = md5($str);
-		return substr($chars,0,8)
-				.'-'. substr($chars,8,4)
-				.'-'. substr($chars,12,4)
-				.'-'. substr($chars,16,4)
-				.'-'. substr($chars,20,12);
+		return SimpleBlogCommon::substr($chars,0,8)
+				.'-'. SimpleBlogCommon::substr($chars,8,4)
+				.'-'. SimpleBlogCommon::substr($chars,12,4)
+				.'-'. SimpleBlogCommon::substr($chars,16,4)
+				.'-'. SimpleBlogCommon::substr($chars,20,12);
 		return $uuid;
 	}
 
@@ -771,7 +759,7 @@ class SimpleBlogCommon{
 			$post =& $posts[$post_index];
 
 			$header = '<b class="simple_blog_title">';
-			$label = str_replace('_',' ',$post['title']);
+			$label = SimpleBlogCommon::Underscores( $post['title'] );
 			$header .= common::Link('Special_Blog',$label,'id='.$post_index);
 			$header .= '</b>';
 
@@ -780,19 +768,15 @@ class SimpleBlogCommon{
 
 			$content = strip_tags($post['content']);
 
-			if( $this->blogData['gadget_abbrev'] > 6 && (strlen($content) > $this->blogData['gadget_abbrev']) ){
+			if( $this->blogData['gadget_abbrev'] > 6 && (SimpleBlogCommon::strlen($content) > $this->blogData['gadget_abbrev']) ){
 
 				$cut = $this->blogData['gadget_abbrev'];
 
-				//php4 strpos
-				//$pos = strpos($content,' ',$cut-5);
-				$temp = substr($content,$cut-5);
-				$pos = strpos($temp,' ')+$cut-5;
-
+				$pos = SimpleBlogCommon::strpos($content,' ',$cut-5);
 				if( ($pos > 0) && ($cut+20 > $pos) ){
 					$cut = $pos;
 				}
-				$content = substr($content,0,$cut).' ... ';
+				$content = SimpleBlogCommon::substr($content,0,$cut).' ... ';
 
 				$label = gpOutput::SelectText('Read More');
 				$content .= common::Link('Special_Blog',$label,'id='.$post_index);
@@ -886,55 +870,6 @@ class SimpleBlogCommon{
 		}
 		$link = $server.common::GetUrl('Special_Blog','id='.$post_index,false);
 
-	}
-
-
-
-	function DateToStrftime($format){
-
-		$zero_strip = stristr(PHP_OS,'win') ? '#' : '-';
-
-
-		// Convert date flags to strftime flags
-		$date_flags = array(
-				'd', 'D', 'j', 'l', 'N', 'w', 'z', 						// Days
-				'W', 													// Weeks
-				'F', 'm', 'M', 'n',										// Months
-				'o', 'Y', 'y',											// Years
-				'A', 'g', 'G', 'h', 'H', 'i', 's',  					// Time
-				'U'														// Full Date/Time
-			);
-		$strftime_flags = array(
-				'%d', '%a', '%'.$zero_strip.'d', '%A', '%u', '%w', '%j', 				// Days
-				'%W',													// Weeks
-				'%B', '%m', '%b', '%'.$zero_strip.'m',					// Months
-				'%G', '%Y', '%y',										// Years
-				'%p', '%l', '%H', '%I', '%H', '%M', '%S', 				// Time
-				'%s'													// Full Date/Time
-			);
-
-		$new_format = '';
-		$i = 0;
-		do{
-			$char = $format{0};
-
-			//get escaped sequences
-			if( $char == '\\' ){
-				$len = strspn($format,'\\');
-				if( $len%2 == 1 ){
-					$len++;
-				}
-				$new_format .= substr($format,0,$len);
-				$format = substr($format,$len);
-				continue;
-			}
-
-			$format = substr($format,1);
-			$new_format .= str_replace($date_flags,$strftime_flags,$char);
-			$i++;
-		}while( strlen($format) > 0 && $i < 20 );
-
-		return $new_format;
 	}
 
 
@@ -1065,6 +1000,46 @@ class SimpleBlogCommon{
 		krsort($this->archives[$ym]);
 		krsort($this->archives);
 		gpFiles::SaveArray($this->archives_file,'archives',$this->archives); //save archives
+	}
+
+	function substr( $str, $start, $length = false ){
+		if( function_exists('mb_substr') ){
+			if( $length !== false ){
+				return mb_substr($str,$start,$length);
+			}
+			return mb_substr($str,$start);
+		}
+		if( $length !== false ){
+			return substr($str,$start,$length);
+		}
+		return substr($str,$start);
+	}
+
+	function strlen($str){
+		if( function_exists('mb_strlen') ){
+			return mb_strlen($str);
+		}
+		return strlen($str);
+	}
+
+	function strpos($haystack,$needle,$offset=0){
+		if( function_exists('mb_strpos') ){
+			return mb_strpos($haystack,$needle,$offset);
+		}
+		return strpos($haystack,$needle,$offset);
+	}
+
+	function substr_replace( $str, $repl, $start, $length ){
+		$part_one = SimpleBlogCommon::substr( $str, 0, $start);
+		$part_two = SimpleBlogCommon::substr( $str, $start+$length);
+		return $part_one . $repl . $part_two;
+	}
+
+	function Underscores($str){
+		if( function_exists('mb_ereg_replace') ){
+			return mb_ereg_replace('_',' ',$str);
+		}
+		return str_replace('_',' ',$str);
 	}
 
 }

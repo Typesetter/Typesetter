@@ -212,7 +212,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		$post =& $posts[$post_index];
 		$this->ShowPostContent($post,$post_index);
 
-		$page->label = str_replace('_',' ',$post['title']);
+		$page->label = SimpleBlogCommon::Underscores( $post['title'] );
 		$this->PostLinks($post_index);
 
 		//comments
@@ -518,7 +518,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		echo '<div class="blog_post'.$class.'" '.$id.'>';
 
 		$header = '<h2 id="blog_post_'.$post_index.'">';
-		$label = str_replace('_',' ',$post['title']);
+		$label = SimpleBlogCommon::Underscores( $post['title'] );
 		$header .= common::Link('Special_Blog',$label,'id='.$post_index);
 		$header .= '</h2>';
 
@@ -549,19 +549,16 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		$content = strip_tags($content);
 
-		if( strlen($content) < $limit ){
+		if( SimpleBlogCommon::strlen($content) < $limit ){
 			return $content;
 		}
 
-		//php4 strpos
-		//$pos = strpos($content,' ',$limit-5);
-		$temp = substr($content,$limit-5);
-		$pos = strpos($temp,' ')+$limit-5;
+		$pos = SimpleBlogCommon::strpos($content,' ',$limit-5);
 
 		if( ($pos > 0) && ($limit+20 > $pos) ){
 			$limit = $pos;
 		}
-		$content = substr($content,0,$limit).' ... ';
+		$content = SimpleBlogCommon::substr($content,0,$limit).' ... ';
 		$label = gpOutput::SelectText('Read More');
 		return $content . common::Link('Special_Blog',$label,'id='.$post_index);
 	}
@@ -661,7 +658,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		if( !empty($_POST['website']) && ($_POST['website'] !== 'http://') ){
 			$website = $_POST['website'];
-			if( strpos($website,'://') === false ){
+			if( SimpleBlogCommon::strpos($website,'://') === false ){
 				$website = false;
 			}
 			if( $website ){

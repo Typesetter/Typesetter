@@ -837,11 +837,7 @@ class common{
 
 		//decide how to send the content
 		gpOutput::Prep();
-		$req = '';
-		if( isset($_REQUEST['gpreq']) ){
-			$req = $_REQUEST['gpreq'];
-		}
-		switch($req){
+		switch(self::RequestType()){
 
 			// <a name="admin_box">
 			case 'flush':
@@ -883,6 +879,24 @@ class common{
 			$len = strlen($gp_head_content) + ob_get_length();
 			common::Send304( common::GenEtag( $page->fileModTime, $len ) );
 		}
+	}
+
+	/**
+	 * Return the type of response was requested by the client
+	 * @since 3.5b2
+	 * @return string
+	 */
+	function RequestType(){
+		if( isset($_REQUEST['gpreq']) ){
+			switch($_REQUEST['gpreq']){
+				case 'body':
+				case 'flush':
+				case 'json':
+				case 'content':
+				return $_REQUEST['gpreq'];
+			}
+		}
+		return 'template';
 	}
 
 

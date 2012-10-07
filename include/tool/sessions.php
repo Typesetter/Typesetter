@@ -476,17 +476,24 @@ class gpsession{
 
 	/**
 	 * Perform admin only changes to the content buffer
+	 * This will happen before gpOutput::BufferOut()
 	 *
 	 */
 	function AdminBuffer($buffer){
 		global $gp_random, $wbErrorBuffer, $gp_admin_html;
-		$nonce = common::new_nonce('post',true);
 
+		switch( common::RequestType() ){
+			case 'flush':
+			case 'json':
+			case 'content':
+			return false;
+		}
 
 		// Add a generic admin nonce field to each post form
 		// Admin nonces are also added with javascript if needed
 		$count = preg_match_all('#<form[^<>]+method=[\'"]post[\'"][^<>]+>#i',$buffer,$matches);
 		if( $count ){
+			$nonce = common::new_nonce('post',true);
 			$matches[0] = array_unique($matches[0]);
 			foreach($matches[0] as $match){
 
@@ -524,8 +531,8 @@ class gpsession{
 		//add $gp_admin_html to the document
 		$pos_body = strpos($buffer,'<body');
 		if( $pos_body ){
-			$pos = strpos($buffer,'>',$pos_body)+1;
-			$buffer = substr_replace($buffer,'<div id="gp_admin_html">'.$gp_admin_html.gpOutput::$editlinks.'</div>',$pos,0);
+			$pos = strpos($buffer,'>',$pos_body);
+			$buffer = substr_replace($buffer,'<div id="gp_admin_html">'.$gp_admin_html.gpOutput::$editlinks.'</div>',$pos+1,0);
 		}
 
 		return $buffer;

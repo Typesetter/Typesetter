@@ -357,7 +357,9 @@ class special_gpsearch{
 	}
 
 
-	//try to search in the blog
+	/**
+	 * @deprecated gpEasy 3.5b2
+	 */
 	function SearchBlog(){
 		global $dataDir, $gp_index, $gp_titles, $config;
 

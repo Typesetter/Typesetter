@@ -12,6 +12,7 @@ if( !defined('gpdebug') || !gpdebug ){
  */
 gp_defined('gpdebug',false);
 gp_defined('gpdebugjs',gpdebug);
+gp_defined('gpdebug_tools',false);
 gp_defined('gptesting',false);
 gp_defined('gptesting',false);
 gp_defined('gp_cookie_cmd',true);
@@ -25,6 +26,8 @@ gp_defined('E_STRICT',2048);
 gp_defined('E_RECOVERABLE_ERROR',4096);
 gp_defined('E_DEPRECATED',8192);
 gp_defined('E_USER_DEPRECATED',16384);
+gp_defined('gpdebug_tools',false);
+
 
 @ini_set( 'session.use_only_cookies', '1' );
 @ini_set( 'default_charset', 'utf-8' );

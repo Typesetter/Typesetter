@@ -101,6 +101,13 @@ define('gpdebug',true);
 
 
 /**
+ * gpdebug_tools
+ * Set to true to display some basic debug tools in the browser window.
+ * Defaults to false
+ */
+//define('gpdebug_tools',false);
+
+/**
  * gp_safe_mode
  * Set to true to turn safe mode on. This will prevent addons from being used.
  * Defaults to the value set for gpdebug

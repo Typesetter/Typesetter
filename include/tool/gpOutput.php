@@ -2016,7 +2016,7 @@ class gpOutput{
 		}
 
 
-		if( gpdebug && $pos = strpos($buffer,'<body') && function_exists('memory_get_peak_usage') ){
+		if( gpdebug_tools && $pos = strpos($buffer,'<body') && function_exists('memory_get_peak_usage') ){
 			$pos = strpos($buffer,'>',$pos);
 			//$limit = @ini_get('memory_limit'); //need to convert to byte value
 			$max_used = memory_get_peak_usage();

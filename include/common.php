@@ -30,7 +30,9 @@ gp_defined('E_USER_DEPRECATED',16384);
 
 @ini_set( 'session.use_only_cookies', '1' );
 @ini_set( 'default_charset', 'utf-8' );
-
+if( function_exists('mb_internal_encoding') ){
+	mb_internal_encoding('UTF-8');
+}
 
 //see /var/www/others/mediawiki-1.15.0/languages/Names.php
 $languages = array(
@@ -1081,6 +1083,7 @@ class common{
 
 		common::SetGlobalPaths($level,$expecting);
 		includeFile('tool/gpOutput.php');
+		includeFile('tool/functions.php');
 		if( $sessions ){
 			ob_start(array('gpOutput','BufferOut'));
 		}elseif( !$ob_gzhandler ){
@@ -2518,47 +2521,52 @@ class common{
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated 3.0
 	 * use gp_edit::UseCK();
 	 */
 	function UseFCK($contents,$name='gpcontent'){
+		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		return gp_edit::UseCK($contents,$name);
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated 3.0
 	 * Use gp_edit::UseCK();
 	 */
 
 	function UseCK($contents,$name='gpcontent',$options=array()){
+		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		return gp_edit::UseCK($contents,$name,$options);
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated 3.0
 	 * Use gp_edit::CKConfig();
 	 */
 	function CKConfig($options=array(),$config_name='config'){
+		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		return gp_edit::CKConfig($options,$config_name);
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated 3.0
 	 * Use gp_edit::PrepAutoComplete();
 	 */
 	function PrepAutoComplete($autocomplete_js=true,$GetUrl=true){
+		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		gp_edit::PrepAutoComplete($autocomplete_js,$GetUrl);
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated 3.0
 	 * Use gp_edit::AutoCompleteValues();
 	 */
 	function AutoCompleteValues($GetUrl=true,$options = array()){
+		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		return gp_edit::AutoCompleteValues($GetUrl,$options);
 	}
@@ -2740,6 +2748,7 @@ class gpFiles{
 	 * Use gp_edit::tidyFix()
 	 */
 	function tidyFix(&$text){
+		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		return gp_edit::tidyFix($text);
 	}
@@ -3199,19 +3208,21 @@ class gpFiles{
 
 
 	/**
-	 * @deprecated
+	 * @deprecated 3.0
 	 * Use gp_edit::CleanTitle() instead
 	 */
 	function CleanTitle($title,$spaces = '_'){
+		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		return gp_edit::CleanTitle($title,$spaces);
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated 3.0
 	 * Use gp_edit::CleanArg() instead
 	 */
 	function CleanArg($path){
+		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		return gp_edit::CleanArg($path);
 	}

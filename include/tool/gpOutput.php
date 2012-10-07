@@ -2016,11 +2016,21 @@ class gpOutput{
 		}
 
 
-		//if( gpdebug && count($_GET) == 0 && count($_POST) == 0 ){
-		//	$buffer .= '<h3>'.number_format(memory_get_usage()).'</h3>';
-		//	$buffer .= '<h3>'.number_format(memory_get_peak_usage()).'</h3>';
-		//	$buffer .= '<h2>'.microtime_diff($_SERVER['REQUEST_TIME'],microtime()).'</h2>';
-		//}
+		if( gpdebug && count($_GET) == 0 && count($_POST) == 0 && $pos = strpos($buffer,'<body') ){
+			$pos = strpos($buffer,'>',$pos);
+			//$limit = @ini_get('memory_limit'); //need to convert to byte value
+			$max_used = memory_get_peak_usage();
+			$percentage = round($max_used/$limit,2);
+			$replacement = '<div style="position:absolute;top:-1px;right:-1px;z-index:10000;padding:5px 10px;background:rgba(255,255,255,0.95);border:1px solid rgba(0,0,0,0.2);font-size:12px">'
+					.'<table>'
+					//.'<tr><td>Memory Usage:</td><td> '.number_format(memory_get_usage()).'</td></tr>'
+					.'<tr><td>Memory:</td><td> '.number_format(memory_get_peak_usage()).'</td></tr>'
+					//.'<tr><td>% of Limit:</td><td> '.$percentage.'%</td></tr>'
+					.'<tr><td>Time:</td><td> '.microtime_diff($_SERVER['REQUEST_TIME'],microtime()).'</td></tr>'
+					.'</table>'
+					.'</div>';
+			$buffer = substr_replace($buffer,$replacement,$pos+1,0);
+		}
 
 		return $buffer;
 	}

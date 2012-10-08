@@ -479,7 +479,7 @@ class gpsession{
 	 * This will happen before gpOutput::BufferOut()
 	 *
 	 */
-	function AdminBuffer($buffer){
+	static function AdminBuffer($buffer){
 		global $gp_random, $wbErrorBuffer, $gp_admin_html;
 
 		//check for html document

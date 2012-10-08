@@ -1983,7 +1983,7 @@ class gpOutput{
 	 * @param string $buffer html content
 	 * @return string finalized response
 	 */
-	function BufferOut($buffer){
+	static function BufferOut($buffer){
 		global $config,	$gp_head_content, $gp_random;
 
 		//get just the head of the buffer to see if we need to add charset

@@ -453,27 +453,25 @@ class gp_filesystem_base{
 			$trash_rel = $this->TempFile( $to_rel.'-old' );
 			$trash_full = $fs_root.'/'.$trash_rel;
 
-			if( !$this->file_exists($to_full) ){
-				$message = $langmessage['dir_replace_failed'].' (Exist Check Failed - '.$this->method.' - '.htmlspecialchars($to_full).')';
-				break;
-			}
-
 			if( !$this->file_exists($from_full) ){
 				$message = $langmessage['dir_replace_failed'].' (Exist Check Failed - '.$this->method.' - '.htmlspecialchars($from_full).')';
 				break;
 			}
 
-			//rename the original to the trash
-			if( !$this->rename( $to_full, $trash_full ) ){
-				$message = $langmessage['dir_replace_failed'].' (Rename 1 Failed - '.$this->method.')';
-				break;
+
+			//rename the original to the trash if it exists
+			if( $this->file_exists($to_full) ){
+				if( !$this->rename( $to_full, $trash_full ) ){
+					$message = $langmessage['dir_replace_failed'].' (Rename of existing directory failed - '.$this->method.')';
+					break;
+				}
+				$trash_dirs[$to_rel] = $trash_rel;
 			}
 
-			$trash_dirs[$to_rel] = $trash_rel;
 
 			//if we've gotten this far, it's very unlikely this rename would fail
 			if( !$this->rename( $from_full, $to_full ) ){
-				$message = $langmessage['dir_replace_failed'].' (Rename 2 Failed - '.$this->method.')';
+				$message = $langmessage['dir_replace_failed'].' (Rename of new directory failed - '.$this->method.')';
 				break;
 			}
 

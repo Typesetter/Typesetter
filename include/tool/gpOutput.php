@@ -2018,14 +2018,13 @@ class gpOutput{
 		}
 
 
-		if( gpdebug_tools && function_exists('memory_get_peak_usage') ){
+		if( gpdebug_tools && function_exists('memory_get_peak_usage') && ($pos = strpos($buffer,'<body')) ){
 			$pos = strpos($buffer,'>',$pos);
 			//$limit = @ini_get('memory_limit'); //need to convert to byte value
 			$max_used = memory_get_peak_usage();
 			$percentage = round($max_used/$limit,2);
 			$replacement = "\n".'<div style="position:absolute;top:-1px;right:-1px;z-index:10000;padding:5px 10px;background:rgba(255,255,255,0.95);border:1px solid rgba(0,0,0,0.2);font-size:12px">'
 					.'<table>'
-					.'<tr><td>Temp:</td><td> '.$pos.'</td></tr>'
 					//.'<tr><td>Memory Usage:</td><td> '.number_format(memory_get_usage()).'</td></tr>'
 					.'<tr><td>Memory:</td><td> '.number_format(memory_get_peak_usage()).'</td></tr>'
 					//.'<tr><td>% of Limit:</td><td> '.$percentage.'%</td></tr>'

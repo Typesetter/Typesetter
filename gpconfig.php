@@ -105,7 +105,7 @@ define('gpdebug',true);
  * Set to true to display some basic debug tools in the browser window.
  * Defaults to false
  */
-//define('gpdebug_tools',false);
+define('gpdebug_tools',true);
 
 /**
  * gp_safe_mode

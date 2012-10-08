@@ -1986,13 +1986,6 @@ class gpOutput{
 	function BufferOut($buffer){
 		global $config,	$gp_head_content, $gp_random;
 
-		switch( common::RequestType() ){
-			case 'flush':
-			case 'json':
-			case 'content':
-			return false;
-		}
-
 		//get just the head of the buffer to see if we need to add charset
 		$pos = strpos($buffer,'</head');
 		if( $pos > 0 ){
@@ -2003,9 +1996,11 @@ class gpOutput{
 		//replace the <head> placeholder with header content
 		$placeholder = '<!-- get_head_placeholder '.$gp_random.' -->';
 		$pos = strpos($buffer,$placeholder);
-		if( $pos !== false ){
-			$buffer = substr_replace($buffer,$gp_head_content,$pos,strlen($placeholder)); //uses less memory than str_replace
+		if( $pos === false ){
+			return false;
 		}
+		$buffer = substr_replace($buffer,$gp_head_content,$pos,strlen($placeholder)); //uses less memory than str_replace
+
 
 		//add jquery if needed
 		$placeholder = '<!-- jquery_placeholder '.$gp_random.' -->';
@@ -2023,7 +2018,7 @@ class gpOutput{
 		}
 
 
-		if( gpdebug_tools && ($pos = strpos($buffer,'<body')) && function_exists('memory_get_peak_usage') ){
+		if( gpdebug_tools && function_exists('memory_get_peak_usage') ){
 			$pos = strpos($buffer,'>',$pos);
 			//$limit = @ini_get('memory_limit'); //need to convert to byte value
 			$max_used = memory_get_peak_usage();
@@ -2042,7 +2037,6 @@ class gpOutput{
 
 		return $buffer;
 	}
-
 
 	/**
 	 * Add appropriate meta charset if it hasn't already been set

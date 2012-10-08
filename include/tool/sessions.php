@@ -482,11 +482,10 @@ class gpsession{
 	function AdminBuffer($buffer){
 		global $gp_random, $wbErrorBuffer, $gp_admin_html;
 
-		switch( common::RequestType() ){
-			case 'flush':
-			case 'json':
-			case 'content':
-			return false;
+		//check for html document
+		$html_doc = true;
+		if( strpos($buffer,'<!-- get_head_placeholder '.$gp_random.' -->') === false ){
+			$html_doc = false;
 		}
 
 		// Add a generic admin nonce field to each post form
@@ -530,7 +529,7 @@ class gpsession{
 
 		//add $gp_admin_html to the document
 		$pos_body = strpos($buffer,'<body');
-		if( $pos_body ){
+		if( $html_doc && $pos_body ){
 			$pos = strpos($buffer,'>',$pos_body);
 			$buffer = substr_replace($buffer,'<div id="gp_admin_html">'.$gp_admin_html.gpOutput::$editlinks.'</div>',$pos+1,0);
 		}

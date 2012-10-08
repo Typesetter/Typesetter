@@ -1986,8 +1986,6 @@ class gpOutput{
 	static function BufferOut($buffer){
 		global $config,	$gp_head_content, $gp_random,$wbMessageBuffer;
 
-		message('here');
-
 		//get just the head of the buffer to see if we need to add charset
 		$pos = strpos($buffer,'</head');
 		if( $pos > 0 ){
@@ -2001,7 +1999,7 @@ class gpOutput{
 		if( $pos === false ){
 			return false;
 		}
-		$buffer = substr_replace($buffer,$gp_head_content,$pos,strlen($placeholder)); //uses less memory than str_replace
+		$buffer = substr_replace($buffer,$gp_head_content,$pos,strlen($placeholder));
 
 
 		//add jquery if needed
@@ -2016,23 +2014,16 @@ class gpOutput{
 					$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/js/jquery.js')."\"></script>";
 				}
 			}
-			$buffer = substr_replace($buffer,$replacement,$pos,strlen($placeholder)); //uses less memory than str_replace
+			$buffer = substr_replace($buffer,$replacement,$pos,strlen($placeholder));
 		}
 
 		//messages
-		$temp = 'nothing';
-		if( count($wbMessageBuffer) ){
-			$temp = 'has messages';
-
-			$search = '<!-- message_placeholder '.$gp_random.' -->';
-			$pos = strpos($buffer,$search);
-			if( $pos ){
-				$temp = $pos;
-
-			}
+		$pos = strpos($buffer,'<!-- message_start '.$gp_random.' -->');
+		$len = strpos($buffer,'<!-- message_end -->') - $pos;
+		if( $pos && $len ){
+			$replacement = GetMessages();
+			$buffer = substr_replace($buffer,$replacement,$pos,$len);
 		}
-
-
 
 
 		if( gpdebug_tools && function_exists('memory_get_peak_usage') && ($pos = strpos($buffer,'<body')) ){
@@ -2043,7 +2034,6 @@ class gpOutput{
 			$replacement = "\n".'<div style="position:absolute;top:-1px;right:-1px;z-index:10000;padding:5px 10px;background:rgba(255,255,255,0.95);border:1px solid rgba(0,0,0,0.2);font-size:12px">'
 					.'<b>Debug Tools</b>'
 					.'<table>'
-					.'<tr><td>Temp:</td><td> '.$temp.'</td></tr>'
 					//.'<tr><td>Memory Usage:</td><td> '.number_format(memory_get_usage()).'</td></tr>'
 					.'<tr><td>Memory:</td><td> '.number_format(memory_get_peak_usage()).'</td></tr>'
 					//.'<tr><td>% of Limit:</td><td> '.$percentage.'%</td></tr>'

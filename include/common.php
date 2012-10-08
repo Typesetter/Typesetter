@@ -351,10 +351,10 @@ function GetMessages(){
 		message($message);
 	}
 
-	$result = '';
+	$result = "\n<!-- message_start ".$gp_random." -->";
 	if( !empty($wbMessageBuffer) ){
 
-		$result = '<div class="messages"><div>';
+		$result .= '<div class="messages"><div>';
 		$result .= '<a style="" href="#" class="req_script close_message" name="close_message"></a>';
 		$result .= '<ul>';
 
@@ -370,12 +370,10 @@ function GetMessages(){
 			}
 		}
 
-		$result .= '<!-- message_placeholder '.$gp_random.' --></ul></div></div>';
-		$wbMessageBuffer = array();
+		$result .= '</ul></div></div>';
 	}
 
-	$result .= common::ErrorBuffer();
-	return $result;
+	return $result .= common::ErrorBuffer()."<!-- message_end -->\n";
 }
 
 
@@ -2373,7 +2371,6 @@ class common{
 			$i++;
 		}
 
-		$wbErrorBuffer = array();
 		return common::IdReq($img_path, $jquery);
 	}
 

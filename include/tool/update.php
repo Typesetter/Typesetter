@@ -45,7 +45,7 @@ class update_class{
 		global $langmessage;
 
 		echo '<div id="gpx_content">';
-		GetMessages();
+		echo GetMessages();
 		echo $this->contentBuffer;
 		echo '</div>';
 

@@ -88,14 +88,14 @@ class gpOutput{
 	function Flush(){
 		global $page;
 		header('Content-Type: text/html; charset=utf-8');
-		GetMessages();
+		echo GetMessages();
 		echo $page->contentBuffer;
 	}
 
 	function Content(){
 		global $page;
 		header('Content-Type: text/html; charset=utf-8');
-		GetMessages();
+		echo GetMessages();
 		$page->GetGpxContent();
 	}
 
@@ -115,7 +115,7 @@ class gpOutput{
 		gpOutput::getHead();
 		echo '</head>';
 		echo '<body class="gpbody">';
-		GetMessages();
+		echo GetMessages();
 
 		$page->GetGpxContent();
 
@@ -1984,7 +1984,9 @@ class gpOutput{
 	 * @return string finalized response
 	 */
 	static function BufferOut($buffer){
-		global $config,	$gp_head_content, $gp_random;
+		global $config,	$gp_head_content, $gp_random,$wbMessageBuffer;
+
+		message('here');
 
 		//get just the head of the buffer to see if we need to add charset
 		$pos = strpos($buffer,'</head');
@@ -2017,6 +2019,21 @@ class gpOutput{
 			$buffer = substr_replace($buffer,$replacement,$pos,strlen($placeholder)); //uses less memory than str_replace
 		}
 
+		//messages
+		$temp = 'nothing';
+		if( count($wbMessageBuffer) ){
+			$temp = 'has messages';
+
+			$search = '<!-- message_placeholder '.$gp_random.' -->';
+			$pos = strpos($buffer,$search);
+			if( $pos ){
+				$temp = $pos;
+
+			}
+		}
+
+
+
 
 		if( gpdebug_tools && function_exists('memory_get_peak_usage') && ($pos = strpos($buffer,'<body')) ){
 			$pos = strpos($buffer,'>',$pos);
@@ -2024,7 +2041,9 @@ class gpOutput{
 			$max_used = memory_get_peak_usage();
 			$percentage = round($max_used/$limit,2);
 			$replacement = "\n".'<div style="position:absolute;top:-1px;right:-1px;z-index:10000;padding:5px 10px;background:rgba(255,255,255,0.95);border:1px solid rgba(0,0,0,0.2);font-size:12px">'
+					.'<b>Debug Tools</b>'
 					.'<table>'
+					.'<tr><td>Temp:</td><td> '.$temp.'</td></tr>'
 					//.'<tr><td>Memory Usage:</td><td> '.number_format(memory_get_usage()).'</td></tr>'
 					.'<tr><td>Memory:</td><td> '.number_format(memory_get_peak_usage()).'</td></tr>'
 					//.'<tr><td>% of Limit:</td><td> '.$percentage.'%</td></tr>'
@@ -2208,7 +2227,7 @@ class gpOutput{
 			echo '</span>';
 		}
 
-		GetMessages();
+		echo GetMessages();
 	}
 
 

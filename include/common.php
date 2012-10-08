@@ -343,7 +343,7 @@ function message(){
  *
  */
 function GetMessages(){
-	global $wbMessageBuffer,$gp_not_writable,$langmessage;
+	global $wbMessageBuffer,$gp_not_writable,$langmessage,$gp_random;
 
 	if( common::loggedIn() && count($gp_not_writable) > 0 ){
 		$files = '<ul><li>'.implode('</li><li>',$gp_not_writable).'</li></ul>';
@@ -351,9 +351,13 @@ function GetMessages(){
 		message($message);
 	}
 
-
+	$result = '';
 	if( !empty($wbMessageBuffer) ){
-		$result = '';
+
+		$result = '<div class="messages"><div>';
+		$result .= '<a style="" href="#" class="req_script close_message" name="close_message"></a>';
+		$result .= '<ul>';
+
 		foreach($wbMessageBuffer as $args){
 			if( !isset($args[0]) ){
 				continue;
@@ -365,16 +369,13 @@ function GetMessages(){
 				$result .= '<li>'.$args[0].'</li>';
 			}
 		}
-		//$result = str_replace('%s',' ',$result);
 
-
+		$result .= '<!-- message_placeholder '.$gp_random.' --></ul></div></div>';
 		$wbMessageBuffer = array();
-		echo '<div class="messages"><div>';
-		echo '<a style="" href="#" class="req_script close_message" name="close_message"></a>';
-		echo '<ul>'.$result.'</ul></div></div>';
 	}
 
-	common::ErrorBuffer();
+	$result .= common::ErrorBuffer();
+	return $result;
 }
 
 
@@ -803,21 +804,27 @@ class display{
 	/* Deprecated functions
 	 */
 	function GetHead(){
+		trigger_error('deprecated functions');
 		gpOutput::GetHead();
 	}
 	function GetExtra($area,$info=array()){
+		trigger_error('deprecated functions');
 		gpOutput::GetExtra($area,$info);
 	}
 	function GetMenu(){
+		trigger_error('deprecated functions');
 		gpOutput::GetMenu();
 	}
 	function GetFullMenu(){
+		trigger_error('deprecated functions');
 		gpOutput::GetFullMenu();
 	}
 	function GetAllGadgets(){
+		trigger_error('deprecated functions');
 		gpOutput::GetAllGadgets();
 	}
 	function GetAdminLink(){
+		trigger_error('deprecated functions');
 		gpOutput::GetAdminLink();
 	}
 

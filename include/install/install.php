@@ -194,7 +194,7 @@ ul.install_status .failed{
 <?php
 
 new gp_install();
-common::ErrorBuffer(false);
+echo common::ErrorBuffer(false);
 echo '</div>';
 echo '</body></html>';
 

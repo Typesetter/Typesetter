@@ -104,7 +104,7 @@ class gpAjax{
 
 		//always send messages
 		ob_start();
-		GetMessages();
+		echo GetMessages();
 		$content = ob_get_clean();
 		if( !empty($content) ){
 			gpAjax::JsonDo('messages','',$content);

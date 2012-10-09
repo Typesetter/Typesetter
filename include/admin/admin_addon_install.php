@@ -1506,7 +1506,7 @@ class admin_addon_install extends admin_addons_tool{
 
 		$full_result = gpRemoteGet::Get($download_link);
 		if( (int)$full_result['response']['code'] < 200 && (int)$full_result['response']['code'] >= 300 ){
-			message($langmessage['download_failed'].' (1)');
+			echo '<p class="gp_notice">'.$langmessage['download_failed'].' (1)</p>';
 			return false;
 		}
 
@@ -1521,15 +1521,16 @@ class admin_addon_install extends admin_addons_tool{
 		$md5 =& $full_result['headers']['x-md5'];
 
 		//check md5
-		if( md5($result) != $md5 ){
-			message($langmessage['OOPS'].' '.$langmessage['Download_Unverified']);
+		$package_md5 = md5($result);
+		if( $package_md5 != $md5 ){
+			echo '<p class="gp_notice">'.$langmessage['download_failed_md5'].' (Package Checksum '.$package_md5.' != Expected Checksum '.$md5.')</p>';
 			return false;
 		}
 
 		//save contents
 		$tempfile = $this->tempfile();
 		if( !gpFiles::Save($tempfile,$result) ){
-			message($langmessage['download_failed'].' (2)');
+			echo '<p class="gp_notice">'.$langmessage['download_failed'].' (Package not saved)</p>';
 			return false;
 		}
 

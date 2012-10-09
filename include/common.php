@@ -1,11 +1,13 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-error_reporting(E_ALL);
 set_error_handler('showError');
-if( !defined('gpdebug') || !gpdebug ){
-	@ini_set('display_errors',0);
+@ini_set('display_errors',0);
+ini_set('log_errors', 1);
+if( defined('gpdebug') && gpdebug ){
+	error_reporting(E_ALL);
 }
+
 
 /**
  * See gpconfig.php for these configuration options
@@ -130,78 +132,13 @@ if ( function_exists( 'date_default_timezone_set' ) )
  * Error Handling
  * Display the error and a debug_backtrace if gpdebug is not false
  * If gpdebug is an email address, send the error message to the address
+ * @return false Always returns false so the standard PHP error handler is also used
  *
  */
 function showError($errno, $errmsg, $filename, $linenum, $vars){
 	global $wbErrorBuffer, $addon_current_id, $page, $addon_current_version;
 	static $reported = array();
 
-	// since we're supporting php 4.3+ there are technically a lot on non-static functions being called statically
-	if( $errno === E_STRICT ){
-		return;
-	}
-
-	// for functions prepended with @ symbol to suppress errors
-	if( gpdebug === false && error_reporting() === 0 ){
-		return;
-	}
-
-	//get the backtrace and function where the error was thrown
-	$backtrace = debug_backtrace();
-	//remove showError() from backtrace
-	if( strtolower($backtrace[0]['function']) == 'showerror' ){
-		@array_shift($backtrace);
-	}
-
-	//record one error per function and only record the error once per request
-	if( !isset($backtrace[0]['function']) ){
-		return;
-	}
-	$uniq = $filename.$backtrace[0]['function'];
-	if( isset($reported[$uniq]) ){
-		return;
-	}
-	$reported[$uniq] = true;
-
-
-	if( gpdebug === false ){
-
-		//if it's an addon error, determine if if was installed remotely
-		if( isset($addon_current_id) && $addon_current_id ){
-			$remote_install = false;
-			foreach($backtrace as $row){
-				if( strpos($row['file'],'/data/') !== false ){
-					$remote_install = true;
-					break;
-				}
-			}
-			if( !$remote_install ){
-				return;
-			}
-
-		//if it's a core error, it should be in the include folder
-		}elseif( strpos($backtrace[0]['file'],'/include/') === false ){
-			return;
-		}
-
-		//record the error
-		$i = count($wbErrorBuffer);
-		$args['en'.$i] = $errno;
-		$args['el'.$i] = $linenum;
-		$args['em'.$i] = substr($errmsg,0,255);
-		$args['ef'.$i] = $filename; //filename length checked later
-		if( isset($addon_current_id) ){
-			$args['ea'.$i] = $addon_current_id;
-		}
-		if( isset($addon_current_version) && $addon_current_version ){
-			$args['ev'.$i] = $addon_current_version;
-		}
-		if( is_object($page) && !empty($page->title) ){
-			$args['ep'.$i] = $page->title;
-		}
-		$wbErrorBuffer[$uniq] = $args;
-		return;
-	}
 
 	$errortype = array (
 				E_ERROR				=> 'Error',
@@ -220,6 +157,81 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 				E_DEPRECATED		=> 'Deprecated',
 				E_USER_DEPRECATED	=> 'User Deprecated',
 			 );
+
+
+	// since we're supporting php 4.3+ there are technically a lot on non-static functions being called statically
+	if( $errno === E_STRICT ){
+		return false;
+	}
+
+	// for functions prepended with @ symbol to suppress errors
+	$error_reporting = error_reporting();
+	if( $error_reporting === 0 ){
+
+		//make sure the error is logged
+		error_log('PHP '.$errortype[$errno].':  '.$errmsg.' in '.$filename.' on line '.$linenum);
+
+		if( gpdebug === false ){
+			return false;
+		}
+	}
+
+	//get the backtrace and function where the error was thrown
+	$backtrace = debug_backtrace();
+	//remove showError() from backtrace
+	if( strtolower($backtrace[0]['function']) == 'showerror' ){
+		@array_shift($backtrace);
+	}
+
+	//record one error per function and only record the error once per request
+	if( !isset($backtrace[0]['function']) ){
+		return false;
+	}
+	$uniq = $filename.$backtrace[0]['function'];
+	if( isset($reported[$uniq]) ){
+		return false;
+	}
+	$reported[$uniq] = true;
+
+	if( gpdebug === false ){
+
+		//if it's an addon error, determine if if was installed remotely
+		if( isset($addon_current_id) && $addon_current_id ){
+			$remote_install = false;
+			foreach($backtrace as $row){
+				if( strpos($row['file'],'/data/') !== false ){
+					$remote_install = true;
+					break;
+				}
+			}
+			if( !$remote_install ){
+				return false;
+			}
+
+		//if it's a core error, it should be in the include folder
+		}elseif( strpos($backtrace[0]['file'],'/include/') === false ){
+			return false;
+		}
+
+		//record the error
+		$i = count($wbErrorBuffer);
+		$args['en'.$i] = $errno;
+		$args['el'.$i] = $linenum;
+		$args['em'.$i] = substr($errmsg,0,255);
+		$args['ef'.$i] = $filename; //filename length checked later
+		if( isset($addon_current_id) ){
+			$args['ea'.$i] = $addon_current_id;
+		}
+		if( isset($addon_current_version) && $addon_current_version ){
+			$args['ev'.$i] = $addon_current_version;
+		}
+		if( is_object($page) && !empty($page->title) ){
+			$args['ep'.$i] = $page->title;
+		}
+		$wbErrorBuffer[$uniq] = $args;
+		return false;
+	}
+
 
 	$mess = '';
 	$mess .= '<fieldset style="padding:1em">';
@@ -260,6 +272,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 		includeFile('tool/email_mailer.php');
 		$gp_mailer->SendEmail(gpdebug, 'debug ', $mess);
 	}
+	return false;
 }
 
 

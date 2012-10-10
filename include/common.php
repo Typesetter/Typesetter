@@ -849,7 +849,7 @@ class display{
 class common{
 
 	function RunOut(){
-		global $page, $gp_head_content;
+		global $page;
 
 		$page->RunScript();
 
@@ -886,6 +886,8 @@ class common{
 			break;
 		}
 
+
+
 		//if logged in, prepare the admin content and don't send 304 response
 		if( common::LoggedIn() ){
 			admin_tools::AdminHtml();
@@ -894,7 +896,11 @@ class common{
 
 		/* attempt to send 304 response  */
 		if( $page->fileModTime > 0 ){
+			global $wbMessageBuffer, $gp_head_content;
 			$len = strlen($gp_head_content) + ob_get_length();
+			if( count($wbMessageBuffer) ){
+				$len += strlen( implode(',',$wbMessageBuffer) );
+			}
 			common::Send304( common::GenEtag( $page->fileModTime, $len ) );
 		}
 	}

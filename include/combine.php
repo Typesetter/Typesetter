@@ -285,7 +285,7 @@ class gp_combine{
 		//gpEasy
 		$scripts['gp-main'] = array(
 								'file' => 'js/main.js',
-								'requires' => array('jquery','ui-core'));
+								'requires' => array('jquery')); //'ui-core'
 
 		$scripts['gp-admin'] = array(
 								'file' => 'js/admin.js',

@@ -1625,6 +1625,7 @@ class gpOutput{
 			common::AddColorBox();
 		}
 
+
 		//always include javascript when there are messages
 		if( $page->admin_js || !empty($page->jQueryCode) || !empty($wbMessageBuffer) || isset($_COOKIE['cookie_cmd']) ){
 			common::LoadComponents('gp-main');
@@ -1826,7 +1827,7 @@ class gpOutput{
 		$keys_before = array_keys($scripts);
 
 		//just jQuery
-		if( count($scripts) < 2 ){
+		if( !count($page->head_js) && count($scripts) < 2 ){
 			echo $placeholder;
 			return;
 		}
@@ -1984,7 +1985,7 @@ class gpOutput{
 	 * @return string finalized response
 	 */
 	static function BufferOut($buffer){
-		global $config,	$gp_head_content, $gp_random,$wbMessageBuffer;
+		global $config,	$gp_head_content, $gp_random;
 
 		//get just the head of the buffer to see if we need to add charset
 		$pos = strpos($buffer,'</head');
@@ -2045,6 +2046,7 @@ class gpOutput{
 
 		return $buffer;
 	}
+
 
 	/**
 	 * Add appropriate meta charset if it hasn't already been set

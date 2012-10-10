@@ -899,7 +899,7 @@ class common{
 			global $wbMessageBuffer, $gp_head_content;
 			$len = strlen($gp_head_content) + ob_get_length();
 			if( count($wbMessageBuffer) ){
-				$len += strlen( implode(',',$wbMessageBuffer) );
+				$len += strlen( serialize($wbMessageBuffer) );
 			}
 			common::Send304( common::GenEtag( $page->fileModTime, $len ) );
 		}

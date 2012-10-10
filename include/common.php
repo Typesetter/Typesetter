@@ -1361,8 +1361,8 @@ class common{
 		$href2 = '';
 		$pos = mb_strpos($href,'/');
 		if( $pos !== false ){
-			$href = mb_substr($href,0,$pos);
 			$href2 = mb_substr($href,$pos);
+			$href = mb_substr($href,0,$pos);
 		}
 
 		$lower = mb_strtolower($href);

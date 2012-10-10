@@ -361,6 +361,7 @@ function GetMessages(){
 		$files = '<ul><li>'.implode('</li><li>',$gp_not_writable).'</li></ul>';
 		$message = sprintf($langmessage['not_writable'],common::GetUrl('Admin_Status')).$files;
 		message($message);
+		$gp_not_writable = array();
 	}
 
 	$result = "\n<!-- message_start ".$gp_random." -->";

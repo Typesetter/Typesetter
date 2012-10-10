@@ -281,11 +281,7 @@ class gp_filesystem_base{
 	}
 
 	function unlink($path){
-		if( unlink($path) ){
-			clearstatcache();
-			return true;
-		}
-		return false;
+		return unlink($path);
 	}
 
 	function is_dir($path){
@@ -298,7 +294,7 @@ class gp_filesystem_base{
 		if( empty($dir) ) return false;
 
 		if( is_link($dir) ){
-			return unlink($dir);
+			return $this->unlink($dir);
 		}
 
 		if( !$this->is_dir($dir) ){
@@ -310,11 +306,11 @@ class gp_filesystem_base{
 		if( is_array($list) ){
 			foreach($list as $file){
 				$full_path = $dir.'/'.$file;
-				if( is_dir($full_path) ){
+				if( $this->is_dir($full_path) ){
 					if( !$this->rmdir_all($full_path) ){
 						$success = false;
 					}
-				}elseif( !unlink($full_path) ){
+				}elseif( !$this->unlink($full_path) ){
 					$success = false;
 				}
 			}
@@ -790,7 +786,7 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 		}
 
 		@ftp_pasv($this->conn_id, true );
-		$ftp_list = @ftp_nlist($this->conn_id, '-a');
+		$ftp_list = @ftp_nlist($this->conn_id, '.');//no arguments like "-a"!
 		@ftp_chdir($this->conn_id, $pwd);
 
 		// Empty array = non-existent folder (real folder will show . at least)

@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * $upload_extensions_allow and $upload_extensions_deny
  * Allow or deny the upload of files based on their file extensions
@@ -106,6 +107,16 @@ define('gpdebug',true);
  * Defaults to false
  */
 define('gpdebug_tools',true);
+
+
+/**
+ * Prevent errors from being displayed to site visitors
+ * Should be set to "0" for any production site
+ * Set to "1" if gpEasy is unable to display errors with gpdebug set to "true" (see above)
+ *
+ */
+@ini_set('display_errors',0);
+
 
 /**
  * gp_safe_mode

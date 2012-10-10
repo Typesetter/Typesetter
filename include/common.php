@@ -2,7 +2,6 @@
 defined('is_running') or die('Not an entry point...');
 
 set_error_handler('showError');
-//@ini_set('display_errors',0);
 ini_set('log_errors', 1);
 if( defined('gpdebug') && gpdebug ){
 	error_reporting(E_ALL);

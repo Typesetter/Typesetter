@@ -1476,7 +1476,7 @@ class admin_addon_install extends admin_addons_tool{
 
 
 	function RemoteInstall2(){
-		global $langmessage, $addonBrowsePath;
+		global $langmessage;
 
 		includeFile('tool/RemoteGet.php');
 
@@ -1491,7 +1491,7 @@ class admin_addon_install extends admin_addons_tool{
 		}
 
 		//download
-		$download_link = $addonBrowsePath;
+		$download_link = addon_browse_path;
 		if( $_POST['type'] == 'theme' ){
 			$download_link .= '/Special_Addon_Themes';
 		}else{
@@ -1523,7 +1523,7 @@ class admin_addon_install extends admin_addons_tool{
 		//check md5
 		$package_md5 = md5($result);
 		if( $package_md5 != $md5 ){
-			echo '<p class="gp_notice">'.$langmessage['download_failed_md5'].' (Package Checksum '.$package_md5.' != Expected Checksum '.$md5.')</p>';
+			echo '<p class="gp_notice">'.$langmessage['download_failed_md5'].' <br/> (Package Checksum '.$package_md5.' != Expected Checksum '.$md5.')</p>';
 			return false;
 		}
 
@@ -1773,7 +1773,7 @@ class admin_addon_install extends admin_addons_tool{
 		if( $this->config_index == 'themes' ){
 			$slug = 'Special_Addon_Themes';
 		}
-		$src = $GLOBALS['addonBrowsePath'].'/'.$slug.'?'.$this->searchQuery.'&page='.$this->searchPage;
+		$src = addon_browse_path.'/'.$slug.'?'.$this->searchQuery.'&page='.$this->searchPage;
 
 		//check cache
 		$cache_file = $dataDir.'/data/_remote/'.sha1($src).'.txt';
@@ -1903,7 +1903,7 @@ class admin_addon_install extends admin_addons_tool{
 		if( $row['type'] == 'plugin' ){
 			$url = 'Special_Addon_Plugins';
 		}
-		return $GLOBALS['addonBrowsePath'].'/'.$url.'?id='.$row['id'].$q;
+		return addon_browse_path.'/'.$url.'?id='.$row['id'].$q;
 	}
 
 	function FindForm(){

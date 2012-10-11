@@ -28,7 +28,8 @@ gp_defined('E_RECOVERABLE_ERROR',4096);
 gp_defined('E_DEPRECATED',8192);
 gp_defined('E_USER_DEPRECATED',16384);
 gp_defined('gpdebug_tools',false);
-
+//gp_defined('addon_browse_path','http://gpeasy.loc/index.php'); message('local browse path');
+gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
 @ini_set( 'session.use_only_cookies', '1' );
 @ini_set( 'default_charset', 'utf-8' );
@@ -74,9 +75,6 @@ $languages = array(
 $gpversion = '3.5b1';
 $addonDataFolder = $addonCodeFolder = false;//deprecated
 $addonPathData = $addonPathCode = false;
-$addonBrowsePath = 'http://gpeasy.com/index.php';
-//$addonBrowsePath = 'http://gpeasy.loc/rocky/index.php';
-//message('local browse path');
 $checkFileIndex = true;
 $wbErrorBuffer = $gp_not_writable = array();
 $gp_random = common::RandomString();
@@ -2283,9 +2281,9 @@ class common{
 
 
 	function IdUrl($request_cmd='cv'){
-		global $config, $gpversion, $addonBrowsePath;
+		global $config, $gpversion;
 
-		$path = $addonBrowsePath.'/Special_Resources?';
+		$path = addon_browse_path.'/Special_Resources?';
 
 		//command
 		$args['cmd'] = $request_cmd;

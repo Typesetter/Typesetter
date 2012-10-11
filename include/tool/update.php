@@ -905,13 +905,13 @@ class update_class{
 
 
 	function DownloadSource(&$package){
-		global $langmessage, $addonBrowsePath;
+		global $langmessage;
 
 		/* for testing
 		 * $download = 'http://test.gpeasy.com/gpEasy_test.zip';
 		 * $download = 'http://gpeasy.loc/rocky/x_gpEasy_test.zip';
 		 */
-		$download = $addonBrowsePath.'/Special_gpEasy?cmd=download&version='.urlencode($package['version']).'&file='.urlencode($package['zip']);
+		$download = addon_browse_path.'/Special_gpEasy?cmd=download&version='.urlencode($package['version']).'&file='.urlencode($package['zip']);
 
 		echo '<li>Downloading version '.$package['version'].' from gpEasy.com.</li>';
 

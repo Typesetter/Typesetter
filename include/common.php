@@ -428,7 +428,7 @@ function showArray($mixed){
 	}
 
 	if( $level == 0 ){
-		return '<pre>'.$output.'</pre>';
+		return '<pre>'.htmlspecialchars($output).'</pre>';
 	}
 	return $output;
 }
@@ -1980,7 +1980,7 @@ class common{
 		}
 
 		if( isset($config['homepath']) && $path == $config['homepath'] ){
-			common::Redirect(common::GetUrl(''));
+			common::Redirect(common::GetUrl('',http_build_query($_GET),false));
 		}
 
 		return $path;

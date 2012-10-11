@@ -151,7 +151,7 @@ class admin_display extends display{
 
 				$lower = strtolower($request_string);
 				if( isset($case_check[$lower]) ){
-					$location = common::GetUrl($case_check[$lower],'',false);
+					$location = common::GetUrl($case_check[$lower],http_build_query($_GET),false);
 					common::Redirect($location);
 				}
 			}

@@ -122,21 +122,21 @@ class special_display extends display{
 		$scripts['special_gpsearch']['script'] = '/include/special/special_search.php';
 		$scripts['special_gpsearch']['class'] = 'special_gpsearch';
 
+		//check for use of a index instead of a page title
+		$translated = common::SpecialHref($requested);
+		if( $translated != $requested ){
+			$requested = $translated;
+			if( $redirect ){
+				$title = common::GetUrl($requested,http_build_query($_GET),false);
+				common::Redirect($title);
+			}
+		}
 
-		$found = false;
+
+		//get the script info
 		$parts = explode('/',$requested);
 		do{
 			$requested = implode('/',$parts);
-
-			//check for use of a index instead of a page title
-			if( !isset($gp_index[$requested]) && $translated = common::IndexToTitle(strtolower($requested)) ){
-				$requested = $translated;
-				if( $redirect ){
-					$title = common::GetUrl($translated,'',false);
-					common::Redirect($translated);
-				}
-			}
-
 			if( isset($gp_index[$requested]) ){
 
 				$index = $gp_index[$requested];

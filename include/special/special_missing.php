@@ -69,7 +69,7 @@ class special_missing{
 		$first_percent = current($similar);
 
 		if( $config['auto_redir'] > 0 && $first_percent >= $config['auto_redir'] ){
-			$redirect = common::GetUrl($first_title);
+			$redirect = common::GetUrl($first_title,http_build_query($_GET),false);
 			common::Redirect($redirect);
 		}
 	}

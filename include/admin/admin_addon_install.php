@@ -253,7 +253,7 @@ class admin_addon_install extends admin_addons_tool{
 	 *
 	 */
 	function InitInstall(){
-		global $dataDir, $langmessage, $gpversion;
+		global $dataDir, $langmessage;
 
 		if( empty($_REQUEST['source']) ){
 			message($langmessage['OOPS']);
@@ -478,7 +478,7 @@ class admin_addon_install extends admin_addons_tool{
 	 * @return bool
 	 */
 	function Install_CheckIni(){
-		global $langmessage, $gpversion;
+		global $langmessage;
 
 		//warn if attempting to install lesser version of same addon
 		if( !empty($this->upgrade_key) ){
@@ -494,7 +494,7 @@ class admin_addon_install extends admin_addons_tool{
 
 		//Check Versions
 		if( isset($this->ini_contents['min_gpeasy_version']) ){
-			if(version_compare($this->ini_contents['min_gpeasy_version'], $gpversion,'>') ){
+			if(version_compare($this->ini_contents['min_gpeasy_version'], gpversion,'>') ){
 				echo '<p class="gp_warning">';
 				echo sprintf($langmessage['min_version'],$this->ini_contents['min_gpeasy_version']);
 				echo ' '.$langmessage['min_version_upgrade'];
@@ -1704,7 +1704,7 @@ class admin_addon_install extends admin_addons_tool{
 	 *
 	 */
 	function RemoteBrowse(){
-		global $langmessage, $config, $dataDir,$gpversion;
+		global $langmessage, $config, $dataDir;
 
 
 		//search options
@@ -1754,7 +1754,7 @@ class admin_addon_install extends admin_addons_tool{
 		//version specific search
 		$search_version = false;
 		if( !isset($config['search_version']) || $config['search_version'] ){
-			$this->searchQuery .= '&ug='.rawurlencode($gpversion);
+			$this->searchQuery .= '&ug='.rawurlencode(gpversion);
 			$search_version = true;
 		}
 
@@ -1881,7 +1881,7 @@ class admin_addon_install extends admin_addons_tool{
 
 		echo '<h3>Search Options</h3>';
 		echo '<ul>';
-		echo '<li>Limit results to addons that are compatible with your version of gpEasy ('.$gpversion.') &nbsp; ';
+		echo '<li>Limit results to addons that are compatible with your version of gpEasy ('.gpversion.') &nbsp; ';
 
 		if( $search_version ){
 			echo '<b>'.$langmessage['On'].'</b> &nbsp; ';

@@ -30,6 +30,7 @@ gp_defined('E_USER_DEPRECATED',16384);
 gp_defined('gpdebug_tools',false);
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php'); message('local browse path');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
+gp_defined('gpversion','3.5b1');
 
 @ini_set( 'session.use_only_cookies', '1' );
 @ini_set( 'default_charset', 'utf-8' );
@@ -71,8 +72,7 @@ $languages = array(
 
 
 
-//$gpversion = '2.4';
-$gpversion = '3.5b1';
+$gpversion = gpversion; // @deprecated 3.5b2
 $addonDataFolder = $addonCodeFolder = false;//deprecated
 $addonPathData = $addonPathCode = false;
 $checkFileIndex = true;
@@ -2281,7 +2281,7 @@ class common{
 
 
 	function IdUrl($request_cmd='cv'){
-		global $config, $gpversion;
+		global $config;
 
 		$path = addon_browse_path.'/Special_Resources?';
 
@@ -2295,7 +2295,7 @@ class common{
 		//$args['uniq'] = $config['gpuniq'];
 		$args['mdu'] = substr(md5($config['gpuniq']),0,20);
 		$args['site'] = common::AbsoluteUrl(''); //keep full path for backwards compat
-		$args['gpv'] = $gpversion;
+		$args['gpv'] = gpversion;
 		$args['php'] = phpversion();
 		$args['se'] =& $_SERVER['SERVER_SOFTWARE'];
 		if( defined('service_provider_id') && is_numeric(service_provider_id) ){
@@ -2833,7 +2833,6 @@ class gpFiles{
 	 * @return bool True on success
 	 */
 	function SaveFile($file,$contents,$code=false,$time=false){
-		global $gpversion;
 
 		$result = gpFiles::FileStart($file,$time);
 		if( $result !== false ){
@@ -2879,7 +2878,6 @@ class gpFiles{
 	 *
 	 */
 	function SaveArray(){
-		global $gpversion;
 
 		$args = func_get_args();
 		$count = count($args);
@@ -2912,18 +2910,17 @@ class gpFiles{
 	 *
 	 */
 	function FileStart($file, $time=false, $file_stats = array() ){
-		global $gpversion;
 
 		if( $time === false ) $time = time();
 
 		//file stats
 		$file_stats = (array)$file_stats + gpFiles::GetFileStats($file);
-		$file_stats['gpversion'] = $gpversion;
+		$file_stats['gpversion'] = gpversion;
 		$file_stats['modified'] = $time;
 
 		return '<'.'?'.'php'
 				. "\ndefined('is_running') or die('Not an entry point...');"
-				. "\n".'$fileVersion = \''.$gpversion.'\';' /* @deprecated 3.0 */
+				. "\n".'$fileVersion = \''.gpversion.'\';' /* @deprecated 3.0 */
 				. "\n".'$fileModTime = \''.$time.'\';' /* @deprecated 3.0 */
 				. "\n".gpFiles::ArrayToPHP('file_stats',$file_stats)
 				. "\n\n";

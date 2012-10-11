@@ -280,10 +280,10 @@ class admin_port{
 	}
 
 	function Export_Ini($which_exported){
-		global $gpversion, $dirPrefix, $dataDir;
+		global $dirPrefix, $dataDir;
 
 		$content = array();
-		$content[] = 'Export_Version = '.$gpversion;
+		$content[] = 'Export_Version = '.gpversion;
 		$content[] = 'Export_Which = '.$which_exported;
 		$content[] = 'Export_Time = '.time();
 		$content[] = 'Export_Prefix = '.$dirPrefix;
@@ -327,7 +327,7 @@ class admin_port{
 	 */
 
 	function Revert($cmd){
-		global $langmessage, $gpversion, $gp_filesystem, $dataDir, $gpAdmin;
+		global $langmessage, $gp_filesystem, $dataDir, $gpAdmin;
 
 		if( !$this->RevertFilesystem() ){
 			return false;
@@ -394,9 +394,9 @@ class admin_port{
 		echo '</p>';
 
 
-		if( version_compare($gpversion,$this->import_info['Export_Version'],'!=') ){
+		if( version_compare(gpversion,$this->import_info['Export_Version'],'!=') ){
 			echo '<p class="gp_notice">';
-			echo sprintf($langmessage['revert_ver_notice'],$gpversion,$this->import_info['Export_Version']);
+			echo sprintf($langmessage['revert_ver_notice'],gpversion,$this->import_info['Export_Version']);
 			echo '</p>';
 		}
 

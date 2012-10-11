@@ -4,10 +4,9 @@ defined('is_running') or die('Not an entry point...');
 class admin_about{
 
 	function admin_about(){
-		global $gpversion;
 
 		echo '<div style="width:600px;padding:0 20px;">';
-		echo '<h2>gpEasy CMS Version '.$gpversion.'</h2>';
+		echo '<h2>gpEasy CMS Version '.gpversion.'</h2>';
 		echo '<p>';
 		echo 'Free, Open Source and easy to use.';
 		echo '</p>';

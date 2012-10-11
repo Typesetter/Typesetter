@@ -10,8 +10,6 @@ wordpress/wp-admin/includes/class-wp-filesystem-ftpext.php
 */
 
 
-global $gpversion;
-
 class update_class{
 
 	//page variables
@@ -79,7 +77,7 @@ class update_class{
 	 *
 	 */
 	function VersionsAndCheckTime(&$new_versions){
-		global $gpversion, $config, $dataDir;
+		global $config, $dataDir;
 
 		includeFile('tool/RemoteGet.php');
 
@@ -96,7 +94,7 @@ class update_class{
 		if( !defined('multi_site_unique') && isset($update_data['packages']['core']) ){
 			$core_version = $update_data['packages']['core']['version'];
 
-			if( $core_version && version_compare($gpversion,$core_version,'<') ){
+			if( $core_version && version_compare(gpversion,$core_version,'<') ){
 				$new_versions['core'] = $core_version;
 			}
 		}
@@ -365,7 +363,7 @@ class update_class{
 	}
 
 	function DoRemoteCheck2(){
-		global $config, $gpversion;
+		global $config;
 
 		$path = common::IdUrl();
 		$result = gpRemoteGet::Get_Successful($path);
@@ -399,7 +397,7 @@ class update_class{
 
 		//save some info in $config
 /*
-		if( $core_version && version_compare($gpversion,$core_version,'<') ){
+		if( $core_version && version_compare(gpversion,$core_version,'<') ){
 			$config['updates']['core'] = time();
 		}
 		$config['updates']['checked'] = time();
@@ -414,7 +412,7 @@ class update_class{
 
 
 	function ShowStatus(){
-		global $langmessage,$gpversion;
+		global $langmessage;
 
 		if( !isset($this->update_data['packages']['core']) ){
 			return;
@@ -422,7 +420,7 @@ class update_class{
 		$core_package = $this->update_data['packages']['core'];
 
 		echo '<div class="inline_message">';
-		if( version_compare($gpversion,$core_package['version'],'<') ){
+		if( version_compare(gpversion,$core_package['version'],'<') ){
 			echo '<span class="green">';
 			echo $langmessage['New_version_available'];
 			echo ' &nbsp; ';
@@ -432,7 +430,7 @@ class update_class{
 			echo '<table>';
 			echo '<tr>';
 			echo '<td>'.$langmessage['Your_version'].'</td>';
-			echo '<td>'.$gpversion.'</td>';
+			echo '<td>'.gpversion.'</td>';
 			echo '</tr>';
 
 			echo '<tr>';
@@ -444,7 +442,7 @@ class update_class{
 		}else{
 			echo $langmessage['UP_TO_DATE'];
 			echo '<div>'.$langmessage['Your_version'];
-			echo '  '.$gpversion;
+			echo '  '.gpversion;
 			echo '</div>';
 			echo '<div>';
 			echo common::link('',$langmessage['return_to_your_site']);
@@ -459,7 +457,7 @@ class update_class{
 
 
 	function Update(){
-		global $langmessage, $gp_filesystem, $gpversion;
+		global $langmessage, $gp_filesystem;
 
 
 		if( !isset($this->update_data['packages']['core']) ){
@@ -476,7 +474,7 @@ class update_class{
 		}
 
 		//already up to date?
-		if( ($curr_step < 4) && version_compare($gpversion,$core_package['version'],'>=') ){
+		if( ($curr_step < 4) && version_compare(gpversion,$core_package['version'],'>=') ){
 			message($langmessage['UP_TO_DATE']);
 			return false;
 		}

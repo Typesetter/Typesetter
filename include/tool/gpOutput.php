@@ -1610,10 +1610,9 @@ class gpOutput{
 	 *
 	 */
 	function GetHead(){
-		global $gp_random;
 		gpPlugin::Action('GetHead');
 		gpOutput::PrepGadgetContent();
-		echo '<!-- get_head_placeholder '.$gp_random.' -->';
+		echo '<!-- get_head_placeholder '.gp_random.' -->';
 	}
 	function HeadContent(){
 		global $config, $page, $gp_head_content, $wbMessageBuffer;
@@ -1820,9 +1819,9 @@ class gpOutput{
 	 * @static
 	 */
 	function GetHead_JS($scripts){
-		global $page, $config, $gp_random;
+		global $page, $config;
 
-		$placeholder = '<!-- jquery_placeholder '.$gp_random.' -->';
+		$placeholder = '<!-- jquery_placeholder '.gp_random.' -->';
 
 		$keys_before = array_keys($scripts);
 
@@ -1985,7 +1984,7 @@ class gpOutput{
 	 * @return string finalized response
 	 */
 	static function BufferOut($buffer){
-		global $config,	$gp_head_content, $gp_random;
+		global $config,	$gp_head_content;
 
 		//get just the head of the buffer to see if we need to add charset
 		$pos = strpos($buffer,'</head');
@@ -1995,7 +1994,7 @@ class gpOutput{
 		}
 
 		//replace the <head> placeholder with header content
-		$placeholder = '<!-- get_head_placeholder '.$gp_random.' -->';
+		$placeholder = '<!-- get_head_placeholder '.gp_random.' -->';
 		$pos = strpos($buffer,$placeholder);
 		if( $pos === false ){
 			return false;
@@ -2004,7 +2003,7 @@ class gpOutput{
 
 
 		//add jquery if needed
-		$placeholder = '<!-- jquery_placeholder '.$gp_random.' -->';
+		$placeholder = '<!-- jquery_placeholder '.gp_random.' -->';
 		$pos = strpos($buffer,$placeholder);
 		if( $pos !== false ){
 			$replacement = '';
@@ -2019,7 +2018,7 @@ class gpOutput{
 		}
 
 		//messages
-		$pos = strpos($buffer,'<!-- message_start '.$gp_random.' -->');
+		$pos = strpos($buffer,'<!-- message_start '.gp_random.' -->');
 		$len = strpos($buffer,'<!-- message_end -->') - $pos;
 		if( $pos && $len ){
 			$replacement = GetMessages();

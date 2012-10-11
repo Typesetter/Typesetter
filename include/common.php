@@ -30,7 +30,10 @@ gp_defined('E_USER_DEPRECATED',16384);
 gp_defined('gpdebug_tools',false);
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php'); message('local browse path');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
-gp_defined('gpversion','3.5b1');
+
+define('gpversion','3.5b1');
+define('gp_random',common::RandomString());
+
 
 @ini_set( 'session.use_only_cookies', '1' );
 @ini_set( 'default_charset', 'utf-8' );
@@ -77,7 +80,7 @@ $addonDataFolder = $addonCodeFolder = false;//deprecated
 $addonPathData = $addonPathCode = false;
 $checkFileIndex = true;
 $wbErrorBuffer = $gp_not_writable = array();
-$gp_random = common::RandomString();
+
 
 
 /* from wordpress
@@ -353,7 +356,7 @@ function message(){
  *
  */
 function GetMessages(){
-	global $wbMessageBuffer,$gp_not_writable,$langmessage,$gp_random;
+	global $wbMessageBuffer,$gp_not_writable,$langmessage;
 
 	if( common::loggedIn() && count($gp_not_writable) > 0 ){
 		$files = '<ul><li>'.implode('</li><li>',$gp_not_writable).'</li></ul>';
@@ -362,7 +365,7 @@ function GetMessages(){
 		$gp_not_writable = array();
 	}
 
-	$result = "\n<!-- message_start ".$gp_random." -->";
+	$result = "\n<!-- message_start ".gp_random." -->";
 	if( !empty($wbMessageBuffer) ){
 
 		$result .= '<div class="messages"><div>';

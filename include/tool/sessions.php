@@ -379,7 +379,7 @@ class gpsession{
 	 *
 	 */
 	function start($session_id){
-		global $langmessage, $dataDir,$gp_random,$GP_LANG_VALUES;
+		global $langmessage, $dataDir,$GP_LANG_VALUES;
 
 		//get the session file
 		$sessions = gpsession::GetSessionIds();
@@ -480,11 +480,11 @@ class gpsession{
 	 *
 	 */
 	static function AdminBuffer($buffer){
-		global $gp_random, $wbErrorBuffer, $gp_admin_html;
+		global $wbErrorBuffer, $gp_admin_html;
 
 		//check for html document
 		$html_doc = true;
-		if( strpos($buffer,'<!-- get_head_placeholder '.$gp_random.' -->') === false ){
+		if( strpos($buffer,'<!-- get_head_placeholder '.gp_random.' -->') === false ){
 			$html_doc = false;
 		}
 

@@ -1441,11 +1441,6 @@ class common{
 		return common::HrefEncode($dir).$query;
 	}
 
-	/* @deprecated, use common::GetDir() */
-	function GetDir_Prefixed($dir){
-		//return common::GetDir($dir);
-	}
-
 
 	/**
 	 * Get the label for a page from it's index

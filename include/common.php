@@ -1609,8 +1609,24 @@ class common{
 			unset($config['hidegplink']);
 		}
 
-		//set values
-		$config += common::ConfigDefaults();
+		//make sure defaults are set
+		$config += array(
+				'maximgarea' => '691200',
+				'maxthumbsize' => '100',
+				'check_uploads' => true,
+				'colorbox_style' => 'example1',
+				'combinecss' => true,
+				'combinejs' => true,
+				'etag_headers' => true,
+				'customlang' => array(),
+				'showgplink' => true,
+				'showsitemap' => true,
+				'showlogin' => true,
+				'auto_redir' => 90,	//2.5
+				'resize_images' => true,	//3.5
+				'jquery' => 'local',
+				);
+
 		if( isset($GLOBALS['dirPrefix']) ){
 			$config['dirPrefix'] = $GLOBALS['dirPrefix']; // deprecated 2.4b4 $config['dirPrefix'], $GLOBALS['dirPrefix'] won't always be set (example: cron jobs)
 		}
@@ -1648,28 +1664,6 @@ class common{
 		return 'gpEasy_'.substr(sha1($uniq),12,12);
 	}
 
-	/**
-	 * Return an array with some of gpEasy's configuration defailts
-	 *
-	 */
-	function ConfigDefaults(){
-		return array(
-				'maximgarea' => '691200',
-				'maxthumbsize' => '100',
-				'check_uploads' => true,
-				'colorbox_style' => 'example1',
-				'combinecss' => true,
-				'combinejs' => true,
-				'etag_headers' => true,
-				'customlang' => array(),
-				'showgplink' => true,
-				'showsitemap' => true,
-				'showlogin' => true,
-				'auto_redir' => 90,	//2.5
-				'resize_images' => true,	//3.5
-				'jquery' => 'local',
-				);
-	}
 
 	/**
 	 * Set global variables ( $gp_index, $gp_titles, $gp_menu and $gpLayouts ) from _site/pages.php

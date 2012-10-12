@@ -51,6 +51,9 @@ $(function(){
 	if( elfinder_opts.getFileCallback ){
 		elfinder_opts.getFileCallback = function(file) {
 			var funcNum = getUrlParam('CKEditorFuncNum');
+			if( typeof(file) == 'object' ){
+				file = file.url;
+			}
 			window.top.opener.CKEDITOR.tools.callFunction(funcNum, file);
 			window.top.close();
 			window.top.opener.focus() ;

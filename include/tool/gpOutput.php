@@ -2166,16 +2166,7 @@ class gpOutput{
 	 * @return bool
 	 */
 	function DetectBot(){
-		$tests = array('googlebot','yahoo! slurp','msnbot','ask jeeves','ia_archiver','bot','spider');
-
-		$agent =& $_SERVER['HTTP_USER_AGENT'];
-		$agent = strtolower($agent);
-		$agent = str_replace($tests,'GP_FOUND_SPIDER',$agent);
-		return (strpos($agent,'GP_FOUND_SPIDER') !== false);
-		if( strpos($agent,'GP_FOUND_SPIDER') === false ){
-			return false;
-		}
-		return true;
+		return preg_match('#bot|yahoo\! slurp|ask jeeves|ia_archiver|spider#i',$_SERVER['HTTP_USER_AGENT']);
 	}
 
 	/**

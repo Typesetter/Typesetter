@@ -4,32 +4,6 @@ var gpPublic;
 var $gp;
 var gp_error = 'There was an error processing the last request. Please reload this page to continue.';
 
-
-var logi = 0;
-function LOG(a){
-	$('<div style="padding:20px" />').html(logi+' :: '+ a).appendTo('body');
-	logi++;
-
-}
-
-////log obejct
-function LOGO(obj){
-	var a = '';
-	for(var i in obj){
-		try{
-			try{
-				a += '<br/><b>'+i+ "</b> = " + obj[i].toString().replace(/</g,'&lt;') + "\n";
-			}catch(m){
-				a += '<br/><b>'+i+ "</b> = " + obj[i] + "\n";
-			}
-		}catch(m){
-			a += '<br/><b>'+i+"</b> -- not allowed -- \n";
-		}
-	}
-	LOG(a);
-}
-
-
 function createCookie(name,value,days) {
 	if (days) {
 		var date = new Date();

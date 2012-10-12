@@ -2,11 +2,33 @@
 var gp_editor = false;
 
 var debug_area;
-function debug(str){
-	if( !debug_area ) debug_area = $('<div id="debug" style="position:fixed;top:0;left:0;background:#fff;padding:10px;z-index:99999;">').prependTo('body');
-	debug_area.prepend('<div>'+str+'</div>');
+function debug(arg){
+	if( !debug_area ) debug_area = $('<div id="debug" style="position:fixed;top:0;left:0;background:#fff;padding:10px;z-index:99999;border:1px solid #333;">').prependTo('body');
+	debug_area.prepend('<div>'+LOGO(arg)+'</div><hr/>');
 }
-
+function LOGO(obj){
+	var type = typeof(obj);
+	var a = '('+type+') ';
+	switch(type){
+		case 'object':
+			for(var i in obj){
+				try{
+					try{
+						a += '<br/><b>'+i+ "</b> = " + obj[i].toString().replace(/</g,'&lt;') + "\n";
+					}catch(m){
+						a += '<br/><b>'+i+ "</b> = " + obj[i] + "\n";
+					}
+				}catch(m){
+					a += '<br/><b>'+i+"</b> -- not allowed -- \n";
+				}
+			}
+		break;
+		default:
+			a += obj;
+		break;
+	}
+	return a;
+}
 
 
 //get the coordinates for positioning editable area overlays

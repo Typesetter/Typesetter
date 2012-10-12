@@ -468,10 +468,10 @@ class admin_tools{
 
 				$label = $new_addon_info['name'].':  '.$new_addon_info['version'];
 				if( $new_addon_info['type'] == 'theme' ){
-					echo '<li>'.common::Link('Admin_Theme_Content',$label,'cmd=remote').'</li>';
+					echo '<li>'.common::Link('Admin_Theme_Content/Remote',$label).'</li>';
 
 				}elseif( $new_addon_info['type'] == 'plugin' ){
-					echo '<li>'.common::Link('Admin_Addons',$label,'cmd=remote').'</li>';
+					echo '<li>'.common::Link('Admin_Addons/Remote',$label).'</li>';
 				}else{
 					continue;
 				}
@@ -792,7 +792,7 @@ class admin_tools{
 					echo '</li>';
 				}
 				echo '<li>';
-				echo common::Link('Admin_Theme_Content',$langmessage['Download Themes'],'cmd=remote');
+				echo common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']);
 				echo '</li>';
 			break;
 		}
@@ -1103,7 +1103,7 @@ class admin_tools{
 			echo common::Link('Admin_Addons',$langmessage['manage']);
 			echo '</li>';
 			echo '<li class="seperator">';
-			echo common::Link('Admin_Addons',$langmessage['Download Plugins'],'cmd=remote');
+			echo common::Link('Admin_Addons/Remote',$langmessage['Download Plugins']);
 			echo '</li>';
 		}
 

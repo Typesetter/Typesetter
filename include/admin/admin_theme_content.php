@@ -47,7 +47,8 @@ class admin_theme_content extends admin_addon_install{
 	//remote install variables
 	var $config_index = 'themes';
 	var $addon_folder_name = '_themes';
-	var $browser_path = 'Admin_Theme_Content';
+	var $path_root = 'Admin_Theme_Content';
+	var $path_remote = 'Admin_Theme_Content/Remote';
 	var $can_install_links = false;
 
 
@@ -72,6 +73,12 @@ class admin_theme_content extends admin_addon_install{
 		if( strpos($page->requested,'/') ){
 			$parts = explode('/',$page->requested);
 			$layout_part = $parts[1];
+			switch( strtolower($layout_part) ){
+				case 'remote':
+					$this->RemoteBrowse();
+				return;
+			}
+
 			if( isset($gpLayouts[$layout_part]) && $this->EditLayout($layout_part,$cmd) ){
 				return;
 			}
@@ -86,11 +93,6 @@ class admin_theme_content extends admin_addon_install{
 
 
 		switch($cmd){
-
-			case 'remote':
-				$this->RemoteBrowse();
-			return;
-
 
 			//remote themes
 			case 'remote_install':
@@ -1535,7 +1537,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '<h2 class="hmargin">';
 		echo $langmessage['Manage Layouts'];
 		echo ' <span>|</span> ';
-		echo common::Link($this->browser_path,$this->find_label,'cmd=remote');
+		echo common::Link($this->path_remote,$this->find_label);
 		echo '</h2>';
 
 		echo '<table class="bordered full_width">';

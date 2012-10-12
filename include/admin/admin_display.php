@@ -207,8 +207,8 @@ class admin_display extends display{
 		echo '<div class="panelgroup">';
 		echo '<span class="icon_page_gear"><span>'.$langmessage['resources'].' (gpEasy.com)</span></span>';
 		echo '<ul>';
-		echo '<li>'.common::Link('Admin_Addons',$langmessage['Download Plugins'],'cmd=remote').'</li>';
-		echo '<li>'.common::Link('Admin_Theme_Content',$langmessage['Download Themes'],'cmd=remote').'</li>';
+		echo '<li>'.common::Link('Admin_Addons/Remote',$langmessage['Download Plugins']).'</li>';
+		echo '<li>'.common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']).'</li>';
 		echo '<li><a href="http://gpeasy.com">Support Forum</a></li>';
 		echo '<li><a href="http://gpeasy.com/Special_Services">Service Providers</a></li>';
 		echo '<li><a href="http://gpeasy.com">Official gpEasy Site</a></li>';

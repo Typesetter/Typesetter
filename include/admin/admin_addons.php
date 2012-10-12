@@ -71,16 +71,24 @@ class admin_addons extends admin_addon_install{
 		$cmd = common::GetCommand();
 
 
+		//
+		$display = 'main';
+		if( strpos($page->requested,'/') ){
+			$parts = explode('/',$page->requested);
+			switch(strtolower($parts[1])){
+				case 'remote':
+					$this->RemoteBrowse();
+				return;
+			}
+		}
+
+
 		switch($cmd){
 
 			/* testing */
 			case 'package':
 				includeFile('admin/x_admin_addon_package.php');
 				new addon_package();
-			break;
-
-			case 'remote':
-				$this->RemoteBrowse();
 			break;
 
 			case 'develop':
@@ -634,7 +642,7 @@ class admin_addons extends admin_addon_install{
 		echo '<h2 class="hmargin">';
 		echo $langmessage['Manage Plugins'];
 		echo ' <span>|</span> ';
-		echo common::Link($this->browser_path,$langmessage['Find Plugins'],'cmd=remote');
+		echo common::Link($this->path_remote,$langmessage['Find Plugins']);
 		echo '</h2>';
 
 

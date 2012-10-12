@@ -33,7 +33,8 @@ class admin_addon_install extends admin_addons_tool{
 	var $config_index = 'addons';
 	var $addon_folder_name = '_addoncode';
 	var $addon_folder;
-	var $browser_path = 'Admin_Addons';
+	var $path_root = 'Admin_Addons';
+	var $path_remote = 'Admin_Addons/Remote';
 	var $can_install_links = true;
 
 	var $find_label;
@@ -147,7 +148,7 @@ class admin_addon_install extends admin_addons_tool{
 		echo '</p>';
 
 		echo '<p>';
-		echo '<form action="'.common::GetUrl($this->browser_path).'" method="post">';
+		echo '<form action="'.common::GetUrl($this->path_root).'" method="post">';
 		echo '<input type="hidden" name="cmd" value="step1" />';
 		echo '<input type="hidden" name="source" value="'.htmlspecialchars($this->source_folder_name).'" />';
 		echo '<button type="submit" name="mode" value="dev" class="gpsubmit" >Continue with Developer Installation ...</button>';
@@ -168,7 +169,7 @@ class admin_addon_install extends admin_addons_tool{
 		}
 
 
-		echo '<form action="'.common::GetUrl($this->browser_path).'" method="post">';
+		echo '<form action="'.common::GetUrl($this->path_root).'" method="post">';
 		echo '<input type="hidden" name="cmd" value="step'.$step.'" />';
 		echo '<input type="hidden" name="source" value="'.htmlspecialchars($this->source_folder_name).'" />';
 		echo '<input type="hidden" name="upgrade_key" value="'.htmlspecialchars($this->upgrade_key).'" />';
@@ -194,7 +195,7 @@ class admin_addon_install extends admin_addons_tool{
 	function Installed(){
 		global $langmessage, $installed_addon;
 
-		echo '<form action="'.common::GetUrl($this->browser_path).'" method="get">';
+		echo '<form action="'.common::GetUrl($this->path_root).'" method="get">';
 		echo '<input type="hidden" name="cmd" value="show" />';
 		echo '<input type="hidden" name="addon" value="'.htmlspecialchars($this->install_folder_name).'" />';
 
@@ -1386,7 +1387,7 @@ class admin_addon_install extends admin_addons_tool{
 			return;
 		}
 
-		echo '<form action="'.common::GetUrl($this->browser_path).'" method="post">';
+		echo '<form action="'.common::GetUrl($this->path_root).'" method="post">';
 		echo '<input type="hidden" name="name" value="'.htmlspecialchars($_REQUEST['name']).'" />';
 		echo '<input type="hidden" name="type" value="'.htmlspecialchars($_REQUEST['type']).'" />';
 		echo '<input type="hidden" name="id" value="'.htmlspecialchars($_REQUEST['id']).'" />';
@@ -1749,7 +1750,7 @@ class admin_addon_install extends admin_addons_tool{
 			$this->searchPage = $_REQUEST['page'];
 		}
 
-		$this->searchQuery = 'cmd=remote';
+		$this->searchQuery = '';
 
 		//version specific search
 		$search_version = false;
@@ -1773,7 +1774,7 @@ class admin_addon_install extends admin_addons_tool{
 		if( $this->config_index == 'themes' ){
 			$slug = 'Special_Addon_Themes';
 		}
-		$src = addon_browse_path.'/'.$slug.'?'.$this->searchQuery.'&page='.$this->searchPage;
+		$src = addon_browse_path.'/'.$slug.'?cmd=remote&'.$this->searchQuery.'&page='.$this->searchPage;
 
 		//check cache
 		$cache_file = $dataDir.'/data/_remote/'.sha1($src).'.txt';
@@ -1818,10 +1819,10 @@ class admin_addon_install extends admin_addons_tool{
 		$this->FindForm();
 
 		echo '<h2 class="hmargin">';
-		echo common::Link($this->browser_path,$this->manage_label);
+		echo common::Link($this->path_root,$this->manage_label);
 		echo ' <span>|</span> ';
 		if( !empty($_GET['q']) ){
-			echo common::Link($this->browser_path,$this->find_label,'cmd=remote');
+			echo common::Link($this->path_remote,$this->find_label);
 			echo ' &#187; ';
 			echo htmlspecialchars($_GET['q']);
 		}else{
@@ -1837,7 +1838,7 @@ class admin_addon_install extends admin_addons_tool{
 			if( $key === $this->searchOrder ){
 				echo '<span>'.$label.'</span>';
 			}else{
-				echo common::Link($this->browser_path,$label,$this->searchQuery.'&order='.$key);
+				echo common::Link($this->path_remote,$label,$this->searchQuery.'&order='.$key);
 			}
 		}
 		echo '</div></div>';
@@ -1885,10 +1886,10 @@ class admin_addon_install extends admin_addons_tool{
 
 		if( $search_version ){
 			echo '<b>'.$langmessage['On'].'</b> &nbsp; ';
-			echo common::Link($this->browser_path,$langmessage['Off'],$this->searchQuery.'&search_option=noversion',' name="gpajax"');
+			echo common::Link($this->path_remote,$langmessage['Off'],$this->searchQuery.'&search_option=noversion',' name="gpajax"');
 
 		}else{
-			echo common::Link($this->browser_path,$langmessage['On'],$this->searchQuery.'&search_option=version',' name="gpajax"');
+			echo common::Link($this->path_remote,$langmessage['On'],$this->searchQuery.'&search_option=version',' name="gpajax"');
 			echo ' &nbsp;  <b>'.$langmessage['Off'].'</b>';
 		}
 		echo '</li>';
@@ -1912,7 +1913,7 @@ class admin_addon_install extends admin_addons_tool{
 		$_GET += array('q'=>'');
 
 		echo '<div class="gp_find_form">';
-		echo '<form action="'.common::GetUrl($this->browser_path).'" method="get">';
+		echo '<form action="'.common::GetUrl($this->path_root).'" method="get">';
 		echo '<input type="hidden" name="cmd" value="remote" />';
 		echo '<input type="text" name="q" value="'.htmlspecialchars($_GET['q']).'" size="15" class="gpinput" /> ';
 		echo '<input type="submit" name="" value="'.$langmessage['Search'].'" class="gpbutton" />';
@@ -1958,9 +1959,9 @@ class admin_addon_install extends admin_addons_tool{
 		if( $this->searchPage > 0 ){
 			//previous
 			if( $this->searchPage > 1 ){
-				echo common::Link($this->browser_path,$langmessage['Previous'],$this->searchQuery.'&page='.($this->searchPage-1));
+				echo common::Link($this->path_remote,$langmessage['Previous'],$this->searchQuery.'&page='.($this->searchPage-1));
 			}else{
-				echo common::Link($this->browser_path,$langmessage['Previous'],$this->searchQuery);
+				echo common::Link($this->path_remote,$langmessage['Previous'],$this->searchQuery);
 			}
 		}else{
 			echo '<span>'.$langmessage['Previous'].'</span>';
@@ -1970,7 +1971,7 @@ class admin_addon_install extends admin_addons_tool{
 		//always show link for first page
 		$start_page = max(0,$this->searchPage-5);
 		if( $start_page > 0 ){
-			echo common::Link($this->browser_path,'1',$this->searchQuery); //.'&offset=0');
+			echo common::Link($this->path_remote,'1',$this->searchQuery); //.'&offset=0');
 			if( $start_page > 1 ){
 				echo '<span>...</span>';
 			}
@@ -1985,9 +1986,9 @@ class admin_addon_install extends admin_addons_tool{
 				echo '<span>'.($j+1).'</span>';
 			}else{
 				if( $j == 0 ){
-					echo common::Link($this->browser_path,($j+1),$this->searchQuery);
+					echo common::Link($this->path_remote,($j+1),$this->searchQuery);
 				}else{
-					echo common::Link($this->browser_path,($j+1),$this->searchQuery.'&page='.($j));
+					echo common::Link($this->path_remote,($j+1),$this->searchQuery.'&page='.($j));
 				}
 			}
 		}
@@ -1997,14 +1998,14 @@ class admin_addon_install extends admin_addons_tool{
 			if( ($max_page+1) < $pages ){
 				echo '<span>...</span>';
 			}
-			echo common::Link($this->browser_path,($pages),$this->searchQuery.'&page='.($pages-1));
+			echo common::Link($this->path_remote,($pages),$this->searchQuery.'&page='.($pages-1));
 		}
 
 
 		$last = $this->searchOffset+$this->searchPerPage;
 		if( $last < $this->searchMax ){
 			//next
-			echo common::Link($this->browser_path,$langmessage['Next'],$this->searchQuery.'&page='.($this->searchPage+1));
+			echo common::Link($this->path_remote,$langmessage['Next'],$this->searchQuery.'&page='.($this->searchPage+1));
 		}else{
 			echo '<span>'.$langmessage['Next'].'</span>';
 		}

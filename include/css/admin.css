@@ -406,10 +406,9 @@ body #gp_admin_html .admin_note a{
 	}
 #gp_admin_boxc.iframe{
 	padding:25px 1px 20px 0 !important;
-	width:780px;
 	}
 #gp_admin_boxc iframe{
-	width:780px;
+	width:100%;
 	border:0;
 }
 
@@ -1483,11 +1482,12 @@ body #gp_admin_html .layout_links a.selected{
 
 #gp_admin_box,
 .gp_floating_area{
-	border:1px solid #aaa;
-	-moz-border-radius: 5px;
-	-o-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
+
+	border:1px solid #fff;
+	-moz-border-radius: 6px;
+	-o-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
 
 	box-shadow:1px 1px 7px #444;
 	-moz-box-shadow: 1px 1px 7px #444;
@@ -1495,26 +1495,21 @@ body #gp_admin_html .layout_links a.selected{
 	-o-box-shadow: 1px 1px 7px #444;
 	-icab-box-shadow: 1px 1px 7px #444;
 	-khtml-box-shadow: 1px 1px 7px #444;
-	}
-
-#gp_admin_box > div,
-.gp_floating_area > div{
-	border-top:1px solid #fff;
-	border-left:1px solid #fff;
-	border-right:1px solid #f1f1f1;
-	border-bottom:1px solid #f1f1f1;
-	-moz-border-radius: 5px;
-	-o-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-
 	background: #ededed;
 	background: #ededed -moz-linear-gradient(top, #fafafa 5px, #ededed 25px);
 	background: #ededed -webkit-linear-gradient(top, #fafafa 5px,#ededed 25px);
 	background: #ededed -o-linear-gradient(top, #fafafa 5px,#ededed 25px);
 	background: #ededed -ms-linear-gradient(top, #fafafa 5px,#ededed 25px);
 	background: #ededed linear-gradient(top, #fafafa 5px,#ededed 25px);
+	}
+
+#gp_admin_box > div,
+.gp_floating_area > div{
 	padding:4px;
+	-moz-border-radius: 6px;
+	-o-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
 }
 
 .gp_floating_area .toolbar{

@@ -261,7 +261,9 @@ $(function(){
 			$gp.CloseAdminBox();
 			if( data == '' ) return false;
 			var $win = $(window);
-			var left = Math.round( ($win.width() - 740)/2);
+			var win_width = $win.width();
+			var box_width = Math.max(720, Math.round(win_width*0.70));
+			var left = Math.round( ($win.width() - box_width - 40)/2);
 			var height = Math.max( $(document).height(), $body.outerHeight(true) );
 
 			$gp.div('gp_admin_box1')
@@ -274,7 +276,7 @@ $(function(){
 						.css({'zIndex':'11001','left':left,'top': $win.scrollTop() })
 						.stop(true,true,true)
 						.fadeIn(400)
-						.html('<a class="gp_admin_box_close" name="admin_box_close"></a><div id="gp_admin_boxc" class="'+(context||'')+'"></div>')
+						.html('<a class="gp_admin_box_close" name="admin_box_close"></a><div id="gp_admin_boxc" class="'+(context||'')+'" style="width:'+box_width+'px"></div>')
 						.find('#gp_admin_boxc')
 						.html(data);
 

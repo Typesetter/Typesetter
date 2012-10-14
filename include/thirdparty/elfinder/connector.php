@@ -34,10 +34,6 @@ function access($attr, $path, $data, $volume) {
 		return false;
 	}
 	return null;
-
-	//return strpos(basename($path), '.') === 0       // if file/folder begins with '.' (dot)
-	//	? !($attr == 'read' || $attr == 'write')    // set read+write to false, other (locked+hidden) set to true
-	//	:  null;                                    // else elFinder decide it itself
 }
 
 $opts = array(
@@ -53,6 +49,8 @@ $opts = array(
 			'tmbURL'		=> common::GetDir('data/_elthumbs'),
 			'separator'		=> '/',
 			'tmbBgColor'	=> 'transparent',
+			'copyOverwrite'	=> false,
+			'uploadOverwrite'=> false,
 		),
 	),
 	'bind' => array(

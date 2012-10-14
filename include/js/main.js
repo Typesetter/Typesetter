@@ -36,7 +36,7 @@ function ajaxResponse(data){
 	$.each(data,function(i,obj){ //using $.each() instead of a for loop to prevent Array.prototype.xxxx from affecting the results
 
 		if( typeof(gpresponse[obj.DO]) == 'function' ){
-			gpresponse[obj.DO].call(this,obj);
+			gpresponse[obj.DO].call(this,data);
 			return;
 		}
 
@@ -116,7 +116,7 @@ $(function(){
 			if( typeof(debugjs) !== "undefined" ){
 
 				//collect some debug info
-				var debug = {
+				var debug_info = {
 					thrownError:thrownError,
 					text:XMLHttpRequest.responseText,
 					status:XMLHttpRequest.status,
@@ -126,13 +126,13 @@ $(function(){
 					browser:$.param($.browser) //$.browser is deprecated and may be removed in future jquery releases
 				}
 				if( ajaxOptions.data ){
-					debug.data = ajaxOptions.data.substr(0,100);
+					debug_info.data = ajaxOptions.data.substr(0,100);
 				}
 
-				LOGO( debug );
+				debug( debug_info );
 				//LOGO( XMLHttpRequest );
 				//LOGO( event );
-				alert('Error detected. See bottom of page for details');
+				//alert('Error detected');
 				return;
 			}
 

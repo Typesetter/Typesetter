@@ -3,23 +3,20 @@ var gp_editor = false;
 
 var debug_area;
 function debug(arg){
-	if( !debug_area ) debug_area = $('<div id="debug" style="position:fixed;top:0;left:0;background:#fff;padding:10px;z-index:99999;border:1px solid #333;">').prependTo('body');
+	if( !debug_area ) debug_area = $('<div id="debug" style="position:absolute;top:0;left:0;background:#fff;padding:10px;z-index:99999;border:1px solid #333;max-width:30%;white-space:pre-wrap">').prependTo('body');
 	debug_area.prepend('<div>'+LOGO(arg)+'</div><hr/>');
 }
 function LOGO(obj){
 	var type = typeof(obj);
-	var a = '('+type+') ';
+	var a = "\n<br/> ("+type+') ';
 	switch(type){
 		case 'object':
 			for(var i in obj){
+				a += "\n<b>"+i+ '</b> = ';
 				try{
-					try{
-						a += '<br/><b>'+i+ "</b> = " + obj[i].toString().replace(/</g,'&lt;') + "\n";
-					}catch(m){
-						a += '<br/><b>'+i+ "</b> = " + obj[i] + "\n";
-					}
+					a += obj[i].toString().replace(/</g,'&lt;').replace(/>/g,'&gt;');
 				}catch(m){
-					a += '<br/><b>'+i+"</b> -- not allowed -- \n";
+					a += " -- not allowed -- ";
 				}
 			}
 		break;
@@ -100,7 +97,6 @@ $(function(){
 		EditOutlines();
 		EditableBar();
 		UIEffects();
-		LoadStyles();
 	}
 	,500);
 
@@ -132,6 +128,8 @@ $(function(){
 			return;
 		}
 
+		$gp.LoadStyle('/include/css/inline_edit.css');
+
 		var file_path = strip_from(this.href,'#');
 		var id = $(this).attr('id').substr(13);
 
@@ -142,21 +140,18 @@ $(function(){
 				loaded();
 			}
 			//for debugging
-			//$('<textarea style="width:90%;height:100px;margin:30px;">').appendTo('body').val(data);
+			//debug(data);
 		});
 	}
 
-	//deprecated
-	$gp.InlineStyles = function(){}
-
-	function LoadStyles(){
+	$gp.LoadStyle = function(file){
 		var d=new Date(),
 			t=d.getTime();
 
 		//href set after appending to head so that it works properly in IE
 		$('<link rel="stylesheet" type="text/css" />')
 			.appendTo('head')
-			.attr({'href':gpBase+'/include/css/inline_edit.css?t='+t});
+			.attr({'href':gpBase+file+'?t='+t});
 
 	}
 
@@ -284,7 +279,7 @@ $(function(){
 			if( data == '' ) return false;
 			var $win = $(window);
 			var win_width = $win.width();
-			var box_width = Math.max(720, Math.round(win_width*0.70));
+			var box_width = Math.max(660, Math.round(win_width*0.70));
 			var left = Math.round( ($win.width() - box_width - 40)/2);
 			var height = Math.max( $(document).height(), $body.outerHeight(true) );
 

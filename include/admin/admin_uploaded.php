@@ -68,14 +68,12 @@ class admin_uploaded{
 		switch($file_cmd){
 			case 'delete':
 				$this->DeleteConfirmed();
-			break;
+			return;
 
 			case 'inline_upload':
 				$this->InlineUpload();
-				//dies
+			//dies
 		}
-
-		admin_uploaded::InlineList($this->currentDir,$this->subdir);
 	}
 
 	function Init(){
@@ -266,7 +264,7 @@ class admin_uploaded{
 		//folder select
 		echo '<div class="option_area">';
 		echo '<div class="gp_edit_select">';
-		echo '<a href="#" class="gp_gallery_folder ckeditor_control" name="gp_show_select"><span class="folder"></span>';
+		echo '<a class="gp_gallery_folder ckeditor_control" name="gp_show_select"><span class="folder"></span>';
 		if( strlen($dir_piece) > 23 ){
 			echo '...'.substr($dir_piece,-20);
 		}else{
@@ -295,14 +293,14 @@ class admin_uploaded{
 
 		//add all images
 		if( $image_count > 0 ){
-			echo '<a href="#" name="gp_gallery_add_all" class="ckeditor_control full_width">'.$langmessage['Add All Images'].'</a>';
+			echo '<a name="gp_gallery_add_all" class="ckeditor_control half_width">'.$langmessage['Add All Images'].'</a>';
 		}
 
 		if( $dir_piece != '/' ){
 
 			echo '<form action="'.common::GetUrl('Admin_Uploaded').'" method="post"  enctype="multipart/form-data" class="gp_upload_form" id="gp_upload_form">';
 			admin_uploaded::Max_File_Size();
-			echo '<a href="#" class="ckeditor_control full_width">'.$langmessage['upload_files'].'</a>';
+			echo '<a class="ckeditor_control half_width">'.$langmessage['upload_files'].'</a>';
 			echo '<div class="gp_object_wrapper">';
 			echo '<input type="file" name="userfiles[]" class="file" />';
 
@@ -319,8 +317,8 @@ class admin_uploaded{
 
 		$content = ob_get_clean();
 
-		$page->ajaxReplace[] = array('gp_gallery_images','',$content);
-
+		$page->ajaxReplace[] = array('inner','#gp_image_area',$content);
+		$page->ajaxReplace[] = array('gp_gallery_images','',''); //tell the script the images have been loaded
 	}
 
 	/**
@@ -335,6 +333,8 @@ class admin_uploaded{
 
 		//for gallery editing
 		$fileUrl = common::GetDir('/data/_uploaded'.$dir_piece.'/'.$file);
+		$rel_path = common::GetDir('/data/_uploaded'.$dir_piece.'/'.$file);
+		$id = self::ImageId($rel_path);
 
 		if( $isThumbDir ){
 			$thumb = ' <img src="'.$fileUrl.'" alt="" />';
@@ -344,13 +344,20 @@ class admin_uploaded{
 
 		$query_string = 'file_cmd=delete&show=inline&file='.urlencode($file);
 
-		return '<span class="expand_child">'
+		return '<span class="expand_child" id="'.$id.'">'
 				. '<a href="'.$fileUrl.'" name="gp_gallery_add" rel="'.$fileUrl.'">'
 				. $thumb
 				. '</a>'
 				. common::Link('Admin_Uploaded'.$dir_piece,'',$query_string,' class="delete gpconfirm" name="gpajax" title="'.$langmessage['delete_confirm'].'"','delete')
 				. '</span>';
 	}
+
+	static function ImageId($path){
+		$encoded = base64_encode($path);
+		$encoded = rtrim($encoded, '=');
+		return 'gp_image_'.strtr($encoded, '+/=', '-_.');
+	}
+
 
 
 
@@ -679,9 +686,7 @@ class admin_uploaded{
 		}
 
 		$page->ajaxReplace[] = array('img_deleted','',$rel_path);
-		return;
-
-
+		$page->ajaxReplace[] = array('img_deleted_id','',self::ImageId($rel_path));
 	}
 
 	/**

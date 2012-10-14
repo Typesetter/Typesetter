@@ -424,7 +424,7 @@ class special_gpsearch{
 		$label_len = strlen($label);
 		$content = substr($content,$label_len);
 		$content = str_replace('>','> ',$content);
-		$content = preg_replace('/\s\s+/', ' ', $content);
+		$content = preg_replace('/\s+/', ' ', $content);
 		$content = strip_tags($content);
 		preg_match($this->search_pattern,$content,$matches,PREG_OFFSET_CAPTURE);
 		$start = 0;

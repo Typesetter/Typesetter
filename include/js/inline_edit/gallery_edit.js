@@ -227,21 +227,7 @@
 
 
 		gpresponse.gp_gallery_images = function(data){
-			$('#gp_image_area').html(data.CONTENT);
 			MultipleFileHandler($('#gp_upload_form'));
-		}
-
-
-		function SingleFileHandler(form){
-
-			form.find('.file').one('change',function(){
-
-				var $form = $(this.form);
-				var clone = MultipleFileHandler($form.clone());
-				$form.after(clone);
-			});
-
-			return form;
 		}
 
 

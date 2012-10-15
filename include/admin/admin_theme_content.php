@@ -1,6 +1,9 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
+global $langmessage;
+//$langmessage['Available Images'] = 'Available Images';
+
 
 /*
 what can be moved?
@@ -79,7 +82,8 @@ class admin_theme_content extends admin_addon_install{
 				return;
 			}
 
-			if( isset($gpLayouts[$layout_part]) && $this->EditLayout($layout_part,$cmd) ){
+			if( isset($gpLayouts[$layout_part]) ){
+				$this->EditLayout($layout_part,$cmd);
 				return;
 			}
 		}
@@ -152,10 +156,8 @@ class admin_theme_content extends admin_addon_install{
 			//editing layouts without a layout id as part of slug
 			case 'editlayout'://linked from install page without a layout id
 			case 'details':
-				if( $this->EditLayout($this->curr_layout,$cmd) ){
-					return;
-				}
-			break;
+				$this->EditLayout($this->curr_layout,$cmd);
+			return;
 
 			case 'rmgadget':
 				$this->RmGadget($_REQUEST['layout']);
@@ -249,15 +251,10 @@ class admin_theme_content extends admin_addon_install{
 	function EditLayout($layout,$cmd){
 		global $page,$gpLayouts,$langmessage,$config;
 
-		if( !isset($gpLayouts[$layout]) ){
-			message($langmessage['OOPS'].' (Invalid Layout)');
-			return false;
-		}
+
 
 		$GLOBALS['GP_ARRANGE_CONTENT'] = true;
-		$page->head .= "\n".'<script type="text/javascript">var gpLayouts=true;</script>';
 		$page->head_js[] = '/include/js/inline_edit/inline_editing.js';
-		$page->show_admin_content = false;
 
 		$this->curr_layout = $layout;
 		$this->SetLayoutArray();
@@ -271,6 +268,33 @@ class admin_theme_content extends admin_addon_install{
 
 		switch($cmd){
 
+			/**
+			 * Inline image editing
+			 *
+			 */
+			case 'inlineedit':
+				$this->InlineEdit();
+			return;
+			case 'gallery_images':
+				$this->GalleryImages();
+			break;
+			case 'image_editor':
+				$this->ImageEditor();
+			return;
+			case 'save_image':
+				$this->SaveHeaderImage();
+			return;
+
+			case 'theme_images':
+				$this->ShowThemeImages();
+			return;
+
+
+
+			/**
+			 * CSS editing
+			 *
+			 */
 			case 'save_css':
 				$this->SaveCSS();
 			break;
@@ -306,7 +330,7 @@ class admin_theme_content extends admin_addon_install{
 			//insert
 			case 'insert':
 				$this->SelectContent();
-			return true;
+			return;
 
 			case 'addcontent':
 				$this->AddContent();
@@ -340,13 +364,14 @@ class admin_theme_content extends admin_addon_install{
 			case 'makedefault':
 			case 'details':
 				$this->ShowDetails($layout, $layout_info, $handlers_count );
-			return true;
+			return;
 		}
+
+		$page->show_admin_content = false;
+		$page->head .= "\n".'<script type="text/javascript">var gpLayouts=true;</script>';
 
 		$this->PrepareCSS();
 		$this->Toolbar($layout, $layout_info );
-
-		return true;
 	}
 
 	/**
@@ -1276,13 +1301,19 @@ class admin_theme_content extends admin_addon_install{
 		$page->gpLayout = false;
 		$page->theme_name = $template;
 		$page->theme_color = $color;
-		$page->theme_is_addon = $theme_info['is_addon'];
 		$page->theme_dir = $theme_info['full_dir'];
 		$page->layout_css = false;
+
 		if( isset($theme_info['id']) ){
 			$page->theme_addon_id = $theme_info['id'];
 		}
-		$page->SetThemePath();
+
+		$path = '/themes/';
+		if( $theme_info['is_addon'] ){
+			$path = '/data/_themes/';
+		}
+		$page->theme_path = common::GetDir($path.$page->theme_name.'/'.$page->theme_color);
+
 		$page->show_admin_content = false;
 
 		$this->ToolbarCSS();
@@ -3196,4 +3227,241 @@ class admin_theme_content extends admin_addon_install{
 		return true;
 	}
 
+
+	/**
+	 * Show images registered by themes using gpOutput::RegisterImage();
+	 *
+	 */
+	function ShowThemeImages(){
+		global $page,$langmessage;
+		$page->ajaxReplace = array();
+
+		ob_start();
+		$images = $this->GetAvailableImages();
+
+		echo '<div id="gp_gallery_avail_imgs">';
+
+		foreach($images as $img_rel => $image ){
+			$file_url = common::GetDir($img_rel);
+			$thumb = '<img src="'.common::GetDir($img_rel).'" alt=""/>';
+
+			echo '<span class="expand_child">'
+				. '<a href="'.$file_url.'" name="gp_gallery_add" rel="'.$file_url.'">'
+				. $thumb
+				. '</a>'
+				. '</span>';
+		}
+		echo '</div>';
+		$content = ob_get_clean();
+		$page->ajaxReplace[] = array('inner','#gp_image_area',$content);
+	}
+
+	function GetAvailableImages(){
+		global $dataDir;
+
+		$all_images = array();
+
+		$dirs = array('/themes','/data/_themes');
+
+		foreach($dirs as $dir_rel){
+			$dir = $dataDir.$dir_rel;
+			$layouts = gpFiles::readDir($dir,1);
+			foreach($layouts as $name){
+				$theme_relative = $dir_rel.'/'.$name;
+				$all_images += $this->GetThemeImages($theme_relative);
+			}
+		}
+
+		return $all_images;
+	}
+
+	function GetThemeImages($theme_rel){
+		global $dataDir;
+		$images_file = $dataDir.$theme_rel.'/images.php';
+		$images = array();
+		if( file_exists($images_file) ){
+			include($images_file);
+		}
+
+		$cleaned_images = array();
+		foreach($images as $image){
+			if( empty($image['url']) ){
+				continue;
+			}
+
+			$img_rel = $theme_rel.'/'.ltrim($image['url'],'/');
+			$img_full = $dataDir.$img_rel;
+			if( !file_exists($img_full) ){
+				continue;
+			}
+			$image['theme_rel'] = $theme_rel;
+			$cleaned_images[$img_rel] = $image;
+		}
+
+		return $cleaned_images;
+	}
+
+
+	function InlineEdit(){
+
+		$section = array();
+		$section['type'] = 'image';
+		includeFile('tool/ajax.php');
+		gpAjax::InlineEdit($section);
+		die();
+	}
+
+	function ImageEditor(){
+		global $page,$dataDir,$langmessage;
+		$page->ajaxReplace = array();
+
+		//image options
+		ob_start();
+		echo '<div id="gp_current_image">';
+		echo '<img/>';
+		echo '<table>';
+		echo '<tr><td>Width</td><td><input type="text" name="width" class="ck_input"/></td>';
+		echo '<td>Height</td><td><input type="text" name="height" class="ck_input"/></td></tr>';
+		echo '<tr><td>Left</td><td><input type="text" name="left" class="ck_input" value="0"/></td>';
+		echo '<td>Top</td><td><input type="text" name="top" class="ck_input" value="0"/></td></tr>';
+		echo '</table>';
+		echo '</div>';
+
+		echo '<b>Select Image</b>';
+		echo '<a class="ckeditor_control half_width" name="show_theme_images">Theme Images</a>';
+		echo '<a class="ckeditor_control half_width" name="show_uploaded_images">Uploaded Images</a>';
+		$content = ob_get_clean();
+
+		$page->ajaxReplace[] = array('inner','#gp_image_options',$content);
+		$page->ajaxReplace[] = array('image_options_loaded','',''); //tell the script the images have been loaded
+	}
+
+
+	function GalleryImages(){
+		$_GET += array('dir'=>'/headers');
+		includeFile('admin/admin_uploaded.php');
+		admin_uploaded::InlineList($_GET['dir'],false);
+	}
+
+	function SaveHeaderImage(){
+		global $page, $dataDir, $dirPrefix, $langmessage;
+		includeFile('tool/Images.php');
+		includeFile('tool/editing.php');
+		$page->ajaxReplace = array();
+		$dest_dir = $dataDir.'/data/_layouts/'.$this->curr_layout;
+
+
+		//source file
+		$source_file_rel = $_REQUEST['file'];
+		if( !empty($_REQUEST['src']) ){
+			$source_file_rel = rawurldecode($_REQUEST['src']);
+			if( !empty($dirPrefix) ){
+				$len = strlen($dirPrefix);
+				$source_file_rel = substr($source_file_rel,$len);
+			}
+		}
+		$source_file_rel = '/'.ltrim($source_file_rel,'/');
+		$source_file_full = $dataDir.$source_file_rel;
+		if( !file_exists($source_file_full) ){
+			message($source_file_full);
+			message($langmessage['OOPS'].' (Source file not found)');
+			return;
+		}
+		$src_img = thumbnail::getSrcImg($source_file_full);
+		if( !$src_img ){
+			message($langmessage['OOPS'].' (Couldn\'t create image [1])');
+			return;
+		}
+
+
+		//size and position variables
+		$orig_w = $width = imagesx($src_img);
+		$orig_h = $height = imagesy($src_img);
+		$posx = $posy = 0;
+		if( isset($_REQUEST['posx']) && is_numeric($_REQUEST['posx']) ){
+			$posx = $_REQUEST['posx'];
+		}
+		if( isset($_REQUEST['posy']) && is_numeric($_REQUEST['posy']) ){
+			$posy = $_REQUEST['posy'];
+		}
+		if( isset($_REQUEST['width']) && is_numeric($_REQUEST['width']) ){
+			$width = $_REQUEST['width'];
+		}
+		if( isset($_REQUEST['height']) && is_numeric($_REQUEST['height']) ){
+			$height = $_REQUEST['height'];
+		}
+
+
+		//check to see if the image needs to be resized
+		if( $posx == 0
+			&& $posy == 0
+			&& $width == $orig_w
+			&& $height == $orig_h
+			){
+				$this->SetImage($source_file_rel,$width,$height);
+				return;
+		}
+
+		//destination file
+		$name = basename($source_file_rel);
+		$parts = explode('.',$name);
+		$type = array_pop($parts);
+		if( count($parts) > 1 ){
+			$time_part = array_pop($parts);
+			if( !ctype_digit($time_part) ){
+				$parts[] = $time_part;
+			}
+		}
+		$name = implode('.',$parts);
+		$time = time();
+		if( isset($_REQUEST['time']) && ctype_digit($_REQUEST['time']) ){
+			$time = $_REQUEST['time'];
+		}
+		$dest_img_rel = '/data/_uploaded/headers/'.$name.'.'.$time.'.'.$type;
+		$dest_img_full = $dataDir.$dest_img_rel;
+
+		//make sure the folder exists
+		if( !gpFiles::CheckDir( dirname($dest_img_full) ) ){
+			message($langmessage['OOPS'].' (Couldn\'t create directory)');
+			return false;
+		}
+
+
+		$src_w = min($orig_w + $posx,$width);
+		$src_h = min($orig_h + $posy,$height);
+		if( !thumbnail::createImg($src_img, $dest_img_full, 0, 0, -$posx, -$posy, $src_w, $src_h, $src_w, $src_h, $width, $height) ){
+			message($langmessage['OOPS'].' (Couldn\'t create image [2])');
+			return;
+		}
+
+		if( $this->SetImage($dest_img_rel,$width,$height) ){
+			includeFile('admin/admin_uploaded.php');
+			admin_uploaded::CreateThumbnail($dest_img_full);
+			$page->ajaxReplace[] = array('ck_saved','','');
+		}
+
+	}
+
+	function SetImage($img_rel,$width,$height){
+		global $gpLayouts,$langmessage;
+
+
+		$save_info = array();
+		$save_info['img_rel'] = $img_rel;
+		$save_info['width'] = $width;
+		$save_info['height'] = $height;
+
+		$container = $_REQUEST['container'];
+		$gpLayouts[$this->curr_layout]['images'] = array(); //prevents shuffle
+		$gpLayouts[$this->curr_layout]['images'][$container] = array(); //prevents shuffle
+		$gpLayouts[$this->curr_layout]['images'][$container][] = $save_info;
+
+		if( !admin_tools::SavePagesPHP() ){
+			message($langmessage['OOPS'].' (Data not saved)');
+			return false;
+		}
+		return true;
+	}
+
 }
+

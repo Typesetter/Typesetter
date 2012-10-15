@@ -11,6 +11,8 @@
 
 	function gp_init_inline_edit(area_id,section_object,options){
 
+		$gp.LoadStyle('/include/css/inline_image.css');
+
 		var defaults = {
 			sortable_area_sel:	'.gp_gallery',
 			img_name:			'gallery',
@@ -188,15 +190,6 @@
 		 * add image functions
 		 *
 		 */
-		function LoadImages(directory){
-			var edit_path = strip_from(save_path,'?');
-			edit_path += '?cmd=gallery_images';
-			if( directory ){
-				edit_path += '&dir='+encodeURIComponent(directory);
-			}
-			$gp.jGoTo(edit_path);
-		}
-
 		gplinks.gp_gallery_add = function(rel,evt){
 			evt.preventDefault();
 			var $this = $(this).stop(true,true);
@@ -228,11 +221,6 @@
 		}
 
 
-		gpresponse.gp_gallery_images = function(data){
-			$('#gp_image_area').html(data.CONTENT);
-			MultipleFileHandler($('#gp_upload_form'));
-		}
-
 		/**
 		 * Check to see if a deleted file is in the current gallery
 		 */
@@ -247,18 +235,15 @@
 			//}
 		//}
 
-		function SingleFileHandler(form){
 
-			form.find('.file').one('change',function(){
 
-				var $form = $(this.form);
-				var clone = MultipleFileHandler($form.clone());
-				$form.after(clone);
-			});
-
-			return form;
+		/**
+		 * Add file upload handlers after the form is loaded
+		 *
+		 */
+		gpresponse.gp_gallery_images = function(data){
+			MultipleFileHandler($('#gp_upload_form'));
 		}
-
 
 		function MultipleFileHandler(form){
 			var action = form.attr('action');
@@ -324,31 +309,8 @@
 			}
 		}
 
-		/*
-		 * drop down menu
-		 *
-		 */
-		gplinks.gp_show_select = function(rel,evt){
-			evt.preventDefault();
-			var $this = $(this);
-			var $options = $this.siblings('.gp_edit_select_options');
 
-			if( $options.is(':visible') ){
-				$options.hide();
-			}else{
-				$options.show();
 
-				$this.parent().unbind('mouseleave').bind('mouseleave',function(){
-					$options.hide();
-				});
-			}
-
-		}
-
-		gplinks.gp_gallery_folder = function(rel,evt){
-			evt.preventDefault();
-			LoadImages(rel);
-		}
 
 		/**
 		 *

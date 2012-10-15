@@ -356,9 +356,9 @@ class admin_uploaded{
 		}
 
 		//for gallery editing
-		$fileUrl = common::GetDir('/data/_uploaded'.$dir_piece.'/'.$file);
-		$rel_path = common::GetDir('/data/_uploaded'.$dir_piece.'/'.$file);
+		$rel_path = '/data/_uploaded'.$dir_piece.'/'.$file;
 		$id = self::ImageId($rel_path);
+		$fileUrl = common::GetDir($rel_path);
 
 		if( $isThumbDir ){
 			$thumb = ' <img src="'.$fileUrl.'" alt="" />';
@@ -714,7 +714,7 @@ class admin_uploaded{
 			return;
 		}
 		$full_path = $this->currentDir.'/'.$file;
-		$rel_path = common::GetDir('/data/_uploaded'.$this->subdir.'/'.$file);
+		$rel_path = '/data/_uploaded'.$this->subdir.'/'.$file;
 
 		if( !gpFiles::RmAll($full_path) ){
 			message($langmessage['OOPS']);

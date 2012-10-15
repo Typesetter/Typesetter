@@ -105,6 +105,10 @@
 
 /* upload form */
 
+#gp_folder_options{
+	float:left;
+	width:252px;
+	}
 .gp_upload_form{
 	display:inline-block;
 	width:111px;
@@ -188,7 +192,6 @@
 	}
 
 
-
 #ckeditor_area .gp_edit_select{
 	position:relative;
 	}
@@ -227,6 +230,17 @@
 	white-space:nowrap;
 	padding:3px 4px;
 	}
+#ckeditor_area .gp_selected_folder{
+	margin:0 0 5px 0;
+	padding:6px;
+	background-color:#fafafa;
+	border:1px solid #fff;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+
 
 #ckeditor_area a.gp_gallery_folder .folder,
 #ckeditor_area a.gp_gallery_folder .add{
@@ -279,12 +293,17 @@
 	border-radius: 5px;
 	float:left;
 	}
+#gp_image_wrap{
+	width:237px;
+	text-align:center;
+	display:block;
+	float:left;
+	}
 #gp_current_image img{
 	max-width:237px;
 	max-height:100px;
 	display:block;
 	margin:0 auto 5px auto;
-	/* float:left; prevents images from being centered */
 	}
 #gp_current_image label{
 	margin-right:5px;

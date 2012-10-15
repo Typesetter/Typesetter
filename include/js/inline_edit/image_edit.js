@@ -16,8 +16,7 @@
 		gp_editing.editor_tools();
 
 		$('#ckeditor_top').html('<div id="gp_image_options"></div><div id="gp_image_area"></div><div id="gp_upload_queue"></div>');
-
-
+		$('#ckeditor_controls').prepend('<div id="gp_folder_options"></div><div style="clear:both"></div>');
 
 
 

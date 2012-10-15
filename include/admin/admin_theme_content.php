@@ -3346,7 +3346,7 @@ class admin_theme_content extends admin_addon_install{
 		//image options
 		ob_start();
 		echo '<div id="gp_current_image">';
-		echo '<img/>';
+		echo '<span id="gp_image_wrap"><img/></span>';
 		echo '<table>';
 		echo '<tr><td>Width</td><td><input type="text" name="width" class="ck_input"/></td>';
 		echo '<td>Height</td><td><input type="text" name="height" class="ck_input"/></td></tr>';

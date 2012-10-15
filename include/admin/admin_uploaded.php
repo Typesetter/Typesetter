@@ -272,23 +272,10 @@ class admin_uploaded{
 		list($folders,$files) = $allFiles;
 
 
-		//available images
-		$avail_imgs = '<div id="gp_gallery_avail_imgs">';
-		$image_count = 0;
-		foreach($files as $file){
-			$img = admin_uploaded::ShowFile_Gallery($dir_piece,$file,$isThumbDir);
-			if( $img ){
-				$avail_imgs .= $img;
-				$image_count++;
-			}
-		}
-		$avail_imgs .= '</div>';
-
-
 		//folder select
 		echo '<div class="option_area">';
 		echo '<div class="gp_edit_select">';
-		echo '<a class="gp_gallery_folder ckeditor_control" name="gp_show_select"><span class="folder"></span>';
+		echo '<a class="gp_gallery_folder gp_selected_folder" name="gp_show_select"><span class="folder"></span>';
 		if( strlen($dir_piece) > 23 ){
 			echo '...'.substr($dir_piece,-20);
 		}else{
@@ -315,6 +302,27 @@ class admin_uploaded{
 		echo '</div>';
 
 
+		//available images
+		echo '<div id="gp_gallery_avail_imgs">';
+		$image_count = 0;
+		foreach($files as $file){
+			$img = admin_uploaded::ShowFile_Gallery($dir_piece,$file,$isThumbDir);
+			if( $img ){
+				echo $img;
+				$image_count++;
+			}
+		}
+		echo '</div>';
+
+
+		$content = ob_get_clean();
+		$page->ajaxReplace[] = array('inner','#gp_image_area',$content);
+
+
+		/**
+		 * Folder controls
+		 */
+		ob_start();
 		//add all images
 		if( $add_all_images && $image_count > 0 ){
 			echo '<a name="gp_gallery_add_all" class="ckeditor_control half_width">'.$langmessage['Add All Images'].'</a>';
@@ -336,19 +344,13 @@ class admin_uploaded{
 		}
 
 		echo '</div>';
-
-		echo $avail_imgs;
-
 		$content = ob_get_clean();
+		$page->ajaxReplace[] = array('inner','#gp_folder_options',$content);
 
-		$page->ajaxReplace[] = array('inner','#gp_image_area',$content);
+
 		$page->ajaxReplace[] = array('gp_gallery_images','',''); //tell the script the images have been loaded
 	}
 
-	function InlineImageList($list){
-
-
-	}
 
 	/**
 	 * @static

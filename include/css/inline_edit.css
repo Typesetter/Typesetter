@@ -80,9 +80,7 @@
 	text-shadow:1px 1px 0 #fff;
 	}
 
-#ckeditor_controls{
-	text-align:right;
-	}
+#ckeditor_save{}
 
 #ckeditor_area .full_width,
 #ckeditor_area .full_width:hover,

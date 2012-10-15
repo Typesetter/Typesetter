@@ -545,11 +545,11 @@ class admin_tools{
 
 			echo '<div id="ckeditor_top"></div>';
 
-			echo '<div id="ckeditor_controls">';
+			echo '<div id="ckeditor_controls"><div id="ckeditor_save">';
 			echo '<a name="ck_save" class="ckeditor_control">'.$langmessage['save'].'</a>';
 			echo '<a name="ck_close" class="ckeditor_control">'.$langmessage['Close'].'</a>';
 			echo '<a name="ck_save" rel="ck_close" class="ckeditor_control">'.$langmessage['Save & Close'].'</a>';
-			echo '</div>';
+			echo '</div></div>';
 
 			echo '<div id="ckeditor_bottom"></div>';
 

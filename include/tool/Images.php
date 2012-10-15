@@ -284,10 +284,8 @@ class thumbnail{
 					return imagecreatefromwbmp($source_path);
 				}
 			break;
-			default:
-				//message('not supported for thumbnail: '.$img_type);
-			return false;
 		}
+		//message('not supported for thumbnail: '.$img_type);
 		return false;
 	}
 
@@ -305,21 +303,19 @@ class thumbnail{
 			trigger_error('dst_img not created');
 			return false;
 		}
-
-
 		$img_type = thumbnail::getType($dest_path);
 
+
 		// allow gif & png to have transparent background
-		if( function_exists('imagesavealpha') ){
-			if( ($img_type == 'gif') || ($img_type == 'png') ){
-				imagealphablending($dst_img, false);
-				imagesavealpha($dst_img,true); //php 4.3.2+
-				$transparent = imagecolorallocatealpha($dst_img, 255, 255, 255, 127);
-				imagefilledrectangle($dst_img, 0, 0, $dst_x, $dst_y, $transparent);
-			}
+		switch($img_type){
+			case 'gif':
+			case 'png':
+				$dst_img = self::Transparency($dst_img);
+			break;
 		}
 
 
+		//if( !imagecopy($dst_img, $src_img, 0, 0, 0, 0, 100, 100) ){
 		if( !imagecopyresampled($dst_img, $src_img, $dst_x, $dst_y, $off_w, $off_h, $dst_w, $dst_h, $old_x, $old_y) ){
 			trigger_error('copyresample failed');
 			imagedestroy($dst_img);
@@ -330,6 +326,18 @@ class thumbnail{
 
 		return thumbnail::SrcToImage($dst_img,$dest_path,$img_type);
 	}
+
+	function Transparency($image){
+		if( function_exists('imagesavealpha') ){
+			imagesavealpha($image,true);
+			$bgcolor = imagecolorallocatealpha($image, 133, 134, 135, 127);
+			imagefill($image, 0, 0, $bgcolor);
+		}
+		return $image;
+	}
+
+
+
 
 	/**
 	 * Output image to path based on type
@@ -347,7 +355,7 @@ class thumbnail{
 				$result = imagegif($src,$path);
 			break;
 			case 'png':
-				$result = imagepng($src,$path);
+				$result = imagepng($src,$path,9,PNG_ALL_FILTERS);
 			break;
 			case 'bmp':
 				$result = imagewbmp($src,$path);

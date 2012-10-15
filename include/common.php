@@ -423,6 +423,12 @@ function showArray($mixed){
 			}
 			$output .= str_repeat('   ',$level).')';
 		break;
+		case 'boolean':
+			if( $mixed ){
+				$mixed = 'true';
+			}else{
+				$mixed = 'false';
+			}
 		default:
 			$output = '('.$type.')'.$mixed.'';
 		break;
@@ -495,11 +501,11 @@ class display{
 	//layout & theme
 	var $theme_name = false;
 	var $theme_color = false;
-	var $theme_is_addon = false;
 	var $get_theme_css = true;
 	var $theme_dir;
 	var $theme_path;
-	var $theme_addon_id;
+	var $theme_rel;
+	var $theme_addon_id = false;
 	var $layout_css = false;
 	var $menu_css_ordered = true;
 	var $menu_css_indexed = true;
@@ -675,20 +681,22 @@ class display{
 		}
 
 		$layout_info = common::LayoutInfo($layout);
-
+		$is_addon = false;
 		if( !$layout_info ){
 			$this->gpLayout = false;
 			$this->theme_name = 'Light_Texture';
 			$this->theme_color = 'Blue';
-			$this->theme_is_addon = $this->theme_addon_id = false;
+			$this->theme_rel = '/themes/'.$this->theme_name.'/'.$this->theme_color;
 			$this->theme_dir = $dataDir.'/themes/'.$this->theme_name;
 
 		}else{
 			$this->gpLayout = $layout;
 			$this->theme_name = $layout_info['theme_name'];
 			$this->theme_color = $layout_info['theme_color'];
-			$this->theme_is_addon = $layout_info['is_addon'];
+			$is_addon = $layout_info['is_addon'];
+			$this->theme_rel = $layout_info['path'];
 			$this->theme_dir = $layout_info['dir'];
+
 			if( isset($layout_info['css']) && $layout_info['css'] ){
 				$this->layout_css = true;
 			}
@@ -703,19 +711,10 @@ class display{
 			if( isset($layout_info['menu_css_indexed']) && !$layout_info['menu_css_indexed'] ){
 				$this->menu_css_indexed = false;
 			}
-
 		}
 
-		$this->SetThemePath();
-	}
+		$this->theme_path = common::GetDir($this->theme_rel);
 
-	function SetThemePath(){
-		if( $this->theme_is_addon ){
-			$this->theme_path = '/data/_themes/';
-		}else{
-			$this->theme_path = '/themes/';
-		}
-		$this->theme_path = common::GetDir($this->theme_path.$this->theme_name.'/'.$this->theme_color);
 	}
 
 
@@ -1004,28 +1003,23 @@ class common{
 		}
 
 		$layout_info = $gpLayouts[$layout];
-		$theme = $layout_info['theme'];
-		$layout_info['theme_name'] = dirname($theme);
-		$layout_info['theme_color'] = basename($theme);
+		$layout_info += array('is_addon'=>false);
+		$layout_info['theme_name'] = dirname($layout_info['theme']);
+		$layout_info['theme_color'] = basename($layout_info['theme']);
 
-		//check the path
-		if( isset($layout_info['is_addon']) && $layout_info['is_addon'] ){
-			$layout_info['dir'] = $dataDir.'/data/_themes/'.$layout_info['theme_name'];
-		}else{
-			$layout_info['dir'] = $dataDir.'/themes/'.$layout_info['theme_name'];
-			$layout_info['is_addon'] = false;
+		$relative = '/themes/';
+		if( $layout_info['is_addon'] ){
+			$relative = '/data/_themes/';
 		}
-
-
-		$layout_info['template'] = $layout_info['dir'].'/template.php';
-
-		if( !file_exists($layout_info['template']) ){
+		$layout_info['path'] = $relative.$layout_info['theme'];
+		$layout_info['dir'] = $dataDir.$relative.$layout_info['theme_name'];
+		if( !file_exists($layout_info['dir'].'/template.php') ){
 			return false;
 		}
 
 		return $layout_info;
-
 	}
+
 
 
 	/*

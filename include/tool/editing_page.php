@@ -752,10 +752,6 @@ class editing_page extends display{
 	 */
 
 	function GalleryImages(){
-		global $page,$dataDir,$langmessage;
-		includeFile('admin/admin_uploaded.php');
-
-		$page->ajaxReplace = array();
 
 		if( isset($_GET['dir']) ){
 			$dir_piece = $_GET['dir'];
@@ -764,36 +760,12 @@ class editing_page extends display{
 		}else{
 			$dir_piece = '/image';
 		}
-		$dir_piece = common::WinPath($dir_piece);
-		$dir = $dataDir.'/data/_uploaded'.$dir_piece;
-
-		$prev_piece = false;
-
-		while( ($dir_piece != '/') && !file_exists($dir) ){
-			$prev_piece = $dir_piece;
-			$dir = dirname($dir);
-			$dir_piece = dirname($dir_piece);
-		}
-
 		//remember browse directory
 		$this->meta_data['gallery_dir'] = $dir_piece;
 		$this->SaveThis();
 
-
-		//new directory?
-		if( $prev_piece ){
-			$prev_piece = gp_edit::CleanArg($prev_piece);
-			$dir_piece = $prev_piece;
-			$dir = $dataDir.'/data/_uploaded'.$prev_piece;
-
-			if( !gpFiles::CheckDir($dir) ){
-				message($langmessage['OOPS']);
-				$dir = dirname($dir);
-				$dir_piece = dirname($prev_piece);
-			}
-		}
-
-		admin_uploaded::InlineList($dir,$dir_piece);
+		includeFile('admin/admin_uploaded.php');
+		admin_uploaded::InlineList($dir_piece);
 	}
 
 

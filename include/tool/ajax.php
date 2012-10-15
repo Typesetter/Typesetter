@@ -134,8 +134,6 @@ class gpAjax{
 
 		header('Content-type: application/x-javascript');
 
-		$type = $section_data['type'];
-
 		$scripts = array();
 		$scripts[] = '/include/js/inline_edit/inline_editing.js';
 
@@ -144,7 +142,7 @@ class gpAjax{
 		if( !empty($section_data['type']) ){
 			$type = $section_data['type'];
 		}
-		switch($section_data['type']){
+		switch($type){
 
 			case 'gallery':
 				$scripts = gpAjax::InlineEdit_Gallery($scripts);
@@ -156,6 +154,12 @@ class gpAjax{
 
 			case 'text';
 				$scripts = gpAjax::InlineEdit_Text($scripts);
+			break;
+
+			case 'image';
+				$scripts[] = '/include/js/jquery.auto_upload.js';
+				$scripts[] = '/include/js/inline_edit/image_common.js';
+				$scripts[] = '/include/js/inline_edit/image_edit.js';
 			break;
 		}
 
@@ -232,8 +236,9 @@ class gpAjax{
 	}
 
 	function InlineEdit_Gallery($scripts){
-		$scripts[] = '/include/js/inline_edit/gallery_edit_202.js';
 		$scripts[] = '/include/js/jquery.auto_upload.js';
+		$scripts[] = '/include/js/inline_edit/image_common.js';
+		$scripts[] = '/include/js/inline_edit/gallery_edit_202.js';
 		return $scripts;
 	}
 

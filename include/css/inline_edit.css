@@ -80,6 +80,9 @@
 	text-shadow:1px 1px 0 #fff;
 	}
 
+#ckeditor_controls{
+	text-align:right;
+	}
 
 #ckeditor_area .full_width,
 #ckeditor_area .full_width:hover,
@@ -94,6 +97,7 @@
 	overflow-y:hidden !important;
 	}
 
+/*
 .gp_editing,
 .inline_editor span.cke_skin_kama{
 	z-index:8000;
@@ -104,6 +108,32 @@
 
 	border:1px solid #ccc !important;
 	margin:-1px !important;
+	}
+	*/
+.inline_editor span.cke_skin_kama{
+	padding:0 !important;
+	-moz-border-radius: 0 !important;
+	-o-border-radius: 0 !important;
+	-webkit-border-radius: 0 !important;
+	border:0 none;
+	}
+.editable_area,
+.inline_editor span.cke_skin_kama,
+.gp_editing{
+	position:relative;
+	}
+
+.inline_editor span.cke_skin_kama:before,
+.gp_editing:before{
+	content:"";
+	position:absolute;
+	top:-1px;right:-1px;bottom:-1px;left:-1px;
+	padding:0 !important;
+
+	border:1px solid #ccc !important;
+	-moz-border-radius: 0 !important;
+	-o-border-radius: 0 !important;
+	-webkit-border-radius: 0 !important;
 	}
 
 .inline_editor span.cke_skin_kama *{
@@ -142,237 +172,7 @@ table.cke_editor > tbody > tr > td
 
 
 
-
-/* gallery editing */
-.gp_drag_box{
-	border:1px dashed #ccc !important;
-	}
-
-.ui-sortable li{
-	cursor:move;
-}
-
-.gp_gallery_edit{
-	position:absolute;
-	left:5px;
-	top:5px;
-	z-index:9999;
-	padding:2px;
-	background-color:#f1f1f1;
-}
-.gp_gallery_edit img{
-	margin:3px;
-	}
-
-.gp_gallery_edit img.page_edit{
-	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -32px;
-	}
-.gp_gallery_edit img.delete{
-	background:url('../imgs/delete.png') no-repeat 0 0;
-	}
-
-
-
-#ckeditor_area .gp_edit_select{
-	position:relative;
-	}
-.gp_edit_select_options{
-	display:none;
-	position:absolute;
-	top:100%;
-	left:0;
-	width:auto;
-	z-index:10003;
-	background-color:#fafafa;
-	border:1px solid #ddd;
-	-moz-border-radius: 5px;
-	-o-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-	padding:3px;
-
-	box-shadow:1px 1px 4px #777;
-	-moz-box-shadow: 1px 1px 4px #777;
-	-webkit-box-shadow:1px 1px 4px #777;
-	-o-box-shadow: 1px 1px 4px #777;
-	-icab-box-shadow: 1px 1px 4px #777;
-	-khtml-box-shadow: 1px 1px 4px #777;
-	}
-
-#ckeditor_area a.gp_gallery_folder{
-	display:block;
-	text-decoration:none;
-	font-size:12px;
-	height:16px;
-	overflow:hidden;
-	color:#444;
-	min-width:180px;
-	white-space:nowrap;
-	padding:3px 4px;
-	}
-
-#ckeditor_area a.gp_gallery_folder .folder,
-#ckeditor_area a.gp_gallery_folder .add{
-	display:inline-block;
-	height:16px;
-	width:16px;
-	float:left;
-	background-position: 50% 50%;
-	background-repeat: no-repeat;
-	}
-#ckeditor_area .gp_edit_select > a.gp_gallery_folder:after{
-	position:absolute;
-	right:10px;
-	font-size:10px;
-	color:#aaa;
-	content:"\25BC";
-	}
-
-
-
-#ckeditor_area a.gp_gallery_folder .folder{
-	margin-right:5px;
-	background-image:url('../imgs/folder.png');
-	}
-#ckeditor_area a.gp_gallery_folder .add{
-	margin-right:5px;
-	background-image:url('../imgs/add.png');
-	}
-
-#ckeditor_area a.gp_gallery_folder:hover{
-	background-color:#ededed;
-	}
-
 #ckeditor_area .label{
-	margin-right:4px;
-	}
-
-/* the position is left leaning to allow for a scrollbar */
-#gp_gallery_avail_imgs{
-	height:280px;
-	overflow:auto;
-	overflow-x:hidden;
-
-	margin:0 0 5px 0;
-	padding:10px 4px 20px;
-	background-color:#fafafa;
-	border:1px solid #fff;
-	-moz-border-radius: 5px;
-	-o-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-	}
-
-#gp_gallery_avail_imgs span{
-	position:relative;
-	display:block;
-	float:left;
-	width:45px;
-	height:45px;
-	margin:2px;
-
-	overflow:hidden;
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
-	border:3px solid #ddd;
-	}
-
-#gp_gallery_avail_imgs span.expand{
-	width:70px;
-	height:70px;
-	margin:-2px -11px -19px -10px;
-	z-index:101;
-	box-shadow:1px 1px 4px #777;
-	-moz-box-shadow: 1px 1px 4px #777;
-	-webkit-box-shadow:1px 1px 4px #777;
-	-o-box-shadow: 1px 1px 4px #777;
-	-icab-box-shadow: 1px 1px 4px #777;
-	-khtml-box-shadow: 1px 1px 4px #777;
-	border:3px solid #bbb;
-	}
-
-#gp_gallery_avail_imgs span.expand:nth-child(3n+1){
-	margin-right:-19px;
-	margin-left:-2px;
-	}
-#gp_gallery_avail_imgs span.expand:nth-child(3n+3){
-	margin-left:-19px;
-	margin-right:-2px;
-	}
-
-#gp_gallery_avail_imgs img{
-	position:relative;
-	display:inline-block;
-	margin:0;
-	padding:0;
-	width:70px;
-	height:70px;
-	}
-
-
-#gp_gallery_avail_imgs a.delete{
-	position:absolute;
-	top:-3px;
-	right:-3px;
-	z-index:102;
-	background: #bbb url('../imgs/delete.png') no-repeat 50% 50%;
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
-	height:22px;
-	width:22px;
-	display:none;
-	}
-#gp_gallery_avail_imgs span.expand a.delete{
-	display:block;
-	}
-
-
-/* upload form */
-
-
-.gp_upload_form a.ckeditor_control{
-	position:absolute;
-	z-index:10000;
-	width:180px;
-	text-align:center;
-	}
-
-#gp_upload_queue a{
-	display:block;
-	text-decoration:none;
-	font: 11px Verdana, Geneva, sans-serif;
-	border:1px solid #fafafa;
-
-	border-radius:5px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	margin: 0 3px 4px 0;
-	color:#444;
-	white-space:nowrap;
-	overflow:hidden;
-
-	width:166px;
-	padding:3px 4px 3px 23px;
-	background:#fafafa url('../imgs/loaderB16.gif') 2px 50% no-repeat;
-}
-
-#gp_upload_queue a.failed{
-	background-image: url('../imgs/cancel.png');
-	background-color: #FDE5DD !important;
-	border: 2px solid #FBCBBC !important;
-	white-space:normal;
-}
-
-#gp_upload_queue a.success{
-	background-image: url('../imgs/cancel.png');
-	background-color: #BCFBBC !important;
-}
-
-#gp_upload_queue a span{
 	margin-right:4px;
 	}
 
@@ -411,6 +211,11 @@ table.cke_editor > tbody > tr > td
 	z-index:10000; /* to be above full screen editing of ckeditor */
 	}
 
+/**
+ *
+ * Docked CSS
+ *
+ */
 #ckeditor_area.docked{
 	width:100%;
 	position:absolute;

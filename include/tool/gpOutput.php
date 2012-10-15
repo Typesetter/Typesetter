@@ -53,6 +53,8 @@ $gpOutConf['CustomMenu']['method']		= array('gpOutput','CustomMenu');
 $gpOutConf['Extra']['method']			= array('gpOutput','GetExtra');
 //$gpOutConf['Text']['method']			= array('gpOutput','GetText'); //use Area() and GetArea() instead
 
+//$gpOutConf['Image']['method']			= array('gpOutput','GetImage');
+
 /* The following methods should be used with gpOutput::Fetch() */
 $gpOutConf['Gadget']['method']			= array('gpOutput','GetGadget');
 
@@ -184,9 +186,10 @@ class gpOutput{
 	 */
 
 
-	/* static */
-	function GetContainerID($name){
+	static function GetContainerID($name,$arg=false){
 		static $indices;
+
+		$name = str_replace(array('+','/','='),array('','',''),base64_encode($name));
 		if( !isset($indices[$name]) ){
 			$indices[$name] = 0;
 		}else{
@@ -215,27 +218,13 @@ class gpOutput{
 
 		$layout_info =& $gpLayouts[$page->gpLayout];
 
-
-		// pre 2.2.0.2 container id's
-		// if someone is editing their theme, and moves handlers around, then these will get mixed up as well!
-		if( is_array($layout_info)
-			&& !isset($layout_info['hander_v'])
-			&& isset($layout_info['handlers'])
-			&& (count($layout_info['handlers']) > 0) ){
-
-			$container_id = gpOutput::GetContainerID($default);
-
-		// container id that includes the argument to prevent mixups when template.php files get edited
-		}else{
-			$container_id = $default.':'.substr($arg,0,10);
-			$container_id = str_replace(array('+','/','='),array('','',''),base64_encode($container_id));
-			$container_id = gpOutput::GetContainerID($container_id);
-		}
+		//container id
+		$container_id = $default.':'.substr($arg,0,10);
+		$container_id = self::GetContainerID($container_id);
 
 
 		if( isset($layout_info) && isset($layout_info['handlers']) ){
 			$handlers =& $layout_info['handlers'];
-
 			if( isset($handlers[$container_id]) ){
 				$outKeys = $handlers[$container_id];
 				$outSet = true;
@@ -360,8 +349,6 @@ class gpOutput{
 			$innerLinks .= '</div>';
 
 		}
-
-		//$arrange_links = gpOutput::ArrangeLinks($info);
 
 		//editable links only .. other editable_areas are handled by their output functions
 		if( $permission ){
@@ -525,7 +512,6 @@ class gpOutput{
 		static $count = 0;
 		$count++;
 		$index = $count; //since &$index is passed by reference
-
 		$attr .= ' class="ExtraEditLink nodisplay" id="ExtraEditLink'.$index.'"';
 		return common::Link($href,$label,$query,$attr);
 	}
@@ -1100,7 +1086,6 @@ class gpOutput{
 			echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 			echo $edit_link;
 			echo common::Link('Admin_Extra',$langmessage['theme_content'],'',' class="nodisplay"');
-			//echo gpOutput::ArrangeLinks($info);
 			echo '</span>';
 			gpOutput::$editlinks .= ob_get_clean();
 
@@ -1113,6 +1098,53 @@ class gpOutput{
 
 	}
 
+	function GetImage($src,$width,$height,$attributes = ''){
+		global $page,$dataDir,$langmessage,$gpLayouts;
+
+
+		//default image information
+		$img_rel = dirname($page->theme_rel).'/'.ltrim($src,'/');
+
+
+		//container id
+		$container_id = 'Image:'.$src;
+		$container_id = gpOutput::GetContainerID($container_id);
+
+
+		//select custom image
+		$image = false;
+		if( isset($gpLayouts[$page->gpLayout])
+			&& isset($gpLayouts[$page->gpLayout]['images'])
+			&& isset($gpLayouts[$page->gpLayout]['images'][$container_id])
+			&& is_array($gpLayouts[$page->gpLayout]['images'][$container_id])
+			){
+				//echo showArray($gpLayouts[$page->gpLayout]['images'][$container_id]);
+				shuffle($gpLayouts[$page->gpLayout]['images'][$container_id]);
+				$image = current($gpLayouts[$page->gpLayout]['images'][$container_id]);
+				$img_full = $dataDir.$image['img_rel'];
+				if( file_exists($img_full) ){
+					$img_rel = $image['img_rel'];
+					$width = $image['width'];
+					$height = $image['height'];
+				}
+		}
+
+		//attributes
+		if( strpos($attributes,'alt=') === false ){
+			$attributes .= 'alt=""';
+		}
+
+
+		//edit options
+		$editable = gpOutput::ShowEditLink('Admin_Theme_Content');
+		if( $editable ){
+			$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content/'.$page->gpLayout,$langmessage['edit'],'file='.rawurlencode($img_rel).'&container='.$container_id.'&time='.time(),' title="Edit Image" name="inline_edit_generic" ');
+			gpOutput::$editlinks .= '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">'.$edit_link.'</span>';
+			$attributes .= ' class="editable_area" id="ExtraEditArea'.$edit_index.'"';
+		}
+
+		echo '<img src="'.common::GetDir($img_rel).'" height="'.(int)$height.'" width="'.(int)$width.'" '.trim($attributes).' />';
+	}
 
 
 	function GetFullMenu($arg=''){

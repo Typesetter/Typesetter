@@ -1,7 +1,7 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-global $langmessage;
+//global $langmessage;
 //$langmessage['Available Images'] = 'Available Images';
 
 
@@ -3235,19 +3235,23 @@ class admin_theme_content extends admin_addon_install{
 	function ShowThemeImages(){
 		global $page,$langmessage;
 		$page->ajaxReplace = array();
-
-		ob_start();
 		$images = $this->GetAvailableImages();
 
+		ob_start();
 		echo '<div id="gp_gallery_avail_imgs">';
 
 		foreach($images as $img_rel => $image ){
+
+			$thumb_rel = $img_rel;
+			if( !empty($image['thumbnail_url']) ){
+				$thumb_rel = $image['theme_rel'].'/'.ltrim($image['thumbnail_url'],'/');
+			}
 			$file_url = common::GetDir($img_rel);
-			$thumb = '<img src="'.common::GetDir($img_rel).'" alt=""/>';
+			$size = ' data-width="'.$image['width'].'" data-height="'.$image['height'].'"';
 
 			echo '<span class="expand_child">'
-				. '<a href="'.$file_url.'" name="gp_gallery_add" rel="'.$file_url.'">'
-				. $thumb
+				. '<a href="'.$file_url.'" name="gp_gallery_add" rel="'.$file_url.'"'.$size.'>'
+				. '<img src="'.common::GetDir($thumb_rel).'" alt=""/>'
 				. '</a>'
 				. '</span>';
 		}
@@ -3256,6 +3260,10 @@ class admin_theme_content extends admin_addon_install{
 		$page->ajaxReplace[] = array('inner','#gp_image_area',$content);
 	}
 
+	/**
+	 * Return an array of all images registered by themes
+	 *
+	 */
 	function GetAvailableImages(){
 		global $dataDir;
 
@@ -3275,6 +3283,10 @@ class admin_theme_content extends admin_addon_install{
 		return $all_images;
 	}
 
+	/**
+	 * Get the images associated with a theme
+	 *
+	 */
 	function GetThemeImages($theme_rel){
 		global $dataDir;
 		$images_file = $dataDir.$theme_rel.'/images.php';
@@ -3294,6 +3306,14 @@ class admin_theme_content extends admin_addon_install{
 			if( !file_exists($img_full) ){
 				continue;
 			}
+
+			$size = '';
+			if( empty($image['width']) || empty($image['height']) ){
+				$src_img = thumbnail::getSrcImg($full_path);
+				$image['width'] = imagesx($src_img);
+				$image['height'] = imagesy($src_img);
+			}
+
 			$image['theme_rel'] = $theme_rel;
 			$cleaned_images[$img_rel] = $image;
 		}
@@ -3302,6 +3322,10 @@ class admin_theme_content extends admin_addon_install{
 	}
 
 
+	/**
+	 * Load the inline editor for a theme image
+	 *
+	 */
 	function InlineEdit(){
 
 		$section = array();
@@ -3311,6 +3335,10 @@ class admin_theme_content extends admin_addon_install{
 		die();
 	}
 
+	/**
+	 * Output content for use with the inline image editor
+	 *
+	 */
 	function ImageEditor(){
 		global $page,$dataDir,$langmessage;
 		$page->ajaxReplace = array();

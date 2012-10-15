@@ -345,11 +345,16 @@ class admin_uploaded{
 		$page->ajaxReplace[] = array('gp_gallery_images','',''); //tell the script the images have been loaded
 	}
 
+	function InlineImageList($list){
+
+
+	}
+
 	/**
 	 * @static
 	 */
 	function ShowFile_Gallery($dir_piece,$file,$isThumbDir){
-		global $langmessage;
+		global $langmessage, $dataDir;
 
 		if( !admin_uploaded::IsImg($file) ){
 			return false;
@@ -358,18 +363,27 @@ class admin_uploaded{
 		//for gallery editing
 		$rel_path = '/data/_uploaded'.$dir_piece.'/'.$file;
 		$id = self::ImageId($rel_path);
-		$fileUrl = common::GetDir($rel_path);
+		$file_url = common::GetDir($rel_path);
+		$full_path = $dataDir.$rel_path;
 
+		//thumbnail
 		if( $isThumbDir ){
-			$thumb = ' <img src="'.$fileUrl.'" alt="" />';
+			$thumb = ' <img src="'.$file_url.'" alt="" />';
 		}else{
 			$thumb = ' <img src="'.common::GetDir('/data/_uploaded/image/thumbnails'.$dir_piece.'/'.$file.'.jpg').'" alt="" />';
+		}
+
+		//get size
+		$src_img = thumbnail::getSrcImg($full_path);
+		$size = '';
+		if( $src_img ){
+			$size = ' data-width="'.imagesx($src_img).'" data-height="'.imagesy($src_img).'"';
 		}
 
 		$query_string = 'file_cmd=delete&show=inline&file='.urlencode($file);
 
 		return '<span class="expand_child" id="'.$id.'">'
-				. '<a href="'.$fileUrl.'" name="gp_gallery_add" rel="'.$fileUrl.'">'
+				. '<a href="'.$file_url.'" name="gp_gallery_add" rel="'.$file_url.'" '.$size.'>'
 				. $thumb
 				. '</a>'
 				. common::Link('Admin_Uploaded'.$dir_piece,'',$query_string,' class="delete gpconfirm" name="gpajax" title="'.$langmessage['delete_confirm'].'"','delete')

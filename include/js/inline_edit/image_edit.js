@@ -64,7 +64,9 @@
 
 			//change src to blank and set as background image
 			edit_img.attr('src','');
-			SetImage( img_src );
+			var width = edit_img.width();
+			var height = edit_img.height()
+			SetCurrentImage( img_src, width, height );
 			SetupDrag();
 
 			//set up height/width listeners
@@ -85,20 +87,13 @@
 
 				},400);
 			});
-			SyncIconInfo();
 		}
-
 
 
 		/**
-		 * Synchronize the icon with the actual image
+		 * Initialize image dragging
 		 *
 		 */
-		function SyncIconInfo(){
-			$('#gp_current_image input[name=width]').val( edit_img.width() );
-			$('#gp_current_image input[name=height]').val( edit_img.height() );
-		}
-
 		function SetupDrag(){
 
 			var posx = posy = mouse_startx = mouse_starty = pos_startx = pos_starty = 0;
@@ -138,9 +133,11 @@
 			evt.preventDefault();
 			var $this = $(this).stop(true,true);
 
-			SetImage( $this.attr('href') );
+			var width = $this.data('width');
+			var height = $this.data('height');
+
+			SetCurrentImage( $this.attr('href'), width, height );
 			SetPosition(0,0);
-			//SyncIconInfo();
 
 			//make sure this information is saved
 			save_obj.width = $('#gp_current_image input[name=width]').val();
@@ -157,13 +154,23 @@
 			edited = true;
 		}
 
-		function SetImage(src){
+		/**
+		 * Set the current image
+		 *
+		 */
+		function SetCurrentImage( src, width, height){
 			delete save_obj.src;
 			if( src !== img_src ){
 				save_obj.src = src;
 			}
 			edit_img.css({'background-image':'url('+src+')'});
 			$('#gp_current_image img').attr('src', src );
+
+			if( width > 0 && height > 0 ){
+				$('#gp_current_image input[name=width]').val( width );
+				$('#gp_current_image input[name=height]').val( height );
+				edit_img.stop(true,true).animate({'width':width,'height':height});
+			}
 		}
 
 

@@ -28,7 +28,7 @@ function jPrep(a,b){
 	return a + b;
 }
 
-function ajaxResponse(data){
+function ajaxResponse(data,textStatus,jqXHR){
 
 	$('.messages').detach();
 
@@ -36,7 +36,7 @@ function ajaxResponse(data){
 	$.each(data,function(i,obj){ //using $.each() instead of a for loop to prevent Array.prototype.xxxx from affecting the results
 
 		if( typeof(gpresponse[obj.DO]) == 'function' ){
-			gpresponse[obj.DO].call(this,data);
+			gpresponse[obj.DO].call(this,data,textStatus,jqXHR);
 			return;
 		}
 

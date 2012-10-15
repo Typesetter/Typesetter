@@ -228,8 +228,34 @@ class admin_uploaded{
 	 * Output a list a images in a director for use in inline editing
 	 * @static
 	 */
-	function InlineList($dir,$dir_piece){
+	function InlineList($dir_piece,$add_all_images = true){
 		global $page,$langmessage,$dataDir;
+		$page->ajaxReplace = array();
+
+
+		$dir_piece = common::WinPath($dir_piece);
+		$dir = $dataDir.'/data/_uploaded'.$dir_piece;
+
+		$prev_piece = false;
+
+		while( ($dir_piece != '/') && !file_exists($dir) ){
+			$prev_piece = $dir_piece;
+			$dir = dirname($dir);
+			$dir_piece = dirname($dir_piece);
+		}
+
+		//new directory?
+		if( $prev_piece ){
+			$prev_piece = gp_edit::CleanArg($prev_piece);
+			$dir_piece = $prev_piece;
+			$dir = $dataDir.'/data/_uploaded'.$prev_piece;
+
+			if( !gpFiles::CheckDir($dir) ){
+				message($langmessage['OOPS']);
+				$dir = dirname($dir);
+				$dir_piece = dirname($prev_piece);
+			}
+		}
 
 
 		ob_start();
@@ -244,8 +270,6 @@ class admin_uploaded{
 		$folders = $files = array();
 		$allFiles = gpFiles::ReadFolderAndFiles($dir);
 		list($folders,$files) = $allFiles;
-
-
 
 
 		//available images
@@ -292,7 +316,7 @@ class admin_uploaded{
 
 
 		//add all images
-		if( $image_count > 0 ){
+		if( $add_all_images && $image_count > 0 ){
 			echo '<a name="gp_gallery_add_all" class="ckeditor_control half_width">'.$langmessage['Add All Images'].'</a>';
 		}
 
@@ -440,7 +464,7 @@ class admin_uploaded{
 			//check the image size
 			thumbnail::CheckArea($to,$config['maximgarea']);
 
-			$this->CreateThumbnail($to);
+			self::CreateThumbnail($to);
 		}
 
 
@@ -451,14 +475,26 @@ class admin_uploaded{
 	 * Create a thumbnail for the image at the path given by $original
 	 *
 	 */
-	function CreateThumbnail($original){
-		global $config;
+	static function CreateThumbnail($original){
+		global $config, $dataDir;
 
-		$name = basename($original);
-		$thumb_dir = $this->thumbFolder.$this->subdir;
-		$thumbPath = $thumb_dir.'/'.$name.'.jpg';
+		$prefix = $dataDir.'/data/_uploaded';
+		$thumb_prefix = $dataDir.'/data/_uploaded/image/thumbnails';
+		if( strpos($original,$thumb_prefix) !== false ){
+			return;
+		}
+		if( strpos($original,$prefix) !== 0 ){
+			return;
+		}
+
+		$len = strlen($prefix);
+		$thumb_path = substr($original,$len);
+		$thumb_path = $thumb_prefix.$thumb_path;
+
+		$thumb_dir = dirname($thumb_path);
+		$thumb_path = $thumb_dir.'/'.basename($thumb_path).'.jpg';
 		gpFiles::CheckDir($thumb_dir);
-		thumbnail::createSquare($original,$thumbPath,$config['maxthumbsize']);
+		thumbnail::createSquare($original,$thumb_path,$config['maxthumbsize']);
 	}
 
 

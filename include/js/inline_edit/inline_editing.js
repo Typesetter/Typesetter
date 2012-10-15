@@ -84,8 +84,8 @@ var gp_editing = {
 		if( path.indexOf('?') > 0 ){
 			query = strip_to(path,'?')+'&';
 		}
+		query += 'cmd=save&';
 		query += gp_editor.gp_saveData();
-		query += '&cmd=save';
 
 		//the saved function
 		gpresponse.ck_saved = function(){
@@ -125,7 +125,7 @@ var gp_editing = {
 		});
 
 		//this needs to happen after SimpleDrag() setup for keep_viewable settings
-		gp_editing.setdock(false); 
+		gp_editing.setdock(false);
 	},
 
 

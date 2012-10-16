@@ -272,8 +272,8 @@ class admin_uploaded{
 		//folder select
 		ob_start();
 
-		echo '<div class="gp_edit_select">';
-		echo '<a class="gp_gallery_folder ckeditor_control gp_selected_folder"><span class="folder"></span>';
+		echo '<div class="gp_edit_select ckeditor_control">';
+		echo '<a class="gp_selected_folder"><span class="folder"></span>';
 		if( strlen($dir_piece) > 23 ){
 			echo '...'.substr($dir_piece,-20);
 		}else{

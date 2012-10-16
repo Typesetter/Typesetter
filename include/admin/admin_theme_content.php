@@ -3466,13 +3466,12 @@ class admin_theme_content extends admin_addon_install{
 		if( $this->SetImage($dest_img_rel,$width,$height) ){
 			includeFile('admin/admin_uploaded.php');
 			admin_uploaded::CreateThumbnail($dest_img_full);
-			$page->ajaxReplace[] = array('ck_saved','','');
 		}
 
 	}
 
 	function SetImage($img_rel,$width,$height){
-		global $gpLayouts,$langmessage;
+		global $gpLayouts,$langmessage,$page;
 
 
 		$save_info = array();
@@ -3489,6 +3488,7 @@ class admin_theme_content extends admin_addon_install{
 			message($langmessage['OOPS'].' (Data not saved)');
 			return false;
 		}
+		$page->ajaxReplace[] = array('ck_saved','','');
 		return true;
 	}
 

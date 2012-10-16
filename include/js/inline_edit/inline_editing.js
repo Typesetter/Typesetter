@@ -93,7 +93,6 @@ var gp_editing = {
 
 			gp_editor.updateElement();
 			gp_editor.resetDirty();
-
 			if( rel == "ck_close" ){
 				gp_editing.close_editor(rel,evt);
 			}

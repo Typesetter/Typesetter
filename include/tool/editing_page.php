@@ -110,6 +110,7 @@ class editing_page extends display{
 
 
 				/* gallery editing */
+				case 'gallery_folder':
 				case 'gallery_images':
 					$this->GalleryImages();
 				return;
@@ -841,7 +842,7 @@ class editing_page extends display{
 		echo '<input type="text" size="" id="gp_gadget_include" name="gadget_include" class="autocomplete" value="'.htmlspecialchars($gadget_content).'" />';
 		echo '</div>';
 
-		echo '<div class="option_area">';
+		echo '<div id="gp_option_area">';
 		echo '<a href="#" name="gp_include_preview" class="ckeditor_control full_width">Preview</a>';
 		echo '</div>';
 

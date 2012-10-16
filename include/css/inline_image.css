@@ -23,8 +23,8 @@
 	overflow:auto;
 	overflow-x:hidden;
 
-	margin:0 0 5px 0;
-	padding:6px;
+	margin:5px 0;
+	padding:5px;
 	background-color:#fafafa;
 	border:1px solid #fff;
 	-moz-border-radius: 5px;
@@ -192,31 +192,35 @@
 	}
 
 
+/**
+ * Folder Selection
+ *
+ */
 #ckeditor_area .gp_edit_select{
 	position:relative;
 	}
 .gp_edit_select_options{
-	display:none;
-	position:absolute;
-	top:100%;
-	left:0;
-	right:3px;
-	width:auto;
-	z-index:10003;
+	margin:5px 0;
+	padding:5px;
 	background-color:#fafafa;
-	border:1px solid #ddd;
+	border:1px solid #fff;
 	-moz-border-radius: 5px;
 	-o-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
-	padding:3px;
+	overflow:auto;
+	overflow-x:hidden;
 
-	box-shadow:1px 1px 4px #777;
-	-moz-box-shadow: 1px 1px 4px #777;
-	-webkit-box-shadow:1px 1px 4px #777;
-	-o-box-shadow: 1px 1px 4px #777;
-	-icab-box-shadow: 1px 1px 4px #777;
-	-khtml-box-shadow: 1px 1px 4px #777;
+	display:none;
+	top:100%;
+	left:0;
+	right:0;
+	height:123px;
+	width:auto;
+	z-index:10003;
+	}
+.gp_active .gp_edit_select_options{
+	display:block;
 	}
 
 #ckeditor_area a.gp_gallery_folder{
@@ -232,7 +236,7 @@
 	}
 #ckeditor_area .gp_selected_folder{
 	margin:0 0 5px 0;
-	padding:6px;
+	padding:5px;
 	background-color:#fafafa;
 	border:1px solid #fff;
 	-moz-border-radius: 5px;
@@ -240,6 +244,15 @@
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
 }
+#ckeditor_area .gp_active .ckeditor_control{
+	border-bottom:1px solid #fafafa !important;
+	border-right:1px solid #fafafa !important;
+	border-top:1px solid #dad9d9 !important;
+	border-left:1px solid #dad9d9 !important;
+
+	background-color:#f5f5f5;
+	background: -moz-linear-gradient(top, #f1f1f1, #f7f7f7);
+	}
 
 
 #ckeditor_area a.gp_gallery_folder .folder,
@@ -269,10 +282,14 @@
 	margin-right:5px;
 	background-image:url('../imgs/add.png');
 	}
+#ckeditor_area a.gp_gallery_folder .gp_count{
+	float:right;
+	}
 
 #ckeditor_area a.gp_gallery_folder:hover{
 	background-color:#ededed;
 	}
+
 
 
 /**
@@ -284,7 +301,7 @@
 	overflow:auto;
 	overflow-x:hidden;
 	margin:0 5px 5px 0;
-	padding:6px;
+	padding:5px;
 	background-color:#fafafa;
 	border:1px solid #fff;
 	-moz-border-radius: 5px;

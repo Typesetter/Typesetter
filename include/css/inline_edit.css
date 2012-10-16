@@ -44,13 +44,7 @@
 	text-align:justify;
 	}
 
-#ckeditor_area .ckeditor_control
-/*
-,
-#ckeditor_area .ckeditor_control:hover,
-#ckeditor_area .ckeditor_control:active
-*/
-	{
+#ckeditor_area .ckeditor_control{
 	font-family:Arial, sans-serif !important;
 	font-size:12px !important;
 	text-decoration:none !important;
@@ -62,13 +56,12 @@
 	border-right:1px solid #dad9d9 !important;
 
 	background-color:#fafafa;
-	background: -moz-linear-gradient(top, #fff 0%, #f7f7f7 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fff), color-stop(100%,#f7f7f7));
-	background: -webkit-linear-gradient(top, #fff 0%,#f7f7f7 100%);
-	background: -o-linear-gradient(top, #fff 0%,#f7f7f7 100%);
-	background: -ms-linear-gradient(top, #fff 0%,#f7f7f7 100%);
+	background: -moz-linear-gradient(top, #fff, #f7f7f7);
+	background: -webkit-linear-gradient(top, #fff, #f7f7f7);
+	background: -o-linear-gradient(top, #fff, #f7f7f7);
+	background: -ms-linear-gradient(top, #fff, #f7f7f7);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f7f7f7',GradientType=0 );
-	background: linear-gradient(top, #fff 0%,#f7f7f7 100%);
+	background: linear-gradient(top, #fff, #f7f7f7);
 
 	line-height:18px;
 	display:inline-block;
@@ -88,8 +81,6 @@
 	text-align:center !important;
 	width:182px;
 	}
-
-
 
 .inline_editor iframe{
 	overflow-y:hidden !important;
@@ -111,7 +102,7 @@
 .inline_editor span.cke_skin_kama,
 .gp_editing{
 	position:relative;
-	z-index: 0;
+	/* z-index: 0; potentially changes layouts */
 	}
 
 .inline_editor span.cke_skin_kama:before,
@@ -254,7 +245,7 @@ table.cke_editor > tbody > tr > td
 #ckeditor_area.docked #ckeditor_top .cke_editor{display:inline;}
 
 
-#ckeditor_area.docked .option_area{
+#ckeditor_area.docked #gp_option_area{
 	float:left;
 	width:200px;
 	margin-right:10px;

@@ -30,40 +30,9 @@ function LOGO(obj){
 
 //get the coordinates for positioning editable area overlays
 function GetCoords(a){
-	var ch,xy=false,loc = {};
+	loc = a.offset();
+	loc.w = a.outerWidth();
 	loc.h = a.outerHeight();
-
-	ch = a.children(':visible').not('.gplinks'); //don't want to position based on hidden gpeasy specific links
-
-	if( ch.length <= 1 ){
-		ch = a;
-	}
-	var top, right, bottom, left;
-	ch.each(function(i,child){
-		child = $(child);
-		xy = child.offset();
-		if( i === 0 ){
-			top = xy.top;
-			left = xy.left;
-			right = xy.left + child.outerWidth();
-			return;
-		}
-
-		if( xy.top < top ){
-			top = xy.top;
-		}
-		if( xy.left < left ){
-			left = xy.left;
-		}
-
-		if( (xy.left + child.outerWidth()) > right ){
-			right = xy.left + child.outerWidth();
-		}
-	});
-
-	loc.w = right - left;
-	loc.left = left;
-	loc.top = top;
 	return loc;
 }
 
@@ -716,10 +685,8 @@ $(function(){
 
 
 			id = edit_area.attr('id').substr(13); //edit_area is always ExtraEditArea#
-			loc = edit_area.offset();
-			width = edit_area.outerWidth(true);
-
-			overlay.show().css({'top':(loc.top-3),'left':(loc.left-2),'width':(width+6)});
+			loc = GetCoords(edit_area);
+			overlay.show().css({'top':(loc.top-3),'left':(loc.left-2),'width':(loc.w+6)});
 
 			if( !lnk_span ){
 				lnk_span = $('<span>');
@@ -742,7 +709,6 @@ $(function(){
 				.removeClass('ExtraEditLink')
 				;
 
-			loc = GetCoords(edit_area);
 			var close_text = '<a class="gp_overlay_expand" name="gp_overlay_close"></a>';
 			lnk_span.html(close_text).unbind('mouseenter').one('mouseenter',function(){
 				if( edit_area.hasClass('gp_no_overlay') ){

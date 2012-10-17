@@ -1530,10 +1530,10 @@ body #gp_admin_html .layout_links a.selected{
 	float:right;
 	}
 
-.gp_floating_area .right a{
-	display:block;
-	float:right;
-	margin-left:7px;
+.gp_floating_area .right a,
+.gp_floating_area .right span{
+	display:inline-block;
+	margin:0 4px 4px 4px;
 	}
 
 .gp_floating_area .admin_arrow_out{

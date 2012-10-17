@@ -3259,6 +3259,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '</div>';
 		$content = ob_get_clean();
 		$page->ajaxReplace[] = array('inner','#gp_image_area',$content);
+		$page->ajaxReplace[] = array('inner','#gp_folder_options',''); //remove upload button
 	}
 
 	/**
@@ -3346,6 +3347,7 @@ class admin_theme_content extends admin_addon_install{
 
 		//image options
 		ob_start();
+
 		echo '<div id="gp_current_image">';
 		echo '<span id="gp_image_wrap"><img/></span>';
 		echo '<table>';
@@ -3356,12 +3358,17 @@ class admin_theme_content extends admin_addon_install{
 		echo '</table>';
 		echo '</div>';
 
+		echo '<div id="gp_source_options" class="gp_edit_group">';
 		echo '<b>Select Image</b>';
 		echo '<a class="ckeditor_control half_width" name="show_theme_images">Theme Images</a>';
 		echo '<a class="ckeditor_control half_width" name="show_uploaded_images">Uploaded Images</a>';
+		echo '</div>';
+
+		echo '<div id="gp_image_area"></div><div id="gp_upload_queue"></div>';
+
 		$content = ob_get_clean();
 
-		$page->ajaxReplace[] = array('inner','#gp_image_options',$content);
+		$page->ajaxReplace[] = array('inner','#ckeditor_top',$content);
 		$page->ajaxReplace[] = array('image_options_loaded','',''); //tell the script the images have been loaded
 	}
 

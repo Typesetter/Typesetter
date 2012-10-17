@@ -213,12 +213,12 @@ table.cke_editor > tbody > tr > td
 	-webkit-border-radius: 0;
 	border-radius: 0;
 
-	box-shadow:none;
-	-moz-box-shadow:none;
-	-webkit-box-shadow:none;
-	-o-box-shadow:none;
-	-icab-box-shadow:none;
-	-khtml-box-shadow:none;
+	box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+	-moz-box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+	-webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+	-o-box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+	-icab-box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+	-khtml-box-shadow: 0 1px 0 rgba(0,0,0,0.2);
 	}
 
 #ckeditor_area.docked > div{
@@ -233,9 +233,14 @@ table.cke_editor > tbody > tr > td
 	padding:7px;
 	}
 
-#ckeditor_area.docked .toolbar{float:right;clear:none;width:40px;padding:0;}
+#ckeditor_area.docked .toolbar{
+	float:right;
+	clear:none;
+	width:20px;
+	padding:0;
+	}
 #ckeditor_area.docked .tools{
-	margin-right:50px; /* room for the toolbar */
+	margin-right:30px; /* room for the toolbar */
 	}
 #ckeditor_area.docked #ckeditor_bottom{display:block;float:left;}
 #ckeditor_area.docked #ckeditor_controls{display:block;float:left;}
@@ -248,11 +253,7 @@ table.cke_editor > tbody > tr > td
 #ckeditor_area.docked #gp_option_area{
 	float:left;
 	width:200px;
-	margin-right:10px;
-	}
-#ckeditor_area.docked #gp_gallery_avail_imgs{
-	display:block;
-	height:60px;
+	margin-right:5px;
 	}
 
 

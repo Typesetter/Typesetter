@@ -43,9 +43,10 @@ class gp_combine{
 			}
 		}
 
-
 		//check to see if file exists
-		$etag = count($files).'.'.common::GenEtag( $modified, $content_length );
+		$dir_hash = crc32( md5( sha1( $dataDir) ) );
+		$dir_hash = base_convert( sprintf("%u\n", $dir_hash ), 10, 36);
+		$etag = count($files).'.'.$dir_hash.'.'.common::GenEtag( $modified, $content_length );
 		$cache_relative = '/data/_cache/combined_'.$etag.'.'.$type;
 		$cache_file = $dataDir.$cache_relative;
 		if( file_exists($cache_file) ){

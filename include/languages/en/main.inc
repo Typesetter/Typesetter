@@ -493,4 +493,11 @@ continue using your old password.</p>',
 'Image_of'=>'Image %1$s of %2$s',
 //'Start Slideshow'=>'Start Slideshow',
 //'Stop Slideshow'=>'Stop Slideshow',
+'Width'=>'Width',
+'Height'=>'Height',
+'Left'=>'Left',
+'Top'=>'Top',
+'Select Image'=>'Select Image',
+'Theme Images'=>'Theme Images',
+
 );

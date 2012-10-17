@@ -1098,8 +1098,12 @@ class gpOutput{
 
 	}
 
-	function GetImage($src,$width,$height,$attributes = ''){
+	function GetImage($src,$attributes = array()){
 		global $page,$dataDir,$langmessage,$gpLayouts;
+
+		//$width,$height,$attributes = ''
+		$attributes = (array)$attributes;
+		$attributes += array('class'=>'');
 
 
 		//default image information
@@ -1124,14 +1128,14 @@ class gpOutput{
 				$img_full = $dataDir.$image['img_rel'];
 				if( file_exists($img_full) ){
 					$img_rel = $image['img_rel'];
-					$width = $image['width'];
-					$height = $image['height'];
+					$attributes['width'] = $image['width'];
+					$attributes['height'] = $image['height'];
 				}
 		}
 
 		//attributes
-		if( strpos($attributes,'alt=') === false ){
-			$attributes .= ' alt=""';
+		if( !isset($attributes['alt']) ){
+			$attributes['alt'] = '';
 		}
 
 
@@ -1140,10 +1144,22 @@ class gpOutput{
 		if( $editable ){
 			$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content/'.$page->gpLayout,$langmessage['edit'],'file='.rawurlencode($img_rel).'&container='.$container_id.'&time='.time(),' title="Edit Image" name="inline_edit_generic" ');
 			gpOutput::$editlinks .= '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">'.$edit_link.'</span>';
-			$attributes .= ' class="editable_area" id="ExtraEditArea'.$edit_index.'"';
+			$attributes['class'] .= ' editable_area';
+			$attributes['id'] = 'ExtraEditArea'.$edit_index;
 		}
 
-		echo '<img src="'.common::GetDir($img_rel).'" height="'.(int)$height.'" width="'.(int)$width.'" '.trim($attributes).' />';
+		//remove class if empty
+		$attributes['class'] = trim($attributes['class']);
+		if( empty($attributes['class']) ){
+			unset($attributes['class']);
+		}
+
+		//convert attributes to string
+		$str = '';
+		foreach($attributes as $key => $value){
+			$str .= ' '.$key.'="'.htmlspecialchars($value,ENT_COMPAT,'UTF-8',false).'"';
+		}
+		echo '<img src="'.common::GetDir($img_rel).'"'.$str.'/>';
 	}
 
 

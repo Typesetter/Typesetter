@@ -31,7 +31,7 @@ gp_defined('gpdebug_tools',false);
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php'); message('local browse path');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
-define('gpversion','3.5b1');
+define('gpversion','3.5b2');
 define('gp_random',common::RandomString());
 
 
@@ -355,7 +355,7 @@ function message(){
  * Output the message buffer
  *
  */
-function GetMessages(){
+function GetMessages( $wrap = true ){
 	global $wbMessageBuffer,$gp_not_writable,$langmessage;
 
 	if( common::loggedIn() && count($gp_not_writable) > 0 ){
@@ -365,7 +365,12 @@ function GetMessages(){
 		$gp_not_writable = array();
 	}
 
-	$result = "\n<!-- message_start ".gp_random." -->";
+	$result = $wrap_end = '';
+
+	if( $wrap ){
+		$result = "\n<!-- message_start ".gp_random." -->";
+		$wrap_end = "<!-- message_end -->\n";
+	}
 	if( !empty($wbMessageBuffer) ){
 
 		$result .= '<div class="messages"><div>';
@@ -387,7 +392,7 @@ function GetMessages(){
 		$result .= '</ul></div></div>';
 	}
 
-	return $result .= common::ErrorBuffer()."<!-- message_end -->\n";
+	return $result .= common::ErrorBuffer().$wrap_end;
 }
 
 

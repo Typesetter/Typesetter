@@ -1131,7 +1131,7 @@ class gpOutput{
 
 		//attributes
 		if( strpos($attributes,'alt=') === false ){
-			$attributes .= 'alt=""';
+			$attributes .= ' alt=""';
 		}
 
 
@@ -2053,8 +2053,8 @@ class gpOutput{
 		$pos = strpos($buffer,'<!-- message_start '.gp_random.' -->');
 		$len = strpos($buffer,'<!-- message_end -->') - $pos;
 		if( $pos && $len ){
-			$replacement = GetMessages();
-			$buffer = substr_replace($buffer,$replacement,$pos,$len);
+			$replacement = GetMessages(false);
+			$buffer = substr_replace($buffer,$replacement,$pos,$len+20);
 		}
 
 

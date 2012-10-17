@@ -364,7 +364,7 @@ class admin_permalinks{
 
 			//append the requested title to the end for systems using mod_cache. Also reported in wordpress http://core.trac.wordpress.org/ticket/12175
 			$RuleArray[] = '<IfModule mod_cache.c>';
-			$RuleArray[] = 'RewriteRule /?(.*) "'.$home_root.'index.php/$1" [L]';
+			$RuleArray[] = 'RewriteRule /?(.*) "'.$home_root.'index.php?$1" [qsa,L]';
 			$RuleArray[] = '</IfModule>';
 			$RuleArray[] = '<IfModule !mod_cache.c>';
 			$RuleArray[] = 'RewriteRule . "'.$home_root.'index.php" [L]';

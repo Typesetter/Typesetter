@@ -344,7 +344,7 @@ class admin_theme_content extends admin_addon_install{
 
 		}
 
-		$layout_info = common::LayoutInfo($layout);
+		$layout_info = common::LayoutInfo($layout,false);
 		$handlers_count = 0;
 		if( isset($layout_info['handlers']) && is_array($layout_info['handlers']) ){
 			foreach($layout_info['handlers'] as $val){
@@ -903,7 +903,7 @@ class admin_theme_content extends admin_addon_install{
 		global $langmessage,$gpLayouts,$page;
 
 		$color =& $_REQUEST['color'];
-		$layout_info = common::LayoutInfo($layout);
+		$layout_info = common::LayoutInfo($layout,false);
 		$theme_colors = $this->GetThemeColors($layout_info['dir']);
 
 		if( !isset($theme_colors[$color]) ){

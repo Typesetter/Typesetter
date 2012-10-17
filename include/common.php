@@ -995,7 +995,7 @@ class common{
 	/**
 	 * Return an array of information about the layout
 	 */
-	function LayoutInfo($layout){
+	function LayoutInfo( $layout, $check_existence = true ){
 		global $gpLayouts,$dataDir;
 
 		if( !isset($gpLayouts[$layout]) ){
@@ -1013,7 +1013,7 @@ class common{
 		}
 		$layout_info['path'] = $relative.$layout_info['theme'];
 		$layout_info['dir'] = $dataDir.$relative.$layout_info['theme_name'];
-		if( !file_exists($layout_info['dir'].'/template.php') ){
+		if( $check_existence && !file_exists($layout_info['dir'].'/template.php') ){
 			return false;
 		}
 

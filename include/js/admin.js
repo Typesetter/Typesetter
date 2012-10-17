@@ -277,9 +277,13 @@ $(function(){
 		$gp.AdminBoxC = function(data,context){
 			$gp.CloseAdminBox();
 			if( data == '' ) return false;
-			var $win = $(window);
+
+			/*
 			var win_width = $win.width();
 			var box_width = Math.max(660, Math.round(win_width*0.70));
+			*/
+			var $win = $(window);
+			var box_width = 640;
 			var left = Math.round( ($win.width() - box_width - 40)/2);
 			var height = Math.max( $(document).height(), $body.outerHeight(true) );
 

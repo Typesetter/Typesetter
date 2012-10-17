@@ -359,18 +359,15 @@
 #gp_image_area,
 #gp_edit_select,
 #ckeditor_save,
+#gp_source_options,
 #gp_option_area{
 	display:inline-block;
 	}
 
-#ckeditor_area.docked .gp_edit_group{
-	min-height:70px;
-	display:inline-block;
-	vertical-align:top;
-	}
 #ckeditor_area.docked #gp_source_options{
 	width:124px;
 	margin-right:5px;
+	vertical-align:top;
 	}
 
 #ckeditor_area.docked #ckeditor_controls{
@@ -397,7 +394,7 @@
 
 #ckeditor_area.docked #gp_gallery_avail_imgs,
 #ckeditor_area.docked #gp_current_image{
-	height:117px;
+	height:117px !important;
 	margin-right:5px;
 	}
 #ckeditor_area.docked #gp_current_image img{

@@ -3354,7 +3354,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '</table>';
 		echo '</div>';
 
-		echo '<div id="gp_source_options" class="gp_edit_group">';
+		echo '<div id="gp_source_options">';
 		echo '<b>'.$langmessage['Select Image'].'</b>';
 		echo '<a class="ckeditor_control half_width" name="show_theme_images">'.$langmessage['Theme Images'].'</a>';
 		echo '<a class="ckeditor_control half_width" name="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';

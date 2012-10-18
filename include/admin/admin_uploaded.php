@@ -296,7 +296,13 @@ class admin_uploaded{
 			}
 			$full_dir = $dataDir.'/data/_uploaded'.$sub_dir;
 			$sub_files = scandir($full_dir);
-			echo '<a class="gp_gallery_folder" name="gp_gallery_folder" rel="'.htmlspecialchars($sub_dir).'"><span class="folder"></span><span class="gp_count">'.count($sub_files).'</span>'.$folder.'</a>';
+			$count = 0;
+			foreach($sub_files as $file){
+				if( admin_uploaded::IsImg($file) ){
+					$count++;
+				}
+			}
+			echo '<a class="gp_gallery_folder" name="gp_gallery_folder" rel="'.htmlspecialchars($sub_dir).'"><span class="folder"></span><span class="gp_count">'.$count.'</span>'.$folder.'</a>';
 		}
 		echo '</div>';
 		echo '</div>';

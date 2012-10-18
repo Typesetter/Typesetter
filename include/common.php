@@ -1188,7 +1188,7 @@ class common{
 			return false;
 		}
 
-		$lower_value = strtolower($value);
+		$lower_value = trim(strtolower($value));
 		switch($lower_value){
 			case 'true':
 			case 'yes':

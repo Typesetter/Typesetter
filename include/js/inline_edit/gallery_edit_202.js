@@ -97,6 +97,8 @@
 
 			//floating editor
 			$('#ckeditor_top').html('<div id="gp_image_area"></div><div id="gp_upload_queue"></div>');
+			$('#ckeditor_controls').prepend('<div id="gp_folder_options"></div>');
+
 			LoadImages(false);
 
 

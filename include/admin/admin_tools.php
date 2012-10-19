@@ -1054,7 +1054,7 @@ class admin_tools{
 		$pages['gp_titles'] = $gp_titles;
 		$pages['gpLayouts'] = $gpLayouts;
 
-		if( !gpFiles::SaveArray($dataDir.'/data/_site/pages.php','pages',$pages) ){
+		if( !gpFiles::SaveArray($dataDir.'/data/_site/'.common::get_device_pagesFile(),'pages',$pages) ){
 			return false;
 		}
 		return true;
@@ -1072,8 +1072,8 @@ class admin_tools{
 		if( !is_array($config) ) return false;
 
 		if( !isset($config['gpuniq']) ) $config['gpuniq'] = common::RandomString(20);
-
-		return gpFiles::SaveArray($dataDir.'/data/_site/config.php','config',$config);
+        common:: createRequiredConfigandPagesFiles();
+		return gpFiles::SaveArray($dataDir.'/data/_site/'.common::get_device_configFile(),'config',$config);
 	}
 
 

@@ -2597,6 +2597,12 @@ class common{
 	*
 	*/
 	function getDeviceType(){ 
+	   //if (common::loggedIn()) {  //Cannot seem to use this, the moment I use this the system thinks you are logged out
+	     if (isset($_COOKIE['device_emulate'])) {
+		   return $_COOKIE['device_emulate'];
+		 }
+	   //}
+	   
 	
 	 //Is it a mobile or normal pc ?
 	  $mobilegroup = 'alcatel|amoi|avantgo|blackberry|benq|cell|cricket|docomo|elaine|htc|iemobile|iphone|ipad|ipaq|ipod|j2me|java|midp|mini|mmp|mobi|motorola|nec-|nokia|palm|panasonic|philips|phone|sagem|sharp|sie-|smartphone|sony|symbian|t-mobile|telus|up\.browser|up\.link|vodafone|wap|webos|wireless|xda|xoom|zte';

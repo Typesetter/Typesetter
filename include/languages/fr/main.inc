@@ -496,4 +496,5 @@ $langmessage = array(
 'Theme Images'=>'Theme Images',
 'mobile_device_config' => 'Mobile Device Config',
 'tablet_device_config' => 'Tablet Device Config',
+'restore_backup' => 'Restore Backup',
 );

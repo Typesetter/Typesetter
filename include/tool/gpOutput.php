@@ -1752,24 +1752,28 @@ class gpOutput{
 			echo "\n".'<meta name="robots" content="'.$page->TitleInfo['rel'].'" />';
 		}
 
-
-		//keywords
-		$keywords[] = strip_tags($page->label);
-		$site_keywords = explode(',',$config['keywords']);
-		$keywords = array_merge($keywords,$site_keywords);
-		$keywords = array_unique($keywords);
-		$keywords = array_diff($keywords,array(''));
-		echo "\n<meta name=\"keywords\" content=\"".implode(', ',$keywords)."\" />";
-
+        //description to be used by both keywords (broken down) and descriptions
+		 if (function_exists('mb_substr')) { 
+		    $description = trim(mb_substr(strip_tags(stripslashes(htmlspecialchars_decode($page->contentBuffer, ENT_QUOTES))), 0, 160));
+	     } else {
+		    $description = trim(substr(strip_tags(stripslashes(htmlspecialchars_decode($page->contentBuffer, ENT_QUOTES))), 0, 160));
+	     }		
 
 		//description
-		$description = '';
 		if( !empty($page->meta_description) ){
+		    $description = '';
 			$description .= $page->meta_description;
 		}elseif( !empty($page->TitleInfo['description']) ){
+		    $description = '';
 			$description .= $page->TitleInfo['description'];
 		}else{
-			$description .= $page_title;
+		   $description = str_replace('"','', $description);
+		   $description = str_replace("'",'', $description);
+		   $description = preg_replace('/\n/', " ", $description);
+		   $description = preg_replace('/\r/', " ", $description);
+		   $description = preg_replace('/\t/', " ", $description);
+		   $description = preg_replace('/ +/', " ", $description);
+		   $description = $page_title.' '.$description;
 		}
 		$description = gpOutput::EndPhrase($description);
 
@@ -1780,6 +1784,18 @@ class gpOutput{
 		if( !empty($description) ){
 			echo "\n<meta name=\"description\" content=\"".$description."\" />";
 		}
+
+		//keywords
+		$description = str_replace('.','', $description);
+		$descr_keyword_list = explode(' ',$description);
+		$keywords[] = strip_tags($page->label);
+		$site_keywords = explode(',',$config['keywords']);
+		$keywords = array_merge($keywords,$site_keywords);
+		$keywords = array_merge($keywords,$descr_keyword_list);
+		$keywords = array_unique($keywords);
+		$keywords = array_diff($keywords,array(''));
+		echo "\n<meta name=\"keywords\" content=\"".implode(', ',$keywords)."\" />";
+		
 		echo "\n<meta name=\"generator\" content=\"gpEasy CMS\" />";
 
 	}

@@ -96,6 +96,11 @@ class editing_page extends display{
 					$this->AddNewSection();
 				break;
 
+				case 'restore_backup': //restore backup
+					$this->RestoreBackup();
+				break;
+				
+
 				case 'rm_section':
 					$this->RmSection();
 				break;
@@ -604,10 +609,37 @@ class editing_page extends display{
 		if( !isset($this->meta_data['file_number']) ){
 			$this->meta_data['file_number'] = gpFiles::NewFileNumber();
 		}
-
+        $this->BackupFile(); //make a backup of the page file
+		
 		return gpFiles::SaveArray($this->file,'meta_data',$this->meta_data,'file_sections',$this->file_sections);
 	}
-
+     
+	/**
+	 *	Save a backup of the file
+	 *
+	 **/
+	function BackupFile(){
+       global $dataDir;
+	   if (!is_dir($dataDir.'/data/_backup/pages')) {
+	     mkdir($dataDir.'/data/_backup/pages',0644,true);
+	   }
+	   $backupFile = str_replace('_pages/','_backup/pages/',$this->file);
+	   if (file_exists($backupFile)) {
+	     unlink($backupFile);
+	   }
+	   copy($this->file,$backupFile);
+	}
+	/*
+	  Restore the backup file (validated if exist by menu button
+	*/
+	function RestoreBackup(){
+	   $backupFile = str_replace('_pages/','_backup/pages/',$this->file);
+	   unlink($this->file);
+	   copy($backupFile,$this->file);
+	   unlink($backupFile);
+	   message('Backup restored. Please <a href="" name="gp_refresh">Refresh this page</a>');
+	}
+	
 	function SaveSection_Include($section){
 		global $page, $langmessage, $gp_index, $config;
 
@@ -705,6 +737,13 @@ class editing_page extends display{
 
 				$q = 'cmd=add_section&copy=copy&section='.$section_key.'&last_mod='.rawurlencode($this->fileModTime);
 				echo common::Link($this->title,$langmessage['Copy'],$q,' name="creq"');
+	 	        
+                //See if there is a backup of the page to restore				
+	 		    $backupFile = str_replace('_pages/','_backup/pages/',$this->file); 
+	            if (file_exists($backupFile)) {
+  				  $q = 'cmd=restore_backup&last_mod='.rawurlencode($this->fileModTime);
+				  echo common::Link($this->title,$langmessage['restore_backup'],$q,' name="creq"');
+				}  
 
 
 				//remove section link

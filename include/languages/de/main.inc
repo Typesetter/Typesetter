@@ -494,5 +494,7 @@ Achten Sie darauf, dass Sie einen modernen Browser wie etwa Mozilla FireFox oder
 'Top'=>'Top',
 'Select Image'=>'Select Image',
 'Theme Images'=>'Theme Images',
-
+'mobile_device_config' => 'Mobile Device Config',
+'tablet_device_config' => 'Tablet Device Config',
+'restore_backup' => 'Restore Backup',
 );

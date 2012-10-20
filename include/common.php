@@ -1582,7 +1582,7 @@ class common{
 	function GetConfig(){
 		global $config, $gp_index, $dataDir, $gp_menu;
 
-		require($dataDir.'/data/_site/config.php');
+		require($dataDir.'/data/_site/'.common::get_device_configFile());
 		if( !is_array($config) ){
 			common::stop();
 		}
@@ -1668,7 +1668,7 @@ class common{
 		$gp_index = array();
 
 		$pages = array();
-		require($dataDir.'/data/_site/pages.php');
+		require($dataDir.'/data/_site/'.common::get_device_pagesFile());
 		$GLOBALS['fileModTimes']['pages.php'] = $fileModTime;
 		$gpLayouts = $pages['gpLayouts'];
 
@@ -2514,6 +2514,136 @@ class common{
 		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		return gp_edit::AutoCompleteValues($GetUrl,$options);
+	}
+	
+	/**
+	* function to determine what device type is accessing the page and if there is a seperate config setup for it 
+	* 
+	*/
+	function get_device_configFile($validate_configFile_exist = true){
+	  global $dataDir;
+	  
+	  //Is it a mobile or normal pc ?
+	  $devType = common::getDeviceType();
+
+      if($devType == 'mobile') {
+	    //is a mobile device..see if have own config for this device group.
+		if ($validate_configFile_exist) {
+		  if (file_exists($dataDir.'/data/_site/config_mobile.php')) {
+  		    return 'config_mobile.php';
+		  } else {
+		     return 'config.php';
+          }		  
+		} else {
+		   return 'config_mobile.php';
+		}
+	  } else if ($devType == 'tablet') {
+	    //is a tablet type device..see if have own config for this device group.
+		if ($validate_configFile_exist) {
+		  if (file_exists($dataDir.'/data/_site/config_tablet.php')) {
+  		    return 'config_tablet.php';
+		  } else {
+		     return 'config.php';
+          }		  
+		} else {
+		   return 'config_tablet.php';
+		}
+      } else {
+	    //normal pc, load default config
+		return 'config.php';
+	  }
+	}
+	
+	/**
+	* function to determine what device type is accessing the page and if there is a seperate pages setup for it 
+	* 
+	*/
+	function get_device_pagesFile($validate_pagesFile_exist = true){
+	  global $dataDir;
+	  
+	  //Is it a mobile or normal pc ?
+	  $devType = common::getDeviceType();
+
+      if($devType == 'mobile') {
+	    //is a mobile device..see if have own config for this device group.
+		if ($validate_pagesFile_exist) {
+		  if (file_exists($dataDir.'/data/_site/pages_mobile.php')) {
+  		    return 'pages_mobile.php';
+		  } else {
+		     return 'pages.php';
+          }		  
+		} else {
+		   return 'pages_mobile.php';
+		}
+	  } else if ($devType == 'tablet') {
+	    //is a tablet type device..see if have own config for this device group.
+		if ($validate_pagesFile_exist) {
+		  if (file_exists($dataDir.'/data/_site/pages_tablet.php')) {
+  		    return 'pages_tablet.php';
+		  } else {
+		     return 'pages.php';
+          }		  
+		} else {
+		   return 'pages_tablet.php';
+		}
+      } else {
+	    //normal pc, load default config
+		return 'pages.php';
+	  }
+	}
+	
+	/*
+	* Returns the device type connecting to the webpage
+	*
+	*/
+	function getDeviceType(){ 
+	   //if (common::loggedIn()) {  //Cannot seem to use this, the moment I use this the system thinks you are logged out
+	     if (isset($_COOKIE['device_emulate'])) {
+		   return $_COOKIE['device_emulate'];
+		 }
+	   //}
+	   
+	
+	 //Is it a mobile or normal pc ?
+	  $mobilegroup = 'alcatel|amoi|avantgo|blackberry|benq|cell|cricket|docomo|elaine|htc|iemobile|iphone|ipad|ipaq|ipod|j2me|java|midp|mini|mmp|mobi|motorola|nec-|nokia|palm|panasonic|philips|phone|sagem|sharp|sie-|smartphone|sony|symbian|t-mobile|telus|up\.browser|up\.link|vodafone|wap|webos|wireless|xda|xoom|zte';
+	  $tabletgroup = 'android|benq|ipad|ipaq|rim tablet';
+	  
+      if(preg_match("/($mobilegroup)/i", $_SERVER['HTTP_USER_AGENT'])) {
+	    // error_log('mobile deteceted: '.$_SERVER['HTTP_USER_AGENT']);
+	     return 'mobile';
+	  } else if(preg_match("/($tabletgroup)/i", $_SERVER['HTTP_USER_AGENT'])) {
+	   // error_log('tablet deteceted: '.$_SERVER['HTTP_USER_AGENT']);
+	    return 'tablet';
+	  } else {
+	    //error_log('pc deteceted : '.$_SERVER['HTTP_USER_AGENT']);
+	    return 'pc';
+	  }
+	}
+	
+	/*
+	*
+	*
+	*/
+	function createRequiredConfigandPagesFiles(){
+	  //This needs to make a copy of the current config and pages files if the do not exist for mobile or tablet yet
+	  // and has been configured as required.
+	  global $config,$dataDir;
+	  if ($config['mobile_device_config'] == TRUE) {
+	    if (!file_exists($dataDir.'/data/_site/pages_mobile.php')) {
+		  copy($dataDir.'/data/_site/pages.php',$dataDir.'/data/_site/pages_mobile.php');
+		}
+		if (!file_exists($dataDir.'/data/_site/config_mobile.php')) {
+		  copy($dataDir.'/data/_site/config.php',$dataDir.'/data/_site/config_mobile.php');
+		}
+      }	
+	  if ($config['tablet_device_config'] == TRUE) {
+	     if (!file_exists($dataDir.'/data/_site/pages_tablet.php')) {
+		   copy($dataDir.'/data/_site/pages.php',$dataDir.'/data/_site/pages_tablet.php');
+		 }
+		 if (!file_exists($dataDir.'/data/_site/config_tablet.php')) {
+		   copy($dataDir.'/data/_site/config.php',$dataDir.'/data/_site/config_tablet.php');
+		 }
+	  }
 	}
 }
 

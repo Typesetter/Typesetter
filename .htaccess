@@ -3,3 +3,22 @@ AddType application/x-javascript .js
 AddType text/css .css
 AddType text/xml .xml
 
+
+# BEGIN gpEasy
+<IfModule mod_rewrite.c>
+<IfModule mod_env.c>
+SetEnv gp_rewrite 0f2HVB8
+</IfModule>
+RewriteEngine On
+RewriteBase "/gpEasy_dev/"
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+<IfModule mod_cache.c>
+RewriteRule /?(.*) "/gpEasy_dev/index.php?$1" [qsa,L]
+</IfModule>
+<IfModule !mod_cache.c>
+RewriteRule . "/gpEasy_dev/index.php" [L]
+</IfModule>
+</IfModule>
+# END gpEasy

@@ -44,6 +44,8 @@ class admin_configuration{
 						'showsitemap'=>'boolean',
 						'showlogin'=>'boolean',
 						'showgplink'=>'boolean',
+						'mobile_device_config' => 'boolean',
+						'tablet_device_config' => 'boolean',
 
 						'Performance'=>false,
 						'jquery'=>'',

@@ -493,5 +493,6 @@ $langmessage = array(
 'Top'=>'Top',
 'Select Image'=>'Select Image',
 'Theme Images'=>'Theme Images',
+'restore_backup' => 'Restore Backup',
 
 );

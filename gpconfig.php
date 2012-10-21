@@ -117,6 +117,11 @@ define('gpdebug',true);
  */
 //@ini_set('display_errors',0);
 
+/**
+ * Limit the number of revisions to store in the backup
+ *
+ */
+define('gp_backup_limit',10);
 
 /**
  * gp_safe_mode

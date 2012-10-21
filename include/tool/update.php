@@ -329,7 +329,7 @@ class update_class{
 
 		if( $this->data_timestamp > 0 ){
 			echo '<p>';
-			echo sprintf($langmessage['Software_updates_checked'],date('r',$this->data_timestamp));
+			echo sprintf($langmessage['Software_updates_checked'],common::date($langmessage['strftime_datetime'],$this->data_timestamp));
 			echo '</p>';
 		}
 

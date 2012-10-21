@@ -499,6 +499,7 @@ continue using your old password.</p>',
 'Top'=>'Top',
 'Select Image'=>'Select Image',
 'Theme Images'=>'Theme Images',
-'restore_backup' => 'Restore Backup',
-
+'Revision History'=> 'Revision History',
+'viewing_revision'=>'You are currently viewing a revision of this page created on %1$s',
+'Restore this revision'=>'Restore this revision',
 );

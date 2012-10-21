@@ -209,6 +209,9 @@ class admin_theme_content extends admin_addon_install{
 			case 'addontext':
 				$this->AddonText();
 			return;
+			case 'setdevtype':
+			  common::setActiveDevice(common::GetCommand('device_type'));
+			   break;
 
 
 		}
@@ -1567,6 +1570,7 @@ class admin_theme_content extends admin_addon_install{
 		echo ' <span>|</span> ';
 		echo common::Link($this->path_remote,$this->find_label);
 		echo '</h2>';
+		common::DeviceSelector(); //allows one to select a new active device to configure and work with
 
 		echo '<table class="bordered full_width">';
 		echo '<tr>';

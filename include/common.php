@@ -2597,12 +2597,9 @@ class common{
 	*
 	*/
 	function getDeviceType(){ 
-	   //if (common::loggedIn()) {  //Cannot seem to use this, the moment I use this the system thinks you are logged out
 	     if (isset($_COOKIE['device_emulate'])) {
 		   return $_COOKIE['device_emulate'];
 		 }
-	   //}
-	   
 	
 	 //Is it a mobile or normal pc ?
 	  $mobilegroup = 'alcatel|amoi|avantgo|blackberry|benq|cell|cricket|docomo|elaine|htc|iemobile|iphone|ipad|ipaq|ipod|j2me|java|midp|mini|mmp|mobi|motorola|nec-|nokia|palm|panasonic|philips|phone|sagem|sharp|sie-|smartphone|sony|symbian|t-mobile|telus|up\.browser|up\.link|vodafone|wap|webos|wireless|xda|xoom|zte';
@@ -2644,6 +2641,98 @@ class common{
 		   copy($dataDir.'/data/_site/config.php',$dataDir.'/data/_site/config_tablet.php');
 		 }
 	  }
+	}
+
+    function DeviceSelector(){
+       global $config;
+	
+  	  $forceSelection = isset($_GET['device_type'])?$_GET['device_type']:'';
+	  $devT = ($forceSelection == '')?common::getDeviceType():$forceSelection;
+	  
+	  $pc = ($devT=='pc')?"selected='selected'":'';
+	  $mobile = ($devT=='mobile')?"selected='selected'":'';
+	  $tablet = ($devT=='tablet')?"selected='selected'":'';
+	  
+	  $tmpS = "<option $pc>pc</option>";
+	  if (isset($config['mobile_device_config']) && ($config['mobile_device_config'] == TRUE)) {
+	    $tmpS .= "<option $mobile >mobile</option>";
+	  }
+	  if (isset($config['tablet_device_config']) && ($config['tablet_device_config'] == TRUE)) {
+	    $tmpS .= "<option $tablet>tablet</option>";
+	  }
+		echo "<form action='".common::GetUrl('Admin_Theme_Content')."' method='get' ><input type='hidden' name='cmd' value='setdevtype'><p>Active Device Type : <select name='device_type'>".$tmpS."</select> <input type='submit' value='Active'></p></form>";
+	}
+	
+	function setActiveDevice($device = 'pc'){
+		  gpsession::cookie('device_emulate',$device); 
+		  message('Device '.$device.' was Activated, <a href="" name="gp_refresh">Refresh this page</a> to see new config.');
+	}
+	
+	/*
+	*  Will save the new page save to all devices config files that exist.
+	   Note : It does the save regardless if the device is active or not, if the config file exist, it gets save to him.
+	*/
+	function SavePagesforAllDevices($titles,$index){
+	  global $dataDir;
+	  //We dont use global config variables here for we want to pull each file in seperatly and use his config again
+	  $dev_list = array('pc','mobile','tablet');
+	  $active_device = common::getDeviceType(); //current device will be ignored as it will get saved to automatically
+	  
+	  foreach ($dev_list as $val) {
+	    if ($val == $active_device) { continue; }
+		
+		$pages = array();
+		$fname = $dataDir."/data/_site/pages_$val.php";
+		if (file_exists($fname)) {
+			include $fname;
+		} else if (($val == 'pc') && (file_exists($dataDir."/data/_site/pages.php")))  {
+		  $fname = $dataDir."/data/_site/pages.php";
+		  include $fname;
+		} else {
+		  continue;
+		}
+
+	    $pages['gp_index'] = $index;
+	    $pages['gp_titles'] = $titles;
+        if( !gpFiles::SaveArray($fname,'pages',$pages) ){
+		   return false;
+        }
+	  }
+	  return true;
+	}
+	
+/*
+	*  Will save the config save to all devices config files that exist.
+	   Note : It does the save regardless if the device is active or not, if the config file exist, it gets save to him.
+	   This is meant to keep the Addons in Sync with each other
+	*/
+	function SaveConfigforAllDevices($gadgets,$admin_links,$addons){
+	  global $dataDir;
+	  //We dont use global config variables here for we want to pull each file in seperatly and use his config again
+	  $dev_list = array('pc','mobile','tablet');
+	  $active_device = common::getDeviceType(); //current device will be ignored as it will get saved to automatically
+	  
+	  foreach ($dev_list as $val) {
+	    if ($val == $active_device) { continue; }
+		
+        $config = array();
+		$fname = $dataDir."/data/_site/config_$val.php";
+		if (file_exists($fname)) {
+			include $fname;
+		} else if (($val == 'pc') && (file_exists($dataDir."/data/_site/config.php")))  {
+		  $fname = $dataDir."/data/_site/config.php";
+		  include $fname;
+		} else {
+		  continue;
+		}
+	    $config['gadgets'] = $gadgets;
+		$config['admin_links'] = $admin_links;
+		$config['addons'] = $addons;
+        if( !gpFiles::SaveArray($fname,'config',$config) ){
+	      return false;
+		}
+	  }
+	  return true;
 	}	
 }
 

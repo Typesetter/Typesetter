@@ -576,8 +576,9 @@ class editing_page extends display{
 			return false;
 		}
 
-
 		$type = $this->file_sections[$section]['type'];
+		$check_before = serialize($this);
+		$check_before = sha1( $check_before ) . md5( $check_before );
 
 		$save_this = false;
 		switch($type){
@@ -598,6 +599,14 @@ class editing_page extends display{
 		$save_this = gpPlugin::Filter('SaveSection',array($save_this,$section,$type));
 		if( $save_this !== true ){
 			message($langmessage['OOPS'].'(2)');
+			return false;
+		}
+
+		//don't save if nothing has changed
+		$check_after = serialize($this);
+		$check_after = sha1( $check_after ) . md5( $check_after );
+		if( $check_before == $check_after ){
+			message($langmessage['SAVED']);
 			return false;
 		}
 

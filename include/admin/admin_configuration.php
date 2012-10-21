@@ -335,13 +335,31 @@ class admin_configuration{
 		echo common::Link('Admin_Preferences',$langmessage['Preferences'],'','name="gpabox"');
 		echo '</p>';
 
-
+        $this->validation_js();
 		echo '</form>';
-
-
+        
+         
 		return;
 	}
+    
+	/*
+	*  Validation javscript added AFTER the form.
+	*/
+	function validation_js(){
+	  global $langmessage;
+	  echo "<script type='text/javascript'>";
+	    
+	  //Check description length, warn if move over 160 chars
+	  echo "$('#desc').keydown(function() {	";
+  	     echo "$('#notify_desc').text('".$langmessage['character_count']." : '+$(this).val().length);"; 
+		 echo "if ($(this).val().length > 160) { $('#notify_desc').css('color','red'); } else { $('#notify_desc').css('color','black'); } ";
+	  echo "});";
+	  echo "$('#notify_desc').text('".$langmessage['character_count']." : '+$('#desc').val().length);";
+	  echo "if ($('#desc').val().length > 160) { $('#notify_desc').css('color','red'); } else { $('#notify_desc').css('color','black'); } ";
+	  //end description warn
 
+	  echo "</script>";
+	}
 
 	//
 	//	Form Functions
@@ -368,18 +386,18 @@ class admin_configuration{
 		$value = htmlspecialchars($value);
 
 
-		static $textarea = '<textarea name="%s" cols="40" rows="%d" class="gptextarea">%s</textarea>';
+		static $textarea = '<textarea id="%s" name="%s" cols="40" rows="%d" class="gptextarea">%s</textarea><span id="notify_%s"></span>'; //span added for js to add notifications as text is altered.
 		if( $type=='text' && $len > 100 && (strpos($value,' ') != false) ){
 			$cols = 40;
 			$rows = ceil($len/$cols);
-			echo sprintf($textarea,$name,$rows,$value);
+			echo sprintf($textarea,$name,$name,$rows,$value,$name);
 			return;
 		}
 
 		$len = min(40,$len);
-		$text = '<input name="%s" size="%d" value="%s" type="'.$type.'" class="gpinput"/>';
+		$text = '<input id="%s" name="%s" size="%d" value="%s" type="'.$type.'" class="gpinput"/>';
 		echo '<div>';
-		echo "\n".sprintf($text,$name,$len,$value);
+		echo "\n".sprintf($text,$name,$name,$len,$value);
 		echo '</div>';
 	}
 

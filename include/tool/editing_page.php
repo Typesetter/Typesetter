@@ -694,9 +694,13 @@ class editing_page extends display{
 		ob_start();
 		echo '<h2>'.$langmessage['Revision History'].'</h2>';
 		echo '<table class="bordered full_width"><tr><th>'.$langmessage['Modified'].'</th><th>&nbsp;</th></tr>';
-
-		$i = 0;
 		echo '<tbody>';
+
+		echo '<tr><td>';
+		echo common::date($langmessage['strftime_datetime'],$this->fileModTime);
+		echo ' &nbsp; ('.$langmessage['Current Page'].')</td><td>&nbsp;</td></tr>';
+
+		$i = 1;
 		foreach($files as $time => $file){
 			echo '<tr class="'.($i % 2 ? 'even' : '').'"><td>';
 			echo common::date($langmessage['strftime_datetime'],$time);

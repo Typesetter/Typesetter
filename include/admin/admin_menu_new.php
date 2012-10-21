@@ -776,9 +776,8 @@ class admin_menu_new extends admin_menu_tools{
 			if( $stats ){
 				$data += array(
 						'size'		=>	admin_tools::FormatBytes($stats['size'])
-						,'mtime'	=>	date('M j, Y \a\t H:i',$stats['mtime'])
+						,'mtime'	=>	common::date($langmessage['strftime_datetime'],$stats['mtime'])
 						);
-
 			}
 		}
 
@@ -882,7 +881,7 @@ class admin_menu_new extends admin_menu_tools{
 				$mtime = $stats['mtime'];
 				$size = $stats['size'];
 				echo '<a>'.$langmessage['File Size'].': '.admin_tools::FormatBytes($size).'</a>';
-				echo '<a>'.$langmessage['Modified'].': '.date('M j, Y \a\t H:i',$mtime).'</a>';
+				echo '<a>'.$langmessage['Modified'].': '.common::date($langmessage['strftime_datetime'],$mtime).'</a>';
 			}
 		}
 		echo '<a>Data Index: '.$key.'</a>';

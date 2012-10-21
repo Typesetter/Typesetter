@@ -899,7 +899,7 @@ class admin_port{
 
 		if( count($temp) >= 3 && is_numeric($temp[0]) && is_numeric($temp[1]) ){
 			list($time,$exported,$rand) = $temp;
-			$info['time'] = date('M j, Y H:i:s',$time);
+			$info['time'] = common::date($langmessage['strftime_datetime'],$time);
 			$info['bits'] = $exported;
 
 			foreach($this->export_fields as $export_field){

@@ -24,7 +24,7 @@ class editing_page extends display{
 		$this->GetFile();
 
 		//original alpha versions of 1.8 didn't maintain the file_type
-		if( !isset($this->meta_data['file_type'])  ){
+		if( !isset($this->meta_data['file_type']) ){
 			$this->ResetFileTypes();
 		}
 
@@ -43,6 +43,11 @@ class editing_page extends display{
 		if( admin_tools::HasPermission('Admin_User') ){
 			$page->admin_links[] = common::Link('Admin_Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),' title="'.$langmessage['permissions'].'" name="gpabox" ');
 		}
+
+		if( $can_edit ){
+			$page->admin_links[] = common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',' title="'.$langmessage['Revision History'].'" name="gpabox" ');
+		}
+
 
 		if( $menu_permissions ){
 			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['delete_file'],'cmd=trash_page&index='.urlencode($this->gp_index),' title="'.$langmessage['delete_page'].'" name="postlink" class="gpconfirm" ');
@@ -96,10 +101,6 @@ class editing_page extends display{
 					$this->AddNewSection();
 				break;
 
-				case 'restore_backup': //restore backup
-					$this->RestoreBackup();
-				break;
-				
 				case 'rm_section':
 					$this->RmSection();
 				break;
@@ -132,6 +133,16 @@ class editing_page extends display{
 					$this->InlineEdit();
 				die();
 
+				/* revision history */
+				case 'view_revision':
+					$this->ViewRevision();
+				return;
+				case 'use_revision':
+					$this->UseRevision();
+				break;
+				case 'view_history';
+					$this->ViewHistory();
+				return;
 			}
 		}
 
@@ -180,7 +191,7 @@ class editing_page extends display{
 	 * Updates $this->meta_data and $gp_titles
 	 *
 	 */
-	function ResetFileTypes(){
+	function ResetFileTypes($save = true){
 		global $gp_titles;
 
 		$original_types = array();
@@ -205,7 +216,9 @@ class editing_page extends display{
 
 		$gp_titles[$this->gp_index]['type'] = $new_types;
 		admin_tools::SavePagesPHP();
-		$this->SaveThis();
+		if( $save ){
+			$this->SaveThis();
+		}
 	}
 
 	function RenameFile(){
@@ -316,7 +329,7 @@ class editing_page extends display{
 
 		array_splice( $this->file_sections , $section , 1 );
 
-		$this->ResetFileTypes();
+		$this->ResetFileTypes(false);
 
 		if( !$this->SaveThis() ){
 			message($langmessage['OOPS'].'(4)');
@@ -389,7 +402,7 @@ class editing_page extends display{
 
 		$this->file_sections[$new_section] = $start_content;
 
-		$this->ResetFileTypes();
+		$this->ResetFileTypes(false);
 
 		if( !$this->SaveThis() ){
 			message($langmessage['OOPS'].'(4)');
@@ -563,8 +576,9 @@ class editing_page extends display{
 			return false;
 		}
 
-
 		$type = $this->file_sections[$section]['type'];
+		$check_before = serialize($this);
+		$check_before = sha1( $check_before ) . md5( $check_before );
 
 		$save_this = false;
 		switch($type){
@@ -588,11 +602,16 @@ class editing_page extends display{
 			return false;
 		}
 
-		//save to _pages
-		if( !$this->SaveThis() ){
-			message($langmessage['OOPS'].'(3)');
-			return false;
+		//save if the file was changed
+		$check_after = serialize($this);
+		$check_after = sha1( $check_after ) . md5( $check_after );
+		if( $check_before != $check_after ){
+			if( !$this->SaveThis() ){
+				message($langmessage['OOPS'].'(3)');
+				return false;
+			}
 		}
+
 		$page->ajaxReplace[] = array('ck_saved','','');
 		message($langmessage['SAVED']);
 		return true;
@@ -608,37 +627,201 @@ class editing_page extends display{
 		if( !isset($this->meta_data['file_number']) ){
 			$this->meta_data['file_number'] = gpFiles::NewFileNumber();
 		}
-        $this->BackupFile(); //make a backup of the page file
-		
+		$this->SaveBackup(); //make a backup of the page file
+
 		return gpFiles::SaveArray($this->file,'meta_data',$this->meta_data,'file_sections',$this->file_sections);
 	}
-     
+
 	/**
 	 *	Save a backup of the file
 	 *
-	 **/
-	function BackupFile(){
-       global $dataDir;
-	   if (!is_dir($dataDir.'/data/_backup/pages')) {
-	     mkdir($dataDir.'/data/_backup/pages',0644,true);
-	   }
-	   $backupFile = str_replace('_pages/','_backup/pages/',$this->file);
-	   if (file_exists($backupFile)) {
-	     unlink($backupFile);
-	   }
-	   copy($this->file,$backupFile);
+	 */
+	function SaveBackup(){
+		global $dataDir;
+
+		$dir = $dataDir.'/data/_backup/pages/'.$this->gp_index;
+		gpFiles::CheckDir($dir);
+
+		$time = time();
+		if( isset($_REQUEST['revision']) && is_numeric($_REQUEST['revision']) ){
+			$time = $_REQUEST['revision'];
+		}
+
+		$backup_file = $dir.'/'.$time;
+		$contents = file_get_contents( $this->file );
+
+		//compress
+		if( function_exists('gzencode') && function_exists('readgzfile') ){
+			$backup_file .= '.gze';
+			$contents = gzencode($contents,9);
+		}
+
+		gpFiles::Save( $backup_file, $contents );
+		$this->CleanBackupFolder();
 	}
-	/*
-	  Restore the backup file (validated if exist by menu button
-	*/
-	function RestoreBackup(){
-	   $backupFile = str_replace('_pages/','_backup/pages/',$this->file);
-	   unlink($this->file);
-	   copy($backupFile,$this->file);
-	   unlink($backupFile);
-	   message('Backup restored. Please <a href="" name="gp_refresh">Refresh this page</a>');
+
+
+	/**
+	 * Reduce the number of files in the backup folder
+	 *
+	 */
+	function CleanBackupFolder(){
+		global $dataDir;
+		$files = $this->BackupFiles();
+		$file_count = count($files);
+		if( $file_count <= gp_backup_limit ){
+			return;
+		}
+		$delete_count = $file_count - gp_backup_limit;
+		$files = array_splice( $files, 0, $delete_count );
+		foreach($files as $file){
+			$full_path = $dataDir.'/data/_backup/pages/'.$this->gp_index.'/'.$file;
+			unlink($full_path);
+		}
 	}
-	
+
+
+	/**
+	 * Display the revision history of the current file
+	 *
+	 */
+	function ViewHistory(){
+		global $langmessage;
+
+		$files = $this->BackupFiles();
+		krsort($files);
+
+		ob_start();
+		echo '<h2>'.$langmessage['Revision History'].'</h2>';
+		echo '<table class="bordered full_width"><tr><th>'.$langmessage['Modified'].'</th><th>&nbsp;</th></tr>';
+		echo '<tbody>';
+
+		echo '<tr><td>';
+		echo common::date($langmessage['strftime_datetime'],$this->fileModTime);
+		echo ' &nbsp; ('.$langmessage['Current Page'].')</td><td>&nbsp;</td></tr>';
+
+		$i = 1;
+		foreach($files as $time => $file){
+			echo '<tr class="'.($i % 2 ? 'even' : '').'"><td>';
+			echo common::date($langmessage['strftime_datetime'],$time);
+			echo '</td><td>';
+			echo common::Link($this->title,$langmessage['preview'],'cmd=view_revision&time='.$time,' name="cnreq"');
+			echo '</td></tr>';
+			$i++;
+		}
+		echo '</tbody>';
+		echo '</table>';
+		$this->contentBuffer = ob_get_clean();
+	}
+
+	/**
+	 * Display the contents of a past revision
+	 *
+	 */
+	function ViewRevision(){
+		global $langmessage;
+		$time = $_REQUEST['time'];
+		$full_path = $this->BackupFile($time);
+		if( !$full_path ){
+			return false;
+		}
+
+		$file_sections = $file_stats = array();
+
+		//if it's a compressed file, we need an uncompressed version
+		if( strpos($full_path,'.gze') !== false ){
+			$dir = dirname($full_path);
+			ob_start();
+			readgzfile($full_path);
+			$contents = ob_get_clean();
+			$full_path = tempnam($dir,'backup');
+			gpFiles::Save( $full_path, $contents );
+			include($full_path);
+			unlink($full_path);
+		}else{
+			include($full_path);
+		}
+
+		includeFile('tool/SectionContent.php');
+		$this->contentBuffer = section_content::Render($file_sections,$this->title,$file_stats);
+
+
+		$date = common::date($langmessage['strftime_datetime'],$time);
+		$message = sprintf($langmessage['viewing_revision'],$date);
+		$message .= ' <br/> '.common::Link($this->title,$langmessage['Restore this revision'],'cmd=use_revision&time='.$time,' name="cnreq"');
+		$message .= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',' title="'.$langmessage['Revision History'].'" name="gpabox" ');
+		message( $message );
+	}
+
+	/**
+	 * Revert the file data to a previous revision
+	 *
+	 */
+	function UseRevision(){
+		global $langmessage, $page;
+
+		$time = $_REQUEST['time'];
+		$full_path = $this->BackupFile($time);
+		if( !$full_path ){
+			return false;
+		}
+		if( strpos($full_path,'.gze') !== false ){
+			ob_start();
+			readgzfile($full_path);
+			$contents = ob_get_clean();
+		}else{
+			$contents = file_get_contents($full_path);
+		}
+
+		$this->SaveBackup();
+		gpFiles::Save( $this->file, $contents );
+		$this->GetFile();
+		$this->ResetFileTypes(false);
+		message($langmessage['SAVED']);
+	}
+
+	/**
+	 * Return a list of the available backup for the current file
+	 *
+	 */
+	function BackupFiles(){
+		global $dataDir;
+		$dir = $dataDir.'/data/_backup/pages/'.$this->gp_index;
+		if( !file_exists($dir) ){
+			return array();
+		}
+		$all_files = scandir($dir);
+		$files = array();
+		foreach($all_files as $file){
+			if( $file == '.' || $file == '..' ){
+				continue;
+			}
+			$parts = explode('.',$file);
+			$time = array_shift($parts);
+			if( !is_numeric($time) ){
+				continue;
+			}
+			$files[$time] = $file;
+		}
+
+		ksort($files);
+		return $files;
+	}
+
+	/**
+	 * Return the full path of the saved revision if it exists
+	 *
+	 */
+	function BackupFile( $time ){
+		global $dataDir;
+		$files = $this->BackupFiles();
+		if( !isset($files[$time]) ){
+			return false;
+		}
+		return $dataDir.'/data/_backup/pages/'.$this->gp_index.'/'.$files[$time];
+	}
+
+
 	function SaveSection_Include($section){
 		global $page, $langmessage, $gp_index, $config;
 
@@ -721,7 +904,7 @@ class editing_page extends display{
 
 
 				$title_attr = sprintf($langmessage['Section %s'],$section_key+1);
-				$link = gpOutput::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$section_key,' title="'.$title_attr.'" name="'.$link_name.'" rel="'.$link_rel.'"');
+				$link = gpOutput::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$section_key.'&amp;revision='.$this->fileModTime,' title="'.$title_attr.'" name="'.$link_name.'" rel="'.$link_rel.'"');
 
 				//section control links
 				ob_start();
@@ -736,13 +919,6 @@ class editing_page extends display{
 
 				$q = 'cmd=add_section&copy=copy&section='.$section_key.'&last_mod='.rawurlencode($this->fileModTime);
 				echo common::Link($this->title,$langmessage['Copy'],$q,' name="creq"');
-	 	        
-                //See if there is a backup of the page to restore				
-	 		    $backupFile = str_replace('_pages/','_backup/pages/',$this->file); 
-	            if (file_exists($backupFile)) {
-  				  $q = 'cmd=restore_backup&last_mod='.rawurlencode($this->fileModTime);
-				  echo common::Link($this->title,$langmessage['restore_backup'],$q,' name="creq"');
-				}  
 
 
 				//remove section link
@@ -781,7 +957,7 @@ class editing_page extends display{
 	 * gallery editor uses this html to create the new gallery html
 		<li>
 			<a href="'.$imgPath.'" name="gallery" rel="gallery_gallery" title="'.htmlspecialchars($caption).'">
-			<img src="'.$thumbPath.'" height="100" width="100"  alt=""/>
+			<img src="'.$thumbPath.'" height="100" width="100" alt=""/>
 			</a>
 			<div class="caption">
 			$caption

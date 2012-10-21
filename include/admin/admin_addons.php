@@ -521,7 +521,7 @@ class admin_addons extends admin_addon_install{
 
 			$review =& $this->addonReviews[$id];
 			$review += array('time'=>time());
-			echo 'You posted the following review on '.date('M j, Y',$review['time']);
+			echo 'You posted the following review on '.common::date($langmessage['strftime_date'],$review['time']);
 
 
 			echo '<table cellpadding="7">';

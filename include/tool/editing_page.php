@@ -699,7 +699,7 @@ class editing_page extends display{
 		echo '<tbody>';
 		foreach($files as $time => $file){
 			echo '<tr class="'.($i % 2 ? 'even' : '').'"><td>';
-			echo date('M j, Y \a\t H:i',$time);
+			echo strftime($langmessage['strftime_datetime'],$time);
 			echo '</td><td>';
 			echo common::Link($this->title,$langmessage['preview'],'cmd=view_revision&time='.$time,' name="cnreq"');
 			echo '</td></tr>';
@@ -741,7 +741,8 @@ class editing_page extends display{
 		includeFile('tool/SectionContent.php');
 		$this->contentBuffer = section_content::Render($file_sections,$this->title,$file_stats);
 
-		$date = date('M j, Y @ H:i',$time);
+
+		$date = strftime($langmessage['strftime_datetime'],$time);
 		$message = sprintf($langmessage['viewing_revision'],$date);
 		$message .= ' <br/> '.common::Link($this->title,$langmessage['Restore this revision'],'cmd=use_revision&time='.$time,' name="cnreq"');
 		$message .= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',' title="'.$langmessage['Revision History'].'" name="gpabox" ');

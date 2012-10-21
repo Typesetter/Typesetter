@@ -502,4 +502,9 @@ continue using your old password.</p>',
 'Revision History'=> 'Revision History',
 'viewing_revision'=>'You are currently viewing a revision of this page created on %1$s',
 'Restore this revision'=>'Restore this revision',
+
+//for use with php's strftime() method
+'strftime_datetime'=>'%b %E, %Y @ %H:%M',
+'strftime_date'=>'%b %E, %Y',
+'strftime_time'=>'%H:%M',
 );

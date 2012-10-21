@@ -1104,6 +1104,7 @@ class gpOutput{
 		//$width,$height,$attributes = ''
 		$attributes = (array)$attributes;
 		$attributes += array('class'=>'');
+		unset($attributes['id']);
 
 
 		//default image information
@@ -2231,7 +2232,8 @@ class gpOutput{
 	 * @return bool
 	 */
 	function DetectBot(){
-		return preg_match('#bot|yahoo\! slurp|ask jeeves|ia_archiver|spider#i',$_SERVER['HTTP_USER_AGENT']);
+		$user_agent =& $_SERVER['HTTP_USER_AGENT'];
+		return preg_match('#bot|yahoo\! slurp|ask jeeves|ia_archiver|spider#i',$user_agent);
 	}
 
 	/**

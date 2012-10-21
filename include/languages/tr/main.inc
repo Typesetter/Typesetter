@@ -499,5 +499,6 @@ continue using your old password.</p>',
 'Top'=>'Top',
 'Select Image'=>'Select Image',
 'Theme Images'=>'Theme Images',
+'restore_backup' => 'Restore Backup',
 
 );

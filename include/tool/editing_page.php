@@ -647,8 +647,11 @@ class editing_page extends display{
 			$time = $_REQUEST['revision'];
 		}
 
-		$backup_file = $dir.'/'.$time;
 		$contents = file_get_contents( $this->file );
+
+		//backup file name
+		$len = strlen($contents);
+		$backup_file = $dir.'/'.$time.'.'.$len;
 
 		//compress
 		if( function_exists('gzencode') && function_exists('readgzfile') ){
@@ -693,17 +696,32 @@ class editing_page extends display{
 
 		ob_start();
 		echo '<h2>'.$langmessage['Revision History'].'</h2>';
-		echo '<table class="bordered full_width"><tr><th>'.$langmessage['Modified'].'</th><th>&nbsp;</th></tr>';
+		echo '<table class="bordered full_width"><tr><th>'.$langmessage['Modified'].'</th><th>'.$langmessage['File Size'].'</th><th>&nbsp;</th></tr>';
 		echo '<tbody>';
 
+		$size = filesize($this->file);
 		echo '<tr><td>';
 		echo common::date($langmessage['strftime_datetime'],$this->fileModTime);
-		echo ' &nbsp; ('.$langmessage['Current Page'].')</td><td>&nbsp;</td></tr>';
+		echo ' &nbsp; ('.$langmessage['Current Page'].')</td><td>';
+		echo admin_tools::FormatBytes($size);
+		echo '</td><td>&nbsp;</td></tr>';
 
 		$i = 1;
 		foreach($files as $time => $file){
+
+			//get info from filename
+			$name = basename($file);
+			$parts = explode('.',$name);
+			$time = array_shift($parts);
+			$size = array_shift($parts);
+
+			//output row
 			echo '<tr class="'.($i % 2 ? 'even' : '').'"><td>';
 			echo common::date($langmessage['strftime_datetime'],$time);
+			echo '</td><td>';
+			if( $size && is_numeric($size) ){
+				echo admin_tools::FormatBytes($size);
+			}
 			echo '</td><td>';
 			echo common::Link($this->title,$langmessage['preview'],'cmd=view_revision&time='.$time,' name="cnreq"');
 			echo '</td></tr>';

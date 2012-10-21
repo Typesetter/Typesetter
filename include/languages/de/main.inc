@@ -494,5 +494,6 @@ Achten Sie darauf, dass Sie einen modernen Browser wie etwa Mozilla FireFox oder
 'Top'=>'Top',
 'Select Image'=>'Select Image',
 'Theme Images'=>'Theme Images',
+'restore_backup' => 'Restore Backup',
 
 );

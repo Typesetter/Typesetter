@@ -2470,6 +2470,44 @@ class common{
 	}
 
 	/**
+	 * Date format funciton, uses formatting similar to php's strftime function
+	 * http://php.net/manual/en/function.strftime.php
+	 *
+	 */
+	function Date($format='',$time=false){
+		if( empty($format) ){
+			return '';
+		}
+
+		if( !$time ){
+			$time = time();
+		}
+
+		$match_count = preg_match_all('#%+[^\s]#',$format,$matches,PREG_OFFSET_CAPTURE);
+		if( $match_count ){
+			$matches = array_reverse($matches[0]);
+			foreach($matches as $match){
+				$len = strlen($match[0]);
+				if( $len%2 ){
+					$replacement = strftime($match[0],$time);
+				}else{
+					$piece = substr($match[0],-2,2);
+					switch($piece){
+						case '%e':
+							$replacement = strftime( substr($match[0],0,-2),$time).ltrim(strftime('%d',$time),'0');
+						break;
+						default:
+							$replacement = strftime($match[0],$time);
+						break;
+					}
+				}
+				$format = substr_replace($format,$replacement,$match[1],strlen($match[0]));
+			}
+		}
+		return $format;
+	}
+
+	/**
 	 * @deprecated 3.0
 	 * use gp_edit::UseCK();
 	 */

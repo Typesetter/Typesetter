@@ -1782,7 +1782,7 @@ class gpOutput{
 		if( !empty($config['desc']) ){
 			$description .= htmlspecialchars($config['desc']);
 		}
-		$description = trim($description);
+		$description = substr(trim($description), 0, 160); //recommended max 160 chars
 		if( !empty($description) ){
 			echo "\n<meta name=\"description\" content=\"".$description."\" />";
 		}

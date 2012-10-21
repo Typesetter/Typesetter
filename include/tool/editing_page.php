@@ -602,18 +602,14 @@ class editing_page extends display{
 			return false;
 		}
 
-		//don't save if nothing has changed
+		//save if the file was changed
 		$check_after = serialize($this);
 		$check_after = sha1( $check_after ) . md5( $check_after );
-		if( $check_before == $check_after ){
-			message($langmessage['SAVED']);
-			return false;
-		}
-
-		//save to _pages
-		if( !$this->SaveThis() ){
-			message($langmessage['OOPS'].'(3)');
-			return false;
+		if( $check_before != $check_after ){
+			if( !$this->SaveThis() ){
+				message($langmessage['OOPS'].'(3)');
+				return false;
+			}
 		}
 
 		$page->ajaxReplace[] = array('ck_saved','','');

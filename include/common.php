@@ -31,7 +31,7 @@ gp_defined('gpdebug_tools',false);
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php'); message('local browse path');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
-define('gpversion','3.5b3');
+define('gpversion','3.5');
 define('gp_random',common::RandomString());
 
 

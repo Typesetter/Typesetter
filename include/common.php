@@ -2476,7 +2476,7 @@ class common{
 		}
 
 		if( !$time ){
-			$time = time()+1000000;
+			$time = time();
 		}
 
 		$match_count = preg_match_all('#%+[^\s]#',$format,$matches,PREG_OFFSET_CAPTURE);

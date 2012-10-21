@@ -106,7 +106,7 @@ define('gpdebug',true);
  * Set to true to display some basic debug tools in the browser window.
  * Defaults to false
  */
-define('gpdebug_tools',true);
+//define('gpdebug_tools',true);
 
 
 /**
@@ -115,7 +115,7 @@ define('gpdebug_tools',true);
  * Set to "1" if gpEasy is unable to display errors with gpdebug set to "true" (see above)
  *
  */
-@ini_set('display_errors',0);
+//@ini_set('display_errors',0);
 
 
 /**

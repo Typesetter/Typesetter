@@ -1492,7 +1492,7 @@ class gpOutput{
 					$replace[] = common::GetUrl($title);
 					$replace[] = $attr;
 					$replace[] = common::GetLabel($title);
-					$replace[] = common::GetBrowserTitle($title);
+					$replace[] = common::GetBrowserTitle($title,true);
 				}
 
 				$result[] = '<li'.$attr_li.'>'.str_replace($search,$replace,$link_format);

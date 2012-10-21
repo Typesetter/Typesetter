@@ -88,11 +88,16 @@ class gp_rename{
 				$attr = 'disabled="disabled" ';
 				$class .= ' sync_label';
 			}
+			if ((isset($title_info['browser_title_no_hover_text']) ) && ($title_info['browser_title_no_hover_text'] == '1')) {
+				$browser_title_no_hover_text = 'checked="checked"';
+			}else{
+				$browser_title_no_hover_text = "";
+			}
 			echo '<td class="formlabel">';
 			echo $langmessage['browser_title'];
 			echo '</td>';
 			echo '<td>';
-			echo '<input type="text" class="'.$class.' gpinput" size="50" name="browser_title" value="'.$browser_title.'" '.$attr.'/>';
+			echo '<input type="text" class="'.$class.' gpinput" size="50" name="browser_title" value="'.$browser_title.'" '.$attr.'/><br/><input type="checkbox" name="browser_title_no_hover_text" '.$browser_title_no_hover_text.' value="1"> '.$langmessage['hide_menu_hover_text']; //Show menu hover text
 			echo ' <div class="label_synchronize">';
 			if( empty( $attr ) ){
 				echo '<a href="#">'.$langmessage['sync_with_label'].'</a>';
@@ -257,6 +262,11 @@ class gp_rename{
 		}
 		if( !$custom_browser_title ){
 			unset($title_info['browser_title']);
+		}
+		if( isset($_POST['browser_title_no_hover_text']) ){
+		  $title_info['browser_title_no_hover_text'] = '1';
+		} else {
+		  unset($title_info['browser_title_no_hover_text']);
 		}
 
 		//keywords

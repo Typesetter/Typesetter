@@ -500,5 +500,5 @@ continue using your old password.</p>',
 'Select Image'=>'Select Image',
 'Theme Images'=>'Theme Images',
 'restore_backup' => 'Restore Backup',
-
+'hide_menu_hover_text' => 'Hide menu hover text',
 );

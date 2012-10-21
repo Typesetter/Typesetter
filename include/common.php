@@ -1504,7 +1504,7 @@ class common{
 	 * @param string $title
 	 *
 	 */
-	function GetBrowserTitle($title){
+	function GetBrowserTitle($title,$menu_item=false){
 		global $gp_titles, $gp_index;
 
 		if( !isset($gp_index[$title]) ){
@@ -1516,6 +1516,10 @@ class common{
 
 		if( isset($title_info['browser_title']) ){
 			return $title_info['browser_title'];
+		}
+		
+		if (($menu_item == TRUE) && (isset($title_info['browser_title_no_hover_text']))) {
+		  return ''; //blank means no hint will be displayed
 		}
 
 		$label = common::GetLabel($title);

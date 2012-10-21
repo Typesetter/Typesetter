@@ -346,14 +346,15 @@ class admin_configuration{
 	*  Validation javscript added AFTER the form.
 	*/
 	function validation_js(){
+	  global $langmessage;
 	  echo "<script type='text/javascript'>";
 	    
 	  //Check description length, warn if move over 160 chars
 	  echo "$('#desc').keydown(function() {	";
-  	     echo "$('#notify_desc').text('Character count : '+$(this).val().length);";
+  	     echo "$('#notify_desc').text('".$langmessage['character_count']." : '+$(this).val().length);"; 
 		 echo "if ($(this).val().length > 160) { $('#notify_desc').css('color','red'); } else { $('#notify_desc').css('color','black'); } ";
 	  echo "});";
-	  echo "$('#notify_desc').text('Character count : '+$('#desc').val().length);";
+	  echo "$('#notify_desc').text('".$langmessage['character_count']." : '+$('#desc').val().length);";
 	  echo "if ($('#desc').val().length > 160) { $('#notify_desc').css('color','red'); } else { $('#notify_desc').css('color','black'); } ";
 	  //end description warn
 

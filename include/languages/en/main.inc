@@ -507,5 +507,6 @@ continue using your old password.</p>',
 'strftime_datetime'=>'%b %e, %Y @ %H:%M',
 'strftime_date'=>'%b %e, %Y',
 'strftime_time'=>'%H:%M',
-'character_count' => 'Character count',
+
+'_characters' => '%s characters',
 );

@@ -13,6 +13,8 @@ class admin_configuration{
 		global $langmessage,$page;
 
 		$page->ajaxReplace = array();
+		//$page->head_js[] = '/include/js/x_forms.js';
+
 
 		//add examples to smtp_hosts
 		$langmessage['about_config']['smtp_hosts'] .= ' smtp.yourserver.com ; ssl://smtp.gmail.com:465';
@@ -35,7 +37,7 @@ class admin_configuration{
 						'general_settings'=>false,
 						'title'=>'',
 						'keywords'=>'',
-						'desc'=>'',
+						'desc'=>'textarea',
 
 						'Interface'=>false,
 						'colorbox_style' => array('example1'=>'Example 1', 'example2'=>'Example 2', 'example3'=>'Example 3', 'example4'=>'Example 4', 'example5'=>'Example 5', 'example6'=>'Example 6'),
@@ -225,7 +227,7 @@ class admin_configuration{
 
 	function showForm(){
 		global $langmessage;
-		$possibleValues = $this->getPossible();
+		$possible_values = $this->getPossible();
 
 
 		$array = $this->getValues();
@@ -236,9 +238,9 @@ class admin_configuration{
 
 		//order by the possible values
 		$openbody = false;
-		foreach($possibleValues as $key => $possibleValue){
+		foreach($possible_values as $key => $possible_value){
 
-			if( $possibleValue === false ){
+			if( $possible_value === false ){
 				$class = $style = '';
 				if( $openbody ){
 					echo '</table>';
@@ -283,27 +285,22 @@ class admin_configuration{
 			echo '</td>';
 			echo '<td>';
 
-			$curr_possible = $possibleValues[$key];
-			if( $curr_possible === false ){
-				echo 'unavailable';
-			}elseif( is_array($curr_possible) ){
-				$this->formSelect($key,$curr_possible,$value);
-			}elseif( $curr_possible == 'boolean'){
-				$this->formCheckbox($key,$value);
-			}elseif( $curr_possible == 'password' ){
-				$this->formInput($key,$value,'password');
+
+			if( is_array($possible_value) ){
+				$this->formSelect($key,$possible_value,$value);
 			}else{
-				$this->formInput($key,$value);
+				switch($possible_value){
+					case 'boolean':
+						$this->formCheckbox($key,$value);
+					break;
+					case 'textarea':
+						$this->formTextarea($key,$value);
+					break;
+					default:
+						$this->formInput($key,$value,$possible_value);
+					break;
+				}
 			}
-
-/*
-			if( isset($this->defaultVals[$key]) ){
-				echo '<br/> <span class="sm">';
-				echo $this->defaultVals[$key];
-				echo '</span>';
-			}
-*/
-
 
 			if( isset($langmessage['about_config'][$key]) ){
 				echo $langmessage['about_config'][$key];
@@ -335,37 +332,14 @@ class admin_configuration{
 		echo common::Link('Admin_Preferences',$langmessage['Preferences'],'','name="gpabox"');
 		echo '</p>';
 
-        $this->validation_js();
 		echo '</form>';
-        
-         
-		return;
-	}
-    
-	/*
-	*  Validation javscript added AFTER the form.
-	*/
-	function validation_js(){
-	  global $langmessage;
-	  echo "<script type='text/javascript'>";
-	    
-	  //Check description length, warn if move over 160 chars
-	  echo "$('#desc').keydown(function() {	";
-  	     echo "$('#notify_desc').text('".$langmessage['character_count']." : '+$(this).val().length);"; 
-		 echo "if ($(this).val().length > 160) { $('#notify_desc').css('color','red'); } else { $('#notify_desc').css('color','black'); } ";
-	  echo "});";
-	  echo "$('#notify_desc').text('".$langmessage['character_count']." : '+$('#desc').val().length);";
-	  echo "if ($('#desc').val().length > 160) { $('#notify_desc').css('color','red'); } else { $('#notify_desc').css('color','black'); } ";
-	  //end description warn
-
-	  echo "</script>";
 	}
 
-	//
-	//	Form Functions
-	//
 
-
+	/**
+	 *	Form Functions
+	 *
+	 */
 	function formCheckbox($key,$value){
 		$checked = '';
 		if( $value && $value !== 'false' ){
@@ -376,29 +350,15 @@ class admin_configuration{
 	}
 
 	function formInput($name,$value,$type='text'){
-
-		$len = (strlen($value)+20)/20;
-		$len = round($len);
-		$len = $len*20;
-
-		$len = max($len,40);
-
-		$value = htmlspecialchars($value);
-
-
-		static $textarea = '<textarea id="%s" name="%s" cols="40" rows="%d" class="gptextarea">%s</textarea><span id="notify_%s"></span>'; //span added for js to add notifications as text is altered.
-		if( $type=='text' && $len > 100 && (strpos($value,' ') != false) ){
-			$cols = 40;
-			$rows = ceil($len/$cols);
-			echo sprintf($textarea,$name,$name,$rows,$value,$name);
-			return;
-		}
-
-		$len = min(40,$len);
-		$text = '<input id="%s" name="%s" size="%d" value="%s" type="'.$type.'" class="gpinput"/>';
-		echo '<div>';
-		echo "\n".sprintf($text,$name,$name,$len,$value);
+		echo "\n<div>";
+		echo '<input id="'.$name.'" name="'.$name.'" size="60" value="'.htmlspecialchars($value).'" type="'.$type.'" class="gpinput"/>';
 		echo '</div>';
+	}
+
+	function formTextarea($name,$value){
+		global $langmessage;
+		$count_label = sprintf($langmessage['_characters'],'<span>'.strlen($value).'</span>');
+		echo '<textarea id="'.$name.'" name="'.$name.'" cols="40" rows="2" class="gptextarea show_character_count">'.htmlspecialchars($value).'</textarea><span class="character_count">'.$count_label.'</span>';
 	}
 
 	function formSelect($name,$possible,$value=null){

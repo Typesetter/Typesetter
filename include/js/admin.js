@@ -75,6 +75,14 @@ $(function(){
 	 *
 	 */
 	$(document).on('keyup keypress paste change', '.show_character_count', function(){
+	    var warnLevel = $(this).attr('warn'); //try and read warn atrrib
+		if(typeof(warnLevel) != "undefined" && warnLevel !== null) { //if warn attrib exist
+		  if (this.value.length > warnLevel) { //check warning level
+            $(this).parent().find('.character_count').css('color','red'); //set warning color
+		  } else {
+		     $(this).parent().find('.character_count').css('color',''); //set back to default color
+          }		  
+        }
 		$(this).parent().find('.character_count span').html( this.value.length );
 	});
 

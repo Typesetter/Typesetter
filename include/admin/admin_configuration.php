@@ -37,7 +37,7 @@ class admin_configuration{
 						'general_settings'=>false,
 						'title'=>'',
 						'keywords'=>'',
-						'desc'=>'textarea',
+						'desc'=>'textarea(160)',
 
 						'Interface'=>false,
 						'colorbox_style' => array('example1'=>'Example 1', 'example2'=>'Example 2', 'example3'=>'Example 3', 'example4'=>'Example 4', 'example5'=>'Example 5', 'example6'=>'Example 6'),
@@ -288,7 +288,10 @@ class admin_configuration{
 
 			if( is_array($possible_value) ){
 				$this->formSelect($key,$possible_value,$value);
-			}else{
+			} else if (stripos($possible_value,'textarea(') !== FALSE) {
+			   $warnlevel = substr($possible_value,stripos($possible_value,'(')+1,stripos($possible_value,')')-stripos($possible_value,'(')-1);
+			   $this->formTextarea($key,$value,$warnlevel);
+			} else{
 				switch($possible_value){
 					case 'boolean':
 						$this->formCheckbox($key,$value);
@@ -355,10 +358,11 @@ class admin_configuration{
 		echo '</div>';
 	}
 
-	function formTextarea($name,$value){
+	function formTextarea($name,$value,$warning_level = NULL){
 		global $langmessage;
 		$count_label = sprintf($langmessage['_characters'],'<span>'.strlen($value).'</span>');
-		echo '<textarea id="'.$name.'" name="'.$name.'" cols="40" rows="2" class="gptextarea show_character_count">'.htmlspecialchars($value).'</textarea><span class="character_count">'.$count_label.'</span>';
+		$warn_attrib = ($warning_level == NULL)?'':'warn="'.$warning_level.'"';
+		echo '<textarea id="'.$name.'" name="'.$name.'" cols="40" rows="2" class="gptextarea show_character_count" '.$warn_attrib.'>'.htmlspecialchars($value).'</textarea><span class="character_count" >'.$count_label.'</span>';
 	}
 
 	function formSelect($name,$possible,$value=null){

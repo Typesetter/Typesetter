@@ -70,6 +70,14 @@ $(function(){
 	,500);
 
 
+	/**
+	 * Update character counts
+	 *
+	 */
+	$(document).on('keyup keypress paste change', '.show_character_count', function(){
+		$(this).parent().find('.character_count span').html( this.value.length );
+	});
+
 
 	window.onbeforeunload = function(){
 

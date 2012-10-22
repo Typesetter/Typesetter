@@ -777,10 +777,12 @@ class admin_addons extends admin_addon_install{
 
 				//check symbolic links, fix if necessary
 				$link_folder = readlink($installFolder);
-				$source_folder = $dataDir.'/addons/'.$info['upgrade_from'];
-				if( $source_folder != $link_folder && basename($source_folder) == basename($link_folder) ){
-					if( unlink($installFolder) ){
-						symlink($source_folder,$installFolder);
+				if( array_key_exists('upgrade_from',$info) ){
+					$source_folder = $dataDir.'/addons/'.$info['upgrade_from'];
+					if( $source_folder != $link_folder && basename($source_folder) == basename($link_folder) ){
+						if( unlink($installFolder) ){
+							symlink($source_folder,$installFolder);
+						}
 					}
 				}
 			}

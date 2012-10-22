@@ -168,7 +168,7 @@ class admin_addons_tool{
 		echo '</h2>';
 
 		if( isset($this->addonReviews[$id]) ){
-			echo 'You posted the following review on '.date('M j, Y',$this->addonReviews[$id]['time']);
+			echo 'You posted the following review on '.common::date($langmessage['strftime_date'],$this->addonReviews[$id]['time']);
 		}
 
 

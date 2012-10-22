@@ -508,6 +508,7 @@ continue using your old password.</p>',
 'strftime_date'=>'%b %e, %Y',
 'strftime_time'=>'%H:%M',
 'restore_backup' => 'Restore Backup',
+'_characters' => '%s characters',
 'hide_menu_hover_text' => 'Hide menu hover text',
 
 );

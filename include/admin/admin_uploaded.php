@@ -874,21 +874,15 @@ class admin_uploaded{
 		//addded files
 		if( isset($result['added']) && count($result['added']) > 0 ){
 			foreach($result['added'] as $added){
-				$added_path = $added['realpath'];
-				$thumb_path = str_replace($base_dir,$thumb_dir,$added_path).'.jpg';
-				gpFiles::CheckDir($thumb_dir);
-				thumbnail::createSquare($added_path,$thumb_path,$config['maxthumbsize']);
-				gpPlugin::Action('FileUploaded',$added_path);
+				gpPlugin::Action('FileUploaded',$added['realpath']);
+				self::CreateThumbnail($added['realpath']);
 			}
 		}
 
 		//changed files (resized)
 		if( isset($result['changed']) && count($result['changed']) > 0 ){
 			foreach($result['changed'] as $changed){
-				$changed_path = $changed['realpath'];
-				$thumb_path = str_replace($base_dir,$thumb_dir,$changed_path).'.jpg';
-				gpFiles::CheckDir($thumb_dir);
-				thumbnail::createSquare($changed_path,$thumb_path,$config['maxthumbsize']);
+				self::CreateThumbnail($changed['realpath']);
 			}
 		}
 

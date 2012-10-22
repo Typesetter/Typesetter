@@ -508,6 +508,7 @@ continue using your old password.</p>',
 'strftime_date'=>'%b %e, %Y',
 'strftime_time'=>'%H:%M',
 'restore_backup' => 'Restore Backup',
+'_characters' => '%s characters',
 'mobile_device_config' => 'Mobile Device Config',
 'tablet_device_config' => 'Tablet Device Config',
 

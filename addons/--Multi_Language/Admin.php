@@ -342,7 +342,7 @@ class MultiLang_Admin extends MultiLang_Common{
 
 		$index_a = $_POST['index'];
 		if( !isset($gp_titles[$index_a]) ){
-			message($langmessage['OOPS'].' (Invalid Title)');
+			message($langmessage['OOPS'].' (Invalid Title - 1)');
 			return;
 		}
 
@@ -353,8 +353,10 @@ class MultiLang_Admin extends MultiLang_Common{
 		}
 
 		$title = $_POST['title'];
+		includeFile('tool/editing.php');
+		$title = gp_edit::CleanTitle($title);
 		if( !isset($gp_index[$title]) ){
-			message($langmessage['OOPS'].' (Invalid Title)');
+			message($langmessage['OOPS'].' (Invalid Title - 2)');
 			return;
 		}
 		$index_b = $gp_index[$title];
@@ -435,7 +437,7 @@ class MultiLang_Admin extends MultiLang_Common{
 
 		$index = $_REQUEST['index'];
 		if( !isset($gp_titles[$index]) ){
-			echo $langmessage['OOPS'].' (Invalid Title)';
+			echo $langmessage['OOPS'].' (Invalid Title - 3)';
 			return;
 		}
 
@@ -557,7 +559,7 @@ class MultiLang_Admin extends MultiLang_Common{
 
 		$page_index = $_REQUEST['rmindex'];
 		if( !isset($gp_titles[$page_index]) ){
-			echo $langmessage['OOPS'].' (Invalid Title)';
+			echo $langmessage['OOPS'].' (Invalid Title - 4)';
 			return;
 		}
 

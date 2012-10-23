@@ -35,7 +35,6 @@ class elFinderConnector {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	public function __construct($elFinder, $debug=false) {
-		
 		$this->elFinder = $elFinder;
 		if ($debug) {
 			$this->header = 'Content-Type: text/html; charset=utf-8';

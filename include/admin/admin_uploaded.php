@@ -971,6 +971,11 @@ class admin_uploaded{
 	function RenameResized($removed,$added){
 		$added_img = admin_uploaded::TrimBaseDir($added['realpath']);
 		$removed_img = admin_uploaded::TrimBaseDir($removed['realpath']);
+		
+        //update gallery
+		admin_uploaded::UpdateGalleriesImages($added_img,$removed_img);
+		//end update galleries
+		
 		$index = array_search($removed_img,gp_resized::$index);
 		if( !$index ){
 			return false;
@@ -978,7 +983,40 @@ class admin_uploaded{
 		gp_resized::$index[$index] = $added_img;
 	}
 
-
+    function UpdateGalleriesImages($newImg,$oldImg){
+	   //used for file renames mostly, thus expect newImg and oldImg to be in format
+	   //   /image/filename.ext
+	   //thus path from data/_uploads to file
+	  $galleries = array();
+		global $dataDir,$config,$gp_index;
+		include $dataDir.'/data/_site/galleries.php';
+		$ext = '.'.end(explode('.', $newImg));
+		$newImgName = str_replace(' ','%20',str_replace('\\','/',$newImg));
+		$oldImgName = str_replace(' ','%20',str_replace('\\','/',$oldImg));
+		$newThmbImgName = 'image/thumbnails'.$newImgName.$ext;
+		$oldThmbImgName = 'image/thumbnails'.$oldImgName.$ext;
+		
+		foreach ($galleries as $title=>$galitem) {
+		   $file_sections = array();
+		   $meta_data = array();
+		   
+		   $file = $dataDir.'/data/_pages/'.substr($config['gpuniq'],0,7).'_'.$gp_index[$title].'.php';
+		   include $file;
+		   $changemade = false;
+		   foreach ($file_sections as $key=>$val) {
+		     if ($val['type']  == 'gallery'){
+			    $content =  $val['content'];
+				$content = str_replace($oldThmbImgName,$newThmbImgName,$content);
+				$content = str_replace($oldImgName,$newImgName,$content);
+				$file_sections[$key]['content'] = $content;
+				$changemade = true;
+			 }
+		   }
+		   if ($changemade == TRUE) {
+		     gpFiles::SaveArray($file,'meta_data',$meta_data,'file_sections',$file_sections);
+		   }	 
+		}
+	}
 	/**
 	 * Make sure the realpath value is set for elfinder arrays
 	 *

@@ -175,28 +175,23 @@ class elFinder {
 		if (session_id() == '') {
 			session_start();
 		}
-
 		$this->time  = $this->utime();
 		$this->debug = (isset($opts['debug']) && $opts['debug'] ? true : false);
 		
 		setlocale(LC_ALL, !empty($opts['locale']) ? $opts['locale'] : 'en_US.UTF-8');
-
 		// bind events listeners
 		if (!empty($opts['bind']) && is_array($opts['bind'])) {
 			foreach ($opts['bind'] as $cmd => $handler) {
 				$this->bind($cmd, $handler);
 			}
 		}
-
 		if (!isset($opts['roots']) || !is_array($opts['roots'])) {
 			$opts['roots'] = array();
 		}
-
 		// check for net volumes stored in session
 		foreach ($this->getNetVolumes() as $root) {
 			$opts['roots'][] = $root;
 		}
-
 		// "mount" volumes
 		foreach ($opts['roots'] as $i => $o) {
 			$class = 'elFinderVolume'.(isset($o['driver']) ? $o['driver'] : '');
@@ -219,7 +214,6 @@ class elFinder {
 				$this->mountErrors[] = 'Driver "'.$class.'" does not exists';
 			}
 		}
-
 		// if at least one redable volume - ii desu >_<
 		$this->loaded = !empty($this->default);
 	}

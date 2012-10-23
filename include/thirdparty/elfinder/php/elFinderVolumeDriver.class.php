@@ -497,6 +497,11 @@ abstract class elFinderVolumeDriver {
 	 **/
 	protected function configure() {
 		// set thumbnails path
+		//try and fix WEIRD issue when entereing configure function then tmbPath and path is combined as per issue 
+		//https://github.com/Studio-42/elFinder/issues/417
+		if (strpos($this->options['tmbPath'],substr($this->options['path'],0,strlen($this->options['path'])-1).'\\') !== FALSE) {  //fix weird value combine bug
+		    $this->options['tmbPath'] = substr($this->options['tmbPath'],strlen($this->options['path'].'\\')-1,strlen($this->options['tmbPath'])); 
+     	}
 		$path = $this->options['tmbPath'];
 		if ($path) {
 			if (!file_exists($path)) {
@@ -579,7 +584,6 @@ abstract class elFinderVolumeDriver {
 		if (!isset($opts['path']) || $opts['path'] === '') {
 			return $this->setError('Path undefined.');;
 		}
-
 		$this->options = array_merge($this->options, $opts);
 		$this->id = $this->driverId.(!empty($this->options['id']) ? $this->options['id'] : elFinder::$volumesCnt++).'_';
 		$this->root = $this->_normpath($this->options['path']);
@@ -674,10 +678,19 @@ abstract class elFinderVolumeDriver {
 		$type = strtolower($this->options['mimeDetect']);
 		$type = preg_match('/^(finfo|mime_content_type|internal|auto)$/i', $type) ? $type : 'auto';
 		$regexp = '/text\/x\-(php|c\+\+)/';
-
+		
+		if (getenv('MAGIC') == '') { 
+		  if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+		    putenv("MAGIC={$_ENV['PHPRC']}\extras\magic"); 
+		  } else {
+		    putenv('MAGIC=/usr/share/file/magic'); 
+		  }
+		}
+        
+		//make sure mime_magic.magicfile is set else this gives problems on windows set to mime_magic.magicfile = "$PHP_INSTALL_DIR\magic.mime"
 		if (($type == 'finfo' || $type == 'auto')
 		&& class_exists('finfo')
-		&& preg_match($regexp, array_shift(($tmp = explode(';', @finfo_file(finfo_open(FILEINFO_MIME), __FILE__)))))) {
+		&& preg_match($regexp, array_shift(($tmp = explode(';', @finfo_file(finfo_open(FILEINFO_MIME), __FILE__)))))) { 
 			$type = 'finfo';
 			$this->finfo = finfo_open(FILEINFO_MIME);
 		} elseif (($type == 'mime_content_type' || $type == 'auto')
@@ -731,8 +744,7 @@ abstract class elFinderVolumeDriver {
 		}
 
 		// debug($root);
-
-		if ($root['read']) {
+ 		if ($root['read']) {
 			// check startPath - path to open by default instead of root
 			if ($this->options['startPath']) {
 				$start = $this->stat($this->options['startPath']);

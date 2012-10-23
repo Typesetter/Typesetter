@@ -425,8 +425,10 @@ class gpOutput{
 
 		//addonDir is deprecated as of 2.0b3
 		if( isset($info['addonDir']) ){
+			if( gp_safe_mode ) return;
 			gpPlugin::SetDataFolder($info['addonDir']);
 		}elseif( isset($info['addon']) ){
+			if( gp_safe_mode ) return;
 			gpPlugin::SetDataFolder($info['addon']);
 		}
 

@@ -158,11 +158,12 @@ class special_display extends display{
 	function ExecInfo($scriptinfo){
 		global $dataDir;
 
-		ob_start();
-
 		if( isset($scriptinfo['addon']) ){
+			if( gp_safe_mode ) return;
 			gpPlugin::SetDataFolder($scriptinfo['addon']);
 		}
+
+		ob_start();
 
 		if( isset($scriptinfo['script']) ){
 			require($dataDir.$scriptinfo['script']);

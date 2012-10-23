@@ -13,7 +13,9 @@ class gpPlugin{
 	 */
 	function incl($file){
 		global $addonPathCode;
-		if( gp_safe_mode ) return;
+		if( gp_safe_mode ){
+			return;
+		}
 		return include_once($addonPathCode.'/'.$file);
 	}
 
@@ -42,6 +44,8 @@ class gpPlugin{
 	 * This function should not be called directly.
 	 */
 	function ShutdownFunction($addonFolderName,$args){
+
+		if( gp_safe_mode ) return;
 
 		if( !is_array($args) || count($args) < 1 ){
 			return false;
@@ -141,7 +145,12 @@ class gpPlugin{
 	function ExecHook($hook,$info,$args = array()){
 		global $dataDir, $gp_current_hook;
 
-		if( gp_safe_mode ) return;
+		if( gp_safe_mode ){
+			if( isset($args[0]) ){
+				return $args[0];
+			}
+			return;
+		}
 
 		if( !is_array($args) ){
 			$args = array($args);

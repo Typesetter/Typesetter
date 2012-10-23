@@ -886,6 +886,7 @@ class admin_port{
 
 
 	function FileInfo($file){
+		global $langmessage;
 
 
 		$temp = explode('.',$file);

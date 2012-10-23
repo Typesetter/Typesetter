@@ -836,7 +836,7 @@ class admin_uploaded{
 		$base_dir = $dataDir.'/data/_uploaded';
 		$thumb_dir = $dataDir.'/data/_uploaded/image/thumbnails';
 		admin_uploaded::SetRealPath($result,$elfinder);
-
+        
 		switch($cmd){
 
 			case 'rename':
@@ -1003,6 +1003,10 @@ class admin_uploaded{
 		   $meta_data = array();
 		   
 		   $file = $dataDir.'/data/_pages/'.substr($config['gpuniq'],0,7).'_'.$gp_index[$title].'.php';
+		   if (!file_exists($file)) {
+		     $file = $dataDir.'/data/_pages/'.str_replace('/','_',$title).'.php';
+		   }
+		   
 		   include $file;
 		   $changemade = false;
 		   foreach ($file_sections as $key=>$val) {

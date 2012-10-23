@@ -29,7 +29,8 @@ includeFile('thirdparty/elfinder/php/elFinderVolumeLocalFileSystem.class.php');
  **/
 function access($attr, $path, $data, $volume) {
 	//gpEasy thumbnails
-	if( $attr == 'write' && strpos($path,'/image/thumbnails/') !== false ){
+	$path = str_replace('\\','/',$path);
+	if( $attr == 'write' && strpos($path,'/image/thumbnails/') != false ){
 		return false;
 	}
 	return null;

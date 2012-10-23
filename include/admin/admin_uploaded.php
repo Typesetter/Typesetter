@@ -987,8 +987,10 @@ class admin_uploaded{
 	   //used for file renames mostly, thus expect newImg and oldImg to be in format
 	   //   /image/filename.ext
 	   //thus path from data/_uploads to file
-	  $galleries = array();
-		global $dataDir,$config,$gp_index;
+	   global $dataDir,$config,$gp_index;
+	   if (!file_exists($dataDir.'/data/_site/galleries.php')) { return; } //no galleries setup in pages
+	   
+	    $galleries = array();
 		include $dataDir.'/data/_site/galleries.php';
 		$ext = '.'.end(explode('.', $newImg));
 		$newImgName = str_replace(' ','%20',str_replace('\\','/',$newImg));

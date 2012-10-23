@@ -173,6 +173,7 @@ class elFinder {
 	 **/
 	public function __construct($opts) {
 		if (session_id() == '') {
+		    register_shutdown_function('session_write_close');
 			session_start();
 		}
 		$this->time  = $this->utime();

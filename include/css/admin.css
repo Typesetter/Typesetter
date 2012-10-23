@@ -211,8 +211,8 @@ body #gp_admin_html .gpselect option{
 	}
 body #gp_admin_html .gpcheckbox input{
 	margin:0;
-	float:left;
 	padding:0;
+	vertical-align:middle;
 	}
 body #gp_admin_html .gpinput{
 	white-space:nowrap;

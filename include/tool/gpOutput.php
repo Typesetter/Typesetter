@@ -1777,14 +1777,14 @@ class gpOutput{
 		   $description = preg_replace('/\r/', " ", $description);
 		   $description = preg_replace('/\t/', " ", $description);
 		   $description = preg_replace('/ +/', " ", $description);
-		   $description = $page_title.' '.$description;
+		   $description = $page_title.' '.$description; //add some info about the page contents also
 		}
 		$description = gpOutput::EndPhrase($description);
 
 		if( !empty($config['desc']) ){
 			$description .= htmlspecialchars($config['desc']);
 		}
-		$description = substr(trim($description), 0, 160); //recommended max 160 chars
+		$description = trim($description);
 		if( !empty($description) ){
 			echo "\n<meta name=\"description\" content=\"".$description."\" />";
 		}

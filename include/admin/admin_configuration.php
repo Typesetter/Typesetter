@@ -37,7 +37,7 @@ class admin_configuration{
 						'general_settings'=>false,
 						'title'=>'',
 						'keywords'=>'',
-						'desc'=>'textarea(160)',
+						'desc'=>'textarea(260)',
 
 						'Interface'=>false,
 						'colorbox_style' => array('example1'=>'Example 1', 'example2'=>'Example 2', 'example3'=>'Example 3', 'example4'=>'Example 4', 'example5'=>'Example 5', 'example6'=>'Example 6'),

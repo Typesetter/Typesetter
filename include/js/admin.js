@@ -78,7 +78,7 @@ $(function(){
 	    var warnLevel = $(this).attr('warn'); //try and read warn atrrib
 		if(typeof(warnLevel) != "undefined" && warnLevel !== null) { //if warn attrib exist
 		  if (this.value.length > warnLevel) { //check warning level
-            $(this).parent().find('.character_count').css('color','red'); //set warning color
+            $(this).parent().find('.character_count').css('color','#C46713'); //set warning color (orange type)
 		  } else {
 		     $(this).parent().find('.character_count').css('color',''); //set back to default color
           }		  

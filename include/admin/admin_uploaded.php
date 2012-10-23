@@ -836,11 +836,10 @@ class admin_uploaded{
 		$base_dir = $dataDir.'/data/_uploaded';
 		$thumb_dir = $dataDir.'/data/_uploaded/image/thumbnails';
 		admin_uploaded::SetRealPath($result,$elfinder);
-        
 		switch($cmd){
-
+  
 			case 'rename':
-			admin_uploaded::RenameResized($result['removed'][0],$result['added'][0]);
+			admin_uploaded::RenameResized($result['removed'][0],$result['added'][0],$result);
 			break;
 
 			case 'rm':
@@ -968,9 +967,24 @@ class admin_uploaded{
 	 * Update the name of an image in the index when renamed
 	 *
 	 */
-	function RenameResized($removed,$added){
+	function RenameResized($removed,$added,$result = NULL){
+	    global $dataDir;
 		$added_img = admin_uploaded::TrimBaseDir($added['realpath']);
 		$removed_img = admin_uploaded::TrimBaseDir($removed['realpath']);
+
+	    if ($result != NULL) { //johannes added for dir rename in image folder to sync with thumbnails
+		  if ($result['removed'][0]['mime'] == 'directory') {
+			$added_img = str_replace('\\','/',$added_img);
+			$removed_img = str_replace('\\','/',$removed_img);
+			//directory name was changed inside image but not in thumbnails
+			if ((strpos($added_img,'image/') !== FALSE) && (strpos($added_img,'image/thumbnails/') === FALSE)) { 
+				$thmbD = $dataDir.'/data/_uploaded/image/thumbnails';
+				$oldDir = $thmbD.$removed_img;
+				$newDir = $thmbD.$added_img;
+				rename($oldDir,$newDir);
+			}
+		  }	  
+		}
 		
         //update gallery
 		admin_uploaded::UpdateGalleriesImages($added_img,$removed_img);

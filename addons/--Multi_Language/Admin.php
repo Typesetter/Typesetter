@@ -352,14 +352,12 @@ class MultiLang_Admin extends MultiLang_Common{
 			return;
 		}
 
-		$title = $_POST['title'];
-		includeFile('tool/editing.php');
-		$title = gp_edit::CleanTitle($title);
-		if( !isset($gp_index[$title]) ){
+		$index_b = $this->WhichTitle($_POST['title']);
+		if( !$index_b ){
 			message($langmessage['OOPS'].' (Invalid Title - 2)');
 			return;
 		}
-		$index_b = $gp_index[$title];
+
 
 		//a title can't be a translation of  itself
 		if( $index_b == $index_a ){
@@ -425,6 +423,23 @@ class MultiLang_Admin extends MultiLang_Common{
 		}else{
 			message($langmessage['OOPS']);
 		}
+	}
+
+	function WhichTitle($title){
+		global $gp_index, $gp_titles;
+		includeFile('tool/editing.php');
+		$cleaned_title = gp_edit::CleanTitle($title);
+
+		if( isset($gp_index[$cleaned_title]) ){
+			return $gp_index[$cleaned_title];
+		}
+		foreach($gp_titles as $index => $info){
+			if( isset($info['label']) && $info['label'] = $title ){
+				return $index;
+			}
+		}
+
+		return $false;
 	}
 
 

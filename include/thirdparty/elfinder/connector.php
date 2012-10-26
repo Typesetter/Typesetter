@@ -1,11 +1,8 @@
 <?php
 
 defined('is_running') or die('Not an entry point...');
-global $dataDir, $post_quarantine;
+global $dataDir;
 
-if( count($post_quarantine) ){
-	$_POST = $post_quarantine;
-}
 includeFile('admin/admin_uploaded.php');
 
 
@@ -30,9 +27,15 @@ includeFile('thirdparty/elfinder/php/elFinderVolumeLocalFileSystem.class.php');
 function access($attr, $path, $data, $volume) {
 
 	//gpEasy thumbnails
-	if( $attr == 'write' && strpos($path,'/image/thumbnails/') !== false ){
+	if( strpos($path,'/image/thumbnails/') === false ){
+		return null;
+	}
+	switch($attr){
+		case 'write':
+		case 'locked':
 		return false;
 	}
+
 	return null;
 }
 
@@ -43,7 +46,7 @@ $opts = array(
 			'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
 			'path'          => $dataDir.'/data/_uploaded/',
 			'URL'           => common::GetDir('data/_uploaded'),
-			'accessControl' => 'access',             // disable and hide dot starting files (OPTIONAL)
+			'accessControl' => 'access',
 			//'uploadMaxSize' => '1G',
 			'tmbPath'		=> $dataDir.'/data/_elthumbs',
 			'tmbURL'		=> common::GetDir('data/_elthumbs'),

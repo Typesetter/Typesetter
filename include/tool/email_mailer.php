@@ -123,7 +123,7 @@ class gp_phpmailer extends PHPMailer{
    * @param string $name
    * @return void
    */
-	function SetFrom($address, $name = '') {
+	public function SetFrom($address, $name = '', $auto = 1) {
 		$this->From = $this->CleanLine( $address );
 		$this->FromName = $this->CleanLine( $name );
 	}

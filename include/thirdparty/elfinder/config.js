@@ -39,6 +39,8 @@ $(function(){
 		}
 	}
 
+	elfinder_opts.customData = {verified : post_nonce};
+
 	$.extend(elfinder_opts,{
 		uiOptions : uiOptions
 	});

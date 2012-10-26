@@ -13,39 +13,57 @@ class admin_uploaded{
 	var $isThumbDir = false;
 	var	$imgTypes;
 	var $errorMessages = array();
+	var $finder_opts = array();
+
 
 
 	function elFinder(){
-		global $page, $GP_INLINE_VARS;
+		global $page, $GP_INLINE_VARS, $config, $dataDir;
 
 		$GP_INLINE_VARS['admin_resizable'] = false;
 
-		$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.common::GetDir('/include/thirdparty/elfinder/css/elfinder.min.css').'">';
+		$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.common::GetDir('/include/thirdparty/elfinder/css/elfinder.css').'">';
 		$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.common::GetDir('/include/thirdparty/elfinder/style.css').'">';
 
-		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/elfinder/js/elfinder.full.js').'"></script>';
+		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/elfinder/js/elfinder.js').'"></script>';
 		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/elfinder/config.js').'"></script>';
+
 
 		echo '<div id="elfinder"></div>';
 
 		common::LoadComponents('selectable,draggable,droppable,resizable,dialog,slider,button');
 
+
+
+		//get the elfinder language
+		$language = $config['langeditor'];
+		if( $language == 'inherit' ){
+			$language = $config['language'];
+		}
+		$lang_file = '/include/thirdparty/elfinder/js/i18n/elfinder.'.$language.'.js';
+		$lang_full = $dataDir.$lang_file;
+		if( file_exists($lang_full) ){
+			$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir($lang_file).'"></script>';
+		}else{
+			$language = 'en';
+		}
+		$this->finder_opts['lang'] = $language;
+
+
 		$this->elFinderPrep();
+		$page->head_script .= "\n".'var elfinder_opts = '.json_encode($this->finder_opts).';';
 	}
 
 	function elFinderPrep(){
 		global $page, $gpAdmin;
 
-		//$page->head .= '<script type="text/javascript" src="js/i18n/elfinder.ru.js"></script>';
-
-		$el_opts['url'] = common::GetUrl('Admin_Finder');
-		$el_opts['lang'] = 'en';
-		$el_opts['width'] = $gpAdmin['gpui_pw'];
+		//options
+		$this->finder_opts['url'] = common::GetUrl('Admin_Finder');
+		$this->finder_opts['width'] = $gpAdmin['gpui_pw'];
 		if( $gpAdmin['gpui_ph'] > 0 ){
-			$el_opts['height'] = $gpAdmin['gpui_ph'];
+			$this->finder_opts['height'] = $gpAdmin['gpui_ph'];
 		}
 
-		$page->head_script .= "\n".'var elfinder_opts = '.json_encode($el_opts).';';
 	}
 
 

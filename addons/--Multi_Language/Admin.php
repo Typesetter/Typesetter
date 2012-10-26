@@ -342,7 +342,7 @@ class MultiLang_Admin extends MultiLang_Common{
 
 		$index_a = $_POST['index'];
 		if( !isset($gp_titles[$index_a]) ){
-			message($langmessage['OOPS'].' (Invalid Title)');
+			message($langmessage['OOPS'].' (Invalid Title - 1)');
 			return;
 		}
 
@@ -352,12 +352,12 @@ class MultiLang_Admin extends MultiLang_Common{
 			return;
 		}
 
-		$title = $_POST['title'];
-		if( !isset($gp_index[$title]) ){
-			message($langmessage['OOPS'].' (Invalid Title)');
+		$index_b = $this->WhichTitle($_POST['title']);
+		if( !$index_b ){
+			message($langmessage['OOPS'].' (Invalid Title - 2)');
 			return;
 		}
-		$index_b = $gp_index[$title];
+
 
 		//a title can't be a translation of  itself
 		if( $index_b == $index_a ){
@@ -425,6 +425,23 @@ class MultiLang_Admin extends MultiLang_Common{
 		}
 	}
 
+	function WhichTitle($title){
+		global $gp_index, $gp_titles;
+		includeFile('tool/editing.php');
+		$cleaned_title = gp_edit::CleanTitle($title);
+
+		if( isset($gp_index[$cleaned_title]) ){
+			return $gp_index[$cleaned_title];
+		}
+		foreach($gp_titles as $index => $info){
+			if( isset($info['label']) && $info['label'] = $title ){
+				return $index;
+			}
+		}
+
+		return $false;
+	}
+
 
 	/**
 	 * Set the language of the title
@@ -435,7 +452,7 @@ class MultiLang_Admin extends MultiLang_Common{
 
 		$index = $_REQUEST['index'];
 		if( !isset($gp_titles[$index]) ){
-			echo $langmessage['OOPS'].' (Invalid Title)';
+			echo $langmessage['OOPS'].' (Invalid Title - 3)';
 			return;
 		}
 
@@ -557,7 +574,7 @@ class MultiLang_Admin extends MultiLang_Common{
 
 		$page_index = $_REQUEST['rmindex'];
 		if( !isset($gp_titles[$page_index]) ){
-			echo $langmessage['OOPS'].' (Invalid Title)';
+			echo $langmessage['OOPS'].' (Invalid Title - 4)';
 			return;
 		}
 

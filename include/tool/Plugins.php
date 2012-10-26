@@ -11,16 +11,18 @@ class gpPlugin{
 	 * @param string $file File to include relative to the current plugin directory
 	 * @static
 	 */
-	function incl($file){
+	static function incl($file){
 		global $addonPathCode;
-		if( gp_safe_mode ) return;
+		if( gp_safe_mode ){
+			return;
+		}
 		return include_once($addonPathCode.'/'.$file);
 	}
 
 	/**
 	 * Alias of gpPlugin::incl()
 	 */
-	function inc($file){
+	static function inc($file){
 		return gpPlugin::incl($file);
 	}
 
@@ -30,7 +32,7 @@ class gpPlugin{
 	 * Example: gpPlugin::RegisterShutdown(array('class_name','method_name'));  or  gpPlugin::RegisterShutdown(array('class_name','method_name'),'argument1'....);
 	 *
 	 */
-	function RegisterShutdown(){
+	static function RegisterShutdown(){
 		global $addonFolderName;
 		if( gp_safe_mode ) return;
 		$args = func_get_args();
@@ -41,7 +43,9 @@ class gpPlugin{
 	 * Handle functions passed to gpPlugin::RegisterShutdown()
 	 * This function should not be called directly.
 	 */
-	function ShutdownFunction($addonFolderName,$args){
+	static function ShutdownFunction($addonFolderName,$args){
+
+		if( gp_safe_mode ) return;
 
 		if( !is_array($args) || count($args) < 1 ){
 			return false;
@@ -65,7 +69,7 @@ class gpPlugin{
 	 * Similar to wordpress apply_filters_ref_array()
 	 *
 	 */
-	function Filter($hook, $args = array() ){
+	static function Filter($hook, $args = array() ){
 		global $config;
 
 		if( !gpPlugin::HasHook($hook) ){
@@ -86,7 +90,7 @@ class gpPlugin{
 	}
 
 
-	function OneFilter($hook,$args=array()){
+	static function OneFilter($hook,$args=array()){
 		global $config;
 
 		if( !gpPlugin::HasHook($hook) ){
@@ -98,7 +102,7 @@ class gpPlugin{
 		return gpPlugin::ExecHook($hook,$hook_info,$args);
 	}
 
-	function Action($hook, $args = array() ){
+	static function Action($hook, $args = array() ){
 		global $config;
 
 		if( !gpPlugin::HasHook($hook) ){
@@ -116,7 +120,7 @@ class gpPlugin{
 	 * @return bool
 	 *
 	 */
-	function HasHook($hook){
+	static function HasHook($hook){
 		global $config;
 		if( empty($config['hooks']) || empty($config['hooks'][$hook]) ){
 			return false;
@@ -124,7 +128,7 @@ class gpPlugin{
 		return true;
 	}
 
-	function ArgReturn($args){
+	static function ArgReturn($args){
 		if( is_array($args) && isset($args[0]) ){
 			return $args[0];
 		}
@@ -138,10 +142,15 @@ class gpPlugin{
 	 * @param array $args
 	 *
 	 */
-	function ExecHook($hook,$info,$args = array()){
+	static function ExecHook($hook,$info,$args = array()){
 		global $dataDir, $gp_current_hook;
 
-		if( gp_safe_mode ) return;
+		if( gp_safe_mode ){
+			if( isset($args[0]) ){
+				return $args[0];
+			}
+			return;
+		}
 
 		if( !is_array($args) ){
 			$args = array($args);
@@ -167,7 +176,7 @@ class gpPlugin{
 	 * @param string $addon_key Key used to identify a plugin uniquely in the configuration
 	 *
 	 */
-	function SetDataFolder($addon_key){
+	static function SetDataFolder($addon_key){
 		global $dataDir, $config;
 		global $addonDataFolder,$addonCodeFolder; //deprecated
 		global $addonRelativeCode,$addonRelativeData,$addonPathData,$addonPathCode,$addonFolderName,$addon_current_id,$addon_current_version;
@@ -201,7 +210,7 @@ class gpPlugin{
 	 * If there's a current addon folder or addon id, push it onto the stack
 	 *
 	 */
-	function StackPush(){
+	static function StackPush(){
 		global $gp_plugin_stack, $addonFolderName, $addon_current_id;
 
 		if( !$addon_current_id && !$addonFolderName ){
@@ -214,7 +223,7 @@ class gpPlugin{
 	/**
 	 * Reset global path variables
 	 */
-	function ClearDataFolder(){
+	static function ClearDataFolder(){
 		global $gp_plugin_stack;
 		global $addonDataFolder,$addonCodeFolder; //deprecated
 		global $addonRelativeCode,$addonRelativeData,$addonPathData,$addonPathCode,$addonFolderName,$addon_current_id,$addon_current_version;
@@ -240,7 +249,7 @@ class gpPlugin{
 	 * data_folder was briefly used during the development of 2.0.
 	 * @deprecated
 	 */
-	function GetDataFolder($addon_key){
+	static function GetDataFolder($addon_key){
 		global $config;
 		if( isset($config['addons'][$addon_key]['data_folder']) ){
 			return $config['addons'][$addon_key]['data_folder'];
@@ -255,7 +264,7 @@ class gpPlugin{
 	 * @return mixed Returns addon_key string if found, false otherwise
 	 *
 	 */
-	function AddonFromId($addon_id){
+	static function AddonFromId($addon_id){
 		global $config;
 		if( empty($config['addons']) ){
 			return false;

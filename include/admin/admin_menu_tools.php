@@ -45,7 +45,7 @@ class admin_menu_tools{
 	/*
 	 * @static
 	 */
-	function Inheritance_Info(){
+	static function Inheritance_Info(){
 		global $gp_menu, $gp_titles;
 
 		$current_par_info = array();
@@ -102,7 +102,7 @@ class admin_menu_tools{
 	/*
 	 * @static
 	 */
-	function CurrentLayout($index){
+	static function CurrentLayout($index){
 		global $config, $gp_titles,$gpLayouts;
 		static $Inherit_Info;
 

@@ -8,7 +8,7 @@ class gp_combine{
 	 * Generate a file with all of the combined content
 	 *
 	 */
-	function GenerateFile($files,$type){
+	static function GenerateFile($files,$type){
 		global $dataDir;
 
 		//get etag
@@ -138,7 +138,7 @@ class gp_combine{
 	}
 
 
-	function GetTokens($file,$full_path){
+	static function GetTokens($file,$full_path){
 		$content = file_get_contents($full_path);
 		$filters = array(
 			'UrlPrefix' => array( 'BaseUrl' => common::GetDir($file), 'BasePath' => dirname($full_path) )
@@ -148,7 +148,7 @@ class gp_combine{
 	}
 
 
-	function CleanCacheNew(){
+	static function CleanCacheNew(){
 		global $dataDir;
 		$dir = $dataDir.'/data/_cache';
 		$files = scandir($dir);
@@ -190,7 +190,7 @@ class gp_combine{
 	 * Make sure the file is a css or js file and that it exists
 	 * @static
 	 */
-	function CheckFile(&$file){
+	static function CheckFile(&$file){
 		global $dataDir;
 		$comment_start = '<!--';
 		$comment_end = '-->';
@@ -230,7 +230,7 @@ class gp_combine{
 		return false;
 	}
 
-	function CheckFileSub(&$file){
+	static function CheckFileSub(&$file){
 		global $dataDir, $dirPrefix;
 
 		//realpath returns false if file does not exist
@@ -258,7 +258,7 @@ class gp_combine{
 	}
 
 
-	function FileStat_Static( $file_path, &$modified, &$content_length ){
+	static function FileStat_Static( $file_path, &$modified, &$content_length ){
 		$content_length += @filesize($file_path);
 		$modified = max( $modified, @filemtime($file_path) );
 		return $modified;
@@ -268,7 +268,7 @@ class gp_combine{
 	 *
 	 * @static
 	 */
-	function TrimQuery($file){
+	static function TrimQuery($file){
 		$pos = mb_strpos($file,'?');
 		if( $pos > 0 ){
 			$file = mb_substr($file,0,$pos);
@@ -276,7 +276,7 @@ class gp_combine{
 		return trim($file);
 	}
 
-	function ScriptInfo( $components, $dependencies = true){
+	static function ScriptInfo( $components, $dependencies = true){
 		global $config;
 		if( is_string($components) ){
 			$components = explode(',',strtolower($components));

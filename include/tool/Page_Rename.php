@@ -4,7 +4,7 @@ defined('is_running') or die('Not an entry point...');
 
 class gp_rename{
 
-	function RenameForm($title,$action){
+	static function RenameForm($title,$action){
 		global $langmessage,$page,$gp_index,$gp_titles;
 
 
@@ -222,7 +222,7 @@ class gp_rename{
 	}
 
 
-	function RenameFile($title){
+	static function RenameFile($title){
 		global $langmessage, $page, $gp_index, $gp_titles;
 
 		//change the title
@@ -304,7 +304,7 @@ class gp_rename{
 
 
 
-	function RenameFileWorker($title){
+	static function RenameFileWorker($title){
 		global $langmessage,$dataDir,$gp_index;
 
 		//use new_label or new_title
@@ -371,6 +371,3 @@ class gp_rename{
 	}
 
 }
-
-/* deprecated class rename_details 2.5 */
-class rename_details extends gp_rename{}

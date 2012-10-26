@@ -104,7 +104,7 @@ class special_display extends display{
 	 *
 	 * @static
 	 */
-	function GetScriptInfo(&$requested,$redirect=true){
+	static function GetScriptInfo(&$requested,$redirect=true){
 		global $dataDir,$gp_index,$gp_titles;
 
 		$scripts['special_site_map']['script'] = '/include/special/special_map.php';
@@ -155,14 +155,15 @@ class special_display extends display{
 	}
 
 
-	function ExecInfo($scriptinfo){
+	static function ExecInfo($scriptinfo){
 		global $dataDir;
 
-		ob_start();
-
 		if( isset($scriptinfo['addon']) ){
+			if( gp_safe_mode ) return;
 			gpPlugin::SetDataFolder($scriptinfo['addon']);
 		}
+
+		ob_start();
 
 		if( isset($scriptinfo['script']) ){
 			require($dataDir.$scriptinfo['script']);

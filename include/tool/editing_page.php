@@ -496,7 +496,7 @@ class editing_page extends display{
 	/*
 	 * @static
 	 */
-	function SectionTypes(){
+	static function SectionTypes(){
 		global $langmessage;
 		$section_types['text']['label']		= $langmessage['editable_text'];
 		$section_types['gallery']['label']	= $langmessage['Image Gallery'];

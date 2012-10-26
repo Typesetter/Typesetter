@@ -17,7 +17,7 @@ class section_content{
 	 * @return string
 	 *
 	 */
-	function Render($sections,$title,$meta = array()){
+	static function Render($sections,$title,$meta = array()){
 		self::SetVars($title,$meta);
 
 		$content = '';
@@ -39,12 +39,12 @@ class section_content{
 	 * @return string
 	 *
 	 */
-	function RenderSection($section,$section_num,$title,$meta = array()){
+	static function RenderSection($section,$section_num,$title,$meta = array()){
 		self::SetVars($title,$meta);
 		return self::SectionToContent($section,$section_num);
 	}
 
-	function SetVars($title,$meta){
+	static function SetVars($title,$meta){
 		self::$title = $title;
 		self::$label = common::GetLabel($title);
 		self::$meta = array();
@@ -59,7 +59,7 @@ class section_content{
 	 * @return string
 	 *
 	 */
-	function SectionToContent(&$section_data,$section_num){
+	static function SectionToContent(&$section_data,$section_num){
 
 		$section_data = gpPlugin::Filter('SectionToContent',array($section_data,$section_num));
 
@@ -81,7 +81,7 @@ class section_content{
 	 * Replace gpEasy content variables in $content
 	 *
 	 */
-	function TextContent(&$content){
+	static function TextContent(&$content){
 
 		self::$meta += array('modified'=>'');
 
@@ -140,7 +140,7 @@ class section_content{
 	 * @param int $offset The current string position of the page parser
 	 *
 	 */
-	function ReplaceContent(&$content,$offset=0){
+	static function ReplaceContent(&$content,$offset=0){
 		global $gp_index;
 		static $includes = 0;
 
@@ -204,7 +204,7 @@ class section_content{
 	 * @param array $data
 	 * @param string The included content
 	 */
-	function IncludeContent($data){
+	static function IncludeContent($data){
 		global $langmessage, $gp_index;
 
 		if( isset($data['index']) ){
@@ -244,7 +244,7 @@ class section_content{
 	 * @param string $requested The name of the gadget to include
 	 *
 	 */
-	function IncludeGadget($requested){
+	static function IncludeGadget($requested){
 		global $config;
 
 		if( !isset($config['gadgets'][$requested]) ){
@@ -262,7 +262,7 @@ class section_content{
 	 * @param string $requested The name of the special page to include
 	 *
 	 */
-	function IncludeSpecial($requested){
+	static function IncludeSpecial($requested){
 		global $langmessage;
 		includeFile('special.php');
 
@@ -281,7 +281,7 @@ class section_content{
 	 * @param string $requested The name of the page to include
 	 *
 	 */
-	function IncludePage($requested){
+	static function IncludePage($requested){
 		global $gp_index;
 
 		$requested = str_replace(' ','_',$requested);

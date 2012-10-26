@@ -18,7 +18,7 @@ class gp_filesystem_base{
 	var $method = 'gp_filesystem_base';
 
 
-	function init($context = false, $get_method = 'basic'){
+	static function init($context = false, $get_method = 'basic'){
 		global $gp_filesystem;
 
 		if( $gp_filesystem !== false ){
@@ -33,7 +33,7 @@ class gp_filesystem_base{
 		return gp_filesystem_base::set_method($method);
 	}
 
-	function set_method($method){
+	static function set_method($method){
 		global $gp_filesystem;
 		switch($method){
 			case 'gp_filesystem_direct':
@@ -50,7 +50,7 @@ class gp_filesystem_base{
 
 	//needed for writing to the /include, .htaccess and possibly /themes files
 	/* static */
-	function get_filesystem_method($context = false){
+	static function get_filesystem_method($context = false){
 		global $dataDir;
 
 		if( $context === false ){
@@ -175,7 +175,7 @@ class gp_filesystem_base{
 		}
 	}
 
-	function get_filesystem_method_dir($dir){
+	static function get_filesystem_method_dir($dir){
 		$result = gp_filesystem_base::get_filesystem_method_file($dir);
 		if( $result === false ){
 			return false;
@@ -214,7 +214,7 @@ class gp_filesystem_base{
 	 * Get the minimum filesystem_method for $file
 	 * @static
 	 */
-	function get_filesystem_method_file($file){
+	static function get_filesystem_method_file($file){
 
 
 		if( gp_is_writable($file) ){
@@ -231,7 +231,7 @@ class gp_filesystem_base{
 	 * if the target of the symbolic link doesnt exist then is_writable($file) will return false
 	 * @static
 	 */
-	function get_filesystem_method_link($link){
+	static function get_filesystem_method_link($link){
 
 		$temp = gp_filesystem_base::TempFile( $link );
 		if( @rename( $link, $temp ) ){
@@ -268,7 +268,7 @@ class gp_filesystem_base{
 	function connect(){
 		return true;
 	}
-	function connect_handler(){
+	function connect_handler($args){
 		return true;
 	}
 	function get_base_dir(){

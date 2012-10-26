@@ -4,7 +4,7 @@ defined('is_running') or die('Not an entry point...');
 class admin_tools{
 
 
-	function AdminScripts(){
+	static function AdminScripts(){
 		global $langmessage,$config;
 		$scripts = array();
 
@@ -123,7 +123,7 @@ class admin_tools{
 	 * @static
 	 * @return bool
 	 */
-	function HasPermission($script){
+	static function HasPermission($script){
 		global $gpAdmin;
 		if( is_array($gpAdmin) ){
 			$gpAdmin += array('granted'=>'');
@@ -138,7 +138,7 @@ class admin_tools{
 	 * @since 3.0b2
 	 * @return bool
 	 */
-	function CheckPermission($granted,$script){
+	static function CheckPermission($granted,$script){
 
 		if( $granted == 'all' ){
 			return true;
@@ -160,7 +160,7 @@ class admin_tools{
 	 * @param string $index The data index of the page
 	 * @return bool
 	 */
-	function CanEdit($index){
+	static function CanEdit($index){
 		global $gpAdmin;
 
 		//pre 3.0 check
@@ -184,7 +184,7 @@ class admin_tools{
 	 * @since 3.0b2
 	 * @static
 	 */
-	function EditingValue(&$user_info){
+	static function EditingValue(&$user_info){
 		if( isset($user_info['editing']) ){
 			return;
 		}
@@ -202,7 +202,7 @@ class admin_tools{
 	 * @param array $new_versions Data about newly available versions of gpEasy and addons
 	 * @static
 	 */
-	function GetAdminPanel($new_versions){
+	static function GetAdminPanel($new_versions){
 		global $page, $gpAdmin, $config;
 
 		//don't send the panel when it's a gpreq=json request
@@ -251,7 +251,7 @@ class admin_tools{
 	 * @param array $new_versions Data about newly available versions of gpEasy and addons
 	 * @static
 	 */
-	function AdminPanelLinks($in_panel=true,$new_versions=array()){
+	static function AdminPanelLinks($in_panel=true,$new_versions=array()){
 		global $langmessage, $page, $gpAdmin, $config;
 
 		$group2 = '<div class="panelgroup2 in_window" %s>';
@@ -527,7 +527,7 @@ class admin_tools{
 	 * Output the html used for inline editor toolbars
 	 * @static
 	 */
-	function InlineEditArea(){
+	static function InlineEditArea(){
 		global $langmessage;
 
 		//inline editor html
@@ -566,7 +566,7 @@ class admin_tools{
 	 * Get the links for the Frequently Used section of the admin toolbar
 	 *
 	 */
-	function GetFrequentlyUsed($in_panel){
+	static function GetFrequentlyUsed($in_panel){
 		global $langmessage,$gpAdmin;
 
 		//frequently used
@@ -605,7 +605,7 @@ class admin_tools{
 		echo '</li>';
 	}
 
-	function AdminContentPanel(){
+	static function AdminContentPanel(){
 		global $page, $config, $langmessage, $gp_menu;
 
 		//the login form does not need the panel
@@ -634,7 +634,7 @@ class admin_tools{
 
 
 	//uses $status from update codes to execute some cleanup code on a regular interval (7 days)
-	function ScheduledTasks($status){
+	static function ScheduledTasks($status){
 		global $dataDir;
 
 
@@ -665,7 +665,7 @@ class admin_tools{
 
 
 	//admin_tools::AdminHtml();
-	function AdminHtml(){
+	static function AdminHtml(){
 		global $page, $gp_admin_html;
 
 		ob_start();
@@ -687,7 +687,7 @@ class admin_tools{
 		$gp_admin_html .= ob_get_clean();
 	}
 
-	function CheckStatus($status){
+	static function CheckStatus($status){
 
 		switch($status){
 			case 'embedcheck':
@@ -706,7 +706,7 @@ class admin_tools{
 	/*
 	 * @deprecated 2.3.1
 	 */
-	function GetAdminLinks($type=false){
+	static function GetAdminLinks($type=false){
 		global $langmessage;
 
 		$scripts = admin_tools::AdminScripts();
@@ -744,7 +744,7 @@ class admin_tools{
 		echo '</ul>';
 	}
 
-	function GetAdminGroup($grouping){
+	static function GetAdminGroup($grouping){
 		global $langmessage,$page;
 
 		$scripts = admin_tools::AdminScripts();
@@ -812,7 +812,7 @@ class admin_tools{
 	 * Some tags will be allowed
 	 *
 	 */
-	function PostedLabel($string){
+	static function PostedLabel($string){
 		includeFile('tool/strings.php');
 
 		// Remove control characters
@@ -830,7 +830,7 @@ class admin_tools{
 	 * @since 2.5b1
 	 *
 	 */
-	function LabelToSlug($string){
+	static function LabelToSlug($string){
 		return admin_tools::PostedSlug( $string, true);
 	}
 
@@ -841,7 +841,7 @@ class admin_tools{
 	 * @return string
 	 * @since 2.4b5
 	 */
-	function PostedSlug($string,$from_label = false){
+	static function PostedSlug($string,$from_label = false){
 		includeFile('tool/strings.php');
 
 		// Remove control characters
@@ -876,7 +876,7 @@ class admin_tools{
 	 * Fix the html for page labels
 	 *
 	 */
-	function LabelHtml($string){
+	static function LabelHtml($string){
 
 		//prepend with space for preg_split(), space will be trimmed at the end
 		$string = ' '.$string;
@@ -914,7 +914,7 @@ class admin_tools{
 	 * Remove slashes and dots from a slug that could cause navigation problems
 	 *
 	 */
-	function SlugSlashes($string){
+	static function SlugSlashes($string){
 
 		$string = str_replace('\\','/',$string);
 
@@ -946,7 +946,7 @@ class admin_tools{
 	 * @return mixed false or the data index of the matched title
 	 * @since 2.4b5
 	 */
-	function CheckTitleCase($title){
+	static function CheckTitleCase($title){
 		global $gp_index;
 
 		$titles_lower = array_change_key_case($gp_index,CASE_LOWER);
@@ -965,7 +965,7 @@ class admin_tools{
 	 * @return mixed false if the title doesn't exist, string if a conflict is found
 	 * @since 2.4b5
 	 */
-	function CheckTitle($title,&$message){
+	static function CheckTitle($title,&$message){
 		global $gp_index, $config, $langmessage;
 
 		if( empty($title) ){
@@ -1002,7 +1002,7 @@ class admin_tools{
 	 * Check a title against existing titles and special pages
 	 *
 	 */
-	function CheckPostedNewPage($title,&$message){
+	static function CheckPostedNewPage($title,&$message){
 		global $langmessage,$gp_index, $config;
 
 		$title = admin_tools::LabelToSlug($title);
@@ -1025,7 +1025,7 @@ class admin_tools{
 	//
 
 	//admin_tools::SaveAllConfig();
-	function SaveAllConfig(){
+	static function SaveAllConfig(){
 		if( !admin_tools::SaveConfig() ){
 			return false;
 		}
@@ -1041,7 +1041,7 @@ class admin_tools{
 	 * @return bool
 	 *
 	 */
-	function SavePagesPHP(){
+	static function SavePagesPHP(){
 		global $gp_index, $gp_titles, $gp_menu, $gpLayouts, $dataDir;
 
 		if( !is_array($gp_menu) || !is_array($gp_index) || !is_array($gp_titles) || !is_array($gpLayouts) ){
@@ -1066,7 +1066,7 @@ class admin_tools{
 	 * @return bool
 	 *
 	 */
-	function SaveConfig(){
+	static function SaveConfig(){
 		global $config, $dataDir;
 
 		if( !is_array($config) ) return false;
@@ -1080,7 +1080,7 @@ class admin_tools{
 	/**
 	 * @deprecated
 	 */
-	function tidyFix(&$text){
+	static function tidyFix(&$text){
 		trigger_error('tidyFix should be called using gp_edit::tidyFix() instead of admin_tools:tidyFix()');
 		return false;
 	}
@@ -1091,7 +1091,7 @@ class admin_tools{
 	 * Return the addon section of the admin panel
 	 *
 	 */
-	function GetAddonLinks($in_panel){
+	static function GetAddonLinks($in_panel){
 		global $langmessage, $config;
 
 		ob_start();
@@ -1157,7 +1157,7 @@ class admin_tools{
 	 * Determine if the installation should be allowed to process remote installations
 	 *
 	 */
-	function CanRemoteInstall(){
+	static function CanRemoteInstall(){
 		static $bool;
 
 		if( isset($bool) ){
@@ -1189,7 +1189,7 @@ class admin_tools{
 	 * Return a formatted list of links associated with $addon
 	 * @return string
 	 */
-	function GetAddonSubLinks($addon=false){
+	static function GetAddonSubLinks($addon=false){
 		global $config;
 
 		$special_links = admin_tools::GetAddonTitles( $addon);
@@ -1222,7 +1222,7 @@ class admin_tools{
 	 * @return array List of addon links
 	 *
 	 */
-	function GetAddonTitles($addon){
+	static function GetAddonTitles($addon){
 		global $gp_index, $gp_titles;
 
 		$sublinks = array();
@@ -1247,7 +1247,7 @@ class admin_tools{
 	 * @return array List of addon links
 	 *
 	 */
-	function GetAddonComponents($from,$addon){
+	static function GetAddonComponents($from,$addon){
 		if( !is_array($from) ){
 			return;
 		}
@@ -1270,7 +1270,7 @@ class admin_tools{
 	}
 
 
-	function FormatBytes($size, $precision = 2){
+	static function FormatBytes($size, $precision = 2){
 		$base = log($size) / log(1024);
 		$suffixes = array('B', 'KB', 'MB', 'GB', 'TB');
 		$floor = max(0,floor($base));

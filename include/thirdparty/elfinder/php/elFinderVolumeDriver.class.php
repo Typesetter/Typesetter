@@ -170,8 +170,6 @@ abstract class elFinderVolumeDriver {
 		'mimefile'        => '',
 		// directory for thumbnails
 		'tmbPath'         => '.tmb',
-		// mode to create thumbnails dir
-		'tmbPathMode'     => 0777,
 		// thumbnails dir URL. Set it if store thumbnails outside root directory
 		'tmbURL'          => '',
 		// thumbnails size (px)
@@ -501,7 +499,7 @@ abstract class elFinderVolumeDriver {
 		if ($path) {
 			if (!file_exists($path)) {
 				if (@mkdir($path)) {
-					chmod($path, $this->options['tmbPathMode']);
+					chmod( $path, finder_chmod_dir );
 				} else {
 					$path = '';
 				}
@@ -610,16 +608,8 @@ abstract class elFinderVolumeDriver {
 			}
 		}
 
-		if (!empty($this->options['accessControl'])) {
-			if (is_string($this->options['accessControl'])
-			&& function_exists($this->options['accessControl'])) {
-				$this->access = $this->options['accessControl'];
-			} elseif (is_array($this->options['accessControl'])
-			&& count($this->options['accessControl']) > 1
-			&& is_object($this->options['accessControl'][0])
-			&& method_exists($this->options['accessControl'][0], $this->options['accessControl'][1])) {
-				$this->access = array($this->options['accessControl'][0], $this->options['accessControl'][1]);
-			}
+		if( !empty($this->options['accessControl']) && is_callable($this->options['accessControl']) ){
+			$this->access = $this->options['accessControl'];
 		}
 
 		$this->today     = mktime(0,0,0, date('m'), date('d'), date('Y'));
@@ -675,16 +665,19 @@ abstract class elFinderVolumeDriver {
 		$type = preg_match('/^(finfo|mime_content_type|internal|auto)$/i', $type) ? $type : 'auto';
 		$regexp = '/text\/x\-(php|c\+\+)/';
 
-		if (($type == 'finfo' || $type == 'auto')
-		&& class_exists('finfo')
-		&& preg_match($regexp, array_shift(($tmp = explode(';', @finfo_file(finfo_open(FILEINFO_MIME), __FILE__)))))) {
-			$type = 'finfo';
-			$this->finfo = finfo_open(FILEINFO_MIME);
-		} elseif (($type == 'mime_content_type' || $type == 'auto')
-		&& function_exists('mime_content_type')
-		&& preg_match($regexp, array_shift(explode(';', mime_content_type(__FILE__))))) {
-			$type = 'mime_content_type';
-		} else {
+
+		if( ($type == 'finfo' || $type == 'auto')
+			&& class_exists('finfo')
+			&& ($tmp = explode(';', @finfo_file(finfo_open(FILEINFO_MIME), __FILE__)))
+			&& is_array($tmp)
+			&& preg_match($regexp, array_shift($tmp)) ){
+				$type = 'finfo';
+				$this->finfo = finfo_open(FILEINFO_MIME);
+		}elseif( ($type == 'mime_content_type' || $type == 'auto')
+			&& function_exists('mime_content_type')
+			&& preg_match($regexp, array_shift(explode(';', mime_content_type(__FILE__)))) ) {
+				$type = 'mime_content_type';
+		}else{
 			$type = 'internal';
 		}
 		$this->mimeDetect = $type;
@@ -1305,12 +1298,14 @@ abstract class elFinderVolumeDriver {
 
 		$this->rmTmb($file); // remove old name tmbs, we cannot do this after dir move
 
-
-		if (($path = $this->_move($path, $dir, $name))) {
-			$this->clearcache();
-			return $this->stat($path);
+		if (!$this->_move($path, $dir, $name)) {
+			return false;
 		}
-		return false;
+
+		$path = $this->_joinPath($dir, $name);
+
+		$this->clearcache();
+		return $this->stat($path);
 	}
 
 	/**
@@ -1418,19 +1413,13 @@ abstract class elFinderVolumeDriver {
 			}
 		}
 
-		$stat = array(
-			'mime'   => $mime,
-			'width'  => 0,
-			'height' => 0,
-			'size'   => filesize($tmpname));
-
-		// $w = $h = 0;
+		$w = $h = 0;
 		if (strpos($mime, 'image') === 0 && ($s = getimagesize($tmpname))) {
-			$stat['width'] = $s[0];
-			$stat['height'] = $s[1];
+			$w = $s[0];
+			$h = $s[1];
 		}
 		// $this->clearcache();
-		if (($path = $this->_save($fp, $dstpath, $name, $stat)) == false) {
+		if (($path = $this->_save($fp, $dstpath, $name, $mime, $w, $h)) == false) {
 			return false;
 		}
 
@@ -1510,22 +1499,15 @@ abstract class elFinderVolumeDriver {
 		}
 
 		// copy/move inside current volume
-		$source = $this->decode($src);
 		if ($volume == $this) {
+			$source = $this->decode($src);
 			// do not copy into itself
 			if ($this->_inpath($destination, $source)) {
 				return $this->setError(elFinder::ERROR_COPY_INTO_ITSELF, $errpath);
 			}
 			$method = $rmSrc ? 'move' : 'copy';
-			if( $path = $this->$method($source, $destination, $name) ){
-				$stat = $this->stat($path);
-				$stat['source'] = $source;
-				return $stat;
-			}else{
-				return false;
-			}
+			return ($path = $this->$method($source, $destination, $name)) ? $this->stat($path) : false;
 		}
-
 
 		// copy/move from another volume
 		if (!$this->options['copyTo'] || !$volume->copyFromAllowed()) {
@@ -1543,10 +1525,7 @@ abstract class elFinderVolumeDriver {
 				return $this->setError(elFinder::ERROR_MOVE, $errpath, elFinder::ERROR_RM_SRC);
 			}
 		}
-
-		$stat = $this->stat($path);
-		$stat['source'] = $source;
-		return $stat;
+		return $this->stat($path);
 	}
 
 	/**
@@ -1965,16 +1944,8 @@ abstract class elFinderVolumeDriver {
 
 		$perm = null;
 
-		if ($this->access) {
-			if (is_array($this->access)) {
-				$obj    = $this->access[0];
-				$method = $this->access[1];
-				$perm   = $obj->{$method}($name, $path, $this->options['accessControlData'], $this);
-			} else {
-				$func = $this->access;
-				$perm = $func($name, $path, $this->options['accessControlData'], $this);
-			}
-
+		if( $this->access ){
+			$perm = call_user_func($this->access, $name, $path, $this->options['accessControlData'], $this);
 			if ($perm !== null) {
 				return !!$perm;
 			}
@@ -2012,15 +1983,7 @@ abstract class elFinderVolumeDriver {
 		$perm = null;
 
 		if ($this->access) {
-			if (is_array($this->access)) {
-				$obj    = $this->access[0];
-				$method = $this->access[1];
-				$perm   = $obj->{$method}('write', $path, $this->options['accessControlData'], $this);
-			} else {
-				$func = $this->access;
-				$perm = $func('write', $path, $this->options['accessControlData'], $this);
-			}
-
+			$perm = call_user_func($this->access, 'write', $path, $this->options['accessControlData'], $this);
 			if ($perm !== null) {
 				return !!$perm;
 			}
@@ -2047,9 +2010,6 @@ abstract class elFinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function stat($path) {
-		if ($path === false) {
-			return false;
-		}
 		return isset($this->cache[$path])
 			? $this->cache[$path]
 			: $this->updateCache($path, $this->_stat($path));
@@ -2274,7 +2234,7 @@ abstract class elFinderVolumeDriver {
 		foreach ($this->getScandir($path) as $stat) {
 			$size = $stat['mime'] == 'directory' && $stat['read']
 				? $this->countSize($this->_joinPath($path, $stat['name']))
-				: (isset($stat['size']) ? intval($stat['size']) : 0);
+				: $stat['size'];
 			if ($size > 0) {
 				$result += $size;
 			}
@@ -2554,16 +2514,16 @@ abstract class elFinderVolumeDriver {
 			}
 
 		} else {
-			// $mime = $source['mime'];
-			// $w = $h = 0;
-			if (($dim = $volume->dimensions($src))) {
+			$mime = $source['mime'];
+			$w = $h = 0;
+			if (strpos($mime, 'image') === 0 && ($dim = $volume->dimensions($src))) {
 				$s = explode('x', $dim);
-				$source['width']  = $s[0];
-				$source['height'] = $s[1];
+				$w = $s[0];
+				$h = $s[1];
 			}
 
 			if (($fp = $volume->open($src)) == false
-			|| ($path = $this->_save($fp, $destination, $name, $source)) == false) {
+			|| ($path = $this->_save($fp, $destination, $name, $mime, $w, $h, $source)) == false) {
 				$fp && $volume->close($fp, $src);
 				return $this->setError(elFinder::ERROR_COPY, $errpath);
 			}
@@ -2723,17 +2683,18 @@ abstract class elFinderVolumeDriver {
 			return false;
 		}
 
-    		/* If image smaller or equal thumbnail size - just fitting to thumbnail square */
-    		if ($s[0] <= $tmbSize && $s[1]  <= $tmbSize) {
-     	   		$result = $this->imgSquareFit($tmb, $tmbSize, $tmbSize, 'center', 'middle', $this->options['tmbBgColor'], 'png' );
-	    	} else {
+    	/* If image smaller or equal thumbnail size - just fitting to thumbnail square */
+    	if ($s[0] <= $tmbSize && $s[1]  <= $tmbSize) {
+     	   $result = $this->imgSquareFit($tmb, $tmbSize, $tmbSize, 'center', 'middle', $this->options['tmbBgColor'], 'png' );
 
-	    		if ($this->options['tmbCrop']) {
+	    } else {
 
-        			/* Resize and crop if image bigger than thumbnail */
-	        		if (!(($s[0] > $tmbSize && $s[1] <= $tmbSize) || ($s[0] <= $tmbSize && $s[1] > $tmbSize) ) || ($s[0] > $tmbSize && $s[1] > $tmbSize)) {
-    					$result = $this->imgResize($tmb, $tmbSize, $tmbSize, true, false, 'png');
-	        		}
+	    	if ($this->options['tmbCrop']) {
+
+        		/* Resize and crop if image bigger than thumbnail */
+	        	if (!(($s[0] > $tmbSize && $s[1] <= $tmbSize) || ($s[0] <= $tmbSize && $s[1] > $tmbSize) ) || ($s[0] > $tmbSize && $s[1] > $tmbSize)) {
+    				$result = $this->imgResize($tmb, $tmbSize, $tmbSize, true, false, 'png');
+	        	}
 
 				if (($s = getimagesize($tmb)) != false) {
 					$x = $s[0] > $tmbSize ? intval(($s[0] - $tmbSize)/2) : 0;
@@ -2741,13 +2702,12 @@ abstract class elFinderVolumeDriver {
 					$result = $this->imgCrop($tmb, $tmbSize, $tmbSize, $x, $y, 'png');
 				}
 
-    			} else {
-        			$result = $this->imgResize($tmb, $tmbSize, $tmbSize, true, true, $this->imgLib, 'png');
-      			}
+    		} else {
+        		$result = $this->imgResize($tmb, $tmbSize, $tmbSize, true, true, $this->imgLib, 'png');
+        		$result = $this->imgSquareFit($tmb, $tmbSize, $tmbSize, 'center', 'middle', $this->options['tmbBgColor'], 'png' );
+      		}
 
-			$result = $this->imgSquareFit($tmb, $tmbSize, $tmbSize, 'center', 'middle', $this->options['tmbBgColor'], 'png' );
 		}
-
 		if (!$result) {
 			unlink($tmb);
 			return false;
@@ -3447,11 +3407,14 @@ abstract class elFinderVolumeDriver {
 	 * @param  resource  $fp   file pointer
 	 * @param  string    $dir  target dir path
 	 * @param  string    $name file name
-	 * @param  array     $stat file stat (required by some virtual fs)
+	 * @param  string    $mime file mime type
+	 * @param  integer   $w    image width
+	 * @param  integer   $h    image height
+	 * @param  array     $stat file stat (optional)
 	 * @return bool|string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	abstract protected function _save($fp, $dir, $name, $stat);
+	abstract protected function _save($fp, $dir, $name, $mime, $w, $h);
 
 	/**
 	 * Get file contents

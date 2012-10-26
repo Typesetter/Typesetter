@@ -19,7 +19,7 @@ class gpRemoteGet{
 	 *
 	 * @return mixed string indicates the method, False indicates it's not compatible
 	*/
-	function Test(){
+	static function Test(){
 
 		$methods = array('stream','fopen','fsockopen');
 		foreach($methods as $method){
@@ -35,7 +35,7 @@ class gpRemoteGet{
 	 * Determine if a specific method is supported
 	 *
 	 */
-	function Supported($method){
+	static function Supported($method){
 
 		if( common::IniGet('safe_mode') ){
 			return false;
@@ -62,7 +62,7 @@ class gpRemoteGet{
 	 * Return response only if successful, otherwise return false
 	 *
 	 */
-	function Get_Successful($url,$args=array()){
+	static function Get_Successful($url,$args=array()){
 		$result = gpRemoteGet::Get($url,$args);
 
 		if( (int)$result['response']['code'] >= 200 && (int)$result['response']['code'] < 300 ){
@@ -76,7 +76,7 @@ class gpRemoteGet{
 	 * Attempt to get the resource at $url
 	 * Loop through all potential methods until successful
 	 */
-	function Get($url,$args=array()){
+	static function Get($url,$args=array()){
 
 		$methods = array('stream','fopen','fsockopen');
 		foreach($methods as $method){
@@ -95,7 +95,7 @@ class gpRemoteGet{
 		return false;
 	}
 
-	function GetMethod($method,$url,$args=array()){
+	static function GetMethod($method,$url,$args=array()){
 		global $langmessage;
 
 
@@ -149,13 +149,13 @@ class gpRemoteGet{
 	}
 
 
-	function http_request($url,$r){
+	static function http_request($url,$r){
 
 
 
 	}
 
-	function stream_request($url,$r){
+	static function stream_request($url,$r){
 
 		$arrURL = parse_url($url);
 		if( !isset($arrURL['scheme']) ){
@@ -200,7 +200,7 @@ class gpRemoteGet{
 	}
 
 
-	function fopen_request($url,$r){
+	static function fopen_request($url,$r){
 
 		$arrURL = parse_url($url);
 		if( !isset($arrURL['scheme']) ){
@@ -242,7 +242,7 @@ class gpRemoteGet{
 	}
 
 
-	function fsockopen_request($url,$r){
+	static function fsockopen_request($url,$r){
 
 		$arrURL = parse_url($url);
 		$fsockopen_host = $arrURL['host'];
@@ -299,7 +299,7 @@ class gpRemoteGet{
 		return array('headers' => $processedHeaders['headers'], 'body' => $process['body'], 'response' => $processedHeaders['response'], 'cookies' => $processedHeaders['cookies']);
 	}
 
-	function stream_timeout($handle,$time){
+	static function stream_timeout($handle,$time){
 
 		if( !function_exists('stream_set_timeout') ){
 			return;
@@ -314,7 +314,7 @@ class gpRemoteGet{
 	 * Handle a redirect response
 	 *
 	 */
-	function Redirect($headers,$r,$arrURL){
+	static function Redirect($headers,$r,$arrURL){
 		if( $r['redirection']-- < 0 ){
 			trigger_error('Too many redirects');
 			return false;
@@ -344,7 +344,7 @@ class gpRemoteGet{
 	 * @param string $body Body content
 	 * @return string Chunked decoded body on success or raw body on failure.
 	 */
-	function chunkTransferDecode($body,&$headers){
+	static function chunkTransferDecode($body,&$headers){
 
 		if( empty($body) ){
 			return $body;
@@ -395,7 +395,7 @@ class gpRemoteGet{
 	 * @param resource $handle stream handle
 	 * @return array|false Array with unprocessed string headers.
 	 */
-	function StreamHeaders($handle){
+	static function StreamHeaders($handle){
 		if( !function_exists('stream_get_meta_data') ){
 			return false;
 		}
@@ -419,7 +419,7 @@ class gpRemoteGet{
 	 * @param string $strResponse The full response string
 	 * @return array Array with 'headers' and 'body' keys.
 	 */
-	function processResponse($strResponse) {
+	static function processResponse($strResponse) {
 		list($theHeaders, $theBody) = explode("\r\n\r\n", $strResponse, 2);
 		return array('headers' => $theHeaders, 'body' => $theBody);
 	}
@@ -438,7 +438,7 @@ class gpRemoteGet{
 	 * @return array Processed string headers. If duplicate headers are encountered,
 	 * 					Then a numbered array is returned as the value of that header-key.
 	 */
-	function processHeaders($headers) {
+	static function processHeaders($headers) {
 		// split headers, one per array element
 		if ( is_string($headers) ) {
 			// tolerate line terminator: CRLF = LF (RFC 2616 19.3)

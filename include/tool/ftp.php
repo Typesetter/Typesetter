@@ -4,7 +4,7 @@ defined('is_running') or die('Not an entry point...');
 class gpftp{
 
 	//try to get the ftp_server
-	function GetFTPServer(){
+	static function GetFTPServer(){
 
 		if( isset($_SERVER['HTTP_HOST']) ){
 			$server = $_SERVER['HTTP_HOST'];
@@ -24,7 +24,7 @@ class gpftp{
 		return '';
 	}
 
-	function GetFTPRoot($conn_id,$testDir){
+	static function GetFTPRoot($conn_id,$testDir){
 		$ftp_root = false;
 
 		//attempt to find the ftp_root
@@ -65,7 +65,7 @@ class gpftp{
 
 	//test the $file by adding a directory and seeing if it exists in relation to the $testDir
 	//uses output buffering to prevent warnings from showing when we try a directory that doesn't exist
-	function TestFTPDir($conn_id,$file,$testDir){
+	static function TestFTPDir($conn_id,$file,$testDir){
 		$success = false;
 
 		ftp_chdir( $conn_id, '/');

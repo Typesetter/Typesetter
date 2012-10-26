@@ -76,7 +76,7 @@ class update_class{
 	 * @static
 	 *
 	 */
-	function VersionsAndCheckTime(&$new_versions){
+	static function VersionsAndCheckTime(&$new_versions){
 		global $config, $dataDir;
 
 		includeFile('tool/RemoteGet.php');
@@ -129,7 +129,7 @@ class update_class{
 		return 'checklater';
 	}
 
-	function CheckArray(&$new_versions,$array,$update_data){
+	static function CheckArray(&$new_versions,$array,$update_data){
 
 		foreach($array as $addon => $addon_info){
 			if( !isset($addon_info['id']) ){
@@ -236,7 +236,7 @@ class update_class{
 		$this->data_timestamp = $timestamp;
 	}
 
-	function GetDataStatic(&$update_data,&$data_timestamp){
+	static function GetDataStatic(&$update_data,&$data_timestamp){
 		global $dataDir;
 
 		$data_timestamp = 0;
@@ -250,7 +250,7 @@ class update_class{
 		$update_data += array('packages'=>array());
 	}
 
-	function SaveDataStatic(&$update_data){
+	static function SaveDataStatic(&$update_data){
 		global $dataDir;
 		$file = $dataDir.'/data/_updates/updates.php';
 		gpFiles::SaveArray($file,'update_data',$update_data);

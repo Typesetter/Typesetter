@@ -217,7 +217,7 @@ class gp_resized{
 	 * Save the image index information if the checksum has changed
 	 *
 	 */
-	function SaveIndex(){
+	static function SaveIndex(){
 		global $dataDir;
 		if( self::$index_checksum === self::checksum(self::$index) ){
 			return true;
@@ -233,7 +233,7 @@ class gp_resized{
 	 * Generate a checksum for the $array
 	 *
 	 */
-	function checksum($array){
+	static function checksum($array){
 		return md5(serialize($array) );
 	}
 

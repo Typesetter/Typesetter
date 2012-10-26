@@ -5,11 +5,11 @@ defined('is_running') or die('Not an entry point...');
 
 class gpAjax{
 
-	function ReplaceContent($id,$content){
+	static function ReplaceContent($id,$content){
 		gpAjax::JavascriptCall('WBx.response','replace',$id,$content);
 	}
 
-	function JavascriptCall(){
+	static function JavascriptCall(){
 		$args = func_get_args();
 		if( !isset($args[0]) ){
 			return;
@@ -26,21 +26,21 @@ class gpAjax{
 		echo ');';
 	}
 
-	function quote(&$content){
+	static function quote(&$content){
 		static $search = array('\\','"',"\n","\r",'<script','</script>');
 		static $repl = array('\\\\','\"','\n','\r','<"+"script','<"+"/script>');
 
 		return '"'.str_replace($search,$repl,$content).'"';
 	}
 
-	function JsonEval($content){
+	static function JsonEval($content){
 		echo '{DO:"eval"';
 		echo ',CONTENT:';
 		echo gpAjax::quote($content);
 		echo '},';
 	}
 
-	function JsonDo($do,$selector,&$content){
+	static function JsonDo($do,$selector,&$content){
 		static $comma = '';
 		echo $comma;
 		echo '{DO:';
@@ -59,7 +59,7 @@ class gpAjax{
 	 * Sends JSON object to client
 	 *
 	 */
-	function Response(){
+	static function Response(){
 		global $page;
 
 		if( !is_array($page->ajaxReplace) ){
@@ -120,14 +120,14 @@ class gpAjax{
 	 * Check the callback parameter, die with an alert if the test fails
 	 *
 	 */
-	function Callback($callback){
+	static function Callback($callback){
 		if( !preg_match('#^[a-zA-Z0-9_]+$#',$callback) ){
 			die('alert("Invalid Callback");');
 		}
 		return $callback;
 	}
 
-	function InlineEdit($section_data){
+	static function InlineEdit($section_data){
 		global $dataDir,$dirPrefix;
 
 		$section_data += array('type'=>'','content'=>'');
@@ -209,7 +209,7 @@ class gpAjax{
 		echo '}else{alert("gp_init_inline_edit() is not defined");}';
 	}
 
-	function InlineEdit_Text($scripts){
+	static function InlineEdit_Text($scripts){
 		includeFile('tool/editing.php');
 
 		//autocomplete
@@ -230,12 +230,12 @@ class gpAjax{
 		return $scripts;
 	}
 
-	function InlineEdit_Include($scripts){
+	static function InlineEdit_Include($scripts){
 		$scripts[] = '/include/js/inline_edit/include_edit.js';
 		return $scripts;
 	}
 
-	function InlineEdit_Gallery($scripts){
+	static function InlineEdit_Gallery($scripts){
 		$scripts[] = '/include/js/jquery.auto_upload.js';
 		$scripts[] = '/include/js/inline_edit/image_common.js';
 		$scripts[] = '/include/js/inline_edit/gallery_edit_202.js';

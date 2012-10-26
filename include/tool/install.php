@@ -588,7 +588,7 @@ class Install_Tools{
 
 class FileSystem{
 
-	function GetExpectedPerms($file){
+	static function GetExpectedPerms($file){
 
 		if( !FileSystem::HasFunctions() ){
 			return '777';
@@ -618,7 +618,7 @@ class FileSystem{
 		return '777';
 	}
 
-	function GetExpectedPerms_file($file){
+	static function GetExpectedPerms_file($file){
 
 		if( !FileSystem::HasFunctions() ){
 			return '666';
@@ -648,7 +648,7 @@ class FileSystem{
 		return '666';
 	}
 
-	function HasFunctions(){
+	static function HasFunctions(){
 
 		return function_exists('posix_getpwuid')
 			&& function_exists('posix_geteuid')
@@ -662,7 +662,7 @@ class FileSystem{
 	/*
 	 * Compare Permissions
 	 */
-	function perm_compare($perm1, $perm2) {
+	static function perm_compare($perm1, $perm2) {
 
 		if( !FileSystem::ValidPermission($perm1) ){
 			return false;
@@ -688,7 +688,7 @@ class FileSystem{
 		return true;
 	}
 
-	function ValidPermission(&$permission){
+	static function ValidPermission(&$permission){
 		if( strlen($permission) == 3 ){
 			return true;
 		}
@@ -706,7 +706,7 @@ class FileSystem{
 	* @return string The name of the file owner
 	*/
 
-	function file_owner($file) {
+	static function file_owner($file) {
 		$info = FileSystem::file_info($file);
 		if (is_array($info)) {
 			if (isset($info['name'])) {
@@ -725,7 +725,7 @@ class FileSystem{
 	* @return array The Group members of the PHP Engine
 	*/
 
-	function process_members() {
+	static function process_members() {
 		$info = FileSystem::process_info();
 		if (isset($info['members'])) {
 			return $info['members'];
@@ -739,7 +739,7 @@ class FileSystem{
 	* @return int  The user ID of the file owner
 	*/
 
-	function file_uid($file) {
+	static function file_uid($file) {
 		$info = FileSystem::file_info($file);
 		if (is_array($info)) {
 			if (isset($info['uid'])) {
@@ -754,7 +754,7 @@ class FileSystem{
 	* @return int  The user Group of the file owner
 	*/
 
-	function file_group($file) {
+	static function file_group($file) {
 		$info = FileSystem::file_info($file);
 		if (is_array($info) && isset($info['gid'])) {
 			return $info['gid'];
@@ -767,7 +767,7 @@ class FileSystem{
 	* @return array The Info array of the file owner
 	*/
 
-	function file_info($file) {
+	static function file_info($file) {
 		return posix_getpwuid(@fileowner($file));
 	}
 
@@ -776,7 +776,7 @@ class FileSystem{
 	* @return array The Group Info of the PHP Engine
 	*/
 
-	function process_info() {
+	static function process_info() {
 		return posix_getgrgid(posix_getegid());
 	}
 

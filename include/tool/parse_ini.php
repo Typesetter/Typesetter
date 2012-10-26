@@ -12,7 +12,7 @@ defined("is_running") or die("Not an entry point...");
 
 class gp_ini{
 
-	function ParseFile($file,$variables=array()){
+	static function ParseFile($file,$variables=array()){
 
 		$fp = @fopen($file,'rb');
 		if( !$fp ){
@@ -36,7 +36,7 @@ class gp_ini{
 		return gp_ini::ParseString($contents);
 	}
 
-	function ParseString($string){
+	static function ParseString($string){
 
 		$aResult  = array();
 		$a = &$aResult;
@@ -69,7 +69,7 @@ class gp_ini{
 		return $aResult;
 	}
 
-	function GetAssignment($line,&$key,&$value){
+	static function GetAssignment($line,&$key,&$value){
 		$key = $value = false;
 
 		//get the key
@@ -117,7 +117,7 @@ class gp_ini{
 		return true;
 	}
 
-	function GetQuotedText($line,$closechar=']'){
+	static function GetQuotedText($line,$closechar=']'){
 
 		do{
 			$unique = uniqid('__');
@@ -139,7 +139,7 @@ class gp_ini{
 		return $line;
 	}
 
-	function Value($val){
+	static function Value($val){
 		if (preg_match('/^-?[0-9]$/', $val)) { return intval($val); }
 		else if (strtolower($val) === 'true') { return true; }
 		else if (strtolower($val) === 'false') { return false; }

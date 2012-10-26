@@ -7,7 +7,7 @@ class gp_recaptcha{
 	 * @static
 	 * @return bool True if plugin-hooks or recaptcha is enabled
 	 */
-	function isActive(){
+	static function isActive(){
 
 		if( gpPlugin::HasHook('AntiSpam_Form') && gpPlugin::HasHook('AntiSpam_Check') ){
 			return true;
@@ -20,7 +20,7 @@ class gp_recaptcha{
 	 * @static
 	 * @return bool True if recaptcha_public and recaptcha_private are set
 	 */
-	function hasRecaptcha(){
+	static function hasRecaptcha(){
 		global $config;
 
 		if( !empty($config['recaptcha_public']) && !empty($config['recaptcha_private']) ){
@@ -36,7 +36,7 @@ class gp_recaptcha{
 	 * @static
 	 * @return string
 	 */
-	function GetForm(){
+	static function GetForm(){
 		global $config,$dataDir;
 
 		$html = '';
@@ -75,7 +75,7 @@ class gp_recaptcha{
 	 * @static
 	 *
 	 */
-	function Form(){
+	static function Form(){
 		echo gp_recaptcha::GetForm();
 	}
 
@@ -84,7 +84,7 @@ class gp_recaptcha{
 	 * @static
 	 *
 	 */
-	function Check(){
+	static function Check(){
 		global $page,$langmessage,$config,$dataDir;
 
 		// if hooks return false, stop

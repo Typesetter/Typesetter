@@ -731,7 +731,7 @@ class display{
 	 * @return mixed
 	 *
 	 */
-	function OrConfig($id,$var){
+	static function OrConfig($id,$var){
 		global $config, $gp_titles;
 
 		if( $id ){
@@ -758,7 +758,7 @@ class display{
 	 *
 	 * @return bool
 	 */
-	function ParentConfig($checkId,$var,&$value){
+	static function ParentConfig($checkId,$var,&$value){
 		global $gp_titles,$gp_menu;
 
 		$parents = common::Parents($checkId,$gp_menu);

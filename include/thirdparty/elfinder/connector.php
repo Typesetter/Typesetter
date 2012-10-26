@@ -6,6 +6,14 @@ global $dataDir;
 includeFile('admin/admin_uploaded.php');
 
 
+/**
+ * Finder settings
+ *
+ */
+define( 'finder_chmod_file', gp_chmod_file );
+define( 'finder_chmod_dir', gp_chmod_dir );
+
+
 //include_once dirname(__FILE__).DIRECTORY_SEPARATOR.'elFinderConnector.class.php';
 //include_once dirname(__FILE__).DIRECTORY_SEPARATOR.'elFinder.class.php';
 //include_once dirname(__FILE__).DIRECTORY_SEPARATOR.'elFinderVolumeDriver.class.php';
@@ -61,9 +69,6 @@ $opts = array(
 	)
 );
 
-
-elFinder::defined( 'finder_chmod_file', gp_chmod_file );
-elFinder::defined( 'finder_chmod_dir', gp_chmod_dir );
 
 
 // run elFinder

@@ -346,7 +346,7 @@ class MultiLang_Admin extends MultiLang_Common{
 			return;
 		}
 
-		$lang_a = array_search($_POST['ml_lang'],$ml_languages);
+		$lang_a = $this->WhichLanguage($_POST['ml_lang']);
 		if( !$lang_a ){
 			message($langmessage['OOPS'].' (Invalid Language)');
 			return;
@@ -387,7 +387,7 @@ class MultiLang_Admin extends MultiLang_Common{
 				return;
 			}
 
-			$lang_b = array_search($_POST['ml_lang_b'],$ml_languages);
+			$lang_b = $this->WhichLanguage($_POST['ml_lang_b']);
 			if( !$lang_b ){
 				message($langmessage['OOPS'].' (Invalid Language)');
 				return;
@@ -434,12 +434,22 @@ class MultiLang_Admin extends MultiLang_Common{
 			return $gp_index[$cleaned_title];
 		}
 		foreach($gp_titles as $index => $info){
-			if( isset($info['label']) && $info['label'] = $title ){
+			if( isset($info['label']) && $info['label'] == $title ){
 				return $index;
 			}
 		}
 
 		return $false;
+	}
+
+	function WhichLanguage($language){
+		global $ml_languages;
+
+		if( isset($ml_languages[$language]) ){
+			return $language;
+		}
+
+		return array_search($_POST['ml_lang'],$ml_languages);
 	}
 
 

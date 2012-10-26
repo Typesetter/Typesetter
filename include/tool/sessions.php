@@ -13,7 +13,7 @@ defined('gp_lock_time') or define('gp_lock_time',900); // = 15 minutes
 class gpsession{
 
 
-	function LogIn(){
+	static function LogIn(){
 		global $dataDir,$langmessage,$gp_internal_redir, $config;
 
 		// check nonce
@@ -105,7 +105,7 @@ class gpsession{
 	 * Return the username for the login request
 	 *
 	 */
-	function GetLoginUser($users){
+	static function GetLoginUser($users){
 
 		if( gp_require_encrypt && empty($_POST['user_sha']) ){
 			return false;
@@ -133,7 +133,7 @@ class gpsession{
 	 * check password, choose between plaintext, md5 encrypted or sha-1 encrypted
 	 * @param string $user_pass
 	 */
-	function CheckPassword( $user_pass ){
+	static function CheckPassword( $user_pass ){
 
 		// $user_pass is the already encrypted password (md5 or sha)
 		// the second level hash is always done with sha
@@ -165,7 +165,7 @@ class gpsession{
 	}
 
 
-	function IncorrectLogin($i){
+	static function IncorrectLogin($i){
 		global $langmessage, $gp_internal_redir;
 		message($langmessage['incorrect_login'].' ('.$i.')');
 		$url = common::GetUrl('Admin','cmd=forgotten');
@@ -176,7 +176,7 @@ class gpsession{
 
 
 	//get/set the value of $userinfo['file_name']
-	function SetSessionFileName($userinfo,$username){
+	static function SetSessionFileName($userinfo,$username){
 
 		if( !isset($userinfo['file_name']) ){
 
@@ -193,7 +193,7 @@ class gpsession{
 		return $userinfo;
 	}
 
-	function UpdateFileName($old_file_name){
+	static function UpdateFileName($old_file_name){
 		global $dataDir;
 
 		//get a new unique name
@@ -214,7 +214,7 @@ class gpsession{
 		return $old_file_name;
 	}
 
-	function LogOut(){
+	static function LogOut(){
 		global $langmessage;
 
 		if( !isset($_COOKIE[gp_session_cookie]) ){
@@ -226,7 +226,7 @@ class gpsession{
 		message($langmessage['LOGGED_OUT']);
 	}
 
-	function CleanSession($session_id){
+	static function CleanSession($session_id){
 		//remove the session_id from session_ids.php
 		$sessions = gpsession::GetSessionIds();
 		unset($sessions[$_COOKIE[gp_session_cookie]]);
@@ -238,7 +238,7 @@ class gpsession{
 	 * Attempt to use httponly if available
 	 *
 	 */
-	function cookie($name,$value,$expires = false){
+	static function cookie($name,$value,$expires = false){
 		global $config, $dirPrefix;
 
 		$cookiePath = '/';
@@ -267,7 +267,7 @@ class gpsession{
 	 * Update the number of login attempts and the time of the last attempt for a $username
 	 *
 	 */
-	function UpdateAttempts($users,$username,$reset = false){
+	static function UpdateAttempts($users,$username,$reset = false){
 		global $dataDir;
 
 		if( $reset ){
@@ -282,7 +282,7 @@ class gpsession{
 
 
 	//called when a user logs in
-	function create(&$user_info,$username){
+	static function create(&$user_info,$username){
 		global $dataDir, $langmessage;
 
 		//update the session files to .php files
@@ -337,7 +337,7 @@ class gpsession{
 	 * Return the contents of the session_ids.php data file
 	 * @return array array of all sessions
 	 */
-	function GetSessionIds(){
+	static function GetSessionIds(){
 		global $dataDir;
 		$sessions = array();
 		$sessions_file = $dataDir.'/data/_site/session_ids.php';
@@ -353,7 +353,7 @@ class gpsession{
 	 * @param $sessions array array of all sessions
 	 * @return bool
 	 */
-	function SaveSessionIds($sessions){
+	static function SaveSessionIds($sessions){
 		global $dataDir;
 
 		while( $current = current($sessions) ){
@@ -378,7 +378,7 @@ class gpsession{
 	 * Determine if $session_id represents a valid session and if so start the session
 	 *
 	 */
-	function start($session_id){
+	static function start($session_id){
 		global $langmessage, $dataDir,$GP_LANG_VALUES;
 
 		//get the session file
@@ -464,10 +464,6 @@ class gpsession{
 		//make sure forms have admin nonce
 		ob_start(array('gpsession','AdminBuffer'));
 
-		/*load js components
-		 * global $page not available yet.. gpOutput is
-		common::AddColorBox();
-		*/
 		$GP_LANG_VALUES += array('cancel'=>'ca','update'=>'up','caption'=>'cp');
 		common::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css');
 
@@ -481,6 +477,7 @@ class gpsession{
 	 */
 	static function AdminBuffer($buffer){
 		global $wbErrorBuffer, $gp_admin_html;
+
 
 		//check for html document
 		$html_doc = true;
@@ -517,6 +514,12 @@ class gpsession{
 			//check for fatal error
 			$fatal_errors = array(E_ERROR,E_PARSE);
 			$last_error = error_get_last();
+
+			//$backtrace = debug_backtrace();
+			//return showArray($backtrace);
+
+			//return showArray($last_error).showArray($fatal_errors);
+
 			if( is_array($last_error) && in_array($last_error['type'],$fatal_errors) ){
 				showError($last_error['type'], $last_error['message'],  $last_error['file'],  $last_error['line'], false);
 				$buffer .= '<p>An error occurred while generating this page.<p> '
@@ -543,7 +546,7 @@ class gpsession{
 	 * @param string $checksum
 	 * @return array The user's session data
 	 */
-	function SessionData($session_file,&$checksum){
+	static function SessionData($session_file,&$checksum){
 
 		$gpAdmin = array();
 		if( file_exists($session_file) ){
@@ -558,7 +561,7 @@ class gpsession{
 		return $gpAdmin + gpsession::gpui_defaults();
 	}
 
-	function gpui_defaults(){
+	static function gpui_defaults(){
 
 		return array(	'gpui_cmpct'=>1,
 						'gpui_tx'=>6,
@@ -580,7 +583,7 @@ class gpsession{
 	 * Prevent XSS attacks for logged in users by making sure the request contains a valid nonce
 	 *
 	 */
-	function CheckPosts($session_id){
+	static function CheckPosts($session_id){
 
 		if( count($_POST) == 0 ){
 			return;
@@ -604,7 +607,7 @@ class gpsession{
 	 * Unset all $_POST values
 	 *
 	 */
-	function StripPost($message){
+	static function StripPost($message){
 		global $langmessage, $post_quarantine;
 		message($langmessage['OOPS'].' ('.$message.')');
 		$post_quarantine = $_POST;
@@ -620,7 +623,7 @@ class gpsession{
 	 * @param string $checksum_read The original checksum of the $gpAdmin array
 	 *
 	 */
-	function close($file,$checksum_read){
+	static function close($file,$checksum_read){
 		global $gpAdmin;
 
 		gpsession::Cron();
@@ -646,7 +649,7 @@ class gpsession{
 	 * Once an hour only when admin is logged in
 	 *
 	 */
-	function Cron(){
+	static function Cron(){
 		global $dataDir;
 
 		$file_stats = $cron_info = array();
@@ -668,7 +671,7 @@ class gpsession{
 	 * Delete after 36 hours (129600 seconds)
 	 *
 	 */
-	function CleanTemp(){
+	static function CleanTemp(){
 		global $dataDir;
 		$temp_folder = $dataDir.'/data/_temp';
 		$files = gpFiles::ReadDir($temp_folder,false);
@@ -687,7 +690,7 @@ class gpsession{
 	 * Save user settings
 	 *
 	 */
-	function SaveSetting(){
+	static function SaveSetting(){
 
 		$cmd = common::GetCommand();
 		if( empty($cmd) ){
@@ -705,7 +708,7 @@ class gpsession{
 	 * Save UI values for the current user
 	 *
 	 */
-	function SaveGPUI(){
+	static function SaveGPUI(){
 		global $gpAdmin;
 
 		gpsession::SetGPUI();
@@ -724,7 +727,7 @@ class gpsession{
 	 * Set UI values from posted data for the current user
 	 *
 	 */
-	function SetGPUI(){
+	static function SetGPUI(){
 		global $gpAdmin;
 
 		$possible = array();
@@ -789,7 +792,7 @@ class gpsession{
 	 * Output the UI variables as a Javascript Object
 	 *
 	 */
-	function GPUIVars(){
+	static function GPUIVars(){
 		global $gpAdmin,$page,$config;
 
 
@@ -828,7 +831,7 @@ class gpsession{
 	 * Generate a checksum for the $array
 	 *
 	 */
-	function checksum($array){
+	static function checksum($array){
 		return md5(serialize($array) );
 	}
 
@@ -847,7 +850,7 @@ class gpsession{
 	 *
 	 * @return  string  a MD5 sum of various browser headers
 	 */
-	function auth_browseruid($legacy = false){
+	static function auth_browseruid($legacy = false){
 
 		$uid = '';
 		if( isset($_SERVER['HTTP_USER_AGENT']) ){
@@ -901,7 +904,7 @@ class gpsession{
 	 * @author Andreas Gohr <andi@splitbrain.org>
 	 *
 	 */
-	function clientIP($single=false){
+	static function clientIP($single=false){
 	    $ip = array();
 	    $ip[] = $_SERVER['REMOTE_ADDR'];
 	    if(!empty($_SERVER['HTTP_X_FORWARDED_FOR']))

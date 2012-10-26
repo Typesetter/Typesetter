@@ -71,7 +71,7 @@ class gpOutput{
 	 *
 	 */
 
-	function Prep(){
+	static function Prep(){
 		global $page;
 		if( !isset($page->rewrite_urls) ){
 			return;
@@ -87,14 +87,14 @@ class gpOutput{
 	 * Send only messages and the content buffer to the client
 	 * @static
 	 */
-	function Flush(){
+	static function Flush(){
 		global $page;
 		header('Content-Type: text/html; charset=utf-8');
 		echo GetMessages();
 		echo $page->contentBuffer;
 	}
 
-	function Content(){
+	static function Content(){
 		global $page;
 		header('Content-Type: text/html; charset=utf-8');
 		echo GetMessages();
@@ -105,7 +105,7 @@ class gpOutput{
 	 * Send only the messages and content as a simple html document
 	 * @static
 	 */
-	function BodyAsHTML(){
+	static function BodyAsHTML(){
 		global $page;
 
 		$page->head_script .= 'var gp_bodyashtml = true;';
@@ -131,7 +131,7 @@ class gpOutput{
 	 * Send all content according to the current layout
 	 * @static
 	 */
-	function Template(){
+	static function Template(){
 		global $page, $GP_ARRANGE, $GP_STYLES, $get_all_gadgets_called, $addon_current_id;
 		$get_all_gadgets_called = false;
 
@@ -152,7 +152,7 @@ class gpOutput{
 	 * Get the settings for the current theme if settings.php exists
 	 * @static
 	 */
-	function TemplateSettings(){
+	static function TemplateSettings(){
 		global $page, $GP_STYLES;
 		$settings_path = $page->theme_dir.'/settings.php';
 		if( file_exists($settings_path) ){
@@ -166,7 +166,7 @@ class gpOutput{
 	 * The header will be discarded if it's an ajax request or similar
 	 * @static
 	 */
-	function AddHeader($header, $replace = true, $code = false){
+	static function AddHeader($header, $replace = true, $code = false){
 		if( !empty($_REQUEST['gpreq']) ){
 			return false;
 		}
@@ -203,14 +203,14 @@ class gpOutput{
 	 * Fetch the output and return as a string
 	 *
 	 */
-	function Fetch($default,$arg=''){
+	static function Fetch($default,$arg=''){
 		ob_start();
 		gpOutput::Get($default,$arg);
 		return ob_get_clean();
 	}
 
 
-	function Get($default='',$arg=''){
+	static function Get($default='',$arg=''){
 		global $page,$gpLayouts,$gpOutConf;
 
 		$outSet = false;
@@ -240,7 +240,7 @@ class gpOutput{
 
 	}
 
-	function ForEachOutput($outKeys,$container_id){
+	static function ForEachOutput($outKeys,$container_id){
 
 		if( !is_array($outKeys) || (count($outKeys) == 0) ){
 
@@ -263,7 +263,7 @@ class gpOutput{
 	}
 
 	/* static */
-	function GetgpOutInfo($gpOutCmd){
+	static function GetgpOutInfo($gpOutCmd){
 		global $gpOutConf,$config;
 
 		$key = $gpOutCmd = trim($gpOutCmd,':');
@@ -292,7 +292,7 @@ class gpOutput{
 	}
 
 	/* static */
-	function GpOutLabel($key){
+	static function GpOutLabel($key){
 		global $langmessage;
 
 		$info = gpOutput::GetgpOutInfo($key);
@@ -305,7 +305,7 @@ class gpOutput{
 	}
 
 
-	function CallOutput($info,$container_id){
+	static function CallOutput($info,$container_id){
 		global $GP_ARRANGE,$page,$langmessage,$gpOutStarted,$GP_MENU_LINKS,$GP_MENU_CLASS,$gp_current_container;
 		$gp_current_container = $container_id;
 		$gpOutStarted = true;
@@ -405,7 +405,7 @@ class gpOutput{
 		$gp_current_container = false;
 	}
 
-	function ExecArea($info){
+	static function ExecArea($info){
 		global $GP_GADGET_CACHE;
 
 		//retreive from gadget cache if set
@@ -420,7 +420,7 @@ class gpOutput{
 		gpOutput::ExecInfo($info,$args);
 	}
 
-	function ExecInfo($info,$args=array()){
+	static function ExecInfo($info,$args=array()){
 		global $dataDir, $addonFolderName, $installed_addon, $config;
 
 		//addonDir is deprecated as of 2.0b3
@@ -501,7 +501,7 @@ class gpOutput{
 	}
 
 
-	function ShowEditLink($permission=false){
+	static function ShowEditLink($permission=false){
 		global $GP_NESTED_EDIT;
 
 		if( $permission ){
@@ -510,7 +510,7 @@ class gpOutput{
 		return !$GP_NESTED_EDIT && common::LoggedIn();
 	}
 
-	function EditAreaLink(&$index,$href,$label,$query='',$attr=''){
+	static function EditAreaLink(&$index,$href,$label,$query='',$attr=''){
 		static $count = 0;
 		$count++;
 		$index = $count; //since &$index is passed by reference
@@ -525,7 +525,7 @@ class gpOutput{
 	 * This function is not called from gpOutput::Get('GetAllGadgets') so that each individual gadget area can be used as a drag area
 	 *
 	 */
-	function GetAllGadgets(){
+	static function GetAllGadgets(){
 		global $config, $page, $gpLayouts, $get_all_gadgets_called;
 		$get_all_gadgets_called = true;
 
@@ -560,7 +560,7 @@ class gpOutput{
 	 * Save whether or not the template is using GetAllGadgets()
 	 *
 	 */
-	function AllGadgetSetting(){
+	static function AllGadgetSetting(){
 		global $get_all_gadgets_called, $page, $gpLayouts;
 
 		if( !common::LoggedIn() ){
@@ -592,7 +592,7 @@ class gpOutput{
 	 * This method should be called using gpOutput::Fetch('Gadget',$gadget_name)
 	 *
 	 */
-	function GetGadget($id){
+	static function GetGadget($id){
 		global $config;
 
 		if( !isset($config['gadgets'][$id]) ){
@@ -611,7 +611,7 @@ class gpOutput{
 	 * Prepare the gadget content before getting template.php so that gadget functions can add css and js to the head
 	 * @return null
 	 */
-	function PrepGadgetContent(){
+	static function PrepGadgetContent(){
 		global $page, $GP_GADGET_CACHE;
 
 		$gadget_info = gpOutput::WhichGadgets($page->gpLayout);
@@ -629,7 +629,7 @@ class gpOutput{
 	 * Return information about the gadgets being used in the current layout
 	 * @return array
 	 */
-	function WhichGadgets($layout){
+	static function WhichGadgets($layout){
 		global $config,$gpLayouts;
 
 		$gadget_info = $temp_info = array();
@@ -689,7 +689,7 @@ class gpOutput{
 	 * 		$source_menu (string)	Which menu to use
 	 *
 	 */
-	function CustomMenu($arg,$title=false){
+	static function CustomMenu($arg,$title=false){
 		global $page, $gp_index;
 
 		//from output functions
@@ -758,7 +758,7 @@ class gpOutput{
 	 * @param string $id String identifying the requested menu
 	 * @return array menu data
 	 */
-	function GetMenuArray($id){
+	static function GetMenuArray($id){
 		global $dataDir, $gp_menu, $config;
 
 		$menu_file = $dataDir.'/data/_menus/'.$id.'.php';
@@ -783,7 +783,7 @@ class gpOutput{
 	 * .. htmlspecialchars label for external links
 	 * @since 3.0b1
 	 */
-	function FixMenu($menu){
+	static function FixMenu($menu){
 
 		//fix external links, prior to 3.0, escaping was done when the menu was output
 		foreach($menu as $key => $value){
@@ -810,7 +810,7 @@ class gpOutput{
 	}
 
 
-	function MenuReduce_ExpandAll($menu,$expand_level,$curr_title_key,$top_level){
+	static function MenuReduce_ExpandAll($menu,$expand_level,$curr_title_key,$top_level){
 
 		$result_menu = array();
 		$submenu = array();
@@ -842,7 +842,7 @@ class gpOutput{
 
 
 	//Reduce titles deeper than $expand_level || $current_level
-	function MenuReduce_Expand($menu,$expand_level,$curr_title_key,$top_level){
+	static function MenuReduce_Expand($menu,$expand_level,$curr_title_key,$top_level){
 		$result_menu = array();
 		$submenu = array();
 
@@ -947,7 +947,7 @@ class gpOutput{
 	}
 
 	// reduce the menu to the group
-	function MenuReduce_Group($menu,$curr_title_key,$expand_level,$curr_level){
+	static function MenuReduce_Group($menu,$curr_title_key,$expand_level,$curr_level){
 		$result = array();
 		$group_temp = array();
 		$found_title = false;
@@ -979,7 +979,7 @@ class gpOutput{
 	}
 
 	// titles above selected title, deeper than $expand_level, and within the group
-	function MenuReduce_Sub(&$good_titles,$menu,$curr_title_key,$expand_level,$curr_level){
+	static function MenuReduce_Sub(&$good_titles,$menu,$curr_title_key,$expand_level,$curr_level){
 		$found_title = false;
 		$test_level = $curr_level;
 		foreach($menu as $title_key => $level){
@@ -1005,7 +1005,7 @@ class gpOutput{
 	}
 
 	//Reduce the menu to titles deeper than ($show_level-1)
-	function MenuReduce_Top($menu,$show_level,$curr_title_key){
+	static function MenuReduce_Top($menu,$show_level,$curr_title_key){
 		$result_menu = array();
 		$foundGroup = false;
 
@@ -1052,7 +1052,7 @@ class gpOutput{
 
 
 	//Reduce the menu to titles above $bottom_level value
-	function MenuReduce_Bottom($menu,$bottom_level){
+	static function MenuReduce_Bottom($menu,$bottom_level){
 		$result_menu = array();
 
 		foreach($menu as $title => $level){
@@ -1064,7 +1064,7 @@ class gpOutput{
 	}
 
 
-	function GetExtra($name='Side_Menu',$info=array()){
+	static function GetExtra($name='Side_Menu',$info=array()){
 		global $dataDir,$langmessage;
 
 
@@ -1100,7 +1100,7 @@ class gpOutput{
 
 	}
 
-	function GetImage($src,$attributes = array()){
+	static function GetImage($src,$attributes = array()){
 		global $page,$dataDir,$langmessage,$gpLayouts;
 
 		//$width,$height,$attributes = ''
@@ -1166,12 +1166,12 @@ class gpOutput{
 	}
 
 
-	function GetFullMenu($arg=''){
+	static function GetFullMenu($arg=''){
 		$source_menu_array = gpOutput::GetMenuArray($arg);
 		gpOutput::OutputMenu($source_menu_array,0,$source_menu_array);
 	}
 
-	function GetMenu($arg=''){
+	static function GetMenu($arg=''){
 		$source_menu_array = gpOutput::GetMenuArray($arg);
 
 		$sendMenu = array();
@@ -1185,14 +1185,14 @@ class gpOutput{
 		gpOutput::OutputMenu($sendMenu,0,$source_menu_array);
 	}
 
-	function GetSecondSubMenu($arg,$info){
+	static function GetSecondSubMenu($arg,$info){
 		gpOutput::GetSubMenu($arg,$info,1);
 	}
-	function GetThirdSubMenu($arg,$info){
+	static function GetThirdSubMenu($arg,$info){
 		gpOutput::GetSubMenu($arg,$info,2);
 	}
 
-	function GetSubMenu($arg='',$info=false,$search_level=false){
+	static function GetSubMenu($arg='',$info=false,$search_level=false){
 		global $page;
 		$source_menu_array = gpOutput::GetMenuArray($arg);
 
@@ -1240,7 +1240,7 @@ class gpOutput{
 		}
 	}
 
-	function GetTopTwoMenu($arg=''){
+	static function GetTopTwoMenu($arg=''){
 		$source_menu_array = gpOutput::GetMenuArray($arg);
 
 		$sendMenu = array();
@@ -1253,7 +1253,7 @@ class gpOutput{
 		gpOutput::OutputMenu($sendMenu,0,$source_menu_array);
 	}
 
-	function GetBottomTwoMenu($arg=''){
+	static function GetBottomTwoMenu($arg=''){
 		$source_menu_array = gpOutput::GetMenuArray($arg);
 
 		$sendMenu = array();
@@ -1267,7 +1267,7 @@ class gpOutput{
 		gpOutput::OutputMenu($sendMenu,1,$source_menu_array);
 	}
 
-	function GetExpandLastMenu($arg=''){
+	static function GetExpandLastMenu($arg=''){
 		global $page;
 		$source_menu_array = gpOutput::GetMenuArray($arg);
 
@@ -1301,7 +1301,7 @@ class gpOutput{
 	}
 
 
-	function GetExpandMenu($arg=''){
+	static function GetExpandMenu($arg=''){
 		global $page;
 		$source_menu_array = gpOutput::GetMenuArray($arg);
 
@@ -1338,7 +1338,7 @@ class gpOutput{
 	 * Output a navigation menu
 	 * @static
 	 */
-	function OutputMenu($menu,$start_level,$source_menu=false){
+	static function OutputMenu($menu,$start_level,$source_menu=false){
 		global $page,$GP_MENU_LINKS,$GP_MENU_CLASS,$gp_menu,$gp_titles;
 
 		if( $source_menu === false ){
@@ -1522,7 +1522,7 @@ class gpOutput{
 		return;
 	}
 
-	function ResetMenuGlobals(){
+	static function ResetMenuGlobals(){
 		global $GP_MENU_LINKS,$GP_MENU_CLASS;
 		unset($GP_MENU_LINKS);
 		unset($GP_MENU_CLASS);
@@ -1538,7 +1538,7 @@ class gpOutput{
 	 */
 
 	/* draggable html and editable text */
-	function Area($name,$html){
+	static function Area($name,$html){
 		global $gpOutConf,$gpOutStarted;
 		if( $gpOutStarted ){
 			trigger_error('gpOutput::Area() must be called before all other output functions');
@@ -1550,12 +1550,12 @@ class gpOutput{
 		$gpOutConf[$name]['html'] = $html;
 	}
 
-	function GetArea($name,$text){
+	static function GetArea($name,$text){
 		$name = '[text]'.$name;
 		gpOutput::Get($name,$text);
 	}
 
-	function GetAreaOut($text,$info){
+	static function GetAreaOut($text,$info){
 		global $config,$langmessage,$page;
 
 		$html =& $info['html'];
@@ -1588,7 +1588,7 @@ class gpOutput{
 
 	/* similar to ReturnText() but links to script for editing all addon texts */
 	// the $html parameter should primarily be used when the text is to be placed inside of a link or other element that cannot have a link and/or span as a child node
-	function GetAddonText($key,$html='%s'){
+	static function GetAddonText($key,$html='%s'){
 		global $addonFolderName;
 
 		if( !$addonFolderName ){
@@ -1600,16 +1600,16 @@ class gpOutput{
 	}
 
 	/* deprecated, use ReturnText() */
-	function GetText($key,$html='%s'){
+	static function GetText($key,$html='%s'){
 		echo gpOutput::ReturnText($key,$html);
 	}
 
-	function ReturnText($key,$html='%s'){
+	static function ReturnText($key,$html='%s'){
 		$query = 'cmd=edittext&key='.urlencode($key);
 		return gpOutput::ReturnTextWorker($key,$html,$query);
 	}
 
-	function ReturnTextWorker($key,$html,$query){
+	static function ReturnTextWorker($key,$html,$query){
 		global $langmessage;
 
 		$result = '';
@@ -1642,7 +1642,7 @@ class gpOutput{
 	 * Returns the user translated string if it exists or $key (the untranslated string) if a translation doesn't exist
 	 *
 	 */
-	function SelectText($key){
+	static function SelectText($key){
 		global $config,$langmessage;
 
 		$text = $key;
@@ -1660,12 +1660,12 @@ class gpOutput{
 	 * Generate and output the <head> portion of the html document
 	 *
 	 */
-	function GetHead(){
+	static function GetHead(){
 		gpPlugin::Action('GetHead');
 		gpOutput::PrepGadgetContent();
 		echo '<!-- get_head_placeholder '.gp_random.' -->';
 	}
-	function HeadContent(){
+	static function HeadContent(){
 		global $config, $page, $gp_head_content, $wbMessageBuffer;
 		$gp_head_content = '';
 
@@ -1723,7 +1723,7 @@ class gpOutput{
 	 * Output the title, keywords, description and other meta for the current html document
 	 * @static
 	 */
-	function GetHead_TKD(){
+	static function GetHead_TKD(){
 		global $config, $page;
 
 		//start keywords;
@@ -1792,7 +1792,7 @@ class gpOutput{
 	 * Prepare and output any inline Javascript for the current page
 	 * @static
 	 */
-	function GetHead_InlineJS(){
+	static function GetHead_InlineJS(){
 		global $page, $linkPrefix, $GP_INLINE_VARS;
 
 		ob_start();
@@ -1846,7 +1846,7 @@ class gpOutput{
 	 * Add language values to the current page
 	 * @static
 	 */
-	function GetHead_Lang(){
+	static function GetHead_Lang(){
 		global $langmessage, $GP_LANG_VALUES;
 
 		if( !count($GP_LANG_VALUES) ){
@@ -1869,7 +1869,7 @@ class gpOutput{
 	 * Prepare and output the Javascript for the current page
 	 * @static
 	 */
-	function GetHead_JS($scripts){
+	static function GetHead_JS($scripts){
 		global $page, $config;
 
 		$placeholder = '<!-- jquery_placeholder '.gp_random.' -->';
@@ -1923,7 +1923,7 @@ class gpOutput{
 	 * Prepare and output the css for the current page
 	 * @static
 	 */
-	function GetHead_CSS($scripts){
+	static function GetHead_CSS($scripts){
 		global $page, $config;
 
 		//remote jquery ui
@@ -1976,7 +1976,7 @@ class gpOutput{
 	 * @param string $theme_stylesheet The current theme identifier
 	 *
 	 */
-	function CombineFiles($files,$type,$combine,$theme_stylesheet=false){
+	static function CombineFiles($files,$type,$combine,$theme_stylesheet=false){
 		global $page;
 
 		$files = array_unique($files);
@@ -2104,7 +2104,7 @@ class gpOutput{
 	 * See http://www.w3schools.com/tags/tag_doctype.asp for description of different doctypes
 	 *
 	 */
-	function DoctypeMeta($doc_start){
+	static function DoctypeMeta($doc_start){
 		global $gp_head_content;
 
 		$doc_start = strtolower($doc_start);
@@ -2153,7 +2153,7 @@ class gpOutput{
 	 * Generate the javascript used to identify true wysiwyg areas
 	 * @static
 	 */
-	function GP_STYLES(){
+	static function GP_STYLES(){
 		global $GP_STYLES;
 
 		//http://www.w3.org/TR/html4/types.html#type-name
@@ -2216,7 +2216,7 @@ class gpOutput{
 	 * Detection is rudimentary and shouldn't be relied on
 	 * @return bool
 	 */
-	function DetectBot(){
+	static function DetectBot(){
 		$user_agent =& $_SERVER['HTTP_USER_AGENT'];
 		return preg_match('#bot|yahoo\! slurp|ask jeeves|ia_archiver|spider#i',$user_agent);
 	}
@@ -2224,7 +2224,7 @@ class gpOutput{
 	/**
 	 * Return true if the current page is the home page
 	 */
-	function is_front_page(){
+	static function is_front_page(){
 		global $gp_menu, $page;
 		reset($gp_menu);
 		return $page->gp_index == key($gp_menu);
@@ -2235,7 +2235,7 @@ class gpOutput{
 	 * Outputs the sitemap link, admin login/logout link, powered by link, admin html and messages
 	 * @static
 	 */
-	function GetAdminLink(){
+	static function GetAdminLink(){
 		global $config, $langmessage, $page;
 
 		if( !isset($config['showsitemap']) || $config['showsitemap'] ){
@@ -2270,7 +2270,7 @@ class gpOutput{
 	 * @static
 	 * @since 2.4RC1
 	 */
-	function EndPhrase($string){
+	static function EndPhrase($string){
 		$string = trim($string);
 		if( empty($string) ){
 			return $string;

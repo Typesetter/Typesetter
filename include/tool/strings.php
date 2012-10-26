@@ -8,7 +8,7 @@ class gp_strings{
 	 * Return an array of character entities and their corresponding iso (numeric) code
 	 * @since 2.4b5
 	 */
-	function iso_entities(){
+	static function iso_entities(){
 		return array( '&#32;'=>'', '&#34;'=>'"', '&#38;'=>'&', '&#60;'=>'<', '&#62;'=>'>', '&#124;'=>'|', '&#131;'=>'ƒ', '&#132;'=>'„', '&#133;'=>'…', '&#134;'=>'†', '&#135;'=>'‡', '&#136;'=>'ˆ', '&#137;'=>'‰', '&#138;'=>'Š', '&#139;'=>'‹', '&#140;'=>'Œ', '&#144;'=>'', '&#145;'=>'‘', '&#146;'=>'’', '&#147;'=>'“', '&#148;'=>'”', '&#149;'=>'•', '&#150;'=>'–', '&#151;'=>'—', '&#152;'=>'˜', '&#153;'=>'™', '&#154;'=>'š', '&#155;'=>'›', '&#156;'=>'œ', '&#159;'=>'Ÿ', '&#160;'=>''
 		, '&#161;'=>'¡', '&#162;'=>'¢', '&#163;'=>'£', '&#164;'=>'¤', '&#165;'=>'¥', '&#166;'=>'¦', '&#167;'=>'§', '&#168;'=>'¨', '&#169;'=>'©', '&#170;'=>'ª', '&#171;'=>'«', '&#172;'=>'¬', '&#173;'=>'­', '&#174;'=>'®', '&#175;'=>'¯', '&#176;'=>'°', '&#177;'=>'±', '&#178;'=>'²', '&#179;'=>'³', '&#180;'=>'´', '&#181;'=>'µ', '&#182;'=>'¶', '&#183;'=>'·', '&#184;'=>'¸', '&#185;'=>'¹', '&#186;'=>'º', '&#187;'=>'»', '&#188;'=>'¼', '&#189;'=>'½', '&#190;'=>'¾', '&#191;'=>'¿', '&#192;'=>'À'
 		, '&#193;'=>'Á', '&#194;'=>'Â', '&#195;'=>'Ã', '&#196;'=>'Ä', '&#197;'=>'Å', '&#198;'=>'Æ', '&#199;'=>'Ç', '&#200;'=>'È', '&#201;'=>'É', '&#202;'=>'Ê', '&#203;'=>'Ë', '&#204;'=>'Ì', '&#205;'=>'Í', '&#206;'=>'Î', '&#207;'=>'Ï', '&#208;'=>'Ð', '&#209;'=>'Ñ', '&#210;'=>'Ò', '&#211;'=>'Ó', '&#212;'=>'Ô', '&#213;'=>'Õ', '&#214;'=>'Ö', '&#215;'=>'×', '&#216;'=>'Ø', '&#217;'=>'Ù', '&#218;'=>'Ú', '&#219;'=>'Û', '&#220;'=>'Ü', '&#221;'=>'Ý', '&#222;'=>'Þ', '&#223;'=>'ß'
@@ -25,7 +25,7 @@ class gp_strings{
 	 * Return an array of character entities and their corresponding html (non-numeric) code
 	 * @since 2.4b5
 	 */
-	function html_entities(){
+	static function html_entities(){
 		return array( '&quot;'=>'"', '&amp;'=>'&', '&frasl;'=>'⁄', '&lt;'=>'<', '&gt;'=>'>', '&nbsp;'=>'', '&iexcl;'=>'¡', '&cent;'=>'¢', '&pound;'=>'£', '&curren;'=>'¤', '&yen;'=>'¥', '&brvbar;'=>'¦', '&brkbar;'=>'¦', '&sect;'=>'§', '&uml;'=>'¨', '&die;'=>'¨', '&copy;'=>'©', '&ordf;'=>'ª', '&laquo;'=>'«', '&not;'=>'¬', '&shy;'=>'­', '&reg;'=>'®', '&macr;'=>'¯', '&hibar;'=>'¯', '&deg;'=>'°', '&plusmn;'=>'±', '&sup2;'=>'²', '&sup3;'=>'³', '&acute;'=>'´', '&micro;'=>'µ', '&para;'=>'¶'
 		, '&middot;'=>'·', '&cedil;'=>'¸', '&sup1;'=>'¹', '&ordm;'=>'º', '&raquo;'=>'»', '&frac14;'=>'¼', '&frac12;'=>'½', '&frac34;'=>'¾', '&iquest;'=>'¿', '&Agrave;'=>'À', '&Aacute;'=>'Á', '&Acirc;'=>'Â', '&Atilde;'=>'Ã', '&Auml;'=>'Ä', '&Aring;'=>'Å', '&AElig;'=>'Æ', '&Ccedil;'=>'Ç', '&Egrave;'=>'È', '&Eacute;'=>'É', '&Ecirc;'=>'Ê', '&Euml;'=>'Ë', '&Igrave;'=>'Ì', '&Iacute;'=>'Í', '&Icirc;'=>'Î', '&Iuml;'=>'Ï', '&ETH;'=>'Ð', '&Ntilde;'=>'Ñ', '&Ograve;'=>'Ò', '&Oacute;'=>'Ó'
 		, '&Ocirc;'=>'Ô', '&Otilde;'=>'Õ', '&Ouml;'=>'Ö', '&times;'=>'×', '&Oslash;'=>'Ø', '&Ugrave;'=>'Ù', '&Uacute;'=>'Ú', '&Ucirc;'=>'Û', '&Uuml;'=>'Ü', '&Yacute;'=>'Ý', '&THORN;'=>'Þ', '&szlig;'=>'ß', '&agrave;'=>'à', '&aacute;'=>'á', '&acirc;'=>'â', '&atilde;'=>'ã', '&auml;'=>'ä', '&aring;'=>'å', '&aelig;'=>'æ', '&ccedil;'=>'ç', '&egrave;'=>'è', '&eacute;'=>'é', '&ecirc;'=>'ê', '&euml;'=>'ë', '&igrave;'=>'ì', '&iacute;'=>'í', '&icirc;'=>'î', '&iuml;'=>'ï', '&eth;'=>'ð'
@@ -41,7 +41,7 @@ class gp_strings{
 	 * Return an array of character entities and all of their corresponding html codes
 	 * @since 2.4b5
 	 */
-	function all_entities(){
+	static function all_entities(){
 		return gp_strings::iso_entities() + gp_strings::html_entities();
 	}
 
@@ -49,7 +49,7 @@ class gp_strings{
 	 * Convert all entities to their character equivalent
 	 * @since 2.5b1
 	 */
-	function entity_unescape($string){
+	static function entity_unescape($string){
 		//change &#0039; to &#39;
 		$string = preg_replace('/&#[0]+([1-9]+);/','&#$1;',$string);
 
@@ -61,7 +61,7 @@ class gp_strings{
 	 * Convert characters to their entity equivalent
 	 * @since 2.5b1
 	 */
-	function entity_escape($string){
+	static function entity_escape($string){
 		$all_entities = gp_strings::all_entities();
 		return str_replace(array_keys($all_entities),array_values($all_entities),$string);
 	}

@@ -160,9 +160,10 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 
 
 	// since we're supporting php 4.3+ there are technically a lot on non-static functions being called statically
-	if( $errno === E_STRICT ){
-		return false;
-	}
+	//if( $errno === E_STRICT ){
+	//	return false;
+	//}
+
 
 	// for functions prepended with @ symbol to suppress errors
 	$error_reporting = error_reporting();
@@ -853,7 +854,7 @@ class display{
 
 class common{
 
-	function RunOut(){
+	static function RunOut(){
 		global $page;
 
 		$page->RunScript();
@@ -915,7 +916,7 @@ class common{
 	 * @since 3.5b2
 	 * @return string
 	 */
-	function RequestType(){
+	static function RequestType(){
 		if( isset($_REQUEST['gpreq']) ){
 			switch($_REQUEST['gpreq']){
 				case 'body':
@@ -935,7 +936,7 @@ class common{
 	 * @param string $etag The calculated etag for the current page
 	 *
 	 */
-	function Send304($etag){
+	static function Send304($etag){
 		global $config;
 
 		if( !$config['etag_headers'] ) return;
@@ -978,7 +979,7 @@ class common{
 	 * @param string $text HTTP status
 	 * @return unknown
 	 */
-	function status_header( $header, $text ) {
+	static function status_header( $header, $text ) {
 		$protocol = $_SERVER['SERVER_PROTOCOL'];
 		if( 'HTTP/1.1' != $protocol && 'HTTP/1.0' != $protocol )
 			$protocol = 'HTTP/1.0';
@@ -986,11 +987,11 @@ class common{
 		return @header( $status_header, true, $header );
 	}
 
-	function GenEtag($modified,$content_length){
+	static function GenEtag($modified,$content_length){
 		return base_convert( $modified, 10, 36).'.'.base_convert( $content_length, 10, 36);
 	}
 
-	function CheckTheme(){
+	static function CheckTheme(){
 		global $page;
 		if( $page->theme_name === false ){
 			$page->SetTheme();
@@ -1000,7 +1001,7 @@ class common{
 	/**
 	 * Return an array of information about the layout
 	 */
-	function LayoutInfo( $layout, $check_existence = true ){
+	static function LayoutInfo( $layout, $check_existence = true ){
 		global $gpLayouts,$dataDir;
 
 		if( !isset($gpLayouts[$layout]) ){
@@ -1035,7 +1036,7 @@ class common{
 	 *
 	 */
 
-	function EntryPoint($level=0,$expecting='index.php',$sessions=true){
+	static function EntryPoint($level=0,$expecting='index.php',$sessions=true){
 
 		clearstatcache();
 
@@ -1070,7 +1071,7 @@ class common{
 	 * Determine if gpEasy has been installed
 	 *
 	 */
-	function gpInstalled(){
+	static function gpInstalled(){
 		global $dataDir;
 
 		if( @file_exists($dataDir.'/data/_site/config.php') ){
@@ -1086,7 +1087,7 @@ class common{
 		die('<p>Sorry, this site is temporarily unavailable.</p>');
 	}
 
-	function SetGlobalPaths($DirectoriesAway,$expecting){
+	static function SetGlobalPaths($DirectoriesAway,$expecting){
 		global $dataDir, $dirPrefix, $rootDir, $dirPrefixEncoded;
 
 		$rootDir = common::WinPath(dirname(dirname(__FILE__)));
@@ -1122,7 +1123,7 @@ class common{
 	 * Convert backslashes to forward slashes
 	 *
 	 */
-	function WinPath($path){
+	static function WinPath($path){
 		return str_replace('\\','/',$path);
 	}
 
@@ -1130,7 +1131,7 @@ class common{
 	 * Determine if this installation is supressing index.php in urls or not
 	 *
 	 */
-	function SetLinkPrefix(){
+	static function SetLinkPrefix(){
 		global $linkPrefix, $dirPrefix, $config;
 
 		$linkPrefix = $dirPrefix;
@@ -1165,7 +1166,7 @@ class common{
 	 * @return mixed Returns false if $expected is not found, otherwise it returns the environment value.
 	 *
 	 */
-	function GetEnv($var,$expecting=false){
+	static function GetEnv($var,$expecting=false){
 		$value = false;
 		if( isset($_SERVER[$var]) ){
 			$value = $_SERVER[$var];
@@ -1182,7 +1183,7 @@ class common{
 	 * Get the ini value and return a boolean casted value when appropriate: On, Off, 1, 0, True, False, Yes, No
 	 *
 	 */
-	function IniGet($key){
+	static function IniGet($key){
 		$value = ini_get($key);
 		if( empty($value) ){
 			return false;
@@ -1207,7 +1208,7 @@ class common{
 	}
 
 
-	function ReduceGlobalPath($path,$DirectoriesAway){
+	static function ReduceGlobalPath($path,$DirectoriesAway){
 		$path = dirname($path);
 
 		$i = 0;
@@ -1221,7 +1222,7 @@ class common{
 
 
 	//use dirPrefix to find requested level
-	function RequestLevel(){
+	static function RequestLevel(){
 		global $dirPrefixRel,$dirPrefix;
 
 		$path = $_SERVER['REQUEST_URI'];
@@ -1260,7 +1261,7 @@ class common{
 	 * @param string $str The string value of an html attribute
 	 * @return string The escaped string
 	 */
-	function Ampersands($str){
+	static function Ampersands($str){
 		return preg_replace('/&(?![#a-zA-Z0-9]{2,9};)/S','&amp;',$str);
 	}
 
@@ -1270,7 +1271,7 @@ class common{
 	 * Does not convert existing ampersands "&"
 	 *
 	 */
-	function LabelSpecialChars($string){
+	static function LabelSpecialChars($string){
 		return str_replace( array('<','>','"',"'"), array('&lt;','&gt;','&quot;','&#39;') , $string);
 
 		/*return str_replace(
@@ -1283,7 +1284,7 @@ class common{
 
 
 	/* deprecated: Use common::Link() instead */
-	function Link_Admin($href,$label,$query='',$attr=''){
+	static function Link_Admin($href,$label,$query='',$attr=''){
 		return common::Link($href,$label,$query,$attr);
 	}
 
@@ -1298,7 +1299,7 @@ class common{
 	 *
 	 * @return string The formatted html hyperlink
 	 */
-	function Link($href='',$label,$query='',$attr='',$nonce_action=false){
+	static function Link($href='',$label,$query='',$attr='',$nonce_action=false){
 
 		if( strpos($attr,'title="') === false){
 			$attr .= ' title="'.common::Ampersands(strip_tags($label)).'" ';
@@ -1313,7 +1314,7 @@ class common{
 	 * @param string $title The title of the page
 	 * @return string The formatted html hyperlink
 	 */
-	function Link_Page($title=''){
+	static function Link_Page($title=''){
 		global $config, $gp_index;
 
 		if( empty($title) && !empty($config['homepath']) ){
@@ -1326,7 +1327,7 @@ class common{
 	}
 
 
-	function GetUrl($href='',$query='',$ampersands=true,$nonce_action=false){
+	static function GetUrl($href='',$query='',$ampersands=true,$nonce_action=false){
 		global $linkPrefix, $config, $gp_index;
 
 		$href = common::SpecialHref($href);
@@ -1361,7 +1362,7 @@ class common{
 	}
 
 	//translate special pages from key to title
-	function SpecialHref($href){
+	static function SpecialHref($href){
 		global $gp_index;
 
 		$href2 = '';
@@ -1388,13 +1389,13 @@ class common{
 	 * In case you'd like to learn about percent encoding: http://www.blooberry.com/indexdot/html/topics/urlencoding.htm
 	 *
 	 */
-	function HrefEncode($href){
+	static function HrefEncode($href){
 		$href = rawurlencode($href);
 		return str_replace( array('%26','&amp%3B','%2F','%5C'),array('&','&amp;','/','\\'),$href);
 	}
 
 
-	function AbsoluteLink($href,$label,$query='',$attr=''){
+	static function AbsoluteLink($href,$label,$query='',$attr=''){
 
 		if( strpos($attr,'title="') === false){
 			$attr .= ' title="'.htmlspecialchars(strip_tags($label)).'" ';
@@ -1403,7 +1404,7 @@ class common{
 		return '<a href="'.common::AbsoluteUrl($href,$query).'" '.$attr.'>'.common::Ampersands($label).'</a>';
 	}
 
-	function AbsoluteUrl($href='',$query='',$with_schema=true,$ampersands=true){
+	static function AbsoluteUrl($href='',$query='',$with_schema=true,$ampersands=true){
 
 		if( isset($_SERVER['HTTP_HOST']) ){
 			$server = $_SERVER['HTTP_HOST'];
@@ -1424,7 +1425,7 @@ class common{
 	 * The query string component of a path should not be included but will be protected from being encoded
 	 *
 	 */
-	function GetDir($dir='',$ampersands = false){
+	static function GetDir($dir='',$ampersands = false){
 		global $dirPrefix;
 
 		$query = '';
@@ -1446,7 +1447,7 @@ class common{
 	 * @param string $index
 	 * @param bool $amp Whether or not to escape ampersand characters
 	 */
-	function GetLabelIndex($index=false,$amp=false){
+	static function GetLabelIndex($index=false,$amp=false){
 		global $gp_titles,$langmessage;
 
 		$info = array();
@@ -1475,7 +1476,7 @@ class common{
 	 * @param string $title
 	 * @param bool $amp Whether or not to escape ampersand characters
 	 */
-	function GetLabel($title=false){
+	static function GetLabel($title=false){
 		global $gp_titles, $gp_index, $langmessage;
 
 		$return = false;
@@ -1504,7 +1505,7 @@ class common{
 	 * @param string $title
 	 *
 	 */
-	function GetBrowserTitle($title){
+	static function GetBrowserTitle($title){
 		global $gp_titles, $gp_index;
 
 		if( !isset($gp_index[$title]) ){
@@ -1531,7 +1532,7 @@ class common{
 	 * @since 2.0b1
 	 * @param string $names A comma separated list of ui components to include. Avail since gpEasy 3.5.
 	 */
-	function LoadComponents( $names = ''){
+	static function LoadComponents( $names = ''){
 		gpOutput::$components .= ','.$names.',';
 		gpOutput::$components = str_replace(',,',',',gpOutput::$components);
 	}
@@ -1541,7 +1542,7 @@ class common{
 	 * Add gallery js and css to the <head> section of a page
 	 *
 	 */
-	function ShowingGallery(){
+	static function ShowingGallery(){
 		global $page;
 		static $showing = false;
 		if( $showing ) return;
@@ -1560,7 +1561,7 @@ class common{
 	 * Add js and css elements to the <head> section of a page
 	 *
 	 */
-	function AddColorBox(){
+	static function AddColorBox(){
 		global $page, $config, $langmessage;
 		static $init = false;
 
@@ -1579,7 +1580,7 @@ class common{
 	 * Set the $config array from /data/_site/config.php
 	 *
 	 */
-	function GetConfig(){
+	static function GetConfig(){
 		global $config, $gp_index, $dataDir, $gp_menu;
 
 		require($dataDir.'/data/_site/config.php');
@@ -1645,7 +1646,7 @@ class common{
 		}
 	}
 
-	function stop(){
+	static function stop(){
 		die('<p>Notice: The site configuration did not load properly.</p>'
 			.'<p>If you are the site administrator, you can troubleshoot the problem turning debugging "on" or bypass it by enabling safe mode.</p>'
 			.'<p>More information is available in the <a href="http://docs.gpeasy.com/Main/Troubleshooting">gpEasy documentation</a>.</p>'
@@ -1654,7 +1655,7 @@ class common{
 	}
 
 
-	function SessionCookie($uniq){
+	static function SessionCookie($uniq){
 		return 'gpEasy_'.substr(sha1($uniq),12,12);
 	}
 
@@ -1663,7 +1664,7 @@ class common{
 	 * Set global variables ( $gp_index, $gp_titles, $gp_menu and $gpLayouts ) from _site/pages.php
 	 *
 	 */
-	function GetPagesPHP(){
+	static function GetPagesPHP(){
 		global $gp_index, $gp_titles, $gp_menu, $dataDir, $gpLayouts;
 		$gp_index = array();
 
@@ -1721,7 +1722,7 @@ class common{
 	 * Generate a new file index
 	 * skip indexes that are just numeric
 	 */
-	function NewFileIndex(){
+	static function NewFileIndex(){
 		global $gp_index, $gp_titles;
 
 		$num_index = 0;
@@ -1758,7 +1759,7 @@ class common{
 	 * Will return false for titles that are external links
 	 * @param string $index The index of the file
 	 */
-	function IndexToTitle($index){
+	static function IndexToTitle($index){
 		global $gp_index;
 		return array_search($index,$gp_index);
 	}
@@ -1771,7 +1772,7 @@ class common{
 	 * @return array
 	 *
 	 */
-	function Parents($index,$menu){
+	static function Parents($index,$menu){
 		$parents = array();
 
 		if( !isset($menu[$index]) || !isset($menu[$index]['level']) ){
@@ -1806,7 +1807,7 @@ class common{
 	 * @param string $index The data index of the child title
 	 * @return array
 	 */
-	function Descendants($index,$menu){
+	static function Descendants($index,$menu){
 
 		$titles = array();
 
@@ -1841,7 +1842,7 @@ class common{
 	 * @param mixed $default The value to return if $config[$key] is not set
 	 * @return mixed
 	 */
-	function ConfigValue($key,$default=false){
+	static function ConfigValue($key,$default=false){
 		global $config;
 		if( !isset($config[$key]) ){
 			return $default;
@@ -1855,7 +1856,7 @@ class common{
 	 * @param int $len length of string to return
 	 * @param bool $cases Whether or not to use upper and lowercase characters
 	 */
-	function RandomString($len = 40, $cases = true ){
+	static function RandomString($len = 40, $cases = true ){
 
 		$string = 'abcdefghijklmnopqrstuvwxyz1234567890';
 		if( $cases ){
@@ -1874,7 +1875,7 @@ class common{
 	 * Language files were renamed to main.inc for version 2.0.2
 	 *
 	 */
-	function GetLangFile($file='main.inc',$language=false){
+	static function GetLangFile($file='main.inc',$language=false){
 		global $dataDir, $config, $langmessage;
 
 		if( $language === false ){
@@ -1901,7 +1902,7 @@ class common{
 	 * @param string $title
 	 * @return mixed 'admin','special' or false
 	 */
-	function SpecialOrAdmin($title){
+	static function SpecialOrAdmin($title){
 		global $gp_index,$gp_titles;
 
 		$lower_title = strtolower($title);
@@ -1940,7 +1941,7 @@ class common{
 	 * @return string The title to display based on the request uri
 	 *
 	 */
-	function WhichPage(){
+	static function WhichPage(){
 		global $config, $gp_internal_redir, $gp_menu;
 
 		if( isset($gp_internal_redir) ){
@@ -1983,7 +1984,7 @@ class common{
 	 * @param string $code http redirect code: 301 or 302
 	 *
 	 */
-	function Redirect($path,$code = 301){
+	static function Redirect($path,$code = 301){
 
 		//prevent a cache from creating an infinite redirect
 		Header( 'Last-Modified: ' . gmdate( 'D, j M Y H:i:s' ) . ' GMT' );
@@ -2013,7 +2014,7 @@ class common{
 	 * @param string The request_title portion of $path
 	 *
 	 */
-	function CleanRequest($path){
+	static function CleanRequest($path){
 		global $dirPrefix;
 
 		//use dirPrefix to find requested title
@@ -2043,7 +2044,7 @@ class common{
 	 * Handle admin login/logout/session_start if admin session parameters exist
 	 *
 	 */
-	function sessions(){
+	static function sessions(){
 
 		$update_cookies = false;
 		$cmd = '';
@@ -2094,7 +2095,7 @@ class common{
 	 * Return true if an administrator is logged in
 	 * @return bool
 	 */
-	function LoggedIn(){
+	static function LoggedIn(){
 		global $gpAdmin;
 		static $loggedin;
 
@@ -2111,7 +2112,7 @@ class common{
 		return true;
 	}
 
-	function new_nonce($action = 'none', $anon = false, $factor = 43200 ){
+	static function new_nonce($action = 'none', $anon = false, $factor = 43200 ){
 		global $gpAdmin;
 
 		$nonce = $action;
@@ -2133,7 +2134,7 @@ class common{
 	 * @return mixed Return false if the $check_nonce did not pass. 1 or 2 if it passes.
 	 *
 	 */
-	function verify_nonce($action = 'none', $check_nonce = false, $anon = false, $factor = 43200 ){
+	static function verify_nonce($action = 'none', $check_nonce = false, $anon = false, $factor = 43200 ){
 		global $gpAdmin;
 
 		if( $check_nonce === false ){
@@ -2174,7 +2175,7 @@ class common{
 	 * @param int $factor Determines the length of time the generated nonce will be valid. The default 43200 will result in a 24hr period of time.
 	 *
 	 */
-	function nonce_hash( $nonce, $tick_offset=0, $factor = 43200 ){
+	static function nonce_hash( $nonce, $tick_offset=0, $factor = 43200 ){
 		global $config;
 		$nonce_tick = ceil( time() / $factor ) - $tick_offset;
 		return substr( md5($nonce.$config['gpuniq'].$nonce_tick), -12, 10);
@@ -2185,7 +2186,7 @@ class common{
 	 * Don't use $_REQUEST here because SetCookieArgs() uses $_GET
 	 *
 	 */
-	function GetCommand($type='cmd'){
+	static function GetCommand($type='cmd'){
 		global $gpAdmin;
 
 		if( is_array($gpAdmin) && isset($gpAdmin['locked']) && $gpAdmin['locked'] ){
@@ -2207,7 +2208,7 @@ class common{
 	 * Used for receiving arguments from javascript without having to put variables in the $_GET request
 	 * nice for things that shouldn't be repeated!
 	 */
-	function SetCookieArgs(){
+	static function SetCookieArgs(){
 		static $done = false;
 
 		if( $done || !gp_cookie_cmd ){
@@ -2239,7 +2240,7 @@ class common{
 	 * Output Javascript code to set variable defaults
 	 *
 	 */
-	function JsStart(){
+	static function JsStart(){
 
 		//default gpEasy Variables
 		echo 'var gplinks={},gpinputs={},gpresponse={}'
@@ -2256,7 +2257,7 @@ class common{
 	 * Note: $config['shahash'] won't be set for install!
 	 *
 	 */
-	function hash($arg){
+	static function hash($arg){
 		global $config;
 
 		if( isset($config['shahash']) && !$config['shahash'] ){
@@ -2265,13 +2266,13 @@ class common{
 		return sha1($arg);
 	}
 
-	function AjaxWarning(){
+	static function AjaxWarning(){
 		global $page,$langmessage;
 		$page->ajaxReplace[] = array(0=>'admin_box_data',1=>'',2=>$langmessage['OOPS_Start_over']);
 	}
 
 
-	function IdUrl($request_cmd='cv'){
+	static function IdUrl($request_cmd='cv'){
 		global $config;
 
 		$path = addon_browse_path.'/Special_Resources?';
@@ -2329,7 +2330,7 @@ class common{
 	 * Used to send error reports without affecting the display of a page
 	 *
 	 */
-	function IdReq($img_path,$jquery = true){
+	static function IdReq($img_path,$jquery = true){
 
 		//using jquery asynchronously doesn't affect page loading
 		//error function defined to prevent the default error function in main.js from firing
@@ -2344,7 +2345,7 @@ class common{
 	}
 
 	//only include error buffer when admin is logged in
-	function ErrorBuffer($check_user = true, $jquery = true){
+	static function ErrorBuffer($check_user = true, $jquery = true){
 		global $wbErrorBuffer, $config, $dataDir, $rootDir;
 
 		if( count($wbErrorBuffer) == 0 ) return;
@@ -2390,7 +2391,7 @@ class common{
 	 * @param string $functionName Function name
 	 * @return bool True if function exists (not disabled); False otherwise.
 	 */
-	function function_exists($functionName){
+	static function function_exists($functionName){
 		$functionName = strtolower($functionName);
 
 		// eval() is a language construct
@@ -2422,7 +2423,7 @@ class common{
 	 * @param mixed $data
 	 *
 	 */
-	function JsonEncode($data){
+	static function JsonEncode($data){
 		static $search = array('\\','"',"\n","\r",'<script','</script>');
 		static $repl = array('\\\\','\"','\n','\r','<"+"script','<"+"/script>');
 
@@ -2470,7 +2471,7 @@ class common{
 	 * http://php.net/manual/en/function.strftime.php
 	 *
 	 */
-	function Date($format='',$time=false){
+	static function Date($format='',$time=false){
 		if( empty($format) ){
 			return '';
 		}
@@ -2507,7 +2508,7 @@ class common{
 	 * @deprecated 3.0
 	 * use gp_edit::UseCK();
 	 */
-	function UseFCK($contents,$name='gpcontent'){
+	static function UseFCK($contents,$name='gpcontent'){
 		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		return gp_edit::UseCK($contents,$name);
@@ -2518,7 +2519,7 @@ class common{
 	 * Use gp_edit::UseCK();
 	 */
 
-	function UseCK($contents,$name='gpcontent',$options=array()){
+	static function UseCK($contents,$name='gpcontent',$options=array()){
 		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		return gp_edit::UseCK($contents,$name,$options);
@@ -2528,7 +2529,7 @@ class common{
 	 * @deprecated 3.0
 	 * Use gp_edit::CKConfig();
 	 */
-	function CKConfig($options=array(),$config_name='config'){
+	static function CKConfig($options=array(),$config_name='config'){
 		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		return gp_edit::CKConfig($options,$config_name);
@@ -2538,7 +2539,7 @@ class common{
 	 * @deprecated 3.0
 	 * Use gp_edit::PrepAutoComplete();
 	 */
-	function PrepAutoComplete($autocomplete_js=true,$GetUrl=true){
+	static function PrepAutoComplete($autocomplete_js=true,$GetUrl=true){
 		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		gp_edit::PrepAutoComplete($autocomplete_js,$GetUrl);
@@ -2548,7 +2549,7 @@ class common{
 	 * @deprecated 3.0
 	 * Use gp_edit::AutoCompleteValues();
 	 */
-	function AutoCompleteValues($GetUrl=true,$options = array()){
+	static function AutoCompleteValues($GetUrl=true,$options = array()){
 		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		return gp_edit::AutoCompleteValues($GetUrl,$options);
@@ -2570,7 +2571,7 @@ class gpFiles{
 	 * @param mixed $filetype If false, all files in $dir will be included. false=all,1=directories,'php'='.php' files
 	 * @return array() List of files in $dir
 	 */
-	function ReadDir($dir,$filetype='php'){
+	static function ReadDir($dir,$filetype='php'){
 		$files = array();
 		if( !file_exists($dir) ){
 			return $files;
@@ -2636,7 +2637,7 @@ class gpFiles{
 	 * @return array() The folders and files within $dir
 	 *
 	 */
-	function ReadFolderAndFiles($dir){
+	static function ReadFolderAndFiles($dir){
 		$dh = @opendir($dir);
 		if( !$dh ){
 			return array();
@@ -2669,7 +2670,7 @@ class gpFiles{
 	 * @param string $title The title to be cleansed
 	 * @return string The cleansed title
 	 */
-	function CleanLabel($title=''){
+	static function CleanLabel($title=''){
 
 		$title = str_replace(array('"'),array(''),$title);
 		$title = str_replace(array('<','>'),array('_'),$title);
@@ -2685,7 +2686,7 @@ class gpFiles{
 	 *
 	 * @param string $text The string to be cleansed. Passed by reference
 	 */
-	function cleanText(&$text){
+	static function cleanText(&$text){
 		includeFile('tool/editing.php');
 		gp_edit::tidyFix($text);
 		gpFiles::rmPHP($text);
@@ -2697,7 +2698,7 @@ class gpFiles{
 	 *
 	 * @param string $text The html content to be checked. Passed by reference
 	 */
-	function FixTags(&$text){
+	static function FixTags(&$text){
 		includeFile('tool/HTML_Output.php');
 		$gp_html_output = new gp_html_output($text);
 		$text = $gp_html_output->result;
@@ -2708,7 +2709,7 @@ class gpFiles{
 	 *
 	 * @param string $text The html content to be checked. Passed by reference
 	 */
-	function rmPHP(&$text){
+	static function rmPHP(&$text){
 		$search = array('<?','<?php','?>');
 		$replace = array('&lt;?','&lt;?php','?&gt;');
 		$text = str_replace($search,$replace,$text);
@@ -2720,7 +2721,7 @@ class gpFiles{
 	 * @param string $string
 	 * @return string
 	 */
-	function NoNull($string){
+	static function NoNull($string){
 		$string = preg_replace('/\0+/', '', $string);
 		return preg_replace('/(\\\\0)+/', '', $string);
 	}
@@ -2730,7 +2731,7 @@ class gpFiles{
 	 * @deprecated 2.5
 	 * Use gp_edit::tidyFix()
 	 */
-	function tidyFix(&$text){
+	static function tidyFix(&$text){
 		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		return gp_edit::tidyFix($text);
@@ -2742,7 +2743,7 @@ class gpFiles{
 	 * @since 1.8a1
 	 *
 	 */
-	function NewTitle($title,$section_content = false,$type='text'){
+	static function NewTitle($title,$section_content = false,$type='text'){
 
 		if( empty($title) ){
 			return false;
@@ -2773,7 +2774,7 @@ class gpFiles{
 	 * @param string $title
 	 * @return string The path of the data file
 	 */
-	function PageFile($title){
+	static function PageFile($title){
 		global $dataDir, $config, $gp_index;
 
 		$index_path = false;
@@ -2793,7 +2794,7 @@ class gpFiles{
 		return $index_path;
 	}
 
-	function NewFileNumber(){
+	static function NewFileNumber(){
 		global $config;
 
 		includeFile('admin/admin_tools.php');
@@ -2815,7 +2816,7 @@ class gpFiles{
 	 * @param string $file
 	 * @return array
 	 */
-	function GetTitleMeta($file){
+	static function GetTitleMeta($file){
 
 		$meta_data = array();
 		if( file_exists($file) ){
@@ -2830,7 +2831,7 @@ class gpFiles{
 	 * Return an array of info about the data file
 	 *
 	 */
-	function GetFileStats($file){
+	static function GetFileStats($file){
 		$file_stats = array();
 		if( file_exists($file) ){
 			ob_start();
@@ -2861,7 +2862,7 @@ class gpFiles{
 	 * @param string $time The unix timestamp to be used for the $fileVersion
 	 * @return bool True on success
 	 */
-	function SaveFile($file,$contents,$code=false,$time=false){
+	static function SaveFile($file,$contents,$code=false,$time=false){
 
 		$result = gpFiles::FileStart($file,$time);
 		if( $result !== false ){
@@ -2881,7 +2882,7 @@ class gpFiles{
 	 * @param bool $checkDir Whether or not to check to see if the parent directory exists before attempting to save the file
 	 * @return bool True on success
 	 */
-	function Save($file,$contents,$checkDir=true){
+	static function Save($file,$contents,$checkDir=true){
 		$fp = gpFiles::fopen($file,$checkDir);
 		if( !$fp ){
 			return false;
@@ -2906,7 +2907,7 @@ class gpFiles{
 	 * @param array $array The value of $varname to be saved
 	 *
 	 */
-	function SaveArray(){
+	static function SaveArray(){
 
 		$args = func_get_args();
 		$count = count($args);
@@ -2938,7 +2939,7 @@ class gpFiles{
 	 * Return the beginning content of a data file
 	 *
 	 */
-	function FileStart($file, $time=false, $file_stats = array() ){
+	static function FileStart($file, $time=false, $file_stats = array() ){
 
 		if( $time === false ) $time = time();
 
@@ -2955,7 +2956,7 @@ class gpFiles{
 				. "\n\n";
 	}
 
-	function ArrayToPHP($varname,&$array){
+	static function ArrayToPHP($varname,&$array){
 		return '$'.$varname.' = '.var_export($array,true).';';
 	}
 
@@ -2971,7 +2972,7 @@ class gpFiles{
 	 * @param int $length If length is omitted, nothing is removed from $array. If positive, then that many elements will be removed starting with $search_key + $offset
 	 * @return bool True on success
 	 */
-	function ArrayInsert($search_key,$new_key,$new_value,&$array,$offset=0,$length=0){
+	static function ArrayInsert($search_key,$new_key,$new_value,&$array,$offset=0,$length=0){
 
 		$array_keys = array_keys($array);
 		$array_values = array_values($array);
@@ -2994,7 +2995,7 @@ class gpFiles{
 	 * Replace a key-value pair in an associative array
 	 * ArrayReplace() is a shortcut for using gpFiles::ArrayInsert() with $offset = 0 and $length = 1
 	 */
-	function ArrayReplace($search_key,$new_key,$new_value,&$array){
+	static function ArrayReplace($search_key,$new_key,$new_value,&$array){
 		return gpFiles::ArrayInsert($search_key,$new_key,$new_value,$array,0,1);
 	}
 
@@ -3007,7 +3008,7 @@ class gpFiles{
 	 * @param bool $checkDir Whether or not to check the parent directory's existence.
 	 * @return bool true on success
 	 */
-	function fopen($file,$checkDir=true){
+	static function fopen($file,$checkDir=true){
 		global $gp_not_writable;
 
 		if( file_exists($file) ){
@@ -3042,7 +3043,7 @@ class gpFiles{
 	 * @param bool $index Whether or not to add an index.hmtl file in the directory
 	 * @return bool True on success
 	 */
-	function CheckDir($dir,$index=true){
+	static function CheckDir($dir,$index=true){
 		global $config,$checkFileIndex;
 
 		if( !file_exists($dir) ){
@@ -3080,7 +3081,7 @@ class gpFiles{
 	 * Will only work if directory is empty
 	 *
 	 */
-	function RmDir($dir){
+	static function RmDir($dir){
 		global $config;
 
 		//ftp
@@ -3094,7 +3095,7 @@ class gpFiles{
 	 * Remove a file or directory and it's contents
 	 *
 	 */
-	function RmAll($path){
+	static function RmAll($path){
 
 		if( empty($path) ) return false;
 		if( is_link($path) ) return @unlink($path);
@@ -3127,14 +3128,14 @@ class gpFiles{
 
 	/* FTP Function */
 
-	function FTP_RmDir($dir){
+	static function FTP_RmDir($dir){
 		$conn_id = gpFiles::FTPConnect();
 		$dir = gpFiles::ftpLocation($dir);
 
 		return ftp_rmdir($conn_id,$dir);
 	}
 
-	function FTP_CheckDir($dir){
+	static function FTP_CheckDir($dir){
 		$conn_id = gpFiles::FTPConnect();
 		$dir = gpFiles::ftpLocation($dir);
 
@@ -3144,7 +3145,7 @@ class gpFiles{
 		return ftp_site($conn_id, 'CHMOD 0777 '. $dir );
 	}
 
-	function FTPConnect(){
+	static function FTPConnect(){
 		global $config;
 
 		static $conn_id = false;
@@ -3172,13 +3173,13 @@ class gpFiles{
 		return $conn_id;
 	}
 
-	function ftpClose($connection=false){
+	static function ftpClose($connection=false){
 		if( $connection !== false ){
 			@ftp_quit($connection);
 		}
 	}
 
-	function ftpLocation(&$location){
+	static function ftpLocation(&$location){
 		global $config,$dataDir;
 
 		$len = strlen($dataDir);
@@ -3191,7 +3192,7 @@ class gpFiles{
 	 * @deprecated 3.0
 	 * Use gp_edit::CleanTitle() instead
 	 */
-	function CleanTitle($title,$spaces = '_'){
+	static function CleanTitle($title,$spaces = '_'){
 		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		return gp_edit::CleanTitle($title,$spaces);
@@ -3201,7 +3202,7 @@ class gpFiles{
 	 * @deprecated 3.0
 	 * Use gp_edit::CleanArg() instead
 	 */
-	function CleanArg($path){
+	static function CleanArg($path){
 		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		return gp_edit::CleanArg($path);

@@ -33,8 +33,6 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 	 **/
 	public function __construct() {
 		$this->options['alias']    = '';              // alias to replace root dir name
-		$this->options['dirMode']  = 0755;            // new dirs mode
-		$this->options['fileMode'] = 0644;            // new files mode
 		$this->options['quarantine'] = '.quarantine';  // quarantine folder name - required to check archive (must be hidden)
 		$this->options['maxArcFilesSize'] = 0;        // max allowed archive files size (0 - no limit)
 	}
@@ -422,7 +420,7 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 		$path = $path.DIRECTORY_SEPARATOR.$name;
 
 		if (@mkdir($path)) {
-			@chmod($path, $this->options['dirMode']);
+			@chmod($path, finder_chmod_dir );
 			return $path;
 		}
 
@@ -442,7 +440,7 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 
 		if (($fp = @fopen($path, 'w'))) {
 			@fclose($fp);
-			@chmod($path, $this->options['fileMode']);
+			@chmod( $path, finder_chmod_file );
 			return $path;
 		}
 		return false;
@@ -532,7 +530,7 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 			fwrite($target, fread($fp, 8192));
 		}
 		fclose($target);
-		@chmod($path, $this->options['fileMode']);
+		@chmod( $path, finder_chmod_file );
 		clearstatcache();
 		return $path;
 	}

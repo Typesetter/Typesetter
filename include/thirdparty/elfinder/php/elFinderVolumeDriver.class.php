@@ -170,8 +170,6 @@ abstract class elFinderVolumeDriver {
 		'mimefile'        => '',
 		// directory for thumbnails
 		'tmbPath'         => '.tmb',
-		// mode to create thumbnails dir
-		'tmbPathMode'     => 0777,
 		// thumbnails dir URL. Set it if store thumbnails outside root directory
 		'tmbURL'          => '',
 		// thumbnails size (px)
@@ -501,7 +499,7 @@ abstract class elFinderVolumeDriver {
 		if ($path) {
 			if (!file_exists($path)) {
 				if (@mkdir($path)) {
-					chmod($path, $this->options['tmbPathMode']);
+					chmod( $path, finder_chmod_dir );
 				} else {
 					$path = '';
 				}

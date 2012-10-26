@@ -509,21 +509,18 @@ class gpsession{
 		}
 
 		//add error notice if there was a fatal error
-		if( !gpdebug && function_exists('error_get_last') ){
+		if( !ini_get('display_errors') && function_exists('error_get_last') ){
 
 			//check for fatal error
 			$fatal_errors = array(E_ERROR,E_PARSE);
 			$last_error = error_get_last();
 
-			//$backtrace = debug_backtrace();
-			//return showArray($backtrace);
-
-			//return showArray($last_error).showArray($fatal_errors);
-
 			if( is_array($last_error) && in_array($last_error['type'],$fatal_errors) ){
+
 				showError($last_error['type'], $last_error['message'],  $last_error['file'],  $last_error['line'], false);
 				$buffer .= '<p>An error occurred while generating this page.<p> '
-						.'<p>If you are the site administrator, you can troubleshoot the problem turning debugging "on" or bypass it by enabling safe mode.</p>'
+						.'<p>If you are the site administrator, you can troubleshoot the problem by changing php\'s display_errors setting to 1 in the gpconfig.php file.</p>'
+						.'<p>If the problem is being caused by an addon, you may also be able to bypass the error by enabling gpEasy\'s safe mode in the gpconfig.php file.</p>'
 						.'<p>More information is available in the <a href="http://docs.gpeasy.com/Main/Troubleshooting">gpEasy documentation</a>.</p>'
 						.common::ErrorBuffer(true,false);
 						;

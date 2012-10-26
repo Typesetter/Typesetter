@@ -412,6 +412,7 @@ class MultiLang_Admin extends MultiLang_Common{
 		$this->config['lists'][$list_index][$lang_a] = $index_a;
 		$this->config['titles'][$index_a] = $list_index;
 
+
 		//echo '<h3>New configuration</h3>';
 		//echo showArray($this->config);
 		//echo '<hr/>';
@@ -448,8 +449,7 @@ class MultiLang_Admin extends MultiLang_Common{
 		if( isset($ml_languages[$language]) ){
 			return $language;
 		}
-
-		return array_search($_POST['ml_lang'],$ml_languages);
+		return array_search($language,$ml_languages);
 	}
 
 
@@ -629,6 +629,7 @@ class MultiLang_Admin extends MultiLang_Common{
 		echo ' - ';
 		echo common::Link('Admin_MultiLang','Languages','cmd=languages');
 		echo '</p>';
+
 	}
 
 }

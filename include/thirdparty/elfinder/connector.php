@@ -61,6 +61,11 @@ $opts = array(
 	)
 );
 
+
+elFinder::defined( 'finder_chmod_file', gp_chmod_file );
+elFinder::defined( 'finder_chmod_dir', gp_chmod_dir );
+
+
 // run elFinder
 $connector = new elFinderConnector(new elFinder($opts));
 $connector->run();

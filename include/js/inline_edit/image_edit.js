@@ -65,6 +65,8 @@
 			edit_img.attr('src','');
 			var width = edit_img.width();
 			var height = edit_img.height()
+			$('#gp_current_image input[name=orig_width]').val( width );
+			$('#gp_current_image input[name=orig_height]').val( height );
 			SetCurrentImage( img_src, width, height );
 			SetupDrag();
 
@@ -184,6 +186,11 @@
 		gplinks.show_theme_images = function(){
 			var path = strip_from(gp_editor.save_path,'?')+'?cmd=theme_images';
 			$gp.jGoTo(path);
+		}
+		gplinks.deafult_sizes = function(){
+			$('#gp_current_image input[name=width]').val( $('#gp_current_image input[name=orig_width]').val());
+			$('#gp_current_image input[name=height]').val( $('#gp_current_image input[name=orig_height]').val());
+			$('#gp_current_image input[name=width]').change();
 		}
 
 

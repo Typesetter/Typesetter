@@ -3345,6 +3345,8 @@ class admin_theme_content extends admin_addon_install{
 		ob_start();
 
 		echo '<div id="gp_current_image">';
+		echo '<input type="hidden" name="orig_height">';
+		echo '<input type="hidden" name="orig_width">';
 		echo '<span id="gp_image_wrap"><img/></span>';
 		echo '<table>';
 		echo '<tr><td>'.$langmessage['Width'].'</td><td><input type="text" name="width" class="ck_input"/></td>';
@@ -3358,6 +3360,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '<b>'.$langmessage['Select Image'].'</b>';
 		echo '<a class="ckeditor_control half_width" name="show_theme_images">'.$langmessage['Theme Images'].'</a>';
 		echo '<a class="ckeditor_control half_width" name="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
+		echo '<a class="ckeditor_control half_width" name="deafult_sizes">'.$langmessage['Theme_default_sizes'].'</a>';		
 		echo '</div>';
 
 		echo '<div id="gp_image_area"></div><div id="gp_upload_queue"></div>';

@@ -68,6 +68,14 @@ define('gp_remote_addons',true);
  */
 define('service_provider_id',false);
 
+
+/**
+ * Limit the number of revisions to store in the backup
+ *
+ */
+define('gp_backup_limit',10);
+
+
 /**
  * gp_chmod_file
  * The mode used by chmod() for data files
@@ -116,12 +124,6 @@ define('gpdebug_tools',true);
  *
  */
 @ini_set('display_errors',0);
-
-/**
- * Limit the number of revisions to store in the backup
- *
- */
-define('gp_backup_limit',10);
 
 /**
  * gp_safe_mode

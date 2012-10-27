@@ -28,6 +28,7 @@ gp_defined('E_RECOVERABLE_ERROR',4096);
 gp_defined('E_DEPRECATED',8192);
 gp_defined('E_USER_DEPRECATED',16384);
 gp_defined('gpdebug_tools',false);
+gp_defined('gp_backup_limit',10);
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php'); message('local browse path');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
@@ -152,7 +153,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 				E_USER_ERROR		=> 'User Error',
 				E_USER_WARNING 		=> 'User Warning',
 				E_USER_NOTICE		=> 'User Notice',
-				E_STRICT			=> 'Runtime Notice',
+				E_STRICT			=> 'Strict Notice',
 				E_RECOVERABLE_ERROR => 'Recoverable Error',
 				E_DEPRECATED		=> 'Deprecated',
 				E_USER_DEPRECATED	=> 'User Deprecated',

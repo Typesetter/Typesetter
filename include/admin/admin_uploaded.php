@@ -158,14 +158,14 @@ class admin_uploaded{
 	}
 
 
-	function Max_File_Size(){
+	static function Max_File_Size(){
 		$max = admin_uploaded::getByteValue();
 		if( $max !== false ){
 			echo '<input type="hidden" name="MAX_FILE_SIZE" value="'.$max.'" />';
 		}
 	}
 
-	function getByteValue($value=false){
+	static function getByteValue($value=false){
 
 		if( $value === false ){
 			$value = ini_get('upload_max_filesize');
@@ -246,7 +246,7 @@ class admin_uploaded{
 	 * Output a list a images in a director for use in inline editing
 	 * @static
 	 */
-	function InlineList($dir_piece,$add_all_images = true){
+	static function InlineList($dir_piece,$add_all_images = true){
 		global $page,$langmessage,$dataDir;
 		$page->ajaxReplace = array();
 
@@ -390,7 +390,7 @@ class admin_uploaded{
 	/**
 	 * @static
 	 */
-	function ShowFile_Gallery($dir_piece,$file,$isThumbDir){
+	static function ShowFile_Gallery($dir_piece,$file,$isThumbDir){
 		global $langmessage, $dataDir;
 
 		if( !admin_uploaded::IsImg($file) ){
@@ -821,7 +821,7 @@ class admin_uploaded{
 	 * @param string $file The $file name or path
 	 * @return string The extenstion of $file
 	 */
-	function GetFileType($file){
+	static function GetFileType($file){
 		$name_parts = explode('.',$file);
 		$file_type = array_pop($name_parts);
 		return strtolower($file_type);
@@ -831,7 +831,7 @@ class admin_uploaded{
 	 * Determines if the $file is an image based on the file extension
 	 * @return bool
 	 */
-	function IsImg($file){
+	static function IsImg($file){
 		$img_types = array('bmp'=>1,'png'=>1,'jpg'=>1,'jpeg'=>1,'gif'=>1,'tiff'=>1,'tif'=>1);
 
 		$type = admin_uploaded::GetFileType($file);

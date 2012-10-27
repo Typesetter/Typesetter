@@ -174,7 +174,7 @@ class thumbnail{
 	 * Return a type file type of a given file given by it's $path on the file system
 	 * @static
 	 */
-	function getType($path){
+	static function getType($path){
 		$nameParts = explode('.',$path);
 		$type = array_pop($nameParts);
 		return strtolower($type);
@@ -184,7 +184,7 @@ class thumbnail{
 	 * Attempt to increase php's memory limit using the current memory used and the post_max_size value
 	 * @static
 	 */
-	function AdjustMemoryLimit(){
+	static function AdjustMemoryLimit(){
 		//Generally speaking, memory_limit should be larger than post_max_size http://php.net/manual/en/ini.core.php
 
 
@@ -216,7 +216,7 @@ class thumbnail{
 	 * @param string $value
 	 * @return int
 	 */
-	function getByteValue($value){
+	static function getByteValue($value){
 
 		if( is_numeric($value) ){
 			return (int)$value;
@@ -246,7 +246,7 @@ class thumbnail{
 	 * @param string $type_file The file type of the source image
 	 * @return mixed GD image if successful, false otherwise
 	 */
-	function getSrcImg($source_path,$type_file=false){
+	static function getSrcImg($source_path,$type_file=false){
 		if( !function_exists('imagetypes') ){
 			return false;
 		}

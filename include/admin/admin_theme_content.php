@@ -3291,8 +3291,14 @@ class admin_theme_content extends admin_addon_install{
 		$images = array();
 		if( file_exists($images_file) ){
 			include($images_file);
+		} else {
+		  if (is_dir($dataDir.$theme_rel.'/images')){
+		    gpOutput::RegisterImages($dataDir.$theme_rel,'images');
+			if( file_exists($images_file) ){
+			  include($images_file);
+		    }
+		  }	
 		}
-
 		$cleaned_images = array();
 		foreach($images as $image){
 			if( empty($image['url']) ){
@@ -3307,7 +3313,8 @@ class admin_theme_content extends admin_addon_install{
 
 			$size = '';
 			if( empty($image['width']) || empty($image['height']) ){
-				$src_img = thumbnail::getSrcImg($full_path);
+			     includeFile('tool/Images.php');
+				$src_img = thumbnail::getSrcImg($img_full);
 				$image['width'] = imagesx($src_img);
 				$image['height'] = imagesy($src_img);
 			}

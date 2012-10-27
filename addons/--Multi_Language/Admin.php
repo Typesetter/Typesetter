@@ -382,8 +382,12 @@ class MultiLang_Admin extends MultiLang_Common{
 		//new list
 		}else{
 
+			//$list_index = $this->GetListIndex($index_b);
 			if( $this->GetListIndex($index_b) ){
-				message($langmessage['OOPS'].' (Already Translated)');
+				$label = common::GetLabelIndex($index_b);
+				$link = common::Link('Admin_MultiLang',$label,'cmd=title_settings&index='.$index_b,' name="gpabox"');
+				message('Sorry, '.$link.' is already part of a translation.');
+				//message($langmessage['OOPS'].' (Already Translated)');
 				return;
 			}
 
@@ -475,6 +479,11 @@ class MultiLang_Admin extends MultiLang_Common{
 
 
 		echo '<div>';
+
+		echo '<h2>';
+		echo common::GetLabelIndex($index);
+		echo '</h2>';
+
 		echo '<form method="post" action="'.common::GetUrl('Admin_MultiLang').'">';
 		echo '<input type="hidden" name="cmd" value="title_settings_save" />';
 		echo '<input type="hidden" name="index" value="'.$index.'" />';

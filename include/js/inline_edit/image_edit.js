@@ -195,13 +195,26 @@
 		gplinks.show_uploaded_images = function(){
 			LoadImages(false);
 		}
+
+		function setVisibleThemeImages(){
+			var minWidth = value('orig_width') - (value('orig_width') * 0.20);
+			var maxWidth = (value('orig_width') * 1.20);
+			var minHeight = value('orig_height') - (value('orig_height') * 0.20);
+			var maxHeight = (value('orig_height') * 1.20);
+			$('#gp_gallery_avail_imgs a').each(function(ind){
+			   var width =  $(this).attr('data-width');
+			   var height =  $(this).attr('data-height');
+			   if (!((width <= maxWidth) && (width >= minWidth) && 
+			      (height <= maxHeight) && (height >= minHeight))) {
+				  $(this).parent().hide();
+			   }
+			});
+		
+		}
+		
 		gplinks.show_theme_images = function(){
 			var path = strip_from(gp_editor.save_path,'?')+'?cmd=theme_images';
-			$gp.jGoTo(path);
-			$.each($('#gp_gallery_avail_imgs a'),function(){
-			  
-			});
-			
+			$gp.jGoTo(path,setVisibleThemeImages);
 		}
 		gplinks.deafult_sizes = function(){
 			value('width', value('orig_width') );

@@ -3401,7 +3401,6 @@ class admin_theme_content extends admin_addon_install{
 		$source_file_rel = '/'.ltrim($source_file_rel,'/');
 		$source_file_full = $dataDir.$source_file_rel;
 		if( !file_exists($source_file_full) ){
-			message($source_file_full);
 			message($langmessage['OOPS'].' (Source file not found)');
 			return;
 		}
@@ -3455,7 +3454,8 @@ class admin_theme_content extends admin_addon_install{
 		if( isset($_REQUEST['time']) && ctype_digit($_REQUEST['time']) ){
 			$time = $_REQUEST['time'];
 		}
-		$dest_img_rel = '/data/_uploaded/headers/'.$name.'.'.$time.'.'.$type;
+		//$dest_img_rel = '/data/_uploaded/headers/'.$name.'.'.$time.'.'.$type;
+		$dest_img_rel = '/data/_uploaded/headers/'.$name.'.'.$time.'.png';
 		$dest_img_full = $dataDir.$dest_img_rel;
 
 		//make sure the folder exists

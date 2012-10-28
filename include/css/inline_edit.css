@@ -109,8 +109,11 @@
 .gp_editing:before{
 	content:"";
 	position:absolute;
-	top:-1px;right:-1px;bottom:-1px;left:-1px;
-	padding:0 !important;
+	top:-1px;
+	right:-1px;
+	bottom:-1px;
+	left:-1px;
+	padding:10px !important;
 
 	border:1px solid #ccc !important;
 	-moz-border-radius: 0 !important;

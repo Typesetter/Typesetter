@@ -3287,20 +3287,28 @@ class admin_theme_content extends admin_addon_install{
 	 */
 	function GetThemeImages($theme_rel){
 		global $dataDir;
-		$images_file = $dataDir.$theme_rel.'/images.php';
+        $themeName = basename( $theme_rel );
+		$images_file = $dataDir.'/data/_site/theme_images.php';
 		$images = array();
-		if( file_exists($images_file) ){
+		if( file_exists($images_file) ){ //need a neater way to do this.. feels messy
 			include($images_file);
+			if (!isset($images[$themeName])) {
+				if (is_dir($dataDir.$theme_rel.'/images')){
+				   gpOutput::RegisterImages($dataDir.$theme_rel,'images');
+				}	else {  return array(); }			
+			}
 		} else {
 		  if (is_dir($dataDir.$theme_rel.'/images')){
 		    gpOutput::RegisterImages($dataDir.$theme_rel,'images');
 			if( file_exists($images_file) ){
 			  include($images_file);
-		    }
-		  }	
-		}
+		    } else {  return array(); }
+		  }	else {  return array(); }
+		} //end loading images file.
+		
+		$themeImages = $images[$themeName];
 		$cleaned_images = array();
-		foreach($images as $image){
+		foreach($themeImages as $image){
 			if( empty($image['url']) ){
 				continue;
 			}

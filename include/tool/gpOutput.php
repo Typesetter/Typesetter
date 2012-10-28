@@ -1103,7 +1103,6 @@ class gpOutput{
 	static function RegisterImages($themeRoot,$imageFolderName){
 	   $imagesFolder = $themeRoot.'/'.$imageFolderName;
 	   if (!is_dir($imagesFolder)) {
-	     error_log('not found  : '.$imagesFolder);
 		 return;
 	   }
 	   
@@ -1122,12 +1121,14 @@ class gpOutput{
 	}
 	
 	static function RegisterImage($themeDirName,$src,$width,$height){
-		$images_file = $themeDirName.'/images.php';
+	  global $dataDir;
+	     $themeName = basename($themeDirName);
+		$images_file = $dataDir.'/data/_site/theme_images.php';
 	    $images = array();
 	    if (file_exists($images_file)){
 			include($images_file);
 		}
-		$images[] = array(
+		$images[$themeName ][] = array(
 		        'url' => $src,
 				'width' => $width,
 				'height' => $height

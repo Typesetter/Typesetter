@@ -184,6 +184,10 @@
 		gplinks.show_theme_images = function(){
 			var path = strip_from(gp_editor.save_path,'?')+'?cmd=theme_images';
 			$gp.jGoTo(path);
+			$.each($('#gp_gallery_avail_imgs a'),function(){
+			  
+			});
+			
 		}
 
 

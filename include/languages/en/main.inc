@@ -509,4 +509,6 @@ continue using your old password.</p>',
 'strftime_time'=>'%H:%M',
 
 '_characters' => '%s characters',
+'Theme_default_sizes' => 'Default Size',
+
 );

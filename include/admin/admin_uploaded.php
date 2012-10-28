@@ -829,6 +829,7 @@ class admin_uploaded{
 
 	/**
 	 * Determines if the $file is an image based on the file extension
+	 * @static
 	 * @return bool
 	 */
 	static function IsImg($file){

@@ -12,7 +12,7 @@ class thumbnail{
 	 * @param int $max_area Maximum area of the image: 600x800 pixels = 480,000 sq/pixels
 	 * @return bool true if the image doesn't need to be reduced or if a reduction is made
 	 */
-	function CheckArea($img_path,$max_area=1024000){
+	static function CheckArea($img_path,$max_area=1024000){
 
 		$src_img = thumbnail::getSrcImg($img_path); //memory usage before and after this call are small 1093804 vs 1094616
 		if( !$src_img ){
@@ -56,7 +56,7 @@ class thumbnail{
 	 * @param string $type_file a string representing the type of the source file (png, jpg)
 	 * @return bool
 	 */
-	function createSquare($source_path,$dest_path,$size=50,$type_file=false){
+	static function createSquare($source_path,$dest_path,$size=50,$type_file=false){
 		$new_w = $new_h = $size;
 
 		$src_img = thumbnail::getSrcImg($source_path,$type_file);
@@ -102,7 +102,7 @@ class thumbnail{
 	 * @param string $img_type A string representing the type of the source file (png, jpg)
 	 * @return bool
 	 */
-	function CreateRect($source_path,$dest_path,$new_w=50,$new_h=50,$img_type=false){
+	static function CreateRect($source_path,$dest_path,$new_w=50,$new_h=50,$img_type=false){
 
 		$src_img = thumbnail::getSrcImg($source_path,$img_type);
 		if( !$src_img ){
@@ -136,7 +136,7 @@ class thumbnail{
 	/**
 	 *  @deprecated
 	 */
-	function maxArea($source_path,$dest_path,$max_area=1024000){
+	static function maxArea($source_path,$dest_path,$max_area=1024000){
 
 		$src_img = thumbnail::getSrcImg($source_path,$dest_path); //memory usage before and after this call are small 1093804 vs 1094616
 		if( !$src_img ){
@@ -294,7 +294,7 @@ class thumbnail{
 	 * Save the GD image ($src_img) to the desired location ($dest_path) with the sizing arguments
 	 *
 	 */
-	function createImg($src_img, $dest_path, $dst_x, $dst_y, $off_w, $off_h, $dst_w, $dst_h, $old_x, $old_y, $new_w = false, $new_h = false){
+	static function createImg($src_img, $dest_path, $dst_x, $dst_y, $off_w, $off_h, $dst_w, $dst_h, $old_x, $old_y, $new_w = false, $new_h = false){
 		if( !$new_w ) $new_w = $dst_w;
 		if( !$new_h ) $new_h = $dst_h;
 
@@ -327,7 +327,7 @@ class thumbnail{
 		return thumbnail::SrcToImage($dst_img,$dest_path,$img_type);
 	}
 
-	function Transparency($image){
+	static function Transparency($image){
 		if( function_exists('imagesavealpha') ){
 			imagesavealpha($image,true);
 			$bgcolor = imagecolorallocatealpha($image, 133, 134, 135, 127);
@@ -344,7 +344,7 @@ class thumbnail{
 	 * will already have checked for support via the getSrcImg function
 	 *
 	 */
-	function SrcToImage($src,$path,$type){
+	static function SrcToImage($src,$path,$type){
 		$result = false;
 		switch($type){
 			case 'jpeg':

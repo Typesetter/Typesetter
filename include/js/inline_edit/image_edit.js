@@ -62,11 +62,14 @@
 		gpresponse.image_options_loaded = function(){
 
 			//change src to blank and set as background image
-			edit_img.attr('src','');
 			var width = edit_img.width();
 			var height = edit_img.height()
+			value('orig_width', width );
+			value('orig_height', height );
 			SetCurrentImage( img_src, width, height );
 			SetupDrag();
+
+			edit_img.attr('src',gp_blank_img); //after getting size
 
 			//set up height/width listeners
 			$('#gp_current_image input').on('keyup keydown change paste',function(){
@@ -75,18 +78,31 @@
 					edited = true;
 
 					//width - height
-					save_obj.width = parseInt( $('#gp_current_image input[name=width]').val() );
-					save_obj.height = parseInt( $('#gp_current_image input[name=height]').val() );
+					save_obj.width = value('width');
+					save_obj.height = value('height');
 					edit_img.stop(true,true).animate({'width':save_obj.width,'height':save_obj.height});
 
 					//left - top
-					var left = parseInt( $('#gp_current_image input[name=left]').val() );
-					var top = parseInt( $('#gp_current_image input[name=top]').val() );
+					var left = value('left');
+					var top = value('top');
 					SetPosition(left,top);
 
 				},400);
 			});
 		}
+
+		function value(name,value){
+			var field = input(name);
+			if( typeof(value) !== 'undefined' ){
+				field.val( value );
+			}
+			return parseInt( field.val() );
+		}
+
+		function input(name){
+			return $('#gp_current_image input[name='+name+']');
+		}
+
 
 
 		/**
@@ -114,8 +130,8 @@
 				mousedown = false;
 			}).mousemove(function(evt){
 				if( mousedown ){
-					posx = parseInt(pos_startx + evt.pageX - mouse_startx);
-					posy = parseInt(pos_starty + evt.pageY - mouse_starty);
+					posx = pos_startx + evt.pageX - mouse_startx;
+					posy = pos_starty + evt.pageY - mouse_starty;
 					SetPosition(posx,posy);
 				}
 			});
@@ -139,17 +155,15 @@
 			SetPosition(0,0);
 
 			//make sure this information is saved
-			save_obj.width = $('#gp_current_image input[name=width]').val();
-			save_obj.height = $('#gp_current_image input[name=height]').val();
+			save_obj.width = value('width');
+			save_obj.height = value('height');
 			edited = true;
 		}
 
 		function SetPosition(posx,posy){
+			save_obj.posx = posx = value('left', posx );
+			save_obj.posy = posy = value('top',  posy );
 			edit_img.css({'background-position':posx+'px '+posy+'px'});
-			$('#gp_current_image input[name=left]').val( posx );
-			$('#gp_current_image input[name=top]').val( posy );
-			save_obj.posx = posx;
-			save_obj.posy = posy;
 			edited = true;
 		}
 
@@ -166,8 +180,8 @@
 			$('#gp_current_image img').attr('src', src );
 
 			if( width > 0 && height > 0 ){
-				$('#gp_current_image input[name=width]').val( width );
-				$('#gp_current_image input[name=height]').val( height );
+				value('width', width );
+				value('height', height );
 				edit_img.stop(true,true).animate({'width':width,'height':height});
 			}
 		}
@@ -188,6 +202,13 @@
 			  
 			});
 			
+		}
+		gplinks.deafult_sizes = function(){
+			value('width', value('orig_width') );
+			value('height', value('orig_height') );
+			input('width').change();
+
+			SetPosition(0,0);
 		}
 
 

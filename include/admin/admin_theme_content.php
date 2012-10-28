@@ -3386,7 +3386,7 @@ class admin_theme_content extends admin_addon_install{
 		includeFile('tool/Images.php');
 		includeFile('tool/editing.php');
 		$page->ajaxReplace = array();
-		$dest_dir = $dataDir.'/data/_layouts/'.$this->curr_layout;
+		//$dest_dir = $dataDir.'/data/_layouts/'.$this->curr_layout; //Not used anywhere.
 
 
 		//source file
@@ -3489,7 +3489,7 @@ class admin_theme_content extends admin_addon_install{
 		$save_info['height'] = $height;
 
 		$container = $_REQUEST['container'];
-		$gpLayouts[$this->curr_layout]['images'] = array(); //prevents shuffle
+		//$gpLayouts[$this->curr_layout]['images'] = array(); //prevents shuffle - REMOVED to allow images per container to be saved.
 		$gpLayouts[$this->curr_layout]['images'][$container] = array(); //prevents shuffle
 		$gpLayouts[$this->curr_layout]['images'][$container][] = $save_info;
 

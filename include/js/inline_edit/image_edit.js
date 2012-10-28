@@ -62,13 +62,14 @@
 		gpresponse.image_options_loaded = function(){
 
 			//change src to blank and set as background image
-			edit_img.attr('src','');
 			var width = edit_img.width();
 			var height = edit_img.height()
 			value('orig_width', width );
 			value('orig_height', height );
 			SetCurrentImage( img_src, width, height );
 			SetupDrag();
+
+			edit_img.attr('src',gp_blank_img); //after getting size
 
 			//set up height/width listeners
 			$('#gp_current_image input').on('keyup keydown change paste',function(){

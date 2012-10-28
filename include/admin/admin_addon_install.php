@@ -1913,8 +1913,7 @@ class admin_addon_install extends admin_addons_tool{
 		$_GET += array('q'=>'');
 
 		echo '<div class="gp_find_form">';
-		echo '<form action="'.common::GetUrl($this->path_root).'" method="get">';
-		echo '<input type="hidden" name="cmd" value="remote" />';
+		echo '<form action="'.common::GetUrl($this->path_remote).'" method="get">';
 		echo '<input type="text" name="q" value="'.htmlspecialchars($_GET['q']).'" size="15" class="gpinput" /> ';
 		echo '<input type="submit" name="" value="'.$langmessage['Search'].'" class="gpbutton" />';
 		echo '</form>';

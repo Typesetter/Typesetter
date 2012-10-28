@@ -327,10 +327,14 @@ $(function(){
 		return this;
 	}
 
-	$gp.jGoTo = function(a){
+	$gp.jGoTo = function(a,b){
 		loading();
 		a = jPrep(a);
-		$.getJSON(a,ajaxResponse);
+		$.getJSON(a).success(ajaxResponse).complete(function() {
+  		    if( typeof(b) !== 'undefined' ){
+     		    b();
+	  	    }
+		});
 	}
 
 	/* Reload page with arguments (a) set as a cookie

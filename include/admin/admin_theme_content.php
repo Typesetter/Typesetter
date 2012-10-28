@@ -3350,9 +3350,12 @@ class admin_theme_content extends admin_addon_install{
 		echo '<span id="gp_image_wrap"><img/></span>';
 		echo '<table>';
 		echo '<tr><td>'.$langmessage['Width'].'</td><td><input type="text" name="width" class="ck_input"/></td>';
-		echo '<td>'.$langmessage['Height'].'</td><td><input type="text" name="height" class="ck_input"/></td></tr>';
+		echo '<td>'.$langmessage['Height'].'</td><td><input type="text" name="height" class="ck_input"/></td>';
+		echo '<td><a name="deafult_sizes" class="ckeditor_control ck_reset_size" title="'.$langmessage['Theme_default_sizes'].'">&#10226;</a></td>';
+		echo '</tr>';
 		echo '<tr><td>'.$langmessage['Left'].'</td><td><input type="text" name="left" class="ck_input" value="0"/></td>';
-		echo '<td>'.$langmessage['Top'].'</td><td><input type="text" name="top" class="ck_input" value="0"/></td></tr>';
+		echo '<td>'.$langmessage['Top'].'</td><td><input type="text" name="top" class="ck_input" value="0"/></td>';
+		echo '</tr>';
 		echo '</table>';
 		echo '</div>';
 
@@ -3360,7 +3363,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '<b>'.$langmessage['Select Image'].'</b>';
 		echo '<a class="ckeditor_control half_width" name="show_theme_images">'.$langmessage['Theme Images'].'</a>';
 		echo '<a class="ckeditor_control half_width" name="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
-		echo '<a class="ckeditor_control half_width" name="deafult_sizes">'.$langmessage['Theme_default_sizes'].'</a>';		
+		//echo '<a class="ckeditor_control half_width" name="deafult_sizes">'.$langmessage['Theme_default_sizes'].'</a>';
 		echo '</div>';
 
 		echo '<div id="gp_image_area"></div><div id="gp_upload_queue"></div>';

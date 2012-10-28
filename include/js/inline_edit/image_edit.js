@@ -216,6 +216,12 @@
 			var path = strip_from(gp_editor.save_path,'?')+'?cmd=theme_images';
 			$gp.jGoTo(path,setVisibleThemeImages);
 		}
+		gplinks.show_all_theme_images = function(){
+		   $('#gp_gallery_avail_imgs a').each(function(ind){
+				  $(this).parent().show();
+			});
+		}
+		
 		gplinks.deafult_sizes = function(){
 			value('width', value('orig_width') );
 			value('height', value('orig_height') );

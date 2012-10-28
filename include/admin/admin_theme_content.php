@@ -3377,6 +3377,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '<div id="gp_source_options">';
 		echo '<b>'.$langmessage['Select Image'].'</b>';
 		echo '<a class="ckeditor_control half_width" name="show_theme_images">'.$langmessage['Theme Images'].'</a>';
+		echo '<a class="ckeditor_control ck_reset_size" name="show_all_theme_images" title="'.$langmessage['Theme Images'].'">&#10226;</a>';
 		echo '<a class="ckeditor_control half_width" name="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
 		//echo '<a class="ckeditor_control half_width" name="deafult_sizes">'.$langmessage['Theme_default_sizes'].'</a>';
 		echo '</div>';

@@ -315,13 +315,13 @@ class thumbnail{
 		}
 
 
-		//if( !imagecopy($dst_img, $src_img, 0, 0, 0, 0, 100, 100) ){
 		if( !imagecopyresampled($dst_img, $src_img, $dst_x, $dst_y, $off_w, $off_h, $dst_w, $dst_h, $old_x, $old_y) ){
 			trigger_error('copyresample failed');
 			imagedestroy($dst_img);
 			imagedestroy($src_img);
 			return false;
 		}
+
 		imagedestroy($src_img);
 
 		return thumbnail::SrcToImage($dst_img,$dest_path,$img_type);

@@ -3442,10 +3442,7 @@ class admin_theme_content extends admin_addon_install{
 			return false;
 		}
 
-
-		$src_w = min($orig_w + $posx,$width);
-		$src_h = min($orig_h + $posy,$height);
-		if( !thumbnail::createImg($src_img, $dest_img_full, 0, 0, -$posx, -$posy, $src_w, $src_h, $src_w, $src_h, $width, $height) ){
+		if( !thumbnail::createImg($src_img, $dest_img_full, $posx, $posy, 0, 0, $orig_w, $orig_h, $orig_w, $orig_h, $width, $height) ){
 			message($langmessage['OOPS'].' (Couldn\'t create image [2])');
 			return;
 		}

@@ -4,7 +4,6 @@
 	 *
 	 */
 	$('body').click(function(evt){
-
 		var $area = false;
 		if( evt.target ){
 			$area = $(evt.target).closest('.gp_edit_select');
@@ -17,7 +16,7 @@
 		var $options = $area.find('.gp_edit_select_options');
 		if( !$options.is(':visible') ){
 			$options.slideDown(500,function(){
-				$('#gp_option_area').addClass('gp_active');
+				$('#gp_image_area').addClass('gp_active');
 			});
 			$('#gp_gallery_avail_imgs').animate({'height':80},500);
 			return;
@@ -31,10 +30,12 @@
 	});
 
 	function CloseFolder(){
-		if( !$('.gp_active').length ) return;
+		if( !$('.gp_active').length ){
+			return;
+		}
 		$('#gp_gallery_avail_imgs').animate({'height':220},500);
 		$('.gp_edit_select_options').slideUp(500,function(){
-			$('#gp_option_area').removeClass('gp_active');
+			$('#gp_image_area').removeClass('gp_active');
 		});
 
 	}

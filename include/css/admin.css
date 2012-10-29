@@ -14,6 +14,7 @@ body #gp_admin_html{
 	left:0;
 	right:0;
 	height:0;
+	text-transform: none;
 	/* 	width:100%; for file browser */
 	}
 

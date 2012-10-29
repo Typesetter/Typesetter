@@ -3235,19 +3235,18 @@ class admin_theme_content extends admin_addon_install{
 		global $page,$langmessage,$dirPrefix;
 		$page->ajaxReplace = array();
 		$themes = $this->GetPossible();
-
+		$current_theme = false;
 
 		//which theme folder
 		if( isset($_REQUEST['theme']) && isset($themes[$_REQUEST['theme']]) ){
-			$current_id = $_REQUEST['theme'];
-			$current_info = $themes[$current_id];
+			$current_theme = $_REQUEST['theme'];
+			$current_info = $themes[$current_theme];
 			$current_label = $current_info['name'];
 			$current_dir = $current_info['full_dir'];
 			$current_url = $current_info['url'];
 
 		//current layout
 		}else{
-			//$current_id = false;
 			$layout_info = common::LayoutInfo($this->curr_layout,false);
 			$current_label = $layout_info['theme_name'];
 			$current_dir = $layout_info['dir'];
@@ -3276,21 +3275,25 @@ class admin_theme_content extends admin_addon_install{
 		//images in theme
 		includeFile('tool/Images.php');
 		self::GetAvailThemeImages( $current_dir, $current_url, $images );
-
 		ob_start();
-		echo '<div id="gp_gallery_avail_imgs">';
-
 		foreach($images as $image ){
 			echo '<span class="expand_child">'
 				. '<a href="'.$image['url'].'" name="gp_gallery_add" rel="'.$image['url'].'" data-width="'.$image['width'].'" data-height="'.$image['height'].'">'
 				. '<img src="'.$image['url'].'" alt=""/>'
 				. '</a></span>';
 		}
-		echo '</div>';
-		$content = ob_get_clean();
+		$gp_gallery_avail_imgs = ob_get_clean();
 
 
-		$page->ajaxReplace[] = array('inner','#gp_image_area',$gp_option_area.$content);
+		if( $current_theme ){
+			$page->ajaxReplace[] = array('inner','#gp_option_area',$gp_option_area);
+			$page->ajaxReplace[] = array('inner','#gp_gallery_avail_imgs',$gp_gallery_avail_imgs);
+		}else{
+			$content = '<div id="gp_option_area">'.$gp_option_area.'</div>'
+						.'<div id="gp_gallery_avail_imgs">'.$gp_gallery_avail_imgs.'</div>';
+			$page->ajaxReplace[] = array('inner','#gp_image_area',$content);
+		}
+
 		$page->ajaxReplace[] = array('inner','#gp_folder_options',''); //remove upload button
 	}
 

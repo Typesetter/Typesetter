@@ -3287,14 +3287,28 @@ class admin_theme_content extends admin_addon_install{
 	 */
 	function GetThemeImages($theme_rel){
 		global $dataDir;
-		$images_file = $dataDir.$theme_rel.'/images.php';
+        $themeName = basename( $theme_rel );
+		$images_file = $dataDir.'/data/_site/theme_images.php';
 		$images = array();
-		if( file_exists($images_file) ){
+		if( file_exists($images_file) ){ //need a neater way to do this.. feels messy
 			include($images_file);
-		}
-
+			if (!isset($images[$themeName])) {
+				if (is_dir($dataDir.$theme_rel.'/images')){
+				   gpOutput::RegisterImages($dataDir.$theme_rel,'images');
+				}	else {  return array(); }			
+			}
+		} else {
+		  if (is_dir($dataDir.$theme_rel.'/images')){
+		    gpOutput::RegisterImages($dataDir.$theme_rel,'images');
+			if( file_exists($images_file) ){
+			  include($images_file);
+		    } else {  return array(); }
+		  }	else {  return array(); }
+		} //end loading images file.
+		
+		$themeImages = $images[$themeName];
 		$cleaned_images = array();
-		foreach($images as $image){
+		foreach($themeImages as $image){
 			if( empty($image['url']) ){
 				continue;
 			}
@@ -3307,7 +3321,8 @@ class admin_theme_content extends admin_addon_install{
 
 			$size = '';
 			if( empty($image['width']) || empty($image['height']) ){
-				$src_img = thumbnail::getSrcImg($full_path);
+			     includeFile('tool/Images.php');
+				$src_img = thumbnail::getSrcImg($img_full);
 				$image['width'] = imagesx($src_img);
 				$image['height'] = imagesy($src_img);
 			}
@@ -3362,6 +3377,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '<div id="gp_source_options">';
 		echo '<b>'.$langmessage['Select Image'].'</b>';
 		echo '<a class="ckeditor_control half_width" name="show_theme_images">'.$langmessage['Theme Images'].'</a>';
+		echo '<a class="ckeditor_control ck_reset_size" name="show_all_theme_images" title="'.$langmessage['Theme Images'].'">&#10226;</a>';
 		echo '<a class="ckeditor_control half_width" name="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
 		//echo '<a class="ckeditor_control half_width" name="deafult_sizes">'.$langmessage['Theme_default_sizes'].'</a>';
 		echo '</div>';

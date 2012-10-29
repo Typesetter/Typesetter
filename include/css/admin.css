@@ -1661,11 +1661,12 @@ body #gp_admin_html .layout_links a.selected{
 	display:block;
 	}
 #admin_search .result_list h4{
-	margin-bottom:0;
+	margin:20px 0 0 0;
 	}
 #admin_search .result_list h4 a{
-	font-weight:bold;
-	margin-bottom:0;
+	font-weight:normal;
+	font-size:17px;
+	margin:0;
 	color:#445599 !important;
 	border-bottom: 0 none;
 	}

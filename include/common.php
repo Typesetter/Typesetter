@@ -1300,7 +1300,7 @@ class common{
 	 *
 	 * @return string The formatted html hyperlink
 	 */
-	static function Link($href='',$label,$query='',$attr='',$nonce_action=false){
+	static function Link($href='',$label='',$query='',$attr='',$nonce_action=false){
 
 		if( strpos($attr,'title="') === false){
 			$attr .= ' title="'.common::Ampersands(strip_tags($label)).'" ';

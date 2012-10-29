@@ -1099,43 +1099,7 @@ class gpOutput{
 		}
 
 	}
-    
-	static function RegisterImages($themeRoot,$imageFolderName){
-	   $imagesFolder = $themeRoot.'/'.$imageFolderName;
-	   if (!is_dir($imagesFolder)) {
-		 return;
-	   }
-	   
-       $files = scandir($imagesFolder);
-		includeFile('tool/Images.php');	   
-	   foreach ($files as $file) {
-	       if (($file == '.') || ($file == '..') || is_dir($imagesFolder.'/'.$file)) {
-		     continue;
-		   }
-		   $url = $imageFolderName.'/'.$file;
-		   $src_img = thumbnail::getSrcImg($imagesFolder.'/'.$file);
-		   $width = imagesx($src_img);
-		   $height = imagesy($src_img);
-		   gpOutput::RegisterImage($themeRoot,$url,$width,$height);
-	   }
-	}
-	
-	static function RegisterImage($themeDirName,$src,$width,$height){
-	  global $dataDir;
-	     $themeName = basename($themeDirName);
-		$images_file = $dataDir.'/data/_site/theme_images.php';
-	    $images = array();
-	    if (file_exists($images_file)){
-			include($images_file);
-		}
-		$images[$themeName ][] = array(
-		        'url' => $src,
-				'width' => $width,
-				'height' => $height
-				);
-		gpFiles::SaveArray($images_file,'images',$images);
-	}
-	
+
 	static function GetImage($src,$attributes = array()){
 		global $page,$dataDir,$langmessage,$gpLayouts;
 

@@ -3226,7 +3226,7 @@ class admin_theme_content extends admin_addon_install{
 
 
 	/**
-	 * Show images registered by themes using gpOutput::RegisterImage();
+	 * Show images registered by themes using self::RegisterImage();
 	 *
 	 */
 	function ShowThemeImages(){
@@ -3294,18 +3294,18 @@ class admin_theme_content extends admin_addon_install{
 			include($images_file);
 			if (!isset($images[$themeName])) {
 				if (is_dir($dataDir.$theme_rel.'/images')){
-				   gpOutput::RegisterImages($dataDir.$theme_rel,'images');
-				}	else {  return array(); }			
+				   self::RegisterImages($dataDir.$theme_rel,'images');
+				}	else {  return array(); }
 			}
 		} else {
 		  if (is_dir($dataDir.$theme_rel.'/images')){
-		    gpOutput::RegisterImages($dataDir.$theme_rel,'images');
+		    self::RegisterImages($dataDir.$theme_rel,'images');
 			if( file_exists($images_file) ){
 			  include($images_file);
 		    } else {  return array(); }
 		  }	else {  return array(); }
 		} //end loading images file.
-		
+
 		$themeImages = $images[$themeName];
 		$cleaned_images = array();
 		foreach($themeImages as $image){
@@ -3379,7 +3379,6 @@ class admin_theme_content extends admin_addon_install{
 		echo '<a class="ckeditor_control half_width" name="show_theme_images">'.$langmessage['Theme Images'].'</a>';
 		echo '<a class="ckeditor_control ck_reset_size" name="show_all_theme_images" title="'.$langmessage['Theme Images'].'">&#10226;</a>';
 		echo '<a class="ckeditor_control half_width" name="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
-		//echo '<a class="ckeditor_control half_width" name="deafult_sizes">'.$langmessage['Theme_default_sizes'].'</a>';
 		echo '</div>';
 
 		echo '<div id="gp_image_area"></div><div id="gp_upload_queue"></div>';
@@ -3515,6 +3514,43 @@ class admin_theme_content extends admin_addon_install{
 		}
 		$page->ajaxReplace[] = array('ck_saved','','');
 		return true;
+	}
+
+
+	static function RegisterImages($themeRoot,$imageFolderName){
+	   $imagesFolder = $themeRoot.'/'.$imageFolderName;
+	   if (!is_dir($imagesFolder)) {
+		 return;
+	   }
+
+       $files = scandir($imagesFolder);
+		includeFile('tool/Images.php');
+	   foreach ($files as $file) {
+	       if (($file == '.') || ($file == '..') || is_dir($imagesFolder.'/'.$file)) {
+		     continue;
+		   }
+		   $url = $imageFolderName.'/'.$file;
+		   $src_img = thumbnail::getSrcImg($imagesFolder.'/'.$file);
+		   $width = imagesx($src_img);
+		   $height = imagesy($src_img);
+		   self::RegisterImage($themeRoot,$url,$width,$height);
+	   }
+	}
+
+	static function RegisterImage($themeDirName,$src,$width,$height){
+	  global $dataDir;
+	     $themeName = basename($themeDirName);
+		$images_file = $dataDir.'/data/_site/theme_images.php';
+	    $images = array();
+	    if (file_exists($images_file)){
+			include($images_file);
+		}
+		$images[$themeName ][] = array(
+		        'url' => $src,
+				'width' => $width,
+				'height' => $height
+				);
+		gpFiles::SaveArray($images_file,'images',$images);
 	}
 
 }

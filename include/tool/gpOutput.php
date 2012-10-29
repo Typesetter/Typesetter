@@ -1563,7 +1563,7 @@ class gpOutput{
 		$wrap = gpOutput::ShowEditLink('Admin_Theme_Content');
 		if( $wrap ){
 			echo gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=edittext&key='.urlencode($text).'&return='.urlencode($page->title),' title="'.urlencode($text).'" name="gpabox" ');
-			echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
+			echo '<div class="editable_area inner_size" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
 		}
 
 		if( isset($config['customlang'][$text]) ){

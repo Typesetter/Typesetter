@@ -261,7 +261,7 @@ class elFinder {
 			$this->output(array('error' => '{"error":["'.implode('","', $error).'"]}', 'raw' => true));
 		}
 
-		if (!$this->loaded()) {
+		if( !$this->loaded() ){
 			$this->output(array('error' => $this->error(elFinder::ERROR_CONF, elFinder::ERROR_CONF_NO_VOL), 'debug' => $this->mountErrors));
 		}
 
@@ -613,10 +613,6 @@ class elFinder {
 		$class = 'elFinderVolume'.$driver;
 		if( !class_exists($class) ){
 			$file = 'elFinderVolume'.$driver.'.class.php';
-			if( !file_exists($file) ){
-				$this->mountErrors[] = 'Driver file for "'.$driver.'" does not exists';
-				return false;
-			}
 			include_once($file);
 		}
 		if( !class_exists($class) ){

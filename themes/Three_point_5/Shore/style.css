@@ -31,7 +31,7 @@ h2{
 h2,h3,h4{
 	color: #000;
 	font-family: Courgette, script;
-	margin: 0;
+	margin-bottom:0;
 }
 
 h3{

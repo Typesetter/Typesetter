@@ -15,10 +15,10 @@ class admin_browser extends admin_uploaded{
 		$page->head .= '#gp_admin_html{padding:5px 0 !important;}';
 		$page->head .= '</style>';
 
-		$this->elFinder();
+		$this->Finder();
 	}
 
-	function elFinderPrep(){
+	function FinderPrep(){
 		$this->finder_opts['url'] = common::GetUrl('Admin_Finder');
 		$this->finder_opts['getFileCallback'] = true;
 	}

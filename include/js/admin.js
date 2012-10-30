@@ -697,10 +697,10 @@ $(function(){
 			id = edit_area.attr('id').substr(13); //edit_area is always ExtraEditArea#
 
 			//get the edit links
-			var tmp = $('#ExtraEditLnks'+id).find('a');
-			if( tmp.length == 0 ){
-				tmp = $('#ExtraEditLink'+id);
-				if( tmp.length == 0 ){
+			var edit_links = $('#ExtraEditLnks'+id).find('a');
+			if( edit_links.length == 0 ){
+				edit_links = $('#ExtraEditLink'+id);
+				if( edit_links.length == 0 ){
 					return;
 				}
 			}
@@ -722,7 +722,7 @@ $(function(){
 			SpanPosition();
 
 			//add the edit links
-			tmp = tmp.clone(true)
+			edit_links = edit_links.clone(true)
 				.removeClass('ExtraEditLink')
 				;
 
@@ -736,7 +736,7 @@ $(function(){
 					.html(close_text)
 					.stop(true,true,true)
 					.show()
-					.append(tmp)
+					.append(edit_links)
 					.find('.gp_overlay_expand').attr('class','gp_overlay_close')
 					;
 

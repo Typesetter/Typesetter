@@ -261,7 +261,7 @@ class elFinder {
 			$this->output(array('error' => '{"error":["'.implode('","', $error).'"]}', 'raw' => true));
 		}
 
-		if( !$this->loaded() ){
+		if (!$this->loaded()) {
 			$this->output(array('error' => $this->error(elFinder::ERROR_CONF, elFinder::ERROR_CONF_NO_VOL), 'debug' => $this->mountErrors));
 		}
 

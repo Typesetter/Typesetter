@@ -96,30 +96,16 @@
 
 /**
  * border around area being editing
- * Using :before so the border width doesn't affect display of content
  */
 .editable_area,
 .inline_editor span.cke_skin_kama,
 .gp_editing{
 	position:relative;
-	/* z-index: 0; potentially changes layouts */
 	}
 
-.inline_editor span.cke_skin_kama:before,
-.gp_editing:before{
-	content:"";
-	position:absolute;
-	top:-1px;
-	right:-1px;
-	bottom:-1px;
-	left:-1px;
-	padding:10px !important;
-
-	border:1px solid #ccc !important;
-	-moz-border-radius: 0 !important;
-	-o-border-radius: 0 !important;
-	-webkit-border-radius: 0 !important;
-	z-index:-1;
+.inline_editor span.cke_skin_kama,
+.gp_editing{
+	outline:1px solid #ccc !important;
 	}
 
 .inline_editor span.cke_skin_kama *{

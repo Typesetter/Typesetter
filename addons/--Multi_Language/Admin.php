@@ -346,7 +346,7 @@ class MultiLang_Admin extends MultiLang_Common{
 			return;
 		}
 
-		$lang_a = array_search($_POST['ml_lang'],$ml_languages);
+		$lang_a = $this->WhichLanguage($_POST['ml_lang']);
 		if( !$lang_a ){
 			message($langmessage['OOPS'].' (Invalid Language)');
 			return;
@@ -382,12 +382,16 @@ class MultiLang_Admin extends MultiLang_Common{
 		//new list
 		}else{
 
+			//$list_index = $this->GetListIndex($index_b);
 			if( $this->GetListIndex($index_b) ){
-				message($langmessage['OOPS'].' (Already Translated)');
+				$label = common::GetLabelIndex($index_b);
+				$link = common::Link('Admin_MultiLang',$label,'cmd=title_settings&index='.$index_b,' name="gpabox"');
+				message('Sorry, '.$link.' is already part of a translation.');
+				//message($langmessage['OOPS'].' (Already Translated)');
 				return;
 			}
 
-			$lang_b = array_search($_POST['ml_lang_b'],$ml_languages);
+			$lang_b = $this->WhichLanguage($_POST['ml_lang_b']);
 			if( !$lang_b ){
 				message($langmessage['OOPS'].' (Invalid Language)');
 				return;
@@ -412,6 +416,7 @@ class MultiLang_Admin extends MultiLang_Common{
 		$this->config['lists'][$list_index][$lang_a] = $index_a;
 		$this->config['titles'][$index_a] = $list_index;
 
+
 		//echo '<h3>New configuration</h3>';
 		//echo showArray($this->config);
 		//echo '<hr/>';
@@ -434,12 +439,21 @@ class MultiLang_Admin extends MultiLang_Common{
 			return $gp_index[$cleaned_title];
 		}
 		foreach($gp_titles as $index => $info){
-			if( isset($info['label']) && $info['label'] = $title ){
+			if( isset($info['label']) && $info['label'] == $title ){
 				return $index;
 			}
 		}
 
 		return $false;
+	}
+
+	function WhichLanguage($language){
+		global $ml_languages;
+
+		if( isset($ml_languages[$language]) ){
+			return $language;
+		}
+		return array_search($language,$ml_languages);
 	}
 
 
@@ -465,6 +479,11 @@ class MultiLang_Admin extends MultiLang_Common{
 
 
 		echo '<div>';
+
+		echo '<h2>';
+		echo common::GetLabelIndex($index);
+		echo '</h2>';
+
 		echo '<form method="post" action="'.common::GetUrl('Admin_MultiLang').'">';
 		echo '<input type="hidden" name="cmd" value="title_settings_save" />';
 		echo '<input type="hidden" name="index" value="'.$index.'" />';
@@ -619,6 +638,7 @@ class MultiLang_Admin extends MultiLang_Common{
 		echo ' - ';
 		echo common::Link('Admin_MultiLang','Languages','cmd=languages');
 		echo '</p>';
+
 	}
 
 }

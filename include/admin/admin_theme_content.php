@@ -1393,7 +1393,7 @@ class admin_theme_content extends admin_addon_install{
 	 * @return array
 	 */
 	function GetPossible(){
-		global $dataDir;
+		global $dataDir,$dirPrefix;
 		$themes = array();
 
 		//packaged themes
@@ -1416,6 +1416,7 @@ class admin_theme_content extends admin_addon_install{
 			$themes[$index]['folder'] = $name;
 			$themes[$index]['is_addon'] = false;
 			$themes[$index]['full_dir'] = $full_dir;
+			$themes[$index]['url'] = common::GetDir('/themes/'.$name);
 			if( isset($ini_info['Addon_Unique_ID']) ){
 				$themes[$index]['id'] = $ini_info['Addon_Unique_ID'];
 			}
@@ -1442,6 +1443,7 @@ class admin_theme_content extends admin_addon_install{
 			$themes[$index]['is_addon'] = true;
 			$themes[$index]['full_dir'] = $full_dir;
 			$themes[$index]['id'] = $ini_info['Addon_Unique_ID'];
+			$themes[$index]['url'] = common::GetDir('/data/_themes/'.$folder);
 		}
 
 		uksort($themes,'strnatcasecmp');
@@ -3226,99 +3228,74 @@ class admin_theme_content extends admin_addon_install{
 
 
 	/**
-	 * Show images registered by themes using gpOutput::RegisterImage();
+	 * Show images available in themes
 	 *
 	 */
 	function ShowThemeImages(){
-		global $page,$langmessage;
+		global $page,$langmessage,$dirPrefix;
 		$page->ajaxReplace = array();
-		$images = $this->GetAvailableImages();
+		$themes = $this->GetPossible();
+		$current_theme = false;
 
+		//which theme folder
+		if( isset($_REQUEST['theme']) && isset($themes[$_REQUEST['theme']]) ){
+			$current_theme = $_REQUEST['theme'];
+			$current_info = $themes[$current_theme];
+			$current_label = $current_info['name'];
+			$current_dir = $current_info['full_dir'];
+			$current_url = $current_info['url'];
+
+		//current layout
+		}else{
+			$layout_info = common::LayoutInfo($this->curr_layout,false);
+			$current_label = $layout_info['theme_name'];
+			$current_dir = $layout_info['dir'];
+			$current_url = common::GetDir(dirname($layout_info['path']));
+		}
+
+
+		//list of themes
 		ob_start();
-		echo '<div id="gp_gallery_avail_imgs">';
+		echo '<div class="gp_edit_select ckeditor_control">';
+		echo '<a class="gp_selected_folder"><span class="folder"></span>';
+		echo $current_label;
+		echo '</a>';
 
-		foreach($images as $img_rel => $image ){
+		echo '<div class="gp_edit_select_options">';
 
-			$thumb_rel = $img_rel;
-			if( !empty($image['thumbnail_url']) ){
-				$thumb_rel = $image['theme_rel'].'/'.ltrim($image['thumbnail_url'],'/');
-			}
-			$file_url = common::GetDir($img_rel);
-			$size = ' data-width="'.$image['width'].'" data-height="'.$image['height'].'"';
-
-			echo '<span class="expand_child">'
-				. '<a href="'.$file_url.'" name="gp_gallery_add" rel="'.$file_url.'"'.$size.'>'
-				. '<img src="'.common::GetDir($thumb_rel).'" alt=""/>'
-				. '</a>'
-				. '</span>';
+		foreach($themes as $theme_id => $info){
+			echo common::Link('Admin_Theme_Content/'.rawurlencode($this->curr_layout),'<span class="folder"></span>'.$info['name'],'cmd=theme_images&theme='.rawurlencode($theme_id),' name="gpajax" class="gp_gallery_folder" ');
 		}
 		echo '</div>';
-		$content = ob_get_clean();
-		$page->ajaxReplace[] = array('inner','#gp_image_area',$content);
+		echo '</div>';
+
+		$gp_option_area = ob_get_clean();
+
+
+		//images in theme
+		includeFile('tool/Images.php');
+		self::GetAvailThemeImages( $current_dir, $current_url, $images );
+		ob_start();
+		foreach($images as $image ){
+			echo '<span class="expand_child">'
+				. '<a href="'.$image['url'].'" name="gp_gallery_add" rel="'.$image['url'].'" data-width="'.$image['width'].'" data-height="'.$image['height'].'">'
+				. '<img src="'.$image['url'].'" alt=""/>'
+				. '</a></span>';
+		}
+		$gp_gallery_avail_imgs = ob_get_clean();
+
+
+		if( $current_theme ){
+			$page->ajaxReplace[] = array('inner','#gp_option_area',$gp_option_area);
+			$page->ajaxReplace[] = array('inner','#gp_gallery_avail_imgs',$gp_gallery_avail_imgs);
+		}else{
+			$content = '<div id="gp_option_area">'.$gp_option_area.'</div>'
+						.'<div id="gp_gallery_avail_imgs">'.$gp_gallery_avail_imgs.'</div>';
+			$page->ajaxReplace[] = array('inner','#gp_image_area',$content);
+		}
+
 		$page->ajaxReplace[] = array('inner','#gp_folder_options',''); //remove upload button
 	}
-
-	/**
-	 * Return an array of all images registered by themes
-	 *
-	 */
-	function GetAvailableImages(){
-		global $dataDir;
-
-		$all_images = array();
-
-		$dirs = array('/themes','/data/_themes');
-
-		foreach($dirs as $dir_rel){
-			$dir = $dataDir.$dir_rel;
-			$layouts = gpFiles::readDir($dir,1);
-			foreach($layouts as $name){
-				$theme_relative = $dir_rel.'/'.$name;
-				$all_images += $this->GetThemeImages($theme_relative);
-			}
-		}
-
-		return $all_images;
-	}
-
-	/**
-	 * Get the images associated with a theme
-	 *
-	 */
-	function GetThemeImages($theme_rel){
-		global $dataDir;
-		$images_file = $dataDir.$theme_rel.'/images.php';
-		$images = array();
-		if( file_exists($images_file) ){
-			include($images_file);
-		}
-
-		$cleaned_images = array();
-		foreach($images as $image){
-			if( empty($image['url']) ){
-				continue;
-			}
-
-			$img_rel = $theme_rel.'/'.ltrim($image['url'],'/');
-			$img_full = $dataDir.$img_rel;
-			if( !file_exists($img_full) ){
-				continue;
-			}
-
-			$size = '';
-			if( empty($image['width']) || empty($image['height']) ){
-				$src_img = thumbnail::getSrcImg($full_path);
-				$image['width'] = imagesx($src_img);
-				$image['height'] = imagesy($src_img);
-			}
-
-			$image['theme_rel'] = $theme_rel;
-			$cleaned_images[$img_rel] = $image;
-		}
-
-		return $cleaned_images;
-	}
-
 
 	/**
 	 * Load the inline editor for a theme image
@@ -3345,18 +3322,25 @@ class admin_theme_content extends admin_addon_install{
 		ob_start();
 
 		echo '<div id="gp_current_image">';
+		echo '<input type="hidden" name="orig_height">';
+		echo '<input type="hidden" name="orig_width">';
 		echo '<span id="gp_image_wrap"><img/></span>';
 		echo '<table>';
 		echo '<tr><td>'.$langmessage['Width'].'</td><td><input type="text" name="width" class="ck_input"/></td>';
-		echo '<td>'.$langmessage['Height'].'</td><td><input type="text" name="height" class="ck_input"/></td></tr>';
+		echo '<td>'.$langmessage['Height'].'</td><td><input type="text" name="height" class="ck_input"/></td>';
+		echo '<td><a name="deafult_sizes" class="ckeditor_control ck_reset_size" title="'.$langmessage['Theme_default_sizes'].'">&#10226;</a></td>';
+		echo '</tr>';
 		echo '<tr><td>'.$langmessage['Left'].'</td><td><input type="text" name="left" class="ck_input" value="0"/></td>';
-		echo '<td>'.$langmessage['Top'].'</td><td><input type="text" name="top" class="ck_input" value="0"/></td></tr>';
+		echo '<td>'.$langmessage['Top'].'</td><td><input type="text" name="top" class="ck_input" value="0"/></td>';
+		echo '</tr>';
 		echo '</table>';
 		echo '</div>';
 
 		echo '<div id="gp_source_options">';
 		echo '<b>'.$langmessage['Select Image'].'</b>';
-		echo '<a class="ckeditor_control half_width" name="show_theme_images">'.$langmessage['Theme Images'].'</a>';
+		echo common::Link('Admin_Theme_Content/'.rawurlencode($this->curr_layout),$langmessage['Theme Images'],'cmd=theme_images',' name="gpajax" class="ckeditor_control half_width" ');
+		//echo '<a class="ckeditor_control half_width" name="show_theme_images">'.$langmessage['Theme Images'].'</a>';
+		//echo '<a class="ckeditor_control ck_reset_size" name="show_all_theme_images" title="'.$langmessage['Theme Images'].'">&#10226;</a>';
 		echo '<a class="ckeditor_control half_width" name="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
 		echo '</div>';
 
@@ -3380,7 +3364,7 @@ class admin_theme_content extends admin_addon_install{
 		includeFile('tool/Images.php');
 		includeFile('tool/editing.php');
 		$page->ajaxReplace = array();
-		$dest_dir = $dataDir.'/data/_layouts/'.$this->curr_layout;
+		//$dest_dir = $dataDir.'/data/_layouts/'.$this->curr_layout; //Not used anywhere.
 
 
 		//source file
@@ -3395,7 +3379,6 @@ class admin_theme_content extends admin_addon_install{
 		$source_file_rel = '/'.ltrim($source_file_rel,'/');
 		$source_file_full = $dataDir.$source_file_rel;
 		if( !file_exists($source_file_full) ){
-			message($source_file_full);
 			message($langmessage['OOPS'].' (Source file not found)');
 			return;
 		}
@@ -3449,7 +3432,8 @@ class admin_theme_content extends admin_addon_install{
 		if( isset($_REQUEST['time']) && ctype_digit($_REQUEST['time']) ){
 			$time = $_REQUEST['time'];
 		}
-		$dest_img_rel = '/data/_uploaded/headers/'.$name.'.'.$time.'.'.$type;
+		//$dest_img_rel = '/data/_uploaded/headers/'.$name.'.'.$time.'.'.$type;
+		$dest_img_rel = '/data/_uploaded/headers/'.$name.'.'.$time.'.png';
 		$dest_img_full = $dataDir.$dest_img_rel;
 
 		//make sure the folder exists
@@ -3458,10 +3442,7 @@ class admin_theme_content extends admin_addon_install{
 			return false;
 		}
 
-
-		$src_w = min($orig_w + $posx,$width);
-		$src_h = min($orig_h + $posy,$height);
-		if( !thumbnail::createImg($src_img, $dest_img_full, 0, 0, -$posx, -$posy, $src_w, $src_h, $src_w, $src_h, $width, $height) ){
+		if( !thumbnail::createImg($src_img, $dest_img_full, $posx, $posy, 0, 0, $orig_w, $orig_h, $orig_w, $orig_h, $width, $height) ){
 			message($langmessage['OOPS'].' (Couldn\'t create image [2])');
 			return;
 		}
@@ -3483,7 +3464,7 @@ class admin_theme_content extends admin_addon_install{
 		$save_info['height'] = $height;
 
 		$container = $_REQUEST['container'];
-		$gpLayouts[$this->curr_layout]['images'] = array(); //prevents shuffle
+		//$gpLayouts[$this->curr_layout]['images'] = array(); //prevents shuffle - REMOVED to allow images per container to be saved.
 		$gpLayouts[$this->curr_layout]['images'][$container] = array(); //prevents shuffle
 		$gpLayouts[$this->curr_layout]['images'][$container][] = $save_info;
 
@@ -3493,6 +3474,54 @@ class admin_theme_content extends admin_addon_install{
 		}
 		$page->ajaxReplace[] = array('ck_saved','','');
 		return true;
+	}
+
+
+	/**
+	 * Get a list of all the images available within a theme
+	 *
+	 */
+	function GetAvailThemeImages( $dir, $url, &$images ){
+		$files = scandir($dir);
+		$files = array_diff($files,array('.','..'));
+		foreach($files as $file){
+
+			$file_full = $dir.'/'.$file;
+			$file_url = $url.'/'.$file;
+			if( is_dir($file_full) ){
+				self::GetAvailThemeImages( $file_full, $file_url, $images );
+				continue;
+			}
+
+			if( !self::IsImg( $file ) ){
+				continue;
+			}
+
+			$size = getimagesize($file_full);
+
+			$temp = array();
+			$temp['width'] = $size[0];
+			$temp['height'] = $size[1];
+			$temp['full'] = $file_full;
+			$temp['url'] = $file_url;
+			$images[] = $temp;
+		}
+	}
+
+
+	/**
+	 * Determines if the $file is an image based on the file extension
+	 * @static
+	 * @return bool
+	 */
+	static function IsImg($file){
+		$img_types = array('bmp','png','jpg','jpeg','gif','tiff','tif');
+
+		$name_parts = explode('.',$file);
+		$file_type = array_pop($name_parts);
+		$file_type = strtolower($file_type);
+
+		return in_array($file_type,$img_types);
 	}
 
 }

@@ -965,7 +965,7 @@ class admin_port{
 			echo '</td>';
 			echo '<td>';
 			$size = filesize($full_path);
-			echo $this->format_bytes($size);
+			echo admin_tools::FormatBytes($size);
 			echo ' ';
 			echo $info['ext'];
 			echo '</td>';
@@ -997,7 +997,7 @@ class admin_port{
 		echo '</th><th>';
 		echo '&nbsp;';
 		echo '</th><th>';
-		echo $this->format_bytes($total_size);
+		echo admin_tools::FormatBytes($total_size);
 		echo '</th><th>';
 		echo '&nbsp;';
 		echo '</th></tr>';
@@ -1077,12 +1077,6 @@ class admin_port{
 		echo ' &nbsp; ';
 		echo htmlspecialchars($label);
 		echo '</label>';
-	}
-
-	function format_bytes($size) {
-		$units = array('B', 'KB', 'MB', 'GB', 'TB');
-		for ($i = 0; $size >= 1024 && $i < 4; $i++) $size /= 1024;
-		return round($size, 2).'&nbsp;'.$units[$i];
 	}
 
 }

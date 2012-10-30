@@ -1126,8 +1126,8 @@ class gpOutput{
 			&& is_array($gpLayouts[$page->gpLayout]['images'][$container_id])
 			){
 				//echo showArray($gpLayouts[$page->gpLayout]['images'][$container_id]);
-				shuffle($gpLayouts[$page->gpLayout]['images'][$container_id]);
-				$image = current($gpLayouts[$page->gpLayout]['images'][$container_id]);
+				//shuffle($gpLayouts[$page->gpLayout]['images'][$container_id]); //Does not make sense ? There will always be only 1 entry in for this container as it is per img element
+				$image = $gpLayouts[$page->gpLayout]['images'][$container_id][0]; //call to current also not needed, there will only be 1 entry
 				$img_full = $dataDir.$image['img_rel'];
 				if( file_exists($img_full) ){
 					$img_rel = $image['img_rel'];
@@ -1563,7 +1563,7 @@ class gpOutput{
 		$wrap = gpOutput::ShowEditLink('Admin_Theme_Content');
 		if( $wrap ){
 			echo gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=edittext&key='.urlencode($text).'&return='.urlencode($page->title),' title="'.urlencode($text).'" name="gpabox" ');
-			echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
+			echo '<div class="editable_area inner_size" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
 		}
 
 		if( isset($config['customlang'][$text]) ){

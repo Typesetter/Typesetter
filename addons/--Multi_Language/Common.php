@@ -29,14 +29,38 @@ class MultiLang_Common{
 		$config += array('titles'=>array(),'lists'=>array(),'langs'=>array());
 
 		$this->config = $config;
-		$this->lists = $config['lists'];
-		$this->titles = $config['titles'];
+		$this->FixConfig();
+		$this->lists = $this->config['lists'];
+		$this->titles = $this->config['titles'];
 
-		if( !count($config['langs']) ){
+		if( !count($this->config['langs']) ){
 			$this->langs = $ml_languages;
 		}else{
-			$this->langs = $config['langs'];
+			$this->langs =$this->config['langs'];
 		}
+	}
+
+	/**
+	 * Remove entries from titles if they aren't in lists
+	 *
+	 */
+	function FixConfig(){
+		if( !isset($this->config['titles']) || !is_array($this->config['titles']) ){
+			return;
+		}
+
+		foreach($this->config['titles'] as $title_index => $list){
+			if( !isset($this->config['lists'][$list]) || !is_array($this->config['lists'][$list]) ){
+				unset($this->config['titles'][$title_index]);
+				continue;
+			}
+
+			if( !in_array($title_index,$this->config['lists'][$list]) ){
+				unset($this->config['titles'][$title_index]);
+				continue;
+			}
+		}
+
 	}
 
 	/**

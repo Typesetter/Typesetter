@@ -14,6 +14,7 @@ body #gp_admin_html{
 	left:0;
 	right:0;
 	height:0;
+	text-transform: none;
 	/* 	width:100%; for file browser */
 	}
 
@@ -1533,7 +1534,7 @@ body #gp_admin_html .layout_links a.selected{
 .gp_floating_area .right a,
 .gp_floating_area .right span{
 	display:inline-block;
-	margin:0 4px 4px 4px;
+	margin:0 4px;
 	}
 
 .gp_floating_area .admin_arrow_out{
@@ -1660,11 +1661,12 @@ body #gp_admin_html .layout_links a.selected{
 	display:block;
 	}
 #admin_search .result_list h4{
-	margin-bottom:0;
+	margin:20px 0 0 0;
 	}
 #admin_search .result_list h4 a{
-	font-weight:bold;
-	margin-bottom:0;
+	font-weight:normal;
+	font-size:17px;
+	margin:0;
 	color:#445599 !important;
 	border-bottom: 0 none;
 	}

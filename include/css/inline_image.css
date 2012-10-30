@@ -16,6 +16,13 @@
 	display:inline-block;
 	}
 
+#ckeditor_area .ck_reset_size{
+	border: 1px solid #CCCCCC !important;
+	font-size: 18px !important;
+	line-height: 19px;
+	padding: 0 4px !important;
+	text-align: center;
+	}
 
 
 /* the position is left leaning to allow for a scrollbar */
@@ -83,6 +90,7 @@
 	max-height:200px;
 	min-width:70px;
 	min-height:70px;
+	background:#fff;
 	}
 
 
@@ -234,16 +242,6 @@
 	margin:0 !important;
 }
 
-/*
-#ckeditor_area .gp_active .gp_edit_select{
-	border-bottom:1px solid #fafafa !important;
-	border-right:1px solid #fafafa !important;
-	border-top:1px solid #dad9d9 !important;
-	border-left:1px solid #dad9d9 !important;
-	background-color:#f5f5f5;
-	background: -moz-linear-gradient(top, #f1f1f1, #f7f7f7);
-	}
-	*/
 
 #ckeditor_area a.gp_selected_folder .folder,
 #ckeditor_area a.gp_gallery_folder .folder,

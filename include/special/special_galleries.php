@@ -206,7 +206,7 @@ class special_galleries{
 	 *
 	 * @static
 	 */
-	function GetData(){
+	static function GetData(){
 		global $dataDir;
 
 		$galleries = array();
@@ -226,7 +226,7 @@ class special_galleries{
 	 * Add visibility settings according to old method for handling gallery visibility
 	 * @static
 	 */
-	function UpdateData(&$galleries){
+	static function UpdateData(&$galleries){
 		global $gp_index, $gp_menu;
 
 		foreach($galleries as $title => $info){
@@ -349,7 +349,7 @@ class special_galleries{
 
 	///data/_uploaded/image/thumbnails/image/gpeasy/admin_pages/01login.png.jpg
 	///data/_uploaded/image/gpeasy/xamppsetup/01.png
-	function UpdateGalleryInfo($title,$file_sections){
+	static function UpdateGalleryInfo($title,$file_sections){
 
 		$content = '';
 		$has_gallery = false;
@@ -405,7 +405,7 @@ class special_galleries{
 	 * Handle the removal of a gallery page for admin_menu_tools.php
 	 *
 	 */
-	function RemovedGallery($title){
+	static function RemovedGallery($title){
 
 		$galleries = special_galleries::GetData();
 		if( !isset($galleries[$title]) ){
@@ -423,7 +423,7 @@ class special_galleries{
 	 * @static
 	 *
 	 */
-	function RenamedGallery($old_title,$new_title){
+	static function RenamedGallery($old_title,$new_title){
 
 		$galleries = special_galleries::GetData();
 		if( !isset($galleries[$old_title]) ){
@@ -435,7 +435,7 @@ class special_galleries{
 		}
 	}
 
-	function SaveIndex($galleries){
+	static function SaveIndex($galleries){
 		global $dataDir;
 
 		includeFile('admin/admin_tools.php');

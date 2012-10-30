@@ -30,6 +30,9 @@ function LOGO(obj){
 
 //get the coordinates for positioning editable area overlays
 function GetCoords(a){
+	if( a.hasClass('inner_size') ){
+		a = a.children(':first');
+	}
 	loc = a.offset();
 	loc.w = a.outerWidth();
 	loc.h = a.outerHeight();

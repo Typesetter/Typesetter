@@ -502,7 +502,11 @@ class gpOutput{
 
 
 	static function ShowEditLink($permission=false){
-		global $GP_NESTED_EDIT;
+		global $GP_NESTED_EDIT, $page;
+
+		if( !$page->gpLayout ){
+			return false;
+		}
 
 		if( $permission ){
 			return !$GP_NESTED_EDIT && common::LoggedIn() && admin_tools::HasPermission($permission);
@@ -1143,7 +1147,7 @@ class gpOutput{
 
 		//edit options
 		$editable = gpOutput::ShowEditLink('Admin_Theme_Content');
-		if( $page->gpLayout && $editable ){
+		if( $editable ){
 			$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content/'.$page->gpLayout,$langmessage['edit'],'file='.rawurlencode($img_rel).'&container='.$container_id.'&time='.time(),' title="Edit Image" name="inline_edit_generic" ');
 			gpOutput::$editlinks .= '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">'.$edit_link.'</span>';
 			$attributes['class'] .= ' editable_area';

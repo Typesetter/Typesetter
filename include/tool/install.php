@@ -174,7 +174,7 @@ class Install_Tools{
 		//$config = array(); //because of ftp values
 
 		$gpLayouts = array();
-		$gpLayouts['default']['theme'] = 'Light_Texture/Blue';
+		$gpLayouts['default']['theme'] = 'Three_point_5/Shore';
 		$gpLayouts['default']['color'] = '#93c47d';
 		$gpLayouts['default']['label'] = $langmessage['default'];
 

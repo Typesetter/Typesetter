@@ -695,8 +695,8 @@ class display{
 		$is_addon = false;
 		if( !$layout_info ){
 			$this->gpLayout = false;
-			$this->theme_name = 'Light_Texture';
-			$this->theme_color = 'Blue';
+			$this->theme_name = 'Three_point_5';
+			$this->theme_color = 'Shore';
 			$this->theme_rel = '/themes/'.$this->theme_name.'/'.$this->theme_color;
 			$this->theme_dir = $dataDir.'/themes/'.$this->theme_name;
 

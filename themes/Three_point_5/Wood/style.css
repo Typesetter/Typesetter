@@ -112,9 +112,6 @@ p{
 	font-family: sans-serif;
 	text-shadow: 1px 1px 0 rgba(255,255,255,0.6);
 	}
-#menu a:hover{
-	text-decoration:underline;
-	}
 
 #menu ul{
 	list-style: none;

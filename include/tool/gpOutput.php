@@ -1117,7 +1117,6 @@ class gpOutput{
 		$container_id = 'Image:'.$src;
 		$container_id = gpOutput::GetContainerID($container_id);
 
-
 		//select custom image
 		$image = false;
 		if( isset($gpLayouts[$page->gpLayout])
@@ -1144,7 +1143,7 @@ class gpOutput{
 
 		//edit options
 		$editable = gpOutput::ShowEditLink('Admin_Theme_Content');
-		if( $editable ){
+		if( $page->gpLayout && $editable ){
 			$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content/'.$page->gpLayout,$langmessage['edit'],'file='.rawurlencode($img_rel).'&container='.$container_id.'&time='.time(),' title="Edit Image" name="inline_edit_generic" ');
 			gpOutput::$editlinks .= '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">'.$edit_link.'</span>';
 			$attributes['class'] .= ' editable_area';

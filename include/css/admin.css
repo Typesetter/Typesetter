@@ -1534,7 +1534,7 @@ body #gp_admin_html .layout_links a.selected{
 .gp_floating_area .right a,
 .gp_floating_area .right span{
 	display:inline-block;
-	margin:0 4px 4px 4px;
+	margin:0 4px;
 	}
 
 .gp_floating_area .admin_arrow_out{

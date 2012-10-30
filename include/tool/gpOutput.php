@@ -502,11 +502,7 @@ class gpOutput{
 
 
 	static function ShowEditLink($permission=false){
-		global $GP_NESTED_EDIT, $page;
-
-		if( !$page->gpLayout ){
-			return false;
-		}
+		global $GP_NESTED_EDIT;
 
 		if( $permission ){
 			return !$GP_NESTED_EDIT && common::LoggedIn() && admin_tools::HasPermission($permission);
@@ -1565,7 +1561,7 @@ class gpOutput{
 
 		$wrap = gpOutput::ShowEditLink('Admin_Theme_Content');
 		if( $wrap ){
-			echo gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=edittext&key='.urlencode($text).'&return='.urlencode($page->title),' title="'.urlencode($text).'" name="gpabox" ');
+			gpOutput::$editlinks .= gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=edittext&key='.urlencode($text).'&return='.urlencode($page->title),' title="'.urlencode($text).'" name="gpabox" ');
 			echo '<div class="editable_area inner_size" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
 		}
 

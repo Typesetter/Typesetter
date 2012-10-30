@@ -139,6 +139,7 @@ if ( function_exists( 'date_default_timezone_set' ) )
 function showError($errno, $errmsg, $filename, $linenum, $vars){
 	global $wbErrorBuffer, $addon_current_id, $page, $addon_current_version;
 	static $reported = array();
+	$report_error = true;
 
 
 	$errortype = array (
@@ -160,10 +161,10 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 			 );
 
 
-	// since we're supporting php 4.3+ there are technically a lot on non-static functions being called statically
-	//if( $errno === E_STRICT ){
-	//	return false;
-	//}
+	// since we supported php 4.3+, there may be a lot of strict errors
+	if( $errno === E_STRICT ){
+		$report_error = true;
+	}
 
 
 	// for functions prepended with @ symbol to suppress errors
@@ -196,6 +197,9 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	$reported[$uniq] = true;
 
 	if( gpdebug === false ){
+		if( !$report_error ){
+			return false;
+		}
 
 		//if it's an addon error, determine if if was installed remotely
 		if( isset($addon_current_id) && $addon_current_id ){
@@ -269,7 +273,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 
 	if( gpdebug === true ){
 		message($mess);
-	}else{
+	}elseif( $report_error ){
 		global $gp_mailer;
 		includeFile('tool/email_mailer.php');
 		$gp_mailer->SendEmail(gpdebug, 'debug ', $mess);
@@ -898,6 +902,12 @@ class common{
 		//if logged in, prepare the admin content and don't send 304 response
 		if( common::LoggedIn() ){
 			admin_tools::AdminHtml();
+
+			//empty edit links if there isn't a layout
+			if( !$page->gpLayout ){
+				gpOutput::$editlinks = '';
+			}
+
 			return;
 		}
 

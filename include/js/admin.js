@@ -694,8 +694,18 @@ $(function(){
 				return;
 			}
 
-
 			id = edit_area.attr('id').substr(13); //edit_area is always ExtraEditArea#
+
+			//get the edit links
+			var tmp = $('#ExtraEditLnks'+id).find('a');
+			if( tmp.length == 0 ){
+				tmp = $('#ExtraEditLink'+id);
+				if( tmp.length == 0 ){
+					return;
+				}
+			}
+
+			//edit area location
 			loc = GetCoords(edit_area);
 			overlay.show().css({'top':(loc.top-3),'left':(loc.left-2),'width':(loc.w+6)});
 
@@ -712,10 +722,6 @@ $(function(){
 			SpanPosition();
 
 			//add the edit links
-			var tmp = $('#ExtraEditLnks'+id).find('a');
-			if( tmp.length == 0 ){
-				tmp = $('#ExtraEditLink'+id);
-			}
 			tmp = tmp.clone(true)
 				.removeClass('ExtraEditLink')
 				;

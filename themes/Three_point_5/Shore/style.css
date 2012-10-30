@@ -66,7 +66,7 @@ p{
 	box-shadow: 0 0 5px 0 rgba(0,0,0,0.25);
 }
 #content > div{
-	padding:35px;
+	padding:15px 35px 35px 35px;
 	border:1px solid #ddd;
 	min-height:500px;
 	}

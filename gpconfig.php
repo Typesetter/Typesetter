@@ -98,7 +98,7 @@ define('gp_chmod_dir',0755);
  * Set to true to display php errors in the browser window.
  * Defaults to false
  */
-define('gpdebug',true);
+//define('gpdebug',true);
 
 
 /**
@@ -123,14 +123,14 @@ define('gpdebug',true);
  * Set to "1" if gpEasy is unable to display errors with gpdebug set to "true" (see above)
  *
  */
-//@ini_set('display_errors',0);
+@ini_set('display_errors',0);
 
 /**
  * gp_safe_mode
  * Set to true to turn safe mode on. This will prevent addons from being used.
  * Defaults to the value set for gpdebug
  */
-define('gp_safe_mode',false);
+//define('gp_safe_mode',false);
 
 
 /**

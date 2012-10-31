@@ -1300,6 +1300,7 @@ class admin_theme_content extends admin_addon_install{
 		$page->theme_color = $color;
 		$page->theme_dir = $theme_info['full_dir'];
 		$page->layout_css = false;
+		$page->theme_rel = $theme_info['rel'].'/'.$color;
 
 		if( isset($theme_info['id']) ){
 			$page->theme_addon_id = $theme_info['id'];
@@ -1416,7 +1417,7 @@ class admin_theme_content extends admin_addon_install{
 			$themes[$index]['folder'] = $name;
 			$themes[$index]['is_addon'] = false;
 			$themes[$index]['full_dir'] = $full_dir;
-			$themes[$index]['url'] = common::GetDir('/themes/'.$name);
+			$themes[$index]['rel'] = '/themes/'.$name;
 			if( isset($ini_info['Addon_Unique_ID']) ){
 				$themes[$index]['id'] = $ini_info['Addon_Unique_ID'];
 			}
@@ -1443,7 +1444,7 @@ class admin_theme_content extends admin_addon_install{
 			$themes[$index]['is_addon'] = true;
 			$themes[$index]['full_dir'] = $full_dir;
 			$themes[$index]['id'] = $ini_info['Addon_Unique_ID'];
-			$themes[$index]['url'] = common::GetDir('/data/_themes/'.$folder);
+			$themes[$index]['rel'] = '/data/_themes/'.$folder;
 		}
 
 		uksort($themes,'strnatcasecmp');
@@ -3243,7 +3244,7 @@ class admin_theme_content extends admin_addon_install{
 			$current_info = $themes[$current_theme];
 			$current_label = $current_info['name'];
 			$current_dir = $current_info['full_dir'];
-			$current_url = $current_info['url'];
+			$current_url = common::GetDir($current_info['rel']);
 
 		//current layout
 		}else{

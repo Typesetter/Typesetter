@@ -13,15 +13,7 @@ includeFile('admin/admin_uploaded.php');
 define( 'finder_chmod_file', gp_chmod_file );
 define( 'finder_chmod_dir', gp_chmod_dir );
 
-
-//include_once dirname(__FILE__).DIRECTORY_SEPARATOR.'elFinderConnector.class.php';
-//include_once dirname(__FILE__).DIRECTORY_SEPARATOR.'elFinder.class.php';
-//include_once dirname(__FILE__).DIRECTORY_SEPARATOR.'elFinderVolumeDriver.class.php';
-//include_once dirname(__FILE__).DIRECTORY_SEPARATOR.'elFinderVolumeLocalFileSystem.class.php';
-includeFile('thirdparty/elfinder/php/elFinderConnector.class.php');
-includeFile('thirdparty/elfinder/php/elFinder.class.php');
-includeFile('thirdparty/elfinder/php/elFinderVolumeDriver.class.php');
-includeFile('thirdparty/elfinder/php/elFinderVolumeLocalFileSystem.class.php');
+includeFile('thirdparty/finder/php/elFinder.class.php');
 
 
 /**
@@ -48,7 +40,7 @@ function access($attr, $path, $data, $volume) {
 }
 
 $opts = array(
-	'debug' => gpdebugjs,
+	'debug' => gpdebug,
 	'roots' => array(
 		array(
 			'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
@@ -72,5 +64,5 @@ $opts = array(
 
 
 // run elFinder
-$connector = new elFinderConnector(new elFinder($opts));
+$connector = new elFinder($opts);
 $connector->run();

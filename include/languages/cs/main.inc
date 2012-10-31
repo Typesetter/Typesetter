@@ -176,7 +176,7 @@ $langmessage = array(
 'not_enabled'=>'Omlouváme se, ale správce webu nepovolil tuto funkci.',
 'add'=>'Přidat',
 'remove'=>'Odstranit',
-'insert'=>'Insert',
+'insert'=>'Vložit',
 'disable'=>'Zakázat',
 'disabled'=>'Zakázáno',
 'enable'=>'Povolit',
@@ -487,12 +487,22 @@ $langmessage = array(
 'Image_of'=>'Obrázek %1$s z %2$s',
 //'Start Slideshow'=>'Start Slideshow',
 //'Stop Slideshow'=>'Stop Slideshow',
-'Width'=>'Width',
-'Height'=>'Height',
-'Left'=>'Left',
-'Top'=>'Top',
+'Width'=>'Šířka',
+'Height'=>'Výška',
+'Left'=>'Vlevo',
+'Top'=>'Shora',
 'Select Image'=>'Select Image',
 'Theme Images'=>'Theme Images',
-'restore_backup' => 'Restore Backup',
+'Revision History'=> 'Historie revizí',
+'viewing_revision'=>'You are currently viewing a revision of this page created on %1$s',
+'Restore this revision'=>'Obnovit tuto revizi',
+
+//for use with php's strftime() method
+'strftime_datetime'=>'%b %e, %Y @ %H:%M',
+'strftime_date'=>'%b %e, %Y',
+'strftime_time'=>'%H:%M',
+
+'_characters' => '%s characters',
+'Theme_default_sizes' => 'Default Size',
 
 );

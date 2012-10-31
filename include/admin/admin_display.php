@@ -174,7 +174,7 @@ class admin_display extends display{
 				return;
 
 				case 'Admin_Finder':
-					includeFile('thirdparty/elfinder/connector.php');
+					includeFile('thirdparty/finder/connector.php');
 				return;
 
 			}

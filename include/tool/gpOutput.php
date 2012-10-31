@@ -1117,7 +1117,6 @@ class gpOutput{
 		$container_id = 'Image:'.$src;
 		$container_id = gpOutput::GetContainerID($container_id);
 
-
 		//select custom image
 		$image = false;
 		if( isset($gpLayouts[$page->gpLayout])
@@ -1562,7 +1561,7 @@ class gpOutput{
 
 		$wrap = gpOutput::ShowEditLink('Admin_Theme_Content');
 		if( $wrap ){
-			echo gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=edittext&key='.urlencode($text).'&return='.urlencode($page->title),' title="'.urlencode($text).'" name="gpabox" ');
+			gpOutput::$editlinks .= gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=edittext&key='.urlencode($text).'&return='.urlencode($page->title),' title="'.urlencode($text).'" name="gpabox" ');
 			echo '<div class="editable_area inner_size" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
 		}
 

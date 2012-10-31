@@ -1,6 +1,9 @@
 <?php
 
 
+require('elFinderVolumeDriver.class.php');
+
+
 /**
  * File Permissions
  *
@@ -36,7 +39,7 @@ class elFinder {
 	 **/
 	protected $volumes = array();
 
-	public static $netDrivers = array();
+	public static $netDrivers = array('ftp'=>'FTP');
 
 	/**
 	 * Mounted volumes count
@@ -109,6 +112,14 @@ class elFinder {
 	 * @var string
 	 **/
 	protected $debug = false;
+
+	/**
+	 * undocumented class variable
+	 *
+	 * @var string
+	 **/
+	protected $header = 'Content-Type: application/json';
+
 
 	/**
 	 * undocumented class variable
@@ -189,7 +200,9 @@ class elFinder {
 
 		$this->time  = $this->utime();
 		$this->debug = (isset($opts['debug']) && $opts['debug'] ? true : false);
-
+		if( $this->debug ){
+			$this->header = 'Content-Type: text/html; charset=utf-8';
+		}
 		setlocale(LC_ALL, !empty($opts['locale']) ? $opts['locale'] : 'en_US.UTF-8');
 
 		// bind events listeners
@@ -211,31 +224,114 @@ class elFinder {
 		*/
 
 		// "mount" volumes
-		foreach ($opts['roots'] as $i => $o) {
-			$class = 'elFinderVolume'.(isset($o['driver']) ? $o['driver'] : '');
+		foreach( $opts['roots'] as $i => $o ){
+			$driver = isset($o['driver']) ? $o['driver'] : '';
+			if( $this->MountVolume( $volume, $driver, $o ) ){
 
-			if (class_exists($class)) {
-				$volume = new $class();
+				// unique volume id (ends on "_") - used as prefix to files hash
+				$id = $volume->id();
 
-				if ($volume->mount($o)) {
-					// unique volume id (ends on "_") - used as prefix to files hash
-					$id = $volume->id();
-
-					$this->volumes[$id] = $volume;
-					if (!$this->default && $volume->isReadable()) {
-						$this->default = $this->volumes[$id];
-					}
-				} else {
-					$this->mountErrors[] = 'Driver "'.$class.'" : '.implode(' ', $volume->error());
+				$this->volumes[$id] = $volume;
+				if( !$this->default && $volume->isReadable() ){
+					$this->default = $this->volumes[$id];
 				}
-			} else {
-				$this->mountErrors[] = 'Driver "'.$class.'" does not exists';
 			}
+
 		}
 
 		// if at least one redable volume - ii desu >_<
 		$this->loaded = !empty($this->default);
 	}
+
+
+	/**
+	 * Execute elFinder command and output result
+	 *
+	 * @return void
+	 * @author Dmitry (dio) Levashov
+	 **/
+	public function run() {
+		$isPost = $_SERVER["REQUEST_METHOD"] == 'POST';
+		$src    = $_SERVER["REQUEST_METHOD"] == 'POST' ? $_POST : $_GET;
+		$cmd    = isset($src['cmd']) ? $src['cmd'] : '';
+		$args   = array();
+
+		if (!function_exists('json_encode')) {
+			$error = $this->error(elFinder::ERROR_CONF, elFinder::ERROR_CONF_NO_JSON);
+			$this->output(array('error' => '{"error":["'.implode('","', $error).'"]}', 'raw' => true));
+		}
+
+		if (!$this->loaded()) {
+			$this->output(array('error' => $this->error(elFinder::ERROR_CONF, elFinder::ERROR_CONF_NO_VOL), 'debug' => $this->mountErrors));
+		}
+
+		// telepat_mode: on
+		if (!$cmd && $isPost) {
+			$this->output(array('error' => $this->error(elFinder::ERROR_UPLOAD, elFinder::ERROR_UPLOAD_TOTAL_SIZE), 'header' => 'Content-Type: text/html'));
+		}
+		// telepat_mode: off
+
+		if (!$this->commandExists($cmd)) {
+			$this->output(array('error' => $this->error(elFinder::ERROR_UNKNOWN_CMD)));
+		}
+
+		// collect required arguments to exec command
+		foreach ($this->commandArgsList($cmd) as $name => $req) {
+			$arg = $name == 'FILES'
+				? $_FILES
+				: (isset($src[$name]) ? $src[$name] : '');
+
+			if (!is_array($arg)) {
+				$arg = trim($arg);
+			}
+			if ($req && (!isset($arg) || $arg === '')) {
+				$this->output(array('error' => $this->error(elFinder::ERROR_INV_PARAMS, $cmd)));
+			}
+			$args[$name] = $arg;
+		}
+
+		$args['debug'] = isset($src['debug']) ? !!$src['debug'] : false;
+
+		$this->output($this->exec($cmd, $args));
+	}
+
+	/**
+	 * Output json
+	 *
+	 * @param  array  data to output
+	 * @return void
+	 * @author Dmitry (dio) Levashov
+	 **/
+	protected function output(array $data) {
+		$header = isset($data['header']) ? $data['header'] : $this->header;
+		unset($data['header']);
+		if ($header) {
+			if (is_array($header)) {
+				foreach ($header as $h) {
+					header($h);
+				}
+			} else {
+				header($header);
+			}
+		}
+
+		if (isset($data['pointer'])) {
+			rewind($data['pointer']);
+			fpassthru($data['pointer']);
+			if (!empty($data['volume'])) {
+				$data['volume']->close($data['pointer'], $data['info']['hash']);
+			}
+			exit();
+		} else {
+			if (!empty($data['raw']) && !empty($data['error'])) {
+				exit($data['error']);
+			} else {
+				exit(json_encode($data));
+			}
+		}
+
+	}
+
 
 	/**
 	 * Return true if fm init correctly
@@ -473,31 +569,30 @@ class elFinder {
 		$options  = array();
 		$protocol = $args['protocol'];
 		$driver   = isset(self::$netDrivers[$protocol]) ? $protocol : '';
-		$class    = 'elfindervolume'.$protocol;
 
-		if (!$driver) {
+		if( !$driver ){
 			return array('error' => $this->error(self::ERROR_NETMOUNT, $args['host'], self::ERROR_NETMOUNT_NO_DRIVER));
 		}
 
-		if (!$args['path']) {
+		if( !$args['path'] ){
 			$args['path'] = '/';
 		}
 
-		foreach ($args as $k => $v) {
+		foreach($args as $k => $v){
 			if ($k != 'options' && $k != 'protocol' && $v) {
 				$options[$k] = $v;
 			}
 		}
 
-		if (is_array($args['options'])) {
-			foreach ($args['options'] as $key => $value) {
+		if( is_array($args['options']) ){
+			foreach($args['options'] as $key => $value){
 				$options[$key] = $value;
 			}
 		}
 
-		$volume = new $class();
+		$this->MountVolume( $volume, $protocol, $options );
 
-		if ($volume->mount($options)) {
+		if( $volume->mount($options) ){
 			$netVolumes        = $this->getNetVolumes();
 			$options['driver'] = $driver;
 			$netVolumes[]      = $options;
@@ -507,7 +602,30 @@ class elFinder {
 		} else {
 			return array('error' => $this->error(self::ERROR_NETMOUNT, $args['host'], implode(' ', $volume->error())));
 		}
+	}
 
+	/**
+	 * Create a new volume object for the specified driver
+	 * Include the file if the class doesn't exist
+	 *
+	 */
+	function MountVolume( &$volume, $driver, $options ){
+		$class = 'elFinderVolume'.$driver;
+		if( !class_exists($class) ){
+			$file = 'elFinderVolume'.$driver.'.class.php';
+			include_once($file);
+		}
+		if( !class_exists($class) ){
+			$this->mountErrors[] = 'Driver "'.$driver.'" does not exists';
+		}
+		$volume = new $class();
+
+		if( !$volume->mount($options) ){
+			$this->mountErrors[] = 'Driver "'.$driver.'" : '.implode(' ', $volume->error());
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

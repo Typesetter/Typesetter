@@ -17,16 +17,16 @@ class admin_uploaded{
 
 
 
-	function elFinder(){
+	function Finder(){
 		global $page, $GP_INLINE_VARS, $config, $dataDir;
 
 		$GP_INLINE_VARS['admin_resizable'] = false;
 
-		$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.common::GetDir('/include/thirdparty/elfinder/css/elfinder.css').'">';
-		$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.common::GetDir('/include/thirdparty/elfinder/style.css').'">';
+		$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.common::GetDir('/include/thirdparty/finder/css/elfinder.css').'">';
+		$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.common::GetDir('/include/thirdparty/finder/style.css').'">';
 
-		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/elfinder/js/elfinder.js').'"></script>';
-		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/elfinder/config.js').'"></script>';
+		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/finder/js/elfinder.js').'"></script>';
+		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/finder/config.js').'"></script>';
 
 
 		echo '<div id="elfinder"></div>';
@@ -35,12 +35,12 @@ class admin_uploaded{
 
 
 
-		//get the elfinder language
+		//get the finder language
 		$language = $config['langeditor'];
 		if( $language == 'inherit' ){
 			$language = $config['language'];
 		}
-		$lang_file = '/include/thirdparty/elfinder/js/i18n/elfinder.'.$language.'.js';
+		$lang_file = '/include/thirdparty/finder/js/i18n/elfinder.'.$language.'.js';
 		$lang_full = $dataDir.$lang_file;
 		if( file_exists($lang_full) ){
 			$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir($lang_file).'"></script>';
@@ -50,11 +50,11 @@ class admin_uploaded{
 		$this->finder_opts['lang'] = $language;
 
 
-		$this->elFinderPrep();
+		$this->FinderPrep();
 		$page->head_script .= "\n".'var elfinder_opts = '.json_encode($this->finder_opts).';';
 	}
 
-	function elFinderPrep(){
+	function FinderPrep(){
 		global $page, $gpAdmin;
 
 		//options
@@ -72,7 +72,7 @@ class admin_uploaded{
 		if( !empty($file_cmd) || (isset($_REQUEST['show']) && $_REQUEST['show'] == 'inline') ){
 			$this->do_admin_uploaded($file_cmd);
 		}else{
-			$this->elFinder();
+			$this->Finder();
 		}
 	}
 
@@ -844,17 +844,17 @@ class admin_uploaded{
 
 
 	/**
-	 *  Performs actions after changes are made to files in elFinder
+	 *  Performs actions after changes are made to files in finder
 	 *
 	 */
-	static function FinderChange($cmd, $result, $args, $elfinder){
+	static function FinderChange($cmd, $result, $args, $finder){
 		global $dataDir,$config;
 
 		includeFile('image.php');
 		gp_resized::SetIndex();
 		$base_dir = $dataDir.'/data/_uploaded';
 		$thumb_dir = $dataDir.'/data/_uploaded/image/thumbnails';
-		admin_uploaded::SetRealPath($result,$elfinder);
+		admin_uploaded::SetRealPath($result,$finder);
 
 		switch($cmd){
 
@@ -999,17 +999,17 @@ class admin_uploaded{
 
 
 	/**
-	 * Make sure the realpath value is set for elfinder arrays
+	 * Make sure the realpath value is set for finder arrays
 	 *
 	 */
-	function SetRealPath(&$array,$elfinder){
+	function SetRealPath(&$array,$finder){
 		foreach($array as $type => $list){
 			if( !is_array($list) ){
 				continue;
 			}
 			foreach($list as $key => $info){
 				if( !isset($info['realpath']) ){
-					$array[$type][$key]['realpath'] = $elfinder->realpath($info['hash']);
+					$array[$type][$key]['realpath'] = $finder->realpath($info['hash']);
 				}
 			}
 		}

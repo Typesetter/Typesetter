@@ -146,7 +146,7 @@ class editing_page extends display{
 			}
 		}
 
-		$this->contentBuffer = editing_page::GenerateContent_Admin();
+		$this->contentBuffer = $this->GenerateContent_Admin();
 	}
 
 	function InlineEdit(){

@@ -1052,7 +1052,7 @@ background: linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%
 	border:1px solid #222;
 	padding:2px 3px;
 	margin:0 23px 5px 0;
-
+	line-height: 130% !important;
 	font-size:12px !important;
 	font-weight:normal !important;
 	letter-spacing:1px !important;

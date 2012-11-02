@@ -3171,7 +3171,7 @@ class admin_theme_content extends admin_addon_install{
 
 		//delete the folder
 		$dir = $dataDir.'/data/_themes/'.$theme_folder_name;
-		$this->RmDir($dir);
+		gpFiles::RmAll($dir);
 
 		//remove from settings
 		unset($config['themes'][$theme_folder_name]);

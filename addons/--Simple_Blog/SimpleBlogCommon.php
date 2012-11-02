@@ -525,6 +525,8 @@ class SimpleBlogCommon{
 	function PostForm(&$array,$cmd='save_new',$post_id=false){
 		global $langmessage;
 
+		includeFile('tool/editing.php');
+
 		$array += array('title'=>'','content'=>'','subtitle'=>'');
 		$array['title'] = SimpleBlogCommon::Underscores( $array['title'] );
 
@@ -553,7 +555,7 @@ class SimpleBlogCommon{
 
 		echo '<tr>';
 			echo '<td colspan="2">';
-			common::UseCK( $array['content'],'content' );
+			gp_edit::UseCK($array['content'],'content');
 			echo '</td>';
 			echo '</tr>';
 

@@ -2522,7 +2522,7 @@ class common{
 	static function UseFCK($contents,$name='gpcontent'){
 		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
-		return gp_edit::UseCK($contents,$name);
+		gp_edit::UseCK($contents,$name);
 	}
 
 	/**
@@ -2533,7 +2533,7 @@ class common{
 	static function UseCK($contents,$name='gpcontent',$options=array()){
 		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
-		return gp_edit::UseCK($contents,$name,$options);
+		gp_edit::UseCK($contents,$name,$options);
 	}
 
 	/**

@@ -10,9 +10,9 @@
 
 		<div id="search">
 		<?php $_GET += array('q'=>''); ?>
-		<form action="<?= common::GetUrl( 'special_gpsearch') ?>" method="get">
+		<form action="<?php echo common::GetUrl( 'special_gpsearch') ?>" method="get">
 		<div>
-		<input type="text" class="query" name="q" value="<?= htmlspecialchars($_GET['q']) ?>" />
+		<input type="text" class="query" name="q" value="<?php echo htmlspecialchars($_GET['q']) ?>" />
 		<input type="submit" class="submit" value="" />
 		</div>
 		</form>

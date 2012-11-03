@@ -562,7 +562,7 @@ class gpsession{
 
 		return array(	'gpui_cmpct'=>1,
 						'gpui_tx'=>6,
-						'gpui_ty'=>130,
+						'gpui_ty'=>10,
 						'gpui_ckx'=>20,
 						'gpui_cky'=>240,
 						'gpui_ckd'=>false,

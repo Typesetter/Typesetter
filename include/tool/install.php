@@ -187,7 +187,7 @@ class Install_Tools{
 		$config['timeoffset'] = '0';
 		$config['langeditor'] = 'inherit';
 		$config['dateformat'] = '%m/%d/%y - %I:%M %p';
-		$config['gpversion'] = $GLOBALS['gpversion'];
+		$config['gpversion'] = gpversion;
 		$config['shahash'] = true;
 		if( !isset($config['gpuniq']) ){
 			$config['gpuniq'] = common::RandomString(20);

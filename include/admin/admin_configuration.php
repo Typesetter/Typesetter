@@ -351,7 +351,7 @@ class admin_configuration{
 
 	function formInput($name,$value,$type='text'){
 		echo "\n<div>";
-		echo '<input id="'.$name.'" name="'.$name.'" size="60" value="'.htmlspecialchars($value).'" type="'.$type.'" class="gpinput"/>';
+		echo '<input id="'.$name.'" name="'.$name.'" size="50" value="'.htmlspecialchars($value).'" type="'.$type.'" class="gpinput"/>';
 		echo '</div>';
 	}
 

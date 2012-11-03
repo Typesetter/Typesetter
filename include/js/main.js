@@ -33,10 +33,10 @@ function ajaxResponse(data,textStatus,jqXHR){
 	$('.messages').detach();
 
 	var cbox = false;
-	$.each(data,function(i,obj){ //using $.each() instead of a for loop to prevent Array.prototype.xxxx from affecting the results
+	$.each(data,function(i,obj){
 
 		if( typeof(gpresponse[obj.DO]) == 'function' ){
-			gpresponse[obj.DO].call(this,data,textStatus,jqXHR);
+			gpresponse[obj.DO].call(this,obj,textStatus,jqXHR);
 			return;
 		}
 

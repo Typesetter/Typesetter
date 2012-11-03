@@ -1,6 +1,6 @@
 web1:
   name: gpeasy
-  php_display_errors: "0"
+  php_display_errors: "1"
   shared_writable_dirs:
     - /data
   php_extensions:

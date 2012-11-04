@@ -3,22 +3,22 @@
  * @author Tomoaki Yoshida <info@yoshida-studio.jp>, Naoki Sawada <hypweb@gmail.com>
  * @version 2012-08-15
  */
-if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object') {
-	elFinder.prototype.i18.jp = {
+if (Finder && Finder.prototype && typeof(Finder.prototype.i18) == 'object') {
+	Finder.prototype.i18.jp = {
 		translator : 'Tomoaki Yoshida &lt;info@yoshida-studio.jp&gt;',
 		language   : 'Japanese',
 		direction  : 'ltr',
 		dateFormat : 'Y/m/d h:i A', // 2012/04/11 05:27 PM
 		fancyDateFormat : '$1 h:i A', // will produce smth like: 今日 12:25 PM
 		messages   : {
-			
+
 			/********************************** errors **********************************/
 			'error'                : 'エラー',
 			'errUnknown'           : '不明なエラーです',
 			'errUnknownCmd'        : '不明なコマンドです',
 			'errJqui'              : '無効なjQuery UI コンフィグレーションです。セレクタブルコンポーネント、ドラッガブルコンポーネント、ドロッパブルコンポーネントがあるかを確認して下さい',
-			'errNode'              : 'elFinderはDOM Elementが必要です',
-			'errURL'               : '無効なelFinder コンフィグレーションです! URLを設定してください',
+			'errNode'              : 'gpFinderはDOM Elementが必要です',
+			'errURL'               : '無効なgpFinder コンフィグレーションです! URLを設定してください',
 			'errAccess'            : 'アクセスが拒否されました',
 			'errConnect'           : 'バックエンドとの接続ができません',
 			'errAbort'             : '接続が中断されました',
@@ -56,7 +56,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'errUploadTotalSize'   : 'データが許容サイズを超えています', // old name - errMaxSize
 			'errUploadFileSize'    : 'ファイルが許容サイズを超えています', //  old name - errFileMaxSize
 			'errUploadMime'        : '許可されていないファイル形式です',
-			'errUploadTransfer'    : '"$1" 転送エラーです', 
+			'errUploadTransfer'    : '"$1" 転送エラーです',
 			'errNotReplace'        : 'アイテム "$1" は、すでにこの場所にありますがアイテムのタイプが違うので置き換えることはできません', // new
 			'errReplace'           : '"$1"を置き換えることができません',
 			'errSave'              : '"$1"を保存することができません',
@@ -109,8 +109,8 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'cmdresize'    : 'リサイズと回転',
 			'cmdsort'      : 'ソート',
 			'cmdnetmount'  : 'ネットワークボリュームをマウント', // added 18.04.2012
-			
-			/*********************************** buttons ***********************************/ 
+
+			/*********************************** buttons ***********************************/
 			'btnClose'  : '閉じる',
 			'btnSave'   : '保存',
 			'btnRm'     : '削除',
@@ -140,7 +140,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'ntfsmth'     : '何かしています >_<',
       		'ntfloadimg'  : 'イメージを読み込んでいます',
       		'ntfnetmount' : 'ネットワークボリュームをマウントしています', // added 18.04.2012
-			
+
 			/************************************ dates **********************************/
 			'dateUnknown' : '不明',
 			'Today'       : '今日',
@@ -159,8 +159,8 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'Dec'         : '12月',
 
 			/******************************** sort variants ********************************/
-			'sortname'          : '名前順', 
-			'sortkind'          : '種類順', 
+			'sortname'          : '名前順',
+			'sortkind'          : '種類順',
 			'sortsize'          : 'サイズ順',
 			'sortdate'          : '日付順',
 			'sortFoldersFirst'  : 'フォルダ優先', // added 21.06.2012
@@ -187,7 +187,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'viewlist'        : 'リスト形式で見る',
 			'viewicons'       : 'アイコン形式で見る',
 			'places'          : 'Places',
-			'calc'            : '計算', 
+			'calc'            : '計算',
 			'path'            : 'パス',
 			'aliasfor'        : 'エイリアス',
 			'locked'          : 'ロックされています',
@@ -198,7 +198,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'yes'             : 'はい',
 			'no'              : 'いいえ',
 			'link'            : 'リンク',
-			'searcresult'     : '検索結果',  
+			'searcresult'     : '検索結果',
 			'selected'        : '選択されたアイテム',
 			'about'           : 'アバウト',
 			'shortcuts'       : 'ショートカット',

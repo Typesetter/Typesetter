@@ -1100,6 +1100,7 @@ class editing_page extends display{
 			}
 		}
 		$code .= ']';
+
 		$page->ajaxReplace[] = array('gp_autocomplete_include','gadget',$code);
 
 	}

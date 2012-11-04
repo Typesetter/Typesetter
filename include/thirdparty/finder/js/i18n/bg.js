@@ -3,27 +3,27 @@
  * @author Stamo Petkov <stamo.petkov@gmail.com>
  * @version 2012-02-18
  */
-if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object') {
-	elFinder.prototype.i18.bg = {
+if (Finder && Finder.prototype && typeof(Finder.prototype.i18) == 'object') {
+	Finder.prototype.i18.bg = {
 		translator : 'Stamo Petkov &lt;stamo.petkov@gmail.com&gt;',
 		language   : 'Български',
 		direction  : 'ltr',
 		messages   : {
-			
+
 			/********************************** errors **********************************/
 			'error'                : 'Грешка',
 			'errUnknown'           : 'Непозната грешка.',
 			'errUnknownCmd'        : 'Непозната команда.',
 			'errJqui'              : 'Грешна конфигурация на jQuery UI. Компонентите selectable, draggable и droppable трябва да са включени.',
-			'errNode'              : 'elFinder изисква да бъде създаден DOM елемент.',
-			'errURL'               : 'Грешка в настройките на elFinder! не е зададена стойност на URL.',
+			'errNode'              : 'gpFinder изисква да бъде създаден DOM елемент.',
+			'errURL'               : 'Грешка в настройките на gpFinder! не е зададена стойност на URL.',
 			'errAccess'            : 'Достъп отказан.',
 			'errConnect'           : 'Няма връзка със сървъра.',
 			'errAbort'             : 'Връзката е прекъсната.',
 			'errTimeout'           : 'Просрочена връзка.',
-			'errNotFound'          : 'Сървърът не е намерен.', 
+			'errNotFound'          : 'Сървърът не е намерен.',
 			'errResponse'          : 'Грешен отговор от сървъра.',
-			'errConf'              : 'Грешни настройки на сървъра.', 
+			'errConf'              : 'Грешни настройки на сървъра.',
 			'errJSON'              : 'Не е инсталиран модул на PHP за JSON.',
 			'errNoVolumes'         : 'Няма дялове достъпни за четене.',
 			'errCmdParams'         : 'Грешни параметри на командата "$1".',
@@ -54,7 +54,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'errMaxSize'           : 'Данните превишават максимално допостумия размер.',
 			'errFileMaxSize'       : 'Файла превишава максимално допустимия размер.',
 			'errUploadMime'        : 'Не е позволен тип на файла.',
-			'errUploadTransfer'    : '"$1" грешка при предаване.', 
+			'errUploadTransfer'    : '"$1" грешка при предаване.',
 			'errSave'              : 'Не мога да запиша "$1".',
 			'errCopy'              : 'Не мога да копирам "$1".',
 			'errMove'              : 'Не мога да преместя "$1".',
@@ -64,13 +64,13 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'errArchive'           : 'Не мога да създам архив.',
 			'errArcType'           : 'Неподдържан тип на архива.',
 			'errNoArchive'         : 'Файлът не е архив или е от неподдържан тип.',
-			'errCmdNoSupport'      : 'Сървъра не поддържа тази команда.', 
+			'errCmdNoSupport'      : 'Сървъра не поддържа тази команда.',
 			'errReplByChild'       : 'Папката “$1” не може да бъде заменена от съдържащ се в нея елемент.',
 			'errArcSymlinks'       : 'От съображения за сигурност няма да бъдат разопаковани архиви съдържащи symlinks.',
 			'errArcMaxSize'        : 'Архивните файлове превишават максимално допустимия размер.',
 			'errResize'            : 'Не мога да преоразмеря "$1".',
 			'errUsupportType'      : 'Неподдържан тип файл.',
-			
+
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Създай архив',
 			'cmdback'      : 'Назад',
@@ -99,8 +99,8 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'cmdview'      : 'Виж',
 			'cmdresize'    : 'Размер на изображение',
 			'cmdsort'      : 'Подреди',
-			
-			/*********************************** buttons ***********************************/ 
+
+			/*********************************** buttons ***********************************/
 			'btnClose'  : 'Затвори',
 			'btnSave'   : 'Запиши',
 			'btnRm'     : 'Премахни',
@@ -108,7 +108,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'btnCancel' : 'Отказ',
 			'btnNo'     : 'Не',
 			'btnYes'    : 'Да',
-			
+
 			/******************************** notifications ********************************/
 			'ntfopen'     : 'Отваряне на папка',
 			'ntffile'     : 'Отваряне на файл',
@@ -128,7 +128,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'ntfsearch'   : 'Търся файлове',
 			'ntfsmth'     : 'Зает съм >_<',
 			'ntfloadimg'  : 'Зареждам изображения',
-			
+
 			/************************************ dates **********************************/
 			'dateUnknown' : 'неизвестна',
 			'Today'       : 'Днес',
@@ -145,17 +145,17 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'Oct'         : 'Окт',
 			'Nov'         : 'Ное',
 			'Dec'         : 'Дек',
-			
+
 			/******************************** sort variants ********************************/
-			'sortnameDirsFirst' : 'по име (първо папките)', 
-			'sortkindDirsFirst' : 'по вид (първо папките)', 
-			'sortsizeDirsFirst' : 'по размер (първо папките)', 
-			'sortdateDirsFirst' : 'по дата (първо папките)', 
-			'sortname'          : 'по име', 
-			'sortkind'          : 'по вид', 
+			'sortnameDirsFirst' : 'по име (първо папките)',
+			'sortkindDirsFirst' : 'по вид (първо папките)',
+			'sortsizeDirsFirst' : 'по размер (първо папките)',
+			'sortdateDirsFirst' : 'по дата (първо папките)',
+			'sortname'          : 'по име',
+			'sortkind'          : 'по вид',
 			'sortsize'          : 'по размер',
 			'sortdate'          : 'по дата',
-			
+
 			/********************************** messages **********************************/
 			'confirmReq'      : 'Изисква се подтвърждение',
 			'confirmRm'       : 'Сигурни ли сте, че желаете да премахнете файловете?<br/>Това действие е необратимо!',
@@ -178,7 +178,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'viewlist'        : 'Изглед списък',
 			'viewicons'       : 'Изглед икони',
 			'places'          : 'Места',
-			'calc'            : 'Изчисли', 
+			'calc'            : 'Изчисли',
 			'path'            : 'Път',
 			'aliasfor'        : 'Връзка към',
 			'locked'          : 'Заключен',
@@ -189,7 +189,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'yes'             : 'да',
 			'no'              : 'не',
 			'link'            : 'Връзка',
-			'searcresult'     : 'Резултати от търсенето',  
+			'searcresult'     : 'Резултати от търсенето',
 			'selected'        : 'Избрани елементи',
 			'about'           : 'За',
 			'shortcuts'       : 'преки пътища',
@@ -227,7 +227,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'resize'          : 'Преоразмери',
 			'crop'            : 'Отрежи',
 
-			
+
 			/********************************** mimetypes **********************************/
 			'kindUnknown'     : 'Непознат',
 			'kindFolder'      : 'Папка',

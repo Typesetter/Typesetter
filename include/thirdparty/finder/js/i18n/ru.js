@@ -3,8 +3,8 @@
  * @author Dmitry "dio" Levashov <dio@std42.ru>
  * @version 2011-07-15
  */
-if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object') {
-	elFinder.prototype.i18.ru = {
+if (Finder && Finder.prototype && typeof(Finder.prototype.i18) == 'object') {
+	Finder.prototype.i18.ru = {
 		translator : 'Dmitry "dio" Levashov &lt;dio@std42.ru&gt;',
 		language   : 'Русский язык',
 		direction  : 'ltr',
@@ -17,7 +17,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'errUnknown'           : 'Неизвестная ошибка.',
 			'errUnknownCmd'        : 'Неизвестная комманда.',
 			'errJqui'              : 'Отсутствуют необходимые компоненты jQuery UI - selectable, draggable и droppable.',
-			'errNode'              : 'Отсутствует DOM элемент для инициализации elFinder.',
+			'errNode'              : 'Отсутствует DOM элемент для инициализации gpFinder.',
 			'errURL'               : 'Некорректная настройка. Необходимо указать URL сервера.',
 			'errAccess'            : 'Доступ запрещен.',
 			'errConnect'           : 'Не удалось соединиться с сервером.',
@@ -56,7 +56,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'errMaxSize'           : 'Превышен допустимый размер загружаемых файлов.',
 			'errFileMaxSize'       : 'Размер файла превышает допустимый.',
 			'errUploadMime'        : 'Недопустимый тип файла.',
-			'errUploadTransfer'    : 'Ошибка передачи файла "$1".', 
+			'errUploadTransfer'    : 'Ошибка передачи файла "$1".',
 			'errSave'              : 'Ошибка сохранения "$1".',
 			'errCopy'              : 'Ошибка копирования "$1".',
 			'errMove'              : 'Ошибка перемещения "$1".',
@@ -105,8 +105,8 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'cmdview'      : 'Вид',
 			'cmdresize'    : 'Размер изображения',
 			'cmdsort'      : 'Сортировать',
-			
-			/*********************************** buttons ***********************************/ 
+
+			/*********************************** buttons ***********************************/
 			'btnClose'  : 'Закрыть',
 			'btnSave'   : 'Сохранить',
 			'btnRm'     : 'Удалить',
@@ -163,28 +163,28 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'October'     : 'Октябрь',
 			'November'    : 'Ноябрь',
 			'December'    : 'Декабрь',
-			'Sunday'      : 'Воскресенье', 
-			'Monday'      : 'Понедельник', 
-			'Tuesday'     : 'Вторник', 
-			'Wednesday'   : 'Среда', 
-			'Thursday'    : 'Четверг', 
-			'Friday'      : 'Пятница', 
+			'Sunday'      : 'Воскресенье',
+			'Monday'      : 'Понедельник',
+			'Tuesday'     : 'Вторник',
+			'Wednesday'   : 'Среда',
+			'Thursday'    : 'Четверг',
+			'Friday'      : 'Пятница',
 			'Saturday'    : 'Суббота',
-			'Sun'         : 'Вск', 
-			'Mon'         : 'Пнд', 
-			'Tue'         : 'Втр', 
-			'Wed'         : 'Срд', 
-			'Thu'         : 'Чтв', 
-			'Fri'         : 'Птн', 
+			'Sun'         : 'Вск',
+			'Mon'         : 'Пнд',
+			'Tue'         : 'Втр',
+			'Wed'         : 'Срд',
+			'Thu'         : 'Чтв',
+			'Fri'         : 'Птн',
 			'Sat'         : 'Сбт',
 
 			/******************************** sort variants ********************************/
-			'sortnameDirsFirst' : 'по имени (папки в начале)', 
-			'sortkindDirsFirst' : 'по типу (папки в начале)', 
-			'sortsizeDirsFirst' : 'по размеру (папки в начале)', 
-			'sortdateDirsFirst' : 'по дате (папки в начале)', 
-			'sortname'          : 'по имени', 
-			'sortkind'          : 'по типу', 
+			'sortnameDirsFirst' : 'по имени (папки в начале)',
+			'sortkindDirsFirst' : 'по типу (папки в начале)',
+			'sortsizeDirsFirst' : 'по размеру (папки в начале)',
+			'sortdateDirsFirst' : 'по дате (папки в начале)',
+			'sortname'          : 'по имени',
+			'sortkind'          : 'по типу',
 			'sortsize'          : 'по размеру',
 			'sortdate'          : 'по дате',
 			'sortFoldersFirst'  : 'Папки в начале',
@@ -211,7 +211,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'viewlist'        : 'В виде списка',
 			'viewicons'       : 'В виде иконок',
 			'places'          : 'Избранное',
-			'calc'            : 'вычисляю', 
+			'calc'            : 'вычисляю',
 			'path'            : 'Путь',
 			'aliasfor'        : 'Указывает на',
 			'locked'          : 'Защита',
@@ -222,7 +222,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'yes'             : 'да',
 			'no'              : 'нет',
 			'link'            : 'Ссылка',
-			'searcresult'     : 'Результаты поиска',  
+			'searcresult'     : 'Результаты поиска',
 			'selected'        : 'выбрано',
 			'about'           : 'О программе',
 			'shortcuts'       : 'Горячие клавиши',
@@ -345,11 +345,11 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'kindVideoFlash'  : 'Видео Flash',
 			'kindVideoMKV'    : 'Видео Matroska',
 			'kindVideoOGG'    : 'Видео Ogg'
-			
+
 		}
 	}
 }
 
 
- 
+
 

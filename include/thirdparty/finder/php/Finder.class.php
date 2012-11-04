@@ -1,29 +1,28 @@
 <?php
 
 
-require('elFinderVolumeDriver.class.php');
+require('FinderVolumeDriver.class.php');
 
 
 /**
  * File Permissions
  *
  */
-elFinder::defined('finder_chmod_file',0666);
-elFinder::defined('finder_chmod_dir',0755);
+Finder::defined('finder_chmod_file',0666);
+Finder::defined('finder_chmod_dir',0755);
 
 
 
 
 /**
- * elFinder - file manager for web.
  * Core class.
  *
- * @package elfinder
+ * @package Finder
  * @author Dmitry (dio) Levashov
  * @author Troex Nevelin
  * @author Alexey Sukhotin
  **/
-class elFinder {
+class Finder {
 
 	/**
 	 * API version number
@@ -52,7 +51,7 @@ class elFinder {
 	/**
 	 * Default root (storage)
 	 *
-	 * @var elFinderStorageDriver
+	 * @var FinderStorageDriver
 	 **/
 	protected $default = null;
 
@@ -84,7 +83,7 @@ class elFinder {
 		'info'      => array('targets' => true),
 		'dim'       => array('target' => true),
 		'resize'    => array('target' => true, 'width' => true, 'height' => true, 'mode' => false, 'x' => false, 'y' => false, 'degree' => false),
-		//'netmount'  => array('protocol' => true, 'host' => true, 'path' => false, 'port' => false, 'user' => true, 'pass' => true, 'alias' => false, 'options' => false)
+		'netmount'  => array('protocol' => true, 'host' => true, 'path' => false, 'port' => false, 'user' => true, 'pass' => true, 'alias' => false, 'options' => false)
 	);
 
 	/**
@@ -101,7 +100,7 @@ class elFinder {
 	 **/
 	protected $time = 0;
 	/**
-	 * Is elFinder init correctly?
+	 * Is the Finder init correctly?
 	 *
 	 * @var bool
 	 **/
@@ -132,8 +131,23 @@ class elFinder {
 	 * Errors from not mounted volumes
 	 *
 	 * @var array
-	 **/
+	 */
 	public $mountErrors = array();
+
+	/**
+	 * Array of user data
+	 *
+	 * @var array
+	 */
+	public $userData = array();
+
+	/**
+	 * Callback for saving user data
+	 *
+	 * @var callback
+	 */
+	public $saveDataMethod = false;
+
 
 	// Errors messages
 	const ERROR_UNKNOWN           = 'errUnknown';
@@ -189,14 +203,11 @@ class elFinder {
 	/**
 	 * Constructor
 	 *
-	 * @param  array  elFinder and roots configurations
+	 * @param  array  Finder and roots configurations
 	 * @return void
 	 * @author Dmitry (dio) Levashov
 	 **/
 	public function __construct($opts) {
-		//if (session_id() == '') {
-		//	session_start();
-		//}
 
 		$this->time  = $this->utime();
 		$this->debug = (isset($opts['debug']) && $opts['debug'] ? true : false);
@@ -206,22 +217,29 @@ class elFinder {
 		setlocale(LC_ALL, !empty($opts['locale']) ? $opts['locale'] : 'en_US.UTF-8');
 
 		// bind events listeners
-		if (!empty($opts['bind']) && is_array($opts['bind'])) {
-			foreach ($opts['bind'] as $cmd => $handler) {
-				$this->bind($cmd, $handler);
+		if( !empty($opts['bind']) && is_array($opts['bind']) ){
+			foreach( $opts['bind'] as $cmd => $listener ){
+				$this->bind($cmd, $listener);
 			}
 		}
 
-		if (!isset($opts['roots']) || !is_array($opts['roots'])) {
+		// get data
+		if( !empty($opts['returnData']) && !empty($opts['saveData'])
+			&& is_callable($opts['returnData']) && is_callable($opts['saveData']) ){
+			$this->userData = call_user_func( $opts['returnData'] );
+			$this->saveDataMethod = $opts['saveData'];
+		}
+
+
+		// roots
+		if( !isset($opts['roots']) || !is_array($opts['roots']) ){
 			$opts['roots'] = array();
 		}
 
-		// check for net volumes stored in session
-		/*
+		// check for net volumes stored in userData
 		foreach ($this->getNetVolumes() as $root) {
 			$opts['roots'][] = $root;
 		}
-		*/
 
 		// "mount" volumes
 		foreach( $opts['roots'] as $i => $o ){
@@ -245,7 +263,7 @@ class elFinder {
 
 
 	/**
-	 * Execute elFinder command and output result
+	 * Execute Finder command and output result
 	 *
 	 * @return void
 	 * @author Dmitry (dio) Levashov
@@ -257,22 +275,22 @@ class elFinder {
 		$args   = array();
 
 		if (!function_exists('json_encode')) {
-			$error = $this->error(elFinder::ERROR_CONF, elFinder::ERROR_CONF_NO_JSON);
+			$error = $this->error(Finder::ERROR_CONF, Finder::ERROR_CONF_NO_JSON);
 			$this->output(array('error' => '{"error":["'.implode('","', $error).'"]}', 'raw' => true));
 		}
 
 		if (!$this->loaded()) {
-			$this->output(array('error' => $this->error(elFinder::ERROR_CONF, elFinder::ERROR_CONF_NO_VOL), 'debug' => $this->mountErrors));
+			$this->output(array('error' => $this->error(Finder::ERROR_CONF, Finder::ERROR_CONF_NO_VOL), 'debug' => $this->mountErrors));
 		}
 
 		// telepat_mode: on
 		if (!$cmd && $isPost) {
-			$this->output(array('error' => $this->error(elFinder::ERROR_UPLOAD, elFinder::ERROR_UPLOAD_TOTAL_SIZE), 'header' => 'Content-Type: text/html'));
+			$this->output(array('error' => $this->error(Finder::ERROR_UPLOAD, Finder::ERROR_UPLOAD_TOTAL_SIZE), 'header' => 'Content-Type: text/html'));
 		}
 		// telepat_mode: off
 
 		if (!$this->commandExists($cmd)) {
-			$this->output(array('error' => $this->error(elFinder::ERROR_UNKNOWN_CMD)));
+			$this->output(array('error' => $this->error(Finder::ERROR_UNKNOWN_CMD)));
 		}
 
 		// collect required arguments to exec command
@@ -285,7 +303,7 @@ class elFinder {
 				$arg = trim($arg);
 			}
 			if ($req && (!isset($arg) || $arg === '')) {
-				$this->output(array('error' => $this->error(elFinder::ERROR_INV_PARAMS, $cmd)));
+				$this->output(array('error' => $this->error(Finder::ERROR_INV_PARAMS, $cmd)));
 			}
 			$args[$name] = $arg;
 		}
@@ -354,27 +372,26 @@ class elFinder {
 	}
 
 	/**
-	 * Add handler to elFinder command
+	 * Add lister to Finder command
 	 *
 	 * @param  string  command name
-	 * @param  string|array  callback name or array(object, method)
-	 * @return elFinder
-	 * @author Dmitry (dio) Levashov
-	 **/
-	public function bind($cmd, $handler) {
-		$cmds = $cmd == '*'
-			? array_keys($this->commands)
-			: array_map('trim', explode(' ', $cmd));
+	 * @param  callback  callback name or array(object, method)
+	 * @return Finder
+	 *
+	 */
+	public function bind($cmd, $listener) {
+		$cmds = explode(' ', $cmd);
+		foreach($cmds as $cmd){
+			$cmd = trim($cmd);
+			if( empty($cmd) ){
+				continue;
+			}
+			if( !isset($this->listeners[$cmd]) ){
+				$this->listeners[$cmd] = array();
+			}
 
-		foreach ($cmds as $cmd) {
-			if ($cmd) {
-				if (!isset($this->listeners[$cmd])) {
-					$this->listeners[$cmd] = array();
-				}
-
-				if( is_callable($handler) ){
-					$this->listeners[$cmd][] = $handler;
-				}
+			if( is_callable($listener) ){
+				$this->listeners[$cmd][] = $listener;
 			}
 		}
 
@@ -382,24 +399,57 @@ class elFinder {
 	}
 
 	/**
-	 * Remove event (command exec) handler
+	 * Remove event (command exec) listener
 	 *
-	 * @param  string  command name
-	 * @param  string|array  callback name or array(object, method)
-	 * @return elFinder
-	 * @author Dmitry (dio) Levashov
-	 **/
-	public function unbind($cmd, $handler) {
-		if (!empty($this->listeners[$cmd])) {
-			foreach ($this->listeners[$cmd] as $i => $h) {
-				if ($h === $handler) {
-					unset($this->listeners[$cmd][$i]);
-					return $this;
+	 * @param  string $event event name
+	 * @param  callback  callback name or array(object, method)
+	 * @return Finder
+	 *
+	 */
+	public function unbind($event, $listener){
+		$events = explode(' ', $event);
+		foreach($events as $event){
+			$event = trim($event);
+			if( empty($event) ){
+				continue;
+			}
+
+			if( empty($this->listeners[$event]) ){
+				continue;
+			}
+
+			foreach( $this->listeners[$event] as $i => $h ){
+				if( $h === $listener ){
+					unset($this->listeners[$event][$i]);
 				}
 			}
 		}
 		return $this;
 	}
+
+	/**
+	 * Return a list of listeners for the current event
+	 * @param string $event
+	 * @return array
+	 */
+	public function GetListeners( $event, $state = false ){
+		$listeners = array();
+
+		if( $state ){
+			$state = '-'.trim($state,'-');
+			$event .= $state;
+		}
+
+		if( !empty($this->listeners[$event]) ){
+			$listeners = $this->listeners[$event];
+		}
+		if( !empty($this->listeners['*'.$state]) ){
+			$listeners = array_merge($listeners,$this->listeners['*'.$state]);
+		}
+		return $listeners;
+	}
+
+
 
 	/**
 	 * Return true if command exists
@@ -433,36 +483,45 @@ class elFinder {
 	 **/
 	public function exec($cmd, $args) {
 
-		if (!$this->loaded) {
+		if( !$this->loaded ){
 			return array('error' => $this->error(self::ERROR_CONF, self::ERROR_CONF_NO_VOL));
 		}
 
-		if (!$this->commandExists($cmd)) {
+		if( !$this->commandExists($cmd) ){
 			return array('error' => $this->error(self::ERROR_UNKNOWN_CMD));
 		}
 
-		if (!empty($args['mimes']) && is_array($args['mimes'])) {
+		if( !empty($args['mimes']) && is_array($args['mimes']) ){
 			foreach ($this->volumes as $id => $v) {
 				$this->volumes[$id]->setMimesFilter($args['mimes']);
 			}
 		}
 
+		// call "*-before" events
+		$listeners = $this->GetListeners($cmd,'before');
+		foreach( $listeners as $listener ){
+			$args = call_user_func($listener,$before,$args,$this);
+		}
+		if( !is_array($args) ){
+			return array('error' => $this->error('errPerm'));
+		}
+
+		//call the command
 		$result = call_user_func( array($this,$cmd), $args );
 
-		if (isset($result['removed'])) {
+		if( isset($result['removed']) ){
 			foreach ($this->volumes as $volume) {
 				$result['removed'] = array_merge($result['removed'], $volume->removed());
 				$volume->resetRemoved();
 			}
 		}
 
-		// call handlers for this command
-		if (!empty($this->listeners[$cmd])) {
-			foreach ($this->listeners[$cmd] as $handler) {
-				// handler return true to force sync client after command completed
-				if( call_user_func($handler,$cmd,$result,$args,$this) ){
-					$result['sync'] = true;
-				}
+		// call listeners for this command
+		$listeners = $this->GetListeners($cmd);
+		foreach( $listeners as $listener ){
+			// listener return true to force sync client after command completed
+			if( call_user_func($listener,$cmd,$result,$args,$this) ){
+				$result['sync'] = true;
 			}
 		}
 
@@ -494,7 +553,7 @@ class elFinder {
 				'mountErrors' => $this->mountErrors
 				);
 
-			foreach ($this->volumes as $id => $volume) {
+			foreach( $this->volumes as $id => $volume ){
 				$result['debug']['volumes'][] = $volume->debug();
 			}
 		}
@@ -526,8 +585,11 @@ class elFinder {
 	 * @return array
 	 * @author Dmitry (dio) Levashov
 	 */
-	protected function getNetVolumes() {
-		return isset($_SESSION['elFinderNetVolumes']) && is_array($_SESSION['elFinderNetVolumes']) ? $_SESSION['elFinderNetVolumes'] : array();
+	protected function getNetVolumes(){
+		if( isset($this->userData['FinderNetVolumes']) && is_array($this->userData['FinderNetVolumes']) ){
+			return $this->userData['FinderNetVolumes'];
+		}
+		return array();
 	}
 
 	/**
@@ -537,8 +599,12 @@ class elFinder {
 	 * @return void
 	 * @author Dmitry (dio) Levashov
 	 */
-	protected function saveNetVolumes($volumes) {
-		$_SESSION['elFinderNetVolumes'] = $volumes;
+	protected function saveNetVolumes($volumes){
+		if( !$this->saveDataMethod ){
+			return false;
+		}
+		$this->userData['FinderNetVolumes'] = $volumes;
+		return call_user_func( $this->saveDataMethod, $this->userData);
 	}
 
 	/***************************************************************************/
@@ -568,7 +634,7 @@ class elFinder {
 	protected function netmount($args) {
 		$options  = array();
 		$protocol = $args['protocol'];
-		$driver   = isset(self::$netDrivers[$protocol]) ? $protocol : '';
+		$driver   = isset(self::$netDrivers[$protocol]) ? self::$netDrivers[$protocol] : '';
 
 		if( !$driver ){
 			return array('error' => $this->error(self::ERROR_NETMOUNT, $args['host'], self::ERROR_NETMOUNT_NO_DRIVER));
@@ -590,7 +656,7 @@ class elFinder {
 			}
 		}
 
-		$this->MountVolume( $volume, $protocol, $options );
+		$this->MountVolume( $volume, $driver, $options );
 
 		if( $volume->mount($options) ){
 			$netVolumes        = $this->getNetVolumes();
@@ -610,9 +676,9 @@ class elFinder {
 	 *
 	 */
 	function MountVolume( &$volume, $driver, $options ){
-		$class = 'elFinderVolume'.$driver;
+		$class = 'FinderVolume'.$driver;
 		if( !class_exists($class) ){
-			$file = 'elFinderVolume'.$driver.'.class.php';
+			$file = 'FinderVolume'.$driver.'.class.php';
 			include_once($file);
 		}
 		if( !class_exists($class) ){
@@ -994,19 +1060,20 @@ class elFinder {
 	protected function upload($args) {
 		$target = $args['target'];
 		$volume = $this->volume($target);
-		$files  = isset($args['FILES']['upload']) && is_array($args['FILES']['upload']) ? $args['FILES']['upload'] : array();
+		$files =& $args['FILES']['upload'];
 		$result = array('added' => array(), 'header' => empty($args['html']) ? false : 'Content-Type: text/html; charset=utf-8');
 
-		if (empty($files)) {
+		if( !is_array($files) || empty($files) ){
 			return array('error' => $this->error(self::ERROR_UPLOAD, self::ERROR_UPLOAD_NO_FILES), 'header' => $header);
 		}
 
-		if (!$volume) {
+		if( !$volume ){
 			return array('error' => $this->error(self::ERROR_UPLOAD, self::ERROR_TRGDIR_NOT_FOUND, '#'.$target), 'header' => $header);
 		}
 
-		foreach ($files['name'] as $i => $name) {
-			if (($error = $files['error'][$i]) > 0) {
+		foreach( $files['name'] as $i => $name ){
+			$error = $files['error'][$i];
+			if( $error > 0 ){
 				$result['warning'] = $this->error(self::ERROR_UPLOAD_FILE, $name, $error == UPLOAD_ERR_INI_SIZE || $error == UPLOAD_ERR_FORM_SIZE ? self::ERROR_UPLOAD_FILE_SIZE : self::ERROR_UPLOAD_TRANSFER);
 				$this->uploadDebug = 'Upload error code: '.$error;
 				break;
@@ -1014,13 +1081,22 @@ class elFinder {
 
 			$tmpname = $files['tmp_name'][$i];
 
-			if (($fp = fopen($tmpname, 'rb')) == false) {
+			//make sure it's an uploaded file
+			if( !is_uploaded_file($tmpname) ){
+				$result['warning'] = $this->error(self::ERROR_UPLOAD_FILE, $name, self::ERROR_UPLOAD_TRANSFER);
+				$this->uploadDebug = 'Upload error: not an uploaded file';
+				break;
+			}
+
+			$fp = fopen($tmpname, 'rb');
+			if( $fp === false ){
 				$result['warning'] = $this->error(self::ERROR_UPLOAD_FILE, $name, self::ERROR_UPLOAD_TRANSFER);
 				$this->uploadDebug = 'Upload error: unable open tmp file';
 				break;
 			}
 
-			if (($file = $volume->upload($fp, $target, $name, $tmpname)) === false) {
+			$file = $volume->upload($fp, $target, $name, $tmpname);
+			if( $file === false ){
 				$result['warning'] = $this->error(self::ERROR_UPLOAD_FILE, $name, $volume->error());
 				fclose($fp);
 				break;
@@ -1252,7 +1328,7 @@ class elFinder {
 	 * Return root - file's owner
 	 *
 	 * @param  string  file hash
-	 * @return elFinderStorageDriver
+	 * @return FinderStorageDriver
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function volume($hash) {

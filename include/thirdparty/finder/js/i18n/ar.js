@@ -3,8 +3,8 @@
  * @author Tawfek Daghistani <tawfekov@gmail.com>
  * @version 2011-07-09
  */
-if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object') {
-	elFinder.prototype.i18.ar = {
+if (Finder && Finder.prototype && typeof(Finder.prototype.i18) == 'object') {
+	Finder.prototype.i18.ar = {
 		translator : 'Tawfek Daghistani &lt;tawfekov@gmail.com&gt;',
 		language   : 'العربية',
 		direction  : 'rtl',
@@ -15,7 +15,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'errUnknown'           : 'خطأ غير معروف .',
 			'errUnknownCmd'        : 'أمر غير معروف .',
 			'errJqui'              : 'إعدادات jQuery UI غير كاملة الرجاء التأكد من وجود كل من selectable, draggable and droppable',
-			'errNode'              : '. موجود DOM إلى عنصر  elFinder تحتاج  ',
+			'errNode'              : '. موجود DOM إلى عنصر  gpFinder تحتاج  ',
 			'errURL'               : 'إعدادات خاطئة , عليك وضع الرابط ضمن الإعدادات',
 			'errAccess'            : 'وصول مرفوض .',
 			'errConnect'           : 'غير قادر على الاتصال بالخادم الخلفي  (backend)',
@@ -54,7 +54,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'errMaxSize'           : 'حجم البيانات أكبر من الحجم المسموح به ',
 			'errFileMaxSize'       : 'حجم الملف أكبر من الحجم المسموح به',
 			'errUploadMime'        : 'نوع ملف غير مسموح ',
-			'errUploadTransfer'    : '"$1" خطأ أثناء عملية النقل', 
+			'errUploadTransfer'    : '"$1" خطأ أثناء عملية النقل',
 			'errSave'              : 'غير قادر على الحفظ في  "$1".',
 			'errCopy'              : 'غير قادر على النسخ إلى"$1".',
 			'errMove'              : 'غير قادر على القص إلى "$1".',
@@ -68,7 +68,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'errReplByChild'       : 'The folder “$1” can’t be replaced by an item it contains.',
 			'errArcSymlinks'       : 'For security reason denied to unpack archives contains symlinks.',
 			'errArcMaxSize'        : 'Archive files exceeds maximum allowed size.',
-			
+
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'أنشئ مجلد مضغوط',
 			'cmdback'      : 'الخلف',
@@ -96,7 +96,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'cmdupload'    : 'رفع ملفات',
 			'cmdview'      : 'عرض',
 
-			/*********************************** buttons ***********************************/ 
+			/*********************************** buttons ***********************************/
 			'btnClose'  : 'إغلاق',
 			'btnSave'   : 'حفظ',
 			'btnRm'     : 'إزالة',
@@ -162,7 +162,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'viewlist'        : 'اعرض ك قائمة',
 			'viewicons'       : 'اعرض ك ايقونات',
 			'places'          : 'المواقع',
-			'calc'            : 'حساب', 
+			'calc'            : 'حساب',
 			'path'            : 'مسار',
 			'aliasfor'        : 'Alias for',
 			'locked'          : 'مقفول',
@@ -173,7 +173,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'yes'             : 'نعم',
 			'no'              : 'لا',
 			'link'            : 'اربتاط',
-			'searcresult'     : 'نتائج البحث',  
+			'searcresult'     : 'نتائج البحث',
 			'selected'        : 'العناصر المحددة',
 			'about'           : 'عن البرنامج',
 			'shortcuts'       : 'الاختصارات',
@@ -203,7 +203,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'rmFromPlaces'    : 'Remove from places',
 			'untitled folder' : 'untitled folder',
 			'untitled file.txt' : 'untitled file.txt',
-			
+
 			/********************************** mimetypes **********************************/
 			'kindUnknown'     : 'غير معروف',
 			'kindFolder'      : 'مجلد',
@@ -286,5 +286,5 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 }
 
 
- 
+
 

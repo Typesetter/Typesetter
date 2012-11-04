@@ -1,12 +1,12 @@
 <?php
 
 /**
- * elFinder driver for local filesystem.
+ * local filesystem driver
  *
  * @author Dmitry (dio) Levashov
  * @author Troex Nevelin
  **/
-class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
+class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 
 	/**
 	 * Driver id
@@ -763,12 +763,12 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 			$this->remove($dir);
 
 			if ($symlinks) {
-				return $this->setError(elFinder::ERROR_ARC_SYMLINKS);
+				return $this->setError(Finder::ERROR_ARC_SYMLINKS);
 			}
 
 			// check max files size
 			if ($this->options['maxArcFilesSize'] > 0 && $this->options['maxArcFilesSize'] < $this->archiveSize) {
-				return $this->setError(elFinder::ERROR_ARC_MAXSIZE);
+				return $this->setError(Finder::ERROR_ARC_MAXSIZE);
 			}
 
 

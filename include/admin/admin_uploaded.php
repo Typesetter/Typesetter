@@ -22,14 +22,14 @@ class admin_uploaded{
 
 		$GP_INLINE_VARS['admin_resizable'] = false;
 
-		$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.common::GetDir('/include/thirdparty/finder/css/elfinder.css').'">';
+		$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.common::GetDir('/include/thirdparty/finder/css/finder.css').'">';
 		$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.common::GetDir('/include/thirdparty/finder/style.css').'">';
 
-		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/finder/js/elfinder.js').'"></script>';
+		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/finder/js/finder.js').'"></script>';
 		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/finder/config.js').'"></script>';
 
 
-		echo '<div id="elfinder"></div>';
+		echo '<div id="finder"></div>';
 
 		common::LoadComponents('selectable,draggable,droppable,resizable,dialog,slider,button');
 
@@ -40,7 +40,7 @@ class admin_uploaded{
 		if( $language == 'inherit' ){
 			$language = $config['language'];
 		}
-		$lang_file = '/include/thirdparty/finder/js/i18n/elfinder.'.$language.'.js';
+		$lang_file = '/include/thirdparty/finder/js/i18n/'.$language.'.js';
 		$lang_full = $dataDir.$lang_file;
 		if( file_exists($lang_full) ){
 			$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir($lang_file).'"></script>';
@@ -51,7 +51,7 @@ class admin_uploaded{
 
 
 		$this->FinderPrep();
-		$page->head_script .= "\n".'var elfinder_opts = '.json_encode($this->finder_opts).';';
+		$page->head_script .= "\n".'var finder_opts = '.json_encode($this->finder_opts).';';
 	}
 
 	function FinderPrep(){

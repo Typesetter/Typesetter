@@ -8,28 +8,28 @@
 	overflow:visible !important;
 	}
 
-#elfinder{
+#finder{
 	border:0 none !important;
 	}
 
-.elfinder-toolbar,
-.elfinder-statusbar,
-.elfinder-navbar{
+.finder-toolbar,
+.finder-statusbar,
+.finder-navbar{
 	background:#ededed !important;
 	}
-.elfinder-workzone{
+.finder-workzone{
 	border-left:1px solid #aaa !important;
 	}
 /*
-.elfinder-button{
+.finder-button{
 	height:18px;
 	width:20px;
 	}
 
-.elfinder-button-icon{
+.finder-button-icon{
 	margin:2px !important;
 	}
-.elfinder-toolbar-button-separator{
+.finder-toolbar-button-separator{
 	height:26px;
 	}
 	*/

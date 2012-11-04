@@ -13,7 +13,7 @@ includeFile('admin/admin_uploaded.php');
 define( 'finder_chmod_file', gp_chmod_file );
 define( 'finder_chmod_dir', gp_chmod_dir );
 
-includeFile('thirdparty/finder/php/elFinder.class.php');
+includeFile('thirdparty/finder/php/Finder.class.php');
 
 
 /**
@@ -63,6 +63,6 @@ $opts = array(
 
 
 
-// run elFinder
-$connector = new elFinder($opts);
+// run Finder
+$connector = new Finder($opts);
 $connector->run();

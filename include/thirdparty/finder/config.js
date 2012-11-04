@@ -39,19 +39,19 @@ $(function(){
 		}
 	}
 
-	elfinder_opts.customData = {verified : post_nonce};
+	finder_opts.customData = {verified : post_nonce};
 
-	$.extend(elfinder_opts,{
+	$.extend(finder_opts,{
 		uiOptions : uiOptions
 	});
 
 
 	/**
-	 * Start elfinder for ckeditor
+	 * Start finder for ckeditor
 	 *
 	 */
-	if( elfinder_opts.getFileCallback ){
-		elfinder_opts.getFileCallback = function(file) {
+	if( finder_opts.getFileCallback ){
+		finder_opts.getFileCallback = function(file) {
 			var funcNum = getUrlParam('CKEditorFuncNum');
 			if( typeof(file) == 'object' ){
 				file = file.url;
@@ -60,23 +60,23 @@ $(function(){
 			window.top.close();
 			window.top.opener.focus() ;
 		};
-	var $elfinder = $('#elfinder').elfinder(elfinder_opts);
+	var $finder = $('#finder').finder(finder_opts);
 	var $window = $(window);
 
 	$window.resize(function(){
 		var win_height = $window.height()-10;
-		if( $elfinder.height() != win_height ){
-			$elfinder.height(win_height).resize();
+		if( $finder.height() != win_height ){
+			$finder.height(win_height).resize();
 		}
 	})
 
 	/**
-	 * Start elfinder for uploaded files manager
+	 * Start finder for uploaded files manager
 	 *
 	 */
 	}else{
-		$('#elfinder')
-			.elfinder(elfinder_opts)
+		$('#finder')
+			.finder(finder_opts)
 			//
 
 			//save the height and width
@@ -105,7 +105,7 @@ $(function(){
 
 
 /**
- * How to modify CKEditor to open elFinder in dialog, not in new browser window?
+ * How to modify CKEditor to open Finder in dialog, not in new browser window?
  * http://elfinder.org/forum/#/20110728/integration-with-ckeditor-759177/
  *
 CKEDITOR.on('dialogDefinition', function(event) {
@@ -121,13 +121,13 @@ CKEDITOR.on('dialogDefinition', function(event) {
 				$('<div \>').dialog({
 					modal:true
 					,width:"80%"
-					,title:'elFinder'
+					,title:'Finder'
 					,zIndex: 99999
 					,create: function(event, ui) {
-						$(this).elfinder({
+						$(this).finder({
 							resizable:false
 							,//lang:'ru', // Optional
-							,url : '/elfinder/php/connector.php?mode=image'
+							,url : '/finder/php/connector.php?mode=image'
 							,getFileCallback : function(url) {
 								if( $('input#cke_118_textInput').is(':visible') ){
 									$('input#cke_118_textInput').val(url);
@@ -136,7 +136,7 @@ CKEDITOR.on('dialogDefinition', function(event) {
 								}
 								$('a.ui-dialog-titlebar-close[role="button"]').click()
 							}
-						}).elfinder('instance')
+						})
 					}
 				})
 			}

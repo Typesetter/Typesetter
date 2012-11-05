@@ -1345,11 +1345,10 @@ class common{
 
 		//home page link
 		if( isset($config['homepath']) && $href == $config['homepath'] ){
-			$href = '';
+			$href = rtrim(dirname($linkPrefix),'/').'/';
+		}else{
+			$href = $linkPrefix.'/'.ltrim($href,'/');
 		}
-
-		//redirects won't work with &amp;
-		$href = $linkPrefix.'/'.ltrim($href,'/');
 
 		if( $ampersands ){
 			$href = common::Ampersands($href);

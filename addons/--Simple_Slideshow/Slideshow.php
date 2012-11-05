@@ -7,7 +7,7 @@ class SimpleSlideshow{
 	/*
 	 * @static
 	 */
-	function SectionTypes($section_types){
+	static function SectionTypes($section_types){
 
 		$section_types['simple_slide'] = array();
 		$section_types['simple_slide']['label'] = 'Simple Slideshow';
@@ -18,7 +18,7 @@ class SimpleSlideshow{
 	/*
 	 * @static
 	 */
-	function SectionToContent($section_data){
+	static function SectionToContent($section_data){
 
 		if( $section_data['type'] != 'simple_slide' ){
 			return $section_data;
@@ -75,10 +75,10 @@ class SimpleSlideshow{
 
 
 
-	/*
+	/**
 	 * @static
 	 */
-	function DefaultContent($default_content,$type){
+	static function DefaultContent($default_content,$type){
 		global $langmessage;
 		if( $type == 'simple_slide' ){
 			return '<div class="gp_slide_thumbs"><ul class="gp_slideshow"><li class="gp_to_remove"><a></a></li></ul></div>';
@@ -86,10 +86,10 @@ class SimpleSlideshow{
 		return $default_content;
 	}
 
-	/*
+	/**
 	 * @static
 	 */
-	function SaveSection($return,$section,$type){
+	static function SaveSection($return,$section,$type){
 		global $page;
 		if( $type == 'simple_slide' ){
 			$page->SaveSection_Text($section);
@@ -105,7 +105,7 @@ class SimpleSlideshow{
 	 * @static
 	 *
 	 */
-	function GenerateContent_Admin(){
+	static function GenerateContent_Admin(){
 		global $addonFolderName, $page, $addonRelativeCode;
 		$page->head_script .= "\nvar SLIDESHOW_BASE = '".$addonRelativeCode."';\n";
 		SimpleSlideshow::AddComponents();
@@ -113,7 +113,7 @@ class SimpleSlideshow{
 	}
 
 
-	function AddComponents(){
+	static function AddComponents(){
 		global $addonFolderName, $page, $addonRelativeCode;
 		static $done = false;
 
@@ -131,7 +131,7 @@ class SimpleSlideshow{
 	 *
 	 *
 	 */
-	function InlineEdit_Scripts($scripts,$type){
+	static function InlineEdit_Scripts($scripts,$type){
 		global $addonRelativeCode;
 		if( $type !== 'simple_slide' ){
 			return $scripts;

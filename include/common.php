@@ -139,7 +139,7 @@ if ( function_exists( 'date_default_timezone_set' ) )
 function showError($errno, $errmsg, $filename, $linenum, $vars){
 	global $wbErrorBuffer, $addon_current_id, $page, $addon_current_version;
 	static $reported = array();
-	$report_error = false;
+	$report_error = true;
 
 
 	$errortype = array (
@@ -163,7 +163,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 
 	// since we supported php 4.3+, there may be a lot of strict errors
 	if( $errno === E_STRICT ){
-		$report_error = true;
+		$report_error = false;
 	}
 
 

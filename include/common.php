@@ -139,7 +139,7 @@ if ( function_exists( 'date_default_timezone_set' ) )
 function showError($errno, $errmsg, $filename, $linenum, $vars){
 	global $wbErrorBuffer, $addon_current_id, $page, $addon_current_version;
 	static $reported = array();
-	$report_error = true;
+	$report_error = false;
 
 
 	$errortype = array (

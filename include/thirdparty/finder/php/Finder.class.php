@@ -500,7 +500,7 @@ class Finder {
 		// call "*-before" events
 		$listeners = $this->GetListeners($cmd,'before');
 		foreach( $listeners as $listener ){
-			$args = call_user_func($listener,$before,$args,$this);
+			$args = call_user_func($listener,$cmd.'-before',$args,$this);
 		}
 		if( !is_array($args) ){
 			return array('error' => $this->error('errPerm'));

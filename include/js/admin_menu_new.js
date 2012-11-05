@@ -270,19 +270,23 @@
 
 		/*
 		 * Get information about the current menus so we can reload them as they change
+		 *
+		 * menu_markers aren't next to the actual menus any more
+		 *
 		 */
 		function getmenus(){
 			var vals,id,result = '';
-			$('.menu_marker').each(function(c,d){
-				id = d.nextSibling.id;
-				vals = $(d).children();
+
+			$('.menu_marker').each(function(){
+				var $this = $(this);
+				id = $this.data('menuid');
+				vals = $this.children();
 
 				result += '&menus['+id+']='+encodeURIComponent(vals.eq(0).val());
 				result += '&menuh['+id+']='+encodeURIComponent(vals.eq(1).val());
 				result += '&menuc['+id+']='+encodeURIComponent(vals.eq(2).val());
 			});
 			return result;
-
 		}
 
 		gpresponse.replacemenu = function(j){

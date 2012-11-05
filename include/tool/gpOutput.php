@@ -366,7 +366,7 @@ class gpOutput{
 				echo common::Link('Admin_Menu',$langmessage['file_manager'],'',' class="nodisplay"');
 				echo '</span>';
 
-				$id = 'id="ExtraEditArea'.$edit_index.'"';
+				$id = 'ExtraEditArea'.$edit_index.'';
 
 			}elseif( isset($info['key']) && ($info['key'] == 'CustomMenu') ){
 
@@ -377,14 +377,14 @@ class gpOutput{
 				echo common::Link('Admin_Menu',$langmessage['file_manager'],'',' class="nodisplay"');
 				echo '</span>';
 
-				$id = 'id="ExtraEditArea'.$edit_index.'"';
+				$id = 'ExtraEditArea'.$edit_index.'';
 				$class .=  ' editable_area';
 				$menu_marker = true;
 			}
 
 			//for menu arrangement, admin_menu_new.js
 			if( $menu_marker ){
-				echo '<div class="menu_marker nodisplay">';
+				echo '<div class="menu_marker nodisplay" data-menuid="'.$id.'">';
 				echo '<input type="hidden" value="'.htmlspecialchars($info['gpOutCmd']).'" />';
 				echo '<input type="hidden" value="'.htmlspecialchars($GP_MENU_LINKS).'" />';
 				echo '<input type="hidden" value="'.htmlspecialchars($GP_MENU_CLASS).'" />';
@@ -394,6 +394,9 @@ class gpOutput{
 		}
 
 
+		if( !empty($id) ){
+			$id = 'id="'.$id.'"';
+		}
 		echo '<div class="'.$class.' GPAREA" '.$id.'>';
 		echo $innerLinks;
 
@@ -1347,7 +1350,7 @@ class gpOutput{
 		$search = array('{$href_text}','{$attr}','{$label}','{$title}');
 		$replace = array();
 
-		if( count($menu) == 0 ){
+		if( !count($menu) ){
 			echo '<div class="emtpy_menu"></div>'; //an empty <ul> is not valid xhtml
 			gpOutput::ResetMenuGlobals();
 			return;

@@ -4,15 +4,6 @@ defined('is_running') or die('Not an entry point...');
 global $dataDir;
 
 includeFile('admin/admin_uploaded.php');
-
-
-/**
- * Finder settings
- *
- */
-define( 'finder_chmod_file', gp_chmod_file );
-define( 'finder_chmod_dir', gp_chmod_dir );
-
 includeFile('thirdparty/finder/php/Finder.class.php');
 
 
@@ -54,6 +45,9 @@ $opts = array(
 			'tmbBgColor'	=> 'transparent',
 			'copyOverwrite'	=> false,
 			'uploadOverwrite'=> false,
+			'tmbPathMode'	=> gp_chmod_dir,
+			'dirMode'		=> gp_chmod_dir,
+			'fileMode'		=> gp_chmod_file
 		),
 	),
 	'bind' => array(

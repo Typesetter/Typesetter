@@ -33,6 +33,8 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 	 **/
 	public function __construct() {
 		$this->options['alias']    = '';              // alias to replace root dir name
+		$this->options['dirMode']  = 0755;            // new dirs mode
+		$this->options['fileMode'] = 0644;            // new files mode
 		$this->options['quarantine'] = '.quarantine';  // quarantine folder name - required to check archive (must be hidden)
 		$this->options['maxArcFilesSize'] = 0;        // max allowed archive files size (0 - no limit)
 	}
@@ -420,7 +422,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 		$path = $path.DIRECTORY_SEPARATOR.$name;
 
 		if (@mkdir($path)) {
-			@chmod($path, finder_chmod_dir );
+			@chmod($path, $this->options['dirMode']);
 			return $path;
 		}
 
@@ -440,7 +442,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 
 		if (($fp = @fopen($path, 'w'))) {
 			@fclose($fp);
-			@chmod( $path, finder_chmod_file );
+			@chmod($path, $this->options['fileMode']);
 			return $path;
 		}
 		return false;
@@ -530,7 +532,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 			fwrite($target, fread($fp, 8192));
 		}
 		fclose($target);
-		@chmod( $path, finder_chmod_file );
+		@chmod( $path, $this->options['fileMode'] );
 		clearstatcache();
 		return $path;
 	}

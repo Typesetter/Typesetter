@@ -170,6 +170,8 @@ abstract class FinderVolumeDriver {
 		'mimefile'        => '',
 		// directory for thumbnails
 		'tmbPath'         => '.tmb',
+		// mode to create thumbnails dir
+		'tmbPathMode'     => 0777,
 		// thumbnails dir URL. Set it if store thumbnails outside root directory
 		'tmbURL'          => '',
 		// thumbnails size (px)
@@ -499,7 +501,7 @@ abstract class FinderVolumeDriver {
 		if ($path) {
 			if (!file_exists($path)) {
 				if (@mkdir($path)) {
-					chmod( $path, finder_chmod_dir );
+					chmod( $path, $this->options['tmbPathMode'] );
 				} else {
 					$path = '';
 				}

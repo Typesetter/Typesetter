@@ -4,15 +4,6 @@
 require('FinderVolumeDriver.class.php');
 
 
-/**
- * File Permissions
- *
- */
-Finder::defined('finder_chmod_file',0666);
-Finder::defined('finder_chmod_dir',0755);
-
-
-
 
 /**
  * Core class.
@@ -1387,14 +1378,5 @@ class Finder {
 		return (double)$time[1] + (double)$time[0];
 	}
 
-	/**
-	 * Define a constant if it hasn't already been set
-	 * @param string $var The name of the constant
-	 * @param mixed $default The value to set the constant if it hasn't been set
-	 * @since 2.4RC2
-	 */
-	function defined($var,$default){
-		defined($var) or define($var,$default);
-	}
 
 } // END class

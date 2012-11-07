@@ -279,13 +279,13 @@ class Install_Tools{
 		//Side_Menu
 		$file = $destination.'/data/_extra/Side_Menu.php';
 		$content = '<h3>Join the gpEasy Community</h3>
-		<p>Visit gpEasy.com to access the many <a href="http://gpeasy.com/Special_Resources" title="gpEasy Community Resources">available resources</a> to help you get the most out of our CMS.</p>
+		<p>Visit gpEasy.com to access the many <a href="http://gpeasy.com/Resources" title="gpEasy Community Resources">available resources</a> to help you get the most out of our CMS.</p>
 		<ul>
 		<li><a href="http://gpeasy.com/Special_Addon_Themes" title="gpEasy CMS Themes">Download Themes</a></li>
 		<li><a href="http://gpeasy.com/Special_Addon_Plugins" title="gpEasy CMS Plugin">Download Plugins</a></li>
 		<li><a href="http://gpeasy.com/Special_Forum" title="gpEasy CMS Forum">Get Help in the Forum</a></li>
-		<li><a href="http://gpeasy.com/Special_Powered_by" title="Sites using gpEasy CMS">Show off Your Site</a></li>
-		<li><a href="http://gpeasy.com/Special_Resources" title="gpEasy Community Resources">And Much More...</a></li>
+		<li><a href="http://gpeasy.com/Powered_by" title="Sites using gpEasy CMS">Show off Your Site</a></li>
+		<li><a href="http://gpeasy.com/Resources" title="gpEasy Community Resources">And Much More...</a></li>
 		</ul>
 		<p class="sm">(Edit this content by clicking &quot;Edit&quot;, it&#39;s that easy!)</p>';
 		gpFiles::SaveFile($file,$content);

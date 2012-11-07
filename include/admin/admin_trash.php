@@ -29,7 +29,7 @@ class admin_trash{
 	 * Make Sure the trash folder exists
 	 * admin_trash::PrepFolder();
 	 */
-	function PrepFolder(){
+	static function PrepFolder(){
 		global $dataDir;
 		$trash_dir = $dataDir.'/data/_trash';
 		gpFiles::CheckDir($trash_dir);
@@ -43,7 +43,7 @@ class admin_trash{
 	 *
 	 * @static
 	 */
-	function ModTrashData($add_to_trash,$remove_from_trash){
+	static function ModTrashData($add_to_trash,$remove_from_trash){
 		global $dataDir;
 
 		$trash_titles = admin_trash::TrashFiles();
@@ -82,7 +82,7 @@ class admin_trash{
 	 * Return a sorted array of files in the trash
 	 * @static
 	 */
-	function TrashFiles(){
+	static function TrashFiles(){
 		global $dataDir;
 		$trash_dir = $dataDir.'/data/_site/trash.php';
 
@@ -100,7 +100,7 @@ class admin_trash{
 	 * Create the trash.php index file based on the /_trash folder contents
 	 * @static
 	 */
-	function GenerateTrashIndex(){
+	static function GenerateTrashIndex(){
 		global $dataDir;
 
 		$trash_dir = $dataDir.'/data/_trash';
@@ -125,7 +125,7 @@ class admin_trash{
 	 * Save $trash_titles to the trash.php index file
 	 * @static
 	 */
-	function SaveTrashTitles($trash_titles){
+	static function SaveTrashTitles($trash_titles){
 		global $dataDir;
 		$index_file = $dataDir.'/data/_site/trash.php';
 		uksort($trash_titles,'strnatcasecmp');
@@ -139,7 +139,7 @@ class admin_trash{
 	 * Get the $info array for $title for use with $gp_titles
 	 * @static
 	 */
-	function GetInfo($title){
+	static function GetInfo($title){
 		global $dataDir;
 		static $trash_titles = false;
 		if( $trash_titles === false ){
@@ -177,7 +177,7 @@ class admin_trash{
 	 * Copy the php file in _pages to _trash for $title
 	 *
 	 */
-	function MoveToTrash_File($title, $index, &$trash_data){
+	static function MoveToTrash_File($title, $index, &$trash_data){
 		global $dataDir, $gp_titles;
 
 		$source_file = gpFiles::PageFile($title);
@@ -237,7 +237,7 @@ class admin_trash{
 		}
 
 		$titles = $_POST['title'];
-		$this->RestoreTitles($titles);
+		admin_trash::RestoreTitles($titles);
 
 		if( count($titles) == 0 ){
 			message($langmessage['OOPS'].' (R1)');
@@ -270,7 +270,7 @@ class admin_trash{
 	 * @return array A list of restored titles that can be used for menu insertion
 	 *
 	 */
-	function RestoreTitles(&$titles){
+	static function RestoreTitles(&$titles){
 		global $dataDir, $gp_index, $gp_titles;
 
 		$new_menu = array();
@@ -330,7 +330,7 @@ class admin_trash{
 	 *  - special_galleries::UpdateGalleryInfo($title,$content)
 	 *
 	 */
-	function RestoreFile($title,$file,$title_info){
+	static function RestoreFile($title,$file,$title_info){
 		//get the file data
 		$file_sections = array();
 		ob_start();
@@ -379,7 +379,7 @@ class admin_trash{
 	 *
 	 * @static
 	 */
-	function GetTypes($file){
+	static function GetTypes($file){
 
 		$types = array();
 		$file_sections = array();

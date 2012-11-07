@@ -2285,7 +2285,7 @@ class common{
 	static function IdUrl($request_cmd='cv'){
 		global $config;
 
-		$path = addon_browse_path.'/Special_Resources?';
+		$path = addon_browse_path.'/Resources?';
 
 		//command
 		$args['cmd'] = $request_cmd;

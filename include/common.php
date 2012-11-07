@@ -32,7 +32,7 @@ gp_defined('gp_backup_limit',10);
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php'); message('local browse path');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
-define('gpversion','3.5RC1');
+define('gpversion','3.5RC2');
 define('gp_random',common::RandomString());
 
 
@@ -1345,7 +1345,11 @@ class common{
 
 		//home page link
 		if( isset($config['homepath']) && $href == $config['homepath'] ){
-			$href = rtrim(dirname($linkPrefix),'/').'/';
+			$href = $linkPrefix;
+			if( !$_SERVER['gp_rewrite'] ){
+				$href = dirname($href);
+			}
+			$href = rtrim($href,'/').'/';
 		}else{
 			$href = $linkPrefix.'/'.ltrim($href,'/');
 		}

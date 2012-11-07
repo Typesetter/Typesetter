@@ -503,6 +503,6 @@ $langmessage = array(
 'strftime_time'=>'%H:%M',
 
 '_characters' => '%s 個字元',
-'Theme_default_sizes' => 'Default Size',
+'Theme_default_sizes' => '預設大小',
 
 );

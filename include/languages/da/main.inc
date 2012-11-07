@@ -504,6 +504,6 @@ $langmessage = array(
 'strftime_time'=>'%H:%M',
 
 '_characters' => '%s bogstaver',
-'Theme_default_sizes' => 'Default Size',
+'Theme_default_sizes' => 'Standard Størrelse',
 
 );

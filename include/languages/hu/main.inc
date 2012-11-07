@@ -72,7 +72,7 @@ $langmessage = array(
 'Child Pages'=>'Gyermek lapok',
 'Not In Main Menu'=>'Nem található a főmenüben',
 'Not In Any Menus'=>'Nem található egyetlen menüben sem',
-'SHOWING'=>'Showing %1$s - %2$s of %3$s',
+'SHOWING'=>'Megjeleníti %1$s - %2$s / %3$s',
 'External Link'=>'Külső hivatkozás',
 'New_Window'=>'Megnyitás új ablakban',
 'Page Info'=>'Oldal információ',
@@ -503,6 +503,6 @@ $langmessage = array(
 'strftime_time'=>'%H:%M',
 
 '_characters' => '%s karakter',
-'Theme_default_sizes' => 'Default Size',
+'Theme_default_sizes' => 'Alapértelmezett méret',
 
 );

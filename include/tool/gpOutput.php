@@ -1624,7 +1624,7 @@ class gpOutput{
 			}
 
 			gpOutput::$editlinks .= gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],$query,' title="'.$title.'" name="gpabox" ');
-			echo '<span class="editable_area" id="ExtraEditArea'.$edit_index.'">';
+			$result .= '<span class="editable_area" id="ExtraEditArea'.$edit_index.'">';
 		}
 
 		$text = gpOutput::SelectText($key);

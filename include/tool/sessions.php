@@ -325,6 +325,9 @@ class gpsession{
 		$new_data = gpsession::SessionData($user_file,$checksum);
 		$new_data['username'] = $username;
 		$new_data['granted'] = $user_info['granted'];
+		if( isset($user_info['editing']) ){
+			$new_data['editing'] = $user_info['editing'];
+		}
 		admin_tools::EditingValue($new_data);
 		gpFiles::SaveArray($user_file,'gpAdmin',$new_data);
 

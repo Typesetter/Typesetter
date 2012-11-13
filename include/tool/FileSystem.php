@@ -877,17 +877,11 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 	function file_exists($file){
 
 		$list = @ftp_nlist($this->conn_id, $file);
-		return !empty($list); //empty list = no file, so invert.
-
-
-		$dir = dirname($file);
-		$name = basename($file);
-		$list = $this->dirlist($dir);
-
-		if( is_array($list) && isset($list[$name]) ){
+		if( !empty($list) ){
 			return true;
 		}
-		return false;
+
+		return $this->is_dir($file);//in case it's an empty directory
 	}
 
 

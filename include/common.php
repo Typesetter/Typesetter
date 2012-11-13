@@ -2117,7 +2117,7 @@ class common{
 			$loggedin = true;
 		}
 
-		return gpPlugin::Filter('PageRunScript',array($loggedin));
+		return gpPlugin::Filter('LoggedIn',array($loggedin));
 	}
 
 	static function new_nonce($action = 'none', $anon = false, $factor = 43200 ){

@@ -2111,19 +2111,13 @@ class common{
 	 */
 	static function LoggedIn(){
 		global $gpAdmin;
-		static $loggedin;
 
-		if( isset($loggedin) ){
-			return $loggedin;
+		$loggedin = false;
+		if( isset($gpAdmin) && is_array($gpAdmin) ){
+			$loggedin = true;
 		}
 
-		if( !isset($gpAdmin) ){
-			$loggedin = false;
-			return false;
-		}
-
-		$loggedin = true;
-		return true;
+		return gpPlugin::Filter('PageRunScript',array($loggedin));
 	}
 
 	static function new_nonce($action = 'none', $anon = false, $factor = 43200 ){

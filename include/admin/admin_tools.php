@@ -240,9 +240,6 @@ class admin_tools{
 		echo '</div></div>'; //end simplepanel
 
 		echo "\n\n";
-
-		admin_tools::InlineEditArea();
-
 	}
 
 	/**
@@ -676,6 +673,7 @@ class admin_tools{
 		echo '<div id="loading2" class="nodisplay"></div>';
 
 		admin_tools::GetAdminPanel($new_versions);
+		admin_tools::InlineEditArea();
 		echo '<div class="nodisplay" id="gp_hidden"></div>';
 
 		if( isset($page->admin_html) ){

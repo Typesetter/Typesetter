@@ -55,7 +55,7 @@ abstract class FinderVolumeDriver {
 	 *
 	 * @var string
 	 **/
-	protected $startPath = '';
+	protected $startPath = false;
 
 	/**
 	 * Base URL
@@ -86,13 +86,6 @@ abstract class FinderVolumeDriver {
 	protected $tmbURL = '';
 
 	/**
-	 * Thumbnails size in px
-	 *
-	 * @var int
-	 **/
-	protected $tmbSize = 48;
-
-	/**
 	 * Image manipulation lib name
 	 * auto|imagick|mogtify|gd
 	 *
@@ -116,13 +109,6 @@ abstract class FinderVolumeDriver {
 		'create'  => array(),
 		'extract' => array()
 	);
-
-	/**
-	 * How many subdirs levels return for tree
-	 *
-	 * @var int
-	 **/
-	protected $treeDeep = 1;
 
 	/**
 	 * Errors from last failed action
@@ -473,6 +459,13 @@ abstract class FinderVolumeDriver {
 	 **/
 	protected $dirsCache = array();
 
+	/**
+	 * Cache storing which directories have subdirectories
+	 *
+	 */
+	protected $subdirCache = array();
+
+
 	/*********************************************************************/
 	/*                            INITIALIZATION                         */
 	/*********************************************************************/
@@ -490,7 +483,7 @@ abstract class FinderVolumeDriver {
 
 	/**
 	 * Configure after successfull mount.
-	 * By default set thumbnails path and image manipulation library.
+	 * By default set thumbnails path
 	 *
 	 * @return void
 	 * @author Dmitry (dio) Levashov
@@ -512,20 +505,53 @@ abstract class FinderVolumeDriver {
 				$this->tmbPathWritable = is_writable($path);
 			}
 		}
-
-		// set image manipulation library
-		$type = preg_match('/^(imagick|gd|auto)$/i', $this->options['imgLib'])
-			? strtolower($this->options['imgLib'])
-			: 'auto';
-
-		if (($type == 'imagick' || $type == 'auto') && extension_loaded('imagick')) {
-			$this->imgLib = 'imagick';
-		} else {
-			$this->imgLib = function_exists('gd_info') ? 'gd' : '';
-		}
-
 	}
 
+
+	/**
+	 * Allow the volume to connect
+	 * @return bool
+	 */
+	public function connect(){
+		static $connected = false;
+
+		if( $connected ){
+			return true;
+		}
+
+		$root = $this->stat($this->root);
+		if (!$root) {
+			return $this->setError('Root folder does not exists.');
+		}
+		if (!$root['read'] && !$root['write']) {
+			return $this->setError('Root folder has not read and write permissions.');
+		}
+
+		if( !$root['read'] ){
+			$this->options['URL']     = '';
+			$this->options['tmbURL']  = '';
+			$this->options['tmbPath'] = '';
+			// read only volume
+			array_unshift($this->attributes, array(
+				'pattern' => '/.*/',
+				'read'    => false
+			));
+		}
+		$this->URL      = $this->options['URL'];
+		if ($this->URL && preg_match("|[^/?&=]$|", $this->URL)) {
+			$this->URL .= '/';
+		}
+
+		$this->tmbURL   = !empty($this->options['tmbURL']) ? $this->options['tmbURL'] : '';
+		if ($this->tmbURL && preg_match("|[^/?&=]$|", $this->tmbURL)) {
+			$this->tmbURL .= '/';
+		}
+
+
+		$this->configure();
+		$connected = true;
+		return true;
+	}
 
 	/*********************************************************************/
 	/*                              PUBLIC API                           */
@@ -595,7 +621,7 @@ abstract class FinderVolumeDriver {
 
 		// root attributes
 		$this->attributes[] = array(
-			'pattern' => '~^'.preg_quote(DIRECTORY_SEPARATOR).'$~',
+			'pattern' => '~^'.preg_quote($this->separator).'$~',
 			'locked'  => true,
 			'hidden'  => false
 		);
@@ -693,10 +719,10 @@ abstract class FinderVolumeDriver {
 			$file = false;
 			if (!empty($this->options['mimefile']) && file_exists($this->options['mimefile'])) {
 				$file = $this->options['mimefile'];
-			} elseif (file_exists(dirname(__FILE__).DIRECTORY_SEPARATOR.'mime.types')) {
-				$file = dirname(__FILE__).DIRECTORY_SEPARATOR.'mime.types';
-			} elseif (file_exists(dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'mime.types')) {
-				$file = dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'mime.types';
+			} elseif (file_exists(dirname(__FILE__).'/mime.types')) {
+				$file = dirname(__FILE__).'/mime.types';
+			} elseif (file_exists(dirname(dirname(__FILE__)).'/mime.types')) {
+				$file = dirname(dirname(__FILE__)).'/mime.types';
 			}
 
 			if ($file && file_exists($file)) {
@@ -716,58 +742,12 @@ abstract class FinderVolumeDriver {
 		}
 
 		$this->rootName = empty($this->options['alias']) ? $this->_basename($this->root) : $this->options['alias'];
-		$root = $this->stat($this->root);
 
-		if (!$root) {
-			return $this->setError('Root folder does not exists.');
-		}
-		if (!$root['read'] && !$root['write']) {
-			return $this->setError('Root folder has not read and write permissions.');
-		}
 
-		// debug($root);
-
-		if ($root['read']) {
-			// check startPath - path to open by default instead of root
-			if ($this->options['startPath']) {
-				$start = $this->stat($this->options['startPath']);
-				if (!empty($start)
-				&& $start['mime'] == 'directory'
-				&& $start['read']
-				&& empty($start['hidden'])
-				&& $this->_inpath($this->options['startPath'], $this->root)) {
-					$this->startPath = $this->options['startPath'];
-					if (substr($this->startPath, -1, 1) == $this->options['separator']) {
-						$this->startPath = substr($this->startPath, 0, -1);
-					}
-				}
-			}
-		} else {
-			$this->options['URL']     = '';
-			$this->options['tmbURL']  = '';
-			$this->options['tmbPath'] = '';
-			// read only volume
-			array_unshift($this->attributes, array(
-				'pattern' => '/.*/',
-				'read'    => false
-			));
-		}
-		$this->treeDeep = $this->options['treeDeep'] > 0 ? (int)$this->options['treeDeep'] : 1;
-		$this->tmbSize  = $this->options['tmbSize'] > 0 ? (int)$this->options['tmbSize'] : 48;
-		$this->URL      = $this->options['URL'];
-		if ($this->URL && preg_match("|[^/?&=]$|", $this->URL)) {
-			$this->URL .= '/';
-		}
-
-		$this->tmbURL   = !empty($this->options['tmbURL']) ? $this->options['tmbURL'] : '';
-		if ($this->tmbURL && preg_match("|[^/?&=]$|", $this->tmbURL)) {
-			$this->tmbURL .= '/';
-		}
-
-		$this->nameValidator = is_string($this->options['acceptedName']) && !empty($this->options['acceptedName'])
-			? $this->options['acceptedName']
-			: '';
-
+		/**
+		 * Archiver section
+		 *
+		 */
 		$this->_checkArchivers();
 		// manual control archive types to create
 		if (!empty($this->options['archiveMimes']) && is_array($this->options['archiveMimes'])) {
@@ -803,9 +783,21 @@ abstract class FinderVolumeDriver {
 			}
 		}
 
-		$this->configure();
-		// echo $this->uploadMaxSize;
-		// echo $this->options['uploadMaxSize'];
+
+		/**
+		 * Set image manipulation library
+		 *
+		 */
+		$type = preg_match('/^(imagick|gd|auto)$/i', $this->options['imgLib'])
+			? strtolower($this->options['imgLib'])
+			: 'auto';
+
+		if (($type == 'imagick' || $type == 'auto') && extension_loaded('imagick')) {
+			$this->imgLib = 'imagick';
+		} else {
+			$this->imgLib = function_exists('gd_info') ? 'gd' : '';
+		}
+
 		return $this->mounted = true;
 	}
 
@@ -856,9 +848,31 @@ abstract class FinderVolumeDriver {
 	 *
 	 * @return string
 	 * @author Dmitry (dio) Levashov
-	 **/
-	public function defaultPath() {
-		return $this->encode($this->startPath ? $this->startPath : $this->root);
+	 */
+	public function defaultPath(){
+
+		if( $this->startPath ){
+			return $this->encode($this->startPath);
+		}
+		$this->startPath = $this->root;
+
+
+		// check startPath - path to open by default instead of root
+		if( $this->options['startPath'] ){
+			$start = $this->stat($this->options['startPath']);
+			if (!empty($start)
+			&& $start['mime'] == 'directory'
+			&& $start['read']
+			&& empty($start['hidden'])
+			&& $this->_inpath($this->options['startPath'], $this->root)) {
+				$this->startPath = $this->options['startPath'];
+				if (substr($this->startPath, -1, 1) == $this->options['separator']) {
+					$this->startPath = substr($this->startPath, 0, -1);
+				}
+			}
+		}
+
+		return $this->encode($this->startPath);
 	}
 
 	/**
@@ -1002,16 +1016,11 @@ abstract class FinderVolumeDriver {
 	 **/
 	public function file($hash) {
 		$path = $this->decode($hash);
-
-		return ($file = $this->stat($path)) ? $file : $this->setError(Finder::ERROR_FILE_NOT_FOUND);
-
-		if (($file = $this->stat($path)) != false) {
-			if ($realpath) {
-				$file['realpath'] = $path;
-			}
-			return $file;
+		$file = $this->stat($path);
+		if( !$file ){
+			return $this->setError(Finder::ERROR_FILE_NOT_FOUND);
 		}
-		return $this->setError(Finder::ERROR_FILE_NOT_FOUND);
+		return $file;
 	}
 
 	/**
@@ -1022,8 +1031,10 @@ abstract class FinderVolumeDriver {
 	 * @return array|false
 	 * @author Dmitry (dio) Levashov
 	 **/
-	public function dir($hash, $resolveLink=false) {
-		if (($dir = $this->file($hash)) == false) {
+	public function dir( $hash, $resolveLink=false ){
+		$path = $this->decode($hash);
+		$dir = $this->stat($path);
+		if( $dir == false ){
 			return $this->setError(Finder::ERROR_DIR_NOT_FOUND);
 		}
 
@@ -1031,9 +1042,12 @@ abstract class FinderVolumeDriver {
 			$dir = $this->file($dir['thash']);
 		}
 
-		return $dir && $dir['mime'] == 'directory' && empty($dir['hidden'])
-			? $dir
-			: $this->setError(Finder::ERROR_NOT_DIR);
+		if( !$dir || $dir['mime'] != 'directory' || !empty($dir['hidden']) ){
+			return $this->setError(Finder::ERROR_NOT_DIR);
+		}
+
+		$dir = $this->HasSubdirs($path,$dir);
+		return $dir;
 	}
 
 	/**
@@ -1042,15 +1056,19 @@ abstract class FinderVolumeDriver {
 	 * @param  string   $hash   file hash
 	 * @return array|false
 	 * @author Dmitry (dio) Levashov
-	 **/
+	 */
 	public function scandir($hash) {
-		if (($dir = $this->dir($hash)) == false) {
+		$dir = $this->dir($hash);
+		if( $dir == false) {
 			return false;
 		}
 
-		return $dir['read']
-			? $this->getScandir($this->decode($hash))
-			: $this->setError(Finder::ERROR_PERM_DENIED);
+		if( $dir['read'] ){
+			$path = $this->decode($hash);
+			return $this->getScandir($path);
+		}
+
+		return $this->setError(Finder::ERROR_PERM_DENIED);
 	}
 
 	/**
@@ -1087,14 +1105,22 @@ abstract class FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	public function tree($hash='', $deep=0, $exclude='') {
-		$path = $hash ? $this->decode($hash) : $this->root;
+		if( $hash ){
+			$path = $this->decode($hash);
+		}else{
+			$path = $this->root;
+		}
 
-		if (($dir = $this->stat($path)) == false || $dir['mime'] != 'directory') {
+		$dir = $this->stat($path);
+		if( $dir == false || $dir['mime'] != 'directory' ){
 			return false;
 		}
 
-		$dirs = $this->gettree($path, $deep > 0 ? $deep -1 : $this->treeDeep-1, $exclude ? $this->decode($exclude) : null);
+		$this->options['treeDeep'] = $this->options['treeDeep'] > 0 ? (int)$this->options['treeDeep'] : 1;
+
+		$dirs = $this->gettree($path, $deep > 0 ? $deep -1 : $this->options['treeDeep']-1, $exclude ? $this->decode($exclude) : null);
 		array_unshift($dirs, $dir);
+
 		return $dirs;
 	}
 
@@ -1106,14 +1132,15 @@ abstract class FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	public function parents($hash) {
-		if (($current = $this->dir($hash)) == false) {
+		$current = $this->dir($hash);
+		if( $current == false ){
 			return false;
 		}
 
 		$path = $this->decode($hash);
 		$tree = array();
 
-		while ($path && $path != $this->root) {
+		while( $path && $path != $this->root ){
 			$path = $this->_dirname($path);
 			$stat = $this->stat($path);
 			if (!empty($stat['hidden']) || !$stat['read']) {
@@ -1122,8 +1149,8 @@ abstract class FinderVolumeDriver {
 
 			array_unshift($tree, $stat);
 			if ($path != $this->root) {
-				foreach ($this->gettree($path, 0) as $dir) {
-					if (!in_array($dir, $tree)) {
+				foreach( $this->gettree($path, 0) as $dir ){
+					if( !in_array($dir, $tree) ){
 						$tree[] = $dir;
 					}
 				}
@@ -1167,9 +1194,10 @@ abstract class FinderVolumeDriver {
 	 * @return Resource
 	 * @author Dmitry (dio) Levashov
 	 **/
-	public function open($hash) {
-		if (($file = $this->file($hash)) == false
-		|| $file['mime'] == 'directory') {
+	public function open($hash){
+		$file = $this->file($hash);
+
+		if( $file == false || $file['mime'] == 'directory' ){
 			return false;
 		}
 
@@ -1594,17 +1622,16 @@ abstract class FinderVolumeDriver {
 			return $this->setError(Finder::ERROR_PERM_DENIED);
 		}
 
-		if (($file = $this->file($hash)) == false) {
+		$file = $this->file($hash);
+		if( $file == false ){
 			return $this->setError(Finder::ERROR_FILE_NOT_FOUND);
 		}
 
-		$archiver = isset($this->archivers['extract'][$file['mime']])
-			? $this->archivers['extract'][$file['mime']]
-			: false;
-
-		if (!$archiver) {
+		if( !isset($this->archivers['extract'][$file['mime']]) ){
 			return $this->setError(Finder::ERROR_NOT_ARCHIVE);
 		}
+
+		$archiver = $this->archivers['extract'][$file['mime']];
 
 		$path   = $this->decode($hash);
 		$parent = $this->stat($this->_dirname($path));
@@ -1613,7 +1640,17 @@ abstract class FinderVolumeDriver {
 			return $this->setError(Finder::ERROR_PERM_DENIED);
 		}
 		$this->clearcache();
-		return ($path = $this->_extract($path, $archiver)) ? $this->stat($path) : false;
+
+		if( isset($archiver['function']) ){
+			$path = call_user_func( array($this,$archiver['function']), $path, $archiver );
+		}else{
+			$path = $this->_extract($path, $archiver);
+		}
+		if( !$path ){
+			return $this->setError(Finder::ERROR_PERM_DENIED);
+		}
+
+		return $this->stat($path);
 	}
 
 	/**
@@ -1658,7 +1695,20 @@ abstract class FinderVolumeDriver {
 		$name = (count($files) == 1 ? $files[0] : 'Archive').'.'.$archiver['ext'];
 		$name = $this->uniqueName($dir, $name, '');
 		$this->clearcache();
-		return ($path = $this->_archive($dir, $files, $name, $archiver)) ? $this->stat($path) : false;
+
+
+		if( isset($archiver['function']) ){
+			$path = call_user_func( array($this,$archiver['function']), $dir, $files, $name, $archiver );
+		}else{
+			$path = $this->_archive($dir, $files, $name, $archiver);
+		}
+
+		if( !$path ){
+			return $this->error('errArchive');
+		}
+
+
+		return $this->stat($path);
 	}
 
 	/**
@@ -1776,8 +1826,6 @@ abstract class FinderVolumeDriver {
 	 **/
 	protected function setError($error) {
 
-		$this->error = array();
-
 		foreach (func_get_args() as $err) {
 			if (is_array($err)) {
 				$this->error = array_merge($this->error, $err);
@@ -1811,7 +1859,7 @@ abstract class FinderVolumeDriver {
 			$p = $this->_relpath($path);
 			// if reqesting root dir $path will be empty, then assign '/' as we cannot leave it blank for crypt
 			if ($p === '')	{
-				$p = DIRECTORY_SEPARATOR;
+				$p = $this->separator;
 			}
 
 			// TODO crypt path and return hash
@@ -1843,7 +1891,7 @@ abstract class FinderVolumeDriver {
 			// TODO uncrypt hash and return path
 			$path = $this->uncrypt($h);
 			// append ROOT to path after it was cut in encode
-			return $this->_abspath($path);//$this->root.($path == DIRECTORY_SEPARATOR ? '' : DIRECTORY_SEPARATOR.$path);
+			return $this->_abspath($path);
 		}
 	}
 
@@ -1872,22 +1920,24 @@ abstract class FinderVolumeDriver {
 	}
 
 	/**
-	 * Validate file name based on $this->options['acceptedName'] regexp
+	 * Validate file name based on $this->options['acceptedName'] regexp or callback
 	 *
 	 * @param  string  $name  file name
 	 * @return bool
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function nameAccepted($name) {
-		if ($this->nameValidator) {
-			if (function_exists($this->nameValidator)) {
-				$f = $this->nameValidator;
-				return $f($name);
-			}
 
-			return preg_match($this->nameValidator, $name);
+		if( empty($this->options['acceptedName']) ){
+			return true;
 		}
-		return true;
+		$validator =& $this->options['acceptedName'];
+
+		if( is_string($validator) && !is_callable($validator) ){
+			return preg_match($validator, $name);
+		}
+
+		return call_user_func( $validator, $name );
 	}
 
 	/**
@@ -1927,6 +1977,7 @@ abstract class FinderVolumeDriver {
 		return $name.md5($dir).$ext;
 	}
 
+
 	/*********************** file stat *********************/
 
 	/**
@@ -1943,7 +1994,6 @@ abstract class FinderVolumeDriver {
 			return false;
 		}
 
-
 		$perm = null;
 
 		if( $this->access ){
@@ -1953,18 +2003,11 @@ abstract class FinderVolumeDriver {
 			}
 		}
 
-		if ($this->separator != '/') {
-			$path = str_replace($this->separator, '/', $this->_relpath($path));
-		} else {
-			$path = $this->_relpath($path);
-		}
-
-		$path = '/'.$path;
+		$path = $this->separator.$this->_relpath($path);
 
 		for ($i = 0, $c = count($this->attributes); $i < $c; $i++) {
 			$attrs = $this->attributes[$i];
-
-			if (isset($attrs[$name]) && isset($attrs['pattern']) && preg_match($attrs['pattern'], $path)) {
+			if( isset($attrs[$name]) && isset($attrs['pattern']) && preg_match($attrs['pattern'], $path) ){
 				$perm = $attrs[$name];
 			}
 		}
@@ -2012,9 +2055,12 @@ abstract class FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function stat($path) {
-		return isset($this->cache[$path])
-			? $this->cache[$path]
-			: $this->updateCache($path, $this->_stat($path));
+		if( isset($this->cache[$path]) ){
+			return $this->cache[$path];
+		}
+
+		$stat = $this->_stat($path);
+		return $this->updateCache($path, $stat );
 	}
 
 	/**
@@ -2086,37 +2132,12 @@ abstract class FinderVolumeDriver {
 			unset($stat['hidden']);
 		}
 
-		if ($stat['read'] && empty($stat['hidden'])) {
-
-			if ($stat['mime'] == 'directory') {
-				// for dir - check for subdirs
-
-				if ($this->options['checkSubfolders']) {
-					if (isset($stat['dirs'])) {
-						if ($stat['dirs']) {
-							$stat['dirs'] = 1;
-						} else {
-							unset($stat['dirs']);
-						}
-					} elseif (!empty($stat['alias']) && !empty($stat['target'])) {
-						$stat['dirs'] = isset($this->cache[$stat['target']])
-							? intval(isset($this->cache[$stat['target']]['dirs']))
-							: $this->_subdirs($stat['target']);
-
-					} elseif ($this->_subdirs($path)) {
-						$stat['dirs'] = 1;
-					}
-				} else {
-					$stat['dirs'] = 1;
-				}
-			} else {
-				// for files - check for thumbnails
-				$p = isset($stat['target']) ? $stat['target'] : $path;
-				if ($this->tmbURL && !isset($stat['tmb']) && $this->canCreateTmb($p, $stat)) {
-					$tmb = $this->gettmb($p, $stat);
-					$stat['tmb'] = $tmb ? $tmb : 1;
-				}
-
+		// for files - check for thumbnails
+		if( $stat['read'] && empty($stat['hidden']) && ($stat['mime'] != 'directory') ){
+			$p = isset($stat['target']) ? $stat['target'] : $path;
+			if ($this->tmbURL && !isset($stat['tmb']) && $this->canCreateTmb($p, $stat)) {
+				$tmb = $this->gettmb($p, $stat);
+				$stat['tmb'] = $tmb ? $tmb : 1;
 			}
 		}
 
@@ -2125,25 +2146,35 @@ abstract class FinderVolumeDriver {
 			unset($stat['target']);
 		}
 
-		return $this->cache[$path] = $stat;
+		$this->cache[$path] = $stat;
+		return $stat;
 	}
+
+
 
 	/**
-	 * Get stat for folder content and put in cache
+	 * Return required dir's files info.
 	 *
-	 * @param  string  $path
-	 * @return void
+	 * @param  string  $path  dir path
+	 * @return array
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function cacheDir($path) {
-		$this->dirsCache[$path] = array();
+	protected function getScandir($path) {
+		$files = array();
 
-		foreach ($this->_scandir($path) as $p) {
-			if (($stat = $this->stat($p)) && empty($stat['hidden'])) {
-				$this->dirsCache[$path][] = $p;
+		!isset($this->dirsCache[$path]) && $this->cacheDir($path);
+
+		foreach( $this->dirsCache[$path] as $p ){
+			$stat = $this->stat($p);
+			if( $stat && empty($stat['hidden']) ){
+				$files[$p] = $stat;
 			}
 		}
+
+		return $files;
 	}
+
+
 
 	/**
 	 * Clean cache
@@ -2152,7 +2183,7 @@ abstract class FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function clearcache() {
-		$this->cache = $this->dirsCache = array();
+		$this->cache = $this->dirsCache = $this->subdirCache = array();
 	}
 
 	/**
@@ -2233,13 +2264,14 @@ abstract class FinderVolumeDriver {
 		$subdirs = $this->options['checkSubfolders'];
 		$this->options['checkSubfolders'] = true;
 		$result = 0;
-		foreach ($this->getScandir($path) as $stat) {
-			$size = $stat['mime'] == 'directory' && $stat['read']
-				? $this->countSize($this->_joinPath($path, $stat['name']))
-				: $stat['size'];
-			if ($size > 0) {
-				$result += $size;
+		$list = $this->getScandir($path);
+		foreach( $list as $p => $stat ){
+			if( $stat['mime'] == 'directory' && $stat['read'] ){
+				$size = $this->countSize($p);
+			}else{
+				$size = $stat['size'];
 			}
+			$result += $size;
 		}
 		$this->options['checkSubfolders'] = $subdirs;
 		return $result;
@@ -2270,19 +2302,21 @@ abstract class FinderVolumeDriver {
 	protected function closestByAttr($path, $attr, $val) {
 		$stat = $this->stat($path);
 
-		if (empty($stat)) {
+		if( empty($stat) ){
 			return false;
 		}
 
 		$v = isset($stat[$attr]) ? $stat[$attr] : false;
 
-		if ($v == $val) {
+		if( $v == $val ){
 			return $path;
 		}
 
-		return $stat['mime'] == 'directory'
-			? $this->childsByAttr($path, $attr, $val)
-			: false;
+		if( $stat['mime'] == 'directory' ){
+			return $this->childsByAttr($path, $attr, $val);
+		}
+
+		return false;
 	}
 
 	/**
@@ -2294,9 +2328,12 @@ abstract class FinderVolumeDriver {
 	 * @return string|false
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function childsByAttr($path, $attr, $val) {
-		foreach ($this->_scandir($path) as $p) {
-			if (($_p = $this->closestByAttr($p, $attr, $val)) != false) {
+	protected function childsByAttr($path, $attr, $val){
+
+		$list = $this->getScandir($path);
+		foreach($list as $p => $s){
+			$_p = $this->closestByAttr($p, $attr, $val);
+			if( $_p != false ){
 				return $_p;
 			}
 		}
@@ -2305,26 +2342,32 @@ abstract class FinderVolumeDriver {
 
 	/*****************  get content *******************/
 
+
 	/**
-	 * Return required dir's files info.
-	 * If onlyMimes is set - return only dirs and files of required mimes
+	 * Return true if the directory given by path has subdirectories
 	 *
-	 * @param  string  $path  dir path
-	 * @return array
-	 * @author Dmitry (dio) Levashov
-	 **/
-	protected function getScandir($path) {
-		$files = array();
+	 */
+	protected function HasSubdirs( $path, $stat ){
 
-		!isset($this->dirsCache[$path]) && $this->cacheDir($path);
-
-		foreach ($this->dirsCache[$path] as $p) {
-			if (($stat = $this->stat($p)) && empty($stat['hidden'])) {
-				$files[] = $stat;
-			}
+		if( isset($stat['dirs']) ){
+			return $stat;
 		}
 
-		return $files;
+		if( !$this->options['checkSubfolders'] ){
+			return $stat;
+		}
+
+
+		$list = $this->getScandir($path);
+
+		foreach($list as $p => $s){
+			if( $s['mime'] == 'directory' ){
+				$stat['dirs'] = 1;
+				return $this->updateCache($path, $stat );
+			}
+		}
+		$stat['dirs'] = 0;
+		return $this->updateCache($path, $stat );
 	}
 
 
@@ -2339,21 +2382,23 @@ abstract class FinderVolumeDriver {
 	protected function gettree($path, $deep, $exclude='') {
 		$dirs = array();
 
-		!isset($this->dirsCache[$path]) && $this->cacheDir($path);
+		$list = $this->getScandir($path);
+		foreach($list as $p => $stat){
 
-		foreach ($this->dirsCache[$path] as $p) {
-			$stat = $this->stat($p);
+			if( !$stat || !empty($stat['hidden']) || $stat['mime'] !== 'directory' || $p == $exclude ){
+				continue;
+			}
 
-			if ($stat && empty($stat['hidden']) && $p != $exclude && $stat['mime'] == 'directory') {
-				$dirs[] = $stat;
-				if ($deep > 0 && !empty($stat['dirs'])) {
-					$dirs = array_merge($dirs, $this->gettree($p, $deep-1));
-				}
+			$stat = $this->HasSubdirs($p,$stat);
+			$dirs[] = $stat;
+			if( $deep > 0 && $stat['dirs'] ){
+				$dirs = array_merge($dirs, $this->gettree($p, $deep-1));
 			}
 		}
 
 		return $dirs;
 	}
+
 
 	/**
 	 * Recursive files search
@@ -2367,9 +2412,8 @@ abstract class FinderVolumeDriver {
 	protected function doSearch($path, $q, $mimes) {
 		$result = array();
 
-		foreach($this->_scandir($path) as $p) {
-			$stat = $this->stat($p);
-
+		$list = $this->getScandir($path);
+		foreach($list as $p => $stat){
 			if (!$stat) { // invalid links
 				continue;
 			}
@@ -2557,14 +2601,16 @@ abstract class FinderVolumeDriver {
 			return $this->setError(Finder::ERROR_LOCKED, $this->_path($path));
 		}
 
-		if ($stat['mime'] == 'directory') {
-			foreach ($this->_scandir($path) as $p) {
-				$name = $this->_basename($p);
-				if ($name != '.' && $name != '..' && !$this->remove($p)) {
+		if( $stat['mime'] == 'directory' ){
+
+			$list = $this->getScandir($path);
+			foreach($list as $p => $s){
+				if( !$this->remove($p) ){
 					return false;
 				}
 			}
-			if (!$this->_rmdir($path)) {
+
+			if( !$this->_rmdir($path) ){
 				return $this->setError(Finder::ERROR_RM, $this->_path($path));
 			}
 
@@ -2608,7 +2654,7 @@ abstract class FinderVolumeDriver {
 			}
 
 			$name = $this->tmbname($stat);
-			if (file_exists($this->tmbPath.DIRECTORY_SEPARATOR.$name)) {
+			if (file_exists( $this->_joinPath($this->tmbPath,$name) )) {
 				return $name;
 			}
 		}
@@ -2658,7 +2704,7 @@ abstract class FinderVolumeDriver {
 		}
 
 		$name = $this->tmbname($stat);
-		$tmb  = $this->tmbPath.DIRECTORY_SEPARATOR.$name;
+		$tmb  = $this->_joinPath( $this->tmbPath,$name );
 
 		// copy image into tmbPath so some drivers does not store files on local fs
 		if (($src = $this->_fopen($path, 'rb')) == false) {
@@ -2679,7 +2725,7 @@ abstract class FinderVolumeDriver {
 
 		$result = false;
 
-		$tmbSize = $this->tmbSize;
+		$tmbSize = $this->options['tmbSize'] > 0 ? (int)$this->options['tmbSize'] : 48;
 
   		if (($s = getimagesize($tmb)) == false) {
 			return false;
@@ -3009,13 +3055,13 @@ abstract class FinderVolumeDriver {
 	 * Execute shell command
 	 *
 	 * @param  string  $command       command line
-	 * @param  array   $output        stdout strings
 	 * @param  array   $return_var    process exit code
+	 * @param  array   $output        stdout strings
 	 * @param  array   $error_output  stderr strings
 	 * @return int     exit code
 	 * @author Alexey Sukhotin
 	 **/
-	protected function procExec($command , array &$output = null, &$return_var = -1, array &$error_output = null) {
+	protected function procExec($command , &$return_var = -1, array &$output = null, array &$error_output = null) {
 
 		$descriptorspec = array(
 			0 => array("pipe", "r"),  // stdin
@@ -3056,13 +3102,22 @@ abstract class FinderVolumeDriver {
 	 * @author Troex Nevelin
 	 **/
 	protected function rmTmb($stat) {
-		if ($stat['mime'] === 'directory') {
-			foreach ($this->_scandir($this->decode($stat['hash'])) as $p) {
-				$name = $this->_basename($p);
-				$name != '.' && $name != '..' && $this->rmTmb($this->stat($p));
+
+		//directory
+		if( $stat['mime'] === 'directory' ){
+
+			$path = $this->decode($stat['hash']);
+			$list = $this->getScandir($path);
+			foreach( $list as $p => $stat ){
+				$this->rmTmb($stat);
 			}
-		} else if (!empty($stat['tmb']) && $stat['tmb'] != "1") {
-			$tmb = $this->tmbPath.DIRECTORY_SEPARATOR.$stat['tmb'];
+
+			return;
+		}
+
+		//files
+		if( !empty($stat['tmb']) && $stat['tmb'] != "1" ){
+			$tmb = $this->_joinPath( $this->tmbPath, $stat['tmb'] );
 			file_exists($tmb) && @unlink($tmb);
 			clearstatcache();
 		}
@@ -3172,7 +3227,6 @@ abstract class FinderVolumeDriver {
 		return stripos($haystack , $needle , $offset);
 	}
 
-	/**==================================* abstract methods *====================================**/
 
 	/*********************** paths/urls *************************/
 
@@ -3183,7 +3237,9 @@ abstract class FinderVolumeDriver {
 	 * @return string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	abstract protected function _dirname($path);
+	protected function _dirname($path){
+		return dirname($path);
+	}
 
 	/**
 	 * Return file name
@@ -3192,7 +3248,10 @@ abstract class FinderVolumeDriver {
 	 * @return string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	abstract protected function _basename($path);
+	protected function _basename($path) {
+		return basename($path);
+	}
+
 
 	/**
 	 * Join dir name and file name and return full path.
@@ -3203,16 +3262,57 @@ abstract class FinderVolumeDriver {
 	 * @return string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	abstract protected function _joinPath($dir, $name);
+	protected function _joinPath($dir, $name){
+		$dir = $this->_separator($dir);
+		$name = $this->_separator($name);
+		return rtrim($dir,$this->separator) . $this->separator . ltrim($name,$this->separator);
+	}
+
 
 	/**
-	 * Return normalized path
+	 * Return normalized path, this works the same as os.path.normpath() in Python
 	 *
-	 * @param  string  $path  file path
+	 * @param  string  $path  path
 	 * @return string
-	 * @author Dmitry (dio) Levashov
+	 * @author Troex Nevelin
 	 **/
-	abstract protected function _normpath($path);
+	protected function _normpath( $path ){
+		$path = $this->_separator( $path );
+		if( empty($path) ){
+			return '.';
+		}
+
+		$initial_slashes = 0;
+		if( strpos($path, $this->separator) === 0 ){
+			$initial_slashes = 1;
+		}
+
+		if( $initial_slashes
+			&& (strpos($path, $this->separator.$this->separator ) === 0)
+			&& (strpos($path, $this->separator.$this->separator.$this->separator) === false) ){
+				$initial_slashes = 2;
+		}
+
+		$comps = explode($this->separator, $path);
+		$new_comps = array();
+		foreach ($comps as $comp) {
+			if (in_array($comp, array('', '.'))) {
+				continue;
+			}
+
+			if (($comp != '..')
+			|| (!$initial_slashes && !$new_comps)
+			|| ($new_comps && (end($new_comps) == '..'))) {
+				array_push($new_comps, $comp);
+			} elseif ($new_comps) {
+				array_pop($new_comps);
+			}
+		}
+		$path = str_repeat($this->separator, $initial_slashes) . implode($this->separator, $new_comps);
+
+		return $path ? $path : '.';
+	}
+
 
 	/**
 	 * Return file path related to root dir
@@ -3221,26 +3321,46 @@ abstract class FinderVolumeDriver {
 	 * @return string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	abstract protected function _relpath($path);
+	protected function _relpath($path){
+		$path = $this->_separator( $path );
+		if( $path == $this->root ){
+			return '';
+		}
+		if( $this->root == $this->separator ){
+			return substr($path,1);
+		}
+		return substr($path, strlen($this->root)+1);
+	}
+
 
 	/**
 	 * Convert path related to root dir into real path
-	 *
-	 * @param  string  $path  rel file path
-	 * @return string
-	 * @author Dmitry (dio) Levashov
-	 **/
-	abstract protected function _abspath($path);
-
-	/**
-	 * Return fake path started from root dir.
-	 * Required to show path on client side.
 	 *
 	 * @param  string  $path  file path
 	 * @return string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	abstract protected function _path($path);
+	protected function _abspath($path) {
+		$path = $this->_separator( $path );
+		return $path == $this->separator ? $this->root : $this->_joinPath($this->root,$path);
+	}
+
+
+
+	/**
+	 * Return fake path started from root dir
+	 *
+	 * @param  string  $path  file path
+	 * @return string
+	 * @author Dmitry (dio) Levashov
+	 **/
+	protected function _path($path) {
+		if( $path == $this->root ){
+			return $this->rootName;
+		}
+		return $this->_joinPath( $this->rootName, $this->_relpath($path) );
+	}
+
 
 	/**
 	 * Return true if $path is children of $parent
@@ -3250,7 +3370,24 @@ abstract class FinderVolumeDriver {
 	 * @return bool
 	 * @author Dmitry (dio) Levashov
 	 **/
-	abstract protected function _inpath($path, $parent);
+	protected function _inpath($path, $parent) {
+		$path = $this->_separator( $path );
+		$parent = $this->_separator( $parent );
+		return $path == $parent || strpos($path, $this->_joinPath($parent,$this->separator) ) === 0;
+	}
+
+
+	/**
+	 * Make sure the path is using the correct separator
+	 *
+	 */
+	protected function _separator($path){
+		return str_replace( array('/','\\'), $this->separator, $path);
+	}
+
+
+	/**==================================* abstract methods *====================================**/
+
 
 	/**
 	 * Return stat for given path.
@@ -3274,17 +3411,19 @@ abstract class FinderVolumeDriver {
 	abstract protected function _stat($path);
 
 
+	/**
+	 * Get stat for folder content and put in cache
+	 *
+	 * @param  string  $path
+	 * @return void
+	 */
+	abstract protected function cacheDir($path);
+
+
+
 	/***************** file stat ********************/
 
 
-	/**
-	 * Return true if path is dir and has at least one childs directory
-	 *
-	 * @param  string  $path  dir path
-	 * @return bool
-	 * @author Dmitry (dio) Levashov
-	 **/
-	abstract protected function _subdirs($path);
 
 	/**
 	 * Return object width and height
@@ -3298,15 +3437,6 @@ abstract class FinderVolumeDriver {
 	abstract protected function _dimensions($path, $mime);
 
 	/******************** file/dir content *********************/
-
-	/**
-	 * Return files list in directory
-	 *
-	 * @param  string  $path  dir path
-	 * @return array
-	 * @author Dmitry (dio) Levashov
-	 **/
-	abstract protected function _scandir($path);
 
 	/**
 	 * Open file and return file pointer

@@ -55,7 +55,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 
 		if ($this->options['quarantine']) {
 			$this->attributes[] = array(
-				'pattern' => '~^'.preg_quote(DIRECTORY_SEPARATOR.$this->options['quarantine']).'$~',
+				'pattern' => '~^'.preg_quote($this->separator.$this->options['quarantine']).'$~',
 				'read'    => false,
 				'write'   => false,
 				'locked'  => true,
@@ -65,10 +65,10 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 
 		// check thumbnails path
 		if( $this->options['tmbPath']
-			&& ($test_path = str_replace( array('\\','/'), DIRECTORY_SEPARATOR, $this->options['tmbPath']))
-			&& (strpos($test_path,DIRECTORY_SEPARATOR) === false)
+			&& ($test_path = $this->_separator($this->options['tmbPath']))
+			&& (strpos($test_path,$this->separator) === false)
 			){
-				$this->options['tmbPath'] = $this->root.DIRECTORY_SEPARATOR.$this->options['tmbPath'];
+				$this->options['tmbPath'] = $this->_joinPath( $this->root, $this->options['tmbPath']);
 				$this->options['tmbPath'] = $this->_normpath($this->options['tmbPath']);
 		}
 
@@ -77,7 +77,8 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 		// if no thumbnails url - try detect it
 		if ($root['read'] && !$this->tmbURL && $this->URL) {
 			if (strpos($this->tmbPath, $this->root) === 0) {
-				$this->tmbURL = $this->URL.str_replace(DIRECTORY_SEPARATOR, '/', substr($this->tmbPath, strlen($this->root)+1));
+				$temp = substr($this->tmbPath, strlen($this->root)+1);
+				$this->tmbURL = $this->URL . str_replace($this->separator, '/', $temp );
 				if (preg_match("|[^/?&=]$|", $this->tmbURL)) {
 					$this->tmbURL .= '/';
 				}
@@ -86,7 +87,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 
 		// check quarantine dir
 		if (!empty($this->options['quarantine'])) {
-			$this->quarantine = $this->root.DIRECTORY_SEPARATOR.$this->options['quarantine'];
+			$this->quarantine = $this->_joinPath( $this->root, $this->options['quarantine'] );
 			if ((!is_dir($this->quarantine) && !$this->_mkdir($this->root, $this->options['quarantine'])) || !is_writable($this->quarantine)) {
 				$this->archivers['extract'] = array();
 				$this->disabled[] = 'extract';
@@ -101,138 +102,6 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 	/*********************************************************************/
 	/*                               FS API                              */
 	/*********************************************************************/
-
-	/*********************** paths/urls *************************/
-
-	/**
-	 * Return parent directory path
-	 *
-	 * @param  string  $path  file path
-	 * @return string
-	 * @author Dmitry (dio) Levashov
-	 **/
-	protected function _dirname($path) {
-		return dirname($path);
-	}
-
-	/**
-	 * Return file name
-	 *
-	 * @param  string  $path  file path
-	 * @return string
-	 * @author Dmitry (dio) Levashov
-	 **/
-	protected function _basename($path) {
-		return basename($path);
-	}
-
-	/**
-	 * Join dir name and file name and retur full path
-	 *
-	 * @param  string  $dir
-	 * @param  string  $name
-	 * @return string
-	 * @author Dmitry (dio) Levashov
-	 **/
-	protected function _joinPath($dir, $name) {
-		return $dir.DIRECTORY_SEPARATOR.$name;
-	}
-
-	/**
-	 * Return normalized path, this works the same as os.path.normpath() in Python
-	 *
-	 * @param  string  $path  path
-	 * @return string
-	 * @author Troex Nevelin
-	 **/
-	protected function _normpath($path) {
-		if (empty($path)) {
-			return '.';
-		}
-
-		if (strpos($path, '/') === 0) {
-			$initial_slashes = true;
-		} else {
-			$initial_slashes = false;
-		}
-
-		if (($initial_slashes)
-		&& (strpos($path, '//') === 0)
-		&& (strpos($path, '///') === false)) {
-			$initial_slashes = 2;
-		}
-
-		$initial_slashes = (int) $initial_slashes;
-
-		$comps = explode('/', $path);
-		$new_comps = array();
-		foreach ($comps as $comp) {
-			if (in_array($comp, array('', '.'))) {
-				continue;
-			}
-
-			if (($comp != '..')
-			|| (!$initial_slashes && !$new_comps)
-			|| ($new_comps && (end($new_comps) == '..'))) {
-				array_push($new_comps, $comp);
-			} elseif ($new_comps) {
-				array_pop($new_comps);
-			}
-		}
-		$comps = $new_comps;
-		$path = implode('/', $comps);
-		if ($initial_slashes) {
-			$path = str_repeat('/', $initial_slashes) . $path;
-		}
-
-		return $path ? $path : '.';
-	}
-
-	/**
-	 * Return file path related to root dir
-	 *
-	 * @param  string  $path  file path
-	 * @return string
-	 * @author Dmitry (dio) Levashov
-	 **/
-	protected function _relpath($path) {
-		return $path == $this->root ? '' : substr($path, strlen($this->root)+1);
-	}
-
-	/**
-	 * Convert path related to root dir into real path
-	 *
-	 * @param  string  $path  file path
-	 * @return string
-	 * @author Dmitry (dio) Levashov
-	 **/
-	protected function _abspath($path) {
-		return $path == DIRECTORY_SEPARATOR ? $this->root : $this->root.DIRECTORY_SEPARATOR.$path;
-	}
-
-	/**
-	 * Return fake path started from root dir
-	 *
-	 * @param  string  $path  file path
-	 * @return string
-	 * @author Dmitry (dio) Levashov
-	 **/
-	protected function _path($path) {
-		return $this->rootName.($path == $this->root ? '' : $this->separator.$this->_relpath($path));
-	}
-
-	/**
-	 * Return true if $path is children of $parent
-	 *
-	 * @param  string  $path    path to check
-	 * @param  string  $parent  parent path
-	 * @return bool
-	 * @author Dmitry (dio) Levashov
-	 **/
-	protected function _inpath($path, $parent) {
-		return $path == $parent || strpos($path, $parent.DIRECTORY_SEPARATOR) === 0;
-	}
-
 
 
 	/***************** file stat ********************/
@@ -296,29 +165,6 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 
 
 	/**
-	 * Return true if path is dir and has at least one childs directory
-	 *
-	 * @param  string  $path  dir path
-	 * @return bool
-	 * @author Dmitry (dio) Levashov
-	 **/
-	protected function _subdirs($path) {
-
-		if (($dir = dir($path))) {
-			$dir = dir($path);
-			while (($entry = $dir->read()) !== false) {
-				$p = $dir->path.DIRECTORY_SEPARATOR.$entry;
-				if ($entry != '.' && $entry != '..' && is_dir($p) && !$this->attr($p, 'hidden')) {
-					$dir->close();
-					return true;
-				}
-			}
-			$dir->close();
-		}
-		return false;
-	}
-
-	/**
 	 * Return object width and height
 	 * Ususaly used for images, but can be realize for video etc...
 	 *
@@ -343,47 +189,50 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function readlink($path) {
-		if (!($target = @readlink($path))) {
+		$target = @readlink($path);
+		if( !$target ){
 			return false;
 		}
 
-		if (substr($target, 0, 1) != DIRECTORY_SEPARATOR) {
-			$target = dirname($path).DIRECTORY_SEPARATOR.$target;
+		$target = $this->_separator($target);
+
+		if( $target[0] != $this->separator ){
+			$target = $this->_joinPath( dirname($path), $target );
 		}
 
 		$atarget = realpath($target);
 
-		if (!$atarget) {
+		if( !$atarget ){
 			return false;
 		}
 
-		$root  = $this->root;
-		$aroot = $this->aroot;
-
-		if ($this->_inpath($atarget, $this->aroot)) {
-			return $this->_normpath($this->root.DIRECTORY_SEPARATOR.substr($atarget, strlen($this->aroot)+1));
+		if( $this->_inpath($atarget, $this->aroot) ){
+			$arelative = substr( $atarget, strlen($this->aroot) );
+			return $this->_joinPath($this->root, $arelative );
 		}
 
 		return false;
 	}
 
 	/**
-	 * Return files list in directory.
+	 * Get stat for folder content and put in cache
 	 *
-	 * @param  string  $path  dir path
-	 * @return array
-	 * @author Dmitry (dio) Levashov
-	 **/
-	protected function _scandir($path) {
-		$files = array();
+	 * @param  string  $path
+	 * @return void
+	 */
+	protected function cacheDir($path){
+		$this->dirsCache[$path] = array();
 
-		foreach (scandir($path) as $name) {
-			if ($name != '.' && $name != '..') {
-				$files[] = $path.DIRECTORY_SEPARATOR.$name;
+		$list = scandir($path);
+		foreach($list as $file){
+			if( $file == '.' || $file == '..' ){
+				continue;
 			}
+			$p = $this->_joinPath( $path, $file );
+			$this->dirsCache[$path][] = $p;
 		}
-		return $files;
 	}
+
 
 	/**
 	 * Open file and return file pointer
@@ -419,7 +268,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _mkdir($path, $name) {
-		$path = $path.DIRECTORY_SEPARATOR.$name;
+		$path = $this->_joinPath( $path, $name);
 
 		if (@mkdir($path)) {
 			@chmod($path, $this->options['dirMode']);
@@ -438,7 +287,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _mkfile($path, $name) {
-		$path = $path.DIRECTORY_SEPARATOR.$name;
+		$path = $this->_joinPath( $path, $name);
 
 		if (($fp = @fopen($path, 'w'))) {
 			@fclose($fp);
@@ -458,7 +307,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _symlink($source, $targetDir, $name) {
-		return @symlink($source, $targetDir.DIRECTORY_SEPARATOR.$name);
+		return @symlink($source, $this->_joinPath( $targetDir, $name) );
 	}
 
 	/**
@@ -471,7 +320,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _copy($source, $targetDir, $name) {
-		return copy($source, $targetDir.DIRECTORY_SEPARATOR.$name);
+		return copy($source, $this->_joinPath( $targetDir, $name) );
 	}
 
 	/**
@@ -485,7 +334,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _move($source, $targetDir, $name) {
-		$target = $targetDir.DIRECTORY_SEPARATOR.$name;
+		$target = $this->_joinPath( $targetDir, $name);
 		return @rename($source, $target) ? $target : false;
 	}
 
@@ -522,7 +371,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _save($fp, $dir, $name, $mime, $w, $h) {
-		$path = $dir.DIRECTORY_SEPARATOR.$name;
+		$path = $this->_joinPath( $dir, $name );
 
 		if (!($target = @fopen($path, 'wb'))) {
 			return false;
@@ -568,96 +417,107 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 	 * Detect available archivers
 	 *
 	 * @return void
-	 **/
+	 */
 	protected function _checkArchivers() {
-		if (!function_exists('exec')) {
-			$this->options['archivers'] = $this->options['archive'] = array();
-			return;
-		}
+
 		$arcs = array(
 			'create'  => array(),
 			'extract' => array()
 			);
 
-		//exec('tar --version', $o, $ctar);
-		$this->procExec('tar --version', $o, $ctar);
 
+		//.tar
+		$arcs['create']['application/x-tar']  = array( 'function'=>'PhpCompress', 'ext'=> 'tar' );
+		$arcs['extract']['application/x-tar'] = array( 'function'=>'PhpExtract', 'ext'=> 'tar' );
+
+
+	    if( function_exists('gzopen') ){
+
+			//.zip
+			$arcs['create']['application/zip']  = array( 'function'=>'PhpCompress', 'ext'=> 'zip' );
+			$arcs['extract']['application/zip'] = array( 'function'=>'PhpExtract', 'ext'=> 'zip' );
+
+
+			// .tar.gz
+			$arcs['create']['application/x-gzip']  = array( 'function'=>'PhpCompress', 'ext'=>'tgz' );
+			$arcs['extract']['application/x-gzip'] = array( 'function'=>'PhpExtract', 'ext'=> 'tgz' );
+
+		}
+
+		// .tar.bz
+		if( function_exists('bzopen') ){
+			$arcs['create']['application/x-bzip2']  = array( 'function'=>'PhpCompress', 'ext'=>'tbz' );
+			$arcs['extract']['application/x-bzip2'] = array( 'function'=>'PhpExtract', 'ext'=> 'tbz' );
+		}
+
+		if (!function_exists('exec')) {
+			$this->archivers = $arcs;
+			// $this->options['archivers'] = $this->options['archive'] = array();
+			return;
+		}
+
+		// 7z supports multiple types, but isn't the ideal either
+		// these setting will be overwritten if a better option is found
+		$this->procExec('7za --help', $c);
+		if ($c == 0) {
+			$arcs['create']['application/x-7z-compressed']  = array('cmd' => '7za', 'argc' => 'a', 'ext' => '7z');
+			$arcs['extract']['application/x-7z-compressed'] = array('cmd' => '7za', 'argc' => 'e -y', 'ext' => '7z');
+
+			$arcs['create']['application/x-gzip'] = array('cmd' => '7za', 'argc' => 'a -tgzip', 'ext' => 'tar.gz');
+			$arcs['extract']['application/x-gzip'] = array('cmd' => '7za', 'argc' => 'e -tgzip -y', 'ext' => 'tar.gz');
+
+			$arcs['create']['application/x-bzip2'] = array('cmd' => '7za', 'argc' => 'a -tbzip2', 'ext' => 'tar.bz');
+			$arcs['extract']['application/x-bzip2'] = array('cmd' => '7za', 'argc' => 'a -tbzip2 -y', 'ext' => 'tar.bz');
+
+			$arcs['create']['application/zip'] = array('cmd' => '7za', 'argc' => 'a -tzip -l', 'ext' => 'zip');
+			$arcs['extract']['application/zip'] = array('cmd' => '7za', 'argc' => 'e -tzip -y', 'ext' => 'zip');
+
+			$arcs['create']['application/x-tar'] = array('cmd' => '7za', 'argc' => 'a -ttar -l', 'ext' => 'tar');
+			$arcs['extract']['application/x-tar'] = array('cmd' => '7za', 'argc' => 'e -ttar -y', 'ext' => 'tar');
+		}
+
+
+
+		// native support
+		$this->procExec('tar --version', $ctar);
 		if ($ctar == 0) {
 			$arcs['create']['application/x-tar']  = array('cmd' => 'tar', 'argc' => '-cf', 'ext' => 'tar');
 			$arcs['extract']['application/x-tar'] = array('cmd' => 'tar', 'argc' => '-xf', 'ext' => 'tar');
-			//$test = exec('gzip --version', $o, $c);
-			unset($o);
-			$test = $this->procExec('gzip --version', $o, $c);
 
+			$test = $this->procExec('gzip --version', $c);
 			if ($c == 0) {
 				$arcs['create']['application/x-gzip']  = array('cmd' => 'tar', 'argc' => '-czf', 'ext' => 'tgz');
 				$arcs['extract']['application/x-gzip'] = array('cmd' => 'tar', 'argc' => '-xzf', 'ext' => 'tgz');
 			}
-			unset($o);
-			//$test = exec('bzip2 --version', $o, $c);
-			$test = $this->procExec('bzip2 --version', $o, $c);
+
+			$test = $this->procExec('bzip2 --version', $c);
 			if ($c == 0) {
 				$arcs['create']['application/x-bzip2']  = array('cmd' => 'tar', 'argc' => '-cjf', 'ext' => 'tbz');
 				$arcs['extract']['application/x-bzip2'] = array('cmd' => 'tar', 'argc' => '-xjf', 'ext' => 'tbz');
 			}
 		}
-		unset($o);
-		//exec('zip --version', $o, $c);
-		$this->procExec('zip -v', $o, $c);
+		$this->procExec('zip -v', $c);
 		if ($c == 0) {
 			$arcs['create']['application/zip']  = array('cmd' => 'zip', 'argc' => '-r9', 'ext' => 'zip');
 		}
-		unset($o);
-		$this->procExec('unzip --help', $o, $c);
+
+		$this->procExec('unzip --help', $c);
 		if ($c == 0) {
 			$arcs['extract']['application/zip'] = array('cmd' => 'unzip', 'argc' => '',  'ext' => 'zip');
 		}
-		unset($o);
-		//exec('rar --version', $o, $c);
-		$this->procExec('rar --version', $o, $c);
+
+		$this->procExec('rar --version', $c);
 		if ($c == 0 || $c == 7) {
 			$arcs['create']['application/x-rar']  = array('cmd' => 'rar', 'argc' => 'a -inul', 'ext' => 'rar');
 			$arcs['extract']['application/x-rar'] = array('cmd' => 'rar', 'argc' => 'x -y',    'ext' => 'rar');
 		} else {
-			unset($o);
-			//$test = exec('unrar', $o, $c);
-			$test = $this->procExec('unrar', $o, $c);
+			$test = $this->procExec('unrar', $c);
 			if ($c==0 || $c == 7) {
 				$arcs['extract']['application/x-rar'] = array('cmd' => 'unrar', 'argc' => 'x -y', 'ext' => 'rar');
 			}
 		}
-		unset($o);
-		//exec('7za --help', $o, $c);
-		$this->procExec('7za --help', $o, $c);
-		if ($c == 0) {
-			$arcs['create']['application/x-7z-compressed']  = array('cmd' => '7za', 'argc' => 'a', 'ext' => '7z');
-			$arcs['extract']['application/x-7z-compressed'] = array('cmd' => '7za', 'argc' => 'e -y', 'ext' => '7z');
 
-			if (empty($arcs['create']['application/x-gzip'])) {
-				$arcs['create']['application/x-gzip'] = array('cmd' => '7za', 'argc' => 'a -tgzip', 'ext' => 'tar.gz');
-			}
-			if (empty($arcs['extract']['application/x-gzip'])) {
-				$arcs['extract']['application/x-gzip'] = array('cmd' => '7za', 'argc' => 'e -tgzip -y', 'ext' => 'tar.gz');
-			}
-			if (empty($arcs['create']['application/x-bzip2'])) {
-				$arcs['create']['application/x-bzip2'] = array('cmd' => '7za', 'argc' => 'a -tbzip2', 'ext' => 'tar.bz');
-			}
-			if (empty($arcs['extract']['application/x-bzip2'])) {
-				$arcs['extract']['application/x-bzip2'] = array('cmd' => '7za', 'argc' => 'a -tbzip2 -y', 'ext' => 'tar.bz');
-			}
-			if (empty($arcs['create']['application/zip'])) {
-				$arcs['create']['application/zip'] = array('cmd' => '7za', 'argc' => 'a -tzip -l', 'ext' => 'zip');
-			}
-			if (empty($arcs['extract']['application/zip'])) {
-				$arcs['extract']['application/zip'] = array('cmd' => '7za', 'argc' => 'e -tzip -y', 'ext' => 'zip');
-			}
-			if (empty($arcs['create']['application/x-tar'])) {
-				$arcs['create']['application/x-tar'] = array('cmd' => '7za', 'argc' => 'a -ttar -l', 'ext' => 'tar');
-			}
-			if (empty($arcs['extract']['application/x-tar'])) {
-				$arcs['extract']['application/x-tar'] = array('cmd' => '7za', 'argc' => 'e -ttar -y', 'ext' => 'tar');
-			}
-		}
+
 
 		$this->archivers = $arcs;
 	}
@@ -676,7 +536,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 		$dir = $this->_dirname($path);
 		chdir($dir);
 		$cmd = $arc['cmd'].' '.$arc['argc'].' '.escapeshellarg($this->_basename($path));
-		$this->procExec($cmd, $o, $c);
+		$this->procExec($cmd, $c);
 		chdir($cwd);
 	}
 
@@ -695,7 +555,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 		if (is_dir($path)) {
 			foreach (scandir($path) as $name) {
 				if ($name != '.' && $name != '..') {
-					$p = $path.DIRECTORY_SEPARATOR.$name;
+					$p = $this->_joinPath( $path, $name );
 					if (is_link($p) || !$this->nameAccepted($name)) {
 						return true;
 					}
@@ -723,11 +583,11 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov,
 	 * @author Alexey Sukhotin
 	 **/
-	protected function _extract($path, $arc) {
+	protected function _extract($path, $arc){
 
 		if ($this->quarantine) {
-			$dir     = $this->quarantine.DIRECTORY_SEPARATOR.str_replace(' ', '_', microtime()).basename($path);
-			$archive = $dir.DIRECTORY_SEPARATOR.basename($path);
+			$dir     = $this->_joinPath( $this->quarantine, str_replace(' ', '_', microtime()).basename($path) );
+			$archive = $this->_joinPath( $dir, basename($path) );
 
 			if (!@mkdir($dir)) {
 				return false;
@@ -778,7 +638,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 			// archive contains one item - extract in archive dir
 			if (count($ls) == 1) {
 				$this->_unpack($path, $arc);
-				$result = dirname($path).DIRECTORY_SEPARATOR.$ls[0];
+				$result = $this->_joinPath( dirname($path), $ls[0]);
 
 
 			} else {
@@ -788,13 +648,13 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 				if (preg_match('/\.((tar\.(gz|bz|bz2|z|lzo))|cpio\.gz|ps\.gz|xcf\.(gz|bz2)|[a-z0-9]{1,4})$/i', $name, $m)) {
 					$name = substr($name, 0,  strlen($name)-strlen($m[0]));
 				}
-				$test = dirname($path).DIRECTORY_SEPARATOR.$name;
+				$test = $this->_joinPath( dirname($path), $name );
 				if (file_exists($test) || is_link($test)) {
 					$name = $this->uniqueName(dirname($path), $name, '-', false);
 				}
 
-				$result  = dirname($path).DIRECTORY_SEPARATOR.$name;
-				$archive = $result.DIRECTORY_SEPARATOR.basename($path);
+				$result  = $this->_joinPath( dirname($path), $name);
+				$archive = $this->_joinPath( $result, basename($path) );
 
 				if (!$this->_mkdir(dirname($path), $name) || !copy($path, $archive)) {
 					return false;
@@ -806,6 +666,178 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 
 			return file_exists($result) ? $result : false;
 		}
+	}
+
+	/**
+	 * Extract files from an archive using pclzip.lib.php or Archive_Tar.php
+	 *
+	 * @param string  $path  archive path
+	 * @param array $archiver
+	 * @return bool
+	 */
+	protected function PhpExtract( $path, $archiver ){
+
+		// create archive object
+		@ini_set('memory_limit', '256M');
+		switch( $archiver['ext'] ){
+			case 'zip':
+				include('pclzip.lib.php');
+				$archive = new PclZip($path);
+			break;
+
+			case 'tbz':
+			case 'tgz':
+			case 'tar':
+				include('Archive_Tar.php');
+				$archive = new Archive_Tar( $path );
+			break;
+			default:
+			return $this->setError('Unknown archive type');
+		}
+
+		$list = $archive->listContent();
+		if( !count($list) ){
+			return $this->setError('Empty Archive');
+		}
+
+		// destination path .. determine if we need to create a folder for the files in the archive
+		$root_names = $this->ArchiveRoots($list);
+		$extract_args = array();
+		$remove_path = '';
+		if( count($root_names) > 1 ){
+			$dest = $this->ArchiveDestination( $path );
+		}elseif( count($list) == 1 ){
+			//$dest = dirname($path);
+			$dest = $this->ArchiveDestination( $path );//not ideal, but the listing is updated this way
+		}else{
+			$name = array_shift($root_names);
+			$remove_path = $name;
+			$dest = $this->IncrementName( dirname($path), $name );
+		}
+
+
+		// extract
+		switch( $archiver['ext'] ){
+			case 'zip':
+				if( !$archive->extract( $dest, $remove_path ) ){
+					return $this->setError('Extract Failed');
+				}
+			break;
+
+			case 'tbz':
+			case 'tgz':
+			case 'tar':
+				if( !$archive->extractModify( $dest, $remove_path ) ){
+					return $this->setError('Extract Failed');
+				}
+			break;
+		}
+
+		return $dest;
+	}
+
+
+	/**
+	 * Return a list of root paths from an archive list
+	 * Helpful in determining if we need to create a folder for the files in the archive
+	 * @param array $list List of files in archive
+	 *
+	 */
+	protected function ArchiveRoots( &$list ){
+		$root_names = array();
+		foreach($list as $file){
+			$filename = ltrim( str_replace('\\','/',$file['filename']) ,' 	/' );
+			$parts = explode('/',$filename);
+			$root_names[] = array_shift($parts);
+		}
+		return array_unique($root_names);
+	}
+
+
+	/**
+	 * Return the path an archive can be extracted to
+	 * @param string $path
+	 */
+	protected function ArchiveDestination( $path ){
+
+		$name = basename($path);
+		$parts = explode('.',$name);
+		$extension = array_pop($parts);
+		$name = implode('.',$parts);
+
+		return $this->IncrementName( dirname($path), $name );
+	}
+
+	/**
+	 * Create a unique filename by incrementing if needed
+	 * @param string $dir
+	 * @param string $name
+	 * @param string $ext
+	 */
+	function IncrementName( $dir, $name, $ext = false ){
+		if( $ext ){
+			$ext = ltrim($ext,'.').'.';
+		}
+
+		$dest = $this->_joinPath( $dir, $name.$ext);
+		if( !file_exists($dest) && !is_link($dest) ){
+			return $dest;
+		}
+
+		$i = 0;
+		do{
+			$dest = $this->_joinPath( $dir, $name.'-'.$i.$ext);
+			$i++;
+		}while( file_exists($dest) || is_link($dest) );
+
+		return $dest;
+	}
+
+
+	/**
+	 * Create archive using php function and return the path
+	 *
+	 * @param  string  $dir    target dir
+	 * @param  array   $files  files names list
+	 * @param  string  $name   archive name
+	 * @param  array   $arc    archiver options
+	 * @return string|bool
+	 */
+	protected function PhpCompress($dir, $files, $name, $archiver ){
+
+		@ini_set('memory_limit', '256M');
+		$path = $this->_joinPath( $dir, $name );
+
+		//format the list
+		$list = array();
+		foreach($files as $file){
+			$list[] = $this->_joinPath( $dir, $file );
+		}
+
+		// create archive object
+		switch( $archiver['ext'] ){
+			case 'zip':
+				include('pclzip.lib.php');
+				$archive = new PclZip($path);
+				if( !$archive->Create($list,'',$dir) ){
+					return $this->SetError('errArchive');
+				}
+			break;
+
+			case 'tgz':
+			case 'tbz':
+			case 'tar':
+				include('Archive_Tar.php');
+				$archive = new Archive_Tar( $path );
+				if( !$archive->createModify($list, '', $dir) ){
+					return $this->SetError('errArchive');
+				}
+			break;
+		}
+
+
+		return $path;
+
 	}
 
 	/**
@@ -826,10 +858,10 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 		$files = array_map('escapeshellarg', $files);
 
 		$cmd = $arc['cmd'].' '.$arc['argc'].' '.escapeshellarg($name).' '.implode(' ', $files);
-		$this->procExec($cmd, $o, $c);
+		$this->procExec($cmd, $c);
 		chdir($cwd);
 
-		$path = $dir.DIRECTORY_SEPARATOR.$name;
+		$path = $this->_joinPath( $dir, $name );
 		return file_exists($path) ? $path : false;
 	}
 

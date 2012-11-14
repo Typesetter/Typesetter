@@ -647,18 +647,34 @@ class Finder {
 			}
 		}
 
-		$this->MountVolume( $volume, $driver, $options );
-
-		if( $volume->mount($options) ){
-			$netVolumes        = $this->getNetVolumes();
-			$options['driver'] = $driver;
-			$netVolumes[]      = $options;
-			$netVolumes        = array_unique($netVolumes);
-			$this->saveNetVolumes($netVolumes);
-			return array('sync' => true);
-		} else {
+		if( !$this->MountVolume( $volume, $driver, $options ) ){
 			return array('error' => $this->error(self::ERROR_NETMOUNT, $args['host'], implode(' ', $volume->error())));
 		}
+
+		if( !$volume->connect() ){
+			return array('error' => $this->error(self::ERROR_NETMOUNT, $args['host'], implode(' ', $volume->error())));
+		}
+
+		$netVolumes        = $this->getNetVolumes();
+		$options['driver'] = $driver;
+		$netVolumes[]      = $options;
+		$netVolumes        = array_unique($netVolumes);
+		$this->saveNetVolumes($netVolumes);
+
+
+		//add to list of volumes
+		$id = $volume->id();
+		$this->volumes[$id] = $volume;
+
+
+		// simulate open request send open data
+		// data : {cmd : 'open', init : 1, target : cwd, tree : this.ui.tree ? 1 : 0},
+		$args = array();
+		$args['cmd'] = 'open';
+		$args['init'] = 1;
+		$args['target'] = $volume->defaultPath(); //$id;
+		$args['tree'] = 1;
+		return $this->open($args);
 	}
 
 	/**
@@ -724,21 +740,24 @@ class Finder {
 		$files = array($cwd);
 
 		// get folders trees
-		if ($args['tree']) {
-			foreach ($this->volumes as $id => $v) {
-				if (($tree = $v->tree('', 0, $cwd['hash'])) != false) {
+		if( $args['tree'] ){
+			foreach($this->volumes as $id => $vol){
+				$vol->connect();
+				$tree = $vol->tree('', 0, $cwd['hash']);
+				if( $tree !== false ){
 					$files = array_merge($files, $tree);
 				}
 			}
 		}
 
 		// get current working directory files list and add to $files if not exists in it
-		if (($ls = $volume->scandir($cwd['hash'])) === false) {
+		$ls = $volume->scandir($cwd['hash']);
+		if( $ls === false) {
 			return array('error' => $this->error(self::ERROR_OPEN, $cwd['name'], $volume->error()));
 		}
 
-		foreach ($ls as $file) {
-			if (!in_array($file, $files)) {
+		foreach( $ls as $file ){
+			if( !in_array($file, $files) ){
 				$files[] = $file;
 			}
 		}
@@ -767,11 +786,16 @@ class Finder {
 	 **/
 	protected function ls($args) {
 		$target = $args['target'];
-
-		if (($volume = $this->volume($target)) == false
-		|| ($list = $volume->ls($target)) === false) {
+		$volume = $this->volume($target);
+		if( $volume == false ){
 			return array('error' => $this->error(self::ERROR_OPEN, '#'.$target));
 		}
+
+		$list = $volume->ls($target);
+		if( $list == false ){
+			return array('error' => $this->error(self::ERROR_OPEN, '#'.$target));
+		}
+
 		return array('list' => $list);
 	}
 
@@ -785,8 +809,13 @@ class Finder {
 	protected function tree($args) {
 		$target = $args['target'];
 
-		if (($volume = $this->volume($target)) == false
-		|| ($tree = $volume->tree($target)) == false) {
+		$volume = $this->volume($target);
+		if( $volume == false ){
+			return array('error' => $this->error(self::ERROR_OPEN, '#'.$target));
+		}
+
+		$tree = $volume->tree($target);
+		if( $tree == false ){
 			return array('error' => $this->error(self::ERROR_OPEN, '#'.$target));
 		}
 
@@ -803,8 +832,13 @@ class Finder {
 	protected function parents($args) {
 		$target = $args['target'];
 
-		if (($volume = $this->volume($target)) == false
-		|| ($tree = $volume->parents($target)) == false) {
+		$volume = $this->volume($target);
+		if( $volume == false ){
+			return array('error' => $this->error(self::ERROR_OPEN, '#'.$target));
+		}
+
+		$tree = $volume->parents($target);
+		if( $tree == false ){
 			return array('error' => $this->error(self::ERROR_OPEN, '#'.$target));
 		}
 
@@ -1240,6 +1274,7 @@ class Finder {
 		$result = array();
 
 		foreach ($this->volumes as $volume) {
+			$volume->connect();
 			$result = array_merge($result, $volume->search($q, $mimes));
 		}
 
@@ -1322,13 +1357,19 @@ class Finder {
 	 * @return FinderStorageDriver
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function volume($hash) {
-		foreach ($this->volumes as $id => $v) {
-			if (strpos(''.$hash, $id) === 0) {
-				return $this->volumes[$id];
-			}
+	protected function volume($hash){
+
+		$hash_parts = explode('_',$hash);
+		$volume_id = array_shift($hash_parts).'_';
+		if( !isset($this->volumes[$volume_id]) ){
+			return false;
 		}
-		return false;
+
+		if( !$this->volumes[$volume_id]->connect() ){
+			return false;
+		}
+
+		return $this->volumes[$volume_id];
 	}
 
 	/**

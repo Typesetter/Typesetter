@@ -876,12 +876,12 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 	 */
 	function file_exists($file){
 
-		$list = @ftp_nlist($this->conn_id, $file);
-		if( !empty($list) ){
+		$size = ftp_size($this->conn_id, $file);
+		if( $size ){
 			return true;
 		}
 
-		return $this->is_dir($file);//in case it's an empty directory
+		return $this->is_dir($file);
 	}
 
 

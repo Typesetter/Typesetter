@@ -877,7 +877,7 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 	function file_exists($file){
 
 		$size = ftp_size($this->conn_id, $file);
-		if( $size ){
+		if( $size >= 0 ){
 			return true;
 		}
 

@@ -14,7 +14,6 @@ class special_display extends display{
 
 		$this->requested = $title;
 		$this->title = $title;
-		$this->label = 'Special';
 	}
 
 	function RunScript(){
@@ -35,7 +34,6 @@ class special_display extends display{
 		}
 
 		$this->gp_index = $gp_index[$this->requested];
-		$this->label = common::GetLabel($this->requested);
 		$this->TitleInfo = $scriptinfo;
 
 		$menu_permissions = false;

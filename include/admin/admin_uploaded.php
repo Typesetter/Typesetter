@@ -882,6 +882,7 @@ class admin_uploaded{
 		if( isset($result['removed']) && count($result['removed']) > 0 ){
 			foreach($result['removed'] as $removed){
 				$removed_path = $removed['realpath'];
+				gpPlugin::Action('FileDeleted',$removed_path);
 				$thumb_path = str_replace($base_dir,$thumb_dir,$removed_path).'.jpg';
 				if( file_exists($thumb_path) ){
 					unlink($thumb_path);
@@ -901,6 +902,7 @@ class admin_uploaded{
 		//changed files (resized)
 		if( isset($result['changed']) && count($result['changed']) > 0 ){
 			foreach($result['changed'] as $changed){
+				gpPlugin::Action('FileChanged',$changed['realpath']);
 				self::CreateThumbnail($changed['realpath']);
 			}
 		}

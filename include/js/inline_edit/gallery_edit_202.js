@@ -66,7 +66,7 @@
 
 				var data = edit_div.clone();
 				data.find('li.holder').remove();
-				data.find('ul').removeClass('ui-sortable');
+				data.find('ul').enableSelection().sortable('destroy').removeClass('ui-sortable').removeAttr('unselectable');
 				data.find('.gp_nosave').remove();
 				data = data.html();
 

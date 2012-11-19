@@ -1060,6 +1060,7 @@ class common{
 		common::SetGlobalPaths($level,$expecting);
 		includeFile('tool/gpOutput.php');
 		includeFile('tool/functions.php');
+		includeFile('tool/Plugins.php');
 		if( $sessions ){
 			ob_start(array('gpOutput','BufferOut'));
 		}elseif( !$ob_gzhandler ){
@@ -1074,7 +1075,6 @@ class common{
 		if( $sessions ){
 			common::sessions();
 		}
-		includeFile('tool/Plugins.php');
 	}
 
 

@@ -23,7 +23,8 @@ if( !function_exists('ctype_digit') ){
 if( !function_exists('mb_strpos') ){
 
 	function mb_strpos(){
-		return call_user_func_array('strpos',func_get_args());
+		$args = func_get_args();
+		return call_user_func_array('strpos',$args);
 	}
 
 	function mb_strlen($str){
@@ -39,7 +40,8 @@ if( !function_exists('mb_strpos') ){
 	}
 
 	function mb_substr(){
-		return call_user_func_array('substr',func_get_args());
+		$args = func_get_args();
+		return call_user_func_array('substr',$args);
 	}
 
 	function mb_substr_count($haystack,$needle){

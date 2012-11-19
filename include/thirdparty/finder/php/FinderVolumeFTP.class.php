@@ -150,19 +150,6 @@ class FinderVolumeFTP extends FinderVolumeDriver {
 		if (!$this->tmp && $this->tmbPath) {
 			$this->tmp = $this->tmbPath;
 		}
-
-		if (!$this->tmp) {
-			$this->disabled[] = 'mkfile';
-			$this->disabled[] = 'paste';
-			$this->disabled[] = 'duplicate';
-			$this->disabled[] = 'upload';
-			$this->disabled[] = 'edit';
-			$this->disabled[] = 'archive';
-			$this->disabled[] = 'extract';
-		}
-
-		// echo $this->tmp;
-
 	}
 
 	/**
@@ -447,7 +434,7 @@ class FinderVolumeFTP extends FinderVolumeDriver {
 
 		//files
 		$size = ftp_size($this->connect, $path);
-		if( !$size ){
+		if( $size < 0 ){
 			return false;
 		}
 
@@ -609,12 +596,10 @@ class FinderVolumeFTP extends FinderVolumeDriver {
 	 **/
 	protected function _fopen($path, $mode='rb') {
 
-		if ($this->tmp) {
-			$local = $this->_joinPath( $this->tmp, md5($path) );
+		$local = $this->tempname($path);
 
-			if (ftp_get($this->connect, $local, $path, FTP_BINARY)) {
-				return @fopen($local, $mode);
-			}
+		if( ftp_get($this->connect, $local, $path, FTP_BINARY) ){
+			return @fopen($local, $mode);
 		}
 
 		return false;
@@ -630,7 +615,8 @@ class FinderVolumeFTP extends FinderVolumeDriver {
 	protected function _fclose($fp, $path='') {
 		@fclose($fp);
 		if ($path) {
-			@unlink( $this->_joinPath( $this->tmp, md5($path)));
+			$local = $this->tempname($path);
+			@unlink( $local );
 		}
 	}
 
@@ -663,14 +649,11 @@ class FinderVolumeFTP extends FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _mkfile($path, $name) {
-		if ($this->tmp) {
-			$path = $this->_joinPath( $path,$name);
-			$local = $this->_joinPath( $this->tmp, md5($path) );
-			$res = touch($local) && ftp_put($this->connect, $path, $local, FTP_ASCII);
-			@unlink($local);
-			return $res ? $path : false;
-		}
-		return false;
+		$path = $this->_joinPath( $path, $name );
+		$local = $this->tempname($path );
+		$res = touch($local) && ftp_put($this->connect, $path, $local, FTP_ASCII);
+		@unlink($local);
+		return $res ? $path : false;
 	}
 
 	/**
@@ -695,20 +678,22 @@ class FinderVolumeFTP extends FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _copy($source, $targetDir, $name) {
-		$res = false;
 
-		if ($this->tmp) {
-			$local  = $this->_joinPath( $this->tmp, md5($source) );
-			$target = $this->_joinPath( $targetDir, $name );
+		$local = $this->tempname($source);
+		$target = $this->_joinPath( $targetDir, $name );
 
-			if (ftp_get($this->connect, $local, $source, FTP_BINARY)
-			&& ftp_put($this->connect, $target, $local, $this->ftpMode($target))) {
-				$res = $target;
-			}
+		if( !ftp_get($this->connect, $local, $source, FTP_BINARY) ){
 			@unlink($local);
+			return false;
 		}
 
-		return $res;
+		if( !ftp_put($this->connect, $target, $local, $this->ftpMode($target)) ){
+			@unlink($local);
+			return false;
+		}
+
+		@unlink($local);
+		return $target;
 	}
 
 	/**
@@ -793,21 +778,22 @@ class FinderVolumeFTP extends FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _filePutContents($path, $content) {
-		$res = false;
 
-		if ($this->tmp) {
-			$local = $this->_joinPath( $this->tmp, md5($path).'.txt');
+		$local = $this->tempname($path);
 
-			if (@file_put_contents($local, $content, LOCK_EX) !== false
-			&& ($fp = @fopen($local, 'rb'))) {
-				clearstatcache();
-				$res  = ftp_fput($this->connect, $path, $fp, $this->ftpMode($path));
-				@fclose($fp);
-			}
-			file_exists($local) && @unlink($local);
+		if( @file_put_contents($local, $content, LOCK_EX) === false ){
+			return false;
+		}
+		$fp = @fopen($local, 'rb');
+		if( !$fp ){
+			unlink($local);
+			return false;
 		}
 
-		return $res;
+		$res = ftp_fput($this->connect, $path, $fp, $this->ftpMode($path));
+
+		unlink($local);
+		return true;
 	}
 
 	/**
@@ -866,6 +852,26 @@ class FinderVolumeFTP extends FinderVolumeDriver {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Return a temporary path name
+	 *
+	 */
+	protected function tempname( $path ){
+		static $paths = array();
+
+		if( isset($paths[$path]) ){
+			return $paths[$path];
+		}
+
+		if( !$this->tmp ){
+			$dir = sys_get_temp_dir();
+		}
+		$temp = tempnam($dir,'');
+
+		$paths[$path] = $temp;
+		return $temp;
 	}
 
 	/**

@@ -625,12 +625,12 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 			$this->remove($dir);
 
 			if ($symlinks) {
-				return $this->setError(Finder::ERROR_ARC_SYMLINKS);
+				return $this->setError('errArcSymlinks');
 			}
 
 			// check max files size
 			if ($this->options['maxArcFilesSize'] > 0 && $this->options['maxArcFilesSize'] < $this->archiveSize) {
-				return $this->setError(Finder::ERROR_ARC_MAXSIZE);
+				return $this->setError('errArcMaxSize');
 			}
 
 

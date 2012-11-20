@@ -19,6 +19,7 @@ class update_class{
 	var $contentBuffer = '';
 	var $head_script = '';
 	var $gpLayout;
+	var $title = '';
 
 
 	//for unpacking and replacing

@@ -3,7 +3,7 @@
 
 //$start_time = microtime();
 
-define('is_running',true);
+defined('is_running') or define('is_running',true);
 require_once('common.php');
 common::EntryPoint(0);
 

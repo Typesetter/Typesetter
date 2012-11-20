@@ -30,8 +30,26 @@ function access($attr, $path, $data, $volume) {
 	return null;
 }
 
+
+function SaveFinderData($data){
+	global $config;
+	$config['finder_data'] = $data;
+	admin_tools::SaveConfig();
+}
+
+function ReturnFinderData(){
+	global $config;
+	if( isset($config['finder_data']) ){
+		return $config['finder_data'];
+	}
+	return false;
+}
+
+
 $opts = array(
 	'debug' => gpdebug,
+	'saveData' => 'SaveFinderData',
+	'returnData' => 'ReturnFinderData',
 	'roots' => array(
 		array(
 			'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)

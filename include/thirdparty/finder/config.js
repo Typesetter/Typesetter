@@ -4,7 +4,8 @@ $(function(){
 	var uiOptions = {
 		// toolbar configuration
 		toolbar : [
-			['back', 'forward','reload', 'up'],//'home',
+			['back', 'forward','up','reload'],
+			['home','netmount'],
 			['mkdir', 'upload'], //'mkfile',
 			['open', 'download', 'getfile'],
 			['info'],
@@ -12,7 +13,7 @@ $(function(){
 			['copy', 'cut', 'paste'],
 			['rm'],
 			['duplicate', 'rename', 'edit', 'resize'],
-			//['extract', 'archive'],
+			['extract', 'archive'],
 			['search'],
 			['view','sort'],
 			['help']

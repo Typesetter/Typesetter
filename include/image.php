@@ -163,7 +163,7 @@ class gp_resized{
 	 * Get a new folder
 	 *
 	 */
-	function NewFolder(){
+	static function NewFolder(){
 		global $dataDir;
 		$new_index = gp_resized::NewIndex();
 		return $dataDir.'/data/_resized/'.$new_index;
@@ -173,7 +173,7 @@ class gp_resized{
 	 * Get the next index
 	 *
 	 */
-	function NewIndex(){
+	static function NewIndex(){
 		$next_numeric = base_convert(self::$last_index,36,10)+1;
 		do{
 			$index = array();
@@ -241,7 +241,7 @@ class gp_resized{
 	 * Get usage information about a image
 	 *
 	 */
-	function GetUsage($index){
+	static function GetUsage($index){
 		global $dataDir;
 		$data_file = $dataDir.'/data/_resized/'.$index.'/data.php';
 		$usage = array();
@@ -255,7 +255,7 @@ class gp_resized{
 	 * Get usage information about a image
 	 *
 	 */
-	function SaveUsage($index,$data){
+	static function SaveUsage($index,$data){
 		global $dataDir;
 		$data_file = $dataDir.'/data/_resized/'.$index.'/data.php';
 		return gpFiles::SaveArray($data_file,'usage',$data);

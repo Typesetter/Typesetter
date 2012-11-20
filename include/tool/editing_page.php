@@ -420,7 +420,7 @@ class editing_page extends display{
 	 * @static
 	 *
 	 */
-	function GetDefaultContent($type){
+	static function GetDefaultContent($type){
 		global $langmessage;
 
 		switch($type){

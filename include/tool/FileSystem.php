@@ -352,7 +352,7 @@ class gp_filesystem_base{
 			return false;
 		}
 		//the gpEasy core does not need to be world writable
-		chmod($file,FS_CHMOD_FILE);
+		@chmod($file,FS_CHMOD_FILE);
 		return true;
 	}
 

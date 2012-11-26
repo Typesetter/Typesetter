@@ -284,7 +284,7 @@ class admin_permalinks{
 	 *
 	 * @return boolean
 	 */
-	function TestResponse(){
+	static function TestResponse(){
 		global $config;
 
 		//get url, force gp_rewrite to $new_gp_rewrite
@@ -314,7 +314,7 @@ class admin_permalinks{
 	 *
 	 * @param string $contents .htaccess file contents
 	 */
-	function StripRules(&$contents){
+	static function StripRules(&$contents){
 		//strip gpEasy code
 		$pos = strpos($contents,'# BEGIN gpEasy');
 		if( $pos === false ){
@@ -335,7 +335,7 @@ class admin_permalinks{
 	 * Return the .htaccess code that can be used to hide index.php
 	 *
 	 */
-	function Rewrite_Rules($HideRules = true,$home_root,$uniq=false){
+	static function Rewrite_Rules($HideRules = true,$home_root,$uniq=false){
 
 		$home_root = rtrim($home_root,'/').'/';
 

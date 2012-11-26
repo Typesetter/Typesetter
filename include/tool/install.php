@@ -13,7 +13,7 @@ class Install_Tools{
 	 *  - Password
 	 *
 	 */
-	function Form_UserDetails(){
+	static function Form_UserDetails(){
 		global $langmessage;
 
 		$_POST += array('username'=>'','site_title'=>'My gpEasy CMS','email'=>'');
@@ -32,7 +32,7 @@ class Install_Tools{
 	 *  - hide gplink
 	 *
 	 */
-	function Form_Configuration(){
+	static function Form_Configuration(){
 		global $langmessage;
 
 		echo '<tr><th colspan="2">';
@@ -75,7 +75,7 @@ class Install_Tools{
  	 * @param bool $default The default value if it hasn't already been set by the user
  	 *
 	 */
-	function BooleanForm($key,$default=true){
+	static function BooleanForm($key,$default=true){
 		$checked = '';
 		if( Install_Tools::BooleanValue($key,$default) ){
 			$checked = 'checked="checked"';
@@ -90,7 +90,7 @@ class Install_Tools{
  	 * @param string $key The configuration key
  	 * @param bool $default The default value if it hasn't already been set by the user
 	 */
-	function BooleanValue($key,$default=true){
+	static function BooleanValue($key,$default=true){
 		if( !isset($_POST[$key]) ){
 			return $default;
 		}
@@ -103,7 +103,7 @@ class Install_Tools{
 
 	//based on the user supplied values, make sure we can go forward with the installation
 
-	function gpInstall_Check(){
+	static function gpInstall_Check(){
 		global $langmessage;
 
 		$_POST += array('username'=>'','site_title'=>'My gpEasy CMS','email'=>'');
@@ -151,7 +151,7 @@ class Install_Tools{
 		return true;
 	}
 
-	function Install_Title(){
+	static function Install_Title(){
 		$title = $_POST['site_title'];
 		$title = htmlspecialchars($title);
 		$title = trim($title);
@@ -161,7 +161,7 @@ class Install_Tools{
 		return $title;
 	}
 
-	function Install_DataFiles_New($destination = false, $config, $base_install = true ){
+	static function Install_DataFiles_New($destination = false, $config, $base_install = true ){
 		global $langmessage;
 
 
@@ -457,7 +457,7 @@ class Install_Tools{
 	 * @param string $destination The root path of the installation
 	 * @param array $config Current installation configuration
 	 */
-	function InstallHtaccess($destination,$config){
+	static function InstallHtaccess($destination,$config){
 		global $install_ftp_connection, $dirPrefix;
 
 		includeFile('admin/admin_permalinks.php');
@@ -544,7 +544,7 @@ class Install_Tools{
 		return $UsePathInfo;
 	}
 
-	function Install_Link($href,$label,$query='',$attr=''){
+	static function Install_Link($href,$label,$query='',$attr=''){
 
 		$charlist = "\\'";
 		$href = addcslashes($href,$charlist);
@@ -560,7 +560,7 @@ class Install_Tools{
 		return $text;
 	}
 
-	function Install_Link_Content($href,$label,$query='',$attr=''){
+	static function Install_Link_Content($href,$label,$query='',$attr=''){
 
 		$query = str_replace('&','&amp;',$query);
 		$href = str_replace('&','&amp;',$href);

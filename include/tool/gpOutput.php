@@ -2259,7 +2259,7 @@ class gpOutput{
 
 		if( !isset($config['showgplink']) || $config['showgplink'] ){
 			echo ' <span id="powered_by_link">';
-			echo 'Powered by <a href="http://gpEasy.com" title="A Free and Easy CMS in PHP">gp|Easy CMS</a>';
+			echo 'Powered by <a href="http://gpEasy.com" title="A Free and Easy CMS in PHP" target="_blank">gp|Easy CMS</a>';
 			echo '</span>';
 		}
 

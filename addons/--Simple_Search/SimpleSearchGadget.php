@@ -21,4 +21,3 @@ echo gpOutput::GetAddonText('Search',$html);
 
 echo '</div>';
 echo '</form>';
-

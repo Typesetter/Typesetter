@@ -210,7 +210,7 @@ class admin_display extends display{
 		echo '<li>'.common::Link('Admin_Addons/Remote',$langmessage['Download Plugins']).'</li>';
 		echo '<li>'.common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']).'</li>';
 		echo '<li><a href="http://gpeasy.com">Support Forum</a></li>';
-		echo '<li><a href="http://gpeasy.com/Special_Services">Service Providers</a></li>';
+		echo '<li><a href="http://gpeasy.com/Services">Service Providers</a></li>';
 		echo '<li><a href="http://gpeasy.com">Official gpEasy Site</a></li>';
 		echo '<li><a href="https://sourceforge.net/tracker/?group_id=264307&amp;atid=1127698">Report A Bug (sf.net)</a></li>';
 		echo '</ul>';

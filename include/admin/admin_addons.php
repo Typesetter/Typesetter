@@ -812,7 +812,7 @@ class admin_addons extends admin_addon_install{
 
 				echo ' &nbsp; ';
 				$forum_id = 1000 + $info['id'];
-				echo '<a href="'.addon_browse_path.'/Special_Forum?show=f'.$forum_id.'" target="_blank">'.$langmessage['Support'].'</a>';
+				echo '<a href="'.addon_browse_path.'/Forum?show=f'.$forum_id.'" target="_blank">'.$langmessage['Support'].'</a>';
 
 			}else{
 				echo '<span class="unavail">'.$langmessage['rate'].'</span>';
@@ -833,7 +833,7 @@ class admin_addons extends admin_addon_install{
 
 			if( isset($info['id']) && isset($new_versions[$info['id']]) ){
 				echo ' &nbsp; ';
-				echo ' <a href="'.addon_browse_path.'/Special_Addon_Plugins?id='.$info['id'].'" name="remote">';
+				echo ' <a href="'.addon_browse_path.'/Plugins?id='.$info['id'].'" name="remote">';
 				echo $langmessage['upgrade'].' (gpEasy.com)';
 				echo '</a>';
 			}

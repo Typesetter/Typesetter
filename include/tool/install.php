@@ -226,9 +226,9 @@ class Install_Tools{
 		<h3>Online Resources</h3>
 		<p>gpEasy.com has a number of resources to help you do even more with gpEasy.</p>
 		<ul>
-		<li>Find more community developed <a href="http://gpeasy.com/Special_Addon_Themes" title="gpEasy CMS Themes">themes</a> and <a href="http://gpeasy.com/Special_Addon_Plugins" title="gpEasy CMS Plugin">plugins</a> to enhance your site.</li>
-		<li>Get help in the <a href="http://gpeasy.com/Special_Forum" title="gpEasy CMS Forum">gpEasy forum</a>.</li>
-		<li>Show off your <a href="http://gpeasy.com/Special_Powered_by" title="Sites Using gpEasy CMS">gpEasy powered site</a> or list your <a href="http://gpeasy.com/Special_Service_Provider" title="Businesses Using gpEasy CMS">gpEasy related business</a>.</li>
+		<li>Find more community developed <a href="http://gpeasy.com/Themes" title="gpEasy CMS Themes">themes</a> and <a href="http://gpeasy.com/Plugins" title="gpEasy CMS Plugin">plugins</a> to enhance your site.</li>
+		<li>Get help in the <a href="http://gpeasy.com/Forum" title="gpEasy CMS Forum">gpEasy forum</a>.</li>
+		<li>Show off your <a href="http://gpeasy.com/Powered_by" title="Sites Using gpEasy CMS">gpEasy powered site</a> or list your <a href="http://gpeasy.com/Service_Provider" title="Businesses Using gpEasy CMS">gpEasy related business</a>.</li>
 		</ul>';
 
 
@@ -236,7 +236,7 @@ class Install_Tools{
 
 		gpFiles::NewTitle('Help_Videos',"<h1>Help Videos</h1>
 		<p>Video tutorials are often a fast and easy way to learn new things quickly.
-		So far, we only have one in Deutsch (German) made by <a href=\"http://gpeasy.com/Special_Service_Provider?id=57\" title=\"IT Ricther on gpEasy.com\">IT Richter</a>.
+		So far, we only have one in Deutsch (German) made by <a href=\"http://gpeasy.com/Service_Provider?id=57\" title=\"IT Ricther on gpEasy.com\">IT Richter</a>.
 		If you make a video tutorial for gpEasy, <a href=\"http://gpeasy.com/Contact\">let us know</a>, and we'll make sure it's included in our list.
 		</p>
 		<p>And as always, to edit this page, just click the \"Edit\" button while logged in.</p>
@@ -281,9 +281,9 @@ class Install_Tools{
 		$content = '<h3>Join the gpEasy Community</h3>
 		<p>Visit gpEasy.com to access the many <a href="http://gpeasy.com/Resources" title="gpEasy Community Resources">available resources</a> to help you get the most out of our CMS.</p>
 		<ul>
-		<li><a href="http://gpeasy.com/Special_Addon_Themes" title="gpEasy CMS Themes">Download Themes</a></li>
-		<li><a href="http://gpeasy.com/Special_Addon_Plugins" title="gpEasy CMS Plugin">Download Plugins</a></li>
-		<li><a href="http://gpeasy.com/Special_Forum" title="gpEasy CMS Forum">Get Help in the Forum</a></li>
+		<li><a href="http://gpeasy.com/Themes" title="gpEasy CMS Themes">Download Themes</a></li>
+		<li><a href="http://gpeasy.com/Plugins" title="gpEasy CMS Plugin">Download Plugins</a></li>
+		<li><a href="http://gpeasy.com/Forum" title="gpEasy CMS Forum">Get Help in the Forum</a></li>
 		<li><a href="http://gpeasy.com/Powered_by" title="Sites using gpEasy CMS">Show off Your Site</a></li>
 		<li><a href="http://gpeasy.com/Resources" title="gpEasy Community Resources">And Much More...</a></li>
 		</ul>

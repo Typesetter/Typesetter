@@ -489,6 +489,7 @@ function gp_is_writable( $path ){
 }
 
 
+
 /**
  *	Objects of this class handle the display of standard gpEasy pages
  *  The classes for admin pages and special pages extend the display class

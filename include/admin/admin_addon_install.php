@@ -1494,9 +1494,9 @@ class admin_addon_install extends admin_addons_tool{
 		//download
 		$download_link = addon_browse_path;
 		if( $_POST['type'] == 'theme' ){
-			$download_link .= '/Special_Addon_Themes';
+			$download_link .= '/Themes';
 		}else{
-			$download_link .= '/Special_Addon_Plugins';
+			$download_link .= '/Plugins';
 		}
 		$download_link .= '?cmd=install&id='.rawurlencode($_POST['id']);
 		if( isset($_POST['order']) ){
@@ -1770,9 +1770,9 @@ class admin_addon_install extends admin_addons_tool{
 			$this->searchOrder = key($orderby);
 		}
 
-		$slug = 'Special_Addon_Plugins';
+		$slug = 'Plugins';
 		if( $this->config_index == 'themes' ){
-			$slug = 'Special_Addon_Themes';
+			$slug = 'Themes';
 		}
 		$src = addon_browse_path.'/'.$slug.'?cmd=remote&'.$this->searchQuery.'&page='.$this->searchPage;
 
@@ -1900,9 +1900,9 @@ class admin_addon_install extends admin_addons_tool{
 		echo '<a href="'.$this->DetailUrl($row,$q).'" name="remote" '.$attr.'>'.$label.'</a>';
 	}
 	function DetailUrl($row,$q=''){
-		$url = 'Special_Addon_Themes';
+		$url = 'Themes';
 		if( $row['type'] == 'plugin' ){
-			$url = 'Special_Addon_Plugins';
+			$url = 'Plugins';
 		}
 		return addon_browse_path.'/'.$url.'?id='.$row['id'].$q;
 	}

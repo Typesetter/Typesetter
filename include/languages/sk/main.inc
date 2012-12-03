@@ -503,6 +503,6 @@ $langmessage = array(
 'strftime_time'=>'%H:%M',
 
 '_characters' => '%s znakov',
-'Theme_default_sizes' => 'Default Size',
+'Theme_default_sizes' => 'Predvolená veľkosť',
 
 );

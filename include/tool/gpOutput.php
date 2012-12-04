@@ -1915,7 +1915,11 @@ class gpOutput{
 		foreach($scripts as $key => $script){
 			$js_files[$key] = '/include/'.$script['file'];
 		}
-		$js_files += $page->head_js; //other js files
+		if( is_array($page->head_js) ){
+			$js_files += $page->head_js; //other js files
+		}else{
+			trigger_error('$page->head_js is not an array');
+		}
 
 		gpOutput::CombineFiles($js_files,'js',$config['combinejs']);
 	}

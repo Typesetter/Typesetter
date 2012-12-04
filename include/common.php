@@ -32,7 +32,7 @@ gp_defined('gp_backup_limit',10);
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php'); message('local browse path');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
-define('gpversion','3.5');
+define('gpversion','3.5.1');
 define('gp_random',common::RandomString());
 
 

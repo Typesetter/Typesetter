@@ -1344,12 +1344,14 @@ class common{
 	static function GetUrl($href='',$query='',$ampersands=true,$nonce_action=false){
 		global $linkPrefix, $config, $gp_index;
 
+		$href = common::WinPath($href);
 		$filtered = gpPlugin::Filter('GetUrl',array(array($href,$query)));
 		if( is_array($filtered) ){
 			list($href,$query) = $filtered;
 		}
 
 		$href = common::SpecialHref($href);
+
 
 		//home page link
 		if( isset($config['homepath']) && $href == $config['homepath'] ){

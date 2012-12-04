@@ -518,6 +518,7 @@ class display{
 	var $theme_path;
 	var $theme_rel;
 	var $theme_addon_id = false;
+	var $theme_is_addon = false;/* @deprecated 3.5 */
 	var $layout_css = false;
 	var $menu_css_ordered = true;
 	var $menu_css_indexed = true;
@@ -714,6 +715,7 @@ class display{
 			}
 			if( isset($layout_info['addon_id']) ){
 				$this->theme_addon_id = $layout_info['addon_id'];
+				$this->theme_is_addon = true;
 			}
 
 			//css preferences

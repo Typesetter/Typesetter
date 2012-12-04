@@ -1938,6 +1938,11 @@ class gpOutput{
 		//create list of files to include
 		$css_files = array();
 
+		//css using Load
+		foreach($scripts as $key => $script){
+			$css_files[$key] = '/include/'.$script['file'];
+		}
+
 		if( isset($page->css_user) && is_array($page->css_user) ){
 			$css_files = array_merge($css_files,$page->css_user);
 		}
@@ -1957,13 +1962,6 @@ class gpOutput{
 		if( isset($page->css_admin) && is_array($page->css_admin) ){
 			$css_files = array_merge($css_files,$page->css_admin);
 		}
-
-		//css using Load
-		foreach($scripts as $key => $script){
-			$css_files[$key] = '/include/'.$script['file'];
-		}
-
-		$css_files = array_reverse($css_files);
 
 		gpOutput::CombineFiles($css_files,'css',$config['combinecss'],$theme_stylesheet);
 	}

@@ -471,15 +471,11 @@ function gp_is_writable( $path ){
 		return true;
 	}
 
-	if( strpos($_SERVER['SERVER_SOFTWARE'], 'IIS') === false ){
-		return false;
-	}
-
-	if( is_dir($path) ){
-		return gp_is_writable( $path . '/' . uniqid( mt_rand() ) . '.tmp' );
-	}
-
 	// check tmp file for read/write capabilities
+	if( is_dir($path) ){
+		$path = rtrim($path,'/').'/' . uniqid( mt_rand() ) . '.tmp';
+	}
+
 	$should_delete_tmp_file = !file_exists( $path );
 	$f = @fopen( $path, 'a' );
 	if ( $f === false ) return false;
@@ -1024,7 +1020,7 @@ class common{
 
 		$layout_info = $gpLayouts[$layout];
 		$layout_info += array('is_addon'=>false);
-		$layout_info['theme_name'] = dirname($layout_info['theme']);
+		$layout_info['theme_name'] = common::DirName($layout_info['theme']);
 		$layout_info['theme_color'] = basename($layout_info['theme']);
 
 		$relative = '/themes/';
@@ -1104,7 +1100,7 @@ class common{
 	static function SetGlobalPaths($DirectoriesAway,$expecting){
 		global $dataDir, $dirPrefix, $rootDir, $dirPrefixEncoded;
 
-		$rootDir = common::WinPath(dirname(dirname(__FILE__)));
+		$rootDir = common::DirName( __FILE__, 2 );
 
 		// dataDir, make sure it contains $expecting. Some servers using cgi do not set this properly
 		// required for the Multi-Site plugin
@@ -1139,6 +1135,18 @@ class common{
 	 */
 	static function WinPath($path){
 		return str_replace('\\','/',$path);
+	}
+
+	/**
+	 * Returns parent directory's path with forward slashes
+	 * php's dirname() method may change slashes from / to \
+	 *
+	 */
+	static function DirName( $path, $dirs = 1 ){
+		for($i=0;$i<$dirs;$i++){
+			$path = dirname($path);
+		}
+		return common::WinPath( $path );
 	}
 
 	/**
@@ -1223,14 +1231,14 @@ class common{
 
 
 	static function ReduceGlobalPath($path,$DirectoriesAway){
-		$path = dirname($path);
+		$path = common::DirName($path);
 
 		$i = 0;
 		while($i < $DirectoriesAway){
-			$path = dirname($path);
+			$path = common::DirName($path);
 			$i++;
 		}
-		return common::WinPath($path);
+		return $path;
 	}
 
 
@@ -1344,7 +1352,6 @@ class common{
 	static function GetUrl($href='',$query='',$ampersands=true,$nonce_action=false){
 		global $linkPrefix, $config, $gp_index;
 
-		$href = common::WinPath($href);
 		$filtered = gpPlugin::Filter('GetUrl',array(array($href,$query)));
 		if( is_array($filtered) ){
 			list($href,$query) = $filtered;
@@ -1357,7 +1364,7 @@ class common{
 		if( isset($config['homepath']) && $href == $config['homepath'] ){
 			$href = $linkPrefix;
 			if( !$_SERVER['gp_rewrite'] ){
-				$href = dirname($href);
+				$href = common::DirName($href);
 			}
 			$href = rtrim($href,'/').'/';
 		}else{
@@ -3037,7 +3044,7 @@ class gpFiles{
 			return $fp;
 		}
 
-		$dir = dirname($file);
+		$dir = common::DirName($file);
 		if( $checkDir ){
 			if( !file_exists($dir) ){
 				gpFiles::CheckDir($dir);
@@ -3065,7 +3072,7 @@ class gpFiles{
 		global $config,$checkFileIndex;
 
 		if( !file_exists($dir) ){
-			$parent = dirname($dir);
+			$parent = common::DirName($dir);
 			gpFiles::CheckDir($parent,$index);
 
 

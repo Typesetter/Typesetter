@@ -20,6 +20,10 @@ class update_class{
 	var $head_script = '';
 	var $gpLayout;
 	var $title = '';
+	var $admin_js = false;
+	var $meta_keywords = array();
+	var $head_js = array();
+
 
 
 	//for unpacking and replacing

@@ -1231,14 +1231,7 @@ class common{
 
 
 	static function ReduceGlobalPath($path,$DirectoriesAway){
-		$path = common::DirName($path);
-
-		$i = 0;
-		while($i < $DirectoriesAway){
-			$path = common::DirName($path);
-			$i++;
-		}
-		return $path;
+		return common::DirName($path,$DirectoriesAway+1);
 	}
 
 

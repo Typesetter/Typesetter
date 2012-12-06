@@ -41,7 +41,7 @@ class gpsession{
 			gpsession::IncorrectLogin('1');
 			return false;
 		}
-		$users[$username] += array('attempts'=> 0,'granted'=>'','editing'=>'');
+		$users[$username] += array('attempts'=> 0,'granted'=>''); // 'editing' will be set EditingValue()
 		$userinfo = $users[$username];
 
 		//Check Attempts
@@ -330,7 +330,6 @@ class gpsession{
 		}
 		admin_tools::EditingValue($new_data);
 		gpFiles::SaveArray($user_file,'gpAdmin',$new_data);
-
 		return $session_id;
 	}
 

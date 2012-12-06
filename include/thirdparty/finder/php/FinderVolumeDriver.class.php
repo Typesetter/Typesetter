@@ -491,6 +491,8 @@ abstract class FinderVolumeDriver {
 	protected function configure() {
 		// set thumbnails path
 		$path = $this->options['tmbPath'];
+		$path = $this->_separator( $path );
+
 		if ($path) {
 			if (!file_exists($path)) {
 				if (@mkdir($path)) {
@@ -607,9 +609,9 @@ abstract class FinderVolumeDriver {
 		}
 
 		$this->options = array_merge($this->options, $opts);
+		$this->separator = isset($this->options['separator']) ? $this->options['separator'] : DIRECTORY_SEPARATOR;
 		$this->id = $this->driverId.(!empty($this->options['id']) ? $this->options['id'] : Finder::$volumesCnt++).'_';
 		$this->root = $this->_normpath($this->options['path']);
-		$this->separator = isset($this->options['separator']) ? $this->options['separator'] : DIRECTORY_SEPARATOR;
 
 		// default file attribute
 		$this->defaults = array(
@@ -1858,6 +1860,8 @@ abstract class FinderVolumeDriver {
 	 * @author Troex Nevelin
 	 **/
 	protected function encode($path) {
+		$path = $this->_separator( $path );
+
 		if ($path !== '') {
 
 			// cut ROOT from $path for security reason, even if hacker decodes the path he will not know the root
@@ -2060,6 +2064,9 @@ abstract class FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function stat($path) {
+
+		$path = $this->_separator( $path );
+
 		if( isset($this->cache[$path]) ){
 			return $this->cache[$path];
 		}
@@ -2077,10 +2084,10 @@ abstract class FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function updateCache($path, $stat) {
+
 		if (empty($stat) || !is_array($stat)) {
 			return $this->cache[$path] = array();
 		}
-
 
 		$stat['hash'] = $this->encode($path);
 
@@ -2368,7 +2375,7 @@ abstract class FinderVolumeDriver {
 			return $stat;
 		}
 
-
+		$path = $this->_separator( $path );
 		$list = $this->getScandir($path);
 
 		foreach($list as $p => $s){
@@ -3285,7 +3292,7 @@ abstract class FinderVolumeDriver {
 	protected function _joinPath($dir, $name){
 		$dir = $this->_separator($dir);
 		$name = $this->_separator($name);
-		return rtrim($dir,$this->separator) . $this->separator . ltrim($name,$this->separator);
+		return $dir . $this->separator . ltrim($name,$this->separator);
 	}
 
 
@@ -3402,7 +3409,8 @@ abstract class FinderVolumeDriver {
 	 *
 	 */
 	protected function _separator($path){
-		return str_replace( array('/','\\'), $this->separator, $path);
+		$path = str_replace( array('/','\\'), $this->separator, $path);
+		return rtrim($path,$this->separator);
 	}
 
 

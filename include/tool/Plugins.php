@@ -9,9 +9,9 @@ class gpPlugin{
 	/**
 	 * Include a file in the current plugin directory
 	 * @param string $file File to include relative to the current plugin directory
-	 * @static
+	 * @static (not declared static so addon devs can continue to use $this within included files)
 	 */
-	static function incl($file){
+	function incl($file){
 		global $addonPathCode;
 		if( gp_safe_mode ){
 			return;
@@ -22,7 +22,7 @@ class gpPlugin{
 	/**
 	 * Alias of gpPlugin::incl()
 	 */
-	static function inc($file){
+	function inc($file){
 		return gpPlugin::incl($file);
 	}
 

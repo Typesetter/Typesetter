@@ -13,6 +13,32 @@ defined('gp_lock_time') or define('gp_lock_time',900); // = 15 minutes
 class gpsession{
 
 
+	static function Init(){
+		includeFile('admin/admin_tools.php');
+		includeFile('tool/editing.php');
+
+		$cmd = common::GetCommand();
+
+		switch( $cmd ){
+			case 'logout':
+				gpsession::LogOut();
+			return;
+			case 'login':
+				gpsession::LogIn();
+			return;
+			case 'enable_file':
+				gpsession::EnableFile();
+			return;
+		}
+
+		if( isset($_COOKIE[gp_session_cookie]) ){
+			gpsession::CheckPosts($_COOKIE[gp_session_cookie]);
+			gpsession::start($_COOKIE[gp_session_cookie]);
+		}
+
+	}
+
+
 	static function LogIn(){
 		global $dataDir,$langmessage,$gp_internal_redir, $config;
 
@@ -510,24 +536,6 @@ class gpsession{
 			}
 		}
 
-		//add error notice if there was a fatal error
-		if( !ini_get('display_errors') && function_exists('error_get_last') ){
-
-			//check for fatal error
-			$fatal_errors = array(E_ERROR,E_PARSE);
-			$last_error = error_get_last();
-
-			if( is_array($last_error) && in_array($last_error['type'],$fatal_errors) ){
-
-				showError($last_error['type'], $last_error['message'],  $last_error['file'],  $last_error['line'], false);
-				$buffer .= '<p>An error occurred while generating this page.<p> '
-						.'<p>If you are the site administrator, you can troubleshoot the problem by changing php\'s display_errors setting to 1 in the gpconfig.php file.</p>'
-						.'<p>If the problem is being caused by an addon, you may also be able to bypass the error by enabling gpEasy\'s safe mode in the gpconfig.php file.</p>'
-						.'<p>More information is available in the <a href="http://docs.gpeasy.com/Main/Troubleshooting">gpEasy documentation</a>.</p>'
-						.common::ErrorBuffer(true,false);
-						;
-			}
-		}
 
 		//add $gp_admin_html to the document
 		$pos_body = strpos($buffer,'<body');
@@ -958,6 +966,21 @@ class gpsession{
 	    }
 	    // still here? just use the first (last) address
 	    return $ip[0];
+	}
+
+	/**
+	 * Enable file inclusion
+	 *
+	 */
+	function EnableFile(){
+		global $dataDir,$page;
+
+		$file = $dataDir.'/data/_site/fatal_file_'.$_REQUEST['hash'];
+		if( file_exists($file) ){
+			unlink($file);
+		}
+		$title = common::WhichPage();
+		common::Redirect(common::GetUrl($title));
 	}
 
 }

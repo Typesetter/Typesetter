@@ -164,12 +164,14 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	// since we supported php 4.3+, there may be a lot of strict errors
 	if( $errno === E_STRICT ){
 		$report_error = false;
+		return false;
 	}
 
 
 	// for functions prepended with @ symbol to suppress errors
 	$error_reporting = error_reporting();
 	if( $error_reporting === 0 ){
+		$report_error = false;
 
 		//make sure the error is logged
 		error_log('PHP '.$errortype[$errno].':  '.$errmsg.' in '.$filename.' on line '.$linenum);
@@ -177,6 +179,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 		if( gpdebug === false ){
 			return false;
 		}
+		return false;
 	}
 
 	//get the backtrace and function where the error was thrown
@@ -2070,7 +2073,6 @@ class common{
 	 */
 	static function sessions(){
 
-		$update_cookies = false;
 		$cmd = '';
 		if( isset($_GET['cmd']) && $_GET['cmd'] == 'logout' ){
 			$cmd = 'logout';
@@ -2078,40 +2080,14 @@ class common{
 			$cmd = $_POST['cmd'];
 		}elseif( isset($_COOKIE[gp_session_cookie]) ){
 			$cmd = 'start';
-		}elseif( isset($_COOKIE['gpEasy']) ){
-			$_COOKIE[gp_session_cookie] = $_COOKIE['gpEasy'];
-			$update_cookies = true;
-			$cmd = 'start';
 		}
 
 		if( empty($cmd) ){
 			return;
 		}
 
-
 		includeFile('tool/sessions.php');
-		includeFile('admin/admin_tools.php');
-		includeFile('tool/editing.php');
-
-		if( $update_cookies ){
-			gpsession::cookie(gp_session_cookie,$_COOKIE['gpEasy']);
-			gpsession::cookie('gpEasy','',time()-42000);
-		}
-
-
-		switch( $cmd ){
-			case 'logout':
-				gpsession::LogOut();
-			return;
-			case 'login':
-				gpsession::LogIn();
-			return;
-		}
-
-		if( isset($_COOKIE[gp_session_cookie]) ){
-			gpsession::CheckPosts($_COOKIE[gp_session_cookie]);
-			gpsession::start($_COOKIE[gp_session_cookie]);
-		}
+		gpsession::Init();
 	}
 
 

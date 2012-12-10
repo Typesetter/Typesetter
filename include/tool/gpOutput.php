@@ -442,16 +442,20 @@ class gpOutput{
 		}
 
 		//data
-		if( !empty($info['data']) && file_exists($dataDir.$info['data']) ){
-			include($dataDir.$info['data']);
+		if( !empty($info['data']) ){
+			$full_path = $dataDir.$info['data'];
+			if( file_exists($full_path) ){
+				gpOutput::IncludeScript($full_path);
+			}
 		}
 
 		//script
 		$has_script = false;
 		if( isset($info['script']) ){
-			if( file_exists($dataDir.$info['script']) ){
-				include_once($dataDir.$info['script']);
-				$has_script = true;
+
+			$full_path = $dataDir.$info['script'];
+			if( file_exists($full_path) ){
+				$has_script = gpOutput::IncludeScript($full_path);
 			}else{
 				$name =& $config['addons'][$addonFolderName]['name'];
 				trigger_error('gpEasy Error: Addon hook script doesn\'t exist. Script: '.$info['script'].' Addon: '.$name);
@@ -502,6 +506,37 @@ class gpOutput{
 
 		return $args;
 	}
+
+	/**
+	 * Include a script, unless it has caused a fatal error
+	 * @param string $file The full path of the php file to include
+	 *
+	 */
+	static function IncludeScript($file){
+		global $dataDir,$page;
+		$file = realpath($file);
+
+		$hash = base64_encode($file);
+		$check_file = $dataDir.'/data/_site/fatal_file_'.$hash;
+		if( !file_exists($check_file) ){
+			return include_once($file);
+		}
+
+		$message = 'Warning: The file <i>'.$file.'</i> has caused fatal errors and was not included.';
+		error_log( $message );
+		if( common::LoggedIn() ){
+			$message .= ' &nbsp; '.common::Link($page->title,'Enable File','cmd=enable_file&hash='.$hash) //cannot be creq
+						.' &nbsp; <a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>'
+						.'<div class="nodisplay">'
+						.file_get_contents($check_file)
+						.'</div>';
+			message( $message );
+		}
+
+
+		return false;
+	}
+
 
 
 	static function ShowEditLink($permission=false){
@@ -2039,7 +2074,44 @@ class gpOutput{
 	 * @return string finalized response
 	 */
 	static function BufferOut($buffer){
-		global $config,	$gp_head_content;
+		global $config,	$gp_head_content, $addonFolderName, $dataDir;
+
+
+		//add error notice if there was a fatal error
+		if( !ini_get('display_errors') && function_exists('error_get_last') ){
+
+			//check for fatal error
+			$fatal_errors = array(E_ERROR,E_PARSE);
+			$last_error = error_get_last();
+			if( is_array($last_error) && in_array($last_error['type'],$fatal_errors) ){
+
+				$last_error['file'] = realpath($last_error['file']);//may be redundant
+				showError($last_error['type'], $last_error['message'],  $last_error['file'],  $last_error['line'], false);
+				$buffer .= '<p>An error occurred while generating this page.<p> '
+						.'<p>If you are the site administrator, you can troubleshoot the problem by changing php\'s display_errors setting to 1 in the gpconfig.php file.</p>'
+						.'<p>If the problem is being caused by an addon, you may also be able to bypass the error by enabling gpEasy\'s safe mode in the gpconfig.php file.</p>'
+						.'<p>More information is available in the <a href="http://docs.gpeasy.com/Main/Troubleshooting">gpEasy documentation</a>.</p>'
+						.common::ErrorBuffer(true,false);
+
+				//disable addon causing fatal
+				if( $addonFolderName ){
+					$file = $dataDir.'/data/_site/fatal_file_'.base64_encode($last_error['file']);
+					$details = showArray($last_error);
+					gpFiles::Save($file,$details);
+				}
+			}
+		}
+
+
+
+		//replace the <head> placeholder with header content
+		$placeholder = '<!-- get_head_placeholder '.gp_random.' -->';
+		$pos = strpos($buffer,$placeholder);
+		if( $pos === false ){
+			return $buffer;
+		}
+		$buffer = substr_replace($buffer,$gp_head_content,$pos,strlen($placeholder));
+
 
 		//get just the head of the buffer to see if we need to add charset
 		$pos = strpos($buffer,'</head');
@@ -2047,14 +2119,6 @@ class gpOutput{
 			$head = substr($buffer,0,$pos);
 			gpOutput::DoctypeMeta($head);
 		}
-
-		//replace the <head> placeholder with header content
-		$placeholder = '<!-- get_head_placeholder '.gp_random.' -->';
-		$pos = strpos($buffer,$placeholder);
-		if( $pos === false ){
-			return false;
-		}
-		$buffer = substr_replace($buffer,$gp_head_content,$pos,strlen($placeholder));
 
 
 		//add jquery if needed

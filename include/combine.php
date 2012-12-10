@@ -24,6 +24,7 @@ class gp_combine{
 
 
 		//check css imports
+		$modified = $content_length = 0;
 		if( $type == 'css' ){
 			$had_imported = false;
 			$import_data = array();
@@ -234,11 +235,10 @@ class gp_combine{
 		global $dataDir, $dirPrefix;
 
 		//realpath returns false if file does not exist
-		$full_path = realpath($dataDir.$file);
-		if( $full_path ){
-			return $full_path;
+		$full_path = $dataDir.$file;
+		if( file_exists($full_path) ){
+			return realpath($full_path);
 		}
-
 
 		//check for paths that have already included $dirPrefix
 		if( empty($dirPrefix) ){
@@ -247,10 +247,10 @@ class gp_combine{
 
 		if( strpos($file,$dirPrefix) === 0 ){
 			$fixed = substr($file,strlen($dirPrefix));
-			$full_path = realpath($dataDir.$fixed);
-			if( $full_path ){
+			$full_path = $dataDir.$fixed;
+			if( file_exists($full_path) ){
 				$file = $fixed;
-				return $full_path;
+				return realpath($full_path);
 			}
 		}
 

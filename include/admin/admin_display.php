@@ -212,7 +212,7 @@ class admin_display extends display{
 		echo '<li><a href="http://gpeasy.com">Support Forum</a></li>';
 		echo '<li><a href="http://gpeasy.com/Services">Service Providers</a></li>';
 		echo '<li><a href="http://gpeasy.com">Official gpEasy Site</a></li>';
-		echo '<li><a href="https://sourceforge.net/tracker/?group_id=264307&amp;atid=1127698">Report A Bug (sf.net)</a></li>';
+		echo '<li><a href="https://github.com/oyejorge/gpEasy-CMS/issues">Report A Bug</a></li>';
 		echo '</ul>';
 		echo '</div>';
 
@@ -222,15 +222,9 @@ class admin_display extends display{
 
 		echo '<div id="adminfooter">';
 		echo '<ul>';
-		echo '<li>';
-		echo 'WYSIWYG editor by  <a href="http://ckeditor.com/">CKEditor.net</a>';
-		echo '</li>';
-		echo '<li>';
-		echo 'Galleries made possible by <a href="http://colorpowered.com/colorbox/">ColorBox</a>';
-		echo '</li>';
-		echo '<li>';
-		echo 'Icons by <a href="http://www.famfamfam.com/">famfamfam.com</a>';
-		echo '</li>';
+		echo '<li>WYSIWYG editor by  <a href="http://ckeditor.com/">CKEditor.net</a></li>';
+		echo '<li>Galleries made possible by <a href="http://colorpowered.com/colorbox/">ColorBox</a></li>';
+		echo '<li>Icons by <a href="http://www.famfamfam.com/">famfamfam.com</a></li>';
 		echo '</ul>';
 		echo '</div>';
 	}

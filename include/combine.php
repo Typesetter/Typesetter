@@ -12,6 +12,7 @@ class gp_combine{
 		global $dataDir;
 
 		//get etag
+		$modified = $content_length = 0;
 		$full_paths = array();
 		foreach($files as $file){
 			$full_path = gp_combine::CheckFile($file);
@@ -24,7 +25,6 @@ class gp_combine{
 
 
 		//check css imports
-		$modified = $content_length = 0;
 		if( $type == 'css' ){
 			$had_imported = false;
 			$import_data = array();

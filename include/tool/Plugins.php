@@ -12,11 +12,13 @@ class gpPlugin{
 	 * @static (not declared static so addon devs can continue to use $this within included files)
 	 */
 	function incl($file){
-		global $addonPathCode;
+		global $addonPathCode, $dataDir;
 		if( gp_safe_mode ){
 			return;
 		}
-		return include_once($addonPathCode.'/'.$file);
+		$full_path = $addonPathCode.'/'.$file;
+
+		return gpOutput::IncludeScript($full_path);
 	}
 
 	/**

@@ -28,7 +28,7 @@ class gpsession{
 			return;
 			case 'enable_component':
 				gpsession::EnableComponent();
-			return;
+			break;
 
 		}
 
@@ -967,7 +967,12 @@ class gpsession{
 	function EnableComponent(){
 		global $dataDir,$page;
 
-		$file = $dataDir.'/data/_site/fatal_'.$_REQUEST['hash'];
+		if( empty($_REQUEST['hash']) || !ctype_alnum($_REQUEST['hash']) ){
+			message('not set');
+			return;
+		}
+
+		$file = $dataDir.'/data/_site/fatal_exec_'.$_REQUEST['hash'];
 		if( file_exists($file) ){
 			unlink($file);
 		}

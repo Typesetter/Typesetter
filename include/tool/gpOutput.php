@@ -453,7 +453,7 @@ class gpOutput{
 			$message = 'Warning: A compenent of this page has been disabled because it caused fatal errors:';
 			error_log( $message );
 			if( common::LoggedIn() ){
-				$message .= ' <br/> '.common::Link($page->title,'Enable Component','cmd=enable_component&hash=exec_'.$curr_hash) //cannot be creq
+				$message .= ' <br/> '.common::Link($page->title,'Enable Component','cmd=enable_component&hash='.$curr_hash) //cannot be creq
 							.' &nbsp; <a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>'
 							.'<div class="nodisplay">'
 							.file_get_contents($file)
@@ -2083,33 +2083,34 @@ class gpOutput{
 				showError($last_error['type'], $last_error['message'],  $last_error['file'],  $last_error['line'], false);
 				$reload = false;
 
-				$buffer .= '<p>An error occurred while generating this page.<p> '
-						.'<p>If you are the site administrator, you can troubleshoot the problem by changing php\'s display_errors setting to 1 in the gpconfig.php file.</p>'
-						.'<p>If the problem is being caused by an addon, you may also be able to bypass the error by enabling gpEasy\'s safe mode in the gpconfig.php file.</p>'
-						.'<p>More information is available in the <a href="http://docs.gpeasy.com/Main/Troubleshooting">gpEasy documentation</a>.</p>'
-
-						;
-
-
 				//disable execution
 				if( count($GP_EXEC_STACK) ){
 					$file = $dataDir.'/data/_site/fatal_exec_'.array_pop($GP_EXEC_STACK);
 					gpFiles::Save($file,showArray($last_error));
 					$reload = true;
-
-				//disable addon causing fatal
-				}elseif( $addonFolderName ){
-					$file = $dataDir.'/data/_site/fatal_file_'.base64_encode($last_error['file']);
-					gpFiles::Save($file,showArray($last_error));
 				}
 
 
-				if( $reload ){
-					$buffer .= '<p>This page will reload in five seconds</p>'
-							.'<script type="text/javascript">window.setTimeout(function(){window.location.href = window.location.href},5000);</script>';
-				}
+				//reload non-logged in users automatically, display message to admins
+				$buffer .= '<p>Oops, an error occurred while generating this page.<p>';
+				if( !common::LoggedIn() ){
+					if( $reload ){
+						$buffer .= 'Reloading... <script type="text/javascript">window.setTimeout(function(){window.location.href = window.location.href},1000);</script>';
+					}else{
+						$buffer .= '<p>If you are the site administrator, you can troubleshoot the problem by changing php\'s display_errors setting to 1 in the gpconfig.php file.</p>'
+								.'<p>If the problem is being caused by an addon, you may also be able to bypass the error by enabling gpEasy\'s safe mode in the gpconfig.php file.</p>'
+								.'<p>More information is available in the <a href="http://docs.gpeasy.com/Main/Troubleshooting">gpEasy documentation</a>.</p>'
+								.'<p><a href="">Reload this page to continue</a>.</p>'
+								;
+					}
+				}else{
+					$buffer .= '<h3>Error Details</h3>'
+							.showArray($last_error)
+							.'<p><a href="">Reload this page to continue</a>.</p>'
+							.'<p style="font-size:90%">Note: Error details are only displayed for logged in administrators</p>'
+							.common::ErrorBuffer(true,false);
 
-				$buffer .common::ErrorBuffer(true,false);
+				}
 
 			}
 		}

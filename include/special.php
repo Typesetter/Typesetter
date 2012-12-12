@@ -156,21 +156,9 @@ class special_display extends display{
 	static function ExecInfo($scriptinfo){
 		global $dataDir;
 
-		if( isset($scriptinfo['addon']) ){
-			if( gp_safe_mode ) return;
-			gpPlugin::SetDataFolder($scriptinfo['addon']);
-		}
-
 		ob_start();
-
-		if( isset($scriptinfo['script']) ){
-			require($dataDir.$scriptinfo['script']);
-		}
-		if( isset($scriptinfo['class']) ){
-			new $scriptinfo['class'](); //not passing any args to class, this is being used by special_missing.php
-		}
-		gpPlugin::ClearDataFolder();
-
+		$args = array();
+		gpOutput::ExecInfo($scriptinfo,$args);
 		return ob_get_clean();
 	}
 

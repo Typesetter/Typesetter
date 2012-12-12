@@ -16,9 +16,7 @@ class gpPlugin{
 		if( gp_safe_mode ){
 			return;
 		}
-		$full_path = $addonPathCode.'/'.$file;
-
-		return gpOutput::IncludeScript($full_path);
+		return include_once($addonPathCode.'/'.$file);
 	}
 
 	/**

@@ -2,7 +2,7 @@
 defined('is_running') or die('Not an entry point...');
 
 //for output handlers, see admin_theme_content.php for more info
-global $GP_ARRANGE, $gpOutConf, $gpOutStarted, $GP_GADGET_CACHE, $GP_LANG_VALUES, $GP_INLINE_VARS;
+global $GP_ARRANGE, $gpOutConf, $gpOutStarted, $GP_GADGET_CACHE, $GP_LANG_VALUES, $GP_INLINE_VARS, $GP_EXEC_STACK;
 
 $GP_ARRANGE = true;
 $gpOutStarted = $GP_NESTED_EDIT = false;
@@ -423,8 +423,13 @@ class gpOutput{
 		gpOutput::ExecInfo($info,$args);
 	}
 
+	/**
+	 * Execute a set of directives for theme areas, hooks and special pages
+	 *
+	 */
 	static function ExecInfo($info,$args=array()){
-		global $dataDir, $addonFolderName, $installed_addon, $config;
+		global $dataDir, $addonFolderName, $installed_addon, $config, $GP_EXEC_STACK,$page;
+
 
 		//addonDir is deprecated as of 2.0b3
 		if( isset($info['addonDir']) ){
@@ -441,11 +446,30 @@ class gpOutput{
 			return $args;
 		}
 
+		// check for fatal errors
+		$curr_hash = common::ArraySum($info);
+		$file = $dataDir.'/data/_site/fatal_exec_'.$curr_hash;
+		if( file_exists($file) ){
+			$message = 'Warning: A compenent of this page has been disabled because it caused fatal errors:';
+			error_log( $message );
+			if( common::LoggedIn() ){
+				$message .= ' <br/> '.common::Link($page->title,'Enable Component','cmd=enable_component&hash=exec_'.$curr_hash) //cannot be creq
+							.' &nbsp; <a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>'
+							.'<div class="nodisplay">'
+							.file_get_contents($file)
+							.'</div>';
+				message( $message );
+			}
+			return $args;
+		}
+
+		$GP_EXEC_STACK[] = $curr_hash;
+
 		//data
 		if( !empty($info['data']) ){
 			$full_path = $dataDir.$info['data'];
 			if( file_exists($full_path) ){
-				gpOutput::IncludeScript($full_path);
+				include($full_path);
 			}
 		}
 
@@ -455,7 +479,7 @@ class gpOutput{
 
 			$full_path = $dataDir.$info['script'];
 			if( file_exists($full_path) ){
-				$has_script = gpOutput::IncludeScript($full_path);
+				include_once($full_path);
 			}else{
 				$name =& $config['addons'][$addonFolderName]['name'];
 				trigger_error('gpEasy Error: Addon hook script doesn\'t exist. Script: '.$info['script'].' Addon: '.$name);
@@ -503,40 +527,10 @@ class gpOutput{
 		}
 
 		gpPlugin::ClearDataFolder();
+		array_pop($GP_EXEC_STACK);
 
 		return $args;
 	}
-
-	/**
-	 * Include a script, unless it has caused a fatal error
-	 * @param string $file The full path of the php file to include
-	 *
-	 */
-	static function IncludeScript($file){
-		global $dataDir,$page;
-		$file = realpath($file);
-
-		$hash = base64_encode($file);
-		$check_file = $dataDir.'/data/_site/fatal_file_'.$hash;
-		if( !file_exists($check_file) ){
-			return include_once($file);
-		}
-
-		$message = 'Warning: The file <i>'.$file.'</i> has caused fatal errors and was not included.';
-		error_log( $message );
-		if( common::LoggedIn() ){
-			$message .= ' &nbsp; '.common::Link($page->title,'Enable File','cmd=enable_file&hash='.$hash) //cannot be creq
-						.' &nbsp; <a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>'
-						.'<div class="nodisplay">'
-						.file_get_contents($check_file)
-						.'</div>';
-			message( $message );
-		}
-
-
-		return false;
-	}
-
 
 
 	static function ShowEditLink($permission=false){
@@ -2074,7 +2068,7 @@ class gpOutput{
 	 * @return string finalized response
 	 */
 	static function BufferOut($buffer){
-		global $config,	$gp_head_content, $addonFolderName, $dataDir;
+		global $config,	$gp_head_content, $addonFolderName, $dataDir, $GP_EXEC_STACK;
 
 
 		//add error notice if there was a fatal error
@@ -2087,18 +2081,36 @@ class gpOutput{
 
 				$last_error['file'] = realpath($last_error['file']);//may be redundant
 				showError($last_error['type'], $last_error['message'],  $last_error['file'],  $last_error['line'], false);
+				$reload = false;
+
 				$buffer .= '<p>An error occurred while generating this page.<p> '
 						.'<p>If you are the site administrator, you can troubleshoot the problem by changing php\'s display_errors setting to 1 in the gpconfig.php file.</p>'
 						.'<p>If the problem is being caused by an addon, you may also be able to bypass the error by enabling gpEasy\'s safe mode in the gpconfig.php file.</p>'
 						.'<p>More information is available in the <a href="http://docs.gpeasy.com/Main/Troubleshooting">gpEasy documentation</a>.</p>'
-						.common::ErrorBuffer(true,false);
+
+						;
+
+
+				//disable execution
+				if( count($GP_EXEC_STACK) ){
+					$file = $dataDir.'/data/_site/fatal_exec_'.array_pop($GP_EXEC_STACK);
+					gpFiles::Save($file,showArray($last_error));
+					$reload = true;
 
 				//disable addon causing fatal
-				if( $addonFolderName ){
+				}elseif( $addonFolderName ){
 					$file = $dataDir.'/data/_site/fatal_file_'.base64_encode($last_error['file']);
-					$details = showArray($last_error);
-					gpFiles::Save($file,$details);
+					gpFiles::Save($file,showArray($last_error));
 				}
+
+
+				if( $reload ){
+					$buffer .= '<p>This page will reload in five seconds</p>'
+							.'<script type="text/javascript">window.setTimeout(function(){window.location.href = window.location.href},5000);</script>';
+				}
+
+				$buffer .common::ErrorBuffer(true,false);
+
 			}
 		}
 

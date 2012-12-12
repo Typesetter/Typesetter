@@ -26,9 +26,10 @@ class gpsession{
 			case 'login':
 				gpsession::LogIn();
 			return;
-			case 'enable_file':
-				gpsession::EnableFile();
+			case 'enable_component':
+				gpsession::EnableComponent();
 			return;
+
 		}
 
 		if( isset($_COOKIE[gp_session_cookie]) ){
@@ -636,7 +637,7 @@ class gpsession{
 		gpsession::Cron();
 
 		unset($gpAdmin['checksum']);
-		$checksum = gpsession::checksum($gpAdmin);
+		$checksum = common::ArraySum($gpAdmin);
 
 		//nothing changes
 		if( $checksum === $checksum_read ){
@@ -835,15 +836,6 @@ class gpsession{
 
 
 	/**
-	 * Generate a checksum for the $array
-	 *
-	 */
-	static function checksum($array){
-		return md5(serialize($array) );
-	}
-
-
-	/**
 	 * Code modified from dokuwiki
 	 * /dokuwiki/inc/auth.php
 	 *
@@ -972,15 +964,16 @@ class gpsession{
 	 * Enable file inclusion
 	 *
 	 */
-	function EnableFile(){
+	function EnableComponent(){
 		global $dataDir,$page;
 
-		$file = $dataDir.'/data/_site/fatal_file_'.$_REQUEST['hash'];
+		$file = $dataDir.'/data/_site/fatal_'.$_REQUEST['hash'];
 		if( file_exists($file) ){
 			unlink($file);
 		}
 		$title = common::WhichPage();
 		common::Redirect(common::GetUrl($title));
 	}
+
 
 }

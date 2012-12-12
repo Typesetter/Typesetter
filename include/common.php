@@ -714,8 +714,8 @@ class display{
 			}
 			if( isset($layout_info['addon_id']) ){
 				$this->theme_addon_id = $layout_info['addon_id'];
-				$this->theme_is_addon = true;
 			}
+			$this->theme_is_addon = $layout_info['is_addon'];//if installed in /themes or /data/_themes
 
 			//css preferences
 			if( isset($layout_info['menu_css_ordered']) && !$layout_info['menu_css_ordered'] ){
@@ -2496,6 +2496,15 @@ class common{
 			}
 		}
 		return $format;
+	}
+
+
+	/**
+	 * Generate a checksum for the $array
+	 *
+	 */
+	static function ArraySum($array){
+		return md5(serialize($array) );
 	}
 
 	/**

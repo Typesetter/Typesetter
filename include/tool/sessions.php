@@ -968,11 +968,11 @@ class gpsession{
 		global $dataDir,$page;
 
 		if( empty($_REQUEST['hash']) || !ctype_alnum($_REQUEST['hash']) ){
-			message('not set');
+			message('Invalid Request');
 			return;
 		}
 
-		$file = $dataDir.'/data/_site/fatal_exec_'.$_REQUEST['hash'];
+		$file = $dataDir.'/data/_site/fatal_'.$_REQUEST['hash'];
 		if( file_exists($file) ){
 			unlink($file);
 		}

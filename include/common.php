@@ -409,7 +409,7 @@ function GetMessages( $wrap = true ){
  * Include a file relative to the include directory of the current installation
  *
  */
-function includeFile( $file){
+function includeFile( $file ){
 	global $dataDir;
 	require_once( $dataDir.'/include/'.$file );
 }
@@ -694,6 +694,17 @@ class display{
 
 		$layout_info = common::LayoutInfo($layout);
 		$is_addon = false;
+
+
+		//check for fatal error in template.php file
+		if( $layout_info ){
+			$file = $layout_info['dir'].'/template.php';
+			$hash = 'file'.md5($file).sha1($file);
+			if( gpOutput::FatalNotice($hash) ){
+				$layout_info = false;
+			}
+		}
+
 		if( !$layout_info ){
 			$this->gpLayout = false;
 			$this->theme_name = 'Three_point_5';
@@ -708,6 +719,7 @@ class display{
 			$is_addon = $layout_info['is_addon'];
 			$this->theme_rel = $layout_info['path'];
 			$this->theme_dir = $layout_info['dir'];
+
 
 			if( isset($layout_info['css']) && $layout_info['css'] ){
 				$this->layout_css = true;

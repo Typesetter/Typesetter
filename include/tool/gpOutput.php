@@ -6,7 +6,7 @@ global $GP_ARRANGE, $gpOutConf, $gpOutStarted, $GP_GADGET_CACHE, $GP_LANG_VALUES
 
 $GP_ARRANGE = true;
 $gpOutStarted = $GP_NESTED_EDIT = false;
-$gpOutConf = $GP_GADGET_CACHE = $GP_LANG_VALUES = $GP_INLINE_VARS = array();
+$gpOutConf = $GP_GADGET_CACHE = $GP_LANG_VALUES = $GP_INLINE_VARS = $GP_EXEC_STACK = array();
 
 
 //named menus should just be shortcuts to the numbers in custom menu
@@ -132,7 +132,7 @@ class gpOutput{
 	 * @static
 	 */
 	static function Template(){
-		global $page, $GP_ARRANGE, $GP_STYLES, $get_all_gadgets_called, $addon_current_id;
+		global $page, $get_all_gadgets_called, $addon_current_id;
 		$get_all_gadgets_called = false;
 
 		if( isset($page->theme_addon_id) ){
@@ -140,7 +140,8 @@ class gpOutput{
 		}
 		gpOutput::TemplateSettings();
 		header('Content-Type: text/html; charset=utf-8');
-		require($page->theme_dir.'/template.php');
+		gpOutput::IncludeScript($page->theme_dir.'/template.php','require',array('page','GP_ARRANGE','GP_STYLES'));
+
 		gpPlugin::ClearDataFolder();
 
 
@@ -153,11 +154,9 @@ class gpOutput{
 	 * @static
 	 */
 	static function TemplateSettings(){
-		global $page, $GP_STYLES;
+		global $page;
 		$settings_path = $page->theme_dir.'/settings.php';
-		if( file_exists($settings_path) ){
-			require($settings_path);
-		}
+		gpOutput::IncludeScript($settings_path,'require_if',array('page','GP_STYLES'));
 	}
 
 
@@ -428,7 +427,7 @@ class gpOutput{
 	 *
 	 */
 	static function ExecInfo($info,$args=array()){
-		global $dataDir, $addonFolderName, $installed_addon, $config, $GP_EXEC_STACK,$page;
+		global $dataDir, $addonFolderName, $installed_addon, $config, $GP_EXEC_STACK, $page;
 
 
 		//addonDir is deprecated as of 2.0b3
@@ -447,19 +446,8 @@ class gpOutput{
 		}
 
 		// check for fatal errors
-		$curr_hash = common::ArraySum($info);
-		$file = $dataDir.'/data/_site/fatal_exec_'.$curr_hash;
-		if( file_exists($file) ){
-			$message = 'Warning: A compenent of this page has been disabled because it caused fatal errors:';
-			error_log( $message );
-			if( common::LoggedIn() ){
-				$message .= ' <br/> '.common::Link($page->title,'Enable Component','cmd=enable_component&hash='.$curr_hash) //cannot be creq
-							.' &nbsp; <a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>'
-							.'<div class="nodisplay">'
-							.file_get_contents($file)
-							.'</div>';
-				message( $message );
-			}
+		$curr_hash = 'exec'.common::ArraySum($info);
+		if( self::FatalNotice($curr_hash) ){
 			return $args;
 		}
 
@@ -530,6 +518,78 @@ class gpOutput{
 		array_pop($GP_EXEC_STACK);
 
 		return $args;
+	}
+
+
+
+	/**
+	 * Include a script, unless it has caused a fatal error
+	 * @param string $file The full path of the php file to include
+	 * @param string $include_variation Which variation or adaptation of php's include() function to use (include,include_once,include_if, include_once_if, require ...)
+	 * @param array List of global variables to set
+	 */
+	static function IncludeScript($file, $include_variation = 'include_once', $globals = array() ){
+		global $GP_EXEC_STACK;
+
+		$file = realpath($file);
+		$hash = 'file'.md5($file).sha1($file);
+		if( self::FatalNotice($hash) ){
+			return false;
+		}
+
+		//check to see if it exists
+		$include_variation = str_replace('_if','',$include_variation,$has_if);
+		if( $has_if && !file_exists($file) ){
+			return;
+		}
+
+		//set global variables
+		foreach($globals as $global){
+			global $$global;
+		}
+
+		$GP_EXEC_STACK[] = $hash;
+
+		switch($include_variation){
+			case 'include':
+				$return = include($file);
+			break;
+			case 'include_once':
+				$return = include_once($file);
+			break;
+			case 'require':
+				$return = require_once($file);
+			break;
+			case 'require_once':
+				$return = require_once($file);
+			break;
+		}
+
+		array_pop($GP_EXEC_STACK);
+
+		return $return;
+	}
+
+	static function FatalNotice($hash){
+		global $dataDir;
+
+		$file = $dataDir.'/data/_site/fatal_'.$hash;
+		if( !file_exists($file) ){
+			return false;
+		}
+
+		$message = 'Warning: A compenent of this page has been disabled because it caused fatal errors:';
+		error_log( $message );
+		if( common::LoggedIn() ){
+			$message .= ' <br/> '.common::Link($page->title,'Enable Component','cmd=enable_component&hash='.$hash) //cannot be creq
+						.' &nbsp; <a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>'
+						.'<div class="nodisplay">'
+						.file_get_contents($file)
+						.'</div>';
+			message( $message );
+		}
+
+		return true;
 	}
 
 
@@ -2085,7 +2145,7 @@ class gpOutput{
 
 				//disable execution
 				if( count($GP_EXEC_STACK) ){
-					$file = $dataDir.'/data/_site/fatal_exec_'.array_pop($GP_EXEC_STACK);
+					$file = $dataDir.'/data/_site/fatal_'.array_pop($GP_EXEC_STACK);
 					gpFiles::Save($file,showArray($last_error));
 					$reload = true;
 				}

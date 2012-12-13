@@ -414,6 +414,57 @@ function includeFile( $file ){
 	require_once( $dataDir.'/include/'.$file );
 }
 
+/**
+ * Include a script, unless it has caused a fatal error.
+ * Using this function allows gpEasy to handle fatal errors that are thrown by the included php scripts
+ *
+ * @param string $file The full path of the php file to include
+ * @param string $include_variation Which variation or adaptation of php's include() function to use (include,include_once,include_if, include_once_if, require ...)
+ * @param array List of global variables to set
+ */
+function IncludeScript($file, $include_variation = 'include_once', $globals = array() ){
+	global $GP_EXEC_STACK;
+
+	$file = realpath($file);
+	$hash = 'file'.md5($file).sha1($file);
+	if( gpOutput::FatalNotice($hash) ){
+		return false;
+	}
+
+	//check to see if it exists
+	$include_variation = str_replace('_if','',$include_variation,$has_if);
+	if( $has_if && !file_exists($file) ){
+		return;
+	}
+
+	//set global variables
+	foreach($globals as $global){
+		global $$global;
+	}
+
+	$GP_EXEC_STACK[] = $hash;
+
+	switch($include_variation){
+		case 'include':
+			$return = include($file);
+		break;
+		case 'include_once':
+			$return = include_once($file);
+		break;
+		case 'require':
+			$return = require_once($file);
+		break;
+		case 'require_once':
+			$return = require_once($file);
+		break;
+	}
+
+	array_pop($GP_EXEC_STACK);
+
+	return $return;
+}
+
+
 
 /**
  * Similar to print_r and var_dump, but it is output buffer handling function safe

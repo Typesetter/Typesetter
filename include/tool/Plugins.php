@@ -3,27 +3,35 @@ defined('is_running') or die('Not an entry point...');
 
 global $gp_plugin_stack;
 $gp_plugin_stack = array();
+
+
+/**
+ * Include a file in the current plugin directory
+ * @param string $file File to include relative to the current plugin directory
+ *
+ */
+function gpPlugin_incl($file){
+	global $addonPathCode, $dataDir;
+	if( gp_safe_mode ){
+		return;
+	}
+	IncludeScript($addonPathCode.'/'.$file);
+}
+
+
 class gpPlugin{
 
 
 	/**
-	 * Include a file in the current plugin directory
-	 * @param string $file File to include relative to the current plugin directory
-	 * @static (not declared static so addon devs can continue to use $this within included files)
+	 * Aliases of gpPlugin_incl()
+	 * @deprecated
 	 */
 	function incl($file){
-		global $addonPathCode, $dataDir;
-		if( gp_safe_mode ){
-			return;
-		}
-		return include_once($addonPathCode.'/'.$file);
+		return gpPlugin_incl($file);
 	}
 
-	/**
-	 * Alias of gpPlugin::incl()
-	 */
 	function inc($file){
-		return gpPlugin::incl($file);
+		return gpPlugin_incl($file);
 	}
 
 	/**

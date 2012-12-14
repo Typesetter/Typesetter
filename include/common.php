@@ -1717,9 +1717,12 @@ class common{
 		}
 		$config['homepath_key'] = key($gp_menu);
 		$config['homepath'] = common::IndexToTitle($config['homepath_key']);
+
 		if( !isset($config['gadgets']['Contact']) ){
 			$config['gadgets']['Contact'] = array('script'=>'/include/special/special_contact.php','class'=>'special_contact_gadget');
 		}
+
+		//3.5
 		if( !isset($config['gadgets']['Search']) ){
 			$config['gadgets']['Search'] = array('script'=>'/include/special/special_search.php','method'=>array('special_gpsearch','gadget'));
 		}
@@ -2566,7 +2569,7 @@ class common{
 	 * Generate a checksum for the $array
 	 *
 	 */
-	static function ArraySum($array){
+	static function ArrayHash($array){
 		return md5(serialize($array) );
 	}
 

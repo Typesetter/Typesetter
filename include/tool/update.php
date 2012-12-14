@@ -896,7 +896,7 @@ class update_class{
 				continue;
 			}
 
-			$root = dirname($filename);
+			$root = common::DirName($filename);
 
 			if( !$archive_root || ( strlen($root) < strlen($archive_root) ) ){
 				$archive_root = $root;

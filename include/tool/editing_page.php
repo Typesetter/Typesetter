@@ -748,7 +748,7 @@ class editing_page extends display{
 
 		//if it's a compressed file, we need an uncompressed version
 		if( strpos($full_path,'.gze') !== false ){
-			$dir = dirname($full_path);
+			$dir = common::DirName($full_path);
 			ob_start();
 			readgzfile($full_path);
 			$contents = ob_get_clean();

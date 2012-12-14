@@ -142,7 +142,7 @@ class gp_combine{
 	static function GetTokens($file,$full_path){
 		$content = file_get_contents($full_path);
 		$filters = array(
-			'UrlPrefix' => array( 'BaseUrl' => common::GetDir($file), 'BasePath' => dirname($full_path) )
+			'UrlPrefix' => array( 'BaseUrl' => common::GetDir($file), 'BasePath' => common::DirName($full_path) )
 			);
 		$minifier = new CssMinifier(null, $filters);
 		return $minifier->minifyTokens($content);

@@ -157,7 +157,7 @@ class gp_edit{
 		$exists_before = file_exists($dest_path);
 
 		//make sure the folder exists
-		if( !gpFiles::CheckDir( dirname($dest_path) ) ){
+		if( !gpFiles::CheckDir( common::DirName($dest_path) ) ){
 			return false;
 		}
 

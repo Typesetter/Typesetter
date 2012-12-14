@@ -269,7 +269,7 @@ class gp_resized{
 	static function Folder($img){
 		global $dataDir;
 		$name = basename($img);
-		return $dataDir.'/data/_resized'.dirname($img).'/'.gp_resized::EncodePath($name);
+		return $dataDir.'/data/_resized'.common::DirName($img).'/'.gp_resized::EncodePath($name);
 	}
 
 	/**

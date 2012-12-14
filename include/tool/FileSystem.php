@@ -58,7 +58,7 @@ class gp_filesystem_base{
 		}
 
 		while( !file_exists($context) ){
-			$context = dirname($context);
+			$context = common::DirName($context);
 		}
 
 

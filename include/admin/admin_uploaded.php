@@ -258,8 +258,8 @@ class admin_uploaded{
 
 		while( ($dir_piece != '/') && !file_exists($dir) ){
 			$prev_piece = $dir_piece;
-			$dir = dirname($dir);
-			$dir_piece = dirname($dir_piece);
+			$dir = common::DirName($dir);
+			$dir_piece = common::DirName($dir_piece);
 		}
 
 		//new directory?
@@ -270,8 +270,8 @@ class admin_uploaded{
 
 			if( !gpFiles::CheckDir($dir) ){
 				message($langmessage['OOPS']);
-				$dir = dirname($dir);
-				$dir_piece = dirname($prev_piece);
+				$dir = common::DirName($dir);
+				$dir_piece = common::DirName($prev_piece);
 			}
 		}
 
@@ -301,7 +301,7 @@ class admin_uploaded{
 
 		echo '<div class="gp_edit_select_options">';
 		if( $dir_piece != '/' ){
-			$temp = dirname($dir_piece);
+			$temp = common::common::DirName($dir_piece);
 			echo '<a href="?cmd=new_dir&dir='.rawurlencode($dir_piece).'" class="gp_gallery_folder" name="gpabox"><span class="add"></span>'.$langmessage['create_dir'].'</a>';
 			echo '<a class="gp_gallery_folder" name="gp_gallery_folder" rel="'.htmlspecialchars($temp).'"><span class="folder"></span>../</a>';
 		}
@@ -542,7 +542,7 @@ class admin_uploaded{
 		$thumb_path = substr($original,$len);
 		$thumb_path = $thumb_prefix.$thumb_path;
 
-		$thumb_dir = dirname($thumb_path);
+		$thumb_dir = common::DirName($thumb_path);
 		$thumb_path = $thumb_dir.'/'.basename($thumb_path).'.jpg';
 		gpFiles::CheckDir($thumb_dir);
 		thumbnail::createSquare($original,$thumb_path,$config['maxthumbsize']);

@@ -446,7 +446,7 @@ class gpOutput{
 		}
 
 		// check for fatal errors
-		$curr_hash = 'exec'.common::ArraySum($info);
+		$curr_hash = 'exec'.common::ArrayHash($info);
 		if( self::FatalNotice($curr_hash) ){
 			return $args;
 		}
@@ -462,9 +462,12 @@ class gpOutput{
 		$has_script = false;
 		if( isset($info['script']) ){
 
-			if( !IncludeScript($dataDir.$info['script'],'include_once_if') ){
+			$full_path = $dataDir.$info['script'];
+			if( !file_exists($full_path) ){
 				$name =& $config['addons'][$addonFolderName]['name'];
 				trigger_error('gpEasy Error: Addon hook script doesn\'t exist. Script: '.$info['script'].' Addon: '.$name);
+			}elseif( IncludeScript($full_path,'include_once') ){
+				$has_script = true;
 			}
 		}
 
@@ -516,7 +519,8 @@ class gpOutput{
 
 
 	static function FatalNotice($hash){
-		global $dataDir;
+		global $dataDir,$page;
+		static $notified = array();
 
 		$file = $dataDir.'/data/_site/fatal_'.$hash;
 		if( !file_exists($file) ){
@@ -526,12 +530,18 @@ class gpOutput{
 		$message = 'Warning: A compenent of this page has been disabled because it caused fatal errors:';
 		error_log( $message );
 		if( common::LoggedIn() ){
-			$message .= ' <br/> '.common::Link($page->title,'Enable Component','cmd=enable_component&hash='.$hash) //cannot be creq
-						.' &nbsp; <a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>'
-						.'<div class="nodisplay">'
-						.file_get_contents($file)
-						.'</div>';
-			message( $message );
+
+			$error_info = file_get_contents($file);
+			$info_hash = common::ArrayHash($error_info);
+			if( !in_array($info_hash,$notified) ){
+				$message .= ' <br/> '.common::Link($page->title,'Enable Component','cmd=enable_component&hash='.$hash) //cannot be creq
+							.' &nbsp; <a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>'
+							.'<div class="nodisplay">'
+							.$error_info
+							.'</div>';
+				message( $message );
+				$notified[] = $info_hash;
+			}
 		}
 
 		return true;
@@ -2073,7 +2083,7 @@ class gpOutput{
 	 * @return string finalized response
 	 */
 	static function BufferOut($buffer){
-		global $config,	$gp_head_content, $addonFolderName, $dataDir, $GP_EXEC_STACK;
+		global $config,	$gp_head_content, $addonFolderName, $dataDir, $GP_EXEC_STACK, $addon_current_id;
 
 
 		//add error notice if there was a fatal error
@@ -2083,6 +2093,12 @@ class gpOutput{
 			$fatal_errors = array(E_ERROR,E_PARSE);
 			$last_error = error_get_last();
 			if( is_array($last_error) && in_array($last_error['type'],$fatal_errors) ){
+
+				$last_error['request'] = $_SERVER['REQUEST_URI'];
+				if( $addon_current_id ){
+					$last_error['addon_name'] = $config['addons'][$addonFolderName]['name'];
+					$last_error['addon_id'] = $addon_current_id;
+				}
 
 				$last_error['file'] = realpath($last_error['file']);//may be redundant
 				showError($last_error['type'], $last_error['message'],  $last_error['file'],  $last_error['line'], false);

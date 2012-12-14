@@ -15,7 +15,8 @@ function gpPlugin_incl($file){
 	if( gp_safe_mode ){
 		return;
 	}
-	IncludeScript($addonPathCode.'/'.$file);
+	//IncludeScript($addonPathCode.'/'.$file); //actually makes debugging more difficult because of cascading errors
+	include_once($addonPathCode.'/'.$file);
 }
 
 

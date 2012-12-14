@@ -637,7 +637,7 @@ class gpsession{
 		gpsession::Cron();
 
 		unset($gpAdmin['checksum']);
-		$checksum = common::ArraySum($gpAdmin);
+		$checksum = common::ArrayHash($gpAdmin);
 
 		//nothing changes
 		if( $checksum === $checksum_read ){
@@ -961,7 +961,7 @@ class gpsession{
 	}
 
 	/**
-	 * Enable file inclusion
+	 * Re-enable components that were disabled because of fatal errors
 	 *
 	 */
 	function EnableComponent(){
@@ -972,9 +972,25 @@ class gpsession{
 			return;
 		}
 
-		$file = $dataDir.'/data/_site/fatal_'.$_REQUEST['hash'];
+		$dir = $dataDir.'/data/_site';
+		$file = $dir.'/fatal_'.$_REQUEST['hash'];
 		if( file_exists($file) ){
+			$hash = md5_file($file);
 			unlink($file);
+
+
+			//remove matching errors
+			$files = scandir($dir);
+			foreach($files as $file){
+				if( strpos($file,'fatal_') !== 0 ){
+					continue;
+				}
+
+				$full_path = $dir.'/'.$file;
+				if( $hash == md5_file($full_path) ){
+					unlink($full_path);
+				}
+			}
 		}
 		$title = common::WhichPage();
 		common::Redirect(common::GetUrl($title));

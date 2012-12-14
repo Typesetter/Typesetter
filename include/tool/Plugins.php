@@ -8,7 +8,7 @@ $gp_plugin_stack = array();
 /**
  * Include a file in the current plugin directory
  * @param string $file File to include relative to the current plugin directory
- *
+ * @since 3.5.3
  */
 function gpPlugin_incl($file){
 	global $addonPathCode, $dataDir;
@@ -24,7 +24,7 @@ class gpPlugin{
 
 	/**
 	 * Aliases of gpPlugin_incl()
-	 * @deprecated
+	 * @deprecated 3.5.3
 	 */
 	function incl($file){
 		return gpPlugin_incl($file);

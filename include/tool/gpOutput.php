@@ -140,7 +140,7 @@ class gpOutput{
 		}
 		gpOutput::TemplateSettings();
 		header('Content-Type: text/html; charset=utf-8');
-		IncludeScript($page->theme_dir.'/template.php','require',array('page','GP_ARRANGE','GP_STYLES'));
+		IncludeScript($page->theme_dir.'/template.php','require',array('page','GP_ARRANGE','GP_STYLES','GP_MENU_LINKS','GP_MENU_CLASS'));
 
 		gpPlugin::ClearDataFolder();
 
@@ -455,20 +455,14 @@ class gpOutput{
 
 		//data
 		if( !empty($info['data']) ){
-			$full_path = $dataDir.$info['data'];
-			if( file_exists($full_path) ){
-				include($full_path);
-			}
+			IncludeScript($dataDir.$info['data'],'include_if');
 		}
 
 		//script
 		$has_script = false;
 		if( isset($info['script']) ){
 
-			$full_path = $dataDir.$info['script'];
-			if( file_exists($full_path) ){
-				include_once($full_path);
-			}else{
+			if( !IncludeScript($dataDir.$info['script'],'include_once_if') ){
 				$name =& $config['addons'][$addonFolderName]['name'];
 				trigger_error('gpEasy Error: Addon hook script doesn\'t exist. Script: '.$info['script'].' Addon: '.$name);
 			}

@@ -121,22 +121,10 @@ class admin_display extends display{
 			$scripts = admin_tools::AdminScripts();
 			if( isset($scripts[$request_string]) ){
 				$scriptinfo = $scripts[$request_string];
-
 				if( admin_tools::HasPermission($request_string) ){
-					if( isset($scriptinfo['addon']) ){
-						gpPlugin::SetDataFolder($scriptinfo['addon']);
-					}
-					admin_display::OrganizeFrequentScripts($request_string);
 
+					gpOutput::ExecInfo($scriptinfo);
 
-					if( isset($scriptinfo['script']) ){
-						require($dataDir.$scriptinfo['script']);
-					}
-					if( isset($scriptinfo['class']) ){
-						new $scriptinfo['class']();
-					}
-
-					gpPlugin::ClearDataFolder();
 					return;
 				}else{
 					message($langmessage['not_permitted']);

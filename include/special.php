@@ -157,8 +157,7 @@ class special_display extends display{
 		global $dataDir;
 
 		ob_start();
-		$args = array();
-		gpOutput::ExecInfo($scriptinfo,$args);
+		gpOutput::ExecInfo($scriptinfo);
 		return ob_get_clean();
 	}
 

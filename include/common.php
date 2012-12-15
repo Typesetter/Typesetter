@@ -137,7 +137,7 @@ if ( function_exists( 'date_default_timezone_set' ) )
  *
  */
 function showError($errno, $errmsg, $filename, $linenum, $vars){
-	global $wbErrorBuffer, $addon_current_id, $page, $addon_current_version;
+	global $wbErrorBuffer, $addon_current_id, $page, $addon_current_version, $config, $addonFolderName;
 	static $reported = array();
 	$report_error = true;
 
@@ -190,10 +190,11 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	}
 
 	//record one error per function and only record the error once per request
-	if( !isset($backtrace[0]['function']) ){
-		return false;
+	if( isset($backtrace[0]['function']) ){
+		$uniq = $filename.$backtrace[0]['function'];
+	}else{
+		$uniq = $filename.$linenum;
 	}
-	$uniq = $filename.$backtrace[0]['function'];
 	if( isset($reported[$uniq]) ){
 		return false;
 	}
@@ -204,21 +205,14 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 			return false;
 		}
 
-		//if it's an addon error, determine if if was installed remotely
-		if( isset($addon_current_id) && $addon_current_id ){
-			$remote_install = false;
-			foreach($backtrace as $row){
-				if( strpos($row['file'],'/data/') !== false ){
-					$remote_install = true;
-					break;
-				}
-			}
-			if( !$remote_install ){
+		//if it's an addon error, only report if the addon was installed remotely
+		if( isset($addonFolderName) && $addonFolderName ){
+			if( !isset($config['addons'][$addonFolderName]['remote_install'])  ){
 				return false;
 			}
 
 		//if it's a core error, it should be in the include folder
-		}elseif( strpos($backtrace[0]['file'],'/include/') === false ){
+		}elseif( strpos($filename,'/include/') === false ){
 			return false;
 		}
 

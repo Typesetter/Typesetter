@@ -1,10 +1,6 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-global $gp_plugin_stack;
-$gp_plugin_stack = array();
-
-
 /**
  * Include a file in the current plugin directory
  * @param string $file File to include relative to the current plugin directory
@@ -21,6 +17,8 @@ function gpPlugin_incl($file){
 
 
 class gpPlugin{
+
+	private static $stack = array();
 
 
 	/**
@@ -220,12 +218,12 @@ class gpPlugin{
 	 *
 	 */
 	static function StackPush(){
-		global $gp_plugin_stack, $addonFolderName, $addon_current_id;
+		global $addonFolderName, $addon_current_id;
 
 		if( !$addon_current_id && !$addonFolderName ){
 			return;
 		}
-		$gp_plugin_stack[] = array('folder'=>$addonFolderName,'id'=>$addon_current_id);
+		self::$stack[] = array('folder'=>$addonFolderName,'id'=>$addon_current_id);
 	}
 
 
@@ -233,7 +231,6 @@ class gpPlugin{
 	 * Reset global path variables
 	 */
 	static function ClearDataFolder(){
-		global $gp_plugin_stack;
 		global $addonDataFolder,$addonCodeFolder; //deprecated
 		global $addonRelativeCode,$addonRelativeData,$addonPathData,$addonPathCode,$addonFolderName,$addon_current_id,$addon_current_version;
 
@@ -243,8 +240,8 @@ class gpPlugin{
 		$addonRelativeCode = $addonRelativeData = $addonPathData = $addonPathCode = $addon_current_id = $addon_current_version = false;
 
 		//Make the most recent addon folder or addon id in the stack the current addon
-		if( count($gp_plugin_stack) > 0 ){
-			$info = array_pop($gp_plugin_stack);
+		if( count(self::$stack) > 0 ){
+			$info = array_pop(self::$stack);
 			if( $info['folder'] ){
 				gpPlugin::SetDataFolder($info['folder']);
 			}elseif( $info['id'] ){

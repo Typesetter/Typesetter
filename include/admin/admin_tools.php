@@ -96,6 +96,8 @@ class admin_tools{
 		$scripts['Admin_Uninstall']['group'] = 'settings';
 
 
+
+
 		/*
 		 * 	Unlisted
 		 */
@@ -105,6 +107,12 @@ class admin_tools{
 		$scripts['Admin_Addons']['class'] = 'admin_addons';
 		$scripts['Admin_Addons']['label'] = $langmessage['plugins'];
 		$scripts['Admin_Addons']['list'] = false;
+
+
+		$scripts['Admin_Errors']['script'] = '/include/admin/admin_errors.php';
+		$scripts['Admin_Errors']['class'] = 'admin_errors';
+		$scripts['Admin_Errors']['label'] = 'Errors';
+		$scripts['Admin_Errors']['group'] = false;
 
 
 /*

@@ -1921,6 +1921,7 @@ class gpOutput{
 		$placeholder = '<!-- jquery_placeholder '.gp_random.' -->';
 
 		$keys_before = array_keys($scripts);
+		$combine = $config['combinejs'] && !common::loggedIn();
 
 		//just jQuery
 		if( !count($page->head_js) && count($scripts) < 2 ){
@@ -1948,7 +1949,7 @@ class gpOutput{
 			}
 		}
 
-		if( !$config['combinejs'] || $page->head_force_inline ){
+		if( !$combine || $page->head_force_inline ){
 			echo "\n<script type=\"text/javascript\">/* <![CDATA[ */";
 			common::jsStart();
 			echo '/* ]]> */</script>';
@@ -1965,7 +1966,7 @@ class gpOutput{
 			trigger_error('$page->head_js is not an array');
 		}
 
-		gpOutput::CombineFiles($js_files,'js',$config['combinejs']);
+		gpOutput::CombineFiles($js_files,'js',$combine );
 	}
 
 

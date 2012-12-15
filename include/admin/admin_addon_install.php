@@ -21,12 +21,12 @@ class admin_addon_install extends admin_addons_tool{
 	var $data_folder;
 
 
-	//new
 	var $upgrade_key = false;
 	var $temp_folder_name;
 	var $temp_folder_path;
 	var $install_folder_name;
 	var $install_folder_path;
+	var $remote_installation = false;
 
 
 	//plugin vs theme
@@ -702,7 +702,12 @@ class admin_addon_install extends admin_addons_tool{
 		$this->UpdateConfigInfo('Addon_Name','name');
 		$this->UpdateConfigInfo('Addon_Version','version');
 		$this->UpdateConfigInfo('Addon_Unique_ID','id');
-		$this->UpdateConfigInfo('Addon_Unique_ID','id');
+
+		//remote
+		unset($this->config[$this->install_folder_name]['remote_install']);
+		if( $this->remote_installation ){
+			$this->config[$this->install_folder_name]['remote_install'] = true;
+		}
 
 
 		//proof of purchase
@@ -1342,6 +1347,7 @@ class admin_addon_install extends admin_addons_tool{
 	function RemoteInstallMain($cmd){
 		global $langmessage;
 
+		$this->remote_installation = true;
 		$this->Init_PT();
 		$this->GetAddonData(); //for addonHistory
 		if( !$this->RemoteInit() ){

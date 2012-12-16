@@ -2087,6 +2087,13 @@ class gpOutput{
 		global $config,	$gp_head_content, $addonFolderName, $dataDir, $GP_EXEC_STACK, $addon_current_id;
 
 
+		//remove lock
+		if( defined('gp_has_lock') && gp_has_lock ){
+			$lock_file = $dataDir.'/data/_site/site_lock';
+			unlink($lock_file);
+		}
+
+
 		//add error notice if there was a fatal error
 		if( !ini_get('display_errors') && function_exists('error_get_last') ){
 

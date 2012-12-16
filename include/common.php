@@ -29,6 +29,7 @@ gp_defined('E_DEPRECATED',8192);
 gp_defined('E_USER_DEPRECATED',16384);
 gp_defined('gpdebug_tools',false);
 gp_defined('gp_backup_limit',10);
+gp_defined('gp_lock_lifetime',60);
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php'); message('local browse path');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
@@ -163,8 +164,8 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 
 	// since we supported php 4.3+, there may be a lot of strict errors
 	if( $errno === E_STRICT ){
-		$report_error = false;
-		return false;
+		//$report_error = false;
+		return;
 	}
 
 
@@ -2948,6 +2949,11 @@ class gpFiles{
 	static function Save($file,$contents,$checkDir=true){
 		global $gp_not_writable;
 
+		if( !self::GetLock() ){
+			return false;
+		}
+
+		//make sure directory exists
 		if( $checkDir && !file_exists($file) ){
 			$dir = common::DirName($file);
 			if( !file_exists($dir) ){
@@ -2955,25 +2961,66 @@ class gpFiles{
 			}
 		}
 
-		$fp = @fopen($file,'ab'); //using "a" so the file isn't truncated
+		$fp = @fopen($file,'wb');
 		if( $fp === false ){
 			$gp_not_writable[] = $file;
 			return false;
 		}
 
-		//lock
-		if( !flock($fp,LOCK_EX) ){
-			return false;
-		}
-		ftruncate($fp,0);
-		fseek($fp,0);
-
 		@chmod($file,gp_chmod_file);
 
 		$return = fwrite($fp,$contents);
-		flock($fp,LOCK_UN);
 		fclose($fp);
 		return ($return !== false);
+	}
+
+	/**
+	 * Get a lock on the data folder to prevent simultaneous writing
+	 * Use pid to avoid race-condition
+	 * Loop and delay to wait for the removal of existing locks (maximum of about .2 of a second)
+	 * @since 3.5.3
+	 */
+	private static function GetLock(){
+		global $dataDir;
+
+		if( defined('gp_has_lock') ){
+			return gp_has_lock;
+		}
+
+		$tries = 0;
+		$diff = false;
+		$lock_file = $dataDir.'/data/_site/site_lock';
+		if( function_exists('getmypid') ){
+			$pid = getmypid();
+		}else{
+			$pid = rand(100,100000);
+		}
+
+		while($tries < 1000){
+			if( !file_exists($lock_file) ){
+				file_put_contents($lock_file,$pid);
+				usleep(100);
+				$contents = file_get_contents($lock_file);
+				if( $pid === (int)$contents ){
+					define('gp_has_lock',true);
+					return true;
+				}
+
+			}elseif( $diff === false ){
+				$checked_time = true;
+				$diff = time() - filemtime($lock_file);
+				if( $diff > gp_lock_lifetime ){
+					unlink( $lock_file);
+				}
+			}
+			clearstatcache();
+			usleep(100);
+			$tries++;
+		}
+
+		define('gp_has_lock',false);
+		message('Sorry, a write lock could not be obtained. The existing lock will expire in '.(gp_lock_lifetime-$diff).' seconds.');
+		return gp_has_lock;
 	}
 
 

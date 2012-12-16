@@ -2946,18 +2946,61 @@ class gpFiles{
 	 * @return bool True on success
 	 */
 	static function Save($file,$contents,$checkDir=true){
-		$fp = gpFiles::fopen($file,$checkDir);
-		if( !$fp ){
+		global $gp_not_writable;
+
+		if( $checkDir && !file_exists($file) ){
+			$dir = common::DirName($file);
+			if( !file_exists($dir) ){
+				gpFiles::CheckDir($dir);
+			}
+		}
+
+		$fp = @fopen($file,'ab'); //using "a" so the file isn't truncated
+		if( $fp === false ){
+			$gp_not_writable[] = $file;
 			return false;
 		}
 
-		if( fwrite($fp,$contents) === false ){
-			fclose($fp);
+		//lock
+		if( !flock($fp,LOCK_EX) ){
 			return false;
 		}
+		ftruncate($fp,0);
+		fseek($fp,0);
 
+		@chmod($file,gp_chmod_file);
+
+		$return = fwrite($fp,$contents);
+		flock($fp,LOCK_UN);
 		fclose($fp);
-		return true;
+		return ($return !== false);
+	}
+
+
+	/**
+	 * @deprecated 3.5.3
+	 */
+	static function fopen($file,$checkDir=true){
+		global $gp_not_writable;
+
+		trigger_error('Deprecated function');
+
+		if( $checkDir && !file_exists($file) ){
+			$dir = common::DirName($file);
+			if( !file_exists($dir) ){
+				gpFiles::CheckDir($dir);
+			}
+		}
+
+		$fp = @fopen($file,'ab'); //using "a" so the file isn't truncated
+		if( $fp === false ){
+			$gp_not_writable[] = $file;
+			return false;
+		}
+
+		//chmod($file,0644);
+		@chmod($file,gp_chmod_file);
+		return $fp;
 	}
 
 
@@ -3063,41 +3106,6 @@ class gpFiles{
 	}
 
 
-	/**
-	 * Open a file for writing
-	 * Keep track of files and directories that aren't writable in $gp_not_writable
-	 *
-	 * @param string $file The path of the file
-	 * @param bool $checkDir Whether or not to check the parent directory's existence.
-	 * @return bool true on success
-	 */
-	static function fopen($file,$checkDir=true){
-		global $gp_not_writable;
-
-		if( file_exists($file) ){
-			$fp = @fopen($file,'wb');
-			if( $fp === false ){
-				$gp_not_writable[] = $file;
-			}
-			return $fp;
-		}
-
-		$dir = common::DirName($file);
-		if( $checkDir ){
-			if( !file_exists($dir) ){
-				gpFiles::CheckDir($dir);
-			}
-		}
-
-		$fp = @fopen($file,'wb');
-		if( $fp === false ){
-			$gp_not_writable[] = $file;
-		}else{
-			//chmod($file,0644);
-			@chmod($file,gp_chmod_file);
-		}
-		return $fp;
-	}
 
 	/**
 	 * Check recursively to see if a directory exists, if it doesn't attempt to create it

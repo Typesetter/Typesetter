@@ -3004,7 +3004,7 @@ class gpFiles{
 		global $dataDir;
 		$checked_time = false;
 		$tries = 0;
-		$lock_file = $dataDir.'/data/_site/lock_'.$file;
+		$lock_file = $dataDir.'/data/lock_'.$file;
 		while($tries < 1000){
 
 			if( !file_exists($lock_file) ){

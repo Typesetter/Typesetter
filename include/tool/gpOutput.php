@@ -2089,7 +2089,7 @@ class gpOutput{
 
 		//remove lock
 		if( defined('gp_has_lock') && gp_has_lock ){
-			$lock_file = $dataDir.'/data/_site/site_lock';
+			$lock_file = $dataDir.'/data/_site/lock_write';
 			unlink($lock_file);
 		}
 

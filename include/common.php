@@ -29,7 +29,7 @@ gp_defined('E_DEPRECATED',8192);
 gp_defined('E_USER_DEPRECATED',16384);
 gp_defined('gpdebug_tools',false);
 gp_defined('gp_backup_limit',10);
-gp_defined('gp_lock_lifetime',60);
+gp_defined('gp_write_lock_time',60);
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php'); message('local browse path');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
@@ -1666,18 +1666,13 @@ class common{
 	 *
 	 */
 	static function GetConfig(){
-		global $config, $gp_index, $dataDir, $gp_menu;
+		global $config, $dataDir;
 
 		require($dataDir.'/data/_site/config.php');
 		if( !is_array($config) ){
 			common::stop();
 		}
 		$GLOBALS['fileModTimes']['config.php'] = $fileModTime;
-
-		common::GetPagesPHP();
-		if( !is_array($gp_menu) ){
-			common::stop();
-		}
 
 		//remove old values
 		if( isset($config['linkto']) ) unset($config['linkto']);
@@ -1710,8 +1705,6 @@ class common{
 		if( isset($GLOBALS['dirPrefix']) ){
 			$config['dirPrefix'] = $GLOBALS['dirPrefix']; // deprecated 2.4b4 $config['dirPrefix'], $GLOBALS['dirPrefix'] won't always be set (example: cron jobs)
 		}
-		$config['homepath_key'] = key($gp_menu);
-		$config['homepath'] = common::IndexToTitle($config['homepath_key']);
 
 		if( !isset($config['gadgets']['Contact']) ){
 			$config['gadgets']['Contact'] = array('script'=>'/include/special/special_contact.php','class'=>'special_contact_gadget');
@@ -1722,10 +1715,8 @@ class common{
 			$config['gadgets']['Search'] = array('script'=>'/include/special/special_search.php','method'=>array('special_gpsearch','gadget'));
 		}
 
-		gp_defined('gp_session_cookie',common::SessionCookie($config['gpuniq']));
-
-		//get language file
 		common::GetLangFile();
+		common::GetPagesPHP();
 
 		//upgrade?
 		if( version_compare($config['gpversion'],'2.3.4','<') ){
@@ -1743,17 +1734,12 @@ class common{
 	}
 
 
-	static function SessionCookie($uniq){
-		return 'gpEasy_'.substr(sha1($uniq),12,12);
-	}
-
-
 	/**
 	 * Set global variables ( $gp_index, $gp_titles, $gp_menu and $gpLayouts ) from _site/pages.php
 	 *
 	 */
 	static function GetPagesPHP(){
-		global $gp_index, $gp_titles, $gp_menu, $dataDir, $gpLayouts;
+		global $gp_index, $gp_titles, $gp_menu, $dataDir, $gpLayouts, $config;
 		$gp_index = array();
 
 		$pages = array();
@@ -1782,6 +1768,10 @@ class common{
 		$gp_titles = $pages['gp_titles'];
 		$gp_menu = $pages['gp_menu'];
 
+		if( !is_array($gp_menu) ){
+			common::stop();
+		}
+
 		//update for 3.5,
 		if( !isset($gp_titles['special_gpsearch']) ){
 			$gp_titles['special_gpsearch'] = array();
@@ -1802,6 +1792,10 @@ class common{
 				}
 			}
 		}
+
+		//title related configuration settings
+		$config['homepath_key'] = key($gp_menu);
+		$config['homepath'] = common::IndexToTitle($config['homepath_key']);
 
 	}
 
@@ -2139,8 +2133,13 @@ class common{
 			$cmd = 'logout';
 		}elseif( isset($_POST['cmd']) && $_POST['cmd'] == 'login' ){
 			$cmd = $_POST['cmd'];
-		}elseif( isset($_COOKIE[gp_session_cookie]) ){
-			$cmd = 'start';
+		}elseif( count($_COOKIE) ){
+			foreach($_COOKIE as $key => $value){
+				if( strpos($key,'gpEasy_') === 0 ){
+					$cmd = 'start';
+					break;
+				}
+			}
 		}
 
 		if( empty($cmd) ){
@@ -2949,7 +2948,7 @@ class gpFiles{
 	static function Save($file,$contents,$checkDir=true){
 		global $gp_not_writable;
 
-		if( !self::GetLock() ){
+		if( !self::WriteLock() ){
 			return false;
 		}
 
@@ -2975,53 +2974,66 @@ class gpFiles{
 	}
 
 	/**
-	 * Get a lock on the data folder to prevent simultaneous writing
-	 * Use pid to avoid race-condition
-	 * Loop and delay to wait for the removal of existing locks (maximum of about .2 of a second)
+	 * Get a write lock to prevent simultaneous writing
 	 * @since 3.5.3
 	 */
-	private static function GetLock(){
+	static function WriteLock(){
 		global $dataDir;
 
 		if( defined('gp_has_lock') ){
 			return gp_has_lock;
 		}
 
-		$tries = 0;
-		$diff = false;
-		$lock_file = $dataDir.'/data/_site/site_lock';
-		if( function_exists('getmypid') ){
-			$pid = getmypid();
-		}else{
-			$pid = rand(100,100000);
+		$expires = gp_write_lock_time;
+		if( self::LockFile('write',gp_random,$expires) ){
+			define('gp_has_lock',true);
+			return true;
 		}
 
-		while($tries < 1000){
-			if( !file_exists($lock_file) ){
-				file_put_contents($lock_file,$pid);
-				usleep(100);
-				$contents = file_get_contents($lock_file);
-				if( $pid === (int)$contents ){
-					define('gp_has_lock',true);
-					return true;
-				}
+		message('Oops, a write lock could not be obtained. The existing lock will expire in '.($expires).' seconds.');
+		define('gp_has_lock',false);
+		return false;
+	}
 
-			}elseif( $diff === false ){
+	/**
+	 * Get a lock
+ 	 * Loop and delay to wait for the removal of existing locks (maximum of about .2 of a second)
+ 	 *
+ 	 */
+	static function LockFile($file,$value,&$expires){
+		global $dataDir;
+		$checked_time = false;
+		$tries = 0;
+		$lock_file = $dataDir.'/data/_site/lock_'.$file;
+		while($tries < 1000){
+
+			if( !file_exists($lock_file) ){
+				file_put_contents($lock_file,$value);
+				usleep(100);
+			}
+
+			$contents = file_get_contents($lock_file);
+			if( $value === $contents ){
+				touch($lock_file);
+				return true;
+			}
+
+			if( !$checked_time ){
 				$checked_time = true;
 				$diff = time() - filemtime($lock_file);
-				if( $diff > gp_lock_lifetime ){
+				if( $diff > $expires ){
 					unlink( $lock_file);
+				}else{
+					$expires -= $diff;
 				}
 			}
 			clearstatcache();
 			usleep(100);
 			$tries++;
 		}
-
-		define('gp_has_lock',false);
-		message('Sorry, a write lock could not be obtained. The existing lock will expire in '.(gp_lock_lifetime-$diff).' seconds.');
-		return gp_has_lock;
+		return false;
 	}
+
 
 
 	/**

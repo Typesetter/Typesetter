@@ -1,21 +1,17 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-/*
-
-Custom SESSIONS
-
-*/
-
-defined('gp_lock_time') or define('gp_lock_time',900); // = 15 minutes
-//defined('gp_lock_time') or define('gp_lock_time',120); // = 2 minutes .. used for testing
+gp_defined('gp_lock_time',900); // = 15 minutes
+includeFile('admin/admin_tools.php');
+includeFile('tool/editing.php');
 
 class gpsession{
 
 
 	static function Init(){
-		includeFile('admin/admin_tools.php');
-		includeFile('tool/editing.php');
+		global $config;
+
+		gp_defined('gp_session_cookie',self::SessionCookie($config['gpuniq']));
 
 		$cmd = common::GetCommand();
 
@@ -33,7 +29,7 @@ class gpsession{
 		}
 
 		if( isset($_COOKIE[gp_session_cookie]) ){
-			gpsession::CheckPosts($_COOKIE[gp_session_cookie]);
+			gpsession::CheckPosts();
 			gpsession::start($_COOKIE[gp_session_cookie]);
 		}
 
@@ -116,8 +112,6 @@ class gpsession{
 
 		if( $logged_in === true ){
 			message($langmessage['logged_in']);
-		}elseif( $logged_in === 'locked' ){
-			$logged_in = false;
 		}
 
 		//need to save the user info regardless of success or not
@@ -266,7 +260,7 @@ class gpsession{
 	 *
 	 */
 	static function cookie($name,$value,$expires = false){
-		global $config, $dirPrefix;
+		global $dirPrefix;
 
 		$cookiePath = '/';
 		if( !empty($dirPrefix) ){
@@ -438,35 +432,6 @@ class gpsession{
 			return false;
 		}
 
-		//lock to prevent conflicting edits
-		$locked = false;
-		$last_sess_id = false;
-		$last_sess_time = 0;
-		$since_last_session = 0;
-		foreach($sessions as $sess_temp_id => $sess_temp_info){
-			if( !isset($sess_temp_info['time']) || !$sess_temp_info['time'] ){
-				continue;
-			}
-
-			$diff = (time() - $sess_temp_info['time'])/60;
-			if( $diff < gp_lock_time && $last_sess_time < $sess_temp_info['time'] ){
-				$last_sess_id = $sess_temp_id;
-				$last_sess_time = $sess_temp_info['time'];
-				$since_last_session = time() - $last_sess_time;
-			}
-		}
-
-		if( $last_sess_id && $last_sess_id != $session_id ){
-			$expires = ceil( (gp_lock_time - $since_last_session)/60 );
-
-			//no longer locked
-			if( $expires > 0 ){
-				$locked = true;
-				message( $langmessage['site_locked'].' '.sprintf($langmessage['lock_expires_in'],$expires) );
-			}
-		}
-
-
 		//prevent browser caching when editing
 		Header( 'Last-Modified: ' . gmdate( 'D, j M Y H:i:s' ) . ' GMT' );
 		Header( 'Expires: ' . gmdate( 'D, j M Y H:i:s', time() ) . ' GMT' );
@@ -474,21 +439,23 @@ class gpsession{
 		Header( 'Cache-Control: post-check=0, pre-check=0', false );
 		Header( 'Pragma: no-cache' ); // HTTP/1.0
 
+
 		$GLOBALS['gpAdmin'] = gpsession::SessionData($session_file,$checksum);
-		if( $locked ){
+
+
+		//lock to prevent conflicting edits
+		$expires = gp_lock_time;
+		if( !gpFiles::LockFile('admin',$session_id,$expires) ){
+			message( $langmessage['site_locked'].' '.sprintf($langmessage['lock_expires_in'],ceil($expires/60)) );
 			$GLOBALS['gpAdmin']['locked'] = true;
 		}else{
 			unset($GLOBALS['gpAdmin']['locked']);
 		}
+
+
 		register_shutdown_function(array('gpsession','close'),$session_file,$checksum);
 
 		gpsession::SaveSetting();
-
-		//update time and move to end of $sessions array
-		if( !$locked && (!$since_last_session || $since_last_session > (gp_lock_time / 2) )){
-			$sessions[$session_id]['time'] = time();
-			gpsession::SaveSessionIds($sessions);
-		}
 
 		//make sure forms have admin nonce
 		ob_start(array('gpsession','AdminBuffer'));
@@ -591,21 +558,17 @@ class gpsession{
 	 * Prevent XSS attacks for logged in users by making sure the request contains a valid nonce
 	 *
 	 */
-	static function CheckPosts($session_id){
+	static function CheckPosts(){
 
 		if( count($_POST) == 0 ){
 			return;
 		}
 
-		if( !isset($_POST['verified']) ){
-			gpsession::StripPost('XSS Verification Parameter Not Set');
-			return;
-		}
 		if( empty($_POST['verified']) ){
-			gpsession::StripPost('XSS Verification Parameter Empty');
+			gpsession::StripPost('XSS Verification Parameter Error');
 			return;
 		}
-		if( !common::verify_nonce('post',$_POST['verified'],true) && ($_POST['verified'] !== $session_id) ){
+		if( !common::verify_nonce('post',$_POST['verified'],true) ){
 			gpsession::StripPost('XSS Verification Parameter Mismatch');
 			return;
 		}
@@ -635,6 +598,7 @@ class gpsession{
 		global $gpAdmin;
 
 		gpsession::Cron();
+		self::IncludedFiles();
 
 		unset($gpAdmin['checksum']);
 		$checksum = common::ArrayHash($gpAdmin);
@@ -650,6 +614,51 @@ class gpsession{
 
 		$gpAdmin['checksum'] = $checksum; //store the new checksum
 		gpFiles::SaveArray($file,'gpAdmin',$gpAdmin);
+	}
+
+	/**
+	 * Keep track of the 100 most recently included data files
+	 *
+	 */
+	static function IncludedFiles(){
+		global $gpAdmin,$page;
+
+		$included_files =& $gpAdmin['included_files'];
+		if( !is_array($included_files) ){
+			$included_files = array();
+		}
+
+		// get filemtime of data files
+		$data_files = self::DataFiles();
+		foreach($data_files as $file => $full_path){
+			unset($included_files[$file]);
+			$included_files[$file] = filemtime($full_path);
+		}
+		$included_files = array_slice( $included_files, -100, 100, true);
+
+		//message(gp_random);
+		//if( isset($_COOKIE['data_files']) ){
+		//	message('data files: '.$_COOKIE['data_files']);
+		//}
+		//setcookie('data_files',$page->title,time()+2592000,$_SERVER['REQUEST_URI']);
+		//message(showArray($included_files));
+	}
+
+	static function DataFiles(){
+		global $dataDir;
+		$dir = $dataDir.'/data';
+		$dir_len = strlen($dir);
+		$temp = array();
+		$files = get_included_files();
+		foreach($files as $full_path){
+			if( strpos($full_path,$dir) !== 0 ){
+				continue;
+			}
+			$file = substr($full_path,$dir_len);
+
+			$temp[$file] = $full_path;
+		}
+		return $temp;
 	}
 
 	/**
@@ -994,6 +1003,10 @@ class gpsession{
 		}
 		$title = common::WhichPage();
 		common::Redirect(common::GetUrl($title));
+	}
+
+	static function SessionCookie($uniq){
+		return 'gpEasy_'.substr(sha1($uniq),12,12);
 	}
 
 

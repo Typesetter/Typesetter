@@ -2152,15 +2152,15 @@ class gpOutput{
 		if( $pos === false ){
 			return $buffer;
 		}
-		$buffer = substr_replace($buffer,$gp_head_content,$pos,strlen($placeholder));
-
 
 		//get just the head of the buffer to see if we need to add charset
-		$pos = strpos($buffer,'</head');
-		if( $pos > 0 ){
-			$head = substr($buffer,0,$pos);
+		$head_pos = strpos($buffer,'</head');
+		if( $head_pos > 0 ){
+			$head = substr($buffer,0,$head_pos);
 			gpOutput::DoctypeMeta($head);
 		}
+
+		$buffer = substr_replace($buffer,$gp_head_content,$pos,strlen($placeholder));
 
 
 		//add jquery if needed

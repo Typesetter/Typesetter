@@ -1376,12 +1376,33 @@ class common{
 	 * @return string The formatted html hyperlink
 	 */
 	static function Link($href='',$label='',$query='',$attr='',$nonce_action=false){
+		return '<a href="'.common::GetUrl($href,$query,true,$nonce_action).'" '.common::LinkAttr($attr,$label).'>'.common::Ampersands($label).'</a>';
+	}
 
-		if( strpos($attr,'title="') === false){
-			$attr .= ' title="'.common::Ampersands(strip_tags($label)).'" ';
+	function LinkAttr($attr='',$label=''){
+		$string = '';
+		$has_title = false;
+		if( is_array($attr) ){
+			$attr = array_change_key_case($attr);
+			$has_title = isset($attr['title']);
+			if( isset($attr['name']) && $attr['name'] == 'postlink' ){
+				$attr['data-nonce'] = common::new_nonce('post',true);
+			}
+			foreach($attr as $attr_name => $attr_value){
+				$string .= ' '.$attr_name.'="'.htmlspecialchars($attr_value,ENT_COMPAT,'UTF-8',false).'"';
+			}
+		}else{
+			$string = $attr;
+			if( strpos($attr,'title="') === false){
+				$has_title = true;
+			}
 		}
 
-		return '<a href="'.common::GetUrl($href,$query,true,$nonce_action).'" '.$attr.'>'.common::Ampersands($label).'</a>';
+		if( !$has_title && !empty($label) ){
+			$string .= ' title="'.common::Ampersands(strip_tags($label)).'" ';
+		}
+
+		return trim($string);
 	}
 
 	/**

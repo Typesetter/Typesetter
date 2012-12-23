@@ -1393,8 +1393,14 @@ class common{
 			}
 		}else{
 			$string = $attr;
-			if( strpos($attr,'title="') === false){
+			if( strpos($attr,'title="') !== false){
 				$has_title = true;
+			}
+
+			// backwards compatibility hack to be removed in future releases
+			// @since 3.6
+			if( strpos($attr,'name="postlink"') !== false ){
+				$attr .= ' data-nonce="'.common::new_nonce('post',true).'"';
 			}
 		}
 

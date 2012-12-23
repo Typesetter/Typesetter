@@ -600,6 +600,7 @@ class gpsession{
 		global $gpAdmin;
 
 		gpsession::Cron();
+		self::LayoutInfo();
 		//self::IncludedFiles();
 
 		unset($gpAdmin['checksum']);
@@ -617,6 +618,107 @@ class gpsession{
 		$gpAdmin['checksum'] = $checksum; //store the new checksum
 		gpFiles::SaveArray($file,'gpAdmin',$gpAdmin);
 	}
+
+	/**
+	 * Update layout information if needed
+	 *
+	 */
+	static function LayoutInfo(){
+		global $page, $gpLayouts, $get_all_gadgets_called;
+
+		if( common::RequestType() != 'template' ){
+			return;
+		}
+
+		$layout = $page->gpLayout;
+		if( !isset($gpLayouts[$layout]) ){
+			return;
+		}
+
+		// make sure template.php was included
+		// this would be more efficient if be done with a variable
+		$template_file = realpath($page->theme_dir.'/template.php');
+		$included = get_included_files();
+		$template_included = false;
+		foreach($included as $file){
+			if( realpath($file) == $template_file ){
+				$template_included = true;
+				break;
+			}
+		}
+		if( !$template_included ){
+			return;
+		}
+
+		$layout_info =& $gpLayouts[$layout];
+
+		//template.php file not modified
+		$template_mod = filemtime($template_file);
+		if( isset($layout_info['template_mod']) && $layout_info['template_mod'] >= $template_mod ){
+			return;
+		}
+
+		$contents = ob_get_contents();
+
+		//charset
+		if( strpos($contents,'charset=') !== false ){
+			return;
+		}
+
+		//get just the head of the buffer to see if we need to add charset
+		$pos = strpos($contents,'</head');
+		unset($layout_info['doctype']);
+		unset($layout_info['html5']);
+		if( $pos > 0 ){
+			$head = substr($contents,0,$pos);
+			$head = strtolower($head);
+			$layout_info['html5'] = self::Html5Layout($head);
+			$layout_info['doctype'] = self::DoctypeMeta($layout_info['html5'],$head);
+		}
+		$layout_info['all_gadgets'] = $get_all_gadgets_called;
+
+
+		//save
+		$layout_info['template_mod'] = $template_mod;
+		admin_tools::SavePagesPHP();
+	}
+
+
+	/**
+	 * Determine if the current layout is html5
+	 *
+	 */
+	static function Html5Layout($doc_start){
+		if( strpos($doc_start,'<!doctype html>') !== false ){
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Determine if gpEasy needs to add a <meta charset> tag
+	 * Look at the beginning of the document to see what kind of doctype the current template is using
+	 * See http://www.w3schools.com/tags/tag_doctype.asp for description of different doctypes
+	 *
+	 */
+	static function DoctypeMeta($html5,$doc_start){
+
+		//charset already set
+		if( strpos($doc_start,'charset=') !== false ){
+			return '';
+		}
+
+		// html5
+		// spec states this should be "the first element child of the head element"
+		if( $html5 ){
+			return '<meta charset="UTF-8" />';
+		}
+		return '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
+	}
+
+
+
+
 
 	/**
 	 * Keep track of the 100 most recently included data files

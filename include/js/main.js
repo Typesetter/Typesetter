@@ -375,14 +375,23 @@ $(function(){
 	 */
 	$gp.post_link = function(lnk){
 		loading();
-		var data = lnk.search;
-		if( data[0] == '?' ) data = data.substring(1);
-		$gp.postC(lnk.href,data);
+		var $lnk = $(lnk);
+		var data = strip_to(lnk.search,'?')
+				+ '&gpreq=json&jsoncallback=?'
+				+ '&verified='+encodeURIComponent($lnk.data('nonce'))
+				;
+		$.post(
+			strip_from(lnk.href,'?'),
+			data,
+			ajaxResponse,
+			'json'
+			);
 	}
 
-	/*
+	/**
 	 * 	Post content with gpEasy's verified value
 	 *  Arguments order is same as jQuery's $.post()
+	 *
 	 */
 	$gp.postC = function(url,data,callback,datatype){
 		callback = callback || ajaxResponse;
@@ -434,18 +443,13 @@ function message(){
 }
 
 function tabs(a){
-	$(a.parentNode).find('a').removeClass('selected').each(function(b,c){
-		var d = strip_to(c.href,'#');
-		if( d ){
-			$('#'+d).hide();
-		}
+	$(a).siblings('a').removeClass('selected').each(function(b,c){
+		if( c.hash ) $(c.hash).hide();
 	});
 
-	d = strip_to(a.href,'#');
-
-	$('#'+d).show();
-
-	a.className = 'selected';
+	if( a.hash ){
+		$(a.hash).show().addClass('selected');
+	}
 }
 
 function strip_to(a,b){
@@ -454,7 +458,7 @@ function strip_to(a,b){
 	if( pos > -1 ){
 		return a.substr(pos+1);
 	}
-	return false;
+	return a;
 }
 
 function strip_from(a,b){

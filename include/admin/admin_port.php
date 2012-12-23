@@ -980,8 +980,7 @@ class admin_port{
 			}
 
 			echo '&nbsp;&nbsp;';
-			echo common::Link('Admin_Port',$langmessage['delete'],'cmd=delete&file='.rawurlencode($file),' name="postlink" class="gpconfirm" title="'.$langmessage['delete_confirm'].'"',$file);
-
+			echo common::Link('Admin_Port',$langmessage['delete'],'cmd=delete&file='.rawurlencode($file),array('name'=>'postlink','title'=>$langmessage['delete_confirm'],'class'=>'gpconfirm'),$file);
 			echo '</td>';
 			echo '</tr>';
 

@@ -401,7 +401,7 @@ class admin_users{
 			echo ' &nbsp; ';
 
 			$title = sprintf($langmessage['generic_delete_confirm'],htmlspecialchars($username));
-			echo common::Link('Admin_Users',$langmessage['delete'],'cmd=rm&username='.$username,' title="'.$title.'" name="postlink" class="gpconfirm"');
+			echo common::Link('Admin_Users',$langmessage['delete'],'cmd=rm&username='.$username,array('name'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
 			echo '</td>';
 			echo '</tr>';
 		}

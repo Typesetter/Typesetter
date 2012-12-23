@@ -50,7 +50,8 @@ class editing_page extends display{
 
 
 		if( $menu_permissions ){
-			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['delete_file'],'cmd=trash_page&index='.urlencode($this->gp_index),' title="'.$langmessage['delete_page'].'" name="postlink" class="gpconfirm" ');
+			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['delete_file'],'cmd=trash_page&index='.urlencode($this->gp_index),array('name'=>'postlink','title'=>$langmessage['delete_page'],'class'=>'gpconfirm'));
+
 		}
 
 

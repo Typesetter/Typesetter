@@ -429,9 +429,9 @@ class admin_trash{
 			echo '</td>';
 			echo '<td>';
 
-			echo common::Link('Admin_Trash',$langmessage['restore'],'cmd=restore_one&title['.rawurlencode($title).']=1','name="postlink"');
+			echo common::Link('Admin_Trash',$langmessage['restore'],'cmd=restore_one&title['.rawurlencode($title).']=1',array('name'=>'postlink'));
 			echo ' &nbsp; ';
-			echo common::Link('Admin_Trash',$langmessage['delete'],'cmd=delete_one&title['.rawurlencode($title).']=1','name="postlink"');
+			echo common::Link('Admin_Trash',$langmessage['delete'],'cmd=delete_one&title['.rawurlencode($title).']=1',array('name'=>'postlink'));
 
 			echo '</td>';
 			echo '</tr>';

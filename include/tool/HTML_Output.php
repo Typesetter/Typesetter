@@ -200,12 +200,7 @@ class gp_html_output extends gp_html_parse{
 	}
 
 	function htmlspecialchars($text){
-
-		$unencoded = array('&','"','<','>');
-		$encoded = array('&amp;','&quot;','&lt;','&gt;');
-
-		$text = str_replace($encoded,$unencoded,$text);
-		return str_replace($unencoded,$encoded,$text);
+		return htmlspecialchars($text,ENT_COMPAT,'UTF-8',false);
 	}
 }
 

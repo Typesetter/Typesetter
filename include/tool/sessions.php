@@ -601,7 +601,6 @@ class gpsession{
 
 		gpsession::Cron();
 		self::LayoutInfo();
-		//self::IncludedFiles();
 
 		unset($gpAdmin['checksum']);
 		$checksum = common::ArrayHash($gpAdmin);
@@ -714,55 +713,6 @@ class gpsession{
 			return '<meta charset="UTF-8" />';
 		}
 		return '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
-	}
-
-
-
-
-
-	/**
-	 * Keep track of the 100 most recently included data files
-	 *
-	 */
-	static function IncludedFiles(){
-		global $gpAdmin,$page;
-
-		$included_files =& $gpAdmin['included_files'];
-		if( !is_array($included_files) ){
-			$included_files = array();
-		}
-
-		// get filemtime of data files
-		$data_files = self::DataFiles();
-		foreach($data_files as $file => $full_path){
-			unset($included_files[$file]);
-			$included_files[$file] = filemtime($full_path);
-		}
-		$included_files = array_slice( $included_files, -100, 100, true);
-
-		//message(gp_random);
-		//if( isset($_COOKIE['data_files']) ){
-		//	message('data files: '.$_COOKIE['data_files']);
-		//}
-		//setcookie('data_files',$page->title,time()+2592000,$_SERVER['REQUEST_URI']);
-		//message(showArray($included_files));
-	}
-
-	static function DataFiles(){
-		global $dataDir;
-		$dir = $dataDir.'/data';
-		$dir_len = strlen($dir);
-		$temp = array();
-		$files = get_included_files();
-		foreach($files as $full_path){
-			if( strpos($full_path,$dir) !== 0 ){
-				continue;
-			}
-			$file = substr($full_path,$dir_len);
-
-			$temp[$file] = $full_path;
-		}
-		return $temp;
 	}
 
 	/**

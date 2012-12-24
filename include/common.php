@@ -1385,7 +1385,19 @@ class common{
 		if( is_array($attr) ){
 			$attr = array_change_key_case($attr);
 			$has_title = isset($attr['title']);
-			if( isset($attr['name']) && $attr['name'] == 'postlink' ){
+			if( isset($attr['name']) && !isset($attr['data-cmd']) ){
+				$attr['data-cmd'] = $attr['name'];
+				unset($attr['name']);
+
+				/*
+				if( isset($attr['rel']) && !isset($attr['data-arg']) ){
+					$attr['data-arg'] = $attr['rel'];
+					unset($attr['rel']);
+				}
+				*/
+			}
+
+			if( isset($attr['data-cmd']) && $attr['data-cmd'] == 'postlink' ){
 				$attr['data-nonce'] = common::new_nonce('post',true);
 			}
 			foreach($attr as $attr_name => $attr_value){

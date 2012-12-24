@@ -220,10 +220,16 @@ $(function(){
 
 
 		//one function for all anchor clicks
-		$('a[name]').live('click',function(evt){
+		$(document).on('click', 'a',function(evt){
+
 				var $this = $(this);
-				var a = $this.attr('name');
-				var b = $this.attr('rel');
+				var cmd = $this.data('cmd');
+				var arg = '';
+				if( !cmd ){
+					// use of name and rel attributes is deprecated
+					cmd = $this.attr('name');
+					arg = $this.attr('rel');
+				}
 
 
 				if( $this.hasClass('gpconfirm') && !confirm(this.title) ){
@@ -231,30 +237,30 @@ $(function(){
 					return;
 				}
 
-				if( typeof(gplinks[a]) == 'function' ){
-					return gplinks[a].call(this,b,evt);
+				if( typeof(gplinks[cmd]) == 'function' ){
+					return gplinks[cmd].call(this,arg,evt);
 				}
 
-				switch(a){
+				switch(cmd){
 
 					case 'tabs':
 						tabs(this);
 					break;
 
 					case 'toggle_show':
-						$(b).toggle();
+						$(arg).toggle();
 					break;
 
 					case 'inline_box':
-						TransferValues(b,this);
+						TransferValues(arg,this);
 						$.fn.colorbox(
 							//$.extend(colorbox_options,{inline:true,href:b, open:true})
-							$gp.cboxSettings({inline:true,href:b, open:true})
+							$gp.cboxSettings({inline:true,href:arg, open:true})
 						);
 					break;
 					case 'iadmin_box': //inline admin box
-						TransferValues(b,this);
-						$gp.AdminBoxC($(b),'inline');
+						TransferValues(arg,this);
+						$gp.AdminBoxC($(arg),'inline');
 					break;
 
 					case 'postlink':
@@ -275,10 +281,10 @@ $(function(){
 					break;
 					case 'gallery':
 						var selector;
-						if( b == '' ){
+						if( arg == '' ){
 							selector = this;
 						}else{
-							selector = 'a[rel='+b+']';
+							selector = 'a[rel='+arg+']';
 						}
 						$(selector).colorbox(
 							$gp.cboxSettings({resize:true})

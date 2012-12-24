@@ -41,10 +41,10 @@ class special_display extends display{
 			$menu_permissions = admin_tools::HasPermission('Admin_Menu');
 			if( $menu_permissions ){
 				$page->admin_links[] = common::Link($this->title,$langmessage['rename/details'],'cmd=renameform',' name="gpajax" ');
-				$page->admin_links[] = common::Link('Admin_Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),' title="'.$langmessage['current_layout'].'" name="gpabox"');
+				$page->admin_links[] = common::Link('Admin_Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
 			}
 			if( admin_tools::HasPermission('Admin_User') ){
-				$page->admin_links[] = common::Link('Admin_Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),' title="'.$langmessage['permissions'].'" name="gpabox" ');
+				$page->admin_links[] = common::Link('Admin_Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
 			}
 		}
 

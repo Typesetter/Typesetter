@@ -302,7 +302,7 @@ class admin_uploaded{
 		echo '<div class="gp_edit_select_options">';
 		if( $dir_piece != '/' ){
 			$temp = common::DirName($dir_piece);
-			echo '<a href="?cmd=new_dir&dir='.rawurlencode($dir_piece).'" class="gp_gallery_folder" name="gpabox"><span class="add"></span>'.$langmessage['create_dir'].'</a>';
+			echo '<a href="?cmd=new_dir&dir='.rawurlencode($dir_piece).'" class="gp_gallery_folder" data-cmd="gpabox"><span class="add"></span>'.$langmessage['create_dir'].'</a>';
 			echo '<a class="gp_gallery_folder" name="gp_gallery_folder" rel="'.htmlspecialchars($temp).'"><span class="folder"></span>../</a>';
 		}
 

@@ -174,7 +174,7 @@ class admin_preferences extends admin_users{
 		echo '<b>';
 		echo $langmessage['see_also'];
 		echo '</b> ';
-		echo common::Link('Admin_Configuration',$langmessage['configuration'],'','name="gpabox"');
+		echo common::Link('Admin_Configuration',$langmessage['configuration'],'','data-cmd="gpabox"');
 		echo '</p>';
 
 		echo '</div>';

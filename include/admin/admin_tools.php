@@ -238,7 +238,7 @@ class admin_tools{
 			echo '<div class="toolbar cf">';
 				echo '<a class="toggle_panel" data-cmd="toggle_panel"></a>';
 				echo common::Link('Admin_Main','','','class="icon_admin_home"');
-				echo common::Link('special_gpsearch','','','class="icon_admin_search" name="gpabox"');
+				echo common::Link('special_gpsearch','','',array('class'=>'icon_admin_search','data-cmd'=>'gpabox'));
 				echo '<span class="extra admin_arrow_out"></span>';
 			echo '</div>';
 
@@ -512,7 +512,7 @@ class admin_tools{
 			admin_tools::GetFrequentlyUsed($in_panel);
 
 			echo '<li>';
-			echo common::Link('Admin_Preferences',$langmessage['Preferences'],'','name="gpabox"');
+			echo common::Link('Admin_Preferences',$langmessage['Preferences'],'',array('name'=>'gpabox'));
 			echo '</li>';
 
 			echo '<li>';
@@ -520,7 +520,7 @@ class admin_tools{
 			echo '</li>';
 
 			echo '<li>';
-			echo common::Link('Admin_About','About gpEasy','',' name="gpabox" ');
+			echo common::Link('Admin_About','About gpEasy','',array('name'=>'gpabox'));
 			echo '</li>';
 			echo '</ul>';
 			echo '</div>';
@@ -542,7 +542,7 @@ class admin_tools{
 			echo '<div class="toolbar">';
 				echo '<div class="right">';
 				echo '<span class="admin_arrow_out"></span>';
-				echo '<a class="docklink" name="ck_docklink"></a>';
+				echo '<a class="docklink" data-cmd="ck_docklink"></a>';
 				echo '</div>';
 			echo '</div>';
 
@@ -771,7 +771,7 @@ class admin_tools{
 			echo '<li>';
 
 			if( isset($info['popup']) && $info['popup'] == true ){
-				echo common::Link($script,$info['label'],'','name="gpabox"');
+				echo common::Link($script,$info['label'],'',array('name'=>'gpabox'));
 			}else{
 				echo common::Link($script,$info['label']);
 			}

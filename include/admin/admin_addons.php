@@ -482,7 +482,7 @@ class admin_addons extends admin_addon_install{
 					echo $config['addons'][$addon]['editable_text'];
 					echo '</td>';
 					echo '<td>';
-					echo common::Link('Admin_Theme_Content',$langmessage['edit'],'cmd=addontext&addon='.urlencode($addon),' title="'.urlencode($langmessage['editable_text']).'" name="gpabox" ');
+					echo common::Link('Admin_Theme_Content',$langmessage['edit'],'cmd=addontext&addon='.urlencode($addon),array('title'=>urlencode($langmessage['editable_text']),'data-cmd'=>'gpabox'));
 					echo '</td></tr>';
 
 
@@ -840,7 +840,7 @@ class admin_addons extends admin_addon_install{
 
 
 			echo ' &nbsp; ';
-			echo common::Link('Admin_Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.$folder,' name="gpabox"');
+			echo common::Link('Admin_Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.$folder,'data-cmd="gpabox"');
 
 			echo '</td>';
 			echo '<td>';

@@ -410,7 +410,7 @@ class admin_theme_content extends admin_addon_install{
 			if( $config['gpLayout'] == $layout ){
 				echo $langmessage['default'];
 			}elseif( !isset($_GET['show']) ){
-				echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),str_replace(' ','&nbsp;',$langmessage['make_default']),'cmd=makedefault',' name="gpabox" title="'.htmlspecialchars($langmessage['make_default']).'" ');
+				echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),str_replace(' ','&nbsp;',$langmessage['make_default']),'cmd=makedefault',array('data-cmd'=>'gpabox','title'=>$langmessage['make_default']));
 			}else{
 				echo common::Link('Admin_Theme_Content',str_replace(' ','&nbsp;',$langmessage['default']),'cmd=makedefault&layout_id='.rawurlencode($layout),' name="creq" title="'.htmlspecialchars($langmessage['make_default']).'" ');
 			}
@@ -639,10 +639,10 @@ class admin_theme_content extends admin_addon_install{
 		echo '<div><div class="dd_menu">';
 		echo '<a name="dd_menu">'.$langmessage['options'].'</a>';
 		echo '<div class="dd_list"><ul>';
-		echo '<li>'.common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['details'],'cmd=details','name="gpabox"').'</li>';
-		echo '<li>'.common::Link('Admin_Theme_Content/'.rawurlencode($layout),'CSS','cmd=css','name="gpabox"').'</li>';
+		echo '<li>'.common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['details'],'cmd=details','data-cmd="gpabox"').'</li>';
+		echo '<li>'.common::Link('Admin_Theme_Content/'.rawurlencode($layout),'CSS','cmd=css','data-cmd="gpabox"').'</li>';
 		//echo '<li>'.common::Link('Admin_Theme_Content',$langmessage['Copy'],'cmd=copy&layout='.rawurlencode($layout),' name="creq"').'</li>';
-		echo '<li>'.common::Link('Admin_Theme_Content',$langmessage['Copy'],'cmd=copy&layout='.rawurlencode($layout),' name="gpabox"').'</li>';
+		echo '<li>'.common::Link('Admin_Theme_Content',$langmessage['Copy'],'cmd=copy&layout='.rawurlencode($layout),'data-cmd="gpabox"').'</li>';
 		$attr = 'name="cnreq" class="gpconfirm" title="'.sprintf($langmessage['generic_delete_confirm'],$info['label']).'"';
 		echo '<li>'.common::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletelayout&layout_id='.rawurlencode($layout),$attr).'</li>';
 
@@ -1335,7 +1335,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '</div>';
 
 		echo '<div class="add_layout">';
-		echo common::Link('Admin_Theme_Content',$langmessage['use_this_theme'],'cmd=newlayout&theme='.rawurlencode($theme),'name="gpabox"');
+		echo common::Link('Admin_Theme_Content',$langmessage['use_this_theme'],'cmd=newlayout&theme='.rawurlencode($theme),'data-cmd="gpabox"');
 		echo '</div>';
 
 		echo '</div>';
@@ -1723,7 +1723,7 @@ class admin_theme_content extends admin_addon_install{
 					echo ' &nbsp; ';
 				}
 				$folder = $info['folder'];
-				echo common::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletetheme&folder='.rawurlencode($folder).'&label='.rawurlencode($theme_id),' name="gpabox"');
+				echo common::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletetheme&folder='.rawurlencode($folder).'&label='.rawurlencode($theme_id),'data-cmd="gpabox"');
 
 				if( isset($config['themes'][$folder]['order']) ){
 					echo ' &nbsp; <span>Order: '.$config['themes'][$folder]['order'].'</span>';
@@ -1767,10 +1767,10 @@ class admin_theme_content extends admin_addon_install{
 			echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['edit'],'',' title="'.htmlspecialchars($langmessage['Arrange Content']).'" ');
 			echo ' &nbsp; ';
 
-			echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['details'],'cmd=details&show=main',' name="gpabox"');
+			echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['details'],'cmd=details&show=main','data-cmd="gpabox"');
 			echo ' &nbsp; ';
 
-			echo common::Link('Admin_Theme_Content',$langmessage['Copy'],'cmd=copy&layout='.rawurlencode($layout),' name="gpabox"');
+			echo common::Link('Admin_Theme_Content',$langmessage['Copy'],'cmd=copy&layout='.rawurlencode($layout),'data-cmd="gpabox"');
 			echo ' &nbsp; ';
 
 			if( $config['gpLayout'] == $layout ){

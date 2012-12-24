@@ -86,7 +86,7 @@ class special_gpsearch{
 		$this->RunQuery();
 
 		if( common::LoggedIn() ){
-			echo common::Link('special_gpsearch','Configuration','cmd=config','name="gpabox"');
+			echo common::Link('special_gpsearch','Configuration','cmd=config','data-cmd="gpabox"');
 		}
 
 		echo '</div>';
@@ -203,7 +203,7 @@ class special_gpsearch{
 				}
 				$attr = '';
 				if( $this->gpabox ){
-					$attr = 'name="gpabox"';
+					$attr = 'data-cmd="gpabox"';
 				}
 				echo common::Link('special_gpsearch',($i+1),$query,$attr).' ';
 			}
@@ -235,7 +235,7 @@ class special_gpsearch{
 		if( !common::LoggedIn() ){
 			return false;
 		}
-		$page->admin_links[] = array('special_gpsearch','Configuration','cmd=config','name="gpabox"');
+		$page->admin_links[] = array('special_gpsearch','Configuration','cmd=config','data-cmd="gpabox"');
 		$cmd = common::GetCommand();
 
 		switch($cmd){

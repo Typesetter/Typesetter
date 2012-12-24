@@ -339,7 +339,7 @@ class gpOutput{
 			if( !$empty_container ){
 				$innerLinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['remove'],'cmd=rm_area&param='.$param,' name="creq"');
 			}
-			$innerLinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['insert'],'cmd=insert&param='.$param,' name="gpabox"');
+			$innerLinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['insert'],'cmd=insert&param='.$param,array('name'=>'gpabox'));
 			$innerLinks .= '</div>';
 			$innerLinks .= '</div>';
 
@@ -354,7 +354,7 @@ class gpOutput{
 				$class .=  ' editable_area';
 				$menu_marker = true;
 
-				$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=editlinks&layout='.urlencode($page->gpLayout).'&handle='.$param,' rel="links" name="gpabox" title="'.$label.'" ');
+				$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=editlinks&layout='.urlencode($page->gpLayout).'&handle='.$param,' data-cmd="gpabox" title="'.$label.'" ');
 				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 				echo $edit_link;
 				//echo $arrange_links;
@@ -365,7 +365,7 @@ class gpOutput{
 
 			}elseif( isset($info['key']) && ($info['key'] == 'CustomMenu') ){
 
-				$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=editcustom&layout='.urlencode($page->gpLayout).'&handle='.$param,' rel="links" name="gpabox" title="'.$langmessage['Links'].'" ');
+				$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=editcustom&layout='.urlencode($page->gpLayout).'&handle='.$param,' data-cmd="gpabox" title="'.$langmessage['Links'].'" ');
 				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 				echo $edit_link;
 				//echo $arrange_links;
@@ -1574,7 +1574,7 @@ class gpOutput{
 
 		$wrap = gpOutput::ShowEditLink('Admin_Theme_Content');
 		if( $wrap ){
-			gpOutput::$editlinks .= gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=edittext&key='.urlencode($text).'&return='.urlencode($page->title),' title="'.urlencode($text).'" name="gpabox" ');
+			gpOutput::$editlinks .= gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=edittext&key='.urlencode($text).'&return='.urlencode($page->title),' title="'.urlencode($text).'" data-cmd="gpabox" ');
 			echo '<div class="editable_area inner_size" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
 		}
 
@@ -1633,7 +1633,7 @@ class gpOutput{
 				$title = substr($title,0,20).'...'; //javscript may shorten it as well
 			}
 
-			gpOutput::$editlinks .= gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],$query,' title="'.$title.'" name="gpabox" ');
+			gpOutput::$editlinks .= gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],$query,' title="'.$title.'" data-cmd="gpabox" ');
 			$result .= '<span class="editable_area" id="ExtraEditArea'.$edit_index.'">';
 		}
 

@@ -443,7 +443,7 @@ class admin_menu_new extends admin_menu_tools{
 			}
 
 		}
-		echo '<span>'.common::Link('Admin_Menu','+ '.$langmessage['Add New Menu'],'cmd=newmenu',' name="gpabox"').'</span>';
+		echo '<span>'.common::Link('Admin_Menu','+ '.$langmessage['Add New Menu'],'cmd=newmenu','data-cmd="gpabox"').'</span>';
 		echo '</div>';
 
 		echo '<div>';
@@ -462,7 +462,7 @@ class admin_menu_new extends admin_menu_tools{
 			echo '<div>';
 			$label = $menus[$this->curr_menu_id];
 			echo '<b>'.$label.'</b>';
-			echo '<span>'.common::Link('Admin_Menu',$langmessage['rename'],'cmd=rename_menu_prompt&id='.$this->curr_menu_id,' name="gpabox"').'</span>';
+			echo '<span>'.common::Link('Admin_Menu',$langmessage['rename'],'cmd=rename_menu_prompt&id='.$this->curr_menu_id,'data-cmd="gpabox"').'</span>';
 			$title_attr = sprintf($langmessage['generic_delete_confirm'],'&quot;'.$label.'&quot;');
 			echo '<span>'.common::Link('Admin_Menu',$langmessage['delete'],'cmd=rm_menu&id='.$this->curr_menu_id,' name="creq" class="gpconfirm" title="'.$title_attr.'"').'</span>';
 
@@ -732,7 +732,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<span>';
 
 		$img = '<span class="menu_icon page_edit_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$langmessage['edit'],'cmd=edit_external&key=[key]',' title="'.$langmessage['edit'].'" name="gpabox"');
+		echo $this->Link('Admin_Menu',$img.$langmessage['edit'],'cmd=edit_external&key=[key]',array('title'=>$langmessage['edit'],'data-cmd'=>'gpabox'));
 
 		$img = '<span class="menu_icon cut_list_icon"></span>';
 		echo $this->Link('Admin_Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&key=[key]',' title="'.$langmessage['rm_from_menu'].'" name="menupost" class="gpconfirm"');
@@ -817,11 +817,11 @@ class admin_menu_new extends admin_menu_tools{
 		echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&title=[title]',' title="'.$langmessage['rename/details'].'" name="gpajax" ');
 
 		$img = '<span class="menu_icon copy_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&title=[title]',' title="'.$langmessage['Copy'].'" name="gpabox"');
+		echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&title=[title]',array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 
 		if( admin_tools::HasPermission('Admin_User') ){
 			$img = '<span class="menu_icon icon_user"></span>';
-			echo $this->Link('Admin_Users',$img.$langmessage['permissions'],'cmd=file_permissions&index=[key]',' title="'.$langmessage['permissions'].'" name="gpabox" ');
+			echo $this->Link('Admin_Users',$img.$langmessage['permissions'],'cmd=file_permissions&index=[key]',array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
 		}
 
 		$img = '<span class="menu_icon cut_list_icon"></span>';
@@ -842,14 +842,14 @@ class admin_menu_new extends admin_menu_tools{
 
 			//has_layout
 			$img = '<span class="layout_icon"></span>';
-			echo $this->Link('Admin_Menu',$img.'[layout_label]','cmd=layout&index=[key]',' title="'.$langmessage['layout'].'" name="gpabox" class="has_layout"');
+			echo $this->Link('Admin_Menu',$img.'[layout_label]','cmd=layout&index=[key]',' title="'.$langmessage['layout'].'" data-cmd="gpabox" class="has_layout"');
 
 			$img = '<span class="menu_icon undo_icon"></span>';
 			echo $this->Link('Admin_Menu',$img.$langmessage['restore'],'cmd=restorelayout&index=[key]',array('name'=>'postlink','title'=>$langmessage['restore'],'class'=>'has_layout'),'restore');
 
 			//no_layout
 			$img = '<span class="layout_icon"></span>';
-			echo $this->Link('Admin_Menu',$img.'[layout_label]','cmd=layout&index=[key]',' title="'.$langmessage['layout'].'" name="gpabox" class="no_layout"');
+			echo $this->Link('Admin_Menu',$img.'[layout_label]','cmd=layout&index=[key]',' title="'.$langmessage['layout'].'" data-cmd="gpabox" class="no_layout"');
 			echo '</span>';
 		}
 
@@ -899,17 +899,17 @@ class admin_menu_new extends admin_menu_tools{
 
 		$img = '<span class="menu_icon insert_before_icon"></span>';
 		$query = 'cmd=insert_before&insert_where=[key]';
-		echo $this->Link('Admin_Menu',$img.$langmessage['insert_before'],$query,' title="'.$langmessage['insert_before'].'" name="gpabox" ');
+		echo $this->Link('Admin_Menu',$img.$langmessage['insert_before'],$query,array('title'=>$langmessage['insert_before'],'data-cmd'=>'gpabox'));
 
 
 		$img = '<span class="menu_icon insert_after_icon"></span>';
 		$query = 'cmd=insert_after&insert_where=[key]';
-		echo $this->Link('Admin_Menu',$img.$langmessage['insert_after'],$query,' title="'.$langmessage['insert_after'].'" name="gpabox" ');
+		echo $this->Link('Admin_Menu',$img.$langmessage['insert_after'],$query,array('title'=>$langmessage['insert_after'],'data-cmd'=>'gpabox'));
 
 
 		$img = '<span class="menu_icon insert_after_icon"></span>';
 		$query = 'cmd=insert_child&insert_where=[key]';
-		echo $this->Link('Admin_Menu',$img.$langmessage['insert_child'],$query,' title="'.$langmessage['insert_child'].'" name="gpabox" class="insert_child" ');
+		echo $this->Link('Admin_Menu',$img.$langmessage['insert_child'],$query,array('title'=>$langmessage['insert_child'],'data-cmd'=>'gpabox','class'=>'insert_child'));
 		echo '</span>';
 	}
 
@@ -1029,13 +1029,13 @@ class admin_menu_new extends admin_menu_tools{
 				echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&title='.urlencode($title),' title="'.$langmessage['rename/details'].'" name="gpajax" ');
 
 				$img = '<span class="menu_icon copy_icon"></span>';
-				echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&title='.urlencode($title),' title="'.$langmessage['Copy'].'" name="gpabox"');
+				echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&title='.urlencode($title),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox');
 
 				$layout = admin_menu_tools::CurrentLayout($title_index);
 				$layout_info = $gpLayouts[$layout];
 
 				$img = '<span style="background-color:'.$layout_info['color'].';" class="layout_icon"></span>';
-				echo $this->Link('Admin_Menu',$img.$layout_info['label'],'cmd=layout&index='.urlencode($title_index),' title="'.$langmessage['layout'].'" name="gpabox"');
+				echo $this->Link('Admin_Menu',$img.$layout_info['label'],'cmd=layout&index='.urlencode($title_index),array('title'=>$langmessage['layout'],'data-cmd'=>'gpabox');
 
 				$is_special = common::SpecialOrAdmin($title);
 				if( !$is_special ){

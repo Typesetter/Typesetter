@@ -329,7 +329,7 @@ class admin_configuration{
 		echo '<b>';
 		echo $langmessage['see_also'];
 		echo '</b> ';
-		echo common::Link('Admin_Preferences',$langmessage['Preferences'],'','name="gpabox"');
+		echo common::Link('Admin_Preferences',$langmessage['Preferences'],'','data-cmd="gpabox"');
 		echo '</p>';
 
 		echo '</form>';

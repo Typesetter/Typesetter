@@ -36,16 +36,16 @@ class editing_page extends display{
 			$page->admin_links[] = common::Link($this->title,$langmessage['rename/details'],'cmd=renameform',' name="gpajax" ');
 
 			// Having the layout link here complicates things.. would need layout link for special pages
-			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),' title="'.$langmessage['current_layout'].'" name="gpabox"');
-			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['Copy'],'cmd=copypage&redir=redir&title='.urlencode($this->title),' title="'.$langmessage['Copy'].'" name="gpabox"');
+			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
+			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['Copy'],'cmd=copypage&redir=redir&title='.urlencode($this->title),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 		}
 
 		if( admin_tools::HasPermission('Admin_User') ){
-			$page->admin_links[] = common::Link('Admin_Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),' title="'.$langmessage['permissions'].'" name="gpabox" ');
+			$page->admin_links[] = common::Link('Admin_Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
 		}
 
 		if( $can_edit ){
-			$page->admin_links[] = common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',' title="'.$langmessage['Revision History'].'" name="gpabox" ');
+			$page->admin_links[] = common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 		}
 
 
@@ -768,7 +768,7 @@ class editing_page extends display{
 		$date = common::date($langmessage['strftime_datetime'],$time);
 		$message = sprintf($langmessage['viewing_revision'],$date);
 		$message .= ' <br/> '.common::Link($this->title,$langmessage['Restore this revision'],'cmd=use_revision&time='.$time,' name="cnreq"');
-		$message .= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',' title="'.$langmessage['Revision History'].'" name="gpabox" ');
+		$message .= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 		message( $message );
 	}
 
@@ -934,7 +934,7 @@ class editing_page extends display{
 					echo common::Link($this->title,$langmessage['move_up'],'cmd=move_up&section='.$section_key,' name="creq"','move_up'.$section_key);
 				}
 
-				echo common::Link($this->title,$langmessage['New Section'],'cmd=new_section&section='.$section_key,' name="gpabox"');
+				echo common::Link($this->title,$langmessage['New Section'],'cmd=new_section&section='.$section_key,array('data-cmd'=>'gpabox'));
 
 				$q = 'cmd=add_section&copy=copy&section='.$section_key.'&last_mod='.rawurlencode($this->fileModTime);
 				echo common::Link($this->title,$langmessage['Copy'],$q,' name="creq"');

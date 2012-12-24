@@ -230,7 +230,7 @@ class special_contact_gadget{
 
 				if( gpOutput::ShowEditLink('Admin_Theme_Content') ){
 					$query = 'cmd=edittext&key='.urlencode($key);
-					echo gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],$query,' title="'.$key.'" name="gpabox" ');
+					echo gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],$query,' title="'.$key.'" data-cmd="gpabox" ');
 					echo '<input type="submit" class="submit editable_area" id="ExtraEditArea'.$edit_index.'" name="aaa" value="'.$text.'" />';
 				}else{
 					echo '<input type="submit" class="submit" name="aaa" value="'.$text.'" />';

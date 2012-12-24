@@ -249,7 +249,7 @@ class admin_configuration{
 					$style = ' nodisplay';
 				}
 				echo '<h4 class="head'.$class.' one">';
-				echo '<a href="#" name="collapsible">';
+				echo '<a data-cmd="collapsible">';
 				if( isset($langmessage[$key]) ){
 					echo $langmessage[$key];
 				}else{

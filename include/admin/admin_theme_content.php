@@ -1679,7 +1679,7 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 		echo '<div class="collapsible">';
-		echo '<h4 class="head'.$class.'"><a name="collapsible">';
+		echo '<h4 class="head'.$class.'"><a data-cmd="collapsible">';
 		echo $langmessage['available_themes'];
 		echo ': '.$avail_count;
 		echo '</a></h4>';

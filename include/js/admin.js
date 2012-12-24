@@ -199,9 +199,7 @@ $(function(){
 			$gp.SaveGPUI();
 		}
 
-		gplinks.collapsible = function(rel,evt){
-			evt.preventDefault();
-
+		gplinks.collapsible = function(){
 			var area = $(this).parent();
 
 			//only show one

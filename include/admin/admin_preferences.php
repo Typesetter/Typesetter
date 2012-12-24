@@ -116,7 +116,7 @@ class admin_preferences extends admin_users{
 		echo '<form action="'.common::GetUrl('Admin_Preferences').'" method="post">';
 		echo '<div class="collapsible">';
 
-		echo '<h4 class="head"><a href="#" name="collapsible">'.$langmessage['general_settings'].'</a></h4>';
+		echo '<h4 class="head"><a data-cmd="collapsible">'.$langmessage['general_settings'].'</a></h4>';
 		echo '<div>';
 		echo '<table class="bordered configuration">';
 
@@ -133,7 +133,7 @@ class admin_preferences extends admin_users{
 		echo '</div>';
 
 
-		echo '<h4 class="head hidden"><a href="#" name="collapsible">'.$langmessage['change_password'].'</a></h4>';
+		echo '<h4 class="head hidden"><a data-cmd="collapsible">'.$langmessage['change_password'].'</a></h4>';
 
 		echo '<div class="nodisplay">';
 		echo '<table class="bordered configuration">';

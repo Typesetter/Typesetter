@@ -178,14 +178,14 @@ $(function(){
 		 * Handle clicks on headers within the main admin toolbar
 		 *
 		 */
-		gplinks.toplink = function(rel,evt){
-			evt.preventDefault();
+		gplinks.toplink = function(){
 
 			//must not be compact
+			var $this = $(this);
 			var panel = $('#simplepanel');
 			if( panel.hasClass('compact') ) return;
 
-			var b = $(this).next();
+			var b = $this.next();
 			var is_visible = b.is(':visible') && (b.height() > 0);
 
 			//hide visible areas
@@ -193,7 +193,7 @@ $(function(){
 			gpui['vis'] = false;
 
 			if( !is_visible ){
-				gpui['vis'] = rel;
+				gpui['vis'] = $this.data('arg');
 				b.slideDown(300);
 			}
 			$gp.SaveGPUI();

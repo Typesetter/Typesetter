@@ -236,7 +236,7 @@ class admin_tools{
 
 			//toolbar
 			echo '<div class="toolbar cf">';
-				echo '<a class="toggle_panel" name="toggle_panel" ></a>';
+				echo '<a class="toggle_panel" data-cmd="toggle_panel"></a>';
 				echo common::Link('Admin_Main','','','class="icon_admin_home"');
 				echo common::Link('special_gpsearch','','','class="icon_admin_search" name="gpabox"');
 				echo '<span class="extra admin_arrow_out"></span>';
@@ -269,7 +269,7 @@ class admin_tools{
 				echo '<span>'.$langmessage['Current Page'].'</span>';
 				echo '<div class="panelgroup2">';
 			}else{
-				echo '<a class="toplink icon_page_gear" name="toplink" rel="cur">';
+				echo '<a class="toplink icon_page_gear" data-cmd="toplink" data-arg="cur">';
 				echo '<span>'.$langmessage['Current Page'].'</span>';
 				echo '</a>';
 
@@ -327,7 +327,7 @@ class admin_tools{
 					echo '<span class="icon_page">'.$label.'</span>';
 					echo '<div class="panelgroup2">';
 				}else{
-					echo '<a class="toplink icon_page" name="toplink" rel="con">';
+					echo '<a class="toplink icon_page" data-cmd="toplink" data-arg="con">';
 					echo $label;
 					echo '</a>';
 
@@ -356,7 +356,7 @@ class admin_tools{
 					echo '<span class="icon_app">'.$label.'</span>';
 					echo '<div class="panelgroup2">';
 				}else{
-					echo '<a class="toplink icon_app" name="toplink" rel="app">';
+					echo '<a class="toplink icon_app" data-cmd="toplink" data-arg="app">';
 					echo $label;
 					echo '</a>';
 
@@ -387,7 +387,7 @@ class admin_tools{
 					echo '<span class="icon_plug">'.$label.'</span>';
 					echo '<div class="panelgroup2">';
 				}else{
-					echo '<a class="toplink icon_plug" name="toplink" rel="add">';
+					echo '<a class="toplink icon_plug" data-cmd="toplink" data-arg="add">';
 					echo $label;
 					echo '</a>';
 
@@ -416,7 +416,7 @@ class admin_tools{
 					echo '<span class="icon_cog">'.$label.'</span>';
 					echo '<div class="panelgroup2">';
 				}else{
-					echo '<a class="toplink icon_cog" name="toplink" rel="set">';
+					echo '<a class="toplink icon_cog" data-cmd="toplink" data-arg="set">';
 					echo $label;
 					echo '</a>';
 
@@ -445,7 +445,7 @@ class admin_tools{
 				echo '<span class="icon_rfrsh">'.$label.'</span>';
 				echo '<div class="panelgroup2">';
 			}else{
-				echo '<a class="toplink icon_rfrsh" name="toplink" rel="upd">';
+				echo '<a class="toplink icon_rfrsh" data-cmd="toplink" data-arg="upd">';
 				echo $label;
 				echo '</a>';
 
@@ -496,7 +496,7 @@ class admin_tools{
 				echo '<span class="icon_user">'.$label.'</span>';
 				echo '<div class="panelgroup2">';
 			}else{
-				echo '<a class="toplink icon_user" name="toplink" rel="use">';
+				echo '<a class="toplink icon_user" data-cmd="toplink" data-arg="use">';
 				echo $label;
 				echo '</a>';
 

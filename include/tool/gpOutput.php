@@ -111,9 +111,7 @@ class gpOutput{
 		$page->head_script .= 'var gp_bodyashtml = true;';
 
 		header('Content-Type: text/html; charset=utf-8');
-		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
-		echo '<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">';
-		echo '<head>';
+		echo '<!DOCTYPE html><html><head><meta charset="UTF-8" />';
 		gpOutput::getHead();
 		echo '</head>';
 		echo '<body class="gpbody">';
@@ -1711,6 +1709,7 @@ class gpOutput{
 		gpOutput::PrepGadgetContent();
 		echo '<!-- get_head_placeholder '.gp_random.' -->';
 	}
+
 	static function HeadContent(){
 		global $config, $page, $gp_head_content, $wbMessageBuffer;
 		$gp_head_content = '';
@@ -1770,7 +1769,13 @@ class gpOutput{
 	 * @static
 	 */
 	static function GetHead_TKD(){
-		global $config, $page;
+		global $config, $page, $gpLayouts;
+
+		//charset
+		if( $page->gpLayout && isset($gpLayouts[$page->gpLayout]) && isset($gpLayouts[$page->gpLayout]['doctype']) ){
+			echo $gpLayouts[$page->gpLayout]['doctype'];
+		}
+
 
 		//start keywords;
 		$keywords = array();
@@ -2145,19 +2150,11 @@ class gpOutput{
 		}
 
 
-
 		//replace the <head> placeholder with header content
 		$placeholder = '<!-- get_head_placeholder '.gp_random.' -->';
 		$pos = strpos($buffer,$placeholder);
 		if( $pos === false ){
 			return $buffer;
-		}
-
-		//get just the head of the buffer to see if we need to add charset
-		$head_pos = strpos($buffer,'</head');
-		if( $head_pos > 0 ){
-			$head = substr($buffer,0,$head_pos);
-			gpOutput::DoctypeMeta($head);
 		}
 
 		$buffer = substr_replace($buffer,$gp_head_content,$pos,strlen($placeholder));
@@ -2205,57 +2202,6 @@ class gpOutput{
 		}
 
 		return $buffer;
-	}
-
-
-	/**
-	 * Add appropriate meta charset if it hasn't already been set
-	 * Look at the beginning of the document to see what kind of doctype the current template is using
-	 * See http://www.w3schools.com/tags/tag_doctype.asp for description of different doctypes
-	 *
-	 */
-	static function DoctypeMeta($doc_start){
-		global $gp_head_content;
-
-		$doc_start = strtolower($doc_start);
-
-		//charset already set
-		if( strpos($doc_start,'charset=') !== false ){
-			return;
-		}
-
-
-		// html5
-		// spec states this should be "the first element child of the head element"
-		if( strpos($doc_start,'<!doctype html>') !== false ){
-			$gp_head_content = '<meta charset="UTF-8" />'.$gp_head_content;
-			return;
-		}
-
-		// loose
-		// <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-		if( strpos($doc_start,'loose.dtd') !== false ){
-			$gp_head_content = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'.$gp_head_content;
-			return;
-		}
-
-
-		// strict
-		// <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-		// <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-		// <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-		if( strpos($doc_start,'strict.dtd') !== false
-			|| strpos($doc_start,'xhtml11.dtd') !== false
-			){
-			$gp_head_content = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'.$gp_head_content;
-			return;
-		}
-
-		// else transitional
-		// <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-		// <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
-		// <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
-		$gp_head_content = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'.$gp_head_content;
 	}
 
 

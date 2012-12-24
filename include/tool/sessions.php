@@ -667,12 +667,9 @@ class gpsession{
 		//get just the head of the buffer to see if we need to add charset
 		$pos = strpos($contents,'</head');
 		unset($layout_info['doctype']);
-		unset($layout_info['html5']);
 		if( $pos > 0 ){
 			$head = substr($contents,0,$pos);
-			$head = strtolower($head);
-			$layout_info['html5'] = self::Html5Layout($head);
-			$layout_info['doctype'] = self::DoctypeMeta($layout_info['html5'],$head);
+			$layout_info['doctype'] = self::DoctypeMeta($head);
 		}
 		$layout_info['all_gadgets'] = $get_all_gadgets_called;
 
@@ -684,32 +681,21 @@ class gpsession{
 
 
 	/**
-	 * Determine if the current layout is html5
-	 *
-	 */
-	static function Html5Layout($doc_start){
-		if( strpos($doc_start,'<!doctype html>') !== false ){
-			return true;
-		}
-		return false;
-	}
-
-	/**
 	 * Determine if gpEasy needs to add a <meta charset> tag
 	 * Look at the beginning of the document to see what kind of doctype the current template is using
 	 * See http://www.w3schools.com/tags/tag_doctype.asp for description of different doctypes
 	 *
 	 */
-	static function DoctypeMeta($html5,$doc_start){
+	static function DoctypeMeta($doc_start){
 
 		//charset already set
-		if( strpos($doc_start,'charset=') !== false ){
+		if( stripos($doc_start,'charset=') !== false ){
 			return '';
 		}
 
 		// html5
 		// spec states this should be "the first element child of the head element"
-		if( $html5 ){
+		if( stripos($doc_start,'<!doctype html>') !== false ){
 			return '<meta charset="UTF-8" />';
 		}
 		return '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';

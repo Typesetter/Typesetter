@@ -55,7 +55,7 @@ class gpAjax{
 
 
 	/**
-	 * Handle HTTP responses made with $_REQUEST['req'] = json (when <a ... name="gpajax">)
+	 * Handle HTTP responses made with $_REQUEST['req'] = json (when <a ... data-cmd="gpajax">)
 	 * Sends JSON object to client
 	 *
 	 */

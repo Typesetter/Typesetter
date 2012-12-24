@@ -142,8 +142,6 @@ class gpOutput{
 
 		gpPlugin::ClearDataFolder();
 
-
-		gpOutput::AllGadgetSetting();
 		gpOutput::HeadContent();
 	}
 
@@ -599,36 +597,6 @@ class gpOutput{
 		$info = array();
 		$info['gpOutCmd'] = '';
 		gpOutput::CallOutput($info,'GetAllGadgets');
-	}
-
-	/**
-	 * Save whether or not the template is using GetAllGadgets()
-	 *
-	 */
-	static function AllGadgetSetting(){
-		global $get_all_gadgets_called, $page, $gpLayouts;
-
-		if( !common::LoggedIn() ){
-			return;
-		}
-
-		$layout = $page->gpLayout;
-		if( !isset($gpLayouts[$layout]) ){
-			return;
-		}
-
-		$layout_info =& $gpLayouts[$layout];
-
-		$current_setting = true;
-		if( isset($layout_info['all_gadgets']) && !$layout_info['all_gadgets'] ){
-			$current_setting = false;
-		}
-
-		if( $current_setting == $get_all_gadgets_called ){
-			return;
-		}
-		$layout_info['all_gadgets'] = $get_all_gadgets_called;
-		admin_tools::SavePagesPHP();
 	}
 
 

@@ -1056,8 +1056,7 @@ function RenamePrep(){
 		$('input.title_label').bind('keyup change',SyncSlug);
 		$('.label_synchronize a').click(RenameSetup);
 
-		gplinks.showmore = function(rel,evt){
-			evt.preventDefault();
+		gplinks.showmore = function(){
 			$('#gp_rename_table tr').show(500);
 			$(this).parent().remove();
 		}

@@ -186,7 +186,7 @@ class gp_rename{
 		echo '</p>';
 
 		echo '<p>';
-		if( $hidden_rows )  echo ' &nbsp; <a href="" name="showmore" >+ '.$langmessage['more_options'].'</a>';
+		if( $hidden_rows )  echo ' &nbsp; <a data-cmd="showmore" >+ '.$langmessage['more_options'].'</a>';
 		echo '</p>';
 
 		echo '<p>';

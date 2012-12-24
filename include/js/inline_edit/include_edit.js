@@ -105,8 +105,7 @@
 
 
 
-		gplinks.gp_include_preview = function(rel,evt){
-			evt.preventDefault();
+		gplinks.gp_include_preview = function(){
 
 			loading();
 

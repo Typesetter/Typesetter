@@ -1076,7 +1076,7 @@ class editing_page extends display{
 		echo '</div>';
 
 		echo '<div id="gp_option_area">';
-		echo '<a href="#" name="gp_include_preview" class="ckeditor_control full_width">Preview</a>';
+		echo '<a data-cmd="gp_include_preview" class="ckeditor_control full_width">Preview</a>';
 		echo '</div>';
 
 		echo '</form>';

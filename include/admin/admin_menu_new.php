@@ -452,7 +452,7 @@ class admin_menu_new extends admin_menu_tools{
 			if( $menu_id == $this->curr_menu_id ){
 			}else{
 			}
-			echo '<span>'.common::Link('Admin_Menu',$menu_label,'menu='.$menu_id,' name="creq"').'</span>';
+			echo '<span>'.common::Link('Admin_Menu',$menu_label,'menu='.$menu_id,'data-cmd="creq"').'</span>';
 		}
 		echo '</div>';
 
@@ -464,7 +464,7 @@ class admin_menu_new extends admin_menu_tools{
 			echo '<b>'.$label.'</b>';
 			echo '<span>'.common::Link('Admin_Menu',$langmessage['rename'],'cmd=rename_menu_prompt&id='.$this->curr_menu_id,'data-cmd="gpabox"').'</span>';
 			$title_attr = sprintf($langmessage['generic_delete_confirm'],'&quot;'.$label.'&quot;');
-			echo '<span>'.common::Link('Admin_Menu',$langmessage['delete'],'cmd=rm_menu&id='.$this->curr_menu_id,' name="creq" class="gpconfirm" title="'.$title_attr.'"').'</span>';
+			echo '<span>'.common::Link('Admin_Menu',$langmessage['delete'],'cmd=rm_menu&id='.$this->curr_menu_id,array('data-cmd'=>'creq','class'=>'gpconfirm','title'=>$title_attr)).'</span>';
 
 			echo '</div>';
 		}

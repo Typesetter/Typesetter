@@ -458,13 +458,13 @@ class admin_addons extends admin_addon_install{
 					echo str_replace('_',' ',$name);
 					echo '</td><td>';
 					if( isset($value['disabled']) ){
-						echo common::Link('Admin_Addons',$langmessage['enable'],'cmd=enable&addon='.$addon.'&gadget='.rawurlencode($name),' name="creq" ');
+						echo common::Link('Admin_Addons',$langmessage['enable'],'cmd=enable&addon='.$addon.'&gadget='.rawurlencode($name),'data-cmd="creq"');
 						echo ' - ';
 						echo '<b>'.$langmessage['disabled'].'</b>';
 					}else{
 						echo ' <b>'.$langmessage['enabled'].'</b>';
 						echo ' - ';
-						echo common::Link('Admin_Addons',$langmessage['disable'],'cmd=disable&addon='.$addon.'&gadget='.rawurlencode($name),' name="creq" ');
+						echo common::Link('Admin_Addons',$langmessage['disable'],'cmd=disable&addon='.$addon.'&gadget='.rawurlencode($name),'data-cmd="creq"');
 					}
 					echo '</td></tr>';
 				}

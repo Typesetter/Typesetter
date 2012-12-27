@@ -412,7 +412,7 @@ class admin_theme_content extends admin_addon_install{
 			}elseif( !isset($_GET['show']) ){
 				echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),str_replace(' ','&nbsp;',$langmessage['make_default']),'cmd=makedefault',array('data-cmd'=>'gpabox','title'=>$langmessage['make_default']));
 			}else{
-				echo common::Link('Admin_Theme_Content',str_replace(' ','&nbsp;',$langmessage['default']),'cmd=makedefault&layout_id='.rawurlencode($layout),' name="creq" title="'.htmlspecialchars($langmessage['make_default']).'" ');
+				echo common::Link('Admin_Theme_Content',str_replace(' ','&nbsp;',$langmessage['default']),'cmd=makedefault&layout_id='.rawurlencode($layout),array('data-cmd'=>'creq','title'=>htmlspecialchars($langmessage['make_default'])));
 			}
 
 			echo ' &nbsp; ';
@@ -453,9 +453,9 @@ class admin_theme_content extends admin_addon_install{
 		echo '</td><td>';
 		if( $handlers_count > 0 ){
 			if( !isset($_GET['show']) ){
-				echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['restore_defaults'],'cmd=restore',' name="creq" ');
+				echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['restore_defaults'],'cmd=restore','data-cmd="creq"');
 			}else{
-				echo common::Link('Admin_Theme_Content',$langmessage['restore_defaults'],'cmd=restore&layout='.rawurlencode($layout),' name="creq" ');
+				echo common::Link('Admin_Theme_Content',$langmessage['restore_defaults'],'cmd=restore&layout='.rawurlencode($layout),'data-cmd="creq"');
 			}
 		}else{
 			echo $langmessage['default'];
@@ -482,9 +482,9 @@ class admin_theme_content extends admin_addon_install{
 				echo '</td><td>';
 				if( isset($gadget_info[$gadget]) ){
 					if( !isset($_GET['show']) ){
-						echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['remove'],'cmd=rmgadget&gadget='.urlencode($gadget),' name="creq" ');
+						echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['remove'],'cmd=rmgadget&gadget='.urlencode($gadget),'data-cmd="creq"');
 					}else{
-						echo common::Link('Admin_Theme_Content',$langmessage['remove'],'cmd=rmgadget&gadget='.urlencode($gadget).'&layout='.rawurlencode($layout),' name="creq" ');
+						echo common::Link('Admin_Theme_Content',$langmessage['remove'],'cmd=rmgadget&gadget='.urlencode($gadget).'&layout='.rawurlencode($layout),'data-cmd="creq"');
 					}
 				}else{
 					echo $langmessage['disabled'];
@@ -1695,7 +1695,7 @@ class admin_theme_content extends admin_addon_install{
 			$comma = '';
 			foreach($info['colors'] as $color){
 				echo $comma;
-				echo common::Link('Admin_Theme_Content',$color,'cmd=preview&theme='.rawurlencode($theme_id.'/'.$color)); //,' name="creq" ');
+				echo common::Link('Admin_Theme_Content',$color,'cmd=preview&theme='.rawurlencode($theme_id.'/'.$color)); //,' data-cmd="creq" ');
 				$comma = ', ';
 			}
 
@@ -1776,7 +1776,7 @@ class admin_theme_content extends admin_addon_install{
 			if( $config['gpLayout'] == $layout ){
 				echo '<span>'.$langmessage['delete'].'</span>';
 			}else{
-				$attr = 'name="creq" class="gpconfirm" title="'.sprintf($langmessage['generic_delete_confirm'],$info['label']).'"';
+				$attr = array( 'data-cmd'=>'creq','class'=>'gpconfirm','title'=>sprintf($langmessage['generic_delete_confirm'],$info['label']) );
 				echo common::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletelayout&layout_id='.rawurlencode($layout),$attr);
 			}
 
@@ -1788,7 +1788,7 @@ class admin_theme_content extends admin_addon_install{
 			if( $config['gpLayout'] == $layout ){
 				echo '<b>'.$langmessage['default'].'</b>';
 			}else{
-				echo common::Link('Admin_Theme_Content',str_replace(' ','&nbsp;',$langmessage['default']),'cmd=makedefault&layout_id='.rawurlencode($layout),' name="creq" title="'.htmlspecialchars($langmessage['make_default']).'" ');
+				echo common::Link('Admin_Theme_Content',str_replace(' ','&nbsp;',$langmessage['default']),'cmd=makedefault&layout_id='.rawurlencode($layout),array('data-cmd'=>'creq','title'=>$langmessage['make_default']));
 			}
 			echo ' &nbsp; ';
 
@@ -2075,7 +2075,7 @@ class admin_theme_content extends admin_addon_install{
 					echo str_replace('_',' ',$extraName);
 					echo '</td>';
 					echo '<td class="add">';
-					echo common::Link($slug,$langmessage['add'],$addQuery.'&insert=Extra:'.$extraName,' name="creq" ');
+					echo common::Link($slug,$langmessage['add'],$addQuery.'&insert=Extra:'.$extraName,'data-cmd="creq"');
 					echo '</td>';
 					echo '</tr>';
 				}
@@ -2112,7 +2112,7 @@ class admin_theme_content extends admin_addon_install{
 							echo str_replace('_',' ',$gadget);
 							echo '</td>';
 							echo '<td class="add">';
-							echo common::Link($slug,$langmessage['add'],$addQuery.'&insert='.$gadget,' name="creq" ');
+							echo common::Link($slug,$langmessage['add'],$addQuery.'&insert='.$gadget,'data-cmd="creq"');
 							echo '</td>';
 							echo '</tr>';
 					}

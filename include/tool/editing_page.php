@@ -931,13 +931,13 @@ class editing_page extends display{
 				echo $link;
 
 				if( $section_num > 0 ){
-					echo common::Link($this->title,$langmessage['move_up'],'cmd=move_up&section='.$section_key,' name="creq"','move_up'.$section_key);
+					echo common::Link($this->title,$langmessage['move_up'],'cmd=move_up&section='.$section_key,' data-cmd="creq"','move_up'.$section_key);
 				}
 
 				echo common::Link($this->title,$langmessage['New Section'],'cmd=new_section&section='.$section_key,array('data-cmd'=>'gpabox'));
 
 				$q = 'cmd=add_section&copy=copy&section='.$section_key.'&last_mod='.rawurlencode($this->fileModTime);
-				echo common::Link($this->title,$langmessage['Copy'],$q,' name="creq"');
+				echo common::Link($this->title,$langmessage['Copy'],$q,' data-cmd="creq"');
 
 
 				//remove section link
@@ -947,7 +947,7 @@ class editing_page extends display{
 						$title_attr .= "\n\n".$langmessage['rm_section_confirm_deleting'];
 					}
 
-					echo common::Link($this->title,$langmessage['Remove Section'],'cmd=rm_section&section='.$section_key.'&total='.count($this->file_sections),' title="'.$title_attr.'" name="creq" class="gpconfirm"');
+					echo common::Link($this->title,$langmessage['Remove Section'],'cmd=rm_section&section='.$section_key.'&total='.count($this->file_sections), array('title'=>$title_attr,'data-cmd'=>'creq','class'=>'gpconfirm'));
 				}
 				echo '</span>';
 				gpOutput::$editlinks .= ob_get_clean();

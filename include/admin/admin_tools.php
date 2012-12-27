@@ -516,7 +516,7 @@ class admin_tools{
 			echo '</li>';
 
 			echo '<li>';
-			echo common::Link($page->title,$langmessage['logout'],'cmd=logout',' name="creq" ');
+			echo common::Link($page->title,$langmessage['logout'],'cmd=logout','data-cmd="creq"');
 			echo '</li>';
 
 			echo '<li>';

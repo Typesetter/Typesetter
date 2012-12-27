@@ -116,7 +116,7 @@ $(function(){
 		script = file_path+'&cmd=inlineedit&area_id='+id;
 		$.getScript( script,function(data){
 			if( data == 'false' ){
-				alert(gp_error);
+				alert($gp.error);
 				loaded();
 			}
 			//for debugging

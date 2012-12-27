@@ -1,5 +1,4 @@
 
-var gp_error = 'There was an error processing the last request. Please reload this page to continue.';
 
 
 /**
@@ -11,6 +10,7 @@ var $gp = {
 
 	links : {},
 	inputs : {},
+	error : 'There was an error processing the last request. Please reload this page to continue.',
 
 	/**
 	 * Handler for loading json content
@@ -273,7 +273,7 @@ $(function(){
 			return;
 		}
 
-		alert(gp_error);
+		alert($gp.error);
 	});
 
 

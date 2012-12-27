@@ -1,36 +1,14 @@
 
-
-var $gp = function() {
-		return this;
-	}
-$gp.links = {};
-$gp.inputs = {};
-$gp.inputs = {};
-
 var gp_error = 'There was an error processing the last request. Please reload this page to continue.';
 
-function createCookie(name,value,days) {
-	if (days) {
-		var date = new Date();
-		date.setTime(date.getTime()+(days*24*60*60*1000));
-		var expires = "; expires="+date.toGMTString();
-	}
-	else var expires = "";
-	document.cookie = name+"="+value+expires+"; path=/";
-}
 
 
 
-function eraseCookie(name) {
-	createCookie(name,"",-1);
-}
-
-
+/**
+ * @deprecated 3.6
+ */
 function jPrep(a,b){
-	b = typeof(b) == 'undefined' ? 'gpreq=json&jsoncallback=?' : b;
-	a = strip_from(a,'#');
-	a += ( a.indexOf('?') == -1 ) ? '?' : '&';
-	return a + b;
+	return $gp.jPrep(a,b);
 }
 
 function ajaxResponse(data,textStatus,jqXHR){
@@ -91,6 +69,165 @@ function ajaxResponse(data,textStatus,jqXHR){
 }
 
 
+/**
+ * $gp object
+ *
+ *
+ */
+var $gp = {
+
+	links : {},
+	inputs : {},
+
+	/**
+	 * Handler for loading json content
+	 *
+	 */
+	jGoTo : function(a){
+		loading();
+		a = $gp.jPrep(a);
+		$.getJSON(a,ajaxResponse);
+	},
+
+
+	/**
+	 *  Reload page with arguments (a) set as a cookie
+	 * 	if samepage is false, then it will take user to a.href
+	 *
+	 */
+	cGoTo : function(a,samepage){
+		var l;
+		if( samepage ){
+			l = window.location.href;
+		}else{
+			l = strip_from(a.href,'?');
+		}
+		var query = a.search + '&verified='+post_nonce;
+		$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
+		window.location = strip_from(l,'#');
+	},
+
+
+	/**
+	 * Post request to server
+	 *
+	 */
+	post : function(a,data){
+		loading();
+		var frm = $(a).closest('form');
+
+		var b = frm.serialize() + '&verified='+encodeURIComponent(post_nonce); //needed when $gp.post is called without an input click
+		if( a.nodeName == 'INPUT' ){
+			b += '&'+encodeURIComponent(a.name)+'='+encodeURIComponent(a.value);
+		}
+		if( data ){
+			b += '&'+data;
+		}
+
+		$.post(
+			$gp.jPrep(frm.attr('action')),
+			b,
+			ajaxResponse,
+			'json'
+			);
+		return false;
+	},
+
+
+	/**
+	 * POST a link to the server
+	 *
+	 */
+	post_link : function(lnk){
+		loading();
+		var $lnk = $(lnk);
+		var data = strip_to(lnk.search,'?')
+				+ '&gpreq=json&jsoncallback=?'
+				+ '&verified='+encodeURIComponent($lnk.data('nonce'))
+				;
+		$.post(
+			strip_from(lnk.href,'?'),
+			data,
+			ajaxResponse,
+			'json'
+			);
+	},
+
+
+	/**
+	 * 	Post content with gpEasy's verified value
+	 *  Arguments order is same as jQuery's $.post()
+	 *
+	 */
+	postC : function(url,data,callback,datatype){
+		callback = callback || ajaxResponse;
+		datatype = datatype || 'json';
+
+		if( typeof(data) == 'object' ){
+			data = jQuery.param(data,true);
+		}
+
+		data += '&verified='+encodeURIComponent(post_nonce);
+		if( datatype == 'json' ){
+			data += '&gpreq=json&jsoncallback=?';
+		}
+		$.post(
+			strip_from(url,'?'),
+			data,
+			callback,
+			datatype
+			);
+	},
+
+
+
+	/**
+	 * Return the current colorbox settings
+	 *
+	 */
+	cboxSettings : function(options){
+		options = options||{};
+		colorbox_lang = colorbox_lang||{};
+		return $.extend(colorbox_lang,{opacity:0.75,maxWidth:'90%',minWidth:300,minHeight:300,maxHeight:'90%'},options);
+	},
+
+	/**
+	 * Simple method for creating/erasing cookies
+	 */
+	Cookie : function(name,value,days) {
+		if (days) {
+			var date = new Date();
+			date.setTime(date.getTime()+(days*24*60*60*1000));
+			var expires = "; expires="+date.toGMTString();
+		}
+		else var expires = "";
+		document.cookie = name+"="+value+expires+"; path=/";
+	},
+
+
+	/**
+	 * Prepare a query for an ajax request
+	 *
+	 */
+	jPrep : function(query,args){
+		args = typeof(args) == 'undefined' ? 'gpreq=json&jsoncallback=?' : args;
+		query = strip_from(query,'#');
+		query += ( query.indexOf('?') == -1 ) ? '?' : '&';
+		return query + args;
+	},
+
+
+}
+
+
+
+
+
+/**
+ * Onload
+ *
+ *
+ */
 $(function(){
 
 	//add a class to the body
@@ -98,7 +235,7 @@ $(function(){
 	$('body').addClass('STCLASS');
 
 	//erase cookie_cmd
-	eraseCookie('cookie_cmd');
+	$gp.Cookie('cookie_cmd','',-1);
 
 
 	//general initiation
@@ -320,122 +457,6 @@ $(function(){
 
 	} /* end cinit() */
 
-
-	/*
-	AJAX w/ jQuery
-	*/
-
-
-
-	/*
-	 *
-	 * Public Functions
-	 *
-	 */
-
-
-	$gp.jGoTo = function(a){
-		loading();
-		a = jPrep(a);
-		$.getJSON(a,ajaxResponse);
-	}
-
-	/* Reload page with arguments (a) set as a cookie
-	 * 	if samepage is false, then it will take user to a.href
-	 */
-	$gp.cGoTo = function(a,samepage){
-		var l;
-		if( samepage ){
-			l = window.location.href;
-		}else{
-			l = strip_from(a.href,'?');
-		}
-		var query = a.search + '&verified='+post_nonce;
-		createCookie('cookie_cmd',encodeURIComponent(query),1);
-		window.location = strip_from(l,'#');
-	}
-
-	$gp.post = function(a,data){
-		loading();
-		var frm = $(a).closest('form');
-
-		var b = frm.serialize() + '&verified='+encodeURIComponent(post_nonce); //needed when $gp.post is called without an input click
-		if( a.nodeName == 'INPUT' ){
-			b += '&'+encodeURIComponent(a.name)+'='+encodeURIComponent(a.value);
-		}
-		if( data ){
-			b += '&'+data;
-		}
-
-		$.post(
-			jPrep(frm.attr('action')),
-			b,
-			ajaxResponse,
-			'json'
-			);
-		return false;
-	}
-
-	/*
-	 * POST a link with gpEasy's verified values
-	 *
-	 */
-	$gp.post_link = function(lnk){
-		loading();
-		var $lnk = $(lnk);
-		var data = strip_to(lnk.search,'?')
-				+ '&gpreq=json&jsoncallback=?'
-				+ '&verified='+encodeURIComponent($lnk.data('nonce'))
-				;
-		$.post(
-			strip_from(lnk.href,'?'),
-			data,
-			ajaxResponse,
-			'json'
-			);
-	}
-
-	/**
-	 * 	Post content with gpEasy's verified value
-	 *  Arguments order is same as jQuery's $.post()
-	 *
-	 */
-	$gp.postC = function(url,data,callback,datatype){
-		callback = callback || ajaxResponse;
-		datatype = datatype || 'json';
-
-		if( typeof(data) == 'object' ){
-			data = jQuery.param(data,true);
-		}
-
-		data += '&verified='+encodeURIComponent(post_nonce);
-		if( datatype == 'json' ){
-			data += '&gpreq=json&jsoncallback=?';
-		}
-		$.post(
-			strip_from(url,'?'),
-			data,
-			callback,
-			datatype
-			);
-	}
-
-	/**
-	 * Return the current colorbox settings
-	 *
-	 */
-	$gp.cboxSettings = function(options){
-		options = options||{};
-		colorbox_lang = colorbox_lang||{};
-		return $.extend(colorbox_lang,{opacity:0.75,maxWidth:'90%',minWidth:300,minHeight:300,maxHeight:'90%'},options);
-	}
-
-	$gp.relevt = function(evt,rel){
-		if( typeof(rel) == 'object' ){
-			return rel;
-		}
-		return evt;
-	}
 
 	//init
 	cInit();

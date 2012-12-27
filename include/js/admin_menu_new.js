@@ -300,7 +300,7 @@
 		gpinputs.menupost = function(){
 			var a = getmenus();
 			var frm = $(this).closest('form');
-			frm.attr('action', jPrep(frm.attr('action'),a));
+			frm.attr('action', $gp.jPrep(frm.attr('action'),a));
 			$gp.post(this);
 			return false;
 		}

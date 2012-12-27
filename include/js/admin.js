@@ -221,7 +221,7 @@ $(function(){
 		gplinks.ajax_box = gplinks.admin_box = function(rel,evt){
 			evt.preventDefault();
 			loading();
-			var href = jPrep(this.href,'gpreq=flush');
+			var href = $gp.jPrep(this.href,'gpreq=flush');
 			$.get(href,'',function(data, textStatus, XMLHttpRequest){
 				$gp.AdminBoxC(data);
 				loaded();
@@ -236,7 +236,7 @@ $(function(){
 		gplinks.gpabox = function(rel,evt){
 			evt.preventDefault();
 			loading();
-			var href = jPrep(this.href)+'&gpx_content=gpabox';
+			var href = $gp.jPrep(this.href)+'&gpx_content=gpabox';
 			$.getJSON(href,ajaxResponse);
 		}
 
@@ -317,7 +317,7 @@ $(function(){
 		$gp.links.remote = function(evt){
 			evt.preventDefault();
 			var loc = strip_from(window.location.href,'#');
-			var src = jPrep(this.href,'gpreq=body');
+			var src = $gp.jPrep(this.href,'gpreq=body');
 
 			//can remote install
 			if( gpRem ){
@@ -848,7 +848,7 @@ $(function(){
 				sload();
 			}else{
 				$gp.Loaded[script] = true;
-				$.getScript( jPrep(script,'t='+t), function(){
+				$.getScript( $gp.jPrep(script,'t='+t), function(){
 					sload();
 				});
 			}

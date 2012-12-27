@@ -143,5 +143,5 @@
 			var data = gp_editor.getData();
 			return 'gpcontent='+encodeURIComponent(data);
 		}
-		loaded();
+		$gp.loaded();
 	}

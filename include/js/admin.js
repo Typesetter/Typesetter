@@ -114,7 +114,7 @@ $(function(){
 	 */
 	gplinks.inline_edit_generic = function(rel,evt){
 		evt.preventDefault();
-		loading();
+		$gp.loading();
 
 		//legacy inline editing support
 		//can also be used for development/troubleshooting
@@ -132,7 +132,7 @@ $(function(){
 		$.getScript( script,function(data){
 			if( data == 'false' ){
 				alert($gp.error);
-				loaded();
+				$gp.loaded();
 			}
 			//for debugging
 			//debug(data);
@@ -235,11 +235,11 @@ $(function(){
 		 */
 		gplinks.ajax_box = gplinks.admin_box = function(rel,evt){
 			evt.preventDefault();
-			loading();
+			$gp.loading();
 			var href = $gp.jPrep(this.href,'gpreq=flush');
 			$.get(href,'',function(data, textStatus, XMLHttpRequest){
 				$gp.AdminBoxC(data);
-				loaded();
+				$gp.loaded();
 			},'html');
 		}
 
@@ -250,7 +250,7 @@ $(function(){
 		 */
 		gplinks.gpabox = function(rel,evt){
 			evt.preventDefault();
-			loading();
+			$gp.loading();
 			var href = $gp.jPrep(this.href)+'&gpx_content=gpabox';
 			$.getJSON(href,$gp.Response);
 		}

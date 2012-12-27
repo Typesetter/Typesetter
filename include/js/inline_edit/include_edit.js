@@ -107,7 +107,7 @@
 
 		gplinks.gp_include_preview = function(){
 
-			loading();
+			$gp.loading();
 
 			var path = gp_editor.save_path;
 			path = strip_from(path,'#');

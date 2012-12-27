@@ -50,7 +50,7 @@
 				}
 
 				ShowInfo(div);
-				loading();
+				$gp.loading();
 
 				data = jQuery.param(data,true);
 				data += getmenus();

@@ -17,7 +17,7 @@ var $gp = {
 	 *
 	 */
 	jGoTo : function(a){
-		loading();
+		$gp.loading();
 		a = $gp.jPrep(a);
 		$.getJSON(a,$gp.Response);
 	},
@@ -46,7 +46,7 @@ var $gp = {
 	 *
 	 */
 	post : function(a,data){
-		loading();
+		$gp.loading();
 		var frm = $(a).closest('form');
 
 		var b = frm.serialize() + '&verified='+encodeURIComponent(post_nonce); //needed when $gp.post is called without an input click
@@ -72,7 +72,7 @@ var $gp = {
 	 *
 	 */
 	post_link : function(lnk){
-		loading();
+		$gp.loading();
 		var $lnk = $(lnk);
 		var data = strip_to(lnk.search,'?')
 				+ '&gpreq=json&jsoncallback=?'
@@ -209,7 +209,26 @@ var $gp = {
 		}
 
 
-		loaded();
+		$gp.loaded();
+	},
+
+
+	/**
+	 * Display an overlay to indicate loading process
+	 *
+	 */
+	loading : function(){
+		$('#loading1').css('zIndex',99000).fadeTo(1,.3)
+		.next().css('zIndex',99001).show();
+	},
+
+
+	/**
+	 * Hide loading overlay
+	 *
+	 */
+	loaded :function(){
+		$('#loading1, #loading2').clearQueue().hide();
 	}
 
 
@@ -240,7 +259,7 @@ $(function(){
 	 *
 	 */
 	$(document).ajaxError(function(event, XMLHttpRequest, ajaxOptions, thrownError){
-		loaded();
+		$gp.loaded();
 
 		//don't use this error handler if another one is set for the ajax request
 		if( typeof(ajaxOptions.error) == 'function' ){
@@ -438,13 +457,6 @@ $(function(){
 });
 
 
-function loading(){
-	$('#loading1').css('zIndex',99000).fadeTo(1,.3)
-	.next().css('zIndex',99001).show();
-}
-function loaded(){
-	$('#loading1, #loading2').clearQueue().hide();
-}
 
 function strip_to(a,b){
 	if( !a ) return a;
@@ -478,5 +490,11 @@ function jPrep(a,b){
 
 function ajaxResponse(data,textStatus,jqXHR){
 	return $gp.Response(data,textStatus,jqXHR);
+}
+function loading(){
+	$gp.loading();
+}
+function loaded(){
+	$gp.loaded();
 }
 

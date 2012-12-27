@@ -24,7 +24,7 @@
 					data.active = 'active';
 				}
 
-				loading();
+				$gp.loading();
 
 				data = jQuery.param(data,true);
 				$gp.postC( window.location.href , data);

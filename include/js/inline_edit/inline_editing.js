@@ -75,7 +75,7 @@ var gp_editing = {
 
 		if( !gp_editor ) return;
 
-		loading();
+		$gp.loading();
 
 		var path = gp_editor.save_path;
 		path = strip_from(path,'#');

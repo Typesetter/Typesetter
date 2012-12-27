@@ -12,7 +12,7 @@
 		var edited = false;
 		var save_obj = {};
 
-		loaded();
+		$gp.loaded();
 		gp_editing.editor_tools();
 
 		//$('#ckeditor_top').html('');

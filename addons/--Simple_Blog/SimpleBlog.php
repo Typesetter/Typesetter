@@ -1,7 +1,7 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-require_once('SimpleBlogCommon.php');
+gpPlugin::incl('SimpleBlogCommon.php','require_once');
 
 /**
  * Class for displaying the Special_Blog page and performing it's actions

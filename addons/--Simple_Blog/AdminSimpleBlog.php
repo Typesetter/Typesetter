@@ -2,7 +2,7 @@
 
 defined('is_running') or die('Not an entry point...');
 
-require_once('SimpleBlogCommon.php');
+gpPlugin::incl('SimpleBlogCommon.php','require_once');
 
 
 class AdminSimpleBlog extends SimpleBlogCommon{

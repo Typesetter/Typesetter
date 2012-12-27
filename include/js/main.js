@@ -445,9 +445,6 @@ function loading(){
 function loaded(){
 	$('#loading1, #loading2').clearQueue().hide();
 }
-function message(){
-	$('#loading1, #loading2').clearQueue().hide();
-}
 
 function strip_to(a,b){
 	if( !a ) return a;

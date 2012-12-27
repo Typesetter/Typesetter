@@ -59,7 +59,7 @@ var gp_editing = {
 	 * Close the editor instance
 	 * Fired when the Close button is clicked
 	 */
-	close_editor:function(rel,evt){
+	close_editor:function(evt){
 		evt.preventDefault();
 
 		//reload the page so javascript elements are shown again
@@ -70,7 +70,7 @@ var gp_editing = {
 	 * Save Changes
 	 * Close after the save if 'Save & Close' was clicked
 	 */
-	save_changes:function(rel,evt){
+	save_changes:function(evt,arg){
 		evt.preventDefault();
 
 		if( !gp_editor ) return;
@@ -93,8 +93,8 @@ var gp_editing = {
 
 			gp_editor.updateElement();
 			gp_editor.resetDirty();
-			if( rel == "ck_close" ){
-				gp_editing.close_editor(rel,evt);
+			if( arg == 'ck_close' ){
+				gp_editing.close_editor(evt);
 			}
 		}
 
@@ -183,8 +183,8 @@ var gp_editing = {
 
 }
 
-gplinks.ck_close = gp_editing.close_editor;
-gplinks.ck_save = gp_editing.save_changes;
+$gp.links.ck_close = gp_editing.close_editor;
+$gp.links.ck_save = gp_editing.save_changes;
 
 gplinks.ck_docklink = function(rel,evt){
 	gpui.ckd = !gpui.ckd;

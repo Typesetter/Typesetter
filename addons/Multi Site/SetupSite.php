@@ -619,7 +619,7 @@ class SetupSite{
 		//echo common::Link_Admin('Admin_Site_Setup',$langmessage['uninstall'],'cmd=uninstall&site='.urlencode($site),' name="gpajax"');
 
 		$title = sprintf($langmessage['generic_delete_confirm'],' &quot;'.htmlspecialchars($site).'&quot; ');
-		echo common::Link_Admin('Admin_Site_Setup',$langmessage['uninstall'],'cmd=uninstall&site='.urlencode($site),' name="postlink" class="gpconfirm" title="'.$title.'"');
+		echo common::Link_Admin('Admin_Site_Setup',$langmessage['uninstall'],'cmd=uninstall&site='.urlencode($site),array('name'=>'postlink','class'=>'gpconfirm','title'=>$title));
 
 		echo '</td>';
 		echo '</tr>';

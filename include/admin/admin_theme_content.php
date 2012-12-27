@@ -637,7 +637,7 @@ class admin_theme_content extends admin_addon_install{
 	function LayoutOptions($layout,$info){
 		global $langmessage;
 		echo '<div><div class="dd_menu">';
-		echo '<a name="dd_menu">'.$langmessage['options'].'</a>';
+		echo '<a data-cmd="dd_menu">'.$langmessage['options'].'</a>';
 		echo '<div class="dd_list"><ul>';
 		echo '<li>'.common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['details'],'cmd=details','data-cmd="gpabox"').'</li>';
 		echo '<li>'.common::Link('Admin_Theme_Content/'.rawurlencode($layout),'CSS','cmd=css','data-cmd="gpabox"').'</li>';
@@ -664,7 +664,7 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 		echo '<div><div class="dd_menu">';
-		echo '<a name="dd_menu">'.$display.'</a>';
+		echo '<a data-cmd="dd_menu">'.$display.'</a>';
 
 		echo '<div class="dd_list"><ul>';
 		foreach($gpLayouts as $layout => $info){
@@ -699,7 +699,7 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 		echo '<div class="dd_menu">';
-		echo '<a name="dd_menu">'.$display.'</a>';
+		echo '<a data-cmd="dd_menu">'.$display.'</a>';
 
 		echo '<div class="dd_list"><ul>';
 		foreach($themes as $theme_id => $info){

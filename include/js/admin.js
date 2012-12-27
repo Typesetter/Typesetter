@@ -287,8 +287,8 @@ $(function(){
 		/**
 		 * Close gp_admin_box
 		 */
-		$gp.CloseAdminBox = function(evt1,evt){
-			if( evt ) evt.preventDefault();
+		$gp.CloseAdminBox = function(evt){
+			evt.preventDefault();
 			$('#gp_admin_box1').fadeOut();
 			$('#gp_admin_box').fadeOut(300,function(){
 
@@ -365,7 +365,7 @@ $(function(){
 		 * Drop down menus
 		 *
 		 */
-		gplinks.dd_menu = function(rel,evt){
+		$gp.links.dd_menu = function(evt){
 
 			evt.preventDefault();
 			$('.messages').detach(); //remove messages since we can't set the z-index properly

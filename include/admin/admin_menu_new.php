@@ -814,7 +814,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<a href="[url]" class="view_edit_link">'.$img.htmlspecialchars($langmessage['view/edit_page']).'</a>';
 
 		$img = '<span class="menu_icon page_edit_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&title=[title]',' title="'.$langmessage['rename/details'].'" name="gpajax" ');
+		echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&title=[title]',array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
 
 		$img = '<span class="menu_icon copy_icon"></span>';
 		echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&title=[title]',array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
@@ -988,11 +988,11 @@ class admin_menu_new extends admin_menu_tools{
 				if( $i == $this->search_page ){
 					$class = ' class="current"';
 				}
-				echo $this->Link('Admin_Menu',($i+1),'page='.$i,'name="gpajax"'.$class);
+				echo $this->Link('Admin_Menu',($i+1),'page='.$i,'data-cmd="gpajax"'.$class);
 			}
 		}
 
-		echo $this->Link('Admin_Menu',$langmessage['create_new_file'],'cmd=add_hidden',' title="'.$langmessage['create_new_file'].'" name="gpajax"');
+		echo $this->Link('Admin_Menu',$langmessage['create_new_file'],'cmd=add_hidden',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpajax'));
 		echo '</div>';
 		$links = ob_get_clean();
 
@@ -1026,7 +1026,7 @@ class admin_menu_new extends admin_menu_tools{
 				echo '<div>';
 				echo '<b>Options:</b>';
 				$img = '<span class="menu_icon page_edit_icon"></span>';
-				echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&title='.urlencode($title),' title="'.$langmessage['rename/details'].'" name="gpajax" ');
+				echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&title='.urlencode($title),array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
 
 				$img = '<span class="menu_icon copy_icon"></span>';
 				echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&title='.urlencode($title),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));

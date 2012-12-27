@@ -781,7 +781,7 @@ class admin_tools{
 			switch($script){
 				case 'Admin_Menu':
 					echo '<li>';
-					echo common::Link('Admin_Menu','+ '.$langmessage['create_new_file'],'cmd=add_hidden&redir=redir',' title="'.$langmessage['create_new_file'].'" name="gpajax"');
+					echo common::Link('Admin_Menu','+ '.$langmessage['create_new_file'],'cmd=add_hidden&redir=redir',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpajax'));
 					echo '</li>';
 				break;
 			}

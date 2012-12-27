@@ -423,7 +423,7 @@ class admin_uploaded{
 				. '<a href="'.$file_url.'" data-cmd="gp_gallery_add" '.$size.'>'
 				. $thumb
 				. '</a>'
-				. common::Link('Admin_Uploaded'.$dir_piece,'',$query_string,' class="delete gpconfirm" name="gpajax" title="'.$langmessage['delete_confirm'].'"','delete')
+				. common::Link('Admin_Uploaded'.$dir_piece,'',$query_string,array('class'=>'delete gpconfirm','data-cmd'=>'gpajax','title'=>$langmessage['delete_confirm']),'delete')
 				. '</span>';
 	}
 

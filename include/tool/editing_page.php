@@ -33,7 +33,7 @@ class editing_page extends display{
 		$menu_permissions = admin_tools::HasPermission('Admin_Menu');
 		$can_edit = admin_tools::CanEdit($this->gp_index);
 		if( $menu_permissions ){
-			$page->admin_links[] = common::Link($this->title,$langmessage['rename/details'],'cmd=renameform',' name="gpajax" ');
+			$page->admin_links[] = common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
 
 			// Having the layout link here complicates things.. would need layout link for special pages
 			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));

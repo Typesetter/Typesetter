@@ -1892,10 +1892,10 @@ class admin_addon_install extends admin_addons_tool{
 
 		if( $search_version ){
 			echo '<b>'.$langmessage['On'].'</b> &nbsp; ';
-			echo common::Link($this->path_remote,$langmessage['Off'],$this->searchQuery.'&search_option=noversion',' name="gpajax"');
+			echo common::Link($this->path_remote,$langmessage['Off'],$this->searchQuery.'&search_option=noversion',' data-cmd="gpajax"');
 
 		}else{
-			echo common::Link($this->path_remote,$langmessage['On'],$this->searchQuery.'&search_option=version',' name="gpajax"');
+			echo common::Link($this->path_remote,$langmessage['On'],$this->searchQuery.'&search_option=version',' data-cmd="gpajax"');
 			echo ' &nbsp;  <b>'.$langmessage['Off'].'</b>';
 		}
 		echo '</li>';

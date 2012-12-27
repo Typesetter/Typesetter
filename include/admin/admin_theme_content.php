@@ -3266,7 +3266,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '<div class="gp_edit_select_options">';
 
 		foreach($themes as $theme_id => $info){
-			echo common::Link('Admin_Theme_Content/'.rawurlencode($this->curr_layout),'<span class="folder"></span>'.$info['name'],'cmd=theme_images&theme='.rawurlencode($theme_id),' name="gpajax" class="gp_gallery_folder" ');
+			echo common::Link('Admin_Theme_Content/'.rawurlencode($this->curr_layout),'<span class="folder"></span>'.$info['name'],'cmd=theme_images&theme='.rawurlencode($theme_id),' data-cmd="gpajax" class="gp_gallery_folder" ');
 		}
 		echo '</div>';
 		echo '</div>';
@@ -3340,7 +3340,7 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '<div id="gp_source_options">';
 		echo '<b>'.$langmessage['Select Image'].'</b>';
-		echo common::Link('Admin_Theme_Content/'.rawurlencode($this->curr_layout),$langmessage['Theme Images'],'cmd=theme_images',' name="gpajax" class="ckeditor_control half_width" ');
+		echo common::Link('Admin_Theme_Content/'.rawurlencode($this->curr_layout),$langmessage['Theme Images'],'cmd=theme_images',' data-cmd="gpajax" class="ckeditor_control half_width" ');
 		echo '<a class="ckeditor_control half_width" data-cmd="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
 		echo '</div>';
 

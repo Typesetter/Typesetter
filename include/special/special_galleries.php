@@ -160,7 +160,7 @@ class special_galleries{
 			$thumbPath = common::GetDir('/data/_uploaded'.$icon);
 		}
 		echo '<div class="draggable">';
-		echo common::Link('Special_Galleries',htmlspecialchars($title),'cmd=drag&to=%s&title='.urlencode($title),' name="gpajax" class="dragdroplink nodisplay" ');
+		echo common::Link('Special_Galleries',htmlspecialchars($title),'cmd=drag&to=%s&title='.urlencode($title),'data-cmd="gpajax" class="dragdroplink nodisplay" ');
 		echo '<input type="hidden" name="title" value="'.htmlspecialchars($title).'" class="title" />';
 
 		echo ' <img src="'.$thumbPath.'" alt="" class="icon"/>';

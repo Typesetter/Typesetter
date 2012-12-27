@@ -928,7 +928,7 @@ class common{
 		gpOutput::Prep();
 		switch(self::RequestType()){
 
-			// <a name="admin_box">
+			// <a data-cmd="admin_box">
 			case 'flush':
 				gpOutput::Flush();
 			break;
@@ -940,7 +940,7 @@ class common{
 				gpOutput::BodyAsHTML();
 			break;
 
-			// <a name="gpajax">
+			// <a data-cmd="gpajax">
 			case 'json':
 				common::CheckTheme();
 				includeFile('tool/ajax.php');

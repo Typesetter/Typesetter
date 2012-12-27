@@ -503,7 +503,7 @@ $(function(){
 			if( save ) $gp.SaveGPUI();
 		}
 
-		gplinks.gp_docklink = function(rel,evt){
+		$gp.links.gp_docklink = function(evt){
 			evt.preventDefault();
 			gpui.pdock = !gpui.pdock;
 			Put(true);

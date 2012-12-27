@@ -621,7 +621,7 @@ class admin_tools{
 		echo '<div id="admincontent_panel" class="toolbar">';
 		echo '<div class="right">';
 		echo '<span class="admin_arrow_out"></span>';
-		echo '<a class="docklink" name="gp_docklink"></a>';
+		echo '<a class="docklink" data-cmd="gp_docklink"></a>';
 		echo '</div>';
 
 		reset($gp_menu);

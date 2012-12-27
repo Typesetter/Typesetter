@@ -92,7 +92,7 @@
 		}
 
 
-		gplinks.menu_info = function(rel,evt){
+		$gp.links.menu_info = function(evt){
 			evt.preventDefault();
 			var $this = $(this).parent();
 
@@ -195,7 +195,7 @@
 		}
 
 		gplinks.expand_img = function(rel,evt){
-			gplinks.menu_info.call(this,rel,evt);
+			$gp.links.menu_info.call(this,evt);
 
 			$li = $(this).closest('li');
 			if( $li.hasClass('haschildren') ){

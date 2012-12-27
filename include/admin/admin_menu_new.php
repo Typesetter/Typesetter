@@ -643,7 +643,7 @@ class admin_menu_new extends admin_menu_tools{
 					echo $piece;
 					$curr_level++;
 					$piece = '<li class="missing_title"><div>'
-							.'<a href="#" class="label" name="menu_info">'
+							.'<a href="#" class="label" data-cmd="menu_info">'
 							.$langmessage['page_deleted']
 							.'</a>'
 							.'<p><b>'.$langmessage['page_deleted'].'</b></p>'
@@ -713,7 +713,7 @@ class admin_menu_new extends admin_menu_tools{
 			$data['title'] = substr($data['title'],0,30).'...';
 		}
 
-		echo '<a class="label sort external" name="menu_info" rel="'.str_replace('&','&amp;',$menu_key).'">';
+		echo '<a class="label sort external" data-cmd="menu_info" rel="'.str_replace('&','&amp;',$menu_key).'">';
 		echo common::LabelSpecialChars($menu_value['label']);
 		$this->MenuData($data);
 		echo '</a>';
@@ -788,7 +788,7 @@ class admin_menu_new extends admin_menu_tools{
 			$data['opts'] = $menu_options;
 		}
 
-		echo '<a class="label sort" name="menu_info" rel="'.str_replace('&','&amp;',$menu_key).'">';
+		echo '<a class="label sort" data-cmd="menu_info" rel="'.str_replace('&','&amp;',$menu_key).'">';
 		echo common::LabelSpecialChars($label);
 		$this->MenuData($data);
 		echo '</a>';

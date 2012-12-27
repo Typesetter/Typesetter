@@ -407,6 +407,25 @@ $(function(){
 		}
 
 
+		/**
+		 * A simple tab method for switching content area visibility
+		 *
+		 */
+		$gp.links.tabs = function(evt){
+			evt.preventDefault();
+			var $this = $(this);
+			$this.siblings('a').removeClass('selected').each(function(b,c){
+				if( c.hash ) $(c.hash).hide();
+			});
+
+			if( this.hash ){
+				$this.addClass('selected');
+				$(this.hash).show();
+			}
+		}
+
+
+
 	} /* AddgpLinks */
 
 

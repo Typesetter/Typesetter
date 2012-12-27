@@ -251,10 +251,6 @@ $(function(){
 
 				switch(cmd){
 
-					case 'tabs':
-						tabs(this);
-					break;
-
 					case 'toggle_show':
 						$(arg).toggle();
 					break;
@@ -441,7 +437,6 @@ $(function(){
 		return evt;
 	}
 
-
 	//init
 	cInit();
 	$('body').trigger('gpReady');
@@ -458,16 +453,6 @@ function loaded(){
 }
 function message(){
 	$('#loading1, #loading2').clearQueue().hide();
-}
-
-function tabs(a){
-	$(a).siblings('a').removeClass('selected').each(function(b,c){
-		if( c.hash ) $(c.hash).hide();
-	});
-
-	if( a.hash ){
-		$(a.hash).show().addClass('selected');
-	}
 }
 
 function strip_to(a,b){

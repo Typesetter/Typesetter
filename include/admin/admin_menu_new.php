@@ -1029,13 +1029,13 @@ class admin_menu_new extends admin_menu_tools{
 				echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&title='.urlencode($title),' title="'.$langmessage['rename/details'].'" name="gpajax" ');
 
 				$img = '<span class="menu_icon copy_icon"></span>';
-				echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&title='.urlencode($title),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox');
+				echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&title='.urlencode($title),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 
 				$layout = admin_menu_tools::CurrentLayout($title_index);
 				$layout_info = $gpLayouts[$layout];
 
 				$img = '<span style="background-color:'.$layout_info['color'].';" class="layout_icon"></span>';
-				echo $this->Link('Admin_Menu',$img.$layout_info['label'],'cmd=layout&index='.urlencode($title_index),array('title'=>$langmessage['layout'],'data-cmd'=>'gpabox');
+				echo $this->Link('Admin_Menu',$img.$layout_info['label'],'cmd=layout&index='.urlencode($title_index),array('title'=>$langmessage['layout'],'data-cmd'=>'gpabox'));
 
 				$is_special = common::SpecialOrAdmin($title);
 				if( !$is_special ){
@@ -1525,10 +1525,10 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<div class="inline_box">';
 
 			echo '<div class="layout_links">';
-				echo ' <a href="#gp_Insert_New" name="tabs" class="selected">'. $langmessage['new_file'] .'</a>';
-				echo ' <a href="#gp_Insert_Hidden" name="tabs">'. $langmessage['Available Pages'] .'</a>';
-				echo ' <a href="#gp_Insert_Deleted" name="tabs">'. $langmessage['restore_from_trash'] .'</a>';
-				echo ' <a href="#gp_Insert_External" name="tabs">'. $langmessage['External Link'] .'</a>';
+				echo ' <a href="#gp_Insert_New" data-cmd="tabs" class="selected">'. $langmessage['new_file'] .'</a>';
+				echo ' <a href="#gp_Insert_Hidden" data-cmd="tabs">'. $langmessage['Available Pages'] .'</a>';
+				echo ' <a href="#gp_Insert_Deleted" data-cmd="tabs">'. $langmessage['restore_from_trash'] .'</a>';
+				echo ' <a href="#gp_Insert_External" data-cmd="tabs">'. $langmessage['External Link'] .'</a>';
 			echo '</div>';
 
 			// Insert New

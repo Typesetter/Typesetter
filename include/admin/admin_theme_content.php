@@ -2037,13 +2037,13 @@ class admin_theme_content extends admin_addon_install{
 		echo '<div class="inline_box">';
 
 		echo '<div class="layout_links">';
-		echo '<a href="#layout_extra_content" class="selected" name="tabs">'. $langmessage['theme_content'] .'</a>';
+		echo '<a href="#layout_extra_content" class="selected" data-cmd="tabs">'. $langmessage['theme_content'] .'</a>';
 		if( $count_gadgets > 0 ){
-			echo ' <a href="#layout_gadgets" name="tabs">'. $langmessage['gadgets'] .'</a>';
+			echo ' <a href="#layout_gadgets" data-cmd="tabs">'. $langmessage['gadgets'] .'</a>';
 		}
-		echo ' <a href="#layout_menus" name="tabs">'. $langmessage['Link_Menus'] .'</a>';
+		echo ' <a href="#layout_menus" data-cmd="tabs">'. $langmessage['Link_Menus'] .'</a>';
 
-		echo ' <a href="#layout_custom" name="tabs">'. $langmessage['Custom Menu'] .'</a>';
+		echo ' <a href="#layout_custom" data-cmd="tabs">'. $langmessage['Custom Menu'] .'</a>';
 
 		echo '</div>';
 
@@ -2641,11 +2641,11 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '<div class="layout_links">';
 		if( $showCustom ){
-			echo ' <a href="#layout_menus" name="tabs">'. $langmessage['Link_Menus'] .'</a>';
-			echo ' <a href="#layout_custom" name="tabs" class="selected">'. $langmessage['Custom Menu'] .'</a>';
+			echo ' <a href="#layout_menus" data-cmd="tabs">'. $langmessage['Link_Menus'] .'</a>';
+			echo ' <a href="#layout_custom" data-cmd="tabs" class="selected">'. $langmessage['Custom Menu'] .'</a>';
 		}else{
-			echo ' <a href="#layout_menus" name="tabs" class="selected">'. $langmessage['Link_Menus'] .'</a>';
-			echo ' <a href="#layout_custom" name="tabs">'. $langmessage['Custom Menu'] .'</a>';
+			echo ' <a href="#layout_menus" data-cmd="tabs" class="selected">'. $langmessage['Link_Menus'] .'</a>';
+			echo ' <a href="#layout_custom" data-cmd="tabs">'. $langmessage['Custom Menu'] .'</a>';
 		}
 		echo '</div>';
 

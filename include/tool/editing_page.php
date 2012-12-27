@@ -975,7 +975,7 @@ class editing_page extends display{
 	 *
 	 * gallery editor uses this html to create the new gallery html
 		<li>
-			<a href="'.$imgPath.'" name="gallery" rel="gallery_gallery" title="'.htmlspecialchars($caption).'">
+			<a href="'.$imgPath.'" data-cmd="gallery" data-arg="gallery_gallery" title="'.htmlspecialchars($caption).'">
 			<img src="'.$thumbPath.'" height="100" width="100" alt=""/>
 			</a>
 			<div class="caption">

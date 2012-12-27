@@ -275,7 +275,7 @@ $(function(){
 						.css({'zIndex':'11001','left':left,'top': $win.scrollTop() })
 						.stop(true,true,true)
 						.fadeIn(400)
-						.html('<a class="gp_admin_box_close" name="admin_box_close"></a><div id="gp_admin_boxc" class="'+(context||'')+'" style="width:'+box_width+'px"></div>')
+						.html('<a class="gp_admin_box_close" data-cmd="admin_box_close"></a><div id="gp_admin_boxc" class="'+(context||'')+'" style="width:'+box_width+'px"></div>')
 						.find('#gp_admin_boxc')
 						.html(data);
 
@@ -597,21 +597,21 @@ $(function(){
 		var timeout = false,overlay,lnk_span=false,edit_area,highlight_box;
 
 		overlay = $gp.div('gp_edit_overlay');
-		overlay.bind('click',function(evt){
+		overlay.click(function(evt){
 
 			//if a link is clicked, prevent the overlay from being shown right away
 			var target = $(evt.target);
 			if( target.filter('a').length > 0 ){
-				if( target.attr('name') == 'gp_overlay_close' ){
+				if( target.hasClass('gp_overlay_close') ){
 					evt.preventDefault();
 				}
 				if( edit_area) edit_area.addClass('gp_no_overlay');
 			}
 			HideOverlay();
 
-		}).bind('mouseleave',function(evt){
+		}).mouseleave(function(evt){
 			StartOverlayHide();
-		}).bind('mouseenter',function(){
+		}).mouseenter(function(){
 			if( timeout ) window.clearTimeout(timeout);
 		});
 
@@ -744,23 +744,26 @@ $(function(){
 				.removeClass('ExtraEditLink')
 				;
 
-			var close_text = '<a class="gp_overlay_expand" name="gp_overlay_close"></a>';
-			lnk_span.html(close_text).unbind('mouseenter').one('mouseenter',function(){
-				if( edit_area.hasClass('gp_no_overlay') ){
-					return;
-				}
+			var close_text = '<a class="gp_overlay_expand"></a>';
+			lnk_span
+				.html(close_text)
+				.unbind('mouseenter')
+				.one('mouseenter',function(){
+					if( edit_area.hasClass('gp_no_overlay') ){
+						return;
+					}
 
-				lnk_span
-					.html(close_text)
-					.stop(true,true,true)
-					.show()
-					.append(edit_links)
-					.find('.gp_overlay_expand').attr('class','gp_overlay_close')
-					;
+					lnk_span
+						.html(close_text)
+						.stop(true,true,true)
+						.show()
+						.append(edit_links)
+						.find('.gp_overlay_expand').attr('class','gp_overlay_close')
+						;
 
-				//show the overlay
-				highlight_box.stop(true,true,true).show().delay(200).animate({'width':(loc.w+4),'height':(loc.h+5)});
-			});
+					//show the overlay
+					highlight_box.stop(true,true,true).show().delay(200).animate({'width':(loc.w+4),'height':(loc.h+5)});
+				});
 
 		}
 

@@ -236,7 +236,7 @@
 			form.find('.file').auto_upload({
 
 				start: function(name, settings){
-					settings['bar'] = $('<a name="gp_file_uploading">'+name+'</a>').appendTo('#gp_upload_queue');
+					settings['bar'] = $('<a data-cmd="gp_file_uploading">'+name+'</a>').appendTo('#gp_upload_queue');
 					return true;
 				},
 

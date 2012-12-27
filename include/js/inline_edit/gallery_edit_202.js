@@ -115,11 +115,10 @@
 			AddListeners();
 
 			function AddLink(div,name,img){
-				div.append('<a name="'+name+'"><img src="'+gpBase+'/include/imgs/blank.gif" height="16" width="16" class="'+img+'"/></a>');
+				div.append('<a data-cmd="'+name+'"><img src="'+gpBase+'/include/imgs/blank.gif" height="16" width="16" class="'+img+'"/></a>');
 			}
 
-			gplinks.gp_gallery_caption = function(rel,evt){
-				evt.preventDefault();
+			$gp.links.gp_gallery_caption = function(){
 				edit_links.hide();
 				var $li = $(current_image);
 				var caption = $li.find('.caption').html() || $li.find('a:first').attr('title'); //title attr for backwards compat
@@ -134,8 +133,7 @@
 				$gp.AdminBoxC(popup);
 			}
 
-			gplinks.gp_gallery_rm = function(rel,evt){
-				evt.preventDefault();
+			$gp.links.gp_gallery_rm = function(){
 				$(current_image).remove();
 				edit_links.hide(); //so that a new mouseover will happen
 			}
@@ -254,7 +252,7 @@
 			form.find('.file').auto_upload({
 
 				start: function(name, settings){
-					settings['bar'] = $('<a name="gp_file_uploading">'+name+'</a>').appendTo('#gp_upload_queue');
+					settings['bar'] = $('<a data-cmd="gp_file_uploading">'+name+'</a>').appendTo('#gp_upload_queue');
 					settings['holder'] = $('<li class="holder" style="display:none"></li>').appendTo(sortable_area);
 					return true;
 				},
@@ -298,7 +296,7 @@
 		}
 
 
-		gplinks.gp_file_uploading = function(rel,evt){
+		$gp.links.gp_file_uploading = function(){
 			var $this = $(this);
 			var remove = false;
 			if( $this.hasClass('failed') ){

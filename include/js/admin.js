@@ -49,6 +49,21 @@ $(function(){
 		return div;
 	}
 
+	//add return value to form
+	$('form').live('mousedown',function(e){
+		var $this = $(this);
+
+		if( $this.data('gpForms') == 'checked' ){
+			return;
+		}
+
+		if( typeof(this['return']) !== 'undefined' ){
+			this['return'].value = window.location; //set the return path
+		}
+
+		$this.data('gpForms','checked');
+	});
+
 
 	if( !isadmin ){
 		return;

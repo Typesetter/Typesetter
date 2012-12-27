@@ -277,22 +277,11 @@ $(function(){
 	});
 
 
-	//forms
-	$('form').live('mousedown',function(e){
-		var $this = $(this);
-
-		if( $this.data('gpForms') == 'checked' ){
-			return;
-		}
-
-		if( typeof(this['return']) !== 'undefined' ){
-			this['return'].value = window.location; //set the return path
-		}
-
-		$this.data('gpForms','checked');
-	});
-
-	$('input').live('click',function(evt){
+	/**
+	 * Handle clicks on forms
+	 *
+	 */
+	$(document).on('click', 'input',function(evt){
 
 		verify(this.form);
 		var $this = $(this);
@@ -328,7 +317,6 @@ $(function(){
 	function verify(a){
 		$(a).filter('[method=post]').append('<input type="hidden" name="verified" value="'+post_nonce+'" />');
 	}
-
 
 
 	//expanding menus
@@ -427,7 +415,11 @@ $(function(){
 		return false;
 	});
 
-	//assign values to the form based on hidden input elements
+
+	/**
+	 * Assign values to the form based on hidden input elements
+	 *
+	 */
 	function TransferValues(selector,lnk){
 
 		var c = $(selector).find('form').get(0);

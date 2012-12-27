@@ -2768,6 +2768,7 @@ class admin_theme_content extends admin_addon_install{
 			return;
 		}
 
+
 		$return = trim($_POST['return']);
 		if( strpos($return,'http') !== 0 ){
 			$return = common::GetUrl($return,'',false);

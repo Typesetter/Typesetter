@@ -237,7 +237,7 @@ $(function(){
 			evt.preventDefault();
 			loading();
 			var href = $gp.jPrep(this.href)+'&gpx_content=gpabox';
-			$.getJSON(href,ajaxResponse);
+			$.getJSON(href,$gp.Response);
 		}
 
 		gpinputs.gpabox = function(){

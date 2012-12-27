@@ -2,73 +2,6 @@
 var gp_error = 'There was an error processing the last request. Please reload this page to continue.';
 
 
-
-
-/**
- * @deprecated 3.6
- */
-function jPrep(a,b){
-	return $gp.jPrep(a,b);
-}
-
-function ajaxResponse(data,textStatus,jqXHR){
-
-	$('.messages').detach();
-
-	var cbox = false;
-	$.each(data,function(i,obj){
-
-		if( typeof(gpresponse[obj.DO]) == 'function' ){
-			gpresponse[obj.DO].call(this,obj,textStatus,jqXHR);
-			return;
-		}
-
-		switch(obj.DO){
-			case 'replace':
-				$(obj.SELECTOR).replaceWith(obj.CONTENT);
-			break;
-
-			case 'inner':
-				$(obj.SELECTOR).html(obj.CONTENT);
-			break;
-
-			case 'eval':
-				eval(obj.CONTENT);
-			break;
-
-			case 'renameprep':
-				RenamePrep();
-			break;
-
-			case 'admin_box_data':
-				cbox = $gp.AdminBoxC(obj.CONTENT);
-			break;
-
-			case 'messages':
-				$(obj.CONTENT).appendTo('body').show().css({'top':0});
-			break;
-
-			default:
-				//do nothing
-				//alert('nothing for: '+obj.DO);
-			break;
-		}
-	});
-
-	if( !cbox ){
-		try{
-			$gp.CloseAdminBox()
-		}catch(a){}
-		try{
-			$.fn.colorbox.close();
-		} catch(a){}
-	}
-
-
-	loaded();
-}
-
-
 /**
  * $gp object
  *
@@ -86,7 +19,7 @@ var $gp = {
 	jGoTo : function(a){
 		loading();
 		a = $gp.jPrep(a);
-		$.getJSON(a,ajaxResponse);
+		$.getJSON(a,$gp.Response);
 	},
 
 
@@ -127,7 +60,7 @@ var $gp = {
 		$.post(
 			$gp.jPrep(frm.attr('action')),
 			b,
-			ajaxResponse,
+			$gp.Response,
 			'json'
 			);
 		return false;
@@ -148,7 +81,7 @@ var $gp = {
 		$.post(
 			strip_from(lnk.href,'?'),
 			data,
-			ajaxResponse,
+			$gp.Response,
 			'json'
 			);
 	},
@@ -160,7 +93,7 @@ var $gp = {
 	 *
 	 */
 	postC : function(url,data,callback,datatype){
-		callback = callback || ajaxResponse;
+		callback = callback || $gp.Response;
 		datatype = datatype || 'json';
 
 		if( typeof(data) == 'object' ){
@@ -193,6 +126,7 @@ var $gp = {
 
 	/**
 	 * Simple method for creating/erasing cookies
+	 *
 	 */
 	Cookie : function(name,value,days) {
 		if (days) {
@@ -217,6 +151,69 @@ var $gp = {
 	},
 
 
+	/**
+	 * Handle ajax responses
+	 *
+	 */
+	Response : function(data,textStatus,jqXHR){
+
+		$('.messages').detach();
+
+		var cbox = false;
+		$.each(data,function(i,obj){
+
+			if( typeof(gpresponse[obj.DO]) == 'function' ){
+				gpresponse[obj.DO].call(this,obj,textStatus,jqXHR);
+				return;
+			}
+
+			switch(obj.DO){
+				case 'replace':
+					$(obj.SELECTOR).replaceWith(obj.CONTENT);
+				break;
+
+				case 'inner':
+					$(obj.SELECTOR).html(obj.CONTENT);
+				break;
+
+				case 'eval':
+					eval(obj.CONTENT);
+				break;
+
+				case 'renameprep':
+					RenamePrep();
+				break;
+
+				case 'admin_box_data':
+					cbox = $gp.AdminBoxC(obj.CONTENT);
+				break;
+
+				case 'messages':
+					$(obj.CONTENT).appendTo('body').show().css({'top':0});
+				break;
+
+				default:
+					//do nothing
+					//alert('nothing for: '+obj.DO);
+				break;
+			}
+		});
+
+		if( !cbox ){
+			try{
+				$gp.CloseAdminBox()
+			}catch(a){}
+			try{
+				$.fn.colorbox.close();
+			} catch(a){}
+		}
+
+
+		loaded();
+	}
+
+
+
 }
 
 
@@ -238,228 +235,212 @@ $(function(){
 	$gp.Cookie('cookie_cmd','',-1);
 
 
-	//general initiation
-	function cInit(){
+	/**
+	 *	Handle AJAX errors
+	 *
+	 */
+	$(document).ajaxError(function(event, XMLHttpRequest, ajaxOptions, thrownError){
+		loaded();
 
-		//
-		//	AJAX
-		//
-		$(document).ajaxError(function(event, XMLHttpRequest, ajaxOptions, thrownError){
-			loaded();
+		//don't use this error handler if another one is set for the ajax request
+		if( typeof(ajaxOptions.error) == 'function' ){
+			return;
+		}
+		if( thrownError == '' ){
+			return;
+		}
 
-			//don't use this error handler if another one is set for the ajax request
-			if( typeof(ajaxOptions.error) == 'function' ){
-				return;
+		if( typeof(debugjs) !== "undefined" ){
+
+			//collect some debug info
+			var debug_info = {
+				thrownError:thrownError,
+				text:XMLHttpRequest.responseText,
+				status:XMLHttpRequest.status,
+				statusText:XMLHttpRequest.statusText,
+				url:ajaxOptions.url,
+				type:ajaxOptions.type,
+				browser:$.param($.browser) //$.browser is deprecated and may be removed in future jquery releases
 			}
-			if( thrownError == '' ){
-				return;
-			}
-
-			if( typeof(debugjs) !== "undefined" ){
-
-				//collect some debug info
-				var debug_info = {
-					thrownError:thrownError,
-					text:XMLHttpRequest.responseText,
-					status:XMLHttpRequest.status,
-					statusText:XMLHttpRequest.statusText,
-					url:ajaxOptions.url,
-					type:ajaxOptions.type,
-					browser:$.param($.browser) //$.browser is deprecated and may be removed in future jquery releases
-				}
-				if( ajaxOptions.data ){
-					debug_info.data = ajaxOptions.data.substr(0,100);
-				}
-
-				debug( debug_info );
-				//LOGO( XMLHttpRequest );
-				//LOGO( event );
-				//alert('Error detected');
-				return;
+			if( ajaxOptions.data ){
+				debug_info.data = ajaxOptions.data.substr(0,100);
 			}
 
-			alert(gp_error);
-		});
+			debug( debug_info );
+			//LOGO( XMLHttpRequest );
+			//LOGO( event );
+			//alert('Error detected');
+			return;
+		}
 
-		//this will fire event if there's an error
-		//$(document).ajaxComplete( function(event, XMLHttpRequest, ajaxOptions){
-		//});
+		alert(gp_error);
+	});
+
+
+	//forms
+	$('form').live('mousedown',function(e){
+		var $this = $(this);
+
+		if( $this.data('gpForms') == 'checked' ){
+			return;
+		}
+
+		if( typeof(this['return']) !== 'undefined' ){
+			this['return'].value = window.location; //set the return path
+		}
+
+		$this.data('gpForms','checked');
+	});
+
+	$('input').live('click',function(evt){
+
+		verify(this.form);
+		var $this = $(this);
+
+		//get the first class
+		var a = strip_from(
+					$this.attr('class'),
+					' '
+				);
+
+		//put before switch() to allow overriding
+		if( typeof(gpinputs[a]) == 'function' ){
+			return gpinputs[a].call(this,evt,evt);//evt twice so the same function can be used for gplinks and gpinputs
+		}
+
+
+		switch(a){
+
+			case 'gppost':
+			case 'gpajax':
+			return $gp.post(this);
+		}
+
+		return true;
+	});
+
+	$('form').live('submit',function(evt){
+		verify(this);
+	});
+
+	//add a unique verifiable string to confirm posts are
+	//called twice because of bug in jquery 1.4.2 (live) and IE
+	function verify(a){
+		$(a).filter('[method=post]').append('<input type="hidden" name="verified" value="'+post_nonce+'" />');
+	}
 
 
 
-		//forms
-		$('form').live('mousedown',function(e){
+	//expanding menus
+	$('.expand_child').live('mouseenter',function(){
+		$(this).addClass('expand');
+		if( $(this).hasClass('simple_top') ){
+			$(this).addClass('simple_top_hover');
+		}
+	}).live('mouseleave',function(){
+		$(this).removeClass('expand').removeClass('simple_top_hover');
+	});
+
+
+	/**
+	 * Handle all clicks on <a> tags
+	 *
+	 */
+	$(document).on('click', 'a',function(evt){
+
 			var $this = $(this);
+			var cmd = $this.data('cmd');
+			var arg = $this.data('arg');
+			if( !cmd ){
+				// use of name and rel attributes is deprecated
+				cmd = $this.attr('name');
+				arg = $this.attr('rel');
+			}
 
-			if( $this.data('gpForms') == 'checked' ){
+
+			if( $this.hasClass('gpconfirm') && !confirm(this.title) ){
+				evt.preventDefault();
 				return;
 			}
 
-			if( typeof(this['return']) !== 'undefined' ){
-				this['return'].value = window.location; //set the return path
+			if( typeof($gp.links[cmd]) == 'function' ){
+				return $gp.links[cmd].call(this,evt,arg);
 			}
 
-			$this.data('gpForms','checked');
-		});
+			/* @deprectated 3.6 */
+			if( typeof(gplinks[cmd]) == 'function' ){
+				return gplinks[cmd].call(this,arg,evt);
+			}
 
-		$('input').live('click',function(evt){
+			switch(cmd){
 
-			verify(this.form);
-			var $this = $(this);
+				case 'toggle_show':
+					$(arg).toggle();
+				break;
 
-			//get the first class
-			var a = strip_from(
-						$this.attr('class'),
-						' '
+				case 'inline_box':
+					TransferValues(arg,this);
+					$.fn.colorbox(
+						//$.extend(colorbox_options,{inline:true,href:b, open:true})
+						$gp.cboxSettings({inline:true,href:arg, open:true})
 					);
+				break;
+				case 'iadmin_box': //inline admin box
+					TransferValues(arg,this);
+					$gp.AdminBoxC($(arg),'inline');
+				break;
 
-			//put before switch() to allow overriding
-			if( typeof(gpinputs[a]) == 'function' ){
-				return gpinputs[a].call(this,evt,evt);//evt twice so the same function can be used for gplinks and gpinputs
-			}
+				case 'postlink':
+					$gp.post_link(this);
+				break;
 
-
-			switch(a){
-
-				case 'gppost':
 				case 'gpajax':
-				return $gp.post(this);
-			}
-
-			return true;
-		});
-
-		//$('form[method=post]').live('submit',function(){
-		$('form').live('submit',function(evt){
-			//evt.preventDefault();
-			//var first_submit = $(this).find('input[type=submit]:first');
-			//$(this).find('input[type=submit]:first').click();
-			verify(this);
-		});
-
-		//add a unique verifiable string to confirm posts are
-		//called twice because of bug in jquery 1.4.2 (live) and IE
-		function verify(a){
-			$(a).filter('[method=post]').append('<input type="hidden" name="verified" value="'+post_nonce+'" />');
-		}
-
-
-
-		//expanding menus
-		$('.expand_child').live('mouseenter',function(){
-			$(this).addClass('expand');
-			if( $(this).hasClass('simple_top') ){
-				$(this).addClass('simple_top_hover');
-			}
-		}).live('mouseleave',function(){
-			$(this).removeClass('expand').removeClass('simple_top_hover');
-		});
-
-
-		/**
-		 * Handle all clicks on <a> tags
-		 *
-		 */
-		$(document).on('click', 'a',function(evt){
-
-				var $this = $(this);
-				var cmd = $this.data('cmd');
-				var arg = $this.data('arg');
-				if( !cmd ){
-					// use of name and rel attributes is deprecated
-					cmd = $this.attr('name');
-					arg = $this.attr('rel');
-				}
-
-
-				if( $this.hasClass('gpconfirm') && !confirm(this.title) ){
-					evt.preventDefault();
-					return;
-				}
-
-				if( typeof($gp.links[cmd]) == 'function' ){
-					return $gp.links[cmd].call(this,evt,arg);
-				}
-
-				/* @deprectated 3.6 */
-				if( typeof(gplinks[cmd]) == 'function' ){
-					return gplinks[cmd].call(this,arg,evt);
-				}
-
-				switch(cmd){
-
-					case 'toggle_show':
-						$(arg).toggle();
-					break;
-
-					case 'inline_box':
-						TransferValues(arg,this);
-						$.fn.colorbox(
-							//$.extend(colorbox_options,{inline:true,href:b, open:true})
-							$gp.cboxSettings({inline:true,href:arg, open:true})
-						);
-					break;
-					case 'iadmin_box': //inline admin box
-						TransferValues(arg,this);
-						$gp.AdminBoxC($(arg),'inline');
-					break;
-
-					case 'postlink':
-						$gp.post_link(this);
-					break;
-
-					case 'gpajax':
-						$gp.jGoTo(this.href);
-					break;
-					case 'creq':
-						$gp.cGoTo(this,true);
-					break;
-					case 'cnreq':
-						$gp.cGoTo(this,false);
-					break;
-					case 'close_message':
-						$this.closest('div').slideUp();
-					break;
-					case 'gallery':
-						var selector;
-						if( arg == '' ){
-							selector = this;
-						}else{
-							selector = 'a[rel='+arg+']';
-						}
-						$(selector).colorbox(
-							$gp.cboxSettings({resize:true})
-							);
-						$.fn.colorbox.launch(this);
-					break;
-
-					default:
-					return true;
-				}
-
-			evt.preventDefault();
-			return false;
-		});
-
-		//assign values to the form based on hidden input elements
-		function TransferValues(selector,lnk){
-
-			var c = $(selector).find('form').get(0);
-			if( c ){
-				$(lnk).find('input').each(function(i,j){
-					if( c[j.name] ){
-						c[j.name].value = j.value;
+					$gp.jGoTo(this.href);
+				break;
+				case 'creq':
+					$gp.cGoTo(this,true);
+				break;
+				case 'cnreq':
+					$gp.cGoTo(this,false);
+				break;
+				case 'close_message':
+					$this.closest('div').slideUp();
+				break;
+				case 'gallery':
+					var selector;
+					if( arg == '' ){
+						selector = this;
+					}else{
+						selector = 'a[rel='+arg+']';
 					}
-				});
+					$(selector).colorbox(
+						$gp.cboxSettings({resize:true})
+						);
+					$.fn.colorbox.launch(this);
+				break;
+
+				default:
+				return true;
 			}
+
+		evt.preventDefault();
+		return false;
+	});
+
+	//assign values to the form based on hidden input elements
+	function TransferValues(selector,lnk){
+
+		var c = $(selector).find('form').get(0);
+		if( c ){
+			$(lnk).find('input').each(function(i,j){
+				if( c[j.name] ){
+					c[j.name].value = j.value;
+				}
+			});
 		}
+	}
 
 
-	} /* end cinit() */
-
-
-	//init
-	cInit();
 	$('body').trigger('gpReady');
 
 });
@@ -494,4 +475,19 @@ function strip_from(a,b){
 	return a;
 }
 
+
+
+
+
+
+/**
+ * @deprecated 3.6
+ */
+function jPrep(a,b){
+	return $gp.jPrep(a,b);
+}
+
+function ajaxResponse(data,textStatus,jqXHR){
+	return $gp.Response(data,textStatus,jqXHR);
+}
 

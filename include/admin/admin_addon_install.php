@@ -1520,7 +1520,7 @@ class admin_addon_install extends admin_addons_tool{
 		//download failed and a message was sent
 		if( isset($full_result['headers']['x-error']) ){
 			echo '<p class="gp_notice">'.htmlspecialchars($full_result['headers']['x-error']).'</p>';
-			echo '<p>'.sprintf($langmessage['download_failed_xerror'],'href="'.$this->DetailUrl($_POST).'" name="remote"').'</p>';
+			echo '<p>'.sprintf($langmessage['download_failed_xerror'],'href="'.$this->DetailUrl($_POST).'" data-cmd="remote"').'</p>';
 			return false;
 		}
 
@@ -1903,7 +1903,7 @@ class admin_addon_install extends admin_addons_tool{
 	}
 
 	function DetailLink($row,$label = 'Details',$q = '',$attr=''){
-		echo '<a href="'.$this->DetailUrl($row,$q).'" name="remote" '.$attr.'>'.$label.'</a>';
+		echo '<a href="'.$this->DetailUrl($row,$q).'" data-cmd="remote" '.$attr.'>'.$label.'</a>';
 	}
 	function DetailUrl($row,$q=''){
 		$url = 'Themes';

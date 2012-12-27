@@ -306,14 +306,15 @@ $(function(){
 				$.fn.colorbox.close();
 			}
 		}
-		gplinks.admin_box_close = gpinputs.admin_box_close = $gp.CloseAdminBox;
+		$gp.links.admin_box_close = gpinputs.admin_box_close = $gp.CloseAdminBox;
 
 
 		/**
 		 * Remote Browse
+		 * @param object evt Event object
 		 *
 		 */
-		gplinks.remote = function(rel,evt){
+		$gp.links.remote = function(evt){
 			evt.preventDefault();
 			var loc = strip_from(window.location.href,'#');
 			var src = jPrep(this.href,'gpreq=body');

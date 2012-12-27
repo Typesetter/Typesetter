@@ -1,7 +1,12 @@
 
 
-var gpPublic;
-var $gp;
+var $gp = function() {
+		return this;
+	}
+$gp.links = {};
+$gp.inputs = {};
+$gp.inputs = {};
+
 var gp_error = 'There was an error processing the last request. Please reload this page to continue.';
 
 function createCookie(name,value,days) {
@@ -214,17 +219,15 @@ $(function(){
 		});
 
 
-		//
-		//live anchor clicks with name
-		//
-
-
-		//one function for all anchor clicks
+		/**
+		 * Handle all clicks on <a> tags
+		 *
+		 */
 		$(document).on('click', 'a',function(evt){
 
 				var $this = $(this);
 				var cmd = $this.data('cmd');
-				var arg = '';
+				var arg = false;
 				if( !cmd ){
 					// use of name and rel attributes is deprecated
 					cmd = $this.attr('name');
@@ -237,6 +240,11 @@ $(function(){
 					return;
 				}
 
+				if( typeof($gp.links[cmd]) == 'function' ){
+					return $gp.links[cmd].call(this,evt);
+				}
+
+				/* @deprectated 3.6 */
 				if( typeof(gplinks[cmd]) == 'function' ){
 					return gplinks[cmd].call(this,arg,evt);
 				}
@@ -329,9 +337,6 @@ $(function(){
 	 *
 	 */
 
-	gpPublic = $gp = function() {
-		return this;
-	}
 
 	$gp.jGoTo = function(a){
 		loading();
@@ -427,6 +432,13 @@ $(function(){
 		options = options||{};
 		colorbox_lang = colorbox_lang||{};
 		return $.extend(colorbox_lang,{opacity:0.75,maxWidth:'90%',minWidth:300,minHeight:300,maxHeight:'90%'},options);
+	}
+
+	$gp.relevt = function(evt,rel){
+		if( typeof(rel) == 'object' ){
+			return rel;
+		}
+		return evt;
 	}
 
 

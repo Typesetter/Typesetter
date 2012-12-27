@@ -833,7 +833,7 @@ class admin_addons extends admin_addon_install{
 
 			if( isset($info['id']) && isset($new_versions[$info['id']]) ){
 				echo ' &nbsp; ';
-				echo ' <a href="'.addon_browse_path.'/Plugins?id='.$info['id'].'" name="remote">';
+				echo ' <a href="'.addon_browse_path.'/Plugins?id='.$info['id'].'" data-cmd="remote">';
 				echo $langmessage['upgrade'].' (gpEasy.com)';
 				echo '</a>';
 			}

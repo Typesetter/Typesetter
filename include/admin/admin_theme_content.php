@@ -641,9 +641,9 @@ class admin_theme_content extends admin_addon_install{
 		echo '<div class="dd_list"><ul>';
 		echo '<li>'.common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['details'],'cmd=details','data-cmd="gpabox"').'</li>';
 		echo '<li>'.common::Link('Admin_Theme_Content/'.rawurlencode($layout),'CSS','cmd=css','data-cmd="gpabox"').'</li>';
-		//echo '<li>'.common::Link('Admin_Theme_Content',$langmessage['Copy'],'cmd=copy&layout='.rawurlencode($layout),' name="creq"').'</li>';
 		echo '<li>'.common::Link('Admin_Theme_Content',$langmessage['Copy'],'cmd=copy&layout='.rawurlencode($layout),'data-cmd="gpabox"').'</li>';
-		$attr = 'name="cnreq" class="gpconfirm" title="'.sprintf($langmessage['generic_delete_confirm'],$info['label']).'"';
+
+		$attr = array('data-cmd'=>'cnreq', 'class'=>'gpconfirm','title'=>sprintf($langmessage['generic_delete_confirm'],$info['label']));
 		echo '<li>'.common::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletelayout&layout_id='.rawurlencode($layout),$attr).'</li>';
 
 		echo '</ul></div>';

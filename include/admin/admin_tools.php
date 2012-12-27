@@ -512,7 +512,7 @@ class admin_tools{
 			admin_tools::GetFrequentlyUsed($in_panel);
 
 			echo '<li>';
-			echo common::Link('Admin_Preferences',$langmessage['Preferences'],'',array('name'=>'gpabox'));
+			echo common::Link('Admin_Preferences',$langmessage['Preferences'],'',array('data-cmd'=>'gpabox'));
 			echo '</li>';
 
 			echo '<li>';
@@ -520,7 +520,7 @@ class admin_tools{
 			echo '</li>';
 
 			echo '<li>';
-			echo common::Link('Admin_About','About gpEasy','',array('name'=>'gpabox'));
+			echo common::Link('Admin_About','About gpEasy','',array('data-cmd'=>'gpabox'));
 			echo '</li>';
 			echo '</ul>';
 			echo '</div>';
@@ -771,7 +771,7 @@ class admin_tools{
 			echo '<li>';
 
 			if( isset($info['popup']) && $info['popup'] == true ){
-				echo common::Link($script,$info['label'],'',array('name'=>'gpabox'));
+				echo common::Link($script,$info['label'],'',array('data-cmd'=>'gpabox'));
 			}else{
 				echo common::Link($script,$info['label']);
 			}

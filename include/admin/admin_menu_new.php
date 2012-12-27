@@ -439,7 +439,7 @@ class admin_menu_new extends admin_menu_tools{
 			if( $menu_id == $this->curr_menu_id ){
 				echo '<span>'.$menu_label.'</span>';
 			}else{
-				echo '<span>'.common::Link('Admin_Menu',$menu_label,'menu='.$menu_id,' name="cnreq"').'</span>';
+				echo '<span>'.common::Link('Admin_Menu',$menu_label,'menu='.$menu_id,' data-cmd="cnreq"').'</span>';
 			}
 
 		}
@@ -845,7 +845,7 @@ class admin_menu_new extends admin_menu_tools{
 			echo $this->Link('Admin_Menu',$img.'[layout_label]','cmd=layout&index=[key]',' title="'.$langmessage['layout'].'" data-cmd="gpabox" class="has_layout"');
 
 			$img = '<span class="menu_icon undo_icon"></span>';
-			echo $this->Link('Admin_Menu',$img.$langmessage['restore'],'cmd=restorelayout&index=[key]',array('name'=>'postlink','title'=>$langmessage['restore'],'class'=>'has_layout'),'restore');
+			echo $this->Link('Admin_Menu',$img.$langmessage['restore'],'cmd=restorelayout&index=[key]',array('data-cmd'=>'postlink','title'=>$langmessage['restore'],'class'=>'has_layout'),'restore');
 
 			//no_layout
 			$img = '<span class="layout_icon"></span>';

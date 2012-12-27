@@ -50,7 +50,7 @@ class editing_page extends display{
 
 
 		if( $menu_permissions ){
-			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['delete_file'],'cmd=trash_page&index='.urlencode($this->gp_index),array('name'=>'postlink','title'=>$langmessage['delete_page'],'class'=>'gpconfirm'));
+			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['delete_file'],'cmd=trash_page&index='.urlencode($this->gp_index),array('data-cmd'=>'postlink','title'=>$langmessage['delete_page'],'class'=>'gpconfirm'));
 
 		}
 
@@ -724,7 +724,7 @@ class editing_page extends display{
 				echo admin_tools::FormatBytes($size);
 			}
 			echo '</td><td>';
-			echo common::Link($this->title,$langmessage['preview'],'cmd=view_revision&time='.$time,' name="cnreq"');
+			echo common::Link($this->title,$langmessage['preview'],'cmd=view_revision&time='.$time,'data-cmd="cnreq"');
 			echo '</td></tr>';
 			$i++;
 		}
@@ -767,7 +767,7 @@ class editing_page extends display{
 
 		$date = common::date($langmessage['strftime_datetime'],$time);
 		$message = sprintf($langmessage['viewing_revision'],$date);
-		$message .= ' <br/> '.common::Link($this->title,$langmessage['Restore this revision'],'cmd=use_revision&time='.$time,' name="cnreq"');
+		$message .= ' <br/> '.common::Link($this->title,$langmessage['Restore this revision'],'cmd=use_revision&time='.$time,'data-cmd="cnreq"');
 		$message .= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 		message( $message );
 	}

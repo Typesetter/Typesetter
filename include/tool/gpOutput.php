@@ -339,7 +339,7 @@ class gpOutput{
 			if( !$empty_container ){
 				$innerLinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['remove'],'cmd=rm_area&param='.$param,' name="creq"');
 			}
-			$innerLinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['insert'],'cmd=insert&param='.$param,array('name'=>'gpabox'));
+			$innerLinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['insert'],'cmd=insert&param='.$param,array('data-cmd'=>'gpabox'));
 			$innerLinks .= '</div>';
 			$innerLinks .= '</div>';
 

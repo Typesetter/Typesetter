@@ -174,7 +174,7 @@ class admin_extra{
 				echo ' &nbsp; ';
 
 				$title = sprintf($langmessage['generic_delete_confirm'],htmlspecialchars($file));
-				echo common::Link('Admin_Extra',$langmessage['delete'],'cmd=delete&file='.$file,array('name'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
+				echo common::Link('Admin_Extra',$langmessage['delete'],'cmd=delete&file='.$file,array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
 				echo '</td>';
 				echo '</tr>';
 		}

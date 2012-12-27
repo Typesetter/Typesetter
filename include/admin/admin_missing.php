@@ -282,7 +282,7 @@ class admin_missing extends special_missing{
 
 			echo ' &nbsp; ';
 			$title = sprintf($langmessage['generic_delete_confirm'],$source);
-			echo common::Link('Admin_Missing',$langmessage['delete'],'cmd=rmredir&link='.urlencode($source),array('name'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
+			echo common::Link('Admin_Missing',$langmessage['delete'],'cmd=rmredir&link='.urlencode($source),array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
 
 			echo '</td></tr>';
 		}

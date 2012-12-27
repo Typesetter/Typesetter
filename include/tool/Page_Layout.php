@@ -166,7 +166,7 @@ class page_layout{
 
 			echo $langmessage['restore'].': ';
 			$span = '<span class="layout_color_id" style="background-color:'.$parent_info['color'].';" title="'.$parent_info['color'].'"></span> ';
-			echo common::Link($url,$span.$parent_info['label'],$query_string.'cmd=restorelayout&index='.urlencode($index),array('name'=>'postlink','title'=>$langmessage['restore']),'restore');
+			echo common::Link($url,$span.$parent_info['label'],$query_string.'cmd=restorelayout&index='.urlencode($index),array('data-cmd'=>'postlink','title'=>$langmessage['restore']),'restore');
 			echo '</p>';
 		}
 
@@ -202,7 +202,7 @@ class page_layout{
 			echo '<span class="layout_color_id" style="background-color:'.$info['color'].';" title="'.$info['color'].'">';
 			echo '</span> ';
 			if( $layout != $curr_layout ){
-				echo common::Link($url,$info['label'],$query_string.'cmd=uselayout&index='.urlencode($index).'&layout='.urlencode($layout),array('name'=>'postlink'),'use_'.$layout);
+				echo common::Link($url,$info['label'],$query_string.'cmd=uselayout&index='.urlencode($index).'&layout='.urlencode($layout),array('data-cmd'=>'postlink'),'use_'.$layout);
 
 			}
 			echo '</td>';

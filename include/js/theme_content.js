@@ -12,7 +12,7 @@ $(function(){
 	 * Show the layout color and label editor
 	 *
 	 */
-	gplinks.layout_id = function(color,evt){
+	$gp.links.layout_id = function(evt,color){
 
 		evt.preventDefault();
 		var $this = $(this);

@@ -288,7 +288,7 @@ $(function(){
 		 * Close gp_admin_box
 		 */
 		$gp.CloseAdminBox = function(evt){
-			evt.preventDefault();
+			if( evt ) evt.preventDefault();
 			$('#gp_admin_box1').fadeOut();
 			$('#gp_admin_box').fadeOut(300,function(){
 

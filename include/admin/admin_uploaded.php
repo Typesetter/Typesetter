@@ -346,7 +346,7 @@ class admin_uploaded{
 		// Folder controls
 		ob_start();
 		if( $add_all_images && $image_count > 0 ){
-			echo '<a name="gp_gallery_add_all" class="ckeditor_control half_width">'.$langmessage['Add All Images'].'</a>';
+			echo '<a data-cmd="gp_gallery_add_all" class="ckeditor_control half_width">'.$langmessage['Add All Images'].'</a>';
 		}
 
 		if( $dir_piece != '/' ){
@@ -420,7 +420,7 @@ class admin_uploaded{
 		$query_string = 'file_cmd=delete&show=inline&file='.urlencode($file);
 
 		return '<span class="expand_child" id="'.$id.'">'
-				. '<a href="'.$file_url.'" name="gp_gallery_add" rel="'.$file_url.'" '.$size.'>'
+				. '<a href="'.$file_url.'" data-cmd="gp_gallery_add" '.$size.'>'
 				. $thumb
 				. '</a>'
 				. common::Link('Admin_Uploaded'.$dir_piece,'',$query_string,' class="delete gpconfirm" name="gpajax" title="'.$langmessage['delete_confirm'].'"','delete')

@@ -144,7 +144,7 @@
 		 * Use an image
 		 *
 		 */
-		gplinks.gp_gallery_add = function(rel,evt){
+		$gp.links.gp_gallery_add = function(evt){
 			evt.preventDefault();
 			var $this = $(this).stop(true,true);
 
@@ -191,7 +191,7 @@
 		 * Show Images
 		 *
 		 */
-		gplinks.show_uploaded_images = function(){
+		$gp.links.show_uploaded_images = function(){
 			LoadImages(false);
 		}
 
@@ -212,7 +212,7 @@
 		}
 		*/
 
-		gplinks.deafult_sizes = function(){
+		$gp.links.deafult_sizes = function(){
 			value('width', value('orig_width') );
 			value('height', value('orig_height') );
 			input('width').change();

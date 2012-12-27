@@ -685,7 +685,7 @@ class admin_menu_new extends admin_menu_tools{
 			$class .= ' haslayout';
 		}
 
-		echo '<a href="#" class="'.$class.'" name="expand_img" '.$style.'></a>';
+		echo '<a href="#" class="'.$class.'" data-cmd="expand_img" '.$style.'></a>';
 
 		if( isset($gp_titles[$menu_key]) ){
 			$this->ShowLevel_Title($menu_key,$menu_value,$layout_info);

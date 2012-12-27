@@ -3279,7 +3279,7 @@ class admin_theme_content extends admin_addon_install{
 		ob_start();
 		foreach($images as $image ){
 			echo '<span class="expand_child">'
-				. '<a href="'.$image['url'].'" name="gp_gallery_add" rel="'.$image['url'].'" data-width="'.$image['width'].'" data-height="'.$image['height'].'">'
+				. '<a href="'.$image['url'].'" data-cmd="gp_gallery_add" data-width="'.$image['width'].'" data-height="'.$image['height'].'">'
 				. '<img src="'.$image['url'].'" alt=""/>'
 				. '</a></span>';
 		}
@@ -3329,7 +3329,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '<table>';
 		echo '<tr><td>'.$langmessage['Width'].'</td><td><input type="text" name="width" class="ck_input"/></td>';
 		echo '<td>'.$langmessage['Height'].'</td><td><input type="text" name="height" class="ck_input"/></td>';
-		echo '<td><a name="deafult_sizes" class="ckeditor_control ck_reset_size" title="'.$langmessage['Theme_default_sizes'].'">&#10226;</a></td>';
+		echo '<td><a data-cmd="deafult_sizes" class="ckeditor_control ck_reset_size" title="'.$langmessage['Theme_default_sizes'].'">&#10226;</a></td>';
 		echo '</tr>';
 		echo '<tr><td>'.$langmessage['Left'].'</td><td><input type="text" name="left" class="ck_input" value="0"/></td>';
 		echo '<td>'.$langmessage['Top'].'</td><td><input type="text" name="top" class="ck_input" value="0"/></td>';
@@ -3340,9 +3340,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '<div id="gp_source_options">';
 		echo '<b>'.$langmessage['Select Image'].'</b>';
 		echo common::Link('Admin_Theme_Content/'.rawurlencode($this->curr_layout),$langmessage['Theme Images'],'cmd=theme_images',' name="gpajax" class="ckeditor_control half_width" ');
-		//echo '<a class="ckeditor_control half_width" name="show_theme_images">'.$langmessage['Theme Images'].'</a>';
-		//echo '<a class="ckeditor_control ck_reset_size" name="show_all_theme_images" title="'.$langmessage['Theme Images'].'">&#10226;</a>';
-		echo '<a class="ckeditor_control half_width" name="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
+		echo '<a class="ckeditor_control half_width" data-cmd="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
 		echo '</div>';
 
 		echo '<div id="gp_image_area"></div><div id="gp_upload_queue"></div>';

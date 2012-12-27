@@ -192,7 +192,7 @@
 		 * add image functions
 		 *
 		 */
-		gplinks.gp_gallery_add = function(rel,evt){
+		$gp.links.gp_gallery_add = function(evt){
 			evt.preventDefault();
 			var $this = $(this).stop(true,true);
 			AddImage($this.clone());
@@ -200,7 +200,7 @@
 			$this.parent().fadeTo(100,.2).fadeTo(2000,1);
 		}
 
-		gplinks.gp_gallery_add_all = function(rel,evt){
+		$gp.links.gp_gallery_add_all = function(evt){
 			evt.preventDefault();
 			$('#gp_gallery_avail_imgs a[name=gp_gallery_add]').each(function(a,b){
 				AddImage( $(this).clone() );

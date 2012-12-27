@@ -194,7 +194,11 @@
 			}
 		}
 
-		gplinks.expand_img = function(rel,evt){
+		/**
+		 * Handle expanding/reducing sublink lists
+		 *
+		 */
+		$gp.links.expand_img = function(evt){
 			$gp.links.menu_info.call(this,evt);
 
 			$li = $(this).closest('li');

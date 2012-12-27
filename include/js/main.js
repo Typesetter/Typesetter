@@ -351,6 +351,7 @@ $(function(){
 
 	/**
 	 * Handle all clicks on <a> tags
+	 * Use of name and rel attributes is deprecated as of gpEasy 3.6
 	 *
 	 */
 	$(document).on('click', 'a',function(evt){
@@ -359,7 +360,7 @@ $(function(){
 			var cmd = $this.data('cmd');
 			var arg = $this.data('arg');
 			if( !cmd ){
-				// use of name and rel attributes is deprecated
+				/* deprecated 3.6 */
 				cmd = $this.attr('name');
 				arg = $this.attr('rel');
 			}
@@ -374,7 +375,7 @@ $(function(){
 				return $gp.links[cmd].call(this,evt,arg);
 			}
 
-			/* @deprectated 3.6 */
+			/* @deprecated 3.6 */
 			if( typeof(gplinks[cmd]) == 'function' ){
 				return gplinks[cmd].call(this,arg,evt);
 			}

@@ -40,9 +40,9 @@
 
 	}
 
-	gplinks.gp_gallery_folder = function(rel,evt){
+	$gp.links.gp_gallery_folder = function(evt,arg){
 		evt.preventDefault();
-		LoadImages(rel);
+		LoadImages(arg);
 	}
 
 	function LoadImages(directory){

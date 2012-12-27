@@ -303,7 +303,7 @@ class admin_uploaded{
 		if( $dir_piece != '/' ){
 			$temp = common::DirName($dir_piece);
 			echo '<a href="?cmd=new_dir&dir='.rawurlencode($dir_piece).'" class="gp_gallery_folder" data-cmd="gpabox"><span class="add"></span>'.$langmessage['create_dir'].'</a>';
-			echo '<a class="gp_gallery_folder" name="gp_gallery_folder" rel="'.htmlspecialchars($temp).'"><span class="folder"></span>../</a>';
+			echo '<a class="gp_gallery_folder" data-cmd="gp_gallery_folder" data-arg="'.htmlspecialchars($temp).'"><span class="folder"></span>../</a>';
 		}
 
 		foreach($folders as $folder){
@@ -320,7 +320,7 @@ class admin_uploaded{
 					$count++;
 				}
 			}
-			echo '<a class="gp_gallery_folder" name="gp_gallery_folder" rel="'.htmlspecialchars($sub_dir).'"><span class="folder"></span><span class="gp_count">'.$count.'</span>'.$folder.'</a>';
+			echo '<a class="gp_gallery_folder" data-cmd="gp_gallery_folder" data-arg="'.htmlspecialchars($sub_dir).'"><span class="folder"></span><span class="gp_count">'.$count.'</span>'.$folder.'</a>';
 		}
 		echo '</div>';
 		echo '</div>';

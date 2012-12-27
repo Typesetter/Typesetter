@@ -227,7 +227,7 @@ $(function(){
 
 				var $this = $(this);
 				var cmd = $this.data('cmd');
-				var arg = false;
+				var arg = $this.data('arg');
 				if( !cmd ){
 					// use of name and rel attributes is deprecated
 					cmd = $this.attr('name');
@@ -241,7 +241,7 @@ $(function(){
 				}
 
 				if( typeof($gp.links[cmd]) == 'function' ){
-					return $gp.links[cmd].call(this,evt);
+					return $gp.links[cmd].call(this,evt,arg);
 				}
 
 				/* @deprectated 3.6 */

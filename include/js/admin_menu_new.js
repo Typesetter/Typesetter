@@ -88,7 +88,7 @@
 			if( obj.length == 0 ){
 				return '';
 			}
-			return obj.attr('rel');
+			return obj.data('arg');
 		}
 
 
@@ -253,7 +253,7 @@
 
 				newval = '#'+$('#gp_curr_menu').val()+'=[';
 				$admin_menu_div.find('.hidechildren > div > .label').each(function(a,b){
-					newval += b.rel+',';
+					newval += $(b).data('arg')+',';
 				});
 				newval += ']';
 

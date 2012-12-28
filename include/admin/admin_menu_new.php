@@ -713,7 +713,7 @@ class admin_menu_new extends admin_menu_tools{
 			$data['title'] = substr($data['title'],0,30).'...';
 		}
 
-		echo '<a class="label sort external" data-cmd="menu_info" rel="'.str_replace('&','&amp;',$menu_key).'">';
+		echo '<a class="label sort external" data-cmd="menu_info" data-arg="'.str_replace('&','&amp;',$menu_key).'">';
 		echo common::LabelSpecialChars($menu_value['label']);
 		$this->MenuData($data);
 		echo '</a>';
@@ -735,7 +735,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo $this->Link('Admin_Menu',$img.$langmessage['edit'],'cmd=edit_external&key=[key]',array('title'=>$langmessage['edit'],'data-cmd'=>'gpabox'));
 
 		$img = '<span class="menu_icon cut_list_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&key=[key]',' title="'.$langmessage['rm_from_menu'].'" name="menupost" class="gpconfirm"');
+		echo $this->Link('Admin_Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&key=[key]',array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'menupost','class'=>'gpconfirm'));
 
 		echo '</span>';
 
@@ -788,7 +788,7 @@ class admin_menu_new extends admin_menu_tools{
 			$data['opts'] = $menu_options;
 		}
 
-		echo '<a class="label sort" data-cmd="menu_info" rel="'.str_replace('&','&amp;',$menu_key).'">';
+		echo '<a class="label sort" data-cmd="menu_info" data-arg="'.str_replace('&','&amp;',$menu_key).'">';
 		echo common::LabelSpecialChars($label);
 		$this->MenuData($data);
 		echo '</a>';
@@ -825,10 +825,10 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 		$img = '<span class="menu_icon cut_list_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&key=[key]',' title="'.$langmessage['rm_from_menu'].'" name="menupost" class="gpconfirm"'); // gpajax
+		echo $this->Link('Admin_Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&key=[key]',array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'menupost','class'=>'gpconfirm'));
 
 		$img = '<span class="menu_icon bin_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$langmessage['delete'],'cmd=trash&index=[key]',' title="'.$langmessage['delete_page'].'" name="menupost" class="gpconfirm not_special" ');
+		echo $this->Link('Admin_Menu',$img.$langmessage['delete'],'cmd=trash&index=[key]',array('title'=>$langmessage['delete_page'],'data-cmd'=>'menupost','class'=>'gpconfirm not_special'));
 
 		echo '[options]'; //replaced with the contents of gpPlugin::Action('MenuPageOptions',array($title,$menu_key,$menu_value,$layout_info));
 
@@ -1040,7 +1040,7 @@ class admin_menu_new extends admin_menu_tools{
 				$is_special = common::SpecialOrAdmin($title);
 				if( !$is_special ){
 					$img = '<span class="menu_icon bin_icon"></span>';
-					echo $this->Link('Admin_Menu',$img.$langmessage['delete'],'cmd=trash&index='.urlencode($title_index),' title="'.$langmessage['delete_page'].'" name="menupost" class="gpconfirm" ');
+					echo $this->Link('Admin_Menu',$img.$langmessage['delete'],'cmd=trash&index='.urlencode($title_index),array('title'=>$langmessage['delete_page'],'data-cmd'=>'menupost','class'=>'gpconfirm'));
 				}
 
 				gpPlugin::Action('MenuPageOptions',array($title,$title_index,false,$layout_info));

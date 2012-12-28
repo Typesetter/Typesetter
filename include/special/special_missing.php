@@ -154,7 +154,7 @@ class special_missing{
 		if( common::LoggedIn() ){
 			if( $this->requested && !common::SpecialOrAdmin($this->requested) ){
 				$with_spaces = htmlspecialchars($this->requested);
-				$link = common::GetUrl('Admin_Menu','cmd=add_hidden&redir=redir&title='.rawurlencode($this->requested)).'" title="'.$langmessage['create_new_file'].'" name="gpajax';
+				$link = common::GetUrl('Admin_Menu','cmd=add_hidden&redir=redir&title='.rawurlencode($this->requested)).'" title="'.$langmessage['create_new_file'].'" data-cmd="gpajax';
 				$message = sprintf($langmessage['DOESNT_EXIST'],$with_spaces,$link);
 				message($message);
 			}

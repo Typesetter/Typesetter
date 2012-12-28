@@ -305,7 +305,7 @@
 			return false;
 		}
 
-		gplinks.menupost = function(rel,evt){
+		$gp.links.menupost = function(evt){
 			evt.preventDefault();
 			var query = strip_to(this.search,'?');
 			query += getmenus();

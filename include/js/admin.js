@@ -65,8 +65,6 @@ $gp.links.iadmin_box = function(evt,arg){
 }
 
 
-
-
 $(function(){
 
 	//add return value to form

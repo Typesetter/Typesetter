@@ -36,8 +36,9 @@ $(function(){
 
 		panel.find('a.color').off('click').on('click',function(){
 			//$this.css('background-color',this.title);
-			$('#current_color').css('background-color',this.rel);
-			c['color'].value = this.rel;
+			var color = $(this).data('arg');
+			$('#current_color').css('background-color',color);
+			c['color'].value = color;
 		});
 
 

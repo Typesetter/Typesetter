@@ -389,7 +389,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '<tr><td style="width:40%">';
 		echo $langmessage['label'];
 		echo '</td><td>';
-		echo '<a data-cmd="layout_id" title="'.$layout_info['color'].'" rel="'.$layout_info['color'].'">';
+		echo '<a data-cmd="layout_id" title="'.$layout_info['color'].'" data-arg="'.$layout_info['color'].'">';
 		echo '<input type="hidden" name="layout" value="'.htmlspecialchars($layout).'"  /> ';
 		echo '<input type="hidden" name="layout_label" value="'.$layout_info['label'].'"  /> ';
 		echo '<span class="layout_color_id" style="background-color:'.$layout_info['color'].';"></span>';
@@ -1639,7 +1639,7 @@ class admin_theme_content extends admin_addon_install{
 			echo '<td>';
 			echo '<div class="colors">';
 			foreach($colors as $color){
-				echo '<a class="color" style="background-color:'.$color.'" title="'.$color.'" rel="'.$color.'"></a>';
+				echo '<a class="color" style="background-color:'.$color.'" title="'.$color.'" data-arg="'.$color.'"></a>';
 			}
 			echo '</div>';
 			echo '</td>';
@@ -1752,7 +1752,7 @@ class admin_theme_content extends admin_addon_install{
 
 		//label
 			echo '<td class="nowrap">';
-			echo '<a data-cmd="layout_id" title="'.$info['color'].'" rel="'.$info['color'].'">';
+			echo '<a data-cmd="layout_id" title="'.$info['color'].'" data-arg="'.$info['color'].'">';
 			echo '<input type="hidden" name="layout" value="'.htmlspecialchars($layout).'"  /> ';
 			echo '<input type="hidden" name="layout_label" value="'.$info['label'].'"  /> ';
 			echo '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span>';

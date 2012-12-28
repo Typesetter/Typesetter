@@ -163,7 +163,7 @@ function LayoutSetup(){
 		c = $(b);
 
 		//var id_number = c.attr('id');
-		loc = GetCoords(c);
+		loc = $gp.Coords(c);
 
 		//var lnks = c.find('.output_area_link');
 		lnks = c.find('.gplinks');
@@ -179,7 +179,7 @@ function LayoutSetup(){
 			//.animate({'height':loc.h-3,'width':loc.w-3},500)
 			.on('gp_position',function(){
 
-				var loc = GetCoords(c);
+				var loc = $gp.Coords(c);
 
 				//make sure there's at least a small box to work with
 				if( loc.h < 20 ){

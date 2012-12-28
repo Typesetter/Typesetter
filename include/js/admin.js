@@ -28,14 +28,18 @@ function LOGO(obj){
 }
 
 
-//get the coordinates for positioning editable area overlays
-function GetCoords(a){
-	if( a.hasClass('inner_size') ){
-		a = a.children(':first');
+
+/**
+ * Get the coordinates for positioning editable area overlays
+ *
+ */
+$gp.Coords = function(area){
+	if( area.hasClass('inner_size') ){
+		area = area.children(':first');
 	}
-	loc = a.offset();
-	loc.w = a.outerWidth();
-	loc.h = a.outerHeight();
+	loc = area.offset();
+	loc.w = area.outerWidth();
+	loc.h = area.outerHeight();
 	return loc;
 }
 
@@ -60,11 +64,278 @@ $gp.div = function(id){
  */
 $gp.links.iadmin_box = function(evt,arg){
 	evt.preventDefault();
-	TransferValues(arg,this);
+	$gp.CopyVals(arg,this);
 	$gp.AdminBoxC($(arg),'inline');
 }
 
 
+/**
+ * Dynamically load inline editing
+ *
+ */
+$gp.links.inline_edit_generic = function(evt,rel){
+	evt.preventDefault();
+	$gp.loading();
+
+	//legacy inline editing support
+	//can also be used for development/troubleshooting
+	if( typeof(gplinks[rel]) == 'function' ){
+		gplinks[rel].call(this,rel,evt);
+		return;
+	}
+
+	$gp.LoadStyle('/include/css/inline_edit.css');
+
+	var file_path = strip_from(this.href,'#');
+	var id = $(this).attr('id').substr(13);
+
+	script = file_path+'&cmd=inlineedit&area_id='+id;
+	$.getScript( script,function(data){
+		if( data == 'false' ){
+			alert($gp.error);
+			$gp.loaded();
+		}
+		//for debugging
+		//debug(data);
+	});
+}
+
+
+
+/**
+ * Add stylesheets to the current document
+ *
+ */
+$gp.LoadStyle = function(file){
+	var d=new Date(),
+		t=d.getTime();
+
+	//href set after appending to head so that it works properly in IE
+	$('<link rel="stylesheet" type="text/css" />')
+		.appendTo('head')
+		.attr({'href':gpBase+file+'?t='+t});
+}
+
+
+/**
+ * Show content (data) in #gp_admin_box
+ * This is used instead of colorbox for admin content
+ * 		- this box resizes without javascript calls (height)
+ * 		- less animation
+ */
+$gp.AdminBoxC = function(data,context){
+	$gp.CloseAdminBox();
+	if( data == '' ) return false;
+
+	/*
+	var win_width = $win.width();
+	var box_width = Math.max(660, Math.round(win_width*0.70));
+	*/
+	var $win = $(window);
+	var box_width = 640;
+	var left = Math.round( ($win.width() - box_width - 40)/2);
+	var height = Math.max( $(document).height(), $body.outerHeight(true) );
+
+	$gp.div('gp_admin_box1')
+		.css({'zIndex':11000,'min-height':height})
+		.stop(true,true,true)
+		.fadeTo(0,0) //fade in from transparent
+		.fadeTo(200,.2);
+
+	var box = $gp.div('gp_admin_box')
+				.css({'zIndex':'11001','left':left,'top': $win.scrollTop() })
+				.stop(true,true,true)
+				.fadeIn(400)
+				.html('<a class="gp_admin_box_close" data-cmd="admin_box_close"></a><div id="gp_admin_boxc" class="'+(context||'')+'" style="width:'+box_width+'px"></div>')
+				.find('#gp_admin_boxc')
+				.html(data);
+
+	$('.messages').detach();
+	return true;
+}
+
+
+/**
+ * Close gp_admin_box
+ *
+ */
+$gp.CloseAdminBox = function(evt){
+	if( evt ) evt.preventDefault();
+	$('#gp_admin_box1').fadeOut();
+	$('#gp_admin_box').fadeOut(300,function(){
+
+		//move contents back to document if they came from an inline element
+		//remove other content
+		var boxc = $('#gp_admin_boxc');
+		if( boxc.hasClass('inline') ){
+			$('#gp_admin_boxc').children().appendTo('#gp_hidden');
+		}else{
+			$('#gp_admin_boxc').children().remove();
+		}
+
+	});
+	if( typeof($.fn.colorbox) !== 'undefined' ){
+		$.fn.colorbox.close();
+	}
+}
+$gp.links.admin_box_close = gpinputs.admin_box_close = $gp.CloseAdminBox;
+
+
+/**
+ * Remote Browse
+ * @param object evt Event object
+ *
+ */
+$gp.links.remote = function(evt){
+	evt.preventDefault();
+	var loc = strip_from(window.location.href,'#');
+	var src = $gp.jPrep(this.href,'gpreq=body');
+
+	//can remote install
+	if( gpRem ){
+		src += '&in='+encodeURIComponent(loc)
+			+ '&blink='+encodeURIComponent(gpBLink);
+	}
+
+	//40px margin + 17px*2 border + 20px padding + 10 (extra padding) = approx 130
+	var height = $(window).height() - 130;
+
+	var iframe = '<iframe src="'+src+'" style="height:'+height+'px;" frameborder="0" />';
+	$gp.AdminBoxC(iframe,'iframe');
+}
+
+
+
+/**
+ * Save admin user settings
+ *
+ */
+$gp.SaveGPUI = function(){
+	l = 'cmd=savegpui';
+	$.each(gpui,function(i,value){
+		l += '&gpui_'+i+'='+value;
+	});
+
+	$gp.postC( window.location.href, l);
+	//for debugging, see gpsession::SaveGPUI()
+}
+
+
+/**
+ * Drop down menus
+ *
+ */
+$gp.links.dd_menu = function(evt){
+
+	evt.preventDefault();
+	$('.messages').detach(); //remove messages since we can't set the z-index properly
+	var that = this;
+	var $list = $(this).parent().find('.dd_list');
+	ShowList();
+	evt.stopPropagation();
+
+	//display the list and add other handlers
+	function ShowList(){
+		$list.show();
+
+		//scroll to show selected
+		var $selected = $list.find('.selected');
+		if( $selected.length ){
+			var $ul = $list.find('ul:first');
+			var top = $list.find('.selected').parent().position().top + $ul.scrollTop() - 30;
+			$ul.scrollTop(top);
+		}
+
+		$('body').on('click.gp_select',function(evt){
+			HideList();
+
+			//stop propogation if it's a click on the current menu so it will remain hidden
+			if( $(evt.target).closest(that).length ){
+				evt.stopPropagation();
+			}
+		});
+
+	}
+
+	//hide the list and remove handlers
+	function HideList(){
+		$list.hide();
+		$list.off('.gp_select');
+		$('body').off('.gp_select');
+	}
+
+}
+
+
+/**
+ * A simple tab method for switching content area visibility
+ *
+ */
+$gp.links.tabs = function(evt){
+	evt.preventDefault();
+	var $this = $(this);
+	$this.siblings('a').removeClass('selected').each(function(b,c){
+		if( c.hash ) $(c.hash).hide();
+	});
+
+	if( this.hash ){
+		$this.addClass('selected');
+		$(this.hash).show();
+	}
+}
+
+
+
+/**
+ * Use jQuery's Ajax functions to load javascripts and call callback when complete
+ * @depredated 2.0.2 Keep for Simple Slideshow Plugin
+ *
+ */
+$gp.Loaded = {};
+$gp.LoadScripts = function(scripts,callback,relative_path){
+
+	var script_count = scripts.length,
+						d=new Date(),
+						t=d.getTime(),
+						script,
+						base='';
+
+	relative_path = relative_path||false;
+
+	if( relative_path ){
+		base = gpBase;
+	}
+
+	//use $.each to prevent Array.prototype.xxxx from affecting the for loop
+	$.each(scripts,function(i,script){
+		script = base+script;
+		if( $gp.Loaded[script] ){
+			sload();
+		}else{
+			$gp.Loaded[script] = true;
+			$.getScript( $gp.jPrep(script,'t='+t), function(){
+				sload();
+			});
+		}
+	});
+
+	function sload(){
+		script_count--;
+		if(script_count == 0){
+			if( typeof(callback) == 'function' ){
+				callback.call(this);
+			}
+		}
+	}
+
+}
+
+
+
+/**
+ * Onload
+ *
+ */
 $(function(){
 
 	//add return value to form
@@ -126,48 +397,6 @@ $(function(){
 		return;
 	}
 
-
-	/**
-	 * Dynamically load inline editing
-	 *
-	 */
-	$gp.links.inline_edit_generic = function(evt,rel){
-		evt.preventDefault();
-		$gp.loading();
-
-		//legacy inline editing support
-		//can also be used for development/troubleshooting
-		if( typeof(gplinks[rel]) == 'function' ){
-			gplinks[rel].call(this,rel,evt);
-			return;
-		}
-
-		$gp.LoadStyle('/include/css/inline_edit.css');
-
-		var file_path = strip_from(this.href,'#');
-		var id = $(this).attr('id').substr(13);
-
-		script = file_path+'&cmd=inlineedit&area_id='+id;
-		$.getScript( script,function(data){
-			if( data == 'false' ){
-				alert($gp.error);
-				$gp.loaded();
-			}
-			//for debugging
-			//debug(data);
-		});
-	}
-
-	$gp.LoadStyle = function(file){
-		var d=new Date(),
-			t=d.getTime();
-
-		//href set after appending to head so that it works properly in IE
-		$('<link rel="stylesheet" type="text/css" />')
-			.appendTo('head')
-			.attr({'href':gpBase+file+'?t='+t});
-
-	}
 
 
 	function AddgpLinks(){
@@ -279,94 +508,6 @@ $(function(){
 		}
 
 
-
-		/**
-		 * Show content (data) in #gp_admin_box
-		 * This is used instead of colorbox for admin content
-		 * 		- this box resizes without javascript calls (height)
-		 * 		- less animation
-		 */
-		$gp.AdminBoxC = function(data,context){
-			$gp.CloseAdminBox();
-			if( data == '' ) return false;
-
-			/*
-			var win_width = $win.width();
-			var box_width = Math.max(660, Math.round(win_width*0.70));
-			*/
-			var $win = $(window);
-			var box_width = 640;
-			var left = Math.round( ($win.width() - box_width - 40)/2);
-			var height = Math.max( $(document).height(), $body.outerHeight(true) );
-
-			$gp.div('gp_admin_box1')
-				.css({'zIndex':11000,'min-height':height})
-				.stop(true,true,true)
-				.fadeTo(0,0) //fade in from transparent
-				.fadeTo(200,.2);
-
-			var box = $gp.div('gp_admin_box')
-						.css({'zIndex':'11001','left':left,'top': $win.scrollTop() })
-						.stop(true,true,true)
-						.fadeIn(400)
-						.html('<a class="gp_admin_box_close" data-cmd="admin_box_close"></a><div id="gp_admin_boxc" class="'+(context||'')+'" style="width:'+box_width+'px"></div>')
-						.find('#gp_admin_boxc')
-						.html(data);
-
-			$('.messages').detach();
-			return true;
-		}
-
-
-		/**
-		 * Close gp_admin_box
-		 */
-		$gp.CloseAdminBox = function(evt){
-			if( evt ) evt.preventDefault();
-			$('#gp_admin_box1').fadeOut();
-			$('#gp_admin_box').fadeOut(300,function(){
-
-				//move contents back to document if they came from an inline element
-				//remove other content
-				var boxc = $('#gp_admin_boxc');
-				if( boxc.hasClass('inline') ){
-					$('#gp_admin_boxc').children().appendTo('#gp_hidden');
-				}else{
-					$('#gp_admin_boxc').children().remove();
-				}
-
-			});
-			if( typeof($.fn.colorbox) !== 'undefined' ){
-				$.fn.colorbox.close();
-			}
-		}
-		$gp.links.admin_box_close = gpinputs.admin_box_close = $gp.CloseAdminBox;
-
-
-		/**
-		 * Remote Browse
-		 * @param object evt Event object
-		 *
-		 */
-		$gp.links.remote = function(evt){
-			evt.preventDefault();
-			var loc = strip_from(window.location.href,'#');
-			var src = $gp.jPrep(this.href,'gpreq=body');
-
-			//can remote install
-			if( gpRem ){
-				src += '&in='+encodeURIComponent(loc)
-					+ '&blink='+encodeURIComponent(gpBLink);
-			}
-
-			//40px margin + 17px*2 border + 20px padding + 10 (extra padding) = approx 130
-			var height = $(window).height() - 130;
-
-			var iframe = '<iframe src="'+src+'" style="height:'+height+'px;" frameborder="0" />';
-			$gp.AdminBoxC(iframe,'iframe');
-		}
-
-
 		gpinputs.gpcheck = function(){
 			if( this.checked ){
 				$(this).parent().addClass('checked');
@@ -378,87 +519,6 @@ $(function(){
 		gpinputs.check_all = function(){
 			$(this).closest('form').find('input[type=checkbox]').prop('checked',this.checked);
 		}
-
-
-		/**
-		 * Save admin user settings
-		 *
-		 */
-		$gp.SaveGPUI = function(){
-			l = 'cmd=savegpui';
-			$.each(gpui,function(i,value){
-				l += '&gpui_'+i+'='+value;
-			});
-
-			$gp.postC( window.location.href, l);
-			//for debugging, see gpsession::SaveGPUI()
-		}
-
-
-		/**
-		 * Drop down menus
-		 *
-		 */
-		$gp.links.dd_menu = function(evt){
-
-			evt.preventDefault();
-			$('.messages').detach(); //remove messages since we can't set the z-index properly
-			var that = this;
-			var $list = $(this).parent().find('.dd_list');
-			ShowList();
-			evt.stopPropagation();
-
-			//display the list and add other handlers
-			function ShowList(){
-				$list.show();
-
-				//scroll to show selected
-				var $selected = $list.find('.selected');
-				if( $selected.length ){
-					var $ul = $list.find('ul:first');
-					var top = $list.find('.selected').parent().position().top + $ul.scrollTop() - 30;
-					$ul.scrollTop(top);
-				}
-
-				$('body').on('click.gp_select',function(evt){
-					HideList();
-
-					//stop propogation if it's a click on the current menu so it will remain hidden
-					if( $(evt.target).closest(that).length ){
-						evt.stopPropagation();
-					}
-				});
-
-			}
-
-			//hide the list and remove handlers
-			function HideList(){
-				$list.hide();
-				$list.off('.gp_select');
-				$('body').off('.gp_select');
-			}
-
-		}
-
-
-		/**
-		 * A simple tab method for switching content area visibility
-		 *
-		 */
-		$gp.links.tabs = function(evt){
-			evt.preventDefault();
-			var $this = $(this);
-			$this.siblings('a').removeClass('selected').each(function(b,c){
-				if( c.hash ) $(c.hash).hide();
-			});
-
-			if( this.hash ){
-				$this.addClass('selected');
-				$(this.hash).show();
-			}
-		}
-
-
 
 	} /* AddgpLinks */
 
@@ -594,7 +654,7 @@ $(function(){
 						.hover(function(){
 
 							//the red edit box
-							var loc = GetCoords(area);
+							var loc = $gp.Coords(area);
 							box	.stop(true,true,true)
 								.css({'top':(loc.top-3),'left':(loc.left-2),'width':(loc.w+4),'height':(loc.h+5)})
 								.fadeIn();
@@ -758,7 +818,7 @@ $(function(){
 			}
 
 			//edit area location
-			loc = GetCoords(edit_area);
+			loc = $gp.Coords(edit_area);
 			overlay.show().css({'top':(loc.top-3),'left':(loc.left-2),'width':(loc.w+6)});
 
 			if( !lnk_span ){
@@ -851,51 +911,6 @@ $(function(){
 
 
 
-
-	}
-
-
-	/*
-	 * Use jQuery's Ajax functions to load javascripts and call callback when complete
-	 * @depredated 2.0.2 Keep for Simple Slideshow Plugin
-	 *
-	 */
-	$gp.Loaded = {};
-	$gp.LoadScripts = function(scripts,callback,relative_path){
-
-		var script_count = scripts.length,
-							d=new Date(),
-							t=d.getTime(),
-							script,
-							base='';
-
-		relative_path = relative_path||false;
-
-		if( relative_path ){
-			base = gpBase;
-		}
-
-		//use $.each to prevent Array.prototype.xxxx from affecting the for loop
-		$.each(scripts,function(i,script){
-			script = base+script;
-			if( $gp.Loaded[script] ){
-				sload();
-			}else{
-				$gp.Loaded[script] = true;
-				$.getScript( $gp.jPrep(script,'t='+t), function(){
-					sload();
-				});
-			}
-		});
-
-		function sload(){
-			script_count--;
-			if(script_count == 0){
-				if( typeof(callback) == 'function' ){
-					callback.call(this);
-				}
-			}
-		}
 
 	}
 

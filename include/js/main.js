@@ -232,6 +232,23 @@ var $gp = {
 
 
 	/**
+	 * Assign values to the form based on hidden input elements
+	 *
+	 */
+	CopyVals : function(selector,lnk){
+
+		var c = $(selector).find('form').get(0);
+		if( c ){
+			$(lnk).find('input').each(function(i,j){
+				if( c[j.name] ){
+					c[j.name].value = j.value;
+				}
+			});
+		}
+	},
+
+
+	/**
 	 * Link handlers
 	 *
 	 */
@@ -412,7 +429,7 @@ $(function(){
 				break;
 
 				case 'inline_box':
-					TransferValues(arg,this);
+					$gp.CopyVals(arg,this);
 					$.fn.colorbox(
 						//$.extend(colorbox_options,{inline:true,href:b, open:true})
 						$gp.cboxSettings({inline:true,href:arg, open:true})
@@ -445,26 +462,11 @@ $(function(){
 	});
 
 
-	/**
-	 * Assign values to the form based on hidden input elements
-	 *
-	 */
-	function TransferValues(selector,lnk){
-
-		var c = $(selector).find('form').get(0);
-		if( c ){
-			$(lnk).find('input').each(function(i,j){
-				if( c[j.name] ){
-					c[j.name].value = j.value;
-				}
-			});
-		}
-	}
-
-
 	$('body').trigger('gpReady');
 
 });
+
+
 
 
 

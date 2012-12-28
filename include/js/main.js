@@ -394,12 +394,6 @@ $(function(){
 					);
 				break;
 
-
-				case 'iadmin_box': //inline admin box @deprecated 3.6
-					TransferValues(arg,this);
-					$gp.AdminBoxC($(arg),'inline');
-				break;
-
 				case 'postlink':
 					$gp.post_link(this);
 				break;

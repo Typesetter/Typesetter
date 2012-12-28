@@ -39,15 +39,35 @@ function GetCoords(a){
 	return loc;
 }
 
-$(function(){
 
-	$gp.div = function(id){
-		var div = $('#'+id);
-		if( div.length == 0 ){
-			div = $('<div id="'+id+'"></div>').appendTo('#gp_admin_html');
-		}
-		return div;
+/**
+ * Create a <div> in the #gp_admin_html space
+ *
+ */
+$gp.div = function(id){
+	var div = $('#'+id);
+	if( div.length == 0 ){
+		div = $('<div id="'+id+'"></div>').appendTo('#gp_admin_html');
 	}
+	return div;
+}
+
+
+/**
+ * Inline admin box
+ * @deprecated 3.6
+ *
+ */
+$gp.links.iadmin_box = function(evt,arg){
+	evt.preventDefault();
+	TransferValues(arg,this);
+	$gp.AdminBoxC($(arg),'inline');
+}
+
+
+
+
+$(function(){
 
 	//add return value to form
 	$('form').live('mousedown',function(e){

@@ -557,7 +557,11 @@ class gpOutput{
 		static $count = 0;
 		$count++;
 		$index = $count; //since &$index is passed by reference
-		$attr .= ' class="ExtraEditLink nodisplay" id="ExtraEditLink'.$index.'"';
+		if( is_array($attr) ){
+			$attr += array('class'=>'ExtraEditLink nodisplay','id'=>'ExtraEditLink'.$index);
+		}else{
+			$attr .= ' class="ExtraEditLink nodisplay" id="ExtraEditLink'.$index.'"';
+		}
 		return common::Link($href,$label,$query,$attr);
 	}
 
@@ -1097,7 +1101,7 @@ class gpOutput{
 		if( $wrap ){
 
 			ob_start();
-			$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Extra',$langmessage['edit'],'cmd=edit&file='.$name,' title="'.$name.'" name="inline_edit_generic" ');
+			$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Extra',$langmessage['edit'],'cmd=edit&file='.$name,array('title'=>$name,'data-cmd'=>'inline_edit_generic'));
 			echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 			echo $edit_link;
 			echo common::Link('Admin_Extra',$langmessage['theme_content'],'',' class="nodisplay"');
@@ -1157,7 +1161,7 @@ class gpOutput{
 		//edit options
 		$editable = gpOutput::ShowEditLink('Admin_Theme_Content');
 		if( $editable ){
-			$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content/'.$page->gpLayout,$langmessage['edit'],'file='.rawurlencode($img_rel).'&container='.$container_id.'&time='.time(),' title="Edit Image" name="inline_edit_generic" ');
+			$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content/'.$page->gpLayout,$langmessage['edit'],'file='.rawurlencode($img_rel).'&container='.$container_id.'&time='.time(),'title="Edit Image" data-cmd="inline_edit_generic"');
 			gpOutput::$editlinks .= '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">'.$edit_link.'</span>';
 			$attributes['class'] .= ' editable_area';
 			$attributes['id'] = 'ExtraEditArea'.$edit_index;
@@ -1574,7 +1578,7 @@ class gpOutput{
 
 		$wrap = gpOutput::ShowEditLink('Admin_Theme_Content');
 		if( $wrap ){
-			gpOutput::$editlinks .= gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=edittext&key='.urlencode($text).'&return='.urlencode($page->title),' title="'.urlencode($text).'" data-cmd="gpabox" ');
+			gpOutput::$editlinks .= gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=edittext&key='.urlencode($text).'&return='.urlencode($page->title),' title="'.htmlspecialchars($text).'" data-cmd="gpabox" ');
 			echo '<div class="editable_area inner_size" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
 		}
 
@@ -2273,7 +2277,7 @@ class gpOutput{
 				if( common::LoggedIn() ){
 					echo common::Link($page->title,$langmessage['logout'],'cmd=logout','data-cmd="creq" rel="nofollow" ');
 				}else{
-					echo common::Link('Admin_Main',$langmessage['login'],'file='.rawurlencode($page->title),' rel="nofollow" name="login"');
+					echo common::Link('Admin_Main',$langmessage['login'],'file='.rawurlencode($page->title),' rel="nofollow" data-cmd="login"');
 				}
 			echo '</span>';
 		}

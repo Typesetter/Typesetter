@@ -923,7 +923,7 @@ class editing_page extends display{
 
 
 				$title_attr = sprintf($langmessage['Section %s'],$section_key+1);
-				$link = gpOutput::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$section_key.'&amp;revision='.$this->fileModTime,' title="'.$title_attr.'" name="'.$link_name.'" rel="'.$link_rel.'"');
+				$link = gpOutput::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$section_key.'&amp;revision='.$this->fileModTime,array('title'=>$title_attr,'data-cmd'=>$link_name,'data-arg'=>$link_rel));
 
 				//section control links
 				ob_start();

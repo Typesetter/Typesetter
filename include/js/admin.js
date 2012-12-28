@@ -127,10 +127,11 @@ $(function(){
 	}
 
 
-	/*
+	/**
 	 * Dynamically load inline editing
+	 *
 	 */
-	gplinks.inline_edit_generic = function(rel,evt){
+	$gp.links.inline_edit_generic = function(evt,rel){
 		evt.preventDefault();
 		$gp.loading();
 

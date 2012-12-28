@@ -1332,18 +1332,21 @@ function SimpleResize(resize_area,options){
  * TODO: These override the functions in jquery ui and should probably tested and changed or removed
  *
  */
-$.fn.disableSelection = function(){
-	return $(this).attr('unselectable', 'on')
-			.css('-moz-user-select', 'none')
-			.each(function() {
-			this.onselectstart = function() { return false; };
-			});
-};
-
-$.fn.enableSelection = function() {
-	return $(this).attr('unselectable', 'off')
-			.css('-moz-user-select', '')
-			.each(function() {
+if( typeof($.fn.disableSelection) != 'function' ){
+	$.fn.disableSelection = function(){
+		return $(this).attr('unselectable', 'on')
+				.css('-moz-user-select', 'none')
+				.each(function() {
 				this.onselectstart = function() { return false; };
-			});
-};
+				});
+	};
+
+	$.fn.enableSelection = function() {
+		return $(this).attr('unselectable', 'off')
+				.css('-moz-user-select', '')
+				.each(function() {
+					this.onselectstart = function() { return false; };
+				});
+	};
+}
+

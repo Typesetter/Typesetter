@@ -306,18 +306,21 @@ $(function(){
 		var $this = $(this);
 
 		//get the first class
-		var a = strip_from(
-					$this.attr('class'),
-					' '
-				);
+		var cmd = $this.data('cmd');
+		if( !cmd ){
+			cmd = strip_from( $this.attr('class'), ' ' );
+		}
 
-		//put before switch() to allow overriding
-		if( typeof(gpinputs[a]) == 'function' ){
-			return gpinputs[a].call(this,evt,evt);//evt twice so the same function can be used for gplinks and gpinputs
+		if( typeof($gp.inputs[cmd]) == 'function' ){
+			return $gp.inputs[cmd].call(this,evt);
+		}
+
+		if( typeof(gpinputs[cmd]) == 'function' ){
+			return gpinputs[cmd].call(this,evt,evt);//evt twice so the same function can be used for gplinks and gpinputs
 		}
 
 
-		switch(a){
+		switch(cmd){
 
 			case 'gppost':
 			case 'gpajax':

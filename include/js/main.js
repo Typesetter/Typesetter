@@ -393,7 +393,9 @@ $(function(){
 						$gp.cboxSettings({inline:true,href:arg, open:true})
 					);
 				break;
-				case 'iadmin_box': //inline admin box
+
+
+				case 'iadmin_box': //inline admin box @deprecated 3.6
 					TransferValues(arg,this);
 					$gp.AdminBoxC($(arg),'inline');
 				break;

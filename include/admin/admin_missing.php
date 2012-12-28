@@ -16,6 +16,7 @@ class admin_missing extends special_missing{
 		global $langmessage;
 
 		$this->Init();
+		gp_edit::PrepAutoComplete(true,false);
 
 
 		$cmd = common::GetCommand();
@@ -29,6 +30,9 @@ class admin_missing extends special_missing{
 				$this->Edit404();
 			return;
 
+			case 'editredir':
+				$this->EditRedir();
+			return;
 			case 'saveredir';
 				$this->SaveRedir();
 			break;
@@ -39,6 +43,10 @@ class admin_missing extends special_missing{
 			case 'rmredir':
 				$this->RmRedir();
 			break;
+
+			case 'newform':
+				$this->RedirForm();
+			return;
 
 		}
 
@@ -128,11 +136,6 @@ class admin_missing extends special_missing{
 		echo '<div id="Redirection">';
 		$this->ShowRedirection();
 		echo '</div>';
-
-		echo '<div class="nodisplay">';
-		$this->RedirForm();
-		echo '</div>';
-
 	}
 
 
@@ -205,7 +208,8 @@ class admin_missing extends special_missing{
 
 
 		echo '<p>'.$langmessage['About_Redirection'].'</p>';
-		$this->InlineBoxLink($langmessage['New Redirection']);
+		echo common::Link('Admin_Missing',$langmessage['New Redirection'],'cmd=newform',array('data-cmd'=>'gpabox'));
+
 
 		if( empty($this->error_data['redirects']) ){
 			return;
@@ -274,8 +278,7 @@ class admin_missing extends special_missing{
 			echo $this->GetCodeLanguage($data['code']);
 			echo '</td><td>';
 
-
-			$this->InlineBoxLink($langmessage['edit'],'updateredir',$raw_source,$data['target'],$data['code'],$source);
+			echo common::Link('Admin_Missing',$langmessage['edit'],'cmd=editredir&source='.urlencode($source),array('data-cmd'=>'gpabox'));
 
 			echo ' &nbsp; ';
 			echo common::Link($source,$langmessage['Test']);
@@ -290,7 +293,7 @@ class admin_missing extends special_missing{
 		echo '</table>';
 
 		echo '<p>';
-		$this->InlineBoxLink($langmessage['New Redirection']);
+		echo common::Link('Admin_Missing',$langmessage['New Redirection'],'cmd=newform',array('data-cmd'=>'gpabox'));
 		echo '</p>';
 
 
@@ -302,54 +305,49 @@ class admin_missing extends special_missing{
 		}
 	}
 
-	function InlineBoxLink($label,$cmd='saveredir',$source='',$target='',$code='301',$orig_source=''){
-
-		$input = '<input type="hidden" name="cmd" value="'.htmlspecialchars($cmd).'" />';
-		$input .= '<input type="hidden" name="source" value="'.htmlspecialchars($source).'" />';
-		$input .= '<input type="hidden" name="orig_source" value="'.htmlspecialchars($orig_source).'" />';
-		$input .= '<input type="hidden" name="target" value="'.htmlspecialchars($target).'" />';
-		$input .= '<input type="hidden" name="code" value="'.htmlspecialchars($code).'" />';
-
-		echo common::Link('Admin_Missing',$label.$input,'',' name="iadmin_box" rel="#gp_redir" ');
-	}
-
 
 	//using inline_box for this one for autocomplete init
-	function RedirForm(){
+	function RedirForm($values=array()){
 		global $langmessage,$page;
 
-		gp_edit::PrepAutoComplete(true,false);
+		$values += array('cmd'=>'saveredir','source'=>'','target'=>'','code'=>'','orig_source'=>'');
+
+		$codes = array('301'=>$langmessage['301 Moved Permanently'],'302'=>$langmessage['302 Moved Temporarily']);
 
 		echo '<div class="inline_box" id="gp_redir">';
 		echo '<h2>'.$langmessage['New Redirection'].'</h2>';
 		echo '<form method="post" action="'.common::GetUrl('Admin_Missing').'">';
-		echo '<input type="hidden" name="cmd" value=""/>';
-		echo '<input type="hidden" name="orig_source" value=""/>';
+		echo '<input type="hidden" name="cmd" value="'.htmlspecialchars($values['cmd']).'"/>';
+		echo '<input type="hidden" name="orig_source" value="'.htmlspecialchars($values['orig_source']).'"/>';
 
 
 		echo '<table class="bordered">';
-		echo '<tr><th colspan="2">'.$langmessage['options'].'</th>';
-		echo '</tr>';
+		echo '<tr><th colspan="2">'.$langmessage['options'].'</th></tr>';
 
 		echo '<tr><td>';
 		echo $langmessage['Source URL'];
 		echo '</td><td>';
 		echo common::GetUrl('');
-		echo '<input type="text" name="source" value="" size="20" class="gpinput"/>';
+		echo '<input type="text" name="source" value="'.htmlspecialchars($values['source']).'" size="20" class="gpinput"/>';
 		echo '</td></tr>';
 
 		echo '<tr><td>';
 		echo $langmessage['Target URL'];
 		echo '</td><td>';
-		echo '<input type="text" name="target" value="" class="autocomplete gpinput" size="40" />';
+		echo '<input type="text" name="target" value="'.htmlspecialchars($values['target']).'" class="autocomplete gpinput" size="40" />';
 		echo '</td></tr>';
 
 		echo '<tr><td>';
 		echo $langmessage['Method'];
 		echo '</td><td>';
 		echo '<select name="code" class="gpselect">';
-		echo '<option value="301">'.$langmessage['301 Moved Permanently'].'</option>';
-		echo '<option value="302">'.$langmessage['302 Moved Temporarily'].'</option>';
+		foreach($codes as $code_key => $code_value){
+			$selected = '';
+			if( $code_key == $values['code'] ){
+				$selected = ' selected="selected"';
+			}
+			echo '<option value="'.$code_key.'"'.$selected.'>'.htmlspecialchars($code_value).'</option>';
+		}
 		echo '</select>';
 		echo '</td></tr>';
 
@@ -403,8 +401,8 @@ class admin_missing extends special_missing{
 			return false;
 		}
 
-		$source = admin_tools::PostedSlug( $_POST['source'] );
 		$orig_source = $_POST['orig_source'];
+		$source = admin_tools::PostedSlug( $orig_source );
 
 		if( !isset($this->error_data['redirects'][$orig_source]) ){
 			message($langmessage['OOPS'].' (Entry not found)');
@@ -424,6 +422,24 @@ class admin_missing extends special_missing{
 		return $this->SaveData_Message();
 	}
 
+	/**
+	 * Edit an existing redirection
+	 *
+	 */
+	function EditRedir(){
+
+		$source = admin_tools::PostedSlug( $_REQUEST['source'] );
+		if( !isset($this->error_data['redirects'][$source]) ){
+			message($langmessage['OOPS'].' (Invalid Redirect)');
+			return false;
+		}
+
+		$args = $this->error_data['redirects'][$source];
+		$args['cmd'] = 'updateredir';
+		$args['orig_source'] = $source;
+		$args['source'] = $source;
+		$this->RedirForm($args);
+	}
 
 	/**
 	 * Save a new redirection

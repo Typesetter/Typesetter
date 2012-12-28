@@ -209,7 +209,7 @@
 		function AddImage(img,holder){
 
 			sortable_area.find('.gp_to_remove').remove();
-			img.attr({'name':settings.img_name,'rel':settings.img_rel,'title':''}).removeAttr('class');
+			img.attr({'data-cmd':settings.img_name,'data-arg':settings.img_rel,'title':'','class':settings.img_rel})
 			var li = $('<li>').append(img).append('<div class="caption"></div>');
 			if( holder ){
 				holder.replaceWith(li);

@@ -8,7 +8,6 @@
  */
 var $gp = {
 
-	links : {},
 	inputs : {},
 	error : 'There was an error processing the last request. Please reload this page to continue.',
 
@@ -121,7 +120,7 @@ var $gp = {
 	cboxSettings : function(options){
 		options = options||{};
 		colorbox_lang = colorbox_lang||{};
-		return $.extend(colorbox_lang,{opacity:0.75,maxWidth:'90%',minWidth:300,minHeight:300,maxHeight:'90%'},options);
+		return $.extend(colorbox_lang,{opacity:0.75,maxWidth:'90%',maxHeight:'90%'},options);
 	},
 
 	/**
@@ -229,8 +228,32 @@ var $gp = {
 	 */
 	loaded :function(){
 		$('#loading1, #loading2').clearQueue().hide();
-	}
+	},
 
+
+	/**
+	 * Link handlers
+	 *
+	 */
+	links : {
+
+		/**
+		 * Use colorbox
+		 *
+		 */
+		gallery : function(evt,selector){
+			evt.preventDefault();
+			if( selector == '' ){
+				selector = this;
+			}else{
+				selector = 'a[rel='+selector+'],a.'+selector;
+			}
+			$(selector).colorbox(
+				$gp.cboxSettings({resize:true,open:true,rel:selector})
+			);
+		}
+
+	}
 
 
 }
@@ -368,7 +391,6 @@ $(function(){
 				arg = $this.attr('rel');
 			}
 
-
 			if( $this.hasClass('gpconfirm') && !confirm(this.title) ){
 				evt.preventDefault();
 				return;
@@ -412,18 +434,6 @@ $(function(){
 				break;
 				case 'close_message':
 					$this.closest('div').slideUp();
-				break;
-				case 'gallery':
-					var selector;
-					if( arg == '' ){
-						selector = this;
-					}else{
-						selector = 'a[rel='+arg+']';
-					}
-					$(selector).colorbox(
-						$gp.cboxSettings({resize:true})
-						);
-					$.fn.colorbox.launch(this);
 				break;
 
 				default:

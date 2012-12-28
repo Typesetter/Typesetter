@@ -64,15 +64,15 @@ class admin_addons_tool{
 		echo '<span class="rating">';
 
 			$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16"/>';
-			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating=1&arg='.$arg,' rel="1" ');
+			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating=1&arg='.$arg,' data-rating="1" ');
 			$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16"/>';
-			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating=2&arg='.$arg,' rel="2" ');
+			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating=2&arg='.$arg,' data-rating="2" ');
 			$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16"/>';
-			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating=3&arg='.$arg,' rel="3" ');
+			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating=3&arg='.$arg,' data-rating="3" ');
 			$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16"/>';
-			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating=4&arg='.$arg,' rel="4" ');
+			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating=4&arg='.$arg,' data-rating="4" ');
 			$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16"/>';
-			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating=5&arg='.$arg,' rel="5" ');
+			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating=5&arg='.$arg,' data-rating="5" ');
 
 			echo '<input type="hidden" name="rating" value="'.htmlspecialchars($rating).'" readonly="readonly"/>';
 		echo '</span> ';
@@ -141,7 +141,7 @@ class admin_addons_tool{
 
 
 	function RateForm(){
-		global $config, $dirPrefix;
+		global $config, $dirPrefix,$langmessage;
 
 
 		//get appropriate variables
@@ -186,15 +186,15 @@ class admin_addons_tool{
 			echo '<span class="rating">';
 
 				$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
-				echo '<a href="javascript:void(0);" rel="1">'.$label.'</a>';
+				echo '<a href="javascript:void(0);" data-rating="1">'.$label.'</a>';
 				$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
-				echo '<a href="javascript:void(0);" rel="2">'.$label.'</a>';
+				echo '<a href="javascript:void(0);" data-rating="2">'.$label.'</a>';
 				$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
-				echo '<a href="javascript:void(0);" rel="3">'.$label.'</a>';
+				echo '<a href="javascript:void(0);" data-rating="3">'.$label.'</a>';
 				$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
-				echo '<a href="javascript:void(0);" rel="4">'.$label.'</a>';
+				echo '<a href="javascript:void(0);" data-rating="4">'.$label.'</a>';
 				$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
-				echo '<a href="javascript:void(0);" rel="5">'.$label.'</a>';
+				echo '<a href="javascript:void(0);" data-rating="5">'.$label.'</a>';
 
 			echo '<input type="hidden" name="rating" value="'.htmlspecialchars($rating).'" />';
 			echo '</span> ';

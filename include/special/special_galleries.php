@@ -365,7 +365,7 @@ class special_galleries{
 			return;
 		}
 
-		$new_count = preg_match_all('#rel="gallery_gallery"#',$content,$matches);
+		$new_count = preg_match_all('#(rel|class)="gallery_gallery"#',$content,$matches);
 
 		//first image
 		$new_icon = '';

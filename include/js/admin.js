@@ -134,7 +134,7 @@ $gp.AdminBoxC = function(data,context){
 	var $win = $(window);
 	var box_width = 640;
 	var left = Math.round( ($win.width() - box_width - 40)/2);
-	var height = Math.max( $(document).height(), $body.outerHeight(true) );
+	var height = Math.max( $(document).height(), $('body').outerHeight(true) );
 
 	$gp.div('gp_admin_box1')
 		.css({'zIndex':11000,'min-height':height})
@@ -358,8 +358,6 @@ $(function(){
 		return;
 	}
 
-	var $body = $('body');
-
 	if( typeof(gp_bodyashtml) != 'undefined' ){
 		AddgpLinks();
 		return;
@@ -367,7 +365,7 @@ $(function(){
 
 	ContentPosition();
 	AddgpLinks();
-	$body.addClass('gpAdmin').trigger('AdminReady');
+	$('body').addClass('gpAdmin').trigger('AdminReady');
 
 	window.setTimeout(function(){
 		EditOutlines();

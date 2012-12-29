@@ -1,14 +1,15 @@
 
 
 
-/* ckeditor... and other inline editing toolbars */
+/**
+ * ckeditor... and other inline editing toolbars
+ *
+ */
 
 #ckeditor_area{
 	position:absolute;
 	width:207px;
 	}
-
-#ckeditor_area a{}
 
 #ckeditor_bottom{
 	width:180px;
@@ -16,33 +17,36 @@
 	height:20px;
 	}
 
-
-
-
-#ckeditor_area span.cke_skin_kama{
-	border:none;
+#ckeditor_area .cke_chrome{
 	padding:0;
-	margin:0;
-	left:0;
+	border:0 none;
 	}
-#ckeditor_area .cke_wrapper{
-	border:0 none !important;
+#ckeditor_area .cke_inner{
+	background:transparent !important;
 	padding:0 !important;
-	background:#ededed !important;
+	border:0 none !important;
 	}
-#ckeditor_area .cke_skin_kama .cke_rcombo .cke_text{
-	width:33px;
+
+#ckeditor_area .tools{
+	clear:both;
 	}
-#ckeditor_area .cke_skin_kama .cke_rcombo a,
-#ckeditor_area .cke_skin_kama .cke_rcombo a:active,
-#ckeditor_area .cke_skin_kama .cke_rcombo a:hover{
-	margin-right: 2px;
-	margin-bottom:3px;
-	}
-#ckeditor_area .cke_skin_kama .cke_toolgroup{
-	width:193px;
+#ckeditor_area .cke_toolgroup{
+	margin-right:0;
 	text-align:justify;
+	width:193px;
 	}
+
+/* format/font/font-size menus */
+#ckeditor_area #cke_36_text{
+	width:51px;
+	}
+#ckeditor_area #cke_38_text{
+	width:40px;
+	}
+#ckeditor_area #cke_39_text{
+	width: 30px;
+	}
+
 
 #ckeditor_area .ckeditor_control{
 	font-family:Arial, sans-serif !important;
@@ -82,66 +86,17 @@
 	width:182px;
 	}
 
-.inline_editor iframe{
-	overflow-y:hidden !important;
-	}
-
-.inline_editor span.cke_skin_kama{
-	padding:0 !important;
-	-moz-border-radius: 0 !important;
-	-o-border-radius: 0 !important;
-	-webkit-border-radius: 0 !important;
-	border:0 none;
-	}
-
 /**
  * border around area being editing
  */
 .editable_area,
-.inline_editor span.cke_skin_kama,
 .gp_editing{
 	position:relative;
 	}
 
-.inline_editor span.cke_skin_kama,
 .gp_editing{
 	outline:1px solid #ccc !important;
 	}
-
-.inline_editor span.cke_skin_kama *{
-	padding:0 !important;
-	margin:0 !important;
-	display:block !important;
-	}
-
-/* there's an inline <style> element, and some sort of label that will be displayed because of the previous statement */
-.inline_editor span.cke_skin_kama style,
-.inline_editor span.cke_skin_kama .cke_voice_label{
-	display:none !important;
-	}
-
-/* not sure why, but we need both of the ckeditor definitions */
-/* also, prevent user styles from affecting .ckeditor and iframe */
-.inline_editor span.cke_wrapper,
-table.cke_editor,
-table.cke_editor > tbody,
-table.cke_editor > tbody > tr,
-table.cke_editor > tbody > tr > td
-	{
-	border:0 none !important;
-	padding:0 !important;
-	margin:0 !important;
-	-moz-border-radius: 0 !important;
-	-o-border-radius: 0 !important;
-	-webkit-border-radius: 0 !important;
-	border-radius: 0 !important;
-	border-spacing:0 !important;
-	-webkit-box-shadow: 0 0 0 transparent !important;
-	-moz-box-shadow:0 0 0 transparent !important;
-	box-shadow:0 0 0 transparent !important;
-
-	}
-
 
 
 #ckeditor_area .label{
@@ -229,7 +184,11 @@ table.cke_editor > tbody > tr > td
 	padding:0;
 	}
 #ckeditor_area.docked .tools{
+	clear:none;
 	margin-right:30px; /* room for the toolbar */
+	}
+#ckeditor_area.docked .cke_toolgroup{
+	margin-right:5px;
 	}
 #ckeditor_area.docked #ckeditor_bottom{display:block;float:left;}
 #ckeditor_area.docked #ckeditor_controls{display:block;float:left;}

@@ -169,6 +169,8 @@ class gpAjax{
 		$scripts = gpPlugin::Filter('InlineEdit_Scripts',array($scripts,$type));
 		$scripts = array_unique($scripts);
 
+
+
 		//send all scripts
 		foreach($scripts as $script){
 

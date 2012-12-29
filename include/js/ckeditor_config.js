@@ -33,36 +33,7 @@ CKEDITOR.editorConfig = function( config ){
 		['TextColor','BGColor'],
 		['Maximize', 'ShowBlocks','-','About']
 	];
-
-	config.toolbar_inline = [
-
-		['Source','Templates','Print','ShowBlocks' ], //,'Maximize' does not work well
-		['Cut','Copy','Paste','PasteText','PasteFromWord','SelectAll','Find','Replace'],
-
-		['Undo','Redo','RemoveFormat','SpellChecker', 'Scayt'],
-
-		['HorizontalRule','Smiley','SpecialChar','PageBreak','TextColor','BGColor'],
-
-		['Link','Unlink','Anchor','Image','Flash','Table'], //'CreatePlaceholder'
-		['Format','Font','FontSize'],
-		['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','NumberedList','BulletedList','Outdent','Indent'],
-		['Bold','Italic','Underline','Strike','Blockquote','Subscript','Superscript']
-	];
-
 };
-
-
-
-
-//custom autogrow plugin
-// Won't be activated for editor instance unless config.extraPlugins includes 'gpautogrow'
-CKEDITOR.plugins.addExternal( 'gpautogrow', gpBase+'/include/js/inline_edit/','gp_autogrow.js' );
-
-
-//CKEDITOR.on('instanceReady', function( evt ){
-        //var editor = evt.editor;
-        //editor.execCommand('maximize');
-//});
 
 
 
@@ -89,9 +60,10 @@ CKEDITOR.on( 'dialogDefinition', function( ev ){
 					auto_complete_used = false;
 					return false;
 				}
-				return original.call(this);
+				return original.call(this,arguments[0]);
 			}
 		});
+
 
 
 		//override the onload to add autocomplete
@@ -105,7 +77,7 @@ CKEDITOR.on( 'dialogDefinition', function( ev ){
 				//position and zIndex are needed because of bugs with the jquery ui
 				$(url).css({'position':'relative',zIndex: 12000 }).autocomplete({
 					source:gptitles,
-					delay: 100, /* since we're using local data */
+					delay: 100, // since we're using local data
 					minLength: 0,
 					select: function(event,ui){
 						if( ui.item ){
@@ -117,22 +89,9 @@ CKEDITOR.on( 'dialogDefinition', function( ev ){
 								auto_complete_used = true;
 							}
 							return false;
-
-							// these don't prevent the enter button from firing the onok event
-							//event.preventDefault();
-							//event.stopPropagation();
-							//event.stopImmediatePropagation();
 						}
 
 					}
-
-					//,close: function(event){
-						//if( event.which == 27 ){
-							//auto_complete_used = true;
-						//}
-					//}
-
-
 
 				}).data( "autocomplete" )._renderItem = function( ul, item ) {
 					return $( "<li></li>" )
@@ -144,7 +103,6 @@ CKEDITOR.on( 'dialogDefinition', function( ev ){
 		});
 	}
 });
-
 
 
 

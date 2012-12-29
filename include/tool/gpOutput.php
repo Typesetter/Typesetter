@@ -2,11 +2,11 @@
 defined('is_running') or die('Not an entry point...');
 
 //for output handlers, see admin_theme_content.php for more info
-global $GP_ARRANGE, $gpOutConf, $gpOutStarted, $GP_GADGET_CACHE, $GP_LANG_VALUES, $GP_INLINE_VARS, $GP_EXEC_STACK;
+global $GP_ARRANGE, $gpOutConf, $GP_LANG_VALUES, $GP_INLINE_VARS, $GP_EXEC_STACK;
 
 $GP_ARRANGE = true;
-$gpOutStarted = $GP_NESTED_EDIT = false;
-$gpOutConf = $GP_GADGET_CACHE = $GP_LANG_VALUES = $GP_INLINE_VARS = $GP_EXEC_STACK = array();
+$GP_NESTED_EDIT = false;
+$gpOutConf = $GP_LANG_VALUES = $GP_INLINE_VARS = $GP_EXEC_STACK = array();
 
 
 //named menus should just be shortcuts to the numbers in custom menu
@@ -63,6 +63,8 @@ class gpOutput{
 
 	public static $components = '';
 	public static $editlinks = '';
+	private static $out_started = false;
+	private static $gadget_cache = array();
 
 	/*
 	 *
@@ -301,9 +303,9 @@ class gpOutput{
 
 
 	static function CallOutput($info,$container_id){
-		global $GP_ARRANGE,$page,$langmessage,$gpOutStarted,$GP_MENU_LINKS,$GP_MENU_CLASS,$gp_current_container;
+		global $GP_ARRANGE,$page,$langmessage,$GP_MENU_LINKS,$GP_MENU_CLASS,$gp_current_container;
 		$gp_current_container = $container_id;
-		$gpOutStarted = true;
+		self::$out_started = true;
 
 
 		if( isset($info['disabled']) ){
@@ -404,11 +406,9 @@ class gpOutput{
 	}
 
 	static function ExecArea($info){
-		global $GP_GADGET_CACHE;
-
 		//retreive from gadget cache if set
-		if( isset($info['gpOutCmd']) && isset($GP_GADGET_CACHE[$info['gpOutCmd']]) ){
-			echo $GP_GADGET_CACHE[$info['gpOutCmd']];
+		if( isset($info['gpOutCmd']) && isset(self::$gadget_cache[$info['gpOutCmd']]) ){
+			echo self::$gadget_cache[$info['gpOutCmd']];
 			return;
 		}
 
@@ -629,15 +629,15 @@ class gpOutput{
 	 * @return null
 	 */
 	static function PrepGadgetContent(){
-		global $page, $GP_GADGET_CACHE;
+		global $page;
 
 		$gadget_info = gpOutput::WhichGadgets($page->gpLayout);
 
 		foreach($gadget_info as $gpOutCmd => $info){
-			if( !isset($GP_GADGET_CACHE[$gpOutCmd]) ){
+			if( !isset(self::$gadget_cache[$gpOutCmd]) ){
 				ob_start();
 				gpOutput::ExecArea($info);
-				$GP_GADGET_CACHE[$gpOutCmd] = ob_get_clean();
+				self::$gadget_cache[$gpOutCmd] = ob_get_clean();
 			}
 		}
 	}
@@ -1555,8 +1555,8 @@ class gpOutput{
 
 	/* draggable html and editable text */
 	static function Area($name,$html){
-		global $gpOutConf,$gpOutStarted;
-		if( $gpOutStarted ){
+		global $gpOutConf;
+		if( self::$out_started ){
 			trigger_error('gpOutput::Area() must be called before all other output functions');
 			return;
 		}

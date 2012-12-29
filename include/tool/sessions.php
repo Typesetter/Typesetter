@@ -242,15 +242,18 @@ class gpsession{
 			return false;
 		}
 
+		$session_id = $_COOKIE[gp_session_cookie];
+
+		gpFiles::Unlock('admin',sha1(sha1($session_id)));
 		gpsession::cookie(gp_session_cookie,'',time()-42000);
-		gpsession::CleanSession($_COOKIE[gp_session_cookie]);
+		gpsession::CleanSession($session_id);
 		message($langmessage['LOGGED_OUT']);
 	}
 
 	static function CleanSession($session_id){
 		//remove the session_id from session_ids.php
 		$sessions = gpsession::GetSessionIds();
-		unset($sessions[$_COOKIE[gp_session_cookie]]);
+		unset($sessions[$session_id]);
 		gpsession::SaveSessionIds($sessions);
 	}
 

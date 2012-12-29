@@ -29,7 +29,7 @@ gp_defined('E_DEPRECATED',8192);
 gp_defined('E_USER_DEPRECATED',16384);
 gp_defined('gpdebug_tools',false);
 gp_defined('gp_backup_limit',10);
-gp_defined('gp_write_lock_time',60);
+gp_defined('gp_write_lock_time',30);
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php'); message('local browse path');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
@@ -175,7 +175,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 		$report_error = false;
 
 		//make sure the error is logged
-		error_log('PHP '.$errortype[$errno].':  '.$errmsg.' in '.$filename.' on line '.$linenum);
+		//error_log('PHP '.$errortype[$errno].':  '.$errmsg.' in '.$filename.' on line '.$linenum);
 
 		if( gpdebug === false ){
 			return false;
@@ -3030,6 +3030,7 @@ class gpFiles{
 		}
 
 		message('Oops, a write lock could not be obtained. The existing lock will expire in '.($expires).' seconds.');
+		trigger_error('gpEasy write lock could not be obtained.');
 		define('gp_has_lock',false);
 		return false;
 	}
@@ -3061,7 +3062,7 @@ class gpFiles{
 				$checked_time = true;
 				$diff = time() - filemtime($lock_file);
 				if( $diff > $expires ){
-					unlink( $lock_file);
+					@unlink( $lock_file);
 				}else{
 					$expires -= $diff;
 				}
@@ -3069,6 +3070,29 @@ class gpFiles{
 			clearstatcache();
 			usleep(100);
 			$tries++;
+		}
+		return false;
+	}
+
+	/**
+	 * Remove a lock file if the value matches
+	 *
+	 */
+	static function Unlock($file,$value){
+		global $dataDir;
+
+		$lock_file = $dataDir.'/data/lock_'.$file;
+		if( !file_exists($lock_file) ){
+			return true;
+		}
+
+		$contents = @file_get_contents($lock_file);
+		if( $contents === false ){
+			return true;
+		}
+		if( $value === $contents ){
+			unlink($lock_file);
+			return true;
 		}
 		return false;
 	}

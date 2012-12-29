@@ -138,7 +138,7 @@ class gpOutput{
 		}
 		gpOutput::TemplateSettings();
 		header('Content-Type: text/html; charset=utf-8');
-		IncludeScript($page->theme_dir.'/template.php','require',array('page','GP_ARRANGE','GP_STYLES','GP_MENU_LINKS','GP_MENU_CLASS'));
+		IncludeScript($page->theme_dir.'/template.php','require',array('page','GP_ARRANGE','GP_MENU_LINKS','GP_MENU_CLASS'));
 
 		gpPlugin::ClearDataFolder();
 
@@ -152,7 +152,7 @@ class gpOutput{
 	static function TemplateSettings(){
 		global $page;
 		$settings_path = $page->theme_dir.'/settings.php';
-		IncludeScript($settings_path,'require_if',array('page','GP_STYLES'));
+		IncludeScript($settings_path,'require_if',array('page','GP_GETALLGADGETS'));
 	}
 
 
@@ -1833,7 +1833,6 @@ class gpOutput{
 				'admin_resizable' => true,
 				);
 			gpsession::GPUIVars();
-			gpOutput::GP_STYLES();
 		}
 
 		if( count($GP_INLINE_VARS) > 0 ){
@@ -2173,69 +2172,6 @@ class gpOutput{
 		}
 
 		return $buffer;
-	}
-
-
-	/**
-	 * Generate the javascript used to identify true wysiwyg areas
-	 * @static
-	 */
-	static function GP_STYLES(){
-		global $GP_STYLES;
-
-		//http://www.w3.org/TR/html4/types.html#type-name
-		// excluding the period character because of it's use for css classes
-		$name_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_:';
-
-		echo "\nvar gp_styles = [";
-		if( is_array($GP_STYLES) && count($GP_STYLES) > 0 ){
-
-			$comma = '';
-
-			foreach($GP_STYLES as $selector){
-				$full_selector = $selector = trim($selector);
-				$id = '';
-				$class = '';
-
-				if( strlen($selector) < 1 ){
-					continue;
-				}
-				if( strpos($selector,'"') !== false ){
-					continue;
-				}
-
-				//get the id
-				$pos = strpos($selector,'#'); //should be 0
-				if( $pos !== false ){
-					$start = $pos+1;
-					$len = strspn($selector,$name_chars,$start);
-					$id = substr($selector,$start,$len);
-					$selector = substr($selector,$start+$len);
-				}
-
-				do{
-					$continue = false;
-					$pos = strpos($selector,'.');
-					if( $pos !== false ){
-						$continue = true;
-						$start = $pos+1;
-						$len = strspn($selector,$name_chars,$start);
-						if( $len > 0 ){
-							$class = substr($selector,$start,$len).' ';
-						}
-						$selector = substr($selector,$start+$len);
-					}
-
-				}while($continue);
-
-				echo $comma;
-				echo '{selector:"'.$full_selector;
-				echo '",bodyId:"'.$id;
-				echo '",bodyClass:"'.trim($class).'"}';
-				$comma = ',';
-			}
-		}
-		echo '];';
 	}
 
 	/**

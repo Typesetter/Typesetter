@@ -40,7 +40,7 @@ switch($type){
 	break;
 }
 
-common::RunOut();
+gpOutput::RunOut();
 
 //echo '<h2>'.microtime_diff($start_time,microtime()).'</h2>';
 

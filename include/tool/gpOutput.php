@@ -2245,4 +2245,69 @@ class gpOutput{
 		return $string.' ';
 	}
 
+
+
+	static function RunOut(){
+		global $page;
+
+		$page->RunScript();
+
+		//decide how to send the content
+		self::Prep();
+		switch(common::RequestType()){
+
+			// <a data-cmd="admin_box">
+			case 'flush':
+				self::Flush();
+			break;
+
+			// remote request
+			// file browser
+			case 'body':
+				common::CheckTheme();
+				self::BodyAsHTML();
+			break;
+
+			// <a data-cmd="gpajax">
+			case 'json':
+				common::CheckTheme();
+				includeFile('tool/ajax.php');
+				gpAjax::Response();
+			break;
+
+			case 'content':
+				self::Content();
+			break;
+
+			default:
+				common::CheckTheme();
+				self::Template();
+			break;
+		}
+
+
+
+		//if logged in, prepare the admin content and don't send 304 response
+		if( common::LoggedIn() ){
+			admin_tools::AdminHtml();
+
+			//empty edit links if there isn't a layout
+			if( !$page->gpLayout ){
+				self::$editlinks = '';
+			}
+
+			return;
+		}
+
+		/* attempt to send 304 response  */
+		if( $page->fileModTime > 0 ){
+			global $wbMessageBuffer, $gp_head_content;
+			$len = strlen($gp_head_content) + ob_get_length();
+			if( count($wbMessageBuffer) ){
+				$len += strlen( serialize($wbMessageBuffer) );
+			}
+			common::Send304( common::GenEtag( $page->fileModTime, $len ) );
+		}
+	}
+
 }

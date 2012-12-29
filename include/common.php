@@ -919,68 +919,6 @@ class display{
 
 class common{
 
-	static function RunOut(){
-		global $page;
-
-		$page->RunScript();
-
-		//decide how to send the content
-		gpOutput::Prep();
-		switch(self::RequestType()){
-
-			// <a data-cmd="admin_box">
-			case 'flush':
-				gpOutput::Flush();
-			break;
-
-			// remote request
-			// file browser
-			case 'body':
-				common::CheckTheme();
-				gpOutput::BodyAsHTML();
-			break;
-
-			// <a data-cmd="gpajax">
-			case 'json':
-				common::CheckTheme();
-				includeFile('tool/ajax.php');
-				gpAjax::Response();
-			break;
-
-			case 'content':
-				gpOutput::Content();
-			break;
-
-			default:
-				common::CheckTheme();
-				gpOutput::Template();
-			break;
-		}
-
-
-
-		//if logged in, prepare the admin content and don't send 304 response
-		if( common::LoggedIn() ){
-			admin_tools::AdminHtml();
-
-			//empty edit links if there isn't a layout
-			if( !$page->gpLayout ){
-				gpOutput::$editlinks = '';
-			}
-
-			return;
-		}
-
-		/* attempt to send 304 response  */
-		if( $page->fileModTime > 0 ){
-			global $wbMessageBuffer, $gp_head_content;
-			$len = strlen($gp_head_content) + ob_get_length();
-			if( count($wbMessageBuffer) ){
-				$len += strlen( serialize($wbMessageBuffer) );
-			}
-			common::Send304( common::GenEtag( $page->fileModTime, $len ) );
-		}
-	}
 
 	/**
 	 * Return the type of response was requested by the client
@@ -1359,8 +1297,9 @@ class common{
 	}
 
 
-	/* deprecated: Use common::Link() instead */
+	/* @deprecated: Use common::Link() instead */
 	static function Link_Admin($href,$label,$query='',$attr=''){
+		trigger_error('deprecated function');
 		return common::Link($href,$label,$query,$attr);
 	}
 
@@ -1742,7 +1681,7 @@ class common{
 				);
 
 		if( isset($GLOBALS['dirPrefix']) ){
-			$config['dirPrefix'] = $GLOBALS['dirPrefix']; // deprecated 2.4b4 $config['dirPrefix'], $GLOBALS['dirPrefix'] won't always be set (example: cron jobs)
+			$config['dirPrefix'] = $GLOBALS['dirPrefix']; // @deprecated 2.4b4 $config['dirPrefix'], $GLOBALS['dirPrefix'] won't always be set (example: cron jobs)
 		}
 
 		if( !isset($config['gadgets']['Contact']) ){

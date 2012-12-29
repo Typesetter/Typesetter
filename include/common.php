@@ -3024,7 +3024,7 @@ class gpFiles{
 		}
 
 		$expires = gp_write_lock_time;
-		if( self::LockFile('write',gp_random,$expires) ){
+		if( self::Lock('write',gp_random,$expires) ){
 			define('gp_has_lock',true);
 			return true;
 		}
@@ -3039,7 +3039,7 @@ class gpFiles{
  	 * Loop and delay to wait for the removal of existing locks (maximum of about .2 of a second)
  	 *
  	 */
-	static function LockFile($file,$value,&$expires){
+	static function Lock($file,$value,&$expires){
 		global $dataDir;
 		$checked_time = false;
 		$tries = 0;

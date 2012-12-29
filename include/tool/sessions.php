@@ -446,7 +446,7 @@ class gpsession{
 		//lock to prevent conflicting edits
 		if( gp_lock_time > 0 && ( !empty($GLOBALS['gpAdmin']['editing']) || !empty($GLOBALS['gpAdmin']['granted']) ) ){
 			$expires = gp_lock_time;
-			if( !gpFiles::LockFile('admin',sha1(sha1($session_id)),$expires) ){
+			if( !gpFiles::Lock('admin',sha1(sha1($session_id)),$expires) ){
 				message( $langmessage['site_locked'].' '.sprintf($langmessage['lock_expires_in'],ceil($expires/60)) );
 				$GLOBALS['gpAdmin']['locked'] = true;
 			}else{

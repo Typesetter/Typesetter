@@ -91,3 +91,7 @@
     padding: 1px;
     display:inline-block;
     }
+
+#rating_table td{
+	padding:7px;
+	}

@@ -175,68 +175,51 @@ class admin_addons_tool{
 		echo '<form action="'.common::GetUrl($this->scriptUrl,'cmd=rate&arg='.$this->addon_info['pass_arg']).'" method="post">';
 
 
-		echo '<table cellpadding="7">';
+		echo '<table id="rating_table">';
+
+		echo '<tr><td>Rating</td><td>';
+		echo '<span class="rating">';
+		$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
+		echo '<a href="javascript:void(0);" data-rating="1">'.$label.'</a>';
+		$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
+		echo '<a href="javascript:void(0);" data-rating="2">'.$label.'</a>';
+		$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
+		echo '<a href="javascript:void(0);" data-rating="3">'.$label.'</a>';
+		$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
+		echo '<a href="javascript:void(0);" data-rating="4">'.$label.'</a>';
+		$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
+		echo '<a href="javascript:void(0);" data-rating="5">'.$label.'</a>';
+		echo '<input type="hidden" name="rating" value="'.htmlspecialchars($rating).'" />';
+		echo '</span> ';
+		echo '</td></tr>';
 
 
-		echo '<tr>';
-			echo '<td>';
-			echo 'Rating';
-			echo '</td>';
-			echo '<td>';
-			echo '<span class="rating">';
-
-				$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
-				echo '<a href="javascript:void(0);" data-rating="1">'.$label.'</a>';
-				$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
-				echo '<a href="javascript:void(0);" data-rating="2">'.$label.'</a>';
-				$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
-				echo '<a href="javascript:void(0);" data-rating="3">'.$label.'</a>';
-				$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
-				echo '<a href="javascript:void(0);" data-rating="4">'.$label.'</a>';
-				$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
-				echo '<a href="javascript:void(0);" data-rating="5">'.$label.'</a>';
-
-			echo '<input type="hidden" name="rating" value="'.htmlspecialchars($rating).'" />';
-			echo '</span> ';
-			echo '</td>';
-		echo '</tr>';
-
-		echo '<tr>';
-			echo '<td>Review</td>';
-			echo '<td>';
-			echo '<textarea name="review" cols="50" rows="7" class="gptextarea">';
-			echo htmlspecialchars($review);
-			echo '</textarea>';
-			echo '</td>';
-		echo '</tr>';
+		echo '<tr><td>Review</td><td>';
+		echo '<textarea name="review" cols="50" rows="7" class="gptextarea">';
+		echo htmlspecialchars($review);
+		echo '</textarea>';
+		echo '</td></tr>';
 
 
 
-		echo '<tr>';
-			echo '<td>From</td>';
-			echo '<td>';
-			$host = $_SERVER['HTTP_HOST'].$dirPrefix;
-			echo '<input type="text" name="host"  size="50" value="'.htmlspecialchars($host).'" readonly="readonly" class="gpinput gpreadonly" />';
-			echo '<br/>';
-			echo '<input type="checkbox" name="show_site" value="hidden" /> Click to hide your site information on gpEasy.com.';
-			echo '</td>';
-		echo '</tr>';
+		echo '<tr><td>From</td><td>';
+		$host = $_SERVER['HTTP_HOST'].$dirPrefix;
+		echo '<input type="text" name="host"  size="50" value="'.htmlspecialchars($host).'" readonly="readonly" class="gpinput gpreadonly" />';
+		echo '<br/>';
+		echo '<input type="checkbox" name="show_site" value="hidden" /> Click to hide your site information on gpEasy.com.';
+		echo '</td></tr>';
 
-		echo '<tr>';
-			echo '<td>';
-			echo '</td>';
-			echo '<td>';
+		echo '<tr><td></td><td>';
 
-			if( isset($this->addonReviews[$id]) ){
-				echo '<input type="submit" name="cmd" value="Update Review" class="gpsubmit"/>';
-			}else{
-				echo '<input type="submit" name="cmd" value="Send Review" class="gpsubmit"/>';
-			}
+		if( isset($this->addonReviews[$id]) ){
+			echo '<input type="submit" name="cmd" value="Update Review" class="gpsubmit"/>';
+		}else{
+			echo '<input type="submit" name="cmd" value="Send Review" class="gpsubmit"/>';
+		}
 
-			echo ' ';
-			echo '<input type="submit" name="cmd" value="Cancel" class="gpcancel"/>';
-			echo '</td>';
-		echo '</tr>';
+		echo ' ';
+		echo '<input type="submit" name="cmd" value="Cancel" class="gpcancel"/>';
+		echo '</td></tr>';
 
 
 		echo '</table>';

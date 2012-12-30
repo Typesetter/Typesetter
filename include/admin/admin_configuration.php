@@ -261,7 +261,7 @@ class admin_configuration{
 
 				//start new
 				echo '<div class="collapsearea'.$style.'">';
-				echo '<table cellpadding="4" class="bordered configuration">';
+				echo '<table class="bordered configuration">';
 
 				$openbody = true;
 				continue;

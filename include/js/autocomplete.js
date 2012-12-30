@@ -2,11 +2,9 @@
 
 $(function(){
 
-	$(document).on('focus', 'input.autocomplete', function(){
-
+	$(document).on('focus', 'input.autocomplete:not(.ui-autocomplete-input)', function(){
 		$(this)
 			.css({'position':'relative',zIndex:12000}) //position and zIndex are needed because of bugs with the jquery ui
-			.autocomplete('destroy')
 			.autocomplete({
 
 				source:gptitles,
@@ -14,7 +12,7 @@ $(function(){
 				minLength: 0,
 				select: function(event,ui){
 					if( ui.item ){
-						this.value = ui.item;
+						this.value = ui.item[1];
 						return false;
 					}
 				}

@@ -81,16 +81,16 @@ CKEDITOR.on( 'dialogDefinition', function( ev ){
 					minLength: 0,
 					select: function(event,ui){
 						if( ui.item ){
-							url.value = encodeURI(ui.item);
+							url.value = encodeURI(ui.item[1]);
 							protocol.value = '';
 
 							//enter key?
 							if( event.which == 13 ){
 								auto_complete_used = true;
 							}
+							event.stopPropagation();
 							return false;
 						}
-
 					}
 
 				}).data( "autocomplete" )._renderItem = function( ul, item ) {

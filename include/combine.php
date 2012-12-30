@@ -369,7 +369,7 @@ class gp_combine{
 										,'package' => 'jquery_ui');
 
 		$scripts['autocomplete'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.autocomplete.min.js'
-											,'requires' => array('jquery', 'ui-core', 'widget', 'position', 'ui-theme')
+											,'requires' => array('jquery', 'ui-core', 'widget', 'position', 'menu', 'ui-theme')
 											,'package' => 'jquery_ui');
 
 		$scripts['button'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.button.min.js'
@@ -381,8 +381,14 @@ class gp_combine{
 										,'package' => 'jquery_ui');
 
 		$scripts['dialog'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.dialog.min.js'
+									,'requires' => array('jquery', 'ui-core', 'widget', 'button', 'position', 'ui-theme')
+									,'package' => 'jquery_ui');
+
+
+		$scripts['menu'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.menu.min.js'
 									,'requires' => array('jquery', 'ui-core', 'widget', 'position', 'ui-theme')
 									,'package' => 'jquery_ui');
+
 
 		$scripts['progressbar'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.progressbar.min.js'
 											,'requires' => array('jquery', 'ui-core', 'widget', 'ui-theme')

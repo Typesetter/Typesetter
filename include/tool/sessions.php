@@ -628,6 +628,11 @@ class gpsession{
 	static function LayoutInfo(){
 		global $page, $gpLayouts, $get_all_gadgets_called;
 
+
+		if( !gpOutput::$template_included ){
+			return;
+		}
+
 		if( common::RequestType() != 'template' ){
 			return;
 		}
@@ -637,24 +642,10 @@ class gpsession{
 			return;
 		}
 
-		// make sure template.php was included
-		// this would be more efficient if be done with a variable
-		$template_file = realpath($page->theme_dir.'/template.php');
-		$included = get_included_files();
-		$template_included = false;
-		foreach($included as $file){
-			if( realpath($file) == $template_file ){
-				$template_included = true;
-				break;
-			}
-		}
-		if( !$template_included ){
-			return;
-		}
-
 		$layout_info =& $gpLayouts[$layout];
 
 		//template.php file not modified
+		$template_file = realpath($page->theme_dir.'/template.php');
 		$template_mod = filemtime($template_file);
 		if( isset($layout_info['template_mod']) && $layout_info['template_mod'] >= $template_mod ){
 			return;

@@ -63,8 +63,11 @@ class gpOutput{
 
 	public static $components = '';
 	public static $editlinks = '';
+	public static $template_included = false;
+
 	private static $out_started = false;
 	private static $gadget_cache = array();
+
 
 	/*
 	 *
@@ -141,6 +144,7 @@ class gpOutput{
 		gpOutput::TemplateSettings();
 		header('Content-Type: text/html; charset=utf-8');
 		IncludeScript($page->theme_dir.'/template.php','require',array('page','GP_ARRANGE','GP_MENU_LINKS','GP_MENU_CLASS'));
+		self::$template_included = true;
 
 		gpPlugin::ClearDataFolder();
 

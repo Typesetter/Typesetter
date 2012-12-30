@@ -1625,7 +1625,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '<input type="hidden" name="color" value="" />';
 		echo '<input type="hidden" name="cmd" value="layout_details" />';
 
-		echo '<table cellpadding="3">';
+		echo '<table>';
 
 
 		echo '<tr>';

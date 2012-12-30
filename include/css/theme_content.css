@@ -80,11 +80,15 @@ body #gp_admin_html #theme_toolbar a{
 	}
 #layout_ident .color{
 	position:relative;
-	display:inline-block;
+	float:left;
 	height:16px;
 	width:16px;
 	margin:0 1px 1px 0;
 	}
+#layout_ident td{
+	padding:3px;
+	}
+
 
 #theme_content_drop{
 	position:absolute;

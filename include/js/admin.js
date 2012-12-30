@@ -333,6 +333,158 @@ $gp.LoadScripts = function(scripts,callback,relative_path){
 
 
 /**
+ * Refresh the current page
+ * ie doesn't handle href="" the same way as other browsers
+ */
+$gp.links.gp_refresh = function(evt){
+	evt.preventDefault();
+	window.location = strip_from(window.location.href,'#');
+}
+
+
+/**
+ * Change the display of the admin toolbar
+ *
+ */
+$gp.links.toggle_panel = function(evt){
+	var c,panel = $('#simplepanel');
+	evt.preventDefault();
+
+	var classes = '';
+	var has_min = panel.hasClass('min');
+
+	if( panel.hasClass('minb') ){
+		classes = '';
+		c = 0;
+	}else if( panel.hasClass('compact') ){
+		classes = 'minb toggledmin';
+		c = 3;
+	}else{
+		classes = 'compact';
+		c = 1;
+	}
+	if( !panel.hasClass('toggledmin') ){
+		panel.unbind('mouseenter').bind('mouseenter',function(event){panel.unbind(event).removeClass('toggledmin');});
+	}
+	panel.attr('class','keep_viewable '+classes);
+
+	gpui.cmpct = c;
+	$gp.SaveGPUI();
+}
+
+
+
+/**
+ * Handle clicks on headers within the main admin toolbar
+ *
+ */
+$gp.links.toplink = function(){
+
+	//must not be compact
+	var $this = $(this);
+	var panel = $('#simplepanel');
+	if( panel.hasClass('compact') ) return;
+
+	var b = $this.next();
+	var is_visible = b.is(':visible') && (b.height() > 0);
+
+	//hide visible areas
+	$('#simplepanel .panelgroup2:visible').slideUp(300);
+	gpui['vis'] = false;
+
+	if( !is_visible ){
+		gpui['vis'] = $this.data('arg');
+		b.slideDown(300);
+	}
+	$gp.SaveGPUI();
+}
+
+
+
+/**
+ * Collapsible area
+ *
+ */
+$gp.links.collapsible = function(){
+	var area = $(this).parent();
+
+	//only show one
+	if( area.hasClass('one') && area.hasClass('hidden') ){
+		area.parent().find('.head').addClass('hidden');
+		area.parent().find('.collapsearea').slideUp(300);
+		area.removeClass('hidden').next().slideDown(300);
+	//ability to show multiple
+	}else{
+		area.toggleClass('hidden').next().slideToggle(300);
+	}
+
+}
+
+
+/**
+ * Load content in #gp_admin_box
+ * @deprecated 2.5, use name="gpabox" instead
+ *
+ */
+$gp.links.ajax_box = $gp.links.admin_box = function(evt){
+	debug(' "ajax_box" and "admin_box" are deprecated link arguments');
+	evt.preventDefault();
+	$gp.loading();
+	var href = $gp.jPrep(this.href,'gpreq=flush');
+	$.get(href,'',function(data, textStatus, XMLHttpRequest){
+		$gp.AdminBoxC(data);
+		$gp.loaded();
+	},'html');
+}
+
+
+/**
+ * Load content for #gp_admin_box
+ * This method allows for other actions to be sent to the client in addition to admin_box content
+ */
+$gp.links.gpabox = function(evt){
+	evt.preventDefault();
+	$gp.loading();
+	var href = $gp.jPrep(this.href)+'&gpx_content=gpabox';
+	$.getJSON(href,$gp.Response);
+}
+
+
+/**
+ * Post a gpabox request
+ *
+ */
+$gp.inputs.gpabox = function(){
+	return $gp.post(this,'gpx_content=gpabox');
+}
+
+
+/**
+ * Toggle the "checked" class on the parent of a checkbox when clicked
+ *
+ */
+$gp.inputs.gpcheck = function(){
+	if( this.checked ){
+		$(this).parent().addClass('checked');
+	}else{
+		$(this).parent().removeClass('checked');
+	}
+}
+
+
+/**
+ * Check or uncheck all checkboxes in a form
+ *
+ */
+$gp.inputs.check_all = function(){
+	$(this).closest('form').find('input[type=checkbox]').prop('checked',this.checked);
+}
+
+
+
+
+
+/**
  * Onload
  *
  */
@@ -353,18 +505,11 @@ $(function(){
 		$this.data('gpForms','checked');
 	});
 
-
-	if( !isadmin ){
-		return;
-	}
-
-	if( typeof(gp_bodyashtml) != 'undefined' ){
-		AddgpLinks();
+	if( !isadmin || (typeof(gp_bodyashtml) != 'undefined') ){
 		return;
 	}
 
 	ContentPosition();
-	AddgpLinks();
 	$('body').addClass('gpAdmin').trigger('AdminReady');
 
 	window.setTimeout(function(){
@@ -384,6 +529,10 @@ $(function(){
 	});
 
 
+	/**
+	 * Warn before closing a page if an inline edit area has been changed
+	 *
+	 */
 	window.onbeforeunload = function(){
 
 		if( !gp_editor ) return;
@@ -396,129 +545,6 @@ $(function(){
 	}
 
 
-
-	function AddgpLinks(){
-
-		/* ie doesn't handle href="" the same way as other browsers */
-		gplinks.gp_refresh = function(rel,evt){
-			evt.preventDefault();
-			window.location = strip_from(window.location.href,'#');
-		}
-
-		/**
-		 * Change the display of the admin toolbar
-		 *
-		 */
-		gplinks.toggle_panel = function(rel,evt){
-			var panel = $('#simplepanel');
-			evt.preventDefault();
-
-			var classes = '';
-			var has_min = panel.hasClass('min');
-
-			if( panel.hasClass('minb') ){
-				classes = '';
-				c = 0;
-			}else if( panel.hasClass('compact') ){
-				classes = 'minb toggledmin';
-				c = 3;
-			}else{
-				classes = 'compact';
-				c = 1;
-			}
-			if( !panel.hasClass('toggledmin') ){
-				panel.unbind('mouseenter').bind('mouseenter',function(event){panel.unbind(event).removeClass('toggledmin');});
-			}
-			panel.attr('class','keep_viewable '+classes);
-
-			gpui.cmpct = c;
-			$gp.SaveGPUI();
-		}
-
-		/**
-		 * Handle clicks on headers within the main admin toolbar
-		 *
-		 */
-		gplinks.toplink = function(){
-
-			//must not be compact
-			var $this = $(this);
-			var panel = $('#simplepanel');
-			if( panel.hasClass('compact') ) return;
-
-			var b = $this.next();
-			var is_visible = b.is(':visible') && (b.height() > 0);
-
-			//hide visible areas
-			$('#simplepanel .panelgroup2:visible').slideUp(300);
-			gpui['vis'] = false;
-
-			if( !is_visible ){
-				gpui['vis'] = $this.data('arg');
-				b.slideDown(300);
-			}
-			$gp.SaveGPUI();
-		}
-
-		gplinks.collapsible = function(){
-			var area = $(this).parent();
-
-			//only show one
-			if( area.hasClass('one') && area.hasClass('hidden') ){
-				area.parent().find('.head').addClass('hidden');
-				area.parent().find('.collapsearea').slideUp(300);
-				area.removeClass('hidden').next().slideDown(300);
-			//ability to show multiple
-			}else{
-				area.toggleClass('hidden').next().slideToggle(300);
-			}
-
-		}
-
-		/**
-		 * Load content in #gp_admin_box
-		 * @deprecated 2.5, use name="gpabox" instead
-		 */
-		gplinks.ajax_box = gplinks.admin_box = function(rel,evt){
-			evt.preventDefault();
-			$gp.loading();
-			var href = $gp.jPrep(this.href,'gpreq=flush');
-			$.get(href,'',function(data, textStatus, XMLHttpRequest){
-				$gp.AdminBoxC(data);
-				$gp.loaded();
-			},'html');
-		}
-
-
-		/**
-		 * Load content for #gp_admin_box
-		 * This method allows for other actions to be sent to the client in addition to admin_box content
-		 */
-		gplinks.gpabox = function(rel,evt){
-			evt.preventDefault();
-			$gp.loading();
-			var href = $gp.jPrep(this.href)+'&gpx_content=gpabox';
-			$.getJSON(href,$gp.Response);
-		}
-
-		gpinputs.gpabox = function(){
-			return $gp.post(this,'gpx_content=gpabox');
-		}
-
-
-		gpinputs.gpcheck = function(){
-			if( this.checked ){
-				$(this).parent().addClass('checked');
-			}else{
-				$(this).parent().removeClass('checked');
-			}
-		}
-
-		gpinputs.check_all = function(){
-			$(this).closest('form').find('input[type=checkbox]').prop('checked',this.checked);
-		}
-
-	} /* AddgpLinks */
 
 
 	function ContentPosition(){

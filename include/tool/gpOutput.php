@@ -2278,6 +2278,8 @@ class gpOutput{
 			break;
 
 			// <a data-cmd="gpajax">
+			// <a data-cmd="gpabox">
+			// <input data-cmd="gpabox">
 			case 'json':
 				common::CheckTheme();
 				includeFile('tool/ajax.php');

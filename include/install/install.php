@@ -108,6 +108,9 @@ h3,h4{
 	padding:1px;
 	border:0 none;
 	}
+.padded_table td{
+	padding:5px;
+}
 
 
 .lang_select{
@@ -252,7 +255,7 @@ class gp_install{
 		$ok = true;
 
 		echo '<h2>'.$langmessage['Checking_server'].'...</h2>';
-		echo '<table cellpadding="5" cellspacing="0" class="styledtable fullwidth">';
+		echo '<table class="styledtable fullwidth">';
 		echo '<thead>';
 		echo '<tr>';
 		echo '<th>'.$langmessage['Checking'].'...</th>';
@@ -654,8 +657,7 @@ class gp_install{
 		//echo '<h3>'.$langmessage['configuration'].'</h3>';
 		//echo '<h3>'.$langmessage['User Details'].'</h3>';
 		echo '<form action="'.common::GetUrl('').'" method="post">';
-		echo '<table cellspacing="0" class="styledtable">';
-		//echo '<table cellspacing="0" >';
+		echo '<table class="styledtable">';
 		Install_Tools::Form_UserDetails();
 		Install_Tools::Form_Configuration();
 		echo '</table>';
@@ -676,7 +678,7 @@ class gp_install{
 		echo $langmessage['REFRESH_AFTER_CHANGE'];
 		echo '</p>';
 
-		echo '<table cellpadding="5" cellspacing="0"  class="styledtable fullwidth">';
+		echo '<table class="styledtable fullwidth">';
 
 		echo '<tr>';
 		echo '<th>';
@@ -715,7 +717,7 @@ class gp_install{
 			echo $langmessage['FTP_CHMOD'];
 			echo '</p>';
 			echo '<form action="'.common::GetUrl('').'" method="post">';
-			echo '<table cellpadding="5" cellspacing="0">';
+			echo '<table class="padded_table">';
 			Form_FTPDetails();
 			echo '<tr>';
 				echo '<td align="left">&nbsp;</td><td>';

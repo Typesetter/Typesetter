@@ -271,7 +271,7 @@ class update_class{
 		ob_start();
 
 		$passed = true;
-		echo '<table class="styledtable" cellspacing="0">';
+		echo '<table class="styledtable">';
 
 		echo '<tr><th>';
 			echo $langmessage['Test'];

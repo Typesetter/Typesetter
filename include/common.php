@@ -1350,8 +1350,8 @@ class common{
 
 			// backwards compatibility hack to be removed in future releases
 			// @since 3.6
-			if( strpos($attr,'name="postlink"') !== false ){
-				$attr .= ' data-nonce="'.common::new_nonce('post',true).'"';
+			if( strpos($string,'name="postlink"') !== false ){
+				$string .= ' data-nonce="'.common::new_nonce('post',true).'"';
 			}
 		}
 

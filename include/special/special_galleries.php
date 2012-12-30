@@ -109,7 +109,7 @@ class special_galleries{
 
 		$not_visible = array();
 
-		echo '<table cellpadding="10"><tr><td width="50%">';
+		echo '<table id="gp_galleries"><tr><td>';
 
 		echo '<h3>'.$langmessage['visible_galleries'].'</h2>';
 

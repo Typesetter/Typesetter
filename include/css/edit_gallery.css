@@ -125,3 +125,11 @@
 	overflow:hidden;
 	}
 
+#gp_galleries td{
+	width:50% !important;
+	padding-right:15px;
+	}
+#gp_galleries td:last-child{
+	padding-left:15px;
+	padding-right:0;
+	}

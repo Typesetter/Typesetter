@@ -89,7 +89,7 @@
 					$('#gp_include_form .autocomplete').val('');
 
 					if( ui.item ){
-						this.value = ui.item;
+						this.value = ui.item[1];
 						return false;
 					}
 				}

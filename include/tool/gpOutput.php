@@ -2067,12 +2067,6 @@ class gpOutput{
 		global $config,	$gp_head_content, $addonFolderName, $dataDir, $GP_EXEC_STACK, $addon_current_id;
 
 
-		//remove lock
-		if( defined('gp_has_lock') && gp_has_lock ){
-			gpFiles::Unlock('write',gp_random);
-		}
-
-
 		//add error notice if there was a fatal error
 		if( !ini_get('display_errors') && function_exists('error_get_last') ){
 
@@ -2088,13 +2082,15 @@ class gpOutput{
 				}
 
 				$last_error['file'] = realpath($last_error['file']);//may be redundant
-				showError($last_error['type'], $last_error['message'],  $last_error['file'],  $last_error['line'], false);
+				showError($last_error['type'], $last_error['message'],  $last_error['file'],  $last_error['line'], false); //send error to logger
 				$reload = false;
 
 				//disable execution
 				if( count($GP_EXEC_STACK) ){
-					$file = $dataDir.'/data/_site/fatal_'.array_pop($GP_EXEC_STACK);
-					gpFiles::Save($file,showArray($last_error));
+					$error_hash = array_pop($GP_EXEC_STACK);
+					$file = $dataDir.'/data/_site/fatal_'.$error_hash;
+					$content = showArray($last_error);
+					gpFiles::Save($file,$content);
 					$reload = true;
 				}
 
@@ -2114,13 +2110,22 @@ class gpOutput{
 				}else{
 					$buffer .= '<h3>Error Details</h3>'
 							.showArray($last_error)
-							.'<p><a href="">Reload this page to continue</a>.</p>'
-							.'<p style="font-size:90%">Note: Error details are only displayed for logged in administrators</p>'
+							.'<p><a href="">Reload this page with the component disabled</a>.</p>';
+					if( $reload ){
+						$buffer .= '<p><a href="?cmd=enable_component&hash='.$error_hash.'">Reload this page with the component enabled</a>.</p>';
+					}
+					$buffer .= '<p style="font-size:90%">Note: Error details are only displayed for logged in administrators</p>'
 							.common::ErrorBuffer(true,false);
 
 				}
 
 			}
+		}
+
+
+		//remove lock
+		if( defined('gp_has_lock') && gp_has_lock ){
+			gpFiles::Unlock('write',gp_random);
 		}
 
 

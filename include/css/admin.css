@@ -230,6 +230,9 @@ body #gp_admin_html .gpsearch{
 	padding-right:22px;
 	}
 
+body #gp_admin_html .padded_table td{
+	padding:5px;
+	}
 
 /*
  * floating admin container

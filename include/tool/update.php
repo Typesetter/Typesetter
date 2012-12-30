@@ -968,7 +968,7 @@ class update_class{
 		}
 
 		//not connected, show form
-		echo '<table cellspacing="0" class="formtable">';
+		echo '<table class="formtable">';
 		echo '<tr><td>';
 
 		$gp_filesystem->connectForm();

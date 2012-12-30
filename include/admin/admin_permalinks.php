@@ -52,8 +52,7 @@ class admin_permalinks{
 		$this->CheckHtaccess();
 
 		echo '<form method="post" action="'.common::GetUrl('Admin_Permalinks').'">';
-
-		echo '<table cellspacing="11">';
+		echo '<table class="padded_table">';
 		//default
 			$checked = '';
 			if( !$_SERVER['gp_rewrite'] ){
@@ -119,7 +118,7 @@ class admin_permalinks{
 			$temp_prefix = $dirPrefix;
 		}
 
-		return $schema.$server.$temp_prefix.'/sampe-page';
+		return $schema.$server.$temp_prefix.'/sample-page';
 	}
 
 

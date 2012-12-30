@@ -215,7 +215,7 @@ class admin_missing extends special_missing{
 			return;
 		}
 
-		echo '<table class="bordered tablesorter" width="100%">';
+		echo '<table class="bordered tablesorter full_width">';
 		echo '<thead>';
 		echo '<tr><th>';
 		echo $langmessage['Source URL'];

@@ -323,138 +323,157 @@ class gp_combine{
 								'package' => 'jquery_ui');
 
 		$scripts['ui-core'] = array(
-								'file' => 'thirdparty/jquery_ui/ui.core.js',
+								'file' => 'thirdparty/jquery_ui/jquery.ui.core.min.js',
 								'requires' => array('jquery'),
 								'package' => 'jquery_ui');
 
 		$scripts['mouse'] = array(
-								'file' => 'thirdparty/jquery_ui/ui.mouse.js',
+								'file' => 'thirdparty/jquery_ui/jquery.ui.mouse.min.js',
 								'requires' => array('ui-core','widget'),
 								'package' => 'jquery_ui');
 
-		$scripts['position'] = array(	'file' => 'thirdparty/jquery_ui/ui.position.js',
+		$scripts['position'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.position.min.js',
 										'package' => 'jquery_ui');
 
-		$scripts['widget'] = array(	'file' => 'thirdparty/jquery_ui/ui.widget.js',
+		$scripts['widget'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.widget.min.js',
 									'package' => 'jquery_ui');
 
 
 
 		//jquery ui interactions
-		$scripts['draggable'] = array(	'file' => 'thirdparty/jquery_ui/ui.draggable.js'
+		$scripts['draggable'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.draggable.min.js'
 										,'requires' => array('jquery', 'ui-core', 'widget', 'mouse')
 										,'package' => 'jquery_ui');
 
-		$scripts['droppable'] = array(	'file' => 'thirdparty/jquery_ui/ui.droppable.js'
+		$scripts['droppable'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.droppable.min.js'
 										,'requires' => array('jquery', 'ui-core', 'widget', 'mouse', 'draggable')
 										,'package' => 'jquery_ui');
 
-		$scripts['resizable'] = array(	'file' => 'thirdparty/jquery_ui/ui.resizable.js'
+		$scripts['resizable'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.resizable.min.js'
 										,'requires' => array('jquery', 'ui-core', 'widget', 'mouse', 'ui-theme')
 										,'package' => 'jquery_ui');
 
-		$scripts['selectable'] = array(	'file' => 'thirdparty/jquery_ui/ui.selectable.js'
+		$scripts['selectable'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.selectable.min.js'
 										,'requires' => array('jquery', 'ui-core', 'widget', 'mouse', 'ui-theme')
 										,'package' => 'jquery_ui');
 
-		$scripts['sortable'] = array(	'file' => 'thirdparty/jquery_ui/ui.sortable.js'
+		$scripts['sortable'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.sortable.min.js'
 										,'requires' => array('jquery', 'ui-core', 'widget', 'mouse')
 										,'package' => 'jquery_ui');
 
 
 		//jquery ui widgets
 
-		$scripts['accordion'] = array(	'file' => 'thirdparty/jquery_ui/ui.accordion.js'
+		$scripts['accordion'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.accordion.min.js'
 										,'requires' => array('jquery', 'ui-core', 'widget', 'ui-theme')
 										,'package' => 'jquery_ui');
 
-		$scripts['autocomplete'] = array(	'file' => 'thirdparty/jquery_ui/ui.autocomplete.js'
+		$scripts['autocomplete'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.autocomplete.min.js'
 											,'requires' => array('jquery', 'ui-core', 'widget', 'position', 'ui-theme')
 											,'package' => 'jquery_ui');
 
-		$scripts['button'] = array(	'file' => 'thirdparty/jquery_ui/ui.button.js'
+		$scripts['button'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.button.min.js'
 									,'requires' => array('jquery', 'ui-core', 'widget', 'ui-theme')
 									,'package' => 'jquery_ui');
 
-		$scripts['datepicker'] = array(	'file' => 'thirdparty/jquery_ui/ui.datepicker.js'
+		$scripts['datepicker'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.datepicker.min.js'
 										,'requires' => array('jquery', 'ui-core', 'ui-theme')
 										,'package' => 'jquery_ui');
 
-		$scripts['dialog'] = array(	'file' => 'thirdparty/jquery_ui/ui.dialog.js'
+		$scripts['dialog'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.dialog.min.js'
 									,'requires' => array('jquery', 'ui-core', 'widget', 'position', 'ui-theme')
 									,'package' => 'jquery_ui');
 
-		$scripts['progressbar'] = array(	'file' => 'thirdparty/jquery_ui/ui.progressbar.js'
+		$scripts['progressbar'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.progressbar.min.js'
 											,'requires' => array('jquery', 'ui-core', 'widget', 'ui-theme')
 											,'package' => 'jquery_ui');
 
-		$scripts['slider'] = array(	'file' => 'thirdparty/jquery_ui/ui.slider.js'
+		$scripts['slider'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.slider.min.js'
 									,'requires' => array('jquery', 'ui-core', 'widget', 'mouse', 'ui-theme')
 									,'package' => 'jquery_ui');
 
-		$scripts['tabs'] = array(	'file' => 'thirdparty/jquery_ui/ui.tabs.js'
+		$scripts['tabs'] = array(	'file' => 'thirdparty/jquery_ui/jquery.ui.tabs.min.js'
 									,'requires' => array('jquery', 'ui-core', 'widget', 'ui-theme')
 									,'package' => 'jquery_ui');
 
 
 
 		//jquery ui effects
-		$scripts['effects-core'] = array(	'file'=>'thirdparty/jquery_ui/effects.core.js'
+		$scripts['effects-core'] = array(	'file'=>'thirdparty/jquery_ui/jquery.ui.effect.min.js'
 											,'requires' => array('jquery')
 											,'package' => 'jquery_ui');
 
-		$scripts['blind'] = array(	'file'=> 'thirdparty/jquery_ui/effects.blind.js'
+		$scripts['blind'] = array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-blind.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui'
 									);
 
-		$scripts['bounce'] = array(	'file'=> 'thirdparty/jquery_ui/effects.bounce.js'
+		$scripts['bounce'] = array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-bounce.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui');
 
-		$scripts['clip'] = array(	'file'=> 'thirdparty/jquery_ui/effects.clip.js'
+		$scripts['clip'] = array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-clip.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui');
 
-		$scripts['drop'] = array(	'file'=> 'thirdparty/jquery_ui/effects.drop.js'
+		$scripts['drop'] = array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-drop.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui');
 
-		$scripts['explode'] = array(	'file'=> 'thirdparty/jquery_ui/effects.explode.js'
+		$scripts['explode'] = array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-explode.min.js'
 										,'requires' => array('jquery', 'effects-core')
 										,'package' => 'jquery_ui');
 
-		$scripts['fade'] = array(	'file'=> 'thirdparty/jquery_ui/effects.fade.js'
+		$scripts['fade'] = array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-fade.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui');
 
-		$scripts['fold'] = array(	'file'=> 'thirdparty/jquery_ui/effects.fold.js'
+		$scripts['fold'] = array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-fold.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui');
 
-		$scripts['highlight'] = array(	'file'=> 'thirdparty/jquery_ui/effects.highlight.js'
+		$scripts['highlight'] = array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-highlight.min.js'
 										,'requires' => array('jquery', 'effects-core')
 										,'package' => 'jquery_ui');
 
-		$scripts['pulsate'] = array(	'file'=> 'thirdparty/jquery_ui/effects.pulsate.js'
+		$scripts['pulsate'] = array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-pulsate.min.js'
 										,'requires' => array('jquery', 'effects-core')
 										,'package' => 'jquery_ui');
 
-		$scripts['scale'] = array(	'file'=> 'thirdparty/jquery_ui/effects.scale.js'
+		$scripts['scale'] = array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-scale.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui');
 
-		$scripts['shake'] = array(	'file'=> 'thirdparty/jquery_ui/effects.shake.js'
+		$scripts['shake'] = array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-shake.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui');
 
-		$scripts['slide'] = array(	'file'=> 'thirdparty/jquery_ui/effects.slide.js'
+		$scripts['slide'] = array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-slide.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui');
 
-		$scripts['transfer'] = array(	'file'=> 'thirdparty/jquery_ui/effects.transfer.js'
+		$scripts['transfer'] = array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-transfer.min.js'
 										,'requires' => array('jquery', 'effects-core')
 										,'package' => 'jquery_ui');
+
+		/**
+		 * make sure each of the files exists
+		 *
+		static $checked = false;
+		if( $checked === false ){
+			global $dataDir;
+			$checked = true;
+			$dir = $dataDir.'/include/';
+			foreach($scripts as $script){
+				$full = $dir.$script['file'];
+				if( !file_exists($full) ){
+					message('desnt exist: '.$script['file']);
+				}
+			}
+		}
+		*/
+
+
 
 		$all_scripts = array();
 		foreach($components as $component){

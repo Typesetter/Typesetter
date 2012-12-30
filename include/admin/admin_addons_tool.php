@@ -175,7 +175,7 @@ class admin_addons_tool{
 		echo '<form action="'.common::GetUrl($this->scriptUrl,'cmd=rate&arg='.$this->addon_info['pass_arg']).'" method="post">';
 
 
-		echo '<table id="rating_table">';
+		echo '<table class="rating_table">';
 
 		echo '<tr><td>Rating</td><td>';
 		echo '<span class="rating">';

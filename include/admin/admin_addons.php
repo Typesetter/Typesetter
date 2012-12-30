@@ -1,5 +1,5 @@
 <?php
-defined("is_running") or die("Not an entry point...");
+defined('is_running') or die('Not an entry point...');
 
 
 /*
@@ -407,19 +407,15 @@ class admin_addons extends admin_addon_install{
 			$sublinks = admin_tools::GetAddonTitles( $addon);
 			if( !empty($sublinks) ){
 				echo '<tr><th>';
-					echo 'Special Links';
-					echo '</th>';
-					echo '<th>';
-					echo $langmessage['options'];
-					echo '</th></tr>';
+				echo 'Special Links';
+				echo '</th><th>';
+				echo $langmessage['options'];
+				echo '</th></tr>';
 
 				foreach($sublinks as $linkName => $linkInfo){
 					echo '<tr><td>';
-						echo common::Link($linkName,$linkInfo['label']);
-						echo '</td>';
-						echo '<td>';
-						echo '-';
-						echo '</td></tr>';
+					echo common::Link($linkName,$linkInfo['label']);
+					echo '</td><td>-</td></tr>';
 				}
 			}
 
@@ -427,11 +423,12 @@ class admin_addons extends admin_addon_install{
 			$sublinks = admin_tools::GetAddonComponents($config['admin_links'],$addon);
 			if( !empty($sublinks) ){
 				echo '<tr><th>';
-					echo 'Admin Links';
-					echo '</th>';
-					echo '<th>';
-					echo $langmessage['options'];
-					echo '</th></tr>';
+				echo 'Admin Links';
+				echo '</th>';
+				echo '<th>';
+				echo $langmessage['options'];
+				echo '</th></tr>';
+
 				foreach($sublinks as $linkName => $linkInfo){
 					echo '<tr><td>';
 						echo common::Link($linkName,$linkInfo['label']);
@@ -447,11 +444,10 @@ class admin_addons extends admin_addon_install{
 			$gadgets = admin_tools::GetAddonComponents($config['gadgets'],$addon);
 			if( is_array($gadgets) && (count($gadgets) > 0) ){
 				echo '<tr><th>';
-					echo $langmessage['gadgets'];
-					echo '</th>';
-					echo '<th>';
-					echo $langmessage['options'];
-					echo '</th></tr>';
+				echo $langmessage['gadgets'];
+				echo '</th><th>';
+				echo $langmessage['options'];
+				echo '</th></tr>';
 
 				foreach($gadgets as $name => $value){
 					echo '<tr><td>';
@@ -491,12 +487,9 @@ class admin_addons extends admin_addon_install{
 		//hooks
 		$hooks = admin_addons::AddonHooks($addon);
 		if( count($hooks) > 0 ){
-			echo '<tr><th>';
-				echo 'Hooks';
-				echo '</th>';
-				echo '<th>';
-				echo $langmessage['options'];
-				echo '</th></tr>';
+			echo '<tr><th>Hooks</th><th>';
+			echo $langmessage['options'];
+			echo '</th></tr>';
 
 			foreach($hooks as $name => $info){
 				echo '<tr><td>';
@@ -524,44 +517,26 @@ class admin_addons extends admin_addon_install{
 			echo 'You posted the following review on '.common::date($langmessage['strftime_date'],$review['time']);
 
 
-			echo '<table cellpadding="7">';
-			echo '<tr>';
-				echo '<td>';
-				echo 'Rating';
-				echo '</td>';
-				echo '<td>';
-				$this->ShowRating($id,$review['rating']);
-				echo '</td>';
-			echo '</tr>';
+			echo '<table class="rating_table">';
+			echo '<tr><td>Rating</td><td>';
+			$this->ShowRating($id,$review['rating']);
+			echo '</td></tr>';
 
-			echo '<tr>';
-				echo '<td>';
-				echo 'Review';
-				echo '</td>';
-				echo '<td>';
-				echo nl2br(htmlspecialchars($review['review']));
-				echo '</td>';
-			echo '</tr>';
-			echo '<tr>';
-				echo '<td>';
-				echo '</td>';
-				echo '<td>';
-				echo common::Link('Admin_Addons','Edit Review','cmd=rate&arg='.$id);
-				echo '</td>';
-			echo '</tr>';
+			echo '<tr><td>Review</td><td>';
+			echo nl2br(htmlspecialchars($review['review']));
+			echo '</td></tr>';
+
+			echo '<tr><td></td><td>';
+			echo common::Link('Admin_Addons','Edit Review','cmd=rate&arg='.$id);
+			echo '</td></tr>';
 			echo '</table>';
 
 
 		}else{
-			echo '<table cellpadding="7">';
-			echo '<tr>';
-				echo '<td>';
-				echo 'Rating';
-				echo '</td>';
-				echo '<td>';
-				$this->ShowRating($id,5);
-				echo '</td>';
-				echo '</tr>';
+			echo '<table class="rating_table">';
+			echo '<tr><td>Rating</td><td>';
+			$this->ShowRating($id,5);
+			echo '</td></tr>';
 			echo '</table>';
 		}
 

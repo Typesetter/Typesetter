@@ -269,7 +269,7 @@ class gpsession{
 		if( !empty($dirPrefix) ){
 			$cookiePath = $dirPrefix;
 		}
-		$cookiePath = common::HrefEncode($cookiePath);
+		$cookiePath = common::HrefEncode($cookiePath,false);
 
 
 		if( $expires === false ){

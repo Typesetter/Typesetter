@@ -1182,7 +1182,7 @@ class gpOutput{
 		foreach($attributes as $key => $value){
 			$str .= ' '.$key.'="'.htmlspecialchars($value,ENT_COMPAT,'UTF-8',false).'"';
 		}
-		echo '<img src="'.common::GetDir($img_rel).'"'.$str.'/>';
+		echo '<img src="'.common::GetDir($img_rel,true).'"'.$str.'/>';
 	}
 
 
@@ -1831,7 +1831,7 @@ class gpOutput{
 		if( common::LoggedIn() ){
 			$GP_INLINE_VARS += array(
 				'isadmin' => true,
-				'gpBLink' => common::HrefEncode($linkPrefix),
+				'gpBLink' => common::HrefEncode($linkPrefix,false),
 				'post_nonce' => common::new_nonce('post',true),
 				'gpRem' => admin_tools::CanRemoteInstall(),
 				'admin_resizable' => true,
@@ -2110,9 +2110,10 @@ class gpOutput{
 				}else{
 					$buffer .= '<h3>Error Details</h3>'
 							.showArray($last_error)
-							.'<p><a href="">Reload this page with the component disabled</a>.</p>';
+							.'<p><a href="">Reload this page</a></p>';
 					if( $reload ){
-						$buffer .= '<p><a href="?cmd=enable_component&hash='.$error_hash.'">Reload this page with the component enabled</a>.</p>';
+						$buffer .= '<p><a href="">Reload this page with the faulty component disabled</a></p>'
+								. '<p><a href="?cmd=enable_component&hash='.$error_hash.'">Reload this page with the faulty component enabled</a></p>';
 					}
 					$buffer .= '<p style="font-size:90%">Note: Error details are only displayed for logged in administrators</p>'
 							.common::ErrorBuffer(true,false);

@@ -454,13 +454,13 @@ class admin_addons extends admin_addon_install{
 					echo str_replace('_',' ',$name);
 					echo '</td><td>';
 					if( isset($value['disabled']) ){
-						echo common::Link('Admin_Addons',$langmessage['enable'],'cmd=enable&addon='.$addon.'&gadget='.rawurlencode($name),'data-cmd="creq"');
+						echo common::Link('Admin_Addons',$langmessage['enable'],'cmd=enable&addon='.rawurlencode($addon).'&gadget='.rawurlencode($name),'data-cmd="creq"');
 						echo ' - ';
 						echo '<b>'.$langmessage['disabled'].'</b>';
 					}else{
 						echo ' <b>'.$langmessage['enabled'].'</b>';
 						echo ' - ';
-						echo common::Link('Admin_Addons',$langmessage['disable'],'cmd=disable&addon='.$addon.'&gadget='.rawurlencode($name),'data-cmd="creq"');
+						echo common::Link('Admin_Addons',$langmessage['disable'],'cmd=disable&addon='.rawurlencode($addon).'&gadget='.rawurlencode($name),'data-cmd="creq"');
 					}
 					echo '</td></tr>';
 				}
@@ -745,7 +745,7 @@ class admin_addons extends admin_addon_install{
 
 			echo '<td>';
 			$label = $addonName;
-			echo common::Link('Admin_Addons',$label,'cmd=show&addon='.$folder);
+			echo common::Link('Admin_Addons',$label,'cmd=show&addon='.rawurlencode($folder));
 			if( is_link($installFolder) ){
 				echo '<br/> <em class="admin_note">'.$langmessage['developer_install'].'</em>';
 				$developerInstall = true;
@@ -815,7 +815,7 @@ class admin_addons extends admin_addon_install{
 
 
 			echo ' &nbsp; ';
-			echo common::Link('Admin_Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.$folder,'data-cmd="gpabox"');
+			echo common::Link('Admin_Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.rawurlencode($folder),'data-cmd="gpabox"');
 
 			echo '</td>';
 			echo '<td>';

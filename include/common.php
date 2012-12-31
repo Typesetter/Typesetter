@@ -284,7 +284,8 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
  * Calculate the difference between two micro times
  *
  */
-function microtime_diff($a, $b, $eff = 6) {
+function microtime_diff($a, $b = false, $eff = 6) {
+	if( !$b ) $b = microtime();
 	$a = array_sum(explode(" ", $a));
 	$b = array_sum(explode(" ", $b));
 	return sprintf('%0.'.$eff.'f', $b-$a);
@@ -1097,7 +1098,7 @@ class common{
 	}
 
 	static function SetGlobalPaths($DirectoriesAway,$expecting){
-		global $dataDir, $dirPrefix, $rootDir, $dirPrefixEncoded;
+		global $dataDir, $dirPrefix, $rootDir;
 
 		$rootDir = common::DirName( __FILE__, 2 );
 
@@ -1124,8 +1125,6 @@ class common{
 		if( $dirPrefix == '/' ){
 			$dirPrefix = '';
 		}
-
-		$dirPrefixEncoded = common::HrefEncode($dirPrefix);
 	}
 
 	/**
@@ -1403,11 +1402,7 @@ class common{
 			$href = $linkPrefix.'/'.ltrim($href,'/');
 		}
 
-		if( $ampersands ){
-			$href = common::Ampersands($href);
-			$query = common::Ampersands($query);
-		}
-
+		$query = common::QueryEncode($query,$ampersands);
 
 		if( $nonce_action ){
 			$nonce = common::new_nonce($nonce_action);
@@ -1420,8 +1415,7 @@ class common{
 			$query = '?'.ltrim($query,'?');
 		}
 
-
-		return common::HrefEncode($href).$query;
+		return common::HrefEncode($href,$ampersands).$query;
 	}
 
 	//translate special pages from key to title
@@ -1447,16 +1441,52 @@ class common{
 	}
 
 	/**
-	 * Rawurlencode but keeps the following characters: &, /, \
+	 * RawUrlEncode but keeps the following characters: &, /, \
 	 * Slash is needed for hierarchical links
 	 * In case you'd like to learn about percent encoding: http://www.blooberry.com/indexdot/html/topics/urlencoding.htm
 	 *
 	 */
-	static function HrefEncode($href){
+	static function HrefEncode($href,$ampersands=true){
+		$ampersand = '&';
+		if( $ampersands ){
+			$ampersand = '&amp;';
+		}
 		$href = rawurlencode($href);
-		return str_replace( array('%26','&amp%3B','%2F','%5C'),array('&','&amp;','/','\\'),$href);
+		return str_replace( array('%26amp%3B','%26','%2F','%5C'),array($ampersand,$ampersand,'/','\\'),$href);
 	}
 
+	/**
+	 * RawUrlEncode parts of the query string ( characters except & and = )
+	 *
+	 */
+	static function QueryEncode($query,$ampersands = true){
+
+		if( empty($query) ){
+			return '';
+		}
+
+		if( strpos($query,'&amp;') !== false ){
+			$parts = explode('&amp;',$query);
+		}else{
+			$parts = explode('&',$query);
+		}
+
+		$ampersand = $query = '';
+		foreach($parts as $part){
+			if( strpos($part,'=') ){
+				list($key,$value) = explode('=',$part,2);
+				$query .= $ampersand.rawurlencode(rawurldecode($key)).'='.rawurlencode(rawurldecode($value));
+			}else{
+				$query .= $ampersand.rawurlencode(rawurldecode($part));
+			}
+			if( $ampersands ){
+				$ampersand = '&amp;';
+			}else{
+				$ampersand = '&';
+			}
+		}
+		return $query;
+	}
 
 	static function AbsoluteLink($href,$label,$query='',$attr=''){
 
@@ -1498,10 +1528,7 @@ class common{
 			$query = mb_substr($dir,$pos);
 		}
 		$dir = $dirPrefix.'/'.ltrim($dir,'/');
-		if( $ampersands ){
-			$dir = common::ampersands($dir);
-		}
-		return common::HrefEncode($dir).$query;
+		return common::HrefEncode($dir,$ampersands).$query;
 	}
 
 

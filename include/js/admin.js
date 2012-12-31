@@ -211,6 +211,7 @@ $gp.links.remote = function(evt){
  *
  */
 $gp.SaveGPUI = function(){
+	if( !isadmin ) return;
 	l = 'cmd=savegpui';
 	$.each(gpui,function(i,value){
 		l += '&gpui_'+i+'='+value;
@@ -968,163 +969,163 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 	var $doc = $(document);
 
 
-		//dragging
-		$(selector).die('mousedown.sdrag').live('mousedown.sdrag',function(e){
-			/* if( e.target.nodeName != 'DIV') return; */
+	//dragging
+	$(selector).die('mousedown.sdrag').live('mousedown.sdrag',function(e){
+		/* if( e.target.nodeName != 'DIV') return; */
 
-			var box, click_offsetx, click_offsety;
-			e.preventDefault();
-			if( $drag_area.length < 1 ){
-				return;
-			}
-			init();
-			function init(){
+		var box, click_offsetx, click_offsety;
+		e.preventDefault();
+		if( $drag_area.length < 1 ){
+			return;
+		}
+		init();
+		function init(){
+			var pos = $drag_area.offset();
+			click_offsetx = e.clientX - pos.left + $win.scrollLeft();
+			click_offsety = e.clientY - pos.top + $win.scrollTop();
+
+			//$drag_area.fadeTo(0,.5);
+
+			//if( positioning == 'fixed' ){
+				//box = $drag_area;
+			//}
+		}
+
+
+		$doc.bind('mousemove.sdrag',function(e){
+
+			//initiate the box
+			if( !box ){
 				var pos = $drag_area.offset();
-				click_offsetx = e.clientX - pos.left + $win.scrollLeft();
-				click_offsety = e.clientY - pos.top + $win.scrollTop();
-
-				//$drag_area.fadeTo(0,.5);
-
-				//if( positioning == 'fixed' ){
-					//box = $drag_area;
-				//}
+				var w = $drag_area.width();
+				var h = $drag_area.height();
+				box = $gp.div('admin_drag_box')
+					.css({'top':pos.top,'left':pos.left,'width':w,'height':h});
 			}
 
-
-			$doc.bind('mousemove.sdrag',function(e){
-
-				//initiate the box
-				if( !box ){
-					var pos = $drag_area.offset();
-					var w = $drag_area.width();
-					var h = $drag_area.height();
-					box = $gp.div('admin_drag_box')
-						.css({'top':pos.top,'left':pos.left,'width':w,'height':h});
-				}
-
-				box.css({'left':Math.max(tolerance,e.clientX - click_offsetx),'top': Math.max(tolerance,e.clientY - click_offsety)});
-				e.preventDefault();
-				return false;
-			});
-
-
-
-			$doc.unbind('mouseup.sdrag').bind('mouseup.sdrag',function(e){
-				var newposleft,newpostop,pos_obj;
-				$doc.unbind('mousemove.sdrag mouseup.sdrag');
-
-				if( !box ){
-					return false;
-				}
-				e.preventDefault();
-
-				//clean
-				box.remove();
-				box = false;
-
-				//new
-				newposleft = e.clientX - click_offsetx;
-				newpostop = e.clientY - click_offsety;
-				//newposleft = Math.max(0,e.clientX - click_offsetx);
-				//newpostop = Math.max(0,e.clientY - click_offsety);
-
-				//add scroll back in for absolute position
-				if( positioning == 'absolute' ){
-					newposleft += $win.scrollLeft();
-					newpostop += $win.scrollTop();
-				}
-
-				newposleft = Math.max(tolerance,newposleft);
-				newpostop = Math.max(tolerance,newpostop);
-
-
-				pos_obj = {'left':newposleft,'top': newpostop};
-
-				$drag_area.css(pos_obj).data({'gp_left':newposleft,'gp_top':newpostop});
-
-				if( typeof(callback_done) == 'function' ){
-					callback_done.call($drag_area,pos_obj,e);
-				}
-				return false;
-			});
-
+			box.css({'left':Math.max(tolerance,e.clientX - click_offsetx),'top': Math.max(tolerance,e.clientY - click_offsety)});
+			e.preventDefault();
 			return false;
 		});
 
 
 
-		if( $drag_area.css('position') == 'fixed' || $drag_area.parent().css('position') == 'fixed' ){
-			KeepViewable( $drag_area.addClass('keep_viewable') ,true);
-		}
+		$doc.unbind('mouseup.sdrag').bind('mouseup.sdrag',function(e){
+			var newposleft,newpostop,pos_obj;
+			$doc.unbind('mousemove.sdrag mouseup.sdrag');
 
-		function KeepViewable($elem,init){
+			if( !box ){
+				return false;
+			}
+			e.preventDefault();
 
-			if( !$elem.hasClass('keep_viewable') ) return;
+			//clean
+			box.remove();
+			box = false;
 
-			var is_fixed = ($elem.css('position') == 'fixed');
-			var pos, gp_left, css = {};
+			//new
+			newposleft = e.clientX - click_offsetx;
+			newpostop = e.clientY - click_offsety;
+			//newposleft = Math.max(0,e.clientX - click_offsetx);
+			//newpostop = Math.max(0,e.clientY - click_offsety);
 
-			//get current position
-			pos = $elem.position();
-			if( is_fixed ){
-				pos.left -= $win.scrollLeft();
-				pos.top -= $win.scrollTop();
+			//add scroll back in for absolute position
+			if( positioning == 'absolute' ){
+				newposleft += $win.scrollLeft();
+				newpostop += $win.scrollTop();
 			}
 
-			//move back to the right if $elem has been moved left
-			if( init ){
-				$elem.data({'gp_left':pos.left,'gp_top':pos.top});
-			}else if( gp_left = $elem.data('gp_left') ){
-				pos.left = css.left = gp_left;
-				pos.top = css.top = $elem.data('gp_top');
+			newposleft = Math.max(tolerance,newposleft);
+			newpostop = Math.max(tolerance,newpostop);
+
+
+			pos_obj = {'left':newposleft,'top': newpostop};
+
+			$drag_area.css(pos_obj).data({'gp_left':newposleft,'gp_top':newpostop});
+
+			if( typeof(callback_done) == 'function' ){
+				callback_done.call($drag_area,pos_obj,e);
 			}
-
-			var width = $elem.width();
-			var height = $elem.height();
-
-
-			//keep the top of the area from being placed too high in the window
-			var winbottom = $win.height();
-			if( pos.top < tolerance ){
-				css.top = tolerance;
-
-			//keep the top of the area from being placed too low
-			}else if( pos.top > winbottom ){
-				css.top = winbottom + 2*tolerance; //tolerance is negative
-			}
-
-
-			/*
-			var winheight = $win.height();
-			var checkbottom = $win.height() - height - tolerance;
-			if( pos.top < tolerance ){
-				css.top = tolerance;
-
-			}else if( pos.top > checkbottom ){
-				if( height > winheight ){
-					css.top = checkbottom + ( height - winheight);
-				}else{
-					css.top = checkbottom;
-				}
-			}
-			*/
-
-			//right
-			var checkright = $win.width()  - width - tolerance;
-			if( pos.left > checkright ){
-				css.left = checkright;
-			}
-
-			if( css.left || css.top ){
-				$elem.css(css);
-			}
-		}
-
-		$win.resize(function(){
-			$('.keep_viewable').each(function(){
-				KeepViewable($(this),false);
-			});
+			return false;
 		});
+
+		return false;
+	});
+
+
+
+	if( $drag_area.css('position') == 'fixed' || $drag_area.parent().css('position') == 'fixed' ){
+		KeepViewable( $drag_area.addClass('keep_viewable') ,true);
+	}
+
+	function KeepViewable($elem,init){
+
+		if( !$elem.hasClass('keep_viewable') ) return;
+
+		var is_fixed = ($elem.css('position') == 'fixed');
+		var pos, gp_left, css = {};
+
+		//get current position
+		pos = $elem.position();
+		if( is_fixed ){
+			pos.left -= $win.scrollLeft();
+			pos.top -= $win.scrollTop();
+		}
+
+		//move back to the right if $elem has been moved left
+		if( init ){
+			$elem.data({'gp_left':pos.left,'gp_top':pos.top});
+		}else if( gp_left = $elem.data('gp_left') ){
+			pos.left = css.left = gp_left;
+			pos.top = css.top = $elem.data('gp_top');
+		}
+
+		var width = $elem.width();
+		var height = $elem.height();
+
+
+		//keep the top of the area from being placed too high in the window
+		var winbottom = $win.height();
+		if( pos.top < tolerance ){
+			css.top = tolerance;
+
+		//keep the top of the area from being placed too low
+		}else if( pos.top > winbottom ){
+			css.top = winbottom + 2*tolerance; //tolerance is negative
+		}
+
+
+		/*
+		var winheight = $win.height();
+		var checkbottom = $win.height() - height - tolerance;
+		if( pos.top < tolerance ){
+			css.top = tolerance;
+
+		}else if( pos.top > checkbottom ){
+			if( height > winheight ){
+				css.top = checkbottom + ( height - winheight);
+			}else{
+				css.top = checkbottom;
+			}
+		}
+		*/
+
+		//right
+		var checkright = $win.width()  - width - tolerance;
+		if( pos.left > checkright ){
+			css.left = checkright;
+		}
+
+		if( css.left || css.top ){
+			$elem.css(css);
+		}
+	}
+
+	$win.resize(function(){
+		$('.keep_viewable').each(function(){
+			KeepViewable($(this),false);
+		});
+	});
 
 }
 

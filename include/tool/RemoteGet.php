@@ -77,6 +77,7 @@ class gpRemoteGet{
 	 * Loop through all potential methods until successful
 	 */
 	static function Get($url,$args=array()){
+		$url = rawurldecode($url);
 
 		$methods = array('stream','fopen','fsockopen');
 		foreach($methods as $method){

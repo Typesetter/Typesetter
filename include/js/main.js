@@ -325,7 +325,11 @@ $(function(){
 				debug_info.data = ajaxOptions.data.substr(0,100);
 			}
 
-			debug( debug_info );
+			if( typeof(debug) == 'function' ){
+				debug( debug_info );
+			}else{
+				console.log( debug_info );
+			}
 			//LOGO( XMLHttpRequest );
 			//LOGO( event );
 			//alert('Error detected');

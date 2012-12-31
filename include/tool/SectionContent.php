@@ -88,7 +88,7 @@ class section_content{
 		//variables
 		$vars = array(
 			'dirPrefix' => $GLOBALS['dirPrefix'],
-			'linkPrefix' => common::HrefEncode(common::Ampersands($GLOBALS['linkPrefix'])),
+			'linkPrefix' => common::HrefEncode($GLOBALS['linkPrefix']),
 			'fileModTime' => self::$meta['modified'],
 			'title' => self::$title,
 			'label' => self::$label,

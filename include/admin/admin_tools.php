@@ -1142,7 +1142,7 @@ class admin_tools{
 				}
 
 				if( $addon_permissions ){
-					echo common::Link('Admin_Addons',$addonName,'cmd=show&addon='.$addon);
+					echo common::Link('Admin_Addons',$addonName,'cmd=show&addon='.rawurlencode($addon));
 				}else{
 					echo '<a>'.$addonName.'</a>';
 				}

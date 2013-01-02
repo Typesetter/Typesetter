@@ -1,17 +1,22 @@
+/*global $gp:false, gpui:false, gplinks:false, gpinputs:false isadmin:false, gpBase:false, strip_from:false, gpRem:false, gpBLink:false, admin_resizable:false */
+/*jshint forin:true, noarg:true, noempty:true, eqeqeq:true, bitwise:true, strict:true, undef:true, unused:true, curly:true, browser:true, jquery:true, indent:4, maxerr:100, newcap:false, white:false*/
+"use strict";
 
 var gp_editor = false;
 
 var debug_area;
 function debug(arg){
-	if( !debug_area ) debug_area = $('<div id="debug" style="position:absolute;top:0;left:0;background:#fff;padding:10px;z-index:99999;border:1px solid #333;max-width:30%;white-space:pre-wrap">').prependTo('body');
+	if( !debug_area ){
+		debug_area = $('<div id="debug" style="position:absolute;top:0;left:0;background:#fff;padding:10px;z-index:99999;border:1px solid #333;max-width:30%;white-space:pre-wrap">').prependTo('body');
+	}
 	debug_area.prepend('<div>'+LOGO(arg)+'</div><hr/>');
 }
 function LOGO(obj){
-	var type = typeof(obj);
-	var a = "\n<br/> ("+type+') ';
-	switch(type){
-		case 'object':
-			for(var i in obj){
+	var i,a,type = typeof(obj);
+	a = "\n<br/> ("+type+') ';
+	if( type === 'object' ){
+		for(i in obj){
+			if( obj.hasOwnProperty(i) ){
 				a += "\n<b>"+i+ '</b> = ';
 				try{
 					a += obj[i].toString().replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -19,10 +24,9 @@ function LOGO(obj){
 					a += " -- not allowed -- ";
 				}
 			}
-		break;
-		default:
-			a += obj;
-		break;
+		}
+	}else{
+		a += obj;
 	}
 	return a;
 }
@@ -37,11 +41,11 @@ $gp.Coords = function(area){
 	if( area.hasClass('inner_size') ){
 		area = area.children(':first');
 	}
-	loc = area.offset();
+	var loc = area.offset();
 	loc.w = area.outerWidth();
 	loc.h = area.outerHeight();
 	return loc;
-}
+};
 
 
 /**
@@ -50,11 +54,11 @@ $gp.Coords = function(area){
  */
 $gp.div = function(id){
 	var div = $('#'+id);
-	if( div.length == 0 ){
+	if( div.length === 0 ){
 		div = $('<div id="'+id+'"></div>').appendTo('#gp_admin_html');
 	}
 	return div;
-}
+};
 
 
 /**
@@ -66,7 +70,7 @@ $gp.links.iadmin_box = function(evt,arg){
 	evt.preventDefault();
 	$gp.CopyVals(arg,this);
 	$gp.AdminBoxC($(arg),'inline');
-}
+};
 
 
 /**
@@ -79,7 +83,7 @@ $gp.links.inline_edit_generic = function(evt,rel){
 
 	//legacy inline editing support
 	//can also be used for development/troubleshooting
-	if( typeof(gplinks[rel]) == 'function' ){
+	if( typeof(gplinks[rel]) === 'function' ){
 		gplinks[rel].call(this,rel,evt);
 		return;
 	}
@@ -88,17 +92,16 @@ $gp.links.inline_edit_generic = function(evt,rel){
 
 	var file_path = strip_from(this.href,'#');
 	var id = $(this).attr('id').substr(13);
-
-	script = file_path+'&cmd=inlineedit&area_id='+id;
+	var script = file_path+'&cmd=inlineedit&area_id='+id;
 	$.getScript( script,function(data){
-		if( data == 'false' ){
+		if( data === 'false' ){
 			alert($gp.error);
 			$gp.loaded();
 		}
 		//for debugging
 		//debug(data);
 	});
-}
+};
 
 
 
@@ -114,18 +117,20 @@ $gp.LoadStyle = function(file){
 	$('<link rel="stylesheet" type="text/css" />')
 		.appendTo('head')
 		.attr({'href':gpBase+file+'?t='+t});
-}
+};
 
 
 /**
  * Show content (data) in #gp_admin_box
  * This is used instead of colorbox for admin content
- * 		- this box resizes without javascript calls (height)
- * 		- less animation
+ *		- this box resizes without javascript calls (height)
+ *		- less animation
  */
 $gp.AdminBoxC = function(data,context){
 	$gp.CloseAdminBox();
-	if( data == '' ) return false;
+	if( data === '' ){
+		return false;
+	}
 
 	/*
 	var win_width = $win.width();
@@ -140,9 +145,9 @@ $gp.AdminBoxC = function(data,context){
 		.css({'zIndex':11000,'min-height':height})
 		.stop(true,true,true)
 		.fadeTo(0,0) //fade in from transparent
-		.fadeTo(200,.2);
+		.fadeTo(200,0.2);
 
-	var box = $gp.div('gp_admin_box')
+	$gp.div('gp_admin_box')
 				.css({'zIndex':'11001','left':left,'top': $win.scrollTop() })
 				.stop(true,true,true)
 				.fadeIn(400)
@@ -152,7 +157,7 @@ $gp.AdminBoxC = function(data,context){
 
 	$('.messages').detach();
 	return true;
-}
+};
 
 
 /**
@@ -160,7 +165,9 @@ $gp.AdminBoxC = function(data,context){
  *
  */
 $gp.CloseAdminBox = function(evt){
-	if( evt ) evt.preventDefault();
+	if( evt ){
+		evt.preventDefault();
+	}
 	$('#gp_admin_box1').fadeOut();
 	$('#gp_admin_box').fadeOut(300,function(){
 
@@ -177,7 +184,7 @@ $gp.CloseAdminBox = function(evt){
 	if( typeof($.fn.colorbox) !== 'undefined' ){
 		$.fn.colorbox.close();
 	}
-}
+};
 $gp.links.admin_box_close = gpinputs.admin_box_close = $gp.CloseAdminBox;
 
 
@@ -202,7 +209,7 @@ $gp.links.remote = function(evt){
 
 	var iframe = '<iframe src="'+src+'" style="height:'+height+'px;" frameborder="0" />';
 	$gp.AdminBoxC(iframe,'iframe');
-}
+};
 
 
 
@@ -211,15 +218,17 @@ $gp.links.remote = function(evt){
  *
  */
 $gp.SaveGPUI = function(){
-	if( !isadmin ) return;
-	l = 'cmd=savegpui';
+	if( !isadmin ){
+		return;
+	}
+	var data = 'cmd=savegpui';
 	$.each(gpui,function(i,value){
-		l += '&gpui_'+i+'='+value;
+		data += '&gpui_'+i+'='+value;
 	});
 
-	$gp.postC( window.location.href, l);
+	$gp.postC( window.location.href, data);
 	//for debugging, see gpsession::SaveGPUI()
-}
+};
 
 
 /**
@@ -229,43 +238,36 @@ $gp.SaveGPUI = function(){
 $gp.links.dd_menu = function(evt){
 
 	evt.preventDefault();
+	evt.stopPropagation();
+
 	$('.messages').detach(); //remove messages since we can't set the z-index properly
 	var that = this;
 	var $list = $(this).parent().find('.dd_list');
-	ShowList();
-	evt.stopPropagation();
 
 	//display the list and add other handlers
-	function ShowList(){
-		$list.show();
+	$list.show();
 
-		//scroll to show selected
-		var $selected = $list.find('.selected');
-		if( $selected.length ){
-			var $ul = $list.find('ul:first');
-			var top = $list.find('.selected').parent().position().top + $ul.scrollTop() - 30;
-			$ul.scrollTop(top);
-		}
-
-		$('body').on('click.gp_select',function(evt){
-			HideList();
-
-			//stop propogation if it's a click on the current menu so it will remain hidden
-			if( $(evt.target).closest(that).length ){
-				evt.stopPropagation();
-			}
-		});
-
+	//scroll to show selected
+	var $selected = $list.find('.selected');
+	if( $selected.length ){
+		var $ul = $list.find('ul:first');
+		var top = $list.find('.selected').parent().position().top + $ul.scrollTop() - 30;
+		$ul.scrollTop(top);
 	}
 
 	//hide the list and remove handlers
-	function HideList(){
+	$('body').on('click.gp_select',function(evt){
 		$list.hide();
 		$list.off('.gp_select');
 		$('body').off('.gp_select');
-	}
 
-}
+		//stop propogation if it's a click on the current menu so it will remain hidden
+		if( $(evt.target).closest(that).length ){
+			evt.stopPropagation();
+		}
+	});
+
+};
 
 
 /**
@@ -276,14 +278,16 @@ $gp.links.tabs = function(evt){
 	evt.preventDefault();
 	var $this = $(this);
 	$this.siblings('a').removeClass('selected').each(function(b,c){
-		if( c.hash ) $(c.hash).hide();
+		if( c.hash ){
+			$(c.hash).hide();
+		}
 	});
 
 	if( this.hash ){
 		$this.addClass('selected');
 		$(this.hash).show();
 	}
-}
+};
 
 
 
@@ -298,7 +302,6 @@ $gp.LoadScripts = function(scripts,callback,relative_path){
 	var script_count = scripts.length,
 						d=new Date(),
 						t=d.getTime(),
-						script,
 						base='';
 
 	relative_path = relative_path||false;
@@ -322,14 +325,14 @@ $gp.LoadScripts = function(scripts,callback,relative_path){
 
 	function sload(){
 		script_count--;
-		if(script_count == 0){
-			if( typeof(callback) == 'function' ){
+		if(script_count === 0){
+			if( typeof(callback) === 'function' ){
 				callback.call(this);
 			}
 		}
 	}
 
-}
+};
 
 
 
@@ -340,7 +343,7 @@ $gp.LoadScripts = function(scripts,callback,relative_path){
 $gp.links.gp_refresh = function(evt){
 	evt.preventDefault();
 	window.location = strip_from(window.location.href,'#');
-}
+};
 
 
 /**
@@ -352,7 +355,6 @@ $gp.links.toggle_panel = function(evt){
 	evt.preventDefault();
 
 	var classes = '';
-	var has_min = panel.hasClass('min');
 
 	if( panel.hasClass('minb') ){
 		classes = '';
@@ -371,7 +373,7 @@ $gp.links.toggle_panel = function(evt){
 
 	gpui.cmpct = c;
 	$gp.SaveGPUI();
-}
+};
 
 
 
@@ -384,21 +386,23 @@ $gp.links.toplink = function(){
 	//must not be compact
 	var $this = $(this);
 	var panel = $('#simplepanel');
-	if( panel.hasClass('compact') ) return;
+	if( panel.hasClass('compact') ){
+		return;
+	}
 
 	var b = $this.next();
 	var is_visible = b.is(':visible') && (b.height() > 0);
 
 	//hide visible areas
 	$('#simplepanel .panelgroup2:visible').slideUp(300);
-	gpui['vis'] = false;
+	gpui.vis = false;
 
 	if( !is_visible ){
-		gpui['vis'] = $this.data('arg');
+		gpui.vis = $this.data('arg');
 		b.slideDown(300);
 	}
 	$gp.SaveGPUI();
-}
+};
 
 
 
@@ -419,7 +423,7 @@ $gp.links.collapsible = function(){
 		area.toggleClass('hidden').next().slideToggle(300);
 	}
 
-}
+};
 
 
 /**
@@ -432,11 +436,11 @@ $gp.links.ajax_box = $gp.links.admin_box = function(evt){
 	evt.preventDefault();
 	$gp.loading();
 	var href = $gp.jPrep(this.href,'gpreq=flush');
-	$.get(href,'',function(data, textStatus, XMLHttpRequest){
+	$.get(href,'',function(data){
 		$gp.AdminBoxC(data);
 		$gp.loaded();
 	},'html');
-}
+};
 
 
 /**
@@ -448,7 +452,7 @@ $gp.links.gpabox = function(evt){
 	$gp.loading();
 	var href = $gp.jPrep(this.href)+'&gpx_content=gpabox';
 	$.getJSON(href,$gp.Response);
-}
+};
 
 
 /**
@@ -457,7 +461,7 @@ $gp.links.gpabox = function(evt){
  */
 $gp.inputs.gpabox = function(){
 	return $gp.post(this,'gpx_content=gpabox');
-}
+};
 
 
 /**
@@ -470,7 +474,7 @@ $gp.inputs.gpcheck = function(){
 	}else{
 		$(this).parent().removeClass('checked');
 	}
-}
+};
 
 
 /**
@@ -479,9 +483,18 @@ $gp.inputs.gpcheck = function(){
  */
 $gp.inputs.check_all = function(){
 	$(this).closest('form').find('input[type=checkbox]').prop('checked',this.checked);
-}
+};
 
 
+
+/**
+ * Escape special html characters in a string similar to php's htmlspecialchars() function
+ *
+ */
+$gp.htmlchars = function(str){
+	str = str || '';
+	return $('<a>').text(str).html();
+};
 
 
 
@@ -492,10 +505,10 @@ $gp.inputs.check_all = function(){
 $(function(){
 
 	//add return value to form
-	$('form').live('mousedown',function(e){
+	$('form').live('mousedown',function(){
 		var $this = $(this);
 
-		if( $this.data('gpForms') == 'checked' ){
+		if( $this.data('gpForms') === 'checked' ){
 			return;
 		}
 
@@ -506,7 +519,7 @@ $(function(){
 		$this.data('gpForms','checked');
 	});
 
-	if( !isadmin || (typeof(gp_bodyashtml) != 'undefined') ){
+	if( !isadmin || (typeof(gp_bodyashtml) !== 'undefined') ){
 		return;
 	}
 
@@ -536,20 +549,24 @@ $(function(){
 	 */
 	window.onbeforeunload = function(){
 
-		if( !gp_editor ) return;
-		if( typeof(gp_editor.checkDirty) == 'undefined' ) return;
+		if( !gp_editor ){
+			return;
+		}
+		if( typeof(gp_editor.checkDirty) === 'undefined' ){
+			return;
+		}
 
 		if( gp_editor.checkDirty() ){
 			return 'Unsaved changes will be lost.';
 		}
 		return;
-	}
+	};
 
 
 
 
 	function ContentPosition(){
-		var admin_content,parent,container,dock_area;
+		var admin_content,container,dock_area;
 
 		//position admincontent over page
 		admin_content = $('#admincontent');
@@ -572,7 +589,7 @@ $(function(){
 
 		Put(false); //$gp.SaveGPUI won't be avail yet
 
-		SimpleDrag('#admincontent_panel',container,'absolute',function(newpos,e){
+		SimpleDrag('#admincontent_panel',container,'absolute',function(newpos){
 			gpui.pposx = newpos.left;
 			gpui.pposy = newpos.top;
 			gpui.pdock = false;
@@ -592,7 +609,7 @@ $(function(){
 			left = gpui.pposx;
 
 			//if the admin window is docked
-			if( gpui.pdock || (top == 0 && left == 0) ){
+			if( gpui.pdock || (top === 0 && left === 0) ){
 				var pos = dock_area.offset();
 				top = Math.min(300,pos.top+5);
 				left = pos.left+5;
@@ -619,14 +636,16 @@ $(function(){
 
 
 			//don't save during init since nothing has changed
-			if( save ) $gp.SaveGPUI();
+			if( save ){
+				$gp.SaveGPUI();
+			}
 		}
 
 		$gp.links.gp_docklink = function(evt){
 			evt.preventDefault();
 			gpui.pdock = !gpui.pdock;
 			Put(true);
-		}
+		};
 
 	} /* end ContentPosition() */
 
@@ -656,7 +675,7 @@ $(function(){
 					var id_number = $b.attr('id').substr(13);
 					area = $('#ExtraEditArea'+id_number);
 
-					if( area.hasClass('gp_no_overlay') || area.length == 0 ){
+					if( area.hasClass('gp_no_overlay') || area.length === 0 ){
 						return true;
 					}
 					count++;
@@ -724,28 +743,33 @@ $(function(){
 				if( target.hasClass('gp_overlay_close') ){
 					evt.preventDefault();
 				}
-				if( edit_area) edit_area.addClass('gp_no_overlay');
+				if( edit_area){
+					edit_area.addClass('gp_no_overlay');
+				}
 			}
 			HideOverlay();
 
-		}).mouseleave(function(evt){
+		}).mouseleave(function(){
 			StartOverlayHide();
 		}).mouseenter(function(){
-			if( timeout ) window.clearTimeout(timeout);
+			if( timeout ){
+				window.clearTimeout(timeout);
+			}
 		});
 
 		//show the edit link when hovering over an editable area
 		//	using mouseenter to show link an area filled with an iframe
 		$('.editable_area').bind('mousemove.gp mouseenter.gp',function(e){
-			if( timeout ) window.clearTimeout(timeout);
-
+			if( timeout ){
+				window.clearTimeout(timeout);
+			}
 
 			var new_area = $(this);
 			if( new_area.parent().closest('.editable_area').length > 0 ){
 				e.stopPropagation();
 			}
 
-			if( edit_area && new_area.attr('id') == edit_area.attr('id') ){
+			if( edit_area && new_area.attr('id') === edit_area.attr('id') ){
 				return;
 			}else if( edit_area ){
 				rmNoOverlay(edit_area);
@@ -767,7 +791,9 @@ $(function(){
 
 		function rmNoOverlay(edit_area){
 
-			if( !edit_area ) return;
+			if( !edit_area ){
+				return;
+			}
 
 			if( edit_area.hasClass('gp_editing') ){
 				return;
@@ -780,7 +806,9 @@ $(function(){
 		 *
 		 */
 		function SpanPosition(){
-			if( !lnk_span ) return;
+			if( !lnk_span ){
+				return;
+			}
 
 			var off = lnk_span.offset(),
 				pos = lnk_span.position(),
@@ -792,7 +820,9 @@ $(function(){
 
 
 		function StartOverlayHide(){
-			if( timeout ) window.clearTimeout(timeout);
+			if( timeout ){
+				window.clearTimeout(timeout);
+			}
 
 			timeout = window.setTimeout(
 				function(){
@@ -835,9 +865,9 @@ $(function(){
 
 			//get the edit links
 			var edit_links = $('#ExtraEditLnks'+id).find('a');
-			if( edit_links.length == 0 ){
+			if( edit_links.length === 0 ){
 				edit_links = $('#ExtraEditLink'+id);
-				if( edit_links.length == 0 ){
+				if( edit_links.length === 0 ){
 					return;
 				}
 			}
@@ -891,7 +921,7 @@ $(function(){
 
 	function UIEffects(){
 
-		SimpleDrag('#simplepanel .toolbar, #simplepanel .toolbar a','#simplepanel','fixed',function(newpos,e){
+		SimpleDrag('#simplepanel .toolbar, #simplepanel .toolbar a','#simplepanel','fixed',function(newpos){
 			gpui.tx = newpos.left;
 			gpui.ty = newpos.top;
 			$gp.SaveGPUI();
@@ -940,15 +970,6 @@ $(function(){
 	}
 
 
-	/**
-	 * Escape special html characters in a string similar to php's htmlspecialchars() function
-	 *
-	 */
-	$gp.htmlchars = function(str){
-		str = str || '';
-		return $('<a>').text(str).html();
-	}
-
 });
 
 
@@ -986,7 +1007,7 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 
 			//$drag_area.fadeTo(0,.5);
 
-			//if( positioning == 'fixed' ){
+			//if( positioning === 'fixed' ){
 				//box = $drag_area;
 			//}
 		}
@@ -1030,7 +1051,7 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 			//newpostop = Math.max(0,e.clientY - click_offsety);
 
 			//add scroll back in for absolute position
-			if( positioning == 'absolute' ){
+			if( positioning === 'absolute' ){
 				newposleft += $win.scrollLeft();
 				newpostop += $win.scrollTop();
 			}
@@ -1043,7 +1064,7 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 
 			$drag_area.css(pos_obj).data({'gp_left':newposleft,'gp_top':newpostop});
 
-			if( typeof(callback_done) == 'function' ){
+			if( typeof(callback_done) === 'function' ){
 				callback_done.call($drag_area,pos_obj,e);
 			}
 			return false;
@@ -1054,15 +1075,17 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 
 
 
-	if( $drag_area.css('position') == 'fixed' || $drag_area.parent().css('position') == 'fixed' ){
+	if( $drag_area.css('position') === 'fixed' || $drag_area.parent().css('position') === 'fixed' ){
 		KeepViewable( $drag_area.addClass('keep_viewable') ,true);
 	}
 
 	function KeepViewable($elem,init){
 
-		if( !$elem.hasClass('keep_viewable') ) return;
+		if( !$elem.hasClass('keep_viewable') ){
+			return;
+		}
 
-		var is_fixed = ($elem.css('position') == 'fixed');
+		var is_fixed = ($elem.css('position') === 'fixed');
 		var pos, gp_left, css = {};
 
 		//get current position
@@ -1081,7 +1104,6 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 		}
 
 		var width = $elem.width();
-		var height = $elem.height();
 
 
 		//keep the top of the area from being placed too high in the window
@@ -1096,6 +1118,7 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 
 
 		/*
+		var height = $elem.height();
 		var winheight = $win.height();
 		var checkbottom = $win.height() - height - tolerance;
 		if( pos.top < tolerance ){
@@ -1134,7 +1157,7 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
  * Initialize functionality for the rename/details dialog
  *
  */
-function RenamePrep(){
+$gp.response.renameprep = function(){
 	var $form;
 	var old_title;
 	var $new_title;
@@ -1147,16 +1170,16 @@ function RenamePrep(){
 
 		SyncSlug();
 		$('input[disabled=disabled]').each(function(a,b){
-			$(b).fadeTo(400,.6);
+			$(b).fadeTo(400,0.6);
 		});
 
 		$('input.title_label').bind('keyup change',SyncSlug);
 		$('.label_synchronize a').click(RenameSetup);
 
-		gplinks.showmore = function(){
+		$gp.links.showmore = function(){
 			$('#gp_rename_table tr').show(500);
 			$(this).parent().remove();
-		}
+		};
 
 		$new_title.bind('keyup change',function(){
 			ShowRedirect();
@@ -1175,7 +1198,7 @@ function RenamePrep(){
 	function ShowRedirect(){
 		var new_val = $new_title.val().replace(/_/g,' ').toLowerCase();
 
-		if( new_val != old_title ){
+		if( new_val !== old_title ){
 			$('#gp_rename_redirect').show(500);
 		}else{
 			$('#gp_rename_redirect').hide(300);
@@ -1192,10 +1215,10 @@ function RenamePrep(){
 		td.find('a').show();
 		vis.hide();
 
-		var vis = td.find('a:visible');
+		vis = td.find('a:visible');
 		if( vis.length ){
 			if( vis.hasClass('slug_edit') ){
-				td.find('input').addClass('sync_label').prop('disabled','disabled').fadeTo(400,.6);
+				td.find('input').addClass('sync_label').prop('disabled','disabled').fadeTo(400,0.6);
 				SyncSlug();
 			}else{
 				td.find('input').removeClass('sync_label').prop('disabled','').fadeTo(400,1);
@@ -1269,7 +1292,7 @@ function RenamePrep(){
 		//remove consecutive slashes
 		str = str.replace(/[\/\/]+/g,'/');
 
-		if( str == '.' ){
+		if( str === '.' ){
 			return '';
 		}
 
@@ -1279,8 +1302,7 @@ function RenamePrep(){
 		return str;
 	}
 
-
-}
+};
 
 
 
@@ -1293,21 +1315,20 @@ function SimpleResize(resize_area,options){
 		finish:function(area,width){}
 	};
 
-	var options = $.extend({}, defaults, options);
-	var tolerance = -10;
+	options = $.extend({}, defaults, options);
 	var $resize_area = $(resize_area);
 	if( $resize_area.length < 1 ){
 		return;
 	}
 
 
-	$handle_areas = $('<span class="gp_admin_resize"></span><span class="gp_admin_resize gp_resize_right"></span>')
+	$('<span class="gp_admin_resize"></span><span class="gp_admin_resize gp_resize_right"></span>')
 		.appendTo($resize_area)
 		.bind('mousedown.sres',function(evt){
 
 			var start_x = evt.clientX;
-			var new_w = start_w = $resize_area.width();
-			var new_l = start_l = $resize_area.position().left;
+			var new_w = $resize_area.width(), start_w = new_w;
+			var new_l = $resize_area.position().left, start_l = new_l;
 			var $this = $(this);
 
 			evt.preventDefault();
@@ -1335,11 +1356,10 @@ function SimpleResize(resize_area,options){
 				return false;
 
 			}).unbind('mouseup.sres').bind('mouseup.sres',function(evt){
-				var newposleft,newpostop,pos_obj;
 
 				evt.preventDefault();
 				$('body').enableSelection();
-				$(document).unbind('mousemove.sres mouseup.sres')
+				$(document).unbind('mousemove.sres mouseup.sres');
 
 				options.finish.call($resize_area,new_w,new_l);
 
@@ -1357,7 +1377,7 @@ function SimpleResize(resize_area,options){
  * TODO: These override the functions in jquery ui and should probably tested and changed or removed
  *
  */
-if( typeof($.fn.disableSelection) != 'function' ){
+if( typeof($.fn.disableSelection) !== 'function' ){
 	$.fn.disableSelection = function(){
 		return $(this).attr('unselectable', 'on')
 				.css('-moz-user-select', 'none')

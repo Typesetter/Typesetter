@@ -1,4 +1,4 @@
-
+//"use strict";
 
 
 /**
@@ -9,6 +9,7 @@
 var $gp = {
 
 	inputs : {},
+	response : {},
 	error : 'There was an error processing the last request. Please reload this page to continue.',
 
 	/**
@@ -24,7 +25,7 @@ var $gp = {
 
 	/**
 	 *  Reload page with arguments (a) set as a cookie
-	 * 	if samepage is false, then it will take user to a.href
+	 *  if samepage is false, then it will take user to a.href
 	 *
 	 */
 	cGoTo : function(a,samepage){
@@ -49,7 +50,7 @@ var $gp = {
 		var frm = $(a).closest('form');
 
 		var b = frm.serialize() + '&verified='+encodeURIComponent(post_nonce); //needed when $gp.post is called without an input click
-		if( a.nodeName == 'INPUT' ){
+		if( a.nodeName === 'INPUT' ){
 			b += '&'+encodeURIComponent(a.name)+'='+encodeURIComponent(a.value);
 		}
 		if( data ){
@@ -87,20 +88,20 @@ var $gp = {
 
 
 	/**
-	 * 	Post content with gpEasy's verified value
-	 *  Arguments order is same as jQuery's $.post()
+	 * Post content with gpEasy's verified value
+	 * Arguments order is same as jQuery's $.post()
 	 *
 	 */
 	postC : function(url,data,callback,datatype){
 		callback = callback || $gp.Response;
 		datatype = datatype || 'json';
 
-		if( typeof(data) == 'object' ){
+		if( typeof(data) === 'object' ){
 			data = jQuery.param(data,true);
 		}
 
 		data += '&verified='+encodeURIComponent(post_nonce);
-		if( datatype == 'json' ){
+		if( datatype === 'json' ){
 			data += '&gpreq=json&jsoncallback=?';
 		}
 		$.post(
@@ -128,12 +129,12 @@ var $gp = {
 	 *
 	 */
 	Cookie : function(name,value,days) {
+		var expires = "";
 		if (days) {
 			var date = new Date();
 			date.setTime(date.getTime()+(days*24*60*60*1000));
-			var expires = "; expires="+date.toGMTString();
+			expires = "; expires="+date.toGMTString();
 		}
-		else var expires = "";
 		document.cookie = name+"="+value+expires+"; path=/";
 	},
 
@@ -143,9 +144,9 @@ var $gp = {
 	 *
 	 */
 	jPrep : function(query,args){
-		args = typeof(args) == 'undefined' ? 'gpreq=json&jsoncallback=?' : args;
+		args = typeof(args) === 'undefined' ? 'gpreq=json&jsoncallback=?' : args;
 		query = strip_from(query,'#');
-		query += ( query.indexOf('?') == -1 ) ? '?' : '&';
+		query += ( query.indexOf('?') === -1 ) ? '?' : '&';
 		return query + args;
 	},
 
@@ -161,7 +162,12 @@ var $gp = {
 		var cbox = false;
 		$.each(data,function(i,obj){
 
-			if( typeof(gpresponse[obj.DO]) == 'function' ){
+			if( typeof($gp.response[obj.DO]) === 'function' ){
+				$gp.response[obj.DO].call(this,obj,textStatus,jqXHR);
+				return;
+			}
+
+			if( typeof(gpresponse[obj.DO]) === 'function' ){
 				gpresponse[obj.DO].call(this,obj,textStatus,jqXHR);
 				return;
 			}
@@ -177,10 +183,6 @@ var $gp = {
 
 				case 'eval':
 					eval(obj.CONTENT);
-				break;
-
-				case 'renameprep':
-					RenamePrep();
 				break;
 
 				case 'admin_box_data':
@@ -199,9 +201,11 @@ var $gp = {
 		});
 
 		if( !cbox ){
+
 			try{
-				$gp.CloseAdminBox()
+				$gp.CloseAdminBox();
 			}catch(a){}
+
 			try{
 				$.fn.colorbox.close();
 			} catch(a){}
@@ -217,7 +221,7 @@ var $gp = {
 	 *
 	 */
 	loading : function(){
-		$('#loading1').css('zIndex',99000).fadeTo(1,.3)
+		$('#loading1').css('zIndex',99000).fadeTo(1,0.3)
 		.next().css('zIndex',99001).show();
 	},
 
@@ -260,7 +264,7 @@ var $gp = {
 		 */
 		gallery : function(evt,selector){
 			evt.preventDefault();
-			if( selector == '' ){
+			if( selector === '' ){
 				selector = this;
 			}else{
 				selector = 'a[rel='+selector+'],a.'+selector;
@@ -302,14 +306,14 @@ $(function(){
 		$gp.loaded();
 
 		//don't use this error handler if another one is set for the ajax request
-		if( typeof(ajaxOptions.error) == 'function' ){
+		if( typeof(ajaxOptions.error) === 'function' ){
 			return;
 		}
 		if( thrownError == '' ){
 			return;
 		}
 
-		if( typeof(debugjs) !== "undefined" ){
+		if( typeof(debugjs) !== 'undefined' ){
 
 			//collect some debug info
 			var debug_info = {
@@ -320,15 +324,15 @@ $(function(){
 				url:ajaxOptions.url,
 				type:ajaxOptions.type,
 				browser:$.param($.browser) //$.browser is deprecated and may be removed in future jquery releases
-			}
+			};
 			if( ajaxOptions.data ){
 				debug_info.data = ajaxOptions.data.substr(0,100);
 			}
 
-			if( typeof(debug) == 'function' ){
+			if( typeof(debug) === 'function' ){
 				debug( debug_info );
 			}else{
-				console.log( debug_info );
+				//console.log( debug_info );
 			}
 			//LOGO( XMLHttpRequest );
 			//LOGO( event );
@@ -355,11 +359,11 @@ $(function(){
 			cmd = strip_from( $this.attr('class'), ' ' );
 		}
 
-		if( typeof($gp.inputs[cmd]) == 'function' ){
+		if( typeof($gp.inputs[cmd]) === 'function' ){
 			return $gp.inputs[cmd].call(this,evt);
 		}
 
-		if( typeof(gpinputs[cmd]) == 'function' ){
+		if( typeof(gpinputs[cmd]) === 'function' ){
 			return gpinputs[cmd].call(this,evt,evt);//evt twice so the same function can be used for gplinks and gpinputs
 		}
 
@@ -374,7 +378,7 @@ $(function(){
 		return true;
 	});
 
-	$('form').live('submit',function(evt){
+	$('form').live('submit',function(){
 		verify(this);
 	});
 
@@ -417,12 +421,12 @@ $(function(){
 				return;
 			}
 
-			if( typeof($gp.links[cmd]) == 'function' ){
+			if( typeof($gp.links[cmd]) === 'function' ){
 				return $gp.links[cmd].call(this,evt,arg);
 			}
 
 			/* @deprecated 3.6 */
-			if( typeof(gplinks[cmd]) == 'function' ){
+			if( typeof(gplinks[cmd]) === 'function' ){
 				return gplinks[cmd].call(this,arg,evt);
 			}
 
@@ -475,7 +479,9 @@ $(function(){
 
 
 function strip_to(a,b){
-	if( !a ) return a;
+	if( !a ){
+		return a;
+	}
 	var pos = a.indexOf(b);
 	if( pos > -1 ){
 		return a.substr(pos+1);
@@ -484,7 +490,9 @@ function strip_to(a,b){
 }
 
 function strip_from(a,b){
-	if( !a ) return a;
+	if( !a ){
+		return a;
+	}
 	var p = a.indexOf(b);
 	if( p > 0 ){
 		a = a.substr(0,p);

@@ -451,7 +451,6 @@ class editing_page extends display{
 	function NewSectionPrompt(){
 		global $langmessage;
 
-
 		ob_start();
 		echo '<div class="inline_box">';
 		echo '<form method="post" action="'.common::GetUrl($this->title).'">';
@@ -481,7 +480,7 @@ class editing_page extends display{
 
 		echo '<p>';
 		echo '<input type="hidden" name="last_mod" value="'.$this->fileModTime.'" />';
-		echo '<input type="hidden" name="section" value="'.$_GET['section'].'" />';
+		echo '<input type="hidden" name="section" value="'.htmlspecialchars($_GET['section']).'" />';
 		echo '<input type="hidden" name="cmd" value="add_section" />';
 		echo '<input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit"/>';
 		echo ' <input type="button" name="" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';

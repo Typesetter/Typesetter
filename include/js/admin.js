@@ -497,11 +497,15 @@ $gp.htmlchars = function(str){
 };
 
 
+/**
+ * Redirect the user's browser to a url
+ *
+ */
 $gp.response.location = function(obj){
 	window.setTimeout(function(){
 		window.location = obj.SELECTOR;
 	},obj.CONTENT);
-}
+};
 
 
 

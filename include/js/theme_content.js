@@ -218,7 +218,7 @@ function LayoutSetup(){
  * CSS edits will be applied to the page every second
  *
  */
-function EditCSS(){
+$gp.response.EditCSS = function(){
 	var textarea = $('#gp_layout_css');
 	var style_area = $('#gp_layout_style');
 	var start_value = $('#gp_layout_style').html();
@@ -231,5 +231,5 @@ function EditCSS(){
 		}
 
 	},1000);
-}
+};
 

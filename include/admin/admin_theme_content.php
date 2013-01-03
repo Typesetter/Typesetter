@@ -761,7 +761,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '</p>';
 		echo '</form>';
 
-		$page->ajaxReplace[] = array('eval','','EditCSS()');
+		$page->ajaxReplace[] = array('EditCSS','','');
 	}
 
 	/**

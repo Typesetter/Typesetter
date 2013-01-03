@@ -1507,9 +1507,6 @@ class admin_menu_new extends admin_menu_tools{
 
 		$content = ob_get_clean();
 		$page->ajaxReplace[] = array('admin_box_data','',$content);
-		$page->ajaxReplace[] = array('eval','','$("input[name=title]").focus();');
-
-
 	}
 
 

@@ -153,7 +153,9 @@ $gp.AdminBoxC = function(data,context){
 				.fadeIn(400)
 				.html('<a class="gp_admin_box_close" data-cmd="admin_box_close"></a><div id="gp_admin_boxc" class="'+(context||'')+'" style="width:'+box_width+'px"></div>')
 				.find('#gp_admin_boxc')
-				.html(data);
+				.html(data)
+				.find('input:visible:first')
+				.focus();
 
 	$('.messages').detach();
 	return true;

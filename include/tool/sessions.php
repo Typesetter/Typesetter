@@ -37,7 +37,7 @@ class gpsession{
 
 
 	static function LogIn(){
-		global $dataDir,$langmessage,$gp_internal_redir, $config;
+		global $dataDir, $langmessage, $config, $gp_index;
 
 		// check nonce
 		// expire the nonce after 10 minutes
@@ -48,7 +48,6 @@ class gpsession{
 
 		if( !isset($_COOKIE['g']) && !isset($_COOKIE[gp_session_cookie]) ){
 			message($langmessage['COOKIES_REQUIRED']);
-			$gp_internal_redir = 'Admin_Main';
 			return false;
 		}
 
@@ -72,7 +71,6 @@ class gpsession{
 			$timeDiff = (time() - $userinfo['lastattempt'])/60; //minutes
 			if( $timeDiff < 10 ){
 				message($langmessage['LOGIN_BLOCK'],ceil(10-$timeDiff));
-				$gp_internal_redir = 'Admin_Main';
 				return false;
 			}
 		}
@@ -119,7 +117,14 @@ class gpsession{
 		$users[$username] = $userinfo;
 		gpsession::UpdateAttempts($users,$username,true);
 
-		return $logged_in;
+		//redirect to prevent resubmission
+		$redirect = 'Admin_Main';
+		if( isset($_REQUEST['file']) && isset($gp_index[$_REQUEST['file']]) ){
+			$redirect = $_REQUEST['file'];
+		}
+		$url = common::GetUrl($redirect);
+		common::Redirect($url);
+
 	}
 
 	/**
@@ -187,12 +192,10 @@ class gpsession{
 
 
 	static function IncorrectLogin($i){
-		global $langmessage, $gp_internal_redir;
+		global $langmessage;
 		message($langmessage['incorrect_login'].' ('.$i.')');
 		$url = common::GetUrl('Admin','cmd=forgotten');
 		message($langmessage['forgotten_password'],$url);
-		$gp_internal_redir = 'Admin_Main';
-
 	}
 
 

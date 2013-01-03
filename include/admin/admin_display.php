@@ -306,7 +306,7 @@ class admin_display extends display{
 	}
 
 	function LoginForm(){
-		global $langmessage,$gp_index,$page;
+		global $langmessage,$page;
 
 
 		$page->head .= "\n<script type=\"text/javascript\">var IE_LT_8 = false;</script><!--[if lt IE 8]>\n<script type=\"text/javascript\">IE_LT_8=true;</script>\n<![endif]-->";
@@ -320,13 +320,6 @@ class admin_display extends display{
 		$page->admin_js = true;
 		includeFile('tool/sessions.php');
 		gpsession::cookie('g',2);
-
-
-		$action = 'Admin_Main';
-		if( isset($_REQUEST['file']) && isset($gp_index[$_REQUEST['file']]) ){
-			$action = $_REQUEST['file'];
-		}
-
 
 		echo '<div class="req_script nodisplay" id="login_container">';
 
@@ -348,13 +341,11 @@ class admin_display extends display{
 		echo '<p><b>'.$langmessage['LOGIN_REQUIRED'].'</b></p>';
 			echo '<div id="login_timeout" class="nodisplay">Log in Timeout: '.common::Link('Admin_Main','Reload to continue...').'</div>';
 
-			echo '<form action="'.common::GetUrl($action).'" method="post" id="login_form">';
+			echo '<form action="'.common::GetUrl('Admin_Main').'" method="post" id="login_form">';
+			echo '<input type="hidden" name="file" value="'.htmlspecialchars($_REQUEST['file']).'">';
 
 			echo '<div>';
 			echo '<input type="hidden" name="cmd" value="login" />';
-			if( isset($_REQUEST['file']) && isset($gp_index[$_REQUEST['file']]) ){
-				echo '<input type="hidden" name="file" value="'.htmlspecialchars($_REQUEST['file']).'" />';
-			}
 			echo '<input type="hidden" name="login_nonce" value="'.htmlspecialchars(common::new_nonce('login_nonce',true,300)).'" />';
 			echo '</div>';
 

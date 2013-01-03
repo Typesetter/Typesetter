@@ -33,7 +33,7 @@ gp_defined('gp_write_lock_time',30);
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php'); message('local browse path');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
-define('gpversion','3.5.2');
+define('gpversion','3.6rc1');
 define('gp_random',common::RandomString());
 
 
@@ -1381,7 +1381,7 @@ class common{
 
 
 	static function GetUrl($href='',$query='',$ampersands=true,$nonce_action=false){
-		global $linkPrefix, $config, $gp_index;
+		global $linkPrefix, $config;
 
 		$filtered = gpPlugin::Filter('GetUrl',array(array($href,$query)));
 		if( is_array($filtered) ){
@@ -2029,11 +2029,7 @@ class common{
 	 *
 	 */
 	static function WhichPage(){
-		global $config, $gp_internal_redir, $gp_menu;
-
-		if( isset($gp_internal_redir) ){
-			return $gp_internal_redir;
-		}
+		global $config, $gp_menu;
 
 		$path = common::CleanRequest($_SERVER['REQUEST_URI']);
 

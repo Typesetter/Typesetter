@@ -181,10 +181,6 @@ var $gp = {
 					$(obj.SELECTOR).html(obj.CONTENT);
 				break;
 
-				case 'eval':
-					eval(obj.CONTENT);
-				break;
-
 				case 'admin_box_data':
 					cbox = $gp.AdminBoxC(obj.CONTENT);
 				break;

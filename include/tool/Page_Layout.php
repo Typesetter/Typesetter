@@ -40,7 +40,7 @@ class page_layout{
 		if( $this->from_page && $this->title){
 			if( !$this->show_popup ){
 				$url = common::AbsoluteUrl($this->title,'',true,false);
-				$page->ajaxReplace[] = array('eval','','window.location="'.$url.'";');
+				$page->ajaxReplace[] = array('location',$url,0);
 			}
 			return true;
 		}

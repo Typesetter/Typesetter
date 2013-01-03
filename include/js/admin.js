@@ -1,6 +1,6 @@
 /*global $gp:false, gpui:false, gplinks:false, gpinputs:false isadmin:false, gpBase:false, strip_from:false, gpRem:false, gpBLink:false, admin_resizable:false */
 /*jshint forin:true, noarg:true, noempty:true, eqeqeq:true, bitwise:true, strict:true, undef:true, unused:true, curly:true, browser:true, jquery:true, indent:4, maxerr:100, newcap:false, white:false*/
-"use strict";
+//"use strict";
 
 var gp_editor = false;
 
@@ -495,6 +495,13 @@ $gp.htmlchars = function(str){
 	str = str || '';
 	return $('<a>').text(str).html();
 };
+
+
+$gp.response.location = function(obj){
+	window.setTimeout(function(){
+		window.location = obj.SELECTOR;
+	},obj.CONTENT);
+}
 
 
 

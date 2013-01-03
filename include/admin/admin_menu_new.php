@@ -1817,7 +1817,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		//redirect to title
 		$url = common::AbsoluteUrl($title,'',true,false);
-		$page->ajaxReplace[] = array('eval','','window.location="'.$url.'";');
+		$page->ajaxReplace[] = array('location',$url,0);
 	}
 
 
@@ -2615,7 +2615,7 @@ class admin_menu_new extends admin_menu_tools{
 		message($langmessage['SAVED']);
 		if( isset($_REQUEST['redir']) ){
 			$url = common::AbsoluteUrl($title,'',true,false);
-			$page->ajaxReplace[] = array('eval','','window.setTimeout(function(){window.location="'.$url.'"},15000);');
+			$page->ajaxReplace[] = array('location',$url,'15000');
 			message(sprintf($langmessage['will_redirect'],common::Link_Page($title)));
 		}
 

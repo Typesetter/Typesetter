@@ -317,6 +317,7 @@ class admin_display extends display{
 
 
 		$_POST += array('username'=>'');
+		$_REQUEST += array('file'=>'');
 		$page->admin_js = true;
 		includeFile('tool/sessions.php');
 		gpsession::cookie('g',2);

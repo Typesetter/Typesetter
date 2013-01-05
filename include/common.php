@@ -265,7 +265,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 
 	$mess .= '<div><a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>';
 	$mess .= '<div class="nodisplay">';
-	$mess .= showArray($backtrace);
+	$mess .= pre($backtrace);
 	$mess .= '</div></div>';
 	$mess .= '</p></fieldset>';
 
@@ -464,10 +464,10 @@ function IncludeScript($file, $include_variation = 'include_once', $globals = ar
 
 /**
  * Similar to print_r and var_dump, but it is output buffer handling function safe
- * message( showArray(array(array(true))) );
- * message( showArray(new tempo()) );
+ * message( pre(array(array(true))) );
+ * message( pre(new tempo()) );
  */
-function showArray($mixed){
+function pre($mixed){
 	static $level = 0;
 	$output = '';
 
@@ -479,7 +479,7 @@ function showArray($mixed){
 			$output = $type.'('."\n";
 			foreach($mixed as $key => $value){
 				$level++;
-				$output .= str_repeat('   ',$level) . '[' . $key . '] => ' . showArray($value) . "\n";
+				$output .= str_repeat('   ',$level) . '[' . $key . '] => ' . pre($value) . "\n";
 				$level--;
 			}
 			$output .= str_repeat('   ',$level).')';
@@ -500,6 +500,10 @@ function showArray($mixed){
 	}
 	return $output;
 }
+/**
+ * @deprecated 2.6
+ */
+function showArray($mixed){pre($mixed);}
 
 
 /**

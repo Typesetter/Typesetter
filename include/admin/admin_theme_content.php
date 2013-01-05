@@ -1678,16 +1678,11 @@ class admin_theme_content extends admin_addon_install{
 			$avail_count += count($info['colors']);
 		}
 
-		echo '<div class="collapsible">';
-		echo '<h4 class="head'.$class.'"><a data-cmd="collapsible">';
-		echo $langmessage['available_themes'];
-		echo ': '.$avail_count;
-		echo '</a></h4>';
-
 		echo '<table class="bordered" style="width:100%'.$style.'">';
-
+		echo '<tr><th colspan="3">'.$langmessage['available_themes'].': '.$avail_count.'</th>';
+		$i=0;
 		foreach($themes as $theme_id => $info){
-			echo '<tr>';
+			echo '<tr class="'.($i++ % 2 ? ' even' : '').'">';
 			echo '<td>';
 			echo str_replace('_',' ',$info['name']);
 			echo '</td>';
@@ -1735,9 +1730,6 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 		echo '</table>';
-
-		echo '</div>';
-
 	}
 
 
@@ -1747,8 +1739,9 @@ class admin_theme_content extends admin_addon_install{
 	 */
 	function LayoutRow($layout,$info){
 		global $page, $langmessage, $config;
+		static $i = 0;
 
-		echo '<tr class="expand_row">';
+		echo '<tr class="expand_row'.($i++ % 2 ? ' even' : '').'">';
 
 		//label
 			echo '<td class="nowrap">';

@@ -83,6 +83,7 @@ h3,h4{
 .styledtable{
 	border-collapse:collapse;
 	border-bottom: 1px solid #ccc;
+	border-spacing:0;
 	}
 .styledtable td, .styledtable th {
 	border-top: 1px solid #eee;

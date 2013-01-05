@@ -57,6 +57,9 @@ h2, h3, h4{
 .fullwidth{
 	width:100%;
 	}
+.styledtable{
+	border-spacing:0;
+	}
 .styledtable td, .styledtable th {
 	border-bottom: 1px solid #ccc;
 	padding: 5px 20px;

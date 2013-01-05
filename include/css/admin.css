@@ -310,20 +310,6 @@ body #gp_admin_html #admincontent{
 .gpAdmin #admincontent_panel{
 	display:block;
 	}
-.docklink{
-	width:15px;
-	height:15px;
-	border:1px solid #7d7d7d;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-o-border-radius:3px;
-	border-radius:3px;
-	cursor:pointer;
-	background: #7d7d7d url(../imgs/dock.gif) no-repeat 50% 2px;
-	}
-.docked .docklink{
-	background: url(../imgs/dock.gif) no-repeat 50% -12px;
-	}
 #admincontent_panel.toolbar{
 	padding:2px 5px;
 	font-size:13.5px;
@@ -338,15 +324,12 @@ body #gp_admin_html #admincontent{
 #admincontent_panel.toolbar a:hover{
 	color:#333 !important;
 	}
-#admincontainer.docked{
-	box-shadow:0 0 3px #888 !important;
-	-moz-box-shadow: 0 0 3px #888 !important;
-	-webkit-box-shadow:0 0 3px #888 !important;
-	-o-box-shadow: 0 0 3px #888 !important;
-	-icab-box-shadow: 0 0 3px #888 !important;
-	-khtml-box-shadow: 0 0 3px #888 !important;
+#admincontent_panel.toolbar .admin_arrow_out{
+	display:none;
 	}
-
+#admincontent_panel.toolbar:hover .admin_arrow_out{
+	display:block;
+	}
 
 #admincontent .nowrap{
 	white-space:nowrap;
@@ -1562,6 +1545,22 @@ body #gp_admin_html .layout_links a.selected{
 .unavail{
 	visibility:hidden;
 	}
+
+.docklink{
+	width:15px;
+	height:15px;
+	border:1px solid #7d7d7d;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-o-border-radius:3px;
+	border-radius:3px;
+	cursor:pointer;
+	background: #7d7d7d url(../imgs/dock.gif) no-repeat 50% 2px;
+	}
+.docked .docklink{
+	background: url(../imgs/dock.gif) no-repeat 50% -12px;
+	}
+
 
 /**
  * drop down menus

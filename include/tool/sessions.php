@@ -556,7 +556,6 @@ class gpsession{
 						'gpui_pposy'=>0,
 						'gpui_pw'=>0,
 						'gpui_ph'=>0,
-						'gpui_pdock'=>true,
 						'gpui_vis'=>'cur',
 						);
 	}
@@ -792,7 +791,6 @@ class gpsession{
 			$possible['gpui_pposy']	= 'integer';
 			$possible['gpui_pw']	= 'integer';
 			$possible['gpui_ph']	= 'integer';
-			$possible['gpui_pdock']	= 'boolean';
 		}
 
 		$possible['gpui_cmpct']	= 'integer';
@@ -855,7 +853,6 @@ class gpsession{
 		echo ',pposy:'.$gpAdmin['gpui_pposy'];
 		echo ',pw:'.$gpAdmin['gpui_pw'];
 		echo ',ph:'.$gpAdmin['gpui_ph'];
-		echo ',pdock:'. ($gpAdmin['gpui_pdock'] ? 'true' : 'false' );
 		echo ',cmpct:'.(int)$gpAdmin['gpui_cmpct'];
 
 		//the following control which admin toolbar areas are expanded

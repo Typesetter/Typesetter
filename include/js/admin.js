@@ -605,7 +605,6 @@ $(function(){
 		SimpleDrag('#admincontent_panel',container,'absolute',function(newpos){
 			gpui.pposx = newpos.left;
 			gpui.pposy = newpos.top;
-			gpui.pdock = false;
 			Put(true);
 		});
 
@@ -621,8 +620,8 @@ $(function(){
 			top = gpui.pposy;
 			left = gpui.pposx;
 
-			//if the admin window is docked
-			if( gpui.pdock || (top === 0 && left === 0) ){
+			//if the admin window doesn't have a position, try to find a position for it
+			if( top === 0 && left === 0 ){
 				var pos = dock_area.offset();
 				top = Math.min(300,pos.top+5);
 				left = pos.left+5;
@@ -639,26 +638,11 @@ $(function(){
 			}
 
 
-
-			//container class for css differences
-			if( gpui.pdock ){
-				container.addClass('docked');
-			}else{
-				container.removeClass('docked');
-			}
-
-
 			//don't save during init since nothing has changed
 			if( save ){
 				$gp.SaveGPUI();
 			}
 		}
-
-		$gp.links.gp_docklink = function(evt){
-			evt.preventDefault();
-			gpui.pdock = !gpui.pdock;
-			Put(true);
-		};
 
 	} /* end ContentPosition() */
 

@@ -469,7 +469,7 @@ class gpsession{
 		ob_start(array('gpsession','AdminBuffer'));
 
 		$GP_LANG_VALUES += array('cancel'=>'ca','update'=>'up','caption'=>'cp');
-		common::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css');
+		common::LoadComponents('autocomplete,gp-admin,gp-admin-css');
 
 		return true;
 	}

@@ -96,6 +96,7 @@ $langmessage = array(
 'data_check_passed'=>'100%% of your data files passed the health check. A total of %s files were checked.', //%s out of %s files passed the health check.',
 'showing_max_failed'=>'Only showing the first %s files.',
 'create_dir'=>'Create Folder',
+'file_deleted'=>'The file was deleted.',
 'username'=>'Username',
 'user_permissions'=>'User Permissions',
 'not_permitted'=>'Oops, you don\'t have the appropriate permission to perform this operation',

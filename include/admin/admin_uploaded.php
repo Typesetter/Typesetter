@@ -95,21 +95,13 @@ class admin_uploaded{
 	}
 
 	function Init(){
-		global $langmessage, $dataDir,$page, $upload_extensions_allow, $upload_extensions_deny;
+		global $langmessage, $dataDir,$page;
 
 		$this->baseDir = $dataDir.'/data/_uploaded';
 		$this->thumbFolder = $dataDir.'/data/_uploaded/image/thumbnails';
 		$this->currentDir = $this->baseDir;
 		$page->label = $langmessage['uploaded_files'];
 
-
-		$this->AllowedExtensions = array('7z', 'aiff', 'asf', 'avi', 'bmp', 'bz', 'csv', 'doc', 'fla', 'flv', 'gif', 'gz', 'gzip', 'jpeg', 'jpg', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ods', 'odt', 'pdf', 'png', 'ppt', 'pxd', 'qt', 'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 'sdc', 'sitd', 'swf', 'sxc', 'sxw', 'tar', 'tgz', 'tif', 'tiff', 'txt', 'vsd', 'wav', 'wma', 'wmv', 'xls', 'xml', 'zip');
-		if( is_array($upload_extensions_allow) ){
-			$this->AllowedExtensions = array_merge($this->AllowedExtensions,$upload_extensions_allow);
-		}
-		if( is_array($upload_extensions_deny) ){
-			$this->AllowedExtensions = array_diff($this->AllowedExtensions,$upload_extensions_deny);
-		}
 		$this->imgTypes = array('bmp'=>1,'png'=>1,'jpg'=>1,'jpeg'=>1,'gif'=>1,'tiff'=>1,'tif'=>1);
 
 
@@ -434,8 +426,6 @@ class admin_uploaded{
 	}
 
 
-
-
 	function InlineResponse($status,$message){
 		echo '<div>';
 		echo '<textarea class="status">';
@@ -489,7 +479,7 @@ class admin_uploaded{
 		$fName = $this->SanitizeName($fName);
 		$from = $_FILES['userfiles']['tmp_name'][$key];
 
-		if( !$this->UploadCompressed( $from, $fName, $upload_moved ) ){
+		if( !admin_uploaded::AllowedExtension($fName) ){
 			return false;
 		}
 
@@ -601,106 +591,31 @@ class admin_uploaded{
 	}
 
 
+	static function AllowedExtension($file){
+		global $upload_extensions_allow, $upload_extensions_deny;
+		static $AllowedExtensions = false;
 
-
-	/**
-	 * Save a compressed copy of the uploaded file
-	 *
-	 */
-	function UploadCompressed( &$from, &$fName, &$upload_moved ){
-		global $config, $dataDir, $langmessage;
-
-
-		//check file type
-		$file_type = admin_uploaded::GetFileType($fName);
-
-		if( isset($config['check_uploads']) && $config['check_uploads'] === false ){
+		if( !gp_restrict_uploads ){
 			return true;
 		}
 
-		if( in_array( $file_type, $this->AllowedExtensions ) ){
+		if( !gp_restrict_uploads ){
 			return true;
 		}
 
-		$upload_moved = true;
-		@ini_set('memory_limit', '256M');
-		includeFile('thirdparty/ArchiveTar/Tar.php');
 
-
-		//first move the file to a temporary folder
-		//some installations don't like working with files in the default tmp folder
-		do{
-			$this->temp_folder = $dataDir.'/data/_temp/'.rand(1000,9000);
-		}while( file_exists($this->temp_folder) );
-
-		gpFiles::CheckDir($this->temp_folder,false);
-		$temp_file = $this->temp_folder.'/'.$fName;
-		$this->temp_files[] = $temp_file;
-
-		if( !move_uploaded_file($from,$temp_file) ){
-			$this->errorMessages[] = sprintf($langmessage['UPLOAD_ERROR'].' (UC1)', $fName);
-			return false;
-		}
-
-		//prepare file names that may be used
-		//replace . with underscore for security
-		$fName = str_replace('.','_',$fName);
-		$tar_name = $fName.'.tar';
-		$tgz_name = $fName.'.tgz';
-		$tbz_name = $fName.'.tar.bz';
-
-		//create a .tar archive of the file in the same folder
-		$tar_path = $temp_file.'.tar';
-
-		$this->temp_files[] = $tar_path;
-		$tar_object = new Archive_Tar($tar_path);
-		$files = array($temp_file);
-
-		if( !$tar_object->createModify($files, '', $this->temp_folder) ){
-			$this->errorMessages[] = sprintf($langmessage['UPLOAD_ERROR'].' (CM1)', $fName);
-			return false;
-		}
-
-		$fName = $tar_name;
-		$from = $tar_path;
-
-		//compress if available, try gz first
-		if( function_exists('gzopen') ){
-
-			$compress_path = $temp_file.'.tgz';
-			$this->temp_files[] = $compress_path;
-
-			//gz compress the tar
-			$gz_handle = @gzopen($compress_path, 'wb9');
-			if( $gz_handle ){
-				if( @gzwrite( $gz_handle, file_get_contents($tar_path)) ){
-					@gzclose($gz_handle);
-					$fName = $tgz_name;
-					$from = $compress_path;
-					//return true;
-				}
+		$file_type = admin_uploaded::GetFileType($file);
+		if( !$AllowedExtensions ){
+			$AllowedExtensions = array('7z', 'aiff', 'asf', 'avi', 'bmp', 'bz', 'csv', 'doc', 'fla', 'flv', 'gif', 'gz', 'gzip', 'jpeg', 'jpg', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ods', 'odt', 'pdf', 'png', 'ppt', 'pxd', 'qt', 'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 'sdc', 'sitd', 'swf', 'sxc', 'sxw', 'tar', 'tgz', 'tif', 'tiff', 'txt', 'vsd', 'wav', 'wma', 'wmv', 'xls', 'xml', 'zip');
+			if( is_array($upload_extensions_allow) ){
+				$AllowedExtensions = array_merge($AllowedExtensions,$upload_extensions_allow);
+			}
+			if( is_array($upload_extensions_deny) ){
+				$AllowedExtensions = array_diff($AllowedExtensions,$upload_extensions_deny);
 			}
 		}
 
-		//if gz isn't available or doesn't work, try bz
-		if( function_exists('bzopen') ){
-
-			$compress_path = $temp_file.'.tbz';
-			$this->temp_files[] = $compress_path;
-
-			//gz compress the tar
-			$bz_handle = @bzopen($compress_path, 'w');
-			if( $bz_handle ){
-				if( @bzwrite( $bz_handle, file_get_contents($tar_path)) ){
-					@bzclose($bz_handle);
-					$fName = $tbz_name;
-					$from = $compress_path;
-					return true;
-				}
-			}
-		}
-
-		return true;
+		return in_array( $file_type, $AllowedExtensions );
 	}
 
 	/**
@@ -735,9 +650,7 @@ class admin_uploaded{
 		$sname = stripslashes( $sname ) ;
 
 		// Replace dots in the name with underscores (only one dot can be there... security issue).
-		if( $config['check_uploads'] ){
-			$sname = preg_replace( '/\\.(?![^.]*$)/', '_', $sname );
-		}
+		$sname = preg_replace( '/\\.(?![^.]*$)/', '_', $sname );
 
 		// Remove \ / | : ? * " < >
 		return preg_replace( '/\\\\|\\/|\\||\\:|\\?|\\*|"|<|>|[[:cntrl:]]/u', '_', $sname ) ;

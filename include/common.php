@@ -11,6 +11,7 @@ if( defined('gpdebug') && gpdebug ){
 /**
  * See gpconfig.php for these configuration options
  */
+gp_defined('gp_restrict_uploads',false);
 gp_defined('gpdebug',false);
 gp_defined('gpdebugjs',gpdebug);
 gp_defined('gpdebug_tools',false);
@@ -1697,7 +1698,7 @@ class common{
 		$config += array(
 				'maximgarea' => '691200',
 				'maxthumbsize' => '100',
-				'check_uploads' => true,
+				'check_uploads' => false,
 				'colorbox_style' => 'example1',
 				'combinecss' => true,
 				'combinejs' => true,
@@ -1723,6 +1724,7 @@ class common{
 		if( !isset($config['gadgets']['Search']) ){
 			$config['gadgets']['Search'] = array('script'=>'/include/special/special_search.php','method'=>array('special_gpsearch','gadget'));
 		}
+
 
 		common::GetLangFile();
 		common::GetPagesPHP();
@@ -3026,7 +3028,7 @@ class gpFiles{
 
 			if( !$checked_time ){
 				$checked_time = true;
-				$diff = time() - filemtime($lock_file);
+				$diff = time() - @filemtime($lock_file);
 				if( $diff > $expires ){
 					@unlink( $lock_file);
 				}else{

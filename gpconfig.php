@@ -4,7 +4,10 @@
 /**
  * $upload_extensions_allow and $upload_extensions_deny
  * Allow or deny the upload of files based on their file extensions
+ * The default list of available extenstions is array('7z', 'aiff', 'asf', 'avi', 'bmp', 'bz', 'csv', 'doc', 'fla', 'flv', 'gif', 'gz', 'gzip', 'jpeg', 'jpg', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ods', 'odt', 'pdf', 'png', 'ppt', 'pxd', 'qt', 'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 'sdc', 'sitd', 'swf', 'sxc', 'sxw', 'tar', 'tgz', 'tif', 'tiff', 'txt', 'vsd', 'wav', 'wma', 'wmv', 'xls', 'xml', 'zip');
+ * Note: gp_restrict_uploads has to be set to true for upload_extension settings to have any effect
  */
+define('gp_restrict_uploads',false);
 $upload_extensions_allow = array();
 $upload_extensions_deny = array();
 

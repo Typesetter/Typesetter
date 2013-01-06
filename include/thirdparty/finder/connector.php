@@ -31,6 +31,31 @@ function access($attr, $path, $data, $volume) {
 }
 
 
+/**
+ * Check files by extension if gp_restrict_uploads
+ *
+ */
+function upload_check( $event, $args, $finder ){
+
+	if( !gp_restrict_uploads ){
+		return $args;
+	}
+
+	$files =& $args['FILES']['upload'];
+	if( !is_array($files) ){
+		return $args;
+	}
+
+	foreach( $files['name'] as $i => $name ){
+		if( !admin_uploaded::AllowedExtension($name) ){
+			return false;
+		}
+	}
+
+	return $args;
+}
+
+
 function SaveFinderData($data){
 	global $config;
 	$config['finder_data'] = $data;
@@ -70,6 +95,7 @@ $opts = array(
 	),
 	'bind' => array(
 		'duplicate upload rename rm paste resize' => array('admin_uploaded','FinderChange'),//drag+drop = cut+paste
+		'upload-before' => 'upload_check',
 	)
 );
 

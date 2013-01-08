@@ -60,6 +60,14 @@ class FinderVolumeFTP extends FinderVolumeDriver {
 	 **/
 	protected $tmp = '';
 
+
+	/**
+	 * Which methods can be used for mime detection
+	 *
+	 * @var array
+	 */
+	protected $mime_detection = array('internal');
+
 	/**
 	 * Constructor
 	 * Extend options with required fields
@@ -84,7 +92,6 @@ class FinderVolumeFTP extends FinderVolumeDriver {
 			'fileMode'      => 0644
 		);
 		$this->options = array_merge($this->options, $opts);
-		$this->options['mimeDetect'] = 'internal';
 	}
 
 	/*********************************************************************/

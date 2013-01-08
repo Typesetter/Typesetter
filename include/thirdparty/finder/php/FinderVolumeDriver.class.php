@@ -150,9 +150,7 @@ abstract class FinderVolumeDriver {
 		'separator'       => DIRECTORY_SEPARATOR,
 		// library to crypt/uncrypt files names (not implemented)
 		'cryptLib'        => '',
-		// how to detect files mimetypes. (auto/internal/finfo/mime_content_type)
-		'mimeDetect'      => 'auto',
-		// mime.types file path (for mimeDetect==internal)
+		// mime.types file path (for internal mimetype detection)
 		'mimefile'        => '',
 		// directory for thumbnails
 		'tmbPath'         => '.tmb',
@@ -274,27 +272,6 @@ abstract class FinderVolumeDriver {
 	protected $uploadMaxSize = 0;
 
 	/**
-	 * Mimetype detect method
-	 *
-	 * @var string
-	 **/
-	protected $mimeDetect = 'auto';
-
-	/**
-	 * Flag - mimetypes from externail file was loaded
-	 *
-	 * @var bool
-	 **/
-	private static $mimetypesLoaded = false;
-
-	/**
-	 * Finfo object for mimeDetect == 'finfo'
-	 *
-	 * @var object
-	 **/
-	protected $finfo = null;
-
-	/**
 	 * List of disabled client's commands
 	 *
 	 * @var array
@@ -302,7 +279,14 @@ abstract class FinderVolumeDriver {
 	protected $diabled = array();
 
 	/**
-	 * default extensions/mimetypes for mimeDetect == 'internal'
+	 * Which methods can be used for mime detection
+	 *
+	 * @var array
+	 */
+	protected $mime_detection = array('finfo','mime_content_type','internal');
+
+	/**
+	 * Default extensions/mimetypes for internal mimtype detection
 	 *
 	 * @var array
 	 **/
@@ -589,7 +573,6 @@ abstract class FinderVolumeDriver {
 		return array(
 			'id'         => $this->id(),
 			'name'       => strtolower(substr(get_class($this), strlen('finderdriver'))),
-			'mimeDetect' => $this->mimeDetect,
 			'imgLib'     => $this->imgLib
 		);
 	}
@@ -688,61 +671,6 @@ abstract class FinderVolumeDriver {
 			: array();
 
 		$this->cryptLib   = $this->options['cryptLib'];
-		$this->mimeDetect = $this->options['mimeDetect'];
-
-		// find available mimetype detect method
-		$type = strtolower($this->options['mimeDetect']);
-		$type = preg_match('/^(finfo|mime_content_type|internal|auto)$/i', $type) ? $type : 'auto';
-		$regexp = '/text\/x\-(php|c\+\+)/';
-
-
-		if( ($type == 'finfo' || $type == 'auto')
-			&& class_exists('finfo')
-			&& ($tmp = explode(';', @finfo_file(finfo_open(FILEINFO_MIME), __FILE__)))
-			&& is_array($tmp)
-			&& preg_match($regexp, array_shift($tmp)) ){
-				$type = 'finfo';
-				$this->finfo = finfo_open(FILEINFO_MIME);
-		}elseif( ($type == 'mime_content_type' || $type == 'auto')
-			&& function_exists('mime_content_type')
-			&& preg_match($regexp, array_shift(explode(';', mime_content_type(__FILE__)))) ) {
-				$type = 'mime_content_type';
-		}else{
-			$type = 'internal';
-		}
-		$this->mimeDetect = $type;
-
-		// load mimes from external file for mimeDetect == 'internal'
-		// based on Alexey Sukhotin idea and patch: http://elrte.org/redmine/issues/163
-		// file must be in file directory or in parent one
-		if ($this->mimeDetect == 'internal' && !self::$mimetypesLoaded) {
-			self::$mimetypesLoaded = true;
-			$this->mimeDetect = 'internal';
-			$file = false;
-			if (!empty($this->options['mimefile']) && file_exists($this->options['mimefile'])) {
-				$file = $this->options['mimefile'];
-			} elseif (file_exists(dirname(__FILE__).'/mime.types')) {
-				$file = dirname(__FILE__).'/mime.types';
-			} elseif (file_exists(dirname(dirname(__FILE__)).'/mime.types')) {
-				$file = dirname(dirname(__FILE__)).'/mime.types';
-			}
-
-			if ($file && file_exists($file)) {
-				$mimecf = file($file);
-
-				foreach ($mimecf as $line_num => $line) {
-					if (!preg_match('/^\s*#/', $line)) {
-						$mime = preg_split('/\s+/', $line, -1, PREG_SPLIT_NO_EMPTY);
-						for ($i = 1, $size = count($mime); $i < $size ; $i++) {
-							if (!isset(self::$mimetypes[$mime[$i]])) {
-								self::$mimetypes[$mime[$i]] = $mime[0];
-							}
-						}
-					}
-				}
-			}
-		}
-
 		$this->rootName = empty($this->options['alias']) ? $this->_basename($this->root) : $this->options['alias'];
 
 
@@ -1146,7 +1074,7 @@ abstract class FinderVolumeDriver {
 		while( $path && $path != $this->root ){
 			$path = $this->_dirname($path);
 			$stat = $this->stat($path);
-			if (!empty($stat['hidden']) || !$stat['read']) {
+			if (!empty($stat['hidden']) || empty($stat['read']) || !$stat['read']) {
 				return false;
 			}
 
@@ -1398,11 +1326,7 @@ abstract class FinderVolumeDriver {
 		if (!$this->nameAccepted($name)) {
 			return $this->setError('errInvName');
 		}
-
-		$mime = $this->mimetype($this->mimeDetect == 'internal' ? $name : $tmpname, $name);
-		if ($mime == 'unknown' && $this->mimeDetect == 'internal') {
-			$mime = FinderVolumeDriver::mimetypeInternalDetect($name);
-		}
+		$mime = $this->mimetype($tmpname, $name);
 
 		// logic based on http://httpd.apache.org/docs/2.2/mod/mod_authz_host.html#order
 		$allow  = $this->mimeAccepted($mime, $this->uploadAllow, null);
@@ -2208,44 +2132,79 @@ abstract class FinderVolumeDriver {
 	 * Return file mimetype
 	 *
 	 * @param  string  $path  file path
-	 * @return string
-	 * @author Dmitry (dio) Levashov
-	 **/
+	 * @return string $name
+	 *
+	 */
 	protected function mimetype($path, $name = '') {
-		$type = '';
+		$type = false;
+		$ext = '';
 
-		if ($this->mimeDetect == 'finfo') {
-			if ($type = @finfo_file($this->finfo, $path)) {
-				if ($name === '') {
-					$name = $path;
-				}
-				$ext = (false === $pos = strrpos($name, '.')) ? '' : substr($name, $pos + 1);
-				if ($ext && preg_match('~^application/(?:octet-stream|(?:x-)?zip)~', $type)) {
-					if (isset(FinderVolumeDriver::$mimetypes[$ext])) $type = FinderVolumeDriver::$mimetypes[$ext];
-				}
-			}
-		} elseif ($type == 'mime_content_type') {
+		//get extension
+		if( $name === '' ){
+			$name = $path;
+		}
+		$pos = strrpos($name, '.');
+		if( $pos !== false ){
+			$ext = substr($name, $pos + 1);
+		}
+
+		//try with finfo_file
+		if( in_array('finfo',$this->mime_detection) ){
+			$type = self::MimeFinfo($path,$ext);
+		}
+
+		//try with mime_content_type
+		if( !$type && in_array('mime_content_type',$this->mime_detection) && function_exists('mime_content_type') ){
 			$type = mime_content_type($path);
-		} else {
+			$type = self::CleanMime($type);
+		}
+
+		//try internal detection
+		if( !$type && in_array('internal',$this->mime_detection) ){
 			$type = FinderVolumeDriver::mimetypeInternalDetect($path);
 		}
 
-		$type = explode(';', $type);
-		$type = trim($type[0]);
+		return $type;
+	}
 
-		if (in_array($type, array('application/x-empty', 'inode/x-empty'))) {
-			// finfo return this mime for empty files
-			$type = 'text/plain';
-		} elseif ($type == 'application/x-zip') {
-			// http://elrte.org/redmine/issues/163
-			$type = 'application/zip';
+
+	/**
+	 * Try getting the mime type using finfo
+	 *
+	 */
+	static function MimeFinfo($path,$ext){
+		static $finfo = null;
+
+		if( !class_exists('finfo') || $finfo === false ){
+			return false;
 		}
 
-		return $type == 'unknown' && $this->mimeDetect != 'internal'
-			? FinderVolumeDriver::mimetypeInternalDetect($path)
-			: $type;
+		//make sure we can get usable mime types from finfo by checking the mime result for __FILE__
+		if( !$finfo ){
+			$finfo = finfo_open(FILEINFO_MIME);
+			$tmp = explode(';', @finfo_file($finfo, __FILE__));
+			$regexp = '/text\/x\-(php|c\+\+)/';
+			if( !is_array($tmp) || !preg_match($regexp, array_shift($tmp)) ){
+				$finfo = false;
+				return false;
+			}
+		}
 
+		$type = @finfo_file($finfo, $path);
+		if( !$type ){
+			return false;
+		}
+
+		if( $ext
+			&& preg_match('~^application/(?:octet-stream|(?:x-)?zip)~', $type)
+			&& isset(FinderVolumeDriver::$mimetypes[$ext])
+			){
+				$type = FinderVolumeDriver::$mimetypes[$ext];
+		}
+
+		return self::CleanMime($type);
 	}
+
 
 	/**
 	 * Detect file mimetype using "internal" method
@@ -2254,11 +2213,65 @@ abstract class FinderVolumeDriver {
 	 * @return string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	static protected function mimetypeInternalDetect($path) {
+	static protected function mimetypeInternalDetect($path){
+		static $loaded = false;
+
+
+		//load mime types
+		if( !$loaded ){
+			$loaded = true;
+			$file = false;
+			if (!empty($this->options['mimefile']) && file_exists($this->options['mimefile'])) {
+				$file = $this->options['mimefile'];
+			} elseif (file_exists(dirname(__FILE__).'/mime.types')) {
+				$file = dirname(__FILE__).'/mime.types';
+			} elseif (file_exists(dirname(dirname(__FILE__)).'/mime.types')) {
+				$file = dirname(dirname(__FILE__)).'/mime.types';
+			}
+
+			if( $file && file_exists($file) ){
+				$mimecf = file($file);
+
+				foreach ($mimecf as $line_num => $line) {
+					if (!preg_match('/^\s*#/', $line)) {
+						$mime = preg_split('/\s+/', $line, -1, PREG_SPLIT_NO_EMPTY);
+						for ($i = 1, $size = count($mime); $i < $size ; $i++) {
+							if (!isset(self::$mimetypes[$mime[$i]])) {
+								self::$mimetypes[$mime[$i]] = $mime[0];
+							}
+						}
+					}
+				}
+			}
+		}
+
+
+
+
 		$pinfo = pathinfo($path);
 		$ext   = isset($pinfo['extension']) ? strtolower($pinfo['extension']) : '';
-		return isset(FinderVolumeDriver::$mimetypes[$ext]) ? FinderVolumeDriver::$mimetypes[$ext] : 'unknown';
+		return isset(self::$mimetypes[$ext]) ? self::$mimetypes[$ext] : 'unknown';
+	}
 
+
+	static function CleanMime($type){
+		if( !$type ){
+			return false;
+		}
+		$type = explode(';', $type);
+		$type = trim($type[0]);
+
+		switch($type){
+			case 'application/x-empty':
+			case 'inode/x-empty':
+			return 'text/plain';
+
+			// http://elrte.org/redmine/issues/163
+			case 'application/x-zip':
+			return 'application/zip';
+		}
+
+		return $type;
 	}
 
 	/**
@@ -2778,7 +2791,7 @@ abstract class FinderVolumeDriver {
 				}
 
     		} else {
-        		$result = $this->imgResize($tmb, $tmbSize, $tmbSize, true, true, $this->imgLib, 'png');
+        		$result = $this->imgResize($tmb, $tmbSize, $tmbSize, true, true, 'png');
         		$result = $this->imgSquareFit($tmb, $tmbSize, $tmbSize, 'center', 'middle', $this->options['tmbBgColor'], 'png' );
       		}
 

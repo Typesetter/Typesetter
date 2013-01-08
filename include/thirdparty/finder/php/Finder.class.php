@@ -4,7 +4,6 @@
 require('FinderVolumeDriver.class.php');
 
 
-
 /**
  * Core class.
  *
@@ -20,7 +19,7 @@ class Finder {
 	 *
 	 * @var string
 	 **/
-	protected $version = '2.0';
+	protected $version = '2.1';
 
 	/**
 	 * Storages (root dirs)
@@ -308,33 +307,58 @@ class Finder {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function output(array $data) {
-		$header = isset($data['header']) ? $data['header'] : $this->header;
-		unset($data['header']);
-		if ($header) {
-			if (is_array($header)) {
-				foreach ($header as $h) {
-					header($h);
-				}
-			} else {
-				header($header);
-			}
-		}
 
-		if (isset($data['pointer'])) {
+		if( isset($data['pointer']) ){
+			$this->ClearBuffer();
+			$this->Headers($data);
+
 			rewind($data['pointer']);
 			fpassthru($data['pointer']);
-			if (!empty($data['volume'])) {
+			if( !empty($data['volume']) ){
 				$data['volume']->close($data['pointer'], $data['info']['hash']);
 			}
 			exit();
-		} else {
-			if (!empty($data['raw']) && !empty($data['error'])) {
-				exit($data['error']);
-			} else {
-				exit(json_encode($data));
-			}
 		}
 
+		$this->Headers($data);
+		if (!empty($data['raw']) && !empty($data['error'])) {
+			exit($data['error']);
+		}
+
+		exit(json_encode($data));
+	}
+
+	/**
+	 * Set response headers
+	 *
+	 */
+	function Headers($data){
+		$header = isset($data['header']) ? $data['header'] : $this->header;
+		unset($data['header']);
+		if( $header ){
+			if( is_array($header) ){
+				foreach( $header as $h ){
+					header($h);
+				}
+			}else{
+				header($header);
+			}
+		}
+	}
+
+	/**
+	 * Close all open output buffers
+	 *
+	 */
+	function ClearBuffer(){
+		$level = ob_get_level();
+		while( $level > 0 ){
+			ob_end_clean();
+			$level--;
+		}
+		if( function_exists('header_remove') ){
+			header_remove();
+		}
 	}
 
 

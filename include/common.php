@@ -1,18 +1,17 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-set_error_handler('showError');
-ini_set('log_errors', 1);
-if( defined('gpdebug') && gpdebug ){
-	error_reporting(E_ALL);
-}
-
-
 /**
  * See gpconfig.php for these configuration options
+ *
  */
-gp_defined('gp_restrict_uploads',false);
 gp_defined('gpdebug',false);
+if( gpdebug ){
+	error_reporting(E_ALL);
+}
+set_error_handler('showError');
+
+gp_defined('gp_restrict_uploads',false);
 gp_defined('gpdebugjs',gpdebug);
 gp_defined('gpdebug_tools',false);
 gp_defined('gptesting',false);

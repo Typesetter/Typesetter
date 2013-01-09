@@ -536,7 +536,7 @@ class admin_menu_new extends admin_menu_tools{
 		$menu_adjustments_made = false;
 
 		if( $this->curr_menu_array === false ){
-			message($langmessage['OOPS']);
+			message($langmessage['OOPS'].' (Current menu not set)');
 			return;
 		}
 
@@ -832,7 +832,7 @@ class admin_menu_new extends admin_menu_tools{
 		$img = '<span class="menu_icon bin_icon"></span>';
 		echo $this->Link('Admin_Menu',$img.$langmessage['delete'],'cmd=trash&index=[key]',array('title'=>$langmessage['delete_page'],'data-cmd'=>'menupost','class'=>'gpconfirm not_special'));
 
-		echo '[options]'; //replaced with the contents of gpPlugin::Action('MenuPageOptions',array($title,$menu_key,$menu_value,$layout_info));
+		echo '[opts]'; //replaced with the contents of gpPlugin::Action('MenuPageOptions',array($title,$menu_key,$menu_value,$layout_info));
 
 		echo '</span>';
 
@@ -1796,7 +1796,7 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 		if( !$this->SaveMenu(true) ){
-			message($langmessage['OOPS']);
+			message($langmessage['OOPS'].' (Not Saved)');
 			$this->RestoreSettings();
 			return false;
 		}
@@ -1867,13 +1867,13 @@ class admin_menu_new extends admin_menu_tools{
 		$insert[$new_index] = array();
 
 		if( !$this->MenuInsert($insert,$neighbor,$_POST['insert_how']) ){
-			message($langmessage['OOPS']);
+			message($langmessage['OOPS'].' (Not Inserted)');
 			$this->RestoreSettings();
 			return false;
 		}
 
 		if( !$this->SaveMenu(true) ){
-			message($langmessage['OOPS']);
+			message($langmessage['OOPS'].' (Not Saved)');
 			$this->RestoreSettings();
 			return false;
 		}
@@ -1928,7 +1928,6 @@ class admin_menu_new extends admin_menu_tools{
 
 
 	function MenuInsert($titles,$neighbor,$insert_how){
-
 		switch($insert_how){
 
 			case 'insert_before':
@@ -2235,13 +2234,13 @@ class admin_menu_new extends admin_menu_tools{
 
 		$menu_file = $dataDir.'/data/_menus/'.$id.'.php';
 		if( !gpFiles::SaveArray($menu_file,'menu',$new_menu) ){
-			message($langmessage['OOPS']);
+			message($langmessage['OOPS'].' (Menu Not Saved)');
 			return false;
 		}
 
 		$config['menus'][$id] = $menu_name;
 		if( !admin_tools::SaveConfig() ){
-			message($langmessage['OOPS']);
+			message($langmessage['OOPS'].' (Config Not Saved)');
 		}else{
 			$this->avail_menus[$id] = $menu_name;
 			$this->curr_menu_id = $id;
@@ -2392,7 +2391,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		$key =& $_GET['key'];
 		if( !isset($this->curr_menu_array[$key]) ){
-			message($langmessage['OOPS']);
+			message($langmessage['OOPS'].' (Current menu not set)');
 			return false;
 		}
 
@@ -2418,14 +2417,14 @@ class admin_menu_new extends admin_menu_tools{
 
 		$key =& $_POST['key'];
 		if( !isset($this->curr_menu_array[$key]) ){
-			message($langmessage['OOPS']);
+			message($langmessage['OOPS'].' (Current menu not set)');
 			return false;
 		}
 		$level = $this->curr_menu_array[$key]['level'];
 
 		$array = $this->ExternalPost();
 		if( !$array ){
-			message($langmessage['OOPS']);
+			message($langmessage['OOPS'].' (1)');
 			return;
 		}
 
@@ -2435,7 +2434,7 @@ class admin_menu_new extends admin_menu_tools{
 		$this->curr_menu_array[$key] = $array;
 
 		if( !$this->SaveMenu(false) ){
-			message($langmessage['OOPS']);
+			message($langmessage['OOPS'].' (Menu Not Saved)');
 			$this->RestoreSettings();
 			return false;
 		}
@@ -2453,7 +2452,7 @@ class admin_menu_new extends admin_menu_tools{
 		$array = $this->ExternalPost();
 
 		if( !$array ){
-			message($langmessage['OOPS']);
+			message($langmessage['OOPS'].' (Invalid Request)');
 			return;
 		}
 
@@ -2461,13 +2460,13 @@ class admin_menu_new extends admin_menu_tools{
 		$insert[$key] = $array;
 
 		if( !$this->MenuInsert($insert,$_POST['insert_where'],$_POST['insert_how']) ){
-			message($langmessage['OOPS']);
+			message($langmessage['OOPS'].' (Not inserted)');
 			$this->RestoreSettings();
 			return false;
 		}
 
 		if( !$this->SaveMenu(false) ){
-			message($langmessage['OOPS']);
+			message($langmessage['OOPS'].' (Menu not saved)');
 			$this->RestoreSettings();
 			return false;
 		}

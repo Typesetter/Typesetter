@@ -159,17 +159,12 @@
 
 			data = $.extend({}, {title:'',layout_color:'',layout_label:'',types:'',size:'',mtime:'',opts:''}, data);
 
-			this_html = this_html
-							.replace(/\[title\]/g,data.title)
-							.replace(/\[key\]/g,data.key)
-							.replace(/\[url\]/g,data.url)
-							//.replace(/\[layout_color\]/g,data.layout_color)
-							.replace(/\[layout_label\]/g,data.layout_label)
-							.replace(/\[types\]/g,data.types)
-							.replace(/\[size\]/g,data.size)
-							.replace(/\[mtime\]/g,data.mtime)
-							.replace(/\[options\]/g,unspecialchars(data.opts))
-							;
+			var reg,parts = ['title','key','url','layout_label','types','size','mtime','opts'];
+			$.each(parts,function(){
+				reg = new RegExp('(%5B'+this+'%5D|\\['+this+'\\])','gi');
+				this_html = this_html.replace(reg,data[this]);
+			});
+
 			$admin_menu_tools
 				.show()
 				.html(this_html)

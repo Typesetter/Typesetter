@@ -130,6 +130,9 @@ if ( function_exists( 'date_default_timezone_set' ) )
 	date_default_timezone_set( 'UTC' );
 
 
+
+
+
 /**
  * Error Handling
  * Display the error and a debug_backtrace if gpdebug is not false
@@ -2275,6 +2278,8 @@ class common{
 			return;
 		}
 
+		self::RawCookies();
+
 		//get cookie arguments
 		if( empty($_COOKIE['cookie_cmd']) ){
 			return;
@@ -2294,6 +2299,30 @@ class common{
 		}
 
 		$done = true;
+	}
+
+
+	/**
+	 * Fix the $_COOKIE array if RAW_HTTP_COOKIE is set
+	 * Some servers encrypt cookie values before sending them to the client
+	 * Since cookies set by the client (with JavaScript) are not encrypted, the values won't be set in $_COOOKIE
+	 *
+	 */
+	static function RawCookies(){
+		if( empty($_SERVER['RAW_HTTP_COOKIE']) ){
+			return;
+		}
+		$csplit = explode(';', $_SERVER['RAW_HTTP_COOKIE']);
+		foreach( $csplit as $pair ){
+			if( !strpos($pair,'=') ){
+				continue;
+			}
+			list($key,$value) = explode( '=', $pair );
+			$key = rawurldecode(trim($key));
+			if( !array_key_exists($key,$_COOKIE) ){
+				$_COOKIE[$key] = rawurldecode(trim($value));
+			}
+		}
 	}
 
 	/**

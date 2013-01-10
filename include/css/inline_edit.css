@@ -37,13 +37,13 @@
 	}
 
 /* format/font/font-size menus */
-#ckeditor_area #cke_36_text{
+#ckeditor_area .cke_combo__format .cke_combo_text{
 	width:51px;
 	}
-#ckeditor_area #cke_38_text{
+#ckeditor_area .cke_combo__font .cke_combo_text{
 	width:40px;
 	}
-#ckeditor_area #cke_39_text{
+#ckeditor_area .cke_combo__fontsize .cke_combo_text{
 	width: 30px;
 	}
 

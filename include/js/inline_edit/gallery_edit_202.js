@@ -66,7 +66,8 @@
 
 				var data = edit_div.clone();
 				data.find('li.holder').remove();
-				data.find('ul').enableSelection().sortable('destroy').removeClass('ui-sortable').removeAttr('unselectable');
+				//data.find('ul').enableSelection().sortable('destroy').removeClass('ui-sortable').removeAttr('unselectable'); //causes an error with newer versions of jquery
+				data.find('ul').enableSelection().removeClass('ui-sortable').removeAttr('unselectable');
 				data.find('.gp_nosave').remove();
 				data = data.html();
 
@@ -200,7 +201,7 @@
 
 		$gp.links.gp_gallery_add_all = function(evt){
 			evt.preventDefault();
-			$('#gp_gallery_avail_imgs a[name=gp_gallery_add]').each(function(a,b){
+			$('#gp_gallery_avail_imgs').find('a[name=gp_gallery_add],a[data-cmd=gp_gallery_add]').each(function(a,b){
 				AddImage( $(this).clone() );
 			});
 		}

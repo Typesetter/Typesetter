@@ -66,7 +66,6 @@
 
 				var data = edit_div.clone();
 				data.find('li.holder').remove();
-				//data.find('ul').enableSelection().sortable('destroy').removeClass('ui-sortable').removeAttr('unselectable'); //causes an error with newer versions of jquery
 				data.find('ul').enableSelection().removeClass('ui-sortable').removeAttr('unselectable');
 				data.find('.gp_nosave').remove();
 				data = data.html();
@@ -279,7 +278,8 @@
 
 						var avail = $('#gp_gallery_avail_imgs');
 						var img = $(message).appendTo(avail);
-						var img_link = img.find('a[name=gp_gallery_add]');
+						//var img_link = img.find('a[name=gp_gallery_add]');
+						var img_link = img.find('a[name=gp_gallery_add],a[data-cmd=gp_gallery_add]');
 						AddImage(img_link.clone(),settings['holder']);
 
 					}else if( status == 'notimage' ){

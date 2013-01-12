@@ -11,26 +11,28 @@ function debug(arg){
 	}
 	debug_area.prepend('<div>'+LOGO(arg)+'</div><hr/>');
 }
+
 function LOGO(obj){
-	var i,a,type = typeof(obj);
-	a = "\n<br/> ("+type+') ';
+	var i,
+		type = typeof(obj),
+		result = "\n<br/> ("+type+') ';
+
 	if( type === 'object' ){
 		for(i in obj){
 			if( obj.hasOwnProperty(i) ){
-				a += "\n<b>"+i+ '</b> = ';
+				result += "\n<b>"+i+ '</b> = ';
 				try{
-					a += obj[i].toString().replace(/</g,'&lt;').replace(/>/g,'&gt;');
+					result += $gp.htmlchars(obj[i]);
 				}catch(m){
-					a += " -- not allowed -- ";
+					result += " -- not allowed -- ";
 				}
 			}
 		}
 	}else{
-		a += obj;
+		result += $gp.htmlchars(obj);
 	}
-	return a;
+	return result;
 }
-
 
 
 /**

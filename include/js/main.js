@@ -266,9 +266,12 @@ var $gp = {
 			}else{
 				selector = 'a[rel='+selector+'],a.'+selector;
 			}
+
+			$.colorbox.remove();
 			$(selector).colorbox(
-				$gp.cboxSettings({resize:true,open:true,rel:selector})
+				$gp.cboxSettings({resize:true,rel:selector})
 			);
+			$.colorbox.launch(this);
 		}
 
 	}

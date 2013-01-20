@@ -1977,9 +1977,8 @@ class gpOutput{
 		}
 
 		//after other styles, so themes can overwrite defaults
-		$theme_stylesheet = false;
 		if( !empty($page->theme_name) && $page->get_theme_css === true ){
-			$css_files[] = $theme_stylesheet = rawurldecode($page->theme_path).'/style.css';
+			$css_files[] = rawurldecode($page->theme_path).'/style.css';
 		}
 
 		//layout css
@@ -1992,7 +1991,7 @@ class gpOutput{
 			$css_files = array_merge($css_files,$page->css_admin);
 		}
 
-		gpOutput::CombineFiles($css_files,'css',$config['combinecss'],$theme_stylesheet);
+		gpOutput::CombineFiles($css_files,'css',$config['combinecss']);
 	}
 
 
@@ -2002,10 +2001,9 @@ class gpOutput{
 	 *
 	 * @param array $files Array of files relative to $dataDir
 	 * @param string $type The type of resource being combined
-	 * @param string $theme_stylesheet The current theme identifier
 	 *
 	 */
-	static function CombineFiles($files,$type,$combine,$theme_stylesheet=false){
+	static function CombineFiles($files,$type,$combine){
 		global $page;
 
 		$files = array_unique($files);
@@ -2033,26 +2031,23 @@ class gpOutput{
 			return;
 		}
 
-		$html = "\n".'<script type="text/javascript" src="%s"%s></script>';
+		$html = "\n".'<script type="text/javascript" src="%s"></script>';
 		if( $type == 'css' ){
-			$html = "\n".'<link rel="stylesheet" type="text/css" href="%s"%s/>';
+			$html = "\n".'<link rel="stylesheet" type="text/css" href="%s"/>';
 		}
 
 		//files not combined except for script components
 		if( !$combine || (isset($_REQUEST['no_combine']) && common::LoggedIn()) ){
 			foreach($files as $file_key => $file){
-				// CheckFile will fix the $file path if needed
-				$id = ( $file == $theme_stylesheet ? ' id="theme_stylesheet"' : '' );
 				gp_combine::CheckFile($file);
-				echo sprintf($html,common::GetDir($file,true),$id);
+				echo sprintf($html,common::GetDir($file,true));
 			}
 			return;
 		}
 
 		//create combine request
-		$id = ( $type == 'css' ? ' id="theme_stylesheet"' : '' );
 		$combined_file = gp_combine::GenerateFile($files,$type);
-		echo sprintf($html,common::GetDir($combined_file,true),$id);
+		echo sprintf($html,common::GetDir($combined_file,true));
 	}
 
 

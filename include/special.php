@@ -19,10 +19,10 @@ class special_display extends display{
 	function RunScript(){
 		global $gp_index, $langmessage,$page;
 
-		$scriptinfo = special_display::GetScriptInfo($this->requested);
+		$scriptinfo = special_display::GetScriptInfo($this->title);
 		if( $scriptinfo === false ){
 
-			switch($this->requested){
+			switch($this->title){
 				case 'Special_ExtraJS';
 					$this->ExtraJS();
 				//dies
@@ -33,7 +33,7 @@ class special_display extends display{
 			return;
 		}
 
-		$this->gp_index = $gp_index[$this->requested];
+		$this->gp_index = $gp_index[$this->title];
 		$this->TitleInfo = $scriptinfo;
 
 		$menu_permissions = false;

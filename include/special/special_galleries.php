@@ -293,6 +293,7 @@ class special_galleries{
 			}
 
 
+			$icon = rawurldecode($icon); //prevent double encoding
 			if( strpos($icon,'/thumbnails/') === false ){
 				$thumbPath = common::GetDir('/data/_uploaded/image/thumbnails'.$icon.'.jpg');
 			}else{

@@ -98,7 +98,7 @@ var $gp = {
 		datatype = datatype || 'json';
 
 		if( typeof(data) === 'object' ){
-			data = jQuery.param(data,true);
+			data = $.param(data);
 		}
 
 		data += '&verified='+encodeURIComponent(post_nonce);

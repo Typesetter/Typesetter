@@ -494,12 +494,12 @@ function pre($mixed){
 				$mixed = 'false';
 			}
 		default:
-			$output = '('.$type.')'.$mixed.'';
+			$output = '('.$type.')'.htmlspecialchars($mixed,ENT_COMPAT,'UTF-8',false).'';
 		break;
 	}
 
 	if( $level == 0 ){
-		return '<pre>'.htmlspecialchars($output).'</pre>';
+		return '<pre>'.htmlspecialchars($output,ENT_COMPAT,'UTF-8',false).'</pre>';
 	}
 	return $output;
 }
@@ -1116,6 +1116,9 @@ class common{
 			$dataDir = common::ReduceGlobalPath($dataDir,$DirectoriesAway);
 		}else{
 			$dataDir = $rootDir;
+		}
+		if( $dataDir == '/' ){
+			$dataDir = '';
 		}
 
 		//$dirPrefix
@@ -2362,7 +2365,7 @@ class common{
 
 
 	static function IdUrl($request_cmd='cv'){
-		global $config;
+		global $config, $dataDir;
 
 		$path = addon_browse_path.'/Resources?';
 
@@ -2379,6 +2382,8 @@ class common{
 		$args['gpv'] = gpversion;
 		$args['php'] = phpversion();
 		$args['se'] =& $_SERVER['SERVER_SOFTWARE'];
+		$args['data'] = $dataDir;
+
 		if( defined('service_provider_id') && is_numeric(service_provider_id) ){
 			$args['provider'] = service_provider_id;
 		}
@@ -2452,9 +2457,9 @@ class common{
 
 			//remove $dataDir or $rootDir from the filename
 			$file_name = common::WinPath($error['ef'.$i]);
-			if( $dataDir_len && strpos($file_name,$dataDir) === 0 ){
+			if( $dataDir_len > 1 && strpos($file_name,$dataDir) === 0 ){
 				$file_name = substr($file_name,$dataDir_len);
-			}elseif( $rootDir_len && strpos($file_name,$rootDir) === 0 ){
+			}elseif( $rootDir_len > 1 && strpos($file_name,$rootDir) === 0 ){
 				$file_name = substr($file_name,$rootDir_len);
 			}
 			$error['ef'.$i] = substr($file_name,-100);

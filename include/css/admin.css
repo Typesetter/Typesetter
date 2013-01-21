@@ -576,18 +576,19 @@ table.configuration textarea{
 	width:100%;
 	}
 
-table.tablesorter thead tr .gp_header{
-	background-image: url(../thirdparty/tablesorter/bg.gif);
-	background-repeat: no-repeat;
-	background-position: center right;
-	cursor: pointer;
-}
-table.tablesorter thead tr .gp_header_asc{
-	background-image: url(../thirdparty/tablesorter/asc.gif);
-}
-table.tablesorter thead tr .gp_header_desc{
-	background-image: url(../thirdparty/tablesorter/desc.gif);
-}
+table.tablesorter th.gp_header{
+	cursor:pointer;
+	}
+table.tablesorter th.gp_header:before{
+	content:"\21C5";
+	float:right;
+	}
+table.tablesorter th.gp_header_asc:before{
+	content:"\2193";
+	}
+table.tablesorter th.gp_header_desc:before{
+	content:"\2191";
+	}
 
 
 

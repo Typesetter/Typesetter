@@ -558,7 +558,6 @@ class gp_edit{
 
 	}
 
-
 	static function CKConfig($options=array(),$config_name='config'){
 		global $config;
 
@@ -574,37 +573,17 @@ class gp_edit{
 
 		$options += $defaults;
 
-		$values = $config_name.' = (function(a){';
-
-		//keep for reverse compat;
-		if( isset($options['config_text']) ){
-			$values .= $options['config_text'];
-			unset($options['config_text']);
-		}
-
 		//browser paths
 		if( $options['browser'] ){
-			$values .= 'a.filebrowserBrowseUrl = "'.common::GetUrl('Admin_Browser').'?type=all";';
-			$values .= 'a.filebrowserImageBrowseUrl = "'.common::GetUrl('Admin_Browser').'?dir=%2Fimage";';
-			$values .= 'a.filebrowserFlashBrowseUrl = "'.common::GetUrl('Admin_Browser').'?dir=%2Fflash";';
-		}
-		unset($options['browser']);
-
-		foreach($options as $key => $value ){
-			if( $value === true ){
-				$values .= 'a.'.$key.'=true;';
-			}elseif( $value === false){
-				$values .= 'a.'.$key.'=false;';
-			}elseif( $value === null ){
-				$values .= 'a.'.$key.'=null;';
-			}else{
-				$values .= 'a.'.$key.'="'.$value.'";';
-			}
+			$options['filebrowserBrowseUrl'] = common::GetUrl('Admin_Browser').'?type=all';
+			$options['filebrowserImageBrowseUrl'] = common::GetUrl('Admin_Browser').'?dir=%2Fimage';
+			$options['filebrowserFlashBrowseUrl'] = common::GetUrl('Admin_Browser').'?dir=%2Fflash';
+			unset($options['browser']);
 		}
 
-		$values .= ';return a;})('.$config_name.');';
+		$options = gpPlugin::Filter('CKEditorConfig',array($options));
 
-		return $values;
+		return '$.extend('.$config_name.', '.json_encode($options).');';
 	}
 
 

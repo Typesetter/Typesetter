@@ -39,6 +39,8 @@ define('gp_random',common::RandomString());
 
 @ini_set( 'session.use_only_cookies', '1' );
 @ini_set( 'default_charset', 'utf-8' );
+@ini_set( 'html_errors', true );
+
 if( function_exists('mb_internal_encoding') ){
 	mb_internal_encoding('UTF-8');
 }
@@ -1327,7 +1329,7 @@ class common{
 		return '<a href="'.common::GetUrl($href,$query,true,$nonce_action).'" '.common::LinkAttr($attr,$label).'>'.common::Ampersands($label).'</a>';
 	}
 
-	function LinkAttr($attr='',$label=''){
+	static function LinkAttr($attr='',$label=''){
 		$string = '';
 		$has_title = false;
 		if( is_array($attr) ){
@@ -1682,6 +1684,7 @@ class common{
 	 */
 	static function GetConfig(){
 		global $config, $dataDir;
+
 
 		require($dataDir.'/data/_site/config.php');
 		if( !is_array($config) ){
@@ -3045,7 +3048,7 @@ class gpFiles{
 		global $dataDir;
 		$checked_time = false;
 		$tries = 0;
-		$lock_file = $dataDir.'/data/lock_'.$file;
+		$lock_file = $dataDir.'/data/_lock_'.$file;
 		while($tries < 1000){
 
 			if( !file_exists($lock_file) ){
@@ -3082,7 +3085,7 @@ class gpFiles{
 	static function Unlock($file,$value){
 		global $dataDir;
 
-		$lock_file = $dataDir.'/data/lock_'.$file;
+		$lock_file = $dataDir.'/data/_lock_'.$file;
 		if( !file_exists($lock_file) ){
 			return true;
 		}

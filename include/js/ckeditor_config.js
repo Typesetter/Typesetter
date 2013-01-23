@@ -1,43 +1,10 @@
 
-CKEDITOR.editorConfig = function( config ){
-
-	config.toolbar = 'gpeasy';
-
-	config.resize_minWidth = true;
-	config.height = 300;
-
-	config.contentsCss = gpBase+'/include/css/ckeditor_contents.css';
-
-	config.fontSize_sizes = 'Smaller/smaller;Normal/;Larger/larger;8/8px;9/9px;10/10px;11/11px;12/12px;14/14px;16/16px;18/18px;20/20px;22/22px;24/24px;26/26px;28/28px;36/36px;48/48px;72/72px';
-
-	config.ignoreEmptyParagraph = true;
-
-	config.entities_latin = false;
-	config.entities_greek = false;
-
-	config.scayt_autoStartup = false;
-	config.disableNativeSpellChecker = false;
-
-	config.toolbar_gpeasy = [
-		['Source','-','Templates'],
-		['Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'],
-		['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
-		'/',
-		['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
-		['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
-		['Link','Unlink','Anchor'],
-		['Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak'],
-		'/',
-		['Format','Font','FontSize'],
-		['Bold','Italic','Underline','Strike','-','Subscript','Superscript'],
-		['TextColor','BGColor'],
-		['Maximize', 'ShowBlocks','-','About']
-	];
-};
-
-
 
 CKEDITOR.on( 'dialogDefinition', function( ev ){
+
+	if( typeof(gptitles) == 'undefined' ){
+		return;
+	}
 
 	// Take the dialog name and its definition from the event data.
 	var dialogName = ev.data.name;

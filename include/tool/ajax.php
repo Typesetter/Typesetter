@@ -230,6 +230,7 @@ class gpAjax{
 		echo gp_edit::CKConfig($options,'gp_ckconfig');
 
 		$scripts[] = '/include/thirdparty/ckeditor_34/ckeditor.js';
+		//$scripts[] = '/include/js/ckeditor_config.js';
 		$scripts[] = '/include/js/inline_edit/inlineck.js';
 
 		return $scripts;

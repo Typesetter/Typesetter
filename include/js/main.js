@@ -105,6 +105,7 @@ var $gp = {
 		if( datatype === 'json' ){
 			data += '&gpreq=json&jsoncallback=?';
 		}
+
 		$.post(
 			strip_from(url,'?'),
 			data,
@@ -369,6 +370,17 @@ $(function(){
 
 
 		switch(cmd){
+
+			case 'testsave':
+
+				var path = this.form.action;
+				var query = '';
+				query += '&cmd=save';
+				query += '&newcontentstring';
+
+				$gp.postC( path, query);
+
+			return false;
 
 			case 'gppost':
 			case 'gpajax':

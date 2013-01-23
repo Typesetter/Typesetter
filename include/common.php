@@ -1685,6 +1685,9 @@ class common{
 	static function GetConfig(){
 		global $config, $dataDir;
 
+		//includeFile('tool/editing.php');
+		//$config = gp_edit::CKConfig();
+		//message('<textarea>'.htmlspecialchars($config).'</textarea>');
 
 		require($dataDir.'/data/_site/config.php');
 		if( !is_array($config) ){

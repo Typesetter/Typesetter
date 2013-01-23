@@ -26,7 +26,7 @@ function gp_init_inline_edit(area_id,section_object){
 			,bottom:'ckeditor_bottom'
 		}
 	};
-	$.extend(config, gp_ckconfig);
+	config = $.extend({}, gp_ckconfig, config );
 
 
 	//get area

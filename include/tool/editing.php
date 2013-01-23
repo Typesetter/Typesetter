@@ -512,6 +512,7 @@ class gp_edit{
 	static function PrepAutoComplete($autocomplete_js=true,$GetUrl=true){
 		global $page;
 
+		common::LoadComponents('autocomplete');
 		if( $autocomplete_js ){
 			$page->head_js[] = '/include/js/autocomplete.js';
 		}
@@ -537,8 +538,8 @@ class gp_edit{
 		echo '</textarea><br/>';
 
 
-		//$page->head_js[] = '/include/thirdparty/ckeditor_34/ckeditor.js'; //wasn't working quite right, and it's called seperately for inline editing
-		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/ckeditor_34/ckeditor.js').'?3.6.2"></script>';
+		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/ckeditor_34/ckeditor.js').'?'.rawurlencode(gpversion).'"></script>';
+		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/js/ckeditor_config.js').'?'.rawurlencode(gpversion).'"></script>';
 
 
 		gp_edit::PrepAutoComplete(false,true);
@@ -558,13 +559,45 @@ class gp_edit{
 
 	}
 
+
+	/**
+	 * CKEditor configuration settings
+	 * Any settings here take precedence over settings in configuration files defined by the customConfig setting
+	 *
+	 */
 	static function CKConfig($options=array(),$config_name='config'){
 		global $config;
 
-		$defaults = array();
-		$defaults['browser'] = true; //not actually a ckeditor configuration value, but we're keeping it now for reverse compat
-		$defaults['smiley_path'] = common::GetDir('/include/thirdparty/ckeditor_34/plugins/smiley/images/');
-		$defaults['customConfig'] = common::GetDir('/include/js/ckeditor_config.js');
+		$defaults = array(
+						//'customConfig'				=> common::GetDir('/include/js/ckeditor_config.js'),
+						'browser'					=> true, //not actually a ckeditor configuration value, but we're keeping it now for reverse compat
+						'smiley_path'				=> common::GetDir('/include/thirdparty/ckeditor_34/plugins/smiley/images/'),
+						'height'					=> 300,
+						'contentsCss'				=> common::GetDir('/include/css/ckeditor_contents.css'),
+						'fontSize_sizes'			=> 'Smaller/smaller;Normal/;Larger/larger;8/8px;9/9px;10/10px;11/11px;12/12px;14/14px;16/16px;18/18px;20/20px;22/22px;24/24px;26/26px;28/28px;36/36px;48/48px;72/72px',
+						'ignoreEmptyParagraph'		=> true,
+						'entities_latin'			=> false,
+						'entities_greek'			=> false,
+						'scayt_autoStartup'			=> false,
+						'disableNativeSpellChecker'	=> false,
+						'toolbar'					=> array(
+														array('Source','-','Templates'),
+														array('Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'),
+														array('Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'),
+														'/',
+														array('NumberedList','BulletedList','-','Outdent','Indent','Blockquote'),
+														array('JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'),
+														array('Link','Unlink','Anchor'),
+														array('Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak'),
+														'/',
+														array('Format','Font','FontSize'),
+														array('Bold','Italic','Underline','Strike','-','Subscript','Superscript'),
+														array('TextColor','BGColor'),
+														array('Maximize', 'ShowBlocks','-','About')
+														),
+
+					);
+
 		if( $config['langeditor'] == 'inherit' ){
 			$defaults['language'] = $config['language'];
 		}else{
@@ -572,6 +605,8 @@ class gp_edit{
 		}
 
 		$options += $defaults;
+
+		$options = gpPlugin::Filter('CKEditorConfig',array($options));
 
 		//browser paths
 		if( $options['browser'] ){
@@ -581,8 +616,8 @@ class gp_edit{
 			unset($options['browser']);
 		}
 
-		$options = gpPlugin::Filter('CKEditorConfig',array($options));
 
+		//return ' '.json_encode($options).';';
 		return '$.extend('.$config_name.', '.json_encode($options).');';
 	}
 

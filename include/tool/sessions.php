@@ -122,7 +122,7 @@ class gpsession{
 		if( isset($_REQUEST['file']) && isset($gp_index[$_REQUEST['file']]) ){
 			$redirect = $_REQUEST['file'];
 		}
-		$url = common::GetUrl($redirect);
+		$url = common::GetUrl($redirect,'',false);
 		common::Redirect($url);
 
 	}
@@ -1036,7 +1036,7 @@ class gpsession{
 			}
 		}
 		$title = common::WhichPage();
-		common::Redirect(common::GetUrl($title));
+		common::Redirect(common::GetUrl($title,'',false));
 	}
 
 	static function SessionCookie($uniq){

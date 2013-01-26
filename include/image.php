@@ -61,7 +61,7 @@ class gp_resized{
 		//if the image has been renamed, redirect to the new name
 		$index_img = self::$index[$index];
 		if( $index_img != $img ){
-			$path = common::GetDir('/include/image.php').'?i='.$index.'&w='.$width.'&h='.$height.'&img='.rawurlencode($index_img);
+			$path = common::GetDir('/include/image.php',false).'?i='.$index.'&w='.$width.'&h='.$height.'&img='.rawurlencode($index_img);
 			common::Redirect($path);
 		}
 
@@ -97,14 +97,14 @@ class gp_resized{
 			if( ($use_width >= $width && $use_height > $height)
 				|| ($use_width > $width && $use_height >= $height)
 				){
-					$path = common::GetDir('/include/image.php').'?i='.$index.'&w='.$use_width.'&h='.$use_height.'&img='.rawurlencode($img);
+					$path = common::GetDir('/include/image.php',false).'?i='.$index.'&w='.$use_width.'&h='.$use_height.'&img='.rawurlencode($img);
 					common::Redirect($path);
 					//dies
 			}
 		}
 
 		//redirect to full size image
-		$original = common::GetDir('/data/_uploaded'.$img);
+		$original = common::GetDir('/data/_uploaded'.$img,false);
 		common::Redirect($original);
 		//dies
 	}

@@ -30,15 +30,14 @@ var $gp = {
 	 *
 	 */
 	cGoTo : function(a,samepage){
-		var l;
-		if( samepage ){
-			l = window.location.href;
-		}else{
-			l = strip_from(a.href,'?');
-		}
 		var query = a.search + '&verified='+post_nonce;
 		$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
-		window.location = strip_from(l,'#');
+
+		if( samepage ){
+			window.location.reload(true);
+		}else{
+			window.location = strip_from(strip_from(a.href,'#'),'?');
+		}
 	},
 
 

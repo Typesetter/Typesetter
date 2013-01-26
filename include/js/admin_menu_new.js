@@ -316,7 +316,13 @@
 
 			//similar to reload, but it doesn't initiate post resend
 			//we don't want a query string with menu selection to be sent
-			window.location = strip_from(window.location.href,'?');
+			var loc = window.location;
+			var href = loc.href;
+			if( href.indexOf('?') ){
+				window.location = strip_from(href,'?');
+			}else{
+				loc.reload(true);
+			}
 		});
 
 

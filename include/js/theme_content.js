@@ -72,40 +72,40 @@ $(function(){
 	};
 
 	//this has to be 'live'
-	$('.draggable_element').live('mouseenter',function(){
-		$this = $(this);
-		if( $this.hasClass('target') ){
-			return;
+	$(document).delegate('.draggable_element',{
+		'mouseenter': function(){
+			var $this = $(this);
+			if( $this.hasClass('target') ){
+				return;
+			}
+
+			$this.addClass('hover');
+
+
+			$this.find('div').stop(true,true).fadeIn();
+			$this.stop(true).fadeTo('200',1);
+
+			//set height
+			var h = $this.height();
+			$this.data('ph',h);
+			var h2 = $this.height('auto').height();
+			if( h2 < h ){
+				$this.height(h);
+			}
+		},
+		'mouseleave': function(){
+			var $this = $(this)
+						.removeClass('hover')
+						.stop(true)
+						.fadeTo('slow',.5);
+
+			$this.find('div').stop(true,true).fadeOut();
+
+			var h = $this.data('ph');
+			if( parseInt(h) > 0 ){
+				$this.height(h);
+			}
 		}
-
-		$this.addClass('hover');
-
-
-		$this.find('div').stop(true,true).fadeIn();
-		$this.stop(true).fadeTo('200',1);
-
-		//set height
-
-		var h = $this.height();
-		$this.data('ph',h);
-		var h2 = $this.height('auto').height();
-		if( h2 < h ){
-			$this.height(h);
-		}
-
-	}).live('mouseleave',function(){
-
-		$this.removeClass('hover');
-
-		$this = $(this);
-
-		$this.stop(true).fadeTo('slow',.5);
-		$this.find('div').stop(true,true).fadeOut();
-		var h = $this.data('ph');
-		if( parseInt(h) > 0 ){
-			$this.height(h);
-		}
-
 	});
 
 

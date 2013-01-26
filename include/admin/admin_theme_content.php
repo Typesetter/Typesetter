@@ -2464,7 +2464,7 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 		if( !$insert ){
-			message($langmessage['OOPS'].' (1)');
+			message($langmessage['OOPS'].' (Nothing to insert)');
 			return false;
 		}
 

@@ -36,7 +36,7 @@
 			lnk = lnk.clone(true).appendTo('body'); //append to body so the click works
 
 			var c = a.find('a.dragdroplink:first').html();
-			lnk.attr('href',lnk.attr('href').replace('%s',c));
+			lnk.attr('href',lnk.attr('href').replace('%s',c).replace('%25s',c));
 			lnk.click();
 
 			WBd.clean();

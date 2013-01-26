@@ -234,6 +234,14 @@ body #gp_admin_html .padded_table td{
 	padding:5px;
 	}
 
+body #gp_admin_html pre{
+    background: #F7F7F7;
+    border-left: 1px solid #CCC;
+    margin-left: 20px;
+    padding: 10px;
+    white-space: pre-wrap;
+	}
+
 /*
  * floating admin container
  *
@@ -1687,4 +1695,7 @@ body #gp_admin_html .layout_links a.selected{
 div.cke_dialog_ui_input_select{
 	border:0 none;
 	display:inline-block;
+	}
+input.cke_dialog_ui_input_text, input.cke_dialog_ui_input_password{
+	outline:0 none !important;
 	}

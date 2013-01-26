@@ -186,7 +186,7 @@
 
 	$( function() {
 		WBd.VARS();
-		$('.draggable_element').live('mousedown',WBd.dMDn);
+		$(document).on('mousedown','.draggable_element',WBd.dMDn);
 
 		var a = $('<div style="position:absolute;z-index:10000;cursor:move;display:none;" class="WB_DRAG_BOX"></div>');
 

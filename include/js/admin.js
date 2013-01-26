@@ -520,7 +520,7 @@ $gp.response.location = function(obj){
 $(function(){
 
 	//add return value to form
-	$('form').live('mousedown',function(){
+	$(document).on('mousedown','form',function(){
 		var $this = $(this);
 
 		if( $this.data('gpForms') === 'checked' ){
@@ -990,7 +990,7 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 
 
 	//dragging
-	$(selector).die('mousedown.sdrag').live('mousedown.sdrag',function(e){
+	$(document).off('mousedown.sdrag',selector).on('mousedown.sdrag',selector,function(e){
 		/* if( e.target.nodeName != 'DIV') return; */
 
 		var box, click_offsetx, click_offsety;

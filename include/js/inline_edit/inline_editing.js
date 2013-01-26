@@ -63,7 +63,7 @@ var gp_editing = {
 		evt.preventDefault();
 
 		//reload the page so javascript elements are shown again
-		window.location = strip_from(window.location.href,'#');
+		window.location.reload(true);
 	},
 
 	/*

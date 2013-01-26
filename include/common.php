@@ -2341,7 +2341,8 @@ class common{
 				.',gpRem=true'
 				.',isadmin=false'
 				.',gpBase="'.rtrim(common::GetDir(''),'/').'"'
-				.',post_nonce="";'
+				.',post_nonce=""'
+				.',req_type="'.strtolower(htmlspecialchars($_SERVER['REQUEST_METHOD'])).'";'
 				."\n";
 	}
 

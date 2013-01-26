@@ -34,7 +34,7 @@ var $gp = {
 		$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
 
 		if( samepage ){
-			window.location.reload(true);
+			$gp.Reload();
 		}else{
 			window.location = strip_from(strip_from(a.href,'#'),'?');
 		}
@@ -248,6 +248,19 @@ var $gp = {
 		}
 	},
 
+
+	/**
+	 * Reload the current page
+	 * Use window.location.reload(true) to prevent the browser from using the cached page unless it was a post request
+	 *
+	 */
+	Reload : function(){
+		if( typeof(req_type) && req_type == 'post' ){
+			window.location = strip_from(window.location.href,'#');
+		}else{
+			window.location.reload(true);
+		}
+	},
 
 	/**
 	 * Link handlers

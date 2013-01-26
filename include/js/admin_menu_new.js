@@ -321,7 +321,7 @@
 			if( href.indexOf('?') ){
 				window.location = strip_from(href,'?');
 			}else{
-				loc.reload(true);
+				$gp.Reload();
 			}
 		});
 

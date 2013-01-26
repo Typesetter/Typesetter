@@ -346,7 +346,7 @@ $gp.LoadScripts = function(scripts,callback,relative_path){
  */
 $gp.links.gp_refresh = function(evt){
 	evt.preventDefault();
-	window.location.reload(true);
+	$gp.Reload();
 };
 
 

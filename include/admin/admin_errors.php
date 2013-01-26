@@ -23,9 +23,7 @@ class admin_errors{
 			return;
 		}
 
-		$contents = file_get_contents($error_log);
-		$lines = trim($contents);
-		$lines = explode("\n",$contents);
+		$lines = file($error_log);
 		$lines = array_reverse($lines);
 
 		$time = null;

@@ -2161,7 +2161,7 @@ abstract class FinderVolumeDriver {
 
 		//try internal detection
 		if( !$type && in_array('internal',$this->mime_detection) ){
-			$type = FinderVolumeDriver::mimetypeInternalDetect($path);
+			$type = $this->mimetypeInternalDetect($path);
 		}
 
 		return $type;
@@ -2213,7 +2213,7 @@ abstract class FinderVolumeDriver {
 	 * @return string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	static protected function mimetypeInternalDetect($path){
+	protected function mimetypeInternalDetect($path){
 		static $loaded = false;
 
 

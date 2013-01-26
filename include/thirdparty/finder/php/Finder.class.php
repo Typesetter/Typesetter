@@ -19,7 +19,7 @@ class Finder {
 	 *
 	 * @var string
 	 **/
-	protected $version = '2.1';
+	protected $version = '2.2';
 
 	/**
 	 * Storages (root dirs)
@@ -64,7 +64,7 @@ class Finder {
 		'rename'    => array('target' => true, 'name' => true, 'mimes' => false),
 		'duplicate' => array('targets' => true, 'suffix' => false),
 		'paste'     => array('dst' => true, 'targets' => true, 'cut' => false, 'mimes' => false),
-		'upload'    => array('target' => true, 'FILES' => true, 'mimes' => false, 'html' => false),
+		'upload'    => array('target' => true, 'FILES' => true, 'mimes' => false, 'html' => false, 'upload' => false, 'name' => false),
 		'get'       => array('target' => true),
 		'put'       => array('target' => true, 'content' => '', 'mimes' => false),
 		'archive'   => array('targets' => true, 'type' => true, 'mimes' => false),
@@ -91,7 +91,7 @@ class Finder {
 	 **/
 	protected $time = 0;
 	/**
-	 * Is the Finder init correctly?
+	 * Is Finder init correctly?
 	 *
 	 * @var bool
 	 **/
@@ -1133,6 +1133,7 @@ class Finder {
 		return $result;
 	}
 
+
 	/**
 	 * Save uploaded files
 	 *
@@ -1141,19 +1142,26 @@ class Finder {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function upload($args) {
+
+		if( empty($files) ){
+			return $this->UploadExternal($args);
+		}
+
+
 		$target = $args['target'];
 		$volume = $this->volume($target);
 		$files =& $args['FILES']['upload'];
 		$result = array('added' => array(), 'header' => empty($args['html']) ? false : 'Content-Type: text/html; charset=utf-8');
 
-		if( !is_array($files) || empty($files) ){
-			return array('error' => $this->error('errUpload', 'errUploadNoFiles'), 'header' => $header);
-		}
-
 		if( !$volume ){
-			return array('error' => $this->error('errUpload', 'errTrgFolderNotFound', '#'.$target), 'header' => $header);
+			return array('error' => $this->error('errUpload', 'errTrgFolderNotFound', '#'.$target));
 		}
 
+		if( !is_array($files) || empty($files) ){
+			return array('error' => $this->error('errUpload', 'errUploadNoFiles'));
+		}
+
+		// check and upload content in $files array
 		foreach( $files['name'] as $i => $name ){
 			$error = $files['error'][$i];
 			if( $error > 0 ){
@@ -1179,18 +1187,263 @@ class Finder {
 			}
 
 			$file = $volume->upload($fp, $target, $name, $tmpname);
+			fclose($fp);
+
 			if( $file === false ){
 				$result['warning'] = $this->error('errUploadFile', $name, $volume->error());
-				fclose($fp);
 				break;
 			}
 
-			fclose($fp);
 			$result['added'][] = $file;
 		}
 
 		return $result;
 	}
+
+	/**
+	 * Create a $files array similar to $_FILES from drag/drop data
+	 * @param	array $args command arguments
+	 * @return	array
+	 *
+	 */
+	protected function UploadExternal($args){
+		$target = $args['target'];
+		$volume = $this->volume($target);
+		$result = array('added' => array(), 'header' => empty($args['html']) ? false : 'Content-Type: text/html; charset=utf-8');
+
+		if( !isset($args['upload']) || !is_array($args['upload'])) {
+			return array('error' => $this->error('errUpload', 'errUploadNoFiles'));
+		}
+
+		// values may be "http://file_path" or "<img src='http://file_path' ...>"
+		$urls = array();
+		foreach($args['upload'] as $i => $string){
+			$pat = "#(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))#";
+			if( preg_match_all($pat,$string,$matches) ){
+				$urls = array_merge($urls,$matches[0]);
+			}
+		}
+
+		if( empty($urls) ){
+			return array('error' => $this->error('errUpload', 'errUploadNoFiles'));
+		}
+
+		$urls = array_unique($urls);
+		foreach($urls as $url){
+
+			$name = preg_replace('~^.*?([^/#?]+)(?:\?.*)?(?:#.*)?$~', '$1', rawurldecode($url));
+
+			if( empty($name) ){
+				continue;
+			}
+
+			$data = $this->get_remote_contents($url);
+			if( !$data ){
+				continue;
+			}
+
+			$tmpfname = tempnam(sys_get_temp_dir(),'');
+			$fp = fopen($tmpfname, 'w+b');
+			if( !$fp ){
+				continue;
+			}
+
+			if( !fwrite($fp, $data) ){
+				unlink($tmpfname);
+				continue;
+			}
+
+			rewind($fp);
+
+			$file = $volume->upload($fp, $target, $name, $tmpfname);
+			fclose($fp);
+
+			if( $file === false ){
+				$result['warning'] = $this->error('errUploadFile', $name, $volume->error());
+				unlink($tmpfname);
+				break;
+			}
+
+			$result['added'][] = $file;
+
+		}
+
+		return $result;
+	}
+
+
+
+	/**
+	* Get remote contents
+	*
+	* @param  string  $url     target url
+	* @param  int     $timeout timeout (sec)
+	* @param  int     $redirect_max redirect max count
+	* @param  string  $ua
+	* @return string or bool(false)
+	* @retval string contents
+	* @retval false  error
+	* @author Naoki Sawada
+	**/
+	protected function get_remote_contents( $url, $timeout = 30, $redirect_max = 5, $ua = 'Mozilla/5.0' ) {
+		$method = function_exists('curl_exec')? 'curl_get_contents' : 'fsock_get_contents';
+		return $this->$method( $url, $timeout, $redirect_max, $ua );
+	}
+
+	/**
+	 * Get remote contents with cURL
+	 *
+	 * @param  string  $url     target url
+	 * @param  int     $timeout timeout (sec)
+	 * @param  int     $redirect_max redirect max count
+	 * @param  string  $ua
+	 * @return string or bool(false)
+	 * @retval string contents
+	 * @retval false  error
+	 * @author Naoki Sawada
+	 **/
+	 protected function curl_get_contents( $url, $timeout, $redirect_max, $ua ){
+		$ch = curl_init();
+		curl_setopt( $ch, CURLOPT_URL, $url );
+		curl_setopt( $ch, CURLOPT_HEADER, false );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $ch, CURLOPT_BINARYTRANSFER, true );
+		curl_setopt( $ch, CURLOPT_TIMEOUT, $timeout );
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+		curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt( $ch, CURLOPT_MAXREDIRS, $redirect_max);
+		curl_setopt( $ch, CURLOPT_USERAGENT, $ua);
+		$result = curl_exec( $ch );
+		curl_close( $ch );
+		return $result;
+	}
+
+	/**
+	 * Get remote contents with fsockopen()
+	 *
+	 * @param  string  $url          url
+	 * @param  int     $timeout      timeout (sec)
+	 * @param  int     $redirect_max redirect max count
+	 * @param  string  $ua
+	 * @return string or bool(false)
+	 * @retval string contents
+	 * @retval false  error
+	 * @author Naoki Sawada
+	 */
+	protected function fsock_get_contents( $url, $timeout, $redirect_max, $ua ) {
+
+		$connect_timeout = 3;
+		$connect_try = 3;
+		$method = 'GET';
+		$readsize = 4096;
+
+		$getSize = null;
+		$headers = '';
+
+		$arr = parse_url($url);
+		if (!$arr){
+			// Bad request
+			return false;
+		}
+
+		// query
+		$arr['query'] = isset($arr['query']) ? '?'.$arr['query'] : '';
+		// port
+		$arr['port'] = isset($arr['port']) ? $arr['port'] : (!empty($arr['https'])? 443 : 80);
+
+		$url_base = $arr['scheme'].'://'.$arr['host'].':'.$arr['port'];
+		$url_path = isset($arr['path']) ? $arr['path'] : '/';
+		$uri = $url_path.$arr['query'];
+
+		$query = $method.' '.$uri." HTTP/1.0\r\n";
+		$query .= "Host: ".$arr['host']."\r\n";
+		if (!empty($ua)) $query .= "User-Agent: ".$ua."\r\n";
+		if (!is_null($getSize)) $query .= 'Range: bytes=0-' . ($getSize - 1) . "\r\n";
+
+		$query .= $headers;
+
+		$query .= "\r\n";
+
+		$fp = $connect_try_count = 0;
+		while( !$fp && $connect_try_count < $connect_try ) {
+
+			$errno = 0;
+			$errstr = "";
+			$fp = @ fsockopen(
+			$arr['https'].$arr['host'],
+			$arr['port'],
+			$errno,$errstr,$connect_timeout);
+			if ($fp) break;
+			$connect_try_count++;
+			if (connection_aborted()) {
+				exit();
+			}
+			sleep(1); // wait 1sec
+		}
+
+		$fwrite = 0;
+		for ($written = 0; $written < strlen($query); $written += $fwrite) {
+			$fwrite = fwrite($fp, substr($query, $written));
+			if (!$fwrite) {
+				break;
+			}
+		}
+
+		$response = '';
+
+		if ($timeout) {
+			socket_set_timeout($fp, $timeout);
+		}
+
+		$_response = true;
+		while ($_response && (is_null($getSize) || strlen($response) < $getSize)) {
+			if (connection_aborted()) {
+				exit();
+			}
+			if ($_response = fread($fp, $readsize)) {
+				$response .= $_response;
+			}
+		}
+
+		if ($timeout) {
+			$_status = socket_get_status($fp);
+			if ($_status['timed_out']) {
+				fclose($fp);
+				return false; // Request Time-out
+			}
+		}
+
+		fclose($fp);
+
+		$resp = array_pad(explode("\r\n\r\n",$response,2), 2, '');
+		$rccd = array_pad(explode(' ',$resp[0],3), 3, ''); // array('HTTP/1.1','200','OK\r\n...')
+		$rc = (integer)$rccd[1];
+
+		// Redirect
+		switch ($rc) {
+			case 307: // Temporary Redirect
+			case 303: // See Other
+			case 302: // Moved Temporarily
+			case 301: // Moved Permanently
+				$matches = array();
+				if (preg_match('/^Location: (.+?)(#.+)?$/im',$resp[0],$matches) && --$redirect_max > 0) {
+					$url = trim($matches[1]);
+					$hash = isset($matches[2])? trim($matches[2]) : '';
+					if (!preg_match('/^https?:\//',$url)) { // no scheme
+						if ($url{0} != '/') { // Relative path
+							// to Absolute path
+							$url = substr($url_path,0,strrpos($url_path,'/')).'/'.$url;
+						}
+						// add sheme,host
+						$url = $url_base.$url;
+					}
+					return $this->fsock_get_contents( $url, $timeout, $redirect_max, $ua );
+				}
+		}
+
+		return $resp[1]; // Data
+	}
+
 
 	/**
 	 * Copy/move files into new destination

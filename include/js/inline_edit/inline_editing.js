@@ -112,7 +112,7 @@ var gp_editing = {
 		$('#ckeditor_top').html('');
 		$('#ckeditor_bottom').html('');
 
-		SimpleDrag(editor_area.find('.toolbar'),editor_area,'fixed',function(pos){
+		SimpleDrag('#ckeditor_area .toolbar',editor_area,'fixed',function(pos){
 			gpui.ckx = pos.left;
 			gpui.cky = pos.top;
 

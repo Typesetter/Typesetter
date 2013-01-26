@@ -41,7 +41,7 @@
 			save_path: save_path,
 
 			destroy:function(){
-				sortable_area.sortable('destroy');
+				sortable_area.filter(':ui-sortable').sortable('destroy');
 				edit_div.html(content_cache.html());
 				sortable_area.children('li').unbind('mouseenter.gp_edit, mouseleave.gp_edit, mousedown.gp_edit');
 				edit_links.remove();

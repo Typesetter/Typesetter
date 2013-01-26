@@ -324,7 +324,7 @@
 		 * Use javascript to style the checkbox labels when they're checked
 		 *
 		 */
-		$('input:checkbox').live('click',function(){
+		$(document).on('click','input:checkbox',function(){
 			$this = $(this);
 			if( $this.filter(':checked').length > 0 ){
 				$this.closest('li').addClass('gpui-state-checked');
@@ -338,7 +338,7 @@
 		 * Reduce a list of titles by search criteria entered in gpsearch areas
 		 *
 		 */
-		$('input.gpsearch').live('keyup',function(){
+		$(document).on('keyup','input.gpsearch',function(){
 			var search = this.value.toLowerCase();
 			$(this).closest('form').find('.gpui-scrolllist li:not(.gpui-state-checked)').each(function(){
 				var $this = $(this);

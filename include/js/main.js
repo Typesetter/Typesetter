@@ -390,7 +390,8 @@ $(function(){
 		return true;
 	});
 
-	$('form').live('submit',function(){
+	$(document).on('submit','form',function(){
+		alert('verify');
 		verify(this);
 	});
 
@@ -402,13 +403,16 @@ $(function(){
 
 
 	//expanding menus
-	$('.expand_child').live('mouseenter',function(){
-		$(this).addClass('expand');
-		if( $(this).hasClass('simple_top') ){
-			$(this).addClass('simple_top_hover');
+	$(document).delegate('.expand_child',{
+		'mouseenter': function(){
+			var $this = $(this).addClass('expand');
+			if( $this.hasClass('simple_top') ){
+				$this.addClass('simple_top_hover');
+			}
+		},
+		'mouseleave': function(){
+			$(this).removeClass('expand simple_top_hover');
 		}
-	}).live('mouseleave',function(){
-		$(this).removeClass('expand').removeClass('simple_top_hover');
 	});
 
 

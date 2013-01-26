@@ -403,7 +403,6 @@ $(function(){
 	});
 
 	$(document).on('submit','form',function(){
-		alert('verify');
 		verify(this);
 	});
 

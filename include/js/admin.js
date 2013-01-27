@@ -563,7 +563,6 @@ $(function(){
 	 *
 	 */
 	$(window).on('beforeunload',function(){
-		return 'test';
 		if( !gp_editor ){
 			return;
 		}

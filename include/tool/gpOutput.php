@@ -455,7 +455,7 @@ class gpOutput{
 
 		//data
 		if( !empty($info['data']) ){
-			IncludeScript($dataDir.$info['data'],'include_if');
+			IncludeScript($dataDir.$info['data'],'include_if',array('page','dataDir'));
 		}
 
 		//script
@@ -466,7 +466,7 @@ class gpOutput{
 			if( !file_exists($full_path) ){
 				$name =& $config['addons'][$addonFolderName]['name'];
 				trigger_error('gpEasy Error: Addon hook script doesn\'t exist. Script: '.$info['script'].' Addon: '.$name);
-			}elseif( IncludeScript($full_path,'include_once') ){
+			}elseif( IncludeScript($full_path,'include_once',array('page','dataDir')) ){
 				$has_script = true;
 			}
 		}

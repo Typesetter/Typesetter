@@ -562,8 +562,8 @@ $(function(){
 	 * Warn before closing a page if an inline edit area has been changed
 	 *
 	 */
-	window.onbeforeunload = function(){
-
+	$(window).on('beforeunload',function(){
+		return 'test';
 		if( !gp_editor ){
 			return;
 		}
@@ -575,7 +575,7 @@ $(function(){
 			return 'Unsaved changes will be lost.';
 		}
 		return;
-	};
+	});
 
 
 

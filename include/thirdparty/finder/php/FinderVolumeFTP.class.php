@@ -747,10 +747,11 @@ class FinderVolumeFTP extends FinderVolumeDriver {
 	 * @param  resource  $fp   file pointer
 	 * @param  string    $dir  target dir path
 	 * @param  string    $name file name
+	 * @param  array     $stat file stat (required by some virtual fs)
 	 * @return bool|string
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function _save($fp, $dir, $name, $mime, $w, $h) {
+	protected function _save($fp, $dir, $name, $stat) {
 		$path = $this->_joinPath( $dir,$name);
 		return ftp_fput($this->connect, $path, $fp, $this->ftpMode($path))
 			? $path

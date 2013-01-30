@@ -6,27 +6,18 @@
 function gp_init_inline_edit(area_id,section_object){
 
 
-
 	//ckeditor configuration
-	var config = {
-		toolbar: [
-			['Source','Templates','ShowBlocks','Undo','Redo','RemoveFormat'], //,'Maximize' does not work well
-			['Cut','Copy','Paste','PasteText','PasteFromWord','SelectAll','Find','Replace'],
-			['HorizontalRule','Smiley','SpecialChar','PageBreak','TextColor','BGColor'],
-			['Link','Unlink','Anchor','Image','Flash','Table'], //'CreatePlaceholder'
-			['Format','Font','FontSize'],
-			['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','NumberedList','BulletedList','Outdent','Indent'],
-			['Bold','Italic','Underline','Strike','Blockquote','Subscript','Superscript']
-		]
-		,FillEmptyBlocks:false
-		,removePlugins : 'magicline,floatingspace'
-		,extraPlugins: 'sharedspace'
-		,sharedSpaces:{
+	var config = $.extend({}, gp_ckconfig);
+	if( typeof(config.extraPlugins) == 'undefined' ){
+		config.extraPlugins = 'sharedspace';
+	}else{
+		config.extraPlugins += ',sharedspace';
+	}
+	config.sharedSpaces = {
 			top:'ckeditor_top'
 			,bottom:'ckeditor_bottom'
-		}
-	};
-	config = $.extend({}, gp_ckconfig, config );
+		};
+
 
 
 	//get area

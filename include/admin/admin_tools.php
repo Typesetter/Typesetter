@@ -96,6 +96,12 @@ class admin_tools{
 		$scripts['Admin_Uninstall']['group'] = 'settings';
 
 
+		$scripts['Admin_CKEditor']['script'] = '/include/admin/admin_ckeditor.php';
+		$scripts['Admin_CKEditor']['class'] = 'admin_ckeditor';
+		$scripts['Admin_CKEditor']['label'] = 'CKEditor';
+		$scripts['Admin_CKEditor']['group'] = 'settings';
+
+
 
 
 		/*

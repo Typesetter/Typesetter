@@ -580,20 +580,15 @@ class gp_edit{
 						'entities_greek'			=> false,
 						'scayt_autoStartup'			=> false,
 						'disableNativeSpellChecker'	=> false,
+						'FillEmptyBlocks'			=> false,
 						'toolbar'					=> array(
-														array('Source','-','Templates'),
-														array('Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'),
-														array('Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'),
-														'/',
-														array('NumberedList','BulletedList','-','Outdent','Indent','Blockquote'),
-														array('JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'),
-														array('Link','Unlink','Anchor'),
-														array('Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak'),
-														'/',
-														array('Format','Font','FontSize'),
-														array('Bold','Italic','Underline','Strike','-','Subscript','Superscript'),
-														array('TextColor','BGColor'),
-														array('Maximize', 'ShowBlocks','-','About')
+															array('Source','Templates','ShowBlocks','Undo','Redo','RemoveFormat'), //,'Maximize' does not work well
+															array('Cut','Copy','Paste','PasteText','PasteFromWord','SelectAll','Find','Replace'),
+															array('HorizontalRule','Smiley','SpecialChar','PageBreak','TextColor','BGColor'),
+															array('Link','Unlink','Anchor','Image','Flash','Table'), //'CreatePlaceholder'
+															array('Format','Font','FontSize'),
+															array('JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','NumberedList','BulletedList','Outdent','Indent'),
+															array('Bold','Italic','Underline','Strike','Blockquote','Subscript','Superscript')
 														),
 
 					);
@@ -616,8 +611,14 @@ class gp_edit{
 			unset($options['browser']);
 		}
 
+		switch( $config_name ){
+			case 'array':
+			return $options;
 
-		//return ' '.json_encode($options).';';
+			case 'json':
+			return json_encode($options);
+		}
+
 		return '$.extend('.$config_name.', '.json_encode($options).');';
 	}
 

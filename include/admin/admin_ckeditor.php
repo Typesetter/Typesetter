@@ -6,9 +6,32 @@ class admin_ckeditor{
 	var $config_file;
 	var $cke_config = array();
 
+	var $subpages;
+	var $current_subpage = '';
+
 	function admin_ckeditor(){
+		global $page, $langmessage;
+
+		$page->css_admin[] = '/include/css/addons.css';
 		$this->Init();
 
+		// subpage
+		$this->subpages = array(
+			''	=> $langmessage['configuration']
+			,'Plugins'		=> $langmessage['Manage Plugins']
+			,'Default'		=> $langmessage['default']
+			);
+
+
+		if( strpos($page->requested,'/') ){
+			$parts = explode('/',$page->requested);
+			if( array_key_exists( $parts[1], $this->subpages ) ){
+				$this->current_subpage = $parts[1];
+			}
+		}
+
+
+		// commands
 		$cmd = common::GetCommand();
 		switch($cmd){
 
@@ -30,16 +53,42 @@ class admin_ckeditor{
 		echo '.custom_config{width:600px;height:200px;}';
 		echo '</style>';
 
-		echo '<h2>CKEditor Customization</h2>';
-		echo '<p>';
-		echo '<a href="http://ckeditor.com">CKEditor</a> is a powerful editor with <a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html">many configuration options</a> and a growing <a href="http://ckeditor.com/addons/plugins">list of plugins</a>. ';
+		$this->Heading();
+
+
+		switch($this->current_subpage){
+			case 'Plugins':
+				$this->PluginForm();
+			break;
+			case 'Default':
+				$this->DisplayDefaults();
+			break;
+			default:
+				$this->CustomConfigForm();
+			break;
+		}
+
+		echo '<br/><p>';
+		echo '<a href="http://ckeditor.com" target="_blank">CKEditor</a> is gpEasy\'s text editor of choice because it is a powerful tool with <a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html" target="_blank">many configuration options</a> and a growing <a href="http://ckeditor.com/addons/plugins" target="_blank">list of plugins</a>. ';
 		echo '</p>';
+	}
 
-		$this->CustomConfigForm();
+	function Heading(){
 
-		$this->PluginForm();
+		echo '<h2 class="hmargin">CKEditor &#187; ';
 
-		$this->DisplayDefaults();
+		$separator = '';
+		foreach($this->subpages as $slug => $label){
+			echo $separator;
+			if( $slug == $this->current_subpage ){
+				echo $label;
+			}else{
+				echo common::Link( rtrim('Admin_CKEditor/'.$slug,'/'), $label );
+			}
+			$separator = ' <span>|</span> ';
+		}
+		echo '</h2>';
+
 	}
 
 
@@ -48,12 +97,11 @@ class admin_ckeditor{
 	 *
 	 */
 	function PluginForm(){
-		global $langmessage;
+		global $langmessage, $page;
 
-		echo '<h3>Plugins</h3>';
-		echo '<p>Add a CKEditor plugin</p>';
+		echo '<form method="post" action="'.common::GetUrl($page->requested).'" enctype="multipart/form-data">';
+		echo '<table class="bordered"><tr><th>'.$langmessage['name'].'</th><th>'.$langmessage['Modified'].'</th><th>'.$langmessage['options'].'</th></tr>';
 		if( count($this->cke_config['plugins']) ){
-			echo '<table class="bordered"><tr><th>'.$langmessage['name'].'</th><th>'.$langmessage['Modified'].'</th><th>'.$langmessage['options'].'</th></tr>';
 			foreach($this->cke_config['plugins'] as $plugin_name => $plugin_info){
 				echo '<tr><td>';
 				echo $plugin_name;
@@ -62,23 +110,22 @@ class admin_ckeditor{
 				echo '</td><td>';
 
 				$attr = array('data-cmd'=>'postlink', 'class'=>'gpconfirm','title'=>sprintf($langmessage['generic_delete_confirm'],$plugin_name));
-				echo common::Link('Admin_CKEditor',$langmessage['delete'],'cmd=rmplugin&plugin='.rawurlencode($plugin_name), $attr );
+				echo common::Link($page->requested,$langmessage['delete'],'cmd=rmplugin&plugin='.rawurlencode($plugin_name), $attr );
 				echo '</td></tr>';
 
 			}
-		}else{
-			echo '<table>';
 		}
 
-		echo '<tr><td colspan="3">';
-		echo '<form method="post" action="'.common::GetUrl('Admin_CKEditor').'" enctype="multipart/form-data">';
+		echo '<tr><td>';
 		echo '<input type="hidden" name="cmd" value="upload_plugin" />';
 		echo '<input type="file" name="plugin" />';
+		echo '</td><td>&nbsp;';
+		echo '</td><td>';
 		echo ' <input type="submit" value="Install Plugin" />';
-		echo '</form>';
 		echo '</td></tr>';
 
 		echo '</table>';
+		echo '</form>';
 	}
 
 
@@ -199,8 +246,8 @@ class admin_ckeditor{
 	 *
 	 */
 	function CustomConfigForm(){
-		echo '<h3>Configuration</h3>';
-		echo '<form method="post" action="'.common::GetUrl('Admin_CKEditor').'">';
+		global $page;
+		echo '<form method="post" action="'.common::GetUrl($page->requested).'">';
 
 		$placeholder = '{  "example_key":   "example_value"  }';
 		echo '<textarea name="custom_config" class="custom_config" placeholder="'.htmlspecialchars($placeholder).'">';
@@ -213,7 +260,7 @@ class admin_ckeditor{
 
 		echo '<div>';
 		echo '<input type="hidden" name="cmd" value="save_custom_config" />';
-		echo '<input type="submit" value="Save"/>';
+		echo '<input type="submit" value="Save" data-cmd="gpajax" />';
 		echo '</div>';
 
 		echo '</form>';
@@ -251,7 +298,6 @@ class admin_ckeditor{
 	 */
 
 	function DisplayDefaults(){
-		echo '<h3>gpEasy Defaults</h3>';
 		includeFile('tool/editing.php');
 		$default_config = gp_edit::CKConfig(array(),'array');
 		echo '<pre class="json">';

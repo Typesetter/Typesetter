@@ -157,7 +157,6 @@ class gpAjax{
 			break;
 
 			case 'image';
-				//echo 'var gp_blank_img = "hmm"
 				echo 'var gp_blank_img = '.gpAjax::quote(common::GetDir('/include/imgs/blank.gif')).';';
 
 				$scripts[] = '/include/js/jquery.auto_upload.js';
@@ -168,8 +167,6 @@ class gpAjax{
 
 		$scripts = gpPlugin::Filter('InlineEdit_Scripts',array($scripts,$type));
 		$scripts = array_unique($scripts);
-
-
 
 		//send all scripts
 		foreach($scripts as $script){
@@ -217,20 +214,25 @@ class gpAjax{
 	static function InlineEdit_Text($scripts){
 		includeFile('tool/editing.php');
 
-		//autocomplete
+		// autocomplete
 		echo gp_edit::AutoCompleteValues(true);
 
-		//ckeditor basepath and configuration
+
+		// ckeditor basepath and configuration
 		$ckeditor_basepath = common::GetDir('/include/thirdparty/ckeditor_34/');
 		echo 'CKEDITOR_BASEPATH = '.gpAjax::quote($ckeditor_basepath).';';
-		echo 'var gp_ckconfig = {};';
+		echo 'var gp_ckconfig = '.gp_edit::CKConfig( array(), 'json' ).';';
 
-		//gp_ckconfig options
-		$options = array();
-		echo gp_edit::CKConfig($options,'gp_ckconfig');
 
+		// extra plugins
+		$admin_config = gp_edit::CKAdminConfig();
+		echo 'var gp_add_plugins = '.json_encode( array_keys($admin_config['plugins']) ).';';
+		echo 'var gp_plugins_path = '.json_encode(common::GetDir('/data/_ckplugins')).';';
+
+
+		// scripts
 		$scripts[] = '/include/thirdparty/ckeditor_34/ckeditor.js';
-		//$scripts[] = '/include/js/ckeditor_config.js';
+		$scripts[] = '/include/js/ckeditor_config.js';
 		$scripts[] = '/include/js/inline_edit/inlineck.js';
 
 		return $scripts;

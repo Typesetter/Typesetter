@@ -5,6 +5,14 @@
 
 function gp_init_inline_edit(area_id,section_object){
 
+	// add external plugins
+	if( typeof(gp_add_plugins) == 'object' ){
+		$.each(gp_add_plugins,function(){
+			var path = gp_plugins_path+'/'+this+'/';
+			CKEDITOR.plugins.addExternal(this,path);
+		});
+	}
+
 
 	//ckeditor configuration
 	var config = $.extend({}, gp_ckconfig);

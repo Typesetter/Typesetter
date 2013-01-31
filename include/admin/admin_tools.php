@@ -5,10 +5,14 @@ class admin_tools{
 
 
 	static function AdminScripts(){
-		global $langmessage,$config;
+		global $langmessage, $config;
 		$scripts = array();
 
 
+		/**
+		 * Settings
+		 *
+		 */
 		$scripts['Admin_Menu']['script'] = '/include/admin/admin_menu_new.php';
 		$scripts['Admin_Menu']['class'] = 'admin_menu_new';
 		$scripts['Admin_Menu']['label'] = $langmessage['file_manager'];
@@ -21,27 +25,33 @@ class admin_tools{
 		$scripts['Admin_Uploaded']['group'] = 'content';
 
 
-		$scripts['Admin_Theme_Content']['script'] = '/include/admin/admin_theme_content.php';
-		$scripts['Admin_Theme_Content']['class'] = 'admin_theme_content';
-		$scripts['Admin_Theme_Content']['label'] = $langmessage['Manage Layouts'];
-		$scripts['Admin_Theme_Content']['group'] = 'appearance';
-
-
-/*
-		$scripts['Admin_Menus']['script'] = '/include/admin/admin_menus.php';
-		$scripts['Admin_Menus']['class'] = 'admin_menus';
-		$scripts['Admin_Menus']['label'] = $langmessage['Menus'];
-		$scripts['Admin_Menus']['group'] = 'appearance';
-*/
-
-
-
 		$scripts['Admin_Extra']['script'] = '/include/admin/admin_extra.php';
 		$scripts['Admin_Extra']['class'] = 'admin_extra';
 		$scripts['Admin_Extra']['label'] = $langmessage['theme_content'];
 		$scripts['Admin_Extra']['group'] = 'content';
 
 
+		$scripts['Admin_Trash']['script'] = '/include/admin/admin_trash.php';
+		$scripts['Admin_Trash']['class'] = 'admin_trash';
+		$scripts['Admin_Trash']['label'] = $langmessage['trash'];
+		$scripts['Admin_Trash']['group'] = 'content';
+
+
+		/**
+		 * Appearance
+		 *
+		 */
+		$scripts['Admin_Theme_Content']['script'] = '/include/admin/admin_theme_content.php';
+		$scripts['Admin_Theme_Content']['class'] = 'admin_theme_content';
+		$scripts['Admin_Theme_Content']['label'] = $langmessage['Manage Layouts'];
+		$scripts['Admin_Theme_Content']['group'] = 'appearance';
+
+
+
+		/**
+		 * Settings
+		 *
+		 */
 		$scripts['Admin_Configuration']['script'] = '/include/admin/admin_configuration.php';
 		$scripts['Admin_Configuration']['class'] = 'admin_configuration';
 		$scripts['Admin_Configuration']['label'] = $langmessage['configuration'];
@@ -55,6 +65,13 @@ class admin_tools{
 		$scripts['Admin_Users']['group'] = 'settings';
 
 
+		$scripts['Admin_CKEditor']['script'] = '/include/admin/admin_ckeditor.php';
+		$scripts['Admin_CKEditor']['class'] = 'admin_ckeditor';
+		$scripts['Admin_CKEditor']['label'] = 'CKEditor';
+		$scripts['Admin_CKEditor']['group'] = 'settings';
+
+
+
 		$scripts['Admin_Permalinks']['script'] = '/include/admin/admin_permalinks.php';
 		$scripts['Admin_Permalinks']['class'] = 'admin_permalinks';
 		$scripts['Admin_Permalinks']['label'] = $langmessage['permalinks'];
@@ -66,11 +83,6 @@ class admin_tools{
 		$scripts['Admin_Missing']['label'] = $langmessage['Link Errors'];
 		$scripts['Admin_Missing']['group'] = 'settings';
 
-
-		$scripts['Admin_Trash']['script'] = '/include/admin/admin_trash.php';
-		$scripts['Admin_Trash']['class'] = 'admin_trash';
-		$scripts['Admin_Trash']['label'] = $langmessage['trash'];
-		$scripts['Admin_Trash']['group'] = 'content';
 
 
 		if( isset($config['admin_links']) && is_array($config['admin_links']) ){
@@ -94,13 +106,6 @@ class admin_tools{
 		$scripts['Admin_Uninstall']['class'] = 'admin_rm';
 		$scripts['Admin_Uninstall']['label'] = $langmessage['uninstall_prep'];
 		$scripts['Admin_Uninstall']['group'] = 'settings';
-
-
-		$scripts['Admin_CKEditor']['script'] = '/include/admin/admin_ckeditor.php';
-		$scripts['Admin_CKEditor']['class'] = 'admin_ckeditor';
-		$scripts['Admin_CKEditor']['label'] = 'CKEditor';
-		$scripts['Admin_CKEditor']['group'] = 'settings';
-
 
 
 

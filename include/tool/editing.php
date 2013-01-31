@@ -527,7 +527,7 @@ class gp_edit{
 	 * 	- http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html
 	 */
 	static function UseCK($contents,$name='gpcontent',$options=array()){
-		global $page;
+		global $page, $dataDir;
 
 		$options += array('rows'=>'20','cols'=>'50');
 
@@ -541,22 +541,45 @@ class gp_edit{
 		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/ckeditor_34/ckeditor.js').'?'.rawurlencode(gpversion).'"></script>';
 		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/js/ckeditor_config.js').'?'.rawurlencode(gpversion).'"></script>';
 
-
 		gp_edit::PrepAutoComplete(false,true);
 
 		ob_start();
+		echo "\n\n";
 
-		echo 'CKEDITOR.replaceAll( function(tarea,config){';
+		// extra plugins
+		$admin_config = self::CKAdminConfig();
+		foreach($admin_config['plugins'] as $plugin => $plugin_info){
+			$path = common::GetDir('/data/_ckplugins/'.$plugin.'/');
+			echo 'CKEDITOR.plugins.addExternal("'.$plugin.'","'.$path.'");';
+			echo "\n";
+		}
 
-		echo 'if( tarea.className.indexOf("CKEDITAREA") == -1 ) return false;';
-
-		echo gp_edit::CKConfig($options);
-
-		echo 'return true;';
+		echo '$(".CKEDITAREA").each(function(){';
+		echo 'CKEDITOR.replace( this, '.gp_edit::CKConfig($options,'json').' );';
 		echo '});';
+
 		echo "\n\n";
 		$page->jQueryCode .= ob_get_clean();
 
+	}
+
+	static function CKAdminConfig(){
+		global $dataDir;
+		static $cke_config;
+
+		if( is_array($cke_config) ){
+			return $cke_config;
+		}
+
+		$cke_config = array();
+		$config_path = $dataDir.'/data/_site/ckeditor.php';
+		if( file_exists($config_path) ){
+			include($config_path);
+		}
+
+		$cke_config += array('plugins'=>array());
+
+		return $cke_config;
 	}
 
 
@@ -600,6 +623,14 @@ class gp_edit{
 		}
 
 		$options += $defaults;
+
+		// extra plugins
+		if( !array_key_exists('extraPlugins',$options) ){
+			$options['extraPlugins'] = '';
+		}
+		$admin_config = self::CKAdminConfig();
+		$options['extraPlugins'] .= implode(',',array_keys($admin_config['plugins']));
+
 
 		$options = gpPlugin::Filter('CKEditorConfig',array($options));
 

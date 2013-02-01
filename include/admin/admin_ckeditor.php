@@ -19,7 +19,8 @@ class admin_ckeditor{
 		$this->subpages = array(
 			''	=> $langmessage['configuration']
 			,'Plugins'		=> $langmessage['Manage Plugins']
-			,'Default'		=> $langmessage['default']
+			,'Example'		=> 'Example'
+			,'Defaults'		=> $langmessage['defaults']
 			);
 
 
@@ -60,8 +61,11 @@ class admin_ckeditor{
 			case 'Plugins':
 				$this->PluginForm();
 			break;
-			case 'Default':
+			case 'Defaults':
 				$this->DisplayDefaults();
+			break;
+			case 'Example':
+				$this->Example();
 			break;
 			default:
 				$this->CustomConfigForm();
@@ -289,6 +293,17 @@ class admin_ckeditor{
 			message($langmessage['SAVED']);
 		}
 
+	}
+
+
+	/**
+	 * Show a CKEditor instance
+	 *
+	 */
+	function Example(){
+
+		$content = '<h3>Lorem Ipsum</h3> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor lectus id lectus laoreet scelerisque.</p><p>Vestibulum suscipit, lectus a feugiat facilisis, enim arcu fringilla nisi, et scelerisque nibh sapien in quam. Vivamus sit amet elementum nibh. Donec id ipsum nibh. Aliquam ligula nulla, condimentum sit amet consectetur eu, sagittis id ligula. In felis justo, feugiat et luctus sit amet, feugiat eget odio. Nullam suscipit mollis ipsum nec ultrices. Praesent ut lacus lorem. Fusce adipiscing arcu vitae dui ullamcorper a imperdiet felis dignissim. Maecenas eget tortor mi.</p>';
+		gp_edit::UseCK($content);
 	}
 
 

@@ -1767,7 +1767,10 @@ class common{
 
 
 		//update for < 2.0a3
-		if( isset($pages['gpmenu']) && isset($pages['gptitles']) ){
+		if( array_key_exists('gpmenu',$pages)
+			&& array_key_exists('gptitles',$pages)
+			&& !array_key_exists('gp_titles',$pages)
+			&& !array_key_exists('gp_menu',$pages) ){
 
 			foreach($pages['gptitles'] as $title => $info){
 				$index = common::NewFileIndex();

@@ -47,6 +47,7 @@ class admin_port{
 		$this->export_dir = $dataDir.'/data/_exports';
 		$this->temp_dir = $dataDir.'/data/_temp';
 		$this->export_ini_file = $dataDir.'/data/_temp/Export.ini';
+		@set_time_limit(90);
 
 		$this->Init();
 		$this->SetExported();
@@ -932,9 +933,7 @@ class admin_port{
 		echo '<table class="bordered">';
 		echo '<tr><th>';
 		echo $langmessage['Previous Exports'];
-		echo '</th><th>';
-		echo ' &nbsp; ';
-		echo '</th><th>';
+		echo '</th><th> &nbsp; </th><th>';
 		echo $langmessage['File Size'];
 		echo '</th><th>';
 		echo $langmessage['options'];
@@ -959,17 +958,14 @@ class admin_port{
 			}
 			echo '<td>';
 			echo str_replace(' ','&nbsp;',$info['time']);
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo implode(', ',$info['exported']);
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			$size = filesize($full_path);
 			echo admin_tools::FormatBytes($size);
 			echo ' ';
 			echo $info['ext'];
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo '<a href="'.common::GetDir('/data/_exports/'.$file).'">'.$langmessage['Download'].'</a>';
 
 			echo '&nbsp;&nbsp;';
@@ -981,8 +977,7 @@ class admin_port{
 
 			echo '&nbsp;&nbsp;';
 			echo common::Link('Admin_Port',$langmessage['delete'],'cmd=delete&file='.rawurlencode($file),array('data-cmd'=>'postlink','title'=>$langmessage['delete_confirm'],'class'=>'gpconfirm'),$file);
-			echo '</td>';
-			echo '</tr>';
+			echo '</td></tr>';
 
 			$total_count++;
 			$total_size+= $size;
@@ -993,14 +988,9 @@ class admin_port{
 		echo $langmessage['Total'];
 		echo ': ';
 		echo $total_count;
-		echo '</th><th>';
-		echo '&nbsp;';
-		echo '</th><th>';
+		echo '</th><th>&nbsp;</th><th>';
 		echo admin_tools::FormatBytes($total_size);
-		echo '</th><th>';
-		echo '&nbsp;';
-		echo '</th></tr>';
-
+		echo '</th><th>&nbsp;</th></tr>';
 
 		echo '</table>';
 

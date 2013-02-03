@@ -110,7 +110,6 @@ class admin_port{
 			$add_dirs[] = $dataDir.'/data/_extra';
 			$add_dirs[] = $dataDir.'/data/_site';
 			$add_dirs[] = $dataDir.'/data/_menus';
-			$add_dirs[] = $dataDir.'/data/_extra';
 			$add_dirs[] = $dataDir.'/data/_addoncode';
 			$add_dirs[] = $dataDir.'/data/_addondata';
 
@@ -132,6 +131,7 @@ class admin_port{
 
 		if( isset($_POST['media']) ){
 			$add_dirs[] = $dataDir.'/data/_uploaded';
+			$add_dirs[] = $dataDir.'/data/_resized';
 		}
 		if( isset($_POST['themes']) ){
 			$add_dirs[] = $dataDir.'/data/_themes';

@@ -175,7 +175,7 @@ class admin_ckeditor{
 
 
 		// check destination directory
-		$destination = $dataDir.'/data/_ckplugins/'.$plugin_name;
+		$destination = $dataDir.'/data/_ckeditor/'.$plugin_name;
 		$temp_dir = false;
 		if( file_exists($destination) ){
 			$temp_dir = $destination.'_'.time();
@@ -240,7 +240,7 @@ class admin_ckeditor{
 		}
 
 
-		$path = $dataDir.'/data/_ckplugins/'.$plugin;
+		$path = $dataDir.'/data/_ckeditor/'.$plugin;
 		gpFiles::RmAll( $path );
 	}
 
@@ -337,7 +337,7 @@ class admin_ckeditor{
 	function Init(){
 		global $dataDir;
 
-		$this->config_file = $dataDir.'/data/_site/ckeditor.php';
+		$this->config_file = $dataDir.'/data/_ckeditor/config.php';
 		if( file_exists($this->config_file) ){
 			include($this->config_file);
 			$this->cke_config = $cke_config;

@@ -227,7 +227,7 @@ class gpAjax{
 		// extra plugins
 		$admin_config = gp_edit::CKAdminConfig();
 		echo 'var gp_add_plugins = '.json_encode( array_keys($admin_config['plugins']) ).';';
-		echo 'var gp_plugins_path = '.json_encode(common::GetDir('/data/_ckplugins')).';';
+		echo 'var gp_plugins_path = '.json_encode(common::GetDir('/data/_ckeditor')).';';
 
 
 		// scripts

@@ -549,7 +549,7 @@ class gp_edit{
 		// extra plugins
 		$admin_config = self::CKAdminConfig();
 		foreach($admin_config['plugins'] as $plugin => $plugin_info){
-			$path = common::GetDir('/data/_ckplugins/'.$plugin.'/');
+			$path = common::GetDir('/data/_ckeditor/'.$plugin.'/');
 			echo 'CKEDITOR.plugins.addExternal("'.$plugin.'","'.$path.'");';
 			echo "\n";
 		}
@@ -572,7 +572,7 @@ class gp_edit{
 		}
 
 		$cke_config = array();
-		$config_path = $dataDir.'/data/_site/ckeditor.php';
+		$config_path = $dataDir.'/data/_ckeditor/config.php';
 		if( file_exists($config_path) ){
 			include($config_path);
 		}

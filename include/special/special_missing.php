@@ -63,7 +63,8 @@ class special_missing{
 	 */
 	function CheckSimilar(){
 		global $config;
-		$similar = $this->SimilarTitleArray($this->requested);
+		$requested = trim($this->requested,'/');
+		$similar = $this->SimilarTitleArray($requested);
 		reset($similar);
 		$first_title = key($similar);
 		$first_percent = current($similar);

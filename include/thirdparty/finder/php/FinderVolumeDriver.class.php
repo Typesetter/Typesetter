@@ -3104,15 +3104,19 @@ abstract class FinderVolumeDriver {
 	 **/
 	protected function procExec($command , &$return_var = -1, array &$output = null, array &$error_output = null) {
 
+		if( !self::function_exists('proc_open') ){
+			return $return_var;
+		}
+
 		$descriptorspec = array(
 			0 => array("pipe", "r"),  // stdin
 			1 => array("pipe", "w"),  // stdout
 			2 => array("pipe", "w")   // stderr
 		);
 
-		$process = proc_open($command, $descriptorspec, $pipes, null, null);
+		$process = @proc_open($command, $descriptorspec, $pipes, null, null);
 
-		if (is_resource($process)) {
+		if( is_resource($process) ){
 
 			fclose($pipes[0]);
 
@@ -3132,6 +3136,45 @@ abstract class FinderVolumeDriver {
 		return $return_var;
 
 	}
+
+	/**
+	 * Test if function exists.  Also handles case where function is disabled via Suhosin.
+	 * Modified from: http://dev.piwik.org/trac/browser/trunk/plugins/Installation/Controller.php
+	 *
+	 * @param string $function Function name
+	 * @return bool True if function exists (not disabled); False otherwise.
+	 */
+	static function function_exists($function){
+		$function = strtolower($function);
+
+		// eval() is a language construct
+		if( $function == 'eval' ){
+			// does not check suhosin.executor.eval.whitelist (or blacklist)
+			if( extension_loaded('suhosin') && common::IniGet('suhosin.executor.disable_eval') ){
+				return false;
+			}
+			return true;
+		}
+
+		if( !function_exists($function) ){
+			return false;
+		}
+
+		$blacklist = @ini_get('disable_functions');
+		if( extension_loaded('suhosin') ){
+			$blacklist .= ','.@ini_get('suhosin.executor.func.blacklist');
+		}
+
+		$blacklist = explode(',', $blacklist);
+		$blacklist = array_map('trim', $blacklist);
+		$blacklist = array_map('strtolower', $blacklist);
+		if( in_array($function, $blacklist) ){
+			return false;
+		}
+
+		return true;
+	}
+
 
 	/**
 	 * Remove thumbnail, also remove recursively if stat is directory

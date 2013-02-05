@@ -2488,14 +2488,14 @@ class common{
 	 * Test if function exists.  Also handles case where function is disabled via Suhosin.
 	 * Modified from: http://dev.piwik.org/trac/browser/trunk/plugins/Installation/Controller.php
 	 *
-	 * @param string $functionName Function name
+	 * @param string $function Function name
 	 * @return bool True if function exists (not disabled); False otherwise.
 	 */
-	static function function_exists($functionName){
-		$functionName = strtolower($functionName);
+	static function function_exists($function){
+		$function = strtolower($function);
 
 		// eval() is a language construct
-		if($functionName == 'eval'){
+		if( $function == 'eval' ){
 			// does not check suhosin.executor.eval.whitelist (or blacklist)
 			if( extension_loaded('suhosin') && common::IniGet('suhosin.executor.disable_eval') ){
 				return false;
@@ -2503,18 +2503,22 @@ class common{
 			return true;
 		}
 
-		if( !function_exists($functionName) ){
+		if( !function_exists($function) ){
 			return false;
 		}
 
-		if(extension_loaded('suhosin')){
-			$blacklist = @ini_get('suhosin.executor.func.blacklist');
-			if(!empty($blacklist)){
-				$blacklistFunctions = array_map('strtolower', array_map('trim', explode(',', $blacklist)));
-				return !in_array($functionName, $blacklistFunctions);
-			}
-
+		$blacklist = @ini_get('disable_functions');
+		if( extension_loaded('suhosin') ){
+			$blacklist .= ','.@ini_get('suhosin.executor.func.blacklist');
 		}
+
+		$blacklist = explode(',', $blacklist);
+		$blacklist = array_map('trim', $blacklist);
+		$blacklist = array_map('strtolower', $blacklist);
+		if( in_array($function, $blacklist) ){
+			return false;
+		}
+
 		return true;
 	}
 

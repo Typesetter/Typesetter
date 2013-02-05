@@ -403,10 +403,9 @@ class admin_uploaded{
 		}
 
 		//get size
-		$src_img = thumbnail::getSrcImg($full_path);
-		$size = '';
-		if( $src_img ){
-			$size = ' data-width="'.imagesx($src_img).'" data-height="'.imagesy($src_img).'"';
+		$size_a = getimagesize($full_path);
+		if( $size_a ){
+			$size = ' data-width="'.$size_a[0].'" data-height="'.$size_a[1].'"';
 		}
 
 		$query_string = 'file_cmd=delete&show=inline&file='.urlencode($file);

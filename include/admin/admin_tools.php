@@ -802,14 +802,16 @@ class admin_tools{
 		//add more links
 		switch($grouping){
 			case 'appearance':
-				if( !empty($page->gpLayout) && admin_tools::HasPermission('Admin_Theme_Content') ){
+				if( admin_tools::HasPermission('Admin_Theme_Content') ){
+					if( !empty($page->gpLayout) ){
+						echo '<li>';
+						echo common::Link('Admin_Theme_Content/'.urlencode($page->gpLayout),$langmessage['edit_this_layout']);
+						echo '</li>';
+					}
 					echo '<li>';
-					echo common::Link('Admin_Theme_Content/'.urlencode($page->gpLayout),$langmessage['edit_this_layout']);
+					echo common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']);
 					echo '</li>';
 				}
-				echo '<li>';
-				echo common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']);
-				echo '</li>';
 			break;
 		}
 

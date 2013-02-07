@@ -262,6 +262,13 @@ class admin_ckeditor{
 		}
 		echo '</textarea>';
 
+		/*
+		echo '<textarea name="custom_config" class="custom_config" placeholder="'.htmlspecialchars($placeholder).'">';
+		echo self::ReadableJson($this->cke_config['custom_config']);
+		echo '</textarea>';
+		*/
+
+
 		echo '<div>';
 		echo '<input type="hidden" name="cmd" value="save_custom_config" />';
 		echo '<input type="submit" value="Save" data-cmd="gpajax" />';
@@ -286,7 +293,7 @@ class admin_ckeditor{
 			}
 		}
 
-		$this->cke_config['custom_config'] = $custom_config;
+		$this->cke_config['custom_config'] = $decoded;
 		if( !$this->SaveConfig() ){
 			message($langmessage['OOPS'].' (Not Saved)');
 		}else{

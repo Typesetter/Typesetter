@@ -629,8 +629,12 @@ class gp_edit{
 			$options['extraPlugins'] = '';
 		}
 		$admin_config = self::CKAdminConfig();
-		$options['extraPlugins'] .= implode(',',array_keys($admin_config['plugins']));
+		$options['extraPlugins'] .= ','.implode(',',array_keys($admin_config['plugins']));
 
+		// custom config
+		if( is_array($admin_config['custom_config']) ){
+			$options = $admin_config['custom_config'] + $options;
+		}
 
 		$options = gpPlugin::Filter('CKEditorConfig',array($options));
 

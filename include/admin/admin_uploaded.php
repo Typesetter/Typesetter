@@ -768,6 +768,7 @@ class admin_uploaded{
 		$thumb_dir = $dataDir.'/data/_uploaded/image/thumbnails';
 		admin_uploaded::SetRealPath($result,$finder);
 
+
 		switch($cmd){
 
 			case 'rename':
@@ -823,10 +824,11 @@ class admin_uploaded{
 
 		//debug
 		/*
-		$log_file = $dataDir.'/data/_temp/finder_log-all_vars.txt';
+		$log_file = $dataDir.'/data/_temp/finder_log-'.time().'.txt';
 		$data = get_defined_vars();
-		$content = print_r($data,true);
-		gpFiles::Save($log_file,$content);
+		$content = print_r($data,true).'<hr/>';
+		$fp = fopen($log_file,'a');
+		fwrite($fp,$content);
 		*/
 	}
 

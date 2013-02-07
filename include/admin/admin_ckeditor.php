@@ -20,7 +20,7 @@ class admin_ckeditor{
 			''	=> $langmessage['configuration']
 			,'Plugins'		=> $langmessage['Manage Plugins']
 			,'Example'		=> 'Example'
-			,'Defaults'		=> $langmessage['defaults']
+			,'Current'		=> $langmessage['Current Configuration']
 			);
 
 
@@ -61,8 +61,8 @@ class admin_ckeditor{
 			case 'Plugins':
 				$this->PluginForm();
 			break;
-			case 'Defaults':
-				$this->DisplayDefaults();
+			case 'Current':
+				$this->DisplayCurrent();
 			break;
 			case 'Example':
 				$this->Example();
@@ -262,12 +262,6 @@ class admin_ckeditor{
 		}
 		echo '</textarea>';
 
-		/*
-		echo '<textarea name="custom_config" class="custom_config" placeholder="'.htmlspecialchars($placeholder).'">';
-		echo self::ReadableJson($this->cke_config['custom_config']);
-		echo '</textarea>';
-		*/
-
 
 		echo '<div>';
 		echo '<input type="hidden" name="cmd" value="save_custom_config" />';
@@ -285,6 +279,7 @@ class admin_ckeditor{
 		global $langmessage;
 
 		$custom_config =& $_REQUEST['custom_config'];
+		$decoded = array();
 		if( !empty($custom_config) ){
 			$decoded = json_decode($custom_config,true);
 			if( !is_array($decoded) ){
@@ -294,6 +289,7 @@ class admin_ckeditor{
 		}
 
 		$this->cke_config['custom_config'] = $decoded;
+
 		if( !$this->SaveConfig() ){
 			message($langmessage['OOPS'].' (Not Saved)');
 		}else{
@@ -315,11 +311,10 @@ class admin_ckeditor{
 
 
 	/**
-	 * Display gpEasy Defaults
+	 * Display Current Configuration Settings
 	 *
 	 */
-
-	function DisplayDefaults(){
+	function DisplayCurrent(){
 		includeFile('tool/editing.php');
 		$default_config = gp_edit::CKConfig(array(),'array');
 		echo '<pre class="json">';

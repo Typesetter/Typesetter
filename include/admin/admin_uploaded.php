@@ -796,6 +796,17 @@ class admin_uploaded{
 			foreach($result['removed'] as $removed){
 				$removed_path = $removed['realpath'];
 				gpPlugin::Action('FileDeleted',$removed_path);
+
+				$thumb_path = str_replace($base_dir,$thumb_dir,$removed_path);
+				if( file_exists($thumb_path) ){
+					if( is_dir($thumb_path) ){
+						gpFiles::RmAll($thumb_path);
+					}else{
+						unlink($thumb_path);
+					}
+					continue;
+				}
+
 				$thumb_path = str_replace($base_dir,$thumb_dir,$removed_path).'.jpg';
 				if( file_exists($thumb_path) ){
 					unlink($thumb_path);

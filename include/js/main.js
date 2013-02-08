@@ -256,7 +256,7 @@ var $gp = {
 	 */
 	Reload : function(){
 		if( typeof(req_type) && req_type == 'post' ){
-			window.location = strip_from(window.location.href,'#');
+			window.location.href = strip_from(window.location.href,'#');
 		}else{
 			window.location.reload(true);
 		}

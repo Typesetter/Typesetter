@@ -423,11 +423,11 @@ abstract class FinderVolumeDriver {
 	protected $onlyMimes = array();
 
 	/**
-	 * Store files moved or overwrited files info
+	 * Store result information
 	 *
 	 * @var array
-	 **/
-	protected $removed = array();
+	 */
+	protected $result = array( 'added'=>array(), 'removed' => array(), 'changed' => array() );
 
 	/**
 	 * Cache storage
@@ -903,24 +903,23 @@ abstract class FinderVolumeDriver {
 		return $this->stat($path) ? $path : false;
 	}
 
-	/**
-	 * Return list of moved/overwrited files
-	 *
-	 * @return array
-	 * @author Dmitry (dio) Levashov
-	 **/
-	public function removed() {
-		return $this->removed;
-	}
 
 	/**
-	 * Clean removed files list
+	 * Return a result value
 	 *
-	 * @return void
-	 * @author Dmitry (dio) Levashov
+	 */
+	public function result($index){
+		if( array_key_exists( $index, $this->result ) ){
+			return $this->result[$index];
+		}
+		return false;
+	}
+	/**
+	 * Clean file lists
+	 *
 	 **/
-	public function resetRemoved() {
-		$this->removed = array();
+	public function reset(){
+		$this->result = array();
 	}
 
 	/**
@@ -1008,15 +1007,17 @@ abstract class FinderVolumeDriver {
 	 * @return array
 	 * @author Dmitry (dio) Levashov
 	 **/
-	public function ls($hash) {
-		if (($dir = $this->dir($hash)) == false || !$dir['read']) {
+	public function ls( $hash ){
+		$dir = $this->dir($hash);
+		if( $dir || !$dir['read'] ){
 			return false;
 		}
 
 		$list = array();
 		$path = $this->decode($hash);
 
-		foreach ($this->getScandir($path) as $stat) {
+		$dirs = $this->getScandir($path);
+		foreach( $dirs as $stat ){
 			if (empty($stat['hidden']) && $this->mimeAccepted($stat['mime'])) {
 				$list[] = $stat['name'];
 			}
@@ -1467,8 +1468,13 @@ abstract class FinderVolumeDriver {
 			if ($this->_inpath($destination, $source)) {
 				return $this->setError('errCopyInItself', $errpath);
 			}
-			$method = $rmSrc ? 'move' : 'copy';
-			return ($path = $this->$method($source, $destination, $name)) ? $this->stat($path) : false;
+			if( $rmSrc ){
+				$path = $this->move($source, $destination, $name);
+			}else{
+				$path = $this->copy($source, $destination, $name);
+			}
+
+			return $this->stat($path);
 		}
 
 		// copy/move from another volume
@@ -1483,7 +1489,7 @@ abstract class FinderVolumeDriver {
 
 		if ($rmSrc) {
 			if ($src_volume->rm($src)) {
-				$this->removed[] = $file;
+				$this->result['removed'][] = $file;
 			} else {
 				return $this->setError('errMove', $errpath, 'errRmSrc');
 			}
@@ -1985,18 +1991,19 @@ abstract class FinderVolumeDriver {
 	/**
 	 * Return fileinfo
 	 *
-	 * @param  string  $path  file cache
+	 * @param	string  $path  file cache
+	 * @param	bool	$refresh Skip the cache and refresh the cache for the file
 	 * @return array
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function stat($path) {
+	protected function stat( $path, $refresh = false ) {
 		if( $path === false ){
 			return false;
 		}
 
 		$path = $this->_separator( $path );
 
-		if( isset($this->cache[$path]) ){
+		if( !$refresh && isset($this->cache[$path]) ){
 			return $this->cache[$path];
 		}
 
@@ -2102,22 +2109,31 @@ abstract class FinderVolumeDriver {
 	/**
 	 * Return required dir's files info.
 	 *
-	 * @param  string  $path  dir path
-	 * @return array
-	 * @author Dmitry (dio) Levashov
+	 * @param	string	$path	dir path
+	 * @param	bool	$recursive	Recursive scandir
+	 * @param	bool	$hidden	Include hidden files
+	 * @return	array
+	 * @author	Dmitry (dio) Levashov
 	 **/
-	protected function getScandir($path) {
+	protected function getScandir( $path, $recursive = false, $hidden = false ){
 		$files = array();
 
 		!isset($this->dirsCache[$path]) && $this->cacheDir($path);
 
 		foreach( $this->dirsCache[$path] as $p ){
 			$stat = $this->stat($p);
-			if( $stat && empty($stat['hidden']) ){
+			if( !$stat ){
+				continue;
+			}
+
+			if( $hidden || empty($stat['hidden']) ){
 				$files[$p] = $stat;
 			}
-		}
 
+			if( $recursive && $stat['mime'] == 'directory' ){
+				$files += $this->getScandir($p);
+			}
+		}
 		return $files;
 	}
 
@@ -2491,40 +2507,58 @@ abstract class FinderVolumeDriver {
 		$srcStat = $this->stat($src);
 		$this->clearcache();
 
+		$dst_full = $this->_joinPath($dst, $name);
+
 		if (!empty($srcStat['thash'])) {
 			$target = $this->decode($srcStat['thash']);
 			$stat   = $this->stat($target);
 			$this->clearcache();
 			return $stat && $this->_symlink($target, $dst, $name)
-				? $this->_joinPath($dst, $name)
+				? $dst_full
 				: $this->setError('errCopy', $this->_path($src));
 		}
 
-		if ($srcStat['mime'] == 'directory') {
-			$test = $this->stat($this->_joinPath($dst, $name));
 
-			if (($test && $test['mime'] != 'directory') || !$this->_mkdir($dst, $name)) {
+		//single file
+		if( $srcStat['mime'] != 'directory' ){
+
+			if( !$this->_copy($src, $dst, $name) ){
 				return $this->setError('errCopy', $this->_path($src));
 			}
 
-			$dst = $this->_joinPath($dst, $name);
-
-			foreach ($this->getScandir($src) as $stat) {
-				if (empty($stat['hidden'])) {
-					$name = $stat['name'];
-					if (!$this->copy($this->_joinPath($src, $name), $dst, $name)) {
-						$this->remove($dst, true); // fall back
-						return false;
-					}
-				}
-			}
-			$this->clearcache();
-			return $dst;
+			$this->result['added'][$dst_full] = $this->stat($dst_full);
+			return $dst_full;
 		}
 
-		return $this->_copy($src, $dst, $name)
-			? $this->_joinPath($dst, $name)
-			: $this->setError('errCopy', $this->_path($src));
+
+		//directory
+		$test = $this->stat($dst_full,true);
+
+		if( ($test && $test['mime'] != 'directory') || !$this->_mkdir($dst, $name) ){
+			return $this->setError('errCopy', $this->_path($src));
+		}
+
+		if( !$test ){
+			$this->result['added'][$dst_full] = $this->stat($dst_full, true);
+		}
+
+		$list = $this->getScandir($src);
+		foreach($list as $stat) {
+			if( !empty($stat['hidden']) ){
+				continue;
+			}
+
+			$name = $stat['name'];
+			$src_full = $this->_joinPath($src, $name);
+			if( !$this->copy($src_full, $dst_full, $name) ){
+				$this->remove($dst_full, true); // fall back
+				$this->result['added'] = array();
+				return false;
+			}
+		}
+
+		$this->clearcache();
+		return $dst_full;
 	}
 
 	/**
@@ -2543,13 +2577,27 @@ abstract class FinderVolumeDriver {
 		$this->rmTmb($stat); // can not do rmTmb() after _move()
 		$this->clearcache();
 
-		if ($this->_move($src, $dst, $name)) {
-			$this->removed[] = $stat;
-
-			return $this->_joinPath($dst, $name);
+		//get a list of files that will be moved
+		$files = array($src => $stat);
+		if( $stat['mime'] == 'directory' ){
+			$files += $this->getScandir($src);
 		}
 
-		return $this->setError('errMove', $this->_path($src));
+		$new_file_path = $this->_move($src, $dst, $name);
+		if( !$new_file_path ){
+			return $this->setError('errMove', $this->_path($src));
+		}
+
+		$this->result['removed'] = array_values($files);
+
+		//get a list of files that were added
+		$this->result['added'][$new_file_path] = $this->stat($new_file_path);
+		if( $stat['mime'] == 'directory' ){
+			$this->result['added'] += $this->getScandir($src);
+		}
+
+
+		return $this->_joinPath($dst, $name);
 	}
 
 	/**
@@ -2661,7 +2709,7 @@ abstract class FinderVolumeDriver {
 			}
 		}
 
-		$this->removed[] = $stat;
+		$this->result['removed'][] = $stat;
 		return true;
 	}
 

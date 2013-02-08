@@ -520,10 +520,17 @@ class Finder {
 		//call the command
 		$result = call_user_func( array($this,$cmd), $args );
 
-		if( isset($result['removed']) ){
-			foreach ($this->volumes as $volume) {
-				$result['removed'] = array_merge($result['removed'], $volume->removed());
-				$volume->resetRemoved();
+
+		//get result information from volumes
+		$result_lists = array( 'changed'=>false, 'removed'=>true, 'added'=>false );
+		foreach($result_lists as $index => $hashes_only){
+			if( !array_key_exists($index,$result) ){
+				continue;
+			}
+
+			$list =& $result[$index];
+			foreach( $this->volumes as $volume ){
+				$list = array_merge($list, $volume->result($index));
 			}
 		}
 
@@ -536,21 +543,14 @@ class Finder {
 			}
 		}
 
+
+		// remove hidden files and filter files by mimetypes
 		// replace removed files info with removed files hashes
-		if (!empty($result['removed'])) {
-			$removed = array();
-			foreach ($result['removed'] as $file) {
-				$removed[] = $file['hash'];
+		foreach($result_lists as $index => $hashes_only ){
+			if( !array_key_exists($index,$result) ){
+				continue;
 			}
-			$result['removed'] = array_unique($removed);
-		}
-		// remove hidden files and filter files by mimetypes
-		if (!empty($result['added'])) {
-			$result['added'] = $this->filter($result['added']);
-		}
-		// remove hidden files and filter files by mimetypes
-		if (!empty($result['changed'])) {
-			$result['changed'] = $this->filter($result['changed']);
+			$result[$index] = $this->filter($result[$index], $hashes_only);
 		}
 
 		if ($this->debug || !empty($args['debug'])) {
@@ -570,6 +570,7 @@ class Finder {
 		}
 
 		foreach ($this->volumes as $volume) {
+			$volume->reset();
 			$volume->umount();
 		}
 
@@ -1468,12 +1469,12 @@ class Finder {
 				break;
 			}
 
-			if (($file = $dstVolume->paste($srcVolume, $target, $dst, $cut)) == false) {
+			$file = $dstVolume->paste($srcVolume, $target, $dst, $cut);
+			if( !$file ){
 				$result['warning'] = $this->error($dstVolume->error());
 				break;
 			}
 
-			$result['added'][] = $file;
 		}
 		return $result;
 	}
@@ -1712,16 +1713,20 @@ class Finder {
 	 * Remove from files list hidden files and files with required mime types
 	 *
 	 * @param  array  $files  files info
-	 * @return array
+	 * @return array Array of file hashes
 	 * @author Dmitry (dio) Levashov
 	 **/
-	protected function filter($files) {
-		foreach ($files as $i => $file) {
-			if (!empty($file['hidden']) || !$this->default->mimeAccepted($file['mime'])) {
-				unset($files[$i]);
+	protected function filter($files, $hashes_only = true){
+		$hashes = array();
+		foreach( $files as $i => $file ){
+			if( empty($file['hidden']) && $this->default->mimeAccepted($file['mime']) ){
+				$hashes[$file['hash']] = $file;
 			}
 		}
-		return array_merge($files, array());
+		if( $hashes_only ){
+			return array_keys($hashes);
+		}
+		return array_values($hashes);;
 	}
 
 	protected function utime() {

@@ -604,6 +604,7 @@ class gp_edit{
 						'scayt_autoStartup'			=> false,
 						'disableNativeSpellChecker'	=> false,
 						'FillEmptyBlocks'			=> false,
+						'autoParagraph'				=> false,
 						'toolbar'					=> array(
 															array('Source','Templates','ShowBlocks','Undo','Redo','RemoveFormat'), //,'Maximize' does not work well
 															array('Cut','Copy','Paste','PasteText','PasteFromWord','SelectAll','Find','Replace'),

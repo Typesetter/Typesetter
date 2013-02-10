@@ -491,7 +491,7 @@ class gpsession{
 
 		// Add a generic admin nonce field to each post form
 		// Admin nonces are also added with javascript if needed
-		$count = preg_match_all('#<form[^<>]+method=[\'"]post[\'"][^<>]+>#i',$buffer,$matches);
+		$count = preg_match_all('#<form[^<>]*method=[\'"]post[\'"][^<>]*>#i',$buffer,$matches);
 		if( $count ){
 			$nonce = common::new_nonce('post',true);
 			$matches[0] = array_unique($matches[0]);
@@ -506,9 +506,9 @@ class gpsession{
 						continue;
 					}
 				}
-				$replacement = $match.'<span class="nodisplay"><input type="hidden" name="verified" value="'.$nonce.'"/></span>';
-				$pos = strpos($buffer,$match);
-				$buffer = substr_replace($buffer,$replacement,$pos,strlen($match));
+				$replacement = '<span class="nodisplay"><input type="hidden" name="verified" value="'.$nonce.'"/></span>';
+				$pos = strpos($buffer,$match)+strlen($match);
+				$buffer = substr_replace($buffer,$replacement,$pos,0);
 			}
 		}
 

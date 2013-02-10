@@ -508,7 +508,7 @@ class gpsession{
 				}
 				$replacement = $match.'<span class="nodisplay"><input type="hidden" name="verified" value="'.$nonce.'"/></span>';
 				$pos = strpos($buffer,$match);
-				$buffer = substr_replace($buffer,$replacement,$pos,0);
+				$buffer = substr_replace($buffer,$replacement,$pos,strlen($match));
 			}
 		}
 

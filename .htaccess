@@ -4,3 +4,23 @@ AddType text/css .css
 AddType text/xml .xml
 
 AcceptPathInfo On
+
+
+# BEGIN gpEasy
+<IfModule mod_rewrite.c>
+<IfModule mod_env.c>
+SetEnv gp_rewrite OfA1nPs
+</IfModule>
+RewriteEngine On
+RewriteBase "/"
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+<IfModule mod_cache.c>
+RewriteRule /?(.*) "/index.php?$1" [qsa,L]
+</IfModule>
+<IfModule !mod_cache.c>
+RewriteRule . "/index.php" [L]
+</IfModule>
+</IfModule>
+# END gpEasy

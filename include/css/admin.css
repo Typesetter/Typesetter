@@ -132,6 +132,7 @@ body #gp_admin_html .gpcancel,
 body #gp_admin_html .gpsubmit,
 body #gp_admin_html .gpbutton,
 body #gp_admin_html .gpdisabled{
+	display:inline-block;
 	background-color:#f1f1f1;
 	-moz-border-radius: 6px;
 	-webkit-border-radius: 6px;

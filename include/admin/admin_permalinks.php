@@ -51,7 +51,6 @@ class admin_permalinks{
 
 		$this->CheckHtaccess();
 
-		echo '<form method="post" action="'.common::GetUrl('Admin_Permalinks').'">';
 		echo '<table class="padded_table">';
 		//default
 			$checked = '';
@@ -60,12 +59,11 @@ class admin_permalinks{
 			}
 
 			echo '<tr><td>';
-			echo '<label>';
-			echo '<input type="radio" name="none" '.$checked.' /> ';
-			echo '<button type="submit" name="rewrite_setting" value="no_rewrite" class="gpsubmit">';
-			echo $langmessage['use_index.php'];
-			echo '</button>';
-			echo '</label>';
+
+
+			$label = '<input type="radio" name="none" '.$checked.' /> '.$langmessage['use_index.php'];
+			echo common::Link('Admin_Permalinks',$label,'cmd=continue&rewrite_setting=no_rewrite',array('data-cmd'=>'postlink','class'=>'gpsubmit'));
+
 			echo '</td><td>';
 			echo ' <tt>';
 			echo $this->ExampleUrl(true);
@@ -79,12 +77,10 @@ class admin_permalinks{
 			}
 
 			echo '<tr><td>';
-			echo '<label>';
-			echo '<input type="radio" name="none" '.$checked.' /> ';
-			echo '<button type="submit" name="rewrite_setting" value="hide_index" class="gpsubmit">';
-			echo $langmessage['hide_index'];
-			echo '</button> ';
-			echo '</label>';
+
+			$label = '<input type="radio" name="none" '.$checked.' /> '.$langmessage['hide_index'];
+			echo common::Link('Admin_Permalinks',$label,'cmd=continue&rewrite_setting=hide_index',array('data-cmd'=>'postlink','class'=>'gpsubmit'));
+
 			echo '</td><td>';
 			echo ' <tt>';
 			echo $this->ExampleUrl(false);
@@ -93,11 +89,6 @@ class admin_permalinks{
 
 
 		echo '</table>';
-		echo '<p>';
-		echo '<input type="hidden" name="cmd" value="continue" />';
-		echo '</p>';
-		echo '</form>';
-
 	}
 
 	function ExampleUrl($index_php){

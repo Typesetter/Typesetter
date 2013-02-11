@@ -4,6 +4,7 @@ defined('is_running') or die('Not an entry point...');
 /**
  * @deprecated Use email_mailer.php instead
  */
+trigger_error('Deprecated class, please use email_mailer.php instead');
 class gp_email{
 
 

@@ -166,6 +166,16 @@ class gp_phpmailer extends PHPMailer{
 		}else{
 			$server = 'localhost';
 		}
+
+		$pos = strpos($server,':');
+		if( $pos > 0 ){
+			$port = substr($server,$pos+1);
+			if( is_numeric($port) ){
+				$server = substr($server,0,$pos);
+			}
+		}
+
+
 		if( substr( $server, 0, 4 ) == 'www.' ){
 			$server = substr( $server, 4 );
 		}

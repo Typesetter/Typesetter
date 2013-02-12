@@ -590,6 +590,7 @@ class gp_edit{
 	static function CKConfig( $options = array(), $config_name = 'config', &$plugins = array() ){
 		global $config;
 
+		$plugins = array();
 
 		// (4) gpeasy defaults
 		$defaults = array(

@@ -547,15 +547,14 @@ class gp_edit{
 		echo "\n\n";
 
 		// extra plugins
-		$admin_config = self::CKAdminConfig();
-		foreach($admin_config['plugins'] as $plugin => $plugin_info){
-			$path = common::GetDir('/data/_ckeditor/'.$plugin.'/');
-			echo 'CKEDITOR.plugins.addExternal("'.$plugin.'","'.$path.'");';
+		$config = gp_edit::CKConfig( $options, 'json', $plugins );
+		foreach($plugins as $plugin => $plugin_path){
+			echo 'CKEDITOR.plugins.addExternal('.json_encode($plugin).','.json_encode($plugin_path).');';
 			echo "\n";
 		}
 
 		echo '$(".CKEDITAREA").each(function(){';
-		echo 'CKEDITOR.replace( this, '.gp_edit::CKConfig($options,'json').' );';
+		echo 'CKEDITOR.replace( this, '.$config.' );';
 		echo '});';
 
 		echo "\n\n";
@@ -567,17 +566,16 @@ class gp_edit{
 		global $dataDir;
 		static $cke_config;
 
-		if( is_array($cke_config) ){
-			return $cke_config;
-		}
+		//get ckeditor configuration set by users
+		if( !is_array($cke_config) ){
+			$cke_config = array();
+			$config_path = $dataDir.'/data/_ckeditor/config.php';
+			if( file_exists($config_path) ){
+				include($config_path);
+			}
 
-		$cke_config = array();
-		$config_path = $dataDir.'/data/_ckeditor/config.php';
-		if( file_exists($config_path) ){
-			include($config_path);
+			$cke_config += array('plugins'=>array(),'custom_config'=>array());
 		}
-
-		$cke_config += array('plugins'=>array());
 
 		return $cke_config;
 	}
@@ -586,11 +584,14 @@ class gp_edit{
 	/**
 	 * CKEditor configuration settings
 	 * Any settings here take precedence over settings in configuration files defined by the customConfig setting
+	 * Configuration precedence: (1) User (2) Addon (3) $options (4) gpEasy
 	 *
 	 */
-	static function CKConfig($options=array(),$config_name='config'){
+	static function CKConfig( $options = array(), $config_name = 'config', &$plugins = array() ){
 		global $config;
 
+
+		// (4) gpeasy defaults
 		$defaults = array(
 						//'customConfig'				=> common::GetDir('/include/js/ckeditor_config.js'),
 						'browser'					=> true, //not actually a ckeditor configuration value, but we're keeping it now for reverse compat
@@ -623,21 +624,30 @@ class gp_edit{
 			$defaults['language'] = $config['langeditor'];
 		}
 
+		// (3) $options
 		$options += $defaults;
 
-		// extra plugins
-		if( !array_key_exists('extraPlugins',$options) ){
-			$options['extraPlugins'] = '';
-		}
+
+		// (2) Addon settings
+		$options = gpPlugin::Filter('CKEditorConfig',array($options));	// $options['config_key'] = 'config_value';
+		$plugins = gpPlugin::Filter('CKEditorPlugins',array($plugins)); // $plugins['plugin_name'] = 'path_to_plugin_folder';
+
+
+		// (1) User
 		$admin_config = self::CKAdminConfig();
-		$options['extraPlugins'] .= ','.implode(',',array_keys($admin_config['plugins']));
-
-		// custom config
-		if( is_array($admin_config['custom_config']) ){
-			$options = $admin_config['custom_config'] + $options;
+		foreach($admin_config['plugins'] as $plugin => $plugin_info){
+			$plugins[$plugin] = common::GetDir('/data/_ckeditor/'.$plugin.'/');
 		}
 
-		$options = gpPlugin::Filter('CKEditorConfig',array($options));
+		// extra plugins
+		$extra_plugins = array_keys($plugins);
+		if( array_key_exists('extraPlugins',$options) ){
+			$extra_plugins = array_merge($extra_plugins, explode(',',$options['extraPlugins']));
+		}
+
+		$options = $admin_config['custom_config'] + $options;
+		$options['extraPlugins'] = implode(',',$extra_plugins);
+
 
 		//browser paths
 		if( $options['browser'] ){

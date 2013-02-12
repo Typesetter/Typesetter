@@ -221,13 +221,11 @@ class gpAjax{
 		// ckeditor basepath and configuration
 		$ckeditor_basepath = common::GetDir('/include/thirdparty/ckeditor_34/');
 		echo 'CKEDITOR_BASEPATH = '.gpAjax::quote($ckeditor_basepath).';';
-		echo 'var gp_ckconfig = '.gp_edit::CKConfig( array(), 'json' ).';';
+		echo 'var gp_ckconfig = '.gp_edit::CKConfig( array(), 'json', $plugins ).';';
 
 
 		// extra plugins
-		$admin_config = gp_edit::CKAdminConfig();
-		echo 'var gp_add_plugins = '.json_encode( array_keys($admin_config['plugins']) ).';';
-		echo 'var gp_plugins_path = '.json_encode(common::GetDir('/data/_ckeditor')).';';
+		echo 'var gp_add_plugins = '.json_encode( $plugins ).';';
 
 
 		// scripts

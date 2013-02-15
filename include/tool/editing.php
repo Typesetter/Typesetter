@@ -607,6 +607,7 @@ class gp_edit{
 						'disableNativeSpellChecker'	=> false,
 						'FillEmptyBlocks'			=> false,
 						'autoParagraph'				=> false,
+
 						'toolbar'					=> array(
 															array('Source','Templates','ShowBlocks','Undo','Redo','RemoveFormat'), //,'Maximize' does not work well
 															array('Cut','Copy','Paste','PasteText','PasteFromWord','SelectAll','Find','Replace'),
@@ -616,6 +617,18 @@ class gp_edit{
 															array('JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','NumberedList','BulletedList','Outdent','Indent'),
 															array('Bold','Italic','Underline','Strike','Blockquote','Subscript','Superscript')
 														),
+						/*
+						'toolbar'					=> array(
+															array( 'items' => array('Source','Templates','ShowBlocks','Undo','Redo','RemoveFormat') ), //,'Maximize' does not work well
+															array( 'items' => array('Cut','Copy','Paste','PasteText','PasteFromWord','SelectAll','Find','Replace') ),
+															array( 'items' => array('HorizontalRule','Smiley','SpecialChar','PageBreak','TextColor','BGColor') ),
+															array( 'items' => array('Link','Unlink','Anchor','Image','Flash','Table') ), //'CreatePlaceholder'
+															array( 'items' => array('Format','Font','FontSize') ),
+															array( 'items' => array('JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','NumberedList','BulletedList','Outdent','Indent') ),
+															array( 'items' => array('Bold','Italic','Underline','Strike','Blockquote','Subscript','Superscript') )
+														),
+														*/
+
 
 					);
 

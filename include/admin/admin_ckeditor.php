@@ -13,6 +13,8 @@ class admin_ckeditor{
 		global $page, $langmessage;
 
 		$page->css_admin[] = '/include/css/addons.css';
+		//$page->head_js[] = '/include/js/admin_ckeditor.js';
+
 		$this->Init();
 
 		// subpage
@@ -305,8 +307,12 @@ class admin_ckeditor{
 	 */
 	function Example(){
 
+		//echo '<table style="width:100%"><tr><td style="width:300px">';
 		$content = '<h3>Lorem Ipsum</h3> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor lectus id lectus laoreet scelerisque.</p><p>Vestibulum suscipit, lectus a feugiat facilisis, enim arcu fringilla nisi, et scelerisque nibh sapien in quam. Vivamus sit amet elementum nibh. Donec id ipsum nibh. Aliquam ligula nulla, condimentum sit amet consectetur eu, sagittis id ligula. In felis justo, feugiat et luctus sit amet, feugiat eget odio. Nullam suscipit mollis ipsum nec ultrices. Praesent ut lacus lorem. Fusce adipiscing arcu vitae dui ullamcorper a imperdiet felis dignissim. Maecenas eget tortor mi.</p>';
 		gp_edit::UseCK($content);
+		//echo '</td><td>';
+		//echo '<div id="available_icons"></div>';
+		//echo '</td></table>';
 	}
 
 

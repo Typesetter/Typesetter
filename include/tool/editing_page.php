@@ -653,6 +653,10 @@ class editing_page extends display{
 		$len = strlen($contents);
 		$backup_file = $dir.'/'.$time.'.'.$len;
 
+		if( isset($this->file_stats['username']) && $this->file_stats['username'] ){
+			$backup_file .= '.'.$this->file_stats['username'];
+		}
+
 		//compress
 		if( function_exists('gzencode') && function_exists('readgzfile') ){
 			$backup_file .= '.gze';
@@ -696,7 +700,7 @@ class editing_page extends display{
 
 		ob_start();
 		echo '<h2>'.$langmessage['Revision History'].'</h2>';
-		echo '<table class="bordered full_width"><tr><th>'.$langmessage['Modified'].'</th><th>'.$langmessage['File Size'].'</th><th>&nbsp;</th></tr>';
+		echo '<table class="bordered full_width"><tr><th>'.$langmessage['Modified'].'</th><th>'.$langmessage['File Size'].'</th><th>'.$langmessage['username'].'</th><th>&nbsp;</th></tr>';
 		echo '<tbody>';
 
 		$size = filesize($this->file);
@@ -704,16 +708,25 @@ class editing_page extends display{
 		echo common::date($langmessage['strftime_datetime'],$this->fileModTime);
 		echo ' &nbsp; ('.$langmessage['Current Page'].')</td><td>';
 		echo admin_tools::FormatBytes($size);
-		echo '</td><td>&nbsp;</td></tr>';
+		echo '</td><td>'.$this->file_stats['username'].'</td><td>&nbsp;</td></tr>';
 
 		$i = 1;
 		foreach($files as $time => $file){
 
+			//remove .gze
+			if( strpos($file,'.gze') === (strlen($file)-4) ){
+				$file = substr($file,0,-4);
+			}
+
 			//get info from filename
 			$name = basename($file);
-			$parts = explode('.',$name);
+			$parts = explode('.',$name,3);
 			$time = array_shift($parts);
 			$size = array_shift($parts);
+			$username = false;
+			if( count($parts) ){
+				$username = array_shift($parts);
+			}
 
 			//output row
 			echo '<tr class="'.($i % 2 ? 'even' : '').'"><td>';
@@ -722,6 +735,8 @@ class editing_page extends display{
 			if( $size && is_numeric($size) ){
 				echo admin_tools::FormatBytes($size);
 			}
+			echo '</td><td>';
+			echo $username;
 			echo '</td><td>';
 			echo common::Link($this->title,$langmessage['preview'],'cmd=view_revision&time='.$time,'data-cmd="cnreq"');
 			echo '</td></tr>';

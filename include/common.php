@@ -3179,6 +3179,7 @@ class gpFiles{
 	 *
 	 */
 	static function FileStart($file, $time=false, $file_stats = array() ){
+		global $gpAdmin;
 
 		if( $time === false ) $time = time();
 
@@ -3186,6 +3187,12 @@ class gpFiles{
 		$file_stats = (array)$file_stats + gpFiles::GetFileStats($file);
 		$file_stats['gpversion'] = gpversion;
 		$file_stats['modified'] = $time;
+
+		if( common::loggedIn() ){
+			$file_stats['username'] = $gpAdmin['username'];
+		}else{
+			$file_stats['username'] = false;
+		}
 
 		return '<'.'?'.'php'
 				. "\ndefined('is_running') or die('Not an entry point...');"

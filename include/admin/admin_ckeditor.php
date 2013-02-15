@@ -162,14 +162,22 @@ class admin_ckeditor{
 
 		// get plugin name
 		$plugin_name = false;
+		$remove_path = '';
 		$list = $archive->listContent();
 		foreach($list as $file){
-			if( !$file['folder'] ){
-				continue;
+
+			if( strpos($file['filename'],'plugin.js') !== false ){
+				$filename = $file['filename'];
+				$remove_path = dirname($filename);
+				$plugin_name = basename( $remove_path );
+				break;
 			}
-			$plugin_name = strrev(basename(strrev($file['filename'])));
-			break;
 		}
+
+		//message('remove path: '.$remove_path);
+		//message('plugin name: '.$plugin_name);
+		//return;
+
 		if( !$plugin_name ){
 			message($langmessage['OOPS'].' (Unknown plugin name)');
 			return;
@@ -192,7 +200,7 @@ class admin_ckeditor{
 
 
 		// extract
-		$return = $archive->extract( PCLZIP_OPT_PATH, $destination, PCLZIP_OPT_REMOVE_PATH, $plugin_name );
+		$return = $archive->extract( PCLZIP_OPT_PATH, $destination, PCLZIP_OPT_REMOVE_PATH, $remove_path );
 		if( !is_array($return) ){
 
 			if( $temp_dir ){

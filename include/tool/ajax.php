@@ -219,9 +219,14 @@ class gpAjax{
 
 
 		// ckeditor basepath and configuration
+		$options = array(
+						'extraPlugins' => 'sharedspace',
+						'sharedSpaces' => array( 'top' => 'ckeditor_top', 'bottom' =>' ckeditor_bottom' )
+						);
+
 		$ckeditor_basepath = common::GetDir('/include/thirdparty/ckeditor_34/');
 		echo 'CKEDITOR_BASEPATH = '.gpAjax::quote($ckeditor_basepath).';';
-		echo 'var gp_ckconfig = '.gp_edit::CKConfig( array(), 'json', $plugins ).';';
+		echo 'var gp_ckconfig = '.gp_edit::CKConfig( $options, 'json', $plugins ).';';
 
 
 		// extra plugins

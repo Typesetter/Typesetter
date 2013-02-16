@@ -12,21 +12,6 @@ function gp_init_inline_edit(area_id,section_object){
 		});
 	}
 
-
-	//ckeditor configuration
-	var config = $.extend({}, gp_ckconfig);
-	if( typeof(config.extraPlugins) == 'undefined' ){
-		config.extraPlugins = 'sharedspace';
-	}else{
-		config.extraPlugins += ',sharedspace';
-	}
-	config.sharedSpaces = {
-			top:'ckeditor_top'
-			,bottom:'ckeditor_bottom'
-		};
-
-
-
 	//get area
 	var save_path = gp_editing.get_path(area_id);
 	var edit_div = gp_editing.get_edit_area(area_id);
@@ -40,7 +25,7 @@ function gp_init_inline_edit(area_id,section_object){
 
 
 	CKEDITOR.disableAutoInline = true;
-	gp_editor = CKEDITOR.inline( inner, config );
+	gp_editor = CKEDITOR.inline( inner, gp_ckconfig );
 	gp_editor.save_path = save_path;
 	gp_editor.gp_saveData = function(){
 		var data = gp_editor.getData();

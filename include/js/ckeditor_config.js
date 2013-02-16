@@ -1,5 +1,4 @@
 
-
 /**
  * Add buttons to toolbar that were added by plugins
  *
@@ -16,8 +15,11 @@ CKEDITOR.on( 'instanceCreated', function(e){
 	});
 	*/
 
-	//add a row to the toolbar with plugin buttons
-	editor.on( 'pluginsLoaded', function(){
+
+	// add a row to the toolbar with plugin buttons
+	// using uiSpace for sharedSpaces
+	editor.on( 'uiSpace', function(){
+	//editor.on( 'pluginsLoaded', function(){
 
 		// this is a list of buttons standard to ckeditor
 		var standard_items = ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', 'BidiLtr', 'BidiRtl', 'Blockquote', 'Cut', 'Copy', 'Paste', 'TextColor', 'BGColor', 'Templates', 'CreateDiv', '-', 'NumberedList', 'BulletedList', 'Indent', 'Outdent', 'Find', 'Replace', 'Flash', 'Font', 'FontSize', 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField', 'Format', 'HorizontalRule', 'Iframe', 'Image', 'Smiley', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', 'Link', 'Unlink', 'Anchor', 'Maximize', 'NewPage', 'PageBreak', 'PasteText', 'PasteFromWord', 'RemoveFormat', 'Save', 'SelectAll', 'ShowBlocks', 'Source', 'SpecialChar', 'Styles', 'Table', 'Undo', 'Redo' ];
@@ -34,7 +36,7 @@ CKEDITOR.on( 'instanceCreated', function(e){
 			return;
 		}
 
-		editor.config.toolbar.push( [ plugin_buttons ] );
+		editor.config.toolbar.push( plugin_buttons );
 	});
 
 

@@ -146,8 +146,8 @@ class special_display extends display{
 					return $gp_titles[$index];
 				}
 			}
-
-		}while( array_pop($parts) );
+			array_pop($parts);
+		}while( count($parts) );
 
 		return false;
 	}

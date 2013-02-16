@@ -2031,7 +2031,8 @@ class common{
 					return 'special';
 				}
 			}
-		}while( array_pop($parts) );
+			array_pop($parts);
+		}while( count($parts) );
 
 		return false;
 	}

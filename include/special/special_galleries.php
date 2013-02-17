@@ -81,6 +81,7 @@ class special_galleries{
 		$page->css_admin[] = '/include/css/edit_gallery.css';
 
 
+		admin_tools::AdminContainer();
 		echo '<div id="admincontent">';
 		admin_tools::AdminContentPanel();
 		echo '<div id="admincontent_inner">';
@@ -98,6 +99,7 @@ class special_galleries{
 
 		$this->EditableArea();
 
+		echo '</div>';
 		echo '</div>';
 		echo '</div>';
 

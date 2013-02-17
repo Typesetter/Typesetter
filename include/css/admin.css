@@ -298,9 +298,6 @@ body #gp_admin_html #admincontent{
 
 #admincontent_inner{
 	padding:20px 20px 10em 20px;
-	}
-
-.gpAdmin #admincontent_inner{
 	overflow:hidden;
 
 	-moz-border-radius: 3px;
@@ -314,9 +311,6 @@ body #gp_admin_html #admincontent{
 
 
 #admincontent_panel{
-	display:none;
-	}
-.gpAdmin #admincontent_panel{
 	display:block;
 	}
 #admincontent_panel.toolbar{

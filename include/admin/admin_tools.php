@@ -647,6 +647,22 @@ class admin_tools{
 
 	}
 
+	static function AdminContainer(){
+		global $gpAdmin;
+
+		$top = $gpAdmin['gpui_pposy'];
+		$left = $gpAdmin['gpui_pposx'];
+		$width = Max($gpAdmin['gpui_pw'],300);
+
+		//if the admin window doesn't have a position, try to find a position for it
+		if( $top === 0 && $left === 0 ){
+			$top = $left = 70;
+		}
+
+		echo '<div id="admincontainer" class="gp_floating_area" style="left:'.$left.'px;top:'.$top.'px;width:'.$width.'px;">';
+	}
+
+
 
 	//uses $status from update codes to execute some cleanup code on a regular interval (7 days)
 	static function ScheduledTasks($status){

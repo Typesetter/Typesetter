@@ -579,71 +579,30 @@ $(function(){
 
 
 
+	/**
+	 * Position admincontent over page
+	 *
+	 */
 	function ContentPosition(){
-		var admin_content,container,dock_area;
 
-		//position admincontent over page
-		admin_content = $('#admincontent');
-		if( admin_content.length < 1 ){
+		var container = $('#admincontainer');
+		if( container.length < 1 ){
 			return;
 		}
 
-		dock_area = admin_content.parent().parent();
-
-		container = admin_content.parent()
-					.wrap('<div id="admincontainer" class="gp_floating_area"></div>')
-					.parent()
-					.appendTo('#gp_admin_html');
-
-
 		//move the after content down
 		$('#gpAfterContent').css('margin-top',container.height()+100);
-		//$('#gpAfterContent').height(container.height()+100);
-		//dock_area.height(container.height()+100);
-
-		Put(false); //$gp.SaveGPUI won't be avail yet
 
 		SimpleDrag('#admincontent_panel',container,'absolute',function(newpos){
 			gpui.pposx = newpos.left;
 			gpui.pposy = newpos.top;
-			Put(true);
-		});
-
-		//determine positioning of #admincontainer and save
-		function Put(save){
-			var top,left,width;
-
-			width = gpui.pw;
-			if( width < 300 ){
-				width = dock_area.outerWidth()-10;
-			}
-
-			top = gpui.pposy;
-			left = gpui.pposx;
-
-			//if the admin window doesn't have a position, try to find a position for it
-			if( top === 0 && left === 0 ){
-				var pos = dock_area.offset();
-				top = Math.min(300,pos.top+5);
-				left = pos.left+5;
-			}
-
 
 			container.css({
-							'left':Math.max(10,left)
-							,'top':Math.max(10,top)
+							'left':Math.max(5,gpui.pposx)
+							,'top':Math.max(5,gpui.pposy)
 							});
-
-			if( admin_resizable ){
-				container.width(width);
-			}
-
-
-			//don't save during init since nothing has changed
-			if( save ){
-				$gp.SaveGPUI();
-			}
-		}
+			$gp.SaveGPUI();
+		});
 
 	} /* end ContentPosition() */
 

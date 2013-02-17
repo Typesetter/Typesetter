@@ -849,10 +849,10 @@ class gpsession{
 
 
 		echo 'var gpui={';
-		echo 'pposx:'.$gpAdmin['gpui_pposx'];
-		echo ',pposy:'.$gpAdmin['gpui_pposy'];
-		echo ',pw:'.$gpAdmin['gpui_pw'];
-		echo ',ph:'.$gpAdmin['gpui_ph'];
+		echo 'ph:'.$gpAdmin['gpui_ph'];
+		//echo ',pposx:'.$gpAdmin['gpui_pposx'];
+		//echo ',pposy:'.$gpAdmin['gpui_pposy'];
+		//echo ',pw:'.$gpAdmin['gpui_pw'];
 		echo ',cmpct:'.(int)$gpAdmin['gpui_cmpct'];
 
 		//the following control which admin toolbar areas are expanded

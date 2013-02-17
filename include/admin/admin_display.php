@@ -76,26 +76,33 @@ class admin_display extends display{
 			return;
 		}
 
-		ob_start();
-
-		admin_tools::AdminContainer();
-		echo '<div id="gpx_content">';
-		echo '<div id="admincontent">';
-		admin_tools::AdminContentPanel();
-
 		if( common::LoggedIn() ){
-			echo '<div id="admincontent_inner">';
-			echo $this->contentBuffer;
+			ob_start();
+			admin_tools::AdminContainer();
+			echo '<div id="gpx_content">';
+			echo '<div id="admincontent">';
+			admin_tools::AdminContentPanel();
+
+			if( common::LoggedIn() ){
+				echo '<div id="admincontent_inner">';
+				echo $this->contentBuffer;
+				echo '</div>';
+			}else{
+				echo $this->contentBuffer;
+			}
+
 			echo '</div>';
-		}else{
-			echo $this->contentBuffer;
+			echo '</div>';
+			echo '</div>';
+			$gp_admin_html .= ob_get_clean();
+			return;
 		}
 
+		echo '<div id="gpx_content">';
+		echo '<div id="admincontent">';
+		echo $this->contentBuffer;
 		echo '</div>';
 		echo '</div>';
-		echo '</div>';
-
-		$gp_admin_html .= ob_get_clean();
 	}
 
 	function AnonUser(){

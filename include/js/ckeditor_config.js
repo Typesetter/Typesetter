@@ -39,7 +39,6 @@ CKEDITOR.on( 'instanceCreated', function(e){
 		editor.config.toolbar.push( plugin_buttons );
 	});
 
-
 });
 
 

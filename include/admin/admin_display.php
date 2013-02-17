@@ -171,7 +171,8 @@ class admin_display extends display{
 				return;
 
 			}
-		}while( array_pop($parts) );
+			array_pop($parts);
+		}while( count($parts) );
 
 		$this->AdminPanel();
 	}

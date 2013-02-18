@@ -650,16 +650,15 @@ class admin_tools{
 	static function AdminContainer(){
 		global $gpAdmin;
 
-		$top = $gpAdmin['gpui_pposy'];
-		$left = $gpAdmin['gpui_pposx'];
-		$width = Max($gpAdmin['gpui_pw'],300);
-
-		//if the admin window doesn't have a position, try to find a position for it
-		if( $top === 0 && $left === 0 ){
-			$top = $left = 70;
+		// if the admin window doesn't have a position
+		if( !isset($gpAdmin['gpui_pposx']) || !isset($gpAdmin['gpui_pposy']) || ($gpAdmin['gpui_pposx'] == 0 && $gpAdmin['gpui_pposy'] == 0) ){
+			$gpAdmin['gpui_pposx'] = $gpAdmin['gpui_pposy'] = 70;
+		}
+		if( !isset($gpAdmin['gpui_pw']) || $gpAdmin['gpui_pw'] == 0 ){
+			$gpAdmin['gpui_pw'] = 960;
 		}
 
-		return '<div id="admincontainer" class="gp_floating_area" style="left:'.$left.'px;top:'.$top.'px;width:'.$width.'px;">';
+		return '<div id="admincontainer" class="gp_floating_area" style="left:'.$gpAdmin['gpui_pposx'].'px;top:'.$gpAdmin['gpui_pposy'].'px;width:'.Max($gpAdmin['gpui_pw'],300).'px;">';
 	}
 
 

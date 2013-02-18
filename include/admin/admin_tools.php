@@ -659,7 +659,7 @@ class admin_tools{
 			$top = $left = 70;
 		}
 
-		echo '<div id="admincontainer" class="gp_floating_area" style="left:'.$left.'px;top:'.$top.'px;width:'.$width.'px;">';
+		return '<div id="admincontainer" class="gp_floating_area" style="left:'.$left.'px;top:'.$top.'px;width:'.$width.'px;">';
 	}
 
 

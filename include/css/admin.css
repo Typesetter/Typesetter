@@ -119,6 +119,7 @@ body #gp_admin_html h1:first-child,
 body #gp_admin_html h2:first-child,
 body #gp_admin_html h3:first-child{
 	margin-top:0;
+	padding-top:0;
 	}
 
 

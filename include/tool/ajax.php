@@ -89,7 +89,7 @@ class gpAjax{
 			}
 
 			ob_start();
-			$page->GetGpxContent();
+			$page->GetGpxContent(true);
 			$content = ob_get_clean();
 			gpAjax::JsonDo('replace',$replace_id,$content);
 		}

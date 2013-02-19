@@ -8,8 +8,6 @@
 	background-color:black;
 	z-index:200000;
 	filter:alpha(opacity=50);
-	-moz-opacity:0.5;
-	-khtml-opacity: 0.5;
 	opacity: 0.5;
 	}
 
@@ -46,8 +44,6 @@
 
 #select_options a:hover{
 	filter:alpha(opacity=100);
-	-moz-opacity:1;
-	-khtml-opacity: 1;
 	opacity: 1;
 	border-color:#c6c6c6;
 	box-shadow:0 1px 1px rgba(0,0,0,0.1);
@@ -57,8 +53,6 @@
 
 #select_options a.disabled{
 	filter:alpha(opacity=40);
-	-moz-opacity:0.4;
-	-khtml-opacity: 0.4;
 	opacity: 0.4;
 	}
 
@@ -78,7 +72,6 @@
 .gp_object_wrapper{
 	position:relative;
 	z-index:9001;
-	-moz-opacity:0;
 	filter:alpha(opacity: 0);
 	opacity: 0;
 	cursor:pointer;

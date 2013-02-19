@@ -261,8 +261,6 @@ body #gp_admin_html pre{
 
 	background-color:#fff; /* important for ie to prevent text selection underneath drag box */
 	filter:alpha(opacity=40);
-	-moz-opacity:0.4;
-	-khtml-opacity: 0.4;
 	opacity: 0.4;
 }
 
@@ -616,8 +614,6 @@ table.tablesorter th.gp_header_desc:before{
 	}
 .draggable_hidden{
 	filter:alpha(opacity=30);
-	-moz-opacity:0.3;
-	-khtml-opacity: 0.3;
 	opacity: 0.3;
 }
 .target{
@@ -632,8 +628,6 @@ table.tablesorter th.gp_header_desc:before{
 	visibility:visible !important;
 
 	filter:alpha(opacity=100);
-	-moz-opacity:1;
-	-khtml-opacity: 1;
 	opacity: 1;
 	}
 
@@ -948,8 +942,6 @@ table.tablesorter th.gp_header_desc:before{
 
 	background-color:#eee;
 	filter:alpha(opacity=50);
-	-moz-opacity:0.5;
-	-khtml-opacity: 0.5;
 	opacity: 0.5;
 
 	border:1px dashed red;
@@ -1292,8 +1284,6 @@ body #addon_about{
 	}
 #gp_admin_html .all_checkboxes label.unchecked{
 	filter:alpha(opacity=50);
-	-moz-opacity:0.5;
-	-khtml-opacity: 0.5;
 	opacity: 0.5;
 	}
 #gp_admin_html .checkboxes_init .all_checkbox input{
@@ -1399,7 +1389,6 @@ body #gp_admin_html .layout_links a.selected{
 .gp_object_wrapper{
 	position:relative;
 	z-index:10001;
-	-moz-opacity:0 ;
 	filter:alpha(opacity: 0);
 	opacity: 0;
 	cursor:pointer;

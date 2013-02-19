@@ -1886,7 +1886,7 @@ class admin_menu_new extends admin_menu_tools{
 	function CreateNew(){
 		global $gp_index, $gp_titles, $langmessage;
 		includeFile('tool/editing_page.php');
-		includeFile('tool/SectionContent.php');
+		includeFile('tool/editing.php');
 
 		$title = $_POST['title'];
 		$title = admin_tools::CheckPostedNewPage($title,$message);
@@ -1896,7 +1896,7 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 		$type = $_POST['content_type'];
-		$content = section_content::DefaultContent($type);
+		$content = gp_edit::DefaultContent($type);
 
 		if( $content === false ){
 			return false;

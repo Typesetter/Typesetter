@@ -381,7 +381,7 @@ class editing_page extends display{
 			$start_content = $this->file_sections[$section];
 		}else{
 			$start_content['type'] = $_POST['content_type'];
-			$start_content['content'] = section_content::DefaultContent($start_content['type']);
+			$start_content['content'] = gp_edit::DefaultContent($start_content['type']);
 			if( $start_content['content'] === false ){
 				message($langmessage['OOPS'].'(3)');
 				return;

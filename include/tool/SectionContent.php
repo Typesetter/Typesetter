@@ -63,33 +63,6 @@ class section_content{
 	}
 
 
-	/**
-	 * Get the default content for the specified content type
-	 * @static
-	 * @since 3.6
-	 *
-	 */
-	static function DefaultContent($type){
-		global $langmessage;
-
-		switch($type){
-			case 'include':
-				$default_content = '';
-			break;
-
-			case 'gallery':
-				$default_content = '<ul class="gp_gallery"><li class="gp_to_remove"></li></ul>';
-			break;
-
-			case 'text':
-			default:
-				$default_content = '<p>'.$langmessage['New Section'].'</p>';
-			break;
-		}
-
-		return gpPlugin::Filter('GetDefaultContent',array($default_content,$type));
-	}
-
 
 	static function SetVars($title,$meta){
 		self::$title = $title;
@@ -259,15 +232,16 @@ class section_content{
 		}else{
 			$requested = $data['content'];
 		}
-		if( self::$title == $requested ){
-			if( common::LoggedIn() ){
-				message('Infinite loop detected');
-			}
-			return;
-		}
 
 		if( empty($requested) ){
 			return '<p>'.$langmessage['File Include'].'</p>';
+		}
+
+		if( self::$title == $requested ){
+			if( common::LoggedIn() ){
+				message('Infinite loop detected: '.htmlspecialchars($requested) );
+			}
+			return;
 		}
 
 		if( isset($data['include_type']) ){

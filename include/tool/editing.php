@@ -683,4 +683,32 @@ class gp_edit{
 	}
 
 
+
+	/**
+	 * Get the default content for the specified content type
+	 * @static
+	 * @since 3.6
+	 *
+	 */
+	static function DefaultContent($type='text'){
+		global $langmessage;
+
+		switch($type){
+			case 'include':
+				$default_content = '';
+			break;
+
+			case 'gallery':
+				$default_content = '<ul class="gp_gallery"><li class="gp_to_remove"></li></ul>';
+			break;
+
+			case 'text':
+			default:
+				$default_content = '<p>'.$langmessage['New Section'].'</p>';
+			break;
+		}
+
+		return gpPlugin::Filter('GetDefaultContent',array($default_content,$type));
+	}
+
 }

@@ -288,7 +288,7 @@ class admin_extra{
 
 		$data = array(
 					'type'	=> $_POST['type'],
-					'content' => section_content::DefaultContent($_POST['type'])
+					'content' => gp_edit::DefaultContent($_POST['type'])
 				);
 
 		$file = $this->folder.'/'.$title.'.php';

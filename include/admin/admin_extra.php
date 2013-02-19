@@ -18,6 +18,13 @@ class admin_extra{
 		$show = true;
 		switch($cmd){
 
+			/* gallery editing */
+			case 'gallery_folder':
+			case 'gallery_images':
+				$this->GalleryImages();
+			return;
+
+
 			case 'delete';
 				$this->DeleteArea();
 			break;
@@ -151,11 +158,18 @@ class admin_extra{
 		echo $langmessage['options'];
 		echo '</th></tr>';
 
+		$i = 0;
 		foreach($this->areas as $file){
 			$extraName = $file;
 			$data = gpOutput::ExtraContent($file);
 
-			echo '<tr><td style="white-space:nowrap">';
+			if( $i%2 == 0 ){
+				echo '<tr class="even">';
+			}else{
+				echo '<tr>';
+			}
+
+			echo '<td style="white-space:nowrap">';
 			echo str_replace('_',' ',$extraName);
 			echo '</td><td>';
 			$type = $data['type'];
@@ -179,6 +193,7 @@ class admin_extra{
 			$title = sprintf($langmessage['generic_delete_confirm'],htmlspecialchars($file));
 			echo common::Link('Admin_Extra',$langmessage['delete'],'cmd=delete&file='.$file,array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
 			echo '</td></tr>';
+			$i++;
 		}
 
 		echo '</table>';
@@ -187,13 +202,11 @@ class admin_extra{
 		echo '<form action="'.common::GetUrl('Admin_Extra').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="new_section" />';
 		echo '<input type="text" name="file" value="" size="15" class="gpinput"/> ';
-
-		/*echo '<select name="type" class="gpselect">';
+		echo '<select name="type" class="gpselect">';
 		foreach($types as $type => $info){
 			echo '<option value="'.$type.'">'.$info['label'].'</option>';
 		}
 		echo '</select> ';
-		*/
 		echo '<input type="submit" name="" value="'.$langmessage['Add New Area'].'" class="gppost gpsubmit"/>';
 		echo '</form>';
 		echo '</p>';
@@ -243,9 +256,8 @@ class admin_extra{
 
 		$title = gp_edit::CleanTitle($_REQUEST['file']);
 		$file = $this->folder.'/'.$title.'.php';
-
-		$data = array();
-		$data['type'] = 'text';
+		$data = gpOutput::ExtraContent($title);
+		message('content: '.htmlspecialchars($_POST['gpcontent']));
 		$data['content'] = $_POST['gpcontent'];
 		gpFiles::cleanText($data['content']);
 
@@ -307,6 +319,23 @@ class admin_extra{
 		echo '</h2>';
 
 		gpOutput::GetExtra($name);
+	}
+
+	function GalleryImages(){
+
+		if( isset($_GET['dir']) ){
+			$dir_piece = $_GET['dir'];
+		//}elseif( isset($this->meta_data['gallery_dir']) ){
+		//	$dir_piece = $this->meta_data['gallery_dir'];
+		}else{
+			$dir_piece = '/image';
+		}
+		//remember browse directory
+		$this->meta_data['gallery_dir'] = $dir_piece;
+		//$this->SaveThis();
+
+		includeFile('admin/admin_uploaded.php');
+		admin_uploaded::InlineList($dir_piece);
 	}
 
 }

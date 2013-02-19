@@ -257,7 +257,6 @@ class admin_extra{
 		$title = gp_edit::CleanTitle($_REQUEST['file']);
 		$file = $this->folder.'/'.$title.'.php';
 		$data = gpOutput::ExtraContent($title);
-		message('content: '.htmlspecialchars($_POST['gpcontent']));
 		$data['content'] = $_POST['gpcontent'];
 		gpFiles::cleanText($data['content']);
 

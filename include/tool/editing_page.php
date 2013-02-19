@@ -2,6 +2,7 @@
 defined('is_running') or die('Not an entry point...');
 
 includeFile('tool/editing.php');
+includeFile('tool/SectionContent.php');
 
 class editing_page extends display{
 
@@ -380,7 +381,7 @@ class editing_page extends display{
 			$start_content = $this->file_sections[$section];
 		}else{
 			$start_content['type'] = $_POST['content_type'];
-			$start_content['content'] = editing_page::GetDefaultContent($start_content['type']);
+			$start_content['content'] = section_content::DefaultContent($start_content['type']);
 			if( $start_content['content'] === false ){
 				message($langmessage['OOPS'].'(3)');
 				return;
@@ -414,35 +415,6 @@ class editing_page extends display{
 		message($langmessage['SAVED']);
 	}
 
-
-	/**
-	 * Get the default content for the specified content type
-	 *
-	 * @static
-	 *
-	 */
-	static function GetDefaultContent($type){
-		global $langmessage;
-
-		switch($type){
-			case 'include':
-				$default_content = '';
-			break;
-
-			case 'gallery':
-				$default_content = '<ul class="gp_gallery"><li class="gp_to_remove"></li></ul>';
-			break;
-
-			case 'text':
-			default:
-				$default_content = '<p>'.$langmessage['New Section'].'</p>';
-			break;
-		}
-
-		$default_content = gpPlugin::Filter('GetDefaultContent',array($default_content,$type));
-
-		return $default_content;
-	}
 
 	/**
 	 * Display a form for adding a new section to the page
@@ -493,7 +465,8 @@ class editing_page extends display{
 
 	}
 
-	/*
+	/**
+	 * Return a list of section types
 	 * @static
 	 */
 	static function SectionTypes(){
@@ -547,7 +520,6 @@ class editing_page extends display{
 				}
 
 
-				includeFile('tool/SectionContent.php');
 				$content = section_content::RenderSection($data,$section,$this->title,$this->file_stats);
 				$page->ajaxReplace[] = array('gp_include_content','',$content);
 			break;
@@ -775,7 +747,6 @@ class editing_page extends display{
 			include($full_path);
 		}
 
-		includeFile('tool/SectionContent.php');
 		$this->contentBuffer = section_content::Render($file_sections,$this->title,$file_stats);
 
 
@@ -885,7 +856,6 @@ class editing_page extends display{
 		$this->file_sections[$section] = $section_data;
 
 		//send replacement content
-		includeFile('tool/SectionContent.php');
 		$content = section_content::RenderSection($section_data,$section,$this->title,$this->file_stats);
 		$page->ajaxReplace[] = array('gp_include_content','',$content);
 		return true;
@@ -921,7 +891,6 @@ class editing_page extends display{
 
 		//add to all pages in case a user adds a gallery
 		gpPlugin::Action('GenerateContent_Admin');
-		includeFile('tool/SectionContent.php');
 		common::ShowingGallery();
 
 		$content = '';

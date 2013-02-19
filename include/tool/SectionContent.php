@@ -44,6 +44,53 @@ class section_content{
 		return self::SectionToContent($section,$section_num);
 	}
 
+	/**
+	 * Return the data types available for content areas
+	 * @since 3.6
+	 */
+	static function GetTypes(){
+		global $langmessage;
+		static $types = false;
+
+		if( !$types ){
+			$types['text']['label']		= $langmessage['editable_text'];
+			$types['gallery']['label']	= $langmessage['Image Gallery'];
+			$types['include']['label']	= $langmessage['File Include'];
+			$types = gpPlugin::Filter('SectionTypes',array($types));
+		}
+
+		return $types;
+	}
+
+
+	/**
+	 * Get the default content for the specified content type
+	 * @static
+	 * @since 3.6
+	 *
+	 */
+	static function DefaultContent($type){
+		global $langmessage;
+
+		switch($type){
+			case 'include':
+				$default_content = '';
+			break;
+
+			case 'gallery':
+				$default_content = '<ul class="gp_gallery"><li class="gp_to_remove"></li></ul>';
+			break;
+
+			case 'text':
+			default:
+				$default_content = '<p>'.$langmessage['New Section'].'</p>';
+			break;
+		}
+
+		return gpPlugin::Filter('GetDefaultContent',array($default_content,$type));
+	}
+
+
 	static function SetVars($title,$meta){
 		self::$title = $title;
 		self::$label = common::GetLabel($title);

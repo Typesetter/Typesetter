@@ -162,6 +162,7 @@ body #gp_admin_html .gpinput{
 	}
 
 body #gp_admin_html .gpinput,
+body #gp_admin_html .gpselect,
 body #gp_admin_html .gpsubmit,
 body #gp_admin_html .gpcancel{
 	margin-right:7px;
@@ -204,7 +205,7 @@ body #gp_admin_html .gpdisabled{
 
 body #gp_admin_html .gpselect option{
 	text-shadow:none;
-	padding:1px 5px;
+	padding:0 5px;
 	}
 body #gp_admin_html .gpcheckbox input{
 	margin:0;
@@ -1088,7 +1089,7 @@ color:#2d2d2d!important;
 	}
 
 #adminlinks2 > div > span > span{
-	padding:5px 0 5px 30px;
+	padding:7px 0 3px 30px;
 	display:block;
 	text-shadow: 0 1px 0 #fff;
 	font-size:15px;
@@ -1155,6 +1156,8 @@ color:#2d2d2d!important;
 	border-radius:0 0 5px 5px;
 	background:#fff;
 	z-index:11;
+	max-height:200px;
+	overflow:auto;
 	}
 #adminlinks2 li.expand_child li{
 	overflow:hidden;

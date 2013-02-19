@@ -175,6 +175,7 @@ var $gp = {
 
 			switch(obj.DO){
 				case 'replace':
+					console.log(obj.CONTENT);
 					$(obj.SELECTOR).replaceWith(obj.CONTENT);
 				break;
 

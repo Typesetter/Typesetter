@@ -1088,18 +1088,9 @@ class gpOutput{
 	static function GetExtra($name='Side_Menu',$info=array()){
 		global $dataDir,$langmessage;
 
-
+		includeFile('tool/SectionContent.php');
 		$name = str_replace(' ','_',$name);
-
-		$extra_content = '';
-		$file = $dataDir.'/data/_extra/'.$name.'.php';
-		if( file_exists($file) ){
-			ob_start();
-			include($file);
-			$extra_content = ob_get_clean();
-		}
-
-		$extra_content = gpPlugin::Filter('GetExtra',array($extra_content,$name));
+		$extra_content = self::ExtraContent( $name, $file_stats );
 
 		$wrap = gpOutput::ShowEditLink('Admin_Extra');
 		if( $wrap ){
@@ -1113,12 +1104,29 @@ class gpOutput{
 			gpOutput::$editlinks .= ob_get_clean();
 
 			echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
-			echo $extra_content;
+			echo section_content::RenderSection($extra_content,0,'',$file_stats);
 			echo '</div>';
 		}else{
-			echo $extra_content;
+			echo section_content::RenderSection($extra_content,0,'',$file_stats);
 		}
 
+	}
+
+	static function ExtraContent( $title, &$file_stats = array() ){
+		global $dataDir;
+		$file = $dataDir.'/data/_extra/'.$title.'.php';
+
+		$extra_content = array();
+		if( file_exists($file) ){
+			ob_start();
+			include($file);
+			$extra_content_string = ob_get_clean();
+			if( !count($extra_content) ){
+				$extra_content['content'] = $extra_content_string;
+			}
+		}
+
+		return $extra_content + array('type'=>'text','content'=>'');
 	}
 
 	static function GetImage($src,$attributes = array()){

@@ -53,9 +53,6 @@ body #gp_admin_html #theme_toolbar a{
 #theme_toolbar select{
 	border:1px solid #ccc;
 	background:#fff;
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	padding:3px;
 	width:200px;
@@ -102,9 +99,6 @@ body #gp_admin_html #theme_toolbar a{
 	background:#888;
 	z-index:8100; /*  given 8100 z-index by js */
 	border:3px dotted #FFF;
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	}
 
@@ -145,9 +139,6 @@ body #gp_admin_html #theme_toolbar a{
 	margin:3px;
 	text-decoration:none;
 
-	-moz-border-radius: 3px !important;
-	-webkit-border-radius: 3px !important;
-	-o-border-radius:3px !important;
 	border-radius:3px !important;
 	z-index:8300;
 }
@@ -186,9 +177,6 @@ body #gp_admin_html #theme_toolbar a{
 	height:24px;
 	}
 .add_layout a{
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	padding:4px 7px;
 	color:#fff !important;
@@ -227,9 +215,6 @@ body #gp_admin_html #theme_toolbar a{
 #gp_drag_n_drop > div > div{
 	background-color:#fff;
 	border:1px solid #ddd;
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	padding:10px;
 }

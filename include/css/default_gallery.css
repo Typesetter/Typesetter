@@ -12,9 +12,6 @@
 	padding:.5em .5em 0 .5em;
 	border:1px solid #ccc;
 	height:110px;
-	-moz-border-radius: 9px;
-	-webkit-border-radius: 9px;
-	-o-border-radius: 9px;
 	border-radius:9px;
 	background: #ededed;
 	background: #ededed -moz-linear-gradient(top, #fafafa 5px, #ededed 25px);

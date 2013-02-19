@@ -135,9 +135,6 @@ body #gp_admin_html .gpbutton,
 body #gp_admin_html .gpdisabled{
 	display:inline-block;
 	background-color:#f1f1f1;
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
-	-o-border-radius: 6px;
 	border-radius: 6px;
 	border:1px solid #ccc;
 
@@ -154,9 +151,6 @@ body #gp_admin_html .gpdisabled{
 body #gp_admin_html .gptextarea,
 body #gp_admin_html .gpinput{
 	background:#fff;
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
-	-o-border-radius: 6px;
 	border-radius: 6px;
 	border:1px solid #ccc;
 	color:#333;
@@ -263,9 +257,6 @@ body #gp_admin_html pre{
 	border:2px dashed #000;
 	z-index:90000;
 	padding:0;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-o-border-radius: 3px;
 	border-radius: 3px;
 
 	background-color:#fff; /* important for ie to prevent text selection underneath drag box */
@@ -300,12 +291,7 @@ body #gp_admin_html #admincontent{
 #admincontent_inner{
 	padding:20px 20px 10em 20px;
 	overflow:hidden;
-
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-o-border-radius: 3px;
 	border-radius: 3px;
-
 	background-color:#fff;
 	border:1px solid #ccc;
 }
@@ -441,9 +427,6 @@ input.admin_box_close{
 	padding:0;
 	margin:0;
 	cursor:pointer;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	-o-border-radius:5px;
 	border-radius:5px;
 	}
 
@@ -507,9 +490,6 @@ body.edit_layout .GPAREA{
 	cursor: pointer;
 	padding:5px 6px;
 	margin-top:5px;
-	-moz-border-radius:3px;
-	-o-border-radius:3px;
-	-webkit-border-radius:3px;
 	border-radius:3px;
 	color:#333 !important;
 	background:#f1f1f1;
@@ -535,9 +515,6 @@ body.edit_layout .GPAREA{
 
 
 .collapsible h4.hidden a{
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	}
 
@@ -551,9 +528,6 @@ body.edit_layout .GPAREA{
 	}
 
 .collapsible > div{
-	-moz-border-radius: 0 0 3px 3px;
-	-o-border-radius: 0 0 3px 3px;
-	-webkit-border-radius: 0 0 3px 3px;
 	border-radius: 0 0 3px 3px;
 	background:#fff;
 	padding:5px;
@@ -570,9 +544,6 @@ table.configuration select{
 table.configuration input,
 table.configuration textarea{
 	border:1px solid #bbb;
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	padding:3px;
 	}
@@ -689,9 +660,6 @@ table.tablesorter th.gp_header_desc:before{
 
 	display:block;
 	border:1px solid #000;
-	-moz-border-radius: 5px;
-	-o-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	border-radius: 5px;
 	background: #222;
 	-webkit-box-shadow:0 0 3px rgba(0,0,0,0.6);
@@ -905,9 +873,6 @@ table.tablesorter th.gp_header_desc:before{
 
 #simplepanel.compact .submenu{
 	border:1px solid #000;
-	-moz-border-radius: 5px;
-	-o-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	border-radius: 5px;
 	}
 
@@ -933,9 +898,6 @@ table.tablesorter th.gp_header_desc:before{
 	top:0;
 	background-color:#2b2b2b;
 	border:1px solid #000;
-	-moz-border-radius: 5px;
-	-o-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	border-radius: 5px;
 	}
 
@@ -991,9 +953,6 @@ table.tablesorter th.gp_header_desc:before{
 	opacity: 0.5;
 
 	border:1px dashed red;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-o-border-radius:3px;
 	border-radius:3px;
 
 	-moz-border-image:url("../imgs/editing.gif") 1 repeat;
@@ -1022,8 +981,6 @@ background: linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%
 
 	min-height:17px;
 	min-width:19px;
-	-webkit-border-radius:3px;
-	-moz-border-radius:3px;
 	border-radius:3px;
 	-webkit-box-shadow:0 0 3px rgba(0,0,0,0.6);
 	-moz-box-shadow:0 0 3px rgba(0,0,0,0.6);
@@ -1052,8 +1009,6 @@ background: linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%
 	text-decoration:none !important;
 	text-align:left;
 	white-space:nowrap;
-	-webkit-border-radius:3px;
-	-moz-border-radius:3px;
 	border-radius:3px;
 	}
 
@@ -1066,8 +1021,6 @@ background: linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%
 	width:16px !important;
 	padding:1px !important;
 	z-index:9001;
-	-webkit-border-radius:3px;
-	-moz-border-radius:3px;
 	border-radius:3px;
 	background: url('../imgs/admin_icons.png') no-repeat -7px -232px;
 	border:1px solid transparent;
@@ -1278,9 +1231,6 @@ div.inline_box label{
 	border: 1px solid #fcefa1;
 	background:#fffde6 url(../imgs/error.png) 5px 4px no-repeat;
 	padding:5px 7px 5px 30px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	-o-border-radius:5px;
 	border-radius:5px;
 	}
 .gp_notice,
@@ -1298,9 +1248,6 @@ div.inline_box label{
 	border: 1px solid #6aa84f;
 	padding:5px 7px;
 	background-color:#bdf5a4;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	-o-border-radius:5px;
 	border-radius:5px;
 	}
 
@@ -1310,9 +1257,6 @@ body #addon_about{
 	border:1px solid #ccc;
 	padding:14px;
 	max-width:600px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	-o-border-radius:5px;
 	border-radius:5px;
 	line-height:170%;
 	}
@@ -1338,9 +1282,6 @@ body #addon_about{
 	border:1px solid #aaa;
 	background-color:#f1f1f1;
 	padding:3px 7px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-o-border-radius:3px;
 	border-radius:3px;
 	}
 #gp_admin_html .all_checkboxes label.checked{
@@ -1376,9 +1317,6 @@ body #gp_admin_html .layout_links a{
 	font-weight:bold;
 	margin:3px 7px 3px 0;
 	padding:3px 7px;
-	-moz-border-radius: 3px !important;
-	-webkit-border-radius: 3px !important;
-	-o-border-radius:3px !important;
 	border-radius:3px !important;
 	font-size:13px;
 
@@ -1477,17 +1415,11 @@ body #gp_admin_html .layout_links a.selected{
 .gp_floating_area{
 
 	border:1px solid #fff;
-	-moz-border-radius: 6px;
-	-o-border-radius: 6px;
-	-webkit-border-radius: 6px;
 	border-radius: 6px;
 
 	box-shadow:1px 1px 7px #444;
 	-moz-box-shadow: 1px 1px 7px #444;
 	-webkit-box-shadow:1px 1px 7px #444;
-	-o-box-shadow: 1px 1px 7px #444;
-	-icab-box-shadow: 1px 1px 7px #444;
-	-khtml-box-shadow: 1px 1px 7px #444;
 	background: #ededed;
 	background: #ededed -moz-linear-gradient(top, #fafafa 5px, #ededed 25px);
 	background: #ededed -webkit-linear-gradient(top, #fafafa 5px,#ededed 25px);
@@ -1499,9 +1431,6 @@ body #gp_admin_html .layout_links a.selected{
 #gp_admin_box > div,
 .gp_floating_area > div{
 	padding:4px;
-	-moz-border-radius: 6px;
-	-o-border-radius: 6px;
-	-webkit-border-radius: 6px;
 	border-radius: 6px;
 }
 
@@ -1555,9 +1484,6 @@ body #gp_admin_html .layout_links a.selected{
 	width:15px;
 	height:15px;
 	border:1px solid #7d7d7d;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-o-border-radius:3px;
 	border-radius:3px;
 	cursor:pointer;
 	background: #7d7d7d url(../imgs/dock.gif) no-repeat 50% 2px;
@@ -1594,9 +1520,6 @@ body #gp_admin_html .layout_links a.selected{
 .dd_menu > a{
 	border:1px solid #ccc;
 	overflow:hidden;
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	background:#fff;
 
@@ -1626,9 +1549,6 @@ body #gp_admin_html .layout_links a.selected{
 	position:absolute;
 	padding:3px;
 	display:none;
-	-moz-border-radius: 5px;
-	-o-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	border-radius: 5px;
 	border:1px solid #ccc;
 	top:100%;

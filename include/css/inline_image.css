@@ -35,9 +35,6 @@
 	padding:5px;
 	background-color:#fafafa;
 	border:1px solid #fff;
-	-moz-border-radius: 5px;
-	-o-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	border-radius: 5px;
 	display:inline-block;
 	}
@@ -52,9 +49,6 @@
 	overflow:hidden;
 
 	border:2px solid #ddd;
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	}
 
@@ -100,9 +94,6 @@
 	right:-3px;
 	z-index:102;
 	background: #bbb url('../imgs/delete.png') no-repeat 50% 50%;
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	height:22px;
 	width:22px;
@@ -141,8 +132,6 @@
 	border:1px solid #fafafa;
 
 	border-radius:5px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
 	margin: 0 3px 4px 0;
 	color:#444;
 	white-space:nowrap;
@@ -273,9 +262,6 @@
 #ckeditor_area a.gp_gallery_folder:hover{
 	background-color:#ededed;
 	background-color:rgba(0, 0, 0, 0.05);
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	}
 
@@ -293,9 +279,6 @@
 	padding:5px;
 	background-color:#fafafa;
 	border:1px solid #fff;
-	-moz-border-radius: 5px;
-	-o-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	border-radius: 5px;
 	float:left;
 	}
@@ -318,9 +301,6 @@
 	width:40px;
 	border:1px solid #ccc;
 	padding:2px 3px;
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	text-align:right;
 	}

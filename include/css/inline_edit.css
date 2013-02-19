@@ -70,8 +70,6 @@
 	line-height:18px;
 	display:inline-block;
 	border-radius:5px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
 	margin: 0 3px 4px 0 !important;
 	color:#444 !important;
 	text-shadow:1px 1px 0 #fff;
@@ -115,9 +113,6 @@
 
 .gp_inlude_edit input{
 	border:1px solid #ccc;
-	-moz-border-radius: 5px;
-	-o-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	border-radius: 5px;
 	padding:4px;
 	width:185px;
@@ -152,9 +147,6 @@
 	border-top:none;
 	border-left:left:none;
 	border-right:none;
-	-moz-border-radius: 0;
-	-o-border-radius: 0;
-	-webkit-border-radius: 0;
 	border-radius: 0;
 
 	box-shadow: 0 1px 0 rgba(0,0,0,0.2);
@@ -170,9 +162,6 @@
 	border-left:none;
 	border-right:none;
 	border-bottom:1px solid #f1f1f1;
-	-moz-border-radius: 0;
-	-o-border-radius: 0;
-	-webkit-border-radius: 0;
 	border-radius: 0;
 	padding:7px;
 	}

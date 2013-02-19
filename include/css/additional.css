@@ -33,9 +33,6 @@ body .messages > div{
 	-webkit-box-shadow: 0 3px 5px -2px #E4E4E4;
 	-moz-box-shadow: 0 3px 5px -2px #E4E4E4;
 	*/
-	-moz-border-radius: 0 0 7px 7px;
-	-webkit-border-radius: 0 0 7px 7px;
-	-o-border-radius: 0 0 7px 7px;
 	border-radius:0 0 7px 7px;
 	max-height:250px;
 	overflow:auto;

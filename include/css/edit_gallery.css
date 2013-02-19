@@ -27,9 +27,6 @@
 #select_options a{
 	display:inline-block;
 	margin:1px 3px 1px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-o-border-radius: 3px;
 	border-radius: 3px;
 	font-weight:bold;
 	color:#444 !important;

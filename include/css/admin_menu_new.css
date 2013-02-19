@@ -31,11 +31,6 @@ body #admin_menu li.ui-sortable-helper{
 
 	border:1px solid #fff;
 	background: #f1f1f5 url('../imgs/blank.gif') 3px 50% no-repeat;
-
-
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	-o-border-radius: 4px;
 	border-radius:4px;
 	}
 #admin_menu li.hidechildren ul{
@@ -60,10 +55,7 @@ body #admin_menu li.ui-sortable-helper{
 	}
 
 #admin_menu li div a.haslayout{
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
 	border-radius: 3px;
-	-webkit-border-radius: 3px;
 	vertical-align:middle;
 	}
 
@@ -109,12 +101,7 @@ body #admin_menu li.ui-sortable-helper{
 	margin-top:-10px;
 	border:1px solid #bbb;
 	background:#fff;
-
 	min-width:180px;
-
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	-o-border-radius: 4px;
 	border-radius:4px;
 }
 
@@ -169,10 +156,7 @@ body #admin_menu li.ui-sortable-helper{
 	}
 
 #admin_menu_div .layout_icon{
-	-moz-border-radius: 5px;
-	-o-border-radius: 5px;
 	border-radius: 5px;
-	-webkit-border-radius: 5px;
 	}
 
 #admin_menu_div .undo_icon{
@@ -204,9 +188,6 @@ body #admin_menu li.ui-sortable-helper{
 .placeholder{
 	border:1px dashed #889888;
 	background:#DFF1DF !important;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	-o-border-radius: 4px;
 	border-radius:4px;
 	}
 
@@ -232,10 +213,6 @@ body #admin_menu li.ui-sortable-helper{
 	text-decoration:none;
 	color:#666;
 	background-color:#f5f5f5;
-
-	-moz-border-radius: 4px;
-	-webkit-border-radius:4px;
-	-o-border-radius: 4px;
 	border-radius:4px;
 	}
 #gp_menu_available .gp_search_links a.current{

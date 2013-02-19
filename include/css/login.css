@@ -10,9 +10,6 @@
 	margin:10px;
 	width:250px;
 	color:#444;
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
-	-o-border-radius: 6px;
 	border-radius:6px;
 	}
 
@@ -32,9 +29,6 @@
 
 	padding:3px 10px;
 	margin:1.5em 0;
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
-	-o-border-radius: 6px;
 	border-radius:6px;
 	cursor:pointer;
 	}
@@ -89,10 +83,6 @@
 	padding:10px;
 	background-color:#fff1a8;
 	border:1px solid #bfb178;
-
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
-	-o-border-radius: 6px;
 	border-radius:6px;
 }
 

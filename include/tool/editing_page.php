@@ -494,39 +494,13 @@ class editing_page extends display{
 		//for ajax responses
 		$page->ajaxReplace = array();
 
-		$section = $_POST['section'];
-		if( !is_numeric($section) ){
+		$section =& $_POST['section'];
+		if( !is_numeric($section) || !isset($this->file_sections[$section]) ){
 			message($langmessage['OOPS'].'(1)');
 			return false;
 		}
-
-		if( !isset($this->file_sections[$section]) ){
-			message($langmessage['OOPS'].'(1)');
-			return false;
-		}
-
-		$type = $this->file_sections[$section]['type'];
-
-
-		switch($type){
-			case 'include':
-				$data = array();
-				$data['type'] = $type;
-				if( !empty($_POST['gadget_include']) ){
-					$data['include_type'] = 'gadget';
-					$data['content'] = $_POST['gadget_include'];
-				}else{
-					$data['content'] = $_POST['file_include'];
-				}
-
-
-				$content = section_content::RenderSection($data,$section,$this->title,$this->file_stats);
-				$page->ajaxReplace[] = array('gp_include_content','',$content);
-			break;
-			default:
-				message($langmessage['OOPS'].'(2)');
-			return false;
-		}
+		$section_content = $this->file_sections[$section];
+		gp_edit::PreviewSection( $section_content, $section, $this->title, $this->file_stats );
 	}
 
 	function SaveSection(){
@@ -536,7 +510,7 @@ class editing_page extends display{
 		$page->ajaxReplace = array();
 
 
-		//check
+		// check
 		$section =& $_POST['section'];
 		if( !is_numeric($section) ){
 			message($langmessage['OOPS'].'(1)');
@@ -548,28 +522,11 @@ class editing_page extends display{
 			return false;
 		}
 
-		$type = $this->file_sections[$section]['type'];
 		$check_before = serialize($this);
 		$check_before = sha1( $check_before ) . md5( $check_before );
 
-		$save_this = false;
-		switch($type){
-			case 'text':
-				$save_this = true;
-				$this->SaveSection_Text($section);
-			break;
-			case 'gallery':
-				$save_this = true;
-				$this->SaveSection_Text($section);
-				$this->GalleryEdited();
-			break;
-			case 'include':
-				$save_this = $this->SaveSection_Include($section);
-			break;
-		}
-
-		$save_this = gpPlugin::Filter('SaveSection',array($save_this,$section,$type));
-		if( $save_this !== true ){
+		$save_this = gp_edit::SectionFromPost( $this->file_sections[$section], $section, $this->title, $this->file_stats );
+		if( !$save_this ){
 			message($langmessage['OOPS'].'(2)');
 			return false;
 		}
@@ -577,15 +534,22 @@ class editing_page extends display{
 		//save if the file was changed
 		$check_after = serialize($this);
 		$check_after = sha1( $check_after ) . md5( $check_after );
-		if( $check_before != $check_after ){
-			if( !$this->SaveThis() ){
-				message($langmessage['OOPS'].'(3)');
-				return false;
-			}
+		if( $check_before != $check_after && !$this->SaveThis() ){
+			message($langmessage['OOPS'].'(3)');
+			return false;
 		}
 
 		$page->ajaxReplace[] = array('ck_saved','','');
 		message($langmessage['SAVED']);
+
+
+		//update gallery information
+		switch($this->file_sections[$section]['type']){
+			case 'gallery':
+				$this->GalleryEdited();
+			break;
+		}
+
 		return true;
 	}
 
@@ -826,56 +790,6 @@ class editing_page extends display{
 	}
 
 
-	function SaveSection_Include($section){
-		global $page, $langmessage, $gp_index, $config;
-
-
-		$section_data = $this->file_sections[$section];
-		unset($section_data['index']);
-
-		if( !empty($_POST['gadget_include']) ){
-			$gadget = $_POST['gadget_include'];
-			if( !isset($config['gadgets'][$gadget]) ){
-				message($langmessage['OOPS_TITLE']);
-				return false;
-			}
-
-			$section_data['include_type'] = 'gadget';
-			$section_data['content'] = $gadget;
-		}else{
-			$title = $_POST['file_include'];
-			if( !isset($gp_index[$title]) ){
-				message($langmessage['OOPS_TITLE']);
-				return false;
-			}
-			$section_data['include_type'] = common::SpecialOrAdmin($title);
-			$section_data['index'] = $gp_index[$title];
-			$section_data['content'] = $title;
-		}
-
-		$this->file_sections[$section] = $section_data;
-
-		//send replacement content
-		$content = section_content::RenderSection($section_data,$section,$this->title,$this->file_stats);
-		$page->ajaxReplace[] = array('gp_include_content','',$content);
-		return true;
-	}
-
-
-	function SaveSection_Text($section){
-		global $config;
-		$content =& $_POST['gpcontent'];
-		gpFiles::cleanText($content);
-		$this->file_sections[$section]['content'] = $content;
-
-		if( $config['resize_images'] ){
-			gp_edit::ResizeImages($this->file_sections[$section]['content'],$this->file_sections[$section]['resized_imgs']);
-		}
-
-		return true;
-	}
-
-
 	/**
 	 * Extract information about the gallery from it's html: img_count, icon_src
 	 * Call GalleryEdited when a gallery section is removed, edited
@@ -1017,7 +931,7 @@ class editing_page extends display{
 	 * Include Editing
 	 */
 	function IncludeDialog(){
-		global $page,$langmessage,$config;
+		global $page,$langmessage;
 
 		$page->ajaxReplace = array();
 
@@ -1027,66 +941,7 @@ class editing_page extends display{
 			return;
 		}
 
-		$include_type =& $this->file_sections[$section]['include_type'];
-
-		$gadget_content = '';
-		$file_content = '';
-		switch($include_type){
-			case 'gadget':
-				$gadget_content =& $this->file_sections[$section]['content'];
-			break;
-			default:
-				$file_content =& $this->file_sections[$section]['content'];
-			break;
-		}
-
-		ob_start();
-
-		echo '<form id="gp_include_form">';
-
-		echo '<div class="gp_inlude_edit">';
-		echo '<span class="label">';
-		echo $langmessage['File Include'];
-		echo '</span>';
-		echo '<input type="text" size="" id="gp_file_include" name="file_include" class="autocomplete" value="'.htmlspecialchars($file_content).'" />';
-		echo '</div>';
-
-		echo '<div class="gp_inlude_edit">';
-		echo '<span class="label">';
-		echo $langmessage['gadgets'];
-		echo '</span>';
-		echo '<input type="text" size="" id="gp_gadget_include" name="gadget_include" class="autocomplete" value="'.htmlspecialchars($gadget_content).'" />';
-		echo '</div>';
-
-		echo '<div id="gp_option_area">';
-		echo '<a data-cmd="gp_include_preview" class="ckeditor_control full_width">Preview</a>';
-		echo '</div>';
-
-		echo '</form>';
-
-
-		$content = ob_get_clean();
-		$page->ajaxReplace[] = array('gp_include_dialog','',$content);
-
-
-		//file include autocomplete
-		$options['admin_vals'] = false;
-		$options['var_name'] = 'source';
-		$file_includes = gp_edit::AutoCompleteValues(false,$options);
-		$page->ajaxReplace[] = array('gp_autocomplete_include','file',$file_includes);
-
-
-		//gadget include autocomplete
-		$code = 'var source=[';
-		if( isset($config['gadgets']) ){
-			foreach($config['gadgets'] as $uniq => $info){
-				$code .= '["'.addslashes($uniq).'","'.addslashes($uniq).'"],';
-			}
-		}
-		$code .= ']';
-
-		$page->ajaxReplace[] = array('gp_autocomplete_include','gadget',$code);
-
+		gp_edit::IncludeDialog($this->file_sections[$section]);
 	}
 
 }

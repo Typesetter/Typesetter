@@ -711,4 +711,182 @@ class gp_edit{
 		return gpPlugin::Filter('GetDefaultContent',array($default_content,$type));
 	}
 
+
+	/**
+	 * Include Editing
+	 *
+	 */
+	function IncludeDialog( $section ){
+		global $page,$langmessage,$config;
+
+		$page->ajaxReplace = array();
+
+		$include_type =& $section['include_type'];
+
+		$gadget_content = '';
+		$file_content = '';
+		switch($include_type){
+			case 'gadget':
+				$gadget_content =& $section['content'];
+			break;
+			default:
+				$file_content =& $section['content'];
+			break;
+		}
+
+		ob_start();
+
+		echo '<form id="gp_include_form">';
+
+		echo '<div class="gp_inlude_edit">';
+		echo '<span class="label">';
+		echo $langmessage['File Include'];
+		echo '</span>';
+		echo '<input type="text" size="" id="gp_file_include" name="file_include" class="autocomplete" value="'.htmlspecialchars($file_content).'" />';
+		echo '</div>';
+
+		echo '<div class="gp_inlude_edit">';
+		echo '<span class="label">';
+		echo $langmessage['gadgets'];
+		echo '</span>';
+		echo '<input type="text" size="" id="gp_gadget_include" name="gadget_include" class="autocomplete" value="'.htmlspecialchars($gadget_content).'" />';
+		echo '</div>';
+
+		echo '<div id="gp_option_area">';
+		echo '<a data-cmd="gp_include_preview" class="ckeditor_control full_width">Preview</a>';
+		echo '</div>';
+
+		echo '</form>';
+
+
+		$content = ob_get_clean();
+		$page->ajaxReplace[] = array('gp_include_dialog','',$content);
+
+
+		//file include autocomplete
+		$options['admin_vals'] = false;
+		$options['var_name'] = 'source';
+		$file_includes = gp_edit::AutoCompleteValues(false,$options);
+		$page->ajaxReplace[] = array('gp_autocomplete_include','file',$file_includes);
+
+
+		//gadget include autocomplete
+		$code = 'var source=[';
+		if( isset($config['gadgets']) ){
+			foreach($config['gadgets'] as $uniq => $info){
+				$code .= '["'.addslashes($uniq).'","'.addslashes($uniq).'"],';
+			}
+		}
+		$code .= ']';
+
+		$page->ajaxReplace[] = array('gp_autocomplete_include','gadget',$code);
+
+	}
+
+	function PreviewSection($section,$section_num,$title,$file_stats){
+		global $page,$langmessage;
+
+		//for ajax responses
+		$page->ajaxReplace = array();
+
+		switch($section['type']){
+			case 'include':
+				$data = array();
+				$data['type'] = $section['type'];
+				if( !empty($_POST['gadget_include']) ){
+					$data['include_type'] = 'gadget';
+					$data['content'] = $_POST['gadget_include'];
+				}else{
+					$data['content'] = $_POST['file_include'];
+				}
+
+				$content = section_content::RenderSection( $data, $section_num, $title, $file_stats );
+				$page->ajaxReplace[] = array('gp_include_content','',$content);
+			break;
+			default:
+				message($langmessage['OOPS'].'(2)');
+			return false;
+		}
+	}
+
+	/**
+	 * Return an array
+	 *
+	 */
+	static function SectionFromPost( &$existing_section, $section_num, $title, $file_stats ){
+		global $page, $langmessage;
+
+		$type = $existing_section['type'];
+		$save_this = false;
+		switch($type){
+			case 'text':
+				$save_this = true;
+				self::SectionFromPost_Text( $existing_section );
+			break;
+			case 'gallery':
+				$save_this = true;
+				self::SectionFromPost_Text( $existing_section );
+			break;
+			case 'include':
+				$save_this = self::SectionFromPost_Include( $existing_section, $section_num, $title, $file_stats );
+			break;
+		}
+
+		return gpPlugin::Filter( 'SaveSection', array( $save_this, $section_num, $type) );
+	}
+
+
+	/**
+	 * Get the posted content for a text area
+	 *
+	 */
+	static function SectionFromPost_Text( &$section ){
+		global $config;
+		$content =& $_POST['gpcontent'];
+		gpFiles::cleanText($content);
+		$section['content'] = $content;
+
+		if( $config['resize_images'] ){
+			gp_edit::ResizeImages( $section['content'], $section['resized_imgs'] );
+		}
+
+		return true;
+	}
+
+	/**
+	 *
+	 *
+	 */
+	static function SectionFromPost_Include( &$existing_section, $section_num, $title, $file_stats ){
+		global $page, $langmessage, $gp_index, $config;
+
+		unset($existing_section['index']);
+
+		if( !empty($_POST['gadget_include']) ){
+			$gadget = $_POST['gadget_include'];
+			if( !isset($config['gadgets'][$gadget]) ){
+				message($langmessage['OOPS_TITLE']);
+				return false;
+			}
+
+			$existing_section['include_type'] = 'gadget';
+			$existing_section['content'] = $gadget;
+		}else{
+			$include_title = $_POST['file_include'];
+			if( !isset($gp_index[$include_title]) ){
+				message($langmessage['OOPS_TITLE']);
+				return false;
+			}
+			$existing_section['include_type'] = common::SpecialOrAdmin($include_title);
+			$existing_section['index'] = $gp_index[$include_title];
+			$existing_section['content'] = $include_title;
+		}
+
+
+		//send replacement content
+		$content = section_content::RenderSection( $existing_section, $section_num, $title, $file_stats );
+		$page->ajaxReplace[] = array('gp_include_content','',$content);
+		return true;
+	}
+
 }

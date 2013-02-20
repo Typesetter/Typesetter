@@ -249,6 +249,7 @@ class section_content{
 		}else{
 			$type = common::SpecialOrAdmin($requested);
 		}
+
 		switch($type){
 			case 'gadget':
 			return self::IncludeGadget($requested);

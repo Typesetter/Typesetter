@@ -620,12 +620,7 @@ class gpOutput{
 			return;
 		}
 
-		$info = $config['gadgets'][$id];
-		if( !isset($info['addon']) ){
-			return;
-		}
-
-		gpOutput::ExecArea($info);
+		gpOutput::ExecArea($config['gadgets'][$id]);
 	}
 
 	/**

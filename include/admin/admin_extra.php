@@ -1,6 +1,9 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
+includeFile('tool/editing.php');
+includeFile('tool/SectionContent.php');
+
 class admin_extra{
 
 	var $folder;
@@ -9,20 +12,15 @@ class admin_extra{
 	function admin_extra(){
 		global $langmessage, $dataDir;
 
-		includeFile('tool/SectionContent.php');
 		$this->folder = $dataDir.'/data/_extra';
 		$this->Getdata();
+
+		message('newdirform() needed?');
 
 		$cmd = common::GetCommand();
 
 		$show = true;
 		switch($cmd){
-
-			/* gallery editing */
-			case 'gallery_folder':
-			case 'gallery_images':
-				$this->GalleryImages();
-			return;
 
 
 			case 'delete';
@@ -33,7 +31,7 @@ class admin_extra{
 				$this->NewSection();
 			break;
 
-			case 'preview':
+			case 'view':
 				$this->Preview();
 				$show = false;
 			break;
@@ -56,6 +54,20 @@ class admin_extra{
 				$this->InlineEdit();
 			die();
 
+
+			/* include editing */
+			case 'preview':
+				$this->PreviewSection();
+			return;
+			case 'include_dialog':
+				$this->IncludeDialog();
+			return;
+
+			/* gallery editing */
+			case 'gallery_folder':
+			case 'gallery_images':
+				$this->GalleryImages();
+			return;
 		}
 
 		if( $show ){
@@ -70,12 +82,12 @@ class admin_extra{
 
 	function InlineEdit(){
 
-		$title = gp_edit::CleanTitle($_REQUEST['file']);
-		if( empty($title) ){
+		$file = gp_edit::CleanTitle($_REQUEST['file']);
+		if( empty($file) ){
 			return false;
 		}
 
-		$data = gpOutput::ExtraContent($title);
+		$data = gpOutput::ExtraContent($file);
 		includeFile('tool/ajax.php');
 		gpAjax::InlineEdit($data);
 
@@ -187,7 +199,7 @@ class admin_extra{
 				echo ' &nbsp; ';
 			}
 
-			echo common::Link('Admin_Extra',$langmessage['preview'],'cmd=preview&file='.$file);
+			echo common::Link('Admin_Extra',$langmessage['preview'],'cmd=view&file='.$file);
 			echo ' &nbsp; ';
 
 			$title = sprintf($langmessage['generic_delete_confirm'],htmlspecialchars($file));
@@ -254,21 +266,33 @@ class admin_extra{
 			return false;
 		}
 
-		$title = gp_edit::CleanTitle($_REQUEST['file']);
-		$file = $this->folder.'/'.$title.'.php';
-		$data = gpOutput::ExtraContent($title);
-		$data['content'] = $_POST['gpcontent'];
-		gpFiles::cleanText($data['content']);
+		//get file data
+		$file = gp_edit::CleanTitle( $_REQUEST['file'] );
+		$data = gpOutput::ExtraContent( $file, $file_stats );
+		$page->file_sections = array( $data ); //hack so the SaveSection filter works
 
-		if( !gpFiles::SaveArray($file,'extra_content',$data) ){
+
+		//get the new content
+		$save_this = gp_edit::SectionFromPost( $data, 0, '', $file_stats );
+		if( !$save_this ){
 			message($langmessage['OOPS']);
 			$this->EditExtra();
 			return false;
 		}
 
+
+		//save the new content
+		$file_full = $this->folder.'/'.$file.'.php';
+		if( !gpFiles::SaveArray( $file_full, 'extra_content', $data ) ){
+			message($langmessage['OOPS']);
+			$this->EditExtra();
+			return false;
+		}
+
+
 		$page->ajaxReplace[] = array('ck_saved','','');
 		message($langmessage['SAVED']);
-		$this->areas[$title] = $title;
+		$this->areas[$file] = $file;
 		return true;
 	}
 
@@ -309,15 +333,14 @@ class admin_extra{
 	 */
 	function Preview(){
 		global $langmessage;
-		$name = gp_edit::CleanTitle($_REQUEST['file']);
+		$file = gp_edit::CleanTitle($_REQUEST['file']);
 
 		echo '<h2>';
 		echo common::Link('Admin_Extra',$langmessage['theme_content']);
-		echo ' &#187; ';
-		echo $name;
+		echo ' &#187; '.str_replace('_',' ',$file).'</h2>';
 		echo '</h2>';
 
-		gpOutput::GetExtra($name);
+		gpOutput::GetExtra($file);
 	}
 
 	function GalleryImages(){
@@ -335,6 +358,24 @@ class admin_extra{
 
 		includeFile('admin/admin_uploaded.php');
 		admin_uploaded::InlineList($dir_piece);
+	}
+
+
+	function IncludeDialog(){
+		$file = gp_edit::CleanTitle($_REQUEST['file']);
+		$data = gpOutput::ExtraContent($file);
+		gp_edit::IncludeDialog($data);
+	}
+
+	function PreviewSection(){
+		global $page,$langmessage;
+
+		//for ajax responses
+		$page->ajaxReplace = array();
+
+		$file = gp_edit::CleanTitle($_REQUEST['file']);
+		$data = gpOutput::ExtraContent( $file, $file_stats );
+		gp_edit::PreviewSection( $data, 0, '', $file_stats );
 	}
 
 }

@@ -471,11 +471,8 @@ class editing_page extends display{
 	 */
 	static function SectionTypes(){
 		global $langmessage;
-		$section_types['text']['label']		= $langmessage['editable_text'];
-		$section_types['gallery']['label']	= $langmessage['Image Gallery'];
-		$section_types['include']['label']	= $langmessage['File Include'];
 
-		$section_types = gpPlugin::Filter('SectionTypes',array($section_types));
+		$section_types = section_content::GetTypes();
 
 		$checked = 'checked="checked"';
 		foreach($section_types as $type => $type_info){

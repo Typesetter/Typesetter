@@ -895,6 +895,8 @@ $(function(){
 						$gp.SaveGPUI();
 					}
 				});
+		}else{
+			$('#admincontainer').css('width','auto');
 		}
 
 

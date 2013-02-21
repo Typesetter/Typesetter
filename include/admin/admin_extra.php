@@ -34,10 +34,6 @@ class admin_extra{
 				$show = false;
 			break;
 
-			//case 'save':
-			//	$this->SaveExtra();
-			//	$show = false;
-			//break
 			case 'edit':
 				if( $this->EditExtra() ){
 					$show = false;
@@ -234,52 +230,6 @@ class admin_extra{
 		echo '<input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit" />';
 		echo '<input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="gpcancel"/>';
 		echo '</form>';
-		return true;
-	}
-
-	/**
-	 * Save the posted content for an extra content area
-	 *
-	 */
-	function SaveExtra(){
-		global $langmessage,$page;
-
-		//for ajax responses
-		$page->ajaxReplace = array();
-
-		if( empty($_REQUEST['file']) ){
-			message($langmessage['OOPS']);
-			$this->EditExtra();
-			return false;
-		}
-
-		//get file data
-		$file = gp_edit::CleanTitle( $_REQUEST['file'] );
-		$data = gpOutput::ExtraContent( $file, $file_stats );
-		$page->file_sections = array( $data ); //hack so the SaveSection filter works
-
-
-		//get the new content
-		$save_this = gp_edit::SectionFromPost( $data, 0, '', $file_stats );
-		if( !$save_this ){
-			message($langmessage['OOPS']);
-			$this->EditExtra();
-			return false;
-		}
-
-
-		//save the new content
-		$file_full = $this->folder.'/'.$file.'.php';
-		if( !gpFiles::SaveArray( $file_full, 'extra_content', $data ) ){
-			message($langmessage['OOPS']);
-			$this->EditExtra();
-			return false;
-		}
-
-
-		$page->ajaxReplace[] = array('ck_saved','','');
-		message($langmessage['SAVED']);
-		$this->areas[$file] = $file;
 		return true;
 	}
 

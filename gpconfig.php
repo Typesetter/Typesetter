@@ -101,7 +101,7 @@ define('gp_chmod_dir',0755);
  * Set to true to display php errors in the browser window.
  * Defaults to false
  */
-define('gpdebug',true);
+//define('gpdebug',true);
 
 
 /**

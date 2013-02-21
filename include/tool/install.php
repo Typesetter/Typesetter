@@ -208,7 +208,7 @@ class Install_Tools{
 
 
 		$content = '<h2>Welcome!</h2>
-		<p>Welcome to your new gpEasy powered website. Now that gpEasy is installed, you can start editing the content and customising your site.</p>
+		<p>Welcome to your new gpEasy powered website. Now that gpEasy is installed, you can start editing the content and customizing your site.</p>
 		<h3>Getting Started</h3>
 		<p>You are currently viewing the default home page of your website. Here\'s a quick description of how to edit this page.</p>
 		<ol>

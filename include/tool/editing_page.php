@@ -87,7 +87,7 @@ class editing_page extends display{
 			switch($cmd){
 
 				case 'new_dir':
-					$this->NewDirForm();
+					$this->contentBuffer = gp_edit::NewDirForm();
 				return;
 
 				//section editing
@@ -550,7 +550,7 @@ class editing_page extends display{
 		return true;
 	}
 
-	function SaveThis(){
+	function SaveThis( $backup = true ){
 
 		if( !is_array($this->meta_data) || !is_array($this->file_sections) ){
 			return false;
@@ -560,7 +560,9 @@ class editing_page extends display{
 		if( !isset($this->meta_data['file_number']) ){
 			$this->meta_data['file_number'] = gpFiles::NewFileNumber();
 		}
-		$this->SaveBackup(); //make a backup of the page file
+		if( $backup ){
+			$this->SaveBackup(); //make a backup of the page file
+		}
 
 		return gpFiles::SaveArray($this->file,'meta_data',$this->meta_data,'file_sections',$this->file_sections);
 	}
@@ -890,39 +892,13 @@ class editing_page extends display{
 		}
 		//remember browse directory
 		$this->meta_data['gallery_dir'] = $dir_piece;
-		$this->SaveThis();
+		$this->SaveThis(false);
 
 		includeFile('admin/admin_uploaded.php');
 		admin_uploaded::InlineList($dir_piece);
 	}
 
 
-	function NewDirForm(){
-		global $langmessage;
-		includeFile('admin/admin_uploaded.php');
-
-		ob_start();
-
-		echo '<div class="inline_box">';
-		$img = '<img src="'.common::GetDir('/include/imgs/folder.png').'" height="16" width="16" alt=""/> ';
-		echo '<h2>'.$img.$langmessage['create_dir'].'</h2>';
-		echo '<form action="'.common::GetUrl($this->title).'" method="post" >';
-		echo '<p>';
-		echo htmlspecialchars($_GET['dir']).'/';
-		echo ' <input type="text" class="gpinput" name="newdir" size="30" />';
-		echo '</p>';
-		echo '<p>';
-		if( !empty($_GET['dir']) ){
-			echo ' <input type="hidden" name="dir" value="'.htmlspecialchars($_GET['dir']).'" />';
-		}
-		echo '<input type="submit" name="aaa" value="'.$langmessage['create_dir'].'" class="gp_gallery_folder_add gpsubmit"/>';
-		echo ' <input type="submit" name="" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel"/>';
-		echo '</p>';
-		echo '</form>';
-		echo '</div>';
-
-		$this->contentBuffer = ob_get_clean();
-	}
 
 	/*
 	 * Include Editing

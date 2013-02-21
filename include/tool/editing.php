@@ -781,32 +781,7 @@ class gp_edit{
 
 		$page->ajaxReplace[] = array('gp_autocomplete_include','gadget',$code);
 
-	}
-
-	function PreviewSection($section,$section_num,$title,$file_stats){
-		global $page,$langmessage;
-
-		//for ajax responses
-		$page->ajaxReplace = array();
-
-		switch($section['type']){
-			case 'include':
-				$data = array();
-				$data['type'] = $section['type'];
-				if( !empty($_POST['gadget_include']) ){
-					$data['include_type'] = 'gadget';
-					$data['content'] = $_POST['gadget_include'];
-				}else{
-					$data['content'] = $_POST['file_include'];
-				}
-
-				$content = section_content::RenderSection( $data, $section_num, $title, $file_stats );
-				$page->ajaxReplace[] = array('gp_include_content','',$content);
-			break;
-			default:
-				message($langmessage['OOPS'].'(2)');
-			return false;
-		}
+		return false;
 	}
 
 	/**
@@ -888,5 +863,109 @@ class gp_edit{
 		$page->ajaxReplace[] = array('gp_include_content','',$content);
 		return true;
 	}
+
+
+
+	/**
+	 * Preview an include section
+	 *
+	 */
+	function PreviewSection( $section, $section_num, $title, $file_stats ){
+		global $page,$langmessage;
+
+		//for ajax responses
+		$page->ajaxReplace = array();
+
+		switch($section['type']){
+			case 'include':
+				$data = array();
+				$data['type'] = $section['type'];
+				if( !empty($_POST['gadget_include']) ){
+					$data['include_type'] = 'gadget';
+					$data['content'] = $_POST['gadget_include'];
+				}else{
+					$data['content'] = $_POST['file_include'];
+				}
+
+				$content = section_content::RenderSection( $data, $section_num, $title, $file_stats );
+				$page->ajaxReplace[] = array('gp_include_content','',$content);
+			return;
+		}
+
+		message($langmessage['OOPS'].'(2)');
+	}
+
+
+	/**
+	 * Display a form for creating a new directory
+	 *
+	 */
+	function NewDirForm(){
+		global $langmessage, $page;
+		includeFile('admin/admin_uploaded.php');
+
+		ob_start();
+
+		echo '<div class="inline_box">';
+		$img = '<img src="'.common::GetDir('/include/imgs/folder.png').'" height="16" width="16" alt=""/> ';
+		echo '<h2>'.$img.$langmessage['create_dir'].'</h2>';
+		echo '<form action="'.common::GetUrl($page->title).'" method="post" >';
+		echo '<p>';
+		echo htmlspecialchars($_GET['dir']).'/';
+		echo ' <input type="text" class="gpinput" name="newdir" size="30" />';
+		echo '</p>';
+		echo '<p>';
+		if( !empty($_GET['dir']) ){
+			echo ' <input type="hidden" name="dir" value="'.htmlspecialchars($_GET['dir']).'" />';
+		}
+		echo '<input type="submit" name="aaa" value="'.$langmessage['create_dir'].'" class="gp_gallery_folder_add gpsubmit"/>';
+		echo ' <input type="submit" name="" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel"/>';
+		echo '</p>';
+		echo '</form>';
+		echo '</div>';
+
+		return ob_get_clean();
+	}
+
+
+	/**
+	 * Perform various section editing commands
+	 *
+	 * @return bool true if $section should be saved
+	 *
+	 */
+	static function SectionEdit( $cmd, &$section, $section_num, $title, $file_stats ){
+
+		switch($cmd){
+
+
+			case 'preview':
+			self::PreviewSection( $section, $section_num, $title, $file_stats );
+			return false;
+
+
+			case 'include_dialog':
+			self::IncludeDialog( $section );
+			return false;
+
+
+			case 'inlineedit':
+			includeFile('tool/ajax.php');
+			gpAjax::InlineEdit( $section );
+			die();
+
+
+			case 'save':
+			return gp_edit::SectionFromPost( $section, $section_num, $title, $file_stats );
+
+		}
+
+		message($langmessage['OOPS'].'(Uknown Command)');
+		return false;
+	}
+
+
+
+
 
 }

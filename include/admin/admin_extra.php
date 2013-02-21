@@ -15,8 +15,6 @@ class admin_extra{
 		$this->folder = $dataDir.'/data/_extra';
 		$this->Getdata();
 
-		message('newdirform() needed?');
-
 		$cmd = common::GetCommand();
 
 		$show = true;
@@ -32,14 +30,14 @@ class admin_extra{
 			break;
 
 			case 'view':
-				$this->Preview();
+				$this->PreviewText();
 				$show = false;
 			break;
 
-			case 'save':
-				if( $this->SaveExtra() ){
-					break;
-				}
+			//case 'save':
+			//	$this->SaveExtra();
+			//	$show = false;
+			//break
 			case 'edit':
 				if( $this->EditExtra() ){
 					$show = false;
@@ -50,24 +48,25 @@ class admin_extra{
 				$this->RawContent();
 			break;
 
-			case 'inlineedit':
-				$this->InlineEdit();
-			die();
-
-
-			/* include editing */
-			case 'preview':
-				$this->PreviewSection();
-			return;
-			case 'include_dialog':
-				$this->IncludeDialog();
-			return;
 
 			/* gallery editing */
 			case 'gallery_folder':
 			case 'gallery_images':
 				$this->GalleryImages();
 			return;
+
+			case 'new_dir':
+				gp_edit::NewDirForm();
+			return;
+
+			/* inline editing */
+			case 'save':
+			case 'inlineedit':
+			case 'include_dialog':
+			case 'preview':
+				$this->SectionEdit($cmd);
+			return;
+
 		}
 
 		if( $show ){
@@ -78,19 +77,6 @@ class admin_extra{
 	function Getdata(){
 		$this->areas = gpFiles::ReadDir($this->folder);
 		asort($this->areas);
-	}
-
-	function InlineEdit(){
-
-		$file = gp_edit::CleanTitle($_REQUEST['file']);
-		if( empty($file) ){
-			return false;
-		}
-
-		$data = gpOutput::ExtraContent($file);
-		includeFile('tool/ajax.php');
-		gpAjax::InlineEdit($data);
-
 	}
 
 
@@ -263,6 +249,7 @@ class admin_extra{
 
 		if( empty($_REQUEST['file']) ){
 			message($langmessage['OOPS']);
+			$this->EditExtra();
 			return false;
 		}
 
@@ -331,7 +318,7 @@ class admin_extra{
 	 * Preview
 	 *
 	 */
-	function Preview(){
+	function PreviewText(){
 		global $langmessage;
 		$file = gp_edit::CleanTitle($_REQUEST['file']);
 
@@ -361,21 +348,47 @@ class admin_extra{
 	}
 
 
-	function IncludeDialog(){
-		$file = gp_edit::CleanTitle($_REQUEST['file']);
-		$data = gpOutput::ExtraContent($file);
-		gp_edit::IncludeDialog($data);
-	}
 
-	function PreviewSection(){
-		global $page,$langmessage;
 
-		//for ajax responses
+
+	/**
+	 * Perform various section editing commands
+	 *
+	 */
+	function SectionEdit($cmd){
+		global $page, $langmessage;
+
+		if( empty($_REQUEST['file']) ){
+			message($langmessage['OOPS']);
+			return false;
+		}
+
 		$page->ajaxReplace = array();
 
 		$file = gp_edit::CleanTitle($_REQUEST['file']);
 		$data = gpOutput::ExtraContent( $file, $file_stats );
-		gp_edit::PreviewSection( $data, 0, '', $file_stats );
+
+		$page->file_sections = array( $data ); //hack so the SaveSection filter works
+		$page->file_stats = $file_stats;
+		if( !gp_edit::SectionEdit( $cmd, $data, 0, '', $file_stats ) ){
+			return;
+		}
+
+		//save the new content
+		$file_full = $this->folder.'/'.$file.'.php';
+		if( !gpFiles::SaveArray( $file_full, 'extra_content', $data ) ){
+			message($langmessage['OOPS']);
+			$this->EditExtra();
+			return false;
+		}
+
+
+		$page->ajaxReplace[] = array('ck_saved','','');
+		message($langmessage['SAVED']);
+		$this->areas[$file] = $file;
+		$this->EditExtra();
+		return true;
+
 	}
 
 }

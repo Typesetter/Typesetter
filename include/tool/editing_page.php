@@ -179,7 +179,7 @@ class editing_page extends display{
 
 
 		//update gallery information
-		switch($this->file_sections[$section]['type']){
+		switch($this->file_sections[$section_num]['type']){
 			case 'gallery':
 				$this->GalleryEdited();
 			break;

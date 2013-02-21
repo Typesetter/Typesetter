@@ -150,7 +150,7 @@ class editing_page extends display{
 	 *
 	 */
 	function SectionEdit($cmd){
-		global $page;
+		global $page, $langmessage;
 
 		$section_num = $_REQUEST['section'];
 		if( !is_numeric($section_num) || !isset($this->file_sections[$section_num])){

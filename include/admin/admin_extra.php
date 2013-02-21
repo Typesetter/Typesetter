@@ -298,9 +298,6 @@ class admin_extra{
 	}
 
 
-
-
-
 	/**
 	 * Perform various section editing commands
 	 *

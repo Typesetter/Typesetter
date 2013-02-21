@@ -86,10 +86,6 @@ class editing_page extends display{
 
 			switch($cmd){
 
-				case 'new_dir':
-					$this->contentBuffer = gp_edit::NewDirForm();
-				return;
-
 				//section editing
 				case 'move_up':
 					$this->MoveUp();
@@ -107,10 +103,6 @@ class editing_page extends display{
 					$this->RmSection();
 				break;
 
-				case 'save':
-					$this->SaveSection();
-				return;
-
 				case 'rawcontent':
 					$this->RawContent();
 				break;
@@ -122,18 +114,18 @@ class editing_page extends display{
 					$this->GalleryImages();
 				return;
 
-				/* include editing */
-				case 'preview':
-					$this->PreviewSection();
-				return;
-				case 'include_dialog':
-					$this->IncludeDialog();
+				case 'new_dir':
+					$this->contentBuffer = gp_edit::NewDirForm();
 				return;
 
 				/* inline editing */
+				case 'save':
+				case 'preview':
 				case 'inlineedit':
-					$this->InlineEdit();
-				die();
+				case 'include_dialog':
+					$this->SectionEdit($cmd);
+				return;
+
 
 				/* revision history */
 				case 'view_revision':
@@ -145,22 +137,57 @@ class editing_page extends display{
 				case 'view_history';
 					$this->ViewHistory();
 				return;
+
 			}
 		}
 
 		$this->contentBuffer = $this->GenerateContent_Admin();
 	}
 
-	function InlineEdit(){
-		$section = $_REQUEST['section'];
-		if( !is_numeric($section) || !isset($this->file_sections[$section])){
+
+	/**
+	 * Perform various section editing commands
+	 *
+	 */
+	function SectionEdit($cmd){
+		global $page;
+
+		$section_num = $_REQUEST['section'];
+		if( !is_numeric($section_num) || !isset($this->file_sections[$section_num])){
 			echo 'false';
 			return false;
 		}
 
-		includeFile('tool/ajax.php');
-		gpAjax::InlineEdit($this->file_sections[$section]);
+		$page->ajaxReplace = array();
+		$check_before = serialize($this);
+		$check_before = sha1( $check_before ) . md5( $check_before );
+
+		if( !gp_edit::SectionEdit( $cmd, $this->file_sections[$section_num], $section_num, $this->title, $this->file_stats ) ){
+			return;
+		}
+
+		//save if the file was changed
+		$check_after = serialize($this);
+		$check_after = sha1( $check_after ) . md5( $check_after );
+		if( $check_before != $check_after && !$this->SaveThis() ){
+			message($langmessage['OOPS'].'(3)');
+			return false;
+		}
+
+		$page->ajaxReplace[] = array('ck_saved','','');
+		message($langmessage['SAVED']);
+
+
+		//update gallery information
+		switch($this->file_sections[$section]['type']){
+			case 'gallery':
+				$this->GalleryEdited();
+			break;
+		}
+
+		return true;
 	}
+
 
 	/*
 	 * Send the raw content of the section to the gpResponse handler
@@ -484,71 +511,6 @@ class editing_page extends display{
 		}
 	}
 
-
-	function PreviewSection(){
-		global $page,$langmessage;
-
-		//for ajax responses
-		$page->ajaxReplace = array();
-
-		$section =& $_POST['section'];
-		if( !is_numeric($section) || !isset($this->file_sections[$section]) ){
-			message($langmessage['OOPS'].'(1)');
-			return false;
-		}
-		$section_content = $this->file_sections[$section];
-		gp_edit::PreviewSection( $section_content, $section, $this->title, $this->file_stats );
-	}
-
-	function SaveSection(){
-		global $page,$langmessage;
-
-		//for ajax responses
-		$page->ajaxReplace = array();
-
-
-		// check
-		$section =& $_POST['section'];
-		if( !is_numeric($section) ){
-			message($langmessage['OOPS'].'(1)');
-			return false;
-		}
-
-		if( !isset($this->file_sections[$section]) ){
-			message($langmessage['OOPS'].'(1)');
-			return false;
-		}
-
-		$check_before = serialize($this);
-		$check_before = sha1( $check_before ) . md5( $check_before );
-
-		$save_this = gp_edit::SectionFromPost( $this->file_sections[$section], $section, $this->title, $this->file_stats );
-		if( !$save_this ){
-			message($langmessage['OOPS'].'(2)');
-			return false;
-		}
-
-		//save if the file was changed
-		$check_after = serialize($this);
-		$check_after = sha1( $check_after ) . md5( $check_after );
-		if( $check_before != $check_after && !$this->SaveThis() ){
-			message($langmessage['OOPS'].'(3)');
-			return false;
-		}
-
-		$page->ajaxReplace[] = array('ck_saved','','');
-		message($langmessage['SAVED']);
-
-
-		//update gallery information
-		switch($this->file_sections[$section]['type']){
-			case 'gallery':
-				$this->GalleryEdited();
-			break;
-		}
-
-		return true;
-	}
 
 	function SaveThis( $backup = true ){
 
@@ -896,25 +858,6 @@ class editing_page extends display{
 
 		includeFile('admin/admin_uploaded.php');
 		admin_uploaded::InlineList($dir_piece);
-	}
-
-
-
-	/*
-	 * Include Editing
-	 */
-	function IncludeDialog(){
-		global $page,$langmessage;
-
-		$page->ajaxReplace = array();
-
-		$section =& $_GET['section'];
-		if( !isset($this->file_sections[$section]) ){
-			message($langmessage['OOPS']);
-			return;
-		}
-
-		gp_edit::IncludeDialog($this->file_sections[$section]);
 	}
 
 }

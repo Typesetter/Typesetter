@@ -2082,6 +2082,13 @@ class admin_theme_content extends admin_addon_install{
 				echo '<input type="hidden" name="where" value="'.htmlspecialchars($param).'" />';
 
 				echo '<input type="text" name="extra_area" value="" size="15" class="gpinput"/>';
+				includeFile('tool/SectionContent.php');
+				$types = section_content::GetTypes();
+				echo '<select name="type" class="gpselect">';
+				foreach($types as $type => $info){
+					echo '<option value="'.$type.'">'.$info['label'].'</option>';
+				}
+				echo '</select> ';
 				echo ' <input type="submit" name="" value="'.$langmessage['Add New Area'].'" class="gpbutton"/>';
 				echo '</form>';
 				echo '</td><td colspan="2" class="add">';
@@ -2487,25 +2494,31 @@ class admin_theme_content extends admin_addon_install{
 
 	//return the name of the cleansed extra area name, create file if it doesn't already exist
 	function NewExtraArea(){
-		global $dataDir,$langmessage;
+		global $langmessage, $dataDir;
 
-		if( empty($_POST['extra_area']) ){
+		$title = gp_edit::CleanTitle($_REQUEST['extra_area']);
+		if( empty($title) ){
+			message($langmessage['OOPS']);
 			return false;
 		}
 
-		$extra_name = gp_edit::CleanTitle($_POST['extra_area']);
-		$extra_file = $dataDir.'/data/_extra/'.$extra_name.'.php';
+		$data = array(
+					'type'	=> $_POST['type'],
+					'content' => gp_edit::DefaultContent($_POST['type'])
+				);
 
-		if( file_exists($extra_file) ){
-			return $extra_name;
+		$file = $dataDir.'/data/_extra/'.$title.'.php';
+
+		if( file_exists($file) ){
+			return $title;
 		}
 
-		$text = '<div>'.htmlspecialchars($_POST['extra_area']).'</div>';
-		if( !gpFiles::SaveFile($extra_file,$text) ){
+		if( !gpFiles::SaveArray($file,'extra_content',$data) ){
+			message($langmessage['OOPS']);
 			return false;
 		}
 
-		return $extra_name;
+		return $title;
 	}
 
 

@@ -1,4 +1,10 @@
 
+1.7.3
+------------------------------------------------------------
+* Fix blog count
+* Remove deprecated javascript attributes
+* Fix comment css
+
 1.4
 ------------------------------------------------------------
 * minor css additions

@@ -7,9 +7,22 @@
 	margin-bottom:1em;
 	font-size:90%;
 	}
-.comment_container form ul{width:50%;margin:0;}
-.comment_container form li{list-style:none;padding:5px 0;clear:both;}
-.comment_container form li label,.comment_container form li input,.comment_container form li textarea{float:left;width:100%;}
+.comment_container form ul{
+	max-width:450px;
+	margin:0;
+	padding:0;
+	}
+.comment_container form li{
+	list-style:none;
+	padding:5px 0;
+	clear:both;
+	}
+.comment_container form li label,
+.comment_container form li input,
+.comment_container form li textarea{
+	float:left;
+	width:95%;
+	}
 .comment_container input.submit{margin:5px 0;width:120px;}
 
 

@@ -206,13 +206,8 @@ class SimpleBlogCommon{
 		unset($this->blogData['post_list']);
 
 		//set some stats
-		$this->blogData['post_count'] = 0;
-		$chars = count_chars($this->blogData['str_index'],1);
-		if( isset($chars[44]) && $chars[44] > 2 ){
-			$this->blogData['post_count'] = $chars[44]-1;
-		}
-
 		$this->blogData['str_index'] = ','.trim($this->blogData['str_index'],',').',';
+		$this->blogData['post_count'] = substr_count($this->blogData['str_index'],':');
 
 		return gpFiles::SaveArray($this->indexFile,'blogData',$this->blogData);
 	}

@@ -78,7 +78,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			$page->admin_links[] = array('Admin_Blog','Configuration');
 
-			$page->admin_links[] = array('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addonFolderName),' name="ajax_box" ');
+			$page->admin_links[] = array('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addonFolderName),' name="gpabox" ');
 
 			$label = 'Number of Posts: '. $this->blogData['post_count'];
 			$page->admin_links[$label] = '';
@@ -198,7 +198,9 @@ class SimpleBlog extends SimpleBlogCommon{
 				if( $this->AddComment($post_index) ){
 					$commentSaved = true;
 				}else{
+					echo '<div class="comment_container">';
 					$this->CommentForm($post_index,true);
+					echo '</div>';
 					return;
 				}
 			break;
@@ -491,7 +493,7 @@ class SimpleBlog extends SimpleBlogCommon{
 			echo $edit_link;
 
 			echo common::Link('Special_Blog',$langmessage['edit'].' (All)','cmd=edit&id='.$post_index,' style="display:none"');
-			echo common::Link('Special_Blog',$langmessage['delete'],'cmd=deleteentry&del_id='.$post_index,' name="ajax_box" style="display:none"');
+			echo common::Link('Special_Blog',$langmessage['delete'],'cmd=deleteentry&del_id='.$post_index,' name="gpabox" style="display:none"');
 
 			if( $this->blogData['allow_comments'] ){
 				if( isset($this->blogData['post_info'][$post_index]) && isset($this->blogData['post_info'][$post_index]['closecomments']) ){
@@ -726,7 +728,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			if( common::LoggedIn() ){
 				echo ' &nbsp; ';
-				echo common::Link('Special_Blog',$langmessage['delete'],'cmd=delete_comment_prompt&id='.$post_index.'&comment='.$key,' name="ajax_box"');
+				echo common::Link('Special_Blog',$langmessage['delete'],'cmd=delete_comment_prompt&id='.$post_index.'&comment='.$key,' name="gpabox"');
 			}
 
 

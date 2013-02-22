@@ -338,7 +338,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 			echo ' &nbsp; &nbsp; ';
 			echo common::Link('Admin_BlogCategories','Categories Admin');
 			echo ' &nbsp; &nbsp; ';
-			echo common::Link('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addonFolderName),' title="'.urlencode($langmessage['editable_text']).'" name="ajax_box" ');
+			echo common::Link('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addonFolderName),' title="'.urlencode($langmessage['editable_text']).'" name="gpabox" ');
 			echo ' &nbsp; &nbsp; ';
 			echo common::Link('Admin_Blog','Regenerate Gadget','cmd=regen',' name="creq"');
 		echo '</p>';

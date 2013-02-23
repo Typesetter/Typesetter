@@ -55,8 +55,8 @@ $(function(){
 		var source = data();
 
 		// create autocomplete
+		$search.filter(':ui-autocomplete').autocomplete('destroy');
 		$search
-			.autocomplete( 'destroy' )
 			.autocomplete({
 				source: source,
 				delay: 100,

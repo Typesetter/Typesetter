@@ -2049,6 +2049,7 @@ class common{
 		global $config, $gp_menu;
 
 		$path = common::CleanRequest($_SERVER['REQUEST_URI']);
+		$path = preg_replace('#[[:cntrl:]]#u','', $path);// remove control characters
 
 		$pos = mb_strpos($path,'?');
 		if( $pos !== false ){

@@ -129,6 +129,7 @@ class admin_display extends display{
 				$scriptinfo = $scripts[$request_string];
 				if( admin_tools::HasPermission($request_string) ){
 
+					admin_display::OrganizeFrequentScripts($request_string);
 					gpOutput::ExecInfo($scriptinfo);
 
 					return;
@@ -433,7 +434,7 @@ class admin_display extends display{
 
 
 
-	function OrganizeFrequentScripts($page){
+	static function OrganizeFrequentScripts($page){
 		global $gpAdmin;
 
 		if( !isset($gpAdmin['freq_scripts']) ){
@@ -451,7 +452,7 @@ class admin_display extends display{
 		arsort($gpAdmin['freq_scripts']);
 	}
 
-	function CleanFrequentScripts(){
+	static function CleanFrequentScripts(){
 		global $gpAdmin;
 
 		//reduce to length of 5;

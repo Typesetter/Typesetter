@@ -63,7 +63,7 @@ $(function(){
 				minLength: 0,
 				select: function(event,ui){
 					if( ui.item ){
-						this.value = ui.item
+						this.value = ui.item[0]
 										.replace(/&quot;/g, '"')
 										.replace(/&#039;/g, "'")
 										.replace(/&lt;/g, '<')

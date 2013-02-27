@@ -270,26 +270,12 @@ class admin_tools{
 	static function AdminPanelLinks($in_panel=true,$new_versions=array()){
 		global $langmessage, $page, $gpAdmin, $config;
 
-		$group2 = '<div class="panelgroup2 in_window" %s>';
-
 
 		//current page
 		if( $in_panel && !isset($GLOBALS['GP_ARRANGE_CONTENT']) ){
 			echo '<div class="panelgroup" id="current_page_panel">';
-			if( !$in_panel ){
-				echo '<span>'.$langmessage['Current Page'].'</span>';
-				echo '<div class="panelgroup2">';
-			}else{
-				echo '<a class="toplink icon_page_gear" data-cmd="toplink" data-arg="cur">';
-				echo '<span>'.$langmessage['Current Page'].'</span>';
-				echo '</a>';
 
-				if( $gpAdmin['gpui_vis'] == 'cur' ){
-					echo '<div class="panelgroup2 in_window">';
-				}else{
-					echo '<div class="panelgroup2 in_window nodisplay">';
-				}
-			}
+			self::PanelHeading($in_panel, $langmessage['Current Page'], 'icon_page_gear', 'cur' );
 
 			echo '<ul class="submenu">';
 			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Current Page'].'</a></li>';
@@ -332,28 +318,12 @@ class admin_tools{
 		//content
 		if( $links = admin_tools::GetAdminGroup('content') ){
 			echo '<div class="panelgroup">';
-
-				$label = '<span>'.$langmessage['Content'].'</span>';
-				if( !$in_panel ){
-					echo '<span class="icon_page">'.$label.'</span>';
-					echo '<div class="panelgroup2">';
-				}else{
-					echo '<a class="toplink icon_page" data-cmd="toplink" data-arg="con">';
-					echo $label;
-					echo '</a>';
-
-					if( $gpAdmin['gpui_vis'] == 'con' ){
-						echo '<div class="panelgroup2 in_window">';
-					}else{
-						echo '<div class="panelgroup2 in_window nodisplay">';
-					}
-				}
-
-				echo '<ul class="submenu">';
-				echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Content'].'</a></li>';
-				echo $links;
-				echo '</ul>';
-				echo '</div>';
+			self::PanelHeading($in_panel, $langmessage['Content'], 'icon_page', 'con' );
+			echo '<ul class="submenu">';
+			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Content'].'</a></li>';
+			echo $links;
+			echo '</ul>';
+			echo '</div>';
 			echo '</div>';
 		}
 
@@ -361,29 +331,12 @@ class admin_tools{
 		//appearance
 		if( $links = admin_tools::GetAdminGroup('appearance') ){
 			echo '<div class="panelgroup">';
-
-				$label = '<span>'.$langmessage['Appearance'].'</span>';
-				if( !$in_panel ){
-					echo '<span class="icon_app">'.$label.'</span>';
-					echo '<div class="panelgroup2">';
-				}else{
-					echo '<a class="toplink icon_app" data-cmd="toplink" data-arg="app">';
-					echo $label;
-					echo '</a>';
-
-					if( $gpAdmin['gpui_vis'] == 'app' ){
-						echo '<div class="panelgroup2 in_window">';
-					}else{
-						echo '<div class="panelgroup2 in_window nodisplay">';
-					}
-				}
-
-
-				echo '<ul class="submenu">';
-				echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Appearance'].'</a></li>';
-				echo $links;
-				echo '</ul>';
-				echo '</div>';
+			self::PanelHeading($in_panel, $langmessage['Appearance'], 'icon_app', 'app' );
+			echo '<ul class="submenu">';
+			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Appearance'].'</a></li>';
+			echo $links;
+			echo '</ul>';
+			echo '</div>';
 			echo '</div>';
 		}
 
@@ -392,28 +345,12 @@ class admin_tools{
 		$links = admin_tools::GetAddonLinks($in_panel);
 		if( !empty($links) ){
 			echo '<div class="panelgroup">';
-
-				$label = '<span>'.$langmessage['plugins'].'</span>';
-				if( !$in_panel ){
-					echo '<span class="icon_plug">'.$label.'</span>';
-					echo '<div class="panelgroup2">';
-				}else{
-					echo '<a class="toplink icon_plug" data-cmd="toplink" data-arg="add">';
-					echo $label;
-					echo '</a>';
-
-					if( $gpAdmin['gpui_vis'] == 'add' ){
-						echo '<div class="panelgroup2 in_window">';
-					}else{
-						echo '<div class="panelgroup2 in_window nodisplay">';
-					}
-				}
-
-				echo '<ul class="submenu">';
-				echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['plugins'].'</a></li>';
-				echo $links;
-				echo '</ul>';
-				echo '</div>';
+			self::PanelHeading($in_panel, $langmessage['plugins'], 'icon_plug', 'add' );
+			echo '<ul class="submenu">';
+			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['plugins'].'</a></li>';
+			echo $links;
+			echo '</ul>';
+			echo '</div>';
 			echo '</div>';
 		}
 
@@ -421,28 +358,12 @@ class admin_tools{
 		//settings
 		if( $links = admin_tools::GetAdminGroup('settings') ){
 			echo '<div class="panelgroup">';
-
-				$label = '<span>'.$langmessage['Settings'].'</span>';
-				if( !$in_panel ){
-					echo '<span class="icon_cog">'.$label.'</span>';
-					echo '<div class="panelgroup2">';
-				}else{
-					echo '<a class="toplink icon_cog" data-cmd="toplink" data-arg="set">';
-					echo $label;
-					echo '</a>';
-
-					if( $gpAdmin['gpui_vis'] == 'set' ){
-						echo '<div class="panelgroup2 in_window">';
-					}else{
-						echo '<div class="panelgroup2 in_window nodisplay">';
-					}
-				}
-
-				echo '<ul class="submenu">';
-				echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Settings'].'</a></li>';
-				echo $links;
-				echo '</ul>';
-				echo '</div>';
+			self::PanelHeading($in_panel, $langmessage['Settings'], 'icon_cog', 'set' );
+			echo '<ul class="submenu">';
+			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Settings'].'</a></li>';
+			echo $links;
+			echo '</ul>';
+			echo '</div>';
 			echo '</div>';
 		}
 
@@ -450,26 +371,9 @@ class admin_tools{
 		//updates
 		if( count($new_versions) > 0 ){
 			echo '<div class="panelgroup">';
-
-			$label = '<span>'.$langmessage['updates'].'</span>';
-			if( !$in_panel ){
-				echo '<span class="icon_rfrsh">'.$label.'</span>';
-				echo '<div class="panelgroup2">';
-			}else{
-				echo '<a class="toplink icon_rfrsh" data-cmd="toplink" data-arg="upd">';
-				echo $label;
-				echo '</a>';
-
-				if( $gpAdmin['gpui_vis'] == 'upd' ){
-					echo '<div class="panelgroup2 in_window">';
-				}else{
-					echo '<div class="panelgroup2 in_window nodisplay">';
-				}
-			}
-
+			self::PanelHeading($in_panel, $langmessage['updates'], 'icon_rfrsh', 'upd' );
 			echo '<ul class="submenu">';
 			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['updates'].'</a></li>';
-
 
 			if( isset($new_versions['core']) ){
 				echo '<li>';
@@ -502,21 +406,7 @@ class admin_tools{
 		//username
 		echo '<div class="panelgroup">';
 
-			$label = '<span>'.$gpAdmin['username'].'</span>';
-			if( !$in_panel ){
-				echo '<span class="icon_user">'.$label.'</span>';
-				echo '<div class="panelgroup2">';
-			}else{
-				echo '<a class="toplink icon_user" data-cmd="toplink" data-arg="use">';
-				echo $label;
-				echo '</a>';
-
-				if( $gpAdmin['gpui_vis'] == 'use' ){
-					echo '<div class="panelgroup2 in_window">';
-				}else{
-					echo '<div class="panelgroup2 in_window nodisplay">';
-				}
-			}
+			self::PanelHeading($in_panel, $gpAdmin['username'], 'icon_user', 'use' );
 
 			echo '<ul class="submenu">';
 			echo '<li class="submenu_top"><a class="submenu_top">'.$gpAdmin['username'].'</a></li>';
@@ -537,6 +427,27 @@ class admin_tools{
 			echo '</div>';
 
 		echo '</div>';
+	}
+
+	static function PanelHeading( $in_panel, $label, $icon, $arg ){
+		global $gpAdmin;
+
+		if( !$in_panel ){
+			echo '<span class="'.$icon.'"><span>'.$label.'</span></span>';
+			echo '<div class="panelgroup2">';
+			return;
+		}
+
+		echo '<a class="toplink '.$icon.'" data-cmd="toplink" data-arg="'.$arg.'"><span>';
+		echo $label;
+		echo '</span></a>';
+
+		if( $gpAdmin['gpui_vis'] == $arg ){
+			echo '<div class="panelgroup2 in_window">';
+		}else{
+			echo '<div class="panelgroup2 in_window nodisplay">';
+		}
+
 	}
 
 	/**

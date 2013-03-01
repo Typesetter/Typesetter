@@ -371,7 +371,7 @@ $gp.links.toggle_panel = function(evt){
 		c = 1;
 	}
 	if( !panel.hasClass('toggledmin') ){
-		panel.unbind('mouseenter').bind('mouseenter',function(event){panel.unbind(event).removeClass('toggledmin');});
+		panel.unbind('mouseenter touchstart').bind('mouseenter touchstart',function(event){panel.unbind(event).removeClass('toggledmin');});
 	}
 	panel.attr('class','keep_viewable '+classes);
 
@@ -614,7 +614,7 @@ $(function(){
 	 */
 	function EditableBar(){
 
-		$('#current_page_panel').bind('mouseenter.edb',function(){
+		$('#current_page_panel').bind('mouseenter.edb touchstart.edb',function(){
 			var count = 0,box, $win = $(window);
 			var list = $('#editable_areas_list').html('');
 
@@ -652,7 +652,7 @@ $(function(){
 						.wrap('<li>')
 
 						//add handlers
-						.hover(function(){
+						.on('mouseenter touchstart',function(){
 
 							//the red edit box
 							var loc = $gp.Coords(area);
@@ -664,11 +664,10 @@ $(function(){
 							if( $win.scrollTop() > loc.top || ( $win.scrollTop() + $win.height() ) < loc.top ){
 								$('html,body').stop(true,true,true).animate({scrollTop: Math.max(0,loc.top-100)},'slow');
 							}
-
-						},function(){
+						}).on('mouseleave touchend',function(){
 							box.stop(true,true,true).fadeOut();
 						}).click(function(){
-							$(this).unbind('mouseenter');
+							$(this).unbind('mouseenter touchstart');
 							window.setTimeout(function(){
 								$(this).remove();
 								box.hide();
@@ -706,9 +705,9 @@ $(function(){
 			}
 			HideOverlay();
 
-		}).mouseleave(function(){
+		}).on('mouseleave touchend',function(){
 			StartOverlayHide();
-		}).mouseenter(function(){
+		}).on('mouseenter touchstart',function(){
 			if( timeout ){
 				window.clearTimeout(timeout);
 			}
@@ -716,7 +715,7 @@ $(function(){
 
 		//show the edit link when hovering over an editable area
 		//	using mouseenter to show link an area filled with an iframe
-		$('.editable_area').bind('mousemove.gp mouseenter.gp',function(e){
+		$('.editable_area').bind('mousemove.gp mouseenter.gp touchstart.gp',function(e){
 			if( timeout ){
 				window.clearTimeout(timeout);
 			}
@@ -736,7 +735,7 @@ $(function(){
 
 			AreaOverlay(edit_area);
 
-		}).bind('mouseleave',function(){
+		}).bind('mouseleave touchend',function(){
 			StartOverlayHide();
 			rmNoOverlay(edit_area);
 		});
@@ -853,8 +852,8 @@ $(function(){
 			var close_text = '<a class="gp_overlay_expand"></a>';
 			lnk_span
 				.html(close_text)
-				.unbind('mouseenter')
-				.one('mouseenter',function(){
+				.unbind('mouseenter touchstart')
+				.one('mouseenter touchstart',function(){
 					if( edit_area.hasClass('gp_no_overlay') ){
 						return;
 					}
@@ -901,7 +900,7 @@ $(function(){
 
 
 		//keep expanding areas within the viewable window
-		$('.in_window').parent().bind('mouseenter',function(){
+		$('.in_window').parent().bind('mouseenter touchstart',function(){
 			var $this = $(this);
 			var panel = $this.children('.in_window').css({'right':'auto','left':'100%','top':0});
 			window.setTimeout(function(){

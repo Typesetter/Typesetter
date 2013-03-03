@@ -39,6 +39,8 @@ $(function(){
 
 		var search = this;
 		var $search = $(this);
+		var $parent = $search.parent().css({'border-color':'#CC0000'});
+
 
 		//once the comobox is initiated, we dont' need to create it again
 		$search.removeClass('combobox');
@@ -62,15 +64,26 @@ $(function(){
 				minLength: 1,
 				select: function(event,ui){
 					if( ui.item ){
-						this.value = ui.item[0]
+
+						$search.val(
+										ui.item[0]
 										.replace(/&quot;/g, '"')
 										.replace(/&#039;/g, "'")
 										.replace(/&lt;/g, '<')
 										.replace(/&gt;/g, '>')
-										.replace(/&amp;/g, '&');
+										.replace(/&amp;/g, '&')
+								);
+
+						$parent.css({'border-color':''});
+
 						return false;
 					}
-				}
+				},
+				search: function(){
+					$parent.css({'border-color':'#CC0000'});
+				},
+
+
 			})
 			.data( 'autocomplete' )._renderItem = function( ul, item ) {
 				return $( '<li></li>' )
@@ -78,14 +91,6 @@ $(function(){
 					.append( '<a>' + item[0] + '<span>'+item[1]+'</span></a>' )
 					.appendTo( ul );
 			};
-
-		// open autocomplete list
-		$search
-			.focus(function(){
-				$search.autocomplete( 'search', $search.val() );
-				search.focus();
-			})
-			.focus();
 
 		function data(){
 			var str = $search

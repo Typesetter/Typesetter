@@ -444,7 +444,7 @@ class MultiLang_Admin extends MultiLang_Common{
 			}
 		}
 
-		return $false;
+		return false;
 	}
 
 	function WhichLanguage($language){

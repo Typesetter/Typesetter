@@ -409,12 +409,11 @@ class gp_edit{
 			return false;
 		}
 
-		if( $ignore_config ){
+		if( !$ignore_config ){
 			if( empty($config['HTML_Tidy']) || $config['HTML_Tidy'] == 'off' ){
 				return true;
 			}
 		}
-
 
 		$options = array();
 		$options['wrap'] = 0;						//keeps tidy from wrapping... want the least amount of space changing as possible.. could get rid of spaces between words with the str_replaces below

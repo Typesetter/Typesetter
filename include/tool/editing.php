@@ -405,14 +405,14 @@ class gp_edit{
 	static function tidyFix(&$text,$ignore_config = false){
 		global $config;
 
-		if( !function_exists('tidy_parse_string') ){
-			return false;
-		}
-
 		if( !$ignore_config ){
 			if( empty($config['HTML_Tidy']) || $config['HTML_Tidy'] == 'off' ){
 				return true;
 			}
+		}
+
+		if( !function_exists('tidy_parse_string') ){
+			return false;
 		}
 
 		$options = array();

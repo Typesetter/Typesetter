@@ -59,7 +59,7 @@ $(function(){
 			.autocomplete({
 				source: source,
 				delay: 100,
-				minLength: 0,
+				minLength: 1,
 				select: function(event,ui){
 					if( ui.item ){
 						this.value = ui.item[0]

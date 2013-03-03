@@ -401,7 +401,7 @@ class special_gpsearch{
 			foreach($posts as $id => $post){
 				$title = $blog_label.': '.str_replace('_',' ',$post['title']);
 				$content = str_replace('_',' ',$post['title']).' '.$post['content'];
-				$this->FindString($content, $title, $slug, '?cmd=post&id='.$id);
+				$this->FindString($content, $title, 'Special_Blog', 'cmd=post&id='.$id);
 			}
 			$posts = array();
 		}

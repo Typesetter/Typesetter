@@ -402,14 +402,17 @@ class gp_edit{
 	 *
 	 * @param string $text The html content to be checked. Passed by reference
 	 */
-	static function tidyFix(&$text){
+	static function tidyFix(&$text,$ignore_config = false){
 		global $config;
 
 		if( !function_exists('tidy_parse_string') ){
 			return false;
 		}
-		if( empty($config['HTML_Tidy']) || $config['HTML_Tidy'] == 'off' ){
-			return true;
+
+		if( $ignore_config ){
+			if( empty($config['HTML_Tidy']) || $config['HTML_Tidy'] == 'off' ){
+				return true;
+			}
 		}
 
 

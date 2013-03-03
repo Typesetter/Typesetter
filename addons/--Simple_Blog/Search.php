@@ -29,7 +29,7 @@ class BlogSearch{
 			foreach($posts as $id => $post){
 				$title = $label.': '.str_replace('_',' ',$post['title']);
 				$content = str_replace('_',' ',$post['title']).' '.$post['content'];
-				$search_obj->FindString($content, $title, 'Special_Blog', '?cmd=post&id='.$id);
+				$search_obj->FindString($content, $title, 'Special_Blog', 'cmd=post&id='.$id);
 			}
 			$posts = array();
 		}

@@ -37,13 +37,17 @@ $(function(){
 	});
 	$('input.combobox').live('focus',function(){
 
-		var search = this;
-		var $search = $(this);
-		var $parent = $search.parent().css({'border-color':'#CC0000'});
-
-
 		//once the comobox is initiated, we dont' need to create it again
-		$search.removeClass('combobox');
+		var $search = $(this).removeClass('combobox');
+
+		var $parent = $search.parent();
+		var $hidden = $parent.find('input[type=hidden]');
+		if( $hidden.val() == '' ){
+			$parent.css({'border-color':'#CC0000'});
+		}
+
+
+
 
 		/*
 		var $list = $search.closest('div').find('option');
@@ -74,16 +78,22 @@ $(function(){
 										.replace(/&amp;/g, '&')
 								);
 
+
 						$parent.css({'border-color':''});
+
+						if( ui.item[2] ){
+							$hidden.val( ui.item[2] );
+						}else{
+							$hidden.val( ui.item[1] );
+						}
 
 						return false;
 					}
 				},
 				search: function(){
+					$hidden.val('');
 					$parent.css({'border-color':'#CC0000'});
-				},
-
-
+				}
 			})
 			.data( 'autocomplete' )._renderItem = function( ul, item ) {
 				return $( '<li></li>' )

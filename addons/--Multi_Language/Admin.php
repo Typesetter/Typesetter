@@ -293,6 +293,7 @@ class MultiLang_Admin extends MultiLang_Common{
 		}
 		echo '<span class="gpinput combobox">';
 		echo '<input type="text" name="'.$name.'" value="'.htmlspecialchars($default_label).'" class="combobox"/>';
+		echo '<input type="hidden" name="'.$name.'_hidden" value="'.htmlspecialchars($default).'" />';
 		echo '</span>';
 
 		echo '</div>';
@@ -311,7 +312,7 @@ class MultiLang_Admin extends MultiLang_Common{
 				continue;
 			}
 			$label = common::GetLabelIndex($index);
-			$data[] = array( common::LabelSpecialChars($label), $url );
+			$data[] = array( common::LabelSpecialChars($label), $url, $index );
 		}
 
 		//$data = array_slice($data,107,1);
@@ -325,8 +326,10 @@ class MultiLang_Admin extends MultiLang_Common{
 		if( $default_index ){
 			$default_url = common::IndexToTitle($default_index);
 		}
+
 		echo '<span class="gpinput combobox">';
 		echo '<input type="text" name="title" value="'.htmlspecialchars($default_url).'" class="combobox"/>';
+		echo '<input type="hidden" name="title_index" value="'.htmlspecialchars($default_index).'" />';
 		echo '</span>';
 
 		echo '</div>';
@@ -340,20 +343,26 @@ class MultiLang_Admin extends MultiLang_Common{
 	function TitleSettingsSave($cmd){
 		global $gp_titles, $ml_languages, $langmessage, $gp_index;
 
+
 		$index_a = $_POST['index'];
 		if( !isset($gp_titles[$index_a]) ){
 			message($langmessage['OOPS'].' (Invalid Title - 1)');
 			return;
 		}
 
-		$lang_a = $this->WhichLanguage($_POST['ml_lang']);
+		$lang_a = $_POST['ml_lang_hidden'];
 		if( !$lang_a ){
 			message($langmessage['OOPS'].' (Invalid Language)');
 			return;
 		}
 
-		$index_b = $this->WhichTitle($_POST['title']);
-		if( !$index_b ){
+		$index_b = $_POST['title_index'];
+		if( empty($index_b) ){
+			message($langmessage['OOPS'].' (No Title)');
+			return;
+		}
+
+		if( !isset($gp_titles[$index_b]) ){
 			message($langmessage['OOPS'].' (Invalid Title - 2)');
 			return;
 		}
@@ -391,7 +400,7 @@ class MultiLang_Admin extends MultiLang_Common{
 				return;
 			}
 
-			$lang_b = $this->WhichLanguage($_POST['ml_lang_b']);
+			$lang_b = $_POST['ml_lang_b_hidden'];
 			if( !$lang_b ){
 				message($langmessage['OOPS'].' (Invalid Language)');
 				return;
@@ -429,33 +438,6 @@ class MultiLang_Admin extends MultiLang_Common{
 			message($langmessage['OOPS']);
 		}
 	}
-
-	function WhichTitle($title){
-		global $gp_index, $gp_titles;
-		includeFile('tool/editing.php');
-		$cleaned_title = gp_edit::CleanTitle($title);
-
-		if( isset($gp_index[$cleaned_title]) ){
-			return $gp_index[$cleaned_title];
-		}
-		foreach($gp_titles as $index => $info){
-			if( isset($info['label']) && $info['label'] == $title ){
-				return $index;
-			}
-		}
-
-		return false;
-	}
-
-	function WhichLanguage($language){
-		global $ml_languages;
-
-		if( isset($ml_languages[$language]) ){
-			return $language;
-		}
-		return array_search($language,$ml_languages);
-	}
-
 
 	/**
 	 * Set the language of the title
@@ -502,7 +484,7 @@ class MultiLang_Admin extends MultiLang_Common{
 		echo 'What page is this page a translation of?';
 		echo '</td><td></td></tr>';
 		echo '<tr><td style="vertical-align:bottom">';
-		$this->TitleSelect(false);
+		$this->TitleSelect('');
 		echo '</td></tr>';
 
 		echo '<tr><td>';
@@ -569,7 +551,7 @@ class MultiLang_Admin extends MultiLang_Common{
 		echo '<tr><td>';
 		$this->LanguageSelect('ml_lang',false,$this->lang);
 		echo '</td><td>';
-		$this->TitleSelect(false,$list);
+		$this->TitleSelect('',$list);
 		echo '</td><td>';
 		echo '<input type="submit" value="'.$langmessage['save'].'" class="gpabox gpbutton" /> ';
 		echo '</td></tr>';

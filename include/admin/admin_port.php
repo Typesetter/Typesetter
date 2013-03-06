@@ -40,6 +40,8 @@ class admin_port{
 	var $replace_dirs = array();
 	var $extra_dirs = array();
 
+	var $iframe = '';
+
 
 	function admin_port(){
 		global $langmessage,$dataDir,$page;
@@ -83,6 +85,7 @@ class admin_port{
 		//echo '<h2>'.$langmessage['Import/Export'].'</h2>';
 		echo '<h2>'.$langmessage['Export'].'</h2>';
 		echo $langmessage['Export About'];
+		echo $this->iframe;
 
 		$this->ExportForm();
 
@@ -178,7 +181,8 @@ class admin_port{
 
 		//iframe for download
 		if( $success ){
-			echo '<iframe src="'.common::GetDir('/data/_exports/'.$this->archive_name).'" height="0" width="0" style="visibility:hidden;height:0;width:0;"></iframe>';
+			message('iframe');
+			$this->iframe = '<iframe src="'.common::GetDir('/data/_exports/'.$this->archive_name).'" height="0" width="0" style="visibility:hidden;height:0;width:0;"></iframe>';
 		}
 	}
 
@@ -195,9 +199,9 @@ class admin_port{
 		$this->Init_Tar();
 		//$tar_object = new Archive_Tar($this->archive_path,'gz'); //didn't always work when compressin
 		$tar_object = new Archive_Tar($this->archive_path);
-		if( gpdebug ){
-			$tar_object->setErrorHandling(PEAR_ERROR_PRINT);
-		}
+		//if( gpdebug ){
+		//	$tar_object->setErrorHandling(PEAR_ERROR_PRINT);
+		//}
 
 		if( !$tar_object->createModify($add_dirs, 'gpexport', $dataDir) ){
 			message($langmessage['OOPS'].'(5)');

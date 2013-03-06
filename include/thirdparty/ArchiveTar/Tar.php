@@ -40,7 +40,6 @@
  * @link        http://pear.php.net/package/Archive_Tar
  */
 
-require_once 'PEAR.php';
 
 
 define ('ARCHIVE_TAR_ATT_SEPARATOR', 90001);
@@ -54,8 +53,7 @@ define ('ARCHIVE_TAR_END_BLOCK', pack("a512", ''));
 * @license  http://www.opensource.org/licenses/bsd-license.php New BSD License
 * @package  Archive_Tar
 */
-class Archive_Tar extends PEAR
-{
+class Archive_Tar{
     /**
     * @var string Name of the Tar
     */
@@ -108,7 +106,6 @@ class Archive_Tar extends PEAR
     */
     function Archive_Tar($p_tarname, $p_compress = null)
     {
-        $this->PEAR();
         $this->_compress = false;
         $this->_compress_type = 'none';
         if (($p_compress === null) || ($p_compress == '')) {
@@ -159,7 +156,7 @@ class Archive_Tar extends PEAR
                 $extname = 'bz2';
 
             if (!extension_loaded($extname)) {
-                PEAR::loadExtension($extname);
+                //PEAR::loadExtension($extname);
             }
             if (!extension_loaded($extname)) {
                 $this->_error("The extension '$extname' couldn't be found.\n".
@@ -178,7 +175,6 @@ class Archive_Tar extends PEAR
         // ----- Look for a local copy to delete
         if ($this->_temp_tarname != '')
             @unlink($this->_temp_tarname);
-        $this->_PEAR();
     }
     // }}}
 
@@ -628,7 +624,8 @@ class Archive_Tar extends PEAR
     function _error($p_message)
     {
         // ----- To be completed
-        $this->raiseError($p_message);
+        trigger_error($p_message);
+        //$this->raiseError($p_message);
     }
     // }}}
 
@@ -636,7 +633,8 @@ class Archive_Tar extends PEAR
     function _warning($p_message)
     {
         // ----- To be completed
-        $this->raiseError($p_message);
+        trigger_error($p_message);
+        //$this->raiseError($p_message);
     }
     // }}}
 

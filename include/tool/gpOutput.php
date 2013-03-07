@@ -1864,9 +1864,9 @@ class gpOutput{
 
 
 		if( !empty($inline) ){
-			echo "\n<script type=\"text/javascript\">/* <![CDATA[ */\n";
+			echo "\n<script type=\"text/javascript\">\n";
 			echo $inline;
-			echo "\n/* ]]> */</script>";
+			echo "\n</script>";
 		}
 	}
 
@@ -1882,7 +1882,7 @@ class gpOutput{
 			return;
 		}
 
-		echo "\n<script type=\"text/javascript\">/* <![CDATA[ */";
+		echo "\n<script type=\"text/javascript\">";
 		echo 'var gplang = {';
 		$comma = '';
 		foreach($GP_LANG_VALUES as $from_key => $to_key){
@@ -1890,7 +1890,7 @@ class gpOutput{
 			echo $to_key.':"'.str_replace(array('\\','"'),array('\\\\','\"'),$langmessage[$from_key]).'"';
 			$comma = ',';
 		}
-		echo "}; /* ]]> */</script>";
+		echo "}; </script>";
 	}
 
 
@@ -1933,9 +1933,9 @@ class gpOutput{
 		}
 
 		if( !$combine || $page->head_force_inline ){
-			echo "\n<script type=\"text/javascript\">/* <![CDATA[ */";
+			echo "\n<script type=\"text/javascript\">";
 			common::jsStart();
-			echo '/* ]]> */</script>';
+			echo '</script>';
 		}
 
 		//create list of files to include
@@ -2018,7 +2018,7 @@ class gpOutput{
 			if( $type == 'css' ){
 				echo '<style type="text/css">';
 			}else{
-				echo '<script type="text/javascript">/* <![CDATA[ */';
+				echo '<script type="text/javascript">';
 			}
 			foreach($files as $file_key => $file){
 				$full_path = gp_combine::CheckFile($file);
@@ -2029,7 +2029,7 @@ class gpOutput{
 			if( $type == 'css' ){
 				echo '</style>';
 			}else{
-				echo '/* ]]> */</script>';
+				echo '</script>';
 			}
 			return;
 		}

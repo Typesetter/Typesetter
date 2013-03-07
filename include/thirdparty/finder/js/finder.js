@@ -1,292 +1,10702 @@
-window.Finder=function(a,c){this.time("load");var b=this;a=$(a);var d=$("<div/>").append(a.contents()),e=a.attr("style"),f=a.attr("id")||"",g="finder-"+(f||Math.random().toString().substr(2,7)),h="mousedown."+g,j="keydown."+g,l="keypress."+g,k=!0,m=!0,n="",r={path:"",url:"",tmbUrl:"",disabled:[],separator:"/",archives:[],extract:[],copyOverwrite:!0,tmb:!1},p={},v=[],t={},x={},w=[],D=[],E=[],Q=new b.command(b),J="auto",K=400,L,A=function(a){if(a.init)p={};else for(var c in p)p.hasOwnProperty(c)&&("directory"!=
-p[c].mime&&p[c].phash==n&&-1===$.inArray(c,D))&&delete p[c];n=a.cwd.hash;y(a.files);p[n]||y([a.cwd]);b.lastDir(n)},y=function(a){for(var b=a.length,c;b--;)c=a[b],c.name&&(c.hash&&c.mime)&&(p[c.hash]=c)},B=new Date;this.OS=-1!==navigator.userAgent.indexOf("Mac")?"mac":-1!==navigator.userAgent.indexOf("Win")?"win":"other";this.UA={ltIE6:"undefined"==typeof window.addEventListener&&"undefined"==typeof document.documentElement.style.maxHeight,ltIE7:"undefined"==typeof window.addEventListener&&"undefined"==
-typeof document.querySelectorAll,ltIE8:"undefined"==typeof window.addEventListener&&"undefined"==typeof document.getElementsByClassName,IE:!!document.uniqueID,Firefox:!!window.sidebar,Opera:!!window.opera,Webkit:!document.uniqueID&&!window.opera&&!window.sidebar&&window.localStorage&&"undefined"==typeof window.orientation,Mobile:"undefined"!=typeof window.orientation};this.options=$.extend(!0,{},this._options,c||{});c.ui&&(this.options.ui=c.ui);c.commands&&(this.options.commands=c.commands);c.uiOptions&&
-c.uiOptions.toolbar&&(this.options.uiOptions.toolbar=c.uiOptions.toolbar);$.extend(this.options.contextmenu,c.contextmenu);this.requestType=/^(get|post)$/i.test(this.options.requestType)?this.options.requestType.toLowerCase():"get";this.customData=$.isPlainObject(this.options.customData)?this.options.customData:{};this.id=f;this.uploadURL=c.urlUpload||c.url;this.namespace=g;this.lang=this.i18[this.options.lang]&&this.i18[this.options.lang].messages?this.options.lang:"en";f="en"==this.lang?this.i18.en:
-$.extend(!0,{},this.i18.en,this.i18[this.lang]);this.direction=f.direction;this.messages=f.messages;this.dateFormat=this.options.dateFormat||f.dateFormat;this.fancyFormat=this.options.fancyDateFormat||f.fancyDateFormat;this.today=(new Date(B.getFullYear(),B.getMonth(),B.getDate())).getTime()/1E3;this.yesterday=this.today-86400;B=this.options.UTCDate?"UTC":"";this.getHours="get"+B+"Hours";this.getMinutes="get"+B+"Minutes";this.getSeconds="get"+B+"Seconds";this.getDate="get"+B+"Date";this.getDay="get"+
-B+"Day";this.getMonth="get"+B+"Month";this.getFullYear="get"+B+"FullYear";this.cssClass="ui-helper-reset ui-helper-clearfix ui-widget ui-widget-content ui-corner-all finder finder-"+("rtl"==this.direction?"rtl":"ltr")+" "+this.options.cssClass;var u;try{u="localStorage"in window&&null!==window.localStorage?b.localStorage:b.cookie}catch(G){u=b.cookie}this.storage=u;this.viewType=this.storage("view")||this.options.defaultView||"icons";this.sortType=this.storage("sortType")||this.options.sortType||"name";
-this.sortOrder=this.storage("sortOrder")||this.options.sortOrder||"asc";this.sortStickFolders=this.storage("sortStickFolders");this.sortStickFolders=null===this.sortStickFolders?!!this.options.sortStickFolders:!!this.sortStickFolders;this.sortRules=$.extend(!0,{},this._sortRules,this.options.sortsRules);$.each(this.sortRules,function(a,c){"function"!=typeof c&&delete b.sortRules[a]});this.compare=$.proxy(this.compare,this);this.notifyDelay=0<this.options.notifyDelay?parseInt(this.options.notifyDelay):
-500;this.draggable={appendTo:"body",addClasses:!0,delay:30,revert:!0,refreshPositions:!0,cursor:"move",cursorAt:{left:50,top:47},drag:function(a,b){b.helper.data("locked")||b.helper.toggleClass("finder-drag-helper-plus",a.shiftKey||a.ctrlKey||a.metaKey)},start:function(a,b){var c=$.map(b.helper.data("files")||[],function(a){return a||null}),d,e;for(d=c.length;d--;)if(e=c[d],p[e].locked){b.helper.addClass("finder-drag-helper-plus").data("locked",!0);break}},stop:function(){b.trigger("focus").trigger("dragstop")},
-helper:function(a){var c=this.id?$(this):$(this).parents("[id]:first"),d=$('<div class="finder-drag-helper"><span class="finder-drag-helper-icon-plus"/></div>'),e=function(a){return'<div class="finder-cwd-icon '+b.mime2class(a)+' ui-corner-all"/>'},f;b.trigger("dragstart",{target:c[0],originalEvent:a});a=c.is("."+b.res("class","cwdfile"))?b.selected():[b.navId2Hash(c.attr("id"))];d.append(e(p[a[0]].mime)).data("files",a).data("locked",!1);1<(f=a.length)&&d.append(e(p[a[f-1]].mime)+'<span class="finder-drag-num">'+
-f+"</span>");return d}};this.droppable={tolerance:"pointer",accept:".finder-cwd-file-wrapper,.finder-navbar-dir,.finder-cwd-file",hoverClass:this.res("class","adroppable"),drop:function(a,c){var d=$(this),e=$.map(c.helper.data("files")||[],function(a){return a||null}),f=[],g,h;d.is("."+b.res("class","cwd"))?g=n:d.is("."+b.res("class","cwdfile"))?g=d.attr("id"):d.is("."+b.res("class","navdir"))&&(g=b.navId2Hash(d.attr("id")));for(d=e.length;d--;)h=e[d],h!=g&&p[h].phash!=g&&f.push(h);f.length&&(c.helper.hide(),
-b.clipboard(f,!(a.ctrlKey||a.shiftKey||a.metaKey||c.helper.data("locked"))),b.exec("paste",g),b.trigger("drop",{files:e}))}};this.enabled=function(){return a.is(":visible")&&k};this.visible=function(){return a.is(":visible")};this.root=function(a){for(a=p[a||n];a&&a.phash;)a=p[a.phash];if(a)return a.hash;for(;void 0 in p&&p.hasOwnProperty(void 0);)if(a=p[void 0],!a.phash&&"directory"==!a.mime&&a.read)return a.hash;return""};this.cwd=function(){return p[n]||{}};this.option=function(a){return r[a]||
-""};this.file=function(a){return p[a]};this.files=function(){return $.extend(!0,{},p)};this.parents=function(a){for(var b=[];a=this.file(a);)b.unshift(a.hash),a=a.phash;return b};this.path2array=function(a){for(var b,c=[];a&&(b=p[a])&&b.hash;)c.unshift(b.name),a=b.phash;return c};this.path=function(a){return p[a]&&p[a].path?p[a].path:this.path2array(a).join(r.separator)};this.url=function(a){var b=p[a];if(!b||!b.read)return"";if(b.url)return b.url;if(r.url)return r.url+$.map(this.path2array(a),function(a){return encodeURIComponent(a)}).slice(1).join("/");
-a=$.extend({},this.customData,{cmd:"file",target:b.hash});return this.options.url+(-1===this.options.url.indexOf("?")?"?":"&")+$.param(a,!0)};this.tmb=function(a){if((a=(a=p[a])&&a.tmb&&1!=a.tmb?r.tmbUrl+a.tmb:"")&&(this.UA.Opera||this.UA.IE))a+="?_="+(new Date).getTime();return a};this.selected=function(){return v.slice(0)};this.selectedFiles=function(){return $.map(v,function(a){return p[a]?$.extend({},p[a]):null})};this.fileByName=function(a,b){for(var c in p)if(p.hasOwnProperty(c)&&p[c].phash==
-b&&p[c].name==a)return p[c]};this.validResponse=function(a,b){return b.error||this.rules[this.rules[a]?a:"defaults"](b)};this.request=function(a){var b=this,c=this.options,d=$.Deferred(),e=$.extend({},c.customData,{mimes:c.onlyMimes},a.data||a),f=e.cmd,g=!(a.preventDefault||a.preventFail),h=!(a.preventDefault||a.preventDone),j=$.extend({},a.notify),l=a.syncOnFail,n;a=$.extend({url:c.url,async:!0,type:this.requestType,dataType:"json",cache:!1,data:e},a.options||{});var c=function(a){a.warning&&b.error(a.warning);
-"netmount"==f&&(f="open");"open"==f&&A($.extend(!0,{},a));a.removed&&a.removed.length&&b.remove(a);a.added&&a.added.length&&b.add(a);a.changed&&a.changed.length&&b.change(a);b.trigger(f,a);a.sync&&b.sync()},k;h&&d.done(c);d.fail(function(a){a&&(g?b.error(a):b.debug("error",b.i18n(a)))});if(!f)return d.reject("errCmdReq");l&&d.fail(function(a){a&&b.sync()});j.type&&j.cnt&&(n=setTimeout(function(){b.notify(j);d.always(function(){j.cnt=-(parseInt(j.cnt)||0);b.notify(j)})},b.notifyDelay),d.always(function(){clearTimeout(n)}));
-if("open"==f)for(;h=E.pop();)"pending"==h.state()&&(h.quiet=!0,h.abort());delete a.preventFail;k=this.transport.send(a).fail(function(a,b){var c;switch(b){case "abort":c=a.quiet?"":["errConnect","errAbort"];break;case "timeout":c=["errConnect","errTimeout"];break;case "parsererror":c="";"string"==typeof a.responseText&&(c="Response: "+a.responseText.substr(0,300));c=["errResponse","errDataNotJSON","",c];break;default:c=403==a.status?["errConnect","errAccess"]:404==a.status?["errConnect","errNotFound"]:
-"errConnect"}d.reject(c,a,b)}).done(function(a){if(a)if($.isPlainObject(a)){if(a.error)return d.reject(a.error,k);if(!b.validResponse(f,a))return d.reject("errResponse",k)}else return d.reject(["errResponse","errDataNotJSON"],k);else return d.reject(["errResponse","errDataEmpty"],k);a.options&&(r=$.extend({},r,a.options));a.netDrivers&&(b.netDrivers=a.netDrivers);d.resolve(a);a.debug&&b.debug("backend-debug",a.debug)});"open"==f&&(E.unshift(k),d.always(function(){var a=$.inArray(k,E);-1!==a&&E.splice(a,
-1)}));return d};this.diff=function(a){var b={},c=[],d=[],e=[];$.each(a,function(a,c){b[c.hash]=c});$.each(p,function(a){!b[a]&&d.push(a)});$.each(b,function(a,b){var d=p[a];d?$.each(b,function(a){if(b[a]!=d[a])return e.push(b),!1}):c.push(b)});$.each(d,function(a,c){var f=p[c],g=f.phash,h;if(h=g){if(f="directory"==f.mime)if(f=-1===$.inArray(g,d))if(f=b[g]){a:{for(f=e.length;f--;)if(e[f].hash==g){f=!0;break a}f=void 0}f=!f}h=f}h&&e.push(b[g])});return{added:c,removed:d,changed:e}};this.sync=function(){var a=
-this,b=$.Deferred().done(function(){a.trigger("sync")}),c={data:{cmd:"open",init:1,target:n,tree:this.ui.tree?1:0},preventDefault:!0},d={data:{cmd:"tree",target:n==this.root()?n:this.file(n).phash},preventDefault:!0};$.when(this.request(c),this.request(d)).fail(function(c){b.reject(c);c&&a.request({data:{cmd:"open",target:a.lastDir(""),tree:1,init:1},notify:{type:"open",cnt:1,hideCnt:!0}})}).done(function(c,d){var e=a.diff(c.files.concat(d&&d.tree?d.tree:[]));e.added.push(c.cwd);e.removed.length&&
-a.remove(e);e.added.length&&a.add(e);e.changed.length&&a.change(e);return b.resolve(e)});return b};this.upload=function(a){return this.transport.upload(a,this)};this.bind=function(a,b){var c;if("function"==typeof b){a=(""+a).toLowerCase().split(/\s+/);for(c=0;c<a.length;c++)void 0===t[a[c]]&&(t[a[c]]=[]),t[a[c]].push(b)}return this};this.unbind=function(a,b){var c=t[(""+a).toLowerCase()]||[],d=c.indexOf(b);-1<d&&c.splice(d,1);return this};this.trigger=function(a,b){a=a.toLowerCase();var c=t[a]||[],
-d;if(c.length){a=$.Event(a);for(d=0;d<c.length;d++){a.data=$.extend(!0,{},b);try{if(!1===c[d](a,this)||a.isDefaultPrevented()){this.debug("event-stoped",a.type);break}}catch(e){window.console&&window.console.log&&window.console.log(e)}}}return this};this.shortcut=function(a){var b,c,d,e,f;if(this.options.allowShortcuts&&a.pattern&&$.isFunction(a.callback)){b=a.pattern.toUpperCase().split(/\s+/);for(e=0;e<b.length;e++)c=b[e],f=c.split("+"),(d=1==(d=f.pop()).length?0<d?d:d.charCodeAt(0):$.ui.keyCode[d])&&
-!x[c]&&(x[c]={keyCode:d,altKey:-1!=$.inArray("ALT",f),ctrlKey:-1!=$.inArray("CTRL",f),shiftKey:-1!=$.inArray("SHIFT",f),type:a.type||"keydown",callback:a.callback,description:a.description,pattern:c})}return this};this.shortcuts=function(){var a=[];$.each(x,function(c,d){a.push([d.pattern,b.i18n(d.description)])});return a};this.clipboard=function(a,b){var c=function(){return $.map(w,function(a){return a.hash})};void 0!==a&&(w.length&&this.trigger("unlockfiles",{files:c()}),D=[],w=$.map(a||[],function(a){var c=
-p[a];return c?(D.push(a),{hash:a,phash:c.phash,name:c.name,mime:c.mime,read:c.read,locked:c.locked,cut:!!b}):null}),this.trigger("changeclipboard",{clipboard:w.slice(0,w.length)}),b&&this.trigger("lockfiles",{files:c()}));return w.slice(0,w.length)};this.isCommandEnabled=function(a){return this._commands[a]?-1===$.inArray(a,r.disabled):!1};this.exec=function(a,b,c){return this._commands[a]&&this.isCommandEnabled(a)?this._commands[a].exec(b,c):$.Deferred().reject("No such command")};this.dialog=function(b,
-c){return $("<div/>").append(b).appendTo(a).finderdialog(c)};this.getUI=function(b){return this.ui[b]||a};this.command=function(a){return void 0===a?this._commands:this._commands[a]};this.resize=function(b,c){a.css("width",b).height(c).trigger("resize");this.trigger("resize",{width:a.width(),height:a.height()})};this.restoreSize=function(){this.resize(J,K)};this.show=function(){a.show();this.enable().trigger("show")};this.hide=function(){this.disable().trigger("hide");a.hide()};this.destroy=function(){a&&
-a[0].finder&&(this.trigger("destroy").disable(),t={},x={},$(document).add(a).unbind("."+this.namespace),b.trigger=function(){},a.children().remove(),a.append(d.contents()).removeClass(this.cssClass).attr("style",e),a[0].finder=null,L&&clearInterval(L))};if(!$.fn.selectable||!$.fn.draggable||!$.fn.droppable)return alert(this.i18n("errJqui"));if(!a.length)return alert(this.i18n("errNode"));if(!this.options.url)return alert(this.i18n("errURL"));$.extend($.ui.keyCode,{F1:112,F2:113,F3:114,F4:115,F5:116,
-F6:117,F7:118,F8:119,F9:120});this.dragUpload=!1;this.xhrUpload="undefined"!=typeof XMLHttpRequestUpload&&"undefined"!=typeof File&&"undefined"!=typeof FormData;this.transport={};"object"==typeof this.options.transport&&(this.transport=this.options.transport,"function"==typeof this.transport.init&&this.transport.init(this));"function"!=typeof this.transport.send&&(this.transport.send=function(a){return $.ajax(a)});"iframe"==this.transport.upload?this.transport.upload=$.proxy(this.uploads.iframe,this):
-"function"==typeof this.transport.upload?this.dragUpload=!!this.options.dragUploadAllow:this.xhrUpload?(this.transport.upload=$.proxy(this.uploads.xhr,this),this.dragUpload=!0):this.transport.upload=$.proxy(this.uploads.iframe,this);this.error=function(){var a=arguments[0];return 1==arguments.length&&"function"==typeof a?b.bind("error",a):b.trigger("error",{error:a})};$.each("enable disable load open reload select add remove change dblclick getfile lockfiles unlockfiles dragstart dragstop search searchend viewchange".split(" "),
-function(a,c){b[c]=function(){var a=arguments[0];return 1==arguments.length&&"function"==typeof a?b.bind(c,a):b.trigger(c,$.isPlainObject(a)?a:{})}});this.enable(function(){!k&&(b.visible()&&b.ui.overlay.is(":hidden"))&&(k=!0,$("texarea:focus,input:focus,button").blur(),a.removeClass("finder-disabled"))}).disable(function(){m=k;k=!1;a.addClass("finder-disabled")}).open(function(){v=[]}).select(function(a){v=$.map(a.data.selected||a.data.value||[],function(a){return p[a]?a:null})}).error(function(a){var c=
-{cssClass:"finder-dialog-error",title:b.i18n(b.i18n("error")),resizable:!1,destroyOnClose:!0,buttons:{}};c.buttons[b.i18n(b.i18n("btnClose"))]=function(){$(this).finderdialog("close")};b.dialog('<span class="finder-dialog-icon finder-dialog-icon-error"/>'+b.i18n(a.data.error),c)}).bind("tree parents",function(a){y(a.data.tree||[])}).bind("tmb",function(a){$.each(a.data.images||[],function(a,b){p[a]&&(p[a].tmb=b)})}).add(function(a){y(a.data.added||[])}).change(function(a){$.each(a.data.changed||[],
-function(a,b){var c=b.hash;p[c]=p[c]?$.extend(p[c],b):b})}).remove(function(a){a=a.data.removed||[];for(var b=a.length,c=function(a){var b=p[a];b&&("directory"==b.mime&&b.dirs&&$.each(p,function(b,d){d.phash==a&&c(b)}),delete p[a])};b--;)c(a[b])}).bind("search",function(a){y(a.data.files)});$.each(this.options.handlers,function(a,c){b.bind(a,c)});this.history=new this.history(this);"function"==typeof this.options.getFileCallback&&this.commands.getfile&&(this.bind("dblclick",function(a){a.preventDefault();
-b.exec("getfile").fail(function(){b.exec("open")})}),this.shortcut({pattern:"enter",description:this.i18n("cmdgetfile"),callback:function(){b.exec("getfile").fail(function(){b.exec("mac"==b.OS?"rename":"open")})}}).shortcut({pattern:"ctrl+enter",description:this.i18n("mac"==this.OS?"cmdrename":"cmdopen"),callback:function(){b.exec("mac"==b.OS?"rename":"open")}}));this._commands={};$.isArray(this.options.commands)||(this.options.commands=[]);$.each("open reload back forward up home info quicklook getfile help".split(" "),
-function(a,c){-1===$.inArray(c,b.options.commands)&&b.options.commands.push(c)});$.each(this.options.commands,function(a,c){var d=b.commands[c];$.isFunction(d)&&!b._commands[c]&&(d.prototype=Q,b._commands[c]=new d,b._commands[c].setup(c,b.options.commandsOptions[c]||{}))});a.addClass(this.cssClass).bind(h,function(){!k&&b.enable()});this.ui={workzone:$("<div/>").appendTo(a).finderworkzone(this),navbar:$("<div/>").appendTo(a).findernavbar(this,this.options.uiOptions.navbar||{}),contextmenu:$("<div/>").appendTo(a).findercontextmenu(this),
-overlay:$("<div/>").appendTo(a).finderoverlay({show:function(){b.disable()},hide:function(){m&&b.enable()}}),cwd:$("<div/>").appendTo(a).findercwd(this,this.options.uiOptions.cwd||{}),notify:this.dialog("",{cssClass:"finder-dialog-notify",position:{top:"12px",right:"12px"},resizable:!1,autoOpen:!1,title:"&nbsp;",width:280}),statusbar:$('<div class="ui-widget-header ui-helper-clearfix ui-corner-bottom finder-statusbar"/>').hide().appendTo(a)};$.each(this.options.ui||[],function(c,d){var e="finder"+
-d,f=b.options.uiOptions[d]||{};!b.ui[d]&&$.fn[e]&&(b.ui[d]=$("<"+(f.tag||"div")+"/>").appendTo(a)[e](b,f))});a[0].finder=this;this.options.resizable&&$.fn.resizable&&a.resizable({handles:"se",minWidth:300,minHeight:200});this.options.width&&(J=this.options.width);this.options.height&&(K=parseInt(this.options.height));b.resize(J,K);$(document).bind("click."+this.namespace,function(c){k&&!$(c.target).closest(a).length&&b.disable()}).bind(j+" "+l,function(a){var c=a.keyCode,d=!(!a.ctrlKey&&!a.metaKey);
-k&&($.each(x,function(e,f){f.type==a.type&&(f.keyCode==c&&f.shiftKey==a.shiftKey&&f.ctrlKey==d&&f.altKey==a.altKey)&&(a.preventDefault(),a.stopPropagation(),f.callback(a,b),b.debug("shortcut-exec",e+" : "+f.description))}),9==c&&!$(a.target).is(":input")&&a.preventDefault())});this.trigger("init").request({data:{cmd:"open",target:b.lastDir(),init:1,tree:this.ui.tree?1:0},preventDone:!0,notify:{type:"open",cnt:1,hideCnt:!0},freeze:!0}).fail(function(){b.trigger("fail").disable().lastDir("");t={};x=
-{};$(document).add(a).unbind("."+this.namespace);b.trigger=function(){}}).done(function(a){b.load();a=$.extend(!0,{},a);A(a);b.trigger("open",a)});this.one("load",function(){a.trigger("resize");1E3<b.options.sync&&(L=setInterval(function(){b.sync()},b.options.sync))})};
-Finder.prototype={res:function(a,c){return this.resources[a]&&this.resources[a][c]},i18:{en:{translator:"",language:"English",direction:"ltr",dateFormat:"d.m.Y H:i",fancyDateFormat:"$1 H:i",messages:{}},months:"January February March April May June July August September October November December".split(" "),monthsShort:"Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" "),days:"Sunday Monday Tuesday Wednesday Thursday Friday Saturday".split(" "),daysShort:"Sun Mon Tue Wed Thu Fri Sat".split(" ")},
-rules:{defaults:function(a){return!a||a.added&&!$.isArray(a.added)||a.removed&&!$.isArray(a.removed)||a.changed&&!$.isArray(a.changed)?!1:!0},open:function(a){return a&&a.cwd&&a.files&&$.isPlainObject(a.cwd)&&$.isArray(a.files)},tree:function(a){return a&&a.tree&&$.isArray(a.tree)},parents:function(a){return a&&a.tree&&$.isArray(a.tree)},tmb:function(a){return a&&a.images&&($.isPlainObject(a.images)||$.isArray(a.images))},upload:function(a){return a&&($.isPlainObject(a.added)||$.isArray(a.added))},
-search:function(a){return a&&a.files&&$.isArray(a.files)}},commands:{},parseUploadData:function(a){var c;if(!$.trim(a))return{error:["errResponse","errDataEmpty"]};try{c=$.parseJSON(a)}catch(b){return{error:["errResponse","errDataNotJSON"]}}if(!this.validResponse("upload",c))return{error:["errResponse"]};c.removed=$.map(c.added||[],function(a){return a.hash});return c},iframeCnt:0,uploads:{iframe:function(a,c){var b=c?c:this,d=a.input,e=$.Deferred().fail(function(a){a&&b.error(a)}).done(function(a){a.warning&&
-b.error(a.warning);a.removed&&b.remove(a);a.added&&b.add(a);a.changed&&b.change(a);b.trigger("upload",a);a.sync&&b.sync()}),f="iframe-"+b.namespace+ ++b.iframeCnt,g=$('<form action="'+b.uploadURL+'" method="post" enctype="multipart/form-data" encoding="multipart/form-data" target="'+f+'" style="display:none"><input type="hidden" name="cmd" value="upload" /></form>'),h=this.UA.IE,j=function(){r&&clearTimeout(r);n&&clearTimeout(n);m&&b.notify({type:"upload",cnt:-k});setTimeout(function(){h&&$('<iframe src="javascript:false;"/>').appendTo(g);
-g.remove();l.remove()},100)},l=$('<iframe src="'+(h?"javascript:false;":"about:blank")+'" name="'+f+'" style="position:absolute;left:-1000px;top:-1000px" />').bind("load",function(){l.unbind("load").bind("load",function(){var a=b.parseUploadData(l.contents().text());j();a.error?e.reject(a.error):e.resolve(a)});n=setTimeout(function(){m=!0;b.notify({type:"upload",cnt:k})},b.options.notifyDelay);0<b.options.iframeTimeout&&(r=setTimeout(function(){j();e.reject([errors.connect,errors.timeout])},b.options.iframeTimeout));
-g.submit()}),k,m,n,r;if(d&&$(d).is(":file")&&$(d).val())g.append(d);else return e.reject();k=d.files?d.files.length:1;g.append('<input type="hidden" name="target" value="'+b.cwd().hash+'"/>').append('<input type="hidden" name="html" value="1"/>').append($(d).attr("name","upload[]"));$.each(b.options.onlyMimes||[],function(a,b){g.append('<input type="hidden" name="mimes[]" value="'+b+'"/>')});$.each(b.options.customData,function(a,b){g.append('<input type="hidden" name="'+a+'" value="'+b+'"/>')});
-g.appendTo("body");l.appendTo("body");return e},xhr:function(a,c){var b=c?c:this,d=$.Deferred().fail(function(a){a&&b.error(a)}).done(function(a){a.warning&&b.error(a.warning);a.removed&&b.remove(a);a.added&&b.add(a);a.changed&&b.change(a);b.trigger("upload",a);a.sync&&b.sync()}).always(function(){m&&clearTimeout(m);l&&b.notify({type:"upload",cnt:-h,progress:100*h})}),e=new XMLHttpRequest,f=new FormData,g=a.input?a.input.files:a.files,h=g.length,j=5,l=!1,k=function(){return setTimeout(function(){l=
-!0;b.notify({type:"upload",cnt:h,progress:j*h})},b.options.notifyDelay)},m;if(!h)return d.reject();e.addEventListener("error",function(){d.reject("errConnect")},!1);e.addEventListener("abort",function(){d.reject(["errConnect","errAbort"])},!1);e.addEventListener("load",function(){var a=e.status;if(500<a)return d.reject("errResponse");if(200!=a)return d.reject("errConnect");if(4!=e.readyState)return d.reject(["errConnect","errTimeout"]);if(!e.responseText)return d.reject(["errResponse","errDataEmpty"]);
-a=b.parseUploadData(e.responseText);a.error?d.reject(a.error):d.resolve(a)},!1);e.upload.addEventListener("progress",function(a){var c=j;a.lengthComputable&&(a=parseInt(100*a.loaded/a.total),0<a&&!m&&(m=k()),4<a-c&&(j=a,l&&b.notify({type:"upload",cnt:0,progress:(j-c)*h})))},!1);e.open("POST",b.uploadURL,!0);f.append("cmd","upload");f.append("target",b.cwd().hash);$.each(b.options.customData,function(a,b){f.append(a,b)});$.each(b.options.onlyMimes,function(a,b){f.append("mimes["+a+"]",b)});$.each(g,
-function(a,b){f.append("upload[]",b)});e.onreadystatechange=function(){4==e.readyState&&0==e.status&&d.reject(["errConnect","errAbort"])};e.send(f);if(!this.UA.Webkit||!a.files)m=k();return d}},one:function(a,c){var b=this,d=$.proxy(c,function(a){setTimeout(function(){b.unbind(a.type,d)},3);return c.apply(this,arguments)});return this.bind(a,d)},localStorage:function(a,c){var b=window.localStorage;a="finder-"+a+this.id;if(null===c)return console.log("remove",a),b.removeItem(a);if(void 0!==c)try{b.setItem(a,
-c)}catch(d){b.clear(),b.setItem(a,c)}return b.getItem(a)},cookie:function(a,c){var b,d;a="finder-"+a+this.id;if(void 0===c){if(document.cookie&&""!=document.cookie){b=document.cookie.split(";");a+="=";for(d=0;d<b.length;d++)if(b[d]=$.trim(b[d]),b[d].substring(0,a.length)==a)return decodeURIComponent(b[d].substring(a.length))}return""}d=$.extend({},this.options.cookie);null===c&&(c="",d.expires=-1);"number"==typeof d.expires&&(b=new Date,b.setTime(b.getTime()+864E5*d.expires),d.expires=b);document.cookie=
-a+"="+encodeURIComponent(c)+"; expires="+d.expires.toUTCString()+(d.path?"; path="+d.path:"")+(d.domain?"; domain="+d.domain:"")+(d.secure?"; secure":"");return c},lastDir:function(a){return this.options.rememberLastDir?this.storage("lastdir",a):""},_node:$("<span/>"),escape:function(a){return this._node.text(a).html()},setSort:function(a,c,b){this.storage("sortType",this.sortType=this.sortRules[a]?a:"name");this.storage("sortOrder",this.sortOrder=/asc|desc/.test(c)?c:"asc");this.storage("sortStickFolders",
-(this.sortStickFolders=!!b)?1:"");this.trigger("sortchange")},_sortRules:{name:function(a,c){return a.name.toLowerCase().localeCompare(c.name.toLowerCase())},size:function(a,c){var b=parseInt(a.size)||0,d=parseInt(c.size)||0;return b==d?0:b>d?1:-1},kind:function(a,c){return a.mime.localeCompare(c.mime)},date:function(a,c){var b=a.ts||a.date,d=c.ts||c.date;return b==d?0:b>d?1:-1}},compare:function(a,c){var b=this.sortType,d="asc"==this.sortOrder,e=this.sortRules,f=e[b],g="directory"==a.mime,h="directory"==
-c.mime;if(this.sortStickFolders){if(g&&!h)return-1;if(!g&&h)return 1}f=d?f(a,c):f(c,a);return"name"!=b&&0==f?d?e.name(a,c):e.name(c,a):f},sortFiles:function(a){return a.sort(this.compare)},notify:function(a){var c=a.type,b=this.messages["ntf"+c]?this.i18n("ntf"+c):this.i18n("ntfsmth"),d=this.ui.notify,e=d.children(".finder-notify-"+c),f=a.cnt,g=0<=a.progress&&100>=a.progress?a.progress:0,h;if(!c)return this;e.length||(e=$('<div class="finder-notify finder-notify-{type}"><span class="finder-dialog-icon finder-dialog-icon-{type}"/><span class="finder-notify-msg">{msg}</span> <span class="finder-notify-cnt"/><div class="finder-notify-progressbar"><div class="finder-notify-progress"/></div></div>'.replace(/\{type\}/g,
-c).replace(/\{msg\}/g,b)).appendTo(d).data("cnt",0),g&&e.data({progress:0,total:0}));c=f+parseInt(e.data("cnt"));if(0<c){if(!a.hideCnt&&e.children(".finder-notify-cnt").text("("+c+")"),d.is(":hidden")&&d.finderdialog("open"),e.data("cnt",c),100>g&&0<=e.data("total")&&0<=(h=e.data("progress")))a=f+parseInt(e.data("total")),h=g+h,g=parseInt(h/a),e.data({progress:h,total:a}),d.find(".finder-notify-progress").animate({width:(100>g?g:100)+"%"},20)}else e.remove(),!d.children().length&&d.finderdialog("close");
-return this},confirm:function(a){var c=!1,b={cssClass:"finder-dialog-confirm",modal:!0,resizable:!1,title:this.i18n(a.title||"confirmReq"),buttons:{},close:function(){!c&&a.cancel.callback();$(this).finderdialog("destroy")}},d=this.i18n("apllyAll"),e;a.reject&&(b.buttons[this.i18n(a.reject.label)]=function(){a.reject.callback(!(!e||!e.prop("checked")));c=!0;$(this).finderdialog("close")});b.buttons[this.i18n(a.accept.label)]=function(){a.accept.callback(!(!e||!e.prop("checked")));c=!0;$(this).finderdialog("close")};
-b.buttons[this.i18n(a.cancel.label)]=function(){$(this).finderdialog("close")};a.all&&(a.reject&&(b.width=370),b.create=function(){e=$('<input type="checkbox" />');$(this).next().children().before($("<label>"+d+"</label>").prepend(e))},b.open=function(){var a=$(this).next(),b=parseInt(a.children(":first").outerWidth()+a.children(":last").outerWidth());b>parseInt(a.width())&&$(this).closest(".finder-dialog").width(b+30)});return this.dialog('<span class="finder-dialog-icon finder-dialog-icon-confirm"/>'+
-this.i18n(a.text),b)},uniqueName:function(a,c){var b=0,d="",e;a=this.i18n(a);c=c||this.cwd().hash;if(-1!=(e=a.indexOf(".txt")))d=".txt",a=a.substr(0,e);e=a+d;if(!this.fileByName(e,c))return e;for(;1E4>b;)if(e=a+" "+ ++b+d,!this.fileByName(e,c))return e;return a+Math.random()+d},i18n:function(){var a=this,c=this.messages,b=[],d=[],e=function(b){var c;return 0===b.indexOf("#")&&(c=a.file(b.substr(1)))?c.name:b},f,g,h;for(f=0;f<arguments.length;f++)if(h=arguments[f],"string"==typeof h)b.push(e(h));else if($.isArray(h))for(g=
-0;g<h.length;g++)"string"==typeof h[g]&&b.push(e(h[g]));for(f=0;f<b.length;f++)-1===$.inArray(f,d)&&(h=b[f],h=c[h]||h,h=h.replace(/\$(\d+)/g,function(a,c){c=f+parseInt(c);0<c&&b[c]&&d.push(c);return b[c]||""}),b[f]=h);return $.map(b,function(a,b){return-1===$.inArray(b,d)?a:null}).join("<br>")},formatDate:function(a,c){var b=this;c=c||a.ts;var d=b.i18,e,f,g,h,j,l,k,m,n;return b.options.clientFormatDate&&0<c?(e=new Date(1E3*c),l=e[b.getHours](),k=12<l?l-12:l,m=e[b.getMinutes](),n=e[b.getSeconds](),
-f=e[b.getDate](),g=e[b.getDay](),h=e[b.getMonth]()+1,j=e[b.getFullYear](),e=c>=this.yesterday?this.fancyFormat:this.dateFormat,e=e.replace(/[a-z]/gi,function(a){switch(a){case "d":return 9<f?f:"0"+f;case "j":return f;case "D":return b.i18n(d.daysShort[g]);case "l":return b.i18n(d.days[g]);case "m":return 9<h?h:"0"+h;case "n":return h;case "M":return b.i18n(d.monthsShort[h-1]);case "F":return b.i18n(d.months[h-1]);case "Y":return j;case "y":return(""+j).substr(2);case "H":return 9<l?l:"0"+l;case "G":return l;
-case "g":return k;case "h":return 9<k?k:"0"+k;case "a":return 12<l?"pm":"am";case "A":return 12<l?"PM":"AM";case "i":return 9<m?m:"0"+m;case "s":return 9<n?n:"0"+n}return a}),c>=this.yesterday?e.replace("$1",this.i18n(c>=this.today?"Today":"Yesterday")):e):a.date?a.date.replace(/([a-z]+)\s/i,function(a,c){return b.i18n(c)+" "}):b.i18n("dateUnknown")},perms2class:function(a){var c="";!a.read&&!a.write?c="finder-na":a.read?a.write||(c="finder-ro"):c="finder-wo";return c},formatPermissions:function(a){var c=
-[];a.read&&c.push(this.i18n("read"));a.write&&c.push(this.i18n("write"));return c.length?c.join(" "+this.i18n("and")+" "):this.i18n("noaccess")},formatSize:function(a){var c=1,b="b";if("unknown"==a)return this.i18n("unknown");1073741824<a?(c=1073741824,b="GB"):1048576<a?(c=1048576,b="MB"):1024<a&&(c=1024,b="KB");a/=c;return(0<a?1048576<=c?a.toFixed(2):Math.round(a):0)+" "+b},navHash2Id:function(a){return"nav-"+a},navId2Hash:function(a){return"string"==typeof a?a.substr(4):!1},log:function(a){window.console&&
-window.console.log&&window.console.log(a);return this},debug:function(a,c){var b=this.options.debug;("all"==b||!0===b||$.isArray(b)&&-1!=$.inArray(a,b))&&window.console&&window.console.log&&window.console.log("finder debug: ["+a+"] ["+this.id+"]",c);return this},time:function(a){window.console&&window.console.time&&window.console.time(a)},timeEnd:function(a){window.console&&window.console.timeEnd&&window.console.timeEnd(a)}};Finder.prototype.version="2.2.1";
-$.fn.finder=function(a){return"instance"==a?this.getFinder():this.each(function(){var c="string"==typeof a?a:"";this.finder||new Finder(this,"object"==typeof a?a:{});switch(c){case "close":case "hide":this.finder.hide();break;case "open":case "show":this.finder.show();break;case "destroy":this.finder.destroy()}})};$.fn.getFinder=function(){var a;this.each(function(){if(this.finder)return a=this.finder,!1});return a};
-Finder.prototype._options={url:"",requestType:"get",transport:{},urlUpload:"",dragUploadAllow:"auto",iframeTimeout:0,customData:{},handlers:{},lang:"en",cssClass:"",commands:"open reload home up back forward getfile quicklook download rm duplicate rename mkdir mkfile upload copy cut paste edit extract archive search info view help resize sort netmount unmount".split(" "),commandsOptions:{getfile:{multiple:!1,folders:!1,oncomplete:""},upload:{ui:"uploadbutton"},quicklook:{autoplay:!0,jplayer:"extensions/jplayer"},
-edit:{mimes:[],editors:[]},help:{view:["about","shortcuts","help"]}},getFileCallback:null,defaultView:"icons",ui:["toolbar","places","tree","path","stat"],uiOptions:{toolbar:[["back","forward","up","reload"],["home","netmount"],["mkdir","mkfile","upload"],["open","download","getfile"],["info","quicklook"],["copy","cut","paste"],["rm"],["duplicate","rename","edit","resize"],["extract","archive"],["view","sort"],["help"],["search"]],tree:{openRootOnLoad:!0,syncTree:!0},navbar:{minWidth:150,maxWidth:500},
-cwd:{oldSchool:!1}},onlyMimes:[],sortRules:{},sortType:"name",sortOrder:"asc",sortStickFolders:!0,clientFormatDate:!0,UTCDate:!1,dateFormat:"",fancyDateFormat:"",width:"auto",height:400,resizable:!0,notifyDelay:500,allowShortcuts:!0,rememberLastDir:!0,showFiles:30,showThreshold:50,validName:!1,sync:0,loadTmbs:5,cookie:{expires:30,domain:"",path:"/",secure:!1},contextmenu:{navbar:"open | copy cut paste duplicate | rm | info | unmount".split(" "),cwd:"reload back | upload mkdir mkfile paste | sort | info".split(" "),
-files:"getfile | open quicklook | download | copy cut paste duplicate | rm | edit rename resize | archive extract | info".split(" ")},debug:["error","warning","event-destroy"]};
-Finder.prototype.history=function(a){var c=this,b=!0,d=[],e,f=function(){d=[a.cwd().hash];e=0;b=!0},g=function(g){return g&&c.canForward()||!g&&c.canBack()?(b=!1,a.exec("open",d[g?++e:--e]).fail(f)):$.Deferred().reject()};this.canBack=function(){return 0<e};this.canForward=function(){return e<d.length-1};this.back=g;this.forward=function(){return g(!0)};a.open(function(){var c=d.length,f=a.cwd().hash;b&&(0<=e&&c>e+1&&d.splice(e+1),d[d.length-1]!=f&&d.push(f),e=d.length-1);b=!0}).reload(f)};
-Finder.prototype.command=function(a){this.fm=a;this.title=this.name="";this.state=-1;this.disableOnSearch=this._disabled=this.alwaysEnabled=!1;this.updateOnSelect=!0;this._handlers={enable:function(){this.update(void 0,this.value)},disable:function(){this.update(-1,this.value)},"open reload load":function(){this._disabled=!(this.alwaysEnabled||this.fm.isCommandEnabled(this.name));this.update(void 0,this.value);this.change()}};this.handlers={};this.shortcuts=[];this.options={ui:"button"};this.setup=
-function(a,b){var d=this,e=this.fm,f,g;this.name=a;this.title=e.messages["cmd"+a]?e.i18n("cmd"+a):a;this.options=$.extend({},this.options,b);this.listeners=[];this.updateOnSelect&&(this._handlers.select=function(){this.update(void 0,this.value)});$.each($.extend({},d._handlers,d.handlers),function(a,b){e.bind(a,$.proxy(b,d))});for(f=0;f<this.shortcuts.length;f++)g=this.shortcuts[f],g.callback=$.proxy(g.callback||function(){this.exec()},this),!g.description&&(g.description=this.title),e.shortcut(g);
-this.disableOnSearch&&e.bind("search searchend",function(a){d._disabled="search"==a.type;d.update(void 0,d.value)});this.init()};this.init=function(){};this.exec=function(){return $.Deferred().reject()};this.disabled=function(){return 0>this.state};this.enabled=function(){return-1<this.state};this.active=function(){return 0<this.state};this.getstate=function(){return-1};this.update=function(a,b){var d=this.state,e=this.value;this.state=this._disabled?-1:void 0!==a?a:this.getstate();this.value=b;(d!=
-this.state||e!=this.value)&&this.change()};this.change=function(a){var b;if("function"===typeof a)this.listeners.push(a);else for(b=0;b<this.listeners.length;b++){a=this.listeners[b];try{a(this.state,this.value)}catch(d){this.fm.debug("error",d)}}return this};this.hashes=function(c){return c?$.map($.isArray(c)?c:[c],function(b){return a.file(b)?b:null}):a.selected()};this.files=function(a){var b=this.fm;return a?$.map($.isArray(a)?a:[a],function(a){return b.file(a)||null}):b.selectedFiles()}};
-Finder.prototype.resources={"class":{hover:"ui-state-hover",active:"ui-state-active",disabled:"ui-state-disabled",draggable:"ui-draggable",droppable:"ui-droppable",adroppable:"finder-droppable-active",cwdfile:"finder-cwd-file",cwd:"finder-cwd",tree:"finder-tree",treeroot:"finder-navbar-root",navdir:"finder-navbar-dir",navdirwrap:"finder-navbar-dir-wrapper",navarrow:"finder-navbar-arrow",navsubtree:"finder-navbar-subtree",navcollapse:"finder-navbar-collapsed",navexpand:"finder-navbar-expanded",treedir:"finder-tree-dir",
-placedir:"finder-place-dir",searchbtn:"finder-button-search"},tpl:{perms:'<span class="finder-perms"/>',symlink:'<span class="finder-symlink"/>',navicon:'<span class="finder-nav-icon"/>',navspinner:'<span class="finder-navbar-spinner"/>',navdir:'<div class="finder-navbar-wrapper"><span id="{id}" class="ui-corner-all finder-navbar-dir {cssclass}"><span class="finder-navbar-arrow"/><span class="finder-navbar-icon"/>{symlink}{permissions}{name}</span><div class="finder-navbar-subtree"/></div>'},mimes:{text:"application/x-empty application/javascript application/xhtml+xml audio/x-mp3-playlist application/x-web-config application/docbook+xml application/x-php application/x-perl application/x-awk application/x-config application/x-csh application/xml".split(" ")},
-mixin:{make:function(){var a=this.fm,c=this.name,b=a.getUI("cwd"),d=$.Deferred().fail(function(c){b.trigger("unselectall");c&&a.error(c)}).always(function(){j.remove();h.remove();a.enable()}),e="tmp_"+parseInt(1E5*Math.random()),f=a.cwd().hash,g=new Date,g={hash:e,name:a.uniqueName(this.prefix),mime:this.mime,read:!0,write:!0,date:"Today "+g.getHours()+":"+g.getMinutes()},h=b.trigger("create."+a.namespace,g).find("#"+e),j=$('<input type="text"/>').keydown(function(a){a.stopImmediatePropagation();
-a.keyCode==$.ui.keyCode.ESCAPE?d.reject():a.keyCode==$.ui.keyCode.ENTER&&j.blur()}).mousedown(function(a){a.stopPropagation()}).blur(function(){var b=$.trim(j.val()),g=j.parent();if(g.length){if(!b)return d.reject("errInvName");if(a.fileByName(b,f))return d.reject(["errExists",b]);g.html(a.escape(b));a.lockfiles({files:[e]});a.request({data:{cmd:c,name:b,target:f},notify:{type:c,cnt:1},preventFail:!0,syncOnFail:!0}).fail(function(a){d.reject(a)}).done(function(a){d.resolve(a)})}});if(this.disabled()||
-!h.length)return d.reject();a.disable();h.find(".finder-cwd-filename").empty("").append(j.val(g.name));j.select().focus();return d}}};
-Finder.prototype.kinds={unknown:"Unknown",directory:"Folder",symlink:"Alias","symlink-broken":"AliasBroken","application/x-empty":"TextPlain","application/postscript":"Postscript","application/vnd.ms-office":"MsOffice","application/vnd.ms-word":"MsWord","application/vnd.openxmlformats-officedocument.wordprocessingml.document":"MsWord","application/vnd.ms-word.document.macroEnabled.12":"MsWord","application/vnd.openxmlformats-officedocument.wordprocessingml.template":"MsWord","application/vnd.ms-word.template.macroEnabled.12":"MsWord",
-"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":"MsWord","application/vnd.ms-excel":"MsExcel","application/vnd.ms-excel.sheet.macroEnabled.12":"MsExcel","application/vnd.openxmlformats-officedocument.spreadsheetml.template":"MsExcel","application/vnd.ms-excel.template.macroEnabled.12":"MsExcel","application/vnd.ms-excel.sheet.binary.macroEnabled.12":"MsExcel","application/vnd.ms-excel.addin.macroEnabled.12":"MsExcel","application/vnd.ms-powerpoint":"MsPP","application/vnd.openxmlformats-officedocument.presentationml.presentation":"MsPP",
-"application/vnd.ms-powerpoint.presentation.macroEnabled.12":"MsPP","application/vnd.openxmlformats-officedocument.presentationml.slideshow":"MsPP","application/vnd.ms-powerpoint.slideshow.macroEnabled.12":"MsPP","application/vnd.openxmlformats-officedocument.presentationml.template":"MsPP","application/vnd.ms-powerpoint.template.macroEnabled.12":"MsPP","application/vnd.ms-powerpoint.addin.macroEnabled.12":"MsPP","application/vnd.openxmlformats-officedocument.presentationml.slide":"MsPP","application/vnd.ms-powerpoint.slide.macroEnabled.12":"MsPP",
-"application/pdf":"PDF","application/xml":"XML","application/vnd.oasis.opendocument.text":"OO","application/vnd.oasis.opendocument.text-template":"OO","application/vnd.oasis.opendocument.text-web":"OO","application/vnd.oasis.opendocument.text-master":"OO","application/vnd.oasis.opendocument.graphics":"OO","application/vnd.oasis.opendocument.graphics-template":"OO","application/vnd.oasis.opendocument.presentation":"OO","application/vnd.oasis.opendocument.presentation-template":"OO","application/vnd.oasis.opendocument.spreadsheet":"OO",
-"application/vnd.oasis.opendocument.spreadsheet-template":"OO","application/vnd.oasis.opendocument.chart":"OO","application/vnd.oasis.opendocument.formula":"OO","application/vnd.oasis.opendocument.database":"OO","application/vnd.oasis.opendocument.image":"OO","application/vnd.openofficeorg.extension":"OO","application/x-shockwave-flash":"AppFlash","application/flash-video":"Flash video","application/x-bittorrent":"Torrent","application/javascript":"JS","application/rtf":"RTF","application/rtfd":"RTF",
-"application/x-font-ttf":"TTF","application/x-font-otf":"OTF","application/x-rpm":"RPM","application/x-web-config":"TextPlain","application/xhtml+xml":"HTML","application/docbook+xml":"DOCBOOK","application/x-awk":"AWK","application/x-gzip":"GZIP","application/x-bzip2":"BZIP","application/zip":"ZIP","application/x-zip":"ZIP","application/x-rar":"RAR","application/x-tar":"TAR","application/x-7z-compressed":"7z","application/x-jar":"JAR","text/plain":"TextPlain","text/x-php":"PHP","text/html":"HTML",
-"text/javascript":"JS","text/css":"CSS","text/rtf":"RTF","text/rtfd":"RTF","text/x-c":"C","text/x-csrc":"C","text/x-chdr":"CHeader","text/x-c++":"CPP","text/x-c++src":"CPP","text/x-c++hdr":"CPPHeader","text/x-shellscript":"Shell","application/x-csh":"Shell","text/x-python":"Python","text/x-java":"Java","text/x-java-source":"Java","text/x-ruby":"Ruby","text/x-perl":"Perl","text/x-sql":"SQL","text/xml":"XML","text/x-comma-separated-values":"CSV","image/x-ms-bmp":"BMP","image/jpeg":"JPEG","image/gif":"GIF",
-"image/png":"PNG","image/tiff":"TIFF","image/x-targa":"TGA","image/vnd.adobe.photoshop":"PSD","image/xbm":"XBITMAP","image/pxm":"PXM","audio/mpeg":"AudioMPEG","audio/midi":"AudioMIDI","audio/ogg":"AudioOGG","audio/mp4":"AudioMPEG4","audio/x-m4a":"AudioMPEG4","audio/wav":"AudioWAV","audio/x-mp3-playlist":"AudioPlaylist","video/x-dv":"VideoDV","video/mp4":"VideoMPEG4","video/mpeg":"VideoMPEG","video/x-msvideo":"VideoAVI","video/quicktime":"VideoMOV","video/x-ms-wmv":"VideoWM","video/x-flv":"VideoFlash",
-"video/x-matroska":"VideoMKV","video/ogg":"VideoOGG"};Finder.prototype.mime2kind=function(a){var c="object"==typeof a?a.mime:a;a=a.alias?"Alias":this.kinds[c]?this.kinds[c]:0===c.indexOf("text")?"Text":0===c.indexOf("image")?"Image":0===c.indexOf("audio")?"Audio":0===c.indexOf("video")?"Video":0===c.indexOf("application")?"App":c;return this.messages["kind"+a]?this.i18n("kind"+a):c};
-Finder.prototype.mime2class=function(a){a=a.split("/");return"finder-cwd-icon-"+a[0]+("image"!=a[0]&&a[1]?" finder-cwd-icon-"+a[1].replace(/(\.|\+)/g,"-"):"")};
-$.fn.dialogfinder=function(a){this.not(".finder").each(function(){$(document);var b=$('<div class="ui-widget-header dialogfinder-drag ui-corner-top">'+(a.title||"Files")+"</div>");$('<a href="#" class="dialogfinder-drag-close ui-corner-all"><span class="ui-icon ui-icon-closethick"/></a>').appendTo(b).click(function(a){a.preventDefault();c.dialogfinder("close")});var c=$(this).addClass("dialogfinder").css("position","absolute").hide().appendTo("body").draggable({handle:".dialogfinder-drag"}).finder(a).prepend(b);
-c.finder("instance");c.width(parseInt(c.width())||840).data("finderDestroyOnClose",!!a.destroyOnClose).find(".finder-toolbar").removeClass("ui-corner-top");a.position&&c.data("finderPosition",a.position);!1!==a.autoOpen&&$(this).dialogfinder("open")});if("open"==a){var c=$(this),b=c.data("finderPosition")||{top:parseInt($(document).scrollTop()+($(window).height()<c.height()?2:($(window).height()-c.height())/2)),left:parseInt($(document).scrollLeft()+($(window).width()<c.width()?2:($(window).width()-
-c.width())/2))},d=100;c.is(":hidden")&&($("body").find(":visible").each(function(){var a=$(this),b;if(this!==c[0]&&"absolute"==a.css("position")&&(b=parseInt(a.zIndex()))>d)d=b+1}),c.zIndex(d).css(b).show().trigger("resize"),setTimeout(function(){c.trigger("resize").mousedown()},200))}else if("close"==a)c=$(this),c.is(":visible")&&(c.data("finderDestroyOnClose")?c.finder("destroy").remove():c.finder("close"));else if("instance"==a)return $(this).getFinder();return this};
-Finder&&(Finder.prototype&&"object"==typeof Finder.prototype.i18)&&(Finder.prototype.i18.en={translator:"Troex Nevelin &lt;troex@fury.scancode.ru&gt;",language:"English",direction:"ltr",dateFormat:"M d, Y h:i A",fancyDateFormat:"$1 h:i A",messages:{error:"Error",errUnknown:"Unknown error.",errUnknownCmd:"Unknown command.",errJqui:"Invalid jQuery UI configuration. Selectable, draggable and droppable components must be included.",errNode:"gpFinder requires DOM Element to be created.",errURL:"Invalid gpFinder configuration! URL option is not set.",
-errAccess:"Access denied.",errConnect:"Unable to connect to backend.",errAbort:"Connection aborted.",errTimeout:"Connection timeout.",errNotFound:"Backend not found.",errResponse:"Invalid backend response.",errConf:"Invalid backend configuration.",errJSON:"PHP JSON module not installed.",errNoVolumes:"Readable volumes not available.",errCmdParams:'Invalid parameters for command "$1".',errDataNotJSON:"Data is not JSON.",errDataEmpty:"Data is empty.",errCmdReq:"Backend request requires command name.",
-errOpen:'Unable to open "$1".',errNotFolder:"Object is not a folder.",errNotFile:"Object is not a file.",errRead:'Unable to read "$1".',errWrite:'Unable to write into "$1".',errPerm:"Permission denied.",errLocked:'"$1" is locked and can not be renamed, moved or removed.',errExists:'File named "$1" already exists.',errInvName:"Invalid file name.",errFolderNotFound:"Folder not found.",errFileNotFound:"File not found.",errTrgFolderNotFound:'Target folder "$1" not found.',errPopup:"Browser prevented opening popup window. To open file enable it in browser options.",
-errMkdir:'Unable to create folder "$1".',errMkfile:'Unable to create file "$1".',errRename:'Unable to rename "$1".',errCopyFrom:'Copying files from volume "$1" not allowed.',errCopyTo:'Copying files to volume "$1" not allowed.',errUpload:"Upload error.",errUploadFile:'Unable to upload "$1".',errUploadNoFiles:"No files found for upload.",errUploadTotalSize:"Data exceeds the maximum allowed size.",errUploadFileSize:"File exceeds maximum allowed size.",errUploadMime:"File type not allowed.",errUploadTransfer:'"$1" transfer error.',
-errNotReplace:'Object "$1" already exists at this location and can not be replaced by object with another type.',errReplace:'Unable to replace "$1".',errSave:'Unable to save "$1".',errCopy:'Unable to copy "$1".',errMove:'Unable to move "$1".',errCopyInItself:'Unable to copy "$1" into itself.',errRm:'Unable to remove "$1".',errRmSrc:"Unable remove source file(s).",errExtract:'Unable to extract files from "$1".',errArchive:"Unable to create archive.",errArcType:"Unsupported archive type.",errNoArchive:"File is not archive or has unsupported archive type.",
-errCmdNoSupport:"Backend does not support this command.",errReplByChild:"The folder \u201c$1\u201d can\u2019t be replaced by an item it contains.",errArcSymlinks:"For security reason denied to unpack archives contains symlinks or files with not allowed names.",errArcMaxSize:"Archive files exceeds maximum allowed size.",errResize:'Unable to resize "$1".',errUsupportType:"Unsupported file type.",errNotUTF8Content:'File "$1" is not in UTF-8 and cannot be edited.',errNetMount:'Unable to mount "$1".',
-errNetMountNoDriver:"Unsupported protocol.",errNetMountFailed:"Mount failed.",errNetMountHostReq:"Host required.",cmdarchive:"Create archive",cmdback:"Back",cmdcopy:"Copy",cmdcut:"Cut",cmddownload:"Download",cmdduplicate:"Duplicate",cmdedit:"Edit file",cmdextract:"Extract files from archive",cmdforward:"Forward",cmdgetfile:"Select files",cmdhelp:"About this software",cmdhome:"Home",cmdinfo:"Get info",cmdmkdir:"New folder",cmdmkfile:"New text file",cmdopen:"Open",cmdpaste:"Paste",cmdquicklook:"Preview",
-cmdreload:"Reload",cmdrename:"Rename",cmdrm:"Delete",cmdsearch:"Find files",cmdup:"Go to parent directory",cmdupload:"Upload files",cmdview:"View",cmdresize:"Resize & Rotate",cmdsort:"Sort",cmdnetmount:"Mount network volume",btnClose:"Close",btnSave:"Save",btnRm:"Remove",btnApply:"Apply",btnCancel:"Cancel",btnNo:"No",btnYes:"Yes",btnMount:"Mount",ntfopen:"Open folder",ntffile:"Open file",ntfreload:"Reload folder content",ntfmkdir:"Creating directory",ntfmkfile:"Creating files",ntfrm:"Delete files",
-ntfcopy:"Copy files",ntfmove:"Move files",ntfprepare:"Prepare to copy files",ntfrename:"Rename files",ntfupload:"Uploading files",ntfdownload:"Downloading files",ntfsave:"Save files",ntfarchive:"Creating archive",ntfextract:"Extracting files from archive",ntfsearch:"Searching files",ntfresize:"Resizing images",ntfsmth:"Loading",ntfloadimg:"Loading image",ntfnetmount:"Mounting network volume",dateUnknown:"unknown",Today:"Today",Yesterday:"Yesterday",Jan:"Jan",Feb:"Feb",Mar:"Mar",Apr:"Apr",May:"May",
-Jun:"Jun",Jul:"Jul",Aug:"Aug",Sep:"Sep",Oct:"Oct",Nov:"Nov",Dec:"Dec",sortname:"by name",sortkind:"by kind",sortsize:"by size",sortdate:"by date",sortFoldersFirst:"Folders first",confirmReq:"Confirmation required",confirmRm:"Are you sure you want to remove files?<br/>This cannot be undone!",confirmRepl:"Replace old file with new one?",apllyAll:"Apply to all",name:"Name",size:"Size",perms:"Permissions",modify:"Modified",kind:"Kind",read:"read",write:"write",noaccess:"no access",and:"and",unknown:"unknown",
-selectall:"Select all files",selectfiles:"Select file(s)",selectffile:"Select first file",selectlfile:"Select last file",viewlist:"List view",viewicons:"Icons view",places:"Places",calc:"Calculate",path:"Path",aliasfor:"Alias for",locked:"Locked",dim:"Dimensions",files:"Files",folders:"Folders",items:"Items",yes:"yes",no:"no",link:"Link",searcresult:"Search results",selected:"selected items",about:"About",shortcuts:"Shortcuts",help:"Help",webfm:"Web file manager",ver:"Version",homepage:"Project home",
-docs:"Documentation",github:"Fork us on Github",twitter:"Follow us on twitter",facebook:"Join us on facebook",team:"Team",chiefdev:"chief developer",developer:"developer",contributor:"contributor",maintainer:"maintainer",translator:"translator",icons:"Icons",dontforget:"and don't forget to take your towel",shortcutsof:"Shortcuts disabled",dropFiles:"Drop files here",or:"or",selectForUpload:"Select files to upload",moveFiles:"Move files",copyFiles:"Copy files",rmFromPlaces:"Remove from places",aspectRatio:"Aspect ratio",
-scale:"Scale",width:"Width",height:"Height",resize:"Resize",crop:"Crop",rotate:"Rotate","rotate-cw":"Rotate 90 degrees CW","rotate-ccw":"Rotate 90 degrees CCW",degree:"\u00b0",netMountDialogTitle:"Mount network volume",protocol:"Protocol",host:"Host",port:"Port",user:"User",pass:"Password",kindUnknown:"Unknown",kindFolder:"Folder",kindAlias:"Alias",kindAliasBroken:"Broken alias",kindApp:"Application",kindPostscript:"Postscript document",kindMsOffice:"Microsoft Office document",kindMsWord:"Microsoft Word document",
-kindMsExcel:"Microsoft Excel document",kindMsPP:"Microsoft Powerpoint presentation",kindOO:"Open Office document",kindAppFlash:"Flash application",kindPDF:"Portable Document Format (PDF)",kindTorrent:"Bittorrent file",kind7z:"7z archive",kindTAR:"TAR archive",kindGZIP:"GZIP archive",kindBZIP:"BZIP archive",kindZIP:"ZIP archive",kindRAR:"RAR archive",kindJAR:"Java JAR file",kindTTF:"True Type font",kindOTF:"Open Type font",kindRPM:"RPM package",kindText:"Text document",kindTextPlain:"Plain text",kindPHP:"PHP source",
-kindCSS:"Cascading style sheet",kindHTML:"HTML document",kindJS:"Javascript source",kindRTF:"Rich Text Format",kindC:"C source",kindCHeader:"C header source",kindCPP:"C++ source",kindCPPHeader:"C++ header source",kindShell:"Unix shell script",kindPython:"Python source",kindJava:"Java source",kindRuby:"Ruby source",kindPerl:"Perl script",kindSQL:"SQL source",kindXML:"XML document",kindAWK:"AWK source",kindCSV:"Comma separated values",kindDOCBOOK:"Docbook XML document",kindImage:"Image",kindBMP:"BMP image",
-kindJPEG:"JPEG image",kindGIF:"GIF Image",kindPNG:"PNG Image",kindTIFF:"TIFF image",kindTGA:"TGA image",kindPSD:"Adobe Photoshop image",kindXBITMAP:"X bitmap image",kindPXM:"Pixelmator image",kindAudio:"Audio media",kindAudioMPEG:"MPEG audio",kindAudioMPEG4:"MPEG-4 audio",kindAudioMIDI:"MIDI audio",kindAudioOGG:"Ogg Vorbis audio",kindAudioWAV:"WAV audio",AudioPlaylist:"MP3 playlist",kindVideo:"Video media",kindVideoDV:"DV movie",kindVideoMPEG:"MPEG movie",kindVideoMPEG4:"MPEG-4 movie",kindVideoAVI:"AVI movie",
-kindVideoMOV:"Quick Time movie",kindVideoWM:"Windows Media movie",kindVideoFlash:"Flash movie",kindVideoMKV:"Matroska movie",kindVideoOGG:"Ogg movie"}});"use strict";
-$.fn.finderbutton=function(a){return this.each(function(){var c=a.fm,b=c.res("class","disabled"),d=c.res("class","active"),e=c.res("class","hover"),f,g=$(this).addClass("ui-state-default finder-button").attr("title",a.title).append('<span class="finder-button-icon finder-button-icon-'+a.name+'"/>').hover(function(a){!g.is("."+b)&&g["mouseleave"==a.type?"removeClass":"addClass"](e)}).click(function(c){g.is("."+b)||(f&&1<a.variants.length?(f.is(":hidden")&&a.fm.getUI().click(),c.stopPropagation(),f.slideToggle(100)):
-a.exec())}),c=function(){f.hide()};$.isArray(a.variants)&&(g.addClass("finder-menubutton"),f=$('<div class="ui-widget ui-widget-content finder-button-menu ui-corner-all"/>').hide().appendTo(g).zIndex(12+g.zIndex()).delegate(".finder-button-menu-item",{"mouseenter mouseleave":function(){$(this).toggleClass(e)},click:function(b){b.preventDefault();b.stopPropagation();g.removeClass(e);a.exec(a.fm.selected(),$(this).data("value"))}}),a.fm.bind("disable select",c).getUI().click(c),a.change(function(){f.html("");
-$.each(a.variants,function(b,c){$('<div class="finder-button-menu-item">'+c[1]+"</div>").data("value",c[0]).addClass(c[0]==a.value?"finder-button-menu-item-selected":"").appendTo(f)})}));a.change(function(){a.disabled()?g.removeClass(d+" "+e).addClass(b):(g.removeClass(b),g[a.active()?"addClass":"removeClass"](d))}).change()})};"use strict";
-$.fn.findercontextmenu=function(a){return this.each(function(){var c=$(this).addClass("ui-helper-reset ui-widget ui-state-default ui-corner-all finder-contextmenu finder-contextmenu-"+a.direction).hide().appendTo("body").delegate(".finder-contextmenu-item","mouseenter mouseleave",function(){$(this).toggleClass("ui-state-hover")}),b="ltr"==a.direction?"left":"right",d=$.extend({},a.options.contextmenu),e=function(a,b,c){return $('<div class="finder-contextmenu-item"><span class="finder-button-icon {icon} finder-contextmenu-icon"/><span>{label}</span></div>'.replace("{icon}",
-b?"finder-button-icon-"+b:"").replace("{label}",a)).click(function(a){a.stopPropagation();a.stopPropagation();c()})},f=function(){c.hide().empty()};a.one("load",function(){a.bind("contextmenu",function(g){var h=g.data;f();if(h.type&&h.targets){var j=h.targets,l=!1;$.each(d[h.type]||[],function(b,d){var g,h,k;if("|"==d&&l)c.append('<div class="finder-contextmenu-separator"/>'),l=!1;else if((g=a.command(d))&&-1!=g.getstate(j)){if(g.variants){if(!g.variants.length)return;h=e(g.title,g.name,function(){});
-k=$('<div class="ui-corner-all finder-contextmenu-sub"/>').appendTo(h.append('<span class="finder-contextmenu-arrow"/>'));h.addClass("finder-contextmenu-group").hover(function(){k.toggle()});$.each(g.variants,function(a,b){k.append($('<div class="finder-contextmenu-item"><span>'+b[1]+"</span></div>").click(function(a){a.stopPropagation();f();g.exec(j,b[0])}))})}else h=e(g.title,g.name,function(){f();g.exec(j)});c.append(h);l=!0}})}else h.raw&&$.each(h.raw,function(a,b){var d;b.label&&"function"==
-typeof b.callback&&(d=e(b.label,b.icon,function(){f();b.callback()}),c.append(d))});if(c.children().length){g=h.x;var h=h.y,k=$(window),m=c.outerWidth(),n=c.outerHeight(),r=k.width(),p=k.height(),v=k.scrollTop(),k=k.scrollLeft();g={top:(h+n<p?h:0<h-n?h-n:h)+v,left:(g+m<r?g:g-m)+k,"z-index":100+a.getUI("workzone").zIndex()};c.css(g).show();g={"z-index":g["z-index"]+10};g[b]=parseInt(c.width());c.find(".finder-contextmenu-sub").css(g)}}).one("destroy",function(){c.remove()}).bind("disable select",f).getUI().click(f)})})};
-"use strict";
-$.fn.findercwd=function(a,c){this.not(".finder-cwd").each(function(){var b="list"==a.viewType,d="select."+a.namespace,e="unselect."+a.namespace,f="disable."+a.namespace,g="enable."+a.namespace,h=a.res("class","cwdfile"),j="."+h,l=a.res("class","disabled"),k=a.res("class","draggable"),m=a.res("class","droppable"),n=a.res("class","hover"),r=a.res("class","adroppable"),p=h+"-tmp",v=0<a.options.loadTmbs?a.options.loadTmbs:5,t="",x=[],w={icon:'<div id="{hash}" class="'+h+' {permsclass} {dirclass} ui-corner-all" title="{tooltip}"><div class="finder-cwd-file-wrapper ui-corner-all"><div class="finder-cwd-icon {mime} ui-corner-all" unselectable="on" {style}/>{marker}</div><div class="finder-cwd-filename" title="{name}">{name}</div></div>',row:'<tr id="{hash}" class="'+
-h+' {permsclass} {dirclass}" title="{tooltip}"><td><div class="finder-cwd-file-wrapper"><span class="finder-cwd-icon {mime}"/>{marker}<span class="finder-cwd-filename">{name}</span></div></td><td>{perms}</td><td>{date}</td><td>{size}</td><td>{kind}</td></tr>'},D=a.res("tpl","perms"),E=a.res("tpl","symlink"),Q={permsclass:function(b){return a.perms2class(b)},perms:function(b){return a.formatPermissions(b)},dirclass:function(a){return"directory"==a.mime?"directory":""},mime:function(b){return a.mime2class(b.mime)},
-size:function(b){return a.formatSize(b.size)},date:function(b){return a.formatDate(b)},kind:function(b){return a.mime2kind(b)},marker:function(a){return(a.alias||"symlink-broken"==a.mime?E:"")+(!a.read||!a.write?D:"")},tooltip:function(b){var c=a.formatDate(b)+(0<b.size?" ("+a.formatSize(b.size)+")":"");return b.tooltip?a.escape(b.tooltip).replace(/"/g,"&quot;").replace(/\r/g,"&#13;")+"&#13;"+c:c}},J=function(c){c.name=a.escape(c.name);return w[b?"row":"icon"].replace(/\{([a-z]+)\}/g,function(a,b){return Q[b]?
-Q[b](c):c[b]?c[b]:""})},K=!1,L=function(a){q.find("#"+a).trigger(d)},A=function(){q.find("[id].ui-selected").trigger(e);y()},y=function(){a.trigger("select",{selected:$.map(q.find("[id].ui-selected"),function(a){a=$(a);return a.is("."+l)?null:$(a).attr("id")})})},B=function(a){var b=a.position().top;a=a.outerHeight(!0);var c=s.scrollTop(),d=s.innerHeight();b+a>c+d?s.scrollTop(parseInt(b+a-d)):b<c&&s.scrollTop(b)},u=[],G=function(a){for(var b=u.length;b--;)if(u[b].hash==a)return b;return-1},H="scroll."+
-a.namespace,M=function(){var c=[],d=!1,e=[],f={},c=q.find("[id]:last"),g=!c.length,h=b?q.children("table").children("tbody"):q,j;if(!u.length)return s.unbind(H);for(;(!c.length||c.position().top<=s.height()+s.scrollTop()+a.options.showThreshold)&&(j=u.splice(0,a.options.showFiles)).length;)c=$.map(j,function(a){return a.hash&&a.name?("directory"==a.mime&&(d=!0),a.tmb&&(1===a.tmb?e.push(a.hash):f[a.hash]=a.tmb),J(a)):null}),h.append(c.join("")),c=q.find("[id]:last"),g&&q.scrollTop(0);T(f);e.length&&
-S(e);d&&N()},C=$.extend({},a.droppable,{over:function(b,c){var d=a.cwd().hash;$.each(c.helper.data("files"),function(b,c){if(a.file(c).phash==d)return q.removeClass(r),!1})}}),N=function(){setTimeout(function(){q.find(".directory:not(."+m+",.finder-na,.finder-ro)").droppable(a.droppable)},20)},T=function(b){var c=a.option("tmbUrl"),d=!0,e;$.each(b,function(a,b){var f=q.find("#"+a);if(f.length){var g=c+b;$("<img/>").load(function(){f.find(".finder-cwd-icon").css("background","url('"+g+"') center center no-repeat")}).attr("src",
-g)}else if(d=!1,-1!=(e=G(a)))u[e].tmb=b});return d},S=function(b){var c=[],c=c=b.splice(0,v);c.length&&a.request({data:{cmd:"tmb",targets:c},preventFail:!0}).done(function(a){T(a.images||[])&&S(b)})},O=function(c){for(var d=b?q.find("tbody"):q,e=c.length,f=[],g={},h=!1,j,k,l,m;e--;)if(j=c[e],k=j.hash,!q.find("#"+k).length){var n;a:{n=j;for(var p=q.find("[id]:first"),w=void 0;p.length;){w=a.file(p.attr("id"));if(!p.is(".finder-cwd-parent")&&w&&0>a.compare(n,w)){n=p;break a}p=p.next("[id]")}n=void 0}if((l=
-n)&&l.length)l.before(J(j));else{a:{n=j;p=u.length;w=void 0;for(w=0;w<p;w++)if(0>a.compare(n,u[w])){n=w;break a}n=p||-1}0<=(m=n)?u.splice(m,0,j):d.append(J(j))}q.find("#"+k).length&&("directory"==j.mime?h=!0:j.tmb&&(1===j.tmb?f.push(k):g[k]=j.tmb))}T(g);f.length&&S(f);h&&N()},z=function(b){for(var c=b.length,d,e,f;c--;)if(d=b[c],(e=q.find("#"+d)).length)try{e.detach()}catch(g){a.debug("error",g)}else-1!=(f=G(d))&&u.splice(f,1)},V=a.i18n("name"),P=a.i18n("perms"),U=a.i18n("modify"),F=a.i18n("size"),
-W=a.i18n("kind"),I=function(d,e){var f=a.cwd().hash;A();try{q.children("table,"+j).remove()}catch(g){q.html("")}q.removeClass("finder-cwd-view-icons finder-cwd-view-list").addClass("finder-cwd-view-"+(b?"list":"icons"));s[b?"addClass":"removeClass"]("finder-cwd-wrapper-list");b&&q.html('<table><thead><tr class="ui-state-default"><td >'+V+"</td><td>"+P+"</td><td>"+U+"</td><td>"+F+"</td><td>"+W+"</td></tr></thead><tbody/></table>");u=$.map(d,function(a){return e||a.phash==f?a:null});u=a.sortFiles(u);
-s.bind(H,M).trigger(H);f=a.cwd().phash;if(c.oldSchool&&f&&!t){var h=$.extend(!0,{},a.file(f),{name:"..",mime:"directory"}),h=$(J(h)).addClass("finder-cwd-parent").bind("mousedown click mouseup dblclick mouseenter",function(a){a.preventDefault();a.stopPropagation()}).dblclick(function(){a.exec("open",this.id)});(b?q.find("tbody"):q).prepend(h)}},q=$(this).addClass("ui-helper-clearfix finder-cwd").attr("unselectable","on").delegate(j,"click."+a.namespace,function(a){var b=this.id?$(this):$(this).parents("[id]:first"),
-c=b.prevAll(".ui-selected:first"),f=b.nextAll(".ui-selected:first"),g=c.length,h=f.length;a.stopImmediatePropagation();a.shiftKey&&(g||h)?(a=g?b.prevUntil("#"+c.attr("id")):b.nextUntil("#"+f.attr("id")),a.add(b).trigger(d)):a.ctrlKey||a.metaKey?b.trigger(b.is(".ui-selected")?e:d):(A(),b.trigger(d));y()}).delegate(j,"dblclick."+a.namespace,function(){a.dblclick({file:this.id})}).delegate(j,"mouseenter."+a.namespace,function(){var c=$(this),d=b?c:c.children();!c.is("."+p)&&!d.is("."+k+",."+l)&&d.draggable(a.draggable)}).delegate(j,
-d,function(){var a=$(this);!K&&!a.is("."+l)&&a.addClass("ui-selected").children().addClass(n)}).delegate(j,e,function(){K||$(this).removeClass("ui-selected").children().removeClass(n)}).delegate(j,f,function(){var a=$(this).removeClass("ui-selected").addClass(l),c=(b?a:a.children()).removeClass(n);a.is("."+m)&&a.droppable("disable");c.is("."+k)&&c.draggable("disable");!b&&c.removeClass(l)}).delegate(j,g,function(){var a=$(this).removeClass(l),c=b?a:a.children();a.is("."+m)&&a.droppable("enable");
-c.is("."+k)&&c.draggable("enable")}).delegate(j,"scrolltoview",function(){B($(this))}).delegate(j,"mouseenter mouseleave",function(b){a.trigger("hover",{hash:$(this).attr("id"),type:b.type})}).bind("contextmenu."+a.namespace,function(b){var c=$(b.target).closest("."+h);c.length&&(b.stopPropagation(),b.preventDefault(),c.is("."+l)||(c.is(".ui-selected")||(A(),c.trigger(d),y()),a.trigger("contextmenu",{type:"files",targets:a.selected(),x:b.clientX,y:b.clientY})))}).selectable({filter:j,stop:y,selected:function(a,
-b){$(b.selected).trigger(d)},unselected:function(a,b){$(b.unselected).trigger(e)}}).droppable(C).bind("create."+a.namespace,function(a,c){var d=b?q.find("tbody"):q,e=d.find(".finder-cwd-parent");c=$(J(c)).addClass(p);A();e.length?e.after(c):d.prepend(c);q.scrollTop(0)}).bind("unselectall",A).bind("selectfile",function(a,b){q.find("#"+b).trigger(d);y()}),s=$('<div class="finder-cwd-wrapper"/>').bind("contextmenu",function(b){b.preventDefault();a.trigger("contextmenu",{type:"cwd",targets:[a.cwd().hash],
-x:b.clientX,y:b.clientY})}),R=function(){var a=0;s.siblings(".finder-panel:visible").each(function(){a+=$(this).outerHeight(!0)});s.height(X.height()-a)},X=$(this).parent().resize(R).children(".finder-workzone").append(s.append(this));a.dragUpload&&(s[0].addEventListener("dragenter",function(a){a.preventDefault();a.stopPropagation();s.addClass(r)},!1),s[0].addEventListener("dragleave",function(a){a.preventDefault();a.stopPropagation();a.target==q[0]&&s.removeClass(r)},!1),s[0].addEventListener("dragover",
-function(a){a.preventDefault();a.stopPropagation()},!1),s[0].addEventListener("drop",function(b){b.preventDefault();s.removeClass(r);var c=!1,d="";b.dataTransfer&&b.dataTransfer.files&&b.dataTransfer.files.length?(c=b.dataTransfer.files,d="files"):b.dataTransfer.getData("text/html")?(c=[b.dataTransfer.getData("text/html")],d="html"):b.dataTransfer.getData("text")&&(c=[b.dataTransfer.getData("text")],d="text");c&&a.exec("upload",{files:c,type:d})},!1));a.bind("open",function(a){I(a.data.files)}).bind("search",
-function(a){x=a.data.files;I(x,!0)}).bind("searchend",function(){x=[];t&&(t="",I(a.files()))}).bind("searchstart",function(a){t=a.data.query}).bind("sortchange",function(){I(t?x:a.files(),!!t)}).bind("viewchange",function(){var c=a.selected(),d="list"==a.storage("view");d!=b&&(b=d,I(a.files()),$.each(c,function(a,b){L(b)}),y());R()}).add(function(b){var c=a.cwd().hash;b=t?$.map(b.data.added||[],function(a){return-1===a.name.indexOf(t)?null:a}):$.map(b.data.added||[],function(a){return a.phash==c?
-a:null});O(b)}).change(function(b){var c=a.cwd().hash,d=a.selected();t?$.each(b.data.changed||[],function(a,b){z([b.hash]);-1!==b.name.indexOf(t)&&(O([b]),-1!==$.inArray(b.hash,d)&&L(b.hash))}):$.each($.map(b.data.changed||[],function(a){return a.phash==c?a:null}),function(a,b){z([b.hash]);O([b]);-1!==$.inArray(b.hash,d)&&L(b.hash)});y()}).remove(function(a){z(a.data.removed||[]);y()}).bind("open add search searchend",function(){q.css("height","auto");q.outerHeight(!0)<s.height()&&q.height(s.height()-
-(q.outerHeight(!0)-q.height())-2)}).dragstart(function(a){var b=$(a.data.target);a=a.data.originalEvent;b.is(j)&&(b.is(".ui-selected")||(!a.ctrlKey&&(!a.metaKey&&!a.shiftKey)&&A(),b.trigger(d),y()),q.droppable("disable"));q.selectable("disable").removeClass(l);K=!0}).dragstop(function(){q.selectable("enable").droppable("enable");K=!1}).bind("lockfiles unlockfiles",function(a){var b="lockfiles"==a.type?f:g;a=a.data.files||[];for(var c=a.length;c--;)q.find("#"+a[c]).trigger(b);y()}).bind("mkdir mkfile duplicate upload rename archive extract",
-function(b){var c=a.cwd().hash;A();$.each(b.data.added||[],function(a,b){b&&b.phash==c&&L(b.hash)});y()}).shortcut({pattern:"ctrl+a",description:"selectall",callback:function(){var b;q.find("[id]:not(.ui-selected):not(.finder-cwd-parent)").trigger(d);u.length?(b=a.cwd().hash,a.select({selected:$.map(a.files(),function(a){return a.phash==b?a.hash:null})})):y()}}).shortcut({pattern:"left right up down shift+left shift+right shift+up shift+down",description:"selectfiles",type:"keydown",callback:function(a){var c=
-a.keyCode;a=a.shiftKey;var f=function(a,b){return a[b+"All"]("[id]:not(."+l+"):not(.finder-cwd-parent):first")},g=$.ui.keyCode,h=c==g.LEFT||c==g.UP,j=q.find("[id].ui-selected"),k,m;if(j.length)if(k=j.filter(h?":first":":last"),m=f(k,h?"prev":"next"),m.length)if(b||c==g.LEFT||c==g.RIGHT)c=m;else if(g=k.position().top,m=k.position().left,c=k,h){do c=c.prev("[id]");while(c.length&&!(c.position().top<g&&c.position().left<=m));c.is("."+l)&&(c=f(c,"next"))}else{do c=c.next("[id]");while(c.length&&!(c.position().top>
-g&&c.position().left>=m));c.is("."+l)&&(c=f(c,"prev"));c.length||(m=q.find("[id]:not(."+l+"):last"),m.position().top>g&&(c=m))}else c=k.siblings("[id]:not(."+l+"):not(.finder-cwd-parent):"+(h?"last":"first"));else c=q.find("[id]:not(."+l+"):not(.finder-cwd-parent):"+(h?"last":"first"));c&&(c.length&&!c.is(".finder-cwd-parent"))&&(a?c=k.add(k[h?"prevUntil":"nextUntil"]("#"+c.attr("id"))).add(c):j.trigger(e),c.trigger(d),B(c.filter(h?":first":":last")),y())}}).shortcut({pattern:"home",description:"selectffile",
-callback:function(){A();B(q.find("[id]:first").trigger(d));y()}}).shortcut({pattern:"end",description:"selectlfile",callback:function(){A();B(q.find("[id]:last").trigger(d));y()}})});return this};"use strict";
-$.fn.finderdialog=function(a){var c;if("string"==typeof a&&(c=this.closest(".ui-dialog")).length)"open"==a?"none"==c.css("display")&&c.fadeIn(120,function(){c.trigger("open")}):"close"==a?"none"!=c.css("display")&&c.hide().trigger("close"):"destroy"==a?c.hide().remove():"toTop"==a&&c.trigger("totop");a=$.extend({},$.fn.finderdialog.defaults,a);this.filter(":not(.ui-dialog-content)").each(function(){var b=$(this).addClass("ui-dialog-content ui-widget-content"),c=b.parent(),e=parseInt(1E6*Math.random()),
-f=c.children(".finder-overlay"),g=$('<div class="ui-dialog-buttonset"/>'),h=$('<div class=" ui-helper-clearfix ui-dialog-buttonpane ui-widget-content"/>').append(g),j=$('<div class="test ui-dialog ui-widget ui-widget-content ui-corner-all ui-draggable std42-dialog  finder-dialog '+a.cssClass+'"/>').hide().append(b).appendTo(c).draggable({handle:".ui-dialog-titlebar"}).css({width:a.width,height:a.height,position:"absolute"}).mousedown(function(a){a.stopPropagation();$(document).mousedown();j.is(".finder-dialog-active")||
-(c.find(".finder-dialog:visible").removeClass("finder-dialog-active"),j.addClass("finder-dialog-active").zIndex(l()+1))}).bind("open",function(){a.modal&&f.finderoverlay("show");j.trigger("totop");"function"==typeof a.open&&$.proxy(a.open,b[0])();j.is(".finder-dialog-notify")||c.find(".finder-dialog:visible").not(".finder-dialog-notify").each(function(){var a=$(this),b=parseInt(a.css("top")),c=parseInt(a.css("left")),d=parseInt(j.css("top")),e=parseInt(j.css("left"));a[0]!=j[0]&&(b==d||c==e)&&j.css({top:b+
-10,left:c+10})})}).bind("close",function(){var e=c.find(".finder-dialog:visible"),g=l();a.modal&&f.finderoverlay("hide");e.length?e.each(function(){var a=$(this);if(a.zIndex()>=g)return a.trigger("totop"),!1}):setTimeout(function(){c.mousedown().click()},10);"function"==typeof a.close?$.proxy(a.close,b[0])():a.destroyOnClose&&j.hide().remove()}).bind("totop",function(){$(this).mousedown().find(".ui-button:first").focus().end().find(":text:first").focus()}),l=function(){var a=c.zIndex()+10;c.find(".finder-dialog:visible").each(function(){var b;
-this!=j[0]&&(b=$(this).zIndex(),b>a&&(a=b))});return a},k;a.position||(k=parseInt((c.height()-j.outerHeight())/2-42),a.position={top:0<k?k:0,left:parseInt((c.width()-j.outerWidth())/2)});j.css(a.position);a.closeOnEscape&&$(document).bind("keyup."+e,function(a){a.keyCode==$.ui.keyCode.ESCAPE&&j.is(".finder-dialog-active")&&(b.finderdialog("close"),$(document).unbind("keyup."+e))});j.prepend($('<div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">'+a.title+"</div>").prepend($('<a href="#" class="ui-dialog-titlebar-close ui-corner-all"><span class="ui-icon ui-icon-closethick"/></a>').mousedown(function(a){a.preventDefault();
-b.finderdialog("close")})));$.each(a.buttons,function(a,c){var d=$('<button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">'+a+"</span></button>").click($.proxy(c,b[0])).hover(function(a){$(this)["mouseenter"==a.type?"focus":"blur"]()}).focus(function(){$(this).addClass("ui-state-hover")}).blur(function(){$(this).removeClass("ui-state-hover")}).keydown(function(a){a.keyCode==$.ui.keyCode.ENTER?$(this).click():a.keyCode==$.ui.keyCode.TAB&&
-(a=$(this).next(".ui-button"),a.length?a.focus():$(this).parent().children(".ui-button:first").focus())});g.append(d)});g.children().length&&j.append(h);a.resizable&&$.fn.resizable&&j.resizable({minWidth:a.minWidth,minHeight:a.minHeight,alsoResize:this});"function"==typeof a.create&&$.proxy(a.create,this)();a.autoOpen&&b.finderdialog("open")});return this};
-$.fn.finderdialog.defaults={cssClass:"",title:"",modal:!1,resizable:!0,autoOpen:!0,closeOnEscape:!0,destroyOnClose:!1,buttons:{},position:null,width:320,height:"auto",minWidth:200,minHeight:110};
-$.fn.findernavbar=function(a,c){this.not(".finder-navbar").each(function(){var b=$(this).addClass("ui-state-default finder-navbar"),d=b.parent().resize(function(){b.height(d.height()-e)}).children(".finder-workzone").append(b),e=b.outerHeight()-b.height(),f;$.fn.resizable&&(f=b.resizable({handles:"ltr"==a.direction?"e":"w",minWidth:c.minWidth||150,maxWidth:c.maxWidth||500}).bind("resize scroll",function(){f.css({top:parseInt(b.scrollTop())})}).find(".ui-resizable-handle").zIndex(b.zIndex()+10),a.one("open",
-function(){setTimeout(function(){b.trigger("resize")},150)}))});return this};
-$.fn.finderoverlay=function(a){this.filter(":not(.finder-overlay)").each(function(){a=$.extend({},a);$(this).addClass("ui-widget-overlay finder-overlay").hide().mousedown(function(a){a.preventDefault();a.stopPropagation()}).data({cnt:0,show:"function"==typeof a.show?a.show:function(){},hide:"function"==typeof a.hide?a.hide:function(){}})});if("show"==a){var c=this.eq(0),b=c.data("cnt")+1,d=c.data("show");c.data("cnt",b);c.is(":hidden")&&(c.zIndex(c.parent().zIndex()+1),c.show(),d())}"hide"==a&&(c=
-this.eq(0),b=c.data("cnt")-1,d=c.data("hide"),c.data("cnt",b),0==b&&c.is(":visible")&&(c.hide(),d()));return this};$.fn.finderpanel=function(a){return this.each(function(){var c=$(this).addClass("finder-panel ui-state-default ui-corner-all"),b="margin-"+("ltr"==a.direction?"left":"right");a.one("load",function(){var d=a.getUI("navbar");c.css(b,parseInt(d.outerWidth(!0)));d.bind("resize",function(){c.is(":visible")&&c.css(b,parseInt(d.outerWidth(!0)))})})})};"use strict";
-$.fn.finderpath=function(a){return this.each(function(){var c=$(this).addClass("finder-path").html("&nbsp;").delegate("a","click",function(b){var c=$(this).attr("href").substr(1);b.preventDefault();c!=a.cwd().hash&&a.exec("open",c)}).prependTo(a.getUI("statusbar").show());a.bind("open searchend",function(){var b=[];$.each(a.parents(a.cwd().hash),function(c,e){b.push('<a href="#'+e+'">'+a.escape(a.file(e).name)+"</a>")});c.html(b.join(a.option("separator")))}).bind("search",function(){c.html(a.i18n("searcresult"))})})};
-"use strict";
-$.fn.finderplaces=function(a,c){return this.each(function(){var b=[],d=a.res("class","navdir"),e=a.res("class","navcollapse"),f=a.res("class","navexpand");a.res("class","hover");var g=a.res("class","treeroot"),h=a.res("tpl","navdir"),j=a.res("tpl","perms"),l=$(a.res("tpl","navspinner")),k=function(a){return a.substr(6)},m=function(){a.storage("places",b.join(","))},n=function(b){return $(h.replace(/\{id\}/,"place-"+b.hash).replace(/\{name\}/,a.escape(b.name)).replace(/\{cssclass\}/,a.perms2class(b)).replace(/\{permissions\}/,!b.read||
-!b.write?j:"").replace(/\{symlink\}/,""))},r=function(c){var f=n(c);x.children().length&&$.each(x.children(),function(){var a=$(this);if(0>c.name.localeCompare(a.children("."+d).text()))return!f.insertBefore(a)});b.push(c.hash);!f.parent().length&&x.append(f);t.addClass(e);f.draggable({appendTo:"body",revert:!1,helper:function(){var b=$(this);b.children().removeClass("ui-state-hover");return $('<div class="finder-place-drag finder-'+a.direction+'"/>').append(b.clone()).data("hash",k(b.children(":first").attr("id")))},
-start:function(){$(this).hide()},stop:function(a,b){var c=w.offset().top,d=w.offset().left,e=w.width(),f=w.height(),g=a.clientX,h=a.clientY;g>d&&g<d+e&&h>c&&h<h+f?$(this).show():(p(b.helper.data("hash")),m())}})},p=function(a){var c=$.inArray(a,b);-1!==c&&(b.splice(c,1),x.find("#place-"+a).parent().remove(),!x.children().length&&t.removeClass(e+" "+f))},v=n({hash:"root-"+a.namespace,name:a.i18n(c.name,"places"),read:!0,write:!0}),t=v.children("."+d).addClass(g).click(function(){t.is("."+e)&&(w.toggleClass(f),
-x.slideToggle(),a.storage("placesState",w.is("."+f)?1:0))}),x=v.children("."+a.res("class","navsubtree")),w=$(this).addClass(a.res("class","tree")+" finder-places ui-corner-all").hide().append(v).appendTo(a.getUI("navbar")).delegate("."+d,{click:function(){a.exec("open",$(this).attr("id").substr(6))},mouseenter:function(){$(this).addClass("ui-state-hover")},mouseleave:function(){$(this).removeClass("ui-state-hover")}}).delegate("."+d+":not(."+g+")","contextmenu",function(b){var c=$(this).attr("id").substr(6);
-b.preventDefault();a.trigger("contextmenu",{raw:[{label:a.i18n("rmFromPlaces"),icon:"rm",callback:function(){p(c);m()}}],x:b.clientX,y:b.clientY})}).droppable({tolerance:"pointer",accept:".finder-cwd-file-wrapper,.finder-tree-dir,.finder-cwd-file",hoverClass:a.res("class","adroppable"),drop:function(c,d){var e=!0;$.each(d.helper.data("files"),function(c,d){var f=a.file(d);f&&"directory"==f.mime&&-1===$.inArray(f.hash,b)?r(f):e=!1});m();e&&d.helper.hide()}});a.one("load",function(){w.show().parent().show();
-b=$.map(a.storage("places").split(","),function(a){return a||null});b.length&&(t.prepend(l),a.request({data:{cmd:"info",targets:b},preventDefault:!0}).done(function(c){b=[];$.each(c.files,function(a,b){"directory"==b.mime&&r(b)});m();0<a.storage("placesState")&&t.click()}).always(function(){l.remove()}));a.remove(function(a){$.each(a.data.removed,function(a,b){p(b)});m()}).change(function(a){$.each(a.data.changed,function(a,c){-1!==$.inArray(c.hash,b)&&(p(c.hash),"directory"==c.mime&&r(c))});m()}).bind("sync",
-function(){b.length&&(t.prepend(l),a.request({data:{cmd:"info",targets:b},preventDefault:!0}).done(function(a){$.each(a.files||[],function(a,c){-1===$.inArray(c.hash,b)&&p(c.hash)});m()}).always(function(){l.remove()}))})})})};"use strict";
-$.fn.findersearchbutton=function(a){return this.each(function(){var c=!1,b=$(this).hide().addClass("ui-widget-content finder-button "+a.fm.res("class","searchbtn")+""),d=function(){var b=$.trim(f.val());b?a.exec(b).done(function(){c=!0;f.focus()}):a.fm.trigger("searchend")},e=function(){f.val("");c&&(c=!1,a.fm.trigger("searchend"))},f=$('<input type="text" size="42"/>').appendTo(b).keypress(function(a){a.stopPropagation()}).keydown(function(a){a.stopPropagation();13==a.keyCode&&d();27==a.keyCode&&
-(a.preventDefault(),e())});$('<span class="ui-icon ui-icon-search" title="'+a.title+'"/>').appendTo(b).click(d);$('<span class="ui-icon ui-icon-close"/>').appendTo(b).click(e);setTimeout(function(){b.parent().detach();a.fm.getUI("toolbar").prepend(b.show());if(a.fm.UA.ltIE7){var c=b.children("ltr"==a.fm.direction?".ui-icon-close":".ui-icon-search");c.css({right:"",left:parseInt(b.width())-c.outerWidth(!0)})}},200);a.fm.error(function(){f.unbind("keydown")}).select(function(){f.blur()}).bind("searchend",
-function(){f.val("")}).viewchange(e).shortcut({pattern:"ctrl+f f3",description:a.title,callback:function(){f.select().focus()}})})};"use strict";
-$.fn.findersortbutton=function(a){return this.each(function(){var c=a.fm,b=a.name,d=c.res("class","disabled"),e=c.res("class","hover"),f=$(this).addClass("ui-state-default finder-button finder-menubutton elfiner-button-"+b).attr("title",a.title).append('<span class="finder-button-icon finder-button-icon-'+b+'"/>').hover(function(){!f.is("."+d)&&f.toggleClass(e)}).click(function(b){f.is("."+d)||(b.stopPropagation(),g.is(":hidden")&&a.fm.getUI().click(),g.slideToggle(100))}),g=$('<div class="ui-widget ui-widget-content finder-button-menu ui-corner-all"/>').hide().appendTo(f).zIndex(12+
-f.zIndex()).delegate(".finder-button-menu-item",{"mouseenter mouseleave":function(){$(this).toggleClass(e)},click:function(a){a.preventDefault();a.stopPropagation();j()}}),h=function(){g.children(":not(:last)").removeClass("finder-button-menu-item-selected finder-button-menu-item-selected-asc finder-button-menu-item-selected-desc").filter('[rel="'+c.sortType+'"]').addClass("finder-button-menu-item-selected "+("asc"==c.sortOrder?"finder-button-menu-item-selected-asc":"finder-button-menu-item-selected-desc"));
-g.children(":last").toggleClass("finder-button-menu-item-selected",c.sortStickFolders)},j=function(){g.hide()};$.each(c.sortRules,function(a){g.append($('<div class="finder-button-menu-item" rel="'+a+'"><span class="ui-icon ui-icon-arrowthick-1-n"/><span class="ui-icon ui-icon-arrowthick-1-s"/>'+c.i18n("sort"+a)+"</div>").data("type",a))});g.children().click(function(){var b=$(this).attr("rel");a.exec([],{type:b,order:b==c.sortType?"asc"==c.sortOrder?"desc":"asc":c.sortOrder,stick:c.sortStickFolders})});
-$('<div class="finder-button-menu-item finder-button-menu-item-separated"><span class="ui-icon ui-icon-check"/>'+c.i18n("sortFoldersFirst")+"</div>").appendTo(g).click(function(){a.exec([],{type:c.sortType,order:c.sortOrder,stick:!c.sortStickFolders})});c.bind("disable select",j).getUI().click(j);c.bind("sortchange",h);1<g.children().length?a.change(function(){f.toggleClass(d,a.disabled());h()}).change():f.addClass(d)})};"use strict";
-$.fn.finderstat=function(a){return this.each(function(){var c=$(this).addClass("finder-stat-size"),b=$('<div class="finder-stat-selected"/>'),d=a.i18n("size").toLowerCase(),e=a.i18n("items").toLowerCase(),f=a.i18n("selected"),g=function(b,f){var g=0,k=0;$.each(b,function(a,b){if(!f||b.phash==f)g++,k+=parseInt(b.size)||0});c.html(e+": "+g+", "+d+": "+a.formatSize(k))};a.getUI("statusbar").prepend(c).append(b).show();a.bind("open reload add remove change searchend",function(){g(a.files(),a.cwd().hash)}).search(function(a){g(a.data.files)}).select(function(){var c=
-0,e=0,g=a.selectedFiles();1==g.length?(c=g[0].size,b.html(a.escape(g[0].name)+(0<c?", "+a.formatSize(c):""))):($.each(g,function(a,b){e++;c+=parseInt(b.size)||0}),b.html(e?f+": "+e+", "+d+": "+a.formatSize(c):"&nbsp;"))})})};"use strict";
-$.fn.findertoolbar=function(a,c){this.not(".finder-toolbar").each(function(){var b=a._commands,d=$(this).addClass("ui-helper-clearfix ui-widget-header ui-corner-top finder-toolbar"),e=c||[],f=e.length,g,h,j,l;for(d.prev().length&&d.parent().prepend(this);f--;)if(e[f]){j=$('<div class="ui-widget-content ui-corner-all finder-buttonset"/>');for(g=e[f].length;g--;)if(h=b[e[f][g]])l="finder"+h.options.ui,$.fn[l]&&j.prepend($("<div/>")[l](h));j.children().length&&d.prepend(j);j.children(":gt(0)").before('<span class="ui-widget-content finder-toolbar-button-separator"/>')}d.children().length&&
-d.show()});return this};"use strict";
-$.fn.findertree=function(a,c){var b=a.res("class","tree");this.not("."+b).each(function(){var d=a.res("class","treeroot"),e=c.openRootOnLoad,f=a.res("class","navsubtree"),g=a.res("class","treedir"),h=a.res("class","navcollapse"),j=a.res("class","navexpand"),l=a.res("class","navarrow"),k=a.res("class","active"),m=a.res("class","adroppable"),n=a.res("class","hover"),r=a.res("class","disabled"),p=a.res("class","draggable"),v=a.res("class","droppable"),t=function(a){var b=N.offset().left;return b<=a&&
-a<=b+N.width()},x=a.droppable.drop,w=$.extend(!0,{},a.droppable,{over:function(a){var b=$(this),c=n+" "+m;t(a.clientX)?(b.addClass(c),b.is("."+h+":not(."+j+")")&&setTimeout(function(){b.is("."+m)&&b.children("."+l).click()},500)):b.removeClass(c)},out:function(){$(this).removeClass(n+" "+m)},drop:function(a,b){t(a.clientX)&&x.call(this,a,b)}}),D=$(a.res("tpl","navspinner")),E=a.res("tpl","navdir"),Q=a.res("tpl","perms"),J=a.res("tpl","symlink"),K={id:function(b){return a.navHash2Id(b.hash)},cssclass:function(b){return(b.phash?
-"":d)+" "+(b.net?"finder-navbar-net":"")+" "+g+" "+a.perms2class(b)+" "+(b.dirs&&!b.link?h:"")},permissions:function(a){return!a.read||!a.write?Q:""},symlink:function(a){return a.alias?J:""}},L=function(b){b.name=a.escape(b.name);return E.replace(/(?:\{([a-z]+)\})/ig,function(a,c){return b[c]||(K[c]?K[c](b):"")})},A=function(a){return $.map(a||[],function(a){return"directory"==a.mime?a:null})},y=function(b){return b?C.find("#"+a.navHash2Id(b)).next("."+f):C},B=function(b,c){for(var d=b.children(":first"),
-e;d.length;){e=a.file(a.navId2Hash(d.children("[id]").attr("id")));if((e=a.file(a.navId2Hash(d.children("[id]").attr("id"))))&&0>c.name.toLowerCase().localeCompare(e.name.toLowerCase()))return d;d=d.next()}return $("")},u=function(b){for(var c=b.length,d=[],e=b.length,f,g,h,j;e--;)if(f=b[e],!C.find("#"+a.navHash2Id(f.hash)).length)if(h=y(f.phash),h.length)if(g=L(f),f.phash&&(j=B(h,f)).length)j.before(g);else h[f.phash?"append":"prepend"](g);else d.push(f);if(d.length&&d.length<c)return u(d);setTimeout(function(){H()},
-10)},G=function(b){var h=a.cwd().hash,l=C.find("#"+a.navHash2Id(h)),m,n;e&&(m=C.find("#"+a.navHash2Id(a.root())),m.is(".finder-subtree-loaded")&&m.addClass(j).next("."+f).show(),e=!1);l.is("."+k)||(C.find("."+g+"."+k).removeClass(k),l.addClass(k));if(c.syncTree)if(l.length)l.parentsUntil("."+d).filter("."+f).show().prev("."+g).addClass(j);else if(!b&&(n=a.file(h)).phash&&C.find("#"+a.navHash2Id(n.phash)).length)u([n]),a.request({data:{cmd:"parents",target:h},preventFail:!0}).done(function(b){b=A(b.tree);
-u(b);M(b,"finder-subtree-loaded");h==a.cwd().hash&&G(!0)})},H=function(){C.find("."+g+":not(."+v+",.finder-ro,.finder-na)").droppable(w)},M=function(b,c){var d="finder-subtree-loaded"==c?"."+h+":not(.finder-subtree-loaded)":":not(."+h+")";$.each(b,function(b,e){C.find("#"+a.navHash2Id(e.phash)+d).filter(function(){return 0<$(this).next("."+f).children().length}).addClass(c)})},C=$(this).addClass(b).delegate("."+g,{"mouseenter mouseleave":function(b){var c=$(this);b="mouseenter"==b.type;c.is("."+m+
-" ,."+r)||(b&&!c.is("."+d+",."+p+",.finder-na,.finder-wo")&&c.draggable(a.draggable),c.toggleClass(n,b))},"dropover dropout drop":function(a){$(this)["dropover"==a.type?"addClass":"removeClass"](m+" "+n)},click:function(){var b=$(this),c=a.navId2Hash(b.attr("id")),d=a.file(c);a.trigger("searchend");c!=a.cwd().hash&&!b.is("."+r)?a.exec("open",d.thash||c):b.is("."+h)&&b.children("."+l).click()},contextmenu:function(b){b.preventDefault();a.trigger("contextmenu",{type:"navbar",targets:[a.navId2Hash($(this).attr("id"))],
-x:b.clientX,y:b.clientY})}}).delegate("."+g+"."+h+" ."+l,"click",function(b){var c=$(this),d=c.parent("."+g),e=d.next("."+f);b.stopPropagation();d.is(".finder-subtree-loaded")?(d.toggleClass(j),e.slideToggle()):(D.insertBefore(c),d.removeClass(h),a.request({cmd:"tree",target:a.navId2Hash(d.attr("id"))}).done(function(a){u(A(a.tree));e.children().length&&(d.addClass(h+" "+j),e.slideDown());G()}).always(function(){D.remove();d.addClass("finder-subtree-loaded")}))}),N=a.getUI("navbar").append(C).show();
-a.open(function(a){a=a.data;var b=A(a.files);a.init&&C.empty();b.length&&(u(b),M(b,"finder-subtree-loaded"));G()}).add(function(a){a=A(a.data.added);a.length&&(u(a),M(a,h))}).change(function(b){b=A(b.data.changed);for(var c=b.length,d,e,h,k,l,m;c--;)if(d=b[c],(e=C.find("#"+a.navHash2Id(d.hash))).length){if(d.phash){h=e.closest("."+f);k=y(d.phash);l=e.parent().next();m=B(k,d);if(!k.length)continue;if(k[0]!==h[0]||l.get(0)!==m.get(0))m.length?m.before(e):k.append(e)}k=e.is("."+j);l=e.is(".finder-subtree-loaded");
-h=$(L(d));e.replaceWith(h.children("."+g));if(d.dirs&&(k||l)&&(e=C.find("#"+a.navHash2Id(d.hash)))&&e.next("."+f).children().length)k&&e.addClass(j),l&&e.addClass("finder-subtree-loaded")}G();H()}).remove(function(b){b=b.data.removed;for(var c=b.length,d,e;c--;)if((d=C.find("#"+a.navHash2Id(b[c]))).length)e=d.closest("."+f),d.parent().detach(),e.children().length||e.hide().prev("."+g).removeClass(h+" "+j+" finder-subtree-loaded")}).bind("search searchend",function(b){C.find("#"+a.navHash2Id(a.cwd().hash))["search"==
-b.type?"removeClass":"addClass"](k)}).bind("lockfiles unlockfiles",function(b){var c="lockfiles"==b.type,d=c?"disable":"enable";b=$.map(b.data.files||[],function(b){var c=a.file(b);return c&&"directory"==c.mime?b:null});$.each(b,function(b,e){var f=C.find("#"+a.navHash2Id(e));f.length&&(f.is("."+p)&&f.draggable(d),f.is("."+v)&&f.droppable(k),f[c?"addClass":"removeClass"](r))})})});return this};"use strict";
-$.fn.finderuploadbutton=function(a){return this.each(function(){var c=$(this).finderbutton(a).unbind("click"),b=$("<form/>").appendTo(c),d=$('<input type="file" multiple="true"/>').change(function(){var c=$(this);c.val()&&(a.exec({input:c.remove()[0]}),d.clone(!0).appendTo(b))});b.append(d.clone(!0));a.change(function(){b[a.disabled()?"hide":"show"]()}).change()})};"use strict";
-$.fn.finderviewbutton=function(a){return this.each(function(){var c=$(this).finderbutton(a),b=c.children(".finder-button-icon");a.change(function(){var d="icons"==a.value;b.toggleClass("finder-button-icon-view-list",d);c.attr("title",a.fm.i18n(d?"viewlist":"viewicons"))})})};"use strict";
-$.fn.finderworkzone=function(){this.not(".finder-workzone").each(function(){var a=$(this).addClass("finder-workzone"),c=a.outerHeight(!0)-a.height(),b=a.parent();b.add(window).bind("resize",function(){var d=b.height();b.children(":visible:not(.finder-workzone)").each(function(){var a=$(this);"absolute"!=a.css("position")&&(d-=a.outerHeight(!0))});a.height(d-c)})});return this};"use strict";
-Finder.prototype.commands.archive=function(){var a=this,c=a.fm,b=[];this.variants=[];this.disableOnSearch=!0;c.bind("open reload",function(){a.variants=[];$.each(b=c.option("archivers").create||[],function(b,e){a.variants.push([e,c.mime2kind(e)])});a.change()});this.getstate=function(){return!this._disabled&&b.length&&c.selected().length&&c.cwd().write?0:-1};this.exec=function(a,e){var f=this.files(a),g=f.length,h=e||b[0],j=c.cwd(),l=["errArchive","errPerm"],k=$.Deferred().fail(function(a){a&&c.error(a)});
-if(!this.enabled()||!g||!(b.length&&-1!==$.inArray(h,b)))return k.reject();if(!j.write)return k.reject(l);for(j=0;j<g;j++)if(!f[j].read)return k.reject(l);return c.request({data:{cmd:"archive",targets:this.hashes(a),type:h},notify:{type:"archive",cnt:1},syncOnFail:!0})}};"use strict";Finder.prototype.commands.back=function(){this.alwaysEnabled=!0;this.updateOnSelect=!1;this.shortcuts=[{pattern:"ctrl+left backspace"}];this.getstate=function(){return this.fm.history.canBack()?0:-1};this.exec=function(){return this.fm.history.back()}};
-"use strict";Finder.prototype.commands.copy=function(){this.shortcuts=[{pattern:"ctrl+c ctrl+insert"}];this.getstate=function(a){a=this.files(a);var c=a.length;return c&&$.map(a,function(a){return a.phash&&a.read?a:null}).length==c?0:-1};this.exec=function(a){var c=this.fm,b=$.Deferred().fail(function(a){c.error(a)});$.each(this.files(a),function(a,c){if(!c.read||!c.phash)return!b.reject(["errCopy",c.name,"errPerm"])});return"rejected"==b.state()?b:b.resolve(c.clipboard(this.hashes(a)))}};"use strict";
-Finder.prototype.commands.cut=function(){this.shortcuts=[{pattern:"ctrl+x shift+insert"}];this.getstate=function(a){a=this.files(a);var c=a.length;return c&&$.map(a,function(a){return a.phash&&a.read&&!a.locked?a:null}).length==c?0:-1};this.exec=function(a){var c=this.fm,b=$.Deferred().fail(function(a){c.error(a)});$.each(this.files(a),function(a,c){if(!c.read||!c.phash)return!b.reject(["errCopy",c.name,"errPerm"]);if(c.locked)return!b.reject(["errLocked",c.name])});return"rejected"==b.state()?b:
-b.resolve(c.clipboard(this.hashes(a),!0))}};"use strict";
-Finder.prototype.commands.download=function(){var a=this,c=this.fm,b=function(b){return $.map(a.files(b),function(a){return"directory"==a.mime?null:a})};this.shortcuts=[{pattern:"shift+enter"}];this.getstate=function(){var a=this.fm.selected(),e=a.length;return!this._disabled&&e&&(!c.UA.IE||1==e)&&e==b(a).length?0:-1};this.exec=function(a){var c=this.fm,f=c.options.url,g=b(a),h=$.Deferred(),j="",l="",k;if(this.disabled())return h.reject();$.each(c.options.customData||{},function(a,b){l+="&"+a+"="+
-b});f+=-1===f.indexOf("?")?"?":"&";for(k=0;k<g.length;k++)j+='<iframe class="downloader" id="downloader-'+g[k].hash+'" style="display:none" src="'+f+"cmd=file&target="+g[k].hash+"&download=1"+l+'"/>';$(j).appendTo("body").ready(function(){setTimeout(function(){$(j).each(function(){$("#"+$(this).attr("id")).remove()})},2E4+1E4*k)});c.trigger("download",{files:g});return h.resolve(a)}};"use strict";
-Finder.prototype.commands.duplicate=function(){var a=this.fm;this.getstate=function(c){c=this.files(c);var b=c.length;return!this._disabled&&b&&a.cwd().write&&$.map(c,function(a){return a.phash&&a.read?a:null}).length==b?0:-1};this.exec=function(a){var b=this.fm,d=this.files(a),e=d.length,f=$.Deferred().fail(function(a){a&&b.error(a)});if(!e||this._disabled)return f.reject();$.each(d,function(a,c){if(!c.read||!b.file(c.phash).write)return!f.reject(["errCopy",c.name,"errPerm"])});return"rejected"==
-f.state()?f:b.request({data:{cmd:"duplicate",targets:this.hashes(a)},notify:{type:"copy",cnt:e}})}};"use strict";
-Finder.prototype.commands.edit=function(){var a=this,c=this.fm,b=c.res("mimes","text")||[],d=function(c){return $.map(c,function(c){return(0===c.mime.indexOf("text/")||-1!==$.inArray(c.mime,b))&&c.mime.indexOf("text/rtf")&&(!a.onlyMimes.length||-1!==$.inArray(c.mime,a.onlyMimes))&&c.read&&c.write?c:null})},e=function(b){var d=b.hash,e=$.Deferred();c.url(d);var j="edit-"+c.namespace+"-"+b.hash,l=c.getUI().find("#"+j);if(l.length)return l.finderdialog("toTop"),e.resolve();if(!b.read||!b.write)return l=
-["errOpen",b.name,"errPerm"],c.error(l),e.reject(l);c.request({data:{cmd:"get",target:d},notify:{type:"openfile",cnt:1},syncOnFail:!0}).done(function(k){k=k.content;var l=$.Deferred(),n=$('<textarea class="finder-file-edit" rows="20" id="'+j+'-ta">'+c.escape(k)+"</textarea>"),r=function(){n.editor&&n.editor.save(n[0],n.editor.instance);l.resolve(n.getContent());n.finderdialog("close")},p=function(){l.reject();n.finderdialog("close")};k={title:b.name,width:a.options.dialogWidth||450,buttons:{},close:function(){n.editor&&
-n.editor.close(n[0],n.editor.instance);$(this).finderdialog("destroy")},open:function(){c.disable();n.focus();n[0].setSelectionRange&&n[0].setSelectionRange(0,0);n.editor&&n.editor.load(n[0])}};n.getContent=function(){return n.val()};$.each(a.options.editors||[],function(a,c){if(-1!==$.inArray(b.mime,c.mimes||[])&&"function"==typeof c.load&&"function"==typeof c.save)return n.editor={load:c.load,save:c.save,close:"function"==typeof c.close?c.close:function(){},instance:null},!1});n.editor||n.keydown(function(a){var b=
-a.keyCode,c,d;a.stopPropagation();9==b&&(a.preventDefault(),this.setSelectionRange&&(c=this.value,d=this.selectionStart,this.value=c.substr(0,d)+"\t"+c.substr(this.selectionEnd),d+=1,this.setSelectionRange(d,d)));if(a.ctrlKey||a.metaKey){if(81==b||87==b)a.preventDefault(),p();83==b&&(a.preventDefault(),r())}});k.buttons[c.i18n("Save")]=r;k.buttons[c.i18n("Cancel")]=p;c.dialog(n,k).attr("id",j);l.promise().done(function(a){c.request({options:{type:"post"},data:{cmd:"put",target:d,content:a},notify:{type:"save",
-cnt:1},syncOnFail:!0}).fail(function(a){e.reject(a)}).done(function(a){a.changed&&a.changed.length&&c.change(a);e.resolve(a)})})}).fail(function(a){e.reject(a)});return e.promise()};this.shortcuts=[{pattern:"ctrl+e"}];this.init=function(){this.onlyMimes=this.options.mimes||[]};this.getstate=function(a){a=this.files(a);var b=a.length;return!this._disabled&&b&&d(a).length==b?0:-1};this.exec=function(a){a=d(this.files(a));var b=[],c;if(this.disabled())return $.Deferred().reject();for(;c=a.shift();)b.push(e(c));
-return b.length?$.when.apply(null,b):$.Deferred().reject()}};"use strict";
-Finder.prototype.commands.extract=function(){var a=this,c=a.fm,b=[];this.disableOnSearch=!0;c.bind("open reload",function(){b=c.option("archivers").extract||[];a.change()});this.getstate=function(a){a=this.files(a);var c=a.length;return!this._disabled&&c&&this.fm.cwd().write&&$.map(a,function(a){return a.read&&-1!==$.inArray(a.mime,b)?a:null}).length==c?0:-1};this.exec=function(a){a=this.files(a);var e=$.Deferred(),f=a.length,g=f,h,j;if(!this.enabled()||!f||!b.length)return e.reject();for(h=0;h<f;h++){j=
-a[h];if(!j.read||!c.file(j.phash).write)return a=["errExtract",j.name,"errPerm"],c.error(a),e.reject(a);if(-1===$.inArray(j.mime,b))return a=["errExtract",j.name,"errNoArchive"],c.error(a),e.reject(a);c.request({data:{cmd:"extract",target:j.hash},notify:{type:"extract",cnt:1},syncOnFail:!0}).fail(function(a){"rejected"!=e.state()&&e.reject(a)}).done(function(){g--;0==g&&e.resolve()})}return e}};
-Finder.prototype.commands.forward=function(){this.updateOnSelect=this.alwaysEnabled=!0;this.shortcuts=[{pattern:"ctrl+right"}];this.getstate=function(){return this.fm.history.canForward()?0:-1};this.exec=function(){return this.fm.history.forward()}};"use strict";
-Finder.prototype.commands.getfile=function(){var a=this,c=this.fm;this.alwaysEnabled=!0;this.callback=c.options.getFileCallback;this._disabled="function"==typeof this.callback;this.getstate=function(b){b=this.files(b);var c=b.length,e;if(e=this.callback)if(e=c){var f=a.options;b=$.map(b,function(a){return"directory"!=a.mime||f.folders?a:null});e=(f.multiple||1==b.length?b:[]).length==c}return e?0:-1};this.exec=function(b){var c=this.fm,e=this.options,f=this.files(b);b=f.length;var g=c.option("url"),
-h=c.option("tmbUrl"),j=$.Deferred().done(function(b){c.trigger("getfile",{files:b});a.callback(b,c);"close"==e.oncomplete?c.hide():"destroy"==e.oncomplete&&c.destroy()}),l=[],k,m,n;if(-1==this.getstate())return j.reject();for(k=0;k<b;k++){m=f[k];if("directory"==m.mime&&!e.folders)return j.reject();m.baseUrl=g;m.url=c.url(m.hash);m.path=c.path(m.hash);m.tmb&&1!=m.tmb&&(m.tmb=h+m.tmb);!m.width&&!m.height&&(m.dim?(n=m.dim.split("x"),m.width=n[0],m.height=n[1]):-1!==m.mime.indexOf("image")&&l.push(c.request({data:{cmd:"dim",
-target:m.hash},preventDefault:!0}).done($.proxy(function(a){a.dim&&(n=a.dim.split("x"),this.width=n[0],this.height=n[1]);this.dim=a.dim},f[k]))))}return l.length?($.when.apply(null,l).always(function(){j.resolve(e.multiple?f:f[0])}),j):j.resolve(e.multiple?f:f[0])}};"use strict";
-Finder.prototype.commands.help=function(){var a=this.fm,c=this,b=/\{url\}/,d=/\{link\}/,e=['<div class="ui-tabs ui-widget ui-widget-content ui-corner-all finder-help">','<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">'],f;this.alwaysEnabled=!0;this.updateOnSelect=!1;this.state=0;this.shortcuts=[{pattern:"f1",description:this.title}];setTimeout(function(){var g=c.options.view||["about","shortcuts","help"];$.each(g,function(b,c){e.push('<li class="ui-state-default ui-corner-top"><a href="#{id}">{title}</a></li>'.replace(/\{id\}/,
-c).replace(/\{title\}/,a.i18n(c)))});e.push("</ul>");-1!==$.inArray("about",g)&&(e.push('<div id="about" class="ui-tabs-panel ui-widget-content ui-corner-bottom">'),e.push("<h3>gpFinder</h3>"),e.push('<div class="ui-priority-primary">'+a.i18n("webfm")+"</div>"),e.push('<div class="ui-priority-secondary">'+a.i18n("ver")+": "+a.version+' <span id="apiver"></span></div>'),e.push('<div class="ui-priority-secondary">jQuery/jQuery UI: '+$().jquery+"/"+$.ui.version+"</div>"),e.push('<div class="finder-help-separator"/>'),
-e.push('<div class="finder-help-link"> <a href="{url}">{link}</a></div>'.replace(b,"https://github.com/oyejorge/gpFinder/wiki").replace(d,a.i18n("docs"))),e.push('<div class="finder-help-link"> <a href="{url}">{link}</a></div>'.replace(b,"https://github.com/oyejorge/gpFinder/issues").replace(d,"Issues")),e.push('<div class="finder-help-link"> <a href="{url}">{link}</a></div>'.replace(b,"https://github.com/oyejorge/gpFinder").replace(d,a.i18n("github"))),e.push('<div class="finder-help-link"> <a href="{url}">{link}</a></div>'.replace(b,
-"https://elfinder.org").replace(d,"gpFinder is an adaptation of elFinder")),e.push('<div class="finder-help-separator"/>'),e.push('<div class="finder-help-separator"/>'),e.push('<div class="finder-help-license">'+a.i18n("icons")+': <a href="http://pixelmixer.ru/" target="_blank">Pixelmixer</a>, <a href="http://p.yusukekamiyamane.com" target="_blank">Fugue</a></div>'),e.push('<div class="finder-help-separator"/>'),e.push('<div class="finder-help-license">Licence: BSD Licence</div>'),e.push('<div class="finder-help-license">Copyright \u00a9 2009-2011, Studio 42</div>'),
-e.push('<div class="finder-help-license">\u201e \u2026'+a.i18n("dontforget")+" \u201d</div>"),e.push("</div>"));if(-1!==$.inArray("shortcuts",g)){var h=a.shortcuts();e.push('<div id="shortcuts" class="ui-tabs-panel ui-widget-content ui-corner-bottom">');h.length?(e.push('<div class="ui-widget-content finder-help-shortcuts">'),$.each(h,function(a,b){e.push('<div class="finder-help-shortcut"><div class="finder-help-shortcut-pattern">{pattern}</div> {descrip}</div>'.replace(/\{pattern\}/,b[0]).replace(/\{descrip\}/,
-b[1]))}),e.push("</div>")):e.push('<div class="finder-help-disabled">'+a.i18n("shortcutsof")+"</div>");e.push("</div>")}-1!==$.inArray("help",g)&&(e.push('<div id="help" class="ui-tabs-panel ui-widget-content ui-corner-bottom">'),e.push('<a href="http://gpfinder.org/index.php/Forum" target="_blank" class="finder-dont-panic"><span>DON\'T PANIC</span></a>'),e.push("</div>"));e.push("</div>");f=$(e.join(""));a.one("load",function(){f.find("#apiver").text(a.api)});f.find(".ui-tabs-nav li").hover(function(){$(this).toggleClass("ui-state-hover")}).children().click(function(a){var b=
-$(this);a.preventDefault();a.stopPropagation();b.is(".ui-tabs-selected")||(b.parent().addClass("ui-tabs-selected ui-state-active").siblings().removeClass("ui-tabs-selected").removeClass("ui-state-active"),f.find(".ui-tabs-panel").hide().filter(b.attr("href")).show())}).filter(":first").click()},200);this.getstate=function(){return 0};this.exec=function(){this.dialog||(this.dialog=this.fm.dialog(f,{title:this.title,width:530,autoOpen:!1,destroyOnClose:!1}));this.dialog.finderdialog("open").find(".ui-tabs-nav li a:first").click()}};
-Finder.prototype.commands.home=function(){this.title="Home";this.alwaysEnabled=!0;this.updateOnSelect=!1;this.shortcuts=[{pattern:"ctrl+home ctrl+shift+up",description:"Home"}];this.getstate=function(){var a=this.fm.root(),c=this.fm.cwd().hash;return a&&c&&a!=c?0:-1};this.exec=function(){return this.fm.exec("open",this.fm.root())}};"use strict";
-Finder.prototype.commands.info=function(){var a=this.fm,c={calc:a.i18n("calc"),size:a.i18n("size"),unknown:a.i18n("unknown"),path:a.i18n("path"),aliasfor:a.i18n("aliasfor"),modify:a.i18n("modify"),perms:a.i18n("perms"),locked:a.i18n("locked"),dim:a.i18n("dim"),kind:a.i18n("kind"),files:a.i18n("files"),folders:a.i18n("folders"),items:a.i18n("items"),yes:a.i18n("yes"),no:a.i18n("no"),link:a.i18n("link")};this.tpl={main:'<div class="ui-helper-clearfix finder-info-title"><span class="finder-cwd-icon {class} ui-corner-all"/>{title}</div><table class="finder-info-tb">{content}</table>',
-itemTitle:'<strong>{name}</strong><span class="finder-info-kind">{kind}</span>',groupTitle:"<strong>{items}: {num}</strong>",row:"<tr><td>{label} : </td><td>{value}</td></tr>",spinner:'<span>{text}</span> <span class="finder-info-spinner"/>'};this.alwaysEnabled=!0;this.updateOnSelect=!1;this.shortcuts=[{pattern:"ctrl+i"}];this.init=function(){$.each(c,function(b,d){c[b]=a.i18n(d)})};this.getstate=function(a){a=this.files(a);return a.length?0:-1};this.exec=function(a){var d=this.fm,e=this.tpl,f=e.row,
-g=this.files(a),h=g.length;a=[];var j=e.main,l={title:this.title,width:"auto",close:function(){$(this).finderdialog("destroy")}},k=[],m=function(a){r.find(".finder-info-spinner").parent().text(a)},n=d.namespace+"-info-"+$.map(g,function(a){return a.hash}).join("-"),r=d.getUI().find("#"+n),p,v,t,x;if(!h)return $.Deferred().reject();if(r.length)return r.finderdialog("toTop"),$.Deferred().resolve();1==h?(g=g[0],j=j.replace("{class}",d.mime2class(g.mime)),t=e.itemTitle.replace("{name}",g.name).replace("{kind}",
-d.mime2kind(g)),g.tmb&&(v=d.option("tmbUrl")+g.tmb),g.read?"directory"!=g.mime||g.alias?p=d.formatSize(g.size):(p=e.spinner.replace("{text}",c.calc),k.push(g.hash)):p=c.unknown,a.push(f.replace("{label}",c.size).replace("{value}",p)),g.alias&&a.push(f.replace("{label}",c.aliasfor).replace("{value}",g.alias)),a.push(f.replace("{label}",c.path).replace("{value}",d.escape(d.path(g.hash)))),g.read&&a.push(f.replace("{label}",c.link).replace("{value}",'<a href="'+d.url(g.hash)+'" target="_blank">'+g.name+
-"</a>")),g.dim?a.push(f.replace("{label}",c.dim).replace("{value}",g.dim)):-1!==g.mime.indexOf("image")&&(g.width&&g.height?a.push(f.replace("{label}",c.dim).replace("{value}",g.width+"x"+g.height)):(a.push(f.replace("{label}",c.dim).replace("{value}",e.spinner.replace("{text}",c.calc))),d.request({data:{cmd:"dim",target:g.hash},preventDefault:!0}).fail(function(){m(c.unknown)}).done(function(a){m(a.dim||c.unknown)}))),a.push(f.replace("{label}",c.modify).replace("{value}",d.formatDate(g))),a.push(f.replace("{label}",
-c.perms).replace("{value}",d.formatPermissions(g))),a.push(f.replace("{label}",c.locked).replace("{value}",g.locked?c.yes:c.no))):(j=j.replace("{class}","finder-cwd-icon-group"),t=e.groupTitle.replace("{items}",c.items).replace("{num}",h),(x=$.map(g,function(a){return"directory"==a.mime?1:null}).length)?(a.push(f.replace("{label}",c.kind).replace("{value}",x==h?c.folders:c.folders+" "+x+", "+c.files+" "+(h-x))),a.push(f.replace("{label}",c.size).replace("{value}",e.spinner.replace("{text}",c.calc))),
-k=$.map(g,function(a){return a.hash})):(p=0,$.each(g,function(a,b){var c=parseInt(b.size);p=0<=c&&0<=p?p+c:"unknown"}),a.push(f.replace("{label}",c.kind).replace("{value}",c.files)),a.push(f.replace("{label}",c.size).replace("{value}",d.formatSize(p)))));j=j.replace("{title}",t).replace("{content}",a.join(""));r=d.dialog(j,l);r.attr("id",n);v&&$("<img/>").load(function(){r.find(".finder-cwd-icon").css("background",'url("'+v+'") center center no-repeat')}).attr("src",v);k.length&&d.request({data:{cmd:"size",
-targets:k},preventDefault:!0}).fail(function(){m(c.unknown)}).done(function(a){a=parseInt(a.size);m(0<=a?d.formatSize(a):c.unknown)})}};"use strict";Finder.prototype.commands.mkdir=function(){this.disableOnSearch=!0;this.updateOnSelect=!1;this.mime="directory";this.prefix="untitled folder";this.exec=$.proxy(this.fm.res("mixin","make"),this);this.shortcuts=[{pattern:"ctrl+shift+n"}];this.getstate=function(){return!this._disabled&&this.fm.cwd().write?0:-1}};"use strict";
-Finder.prototype.commands.mkfile=function(){this.disableOnSearch=!0;this.updateOnSelect=!1;this.mime="text/plain";this.prefix="untitled file.txt";this.exec=$.proxy(this.fm.res("mixin","make"),this);this.getstate=function(){return!this._disabled&&this.fm.cwd().write?0:-1}};"use strict";
-Finder.prototype.commands.netmount=function(){var a=this;this.alwaysEnabled=!0;this.updateOnSelect=!1;this.drivers=[];this.handlers={load:function(){this.drivers=this.fm.netDrivers}};this.getstate=function(){return this.drivers.length?0:-1};this.exec=function(){var c=a.fm,b=$.Deferred();if(!a.dialog){var d,e={protocol:$("<select/>"),host:$('<input type="text"/>'),port:$('<input type="text"/>'),path:$('<input type="text" value="/"/>'),user:$('<input type="text"/>'),pass:$('<input type="password"/>')};
-d={title:c.i18n("netMountDialogTitle"),resizable:!1,modal:!0,destroyOnClose:!0,close:function(){delete a.dialog;"resolved"!=b.state()&&"rejected"!=b.state()&&b.reject()},buttons:{}};var f=$('<table class="finder-info-tb finder-netmount-tb"/>');$.each(a.drivers,function(a,b){e.protocol.append('<option value="'+b+'">'+c.i18n(b)+"</option>")});$.each(e,function(a,b){"protocol"!=a&&b.addClass("ui-corner-all");f.append($("<tr/>").append($("<td>"+c.i18n(a)+"</td>")).append($("<td/>").append(b)))});d.buttons[c.i18n("btnMount")]=
-function(){var c={cmd:"netmount"};$.each(e,function(a,b){var d=$.trim(b.val());d&&(c[a]=d)});if(!c.host)return a.fm.trigger("error",{error:"errNetMountHostReq"});a.fm.request({data:c,notify:{type:"netmount",cnt:1}}).done(function(){b.resolve()}).fail(function(a){b.reject(a)});a.dialog.finderdialog("close")};d.buttons[c.i18n("btnCancel")]=function(){a.dialog.finderdialog("close")};d=c.dialog(f,d);a.dialog=d}return b.promise()}};"use strict";
-Finder.prototype.commands.open=function(){this.alwaysEnabled=!0;this._handlers={dblclick:function(a){a.preventDefault();this.exec()},"select enable disable reload":function(a){this.update("disable"==a.type?-1:void 0)}};this.shortcuts=[{pattern:"ctrl+down numpad_enter"+("mac"!=this.fm.OS&&" enter")}];this.getstate=function(a){a=this.files(a);var c=a.length;return 1==c?0:c?$.map(a,function(a){return"directory"==a.mime?null:a}).length==c?0:-1:-1};this.exec=function(a){var c=this.fm,b=$.Deferred().fail(function(a){a&&
-c.error(a)}),d=this.files(a),e=d.length,f,g,h;if(!e)return b.reject();if(1==e&&(f=d[0])&&"directory"==f.mime)return f&&!f.read?b.reject(["errOpen",f.name,"errPerm"]):c.request({data:{cmd:"open",target:f.thash||f.hash},notify:{type:"open",cnt:1,hideCnt:!0},syncOnFail:!0});d=$.map(d,function(a){return"directory"!=a.mime?a:null});if(e!=d.length)return b.reject();for(e=d.length;e--;){f=d[e];if(!f.read)return b.reject(["errOpen",f.name,"errPerm"]);if(!(g=c.url(f.hash)))g=c.options.url,g=g+(-1===g.indexOf("?")?
-"?":"&")+"cmd=file&target="+f.hash;h="";f.dim&&(f=f.dim.split("x"),h="width="+(parseInt(f[0])+20)+",height="+(parseInt(f[1])+20));if(!window.open(g,"_blank",h+",top=50,left=50,scrollbars=yes,resizable=yes"))return b.reject("errPopup")}return b.resolve(a)}};"use strict";
-Finder.prototype.commands.paste=function(){this.updateOnSelect=!1;this.handlers={changeclipboard:function(){this.update()}};this.shortcuts=[{pattern:"ctrl+v shift+insert"}];this.getstate=function(a){if(this._disabled)return-1;if(a){if($.isArray(a)){if(1!=a.length)return-1;a=this.fm.file(a[0])}}else a=this.fm.cwd();return"directory"==a.mime&&a.write?0:-1};this.exec=function(a){var c=this,b=c.fm;a=a?this.files(a)[0]:b.cwd();var d=b.clipboard(),e=d.length,f=e?d[0].cut:!1,g=f?"errMove":"errCopy",h=[],
-j=[],l=$.Deferred().fail(function(a){a&&b.error(a)}),k,m;if(!e||!a||"directory"!=a.mime)return l.reject();if(!a.write)return l.reject([g,d[0].name,"errPerm"]);k=b.parents(a.hash);$.each(d,function(c,e){if(!e.read)return!l.reject([g,d[0].name,"errPerm"]);if(f&&e.locked)return!l.reject(["errLocked",e.name]);if(-1!==$.inArray(e.hash,k))return!l.reject(["errCopyInItself",e.name]);m=b.parents(e.hash);if(-1!==$.inArray(a.hash,m)&&$.map(m,function(c){c=b.file(c);return c.phash==a.hash&&c.name==e.name?c:
-null}).length)return!l.reject(["errReplByChild",e.name]);e.phash==a.hash?j.push(e.hash):h.push({hash:e.hash,phash:e.phash,name:e.name})});return"rejected"==l.state()?l:$.when(j.length&&b._commands.duplicate?b.exec("duplicate",j):$.Deferred().resolve(),function(d){var e=$.Deferred(),g=[],h=function(a){var c=d[g[a]],j=a==g.length-1;c&&b.confirm({title:b.i18n(f?"moveFiles":"copyFiles"),text:b.i18n(["errExists",c.name,"confirmRepl"]),all:!j,accept:{label:"btnYes",callback:function(b){!j&&!b?h(++a):k(d)}},
-reject:{label:"btnNo",callback:function(b){var c;if(b)for(c=g.length;a<c--;)d[g[c]].remove=!0;else d[g[a]].remove=!0;!j&&!b?h(++a):k(d)}},cancel:{label:"btnCancel",callback:function(){e.resolve()}}})},j=function(a){for(var b=[],c=d.length;c--;)-1!==$.inArray(d[c].name,a)&&b.unshift(c);g=b;g.length?h(0):k(d)},k=function(c){c=$.map(c,function(a){return!a.remove?a:null});var d=c.length,g;if(!d)return e.resolve();g=c[0].phash;c=$.map(c,function(a){return a.hash});b.request({data:{cmd:"paste",dst:a.hash,
-targets:c,cut:f?1:0,src:g},notify:{type:f?"move":"copy",cnt:d}}).always(function(){e.resolve();b.unlockfiles({files:c})})};if(c._disabled||!d.length)return e.resolve();b.option("copyOverwrite")?a.hash==b.cwd().hash?j($.map(b.files(),function(b){return b.phash==a.hash?b.name:null})):b.request({data:{cmd:"ls",target:a.hash},notify:{type:"prepare",cnt:1,hideCnt:!0},preventFail:!0}).always(function(a){j(a.list||[])}):k(d);return e}(h)).always(function(){f&&b.clipboard([])})}};"use strict";
-Finder.prototype.commands.quicklook=function(){var a=this,c=a.fm,b=0,d=function(a){$(document).trigger($.Event("keydown",{keyCode:a,ctrlKey:!1,shiftKey:!1,altKey:!1,metaKey:!1}))},e=function(a){return{opacity:0,width:20,height:"list"==c.view?1:20,top:a.offset().top,left:a.offset().left}},f=function(){var a=$(window);return{opacity:1,width:h,height:j,top:parseInt((a.height()-j)/2+a.scrollTop()),left:parseInt((a.width()-h)/2+a.scrollLeft())}},g=function(a){var b=document.createElement(a.substr(0,a.indexOf("/"))),
-c=!1;try{c=b.canPlayType&&b.canPlayType(a)}catch(d){}return c&&""!==c&&"no"!=c},h,j,l,k,m=$('<div class="finder-quicklook-title"/>'),n=$("<div/>"),r=$('<div class="finder-quicklook-info"/>'),p=$('<div class="finder-quicklook-navbar-icon finder-quicklook-navbar-icon-fullscreen"/>').mousedown(function(b){var d=a.window,e=d.is(".finder-quicklook-fullscreen"),f="scroll."+c.namespace,g=$(window);b.stopPropagation();e?(d.css(d.data("position")).unbind("mousemove"),g.unbind(f).trigger(a.resize).unbind(a.resize),
-v.unbind("mouseenter").unbind("mousemove")):(d.data("position",{left:d.css("left"),top:d.css("top"),width:d.width(),height:d.height()}).css({width:"100%",height:"100%"}),$(window).bind(f,function(){d.css({left:parseInt($(window).scrollLeft()),top:parseInt($(window).scrollTop())})}).bind(a.resize,function(){a.preview.trigger("changesize")}).trigger(f).trigger(a.resize),d.bind("mousemove",function(){v.stop(!0,!0).show().delay(3E3).fadeOut("slow")}).mousemove(),v.mouseenter(function(){v.stop(!0,!0).show()}).mousemove(function(a){a.stopPropagation()}));
-v.attr("style","");e?v.filter(":ui-draggable").draggable("destroy"):v.draggable({});d.toggleClass("finder-quicklook-fullscreen");$(this).toggleClass("finder-quicklook-navbar-icon-fullscreen-off");$.fn.resizable&&l.add(d).resizable(e?"enable":"disable").removeClass("ui-state-disabled")}),v=$('<div class="finder-quicklook-navbar"/>').append($('<div class="finder-quicklook-navbar-icon finder-quicklook-navbar-icon-prev"/>').mousedown(function(){d(37)})).append(p).append($('<div class="finder-quicklook-navbar-icon finder-quicklook-navbar-icon-next"/>').mousedown(function(){d(39)})).append('<div class="finder-quicklook-navbar-separator"/>').append($('<div class="finder-quicklook-navbar-icon finder-quicklook-navbar-icon-close"/>').mousedown(function(){a.window.trigger("close")}));
-this.resize="resize."+c.namespace;this.info=$('<div class="finder-quicklook-info-wrapper"/>').append(n).append(r);this.preview=$('<div class="finder-quicklook-preview ui-helper-clearfix"/>').bind("change",function(){a.info.attr("style","").hide();n.removeAttr("class").attr("style","");r.html("")}).bind("update",function(b){var c=a.fm,d=b.file,e;d?(!d.read&&b.stopImmediatePropagation(),a.window.data("hash",d.hash),a.preview.unbind("changesize").trigger("change").children().remove(),m.html(c.escape(d.name)),
-r.html('<div class="finder-quicklook-info-data">{value}</div>'.replace(/\{value\}/,d.name)+'<div class="finder-quicklook-info-data">{value}</div>'.replace(/\{value\}/,c.mime2kind(d))+("directory"==d.mime?"":'<div class="finder-quicklook-info-data">{value}</div>'.replace(/\{value\}/,c.formatSize(d.size)))+'<div class="finder-quicklook-info-data">{value}</div>'.replace(/\{value\}/,c.i18n("modify")+": "+c.formatDate(d))),n.addClass("finder-cwd-icon ui-corner-all "+c.mime2class(d.mime)),d.tmb&&$("<img/>").hide().appendTo(a.preview).load(function(){n.css("background",
-'url("'+e+'") center center no-repeat');$(this).remove()}).attr("src",e=c.tmb(d.hash)),a.info.delay(100).fadeIn(10)):b.stopImmediatePropagation()});this.window=$('<div class="ui-helper-reset ui-widget finder-quicklook" style="position:absolute"/>').click(function(a){a.stopPropagation()}).append($('<div class="finder-quicklook-titlebar"/>').append(m).append($('<span class="ui-icon ui-icon-circle-close"/>').mousedown(function(b){b.stopPropagation();a.window.trigger("close")}))).append(this.preview.add(v)).append(a.info.hide()).draggable({handle:"div.finder-quicklook-titlebar"}).bind("open",
-function(){var c=a.window,d=a.value,g;if(a.closed()&&d&&(g=k.find("#"+d.hash)).length)b=1,g.trigger("scrolltoview"),c.css(e(g)).show().animate(f(),550,function(){b=2;a.update(1,a.value)})}).bind("close",function(){var c=a.window,d=a.preview.trigger("change"),f=k.find("#"+c.data("hash")),g=function(){b=0;c.hide();d.children().remove();a.update(0,a.value)};a.opened()&&(b=1,c.is(".finder-quicklook-fullscreen")&&p.mousedown(),f.length?c.animate(e(f),500,g):g())});this.alwaysEnabled=!0;this.value=null;
-this.handlers={select:function(){this.update(void 0,this.fm.selectedFiles()[0])},error:function(){a.window.is(":visible")&&a.window.data("hash","").trigger("close")},"searchshow searchhide":function(){this.opened()&&this.window.trigger("close")}};this.shortcuts=[{pattern:"space"}];this.support={audio:{ogg:g('audio/ogg; codecs="vorbis"'),mp3:g("audio/mpeg;"),wav:g('audio/wav; codecs="1"'),m4a:g("audio/x-m4a;")||g("audio/aac;")},video:{ogg:g('video/ogg; codecs="theora"'),webm:g('video/webm; codecs="vp8, vorbis"'),
-mp4:g('video/mp4; codecs="avc1.42E01E"')||g('video/mp4; codecs="avc1.42E01E, mp4a.40.2"')}};this.closed=function(){return 0==b};this.opened=function(){return 2==b};this.init=function(){var b=this.options,d=this.window,e=this.preview;h=0<b.width?parseInt(b.width):450;j=0<b.height?parseInt(b.height):300;c.one("load",function(){l=c.getUI();k=c.getUI("cwd");d.appendTo("body").zIndex(100+l.zIndex());$(document).keydown(function(b){27==b.keyCode&&a.opened()&&d.trigger("close")});$.fn.resizable&&d.resizable({handles:"se",
-minWidth:350,minHeight:120,resize:function(){e.trigger("changesize")}});a.change(function(){a.opened()&&(a.value?e.trigger($.Event("update",{file:a.value})):d.trigger("close"))});$.each(c.commands.quicklook.plugins||[],function(b,c){"function"==typeof c&&new c(a)});e.bind("update",function(){a.info.show()})})};this.getstate=function(){return 1==this.fm.selected().length?2==b?1:0:-1};this.exec=function(){this.enabled()&&this.window.trigger(this.opened()?"close":"open")};this.hideinfo=function(){this.info.stop(!0).hide()}};
-Finder.prototype.commands.quicklook.plugins=[function(a){var c=["image/jpeg","image/png","image/gif"],b=a.preview;$.each(navigator.mimeTypes,function(a,b){var f=b.type;0===f.indexOf("image/")&&$.inArray(f,c)&&c.push(f)});b.bind("update",function(d){var e=d.file,f;-1!==$.inArray(e.mime,c)&&(d.stopImmediatePropagation(),f=$("<img/>").hide().appendTo(b).load(function(){setTimeout(function(){var c=(f.width()/f.height()).toFixed(2);b.bind("changesize",function(){var a=parseInt(b.width()),d=parseInt(b.height()),
-e;c<(a/d).toFixed(2)?(e=d,a=Math.floor(e*c)):e=Math.floor(a/c);f.width(a).height(e).css("margin-top",e<d?Math.floor((d-e)/2):0)}).trigger("changesize");a.hideinfo();f.fadeIn(100)},1)}).attr("src",a.fm.url(e.hash)))})},function(a){var c=["text/html","application/xhtml+xml"],b=a.preview,d=a.fm;b.bind("update",function(e){var f=e.file,g;-1!==$.inArray(f.mime,c)&&(e.stopImmediatePropagation(),b.one("change",function(){"resolved"!=g.state()&&"rejected"!=g.state()&&g.reject()}),g=d.request({data:{cmd:"get",
-target:f.hash,current:f.phash},preventDefault:!0}).done(function(c){a.hideinfo();doc=$('<iframe class="finder-quicklook-preview-html"/>').appendTo(b)[0].contentWindow.document;doc.open();doc.write(c.content);doc.close()}))})},function(a){var c=a.fm,b=c.res("mimes","text"),d=a.preview;d.bind("update",function(e){var f=e.file,g=f.mime,h;if(0===g.indexOf("text/")||-1!==$.inArray(g,b))e.stopImmediatePropagation(),d.one("change",function(){"resolved"!=h.state()&&"rejected"!=h.state()&&h.reject()}),h=c.request({data:{cmd:"get",
-target:f.hash},preventDefault:!0}).done(function(b){a.hideinfo();$('<div class="finder-quicklook-preview-text-wrapper"><pre class="finder-quicklook-preview-text">'+c.escape(b.content)+"</pre></div>").appendTo(d)})})},function(a){var c=a.fm,b=a.preview,d=!1;c.UA.Webkit&&"mac"==c.OS||c.UA.IE?d=!0:$.each(navigator.plugins,function(a,b){$.each(b,function(a,b){if("application/pdf"==b.type)return!(d=!0)})});d&&b.bind("update",function(d){var f=d.file,g;"application/pdf"==f.mime&&(d.stopImmediatePropagation(),
-b.one("change",function(){g.unbind("load").remove()}),g=$('<iframe class="finder-quicklook-preview-pdf"/>').hide().appendTo(b).load(function(){a.hideinfo();g.show()}).attr("src",c.url(f.hash)))})},function(a){var c=a.fm,b=a.preview,d=!1;$.each(navigator.plugins,function(a,b){$.each(b,function(a,b){if("application/x-shockwave-flash"==b.type)return!(d=!0)})});d&&b.bind("update",function(d){var f=d.file;"application/x-shockwave-flash"==f.mime&&(d.stopImmediatePropagation(),a.hideinfo(),b.append($('<embed class="finder-quicklook-preview-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" src="'+
-c.url(f.hash)+'" quality="high" type="application/x-shockwave-flash" />')))})},function(a){var c=a.preview,b=!!a.options.autoplay,d={"audio/mpeg":"mp3","audio/mpeg3":"mp3","audio/mp3":"mp3","audio/x-mpeg3":"mp3","audio/x-mp3":"mp3","audio/x-wav":"wav","audio/wav":"wav","audio/x-m4a":"m4a","audio/aac":"m4a","audio/mp4":"m4a","audio/x-mp4":"m4a","audio/ogg":"ogg"},e;c.bind("update",function(f){var g=f.file;a.support.audio[d[g.mime]]&&(f.stopImmediatePropagation(),e=$('<audio class="finder-quicklook-preview-audio" controls preload="auto" autobuffer><source src="'+
-a.fm.url(g.hash)+'" /></audio>').appendTo(c),b&&e[0].play())}).bind("change",function(){e&&e.parent().length&&(e[0].pause(),e.remove(),e=null)})},function(a){var c=a.preview,b=!!a.options.autoplay,d={"video/mp4":"mp4","video/x-m4v":"mp4","video/ogg":"ogg","application/ogg":"ogg","video/webm":"webm"},e;c.bind("update",function(f){var g=f.file;a.support.video[d[g.mime]]&&(f.stopImmediatePropagation(),a.hideinfo(),e=$('<video class="finder-quicklook-preview-video" controls preload="auto" autobuffer><source src="'+
-a.fm.url(g.hash)+'" /></video>').appendTo(c),b&&e[0].play())}).bind("change",function(){e&&e.parent().length&&(e[0].pause(),e.remove(),e=null)})},function(a){var c=a.preview,b=[],d;$.each(navigator.plugins,function(a,c){$.each(c,function(a,c){(0===c.type.indexOf("audio/")||0===c.type.indexOf("video/"))&&b.push(c.type)})});c.bind("update",function(e){var f=e.file,g=f.mime;-1!==$.inArray(f.mime,b)&&(e.stopImmediatePropagation(),(e=0===g.indexOf("video/"))&&a.hideinfo(),d=$('<embed src="'+a.fm.url(f.hash)+
-'" type="'+g+'" class="finder-quicklook-preview-'+(e?"video":"audio")+'"/>').appendTo(c))}).bind("change",function(){d&&d.parent().length&&(d.remove(),d=null)})}];
-Finder.prototype.commands.reload=function(){this.updateOnSelect=this.alwaysEnabled=!0;this.shortcuts=[{pattern:"ctrl+shift+r f5"}];this.getstate=function(){return 0};this.exec=function(){var a=this.fm,c=a.sync(),b=setTimeout(function(){a.notify({type:"reload",cnt:1,hideCnt:!0});c.always(function(){a.notify({type:"reload",cnt:-1})})},a.notifyDelay);return c.always(function(){clearTimeout(b);a.trigger("reload")})}};"use strict";
-Finder.prototype.commands.rename=function(){this.shortcuts=[{pattern:"f2"+("mac"==this.fm.OS?" enter":"")}];this.getstate=function(){var a=this.fm.selectedFiles();return!this._disabled&&1==a.length&&a[0].phash&&!a[0].locked?0:-1};this.exec=function(){var a=this.fm,c=a.getUI("cwd"),b=a.selected(),d=b.length,e=a.file(b.shift()),f=$.Deferred().fail(function(b){var d=g.parent(),f=a.escape(e.name);d.length?(g.remove(),d.html(f)):(c.find("#"+e.hash).find(".finder-cwd-filename").html(f),setTimeout(function(){c.find("#"+
-e.hash).click()},50));b&&a.error(b)}).always(function(){a.enable()}),g=$('<input type="text"/>').keydown(function(a){a.stopPropagation();a.stopImmediatePropagation();a.keyCode==$.ui.keyCode.ESCAPE?f.reject():a.keyCode==$.ui.keyCode.ENTER&&g.blur()}).mousedown(function(a){a.stopPropagation()}).dblclick(function(a){a.stopPropagation();a.preventDefault()}).blur(function(){var b=$.trim(g.val()),c=g.parent();if(c.length){g[0].setSelectionRange&&g[0].setSelectionRange(0,0);if(b==e.name)return f.reject();
-if(!b)return f.reject("errInvName");if(a.fileByName(b,e.phash))return f.reject(["errExists",b]);c.html(a.escape(b));a.lockfiles({files:[e.hash]});a.request({data:{cmd:"rename",target:e.hash,name:b},notify:{type:"rename",cnt:1}}).fail(function(){f.reject();a.sync()}).done(function(a){f.resolve(a)}).always(function(){a.unlockfiles({files:[e.hash]})})}}),b=c.find("#"+e.hash).find(".finder-cwd-filename").empty().append(g.val(e.name)),h=g.val().replace(/\.((tar\.(gz|bz|bz2|z|lzo))|cpio\.gz|ps\.gz|xcf\.(gz|bz2)|[a-z0-9]{1,4})$/ig,
-"");if(this.disabled())return f.reject();if(!e||1<d||!b.length)return f.reject("errCmdParams",this.title);if(e.locked)return f.reject(["errLocked",e.name]);a.one("select",function(){g.parent().length&&e&&-1===$.inArray(e.hash,a.selected())&&g.blur()});g.select().focus();g[0].setSelectionRange&&g[0].setSelectionRange(0,h.length);return f}};"use strict";
-Finder.prototype.commands.resize=function(){this.updateOnSelect=!1;this.getstate=function(){var a=this.fm.selectedFiles();return!this._disabled&&1==a.length&&a[0].read&&a[0].write&&-1!==a[0].mime.indexOf("image/")?0:-1};this.exec=function(a){var c=this.fm,b=this.files(a),d=$.Deferred(),e;if(!b.length||-1===b[0].mime.indexOf("image/"))return d.reject();a="resize-"+c.namespace+"-"+b[0].hash;e=c.getUI().find("#"+a);if(e.length)return e.finderdialog("toTop"),d.resolve();var f=b[0],g=$('<div class="finder-dialog-resize"/>'),
-h=$('<div class="finder-resize-control"/>'),j=$('<div class="finder-resize-preview"/>'),l=$('<div class="finder-resize-spinner">'+c.i18n("ntfloadimg")+"</div>"),k=$('<div class="finder-resize-handle"/>'),m=$('<div class="finder-resize-handle"/>'),n=$('<div class="finder-resize-uiresize"/>'),r=$('<div class="finder-resize-uicrop"/>'),p=$('<div class="finder-resize-rotate"/>'),b=$('<div class="ui-state-default finder-button"/>').attr("title",c.i18n("rotate-cw")).append($('<span class="finder-button-icon finder-button-icon-rotate-l"/>').click(function(){O-=
-90;s.update(O)}));e=$('<div class="ui-state-default finder-button"/>').attr("title",c.i18n("rotate-ccw")).append($('<span class="finder-button-icon finder-button-icon-rotate-r"/>').click(function(){O+=90;s.update(O)}));var v=$("<span />"),t=$('<div class="ui-state-default ui-corner-all finder-resize-reset"><span class="ui-icon ui-icon-arrowreturnthick-1-w"/></div>'),x=$('<div class="finder-resize-type"/>').append('<input type="radio" name="type" id="type-resize" value="resize" checked="checked" /><label for="type-resize">'+
-c.i18n("resize")+"</label>").append('<input type="radio" name="type" id="type-crop"   value="crop"/><label for="type-crop">'+c.i18n("crop")+"</label>").append('<input type="radio" name="type" id="type-rotate" value="rotate"/><label for="type-rotate">'+c.i18n("rotate")+"</label>");$("input",x).change(function(){var a=$("input:checked",x).val();W();R(!0);X(!0);Z(!0);"resize"==a?(n.show(),p.hide(),r.hide(),R()):"crop"==a?(p.hide(),n.hide(),r.show(),X()):"rotate"==a&&(n.hide(),r.hide(),p.show(),Z())});
-var w=$('<input type="checkbox" checked="checked"/>').change(function(){M=!!w.prop("checked");I.fixHeight();R(!0);R()}),D=$('<input type="text" size="5"/>').change(function(){var a=parseInt(D.val()),b=parseInt(M?a/B:E.val());0<a&&0<b&&(I.updateView(a,b),E.val(b))}),E=$('<input type="text" size="5"/>').change(function(){var a=parseInt(E.val()),b=parseInt(M?a*B:D.val());0<b&&0<a&&(I.updateView(b,a),D.val(b))}),Q=$('<input type="text" size="5"/>'),J=$('<input type="text" size="5"/>'),K=$('<input type="text" size="5"/>'),
-L=$('<input type="text" size="5"/>'),A=$('<input type="text" size="3" maxlength="3" value="0" />').change(function(){s.update()}),y=$('<div class="finder-resize-rotate-slider"/>').slider({min:0,max:359,value:A.val(),animate:!0,change:function(a,b){b.value!=y.slider("value")&&s.update(b.value)},slide:function(a,b){s.update(b.value,!1)}}),B=1,u=1,G=0,H=0,M=!0,C=0,N=0,T=0,S=0,O=0,z=$("<img/>").load(function(){l.remove();G=z.width();H=z.height();B=G/H;I.updateView(G,H);k.append(z.show()).show();D.val(G);
-E.val(H);var a=Math.min(C,N)/Math.sqrt(Math.pow(G,2)+Math.pow(H,2));T=G*a;S=H*a;h.find("input,select").removeAttr("disabled").filter(":text").keydown(function(a){var b=a.keyCode,c;a.stopPropagation();37<=b&&40>=b||(b==$.ui.keyCode.BACKSPACE||b==$.ui.keyCode.DELETE||65==b&&(a.ctrlKey||a.metaKey)||27==b)||(9==b&&(c=$(this).parent()[a.shiftKey?"prev":"next"](".finder-resize-row").children(":text"),c.length&&c.focus()),13==b?aa():48<=b&&57>=b||96<=b&&105>=b||a.preventDefault())}).filter(":first").focus();
-R();t.hover(function(){t.toggleClass("ui-state-hover")}).click(W)}).error(function(){l.text("Unable to load image").css("background","transparent")}),V=$("<div/>"),P=$("<img/>"),U=$("<div/>"),F=$("<img/>"),W=function(){D.val(G);E.val(H);I.updateView(G,H)},I={update:function(){D.val(parseInt(z.width()/u));E.val(parseInt(z.height()/u))},updateView:function(a,b){a>C||b>N?a/C>b/N?z.width(C).height(Math.ceil(z.width()/B)):z.height(N).width(Math.ceil(z.height()*B)):z.width(a).height(b);u=z.width()/a;v.text("1 : "+
-(1/u).toFixed(2));I.updateHandle()},updateHandle:function(){k.width(z.width()).height(z.height())},fixWidth:function(){var a;M&&(a=E.val(),a=parseInt(a*B),I.updateView(void 0,a),D.val(void 0))},fixHeight:function(){var a,b;M&&(a=D.val(),b=parseInt(a/B),I.updateView(a,b),E.val(b))}},q={update:function(){K.val(parseInt(m.width()/u));L.val(parseInt(m.height()/u));Q.val(parseInt((m.offset().left-P.offset().left)/u));J.val(parseInt((m.offset().top-P.offset().top)/u))},resize_update:function(){q.update();
-U.width(m.width());U.height(m.height())}},s={mouseStartAngle:0,imageStartAngle:0,imageBeingRotated:!1,update:function(a,b){"undefined"==typeof a&&(O=a=parseInt(A.val()));"undefined"==typeof b&&(b=!0);!b||c.UA.Opera||c.UA.ltIE8?F.rotate(a):F.animate({rotate:a+"deg"});a%=360;0>a&&(a+=360);A.val(parseInt(a));y.slider("value",A.val())},execute:function(a){if(s.imageBeingRotated){var b=s.getCenter(F),b=Math.atan2(a.pageY-b[1],a.pageX-b[0])-s.mouseStartAngle+s.imageStartAngle,b=Math.round(180*parseFloat(b)/
-Math.PI);a.shiftKey&&(b=15*Math.round((b+6)/15));F.rotate(b);b%=360;0>b&&(b+=360);A.val(b);y.slider("value",A.val());return!1}},start:function(a){s.imageBeingRotated=!0;var b=s.getCenter(F);s.mouseStartAngle=Math.atan2(a.pageY-b[1],a.pageX-b[0]);s.imageStartAngle=parseFloat(F.rotate())*Math.PI/180;$(document).mousemove(s.execute);return!1},stop:function(){if(s.imageBeingRotated)return $(document).unbind("mousemove",s.execute),setTimeout(function(){s.imageBeingRotated=!1},10),!1},getCenter:function(){var a=
-F.rotate();F.rotate(0);var b=F.offset(),c=b.left+F.width()/2,b=b.top+F.height()/2;F.rotate(a);return[c,b]}},R=function(a){$.fn.resizable&&(a?(k.filter(":ui-resizable").resizable("destroy"),k.hide()):(k.show(),k.resizable({alsoResize:z,aspectRatio:M,resize:I.update,stop:I.fixHeight})))},X=function(a){$.fn.draggable&&$.fn.resizable&&(a?(m.filter(":ui-resizable").resizable("destroy"),m.filter(":ui-draggable").draggable("destroy"),V.hide()):(P.width(z.width()).height(z.height()),U.width(z.width()).height(z.height()),
-m.width(P.width()).height(P.height()).offset(P.offset()).resizable({containment:V,resize:q.resize_update,handles:"all"}).draggable({handle:m,containment:P,drag:q.update}),V.show().width(z.width()).height(z.height()),q.update()))},Z=function(a){$.fn.draggable&&$.fn.resizable&&(a?F.hide():F.show().width(T).height(S).css("margin-top",(N-S)/2).css("margin-left",(C-T)/2))},aa=function(){var a,b,e,h,j,k=$("input:checked",x).val();D.add(E).change();if("resize"==k)a=parseInt(D.val())||0,b=parseInt(E.val())||
-0;else if("crop"==k)a=parseInt(K.val())||0,b=parseInt(L.val())||0,e=parseInt(Q.val())||0,h=parseInt(J.val())||0;else{k="rotate";a=G;b=H;j=parseInt(A.val())||0;if(0>j||360<j)return c.error("Invalid rotate degree");if(0==j||360==j)return c.error("Image dose not rotated")}if("rotate"!=k){if(0>=a||0>=b)return c.error("Invalid image size");if(a==G&&b==H)return c.error("Image size not changed")}g.finderdialog("close");c.request({data:{cmd:"resize",target:f.hash,width:a,height:b,x:e,y:h,degree:j,mode:k},
-notify:{type:"resize",cnt:1}}).fail(function(a){d.reject(a)}).done(function(){d.resolve()})},Y={},ba=c.url(f.hash);F.mousedown(s.start);$(document).mouseup(s.stop);n.append($('<div class="finder-resize-row"/>').append($('<div class="finder-resize-label"/>').text(c.i18n("width"))).append(D).append(t)).append($('<div class="finder-resize-row"/>').append($('<div class="finder-resize-label"/>').text(c.i18n("height"))).append(E)).append($('<div class="finder-resize-row"/>').append($("<label/>").text(c.i18n("aspectRatio")).prepend(w))).append($('<div class="finder-resize-row"/>').append(c.i18n("scale")+
-" ").append(v));r.append($('<div class="finder-resize-row"/>').append($('<div class="finder-resize-label"/>').text("X")).append(Q)).append($('<div class="finder-resize-row"/>').append($('<div class="finder-resize-label"/>').text("Y")).append(J)).append($('<div class="finder-resize-row"/>').append($('<div class="finder-resize-label"/>').text(c.i18n("width"))).append(K)).append($('<div class="finder-resize-row"/>').append($('<div class="finder-resize-label"/>').text(c.i18n("height"))).append(L));p.append($('<div class="finder-resize-row"/>').append($('<div class="finder-resize-label"/>').text(c.i18n("rotate"))).append($('<div style="float:left; width: 130px;">').append($('<div style="float:left;">').append(A).append($("<span/>").text(c.i18n("degree")))).append($('<div class="ui-widget-content ui-corner-all finder-buttonset"/>').append(b).append($('<span class="ui-widget-content finder-toolbar-button-separator"/>')).append(e))).append(y));
-g.append(x);h.append($('<div class="finder-resize-row"/>')).append(n).append(r.hide()).append(p.hide()).find("input,select").attr("disabled","disabled");k.append('<div class="finder-resize-handle-hline finder-resize-handle-hline-top"/>').append('<div class="finder-resize-handle-hline finder-resize-handle-hline-bottom"/>').append('<div class="finder-resize-handle-vline finder-resize-handle-vline-left"/>').append('<div class="finder-resize-handle-vline finder-resize-handle-vline-right"/>').append('<div class="finder-resize-handle-point finder-resize-handle-point-e"/>').append('<div class="finder-resize-handle-point finder-resize-handle-point-se"/>').append('<div class="finder-resize-handle-point finder-resize-handle-point-s"/>');
-j.append(l).append(k.hide()).append(z.hide());m.css("position","absolute").append('<div class="finder-resize-handle-hline finder-resize-handle-hline-top"/>').append('<div class="finder-resize-handle-hline finder-resize-handle-hline-bottom"/>').append('<div class="finder-resize-handle-vline finder-resize-handle-vline-left"/>').append('<div class="finder-resize-handle-vline finder-resize-handle-vline-right"/>').append('<div class="finder-resize-handle-point finder-resize-handle-point-n"/>').append('<div class="finder-resize-handle-point finder-resize-handle-point-e"/>').append('<div class="finder-resize-handle-point finder-resize-handle-point-s"/>').append('<div class="finder-resize-handle-point finder-resize-handle-point-w"/>').append('<div class="finder-resize-handle-point finder-resize-handle-point-ne"/>').append('<div class="finder-resize-handle-point finder-resize-handle-point-se"/>').append('<div class="finder-resize-handle-point finder-resize-handle-point-sw"/>').append('<div class="finder-resize-handle-point finder-resize-handle-point-nw"/>');
-j.append(V.css("position","absolute").hide().append(P).append(m.append(U)));j.append(F.hide());j.css("overflow","hidden");g.append(j).append(h);Y[c.i18n("btnCancel")]=function(){g.finderdialog("close")};Y[c.i18n("btnApply")]=aa;c.dialog(g,{title:f.name,width:650,resizable:!1,destroyOnClose:!0,buttons:Y,open:function(){j.zIndex(1+$(this).parent().zIndex())}}).attr("id",a);c.UA.ltIE8&&$(".finder-dialog").css("filter","");t.css("left",D.position().left+D.width()+12);U.css({opacity:0.2,"background-color":"#fff",
-position:"absolute"});m.css("cursor","move");m.find(".finder-resize-handle-point").css({"background-color":"#fff",opacity:0.5,"border-color":"#000"});F.css("cursor","pointer");x.buttonset();C=j.width()-(k.outerWidth()-k.width());N=j.height()-(k.outerHeight()-k.height());z.attr("src",ba+(-1===ba.indexOf("?")?"?":"&")+"_="+Math.random());P.attr("src",z.attr("src"));F.attr("src",z.attr("src"));return d}};
-(function(a){var c=function(a,b){var c=0;for(c in b)if("undefined"!=typeof a[b[c]])return b[c];a[b[c]]="";return b[c]};a.cssHooks.rotate={get:function(b){return a(b).rotate()},set:function(b,c){a(b).rotate(c);return c}};a.cssHooks.transform={get:function(a){var b=c(a.style,["WebkitTransform","MozTransform","OTransform","msTransform","transform"]);return a.style[b]},set:function(a,b){var f=c(a.style,["WebkitTransform","MozTransform","OTransform","msTransform","transform"]);return a.style[f]=b}};a.fn.rotate=
-function(a){if("undefined"==typeof a)return window.opera?(a=this.css("transform").match(/rotate\((.*?)\)/))&&a[1]?Math.round(180*parseFloat(a[1])/Math.PI):0:(a=this.css("transform").match(/rotate\((.*?)\)/))&&a[1]?parseInt(a[1]):0;this.css("transform",this.css("transform").replace(/none|rotate\(.*?\)/,"")+"rotate("+parseInt(a)+"deg)");return this};a.fx.step.rotate=function(b){0==b.state&&(b.start=a(b.elem).rotate(),b.now=b.start);a(b.elem).rotate(b.now)};if("undefined"==typeof window.addEventListener&&
-"undefined"==typeof document.getElementsByClassName){var b=a.cssHooks.transform.set;a.cssHooks.transform.set=function(a,c){b.apply(this,[a,c]);var f,g=1,h=1,j=1,l=1;if("undefined"==typeof a.style.msTransform){if("static"==a.currentStyle.position){f=a;for(var k=f.offsetLeft,m=f.offsetTop;f.offsetParent;){f=f.offsetParent;if(f!=document.body&&"static"!=f.currentStyle.position)break;f!=document.body&&f!=document.documentElement&&(k-=f.scrollLeft,m-=f.scrollTop);k+=f.offsetLeft;m+=f.offsetTop}a.style.position=
-"absolute";a.style.left=k+"px";a.style.top=m+"px"}f=(f=c.match(/rotate\((.*?)\)/))&&f[1]?parseInt(f[1]):0;f%=360;0>f&&(f=360+f);k=f*Math.PI/180;m=Math.cos(k);k=Math.sin(k);g*=m;h*=-k;j*=k;l*=m;a.style.filter=(a.style.filter||"").replace(/progid:DXImageTransform\.Microsoft\.Matrix\([^)]*\)/,"")+("progid:DXImageTransform.Microsoft.Matrix(M11="+g+",M12="+h+",M21="+j+",M22="+l+",FilterType='bilinear',sizingMethod='auto expand')");g=parseInt(a.style.width||a.width||0);h=parseInt(a.style.height||a.height||
-0);k=f*Math.PI/180;j=Math.abs(Math.cos(k));l=Math.abs(Math.sin(k));a.style.marginLeft=Math.floor((g-(g*j+h*l))/2)+"px";a.style.marginTop=Math.floor((h-(g*l+h*j))/2)+"px"}return c}}})(jQuery);"use strict";
-Finder.prototype.commands.rm=function(){this.shortcuts=[{pattern:"delete ctrl+backspace"}];this.getstate=function(a){var c=this.fm;a=a||c.selected();return!this._disabled&&a.length&&$.map(a,function(a){var d=c.file(a);return d&&d.phash&&!d.locked?a:null}).length==a.length?0:-1};this.exec=function(a){var c=this.fm,b=$.Deferred().fail(function(a){a&&c.error(a)}),d=this.files(a),e=d.length,f=c.cwd().hash,g=!1;if(!e||this._disabled)return b.reject();$.each(d,function(a,d){if(!d.phash)return!b.reject(["errRm",
-d.name,"errPerm"]);if(d.locked)return!b.reject(["errLocked",d.name]);d.hash==f&&(g=c.root(d.hash))});"rejected"!=b.state()&&(d=this.hashes(a),c.confirm({title:this.title,text:"confirmRm",accept:{label:"btnRm",callback:function(){c.lockfiles({files:d});c.request({data:{cmd:"rm",targets:d},notify:{type:"rm",cnt:e},preventFail:!0}).fail(function(a){b.reject(a)}).done(function(a){b.done(a);g&&c.exec("open",g)}).always(function(){c.unlockfiles({files:d})})}},cancel:{label:"btnCancel",callback:function(){b.reject()}}}));
-return b}};"use strict";Finder.prototype.commands.search=function(){this.title="Find files";this.options={ui:"searchbutton"};this.alwaysEnabled=!0;this.updateOnSelect=!1;this.getstate=function(){return 0};this.exec=function(a){var c=this.fm;if("string"==typeof a&&a)return c.trigger("searchstart",{query:a}),c.request({data:{cmd:"search",q:a},notify:{type:"search",cnt:1,hideCnt:!0}});c.getUI("toolbar").find("."+c.res("class","searchbtn")+" :text").focus();return $.Deferred().reject()}};"use strict";
-Finder.prototype.commands.sort=function(){this.options={ui:"sortbutton"};this.getstate=function(){return 0};this.exec=function(a,c){var b=this.fm;c=$.extend({type:b.sortType,order:b.sortOrder,stick:b.sortStickFolders},c);this.fm.setSort(c.type,c.order,c.stick);return $.Deferred().resolve()}};
-Finder.prototype.commands.unmount=function(){var a=this.fm;this.alwaysEnabled=!0;this.updateOnSelect=!1;this.getstate=function(c){return!c||1<c.length?-1:a.file(c[0]).net?0:-1};this.exec=function(c){var b=c[0],d=$.Deferred();return a.request({data:{cmd:"unmount",target:b},notify:{type:"unmount",cnt:1}}).fail(function(a){d.reject(a)}).done(function(){d.resolve();$("#nav-"+b).closest(".finder-navbar-wrapper").detach();$(".finder-navbar-wrapper:first span:first").click()})}};"use strict";
-Finder.prototype.commands.up=function(){this.alwaysEnabled=!0;this.updateOnSelect=!1;this.shortcuts=[{pattern:"ctrl+up"}];this.getstate=function(){return this.fm.cwd().phash?0:-1};this.exec=function(){return this.fm.cwd().phash?this.fm.exec("open",this.fm.cwd().phash):$.Deferred().reject()}};"use strict";
-Finder.prototype.commands.upload=function(){var a=this.fm.res("class","hover");this.disableOnSearch=!0;this.updateOnSelect=!1;this.shortcuts=[{pattern:"ctrl+u"}];this.getstate=function(){return!this._disabled&&this.fm.cwd().write?0:-1};this.exec=function(c){var b=this.fm,d=function(a){f.finderdialog("close");b.upload(a).fail(function(a){e.reject(a)}).done(function(a){e.resolve(a)})},e,f,g,h,j,l;if(this.disabled())return $.Deferred().reject();if(c&&(c.input||c.files))return b.upload(c);e=$.Deferred();
-g=$('<input type="file" multiple="true"/>').change(function(){d({input:g[0]})});h=$('<div class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">'+b.i18n("selectForUpload")+"</span></div>").append($("<form/>").append(g)).hover(function(){h.toggleClass(a)});f=$('<div class="finder-upload-dialog-wrapper"/>').append(h);l=$('<div class="ui-corner-all finder-upload-dropbox" contenteditable=true></div>').focus(function(){if(this.innerHTML){var a=this.innerHTML.match(/<[^>]+>/)?
-"html":"text",b=this.innerHTML;this.innerHTML="";d({files:[b],type:a})}}).bind("dragenter mouseover",function(){this.focus();$(l).addClass(a)}).bind("dragleave mouseout",function(){this.blur();$(l).removeClass(a)}).bind("mouseup keyup",function(){setTimeout(function(){$(l).focus()},100)});b.dragUpload?(j=$('<div class="ui-corner-all finder-upload-dropbox">'+b.i18n("dropFiles")+"</div>").prependTo(f).after('<div class="finder-upload-dialog-or">'+b.i18n("or")+"</div>").after(l).after("<div>"+b.i18n("dropFilesBrowser")+
-"</div>").after('<div class="finder-upload-dialog-or">'+b.i18n("or")+"</div>")[0],j.addEventListener("dragenter",function(b){b.stopPropagation();b.preventDefault();$(j).addClass(a)},!1),j.addEventListener("dragleave",function(b){b.stopPropagation();b.preventDefault();$(j).removeClass(a)},!1),j.addEventListener("dragover",function(b){b.stopPropagation();b.preventDefault();$(j).addClass(a)},!1),j.addEventListener("drop",function(a){a.stopPropagation();a.preventDefault();var b=!1,c="";a.dataTransfer&&
-a.dataTransfer.files&&a.dataTransfer.files.length?(b=a.dataTransfer.files,c="files"):a.dataTransfer.getData("text/html")?(b=[a.dataTransfer.getData("text/html")],c="html"):a.dataTransfer.getData("text")&&(b=[a.dataTransfer.getData("text")],c="text");b&&d({files:b,type:c})},!1)):$("<div>"+b.i18n("dropFilesBrowser")+"</div>").append(l).prependTo(f).after('<div class="finder-upload-dialog-or">'+b.i18n("or")+"</div>")[0];b.dialog(f,{title:this.title,modal:!0,resizable:!1,destroyOnClose:!0});return e}};
-"use strict";Finder.prototype.commands.view=function(){this.value=this.fm.viewType;this.alwaysEnabled=!0;this.updateOnSelect=!1;this.options={ui:"viewbutton"};this.getstate=function(){return 0};this.exec=function(){var a=this.fm.storage("view","list"==this.value?"icons":"list");this.fm.viewchange();this.update(void 0,a)}};
+
+/**
+ * @class Finder - file manager for web
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+window.Finder = function(node, opts) {
+	this.time('load');
+
+	var self = this,
+
+		/**
+		 * Node on which finder creating
+		 *
+		 * @type jQuery
+		 **/
+		node = $(node),
+
+		/**
+		 * Store node contents.
+		 *
+		 * @see this.destroy
+		 * @type jQuery
+		 **/
+		prevContent = $('<div/>').append(node.contents()),
+
+		/**
+		 * Store node inline styles
+		 *
+		 * @see this.destroy
+		 * @type String
+		 **/
+		prevStyle = node.attr('style'),
+
+		/**
+		 * Instance ID. Required to get/set cookie
+		 *
+		 * @type String
+		 **/
+		id = node.attr('id') || '',
+
+		/**
+		 * Events namespace
+		 *
+		 * @type String
+		 **/
+		namespace = 'finder-'+(id || Math.random().toString().substr(2, 7)),
+
+		/**
+		 * Mousedown event
+		 *
+		 * @type String
+		 **/
+		mousedown = 'mousedown.'+namespace,
+
+		/**
+		 * Keydown event
+		 *
+		 * @type String
+		 **/
+		keydown = 'keydown.'+namespace,
+
+		/**
+		 * Keypress event
+		 *
+		 * @type String
+		 **/
+		keypress = 'keypress.'+namespace,
+
+		/**
+		 * Is shortcuts/commands enabled
+		 *
+		 * @type Boolean
+		 **/
+		enabled = true,
+
+		/**
+		 * Store enabled value before ajax requiest
+		 *
+		 * @type Boolean
+		 **/
+		prevEnabled = true,
+
+		/**
+		 * List of build-in events which mapped into methods with same names
+		 *
+		 * @type Array
+		 **/
+		events = ['enable', 'disable', 'load', 'open', 'reload', 'select',  'add', 'remove', 'change', 'dblclick', 'getfile', 'lockfiles', 'unlockfiles', 'dragstart', 'dragstop'],
+
+		/**
+		 * Rules to validate data from backend
+		 *
+		 * @type Object
+		 **/
+		rules = {},
+
+		/**
+		 * Current working directory hash
+		 *
+		 * @type String
+		 **/
+		cwd = '',
+
+		/**
+		 * Current working directory options
+		 *
+		 * @type Object
+		 **/
+		cwdOptions = {
+			path          : '',
+			url           : '',
+			tmbUrl        : '',
+			disabled      : [],
+			separator     : '/',
+			archives      : [],
+			extract       : [],
+			copyOverwrite : true,
+			tmb           : false // old API
+		},
+
+		/**
+		 * Files/dirs cache
+		 *
+		 * @type Object
+		 **/
+		files = {},
+
+		/**
+		 * Selected files hashes
+		 *
+		 * @type Array
+		 **/
+		selected = [],
+
+		/**
+		 * Events listeners
+		 *
+		 * @type Object
+		 **/
+		listeners = {},
+
+		/**
+		 * Shortcuts
+		 *
+		 * @type Object
+		 **/
+		shortcuts = {},
+
+		/**
+		 * Buffer for copied files
+		 *
+		 * @type Array
+		 **/
+		clipboard = [],
+
+		/**
+		 * Copied/cuted files hashes
+		 * Prevent from remove its from cache.
+		 * Required for dispaly correct files names in error messages
+		 *
+		 * @type Array
+		 **/
+		remember = [],
+
+		/**
+		 * Queue for 'open' requests
+		 *
+		 * @type Array
+		 **/
+		queue = [],
+
+		/**
+		 * Commands prototype
+		 *
+		 * @type Object
+		 **/
+		base = new self.command(self),
+
+		/**
+		 * Finder node width
+		 *
+		 * @type String
+		 * @default "auto"
+		 **/
+		width  = 'auto',
+
+		/**
+		 * Finder node height
+		 *
+		 * @type Number
+		 * @default 400
+		 **/
+		height = 400,
+
+		syncInterval,
+
+		open = function(data) {
+			if (data.init) {
+				// init - reset cache
+				files = {};
+			} else {
+				// remove only files from prev cwd
+				for (var i in files) {
+					if (files.hasOwnProperty(i)
+					&& files[i].mime != 'directory'
+					&& files[i].phash == cwd
+					&& $.inArray(i, remember) === -1) {
+						delete files[i];
+					}
+				}
+			}
+
+			cwd = data.cwd.hash;
+			cache(data.files);
+			if (!files[cwd]) {
+				cache([data.cwd]);
+			}
+			self.lastDir(cwd);
+		},
+
+		/**
+		 * Store info about files/dirs in "files" object.
+		 *
+		 * @param  Array  files
+		 * @return void
+		 **/
+		cache = function(data) {
+			var l = data.length, f;
+
+			while (l--) {
+				f = data[l];
+				if (f.name && f.hash && f.mime) {
+					files[f.hash] = f;
+				}
+			}
+		},
+
+		/**
+		 * Exec shortcut
+		 *
+		 * @param  jQuery.Event  keydown/keypress event
+		 * @return void
+		 */
+		execShortcut = function(e) {
+			var code    = e.keyCode,
+				ctrlKey = !!(e.ctrlKey || e.metaKey);
+
+			if (enabled) {
+
+				$.each(shortcuts, function(i, shortcut) {
+					if (shortcut.type    == e.type
+					&& shortcut.keyCode  == code
+					&& shortcut.shiftKey == e.shiftKey
+					&& shortcut.ctrlKey  == ctrlKey
+					&& shortcut.altKey   == e.altKey) {
+						e.preventDefault()
+						e.stopPropagation();
+						shortcut.callback(e, self);
+						self.debug('shortcut-exec', i+' : '+shortcut.description);
+					}
+				});
+
+				// prevent tab out of finder
+				if (code == 9 && !$(e.target).is(':input')) {
+					e.preventDefault();
+				}
+
+			}
+		},
+		date = new Date(),
+		utc,
+		i18n
+		;
+
+
+	/**
+	 * User os. Required to bind native shortcuts for open/rename
+	 *
+	 * @type String
+	 **/
+	this.OS = navigator.userAgent.indexOf('Mac') !== -1 ? 'mac' : navigator.userAgent.indexOf('Win') !== -1  ? 'win' : 'other';
+
+
+	/**
+	* User browser UA.
+	* jQuery.browser: version deprecated: 1.3, removed: 1.9
+	*
+	* @type Object
+	*/
+	this.UA = (function(){
+		var webkit = !document.uniqueID && !window.opera && !window.sidebar && window.localStorage && typeof window.orientation == "undefined";
+		return {
+			// Browser IE <= IE 6
+			ltIE6:		typeof window.addEventListener == "undefined" && typeof document.documentElement.style.maxHeight == "undefined",
+			// Browser IE <= IE 7
+			ltIE7:		typeof window.addEventListener == "undefined" && typeof document.querySelectorAll == "undefined",
+			// Browser IE <= IE 8
+			ltIE8:		typeof window.addEventListener == "undefined" && typeof document.getElementsByClassName == "undefined",
+			IE:			!!document.uniqueID,
+			Firefox:	!!window.sidebar,
+			Opera:		!!window.opera,
+			Webkit:		webkit,
+			Chrome:		webkit && window.chrome,
+			Safari:		webkit && !window.chrome,
+			Mobile:		typeof window.orientation != "undefined"
+		}
+	})();
+
+
+	/**
+	 * Configuration options
+	 *
+	 * @type Object
+	 **/
+	this.options = $.extend(true, {}, this._options, opts||{});
+
+	if (opts.ui) {
+		this.options.ui = opts.ui;
+	}
+
+	if (opts.commands) {
+		this.options.commands = opts.commands;
+	}
+
+	if (opts.uiOptions && opts.uiOptions.toolbar) {
+		this.options.uiOptions.toolbar = opts.uiOptions.toolbar;
+	}
+
+	$.extend(this.options.contextmenu, opts.contextmenu);
+
+
+	/**
+	 * Ajax request type
+	 *
+	 * @type String
+	 * @default "get"
+	 **/
+	this.requestType = /^(get|post)$/i.test(this.options.requestType) ? this.options.requestType.toLowerCase() : 'get',
+
+	/**
+	 * Any data to send across every ajax request
+	 *
+	 * @type Object
+	 * @default {}
+	 **/
+	this.customData = $.isPlainObject(this.options.customData) ? this.options.customData : {};
+
+	/**
+	 * ID. Required to create unique cookie name
+	 *
+	 * @type String
+	 **/
+	this.id = id;
+
+	/**
+	 * URL to upload files
+	 *
+	 * @type String
+	 **/
+	this.uploadURL = opts.urlUpload || opts.url;
+
+	/**
+	 * Events namespace
+	 *
+	 * @type String
+	 **/
+	this.namespace = namespace;
+
+	/**
+	 * Interface language
+	 *
+	 * @type String
+	 * @default "en"
+	 **/
+	this.lang = this.i18[this.options.lang] && this.i18[this.options.lang].messages ? this.options.lang : 'en';
+
+	i18n = this.lang == 'en'
+		? this.i18['en']
+		: $.extend(true, {}, this.i18['en'], this.i18[this.lang]);
+
+	/**
+	 * Interface direction
+	 *
+	 * @type String
+	 * @default "ltr"
+	 **/
+	this.direction = i18n.direction;
+
+	/**
+	 * i18 messages
+	 *
+	 * @type Object
+	 **/
+	this.messages = i18n.messages;
+
+	/**
+	 * Date/time format
+	 *
+	 * @type String
+	 * @default "m.d.Y"
+	 **/
+	this.dateFormat = this.options.dateFormat || i18n.dateFormat;
+
+	/**
+	 * Date format like "Yesterday 10:20:12"
+	 *
+	 * @type String
+	 * @default "{day} {time}"
+	 **/
+	this.fancyFormat = this.options.fancyDateFormat || i18n.fancyDateFormat;
+
+	/**
+	 * Today timestamp
+	 *
+	 * @type Number
+	 **/
+	this.today = (new Date(date.getFullYear(), date.getMonth(), date.getDate())).getTime()/1000;
+
+	/**
+	 * Yesterday timestamp
+	 *
+	 * @type Number
+	 **/
+	this.yesterday = this.today - 86400;
+
+	utc = this.options.UTCDate ? 'UTC' : '';
+
+	this.getHours    = 'get'+utc+'Hours';
+	this.getMinutes  = 'get'+utc+'Minutes';
+	this.getSeconds  = 'get'+utc+'Seconds';
+	this.getDate     = 'get'+utc+'Date';
+	this.getDay      = 'get'+utc+'Day';
+	this.getMonth    = 'get'+utc+'Month';
+	this.getFullYear = 'get'+utc+'FullYear';
+
+	/**
+	 * Css classes
+	 *
+	 * @type String
+	 **/
+	this.cssClass = 'ui-helper-reset ui-helper-clearfix ui-widget ui-widget-content ui-corner-all finder finder-'+(this.direction == 'rtl' ? 'rtl' : 'ltr')+' '+this.options.cssClass;
+
+	/**
+	 * Method to store/fetch data
+	 *
+	 * @type Function
+	 **/
+	this.storage = (function() {
+		try {
+			return 'localStorage' in window && window['localStorage'] !== null ? self.localStorage : self.cookie;
+		} catch (e) {
+			return self.cookie;
+		}
+	})();
+
+	this.viewType = this.storage('view') || this.options.defaultView || 'icons';
+
+	this.sortType = this.storage('sortType') || this.options.sortType || 'name';
+
+	this.sortOrder = this.storage('sortOrder') || this.options.sortOrder || 'asc';
+
+	this.sortStickFolders = this.storage('sortStickFolders');
+
+	if (this.sortStickFolders === null) {
+		this.sortStickFolders = !!this.options.sortStickFolders;
+	} else {
+		this.sortStickFolders = !!this.sortStickFolders
+	}
+
+	this.sortRules = $.extend(true, {}, this._sortRules, this.options.sortsRules);
+
+	$.each(this.sortRules, function(name, method) {
+		if (typeof method != 'function') {
+			delete self.sortRules[name];
+		}
+	});
+
+	this.compare = $.proxy(this.compare, this);
+
+	/**
+	 * Delay in ms before open notification dialog
+	 *
+	 * @type Number
+	 * @default 500
+	 **/
+	this.notifyDelay = this.options.notifyDelay > 0 ? parseInt(this.options.notifyDelay) : 500;
+
+	/**
+	 * Base draggable options
+	 *
+	 * @type Object
+	 **/
+	this.draggable = {
+		appendTo   : 'body',
+		addClasses : true,
+		delay      : 30,
+		revert     : true,
+		refreshPositions : true,
+		cursor     : 'move',
+		cursorAt   : {left : 50, top : 47},
+		drag       : function(e, ui) {
+			if (! ui.helper.data('locked')) {
+				ui.helper.toggleClass('finder-drag-helper-plus', e.shiftKey||e.ctrlKey||e.metaKey);
+			}
+		},
+		start      : function(e, ui) {
+			var targets = $.map(ui.helper.data('files')||[], function(h) { return h || null ;}),
+			cnt, h;
+			cnt = targets.length;
+			while (cnt--) {
+				h = targets[cnt];
+				if (files[h].locked) {
+					ui.helper.addClass('finder-drag-helper-plus').data('locked', true);
+					break;
+				}
+			}
+		},
+		stop       : function() { self.trigger('focus').trigger('dragstop'); },
+		helper     : function(e, ui) {
+			var element = this.id ? $(this) : $(this).parents('[id]:first'),
+				helper  = $('<div class="finder-drag-helper"><span class="finder-drag-helper-icon-plus"/></div>'),
+				icon    = function(mime) { return '<div class="finder-cwd-icon '+self.mime2class(mime)+' ui-corner-all"/>'; },
+				hashes, l;
+
+			self.trigger('dragstart', {target : element[0], originalEvent : e});
+
+			hashes = element.is('.'+self.res('class', 'cwdfile'))
+				? self.selected()
+				: [self.navId2Hash(element.attr('id'))];
+
+			helper.append(icon(files[hashes[0]].mime)).data('files', hashes).data('locked', false);
+
+			if ((l = hashes.length) > 1) {
+				helper.append(icon(files[hashes[l-1]].mime) + '<span class="finder-drag-num">'+l+'</span>');
+			}
+
+			return helper;
+		}
+	};
+
+	/**
+	 * Base droppable options
+	 *
+	 * @type Object
+	 **/
+	this.droppable = {
+			// greedy     : true,
+			tolerance  : 'pointer',
+			accept     : '.finder-cwd-file-wrapper,.finder-navbar-dir,.finder-cwd-file',
+			hoverClass : this.res('class', 'adroppable'),
+			drop : function(e, ui) {
+				var dst     = $(this),
+					targets = $.map(ui.helper.data('files')||[], function(h) { return h || null }),
+					result  = [],
+					c       = 'class',
+					cnt, hash, i, h;
+
+				if (dst.is('.'+self.res(c, 'cwd'))) {
+					hash = cwd;
+				} else if (dst.is('.'+self.res(c, 'cwdfile'))) {
+					hash = dst.attr('id');
+				} else if (dst.is('.'+self.res(c, 'navdir'))) {
+					hash = self.navId2Hash(dst.attr('id'));
+				}
+
+				cnt = targets.length;
+
+				while (cnt--) {
+					h = targets[cnt];
+					// ignore drop into itself or in own location
+					h != hash && files[h].phash != hash && result.push(h);
+				}
+
+				if (result.length) {
+					ui.helper.hide();
+					self.clipboard(result, !(e.ctrlKey||e.shiftKey||e.metaKey||ui.helper.data('locked')));
+					self.exec('paste', hash);
+					self.trigger('drop', {files : targets});
+
+				}
+			}
+		};
+
+	/**
+	 * Return true if filemanager is active
+	 *
+	 * @return Boolean
+	 **/
+	this.enabled = function() {
+		return node.is(':visible') && enabled;
+	}
+
+	/**
+	 * Return true if filemanager is visible
+	 *
+	 * @return Boolean
+	 **/
+	this.visible = function() {
+		return node.is(':visible');
+	}
+
+	/**
+	 * Return root dir hash for current working directory
+	 *
+	 * @return String
+	 */
+	this.root = function(hash) {
+		var dir = files[hash || cwd], i;
+
+		while (dir && dir.phash) {
+			dir = files[dir.phash]
+		}
+		if (dir) {
+			return dir.hash;
+		}
+
+		while (i in files && files.hasOwnProperty(i)) {
+			dir = files[i]
+			if (!dir.phash && !dir.mime == 'directory' && dir.read) {
+				return dir.hash
+			}
+		}
+
+		return '';
+	}
+
+	/**
+	 * Return current working directory info
+	 *
+	 * @return Object
+	 */
+	this.cwd = function() {
+		return files[cwd] || {};
+	}
+
+	/**
+	 * Return required cwd option
+	 *
+	 * @param  String  option name
+	 * @return mixed
+	 */
+	this.option = function(name) {
+		return cwdOptions[name]||'';
+	}
+
+	/**
+	 * Return file data from current dir or tree by it's hash
+	 *
+	 * @param  String  file hash
+	 * @return Object
+	 */
+	this.file = function(hash) {
+		return files[hash];
+	};
+
+	/**
+	 * Return all cached files
+	 *
+	 * @return Array
+	 */
+	this.files = function() {
+		return $.extend(true, {}, files);
+	}
+
+	/**
+	 * Return list of file parents hashes include file hash
+	 *
+	 * @param  String  file hash
+	 * @return Array
+	 */
+	this.parents = function(hash) {
+		var parents = [],
+			dir;
+
+		while ((dir = this.file(hash))) {
+			parents.unshift(dir.hash);
+			hash = dir.phash;
+		}
+		return parents;
+	}
+
+	this.path2array = function(hash) {
+		var file,
+			path = [];
+
+		while (hash && (file = files[hash]) && file.hash) {
+			path.unshift(file.name);
+			hash = file.phash;
+		}
+
+		return path;
+	}
+
+	/**
+	 * Return file path
+	 *
+	 * @param  Object  file
+	 * @return String
+	 */
+	this.path = function(hash) {
+		return files[hash] && files[hash].path
+			? files[hash].path
+			: this.path2array(hash).join(cwdOptions.separator);
+	}
+
+	/**
+	 * Return file url if set
+	 *
+	 * @param  Object  file
+	 * @return String
+	 */
+	this.url = function(hash) {
+		var file = files[hash];
+
+		if (!file || !file.read) {
+			return '';
+		}
+
+		if (file.url) {
+			return file.url;
+		}
+
+		if (cwdOptions.url) {
+			return cwdOptions.url + $.map(this.path2array(hash), function(n) { return encodeURIComponent(n); }).slice(1).join('/')
+		}
+
+		var params = $.extend({}, this.customData, {
+			cmd: 'file',
+			target: file.hash
+		});
+
+		return this.options.url + (this.options.url.indexOf('?') === -1 ? '?' : '&') + $.param(params, true);
+	}
+
+	/**
+	 * Return thumbnail url
+	 *
+	 * @param  String  file hash
+	 * @return String
+	 */
+	this.tmb = function(hash) {
+		var file = files[hash],
+			url = file && file.tmb && file.tmb != 1 ? cwdOptions['tmbUrl'] + file.tmb : '';
+
+		if (url && (this.UA.Opera || this.UA.IE)) {
+			url += '?_=' + new Date().getTime();
+		}
+		return url;
+	}
+
+	/**
+	 * Return selected files hashes
+	 *
+	 * @return Array
+	 **/
+	this.selected = function() {
+		return selected.slice(0);
+	}
+
+	/**
+	 * Return selected files info
+	 *
+	 * @return Array
+	 */
+	this.selectedFiles = function() {
+		return $.map(selected, function(hash) { return files[hash] ? $.extend({}, files[hash]) : null });
+	};
+
+	/**
+	 * Return true if file with required name existsin required folder
+	 *
+	 * @param  String  file name
+	 * @param  String  parent folder hash
+	 * @return Boolean
+	 */
+	this.fileByName = function(name, phash) {
+		var hash;
+
+		for (hash in files) {
+			if (files.hasOwnProperty(hash) && files[hash].phash == phash && files[hash].name == name) {
+				return files[hash];
+			}
+		}
+	};
+
+	/**
+	 * Valid data for required command based on rules
+	 *
+	 * @param  String  command name
+	 * @param  Object  cammand's data
+	 * @return Boolean
+	 */
+	this.validResponse = function(cmd, data) {
+		return data.error || this.rules[this.rules[cmd] ? cmd : 'defaults'](data);
+	}
+
+	/**
+	 * Proccess ajax request.
+	 * Fired events :
+	 * @todo
+	 * @example
+	 * @todo
+	 * @return $.Deferred
+	 */
+	this.request = function(options) {
+		var self     = this,
+			o        = this.options,
+			dfrd     = $.Deferred(),
+			// request data
+			data     = $.extend({}, o.customData, {mimes : o.onlyMimes}, options.data || options),
+			// command name
+			cmd      = data.cmd,
+			// call default fail callback (display error dialog) ?
+			deffail  = !(options.preventDefault || options.preventFail),
+			// call default success callback ?
+			defdone  = !(options.preventDefault || options.preventDone),
+			// options for notify dialog
+			notify   = $.extend({}, options.notify),
+			// sync files on request fail
+			syncOnFail = options.syncOnFail,
+			// open notify dialog timeout
+			timeout,
+			// request options
+			options = $.extend({
+				url      : o.url,
+				async    : true,
+				type     : this.requestType,
+				dataType : 'json',
+				cache    : false,
+				// timeout  : 100,
+				data     : data
+			}, options.options || {}),
+			/**
+			 * Default success handler.
+			 * Call default data handlers and fire event with command name.
+			 *
+			 * @param Object  response data
+			 * @return void
+			 **/
+			done = function(data) {
+				data.warning && self.error(data.warning);
+
+				if( cmd == 'netmount' ){
+					cmd = 'open';
+				}
+
+				if( cmd == 'open' ){
+					open($.extend(true, {}, data));
+				}
+
+				// fire some event to update cache/ui
+				data.removed && data.removed.length && self.remove(data);
+				data.added   && data.added.length   && self.add(data);
+				data.changed && data.changed.length && self.change(data);
+
+				// fire event with command name
+				self.trigger(cmd, data);
+
+				// force update content
+				data.sync && self.sync();
+			},
+			/**
+			 * Request error handler. Reject dfrd with correct error message.
+			 *
+			 * @param jqxhr  request object
+			 * @param String request status
+			 * @return void
+			 **/
+			error = function(xhr, status) {
+				var error;
+
+				switch( status ){
+					case 'abort':
+						error = xhr.quiet ? '' : ['errConnect', 'errAbort'];
+					break;
+
+					case 'timeout':
+						error = ['errConnect', 'errTimeout'];
+					break;
+
+					case 'parsererror':
+						var str = '';
+						if( typeof(xhr.responseText) == 'string' ){
+							str = 'Response: '+xhr.responseText.substr(0,300);
+						}
+						error = ['errResponse', 'errDataNotJSON','',str];
+					break;
+
+					default:
+						if( xhr.status == 403 ){
+							error = ['errConnect', 'errAccess'];
+						} else if (xhr.status == 404) {
+							error = ['errConnect', 'errNotFound'];
+						} else {
+							error = 'errConnect';
+						}
+				}
+
+				dfrd.reject(error, xhr, status);
+			},
+
+			/**
+			 * Request success handler. Valid response data and reject/resolve dfrd.
+			 *
+			 * @param Object  response data
+			 * @param String request status
+			 * @return void
+			 **/
+			success = function(response) {
+				//if (raw) {
+				//	return dfrd.resolve(response);
+				//}
+
+				if (!response) {
+					return dfrd.reject(['errResponse', 'errDataEmpty'], xhr);
+				} else if (!$.isPlainObject(response)) {
+					return dfrd.reject(['errResponse', 'errDataNotJSON'], xhr);
+				} else if (response.error) {
+					return dfrd.reject(response.error, xhr);
+				} else if (!self.validResponse(cmd, response)) {
+					return dfrd.reject('errResponse', xhr);
+				}
+
+				//response = self.normalize(response);
+
+				if (response.options) {
+					cwdOptions = $.extend({}, cwdOptions, response.options);
+				}
+
+				if (response.netDrivers) {
+					self.netDrivers = response.netDrivers;
+				}
+
+				dfrd.resolve(response);
+				response.debug && self.debug('backend-debug', response.debug);
+			},
+			xhr, _xhr
+			;
+
+		defdone && dfrd.done(done);
+		dfrd.fail(function(error){
+			if( !error ) return;
+			if( deffail ){
+				self.error(error);
+			}else{
+				self.debug('error', self.i18n(error));
+			}
+		})
+
+		if (!cmd) {
+			return dfrd.reject('errCmdReq');
+		}
+
+		if (syncOnFail) {
+			dfrd.fail(function(error) {
+				error && self.sync();
+			});
+		}
+
+		if (notify.type && notify.cnt) {
+			timeout = setTimeout(function() {
+				self.notify(notify);
+				dfrd.always(function() {
+					notify.cnt = -(parseInt(notify.cnt)||0);
+					self.notify(notify);
+				})
+			}, self.notifyDelay)
+
+			dfrd.always(function() {
+				clearTimeout(timeout);
+			});
+		}
+
+		// quiet abort not completed "open" requests
+		if (cmd == 'open') {
+			while ((_xhr = queue.pop())) {
+				if (_xhr.state() == 'pending') {
+					_xhr.quiet = true;
+					_xhr.abort();
+				}
+			}
+		}
+
+		delete options.preventFail
+
+		xhr = this.transport.send(options).fail(error).done(success);
+
+		// this.transport.send(options)
+
+		// add "open" xhr into queue
+		if (cmd == 'open') {
+			queue.unshift(xhr);
+			dfrd.always(function() {
+				var ndx = $.inArray(xhr, queue);
+
+				ndx !== -1 && queue.splice(ndx, 1);
+			});
+		}
+
+		return dfrd;
+	};
+
+	/**
+	 * Compare current files cache with new files and return diff
+	 *
+	 * @param  Array  new files
+	 * @return Object
+	 */
+	this.diff = function(incoming) {
+		var raw       = {},
+			added     = [],
+			removed   = [],
+			changed   = [],
+			isChanged = function(hash) {
+				var l = changed.length;
+
+				while (l--) {
+					if (changed[l].hash == hash) {
+						return true;
+					}
+				}
+			};
+
+		$.each(incoming, function(i, f) {
+			raw[f.hash] = f;
+		});
+
+		// find removed
+		$.each(files, function(hash, f) {
+			!raw[hash] && removed.push(hash);
+		});
+
+		// compare files
+		$.each(raw, function(hash, file) {
+			var origin = files[hash];
+
+			if (!origin) {
+				added.push(file);
+			} else {
+				$.each(file, function(prop) {
+					if (file[prop] != origin[prop]) {
+						changed.push(file)
+						return false;
+					}
+				});
+			}
+		});
+
+		// parents of removed dirs mark as changed (required for tree correct work)
+		$.each(removed, function(i, hash) {
+			var file  = files[hash],
+				phash = file.phash;
+
+			if (phash
+			&& file.mime == 'directory'
+			&& $.inArray(phash, removed) === -1
+			&& raw[phash]
+			&& !isChanged(phash)) {
+				changed.push(raw[phash]);
+			}
+		});
+
+		return {
+			added   : added,
+			removed : removed,
+			changed : changed
+		};
+	}
+
+	/**
+	 * Sync content
+	 *
+	 * @return jQuery.Deferred
+	 */
+	this.sync = function() {
+		var self  = this,
+			dfrd  = $.Deferred().done(function() { self.trigger('sync'); }),
+			opts1 = {
+				data           : {cmd : 'open', init : 1, target : cwd, tree : this.ui.tree ? 1 : 0},
+				preventDefault : true
+			},
+			opts2 = {
+				data           : {cmd : 'tree', target : (cwd == this.root())? cwd : this.file(cwd).phash},
+				preventDefault : true
+			};
+
+		$.when(
+			this.request(opts1),
+			this.request(opts2)
+		)
+		.fail(function(error) {
+			dfrd.reject(error);
+			error && self.request({
+				data   : {cmd : 'open', target : self.lastDir(''), tree : 1, init : 1},
+				notify : {type : 'open', cnt : 1, hideCnt : true}
+			});
+		})
+		.done(function(odata, pdata) {
+
+			var diff = self.diff( odata.files.concat(pdata && pdata.tree ? pdata.tree : []) );
+
+			diff.added.push(odata.cwd)
+			diff.removed.length && self.remove(diff);
+			diff.added.length   && self.add(diff);
+			diff.changed.length && self.change(diff);
+			return dfrd.resolve(diff);
+		});
+
+		return dfrd;
+	}
+
+	this.upload = function(files) {
+		return this.transport.upload(files, this);
+	}
+
+	/**
+	 * Attach listener to events
+	 * To bind to multiply events at once, separate events names by space
+	 *
+	 * @param  String  event(s) name(s)
+	 * @param  Object  event handler
+	 * @return Finder
+	 */
+	this.bind = function(event, callback) {
+		var i;
+
+		if (typeof(callback) == 'function') {
+			event = ('' + event).toLowerCase().split(/\s+/);
+
+			for (i = 0; i < event.length; i++) {
+				if (listeners[event[i]] === void(0)) {
+					listeners[event[i]] = [];
+				}
+				listeners[event[i]].push(callback);
+			}
+		}
+		return this;
+	};
+
+	/**
+	 * Remove event listener if exists
+	 *
+	 * @param  String    event name
+	 * @param  Function  callback
+	 * @return Finder
+	 */
+	this.unbind = function(event, callback) {
+		var l = listeners[('' + event).toLowerCase()] || [],
+			i = l.indexOf(callback);
+
+		i > -1 && l.splice(i, 1);
+		//delete callback; // need this?
+		callback = null
+		return this;
+	};
+
+	/**
+	 * Fire event - send notification to all event listeners
+	 *
+	 * @param  String   event type
+	 * @param  Object   data to send across event
+	 * @return Finder
+	 */
+	this.trigger = function(event, data) {
+		var event    = event.toLowerCase(),
+			handlers = listeners[event] || [], i, j;
+
+		//this.debug('event-'+event, data)
+
+		if (handlers.length) {
+			event = $.Event(event);
+
+			for (i = 0; i < handlers.length; i++) {
+				// to avoid data modifications. remember about "sharing" passing arguments in js :)
+				event.data = $.extend(true, {}, data);
+
+				try {
+					if (handlers[i](event, this) === false
+					|| event.isDefaultPrevented()) {
+						this.debug('event-stoped', event.type);
+						break;
+					}
+				} catch (ex) {
+					window.console && window.console.log && window.console.log(ex);
+				}
+
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Bind keybord shortcut to keydown event
+	 *
+	 * @example
+	 *    finder.shortcut({
+	 *       pattern : 'ctrl+a',
+	 *       description : 'Select all files',
+	 *       callback : function(e) { ... },
+	 *       keypress : true|false (bind to keypress instead of keydown)
+	 *    })
+	 *
+	 * @param  Object  shortcut config
+	 * @return Finder
+	 */
+	this.shortcut = function(s) {
+		var patterns, pattern, code, i, parts;
+
+		if (this.options.allowShortcuts && s.pattern && $.isFunction(s.callback)) {
+			patterns = s.pattern.toUpperCase().split(/\s+/);
+
+			for (i= 0; i < patterns.length; i++) {
+				pattern = patterns[i]
+				parts   = pattern.split('+');
+				code    = (code = parts.pop()).length == 1
+					? code > 0 ? code : code.charCodeAt(0)
+					: $.ui.keyCode[code];
+
+				if (code && !shortcuts[pattern]) {
+					shortcuts[pattern] = {
+						keyCode     : code,
+						altKey      : $.inArray('ALT', parts)   != -1,
+						ctrlKey     : $.inArray('CTRL', parts)  != -1,
+						shiftKey    : $.inArray('SHIFT', parts) != -1,
+						type        : s.type || 'keydown',
+						callback    : s.callback,
+						description : s.description,
+						pattern     : pattern
+					};
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Registered shortcuts
+	 *
+	 * @type Object
+	 **/
+	this.shortcuts = function() {
+		var ret = [];
+
+		$.each(shortcuts, function(i, s) {
+			ret.push([s.pattern, self.i18n(s.description)]);
+		});
+		return ret;
+	};
+
+	/**
+	 * Get/set clipboard content.
+	 * Return new clipboard content.
+	 *
+	 * @example
+	 *   this.clipboard([]) - clean clipboard
+	 *   this.clipboard([{...}, {...}], true) - put 2 files in clipboard and mark it as cutted
+	 *
+	 * @param  Array    new files hashes
+	 * @param  Boolean  cut files?
+	 * @return Array
+	 */
+	this.clipboard = function(hashes, cut) {
+		var map = function() { return $.map(clipboard, function(f) { return f.hash }); }
+
+		if (hashes !== void(0)) {
+			clipboard.length && this.trigger('unlockfiles', {files : map()});
+			remember = [];
+
+			clipboard = $.map(hashes||[], function(hash) {
+				var file = files[hash];
+				if (file) {
+
+					remember.push(hash);
+
+					return {
+						hash   : hash,
+						phash  : file.phash,
+						name   : file.name,
+						mime   : file.mime,
+						read   : file.read,
+						locked : file.locked,
+						cut    : !!cut
+					}
+				}
+				return null;
+			});
+			this.trigger('changeclipboard', {clipboard : clipboard.slice(0, clipboard.length)});
+			cut && this.trigger('lockfiles', {files : map()});
+		}
+
+		// return copy of clipboard instead of refrence
+		return clipboard.slice(0, clipboard.length);
+	}
+
+	/**
+	 * Return true if command enabled
+	 *
+	 * @param  String  command name
+	 * @return Boolean
+	 */
+	this.isCommandEnabled = function(name) {
+		return this._commands[name] ? $.inArray(name, cwdOptions.disabled) === -1 : false;
+	}
+
+	/**
+	 * Exec command and return result;
+	 *
+	 * @param  String         command name
+	 * @param  String|Array   usualy files hashes
+	 * @param  String|Array   command options
+	 * @return $.Deferred
+	 */
+	this.exec = function(cmd, files, opts) {
+		return this._commands[cmd] && this.isCommandEnabled(cmd)
+			? this._commands[cmd].exec(files, opts)
+			: $.Deferred().reject('No such command');
+	}
+
+	/**
+	 * Create and return dialog.
+	 *
+	 * @param  String|DOMElement  dialog content
+	 * @param  Object             dialog options
+	 * @return jQuery
+	 */
+	this.dialog = function(content, options) {
+		return $('<div/>').append(content).appendTo(node).finderdialog(options);
+	}
+
+	/**
+	 * Return UI widget or node
+	 *
+	 * @param  String  ui name
+	 * @return jQuery
+	 */
+	this.getUI = function(ui) {
+		return this.ui[ui] || node;
+	}
+
+	this.command = function(name) {
+		return name === void(0) ? this._commands : this._commands[name];
+	}
+
+	/**
+	 * Resize finder node
+	 *
+	 * @param  String|Number  width
+	 * @param  Number         height
+	 * @return void
+	 */
+	this.resize = function(w, h) {
+		node.css('width', w).height(h).trigger('resize');
+		this.trigger('resize', {width : node.width(), height : node.height()});
+	}
+
+	/**
+	 * Restore finder node size
+	 *
+	 * @return Finder
+	 */
+	this.restoreSize = function() {
+		this.resize(width, height);
+	}
+
+	this.show = function() {
+		node.show();
+		this.enable().trigger('show');
+	}
+
+	this.hide = function() {
+		this.disable().trigger('hide');
+		node.hide();
+	}
+
+	/**
+	 * Destroy this Finder instance
+	 *
+	 * @return void
+	 **/
+	this.destroy = function() {
+		if (node && node[0].finder) {
+			this.trigger('destroy').disable();
+			listeners = {};
+			shortcuts = {};
+			$(document).add(node).unbind('.'+this.namespace);
+			self.trigger = function() { }
+			node.children().remove();
+			node.append(prevContent.contents()).removeClass(this.cssClass).attr('style', prevStyle);
+			node[0].finder = null;
+			if (syncInterval) {
+				clearInterval(syncInterval);
+			}
+		}
+	}
+
+	/*************  init stuffs  ****************/
+
+	// check jquery ui
+	if (!($.fn.selectable && $.fn.draggable && $.fn.droppable)) {
+		return alert(this.i18n('errJqui'));
+	}
+
+	// check node
+	if (!node.length) {
+		return alert(this.i18n('errNode'));
+	}
+	// check connector url
+	if (!this.options.url) {
+		return alert(this.i18n('errURL'));
+	}
+
+	$.extend($.ui.keyCode, {
+		'F1' : 112,
+		'F2' : 113,
+		'F3' : 114,
+		'F4' : 115,
+		'F5' : 116,
+		'F6' : 117,
+		'F7' : 118,
+		'F8' : 119,
+		'F9' : 120
+	});
+
+	this.dragUpload = false;
+	this.xhrUpload  = typeof XMLHttpRequestUpload != 'undefined' && typeof File != 'undefined' && typeof FormData != 'undefined';
+
+	// configure transport object
+	this.transport = {}
+
+	if (typeof(this.options.transport) == 'object') {
+		this.transport = this.options.transport;
+		if (typeof(this.transport.init) == 'function') {
+			this.transport.init(this)
+		}
+	}
+
+	if (typeof(this.transport.send) != 'function') {
+		this.transport.send = function(opts) { return $.ajax(opts); }
+	}
+
+	if (this.transport.upload == 'iframe') {
+		this.transport.upload = $.proxy(this.uploads.iframe, this);
+	} else if (typeof(this.transport.upload) == 'function') {
+		this.dragUpload = !!this.options.dragUploadAllow;
+	} else if (this.xhrUpload) {
+		this.transport.upload = $.proxy(this.uploads.xhr, this);
+		this.dragUpload = true;
+	} else {
+		this.transport.upload = $.proxy(this.uploads.iframe, this);
+	}
+
+	/**
+	 * Alias for this.trigger('error', {error : 'message'})
+	 *
+	 * @param  String  error message
+	 * @return Finder
+	 **/
+	this.error = function() {
+		var arg = arguments[0];
+		return arguments.length == 1 && typeof(arg) == 'function'
+			? self.bind('error', arg)
+			: self.trigger('error', {error : arg});
+	}
+
+	// create bind/trigger aliases for build-in events
+	$.each(['enable', 'disable', 'load', 'open', 'reload', 'select',  'add', 'remove', 'change', 'dblclick', 'getfile', 'lockfiles', 'unlockfiles', 'dragstart', 'dragstop', 'search', 'searchend', 'viewchange'], function(i, name) {
+		self[name] = function() {
+			var arg = arguments[0];
+			return arguments.length == 1 && typeof(arg) == 'function'
+				? self.bind(name, arg)
+				: self.trigger(name, $.isPlainObject(arg) ? arg : {});
+		}
+	});
+
+	// bind core event handlers
+	this
+		.enable(function() {
+			if (!enabled && self.visible() && self.ui.overlay.is(':hidden')) {
+				enabled = true;
+				$('texarea:focus,input:focus,button').blur();
+				node.removeClass('finder-disabled');
+			}
+		})
+		.disable(function() {
+			prevEnabled = enabled;
+			enabled = false;
+			node.addClass('finder-disabled');
+		})
+		.open(function() {
+			selected = [];
+		})
+		.select(function(e) {
+			selected = $.map(e.data.selected || e.data.value|| [], function(hash) { return files[hash] ? hash : null; });
+		})
+		.error(function(e) {
+			var opts  = {
+					cssClass  : 'finder-dialog-error',
+					title     : self.i18n(self.i18n('error')),
+					resizable : false,
+					destroyOnClose : true,
+					buttons   : {}
+			};
+
+			opts.buttons[self.i18n(self.i18n('btnClose'))] = function() { $(this).finderdialog('close'); };
+
+			self.dialog('<span class="finder-dialog-icon finder-dialog-icon-error"/>'+self.i18n(e.data.error), opts);
+		})
+		.bind('tree parents', function(e) {
+			cache(e.data.tree || []);
+		})
+		.bind('tmb', function(e) {
+			$.each(e.data.images||[], function(hash, tmb) {
+				if (files[hash]) {
+					files[hash].tmb = tmb;
+				}
+			})
+		})
+		.add(function(e) {
+			cache(e.data.added||[]);
+		})
+		.change(function(e) {
+			$.each(e.data.changed||[], function(i, file) {
+				var hash = file.hash;
+				files[hash] = files[hash] ? $.extend(files[hash], file) : file;
+			});
+		})
+		.remove(function(e) {
+			var removed = e.data.removed||[],
+				l       = removed.length,
+				rm      = function(hash) {
+					var file = files[hash];
+					if (file) {
+						if(file.mime == 'directory' && file.dirs) {
+							$.each(files, function(h, f) {
+								f.phash == hash && rm(h);
+							});
+						}
+						delete files[hash];
+					}
+				};
+
+			while (l--) {
+				rm(removed[l]);
+			}
+
+		})
+		.bind('search', function(e) {
+			cache(e.data.files);
+		})
+		;
+
+	// bind external event handlers
+	$.each(this.options.handlers, function(event, callback) {
+		self.bind(event, callback);
+	});
+
+	/**
+	 * History object. Store visited folders
+	 *
+	 * @type Object
+	 **/
+	this.history = new this.history(this);
+
+	// in getFileCallback set - change default actions on double click/enter/ctrl+enter
+	if (typeof(this.options.getFileCallback) == 'function' && this.commands.getfile) {
+		this.bind('dblclick', function(e) {
+			e.preventDefault();
+			self.exec('getfile').fail(function() {
+				self.exec('open');
+			});
+		});
+		this.shortcut({
+			pattern     : 'enter',
+			description : this.i18n('cmdgetfile'),
+			callback    : function() { self.exec('getfile').fail(function() { self.exec(self.OS == 'mac' ? 'rename' : 'open') }) }
+		})
+		.shortcut({
+			pattern     : 'ctrl+enter',
+			description : this.i18n(this.OS == 'mac' ? 'cmdrename' : 'cmdopen'),
+			callback    : function() { self.exec(self.OS == 'mac' ? 'rename' : 'open') }
+		});
+
+	}
+
+	/**
+	 * Loaded commands
+	 *
+	 * @type Object
+	 **/
+	this._commands = {};
+
+	if (!$.isArray(this.options.commands)) {
+		this.options.commands = [];
+	}
+	// check required commands
+	$.each(['open', 'reload', 'back', 'forward', 'up', 'home', 'info', 'quicklook', 'getfile', 'help'], function(i, cmd) {
+		$.inArray(cmd, self.options.commands) === -1 && self.options.commands.push(cmd);
+	});
+
+	// load commands
+	$.each(this.options.commands, function(i, name) {
+		var cmd = self.commands[name];
+		if ($.isFunction(cmd) && !self._commands[name]) {
+			cmd.prototype = base;
+			self._commands[name] = new cmd();
+			self._commands[name].setup(name, self.options.commandsOptions[name]||{});
+		}
+	});
+
+	// prepare node
+	node.addClass(this.cssClass)
+		.bind(mousedown, function() {
+			!enabled && self.enable();
+		});
+
+
+	/**
+	 * UI nodes
+	 *
+	 * @type Object
+	 **/
+	this.ui = {
+		// container for nav panel and current folder container
+		workzone : $('<div/>').appendTo(node).finderworkzone(this),
+		// container for folders tree / places
+		navbar : $('<div/>').appendTo(node).findernavbar(this, this.options.uiOptions.navbar || {}),
+		// contextmenu
+		contextmenu : $('<div/>').appendTo(node).findercontextmenu(this),
+		// overlay
+		overlay : $('<div/>').appendTo(node).finderoverlay({
+			show : function() { self.disable(); },
+			hide : function() { prevEnabled && self.enable(); }
+		}),
+		// current folder container
+		cwd : $('<div/>').appendTo(node).findercwd(this, this.options.uiOptions.cwd || {}),
+		// notification dialog window
+		notify : this.dialog('', {
+			cssClass  : 'finder-dialog-notify',
+			position  : {top : '12px', right : '12px'},
+			resizable : false,
+			autoOpen  : false,
+			title     : '&nbsp;',
+			width     : 280
+		}),
+		statusbar : $('<div class="ui-widget-header ui-helper-clearfix ui-corner-bottom finder-statusbar"/>').hide().appendTo(node)
+	}
+
+	// load required ui
+	$.each(this.options.ui || [], function(i, ui) {
+		var name = 'finder'+ui,
+			opts = self.options.uiOptions[ui] || {};
+
+		if (!self.ui[ui] && $.fn[name]) {
+			self.ui[ui] = $('<'+(opts.tag || 'div')+'/>').appendTo(node)[name](self, opts);
+		}
+	});
+
+
+
+	// store instance in node
+	node[0].finder = this;
+
+	// make node resizable
+	this.options.resizable
+	&& $.fn.resizable
+	&& node.resizable({
+		handles   : 'se',
+		minWidth  : 300,
+		minHeight : 200
+	});
+
+	if (this.options.width) {
+		width = this.options.width;
+	}
+
+	if (this.options.height) {
+		height = parseInt(this.options.height);
+	}
+
+	// update size
+	self.resize(width, height);
+
+	// attach events to document
+	$(document)
+		// disable finder on click outside finder
+		.bind('click.'+this.namespace, function(e) {
+			if( enabled && !$(e.target).closest(node).length ){
+				self.disable();
+			}
+		})
+		// exec shortcuts
+		.bind(keydown+' '+keypress, execShortcut);
+
+	// send initial request and start to pray >_<
+	this.trigger('init')
+		.request({
+			data        : {cmd : 'open', target : self.lastDir(), init : 1, tree : this.ui.tree ? 1 : 0},
+			preventDone : true,
+			notify      : {type : 'open', cnt : 1, hideCnt : true},
+			freeze      : true
+		})
+		.fail(function() {
+			self.trigger('fail').disable().lastDir('');
+			listeners = {};
+			shortcuts = {};
+			$(document).add(node).unbind('.'+this.namespace);
+			self.trigger = function() { };
+		})
+		.done(function(data) {
+			self.load();
+			data = $.extend(true, {}, data);
+			open(data);
+			self.trigger('open', data);
+		});
+
+	// update ui's size after init
+	this.one('load', function() {
+		node.trigger('resize');
+		if (self.options.sync > 1000) {
+			syncInterval = setInterval(function() {
+				self.sync();
+			}, self.options.sync)
+
+		}
+
+	});
+
+	// self.timeEnd('load');
+
+}
+
+/**
+ * Prototype
+ *
+ * @type  Object
+ */
+Finder.prototype = {
+
+	res : function(type, id) {
+		return this.resources[type] && this.resources[type][id];
+	},
+
+	/**
+	 * Internationalization object
+	 *
+	 * @type  Object
+	 */
+	i18 : {
+		en : {
+			translator      : '',
+			language        : 'English',
+			direction       : 'ltr',
+			dateFormat      : 'd.m.Y H:i',
+			fancyDateFormat : '$1 H:i',
+			messages        : {}
+		},
+		months : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+		monthsShort : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+
+		days : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+		daysShort : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+	},
+
+	/**
+	 * Ajax request data validation rules
+	 *
+	 * @type  Object
+	 */
+	rules : {
+		defaults : function(data) {
+			if (!data
+			|| (data.added && !$.isArray(data.added))
+			||  (data.removed && !$.isArray(data.removed))
+			||  (data.changed && !$.isArray(data.changed))) {
+				return false;
+			}
+			return true;
+		},
+		open    : function(data) { return data && data.cwd && data.files && $.isPlainObject(data.cwd) && $.isArray(data.files); },
+		tree    : function(data) { return data && data.tree && $.isArray(data.tree); },
+		parents : function(data) { return data && data.tree && $.isArray(data.tree); },
+		tmb     : function(data) { return data && data.images && ($.isPlainObject(data.images) || $.isArray(data.images)); },
+		upload  : function(data) { return data && ($.isPlainObject(data.added) || $.isArray(data.added));},
+		search  : function(data) { return data && data.files && $.isArray(data.files)}
+	},
+
+
+
+
+	/**
+	 * Commands costructors
+	 *
+	 * @type Object
+	 */
+	commands : {},
+
+	parseUploadData : function(text) {
+		var data;
+
+		if (!$.trim(text)) {
+			return {error : ['errResponse', 'errDataEmpty']};
+		}
+
+		try {
+			data = $.parseJSON(text);
+		} catch (e) {
+			return {error : ['errResponse', 'errDataNotJSON']}
+		}
+
+		if (!this.validResponse('upload', data)) {
+			return {error : ['errResponse']};
+		}
+		//data = this.normalize(data);
+		data.removed = $.map(data.added||[], function(f) { return f.hash; })
+		return data;
+
+	},
+
+	iframeCnt : 0,
+
+	uploads : {
+		// upload transport using iframe
+		iframe : function(data, fm) {
+			var self   = fm ? fm : this,
+				input  = data.input,
+				dfrd   = $.Deferred()
+					.fail(function(error) {
+						error && self.error(error);
+					})
+					.done(function(data) {
+						data.warning && self.error(data.warning);
+						data.removed && self.remove(data);
+						data.added   && self.add(data);
+						data.changed && self.change(data);
+						self.trigger('upload', data);
+						data.sync && self.sync();
+					}),
+				name = 'iframe-'+self.namespace+(++self.iframeCnt),
+				form = $('<form action="'+self.uploadURL+'" method="post" enctype="multipart/form-data" encoding="multipart/form-data" target="'+name+'" style="display:none"><input type="hidden" name="cmd" value="upload" /></form>'),
+				msie = this.UA.IE,
+				// clear timeouts, close notification dialog, remove form/iframe
+				onload = function() {
+					abortto  && clearTimeout(abortto);
+					notifyto && clearTimeout(notifyto);
+					notify   && self.notify({type : 'upload', cnt : -cnt});
+
+					setTimeout(function() {
+						msie && $('<iframe src="javascript:false;"/>').appendTo(form);
+						form.remove();
+						iframe.remove();
+					}, 100);
+				},
+				iframe = $('<iframe src="'+(msie ? 'javascript:false;' : 'about:blank')+'" name="'+name+'" style="position:absolute;left:-1000px;top:-1000px" />')
+					.bind('load', function() {
+						iframe.unbind('load')
+							.bind('load', function() {
+								var data = self.parseUploadData(iframe.contents().text());
+
+								onload();
+								data.error ? dfrd.reject(data.error) : dfrd.resolve(data);
+							});
+
+							// notify dialog
+							notifyto = setTimeout(function() {
+								notify = true;
+								self.notify({type : 'upload', cnt : cnt});
+							}, self.options.notifyDelay);
+
+							// emulate abort on timeout
+							if (self.options.iframeTimeout > 0) {
+								abortto = setTimeout(function() {
+									onload();
+									dfrd.reject([errors.connect, errors.timeout]);
+								}, self.options.iframeTimeout);
+							}
+
+							form.submit();
+					}),
+				cnt, notify, notifyto, abortto
+
+				;
+
+			if (input && $(input).is(':file') && $(input).val()) {
+				form.append(input);
+			} else {
+				return dfrd.reject();
+			}
+
+			cnt = input.files ? input.files.length : 1;
+
+			form.append('<input type="hidden" name="target" value="'+self.cwd().hash+'"/>')
+				.append('<input type="hidden" name="html" value="1"/>')
+				.append($(input).attr('name', 'upload[]'));
+
+			$.each(self.options.onlyMimes||[], function(i, mime) {
+				form.append('<input type="hidden" name="mimes[]" value="'+mime+'"/>');
+			});
+
+			$.each(self.options.customData, function(key, val) {
+				form.append('<input type="hidden" name="'+key+'" value="'+val+'"/>');
+			});
+
+			form.appendTo('body');
+			iframe.appendTo('body');
+
+			return dfrd;
+		},
+		// upload transport using XMLHttpRequest
+		xhr : function(data, fm) {
+			var self   = fm ? fm : this,
+				dfrd   = $.Deferred()
+					.fail(function(error) {
+						error && self.error(error);
+					})
+					.done(function(data) {
+						data.warning && self.error(data.warning);
+						data.removed && self.remove(data);
+						data.added   && self.add(data);
+						data.changed && self.change(data);
+	 					self.trigger('upload', data);
+						data.sync && self.sync();
+					})
+					.always(function() {
+						notifyto && clearTimeout(notifyto);
+						notify && self.notify({type : 'upload', cnt : -cnt, progress : 100*cnt});
+					}),
+				xhr         = new XMLHttpRequest(),
+				formData    = new FormData(),
+				files       = data.input ? data.input.files : data.files,
+				cnt         = files.length,
+				loaded      = 5,
+				notify      = false,
+				startNotify = function() {
+					return setTimeout(function() {
+						notify = true;
+						self.notify({type : 'upload', cnt : cnt, progress : loaded*cnt});
+					}, self.options.notifyDelay);
+				},
+				notifyto;
+
+			if (!cnt) {
+				return dfrd.reject();
+			}
+
+			xhr.addEventListener('error', function() {
+				dfrd.reject('errConnect');
+			}, false);
+
+			xhr.addEventListener('abort', function() {
+				dfrd.reject(['errConnect', 'errAbort']);
+			}, false);
+
+			xhr.addEventListener('load', function() {
+				var status = xhr.status, data;
+
+				if (status > 500) {
+					return dfrd.reject('errResponse');
+				}
+				if (status != 200) {
+					return dfrd.reject('errConnect');
+				}
+				if (xhr.readyState != 4) {
+					return dfrd.reject(['errConnect', 'errTimeout']); // am i right?
+				}
+				if (!xhr.responseText) {
+					return dfrd.reject(['errResponse', 'errDataEmpty']);
+				}
+
+				data = self.parseUploadData(xhr.responseText);
+				data.error ? dfrd.reject(data.error) : dfrd.resolve(data);
+			}, false);
+
+			xhr.upload.addEventListener('progress', function(e) {
+				var prev = loaded, curr;
+
+				if (e.lengthComputable) {
+
+					curr = parseInt(e.loaded*100 / e.total);
+
+					// to avoid strange bug in safari (not in chrome) with drag&drop.
+					// bug: macos finder opened in any folder,
+					// reset safari cache (option+command+e), reload finder page,
+					// drop file from finder
+					// on first attempt request starts (progress callback called ones) but never ends.
+					// any next drop - successfull.
+					if (curr > 0 && !notifyto) {
+						notifyto = startNotify();
+					}
+
+					if (curr - prev > 4) {
+						loaded = curr;
+						notify && self.notify({type : 'upload', cnt : 0, progress : (loaded - prev)*cnt});
+					}
+				}
+			}, false);
+
+
+			xhr.open('POST', self.uploadURL, true);
+			formData.append('cmd', 'upload');
+			formData.append('target', self.cwd().hash);
+			$.each(self.options.customData, function(key, val) {
+				formData.append(key, val);
+			});
+			$.each(self.options.onlyMimes, function(i, mime) {
+				formData.append('mimes['+i+']', mime);
+			});
+
+			$.each(files, function(i, file) {
+				formData.append('upload[]', file);
+			});
+
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState == 4 && xhr.status == 0) {
+					// ff bug while send zero sized file
+					// for safari - send directory
+					dfrd.reject(['errConnect', 'errAbort']);
+				}
+			}
+
+			xhr.send(formData);
+
+			if (!this.UA.Safari || !data.files) {
+				notifyto = startNotify();
+			}
+
+			return dfrd;
+		}
+	},
+
+
+	/**
+	 * Bind callback to event(s) The callback is executed at most once per event.
+	 * To bind to multiply events at once, separate events names by space
+	 *
+	 * @param  String    event name
+	 * @param  Function  callback
+	 * @return Finder
+	 */
+	one : function(event, callback) {
+		var self = this,
+			h    = $.proxy(callback, function(event) {
+				setTimeout(function() {self.unbind(event.type, h);}, 3);
+				return callback.apply(this, arguments);
+			});
+		return this.bind(event, h);
+	},
+
+	/**
+	 * Set/get data into/from localStorage
+	 *
+	 * @param  String       key
+	 * @param  String|void  value
+	 * @return String
+	 */
+	localStorage : function(key, val) {
+		var s = window.localStorage;
+
+		key = 'finder-'+key+this.id;
+
+		if (val === null) {
+			console.log('remove', key)
+			return s.removeItem(key);
+		}
+
+		if (val !== void(0)) {
+			try {
+				s.setItem(key, val);
+			} catch (e) {
+				s.clear();
+				s.setItem(key, val);
+			}
+		}
+
+		return s.getItem(key);
+	},
+
+	/**
+	 * Get/set cookie
+	 *
+	 * @param  String       cookie name
+	 * @param  String|void  cookie value
+	 * @return String
+	 */
+	cookie : function(name, value) {
+		var d, o, c, i;
+
+		name = 'finder-'+name+this.id;
+
+		if (value === void(0)) {
+			if (document.cookie && document.cookie != '') {
+				c = document.cookie.split(';');
+				name += '=';
+				for (i=0; i<c.length; i++) {
+					c[i] = $.trim(c[i]);
+					if (c[i].substring(0, name.length) == name) {
+						return decodeURIComponent(c[i].substring(name.length));
+					}
+				}
+			}
+			return '';
+		}
+
+		o = $.extend({}, this.options.cookie);
+		if (value === null) {
+			value = '';
+			o.expires = -1;
+		}
+		if (typeof(o.expires) == 'number') {
+			d = new Date();
+			d.setTime(d.getTime()+(o.expires * 86400000));
+			o.expires = d;
+		}
+		document.cookie = name+'='+encodeURIComponent(value)+'; expires='+o.expires.toUTCString()+(o.path ? '; path='+o.path : '')+(o.domain ? '; domain='+o.domain : '')+(o.secure ? '; secure' : '');
+		return value;
+	},
+
+	/**
+	 * Get/set last opened directory
+	 *
+	 * @param  String|undefined  dir hash
+	 * @return String
+	 */
+	lastDir : function(hash) {
+		return this.options.rememberLastDir ? this.storage('lastdir', hash) : '';
+	},
+
+	/**
+	 * Node for escape html entities in texts
+	 *
+	 * @type jQuery
+	 */
+	_node : $('<span/>'),
+
+	/**
+	 * Replace not html-safe symbols to html entities
+	 *
+	 * @param  String  text to escape
+	 * @return String
+	 */
+	escape : function(name) {
+		return this._node.text(name).html();
+	},
+
+
+	/**
+	 * Update sort options
+	 *
+	 * @param {String} sort type
+	 * @param {String} sort order
+	 * @param {Boolean} show folder first
+	 */
+	setSort : function(type, order, stickFolders) {
+		this.storage('sortType', (this.sortType = this.sortRules[type] ? type : 'name'));
+		this.storage('sortOrder', (this.sortOrder = /asc|desc/.test(order) ? order : 'asc'));
+		this.storage('sortStickFolders', (this.sortStickFolders = !!stickFolders) ? 1 : '');
+		this.trigger('sortchange');
+	},
+
+	_sortRules : {
+		name : function(file1, file2) { return file1.name.toLowerCase().localeCompare(file2.name.toLowerCase()); },
+		size : function(file1, file2) {
+			var size1 = parseInt(file1.size) || 0,
+				size2 = parseInt(file2.size) || 0;
+
+			return size1 == size2 ? 0 : size1 > size2 ? 1 : -1;
+			return (parseInt(file1.size) || 0) > (parseInt(file2.size) || 0) ? 1 : -1; },
+		kind : function(file1, file2) { return file1.mime.localeCompare(file2.mime); },
+		date : function(file1, file2) {
+			var date1 = file1.ts || file1.date,
+				date2 = file2.ts || file2.date;
+
+			return date1 == date2 ? 0 : date1 > date2 ? 1 : -1
+		}
+	},
+
+	/**
+	 * Compare files based on Finder.sort
+	 *
+	 * @param  Object  file
+	 * @param  Object  file
+	 * @return Number
+	 */
+	compare : function(file1, file2) {
+		var self  = this,
+			type  = self.sortType,
+			asc   = self.sortOrder == 'asc',
+			stick = self.sortStickFolders,
+			rules = self.sortRules,
+			sort  = rules[type],
+			d1    = file1.mime == 'directory',
+			d2    = file2.mime == 'directory',
+			res;
+
+		if (stick) {
+			if (d1 && !d2) {
+				return -1;
+			} else if (!d1 && d2) {
+				return 1;
+			}
+		}
+
+		res = asc ? sort(file1, file2) : sort(file2, file1);
+
+		return type != 'name' && res == 0
+			? res = asc ? rules.name(file1, file2) : rules.name(file2, file1)
+			: res;
+	},
+
+	/**
+	 * Sort files based on config
+	 *
+	 * @param  Array  files
+	 * @return Array
+	 */
+	sortFiles : function(files) {
+		return files.sort(this.compare);
+	},
+
+	/**
+	 * Open notification dialog
+	 * and append/update message for required notification type.
+	 *
+	 * @param  Object  options
+	 * @example
+	 * this.notify({
+	 *    type : 'copy',
+	 *    msg : 'Copy files', // not required for known types @see this.notifyType
+	 *    cnt : 3,
+	 *    hideCnt : false, // true for not show count
+	 *    progress : 10 // progress bar percents (use cnt : 0 to update progress bar)
+	 * })
+	 * @return Finder
+	 */
+	notify : function(opts) {
+		var type     = opts.type,
+			msg      = this.messages['ntf'+type] ? this.i18n('ntf'+type) : this.i18n('ntfsmth'),
+			ndialog  = this.ui.notify,
+			notify   = ndialog.children('.finder-notify-'+type),
+			ntpl     = '<div class="finder-notify finder-notify-{type}"><span class="finder-dialog-icon finder-dialog-icon-{type}"/><span class="finder-notify-msg">{msg}</span> <span class="finder-notify-cnt"/><div class="finder-notify-progressbar"><div class="finder-notify-progress"/></div></div>',
+			delta    = opts.cnt,
+			progress = opts.progress >= 0 && opts.progress <= 100 ? opts.progress : 0,
+			cnt, total, prc;
+
+		if (!type) {
+			return this;
+		}
+
+		if (!notify.length) {
+			notify = $(ntpl.replace(/\{type\}/g, type).replace(/\{msg\}/g, msg))
+				.appendTo(ndialog)
+				.data('cnt', 0);
+
+			if (progress) {
+				notify.data({progress : 0, total : 0});
+			}
+		}
+
+		cnt = delta + parseInt(notify.data('cnt'));
+
+		if (cnt > 0) {
+			!opts.hideCnt && notify.children('.finder-notify-cnt').text('('+cnt+')');
+			ndialog.is(':hidden') && ndialog.finderdialog('open');
+			notify.data('cnt', cnt);
+
+			if (progress < 100
+			&& (total = notify.data('total')) >= 0
+			&& (prc = notify.data('progress')) >= 0) {
+
+				total    = delta + parseInt(notify.data('total'));
+				prc      = progress + prc;
+				progress = parseInt(prc/total);
+				notify.data({progress : prc, total : total});
+
+				ndialog.find('.finder-notify-progress')
+					.animate({
+						width : (progress < 100 ? progress : 100)+'%'
+					}, 20);
+			}
+
+		} else {
+			notify.remove();
+			!ndialog.children().length && ndialog.finderdialog('close');
+		}
+
+		return this;
+	},
+
+	/**
+	 * Open confirmation dialog
+	 *
+	 * @param  Object  options
+	 * @example
+	 * this.confirm({
+	 *    title : 'Remove files',
+	 *    text  : 'Here is question text',
+	 *    accept : {  // accept callback - required
+	 *      label : 'Continue',
+	 *      callback : function(applyToAll) { fm.log('Ok') }
+	 *    },
+	 *    cancel : { // cancel callback - required
+	 *      label : 'Cancel',
+	 *      callback : function() { fm.log('Cancel')}
+	 *    },
+	 *    reject : { // reject callback - optionally
+	 *      label : 'No',
+	 *      callback : function(applyToAll) { fm.log('No')}
+	 *   },
+	 *   all : true  // display checkbox "Apply to all"
+	 * })
+	 * @return Finder
+	 */
+	confirm : function(opts) {
+		var complete = false,
+			options = {
+				cssClass  : 'finder-dialog-confirm',
+				modal     : true,
+				resizable : false,
+				title     : this.i18n(opts.title || 'confirmReq'),
+				buttons   : {},
+				close     : function() {
+					!complete && opts.cancel.callback();
+					$(this).finderdialog('destroy');
+				}
+			},
+			apply = this.i18n('apllyAll'),
+			label, checkbox;
+
+
+		if (opts.reject) {
+			options.buttons[this.i18n(opts.reject.label)] = function() {
+				opts.reject.callback(!!(checkbox && checkbox.prop('checked')))
+				complete = true;
+				$(this).finderdialog('close')
+			};
+		}
+
+		options.buttons[this.i18n(opts.accept.label)] = function() {
+			opts.accept.callback(!!(checkbox && checkbox.prop('checked')))
+			complete = true;
+			$(this).finderdialog('close')
+		};
+
+		options.buttons[this.i18n(opts.cancel.label)] = function() {
+			$(this).finderdialog('close')
+		};
+
+		if (opts.all) {
+			if (opts.reject) {
+				options.width = 370;
+			}
+			options.create = function() {
+				checkbox = $('<input type="checkbox" />');
+				$(this).next().children().before($('<label>'+apply+'</label>').prepend(checkbox));
+			}
+
+			options.open = function() {
+				var pane = $(this).next(),
+					width = parseInt(pane.children(':first').outerWidth() + pane.children(':last').outerWidth());
+
+				if (width > parseInt(pane.width())) {
+					$(this).closest('.finder-dialog').width(width+30);
+				}
+			}
+		}
+
+		return this.dialog('<span class="finder-dialog-icon finder-dialog-icon-confirm"/>' + this.i18n(opts.text), options);
+	},
+
+	/**
+	 * Create unique file name in required dir
+	 *
+	 * @param  String  file name
+	 * @param  String  parent dir hash
+	 * @return String
+	 */
+	uniqueName : function(prefix, phash) {
+		var i = 0, ext = '', p, name;
+
+		prefix = this.i18n(prefix);
+		phash = phash || this.cwd().hash;
+
+		if ((p = prefix.indexOf('.txt')) != -1) {
+			ext    = '.txt';
+			prefix = prefix.substr(0, p);
+		}
+
+		name   = prefix+ext;
+
+		if (!this.fileByName(name, phash)) {
+			return name;
+		}
+		while (i < 10000) {
+			name = prefix + ' ' + (++i) + ext;
+			if (!this.fileByName(name, phash)) {
+				return name;
+			}
+		}
+		return prefix + Math.random() + ext;
+	},
+
+	/**
+	 * Return message translated onto current language
+	 *
+	 * @param  String|Array  message[s]
+	 * @return String
+	 **/
+	i18n : function() {
+		var self = this,
+			messages = this.messages,
+			input    = [],
+			ignore   = [],
+			message = function(m) {
+				var file;
+				if (m.indexOf('#') === 0) {
+					if ((file = self.file(m.substr(1)))) {
+						return file.name;
+					}
+				}
+				return m;
+			},
+			i, j, m;
+
+		for (i = 0; i< arguments.length; i++) {
+			m = arguments[i];
+
+			if (typeof m == 'string') {
+				input.push(message(m));
+			} else if ($.isArray(m)) {
+				for (j = 0; j < m.length; j++) {
+					if (typeof m[j] == 'string') {
+						input.push(message(m[j]));
+					}
+				}
+			}
+		}
+
+		for (i = 0; i < input.length; i++) {
+			// dont translate placeholders
+			if ($.inArray(i, ignore) !== -1) {
+				continue;
+			}
+			m = input[i];
+			// translate message
+			m = messages[m] || m;
+			// replace placeholders in message
+			m = m.replace(/\$(\d+)/g, function(match, placeholder) {
+				placeholder = i + parseInt(placeholder);
+				if (placeholder > 0 && input[placeholder]) {
+					ignore.push(placeholder)
+				}
+				return input[placeholder] || '';
+			});
+
+			input[i] = m;
+		}
+
+		return $.map(input, function(m, i) { return $.inArray(i, ignore) === -1 ? m : null; }).join('<br>');
+	},
+
+
+
+
+	/**
+	 * Return localized date
+	 *
+	 * @param  Object  file object
+	 * @return String
+	 */
+	formatDate : function(file, ts) {
+		var self = this,
+			ts   = ts || file.ts,
+			i18  = self.i18,
+			date, format, output, d, dw, m, y, h, g, i, s;
+
+		if (self.options.clientFormatDate && ts > 0) {
+
+			date = new Date(ts*1000);
+
+			h  = date[self.getHours]();
+			g  = h > 12 ? h - 12 : h;
+			i  = date[self.getMinutes]();
+			s  = date[self.getSeconds]();
+			d  = date[self.getDate]();
+			dw = date[self.getDay]();
+			m  = date[self.getMonth]() + 1;
+			y  = date[self.getFullYear]();
+
+			format = ts >= this.yesterday
+				? this.fancyFormat
+				: this.dateFormat;
+
+			output = format.replace(/[a-z]/gi, function(val) {
+				switch (val) {
+					case 'd': return d > 9 ? d : '0'+d;
+					case 'j': return d;
+					case 'D': return self.i18n(i18.daysShort[dw]);
+					case 'l': return self.i18n(i18.days[dw]);
+					case 'm': return m > 9 ? m : '0'+m;
+					case 'n': return m;
+					case 'M': return self.i18n(i18.monthsShort[m-1]);
+					case 'F': return self.i18n(i18.months[m-1]);
+					case 'Y': return y;
+					case 'y': return (''+y).substr(2);
+					case 'H': return h > 9 ? h : '0'+h;
+					case 'G': return h;
+					case 'g': return g;
+					case 'h': return g > 9 ? g : '0'+g;
+					case 'a': return h > 12 ? 'pm' : 'am';
+					case 'A': return h > 12 ? 'PM' : 'AM';
+					case 'i': return i > 9 ? i : '0'+i;
+					case 's': return s > 9 ? s : '0'+s;
+				}
+				return val;
+			});
+
+			return ts >= this.yesterday
+				? output.replace('$1', this.i18n(ts >= this.today ? 'Today' : 'Yesterday'))
+				: output;
+		} else if (file.date) {
+			return file.date.replace(/([a-z]+)\s/i, function(a1, a2) { return self.i18n(a2)+' '; });
+		}
+
+		return self.i18n('dateUnknown');
+	},
+
+	/**
+	 * Return css class marks file permissions
+	 *
+	 * @param  Object  file
+	 * @return String
+	 */
+	perms2class : function(o) {
+		var c = '';
+
+		if (!o.read && !o.write) {
+			c = 'finder-na';
+		} else if (!o.read) {
+			c = 'finder-wo';
+		} else if (!o.write) {
+			c = 'finder-ro';
+		}
+		return c;
+	},
+
+	/**
+	 * Return localized string with file permissions
+	 *
+	 * @param  Object  file
+	 * @return String
+	 */
+	formatPermissions : function(f) {
+		var p  = [];
+
+		f.read && p.push(this.i18n('read'));
+		f.write && p.push(this.i18n('write'));
+
+		return p.length ? p.join(' '+this.i18n('and')+' ') : this.i18n('noaccess');
+	},
+
+	/**
+	 * Return formated file size
+	 *
+	 * @param  Number  file size
+	 * @return String
+	 */
+	formatSize : function(s) {
+		var n = 1, u = 'b';
+
+		if (s == 'unknown') {
+			return this.i18n('unknown');
+		}
+
+		if (s > 1073741824) {
+			n = 1073741824;
+			u = 'GB';
+		} else if (s > 1048576) {
+			n = 1048576;
+			u = 'MB';
+		} else if (s > 1024) {
+			n = 1024;
+			u = 'KB';
+		}
+		s = s/n;
+		return (s > 0 ? n >= 1048576 ? s.toFixed(2) : Math.round(s) : 0) +' '+u;
+	},
+
+
+	navHash2Id : function(hash) {
+		return 'nav-'+hash;
+	},
+
+	navId2Hash : function(id) {
+		return typeof(id) == 'string' ? id.substr(4) : false;
+	},
+
+	log : function(m) { window.console && window.console.log && window.console.log(m); return this; },
+
+	debug : function(type, m) {
+		var d = this.options.debug;
+
+		if (d == 'all' || d === true || ($.isArray(d) && $.inArray(type, d) != -1)) {
+			window.console && window.console.log && window.console.log('finder debug: ['+type+'] ['+this.id+']', m);
+		}
+		return this;
+	},
+	time : function(l) { window.console && window.console.time && window.console.time(l); },
+	timeEnd : function(l) { window.console && window.console.timeEnd && window.console.timeEnd(l); }
+
+
+}
+;/**
+ * Application version
+ *
+ * @type String
+ **/
+Finder.prototype.version = '2.2.1';
+
+;$.fn.finder = function(o) {
+
+	if (o == 'instance') {
+		return this.getFinder();
+	}
+
+	return this.each(function() {
+
+		var cmd = typeof(o) == 'string' ? o : '';
+		if (!this.finder) {
+			new Finder(this, typeof(o) == 'object' ? o : {})
+		}
+
+		switch(cmd) {
+			case 'close':
+			case 'hide':
+				this.finder.hide();
+				break;
+
+			case 'open':
+			case 'show':
+				this.finder.show();
+				break;
+
+			case 'destroy':
+				this.finder.destroy();
+				break;
+		}
+
+	})
+}
+
+$.fn.getFinder = function() {
+	var instance;
+
+	this.each(function() {
+		if (this.finder) {
+			instance = this.finder;
+			return false;
+		}
+	});
+
+	return instance;
+}
+;/**
+ * Default Finder config
+ *
+ * @type  Object
+ * @autor Dmitry (dio) Levashov
+ */
+Finder.prototype._options = {
+	/**
+	 * Connector url. Required!
+	 *
+	 * @type String
+	 */
+	url : '',
+
+	/**
+	 * Ajax request type.
+	 *
+	 * @type String
+	 * @default "get"
+	 */
+	requestType : 'get',
+
+	/**
+	 * Transport to send request to backend.
+	 * Required for future extensions using websockets/webdav etc.
+	 * Must be an object with "send" method.
+	 * transport.send must return $.Deferred() object
+	 *
+	 * @type Object
+	 * @default null
+	 * @example
+	 *  transport : {
+	 *    init : function(finderInstance) { },
+	 *    send : function(options) {
+	 *      var dfrd = $.Deferred();
+	 *      // connect to backend ...
+	 *      return dfrd;
+	 *    },
+	 *    upload : function(data) {
+	 *      var dfrd = $.Deferred();
+	 *      // upload ...
+	 *      return dfrd;
+	 *    }
+	 *
+	 *  }
+	 **/
+	transport : {},
+
+	/**
+	 * URL to upload file to.
+	 * If not set - connector URL will be used
+	 *
+	 * @type String
+	 * @default  ''
+	 */
+	urlUpload : '',
+
+	/**
+	 * Allow to drag and drop to upload files
+	 *
+	 * @type Boolean|String
+	 * @default  'auto'
+	 */
+	dragUploadAllow : 'auto',
+
+	/**
+	 * Timeout for upload using iframe
+	 *
+	 * @type Number
+	 * @default  0 - no timeout
+	 */
+	iframeTimeout : 0,
+
+	/**
+	 * Data to append to all requests and to upload files
+	 *
+	 * @type Object
+	 * @default  {}
+	 */
+	customData : {},
+
+	/**
+	 * Event listeners to bind on Finder init
+	 *
+	 * @type Object
+	 * @default  {}
+	 */
+	handlers : {},
+
+	/**
+	 * Interface language
+	 *
+	 * @type String
+	 * @default "en"
+	 */
+	lang : 'en',
+
+	/**
+	 * Additional css class for filemanager node.
+	 *
+	 * @type String
+	 */
+	cssClass : '',
+
+	/**
+	 * Active commands list
+	 * If some required commands will be missed here, Finder will add its
+	 *
+	 * @type Array
+	 */
+	commands : [
+		'open', 'reload', 'home', 'up', 'back', 'forward', 'getfile', 'quicklook',
+		'download', 'rm', 'duplicate', 'rename', 'mkdir', 'mkfile', 'upload', 'copy',
+		'cut', 'paste', 'edit', 'extract', 'archive', 'search', 'info', 'view', 'help', 'resize', 'sort',
+		'netmount', 'unmount'
+	],
+
+	/**
+	 * Commands options.
+	 *
+	 * @type Object
+	 **/
+	commandsOptions : {
+		// "getfile" command options.
+		getfile : {
+			// allow to return multiple files info
+			multiple : false,
+			// allow to return filers info
+			folders  : false,
+			// action after callback (""/"close"/"destroy")
+			oncomplete : ''
+		},
+		// "upload" command options.
+		upload : {
+			ui : 'uploadbutton'
+		},
+		// "quicklook" command options.
+		quicklook : {
+			autoplay : true,
+			jplayer  : 'extensions/jplayer'
+		},
+		// "quicklook" command options.
+		edit : {
+			// list of allowed mimetypes to edit
+			// if empty - any text files can be edited
+			mimes : [],
+			// edit files in wysisyg's
+			editors : [
+				// {
+				// 	/**
+				// 	 * files mimetypes allowed to edit in current wysisyg
+				// 	 * @type  Array
+				// 	 */
+				// 	mimes : ['text/html'],
+				// 	/**
+				// 	 * Called when "edit" dialog loaded.
+				// 	 * Place to init wysisyg.
+				// 	 * Can return wysisyg instance
+				// 	 *
+				// 	 * @param  DOMElement  textarea node
+				// 	 * @return Object
+				// 	 */
+				// 	load : function(textarea) { },
+				// 	/**
+				// 	 * Called before "edit" dialog closed.
+				// 	 * Place to destroy wysisyg instance.
+				// 	 *
+				// 	 * @param  DOMElement  textarea node
+				// 	 * @param  Object      wysisyg instance (if was returned by "load" callback)
+				// 	 * @return void
+				// 	 */
+				// 	close : function(textarea, instance) { },
+				// 	/**
+				// 	 * Called before file content send to backend.
+				// 	 * Place to update textarea content if needed.
+				// 	 *
+				// 	 * @param  DOMElement  textarea node
+				// 	 * @param  Object      wysisyg instance (if was returned by "load" callback)
+				// 	 * @return void
+				// 	 */
+				// 	save : function(textarea, editor) {}
+				//
+				// }
+			]
+		},
+
+
+		help : {view : ['about', 'shortcuts', 'help']}
+	},
+
+	/**
+	 * Callback for "getfile" commands.
+	 * Required to use Finder with WYSIWYG editors etc..
+	 *
+	 * @type Function
+	 * @default null (command not active)
+	 */
+	getFileCallback : null,
+
+	/**
+	 * Default directory view. icons/list
+	 *
+	 * @type String
+	 * @default "icons"
+	 */
+	defaultView : 'icons',
+
+	/**
+	 * UI plugins to load.
+	 * Current dir ui and dialogs loads always.
+	 * Here set not required plugins as folders tree/toolbar/statusbar etc.
+	 *
+	 * @type Array
+	 * @full ['toolbar', 'places', 'tree', 'path', 'stat']
+	 */
+	ui : ['toolbar', 'places', 'tree', 'path', 'stat' ],
+
+	/**
+	 * Some UI plugins options.
+	 * @type Object
+	 */
+	uiOptions : {
+		// toolbar configuration
+		toolbar : [
+			['back', 'forward','up','reload'],
+			['home', 'netmount'],
+			['mkdir', 'mkfile', 'upload'],
+			['open', 'download', 'getfile'],
+			['info','quicklook'],
+			['copy', 'cut', 'paste'],
+			['rm'],
+			['duplicate', 'rename', 'edit', 'resize'],
+			['extract', 'archive'],
+			['view', 'sort'],
+			['help'],
+			['search']
+		],
+		// directories tree options
+		tree : {
+			// expand current root on init
+			openRootOnLoad : true,
+			// auto load current dir parents
+			syncTree : true
+		},
+		// navbar options
+		navbar : {
+			minWidth : 150,
+			maxWidth : 500
+		},
+		cwd : {
+			// display parent folder with ".." name :)
+			oldSchool : false
+		}
+	},
+
+	/**
+	 * Display only required files by types
+	 *
+	 * @type Array
+	 * @default []
+	 * @example
+	 *  onlyMimes : ["image"] - display all images
+	 *  onlyMimes : ["image/png", "application/x-shockwave-flash"] - display png and flash
+	 */
+	onlyMimes : [],
+
+	/**
+	 * Custom files sort rules.
+	 * All default rules (name/size/kind/date) set in Finder._sortRules
+	 *
+	 * @type {Object}
+	 * @example
+	 * sortRules : {
+	 *   name : function(file1, file2) { return file1.name.toLowerCase().localeCompare(file2.name.toLowerCase()); }
+	 * }
+	 */
+	sortRules : {},
+
+	/**
+	 * Default sort type.
+	 *
+	 * @type {String}
+	 */
+	sortType : 'name',
+
+	/**
+	 * Default sort order.
+	 *
+	 * @type {String}
+	 * @default "asc"
+	 */
+	sortOrder : 'asc',
+
+	/**
+	 * Display folders first?
+	 *
+	 * @type {Boolean}
+	 * @default true
+	 */
+	sortStickFolders : true,
+
+	/**
+	 * If true - Finder will formating dates itself,
+	 * otherwise - backend date will be used.
+	 *
+	 * @type Boolean
+	 */
+	clientFormatDate : true,
+
+	/**
+	 * Show UTC dates.
+	 * Required set clientFormatDate to true
+	 *
+	 * @type Boolean
+	 */
+	UTCDate : false,
+
+	/**
+	 * File modification datetime format.
+	 * Value from selected language data  is used by default.
+	 * Set format here to overwrite it.
+	 *
+	 * @type String
+	 * @default  ""
+	 */
+	dateFormat : '',
+
+	/**
+	 * File modification datetime format in form "Yesterday 12:23:01".
+	 * Value from selected language data is used by default.
+	 * Set format here to overwrite it.
+	 * Use $1 for "Today"/"Yesterday" placeholder
+	 *
+	 * @type String
+	 * @default  ""
+	 * @example "$1 H:m:i"
+	 */
+	fancyDateFormat : '',
+
+	/**
+	 * Finder width
+	 *
+	 * @type String|Number
+	 * @default  "auto"
+	 */
+	width : 'auto',
+
+	/**
+	 * Finder height
+	 *
+	 * @type Number
+	 * @default  "auto"
+	 */
+	height : 400,
+
+	/**
+	 * Make Finder resizable if jquery ui resizable available
+	 *
+	 * @type Boolean
+	 * @default  true
+	 */
+	resizable : true,
+
+	/**
+	 * Timeout before open notifications dialogs
+	 *
+	 * @type Number
+	 * @default  500 (.5 sec)
+	 */
+	notifyDelay : 500,
+
+	/**
+	 * Allow shortcuts
+	 *
+	 * @type Boolean
+	 * @default  true
+	 */
+	allowShortcuts : true,
+
+	/**
+	 * Remeber last opened dir to open it after reload or in next session
+	 *
+	 * @type Boolean
+	 * @default  true
+	 */
+	rememberLastDir : true,
+
+	/**
+	 * Lazy load config.
+	 * How many files display at once?
+	 *
+	 * @type Number
+	 * @default  50
+	 */
+	showFiles : 30,
+
+	/**
+	 * Lazy load config.
+	 * Distance in px to cwd bottom edge to start display files
+	 *
+	 * @type Number
+	 * @default  50
+	 */
+	showThreshold : 50,
+
+	/**
+	 * Additional rule to valid new file name.
+	 * By default not allowed empty names or '..'
+	 *
+	 * @type false|RegExp|function
+	 * @default  false
+	 * @example
+	 *  disable names with spaces:
+	 *  validName : /^[^\s]$/
+	 */
+	validName : false,
+
+	/**
+	 * Sync content interval
+	 * @todo - fix in Finder
+	 * @type Number
+	 * @default  0 (do not sync)
+	 */
+	sync : 0,
+
+	/**
+	 * How many thumbnails create in one request
+	 *
+	 * @type Number
+	 * @default  5
+	 */
+	loadTmbs : 5,
+
+	/**
+	 * Cookie option for browsersdoes not suppot localStorage
+	 *
+	 * @type Object
+	 */
+	cookie         : {
+		expires : 30,
+		domain  : '',
+		path    : '/',
+		secure  : false
+	},
+
+	/**
+	 * Contextmenu config
+	 *
+	 * @type Object
+	 */
+	contextmenu : {
+		// navbarfolder menu
+		navbar : ['open', '|', 'copy', 'cut', 'paste', 'duplicate', '|', 'rm', '|', 'info', '|', 'unmount'],
+		// current directory menu
+		cwd    : ['reload', 'back', '|', 'upload', 'mkdir', 'mkfile', 'paste', '|', 'sort', '|', 'info'],
+		// current directory file menu
+		files  : ['getfile', '|','open', 'quicklook', '|', 'download', '|', 'copy', 'cut', 'paste', 'duplicate', '|', 'rm', '|', 'edit', 'rename', 'resize', '|', 'archive', 'extract', '|', 'info']
+	},
+
+	/**
+	 * Debug config
+	 *
+	 * @type Array|Boolean
+	 */
+	// debug : true
+	debug : ['error', 'warning', 'event-destroy']
+}
+;/**
+ * @class Finder.history
+ * Store visited folders
+ * and provide "back" and "forward" methods
+ *
+ * @author Dmitry (dio) Levashov
+ */
+Finder.prototype.history = function(fm) {
+	var self = this,
+		/**
+		 * Update history on "open" event?
+		 *
+		 * @type Boolean
+		 */
+		update = true,
+		/**
+		 * Directories hashes storage
+		 *
+		 * @type Array
+		 */
+		history = [],
+		/**
+		 * Current directory index in history
+		 *
+		 * @type Number
+		 */
+		current,
+		/**
+		 * Clear history
+		 *
+		 * @return void
+		 */
+		reset = function() {
+			history = [fm.cwd().hash];
+			current = 0;
+			update  = true;
+		},
+		/**
+		 * Open prev/next folder
+		 *
+		 * @Boolen  open next folder?
+		 * @return jQuery.Deferred
+		 */
+		go = function(fwd) {
+			if ((fwd && self.canForward()) || (!fwd && self.canBack())) {
+				update = false;
+				return fm.exec('open', history[fwd ? ++current : --current]).fail(reset);
+			}
+			return $.Deferred().reject();
+		};
+
+	/**
+	 * Return true if there is previous visited directories
+	 *
+	 * @return Boolen
+	 */
+	this.canBack = function() {
+		return current > 0;
+	}
+
+	/**
+	 * Return true if can go forward
+	 *
+	 * @return Boolen
+	 */
+	this.canForward = function() {
+		return current < history.length - 1;
+	}
+
+	/**
+	 * Go back
+	 *
+	 * @return void
+	 */
+	this.back = go;
+
+	/**
+	 * Go forward
+	 *
+	 * @return void
+	 */
+	this.forward = function() {
+		return go(true);
+	}
+
+	// bind to finder events
+	fm.open(function(e) {
+		var l = history.length,
+			cwd = fm.cwd().hash;
+
+		if (update) {
+			current >= 0 && l > current + 1 && history.splice(current+1);
+			history[history.length-1] != cwd && history.push(cwd);
+			current = history.length - 1;
+		}
+		update = true;
+	})
+	.reload(reset);
+
+};/**
+ * Finder command prototype
+ *
+ * @type  Finder.command
+ * @author  Dmitry (dio) Levashov
+ */
+Finder.prototype.command = function(fm) {
+
+	/**
+	 * Finder instance
+	 *
+	 * @type  Finder
+	 */
+	this.fm = fm;
+
+	/**
+	 * Command name, same as class name
+	 *
+	 * @type  String
+	 */
+	this.name = '';
+
+	/**
+	 * Short command description
+	 *
+	 * @type  String
+	 */
+	this.title = '';
+
+	/**
+	 * Current command state
+	 *
+	 * @example
+	 * this.state = -1; // command disabled
+	 * this.state = 0;  // command enabled
+	 * this.state = 1;  // command active (for example "fullscreen" command while finder in fullscreen mode)
+	 * @default -1
+	 * @type  Number
+	 */
+	this.state = -1;
+
+	/**
+	 * If true, command can not be disabled by connector.
+	 * @see this.update()
+	 *
+	 * @type  Boolen
+	 */
+	this.alwaysEnabled = false;
+
+	/**
+	 * If true, this means command was disabled by connector.
+	 * @see this.update()
+	 *
+	 * @type  Boolen
+	 */
+	this._disabled = false;
+
+	this.disableOnSearch = false;
+
+	this.updateOnSelect = true;
+
+	/**
+	 * Finder events defaults handlers.
+	 * Inside handlers "this" is current command object
+	 *
+	 * @type  Object
+	 */
+	this._handlers = {
+		enable  : function() { this.update(void(0), this.value); },
+		disable : function() { this.update(-1, this.value); },
+		'open reload load'    : function(e) {
+			this._disabled = !(this.alwaysEnabled || this.fm.isCommandEnabled(this.name));
+			this.update(void(0), this.value)
+			this.change();
+		}
+	};
+
+	/**
+	 * Finder events handlers.
+	 * Inside handlers "this" is current command object
+	 *
+	 * @type  Object
+	 */
+	this.handlers = {}
+
+	/**
+	 * Shortcuts
+	 *
+	 * @type  Array
+	 */
+	this.shortcuts = [];
+
+	/**
+	 * Command options
+	 *
+	 * @type  Object
+	 */
+	this.options = {ui : 'button'};
+
+	/**
+	 * Prepare object -
+	 * bind events and shortcuts
+	 *
+	 * @return void
+	 */
+	this.setup = function(name, opts) {
+		var self = this,
+			fm   = this.fm, i, s;
+
+		this.name      = name;
+		this.title     = fm.messages['cmd'+name] ? fm.i18n('cmd'+name) : name,
+		this.options   = $.extend({}, this.options, opts);
+		this.listeners = [];
+
+		if (this.updateOnSelect) {
+			this._handlers.select = function() { this.update(void(0), this.value); }
+		}
+
+		$.each($.extend({}, self._handlers, self.handlers), function(cmd, handler) {
+			fm.bind(cmd, $.proxy(handler, self));
+		});
+
+		for (i = 0; i < this.shortcuts.length; i++) {
+			s = this.shortcuts[i];
+			s.callback = $.proxy(s.callback || function() { this.exec() }, this);
+			!s.description && (s.description = this.title);
+			fm.shortcut(s);
+		}
+
+		if (this.disableOnSearch) {
+			fm.bind('search searchend', function(e) {
+				self._disabled = e.type == 'search';
+				self.update(void(0), self.value);
+			});
+		}
+
+		this.init();
+	}
+
+	/**
+	 * Command specific init stuffs
+	 *
+	 * @return void
+	 */
+	this.init = function() { }
+
+	/**
+	 * Exec command
+	 *
+	 * @param  Array         target files hashes
+	 * @param  Array|Object  command value
+	 * @return $.Deferred
+	 */
+	this.exec = function(files, opts) {
+		return $.Deferred().reject();
+	}
+
+	/**
+	 * Return true if command disabled.
+	 *
+	 * @return Boolen
+	 */
+	this.disabled = function() {
+		return this.state < 0;
+	}
+
+	/**
+	 * Return true if command enabled.
+	 *
+	 * @return Boolen
+	 */
+	this.enabled = function() {
+		return this.state > -1;
+	}
+
+	/**
+	 * Return true if command active.
+	 *
+	 * @return Boolen
+	 */
+	this.active = function() {
+		return this.state > 0;
+	}
+
+	/**
+	 * Return current command state.
+	 * Must be overloaded in most commands
+	 *
+	 * @return Number
+	 */
+	this.getstate = function() {
+		return -1;
+	}
+
+	/**
+	 * Update command state/value
+	 * and rize 'change' event if smth changed
+	 *
+	 * @param  Number  new state or undefined to auto update state
+	 * @param  mixed   new value
+	 * @return void
+	 */
+	this.update = function(s, v) {
+		var state = this.state,
+			value = this.value;
+
+		if (this._disabled) {
+			this.state = -1;
+		} else {
+			this.state = s !== void(0) ? s : this.getstate();
+		}
+
+		this.value = v;
+
+		if (state != this.state || value != this.value) {
+			this.change();
+		}
+	}
+
+	/**
+	 * Bind handler / fire 'change' event.
+	 *
+	 * @param  Function|undefined  event callback
+	 * @return void
+	 */
+	this.change = function(c) {
+		var cmd, i;
+
+		if (typeof(c) === 'function') {
+			this.listeners.push(c);
+		} else {
+			for (i = 0; i < this.listeners.length; i++) {
+				cmd = this.listeners[i];
+				try {
+					cmd(this.state, this.value);
+				} catch (e) {
+					this.fm.debug('error', e)
+				}
+			}
+		}
+		return this;
+	}
+
+
+	/**
+	 * With argument check given files hashes and return list of existed files hashes.
+	 * Without argument return selected files hashes.
+	 *
+	 * @param  Array|String|void  hashes
+	 * @return Array
+	 */
+	this.hashes = function(hashes) {
+		return hashes
+			? $.map($.isArray(hashes) ? hashes : [hashes], function(hash) { return fm.file(hash) ? hash : null; })
+			: fm.selected();
+	}
+
+	/**
+	 * Return only existed files from given fils hashes | selected files
+	 *
+	 * @param  Array|String|void  hashes
+	 * @return Array
+	 */
+	this.files = function(hashes) {
+		var fm = this.fm;
+
+		return hashes
+			? $.map($.isArray(hashes) ? hashes : [hashes], function(hash) { return fm.file(hash) || null })
+			: fm.selectedFiles();
+	}
+}
+
+
+;
+/**
+ * Finder resources registry.
+ * Store shared data
+ *
+ * @type Object
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.resources = {
+	'class' : {
+		hover       : 'ui-state-hover',
+		active      : 'ui-state-active',
+		disabled    : 'ui-state-disabled',
+		draggable   : 'ui-draggable',
+		droppable   : 'ui-droppable',
+		adroppable  : 'finder-droppable-active',
+		cwdfile     : 'finder-cwd-file',
+		cwd         : 'finder-cwd',
+		tree        : 'finder-tree',
+		treeroot    : 'finder-navbar-root',
+		navdir      : 'finder-navbar-dir',
+		navdirwrap  : 'finder-navbar-dir-wrapper',
+		navarrow    : 'finder-navbar-arrow',
+		navsubtree  : 'finder-navbar-subtree',
+		navcollapse : 'finder-navbar-collapsed',
+		navexpand   : 'finder-navbar-expanded',
+		treedir     : 'finder-tree-dir',
+		placedir    : 'finder-place-dir',
+		searchbtn   : 'finder-button-search'
+	},
+	tpl : {
+		perms      : '<span class="finder-perms"/>',
+		symlink    : '<span class="finder-symlink"/>',
+		navicon    : '<span class="finder-nav-icon"/>',
+		navspinner : '<span class="finder-navbar-spinner"/>',
+		navdir     : '<div class="finder-navbar-wrapper"><span id="{id}" class="ui-corner-all finder-navbar-dir {cssclass}"><span class="finder-navbar-arrow"/><span class="finder-navbar-icon"/>{symlink}{permissions}{name}</span><div class="finder-navbar-subtree"/></div>'
+
+	},
+
+	mimes : {
+		text : [
+			'application/x-empty',
+			'application/javascript',
+			'application/xhtml+xml',
+			'audio/x-mp3-playlist',
+			'application/x-web-config',
+			'application/docbook+xml',
+			'application/x-php',
+			'application/x-perl',
+			'application/x-awk',
+			'application/x-config',
+			'application/x-csh',
+			'application/xml'
+		]
+	},
+
+	mixin : {
+		make : function() {
+			var fm   = this.fm,
+				cmd  = this.name,
+				cwd  = fm.getUI('cwd'),
+				dfrd = $.Deferred()
+					.fail(function(error) {
+						cwd.trigger('unselectall');
+						error && fm.error(error);
+					})
+					.always(function() {
+						input.remove();
+						node.remove();
+						fm.enable();
+					}),
+				id    = 'tmp_'+parseInt(Math.random()*100000),
+				phash = fm.cwd().hash,
+				date = new Date(),
+				file   = {
+					hash  : id,
+					name  : fm.uniqueName(this.prefix),
+					mime  : this.mime,
+					read  : true,
+					write : true,
+					date  : 'Today '+date.getHours()+':'+date.getMinutes()
+				},
+				node = cwd.trigger('create.'+fm.namespace, file).find('#'+id),
+				input = $('<input type="text"/>')
+					.keydown(function(e) {
+						e.stopImmediatePropagation();
+
+						if (e.keyCode == $.ui.keyCode.ESCAPE) {
+							dfrd.reject();
+						} else if (e.keyCode == $.ui.keyCode.ENTER) {
+							input.blur();
+						}
+					})
+					.mousedown(function(e) {
+						e.stopPropagation();
+					})
+					.blur(function() {
+						var name   = $.trim(input.val()),
+							parent = input.parent();
+
+						if (parent.length) {
+
+							if (!name) {
+								return dfrd.reject('errInvName');
+							}
+							if (fm.fileByName(name, phash)) {
+								return dfrd.reject(['errExists', name]);
+							}
+
+							parent.html(fm.escape(name));
+
+							fm.lockfiles({files : [id]});
+
+							fm.request({
+									data        : {cmd : cmd, name : name, target : phash},
+									notify      : {type : cmd, cnt : 1},
+									preventFail : true,
+									syncOnFail  : true
+								})
+								.fail(function(error) {
+									dfrd.reject(error);
+								})
+								.done(function(data) {
+									dfrd.resolve(data);
+								});
+						}
+					});
+
+
+			if (this.disabled() || !node.length) {
+				return dfrd.reject();
+			}
+
+			fm.disable();
+			node.find('.finder-cwd-filename').empty('').append(input.val(file.name));
+			input.select().focus();
+
+			return dfrd;
+
+
+
+		}
+
+	}
+}
+
+;
+/**
+ * File mimetype to kind mapping
+ *
+ * @type  Object
+ */
+Finder.prototype.kinds = {
+
+		'unknown'                       : 'Unknown',
+		'directory'                     : 'Folder',
+		'symlink'                       : 'Alias',
+		'symlink-broken'                : 'AliasBroken',
+		'application/x-empty'           : 'TextPlain',
+		'application/postscript'        : 'Postscript',
+		'application/vnd.ms-office'     : 'MsOffice',
+		'application/vnd.ms-word'       : 'MsWord',
+		'application/vnd.openxmlformats-officedocument.wordprocessingml.document' : 'MsWord',
+		'application/vnd.ms-word.document.macroEnabled.12'                        : 'MsWord',
+		'application/vnd.openxmlformats-officedocument.wordprocessingml.template' : 'MsWord',
+		'application/vnd.ms-word.template.macroEnabled.12'                        : 'MsWord',
+		'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'       : 'MsWord',
+		'application/vnd.ms-excel'      : 'MsExcel',
+		'application/vnd.ms-excel.sheet.macroEnabled.12'                          : 'MsExcel',
+		'application/vnd.openxmlformats-officedocument.spreadsheetml.template'    : 'MsExcel',
+		'application/vnd.ms-excel.template.macroEnabled.12'                       : 'MsExcel',
+		'application/vnd.ms-excel.sheet.binary.macroEnabled.12'                   : 'MsExcel',
+		'application/vnd.ms-excel.addin.macroEnabled.12'                          : 'MsExcel',
+		'application/vnd.ms-powerpoint' : 'MsPP',
+		'application/vnd.openxmlformats-officedocument.presentationml.presentation' : 'MsPP',
+		'application/vnd.ms-powerpoint.presentation.macroEnabled.12'              : 'MsPP',
+		'application/vnd.openxmlformats-officedocument.presentationml.slideshow'  : 'MsPP',
+		'application/vnd.ms-powerpoint.slideshow.macroEnabled.12'                 : 'MsPP',
+		'application/vnd.openxmlformats-officedocument.presentationml.template'   : 'MsPP',
+		'application/vnd.ms-powerpoint.template.macroEnabled.12'                  : 'MsPP',
+		'application/vnd.ms-powerpoint.addin.macroEnabled.12'                     : 'MsPP',
+		'application/vnd.openxmlformats-officedocument.presentationml.slide'      : 'MsPP',
+		'application/vnd.ms-powerpoint.slide.macroEnabled.12'                     : 'MsPP',
+		'application/pdf'               : 'PDF',
+		'application/xml'               : 'XML',
+		'application/vnd.oasis.opendocument.text' : 'OO',
+		'application/vnd.oasis.opendocument.text-template'         : 'OO',
+		'application/vnd.oasis.opendocument.text-web'              : 'OO',
+		'application/vnd.oasis.opendocument.text-master'           : 'OO',
+		'application/vnd.oasis.opendocument.graphics'              : 'OO',
+		'application/vnd.oasis.opendocument.graphics-template'     : 'OO',
+		'application/vnd.oasis.opendocument.presentation'          : 'OO',
+		'application/vnd.oasis.opendocument.presentation-template' : 'OO',
+		'application/vnd.oasis.opendocument.spreadsheet'           : 'OO',
+		'application/vnd.oasis.opendocument.spreadsheet-template'  : 'OO',
+		'application/vnd.oasis.opendocument.chart'                 : 'OO',
+		'application/vnd.oasis.opendocument.formula'               : 'OO',
+		'application/vnd.oasis.opendocument.database'              : 'OO',
+		'application/vnd.oasis.opendocument.image'                 : 'OO',
+		'application/vnd.openofficeorg.extension'                  : 'OO',
+		'application/x-shockwave-flash' : 'AppFlash',
+		'application/flash-video'       : 'Flash video',
+		'application/x-bittorrent'      : 'Torrent',
+		'application/javascript'        : 'JS',
+		'application/rtf'               : 'RTF',
+		'application/rtfd'              : 'RTF',
+		'application/x-font-ttf'        : 'TTF',
+		'application/x-font-otf'        : 'OTF',
+		'application/x-rpm'             : 'RPM',
+		'application/x-web-config'      : 'TextPlain',
+		'application/xhtml+xml'         : 'HTML',
+		'application/docbook+xml'       : 'DOCBOOK',
+		'application/x-awk'             : 'AWK',
+		'application/x-gzip'            : 'GZIP',
+		'application/x-bzip2'           : 'BZIP',
+		'application/zip'               : 'ZIP',
+		'application/x-zip'               : 'ZIP',
+		'application/x-rar'             : 'RAR',
+		'application/x-tar'             : 'TAR',
+		'application/x-7z-compressed'   : '7z',
+		'application/x-jar'             : 'JAR',
+		'text/plain'                    : 'TextPlain',
+		'text/x-php'                    : 'PHP',
+		'text/html'                     : 'HTML',
+		'text/javascript'               : 'JS',
+		'text/css'                      : 'CSS',
+		'text/rtf'                      : 'RTF',
+		'text/rtfd'                     : 'RTF',
+		'text/x-c'                      : 'C',
+		'text/x-csrc'                   : 'C',
+		'text/x-chdr'                   : 'CHeader',
+		'text/x-c++'                    : 'CPP',
+		'text/x-c++src'                 : 'CPP',
+		'text/x-c++hdr'                 : 'CPPHeader',
+		'text/x-shellscript'            : 'Shell',
+		'application/x-csh'             : 'Shell',
+		'text/x-python'                 : 'Python',
+		'text/x-java'                   : 'Java',
+		'text/x-java-source'            : 'Java',
+		'text/x-ruby'                   : 'Ruby',
+		'text/x-perl'                   : 'Perl',
+		'text/x-sql'                    : 'SQL',
+		'text/xml'                      : 'XML',
+		'text/x-comma-separated-values' : 'CSV',
+		'image/x-ms-bmp'                : 'BMP',
+		'image/jpeg'                    : 'JPEG',
+		'image/gif'                     : 'GIF',
+		'image/png'                     : 'PNG',
+		'image/tiff'                    : 'TIFF',
+		'image/x-targa'                 : 'TGA',
+		'image/vnd.adobe.photoshop'     : 'PSD',
+		'image/xbm'                     : 'XBITMAP',
+		'image/pxm'                     : 'PXM',
+		'audio/mpeg'                    : 'AudioMPEG',
+		'audio/midi'                    : 'AudioMIDI',
+		'audio/ogg'                     : 'AudioOGG',
+		'audio/mp4'                     : 'AudioMPEG4',
+		'audio/x-m4a'                   : 'AudioMPEG4',
+		'audio/wav'                     : 'AudioWAV',
+		'audio/x-mp3-playlist'          : 'AudioPlaylist',
+		'video/x-dv'                    : 'VideoDV',
+		'video/mp4'                     : 'VideoMPEG4',
+		'video/mpeg'                    : 'VideoMPEG',
+		'video/x-msvideo'               : 'VideoAVI',
+		'video/quicktime'               : 'VideoMOV',
+		'video/x-ms-wmv'                : 'VideoWM',
+		'video/x-flv'                   : 'VideoFlash',
+		'video/x-matroska'              : 'VideoMKV',
+		'video/ogg'                     : 'VideoOGG'
+};
+
+
+/**
+ * Return localized kind of file
+ *
+ * @param  Object|String  file or file mimetype
+ * @return String
+ */
+Finder.prototype.mime2kind = function(f) {
+	var mime = typeof(f) == 'object' ? f.mime : f, kind;
+
+	if (f.alias) {
+		kind = 'Alias';
+	} else if (this.kinds[mime]) {
+		kind = this.kinds[mime];
+	} else {
+		if (mime.indexOf('text') === 0) {
+			kind = 'Text';
+		} else if (mime.indexOf('image') === 0) {
+			kind = 'Image';
+		} else if (mime.indexOf('audio') === 0) {
+			kind = 'Audio';
+		} else if (mime.indexOf('video') === 0) {
+			kind = 'Video';
+		} else if (mime.indexOf('application') === 0) {
+			kind = 'App';
+		} else {
+			kind = mime;
+		}
+	}
+
+	return this.messages['kind'+kind] ? this.i18n('kind'+kind) : mime;
+};
+
+
+/**
+ * Convert mimetype into css classes
+ *
+ * @param  String  file mimetype
+ * @return String
+ */
+Finder.prototype.mime2class = function(mime) {
+	var prefix = 'finder-cwd-icon-';
+
+	mime = mime.split('/');
+
+	return prefix+mime[0]+(mime[0] != 'image' && mime[1] ? ' '+prefix+mime[1].replace(/(\.|\+)/g, '-') : '');
+};
+;
+/**
+ * @class dialogfinder - open Finder in dialog window
+ *
+ * @param  Object  Finder options with dialog options
+ * @example
+ * $(selector).dialogfinder({
+ *     // some finder options
+ *     title          : 'My files', // dialog title, default = "Files"
+ *     width          : 850,        // dialog width, default 840
+ *     autoOpen       : false,      // if false - dialog will not be opened after init, default = true
+ *     destroyOnClose : true        // destroy Finder on close dialog, default = false
+ * })
+ * @author Dmitry (dio) Levashov
+ **/
+$.fn.dialogfinder = function(opts) {
+	var position = 'finderPosition',
+		destroy  = 'finderDestroyOnClose';
+
+	this.not('.finder').each(function() {
+
+
+		var doc     = $(document),
+			toolbar = $('<div class="ui-widget-header dialogfinder-drag ui-corner-top">'+(opts.title || 'Files')+'</div>'),
+			button  = $('<a href="#" class="dialogfinder-drag-close ui-corner-all"><span class="ui-icon ui-icon-closethick"/></a>')
+				.appendTo(toolbar)
+				.click(function(e) {
+					e.preventDefault();
+
+					node.dialogfinder('close');
+				}),
+			node    = $(this).addClass('dialogfinder')
+				.css('position', 'absolute')
+				.hide()
+				.appendTo('body')
+				.draggable({
+					handle : '.dialogfinder-drag'
+				})
+				.finder(opts)
+				.prepend(toolbar),
+			finder = node.finder('instance');
+
+
+		node.width(parseInt(node.width()) || 840) // fix width if set to "auto"
+			.data(destroy, !!opts.destroyOnClose)
+			.find('.finder-toolbar').removeClass('ui-corner-top');
+
+		opts.position && node.data(position, opts.position);
+
+		opts.autoOpen !== false && $(this).dialogfinder('open');
+
+	});
+
+	if (opts == 'open') {
+		var node = $(this),
+			pos  = node.data(position) || {
+				top  : parseInt($(document).scrollTop() + ($(window).height() < node.height() ? 2 : ($(window).height() - node.height())/2)),
+				left : parseInt($(document).scrollLeft() + ($(window).width() < node.width()  ? 2 : ($(window).width()  - node.width())/2))
+			},
+			zindex = 100;
+
+		if (node.is(':hidden')) {
+
+			$('body').find(':visible').each(function() {
+				var $this = $(this), z;
+
+				if (this !== node[0] && $this.css('position') == 'absolute' && (z = parseInt($this.zIndex())) > zindex) {
+					zindex = z + 1;
+				}
+			});
+
+			node.zIndex(zindex).css(pos).show().trigger('resize')
+
+			setTimeout(function() {
+				// fix resize icon position and make finder active
+				node.trigger('resize').mousedown();
+			}, 200);
+		}
+	} else if (opts == 'close') {
+		var node = $(this);
+
+		if (node.is(':visible')) {
+			!!node.data(destroy)
+				? node.finder('destroy').remove()
+				: node.finder('close');
+		}
+	} else if (opts == 'instance') {
+		return $(this).getFinder();
+	}
+
+	return this;
+}
+
+;/**
+ * English translation
+ * @author Troex Nevelin <troex@fury.scancode.ru>
+ * @version 2012-02-25
+ */
+if (Finder && Finder.prototype && typeof(Finder.prototype.i18) == 'object') {
+	Finder.prototype.i18.en = {
+		translator : 'Troex Nevelin &lt;troex@fury.scancode.ru&gt;',
+		language   : 'English',
+		direction  : 'ltr',
+		dateFormat : 'M d, Y h:i A', // Mar 13, 2012 05:27 PM
+		fancyDateFormat : '$1 h:i A', // will produce smth like: Today 12:25 PM
+		messages   : {
+
+			/********************************** errors **********************************/
+			'error'                : 'Error',
+			'errUnknown'           : 'Unknown error.',
+			'errUnknownCmd'        : 'Unknown command.',
+			'errJqui'              : 'Invalid jQuery UI configuration. Selectable, draggable and droppable components must be included.',
+			'errNode'              : 'gpFinder requires DOM Element to be created.',
+			'errURL'               : 'Invalid gpFinder configuration! URL option is not set.',
+			'errAccess'            : 'Access denied.',
+			'errConnect'           : 'Unable to connect to backend.',
+			'errAbort'             : 'Connection aborted.',
+			'errTimeout'           : 'Connection timeout.',
+			'errNotFound'          : 'Backend not found.',
+			'errResponse'          : 'Invalid backend response.',
+			'errConf'              : 'Invalid backend configuration.',
+			'errJSON'              : 'PHP JSON module not installed.',
+			'errNoVolumes'         : 'Readable volumes not available.',
+			'errCmdParams'         : 'Invalid parameters for command "$1".',
+			'errDataNotJSON'       : 'Data is not JSON.',
+			'errDataEmpty'         : 'Data is empty.',
+			'errCmdReq'            : 'Backend request requires command name.',
+			'errOpen'              : 'Unable to open "$1".',
+			'errNotFolder'         : 'Object is not a folder.',
+			'errNotFile'           : 'Object is not a file.',
+			'errRead'              : 'Unable to read "$1".',
+			'errWrite'             : 'Unable to write into "$1".',
+			'errPerm'              : 'Permission denied.',
+			'errLocked'            : '"$1" is locked and can not be renamed, moved or removed.',
+			'errExists'            : 'File named "$1" already exists.',
+			'errInvName'           : 'Invalid file name.',
+			'errFolderNotFound'    : 'Folder not found.',
+			'errFileNotFound'      : 'File not found.',
+			'errTrgFolderNotFound' : 'Target folder "$1" not found.',
+			'errPopup'             : 'Browser prevented opening popup window. To open file enable it in browser options.',
+			'errMkdir'             : 'Unable to create folder "$1".',
+			'errMkfile'            : 'Unable to create file "$1".',
+			'errRename'            : 'Unable to rename "$1".',
+			'errCopyFrom'          : 'Copying files from volume "$1" not allowed.',
+			'errCopyTo'            : 'Copying files to volume "$1" not allowed.',
+			'errUpload'            : 'Upload error.',  // old name - errUploadCommon
+			'errUploadFile'        : 'Unable to upload "$1".', // old name - errUpload
+			'errUploadNoFiles'     : 'No files found for upload.',
+			'errUploadTotalSize'   : 'Data exceeds the maximum allowed size.', // old name - errMaxSize
+			'errUploadFileSize'    : 'File exceeds maximum allowed size.', //  old name - errFileMaxSize
+			'errUploadMime'        : 'File type not allowed.',
+			'errUploadTransfer'    : '"$1" transfer error.',
+			'errNotReplace'        : 'Object "$1" already exists at this location and can not be replaced by object with another type.', // new
+			'errReplace'           : 'Unable to replace "$1".',
+			'errSave'              : 'Unable to save "$1".',
+			'errCopy'              : 'Unable to copy "$1".',
+			'errMove'              : 'Unable to move "$1".',
+			'errCopyInItself'      : 'Unable to copy "$1" into itself.',
+			'errRm'                : 'Unable to remove "$1".',
+			'errRmSrc'             : 'Unable remove source file(s).',
+			'errExtract'           : 'Unable to extract files from "$1".',
+			'errArchive'           : 'Unable to create archive.',
+			'errArcType'           : 'Unsupported archive type.',
+			'errNoArchive'         : 'File is not archive or has unsupported archive type.',
+			'errCmdNoSupport'      : 'Backend does not support this command.',
+			'errReplByChild'       : 'The folder “$1” can’t be replaced by an item it contains.',
+			'errArcSymlinks'       : 'For security reason denied to unpack archives contains symlinks or files with not allowed names.', // edited 24.06.2012
+			'errArcMaxSize'        : 'Archive files exceeds maximum allowed size.',
+			'errResize'            : 'Unable to resize "$1".',
+			'errUsupportType'      : 'Unsupported file type.',
+			'errNotUTF8Content'    : 'File "$1" is not in UTF-8 and cannot be edited.',  // added 9.11.2011
+			'errNetMount'          : 'Unable to mount "$1".', // added 17.04.2012
+			'errNetMountNoDriver'  : 'Unsupported protocol.',     // added 17.04.2012
+			'errNetMountFailed'    : 'Mount failed.',         // added 17.04.2012
+			'errNetMountHostReq'   : 'Host required.', // added 18.04.2012
+			/******************************* commands names ********************************/
+			'cmdarchive'   : 'Create archive',
+			'cmdback'      : 'Back',
+			'cmdcopy'      : 'Copy',
+			'cmdcut'       : 'Cut',
+			'cmddownload'  : 'Download',
+			'cmdduplicate' : 'Duplicate',
+			'cmdedit'      : 'Edit file',
+			'cmdextract'   : 'Extract files from archive',
+			'cmdforward'   : 'Forward',
+			'cmdgetfile'   : 'Select files',
+			'cmdhelp'      : 'About this software',
+			'cmdhome'      : 'Home',
+			'cmdinfo'      : 'Get info',
+			'cmdmkdir'     : 'New folder',
+			'cmdmkfile'    : 'New text file',
+			'cmdopen'      : 'Open',
+			'cmdpaste'     : 'Paste',
+			'cmdquicklook' : 'Preview',
+			'cmdreload'    : 'Reload',
+			'cmdrename'    : 'Rename',
+			'cmdrm'        : 'Delete',
+			'cmdsearch'    : 'Find files',
+			'cmdup'        : 'Go to parent directory',
+			'cmdupload'    : 'Upload files',
+			'cmdview'      : 'View',
+			'cmdresize'    : 'Resize & Rotate',
+			'cmdsort'      : 'Sort',
+			'cmdnetmount'  : 'Mount network volume', // added 18.04.2012
+
+			/*********************************** buttons ***********************************/
+			'btnClose'  : 'Close',
+			'btnSave'   : 'Save',
+			'btnRm'     : 'Remove',
+			'btnApply'  : 'Apply',
+			'btnCancel' : 'Cancel',
+			'btnNo'     : 'No',
+			'btnYes'    : 'Yes',
+			'btnMount'  : 'Mount',  // added 18.04.2012
+			/******************************** notifications ********************************/
+			'ntfopen'     : 'Open folder',
+			'ntffile'     : 'Open file',
+			'ntfreload'   : 'Reload folder content',
+			'ntfmkdir'    : 'Creating directory',
+			'ntfmkfile'   : 'Creating files',
+			'ntfrm'       : 'Delete files',
+			'ntfcopy'     : 'Copy files',
+			'ntfmove'     : 'Move files',
+			'ntfprepare'  : 'Prepare to copy files',
+			'ntfrename'   : 'Rename files',
+			'ntfupload'   : 'Uploading files',
+			'ntfdownload' : 'Downloading files',
+			'ntfsave'     : 'Save files',
+			'ntfarchive'  : 'Creating archive',
+			'ntfextract'  : 'Extracting files from archive',
+			'ntfsearch'   : 'Searching files',
+			'ntfresize'   : 'Resizing images',
+			'ntfsmth'     : 'Loading',
+      		'ntfloadimg'  : 'Loading image',
+      		'ntfnetmount' : 'Mounting network volume', // added 18.04.2012
+
+			/************************************ dates **********************************/
+			'dateUnknown' : 'unknown',
+			'Today'       : 'Today',
+			'Yesterday'   : 'Yesterday',
+			'Jan'         : 'Jan',
+			'Feb'         : 'Feb',
+			'Mar'         : 'Mar',
+			'Apr'         : 'Apr',
+			'May'         : 'May',
+			'Jun'         : 'Jun',
+			'Jul'         : 'Jul',
+			'Aug'         : 'Aug',
+			'Sep'         : 'Sep',
+			'Oct'         : 'Oct',
+			'Nov'         : 'Nov',
+			'Dec'         : 'Dec',
+
+			/******************************** sort variants ********************************/
+			'sortname'          : 'by name',
+			'sortkind'          : 'by kind',
+			'sortsize'          : 'by size',
+			'sortdate'          : 'by date',
+			'sortFoldersFirst'  : 'Folders first',
+
+			/********************************** messages **********************************/
+			'confirmReq'      : 'Confirmation required',
+			'confirmRm'       : 'Are you sure you want to remove files?<br/>This cannot be undone!',
+			'confirmRepl'     : 'Replace old file with new one?',
+			'apllyAll'        : 'Apply to all',
+			'name'            : 'Name',
+			'size'            : 'Size',
+			'perms'           : 'Permissions',
+			'modify'          : 'Modified',
+			'kind'            : 'Kind',
+			'read'            : 'read',
+			'write'           : 'write',
+			'noaccess'        : 'no access',
+			'and'             : 'and',
+			'unknown'         : 'unknown',
+			'selectall'       : 'Select all files',
+			'selectfiles'     : 'Select file(s)',
+			'selectffile'     : 'Select first file',
+			'selectlfile'     : 'Select last file',
+			'viewlist'        : 'List view',
+			'viewicons'       : 'Icons view',
+			'places'          : 'Places',
+			'calc'            : 'Calculate',
+			'path'            : 'Path',
+			'aliasfor'        : 'Alias for',
+			'locked'          : 'Locked',
+			'dim'             : 'Dimensions',
+			'files'           : 'Files',
+			'folders'         : 'Folders',
+			'items'           : 'Items',
+			'yes'             : 'yes',
+			'no'              : 'no',
+			'link'            : 'Link',
+			'searcresult'     : 'Search results',
+			'selected'        : 'selected items',
+			'about'           : 'About',
+			'shortcuts'       : 'Shortcuts',
+			'help'            : 'Help',
+			'webfm'           : 'Web file manager',
+			'ver'             : 'Version',
+			//'protocolver'     : 'protocol version',
+			'homepage'        : 'Project home',
+			'docs'            : 'Documentation',
+			'github'          : 'Fork us on Github',
+			'twitter'         : 'Follow us on twitter',
+			'facebook'        : 'Join us on facebook',
+			'team'            : 'Team',
+			'chiefdev'        : 'chief developer',
+			'developer'       : 'developer',
+			'contributor'     : 'contributor',
+			'maintainer'      : 'maintainer',
+			'translator'      : 'translator',
+			'icons'           : 'Icons',
+			'dontforget'      : 'and don\'t forget to take your towel',
+			'shortcutsof'     : 'Shortcuts disabled',
+			'dropFiles'       : 'Drop files here',
+			'or'              : 'or',
+			'selectForUpload' : 'Select files to upload',
+			'moveFiles'       : 'Move files',
+			'copyFiles'       : 'Copy files',
+			'rmFromPlaces'    : 'Remove from places',
+			'aspectRatio'     : 'Aspect ratio',
+			'scale'           : 'Scale',
+			'width'           : 'Width',
+			'height'          : 'Height',
+			'resize'          : 'Resize',
+			'crop'            : 'Crop',
+			'rotate'          : 'Rotate',
+			'rotate-cw'       : 'Rotate 90 degrees CW',
+			'rotate-ccw'      : 'Rotate 90 degrees CCW',
+			'degree'          : '°',
+			'netMountDialogTitle' : 'Mount network volume', // added 18.04.2012
+			'protocol'            : 'Protocol', // added 18.04.2012
+			'host'                : 'Host', // added 18.04.2012
+			'port'                : 'Port', // added 18.04.2012
+			'user'                : 'User', // added 18.04.2012
+			'pass'                : 'Password', // added 18.04.2012
+
+			/********************************** mimetypes **********************************/
+			'kindUnknown'     : 'Unknown',
+			'kindFolder'      : 'Folder',
+			'kindAlias'       : 'Alias',
+			'kindAliasBroken' : 'Broken alias',
+			// applications
+			'kindApp'         : 'Application',
+			'kindPostscript'  : 'Postscript document',
+			'kindMsOffice'    : 'Microsoft Office document',
+			'kindMsWord'      : 'Microsoft Word document',
+			'kindMsExcel'     : 'Microsoft Excel document',
+			'kindMsPP'        : 'Microsoft Powerpoint presentation',
+			'kindOO'          : 'Open Office document',
+			'kindAppFlash'    : 'Flash application',
+			'kindPDF'         : 'Portable Document Format (PDF)',
+			'kindTorrent'     : 'Bittorrent file',
+			'kind7z'          : '7z archive',
+			'kindTAR'         : 'TAR archive',
+			'kindGZIP'        : 'GZIP archive',
+			'kindBZIP'        : 'BZIP archive',
+			'kindZIP'         : 'ZIP archive',
+			'kindRAR'         : 'RAR archive',
+			'kindJAR'         : 'Java JAR file',
+			'kindTTF'         : 'True Type font',
+			'kindOTF'         : 'Open Type font',
+			'kindRPM'         : 'RPM package',
+			// texts
+			'kindText'        : 'Text document',
+			'kindTextPlain'   : 'Plain text',
+			'kindPHP'         : 'PHP source',
+			'kindCSS'         : 'Cascading style sheet',
+			'kindHTML'        : 'HTML document',
+			'kindJS'          : 'Javascript source',
+			'kindRTF'         : 'Rich Text Format',
+			'kindC'           : 'C source',
+			'kindCHeader'     : 'C header source',
+			'kindCPP'         : 'C++ source',
+			'kindCPPHeader'   : 'C++ header source',
+			'kindShell'       : 'Unix shell script',
+			'kindPython'      : 'Python source',
+			'kindJava'        : 'Java source',
+			'kindRuby'        : 'Ruby source',
+			'kindPerl'        : 'Perl script',
+			'kindSQL'         : 'SQL source',
+			'kindXML'         : 'XML document',
+			'kindAWK'         : 'AWK source',
+			'kindCSV'         : 'Comma separated values',
+			'kindDOCBOOK'     : 'Docbook XML document',
+			// images
+			'kindImage'       : 'Image',
+			'kindBMP'         : 'BMP image',
+			'kindJPEG'        : 'JPEG image',
+			'kindGIF'         : 'GIF Image',
+			'kindPNG'         : 'PNG Image',
+			'kindTIFF'        : 'TIFF image',
+			'kindTGA'         : 'TGA image',
+			'kindPSD'         : 'Adobe Photoshop image',
+			'kindXBITMAP'     : 'X bitmap image',
+			'kindPXM'         : 'Pixelmator image',
+			// media
+			'kindAudio'       : 'Audio media',
+			'kindAudioMPEG'   : 'MPEG audio',
+			'kindAudioMPEG4'  : 'MPEG-4 audio',
+			'kindAudioMIDI'   : 'MIDI audio',
+			'kindAudioOGG'    : 'Ogg Vorbis audio',
+			'kindAudioWAV'    : 'WAV audio',
+			'AudioPlaylist'   : 'MP3 playlist',
+			'kindVideo'       : 'Video media',
+			'kindVideoDV'     : 'DV movie',
+			'kindVideoMPEG'   : 'MPEG movie',
+			'kindVideoMPEG4'  : 'MPEG-4 movie',
+			'kindVideoAVI'    : 'AVI movie',
+			'kindVideoMOV'    : 'Quick Time movie',
+			'kindVideoWM'     : 'Windows Media movie',
+			'kindVideoFlash'  : 'Flash movie',
+			'kindVideoMKV'    : 'Matroska movie',
+			'kindVideoOGG'    : 'Ogg movie'
+		}
+	}
+}
+
+;"use strict"
+/**
+ * @class  Finder toolbar button widget.
+ * If command has variants - create menu
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+$.fn.finderbutton = function(cmd) {
+	return this.each(function() {
+
+		var c        = 'class',
+			fm       = cmd.fm,
+			disabled = fm.res(c, 'disabled'),
+			active   = fm.res(c, 'active'),
+			hover    = fm.res(c, 'hover'),
+			item     = 'finder-button-menu-item',
+			selected = 'finder-button-menu-item-selected',
+			menu,
+			button   = $(this).addClass('ui-state-default finder-button')
+				.attr('title', cmd.title)
+				.append('<span class="finder-button-icon finder-button-icon-'+cmd.name+'"/>')
+				.hover(function(e) { !button.is('.'+disabled) && button[e.type == 'mouseleave' ? 'removeClass' : 'addClass'](hover) /**button.toggleClass(hover);*/ })
+				.click(function(e) {
+					if (!button.is('.'+disabled)) {
+						if (menu && cmd.variants.length > 1) {
+							// close other menus
+							menu.is(':hidden') && cmd.fm.getUI().click();
+							e.stopPropagation();
+							menu.slideToggle(100);
+						} else {
+							cmd.exec();
+						}
+
+					}
+				}),
+			hideMenu = function() {
+				menu.hide();
+			};
+
+		// if command has variants create menu
+		if ($.isArray(cmd.variants)) {
+			button.addClass('finder-menubutton');
+
+			menu = $('<div class="ui-widget ui-widget-content finder-button-menu ui-corner-all"/>')
+				.hide()
+				.appendTo(button)
+				.zIndex(12+button.zIndex())
+				.delegate('.'+item, {
+					'mouseenter mouseleave': function() {
+						$(this).toggleClass(hover);
+					},
+					'click': function(e) {
+						e.preventDefault();
+						e.stopPropagation();
+						button.removeClass(hover);
+						cmd.exec(cmd.fm.selected(), $(this).data('value'));
+					}
+				});
+
+			cmd.fm.bind('disable select', hideMenu).getUI().click(hideMenu);
+
+			cmd.change(function() {
+				menu.html('');
+				$.each(cmd.variants, function(i, variant) {
+					$('<div class="'+item+'">'+variant[1]+'</div>')
+						.data('value', variant[0]).addClass(variant[0] == cmd.value ? selected : '')
+						.appendTo(menu);
+				});
+			});
+		}
+
+		cmd.change(function() {
+			if (cmd.disabled()) {
+				button.removeClass(active+' '+hover).addClass(disabled);
+			} else {
+				button.removeClass(disabled);
+				button[cmd.active() ? 'addClass' : 'removeClass'](active);
+			}
+		})
+		.change();
+	});
+}
+;"use strict";
+/**
+ * @class  Finder contextmenu
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+$.fn.findercontextmenu = function(fm) {
+
+	return this.each(function() {
+		var menu = $(this).addClass('ui-helper-reset ui-widget ui-state-default ui-corner-all finder-contextmenu finder-contextmenu-'+fm.direction)
+				.hide()
+				.appendTo('body')
+				.delegate('.finder-contextmenu-item', 'mouseenter mouseleave', function() {
+					$(this).toggleClass('ui-state-hover')
+				}),
+			subpos  = fm.direction == 'ltr' ? 'left' : 'right',
+			types = $.extend({}, fm.options.contextmenu),
+			tpl     = '<div class="finder-contextmenu-item"><span class="finder-button-icon {icon} finder-contextmenu-icon"/><span>{label}</span></div>',
+			item = function(label, icon, callback) {
+				return $(tpl.replace('{icon}', icon ? 'finder-button-icon-'+icon : '').replace('{label}', label))
+					.click(function(e) {
+						e.stopPropagation();
+						e.stopPropagation();
+						callback();
+					});
+			},
+
+			open = function(x, y) {
+				var win        = $(window),
+					width      = menu.outerWidth(),
+					height     = menu.outerHeight(),
+					wwidth     = win.width(),
+					wheight    = win.height(),
+					scrolltop  = win.scrollTop(),
+					scrollleft = win.scrollLeft(),
+					css        = {
+						top  : (y + height < wheight ? y : y - height > 0 ? y - height : y) + scrolltop,
+						left : (x + width  < wwidth  ? x : x - width) + scrollleft,
+						'z-index' : 100 + fm.getUI('workzone').zIndex()
+					};
+
+				menu.css(css)
+					.show();
+
+				css = {'z-index' : css['z-index']+10};
+				css[subpos] = parseInt(menu.width());
+				menu.find('.finder-contextmenu-sub').css(css);
+			},
+
+			close = function() {
+				menu.hide().empty();
+			},
+
+			create = function(type, targets) {
+				var sep = false;
+
+
+
+				$.each(types[type]||[], function(i, name) {
+					var cmd, node, submenu;
+
+					if (name == '|' && sep) {
+						menu.append('<div class="finder-contextmenu-separator"/>');
+						sep = false;
+						return;
+					}
+
+					cmd = fm.command(name);
+
+					if (cmd && cmd.getstate(targets) != -1) {
+						if (cmd.variants) {
+							if (!cmd.variants.length) {
+								return;
+							}
+							node = item(cmd.title, cmd.name, function() {});
+
+							submenu = $('<div class="ui-corner-all finder-contextmenu-sub"/>')
+								.appendTo(node.append('<span class="finder-contextmenu-arrow"/>'));
+
+							node.addClass('finder-contextmenu-group')
+								.hover(function() {
+									submenu.toggle()
+								})
+
+							$.each(cmd.variants, function(i, variant) {
+								submenu.append(
+									$('<div class="finder-contextmenu-item"><span>'+variant[1]+'</span></div>')
+										.click(function(e) {
+											e.stopPropagation();
+											close();
+											cmd.exec(targets, variant[0]);
+										})
+								);
+							});
+
+						} else {
+							node = item(cmd.title, cmd.name, function() {
+								close();
+								cmd.exec(targets);
+							})
+
+						}
+
+						menu.append(node)
+						sep = true;
+					}
+				})
+			},
+
+			createFromRaw = function(raw) {
+				$.each(raw, function(i, data) {
+					var node;
+
+					if (data.label && typeof data.callback == 'function') {
+						node = item(data.label, data.icon, function() {
+							close();
+							data.callback();
+						});
+						menu.append(node);
+					}
+				})
+			};
+
+		fm.one('load', function() {
+			fm.bind('contextmenu', function(e) {
+				var data = e.data;
+
+				close();
+
+				if (data.type && data.targets) {
+					create(data.type, data.targets);
+				} else if (data.raw) {
+					createFromRaw(data.raw);
+				}
+
+				menu.children().length && open(data.x, data.y);
+			})
+			.one('destroy', function() { menu.remove(); })
+			.bind('disable select', close)
+			.getUI().click(close);
+		});
+
+	});
+
+}
+;"use strict";
+/**
+ * Finder current working directory ui.
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+$.fn.findercwd = function(fm, options) {
+
+	this.not('.finder-cwd').each(function() {
+		// fm.time('cwdLoad');
+
+		var
+			list = fm.viewType == 'list',
+
+			undef = 'undefined',
+			/**
+			 * Select event full name
+			 *
+			 * @type String
+			 **/
+			evtSelect = 'select.'+fm.namespace,
+
+			/**
+			 * Unselect event full name
+			 *
+			 * @type String
+			 **/
+			evtUnselect = 'unselect.'+fm.namespace,
+
+			/**
+			 * Disable event full name
+			 *
+			 * @type String
+			 **/
+			evtDisable = 'disable.'+fm.namespace,
+
+			/**
+			 * Disable event full name
+			 *
+			 * @type String
+			 **/
+			evtEnable = 'enable.'+fm.namespace,
+
+			c = 'class',
+			/**
+			 * File css class
+			 *
+			 * @type String
+			 **/
+			clFile       = fm.res(c, 'cwdfile'),
+
+			/**
+			 * Selected css class
+			 *
+			 * @type String
+			 **/
+			fileSelector = '.'+clFile,
+
+			/**
+			 * Selected css class
+			 *
+			 * @type String
+			 **/
+			clSelected = 'ui-selected',
+
+			/**
+			 * Disabled css class
+			 *
+			 * @type String
+			 **/
+			clDisabled = fm.res(c, 'disabled'),
+
+			/**
+			 * Draggable css class
+			 *
+			 * @type String
+			 **/
+			clDraggable = fm.res(c, 'draggable'),
+
+			/**
+			 * Droppable css class
+			 *
+			 * @type String
+			 **/
+			clDroppable = fm.res(c, 'droppable'),
+
+			/**
+			 * Hover css class
+			 *
+			 * @type String
+			 **/
+			clHover     = fm.res(c, 'hover'),
+
+			/**
+			 * Hover css class
+			 *
+			 * @type String
+			 **/
+			clDropActive = fm.res(c, 'adroppable'),
+
+			/**
+			 * Css class for temporary nodes (for mkdir/mkfile) commands
+			 *
+			 * @type String
+			 **/
+			clTmp = clFile+'-tmp',
+
+			/**
+			 * Number of thumbnails to load in one request
+			 *
+			 * @type Number
+			 **/
+			tmbNum = fm.options.loadTmbs > 0 ? fm.options.loadTmbs : 5,
+
+			/**
+			 * Current search query.
+			 *
+			 * @type String
+			 */
+			query = '',
+
+			lastSearch = [],
+
+			/**
+			 * File templates
+			 *
+			 * @type Object
+			 **/
+			templates = {
+				icon : '<div id="{hash}" class="'+clFile+' {permsclass} {dirclass} ui-corner-all" title="{tooltip}"><div class="finder-cwd-file-wrapper ui-corner-all"><div class="finder-cwd-icon {mime} ui-corner-all" unselectable="on" {style}/>{marker}</div><div class="finder-cwd-filename" title="{name}">{name}</div></div>',
+				row  : '<tr id="{hash}" class="'+clFile+' {permsclass} {dirclass}" title="{tooltip}"><td><div class="finder-cwd-file-wrapper"><span class="finder-cwd-icon {mime}"/>{marker}<span class="finder-cwd-filename">{name}</span></div></td><td>{perms}</td><td>{date}</td><td>{size}</td><td>{kind}</td></tr>'
+			},
+
+			permsTpl = fm.res('tpl', 'perms'),
+
+			symlinkTpl = fm.res('tpl', 'symlink'),
+
+			/**
+			 * Template placeholders replacement rules
+			 *
+			 * @type Object
+			 **/
+			replacement = {
+				permsclass : function(f) {
+					return fm.perms2class(f);
+				},
+				perms : function(f) {
+					return fm.formatPermissions(f);
+				},
+				dirclass : function(f) {
+					return f.mime == 'directory' ? 'directory' : '';
+				},
+				mime : function(f) {
+					return fm.mime2class(f.mime);
+				},
+				size : function(f) {
+					return fm.formatSize(f.size);
+				},
+				date : function(f) {
+					return fm.formatDate(f);
+				},
+				kind : function(f) {
+					return fm.mime2kind(f);
+				},
+				marker : function(f) {
+					return (f.alias || f.mime == 'symlink-broken' ? symlinkTpl : '')+(!f.read || !f.write ? permsTpl : '');
+				},
+				tooltip : function(f) {
+					var title = fm.formatDate(f) + (f.size > 0 ? ' ('+fm.formatSize(f.size)+')' : '');
+					return f.tooltip? fm.escape(f.tooltip).replace(/"/g, '&quot;').replace(/\r/g, '&#13;') + '&#13;' + title : title;
+				}
+			},
+
+			/**
+			 * Return file html
+			 *
+			 * @param  Object  file info
+			 * @return String
+			 **/
+			itemhtml = function(f) {
+				f.name = fm.escape(f.name);
+				return templates[list ? 'row' : 'icon']
+							.replace(/\{([a-z]+)\}/g, function(s, e) {
+								return replacement[e] ? replacement[e](f) : (f[e] ? f[e] : '');
+							});
+			},
+
+			/**
+			 * Flag. Required for msie to avoid unselect files on dragstart
+			 *
+			 * @type Boolean
+			 **/
+			selectLock = false,
+
+			/**
+			 * Move selection to prev/next file
+			 *
+			 * @param String  move direction
+			 * @param Boolean append to current selection
+			 * @return void
+			 * @rise select
+			 */
+			select = function(keyCode, append) {
+				var code     = $.ui.keyCode,
+					prev     = keyCode == code.LEFT || keyCode == code.UP,
+					sel      = cwd.find('[id].'+clSelected),
+					selector = prev ? 'first:' : 'last',
+					s, n, sib, top, left;
+
+				function firstSibling(n, direction) {
+					return n[direction+'All']('[id]:not(.'+clDisabled+'):not(.finder-cwd-parent):first');
+				}
+
+				if (sel.length) {
+					s = sel.filter(prev ? ':first' : ':last');
+					sib = firstSibling(s, prev ? 'prev' : 'next');
+
+
+					if (!sib.length) {
+						// there is no sibling on required side - move to opposite end
+						var which = prev ? 'last' : 'first';
+						n = s.siblings('[id]:not(.'+clDisabled+'):not(.finder-cwd-parent):'+which);
+
+					} else if (list || keyCode == code.LEFT || keyCode == code.RIGHT) {
+						// find real prevoius file
+						n = sib;
+					} else {
+						// find up/down side file in icons view
+						top = s.position().top;
+						left = s.position().left;
+
+						n = s;
+						if (prev) {
+							do {
+								n = n.prev('[id]');
+							} while (n.length && !(n.position().top < top && n.position().left <= left));
+
+							if (n.is('.'+clDisabled)) {
+								n = firstSibling(n, 'next');
+							}
+						} else {
+							do {
+								n = n.next('[id]');
+							} while (n.length && !(n.position().top > top && n.position().left >= left));
+
+							if (n.is('.'+clDisabled)) {
+								n = firstSibling(n, 'prev');
+							}
+							// there is row before last one - select last file
+							if (!n.length) {
+								sib = cwd.find('[id]:not(.'+clDisabled+'):last');
+								if (sib.position().top > top) {
+									n = sib;
+								}
+							}
+						}
+					}
+					//!append && unselectAll(); /* breaks quicklook by firing handlers.select() */
+				} else {
+					// there are no selected file - select first/last one
+					n = cwd.find('[id]:not(.'+clDisabled+'):not(.finder-cwd-parent):'+(prev ? 'last' : 'first'))
+				}
+
+				if (n && n.length && !n.is('.finder-cwd-parent')) {
+					if (append) {
+						// append new files to selected
+						n = s.add(s[prev ? 'prevUntil' : 'nextUntil']('#'+n.attr('id'))).add(n);
+					} else {
+						// unselect selected files
+						sel.trigger(evtUnselect);
+					}
+					// select file(s)
+					n.trigger(evtSelect);
+					// set its visible
+					scrollToView(n.filter(prev ? ':first' : ':last'));
+					// update cache/view
+					trigger();
+				}
+			},
+
+			selectFile = function(hash) {
+				cwd.find('#'+hash).trigger(evtSelect);
+			},
+
+			/**
+			 * Unselect all files
+			 *
+			 * @return void
+			 */
+			unselectAll = function() {
+				cwd.find('[id].'+clSelected).trigger(evtUnselect);
+				trigger();
+			},
+
+			/**
+			 * Return selected files hashes list
+			 *
+			 * @return Array
+			 */
+			selected = function() {
+				return $.map(cwd.find('[id].'+clSelected), function(n) {
+					n = $(n);
+					return n.is('.'+clDisabled) ? null : $(n).attr('id');
+				});
+			},
+
+			/**
+			 * Fire finder "select" event and pass selected files to it
+			 *
+			 * @return void
+			 */
+			trigger = function() {
+				fm.trigger('select', {selected : selected()});
+			},
+
+			/**
+			 * Scroll file to set it visible
+			 *
+			 * @param DOMElement  file/dir node
+			 * @return void
+			 */
+			scrollToView = function(o) {
+				var ftop    = o.position().top,
+					fheight = o.outerHeight(true),
+					wtop    = wrapper.scrollTop(),
+					wheight = wrapper.innerHeight();
+
+				if (ftop + fheight > wtop + wheight) {
+					wrapper.scrollTop(parseInt(ftop + fheight - wheight));
+				} else if (ftop < wtop) {
+					wrapper.scrollTop(ftop);
+				}
+			},
+
+			/**
+			 * Files we get from server but not show yet
+			 *
+			 * @type Array
+			 **/
+			buffer = [],
+
+			/**
+			 * Return index of elements with required hash in buffer
+			 *
+			 * @param String  file hash
+			 * @return Number
+			 */
+			index = function(hash) {
+				var l = buffer.length;
+
+				while (l--) {
+					if (buffer[l].hash == hash) {
+						return l;
+					}
+				}
+				return -1;
+			},
+
+			/**
+			 * Scroll event name
+			 *
+			 * @type String
+			 **/
+			scrollEvent = 'scroll.'+fm.namespace,
+
+			/**
+			 * Cwd scroll event handler.
+			 * Lazy load - append to cwd not shown files
+			 *
+			 * @return void
+			 */
+			render = function() {
+				var html  = [],
+					dirs  = false,
+					ltmb  = [],
+					atmb  = {},
+					last  = cwd.find('[id]:last'),
+					top   = !last.length,
+					place = list ? cwd.children('table').children('tbody') : cwd,
+					files;
+
+				if (!buffer.length) {
+					return wrapper.unbind(scrollEvent);
+				}
+
+				while ((!last.length || last.position().top <= wrapper.height() + wrapper.scrollTop() + fm.options.showThreshold)
+					&& (files = buffer.splice(0, fm.options.showFiles)).length) {
+
+					html = $.map(files, function(f) {
+						if (f.hash && f.name) {
+							if (f.mime == 'directory') {
+								dirs = true;
+							}
+							if (f.tmb) {
+								f.tmb === 1 ? ltmb.push(f.hash) : (atmb[f.hash] = f.tmb)
+							}
+							return itemhtml(f);
+						}
+						return null;
+					});
+
+					place.append(html.join(''));
+					last = cwd.find('[id]:last');
+					// scroll top on dir load to avoid scroll after page reload
+					top && cwd.scrollTop(0);
+
+				}
+
+				// load/attach thumbnails
+				attachThumbnails(atmb);
+				ltmb.length && loadThumbnails(ltmb);
+
+				// make directory droppable
+				dirs && makeDroppable();
+
+			},
+
+			/**
+			 * Droppable options for cwd.
+			 * Do not add class on childs file over
+			 *
+			 * @type Object
+			 */
+			droppable = $.extend({}, fm.droppable, {
+				over : function(e, ui) {
+					var hash = fm.cwd().hash;
+					$.each(ui.helper.data('files'), function(i, h) {
+						if (fm.file(h).phash == hash) {
+							cwd.removeClass(clDropActive);
+							return false;
+						}
+					})
+				}
+			}),
+
+			/**
+			 * Make directory droppable
+			 *
+			 * @return void
+			 */
+			makeDroppable = function() {
+				setTimeout(function() {
+					cwd.find('.directory:not(.'+clDroppable+',.finder-na,.finder-ro)').droppable(fm.droppable);
+				}, 20);
+			},
+
+			/**
+			 * Preload required thumbnails and on load add css to files.
+			 * Return false if required file is not visible yet (in buffer) -
+			 * required for old api to stop loading thumbnails.
+			 *
+			 * @param  Object  file hash -> thumbnail map
+			 * @return Boolean
+			 */
+			attachThumbnails = function(images) {
+				var url = fm.option('tmbUrl'),
+					ret = true,
+					ndx;
+
+				$.each(images, function(hash, tmb) {
+					var node = cwd.find('#'+hash);
+
+					if (node.length) {
+
+						(function(node, tmb) {
+							$('<img/>')
+								.load(function() { node.find('.finder-cwd-icon').css('background', "url('"+tmb+"') center center no-repeat"); })
+								.attr('src', tmb);
+						})(node, url+tmb);
+					} else {
+						ret = false;
+						if ((ndx = index(hash)) != -1) {
+							buffer[ndx].tmb = tmb;
+						}
+					}
+				});
+				return ret;
+			},
+
+			/**
+			 * Load thumbnails from backend.
+			 *
+			 * @param  Array|Boolean  files hashes list
+			 * @return void
+			 */
+			loadThumbnails = function(files) {
+				var tmbs = [];
+
+				tmbs = tmbs = files.splice(0, tmbNum);
+				if (tmbs.length) {
+					fm.request({
+						data : {cmd : 'tmb', targets : tmbs},
+						preventFail : true
+					})
+					.done(function(data) {
+						if (attachThumbnails(data.images||[])) {
+							loadThumbnails(files);
+						}
+					});
+				}
+			},
+
+			/**
+			 * Add new files to cwd/buffer
+			 *
+			 * @param  Array  new files
+			 * @return void
+			 */
+			add = function(files) {
+				var place    = list ? cwd.find('tbody') : cwd,
+					l        = files.length,
+					ltmb     = [],
+					atmb     = {},
+					dirs     = false,
+					findNode = function(file) {
+						var pointer = cwd.find('[id]:first'), file2;
+
+						while (pointer.length) {
+							file2 = fm.file(pointer.attr('id'));
+							if (!pointer.is('.finder-cwd-parent') && file2 && fm.compare(file, file2) < 0) {
+								return pointer;
+							}
+							pointer = pointer.next('[id]');
+						}
+					},
+					findIndex = function(file) {
+						var l = buffer.length, i;
+
+						for (i =0; i < l; i++) {
+							if (fm.compare(file, buffer[i]) < 0) {
+								return i;
+							}
+						}
+						return l || -1;
+					},
+					file, hash, node, ndx;
+
+
+				while (l--) {
+					file = files[l];
+					hash = file.hash;
+
+					if (cwd.find('#'+hash).length) {
+						continue;
+					}
+
+					if ((node = findNode(file)) && node.length) {
+						node.before(itemhtml(file));
+					} else if ((ndx = findIndex(file)) >= 0) {
+						buffer.splice(ndx, 0, file);
+					} else {
+						place.append(itemhtml(file));
+					}
+
+					if (cwd.find('#'+hash).length) {
+						if (file.mime == 'directory') {
+							dirs = true;
+						} else if (file.tmb) {
+							file.tmb === 1 ? ltmb.push(hash) : (atmb[hash] = file.tmb);
+						}
+					}
+				}
+
+				attachThumbnails(atmb);
+				ltmb.length && loadThumbnails(ltmb);
+				dirs && makeDroppable();
+			},
+
+			/**
+			 * Remove files from cwd/buffer
+			 *
+			 * @param  Array  files hashes
+			 * @return void
+			 */
+			remove = function(files) {
+				var l = files.length, hash, n, ndx;
+
+				while (l--) {
+					hash = files[l];
+					if ((n = cwd.find('#'+hash)).length) {
+						try {
+							n.detach();
+						} catch(e) {
+							fm.debug('error', e);
+						}
+					} else if ((ndx = index(hash)) != -1) {
+						buffer.splice(ndx, 1);
+					}
+				}
+			},
+
+			msg = {
+				name : fm.i18n('name'),
+				perm : fm.i18n('perms'),
+				mod  : fm.i18n('modify'),
+				size : fm.i18n('size'),
+				kind : fm.i18n('kind')
+			},
+			/**
+			 * Update directory content
+			 *
+			 * @param  Array  files
+			 * @return void
+			 */
+			content = function(files, any) {
+				var phash = fm.cwd().hash;
+				// console.log(files)
+
+				unselectAll();
+
+				try {
+					// to avoid problem with draggable
+					cwd.children('table,'+fileSelector).remove();
+				} catch (e) {
+					cwd.html('');
+				}
+
+				cwd.removeClass('finder-cwd-view-icons finder-cwd-view-list')
+					.addClass('finder-cwd-view-'+(list ? 'list' :'icons'));
+
+				wrapper[list ? 'addClass' : 'removeClass']('finder-cwd-wrapper-list');
+
+				list && cwd.html('<table><thead><tr class="ui-state-default"><td >'+msg.name+'</td><td>'+msg.perm+'</td><td>'+msg.mod+'</td><td>'+msg.size+'</td><td>'+msg.kind+'</td></tr></thead><tbody/></table>');
+
+				buffer = $.map(files, function(f) { return any || f.phash == phash ? f : null; });
+
+				buffer = fm.sortFiles(buffer);
+
+				wrapper.bind(scrollEvent, render).trigger(scrollEvent);
+
+				phash = fm.cwd().phash;
+
+				if (options.oldSchool && phash && !query) {
+					var parent = $.extend(true, {}, fm.file(phash), {name : '..', mime : 'directory'});
+					parent = $(itemhtml(parent))
+						.addClass('finder-cwd-parent')
+						.bind('mousedown click mouseup dblclick mouseenter', function(e) {
+							e.preventDefault();
+							e.stopPropagation();
+						})
+						.dblclick(function() {
+							fm.exec('open', this.id);
+						});
+
+					(list ? cwd.find('tbody') : cwd).prepend(parent);
+				}
+
+			},
+
+			/**
+			 * CWD node itself
+			 *
+			 * @type JQuery
+			 **/
+			cwd = $(this)
+				.addClass('ui-helper-clearfix finder-cwd')
+				.attr('unselectable', 'on')
+				// fix ui.selectable bugs and add shift+click support
+				.delegate(fileSelector, 'click.'+fm.namespace, function(e) {
+					var p    = this.id ? $(this) : $(this).parents('[id]:first'),
+						prev = p.prevAll('.'+clSelected+':first'),
+						next = p.nextAll('.'+clSelected+':first'),
+						pl   = prev.length,
+						nl   = next.length,
+						sib;
+
+					e.stopImmediatePropagation();
+
+					if (e.shiftKey && (pl || nl)) {
+						sib = pl ? p.prevUntil('#'+prev.attr('id')) : p.nextUntil('#'+next.attr('id'));
+						sib.add(p).trigger(evtSelect);
+					} else if (e.ctrlKey || e.metaKey) {
+						p.trigger(p.is('.'+clSelected) ? evtUnselect : evtSelect);
+					} else {
+						unselectAll();
+						p.trigger(evtSelect);
+					}
+
+					trigger();
+				})
+				// call fm.open()
+				.delegate(fileSelector, 'dblclick.'+fm.namespace, function(e) {
+					fm.dblclick({file : this.id});
+				})
+				// attach draggable
+				.delegate(fileSelector, 'mouseenter.'+fm.namespace, function(e) {
+					var $this = $(this),
+						target = list ? $this : $this.children();
+
+					if (!$this.is('.'+clTmp) && !target.is('.'+clDraggable+',.'+clDisabled)) {
+						target.draggable(fm.draggable);
+					}
+				})
+				// add hover class to selected file
+				.delegate(fileSelector, evtSelect, function(e) {
+					var $this = $(this);
+					if( !selectLock && !$this.is('.'+clDisabled) ){
+						$this.addClass(clSelected).children().addClass(clHover);
+					}
+				})
+				// remove hover class from unselected file
+				.delegate(fileSelector, evtUnselect, function(e) {
+					if (!selectLock) {
+						$(this).removeClass(clSelected).children().removeClass(clHover);
+					}
+				})
+				// disable files wich removing or moving
+				.delegate(fileSelector, evtDisable, function() {
+					var $this  = $(this).removeClass(clSelected).addClass(clDisabled),
+						target = (list ? $this : $this.children()).removeClass(clHover);
+
+					$this.is('.'+clDroppable) && $this.droppable('disable');
+					target.is('.'+clDraggable) && target.draggable('disable');
+					!list && target.removeClass(clDisabled);
+				})
+				// if any files was not removed/moved - unlock its
+				.delegate(fileSelector, evtEnable, function() {
+					var $this  = $(this).removeClass(clDisabled),
+						target = list ? $this : $this.children();
+
+					$this.is('.'+clDroppable) && $this.droppable('enable');
+					target.is('.'+clDraggable) && target.draggable('enable');
+				})
+				.delegate(fileSelector, 'scrolltoview', function() {
+					scrollToView($(this));
+				})
+				.delegate(fileSelector, 'mouseenter mouseleave', function(e) {
+					fm.trigger('hover', {hash : $(this).attr('id'), type : e.type});
+				})
+				.bind('contextmenu.'+fm.namespace, function(e) {
+					var file = $(e.target).closest('.'+clFile);
+
+					if (file.length) {
+						e.stopPropagation();
+						e.preventDefault();
+						if (!file.is('.'+clDisabled)) {
+							if (!file.is('.'+clSelected)) {
+								// cwd.trigger('unselectall');
+								unselectAll()
+								file.trigger(evtSelect);
+								trigger();
+							}
+							fm.trigger('contextmenu', {
+								'type'    : 'files',
+								'targets' : fm.selected(),
+								'x'       : e.clientX,
+								'y'       : e.clientY
+							});
+
+						}
+
+					}
+					// e.preventDefault();
+
+
+				})
+
+				// make files selectable
+				.selectable({
+					filter     : fileSelector,
+					stop       : trigger,
+					selected   : function(e, ui) { $(ui.selected).trigger(evtSelect); },
+					unselected : function(e, ui) { $(ui.unselected).trigger(evtUnselect); }
+				})
+				// make cwd itself droppable for folders from nav panel
+				.droppable(droppable)
+				// prepend fake file/dir
+				.bind('create.'+fm.namespace, function(e, file) {
+					var parent = list ? cwd.find('tbody') : cwd,
+						p = parent.find('.finder-cwd-parent'),
+						file = $(itemhtml(file)).addClass(clTmp);
+
+					unselectAll();
+
+					if (p.length) {
+						p.after(file);
+					} else {
+						parent.prepend(file);
+					}
+
+					cwd.scrollTop(0);
+				})
+				// unselect all selected files
+				.bind('unselectall', unselectAll)
+				.bind('selectfile', function(e, id) {
+					cwd.find('#'+id).trigger(evtSelect);
+					trigger();
+				}),
+			wrapper = $('<div class="finder-cwd-wrapper"/>')
+				.bind('contextmenu', function(e) {
+					e.preventDefault();
+					fm.trigger('contextmenu', {
+						'type'    : 'cwd',
+						'targets' : [fm.cwd().hash],
+						'x'       : e.clientX,
+						'y'       : e.clientY
+					});
+
+				}),
+
+			resize = function() {
+				var h = 0;
+
+				wrapper.siblings('.finder-panel:visible').each(function() {
+					h += $(this).outerHeight(true);
+				});
+
+				wrapper.height(wz.height() - h);
+			},
+			// finder node
+			parent = $(this).parent().resize(resize),
+			// workzone node
+			wz = parent.children('.finder-workzone').append(wrapper.append(this))
+			;
+
+
+		if (fm.dragUpload) {
+			wrapper[0].addEventListener('dragenter', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+
+				wrapper.addClass(clDropActive);
+			}, false);
+
+			wrapper[0].addEventListener('dragleave', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				e.target == cwd[0] && wrapper.removeClass(clDropActive);
+			}, false);
+
+			wrapper[0].addEventListener('dragover', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+			}, false);
+
+			wrapper[0].addEventListener('drop', function(e) {
+			  	e.preventDefault();
+				wrapper.removeClass(clDropActive);
+				var file = false;
+				var type = '';
+				if (e.dataTransfer && e.dataTransfer.files &&  e.dataTransfer.files.length) {
+					file = e.dataTransfer.files;
+					type = 'files';
+				} else if (e.dataTransfer.getData('text/html')) {
+					file = [ e.dataTransfer.getData('text/html') ];
+					type = 'html';
+				} else if (e.dataTransfer.getData('text')) {
+					file = [ e.dataTransfer.getData('text') ];
+					type = 'text';
+				}
+				if (file) {
+					fm.exec('upload', {files : file, type : type});
+				}
+			}, false);
+		}
+
+		fm
+			.bind('open', function(e) {
+				content(e.data.files);
+			})
+			.bind('search', function(e) {
+				lastSearch = e.data.files;
+				content(lastSearch, true);
+			})
+			.bind('searchend', function() {
+				lastSearch = [];
+				if (query) {
+					query = '';
+					content(fm.files());
+				}
+			})
+			.bind('searchstart', function(e) {
+				query = e.data.query;
+			})
+			.bind('sortchange', function() {
+				content(query ? lastSearch : fm.files(), !!query);
+			})
+			.bind('viewchange', function() {
+				var sel = fm.selected(),
+					l   = fm.storage('view') == 'list';
+
+				if (l != list) {
+					list = l;
+					content(fm.files());
+
+					$.each(sel, function(i, h) {
+						selectFile(h);
+					});
+					trigger();
+				}
+				resize();
+			})
+			.add(function(e) {
+				var phash = fm.cwd().hash,
+					files = query
+						? $.map(e.data.added || [], function(f) { return f.name.indexOf(query) === -1 ? null : f })
+						: $.map(e.data.added || [], function(f) { return f.phash == phash ? f : null; })
+						;
+				add(files);
+			})
+			.change(function(e) {
+				var phash = fm.cwd().hash,
+					sel   = fm.selected(),
+					files;
+
+				if (query) {
+					$.each(e.data.changed || [], function(i, file) {
+						remove([file.hash]);
+						if (file.name.indexOf(query) !== -1) {
+							add([file]);
+							$.inArray(file.hash, sel) !== -1 && selectFile(file.hash);
+						}
+					})
+				} else {
+					$.each($.map(e.data.changed || [], function(f) { return f.phash == phash ? f : null; }), function(i, file) {
+						remove([file.hash]);
+						add([file]);
+						$.inArray(file.hash, sel) !== -1 && selectFile(file.hash);
+					});
+				}
+
+				trigger();
+			})
+			.remove(function(e) {
+				remove(e.data.removed || []);
+				trigger();
+			})
+			// fix cwd height if it less then wrapper
+			.bind('open add search searchend', function() {
+				cwd.css('height', 'auto');
+
+				if (cwd.outerHeight(true) < wrapper.height()) {
+					cwd.height(wrapper.height() - (cwd.outerHeight(true) - cwd.height()) - 2);
+				}
+			})
+			// select dragged file if no selected, disable selectable
+			.dragstart(function(e) {
+				var target = $(e.data.target),
+					oe     = e.data.originalEvent;
+
+				if (target.is(fileSelector)) {
+
+					if (!target.is('.'+clSelected)) {
+						!(oe.ctrlKey || oe.metaKey || oe.shiftKey) && unselectAll();
+						target.trigger(evtSelect);
+						trigger();
+					}
+					cwd.droppable('disable');
+				}
+
+				cwd.selectable('disable').removeClass(clDisabled);
+				selectLock = true;
+			})
+			// enable selectable
+			.dragstop(function() {
+				cwd.selectable('enable').droppable('enable');
+				selectLock = false;
+			})
+			.bind('lockfiles unlockfiles', function(e) {
+				var event = e.type == 'lockfiles' ? evtDisable : evtEnable,
+					files = e.data.files || [],
+					l     = files.length;
+
+				while (l--) {
+					cwd.find('#'+files[l]).trigger(event);
+				}
+				trigger();
+			})
+			// select new files after some actions
+			.bind('mkdir mkfile duplicate upload rename archive extract', function(e) {
+				var phash = fm.cwd().hash, files;
+
+				unselectAll();
+
+				$.each(e.data.added || [], function(i, file) {
+					file && file.phash == phash && selectFile(file.hash);
+				});
+				trigger();
+			})
+
+			// select all
+			.shortcut({
+				pattern     :'ctrl+a',
+				description : 'selectall',
+				callback    : function() {
+					var phash;
+
+					cwd.find('[id]:not(.'+clSelected+'):not(.finder-cwd-parent)').trigger(evtSelect);
+
+					// only select if there are files in the current directory
+					if (buffer.length) {
+						phash = fm.cwd().hash;
+						fm.select({selected : $.map(fm.files(), function(f) { return f.phash == phash ? f.hash : null; })})
+					} else {
+						trigger();
+					}
+				}
+			})
+			.shortcut({
+				pattern     : 'left right up down shift+left shift+right shift+up shift+down',
+				description : 'selectfiles',
+				type        : 'keydown' ,
+				callback    : function(e) { select(e.keyCode, e.shiftKey); }
+			})
+			.shortcut({
+				pattern     : 'home',
+				description : 'selectffile',
+				callback    : function(e) {
+					unselectAll();
+					scrollToView(cwd.find('[id]:first').trigger(evtSelect))
+					trigger();
+				}
+			})
+			.shortcut({
+				pattern     : 'end',
+				description : 'selectlfile',
+				callback    : function(e) {
+					unselectAll();
+					scrollToView(cwd.find('[id]:last').trigger(evtSelect)) ;
+					trigger();
+				}
+			});
+
+	});
+
+	// fm.timeEnd('cwdLoad')
+
+	return this;
+}
+;"use strict";
+/**
+ * @class  Finder dialog
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+$.fn.finderdialog = function(opts) {
+	var dialog;
+
+	if (typeof(opts) == 'string' && (dialog = this.closest('.ui-dialog')).length) {
+		if (opts == 'open') {
+			dialog.css('display') == 'none' && dialog.fadeIn(120, function() {
+				dialog.trigger('open');
+			});
+		} else if (opts == 'close') {
+			dialog.css('display') != 'none' && dialog.hide().trigger('close');
+		} else if (opts == 'destroy') {
+			dialog.hide().remove();
+		} else if (opts == 'toTop') {
+			dialog.trigger('totop');
+		}
+	}
+
+	opts = $.extend({}, $.fn.finderdialog.defaults, opts);
+
+	this.filter(':not(.ui-dialog-content)').each(function() {
+		var self       = $(this).addClass('ui-dialog-content ui-widget-content'),
+			parent     = self.parent(),
+			clactive   = 'finder-dialog-active',
+			cldialog   = 'finder-dialog',
+			clnotify   = 'finder-dialog-notify',
+			clhover    = 'ui-state-hover',
+			id         = parseInt(Math.random()*1000000),
+			overlay    = parent.children('.finder-overlay'),
+			buttonset  = $('<div class="ui-dialog-buttonset"/>'),
+			buttonpane = $('<div class=" ui-helper-clearfix ui-dialog-buttonpane ui-widget-content"/>')
+				.append(buttonset),
+
+
+			dialog = $('<div class="test ui-dialog ui-widget ui-widget-content ui-corner-all ui-draggable std42-dialog  '+cldialog+' '+opts.cssClass+'"/>')
+				.hide()
+				.append(self)
+				.appendTo(parent)
+				.draggable({
+					handle : '.ui-dialog-titlebar'
+				})
+				.css({
+					width  : opts.width,
+					height : opts.height,
+					position: 'absolute'
+				})
+				.mousedown(function(e) {
+					e.stopPropagation();
+
+					$(document).mousedown();
+
+					if (!dialog.is('.'+clactive)) {
+						parent.find('.'+cldialog+':visible').removeClass(clactive);
+						dialog.addClass(clactive).zIndex(maxZIndex() + 1);
+					}
+				})
+				.bind('open', function() {
+					opts.modal && overlay.finderoverlay('show');
+					dialog.trigger('totop');
+					typeof(opts.open) == 'function' && $.proxy(opts.open, self[0])();
+
+					if (!dialog.is('.'+clnotify)) {
+
+						parent.find('.'+cldialog+':visible').not('.'+clnotify).each(function() {
+							var d     = $(this),
+								top   = parseInt(d.css('top')),
+								left  = parseInt(d.css('left')),
+								_top  = parseInt(dialog.css('top')),
+								_left = parseInt(dialog.css('left'))
+								;
+
+							if (d[0] != dialog[0] && (top == _top || left == _left)) {
+								dialog.css({
+									top  : (top+10),
+									left : (left+10)
+								});
+							}
+						});
+					}
+				})
+				.bind('close', function() {
+					var dialogs = parent.find('.finder-dialog:visible'),
+						z = maxZIndex();
+
+					opts.modal && overlay.finderoverlay('hide');
+
+					// get focus to next dialog
+					if (dialogs.length) {
+						dialogs.each(function() {
+							var d = $(this);
+							if (d.zIndex() >= z) {
+								d.trigger('totop');
+								return false;
+							}
+						})
+					} else {
+						// return focus to parent
+						setTimeout(function() {
+							parent.mousedown().click();
+						}, 10);
+
+					}
+
+					if (typeof(opts.close) == 'function') {
+						$.proxy(opts.close, self[0])();
+					} else if (opts.destroyOnClose) {
+						dialog.hide().remove();
+					}
+				})
+				.bind('totop', function() {
+					$(this).mousedown().find('.ui-button:first').focus().end().find(':text:first').focus()
+				}),
+				maxZIndex = function() {
+					var z = parent.zIndex() + 10;
+					parent.find('.'+cldialog+':visible').each(function() {
+						var _z;
+						if (this != dialog[0]) {
+							_z = $(this).zIndex();
+							if (_z > z) {
+								z = _z;
+							}
+						}
+					})
+					return z;
+				},
+				top
+			;
+
+		if (!opts.position) {
+			top = parseInt((parent.height() - dialog.outerHeight())/2 - 42);
+			opts.position = {
+				top  : (top > 0 ? top : 0),
+				left : parseInt((parent.width() - dialog.outerWidth())/2)
+			}
+		}
+
+		dialog.css(opts.position);
+
+		if (opts.closeOnEscape) {
+			$(document).bind('keyup.'+id, function(e) {
+				if (e.keyCode == $.ui.keyCode.ESCAPE && dialog.is('.'+clactive)) {
+					self.finderdialog('close');
+					$(document).unbind('keyup.'+id);
+				}
+			})
+		}
+		dialog.prepend(
+			$('<div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">'+opts.title+'</div>')
+				.prepend($('<a href="#" class="ui-dialog-titlebar-close ui-corner-all"><span class="ui-icon ui-icon-closethick"/></a>')
+					.mousedown(function(e) {
+						e.preventDefault();
+						self.finderdialog('close');
+					}))
+
+		);
+
+
+
+		$.each(opts.buttons, function(name, cb) {
+			var button = $('<button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">'+name+'</span></button>')
+				.click($.proxy(cb, self[0]))
+				.hover(function(e) { $(this)[e.type == 'mouseenter' ? 'focus' : 'blur']() })
+				.focus(function() { $(this).addClass(clhover) })
+				.blur(function() { $(this).removeClass(clhover) })
+				.keydown(function(e) {
+					var next;
+
+					if (e.keyCode == $.ui.keyCode.ENTER) {
+						$(this).click();
+					}  else if (e.keyCode == $.ui.keyCode.TAB) {
+						next = $(this).next('.ui-button');
+						next.length ? next.focus() : $(this).parent().children('.ui-button:first').focus()
+					}
+				})
+			buttonset.append(button);
+		})
+
+		buttonset.children().length && dialog.append(buttonpane);
+		if (opts.resizable && $.fn.resizable) {
+			dialog.resizable({
+					minWidth   : opts.minWidth,
+					minHeight  : opts.minHeight,
+					alsoResize : this
+				});
+		}
+
+		typeof(opts.create) == 'function' && $.proxy(opts.create, this)();
+
+		opts.autoOpen && self.finderdialog('open');
+
+	});
+
+	return this;
+}
+
+$.fn.finderdialog.defaults = {
+	cssClass  : '',
+	title     : '',
+	modal     : false,
+	resizable : true,
+	autoOpen  : true,
+	closeOnEscape : true,
+	destroyOnClose : false,
+	buttons   : {},
+	position  : null,
+	width     : 320,
+	height    : 'auto',
+	minWidth  : 200,
+	minHeight : 110
+};/**
+ * @class findernav - Finder container for diretories tree and places
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+$.fn.findernavbar = function(fm, opts) {
+
+	this.not('.finder-navbar').each(function() {
+		var nav    = $(this).addClass('ui-state-default finder-navbar'),
+			parent = nav.parent()
+				.resize(function() {
+					nav.height(wz.height() - delta);
+				}),
+			wz     = parent.children('.finder-workzone').append(nav),
+			delta  = nav.outerHeight() - nav.height(),
+			handle;
+
+
+		if ($.fn.resizable) {
+			handle = nav.resizable({
+					handles : (fm.direction == 'ltr') ? 'e' : 'w',
+					minWidth : opts.minWidth || 150,
+					maxWidth : opts.maxWidth || 500
+				})
+				.bind('resize scroll', function() {
+					handle.css({
+						top  : parseInt(nav.scrollTop())
+					})
+				})
+				.find('.ui-resizable-handle').zIndex(nav.zIndex() + 10);
+
+			fm.one('open', function() {
+				setTimeout(function() {
+					nav.trigger('resize');
+				}, 150);
+			});
+		}
+	});
+
+	return this;
+}
+;
+$.fn.finderoverlay = function(opts) {
+
+	this.filter(':not(.finder-overlay)').each(function() {
+		opts = $.extend({}, opts);
+		$(this).addClass('ui-widget-overlay finder-overlay')
+			.hide()
+			.mousedown(function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+			})
+			.data({
+				cnt  : 0,
+				show : typeof(opts.show) == 'function' ? opts.show : function() { },
+				hide : typeof(opts.hide) == 'function' ? opts.hide : function() { }
+			});
+	});
+
+	if (opts == 'show') {
+		var o    = this.eq(0),
+			cnt  = o.data('cnt') + 1,
+			show = o.data('show');
+
+		o.data('cnt', cnt);
+
+		if (o.is(':hidden')) {
+			o.zIndex(o.parent().zIndex()+1);
+			o.show();
+			show();
+		}
+	}
+
+	if (opts == 'hide') {
+		var o    = this.eq(0),
+			cnt  = o.data('cnt') - 1,
+			hide = o.data('hide');
+
+		o.data('cnt', cnt);
+
+		if (cnt == 0 && o.is(':visible')) {
+			o.hide();
+			hide();
+		}
+	}
+
+	return this;
+};$.fn.finderpanel = function(fm) {
+
+	return this.each(function() {
+		var panel = $(this).addClass('finder-panel ui-state-default ui-corner-all'),
+			margin = 'margin-'+(fm.direction == 'ltr' ? 'left' : 'right');
+
+		fm.one('load', function(e) {
+			var navbar = fm.getUI('navbar');
+
+			panel.css(margin, parseInt(navbar.outerWidth(true)));
+			navbar.bind('resize', function() {
+				panel.is(':visible') && panel.css(margin, parseInt(navbar.outerWidth(true)))
+			})
+		})
+	})
+};"use strict";
+/**
+ * @class Finder ui
+ * Display current folder path in statusbar.
+ * Click on folder name in path - open folder
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+$.fn.finderpath = function(fm) {
+	return this.each(function() {
+		var path = $(this).addClass('finder-path').html('&nbsp;')
+				.delegate('a', 'click', function(e) {
+					var hash = $(this).attr('href').substr(1);
+
+					e.preventDefault();
+					hash != fm.cwd().hash && fm.exec('open', hash);
+				})
+				.prependTo(fm.getUI('statusbar').show())
+
+			fm.bind('open searchend', function() {
+				var dirs = [];
+
+				$.each(fm.parents(fm.cwd().hash), function(i, hash) {
+					dirs.push('<a href="#'+hash+'">'+fm.escape(fm.file(hash).name)+'</a>');
+				});
+
+				path.html(dirs.join(fm.option('separator')));
+			})
+			.bind('search', function() {
+				path.html(fm.i18n('searcresult'));
+			});
+	});
+};"use strict";
+/**
+ * @class Finder places/favorites ui
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+$.fn.finderplaces = function(fm, opts) {
+	return this.each(function() {
+		var dirs      = [],
+			c         = 'class',
+			navdir    = fm.res(c, 'navdir'),
+			collapsed = fm.res(c, 'navcollapse'),
+			expanded  = fm.res(c, 'navexpand'),
+			hover     = fm.res(c, 'hover'),
+			clroot    = fm.res(c, 'treeroot'),
+			tpl       = fm.res('tpl', 'navdir'),
+			ptpl      = fm.res('tpl', 'perms'),
+			spinner   = $(fm.res('tpl', 'navspinner')),
+			/**
+			 * Convert places dir node into dir hash
+			 *
+			 * @param  String  directory id
+			 * @return String
+			 **/
+			id2hash   = function(id) { return id.substr(6);	},
+			/**
+			 * Convert places dir node into dir hash
+			 *
+			 * @param  String  directory id
+			 * @return String
+			 **/
+			hash2id   = function(hash) { return 'place-'+hash; },
+
+			/**
+			 * Save current places state
+			 *
+			 * @return void
+			 **/
+			save      = function() { fm.storage('places', dirs.join(',')); },
+			/**
+			 * Return node for given dir object
+			 *
+			 * @param  Object  directory object
+			 * @return jQuery
+			 **/
+			create    = function(dir) {
+				return $(tpl.replace(/\{id\}/, hash2id(dir.hash))
+							.replace(/\{name\}/, fm.escape(dir.name))
+							.replace(/\{cssclass\}/, fm.perms2class(dir))
+							.replace(/\{permissions\}/, !dir.read || !dir.write ? ptpl : '')
+							.replace(/\{symlink\}/, ''));
+			},
+			/**
+			 * Add new node into places
+			 *
+			 * @param  Object  directory object
+			 * @return void
+			 **/
+			add = function(dir) {
+				var node = create(dir);
+
+				if (subtree.children().length) {
+					$.each(subtree.children(), function() {
+						var current =  $(this);
+
+						if (dir.name.localeCompare(current.children('.'+navdir).text()) < 0) {
+							return !node.insertBefore(current);
+						}
+					});
+				}
+
+				dirs.push(dir.hash);
+				!node.parent().length && subtree.append(node);
+				root.addClass(collapsed);
+				node.draggable({
+					appendTo : 'body',
+					revert   : false,
+					helper   : function() {
+						var dir = $(this);
+
+						dir.children().removeClass('ui-state-hover');
+
+						return $('<div class="finder-place-drag finder-'+fm.direction+'"/>')
+								.append(dir.clone())
+								.data('hash', id2hash(dir.children(':first').attr('id')));
+
+					},
+					start    : function() { $(this).hide(); },
+					stop     : function(e, ui) {
+						var top    = places.offset().top,
+							left   = places.offset().left,
+							width  = places.width(),
+							height = places.height(),
+							x      = e.clientX,
+							y      = e.clientY;
+
+						if (x > left && x < left+width && y > top && y < y+height) {
+							$(this).show();
+						} else {
+							remove(ui.helper.data('hash'));
+							save();
+						}
+					}
+				});
+			},
+			/**
+			 * Remove dir from places
+			 *
+			 * @param  String  directory id
+			 * @return void
+			 **/
+			remove = function(hash) {
+				var ndx = $.inArray(hash, dirs);
+
+				if (ndx !== -1) {
+					dirs.splice(ndx, 1);
+					subtree.find('#'+hash2id(hash)).parent().remove();
+					!subtree.children().length && root.removeClass(collapsed+' '+expanded);
+				}
+			},
+			/**
+			 * Remove all dir from places
+			 *
+			 * @return void
+			 **/
+			clear = function() {
+				subtree.empty();
+				root.removeClass(collapsed+' '+expanded);
+			},
+			/**
+			 * Node - wrapper for places root
+			 *
+			 * @type jQuery
+			 **/
+			wrapper = create({
+					hash  : 'root-'+fm.namespace,
+					name  : fm.i18n(opts.name, 'places'),
+					read  : true,
+					write : true
+				}),
+			/**
+			 * Places root node
+			 *
+			 * @type jQuery
+			 **/
+			root = wrapper.children('.'+navdir)
+				.addClass(clroot)
+				.click(function() {
+					if (root.is('.'+collapsed)) {
+						places.toggleClass(expanded);
+						subtree.slideToggle();
+						fm.storage('placesState', places.is('.'+expanded)? 1 : 0);
+					}
+				}),
+			/**
+			 * Container for dirs
+			 *
+			 * @type jQuery
+			 **/
+			subtree = wrapper.children('.'+fm.res(c, 'navsubtree')),
+			/**
+			 * Main places container
+			 *
+			 * @type jQuery
+			 **/
+			places = $(this).addClass(fm.res(c, 'tree')+' finder-places ui-corner-all')
+				.hide()
+				.append(wrapper)
+				.appendTo(fm.getUI('navbar'))
+				.delegate('.'+navdir,{
+					'click': function() {
+						fm.exec('open', $(this).attr('id').substr(6));
+					},
+					'mouseenter': function(){
+						$(this).addClass('ui-state-hover');
+					},
+					'mouseleave': function(){
+						$(this).removeClass('ui-state-hover');
+					}
+				})
+				.delegate('.'+navdir+':not(.'+clroot+')', 'contextmenu', function(e) {
+					var hash = $(this).attr('id').substr(6);
+
+					e.preventDefault();
+
+					fm.trigger('contextmenu', {
+						raw : [{
+							label    : fm.i18n('rmFromPlaces'),
+							icon     : 'rm',
+							callback : function() { remove(hash); save(); }
+						}],
+						'x'       : e.clientX,
+						'y'       : e.clientY
+					})
+
+				})
+				.droppable({
+					tolerance  : 'pointer',
+					accept     : '.finder-cwd-file-wrapper,.finder-tree-dir,.finder-cwd-file',
+					hoverClass : fm.res('class', 'adroppable'),
+					drop       : function(e, ui) {
+						var resolve = true;
+
+						$.each(ui.helper.data('files'), function(i, hash) {
+							var dir = fm.file(hash);
+
+							if (dir && dir.mime == 'directory' && $.inArray(dir.hash, dirs) === -1) {
+								add(dir);
+							} else {
+								resolve = false;
+							}
+						})
+						save();
+						resolve && ui.helper.hide();
+					}
+				});
+
+
+		// on fm load - show places and load files from backend
+		fm.one('load', function() {
+
+			places.show().parent().show();
+
+			dirs = $.map(fm.storage('places').split(','), function(hash) { return hash || null});
+
+			if (dirs.length) {
+				root.prepend(spinner);
+
+				fm.request({
+					data : {cmd : 'info', targets : dirs},
+					preventDefault : true
+				})
+				.done(function(data) {
+					dirs = [];
+					$.each(data.files, function(i, file) {
+						file.mime == 'directory' && add(file);
+					});
+					save();
+					if (fm.storage('placesState') > 0) {
+						root.click();
+					}
+				})
+				.always(function() {
+					spinner.remove();
+				})
+			}
+
+
+			fm.remove(function(e) {
+				$.each(e.data.removed, function(i, hash) {
+					remove(hash);
+				});
+				save();
+			})
+			.change(function(e) {
+				$.each(e.data.changed, function(i, file) {
+					if ($.inArray(file.hash, dirs) !== -1) {
+						remove(file.hash);
+						file.mime == 'directory' && add(file);
+					}
+				});
+				save();
+			})
+			.bind('sync', function() {
+				if (dirs.length) {
+					root.prepend(spinner);
+
+					fm.request({
+						data : {cmd : 'info', targets : dirs},
+						preventDefault : true
+					})
+					.done(function(data) {
+						$.each(data.files || [], function(i, file) {
+							if ($.inArray(file.hash, dirs) === -1) {
+								remove(file.hash);
+							}
+						});
+						save();
+					})
+					.always(function() {
+						spinner.remove();
+					});
+				}
+			})
+
+		})
+
+	});
+};"use strict"
+/**
+ * @class  Finder toolbar search button widget.
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+$.fn.findersearchbutton = function(cmd) {
+	return this.each(function() {
+		var result = false,
+			button = $(this).hide().addClass('ui-widget-content finder-button '+cmd.fm.res('class', 'searchbtn')+''),
+			search = function() {
+				var val = $.trim(input.val());
+				if (val) {
+					cmd.exec(val).done(function() {
+						result = true;
+						input.focus();
+					});
+
+				} else {
+					cmd.fm.trigger('searchend')
+				}
+			},
+			abort = function() {
+				input.val('');
+				if (result) {
+					result = false;
+					cmd.fm.trigger('searchend');
+				}
+			},
+			input  = $('<input type="text" size="42"/>')
+				.appendTo(button)
+				// to avoid fm shortcuts on arrows
+				.keypress(function(e) {
+					e.stopPropagation();
+				})
+				.keydown(function(e) {
+					e.stopPropagation();
+
+					e.keyCode == 13 &&  search();
+
+					if (e.keyCode== 27) {
+						e.preventDefault();
+						abort();
+					}
+				});
+
+		$('<span class="ui-icon ui-icon-search" title="'+cmd.title+'"/>')
+			.appendTo(button)
+			.click(search);
+
+		$('<span class="ui-icon ui-icon-close"/>')
+			.appendTo(button)
+			.click(abort)
+
+		// wait when button will be added to DOM
+		setTimeout(function() {
+			button.parent().detach();
+			cmd.fm.getUI('toolbar').prepend(button.show());
+			// position icons for ie7
+			if (cmd.fm.UA.ltIE7) {
+				var icon = button.children(cmd.fm.direction == 'ltr' ? '.ui-icon-close' : '.ui-icon-search');
+				icon.css({
+					right : '',
+					left : parseInt(button.width())-icon.outerWidth(true)
+				});
+			}
+		}, 200);
+
+		cmd.fm
+			.error(function() {
+				input.unbind('keydown');
+			})
+			.select(function() {
+				input.blur();
+			})
+			.bind('searchend', function() {
+				input.val('');
+			})
+			.viewchange(abort)
+			.shortcut({
+				pattern     : 'ctrl+f f3',
+				description : cmd.title,
+				callback    : function() { input.select().focus(); }
+			});
+
+	});
+};"use strict"
+/**
+ * @class  Finder toolbar button menu with sort variants.
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+$.fn.findersortbutton = function(cmd) {
+
+	return this.each(function() {
+		var fm       = cmd.fm,
+			name     = cmd.name,
+			c        = 'class',
+			disabled = fm.res(c, 'disabled'),
+			hover    = fm.res(c, 'hover'),
+			item     = 'finder-button-menu-item',
+			selected = item+'-selected',
+			asc      = selected+'-asc',
+			desc     = selected+'-desc',
+			button   = $(this).addClass('ui-state-default finder-button finder-menubutton elfiner-button-'+name)
+				.attr('title', cmd.title)
+				.append('<span class="finder-button-icon finder-button-icon-'+name+'"/>')
+				.hover(function() { !button.is('.'+disabled) && button.toggleClass(hover); })
+				.click(function(e) {
+					if (!button.is('.'+disabled)) {
+						e.stopPropagation();
+						menu.is(':hidden') && cmd.fm.getUI().click();
+						menu.slideToggle(100);
+					}
+				}),
+			menu = $('<div class="ui-widget ui-widget-content finder-button-menu ui-corner-all"/>')
+				.hide()
+				.appendTo(button)
+				.zIndex(12+button.zIndex())
+				.delegate('.'+item,{
+					'mouseenter mouseleave': function() {
+						$(this).toggleClass(hover);
+					},
+					'click': function(e) {
+						e.preventDefault();
+						e.stopPropagation();
+						hide();
+					}
+				}),
+			update = function() {
+				menu.children(':not(:last)').removeClass(selected+' '+asc+' '+desc)
+					.filter('[rel="'+fm.sortType+'"]')
+					.addClass(selected+' '+(fm.sortOrder == 'asc' ? asc : desc));
+
+				menu.children(':last').toggleClass(selected, fm.sortStickFolders);
+			},
+			hide = function() { menu.hide(); };
+
+
+		$.each(fm.sortRules, function(name, value) {
+			menu.append($('<div class="'+item+'" rel="'+name+'"><span class="ui-icon ui-icon-arrowthick-1-n"/><span class="ui-icon ui-icon-arrowthick-1-s"/>'+fm.i18n('sort'+name)+'</div>').data('type', name));
+		});
+
+		menu.children().click(function(e) {
+			var type = $(this).attr('rel');
+
+			cmd.exec([], {
+				type  : type,
+				order : type == fm.sortType ? fm.sortOrder == 'asc' ? 'desc' : 'asc' : fm.sortOrder,
+				stick : fm.sortStickFolders
+			});
+		})
+
+		$('<div class="'+item+' '+item+'-separated"><span class="ui-icon ui-icon-check"/>'+fm.i18n('sortFoldersFirst')+'</div>')
+			.appendTo(menu)
+			.click(function(){
+				cmd.exec([], {type : fm.sortType, order : fm.sortOrder, stick : !fm.sortStickFolders});
+			});
+
+		fm.bind('disable select', hide).getUI().click(hide);
+
+		fm.bind('sortchange', update)
+
+		if (menu.children().length > 1) {
+			cmd.change(function() {
+					button.toggleClass(disabled, cmd.disabled());
+					update();
+				})
+				.change();
+
+		} else {
+			button.addClass(disabled);
+		}
+
+	});
+
+}
+
+
+;"use strict";
+/**
+ * @class Finder ui
+ * Display number of files/selected files and its size in statusbar
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+$.fn.finderstat = function(fm) {
+	return this.each(function() {
+		var size       = $(this).addClass('finder-stat-size'),
+			sel        = $('<div class="finder-stat-selected"/>'),
+			titlesize  = fm.i18n('size').toLowerCase(),
+			titleitems = fm.i18n('items').toLowerCase(),
+			titlesel   = fm.i18n('selected'),
+			setstat    = function(files, cwd) {
+				var c = 0,
+					s = 0;
+
+				$.each(files, function(i, file) {
+					if (!cwd || file.phash == cwd) {
+						c++;
+						s += parseInt(file.size)||0;
+					}
+				})
+				size.html(titleitems+': '+c+', '+titlesize+': '+fm.formatSize(s));
+			};
+
+		fm.getUI('statusbar').prepend(size).append(sel).show();
+
+		fm
+		.bind('open reload add remove change searchend', function() {
+			setstat(fm.files(), fm.cwd().hash)
+		})
+		.search(function(e) {
+			setstat(e.data.files);
+		})
+		.select(function() {
+			var s = 0,
+				c = 0,
+				files = fm.selectedFiles();
+
+			if (files.length == 1) {
+				s = files[0].size;
+				sel.html(fm.escape(files[0].name)+(s > 0 ? ', '+fm.formatSize(s) : ''));
+
+				return;
+			}
+
+			$.each(files, function(i, file) {
+				c++;
+				s += parseInt(file.size)||0;
+			});
+
+			sel.html(c ? titlesel+': '+c+', '+titlesize+': '+fm.formatSize(s) : '&nbsp;');
+		})
+
+		;
+	})
+};"use strict";
+/**
+ * @class  Finder toolbar
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+$.fn.findertoolbar = function(fm, opts) {
+	this.not('.finder-toolbar').each(function() {
+		var commands = fm._commands,
+			self     = $(this).addClass('ui-helper-clearfix ui-widget-header ui-corner-top finder-toolbar'),
+			panels   = opts || [],
+			l        = panels.length,
+			i, cmd, panel, button;
+
+		self.prev().length && self.parent().prepend(this);
+
+		while (l--) {
+			if (panels[l]) {
+				panel = $('<div class="ui-widget-content ui-corner-all finder-buttonset"/>');
+				i = panels[l].length;
+				while (i--) {
+					if ((cmd = commands[panels[l][i]])) {
+						button = 'finder'+cmd.options.ui;
+						$.fn[button] && panel.prepend($('<div/>')[button](cmd));
+					}
+				}
+
+				panel.children().length && self.prepend(panel);
+				panel.children(':gt(0)').before('<span class="ui-widget-content finder-toolbar-button-separator"/>');
+
+			}
+		}
+
+		self.children().length && self.show();
+	});
+
+	return this;
+}
+;"use strict";
+/**
+ * @class  Finder folders tree
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+$.fn.findertree = function(fm, opts) {
+	var treeclass = fm.res('class', 'tree');
+
+	this.not('.'+treeclass).each(function() {
+
+		var c = 'class',
+
+			/**
+			 * Root directory class name
+			 *
+			 * @type String
+			 */
+			root      = fm.res(c, 'treeroot'),
+
+			/**
+			 * Open root dir if not opened yet
+			 *
+			 * @type Boolean
+			 */
+			openRoot  = opts.openRootOnLoad,
+
+			/**
+			 * Subtree class name
+			 *
+			 * @type String
+			 */
+			subtree   = fm.res(c, 'navsubtree'),
+
+			/**
+			 * Directory class name
+			 *
+			 * @type String
+			 */
+			navdir    = fm.res(c, 'treedir'),
+
+			/**
+			 * Collapsed arrow class name
+			 *
+			 * @type String
+			 */
+			collapsed = fm.res(c, 'navcollapse'),
+
+			/**
+			 * Expanded arrow class name
+			 *
+			 * @type String
+			 */
+			expanded  = fm.res(c, 'navexpand'),
+
+			/**
+			 * Class name to mark arrow for directory with already loaded children
+			 *
+			 * @type String
+			 */
+			loaded    = 'finder-subtree-loaded',
+
+			/**
+			 * Arraw class name
+			 *
+			 * @type String
+			 */
+			arrow = fm.res(c, 'navarrow'),
+
+			/**
+			 * Current directory class name
+			 *
+			 * @type String
+			 */
+			active    = fm.res(c, 'active'),
+
+			/**
+			 * Droppable dirs dropover class
+			 *
+			 * @type String
+			 */
+			dropover = fm.res(c, 'adroppable'),
+
+			/**
+			 * Hover class name
+			 *
+			 * @type String
+			 */
+			hover    = fm.res(c, 'hover'),
+
+			/**
+			 * Disabled dir class name
+			 *
+			 * @type String
+			 */
+			disabled = fm.res(c, 'disabled'),
+
+			/**
+			 * Draggable dir class name
+			 *
+			 * @type String
+			 */
+			draggable = fm.res(c, 'draggable'),
+
+			/**
+			 * Droppable dir  class name
+			 *
+			 * @type String
+			 */
+			droppable = fm.res(c, 'droppable'),
+
+			insideNavbar = function(x) {
+				var left = navbar.offset().left;
+
+				return left <= x && x <= left + navbar.width();
+			},
+
+			drop = fm.droppable.drop,
+
+			/**
+			 * Droppable options
+			 *
+			 * @type Object
+			 */
+			droppableopts = $.extend(true, {}, fm.droppable, {
+				// show subfolders on dropover
+				over : function(e) {
+					var link = $(this),
+						cl   = hover+' '+dropover;
+
+					if (insideNavbar(e.clientX)) {
+						link.addClass(cl)
+						if (link.is('.'+collapsed+':not(.'+expanded+')')) {
+							setTimeout(function() {
+								link.is('.'+dropover) && link.children('.'+arrow).click();
+							}, 500);
+						}
+					} else {
+						link.removeClass(cl);
+					}
+				},
+				out : function() { $(this).removeClass(hover+' '+dropover); },
+				drop : function(e, ui) { insideNavbar(e.clientX) && drop.call(this, e, ui); }
+			}),
+
+			spinner = $(fm.res('tpl', 'navspinner')),
+
+			/**
+			 * Directory html template
+			 *
+			 * @type String
+			 */
+			tpl = fm.res('tpl', 'navdir'),
+
+			/**
+			 * Permissions marker html template
+			 *
+			 * @type String
+			 */
+			ptpl = fm.res('tpl', 'perms'),
+
+			/**
+			 * Symlink marker html template
+			 *
+			 * @type String
+			 */
+			stpl = fm.res('tpl', 'symlink'),
+
+			/**
+			 * Html template replacement methods
+			 *
+			 * @type Object
+			 */
+			replace = {
+				id          : function(dir) { return fm.navHash2Id(dir.hash) },
+				cssclass    : function(dir) {
+					return (dir.phash ? '' : root)+' '+(dir.net ? 'finder-navbar-net' : '' )+' '+navdir+' '+fm.perms2class(dir)+' '+(dir.dirs && !dir.link ? collapsed : '');
+				},
+				permissions : function(dir) { return !dir.read || !dir.write ? ptpl : ''; },
+				symlink     : function(dir) { return dir.alias ? stpl : ''; }
+			},
+
+			/**
+			 * Return html for given dir
+			 *
+			 * @param  Object  directory
+			 * @return String
+			 */
+			itemhtml = function(dir) {
+				dir.name = fm.escape(dir.name);
+
+				return tpl.replace(/(?:\{([a-z]+)\})/ig, function(m, key) {
+					return dir[key] || (replace[key] ? replace[key](dir) : '');
+				});
+			},
+
+			/**
+			 * Return only dirs from files list
+			 *
+			 * @param  Array  files list
+			 * @return Array
+			 */
+			filter = function(files) {
+				return $.map(files||[], function(f) { return f.mime == 'directory' ? f : null });
+			},
+
+			/**
+			 * Find parent subtree for required directory
+			 *
+			 * @param  String  dir hash
+			 * @return jQuery
+			 */
+			findSubtree = function(hash) {
+				return hash ? tree.find('#'+fm.navHash2Id(hash)).next('.'+subtree) : tree;
+			},
+
+			/**
+			 * Find directory (wrapper) in required node
+			 * before which we can insert new directory
+			 *
+			 * @param  jQuery  parent directory
+			 * @param  Object  new directory
+			 * @return jQuery
+			 */
+			findSibling = function(subtree, dir) {
+				var node = subtree.children(':first'),
+					info;
+
+				while (node.length) {
+					info = fm.file(fm.navId2Hash(node.children('[id]').attr('id')));
+
+					if ((info = fm.file(fm.navId2Hash(node.children('[id]').attr('id'))))
+					&& dir.name.toLowerCase().localeCompare(info.name.toLowerCase()) < 0) {
+						return node;
+					}
+					node = node.next();
+				}
+				return $('');
+			},
+
+			/**
+			 * Add new dirs in tree
+			 *
+			 * @param  Array  dirs list
+			 * @return void
+			 */
+			updateTree = function(dirs) {
+				var length  = dirs.length,
+					orphans = [],
+					i = dirs.length,
+					dir, html, parent, sibling;
+
+				while (i--) {
+					dir = dirs[i];
+
+					if (tree.find('#'+fm.navHash2Id(dir.hash)).length) {
+						continue;
+					}
+
+					parent = findSubtree(dir.phash);
+					if (parent.length) {
+						html = itemhtml(dir);
+						if (dir.phash && (sibling = findSibling(parent, dir)).length) {
+							sibling.before(html);
+						} else {
+							parent[dir.phash ? 'append' : 'prepend'](html);
+						}
+					} else {
+						orphans.push(dir);
+					}
+				}
+
+				if (orphans.length && orphans.length < length) {
+					return updateTree(orphans);
+				}
+
+				setTimeout(function() {
+					updateDroppable();
+				}, 10);
+
+			},
+
+			/**
+			 * Mark current directory as active
+			 * If current directory is not in tree - load it and its parents
+			 *
+			 * @param {Boolean} do not recursive call
+			 * @return void
+			 */
+			sync = function(stopRec) {
+				var cwd     = fm.cwd().hash,
+					current = tree.find('#'+fm.navHash2Id(cwd)),
+					rootNode, dir;
+
+				if (openRoot) {
+					rootNode = tree.find('#'+fm.navHash2Id(fm.root()));
+					rootNode.is('.'+loaded) && rootNode.addClass(expanded).next('.'+subtree).show();
+					openRoot = false;
+				}
+
+				if (!current.is('.'+active)) {
+					tree.find('.'+navdir+'.'+active).removeClass(active);
+					current.addClass(active);
+				}
+
+				if (opts.syncTree) {
+					if (current.length) {
+						current.parentsUntil('.'+root).filter('.'+subtree).show().prev('.'+navdir).addClass(expanded);
+					} else if ( !stopRec ) {
+						// check if cwd is not in files
+						if ((dir = fm.file(cwd)).phash && tree.find('#'+fm.navHash2Id(dir.phash)).length) {
+							updateTree([dir]);
+						} else {
+							return;
+						}
+
+						fm.request({
+							data : {cmd : 'parents', target : cwd},
+							preventFail : true
+						})
+						.done(function(data) {
+							var dirs = filter(data.tree);
+							updateTree(dirs);
+							updateArrows(dirs, loaded);
+							cwd == fm.cwd().hash && sync(true);
+						});
+					}
+				}
+			},
+
+			/**
+			 * Make writable and not root dirs droppable
+			 *
+			 * @return void
+			 */
+			updateDroppable = function() {
+				tree.find('.'+navdir+':not(.'+droppable+',.finder-ro,.finder-na)').droppable(droppableopts);
+			},
+
+			/**
+			 * Check required folders for subfolders and update arrow classes
+			 *
+			 * @param  Array  folders to check
+			 * @param  String css class
+			 * @return void
+			 */
+			updateArrows = function(dirs, cls) {
+				var sel = cls == loaded
+						? '.'+collapsed+':not(.'+loaded+')'
+						: ':not(.'+collapsed+')';
+
+
+				//tree.find('.'+subtree+':has(*)').prev(':not(.'+collapsed+')').addClass(collapsed)
+
+				$.each(dirs, function(i, dir) {
+					tree.find('#'+fm.navHash2Id(dir.phash)+sel)
+						.filter(function() { return $(this).next('.'+subtree).children().length > 0 })
+						.addClass(cls);
+				})
+			},
+
+
+
+			/**
+			 * Navigation tree
+			 *
+			 * @type JQuery
+			 */
+			tree = $(this).addClass(treeclass)
+				// make dirs draggable
+
+				.delegate('.'+navdir,{
+
+					// make dirs draggable and toggle hover class
+					'mouseenter mouseleave': function(e) {
+						var link  = $(this),
+							enter = e.type == 'mouseenter';
+
+						if (!link.is('.'+dropover+' ,.'+disabled)) {
+							enter && !link.is('.'+root+',.'+draggable+',.finder-na,.finder-wo') && link.draggable(fm.draggable);
+							link.toggleClass(hover, enter);
+						}
+					},
+
+					// add/remove dropover css class
+					'dropover dropout drop':function(e) {
+						$(this)[e.type == 'dropover' ? 'addClass' : 'removeClass'](dropover+' '+hover);
+					},
+
+					// open dir or open subfolders in tree
+					'click':function(e){
+						var link = $(this),
+							hash = fm.navId2Hash(link.attr('id')),
+							file = fm.file(hash);
+
+						fm.trigger('searchend');
+
+						if (hash != fm.cwd().hash && !link.is('.'+disabled)) {
+							fm.exec('open', file.thash || hash);
+						} else if (link.is('.'+collapsed)) {
+							link.children('.'+arrow).click();
+						}
+					},
+
+					//context menu
+					'contextmenu': function(e) {
+						e.preventDefault();
+
+						fm.trigger('contextmenu', {
+							'type'    : 'navbar',
+							'targets' : [fm.navId2Hash($(this).attr('id'))],
+							'x'       : e.clientX,
+							'y'       : e.clientY
+						});
+					}
+				})
+
+				// toggle subfolders in tree
+				.delegate('.'+navdir+'.'+collapsed+' .'+arrow, 'click', function(e) {
+					var arrow = $(this),
+						link  = arrow.parent('.'+navdir),
+						stree = link.next('.'+subtree);
+
+					e.stopPropagation();
+
+					if (link.is('.'+loaded)) {
+						link.toggleClass(expanded);
+						stree.slideToggle()
+					} else {
+						spinner.insertBefore(arrow);
+						link.removeClass(collapsed);
+
+						fm.request({cmd : 'tree', target : fm.navId2Hash(link.attr('id'))})
+							.done(function(data) {
+								updateTree(filter(data.tree));
+
+								if (stree.children().length) {
+									link.addClass(collapsed+' '+expanded);
+									stree.slideDown();
+								}
+								sync();
+							})
+							.always(function(data) {
+								spinner.remove();
+								link.addClass(loaded);
+							});
+					}
+				}),
+
+			// move tree into navbar
+			navbar = fm.getUI('navbar').append(tree).show()
+			;
+
+		fm.open(function(e) {
+			var data = e.data,
+				dirs = filter(data.files);
+
+			data.init && tree.empty();
+
+			if (dirs.length) {
+				updateTree(dirs);
+				updateArrows(dirs, loaded);
+			}
+			sync();
+		})
+		// add new dirs
+		.add(function(e) {
+			var dirs = filter(e.data.added);
+
+			if (dirs.length) {
+				updateTree(dirs);
+				updateArrows(dirs, collapsed);
+			}
+		})
+		// update changed dirs
+		.change(function(e) {
+			var dirs = filter(e.data.changed),
+				l    = dirs.length,
+				dir, node, tmp, realParent, reqParent, realSibling, reqSibling, isExpanded, isLoaded;
+
+			while (l--) {
+				dir = dirs[l];
+				if ((node = tree.find('#'+fm.navHash2Id(dir.hash))).length) {
+					if (dir.phash) {
+						realParent  = node.closest('.'+subtree);
+						reqParent   = findSubtree(dir.phash);
+						realSibling = node.parent().next();
+						reqSibling  = findSibling(reqParent, dir);
+
+						if (!reqParent.length) {
+							continue;
+						}
+
+						if (reqParent[0] !== realParent[0] || realSibling.get(0) !== reqSibling.get(0)) {
+							reqSibling.length ? reqSibling.before(node) : reqParent.append(node);
+						}
+					}
+					isExpanded = node.is('.'+expanded);
+					isLoaded   = node.is('.'+loaded);
+					tmp        = $(itemhtml(dir));
+					node.replaceWith(tmp.children('.'+navdir));
+
+					if (dir.dirs
+					&& (isExpanded || isLoaded)
+					&& (node = tree.find('#'+fm.navHash2Id(dir.hash)))
+					&& node.next('.'+subtree).children().length) {
+						isExpanded && node.addClass(expanded);
+						isLoaded && node.addClass(loaded);
+					}
+				}
+			}
+
+			sync();
+			updateDroppable();
+		})
+		// remove dirs
+		.remove(function(e) {
+			var dirs = e.data.removed,
+				l    = dirs.length,
+				node, stree;
+
+			while (l--) {
+				if ((node = tree.find('#'+fm.navHash2Id(dirs[l]))).length) {
+					stree = node.closest('.'+subtree);
+					node.parent().detach();
+					if (!stree.children().length) {
+						stree.hide().prev('.'+navdir).removeClass(collapsed+' '+expanded+' '+loaded);
+					}
+				}
+			}
+		})
+		// add/remove active class for current dir
+		.bind('search searchend', function(e) {
+			tree.find('#'+fm.navHash2Id(fm.cwd().hash))[e.type == 'search' ? 'removeClass' : 'addClass'](active);
+		})
+		// lock/unlock dirs while moving
+		.bind('lockfiles unlockfiles', function(e) {
+			var lock = e.type == 'lockfiles',
+				act  = lock ? 'disable' : 'enable',
+				dirs = $.map(e.data.files||[], function(h) {
+					var dir = fm.file(h);
+					return dir && dir.mime == 'directory' ? h : null;
+				})
+
+			$.each(dirs, function(i, hash) {
+				var dir = tree.find('#'+fm.navHash2Id(hash));
+
+				if (dir.length) {
+					dir.is('.'+draggable) && dir.draggable(act);
+					dir.is('.'+droppable) && dir.droppable(active);
+					dir[lock ? 'addClass' : 'removeClass'](disabled);
+				}
+			});
+		})
+
+	});
+
+	return this;
+}
+;"use strict";
+/**
+ * @class  Finder toolbar's button tor upload file
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+$.fn.finderuploadbutton = function(cmd) {
+	return this.each(function() {
+		var button = $(this).finderbutton(cmd)
+				.unbind('click'),
+			form = $('<form/>').appendTo(button),
+			input = $('<input type="file" multiple="true"/>')
+				.change(function() {
+					var _input = $(this);
+					if (_input.val()) {
+						cmd.exec({input : _input.remove()[0]});
+						input.clone(true).appendTo(form);
+					}
+				});
+
+		form.append(input.clone(true));
+
+		cmd.change(function() {
+			form[cmd.disabled() ? 'hide' : 'show']();
+		})
+		.change();
+	});
+}
+;"use strict"
+/**
+ * @class  Finder toolbar button to switch current directory view.
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+$.fn.finderviewbutton = function(cmd) {
+	return this.each(function() {
+		var button = $(this).finderbutton(cmd),
+			icon   = button.children('.finder-button-icon');
+
+		cmd.change(function() {
+			var icons = cmd.value == 'icons';
+
+			icon.toggleClass('finder-button-icon-view-list', icons);
+			button.attr('title', cmd.fm.i18n(icons ? 'viewlist' : 'viewicons'));
+		});
+	});
+};"use strict";
+/**
+ * @class finderworkzone - Finder container for nav and current directory
+ * @author Dmitry (dio) Levashov
+ **/
+$.fn.finderworkzone = function(fm) {
+	var cl = 'finder-workzone';
+
+	this.not('.'+cl).each(function() {
+		var wz     = $(this).addClass(cl),
+			wdelta = wz.outerHeight(true) - wz.height(),
+			parent = wz.parent();
+
+		parent.add(window).bind('resize', function() {
+				var height = parent.height();
+
+				parent.children(':visible:not(.'+cl+')').each(function() {
+					var ch = $(this);
+
+					if (ch.css('position') != 'absolute') {
+						height -= ch.outerHeight(true);
+					}
+				});
+
+				wz.height(height - wdelta);
+			});
+	});
+	return this;
+}
+
+
+;"use strict"
+/**
+ * @class  Finder command "archive"
+ * Archive selected files
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.archive = function() {
+	var self  = this,
+		fm    = self.fm,
+		mimes = [];
+
+	this.variants = [];
+
+	this.disableOnSearch = true;
+
+	/**
+	 * Update mimes on open/reload
+	 *
+	 * @return void
+	 **/
+	fm.bind('open reload', function() {
+		self.variants = [];
+		$.each((mimes = fm.option('archivers')['create'] || []), function(i, mime) {
+			self.variants.push([mime, fm.mime2kind(mime)])
+		});
+		self.change();
+	});
+
+	this.getstate = function() {
+		return !this._disabled && mimes.length && fm.selected().length && fm.cwd().write ? 0 : -1;
+	}
+
+	this.exec = function(hashes, type) {
+		var files = this.files(hashes),
+			cnt   = files.length,
+			mime  = type || mimes[0],
+			cwd   = fm.cwd(),
+			error = ['errArchive', 'errPerm'],
+			dfrd  = $.Deferred().fail(function(error) {
+				error && fm.error(error);
+			}),
+			i;
+
+		if (!(this.enabled() && cnt && mimes.length && $.inArray(mime, mimes) !== -1)) {
+			return dfrd.reject();
+		}
+
+		if (!cwd.write) {
+			return dfrd.reject(error);
+		}
+
+		for (i = 0; i < cnt; i++) {
+			if (!files[i].read) {
+				return dfrd.reject(error);
+			}
+		}
+
+		return fm.request({
+			data       : {cmd : 'archive', targets : this.hashes(hashes), type : mime},
+			notify     : {type : 'archive', cnt : 1},
+			syncOnFail : true
+		});
+	}
+
+};"use strict";
+/**
+ * @class  Finder command "back"
+ * Open last visited folder
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.back = function() {
+	this.alwaysEnabled  = true;
+	this.updateOnSelect = false;
+	this.shortcuts      = [{
+		pattern     : 'ctrl+left backspace'
+	}];
+
+	this.getstate = function() {
+		return this.fm.history.canBack() ? 0 : -1;
+	}
+
+	this.exec = function() {
+		return this.fm.history.back();
+	}
+
+};"use strict";
+/**
+ * @class Finder command "copy".
+ * Put files in filemanager clipboard.
+ *
+ * @type  Finder.command
+ * @author  Dmitry (dio) Levashov
+ */
+Finder.prototype.commands.copy = function() {
+
+	this.shortcuts = [{
+		pattern     : 'ctrl+c ctrl+insert'
+	}];
+
+	this.getstate = function(sel) {
+		var sel = this.files(sel),
+			cnt = sel.length;
+
+		return cnt && $.map(sel, function(f) { return f.phash && f.read ? f : null  }).length == cnt ? 0 : -1;
+	}
+
+	this.exec = function(hashes) {
+		var fm   = this.fm,
+			dfrd = $.Deferred()
+				.fail(function(error) {
+					fm.error(error);
+				});
+
+		$.each(this.files(hashes), function(i, file) {
+			if (!(file.read && file.phash)) {
+				return !dfrd.reject(['errCopy', file.name, 'errPerm']);
+			}
+		});
+
+
+		return (dfrd.state() == 'rejected') ? dfrd : dfrd.resolve(fm.clipboard(this.hashes(hashes)));
+	}
+
+};"use strict";
+/**
+ * @class Finder command "copy".
+ * Put files in filemanager clipboard.
+ *
+ * @type  Finder.command
+ * @author  Dmitry (dio) Levashov
+ */
+Finder.prototype.commands.cut = function() {
+
+	this.shortcuts = [{
+		pattern     : 'ctrl+x shift+insert'
+	}];
+
+	this.getstate = function(sel) {
+		var sel = this.files(sel),
+			cnt = sel.length;
+
+		return cnt && $.map(sel, function(f) { return f.phash && f.read && !f.locked ? f : null  }).length == cnt ? 0 : -1;
+	}
+
+	this.exec = function(hashes) {
+		var fm     = this.fm,
+			dfrd   = $.Deferred()
+						.fail(function(error) {
+							fm.error(error);
+						});
+
+		$.each(this.files(hashes), function(i, file) {
+			if( !(file.read && file.phash) ){
+				return !dfrd.reject(['errCopy', file.name, 'errPerm']);
+			}
+			if( file.locked ){
+				return !dfrd.reject(['errLocked', file.name]);
+			}
+		});
+
+		return (dfrd.state() == 'rejected') ? dfrd : dfrd.resolve(fm.clipboard(this.hashes(hashes), true));
+	}
+
+};"use strict";
+/**
+ * @class Finder command "download".
+ * Download selected files.
+ * Only for new api
+ *
+ * @author Dmitry (dio) Levashov, dio@std42.ru
+ **/
+Finder.prototype.commands.download = function() {
+	var self   = this,
+		fm     = this.fm,
+		filter = function(hashes) {
+			return $.map(self.files(hashes), function(f) { return f.mime == 'directory' ? null : f });
+		};
+
+	this.shortcuts = [{
+		pattern     : 'shift+enter'
+	}];
+
+	this.getstate = function() {
+		var sel = this.fm.selected(),
+			cnt = sel.length;
+
+		return  !this._disabled && cnt && (!fm.UA.IE || cnt == 1) && cnt == filter(sel).length ? 0 : -1;
+	}
+
+	this.exec = function(hashes) {
+		var fm      = this.fm,
+			base    = fm.options.url,
+			files   = filter(hashes),
+			dfrd    = $.Deferred(),
+			iframes = '',
+			cdata   = '',
+			i, url;
+
+		if (this.disabled()) {
+			return dfrd.reject();
+		}
+
+		$.each(fm.options.customData || {}, function(k, v) {
+			cdata += '&'+k+'='+v;
+		});
+
+		base += base.indexOf('?') === -1 ? '?' : '&';
+
+		for (i = 0; i < files.length; i++) {
+			iframes += '<iframe class="downloader" id="downloader-' + files[i].hash+'" style="display:none" src="'+base + 'cmd=file&target=' + files[i].hash+'&download=1'+cdata+'"/>';
+		}
+		$(iframes)
+			.appendTo('body')
+			.ready(function() {
+
+				// remove iframes after some time has passed
+				// 20 sec + 10 sec for each file
+				setTimeout(function() {
+					$(iframes).each(function() {
+						$('#' + $(this).attr('id')).remove();
+					});
+				}, (20000 + (10000 * i)) );
+			});
+		fm.trigger('download', {files : files});
+		return dfrd.resolve(hashes);
+	}
+
+};"use strict";
+/**
+ * @class Finder command "duplicate"
+ * Create file/folder copy with suffix "copy Number"
+ *
+ * @type  Finder.command
+ * @author  Dmitry (dio) Levashov
+ */
+Finder.prototype.commands.duplicate = function() {
+	var fm = this.fm;
+
+	this.getstate = function(sel) {
+		var sel = this.files(sel),
+			cnt = sel.length;
+
+		return !this._disabled && cnt && fm.cwd().write && $.map(sel, function(f) { return f.phash && f.read ? f : null  }).length == cnt ? 0 : -1;
+	}
+
+	this.exec = function(hashes) {
+		var fm     = this.fm,
+			files  = this.files(hashes),
+			cnt    = files.length,
+			dfrd   = $.Deferred()
+				.fail(function(error) {
+					error && fm.error(error);
+				}),
+			args = [];
+
+		if (!cnt || this._disabled) {
+			return dfrd.reject();
+		}
+
+		$.each(files, function(i, file) {
+			if (!file.read || !fm.file(file.phash).write) {
+				return !dfrd.reject(['errCopy', file.name, 'errPerm']);
+			}
+		});
+
+		if( dfrd.state() == 'rejected' ){
+			return dfrd;
+		}
+
+		return fm.request({
+			data   : {cmd : 'duplicate', targets : this.hashes(hashes)},
+			notify : {type : 'copy', cnt : cnt}
+		});
+
+	}
+
+};"use strict"
+/**
+ * @class Finder command "edit".
+ * Edit text file in dialog window
+ *
+ * @author Dmitry (dio) Levashov, dio@std42.ru
+ **/
+Finder.prototype.commands.edit = function() {
+	var self  = this,
+		fm    = this.fm,
+		mimes = fm.res('mimes', 'text') || [],
+
+		/**
+		 * Return files acceptable to edit
+		 *
+		 * @param  Array  files hashes
+		 * @return Array
+		 **/
+		filter = function(files) {
+			return $.map(files, function(file) {
+				return (file.mime.indexOf('text/') === 0 || $.inArray(file.mime, mimes) !== -1)
+					&& file.mime.indexOf('text/rtf')
+					&& (!self.onlyMimes.length || $.inArray(file.mime, self.onlyMimes) !== -1)
+					&& file.read && file.write ? file : null;
+			});
+		},
+
+		/**
+		 * Open dialog with textarea to edit file
+		 *
+		 * @param  String  id       dialog id
+		 * @param  Object  file     file object
+		 * @param  String  content  file content
+		 * @return $.Deferred
+		 **/
+		dialog = function(id, file, content) {
+
+			var dfrd = $.Deferred(),
+				ta   = $('<textarea class="finder-file-edit" rows="20" id="'+id+'-ta">'+fm.escape(content)+'</textarea>'),
+				save = function() {
+					ta.editor && ta.editor.save(ta[0], ta.editor.instance);
+					dfrd.resolve(ta.getContent());
+					ta.finderdialog('close');
+				},
+				cancel = function() {
+					dfrd.reject();
+					ta.finderdialog('close');
+				},
+				opts = {
+					title   : file.name,
+					width   : self.options.dialogWidth || 450,
+					buttons : {},
+					close   : function() {
+						ta.editor && ta.editor.close(ta[0], ta.editor.instance);
+						$(this).finderdialog('destroy');
+					},
+					open    : function() {
+						fm.disable();
+						ta.focus();
+						ta[0].setSelectionRange && ta[0].setSelectionRange(0, 0);
+						ta.editor && ta.editor.load(ta[0]);
+					}
+
+				};
+
+				ta.getContent = function() {
+					return ta.val()
+				}
+
+				$.each(self.options.editors || [], function(i, editor) {
+					if ($.inArray(file.mime, editor.mimes || []) !== -1
+					&& typeof editor.load == 'function'
+					&& typeof editor.save == 'function') {
+						ta.editor = {
+							load     : editor.load,
+							save     : editor.save,
+							close    : typeof editor.close == 'function' ? editor.close : function() {},
+							instance : null
+						}
+
+						return false;
+					}
+				});
+
+				if (!ta.editor) {
+					ta.keydown(function(e) {
+						var code = e.keyCode,
+							value, start;
+
+						e.stopPropagation();
+						if (code == 9) {
+							e.preventDefault();
+							// insert tab on tab press
+							if (this.setSelectionRange) {
+								value = this.value;
+								start = this.selectionStart;
+								this.value = value.substr(0, start) + "\t" + value.substr(this.selectionEnd);
+								start += 1;
+								this.setSelectionRange(start, start);
+							}
+						}
+
+						if (e.ctrlKey || e.metaKey) {
+							// close on ctrl+w/q
+							if (code == 81 || code == 87) {
+								e.preventDefault();
+								cancel();
+							}
+							if (code == 83) {
+								e.preventDefault();
+								save();
+							}
+						}
+
+					})
+				}
+
+				opts.buttons[fm.i18n('Save')]   = save;
+				opts.buttons[fm.i18n('Cancel')] = cancel
+
+				fm.dialog(ta, opts).attr('id', id);
+				return dfrd.promise();
+		},
+
+		/**
+		 * Get file content and
+		 * open dialog with textarea to edit file content
+		 *
+		 * @param  String  file hash
+		 * @return jQuery.Deferred
+		 **/
+		edit = function(file) {
+			var hash   = file.hash,
+				opts   = fm.options,
+				dfrd   = $.Deferred(),
+				data   = {cmd : 'file', target : hash},
+				url    = fm.url(hash) || fm.options.url,
+				id    = 'edit-'+fm.namespace+'-'+file.hash,
+				d = fm.getUI().find('#'+id),
+				error;
+
+
+			if (d.length) {
+				d.finderdialog('toTop');
+				return dfrd.resolve();
+			}
+
+			if (!file.read || !file.write) {
+				error = ['errOpen', file.name, 'errPerm']
+				fm.error(error)
+				return dfrd.reject(error);
+			}
+
+			fm.request({
+				data   : {cmd : 'get', target  : hash},
+				notify : {type : 'openfile', cnt : 1},
+				syncOnFail : true
+			})
+			.done(function(data) {
+				dialog(id, file, data.content)
+					.done(function(content) {
+						fm.request({
+							options : {type : 'post'},
+							data : {
+								cmd     : 'put',
+								target  : hash,
+								content : content
+							},
+							notify : {type : 'save', cnt : 1},
+							syncOnFail : true
+						})
+						.fail(function(error) {
+							dfrd.reject(error);
+						})
+						.done(function(data) {
+							data.changed && data.changed.length && fm.change(data);
+							dfrd.resolve(data);
+						});
+					})
+			})
+			.fail(function(error) {
+				dfrd.reject(error);
+			})
+
+			return dfrd.promise();
+		};
+
+
+
+	this.shortcuts = [{
+		pattern     : 'ctrl+e'
+	}];
+
+	this.init = function() {
+		this.onlyMimes = this.options.mimes || []
+	}
+
+	this.getstate = function(sel) {
+		var sel = this.files(sel),
+			cnt = sel.length;
+
+		return !this._disabled && cnt && filter(sel).length == cnt ? 0 : -1;
+	}
+
+	this.exec = function(hashes) {
+		var files = filter(this.files(hashes)),
+			list  = [],
+			file;
+
+		if (this.disabled()) {
+			return $.Deferred().reject();
+		}
+
+		while ((file = files.shift())) {
+			list.push(edit(file));
+		}
+
+		return list.length
+			? $.when.apply(null, list)
+			: $.Deferred().reject();
+	}
+
+};"use strict"
+/**
+ * @class  Finder command "extract"
+ * Extract files from archive
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.extract = function() {
+	var self    = this,
+		fm      = self.fm,
+		mimes   = [],
+		filter  = function(files) {
+			return $.map(files, function(file) {
+				return file.read && $.inArray(file.mime, mimes) !== -1 ? file : null
+
+			})
+		};
+
+	this.disableOnSearch = true;
+
+	// Update mimes list on open/reload
+	fm.bind('open reload', function() {
+		mimes = fm.option('archivers')['extract'] || [];
+		self.change();
+	});
+
+	this.getstate = function(sel) {
+		var sel = this.files(sel),
+			cnt = sel.length;
+
+		return !this._disabled && cnt && this.fm.cwd().write && filter(sel).length == cnt ? 0 : -1;
+	}
+
+	this.exec = function(hashes) {
+		var files    = this.files(hashes),
+			dfrd     = $.Deferred(),
+			cnt      = files.length,
+			complete = cnt,
+			i, file, error;
+
+		if (!(this.enabled() && cnt && mimes.length)) {
+			return dfrd.reject();
+		}
+
+		for (i = 0; i < cnt; i++) {
+			file = files[i];
+			if (!(file.read && fm.file(file.phash).write)) {
+				error = ['errExtract', file.name, 'errPerm']
+				fm.error(error);
+				return dfrd.reject(error);
+			}
+
+			if ($.inArray(file.mime, mimes) === -1) {
+				error = ['errExtract', file.name, 'errNoArchive'];
+				fm.error(error);
+				return dfrd.reject(error);
+			}
+
+			fm.request({
+				data       : {cmd : 'extract', target : file.hash},
+				notify     : {type : 'extract', cnt : 1},
+				syncOnFail : true
+			})
+			.fail(function(error) {
+				if( dfrd.state() != 'rejected' ){
+					dfrd.reject(error);
+				}
+			})
+			.done(function() {
+				complete--;
+				if (complete == 0) {
+					dfrd.resolve();
+				}
+			});
+
+		}
+
+		return dfrd;
+	}
+
+};/**
+ * @class  Finder command "forward"
+ * Open next visited folder
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.forward = function() {
+	this.alwaysEnabled = true;
+	this.updateOnSelect = true;
+	this.shortcuts = [{
+		pattern     : 'ctrl+right'
+	}];
+
+	this.getstate = function() {
+		return this.fm.history.canForward() ? 0 : -1;
+	}
+
+	this.exec = function() {
+		return this.fm.history.forward();
+	}
+
+};"use strict";
+/**
+ * @class Finder command "getfile".
+ * Return selected files info into outer callback.
+ * For use Finder with wysiwyg editors etc.
+ *
+ * @author Dmitry (dio) Levashov, dio@std42.ru
+ **/
+Finder.prototype.commands.getfile = function() {
+	var self   = this,
+		fm     = this.fm,
+		filter = function(files) {
+			var o = self.options;
+
+			files = $.map(files, function(file) {
+				return file.mime != 'directory' || o.folders ? file : null;
+			});
+
+			return o.multiple || files.length == 1 ? files : [];
+		};
+
+	this.alwaysEnabled = true;
+	this.callback      = fm.options.getFileCallback;
+	this._disabled     = typeof(this.callback) == 'function';
+
+	this.getstate = function(sel) {
+		var sel = this.files(sel),
+			cnt = sel.length;
+
+		return this.callback && cnt && filter(sel).length == cnt ? 0 : -1;
+	}
+
+	this.exec = function(hashes) {
+		var fm    = this.fm,
+			opts  = this.options,
+			files = this.files(hashes),
+			cnt   = files.length,
+			url   = fm.option('url'),
+			tmb   = fm.option('tmbUrl'),
+			dfrd  = $.Deferred()
+				.done(function(data) {
+					fm.trigger('getfile', {files : data});
+					self.callback(data, fm);
+
+					if (opts.oncomplete == 'close') {
+						fm.hide();
+					} else if (opts.oncomplete == 'destroy') {
+						fm.destroy();
+					}
+				}),
+			result = function(file) {
+				if( opts.multiple ){
+					return files;
+				}
+				return files[0];
+			},
+			req = [],
+			i, file, dim;
+
+		if (this.getstate() == -1) {
+			return dfrd.reject();
+		}
+
+		for (i = 0; i < cnt; i++) {
+			file = files[i];
+			if (file.mime == 'directory' && !opts.folders) {
+				return dfrd.reject();
+			}
+			file.baseUrl = url;
+			file.url     = fm.url(file.hash);
+			file.path    = fm.path(file.hash);
+			if (file.tmb && file.tmb != 1) {
+				file.tmb = tmb + file.tmb;
+			}
+			if (!file.width && !file.height) {
+				if (file.dim) {
+					dim = file.dim.split('x');
+					file.width = dim[0];
+					file.height = dim[1];
+				} else if (file.mime.indexOf('image') !== -1) {
+					req.push(fm.request({
+						data : {cmd : 'dim', target : file.hash},
+						preventDefault : true
+					})
+					.done($.proxy(function(data) {
+						if (data.dim) {
+							dim = data.dim.split('x');
+							this.width = dim[0];
+							this.height = dim[1];
+						}
+						this.dim = data.dim
+					}, files[i])));
+				}
+			}
+		}
+
+		if (req.length) {
+			$.when.apply(null, req).always(function() {
+				dfrd.resolve(result(files));
+			})
+			return dfrd;
+		}
+
+		return dfrd.resolve(result(files));
+	}
+
+};"use strict";
+/**
+ * @class  Finder command "help"
+ * "About" dialog
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.help = function() {
+	var fm   = this.fm,
+		self = this,
+		linktpl = '<div class="finder-help-link"> <a href="{url}">{link}</a></div>',
+		atpl    = '<div class="finder-help-team"><div>{author}</div>{work}</div>',
+		url     = /\{url\}/,
+		link    = /\{link\}/,
+		author  = /\{author\}/,
+		work    = /\{work\}/,
+		r       = 'replace',
+		prim    = 'ui-priority-primary',
+		sec     = 'ui-priority-secondary',
+		lic     = 'finder-help-license',
+		tab     = '<li class="ui-state-default ui-corner-top"><a href="#{id}">{title}</a></li>',
+		html    = ['<div class="ui-tabs ui-widget ui-widget-content ui-corner-all finder-help">',
+				'<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">'],
+		stpl    = '<div class="finder-help-shortcut"><div class="finder-help-shortcut-pattern">{pattern}</div> {descrip}</div>',
+		sep     = '<div class="finder-help-separator"/>',
+
+
+		about = function() {
+			html.push('<div id="about" class="ui-tabs-panel ui-widget-content ui-corner-bottom">')
+			html.push('<h3>gpFinder</h3>');
+			html.push('<div class="'+prim+'">'+fm.i18n('webfm')+'</div>');
+			html.push('<div class="'+sec+'">'+fm.i18n('ver')+': '+fm.version+' <span id="apiver"></span></div>');
+			html.push('<div class="'+sec+'">jQuery/jQuery UI: '+$().jquery+'/'+$.ui.version+'</div>');
+
+			html.push(sep);
+
+			//html.push(linktpl[r](url, 'http://elfinder.org/')[r](link, fm.i18n('homepage')));
+			html.push(linktpl[r](url, 'https://github.com/oyejorge/gpFinder/wiki')[r](link, fm.i18n('docs')));
+			html.push(linktpl[r](url, 'https://github.com/oyejorge/gpFinder/issues')[r](link, 'Issues'));
+			html.push(linktpl[r](url, 'https://github.com/oyejorge/gpFinder')[r](link, fm.i18n('github')));
+			html.push(linktpl[r](url, 'https://elfinder.org')[r](link, 'gpFinder is an adaptation of elFinder'));
+			//html.push(linktpl[r](url, 'http://twitter.com/elrte_elfinder')[r](link, fm.i18n('twitter')));
+
+			html.push(sep);
+
+			/*
+			html.push('<div class="'+prim+'">'+fm.i18n('team')+'</div>');
+			html.push(atpl[r](author, 'Dmitry "dio" Levashov &lt;dio@std42.ru&gt;')[r](work, fm.i18n('chiefdev')));
+			html.push(atpl[r](author, 'Troex Nevelin &lt;troex@fury.scancode.ru&gt;')[r](work, fm.i18n('maintainer')));
+			html.push(atpl[r](author, 'Alexey Sukhotin &lt;strogg@yandex.ru&gt;')[r](work, fm.i18n('contributor')));
+			html.push(atpl[r](author, 'Naoki Sawada &lt;hypweb@gmail.com&gt;')[r](work, fm.i18n('contributor')));
+			fm.i18[fm.lang].translator && html.push(atpl[r](author, fm.i18[fm.lang].translator)[r](work, fm.i18n('translator')+' ('+fm.i18[fm.lang].language+')'));
+			*/
+
+
+			html.push(sep);
+			html.push('<div class="'+lic+'">'+fm.i18n('icons')+': <a href="http://pixelmixer.ru/" target="_blank">Pixelmixer</a>, <a href="http://p.yusukekamiyamane.com" target="_blank">Fugue</a></div>');
+
+			html.push(sep);
+			html.push('<div class="'+lic+'">Licence: BSD Licence</div>');
+			html.push('<div class="'+lic+'">Copyright © 2009-2011, Studio 42</div>');
+			html.push('<div class="'+lic+'">„ …'+fm.i18n('dontforget')+' ”</div>');
+			html.push('</div>');
+		},
+		shortcuts = function() {
+			var sh = fm.shortcuts();
+			// shortcuts tab
+			html.push('<div id="shortcuts" class="ui-tabs-panel ui-widget-content ui-corner-bottom">');
+
+			if (sh.length) {
+				html.push('<div class="ui-widget-content finder-help-shortcuts">');
+				$.each(sh, function(i, s) {
+					html.push(stpl.replace(/\{pattern\}/, s[0]).replace(/\{descrip\}/, s[1]));
+				});
+
+				html.push('</div>');
+			} else {
+				html.push('<div class="finder-help-disabled">'+fm.i18n('shortcutsof')+'</div>')
+			}
+
+
+			html.push('</div>')
+
+		},
+		help = function() {
+			// help tab
+			html.push('<div id="help" class="ui-tabs-panel ui-widget-content ui-corner-bottom">');
+			html.push('<a href="http://gpfinder.org/index.php/Forum" target="_blank" class="finder-dont-panic"><span>DON\'T PANIC</span></a>');
+			html.push('</div>');
+			// end help
+		},
+		content;
+
+	this.alwaysEnabled  = true;
+	this.updateOnSelect = false;
+	this.state = 0;
+
+	this.shortcuts = [{
+		pattern     : 'f1',
+		description : this.title
+	}];
+
+	setTimeout(function() {
+		var parts = self.options.view || ['about', 'shortcuts', 'help'];
+
+		$.each(parts, function(i, title) {
+			html.push(tab[r](/\{id\}/, title)[r](/\{title\}/, fm.i18n(title)));
+		});
+
+		html.push('</ul>');
+
+		$.inArray('about', parts) !== -1 && about();
+		$.inArray('shortcuts', parts) !== -1 && shortcuts();
+		$.inArray('help', parts) !== -1 && help();
+
+		html.push('</div>');
+		content = $(html.join(''));
+
+		fm.one('load', function setapi() { content.find('#apiver').text(fm.api); });
+
+		content.find('.ui-tabs-nav li')
+			.hover(function() {
+				$(this).toggleClass('ui-state-hover')
+			})
+			.children()
+			.click(function(e) {
+				var link = $(this);
+
+				e.preventDefault();
+				e.stopPropagation();
+
+				if (!link.is('.ui-tabs-selected')) {
+					link.parent().addClass('ui-tabs-selected ui-state-active').siblings().removeClass('ui-tabs-selected').removeClass('ui-state-active');
+					content.find('.ui-tabs-panel').hide().filter(link.attr('href')).show();
+				}
+
+			})
+			.filter(':first').click();
+
+	}, 200)
+
+	this.getstate = function() {
+		return 0;
+	}
+
+	this.exec = function() {
+		if (!this.dialog) {
+			this.dialog = this.fm.dialog(content, {title : this.title, width : 530, autoOpen : false, destroyOnClose : false});
+		}
+
+		this.dialog.finderdialog('open').find('.ui-tabs-nav li a:first').click();
+	}
+
+}
+;
+Finder.prototype.commands.home = function() {
+	this.title = 'Home';
+	this.alwaysEnabled  = true;
+	this.updateOnSelect = false;
+	this.shortcuts = [{
+		pattern     : 'ctrl+home ctrl+shift+up',
+		description : 'Home'
+	}];
+
+	this.getstate = function() {
+		var root = this.fm.root(),
+			cwd  = this.fm.cwd().hash;
+
+		return root && cwd && root != cwd ? 0: -1;
+	}
+
+	this.exec = function() {
+		return this.fm.exec('open', this.fm.root());
+	}
+
+
+};"use strict";
+/**
+ * @class Finder command "info".
+ * Display dialog with file properties.
+ *
+ * @author Dmitry (dio) Levashov, dio@std42.ru
+ **/
+Finder.prototype.commands.info = function() {
+	var m   = 'msg',
+		fm  = this.fm,
+		spclass = 'finder-info-spinner',
+		msg = {
+			calc     : fm.i18n('calc'),
+			size     : fm.i18n('size'),
+			unknown  : fm.i18n('unknown'),
+			path     : fm.i18n('path'),
+			aliasfor : fm.i18n('aliasfor'),
+			modify   : fm.i18n('modify'),
+			perms    : fm.i18n('perms'),
+			locked   : fm.i18n('locked'),
+			dim      : fm.i18n('dim'),
+			kind     : fm.i18n('kind'),
+			files    : fm.i18n('files'),
+			folders  : fm.i18n('folders'),
+			items    : fm.i18n('items'),
+			yes      : fm.i18n('yes'),
+			no       : fm.i18n('no'),
+			link     : fm.i18n('link')
+		};
+
+	this.tpl = {
+		main       : '<div class="ui-helper-clearfix finder-info-title"><span class="finder-cwd-icon {class} ui-corner-all"/>{title}</div><table class="finder-info-tb">{content}</table>',
+		itemTitle  : '<strong>{name}</strong><span class="finder-info-kind">{kind}</span>',
+		groupTitle : '<strong>{items}: {num}</strong>',
+		row        : '<tr><td>{label} : </td><td>{value}</td></tr>',
+		spinner    : '<span>{text}</span> <span class="'+spclass+'"/>'
+	}
+
+	this.alwaysEnabled = true;
+	this.updateOnSelect = false;
+	this.shortcuts = [{
+		pattern     : 'ctrl+i'
+	}];
+
+	this.init = function() {
+		$.each(msg, function(k, v) {
+			msg[k] = fm.i18n(v);
+		});
+	}
+
+	this.getstate = function(sel) {
+		var sel = this.files(sel);
+		return sel.length ? 0 : -1;
+	}
+
+	this.exec = function(hashes) {
+		var self    = this,
+			fm      = this.fm,
+			tpl     = this.tpl,
+			row     = tpl.row,
+			files   = this.files(hashes),
+			cnt     = files.length,
+			content = [],
+			view    = tpl.main,
+			l       = '{label}',
+			v       = '{value}',
+			opts    = {
+				title : this.title,
+				width : 'auto',
+				close : function() { $(this).finderdialog('destroy'); }
+			},
+			count = [],
+			replSpinner = function(msg) { dialog.find('.'+spclass).parent().text(msg); },
+			id = fm.namespace+'-info-'+$.map(files, function(f) { return f.hash }).join('-'),
+			dialog = fm.getUI().find('#'+id),
+			size, tmb, file, title, dcnt;
+
+		if (!cnt) {
+			return $.Deferred().reject();
+		}
+
+		if (dialog.length) {
+			dialog.finderdialog('toTop');
+			return $.Deferred().resolve();
+		}
+
+
+		if (cnt == 1) {
+			file  = files[0];
+			view  = view.replace('{class}', fm.mime2class(file.mime));
+			title = tpl.itemTitle.replace('{name}', file.name).replace('{kind}', fm.mime2kind(file));
+
+			if (file.tmb) {
+				tmb = fm.option('tmbUrl')+file.tmb;
+			}
+
+			if (!file.read) {
+				size = msg.unknown;
+			} else if (file.mime != 'directory' || file.alias) {
+				size = fm.formatSize(file.size);
+			} else {
+				size = tpl.spinner.replace('{text}', msg.calc);
+				count.push(file.hash);
+			}
+
+			content.push(row.replace(l, msg.size).replace(v, size));
+			file.alias && content.push(row.replace(l, msg.aliasfor).replace(v, file.alias));
+			content.push(row.replace(l, msg.path).replace(v, fm.escape(fm.path(file.hash))));
+			file.read && content.push(row.replace(l, msg.link).replace(v,  '<a href="'+fm.url(file.hash)+'" target="_blank">'+file.name+'</a>'));
+
+			if (file.dim) { // old api
+				content.push(row.replace(l, msg.dim).replace(v, file.dim));
+			} else if (file.mime.indexOf('image') !== -1) {
+				if (file.width && file.height) {
+					content.push(row.replace(l, msg.dim).replace(v, file.width+'x'+file.height));
+				} else {
+					content.push(row.replace(l, msg.dim).replace(v, tpl.spinner.replace('{text}', msg.calc)));
+					fm.request({
+						data : {cmd : 'dim', target : file.hash},
+						preventDefault : true
+					})
+					.fail(function() {
+						replSpinner(msg.unknown);
+					})
+					.done(function(data) {
+						replSpinner(data.dim || msg.unknown);
+					});
+				}
+			}
+
+
+			content.push(row.replace(l, msg.modify).replace(v, fm.formatDate(file)));
+			content.push(row.replace(l, msg.perms).replace(v, fm.formatPermissions(file)));
+			content.push(row.replace(l, msg.locked).replace(v, file.locked ? msg.yes : msg.no));
+		} else {
+			view  = view.replace('{class}', 'finder-cwd-icon-group');
+			title = tpl.groupTitle.replace('{items}', msg.items).replace('{num}', cnt);
+			dcnt  = $.map(files, function(f) { return f.mime == 'directory' ? 1 : null }).length;
+			if (!dcnt) {
+				size = 0;
+				$.each(files, function(h, f) {
+					var s = parseInt(f.size);
+
+					if (s >= 0 && size >= 0) {
+						size += s;
+					} else {
+						size = 'unknown';
+					}
+				});
+				content.push(row.replace(l, msg.kind).replace(v, msg.files));
+				content.push(row.replace(l, msg.size).replace(v, fm.formatSize(size)));
+			} else {
+				content.push(row.replace(l, msg.kind).replace(v, dcnt == cnt ? msg.folders : msg.folders+' '+dcnt+', '+msg.files+' '+(cnt-dcnt)))
+				content.push(row.replace(l, msg.size).replace(v, tpl.spinner.replace('{text}', msg.calc)));
+				count = $.map(files, function(f) { return f.hash });
+
+			}
+		}
+
+		view = view.replace('{title}', title).replace('{content}', content.join(''));
+
+		dialog = fm.dialog(view, opts);
+		dialog.attr('id', id)
+
+		// load thumbnail
+		if (tmb) {
+			$('<img/>')
+				.load(function() { dialog.find('.finder-cwd-icon').css('background', 'url("'+tmb+'") center center no-repeat'); })
+				.attr('src', tmb);
+		}
+
+		// send request to count total size
+		if (count.length) {
+			fm.request({
+					data : {cmd : 'size', targets : count},
+					preventDefault : true
+				})
+				.fail(function() {
+					replSpinner(msg.unknown);
+				})
+				.done(function(data) {
+					var size = parseInt(data.size);
+					replSpinner(size >= 0 ? fm.formatSize(size) : msg.unknown);
+				});
+		}
+
+	}
+
+}
+;"use strict";
+/**
+ * @class  Finder command "mkdir"
+ * Create new folder
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.mkdir = function() {
+	this.disableOnSearch = true;
+	this.updateOnSelect  = false;
+	this.mime            = 'directory';
+	this.prefix          = 'untitled folder';
+	this.exec            = $.proxy(this.fm.res('mixin', 'make'), this);
+
+	this.shortcuts = [{
+		pattern     : 'ctrl+shift+n'
+	}];
+
+	this.getstate = function() {
+		return !this._disabled && this.fm.cwd().write ? 0 : -1;
+	}
+
+}
+;"use strict";
+/**
+ * @class  Finder command "mkfile"
+ * Create new empty file
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.mkfile = function() {
+	this.disableOnSearch = true;
+	this.updateOnSelect  = false;
+	this.mime            = 'text/plain';
+	this.prefix          = 'untitled file.txt';
+	this.exec            = $.proxy(this.fm.res('mixin', 'make'), this);
+
+	this.getstate = function() {
+		return !this._disabled && this.fm.cwd().write ? 0 : -1;
+	}
+
+}
+;"use strict"
+/**
+ * @class  Finder command "netmount"
+ * Mount network volume with user credentials.
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.netmount = function() {
+	var self = this;
+
+	this.alwaysEnabled  = true;
+	this.updateOnSelect = false;
+
+	this.drivers = [];
+
+	this.handlers = {
+		load : function() {
+			this.drivers = this.fm.netDrivers;
+		}
+	}
+
+	this.getstate = function() {
+		return this.drivers.length ? 0 : -1;
+	}
+
+	this.exec = function() {
+		var fm = self.fm,
+			dfrd = $.Deferred(),
+			create = function() {
+				var inputs = {
+						protocol : $('<select/>'),
+						host     : $('<input type="text"/>'),
+						port     : $('<input type="text"/>'),
+						path     : $('<input type="text" value="/"/>'),
+						user     : $('<input type="text"/>'),
+						pass     : $('<input type="password"/>')
+					},
+					opts = {
+						title          : fm.i18n('netMountDialogTitle'),
+						resizable      : false,
+						modal          : true,
+						destroyOnClose : true,
+						close          : function() {
+							delete self.dialog;
+
+							(dfrd.state() != 'resolved') && (dfrd.state() != 'rejected') && dfrd.reject();
+						},
+						buttons        : {}
+					},
+					content = $('<table class="finder-info-tb finder-netmount-tb"/>');
+
+				$.each(self.drivers, function(i, protocol) {
+					inputs.protocol.append('<option value="'+protocol+'">'+fm.i18n(protocol)+'</option>');
+				});
+
+
+				$.each(inputs, function(name, input) {
+					name != 'protocol' && input.addClass('ui-corner-all');
+					content.append($('<tr/>').append($('<td>'+fm.i18n(name)+'</td>')).append($('<td/>').append(input)));
+				});
+
+				opts.buttons[fm.i18n('btnMount')] = function() {
+					var data = {cmd : 'netmount'};
+
+					$.each(inputs, function(name, input) {
+						var val = $.trim(input.val());
+
+						if (val) {
+							data[name] = val;
+						}
+					});
+
+					if (!data.host) {
+						return self.fm.trigger('error', {error : 'errNetMountHostReq'});
+					}
+
+					self.fm.request({data : data, notify : {type : 'netmount', cnt : 1}})
+						.done(function() { dfrd.resolve(); })
+						.fail(function(error) { dfrd.reject(error); });
+
+					self.dialog.finderdialog('close');
+				}
+
+				opts.buttons[fm.i18n('btnCancel')] = function() {
+					self.dialog.finderdialog('close');
+				}
+
+				return fm.dialog(content, opts);
+			}
+			;
+
+		if (!self.dialog) {
+			self.dialog = create()
+		}
+
+		return dfrd.promise();
+	}
+
+};"use strict"
+/**
+ * @class  Finder command "open"
+ * Enter folder or open files in new windows
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.open = function() {
+	this.alwaysEnabled = true;
+
+	this._handlers = {
+		dblclick : function(e) { e.preventDefault(); this.exec() },
+		'select enable disable reload' : function(e) { this.update(e.type == 'disable' ? -1 : void(0));  }
+	}
+
+	this.shortcuts = [{
+		pattern     : 'ctrl+down numpad_enter'+(this.fm.OS != 'mac' && ' enter')
+	}];
+
+	this.getstate = function(sel) {
+		var sel = this.files(sel),
+			cnt = sel.length;
+
+		return cnt == 1
+			? 0
+			: cnt ? ($.map(sel, function(file) { return file.mime == 'directory' ? null : file}).length == cnt ? 0 : -1) : -1
+	}
+
+	this.exec = function(hashes) {
+		var fm    = this.fm,
+			dfrd  = $.Deferred().fail(function(error) { error && fm.error(error); }),
+			files = this.files(hashes),
+			cnt   = files.length,
+			file, url, s, w;
+
+		if (!cnt) {
+			return dfrd.reject();
+		}
+
+		// open folder
+		if (cnt == 1 && (file = files[0]) && file.mime == 'directory') {
+			return file && !file.read
+				? dfrd.reject(['errOpen', file.name, 'errPerm'])
+				: fm.request({
+						data   : {cmd  : 'open', target : file.thash || file.hash},
+						notify : {type : 'open', cnt : 1, hideCnt : true},
+						syncOnFail : true
+					});
+		}
+
+		files = $.map(files, function(file) { return file.mime != 'directory' ? file : null });
+
+		// nothing to open or files and folders selected - do nothing
+		if (cnt != files.length) {
+			return dfrd.reject();
+		}
+
+		// open files
+		cnt = files.length;
+		while (cnt--) {
+			file = files[cnt];
+
+			if (!file.read) {
+				return dfrd.reject(['errOpen', file.name, 'errPerm']);
+			}
+
+			if (!(url = fm.url(/*file.thash || */file.hash))) {
+				url = fm.options.url;
+				url = url + (url.indexOf('?') === -1 ? '?' : '&')
+					+ 'cmd=file&target=' + file.hash;
+			}
+
+			w = '';
+			// set window size for image
+			if (file.dim) {
+				s = file.dim.split('x');
+				w = 'width='+(parseInt(s[0])+20) + ',height='+(parseInt(s[1])+20);
+			} else {
+				w = 'width='+parseInt(2*$(window).width()/3)+',height='+parseInt(2*$(window).height()/3);
+			}
+
+			if (!window.open(url, '_blank', w + ',top=50,left=50,scrollbars=yes,resizable=yes')) {
+				return dfrd.reject('errPopup');
+			}
+		}
+		return dfrd.resolve(hashes);
+	}
+
+};"use strict";
+/**
+ * @class  Finder command "paste"
+ * Paste filesfrom clipboard into directory.
+ * If files pasted in its parent directory - files duplicates will created
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.paste = function() {
+
+	this.updateOnSelect  = false;
+
+	this.handlers = {
+		changeclipboard : function() { this.update(); }
+	}
+
+	this.shortcuts = [{
+		pattern     : 'ctrl+v shift+insert'
+	}];
+
+	this.getstate = function(dst) {
+		if (this._disabled) {
+			return -1;
+		}
+		if (dst) {
+			if ($.isArray(dst)) {
+				if (dst.length != 1) {
+					return -1;
+				}
+				dst = this.fm.file(dst[0]);
+			}
+		} else {
+			dst = this.fm.cwd();
+		}
+
+		//return this.fm.clipboard().length && dst.mime == 'directory' && dst.write ? 0 : -1;
+		return dst.mime == 'directory' && dst.write ? 0 : -1;
+	}
+
+	this.exec = function(dst) {
+		var self   = this,
+			fm     = self.fm,
+			dst    = dst ? this.files(dst)[0] : fm.cwd(),
+			files  = fm.clipboard(),
+			cnt    = files.length,
+			cut    = cnt ? files[0].cut : false,
+			error  = cut ? 'errMove' : 'errCopy',
+			fpaste = [],
+			fcopy  = [],
+			dfrd   = $.Deferred()
+				.fail(function(error) {
+					error && fm.error(error);
+				}),
+			copy  = function(files) {
+				return files.length && fm._commands.duplicate
+					? fm.exec('duplicate', files)
+					: $.Deferred().resolve();
+			},
+			paste = function(files) {
+				var dfrd      = $.Deferred(),
+					existed   = [],
+					intersect = function(files, names) {
+						var ret = [],
+							i   = files.length;
+
+						while (i--) {
+							$.inArray(files[i].name, names) !== -1 && ret.unshift(i);
+						}
+						return ret;
+					},
+					confirm   = function(ndx) {
+						var i    = existed[ndx],
+							file = files[i],
+							last = ndx == existed.length-1;
+
+						if (!file) {
+							return;
+						}
+
+						fm.confirm({
+							title  : fm.i18n(cut ? 'moveFiles' : 'copyFiles'),
+							text   : fm.i18n(['errExists', file.name, 'confirmRepl']),
+							all    : !last,
+							accept : {
+								label    : 'btnYes',
+								callback : function(all) {
+									!last && !all
+										? confirm(++ndx)
+										: paste(files);
+								}
+							},
+							reject : {
+								label    : 'btnNo',
+								callback : function(all) {
+									var i;
+
+									if (all) {
+										i = existed.length;
+										while (ndx < i--) {
+											files[existed[i]].remove = true
+										}
+									} else {
+										files[existed[ndx]].remove = true;
+									}
+
+									!last && !all
+										? confirm(++ndx)
+										: paste(files);
+								}
+							},
+							cancel : {
+								label    : 'btnCancel',
+								callback : function() {
+									dfrd.resolve();
+								}
+							}
+						})
+					},
+					valid     = function(names) {
+						existed = intersect(files, names);
+						existed.length ? confirm(0) : paste(files);
+					},
+					paste     = function(files) {
+						var files  = $.map(files, function(file) { return !file.remove ? file : null } ),
+							cnt    = files.length,
+							groups = {},
+							args   = [],
+							src;
+
+						if (!cnt) {
+							return dfrd.resolve();
+						}
+
+						src = files[0].phash;
+						files = $.map(files, function(f) { return f.hash});
+
+						fm.request({
+								data   : {cmd : 'paste', dst : dst.hash, targets : files, cut : cut ? 1 : 0, src : src},
+								notify : {type : cut ? 'move' : 'copy', cnt : cnt}
+							})
+							.always(function() {
+								dfrd.resolve();
+								fm.unlockfiles({files : files});
+							});
+					}
+					;
+
+				if (self._disabled || !files.length) {
+					return dfrd.resolve();
+				}
+
+
+				if (!fm.option('copyOverwrite')) {
+					paste(files);
+				} else {
+
+					dst.hash == fm.cwd().hash
+						? valid($.map(fm.files(), function(file) { return file.phash == dst.hash ? file.name : null }))
+						: fm.request({
+							data : {cmd : 'ls', target : dst.hash},
+							notify : {type : 'prepare', cnt : 1, hideCnt : true},
+							preventFail : true
+						})
+						.always(function(data) {
+							valid(data.list || [])
+						});
+				}
+
+				return dfrd;
+			},
+			parents, fparents;
+
+
+		if (!cnt || !dst || dst.mime != 'directory') {
+			return dfrd.reject();
+		}
+
+		if (!dst.write)	{
+			return dfrd.reject([error, files[0].name, 'errPerm']);
+		}
+
+		parents = fm.parents(dst.hash);
+
+		$.each(files, function(i, file) {
+			if (!file.read) {
+				return !dfrd.reject([error, files[0].name, 'errPerm']);
+			}
+
+			if (cut && file.locked) {
+				return !dfrd.reject(['errLocked', file.name]);
+			}
+
+			if ($.inArray(file.hash, parents) !== -1) {
+				return !dfrd.reject(['errCopyInItself', file.name]);
+			}
+
+			fparents = fm.parents(file.hash);
+			if ($.inArray(dst.hash, fparents) !== -1) {
+
+				if ($.map(fparents, function(h) { var d = fm.file(h); return d.phash == dst.hash && d.name == file.name ? d : null }).length) {
+					return !dfrd.reject(['errReplByChild', file.name]);
+				}
+			}
+
+			if (file.phash == dst.hash) {
+				fcopy.push(file.hash);
+			} else {
+				fpaste.push({
+					hash  : file.hash,
+					phash : file.phash,
+					name  : file.name
+				});
+			}
+		});
+
+		if( dfrd.state() == 'rejected' ){
+			return dfrd;
+		}
+
+		return $.when(
+			copy(fcopy),
+			paste(fpaste)
+		).always(function() {
+			cut && fm.clipboard([]);
+		});
+	}
+
+};"use strict"
+/**
+ * @class  Finder command "quicklook"
+ * Fast preview for some files types
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.quicklook = function() {
+	var self       = this,
+		fm         = self.fm,
+		/**
+		 * window closed state
+		 *
+		 * @type Number
+		 **/
+		closed     = 0,
+		/**
+		 * window animated state
+		 *
+		 * @type Number
+		 **/
+		animated   = 1,
+		/**
+		 * window opened state
+		 *
+		 * @type Number
+		 **/
+		opened     = 2,
+		/**
+		 * window state
+		 *
+		 * @type Number
+		 **/
+		state      = closed,
+		/**
+		 * next/prev event name (requied to cwd catch it)
+		 *
+		 * @type Number
+		 **/
+
+		/**
+		 * navbar icon class
+		 *
+		 * @type Number
+		 **/
+		navicon    = 'finder-quicklook-navbar-icon',
+		/**
+		 * navbar "fullscreen" icon class
+		 *
+		 * @type Number
+		 **/
+		fullscreen  = 'finder-quicklook-fullscreen',
+		/**
+		 * Triger keydown/keypress event with left/right arrow key code
+		 *
+		 * @param  Number  left/right arrow key code
+		 * @return void
+		 **/
+		navtrigger = function(code) {
+			$(document).trigger($.Event('keydown', { keyCode: code, ctrlKey : false, shiftKey : false, altKey : false, metaKey : false }));
+		},
+		/**
+		 * Return css for closed window
+		 *
+		 * @param  jQuery  file node in cwd
+		 * @return void
+		 **/
+		closedCss = function(node) {
+			return {
+				opacity : 0,
+				width   : 20,//node.width(),
+				height  : fm.view == 'list' ? 1 : 20,
+				top     : node.offset().top,
+				left    : node.offset().left
+			}
+		},
+		/**
+		 * Return css for opened window
+		 *
+		 * @return void
+		 **/
+		openedCss = function() {
+			var win = $(window);
+			return {
+				opacity : 1,
+				width  : width,
+				height : height,
+				top    : parseInt((win.height() - height)/2 + win.scrollTop()),
+				left   : parseInt((win.width() - width)/2 + win.scrollLeft())
+			}
+		},
+
+		support = function(codec) {
+			var media = document.createElement(codec.substr(0, codec.indexOf('/'))),
+				value = false;
+
+			try {
+				value = media.canPlayType && media.canPlayType(codec);
+			} catch (e) {
+
+			}
+
+			return value && value !== '' && value != 'no';
+		},
+
+		/**
+		 * Opened window width (from config)
+		 *
+		 * @type Number
+		 **/
+		width,
+		/**
+		 * Opened window height (from config)
+		 *
+		 * @type Number
+		 **/
+		height,
+		/**
+		 * Finder node
+		 *
+		 * @type jQuery
+		 **/
+		parent,
+		/**
+		 * Finder current directory node
+		 *
+		 * @type jQuery
+		 **/
+		cwd,
+		title   = $('<div class="finder-quicklook-title"/>'),
+		icon    = $('<div/>'),
+		info    = $('<div class="finder-quicklook-info"/>'),//.hide(),
+		fsicon  = $('<div class="'+navicon+' '+navicon+'-fullscreen"/>')
+			.mousedown(function(e) {
+				var win     = self.window,
+					full    = win.is('.'+fullscreen),
+					scroll  = 'scroll.'+fm.namespace,
+					$window = $(window);
+
+				e.stopPropagation();
+
+				if (full) {
+					win.css(win.data('position')).unbind('mousemove');
+					$window.unbind(scroll).trigger(self.resize).unbind(self.resize);
+					navbar.unbind('mouseenter').unbind('mousemove');
+				} else {
+					win.data('position', {
+						left   : win.css('left'),
+						top    : win.css('top'),
+						width  : win.width(),
+						height : win.height()
+					})
+					.css({
+						width  : '100%',
+						height : '100%'
+					});
+
+					$(window).bind(scroll, function() {
+						win.css({
+							left   : parseInt($(window).scrollLeft()),
+							top    : parseInt($(window).scrollTop())
+						})
+					})
+					.bind(self.resize, function(e) {
+						self.preview.trigger('changesize');
+					})
+					.trigger(scroll)
+					.trigger(self.resize);
+
+					win.bind('mousemove', function(e) {
+						navbar.stop(true, true).show().delay(3000).fadeOut('slow');
+					})
+					.mousemove();
+
+					navbar.mouseenter(function() {
+						navbar.stop(true, true).show();
+					})
+					.mousemove(function(e) {
+						e.stopPropagation();
+					});
+				}
+				navbar.attr('style', '');
+				if( full ){
+					navbar.filter(':ui-draggable').draggable('destroy');
+				}else{
+					navbar.draggable({});
+				}
+
+				win.toggleClass(fullscreen);
+				$(this).toggleClass(navicon+'-fullscreen-off');
+				$.fn.resizable && parent.add(win).resizable(full ? 'enable' : 'disable').removeClass('ui-state-disabled');
+			}),
+
+		navbar  = $('<div class="finder-quicklook-navbar"/>')
+			.append($('<div class="'+navicon+' '+navicon+'-prev"/>').mousedown(function() { navtrigger(37); }))
+			.append(fsicon)
+			.append($('<div class="'+navicon+' '+navicon+'-next"/>').mousedown(function() { navtrigger(39); }))
+			.append('<div class="finder-quicklook-navbar-separator"/>')
+			.append($('<div class="'+navicon+' '+navicon+'-close"/>').mousedown(function() { self.window.trigger('close'); }))
+		;
+
+	this.resize = 'resize.'+fm.namespace;
+	this.info = $('<div class="finder-quicklook-info-wrapper"/>')
+		.append(icon)
+		.append(info);
+
+	this.preview = $('<div class="finder-quicklook-preview ui-helper-clearfix"/>')
+		// clean info/icon
+		.bind('change', function(e) {
+			self.info.attr('style', '').hide();
+			icon.removeAttr('class').attr('style', '');
+			info.html('');
+
+		})
+		// update info/icon
+		.bind('update', function(e) {
+			var fm      = self.fm,
+				preview = self.preview,
+				file    = e.file,
+				tpl     = '<div class="finder-quicklook-info-data">{value}</div>',
+				tmb;
+
+			if (file) {
+				!file.read && e.stopImmediatePropagation();
+				self.window.data('hash', file.hash);
+				self.preview.unbind('changesize').trigger('change').children().remove();
+				title.html(fm.escape(file.name));
+
+				info.html(
+						tpl.replace(/\{value\}/, file.name)
+						+ tpl.replace(/\{value\}/, fm.mime2kind(file))
+						+ (file.mime == 'directory' ? '' : tpl.replace(/\{value\}/, fm.formatSize(file.size)))
+						+ tpl.replace(/\{value\}/, fm.i18n('modify')+': '+ fm.formatDate(file))
+					)
+				icon.addClass('finder-cwd-icon ui-corner-all '+fm.mime2class(file.mime));
+
+				if (file.tmb) {
+					$('<img/>')
+						.hide()
+						.appendTo(self.preview)
+						.load(function() {
+							icon.css('background', 'url("'+tmb+'") center center no-repeat');
+							$(this).remove();
+						})
+						.attr('src', (tmb = fm.tmb(file.hash)));
+				}
+				self.info.delay(100).fadeIn(10);
+			} else {
+				e.stopImmediatePropagation();
+			}
+		});
+
+
+
+
+	this.window = $('<div class="ui-helper-reset ui-widget finder-quicklook" style="position:absolute"/>')
+		.click(function(e) { e.stopPropagation(); })
+		.append(
+			$('<div class="finder-quicklook-titlebar"/>')
+				.append(title)
+				.append($('<span class="ui-icon ui-icon-circle-close"/>').mousedown(function(e) {
+					e.stopPropagation();
+					self.window.trigger('close');
+				}))
+		)
+		.append(this.preview.add(navbar))
+		.append(self.info.hide())
+		.draggable({handle : 'div.finder-quicklook-titlebar'})
+		.bind('open', function(e) {
+			var win  = self.window,
+				file = self.value,
+				node;
+
+			if (self.closed() && file && (node = cwd.find('#'+file.hash)).length) {
+
+				state = animated;
+				node.trigger('scrolltoview');
+				win.css(closedCss(node))
+					.show()
+					.animate(openedCss(), 550, function() {
+						state = opened;
+						self.update(1, self.value);
+					});
+			}
+		})
+		.bind('close', function(e) {
+			var win     = self.window,
+				preview = self.preview.trigger('change'),
+				file    = self.value,
+				node    = cwd.find('#'+win.data('hash')),
+				close   = function() {
+					state = closed;
+					win.hide();
+					preview.children().remove();
+					self.update(0, self.value)
+				};
+
+			if (self.opened()) {
+				state = animated;
+				win.is('.'+fullscreen) && fsicon.mousedown()
+				node.length
+					? win.animate(closedCss(node), 500, close)
+					: close();
+			}
+		});
+
+	/**
+	 * This command cannot be disable by backend
+	 *
+	 * @type Boolean
+	 **/
+	this.alwaysEnabled = true;
+
+	/**
+	 * Selected file
+	 *
+	 * @type Object
+	 **/
+	this.value = null;
+
+	this.handlers = {
+		// save selected file
+		select : function() { this.update(void(0), this.fm.selectedFiles()[0]); },
+		error  : function() { self.window.is(':visible') && self.window.data('hash', '').trigger('close'); },
+		'searchshow searchhide' : function() { this.opened() && this.window.trigger('close'); }
+	}
+
+	this.shortcuts = [{
+		pattern     : 'space'
+	}];
+
+	this.support = {
+		audio : {
+			ogg : support('audio/ogg; codecs="vorbis"'),
+			mp3 : support('audio/mpeg;'),
+			wav : support('audio/wav; codecs="1"'),
+			m4a : support('audio/x-m4a;') || support('audio/aac;')
+		},
+		video : {
+			ogg  : support('video/ogg; codecs="theora"'),
+			webm : support('video/webm; codecs="vp8, vorbis"'),
+			mp4  : support('video/mp4; codecs="avc1.42E01E"') || support('video/mp4; codecs="avc1.42E01E, mp4a.40.2"')
+		}
+	}
+
+
+	/**
+	 * Return true if quickLoock window is visible and not animated
+	 *
+	 * @return Boolean
+	 **/
+	this.closed = function() {
+		return state == closed;
+	}
+
+	/**
+	 * Return true if quickLoock window is hidden
+	 *
+	 * @return Boolean
+	 **/
+	this.opened = function() {
+		return state == opened;
+	}
+
+	/**
+	 * Init command.
+	 * Add default plugins and init other plugins
+	 *
+	 * @return Object
+	 **/
+	this.init = function() {
+		var o       = this.options,
+			win     = this.window,
+			preview = this.preview,
+			i, p;
+
+		width  = o.width  > 0 ? parseInt(o.width)  : 450;
+		height = o.height > 0 ? parseInt(o.height) : 300;
+
+		fm.one('load', function() {
+			parent = fm.getUI();
+			cwd    = fm.getUI('cwd');
+
+			win.appendTo('body').zIndex(100 + parent.zIndex());
+
+			// close window on escape
+			$(document).keydown(function(e) {
+				e.keyCode == 27 && self.opened() && win.trigger('close')
+			})
+
+			if ($.fn.resizable) {
+				win.resizable({
+					handles   : 'se',
+					minWidth  : 350,
+					minHeight : 120,
+					resize    : function() {
+						// use another event to avoid recursion in fullscreen mode
+						// may be there is clever solution, but i cant find it :(
+						preview.trigger('changesize');
+					}
+				});
+			}
+
+			self.change(function() {
+				if (self.opened()) {
+					self.value ? preview.trigger($.Event('update', {file : self.value})) : win.trigger('close');
+				}
+			});
+
+			$.each(fm.commands.quicklook.plugins || [], function(i, plugin) {
+				if (typeof(plugin) == 'function') {
+					new plugin(self)
+				}
+			});
+
+			preview.bind('update', function() {
+				self.info.show();
+			});
+		});
+
+	}
+
+	this.getstate = function() {
+		return this.fm.selected().length == 1 ? state == opened ? 1 : 0 : -1;
+	}
+
+	this.exec = function() {
+		this.enabled() && this.window.trigger(this.opened() ? 'close' : 'open');
+	}
+
+	this.hideinfo = function() {
+		this.info.stop(true).hide();
+	}
+
+}
+
+;
+Finder.prototype.commands.quicklook.plugins = [
+
+	/**
+	 * Images preview plugin
+	 *
+	 * @param Finder.commands.quicklook
+	 **/
+	function(ql) {
+		var mimes   = ['image/jpeg', 'image/png', 'image/gif'],
+			preview = ql.preview;
+
+		// what kind of images we can display
+		$.each(navigator.mimeTypes, function(i, o) {
+			var mime = o.type;
+
+			if (mime.indexOf('image/') === 0 && $.inArray(mime, mimes)) {
+				mimes.push(mime);
+			}
+		});
+
+		preview.bind('update', function(e) {
+			var file = e.file,
+				img;
+
+			if ($.inArray(file.mime, mimes) !== -1) {
+				// this is our file - stop event propagation
+				e.stopImmediatePropagation();
+
+				img = $('<img/>')
+					.hide()
+					.appendTo(preview)
+					.load(function() {
+						// timeout - because of strange safari bug -
+						// sometimes cant get image height 0_o
+						setTimeout(function() {
+							var prop = (img.width()/img.height()).toFixed(2);
+							preview.bind('changesize', function() {
+								var pw = parseInt(preview.width()),
+									ph = parseInt(preview.height()),
+									w, h;
+
+								if (prop < (pw/ph).toFixed(2)) {
+									h = ph;
+									w = Math.floor(h * prop);
+								} else {
+									w = pw;
+									h = Math.floor(w/prop);
+								}
+								img.width(w).height(h).css('margin-top', h < ph ? Math.floor((ph - h)/2) : 0);
+
+							})
+							.trigger('changesize');
+
+							// hide info/icon
+							ql.hideinfo();
+							//show image
+							img.fadeIn(100);
+						}, 1)
+					})
+					.attr('src', ql.fm.url(file.hash));
+			}
+
+		});
+	},
+
+	/**
+	 * HTML preview plugin
+	 *
+	 * @param Finder.commands.quicklook
+	 **/
+	function(ql) {
+		var mimes   = ['text/html', 'application/xhtml+xml'],
+			preview = ql.preview,
+			fm      = ql.fm;
+
+		preview.bind('update', function(e) {
+			var file = e.file, jqxhr;
+
+			if ($.inArray(file.mime, mimes) !== -1) {
+				e.stopImmediatePropagation();
+
+				// stop loading on change file if not loaded yet
+				preview.one('change', function() {
+					if( (jqxhr.state() != 'resolved') && (jqxhr.state() != 'rejected') ){
+						jqxhr.reject();
+					}
+				});
+
+				jqxhr = fm.request({
+					data           : {cmd : 'get', target  : file.hash, current : file.phash},
+					preventDefault : true
+				})
+				.done(function(data) {
+					ql.hideinfo();
+					doc = $('<iframe class="finder-quicklook-preview-html"/>').appendTo(preview)[0].contentWindow.document;
+					doc.open();
+					doc.write(data.content);
+					doc.close();
+				});
+			}
+		})
+	},
+
+	/**
+	 * Texts preview plugin
+	 *
+	 * @param Finder.commands.quicklook
+	 **/
+	function(ql) {
+		var fm      = ql.fm,
+			mimes   = fm.res('mimes', 'text'),
+			preview = ql.preview;
+
+
+		preview.bind('update', function(e) {
+			var file = e.file,
+				mime = file.mime,
+				jqxhr;
+
+			if (mime.indexOf('text/') === 0 || $.inArray(mime, mimes) !== -1) {
+				e.stopImmediatePropagation();
+
+				// stop loading on change file if not loadin yet
+				preview.one('change', function() {
+					if( (jqxhr.state() != 'resolved') && (jqxhr.state() != 'rejected') ){
+						jqxhr.reject();
+					}
+				});
+
+				jqxhr = fm.request({
+					data   : {cmd     : 'get', target  : file.hash },
+					preventDefault : true
+				})
+				.done(function(data) {
+					ql.hideinfo();
+					$('<div class="finder-quicklook-preview-text-wrapper"><pre class="finder-quicklook-preview-text">'+fm.escape(data.content)+'</pre></div>').appendTo(preview);
+				});
+			}
+		});
+	},
+
+	/**
+	 * PDF preview plugin
+	 *
+	 * @param Finder.commands.quicklook
+	 **/
+	function(ql) {
+		var fm      = ql.fm,
+			mime    = 'application/pdf',
+			preview = ql.preview,
+			active  = false;
+
+		if ((fm.UA.Safari && fm.OS == 'mac') || fm.UA.IE) {
+			active = true;
+		} else {
+			$.each(navigator.plugins, function(i, plugins) {
+				$.each(plugins, function(i, plugin) {
+					if (plugin.type == mime) {
+						return !(active = true);
+					}
+				});
+			});
+		}
+
+		active && preview.bind('update', function(e) {
+			var file = e.file, node;
+
+			if (file.mime == mime) {
+				e.stopImmediatePropagation();
+				preview.one('change', function() {
+					node.unbind('load').remove();
+				});
+
+				node = $('<iframe class="finder-quicklook-preview-pdf"/>')
+					.hide()
+					.appendTo(preview)
+					.load(function() {
+						ql.hideinfo();
+						node.show();
+					})
+					.attr('src', fm.url(file.hash));
+			}
+
+		})
+
+
+	},
+
+	/**
+	 * Flash preview plugin
+	 *
+	 * @param Finder.commands.quicklook
+	 **/
+	function(ql) {
+		var fm      = ql.fm,
+			mime    = 'application/x-shockwave-flash',
+			preview = ql.preview,
+			active  = false;
+
+		$.each(navigator.plugins, function(i, plugins) {
+			$.each(plugins, function(i, plugin) {
+				if (plugin.type == mime) {
+					return !(active = true);
+				}
+			});
+		});
+
+		active && preview.bind('update', function(e) {
+			var file = e.file,
+				node;
+
+			if (file.mime == mime) {
+				e.stopImmediatePropagation();
+				ql.hideinfo();
+				preview.append((node = $('<embed class="finder-quicklook-preview-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" src="'+fm.url(file.hash)+'" quality="high" type="application/x-shockwave-flash" />')));
+			}
+		});
+	},
+
+	/**
+	 * HTML5 audio preview plugin
+	 *
+	 * @param Finder.commands.quicklook
+	 **/
+	function(ql) {
+		var preview  = ql.preview,
+			autoplay = !!ql.options['autoplay'],
+			mimes    = {
+				'audio/mpeg'    : 'mp3',
+				'audio/mpeg3'   : 'mp3',
+				'audio/mp3'     : 'mp3',
+				'audio/x-mpeg3' : 'mp3',
+				'audio/x-mp3'   : 'mp3',
+				'audio/x-wav'   : 'wav',
+				'audio/wav'     : 'wav',
+				'audio/x-m4a'   : 'm4a',
+				'audio/aac'     : 'm4a',
+				'audio/mp4'     : 'm4a',
+				'audio/x-mp4'   : 'm4a',
+				'audio/ogg'     : 'ogg'
+			},
+			node;
+
+		preview.bind('update', function(e) {
+			var file = e.file,
+				type = mimes[file.mime];
+
+			if (ql.support.audio[type]) {
+				e.stopImmediatePropagation();
+
+				node = $('<audio class="finder-quicklook-preview-audio" controls preload="auto" autobuffer><source src="'+ql.fm.url(file.hash)+'" /></audio>')
+					.appendTo(preview);
+				autoplay && node[0].play();
+			}
+		}).bind('change', function() {
+			if (node && node.parent().length) {
+				node[0].pause();
+				node.remove();
+				node= null;
+			}
+		});
+	},
+
+	/**
+	 * HTML5 video preview plugin
+	 *
+	 * @param Finder.commands.quicklook
+	 **/
+	function(ql) {
+		var preview  = ql.preview,
+			autoplay = !!ql.options['autoplay'],
+			mimes    = {
+				'video/mp4'       : 'mp4',
+				'video/x-m4v'     : 'mp4',
+				'video/ogg'       : 'ogg',
+				'application/ogg' : 'ogg',
+				'video/webm'      : 'webm'
+			},
+			node;
+
+		preview.bind('update', function(e) {
+			var file = e.file,
+				type = mimes[file.mime];
+
+			if (ql.support.video[type]) {
+				e.stopImmediatePropagation();
+
+				ql.hideinfo();
+				node = $('<video class="finder-quicklook-preview-video" controls preload="auto" autobuffer><source src="'+ql.fm.url(file.hash)+'" /></video>').appendTo(preview);
+				autoplay && node[0].play();
+
+			}
+		}).bind('change', function() {
+			if (node && node.parent().length) {
+				node[0].pause();
+				node.remove();
+				node= null;
+			}
+		});
+	},
+
+	/**
+	 * Audio/video preview plugin using browser plugins
+	 *
+	 * @param Finder.commands.quicklook
+	 **/
+	function(ql) {
+		var preview = ql.preview,
+			mimes   = [],
+			node;
+
+		$.each(navigator.plugins, function(i, plugins) {
+			$.each(plugins, function(i, plugin) {
+				(plugin.type.indexOf('audio/') === 0 || plugin.type.indexOf('video/') === 0) && mimes.push(plugin.type);
+			});
+		});
+
+		preview.bind('update', function(e) {
+			var file  = e.file,
+				mime  = file.mime,
+				video;
+
+			if ($.inArray(file.mime, mimes) !== -1) {
+				e.stopImmediatePropagation();
+				(video = mime.indexOf('video/') === 0) && ql.hideinfo();
+				node = $('<embed src="'+ql.fm.url(file.hash)+'" type="'+mime+'" class="finder-quicklook-preview-'+(video ? 'video' : 'audio')+'"/>')
+					.appendTo(preview);
+			}
+		}).bind('change', function() {
+			if (node && node.parent().length) {
+				node.remove();
+				node= null;
+			}
+		});
+
+	}
+
+];/**
+ * @class  Finder command "reload"
+ * Sync files and folders
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.reload = function() {
+
+	this.alwaysEnabled = true;
+	this.updateOnSelect = true;
+
+	this.shortcuts = [{
+		pattern     : 'ctrl+shift+r f5'
+	}];
+
+	this.getstate = function() {
+		return 0;
+	}
+
+	this.exec = function() {
+
+		// this would reload the contents of the folder, but wouldn't update the tree
+		// return this.fm.exec('open', this.fm.cwd().hash );
+
+		var fm      = this.fm,
+			dfrd    = fm.sync(),
+
+			timeout = setTimeout(function() {
+				fm.notify({type : 'reload', cnt : 1, hideCnt : true});
+				dfrd.always(function() { fm.notify({type : 'reload', cnt  : -1}); });
+			}, fm.notifyDelay);
+
+		return dfrd.always(function() {
+			clearTimeout(timeout);
+			fm.trigger('reload');
+		});
+	}
+
+};"use strict";
+/**
+ * @class Finder command "rename".
+ * Rename selected file.
+ *
+ * @author Dmitry (dio) Levashov, dio@std42.ru
+ **/
+Finder.prototype.commands.rename = function() {
+
+	this.shortcuts = [{
+		pattern     : 'f2'+(this.fm.OS == 'mac' ? ' enter' : '')
+	}];
+
+	this.getstate = function() {
+		var sel = this.fm.selectedFiles();
+
+		return !this._disabled && sel.length == 1 && sel[0].phash && !sel[0].locked  ? 0 : -1;
+	}
+
+	this.exec = function() {
+		var fm       = this.fm,
+			cwd      = fm.getUI('cwd'),
+			sel      = fm.selected(),
+			cnt      = sel.length,
+			file     = fm.file(sel.shift()),
+			filename = '.finder-cwd-filename',
+			dfrd     = $.Deferred()
+				.fail(function(error) {
+					var parent = input.parent(),
+						name   = fm.escape(file.name);
+
+
+					if (parent.length) {
+						input.remove();
+						parent.html(name);
+					} else {
+						cwd.find('#'+file.hash).find(filename).html(name);
+						setTimeout(function() {
+							cwd.find('#'+file.hash).click();
+						}, 50);
+					}
+
+					error && fm.error(error);
+				})
+				.always(function() {
+					fm.enable();
+				}),
+			input = $('<input type="text"/>')
+				.keydown(function(e) {
+					e.stopPropagation();
+					e.stopImmediatePropagation();
+					if (e.keyCode == $.ui.keyCode.ESCAPE) {
+						dfrd.reject();
+					} else if (e.keyCode == $.ui.keyCode.ENTER) {
+						input.blur();
+					}
+				})
+				.mousedown(function(e) {
+					e.stopPropagation();
+				})
+				.dblclick(function(e) {
+					e.stopPropagation();
+					e.preventDefault();
+				})
+				.blur(function() {
+					var name   = $.trim(input.val()),
+						parent = input.parent();
+
+					if (parent.length) {
+						if (input[0].setSelectionRange) {
+							input[0].setSelectionRange(0, 0)
+						}
+						if (name == file.name) {
+							return dfrd.reject();
+						}
+						if (!name) {
+							return dfrd.reject('errInvName');
+						}
+						if (fm.fileByName(name, file.phash)) {
+							return dfrd.reject(['errExists', name]);
+						}
+
+						parent.html(fm.escape(name));
+						fm.lockfiles({files : [file.hash]});
+						fm.request({
+								data   : {cmd : 'rename', target : file.hash, name : name},
+								notify : {type : 'rename', cnt : 1}
+							})
+							.fail(function(error) {
+								dfrd.reject();
+								fm.sync();
+							})
+							.done(function(data) {
+								dfrd.resolve(data);
+							})
+							.always(function() {
+								fm.unlockfiles({files : [file.hash]})
+							});
+
+					}
+				}),
+			node = cwd.find('#'+file.hash).find(filename).empty().append(input.val(file.name)),
+			name = input.val().replace(/\.((tar\.(gz|bz|bz2|z|lzo))|cpio\.gz|ps\.gz|xcf\.(gz|bz2)|[a-z0-9]{1,4})$/ig, '')
+			;
+
+		if (this.disabled()) {
+			return dfrd.reject();
+		}
+
+		if (!file || cnt > 1 || !node.length) {
+			return dfrd.reject('errCmdParams', this.title);
+		}
+
+		if (file.locked) {
+			return dfrd.reject(['errLocked', file.name]);
+		}
+
+		fm.one('select', function() {
+			input.parent().length && file && $.inArray(file.hash, fm.selected()) === -1 && input.blur();
+		})
+
+		input.select().focus();
+
+		input[0].setSelectionRange && input[0].setSelectionRange(0, name.length);
+
+		return dfrd;
+	}
+
+}
+;"use strict";
+/**
+ * @class  Finder command "resize"
+ * Open dialog to resize image
+ *
+ * @author Dmitry (dio) Levashov
+ * @author Alexey Sukhotin
+ * @author Naoki Sawada
+ * @author Sergio Jovani
+ **/
+Finder.prototype.commands.resize = function() {
+
+	this.updateOnSelect = false;
+
+	this.getstate = function() {
+		var sel = this.fm.selectedFiles();
+		return !this._disabled && sel.length == 1 && sel[0].read && sel[0].write && sel[0].mime.indexOf('image/') !== -1 ? 0 : -1;
+	}
+
+	this.exec = function(hashes) {
+		var fm    = this.fm,
+			files = this.files(hashes),
+			dfrd  = $.Deferred(),
+
+			open = function(file, id) {
+				var dialog   = $('<div class="finder-dialog-resize"/>'),
+					input    = '<input type="text" size="5"/>',
+					row      = '<div class="finder-resize-row"/>',
+					label    = '<div class="finder-resize-label"/>',
+					control  = $('<div class="finder-resize-control"/>'),
+					preview  = $('<div class="finder-resize-preview"/>'),
+					spinner  = $('<div class="finder-resize-spinner">'+fm.i18n('ntfloadimg')+'</div>'),
+					rhandle  = $('<div class="finder-resize-handle"/>'),
+					rhandlec = $('<div class="finder-resize-handle"/>'),
+					uiresize = $('<div class="finder-resize-uiresize"/>'),
+					uicrop   = $('<div class="finder-resize-uicrop"/>'),
+					uibuttonset = '<div class="ui-widget-content ui-corner-all finder-buttonset"/>',
+					uibutton    = '<div class="ui-state-default finder-button"/>',
+					uiseparator = '<span class="ui-widget-content finder-toolbar-button-separator"/>',
+					uirotate    = $('<div class="finder-resize-rotate"/>'),
+					uideg270    = $(uibutton).attr('title',fm.i18n('rotate-cw')).append($('<span class="finder-button-icon finder-button-icon-rotate-l"/>')
+						.click(function(){
+							rdegree = rdegree - 90;
+							rotate.update(rdegree);
+						})),
+					uideg90     = $(uibutton).attr('title',fm.i18n('rotate-ccw')).append($('<span class="finder-button-icon finder-button-icon-rotate-r"/>')
+						.click(function(){
+							rdegree = rdegree + 90;
+							rotate.update(rdegree);
+						})),
+					uiprop   = $('<span />'),
+					reset    = $('<div class="ui-state-default ui-corner-all finder-resize-reset"><span class="ui-icon ui-icon-arrowreturnthick-1-w"/></div>'),
+					//uitype   = $('<div class="finder-resize-type"><div class="finder-resize-label">'+fm.i18n('mode')+'</div></div>')
+					uitype   = $('<div class="finder-resize-type"/>')
+						.append('<input type="radio" name="type" id="type-resize" value="resize" checked="checked" /><label for="type-resize">'+fm.i18n('resize')+'</label>')
+						.append('<input type="radio" name="type" id="type-crop"   value="crop"/><label for="type-crop">'+fm.i18n('crop')+'</label>')
+						.append('<input type="radio" name="type" id="type-rotate" value="rotate"/><label for="type-rotate">'+fm.i18n('rotate')+'</label>'),
+					type     = $('input', uitype)
+						.change(function() {
+							var val = $('input:checked', uitype).val();
+
+							resetView();
+							resizable(true);
+							croppable(true);
+							rotateable(true);
+
+							if (val == 'resize') {
+								uiresize.show();
+								uirotate.hide();
+								uicrop.hide();
+								resizable();
+							}
+							else if (val == 'crop') {
+								uirotate.hide();
+								uiresize.hide();
+								uicrop.show();
+								croppable();
+							} else if (val == 'rotate') {
+								uiresize.hide();
+								uicrop.hide();
+								uirotate.show();
+								rotateable();
+							}
+						}),
+					constr  = $('<input type="checkbox" checked="checked"/>')
+						.change(function() {
+							cratio = !!constr.prop('checked');
+							resize.fixHeight();
+							resizable(true);
+							resizable();
+						}),
+					width   = $(input)
+						.change(function() {
+							var w = parseInt(width.val()),
+								h = parseInt(cratio ? w/ratio : height.val());
+
+							if (w > 0 && h > 0) {
+								resize.updateView(w, h);
+								height.val(h);
+							}
+						}),
+					height  = $(input)
+						.change(function() {
+							var h = parseInt(height.val()),
+								w = parseInt(cratio ? h*ratio : width.val());
+
+							if (w > 0 && h > 0) {
+								resize.updateView(w, h);
+								width.val(w);
+							}
+						}),
+					pointX  = $(input),
+					pointY  = $(input),
+					offsetX = $(input),
+					offsetY = $(input),
+					degree = $('<input type="text" size="3" maxlength="3" value="0" />')
+						.change(function() {
+							rotate.update();
+						}),
+					uidegslider = $('<div class="finder-resize-rotate-slider"/>')
+						.slider({
+							min: 0,
+							max: 359,
+							value: degree.val(),
+							animate: true,
+							change: function(event, ui) {
+								if (ui.value != uidegslider.slider('value')) {
+									rotate.update(ui.value);
+								}
+							},
+							slide: function(event, ui) {
+								rotate.update(ui.value, false);
+							}
+						}),
+					ratio   = 1,
+					prop    = 1,
+					owidth  = 0,
+					oheight = 0,
+					cratio  = true,
+					pwidth  = 0,
+					pheight = 0,
+					rwidth  = 0,
+					rheight = 0,
+					rdegree = 0,
+					img     = $('<img/>')
+						.load(function() {
+							spinner.remove();
+
+							owidth  = img.width();
+							oheight = img.height();
+							ratio   = owidth/oheight;
+							resize.updateView(owidth, oheight);
+
+							rhandle.append(img.show()).show();
+							width.val(owidth);
+							height.val(oheight);
+
+							var r_scale = Math.min(pwidth, pheight) / Math.sqrt(Math.pow(owidth, 2) + Math.pow(oheight, 2));
+							rwidth = owidth * r_scale;
+							rheight = oheight * r_scale;
+
+							control.find('input,select').removeAttr('disabled')
+								.filter(':text').keydown(function(e) {
+									var c = e.keyCode, i;
+
+									e.stopPropagation();
+
+									if ((c >= 37 && c <= 40)
+									|| c == $.ui.keyCode.BACKSPACE
+									|| c == $.ui.keyCode.DELETE
+									|| (c == 65 && (e.ctrlKey||e.metaKey))
+									|| c == 27) {
+										return;
+									}
+
+									if (c == 9) {
+										i = $(this).parent()[e.shiftKey ? 'prev' : 'next']('.finder-resize-row').children(':text');
+
+										if (i.length) {
+											i.focus()
+										}
+									}
+
+									if (c == 13) {
+										save()
+										return;
+									}
+
+									if (!((c >= 48 && c <= 57) || (c >= 96 && c <= 105))) {
+										e.preventDefault();
+									}
+								})
+								.filter(':first').focus();
+
+							resizable();
+
+							reset.hover(function() { reset.toggleClass('ui-state-hover'); }).click(resetView);
+
+						})
+						.error(function() {
+							spinner.text('Unable to load image').css('background', 'transparent');
+						}),
+					basec = $('<div/>'),
+					imgc = $('<img/>'),
+					coverc = $('<div/>'),
+					imgr = $('<img/>'),
+					resetView = function() {
+						width.val(owidth);
+						height.val(oheight);
+						resize.updateView(owidth, oheight);
+					},
+					resize = {
+						update : function() {
+							width.val(parseInt(img.width()/prop));
+							height.val(parseInt(img.height()/prop))
+						},
+
+						updateView : function(w, h) {
+							if (w > pwidth || h > pheight) {
+								if (w / pwidth > h / pheight) {
+									img.width(pwidth).height(Math.ceil(img.width()/ratio));
+								} else {
+									img.height(pheight).width(Math.ceil(img.height()*ratio));
+								}
+							} else {
+								img.width(w).height(h);
+							}
+
+							prop = img.width()/w;
+							uiprop.text('1 : '+(1/prop).toFixed(2))
+							resize.updateHandle();
+						},
+
+						updateHandle : function() {
+							rhandle.width(img.width()).height(img.height());
+						},
+						fixWidth : function() {
+							var w, h;
+							if (cratio) {
+								h = height.val();
+								h = parseInt(h*ratio);
+								resize.updateView(w, h);
+								width.val(w);
+							}
+						},
+						fixHeight : function() {
+							var w, h;
+							if (cratio) {
+								w = width.val();
+								h = parseInt(w/ratio);
+								resize.updateView(w, h);
+								height.val(h);
+							}
+						}
+					},
+					crop = {
+						update : function() {
+							offsetX.val(parseInt(rhandlec.width()/prop));
+							offsetY.val(parseInt(rhandlec.height()/prop));
+							pointX.val(parseInt((rhandlec.offset().left-imgc.offset().left)/prop));
+							pointY.val(parseInt((rhandlec.offset().top-imgc.offset().top)/prop));
+						},
+						resize_update : function() {
+							crop.update();
+							coverc.width(rhandlec.width());
+							coverc.height(rhandlec.height());
+						}
+					},
+					rotate = {
+						mouseStartAngle : 0,
+						imageStartAngle : 0,
+						imageBeingRotated : false,
+
+						update : function(value, animate) {
+							if (typeof value == 'undefined') {
+								rdegree = value = parseInt(degree.val());
+							}
+							if (typeof animate == 'undefined') {
+								animate = true;
+							}
+
+							if (! animate || fm.UA.Opera || fm.UA.ltIE8) {
+								imgr.rotate(value);
+							} else {
+								imgr.animate({rotate: value + 'deg'});
+							}
+							value = value % 360;
+							if (value < 0) {
+								value += 360;
+							}
+							degree.val(parseInt(value));
+
+							uidegslider.slider('value', degree.val());
+						},
+
+						execute : function ( e ) {
+
+							if ( !rotate.imageBeingRotated ) return;
+
+							var imageCentre = rotate.getCenter( imgr );
+							var mouseXFromCentre = e.pageX - imageCentre[0];
+							var mouseYFromCentre = e.pageY - imageCentre[1];
+							var mouseAngle = Math.atan2( mouseYFromCentre, mouseXFromCentre );
+
+							var rotateAngle = mouseAngle - rotate.mouseStartAngle + rotate.imageStartAngle;
+							rotateAngle = Math.round(parseFloat(rotateAngle) * 180 / Math.PI);
+
+							if ( e.shiftKey ) {
+								rotateAngle = Math.round((rotateAngle + 6)/15) * 15;
+							}
+
+							imgr.rotate(rotateAngle);
+
+							rotateAngle = rotateAngle % 360;
+							if (rotateAngle < 0) {
+								rotateAngle += 360;
+							}
+							degree.val(rotateAngle);
+
+							uidegslider.slider('value', degree.val());
+
+							return false;
+						},
+
+						start : function ( e ) {
+
+							rotate.imageBeingRotated = true;
+
+							var imageCentre = rotate.getCenter( imgr );
+							var mouseStartXFromCentre = e.pageX - imageCentre[0];
+							var mouseStartYFromCentre = e.pageY - imageCentre[1];
+							rotate.mouseStartAngle = Math.atan2( mouseStartYFromCentre, mouseStartXFromCentre );
+
+							rotate.imageStartAngle = parseFloat(imgr.rotate()) * Math.PI / 180.0;
+
+							$(document).mousemove( rotate.execute );
+
+							return false;
+						},
+
+						stop : function ( e ) {
+
+							if ( !rotate.imageBeingRotated ) return;
+
+							$(document).unbind( 'mousemove' , rotate.execute);
+
+							setTimeout( function() { rotate.imageBeingRotated = false; }, 10 );
+							return false;
+						},
+
+						getCenter : function ( image ) {
+
+							var currentRotation = imgr.rotate();
+							imgr.rotate(0);
+
+							var imageOffset = imgr.offset();
+							var imageCentreX = imageOffset.left + imgr.width() / 2;
+							var imageCentreY = imageOffset.top + imgr.height() / 2;
+
+							imgr.rotate(currentRotation);
+
+							return Array( imageCentreX, imageCentreY );
+						}
+					},
+					resizable = function(destroy) {
+						if ($.fn.resizable) {
+							if (destroy) {
+								rhandle.filter(':ui-resizable').resizable('destroy');
+								rhandle.hide();
+							}else {
+								rhandle.show();
+								rhandle.resizable({
+									alsoResize  : img,
+									aspectRatio : cratio,
+									resize      : resize.update,
+									stop        : resize.fixHeight
+								});
+							}
+						}
+					},
+					croppable = function(destroy) {
+						if ($.fn.draggable && $.fn.resizable) {
+							if (destroy) {
+								rhandlec.filter(':ui-resizable').resizable('destroy');
+								rhandlec.filter(':ui-draggable').draggable('destroy');
+								basec.hide();
+							}
+							else {
+								imgc
+									.width(img.width())
+									.height(img.height());
+
+								coverc
+									.width(img.width())
+									.height(img.height());
+
+								rhandlec
+									.width(imgc.width())
+									.height(imgc.height())
+									.offset(imgc.offset())
+									.resizable({
+										containment : basec,
+										resize      : crop.resize_update,
+										handles     : 'all'
+									})
+									.draggable({
+										handle      : rhandlec,
+										containment : imgc,
+										drag        : crop.update
+									});
+
+								basec.show()
+									.width(img.width())
+									.height(img.height());
+
+								crop.update();
+							}
+						}
+					},
+					rotateable = function(destroy) {
+						if ($.fn.draggable && $.fn.resizable) {
+							if (destroy) {
+								imgr.hide();
+							}
+							else {
+								imgr.show()
+									.width(rwidth)
+									.height(rheight)
+									.css('margin-top', (pheight-rheight)/2)
+									.css('margin-left', (pwidth-rwidth)/2);
+
+							}
+						}
+					},
+					save = function() {
+						var w, h, x, y, d;
+						var mode = $('input:checked', uitype).val();
+
+						width.add(height).change();
+
+						if (mode == 'resize') {
+							w = parseInt(width.val()) || 0;
+							h = parseInt(height.val()) || 0;
+						} else if (mode == 'crop') {
+							w = parseInt(offsetX.val()) || 0;
+							h = parseInt(offsetY.val()) || 0;
+							x = parseInt(pointX.val()) || 0;
+							y = parseInt(pointY.val()) || 0;
+						} else if (mode = 'rotate') {
+							w = owidth;
+							h = oheight;
+							d = parseInt(degree.val()) || 0;
+							if (d < 0 || d > 360) {
+								return fm.error('Invalid rotate degree');
+							}
+							if (d == 0 || d == 360) {
+								return fm.error('Image dose not rotated');
+							}
+						}
+
+						if (mode != 'rotate') {
+
+							if (w <= 0 || h <= 0) {
+								return fm.error('Invalid image size');
+							}
+
+							if (w == owidth && h == oheight) {
+								return fm.error('Image size not changed');
+							}
+
+						}
+
+						dialog.finderdialog('close');
+
+						fm.request({
+							data : {
+								cmd    : 'resize',
+								target : file.hash,
+								width  : w,
+								height : h,
+								x      : x,
+								y      : y,
+								degree : d,
+								mode   : mode
+							},
+							notify : {type : 'resize', cnt : 1}
+						})
+						.fail(function(error) {
+							dfrd.reject(error);
+						})
+						.done(function() {
+							dfrd.resolve();
+						});
+
+					},
+					buttons = {},
+					hline   = 'finder-resize-handle-hline',
+					vline   = 'finder-resize-handle-vline',
+					rpoint  = 'finder-resize-handle-point',
+					src     = fm.url(file.hash)
+					;
+
+				imgr.mousedown( rotate.start );
+				$(document).mouseup( rotate.stop );
+
+				uiresize.append($(row).append($(label).text(fm.i18n('width'))).append(width).append(reset))
+					.append($(row).append($(label).text(fm.i18n('height'))).append(height))
+					.append($(row).append($('<label/>').text(fm.i18n('aspectRatio')).prepend(constr)))
+					.append($(row).append(fm.i18n('scale')+' ').append(uiprop));
+
+				uicrop.append($(row).append($(label).text('X')).append(pointX))
+					.append($(row).append($(label).text('Y')).append(pointY))
+					.append($(row).append($(label).text(fm.i18n('width'))).append(offsetX))
+					.append($(row).append($(label).text(fm.i18n('height'))).append(offsetY));
+
+				uirotate.append($(row)
+					.append($(label).text(fm.i18n('rotate')))
+					.append($('<div style="float:left; width: 130px;">')
+						.append($('<div style="float:left;">')
+							.append(degree)
+							.append($('<span/>').text(fm.i18n('degree')))
+						)
+						.append($(uibuttonset).append(uideg270).append($(uiseparator)).append(uideg90))
+					)
+					.append(uidegslider)
+				);
+
+
+				dialog.append(uitype);
+
+				control.append($(row))
+					.append(uiresize)
+					.append(uicrop.hide())
+					.append(uirotate.hide())
+					.find('input,select').attr('disabled', 'disabled');
+
+				rhandle.append('<div class="'+hline+' '+hline+'-top"/>')
+					.append('<div class="'+hline+' '+hline+'-bottom"/>')
+					.append('<div class="'+vline+' '+vline+'-left"/>')
+					.append('<div class="'+vline+' '+vline+'-right"/>')
+					.append('<div class="'+rpoint+' '+rpoint+'-e"/>')
+					.append('<div class="'+rpoint+' '+rpoint+'-se"/>')
+					.append('<div class="'+rpoint+' '+rpoint+'-s"/>')
+
+				preview.append(spinner).append(rhandle.hide()).append(img.hide());
+
+				rhandlec.css('position', 'absolute')
+					.append('<div class="'+hline+' '+hline+'-top"/>')
+					.append('<div class="'+hline+' '+hline+'-bottom"/>')
+					.append('<div class="'+vline+' '+vline+'-left"/>')
+					.append('<div class="'+vline+' '+vline+'-right"/>')
+					.append('<div class="'+rpoint+' '+rpoint+'-n"/>')
+					.append('<div class="'+rpoint+' '+rpoint+'-e"/>')
+					.append('<div class="'+rpoint+' '+rpoint+'-s"/>')
+					.append('<div class="'+rpoint+' '+rpoint+'-w"/>')
+					.append('<div class="'+rpoint+' '+rpoint+'-ne"/>')
+					.append('<div class="'+rpoint+' '+rpoint+'-se"/>')
+					.append('<div class="'+rpoint+' '+rpoint+'-sw"/>')
+					.append('<div class="'+rpoint+' '+rpoint+'-nw"/>')
+
+				preview.append(basec.css('position', 'absolute').hide().append(imgc).append(rhandlec.append(coverc)));
+
+				preview.append(imgr.hide());
+
+				preview.css('overflow', 'hidden');
+
+				dialog.append(preview).append(control);
+
+				buttons[fm.i18n('btnCancel')] = function() { dialog.finderdialog('close'); };
+				buttons[fm.i18n('btnApply')] = save;
+
+				fm.dialog(dialog, {
+					title          : file.name,
+					width          : 650,
+					resizable      : false,
+					destroyOnClose : true,
+					buttons        : buttons,
+					open           : function() { preview.zIndex(1+$(this).parent().zIndex()); }
+				}).attr('id', id);
+
+				if (fm.UA.ltIE8) {
+					$('.finder-dialog').css('filter', '');
+				}
+
+				reset.css('left', width.position().left + width.width() + 12);
+
+				coverc.css({ 'opacity': 0.2, 'background-color': '#fff', 'position': 'absolute'}),
+				rhandlec.css('cursor', 'move');
+				rhandlec.find('.finder-resize-handle-point').css({
+					'background-color' : '#fff',
+					'opacity': 0.5,
+					'border-color':'#000'
+				});
+
+				imgr.css('cursor', 'pointer');
+
+				uitype.buttonset();
+
+				pwidth  = preview.width()  - (rhandle.outerWidth()  - rhandle.width());
+				pheight = preview.height() - (rhandle.outerHeight() - rhandle.height());
+
+				img.attr('src', src + (src.indexOf('?') === -1 ? '?' : '&')+'_='+Math.random());
+				imgc.attr('src', img.attr('src'));
+				imgr.attr('src', img.attr('src'));
+
+			},
+
+			id, dialog
+			;
+
+
+		if (!files.length || files[0].mime.indexOf('image/') === -1) {
+			return dfrd.reject();
+		}
+
+		id = 'resize-'+fm.namespace+'-'+files[0].hash;
+		dialog = fm.getUI().find('#'+id);
+
+		if (dialog.length) {
+			dialog.finderdialog('toTop');
+			return dfrd.resolve();
+		}
+
+		open(files[0], id);
+
+		return dfrd;
+	}
+
+};
+
+(function ($) {
+
+	var findProperty = function (styleObject, styleArgs) {
+		var i = 0 ;
+		for( i in styleArgs) {
+	        if (typeof styleObject[styleArgs[i]] != 'undefined')
+	        	return styleArgs[i];
+		}
+		styleObject[styleArgs[i]] = '';
+	    return styleArgs[i];
+	};
+
+	$.cssHooks.rotate = {
+		get: function(elem, computed, extra) {
+			return $(elem).rotate();
+		},
+		set: function(elem, value) {
+			$(elem).rotate(value);
+			return value;
+		}
+	};
+	$.cssHooks.transform = {
+		get: function(elem, computed, extra) {
+			var name = findProperty( elem.style ,
+				['WebkitTransform', 'MozTransform', 'OTransform' , 'msTransform' , 'transform'] );
+			return elem.style[name];
+		},
+		set: function(elem, value) {
+			var name = findProperty( elem.style ,
+				['WebkitTransform', 'MozTransform', 'OTransform' , 'msTransform' , 'transform'] );
+			elem.style[name] = value;
+			return value;
+		}
+	};
+
+	$.fn.rotate = function(val) {
+		if (typeof val == 'undefined') {
+			if (!!window.opera) {
+				var r = this.css('transform').match(/rotate\((.*?)\)/);
+				return  ( r && r[1])?
+					Math.round(parseFloat(r[1]) * 180 / Math.PI) : 0;
+			} else {
+				var r = this.css('transform').match(/rotate\((.*?)\)/);
+				return  ( r && r[1])? parseInt(r[1]) : 0;
+			}
+		}
+		this.css('transform',
+			this.css('transform').replace(/none|rotate\(.*?\)/, '') + 'rotate(' + parseInt(val) + 'deg)');
+		return this;
+	};
+
+	$.fx.step.rotate  = function(fx) {
+		if ( fx.state == 0 ) {
+			fx.start = $(fx.elem).rotate();
+			fx.now = fx.start;
+		}
+		$(fx.elem).rotate(fx.now);
+	};
+
+	if (typeof window.addEventListener == "undefined" && typeof document.getElementsByClassName == "undefined") { // IE & IE<9
+		var GetAbsoluteXY = function(element) {
+			var pnode = element;
+			var x = pnode.offsetLeft;
+			var y = pnode.offsetTop;
+
+			while ( pnode.offsetParent ) {
+				pnode = pnode.offsetParent;
+				if (pnode != document.body && pnode.currentStyle['position'] != 'static') {
+					break;
+				}
+				if (pnode != document.body && pnode != document.documentElement) {
+					x -= pnode.scrollLeft;
+					y -= pnode.scrollTop;
+				}
+				x += pnode.offsetLeft;
+				y += pnode.offsetTop;
+			}
+
+			return { x: x, y: y };
+		};
+
+		var StaticToAbsolute = function (element) {
+			if ( element.currentStyle['position'] != 'static') {
+				return ;
+			}
+
+			var xy = GetAbsoluteXY(element);
+			element.style.position = 'absolute' ;
+			element.style.left = xy.x + 'px';
+			element.style.top = xy.y + 'px';
+		};
+
+		var IETransform = function(element,transform){
+
+			var r;
+			var m11 = 1;
+			var m12 = 1;
+			var m21 = 1;
+			var m22 = 1;
+
+			if (typeof element.style['msTransform'] != 'undefined'){
+				return true;
+			}
+
+			StaticToAbsolute(element);
+
+			r = transform.match(/rotate\((.*?)\)/);
+			var rotate =  ( r && r[1])	?	parseInt(r[1])	:	0;
+
+			rotate = rotate % 360;
+			if (rotate < 0) rotate = 360 + rotate;
+
+			var radian= rotate * Math.PI / 180;
+			var cosX =Math.cos(radian);
+			var sinY =Math.sin(radian);
+
+			m11 *= cosX;
+			m12 *= -sinY;
+			m21 *= sinY;
+			m22 *= cosX;
+
+			element.style.filter =  (element.style.filter || '').replace(/progid:DXImageTransform\.Microsoft\.Matrix\([^)]*\)/, "" ) +
+				("progid:DXImageTransform.Microsoft.Matrix(" +
+					 "M11=" + m11 +
+					",M12=" + m12 +
+					",M21=" + m21 +
+					",M22=" + m22 +
+					",FilterType='bilinear',sizingMethod='auto expand')")
+				;
+
+	  		var ow = parseInt(element.style.width || element.width || 0 );
+	  		var oh = parseInt(element.style.height || element.height || 0 );
+
+			var radian = rotate * Math.PI / 180;
+			var absCosX =Math.abs(Math.cos(radian));
+			var absSinY =Math.abs(Math.sin(radian));
+
+			var dx = (ow - (ow * absCosX + oh * absSinY)) / 2;
+			var dy = (oh - (ow * absSinY + oh * absCosX)) / 2;
+
+			element.style.marginLeft = Math.floor(dx) + "px";
+			element.style.marginTop  = Math.floor(dy) + "px";
+
+			return(true);
+		};
+
+		var transform_set = $.cssHooks.transform.set;
+		$.cssHooks.transform.set = function(elem, value) {
+			transform_set.apply(this, [elem, value] );
+			IETransform(elem,value);
+			return value;
+		};
+	}
+
+})(jQuery);
+;"use strict"
+/**
+ * @class  Finder command "rm"
+ * Delete files
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.rm = function() {
+
+	this.shortcuts = [{
+		pattern     : 'delete ctrl+backspace'
+	}];
+
+	this.getstate = function(sel) {
+		var fm = this.fm;
+		sel = sel || fm.selected();
+		return !this._disabled && sel.length && $.map(sel, function(h) { var f = fm.file(h); return f && f.phash && !f.locked ? h : null }).length == sel.length
+			? 0 : -1;
+	}
+
+	this.exec = function(hashes) {
+		var self   = this,
+			fm     = this.fm,
+			dfrd   = $.Deferred()
+				.fail(function(error) {
+					error && fm.error(error);
+				}),
+			files  = this.files(hashes),
+			cnt    = files.length,
+			cwd    = fm.cwd().hash,
+			goroot = false;
+
+		if (!cnt || this._disabled) {
+			return dfrd.reject();
+		}
+
+		$.each(files, function(i, file) {
+			if (!file.phash) {
+				return !dfrd.reject(['errRm', file.name, 'errPerm']);
+			}
+			if (file.locked) {
+				return !dfrd.reject(['errLocked', file.name]);
+			}
+			if (file.hash == cwd) {
+				goroot = fm.root(file.hash);
+			}
+		});
+
+		if( dfrd.state() != 'rejected' ){
+			files = this.hashes(hashes);
+
+			fm.confirm({
+				title  : self.title,
+				text   : 'confirmRm',
+				accept : {
+					label    : 'btnRm',
+					callback : function() {
+						fm.lockfiles({files : files});
+						fm.request({
+							data   : {cmd  : 'rm', targets : files},
+							notify : {type : 'rm', cnt : cnt},
+							preventFail : true
+						})
+						.fail(function(error) {
+							dfrd.reject(error);
+						})
+						.done(function(data) {
+							dfrd.done(data);
+							goroot && fm.exec('open', goroot)
+						}
+						).always(function() {
+							fm.unlockfiles({files : files});
+						});
+					}
+				},
+				cancel : {
+					label    : 'btnCancel',
+					callback : function() { dfrd.reject(); }
+				}
+			});
+		}
+
+		return dfrd;
+	}
+
+};"use strict"
+/**
+ * @class  Finder command "search"
+ * Find files
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.search = function() {
+	this.title          = 'Find files';
+	this.options        = {ui : 'searchbutton'}
+	this.alwaysEnabled  = true;
+	this.updateOnSelect = false;
+
+	/**
+	 * Return command status.
+	 * Search does not support old api.
+	 *
+	 * @return Number
+	 **/
+	this.getstate = function() {
+		return 0;
+	}
+
+	/**
+	 * Send search request to backend.
+	 *
+	 * @param  String  search string
+	 * @return $.Deferred
+	 **/
+	this.exec = function(q) {
+		var fm = this.fm;
+
+		if (typeof(q) == 'string' && q) {
+			fm.trigger('searchstart', {query : q});
+
+			return fm.request({
+				data   : {cmd : 'search', q : q},
+				notify : {type : 'search', cnt : 1, hideCnt : true}
+			});
+		}
+		fm.getUI('toolbar').find('.'+fm.res('class', 'searchbtn')+' :text').focus();
+		return $.Deferred().reject();
+	}
+
+};"use strict"
+/**
+ * @class  Finder command "sort"
+ * Change sort files rule
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.sort = function() {
+	/**
+	 * Command options
+	 *
+	 * @type  Object
+	 */
+	this.options = {ui : 'sortbutton'};
+
+	this.getstate = function() {
+		return 0;
+	}
+
+	this.exec = function(hashes, sort) {
+		var fm = this.fm,
+			sort = $.extend({
+				type  : fm.sortType,
+				order : fm.sortOrder,
+				stick : fm.sortStickFolders
+			}, sort);
+
+		this.fm.setSort(sort.type, sort.order, sort.stick);
+		return $.Deferred().resolve();
+	}
+
+};
+/**
+ * @class  Finder command "unmount"
+ * un mount a network volume
+ *
+ */
+Finder.prototype.commands.unmount = function() {
+	var self = this,
+		fm = this.fm;
+
+	this.alwaysEnabled  = true;
+	this.updateOnSelect = false;
+
+	this.getstate = function(target){
+		if( !target || target.length > 1 ) return -1;
+		var file = fm.file(target[0]);
+		if( file.net ){
+			return 0;
+		}
+		return -1;
+	}
+
+	this.exec = function(hashes){
+		var target	= hashes[0],
+			dfrd	= $.Deferred();
+
+		return fm.request({
+			data : {cmd : 'unmount', target : target },
+			notify : {type : 'unmount', cnt : 1}
+		}).fail(function(error){
+			dfrd.reject(error);
+		}).done(function(error){
+			dfrd.resolve();
+
+			//remove the tree
+			var span = $('#nav-'+target).closest('.finder-navbar-wrapper').detach();
+
+			//select different tree
+			var $first = $('.finder-navbar-wrapper:first span:first').click();
+
+		});
+	}
+
+
+};"use strict";
+/**
+ * @class  Finder command "up"
+ * Go into parent directory
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.up = function() {
+	this.alwaysEnabled = true;
+	this.updateOnSelect = false;
+
+	this.shortcuts = [{
+		pattern     : 'ctrl+up'
+	}];
+
+	this.getstate = function() {
+		return this.fm.cwd().phash ? 0 : -1;
+	}
+
+	this.exec = function() {
+		return this.fm.cwd().phash ? this.fm.exec('open', this.fm.cwd().phash) : $.Deferred().reject();
+	}
+
+};"use strict";
+/**
+ * @class Finder command "upload"
+ * Upload files using iframe or XMLHttpRequest & FormData.
+ * Dialog allow to send files using drag and drop
+ *
+ * @type  Finder.command
+ * @author  Dmitry (dio) Levashov
+ */
+Finder.prototype.commands.upload = function() {
+	var hover = this.fm.res('class', 'hover');
+
+	this.disableOnSearch = true;
+	this.updateOnSelect  = false;
+
+	// Shortcut opens dialog
+	this.shortcuts = [{
+		pattern     : 'ctrl+u'
+	}];
+
+	/**
+	 * Return command state
+	 *
+	 * @return Number
+	 **/
+	this.getstate = function() {
+		return !this._disabled && this.fm.cwd().write ? 0 : -1;
+	};
+
+
+	this.exec = function(data) {
+		var fm = this.fm,
+			upload = function(data) {
+				dialog.finderdialog('close');
+				fm.upload(data)
+					.fail(function(error) {
+						dfrd.reject(error);
+					})
+					.done(function(data) {
+						dfrd.resolve(data);
+					});
+			},
+			dfrd, dialog, input, button, dropbox, pastebox;
+
+		if (this.disabled()) {
+			return $.Deferred().reject();
+		}
+
+		if (data && (data.input || data.files)) {
+			return fm.upload(data);
+		}
+
+		dfrd = $.Deferred();
+
+
+		input = $('<input type="file" multiple="true"/>')
+			.change(function() {
+				upload({input : input[0]});
+			});
+
+		button = $('<div class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">'+fm.i18n('selectForUpload')+'</span></div>')
+			.append($('<form/>').append(input))
+			.hover(function() {
+				button.toggleClass(hover)
+			});
+
+		dialog = $('<div class="finder-upload-dialog-wrapper"/>')
+			.append(button);
+
+		pastebox = $('<div class="ui-corner-all finder-upload-dropbox" contenteditable=true></div>')
+			.focus(function() {
+				if (this.innerHTML) {
+					var type = this.innerHTML.match(/<[^>]+>/)? 'html' : 'text';
+					var src = this.innerHTML;
+					this.innerHTML = '';
+					upload({files : [ src ], type : type});
+				}
+			})
+			.bind('dragenter mouseover', function(){
+				this.focus();
+				$(pastebox).addClass(hover);
+			})
+			.bind('dragleave mouseout', function(){
+				this.blur();
+				$(pastebox).removeClass(hover);
+			})
+			.bind('mouseup keyup', function() {
+				setTimeout(function(){
+					$(pastebox).focus();
+				}, 100);
+			});
+
+		if (fm.dragUpload) {
+			dropbox = $('<div class="ui-corner-all finder-upload-dropbox">'+fm.i18n('dropFiles')+'</div>')
+				.prependTo(dialog)
+				.after('<div class="finder-upload-dialog-or">'+fm.i18n('or')+'</div>')
+				.after(pastebox)
+				.after('<div>'+fm.i18n('dropFilesBrowser')+'</div>')
+				.after('<div class="finder-upload-dialog-or">'+fm.i18n('or')+'</div>')[0];
+
+			dropbox.addEventListener('dragenter', function(e) {
+				e.stopPropagation();
+			  	e.preventDefault();
+				$(dropbox).addClass(hover);
+			}, false);
+
+			dropbox.addEventListener('dragleave', function(e) {
+				e.stopPropagation();
+			  	e.preventDefault();
+				$(dropbox).removeClass(hover);
+			}, false);
+
+			dropbox.addEventListener('dragover', function(e) {
+				e.stopPropagation();
+			  	e.preventDefault();
+			  	$(dropbox).addClass(hover);
+			}, false);
+
+			dropbox.addEventListener('drop', function(e) {
+				e.stopPropagation();
+			  	e.preventDefault();
+				var file = false;
+				var type = '';
+				if (e.dataTransfer && e.dataTransfer.files &&  e.dataTransfer.files.length) {
+					file = e.dataTransfer.files;
+					type = 'files';
+				} else if (e.dataTransfer.getData('text/html')) {
+					file = [ e.dataTransfer.getData('text/html') ];
+					type = 'html';
+				} else if (e.dataTransfer.getData('text')) {
+					file = [ e.dataTransfer.getData('text') ];
+					type = 'text';
+				}
+				if (file) {
+					upload({files : file, type : type});
+				}
+			}, false);
+
+		} else {
+			$('<div>'+fm.i18n('dropFilesBrowser')+'</div>')
+				.append(pastebox)
+				.prependTo(dialog)
+				.after('<div class="finder-upload-dialog-or">'+fm.i18n('or')+'</div>')[0];
+
+		}
+
+		fm.dialog(dialog, {
+			title          : this.title,
+			modal          : true,
+			resizable      : false,
+			destroyOnClose : true
+		});
+
+		return dfrd;
+	};
+
+};;"use strict";
+/**
+ * @class  Finder command "view"
+ * Change current directory view (icons/list)
+ *
+ * @author Dmitry (dio) Levashov
+ **/
+Finder.prototype.commands.view = function() {
+	this.value          = this.fm.viewType;
+	this.alwaysEnabled  = true;
+	this.updateOnSelect = false;
+
+	this.options = { ui : 'viewbutton'};
+
+	this.getstate = function() {
+		return 0;
+	}
+
+	this.exec = function() {
+		var value = this.fm.storage('view', this.value == 'list' ? 'icons' : 'list');
+		this.fm.viewchange();
+		this.update(void(0), value);
+	}
+
+};

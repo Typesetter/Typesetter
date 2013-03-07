@@ -181,7 +181,6 @@ class admin_port{
 
 		//iframe for download
 		if( $success ){
-			message('iframe');
 			$this->iframe = '<iframe src="'.common::GetDir('/data/_exports/'.$this->archive_name).'" height="0" width="0" style="visibility:hidden;height:0;width:0;"></iframe>';
 		}
 	}

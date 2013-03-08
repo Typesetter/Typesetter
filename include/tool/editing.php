@@ -597,6 +597,7 @@ class gp_edit{
 		// (4) gpeasy defaults
 		$defaults = array(
 						//'customConfig'				=> common::GetDir('/include/js/ckeditor_config.js'),
+						'skin'						=> 'kama',
 						'browser'					=> true, //not actually a ckeditor configuration value, but we're keeping it now for reverse compat
 						'smiley_path'				=> common::GetDir('/include/thirdparty/ckeditor_34/plugins/smiley/images/'),
 						'height'					=> 300,
@@ -609,9 +610,10 @@ class gp_edit{
 						'disableNativeSpellChecker'	=> false,
 						'FillEmptyBlocks'			=> false,
 						'autoParagraph'				=> false,
+						//'removePlugins'				=> 'about',
 
 						'toolbar'					=> array(
-															array('Source','Templates','ShowBlocks','Undo','Redo','RemoveFormat'), //,'Maximize' does not work well
+															array('Sourcedialog','Source','Templates','ShowBlocks','Undo','Redo','RemoveFormat'), //,'Maximize' does not work well
 															array('Cut','Copy','Paste','PasteText','PasteFromWord','SelectAll','Find','Replace'),
 															array('HorizontalRule','Smiley','SpecialChar','PageBreak','TextColor','BGColor'),
 															array('Link','Unlink','Anchor','Image','Flash','Table'), //'CreatePlaceholder'
@@ -658,7 +660,7 @@ class gp_edit{
 		// extra plugins
 		$extra_plugins = array_keys($plugins);
 		if( array_key_exists('extraPlugins',$options) ){
-			$extra_plugins = array_merge($extra_plugins, explode(',',$options['extraPlugins']));
+			$extra_plugins = array_merge( $extra_plugins, explode(',',$options['extraPlugins']), array('sourcedialog') );
 		}
 
 		$options = $admin_config['custom_config'] + $options;

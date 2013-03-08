@@ -1618,15 +1618,3 @@ body #gp_admin_html .layout_links a.selected{
 .ui-selectable-helper{
 	z-index:10000 !important;
 	}
-
-/**
- * ckeditor 4 styles for kama skin
- *
- */
-div.cke_dialog_ui_input_select{
-	border:0 none;
-	display:inline-block;
-	}
-input.cke_dialog_ui_input_text, input.cke_dialog_ui_input_password{
-	outline:0 none !important;
-	}

@@ -50,6 +50,7 @@ class admin_port{
 		$this->temp_dir = $dataDir.'/data/_temp';
 		$this->export_ini_file = $dataDir.'/data/_temp/Export.ini';
 		@set_time_limit(90);
+		@ini_set('memory_limit','64M');
 
 		$this->Init();
 		$this->SetExported();

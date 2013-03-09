@@ -12,6 +12,7 @@ $langmessage = array(
 'LOGIN_REQUIRED'=>'Connettersi per continuare',
 'LOGGED_OUT'=>'Ti sei disconnesso.',
 'configuration'=>'Configura',
+'Current Configuration'=>'Current Configuration',
 'Appearance'=>'Aspetto',
 'Content'=>'Contenuto',
 'Settings'=>'Configurazione',
@@ -96,6 +97,7 @@ $langmessage = array(
 'data_check_passed'=>'100%% dei dati ha superato il controllo. Un totale di %s file sono stati controllati.', //%s out of %s files passed the health check.',
 'showing_max_failed'=>'Mostra solo il primo %s file.',
 'create_dir'=>'Crea cartella',
+'file_deleted'=>'Il file è stato cancellato.',
 'username'=>'Utente',
 'user_permissions'=>'Permessi utente',
 'not_permitted'=>'Oops, non disponi dell\'autorizzazione appropriata per eseguire questa operazione',
@@ -528,16 +530,16 @@ Ripristina Archivio',
 'Top'=>'Su',
 'Select Image'=>'Seleziona immagine',
 'Theme Images'=>'Immagini tema',
-'Revision History'=> 'Revision History',
-'viewing_revision'=>'You are currently viewing a revision of this page created on %1$s',
-'Restore this revision'=>'Restore this revision',
+'Revision History'=> 'Storico delle revisioni',
+'viewing_revision'=>'Stai visualizzando una revisione di questa pagina creata con %1$s',
+'Restore this revision'=>'Ripristina questa revisione',
 
 //for use with php's strftime() method
 'strftime_datetime'=>'%b %e, %Y @ %H:%M',
 'strftime_date'=>'%b %e, %Y',
 'strftime_time'=>'%H:%M',
 
-'_characters' => '%s characters',
-'Theme_default_sizes' => 'Default Size',
+'_characters' => '%s caratteri',
+'Theme_default_sizes' => 'Dimensione di default',
 
 );

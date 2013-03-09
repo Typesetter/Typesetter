@@ -69,8 +69,8 @@ $(function(){
 				select: function(event,ui){
 					if( ui.item ){
 
+						debug( ui.item );
 						$search.val(
-										ui.item[0]
 										.replace(/&quot;/g, '"')
 										.replace(/&#039;/g, "'")
 										.replace(/&lt;/g, '<')
@@ -97,7 +97,7 @@ $(function(){
 			})
 			.data( 'autocomplete' )._renderItem = function( ul, item ) {
 				return $( '<li></li>' )
-					.data( 'item.autocomplete', item[0] )
+					.data( 'item.autocomplete', item )
 					.append( '<a>' + item[0] + '<span>'+item[1]+'</span></a>' )
 					.appendTo( ul );
 			};

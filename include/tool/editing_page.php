@@ -860,4 +860,23 @@ class editing_page extends display{
 		admin_uploaded::InlineList($dir_piece);
 	}
 
+
+	/**
+	 * Used by slideshow addons
+	 * @deprecated 3.6rc4
+	 *
+	 */
+	function SaveSection_Text($section){
+		global $config;
+		$content =& $_POST['gpcontent'];
+		gpFiles::cleanText($content);
+		$this->file_sections[$section]['content'] = $content;
+
+		if( $config['resize_images'] ){
+			gp_edit::ResizeImages($this->file_sections[$section]['content'],$this->file_sections[$section]['resized_imgs']);
+		}
+
+		return true;
+	}
+
 }

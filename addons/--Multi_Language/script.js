@@ -69,8 +69,7 @@ $(function(){
 				select: function(event,ui){
 					if( ui.item ){
 
-						debug( ui.item );
-						$search.val(
+						$search.val(	ui.item[0]
 										.replace(/&quot;/g, '"')
 										.replace(/&#039;/g, "'")
 										.replace(/&lt;/g, '<')

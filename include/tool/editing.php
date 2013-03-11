@@ -793,8 +793,9 @@ class gp_edit{
 	 *
 	 */
 	static function SectionFromPost( &$existing_section, $section_num, $title, $file_stats ){
-		global $page, $langmessage;
+		global $page;
 
+		$section_before = $existing_section;
 		$type = $existing_section['type'];
 		$save_this = false;
 		switch($type){
@@ -811,7 +812,17 @@ class gp_edit{
 			break;
 		}
 
-		return gpPlugin::Filter( 'SaveSection', array( $save_this, $section_num, $type) );
+
+		// Hack: SaveSection used $page->file_sections
+		$page->file_sections[$section_num] = $existing_section;
+		$save_this = gpPlugin::Filter( 'SaveSection', array( $save_this, $section_num, $type) );
+
+		if( !$save_this ){
+			$page->file_sections[$section_num] = $existing_section = $section_before;
+		}
+
+
+		return $save_this;
 	}
 
 
@@ -939,6 +950,7 @@ class gp_edit{
 	 *
 	 */
 	static function SectionEdit( $cmd, &$section, $section_num, $title, $file_stats ){
+		global $langmessage;
 
 		switch($cmd){
 

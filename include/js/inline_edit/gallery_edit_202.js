@@ -8,6 +8,21 @@
  *
  */
 
+	gp_editor = {
+		checkDirty:function(){
+			return false;
+		},
+		getData:function(edit_div){
+			var data = edit_div.clone();
+			data.find('li.holder').remove();
+			data.find('ul').enableSelection().removeClass('ui-sortable').removeAttr('unselectable');
+			data.find('.gp_nosave').remove();
+			data = data.html();
+			return 'gpcontent='+encodeURIComponent(data);
+		},
+		updateElement:function(){
+		}
+	};
 
 	function gp_init_inline_edit(area_id,section_object,options){
 
@@ -37,48 +52,41 @@
 			return;
 		}
 
-		gp_editor = {
-			save_path: save_path,
+		gp_editor.save_path = save_path;
 
-			destroy:function(){
-				sortable_area.filter(':ui-sortable').sortable('destroy');
-				edit_div.html(content_cache.html());
-				sortable_area.children('li').unbind('mouseenter.gp_edit, mouseleave.gp_edit, mousedown.gp_edit');
-				edit_links.remove();
-			},
-			checkDirty:function(){
+		gp_editor.destroy = function(){
+			sortable_area.filter(':ui-sortable').sortable('destroy');
+			edit_div.html(content_cache.html());
+			sortable_area.children('li').unbind('mouseenter.gp_edit, mouseleave.gp_edit, mousedown.gp_edit');
+			edit_links.remove();
+		};
 
-				sortable_area.removeClass('ui-sortable');
+		gp_editor.checkDirty = function(){
 
-				//for IE8
-				var orig_content = content_cache.html().replace(/>[\s]+/g,">");
-				var new_content = edit_div.html().replace(/>[\s]+/g,">");
+			sortable_area.removeClass('ui-sortable');
 
-				if( orig_content != new_content ){
-					sortable_area.addClass('ui-sortable');
-					return true;
-				}
+			//for IE8
+			var orig_content = content_cache.html().replace(/>[\s]+/g,">");
+			var new_content = edit_div.html().replace(/>[\s]+/g,">");
 
+			if( orig_content != new_content ){
 				sortable_area.addClass('ui-sortable');
-				return false;
-			},
-			gp_saveData:function(){
-
-				var data = edit_div.clone();
-				data.find('li.holder').remove();
-				data.find('ul').enableSelection().removeClass('ui-sortable').removeAttr('unselectable');
-				data.find('.gp_nosave').remove();
-				data = data.html();
-
-				return 'gpcontent='+encodeURIComponent(data);
-			},
-			resetDirty:function(){
-				content_cache = edit_div.clone(false);
-				content_cache.find('.ui-sortable').removeClass('ui-sortable');
-			},
-			updateElement:function(){
+				return true;
 			}
+
+			sortable_area.addClass('ui-sortable');
+			return false;
+		};
+
+		gp_editor.gp_saveData = function(){
+			return gp_editor.getData(edit_div);
 		}
+
+
+		gp_editor.resetDirty = function(){
+			content_cache = edit_div.clone(false);
+			content_cache.find('.ui-sortable').removeClass('ui-sortable');
+		};
 
 
 		//replace with raw content then start ckeditor

@@ -611,6 +611,7 @@ class gp_edit{
 						'FillEmptyBlocks'			=> false,
 						'autoParagraph'				=> false,
 						//'removePlugins'				=> 'about',
+						'extraAllowedContent'		=> 'iframe[align,frameborder,height,longdesc,marginheight,marginwidth,name,sandbox,scrolling,seamless,src,srcdoc,width]; *[accesskey,contenteditable,contextmenu,dir,draggable,dropzone,hidden,id,lang,spellcheck,style,tabindex,title,translate](*)',
 
 						'toolbar'					=> array(
 															array('Sourcedialog','Source','Templates','ShowBlocks','Undo','Redo','RemoveFormat'), //,'Maximize' does not work well

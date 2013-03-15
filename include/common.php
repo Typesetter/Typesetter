@@ -3012,13 +3012,17 @@ class gpFiles{
 			}
 		}
 
+		$exists = file_exists($file);
+
 		$fp = @fopen($file,'wb');
 		if( $fp === false ){
 			$gp_not_writable[] = $file;
 			return false;
 		}
 
-		@chmod($file,gp_chmod_file);
+		if( !$exists ){
+			@chmod($file,gp_chmod_file);
+		}
 
 		$return = fwrite($fp,$contents);
 		fclose($fp);

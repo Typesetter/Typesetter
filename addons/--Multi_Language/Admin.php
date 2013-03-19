@@ -209,7 +209,11 @@ class MultiLang_Admin extends MultiLang_Common{
 	 *
 	 */
 	function NotTranslated(){
-		global $ml_languages, $gp_index, $config, $gp_menu;
+		global $ml_languages, $gp_index, $config, $gp_menu, $page;
+
+		$page->head_js[] = '/include/thirdparty/tablesorter/tablesorter.js';
+		$page->jQueryCode .= '$("table.tablesorter").tablesorter({cssHeader:"gp_header",cssAsc:"gp_header_asc",cssDesc:"gp_header_desc"});';
+
 
 		$menu_info['gp_menu'] = $gp_menu;
 		$menu_labels['gp_menu'] = 'Main Menu';
@@ -222,7 +226,9 @@ class MultiLang_Admin extends MultiLang_Common{
 
 		echo '<h2>Pages Without Translations</h2>';
 
-		echo '<table class="bordered full_width"><tr><th>Page</th><th>Menus</th><th>&nbsp;</th></tr>';
+		echo '<table class="bordered full_width tablesorter">';
+		echo '<thead><tr><th>Page</th><th>Slug</th><th>Menus</th><th>&nbsp;</th></tr></thead>';
+		echo '<tbody>';
 		foreach($gp_index as $slug => $page_index){
 			if( isset($this->titles[$page_index]) ){
 				continue;
@@ -231,6 +237,8 @@ class MultiLang_Admin extends MultiLang_Common{
 			echo '<tr><td>';
 			$title = common::IndexToTitle($page_index);
 			echo common::Link_Page($title);
+			echo '</td><td>';
+			echo $title;
 			echo '</td><td>';
 			$which_menus = array();
 			foreach($menu_info as $menu => $info){
@@ -244,6 +252,7 @@ class MultiLang_Admin extends MultiLang_Common{
 			echo common::Link('Admin_MultiLang','Options','cmd=title_settings&index='.$page_index,' name="gpabox"');
 			echo '</td></tr>';
 		}
+		echo '</tbody>';
 		echo '</table>';
 
 	}

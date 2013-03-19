@@ -79,7 +79,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 		echo ' Categories ';
 		echo ' <span>|</span> ';
 		$comments = gpOutput::SelectText('Comments');
-		echo common::Link('Admin_Blog_Comments',$comments);
+		echo common::Link('Admin_BlogComments',$comments);
 		echo '</h2>';
 
 		// print all categories and settings

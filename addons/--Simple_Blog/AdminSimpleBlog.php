@@ -138,7 +138,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo common::Link('Admin_BlogCategories','Categories');
 		echo ' <span>|</span> ';
 		$comments = gpOutput::SelectText('Comments');
-		echo common::Link('Admin_Blog_Comments',$comments);
+		echo common::Link('Admin_BlogComments',$comments);
 		echo '</h2>';
 
 		echo '<form class="renameform" action="'.common::GetUrl('Admin_Blog').'" method="post">';

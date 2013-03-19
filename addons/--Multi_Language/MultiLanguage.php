@@ -168,13 +168,19 @@ class MultiLang extends MultiLang_Common{
 		//if we can determine the language of the current page, then we can translate the menu
 		$new_menu = array();
 		foreach($menu as $key => $value){
+
 			$list = $this->GetList($key);
 			if( !isset($list[$page_lang]) ){
-				$new_menu[$key] = $value;
+				if( !isset($new_menu[$key]) ){
+					$new_menu[$key] = $value;
+				}
 				continue;
 			}
 
-			$new_menu[$list[$page_lang]] = $value;
+			$new_key = $list[$page_lang];
+			if( !isset($new_menu[$new_key]) ){
+				$new_menu[$new_key] = $value;
+			}
 		}
 
 		return $new_menu;

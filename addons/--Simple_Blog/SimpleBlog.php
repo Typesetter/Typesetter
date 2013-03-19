@@ -570,22 +570,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	/* comments */
 
 
-	/**
-	 * Get the comment data for a single post
-	 *
-	 */
-	function GetCommentData($post_index){
 
-		$data = array();
-		$commentDataFile = $this->addonPathData.'/comments_data_'.$post_index.'.txt';
-		if( file_exists($commentDataFile) ){
-			$dataTxt = file_get_contents($commentDataFile);
-			if(  !empty($dataTxt) ){
-				$data = unserialize($dataTxt);
-			}
-		}
-		return $data;
-	}
 
 	/**
 	 * Remove a comment entry from the comment data
@@ -677,25 +662,6 @@ class SimpleBlog extends SimpleBlogCommon{
 			message($langmessage['OOPS']);
 			return false;
 		}
-	}
-
-	/**
-	 * Save the comment data for a blog post
-	 *
-	 */
-	function SaveCommentData($post_index,$data){
-		global $langmessage;
-
-		$dataTxt = serialize($data);
-		$commentDataFile = $this->addonPathData.'/comments_data_'.$post_index.'.txt';
-		if( !gpFiles::Save($commentDataFile,$dataTxt) ){
-			return false;
-		}
-
-		$this->blogData['post_info'][$post_index]['comments'] = count($data);
-		$this->SaveIndex();
-
-		return true;
 	}
 
 

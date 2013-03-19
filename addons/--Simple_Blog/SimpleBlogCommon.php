@@ -1040,6 +1040,85 @@ class SimpleBlogCommon{
 		return str_replace('_',' ',$str);
 	}
 
+	static function FileData($file){
+
+		if( !file_exists($file) ){
+			return false;
+		}
+		$dataTxt = file_get_contents($file);
+		if( empty($dataTxt) ){
+			return false;
+		}
+
+		return unserialize($dataTxt);
+	}
+
+
+	/**
+	 * Get the comment data for a single post
+	 *
+	 */
+	function GetCommentData($post_index){
+
+		// pre 1.7.4
+		$commentDataFile = $this->addonPathData.'/comments_data_'.$post_index.'.txt';
+		$data = SimpleBlogCommon::FileData($commentDataFile);
+		if( $data ){
+			return $data;
+		}
+
+		// 1.7.4+
+		$commentDataFile = $this->addonPathData.'/comments/'.$post_index.'.txt';
+		$data = SimpleBlogCommon::FileData($commentDataFile);
+		if( $data ){
+			return $data;
+		}
+
+
+		return array();
+	}
+
+
+
+	/**
+	 * Save the comment data for a blog post
+	 *
+	 */
+	function SaveCommentData($post_index,$data){
+		global $langmessage;
+
+
+		// check directory
+		$dir = $this->addonPathData.'/comments';
+		if( !gpFiles::CheckDir($dir) ){
+			return false;
+		}
+
+		$commentDataFile = $dir.'/'.$post_index.'.txt';
+		$dataTxt = serialize($data);
+		if( !gpFiles::Save($commentDataFile,$dataTxt) ){
+			return false;
+		}
+
+
+		// clean pre 1.7.4 files
+		$commentDataFile = $this->addonPathData.'/comments_data_'.$post_index.'.txt';
+		if( file_exists($commentDataFile) ){
+			unlink($commentDataFile);
+		}
+
+		$this->blogData['post_info'][$post_index]['comments'] = count($data);
+		$this->SaveIndex();
+
+		//clear comments cache
+		$cache_file = $this->addonPathData.'/comments/cache.txt';
+		if( file_exists($cache_file) ){
+			unlink($cache_file);
+		}
+
+		return true;
+	}
+
 }
 
 

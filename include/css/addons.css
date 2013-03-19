@@ -1,22 +1,4 @@
 
-
-.hmargin{
-	margin-top:0;
-	margin-bottom:1em;
-	color:#333;
-	}
-.hmargin a{
-	color:#888 !important;
-	}
-.hmargin a:hover{
-	color:#333 !important;
-	}
-.hmargin span{
-	color:#bbb;
-	margin:0 5px;
-	}
-
-
 #addon_install_progress{
 	position:relative;
 	}

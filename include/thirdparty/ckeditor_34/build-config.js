@@ -86,7 +86,9 @@ var CKBUILDER_CONFIG = {
 		'richcombo' : 1,
 		'listblock' : 1,
 		'stylesheetparser' : 1,
-		'tableresize' : 1
+		'tableresize' : 1,
+		'sourcedialog' : 1,
+		'sharedspace' : 1
 	},
 	languages : {
 		'ar' : 1,

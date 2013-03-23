@@ -1693,7 +1693,11 @@ class gpOutput{
 		global $config, $page, $gp_head_content, $wbMessageBuffer;
 		$gp_head_content = '';
 
+		//before ob_start() so plugins can get buffer content
+		gpPlugin::Action('HeadContent');
+
 		ob_start();
+
 
 		if( common::LoggedIn() ){
 			common::AddColorBox();

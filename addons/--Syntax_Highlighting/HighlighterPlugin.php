@@ -10,6 +10,7 @@ class HighlighterPlugin{
 	 */
 	static function CKEditorPlugins($plugins){
 		global $addonRelativeCode;
+		trigger_error('ckeditor plugins');
 		$plugins['syntaxhighlight'] = $addonRelativeCode.'/syntaxhighlight/';
 		return $plugins;
 	}
@@ -68,6 +69,7 @@ class HighlighterPlugin{
 		$page->head .= "\n\n";
 		$page->head .= '<link rel="stylesheet" type="text/css" href="'.$addonRelativeCode.'/syntaxhighlighter/styles/shCore.css" />'."\n";
 		$page->head .= '<link rel="stylesheet" type="text/css" href="'.$addonRelativeCode.'/syntaxhighlighter/styles/shThemeDefault.css" />'."\n";
+
 		$page->head .= '<script language="javascript" type="text/javascript" src="'.$addonRelativeCode.'/syntaxhighlighter/scripts/shCore.js"></script>'."\n";
 		foreach($brushes as $brush){
 			$page->head .= '<script language="javascript" type="text/javascript" src="'.$addonRelativeCode.'/syntaxhighlighter/scripts/'.$brush.'"></script>'."\n";

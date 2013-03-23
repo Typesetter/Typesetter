@@ -489,7 +489,7 @@ continue using your old password.</p>',
 'dir_replace_failed'=> 'Directory replacement failed.',
 'revert_failed'=>'Sorry, there was an error unpacking the archive and updating your site. ',
 'try_again'=>'Try Again',
-'not_writable'=>'Error: File permissions appear to have changed and the system is no longer able to write to the following files. <a href="%s">More information...</a>',
+'not_writable'=>'Error: File permissions appear to have changed and the system is no longer able to write to the following files. <a href="%s">More inforomation...</a>',
 'Modified'=>'Modified',
 //colorbox languages
 'Image_of'=>'Image %1$s of %2$s',

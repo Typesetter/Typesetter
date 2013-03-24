@@ -66,9 +66,35 @@ class HighlighterPlugin{
 			return;
 		}
 
+		$config = gpPlugin::GetConfig();
+		$theme =& $config['theme'];
+
 		$page->head .= "\n\n";
 		$page->head .= '<link rel="stylesheet" type="text/css" href="'.$addonRelativeCode.'/syntaxhighlighter/styles/shCore.css" />'."\n";
-		$page->head .= '<link rel="stylesheet" type="text/css" href="'.$addonRelativeCode.'/syntaxhighlighter/styles/shThemeDefault.css" />'."\n";
+
+		$css_file = 'shThemeDefault.css';
+		switch($theme){
+			case 'django':
+				$css_file = 'shThemeDjango.css';
+			break;
+			case 'eclipse':
+				$css_file = 'shThemeEclipse.css';
+			break;
+			case 'emacs':
+				$css_file = 'shThemeEmacs.css';
+			break;
+			case 'fadetogrey':
+				$css_file = 'shThemeFadeToGrey.css';
+			break;
+			case 'midnight':
+				$css_file = 'shThemeMidnight.css';
+			break;
+			case 'rdark':
+				$css_file = 'shThemeRDark.css';
+			break;
+		}
+		$page->head .= '<link rel="stylesheet" type="text/css" href="'.$addonRelativeCode.'/syntaxhighlighter/styles/'.$css_file.'" />'."\n";
+
 
 		$page->head .= '<script language="javascript" type="text/javascript" src="'.$addonRelativeCode.'/syntaxhighlighter/scripts/shCore.js"></script>'."\n";
 		foreach($brushes as $brush){

@@ -282,6 +282,40 @@ class gpPlugin{
 		}
 		return false;
 	}
+
+
+	/**
+	 * Get plugin configuration values
+	 * @since 3.6
+	 *
+	 */
+	static function GetConfig(){
+		global $addonPathData;
+		$config = array();
+		$file = $addonPathData.'/_config.php';
+		if( file_exists($file) ){
+			include($file);
+		}
+		return $config;
+	}
+
+
+	/**
+	 * Get plugin configuration values
+	 * @since 3.6
+	 *
+	 */
+	function SaveConfig($config){
+		global $addonPathData;
+
+		$file = $addonPathData.'/_config.php';
+
+		if( gpFiles::SaveArray($file,'config',$config) ){
+			return true;
+		}
+		return false;
+	}
+
 }
 
 

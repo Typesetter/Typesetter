@@ -92,8 +92,13 @@ class HighlighterPlugin{
 			case 'rdark':
 				$css_file = 'shThemeRDark.css';
 			break;
+			case 'none':
+				$css_file = false;
+			break;
 		}
-		$page->head .= '<link rel="stylesheet" type="text/css" href="'.$addonRelativeCode.'/syntaxhighlighter/styles/'.$css_file.'" />'."\n";
+		if( $css_file ){
+			$page->head .= '<link rel="stylesheet" type="text/css" href="'.$addonRelativeCode.'/syntaxhighlighter/styles/'.$css_file.'" />'."\n";
+		}
 
 
 		$page->head .= '<script language="javascript" type="text/javascript" src="'.$addonRelativeCode.'/syntaxhighlighter/scripts/shCore.js"></script>'."\n";

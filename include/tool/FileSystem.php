@@ -109,7 +109,7 @@ class gp_filesystem_base{
 	 *
 	 * @param array $context array of paths (as keys) and instructions (as values), possible values are (file,dir)
 	 */
-	function get_filesystem_method_list($context = array()){
+	static function get_filesystem_method_list($context = array()){
 		$result = 1;
 
 		if( is_string($context) ){

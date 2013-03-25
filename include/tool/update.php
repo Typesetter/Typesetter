@@ -168,7 +168,7 @@ class update_class{
 
 
 
-	function CheckIncompatible(){
+	static function CheckIncompatible(){
 
 		update_class::GetDataStatic($update_data,$data_timestamp);
 		$diff = time() - $data_timestamp;

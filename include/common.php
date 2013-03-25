@@ -1019,6 +1019,9 @@ class common{
 
 	/**
 	 * Return an array of information about the layout
+	 * @param string $layout The layout key
+	 * @param bool $check_existence Whether or not to check for the existence of the template.php file
+	 *
 	 */
 	static function LayoutInfo( $layout, $check_existence = true ){
 		global $gpLayouts,$dataDir;
@@ -1037,9 +1040,23 @@ class common{
 			$relative = '/data/_themes/';
 		}
 		$layout_info['path'] = $relative.$layout_info['theme'];
-		$layout_info['dir'] = $dataDir.$relative.$layout_info['theme_name'];
-		if( $check_existence && !file_exists($layout_info['dir'].'/template.php') ){
-			return false;
+
+
+		//template.php directory
+		$color_template = $dataDir.$layout_info['path'];
+		$theme_template = $dataDir.$relative.$layout_info['theme_name'];
+
+		if( !$check_existence ){
+			$layout_info['dir'] = $theme_template;
+
+		}else{
+			if( file_exists($color_template.'/template.php') ){
+				$layout_info['dir'] = $color_template;
+			}elseif( file_exists($theme_template.'/template.php') ){
+				$layout_info['dir'] = $theme_template;
+			}else{
+				return false;
+			}
 		}
 
 		return $layout_info;

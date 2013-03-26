@@ -2250,9 +2250,16 @@ class admin_menu_new extends admin_menu_tools{
 
 	//create a menu with one file
 	function AltMenu_New(){
-		global $gp_menu;
-		reset($gp_menu);
-		$first_index = key($gp_menu);
+		global $gp_menu, $gp_titles;
+
+		if( count($gp_menu) ){
+			reset($gp_menu);
+			$first_index = key($gp_menu);
+		}elseif( count($gp_titles ) ){
+			reset($gp_titles);
+			$first_index = key($gp_titles);
+		}
+
 		$new_menu[$first_index] = array('level'=>0);
 		return $new_menu;
 	}

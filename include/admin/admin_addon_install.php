@@ -334,6 +334,7 @@ class admin_addon_install extends admin_addons_tool{
 
 		$variables = array(
 					'{$addon}'				=> $this->install_folder_name,
+					'{$plugin}'				=> $this->install_folder_name,
 					'{$dataDir}'			=> $dataDir,
 					'{$dirPrefix}'			=> $dirPrefix,
 					'{$addonRelativeData}'	=> common::GetDir('/data/_addondata/'.$this->data_folder),
@@ -365,7 +366,7 @@ class admin_addon_install extends admin_addons_tool{
 	}
 
 
-	/*
+	/**
 	 * Determine if the addon (identified by $ini_info and $source_folder) is an upgrade to an existing addon
 	 *
 	 * @return mixed

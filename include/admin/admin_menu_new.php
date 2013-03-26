@@ -1896,23 +1896,23 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 		$type = $_POST['content_type'];
-		$content = gp_edit::DefaultContent($type);
+		$section = gp_edit::DefaultContent($type);
 
-		if( $content === false ){
+		if( $section['content'] === false ){
 			return false;
 		}
 
 		$label = admin_tools::PostedLabel($_POST['title']);
 
 		if( $type == 'text' ){
-			$content = '<h2>'.strip_tags($_POST['title']).'</h2>'.$content;
+			$section['content'] = '<h2>'.strip_tags($_POST['title']).'</h2>'.$section['content'];
 		}
 
 		//add to $gp_index first!
 		$index = common::NewFileIndex();
 		$gp_index[$title] = $index;
 
-		if( !gpFiles::NewTitle($title,$content,$type) ){
+		if( !gpFiles::NewTitle($title,$section['content'],$type) ){
 			message($langmessage['OOPS'].' (cn1)');
 			unset($gp_index[$title]);
 			return false;

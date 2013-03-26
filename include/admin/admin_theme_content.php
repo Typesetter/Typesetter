@@ -2502,11 +2502,7 @@ class admin_theme_content extends admin_addon_install{
 			return false;
 		}
 
-		$data = array(
-					'type'	=> $_POST['type'],
-					'content' => gp_edit::DefaultContent($_POST['type'])
-				);
-
+		$data = gp_edit::DefaultContent($_POST['type']);
 		$file = $dataDir.'/data/_extra/'.$title.'.php';
 
 		if( file_exists($file) ){

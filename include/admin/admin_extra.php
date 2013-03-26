@@ -247,11 +247,7 @@ class admin_extra{
 			return false;
 		}
 
-		$data = array(
-					'type'	=> $_POST['type'],
-					'content' => gp_edit::DefaultContent($_POST['type'])
-				);
-
+		$data = gp_edit::DefaultContent($_POST['type']);
 		$file = $this->folder.'/'.$title.'.php';
 
 		if( !gpFiles::SaveArray($file,'extra_content',$data) ){

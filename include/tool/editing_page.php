@@ -407,9 +407,8 @@ class editing_page extends display{
 		if( isset($_POST['copy']) ){
 			$start_content = $this->file_sections[$section];
 		}else{
-			$start_content['type'] = $_POST['content_type'];
-			$start_content['content'] = gp_edit::DefaultContent($start_content['type']);
-			if( $start_content['content'] === false ){
+			$start_content = gp_edit::DefaultContent($_POST['content_type']);
+			if( is_array($start_content) && $start_content['content'] === false ){
 				message($langmessage['OOPS'].'(3)');
 				return;
 			}

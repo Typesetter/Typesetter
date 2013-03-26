@@ -97,7 +97,7 @@ class gpPlugin{
 	}
 
 
-	static function OneFilter($hook,$args=array()){
+	static function OneFilter( $hook, $args=array(), $addon = false ){
 		global $config;
 
 		if( !gpPlugin::HasHook($hook) ){
@@ -105,6 +105,13 @@ class gpPlugin{
 		}
 
 		$hook_info = end($config['hooks'][$hook]);
+		if( $addon !== false ){
+			foreach($config['hooks'][$hook] as $addon_key => $info){
+				if( $addon_key === $addon ){
+					$hook_info = $info;
+				}
+			}
+		}
 
 		return gpPlugin::ExecHook($hook,$hook_info,$args);
 	}

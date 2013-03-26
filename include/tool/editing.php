@@ -698,22 +698,27 @@ class gp_edit{
 	static function DefaultContent($type='text'){
 		global $langmessage;
 
+		$section = array();
+		$section['type'] = $type;
+		$section['content'] = '';
+
 		switch($type){
 			case 'include':
-				$default_content = '';
 			break;
 
 			case 'gallery':
-				$default_content = '<ul class="gp_gallery"><li class="gp_to_remove"></li></ul>';
+				$section['content'] = '<ul class="gp_gallery"><li class="gp_to_remove"></li></ul>';
 			break;
 
 			case 'text':
 			default:
-				$default_content = '<p>'.$langmessage['New Section'].'</p>';
+				$section['content'] = '<p>'.$langmessage['New Section'].'</p>';
 			break;
 		}
 
-		return gpPlugin::Filter('GetDefaultContent',array($default_content,$type));
+		$section['content'] = gpPlugin::Filter('GetDefaultContent',array($section['content'],$type));
+
+		return $section;
 	}
 
 

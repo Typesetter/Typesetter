@@ -60,14 +60,6 @@ class section_content{
 			$types = gpPlugin::Filter('SectionTypes',array($types));
 		}
 
-
-		global $config;
-		foreach($config['hooks']['SectionTypes'] as $hook_info){
-			$args = array();
-			$args[0] = gpPlugin::ExecHook($hook,$hook_info,$args);
-		}
-
-
 		return $types;
 	}
 

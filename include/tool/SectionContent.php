@@ -44,6 +44,7 @@ class section_content{
 		return self::SectionToContent($section,$section_num);
 	}
 
+
 	/**
 	 * Return the data types available for content areas
 	 * @since 3.6
@@ -58,6 +59,14 @@ class section_content{
 			$types['include']['label']	= $langmessage['File Include'];
 			$types = gpPlugin::Filter('SectionTypes',array($types));
 		}
+
+
+		global $config;
+		foreach($config['hooks']['SectionTypes'] as $hook_info){
+			$args = array();
+			$args[0] = gpPlugin::ExecHook($hook,$hook_info,$args);
+		}
+
 
 		return $types;
 	}

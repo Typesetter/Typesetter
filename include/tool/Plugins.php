@@ -104,16 +104,18 @@ class gpPlugin{
 			return false;
 		}
 
-		$hook_info = end($config['hooks'][$hook]);
-		if( $addon !== false ){
-			foreach($config['hooks'][$hook] as $addon_key => $info){
-				if( $addon_key === $addon ){
-					$hook_info = $info;
-				}
+		if( $addon === false ){
+			$hook_info = end($config['hooks'][$hook]);
+			return gpPlugin::ExecHook($hook,$hook_info,$args);
+		}
+
+		foreach($config['hooks'][$hook] as $addon_key => $hook_info){
+			if( $addon_key === $addon ){
+				return gpPlugin::ExecHook($hook,$hook_info,$args);
 			}
 		}
 
-		return gpPlugin::ExecHook($hook,$hook_info,$args);
+		return false;
 	}
 
 	static function Action($hook, $args = array() ){

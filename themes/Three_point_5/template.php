@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8" />
 <link href='http://fonts.googleapis.com/css?family=Courgette' rel='stylesheet' type='text/css'>
 <?php gpOutput::GetHead(); ?>
 

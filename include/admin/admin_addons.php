@@ -620,6 +620,9 @@ class admin_addons extends admin_addon_install{
 		echo common::Link($this->path_remote,$langmessage['Find Plugins']);
 		echo '</h2>';
 
+		//echo '<h3>Addons</h3>';
+		//echo showArray($config['addons']);
+
 
 
 		if( !$this->ShowInstalled($available) ){

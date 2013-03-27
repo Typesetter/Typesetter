@@ -219,7 +219,7 @@ class SetupSite{
 		echo '</div>';
 
 		echo '<p>';
- 		echo common::Link_Admin('Admin_Site_Setup',$langmessage['back']);
+ 		echo common::Link('Admin_Site_Setup',$langmessage['back']);
  		echo '</p>';
 
 		echo '</form>';
@@ -345,11 +345,11 @@ class SetupSite{
 		echo '</div>';
 
 		echo '<div id="ms_links">';
-		echo common::Link_Admin('Admin_Site_Setup',$langmessage['new_installation'],'cmd=new');
+		echo common::Link('Admin_Site_Setup',$langmessage['new_installation'],'cmd=new');
 		echo ' &nbsp; &nbsp; ';
-		echo common::Link_Admin('Admin_Site_Setup',$langmessage['Settings'],'cmd=settings');
+		echo common::Link('Admin_Site_Setup',$langmessage['Settings'],'cmd=settings');
 		echo ' &nbsp; &nbsp; ';
-		echo common::Link_Admin('Admin_Site_Setup',$langmessage['about'],'cmd=about');
+		echo common::Link('Admin_Site_Setup',$langmessage['about'],'cmd=about');
 		echo '</div>';
 
 		$this->ShowSimple();
@@ -377,7 +377,7 @@ class SetupSite{
 
 
 		echo '<h3>';
-		echo common::Link_Admin('Admin_Site_Setup',$langmessage['Settings'],'cmd=settings');
+		echo common::Link('Admin_Site_Setup',$langmessage['Settings'],'cmd=settings');
 		echo '</h3>';
 
 		echo '<dl>';
@@ -391,7 +391,7 @@ class SetupSite{
 		echo '</dl>';
 
 		echo '<p>';
- 		echo common::Link_Admin('Admin_Site_Setup',$langmessage['back']);
+ 		echo common::Link('Admin_Site_Setup',$langmessage['back']);
  		echo '</p>';
 
 		echo '</div>';
@@ -584,7 +584,7 @@ class SetupSite{
 
 		if( count($this->siteData['sites']) > 5 ){
 			echo '<p>';
-			echo common::Link_Admin('Admin_Site_Setup','More Installations','cmd=installed');
+			echo common::Link('Admin_Site_Setup','More Installations','cmd=installed');
 			echo '</p>';
 		}
 
@@ -614,12 +614,12 @@ class SetupSite{
 
 		echo '</td>';
 		echo '<td>';
-		echo common::Link_Admin('Admin_Site_Setup',$langmessage['options'],'cmd=options&site='.urlencode($site));
+		echo common::Link('Admin_Site_Setup',$langmessage['options'],'cmd=options&site='.urlencode($site));
 		echo ' &nbsp; ';
-		//echo common::Link_Admin('Admin_Site_Setup',$langmessage['uninstall'],'cmd=uninstall&site='.urlencode($site),' name="gpajax"');
+		//echo common::Link('Admin_Site_Setup',$langmessage['uninstall'],'cmd=uninstall&site='.urlencode($site),' name="gpajax"');
 
 		$title = sprintf($langmessage['generic_delete_confirm'],' &quot;'.htmlspecialchars($site).'&quot; ');
-		echo common::Link_Admin('Admin_Site_Setup',$langmessage['uninstall'],'cmd=uninstall&site='.urlencode($site),array('name'=>'postlink','class'=>'gpconfirm','title'=>$title));
+		echo common::Link('Admin_Site_Setup',$langmessage['uninstall'],'cmd=uninstall&site='.urlencode($site),array('name'=>'postlink','class'=>'gpconfirm','title'=>$title));
 
 		echo '</td>';
 		echo '</tr>';
@@ -686,19 +686,19 @@ class SetupSite{
 
 		//navigation links
 		if( $offset > 0 ){
-			echo common::Link_Admin('Admin_Site_Setup','Prev','cmd=installed&q='.urlencode($_GET['q']).'&offset='.max(0,$offset-$limit));
+			echo common::Link('Admin_Site_Setup','Prev','cmd=installed&q='.urlencode($_GET['q']).'&offset='.max(0,$offset-$limit));
 		}else{
 			echo 'Prev';
 		}
 		echo ' &nbsp; ';
 		if( count($reverse) > $limit ){
-			echo common::Link_Admin('Admin_Site_Setup','Next','cmd=installed&q='.urlencode($_GET['q']).'&offset='.($offset+$limit));
+			echo common::Link('Admin_Site_Setup','Next','cmd=installed&q='.urlencode($_GET['q']).'&offset='.($offset+$limit));
 		}else{
 			echo 'Next';
 		}
 
 		echo '<p>';
- 		echo common::Link_Admin('Admin_Site_Setup',$langmessage['back']);
+ 		echo common::Link('Admin_Site_Setup',$langmessage['back']);
  		echo '</p>';
 
 		echo '</div>';

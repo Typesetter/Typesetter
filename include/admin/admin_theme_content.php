@@ -1036,11 +1036,13 @@ class admin_theme_content extends admin_addon_install{
 	 */
 	function NewLayout($cmd){
 
-
 		$this->can_install_links = true;
 		$this->config_index = 'addons';
 		$this->addon_folder_name = '_addoncode';
+
+		$this->GetAddonData(); //for addonHistory
 		$this->Init_PT();
+		$this->InitInstall_Vars();
 
 
 		//check the requested theme
@@ -1055,9 +1057,6 @@ class admin_theme_content extends admin_addon_install{
 		if( !$this->Install_Ini($this->source_folder) ){
 			return false;
 		}
-
-
-		message(pre($this->ini_contents));
 
 
 		// three steps of installation
@@ -1088,6 +1087,18 @@ class admin_theme_content extends admin_addon_install{
 	 */
 	function PreviewTheme($theme, $theme_info){
 		global $langmessage,$config,$page;
+
+
+		ob_start();
+		$success = $this->Install_Step1(false);
+		$content = ob_get_clean();
+		if( !empty($content) ){
+			message($content);
+		}
+		if( !$success ){
+			return false;
+		}
+
 
 		$theme_id = dirname($theme);
 		$template = $theme_info['folder'];
@@ -1154,10 +1165,21 @@ class admin_theme_content extends admin_addon_install{
 	function NewLayoutPrompt($theme, $theme_info ){
 		global $langmessage;
 
+		ob_start();
+		$success = $this->Install_Step2();
+		$content = ob_get_clean();
+
+		if( !$success ){
+			message($content);
+			return false;
+		}
+
+
 		$label = substr($theme_info['name'].'/'.$theme_info['color'],0,25);
 
 		echo '<h3>'.$langmessage['new_layout'].'</h3>';
 		echo '<form action="'.common::GetUrl('Admin_Theme_Content').'" method="post">';
+		$this->HiddenFields();
 		echo '<table class="bordered full_width">';
 
 		echo '<tr><th colspan="2">';
@@ -1194,6 +1216,16 @@ class admin_theme_content extends admin_addon_install{
 	 */
 	function AddLayout($theme, $theme_info){
 		global $gpLayouts,$langmessage,$config,$page;
+
+		ob_start();
+		$success = $this->Install_Step3();
+		$content = ob_get_clean();
+		if( !empty($content) ){
+			message($content);
+		}
+		if( !$success ){
+			return false;
+		}
 
 		$newLayout = array();
 		$newLayout['theme'] = $theme_info['folder'].'/'.$theme_info['color'];

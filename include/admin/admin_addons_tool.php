@@ -16,6 +16,7 @@ class admin_addons_tool{
 	var $CanRate = true;
 	var $messages = array();
 	var $addon_info = array();
+	var $dataFile;
 
 
 
@@ -46,6 +47,11 @@ class admin_addons_tool{
 	}
 
 	function SaveAddonData(){
+
+		if( !isset($this->dataFile) ){
+			trigger_error('dataFile not set');
+			return;
+		}
 
 		$addonData = array();
 

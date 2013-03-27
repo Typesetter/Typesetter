@@ -172,13 +172,7 @@ class admin_addon_install extends admin_addons_tool{
 		echo '<form action="'.common::GetUrl($this->path_root).'" method="post">';
 		echo '<input type="hidden" name="cmd" value="step'.$step.'" />';
 		echo '<input type="hidden" name="source" value="'.htmlspecialchars($this->source_folder_name).'" />';
-		echo '<input type="hidden" name="upgrade_key" value="'.htmlspecialchars($this->upgrade_key).'" />';
-
-		if( isset($this->temp_folder_name) ){
-			echo '<input type="hidden" name="temp_folder_name" value="'.htmlspecialchars($this->temp_folder_name).'" />';
-		}
-		echo '<input type="hidden" name="install_folder_name" value="'.htmlspecialchars($this->install_folder_name).'" />';
-
+		$this->HiddenFields();
 
 		echo '<p>';
 		echo ' <input type="submit" name="" value="'.$langmessage['continue'].'" class="gpsubmit" />';
@@ -190,6 +184,14 @@ class admin_addon_install extends admin_addons_tool{
 		echo '</p>';
 
 		echo '</form>';
+	}
+
+	function HiddenFields(){
+		echo '<input type="hidden" name="upgrade_key" value="'.htmlspecialchars($this->upgrade_key).'" />';
+		if( isset($this->temp_folder_name) ){
+			echo '<input type="hidden" name="temp_folder_name" value="'.htmlspecialchars($this->temp_folder_name).'" />';
+		}
+		echo '<input type="hidden" name="install_folder_name" value="'.htmlspecialchars($this->install_folder_name).'" />';
 	}
 
 	function Installed(){
@@ -410,7 +412,7 @@ class admin_addon_install extends admin_addons_tool{
 	 * Check the contents of the addon that is to be installed
 	 *
 	 */
-	function Install_Step1(){
+	function Install_Step1($verbose = true){
 		global $langmessage;
 
 		//start with a clean addoncode folder
@@ -442,9 +444,11 @@ class admin_addon_install extends admin_addons_tool{
 			return false;
 		}
 
-		echo '<p>';
-		echo sprintf($langmessage['Selected_Install'],' <em>'.htmlspecialchars($this->ini_contents['Addon_Name']).'</em> ',' <em>'.htmlspecialchars($this->source_folder).'</em>');
-		echo '</p>';
+		if( $verbose ){
+			echo '<p>';
+			echo sprintf($langmessage['Selected_Install'],' <em>'.htmlspecialchars($this->ini_contents['Addon_Name']).'</em> ',' <em>'.htmlspecialchars($this->source_folder).'</em>');
+			echo '</p>';
+		}
 
 
 		//Addon Custom Install_Check()
@@ -669,19 +673,19 @@ class admin_addon_install extends admin_addons_tool{
 		global $langmessage, $config;
 
 		if( empty($this->install_folder_name) ){
-			message($langmessage['OOPS']);
+			message($langmessage['OOPS'].' (No Folder Name)');
 			return false;
 		}
 
 
 		if( $this->upgrade_key && !$this->developer_mode ){
 			if( !file_exists($this->install_folder_path) ){
-				message($langmessage['OOPS']);
+				message($langmessage['OOPS'].' (No Folder Path)');
 				return false;
 			}
 
 			if( empty($this->temp_folder_name) || !file_exists($this->temp_folder_path) ){
-				message($langmessage['OOPS']);
+				message($langmessage['OOPS'].' (No Temp Folder)');
 				return false;
 			}
 		}
@@ -694,9 +698,7 @@ class admin_addon_install extends admin_addons_tool{
 			$this->config[$this->install_folder_name] = array();
 		}
 
-		echo '<p>';
-		echo 'Saving Settings';
-		echo '</p>';
+		echo '<p>Saving Settings</p>';
 
 
 		//general configuration
@@ -1400,13 +1402,8 @@ class admin_addon_install extends admin_addons_tool{
 		if( isset($_REQUEST['order']) ){
 			echo '<input type="hidden" name="order" value="'.htmlspecialchars($_REQUEST['order']).'" />';
 		}
-		echo '<input type="hidden" name="upgrade_key" value="'.htmlspecialchars($this->upgrade_key).'" />';
 
-		if( isset($this->temp_folder_name) ){
-			echo '<input type="hidden" name="temp_folder_name" value="'.htmlspecialchars($this->temp_folder_name).'" />';
-		}
-		echo '<input type="hidden" name="install_folder_name" value="'.htmlspecialchars($this->install_folder_name).'" />';
-
+		$this->HiddenFields();
 
 		echo '<p>';
 		echo '<input type="hidden" name="cmd" value="remote_install'.$step.'" />';

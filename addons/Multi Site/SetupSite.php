@@ -1887,10 +1887,12 @@ class SetupSite{
 		//	variable juggling
 		$oldDir = $dataDir;
 		$dataDir = $destination;
+		$old_unique = $config['gpuniq'];
+
 
 		$new_config = array();
 		$new_config['language'] = $config['language'];
-		$new_config['gpuniq'] = $this->NewId();
+		$config['gpuniq'] = $new_config['gpuniq'] = $this->NewId();
 
 		if( !Install_Tools::Install_DataFiles_New( $destination, $new_config, false ) ){
 			$this->Install_Aborted($destination);
@@ -1898,6 +1900,8 @@ class SetupSite{
 		}
 
 		$dataDir = $oldDir;
+		$config['gpuniq'] = $old_unique;
+
 
 		$this->siteData['sites'][$destination] = array();
 		$this->siteData['sites'][$destination]['unique'] = $this->site_uniq_id;

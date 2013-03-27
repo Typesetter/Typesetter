@@ -1494,6 +1494,7 @@ class common{
 			return '';
 		}
 
+		$query = str_replace('+','%20',$query);//in case urlencode() was used instead of rawurlencode()
 		if( strpos($query,'&amp;') !== false ){
 			$parts = explode('&amp;',$query);
 		}else{

@@ -101,6 +101,8 @@ class admin_theme_content extends admin_addon_install{
 				$this->RemoteInstallMain($cmd);
 			return;
 
+
+
 			case 'deletetheme':
 				$this->DeleteTheme();
 			return;
@@ -115,6 +117,7 @@ class admin_theme_content extends admin_addon_install{
 				$this->AdminLayout();
 			return;
 
+
 			//theme ratings
 			case 'Update Review';
 			case 'Send Review':
@@ -127,18 +130,18 @@ class admin_theme_content extends admin_addon_install{
 				}
 			break;
 
+
 			//new layouts
 			case 'preview':
-				if( $this->PreviewTheme() ){
+			case 'newlayout':
+			case 'addlayout':
+				if( $this->NewLayout($cmd) ){
 					return;
 				}
 			break;
-			case 'newlayout':
-				$this->NewLayoutPrompt();
-			return;
-			case 'addlayout':
-				$this->NewLayout();
-			break;
+
+
+
 			//copy
 			case 'copy':
 				$this->CopyLayoutPrompt();
@@ -1025,19 +1028,32 @@ class admin_theme_content extends admin_addon_install{
 		$colors[] = '#351c75';
 		$colors[] = '#741b47';
 
-
-/*		Too dark
-		$colors[] = '#660000';
-		$colors[] = '#783f04';
-		$colors[] = '#7f6000';
-		$colors[] = '#274e13';
-		$colors[] = '#0c343d';
-		$colors[] = '#073763';
-		$colors[] = '#20124d';
-		$colors[] = '#4c1130';
-*/
-
 		return $colors;
+	}
+
+
+
+	/**
+	 * Manage adding new layouts
+	 *
+	 */
+	function NewLayout($cmd){
+		//$this->can_install_links = true;
+
+		switch($cmd){
+			case 'preview':
+				if( $this->PreviewTheme() ){
+					return true;
+				}
+			break;
+			case 'newlayout':
+				$this->NewLayoutPrompt();
+			return true;
+			case 'addlayout':
+				$this->AddLayout();
+			break;
+		}
+		return false;
 	}
 
 
@@ -1093,7 +1109,7 @@ class admin_theme_content extends admin_addon_install{
 	 * Add a new layout to the installation
 	 *
 	 */
-	function NewLayout(){
+	function AddLayout(){
 		global $gpLayouts,$langmessage,$config,$page;
 
 		$theme =& $_POST['theme'];

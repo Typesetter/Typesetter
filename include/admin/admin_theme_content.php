@@ -1043,6 +1043,7 @@ class admin_theme_content extends admin_addon_install{
 		$this->Init_PT();
 
 
+		//check the requested theme
 		$theme =& $_REQUEST['theme'];
 		$theme_info = $this->ThemeInfo($theme);
 		if( $theme_info === false ){
@@ -1050,16 +1051,28 @@ class admin_theme_content extends admin_addon_install{
 			return false;
 		}
 
+		$this->source_folder = $theme_info['full_dir'];
+		if( !$this->Install_Ini($this->source_folder) ){
+			return false;
+		}
 
+
+		message(pre($this->ini_contents));
+
+
+		// three steps of installation
 		switch($cmd){
+
 			case 'preview':
 				if( $this->PreviewTheme($theme, $theme_info) ){
 					return true;
 				}
 			break;
+
 			case 'newlayout':
 				$this->NewLayoutPrompt($theme, $theme_info);
 			return true;
+
 			case 'addlayout':
 				$this->AddLayout($theme, $theme_info);
 			break;

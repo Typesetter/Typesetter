@@ -48,9 +48,10 @@
 	width:90px;
 	height:16px;
 	}
-.addon_rating img{
+.addon_rating span{
 	background: url(../imgs/stars.png);
 	height:16px;
+	display:inline-block;
 	}
 .search_order{
 	}

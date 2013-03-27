@@ -2020,8 +2020,8 @@ class admin_addon_install extends admin_addons_tool{
 		$pos2 = ($width-ceil($pos));
 
 		echo '<span title="'.number_format(($rating*100),0).'%" class="addon_rating">';
-		echo '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="'.$pos.'" />';
-		echo '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="'.$pos2.'" style="background-position:'.$pos2.'px -16px" />';
+		echo '<span style="width:'.$pos.'px"></span>';
+		echo '<span style="background-position:'.$pos2.'px -16px;width:'.$pos2.'px"></span>';
 		echo '</span> ';
 	}
 }

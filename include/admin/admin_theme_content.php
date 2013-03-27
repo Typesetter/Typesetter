@@ -58,8 +58,6 @@ class admin_theme_content extends admin_addon_install{
 		$this->manage_label = $langmessage['Manage Layouts'];
 
 
-		//message('request: '.showArray($_REQUEST));
-
 		$page->head_js[] = '/include/js/theme_content.js';
 		$page->head_js[] = '/include/js/dragdrop.js';
 
@@ -216,7 +214,6 @@ class admin_theme_content extends admin_addon_install{
 
 		}
 
-		//message(showArray($_GET));
 		$this->Show();
 	}
 
@@ -1038,19 +1035,33 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function NewLayout($cmd){
-		//$this->can_install_links = true;
+
+
+		$this->can_install_links = true;
+		$this->config_index = 'addons';
+		$this->addon_folder_name = '_addoncode';
+		$this->Init_PT();
+
+
+		$theme =& $_REQUEST['theme'];
+		$theme_info = $this->ThemeInfo($theme);
+		if( $theme_info === false ){
+			message($langmessage['OOPS'].' (Invalid Theme)');
+			return false;
+		}
+
 
 		switch($cmd){
 			case 'preview':
-				if( $this->PreviewTheme() ){
+				if( $this->PreviewTheme($theme, $theme_info) ){
 					return true;
 				}
 			break;
 			case 'newlayout':
-				$this->NewLayoutPrompt();
+				$this->NewLayoutPrompt($theme, $theme_info);
 			return true;
 			case 'addlayout':
-				$this->AddLayout();
+				$this->AddLayout($theme, $theme_info);
 			break;
 		}
 		return false;
@@ -1059,18 +1070,76 @@ class admin_theme_content extends admin_addon_install{
 
 
 	/**
+	 * Preview a theme and give users the option of creating a new layout
+	 *
+	 */
+	function PreviewTheme($theme, $theme_info){
+		global $langmessage,$config,$page;
+
+		$theme_id = dirname($theme);
+		$template = $theme_info['folder'];
+		$color = $theme_info['color'];
+		$display = htmlspecialchars($theme_info['name'].' / '.$theme_info['color']);
+		$display = str_replace('_',' ',$display);
+		$this->LoremIpsum();
+		$page->gpLayout = false;
+		$page->theme_name = $template;
+		$page->theme_color = $color;
+		$page->theme_dir = $theme_info['full_dir'];
+		$page->layout_css = false;
+		$page->theme_rel = $theme_info['rel'].'/'.$color;
+
+		if( isset($theme_info['id']) ){
+			$page->theme_addon_id = $theme_info['id'];
+		}
+
+		$path = '/themes/';
+		if( $theme_info['is_addon'] ){
+			$path = '/data/_themes/';
+		}
+		$page->theme_path = common::GetDir($path.$page->theme_name.'/'.$page->theme_color);
+
+		$page->show_admin_content = false;
+
+		$this->ToolbarCSS();
+
+
+		ob_start();
+		echo '<div id="theme_toolbar"><div>';
+
+		//theme_right
+		echo '<div id="theme_right">';
+		$this->LayoutSelect();
+		echo '</div>';
+
+		echo '<div id="theme_left">';
+		echo '<div class="step"><b>';
+		echo common::Link('Admin_Theme_Content',$langmessage['available_themes']);
+		echo '</b></div>';
+
+		echo '<div class="step">';
+		$this->ThemeSelect($theme_id,$color);
+		echo '</div>';
+
+		echo '<div class="add_layout">';
+		echo common::Link('Admin_Theme_Content',$langmessage['use_this_theme'],'cmd=newlayout&theme='.rawurlencode($theme),'data-cmd="gpabox"');
+		echo '</div>';
+
+		echo '</div>';
+
+		echo '</div></div>';
+		$page->admin_html = ob_get_clean();
+		return true;
+	}
+
+
+
+	/**
 	 * Give users a few options before creating the new layout
 	 *
 	 */
-	function NewLayoutPrompt(){
+	function NewLayoutPrompt($theme, $theme_info ){
 		global $langmessage;
-
-		$theme =& $_REQUEST['theme'];
-		$theme_info = $this->ThemeInfo($theme);
-		if( $theme_info === false ){
-			message($langmessage['OOPS'].' (Invalid Theme)');
-			return false;
-		}
 
 		$label = substr($theme_info['name'].'/'.$theme_info['color'],0,25);
 
@@ -1105,19 +1174,13 @@ class admin_theme_content extends admin_addon_install{
 		echo '</form>';
 	}
 
+
 	/**
 	 * Add a new layout to the installation
 	 *
 	 */
-	function AddLayout(){
+	function AddLayout($theme, $theme_info){
 		global $gpLayouts,$langmessage,$config,$page;
-
-		$theme =& $_POST['theme'];
-		$theme_info = $this->ThemeInfo($theme);
-		if( $theme_info === false ){
-			message($langmessage['OOPS'].' (Invalid Theme)');
-			return false;
-		}
 
 		$newLayout = array();
 		$newLayout['theme'] = $theme_info['folder'].'/'.$theme_info['color'];
@@ -1291,75 +1354,6 @@ class admin_theme_content extends admin_addon_install{
 		return $new_label;
 	}
 
-	/**
-	 * Preview a theme and give users the option of creating a new layout
-	 *
-	 */
-	function PreviewTheme(){
-		global $langmessage,$config,$page;
-
-		$theme =& $_GET['theme'];
-		$theme_info = $this->ThemeInfo($theme);
-		if( $theme_info === false ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-		$theme_id = dirname($theme);
-		$template = $theme_info['folder'];
-		$color = $theme_info['color'];
-		$display = htmlspecialchars($theme_info['name'].' / '.$theme_info['color']);
-		$display = str_replace('_',' ',$display);
-		$this->LoremIpsum();
-		$page->gpLayout = false;
-		$page->theme_name = $template;
-		$page->theme_color = $color;
-		$page->theme_dir = $theme_info['full_dir'];
-		$page->layout_css = false;
-		$page->theme_rel = $theme_info['rel'].'/'.$color;
-
-		if( isset($theme_info['id']) ){
-			$page->theme_addon_id = $theme_info['id'];
-		}
-
-		$path = '/themes/';
-		if( $theme_info['is_addon'] ){
-			$path = '/data/_themes/';
-		}
-		$page->theme_path = common::GetDir($path.$page->theme_name.'/'.$page->theme_color);
-
-		$page->show_admin_content = false;
-
-		$this->ToolbarCSS();
-
-
-		ob_start();
-		echo '<div id="theme_toolbar"><div>';
-
-		//theme_right
-		echo '<div id="theme_right">';
-		$this->LayoutSelect();
-		echo '</div>';
-
-		echo '<div id="theme_left">';
-		echo '<div class="step"><b>';
-		echo common::Link('Admin_Theme_Content',$langmessage['available_themes']);
-		echo '</b></div>';
-
-		echo '<div class="step">';
-		$this->ThemeSelect($theme_id,$color);
-		echo '</div>';
-
-		echo '<div class="add_layout">';
-		echo common::Link('Admin_Theme_Content',$langmessage['use_this_theme'],'cmd=newlayout&theme='.rawurlencode($theme),'data-cmd="gpabox"');
-		echo '</div>';
-
-		echo '</div>';
-
-		echo '</div></div>';
-		$page->admin_html = ob_get_clean();
-		return true;
-	}
 
 	function LoremIpsum(){
 		global $page, $langmessage, $gp_titles, $gp_menu;

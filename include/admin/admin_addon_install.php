@@ -802,7 +802,6 @@ class admin_addon_install extends admin_addons_tool{
 		//needs to be before other gadget functions
 		$installedGadgets = $this->GetInstalledComponents($config['gadgets'],$this->install_folder_name);
 
-		//echo showArray($this->ini_contents);
 		$gadgets = $this->ExtractFromInstall($this->ini_contents,'Gadget:');
 		$gadgets = $this->CleanGadgets($gadgets);
 		$this->PurgeExisting($config['gadgets'],$gadgets);
@@ -1876,7 +1875,6 @@ class admin_addon_install extends admin_addons_tool{
 				echo $row['rating_count'].' ratings';
 				echo '</td><td>';
 				echo $row['short_description'];
-				//echo showArray($row);
 				echo '</td></tr>';
 				$i++;
 			}

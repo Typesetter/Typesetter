@@ -3,12 +3,14 @@ defined('is_running') or die('Not an entry point...');
 
 
 
+
 global $langmessage;
 $langmessage['Sorry, nothing matched'] = 'Sorry, nothing met your search criteria.';
 $langmessage['Sorry, data not fetched'] = 'Sorry, the addon data could not be fetched from gpEasy.com.';
 
 
 includeFile('admin/admin_addons_tool.php');
+
 
 class admin_addon_install extends admin_addons_tool{
 
@@ -71,8 +73,26 @@ class admin_addon_install extends admin_addons_tool{
 	 *
 	 */
 	function admin_addon_install($cmd){
-		global $langmessage;
 
+
+
+		global $dataDir;
+		includeFile('admin/admin_addon_install_new.php');
+		$this->source_folder = $dataDir.'/addons/'.$_REQUEST['source'];
+
+		$installer = new admin_addon_installer();
+		$installer->source = $this->source_folder;
+		$installer->Install();
+
+		foreach($installer->messages as $msg){
+			message($msg);
+		}
+
+		return;
+
+
+
+		global $langmessage;
 		$this->Init_PT();
 
 		if( !$this->InitInstall() ){
@@ -125,6 +145,11 @@ class admin_addon_install extends admin_addons_tool{
 		return true;
 	}
 
+
+	/**
+	 * Display prompt to confirm an installation in developer mode
+	 *
+	 */
 	function Develop(){
 		global $langmessage;
 
@@ -459,6 +484,7 @@ class admin_addon_install extends admin_addons_tool{
 	/**
 	 * Run the Install_Check.php file if it exists
 	 * @return bool
+	 *
 	 */
 	function Install_CheckFile($dir){
 		$check_file = $dir.'/Install_Check.php';
@@ -796,7 +822,7 @@ class admin_addon_install extends admin_addons_tool{
 		global $langmessage, $config;
 
 		if( !$this->can_install_links ){
-			return;
+			return true;
 		}
 
 		echo '<p>Adding Gadgets</p>';
@@ -841,6 +867,7 @@ class admin_addon_install extends admin_addons_tool{
 		//generic hooks
 		$this->AddHooks();
 
+		return true;
 	}
 
 
@@ -2041,64 +2068,5 @@ class admin_addon_install extends admin_addons_tool{
 		echo '</span> ';
 	}
 
-
 }
 
-
-/**
- * Replace 3 step addon install process with one step
- *
- * Currnet Normal install
- *	step1: checks addon.ini, checks for duplicate addon name,
- *	step2: copies the files
- *	step3: add hooks (special/admin/gadget/hooks), adds addon to configuration
- *
- * New Install
- *	The above 3 steps in one
- *	- copy to dummy folder first then rename
- *
- * New Remote install
- * 	copy files to temp folder.. then do above
- *
- *
- * ?? how to destinguish between upgrade and unwanted install of duplicate addon
- *
- */
-class addon_install{
-
-	var $source = '';
-	var $dest = '';
-	var $install_hooks = true;
-	var $upgrade = false;
-
-
-	var $errors = array();
-	var $messages = array();
-
-	function Install(){
-
-
-	}
-
-	function Check(){
-
-
-	}
-
-	function Copy(){
-
-
-	}
-
-	function Hooks(){
-
-
-	}
-
-	function Finalize(){
-
-
-	}
-
-
-}

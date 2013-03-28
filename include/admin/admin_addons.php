@@ -95,7 +95,7 @@ class admin_addons extends admin_addon_install{
 				$this->Develop();
 			break;
 
-			case 'localinstall':
+			case 'local_install':
 				$this->LocalInstall();
 				$this->Select();
 			break;
@@ -668,10 +668,10 @@ class admin_addons extends admin_addon_install{
 				echo $info['Addon_Version'];
 				echo '</td>';
 				echo '<td>';
-				echo common::Link('Admin_Addons',$langmessage['Install'],'cmd=localinstall&source='.$folder);
+				echo common::Link('Admin_Addons',$langmessage['Install'],'cmd=local_install&source='.$folder,'data-cmd="creq"');
 				echo ' &nbsp; ';
-				if( function_exists('symlink') ){
-					echo common::Link('Admin_Addons',$langmessage['develop'],'cmd=develop&source='.$folder);
+				if( common::function_exists('symlink') ){
+					echo common::Link('Admin_Addons',$langmessage['develop'],'cmd=develop&source='.$folder,'data-cmd="creq"');
 				}
 				echo '</td>';
 
@@ -803,9 +803,9 @@ class admin_addons extends admin_addon_install{
 			if( isset($info['upgrade_from']) ){
 				echo ' &nbsp; ';
 				if( $developerInstall ){
-					echo common::Link('Admin_Addons',$langmessage['upgrade'],'cmd=localinstall&mode=dev&source='.$info['upgrade_from']);
+					echo common::Link('Admin_Addons',$langmessage['upgrade'],'cmd=local_install&mode=dev&source='.$info['upgrade_from'],'data-cmd="creq"');
 				}else{
-					echo common::Link('Admin_Addons',$langmessage['upgrade'],'cmd=localinstall&source='.$info['upgrade_from']);
+					echo common::Link('Admin_Addons',$langmessage['upgrade'],'cmd=local_install&source='.$info['upgrade_from'],'data-cmd="creq"');
 				}
 			}
 

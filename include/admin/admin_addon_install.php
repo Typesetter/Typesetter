@@ -113,7 +113,7 @@ class admin_addon_install extends admin_addons_tool{
 
 		echo '<p>';
 		echo '<form action="'.common::GetUrl($this->path_root).'" method="post">';
-		echo '<input type="hidden" name="cmd" value="localinstall" />';
+		echo '<input type="hidden" name="cmd" value="local_install" />';
 		echo '<input type="hidden" name="source" value="'.htmlspecialchars($source).'" />';
 		echo '<button type="submit" name="mode" value="dev" class="gpsubmit" >Continue with Developer Installation ...</button>';
 		echo ' &nbsp; ';

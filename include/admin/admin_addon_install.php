@@ -66,16 +66,11 @@ class admin_addon_install extends admin_addons_tool{
 	}
 
 
-	/*
-	 *
+	/**
 	 * Install Local Packages
 	 *
-	 *
 	 */
-	function admin_addon_install($cmd){
-
-
-
+	function LocalInstall(){
 		global $dataDir;
 		includeFile('admin/admin_addon_installer.php');
 		$this->source_folder = $dataDir.'/addons/'.$_REQUEST['source'];
@@ -87,58 +82,6 @@ class admin_addon_install extends admin_addons_tool{
 		foreach($installer->messages as $msg){
 			message($msg);
 		}
-
-		return;
-
-
-
-		global $langmessage;
-		$this->Init_PT();
-
-		if( !$this->InitInstall() ){
-			return false;
-		}
-		$this->GetAddonData(); //for addonHistory
-
-
-		$success = false;
-		ob_start();
-		switch($cmd){
-			case 'step2':
-				$success = $this->Install_Step2();
-				$step = 2;
-			break;
-			case 'step3':
-				$success = $this->Install_Step3();
-				$step = 3;
-			break;
-			default:
-				$success = $this->Install_Step1();
-				$step = 1;
-			break;
-		}
-		$content = ob_get_clean();
-
-		if( $success ){
-			$step++;
-		}
-
-		//output
-		$this->Install_Progress($step-1);
-
-		echo $content;
-
-		$this->InstallForm($step);
-
-
-		if( !empty($this->ini_contents['About']) ){
-			echo '<div id="addon_about">';
-			echo '<h3>'.$langmessage['about'].'</h3>';
-			echo strip_tags($this->ini_contents['About'],'<div><p><a><b><br/><span><tt><em><i><b><sup><sub><strong><u>');
-			echo '</div>';
-		}
-
-
 		return true;
 	}
 
@@ -170,7 +113,7 @@ class admin_addon_install extends admin_addons_tool{
 
 		echo '<p>';
 		echo '<form action="'.common::GetUrl($this->path_root).'" method="post">';
-		echo '<input type="hidden" name="cmd" value="step1" />';
+		echo '<input type="hidden" name="cmd" value="localinstall" />';
 		echo '<input type="hidden" name="source" value="'.htmlspecialchars($source).'" />';
 		echo '<button type="submit" name="mode" value="dev" class="gpsubmit" >Continue with Developer Installation ...</button>';
 		echo ' &nbsp; ';
@@ -181,31 +124,6 @@ class admin_addon_install extends admin_addons_tool{
 		echo '<p>Take a look at the <a href="http://docs.gpeasy.com">gpEasy Documentation</a> for  more information about <a href="http://docs.gpeasy.com/Main/Plugins">plugin development</a></p>';
 	}
 
-	function InstallForm($step){
-		global $langmessage;
-
-		if( $step > 3 ){
-			$this->Installed();
-			return;
-		}
-
-
-		echo '<form action="'.common::GetUrl($this->path_root).'" method="post">';
-		echo '<input type="hidden" name="cmd" value="step'.$step.'" />';
-		echo '<input type="hidden" name="source" value="'.htmlspecialchars($this->source_folder_name).'" />';
-		$this->HiddenFields();
-
-		echo '<p>';
-		echo ' <input type="submit" name="" value="'.$langmessage['continue'].'" class="gpsubmit" />';
-		echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="gpcancel" />';
-		if( $this->developer_mode ){
-			echo ' <input type="hidden" name="mode" value="dev" />';
-			echo ' &nbsp; <em>'.$langmessage['developer_install'].'</em>';
-		}
-		echo '</p>';
-
-		echo '</form>';
-	}
 
 	function HiddenFields(){
 		echo '<input type="hidden" name="upgrade_key" value="'.htmlspecialchars($this->upgrade_key).'" />';
@@ -269,51 +187,6 @@ class admin_addon_install extends admin_addons_tool{
 	}
 
 
-
-	/*
-	 * Initialize the installation
-	 * 	Check ini file
-	 * 	Set folder variables
-	 *
-	 */
-	function InitInstall(){
-		global $dataDir, $langmessage;
-
-		if( empty($_REQUEST['source']) ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-		//developer mode
-		if( isset($_REQUEST['mode']) && ($_REQUEST['mode'] == 'dev') ){
-			if( !function_exists('symlink') ){
-				message($langmessage['OOPS']);
-				return false;
-			}
-			$this->developer_mode = true;
-		}
-
-
-		//init vars
-		$this->source_folder_name = $_REQUEST['source'];
-		$this->source_folder = $dataDir.'/addons/'.$_REQUEST['source'];
-		$this->InitInstall_Vars();
-
-
-		//check folders
-		if( !file_exists($this->source_folder) ){
-			message( sprintf($langmessage['File_Not_Found'],' <em>'.$this->source_folder.'</em>') );
-			return false;
-		}
-
-
-		//get ini contents
-		if( !$this->Install_Ini($this->source_folder) ){
-			return false;
-		}
-
-		return true;
-	}
 
 	function InitInstall_Vars(){
 
@@ -1687,14 +1560,10 @@ class admin_addon_install extends admin_addons_tool{
 	}
 
 
-
-
-	/*
-	 *
-	 *
+	/**
+	 * Get a list of installed addons
 	 *
 	 */
-
 	function GetInstalledComponents($from,$addon){
 		$result = array();
 		if( !is_array($from) ){
@@ -1712,6 +1581,7 @@ class admin_addon_install extends admin_addons_tool{
 		}
 		return $result;
 	}
+
 
 	/**
 	 * Remove unused code folders created by incomplete addon installations

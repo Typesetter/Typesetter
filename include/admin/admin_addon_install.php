@@ -77,7 +77,7 @@ class admin_addon_install extends admin_addons_tool{
 
 
 		global $dataDir;
-		includeFile('admin/admin_addon_install_new.php');
+		includeFile('admin/admin_addon_installer.php');
 		$this->source_folder = $dataDir.'/addons/'.$_REQUEST['source'];
 
 		$installer = new admin_addon_installer();
@@ -104,9 +104,6 @@ class admin_addon_install extends admin_addons_tool{
 		$success = false;
 		ob_start();
 		switch($cmd){
-			case 'develop':
-				$this->Develop();
-			return true;
 			case 'step2':
 				$success = $this->Install_Step2();
 				$step = 2;
@@ -153,14 +150,13 @@ class admin_addon_install extends admin_addons_tool{
 	function Develop(){
 		global $langmessage;
 
+		$source =& $_REQUEST['source'];
+
 		echo '<h2>';
 		echo $langmessage['Install'];
-		if( $this->addon_name ){
-			echo ' &#187; ';
-			echo htmlspecialchars($this->addon_name);
-		}
 		echo '</h2>';
-		echo '<p>You have chosen to develop <em>'.htmlspecialchars($this->addon_name).'</em>.</p>';
+
+		echo '<p>You have chosen to install an addon in developer mode.</p>';
 		echo '<p>';
 		echo ' Instead of copying the source folder, a developer installation will access the code in the source folder directly (via a symbolic link). ';
 		echo ' This will allow you to test changes to your addon code without having to repeatedly re-install. ';
@@ -175,7 +171,7 @@ class admin_addon_install extends admin_addons_tool{
 		echo '<p>';
 		echo '<form action="'.common::GetUrl($this->path_root).'" method="post">';
 		echo '<input type="hidden" name="cmd" value="step1" />';
-		echo '<input type="hidden" name="source" value="'.htmlspecialchars($this->source_folder_name).'" />';
+		echo '<input type="hidden" name="source" value="'.htmlspecialchars($source).'" />';
 		echo '<button type="submit" name="mode" value="dev" class="gpsubmit" >Continue with Developer Installation ...</button>';
 		echo ' &nbsp; ';
 		echo '<button type="submit" name="mode" value="" class="gpsubmit">Install Normally ...</button>';

@@ -92,6 +92,9 @@ class admin_addons extends admin_addon_install{
 			break;
 
 			case 'develop':
+				$this->Develop();
+			break;
+
 			case 'step1':
 			case 'step2':
 			case 'step3':

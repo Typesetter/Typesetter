@@ -1690,16 +1690,32 @@ class admin_addon_install extends admin_addons_tool{
 		return $result;
 	}
 
+	/**
+	 * Remove unused code folders created by incomplete addon installations
+	 *
+	 */
 	function CleanInstallFolder(){
 
 		$addoncode = $this->addon_folder;
 		$folders = gpFiles::readDir($addoncode,1);
 
 		foreach($folders as $folder){
-			if( !isset($this->config[$folder]) ){
-				$full_path = $addoncode.'/'.$folder;
-				gpFiles::RmAll($full_path);
+			if( array_key_exists($folder, $this->config) ){
+				continue;
 			}
+			$full_path = $addoncode.'/'.$folder;
+			if( is_link($full_path) ){
+				$stat = lstat($full_path);
+				$mtime = $stat['mtime'];
+			}else{
+				$mtime = filemtime($full_path);
+			}
+			$diff = time() - $mtime;
+			if( $diff < 3600 ){
+				continue;
+			}
+
+			gpFiles::RmAll($full_path);
 		}
 	}
 
@@ -2024,4 +2040,65 @@ class admin_addon_install extends admin_addons_tool{
 		echo '<span style="background-position:'.$pos2.'px -16px;width:'.$pos2.'px"></span>';
 		echo '</span> ';
 	}
+
+
+}
+
+
+/**
+ * Replace 3 step addon install process with one step
+ *
+ * Currnet Normal install
+ *	step1: checks addon.ini, checks for duplicate addon name,
+ *	step2: copies the files
+ *	step3: add hooks (special/admin/gadget/hooks), adds addon to configuration
+ *
+ * New Install
+ *	The above 3 steps in one
+ *	- copy to dummy folder first then rename
+ *
+ * New Remote install
+ * 	copy files to temp folder.. then do above
+ *
+ *
+ * ?? how to destinguish between upgrade and unwanted install of duplicate addon
+ *
+ */
+class addon_install{
+
+	var $source = '';
+	var $dest = '';
+	var $install_hooks = true;
+	var $upgrade = false;
+
+
+	var $errors = array();
+	var $messages = array();
+
+	function Install(){
+
+
+	}
+
+	function Check(){
+
+
+	}
+
+	function Copy(){
+
+
+	}
+
+	function Hooks(){
+
+
+	}
+
+	function Finalize(){
+
+
+	}
+
+
 }

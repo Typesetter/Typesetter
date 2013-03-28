@@ -72,17 +72,15 @@ class admin_addon_install extends admin_addons_tool{
 	 */
 	function LocalInstall(){
 		global $dataDir;
-		includeFile('admin/admin_addon_installer.php');
-		$this->source_folder = $dataDir.'/addons/'.$_REQUEST['source'];
 
+		includeFile('admin/admin_addon_installer.php');
 		$installer = new admin_addon_installer();
-		$installer->source = $this->source_folder;
+		$installer->source = $dataDir.'/addons/'.$_REQUEST['source'];
 		$installer->Install();
 
 		foreach($installer->messages as $msg){
 			message($msg);
 		}
-		return true;
 	}
 
 
@@ -1236,18 +1234,35 @@ class admin_addon_install extends admin_addons_tool{
 
 
 
-	/*
+	/**
 	 * Remote Install Functions
-	 *
-	 *
 	 *
 	 */
 	function RemoteInstallMain($cmd){
+
+		$_REQUEST += array('order'=>'');
+
+		includeFile('admin/admin_addon_installer.php');
+
+		$installer = new admin_addon_installer();
+		$installer->InstallRemote( $_REQUEST['type'], $_REQUEST['id'], $_REQUEST['order'] );
+		foreach($installer->messages as $msg){
+			message($msg);
+		}
+
+		return;
+
 		global $langmessage;
 
 		$this->remote_installation = true;
 		$this->Init_PT();
 		$this->GetAddonData(); //for addonHistory
+
+
+		echo pre($this->config);
+
+		return;
+
 		if( !$this->RemoteInit() ){
 			return;
 		}
@@ -1374,6 +1389,12 @@ class admin_addon_install extends admin_addons_tool{
 		return true;
 	}
 
+	function GetRemotePackage(){
+		global $langmessage;
+		includeFile('tool/RemoteGet.php');
+
+
+	}
 
 	function RemoteInstall2(){
 		global $langmessage;
@@ -1517,14 +1538,6 @@ class admin_addon_install extends admin_addons_tool{
 			if( $archive_root ){
 				if( strpos($filename,$archive_root) !== 0 ){
 					continue;
-
-/*
-					trigger_error('$archive_root not in path');
-					echo '<p class="gp_warning">';
-					echo $langmessage['error_unpacking'];
-					echo '</p>';
-					return false;
-*/
 				}
 
 				$filename = substr($filename,$archive_root_len);

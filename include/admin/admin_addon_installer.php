@@ -37,6 +37,11 @@ class admin_addon_installer extends admin_addon_install{
 	var $can_install_links = true;
 
 
+	var $type;
+	var $id;
+	var $order;
+
+
 	var $dest = '';
 	var $dest_name;
 	var $temp_folder;
@@ -48,11 +53,19 @@ class admin_addon_installer extends admin_addon_install{
 	function __construct(){}
 
 
+	/**
+	 * Install an addon
+	 * $this->source should already be set
+	 *
+	 */
 	function Install(){
+		global $langmessage;
 
 		$success = $this->InstallSteps();
 
-		if( !$success ){
+		if( $success ){
+			$this->message( sprintf($langmessage['installed'],$this->ini_contents['Addon_Name']) );
+		}else{
 			$this->Failed();
 		}
 
@@ -60,6 +73,24 @@ class admin_addon_installer extends admin_addon_install{
 
 		return $success;
 	}
+
+
+
+	/**
+	 * Get and install addon from a remote source
+	 * @param string $type Type of addon (plugin or theme)
+	 * @param int $id Addon id
+	 * @param int $order Purchase order id
+	 *
+	 */
+	function InstallRemote( $type, $id, $order = false ){
+		$this->type = $type;
+		$this->id = $id;
+		$this->order = $order;
+
+		return $this->Install();
+	}
+
 
 
 	/**
@@ -71,7 +102,9 @@ class admin_addon_installer extends admin_addon_install{
 		$this->GetAddonData();			// addonHistory
 		$this->Init_PT();				// $this->config
 
-		if( !$this->CheckSource() ){
+
+		//get from remote
+		if( isset($this->type) && !$this->GetRemote() ){
 			return false;
 		}
 
@@ -117,13 +150,6 @@ class admin_addon_installer extends admin_addon_install{
 
 	}
 
-	/**
-	 * Check the source folder
-	 *
-	 */
-	function CheckSource(){
-		return true;
-	}
 
 
 	/**
@@ -192,7 +218,7 @@ class admin_addon_installer extends admin_addon_install{
 			return false;
 		}
 
-		$this->message( $langmessage['copied_addon_files'] );
+		//$this->message( $langmessage['copied_addon_files'] );
 
 		return true;
 	}
@@ -205,7 +231,7 @@ class admin_addon_installer extends admin_addon_install{
 	function CopyDev(){
 
 		if( $this->upgrade_key ){
-			$this->message( $langmessage['copied_addon_files'] );
+			//$this->message( $langmessage['copied_addon_files'] );
 			return true;
 		}
 
@@ -215,7 +241,7 @@ class admin_addon_installer extends admin_addon_install{
 			return false;
 		}
 
-		$this->message($langmessage['copied_addon_files']);
+		//$this->message($langmessage['copied_addon_files']);
 		return true;
 	}
 
@@ -467,5 +493,164 @@ class admin_addon_installer extends admin_addon_install{
 		$this->messages[] = $message;
 	}
 
+	/**
+	 * Get a stored order/purchase id
+	 * @param int addon id
+	 *
+	 */
+	function GetOrder($id){
+		if( !is_numeric($id) ){
+			return;
+		}
+
+		foreach( $this->config as $folder => $info ){
+			if( !empty($info['id'])
+				&& $id == $info['id']
+				&& !empty($info['order'])
+				){
+					return $info['order'];
+			}
+		}
+	}
+
+
+	/**
+	 * Get the remote package
+	 *
+	 */
+	function GetRemote(){
+		global $langmessage;
+		includeFile('tool/RemoteGet.php');
+
+
+		// download
+		$download_link = addon_browse_path;
+		if( $this->type == 'theme' ){
+			$download_link .= '/Themes';
+		}else{
+			$download_link .= '/Plugins';
+		}
+		$download_link .= '?cmd=install&id='.rawurlencode($this->id);
+
+
+		// purchase order id
+		if( !$this->order ){
+			$this->order = $this->GetOrder($this->id);
+		}
+		if( $this->order ){
+			$download_link .= '&order='.rawurlencode($this->order);
+		}
+
+
+		// get package from remote
+		$full_result = gpRemoteGet::Get($download_link);
+		if( (int)$full_result['response']['code'] < 200 && (int)$full_result['response']['code'] >= 300 ){
+			$this->message( $langmessage['download_failed'] .' (1)');
+			return false;
+		}
+
+		// download failed and a message was sent
+		if( isset($full_result['headers']['x-error']) ){
+			$this->message( htmlspecialchars($full_result['headers']['x-error']) );
+			$this->message( sprintf($langmessage['download_failed_xerror'],'href="'.$this->DetailUrl($_POST).'" data-cmd="remote"') );
+			return false;
+		}
+
+		$result = $full_result['body'];
+		$md5 =& $full_result['headers']['x-md5'];
+
+		//check md5
+		$package_md5 = md5($result);
+		if( $package_md5 != $md5 ){
+			$this->message( $langmessage['download_failed_md5'].' <br/> (Package Checksum '.$package_md5.' != Expected Checksum '.$md5.')' );
+			return false;
+		}
+
+		//save contents
+		$tempfile = $this->tempfile();
+		if( !gpFiles::Save($tempfile,$result) ){
+			$this->message( $langmessage['download_failed'].' (Package not saved)' );
+			return false;
+		}
+
+		$this->source = $this->NewTempFolder();
+
+		$success = $this->ExtractArchive($this->source,$tempfile);
+
+		unlink($tempfile);
+
+		return $success;
+	}
+
+
+
+	/**
+	 * Write Archive
+	 *
+	 */
+	function ExtractArchive($dir,$archive_path){
+		global $langmessage;
+
+		// Unzip uses a lot of memory, but not this much hopefully
+		@ini_set('memory_limit', '256M');
+		includeFile('thirdparty/pclzip-2-8-2/pclzip.lib.php');
+		$archive = new PclZip($archive_path);
+		$archive_files = $archive->extract(PCLZIP_OPT_EXTRACT_AS_STRING);
+
+
+		if( !gpFiles::CheckDir($dir) ){
+			$this->message( sprintf($langmessage['COULD_NOT_SAVE'],$folder) );
+			return false;
+		}
+
+		//get archive root
+		$archive_root = false;
+		foreach( $archive_files as $file ){
+			if( strpos($file['filename'],'/Addon.ini') !== false ){
+				$root = dirname($file['filename']);
+				if( !$archive_root || ( strlen($root) < strlen($archive_root) ) ){
+					$archive_root = $root;
+				}
+			}
+		}
+		$archive_root_len = strlen($archive_root);
+
+
+		foreach($archive_files as $file_info){
+
+			$filename = $file_info['filename'];
+
+			if( $archive_root ){
+				if( strpos($filename,$archive_root) !== 0 ){
+					continue;
+				}
+
+				$filename = substr($filename,$archive_root_len);
+			}
+
+			$filename = '/'.trim($filename,'/');
+			$full_path = $dir.'/'.$filename;
+
+			if( $file_info['folder'] ){
+				$folder = $full_path;
+			}else{
+				$folder = dirname($full_path);
+			}
+
+			if( !gpFiles::CheckDir($folder) ){
+				$this->message( sprintf($langmessage['COULD_NOT_SAVE'],$folder) );
+				return false;
+			}
+			if( $file_info['folder'] ){
+				continue;
+			}
+			if( !gpFiles::Save($full_path,$file_info['content']) ){
+				$this->message( sprintf($langmessage['COULD_NOT_SAVE'],$full_path) );
+				return false;
+			}
+		}
+
+		return true;
+	}
 
 }

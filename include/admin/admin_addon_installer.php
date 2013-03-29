@@ -275,6 +275,10 @@ class admin_addon_installer extends admin_addon_install{
 			return true;
 		}
 
+		if( $this->mode == 'dev' ){
+			return $this->CopyDev();
+		}
+
 		$this->temp_source = $this->TempFile();
 
 		$result = self::CopyAddonDir($this->source,$this->temp_source);
@@ -295,18 +299,16 @@ class admin_addon_installer extends admin_addon_install{
 	 */
 	function CopyDev(){
 
-		if( $this->upgrade_key ){
-			//$this->message( $langmessage['copied_addon_files'] );
-			return true;
+		if( file_exists($this->dest) ){
+			$this->message($langmessage['OOPS'].' (Destination already exists)');
+			return false;
 		}
-
 
 		if( !symlink($this->source,$this->dest) ){
 			$this->message($langmessage['OOPS']);
 			return false;
 		}
 
-		//$this->message($langmessage['copied_addon_files']);
 		return true;
 	}
 

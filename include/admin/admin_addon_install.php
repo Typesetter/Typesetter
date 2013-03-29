@@ -169,27 +169,6 @@ class admin_addon_install extends admin_addons_tool{
 	}
 
 
-	function Install_CheckName($check_name){
-		global $langmessage;
-
-		//check for duplicate name
-		foreach($this->config as $addon_key => $data){
-			if( $this->upgrade_key && ($this->upgrade_key == $addon_key) ){
-				continue;
-			}
-
-			if( $data['name'] == $check_name ){
-				echo '<p class="gp_warning">';
-				echo sprintf($langmessage['already_installed'],' <em>'.$check_name.'</em> ');
-				echo '</p>';
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-
 	function CleanHooks($addon,$keep_hooks = array()){
 		global $config;
 

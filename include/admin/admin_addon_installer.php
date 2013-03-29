@@ -2,13 +2,6 @@
 defined('is_running') or die('Not an entry point...');
 
 /**
- * Things to check back on in the old install
- *	Install_CheckName() needed?
- *
- * Things to look at with themes
- *	$this->config_index
- *
- *
  * Things that could be done previous to installer
  *	- Install_CheckIni() (warning about installing a lesser version)
  *

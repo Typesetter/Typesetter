@@ -234,7 +234,7 @@ class admin_addon_installer extends admin_addon_install{
 					'{$plugin}'				=> $folder,
 					'{$dataDir}'			=> $dataDir,
 					'{$dirPrefix}'			=> $dirPrefix,
-					'{$addonRelativeData}'	=> common::GetDir('/data/_addondata/'.$folder),
+					'{$addonRelativeData}'	=> common::GetDir('/data/_addondata/'.$this->data_folder),
 					'{$addonRelativeCode}'	=> common::GetDir('/data/'.$this->addon_folder_name.'/'.$folder),
 					);
 

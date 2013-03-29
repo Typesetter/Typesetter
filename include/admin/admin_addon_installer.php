@@ -22,8 +22,6 @@ defined('is_running') or die('Not an entry point...');
  *
  *
  * Things to check back on in the old install
- *  - $this->data_folder
- *	- Install_CheckIni()
  *  !! $this->config_index
  *  !! Install_CheckFile()
  *  !! Developer mode
@@ -34,6 +32,9 @@ defined('is_running') or die('Not an entry point...');
  *	remote install shouldn't copy to temp
  *	Install_CheckName() needed?
  *
+ *
+ * Things that could be done previous to installer
+ *	- Install_CheckIni()
  *
  */
 class admin_addon_installer extends admin_addon_install{
@@ -254,6 +255,12 @@ class admin_addon_installer extends admin_addon_install{
 
 		if( isset($this->ini_contents['Addon_Unique_ID']) && !is_numeric($this->ini_contents['Addon_Unique_ID']) ){
 			$this->message('Invalid Unique ID');
+			return false;
+		}
+
+		//Check Versions
+		if( !empty($this->ini_contents['min_gpeasy_version']) && version_compare($this->ini_contents['min_gpeasy_version'], gpversion,'>') ){
+			$this->message( sprintf($langmessage['min_version'],$this->ini_contents['min_gpeasy_version']).' '.$langmessage['min_version_upgrade'] );
 			return false;
 		}
 

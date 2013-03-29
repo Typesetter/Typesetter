@@ -182,19 +182,6 @@ class admin_addon_install extends admin_addons_tool{
 				}
 			}
 		}
-
-		//Check Versions
-		if( isset($this->ini_contents['min_gpeasy_version']) ){
-			if(version_compare($this->ini_contents['min_gpeasy_version'], gpversion,'>') ){
-				echo '<p class="gp_warning">';
-				echo sprintf($langmessage['min_version'],$this->ini_contents['min_gpeasy_version']);
-				echo ' '.$langmessage['min_version_upgrade'];
-				echo '</p>';
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 

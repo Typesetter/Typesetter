@@ -142,31 +142,6 @@ class admin_addon_install extends admin_addons_tool{
 	}
 
 
-
-	/**
-	 * Run the Install_Check.php file if it exists
-	 * @return bool
-	 *
-	 */
-	function Install_CheckFile($dir){
-		$check_file = $dir.'/Install_Check.php';
-		if( !file_exists($check_file) ){
-			return true;
-		}
-
-		include($check_file);
-		if( !function_exists('Install_Check') ){
-			return true;
-		}
-
-		if( !Install_Check() ){
-			return false;
-		}
-
-		return true;
-	}
-
-
 	/**
 	 * Check the ini values of the addon being installed
 	 * @return bool

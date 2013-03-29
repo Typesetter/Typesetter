@@ -22,8 +22,6 @@ defined('is_running') or die('Not an entry point...');
  *
  *
  * Things to check back on in the old install
- *  !! Install_CheckFile()
- *  !! Developer mode
  *	Install_CheckName() needed?
  *
  * Things to look at with themes
@@ -149,6 +147,9 @@ class admin_addon_installer extends admin_addon_install{
 
 		$this->IniContents();
 
+		if( !$this->CheckFile() ){
+			return false;
+		}
 
 		//copy
 		if( !$this->Copy() ){
@@ -473,6 +474,31 @@ class admin_addon_installer extends admin_addon_install{
 
 	}
 
+
+	/**
+	 * Run the Install_Check.php file if it exists
+	 * @return bool
+	 *
+	 */
+	function CheckFile(){
+		$check_file = $this->source.'/Install_Check.php';
+		if( !file_exists($check_file) ){
+			return true;
+		}
+		$success = true;
+
+		ob_start();
+		include($check_file);
+		if( function_exists('Install_Check') ){
+			$success = Install_Check();
+		}
+		$msg = ob_get_clean();
+		if( !empty($msg) ){
+			$this->message($msg);
+		}
+
+		return $success;
+	}
 
 
 	/**

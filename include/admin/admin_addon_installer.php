@@ -24,6 +24,7 @@ defined('is_running') or die('Not an entry point...');
  * Things to check back on in the old install
  *  - $this->data_folder
  *	- Install_CheckIni()
+ *  !! $this->config_index
  *  !! Install_CheckFile()
  *  !! Developer mode
  *	!! Upgrades
@@ -37,20 +38,26 @@ defined('is_running') or die('Not an entry point...');
  */
 class admin_addon_installer extends admin_addon_install{
 
+	//configuration options
 	var $source = '';
 	var $can_install_links = true;
+	var $config_index = 'addons';
+	var $addon_folder_name = '_addoncode';
 
-
+	//remote install
 	var $remote_install = false;
 	var $type;
 	var $id;
 	var $order;
 
 
+	//used internally
+	var $addon_folder;
 	var $dest = '';
 	var $dest_name;
 	var $temp_folder;
 	var $trash_path;
+	var $config_cache;
 
 	var $messages = array();
 
@@ -141,12 +148,19 @@ class admin_addon_installer extends admin_addon_install{
 
 
 		// upgrade/destination
-		$this->install_folder_name = $this->dest_name = $this->UpgradePath($this->ini_contents);
+		$this->dest_name = $this->UpgradePath($this->ini_contents);
 		if( $this->dest_name ){
 			$this->dest = $this->addon_folder.'/'.$this->dest_name;
 		}else{
 			$this->dest = $this->TempFile();
-			$this->install_folder_name = $this->dest_name = basename($this->dest);
+			$this->dest_name = basename($this->dest);
+		}
+
+		//legacy data folder support
+		if( isset($this->config[$this->dest_name]['data_folder']) ){
+			$this->data_folder = $this->config[$this->dest_name]['data_folder'];
+		}else{
+			$this->data_folder = $this->dest_name;
 		}
 
 
@@ -243,8 +257,6 @@ class admin_addon_installer extends admin_addon_install{
 			return false;
 		}
 
-		$this->addon_name = $this->ini_contents['Addon_Name'];
-
 		return true;
 	}
 
@@ -304,7 +316,7 @@ class admin_addon_installer extends admin_addon_install{
 		}
 
 		//needs to be before other gadget functions
-		$installedGadgets = $this->GetInstalledComponents($config['gadgets'],$this->install_folder_name);
+		$installedGadgets = $this->GetInstalledComponents($config['gadgets'],$this->dest_name);
 
 		$gadgets = $this->ExtractFromInstall($this->ini_contents,'Gadget:');
 		$gadgets = $this->CleanGadgets($gadgets);
@@ -378,8 +390,6 @@ class admin_addon_installer extends admin_addon_install{
 	function FinalizeConfig(){
 		global $langmessage, $config;
 
-
-		$this->install_folder_name = $this->dest_name = basename($this->dest);
 
 		//make sure we have an array
 		if( !isset($this->config[$this->dest_name]) ){
@@ -709,9 +719,9 @@ class admin_addon_installer extends admin_addon_install{
 	function UpdateConfigInfo($ini_var,$config_var){
 
 		if( isset($this->ini_contents[$ini_var]) ){
-			$this->config[$this->install_folder_name][$config_var] = $this->ini_contents[$ini_var];
-		}elseif( isset($this->config[$this->install_folder_name][$config_var]) ){
-			unset($this->config[$this->install_folder_name][$config_var]);
+			$this->config[$this->dest_name][$config_var] = $this->ini_contents[$ini_var];
+		}elseif( isset($this->config[$this->dest_name][$config_var]) ){
+			unset($this->config[$this->dest_name][$config_var]);
 		}
 	}
 
@@ -734,7 +744,7 @@ class admin_addon_installer extends admin_addon_install{
 				continue;
 			}
 
-			if( $linkInfo['addon'] !== $this->install_folder_name ){
+			if( $linkInfo['addon'] !== $this->dest_name ){
 				continue;
 			}
 
@@ -767,9 +777,9 @@ class admin_addon_installer extends admin_addon_install{
 				$addlink = true;
 				$curr_info = $gp_titles[$index];
 
-				if( !isset($curr_info['addon']) || $this->install_folder_name === false ){
+				if( !isset($curr_info['addon']) || $this->dest_name === false ){
 					$addlink = false;
-				}elseif( $curr_info['addon'] != $this->install_folder_name ){
+				}elseif( $curr_info['addon'] != $this->dest_name ){
 					$addlink = false;
 				}
 
@@ -826,7 +836,7 @@ class admin_addon_installer extends admin_addon_install{
 			}
 		}
 
-		$this->CleanHooks($this->install_folder_name,$installed);
+		$this->CleanHooks($this->dest_name,$installed);
 	}
 
 	function AddHook($hook,$hook_args){
@@ -834,7 +844,7 @@ class admin_addon_installer extends admin_addon_install{
 
 		$add = array();
 		$this->UpdateLinkInfo($add,$hook_args);
-		$config['hooks'][$hook][$this->install_folder_name] = $add;
+		$config['hooks'][$hook][$this->dest_name] = $add;
 
 		return true;
 	}
@@ -885,9 +895,9 @@ class admin_addon_installer extends admin_addon_install{
 			if( isset($lower_add_to[$lower_key]) ){
 				$addlink = true;
 
-				if( !isset($lower_add_to[$lower_key]['addon']) || $this->install_folder_name === false ){
+				if( !isset($lower_add_to[$lower_key]['addon']) || $this->dest_name === false ){
 					$addlink = false;
-				}elseif( $lower_add_to[$lower_key]['addon'] != $this->install_folder_name ){
+				}elseif( $lower_add_to[$lower_key]['addon'] != $this->dest_name ){
 					$addlink = false;
 				}
 
@@ -913,9 +923,9 @@ class admin_addon_installer extends admin_addon_install{
 
 	function UpdateLinkInfo(&$link_array,$new_info){
 
-		$link_array['addon'] = $this->install_folder_name;
+		$link_array['addon'] = $this->dest_name;
 		if( !empty($new_info['script']) ){
-			$link_array['script'] = '/data/_addoncode/'.$this->install_folder_name .'/'.$new_info['script'];
+			$link_array['script'] = '/data/_addoncode/'.$this->dest_name .'/'.$new_info['script'];
 		}else{
 			unset($link_array['script']);
 		}
@@ -952,12 +962,12 @@ class admin_addon_installer extends admin_addon_install{
 
 
 	/**
-	 * Purge Links from $purgeFrom that were once defined for $this->install_folder_name
+	 * Purge Links from $purgeFrom that were once defined for $this->dest_name
 	 *
 	 */
 	function PurgeExisting(&$purgeFrom,$NewLinks){
 
-		if( $this->install_folder_name === false || !is_array($purgeFrom) ){
+		if( $this->dest_name === false || !is_array($purgeFrom) ){
 			return;
 		}
 
@@ -965,7 +975,7 @@ class admin_addon_installer extends admin_addon_install{
 			if( !isset($linkInfo['addon']) ){
 				continue;
 			}
-			if( $linkInfo['addon'] !== $this->install_folder_name ){
+			if( $linkInfo['addon'] !== $this->dest_name ){
 				continue;
 			}
 
@@ -1094,7 +1104,7 @@ class admin_addon_installer extends admin_addon_install{
 			}
 
 			//check against other gadgets
-			if( isset($config['gadgets'][$gadgetName]) && ($config['gadgets'][$gadgetName]['addon'] !== $this->install_folder_name) ){
+			if( isset($config['gadgets'][$gadgetName]) && ($config['gadgets'][$gadgetName]['addon'] !== $this->dest_name) ){
 				echo '<p class="gp_notice">';
 				echo sprintf($langmessage['addon_key_defined'],' <em>Gadget: '.$gadgetName.'</em>');
 				echo '<p>';

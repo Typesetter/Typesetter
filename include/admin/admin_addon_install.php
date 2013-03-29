@@ -14,30 +14,11 @@ includeFile('admin/admin_addons_tool.php');
 
 class admin_addon_install extends admin_addons_tool{
 
-	var $developer_mode = false;
-	var $source_folder_name;
-	var $source_folder;
-	var $addon_name;
-	var $config_cache;
-	var $data_folder;
 
-
-	var $upgrade_key = false;
-	var $temp_folder_name;
-	var $temp_folder_path;
-	var $install_folder_name;
-	var $install_folder_path;
-	var $remote_installation = false;
-
-
-	//plugin vs theme
+	//remote browsing
 	var $config_index = 'addons';
-	var $addon_folder_name = '_addoncode';
-	var $addon_folder;
 	var $path_root = 'Admin_Addons';
 	var $path_remote = 'Admin_Addons/Remote';
-	var $can_install_links = true;
-
 	var $find_label;
 
 

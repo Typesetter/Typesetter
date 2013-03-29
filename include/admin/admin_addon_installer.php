@@ -1,34 +1,12 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-
 /**
- * Replace 3 step addon install process with one step
- *
- * Currnet Normal install
- *	step1: checks addon.ini, checks for duplicate addon name,
- *	step2: copies the files
- *	step3: add hooks (special/admin/gadget/hooks), adds addon to configuration
- *
- * New Install
- *	The above 3 steps in one
- *	- copy to dummy folder first then rename
- *
- * New Remote install
- * 	copy files to temp folder.. then do above
- *
- *
- * ?? how to destinguish between upgrade and unwanted install of duplicate addon
- *
- *
  * Things to check back on in the old install
  *	Install_CheckName() needed?
  *
  * Things to look at with themes
  *	$this->config_index
- *
- * To check again
- *	Upgrades (local/remote)
  *
  *
  * Things that could be done previous to installer

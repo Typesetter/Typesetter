@@ -116,8 +116,6 @@ class admin_addons extends admin_addon_install{
 				$this->Select();
 			break;
 
-			case 'changeinstall_confirmed';
-			case 'changeinstall':
 			case 'enable':
 			case 'disable':
 			case 'show':
@@ -379,17 +377,6 @@ class admin_addons extends admin_addon_install{
 			case 'disable':
 				$this->GadgetVisibility($addon,$cmd);
 			break;
-
-/*
-			case 'changeinstall':
-				$this->ChangeInstallType($addon);
-			break;
-
-			case 'changeinstall_confirmed':
-				$this->ChangeInstallConfirmed($addon);
-			break;
-*/
-
 		}
 
 		$this->FindForm();
@@ -831,63 +818,4 @@ class admin_addons extends admin_addon_install{
 
 		return true;
 	}
-
-	function ChangeInstallType(&$addonName){
-		global $langmessage;
-
-		$message = '';
-		$message .= '<form action="'.common::GetUrl('Admin_Addons').'" method="post">';
-		$message .= '<input type="hidden" name="cmd" value="changeinstall_confirmed" />';
-		$message .= 'Are you sure you want to change the install type? ';
-		//$message .= ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" />';
-		$message .= ' <input type="submit" name="aaa" value="'.$langmessage['continue'].'" />';
-		$message .= '</form>';
-
-		message($message);
-	}
-
-
-	function ChangeInstallConfirmed(&$addonName){
-		global $dataDir,$langmessage;
-
-
-		$installFolder = $dataDir.'/data/_addoncode/'.$addonName;
-		$fromFolder = $dataDir.'/addons/'.$addonName;
-
-		if( !file_exists($installFolder) ){
-			message($langmessage['OOPS']);
-			return;
-		}
-		if( !file_exists($fromFolder) ){
-			message($langmessage['OOPS']);
-			return;
-		}
-
-		if( is_link($installFolder) ){
-
-
-			unlink($installFolder);
-
-
-			if( !admin_addon_install::CopyAddonDir($fromFolder,$installFolder) ){
-				message($langmessage['OOPS']);
-				return;
-			}
-
-
-		}else{
-
-			gpFiles::RmAll($installFolder);
-
-			if( !symlink($fromFolder,$installFolder) ){
-				message($langmessage['OOPS']);
-				return;
-			}
-		}
-
-		message('Install Type Changed');
-
-	}
-
-
 }

@@ -27,7 +27,6 @@ defined('is_running') or die('Not an entry point...');
  *	!! Upgrades
  *	!! addhooks move to this file
  *  !! any echo() calls
- * 	add CleanUp() function
  *	remote install shouldn't copy to temp
  *	Install_CheckName() needed?
  *
@@ -61,6 +60,8 @@ class admin_addon_installer extends admin_addon_install{
 	var $temp_source;
 	var $trash_path;
 	var $config_cache;
+	var $ini_contents;
+	var $ini_text = '';
 
 	var $messages = array();
 
@@ -241,6 +242,7 @@ class admin_addon_installer extends admin_addon_install{
 					'{$addonRelativeCode}'	=> common::GetDir('/data/'.$this->addon_folder_name.'/'.$folder),
 					);
 
+		$this->ini_text
 
 		//get ini contents
 		$this->ini_contents = gp_ini::ParseFile($ini_file,$variables);
@@ -643,7 +645,7 @@ class admin_addon_installer extends admin_addon_install{
 			return false;
 		}
 
-		$this->source = $this->temp_source = $this->TempFile();
+		$this->source = $this->temp_source = $this->TempFile(); //doesn't need to be copied again by $this->Copy()
 
 		$success = $this->ExtractArchive($this->temp_source,$tempfile);
 

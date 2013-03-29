@@ -14,29 +14,21 @@ class gp_ini{
 
 	static function ParseFile($file,$variables=array()){
 
-		$fp = @fopen($file,'rb');
-		if( !$fp ){
+		$contents = file_get_contents($file);
+		if( $contents === false ){
 			return array();
 		}
 
-		$contents = '';
-		while(!feof($fp)) {
-			$contents .= fread($fp, 8192);
-		}
-		fclose($fp);
+		return gp_ini::ParseString( $contents, $variables );
+	}
+
+	static function ParseString( $string, $variables=array() ){
 
 		if( count($variables) > 0 ){
 			$keys = array_keys($variables);
 			$values = array_values($variables);
-			$contents = str_replace($keys,$values,$contents);
+			$string = str_replace($keys,$values,$string);
 		}
-
-		//message('phps: '.showArray(parse_ini_string($contents,true)));
-		//message('gpeasy: '.showArray(gp_ini::ParseString($contents)));
-		return gp_ini::ParseString($contents);
-	}
-
-	static function ParseString($string){
 
 		$aResult  = array();
 		$a = &$aResult;

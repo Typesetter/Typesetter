@@ -24,8 +24,6 @@ defined('is_running') or die('Not an entry point...');
  * Things to check back on in the old install
  *  !! Install_CheckFile()
  *  !! Developer mode
- *  !! any echo() calls
- *	remote install shouldn't copy to temp
  *	Install_CheckName() needed?
  *
  * Things to look at with themes
@@ -38,9 +36,6 @@ defined('is_running') or die('Not an entry point...');
  * Things that could be done previous to installer
  *	- Install_CheckIni() (warning about installing a lesser version)
  *
- * Can Remove?
- * .gp_notice css
- *
  */
 class admin_addon_installer extends admin_addon_install{
 
@@ -49,6 +44,7 @@ class admin_addon_installer extends admin_addon_install{
 	var $can_install_links = true;
 	var $config_index = 'addons';
 	var $addon_folder_name = '_addoncode';
+	var $mode = ''; //or 'dev'
 
 	//remote install
 	var $remote_install = false;
@@ -104,25 +100,6 @@ class admin_addon_installer extends admin_addon_install{
 	 *
 	 */
 	function InstallRemote( $type, $id, $order = false ){
-
-		if( empty($type)
-			|| empty($id)
-			|| !is_numeric($id)
-			){
-				$this->message($langmessage['OOPS'].' (Invalid Request)');
-				return false;
-		}
-
-		if($type != 'plugin' && $type != 'theme' ){
-			$this->message($langmessage['OOPS'].' (Invalid Type)');
-			return false;
-		}
-
-		if( !admin_tools::CanRemoteInstall() ){
-			$this->message($langmessage['OOPS'].' (Can\'t remote install)');
-			return false;
-		}
-
 
 		$this->remote_install = true;
 		$this->type = $type;
@@ -608,6 +585,26 @@ class admin_addon_installer extends admin_addon_install{
 	function GetRemote(){
 		global $langmessage;
 		includeFile('tool/RemoteGet.php');
+
+
+		// check values
+		if( empty($this->type)
+			|| empty($this->id)
+			|| !is_numeric($this->id)
+			){
+				$this->message($langmessage['OOPS'].' (Invalid Request)');
+				return false;
+		}
+
+		if( $this->type != 'plugin' && $this->type != 'theme' ){
+			$this->message($langmessage['OOPS'].' (Invalid Type)');
+			return false;
+		}
+
+		if( !admin_tools::CanRemoteInstall() ){
+			$this->message($langmessage['OOPS'].' (Can\'t remote install)');
+			return false;
+		}
 
 
 		// download
@@ -1121,17 +1118,13 @@ class admin_addon_installer extends admin_addon_install{
 
 			//check against $gpOutConf
 			if( isset($gpOutConf[$gadgetName]) ){
-				echo '<p class="gp_notice">';
-				echo sprintf($langmessage['addon_key_defined'],' <em>Gadget: '.$gadgetName.'</em>');
-				echo '<p>';
+				$this->message( sprintf($langmessage['addon_key_defined'],' <em>Gadget: '.$gadgetName.'</em>') );
 				continue;
 			}
 
 			//check against other gadgets
 			if( isset($config['gadgets'][$gadgetName]) && ($config['gadgets'][$gadgetName]['addon'] !== $this->dest_name) ){
-				echo '<p class="gp_notice">';
-				echo sprintf($langmessage['addon_key_defined'],' <em>Gadget: '.$gadgetName.'</em>');
-				echo '<p>';
+				$this->message( sprintf($langmessage['addon_key_defined'],' <em>Gadget: '.$gadgetName.'</em>') );
 				continue;
 			}
 

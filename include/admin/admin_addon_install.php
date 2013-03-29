@@ -30,9 +30,12 @@ class admin_addon_install extends admin_addons_tool{
 	function LocalInstall(){
 		global $dataDir;
 
+		$_REQUEST += array('source'=>'','mode'=>'');
+
 		includeFile('admin/admin_addon_installer.php');
 		$installer = new admin_addon_installer();
 		$installer->source = $dataDir.'/addons/'.$_REQUEST['source'];
+		$installer->mode = $_REQUEST['mode'];
 		$installer->Install();
 
 		foreach($installer->messages as $msg){

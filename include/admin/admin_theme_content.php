@@ -94,10 +94,8 @@ class admin_theme_content extends admin_addon_install{
 
 			//remote themes
 			case 'remote_install':
-			case 'remote_install2':
-			case 'remote_install3':
-				$this->RemoteInstallMain($cmd);
-			return;
+				$this->RemoteInstall($cmd);
+			break;
 
 
 

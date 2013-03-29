@@ -101,9 +101,7 @@ class admin_addons extends admin_addon_install{
 			break;
 
 			case 'remote_install':
-			case 'remote_install2':
-			case 'remote_install3':
-				$this->RemoteInstallMain($cmd);
+				$this->RemoteInstall($cmd);
 				$this->Select();
 			break;
 

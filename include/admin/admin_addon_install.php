@@ -89,13 +89,18 @@ class admin_addon_install extends admin_addons_tool{
 	 * Remote Install Functions
 	 *
 	 */
-	function RemoteInstallMain($cmd){
+	function RemoteInstall($cmd){
 
 		$_REQUEST += array('order'=>'');
 
 		includeFile('admin/admin_addon_installer.php');
 
 		$installer = new admin_addon_installer();
+
+		$installer->addon_folder_name = $this->addon_folder_name;
+		$installer->config_index = $this->config_index;
+		$installer->can_install_links = $this->can_install_links;
+
 		$installer->InstallRemote( $_REQUEST['type'], $_REQUEST['id'], $_REQUEST['order'] );
 		foreach($installer->messages as $msg){
 			message($msg);

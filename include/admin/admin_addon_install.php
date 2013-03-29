@@ -167,6 +167,7 @@ class admin_addon_install extends admin_addons_tool{
 	/**
 	 * Check the ini values of the addon being installed
 	 * @return bool
+	 *
 	 */
 	function Install_CheckIni(){
 		global $langmessage;

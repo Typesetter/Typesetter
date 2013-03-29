@@ -22,7 +22,6 @@ defined('is_running') or die('Not an entry point...');
  *
  *
  * Things to check back on in the old install
- *  !! $this->config_index
  *  !! Install_CheckFile()
  *  !! Developer mode
  *	!! Upgrades
@@ -32,9 +31,12 @@ defined('is_running') or die('Not an entry point...');
  *	remote install shouldn't copy to temp
  *	Install_CheckName() needed?
  *
+ * Things to look at with themes
+ *	$this->config_index
+ *
  *
  * Things that could be done previous to installer
- *	- Install_CheckIni()
+ *	- Install_CheckIni() (warning about installing a lesser version)
  *
  */
 class admin_addon_installer extends admin_addon_install{
@@ -56,7 +58,7 @@ class admin_addon_installer extends admin_addon_install{
 	var $addon_folder;
 	var $dest = '';
 	var $dest_name;
-	var $temp_folder;
+	var $temp_source;
 	var $trash_path;
 	var $config_cache;
 
@@ -275,9 +277,13 @@ class admin_addon_installer extends admin_addon_install{
 	function Copy(){
 		global $langmessage;
 
-		$this->temp_folder = $this->TempFile();
+		if( isset($this->temp_source) ){
+			return true;
+		}
 
-		$result = self::CopyAddonDir($this->source,$this->temp_folder);
+		$this->temp_source = $this->TempFile();
+
+		$result = self::CopyAddonDir($this->source,$this->temp_source);
 		if( $result !== true ){
 			$this->message( $result );
 			return false;
@@ -367,7 +373,7 @@ class admin_addon_installer extends admin_addon_install{
 	 */
 	function FinalizeFolder(){
 
-		if( !isset($this->temp_folder) ){
+		if( !isset($this->temp_source) ){
 			return true;
 		}
 
@@ -380,7 +386,7 @@ class admin_addon_installer extends admin_addon_install{
 		}
 
 		//rename temp folder
-		if( rename($this->temp_folder,$this->dest) ){
+		if( rename($this->temp_source,$this->dest) ){
 			return true;
 		}
 
@@ -637,9 +643,9 @@ class admin_addon_installer extends admin_addon_install{
 			return false;
 		}
 
-		$this->source = $this->TempFile();
+		$this->source = $this->temp_source = $this->TempFile();
 
-		$success = $this->ExtractArchive($this->source,$tempfile);
+		$success = $this->ExtractArchive($this->temp_source,$tempfile);
 
 		unlink($tempfile);
 
@@ -1148,14 +1154,23 @@ class admin_addon_installer extends admin_addon_install{
 	 */
 	function CleanInstallFolder(){
 
-		$addoncode = $this->addon_folder;
-		$folders = gpFiles::readDir($addoncode,1);
+		if( file_exists($this->temp_source) ){
+			gpFiles::RmAll($this->temp_source);
+		}
+
+		if( file_exists($this->trash_path) ){
+			gpFiles::RmAll($this->trash_path);
+		}
+
+
+
+		$folders = gpFiles::readDir($this->addon_folder,1);
 
 		foreach($folders as $folder){
 			if( array_key_exists($folder, $this->config) ){
 				continue;
 			}
-			$full_path = $addoncode.'/'.$folder;
+			$full_path = $this->addon_folder.'/'.$folder;
 			if( is_link($full_path) ){
 				$stat = lstat($full_path);
 				$mtime = $stat['mtime'];

@@ -24,8 +24,6 @@ defined('is_running') or die('Not an entry point...');
  * Things to check back on in the old install
  *  !! Install_CheckFile()
  *  !! Developer mode
- *	!! Upgrades
- *	!! addhooks move to this file
  *  !! any echo() calls
  *	remote install shouldn't copy to temp
  *	Install_CheckName() needed?
@@ -33,9 +31,15 @@ defined('is_running') or die('Not an entry point...');
  * Things to look at with themes
  *	$this->config_index
  *
+ * To check again
+ *	Upgrades (local/remote)
+ *
  *
  * Things that could be done previous to installer
  *	- Install_CheckIni() (warning about installing a lesser version)
+ *
+ * Can Remove?
+ * .gp_notice css
  *
  */
 class admin_addon_installer extends admin_addon_install{
@@ -145,11 +149,10 @@ class admin_addon_installer extends admin_addon_install{
 			return false;
 		}
 
-		//get ini contents
-		if( !$this->Install_Ini($this->source) ){
+		//check ini contents
+		if( !$this->GetINI($this->source) ){
 			return false;
 		}
-
 
 		// upgrade/destination
 		$this->dest_name = $this->UpgradePath($this->ini_contents);
@@ -166,6 +169,8 @@ class admin_addon_installer extends admin_addon_install{
 		}else{
 			$this->data_folder = $this->dest_name;
 		}
+
+		$this->IniContents();
 
 
 		//copy
@@ -217,12 +222,12 @@ class admin_addon_installer extends admin_addon_install{
 
 
 	/**
-	 * Set $this->ini_contents with the settings for the addon in $ini_dir
+	 * Get the Ini contents and check values
 	 * @return bool
 	 *
 	 */
-	function Install_Ini($ini_dir){
-		global $langmessage, $dataDir, $dirPrefix;
+	function GetINI($ini_dir){
+		global $langmessage;
 
 		$ini_file = $ini_dir.'/Addon.ini';
 
@@ -231,21 +236,9 @@ class admin_addon_installer extends admin_addon_install{
 			return false;
 		}
 
-		$folder = basename($this->dest);
 
-		$variables = array(
-					'{$addon}'				=> $folder,
-					'{$plugin}'				=> $folder,
-					'{$dataDir}'			=> $dataDir,
-					'{$dirPrefix}'			=> $dirPrefix,
-					'{$addonRelativeData}'	=> common::GetDir('/data/_addondata/'.$this->data_folder),
-					'{$addonRelativeCode}'	=> common::GetDir('/data/'.$this->addon_folder_name.'/'.$folder),
-					);
-
-		$this->ini_text
-
-		//get ini contents
-		$this->ini_contents = gp_ini::ParseFile($ini_file,$variables);
+		$this->ini_text = file_get_contents($ini_file);
+		$this->ini_contents = gp_ini::ParseString($this->ini_text);
 
 		if( !$this->ini_contents ){
 			$this->message( $langmessage['Ini_Error'].' '.$langmessage['Ini_Submit_Bug'] );
@@ -270,6 +263,28 @@ class admin_addon_installer extends admin_addon_install{
 
 		return true;
 	}
+
+
+	/**
+	 * Parse the ini a second time with variables
+	 *
+	 */
+	function IniContents(){
+		global $dataDir, $dirPrefix;
+		$folder = basename($this->dest);
+
+		$variables = array(
+					'{$addon}'				=> $folder,
+					'{$plugin}'				=> $folder,
+					'{$dataDir}'			=> $dataDir,
+					'{$dirPrefix}'			=> $dirPrefix,
+					'{$addonRelativeData}'	=> common::GetDir('/data/_addondata/'.$this->data_folder),
+					'{$addonRelativeCode}'	=> common::GetDir('/data/'.$this->addon_folder_name.'/'.$folder),
+					);
+
+		$this->ini_contents = gp_ini::ParseString($this->ini_text,$variables);
+	}
+
 
 
 	/**
@@ -799,9 +814,7 @@ class admin_addon_installer extends admin_addon_install{
 				}
 
 				if( !$addlink ){
-					echo '<p class="gp_notice">';
-					echo sprintf($langmessage['addon_key_defined'],' <em>Special_Link: '.$new_title.'</em>');
-					echo '<p>';
+					$this->message( sprintf($langmessage['addon_key_defined'],' <em>Special_Link: '.$new_title.'</em>') );
 					continue;
 				}
 
@@ -917,9 +930,7 @@ class admin_addon_installer extends admin_addon_install{
 				}
 
 				if( !$addlink ){
-					echo '<p class="gp_notice">';
-					echo sprintf($langmessage['addon_key_defined'],' <em>'.$Config_Key.'</em>');
-					echo '<p>';
+					$this->message( sprintf($langmessage['addon_key_defined'],' <em>'.$Config_Key.'</em>') );
 					continue;
 				}
 
@@ -1087,9 +1098,7 @@ class admin_addon_installer extends admin_addon_install{
 
 		$test = str_replace(array('.','_',' '),array(''),$name );
 		if( empty($test) || !ctype_alnum($test) ){
-			echo '<p class="gp_notice">';
-			echo 'Could not install <em>'.$name.'</em>. Link and gadget names can only contain alphanumeric characters with underscore "_", dot "." and space " " characters.';
-			echo '</p>';
+			$this->message( 'Could not install <em>'.$name.'</em>. Link and gadget names can only contain alphanumeric characters with underscore "_", dot "." and space " " characters.');
 			return false;
 		}
 		return true;

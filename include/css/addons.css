@@ -1,26 +1,4 @@
 
-#addon_install_progress{
-	position:relative;
-	}
-#addon_install_progress span{
-	position:relative;
-	display:inline-block;
-	padding:5px 15px 5px 15px;
-	margin-right:15px;
-	border:1px solid #ccc;
-	border-radius: 5px;
-	font-weight:bold;
-	color:#666;
-	min-width:10em;
-	text-align:center;
-	}
-#addon_install_progress span.completed,
-#addon_install_progress span.current{
-	background:#209400;
-	border-color:#176b00;
-	color:#fff;
-	}
-
 .gp_find_form{
 	float:right;
 }

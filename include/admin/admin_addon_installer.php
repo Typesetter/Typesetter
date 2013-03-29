@@ -27,7 +27,11 @@ defined('is_running') or die('Not an entry point...');
  *  !! Install_CheckFile()
  *  !! Developer mode
  *	!! Upgrades
+ *	!! addhooks move to this file
+ *  !! any echo() calls
  * 	add CleanUp() function
+ *	remote install shouldn't copy to temp
+ *	Install_CheckName() needed?
  *
  *
  */
@@ -37,6 +41,7 @@ class admin_addon_installer extends admin_addon_install{
 	var $can_install_links = true;
 
 
+	var $remote_install = false;
 	var $type;
 	var $id;
 	var $order;
@@ -84,6 +89,27 @@ class admin_addon_installer extends admin_addon_install{
 	 *
 	 */
 	function InstallRemote( $type, $id, $order = false ){
+
+		if( empty($type)
+			|| empty($id)
+			|| !is_numeric($id)
+			){
+				$this->message($langmessage['OOPS'].' (Invalid Request)');
+				return false;
+		}
+
+		if($type != 'plugin' && $type != 'theme' ){
+			$this->message($langmessage['OOPS'].' (Invalid Type)');
+			return false;
+		}
+
+		if( !admin_tools::CanRemoteInstall() ){
+			$this->message($langmessage['OOPS'].' (Can\'t remote install)');
+			return false;
+		}
+
+
+		$this->remote_install = true;
 		$this->type = $type;
 		$this->id = $id;
 		$this->order = $order;
@@ -104,7 +130,7 @@ class admin_addon_installer extends admin_addon_install{
 
 
 		//get from remote
-		if( isset($this->type) && !$this->GetRemote() ){
+		if( $this->remote_install && !$this->GetRemote() ){
 			return false;
 		}
 
@@ -119,7 +145,7 @@ class admin_addon_installer extends admin_addon_install{
 		if( $this->dest_name ){
 			$this->dest = $this->addon_folder.'/'.$this->dest_name;
 		}else{
-			$this->dest = $this->NewTempFolder();
+			$this->dest = $this->TempFile();
 			$this->install_folder_name = $this->dest_name = basename($this->dest);
 		}
 
@@ -150,6 +176,26 @@ class admin_addon_installer extends admin_addon_install{
 
 	}
 
+
+	/**
+	 * Prepare $this->config and make sure $this->addon_folder exists
+	 *
+	 */
+	function Init_PT(){
+		global $config,$dataDir;
+
+		if( !isset($config[$this->config_index]) ){
+			$config[$this->config_index] = array();
+		}
+
+		$this->config =& $config[$this->config_index];
+		$this->config_cache = $config;
+
+		$this->addon_folder = $dataDir.'/data/'.$this->addon_folder_name;
+
+		gpFiles::CheckDir($this->addon_folder);
+
+	}
 
 
 	/**
@@ -210,7 +256,7 @@ class admin_addon_installer extends admin_addon_install{
 	function Copy(){
 		global $langmessage;
 
-		$this->temp_folder = $this->NewTempFolder();
+		$this->temp_folder = $this->TempFile();
 
 		$result = self::CopyAddonDir($this->source,$this->temp_folder);
 		if( $result !== true ){
@@ -307,7 +353,7 @@ class admin_addon_installer extends admin_addon_install{
 		}
 
 		if( file_exists($this->dest) ){
-			$this->trash_path = $this->NewTempFolder();
+			$this->trash_path = $this->TempFile();
 			if( !@rename($this->dest,$this->trash_path) ){
 				$this->message('Existing destination not renamed');
 				return false;
@@ -352,7 +398,7 @@ class admin_addon_installer extends admin_addon_install{
 
 		//remote
 		unset($this->config[$this->dest_name]['remote_install']);
-		if( $this->remote_installation ){
+		if( $this->remote_install ){
 			$this->config[$this->dest_name]['remote_install'] = true;
 		}
 
@@ -411,19 +457,20 @@ class admin_addon_installer extends admin_addon_install{
 
 
 	/**
-	 * Return the path of a non-existant folder
+	 * Return the path of a non-existant file
 	 *
 	 */
-	function NewTempFolder(){
+	function TempFile($type=''){
 
 		do{
-			$folder = common::RandomString(7,false);
-			$full_dest = $this->addon_folder.'/'.$folder;
+			$file = common::RandomString(7,false);
+			$full_dest = $this->addon_folder.'/'.$file.$type;
 
-		}while( is_numeric($folder) || isset($this->config[$folder]) || file_exists($full_dest) );
+		}while( is_numeric($file) || isset($this->config[$file]) || file_exists($full_dest) );
 
 		return $full_dest;
 	}
+
 
 
 	/**
@@ -567,13 +614,13 @@ class admin_addon_installer extends admin_addon_install{
 		}
 
 		//save contents
-		$tempfile = $this->tempfile();
+		$tempfile = $this->TempFile('.zip');
 		if( !gpFiles::Save($tempfile,$result) ){
 			$this->message( $langmessage['download_failed'].' (Package not saved)' );
 			return false;
 		}
 
-		$this->source = $this->NewTempFolder();
+		$this->source = $this->TempFile();
 
 		$success = $this->ExtractArchive($this->source,$tempfile);
 
@@ -651,6 +698,460 @@ class admin_addon_installer extends admin_addon_install{
 		}
 
 		return true;
+	}
+
+
+
+	/**
+	 * Set config value based on ini setting
+	 *
+	 */
+	function UpdateConfigInfo($ini_var,$config_var){
+
+		if( isset($this->ini_contents[$ini_var]) ){
+			$this->config[$this->install_folder_name][$config_var] = $this->ini_contents[$ini_var];
+		}elseif( isset($this->config[$this->install_folder_name][$config_var]) ){
+			unset($this->config[$this->install_folder_name][$config_var]);
+		}
+	}
+
+
+
+	/**
+	 * Add an addon's special links to the configuration
+	 *
+	 */
+	function UpdateSpecialLinks($Special_Links){
+		global $gp_index, $gp_titles, $gp_menu, $langmessage;
+
+		$lower_links = array_change_key_case($Special_Links,CASE_LOWER);
+
+		//purge links no longer defined ... similar to PurgeExisting()
+		foreach($gp_index as $linkName => $index){
+
+			$linkInfo = $gp_titles[$index];
+			if( !isset($linkInfo['addon']) ){
+				continue;
+			}
+
+			if( $linkInfo['addon'] !== $this->install_folder_name ){
+				continue;
+			}
+
+			if( isset($lower_links[$index]) ){
+				continue;
+			}
+
+			unset($gp_index[$linkName]);
+			unset($gp_titles[$index]);
+			if( isset($gp_menu[$index]) ){
+				unset($gp_menu[$index]);
+			}
+		}
+
+
+		//prepare a list with all titles converted to lower case
+		$lower_titles = array_keys($gp_index);
+		$lower_titles = array_combine($lower_titles, $lower_titles);
+		$lower_titles = array_change_key_case($lower_titles, CASE_LOWER);
+
+
+		//add new links ... similar to AddToConfig()
+		foreach($Special_Links as $new_title => $linkInfo){
+
+			$index = strtolower($new_title);
+			$title = common::IndexToTitle($index);
+
+			//if the title already exists, see if we need to update it
+			if( $title ){
+				$addlink = true;
+				$curr_info = $gp_titles[$index];
+
+				if( !isset($curr_info['addon']) || $this->install_folder_name === false ){
+					$addlink = false;
+				}elseif( $curr_info['addon'] != $this->install_folder_name ){
+					$addlink = false;
+				}
+
+				if( !$addlink ){
+					echo '<p class="gp_notice">';
+					echo sprintf($langmessage['addon_key_defined'],' <em>Special_Link: '.$new_title.'</em>');
+					echo '<p>';
+					continue;
+				}
+
+				//this will overwrite things like label which are at times editable by users
+				//$AddTo[$new_title] = $linkInfo + $AddTo[$new_title];
+
+			// if it doesn't exist, just add it
+			}else{
+
+				// we don't need the Special_ prefix, but we don't want duplicates
+				$temp = $new_title = substr($new_title,8);
+				$temp_lower = $new_lower = strtolower($new_title);
+				$i = 1;
+				while( isset($lower_titles[$new_lower]) ){
+					$new_lower = $temp_lower.'_'.$i;
+					$new_title = $temp.'_'.$i;
+					$i++;
+				}
+
+				$gp_index[$new_title] = $index;
+				$gp_titles[$index] = $linkInfo;
+			}
+
+			$this->UpdateLinkInfo($gp_titles[$index],$linkInfo);
+		}
+	}
+
+
+
+	function AddHooks(){
+
+		$installed = array();
+		foreach($this->ini_contents as $hook => $hook_args){
+			if( !is_array($hook_args) ){
+				continue;
+			}
+
+			if( strpos($hook,'Gadget:') === 0
+				|| strpos($hook,'Admin_Link:') === 0
+				|| strpos($hook,'Special_Link:') === 0
+				){
+					continue;
+			}
+
+			if( $this->AddHook($hook,$hook_args) ){
+				$installed[$hook] = $hook;
+			}
+		}
+
+		$this->CleanHooks($this->install_folder_name,$installed);
+	}
+
+	function AddHook($hook,$hook_args){
+		global $config;
+
+		$add = array();
+		$this->UpdateLinkInfo($add,$hook_args);
+		$config['hooks'][$hook][$this->install_folder_name] = $add;
+
+		return true;
+	}
+
+
+	//extract the configuration type (extractArg) from $Install
+	function ExtractFromInstall(&$Install,$extractArg){
+		if( !is_array($Install) || (count($Install) <= 0) ){
+			return array();
+		}
+
+		$extracted = array();
+		$removeLength = strlen($extractArg);
+
+		foreach($Install as $InstallArg => $ArgInfo){
+			if( strpos($InstallArg,$extractArg) !== 0 ){
+				continue;
+			}
+			$extractName = substr($InstallArg,$removeLength);
+			if( !$this->CheckName($extractName) ){
+				continue;
+			}
+
+			$extracted[$extractName] = $ArgInfo;
+		}
+		return $extracted;
+	}
+
+
+	/*
+	 * Add to $AddTo
+	 * 	Don't add elements already defined by gpEasy or other addons
+	 *
+	 */
+	function AddToConfig(&$AddTo,$New_Config){
+		global $langmessage;
+
+		if( !is_array($New_Config) || (count($New_Config) <= 0) ){
+			return;
+		}
+
+		$lower_add_to = array_change_key_case($AddTo,CASE_LOWER);
+
+		foreach($New_Config as $Config_Key => $linkInfo){
+
+			$lower_key = strtolower($Config_Key);
+
+			if( isset($lower_add_to[$lower_key]) ){
+				$addlink = true;
+
+				if( !isset($lower_add_to[$lower_key]['addon']) || $this->install_folder_name === false ){
+					$addlink = false;
+				}elseif( $lower_add_to[$lower_key]['addon'] != $this->install_folder_name ){
+					$addlink = false;
+				}
+
+				if( !$addlink ){
+					echo '<p class="gp_notice">';
+					echo sprintf($langmessage['addon_key_defined'],' <em>'.$Config_Key.'</em>');
+					echo '<p>';
+					continue;
+				}
+
+				//this will overwrite things like label which are at times editable by users
+				//$AddTo[$Config_Key] = $linkInfo + $AddTo[$Config_Key];
+
+			}else{
+				$AddTo[$Config_Key] = $linkInfo;
+			}
+
+			$this->UpdateLinkInfo($AddTo[$Config_Key],$linkInfo);
+		}
+	}
+
+
+
+	function UpdateLinkInfo(&$link_array,$new_info){
+
+		$link_array['addon'] = $this->install_folder_name;
+		if( !empty($new_info['script']) ){
+			$link_array['script'] = '/data/_addoncode/'.$this->install_folder_name .'/'.$new_info['script'];
+		}else{
+			unset($link_array['script']);
+		}
+		if( !empty($new_info['data']) ){
+			$link_array['data'] = '/data/_addondata/'.$this->data_folder.'/'.$new_info['data'];
+		}else{
+			unset($link_array['data']);
+		}
+		if( !empty($new_info['class']) ){
+			$link_array['class'] = $new_info['class'];
+		}else{
+			unset($link_array['class']);
+		}
+		if( !empty($new_info['method']) ){
+
+			$method = $new_info['method'];
+			if( strpos($method,'::') > 0 ){
+				$method = explode('::',$method);
+			}
+
+			$link_array['method'] = $method;
+		}else{
+			unset($link_array['method']);
+		}
+
+		if( !empty($new_info['value']) ){
+			$link_array['value'] = $new_info['value'];
+		}else{
+			unset($link_array['value']);
+		}
+
+	}
+
+
+
+	/**
+	 * Purge Links from $purgeFrom that were once defined for $this->install_folder_name
+	 *
+	 */
+	function PurgeExisting(&$purgeFrom,$NewLinks){
+
+		if( $this->install_folder_name === false || !is_array($purgeFrom) ){
+			return;
+		}
+
+		foreach($purgeFrom as $linkName => $linkInfo){
+			if( !isset($linkInfo['addon']) ){
+				continue;
+			}
+			if( $linkInfo['addon'] !== $this->install_folder_name ){
+				continue;
+			}
+
+			if( isset($NewLinks[$linkName]) ){
+				continue;
+			}
+
+			unset($purgeFrom[$linkName]);
+		}
+
+	}
+
+
+	/**
+	 * Make sure the extracted links are valid
+	 *
+	 */
+	function CleanLinks(&$links,$prefix,$linkType=false){
+
+		$lower_prefix = strtolower($prefix);
+
+		if( !is_array($links) || (count($links) <= 0) ){
+			return array();
+		}
+
+		$result = array();
+		foreach($links as $linkName => $linkInfo){
+			if( !isset($linkInfo['script']) ){
+				continue;
+			}
+			if( !isset($linkInfo['label']) ){
+				continue;
+			}
+
+			if( strpos(strtolower($linkName),$lower_prefix) !== 0 ){
+				$linkName = $prefix.$linkName;
+			}
+
+
+			$result[$linkName] = array();
+			$result[$linkName]['script'] = $linkInfo['script'];
+			$result[$linkName]['label'] = $linkInfo['label'];
+
+			if( isset($linkInfo['class']) ){
+				$result[$linkName]['class'] = $linkInfo['class'];
+			}
+
+			/*	method only available for gadgets as of 1.7b1
+			if( isset($linkInfo['method']) ){
+				$result[$linkName]['method'] = $linkInfo['method'];
+			}
+			*/
+
+			if( $linkType ){
+				$result[$linkName]['type'] = $linkType;
+			}
+
+		}
+
+		return $result;
+	}
+
+
+
+	/*
+	 * Gadget Functions
+	 *
+	 *
+	 */
+	function AddToHandlers($gadgets){
+		global $gpLayouts;
+
+		if( !is_array($gpLayouts) || !is_array($gadgets) ){
+			return;
+		}
+
+		foreach($gpLayouts as $layout => $containers){
+			if( !is_array($containers) ){
+				continue;
+			}
+
+			if( isset($containers['handlers']['GetAllGadgets']) ){
+				$container =& $gpLayouts[$layout]['handlers']['GetAllGadgets'];
+				if( !is_array($container) ){
+					$container = array();
+				}
+				$container = array_merge($container,$gadgets);
+			}
+		}
+	}
+
+
+	function CheckName($name){
+
+		$test = str_replace(array('.','_',' '),array(''),$name );
+		if( empty($test) || !ctype_alnum($test) ){
+			echo '<p class="gp_notice">';
+			echo 'Could not install <em>'.$name.'</em>. Link and gadget names can only contain alphanumeric characters with underscore "_", dot "." and space " " characters.';
+			echo '</p>';
+			return false;
+		}
+		return true;
+	}
+
+
+	/**
+	 * similar to CleanLinks()
+	 *
+	 */
+	function CleanGadgets(&$gadgets){
+		global $gpOutConf, $langmessage, $config;
+
+		if( !is_array($gadgets) || (count($gadgets) <= 0) ){
+			return array();
+		}
+
+		$result = array();
+		foreach($gadgets as $gadgetName => $gadgetInfo){
+
+			//check against $gpOutConf
+			if( isset($gpOutConf[$gadgetName]) ){
+				echo '<p class="gp_notice">';
+				echo sprintf($langmessage['addon_key_defined'],' <em>Gadget: '.$gadgetName.'</em>');
+				echo '<p>';
+				continue;
+			}
+
+			//check against other gadgets
+			if( isset($config['gadgets'][$gadgetName]) && ($config['gadgets'][$gadgetName]['addon'] !== $this->install_folder_name) ){
+				echo '<p class="gp_notice">';
+				echo sprintf($langmessage['addon_key_defined'],' <em>Gadget: '.$gadgetName.'</em>');
+				echo '<p>';
+				continue;
+			}
+
+
+			$temp = array();
+			if( isset($gadgetInfo['script']) ){
+				$temp['script'] = $gadgetInfo['script'];
+			}
+			if( isset($gadgetInfo['class']) ){
+				$temp['class'] = $gadgetInfo['class'];
+			}
+			if( isset($gadgetInfo['data']) ){
+				$temp['data'] = $gadgetInfo['data'];
+			}
+			if( isset($gadgetInfo['method']) ){
+				$temp['method'] = $gadgetInfo['method'];
+			}
+
+			if( count($temp) > 0 ){
+				$result[$gadgetName] = $temp;
+			}
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 * Remove unused code folders created by incomplete addon installations
+	 *
+	 */
+	function CleanInstallFolder(){
+
+		$addoncode = $this->addon_folder;
+		$folders = gpFiles::readDir($addoncode,1);
+
+		foreach($folders as $folder){
+			if( array_key_exists($folder, $this->config) ){
+				continue;
+			}
+			$full_path = $addoncode.'/'.$folder;
+			if( is_link($full_path) ){
+				$stat = lstat($full_path);
+				$mtime = $stat['mtime'];
+			}else{
+				$mtime = filemtime($full_path);
+			}
+			$diff = time() - $mtime;
+			if( $diff < 3600 ){
+				continue;
+			}
+
+			gpFiles::RmAll($full_path);
+		}
 	}
 
 }

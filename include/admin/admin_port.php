@@ -117,20 +117,7 @@ class admin_port{
 			$add_dirs[] = $dataDir.'/data/_menus';
 			$add_dirs[] = $dataDir.'/data/_addoncode';
 			$add_dirs[] = $dataDir.'/data/_addondata';
-
-			//check for addons in developer mode
-			$dev_addons = false;
-			if( isset($config['addons']) ){
-				foreach($config['addons'] as $addon => $info){
-					$installFolder = $dataDir.'/data/_addoncode/'.$addon;
-					if( is_link($installFolder) ){
-						$dev_addons = true;
-					}
-				}
-			}
-			if( $dev_addons ){
-				$add_dirs[] = $dataDir.'/addons';
-			}
+			$add_dirs[] = $dataDir.'/addons';
 		}
 
 

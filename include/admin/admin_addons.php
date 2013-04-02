@@ -233,7 +233,8 @@ class admin_addons extends admin_addon_install{
 		global $config, $langmessage, $dataDir, $gp_titles, $gp_menu, $gp_index;
 
 		$addon =& $_POST['addon'];
-		if( !isset($config['addons'][$addon]) ){
+		$addon_config = gpPlugin::GetAddonConfig($addon);
+		if( !$addon_config ){
 			message($langmessage['OOPS']);
 			return;
 		}
@@ -293,9 +294,7 @@ class admin_addons extends admin_addon_install{
 		}
 
 
-		$data_folder_name = gpPlugin::GetDataFolder($addon);
-
-		$dataFolder = $dataDir.'/data/_addondata/'.$data_folder_name;
+		$dataFolder = $addon_config['data_folder_full'];
 		if( file_exists($dataFolder) ){
 			gpFiles::RmAll($dataFolder);
 		}

@@ -229,19 +229,23 @@ class gpPlugin{
 		}
 
 		$addon_config = $config['addons'][$addon_key];
-		$addon_config += array('version'=>false, 'id'=>false, 'data_folder'=>$addon_key);
+		$addon_config += array('version'=>false, 'id'=>false, 'data_folder'=>$addon_key, 'order'=>false );
+
 
 
 		//data folder
 		$addon_config['data_folder_part'] = '/data/_addondata/'.$addon_config['data_folder'];
+
+		// Code folder
+		$addon_config['code_folder_part'] = '/data/_addoncode/'.$addon_key;
+
+
+		$addon_config['code_folder_full'] = $dataDir.$addon_config['code_folder_part'];
+		$addon_config['code_folder_rel'] = common::GetDir($addon_config['code_folder_part']);
 		$addon_config['data_folder_full'] = $dataDir.$addon_config['data_folder_part'];
 		$addon_config['data_folder_rel'] = common::GetDir($addon_config['data_folder_part']);
 
 
-		// Code folder
-		$addon_config['code_folder_part'] = '/data/_addoncode/'.$addon_key;
-		$addon_config['code_folder_full'] = $dataDir.$addon_config['code_folder_part'];
-		$addon_config['code_folder_rel'] = common::GetDir($addon_config['code_folder_part']);
 
 		return $addon_config;
 	}
@@ -281,19 +285,6 @@ class gpPlugin{
 				$addon_current_id = $info['id'];
 			}
 		}
-	}
-
-	/**
-	 * Some installations my still have plugins that rely on this setting
-	 * data_folder was briefly used during the development of 2.0.
-	 * @deprecated
-	 */
-	static function GetDataFolder($addon_key){
-		global $config;
-		if( isset($config['addons'][$addon_key]['data_folder']) ){
-			return $config['addons'][$addon_key]['data_folder'];
-		}
-		return $addon_key;
 	}
 
 	/**

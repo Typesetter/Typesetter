@@ -1030,6 +1030,7 @@ class common{
 			return false;
 		}
 
+
 		$layout_info = $gpLayouts[$layout];
 		$layout_info += array('is_addon'=>false);
 		$layout_info['theme_name'] = common::DirName($layout_info['theme']);

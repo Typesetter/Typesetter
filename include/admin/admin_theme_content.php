@@ -590,7 +590,7 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function Toolbar($layout, $layout_info ){
-		global $page,$gpLayouts,$langmessage,$config;
+		global $page,$langmessage,$config;
 		$page->show_admin_content = false;
 		$this->ToolbarCSS();
 
@@ -740,7 +740,7 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function EditCSS(){
-		global $langmessage, $page,$gpLayouts;
+		global $langmessage, $page;
 
 		$css = $this->layoutCSS($this->curr_layout);
 		if( empty($css) ){
@@ -767,7 +767,7 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function PrepareCSS(){
-		global $page,$gpLayouts;
+		global $page;
 
 		$css = $this->layoutCSS($this->curr_layout);
 		$page->head .= '<style id="gp_layout_style" type="text/css">'.$css.'</style>';
@@ -929,7 +929,7 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function RmGadget($layout){
-		global $page,$langmessage,$gpLayouts;
+		global $page,$langmessage;
 
 		$gadget =& $_REQUEST['gadget'];
 

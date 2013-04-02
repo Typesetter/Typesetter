@@ -277,8 +277,14 @@ class admin_addon_installer extends admin_addon_install{
 	 *
 	 */
 	function CopyDev(){
+		global $langmessage;
 
 		if( file_exists($this->dest) ){
+
+			if( is_link($this->dest) ){
+				return true;
+			}
+
 			$this->message($langmessage['OOPS'].' (Destination already exists)');
 			return false;
 		}
@@ -490,15 +496,23 @@ class admin_addon_installer extends admin_addon_install{
 
 	/**
 	 * Return the path of a non-existant file
+	 * Make sure the name won't conflict with names of addons or layouts
 	 *
 	 */
 	function TempFile($type=''){
+		global $config, $gpLayouts;
 
 		do{
 			$file = common::RandomString(7,false);
 			$full_dest = $this->addon_folder.'/'.$file.$type;
 
-		}while( is_numeric($file) || isset($this->config[$file]) || file_exists($full_dest) );
+		}while(
+			is_numeric($file)
+			|| array_key_exists($file, $config['addons'])
+			|| array_key_exists($file, $config['themes'])
+			|| array_key_exists($file, $gpLayouts)
+			|| file_exists($full_dest)
+			);
 
 		return $full_dest;
 	}

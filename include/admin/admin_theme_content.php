@@ -2788,9 +2788,11 @@ class admin_theme_content extends admin_addon_install{
 
 
 	function GetAddonTexts($addon){
-		global $dataDir,$langmessage,$config;
+		global $langmessage,$config;
 
-		$addonDir = $dataDir.'/data/_addoncode/'.$addon;
+
+		$addon_config = gpPlugin::GetAddonConfig($addon);
+		$addonDir = $addon_config['code_folder_full'];
 		if( !is_dir($addonDir) ){
 			return false;
 		}
@@ -2815,7 +2817,7 @@ class admin_theme_content extends admin_addon_install{
 
 
 	function SaveAddonText(){
-		global $dataDir,$langmessage,$config;
+		global $langmessage,$config;
 
 		$addon = gp_edit::CleanArg($_REQUEST['addon']);
 		$texts = $this->GetAddonTexts($addon);
@@ -2874,7 +2876,7 @@ class admin_theme_content extends admin_addon_install{
 	}
 
 	function AddonText(){
-		global $dataDir,$langmessage,$config;
+		global $langmessage,$config;
 
 		$addon = gp_edit::CleanArg($_REQUEST['addon']);
 		$texts = $this->GetAddonTexts($addon);
@@ -3326,7 +3328,7 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function ImageEditor(){
-		global $page,$dataDir,$langmessage;
+		global $page, $langmessage;
 		$page->ajaxReplace = array();
 
 		//image options

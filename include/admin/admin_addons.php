@@ -708,7 +708,9 @@ class admin_addons extends admin_addon_install{
 
 			$addonName = $info['name'];
 			$developerInstall = false;
-			$installFolder = $dataDir.'/data/_addoncode/'.$folder;
+			$addon_config = gpPlugin::GetAddonConfig($folder);
+			$installFolder = $addon_config['code_folder_full'];
+
 
 			echo '<tr class="'.($i % 2 ? 'even' : '').'">';
 			$i++;

@@ -959,20 +959,21 @@ class admin_addon_installer extends admin_addon_install{
 	function UpdateLinkInfo(&$link_array,$new_info){
 
 		$link_array['addon'] = $this->dest_name;
+
+		unset($link_array['script'], $link_array['data'], $link_array['class'], $link_array['method'], $link_array['value']);
+
 		if( !empty($new_info['script']) ){
 			$link_array['script'] = '/data/'.$this->code_folder_name.'/'.$this->dest_name .'/'.$new_info['script'];
-		}else{
 		}
+
 		if( !empty($new_info['data']) ){
 			$link_array['data'] = '/data/_addondata/'.$this->data_folder.'/'.$new_info['data'];
-		}else{
-			unset($link_array['data']);
 		}
+
 		if( !empty($new_info['class']) ){
 			$link_array['class'] = $new_info['class'];
-		}else{
-			unset($link_array['class']);
 		}
+
 		if( !empty($new_info['method']) ){
 
 			$method = $new_info['method'];
@@ -981,14 +982,10 @@ class admin_addon_installer extends admin_addon_install{
 			}
 
 			$link_array['method'] = $method;
-		}else{
-			unset($link_array['method']);
 		}
 
 		if( !empty($new_info['value']) ){
 			$link_array['value'] = $new_info['value'];
-		}else{
-			unset($link_array['value']);
 		}
 
 	}

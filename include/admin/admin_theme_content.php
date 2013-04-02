@@ -45,7 +45,7 @@ class admin_theme_content extends admin_addon_install{
 
 	//remote install variables
 	var $config_index = 'themes';
-	var $addon_folder_name = '_themes';
+	var $code_folder_name = '_themes';
 	var $path_root = 'Admin_Theme_Content';
 	var $path_remote = 'Admin_Theme_Content/Remote';
 	var $can_install_links = false;

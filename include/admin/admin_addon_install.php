@@ -20,7 +20,7 @@ class admin_addon_install extends admin_addons_tool{
 	var $path_root = 'Admin_Addons';
 	var $path_remote = 'Admin_Addons/Remote';
 	var $find_label;
-
+	var $code_folder_name = '_addoncode';
 
 
 	/**
@@ -97,7 +97,7 @@ class admin_addon_install extends admin_addons_tool{
 
 		$installer = new admin_addon_installer();
 
-		$installer->addon_folder_name = $this->addon_folder_name;
+		$installer->code_folder_name = $this->code_folder_name;
 		$installer->config_index = $this->config_index;
 		$installer->can_install_links = $this->can_install_links;
 

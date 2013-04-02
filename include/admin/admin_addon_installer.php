@@ -12,7 +12,7 @@ class admin_addon_installer extends admin_addon_install{
 	var $source = '';
 	var $can_install_links = true;
 	var $config_index = 'addons';
-	var $addon_folder_name = '_addoncode';
+	var $code_folder_name = '_addoncode';
 	var $mode = ''; //'copy', 'dev' or 'source'
 
 	//remote install
@@ -163,7 +163,7 @@ class admin_addon_installer extends admin_addon_install{
 		$this->config =& $config[$this->config_index];
 		$this->config_cache = $config;
 
-		$this->addon_folder = $dataDir.'/data/'.$this->addon_folder_name;
+		$this->addon_folder = $dataDir.'/data/'.$this->code_folder_name;
 
 		gpFiles::CheckDir($this->addon_folder);
 
@@ -228,7 +228,7 @@ class admin_addon_installer extends admin_addon_install{
 					'{$dataDir}'			=> $dataDir,
 					'{$dirPrefix}'			=> $dirPrefix,
 					'{$addonRelativeData}'	=> common::GetDir('/data/_addondata/'.$this->data_folder),
-					'{$addonRelativeCode}'	=> common::GetDir('/data/'.$this->addon_folder_name.'/'.$folder),
+					'{$addonRelativeCode}'	=> common::GetDir('/data/'.$this->code_folder_name.'/'.$folder),
 					);
 
 		$this->ini_contents = gp_ini::ParseString($this->ini_text,$variables);
@@ -960,9 +960,8 @@ class admin_addon_installer extends admin_addon_install{
 
 		$link_array['addon'] = $this->dest_name;
 		if( !empty($new_info['script']) ){
-			$link_array['script'] = '/data/_addoncode/'.$this->dest_name .'/'.$new_info['script'];
+			$link_array['script'] = '/data/'.$this->code_folder_name.'/'.$this->dest_name .'/'.$new_info['script'];
 		}else{
-			unset($link_array['script']);
 		}
 		if( !empty($new_info['data']) ){
 			$link_array['data'] = '/data/_addondata/'.$this->data_folder.'/'.$new_info['data'];

@@ -11,12 +11,20 @@ function gpPlugin_incl($file){
 	if( gp_safe_mode ){
 		return;
 	}
+
 	//IncludeScript($addonPathCode.'/'.$file); //actually makes debugging more difficult because of cascading errors
 	include_once($addonPathCode.'/'.$file);
 }
 
 
 class gpPlugin{
+
+
+	/**
+	 * Holds the configuration values of the current plugin if there is an active plugin
+	 *
+	 */
+	static $current = false;
 
 	private static $stack = array();
 
@@ -202,24 +210,40 @@ class gpPlugin{
 		}
 
 		gpPlugin::StackPush();
+		self::$current = self::GetAddonConfig($addon_key);
 
-		$data_folder = gpPlugin::GetDataFolder($addon_key);
+		$addonFolderName					= $addon_key;
+		$addon_current_id					= self::$current['id'];
+		$addon_current_version				= self::$current['version'];
+		$addonPathCode = $addonCodeFolder 	= self::$current['code_folder_full'];
+		$addonPathData = $addonDataFolder	= self::$current['data_folder_full'];
+		$addonRelativeCode					= self::$current['code_folder_rel'];
+		$addonRelativeData					= self::$current['data_folder_rel'];
+	}
 
-		$addon_current_id = $addon_current_version = false;
-		if( isset($config['addons'][$addon_key]['id']) ){
-			$addon_current_id = $config['addons'][$addon_key]['id'];
+	static function GetAddonConfig($addon_key){
+		global $config, $dataDir;
+
+		if( !array_key_exists($addon_key,$config['addons']) ){
+			return false;
 		}
 
-		if( isset($config['addons'][$addon_key]['version']) ){
-			$addon_current_version = $config['addons'][$addon_key]['version'];
-		}
+		$addon_config = $config['addons'][$addon_key];
+		$addon_config += array('version'=>false, 'id'=>false, 'data_folder'=>$addon_key);
 
-		$addonFolderName = $addon_key;
-		$addonPathCode = $addonCodeFolder = $dataDir.'/data/_addoncode/'.$addon_key;
-		$addonPathData = $addonDataFolder = $dataDir.'/data/_addondata/'.$data_folder;
-		$addonRelativeCode = common::GetDir('/data/_addoncode/'.$addon_key);
-		$addonRelativeData = common::GetDir('/data/_addondata/'.$data_folder);
 
+		//data folder
+		$addon_config['data_folder_part'] = '/data/_addondata/'.$addon_config['data_folder'];
+		$addon_config['data_folder_full'] = $dataDir.$addon_config['data_folder_part'];
+		$addon_config['data_folder_rel'] = common::GetDir($addon_config['data_folder_part']);
+
+
+		// Code folder
+		$addon_config['code_folder_part'] = '/data/_addoncode/'.$addon_key;
+		$addon_config['code_folder_full'] = $dataDir.$addon_config['code_folder_part'];
+		$addon_config['code_folder_rel'] = common::GetDir($addon_config['code_folder_part']);
+
+		return $addon_config;
 	}
 
 	/**

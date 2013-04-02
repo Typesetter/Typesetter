@@ -13,7 +13,7 @@ class admin_addon_installer extends admin_addon_install{
 	var $can_install_links = true;
 	var $config_index = 'addons';
 	var $addon_folder_name = '_addoncode';
-	var $mode = ''; //or 'dev'
+	var $mode = ''; //'copy', 'dev' or 'source'
 
 	//remote install
 	var $remote_install = false;
@@ -247,8 +247,12 @@ class admin_addon_installer extends admin_addon_install{
 			return true;
 		}
 
-		if( $this->mode == 'dev' ){
+		switch($this->mode){
+			case 'dev':
 			return $this->CopyDev();
+
+			case 'source':
+			return $this->CopySource();
 		}
 
 		$this->temp_source = $this->TempFile();
@@ -281,6 +285,15 @@ class admin_addon_installer extends admin_addon_install{
 			return false;
 		}
 
+		return true;
+	}
+
+
+	/**
+	 * Copy
+	 *
+	 */
+	function CopySource(){
 		return true;
 	}
 

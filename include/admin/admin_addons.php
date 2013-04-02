@@ -708,20 +708,15 @@ class admin_addons extends admin_addon_install{
 
 
 		echo '<table class="bordered" style="min-width:700px">';
-		echo '<tr>';
-		echo '<th>';
+		echo '<tr><th>';
 		echo $langmessage['name'];
-		echo '</th>';
-		echo '<th>';
+		echo '</th><th>';
 		echo $langmessage['version'];
-		echo '</th>';
-		echo '<th>';
+		echo '</th><th>';
 		echo $langmessage['options'];
-		echo '</th>';
-		echo '<th>';
+		echo '</th><th>';
 		echo 'Order';
-		echo '</th>';
-		echo '</tr>';
+		echo '</th></tr>';
 		$i=0;
 		foreach($show as $folder => $info){
 
@@ -806,13 +801,11 @@ class admin_addons extends admin_addon_install{
 			echo ' &nbsp; ';
 			echo common::Link('Admin_Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.rawurlencode($folder),'data-cmd="gpabox"');
 
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			if( isset($info['order']) ){
 				echo $info['order'];
 			}
-			echo '&nbsp;</td>';
-			echo '</tr>';
+			echo '&nbsp;</td></tr>';
 		}
 		echo '</table>';
 

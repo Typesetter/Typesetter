@@ -2,20 +2,7 @@
 defined('is_running') or die('Not an entry point...');
 
 
-/*
- * To Do
- *
- * 		Addon Names should not contain html characters
- * 		Move messages to language file
- *
- *
- *
- *
- * Notes
- * 		Copying the directories does not delete files from the /data/_addoncode folder that are no longer used
- *
- *
- *
+/**
  * Admin Plugin
  * 		/addons/<addon>/Addon.ini
  * 			- Addon_Name (required)
@@ -288,7 +275,7 @@ class admin_addons extends admin_addon_install{
 		/*
 		 * Delete the data folders
 		 */
-		$installFolder = $dataDir.'/data/_addoncode/'.$addon;
+		$installFolder = $addon_config['code_folder_full'];
 		if( file_exists($installFolder) ){
 			gpFiles::RmAll($installFolder);
 		}

@@ -200,7 +200,12 @@ class admin_addon_installer extends admin_addons_tool{
 		if( $this->dest_name ){
 			$this->dest = $this->addon_folder.'/'.$this->dest_name;
 		}else{
-			$this->dest = $this->TempFile();
+			$source_folder = dirname($this->source);
+			if( $source_folder == $this->addon_folder ){
+				$this->dest = $this->source;
+			}else{
+				$this->dest = $this->TempFile();
+			}
 			$this->dest_name = basename($this->dest);
 		}
 
@@ -340,11 +345,15 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 	/**
-	 * Copy the addon files
+	 * Copy the addon files to a temporary folder in the same directory as the destination
 	 *
 	 */
 	function Copy(){
 		global $langmessage;
+
+		if( $this->dest == $this->source ){
+			return true;
+		}
 
 		if( isset($this->temp_source) ){
 			return true;

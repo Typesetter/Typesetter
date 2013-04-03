@@ -217,130 +217,15 @@ class admin_addons extends admin_addon_install{
 	}
 
 	function Confirm_Uninstall(){
-		global $config, $langmessage, $dataDir, $gp_titles, $gp_menu, $gp_index;
 
 		$addon =& $_POST['addon'];
-		$addon_config = gpPlugin::GetAddonConfig($addon);
-		if( !$addon_config ){
-			message($langmessage['OOPS']);
-			return;
-		}
 
-		$order = false;
-		if( isset($config['addons'][$addon]['order']) ){
-			$order = $config['addons'][$addon]['order'];
-		}
+		includeFile('admin/admin_addon_installer.php');
+		$installer = new admin_addon_installer();
+		$installer->Uninstall($addon);
 
-
-		//tracking
-		$history = array();
-		$history['name'] = $config['addons'][$addon]['name'];
-		$history['action'] = 'uninstalled';
-		if( isset($config['addons'][$addon]['id']) ){
-			$history['id'] = $config['addons'][$addon]['id'];
-		}
-
-		unset($config['addons'][$addon]);
-
-
-		//remove links
-		$installedGadgets = $this->GetInstalledComponents($config['gadgets'],$addon);
-		$this->RemoveFromHandlers($installedGadgets);
-
-
-		//remove from gp_index, gp_menu
-		$installedLinks = $this->GetInstalledComponents($gp_titles,$addon);
-		foreach($installedLinks as $index){
-			if( isset($gp_menu[$index]) ){
-				unset($gp_menu[$index]);
-			}
-			$title = common::IndexToTitle($index);
-			if( $title ){
-				unset($gp_index[$title]);
-			}
-		}
-
-		$this->RemoveFromConfig($config['gadgets'],$addon);
-		$this->RemoveFromConfig($config['admin_links'],$addon);
-		$this->RemoveFromConfig($gp_titles,$addon);
-		$this->CleanHooks($addon);
-
-		if( !admin_tools::SaveAllConfig() ){
-			message($langmessage['OOPS']);
-			$this->Uninstall();
-			return false;
-		}
-
-
-		/*
-		 * Delete the data folders
-		 */
-		$installFolder = $addon_config['code_folder_full'];
-		if( file_exists($installFolder) ){
-			gpFiles::RmAll($installFolder);
-		}
-
-
-		$dataFolder = $addon_config['data_folder_full'];
-		if( file_exists($dataFolder) ){
-			gpFiles::RmAll($dataFolder);
-		}
-
-		/*
-		 * Record the history
-		 */
-		$history['time'] = time();
-		$this->addonHistory[] = $history;
-		$this->SaveAddonData();
-		if( $order ){
-			$img_path = common::IdUrl('ci');
-			common::IdReq($img_path);
-		}
-
-
-		message($langmessage['SAVED']);
-	}
-
-
-	function RemoveHooks(){
-		global $config;
-		if( !isset($config['hooks']) ){
-			return;
-		}
-
-		foreach($config['hooks'] as $hook_name => $hook_array){
-
-			foreach($hook_array as $hook_dir => $hook_args){
-
-				//not cleaning other addons
-				if( $hook_dir != $addonDir ){
-					continue;
-				}
-
-				unset($config['hooks'][$hook_name][$hook_dir ]);
-			}
-		}
-
-		//reduce further if empty
-		foreach($config['hooks'] as $hook_name => $hook_array){
-			if( empty($hook_array) ){
-				unset($config['hooks'][$hook_name]);
-			}
-		}
-	}
-
-	function RemoveFromConfig(&$configFrom,$addon){
-
-		if( !is_array($configFrom) ){
-			return;
-		}
-		foreach($configFrom  as $key => $value ){
-			if( !isset($value['addon']) ){
-				continue;
-			}
-			if( $value['addon'] == $addon ){
-				unset($configFrom[$key]);
-			}
+		foreach($installer->messages as $msg){
+			message($msg);
 		}
 	}
 

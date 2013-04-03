@@ -1127,17 +1127,35 @@ class admin_theme_content extends admin_addon_install{
 		global $gpLayouts, $langmessage, $config, $page;
 
 
+		includeFile('admin/admin_addon_installer.php');
+		$installer = new admin_addon_installer();
+		$installer->code_folder_name = '_themes';
+		$installer->source = $theme_info['full_dir'];
+		$installer->theme = $theme_info['folder'].'/'.$theme_info['color'];
+		$installer->label = $_POST['label'];
+		$installer->Install();
+
+		foreach($installer->messages as $msg){
+			message($msg);
+		}
+
+		return;
+
 		$newLayout = array();
 		$newLayout['theme'] = $theme_info['folder'].'/'.$theme_info['color'];
 		$newLayout['color'] = self::GetRandColor();
 		$newLayout['label'] = htmlspecialchars($_POST['label']);
-		if( $theme_info['is_addon'] ){
+		if( $theme_info['is_addon'] ){ //'remote_install' would be more accurate
 			$newLayout['is_addon'] = true;
 			$newLayout['theme_label'] = $theme_info['name'].'/'.$theme_info['color'];
 		}
 		if( isset($theme_info['id']) && is_numeric($theme_info['id']) ){
 			$newLayout['addon_id'] = $theme_info['id'];
 		}
+
+		message(pre($theme_info));
+		message('testing');
+		return;
 
 
 		do{
@@ -1470,29 +1488,16 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function DeleteLayoutConfirmed(){
-		global $gpLayouts,$langmessage, $gp_titles;
-
-		$gpLayoutsBefore = $gpLayouts;
+		global $gpLayouts, $langmessage, $gp_titles;
 
 		$layout =& $_POST['layout_id'];
-		if( !isset( $gpLayouts[$layout]) ){
+		if( !isset($gpLayouts[$layout]) ){
 			message($langmessage['OOPS']);
 			return false;
 		}
 
 		//remove from $gp_titles
 		$this->RmLayout($layout);
-
-		//save
-		if( !admin_tools::SavePagesPHP() ){
-			$gpLayouts = $gpLayoutsBefore;
-			message($langmessage['OOPS'].' (s1)');
-			return false;
-		}
-		message($langmessage['SAVED']);
-
-		//remove custom css
-		$this->RemoveCSS($layout);
 	}
 
 	/**
@@ -3165,9 +3170,17 @@ class admin_theme_content extends admin_addon_install{
 
 	}
 
-	function RmLayout($layout){
-		global $gp_titles,$gpLayouts;
 
+	/**
+	 * Remove a layout from $gp_titles and $gpLayouts
+	 *
+	 */
+	function RmLayout($layout){
+		global $gp_titles, $gpLayouts, $langmessage;
+
+		$gpLayoutsBefore = $gpLayouts;
+
+		//remove from $gp_titles
 		foreach($gp_titles as $title => $titleInfo){
 			if( isset($titleThemes[$title]) ){
 				continue;
@@ -3180,7 +3193,49 @@ class admin_theme_content extends admin_addon_install{
 				unset($gp_titles[$title]['gpLayout']);
 			}
 		}
+
+
+		//determine folder should be removed
+		$rm_addon = false;
+		if( isset($gpLayouts[$layout]['addon_key']) ){
+			$rm_addon = $gpLayouts[$layout]['addon_key'];
+			foreach($gpLayouts as $layout_id => $info){
+				if( $layout_id == $layout ){
+					continue;
+				}
+				if( !array_key_exists('addon_key',$info) ){
+					continue;
+				}
+				if( $info['addon_key'] == $rm_addon ){
+					$rm_addon = false;
+				}
+			}
+		}
+
 		unset($gpLayouts[$layout]);
+
+
+		//delete and save
+		if( $rm_addon ){
+			message('rm addon: '.$rm_addon);
+			includeFile('admin/admin_addon_installer.php');
+			$installer = new admin_addon_installer();
+			if( !$installer->Uninstall($rm_addon) ){
+				$gpLayouts = $gpLayoutsBefore;
+			}
+			foreach($installer->messages as $msg){
+				message($msg);
+			}
+		}elseif( !admin_tools::SavePagesPHP() ){
+			$gpLayouts = $gpLayoutsBefore;
+			message($langmessage['OOPS'].' (s1)');
+			return false;
+		}else{
+			message($langmessage['SAVED']);
+		}
+
+		//remove custom css
+		$this->RemoveCSS($layout);
 	}
 
 

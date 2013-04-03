@@ -14,6 +14,9 @@ class admin_addon_installer extends admin_addons_tool{
 	var $config_index = 'addons';
 	var $code_folder_name = '_addoncode';
 	var $mode = ''; //'copy', 'dev' or 'source'
+	var $theme = false;
+	var $label = '';
+
 
 	//remote install
 	var $remote_install = false;
@@ -30,6 +33,7 @@ class admin_addon_installer extends admin_addons_tool{
 	var $temp_source;
 	var $trash_path;
 	var $config_cache;
+	var $layouts_cache;
 	var $ini_contents;
 	var $ini_text = '';
 
@@ -79,6 +83,96 @@ class admin_addon_installer extends admin_addons_tool{
 		return $this->Install();
 	}
 
+
+	/**
+	 * Completely remove an addon
+	 *
+	 */
+	function Uninstall( $addon ){
+		global $config, $langmessage, $gp_titles, $gp_menu, $gp_index;
+
+		$this->GetAddonData();
+
+		$addon_config = gpPlugin::GetAddonConfig($addon);
+		if( !$addon_config ){
+			$this->message($langmessage['OOPS']);
+			return;
+		}
+
+		$order = false;
+		if( isset($config['addons'][$addon]['order']) ){
+			$order = $config['addons'][$addon]['order'];
+		}
+
+
+		//tracking
+		$history = array();
+		$history['name'] = $config['addons'][$addon]['name'];
+		$history['action'] = 'uninstalled';
+		if( isset($config['addons'][$addon]['id']) ){
+			$history['id'] = $config['addons'][$addon]['id'];
+		}
+
+		unset($config['addons'][$addon]);
+
+
+		//remove links
+		$installedGadgets = $this->GetInstalledComponents($config['gadgets'],$addon);
+		$this->RemoveFromHandlers($installedGadgets);
+
+
+		//remove from gp_index, gp_menu
+		$installedLinks = $this->GetInstalledComponents($gp_titles,$addon);
+		foreach($installedLinks as $index){
+			if( isset($gp_menu[$index]) ){
+				unset($gp_menu[$index]);
+			}
+			$title = common::IndexToTitle($index);
+			if( $title ){
+				unset($gp_index[$title]);
+			}
+		}
+
+		$this->RemoveFromConfig($config['gadgets'],$addon);
+		$this->RemoveFromConfig($config['admin_links'],$addon);
+		$this->RemoveFromConfig($gp_titles,$addon);
+		$this->CleanHooks($addon);
+
+		if( !admin_tools::SaveAllConfig() ){
+			$this->message($langmessage['OOPS']);
+			return false;
+		}
+
+
+		/*
+		 * Delete the data folders
+		 */
+		$installFolder = $addon_config['code_folder_full'];
+		if( file_exists($installFolder) ){
+			gpFiles::RmAll($installFolder);
+		}
+
+
+		$dataFolder = $addon_config['data_folder_full'];
+		if( file_exists($dataFolder) ){
+			gpFiles::RmAll($dataFolder);
+		}
+
+		/*
+		 * Record the history
+		 */
+		$history['time'] = time();
+		$this->addonHistory[] = $history;
+		$this->SaveAddonData();
+		if( $order ){
+			$img_path = common::IdUrl('ci');
+			common::IdReq($img_path);
+		}
+
+
+		$this->message($langmessage['SAVED']);
+		return true;
+	}
 
 
 	/**
@@ -133,6 +227,11 @@ class admin_addon_installer extends admin_addons_tool{
 			return false;
 		}
 
+		//layout
+		if( !$this->Layout() ){
+			return false;
+		}
+
 		//move new addon folder into place
 		if( !$this->FinalizeFolder() ){
 			return false;
@@ -155,7 +254,7 @@ class admin_addon_installer extends admin_addons_tool{
 	 *
 	 */
 	function Init_PT(){
-		global $config,$dataDir;
+		global $config, $dataDir, $gpLayouts;
 
 		if( !isset($config[$this->config_index]) ){
 			$config[$this->config_index] = array();
@@ -163,6 +262,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 		$this->config =& $config[$this->config_index];
 		$this->config_cache = $config;
+		$this->layouts_cache = $gpLayouts;
 
 		$this->addon_folder_rel = '/data/'.$this->code_folder_name;
 		$this->addon_folder = $dataDir.$this->addon_folder_rel;
@@ -358,6 +458,42 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 	/**
+	 * Create a layout
+	 *
+	 */
+	function Layout(){
+		global $gpLayouts, $langmessage, $config, $page;
+
+		if( !$this->theme ){
+			return true;
+		}
+
+		$newLayout = array();
+		$newLayout['theme'] = $this->theme;
+		$newLayout['color'] = admin_theme_content::GetRandColor();
+		$newLayout['label'] = htmlspecialchars($this->label);
+		$newLayout['addon_key'] = $this->dest_name;
+
+		/*
+		if( $theme_info['is_addon'] ){ //'remote_install' would be more accurate
+			$newLayout['is_addon'] = true;
+			$newLayout['theme_label'] = $theme_info['name'].'/'.$theme_info['color'];
+		}
+		*/
+
+		if( isset($this->ini_contents['id']) && is_numeric($this->ini_contents['id']) ){
+			$newLayout['addon_id'] = $this->ini_contents['id']['id'];
+		}
+
+		$temp = $this->TempFile();
+		$layout_id = basename($temp);
+		$gpLayouts[$layout_id] = $newLayout;
+
+		return true;
+	}
+
+
+	/**
 	 * Rename the temp folder to the dest folder
 	 *
 	 */
@@ -400,6 +536,11 @@ class admin_addon_installer extends admin_addons_tool{
 		}elseif( !is_array($this->config[$this->dest_name]) ){
 			$this->message('$this->config[addon] is not an array');
 			return false;
+		}
+
+		//code folder
+		if( $this->code_folder_name !== '_addoncode' ){
+			$this->config[$this->dest_name]['code_folder'] = $this->code_folder_name;
 		}
 
 
@@ -1214,5 +1355,22 @@ class admin_addon_installer extends admin_addons_tool{
 			gpFiles::RmAll($full_path);
 		}
 	}
+
+
+	function RemoveFromConfig(&$configFrom,$addon){
+
+		if( !is_array($configFrom) ){
+			return;
+		}
+		foreach($configFrom  as $key => $value ){
+			if( !isset($value['addon']) ){
+				continue;
+			}
+			if( $value['addon'] == $addon ){
+				unset($configFrom[$key]);
+			}
+		}
+	}
+
 
 }

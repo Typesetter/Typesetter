@@ -95,7 +95,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 		$addon_config = gpPlugin::GetAddonConfig($addon);
 		if( !$addon_config ){
-			$this->message($langmessage['OOPS']);
+			$this->message($langmessage['OOPS'].' (Already uninstalled)');
 			return;
 		}
 

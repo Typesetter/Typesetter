@@ -955,75 +955,70 @@ class admin_theme_content extends admin_addon_install{
 	}
 
 
-	function GetRandColor(){
-		$colors = $this->GetColors();
+	static function GetRandColor(){
+		$colors = self::GetColors();
 		$color_key = array_rand($colors);
 		return $colors[$color_key];
 	}
 
-	function GetColors(){
+	static function GetColors(){
 
-		//color/layout_id changing
-		$colors = array();
+		return array(
+			'#ff0000',
+			'#ff9900',
+			'#ffff00',
+			'#00ff00',
+			'#00ffff',
+			'#0000ff',
+			'#9900ff',
+			'#ff00ff',
 
-		$colors[] = '#ff0000';
-		$colors[] = '#ff9900';
-		$colors[] = '#ffff00';
-		$colors[] = '#00ff00';
-		$colors[] = '#00ffff';
-		$colors[] = '#0000ff';
-		$colors[] = '#9900ff';
-		$colors[] = '#ff00ff';
+			'#f4cccc',
+			'#fce5cd',
+			'#fff2cc',
+			'#d9ead3',
+			'#d0e0e3',
+			'#cfe2f3',
+			'#d9d2e9',
+			'#ead1dc',
 
-		$colors[] = '#f4cccc';
-		$colors[] = '#fce5cd';
-		$colors[] = '#fff2cc';
-		$colors[] = '#d9ead3';
-		$colors[] = '#d0e0e3';
-		$colors[] = '#cfe2f3';
-		$colors[] = '#d9d2e9';
-		$colors[] = '#ead1dc';
+			'#ea9999',
+			'#f9cb9c',
+			'#ffe599',
+			'#b6d7a8',
+			'#a2c4c9',
+			'#9fc5e8',
+			'#b4a7d6',
+			'#d5a6bd',
 
+			'#e06666',
+			'#f6b26b',
+			'#ffd966',
+			'#93c47d',
+			'#76a5af',
+			'#6fa8dc',
+			'#8e7cc3',
+			'#c27ba0',
 
-		$colors[] = '#ea9999';
-		$colors[] = '#f9cb9c';
-		$colors[] = '#ffe599';
-		$colors[] = '#b6d7a8';
-		$colors[] = '#a2c4c9';
-		$colors[] = '#9fc5e8';
-		$colors[] = '#b4a7d6';
-		$colors[] = '#d5a6bd';
-
-		$colors[] = '#e06666';
-		$colors[] = '#f6b26b';
-		$colors[] = '#ffd966';
-		$colors[] = '#93c47d';
-		$colors[] = '#76a5af';
-		$colors[] = '#6fa8dc';
-		$colors[] = '#8e7cc3';
-		$colors[] = '#c27ba0';
-
-
-		$colors[] = '#cc0000';
-		$colors[] = '#e69138';
-		$colors[] = '#f1c232';
-		$colors[] = '#6aa84f';
-		$colors[] = '#45818e';
-		$colors[] = '#3d85c6';
-		$colors[] = '#674ea7';
-		$colors[] = '#a64d79';
+			'#cc0000',
+			'#e69138',
+			'#f1c232',
+			'#6aa84f',
+			'#45818e',
+			'#3d85c6',
+			'#674ea7',
+			'#a64d79',
 
 
-		$colors[] = '#990000';
-		$colors[] = '#b45f06';
-		$colors[] = '#bf9000';
-		$colors[] = '#38761d';
-		$colors[] = '#134f5c';
-		$colors[] = '#0b5394';
-		$colors[] = '#351c75';
-		$colors[] = '#741b47';
-
-		return $colors;
+			'#990000',
+			'#b45f06',
+			'#bf9000',
+			'#38761d',
+			'#134f5c',
+			'#0b5394',
+			'#351c75',
+			'#741b47',
+		);
 	}
 
 
@@ -1057,7 +1052,7 @@ class admin_theme_content extends admin_addon_install{
 			return true;
 
 			case 'addlayout':
-				$this->AddLayout($theme, $theme_info);
+				$this->AddLayout($theme_info);
 			break;
 		}
 		return false;
@@ -1176,12 +1171,13 @@ class admin_theme_content extends admin_addon_install{
 	 * Add a new layout to the installation
 	 *
 	 */
-	function AddLayout($theme, $theme_info){
-		global $gpLayouts,$langmessage,$config,$page;
+	function AddLayout($theme_info){
+		global $gpLayouts, $langmessage, $config, $page;
+
 
 		$newLayout = array();
 		$newLayout['theme'] = $theme_info['folder'].'/'.$theme_info['color'];
-		$newLayout['color'] = $this->GetRandColor();
+		$newLayout['color'] = self::GetRandColor();
 		$newLayout['label'] = htmlspecialchars($_POST['label']);
 		if( $theme_info['is_addon'] ){
 			$newLayout['is_addon'] = true;
@@ -1212,6 +1208,22 @@ class admin_theme_content extends admin_addon_install{
 			$page->SetTheme();
 			$this->SetLayoutArray();
 		}
+
+
+		//install as addon
+		//message(pre($theme_info));
+		return;
+
+		includeFile('admin/admin_addon_installer.php');
+		$installer = new admin_addon_installer();
+		$installer->source = $theme_info['full_dir'];
+		//$installer->mode = $_REQUEST['mode'];
+		$installer->Install();
+
+		foreach($installer->messages as $msg){
+			message($msg);
+		}
+
 	}
 
 
@@ -1281,7 +1293,7 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 		$newLayout = $gpLayouts[$copy_id];
-		$newLayout['color'] = $this->GetRandColor();
+		$newLayout['color'] = self::GetRandColor();
 		$newLayout['label'] = htmlspecialchars($_POST['label']);
 
 		//get new unique layout id
@@ -1619,7 +1631,7 @@ class admin_theme_content extends admin_addon_install{
 	 */
 	function ColorSelector($layout = false){
 
-		$colors = $this->GetColors();
+		$colors = self::GetColors();
 		echo '<div id="layout_ident" class="gp_floating_area">';
 		echo '<div>';
 

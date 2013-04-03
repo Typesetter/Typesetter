@@ -6,7 +6,7 @@ defined('is_running') or die('Not an entry point...');
  *	- Install_CheckIni() (warning about installing a lesser version)
  *
  */
-class admin_addon_installer extends admin_addon_install{
+class admin_addon_installer extends admin_addons_tool{
 
 	//configuration options
 	var $source = '';
@@ -102,7 +102,7 @@ class admin_addon_installer extends admin_addon_install{
 		}
 
 		// upgrade/destination
-		$this->dest_name = $this->UpgradePath($this->ini_contents);
+		$this->dest_name = admin_addons_tool::UpgradePath($this->ini_contents);
 		if( $this->dest_name ){
 			$this->dest = $this->addon_folder.'/'.$this->dest_name;
 		}else{

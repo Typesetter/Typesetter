@@ -435,6 +435,142 @@ class admin_addons_tool{
 		return false;
 	}
 
+
+	/**
+	 * Get a list of installed addons
+	 *
+	 */
+	function GetInstalledComponents($from,$addon){
+		$result = array();
+		if( !is_array($from) ){
+			return $result;
+		}
+
+		foreach($from as $name => $info){
+			if( !isset($info['addon']) ){
+				continue;
+			}
+			if( $info['addon'] !== $addon ){
+				continue;
+			}
+			$result[] = $name;
+		}
+		return $result;
+	}
+
+
+
+
+	//remove gadgets from $gpLayouts
+	function RemoveFromHandlers($gadgets){
+		global $gpLayouts;
+
+		if( !is_array($gpLayouts) || !is_array($gadgets) ){
+			return;
+		}
+
+
+		foreach($gpLayouts as $theme => $containers){
+			if( !is_array($containers) || !isset($containers['handlers']) || !is_array($containers['handlers']) ){
+				continue;
+			}
+			foreach($containers['handlers'] as $container => $handlers){
+				if( !is_array($handlers) ){
+					continue;
+				}
+
+				foreach($handlers as $index => $handle){
+					$pos = strpos($handle,':');
+					if( $pos > 0 ){
+						$handle = substr($handle,0,$pos);
+					}
+
+					foreach($gadgets as $gadget){
+						if( $handle === $gadget ){
+							$handlers[$index] = false; //set to false
+						}
+					}
+				}
+
+				$handlers = array_diff($handlers, array(false)); //remove false entries
+				$handlers = array_values($handlers); //reset keys
+				$gpLayouts[$theme]['handlers'][$container] = $handlers;
+			}
+		}
+	}
+
+
+
+	function CleanHooks($addon,$keep_hooks = array()){
+		global $config;
+
+		if( !isset($config['hooks']) ){
+			return;
+		}
+
+		foreach($config['hooks'] as $hook_name => $hook_array){
+
+			foreach($hook_array as $hook_dir => $hook_args){
+
+				//not cleaning other addons
+				if( $hook_dir != $addon ){
+					continue;
+				}
+
+				if( !isset($keep_hooks[$hook_name]) ){
+					unset($config['hooks'][$hook_name][$hook_dir]);
+					//message('remove this hook: '.$hook_name);
+				}
+			}
+		}
+
+		//reduce further if empty
+		foreach($config['hooks'] as $hook_name => $hook_array){
+			if( empty($hook_array) ){
+				unset($config['hooks'][$hook_name]);
+			}
+		}
+
+	}
+
+
+
+	/**
+	 * Determine if the addon (identified by $ini_info and $source_folder) is an upgrade to an existing addon
+	 *
+	 * @return mixed
+	 */
+	static function UpgradePath($ini_info,$config_key='addons'){
+		global $config;
+
+		if( !isset($config[$config_key]) ){
+			return false;
+		}
+
+		//by id
+		if( isset($ini_info['Addon_Unique_ID']) ){
+			foreach($config[$config_key] as $addon_key => $data){
+				if( !isset($data['id']) || !is_numeric($data['id']) ){
+					continue;
+				}
+
+				if( (int)$data['id'] == (int)$ini_info['Addon_Unique_ID'] ){
+					return $addon_key;
+				}
+			}
+		}
+
+		//by name
+		if( isset($ini_info['Addon_Name']) ){
+			foreach($config[$config_key] as $addon_key => $data){
+				if( $data['name'] == $ini_info['Addon_Name'] ){
+					return $addon_key;
+				}
+			}
+		}
+
+		return false;
+	}
 }
 
 

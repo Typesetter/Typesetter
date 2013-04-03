@@ -555,7 +555,7 @@ class admin_addons extends admin_addon_install{
 			if( !$info ){
 				continue;
 			}
-			$info['upgrade_key'] = $this->UpgradePath($info);
+			$info['upgrade_key'] = admin_addons_tool::UpgradePath($info);
 			$avail[$key] = $info;
 		}
 
@@ -581,9 +581,6 @@ class admin_addons extends admin_addon_install{
 		$instructions = true;
 		$available = $this->GetAvailAddons();
 
-		//message('available: '.showArray($available));
-
-
 		$this->FindForm();
 
 		echo '<h2 class="hmargin">';
@@ -591,10 +588,6 @@ class admin_addons extends admin_addon_install{
 		echo ' <span>|</span> ';
 		echo common::Link($this->path_remote,$langmessage['Find Plugins']);
 		echo '</h2>';
-
-		//echo '<h3>Addons</h3>';
-		//echo showArray($config['addons']);
-
 
 
 		if( !$this->ShowInstalled($available) ){

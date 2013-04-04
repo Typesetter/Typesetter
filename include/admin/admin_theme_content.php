@@ -42,6 +42,8 @@ class admin_theme_content extends admin_addon_install{
 	var $curr_layout = false;
 	var $LayoutArray;
 
+	var $possible = array();
+
 
 	//remote install variables
 	var $config_index = 'themes';
@@ -63,6 +65,9 @@ class admin_theme_content extends admin_addon_install{
 
 		$page->css_admin[] = '/include/css/theme_content.css';
 		$page->css_admin[] = '/include/css/addons.css';
+
+		$this->possible = $this->GetPossible();
+
 
 		$cmd = common::GetCommand();
 
@@ -1147,7 +1152,6 @@ class admin_theme_content extends admin_addon_install{
 		$newLayout['label'] = htmlspecialchars($_POST['label']);
 		if( $theme_info['is_addon'] ){ //'remote_install' would be more accurate
 			$newLayout['is_addon'] = true;
-			$newLayout['theme_label'] = $theme_info['name'].'/'.$theme_info['color'];
 		}
 		if( isset($theme_info['id']) && is_numeric($theme_info['id']) ){
 			$newLayout['addon_id'] = $theme_info['id'];
@@ -1768,17 +1772,23 @@ class admin_theme_content extends admin_addon_install{
 
 		//theme
 			echo '<td class="nowrap">';
-			if( isset($info['is_addon']) && $info['is_addon'] ){
-				echo htmlspecialchars($info['theme_label']);
-			}else{
-				echo $info['theme'];
-			}
-
+			echo $this->ThemeLabel($info['theme']);
 			echo '</td>';
 
 
 		echo '</tr>';
+	}
 
+	function ThemeLabel($theme_color){
+
+		list($theme,$color) = explode('/',$theme_color);
+
+		foreach($this->possible as $info){
+			if( $info['folder'] == $theme ){
+				return $info['name'].'/'.$color;
+			}
+		}
+		return $theme_color;
 	}
 
 	function TitlesCount($layout){

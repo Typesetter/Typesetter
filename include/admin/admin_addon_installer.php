@@ -486,7 +486,6 @@ class admin_addon_installer extends admin_addons_tool{
 		/*
 		if( $theme_info['is_addon'] ){ //'remote_install' would be more accurate
 			$newLayout['is_addon'] = true;
-			$newLayout['theme_label'] = $theme_info['name'].'/'.$theme_info['color'];
 		}
 		*/
 

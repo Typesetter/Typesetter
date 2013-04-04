@@ -1041,11 +1041,7 @@ class admin_theme_content extends admin_addon_install{
 			$page->theme_addon_id = $theme_info['id'];
 		}
 
-		$path = '/themes/';
-		if( $theme_info['is_addon'] ){
-			$path = '/data/_themes/';
-		}
-		$page->theme_path = common::GetDir($path.$page->theme_name.'/'.$page->theme_color);
+		$page->theme_path = common::GetDir($theme_info['rel'].'/'.$color);
 
 		$page->show_admin_content = false;
 

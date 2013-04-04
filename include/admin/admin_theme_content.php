@@ -1487,22 +1487,6 @@ class admin_theme_content extends admin_addon_install{
 		}
 	}
 
-	/**
-	 * Remote a layout
-	 *
-	 */
-	function DeleteLayoutConfirmed(){
-		global $gpLayouts, $langmessage, $gp_titles;
-
-		$layout =& $_POST['layout_id'];
-		if( !isset($gpLayouts[$layout]) ){
-			message($langmessage['OOPS'].' (Layout not set)');
-			return false;
-		}
-
-		//remove from $gp_titles
-		$this->RmLayout($layout);
-	}
 
 	/**
 	 * Save the color and label of a layout
@@ -3203,12 +3187,32 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 
-		//delete the folder
+		//delete the folder if it hasn't already been deleted by admin_addon_installer
 		$dir = $dataDir.'/data/_themes/'.$theme_folder_name;
-		gpFiles::RmAll($dir);
+		if( file_exists($dir) ){
+			gpFiles::RmAll($dir);
+		}
 
 	}
 
+
+
+	/**
+	 * Remote a layout
+	 *
+	 */
+	function DeleteLayoutConfirmed(){
+		global $gpLayouts, $langmessage, $gp_titles;
+
+		$layout =& $_POST['layout_id'];
+		if( !isset($gpLayouts[$layout]) ){
+			message($langmessage['OOPS'].' (Layout not set)');
+			return false;
+		}
+
+		//remove from $gp_titles
+		$this->RmLayout($layout);
+	}
 
 	/**
 	 * Remove a layout from $gp_titles and $gpLayouts

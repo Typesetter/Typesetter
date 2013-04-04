@@ -1319,14 +1319,13 @@ class admin_addon_installer extends admin_addons_tool{
 	 */
 	function CleanInstallFolder(){
 
-		if( file_exists($this->temp_source) ){
+		if( $this->dest != $this->temp_source && file_exists($this->temp_source) ){
 			gpFiles::RmAll($this->temp_source);
 		}
 
 		if( file_exists($this->trash_path) ){
 			gpFiles::RmAll($this->trash_path);
 		}
-
 
 
 		$folders = gpFiles::readDir($this->addon_folder,1);

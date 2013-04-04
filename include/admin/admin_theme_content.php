@@ -3074,7 +3074,9 @@ class admin_theme_content extends admin_addon_install{
 		$theme_folder_name =& $_POST['folder'];
 		$theme_folder = $dataDir.'/data/_themes/'.$theme_folder_name;
 		if( empty($theme_folder_name) || !ctype_alnum($theme_folder_name) || !isset($config['themes'][$theme_folder_name]) ){
-			message($langmessage['OOPS']);
+			message($theme_folder_name);
+			message(showArray($config['themes']));
+			message($langmessage['OOPS'].' (Invalid Request)');
 			return false;
 		}
 

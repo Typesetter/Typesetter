@@ -1140,60 +1140,14 @@ class admin_theme_content extends admin_addon_install{
 			message($msg);
 		}
 
-		return;
-
-		$newLayout = array();
-		$newLayout['theme'] = $theme_info['folder'].'/'.$theme_info['color'];
-		$newLayout['color'] = self::GetRandColor();
-		$newLayout['label'] = htmlspecialchars($_POST['label']);
-		if( $theme_info['is_addon'] ){ //'remote_install' would be more accurate
-			$newLayout['is_addon'] = true;
-		}
-		if( isset($theme_info['id']) && is_numeric($theme_info['id']) ){
-			$newLayout['addon_id'] = $theme_info['id'];
-		}
-
-		message(pre($theme_info));
-		message('testing');
-		return;
-
-
-		do{
-			$layout_id = rand(1000,9999);
-		}while( isset($gpLayouts[$layout_id]) );
-
-		$gpLayoutsBefore = $gpLayouts;
-		$gpLayouts[$layout_id] = $newLayout;
-		if( admin_tools::SavePagesPHP() ){
-			message($langmessage['SAVED']);
-		}else{
-			$gpLayouts = $gpLayoutsBefore;
-			message($langmessage['OOPS']);
-		}
-
-
+		/*
 		if( !empty($_POST['default']) && $_POST['default'] != 'false' ){
 			$config['gpLayout'] = $layout_id;
 			admin_tools::SaveConfig();
 			$page->SetTheme();
 			$this->SetLayoutArray();
 		}
-
-
-		//install as addon
-		//message(pre($theme_info));
-		return;
-
-		includeFile('admin/admin_addon_installer.php');
-		$installer = new admin_addon_installer();
-		$installer->source = $theme_info['full_dir'];
-		//$installer->mode = $_REQUEST['mode'];
-		$installer->Install();
-
-		foreach($installer->messages as $msg){
-			message($msg);
-		}
-
+		*/
 	}
 
 

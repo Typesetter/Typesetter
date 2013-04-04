@@ -85,7 +85,7 @@ class admin_addons_tool{
 	}
 
 
-	function GetAvailInstall($fullPath){
+	static function GetAvailInstall($fullPath){
 
 		$iniFile = $fullPath.'/Addon.ini';
 		if( !file_exists($iniFile) ){
@@ -536,41 +536,48 @@ class admin_addons_tool{
 
 
 	/**
-	 * Determine if the addon (identified by $ini_info and $source_folder) is an upgrade to an existing addon
+	 * Determine if the addon (identified by $ini_info) is an upgrade to an existing addon in $dir
 	 *
 	 * @return mixed
 	 */
-	static function UpgradePath($ini_info,$config_key='addons'){
-		global $config;
+	static function UpgradeDir($ini_info,$dir){
 
-		if( !isset($config[$config_key]) ){
-			return false;
+		$ini_id = $ini_name = false;
+		if( isset($ini_info['Addon_Unique_ID']) ){
+			$ini_id = $ini_info['Addon_Unique_ID'];
+		}
+		if( isset($ini_info['Addon_Name']) ){
+			$ini_name = $ini_info['Addon_Name'];
 		}
 
-		//by id
-		if( isset($ini_info['Addon_Unique_ID']) ){
-			foreach($config[$config_key] as $addon_key => $data){
-				if( !isset($data['id']) || !is_numeric($data['id']) ){
+
+		//get all the id's and names of addons in $dir
+		$existing = array();
+		if( file_exists($dir) ){
+			$files = scandir($dir);
+			foreach($files as $file){
+				if( $file == '.' || $file == '..' ){
+					continue;
+				}
+				$ini_dir = $dir.'/'.$file;
+				$ini = admin_addons_tool::GetAvailInstall($ini_dir);
+				if( !$ini ){
 					continue;
 				}
 
-				if( (int)$data['id'] == (int)$ini_info['Addon_Unique_ID'] ){
-					return $addon_key;
+				if( isset($ini['Addon_Unique_ID']) && $ini_id && $ini_id == $ini['Addon_Unique_ID'] ){
+					return $file;
 				}
-			}
-		}
 
-		//by name
-		if( isset($ini_info['Addon_Name']) ){
-			foreach($config[$config_key] as $addon_key => $data){
-				if( $data['name'] == $ini_info['Addon_Name'] ){
-					return $addon_key;
+				if( isset($ini['Addon_Name']) && $ini_name && $ini_name == $ini['Addon_Name'] ){
+					return $file;
 				}
 			}
 		}
 
 		return false;
 	}
+
 }
 
 

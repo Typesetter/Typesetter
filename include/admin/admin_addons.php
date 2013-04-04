@@ -435,12 +435,12 @@ class admin_addons extends admin_addon_install{
 
 		foreach($folders as $key => $value){
 			$fullPath = $addonPath .'/'.$key;
-			$info = $this->GetAvailInstall($fullPath);
+			$info = admin_addons_tool::GetAvailInstall($fullPath);
 
 			if( !$info ){
 				continue;
 			}
-			$info['upgrade_key'] = admin_addons_tool::UpgradePath($info);
+			$info['upgrade_key'] = admin_addons_tool::UpgradeDir($info,$addonPath);
 			$avail[$key] = $info;
 		}
 

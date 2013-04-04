@@ -1127,13 +1127,21 @@ class admin_theme_content extends admin_addon_install{
 	function AddLayout($theme_info){
 		global $gpLayouts, $langmessage, $config, $page;
 
+		$new_layout = array();
+		$new_layout['theme'] = $theme_info['folder'].'/'.$theme_info['color'];
+		$new_layout['color'] = self::GetRandColor();
+		$new_layout['label'] = htmlspecialchars($_POST['label']);
+		if( $theme_info['is_addon'] ){
+			$new_layout['is_addon'] = true;
+		}
+
 
 		includeFile('admin/admin_addon_installer.php');
 		$installer = new admin_addon_installer();
 		$installer->code_folder_name = '_themes';
 		$installer->source = $theme_info['full_dir'];
-		$installer->theme = $theme_info['folder'].'/'.$theme_info['color'];
-		$installer->label = $_POST['label'];
+		$installer->new_layout = $new_layout;
+
 		$installer->Install();
 
 		foreach($installer->messages as $msg){
@@ -1351,7 +1359,7 @@ class admin_theme_content extends admin_addon_install{
 			}
 
 
-			$ini_info = $this->GetAvailInstall($full_dir);
+			$ini_info = admin_addons_tool::GetAvailInstall($full_dir);
 
 			$index = $name.'(package)';
 
@@ -1378,7 +1386,7 @@ class admin_theme_content extends admin_addon_install{
 				continue;
 			}
 
-			$ini_info = $this->GetAvailInstall($full_dir);
+			$ini_info = admin_addons_tool::GetAvailInstall($full_dir);
 
 			$index = $ini_info['Addon_Name'].'(remote)';
 			$themes[$index]['name'] = $ini_info['Addon_Name'];
@@ -3084,10 +3092,7 @@ class admin_theme_content extends admin_addon_install{
 		$rm_addon = false;
 		foreach($gpLayouts as $layout_id => $layout_info){
 
-
-			if( ( !isset($layout_info['is_addon']) || !$layout_info['is_addon'] )
-				&& !array_key_exists('addon_key',$layout_info)
-				){
+			if( !isset($layout_info['is_addon']) || !$layout_info['is_addon'] ){
 				continue;
 			}
 

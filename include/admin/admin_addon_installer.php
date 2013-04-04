@@ -14,8 +14,7 @@ class admin_addon_installer extends admin_addons_tool{
 	var $config_index = 'addons';
 	var $code_folder_name = '_addoncode';
 	var $mode = ''; //'copy', 'dev' or 'source'
-	var $theme = false;
-	var $label = '';
+	var $new_layout = array();
 
 
 	//remote install
@@ -196,16 +195,11 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 
 		// upgrade/destination
-		$this->dest_name = admin_addons_tool::UpgradePath($this->ini_contents);
+		$this->dest_name = admin_addons_tool::UpgradeDir($this->ini_contents,$this->addon_folder);
 		if( $this->dest_name ){
 			$this->dest = $this->addon_folder.'/'.$this->dest_name;
 		}else{
-			$source_folder = dirname($this->source);
-			if( $source_folder == $this->addon_folder ){
-				$this->dest = $this->source;
-			}else{
-				$this->dest = $this->TempFile();
-			}
+			$this->dest = $this->TempFile();
 			$this->dest_name = basename($this->dest);
 		}
 
@@ -473,29 +467,18 @@ class admin_addon_installer extends admin_addons_tool{
 	function Layout(){
 		global $gpLayouts, $langmessage, $config, $page;
 
-		if( !$this->theme ){
+		if( empty($this->new_layout) ){
 			return true;
 		}
 
-		$newLayout = array();
-		$newLayout['theme'] = $this->theme;
-		$newLayout['color'] = admin_theme_content::GetRandColor();
-		$newLayout['label'] = htmlspecialchars($this->label);
-		$newLayout['addon_key'] = $this->dest_name;
-
-		/*
-		if( $theme_info['is_addon'] ){ //'remote_install' would be more accurate
-			$newLayout['is_addon'] = true;
-		}
-		*/
-
+		$this->new_layout['addon_key'] = $this->dest_name;
 		if( isset($this->ini_contents['id']) && is_numeric($this->ini_contents['id']) ){
-			$newLayout['addon_id'] = $this->ini_contents['id']['id'];
+			$this->new_layout['addon_id'] = $this->ini_contents['id']['id'];
 		}
 
 		$temp = $this->TempFile();
 		$layout_id = basename($temp);
-		$gpLayouts[$layout_id] = $newLayout;
+		$gpLayouts[$layout_id] = $this->new_layout;
 
 		return true;
 	}
@@ -506,6 +489,10 @@ class admin_addon_installer extends admin_addons_tool{
 	 *
 	 */
 	function FinalizeFolder(){
+
+		if( $this->dest == $this->source ){
+			return true;
+		}
 
 		if( !isset($this->temp_source) ){
 			return true;

@@ -749,7 +749,6 @@ class display{
 		}
 
 		$layout_info = common::LayoutInfo($layout);
-		$is_addon = false;
 
 
 		//check for fatal error in template.php file
@@ -772,7 +771,6 @@ class display{
 			$this->gpLayout = $layout;
 			$this->theme_name = $layout_info['theme_name'];
 			$this->theme_color = $layout_info['theme_color'];
-			$is_addon = $layout_info['is_addon'];
 			$this->theme_rel = $layout_info['path'];
 			$this->theme_dir = $layout_info['dir'];
 

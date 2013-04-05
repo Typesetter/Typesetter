@@ -423,6 +423,8 @@ class admin_addons extends admin_addon_install{
 		global $dataDir;
 
 		$addonPath = $dataDir.'/addons';
+		$installed_path  = $dataDir.'/data/_addoncode';
+
 
 		if( !file_exists($addonPath) ){
 			message('Warning: The /addons folder "<em>'.$addonPath.'</em>" does not exist on your server.');
@@ -440,7 +442,7 @@ class admin_addons extends admin_addon_install{
 			if( !$info ){
 				continue;
 			}
-			$info['upgrade_key'] = admin_addons_tool::UpgradeDir($info,$addonPath);
+			$info['upgrade_key'] = admin_addons_tool::UpgradeDir($info,$installed_path);
 			$avail[$key] = $info;
 		}
 

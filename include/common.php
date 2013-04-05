@@ -1098,6 +1098,9 @@ class common{
 		if( $sessions ){
 			common::sessions();
 		}
+
+		global $config;
+		message(pre($config['addons']));
 	}
 
 

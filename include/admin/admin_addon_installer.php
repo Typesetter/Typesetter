@@ -24,6 +24,10 @@ class admin_addon_installer extends admin_addons_tool{
 	var $order;
 
 
+	//uninstall
+	var $rm_folders = true;
+
+
 	//used internally
 	var $addon_folder;
 	var $addon_folder_rel;
@@ -146,15 +150,17 @@ class admin_addon_installer extends admin_addons_tool{
 		/*
 		 * Delete the data folders
 		 */
-		$installFolder = $addon_config['code_folder_full'];
-		if( file_exists($installFolder) ){
-			gpFiles::RmAll($installFolder);
-		}
+		if( $this->rm_folders ){
+			$installFolder = $addon_config['code_folder_full'];
+			if( file_exists($installFolder) ){
+				gpFiles::RmAll($installFolder);
+			}
 
 
-		$dataFolder = $addon_config['data_folder_full'];
-		if( file_exists($dataFolder) ){
-			gpFiles::RmAll($dataFolder);
+			$dataFolder = $addon_config['data_folder_full'];
+			if( file_exists($dataFolder) ){
+				gpFiles::RmAll($dataFolder);
+			}
 		}
 
 		/*
@@ -195,13 +201,15 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 
 		// upgrade/destination
-		if( !$this->dest ){
+		if( $this->remote_install ){
 			$this->dest_name = admin_addons_tool::UpgradeDir($this->ini_contents,$this->addon_folder);
 			if( $this->dest_name ){
 				$this->dest = $this->addon_folder.'/'.$this->dest_name;
 			}else{
 				$this->dest = $this->TempFile();
 			}
+		}else{
+			$this->dest = $this->source;
 		}
 		$this->dest_name = basename($this->dest);
 

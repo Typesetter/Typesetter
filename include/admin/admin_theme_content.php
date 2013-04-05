@@ -3182,12 +3182,9 @@ class admin_theme_content extends admin_addon_install{
 
 
 		//determine if code in /data/_theme should be removed
-		//only need to remove if it's a local theme
 		$layout_info = $gpLayouts[$layout];
 		$rm_addon = false;
-		if( isset($layout_info['addon_key'])
-			&& ( !isset($layout_info['is_addon']) || !$layout_info['is_addon'] )
-			){
+		if( isset($layout_info['addon_key']) ){
 			$rm_addon = $gpLayouts[$layout]['addon_key'];
 
 			//don't remove if there are other layouts using the same code
@@ -3210,6 +3207,7 @@ class admin_theme_content extends admin_addon_install{
 		if( $rm_addon ){
 			includeFile('admin/admin_addon_installer.php');
 			$installer = new admin_addon_installer();
+			$installer->rm_folders = false;
 			if( !$installer->Uninstall($rm_addon) ){
 				$gpLayouts = $gpLayoutsBefore;
 			}

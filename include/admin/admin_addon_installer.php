@@ -195,13 +195,15 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 
 		// upgrade/destination
-		$this->dest_name = admin_addons_tool::UpgradeDir($this->ini_contents,$this->addon_folder);
-		if( $this->dest_name ){
-			$this->dest = $this->addon_folder.'/'.$this->dest_name;
-		}else{
-			$this->dest = $this->TempFile();
-			$this->dest_name = basename($this->dest);
+		if( !$this->dest ){
+			$this->dest_name = admin_addons_tool::UpgradeDir($this->ini_contents,$this->addon_folder);
+			if( $this->dest_name ){
+				$this->dest = $this->addon_folder.'/'.$this->dest_name;
+			}else{
+				$this->dest = $this->TempFile();
+			}
 		}
+		$this->dest_name = basename($this->dest);
 
 		//legacy data folder support
 		if( isset($this->config[$this->dest_name]['data_folder']) ){

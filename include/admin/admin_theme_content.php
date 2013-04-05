@@ -1135,11 +1135,11 @@ class admin_theme_content extends admin_addon_install{
 			$new_layout['is_addon'] = true;
 		}
 
-
 		includeFile('admin/admin_addon_installer.php');
 		$installer = new admin_addon_installer();
 		$installer->code_folder_name = '_themes';
 		$installer->source = $theme_info['full_dir'];
+		$installer->dest = $theme_info['full_dir'];
 		$installer->new_layout = $new_layout;
 
 		$installer->Install();
@@ -3180,10 +3180,17 @@ class admin_theme_content extends admin_addon_install{
 
 		$this->RmLayoutPrep($layout);
 
-		//determine folder should be removed
+
+		//determine if code in /data/_theme should be removed
+		//only need to remove if it's a local theme
+		$layout_info = $gpLayouts[$layout];
 		$rm_addon = false;
-		if( isset($gpLayouts[$layout]['addon_key']) ){
+		if( isset($layout_info['addon_key'])
+			&& ( !isset($layout_info['is_addon']) || !$layout_info['is_addon'] )
+			){
 			$rm_addon = $gpLayouts[$layout]['addon_key'];
+
+			//don't remove if there are other layouts using the same code
 			foreach($gpLayouts as $layout_id => $info){
 				if( $layout_id == $layout ){
 					continue;

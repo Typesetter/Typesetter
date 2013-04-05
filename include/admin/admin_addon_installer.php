@@ -646,11 +646,12 @@ class admin_addon_installer extends admin_addons_tool{
 	 *
 	 */
 	function TempFile($type=''){
-		global $config, $gpLayouts;
+		global $config, $gpLayouts, $dataDir;
 
 		do{
 			$file = common::RandomString(7,false);
 			$full_dest = $this->addon_folder.'/'.$file.$type;
+			$data_dest = $dataDir.'/data/_addondata/'.$file.$type;
 
 		}while(
 			is_numeric($file)
@@ -658,6 +659,7 @@ class admin_addon_installer extends admin_addons_tool{
 			|| array_key_exists($file, $config['themes'])
 			|| array_key_exists($file, $gpLayouts)
 			|| file_exists($full_dest)
+			|| file_exists($data_dest)
 			);
 
 		return $full_dest;

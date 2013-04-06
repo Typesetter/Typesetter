@@ -213,6 +213,7 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 		$this->dest_name = basename($this->dest);
 
+
 		//legacy data folder support
 		if( isset($this->config[$this->dest_name]['data_folder']) ){
 			$this->data_folder = $this->config[$this->dest_name]['data_folder'];
@@ -273,12 +274,15 @@ class admin_addon_installer extends admin_addons_tool{
 		$this->config_cache = $config;
 		$this->layouts_cache = $gpLayouts;
 
-		$this->addon_folder_rel = '/data/'.$this->code_folder_name;
+
+		if( $this->remote_install ){
+			$this->addon_folder_rel = '/data/'.$this->code_folder_name;
+		}else{
+			$this->addon_folder_rel = '/'.basename( dirname($this->source) );
+		}
 		$this->addon_folder = $dataDir.$this->addon_folder_rel;
 
-
 		gpFiles::CheckDir($this->addon_folder);
-
 	}
 
 
@@ -544,9 +548,12 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 
 		//code folder
-		if( $this->code_folder_name !== '_addoncode' ){
-			$this->config[$this->dest_name]['code_folder'] = $this->code_folder_name;
-		}
+		//if( $this->code_folder_name !== '_addoncode' ){
+		//	$this->config[$this->dest_name]['code_folder'] = $this->code_folder_name;
+		//}
+		$this->config[$this->dest_name]['code_folder'] = $this->addon_folder_rel;
+
+
 
 
 		//general configuration
@@ -556,10 +563,13 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 		//remote
+		/*
 		unset($this->config[$this->dest_name]['remote_install']);
 		if( $this->remote_install ){
 			$this->config[$this->dest_name]['remote_install'] = true;
 		}
+		*/
+		$this->config[$this->dest_name]['remote_install'] = $this->remote_install;
 
 
 		//proof of purchase
@@ -1330,6 +1340,10 @@ class admin_addon_installer extends admin_addons_tool{
 	 *
 	 */
 	function CleanInstallFolder(){
+
+		if( !$this->remote_install ){
+			return true;
+		}
 
 		if( $this->dest != $this->temp_source && file_exists($this->temp_source) ){
 			gpFiles::RmAll($this->temp_source);

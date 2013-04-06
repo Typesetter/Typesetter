@@ -442,7 +442,7 @@ class admin_addons extends admin_addon_install{
 			if( !$info ){
 				continue;
 			}
-			$info['upgrade_key'] = admin_addons_tool::UpgradeDir($info,$installed_path);
+			$info['upgrade_key'] = admin_addons_tool::UpgradePath($info);
 			$avail[$key] = $info;
 		}
 

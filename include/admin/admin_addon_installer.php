@@ -88,7 +88,8 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 	/**
-	 * Completely remove an addon
+	 * Remove an addon from the site configuration
+	 * Delete code folders if needed
 	 *
 	 */
 	function Uninstall( $addon ){
@@ -101,6 +102,7 @@ class admin_addon_installer extends admin_addons_tool{
 			$this->message($langmessage['OOPS'].' (Already uninstalled)');
 			return;
 		}
+
 
 		$order = false;
 		if( isset($config['addons'][$addon]['order']) ){
@@ -147,15 +149,18 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 
 
-		/*
-		 * Delete the data folders
-		 */
+		//Delete the code & code folders
 		if( $this->rm_folders ){
-			$installFolder = $addon_config['code_folder_full'];
-			if( file_exists($installFolder) ){
-				gpFiles::RmAll($installFolder);
-			}
 
+			//only delete code if remote installation
+			if( isset($addon_config['remote_install']) && $addon_config['remote_install'] ){
+
+				$installFolder = $addon_config['code_folder_full'];
+				if( file_exists($installFolder) ){
+					gpFiles::RmAll($installFolder);
+				}
+
+			}
 
 			$dataFolder = $addon_config['data_folder_full'];
 			if( file_exists($dataFolder) ){
@@ -163,9 +168,7 @@ class admin_addon_installer extends admin_addons_tool{
 			}
 		}
 
-		/*
-		 * Record the history
-		 */
+		//Record the history
 		$history['time'] = time();
 		$this->addonHistory[] = $history;
 		$this->SaveAddonData();
@@ -202,7 +205,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 		// upgrade/destination
 		if( $this->remote_install ){
-			$this->dest_name = admin_addons_tool::UpgradeDir($this->ini_contents,$this->addon_folder);
+			$this->dest_name = admin_addons_tool::UpgradePath($this->ini_contents,$this->config_index);
 			if( $this->dest_name ){
 				$this->dest = $this->addon_folder.'/'.$this->dest_name;
 			}else{

@@ -230,7 +230,11 @@ class gpPlugin{
 
 
 		$addon_config = $config['addons'][$addon_key];
-		$addon_config += array( 'version'=>false, 'id'=>false, 'data_folder'=>$addon_key, 'order'=>false, 'code_folder'=>'/data/_addoncode' );
+		if( !is_array($addon_config) ){
+			trigger_error('Corrupted configuration for addon: '.$addon_key); //.pre($config['addons']));
+			return false;
+		}
+		$addon_config += array( 'version'=>false, 'id'=>false, 'data_folder'=>$addon_key, 'order'=>false, 'code_folder_part'=>'/data/_addoncode/'.$addon_key );
 
 		//data folder
 		$addon_config['data_folder_part'] = '/data/_addondata/'.$addon_config['data_folder'];
@@ -239,9 +243,11 @@ class gpPlugin{
 
 
 		// Code folder
-		$addon_config['code_folder_part'] = $addon_config['code_folder'].'/'.$addon_key;
+		//$addon_config['code_folder_part'] = $addon_config['code_folder'].'/'.$addon_key;
 		$addon_config['code_folder_full'] = $dataDir.$addon_config['code_folder_part'];
 		$addon_config['code_folder_rel'] = common::GetDir($addon_config['code_folder_part']);
+
+		message(pre($addon_config));
 
 		return $addon_config;
 	}

@@ -1733,6 +1733,8 @@ class common{
 				'auto_redir' => 90,	//2.5
 				'resize_images' => true,	//3.5
 				'jquery' => 'local',
+				'addons' => array(),
+				'themes' => array(),
 				);
 
 		if( isset($GLOBALS['dirPrefix']) ){

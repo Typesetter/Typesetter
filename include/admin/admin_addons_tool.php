@@ -563,7 +563,7 @@ class admin_addons_tool{
 		//by name
 		if( isset($ini_info['Addon_Name']) ){
 			foreach($config[$config_key] as $addon_key => $data){
-				if( $data['name'] == $ini_info['Addon_Name'] ){
+				if( isset($data['name']) && $data['name'] == $ini_info['Addon_Name'] ){
 					return $addon_key;
 				}
 			}

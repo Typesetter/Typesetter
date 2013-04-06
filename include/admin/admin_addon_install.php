@@ -21,6 +21,7 @@ class admin_addon_install extends admin_addons_tool{
 	var $path_remote = 'Admin_Addons/Remote';
 	var $find_label;
 	var $code_folder_name = '_addoncode';
+	var $can_install_links = true;
 
 
 	/**
@@ -37,6 +38,9 @@ class admin_addon_install extends admin_addons_tool{
 		$installer->source = $dataDir.'/addons/'.$_REQUEST['source'];
 		$installer->mode = $_REQUEST['mode'];
 		$installer->Install();
+
+		global $config;
+		message(pre($config['addons']));
 
 		foreach($installer->messages as $msg){
 			message($msg);

@@ -39,6 +39,7 @@ class admin_addon_installer extends admin_addons_tool{
 	var $layouts_cache;
 	var $ini_contents;
 	var $ini_text = '';
+	var $upgrade_key = false;
 
 	var $messages = array();
 
@@ -204,10 +205,10 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 
 		// upgrade/destination
+		$this->config_key = admin_addons_tool::UpgradePath($this->ini_contents,$this->config_index);
 		if( $this->remote_install ){
-			$this->dest_name = admin_addons_tool::UpgradePath($this->ini_contents,$this->config_index);
-			if( $this->dest_name ){
-				$this->dest = $this->addon_folder.'/'.$this->dest_name;
+			if( $this->config_key ){
+				$this->dest = $this->addon_folder.'/'.$this->config_key;
 			}else{
 				$this->dest = $this->TempFile();
 			}
@@ -216,15 +217,23 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 		$this->dest_name = basename($this->dest);
 
+		if( !$this->config_key ){
+			$this->config_key = $this->dest_name;
+		}
 
-		//legacy data folder support
-		if( isset($this->config[$this->dest_name]['data_folder']) ){
-			$this->data_folder = $this->config[$this->dest_name]['data_folder'];
+
+		//the data folder will not always be the same as the addon folder
+		if( isset($this->config[$this->config_key]['data_folder']) ){
+			$this->data_folder = $this->config[$this->config_key]['data_folder'];
 		}else{
 			$this->data_folder = $this->dest_name;
 		}
 
 		$this->IniContents();
+
+		if( !$this->PrepConfig() ){
+			return false;
+		}
 
 		if( !$this->CheckFile() ){
 			return false;
@@ -286,6 +295,24 @@ class admin_addon_installer extends admin_addons_tool{
 		$this->addon_folder = $dataDir.$this->addon_folder_rel;
 
 		gpFiles::CheckDir($this->addon_folder);
+	}
+
+
+	/**
+	 * Prepare the configuration array for installation
+	 *
+	 */
+	function PrepConfig(){
+
+		//make sure we have an array
+		if( !isset($this->config[$this->config_key]) ){
+			$this->config[$this->config_key] = array();
+		}elseif( !is_array($this->config[$this->config_key]) ){
+			$this->message('$this->config[addon] is not an array');
+			return false;
+		}
+
+		return true;
 	}
 
 
@@ -439,7 +466,7 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 
 		//needs to be before other gadget functions
-		$installedGadgets = $this->GetInstalledComponents($config['gadgets'],$this->dest_name);
+		$installedGadgets = $this->GetInstalledComponents($config['gadgets'],$this->config_key);
 
 		$gadgets = $this->ExtractFromInstall($this->ini_contents,'Gadget:');
 		$gadgets = $this->CleanGadgets($gadgets);
@@ -488,7 +515,7 @@ class admin_addon_installer extends admin_addons_tool{
 			return true;
 		}
 
-		$this->new_layout['addon_key'] = $this->dest_name;
+		$this->new_layout['addon_key'] = $this->config_key;
 		if( isset($this->ini_contents['id']) && is_numeric($this->ini_contents['id']) ){
 			$this->new_layout['addon_id'] = $this->ini_contents['id']['id'];
 		}
@@ -542,19 +569,11 @@ class admin_addon_installer extends admin_addons_tool{
 		global $langmessage, $config;
 
 
-		//make sure we have an array
-		if( !isset($this->config[$this->dest_name]) ){
-			$this->config[$this->dest_name] = array();
-		}elseif( !is_array($this->config[$this->dest_name]) ){
-			$this->message('$this->config[addon] is not an array');
-			return false;
-		}
-
 		//code folder
 		//if( $this->code_folder_name !== '_addoncode' ){
-		//	$this->config[$this->dest_name]['code_folder'] = $this->code_folder_name;
+		//	$this->config[$this->config_key]['code_folder'] = $this->code_folder_name;
 		//}
-		$this->config[$this->dest_name]['code_folder'] = $this->addon_folder_rel;
+		$this->config[$this->config_key]['code_folder_part'] = $this->addon_folder_rel.'/'.$this->dest_name;
 
 
 
@@ -567,22 +586,22 @@ class admin_addon_installer extends admin_addons_tool{
 
 		//remote
 		/*
-		unset($this->config[$this->dest_name]['remote_install']);
+		unset($this->config[$this->config_key]['remote_install']);
 		if( $this->remote_install ){
-			$this->config[$this->dest_name]['remote_install'] = true;
+			$this->config[$this->config_key]['remote_install'] = true;
 		}
 		*/
-		$this->config[$this->dest_name]['remote_install'] = $this->remote_install;
+		$this->config[$this->config_key]['remote_install'] = $this->remote_install;
 
 
 		//proof of purchase
 		$order = false;
 		if( isset($this->ini_contents['Proof of Purchase']) && isset($this->ini_contents['Proof of Purchase']['order']) ){
 			$order = $this->ini_contents['Proof of Purchase']['order'];
-			$this->config[$this->dest_name]['order'] = $order;
+			$this->config[$this->config_key]['order'] = $order;
 		}else{
 			// don't delete any purchase id's
-			// unset($this->config[$this->dest_name]['order']);
+			// unset($this->config[$this->config_key]['order']);
 		}
 
 
@@ -614,10 +633,10 @@ class admin_addon_installer extends admin_addons_tool{
 
 		// History
 		$history = array();
-		$history['name'] = $this->config[$this->dest_name]['name'];
+		$history['name'] = $this->config[$this->config_key]['name'];
 		$history['action'] = 'installed';
-		if( isset($this->config[$this->dest_name]['id']) ){
-			$history['id'] = $this->config[$this->dest_name]['id'];
+		if( isset($this->config[$this->config_key]['id']) ){
+			$history['id'] = $this->config[$this->config_key]['id'];
 		}
 		$history['time'] = time();
 
@@ -936,9 +955,9 @@ class admin_addon_installer extends admin_addons_tool{
 	function UpdateConfigInfo($ini_var,$config_var){
 
 		if( isset($this->ini_contents[$ini_var]) ){
-			$this->config[$this->dest_name][$config_var] = $this->ini_contents[$ini_var];
-		}elseif( isset($this->config[$this->dest_name][$config_var]) ){
-			unset($this->config[$this->dest_name][$config_var]);
+			$this->config[$this->config_key][$config_var] = $this->ini_contents[$ini_var];
+		}elseif( isset($this->config[$this->config_key][$config_var]) ){
+			unset($this->config[$this->config_key][$config_var]);
 		}
 	}
 
@@ -961,7 +980,7 @@ class admin_addon_installer extends admin_addons_tool{
 				continue;
 			}
 
-			if( $linkInfo['addon'] !== $this->dest_name ){
+			if( $linkInfo['addon'] !== $this->config_key ){
 				continue;
 			}
 
@@ -994,9 +1013,9 @@ class admin_addon_installer extends admin_addons_tool{
 				$addlink = true;
 				$curr_info = $gp_titles[$index];
 
-				if( !isset($curr_info['addon']) || $this->dest_name === false ){
+				if( !isset($curr_info['addon']) || $this->config_key === false ){
 					$addlink = false;
-				}elseif( $curr_info['addon'] != $this->dest_name ){
+				}elseif( $curr_info['addon'] != $this->config_key ){
 					$addlink = false;
 				}
 
@@ -1051,7 +1070,7 @@ class admin_addon_installer extends admin_addons_tool{
 			}
 		}
 
-		$this->CleanHooks($this->dest_name,$installed);
+		$this->CleanHooks($this->config_key,$installed);
 	}
 
 	function AddHook($hook,$hook_args){
@@ -1059,7 +1078,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 		$add = array();
 		$this->UpdateLinkInfo($add,$hook_args);
-		$config['hooks'][$hook][$this->dest_name] = $add;
+		$config['hooks'][$hook][$this->config_key] = $add;
 
 		return true;
 	}
@@ -1110,9 +1129,9 @@ class admin_addon_installer extends admin_addons_tool{
 			if( isset($lower_add_to[$lower_key]) ){
 				$addlink = true;
 
-				if( !isset($lower_add_to[$lower_key]['addon']) || $this->dest_name === false ){
+				if( !isset($lower_add_to[$lower_key]['addon']) || $this->config_key === false ){
 					$addlink = false;
-				}elseif( $lower_add_to[$lower_key]['addon'] != $this->dest_name ){
+				}elseif( $lower_add_to[$lower_key]['addon'] != $this->config_key ){
 					$addlink = false;
 				}
 
@@ -1136,7 +1155,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 	function UpdateLinkInfo(&$link_array,$new_info){
 
-		$link_array['addon'] = $this->dest_name;
+		$link_array['addon'] = $this->config_key;
 
 		unset($link_array['script'], $link_array['data'], $link_array['class'], $link_array['method'], $link_array['value']);
 
@@ -1171,12 +1190,12 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 	/**
-	 * Purge Links from $purgeFrom that were once defined for $this->dest_name
+	 * Purge Links from $purgeFrom that were once defined for $this->config_key
 	 *
 	 */
 	function PurgeExisting(&$purgeFrom,$NewLinks){
 
-		if( $this->dest_name === false || !is_array($purgeFrom) ){
+		if( $this->config_key === false || !is_array($purgeFrom) ){
 			return;
 		}
 
@@ -1184,7 +1203,7 @@ class admin_addon_installer extends admin_addons_tool{
 			if( !isset($linkInfo['addon']) ){
 				continue;
 			}
-			if( $linkInfo['addon'] !== $this->dest_name ){
+			if( $linkInfo['addon'] !== $this->config_key ){
 				continue;
 			}
 
@@ -1309,7 +1328,7 @@ class admin_addon_installer extends admin_addons_tool{
 			}
 
 			//check against other gadgets
-			if( isset($config['gadgets'][$gadgetName]) && ($config['gadgets'][$gadgetName]['addon'] !== $this->dest_name) ){
+			if( isset($config['gadgets'][$gadgetName]) && ($config['gadgets'][$gadgetName]['addon'] !== $this->config_key) ){
 				$this->message( sprintf($langmessage['addon_key_defined'],' <em>Gadget: '.$gadgetName.'</em>') );
 				continue;
 			}

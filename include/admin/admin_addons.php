@@ -526,6 +526,10 @@ class admin_addons extends admin_addon_install{
 	}
 
 
+	/**
+	 * Show installed and locally available plugins
+	 *
+	 */
 	function Select(){
 		global $langmessage,$config;
 		$instructions = true;
@@ -601,6 +605,11 @@ class admin_addons extends admin_addon_install{
 
 	}
 
+
+	/**
+	 * Show installed addons
+	 *
+	 */
 	function ShowInstalled(&$available){
 		global $langmessage,$config,$dataDir;
 
@@ -650,6 +659,9 @@ class admin_addons extends admin_addon_install{
 			$addon_config = gpPlugin::GetAddonConfig($folder);
 			$installFolder = $addon_config['code_folder_full'];
 
+			if( isset($addon_config['is_theme']) && $addon_config['is_theme'] ){
+				continue;
+			}
 
 			echo '<tr class="'.($i % 2 ? 'even' : '').'">';
 			$i++;

@@ -238,11 +238,6 @@ class admin_addon_installer extends admin_addons_tool{
 			return false;
 		}
 
-		//copy
-		if( !$this->Copy() ){
-			return false;
-		}
-
 		//hooks
 		if( !$this->Hooks() ){
 			return false;
@@ -377,36 +372,6 @@ class admin_addon_installer extends admin_addons_tool{
 					);
 
 		$this->ini_contents = gp_ini::ParseString($this->ini_text,$variables);
-	}
-
-
-
-	/**
-	 * Copy the addon files to a temporary folder in the same directory as the destination
-	 *
-	 */
-	function Copy(){
-		global $langmessage;
-
-		if( $this->dest == $this->source ){
-			return true;
-		}
-
-		if( isset($this->temp_source) ){
-			return true;
-		}
-
-		$this->temp_source = $this->TempFile();
-
-		$result = self::CopyAddonDir($this->source,$this->temp_source);
-		if( $result !== true ){
-			$this->message( $result );
-			return false;
-		}
-
-		//$this->message( $langmessage['copied_addon_files'] );
-
-		return true;
 	}
 
 
@@ -814,7 +779,7 @@ class admin_addon_installer extends admin_addons_tool{
 			return false;
 		}
 
-		$this->source = $this->temp_source = $this->TempFile(); //doesn't need to be copied again by $this->Copy()
+		$this->source = $this->temp_source = $this->TempFile();
 
 		$success = $this->ExtractArchive($this->temp_source,$tempfile);
 

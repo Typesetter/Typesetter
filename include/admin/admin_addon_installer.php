@@ -570,12 +570,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 		//code folder
-		//if( $this->code_folder_name !== '_addoncode' ){
-		//	$this->config[$this->config_key]['code_folder'] = $this->code_folder_name;
-		//}
 		$this->config[$this->config_key]['code_folder_part'] = $this->addon_folder_rel.'/'.$this->dest_name;
-
-
 
 
 		//general configuration
@@ -585,13 +580,10 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 		//remote
-		/*
 		unset($this->config[$this->config_key]['remote_install']);
 		if( $this->remote_install ){
 			$this->config[$this->config_key]['remote_install'] = true;
 		}
-		*/
-		$this->config[$this->config_key]['remote_install'] = $this->remote_install;
 
 
 		//proof of purchase

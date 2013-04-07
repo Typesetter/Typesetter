@@ -247,8 +247,6 @@ class gpPlugin{
 		$addon_config['code_folder_full'] = $dataDir.$addon_config['code_folder_part'];
 		$addon_config['code_folder_rel'] = common::GetDir($addon_config['code_folder_part']);
 
-		message(pre($addon_config));
-
 		return $addon_config;
 	}
 

@@ -1284,6 +1284,8 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 
 
+		/*
+		$clean_folders = '_addoncode';
 		$folders = gpFiles::readDir($this->addon_folder,1);
 
 		foreach($folders as $folder){
@@ -1304,6 +1306,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 			gpFiles::RmAll($full_path);
 		}
+		*/
 	}
 
 

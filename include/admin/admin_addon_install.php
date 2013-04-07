@@ -29,9 +29,31 @@ class admin_addon_install extends admin_addons_tool{
 	 * Remote Install Functions
 	 *
 	 */
-	function RemoteInstall($cmd){
+	function RemoteInstall(){
+		global $langmessage, $page;
+
+		echo '<h2>'.$langmessage['Installation'].'</h2>';
+
+		$name = '<em>'.htmlspecialchars($_REQUEST['name']).'</em>';
+		echo '<p class="gp_notice">'.$langmessage['Addon_Install_Warning'].'</p>';
+		echo '<p>'.sprintf($langmessage['Selected_Install'],$name,'gpEasy.com').'</p>';
 
 		$_REQUEST += array('order'=>'');
+
+		echo '<form action="'.common::GetUrl($page->requested).'" method="post">';
+		echo '<input type="hidden" name="cmd" value="remote_install_confirmed" />';
+		echo '<input type="hidden" name="type" value="'.htmlspecialchars($_REQUEST['type']).'" />';
+		echo '<input type="hidden" name="id" value="'.htmlspecialchars($_REQUEST['id']).'" />';
+		echo '<input type="hidden" name="order" value="'.htmlspecialchars($_REQUEST['order']).'" />';
+		echo '<input type="hidden" name="name" value="'.htmlspecialchars($_REQUEST['name']).'" />';
+
+		echo '<input type="submit" value="'.$langmessage['continue'].'" class="gpsubmit">';
+		echo '</form>';
+	}
+
+	function RemoteInstallConfirmed(){
+
+		$_POST += array('order'=>'');
 
 		includeFile('admin/admin_addon_installer.php');
 
@@ -41,7 +63,7 @@ class admin_addon_install extends admin_addons_tool{
 		$installer->config_index = $this->config_index;
 		$installer->can_install_links = $this->can_install_links;
 
-		$installer->InstallRemote( $_REQUEST['type'], $_REQUEST['id'], $_REQUEST['order'] );
+		$installer->InstallRemote( $_POST['type'], $_POST['id'], $_POST['order'] );
 		foreach($installer->messages as $msg){
 			message($msg);
 		}

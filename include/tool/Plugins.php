@@ -221,6 +221,11 @@ class gpPlugin{
 		$addonRelativeData					= self::$current['data_folder_rel'];
 	}
 
+
+	/**
+	 * Return settings of addon defined by $addon_key
+	 *
+	 */
 	static function GetAddonConfig($addon_key){
 		global $config, $dataDir;
 

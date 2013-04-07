@@ -13,7 +13,9 @@ class admin_addon_installer extends admin_addons_tool{
 	var $can_install_links = true;
 	var $config_index = 'addons';
 	var $code_folder_name = '_addoncode';
+
 	var $new_layout = array();
+	var $default_layout = false;
 
 
 	//remote install
@@ -443,6 +445,11 @@ class admin_addon_installer extends admin_addons_tool{
 		$temp = $this->TempFile();
 		$layout_id = basename($temp);
 		$gpLayouts[$layout_id] = $this->new_layout;
+
+		if( $this->default_layout ){
+			$config['gpLayout'] = $layout_id;
+		}
+
 
 		return true;
 	}

@@ -1140,21 +1140,21 @@ class admin_theme_content extends admin_addon_install{
 		$installer->code_folder_name = '_themes';
 		$installer->source = $theme_info['full_dir'];
 		$installer->new_layout = $new_layout;
+		if( !empty($_POST['default']) && $_POST['default'] != 'false' ){
+			$installer->default_layout = true;
+		}
 
-		$installer->Install();
+		$success = $installer->Install();
 
 		foreach($installer->messages as $msg){
 			message($msg);
 		}
 
-		/*
-		if( !empty($_POST['default']) && $_POST['default'] != 'false' ){
-			$config['gpLayout'] = $layout_id;
-			admin_tools::SaveConfig();
+		if( $success && $installer->default_layout ){
 			$page->SetTheme();
 			$this->SetLayoutArray();
 		}
-		*/
+
 	}
 
 

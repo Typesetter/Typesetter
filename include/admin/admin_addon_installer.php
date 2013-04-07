@@ -32,7 +32,6 @@ class admin_addon_installer extends admin_addons_tool{
 	var $addon_folder_rel;
 	var $dest = '';
 	var $dest_name;
-	var $temp_source;
 	var $trash_path;
 	var $config_cache;
 	var $layouts_cache;
@@ -455,11 +454,7 @@ class admin_addon_installer extends admin_addons_tool{
 	 */
 	function FinalizeFolder(){
 
-		if( $this->dest == $this->source ){
-			return true;
-		}
-
-		if( !isset($this->temp_source) ){
+		if( !$this->remote_install ){
 			return true;
 		}
 
@@ -472,7 +467,7 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 
 		//rename temp folder
-		if( rename($this->temp_source,$this->dest) ){
+		if( rename($this->source,$this->dest) ){
 			return true;
 		}
 
@@ -779,9 +774,9 @@ class admin_addon_installer extends admin_addons_tool{
 			return false;
 		}
 
-		$this->source = $this->temp_source = $this->TempFile();
+		$this->source = $this->TempFile();
 
-		$success = $this->ExtractArchive($this->temp_source,$tempfile);
+		$success = $this->ExtractArchive($this->source,$tempfile);
 
 		unlink($tempfile);
 
@@ -1277,11 +1272,11 @@ class admin_addon_installer extends admin_addons_tool{
 	function CleanInstallFolder(){
 
 		if( !$this->remote_install ){
-			return true;
+			return;
 		}
 
-		if( $this->dest != $this->temp_source && file_exists($this->temp_source) ){
-			gpFiles::RmAll($this->temp_source);
+		if( file_exists($this->source) ){
+			gpFiles::RmAll($this->source);
 		}
 
 		if( file_exists($this->trash_path) ){

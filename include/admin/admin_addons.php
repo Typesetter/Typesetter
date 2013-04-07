@@ -671,4 +671,24 @@ class admin_addons extends admin_addon_install{
 
 		return true;
 	}
+
+
+	/**
+	 * Install Local Packages
+	 *
+	 */
+	function LocalInstall(){
+		global $dataDir;
+
+		$_REQUEST += array('source'=>'','mode'=>'');
+
+		includeFile('admin/admin_addon_installer.php');
+		$installer = new admin_addon_installer();
+		$installer->source = $dataDir.'/addons/'.$_REQUEST['source'];
+		$installer->Install();
+
+		foreach($installer->messages as $msg){
+			message($msg);
+		}
+	}
 }

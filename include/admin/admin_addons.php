@@ -124,19 +124,57 @@ class admin_addons extends admin_addon_install{
 		}
 	}
 
+	/**
+	 * Remove unused code folders created by incomplete addon installations
+	 *
+	 */
 	function CleanAddonFolder(){
-		global $config, $dataDir;
+		global $config;
 
 
 		//get a list of all folders
-		$folder = $dataDir.'/data/_addoncode';
-		$files = scandir($folder);
-		$addon_folders = array();
+		$folder = '/data/_addoncode';
+		$code_folders = $this->GetCleanFolders($folder);
+		$folder = '/data/_addondata';
+		$data_folders = $this->GetCleanFolders($folder);
+
+		//check against folders used by addons
+		$addons = $config['addons'];
+		foreach($addons as $addon_key => $info){
+			$addon_config = gpPlugin::GetAddonConfig($addon_key);
+			if( array_key_exists($addon_config['code_folder_part'],$code_folders) ){
+				$code_folders[$addon_config['code_folder_part']] = false;
+			}
+			if( array_key_exists($addon_config['data_folder_part'],$data_folders) ){
+				$data_folders[$addon_config['data_folder_part']] = false;
+			}
+		}
+
+		//remove unused folders
+		$folders = array_filter($code_folders) + array_filter($data_folders);
+		foreach($folders as $folder => $full_path){
+			gpFiles::RmAll($full_path);
+		}
+
+	}
+
+
+	/**
+	 * Get a list of folders within $dir that
+	 *
+	 */
+	function GetCleanFolders($relative){
+		global $dataDir;
+
+		$dir = $dataDir.$relative;
+
+		$files = scandir($dir);
+		$folders = array();
 		foreach($files as $file){
 			if( $file == '.' || $file == '..' ){
 				continue;
 			}
-			$full_path = $folder.'/'.$file;
+			$full_path = $dir.'/'.$file;
 			if( !is_dir($full_path) ){
 				continue;
 			}
@@ -145,24 +183,9 @@ class admin_addons extends admin_addon_install{
 			if( $diff < 3600 ){
 				continue;
 			}
-			$addon_folders['/data/_addoncode/'.$file] = $full_path;
+			$folders[$relative.'/'.$file] = $full_path;
 		}
-
-		//check against folders used by addons
-		$addons = $config['addons'];
-		foreach($addons as $addon_key => $info){
-			$addon_config = gpPlugin::GetAddonConfig($addon_key);
-			if( array_key_exists($addon_config['code_folder_part'],$addon_folders) ){
-				$addon_folders[$addon_config['code_folder_part']] = false;
-				continue;
-			}
-		}
-
-		$addon_folders = array_filter($addon_folders);
-
-		foreach($addon_folders as $folder => $full_path){
-			gpFiles::RmAll($full_path);
-		}
+		return $folders;
 	}
 
 

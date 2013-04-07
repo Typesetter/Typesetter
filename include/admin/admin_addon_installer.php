@@ -1289,31 +1289,6 @@ class admin_addon_installer extends admin_addons_tool{
 		if( file_exists($this->trash_path) ){
 			gpFiles::RmAll($this->trash_path);
 		}
-
-
-		/*
-		$clean_folders = '_addoncode';
-		$folders = gpFiles::readDir($this->addon_folder,1);
-
-		foreach($folders as $folder){
-			if( array_key_exists($folder, $this->config) ){
-				continue;
-			}
-			$full_path = $this->addon_folder.'/'.$folder;
-			if( is_link($full_path) ){
-				$stat = lstat($full_path);
-				$mtime = $stat['mtime'];
-			}else{
-				$mtime = filemtime($full_path);
-			}
-			$diff = time() - $mtime;
-			if( $diff < 3600 ){
-				continue;
-			}
-
-			gpFiles::RmAll($full_path);
-		}
-		*/
 	}
 
 

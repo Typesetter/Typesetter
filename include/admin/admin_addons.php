@@ -38,7 +38,6 @@ class admin_addons extends admin_addon_install{
 	function admin_addons(){
 		global $langmessage,$config,$page;
 
-
 		$this->find_label = $langmessage['Find Plugins'];
 		$this->manage_label = $langmessage['Manage Plugins'];
 
@@ -120,7 +119,49 @@ class admin_addons extends admin_addon_install{
 
 			default:
 				$this->Select();
+				$this->CleanAddonFolder();
 			break;
+		}
+	}
+
+	function CleanAddonFolder(){
+		global $config, $dataDir;
+
+
+		//get a list of all folders
+		$folder = $dataDir.'/data/_addoncode';
+		$files = scandir($folder);
+		$addon_folders = array();
+		foreach($files as $file){
+			if( $file == '.' || $file == '..' ){
+				continue;
+			}
+			$full_path = $folder.'/'.$file;
+			if( !is_dir($full_path) ){
+				continue;
+			}
+			$mtime = filemtime($full_path);
+			$diff = time() - $mtime;
+			if( $diff < 3600 ){
+				continue;
+			}
+			$addon_folders['/data/_addoncode/'.$file] = $full_path;
+		}
+
+		//check against folders used by addons
+		$addons = $config['addons'];
+		foreach($addons as $addon_key => $info){
+			$addon_config = gpPlugin::GetAddonConfig($addon_key);
+			if( array_key_exists($addon_config['code_folder_part'],$addon_folders) ){
+				$addon_folders[$addon_config['code_folder_part']] = false;
+				continue;
+			}
+		}
+
+		$addon_folders = array_filter($addon_folders);
+
+		foreach($addon_folders as $folder => $full_path){
+			gpFiles::RmAll($full_path);
 		}
 	}
 

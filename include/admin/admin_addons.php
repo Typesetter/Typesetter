@@ -78,10 +78,6 @@ class admin_addons extends admin_addon_install{
 				new addon_package();
 			break;
 
-			case 'develop':
-				$this->Develop();
-			break;
-
 			case 'local_install':
 				$this->LocalInstall();
 				$this->Select();
@@ -521,10 +517,6 @@ class admin_addons extends admin_addon_install{
 				echo '</td>';
 				echo '<td>';
 				echo common::Link('Admin_Addons',$langmessage['Install'],'cmd=local_install&source='.$folder,'data-cmd="creq"');
-				echo ' &nbsp; ';
-				if( common::function_exists('symlink') ){
-					echo common::Link('Admin_Addons',$langmessage['develop'],'cmd=develop&source='.$folder,'data-cmd="creq"');
-				}
 				echo '</td>';
 
 				echo '</tr>';

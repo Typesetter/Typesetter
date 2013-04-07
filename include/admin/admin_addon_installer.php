@@ -13,7 +13,6 @@ class admin_addon_installer extends admin_addons_tool{
 	var $can_install_links = true;
 	var $config_index = 'addons';
 	var $code_folder_name = '_addoncode';
-	var $mode = ''; //'copy', 'dev' or 'source'
 	var $new_layout = array();
 
 
@@ -397,14 +396,6 @@ class admin_addon_installer extends admin_addons_tool{
 			return true;
 		}
 
-		switch($this->mode){
-			case 'dev':
-			return $this->CopyDev();
-
-			case 'source':
-			return $this->CopySource();
-		}
-
 		$this->temp_source = $this->TempFile();
 
 		$result = self::CopyAddonDir($this->source,$this->temp_source);
@@ -415,41 +406,6 @@ class admin_addon_installer extends admin_addons_tool{
 
 		//$this->message( $langmessage['copied_addon_files'] );
 
-		return true;
-	}
-
-
-	/**
-	 * Copy code for dev mode
-	 *
-	 */
-	function CopyDev(){
-		global $langmessage;
-
-		if( file_exists($this->dest) ){
-
-			if( is_link($this->dest) ){
-				return true;
-			}
-
-			$this->message($langmessage['OOPS'].' (Destination already exists)');
-			return false;
-		}
-
-		if( !symlink($this->source,$this->dest) ){
-			$this->message($langmessage['OOPS']);
-			return false;
-		}
-
-		return true;
-	}
-
-
-	/**
-	 * Copy
-	 *
-	 */
-	function CopySource(){
 		return true;
 	}
 

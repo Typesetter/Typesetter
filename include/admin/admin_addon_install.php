@@ -36,57 +36,12 @@ class admin_addon_install extends admin_addons_tool{
 		includeFile('admin/admin_addon_installer.php');
 		$installer = new admin_addon_installer();
 		$installer->source = $dataDir.'/addons/'.$_REQUEST['source'];
-		$installer->mode = $_REQUEST['mode'];
 		$installer->Install();
-
-		global $config;
-		message(pre($config['addons']));
 
 		foreach($installer->messages as $msg){
 			message($msg);
 		}
 	}
-
-
-	/**
-	 * Display prompt to confirm an installation in developer mode
-	 *
-	 */
-	function Develop(){
-		global $langmessage;
-
-		$source =& $_REQUEST['source'];
-
-		echo '<h2>';
-		echo $langmessage['Install'];
-		echo '</h2>';
-
-		echo '<p>You have chosen to install an addon in developer mode.</p>';
-		echo '<p>';
-		echo ' Instead of copying the source folder, a developer installation will access the code in the source folder directly (via a symbolic link). ';
-		echo ' This will allow you to test changes to your addon code without having to repeatedly re-install. ';
-		//echo ' Compared to a normal installation, a developer installation will allow you to test changes to your addon code without having to repeatedly re-install. ';
-		echo ' </p>';
-
-		echo '<p>';
-		echo ' If you aren\'t actively developing this addon, a normal installation is recommended which can help insulate the active code from changes that will periodically occur. ';
-		//echo 'If you don\'t plan on making changes to the source code, a normal installation can help insulate the active code, notably during future upgrades and backups. ';
-		echo '</p>';
-
-		echo '<p>';
-		echo '<form action="'.common::GetUrl($this->path_root).'" method="post">';
-		echo '<input type="hidden" name="cmd" value="local_install" />';
-		echo '<input type="hidden" name="source" value="'.htmlspecialchars($source).'" />';
-		echo '<button type="submit" name="mode" value="dev" class="gpsubmit" >Continue with Developer Installation ...</button>';
-		echo ' &nbsp; ';
-		echo '<button type="submit" name="mode" value="" class="gpsubmit">Install Normally ...</button>';
-		echo '</form>';
-		echo '</p>';
-
-		echo '<p>Take a look at the <a href="http://docs.gpeasy.com">gpEasy Documentation</a> for  more information about <a href="http://docs.gpeasy.com/Main/Plugins">plugin development</a></p>';
-	}
-
-
 
 
 	/**

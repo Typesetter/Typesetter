@@ -270,6 +270,11 @@ class admin_tools{
 	static function AdminPanelLinks($in_panel=true,$new_versions=array()){
 		global $langmessage, $page, $gpAdmin, $config;
 
+		$expand_class = 'expand_child';
+		if( !$in_panel ){
+			$expand_class = 'expand_child_click';
+		}
+
 
 		//current page
 		if( $in_panel && !isset($GLOBALS['GP_ARRANGE_CONTENT']) ){
@@ -302,7 +307,7 @@ class admin_tools{
 				echo '</li>';
 			}
 
-			echo '<li class="expand_child"><a>'.$langmessage['Editable Areas'].'</a>';
+			echo '<li class="'.$expand_class.'"><a>'.$langmessage['Editable Areas'].'</a>';
 			echo '<ul class="in_window" id="editable_areas_list">';
 			echo '<li><a>empty</a></li>';
 			echo '</ul>';
@@ -494,10 +499,15 @@ class admin_tools{
 	 *
 	 */
 	static function GetFrequentlyUsed($in_panel){
-		global $langmessage,$gpAdmin;
+		global $langmessage, $gpAdmin;
+
+		$expand_class = 'expand_child';
+		if( !$in_panel ){
+			$expand_class = 'expand_child_click';
+		}
 
 		//frequently used
-		echo '<li class="expand_child">';
+		echo '<li class="'.$expand_class.'">';
 			echo '<a>';
 			echo $langmessage['frequently_used'];
 			echo '</a>';
@@ -1038,6 +1048,11 @@ class admin_tools{
 	static function GetAddonLinks($in_panel){
 		global $langmessage, $config;
 
+		$expand_class = 'expand_child';
+		if( !$in_panel ){
+			$expand_class = 'expand_child_click';
+		}
+
 		ob_start();
 
 		$addon_permissions = admin_tools::HasPermission('Admin_Addons');
@@ -1069,7 +1084,7 @@ class admin_tools{
 				$sublinks = admin_tools::GetAddonSubLinks($addon);
 
 				if( !empty($sublinks) ){
-					echo '<li class="expand_child">';
+					echo '<li class="'.$expand_class.'">';
 					if( $in_panel ){
 						$sublinks = '<ul class="in_window">'.$sublinks.'</ul>';
 					}else{

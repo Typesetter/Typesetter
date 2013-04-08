@@ -185,8 +185,7 @@ class admin_display extends display{
 	 *
 	 */
 	function AdminPanel(){
-		global $langmessage;
-
+		global $langmessage, $page;
 
 		$cmd = common::GetCommand();
 		switch($cmd){
@@ -195,6 +194,7 @@ class admin_display extends display{
 			return;
 		}
 
+		$page->head_js[] = '/include/js/auto_width.js';
 
 		echo '<div id="adminlinks2" class="cf">';
 		admin_tools::AdminPanelLinks(false);

@@ -571,18 +571,21 @@ table.tablesorter th.gp_header_desc:before{
 
 /* New Expandable Menu Control */
 
-.expand_child{
+.expand_child,
+.expand_child_click{
 	position:relative;
 }
 
-.expand_child ul{
+.expand_child ul,
+.expand_child_click ul{
 	position:absolute;
 	display:none;
 	}
 .expand ul{
 	display:block;
 	}
-.expand .expand_child ul{
+.expand .expand_child ul,
+.expand .expand_child_click ul{
 	display:none;
 	}
 .expand .expand ul{
@@ -1058,15 +1061,17 @@ color:#2d2d2d!important;
 #adminlinks2{
 	position:relative;
 	z-index:10;
+	margin-right:-20px;
 	}
+
 #adminlinks2 .panelgroup{
 	display:inline-block;
 	vertical-align:top;
-	margin:10px;
+	margin:10px 20px 10px 0;
 	border:1px solid #ddd;
 	padding:0;
 	width:270px;
-	min-height:250px;
+	min-height:300px;
 	border-radius:4px;
 	background:#f7f7f7;
 	background: -moz-linear-gradient(top, #F9F9F9, #F5F5F5);
@@ -1088,12 +1093,17 @@ color:#2d2d2d!important;
     box-shadow: 0 1px 0 #FFFFFF;
 	}
 
+#adminlinks2 > div > span > a,
 #adminlinks2 > div > span > span{
-	padding:7px 0 3px 30px;
+	padding:7px 0 3px 13px;
 	display:block;
 	text-shadow: 0 1px 0 #fff;
 	font-size:15px;
 	vertical-align:middle;
+	color:#333 !important;
+	}
+#adminlinks2 > div > span > span{
+	padding-left:30px;
 	}
 
 #adminlinks2 ul,
@@ -1104,22 +1114,24 @@ color:#2d2d2d!important;
 	}
 
 #adminlinks2 ul{
-	padding:10px 0 5px 0;
+	padding:4px;
 	}
 
 #adminlinks2 li{
 	position:relative;
-	border-top:1px solid transparent;
-	border-bottom:1px solid transparent;
+	border:1px solid transparent;
+	border-radius:3px;
+	margin-bottom:4px;
 	}
 
 #adminlinks2 li a{
 	font-size:13px;
-	padding:4px 20px;
+	padding:4px 12px;
 	display:block;
 	white-space:nowrap;
 	min-width:170px;
 	color:#333 !important;
+	outline:0 none;
 	}
 
 #adminlinks2 li.submenu_top{
@@ -1130,42 +1142,44 @@ color:#2d2d2d!important;
 	border-bottom:1px dotted #ccc;
 	}
 
-#adminlinks2 li.expand_child > a:before{
+#adminlinks2 li.expand_child_click > a:before{
 	font-size:10px;
 	vertical-align:top;
 	color:#888;
 	content:"\25B6";
 	padding-right:5px;
 	}
+#adminlinks2 li.expand > a:before{
+	content:"\25BC";
+	}
 
+#adminlinks2 li.expand,
 #adminlinks2 li:hover{
 	background-color:#fff;
-	border-top:1px solid #ddd;
-	border-bottom:1px solid #ddd;
+	border:1px solid #ddd;
 	}
 
-#adminlinks2 li.expand_child ul{
-	position:absolute;
-	left:70px;
-	top:100%;
-	right:-1px;
-	padding:5px 0;
-	border-left:1px solid #ddd;
-	border-bottom:1px solid #ddd;
-	border-right:1px solid #ddd;
-	border-radius:0 0 5px 5px;
+#adminlinks2 li.expand_child_click ul{
+	position:relative;
+	padding: 0 0 3px 0;
+	margin: 0 0 2px 0;
 	background:#fff;
 	z-index:11;
-	max-height:200px;
+	max-height:120px;
 	overflow:auto;
 	}
-#adminlinks2 li.expand_child li{
+#adminlinks2 li.expand_child_click li{
 	overflow:hidden;
 	text-overflow:ellipsis;
+	border:0 none;
+	border-radius:0;
 	width:100%;
+	margin:0;
 	}
-
-#adminlinks2 li.expand_child li:hover{
+#adminlinks2 li.expand_child_click li a{
+	padding:3px 25px;
+	}
+#adminlinks2 li.expand_child_click li:hover{
 	background:#f7f7f7;
 	}
 

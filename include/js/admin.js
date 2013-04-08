@@ -1282,42 +1282,58 @@ function SimpleResize(resize_area,options){
 
 	$('<span class="gp_admin_resize"></span><span class="gp_admin_resize gp_resize_right"></span>')
 		.appendTo($resize_area)
-		.bind('mousedown.sres',function(evt){
+		.on('mousedown.sres',function(evt){
 
 			var start_x = evt.clientX;
 			var new_w = $resize_area.width(), start_w = new_w;
 			var new_l = $resize_area.position().left, start_l = new_l;
-			var $this = $(this);
+			var left_right = $(this).hasClass('gp_resize_right');
+			var time = new Date();
+
+			//$('body').disableSelection();
 
 			evt.preventDefault();
 
-			$(document).bind('mousemove.sres',function(evt){
-				$('body').disableSelection();
-				evt.preventDefault();
-				//evt.stopPropagation();
-				//evt.stopImmediatePropagation();
+			//$(document)
+			$('<div style="position:fixed;top:0;right:0;bottom:0;left:0;cursor:e-resize;z-index:999000;">')
+				.appendTo('body')
+				.on('mousemove.sres',function(evt){
 
-				if( $this.hasClass('gp_resize_right') ){
+				//evt.preventDefault();
+
+				//reduce the number of calls
+				var new_time = new Date();
+				var diff = new_time - time;
+				if( diff < 200 ){
+					return;
+				}
+				time = new_time;
+
+
+				if( left_right ){
 					new_w = evt.clientX - start_x + start_w;
 				}else{
 					new_l = evt.clientX - start_x + start_l;
 					new_w = start_x - evt.clientX + start_w;
+
+					new_l = Math.max(0,new_l);
+					$resize_area.css({left:new_l});
 				}
 
 				new_w = Math.min(options.max_w,new_w);
 				new_w = Math.max(options.min_w,new_w);
-				$resize_area.width(new_w);
-
-				new_l = Math.max(0,new_l);
-				$resize_area.css({left:new_l});
+				$resize_area
+					.width(new_w)
+					.resize();
 
 				return false;
 
-			}).unbind('mouseup.sres').bind('mouseup.sres',function(evt){
+			}).off('mouseup.sres').on('mouseup.sres',function(evt){
 
 				evt.preventDefault();
-				$('body').enableSelection();
-				$(document).unbind('mousemove.sres mouseup.sres');
+				//$('body').enableSelection();
+				//$(document).off('mousemove.sres mouseup.sres');
+				$(this).off('mousemove.sres mouseup.sres').remove()
 
 				options.finish.call($resize_area,new_w,new_l);
 

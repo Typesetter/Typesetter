@@ -133,6 +133,8 @@ class gpsession{
 	 */
 	static function GetLoginUser($users){
 
+		$_POST += array('user_sha'=>'','username'=>'','login_nonce'=>'');
+
 		if( gp_require_encrypt && empty($_POST['user_sha']) ){
 			return false;
 		}

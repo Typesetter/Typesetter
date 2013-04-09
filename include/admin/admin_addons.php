@@ -32,7 +32,6 @@ includeFile('admin/admin_addon_install.php'); // admin_addon_install extends adm
 class admin_addons extends admin_addon_install{
 
 	var $dataFile;
-	var $develop = false;
 
 
 	function admin_addons(){
@@ -650,7 +649,6 @@ class admin_addons extends admin_addon_install{
 		foreach($show as $addon_key => $info){
 
 			$addonName = $info['name'];
-			$developerInstall = false;
 			$addon_config = gpPlugin::GetAddonConfig($addon_key);
 			$installFolder = $addon_config['code_folder_full'];
 

@@ -196,6 +196,8 @@ class admin_display extends display{
 
 		$page->head_js[] = '/include/js/auto_width.js';
 
+		echo '<h2>'.$langmessage['administration'].'</h2>';
+
 		echo '<div id="adminlinks2" class="cf">';
 		admin_tools::AdminPanelLinks(false);
 

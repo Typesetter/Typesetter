@@ -739,7 +739,8 @@ table.tablesorter th.gp_header_desc:before{
 	background:url('../imgs/admin_icons.png') no-repeat 0 -65px;
 	}
 #simplepanel .icon_plug,
-#adminlinks2 .icon_plug span{
+#adminlinks2 .icon_plug span,
+#adminlinks2 .icon_plug a{
 	background:url('../imgs/admin_icons.png') no-repeat 0 -97px;
 	}
 #simplepanel .icon_cog,
@@ -1078,6 +1079,10 @@ color:#2d2d2d!important;
 	background: -webkit-linear-gradient(top, #F9F9F9, #F5F5F5);
 	background: linear-gradient(top, #F9F9F9, #F5F5F5);
 	}
+#adminlinks2 .panelgroup2{
+	padding:4px;
+	}
+
 
 #adminlinks2 > div > span{
 	padding:0 5px;
@@ -1095,15 +1100,12 @@ color:#2d2d2d!important;
 
 #adminlinks2 > div > span > a,
 #adminlinks2 > div > span > span{
-	padding:7px 0 3px 13px;
+	padding:7px 0 3px 30px;
 	display:block;
 	text-shadow: 0 1px 0 #fff;
 	font-size:15px;
 	vertical-align:middle;
 	color:#333 !important;
-	}
-#adminlinks2 > div > span > span{
-	padding-left:30px;
 	}
 
 #adminlinks2 ul,
@@ -1111,10 +1113,6 @@ color:#2d2d2d!important;
 	list-style:none;
 	padding:0;
 	margin:0;
-	}
-
-#adminlinks2 ul{
-	padding:4px;
 	}
 
 #adminlinks2 li{

@@ -103,6 +103,9 @@ class admin_addons extends admin_addon_install{
 
 			case 'enable':
 			case 'disable':
+				$this->GadgetVisibility($cmd);
+			return;
+
 			case 'show':
 				$this->ShowAddon();
 			break;
@@ -193,13 +196,14 @@ class admin_addons extends admin_addon_install{
 
 
 
-	function GadgetVisibility($addon,$cmd){
-		global $config,$langmessage;
+	function GadgetVisibility($cmd){
+		global $config, $langmessage, $page;
 
+		$page->ajaxReplace = array();
 		$gadget = $_GET['gadget'];
 
 		if( !isset($config['gadgets']) || !is_array($config['gadgets']) || !isset($config['gadgets'][$gadget]) ){
-			message($langmessage['OOPS']);
+			message($langmessage['OOPS'].' (Invalid Gadget)');
 			return;
 		}
 
@@ -212,11 +216,31 @@ class admin_addons extends admin_addon_install{
 			case 'disable':
 				$gadgetInfo['disabled']	= true;
 			break;
+
 		}
 
 		if( !admin_tools::SaveConfig() ){
-			message($langmessage['OOPS']);
+			message($langmessage['OOPS'].' (Not Saved)');
+			return;
 		}
+
+		$link = $this->GadgetLink($gadget);
+		$page->ajaxReplace[] = array('replace','.gadget_link_'.$gadget,$link);
+	}
+
+	function GadgetLink($name){
+		global $config, $langmessage;
+		$info =& $config['gadgets'][$name];
+		if( !$info ){
+			return '';
+		}
+
+		if( isset($info['disabled']) ){
+			return common::Link('Admin_Addons',str_replace('_',' ',$name).' ('.$langmessage['disabled'].')','cmd=enable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.$name.'"');
+		}else{
+			return common::Link('Admin_Addons',str_replace('_',' ',$name) .' ('.$langmessage['enabled'].')','cmd=disable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.$name.'"');
+		}
+
 	}
 
 
@@ -309,14 +333,6 @@ class admin_addons extends admin_addon_install{
 			return;
 		}
 
-		$cmd = common::GetCommand();
-		switch( $cmd ){
-			case 'enable':
-			case 'disable':
-				$this->GadgetVisibility($addon,$cmd);
-			break;
-		}
-
 		$this->FindForm();
 
 		echo '<h2 class="hmargin">';
@@ -375,17 +391,9 @@ class admin_addons extends admin_addon_install{
 
 				foreach($gadgets as $name => $value){
 					echo '<tr><td>';
-					echo str_replace('_',' ',$name);
+					echo $this->GadgetLink($name);
 					echo '</td><td>';
-					if( isset($value['disabled']) ){
-						echo common::Link('Admin_Addons',$langmessage['enable'],'cmd=enable&addon='.rawurlencode($addon).'&gadget='.rawurlencode($name),'data-cmd="creq"');
-						echo ' - ';
-						echo '<b>'.$langmessage['disabled'].'</b>';
-					}else{
-						echo ' <b>'.$langmessage['enabled'].'</b>';
-						echo ' - ';
-						echo common::Link('Admin_Addons',$langmessage['disable'],'cmd=disable&addon='.rawurlencode($addon).'&gadget='.rawurlencode($name),'data-cmd="creq"');
-					}
+					echo '-';
 					echo '</td></tr>';
 				}
 			}
@@ -651,6 +659,7 @@ class admin_addons extends admin_addon_install{
 			$addonName = $info['name'];
 			$addon_config = gpPlugin::GetAddonConfig($addon_key);
 			$installFolder = $addon_config['code_folder_full'];
+			$new_version = false;
 
 			if( isset($addon_config['is_theme']) && $addon_config['is_theme'] ){
 				continue;
@@ -658,7 +667,7 @@ class admin_addons extends admin_addon_install{
 
 			echo '<div class="panelgroup">';
 
-			echo '<span>';
+			echo '<span class="icon_plug">';
 			echo common::Link('Admin_Addons',$addonName,'cmd=show&addon='.rawurlencode($addon_key));
 			echo '</span>';
 
@@ -698,12 +707,7 @@ class admin_addons extends admin_addon_install{
 				echo '<ul>';
 				foreach($gadgets as $name => $value){
 					echo '<li>';
-					$name = str_replace('_',' ',$name);
-					if( isset($value['disabled']) ){
-						echo common::Link('Admin_Addons',$name.' ('.$langmessage['disabled'].')','cmd=enable&addon='.rawurlencode($addon_key).'&gadget='.rawurlencode($name),'data-cmd="creq"');
-					}else{
-						echo common::Link('Admin_Addons',$name .' ('.$langmessage['enabled'].')','cmd=disable&addon='.rawurlencode($addon_key).'&gadget='.rawurlencode($name),'data-cmd="creq"');
-					}
+					echo $this->GadgetLink($name);
 					echo '</li>';
 				}
 				echo '</ul></li>';
@@ -734,35 +738,11 @@ class admin_addons extends admin_addon_install{
 					echo '</li>';
 				}
 
-				//version
-				if( !empty($addon_config['version']) ){
-					echo '<li><a>'.$langmessage['Your_version'].' '.$addon_config['version']. '</a></li>';
-				}
-
-				//upgrade info
-				if( isset($info['upgrade_from']) ){
-					if( isset($info['upgrade_version']) ){
-						if(version_compare($info['upgrade_version'],$info['version'] ,'>') ){
-							echo '<li><a><b>'.$langmessage['new_version'].' '.$info['upgrade_version'].'</b></a></li>';
-						}
-					}
-				}
-				if( isset($info['id']) && isset($new_versions[$info['id']]) ){
-					message('ok');
-					echo '<li><a><b>'.$langmessage['new_version'].' (gpEasy.com)</b></a></li>';
-				}
-
 				//upgrade link
 				if( isset($info['upgrade_from']) ){
 					echo '<li>';
 					echo common::Link('Admin_Addons',$langmessage['upgrade'],'cmd=local_install&source='.$info['upgrade_from'],'data-cmd="creq"');
 					echo '</li>';
-				}
-
-				if( isset($info['id']) && isset($new_versions[$info['id']]) ){
-					echo '<li><a href="'.addon_browse_path.'/Plugins?id='.$info['id'].'" data-cmd="remote">';
-					echo $langmessage['upgrade'].' (gpEasy.com)';
-					echo '</a></li>';
 				}
 
 				//uninstall
@@ -771,10 +751,37 @@ class admin_addons extends admin_addon_install{
 				echo '</li>';
 
 
+				//version
+				if( !empty($addon_config['version']) ){
+					echo '<li><a>'.$langmessage['Your_version'].' '.$addon_config['version']. '</a></li>';
+				}
+
+
 			echo '</ul></li>';
 
-
 			echo '</ul>';
+
+			//upgrade gpeasy.com
+			if( isset($info['id']) && isset($new_versions[$info['id']]) ){
+				$version_info = $new_versions[$info['id']];
+				echo '<div class="gp_notice">';
+				echo '<a href="'.addon_browse_path.'/Plugins?id='.$info['id'].'" data-cmd="remote">';
+				echo $langmessage['new_version'];
+				echo ' &nbsp; '.$version_info['version'].' (gpEasy.com)</a>';
+				echo '</div>';
+			}
+
+			//upgrade local
+			if( isset($info['upgrade_from']) && isset($info['upgrade_version']) ){
+				if(version_compare($info['upgrade_version'],$info['version'] ,'>') ){
+					echo '<div class="gp_notice">';
+					$label = $langmessage['new_version'].' &nbsp; '.$info['upgrade_version'];
+					echo common::Link('Admin_Addons',$label,'cmd=local_install&source='.$info['upgrade_from'],'data-cmd="creq"');
+					echo '</div>';
+				}
+			}
+
+
 			echo '</div>';
 			echo '</div>';
 		}

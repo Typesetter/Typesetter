@@ -21,6 +21,7 @@ $(function(){
 			cols = 2;
 		}
 		$area_wrap.children('div').width( (width/cols)-adjust );
+		$area_wrap.get(0).style.cssText = '-moz-column-count:'+cols;
 
 	}).resize();
 

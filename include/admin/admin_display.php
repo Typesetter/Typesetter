@@ -204,6 +204,7 @@ class admin_display extends display{
 		//resources
 		echo '<div class="panelgroup">';
 		echo '<span class="icon_page_gear"><span>'.$langmessage['resources'].' (gpEasy.com)</span></span>';
+		echo '<div class="panelgroup2">';
 		echo '<ul>';
 
 		if( admin_tools::HasPermission('Admin_Addons') ){
@@ -217,6 +218,7 @@ class admin_display extends display{
 		echo '<li><a href="http://gpeasy.com">Official gpEasy Site</a></li>';
 		echo '<li><a href="https://github.com/oyejorge/gpEasy-CMS/issues">Report A Bug</a></li>';
 		echo '</ul>';
+		echo '</div>';
 		echo '</div>';
 
 

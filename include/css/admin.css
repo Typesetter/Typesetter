@@ -1072,30 +1072,26 @@ color:#2d2d2d!important;
 	border:1px solid #ddd;
 	padding:0;
 	width:270px;
-	min-height:300px;
 	border-radius:4px;
 	background:#f7f7f7;
-	background: -moz-linear-gradient(top, #F9F9F9, #F5F5F5);
-	background: -webkit-linear-gradient(top, #F9F9F9, #F5F5F5);
-	background: linear-gradient(top, #F9F9F9, #F5F5F5);
+	background: #ededed;
+	background: #ededed -moz-linear-gradient(top, #fafafa 5px, #ededed 25px);
+	background: #ededed -webkit-linear-gradient(top, #fafafa 5px,#ededed 25px);
+	background: #ededed linear-gradient(top, #fafafa 5px,#ededed 25px);
 	}
 #adminlinks2 .panelgroup2{
 	padding:4px;
+	min-height:260px;
+	border:1px solid #ddd;
+	background:#fff;
+	margin:0 4px 4px 4px;
+	border-radius:2px;
 	}
 
 
 #adminlinks2 > div > span{
 	padding:0 5px;
 	display:block;
-	border-bottom:1px solid #ddd;
-	border-radius:4px 4px 0 0;
-	background: #ededed;
-	background: #ededed -moz-linear-gradient(top, #fafafa 5px, #ededed 25px);
-	background: #ededed -webkit-linear-gradient(top, #fafafa 5px,#ededed 25px);
-	background: #ededed -o-linear-gradient(top, #fafafa 5px,#ededed 25px);
-	background: #ededed -ms-linear-gradient(top, #fafafa 5px,#ededed 25px);
-	background: #ededed linear-gradient(top, #fafafa 5px,#ededed 25px);
-    box-shadow: 0 1px 0 #FFFFFF;
 	}
 
 #adminlinks2 > div > span > a,

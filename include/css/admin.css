@@ -1080,12 +1080,12 @@ color:#2d2d2d!important;
 	background: #ededed linear-gradient(top, #fafafa 5px,#ededed 25px);
 	}
 #adminlinks2 .panelgroup2{
-	padding:4px;
-	min-height:260px;
+	height:260px;
 	border:1px solid #ddd;
 	background:#fff;
 	margin:0 4px 4px 4px;
 	border-radius:2px;
+	overflow:hidden;
 	}
 
 
@@ -1109,18 +1109,19 @@ color:#2d2d2d!important;
 	list-style:none;
 	padding:0;
 	margin:0;
+	z-index:10;
 	}
 
 #adminlinks2 li{
 	position:relative;
-	border:1px solid transparent;
-	border-radius:3px;
-	margin-bottom:4px;
+	margin-top:-1px;
+	border-top:1px solid transparent;
+	border-bottom:1px solid transparent;
 	}
 
 #adminlinks2 li a{
 	font-size:13px;
-	padding:4px 12px;
+	padding:5px 12px;
 	display:block;
 	white-space:nowrap;
 	min-width:170px;
@@ -1136,6 +1137,11 @@ color:#2d2d2d!important;
 	border-bottom:1px dotted #ccc;
 	}
 
+#adminlinks2 li.expand_child_click{
+	border-top:1px solid #f5f5f5;
+	border-bottom:1px solid #f5f5f5;
+	}
+
 #adminlinks2 li.expand_child_click > a:before{
 	font-size:10px;
 	vertical-align:top;
@@ -1149,16 +1155,16 @@ color:#2d2d2d!important;
 
 #adminlinks2 li.expand,
 #adminlinks2 li:hover{
-	background-color:#fff;
-	border:1px solid #ddd;
+	background:#f9f9f9;
+	border-top:1px solid #ddd;
+	border-bottom:1px solid #ddd;
+	z-index:11;
 	}
 
 #adminlinks2 li.expand_child_click ul{
 	position:relative;
-	padding: 0 0 3px 0;
-	margin: 0 0 2px 0;
-	background:#fff;
 	z-index:11;
+	background:#fff;
 	max-height:120px;
 	overflow:auto;
 	}

@@ -115,6 +115,7 @@ $langmessage = array(
 'logout'=>'Logout',
 'preview'=>'Preview',
 'layout'=>'Layout',
+'Layout Options'=>'Layout Options',
 'color'=>'Color',
 'style'=>'Style',
 'Links'=>'Links',

@@ -474,24 +474,6 @@ class admin_addons extends admin_addon_install{
 
 	}
 
-	/**
-	 *
-	 * @static
-	 */
-	function AddonHooks($addon){
-		global $config;
-		$hooks = array();
-
-		if( !isset($config['hooks']) || !is_array($config['hooks']) ){
-			return $hooks;
-		}
-		foreach($config['hooks'] as $hook => $hook_array){
-			if( isset($hook_array[$addon]) ){
-				$hooks[$hook] = $hook_array[$addon];
-			}
-		}
-		return $hooks;
-	}
 
 
 	function GetAvailAddons(){
@@ -620,7 +602,7 @@ class admin_addons extends admin_addon_install{
 	 *
 	 */
 	function ShowInstalled(&$available){
-		global $langmessage,$config,$dataDir;
+		global $config;
 
 		//show installed addons
 		$show = $config['addons'];
@@ -653,127 +635,44 @@ class admin_addons extends admin_addon_install{
 		echo '<div id="adminlinks2">';
 		foreach($show as $addon_key => $info){
 
-			$addonName = $info['name'];
 			$addon_config = gpPlugin::GetAddonConfig($addon_key);
-			$installFolder = $addon_config['code_folder_full'];
-			$new_version = false;
-
 			if( isset($addon_config['is_theme']) && $addon_config['is_theme'] ){
 				continue;
 			}
 
+			$addon_config += $info; //merge the upgrade info
+
 			echo '<div class="panelgroup">';
 
 			echo '<span class="icon_plug">';
-			echo common::Link('Admin_Addons',$addonName,'cmd=show&addon='.rawurlencode($addon_key));
+			echo common::Link('Admin_Addons',$addon_config['name'],'cmd=show&addon='.rawurlencode($addon_key));
 			echo '</span>';
 
 			echo '<div class="panelgroup2">';
 			echo '<ul class="submenu">';
 
-			//show Special Links
-			$sublinks = admin_tools::GetAddonTitles( $addon_key );
-			if( !empty($sublinks) ){
-				echo '<li class="expand_child_click">';
-				echo '<a>Special Links ('.count($sublinks).')</a>';
-				echo '<ul>';
-				foreach($sublinks as $linkName => $linkInfo){
-					echo '<li>'.common::Link($linkName,$linkInfo['label']).'</li>';
-				}
-				echo '</ul></li>';
-			}
 
+			$this->AddonPanelGroup($addon_key, $addon_config);
 
-			//show Admin Links
-			$sublinks = admin_tools::GetAddonComponents($config['admin_links'],$addon_key);
-			if( !empty($sublinks) ){
-				echo '<li class="expand_child_click">';
-				echo '<a>Admin Links ('.count($sublinks).')</a>';
-				echo '<ul>';
-				foreach($sublinks as $linkName => $linkInfo){
-					echo '<li>'.common::Link($linkName,$linkInfo['label']).'</li>';
-				}
-				echo '</ul></li>';
-			}
-
-			//show Gadgets
-			$gadgets = admin_tools::GetAddonComponents($config['gadgets'],$addon_key);
-			if( is_array($gadgets) && (count($gadgets) > 0) ){
-				echo '<li class="expand_child_click">';
-				echo '<a>'.$langmessage['gadgets'].' ('.count($gadgets).')</a>';
-				echo '<ul>';
-				foreach($gadgets as $name => $value){
-					echo '<li>';
-					echo $this->GadgetLink($name);
-					echo '</li>';
-				}
-				echo '</ul></li>';
-			}
-
-			//hooks
-			$hooks = admin_addons::AddonHooks($addon_key);
-			if( count($hooks) > 0 ){
-				echo '<li class="expand_child_click">';
-				echo '<a>Hooks</a>';
-				echo '<ul>';
-				foreach($hooks as $name => $hook_info){
-					echo '<li><a>'.str_replace('_',' ',$name).'</a></li>';
-				}
-				echo '</ul></li>';
-			}
-
-
-			//options
-			echo '<li class="expand_child_click">';
-			echo '<a>'.$langmessage['options'].'</a>';
-			echo '<ul>';
-
-				//editable text
-				if( isset($config['addons'][$addon_key]['editable_text']) && admin_tools::HasPermission('Admin_Theme_Content') ){
-					echo '<li>';
-					echo common::Link('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addon_key),array('title'=>urlencode($langmessage['editable_text']),'data-cmd'=>'gpabox'));
-					echo '</li>';
-				}
-
-				//upgrade link
-				if( isset($info['upgrade_from']) ){
-					echo '<li>';
-					echo common::Link('Admin_Addons',$langmessage['upgrade'],'cmd=local_install&source='.$info['upgrade_from'],'data-cmd="creq"');
-					echo '</li>';
-				}
-
-				//uninstall
-				echo '<li>';
-				echo common::Link('Admin_Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.rawurlencode($addon_key),'data-cmd="gpabox"');
-				echo '</li>';
-
-
-				//version
-				if( !empty($addon_config['version']) ){
-					echo '<li><a>'.$langmessage['Your_version'].' '.$addon_config['version']. '</a></li>';
-				}
-
-
-			echo '</ul></li>';
 
 			echo '</ul>';
 
 			//upgrade gpeasy.com
-			if( isset($info['id']) && isset($new_versions[$info['id']]) ){
-				$version_info = $new_versions[$info['id']];
+			if( isset($addon_config['id']) && isset($new_versions[$addon_config['id']]) ){
+				$version_info = $new_versions[$addon_config['id']];
 				echo '<div class="gp_notice">';
-				echo '<a href="'.addon_browse_path.'/Plugins?id='.$info['id'].'" data-cmd="remote">';
+				echo '<a href="'.addon_browse_path.'/Plugins?id='.$addon_config['id'].'" data-cmd="remote">';
 				echo $langmessage['new_version'];
 				echo ' &nbsp; '.$version_info['version'].' (gpEasy.com)</a>';
 				echo '</div>';
 			}
 
 			//upgrade local
-			if( isset($info['upgrade_from']) && isset($info['upgrade_version']) ){
-				if(version_compare($info['upgrade_version'],$info['version'] ,'>') ){
+			if( isset($addon_config['upgrade_from']) && isset($addon_config['upgrade_version']) ){
+				if(version_compare($addon_config['upgrade_version'],$addon_config['version'] ,'>') ){
 					echo '<div class="gp_notice">';
-					$label = $langmessage['new_version'].' &nbsp; '.$info['upgrade_version'];
-					echo common::Link('Admin_Addons',$label,'cmd=local_install&source='.$info['upgrade_from'],'data-cmd="creq"');
+					$label = $langmessage['new_version'].' &nbsp; '.$addon_config['upgrade_version'];
+					echo common::Link('Admin_Addons',$label,'cmd=local_install&source='.$addon_config['upgrade_from'],'data-cmd="creq"');
 					echo '</div>';
 				}
 			}
@@ -781,11 +680,14 @@ class admin_addons extends admin_addon_install{
 
 			echo '</div>';
 			echo '</div>';
+
+
 		}
 		echo '</div>';
 
 		return true;
 	}
+
 
 
 	/**

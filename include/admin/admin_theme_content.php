@@ -1405,15 +1405,19 @@ class admin_theme_content extends admin_addon_install{
 		return $themes;
 	}
 
+	/**
+	 * Get a list of theme subfolders that have style.css files
+	 *
+	 */
 	function GetThemeColors($dir){
 		$subdirs = gpFiles::readDir($dir,1);
 		$colors = array();
 		asort($subdirs);
 		foreach($subdirs as $subdir){
-			if( $subdir == 'images'){
-				continue;
+			$style_path = $dir.'/'.$subdir.'/style.css';
+			if( file_exists($style_path) ){
+				$colors[$subdir] = $subdir;
 			}
-			$colors[$subdir] = $subdir;
 		}
 		return $colors;
 	}
@@ -1484,8 +1488,9 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function Show(){
-		global $config,$page,$langmessage,$gpLayouts;
+		global $config, $page, $langmessage, $gpLayouts;
 
+		$page->head_js[] = '/include/js/auto_width.js';
 
 		$this->FindForm();
 
@@ -1495,20 +1500,22 @@ class admin_theme_content extends admin_addon_install{
 		echo common::Link($this->path_remote,$this->find_label);
 		echo '</h2>';
 
+
+		echo '<div id="adminlinks2">';
+		foreach($gpLayouts as $layout => $info){
+			$this->LayoutDiv($layout,$info);
+		}
+		echo '</div>';
+
+
 		echo '<table class="bordered full_width">';
-		echo '<tr>';
-			echo '<th>';
-			echo $langmessage['layouts'];
-			echo '</th>';
-			echo '<th>';
-			echo $langmessage['usage'];
-			echo '</th>';
-			echo '<th>';
-			echo $langmessage['theme'];
-			echo '/';
-			echo $langmessage['style'];
-			echo '</th>';
-			echo '</tr>';
+		echo '<tr><th>';
+		echo $langmessage['layouts'];
+		echo '</th><th>';
+		echo $langmessage['usage'];
+		echo '</th><th>';
+		echo $langmessage['theme'].'/'.$langmessage['style'];
+		echo '</th></tr>';
 
 		foreach($gpLayouts as $layout => $info){
 			$this->LayoutRow($layout,$info);
@@ -1657,6 +1664,95 @@ class admin_theme_content extends admin_addon_install{
 	}
 
 
+	function LayoutDiv($layout,$info){
+		global $page, $langmessage, $config;
+
+		$layout_info = common::LayoutInfo($layout,false);
+
+		echo '<div class="panelgroup">';
+		echo '<span>';
+		echo '<a data-cmd="layout_id" title="'.$info['color'].'" data-arg="'.$info['color'].'">';
+		echo '<input type="hidden" name="layout" value="'.htmlspecialchars($layout).'"  /> ';
+		echo '<input type="hidden" name="layout_label" value="'.$info['label'].'"  /> ';
+		echo '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span>';
+		echo '&nbsp;';
+		echo $info['label'];
+		echo '</a>';
+		echo '</span>';
+
+
+
+		echo '<div class="panelgroup2">';
+		echo '<ul class="submenu">';
+
+		echo '<li>';
+		echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['edit'],'',' title="'.htmlspecialchars($langmessage['Arrange Content']).'" ');
+		echo '</li>';
+
+
+
+		//layout options
+		echo '<li class="expand_child_click">';
+		echo '<a>'.$langmessage['Layout Options'].'</a>';
+		echo '<ul>';
+		echo '<li>';
+		if( $config['gpLayout'] == $layout ){
+			echo '<a><b>'.$langmessage['default'].'</b></a>';
+		}else{
+			echo common::Link('Admin_Theme_Content',str_replace(' ','&nbsp;',$langmessage['make_default']),'cmd=makedefault&layout_id='.rawurlencode($layout),array('data-cmd'=>'creq','title'=>$langmessage['make_default']));
+		}
+		echo '</li>';
+
+		echo '<li><a>';
+		$titles_count = $this->TitlesCount($layout);
+		echo sprintf($langmessage['%s Pages'],$titles_count);
+		echo '</a></li>';
+
+
+		echo '<li>';
+		echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['details'],'cmd=details&show=main','data-cmd="gpabox"');
+		echo '</li>';
+
+		echo '<li>';
+		echo common::Link('Admin_Theme_Content',$langmessage['Copy'],'cmd=copy&layout='.rawurlencode($layout),'data-cmd="gpabox"');
+		echo '</li>';
+
+		echo '<li>';
+		if( $config['gpLayout'] == $layout ){
+			//echo '<span>'.$langmessage['delete'].'</span>';
+		}else{
+			$attr = array( 'data-cmd'=>'creq','class'=>'gpconfirm','title'=>sprintf($langmessage['generic_delete_confirm'],$info['label']) );
+			echo common::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletelayout&layout_id='.rawurlencode($layout),$attr);
+		}
+		echo '</li>';
+		echo '</ul>';
+
+		//color variations
+		$theme_colors = $this->GetThemeColors($layout_info['dir']);
+		if( count($theme_colors) > 1 ){
+
+			echo '<li class="expand_child_click">';
+			echo '<a>'.$langmessage['style'].'</a>';
+			echo '<ul>';
+			foreach($theme_colors as $color){
+				echo '<li><a>'.$color.'</a></li>';
+			}
+			echo '</ul>';
+			echo '</li>';
+		}
+
+		if( isset($layout_info['addon_key']) ){
+			$addon_key = $layout_info['addon_key'];
+			$addon_config = gpPlugin::GetAddonConfig($addon_key);
+			$this->AddonPanelGroup($addon_key, $addon_config);
+		}
+
+
+		echo '</ul>';
+
+		echo '</div>';
+		echo '</div>';
+	}
 
 	/**
 	 * Show

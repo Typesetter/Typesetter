@@ -572,6 +572,120 @@ class admin_addons_tool{
 		return false;
 	}
 
+
+
+	function AddonPanelGroup($addon_key, $addon_config){
+		global $langmessage, $config;
+
+		$new_version = false;
+
+
+		//show Special Links
+		$sublinks = admin_tools::GetAddonTitles( $addon_key );
+		if( !empty($sublinks) ){
+			echo '<li class="expand_child_click">';
+			echo '<a>Special Links ('.count($sublinks).')</a>';
+			echo '<ul>';
+			foreach($sublinks as $linkName => $linkInfo){
+				echo '<li>'.common::Link($linkName,$linkInfo['label']).'</li>';
+			}
+			echo '</ul></li>';
+		}
+
+
+		//show Admin Links
+		$sublinks = admin_tools::GetAddonComponents($config['admin_links'],$addon_key);
+		if( !empty($sublinks) ){
+			echo '<li class="expand_child_click">';
+			echo '<a>Admin Links ('.count($sublinks).')</a>';
+			echo '<ul>';
+			foreach($sublinks as $linkName => $linkInfo){
+				echo '<li>'.common::Link($linkName,$linkInfo['label']).'</li>';
+			}
+			echo '</ul></li>';
+		}
+
+		//show Gadgets
+		$gadgets = admin_tools::GetAddonComponents($config['gadgets'],$addon_key);
+		if( is_array($gadgets) && (count($gadgets) > 0) ){
+			echo '<li class="expand_child_click">';
+			echo '<a>'.$langmessage['gadgets'].' ('.count($gadgets).')</a>';
+			echo '<ul>';
+			foreach($gadgets as $name => $value){
+				echo '<li>';
+				echo $this->GadgetLink($name);
+				echo '</li>';
+			}
+			echo '</ul></li>';
+		}
+
+		//hooks
+		$hooks = self::AddonHooks($addon_key);
+		if( count($hooks) > 0 ){
+			echo '<li class="expand_child_click">';
+			echo '<a>Hooks</a>';
+			echo '<ul>';
+			foreach($hooks as $name => $hook_info){
+				echo '<li><a>'.str_replace('_',' ',$name).'</a></li>';
+			}
+			echo '</ul></li>';
+		}
+
+
+		//options
+		echo '<li class="expand_child_click">';
+		echo '<a>'.$langmessage['options'].'</a>';
+		echo '<ul>';
+
+			//editable text
+			if( isset($config['addons'][$addon_key]['editable_text']) && admin_tools::HasPermission('Admin_Theme_Content') ){
+				echo '<li>';
+				echo common::Link('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addon_key),array('title'=>urlencode($langmessage['editable_text']),'data-cmd'=>'gpabox'));
+				echo '</li>';
+			}
+
+			//upgrade link
+			if( isset($addon_config['upgrade_from']) ){
+				echo '<li>';
+				echo common::Link('Admin_Addons',$langmessage['upgrade'],'cmd=local_install&source='.$addon_config['upgrade_from'],'data-cmd="creq"');
+				echo '</li>';
+			}
+
+			//uninstall
+			echo '<li>';
+			echo common::Link('Admin_Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.rawurlencode($addon_key),'data-cmd="gpabox"');
+			echo '</li>';
+
+
+			//version
+			if( !empty($addon_config['version']) ){
+				echo '<li><a>'.$langmessage['Your_version'].' '.$addon_config['version']. '</a></li>';
+			}
+
+
+		echo '</ul></li>';
+
+	}
+
+
+	/**
+	 *
+	 * @static
+	 */
+	function AddonHooks($addon){
+		global $config;
+		$hooks = array();
+
+		if( !isset($config['hooks']) || !is_array($config['hooks']) ){
+			return $hooks;
+		}
+		foreach($config['hooks'] as $hook => $hook_array){
+			if( isset($hook_array[$addon]) ){
+				$hooks[$hook] = $hook_array[$addon];
+			}
+		}
+		return $hooks;
+	}
 }
 
 

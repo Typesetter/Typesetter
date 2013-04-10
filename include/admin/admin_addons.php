@@ -571,17 +571,15 @@ class admin_addons extends admin_addon_install{
 			//echo ' -empty- ';
 		}else{
 			echo '<table class="bordered" style="min-width:700px">';
-			echo '<tr>';
-			echo '<th>';
+			echo '<tr><th>';
 			echo $langmessage['name'];
-			echo '</th>';
-			echo '<th>';
+			echo '</th><th>';
 			echo $langmessage['version'];
-			echo '</th>';
-			echo '<th>';
+			echo '</th><th>';
 			echo $langmessage['options'];
-			echo '</th>';
-			echo '</tr>';
+			echo '</th><th>';
+			echo $langmessage['description'];
+			echo '</th></tr>';
 
 			$i=0;
 			foreach($available as $folder => $info ){
@@ -590,19 +588,18 @@ class admin_addons extends admin_addon_install{
 					continue;
 				}
 
-				echo '<tr class="'.($i % 2 ? 'even' : '').'">';
-				echo '<td>';
+				$info += array('About'=>'');
+
+				echo '<tr class="'.($i % 2 ? 'even' : '').'"><td>';
 				echo $info['Addon_Name'];
 				echo '<br/><em class="admin_note">/addons/'.$folder.'</em>';
-				echo '</td>';
-				echo '<td>';
+				echo '</td><td>';
 				echo $info['Addon_Version'];
-				echo '</td>';
-				echo '<td>';
+				echo '</td><td>';
 				echo common::Link('Admin_Addons',$langmessage['Install'],'cmd=local_install&source='.$folder,'data-cmd="creq"');
-				echo '</td>';
-
-				echo '</tr>';
+				echo '</td><td>';
+				echo $info['About'];
+				echo '</td></tr>';
 				$i++;
 			}
 			echo '</table>';

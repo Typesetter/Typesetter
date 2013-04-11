@@ -42,6 +42,7 @@ class admin_addons extends admin_addon_install{
 
 		$page->css_admin[] = '/include/css/addons.css';
 		$page->head_js[] = '/include/js/auto_width.js';
+		$page->head_js[] = '/include/js/rate.js';
 
 		$this->InitRating();
 
@@ -71,23 +72,15 @@ class admin_addons extends admin_addon_install{
 
 		switch($cmd){
 
-			/* testing */
-			case 'package':
-				includeFile('admin/x_admin_addon_package.php');
-				new addon_package();
-			break;
-
 			case 'local_install':
 				$this->LocalInstall();
-				$this->Select();
 			break;
 
 			case 'remote_install':
 				$this->RemoteInstall();
-			break;
+			return;
 			case 'remote_install_confirmed':
 				$this->RemoteInstallConfirmed();
-				$this->Select();
 			break;
 
 
@@ -98,7 +91,6 @@ class admin_addons extends admin_addon_install{
 				if( $this->ShowRatingText ){
 					return;
 				}
-				$this->Select();
 			break;
 
 			case 'enable':
@@ -108,26 +100,23 @@ class admin_addons extends admin_addon_install{
 
 			case 'show':
 				$this->ShowAddon();
-			break;
+			return;
 
 			case 'uninstall':
 				$this->Uninstall();
-			break;
+			return;
 
 			case 'confirm_uninstall':
 				$this->Confirm_Uninstall();
-				$this->Select();
 			break;
 
 			case 'history':
 				$this->History();
-			break;
-
-			default:
-				$this->Select();
-				$this->CleanAddonFolder();
-			break;
+			return;
 		}
+
+		$this->Select();
+		$this->CleanAddonFolder();
 	}
 
 	/**
@@ -321,118 +310,33 @@ class admin_addons extends admin_addon_install{
 	 * Display addon details
 	 *
 	 */
-	function ShowAddon($addon=false){
+	function ShowAddon(){
 		global $config, $langmessage;
 
-		if( $addon === false ){
-			$addon =& $_REQUEST['addon'];
-		}
-		if( !isset($config['addons'][$addon]) ){
+		$addon_key =& $_REQUEST['addon'];
+		if( !isset($config['addons'][$addon_key]) ){
 			message($langmessage['OOPS'].'(s1)');
 			$this->Select();
 			return;
 		}
+
+		$info = $config['addons'][$addon_key];
 
 		$this->FindForm();
 
 		echo '<h2 class="hmargin">';
 		echo common::Link('Admin_Addons',$langmessage['Manage Plugins']);
 		echo ' &#187; ';
-		echo $config['addons'][$addon]['name'];
+		echo $info['name'];
 		echo '</h2>';
 
-		echo '<table class="bordered" style="width:90%">';
 
-		//show Special Links
-			$sublinks = admin_tools::GetAddonTitles( $addon);
-			if( !empty($sublinks) ){
-				echo '<tr><th>';
-				echo 'Special Links';
-				echo '</th><th>';
-				echo $langmessage['options'];
-				echo '</th></tr>';
+		echo '<div id="adminlinks2">';
+		$this->PluginPanelGroup($addon_key,$info);
+		echo '</div>';
 
-				foreach($sublinks as $linkName => $linkInfo){
-					echo '<tr><td>';
-					echo common::Link($linkName,$linkInfo['label']);
-					echo '</td><td>-</td></tr>';
-				}
-			}
+		return;
 
-		//show Admin Links
-			$sublinks = admin_tools::GetAddonComponents($config['admin_links'],$addon);
-			if( !empty($sublinks) ){
-				echo '<tr><th>';
-				echo 'Admin Links';
-				echo '</th>';
-				echo '<th>';
-				echo $langmessage['options'];
-				echo '</th></tr>';
-
-				foreach($sublinks as $linkName => $linkInfo){
-					echo '<tr><td>';
-						echo common::Link($linkName,$linkInfo['label']);
-						echo '</td>';
-						echo '<td>';
-						echo '-';
-						echo '</td></tr>';
-				}
-			}
-
-
-		//show Gadgets
-			$gadgets = admin_tools::GetAddonComponents($config['gadgets'],$addon);
-			if( is_array($gadgets) && (count($gadgets) > 0) ){
-				echo '<tr><th>';
-				echo $langmessage['gadgets'];
-				echo '</th><th>';
-				echo $langmessage['options'];
-				echo '</th></tr>';
-
-				foreach($gadgets as $name => $value){
-					echo '<tr><td>';
-					echo $this->GadgetLink($name);
-					echo '</td><td>';
-					echo '-';
-					echo '</td></tr>';
-				}
-			}
-
-		//editable text
-		if( isset($config['addons'][$addon]['editable_text']) && admin_tools::HasPermission('Admin_Theme_Content') ){
-				echo '<tr><th>';
-					echo $langmessage['editable_text'];
-					echo '</th>';
-					echo '<th>';
-					echo $langmessage['options'];
-					echo '</th></tr>';
-				echo '<tr><td>';
-					echo $config['addons'][$addon]['editable_text'];
-					echo '</td>';
-					echo '<td>';
-					echo common::Link('Admin_Theme_Content',$langmessage['edit'],'cmd=addontext&addon='.urlencode($addon),array('title'=>urlencode($langmessage['editable_text']),'data-cmd'=>'gpabox'));
-					echo '</td></tr>';
-
-
-		}
-
-		//hooks
-		$hooks = admin_addons::AddonHooks($addon);
-		if( count($hooks) > 0 ){
-			echo '<tr><th>Hooks</th><th>';
-			echo $langmessage['options'];
-			echo '</th></tr>';
-
-			foreach($hooks as $name => $info){
-				echo '<tr><td>';
-				echo str_replace('_',' ',$name);
-				echo '</td><td>';
-				echo '&nbsp;';
-				echo '</td></tr>';
-			}
-		}
-
-		echo '</table>';
 
 		if( !isset($config['addons'][$addon]['id']) ){
 			return;
@@ -451,7 +355,7 @@ class admin_addons extends admin_addon_install{
 
 			echo '<table class="rating_table">';
 			echo '<tr><td>Rating</td><td>';
-			$this->ShowRating($id,$review['rating']);
+			echo $this->ShowRating($id,$review['rating']);
 			echo '</td></tr>';
 
 			echo '<tr><td>Review</td><td>';
@@ -467,7 +371,7 @@ class admin_addons extends admin_addon_install{
 		}else{
 			echo '<table class="rating_table">';
 			echo '<tr><td>Rating</td><td>';
-			$this->ShowRating($id,5);
+			echo $this->ShowRating($id,5);
 			echo '</td></tr>';
 			echo '</table>';
 		}
@@ -634,59 +538,107 @@ class admin_addons extends admin_addon_install{
 
 		echo '<div id="adminlinks2">';
 		foreach($show as $addon_key => $info){
-
-			$addon_config = gpPlugin::GetAddonConfig($addon_key);
-			if( isset($addon_config['is_theme']) && $addon_config['is_theme'] ){
-				continue;
-			}
-
-			$addon_config += $info; //merge the upgrade info
-
-			echo '<div class="panelgroup">';
-
-			echo '<span class="icon_plug">';
-			echo common::Link('Admin_Addons',$addon_config['name'],'cmd=show&addon='.rawurlencode($addon_key));
-			echo '</span>';
-
-			echo '<div class="panelgroup2">';
-			echo '<ul class="submenu">';
-
-
-			$this->AddonPanelGroup($addon_key, $addon_config);
-
-
-			echo '</ul>';
-
-			//upgrade gpeasy.com
-			if( isset($addon_config['id']) && isset($new_versions[$addon_config['id']]) ){
-				$version_info = $new_versions[$addon_config['id']];
-				echo '<div class="gp_notice">';
-				echo '<a href="'.addon_browse_path.'/Plugins?id='.$addon_config['id'].'" data-cmd="remote">';
-				echo $langmessage['new_version'];
-				echo ' &nbsp; '.$version_info['version'].' (gpEasy.com)</a>';
-				echo '</div>';
-			}
-
-			//upgrade local
-			if( isset($addon_config['upgrade_from']) && isset($addon_config['upgrade_version']) ){
-				if(version_compare($addon_config['upgrade_version'],$addon_config['version'] ,'>') ){
-					echo '<div class="gp_notice">';
-					$label = $langmessage['new_version'].' &nbsp; '.$addon_config['upgrade_version'];
-					echo common::Link('Admin_Addons',$label,'cmd=local_install&source='.$addon_config['upgrade_from'],'data-cmd="creq"');
-					echo '</div>';
-				}
-			}
-
-
-			echo '</div>';
-			echo '</div>';
-
-
+			$this->PluginPanelGroup($addon_key,$info);
 		}
 		echo '</div>';
 
 		return true;
 	}
+
+
+	function PluginPanelGroup($addon_key,$info){
+		global $config, $langmessage;
+
+		$addon_config = gpPlugin::GetAddonConfig($addon_key);
+		if( isset($addon_config['is_theme']) && $addon_config['is_theme'] ){
+			return;
+		}
+
+		$addon_config += $info; //merge the upgrade info
+
+		echo '<div class="panelgroup">';
+
+		echo '<span class="icon_plug">';
+		echo common::Link('Admin_Addons',$addon_config['name'],'cmd=show&addon='.rawurlencode($addon_key));
+		echo '</span>';
+
+		echo '<div class="panelgroup2">';
+		echo '<ul class="submenu">';
+
+
+		$this->AddonPanelGroup($addon_key, $addon_config);
+
+
+		//options
+		echo '<li class="expand_child_click">';
+		echo '<a>'.$langmessage['options'].'</a>';
+		echo '<ul>';
+
+			//editable text
+			if( isset($config['addons'][$addon_key]['editable_text']) && admin_tools::HasPermission('Admin_Theme_Content') ){
+				echo '<li>';
+				echo common::Link('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addon_key),array('title'=>urlencode($langmessage['editable_text']),'data-cmd'=>'gpabox'));
+				echo '</li>';
+			}
+
+			//upgrade link
+			if( isset($addon_config['upgrade_from']) ){
+				echo '<li>';
+				echo common::Link('Admin_Addons',$langmessage['upgrade'],'cmd=local_install&source='.$addon_config['upgrade_from'],'data-cmd="creq"');
+				echo '</li>';
+			}
+
+			//uninstall
+			echo '<li>';
+			echo common::Link('Admin_Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.rawurlencode($addon_key),'data-cmd="gpabox"');
+			echo '</li>';
+
+
+			//version
+			if( !empty($addon_config['version']) ){
+				echo '<li><a>'.$langmessage['Your_version'].' '.$addon_config['version']. '</a></li>';
+			}
+
+			//rating
+			if( isset($addon_config['id']) && is_numeric($addon_config['id']) ){
+				$id = $addon_config['id'];
+
+				$rating = 5;
+				if( isset($this->addonReviews[$id]) ){
+					$rating = $this->addonReviews[$id]['rating'];
+				}
+				$label = $langmessage['rate_this_addon'].' '.$this->ShowRating($id,$rating);
+				echo '<li><span>'.$label. '</span></li>';
+			}
+		echo '</ul></li>';
+
+		echo '</ul>';
+
+		//upgrade gpeasy.com
+		if( isset($addon_config['id']) && isset($new_versions[$addon_config['id']]) ){
+			$version_info = $new_versions[$addon_config['id']];
+			echo '<div class="gp_notice">';
+			echo '<a href="'.addon_browse_path.'/Plugins?id='.$addon_config['id'].'" data-cmd="remote">';
+			echo $langmessage['new_version'];
+			echo ' &nbsp; '.$version_info['version'].' (gpEasy.com)</a>';
+			echo '</div>';
+		}
+
+		//upgrade local
+		if( isset($addon_config['upgrade_from']) && isset($addon_config['upgrade_version']) ){
+			if(version_compare($addon_config['upgrade_version'],$addon_config['version'] ,'>') ){
+				echo '<div class="gp_notice">';
+				$label = $langmessage['new_version'].' &nbsp; '.$addon_config['upgrade_version'];
+				echo common::Link('Admin_Addons',$label,'cmd=local_install&source='.$addon_config['upgrade_from'],'data-cmd="creq"');
+				echo '</div>';
+			}
+		}
+
+
+		echo '</div>';
+		echo '</div>';
+	}
+
 
 
 

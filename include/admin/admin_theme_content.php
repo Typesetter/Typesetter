@@ -1696,18 +1696,16 @@ class admin_theme_content extends admin_addon_install{
 		echo '<a>'.$langmessage['Layout Options'].'</a>';
 		echo '<ul>';
 		echo '<li>';
+
+		$titles_count = $this->TitlesCount($layout);
+		$titles_count = sprintf($langmessage['%s Pages'],$titles_count);
+
 		if( $config['gpLayout'] == $layout ){
-			echo '<a><b>'.$langmessage['default'].'</b></a>';
+			echo '<a><b>'.$langmessage['default'].' &nbsp; '.$titles_count.'</b></a>';
 		}else{
-			echo common::Link('Admin_Theme_Content',str_replace(' ','&nbsp;',$langmessage['make_default']),'cmd=makedefault&layout_id='.rawurlencode($layout),array('data-cmd'=>'creq','title'=>$langmessage['make_default']));
+			echo common::Link('Admin_Theme_Content',$langmessage['make_default'].' &nbsp; '.$titles_count,'cmd=makedefault&layout_id='.rawurlencode($layout),array('data-cmd'=>'creq','title'=>$langmessage['make_default']));
 		}
 		echo '</li>';
-
-		echo '<li><a>';
-		$titles_count = $this->TitlesCount($layout);
-		echo sprintf($langmessage['%s Pages'],$titles_count);
-		echo '</a></li>';
-
 
 		echo '<li>';
 		echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['details'],'cmd=details&show=main','data-cmd="gpabox"');

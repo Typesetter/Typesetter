@@ -65,23 +65,24 @@ class admin_addons_tool{
 	}
 
 
+	/**
+	 * Display clickable rating stars
+	 *
+	 */
 	function ShowRating($arg,$rating){
 
+		ob_start();
 		echo '<span class="rating">';
 
-			$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16"/>';
-			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating=1&arg='.$arg,' data-rating="1" ');
-			$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16"/>';
-			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating=2&arg='.$arg,' data-rating="2" ');
-			$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16"/>';
-			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating=3&arg='.$arg,' data-rating="3" ');
-			$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16"/>';
-			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating=4&arg='.$arg,' data-rating="4" ');
-			$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16"/>';
-			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating=5&arg='.$arg,' data-rating="5" ');
+		$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16"/>';
+		for($i = 1;$i<6;$i++){
+			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating='.$i.'&arg='.$arg,' data-rating="'.$i.'" data-cmd="gpabox" ');
+		}
 
-			echo '<input type="hidden" name="rating" value="'.htmlspecialchars($rating).'" readonly="readonly"/>';
+		echo '<input type="hidden" name="rating" value="'.htmlspecialchars($rating).'" readonly="readonly"/>';
+
 		echo '</span> ';
+		return ob_get_clean();
 	}
 
 
@@ -178,23 +179,21 @@ class admin_addons_tool{
 		}
 
 
-		echo '<form action="'.common::GetUrl($this->scriptUrl,'cmd=rate&arg='.$this->addon_info['pass_arg']).'" method="post">';
+		//echo '<form action="'.common::GetUrl($this->scriptUrl,'cmd=rate&arg='.$this->addon_info['pass_arg']).'" method="post">';
+		echo '<form action="'.common::GetUrl($this->scriptUrl).'" method="post">';
+		echo '<input type="hidden" name="arg" value="'.$this->addon_info['pass_arg'].'"/>';
+		echo '<input type="hidden" name="cmd" value="rate" />';
 
 
 		echo '<table class="rating_table">';
 
 		echo '<tr><td>Rating</td><td>';
+
 		echo '<span class="rating">';
 		$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
-		echo '<a href="javascript:void(0);" data-rating="1">'.$label.'</a>';
-		$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
-		echo '<a href="javascript:void(0);" data-rating="2">'.$label.'</a>';
-		$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
-		echo '<a href="javascript:void(0);" data-rating="3">'.$label.'</a>';
-		$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
-		echo '<a href="javascript:void(0);" data-rating="4">'.$label.'</a>';
-		$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
-		echo '<a href="javascript:void(0);" data-rating="5">'.$label.'</a>';
+		for($i=1;$i<6;$i++){
+			echo '<a data-rating="'.$i.'">'.$label.'</a>';
+		}
 		echo '<input type="hidden" name="rating" value="'.htmlspecialchars($rating).'" />';
 		echo '</span> ';
 		echo '</td></tr>';
@@ -218,13 +217,13 @@ class admin_addons_tool{
 		echo '<tr><td></td><td>';
 
 		if( isset($this->addonReviews[$id]) ){
-			echo '<input type="submit" name="cmd" value="Update Review" class="gpsubmit"/>';
+			echo '<input type="submit" name="cmd" value="Update Review" class="gppost gpsubmit"/>';
 		}else{
-			echo '<input type="submit" name="cmd" value="Send Review" class="gpsubmit"/>';
+			echo '<input type="submit" name="cmd" value="Send Review" class="gppost gpsubmit"/>';
 		}
 
 		echo ' ';
-		echo '<input type="submit" name="cmd" value="Cancel" class="gpcancel"/>';
+		echo '<input type="submit" name="cmd" value="Cancel" class="admin_box_close gpcancel"/>';
 		echo '</td></tr>';
 
 
@@ -341,8 +340,13 @@ class admin_addons_tool{
 	}
 
 
+	/**
+	 * Send the addon rating to gpEasy.com
+	 *
+	 */
 	function SendRating(){
-		global $langmessage,$config, $dirPrefix;
+		global $langmessage, $config, $dirPrefix, $page;
+		$page->ajaxReplace = array();
 		$data = array();
 
 		if( !is_numeric($_POST['rating']) || ($_POST['rating'] < 1) || ($_POST['rating'] > 5 ) ){
@@ -630,40 +634,6 @@ class admin_addons_tool{
 			}
 			echo '</ul></li>';
 		}
-
-
-		//options
-		echo '<li class="expand_child_click">';
-		echo '<a>'.$langmessage['options'].'</a>';
-		echo '<ul>';
-
-			//editable text
-			if( isset($config['addons'][$addon_key]['editable_text']) && admin_tools::HasPermission('Admin_Theme_Content') ){
-				echo '<li>';
-				echo common::Link('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addon_key),array('title'=>urlencode($langmessage['editable_text']),'data-cmd'=>'gpabox'));
-				echo '</li>';
-			}
-
-			//upgrade link
-			if( isset($addon_config['upgrade_from']) ){
-				echo '<li>';
-				echo common::Link('Admin_Addons',$langmessage['upgrade'],'cmd=local_install&source='.$addon_config['upgrade_from'],'data-cmd="creq"');
-				echo '</li>';
-			}
-
-			//uninstall
-			echo '<li>';
-			echo common::Link('Admin_Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.rawurlencode($addon_key),'data-cmd="gpabox"');
-			echo '</li>';
-
-
-			//version
-			if( !empty($addon_config['version']) ){
-				echo '<li><a>'.$langmessage['Your_version'].' '.$addon_config['version']. '</a></li>';
-			}
-
-
-		echo '</ul></li>';
 
 	}
 

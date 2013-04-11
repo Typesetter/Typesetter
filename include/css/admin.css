@@ -1119,7 +1119,8 @@ color:#2d2d2d!important;
 	border-bottom:1px solid transparent;
 	}
 
-#adminlinks2 li a{
+#adminlinks2 li > a,
+#adminlinks2 li > span{
 	font-size:13px;
 	padding:5px 12px;
 	display:block;
@@ -1176,7 +1177,8 @@ color:#2d2d2d!important;
 	width:100%;
 	margin:0;
 	}
-#adminlinks2 li.expand_child_click li a{
+#adminlinks2 li.expand_child_click li > a,
+#adminlinks2 li.expand_child_click li > span{
 	padding:3px 25px;
 	}
 #adminlinks2 li.expand_child_click li:hover{
@@ -1248,15 +1250,21 @@ div.inline_box label{
  */
 
 
-.rating{
-	position:relative;
-	height:30px;
+body #gp_admin_html .rating{
+	display: inline-block;
+	height: 16px;
+	position: relative;
+	vertical-align: top;
 	}
-.rating a{
+
+body #gp_admin_html .rating a{
 	position:relative;
 	display:inline-block;
 	height:16px;
+	width:16px;
+	min-width:0;
 	background: url(../imgs/stars.png) 0 0;
+	padding:0;
 	}
 
 

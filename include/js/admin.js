@@ -432,7 +432,7 @@ $gp.links.collapsible = function(){
 
 /**
  * Load content in #gp_admin_box
- * @deprecated 2.5, use name="gpabox" instead
+ * @deprecated 2.5, use data-cmd="gpabox" instead
  *
  */
 $gp.links.ajax_box = $gp.links.admin_box = function(evt){

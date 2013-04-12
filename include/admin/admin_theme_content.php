@@ -190,15 +190,8 @@ class admin_theme_content extends admin_addon_install{
 
 
 			//layout options
-			case 'makedefault':
-				$this->MakeDefault($_GET['layout']);
-			break;
 			case 'deletelayout':
 				$this->DeleteLayoutConfirmed();
-			break;
-
-			case 'layout_details':
-				$this->LayoutDetails();
 			break;
 
 
@@ -246,12 +239,22 @@ class admin_theme_content extends admin_addon_install{
 	function LayoutCommands($cmd){
 
 		switch($cmd){
+
+			case 'makedefault':
+				$this->MakeDefault();
+			break;
+
+			case 'layout_details':
+				$this->LayoutDetails();
+			break;
+
 			case 'gadgets':
 				$this->ShowGadgets();
 			return true;
+
 			case 'titles':
 				$this->ShowTitles();
-			return;
+			return true;
 		}
 
 		return false;
@@ -339,9 +342,6 @@ class admin_theme_content extends admin_addon_install{
 				$this->EditCSS(true);
 			break;
 
-			case 'makedefault':
-				$this->MakeDefault($layout);
-			break;
 			case 'change_layout_color':
 				$this->ChangeLayoutColor($layout);
 			break;
@@ -351,10 +351,6 @@ class admin_theme_content extends admin_addon_install{
 
 			case 'rmgadget':
 				$this->RmGadget($layout);
-			break;
-
-			case 'layout_details':
-				$this->LayoutDetails();
 			break;
 
 			case 'restore':
@@ -1537,16 +1533,12 @@ class admin_theme_content extends admin_addon_install{
 	 * @param string $layout
 	 *
 	 */
-	function MakeDefault($layout){
-		global $config,$langmessage,$gpLayouts,$page;
+	function MakeDefault(){
+		global $config,$langmessage,$page;
 
-		if( !isset( $gpLayouts[$layout]) ){
-			message($langmessage['OOPS']);
-			return false;
-		}
 
 		$oldConfig = $config;
-		$config['gpLayout'] = $layout;
+		$config['gpLayout'] = $this->curr_layout;
 
 		if( admin_tools::SaveConfig() ){
 

@@ -1542,6 +1542,7 @@ body #gp_admin_html .layout_links a.selected{
 .dd_menu ul,
 .dd_menu li,
 .dd_menu li a,
+.dd_menu li span,
 .dd_menu .dd_list{
 	list-style:none;
 	padding:0;
@@ -1614,6 +1615,7 @@ body #gp_admin_html .layout_links a.selected{
 .dd_menu li.selected{
 	font-weight:bold;
 	}
+.dd_list span,
 .dd_list a{
 	padding:2px 30px 2px 25px !important;
 	display:block;

@@ -231,6 +231,9 @@ class admin_theme_content extends admin_addon_install{
 			case 'titles':
 				$this->ShowTitles();
 			return;
+			case 'gadgets':
+				$this->ShowGadgets();
+			return;
 
 
 		}
@@ -363,6 +366,9 @@ class admin_theme_content extends admin_addon_install{
 			case 'titles':
 				$this->ShowTitles();
 			return;
+			case 'gadgets':
+				$this->ShowGadgets();
+			return;
 		}
 
 		$layout_info = common::LayoutInfo($layout,false);
@@ -481,35 +487,6 @@ class admin_theme_content extends admin_addon_install{
 		echo '</table>';
 
 
-		// gadgets
-		echo '<br/>';
-		echo '<table class="bordered full_width">';
-		$gadget_info = gpOutput::WhichGadgets($this->curr_layout);
-		echo '<tr><th style="width:40%">';
-		echo $langmessage['gadgets'];
-		echo '</th><th>&nbsp;</th></tr>';
-		if( !isset($config['gadgets']) || count($config['gadgets']) == 0 ){
-			echo '<tr><td colspan="2">';
-			echo $langmessage['Empty'];
-			echo '</td></tr>';
-		}else{
-			foreach($config['gadgets'] as $gadget => $temp){
-				echo '<tr><td>';
-				echo str_replace('_',' ',$gadget);
-				echo '</td><td>';
-				if( isset($gadget_info[$gadget]) ){
-					$query = 'cmd=rmgadget&gadget='.urlencode($gadget);
-					$url = $this->LayoutUrl($layout,$query);
-					echo common::Link($url,$langmessage['remove'],$query,'data-cmd="creq"');
-				}else{
-					echo $langmessage['disabled'];
-				}
-				echo '</td></tr>';
-			}
-		}
-		echo '</table>';
-
-
 		//CSS options
 		echo '<br/>';
 
@@ -566,11 +543,6 @@ class admin_theme_content extends admin_addon_install{
 		echo ': '.$titles_count;
 		echo '</h2>';
 
-		echo '<table class="bordered full_width">';
-		echo '<tr><th colspan="2">&nbsp;';
-		echo '</th></tr>';
-
-		echo '<tr><td colspan="2">';
 		if( $titles_count > 0 ){
 			echo '<ul class="titles_using">';
 
@@ -593,9 +565,45 @@ class admin_theme_content extends admin_addon_install{
 			echo '</ul>';
 			echo '<div class="clear"></div>';
 		}
-		echo '</td></tr>';
+
+	}
+
+
+	/**
+	 * Display gadgets and their status for the current layout
+	 *
+	 */
+	function ShowGadgets(){
+		global $langmessage, $config;
+
+		$gadget_info = gpOutput::WhichGadgets($this->curr_layout);
+
+		echo '<h2>'.$langmessage['gadgets'].'</h2>';
+		echo '<table class="bordered full_width">';
+		echo '<tr><th colspan="2">&nbsp;</th></tr>';
+
+		if( !isset($config['gadgets']) || count($config['gadgets']) == 0 ){
+			echo '<tr><td colspan="2">';
+			echo $langmessage['Empty'];
+			echo '</td></tr>';
+		}else{
+			foreach($config['gadgets'] as $gadget => $temp){
+				echo '<tr><td>';
+				echo str_replace('_',' ',$gadget);
+				echo '</td><td>';
+				if( isset($gadget_info[$gadget]) ){
+					$query = 'cmd=rmgadget&gadget='.urlencode($gadget);
+					$url = $this->LayoutUrl($this->curr_layout,$query);
+					echo common::Link($url,$langmessage['remove'],$query,'data-cmd="creq"');
+				}else{
+					echo $langmessage['disabled'];
+				}
+				echo '</td></tr>';
+			}
+		}
 		echo '</table>';
 	}
+
 
 	/**
 	 * Add CSS to the page to add space for the editing toolbar
@@ -675,6 +683,7 @@ class admin_theme_content extends admin_addon_install{
 		echo common::Link($url,$label,$query,' data-cmd="gpabox"');
 		echo '</li>';
 
+		echo '<li>'.common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['gadgets'],'cmd=gadgets','data-cmd="gpabox"').'</li>';
 
 
 		$attr = array('data-cmd'=>'cnreq', 'class'=>'gpconfirm','title'=>sprintf($langmessage['generic_delete_confirm'],$info['label']));
@@ -1754,7 +1763,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '<ul class="submenu">';
 
 		echo '<li>';
-		echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['edit'],'',' title="'.htmlspecialchars($langmessage['Arrange Content']).'" ');
+		echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['edit_this_layout'],'',' title="'.htmlspecialchars($langmessage['Arrange Content']).'" ');
 		echo '</li>';
 
 

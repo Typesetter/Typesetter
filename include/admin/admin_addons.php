@@ -18,16 +18,11 @@ defined('is_running') or die('Not an entry point...');
  *
  * 			- minimum version / max version
  * 		/addons/<addon>/<php files>
- *
- *
- *
- *
- *
- *
  */
 
 
-includeFile('admin/admin_addon_install.php'); // admin_addon_install extends admin_addon_tool
+includeFile('admin/admin_addon_install.php');
+//includeFile('admin/admin_theme_content.php');
 
 class admin_addons extends admin_addon_install{
 

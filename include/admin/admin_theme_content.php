@@ -220,7 +220,8 @@ class admin_theme_content extends admin_addon_install{
 
 		}
 
-		$this->Show();
+		$this->ShowNew();
+		//$this->Show();
 	}
 
 
@@ -1490,8 +1491,6 @@ class admin_theme_content extends admin_addon_install{
 	function Show(){
 		global $config, $page, $langmessage, $gpLayouts;
 
-		$page->head_js[] = '/include/js/auto_width.js';
-
 		$this->FindForm();
 
 		echo '<h2 class="hmargin">';
@@ -1499,13 +1498,6 @@ class admin_theme_content extends admin_addon_install{
 		echo ' <span>|</span> ';
 		echo common::Link($this->path_remote,$this->find_label);
 		echo '</h2>';
-
-
-		echo '<div id="adminlinks2">';
-		foreach($gpLayouts as $layout => $info){
-			$this->LayoutDiv($layout,$info);
-		}
-		echo '</div>';
 
 
 		echo '<table class="bordered full_width">';
@@ -1533,7 +1525,28 @@ class admin_theme_content extends admin_addon_install{
 		echo '</p>';
 
 		$this->ColorSelector();
+	}
 
+	function ShowNew(){
+		global $config, $page, $langmessage, $gpLayouts;
+
+		$page->head_js[] = '/include/js/auto_width.js';
+
+		$this->FindForm();
+
+		echo '<h2 class="hmargin">';
+		echo $langmessage['Manage Layouts'];
+		echo ' <span>|</span> ';
+		echo common::Link($this->path_remote,$this->find_label);
+		echo '</h2>';
+
+
+		echo '<div id="adminlinks2">';
+		foreach($gpLayouts as $layout => $info){
+			$this->LayoutDiv($layout,$info);
+		}
+		echo '</div>';
+		$this->ColorSelector();
 	}
 
 	/**
@@ -1701,7 +1714,7 @@ class admin_theme_content extends admin_addon_install{
 		$titles_count = sprintf($langmessage['%s Pages'],$titles_count);
 
 		if( $config['gpLayout'] == $layout ){
-			echo '<a><b>'.$langmessage['default'].' &nbsp; '.$titles_count.'</b></a>';
+			echo '<b>'.$langmessage['default'].' &nbsp; '.$titles_count.'</b>';
 		}else{
 			echo common::Link('Admin_Theme_Content',$langmessage['make_default'].' &nbsp; '.$titles_count,'cmd=makedefault&layout_id='.rawurlencode($layout),array('data-cmd'=>'creq','title'=>$langmessage['make_default']));
 		}
@@ -1733,7 +1746,13 @@ class admin_theme_content extends admin_addon_install{
 			echo '<a>'.$langmessage['style'].'</a>';
 			echo '<ul>';
 			foreach($theme_colors as $color){
-				echo '<li><a>'.$color.'</a></li>';
+				echo '<li>';
+				if( $color == $layout_info['theme_color'] ){
+					echo '<b>'.$color.'</b>';
+				}else{
+					echo common::Link('Admin_Theme_Content',$color,'cmd=change_layout_color&color='.$color.'&layout='.rawurlencode($layout),' data-cmd="cnreq"');
+				}
+				echo '</li>';
 			}
 			echo '</ul>';
 			echo '</li>';

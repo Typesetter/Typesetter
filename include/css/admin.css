@@ -1178,7 +1178,11 @@ color:#2d2d2d!important;
 	margin:0;
 	}
 #adminlinks2 li.expand_child_click li > a,
-#adminlinks2 li.expand_child_click li > span{
+#adminlinks2 li.expand_child_click li > span,
+#adminlinks2 li.expand_child_click li > b{
+	font-size:13px;
+	padding:5px 12px;
+	display:block;
 	padding:3px 25px;
 	}
 #adminlinks2 li.expand_child_click li:hover{

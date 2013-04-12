@@ -873,16 +873,21 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 		$old_info = $new_info = $gpLayouts[$layout];
-		if( !isset($_POST['menu_css_ordered']) ){
-			$new_info['menu_css_ordered'] = false;
-		}else{
-			unset($new_info['menu_css_ordered']);
+
+		if( isset($_POST['menu_css_ordered']) ){
+			if( $_POST['menu_css_ordered'] === 'off' ){
+				$new_info['menu_css_ordered'] = false;
+			}else{
+				unset($new_info['menu_css_ordered']);
+			}
 		}
 
-		if( !isset($_POST['menu_css_indexed']) ){
-			$new_info['menu_css_indexed'] = false;
-		}else{
-			unset($new_info['menu_css_indexed']);
+		if( isset($_POST['menu_css_indexed']) ){
+			if( $_POST['menu_css_indexed'] === 'off' ){
+				$new_info['menu_css_indexed'] = false;
+			}else{
+				unset($new_info['menu_css_indexed']);
+			}
 		}
 
 		$gpLayouts[$layout] = $new_info;
@@ -896,6 +901,11 @@ class admin_theme_content extends admin_addon_install{
 		if( $set_theme || $page->gpLayout == $layout ){
 			$page->SetTheme($layout);
 		}
+
+
+		$content = $this->CSSPreferenceForm($layout,$new_info);
+		$page->ajaxReplace = array();
+		$page->ajaxReplace[] = array('replace','#layout_css_ul_'.$layout,$content);
 	}
 
 	/**
@@ -1682,6 +1692,18 @@ class admin_theme_content extends admin_addon_install{
 
 		$layout_info = common::LayoutInfo($layout,false);
 
+		$handlers_count = 0;
+		if( isset($layout_info['handlers']) && is_array($layout_info['handlers']) ){
+			foreach($layout_info['handlers'] as $val){
+				$int = count($val);
+				if( $int === 0){
+					$handlers_count++;
+				}
+				$handlers_count += $int;
+			}
+		}
+
+
 		echo '<div class="panelgroup">';
 		echo '<span>';
 		echo '<a data-cmd="layout_id" title="'.$info['color'].'" data-arg="'.$info['color'].'">';
@@ -1720,14 +1742,30 @@ class admin_theme_content extends admin_addon_install{
 		}
 		echo '</li>';
 
+
+		//details
 		echo '<li>';
 		echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['details'],'cmd=details&show=main','data-cmd="gpabox"');
 		echo '</li>';
 
+
+		//content arrangement
+		echo '<li>';
+		if( $handlers_count > 0 ){
+			echo common::Link('Admin_Theme_Content',$langmessage['content_arrangement'].': '.$langmessage['restore_defaults'],'cmd=restore&layout='.rawurlencode($layout),'data-cmd="creq"');
+		}else{
+			echo '<span>'.$langmessage['content_arrangement'].': '.$langmessage['default'].'</span>';
+		}
+		echo '</li>';
+
+
+		//copy
 		echo '<li>';
 		echo common::Link('Admin_Theme_Content',$langmessage['Copy'],'cmd=copy&layout='.rawurlencode($layout),'data-cmd="gpabox"');
 		echo '</li>';
 
+
+		//delete
 		echo '<li>';
 		if( $config['gpLayout'] == $layout ){
 			//echo '<span>'.$langmessage['delete'].'</span>';
@@ -1737,6 +1775,7 @@ class admin_theme_content extends admin_addon_install{
 		}
 		echo '</li>';
 		echo '</ul>';
+
 
 		//color variations
 		$theme_colors = $this->GetThemeColors($layout_info['dir']);
@@ -1758,6 +1797,14 @@ class admin_theme_content extends admin_addon_install{
 			echo '</li>';
 		}
 
+
+		//css options
+		echo '<li class="expand_child_click">';
+		echo '<a>CSS</a>';
+		echo $this->CSSPreferenceForm($layout,$layout_info);
+		echo '</li>';
+
+
 		if( isset($layout_info['addon_key']) ){
 			$addon_key = $layout_info['addon_key'];
 			$addon_config = gpPlugin::GetAddonConfig($addon_key);
@@ -1769,6 +1816,55 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '</div>';
 		echo '</div>';
+	}
+
+
+	/**
+	 * Return form for name based menu classes and ordered menu classes
+	 *
+	 */
+	function CSSPreferenceForm($layout,$layout_info){
+		ob_start();
+		echo '<ul id="layout_css_ul_'.$layout.'">';
+		// name based menu classes
+		echo '<li>';
+		echo '<form action="'.common::GetUrl('Admin_Theme_Content').'" method="post">';
+		echo '<input type="hidden" name="layout" value="'.$layout.'" />';
+		echo '<input type="hidden" name="cmd" value="css_preferences" />';
+		$checked = '';
+		$value = 'on';
+		if( !isset($layout_info['menu_css_ordered']) ){
+			$checked = 'checked="checked"';
+			$value = 'off';
+		}
+		echo '<input type="hidden" name="menu_css_ordered" value="'.$value.'" />';
+		echo '<label>';
+		echo '<input type="checkbox" name="none" value="" '.$checked.' class="gpajax" />';
+		echo ' Name Based Menu Classes';
+		echo '</label>';
+		echo '</form>';
+		echo '</li>';
+
+		//ordered menu classes
+		echo '<li>';
+		echo '<form action="'.common::GetUrl('Admin_Theme_Content').'" method="post">';
+		echo '<input type="hidden" name="layout" value="'.$layout.'" />';
+		echo '<input type="hidden" name="cmd" value="css_preferences" />';
+		$checked = '';
+		$value = 'on';
+		if( !isset($layout_info['menu_css_indexed']) ){
+			$checked = 'checked="checked"';
+			$value = 'off';
+		}
+		echo '<input type="hidden" name="menu_css_indexed" value="'.$value.'" />';
+		echo '<label>';
+		echo '<input type="checkbox" name="none" value="" '.$checked.' class="gpajax" />';
+		echo ' Ordered Menu Classes';
+		echo '</label>';
+		echo '</form>';
+		echo '</li>';
+		echo '</ul>';
+		return ob_get_clean();
 	}
 
 	/**

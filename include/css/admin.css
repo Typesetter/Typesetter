@@ -1179,7 +1179,8 @@ color:#2d2d2d!important;
 	}
 #adminlinks2 li.expand_child_click li > a,
 #adminlinks2 li.expand_child_click li > span,
-#adminlinks2 li.expand_child_click li > b{
+#adminlinks2 li.expand_child_click li > b,
+#adminlinks2 li.expand_child_click li > form{
 	font-size:13px;
 	padding:5px 12px;
 	display:block;

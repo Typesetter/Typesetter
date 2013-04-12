@@ -108,7 +108,6 @@ class admin_theme_content extends admin_addon_install{
 			break;
 
 
-
 			case 'deletetheme':
 				$this->DeleteTheme();
 			return;
@@ -228,18 +227,34 @@ class admin_theme_content extends admin_addon_install{
 				$this->AddonText();
 			return;
 
-			case 'titles':
-				$this->ShowTitles();
-			return;
-			case 'gadgets':
-				$this->ShowGadgets();
-			return;
-
-
 		}
+
+		if( $this->LayoutCommands($cmd) ){
+			return;
+		}
+
 
 		$this->ShowNew();
 		//$this->Show();
+	}
+
+
+	/**
+	 * Perform various layout commands
+	 *
+	 */
+	function LayoutCommands($cmd){
+
+		switch($cmd){
+			case 'gadgets':
+				$this->ShowGadgets();
+			return true;
+			case 'titles':
+				$this->ShowTitles();
+			return;
+		}
+
+		return false;
 	}
 
 
@@ -362,14 +377,12 @@ class admin_theme_content extends admin_addon_install{
 			case 'rm_area':
 				$this->RemoveArea();
 			break;
+		}
 
-			case 'titles':
-				$this->ShowTitles();
-			return;
-			case 'gadgets':
-				$this->ShowGadgets();
+		if( $this->LayoutCommands($cmd) ){
 			return;
 		}
+
 
 		$layout_info = common::LayoutInfo($layout,false);
 		$handlers_count = 0;
@@ -669,12 +682,14 @@ class admin_theme_content extends admin_addon_install{
 		$page->admin_html = ob_get_clean();
 	}
 
+
 	/**
 	 * Create a drop-down menu for the layout options
 	 *
 	 */
 	function LayoutOptions($layout,$info){
 		global $langmessage, $config;
+
 
 		//get handler count
 		$handlers_count = 0;
@@ -687,6 +702,7 @@ class admin_theme_content extends admin_addon_install{
 				$handlers_count += $int;
 			}
 		}
+
 
 		//gadgets
 		echo '<li>';

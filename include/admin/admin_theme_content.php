@@ -121,6 +121,15 @@ class admin_theme_content extends admin_addon_install{
 				$this->AdminLayout();
 			return;
 
+			//css editing
+			case 'save_css':
+				$this->SaveCSS();
+			break;
+			case 'css':
+				$this->EditCSS();
+			return;
+
+
 
 			//theme ratings
 			case 'Update Review';
@@ -303,7 +312,7 @@ class admin_theme_content extends admin_addon_install{
 				$this->SaveCSS();
 			break;
 			case 'css':
-				$this->EditCSS();
+				$this->EditCSS(true);
 			break;
 
 			case 'makedefault':
@@ -748,17 +757,23 @@ class admin_theme_content extends admin_addon_install{
 	 * Output textarea for adding css to a layout
 	 *
 	 */
-	function EditCSS(){
+	function EditCSS($show=false){
 		global $langmessage, $page;
 
-		$css = $this->layoutCSS($this->curr_layout);
-		if( empty($css) ){
-			//$css = '/* Add your CSS here. Changes will be applied as you edit. */';
+		if( !$this->curr_layout ){
+			return false;
 		}
 
-		echo '<form action="'.common::GetUrl('Admin_Theme_Content/'.$this->curr_layout).'" method="post">';
+		$css = $this->layoutCSS($this->curr_layout);
+		if( $show ){
+			echo '<form action="'.common::GetUrl('Admin_Theme_Content/'.$this->curr_layout).'" method="post">';
+		}else{
+			echo '<form action="'.common::GetUrl('Admin_Theme_Content').'" method="post">';
+			echo ' <input type="hidden" name="layout" value="'.$this->curr_layout.'" />';
+		}
+
 		echo '<h3>CSS</h3>';
-		echo '<textarea name="css" id="gp_layout_css" class="layout_css gptextarea" rows="10" cols="50">';
+		echo '<textarea name="css" id="gp_layout_css" class="layout_css gptextarea" rows="10" cols="50" placeholder="Add your CSS here.">';
 		echo htmlspecialchars($css);
 		echo '</textarea>';
 		echo '<p>';
@@ -1824,8 +1839,14 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function CSSPreferenceForm($layout,$layout_info){
+		global $langmessage;
+
 		ob_start();
 		echo '<ul id="layout_css_ul_'.$layout.'">';
+
+		//edit custom css
+		echo '<li>'.common::Link('Admin_Theme_Content',$langmessage['edit'],'cmd=css&layout='.rawurlencode($layout),'data-cmd="gpabox"').'</li>';
+
 		// name based menu classes
 		echo '<li>';
 		echo '<form action="'.common::GetUrl('Admin_Theme_Content').'" method="post">';

@@ -159,8 +159,15 @@ var $gp = {
 	Response : function(data,textStatus,jqXHR){
 
 		$('.messages').detach();
+		try{
+			$gp.CloseAdminBox();
+		}catch(a){}
 
-		var cbox = false;
+		try{
+			$.fn.colorbox.close();
+		} catch(a){}
+
+
 		$.each(data,function(i,obj){
 
 			if( typeof($gp.response[obj.DO]) === 'function' ){
@@ -184,7 +191,7 @@ var $gp = {
 				break;
 
 				case 'admin_box_data':
-					cbox = $gp.AdminBoxC(obj.CONTENT);
+					$gp.AdminBoxC(obj.CONTENT);
 				break;
 
 				case 'messages':
@@ -197,18 +204,6 @@ var $gp = {
 				break;
 			}
 		});
-
-		if( !cbox ){
-
-			try{
-				$gp.CloseAdminBox();
-			}catch(a){}
-
-			try{
-				$.fn.colorbox.close();
-			} catch(a){}
-		}
-
 
 		$gp.loaded();
 	},

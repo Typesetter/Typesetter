@@ -228,6 +228,10 @@ class admin_theme_content extends admin_addon_install{
 				$this->AddonText();
 			return;
 
+			case 'titles':
+				$this->ShowTitles();
+			return;
+
 
 		}
 
@@ -356,6 +360,9 @@ class admin_theme_content extends admin_addon_install{
 				$this->RemoveArea();
 			break;
 
+			case 'titles':
+				$this->ShowTitles();
+			return;
 		}
 
 		$layout_info = common::LayoutInfo($layout,false);
@@ -427,18 +434,15 @@ class admin_theme_content extends admin_addon_install{
 		echo '</td><td>';
 			if( $config['gpLayout'] == $layout ){
 				echo $langmessage['default'];
-			}elseif( !isset($_GET['show']) ){
+			}elseif( $this->layout_request ){
 				echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),str_replace(' ','&nbsp;',$langmessage['make_default']),'cmd=makedefault',array('data-cmd'=>'gpabox','title'=>$langmessage['make_default']));
 			}else{
 				echo common::Link('Admin_Theme_Content',str_replace(' ','&nbsp;',$langmessage['default']),'cmd=makedefault&layout='.rawurlencode($layout),array('data-cmd'=>'creq','title'=>htmlspecialchars($langmessage['make_default'])));
 			}
-
-			echo ' &nbsp; ';
-			$titles_count = $this->TitlesCount($layout);
-			echo sprintf($langmessage['%s Pages'],$titles_count);
 		echo '</td></tr>';
 
 
+		//styles
 		$theme_colors = $this->GetThemeColors($layout_info['dir']);
 		echo '<tr><td>';
 		echo $langmessage['style'];
@@ -545,15 +549,25 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '</table>';
 		echo '</form>';
+	}
+
+
+	/**
+	 * Display a list of all the titles using the current layout
+	 *
+	 */
+	function ShowTitles(){
+		global $langmessage;
 
 		//affected titles
-		$titles_count = $this->TitlesCount($layout);
+		$titles_count = $this->TitlesCount($this->curr_layout);
 
-		echo '<br/>';
-		echo '<table class="bordered full_width">';
-		echo '<tr><th colspan="2">';
-		echo $langmessage['titles_using_layout'];
+		echo '<h2>'.$langmessage['titles_using_layout'];
 		echo ': '.$titles_count;
+		echo '</h2>';
+
+		echo '<table class="bordered full_width">';
+		echo '<tr><th colspan="2">&nbsp;';
 		echo '</th></tr>';
 
 		echo '<tr><td colspan="2">';
@@ -561,7 +575,7 @@ class admin_theme_content extends admin_addon_install{
 			echo '<ul class="titles_using">';
 
 			foreach( $this->LayoutArray as $index => $layout_comparison ){
-				if( $layout == $layout_comparison ){
+				if( $this->curr_layout == $layout_comparison ){
 
 					$title = common::IndexToTitle($index);
 					if( empty($title) ){
@@ -581,7 +595,6 @@ class admin_theme_content extends admin_addon_install{
 		}
 		echo '</td></tr>';
 		echo '</table>';
-
 	}
 
 	/**
@@ -651,6 +664,18 @@ class admin_theme_content extends admin_addon_install{
 		echo '<li>'.common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['details'],'cmd=details','data-cmd="gpabox"').'</li>';
 		echo '<li>'.common::Link('Admin_Theme_Content/'.rawurlencode($layout),'CSS','cmd=css','data-cmd="gpabox"').'</li>';
 		echo '<li>'.common::Link('Admin_Theme_Content',$langmessage['Copy'],'cmd=copy&layout='.rawurlencode($layout),'data-cmd="gpabox"').'</li>';
+
+
+		//titles using layout
+		echo '<li>';
+		$titles_count = $this->TitlesCount($layout);
+		$label = $langmessage['titles_using_layout'].': '.sprintf($langmessage['%s Pages'],$titles_count);
+		$query = 'cmd=titles';
+		$url = $this->LayoutUrl($layout,$query);
+		echo common::Link($url,$label,$query,' data-cmd="gpabox"');
+		echo '</li>';
+
+
 
 		$attr = array('data-cmd'=>'cnreq', 'class'=>'gpconfirm','title'=>sprintf($langmessage['generic_delete_confirm'],$info['label']));
 		echo '<li>'.common::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletelayout&layout='.rawurlencode($layout),$attr).'</li>';
@@ -1750,9 +1775,12 @@ class admin_theme_content extends admin_addon_install{
 		//title count
 		echo '<li>';
 		$titles_count = $this->TitlesCount($layout);
-		$titles_count = sprintf($langmessage['%s Pages'],$titles_count);
-		echo '<a>'.$langmessage['titles_using_layout'].': '.$titles_count.'</a>';
+		$label = $langmessage['titles_using_layout'].': '.sprintf($langmessage['%s Pages'],$titles_count);
+		$query = 'cmd=titles';
+		$url = $this->LayoutUrl($layout,$query);
+		echo common::Link($url,$label,$query,' data-cmd="gpabox"');
 		echo '</li>';
+
 
 
 		//content arrangement
@@ -1772,14 +1800,14 @@ class admin_theme_content extends admin_addon_install{
 
 
 		//delete
-		echo '<li>';
 		if( $config['gpLayout'] == $layout ){
 			//echo '<span>'.$langmessage['delete'].'</span>';
 		}else{
+			echo '<li>';
 			$attr = array( 'data-cmd'=>'creq','class'=>'gpconfirm','title'=>sprintf($langmessage['generic_delete_confirm'],$info['label']) );
 			echo common::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletelayout&layout='.rawurlencode($layout),$attr);
+			echo '</li>';
 		}
-		echo '</li>';
 		echo '</ul>';
 
 
@@ -1795,7 +1823,9 @@ class admin_theme_content extends admin_addon_install{
 				if( $color == $layout_info['theme_color'] ){
 					echo '<b>'.$color.'</b>';
 				}else{
-					echo common::Link('Admin_Theme_Content',$color,'cmd=change_layout_color&color='.$color.'&layout='.rawurlencode($layout),' data-cmd="cnreq"');
+					$query = 'cmd=change_layout_color&color='.$color;
+					$url = $this->LayoutUrl($layout,$query);
+					echo common::Link($url,$color,$query,' data-cmd="cnreq"');
 				}
 				echo '</li>';
 			}

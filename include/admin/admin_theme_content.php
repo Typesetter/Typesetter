@@ -178,14 +178,6 @@ class admin_theme_content extends admin_addon_install{
 				$this->EditLayout($this->curr_layout,$cmd);
 			return;
 
-			case 'rmgadget':
-				$this->RmGadget($_REQUEST['layout']);
-			break;
-
-			case 'change_layout_color':
-				$this->ChangeLayoutColor($_REQUEST['layout'],false);
-			break;
-
 
 			//layout options
 			case 'deletelayout':
@@ -238,6 +230,11 @@ class admin_theme_content extends admin_addon_install{
 
 		switch($cmd){
 
+
+			case 'change_layout_color':
+				$this->ChangeLayoutColor();
+			break;
+
 			case 'restore':
 				$this->Restore();
 			break;
@@ -254,6 +251,9 @@ class admin_theme_content extends admin_addon_install{
 				$this->LayoutDetails();
 			break;
 
+			case 'rmgadget':
+				$this->RmGadget();
+			break;
 			case 'gadgets':
 				$this->ShowGadgets();
 			return true;
@@ -348,13 +348,9 @@ class admin_theme_content extends admin_addon_install{
 				$this->EditCSS(true);
 			break;
 
-			case 'change_layout_color':
-				$this->ChangeLayoutColor($layout);
-			break;
 
-			case 'rmgadget':
-				$this->RmGadget($layout);
-			break;
+
+
 
 			case 'drag_area':
 				$this->Drag();
@@ -1002,11 +998,11 @@ class admin_theme_content extends admin_addon_install{
 	 * Change the color variant for $layout
 	 *
 	 */
-	function ChangeLayoutColor($layout,$set_theme=true){
+	function ChangeLayoutColor(){
 		global $langmessage,$gpLayouts,$page;
 
 		$color =& $_REQUEST['color'];
-		$layout_info = common::LayoutInfo($layout,false);
+		$layout_info = common::LayoutInfo($this->curr_layout,false);
 		$theme_colors = $this->GetThemeColors($layout_info['dir']);
 
 		if( !isset($theme_colors[$color]) ){
@@ -1014,18 +1010,18 @@ class admin_theme_content extends admin_addon_install{
 			return false;
 		}
 
-		$old_info = $new_info = $gpLayouts[$layout];
+		$old_info = $new_info = $gpLayouts[$this->curr_layout];
 		$theme_name = dirname($new_info['theme']);
 		$new_info['theme'] = $theme_name.'/'.$color;
-		$gpLayouts[$layout] = $new_info;
+		$gpLayouts[$this->curr_layout] = $new_info;
 
 		if( !admin_tools::SavePagesPHP() ){
-			$gpLayouts[$layout] = $old_info;
+			$gpLayouts[$this->curr_layout] = $old_info;
 			message($langmessage['OOPS'].' (Not Saved)');
 			return;
 		}
 
-		if( $set_theme || $page->gpLayout == $layout ){
+		if( $this->layout_request || $page->gpLayout == $this->curr_layout ){
 			$page->SetTheme($layout);
 		}
 
@@ -1037,12 +1033,12 @@ class admin_theme_content extends admin_addon_install{
 	 * @return null
 	 *
 	 */
-	function RmGadget($layout){
+	function RmGadget(){
 		global $page,$langmessage;
 
 		$gadget =& $_REQUEST['gadget'];
 
-		$handlers = $this->GetAllHandlers($layout);
+		$handlers = $this->GetAllHandlers($this->curr_layout);
 		$this->PrepContainerHandlers($handlers,'GetAllGadgets','GetAllGadgets'); //make sure GetAllGadgets is set
 
 		$changed = false;
@@ -1060,7 +1056,7 @@ class admin_theme_content extends admin_addon_install{
 			return;
 		}
 
-		$this->SaveHandlersNew($handlers,$layout);
+		$this->SaveHandlersNew($handlers,$this->curr_layout);
 	}
 
 

@@ -99,6 +99,7 @@ class admin_theme_content extends admin_addon_install{
 
 		switch($cmd){
 
+
 			//remote themes
 			case 'remote_install':
 				$this->RemoteInstall();
@@ -184,10 +185,6 @@ class admin_theme_content extends admin_addon_install{
 				$this->ChangeLayoutColor($_REQUEST['layout'],false);
 			break;
 
-			case 'css_preferences':
-				$this->CSSPreferences($_REQUEST['layout'],false);
-			break;
-
 
 			//layout options
 			case 'deletelayout':
@@ -239,6 +236,10 @@ class admin_theme_content extends admin_addon_install{
 	function LayoutCommands($cmd){
 
 		switch($cmd){
+
+			case 'css_preferences':
+				$this->CSSPreferences();
+			break;
 
 			case 'makedefault':
 				$this->MakeDefault();
@@ -344,9 +345,6 @@ class admin_theme_content extends admin_addon_install{
 
 			case 'change_layout_color':
 				$this->ChangeLayoutColor($layout);
-			break;
-			case 'css_preferences':
-				$this->CSSPreferences($layout);
 			break;
 
 			case 'rmgadget':
@@ -959,14 +957,10 @@ class admin_theme_content extends admin_addon_install{
 	 * Save changes to the css settings for a layout
 	 *
 	 */
-	function CSSPreferences($layout, $set_theme = true){
+	function CSSPreferences(){
 		global $langmessage, $gpLayouts, $page;
-		if( !isset($gpLayouts[$layout]) ){
-			message($langmessage['OOPS'].' (Invalid Layout)');
-			return false;
-		}
 
-		$old_info = $new_info = $gpLayouts[$layout];
+		$old_info = $new_info = $gpLayouts[$this->curr_layout];
 
 		if( isset($_POST['menu_css_ordered']) ){
 			if( $_POST['menu_css_ordered'] === 'off' ){
@@ -984,22 +978,22 @@ class admin_theme_content extends admin_addon_install{
 			}
 		}
 
-		$gpLayouts[$layout] = $new_info;
+		$gpLayouts[$this->curr_layout] = $new_info;
 
 		if( !admin_tools::SavePagesPHP() ){
-			$gpLayouts[$layout] = $old_info;
+			$gpLayouts[$this->curr_layout] = $old_info;
 			message($langmessage['OOPS'].' (Not Saved)');
 			return;
 		}
 
-		if( $set_theme || $page->gpLayout == $layout ){
-			$page->SetTheme($layout);
+		if( $this->layout_request || $page->gpLayout == $this->curr_layout ){
+			$page->SetTheme($this->curr_layout);
 		}
 
 
-		$content = $this->CSSPreferenceForm($layout,$new_info);
+		$content = $this->CSSPreferenceForm($this->curr_layout,$new_info);
 		$page->ajaxReplace = array();
-		$page->ajaxReplace[] = array('replace','#layout_css_ul_'.$layout,$content);
+		$page->ajaxReplace[] = array('replace','#layout_css_ul_'.$this->curr_layout,$content);
 	}
 
 	/**

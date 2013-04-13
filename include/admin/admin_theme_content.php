@@ -89,10 +89,15 @@ class admin_theme_content extends admin_addon_install{
 			}
 		}
 
-		if( isset($_REQUEST['layout']) && isset($gpLayouts[$_REQUEST['layout']]) ){
+
+		//set current layout
+		$this->curr_layout = $config['gpLayout'];
+		if( isset($_REQUEST['layout']) ){
 			$this->curr_layout = $_REQUEST['layout'];
-		}else{
-			$this->curr_layout = $config['gpLayout'];
+		}
+		if( !array_key_exists($this->curr_layout,$gpLayouts) ){
+			message($langmessage['OOPS'].' (Invalid Layout)');
+			$cmd = '';
 		}
 		$this->SetLayoutArray();
 

@@ -1022,7 +1022,7 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 		if( $this->layout_request || $page->gpLayout == $this->curr_layout ){
-			$page->SetTheme($layout);
+			$page->SetTheme($this->curr_layout);
 		}
 
 	}

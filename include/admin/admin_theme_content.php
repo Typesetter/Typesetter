@@ -128,13 +128,6 @@ class admin_theme_content extends admin_addon_install{
 				$this->AdminLayout();
 			return;
 
-			//css editing
-			case 'save_css':
-				$this->SaveCSS();
-			break;
-			case 'css':
-				$this->EditCSS();
-			return;
 
 
 
@@ -229,6 +222,16 @@ class admin_theme_content extends admin_addon_install{
 	function LayoutCommands($cmd){
 
 		switch($cmd){
+
+
+
+			// CSS editing
+			case 'save_css':
+				$this->SaveCSS();
+			break;
+			case 'css':
+				$this->EditCSS();
+			return true;
 
 
 			case 'change_layout_color':
@@ -334,20 +337,6 @@ class admin_theme_content extends admin_addon_install{
 			case 'theme_images':
 				$this->ShowThemeImages();
 			return;
-
-
-
-			/**
-			 * CSS editing
-			 *
-			 */
-			case 'save_css':
-				$this->SaveCSS();
-			break;
-			case 'css':
-				$this->EditCSS(true);
-			break;
-
 
 
 
@@ -832,15 +821,12 @@ class admin_theme_content extends admin_addon_install{
 	 * Output textarea for adding css to a layout
 	 *
 	 */
-	function EditCSS($show=false){
+	function EditCSS(){
 		global $langmessage, $page;
 
-		if( !$this->curr_layout ){
-			return false;
-		}
-
 		$css = $this->layoutCSS($this->curr_layout);
-		if( $show ){
+
+		if( $this->layout_request ){
 			echo '<form action="'.common::GetUrl('Admin_Theme_Content/'.$this->curr_layout).'" method="post">';
 		}else{
 			echo '<form action="'.common::GetUrl('Admin_Theme_Content').'" method="post">';

@@ -683,7 +683,8 @@ class admin_theme_content extends admin_addon_install{
 		//content arrangement
 		echo '<li>';
 		if( $handlers_count ){
-			echo $this->LayoutLink( $layout, $langmessage['content_arrangement'].': '.$langmessage['restore_defaults'], 'cmd=restore', 'data-cmd="creq"' );
+			echo $this->LayoutLink( $layout, $langmessage['restore_defaults'], 'cmd=restore', 'data-cmd="creq"' );
+			//echo $this->LayoutLink( $layout, $langmessage['content_arrangement'].': '.$langmessage['restore_defaults'], 'cmd=restore', 'data-cmd="creq"' );
 		}else{
 			echo '<span>'.$langmessage['content_arrangement'].': '.$langmessage['default'].'</span>';
 		}
@@ -710,7 +711,7 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function LayoutSelect($curr_layout=false,$curr_info=false){
-		global $gpLayouts, $langmessage;
+		global $gpLayouts, $langmessage, $config;
 
 		$display = $langmessage['available_layouts'];
 		if( $curr_layout ){
@@ -729,8 +730,10 @@ class admin_theme_content extends admin_addon_install{
 			}
 			echo '<li'.$attr.'>';
 
-			$display = '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span> &nbsp; '
-					. $info['label'];
+			$display = '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span> &nbsp; '. $info['label'];
+			if( $config['gpLayout'] == $layout ){
+				$display .= ' &nbsp; ('.$langmessage['default'].')';
+			}
 			echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$display);
 			echo '</li>';
 		}
@@ -1744,6 +1747,9 @@ class admin_theme_content extends admin_addon_install{
 		echo '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span>';
 		echo '&nbsp;';
 		echo $info['label'];
+		if( $config['gpLayout'] == $layout ){
+			echo ' &nbsp; ('.$langmessage['default'].')';
+		}
 		echo '</a>';
 		echo '</span>';
 

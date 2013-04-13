@@ -338,9 +338,6 @@ class admin_theme_content extends admin_addon_install{
 				$this->ShowThemeImages();
 			return;
 
-
-
-
 			case 'drag_area':
 				$this->Drag();
 			break;
@@ -383,7 +380,6 @@ class admin_theme_content extends admin_addon_install{
 
 		//display options
 		switch($cmd){
-			case 'makedefault':
 			case 'details':
 				$this->ShowDetails($layout, $layout_info, $handlers_count );
 			return;
@@ -429,18 +425,6 @@ class admin_theme_content extends admin_addon_install{
 		echo $layout_info['theme_name'];
 		echo '</td></tr>';
 
-		echo '<tr><td>';
-		echo $langmessage['usage'];
-		echo '</td><td>';
-			if( $config['gpLayout'] == $layout ){
-				echo $langmessage['default'];
-			}elseif( $this->layout_request ){
-				echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),str_replace(' ','&nbsp;',$langmessage['make_default']),'cmd=makedefault',array('data-cmd'=>'gpabox','title'=>$langmessage['make_default']));
-			}else{
-				echo common::Link('Admin_Theme_Content',str_replace(' ','&nbsp;',$langmessage['default']),'cmd=makedefault&layout='.rawurlencode($layout),array('data-cmd'=>'creq','title'=>htmlspecialchars($langmessage['make_default'])));
-			}
-		echo '</td></tr>';
-
 
 		//styles
 		$theme_colors = $this->GetThemeColors($layout_info['dir']);
@@ -465,20 +449,6 @@ class admin_theme_content extends admin_addon_install{
 		echo ' <input type="submit" name="" value="'.htmlspecialchars($langmessage['save']).'" class="gpbutton" />';
 		echo '</form>';
 		echo '</td></tr>';
-
-
-		echo '<tr><td>';
-		echo $langmessage['content_arrangement'];
-		echo '</td><td>';
-		if( $handlers_count > 0 ){
-			$query = 'cmd=restore';
-			$url = $this->LayoutUrl($layout,$query);
-			echo common::Link($url,$langmessage['restore_defaults'],$query,'data-cmd="creq"');
-		}else{
-			echo $langmessage['default'];
-		}
-		echo '</td></tr>';
-		echo '</table>';
 
 
 		//CSS options
@@ -586,9 +556,7 @@ class admin_theme_content extends admin_addon_install{
 				echo str_replace('_',' ',$gadget);
 				echo '</td><td>';
 				if( isset($gadget_info[$gadget]) ){
-					$query = 'cmd=rmgadget&gadget='.urlencode($gadget);
-					$url = $this->LayoutUrl($this->curr_layout,$query);
-					echo common::Link($url,$langmessage['remove'],$query,'data-cmd="cnreq"');
+					echo $this->LayoutLink( $this->curr_layout, $langmessage['remove'], 'cmd=rmgadget&gadget='.urlencode($gadget), 'data-cmd="cnreq"' );
 				}else{
 					echo $langmessage['disabled'];
 				}
@@ -638,7 +606,7 @@ class admin_theme_content extends admin_addon_install{
 
 		//theme_left
 		echo '<div id="theme_left">';
-		echo '<div class="step"><b>'. common::Link('Admin_Theme_Content',$langmessage['Manage Layouts']).'</b></div>';
+		echo '<div class="step"><b>'. common::Link('Admin_Theme_Content',$langmessage['layouts']).'</b></div>';
 
 		echo '<div class="step">';
 		$this->LayoutSelect($layout,$layout_info);
@@ -647,12 +615,14 @@ class admin_theme_content extends admin_addon_install{
 
 		//options
 		echo '<div><div class="dd_menu">';
-		echo '<a data-cmd="dd_menu">'.$langmessage['options'].'</a>';
-		echo '<div class="dd_list"><ul>';
+		echo '<a data-cmd="dd_menu">'.$langmessage['Layout Options'].'</a>';
+		echo '<div class="dd_list">';
+		echo '<ul>';
 		echo '<li>'.common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['details'],'cmd=details','data-cmd="gpabox"').'</li>';
 		echo '<li>'.common::Link('Admin_Theme_Content/'.rawurlencode($layout),'CSS','cmd=css','data-cmd="gpabox"').'</li>';
 		$this->LayoutOptions($layout,$layout_info);
-		echo '</ul></div>';
+		echo '</ul>';
+		echo '</div>';
 		echo '</div></div>';
 
 
@@ -685,30 +655,35 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 
+		//default
+		echo '<li>';
+		if( $config['gpLayout'] == $layout ){
+			echo '<span><b>'.$langmessage['default'].'</b></span>';
+		}else{
+			echo common::Link('Admin_Theme_Content',$langmessage['make_default'],'cmd=makedefault&layout='.rawurlencode($layout),array('data-cmd'=>'creq','title'=>$langmessage['make_default']));
+		}
+		echo '</li>';
+
+
 		//gadgets
 		echo '<li>';
-		$query = 'cmd=gadgets';
-		$url = $this->LayoutUrl($layout,$query);
-		echo common::Link($url,$langmessage['gadgets'],$query,'data-cmd="gpabox"');
+		echo $this->LayoutLink( $layout, $langmessage['gadgets'], 'cmd=gadgets', 'data-cmd="gpabox"' );
 		echo '</li>';
 
 
 		//titles using layout
 		echo '<li>';
 		$titles_count = $this->TitlesCount($layout);
-		$label = $langmessage['titles_using_layout'].': '.sprintf($langmessage['%s Pages'],$titles_count);
-		$query = 'cmd=titles';
-		$url = $this->LayoutUrl($layout,$query);
-		echo common::Link($url,$label,$query,' data-cmd="gpabox"');
+		$label = sprintf($langmessage['%s Pages'],$titles_count);
+		//$label = $langmessage['titles_using_layout'].': '.$label;
+		echo $this->LayoutLink( $layout, $label, 'cmd=titles', 'data-cmd="gpabox"' );
 		echo '</li>';
 
 
 		//content arrangement
 		echo '<li>';
 		if( $handlers_count ){
-			$query = 'cmd=restore';
-			$url = $this->LayoutUrl($layout,$query);
-			echo common::Link($url,$langmessage['content_arrangement'].': '.$langmessage['restore_defaults'],$query,'data-cmd="creq"');
+			echo $this->LayoutLink( $layout, $langmessage['content_arrangement'].': '.$langmessage['restore_defaults'], 'cmd=restore', 'data-cmd="creq"' );
 		}else{
 			echo '<span>'.$langmessage['content_arrangement'].': '.$langmessage['default'].'</span>';
 		}
@@ -1787,14 +1762,6 @@ class admin_theme_content extends admin_addon_install{
 		echo '<li class="expand_child_click">';
 		echo '<a>'.$langmessage['Layout Options'].'</a>';
 		echo '<ul>';
-		echo '<li>';
-		if( $config['gpLayout'] == $layout ){
-			echo '<b>'.$langmessage['default'].'</b>';
-		}else{
-			echo common::Link('Admin_Theme_Content',$langmessage['make_default'],'cmd=makedefault&layout='.rawurlencode($layout),array('data-cmd'=>'creq','title'=>$langmessage['make_default']));
-		}
-		echo '</li>';
-
 		$this->LayoutOptions($layout,$layout_info);
 		echo '</ul>';
 
@@ -1811,9 +1778,7 @@ class admin_theme_content extends admin_addon_install{
 				if( $color == $layout_info['theme_color'] ){
 					echo '<b>'.$color.'</b>';
 				}else{
-					$query = 'cmd=change_layout_color&color='.$color;
-					$url = $this->LayoutUrl($layout,$query);
-					echo common::Link($url,$color,$query,' data-cmd="cnreq"');
+					echo $this->LayoutLink( $layout, $color, 'cmd=change_layout_color&color='.$color, ' data-cmd="cnreq"' );
 				}
 				echo '</li>';
 			}
@@ -3810,6 +3775,11 @@ class admin_theme_content extends admin_addon_install{
 			$query .= '&layout='.rawurlencode($layout);
 		}
 		return $url;
+	}
+
+	function LayoutLink($layout,$label,$query,$attr){
+		$url = $this->LayoutUrl($layout,$query);
+		return common::Link($url,$label,$query,$attr);
 	}
 
 }

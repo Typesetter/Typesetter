@@ -1539,6 +1539,14 @@ body #gp_admin_html .layout_links a.selected{
  * drop down menus
  *
  */
+.dd_menu{
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	}
 .dd_menu ul,
 .dd_menu li,
 .dd_menu li a,
@@ -1616,7 +1624,7 @@ body #gp_admin_html .layout_links a.selected{
 	}
 .dd_list li > span,
 .dd_list li > a{
-	padding:2px 30px 2px 25px !important;
+	padding:2px 10px !important;
 	display:block;
 	min-width:200px;
 	margin-bottom:3px !important;

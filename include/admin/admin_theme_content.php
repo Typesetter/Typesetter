@@ -177,10 +177,6 @@ class admin_theme_content extends admin_addon_install{
 				$this->RmGadget($_REQUEST['layout']);
 			break;
 
-			case 'restore':
-				$this->Restore($_REQUEST['layout']);
-			break;
-
 			case 'change_layout_color':
 				$this->ChangeLayoutColor($_REQUEST['layout'],false);
 			break;
@@ -236,6 +232,10 @@ class admin_theme_content extends admin_addon_install{
 	function LayoutCommands($cmd){
 
 		switch($cmd){
+
+			case 'restore':
+				$this->Restore();
+			break;
 
 			case 'css_preferences':
 				$this->CSSPreferences();
@@ -351,9 +351,6 @@ class admin_theme_content extends admin_addon_install{
 				$this->RmGadget($layout);
 			break;
 
-			case 'restore':
-				$this->Restore($layout);
-			break;
 			case 'drag_area':
 				$this->Drag();
 			break;
@@ -718,7 +715,7 @@ class admin_theme_content extends admin_addon_install{
 
 		//content arrangement
 		echo '<li>';
-		if( !$handlers_count ){
+		if( $handlers_count ){
 			$query = 'cmd=restore';
 			$url = $this->LayoutUrl($layout,$query);
 			echo common::Link($url,$langmessage['content_arrangement'].': '.$langmessage['restore_defaults'],$query,'data-cmd="creq"');
@@ -2004,8 +2001,8 @@ class admin_theme_content extends admin_addon_install{
 	/**
 	 * Restore a layout to it's default content arrangement
 	 */
-	function Restore($layout){
-		$this->SaveHandlersNew(array(),$layout);
+	function Restore(){
+		$this->SaveHandlersNew(array(),$this->curr_layout);
 	}
 
 	function SaveHandlersNew($handlers,$layout=false){

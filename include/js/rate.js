@@ -36,7 +36,9 @@ $(function(){
 		b.prevAll().css({'background-position':'0 0'});
 	}
 
-	ResetStars();
+	$('span.rating').each(function(){
+		ResetStars( $(this) );
+	});
 
 });
 

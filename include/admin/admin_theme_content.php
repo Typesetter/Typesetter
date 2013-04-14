@@ -42,7 +42,7 @@ class admin_theme_content extends admin_addon_install{
 	var $layout_request = false;
 	var $curr_layout = false;
 	var $LayoutArray;
-
+	var $scriptUrl = 'Admin_Theme_Content';
 	var $possible = array();
 
 
@@ -63,6 +63,7 @@ class admin_theme_content extends admin_addon_install{
 
 		$page->head_js[] = '/include/js/theme_content.js';
 		$page->head_js[] = '/include/js/dragdrop.js';
+		$page->head_js[] = '/include/js/rate.js';
 
 		$page->css_admin[] = '/include/css/theme_content.css';
 		$page->css_admin[] = '/include/css/addons.css';
@@ -135,10 +136,8 @@ class admin_theme_content extends admin_addon_install{
 			case 'Update Review';
 			case 'Send Review':
 			case 'rate':
-				includeFile('admin/admin_addons_tool.php');
-				$rating = new admin_addons_tool();
-				$rating->admin_addon_rating('theme','Admin_Theme_Content');
-				if( $rating->ShowRatingText ){
+				$this->admin_addon_rating('theme','Admin_Theme_Content');
+				if( $this->ShowRatingText ){
 					return;
 				}
 			break;
@@ -1573,9 +1572,12 @@ class admin_theme_content extends admin_addon_install{
 	function ShowAvailable(){
 		global $langmessage,$config;
 
+		$this->GetAddonData();
+
 		//versions available online
 		includeFile('tool/update.php');
 		update_class::VersionsAndCheckTime($new_versions);
+
 
 		$avail_count = 0;
 		foreach($this->possible as $theme_id => $info){
@@ -1607,30 +1609,41 @@ class admin_theme_content extends admin_addon_install{
 			}
 
 			echo '</td><td>';
-			if( isset($info['id']) ){
-				echo common::Link('Admin_Theme_Content',$langmessage['rate'],'cmd=rate&arg='.rawurlencode($info['full_dir']));
+
+			if( isset($info['id']) && is_numeric($info['id']) ){
+				$id = $info['id'];
+
+				//support
+				$forum_id = 1000 + $id;
+				echo '<a href="'.addon_browse_path.'/Forum?show=f'.$forum_id.'" target="_blank">'.$langmessage['Support'].'</a>';
 				echo ' &nbsp; ';
-			}else{
-				echo '<span class="unavail">'.$langmessage['rate'].'</span>';
+
+				//rating
+				$rating = 5;
+				if( isset($this->addonReviews[$id]) ){
+					$rating = $this->addonReviews[$id]['rating'];
+				}
+
+				$label = $langmessage['rate'].' '.$this->ShowRating($info['rel'],$rating);
+				echo $label;
+				echo ' &nbsp; ';
 			}
 
 			if( $info['is_addon'] ){
 
-				if( isset($info['id']) ){
-					$forum_id = 1000 + $info['id'];
-					echo '<a href="'.addon_browse_path.'/Forum?show=f'.$forum_id.'" target="_blank">'.$langmessage['Support'].'</a>';
-					echo ' &nbsp; ';
-				}
-
+				//upgrade
 				if( isset($info['id']) && isset($new_versions[$info['id']]) ){
 					echo '<a href="'.addon_browse_path.'/Themes?id='.$info['id'].'" data-cmd="remote">';
 					echo $langmessage['upgrade'].' (gpEasy.com)';
 					echo '</a>';
 					echo ' &nbsp; ';
 				}
+
+				//delete
 				$folder = $info['folder'];
 				echo common::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletetheme&folder='.rawurlencode($folder).'&label='.rawurlencode($theme_id),'data-cmd="gpabox"');
 
+				//order
 				if( isset($config['themes'][$folder]['order']) ){
 					echo ' &nbsp; <span>Order: '.$config['themes'][$folder]['order'].'</span>';
 				}
@@ -1698,6 +1711,11 @@ class admin_theme_content extends admin_addon_install{
 		echo '</div>';
 	}
 
+
+	/**
+	 * Return the layout name and id color
+	 *
+	 */
 	function GetLayoutLabel( $layout, $layout_info ){
 		global $config, $langmessage, $config;
 

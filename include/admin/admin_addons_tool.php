@@ -67,6 +67,7 @@ class admin_addons_tool{
 
 	/**
 	 * Display clickable rating stars
+	 * $arg is the addon id for plugins, folder for themes
 	 *
 	 */
 	function ShowRating($arg,$rating){
@@ -76,7 +77,7 @@ class admin_addons_tool{
 
 		$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16"/>';
 		for($i = 1;$i<6;$i++){
-			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating='.$i.'&arg='.$arg,' data-rating="'.$i.'" data-cmd="gpabox" ');
+			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating='.$i.'&arg='.rawurlencode($arg),' data-rating="'.$i.'" data-cmd="gpabox" ');
 		}
 
 		echo '<input type="hidden" name="rating" value="'.htmlspecialchars($rating).'" readonly="readonly"/>';
@@ -104,9 +105,10 @@ class admin_addons_tool{
 		return $array;
 	}
 
-
-	//var $scriptUrl;
-
+	/**
+	 * Manage addon ratings
+	 *
+	 */
 	function admin_addon_rating($type,$url){
 		global $page;
 
@@ -265,13 +267,14 @@ class admin_addons_tool{
 
 		$dir = str_replace('\\','/',$dir);
 		$dir = str_replace('../','./',$dir);
-		if( !file_exists($dir) ){
+		$full_dir = $dataDir.$dir;
+		if( !file_exists($full_dir) ){
 			$this->CanRate = false;
-			$this->messages[] = $langmessage['OOPS'];
+			$this->messages[] = $langmessage['OOPS'].' (directory doesn\'t exist)';
 			return false;
 		}
 
-		$ini = admin_addons_tool::GetAvailInstall($dir);
+		$ini = admin_addons_tool::GetAvailInstall($full_dir);
 
 		if( $ini === false ){
 			$this->CanRate = false;

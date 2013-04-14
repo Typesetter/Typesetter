@@ -444,7 +444,8 @@ class admin_addons extends admin_addon_install{
 
 
 		//show available addons
-		echo '<h3>'.$langmessage['available_plugins'].'</h3>';
+		echo '<br/>';
+		echo '<h2>'.$langmessage['available_plugins'].'</h2>';
 
 		echo '<div class="nodisplay" id="gpeasy_addons"></div>';
 

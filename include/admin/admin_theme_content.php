@@ -687,7 +687,6 @@ class admin_theme_content extends admin_addon_install{
 	 */
 	function ThemeSelect($curr_theme_id = false, $curr_color = false){
 		global $langmessage;
-		$themes = $this->GetPossible();
 
 		$display = $langmessage['available_themes'];
 		if( $curr_theme_id ){
@@ -699,7 +698,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '<a data-cmd="dd_menu">'.$display.'</a>';
 
 		echo '<div class="dd_list"><ul>';
-		foreach($themes as $theme_id => $info){
+		foreach($this->possible as $theme_id => $info){
 			echo '<li><span class="list_heading">'.htmlspecialchars(str_replace('_',' ',$info['name'])).'</span>';
 			echo '</li>';
 			foreach($info['colors'] as $color){
@@ -1329,12 +1328,11 @@ class admin_theme_content extends admin_addon_install{
 		$template = dirname($theme);
 		$color = basename($theme);
 
-		$themes = $this->GetPossible();
-		if( !isset($themes[$template]) || !isset($themes[$template]['colors'][$color]) ){
+		if( !isset($this->possible[$template]) || !isset($this->possible[$template]['colors'][$color]) ){
 			return false;
 		}
 
-		$theme_info = $themes[$template];
+		$theme_info = $this->possible[$template];
 		$theme_info['color'] = $color;
 
 		return $theme_info;
@@ -1502,12 +1500,11 @@ class admin_theme_content extends admin_addon_install{
 		}
 		echo '</div>';
 
-		//echo '<br/>';
-		//$this->ShowAvailable();
-		//echo '<p class="admin_note">';
-		//echo $langmessage['see_also'].' '.common::Link('Admin_Menu',$langmessage['file_manager']);
-		//echo '</p>';
-
+		echo '<br/>';
+		$this->ShowAvailable();
+		echo '<p class="admin_note">';
+		echo $langmessage['see_also'].' '.common::Link('Admin_Menu',$langmessage['file_manager']);
+		echo '</p>';
 
 
 		$this->ColorSelector();
@@ -1536,29 +1533,23 @@ class admin_theme_content extends admin_addon_install{
 		echo '<table>';
 
 
-		echo '<tr>';
-			echo '<td>';
-			echo ' <a class="layout_color_id" id="current_color"></a> ';
-			echo '<input type="text" name="layout_label" value="" maxlength="15"/>';
-			echo '</td>';
-			echo '</tr>';
+		echo '<tr><td>';
+		echo ' <a class="layout_color_id" id="current_color"></a> ';
+		echo '<input type="text" name="layout_label" value="" maxlength="15"/>';
+		echo '</td></tr>';
 
-		echo '<tr>';
-			echo '<td>';
-			echo '<div class="colors">';
-			foreach($colors as $color){
-				echo '<a class="color" style="background-color:'.$color.'" title="'.$color.'" data-arg="'.$color.'"></a>';
-			}
-			echo '</div>';
-			echo '</td>';
-			echo '</tr>';
+		echo '<tr><td>';
+		echo '<div class="colors">';
+		foreach($colors as $color){
+			echo '<a class="color" style="background-color:'.$color.'" title="'.$color.'" data-arg="'.$color.'"></a>';
+		}
+		echo '</div>';
+		echo '</td></tr>';
 
-		echo '<tr>';
-			echo '<td>';
-			echo ' <input type="submit" name="" value="Ok" class="gpsubmit"/>';
-			echo ' <input type="button" class="cancel gpcancel" name="" value="Cancel" />';
-			echo '</td>';
-			echo '</tr>';
+		echo '<tr><td>';
+		echo ' <input type="submit" name="" value="Ok" class="gpsubmit"/>';
+		echo ' <input type="button" class="cancel gpcancel" name="" value="Cancel" />';
+		echo '</td></tr>';
 
 		echo '</table>';
 		echo '</form>';
@@ -1567,10 +1558,13 @@ class admin_theme_content extends admin_addon_install{
 
 	}
 
+
+	/**
+	 * Show locally available themes and style variations
+	 *
+	 */
 	function ShowAvailable($show=true){
 		global $langmessage,$config;
-		$themes = $this->GetPossible();
-
 
 		//versions available online
 		includeFile('tool/update.php');
@@ -1582,19 +1576,27 @@ class admin_theme_content extends admin_addon_install{
 			$style = ';display:none';
 		}
 		$avail_count = 0;
-		foreach($themes as $theme_id => $info){
+		foreach($this->possible as $theme_id => $info){
 			$avail_count += count($info['colors']);
 		}
 
+
+		echo '<h2>'.$langmessage['available_themes'].': '.$avail_count.'</h2>';
+
 		echo '<table class="bordered" style="width:100%'.$style.'">';
-		echo '<tr><th colspan="3">'.$langmessage['available_themes'].': '.$avail_count.'</th>';
+		echo '<tr><th>';
+		echo $langmessage['name'];
+		echo '</th><th>';
+		echo $langmessage['style'];
+		echo '</th><th>';
+		echo $langmessage['options'];
+		echo '</th></tr>';
+
 		$i=0;
-		foreach($themes as $theme_id => $info){
-			echo '<tr class="'.($i++ % 2 ? ' even' : '').'">';
-			echo '<td>';
+		foreach($this->possible as $theme_id => $info){
+			echo '<tr class="'.($i++ % 2 ? ' even' : '').'"><td>';
 			echo str_replace('_',' ',$info['name']);
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			$comma = '';
 			foreach($info['colors'] as $color){
 				echo $comma;
@@ -1602,8 +1604,7 @@ class admin_theme_content extends admin_addon_install{
 				$comma = ', ';
 			}
 
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			if( isset($info['id']) ){
 				echo common::Link('Admin_Theme_Content',$langmessage['rate'],'cmd=rate&arg='.rawurlencode($info['full_dir']));
 				echo ' &nbsp; ';
@@ -1633,8 +1634,7 @@ class admin_theme_content extends admin_addon_install{
 				}
 			}
 
-			echo '</td>';
-			echo '</tr>';
+			echo '</td></tr>';
 		}
 
 		echo '</table>';
@@ -3311,13 +3311,12 @@ class admin_theme_content extends admin_addon_install{
 	function ShowThemeImages(){
 		global $page,$langmessage,$dirPrefix;
 		$page->ajaxReplace = array();
-		$themes = $this->GetPossible();
 		$current_theme = false;
 
 		//which theme folder
-		if( isset($_REQUEST['theme']) && isset($themes[$_REQUEST['theme']]) ){
+		if( isset($_REQUEST['theme']) && isset($this->possible[$_REQUEST['theme']]) ){
 			$current_theme = $_REQUEST['theme'];
-			$current_info = $themes[$current_theme];
+			$current_info = $this->possible[$current_theme];
 			$current_label = $current_info['name'];
 			$current_dir = $current_info['full_dir'];
 			$current_url = common::GetDir($current_info['rel']);
@@ -3340,7 +3339,7 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '<div class="gp_edit_select_options">';
 
-		foreach($themes as $theme_id => $info){
+		foreach($this->possible as $theme_id => $info){
 			echo common::Link('Admin_Theme_Content/'.rawurlencode($this->curr_layout),'<span class="folder"></span>'.$info['name'],'cmd=theme_images&theme='.rawurlencode($theme_id),' data-cmd="gpajax" class="gp_gallery_folder" ');
 		}
 		echo '</div>';

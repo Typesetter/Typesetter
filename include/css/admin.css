@@ -1271,7 +1271,6 @@ body #gp_admin_html .rating a{
 	display:inline-block;
 	height:16px;
 	width:16px;
-	min-width:0;
 	background: url(../imgs/stars.png) 0 0;
 	padding:0;
 	}

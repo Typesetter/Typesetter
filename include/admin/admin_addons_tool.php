@@ -75,13 +75,12 @@ class admin_addons_tool{
 		ob_start();
 		echo '<span class="rating">';
 
-		$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16"/>';
 		for($i = 1;$i<6;$i++){
 			$class = '';
 			if( $i > $rating ){
 				$class = ' class="unset"';
 			}
-			echo common::Link($this->scriptUrl,$label,'cmd=rate&rating='.$i.'&arg='.rawurlencode($arg),' data-rating="'.$i.'" data-cmd="gpabox" '.$class);
+			echo common::Link($this->scriptUrl,'','cmd=rate&rating='.$i.'&arg='.rawurlencode($arg),' data-rating="'.$i.'" data-cmd="gpabox" '.$class);
 		}
 
 		echo '<input type="hidden" name="rating" value="'.htmlspecialchars($rating).'" readonly="readonly"/>';
@@ -196,13 +195,12 @@ class admin_addons_tool{
 		echo '<tr><td>Rating</td><td>';
 
 		echo '<span class="rating">';
-		$label = '<img src="'.common::GetDir('/include/imgs/blank.gif').'" alt="" border="0" height="16" width="16">';
 		for($i=1;$i<6;$i++){
 			$class = '';
 			if( $i > $rating ){
 				$class = ' class="unset"';
 			}
-			echo '<a data-rating="'.$i.'"'.$class.'>'.$label.'</a>';
+			echo '<a data-rating="'.$i.'"'.$class.'></a>';
 		}
 		echo '<input type="hidden" name="rating" value="'.htmlspecialchars($rating).'" />';
 		echo '</span> ';

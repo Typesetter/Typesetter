@@ -1621,20 +1621,23 @@ body #gp_admin_html .layout_links a.selected{
 	overflow-y:auto !important;
 }
 
-.dd_menu li.selected{
-	font-weight:bold;
-	}
 .dd_list li > span,
+.dd_list li > b,
 .dd_list li > a{
 	padding:2px 10px !important;
 	display:block;
 	min-width:200px;
 	margin-bottom:3px !important;
 	}
-.dd_list li.selected a,
-.dd_list a:hover{
+
+.dd_list li.selected > *{
+	font-weight:bold;
 	background:#f5f5f5;
 	}
+.dd_list li > *:hover{
+	background:#f5f5f5;
+	}
+
 
 #admin_search .match_stats{
 	color:#666;

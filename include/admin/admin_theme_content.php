@@ -620,10 +620,11 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '<ul>';
 		foreach($theme_colors as $color){
-			echo '<li>';
 			if( $color == $layout_info['theme_color'] ){
+				echo '<li class="selected">';
 				echo '<b>'.$color.'</b>';
 			}else{
+				echo '<li>';
 				echo $this->LayoutLink( $layout, $color, 'cmd=change_layout_color&color='.$color, ' data-cmd="cnreq"' );
 			}
 			echo '</li>';

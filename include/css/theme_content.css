@@ -46,10 +46,10 @@ body #gp_admin_html #theme_toolbar a{
 
 #theme_left > div{
 	border:0 none;
-	padding-right:30px;
 	height:35px;
 	}
 #theme_left > div.step{
+	padding-right:30px;
 	background:url('../imgs/layout_arrow_35.png') no-repeat 100% 0;
 	}
 #theme_toolbar form{

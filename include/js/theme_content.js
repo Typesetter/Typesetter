@@ -38,12 +38,16 @@ $(function(){
 
 
 		//closing the panel
-		panel.find('input.cancel').off('click').on('click',function(){
+		panel.find('input.close').off('click').on('click',function(){
 			LayoutClose();
 		});
 
-		$('body').on('click.layout_id',function(){
-			LayoutClose();
+		$('body').on('click.layout_id',function(evt){
+
+			//prevent click on panel from closing it
+			if( !$(evt.target).closest('#layout_ident').length ){
+				LayoutClose();
+			}
 		})
 		//close with esc key
 		.on('keydown.layout_id', function (evt) {
@@ -57,12 +61,6 @@ $(function(){
 			panel.hide();
 			$('body').off('.layout_id');
 		}
-
-		//prevent click on panel from closing it
-		panel.on('click.layout_id',function(evt){
-			evt.stopPropagation();
-		});
-
 
 	};
 

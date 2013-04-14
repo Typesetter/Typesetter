@@ -251,7 +251,7 @@ class admin_theme_content extends admin_addon_install{
 
 			case 'layout_label':
 				$this->LayoutLabel();
-			break;
+			return true;
 
 			case 'rmgadget':
 				$this->RmGadget();
@@ -1449,7 +1449,8 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function LayoutLabel(){
-		global $gpLayouts,$langmessage;
+		global $gpLayouts, $langmessage, $page;
+		$page->ajaxReplace = array();
 
 		$gpLayoutsBefore = $gpLayouts;
 
@@ -1466,12 +1467,18 @@ class admin_theme_content extends admin_addon_install{
 		$gpLayouts[$layout]['label'] = htmlspecialchars($_POST['layout_label']);
 
 
-		if( admin_tools::SavePagesPHP() ){
-			message($langmessage['SAVED']);
-		}else{
+		if( !admin_tools::SavePagesPHP() ){
 			$gpLayouts = $gpLayoutsBefore;
 			message($langmessage['OOPS'].' (s1)');
+			return;
 		}
+
+		message($langmessage['SAVED']);
+
+		//send new label
+		$layout_info = common::LayoutInfo($layout,false);
+		$replace = $this->GetLayoutLabel($layout, $layout_info);
+		$page->ajaxReplace[] = array( 'replace', '.layout_label_'.$layout, $replace);
 	}
 
 	/**
@@ -1547,8 +1554,8 @@ class admin_theme_content extends admin_addon_install{
 		echo '</td></tr>';
 
 		echo '<tr><td>';
-		echo ' <input type="submit" name="" value="Ok" class="gpajax gpsubmit" />';
-		echo ' <input type="button" class="cancel gpcancel" name="" value="Cancel" />';
+		echo ' <input type="submit" name="" value="Ok" class="gpajax close gpsubmit" />';
+		echo ' <input type="button" class="close gpcancel" name="" value="Cancel" />';
 		echo '</td></tr>';
 
 		echo '</table>';
@@ -1636,26 +1643,18 @@ class admin_theme_content extends admin_addon_install{
 	}
 
 
+	/**
+	 * Display layout label and options
+	 *
+	 */
 	function LayoutDiv($layout,$info){
-		global $page, $langmessage, $config;
+		global $page, $langmessage;
 
 		$layout_info = common::LayoutInfo($layout,false);
 
 
 		echo '<div class="panelgroup">';
-		echo '<span>';
-		echo '<a data-cmd="layout_id" title="'.$info['color'].'" data-arg="'.$info['color'].'">';
-		echo '<input type="hidden" name="layout" value="'.htmlspecialchars($layout).'"  /> ';
-		echo '<input type="hidden" name="layout_label" value="'.$info['label'].'"  /> ';
-		echo '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span>';
-		echo '&nbsp;';
-		echo $info['label'];
-		if( $config['gpLayout'] == $layout ){
-			echo ' &nbsp; ('.$langmessage['default'].')';
-		}
-		echo '</a>';
-		echo '</span>';
-
+		echo $this->GetLayoutLabel($layout, $info);
 
 
 		echo '<div class="panelgroup2">';
@@ -1697,6 +1696,25 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '</div>';
 		echo '</div>';
+	}
+
+	function GetLayoutLabel( $layout, $layout_info ){
+		global $config, $langmessage, $config;
+
+		ob_start();
+		echo '<span class="layout_label_'.$layout.'">';
+		echo '<a data-cmd="layout_id" title="'.$layout_info['color'].'" data-arg="'.$layout_info['color'].'">';
+		echo '<input type="hidden" name="layout" value="'.htmlspecialchars($layout).'"  /> ';
+		echo '<input type="hidden" name="layout_label" value="'.$layout_info['label'].'"  /> ';
+		echo '<span class="layout_color_id" style="background-color:'.$layout_info['color'].';"></span>';
+		echo '&nbsp;';
+		echo $layout_info['label'];
+		if( $config['gpLayout'] == $layout ){
+			echo ' &nbsp; ('.$langmessage['default'].')';
+		}
+		echo '</a>';
+		echo '</span>';
+		return ob_get_clean();
 	}
 
 

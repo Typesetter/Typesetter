@@ -31,14 +31,10 @@ $(function(){
 
 		var b = $span.find('a:eq('+(show_value-1)+')');
 
-		b.nextAll().css({'background-position':'0 -16px'});
-		b.css({'background-position':'0 0'});
-		b.prevAll().css({'background-position':'0 0'});
+		b.nextAll().addClass('unset');
+		b.removeClass('unset');
+		b.prevAll().removeClass('unset');
 	}
-
-	$('span.rating').each(function(){
-		ResetStars( $(this) );
-	});
 
 });
 

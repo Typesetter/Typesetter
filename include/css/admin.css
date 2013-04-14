@@ -1275,6 +1275,10 @@ body #gp_admin_html .rating a{
 	background: url(../imgs/stars.png) 0 0;
 	padding:0;
 	}
+body #gp_admin_html .rating a.unset{
+	background-position: 0 -16px;
+	}
+
 
 
 .gp_notice,

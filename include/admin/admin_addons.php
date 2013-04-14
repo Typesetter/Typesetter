@@ -546,9 +546,9 @@ class admin_addons extends admin_addon_install{
 		global $config, $langmessage;
 
 		$addon_config = gpPlugin::GetAddonConfig($addon_key);
-		if( isset($addon_config['is_theme']) && $addon_config['is_theme'] ){
-			return;
-		}
+		//if( isset($addon_config['is_theme']) && $addon_config['is_theme'] ){
+		//	return;
+		//}
 
 		$addon_config += $info; //merge the upgrade info
 

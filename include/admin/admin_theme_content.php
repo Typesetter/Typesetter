@@ -1701,7 +1701,13 @@ class admin_theme_content extends admin_addon_install{
 		if( isset($layout_info['addon_key']) ){
 			$addon_key = $layout_info['addon_key'];
 			$addon_config = gpPlugin::GetAddonConfig($addon_key);
-			$this->AddonPanelGroup($addon_key, $addon_config);
+			echo '<li>';
+			echo common::link('Admin_Addons','<span class="span_icon_plug"></span> '.$addon_config['name'],'cmd=show&addon='.$addon_key);
+			echo '</li>';
+
+			//$addon_key = $layout_info['addon_key'];
+			//$addon_config = gpPlugin::GetAddonConfig($addon_key);
+			//$this->AddonPanelGroup($addon_key, $addon_config);
 		}
 
 

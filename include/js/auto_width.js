@@ -5,10 +5,14 @@ $(function(){
 
 	//auto width
 	var $area_wrap = $('#adminlinks2');
+	var $children = $area_wrap.children('div');
+	var child_count = $children.length;
 	var adjust = 22;
 	var min_width = 280;
+	var max_width = 500;
 	var width_2 = 600;
 	var width_3 = 900;
+
 
 	$('#admincontainer').resize(function(){
 
@@ -20,8 +24,10 @@ $(function(){
 		}else if( width > width_2 ){
 			cols = 2;
 		}
-		$area_wrap.children('div').width( (width/cols)-adjust );
-		//$area_wrap.get(0).style.cssText = '-moz-column-count:'+cols;
+		cols = Math.min(child_count,cols);
+		width = (width/cols)-adjust;
+		width = Math.min(width, max_width);
+		$children.width( width );
 
 	}).resize();
 

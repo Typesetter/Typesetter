@@ -1103,6 +1103,10 @@ color:#2d2d2d!important;
 	vertical-align:middle;
 	color:#333 !important;
 	}
+#adminlinks2 > div > span.layout_label > a{
+	padding-left:7px;
+	}
+
 
 #adminlinks2 ul,
 #adminlinks2 li{

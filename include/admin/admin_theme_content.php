@@ -1702,7 +1702,7 @@ class admin_theme_content extends admin_addon_install{
 		global $config, $langmessage, $config;
 
 		ob_start();
-		echo '<span class="layout_label_'.$layout.'">';
+		echo '<span class="layout_label_'.$layout.' layout_label">';
 		echo '<a data-cmd="layout_id" title="'.$layout_info['color'].'" data-arg="'.$layout_info['color'].'">';
 		echo '<input type="hidden" name="layout" value="'.htmlspecialchars($layout).'"  /> ';
 		echo '<input type="hidden" name="layout_label" value="'.$layout_info['label'].'"  /> ';

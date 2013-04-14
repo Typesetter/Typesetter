@@ -249,8 +249,8 @@ class admin_theme_content extends admin_addon_install{
 				$this->MakeDefault();
 			break;
 
-			case 'layout_details':
-				$this->LayoutDetails();
+			case 'layout_label':
+				$this->LayoutLabel();
 			break;
 
 			case 'rmgadget':
@@ -1448,7 +1448,7 @@ class admin_theme_content extends admin_addon_install{
 	 * Save the color and label of a layout
 	 *
 	 */
-	function LayoutDetails(){
+	function LayoutLabel(){
 		global $gpLayouts,$langmessage;
 
 		$gpLayoutsBefore = $gpLayouts;
@@ -1528,7 +1528,7 @@ class admin_theme_content extends admin_addon_install{
 		}
 		echo '<input type="hidden" name="layout" value="" />';
 		echo '<input type="hidden" name="color" value="" />';
-		echo '<input type="hidden" name="cmd" value="layout_details" />';
+		echo '<input type="hidden" name="cmd" value="layout_label" />';
 
 		echo '<table>';
 
@@ -1547,7 +1547,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '</td></tr>';
 
 		echo '<tr><td>';
-		echo ' <input type="submit" name="" value="Ok" class="gpsubmit"/>';
+		echo ' <input type="submit" name="" value="Ok" class="gpajax gpsubmit" />';
 		echo ' <input type="button" class="cancel gpcancel" name="" value="Cancel" />';
 		echo '</td></tr>';
 
@@ -1560,21 +1560,16 @@ class admin_theme_content extends admin_addon_install{
 
 
 	/**
-	 * Show locally available themes and style variations
+	 * Show available themes and style variations
 	 *
 	 */
-	function ShowAvailable($show=true){
+	function ShowAvailable(){
 		global $langmessage,$config;
 
 		//versions available online
 		includeFile('tool/update.php');
 		update_class::VersionsAndCheckTime($new_versions);
 
-		$class = $style = '';
-		if( !$show ){
-			$class = ' hidden';
-			$style = ';display:none';
-		}
 		$avail_count = 0;
 		foreach($this->possible as $theme_id => $info){
 			$avail_count += count($info['colors']);
@@ -1583,7 +1578,7 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '<h2>'.$langmessage['available_themes'].': '.$avail_count.'</h2>';
 
-		echo '<table class="bordered" style="width:100%'.$style.'">';
+		echo '<table class="bordered" style="width:100%">';
 		echo '<tr><th>';
 		echo $langmessage['name'];
 		echo '</th><th>';

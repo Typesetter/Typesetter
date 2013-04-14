@@ -205,11 +205,3 @@ body #gp_admin_html #theme_toolbar a{
 }
 
 
-.expand_row .gp_options{
-	visibility:hidden;
-	padding:7px 0 1px 20px;
-	}
-.expand_row.hover .gp_options{
-	visibility:visible;
-	}
-

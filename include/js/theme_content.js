@@ -2,11 +2,6 @@
 $(function(){
 	LayoutSetup();
 
-	$('.expand_row').on('mouseenter',function(){
-		$(this).addClass('hover');
-	}).on('mouseleave',function(){
-		$(this).removeClass('hover');
-	});
 
 	/**
 	 * Show the layout color and label editor

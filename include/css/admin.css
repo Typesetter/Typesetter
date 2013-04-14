@@ -1572,8 +1572,7 @@ body #gp_admin_html .layout_links a.selected{
 	overflow:hidden;
 	border-radius: 3px;
 	background:#fff;
-
-	min-width:160px;
+	width:130px;
 	display:inline-block;
 	padding:0 20px 0 7px;
 	line-height:24px !important;
@@ -1588,11 +1587,14 @@ body #gp_admin_html .layout_links a.selected{
 
 .dd_menu > a:after{
 	position:absolute;
-	right:5px;
+	right:1px;
+	padding:0 4px;
+	border-radius:2px;
 	font-size:10px;
 	color:#666;
 	content:"\25BC";
 	padding-left:5px;
+	background:#fff;
 	}
 
 .dd_menu .dd_list{

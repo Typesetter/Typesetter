@@ -2,7 +2,7 @@
 #theme_toolbar{
 	height:35px;
 	top:0;
-	min-width:800px;
+	min-width:830px;
 	position:fixed;
 	z-index: 9000;
 
@@ -16,12 +16,17 @@
 	background: #ededed -ms-linear-gradient(top, #fafafa 5px,#ededed 100%);
 	background: #ededed linear-gradient(top, #fafafa 5px,#ededed 100%);
 	}
-#theme_toolbar > div{
-	padding:0 40px;
-	}
 body #gp_admin_html #theme_toolbar a{
 	color:#333;
 	}
+
+#theme_right{
+	padding-right:40px;
+	}
+#theme_left{
+	padding-left:40px;
+	}
+
 #theme_right,
 #theme_left{
 	height:35px;

@@ -210,8 +210,7 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 
-		$this->ShowNew();
-		//$this->Show();
+		$this->ShowLayouts();
 	}
 
 
@@ -375,121 +374,11 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 		$page->label = $langmessage['layouts'] . ' » '.$layout_info['label'];
-
-
-
-		//display options
-		switch($cmd){
-			case 'details':
-				$this->ShowDetails($layout, $layout_info, $handlers_count );
-			return;
-		}
-
 		$page->show_admin_content = false;
 		$page->head .= "\n".'<script type="text/javascript">var gpLayouts=true;</script>';
 
 		$this->PrepareCSS();
 		$this->Toolbar($layout, $layout_info );
-	}
-
-	/**
-	 * Show details about the selected layout
-	 *
-	 */
-	function ShowDetails( $layout, $layout_info, $handlers_count){
-		global $langmessage, $config;
-
-		echo '<h3>'.$langmessage['details'].'</h3>';
-
-		//layout options
-		echo '<table class="bordered full_width">';
-		echo '<tr><th colspan="2">';
-		echo $langmessage['layout'];
-		echo '</th></tr>';
-
-		echo '<tr><td style="width:40%">';
-		echo $langmessage['label'];
-		echo '</td><td>';
-		echo '<a data-cmd="layout_id" title="'.$layout_info['color'].'" data-arg="'.$layout_info['color'].'">';
-		echo '<input type="hidden" name="layout" value="'.htmlspecialchars($layout).'"  /> ';
-		echo '<input type="hidden" name="layout_label" value="'.$layout_info['label'].'"  /> ';
-		echo '<span class="layout_color_id" style="background-color:'.$layout_info['color'].';"></span>';
-		echo '&nbsp;';
-		echo $layout_info['label'];
-		echo '</a>';
-		echo '</td></tr>';
-
-		echo '<tr><td>';
-		echo $langmessage['theme'];
-		echo '</td><td>';
-		echo $layout_info['theme_name'];
-		echo '</td></tr>';
-
-
-		//styles
-		$theme_colors = $this->GetThemeColors($layout_info['dir']);
-		echo '<tr><td>';
-		echo $langmessage['style'];
-		echo '</td><td>';
-		$url = $this->LayoutUrl($layout);
-		echo '<form action="'.common::GetUrl($url).'" method="post">';
-		echo '<input type="hidden" name="layout" value="'.$layout.'" />';
-		echo '<select name="color" class="gpselect">';
-		foreach($theme_colors as $color){
-			if( $color == $layout_info['theme_color'] ){
-				echo '<option value="'.htmlspecialchars($color).'" selected="selected">';
-			}else{
-				echo '<option value="'.htmlspecialchars($color).'">';
-			}
-			echo $color;
-			echo '</option>';
-		}
-		echo '</select>';
-		echo ' <input type="hidden" name="cmd" value="change_layout_color" />';
-		echo ' <input type="submit" name="" value="'.htmlspecialchars($langmessage['save']).'" class="gpbutton" />';
-		echo '</form>';
-		echo '</td></tr>';
-
-
-		//CSS options
-		echo '<br/>';
-
-		$url = $this->LayoutUrl($layout);
-		echo '<form action="'.common::GetUrl($url).'" method="post">';
-		echo '<input type="hidden" name="layout" value="'.$layout.'" />';
-		echo '<input type="hidden" name="cmd" value="css_preferences" />';
-		echo '<table class="bordered full_width">';
-		echo '<tr><th style="width:40%">CSS</th><th>&nbsp;</th></tr>';
-
-		echo '<tr><td>';
-		echo 'Name Based Menu Classes';
-		echo '</td><td>';
-		$checked = '';
-		if( !isset($layout_info['menu_css_ordered']) ){
-			$checked = 'checked="checked"';
-		}
-		echo '<input type="checkbox" name="menu_css_ordered" value="on" '.$checked.' />';
-		echo '</td></tr>';
-
-		echo '<tr><td>';
-		echo 'Ordered Menu Classes';
-		echo '</td><td>';
-		$checked = '';
-		if( !isset($layout_info['menu_css_indexed']) ){
-			$checked = 'checked="checked"';
-		}
-		echo '<input type="checkbox" name="menu_css_indexed" value="on" '.$checked.' />';
-		echo '</td></tr>';
-
-
-		echo '<tr><td>';
-		echo '&nbsp;';
-		echo '</td><td>';
-		echo ' <input type="submit" name="" value="'.htmlspecialchars($langmessage['save']).'" class="gpbutton" />';
-		echo '</td></tr>';
-
-		echo '</table>';
-		echo '</form>';
 	}
 
 
@@ -618,13 +507,13 @@ class admin_theme_content extends admin_addon_install{
 		echo '<a data-cmd="dd_menu">'.$langmessage['Layout Options'].'</a>';
 		echo '<div class="dd_list">';
 		echo '<ul>';
-		echo '<li>'.common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['details'],'cmd=details','data-cmd="gpabox"').'</li>';
 		echo '<li>'.common::Link('Admin_Theme_Content/'.rawurlencode($layout),'CSS','cmd=css','data-cmd="gpabox"').'</li>';
 		$this->LayoutOptions($layout,$layout_info);
 		echo '</ul>';
 		echo '</div>';
 		echo '</div></div>';
 
+		$this->StyleOptions($layout, $layout_info);
 
 		echo '</div>';//theme_left
 
@@ -705,6 +594,51 @@ class admin_theme_content extends admin_addon_install{
 			echo '</li>';
 		}
 	}
+
+
+	/**
+	 * Display links for selecting style variations of a theme
+	 *
+	 */
+	function StyleOptions($layout, $layout_info){
+		global $langmessage;
+
+		$theme_colors = $this->GetThemeColors($layout_info['dir']);
+		if( !count($theme_colors) ){
+			return;
+		}
+
+
+		if( $this->layout_request ){
+			echo '<div><div class="dd_menu">';
+			echo '<a data-cmd="dd_menu">'.$langmessage['style'].'</a>';
+			echo '<div class="dd_list">';
+		}else{
+			echo '<li class="expand_child_click">';
+			echo '<a>'.$langmessage['style'].'</a>';
+		}
+
+		echo '<ul>';
+		foreach($theme_colors as $color){
+			echo '<li>';
+			if( $color == $layout_info['theme_color'] ){
+				echo '<b>'.$color.'</b>';
+			}else{
+				echo $this->LayoutLink( $layout, $color, 'cmd=change_layout_color&color='.$color, ' data-cmd="cnreq"' );
+			}
+			echo '</li>';
+		}
+		echo '</ul>';
+
+
+		if( $this->layout_request ){
+			echo '</div>';
+			echo '</div></div>';
+		}else{
+			echo '</li>';
+		}
+	}
+
 
 	/**
 	 * Display all the layouts available in a <select>
@@ -811,7 +745,7 @@ class admin_theme_content extends admin_addon_install{
 			echo ' <input type="hidden" name="layout" value="'.$this->curr_layout.'" />';
 		}
 
-		echo '<h3>CSS</h3>';
+		echo '<h2>CSS</h2>';
 		echo '<textarea name="css" id="gp_layout_css" class="layout_css gptextarea" rows="10" cols="50" placeholder="Add your CSS here.">';
 		echo htmlspecialchars($css);
 		echo '</textarea>';
@@ -1152,7 +1086,7 @@ class admin_theme_content extends admin_addon_install{
 
 		$label = substr($theme_info['name'].'/'.$theme_info['color'],0,25);
 
-		echo '<h3>'.$langmessage['new_layout'].'</h3>';
+		echo '<h2>'.$langmessage['new_layout'].'</h2>';
 		echo '<form action="'.common::GetUrl('Admin_Theme_Content').'" method="post">';
 		echo '<table class="bordered full_width">';
 
@@ -1237,7 +1171,7 @@ class admin_theme_content extends admin_addon_install{
 
 		$label = admin_theme_content::NewLabel($gpLayouts[$layout]['label']);
 
-		echo '<h3>'.$langmessage['new_layout'].'</h3>';
+		echo '<h2>'.$langmessage['new_layout'].'</h2>';
 		echo '<form action="'.common::GetUrl('Admin_Theme_Content').'" method="post">';
 		echo '<table class="bordered full_width">';
 
@@ -1539,51 +1473,11 @@ class admin_theme_content extends admin_addon_install{
 		}
 	}
 
-
 	/**
 	 * Show all layouts and themes
 	 *
 	 */
-	function Show(){
-		global $config, $page, $langmessage, $gpLayouts;
-
-		$this->FindForm();
-
-		echo '<h2 class="hmargin">';
-		echo $langmessage['Manage Layouts'];
-		echo ' <span>|</span> ';
-		echo common::Link($this->path_remote,$this->find_label);
-		echo '</h2>';
-
-
-		echo '<table class="bordered full_width">';
-		echo '<tr><th>';
-		echo $langmessage['layouts'];
-		echo '</th><th>';
-		echo $langmessage['usage'];
-		echo '</th><th>';
-		echo $langmessage['theme'].'/'.$langmessage['style'];
-		echo '</th></tr>';
-
-		foreach($gpLayouts as $layout => $info){
-			$this->LayoutRow($layout,$info);
-		}
-
-		echo '</table>';
-
-		echo '<br/>';
-
-		$this->ShowAvailable();
-
-
-		echo '<p class="admin_note">';
-		echo $langmessage['see_also'].' '.common::Link('Admin_Menu',$langmessage['file_manager']);
-		echo '</p>';
-
-		$this->ColorSelector();
-	}
-
-	function ShowNew(){
+	function ShowLayouts(){
 		global $config, $page, $langmessage, $gpLayouts;
 
 		$page->head_js[] = '/include/js/auto_width.js';
@@ -1594,6 +1488,8 @@ class admin_theme_content extends admin_addon_install{
 		echo $langmessage['Manage Layouts'];
 		echo ' <span>|</span> ';
 		echo common::Link($this->path_remote,$this->find_label);
+
+		//echo $this->ThemeLabel($theme_color);
 		echo '</h2>';
 
 
@@ -1602,6 +1498,15 @@ class admin_theme_content extends admin_addon_install{
 			$this->LayoutDiv($layout,$info);
 		}
 		echo '</div>';
+
+		//echo '<br/>';
+		//$this->ShowAvailable();
+		//echo '<p class="admin_note">';
+		//echo $langmessage['see_also'].' '.common::Link('Admin_Menu',$langmessage['file_manager']);
+		//echo '</p>';
+
+
+
 		$this->ColorSelector();
 	}
 
@@ -1773,24 +1678,7 @@ class admin_theme_content extends admin_addon_install{
 
 
 		//color variations
-		$theme_colors = $this->GetThemeColors($layout_info['dir']);
-		if( count($theme_colors) > 1 ){
-
-			echo '<li class="expand_child_click">';
-			echo '<a>'.$langmessage['style'].'</a>';
-			echo '<ul>';
-			foreach($theme_colors as $color){
-				echo '<li>';
-				if( $color == $layout_info['theme_color'] ){
-					echo '<b>'.$color.'</b>';
-				}else{
-					echo $this->LayoutLink( $layout, $color, 'cmd=change_layout_color&color='.$color, ' data-cmd="cnreq"' );
-				}
-				echo '</li>';
-			}
-			echo '</ul>';
-			echo '</li>';
-		}
+		$this->StyleOptions($layout, $layout_info);
 
 
 		//css options
@@ -1867,71 +1755,6 @@ class admin_theme_content extends admin_addon_install{
 		echo '</li>';
 		echo '</ul>';
 		return ob_get_clean();
-	}
-
-	/**
-	 * Show
-	 */
-	function LayoutRow($layout,$info){
-		global $page, $langmessage, $config;
-		static $i = 0;
-
-		echo '<tr class="expand_row'.($i++ % 2 ? ' even' : '').'">';
-
-		//label
-			echo '<td class="nowrap">';
-			echo '<a data-cmd="layout_id" title="'.$info['color'].'" data-arg="'.$info['color'].'">';
-			echo '<input type="hidden" name="layout" value="'.htmlspecialchars($layout).'"  /> ';
-			echo '<input type="hidden" name="layout_label" value="'.$info['label'].'"  /> ';
-			echo '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span>';
-			echo '&nbsp;';
-			echo $info['label'];
-			echo '</a>';
-
-
-			//options
-			echo '<div class="gp_options">';
-
-			echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['edit'],'',' title="'.htmlspecialchars($langmessage['Arrange Content']).'" ');
-			echo ' &nbsp; ';
-
-			echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['details'],'cmd=details&show=main','data-cmd="gpabox"');
-			echo ' &nbsp; ';
-
-			echo common::Link('Admin_Theme_Content',$langmessage['Copy'],'cmd=copy&layout='.rawurlencode($layout),'data-cmd="gpabox"');
-			echo ' &nbsp; ';
-
-			if( $config['gpLayout'] == $layout ){
-				echo '<span>'.$langmessage['delete'].'</span>';
-			}else{
-				$attr = array( 'data-cmd'=>'creq','class'=>'gpconfirm','title'=>sprintf($langmessage['generic_delete_confirm'],$info['label']) );
-				echo common::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletelayout&layout='.rawurlencode($layout),$attr);
-			}
-
-			echo '</div>';
-			echo '</td>';
-
-		//usage
-			echo '<td class="nowrap">';
-			if( $config['gpLayout'] == $layout ){
-				echo '<b>'.$langmessage['default'].'</b>';
-			}else{
-				echo common::Link('Admin_Theme_Content',str_replace(' ','&nbsp;',$langmessage['default']),'cmd=makedefault&layout='.rawurlencode($layout),array('data-cmd'=>'creq','title'=>$langmessage['make_default']));
-			}
-			echo ' &nbsp; ';
-
-			$titles_count = $this->TitlesCount($layout);
-			echo sprintf($langmessage['%s Pages'],$titles_count);
-
-			echo '</td>';
-
-		//theme
-			echo '<td class="nowrap">';
-			echo $this->ThemeLabel($info['theme']);
-			echo '</td>';
-
-
-		echo '</tr>';
 	}
 
 	function ThemeLabel($theme_color){

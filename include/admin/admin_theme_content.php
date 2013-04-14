@@ -564,8 +564,12 @@ class admin_theme_content extends admin_addon_install{
 		echo '<li>';
 		$titles_count = $this->TitlesCount($layout);
 		$label = sprintf($langmessage['%s Pages'],$titles_count);
-		//$label = $langmessage['titles_using_layout'].': '.$label;
-		echo $this->LayoutLink( $layout, $label, 'cmd=titles', 'data-cmd="gpabox"' );
+		if( $titles_count ){
+			//$label = $langmessage['titles_using_layout'].': '.$label;
+			echo $this->LayoutLink( $layout, $label, 'cmd=titles', 'data-cmd="gpabox"' );
+		}else{
+			echo '<span>'.$label.'</span>';
+		}
 		echo '</li>';
 
 
@@ -697,7 +701,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '<div class="dd_list"><ul>';
 		foreach($themes as $theme_id => $info){
 			echo '<li><span class="list_heading">'.htmlspecialchars(str_replace('_',' ',$info['name'])).'</span>';
-			echo '<ul>';
+			echo '</li>';
 			foreach($info['colors'] as $color){
 				$attr = '';
 				if( $theme_id == $curr_theme_id && $color == $curr_color ){
@@ -708,8 +712,6 @@ class admin_theme_content extends admin_addon_install{
 				echo common::Link('Admin_Theme_Content',htmlspecialchars(str_replace('_',' ',$color)),'cmd=preview&theme='.rawurlencode($theme_id.'/'.$color));
 				echo '</li>';
 			}
-			echo '</li>';
-			echo '</ul>';
 		}
 		echo '</ul></div>';
 		echo '</div>';

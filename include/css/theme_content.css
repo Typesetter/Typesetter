@@ -2,7 +2,7 @@
 #theme_toolbar{
 	height:35px;
 	top:0;
-	min-width:830px;
+	min-width:810px;
 	position:fixed;
 	z-index: 9000;
 
@@ -20,9 +20,6 @@ body #gp_admin_html #theme_toolbar a{
 	color:#333;
 	}
 
-#theme_right{
-	padding-right:40px;
-	}
 #theme_left{
 	padding-left:40px;
 	}
@@ -52,23 +49,6 @@ body #gp_admin_html #theme_toolbar a{
 	padding-right:30px;
 	background:url('../imgs/layout_arrow_35.png') no-repeat 100% 0;
 	}
-#theme_toolbar form{
-	display:inline;
-	}
-#theme_toolbar select{
-	border:1px solid #ccc;
-	background:#fff;
-	border-radius: 3px;
-	padding:3px;
-	width:200px;
-	}
-#theme_right select{
-	width:130px;
-	}
-#theme_toolbar option{
-	padding-left:1.5em;
-	}
-
 
 
 #layout_ident{

@@ -1572,7 +1572,7 @@ body #gp_admin_html .layout_links a.selected{
 	overflow:hidden;
 	border-radius: 3px;
 	background:#fff;
-	width:130px;
+	width:120px;
 	display:inline-block;
 	padding:0 20px 0 7px;
 	line-height:24px !important;
@@ -1609,9 +1609,11 @@ body #gp_admin_html .layout_links a.selected{
 	}
 
 
+.dd_list .list_heading,
 .dd_list .list_heading{
 	font-weight:bold;
 	padding:0 7px;
+	background:#fff !important;
 	}
 
 .dd_list > ul{

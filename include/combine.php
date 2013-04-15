@@ -227,6 +227,22 @@ class gp_combine{
 		}
 
 
+		//translate addon paths
+		$pos = strpos($file,'/data/_addoncode');
+		if( $pos !== false ){
+			$addon_parts = substr($file,$pos+17);
+			$addon_parts = explode('/',$addon_parts);
+			$addon_key = array_shift($addon_parts);
+			$file_rel =
+			$addon_config = gpPlugin::GetAddonConfig($addon_key);
+			$translated = $addon_config['code_folder_rel'].'/'.implode('/',$addon_parts);
+			if( $translated !== $file ){
+				$file = $translated;
+				return self::CheckFile($file);
+			}
+		}
+
+
 		echo  "\n{$comment_start} File Not Found {$dataDir}{$file} {$comment_end}\n";
 		return false;
 	}

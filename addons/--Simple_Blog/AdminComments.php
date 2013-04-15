@@ -12,9 +12,12 @@ class SimpleBlogComments extends SimpleBlogCommon{
 	var $cache_mod = 0;
 
 	function SimpleBlogComments(){
+		global $page, $addonFolderName;
 
 		$this->Init();
 		$this->dir = $this->addonPathData.'/comments';
+		$page->css_user[] = '/data/_addoncode/'.$addonFolderName.'/admin.css';
+
 		$this->GetCache();
 
 		$cmd = common::GetCommand();
@@ -63,7 +66,7 @@ class SimpleBlogComments extends SimpleBlogCommon{
 
 	function OutputComment($comment){
 		global $langmessage;
-		echo '<tr><td>';
+		echo '<tr><td class="user_submitted">';
 		echo '<b>'.$comment['name'].'</b>';
 
 		echo '<p>';

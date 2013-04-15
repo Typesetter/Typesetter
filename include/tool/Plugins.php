@@ -41,6 +41,32 @@ class gpPlugin{
 		return gpPlugin_incl($file);
 	}
 
+
+	/**
+	 * Add a css file to the page
+	 * @since gpEasy 4.0
+	 * @param string $file The path of the css file relative to the addon folder
+	 *
+	 */
+	function css($file){
+		global $page;
+		$file = common::WinPath( $file );
+		$page->css_admin[] = self::$current['code_folder_part'].'/'.ltrim($file,'/');
+	}
+
+
+	/**
+	 * Add a js file to the page
+	 * @since gpEasy 4.0
+	 * @param string $file The path of the js file relative to the addon folder
+	 *
+	 */
+	function js($file){
+		global $page;
+		$file = common::WinPath( $file );
+		$page->head_js[] = self::$current['code_folder_part'].'/'.ltrim($file,'/');
+	}
+
 	/**
 	 * Similar to php's register_shutdown_function()
 	 * This gpEasy specific version will keep track of the active plugin and make sure global path variables are set properly before callting $function

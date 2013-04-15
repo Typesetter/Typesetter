@@ -40,6 +40,7 @@ class admin_addon_installer extends admin_addons_tool{
 	var $ini_contents;
 	var $ini_text = '';
 	var $upgrade_key = false;
+	var $has_hooks = false;
 
 	var $messages = array();
 
@@ -204,6 +205,14 @@ class admin_addon_installer extends admin_addons_tool{
 			return false;
 		}
 
+		/*if( $this->has_hooks ){
+			message('stopping: has hoooks');
+		}else{
+			message('stopping: doesnt have hooks');
+		}
+		return false;
+		*/
+
 		// upgrade/destination
 		$this->config_key = admin_addons_tool::UpgradePath($this->ini_contents,$this->config_index);
 		if( $this->remote_install ){
@@ -259,6 +268,17 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 
 
+		// Save
+		if( !admin_tools::SaveAllConfig() ){
+			$this->message($langmessage['OOPS'].' (Configuration not saved)');
+			return false;
+		}
+
+		if( $this->order ){
+			$img_path = common::IdUrl('ci');
+			common::IdReq($img_path);
+		}
+
 		$this->UpdateHistory();
 
 		return true;
@@ -298,6 +318,11 @@ class admin_addon_installer extends admin_addons_tool{
 	 *
 	 */
 	function PrepConfig(){
+
+		if( !$this->has_hooks ){
+			return true;
+		}
+
 
 		//make sure we have an array
 		if( !isset($this->config[$this->config_key]) ){
@@ -345,14 +370,35 @@ class admin_addon_installer extends admin_addons_tool{
 			return false;
 		}
 
-		//Check Versions
+		// Check Versions
 		if( !empty($this->ini_contents['min_gpeasy_version']) && version_compare($this->ini_contents['min_gpeasy_version'], gpversion,'>') ){
 			$this->message( sprintf($langmessage['min_version'],$this->ini_contents['min_gpeasy_version']).' '.$langmessage['min_version_upgrade'] );
 			return false;
 		}
 
+
+		$this->HasHooks();
+
 		return true;
 	}
+
+
+	/**
+	 * Does it have addon hooks?
+	 *
+	 */
+	function HasHooks(){
+
+		foreach($this->ini_contents as $key => $value){
+			if( is_array($value) ){
+				$this->has_hooks = true;
+				return;
+			}
+		}
+	}
+
+
+
 
 
 	/**
@@ -382,6 +428,10 @@ class admin_addon_installer extends admin_addons_tool{
 	 */
 	function Hooks(){
 		global $langmessage, $config;
+
+		if( !$this->has_hooks ){
+			return true;
+		}
 
 		if( !$this->can_install_links ){
 			return true;
@@ -437,7 +487,10 @@ class admin_addon_installer extends admin_addons_tool{
 			return true;
 		}
 
-		$this->new_layout['addon_key'] = $this->config_key;
+
+		if( $this->has_hooks ){
+			$this->new_layout['addon_key'] = $this->config_key;
+		}
 		if( isset($this->ini_contents['id']) && is_numeric($this->ini_contents['id']) ){
 			$this->new_layout['addon_id'] = $this->ini_contents['id']['id'];
 		}
@@ -491,6 +544,9 @@ class admin_addon_installer extends admin_addons_tool{
 	function FinalizeConfig(){
 		global $langmessage, $config;
 
+		if( !$this->has_hooks ){
+			return true;
+		}
 
 		//code folder
 		$this->config[$this->config_key]['code_folder_part'] = $this->addon_folder_rel.'/'.$this->dest_name;
@@ -516,10 +572,9 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 		//proof of purchase
-		$order = false;
 		if( isset($this->ini_contents['Proof of Purchase']) && isset($this->ini_contents['Proof of Purchase']['order']) ){
-			$order = $this->ini_contents['Proof of Purchase']['order'];
-			$this->config[$this->config_key]['order'] = $order;
+			$this->order = $this->ini_contents['Proof of Purchase']['order'];
+			$this->config[$this->config_key]['order'] = $this->order;
 		}else{
 			// don't delete any purchase id's
 			// unset($this->config[$this->config_key]['order']);
@@ -531,17 +586,6 @@ class admin_addon_installer extends admin_addons_tool{
 			$this->UpdateConfigInfo('html_head','html_head');
 		}
 
-
-		if( !admin_tools::SaveAllConfig() ){
-			$this->message($langmessage['OOPS'].' (Configuration not saved)');
-			return false;
-		}
-
-		if( $order ){
-			$img_path = common::IdUrl('ci');
-			common::IdReq($img_path);
-		}
-
 		return true;
 	}
 
@@ -551,6 +595,10 @@ class admin_addon_installer extends admin_addons_tool{
 	 *
 	 */
 	function UpdateHistory(){
+
+		if( !$this->has_hooks ){
+			return;
+		}
 
 		// History
 		$history = array();

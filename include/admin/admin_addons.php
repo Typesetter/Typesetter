@@ -543,12 +543,9 @@ class admin_addons extends admin_addon_install{
 
 
 	function PluginPanelGroup($addon_key,$info){
-		global $config, $langmessage;
+		global $config, $langmessage, $gpLayouts;
 
 		$addon_config = gpPlugin::GetAddonConfig($addon_key);
-		//if( isset($addon_config['is_theme']) && $addon_config['is_theme'] ){
-		//	return;
-		//}
 
 		$addon_config += $info; //merge the upgrade info
 
@@ -566,47 +563,76 @@ class admin_addons extends admin_addon_install{
 
 
 		//options
-		echo '<li class="expand_child_click">';
-		echo '<a>'.$langmessage['options'].'</a>';
-		echo '<ul>';
+		if( !isset($addon_config['is_theme']) || !$addon_config['is_theme'] ){
+			echo '<li class="expand_child_click">';
+			echo '<a>'.$langmessage['options'].'</a>';
+			echo '<ul>';
 
-			//editable text
-			if( isset($config['addons'][$addon_key]['editable_text']) && admin_tools::HasPermission('Admin_Theme_Content') ){
-				echo '<li>';
-				echo common::Link('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addon_key),array('title'=>urlencode($langmessage['editable_text']),'data-cmd'=>'gpabox'));
-				echo '</li>';
-			}
-
-			//upgrade link
-			if( isset($addon_config['upgrade_from']) ){
-				echo '<li>';
-				echo common::Link('Admin_Addons',$langmessage['upgrade'],'cmd=local_install&source='.$addon_config['upgrade_from'],'data-cmd="creq"');
-				echo '</li>';
-			}
-
-			//uninstall
-			echo '<li>';
-			echo common::Link('Admin_Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.rawurlencode($addon_key),'data-cmd="gpabox"');
-			echo '</li>';
-
-
-			//version
-			if( !empty($addon_config['version']) ){
-				echo '<li><a>'.$langmessage['Your_version'].' '.$addon_config['version']. '</a></li>';
-			}
-
-			//rating
-			if( isset($addon_config['id']) && is_numeric($addon_config['id']) ){
-				$id = $addon_config['id'];
-
-				$rating = 5;
-				if( isset($this->addonReviews[$id]) ){
-					$rating = $this->addonReviews[$id]['rating'];
+				//editable text
+				if( isset($config['addons'][$addon_key]['editable_text']) && admin_tools::HasPermission('Admin_Theme_Content') ){
+					echo '<li>';
+					echo common::Link('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addon_key),array('title'=>urlencode($langmessage['editable_text']),'data-cmd'=>'gpabox'));
+					echo '</li>';
 				}
-				$label = $langmessage['rate_this_addon'].' '.$this->ShowRating($id,$rating);
-				echo '<li><span>'.$label. '</span></li>';
+
+				//upgrade link
+				if( isset($addon_config['upgrade_from']) ){
+					echo '<li>';
+					echo common::Link('Admin_Addons',$langmessage['upgrade'],'cmd=local_install&source='.$addon_config['upgrade_from'],'data-cmd="creq"');
+					echo '</li>';
+				}
+
+				//uninstall
+				echo '<li>';
+				echo common::Link('Admin_Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.rawurlencode($addon_key),'data-cmd="gpabox"');
+				echo '</li>';
+
+
+				//version
+				if( !empty($addon_config['version']) ){
+					echo '<li><a>'.$langmessage['Your_version'].' '.$addon_config['version']. '</a></li>';
+				}
+
+				//rating
+				if( isset($addon_config['id']) && is_numeric($addon_config['id']) ){
+					$id = $addon_config['id'];
+
+					$rating = 5;
+					if( isset($this->addonReviews[$id]) ){
+						$rating = $this->addonReviews[$id]['rating'];
+					}
+					$label = $langmessage['rate_this_addon'].' '.$this->ShowRating($id,$rating);
+					echo '<li><span>'.$label. '</span></li>';
+				}
+			echo '</ul></li>';
+		}else{
+
+			//show list of themes using these addons
+			echo '<li class="expand_child_click">';
+			echo '<a>'.$langmessage['layouts'].'</a>';
+			echo '<ul>';
+			foreach($gpLayouts as $layout_id => $layout_info){
+				if( !isset($layout_info['addon_key']) || $layout_info['addon_key'] !== $addon_key ){
+					continue;
+				}
+				echo '<li>';
+				echo '<span>';
+				echo '<span class="layout_color_id" style="background:'.$layout_info['color'].'"></span> ';
+				echo common::Link('Admin_Theme_Content',$layout_info['label']);
+				echo ' ( ';
+				echo common::Link('Admin_Theme_Content/'.$layout_id,$langmessage['edit']);
+				echo ' )';
+				echo '</span>';
+
+				//echo '<a>';
+				//echo $layout_info['label'];
+				//echo '</a>';
+				//echo pre($layout_info);
+				echo '</li>';
 			}
-		echo '</ul></li>';
+			echo '</ul>';
+			echo '</li>';
+		}
 
 		echo '</ul>';
 

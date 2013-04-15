@@ -202,6 +202,18 @@ class gp_combine{
 			return false;
 		}
 
+		//translate addon paths
+		$pos = strpos($file,'/data/_addoncode');
+		if( $pos !== false ){
+			$addon_parts = substr($file,$pos+17);
+			$addon_parts = explode('/',$addon_parts);
+			$addon_key = array_shift($addon_parts);
+			$file_rel =
+			$addon_config = gpPlugin::GetAddonConfig($addon_key);
+			$file = $addon_config['code_folder_rel'].'/'.implode('/',$addon_parts);
+		}
+
+
 		//remove null charachters
 		$file = gpFiles::NoNull($file);
 
@@ -224,22 +236,6 @@ class gp_combine{
 		//paths that have not been encoded
 		if( $full_path = gp_combine::CheckFileSub($file) ){
 			return $full_path;
-		}
-
-
-		//translate addon paths
-		$pos = strpos($file,'/data/_addoncode');
-		if( $pos !== false ){
-			$addon_parts = substr($file,$pos+17);
-			$addon_parts = explode('/',$addon_parts);
-			$addon_key = array_shift($addon_parts);
-			$file_rel =
-			$addon_config = gpPlugin::GetAddonConfig($addon_key);
-			$translated = $addon_config['code_folder_rel'].'/'.implode('/',$addon_parts);
-			if( $translated !== $file ){
-				$file = $translated;
-				return self::CheckFile($file);
-			}
 		}
 
 

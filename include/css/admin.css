@@ -61,9 +61,13 @@ body #gp_admin_html a img{
 body #gp_admin_html a,
 body #gp_admin_html a:visited,
 body #gp_admin_html a:hover{
-	color:#445599;
+	color:#226699;
 	text-decoration:none;
 }
+body #gp_admin_html a:hover{
+	color:#CC4422;
+	}
+
 body #gp_admin_html a *{
 	color:inherit;
 	text-decoration:inherit;
@@ -1137,8 +1141,14 @@ color:#2d2d2d!important;
 	display:block;
 	white-space:nowrap;
 	min-width:170px;
-	color:#333 !important;
 	outline:0 none;
+	}
+#adminlinks2 li a{
+	color:#333 !important;
+	}
+#adminlinks2 li a:hover{
+	color:#CC4422 !important;
+	color:#226699 !important;
 	}
 
 #adminlinks2 li.submenu_top{
@@ -1185,7 +1195,6 @@ color:#2d2d2d!important;
 	text-overflow:ellipsis;
 	border:0 none;
 	border-radius:0;
-	width:100%;
 	margin:0;
 	}
 #adminlinks2 li.expand_child_click li > a,
@@ -1193,14 +1202,12 @@ color:#2d2d2d!important;
 #adminlinks2 li.expand_child_click li > b,
 #adminlinks2 li.expand_child_click li > form{
 	font-size:13px;
-	padding:5px 12px;
 	display:block;
 	padding:3px 25px;
 	}
 #adminlinks2 li.expand_child_click li:hover{
 	background:#f7f7f7;
 	}
-
 
 
 /*
@@ -1666,10 +1673,9 @@ body #gp_admin_html .layout_links a.selected{
 	font-weight:normal;
 	font-size:17px;
 	margin:0;
-	color:#445599 !important;
+	color:#226699 !important;
 	border-bottom: 0 none;
 	}
-
 
 
 .ui-selectable-helper{

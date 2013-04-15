@@ -132,13 +132,14 @@ body #admin_menu li.ui-sortable-helper{
 #admin_menu_tools a:link,
 #admin_menu_tools a:visited,
 #admin_menu_tools a:hover{
-	color:#444;
+	color:#444 !important;
 	display:block;
 	padding:5px 20px 6px 10px;
 	text-decoration:none;
 	}
 #admin_menu_tools a:hover{
 	background-color:#fff;
+	color:#000 !important;
 	}
 #admin_menu_tools a img,
 #admin_menu_tools a span,

@@ -203,14 +203,15 @@ class gp_combine{
 		}
 
 		//translate addon paths
-		$pos = strpos($file,'/data/_addoncode');
+		$pos = strpos($file,'/data/_addoncode/');
 		if( $pos !== false ){
-			$addon_parts = substr($file,$pos+17);
-			$addon_parts = explode('/',$addon_parts);
-			$addon_key = array_shift($addon_parts);
-			$file_rel =
+			$file_parts = substr($file,$pos+17);
+			$file_parts = explode('/',$file_parts);
+			$addon_key = array_shift($file_parts);
 			$addon_config = gpPlugin::GetAddonConfig($addon_key);
-			$file = $addon_config['code_folder_rel'].'/'.implode('/',$addon_parts);
+			if( $addon_config ){
+				$file = $addon_config['code_folder_rel'].'/'.implode('/',$file_parts);
+			}
 		}
 
 

@@ -1366,6 +1366,9 @@ class admin_theme_content extends admin_addon_install{
 			$themes[$index]['is_addon'] = false;
 			$themes[$index]['full_dir'] = $full_dir;
 			$themes[$index]['rel'] = '/themes/'.$name;
+			if( isset($ini_info['Addon_Version']) ){
+				$themes[$index]['version'] = $ini_info['Addon_Version'];
+			}
 			if( isset($ini_info['Addon_Unique_ID']) ){
 				$themes[$index]['id'] = $ini_info['Addon_Unique_ID'];
 			}
@@ -1393,6 +1396,9 @@ class admin_theme_content extends admin_addon_install{
 			$themes[$index]['full_dir'] = $full_dir;
 			$themes[$index]['id'] = $ini_info['Addon_Unique_ID'];
 			$themes[$index]['rel'] = '/data/_themes/'.$folder;
+			if( isset($ini_info['Addon_Version']) ){
+				$themes[$index]['version'] = $ini_info['Addon_Version'];
+			}
 		}
 
 		uksort($themes,'strnatcasecmp');
@@ -1591,6 +1597,8 @@ class admin_theme_content extends admin_addon_install{
 		echo '<tr><th>';
 		echo $langmessage['name'];
 		echo '</th><th>';
+		echo $langmessage['version'];
+		echo '</th><th>';
 		echo $langmessage['style'];
 		echo '</th><th>';
 		echo $langmessage['options'];
@@ -1601,6 +1609,10 @@ class admin_theme_content extends admin_addon_install{
 			echo '<tr class="'.($i++ % 2 ? ' even' : '').'"><td>';
 			echo str_replace('_',' ',$info['name']);
 			echo '</td><td>';
+			echo $info['version'];
+			//echo pre($info);
+			echo '</td><td>';
+
 			$comma = '';
 			foreach($info['colors'] as $color){
 				echo $comma;

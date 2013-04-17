@@ -2304,6 +2304,7 @@ class gpOutput{
 	function GetComponents($names = ''){
 		includeFile('combine.php');
 		$scripts = gp_combine::ScriptInfo( $names );
+		message($scripts);
 		//gpOutput::CombineFiles($scripts, 'js', false );
 
 

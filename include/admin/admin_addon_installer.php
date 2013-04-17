@@ -205,7 +205,8 @@ class admin_addon_installer extends admin_addons_tool{
 			return false;
 		}
 
-		/*if( $this->has_hooks ){
+		/*
+		if( $this->has_hooks ){
 			message('stopping: has hoooks');
 		}else{
 			message('stopping: doesnt have hooks');
@@ -347,6 +348,12 @@ class admin_addon_installer extends admin_addons_tool{
 		$ini_file = $ini_dir.'/Addon.ini';
 
 		if( !file_exists($ini_file) ){
+
+			//local themes don't need addon.ini files
+			if( !empty($this->new_layout) ){
+				return true;
+			}
+
 			$this->message( sprintf($langmessage['File_Not_Found'],' <em>'.$ini_file.'</em>') );
 			return false;
 		}

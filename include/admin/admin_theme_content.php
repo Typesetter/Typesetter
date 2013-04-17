@@ -1033,6 +1033,12 @@ class admin_theme_content extends admin_addon_install{
 		$page->theme_name = $template;
 		$page->theme_color = $color;
 		$page->theme_dir = $theme_info['full_dir'];
+
+		$color_template_dir = $theme_info['full_dir'].'/'.$color;
+		if( file_exists($color_template_dir.'/template.php') ){
+			$page->theme_dir = $color_template_dir;
+		}
+
 		$page->layout_css = false;
 		$page->theme_rel = $theme_info['rel'].'/'.$color;
 
@@ -1609,7 +1615,11 @@ class admin_theme_content extends admin_addon_install{
 			echo '<tr class="'.($i++ % 2 ? ' even' : '').'"><td>';
 			echo str_replace('_',' ',$info['name']);
 			echo '</td><td>';
-			echo $info['version'];
+			if( isset($info['versionn']) ){
+				echo $info['version'];
+			}else{
+				echo '';
+			}
 			//echo pre($info);
 			echo '</td><td>';
 

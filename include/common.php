@@ -1046,6 +1046,7 @@ class common{
 		$color_template = $dataDir.$layout_info['path'];
 		$theme_template = $dataDir.$relative.$layout_info['theme_name'];
 
+
 		if( !$check_existence ){
 			$layout_info['dir'] = $theme_template;
 

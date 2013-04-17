@@ -2301,13 +2301,16 @@ class gpOutput{
 		}
 	}
 
+	/**
+	 * Add one or more components to the page. Output the <script> and/or <style> immediately
+	 * @param string $names comma separated list of components
+	 *
+	 */
 	function GetComponents($names = ''){
 		includeFile('combine.php');
 		$scripts = gp_combine::ScriptInfo( $names );
-		message($scripts);
-		//gpOutput::CombineFiles($scripts, 'js', false );
-
-
+		gpOutput::CombineFiles($scripts['css'], 'css', false );
+		gpOutput::CombineFiles($scripts['js'], 'js', false );
 	}
 
 

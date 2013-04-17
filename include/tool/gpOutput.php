@@ -1712,22 +1712,13 @@ class gpOutput{
 		common::LoadComponents('jquery,gp-additional');
 
 		//get css and js info
-		$css = $js = array();
 		includeFile('combine.php');
 		$scripts = gp_combine::ScriptInfo( gpOutput::$components );
-		foreach($scripts as $key => $script){
-			if( isset($script['type']) && $script['type'] == 'css' ){
-				$css[$key] = $script;
-			}else{
-				$js[$key] = $script;
-			}
-		}
-
 
 		gpOutput::GetHead_TKD();
-		gpOutput::GetHead_CSS($css); //css before js so it's available to scripts
+		gpOutput::GetHead_CSS($scripts['css']); //css before js so it's available to scripts
 		gpOutput::GetHead_Lang();
-		gpOutput::GetHead_JS($js);
+		gpOutput::GetHead_JS($scripts['js']);
 		gpOutput::GetHead_InlineJS();
 
 		//gadget info
@@ -1942,18 +1933,13 @@ class gpOutput{
 			echo '</script>';
 		}
 
-		//create list of files to include
-		$js_files = array();
-		foreach($scripts as $key => $script){
-			$js_files[$key] = '/include/'.$script['file'];
-		}
 		if( is_array($page->head_js) ){
-			$js_files += $page->head_js; //other js files
+			$scripts += $page->head_js; //other js files
 		}else{
 			trigger_error('$page->head_js is not an array');
 		}
 
-		gpOutput::CombineFiles($js_files,'js',$combine );
+		gpOutput::CombineFiles($scripts,'js',$combine );
 	}
 
 
@@ -1970,35 +1956,26 @@ class gpOutput{
 			unset($scripts['ui-theme']);
 		}
 
-
-		//create list of files to include
-		$css_files = array();
-
-		//css using Load
-		foreach($scripts as $key => $script){
-			$css_files[$key] = '/include/'.$script['file'];
-		}
-
 		if( isset($page->css_user) && is_array($page->css_user) ){
-			$css_files = array_merge($css_files,$page->css_user);
+			$scripts = array_merge($scripts,$page->css_user);
 		}
 
 		//after other styles, so themes can overwrite defaults
 		if( !empty($page->theme_name) && $page->get_theme_css === true ){
-			$css_files[] = rawurldecode($page->theme_path).'/style.css';
+			$scripts[] = rawurldecode($page->theme_path).'/style.css';
 		}
 
 		//layout css
 		if( isset($page->layout_css) && $page->layout_css ){
-			$css_files[] = '/data/_layouts/'.$page->gpLayout.'/custom.css';
+			$scripts[] = '/data/_layouts/'.$page->gpLayout.'/custom.css';
 		}
 
 		//styles that need to override admin.css should be added to $page->css_admin;
 		if( isset($page->css_admin) && is_array($page->css_admin) ){
-			$css_files = array_merge($css_files,$page->css_admin);
+			$scripts = array_merge($scripts,$page->css_admin);
 		}
 
-		gpOutput::CombineFiles($css_files,'css',$config['combinecss']);
+		gpOutput::CombineFiles($scripts,'css',$config['combinecss']);
 	}
 
 
@@ -2323,5 +2300,14 @@ class gpOutput{
 			common::Send304( common::GenEtag( $page->fileModTime, $len ) );
 		}
 	}
+
+	function GetComponents($names = ''){
+		includeFile('combine.php');
+		$scripts = gp_combine::ScriptInfo( $names );
+		//gpOutput::CombineFiles($scripts, 'js', false );
+
+
+	}
+
 
 }

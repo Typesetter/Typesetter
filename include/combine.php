@@ -291,6 +291,7 @@ class gp_combine{
 
 	static function ScriptInfo( $components, $dependencies = true){
 		global $config;
+		static $root_call = true;
 		if( is_string($components) ){
 			$components = explode(',',strtolower($components));
 			$components = array_unique($components);
@@ -475,6 +476,12 @@ class gp_combine{
 										,'requires' => array('jquery', 'effects-core')
 										,'package' => 'jquery_ui');
 
+
+		//html5shiv
+		$scripts['html5shiv'] = array(	'file'=>'thirdparty/js/shiv/html5shiv.js' );
+		$scripts['printshiv'] = array(	'file'=>'thirdparty/js/shiv/html5shiv-printshiv.js' );
+
+
 		/**
 		 * make sure each of the files exists
 		 *
@@ -496,17 +503,38 @@ class gp_combine{
 
 		$all_scripts = array();
 		foreach($components as $component){
-			if( !isset($scripts[$component]) ){
+			if( !array_key_exists($component,$scripts) ){
 				$all_scripts[$component] = false;
 				continue;
 			}
 			$script_info = $scripts[$component];
 			if( $dependencies && isset($script_info['requires']) ){
+				$is_root_call = $root_call;
+				$root_call = false;
 				$all_scripts += gp_combine::ScriptInfo($script_info['requires']);
+				$root_call = $is_root_call;
 			}
 			$all_scripts[$component] = $scripts[$component];
 		}
-		return array_filter($all_scripts);
+
+		if( !$root_call ){
+			return array_filter($all_scripts);
+		}
+
+
+		//return an organized array for the root call
+		$return = array('js'=>array(),'css'=>array() );
+
+		foreach($all_scripts as $key => $script){
+			if( isset($script['type']) && $script['type'] == 'css' ){
+				$return['css'][$key] = '/include/'.$script['file'];
+			}else{
+				$return['js'][$key] = '/include/'.$script['file'];
+			}
+		}
+
+		return $return;
 	}
 
 }
+

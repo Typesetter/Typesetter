@@ -1373,7 +1373,6 @@ class gpOutput{
 
 		if( !count($menu) ){
 			echo '<div class="emtpy_menu"></div>'; //an empty <ul> is not valid xhtml
-			gpOutput::ResetMenuGlobals();
 			return;
 		}
 
@@ -1577,17 +1576,8 @@ class gpOutput{
 
 
 		echo implode('',$result); //don't separate by spaces so css inline can be more functional
-		gpOutput::ResetMenuGlobals();
 		return;
 	}
-
-
-	static function ResetMenuGlobals(){
-		global $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES;
-		unset($GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES);
-	}
-
-
 
 
 	/*

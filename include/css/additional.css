@@ -149,11 +149,6 @@ body .messages a{
 
 .nodisplay{display:none;}
 
-/*
-	clearfix for editable_area heights
-	see http://www.positioniseverything.net/easyclearing.html
-		http://www.quirksmode.org/css/clearing.html
-*/
 
 /* CSS2... doesn't work for IE7
 div.GPAREA:after{

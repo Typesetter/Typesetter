@@ -499,7 +499,7 @@ class admin_menu_new extends admin_menu_tools{
 
 	//we do the json here because we're replacing more than just the content
 	function GetMenus(){
-		global $page, $GP_MENU_LINKS, $GP_MENU_CLASS;
+		global $page, $GP_MENU_LINKS, $GP_MENU_CLASSES;
 
 		foreach($_REQUEST['menus'] as $id => $menu){
 
@@ -517,7 +517,10 @@ class admin_menu_new extends admin_menu_tools{
 				$GP_MENU_LINKS = rawurldecode($_REQUEST['menuh'][$id]);
 			}
 			if( !empty($_REQUEST['menuc'][$id]) ){
-				$GP_MENU_CLASS = rawurldecode($_REQUEST['menuc'][$id]);
+				$menu_classes = json_decode( rawurldecode($_REQUEST['menuc'][$id]), true );
+				if( is_array($menu_classes) ){
+					$GP_MENU_CLASSES = $menu_classes;
+				}
 			}
 
 			ob_start();
@@ -645,7 +648,7 @@ class admin_menu_new extends admin_menu_tools{
 					echo $piece;
 					$curr_level++;
 					$piece = '<li class="missing_title"><div>'
-							.'<a href="#" class="label" data-cmd="menu_info">'
+							.'<a href="#" class="gp_label" data-cmd="menu_info">'
 							.$langmessage['page_deleted']
 							.'</a>'
 							.'<p><b>'.$langmessage['page_deleted'].'</b></p>'
@@ -715,7 +718,7 @@ class admin_menu_new extends admin_menu_tools{
 			$data['title'] = substr($data['title'],0,30).'...';
 		}
 
-		echo '<a class="label sort external" data-cmd="menu_info" data-arg="'.str_replace('&','&amp;',$menu_key).'">';
+		echo '<a class="gp_label sort external" data-cmd="menu_info" data-arg="'.str_replace('&','&amp;',$menu_key).'">';
 		echo common::LabelSpecialChars($menu_value['label']);
 		$this->MenuData($data);
 		echo '</a>';
@@ -790,7 +793,7 @@ class admin_menu_new extends admin_menu_tools{
 			$data['opts'] = $menu_options;
 		}
 
-		echo '<a class="label sort" data-cmd="menu_info" data-arg="'.str_replace('&','&amp;',$menu_key).'">';
+		echo '<a class="gp_label sort" data-cmd="menu_info" data-arg="'.str_replace('&','&amp;',$menu_key).'">';
 		echo common::LabelSpecialChars($label);
 		$this->MenuData($data);
 		echo '</a>';

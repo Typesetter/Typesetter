@@ -388,7 +388,7 @@ class gpOutput{
 				echo '<div class="menu_marker nodisplay" data-menuid="'.$id.'">';
 				echo '<input type="hidden" value="'.htmlspecialchars($info['gpOutCmd']).'" />';
 				echo '<input type="hidden" value="'.htmlspecialchars($GP_MENU_LINKS).'" />';
-				echo '<input type="hidden" value="'.htmlspecialchars($GP_MENU_CLASS).'" />';
+				echo '<input type="hidden" value="'.htmlspecialchars(json_encode($GP_MENU_CLASSES)).'" />';
 				echo '</div>';
 			}
 			gpOutput::$editlinks .= ob_get_clean();

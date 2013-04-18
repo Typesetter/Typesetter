@@ -67,9 +67,9 @@ body #admin_menu li.ui-sortable-helper{
 	}
 */
 
-#admin_menu li div a.label,
-#admin_menu li div a.label:hover,
-#admin_menu li div a.label:link{
+#admin_menu li div a.gp_label,
+#admin_menu li div a.gp_label:hover,
+#admin_menu li div a.gp_label:link{
 	color:#444;
 	font-weight:bold;
 	display:block;
@@ -342,7 +342,7 @@ body #gp_menu_select *{
 .missing_title > div{
 	padding-left:24px;
 	}
-.missing_title > div .label {
+.missing_title > div .gp_label {
 	font-weight:normal !important;
 	color:#990000 !important;
 	}

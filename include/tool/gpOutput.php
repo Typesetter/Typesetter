@@ -68,6 +68,8 @@ class gpOutput{
 	private static $out_started = false;
 	private static $gadget_cache = array();
 
+	private static $edit_area_id = '';
+
 
 	/*
 	 *
@@ -310,6 +312,7 @@ class gpOutput{
 		global $GP_ARRANGE, $page, $langmessage, $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES, $gp_current_container;
 		$gp_current_container = $container_id;
 		self::$out_started = true;
+		self::$edit_area_id = '';
 
 
 		if( isset($info['disabled']) ){
@@ -324,7 +327,6 @@ class gpOutput{
 
 		$param = $container_id.'|'.$info['gpOutCmd'];
 		$class = 'gpArea_'.str_replace(array(':',','),array('_',''),trim($info['gpOutCmd'],':'));
-		$id = '';
 		$permission = gpOutput::ShowEditLink('Admin_Theme_Content');
 
 		ob_start();
@@ -355,35 +357,31 @@ class gpOutput{
 			$menu_marker = false;
 			if( isset($info['link']) ){
 				$label = $langmessage[$info['link']];
-				$class .=  ' editable_area';
-				$menu_marker = true;
 
 				$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=editlinks&layout='.urlencode($page->gpLayout).'&handle='.$param,' data-cmd="gpabox" title="'.$label.'" ');
 				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 				echo $edit_link;
-				//echo $arrange_links;
 				echo common::Link('Admin_Menu',$langmessage['file_manager'],'',' class="nodisplay"');
 				echo '</span>';
 
-				$id = 'ExtraEditArea'.$edit_index.'';
+				self::$edit_area_id = 'ExtraEditArea'.$edit_index;
+				$menu_marker = true;
 
 			}elseif( isset($info['key']) && ($info['key'] == 'CustomMenu') ){
 
 				$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=editcustom&layout='.urlencode($page->gpLayout).'&handle='.$param,' data-cmd="gpabox" title="'.$langmessage['Links'].'" ');
 				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 				echo $edit_link;
-				//echo $arrange_links;
 				echo common::Link('Admin_Menu',$langmessage['file_manager'],'',' class="nodisplay"');
 				echo '</span>';
 
-				$id = 'ExtraEditArea'.$edit_index.'';
-				$class .=  ' editable_area';
+				self::$edit_area_id = 'ExtraEditArea'.$edit_index;
 				$menu_marker = true;
 			}
 
 			//for menu arrangement, admin_menu_new.js
 			if( $menu_marker ){
-				echo '<div class="menu_marker nodisplay" data-menuid="'.$id.'">';
+				echo '<div class="menu_marker nodisplay" data-menuid="'.self::$edit_area_id.'">';
 				echo '<input type="hidden" value="'.htmlspecialchars($info['gpOutCmd']).'" />';
 				echo '<input type="hidden" value="'.htmlspecialchars($GP_MENU_LINKS).'" />';
 				echo '<input type="hidden" value="'.htmlspecialchars(json_encode($GP_MENU_CLASSES)).'" />';
@@ -393,10 +391,7 @@ class gpOutput{
 		gpOutput::$editlinks .= ob_get_clean();
 
 
-		if( !empty($id) ){
-			$id = 'id="'.$id.'"';
-		}
-		echo '<div class="'.$class.' GPAREA" '.$id.'>';
+		echo '<div class="'.$class.' GPAREA">';
 		gpOutput::ExecArea($info);
 		echo '</div>';
 
@@ -1366,8 +1361,14 @@ class gpOutput{
 		$search = array('{$href_text}','{$attr}','{$label}','{$title}');
 		$replace = array();
 
+		$id = $class = '';
+		if( self::$edit_area_id ){
+			$id = ' id="'.self::$edit_area_id.'"';
+			$class = ' editable_area';
+		}
+
 		if( !count($menu) ){
-			echo '<div class="emtpy_menu"></div>'; //an empty <ul> is not valid xhtml
+			echo '<div class="emtpy_menu'.$class.'"'.$id.'></div>'; //an empty <ul> is not valid xhtml
 			return;
 		}
 
@@ -1413,7 +1414,7 @@ class gpOutput{
 
 
 		//output
-		$result[] = '<ul class="'.$GP_MENU_CLASSES['menu_top'].'">';
+		$result[] = '<ul class="'.$GP_MENU_CLASSES['menu_top'].''.$class.'"'.$id.'>';
 
 		foreach($source_keys as $source_index => $menu_key){
 

@@ -155,7 +155,7 @@ body .messages a{
 		http://www.quirksmode.org/css/clearing.html
 */
 
-/* CSS2... doesn't work for IE7 */
+/* CSS2... doesn't work for IE7
 div.GPAREA:after{
 	content: ".";
 	display: block;
@@ -163,14 +163,12 @@ div.GPAREA:after{
 	clear: both;
 	visibility: hidden;
 	}
-
-/* for IE7... does not validate */
+*/
+/* for IE7... does not validate
 div.GPAREA{
 	zoom: 1;
 	}
-
-/* for testing
-div.GPAREA{border:1px solid #ccc;} */
+	*/
 
 .cf:before,.cf:after{content:"";display:table}
 .cf:after{clear:both}

@@ -499,7 +499,7 @@ class admin_menu_new extends admin_menu_tools{
 
 	//we do the json here because we're replacing more than just the content
 	function GetMenus(){
-		global $page,$GP_MENU_LINKS,$GP_MENU_CLASS;
+		global $page, $GP_MENU_LINKS, $GP_MENU_CLASS;
 
 		foreach($_REQUEST['menus'] as $id => $menu){
 

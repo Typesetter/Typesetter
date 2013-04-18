@@ -205,3 +205,10 @@ body #gp_admin_html #theme_toolbar a{
 }
 
 
+/**
+ * Fix for bootstrap css
+ */
+body.edit_layout .navbar-fixed-top{
+	top:36px;
+	}
+

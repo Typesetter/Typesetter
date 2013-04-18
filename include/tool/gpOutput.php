@@ -143,7 +143,7 @@ class gpOutput{
 		}
 		gpOutput::TemplateSettings();
 		header('Content-Type: text/html; charset=utf-8');
-		IncludeScript($page->theme_dir.'/template.php','require',array('page','GP_ARRANGE','GP_MENU_LINKS','GP_MENU_CLASS'));
+		IncludeScript($page->theme_dir.'/template.php','require',array('page','GP_ARRANGE','GP_MENU_LINKS','GP_MENU_CLASS','GP_MENU_CLASSES'));
 		self::$template_included = true;
 
 		gpPlugin::ClearDataFolder();
@@ -307,7 +307,7 @@ class gpOutput{
 
 
 	static function CallOutput($info,$container_id){
-		global $GP_ARRANGE,$page,$langmessage,$GP_MENU_LINKS,$GP_MENU_CLASS,$gp_current_container;
+		global $GP_ARRANGE, $page, $langmessage, $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES, $gp_current_container;
 		$gp_current_container = $container_id;
 		self::$out_started = true;
 
@@ -1362,7 +1362,7 @@ class gpOutput{
 	 * @static
 	 */
 	static function OutputMenu($menu,$start_level,$source_menu=false){
-		global $page,$GP_MENU_LINKS,$GP_MENU_CLASS,$gp_menu,$gp_titles;
+		global $page, $gp_menu, $gp_titles, $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES;
 
 		if( $source_menu === false ){
 			$source_menu =& $gp_menu;
@@ -1399,11 +1399,27 @@ class gpOutput{
 			$parent_page = $parents[0];
 		}
 
-		$class = 'menu_top';
-		if( !empty($GP_MENU_CLASS) ){
-			$class = $GP_MENU_CLASS;
+
+		//menu classes
+		if( !is_array($GP_MENU_CLASSES) ){
+			$GP_MENU_CLASSES = array();
 		}
-		$result[] = '<ul class="'.$class.'">';
+		if( empty($GP_MENU_CLASS) ){
+			$GP_MENU_CLASS = 'menu_top';
+		}
+		$GP_MENU_CLASSES += array(
+							'menu_top'			=> $GP_MENU_CLASS,
+							'selected'			=> 'selected',
+							'selected_li'		=> 'selected_li',
+							'childselected'		=> 'childselected',
+							'childselected_li'	=> 'childselected_li',
+							'li_'				=> 'li_',
+							'li_title'			=> 'li_title',
+							);
+
+
+		//output
+		$result[] = '<ul class="'.$GP_MENU_CLASSES['menu_top'].'">';
 
 		foreach($source_keys as $source_index => $menu_key){
 
@@ -1430,34 +1446,54 @@ class gpOutput{
 					}else{
 						$li_count[$this_level]++;
 					}
-					$class_li = 'li_'.$li_count[$this_level];
+					if( !empty($GP_MENU_CLASSES['li_']) ){
+						$class_li .= $GP_MENU_CLASSES['li_'].$li_count[$this_level];
+					}
 				}
 
-				if( $page->menu_css_indexed ){
-					$class_li .= ' li_title_'.$menu_key;
+				if( $page->menu_css_indexed && !empty($GP_MENU_CLASSES['li_title_']) ){
+					$class_li .= ' '.$GP_MENU_CLASSES['li_title_'].$menu_key;
 				}
 
 
 				//selected classes
-				if( $this_level < $next_info['level'] ){
-					$class .= ' haschildren';
-				}
-				if( isset($menu_info['url']) && ($menu_info['url'] == $page->title || $menu_info['url'] == $page_title_full) ){
-					$class .= ' selected';
-					$class_li .= ' selected_li';
-				}elseif( $menu_key == $page->gp_index ){
-					$class .= ' selected';
-					$class_li .= ' selected_li';
-				}elseif( in_array($menu_key,$parents) ){
-					$class .= ' childselected';
-					$class_li .= ' childselected_li';
+				if( $this_level < $next_info['level'] && !empty($GP_MENU_CLASSES['haschildren']) ){
+					$class .= ' '.$GP_MENU_CLASSES['haschildren'];
 				}
 
+				if( isset($menu_info['url']) && ($menu_info['url'] == $page->title || $menu_info['url'] == $page_title_full) ){
+
+					if( !empty($GP_MENU_CLASSES['selected']) ){
+						$class .= ' '.$GP_MENU_CLASSES['selected'];
+					}
+					if( !empty($GP_MENU_CLASSES['selected_li']) ){
+						$class_li .= ' '.$GP_MENU_CLASSES['selected_li'];
+					}
+
+				}elseif( $menu_key == $page->gp_index ){
+
+					if( !empty($GP_MENU_CLASSES['selected']) ){
+						$class .= ' '.$GP_MENU_CLASSES['selected'];
+					}
+					if( !empty($GP_MENU_CLASSES['selected_li']) ){
+						$class_li .= ' '.$GP_MENU_CLASSES['selected_li'];
+					}
+
+				}elseif( in_array($menu_key,$parents) ){
+
+					if( !empty($GP_MENU_CLASSES['childselected']) ){
+						$class .= ' '.$GP_MENU_CLASSES['childselected'];
+					}
+					if( !empty($GP_MENU_CLASSES['childselected_li']) ){
+						$class_li .= ' '.$GP_MENU_CLASSES['childselected_li'];
+					}
+
+				}
 				if( !empty($class) ){
-					$attr = ' class="'.trim($class).'"';
+					$attr = ' class="'.$class.'"';
 				}
 				if( !empty($class_li) ){
-					$attr_li = ' class="'.trim($class_li).'"';
+					$attr_li = ' class="'.$class_li.'"';
 				}
 
 				//current is a child of the previous
@@ -1545,10 +1581,10 @@ class gpOutput{
 		return;
 	}
 
+
 	static function ResetMenuGlobals(){
-		global $GP_MENU_LINKS,$GP_MENU_CLASS;
-		unset($GP_MENU_LINKS);
-		unset($GP_MENU_CLASS);
+		global $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES;
+		unset($GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES);
 	}
 
 

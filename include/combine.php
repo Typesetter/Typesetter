@@ -206,6 +206,72 @@ class gp_combine{
 				'html5shiv' => array(	'file'=>'thirdparty/js/shiv/html5shiv.js' ),
 				'printshiv' => array(	'file'=>'thirdparty/js/shiv/html5shiv-printshiv.js' ),
 
+
+
+				//bootstrap
+				'bootstrap-css'				=>	array(
+												'file'=> 'thirdparty/Bootstrap/css/bootstrap.min.css'),
+
+				'bootstrap-responsive-css'	=>	array(
+												'file'=> 'thirdparty/Bootstrap/css/bootstrap-responsive.min.css',
+												'requires'=> array('bootstrap-css') ),
+
+				'bootstrap-alert'			=> array(
+												'file' => 'thirdparty/Bootstrap/js/bootstrap-alert.js',
+												'package' => 'bootstrap' ),
+
+				'bootstrap-button'			=> array(
+												'file' => 'thirdparty/Bootstrap/js/bootstrap-button.js',
+												'package' => 'bootstrap' ),
+
+				'bootstrap-carousel'		=> array(
+												'file' => 'thirdparty/Bootstrap/js/bootstrap-carousel.js',
+												'package' => 'bootstrap' ),
+
+				'bootstrap-collapse'		=> array(
+												'file' => 'thirdparty/Bootstrap/js/bootstrap-collapse.js',
+												'package' => 'bootstrap' ),
+
+				'bootstrap-dropdown'		=> array(
+												'file' => 'thirdparty/Bootstrap/js/bootstrap-dropdown.js',
+												'package' => 'bootstrap' ),
+
+				'bootstrap-modal'			=> array(
+												'file' => 'thirdparty/Bootstrap/js/bootstrap-modal.js',
+												'package' => 'bootstrap' ),
+
+				'bootstrap-popover'			=> array(
+												'file' => 'thirdparty/Bootstrap/js/bootstrap-popover.js',
+												'package' => 'bootstrap' ),
+
+				'bootstrap-scrollspy'		=> array(
+												'file' => 'thirdparty/Bootstrap/js/bootstrap-scrollspy.js',
+												'package' => 'bootstrap' ),
+
+				'bootstrap-tab'				=> array(
+												'file' => 'thirdparty/Bootstrap/js/bootstrap-tab.js',
+												'package' => 'bootstrap' ),
+
+				'bootstrap-tooltip'			=> array(
+												'file' => 'thirdparty/Bootstrap/js/bootstrap-tooltip.js',
+												'package' => 'bootstrap' ),
+
+				'bootstrap-transition'		=> array(
+												'file' => 'thirdparty/Bootstrap/js/bootstrap-transition.js',
+												'package' => 'bootstrap' ),
+
+				'bootstrap-typeahead'		=> array(
+												'file' => 'thirdparty/Bootstrap/js/bootstrap-typeahead.js',
+												'package' => 'bootstrap' ),
+
+				'bootstrap-js'				=> array(
+												'file' => 'thirdparty/Bootstrap/js/bootstrap.min.js',
+												'package' => 'bootstrap' ),
+
+				'bootstrap-all'				=> array(
+												'requires'=> array('bootstrap-responsive-css','bootstrap-js'),
+												'package' => 'bootstrap' ),
+
 		);
 
 
@@ -532,6 +598,9 @@ class gp_combine{
 		//return an organized array for the root call
 		$return = array('js'=>array(),'css'=>array() );
 		foreach($all_scripts as $key => $script){
+			if( empty($script['file']) ){
+				continue;
+			}
 			if( empty($script['type']) ){
 				$script['type'] = pathinfo($script['file'], PATHINFO_EXTENSION);
 			}

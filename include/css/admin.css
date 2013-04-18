@@ -29,6 +29,7 @@ body #gp_admin_html *{
 	font-family:inherit;
 	line-height:inherit;
 	text-shadow:none;
+	height:auto;
 	/* background: none; prevents other backgrounds from showing. "inherit" wouldn't make sense */
 	}
 body #gp_admin_html li{
@@ -169,7 +170,7 @@ body #gp_admin_html .gpinput,
 body #gp_admin_html .gpselect,
 body #gp_admin_html .gpsubmit,
 body #gp_admin_html .gpcancel{
-	margin-right:7px;
+	margin:0 7px 0 0;
 	}
 
 body #gp_admin_html .gpcheckbox.checked,

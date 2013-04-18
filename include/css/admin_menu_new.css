@@ -11,6 +11,7 @@
 #admin_menu ul{
 	overflow:visible;
 	padding-left:30px;
+	margin:0;
 	}
 #admin_menu{
 	width:330px;

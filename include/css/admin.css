@@ -29,7 +29,6 @@ body #gp_admin_html *{
 	font-family:inherit;
 	line-height:inherit;
 	text-shadow:none;
-	height:auto;
 	/* background: none; prevents other backgrounds from showing. "inherit" wouldn't make sense */
 	}
 body #gp_admin_html li{
@@ -151,6 +150,7 @@ body #gp_admin_html .gpdisabled{
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	padding:4px 8px;
+	height:auto;
 	}
 
 body #gp_admin_html .gptextarea,
@@ -164,6 +164,7 @@ body #gp_admin_html .gpinput{
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	padding:4px 6px;
+	height:auto;
 	}
 
 body #gp_admin_html .gpinput,
@@ -748,7 +749,7 @@ table.tablesorter th.gp_header_desc:before{
 #adminlinks2 .icon_plug a{
 	background:url('../imgs/admin_icons.png') no-repeat 0 -97px;
 	}
-.span_icon_plug{
+.img_icon_plug{
 	display:inline-block;
 	height:16px;
 	width:16px;

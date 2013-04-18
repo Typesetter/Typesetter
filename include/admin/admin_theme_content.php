@@ -623,12 +623,13 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '<ul>';
 		foreach($theme_colors as $color){
+			$color_label = str_replace('_',' ',$color);
 			if( $color == $layout_info['theme_color'] ){
 				echo '<li class="selected">';
-				echo '<b>'.$color.'</b>';
+				echo '<b>'.$color_label.'</b>';
 			}else{
 				echo '<li>';
-				echo $this->LayoutLink( $layout, $color, 'cmd=change_layout_color&color='.$color, ' data-cmd="cnreq"' );
+				echo $this->LayoutLink( $layout, $color_label, 'cmd=change_layout_color&color='.$color, ' data-cmd="cnreq"' );
 			}
 			echo '</li>';
 		}
@@ -1724,7 +1725,7 @@ class admin_theme_content extends admin_addon_install{
 			$addon_key = $layout_info['addon_key'];
 			$addon_config = gpPlugin::GetAddonConfig($addon_key);
 			echo '<li>';
-			echo common::link('Admin_Addons','<span class="span_icon_plug"></span> '.$addon_config['name'],'cmd=show&addon='.$addon_key);
+			echo common::link('Admin_Addons','<span class="img_icon_plug"></span> '.$addon_config['name'],'cmd=show&addon='.$addon_key);
 			echo '</li>';
 
 			//$addon_key = $layout_info['addon_key'];

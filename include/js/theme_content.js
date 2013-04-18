@@ -150,16 +150,13 @@ function LayoutSetup(){
 
 
 	//create a draggable box for each output_area
-	$('.output_area').each(function(i,b){
-		var loc, lnks, c;
+	var $inner_links = $('.gp_inner_links');
+	$('.gp_output_area').each(function(i,b){
+		var loc, lnks, $this = $(b);
 
-		c = $(b);
+		loc = $gp.Coords($this);
 
-		//var id_number = c.attr('id');
-		loc = $gp.Coords(c);
-
-		//var lnks = c.find('.output_area_link');
-		lnks = c.find('.gplinks');
+		lnks = $inner_links.eq(i);
 
 		if( lnks.length > 0 ){
 
@@ -169,33 +166,23 @@ function LayoutSetup(){
 			.append(lnks) //.output_area_link
 			.fadeTo('fast',.5)
 			.height(loc.h-3).width(loc.w-3)
-			//.animate({'height':loc.h-3,'width':loc.w-3},500)
 			.on('gp_position',function(){
 
-				var loc = $gp.Coords(c);
+				var loc = $gp.Coords($this);
 
 				//make sure there's at least a small box to work with
 				if( loc.h < 20 ){
-					c.height(20);
+					$this.height(20);
 					loc.h = 20;
 				}
 				if( loc.w < 20 ){
-					c.width(20);
+					$this.width(20);
 					loc.w = 20;
 				}
 
-				//
 				$(this).css({'top':loc.top,'left':loc.left})
-				//$(this).animate({'top':loc.top,'left':loc.left})
-
 			});
 		}
-
-		//var d = $('<div style="border:2px dashed red;overflow:hidden;" class="draggable_element"></div>')
-		//.height(h-4).width(w-4);
-		//c.wrap(d);
-		//d.prepend(b.firstChild);
-
 	});
 
 	var drag_elements = $('.draggable_element');

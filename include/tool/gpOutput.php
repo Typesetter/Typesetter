@@ -324,7 +324,6 @@ class gpOutput{
 
 		$param = $container_id.'|'.$info['gpOutCmd'];
 		$class = 'gpArea_'.str_replace(array(':',','),array('_',''),trim($info['gpOutCmd'],':'));
-		$innerLinks = '';
 		$id = '';
 		$permission = gpOutput::ShowEditLink('Admin_Theme_Content');
 
@@ -332,22 +331,21 @@ class gpOutput{
 		//for theme content arrangement
 		if( $GP_ARRANGE && $permission && isset($GLOBALS['GP_ARRANGE_CONTENT'])  ){
 			$empty_container = empty($info['gpOutCmd']); //empty containers can't be removed and don't have labels
-			$class .= ' output_area';
+			$class .= ' gp_output_area';
 
-			$innerLinks .= '<div class="gplinks nodisplay">';
-			$innerLinks .= common::Link('Admin_Theme_Content/'.$page->gpLayout,$param,'cmd=drag_area&dragging='.urlencode($param).'&to=%s','data-cmd="creq" class="dragdroplink nodisplay"'); //drag-drop link
+			gpOutput::$editlinks .= '<div class="gp_inner_links nodisplay">';
+			gpOutput::$editlinks .= common::Link('Admin_Theme_Content/'.$page->gpLayout,$param,'cmd=drag_area&dragging='.urlencode($param).'&to=%s','data-cmd="creq" class="dragdroplink nodisplay"'); //drag-drop link
 			if( !$empty_container ){
-				$innerLinks .= '<div class="output_area_label">';
-				$innerLinks .= ' '.gpOutput::GpOutLabel($info['gpOutCmd']);
-				$innerLinks .= '</div>';
+				gpOutput::$editlinks .= '<div class="output_area_label">';
+				gpOutput::$editlinks .= ' '.gpOutput::GpOutLabel($info['gpOutCmd']);
+				gpOutput::$editlinks .= '</div>';
 			}
-			$innerLinks .= '<div class="output_area_link">';
+			gpOutput::$editlinks .= '<div class="output_area_link">';
 			if( !$empty_container ){
-				$innerLinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['remove'],'cmd=rm_area&param='.$param,'data-cmd="creq"');
+				gpOutput::$editlinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['remove'],'cmd=rm_area&param='.$param,'data-cmd="creq"');
 			}
-			$innerLinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['insert'],'cmd=insert&param='.$param,array('data-cmd'=>'gpabox'));
-			$innerLinks .= '</div>';
-			$innerLinks .= '</div>';
+			gpOutput::$editlinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['insert'],'cmd=insert&param='.$param,array('data-cmd'=>'gpabox'));
+			gpOutput::$editlinks .= '</div></div>';
 
 		}
 
@@ -399,10 +397,7 @@ class gpOutput{
 			$id = 'id="'.$id.'"';
 		}
 		echo '<div class="'.$class.' GPAREA" '.$id.'>';
-		echo $innerLinks;
-
 		gpOutput::ExecArea($info);
-
 		echo '</div>';
 
 		$GP_ARRANGE = true;

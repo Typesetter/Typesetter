@@ -327,31 +327,31 @@ class gpOutput{
 		$id = '';
 		$permission = gpOutput::ShowEditLink('Admin_Theme_Content');
 
+		ob_start();
 
 		//for theme content arrangement
 		if( $GP_ARRANGE && $permission && isset($GLOBALS['GP_ARRANGE_CONTENT'])  ){
 			$empty_container = empty($info['gpOutCmd']); //empty containers can't be removed and don't have labels
 			$class .= ' gp_output_area';
 
-			gpOutput::$editlinks .= '<div class="gp_inner_links nodisplay">';
-			gpOutput::$editlinks .= common::Link('Admin_Theme_Content/'.$page->gpLayout,$param,'cmd=drag_area&dragging='.urlencode($param).'&to=%s','data-cmd="creq" class="dragdroplink nodisplay"'); //drag-drop link
+			echo '<div class="gp_inner_links nodisplay">';
+			echo common::Link('Admin_Theme_Content/'.$page->gpLayout,$param,'cmd=drag_area&dragging='.urlencode($param).'&to=%s','data-cmd="creq" class="dragdroplink nodisplay"'); //drag-drop link
 			if( !$empty_container ){
-				gpOutput::$editlinks .= '<div class="output_area_label">';
-				gpOutput::$editlinks .= ' '.gpOutput::GpOutLabel($info['gpOutCmd']);
-				gpOutput::$editlinks .= '</div>';
+				echo '<div class="output_area_label">';
+				echo ' '.gpOutput::GpOutLabel($info['gpOutCmd']);
+				echo '</div>';
 			}
-			gpOutput::$editlinks .= '<div class="output_area_link">';
+			echo '<div class="output_area_link">';
 			if( !$empty_container ){
-				gpOutput::$editlinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['remove'],'cmd=rm_area&param='.$param,'data-cmd="creq"');
+				echo ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['remove'],'cmd=rm_area&param='.$param,'data-cmd="creq"');
 			}
-			gpOutput::$editlinks .= ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['insert'],'cmd=insert&param='.$param,array('data-cmd'=>'gpabox'));
-			gpOutput::$editlinks .= '</div></div>';
+			echo ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['insert'],'cmd=insert&param='.$param,array('data-cmd'=>'gpabox'));
+			echo '</div></div>';
 
 		}
 
 		//editable links only .. other editable_areas are handled by their output functions
 		if( $permission ){
-			ob_start();
 			$menu_marker = false;
 			if( isset($info['link']) ){
 				$label = $langmessage[$info['link']];
@@ -389,8 +389,8 @@ class gpOutput{
 				echo '<input type="hidden" value="'.htmlspecialchars(json_encode($GP_MENU_CLASSES)).'" />';
 				echo '</div>';
 			}
-			gpOutput::$editlinks .= ob_get_clean();
 		}
+		gpOutput::$editlinks .= ob_get_clean();
 
 
 		if( !empty($id) ){

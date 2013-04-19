@@ -1744,15 +1744,12 @@ class common{
 			$config['dirPrefix'] = $GLOBALS['dirPrefix']; // @deprecated 2.4b4 $config['dirPrefix'], $GLOBALS['dirPrefix'] won't always be set (example: cron jobs)
 		}
 
-		if( !isset($config['gadgets']['Contact']) ){
-			$config['gadgets']['Contact'] = array('script'=>'/include/special/special_contact.php','class'=>'special_contact_gadget');
-		}
-
-		//3.5
-		if( !isset($config['gadgets']['Search']) ){
-			$config['gadgets']['Search'] = array('script'=>'/include/special/special_search.php','method'=>array('special_gpsearch','gadget'));
-		}
-
+		// default gadgets
+		$config['gadgets'] += array(
+								'Contact' 		=> array('script'=>'/include/special/special_contact.php','class'=>'special_contact_gadget'),
+								'Search'		=> array('script'=>'/include/special/special_search.php','method'=>array('special_gpsearch','gadget')), //3.5
+								//'View_Details'	=> array('script'=>'/include/special/special_details.php','class'=>'special_details_gadget'),				//4.0
+								);
 
 		common::GetLangFile();
 		common::GetPagesPHP();

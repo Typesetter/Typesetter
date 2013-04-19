@@ -1627,7 +1627,7 @@ class admin_theme_content extends admin_addon_install{
 			$comma = '';
 			foreach($info['colors'] as $color){
 				echo $comma;
-				echo common::Link('Admin_Theme_Content',$color,'cmd=preview&theme='.rawurlencode($theme_id.'/'.$color)); //,' data-cmd="creq" ');
+				echo common::Link('Admin_Theme_Content',str_replace('_','&nbsp;',$color),'cmd=preview&theme='.rawurlencode($theme_id.'/'.$color)); //,' data-cmd="creq" ');
 				$comma = ', ';
 			}
 

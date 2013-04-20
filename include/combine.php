@@ -338,60 +338,16 @@ class gp_combine{
 			$combined_content = ob_get_clean();
 
 		}else{
-			includeFile('thirdparty/cssmin.php');
 
-
-			//add any @import first
-			$combined_content = $css_content = '';
-			$current_file = false;
+			$combined_content = '';
 			$new_imported = array();
-
 			foreach($full_paths as $file => $full_path){
-				$tokens = self::GetTokens($file,$full_path);
-
-				$open_tokens = 0;
-				foreach($tokens as $token){
-					$token_class = get_class($token);
-					switch($token_class){
-						//case 'CssAtPageStartToken':
-						//case 'CssAtPageDeclarationToken':
-						//case 'CssAtPageEndToken':
-						case 'CssAtFontFaceStartToken':
-						case 'CssAtFontFaceDeclarationToken':
-						case 'CssAtFontFaceEndToken':
-							$combined_content .= (string)$token;
-						continue 2;
-						case 'CssAtImportToken':
-							if( $token->Imported ){
-								$new_imported[$full_path][] = $token->Imported;
-							}else{
-								$combined_content .= (string)$token;
-							}
-						continue 2;
-
-						case 'CssRulesetStartToken':
-							$open_tokens++;
-						break;
-
-						case 'CssRulesetEndToken':
-							$open_tokens--;
-						break;
-					}
-					if( $file !== $current_file ){
-						$css_content .= "\n/* ".$file." */\n";
-						$current_file = $file;
-					}
-					$css_content .= (string)$token;
+				$temp = new gp_combine_css($file);
+				$combined_content .= $temp->content;
+				if( count($temp->imported) ){
+					$new_imported[$full_path] = $temp->imported;
 				}
-
-				//close open tokens
-				for($i=0; $i<$open_tokens; $i++){
-					$css_content .= '}';
-				}
-
 			}
-			$combined_content .= $css_content;
-
 			//save imported data
 			if( count($new_imported) || $had_imported ){
 				if( count($new_imported) ){
@@ -609,6 +565,168 @@ class gp_combine{
 
 		return $return;
 	}
+
+}
+
+
+/*
+ * Get the contents of $file and fix paths:
+ * 	- url(..)
+ *	- @import
+ * 	- @import url(..)
+ */
+class gp_combine_css{
+
+	var $content;
+	var $file;
+	var $full_path;
+	var $imported = array();
+
+	function gp_combine_css($file){
+		global $dataDir;
+
+		includeFile('thirdparty/cssmin_v.1.0.php');
+
+		$this->file = $file;
+		$this->full_path = $dataDir.$file;
+
+
+		$this->content = file_get_contents($this->full_path);
+		$this->content = cssmin::minify($this->content);
+
+		$this->CSS_Import();
+		$this->CSS_FixUrls();
+
+	}
+
+
+	//@import "../styles.css";
+	//@import url("../styles.css");
+	function CSS_Import($offset=0){
+		global $dataDir;
+
+		$pos = strpos($this->content,'@import ',$offset);
+		if( !is_numeric($pos) ){
+			return;
+		}
+		$replace_start = $pos;
+		$pos += 8;
+
+		$pos2 = strpos($this->content,';',$pos);
+		if( !is_numeric($pos2) ){
+			return;
+		}
+
+		$import = substr($this->content,$pos,$pos2-$pos);
+		$import = trim($import);
+
+
+		//trim url(..)
+		if( substr($import,0,4) == 'url(' ){
+			$import = substr($import,4);
+			$import = substr($import,0,-1);
+			$import = trim($import);
+		}
+
+		$import = trim($import,'"\'');
+
+
+		//how to handle @import when the file is on a remote server?
+		if( strpos($import,'://') > 0 ){
+			$this->CSS_Import($pos2);
+			return;
+		}
+
+		$full_path = false;
+		if( $import[0] != '/' ){
+			$import = dirname($this->file).'/'.$import;
+			$import = $this->ReduceUrl($import);
+		}
+		$full_path = $dataDir.$import;
+
+		if( file_exists($full_path) ){
+			$temp = new gp_combine_css($import);
+			$this->content = substr_replace($this->content,$temp->content,$replace_start,$pos2-$replace_start+1);
+			$this->imported[] = $full_path;
+			$this->imported = array_merge($this->imported,$temp->imported);
+		}
+
+		$this->CSS_Import($pos);
+	}
+
+	//http://www.weirdlover.com/2010/05/28/css-url/
+	function CSS_FixUrls($offset=0){
+		$pos = strpos($this->content,'url(',$offset);
+		if( !is_numeric($pos) ){
+			return;
+		}
+		$pos += 4;
+
+		$pos2 = strpos($this->content,')',$pos);
+		if( !is_numeric($pos2) ){
+			return;
+		}
+		$url = substr($this->content,$pos,$pos2-$pos);
+
+		$this->CSS_FixUrl($url,$pos,$pos2);
+
+		return $this->CSS_FixUrls($pos2);
+	}
+
+	function CSS_FixUrl($url,$pos,$pos2){
+		global $dataDir;
+
+		$url = trim($url);
+		$url = trim($url,'"\'');
+
+		//relative url
+		if( $url{0} == '/' ){
+			return;
+		}elseif( strpos($url,'://') > 0 ){
+			return;
+		}elseif( preg_match('/^data:/i', $url) ){
+			return;
+		}
+
+
+		//use a relative path so sub.domain.com and domain.com/sub both work
+		$replacement = common::GetDir(dirname($this->file).'/'.$url);
+		$replacement = $this->ReduceUrl($replacement);
+
+
+		$replacement = '"'.$replacement.'"';
+		$this->content = substr_replace($this->content,$replacement,$pos,$pos2-$pos);
+	}
+
+	/**
+	 * Canonicalize a path by resolving references to '/./', '/../'
+	 * Does not remove leading "../"
+	 * @param string path or url
+	 * @return string Canonicalized path
+	 *
+	 */
+	function ReduceUrl($url){
+
+		$temp = explode('/',$url);
+		$result = array();
+		foreach($temp as $i => $path){
+			if( $path == '.' ){
+				continue;
+			}
+			if( $path == '..' ){
+				for($j=$i-1;$j>0;$j--){
+					if( isset($result[$j]) ){
+						unset($result[$j]);
+						continue 2;
+					}
+				}
+			}
+			$result[$i] = $path;
+		}
+
+		return implode('/',$result);
+	}
+
 
 }
 

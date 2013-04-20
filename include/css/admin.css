@@ -185,7 +185,6 @@ body #gp_admin_html .gpbutton{
 	background: -webkit-linear-gradient(top, #FBFBFB 0%,#E9E9E9 100%);
 	background: -o-linear-gradient(top, #FBFBFB 0%,#E9E9E9 100%);
 	background: -ms-linear-gradient(top, #FBFBFB 0%,#E9E9E9 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FBFBFB', endColorstr='#E9E9E9',GradientType=0 );
 	background: linear-gradient(top, #FBFBFB 0%,#E9E9E9 100%);
 	}
 
@@ -199,7 +198,6 @@ body #gp_admin_html .gpcancel{
 	background: -webkit-linear-gradient(top, #FFF 0%,#F7F7F7 100%);
 	background: -o-linear-gradient(top, #FFF 0%,#F7F7F7 100%);
 	background: -ms-linear-gradient(top, #FFF 0%,#F7F7F7 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#F7F7F7',GradientType=0 );
 	background: linear-gradient(top, #FFFFFF 0%,#F7F7F7 100%);
 	}
 
@@ -1471,7 +1469,6 @@ body #gp_admin_html .layout_links a.selected{
 	opacity: 0;
 	cursor:pointer;
 	}
-.gp_upload_form *,
 .gp_upload_form *{
 	cursor:pointer;
 	}

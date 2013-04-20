@@ -346,15 +346,20 @@ class gp_combine{
 
 		}else{
 
-			$combined_content = '';
+			$imports = $combined_content = '';
 			$new_imported = array();
 			foreach($full_paths as $file => $full_path){
 				$temp = new gp_combine_css($file);
+
+				$combined_content .= "\n/* ".$file." */\n";
 				$combined_content .= $temp->content;
+				$imports .= $temp->imports;
 				if( count($temp->imported) ){
 					$new_imported[$full_path] = $temp->imported;
 				}
 			}
+			$combined_content = $imports . $combined_content;
+
 			//save imported data
 			if( count($new_imported) || $had_imported ){
 				if( count($new_imported) ){
@@ -576,7 +581,7 @@ class gp_combine{
 }
 
 
-/*
+/**
  * Get the contents of $file and fix paths:
  * 	- url(..)
  *	- @import
@@ -588,6 +593,7 @@ class gp_combine_css{
 	var $file;
 	var $full_path;
 	var $imported = array();
+	var $imports = '';
 
 	function gp_combine_css($file){
 		global $dataDir;
@@ -603,12 +609,23 @@ class gp_combine_css{
 
 		$this->CSS_Import();
 		$this->CSS_FixUrls();
-
 	}
 
 
-	//@import "../styles.css";
-	//@import url("../styles.css");
+	/**
+	 * Include the css from @imported css
+	 *
+	 * Will include the css from these
+	 * @import "../styles.css";
+	 * @import url("../styles.css");
+	 * @import styles.css;
+	 *
+	 *
+	 * Will preserve the @import rule for these
+	 * @import "styles.css" screen,tv;
+	 * @import url('http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css.css');
+	 *
+	 */
 	function CSS_Import($offset=0){
 		global $dataDir;
 
@@ -619,31 +636,53 @@ class gp_combine_css{
 		$replace_start = $pos;
 		$pos += 8;
 
-		$pos2 = strpos($this->content,';',$pos);
-		if( !is_numeric($pos2) ){
+		$replace_end = strpos($this->content,';',$pos);
+		if( !is_numeric($replace_end) ){
 			return;
 		}
 
-		$import = substr($this->content,$pos,$pos2-$pos);
-		$import = trim($import);
+		$import_orig = substr($this->content,$pos,$replace_end-$pos);
+		$import_orig = trim($import_orig);
+		$replace_len = $replace_end-$replace_start+1;
 
-
-		//trim url(..)
-		if( substr($import,0,4) == 'url(' ){
-			$import = substr($import,4);
-			$import = substr($import,0,-1);
+		//get url(..)
+		$media = '';
+		if( substr($import_orig,0,4) == 'url(' ){
+			$end_url_pos = strpos($import_orig,')');
+			$import = substr($import_orig,4, $end_url_pos-4);
 			$import = trim($import);
+			$import = trim($import,'"\'');
+			$media = substr($import_orig,$end_url_pos+1);
+		}elseif( $import_orig[0] == '"' || $import_orig[0] == "'" ){
+			$end_url_pos = strpos($import_orig,$import_orig[0]);
+			$import = substr($import_orig,1, $end_url_pos-1);
+			$import = trim($import);
+			$media = substr($import_orig,$end_url_pos+1);
 		}
 
-		$import = trim($import,'"\'');
 
-
-		//how to handle @import when the file is on a remote server?
-		if( strpos($import,'://') > 0 ){
-			$this->CSS_Import($pos2);
+		//keep @import when the file is on a remote server?
+		if( strpos($import,'://') !== false ){
+			$this->imports .= substr($this->content, $replace_start, $replace_len );
+			$this->content = substr_replace( $this->content, '', $replace_start, $replace_len);
+			$this->CSS_Import($offset);
 			return;
 		}
 
+
+		//if a media type is set, keep the @import
+		$media = trim($media);
+		if( !empty($media) ){
+			$import = common::GetDir(dirname($this->file).'/'.$import);
+			$import = $this->ReduceUrl($import);
+			$this->imports .= '@import url("'.$import.'") '.$media.';';
+			$this->content = substr_replace( $this->content, '', $replace_start, $replace_len);
+			$this->CSS_Import($offset);
+			return;
+		}
+
+
+		//include the css
 		$full_path = false;
 		if( $import[0] != '/' ){
 			$import = dirname($this->file).'/'.$import;
@@ -652,10 +691,15 @@ class gp_combine_css{
 		$full_path = $dataDir.$import;
 
 		if( file_exists($full_path) ){
+
 			$temp = new gp_combine_css($import);
-			$this->content = substr_replace($this->content,$temp->content,$replace_start,$pos2-$replace_start+1);
+			$this->content = substr_replace($this->content,$temp->content,$replace_start,$replace_end-$replace_start+1);
 			$this->imported[] = $full_path;
 			$this->imported = array_merge($this->imported,$temp->imported);
+			$this->imports .= $temp->imports;
+
+			$this->CSS_Import($offset);
+			return;
 		}
 
 		$this->CSS_Import($pos);

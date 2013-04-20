@@ -1,4 +1,5 @@
-@import url('../Blue/base.css');
+@import url('base.css');
+
 
 html{
 	background: #d5d5d5 url(bg_texture.png);

@@ -323,6 +323,13 @@ class gp_combine{
 		$cache_relative = '/data/_cache/combined_'.$etag.'.'.$type;
 		$cache_file = $dataDir.$cache_relative;
 		if( file_exists($cache_file) ){
+
+			// change modified time to extend cache
+			$diff = time() - filemtime($cache_file);
+			if( $diff < 304800 ){
+				touch($cache_file);
+			}
+
 			return $cache_relative;
 		}
 

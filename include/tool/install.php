@@ -311,6 +311,14 @@ class Install_Tools{
 		</p>';
 		gpFiles::SaveFile($file,$content);
 
+
+		//Another example area
+		$file = $destination.'/data/_extra/Lorem.php';
+		$content = '<h3>Heading</h3>
+		<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>';
+		gpFiles::SaveFile($file,$content);
+
+
 		//contact html
 		$file = $destination.'/data/_extra/Contact.php';
 		gpFiles::SaveFile($file,'<h2>Contact Us</h2><p>Use the form below to contact us, and be sure to enter a valid email address if you want to hear back from us.</p>');

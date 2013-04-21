@@ -160,7 +160,7 @@ class gpOutput{
 	static function TemplateSettings(){
 		global $page;
 		$settings_path = $page->theme_dir.'/settings.php';
-		IncludeScript($settings_path,'require_if',array('page','GP_GETALLGADGETS'));
+		IncludeScript($settings_path,'require_if',array('page','GP_GETALLGADGETS','GP_MENU_ELEMENTS'));
 	}
 
 
@@ -1351,47 +1351,12 @@ class gpOutput{
 	 * Output a navigation menu
 	 * @static
 	 */
-	static function OutputMenu($menu,$start_level,$source_menu=false){
+	static function OutputMenu( $menu, $start_level, $source_menu=false ){
 		global $page, $gp_menu, $gp_titles, $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES;
 
+		//source menu
 		if( $source_menu === false ){
 			$source_menu =& $gp_menu;
-		}
-
-		$search = array('{$href_text}','{$attr}','{$label}','{$title}');
-		$replace = array();
-
-		$id = $class = '';
-		if( self::$edit_area_id ){
-			$id = ' id="'.self::$edit_area_id.'"';
-			$class = ' editable_area';
-		}
-
-		if( !count($menu) ){
-			echo '<div class="emtpy_menu'.$class.'"'.$id.'></div>'; //an empty <ul> is not valid xhtml
-			return;
-		}
-
-		//$GP_MENU_LINKS = '<a href="{$href_text}" {$attr}><span class="sub-t">{$label}</span></a>';
-		//<a href="/rocky/index.php/Misson_&amp;_Principles" title="Misson &amp; Principles" >Misson &amp; Principles</a>
-		$link_format = '<a href="{$href_text}" title="{$title}"{$attr}>{$label}</a>';
-		if( !empty($GP_MENU_LINKS) ){
-			$link_format = $GP_MENU_LINKS;
-		}
-
-		$result = array();
-		$prev_level = $start_level;
-		$page_title_full = common::GetUrl($page->title);
-		$source_keys = array_keys($source_menu);
-		$source_values = array_values($source_menu);
-		$open = false;
-		$li_count = array();
-
-		//get parent page
-		$parent_page = false;
-		$parents = common::Parents($page->gp_index,$source_menu);
-		if( count($parents) ){
-			$parent_page = $parents[0];
 		}
 
 
@@ -1410,15 +1375,57 @@ class gpOutput{
 							'childselected_li'	=> 'childselected_li',
 							'li_'				=> 'li_',
 							'li_title'			=> 'li_title',
+							'haschildren'		=> 'haschildren',
+							'haschildren_li'	=> '',
+							'child_ul'			=> '',
 							);
 
 
+
+		// opening ul
+		$attributes_ul = array( 'attr'=>'', 'class'=>array(), 'id'=>'' );
+		$attributes_ul['class']['menu_top'] = $GP_MENU_CLASSES['menu_top'];
+		if( self::$edit_area_id ){
+			$attributes_ul['id'] = self::$edit_area_id;
+			$attributes_ul['class']['editable_area'] = 'editable_area';
+		}
+
+		if( !count($menu) ){
+			echo '<div class="emtpy_menu '.implode(' ',$attributes_ul['class']).'" id="'.$attributes_ul['id'].'"></div>'; //an empty <ul> is not valid xhtml
+			return;
+		}
+
+		if( empty($GP_MENU_LINKS) ){
+			$GP_MENU_LINKS = '<a href="{$href_text}" title="{$title}"{$attr}>{$label}</a>';
+		}
+
+		$result = array();
+		$prev_level = $start_level;
+		$page_title_full = common::GetUrl($page->title);
+		$source_keys = array_keys($source_menu);
+		$source_values = array_values($source_menu);
+		$open = false;
+		$li_count = array();
+
+		//get parent page
+		$parent_page = false;
+		$parents = common::Parents($page->gp_index,$source_menu);
+		if( count($parents) ){
+			$parent_page = $parents[0];
+		}
+
+
 		//output
-		$result[] = '<ul class="'.$GP_MENU_CLASSES['menu_top'].''.$class.'"'.$id.'>';
+		$result[] = self::FormatMenuElement('ul',$attributes_ul);
 
 		foreach($source_keys as $source_index => $menu_key){
 
-			$attr = $class = $attr_li = $class_li = '';
+			$attributes_a = array('href' => '', 'attr' => '', 'value' => '', 'title' => '', 'class' =>array() );
+			$attributes_li = array('attr'=>'', 'class'=>array() );
+			$attributes_ul = array('attr'=>'', 'class'=>array() );
+
+			$class_ul = '';
+
 			$menu_info = $source_values[$source_index];
 			$this_level = $menu_info['level'];
 
@@ -1442,63 +1449,49 @@ class gpOutput{
 						$li_count[$this_level]++;
 					}
 					if( !empty($GP_MENU_CLASSES['li_']) ){
-						$class_li .= $GP_MENU_CLASSES['li_'].$li_count[$this_level];
+						$attributes_li['class']['li_'] = $GP_MENU_CLASSES['li_'].$li_count[$this_level];
 					}
 				}
 
 				if( $page->menu_css_indexed && !empty($GP_MENU_CLASSES['li_title_']) ){
-					$class_li .= ' '.$GP_MENU_CLASSES['li_title_'].$menu_key;
+					$attributes_li['class']['li_title_'] = $GP_MENU_CLASSES['li_title_'].$menu_key;
 				}
 
 
 				//selected classes
-				if( $this_level < $next_info['level'] && !empty($GP_MENU_CLASSES['haschildren']) ){
-					$class .= ' '.$GP_MENU_CLASSES['haschildren'];
+				if( $this_level < $next_info['level'] ){
+					$attributes_a['class']['haschildren'] = $GP_MENU_CLASSES['haschildren'];
+					$attributes_li['class']['haschildren_li'] = $GP_MENU_CLASSES['haschildren_li'];
 				}
 
 				if( isset($menu_info['url']) && ($menu_info['url'] == $page->title || $menu_info['url'] == $page_title_full) ){
-
-					if( !empty($GP_MENU_CLASSES['selected']) ){
-						$class .= ' '.$GP_MENU_CLASSES['selected'];
-					}
-					if( !empty($GP_MENU_CLASSES['selected_li']) ){
-						$class_li .= ' '.$GP_MENU_CLASSES['selected_li'];
-					}
+					$attributes_a['class']['selected'] = $GP_MENU_CLASSES['selected'];
+					$attributes_li['class']['selected_li'] = $GP_MENU_CLASSES['selected_li'];
 
 				}elseif( $menu_key == $page->gp_index ){
-
-					if( !empty($GP_MENU_CLASSES['selected']) ){
-						$class .= ' '.$GP_MENU_CLASSES['selected'];
-					}
-					if( !empty($GP_MENU_CLASSES['selected_li']) ){
-						$class_li .= ' '.$GP_MENU_CLASSES['selected_li'];
-					}
+					$attributes_a['class']['selected'] = $GP_MENU_CLASSES['selected'];
+					$attributes_li['class']['selected_li'] = $GP_MENU_CLASSES['selected_li'];
 
 				}elseif( in_array($menu_key,$parents) ){
-
-					if( !empty($GP_MENU_CLASSES['childselected']) ){
-						$class .= ' '.$GP_MENU_CLASSES['childselected'];
-					}
-					if( !empty($GP_MENU_CLASSES['childselected_li']) ){
-						$class_li .= ' '.$GP_MENU_CLASSES['childselected_li'];
-					}
+					$attributes_a['class']['childselected'] = $GP_MENU_CLASSES['childselected'];
+					$attributes_li['class']['childselected_li'] = $GP_MENU_CLASSES['childselected_li'];
 
 				}
-				if( !empty($class) ){
-					$attr = ' class="'.$class.'"';
-				}
-				if( !empty($class_li) ){
-					$attr_li = ' class="'.$class_li.'"';
-				}
+
 
 				//current is a child of the previous
 				if( $this_level > $prev_level ){
-					if( !$open ){
-						$result[] = '<li'.$attr_li.'>'; //only needed if the menu starts below the start_level
+
+					if( !$open ){ //only needed if the menu starts below the start_level
+						$result[] = self::FormatMenuElement('li',$attributes_li);
+					}
+
+					if( !empty($GP_MENU_CLASSES['child_ul']) ){
+						$class_ul = ' class="'.$GP_MENU_CLASSES['child_ul'].'"';
 					}
 
 					while( $this_level > $prev_level){
-						$result[] = '<ul>';
+						$result[] = '<ul '.$class_ul.'>';
 						$result[] = '<li>';
 						$prev_level++;
 					}
@@ -1522,36 +1515,36 @@ class gpOutput{
 				}
 
 
-				$replace = array();
 
 				//external
 				if( isset($menu_info['url']) ){
 					if( empty($menu_info['title_attr']) ){
 						$menu_info['title_attr'] = strip_tags($menu_info['label']);
 					}
-					if( isset($menu_info['new_win']) ){
-						$attr .= ' target="_blank"';
-					}
 
-					$replace[] = $menu_info['url'];
-					$replace[] = $attr;
-					$replace[] = $menu_info['label'];
-					$replace[] = $menu_info['title_attr'];
+					$attributes_a['href'] = $menu_info['url'];
+					$attributes_a['value'] = $menu_info['label'];
+					$attributes_a['title'] = $menu_info['title_attr'];
+					if( isset($menu_info['new_win']) ){
+						$attributes_a['target'] = '_blank';
+					}
 
 				//internal link
 				}else{
-					if( !empty($gp_titles[$menu_key]['rel']) ){
-						$attr .= ' rel="'.$gp_titles[$menu_key]['rel'].'"';
-					}
 
 					$title = common::IndexToTitle($menu_key);
-					$replace[] = common::GetUrl($title);
-					$replace[] = $attr;
-					$replace[] = common::GetLabel($title);
-					$replace[] = common::GetBrowserTitle($title);
+					$attributes_a['href'] = common::GetUrl($title);
+					$attributes_a['value'] = common::GetLabel($title);
+					$attributes_a['title'] = common::GetBrowserTitle($title);
+
+					if( !empty($gp_titles[$menu_key]['rel']) ){
+						$attributes_a['rel'] = $gp_titles[$menu_key]['rel'];
+					}
 				}
 
-				$result[] = '<li'.$attr_li.'>'.str_replace($search,$replace,$link_format);
+				$result[] = self::FormatMenuElement('li',$attributes_li);
+				$result[] = self::FormatMenuElement('a',$attributes_a);
+
 
 				$prev_level = $this_level;
 				$open = true;
@@ -1564,15 +1557,51 @@ class gpOutput{
 			$prev_level--;
 		}
 
-
-		//$test = implode("\n",$result);
-		//$test = htmlspecialchars($test);
-		//echo nl2br($test);
-		//echo '<hr/>';
-
-
 		echo implode('',$result); //don't separate by spaces so css inline can be more functional
-		return;
+	}
+
+	static function FormatMenuElement( $node, $attributes){
+		global $GP_MENU_LINKS, $GP_MENU_ELEMENTS;
+
+
+		// build attr
+		foreach($attributes as $key => $value){
+			if( $key == 'title' ){
+				continue;
+			}
+			if( is_array($value) ){
+				$value = array_filter($value);
+				$value = implode(' ',$value);
+			}
+			if( empty($value) ){
+				continue;
+			}
+			$attributes['attr'] .= ' '.$key.'="'.$value.'"';
+		}
+
+
+		// call template defined function
+		if( !empty($GP_MENU_ELEMENTS) && is_callable($GP_MENU_ELEMENTS) ){
+			$return = call_user_func($GP_MENU_ELEMENTS, $node, $attributes);
+			if( is_string($return) ){
+				return $return;
+			}
+		}
+
+		switch($node){
+
+			case 'ul';
+			return '<ul'.$attributes['attr'].'>';
+
+			//li
+			case 'li':
+			return '<li'.$attributes['attr'].'>';
+
+			//links
+			case 'a';
+			$search = array('{$href_text}','{$attr}','{$label}','{$title}');
+			return str_replace( $search, $attributes, $GP_MENU_LINKS );
+		}
 	}
 
 

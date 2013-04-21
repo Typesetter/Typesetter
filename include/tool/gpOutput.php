@@ -145,7 +145,7 @@ class gpOutput{
 		}
 		gpOutput::TemplateSettings();
 		header('Content-Type: text/html; charset=utf-8');
-		IncludeScript($page->theme_dir.'/template.php','require',array('page','GP_ARRANGE','GP_MENU_LINKS','GP_MENU_CLASS','GP_MENU_CLASSES'));
+		IncludeScript($page->theme_dir.'/template.php','require',array('page','GP_ARRANGE','GP_MENU_LINKS','GP_MENU_CLASS','GP_MENU_CLASSES','GP_MENU_ELEMENTS'));
 		self::$template_included = true;
 
 		gpPlugin::ClearDataFolder();
@@ -160,7 +160,7 @@ class gpOutput{
 	static function TemplateSettings(){
 		global $page;
 		$settings_path = $page->theme_dir.'/settings.php';
-		IncludeScript($settings_path,'require_if',array('page','GP_GETALLGADGETS','GP_MENU_ELEMENTS'));
+		IncludeScript($settings_path,'require_if',array('page','GP_GETALLGADGETS'));
 	}
 
 
@@ -1543,6 +1543,7 @@ class gpOutput{
 
 				$result[] = self::FormatMenuElement('li',$attributes_li);
 				$result[] = self::FormatMenuElement('a',$attributes_a);
+
 
 
 				$prev_level = $this_level;

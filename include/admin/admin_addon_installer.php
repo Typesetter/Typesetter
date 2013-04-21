@@ -41,6 +41,7 @@ class admin_addon_installer extends admin_addons_tool{
 	var $ini_text = '';
 	var $upgrade_key = false;
 	var $has_hooks = false;
+	var $display_name = '';
 
 	var $messages = array();
 
@@ -59,7 +60,7 @@ class admin_addon_installer extends admin_addons_tool{
 		$success = $this->InstallSteps();
 
 		if( $success ){
-			$this->message( sprintf($langmessage['installed'],$this->ini_contents['Addon_Name']) );
+			$this->message( sprintf($langmessage['installed'], $this->display_name ) );
 		}else{
 			$this->Failed();
 		}
@@ -201,18 +202,11 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 
 		//check ini contents
+		$this->display_name = basename($this->source);
 		if( !$this->GetINI($this->source) ){
 			return false;
 		}
 
-		/*
-		if( $this->has_hooks ){
-			message('stopping: has hoooks');
-		}else{
-			message('stopping: doesnt have hooks');
-		}
-		return false;
-		*/
 
 		// upgrade/destination
 		$this->config_key = admin_addons_tool::UpgradePath($this->ini_contents,$this->config_index);
@@ -385,6 +379,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 		$this->HasHooks();
+		$this->display_name = $this->ini_contents['Addon_Name'];
 
 		return true;
 	}

@@ -245,7 +245,7 @@ class admin_configuration{
 				if( $openbody ){
 					echo '</table>';
 					echo '</div>';
-					$class = ' hidden';
+					$class = ' gp_collapsed';
 					$style = ' nodisplay';
 				}
 				echo '<h4 class="head'.$class.' one">';

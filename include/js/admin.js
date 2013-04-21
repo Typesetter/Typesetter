@@ -418,13 +418,13 @@ $gp.links.collapsible = function(){
 	var area = $(this).parent();
 
 	//only show one
-	if( area.hasClass('one') && area.hasClass('hidden') ){
-		area.parent().find('.head').addClass('hidden');
+	if( area.hasClass('one') && area.hasClass('gp_collapsed') ){
+		area.parent().find('.head').addClass('gp_collapsed');
 		area.parent().find('.collapsearea').slideUp(300);
-		area.removeClass('hidden').next().slideDown(300);
+		area.removeClass('gp_collapsed').next().slideDown(300);
 	//ability to show multiple
 	}else{
-		area.toggleClass('hidden').next().slideToggle(300);
+		area.toggleClass('gp_collapsed').next().slideToggle(300);
 	}
 
 };

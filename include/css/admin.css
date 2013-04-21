@@ -517,11 +517,11 @@ body.edit_layout .GPAREA{
 	}
 
 
-.collapsible h4.hidden a{
+.collapsible h4.gp_collapsed a{
 	border-radius: 3px;
 	}
 
-.collapsible h4.hidden a:before{
+.collapsible h4.gp_collapsed a:before{
 	content:"\25B6";
 	color:#888 !important;
 	}

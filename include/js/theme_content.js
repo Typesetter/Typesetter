@@ -120,8 +120,12 @@ $(function(){
  *
  */
 function LayoutSetup(){
-	if( typeof(gpLayouts) == 'undefined' ){
+
+	if( $('#theme_toolbar').length ){
 		$('body').addClass('edit_layout');
+	}
+
+	if( typeof(gpLayouts) == 'undefined' ){
 		return;
 	}
 
@@ -146,7 +150,6 @@ function LayoutSetup(){
 
 
 	//prepare the drag area
-	$('body').addClass('edit_layout');
 	var drag_area = $('<div class="draggable_droparea" id="theme_content_drop"></div>').appendTo('#gp_admin_html');
 
 

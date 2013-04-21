@@ -1566,8 +1566,8 @@ class admin_theme_content extends admin_addon_install{
 		echo '</td></tr>';
 
 		echo '<tr><td>';
-		echo ' <input type="submit" name="" value="Ok" class="gpajax close gpsubmit" />';
-		echo ' <input type="button" class="close gpcancel" name="" value="Cancel" />';
+		echo ' <input type="submit" name="" value="Ok" class="gpajax close_color_dialog gpsubmit" />';
+		echo ' <input type="button" class="close_color_dialog gpcancel" name="" value="Cancel" />';
 		echo '</td></tr>';
 
 		echo '</table>';

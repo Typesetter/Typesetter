@@ -38,7 +38,7 @@ $(function(){
 
 
 		//closing the panel
-		panel.find('input.close').off('click').on('click',function(){
+		panel.find('input.close_color_dialog').off('click').on('click',function(){
 			LayoutClose();
 		});
 

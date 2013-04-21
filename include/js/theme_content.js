@@ -121,6 +121,7 @@ $(function(){
  */
 function LayoutSetup(){
 	if( typeof(gpLayouts) == 'undefined' ){
+		$('body').addClass('edit_layout');
 		return;
 	}
 

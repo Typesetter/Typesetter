@@ -1380,6 +1380,9 @@ class gpOutput{
 							'child_ul'			=> '',
 							);
 
+		if( empty($GP_MENU_LINKS) ){
+			$GP_MENU_LINKS = '<a href="{$href_text}" title="{$title}"{$attr}>{$label}</a>';
+		}
 
 
 		// opening ul
@@ -1391,12 +1394,9 @@ class gpOutput{
 		}
 
 		if( !count($menu) ){
-			echo '<div class="emtpy_menu '.implode(' ',$attributes_ul['class']).'" id="'.$attributes_ul['id'].'"></div>'; //an empty <ul> is not valid xhtml
+			$attributes_ul['class']['empty_menu'] = 'empty_menu';
+			$result[] = self::FormatMenuElement('div',$attributes_ul).'</div>'; //an empty <ul> is not valid xhtml
 			return;
-		}
-
-		if( empty($GP_MENU_LINKS) ){
-			$GP_MENU_LINKS = '<a href="{$href_text}" title="{$title}"{$attr}>{$label}</a>';
 		}
 
 		$result = array();
@@ -1423,8 +1423,6 @@ class gpOutput{
 			$attributes_a = array('href' => '', 'attr' => '', 'value' => '', 'title' => '', 'class' =>array() );
 			$attributes_li = array('attr'=>'', 'class'=>array() );
 			$attributes_ul = array('attr'=>'', 'class'=>array() );
-
-			$class_ul = '';
 
 			$menu_info = $source_values[$source_index];
 			$this_level = $menu_info['level'];
@@ -1487,13 +1485,14 @@ class gpOutput{
 					}
 
 					if( !empty($GP_MENU_CLASSES['child_ul']) ){
-						$class_ul = ' class="'.$GP_MENU_CLASSES['child_ul'].'"';
+						$attributes_ul['class'][] = $GP_MENU_CLASSES['child_ul'];
 					}
 
 					while( $this_level > $prev_level){
-						$result[] = '<ul '.$class_ul.'>';
+						$result[] = self::FormatMenuElement('ul',$attributes_ul);
 						$result[] = '<li>';
 						$prev_level++;
+						$attributes_ul = array('attr'=>'', 'class'=>array() );
 					}
 					array_pop($result);//remove the last <li>
 
@@ -1591,11 +1590,10 @@ class gpOutput{
 		switch($node){
 
 			case 'ul';
-			return '<ul'.$attributes['attr'].'>';
-
-			//li
 			case 'li':
-			return '<li'.$attributes['attr'].'>';
+			case 'div';
+			return '<'.$node.$attributes['attr'].'>';
+
 
 			//links
 			case 'a';

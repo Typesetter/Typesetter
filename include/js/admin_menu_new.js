@@ -84,7 +84,7 @@
 
 
 		function GetTitle(obj){
-			obj = obj.find('a.label');
+			obj = obj.find('a.gp_label');
 			if( obj.length == 0 ){
 				return '';
 			}
@@ -247,7 +247,7 @@
 				//alert('sripped: '+val);
 
 				newval = '#'+$('#gp_curr_menu').val()+'=[';
-				$admin_menu_div.find('.hidechildren > div > .label').each(function(a,b){
+				$admin_menu_div.find('.hidechildren > div > .gp_label').each(function(a,b){
 					newval += $(b).data('arg')+',';
 				});
 				newval += ']';

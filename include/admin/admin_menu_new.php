@@ -1161,7 +1161,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		$key = $_POST['drag_key'];
 		if( !isset($this->curr_menu_array[$key]) ){
-			message($langmessage['OOPS'].'(2)');
+			message($langmessage['OOPS'].' (Unknown menu key)');
 			return false;
 		}
 

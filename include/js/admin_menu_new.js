@@ -288,10 +288,6 @@
 			return result;
 		}
 
-		gpresponse.replacemenu = function(j){
-			$(j.SELECTOR).find('ul:first').replaceWith(j.CONTENT);
-		}
-
 		gpinputs.menupost = function(){
 			var a = getmenus();
 			var frm = $(this).closest('form');

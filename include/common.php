@@ -1738,7 +1738,6 @@ class common{
 		$config['gadgets'] += array(
 								'Contact' 		=> array('script'=>'/include/special/special_contact.php','class'=>'special_contact_gadget'),
 								'Search'		=> array('script'=>'/include/special/special_search.php','method'=>array('special_gpsearch','gadget')), //3.5
-								//'View_Details'	=> array('script'=>'/include/special/special_details.php','class'=>'special_details_gadget'),				//4.0
 								);
 
 		common::GetLangFile();

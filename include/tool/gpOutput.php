@@ -68,7 +68,7 @@ class gpOutput{
 	private static $out_started = false;
 	private static $gadget_cache = array();
 
-	private static $edit_area_id = '';
+	public static $edit_area_id = '';
 
 
 	/*

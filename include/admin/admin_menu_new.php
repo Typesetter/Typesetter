@@ -510,8 +510,9 @@ class admin_menu_new extends admin_menu_tools{
 			}
 
 			$array = array();
-			$array[0] = 'replacemenu';
+			$array[0] = 'replace';
 			$array[1] = '#'.$id;
+			gpOutput::$edit_area_id = $id;
 
 			if( !empty($_REQUEST['menuh'][$id]) ){
 				$GP_MENU_LINKS = rawurldecode($_REQUEST['menuh'][$id]);

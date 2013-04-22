@@ -655,47 +655,6 @@ class admin_tools{
 
 
 
-	/*
-	 * @deprecated 2.3.1
-	 */
-	static function GetAdminLinks($type=false){
-		global $langmessage;
-
-		$scripts = admin_tools::AdminScripts();
-
-		$count = 0;
-		$addon = false;
-		echo '<ul>';
-		foreach($scripts as $script => $info){
-			if( isset($info['list']) && ($info['list'] === false) ){
-				continue;
-			}
-			if( admin_tools::HasPermission($script) ){
-				$class = '';
-				if( isset($info['addon']) ){
-					if( $addon == false ){
-						$class = ' class="seperator" ';
-					}
-					$addon = true;
-				}elseif( $addon ){
-					$class = ' class="seperator" ';
-				}
-
-				echo '<li '.$class.'>';
-				echo common::Link($script,$info['label']);
-				echo '</li>';
-				$count++;
-			}
-		}
-
-		if( $count < 1 ){
-			echo '<li>';
-			echo common::Link('Admin_Preferences',$langmessage['Preferences']);
-			echo '</li>';
-		}
-		echo '</ul>';
-	}
-
 	static function GetAdminGroup($grouping){
 		global $langmessage,$page;
 

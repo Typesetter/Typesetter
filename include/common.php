@@ -1734,10 +1734,6 @@ class common{
 				'themes' => array(),
 				);
 
-		if( isset($GLOBALS['dirPrefix']) ){
-			$config['dirPrefix'] = $GLOBALS['dirPrefix']; // @deprecated 2.4b4 $config['dirPrefix'], $GLOBALS['dirPrefix'] won't always be set (example: cron jobs)
-		}
-
 		// default gadgets
 		$config['gadgets'] += array(
 								'Contact' 		=> array('script'=>'/include/special/special_contact.php','class'=>'special_contact_gadget'),

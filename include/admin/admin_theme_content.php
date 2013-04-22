@@ -2043,11 +2043,15 @@ class admin_theme_content extends admin_addon_install{
 
 
 
+	/**
+	 * Display dialog for insterting gadgets/menus/etc into layouts
+	 *
+	 */
 	function SelectContent(){
 		global $langmessage, $config;
 
 		if( !isset($_GET['param']) ){
-			message($langmessage['OOPS'].' (0)');
+			message($langmessage['OOPS'].' (Param not set)');
 			return;
 		}
 		$param = $_GET['param'];
@@ -2071,6 +2075,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '</div>';
 	}
 
+
 	function SelectContent_Areas($param,$count_gadgets){
 		global $dataDir, $langmessage, $config;
 
@@ -2090,14 +2095,11 @@ class admin_theme_content extends admin_addon_install{
 				asort($files);
 				foreach($files as $file){
 					$extraName = $file;
-					echo '<tr>';
-					echo '<td>';
+					echo '<tr><td>';
 					echo str_replace('_',' ',$extraName);
-					echo '</td>';
-					echo '<td class="add">';
+					echo '</td><td class="add">';
 					echo common::Link($slug,$langmessage['add'],$addQuery.'&insert=Extra:'.$extraName,'data-cmd="creq"');
-					echo '</td>';
-					echo '</tr>';
+					echo '</td></tr>';
 				}
 
 
@@ -2126,6 +2128,7 @@ class admin_theme_content extends admin_addon_install{
 				echo '</table>';
 
 			echo '</div>';
+
 
 			//gadgets
 			if( $count_gadgets > 0){
@@ -2450,6 +2453,10 @@ class admin_theme_content extends admin_addon_install{
 	}
 
 
+	/**
+	 * Insert new content into a layout
+	 *
+	 */
 	function AddContent(){
 		global $langmessage,$page;
 
@@ -2463,7 +2470,7 @@ class admin_theme_content extends admin_addon_install{
 
 		//prep destination
 		if( !$this->GetValues($_REQUEST['where'],$to_container,$to_gpOutCmd) ){
-			message($langmessage['OOPS'].' (0)');
+			message($langmessage['OOPS'].' (Insert location not found)');
 			return false;
 		}
 		$handlers = $this->GetAllHandlers();
@@ -2505,7 +2512,7 @@ class admin_theme_content extends admin_addon_install{
 		//new info
 		$new_gpOutInfo = gpOutput::GetgpOutInfo($insert);
 		if( !$new_gpOutInfo ){
-			message($langmessage['OOPS'].' (1)');
+			message($langmessage['OOPS'].' (Nothing to insert)');
 			return false;
 		}
 		$new_gpOutCmd = rtrim($new_gpOutInfo['key'].':'.$new_gpOutInfo['arg'],':');

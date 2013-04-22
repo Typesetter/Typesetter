@@ -717,20 +717,6 @@ class admin_theme_content extends admin_addon_install{
 	}
 
 
-
-	/*
-	 * Get the content of the drag and drop window
-	 * @deprecated
-	function DragDropNote($layout, $layout_info, $handlers_count ){
-		ob_start();
-		echo '<div id="gp_drag_n_drop" class="gp_floating_area nodisplay"><div><div>';
-		echo $langmessage['DRAG-N-DROP-DESC'];
-		$page->non_admin_content .= ob_get_clean();
-	}
-	 */
-
-
-
 	/**
 	 * Output textarea for adding css to a layout
 	 *

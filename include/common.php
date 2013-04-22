@@ -1326,12 +1326,6 @@ class common{
 	}
 
 
-	/* @deprecated: Use common::Link() instead */
-	static function Link_Admin($href,$label,$query='',$attr=''){
-		trigger_error('deprecated function');
-		return common::Link($href,$label,$query,$attr);
-	}
-
 	/**
 	 * Return an html hyperlink
 	 *

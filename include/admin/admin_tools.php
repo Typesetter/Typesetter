@@ -992,6 +992,7 @@ class admin_tools{
 
 	/**
 	 * @deprecated
+	 * used by simpleblog1
 	 */
 	static function tidyFix(&$text){
 		trigger_error('tidyFix should be called using gp_edit::tidyFix() instead of admin_tools:tidyFix()');

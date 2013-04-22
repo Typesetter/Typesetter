@@ -1384,9 +1384,13 @@ class gpOutput{
 			$GP_MENU_LINKS = '<a href="{$href_text}" title="{$title}"{$attr}>{$label}</a>';
 		}
 
+		$clean_attributes = array( 'attr'=>'', 'class'=>array(), 'id'=>'' );
+		$clean_attributes_a = array('href' => '', 'attr' => '', 'value' => '', 'title' => '', 'class' =>array() );
+
+
 
 		// opening ul
-		$attributes_ul = array( 'attr'=>'', 'class'=>array(), 'id'=>'' );
+		$attributes_ul = $clean_attributes;
 		$attributes_ul['class']['menu_top'] = $GP_MENU_CLASSES['menu_top'];
 		if( self::$edit_area_id ){
 			$attributes_ul['id'] = self::$edit_area_id;
@@ -1402,8 +1406,6 @@ class gpOutput{
 		$result = array();
 		$prev_level = $start_level;
 		$page_title_full = common::GetUrl($page->title);
-		$source_keys = array_keys($source_menu);
-		$source_values = array_values($source_menu);
 		$open = false;
 		$li_count = array();
 
@@ -1418,28 +1420,23 @@ class gpOutput{
 		//output
 		$result[] = self::FormatMenuElement('ul',$attributes_ul);
 
-		//message('<table><tr><td>'.pre($menu).'</td><td>'.pre($source_menu).'</td></tr></table>');
 
-		foreach($source_keys as $source_index => $menu_key){
-
-			//skip if not in menu
-			if( !isset($menu[$menu_key]) ){
-				continue;
-			}
-
-
-			$attributes_a = array('href' => '', 'attr' => '', 'value' => '', 'title' => '', 'class' =>array() );
-			$attributes_li = array('attr'=>'', 'class'=>array() );
-			$attributes_ul = array('attr'=>'', 'class'=>array() );
-
-			$menu_info = $source_values[$source_index];
+		$menu = array_keys($menu);
+		foreach($menu as $menu_index => $menu_key){
+			$menu_info = $source_menu[$menu_key];
 			$this_level = $menu_info['level'];
 
 			//the next entry
 			$next_info = false;
-			if( isset($source_values[$source_index+1]) ){
-				$next_info = $source_values[$source_index+1];
+			$next_index = $menu_index+1;
+			if( array_key_exists($next_index,$menu) ){
+				$next_index = $menu[$next_index];
+				$next_info = $source_menu[$next_index];
 			}
+
+			$attributes_a = $clean_attributes_a;
+			$attributes_li = $attributes_ul = $clean_attributes;
+
 
 			//ordered or "indexed" classes
 			if( $page->menu_css_ordered ){
@@ -1485,7 +1482,7 @@ class gpOutput{
 			//current is a child of the previous
 			if( $this_level > $prev_level ){
 
-				if( !$open ){ //only needed if the menu starts below the start_level
+				if( $menu_index === 0 ){ //only needed if the menu starts below the start_level
 					$result[] = self::FormatMenuElement('li',$attributes_li);
 				}
 
@@ -1497,7 +1494,7 @@ class gpOutput{
 					$result[] = self::FormatMenuElement('ul',$attributes_ul);
 					$result[] = '<li>';
 					$prev_level++;
-					$attributes_ul = array('attr'=>'', 'class'=>array() );
+					$attributes_ul = $clean_attributes;
 				}
 				array_pop($result);//remove the last <li>
 

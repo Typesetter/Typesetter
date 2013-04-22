@@ -134,43 +134,6 @@ class thumbnail{
 
 
 	/**
-	 *  @deprecated
-	 */
-	static function maxArea($source_path,$dest_path,$max_area=1024000){
-
-		$src_img = thumbnail::getSrcImg($source_path,$dest_path); //memory usage before and after this call are small 1093804 vs 1094616
-		if( !$src_img ){
-			return false;
-		}
-
-		//Original Size
-		$old_x = imagesx($src_img);
-		$old_y = imagesy($src_img);
-		$old_area = ($old_x * $old_y);
-
-		//don't enlarge check 1
-		if( $old_area < $max_area ){
-			return move_uploaded_file($source_path,$dest_path);
-		}
-
-		//Calculate the new size
-		$inv_ratio = $old_y / $old_x;
-
-		$new_y = sqrt($max_area * $inv_ratio);
-		$new_y = round($new_y);
-		$new_x = round($max_area / $new_y);
-
-		//don't enlarge check 2
-		$new_area = ($new_y * $new_x);
-		if( $new_area > $old_area ){
-			return move_uploaded_file($source_path,$dest_path);
-		}
-
-		return thumbnail::createImg($src_img, $dest_path, 0, 0, 0, 0, $new_x, $new_y, $old_x, $old_y);
-	}
-
-
-	/**
 	 * Return a type file type of a given file given by it's $path on the file system
 	 * @static
 	 */

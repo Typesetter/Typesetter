@@ -145,36 +145,6 @@ class gp_filesystem_base{
 	}
 
 
-	/* check all files and folders in $context to get the correct filesystem method
-	 *
-	 * @deprecated Use get_filesystem_method_list()
-	 */
-	function get_filesystem_method_all($context = array()){
-
-		$result = 2;
-
-		if( is_string($context) ){
-			$context = array($context);
-		}
-
-		foreach($context as $file){
-			$temp_result = gp_filesystem_base::get_filesystem_method_dir($file);
-			if( $temp_result === false ){
-				return false;
-			}
-			$result = max($temp_result,$result);
-		}
-
-		switch($result){
-			case 1:
-			return 'gp_filesystem_direct';
-			case 2:
-			return 'gp_filesystem_ftp';
-			default:
-			return false;
-		}
-	}
-
 	static function get_filesystem_method_dir($dir){
 		$result = gp_filesystem_base::get_filesystem_method_file($dir);
 		if( $result === false ){

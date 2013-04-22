@@ -2640,23 +2640,12 @@ class common{
 	 * @deprecated 3.0
 	 * Use gp_edit::UseCK();
 	 */
-
 	static function UseCK($contents,$name='gpcontent',$options=array()){
 		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		gp_edit::UseCK($contents,$name,$options);
 	}
 
-
-	/**
-	 * @deprecated 3.0
-	 * Use gp_edit::AutoCompleteValues();
-	 */
-	static function AutoCompleteValues($GetUrl=true,$options = array()){
-		trigger_error('Deprecated Function');
-		includeFile('tool/editing.php');
-		return gp_edit::AutoCompleteValues($GetUrl,$options);
-	}
 }
 
 

@@ -1673,11 +1673,6 @@ class gpOutput{
 		return gpOutput::ReturnTextWorker($key,$html,$query);
 	}
 
-	/* deprecated, use ReturnText() */
-	static function GetText($key,$html='%s'){
-		echo gpOutput::ReturnText($key,$html);
-	}
-
 	static function ReturnText($key,$html='%s'){
 		$query = 'cmd=edittext&key='.urlencode($key);
 		return gpOutput::ReturnTextWorker($key,$html,$query);

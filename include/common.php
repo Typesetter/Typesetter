@@ -2647,15 +2647,6 @@ class common{
 		gp_edit::UseCK($contents,$name,$options);
 	}
 
-	/**
-	 * @deprecated 3.0
-	 * Use gp_edit::CKConfig();
-	 */
-	static function CKConfig($options=array(),$config_name='config'){
-		trigger_error('Deprecated Function');
-		includeFile('tool/editing.php');
-		return gp_edit::CKConfig($options,$config_name);
-	}
 
 	/**
 	 * @deprecated 3.0

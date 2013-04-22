@@ -3081,34 +3081,6 @@ class gpFiles{
 	}
 
 
-
-	/**
-	 * @deprecated 3.5.3
-	 */
-	static function fopen($file,$checkDir=true){
-		global $gp_not_writable;
-
-		trigger_error('Deprecated function');
-
-		if( $checkDir && !file_exists($file) ){
-			$dir = common::DirName($file);
-			if( !file_exists($dir) ){
-				gpFiles::CheckDir($dir);
-			}
-		}
-
-		$fp = @fopen($file,'ab'); //using "a" so the file isn't truncated
-		if( $fp === false ){
-			$gp_not_writable[] = $file;
-			return false;
-		}
-
-		//chmod($file,0644);
-		@chmod($file,gp_chmod_file);
-		return $fp;
-	}
-
-
 	/**
 	 * Save array(s) to a $file location
 	 * Takes 2n+3 arguments

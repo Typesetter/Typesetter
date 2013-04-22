@@ -2861,17 +2861,6 @@ class gpFiles{
 
 
 	/**
-	 * @deprecated 2.5
-	 * Use gp_edit::tidyFix()
-	 */
-	static function tidyFix(&$text){
-		trigger_error('Deprecated Function');
-		includeFile('tool/editing.php');
-		return gp_edit::tidyFix($text);
-	}
-
-
-	/**
 	 * Save the content for a new page in /data/_pages/<title>
 	 * @since 1.8a1
 	 *
@@ -3426,6 +3415,7 @@ class gpFiles{
 	/**
 	 * @deprecated 3.0
 	 * Use gp_edit::CleanTitle() instead
+	 * Used by Simple_Blog1
 	 */
 	static function CleanTitle($title,$spaces = '_'){
 		trigger_error('Deprecated Function');
@@ -3433,13 +3423,4 @@ class gpFiles{
 		return gp_edit::CleanTitle($title,$spaces);
 	}
 
-	/**
-	 * @deprecated 3.0
-	 * Use gp_edit::CleanArg() instead
-	 */
-	static function CleanArg($path){
-		trigger_error('Deprecated Function');
-		includeFile('tool/editing.php');
-		return gp_edit::CleanArg($path);
-	}
 }

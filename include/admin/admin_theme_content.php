@@ -1962,7 +1962,7 @@ class admin_theme_content extends admin_addon_install{
 
 
 	function GetDefaultList($container,$gpOutCmd){
-		global $config, $gpOutConf;
+		global $config;
 
 		if( $container !== 'GetAllGadgets' ){
 
@@ -2044,7 +2044,7 @@ class admin_theme_content extends admin_addon_install{
 
 
 	function SelectContent(){
-		global $langmessage,$config,$gpOutConf;
+		global $langmessage, $config;
 
 		if( !isset($_GET['param']) ){
 			message($langmessage['OOPS'].' (0)');
@@ -2072,7 +2072,7 @@ class admin_theme_content extends admin_addon_install{
 	}
 
 	function SelectContent_Areas($param,$count_gadgets){
-		global $dataDir,$langmessage,$config,$gpOutConf;
+		global $dataDir, $langmessage, $config;
 
 
 		$slug = 'Admin_Theme_Content/'.rawurlencode($this->curr_layout);
@@ -2640,7 +2640,7 @@ class admin_theme_content extends admin_addon_install{
 
 
 	function SelectLinks(){
-		global $langmessage,$gpLayouts,$gpOutConf;
+		global $langmessage, $gpLayouts;
 
 		$layout =& $_REQUEST['layout'];
 
@@ -2743,7 +2743,7 @@ class admin_theme_content extends admin_addon_install{
 
 
 	function SaveLinks(){
-		global $config,$langmessage,$gpOutConf,$gpLayouts;
+		global $config, $langmessage, $gpLayouts;
 
 
 		$layout =& $_POST['layout'];

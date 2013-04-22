@@ -2650,16 +2650,6 @@ class common{
 
 	/**
 	 * @deprecated 3.0
-	 * Use gp_edit::PrepAutoComplete();
-	 */
-	static function PrepAutoComplete($autocomplete_js=true,$GetUrl=true){
-		trigger_error('Deprecated Function');
-		includeFile('tool/editing.php');
-		gp_edit::PrepAutoComplete($autocomplete_js,$GetUrl);
-	}
-
-	/**
-	 * @deprecated 3.0
 	 * Use gp_edit::AutoCompleteValues();
 	 */
 	static function AutoCompleteValues($GetUrl=true,$options = array()){

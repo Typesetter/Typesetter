@@ -64,9 +64,7 @@ class admin_addon_install extends admin_addons_tool{
 		$installer->can_install_links = $this->can_install_links;
 
 		$installer->InstallRemote( $_POST['type'], $_POST['id'], $_POST['order'] );
-		foreach($installer->messages as $msg){
-			message($msg);
-		}
+		$installer->OutputMessages();
 	}
 
 

@@ -59,6 +59,11 @@ class admin_addon_installer extends admin_addons_tool{
 
 		$success = $this->InstallSteps();
 
+		if( !is_dir($this->source) ){
+			$this->message($langmessage['OOPS'].' (Source not found)');
+			return false;
+		}
+
 		if( $success ){
 			$this->message( sprintf($langmessage['installed'], $this->display_name ) );
 		}else{
@@ -87,6 +92,12 @@ class admin_addon_installer extends admin_addons_tool{
 		$this->order = $order;
 
 		return $this->Install();
+	}
+
+	function OutputMessages(){
+		foreach($this->messages as $msg){
+			msg($msg);
+		}
 	}
 
 

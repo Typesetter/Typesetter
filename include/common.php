@@ -360,6 +360,10 @@ function message(){
 	global $wbMessageBuffer;
 	$wbMessageBuffer[] = func_get_args();
 }
+function msg(){
+	global $wbMessageBuffer;
+	$wbMessageBuffer[] = func_get_args();
+}
 
 /**
  * Output the message buffer

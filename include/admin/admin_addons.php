@@ -294,10 +294,7 @@ class admin_addons extends admin_addon_install{
 		includeFile('admin/admin_addon_installer.php');
 		$installer = new admin_addon_installer();
 		$installer->Uninstall($addon);
-
-		foreach($installer->messages as $msg){
-			message($msg);
-		}
+		$installer->OutputMessages();
 	}
 
 
@@ -635,9 +632,6 @@ class admin_addons extends admin_addon_install{
 		$installer = new admin_addon_installer();
 		$installer->source = $dataDir.'/addons/'.$_REQUEST['source'];
 		$installer->Install();
-
-		foreach($installer->messages as $msg){
-			message($msg);
-		}
+		$installer->OutputMessages();
 	}
 }

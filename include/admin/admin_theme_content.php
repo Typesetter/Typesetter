@@ -151,6 +151,10 @@ class admin_theme_content extends admin_addon_install{
 					return;
 				}
 			break;
+			case 'upgrade':
+				$this->UpgradeLayout();
+			break;
+
 
 
 
@@ -1137,10 +1141,7 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 		$success = $installer->Install();
-
-		foreach($installer->messages as $msg){
-			message($msg);
-		}
+		$installer->OutputMessages();
 
 		if( $success && $installer->default_layout ){
 			$page->SetTheme();
@@ -1149,6 +1150,24 @@ class admin_theme_content extends admin_addon_install{
 
 	}
 
+	function UpgradeLayout(){
+		global $langmessage,$dataDir;
+
+		includeFile('admin/admin_addon_installer.php');
+		$installer = new admin_addon_installer();
+
+
+		$layout =& $_REQUEST['layout'];
+		$layout_info = common::LayoutInfo($layout);
+		if( !$layout_info ){
+			message($langmessage['OOPS'].'(Invalid Layout)');
+			return false;
+		}
+
+		$installer->source = $dataDir.dirname($layout_info['path']); //$theme_info['dir'] may be the style folder
+		$installer->Install();
+		$installer->OutputMessages();
+	}
 
 	/**
 	 * Display some options before copying a layout
@@ -1707,6 +1726,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '</li>';
 
 
+		// layouts with hooks
 		if( isset($layout_info['addon_key']) ){
 			$addon_key = $layout_info['addon_key'];
 			$addon_config = gpPlugin::GetAddonConfig($addon_key);
@@ -1714,9 +1734,26 @@ class admin_theme_content extends admin_addon_install{
 			echo common::link('Admin_Addons','<span class="img_icon_plug"></span> '.$addon_config['name'],'cmd=show&addon='.$addon_key);
 			echo '</li>';
 
-			//$addon_key = $layout_info['addon_key'];
-			//$addon_config = gpPlugin::GetAddonConfig($addon_key);
-			//$this->AddonPanelGroup($addon_key, $addon_config);
+			//hooks
+			$addon_config = gpPlugin::GetAddonConfig($addon_key);
+			$this->AddonPanelGroup($addon_key, $addon_config, false );
+
+			//options
+			echo '<li class="expand_child_click">';
+			echo '<a>'.$langmessage['options'].'</a>';
+			echo '<ul>';
+			echo '<li>';
+			echo common::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=upgrade&layout='.$layout,'data-cmd="creq"');
+			echo '</li>';
+
+			//version
+			if( !empty($addon_config['version']) ){
+				echo '<li><a>'.$langmessage['Your_version'].' '.$addon_config['version']. '</a></li>';
+			}
+
+			echo '</ul></li>';
+
+
 		}
 
 
@@ -3212,9 +3249,7 @@ class admin_theme_content extends admin_addon_install{
 			if( !$installer->Uninstall($rm_addon) ){
 				$gpLayouts = $gpLayoutsBefore;
 			}
-			foreach($installer->messages as $msg){
-				message($msg);
-			}
+			$installer->OutputMessages();
 
 		}else{
 
@@ -3303,9 +3338,8 @@ class admin_theme_content extends admin_addon_install{
 			if( !$installer->Uninstall($rm_addon) ){
 				$gpLayouts = $gpLayoutsBefore;
 			}
-			foreach($installer->messages as $msg){
-				message($msg);
-			}
+			$installer->OutputMessages();
+
 		}elseif( !admin_tools::SavePagesPHP() ){
 			$gpLayouts = $gpLayoutsBefore;
 			message($langmessage['OOPS'].' (s1)');

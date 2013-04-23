@@ -587,7 +587,7 @@ class admin_addons_tool{
 
 
 
-	function AddonPanelGroup($addon_key, $addon_config){
+	function AddonPanelGroup($addon_key, $addon_config, $show_hooks = true ){
 		global $langmessage, $config;
 
 		$new_version = false;
@@ -633,15 +633,17 @@ class admin_addons_tool{
 		}
 
 		//hooks
-		$hooks = self::AddonHooks($addon_key);
-		if( count($hooks) > 0 ){
-			echo '<li class="expand_child_click">';
-			echo '<a>Hooks</a>';
-			echo '<ul>';
-			foreach($hooks as $name => $hook_info){
-				echo '<li><a>'.str_replace('_',' ',$name).'</a></li>';
+		if( $show_hooks ){
+			$hooks = self::AddonHooks($addon_key);
+			if( count($hooks) > 0 ){
+				echo '<li class="expand_child_click">';
+				echo '<a>Hooks</a>';
+				echo '<ul>';
+				foreach($hooks as $name => $hook_info){
+					echo '<li><a>'.str_replace('_',' ',$name).'</a></li>';
+				}
+				echo '</ul></li>';
 			}
-			echo '</ul></li>';
 		}
 
 	}

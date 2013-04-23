@@ -329,48 +329,6 @@ class admin_addons extends admin_addon_install{
 		echo '<div id="adminlinks2">';
 		$this->PluginPanelGroup($addon_key,$info);
 		echo '</div>';
-
-		return;
-
-
-		if( !isset($config['addons'][$addon]['id']) ){
-			return;
-		}
-
-		echo '<h3>'.$langmessage['rate_this_addon'].'</h3>';
-
-		$id = $config['addons'][$addon]['id'];
-
-		if( isset($this->addonReviews[$id]) ){
-
-			$review =& $this->addonReviews[$id];
-			$review += array('time'=>time());
-			echo 'You posted the following review on '.common::date($langmessage['strftime_date'],$review['time']);
-
-
-			echo '<table class="rating_table">';
-			echo '<tr><td>Rating</td><td>';
-			echo $this->ShowRating($id,$review['rating']);
-			echo '</td></tr>';
-
-			echo '<tr><td>Review</td><td>';
-			echo nl2br(htmlspecialchars($review['review']));
-			echo '</td></tr>';
-
-			echo '<tr><td></td><td>';
-			echo common::Link('Admin_Addons','Edit Review','cmd=rate&arg='.$id);
-			echo '</td></tr>';
-			echo '</table>';
-
-
-		}else{
-			echo '<table class="rating_table">';
-			echo '<tr><td>Rating</td><td>';
-			echo $this->ShowRating($id,5);
-			echo '</td></tr>';
-			echo '</table>';
-		}
-
 	}
 
 
@@ -549,7 +507,7 @@ class admin_addons extends admin_addon_install{
 
 		$addon_config += $info; //merge the upgrade info
 
-		echo '<div class="panelgroup">';
+		echo '<div class="panelgroup" id="panelgroup_'.md5($addon_key).'">';
 
 		echo '<span class="icon_plug">';
 		echo common::Link('Admin_Addons',$addon_config['name'],'cmd=show&addon='.rawurlencode($addon_key));

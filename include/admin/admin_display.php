@@ -202,7 +202,7 @@ class admin_display extends display{
 		admin_tools::AdminPanelLinks(false);
 
 		//resources
-		echo '<div class="panelgroup">';
+		echo '<div class="panelgroup" id="panelgroup_resources">';
 		echo '<span class="icon_page_gear"><span>'.$langmessage['resources'].' (gpEasy.com)</span></span>';
 		echo '<div class="panelgroup2">';
 		echo '<ul>';

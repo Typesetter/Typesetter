@@ -1675,7 +1675,7 @@ class admin_theme_content extends admin_addon_install{
 		$layout_info = common::LayoutInfo($layout,false);
 
 
-		echo '<div class="panelgroup">';
+		echo '<div class="panelgroup" id="panelgroup_'.md5($layout).'">';
 		echo $this->GetLayoutLabel($layout, $info);
 
 

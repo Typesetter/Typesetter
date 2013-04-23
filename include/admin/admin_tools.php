@@ -271,8 +271,10 @@ class admin_tools{
 		global $langmessage, $page, $gpAdmin, $config;
 
 		$expand_class = 'expand_child';
+		$id_piece = '';
 		if( !$in_panel ){
 			$expand_class = 'expand_child_click';
+			$id_piece = '_click';
 		}
 
 
@@ -322,7 +324,7 @@ class admin_tools{
 
 		//content
 		if( $links = admin_tools::GetAdminGroup('content') ){
-			echo '<div class="panelgroup">';
+			echo '<div class="panelgroup" id="panelgroup_content'.$id_piece.'">';
 			self::PanelHeading($in_panel, $langmessage['Content'], 'icon_page', 'con' );
 			echo '<ul class="submenu">';
 			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Content'].'</a></li>';
@@ -335,7 +337,7 @@ class admin_tools{
 
 		//appearance
 		if( $links = admin_tools::GetAdminGroup('appearance') ){
-			echo '<div class="panelgroup">';
+			echo '<div class="panelgroup" id="panelgroup_appearance'.$id_piece.'">';
 			self::PanelHeading($in_panel, $langmessage['Appearance'], 'icon_app', 'app' );
 			echo '<ul class="submenu">';
 			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Appearance'].'</a></li>';
@@ -349,7 +351,7 @@ class admin_tools{
 		//add-ons
 		$links = admin_tools::GetAddonLinks($in_panel);
 		if( !empty($links) ){
-			echo '<div class="panelgroup">';
+			echo '<div class="panelgroup" id="panelgroup_addons'.$id_piece.'">';
 			self::PanelHeading($in_panel, $langmessage['plugins'], 'icon_plug', 'add' );
 			echo '<ul class="submenu">';
 			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['plugins'].'</a></li>';
@@ -362,7 +364,7 @@ class admin_tools{
 
 		//settings
 		if( $links = admin_tools::GetAdminGroup('settings') ){
-			echo '<div class="panelgroup">';
+			echo '<div class="panelgroup" id="panelgroup_settings'.$id_piece.'">';
 			self::PanelHeading($in_panel, $langmessage['Settings'], 'icon_cog', 'set' );
 			echo '<ul class="submenu">';
 			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Settings'].'</a></li>';
@@ -375,7 +377,7 @@ class admin_tools{
 
 		//updates
 		if( count($new_versions) > 0 ){
-			echo '<div class="panelgroup">';
+			echo '<div class="panelgroup" id="panelgroup_versions'.$id_piece.'">';
 			self::PanelHeading($in_panel, $langmessage['updates'], 'icon_rfrsh', 'upd' );
 			echo '<ul class="submenu">';
 			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['updates'].'</a></li>';
@@ -409,7 +411,7 @@ class admin_tools{
 
 
 		//username
-		echo '<div class="panelgroup">';
+		echo '<div class="panelgroup" id="panelgroup_user'.$id_piece.'">';
 
 			self::PanelHeading($in_panel, $gpAdmin['username'], 'icon_user', 'use' );
 

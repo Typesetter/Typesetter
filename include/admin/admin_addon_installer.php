@@ -578,7 +578,6 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 
 		//layout
-		unset($this->config[$this->config_key]['is_theme']);
 		if( count($this->new_layout) ){
 			$this->config[$this->config_key]['is_theme'] = true;
 		}

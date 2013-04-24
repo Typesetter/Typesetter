@@ -31,7 +31,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 	//used internally
 	var $addon_folder;
-	var $addon_folder_rel;
+	var $addon_folder_rel = false;
 	var $dest = '';
 	var $dest_name;
 	var $trash_path;
@@ -59,7 +59,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 		$success = $this->InstallSteps();
 
-		if( !is_dir($this->source) ){
+		if( !$this->remote_install && !is_dir($this->source) ){
 			$this->message($langmessage['OOPS'].' (Source not found)');
 			return false;
 		}
@@ -220,7 +220,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 		// upgrade/destination
-		$this->config_key = admin_addons_tool::UpgradePath($this->ini_contents,$this->config_index);
+		$this->upgrade_key = $this->config_key = admin_addons_tool::UpgradePath($this->ini_contents,$this->config_index);
 		if( $this->remote_install ){
 			if( $this->config_key ){
 				$this->dest = $this->addon_folder.'/'.$this->config_key;
@@ -308,10 +308,12 @@ class admin_addon_installer extends admin_addons_tool{
 		$this->layouts_cache = $gpLayouts;
 
 
-		if( $this->remote_install ){
-			$this->addon_folder_rel = '/data/'.$this->code_folder_name;
-		}else{
-			$this->addon_folder_rel = '/'.basename( dirname($this->source) );
+		if( !$this->addon_folder_rel ){
+			if( $this->remote_install ){
+				$this->addon_folder_rel = '/data/'.$this->code_folder_name;
+			}else{
+				$this->addon_folder_rel = '/'.basename( dirname($this->source) );
+			}
 		}
 		$this->addon_folder = $dataDir.$this->addon_folder_rel;
 
@@ -446,7 +448,7 @@ class admin_addon_installer extends admin_addons_tool{
 			return true;
 		}
 
-		if( !$this->can_install_links ){
+		if( !$this->can_install_links && !$this->upgrade_key ){
 			return true;
 		}
 

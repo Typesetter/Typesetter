@@ -1131,8 +1131,10 @@ class admin_theme_content extends admin_addon_install{
 			$new_layout['is_addon'] = true;
 		}
 
+
 		includeFile('admin/admin_addon_installer.php');
 		$installer = new admin_addon_installer();
+		$installer->addon_folder_rel = dirname($theme_info['rel']);
 		$installer->code_folder_name = '_themes';
 		$installer->source = $theme_info['full_dir'];
 		$installer->new_layout = $new_layout;

@@ -336,7 +336,7 @@ class admin_tools{
 
 
 		//appearance
-		if( $links = admin_tools::GetAdminGroup('appearance') ){
+		if( $links = self::GetAppearanceGroup($in_panel) ){
 			echo '<div class="panelgroup" id="panelgroup_appearance'.$id_piece.'">';
 			self::PanelHeading($in_panel, $langmessage['Appearance'], 'icon_app', 'app' );
 			echo '<ul class="submenu">';
@@ -696,28 +696,60 @@ class admin_tools{
 		}
 
 
-		//add more links
-		switch($grouping){
-			case 'appearance':
-				if( admin_tools::HasPermission('Admin_Theme_Content') ){
-					if( !empty($page->gpLayout) ){
-						echo '<li>';
-						echo common::Link('Admin_Theme_Content/'.urlencode($page->gpLayout),$langmessage['edit_this_layout']);
-						echo '</li>';
-					}
-					echo '<li>';
-					echo common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']);
-					echo '</li>';
-				}
-			break;
-		}
-
-
 		$result = ob_get_clean();
 		if( !empty($result) ){
 			return $result;
 		}
 		return false;
+	}
+
+	static function GetAppearanceGroup($in_panel){
+		global $page, $langmessage, $gpLayouts, $config;
+
+		if( !admin_tools::HasPermission('Admin_Theme_Content') ){
+			return false;
+		}
+
+		ob_start();
+		echo admin_tools::GetAdminGroup('appearance');
+
+
+		if( !empty($page->gpLayout) ){
+			echo '<li>';
+			echo common::Link('Admin_Theme_Content/'.urlencode($page->gpLayout),$langmessage['edit_this_layout']);
+			echo '</li>';
+		}
+		echo '<li>';
+		echo common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']);
+		echo '</li>';
+
+		//list of layouts
+		$expand_class = 'expand_child';
+		if( !$in_panel ){
+			$expand_class = 'expand_child_click';
+		}
+
+		echo '<li class="'.$expand_class.'">';
+		echo '<a>'.$langmessage['layouts'].'</a>';
+		if( $in_panel ){
+			echo '<ul class="in_window">';
+		}else{
+			echo '<ul>';
+		}
+		foreach($gpLayouts as $layout => $info){
+			echo '<li>';
+			$display = $info['label'];
+			if( $config['gpLayout'] == $layout ){
+				$display = '<b>'.$display.'</b>';
+			}
+			$display = '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span>&nbsp; '.$display;
+			echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$display);
+			echo '</li>';
+		}
+		echo '</ul>';
+		echo '</li>';
+
+		return ob_get_clean();
 	}
 
 

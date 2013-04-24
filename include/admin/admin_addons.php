@@ -307,7 +307,7 @@ class admin_addons extends admin_addon_install{
 
 		$addon_key =& $_REQUEST['addon'];
 		if( !isset($config['addons'][$addon_key]) ){
-			message($langmessage['OOPS'].'(s1)');
+			message($langmessage['OOPS'].'(Addon Not Found)');
 			$this->Select();
 			return;
 		}

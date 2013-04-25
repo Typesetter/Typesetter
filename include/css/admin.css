@@ -858,8 +858,8 @@ table.tablesorter th.gp_header_desc:before{
 	}
 
 
-#simplepanel .submenu a,
-#simplepanel .submenu span{
+#simplepanel .submenu li > a,
+#simplepanel .submenu li > span{
 	display:block;
 	padding:3px 14px;
 	white-space:nowrap;

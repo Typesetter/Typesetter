@@ -24,13 +24,16 @@ class special_missing{
 
 	function special_missing($requested=false){
 		global $langmessage;
-		$this->requested = $requested;
+
 		$this->Init();
 
-		$this->CheckRedirect();
-		$this->CheckSimilar();
-		$this->Get404();
+		if( !is_array($requested) ){
+			$this->requested = $requested;
 
+			$this->CheckRedirect();
+			$this->CheckSimilar();
+		}
+		$this->Get404();
 	}
 
 	/**

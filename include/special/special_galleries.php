@@ -126,7 +126,6 @@ class special_galleries{
 			$this->GalleryEditBox( $title, $info );
 		}
 
-
 		echo '<br class="gpclear"/>';
 		echo '</div>';
 		echo '</td><td>';

@@ -479,7 +479,7 @@ class editing_page extends display{
 		echo '<table class="bordered full_width">';
 
 		//attributes
-		echo '<thead><tr><th>Attributes</th><th>'.$langmessage['Value'].'</th><th>gpEasy Generated</th></tr></thead>';
+		echo '<thead><tr><th>Attributes</th><th>'.$langmessage['Value'].'</th></tr></thead>';
 		echo '<tbody>';
 		$invalid = self::InvalidAttributes($section['attributes']);
 		foreach($section['attributes'] as $attr => $value){
@@ -490,10 +490,9 @@ class editing_page extends display{
 			}
 			echo '<input class="'.$class.'" type="text" name="attr_name[]" value="'.htmlspecialchars($attr).'" size="8" pattern="^([^\s]|i[^d\s]|[^i\s]d|[^i\s][^d\s]|[^\s]{3,})$" />';
 			echo '</td><td style="white-space:nowrap">';
-			echo '<input class="gpinput" type="text" name="attr_value[]" value="'.htmlspecialchars($value).'" size="18" />';
-			echo '</td><td>';
+			echo '<input class="gpinput" type="text" name="attr_value[]" value="'.htmlspecialchars($value).'" size="40" />';
 			if( $attr == 'class' ){
-				echo '<span>GPAREA filetype-'.$section['type'].' &nbsp;</span>';
+				echo '<div class="class_only">gpEasy Generated: GPAREA filetype-'.$section['type'].'</div>';
 			}
 			echo '</td></tr>';
 		}

@@ -142,3 +142,10 @@ define('gpdebug',true);
  */
 //define('gptesting',false);
 
+
+/**
+ * Include clearfloats in gpeasy generated code
+ *
+ */
+define('clear_floats',false);
+

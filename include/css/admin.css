@@ -219,6 +219,9 @@ body #gp_admin_html .gpcheckbox input{
 body #gp_admin_html .gpinput{
 	white-space:nowrap;
 	}
+body #gp_admin_html .gpinput_warning{
+	border-color:red;
+	}
 body #gp_admin_html .gpreadonly{
 	background:#f5f5f5;
 	}

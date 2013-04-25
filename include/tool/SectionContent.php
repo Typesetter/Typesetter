@@ -22,7 +22,8 @@ class section_content{
 
 		$content = '';
 		foreach($sections as $section_num => $section_data){
-			$content .= '<div class="GPAREA filetype-'.$section_data['type'].'">';
+			$section_data += array('attributes' => array() );
+			$content .= '<div'.self::SectionAttributes($section_data['attributes'],$section_data['type']).'>';
 			$content .= self::SectionToContent($section_data,$section_num);
 			$content .= '<div class="gpclear"></div>';
 			$content .= '</div>';
@@ -323,6 +324,18 @@ class section_content{
 		$file_sections = array();
 		require($file);
 		return self::Render($file_sections,self::$title,self::$meta);
+	}
+
+	static function SectionAttributes($attributes,$type){
+
+		$attributes += array('class' => '' );
+		$attributes['class'] = trim('GPAREA filetype-'.$type.' '.$attributes['class']);
+
+		$attr_string = '';
+		foreach($attributes as $attr => $value){
+			$attr_string .= ' '.htmlspecialchars($attr).'="'.htmlspecialchars($value).'"';
+		}
+		return $attr_string;
 	}
 
 }

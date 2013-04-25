@@ -461,6 +461,19 @@ $gp.links.gpabox = function(evt){
 
 
 /**
+ * Add a table row
+ *
+ */
+$gp.links.add_table_row = function(evt){
+	var $tr = $(this).closest('tr');
+	var $new_row = $tr.closest('tbody').find('tr:first').clone();
+	$new_row.find('span').remove();
+	$new_row.find('input').val('');
+	$tr.before($new_row);
+}
+
+
+/**
  * Post a gpabox request
  *
  */

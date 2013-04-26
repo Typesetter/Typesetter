@@ -255,8 +255,10 @@ $gp.links.dd_menu = function(evt){
 	var $selected = $list.find('.selected');
 	if( $selected.length ){
 		var $ul = $list.find('ul:first');
-		var top = $list.find('.selected').position().top + $ul.scrollTop() - 30;
-		$ul.scrollTop(top);
+		var pos = $list.find('.selected').prev().prev().prev().position();
+		if( pos ){
+			$ul.scrollTop( pos.top + $ul.scrollTop() );
+		}
 	}
 
 

@@ -2,6 +2,14 @@ body {
 	padding-top: 60px;
 	padding-bottom: 40px;
 }
+
+@media (max-width: 980px) {
+	.navbar.navbar-fixed-top{
+		position:absolute;
+		margin:0;
+	}
+}
+
 .navbar .GPAREA{
 	display:inline;
 	}

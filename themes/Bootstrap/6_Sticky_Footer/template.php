@@ -24,9 +24,9 @@ include_once($path);
 
 	<body>
 
-
 		<!-- Part 1: Wrap all page content here -->
 		<div id="wrap">
+
 
 			<!-- Fixed navbar -->
 			<div class="navbar navbar-fixed-top">
@@ -88,7 +88,8 @@ include_once($path);
 						</div><!--/.nav-collapse -->
 					</div>
 				</div>
-			</div>
+			</div><!--/.navbar -->
+
 
 			<!-- Begin page content -->
 			<div class="container">

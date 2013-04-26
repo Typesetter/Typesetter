@@ -38,3 +38,6 @@ body {
 .masthead .GPAREA{
 	display:inline;
 	}
+.masthead div.GPAREA:after{
+	display:none;
+	}

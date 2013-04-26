@@ -548,7 +548,7 @@ class gpsession{
 
 	static function gpui_defaults(){
 
-		return array(	'gpui_cmpct'=>1,
+		return array(	'gpui_cmpct'=>0,
 						'gpui_tx'=>6,
 						'gpui_ty'=>10,
 						'gpui_ckx'=>20,

@@ -204,6 +204,12 @@ body #gp_admin_html #theme_toolbar a{
 	padding:10px;
 }
 
+#gp_admin_html .gp_available_themes a.gpsubmit{
+	min-width:100px;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	}
+
 
 /**
  * Fix for bootstrap css

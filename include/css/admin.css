@@ -142,7 +142,7 @@ body #gp_admin_html .gpdisabled{
 	border-radius: 6px;
 	border:1px solid #ccc;
 
-	color:#333;
+	color:#333 !important;
 	text-shadow:1px 1px 0 #fff;
 	white-space:nowrap;
 

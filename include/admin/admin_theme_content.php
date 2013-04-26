@@ -1607,7 +1607,7 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '<h2>'.$langmessage['available_themes'].': '.$avail_count.'</h2>';
 
-		echo '<table class="bordered" style="width:100%">';
+		echo '<table class="bordered gp_available_themes" style="width:100%">';
 		echo '<tr><th>';
 		echo $langmessage['name'];
 		echo '</th><th>';
@@ -1620,22 +1620,19 @@ class admin_theme_content extends admin_addon_install{
 
 		$i=0;
 		foreach($this->possible as $theme_id => $info){
-			echo '<tr class="'.($i++ % 2 ? ' even' : '').'"><td>';
+			echo '<tr class="'.($i++ % 2 ? ' even' : '').'"><td class="nowrap">';
 			echo str_replace('_',' ',$info['name']);
 			echo '</td><td>';
-			if( isset($info['versionn']) ){
+			if( isset($info['version']) ){
 				echo $info['version'];
 			}else{
 				echo '';
 			}
-			//echo pre($info);
 			echo '</td><td>';
 
 			$comma = '';
 			foreach($info['colors'] as $color){
-				echo $comma;
-				echo common::Link('Admin_Theme_Content',str_replace('_','&nbsp;',$color),'cmd=preview&theme='.rawurlencode($theme_id.'/'.$color)); //,' data-cmd="creq" ');
-				$comma = ', ';
+				echo common::Link('Admin_Theme_Content',str_replace('_','&nbsp;',$color),'cmd=preview&theme='.rawurlencode($theme_id.'/'.$color),'class="gpsubmit"'); //,' data-cmd="creq" ');
 			}
 
 			echo '</td><td>';
@@ -1654,7 +1651,7 @@ class admin_theme_content extends admin_addon_install{
 					$rating = $this->addonReviews[$id]['rating'];
 				}
 
-				$label = $langmessage['rate'].' '.$this->ShowRating($info['rel'],$rating);
+				$label = '<span class="nowrap">'.$langmessage['rate'].' '.$this->ShowRating($info['rel'],$rating).'</span>';
 				echo $label;
 				echo ' &nbsp; ';
 			}

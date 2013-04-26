@@ -1,6 +1,18 @@
-body {
-	padding-top: 60px;
-	padding-bottom: 40px;
+.navbar-fixed-top{
+	position:static;
+	margin-bottom:20px;
+	}
+
+@media (min-width:980px){
+	body {
+		padding-top: 60px;
+		padding-bottom: 40px;
+	}
+	.navbar-fixed-top{
+		position:fixed;
+		margin:0;
+	}
+
 }
 .sidebar-nav {
 	padding: 9px 0;

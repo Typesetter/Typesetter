@@ -5,3 +5,6 @@ body {
 .navbar .GPAREA{
 	display:inline;
 	}
+div.GPAREA:after{
+	display:none;
+	}

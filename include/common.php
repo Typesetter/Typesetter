@@ -1736,6 +1736,7 @@ class common{
 				'jquery' => 'local',
 				'addons' => array(),
 				'themes' => array(),
+				'gadgets' => array(),
 				);
 
 		// default gadgets

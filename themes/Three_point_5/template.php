@@ -77,7 +77,7 @@
 	</div>
 
 	<div  class="footer_col last">
-	<?php gpOutput::Get('MiddleSubMenu'); ?>
+	<?php gpOutput::Get('Extra','Lorem'); ?>
 	</div>
 
 	</div>

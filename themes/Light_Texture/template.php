@@ -77,6 +77,7 @@ $(function(){
 			</div>
 			<div class="footarea">
 			<?php
+			gpOutput::Get('Extra','Lorem');
 			gpOutput::GetAllGadgets();
 			//gpOutput::Get('Menu');
 			//gpOutput::Get('Extra','Footer 3');

@@ -119,7 +119,13 @@ CKEDITOR.on( 'dialogDefinition', function( ev ){
 	}
 });
 
-
+CKEDITOR.on('instanceReady', function(event) {
+  event.editor.on('dialogShow', function(dialogShowEvent) {
+    if(CKEDITOR.env.ie) {
+      $(dialogShowEvent.data._.element.$).find('a[href*="void(0)"]').removeAttr('href');
+    }
+  });
+});
 
 
 

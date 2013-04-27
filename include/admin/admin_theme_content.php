@@ -112,6 +112,7 @@ class admin_theme_content extends admin_addon_install{
 			return;
 			case 'remote_install_confirmed':
 				$this->RemoteInstallConfirmed();
+				$this->possible = $this->GetPossible();
 			break;
 
 

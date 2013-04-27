@@ -119,6 +119,10 @@ CKEDITOR.on( 'dialogDefinition', function( ev ){
 	}
 });
 
+/**
+ * Prevent premature onbeforeupload event in IE
+ *
+ */
 CKEDITOR.on('instanceReady', function(event) {
 	if(CKEDITOR.env.ie){
 		event.editor.on('dialogShow', function(dialogShowEvent) {

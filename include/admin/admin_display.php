@@ -76,6 +76,12 @@ class admin_display extends display{
 			return;
 		}
 
+		$request_type = common::RequestType();
+		if( $request_type == 'body' ){
+			echo $this->contentBuffer;
+			return;
+		}
+
 		ob_start();
 		echo '<div id="gpx_content"><div id="admincontent">';
 		admin_tools::AdminContentPanel();

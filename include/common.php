@@ -2641,7 +2641,7 @@ class common{
 			return $img;
 		}
 
-		return substr_replace($img,'/data/_uploaded/image/thumbnails/',$pos, strlen($dir_part) );
+		return substr_replace($img,'/data/_uploaded/image/thumbnails/',$pos, strlen($dir_part) ).'.jpg';
 	}
 
 

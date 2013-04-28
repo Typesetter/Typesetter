@@ -62,6 +62,8 @@
 			return $.param(args)+'&gpcontent='+encodeURIComponent(data);
 		},
 		updateElement:function(){
+		},
+		updateCaption:function(current_image,caption){
 		}
 	};
 
@@ -201,6 +203,7 @@
 
 				$(current_image).find('a, img').attr('title', text );
 				$gp.CloseAdminBox();
+				gp_editor.updateCaption(current_image,text);
 			}
 
 		}

@@ -1567,7 +1567,7 @@ class gpOutput{
 
 		// build attr
 		foreach($attributes as $key => $value){
-			if( $key == 'title' ){
+			if( $key == 'title' || $key == 'href' || $key == 'value' ){
 				continue;
 			}
 			if( is_array($value) ){

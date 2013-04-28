@@ -37,13 +37,29 @@
 		checkDirty:function(){
 			return false;
 		},
-		getData:function(edit_div){
+		getData:function(edit_div,settings){
+
+			//get images and captions
+			var $sortable_area = edit_div.find(settings.sortable_area_sel).find('li');
+
+			var args = {
+				images: [],
+				captions: []
+			};
+			$sortable_area.each(function(){
+				var $this = $(this);
+				args.images.push( $this.find('a').attr('href') );
+				args.captions.push( $this.find('.caption').html() );
+			});
+
+
+			//get content
 			var data = edit_div.clone();
 			data.find('li.holder').remove();
 			data.find('ul').enableSelection().removeClass('ui-sortable').removeAttr('unselectable');
 			data.find('.gp_nosave').remove();
 			data = data.html();
-			return 'gpcontent='+encodeURIComponent(data);
+			return $.param(args)+'&gpcontent='+encodeURIComponent(data);
 		},
 		updateElement:function(){
 		}
@@ -104,7 +120,7 @@
 		};
 
 		gp_editor.gp_saveData = function(){
-			return gp_editor.getData(edit_div);
+			return gp_editor.getData(edit_div,settings);
 		}
 
 
@@ -158,7 +174,7 @@
 
 
 				var popup = '<div class="inline_box" id="gp_gallery_caption"><form><h3>'+gplang.cp+'</h3>'
-							+ '<textarea name="caption" cols="40" rows="8">'+$gp.htmlchars(caption)+'</textarea>'
+							+ '<textarea name="caption" cols="200" rows="3">'+$gp.htmlchars(caption)+'</textarea>'
 							+ '<p><input type="submit" name="cmd" value="'+gplang.up+'" class="gp_gallery_update" /> '
 							+ '<input type="button" name="" value="'+gplang.ca+'" class="admin_box_close" /></p>'
 							+ '</form></div>';

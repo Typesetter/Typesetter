@@ -212,6 +212,12 @@ class SimpleBlog extends SimpleBlogCommon{
 
 
 		$post =& $posts[$post_index];
+                if( !common::LoggedIn() ){
+                    if ($post['isDraft'] === 'on') {
+                        message($langmessage['OOPS']);
+			return;
+                    }; //How to make 404 page?
+                }
 		$this->ShowPostContent($post,$post_index);
 
 		$page->label = SimpleBlogCommon::Underscores( $post['title'] );

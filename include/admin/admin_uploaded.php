@@ -216,7 +216,7 @@ class admin_uploaded{
 		$output =& $_POST['output'];
 		switch($output){
 			case 'gallery';
-				$return_content = admin_uploaded::ShowFile_Gallery($this->subdir,$uploaded,$this->isThumbDir);
+				$return_content = admin_uploaded::ShowFile_Gallery($this->subdir,$uploaded);
 			break;
 
 			default:
@@ -269,11 +269,6 @@ class admin_uploaded{
 
 
 		//folder information
-		$isThumbDir = false;
-		$thumbFolder = $dataDir.'/data/_uploaded/image/thumbnails';
-		if( strpos($dir,$thumbFolder) !== false ){
-			$isThumbDir = true;
-		}
 		$folders = $files = array();
 		$allFiles = gpFiles::ReadFolderAndFiles($dir);
 		list($folders,$files) = $allFiles;
@@ -324,7 +319,7 @@ class admin_uploaded{
 		ob_start();
 		$image_count = 0;
 		foreach($files as $file){
-			$img = admin_uploaded::ShowFile_Gallery($dir_piece,$file,$isThumbDir);
+			$img = admin_uploaded::ShowFile_Gallery($dir_piece,$file);
 			if( $img ){
 				echo $img;
 				$image_count++;
@@ -387,7 +382,7 @@ class admin_uploaded{
 	/**
 	 * @static
 	 */
-	static function ShowFile_Gallery($dir_piece,$file,$isThumbDir){
+	static function ShowFile_Gallery($dir_piece,$file){
 		global $langmessage, $dataDir;
 
 		if( !admin_uploaded::IsImg($file) ){
@@ -401,11 +396,8 @@ class admin_uploaded{
 		$full_path = $dataDir.$rel_path;
 
 		//thumbnail
-		if( $isThumbDir ){
-			$thumb = ' <img src="'.$file_url.'" alt="" />';
-		}else{
-			$thumb = ' <img src="'.common::GetDir('/data/_uploaded/image/thumbnails'.$dir_piece.'/'.$file.'.jpg').'" alt="" />';
-		}
+		$thumb_url = common::ThumbnailPath($file_url);
+		$thumb = ' <img src="'.$thumb_url.'" alt="" />';
 
 		//get size
 		$size_a = getimagesize($full_path);

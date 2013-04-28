@@ -336,6 +336,11 @@ class SimpleBlogCommon{
 		$posts[$post_index]['title'] = $title;
 		$posts[$post_index]['content'] = $content;
 		$posts[$post_index]['subtitle'] = $_POST['subtitle'];
+                if (isset($_POST['isDraft'])) {
+                    $posts[$post_index]['isDraft'] = $_POST['isDraft'];
+                } else {
+                    $posts[$post_index]['isDraft'] = 'off';
+                }
 		$posts[$post_index]['time'] = time();
 
 		//save to data file
@@ -401,6 +406,11 @@ class SimpleBlogCommon{
 		$posts[$post_index]['title'] = $title;
 		$posts[$post_index]['content'] = $content;
 		$posts[$post_index]['subtitle'] = $_POST['subtitle'];
+                if (isset($_POST['isDraft'])) {
+                    $posts[$post_index]['isDraft'] = $_POST['isDraft'];
+                } else {
+                    $posts[$post_index]['isDraft'] = 'off';
+                }
 
 		//save to data file
 		if( !gpFiles::SaveArray($post_file,'posts',$posts) ){
@@ -523,7 +533,7 @@ class SimpleBlogCommon{
 
 		includeFile('tool/editing.php');
 
-		$array += array('title'=>'','content'=>'','subtitle'=>'');
+		$array += array('title'=>'','content'=>'','subtitle'=>'', 'isDraft'=>'');
 		$array['title'] = SimpleBlogCommon::Underscores( $array['title'] );
 
 		echo '<form action="'.common::GetUrl('Special_Blog').'" method="post">';
@@ -534,7 +544,7 @@ class SimpleBlogCommon{
 			echo 'Title';
 			echo '</td>';
 			echo '<td>';
-			echo '<input type="text" name="title" size="60" value="'.$array['title'].'" />';
+			echo '<input type="text" name="title" value="'.$array['title'].'" />';
 			echo '</td>';
 			echo '</tr>';
 
@@ -543,7 +553,18 @@ class SimpleBlogCommon{
 			echo 'Sub-Title';
 			echo '</td>';
 			echo '<td>';
-			echo '<input type="text" name="subtitle" size="60" value="'.$array['subtitle'].'" />';
+			echo '<input type="text" name="subtitle" value="'.$array['subtitle'].'" />';
+			echo '</td>';
+			echo '</tr>';
+                        
+		echo '<tr>';
+			echo '<td>';
+			echo 'Draft';
+			echo '</td>';
+			echo '<td>';
+			echo '<input type="checkbox" name="isDraft"';
+                        if ($array['isDraft'] == 'on') echo 'checked="true"';
+                        echo '" />';
 			echo '</td>';
 			echo '</tr>';
 

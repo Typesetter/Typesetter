@@ -8,6 +8,31 @@
  *
  */
 
+
+	/*
+	 *
+	$gp.links.browser_dialog = function(evt){
+
+		evt.preventDefault();
+
+		var $window = $(window);
+		var windowFeatures =    'height=400'+
+						',width=800'+
+						',toolbar=0'+
+						',scrollbars=0'+
+						',status=0'+
+						',resizable=1'+
+						',location=0'+
+						',menuBar=0'+
+						',left='+ Math.round( ($window.width()-800)/2 )+
+						',top='+ Math.round( ($window.height()-400)/2 )
+						;
+
+		window.open(this.href, 'select_images',windowFeatures).focus();
+	};
+	 */
+
+
 	gp_editor = {
 		checkDirty:function(){
 			return false;

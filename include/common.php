@@ -2623,6 +2623,28 @@ class common{
 	}
 
 
+
+	/**
+	 * Get an image's thumbnail path
+	 *
+	 */
+	static function ThumbnailPath($img){
+
+		//already thumbnail path
+		if( strpos($img,'/data/_uploaded/image/thumbnails') !== false ){
+			return $img;
+		}
+
+		$dir_part = '/data/_uploaded/';
+		$pos = strpos($img,$dir_part);
+		if( $pos === false ){
+			return $img;
+		}
+
+		return substr_replace($img,'/data/_uploaded/image/thumbnails/',$pos, strlen($dir_part) );
+	}
+
+
 	/**
 	 * Generate a checksum for the $array
 	 *

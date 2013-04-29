@@ -157,23 +157,25 @@ class admin_addons extends admin_addon_install{
 		global $dataDir;
 
 		$dir = $dataDir.$relative;
-
-		$files = scandir($dir);
 		$folders = array();
-		foreach($files as $file){
-			if( $file == '.' || $file == '..' ){
-				continue;
+
+		if( file_exists($dir) ){
+			$files = scandir($dir);
+			foreach($files as $file){
+				if( $file == '.' || $file == '..' ){
+					continue;
+				}
+				$full_path = $dir.'/'.$file;
+				if( !is_dir($full_path) ){
+					continue;
+				}
+				$mtime = filemtime($full_path);
+				$diff = time() - $mtime;
+				if( $diff < 3600 ){
+					continue;
+				}
+				$folders[$relative.'/'.$file] = $full_path;
 			}
-			$full_path = $dir.'/'.$file;
-			if( !is_dir($full_path) ){
-				continue;
-			}
-			$mtime = filemtime($full_path);
-			$diff = time() - $mtime;
-			if( $diff < 3600 ){
-				continue;
-			}
-			$folders[$relative.'/'.$file] = $full_path;
 		}
 		return $folders;
 	}

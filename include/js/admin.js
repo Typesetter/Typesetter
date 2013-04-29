@@ -704,7 +704,7 @@ $(function(){
 	 *
 	 */
 	function EditOutlines(){
-		var timeout = false,overlay,lnk_span=false,edit_area,highlight_box;
+		var timeout = false, overlay, lnk_span=false, edit_area, highlight_box, fixed_pos = false;
 
 		overlay = $gp.div('gp_edit_overlay');
 		overlay.click(function(evt){
@@ -778,7 +778,7 @@ $(function(){
 		 *
 		 */
 		function SpanPosition(){
-			if( !lnk_span ){
+			if( !lnk_span || fixed_pos ){
 				return;
 			}
 
@@ -865,14 +865,17 @@ $(function(){
 				.removeClass('ExtraEditLink')
 				;
 
+			fixed_pos = false;
 			var close_text = '<a class="gp_overlay_expand"></a>';
 			lnk_span
+				.css({'left':'auto','top':0,'right':0,'position':'absolute'})
 				.html(close_text)
 				.unbind('mouseenter touchstart')
 				.one('mouseenter touchstart',function(){
 					if( edit_area.hasClass('gp_no_overlay') ){
 						return;
 					}
+
 
 					lnk_span
 						.html(close_text)
@@ -897,6 +900,9 @@ $(function(){
 			if( evt.ctrlKey ) return;
 			evt.preventDefault();
 			if( lnk_span ) lnk_span.mouseenter();
+			var $win = $(window);
+			lnk_span.css({'top':(evt.pageY-$win.scrollTop()),'left':(evt.pageX-$win.scrollLeft()),'right':'auto','position':'fixed'});
+			fixed_pos = true;
 		});
 
 	} /* end EditOutlines */

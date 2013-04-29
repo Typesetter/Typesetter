@@ -888,6 +888,17 @@ $(function(){
 
 		}
 
+
+		/**
+		 * Right Click to show menu
+		 *
+		 */
+		$(document).on('contextmenu','.editable_area',function(evt){
+			if( evt.ctrlKey ) return;
+			evt.preventDefault();
+			if( lnk_span ) lnk_span.mouseenter();
+		});
+
 	} /* end EditOutlines */
 
 

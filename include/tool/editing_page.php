@@ -931,9 +931,9 @@ class editing_page extends display{
 					echo common::Link($this->title,$langmessage['move_up'],'cmd=move_up&section='.$section_key,' data-cmd="creq"','move_up'.$section_key);
 				}
 
-				echo common::Link($this->title,$langmessage['options'],'cmd=section_options&section='.$section_key,array('data-cmd'=>'gpabox'));
+				echo common::Link($this->title,$langmessage['options'].'...','cmd=section_options&section='.$section_key,array('data-cmd'=>'gpabox'));
 
-				echo common::Link($this->title,$langmessage['New Section'],'cmd=new_section&section='.$section_key,array('data-cmd'=>'gpabox'));
+				echo common::Link($this->title,$langmessage['New Section'].'...','cmd=new_section&section='.$section_key,array('data-cmd'=>'gpabox'));
 
 				$q = 'cmd=add_section&copy=copy&section='.$section_key.'&last_mod='.rawurlencode($this->fileModTime);
 				echo common::Link($this->title,$langmessage['Copy'],$q,' data-cmd="creq"');

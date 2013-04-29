@@ -938,8 +938,6 @@ table.tablesorter th.gp_header_desc:before{
 
 
 
-/* new overlay */
-
 #gp_edit_overlay{
 	position:absolute;
 	height:0;
@@ -969,7 +967,6 @@ table.tablesorter th.gp_header_desc:before{
 	border-image:url("../imgs/editing.gif") 1 repeat;
 }
 
-/* Edit Links */
 #gp_edit_overlay > span{
 	position:absolute;
 	top:0;
@@ -978,98 +975,60 @@ table.tablesorter th.gp_header_desc:before{
 	margin-right:-13px;
 	z-index:8999;
 	display:block;
-	padding:3px;
-background: #ccc;
-background: -moz-linear-gradient(top, rgba(238,238,238,1) 0%, rgba(204,204,204,1) 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(238,238,238,1)), color-stop(100%,rgba(204,204,204,1)));
-background: -webkit-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%);
-background: -o-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%);
-background: -ms-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%);
-background: linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%);
-	border:1px solid #aaa;
-
-	min-height:17px;
-	min-width:19px;
+	background: #ededed;
+	background: #ededed -moz-linear-gradient(top, #fafafa 5px, #ededed 25px);
+	background: #ededed -webkit-linear-gradient(top, #fafafa 5px,#ededed 25px);
+	background: #ededed -o-linear-gradient(top, #fafafa 5px,#ededed 25px);
+	background: #ededed -ms-linear-gradient(top, #fafafa 5px,#ededed 25px);
+	background: #ededed linear-gradient(top, #fafafa 5px,#ededed 25px);
 	border-radius:3px;
 	-webkit-box-shadow:0 0 3px rgba(0,0,0,0.6);
 	-moz-box-shadow:0 0 3px rgba(0,0,0,0.6);
 	box-shadow:0 0 3px rgba(0,0,0,0.6);
+	overflow:hidden;
+	padding:1px;
 	}
-
 #gp_edit_overlay span a{
 	position:relative;
 	display:block !important;
-	background: #7d7e7d;
-	background: -moz-linear-gradient(top, #7d7e7d 0%, #0e0e0e 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7d7e7d), color-stop(100%,#0e0e0e));
-	background: -webkit-linear-gradient(top, #7d7e7d 0%,#0e0e0e 100%);
-	background: -o-linear-gradient(top, #7d7e7d 0%,#0e0e0e 100%);
-	background: -ms-linear-gradient(top, #7d7e7d 0%,#0e0e0e 100%);
-	background: linear-gradient(top, #7d7e7d 0%,#0e0e0e 100%);
-	border:1px solid #222;
-	padding:2px 3px;
-	margin:0 23px 5px 0;
-	line-height: 130% !important;
-	font-size:12px !important;
-	font-weight:normal !important;
-	letter-spacing:1px !important;
-	text-shadow:none !important;
-	color:#fff!important;
-	text-decoration:none !important;
-	text-align:left;
-	white-space:nowrap;
-	border-radius:3px;
-	}
-
-#gp_edit_overlay a.gp_overlay_close,
-#gp_edit_overlay a.gp_overlay_expand{
-	position:absolute;
-	top:3px;
-	right:3px;
-	margin:0;
-	width:16px !important;
-	padding:1px !important;
-	z-index:9001;
-	border-radius:3px;
-	background: url('../imgs/admin_icons.png') no-repeat -7px -232px;
+	color:#444 !important;
+	padding:2px 17px;
 	border:1px solid transparent;
-	height:14px !important;
-}
-
-#gp_edit_overlay a.gp_overlay_close{
-	background: #2d2d2d url('../imgs/admin_icons.png') no-repeat -7px -391px;
-	height:16px !important;
-	border:1px solid #2d2d2d;
+	margin:0;
+	font-size:12px !important;
+	cursor:pointer;
 	}
-
 
 #gp_edit_overlay span a:hover{
-background: #ffffff;
-background: -moz-linear-gradient(top, #ffffff 0%, #e5e5e5 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5));
-background: -webkit-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
-background: -o-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
-background: -ms-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
-background: linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
-border:1px solid #ccc;
-color:#2d2d2d!important;
-	}
-#gp_edit_overlay span a.gp_overlay_expand:hover,
-#gp_edit_overlay span a.gp_overlay_close:hover{
+	border:1px solid #d1d1d1;
+	background:#e5e5e5;
+	border-radius:2px;
+	box-shadow: inset 0 0 2px rgba(255,255,255,1);
 
-	background: #ff0000 url('../imgs/admin_icons.png') no-repeat -7px -391px;
-	border:1px solid #f10000;
-}
-#gp_edit_overlay span a.gpconfirm:hover{
-	background: #ff0000;
-	background: -moz-linear-gradient(top, #ff0000 0%, #aa0000 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff0000), color-stop(100%,#aa0000));
-	background: -webkit-linear-gradient(top, #ff0000 0%,#aa0000 100%);
-	background: -o-linear-gradient(top, #ff0000 0%,#aa0000 100%);
-	background: -ms-linear-gradient(top, #ff0000 0%,#aa0000 100%);
-	background: linear-gradient(top, #ff0000 0%,#aa0000 100%);
-	border:1px solid #f10000;
-	color:#fff!important;
+	background: #ddd;
+	background: #ddd -moz-linear-gradient(top, #f5f5f5 5px, #ddd 25px);
+	background: #ddd -webkit-linear-gradient(top, #f5f5f5 5px,#ddd 25px);
+	background: #ddd -o-linear-gradient(top, #f5f5f5 5px,#ddd 25px);
+	background: #ddd -ms-linear-gradient(top, #f5f5f5 5px,#ddd 25px);
+	background: #ddd linear-gradient(top, #f5f5f5 5px,#ddd 25px);
+	}
+
+#gp_edit_overlay span a.gp_overlay_close,
+#gp_edit_overlay span a.gp_overlay_expand{
+	padding:1px !important;
+	background: url('../imgs/admin_icons.png') no-repeat -6px -230px;
+	height:18px;
+	width:18px;
+	}
+
+#gp_edit_overlay span a.gp_overlay_close{
+	float:right;
+	z-index:9001;
+	background: url('../imgs/cancel.png') no-repeat 50% 50%;
+	}
+
+#gp_edit_overlay span a:nth-child(2){
+	margin-right:24px;
 	}
 
 /* adminlinks */

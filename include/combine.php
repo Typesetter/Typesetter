@@ -218,59 +218,72 @@ class gp_combine{
 
 				'bootstrap-alert'			=> array(
 												'file' => 'thirdparty/Bootstrap/js/bootstrap-alert.js',
-												'package' => 'bootstrap' ),
+												'package' => 'bootstrap',
+												'requires'=> array('jquery') ),
 
 				'bootstrap-button'			=> array(
 												'file' => 'thirdparty/Bootstrap/js/bootstrap-button.js',
-												'package' => 'bootstrap' ),
+												'package' => 'bootstrap',
+												'requires'=> array('jquery') ),
 
 				'bootstrap-carousel'		=> array(
 												'file' => 'thirdparty/Bootstrap/js/bootstrap-carousel.js',
-												'package' => 'bootstrap' ),
+												'package' => 'bootstrap',
+												'requires'=> array('jquery') ),
 
 				'bootstrap-collapse'		=> array(
 												'file' => 'thirdparty/Bootstrap/js/bootstrap-collapse.js',
-												'package' => 'bootstrap' ),
+												'package' => 'bootstrap',
+												'requires'=> array('jquery') ),
 
 				'bootstrap-dropdown'		=> array(
 												'file' => 'thirdparty/Bootstrap/js/bootstrap-dropdown.js',
-												'package' => 'bootstrap' ),
+												'package' => 'bootstrap',
+												'requires'=> array('jquery') ),
 
 				'bootstrap-modal'			=> array(
 												'file' => 'thirdparty/Bootstrap/js/bootstrap-modal.js',
-												'package' => 'bootstrap' ),
+												'package' => 'bootstrap',
+												'requires'=> array('jquery') ),
 
 				'bootstrap-popover'			=> array(
 												'file' => 'thirdparty/Bootstrap/js/bootstrap-popover.js',
-												'package' => 'bootstrap' ),
+												'package' => 'bootstrap',
+												'requires'=> array('jquery') ),
 
 				'bootstrap-scrollspy'		=> array(
 												'file' => 'thirdparty/Bootstrap/js/bootstrap-scrollspy.js',
-												'package' => 'bootstrap' ),
+												'package' => 'bootstrap',
+												'requires'=> array('jquery') ),
 
 				'bootstrap-tab'				=> array(
 												'file' => 'thirdparty/Bootstrap/js/bootstrap-tab.js',
-												'package' => 'bootstrap' ),
+												'package' => 'bootstrap',
+												'requires'=> array('jquery') ),
 
 				'bootstrap-tooltip'			=> array(
 												'file' => 'thirdparty/Bootstrap/js/bootstrap-tooltip.js',
-												'package' => 'bootstrap' ),
+												'package' => 'bootstrap',
+												'requires'=> array('jquery') ),
 
 				'bootstrap-transition'		=> array(
 												'file' => 'thirdparty/Bootstrap/js/bootstrap-transition.js',
-												'package' => 'bootstrap' ),
+												'package' => 'bootstrap',
+												'requires'=> array('jquery') ),
 
 				'bootstrap-typeahead'		=> array(
 												'file' => 'thirdparty/Bootstrap/js/bootstrap-typeahead.js',
-												'package' => 'bootstrap' ),
+												'package' => 'bootstrap',
+												'requires'=> array('jquery') ),
 
 				'bootstrap-js'				=> array(
 												'file' => 'thirdparty/Bootstrap/js/bootstrap.min.js',
-												'package' => 'bootstrap' ),
+												'package' => 'bootstrap',
+												'requires'=> array('jquery') ),
 
 				'bootstrap-all'				=> array(
-												'requires'=> array('bootstrap-responsive-css','bootstrap-js'),
-												'package' => 'bootstrap' ),
+												'package' => 'bootstrap',
+												'requires'=> array('bootstrap-responsive-css','bootstrap-js','jquery') ),
 
 		);
 

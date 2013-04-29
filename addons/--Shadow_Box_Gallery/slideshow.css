@@ -1,0 +1,133 @@
+/**
+ * Provider images
+ *
+ */
+.slideshowb_wrap{
+	position:relative;
+	border:1px solid #ddd;
+	border-radius:3px;
+	overflow:hidden;
+	width:85%;
+	margin:20px auto;
+	background:#f7f7f7;
+	background:linear-gradient(to bottom, #fcfcfc, #f5f5f5 30px);
+	box-shadow: -5px -5px 5px -5px #fff inset, 5px 5px 5px -5px #ddd inset;
+	padding:30px 0;
+	}
+.slideshowb_images{
+	position:relative;
+	height:400px;
+	overflow:hidden;
+	white-space:nowrap;
+	display:block;
+	padding:2px;
+	}
+.slideshowb_images a{
+	position:absolute;
+	display:block;
+	width:100%;
+	text-align:center;
+	white-space:nowrap;
+	overflow:hidden;
+	cursor:pointer;
+	/* left:100%; */
+
+	/* background: url(../imgs/loaderA64.gif) 50% 50% no-repeat; */
+	background: url(../../../../include/imgs/loader64.gif) 50% 50% no-repeat;
+	height:400px;
+	line-height:400px;
+	z-index:0;
+	outline:0 none;
+	}
+.slideshowb_images a.loaded{
+	background:none;
+	}
+/*
+.slideshowb_images a.current{
+	z-index:10;
+	}
+	*/
+.slideshowb_images a.first{
+	left:0;
+	}
+.slideshowb_images img{
+	max-height:400px;
+	max-width:90%;
+	}
+
+.slideshowb_icons{
+	position:absolute;
+	top:0;
+	left:-45px;
+	width: 80px;
+	display:inline-block;
+	overflow:hidden;
+	line-height:100%;
+	z-index:100;
+	min-height:500px;
+	transition:left .5s linear, background .5s linear;
+	}
+
+.gp_editing .slideshowb_icons,
+.slideshowb_icons:hover{
+	left:0;
+	background:#fff;
+	background:rgba(255,255,255,0.8);
+	}
+
+.slideshowb_icons ul{
+	position:relative;
+	padding:5px 0 0 0;
+	list-style:none;
+	margin:0;
+	}
+.slideshowb_icons li{
+	margin:0;
+	padding:0;
+	}
+.slideshowb_icons a{
+	display:block !important;
+	cursor:pointer;
+	outline:0 none;
+	padding:5px 10px;
+	}
+.slideshowb_icons img{
+	margin:0;
+	overflow:hidden;
+	display:inline-block;
+	border-radius:30px;
+	box-shadow:0 0 1px #aaa;
+	height:60px;
+	width:60px;
+	}
+.slideshowb_icons .caption{
+	display:none;
+	}
+
+
+.slideshowb_caption{
+	position:absolute;
+	bottom:0;
+	left:0;
+	right:0;
+	line-height:30px;
+	height:30px;
+	text-align:center;
+	font-size:12px;
+	text-shadow:1px 1px 0 #fff;
+	color:#444;
+	padding:0 90px;
+
+	}
+.slideshowb_icons span{
+	position:absolute;
+	top:5px;
+	height:68px;
+	width:68px;
+	left:5px;
+	border:1px solid rgba(0,0,0,0.15);
+	border-radius:34px;
+	background:#fff;
+	background:rgba(255,255,255,0.9);
+	}
+

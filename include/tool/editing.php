@@ -822,11 +822,11 @@ class gp_edit{
 		// Hack: SaveSection used $page->file_sections
 		$page->file_sections[$section_num] = $existing_section;
 		$save_this = gpPlugin::Filter( 'SaveSection', array( $save_this, $section_num, $type) );
+		$existing_section = $page->file_sections[$section_num];
 
 		if( !$save_this ){
 			$page->file_sections[$section_num] = $existing_section = $section_before;
 		}
-
 
 		return $save_this;
 	}

@@ -64,6 +64,8 @@
 		updateElement:function(){
 		},
 		updateCaption:function(current_image,caption){
+		},
+		removeImage:function(image){
 		}
 	};
 
@@ -185,6 +187,7 @@
 			}
 
 			$gp.links.gp_gallery_rm = function(){
+				gp_editor.removeImage(current_image);
 				$(current_image).remove();
 				edit_links.hide(); //so that a new mouseover will happen
 			}

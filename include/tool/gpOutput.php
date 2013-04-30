@@ -2036,6 +2036,12 @@ class gpOutput{
 	static function CombineFiles($files,$type,$combine){
 		global $page;
 
+		//only need file paths
+		foreach($files as $key => $script){
+			if( is_array($script) ){
+				$files[$key] = $script['file'];
+			}
+		}
 		$files = array_unique($files);
 		$files = array_filter($files);//remove empty elements
 

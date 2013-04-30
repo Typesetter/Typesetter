@@ -9,17 +9,17 @@ class gp_combine{
 
 				//gpeasy
 				'gp-main'	=> array(
-									'file' => 'js/main.js',
+									'file' => '/include/js/main.js',
 									'requires' => array('jquery') //'ui-core'
 									),
 
 				'gp-admin'	=> array(
-									'file' => 'js/admin.js',
+									'file' => '/include/js/admin.js',
 									'requires' => array('jquery','gp-main')
 									),
 
 				'gp-admin-css'=> array(
-									'file' => 'css/admin.css',
+									'file' => '/include/css/admin.css',
 									'type' => 'css',
 									'requires' => 'ui-theme'
 									),
@@ -27,257 +27,257 @@ class gp_combine{
 
 
 				'gp-additional'=> array(
-									'file' => 'css/additional.css',
+									'file' => '/include/css/additional.css',
 									'type' => 'css'
 									),
 
 
 				//colorbox
 				'colorbox'	=> array(
-									'file' => 'thirdparty/colorbox139/colorbox/jquery.colorbox.js',
+									'file' => '/include/thirdparty/colorbox139/colorbox/jquery.colorbox.js',
 									'requires' => array('gp-main','colorbox-css')
 									),
 
 
 				'colorbox-css' => array(
-									'file' => 'thirdparty/colorbox139/$config[colorbox_style]/colorbox.css',
+									'file' => '/include/thirdparty/colorbox139/$config[colorbox_style]/colorbox.css',
 									'type' => 'css'
 									),
 
 
 				//jquery
 				'jquery'	=> array(
-									'file' => 'thirdparty/js/jquery.js',
+									'file' => '/include/thirdparty/js/jquery.js',
 									'package' => 'jquery'
 									),
 
 
 				//jquery ui core
 				'ui-theme'	=> array(
-									'file' => 'thirdparty/jquery_ui/jquery-ui.custom.css',
+									'file' => '/include/thirdparty/jquery_ui/jquery-ui.custom.css',
 									'type' => 'css',
 									'package' => 'jquery_ui'
 									),
 
 				'ui-core'	=> array(
-									'file' => 'thirdparty/jquery_ui/jquery.ui.core.min.js',
+									'file' => '/include/thirdparty/jquery_ui/jquery.ui.core.min.js',
 									'requires' => array('jquery'),
 									'package' => 'jquery_ui'
 									),
 
 				'mouse'		=> array(
-									'file' => 'thirdparty/jquery_ui/jquery.ui.mouse.min.js',
+									'file' => '/include/thirdparty/jquery_ui/jquery.ui.mouse.min.js',
 									'requires' => array('ui-core','widget'),
 									'package' => 'jquery_ui'
 									),
 
 				'position'	=> array(
-									'file' => 'thirdparty/jquery_ui/jquery.ui.position.min.js',
+									'file' => '/include/thirdparty/jquery_ui/jquery.ui.position.min.js',
 									'package' => 'jquery_ui'
 									),
 
-				'widget'	=> array(	'file' => 'thirdparty/jquery_ui/jquery.ui.widget.min.js',
+				'widget'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.widget.min.js',
 									'package' => 'jquery_ui'),
 
 
 
 				//jquery ui interactions
-				'draggable'	=> array(	'file' => 'thirdparty/jquery_ui/jquery.ui.draggable.min.js'
+				'draggable'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.draggable.min.js'
 										,'requires' => array('jquery', 'ui-core', 'widget', 'mouse')
 										,'package' => 'jquery_ui'),
 
-				'droppable'	=> array(	'file' => 'thirdparty/jquery_ui/jquery.ui.droppable.min.js'
+				'droppable'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.droppable.min.js'
 										,'requires' => array('jquery', 'ui-core', 'widget', 'mouse', 'draggable')
 										,'package' => 'jquery_ui'),
 
-				'resizable'	=> array(	'file' => 'thirdparty/jquery_ui/jquery.ui.resizable.min.js'
+				'resizable'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.resizable.min.js'
 										,'requires' => array('jquery', 'ui-core', 'widget', 'mouse', 'ui-theme')
 										,'package' => 'jquery_ui'),
 
-				'selectable'=> array(	'file' => 'thirdparty/jquery_ui/jquery.ui.selectable.min.js'
+				'selectable'=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.selectable.min.js'
 										,'requires' => array('jquery', 'ui-core', 'widget', 'mouse', 'ui-theme')
 										,'package' => 'jquery_ui'),
 
-				'sortable'	=> array(	'file' => 'thirdparty/jquery_ui/jquery.ui.sortable.min.js'
+				'sortable'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.sortable.min.js'
 										,'requires' => array('jquery', 'ui-core', 'widget', 'mouse')
 										,'package' => 'jquery_ui'),
 
 				//jquery ui widgets
-				'accordion'	=> array(	'file' => 'thirdparty/jquery_ui/jquery.ui.accordion.min.js'
+				'accordion'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.accordion.min.js'
 										,'requires' => array('jquery', 'ui-core', 'widget', 'ui-theme')
 										,'package' => 'jquery_ui'),
 
-				'autocomplete'=> array(	'file' => 'thirdparty/jquery_ui/jquery.ui.autocomplete.min.js'
+				'autocomplete'=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.autocomplete.min.js'
 											,'requires' => array('jquery', 'ui-core', 'widget', 'position', 'menu', 'ui-theme')
 											,'package' => 'jquery_ui'),
 
-				'button'	=> array(	'file' => 'thirdparty/jquery_ui/jquery.ui.button.min.js'
+				'button'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.button.min.js'
 									,'requires' => array('jquery', 'ui-core', 'widget', 'ui-theme')
 									,'package' => 'jquery_ui'),
 
-				'datepicker'=> array(	'file' => 'thirdparty/jquery_ui/jquery.ui.datepicker.min.js'
+				'datepicker'=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.datepicker.min.js'
 										,'requires' => array('jquery', 'ui-core', 'ui-theme')
 										,'package' => 'jquery_ui'),
 
-				'dialog'	=> array(	'file' => 'thirdparty/jquery_ui/jquery.ui.dialog.min.js'
+				'dialog'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.dialog.min.js'
 									,'requires' => array('jquery', 'ui-core', 'widget', 'button', 'position', 'ui-theme')
 									,'package' => 'jquery_ui'),
 
 
-				'menu'	=> array(	'file' => 'thirdparty/jquery_ui/jquery.ui.menu.min.js'
+				'menu'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.menu.min.js'
 									,'requires' => array('jquery', 'ui-core', 'widget', 'position', 'ui-theme')
 									,'package' => 'jquery_ui'),
 
 
-				'progressbar'	=> array(	'file' => 'thirdparty/jquery_ui/jquery.ui.progressbar.min.js'
+				'progressbar'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.progressbar.min.js'
 											,'requires' => array('jquery', 'ui-core', 'widget', 'ui-theme')
 											,'package' => 'jquery_ui'),
 
-				'slider'	=> array(	'file' => 'thirdparty/jquery_ui/jquery.ui.slider.min.js'
+				'slider'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.slider.min.js'
 									,'requires' => array('jquery', 'ui-core', 'widget', 'mouse', 'ui-theme')
 									,'package' => 'jquery_ui'),
 
-				'tabs'	=> array(	'file' => 'thirdparty/jquery_ui/jquery.ui.tabs.min.js'
+				'tabs'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.tabs.min.js'
 									,'requires' => array('jquery', 'ui-core', 'widget', 'ui-theme')
 									,'package' => 'jquery_ui'),
 
 
 
 				//jquery ui effects
-				'effects-core'	=> array(	'file'=>'thirdparty/jquery_ui/jquery.ui.effect.min.js'
+				'effects-core'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.effect.min.js'
 											,'requires' => array('jquery')
 											,'package' => 'jquery_ui'),
 
-				'blind'	=> array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-blind.min.js'
+				'blind'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.effect-blind.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui'
 									),
 
-				'bounce'	=> array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-bounce.min.js'
+				'bounce'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.effect-bounce.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui'),
 
-				'clip'	=> array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-clip.min.js'
+				'clip'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.effect-clip.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui'),
 
-				'drop'	=> array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-drop.min.js'
+				'drop'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.effect-drop.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui'),
 
-				'explode'	=> array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-explode.min.js'
+				'explode'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.effect-explode.min.js'
 										,'requires' => array('jquery', 'effects-core')
 										,'package' => 'jquery_ui'),
 
-				'fade'	=> array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-fade.min.js'
+				'fade'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.effect-fade.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui'),
 
-				'fold'	=> array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-fold.min.js'
+				'fold'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.effect-fold.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui'),
 
-				'highlight'	=> array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-highlight.min.js'
+				'highlight'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.effect-highlight.min.js'
 										,'requires' => array('jquery', 'effects-core')
 										,'package' => 'jquery_ui'),
 
-				'pulsate'	=> array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-pulsate.min.js'
+				'pulsate'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.effect-pulsate.min.js'
 										,'requires' => array('jquery', 'effects-core')
 										,'package' => 'jquery_ui'),
 
-				'scale'	=> array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-scale.min.js'
+				'scale'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.effect-scale.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui'),
 
-				'shake'	=> array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-shake.min.js'
+				'shake'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.effect-shake.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui'),
 
-				'slide'	=> array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-slide.min.js'
+				'slide'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.effect-slide.min.js'
 									,'requires' => array('jquery', 'effects-core')
 									,'package' => 'jquery_ui'),
 
-				'transfer'	=> array(	'file'=> 'thirdparty/jquery_ui/jquery.ui.effect-transfer.min.js'
+				'transfer'	=> array(	'file' => '/include/thirdparty/jquery_ui/jquery.ui.effect-transfer.min.js'
 										,'requires' => array('jquery', 'effects-core')
 										,'package' => 'jquery_ui'),
 
 
 				//html5shiv
-				'html5shiv' => array(	'file'=>'thirdparty/js/shiv/html5shiv.js' ),
-				'printshiv' => array(	'file'=>'thirdparty/js/shiv/html5shiv-printshiv.js' ),
+				'html5shiv' => array(	'file' => '/include/thirdparty/js/shiv/html5shiv.js' ),
+				'printshiv' => array(	'file' => '/include/thirdparty/js/shiv/html5shiv-printshiv.js' ),
 
 
 
 				//bootstrap
 				'bootstrap-css'				=>	array(
-												'file'=> 'thirdparty/Bootstrap/css/bootstrap.min.css'),
+												'file' => '/include/thirdparty/Bootstrap/css/bootstrap.min.css'),
 
 				'bootstrap-responsive-css'	=>	array(
-												'file'=> 'thirdparty/Bootstrap/css/bootstrap-responsive.min.css',
+												'file' => '/include/thirdparty/Bootstrap/css/bootstrap-responsive.min.css',
 												'requires'=> array('bootstrap-css') ),
 
 				'bootstrap-alert'			=> array(
-												'file' => 'thirdparty/Bootstrap/js/bootstrap-alert.js',
+												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-alert.js',
 												'package' => 'bootstrap',
 												'requires'=> array('jquery') ),
 
 				'bootstrap-button'			=> array(
-												'file' => 'thirdparty/Bootstrap/js/bootstrap-button.js',
+												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-button.js',
 												'package' => 'bootstrap',
 												'requires'=> array('jquery') ),
 
 				'bootstrap-carousel'		=> array(
-												'file' => 'thirdparty/Bootstrap/js/bootstrap-carousel.js',
+												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-carousel.js',
 												'package' => 'bootstrap',
 												'requires'=> array('jquery') ),
 
 				'bootstrap-collapse'		=> array(
-												'file' => 'thirdparty/Bootstrap/js/bootstrap-collapse.js',
+												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-collapse.js',
 												'package' => 'bootstrap',
 												'requires'=> array('jquery') ),
 
 				'bootstrap-dropdown'		=> array(
-												'file' => 'thirdparty/Bootstrap/js/bootstrap-dropdown.js',
+												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-dropdown.js',
 												'package' => 'bootstrap',
 												'requires'=> array('jquery') ),
 
 				'bootstrap-modal'			=> array(
-												'file' => 'thirdparty/Bootstrap/js/bootstrap-modal.js',
+												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-modal.js',
 												'package' => 'bootstrap',
 												'requires'=> array('jquery') ),
 
 				'bootstrap-popover'			=> array(
-												'file' => 'thirdparty/Bootstrap/js/bootstrap-popover.js',
+												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-popover.js',
 												'package' => 'bootstrap',
 												'requires'=> array('jquery') ),
 
 				'bootstrap-scrollspy'		=> array(
-												'file' => 'thirdparty/Bootstrap/js/bootstrap-scrollspy.js',
+												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-scrollspy.js',
 												'package' => 'bootstrap',
 												'requires'=> array('jquery') ),
 
 				'bootstrap-tab'				=> array(
-												'file' => 'thirdparty/Bootstrap/js/bootstrap-tab.js',
+												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-tab.js',
 												'package' => 'bootstrap',
 												'requires'=> array('jquery') ),
 
 				'bootstrap-tooltip'			=> array(
-												'file' => 'thirdparty/Bootstrap/js/bootstrap-tooltip.js',
+												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-tooltip.js',
 												'package' => 'bootstrap',
 												'requires'=> array('jquery') ),
 
 				'bootstrap-transition'		=> array(
-												'file' => 'thirdparty/Bootstrap/js/bootstrap-transition.js',
+												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-transition.js',
 												'package' => 'bootstrap',
 												'requires'=> array('jquery') ),
 
 				'bootstrap-typeahead'		=> array(
-												'file' => 'thirdparty/Bootstrap/js/bootstrap-typeahead.js',
+												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-typeahead.js',
 												'package' => 'bootstrap',
 												'requires'=> array('jquery') ),
 
 				'bootstrap-js'				=> array(
-												'file' => 'thirdparty/Bootstrap/js/bootstrap.min.js',
+												'file' => '/include/thirdparty/Bootstrap/js/bootstrap.min.js',
 												'package' => 'bootstrap',
 												'requires'=> array('jquery') ),
 
@@ -540,7 +540,7 @@ class gp_combine{
 			$components = array_unique($components);
 		}
 
-		self::$scripts['colorbox-css']['file'] = 'thirdparty/colorbox139/'.$config['colorbox_style'].'/colorbox.css';
+		self::$scripts['colorbox-css']['file'] = '/include/thirdparty/colorbox139/'.$config['colorbox_style'].'/colorbox.css';
 
 
 		$all_scripts = array();
@@ -566,6 +566,7 @@ class gp_combine{
 
 		$all_scripts = array_filter($all_scripts);
 
+
 		//return an organized array for the root call
 		$return = array('js'=>array(),'css'=>array() );
 		foreach($all_scripts as $key => $script){
@@ -575,7 +576,7 @@ class gp_combine{
 			if( empty($script['type']) ){
 				$script['type'] = pathinfo($script['file'], PATHINFO_EXTENSION);
 			}
-			$return[$script['type']][$key] = '/include/'.$script['file'];
+			$return[$script['type']][$key] = $script;
 		}
 
 		return $return;

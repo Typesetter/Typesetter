@@ -1,7 +1,7 @@
 <?php
 
 global $page;
-$path = $page->theme_dir.'/../drop_down_menu.php';
+$path = $page->theme_dir.'/drop_down_menu.php';
 include_once($path);
 
 

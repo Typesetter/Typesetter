@@ -993,7 +993,7 @@ table.tablesorter th.gp_header_desc:before{
 	}
 #gp_edit_overlay span a{
 	position:relative;
-	display:block !important;
+	display:none !important;
 	color:#444 !important;
 	padding:2px 17px;
 	border:1px solid transparent;
@@ -1015,16 +1015,18 @@ table.tablesorter th.gp_header_desc:before{
 	background: #ddd -ms-linear-gradient(top, #f5f5f5 5px,#ddd 25px);
 	background: #ddd linear-gradient(top, #f5f5f5 5px,#ddd 25px);
 	}
+#gp_edit_overlay span.gp_hover a{
+	display:block !important;
+	}
 
-#gp_edit_overlay span a.gp_overlay_close,
 #gp_edit_overlay span a.gp_overlay_expand{
+	display:block !important;
 	padding:1px !important;
 	background: url('../imgs/admin_icons.png') no-repeat -6px -230px;
 	height:18px;
 	width:18px;
 	}
-
-#gp_edit_overlay span a.gp_overlay_close{
+#gp_edit_overlay span.gp_hover a.gp_overlay_expand{
 	float:right;
 	z-index:9001;
 	background: url('../imgs/cancel.png') no-repeat 50% 50%;

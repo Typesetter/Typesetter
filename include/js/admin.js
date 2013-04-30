@@ -806,16 +806,11 @@ $(function(){
 			edit_area = false;
 
 			//hide links
-			overlay.find('span').stop(true,true,true).hide(500);
+			overlay.find('span').stop(true,true).hide(500);
 
 			//hide the box
 			var box = overlay.find('div');
-			box	.stop(true)
-				.animate({'width':0,'height':0},{
-					complete:function(){
-						box.hide();
-					}
-				});
+			box.stop(true,true).fadeOut();
 		}
 
 
@@ -853,10 +848,10 @@ $(function(){
 				highlight_box = $('<div>');
 				overlay.html(highlight_box).append(lnk_span);
 			}else{
-				lnk_span.stop(true,true,true).show();
+				lnk_span.stop(true,true).show().removeClass('gp_hover');
 			}
 
-			highlight_box.stop(true,true,true).css({'height':0,'width':0});
+			highlight_box.stop(true,true).hide().css({'height':(loc.h+5),'width':(loc.w+4)});
 
 			SpanPosition();
 
@@ -866,29 +861,33 @@ $(function(){
 				;
 
 			fixed_pos = false;
-			var close_text = '<a class="gp_overlay_expand"></a>';
 			lnk_span
 				.css({'left':'auto','top':0,'right':0,'position':'absolute'})
-				.html(close_text)
+				.html('<a class="gp_overlay_expand"></a>')
+				.append(edit_links)
 				.unbind('mouseenter touchstart')
 				.one('mouseenter touchstart',function(){
 					if( edit_area.hasClass('gp_no_overlay') ){
 						return;
 					}
-
-
-					lnk_span
-						.html(close_text)
-						.stop(true,true,true)
-						.show()
-						.append(edit_links)
-						.find('.gp_overlay_expand').attr('class','gp_overlay_close')
-						;
-
-					//show the overlay
-					highlight_box.stop(true,true,true).show().delay(200).animate({'width':(loc.w+4),'height':(loc.h+5)});
+					ShowMenu();
 				});
 
+		}
+
+		/**
+		 * Display the editable area options
+		 *
+		 */
+		function ShowMenu(){
+			lnk_span
+				.addClass('gp_hover')
+				.stop(true,true)
+				.show();
+				;
+
+			//show the overlay
+			highlight_box.stop(true,true).fadeIn();
 		}
 
 
@@ -896,13 +895,23 @@ $(function(){
 		 * Right Click to show menu
 		 *
 		 */
-		$(document).on('contextmenu','.editable_area',function(evt){
-			if( evt.ctrlKey ) return;
-			evt.preventDefault();
-			if( lnk_span ) lnk_span.mouseenter();
-			var $win = $(window);
-			lnk_span.css({'top':(evt.pageY-$win.scrollTop()),'left':(evt.pageX-$win.scrollLeft()),'right':'auto','position':'fixed'});
-			fixed_pos = true;
+		$(document).on('contextmenu','.editable_area, #gp_edit_overlay',function(evt){
+			if( evt.ctrlKey || evt.altKey || evt.shiftKey ) return;
+			if( lnk_span ){
+				evt.preventDefault();
+				var $win = $(window);
+
+
+				//show and position menu
+				ShowMenu();
+				var left = evt.pageX-$win.scrollLeft();
+				var diff = left + lnk_span.width() - $win.width();
+				if( diff > 0 ){
+					left -= diff;
+				}
+				lnk_span.css({'top':(evt.pageY-$win.scrollTop()),'left':left,'right':'auto','position':'fixed'});
+				fixed_pos = true;
+			}
 		});
 
 	} /* end EditOutlines */

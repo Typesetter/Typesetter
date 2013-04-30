@@ -1945,7 +1945,7 @@ class gpOutput{
 		$placeholder = '<!-- jquery_placeholder '.gp_random.' -->';
 
 		$keys_before = array_keys($scripts);
-		$combine = $config['combinejs'] && !common::loggedIn();
+		$combine = $config['combinejs'] && !common::loggedIn() && ($page->pagetype !== 'admin_display');
 
 		//just jQuery
 		if( !count($page->head_js) && count($scripts) < 2 ){

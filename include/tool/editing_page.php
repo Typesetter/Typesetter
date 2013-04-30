@@ -946,7 +946,7 @@ class editing_page extends display{
 						$title_attr .= "\n\n".$langmessage['rm_section_confirm_deleting'];
 					}
 
-					echo common::Link($this->title,$langmessage['Remove Section'],'cmd=rm_section&section='.$section_key.'&total='.count($this->file_sections), array('title'=>$title_attr,'data-cmd'=>'creq','class'=>'gpconfirm'));
+					echo common::Link($this->title,$langmessage['Remove Section'].'...','cmd=rm_section&section='.$section_key.'&total='.count($this->file_sections), array('title'=>$title_attr,'data-cmd'=>'creq','class'=>'gpconfirm'));
 				}
 				echo '</span>';
 				gpOutput::$editlinks .= ob_get_clean();

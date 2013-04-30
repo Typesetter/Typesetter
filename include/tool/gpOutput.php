@@ -146,10 +146,7 @@ class gpOutput{
 		gpOutput::TemplateSettings();
 		header('Content-Type: text/html; charset=utf-8');
 
-		$path = $page->theme_dir.'/'.$page->theme_color.'/template.php';
-		if( !file_exists($path) ){
-			$path = $page->theme_dir.'/template.php';
-		}
+		$path = $page->theme_dir.'/template.php';
 		IncludeScript($path,'require',array('page','GP_ARRANGE','GP_MENU_LINKS','GP_MENU_CLASS','GP_MENU_CLASSES','GP_MENU_ELEMENTS'));
 		self::$template_included = true;
 
@@ -165,11 +162,7 @@ class gpOutput{
 	static function TemplateSettings(){
 		global $page;
 
-		$path = $page->theme_dir.'/'.$page->theme_color.'/settings.php';
-		if( !file_exists($path) ){
-			$path = $page->theme_dir.'/settings.php';
-		}
-
+		$path = $page->theme_dir.'/settings.php';
 		IncludeScript($path,'require_if',array('page','GP_GETALLGADGETS'));
 	}
 

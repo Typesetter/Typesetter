@@ -1051,20 +1051,6 @@ class common{
 		}
 
 		return $layout_info;
-		if( !$check_existence ){
-			$layout_info['dir'] = $theme_template;
-
-		}else{
-			if( file_exists($color_template.'/template.php') ){
-				$layout_info['dir'] = $color_template;
-			}elseif( file_exists($theme_template.'/template.php') ){
-				$layout_info['dir'] = $theme_template;
-			}else{
-				return false;
-			}
-		}
-
-		return $layout_info;
 	}
 
 

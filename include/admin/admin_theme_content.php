@@ -1025,12 +1025,6 @@ class admin_theme_content extends admin_addon_install{
 		$page->theme_name = $template;
 		$page->theme_color = $color;
 		$page->theme_dir = $theme_info['full_dir'];
-
-		$color_template_dir = $theme_info['full_dir'].'/'.$color;
-		if( file_exists($color_template_dir.'/template.php') ){
-			$page->theme_dir = $color_template_dir;
-		}
-
 		$page->layout_css = false;
 		$page->theme_rel = $theme_info['rel'].'/'.$color;
 

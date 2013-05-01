@@ -27,7 +27,7 @@ class SlideshowB{
 	 */
 	static function SectionTypes($section_types, $generated_key = false ){
 
-		$section_types[self::ContentKey()] = array('label' => 'Slideshow B');
+		$section_types[self::ContentKey()] = array('label' => 'Shadow Box Gallery');
 
 		return $section_types;
 	}

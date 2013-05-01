@@ -169,14 +169,10 @@ $(function(){
 	}
 
 	function Hash( lnk ){
-		var hash = 0, i, char, href;
-
-		hash = lnk.data('hash');
+		var hash = lnk.data('hash');
 		if( hash ){
 			return hash;
 		}
-
-		href = lnk.attr('href');
 
 		do{
 			hash = Math.round(Math.random()*100);

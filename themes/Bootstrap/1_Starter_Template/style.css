@@ -2,6 +2,7 @@ body {
 	padding-top: 60px;
 }
 
+
 @media (max-width: 980px) {
 	.navbar-fixed-top{
 		position:absolute;

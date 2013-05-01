@@ -978,12 +978,12 @@ table.tablesorter th.gp_header_desc:before{
 	margin-right:-13px;
 	z-index:8999;
 	display:block;
-	background: #ededed;
-	background: #ededed -moz-linear-gradient(top, #fafafa 5px, #ededed 25px);
-	background: #ededed -webkit-linear-gradient(top, #fafafa 5px,#ededed 25px);
-	background: #ededed -o-linear-gradient(top, #fafafa 5px,#ededed 25px);
-	background: #ededed -ms-linear-gradient(top, #fafafa 5px,#ededed 25px);
-	background: #ededed linear-gradient(top, #fafafa 5px,#ededed 25px);
+	background: #f1f1f1;
+	background: #f1f1f1 -moz-linear-gradient(top, #fafafa 5px, #f1f1f1 25px);
+	background: #f1f1f1 -webkit-linear-gradient(top, #fafafa 5px, #f1f1f1 25px);
+	background: #f1f1f1 -o-linear-gradient(top, #fafafa 5px, #f1f1f1 25px);
+	background: #f1f1f1 -ms-linear-gradient(top, #fafafa 5px, #f1f1f1 25px);
+	background: #f1f1f1 linear-gradient(top, #fafafa 5px, #f1f1f1 25px);
 	border-radius:3px;
 	-webkit-box-shadow:0 0 3px rgba(0,0,0,0.6);
 	-moz-box-shadow:0 0 3px rgba(0,0,0,0.6);

@@ -94,6 +94,7 @@
 
 .gp_editing{
 	outline:1px solid #ccc !important;
+	z-index:9000;
 	}
 
 

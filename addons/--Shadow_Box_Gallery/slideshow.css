@@ -38,6 +38,7 @@
 	line-height:400px;
 	z-index:0;
 	outline:0 none;
+	vertical-align:middle;
 	}
 .slideshowb_images a.loaded{
 	background:none;
@@ -53,6 +54,7 @@
 .slideshowb_images img{
 	max-height:400px;
 	max-width:90%;
+	vertical-align:middle;
 	}
 
 .slideshowb_icons{

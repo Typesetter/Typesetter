@@ -2,6 +2,13 @@ body {
 	padding-top: 60px;
 }
 
+#gpx_content div.GPAREA{
+	clear:both;
+	}
+#gpx_content div.GPAREA[class*="span"] {
+	clear:none;
+	}
+
 
 @media (max-width: 980px) {
 	.navbar-fixed-top{

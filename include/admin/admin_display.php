@@ -286,7 +286,7 @@ class admin_display extends display{
 			$server = $_SERVER['SERVER_NAME'];
 		}
 
-		$link = common::AbsoluteLink('Admin_Main',$langmessage['login']);
+		$link = common::AbsoluteLink('Admin',$langmessage['login']);
 		$message = sprintf($langmessage['passwordremindertext'],$server,$link,$username,$newpass);
 
 		if( $gp_mailer->SendEmail($userinfo['email'], $langmessage['new_password'], $message) ){
@@ -310,7 +310,7 @@ class admin_display extends display{
 
 
 		echo '<div id="loginform">';
-		echo '<form class="loginform" action="'.common::GetUrl('Admin_Main').'" method="post">';
+		echo '<form class="loginform" action="'.common::GetUrl('Admin').'" method="post">';
 		echo '<p><b>'.$langmessage['send_password'].'</b></p>';
 		//echo '<b>'.sprintf($langmessage['forgotten_password'],'').'</b>';
 
@@ -321,7 +321,7 @@ class admin_display extends display{
 
 		echo '<input type="hidden" name="cmd" value="send_password" />';
 		echo '<input type="submit" name="aa" value="'.$langmessage['send_password'].'" class="login_submit" />';
-		echo ' &nbsp; <label>'. common::Link('Admin_Main',$langmessage['back']).'</label>';
+		echo ' &nbsp; <label>'. common::Link('Admin',$langmessage['back']).'</label>';
 
 		echo '</form>';
 		echo '</div>';
@@ -363,9 +363,9 @@ class admin_display extends display{
 
 		echo '<div id="loginform">';
 		echo '<p><b>'.$langmessage['LOGIN_REQUIRED'].'</b></p>';
-			echo '<div id="login_timeout" class="nodisplay">Log in Timeout: '.common::Link('Admin_Main','Reload to continue...').'</div>';
+			echo '<div id="login_timeout" class="nodisplay">Log in Timeout: '.common::Link('Admin','Reload to continue...').'</div>';
 
-			echo '<form action="'.common::GetUrl('Admin_Main').'" method="post" id="login_form">';
+			echo '<form action="'.common::GetUrl('Admin').'" method="post" id="login_form">';
 			echo '<input type="hidden" name="file" value="'.htmlspecialchars($_REQUEST['file']).'">';
 
 			echo '<div>';

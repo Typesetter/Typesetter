@@ -643,7 +643,7 @@ class gp_install{
 		echo common::Link('',$langmessage['View_your_web_site']);
 		echo '</li>';
 		echo '<li>';
-		echo common::Link('Admin_Main',$langmessage['Log_in_and_start_editing']);
+		echo common::Link('Admin',$langmessage['Log_in_and_start_editing']);
 		echo '</li>';
 		echo '</ul>';
 

@@ -248,7 +248,7 @@ class admin_tools{
 			//toolbar
 			echo '<div class="toolbar cf">';
 				echo '<a class="toggle_panel" data-cmd="toggle_panel"></a>';
-				echo common::Link('Admin_Main','','','class="icon_admin_home"');
+				echo common::Link('Admin','','','class="icon_admin_home"');
 				echo common::Link('special_gpsearch','','',array('class'=>'icon_admin_search','data-cmd'=>'gpabox'));
 				echo '<span class="extra admin_arrow_out"></span>';
 			echo '</div>';
@@ -561,8 +561,8 @@ class admin_tools{
 		$homepath = common::IndexToTitle(key($gp_menu));
 		echo common::Link_Page($homepath);
 		echo ' &#187; ';
-		echo common::Link('Admin_Main',$langmessage['administration']);
-		if( !empty($page->title) && !empty($page->label) && $page->title != 'Admin_Main' ){
+		echo common::Link('Admin',$langmessage['administration']);
+		if( !empty($page->title) && !empty($page->label) && $page->title != 'Admin' ){
 			echo ' &#187; ';
 			echo common::Link($page->title,$page->label);
 		}
@@ -645,7 +645,7 @@ class admin_tools{
 
 		switch($status){
 			case 'embedcheck':
-				$img_path = common::GetUrl('Admin_Main','cmd=embededcheck');
+				$img_path = common::GetUrl('Admin','cmd=embededcheck');
 				common::IdReq($img_path);
 			break;
 			case 'checkincompat':

@@ -2256,7 +2256,7 @@ class gpOutput{
 				if( common::LoggedIn() ){
 					echo common::Link($page->title,$langmessage['logout'],'cmd=logout','data-cmd="creq" rel="nofollow" ');
 				}else{
-					echo common::Link('Admin_Main',$langmessage['login'],'file='.rawurlencode($page->title),' rel="nofollow" data-cmd="login"');
+					echo common::Link('Admin',$langmessage['login'],'file='.rawurlencode($page->title),' rel="nofollow" data-cmd="login"');
 				}
 			echo '</span>';
 		}

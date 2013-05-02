@@ -118,7 +118,7 @@ class gpsession{
 		gpsession::UpdateAttempts($users,$username,true);
 
 		//redirect to prevent resubmission
-		$redirect = 'Admin_Main';
+		$redirect = 'Admin';
 		if( isset($_REQUEST['file']) && isset($gp_index[$_REQUEST['file']]) ){
 			$redirect = $_REQUEST['file'];
 		}

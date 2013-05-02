@@ -2008,9 +2008,9 @@ class common{
 
 		$lower_title = strtolower($title);
 
-		// Admin without the _ because of the primary Admin page at /Admin
-		//	will need to change this to Admin_, changing links for /Admin to /Admin_Main as of 1.7b2
-		if( strpos($lower_title,'admin') === 0 ){
+		if( $lower_title === 'admin' ){
+			return 'admin';
+		}elseif( strpos($lower_title,'admin_') === 0 ){
 			return 'admin';
 		}
 

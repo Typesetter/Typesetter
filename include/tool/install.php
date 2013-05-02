@@ -212,7 +212,7 @@ class Install_Tools{
 		<h3>Getting Started</h3>
 		<p>You are currently viewing the default home page of your website. Here\'s a quick description of how to edit this page.</p>
 		<ol>
-		<li>First make sure you&#39;re '.Install_Tools::Install_Link_Content('Admin_Main','logged in','file=Home').'.</li>
+		<li>First make sure you&#39;re '.Install_Tools::Install_Link_Content('Admin','logged in','file=Home').'.</li>
 		<li>Then, to edit this page, click the &quot;Edit&quot; link that appears when you move your mouse over the content.</li>
 		<li>Make your edits, click &quot;Save&quot; and you&#39;re done!</li>
 		</ol>

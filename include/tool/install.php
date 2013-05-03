@@ -234,15 +234,19 @@ class Install_Tools{
 
 		gpFiles::NewTitle('Home',$content);
 
-		gpFiles::NewTitle('Help_Videos',"<h1>Help Videos</h1>
+		gpFiles::NewTitle('Help_Videos','<h1>Help Videos</h1>
 		<p>Video tutorials are often a fast and easy way to learn new things quickly.
-		So far, we only have one in Deutsch (German) made by <a href=\"http://gpeasy.com/Service_Provider?id=57\" title=\"IT Ricther on gpEasy.com\">IT Richter</a>.
-		If you make a video tutorial for gpEasy, <a href=\"http://gpeasy.com/Contact\">let us know</a>, and we'll make sure it's included in our list.
+		We now have an English version and Deutsch (German) available below.
+		If you make a video tutorial for gpEasy, <a href="http://gpeasy.com/Contact">let us know</a>, and we\'ll make sure it\'s included in our list.
 		</p>
-		<p>And as always, to edit this page, just click the \"Edit\" button while logged in.</p>
+		<p>And as always, to edit this page, just click the "Edit" button while logged in.</p>
+		<h2>English</h2>
+		<p>Created by <a href="http://gpeasy.com/Special_Addons_User?cmd=user&id=916" title="JGladwillDesign">JGladwillDesign</a></p>
+		<p><iframe width="480" height="360" src="http://www.youtube.com/embed/jN-hF4GLb-U" frameborder="0" allowfullscreen></iframe></p>
 		<h2>Deutsch</h2>
-		<p><iframe width=\"560\" height=\"315\" src=\"http://www.youtube.com/embed/04cNgR1EiFY\" frameborder=\"0\" allowfullscreen></iframe></p>
-		");
+		<p>Created by <a href="http://gpeasy.com/Service_Provider?id=57" title="IT Ricther on gpEasy.com">IT Richter</a></p>
+		<p><iframe width="640" height="360" src="http://www.youtube.com/embed/04cNgR1EiFY" frameborder="0" allowfullscreen></iframe></p>
+		');
 
 		gpFiles::NewTitle('Child_Page','<h1>A Child Page</h1><p>This was created as a subpage of your <em>Help Videos</em> . You can easily change the arrangement of all your pages using the '.Install_Tools::Install_Link_Content('Admin_Menu','Page Manager').'.</p>');
 

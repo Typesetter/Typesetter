@@ -1591,7 +1591,7 @@ class admin_menu_new extends admin_menu_tools{
 				echo '<thead><tr><th>';
 				echo $langmessage['title'];
 				echo ' &nbsp; <input type="text" name="search" value="" class="gpinput gpsearch" />';
-				echo '</th><th class="right">';
+				echo '</th><th class="gp_right">';
 				echo $langmessage['insert_into_menu'];
 				echo '</th></tr></thead>';
 				echo '</table>';
@@ -1646,7 +1646,7 @@ class admin_menu_new extends admin_menu_tools{
 				echo '<table class="bordered full_width"><thead>';
 				echo '<tr><th>'.$langmessage['title'];
 				echo ' &nbsp; <input type="text" name="search" value="" class="gpinput gpsearch" />';
-				echo '</th><th class="right">';
+				echo '</th><th class="gp_right">';
 				echo $langmessage['restore'];
 				echo '</th></tr>';
 				echo '</thead></table>';

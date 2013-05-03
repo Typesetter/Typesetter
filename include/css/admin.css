@@ -321,11 +321,20 @@ body #gp_admin_html #admincontent{
 	color:#333 !important;
 	}
 #admincontent_panel.toolbar .admin_arrow_out{
-	display:none;
+	visibility:hidden;
 	}
 #admincontent_panel.toolbar:hover .admin_arrow_out{
-	display:block;
+	visibility:visible;
 	}
+#admincontent_panel.toolbar .close_home{
+	display:inline-block;
+	height:16px;
+	width:16px;
+	background:url(../imgs/cancel.png) no-repeat 50% 50%;
+	border:1px solid transparent;
+	}
+
+
 
 #admincontent .nowrap{
 	white-space:nowrap;
@@ -481,7 +490,7 @@ body.edit_layout .GPAREA{
 }
 
 
-.bordered .right{
+.bordered .gp_right{
 	text-align:right;
 	}
 
@@ -1476,12 +1485,12 @@ body #gp_admin_html .layout_links a.selected{
 	color:#777 !important;
 	}
 
-.gp_floating_area .right{
+.gp_floating_area .gp_right{
 	float:right;
 	}
 
-.gp_floating_area .right a,
-.gp_floating_area .right span{
+.gp_floating_area .gp_right a,
+.gp_floating_area .gp_right span{
 	display:inline-block;
 	margin:0 4px;
 	}

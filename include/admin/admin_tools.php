@@ -469,7 +469,7 @@ class admin_tools{
 		echo '<div id="ckeditor_area" class="gp_floating_area">';
 		echo '<div class="cf">';
 			echo '<div class="toolbar">';
-				echo '<div class="right">';
+				echo '<div class="gp_right">';
 				echo '<span class="admin_arrow_out"></span>';
 				echo '<a class="docklink" data-cmd="ck_docklink"></a>';
 				echo '</div>';
@@ -553,8 +553,9 @@ class admin_tools{
 		}
 
 		echo '<div id="admincontent_panel" class="toolbar">';
-		echo '<div class="right">';
+		echo '<div class="gp_right">';
 		echo '<span class="admin_arrow_out"></span>';
+		echo common::Link('','','','class="close_home"');
 		echo '</div>';
 
 		reset($gp_menu);

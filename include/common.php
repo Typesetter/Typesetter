@@ -2513,8 +2513,8 @@ class common{
 		}
 
 		$blacklist = explode(',', $blacklist);
-		$blacklist = array_map('trim', $blacklist);
-		$blacklist = array_map('strtolower', $blacklist);
+		array_walk('trim', $blacklist);
+		array_walk('strtolower', $blacklist);
 		if( in_array($function, $blacklist) ){
 			return false;
 		}

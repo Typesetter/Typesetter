@@ -8,9 +8,10 @@ class AntiSpamMath{
 		$operator_key = array_rand($this->operators);
 		$operator = $this->operators[$operator_key];
 
+		$asm_1 = rand(1,10);
+		$asm_3 = rand(1,10);
+		if ($operator_key == 3) $asm_1 = $asm_1 * $asm_3;
 
-		$asm_1 = rand(2,50);
-		$asm_3 = rand(2,50);
 
 		$inputs = array();
 		$inputs[] = ' <input type="hidden" name="asm_1" value="'.$asm_1.'" /> ';
@@ -65,9 +66,7 @@ class AntiSpamMath{
 			break;
 		}
 
-		$compare = round($_POST['asm_4']*1000);
-		$result = round($result * 1000);
-
+		$compare = $_POST['asm_4'];
 		//message('result: '.$result.' vs submitted: '.$compare);
 
 		if( $compare != $result ){

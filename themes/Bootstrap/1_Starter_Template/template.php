@@ -5,7 +5,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<?php
-		common::LoadComponents( 'bootstrap-all' );
+		common::LoadComponents( 'bootstrap-all,bootstrap-alert' );
+
 		gpOutput::GetHead();
 		?>
 

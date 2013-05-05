@@ -263,11 +263,15 @@ class gp_combine{
 
 				'bootstrap-js'				=> array(
 												'file' => '/include/thirdparty/Bootstrap/js/bootstrap.min.js',
-												'package' => 'bootstrap'),
+												'package' => 'bootstrap',
+												'exclude'=> array('bootstrap-alert','bootstrap-button','bootstrap-carousel','bootstrap-collapse','bootstrap-dropdown','bootstrap-modal',
+													'bootstrap-popover','bootstrap-scrollspy','bootstrap-tab','bootstrap-tooltip','bootstrap-transition','bootstrap-typeahead')
+												),
 
 				'bootstrap-all'				=> array(
 												'package' => 'bootstrap',
-												'requires'=> array('bootstrap-responsive-css','bootstrap-js') ),
+												'requires'=> array('bootstrap-responsive-css','bootstrap-js')
+												 ),
 
 		);
 
@@ -555,6 +559,17 @@ class gp_combine{
 		}
 
 		$all_scripts = array_filter($all_scripts);
+
+		//remove any excludes
+		$excludes = array();
+		foreach($all_scripts as $key => $script){
+			if( empty($script['exclude']) ){
+				continue;
+			}
+			$excludes = array_merge($excludes,$script['exclude']);
+		}
+
+		$all_scripts = array_diff_key($all_scripts,array_flip($excludes));
 
 
 		//return an organized array for the root call

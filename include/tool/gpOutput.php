@@ -511,26 +511,58 @@ class gpOutput{
 	}
 
 
+	/**
+	 * Check for fatal errors corresponing to $hash
+	 * Notify administrators of disabled components
+	 *
+	 */
 	static function FatalNotice($hash){
 		global $dataDir,$page;
 		static $notified = array();
 
+
+		//no file = no fatal error
 		$file = $dataDir.'/data/_site/fatal_'.$hash;
 		if( !file_exists($file) ){
 			return false;
 		}
 
+
+		$error_info = $error_text = file_get_contents($file);
+
+		// if the file that caused the fatal error has been modified, treat as fixed
+		if( $error_text[0] == '{' && $error_info = json_decode($error_text,true) ){
+
+			if( !empty($error_info['file']) && file_exists($error_info['file']) ){
+
+				//compare modified time
+				if( array_key_exists('file_modified',$error_info) && filemtime($error_info['file']) != $error_info['file_modified'] ){
+					unlink($file);
+					return false;
+				}
+
+				//compare file size
+				if( array_key_exists('file_size',$error_info) && filesize($error_info['file']) != $error_info['file_size'] ){
+					unlink($file);
+					return false;
+				}
+
+			}
+			$error_text = pre($error_info);
+		}
+
+
+		//notify admin
 		$message = 'Warning: A compenent of this page has been disabled because it caused fatal errors:';
 		error_log( $message );
 		if( common::LoggedIn() ){
 
-			$error_info = file_get_contents($file);
-			$info_hash = common::ArrayHash($error_info);
+			$info_hash = md5($error_text);
 			if( !in_array($info_hash,$notified) ){
 				$message .= ' <br/> '.common::Link($page->title,'Enable Component','cmd=enable_component&hash='.$hash) //cannot be creq
 							.' &nbsp; <a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>'
 							.'<div class="nodisplay">'
-							.$error_info
+							.$error_text
 							.'</div>';
 				message( $message );
 				$notified[] = $info_hash;
@@ -2098,7 +2130,7 @@ class gpOutput{
 	 * @return string finalized response
 	 */
 	static function BufferOut($buffer){
-		global $config,	$gp_head_content, $addonFolderName, $dataDir, $GP_EXEC_STACK, $addon_current_id;
+		global $config,	$gp_head_content, $addonFolderName, $dataDir, $GP_EXEC_STACK, $addon_current_id, $wbErrorBuffer;
 
 
 		//add error notice if there was a fatal error
@@ -2121,11 +2153,19 @@ class gpOutput{
 
 				//disable execution
 				if( count($GP_EXEC_STACK) ){
+
+					if( !empty($last_error['file']) ){
+						$last_error['file_modified'] = filemtime($last_error['file']);
+						$last_error['file_size'] = filesize($last_error['file']);
+					}
+					$content = json_encode($last_error);
+
 					$error_hash = array_pop($GP_EXEC_STACK);
-					$file = $dataDir.'/data/_site/fatal_'.$error_hash;
-					$content = showArray($last_error);
-					gpFiles::Save($file,$content);
-					$reload = true;
+					foreach($GP_EXEC_STACK as $error_hash){
+						$file = $dataDir.'/data/_site/fatal_'.$error_hash;
+						gpFiles::Save($file,$content);
+						$reload = true;
+					}
 				}
 
 

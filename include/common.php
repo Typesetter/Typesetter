@@ -432,15 +432,16 @@ function includeFile( $file ){
 function IncludeScript($file, $include_variation = 'include_once', $globals = array() ){
 	global $GP_EXEC_STACK;
 
-	$file = realpath($file);
-	$hash = 'file'.md5($file).sha1($file);
+	$exists = file_exists($file);
+	$hash = 'include'.md5($file).sha1($file);
 	if( gpOutput::FatalNotice($hash) ){
 		return false;
 	}
 
+
 	//check to see if it exists
 	$include_variation = str_replace('_if','',$include_variation,$has_if);
-	if( $has_if && !file_exists($file) ){
+	if( $has_if && !$exists ){
 		return;
 	}
 

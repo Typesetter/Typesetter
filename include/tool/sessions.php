@@ -1013,31 +1013,8 @@ class gpsession{
 	function EnableComponent(){
 		global $dataDir,$page;
 
-		if( empty($_REQUEST['hash']) || !ctype_alnum($_REQUEST['hash']) ){
-			message('Invalid Request');
-			return;
-		}
-
-		$dir = $dataDir.'/data/_site';
-		$file = $dir.'/fatal_'.$_REQUEST['hash'];
-		if( file_exists($file) ){
-			$hash = md5_file($file);
-			unlink($file);
-
-
-			//remove matching errors
-			$files = scandir($dir);
-			foreach($files as $file){
-				if( strpos($file,'fatal_') !== 0 ){
-					continue;
-				}
-
-				$full_path = $dir.'/'.$file;
-				if( $hash == md5_file($full_path) ){
-					unlink($full_path);
-				}
-			}
-		}
+		includeFile('admin/admin_errors.php');
+		admin_errors::ClearError($_REQUEST['hash']);
 		$title = common::WhichPage();
 		common::Redirect(common::GetUrl($title,'',false));
 	}

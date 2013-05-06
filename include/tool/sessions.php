@@ -175,10 +175,6 @@ class gpsession{
 	static function CheckPassword( $user_pass, $nonce, $pash_hash ){
 		global $config;
 
-		// $user_pass is the already encrypted password (md5 or sha)
-		// the second level hash is always done with sha
-
-
 		//without encryption
 		if( !gp_require_encrypt && !empty($_POST['password']) ){
 			$pass = common::hash($_POST['password'],$pash_hash);

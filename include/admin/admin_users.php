@@ -587,7 +587,7 @@ class admin_users{
 	 * Save a user's new password
 	 */
 	function ResetPass(){
-		global $langmessage;
+		global $langmessage, $config;
 
 		if( !$this->CheckPasswords() ){
 			return false;
@@ -599,7 +599,12 @@ class admin_users{
 			return false;
 		}
 
-		$this->users[$username]['password'] = common::hash($_POST['password']);
+		$pass_hash = $config['passhash'];
+		if( isset($this->users[$username]['passhash']) ){
+			$pass_hash = $this->users[$username]['passhash'];
+		}
+
+		$this->users[$username]['password'] = common::hash($_POST['password'],$pass_hash);
 		return $this->SaveUserFile();
 	}
 

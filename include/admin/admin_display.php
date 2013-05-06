@@ -248,7 +248,7 @@ class admin_display extends display{
 
 
 	function SendPassword(){
-		global $langmessage,$dataDir,$gp_mailer;
+		global $langmessage, $dataDir, $gp_mailer, $config;
 
 		includeFile('tool/email_mailer.php');
 		include($dataDir.'/data/_site/users.php');
@@ -274,7 +274,12 @@ class admin_display extends display{
 		$newpass = substr($newpass,0,8);
 
 
-		$users[$username]['newpass'] = common::hash($newpass);
+		$pass_hash = $config['passhash'];
+		if( isset($users[$username]['passhash']) ){
+			$pass_hash = $users[$username]['passhash'];
+		}
+
+		$users[$username]['newpass'] = common::hash($newpass,$pass_hash);
 		if( !gpFiles::SaveArray($dataDir.'/data/_site/users.php','users',$users) ){
 			message($langmessage['OOPS']);
 			return false;

@@ -91,7 +91,12 @@ class admin_preferences extends admin_users{
 		}
 
 
-		$oldpass = common::hash($_POST['oldpassword']);
+		$pass_hash = $config['passhash'];
+		if( isset($this->user_info['passhash']) ){
+			$pass_hash = $this->user_info['passhash'];
+		}
+
+		$oldpass = common::hash($_POST['oldpassword'],$pass_hash);
 		if( $this->user_info['password'] != $oldpass ){
 			message($langmessage['couldnt_reset_pass']);
 			return false;

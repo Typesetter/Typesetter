@@ -41,7 +41,8 @@ class gpsession{
 
 		// check nonce
 		// expire the nonce after 10 minutes
-		if( !common::verify_nonce( 'login_nonce', $_POST['login_nonce'], true, 300 ) ){
+		$nonce = $_POST['login_nonce'];
+		if( !common::verify_nonce( 'login_nonce', $nonce, true, 300 ) ){
 			message($langmessage['OOPS'].' (Expired Nonce)');
 			return;
 		}
@@ -58,7 +59,7 @@ class gpsession{
 
 
 		include($dataDir.'/data/_site/users.php');
-		$username = gpsession::GetLoginUser($users);
+		$username = gpsession::GetLoginUser( $users, $nonce );
 		if( $username === false ){
 			gpsession::IncorrectLogin('1');
 			return false;
@@ -78,14 +79,15 @@ class gpsession{
 
 		//check against password sent to a user's email address from the forgot_password form
 		$passed = false;
-		if( !empty($userinfo['newpass']) && gpsession::CheckPassword($userinfo['newpass']) ){
+		if( !empty($userinfo['newpass']) && gpsession::CheckPassword($userinfo['newpass'],$nonce) ){
 			$userinfo['password'] = $userinfo['newpass'];
 			$passed = true;
 
 		//check password
-		}elseif( gpsession::CheckPassword($userinfo['password']) ){
+		}elseif( gpsession::CheckPassword($userinfo['password'],$nonce) ){
 			$passed = true;
 		}
+
 
 		//if passwords don't match
 		if( $passed !== true ){
@@ -131,7 +133,7 @@ class gpsession{
 	 * Return the username for the login request
 	 *
 	 */
-	static function GetLoginUser($users){
+	static function GetLoginUser( $users, $nonce ){
 
 		$_POST += array('user_sha'=>'','username'=>'','login_nonce'=>'');
 
@@ -140,7 +142,7 @@ class gpsession{
 		}
 
 		foreach($users as $username => $info){
-			$sha_user = sha1($_POST['login_nonce'].$username);
+			$sha_user = sha1($nonce.$username);
 
 			if( !gp_require_encrypt
 				&& !empty($_POST['username'])
@@ -157,15 +159,20 @@ class gpsession{
 		return false;
 	}
 
+
 	/**
 	 * check password, choose between plaintext, md5 encrypted or sha-1 encrypted
 	 * @param string $user_pass
+	 * @param string $nonce
+	 *
 	 */
-	static function CheckPassword( $user_pass ){
+	static function CheckPassword( $user_pass, $nonce ){
+		global $config;
 
 		// $user_pass is the already encrypted password (md5 or sha)
 		// the second level hash is always done with sha
-		$nonced_pass = sha1($_POST['login_nonce'].$user_pass);
+		$nonced_pass = sha1($nonce.$user_pass);
+
 
 		//without encryption
 		if( !gp_require_encrypt && !empty($_POST['password']) ){
@@ -176,16 +183,24 @@ class gpsession{
 			return false;
 		}
 
-		//with md5 encryption
-		if( isset($config['shahash']) && !$config['shahash'] ){
-			if( $nonced_pass === $_POST['pass_md5'] ){
-				return true;
-			}
-			return false;
+
+		$posted_pass = false;
+		switch($config['passhash']){
+
+			//case 'md5':
+			//	$nonced_pass = $_POST['pass_md5'];
+			//break;
+
+			case 'sha1':
+				$posted_pass = $_POST['pass_sha'];
+			break;
+
+			case 'shasha512':
+				$posted_pass = $_POST['pass_sha512'];
+			break;
 		}
 
-		//with sha encryption
-		if( $nonced_pass === $_POST['pass_sha'] ){
+		if( $posted_pass && $posted_pass === $nonced_pass ){
 			return true;
 		}
 
@@ -283,11 +298,7 @@ class gpsession{
 			$expires = 0; //expire at end of session
 		}
 
-		if( version_compare(phpversion(),'5.2','>=') ){
-			setcookie($name, $value, $expires, $cookiePath, '', '', true);
-		}else{
-			setcookie($name, $value, $expires, $cookiePath);
-		}
+		setcookie($name, $value, $expires, $cookiePath, '', '', true);
 	}
 
 

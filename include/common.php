@@ -1724,7 +1724,14 @@ class common{
 				'addons' => array(),
 				'themes' => array(),
 				'gadgets' => array(),
+				'passhash' => 'sha1',
 				);
+
+		//shahash deprecated 4.0
+		if( isset($config['shahash']) && !$config['shahash'] ){
+			$config['passhash'] = 'md5';
+		}
+
 
 		// default gadgets
 		$config['gadgets'] += array(
@@ -2359,10 +2366,22 @@ class common{
 	static function hash($arg){
 		global $config;
 
-		if( isset($config['shahash']) && !$config['shahash'] ){
+		switch($config['passhash']){
+
+			//md5
+			case 'md5':
 			return md5($arg);
+
+			//sha1
+			case 'sha1':
+			return sha1($arg);
 		}
-		return sha1($arg);
+
+		//sha512
+		for($i=0;$i<20;$i++){
+			$arg = hash('sha512',$arg);
+		}
+		return $arg;
 	}
 
 	static function AjaxWarning(){

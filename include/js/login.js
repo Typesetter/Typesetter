@@ -19,13 +19,26 @@ $(function(){
 		if( this.encrypted.checked ){
 			var pwd = this.password.value;
 			var nonce = this.login_nonce.value;
-			this.pass_md5.value = hex_sha1(nonce+hex_md5(pwd));
 			this.pass_sha.value = hex_sha1(nonce+hex_sha1(pwd));
+			this.pass_sha512.value = sha512(pwd,nonce);
 			this.password.value = '';
 
 			this.user_sha.value = hex_sha1(nonce+this.username.value);
 			this.username.value = '';
 		}
 	});
+
+	function sha512(pwd,nonce){
+
+		for(var i = 0; i < 20; i++ ){
+			var shaObj = new jsSHA(pwd,"TEXT");
+			pwd = shaObj.getHash("SHA-512", "HEX");
+		}
+
+		var shaObj = new jsSHA(nonce+pwd,"TEXT");
+		pwd = shaObj.getHash("SHA-512", "HEX");
+
+		return pwd;
+	}
 
 });

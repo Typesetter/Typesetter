@@ -335,6 +335,7 @@ class admin_display extends display{
 		$page->head .= "\n<script type=\"text/javascript\">var IE_LT_8 = false;</script><!--[if lt IE 8]>\n<script type=\"text/javascript\">IE_LT_8=true;</script>\n<![endif]-->";
 		$page->head_js[] = '/include/js/login.js';
 		$page->head_js[] = '/include/js/md5_sha.js';
+		$page->head_js[] = '/include/thirdparty/js/jsSHA.js';
 
 		$page->css_admin[] = '/include/css/login.css';
 
@@ -382,8 +383,8 @@ class admin_display extends display{
 			echo '<label>';
 			echo $langmessage['password'];
 			echo '<input type="password" class="login_text password" name="password" value="" />';
-			echo '<input type="hidden" name="pass_md5" value="" />';
 			echo '<input type="hidden" name="pass_sha" value="" />';
+			echo '<input type="hidden" name="pass_sha512" value="" />';
 			echo '</label>';
 
 			echo '<input type="submit" class="login_submit" name="aa" value="'.$langmessage['login'].'" />';

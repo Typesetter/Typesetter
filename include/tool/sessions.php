@@ -181,7 +181,7 @@ class gpsession{
 
 		//without encryption
 		if( !gp_require_encrypt && !empty($_POST['password']) ){
-			$pass = common::hash(trim($_POST['password']),$pash_hash);
+			$pass = common::hash($_POST['password'],$pash_hash);
 			if( $user_pass === $pass ){
 				return true;
 			}

@@ -2366,6 +2366,8 @@ class common{
 	static function hash($arg,$algo=false){
 		global $config;
 
+		$arg = trim($arg);
+
 		if( !$algo ){
 			$algo = $config['passhash'];
 		}

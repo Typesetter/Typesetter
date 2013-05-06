@@ -274,7 +274,7 @@ class admin_display extends display{
 		$newpass = substr($newpass,0,8);
 
 
-		$users[$username]['newpass'] = common::hash(trim($newpass));
+		$users[$username]['newpass'] = common::hash($newpass);
 		if( !gpFiles::SaveArray($dataDir.'/data/_site/users.php','users',$users) ){
 			message($langmessage['OOPS']);
 			return false;

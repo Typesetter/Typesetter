@@ -403,7 +403,7 @@ class Install_Tools{
 		//users
 		echo '<li>';
 		$user_info = array();
-		$user_info['password'] = sha1(trim($_POST['password']));
+		$user_info['password'] = common::hash(trim($_POST['password']),'sha512');
 		$user_info['granted'] = 'all';
 		$user_info['editing'] = 'all';
 		$user_info['email'] = $_POST['email'];

@@ -171,7 +171,6 @@ class gpsession{
 
 		// $user_pass is the already encrypted password (md5 or sha)
 		// the second level hash is always done with sha
-		$nonced_pass = sha1($nonce.$user_pass);
 
 
 		//without encryption
@@ -183,20 +182,22 @@ class gpsession{
 			return false;
 		}
 
-
 		$posted_pass = false;
 		switch($config['passhash']){
 
 			//case 'md5':
-			//	$nonced_pass = $_POST['pass_md5'];
+			//	$posted_pass = $_POST['pass_md5'];
+			//	$nonced_pass = sha1($nonce.$user_pass);
 			//break;
 
 			case 'sha1':
 				$posted_pass = $_POST['pass_sha'];
+				$nonced_pass = sha1($nonce.$user_pass);
 			break;
 
-			case 'shasha512':
+			case 'sha512':
 				$posted_pass = $_POST['pass_sha512'];
+				$nonced_pass = hash('sha512',$nonce.$user_pass);
 			break;
 		}
 

@@ -2363,10 +2363,14 @@ class common{
 	 * Note: $config['shahash'] won't be set for install!
 	 *
 	 */
-	static function hash($arg){
+	static function hash($arg,$algo=false){
 		global $config;
 
-		switch($config['passhash']){
+		if( !$algo ){
+			$algo = $config['passhash'];
+		}
+
+		switch($algo){
 
 			//md5
 			case 'md5':

@@ -149,7 +149,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 
 
 	$errortype = array (
-				E_ERROR				=> 'Error',
+				E_ERROR				=> 'Fatal Error',
 				E_WARNING			=> 'Warning',
 				E_PARSE				=> 'Parsing Error',
 				E_NOTICE 			=> 'Notice',

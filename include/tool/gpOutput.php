@@ -70,6 +70,8 @@ class gpOutput{
 
 	public static $edit_area_id = '';
 
+	public static $fatal_notices = array();
+
 
 	/*
 	 *
@@ -529,6 +531,7 @@ class gpOutput{
 
 
 		$error_info = $error_text = file_get_contents($file);
+		$info_hash = md5($error_text);
 
 		// if the file that caused the fatal error has been modified, treat as fixed
 		if( $error_text[0] == '{' && $error_info = json_decode($error_text,true) ){
@@ -554,18 +557,19 @@ class gpOutput{
 
 		//notify admin
 		$message = 'Warning: A compenent of this page has been disabled because it caused fatal errors:';
-		error_log( $message );
+		if( !count(self::$fatal_notices) ){
+			error_log( $message );
+		}
 		if( common::LoggedIn() ){
 
-			$info_hash = md5($error_text);
-			if( !in_array($info_hash,$notified) ){
+			if( !in_array($info_hash,self::$fatal_notices) ){
 				$message .= ' <br/> '.common::Link($page->title,'Enable Component','cmd=enable_component&hash='.$hash) //cannot be creq
 							.' &nbsp; <a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>'
 							.'<div class="nodisplay">'
 							.$error_text
 							.'</div>';
-				message( $message );
-				$notified[] = $info_hash;
+				msg( $message );
+				self::$fatal_notices[] = $info_hash;
 			}
 		}
 
@@ -2154,6 +2158,8 @@ class gpOutput{
 				//disable execution
 				if( count($GP_EXEC_STACK) ){
 
+					$last_error['time'] = time();
+					$last_error['request_method'] = $_SERVER['REQUEST_METHOD'];
 					if( !empty($last_error['file']) ){
 						$last_error['file_modified'] = filemtime($last_error['file']);
 						$last_error['file_size'] = filesize($last_error['file']);

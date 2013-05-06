@@ -606,6 +606,7 @@ class gpsession{
 	static function close($file,$checksum_read){
 		global $gpAdmin;
 
+		self::FatalNotices();
 		gpsession::Cron();
 		self::LayoutInfo();
 
@@ -1039,6 +1040,43 @@ class gpsession{
 		}
 		$title = common::WhichPage();
 		common::Redirect(common::GetUrl($title,'',false));
+	}
+
+
+	/**
+	 * Notify the admin if there have been any fatal errors
+	 *
+	 */
+	static function FatalNotices(){
+		global $dataDir, $page;
+
+		if( strpos($page->title,'Admin_Errors') !== false ){
+			return;
+		}
+
+		$dir = $dataDir.'/data/_site';
+		$files = scandir($dir);
+		$has_fatal = false;
+		foreach($files as $file){
+			if( strpos($file,'fatal_') === false ){
+				continue;
+			}
+			$full_path = $dir.'/'.$file;
+			$info_hash = md5_file($full_path);
+			if( in_array($info_hash,gpOutput::$fatal_notices) ){
+				continue;
+			}
+			$has_fatal = true;
+			break;
+		}
+
+		if( !$has_fatal ){
+			return;
+		}
+
+		$msg = 'Warning: One or more components have caused fatal errors and have been disabled. '
+				.common::Link('Admin_Errors','More Information');
+		msg($msg);
 	}
 
 	static function SessionCookie($uniq){

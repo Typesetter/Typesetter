@@ -2373,8 +2373,8 @@ class common{
 		switch($algo){
 
 			//md5
-			case 'md5':
-			return md5($arg);
+			//case 'md5':
+			//return md5($arg);
 
 			//sha1
 			case 'sha1':

@@ -168,7 +168,7 @@ class admin_errors{
 			return;
 		}
 
-		//echo '<p>Note: The following errors are </p>';
+		echo '<p><b>Please Note:</b> The following errors are not limited to your installation of gpEasy.</p>';
 
 		$lines = file($error_log);
 		$lines = array_reverse($lines);

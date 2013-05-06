@@ -188,7 +188,7 @@ class Install_Tools{
 		$config['langeditor'] = 'inherit';
 		$config['dateformat'] = '%m/%d/%y - %I:%M %p';
 		$config['gpversion'] = gpversion;
-		$config['passhash'] = 'sha512';
+		$config['passhash'] = 'sha1'; //'sha512';
 		if( !isset($config['gpuniq']) ){
 			$config['gpuniq'] = common::RandomString(20);
 		}
@@ -403,7 +403,7 @@ class Install_Tools{
 		//users
 		echo '<li>';
 		$user_info = array();
-		$user_info['password'] = common::hash(trim($_POST['password']),'sha512');
+		$user_info['password'] = common::hash(trim($_POST['password']),$config['passhash']);
 		$user_info['granted'] = 'all';
 		$user_info['editing'] = 'all';
 		$user_info['email'] = $_POST['email'];

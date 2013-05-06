@@ -79,12 +79,17 @@ class gpsession{
 
 		//check against password sent to a user's email address from the forgot_password form
 		$passed = false;
-		if( !empty($userinfo['newpass']) && gpsession::CheckPassword($userinfo['newpass'],$nonce) ){
+		$pass_hash = $config['passhash'];
+		if( isset($userinfo['passhash']) ){
+			$pass_hash = $userinfo['passhash'];
+		}
+
+		if( !empty($userinfo['newpass']) && gpsession::CheckPassword($userinfo['newpass'],$nonce,$pass_hash) ){
 			$userinfo['password'] = $userinfo['newpass'];
 			$passed = true;
 
 		//check password
-		}elseif( gpsession::CheckPassword($userinfo['password'],$nonce) ){
+		}elseif( gpsession::CheckPassword($userinfo['password'],$nonce,$pass_hash) ){
 			$passed = true;
 		}
 
@@ -164,9 +169,10 @@ class gpsession{
 	 * check password, choose between plaintext, md5 encrypted or sha-1 encrypted
 	 * @param string $user_pass
 	 * @param string $nonce
+	 * @param string $pass_hash Password hashing algorithm
 	 *
 	 */
-	static function CheckPassword( $user_pass, $nonce ){
+	static function CheckPassword( $user_pass, $nonce, $pash_hash ){
 		global $config;
 
 		// $user_pass is the already encrypted password (md5 or sha)
@@ -175,7 +181,7 @@ class gpsession{
 
 		//without encryption
 		if( !gp_require_encrypt && !empty($_POST['password']) ){
-			$pass = common::hash(trim($_POST['password']));
+			$pass = common::hash(trim($_POST['password']),$pash_hash);
 			if( $user_pass === $pass ){
 				return true;
 			}
@@ -183,7 +189,7 @@ class gpsession{
 		}
 
 		$posted_pass = false;
-		switch($config['passhash']){
+		switch($pash_hash){
 
 			//case 'md5':
 			//	$posted_pass = $_POST['pass_md5'];

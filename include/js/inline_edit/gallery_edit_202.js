@@ -34,23 +34,49 @@
 
 
 	gp_editor = {
+		/**
+		 * Called when a caption is edited
+		 *
+		 */
+		updateCaption:function(current_image,caption){
+		},
+
+		/**
+		 * Called when an image is removed
+		 *
+		 */
+		removeImage:function(image){
+		},
+
+		/**
+		 * Called when an image is added to the gallery
+		 * @param object $li A jquery object of the new <li> element
+		 *
+		 */
+		addedImage:function($li){
+		},
+
 		checkDirty:function(){
 			return false;
 		},
 		getData:function(edit_div,settings){
 
-			//get images and captions
-			var $sortable_area = edit_div.find(settings.sortable_area_sel).find('li');
-
 			var args = {
 				images: [],
 				captions: []
 			};
-			$sortable_area.each(function(){
-				var $this = $(this);
-				args.images.push( $this.find('a').attr('href') );
-				args.captions.push( $this.find('.caption').html() );
+
+
+			//images
+			edit_div.find(settings.sortable_area_sel).find('li > a').each(function(){
+				args.images.push( $(this).attr('href') );
 			});
+
+			//captions
+			edit_div.find(settings.edit_links_target).find('.caption').each(function(){
+				args.captions.push( $(this).html() );
+			});
+
 
 
 			//get content
@@ -62,10 +88,6 @@
 			return $.param(args)+'&gpcontent='+encodeURIComponent(data);
 		},
 		updateElement:function(){
-		},
-		updateCaption:function(current_image,caption){
-		},
-		removeImage:function(image){
 		}
 	};
 
@@ -76,7 +98,8 @@
 		var defaults = {
 			sortable_area_sel:	'.gp_gallery',
 			img_name:			'gallery',
-			img_rel:			'gallery_gallery'
+			img_rel:			'gallery_gallery',
+			edit_links_target:	'.gp_gallery > li'
 		};
 		var settings = $.extend(settings, defaults, options);
 
@@ -155,7 +178,13 @@
 			LoadImages(false);
 
 
-
+			/**
+			 * Caption & delete links
+			 *
+			 */
+			function AddLink(div,name,img){
+				div.append('<a data-cmd="'+name+'"><img src="'+gpBase+'/include/imgs/blank.gif" height="16" width="16" class="'+img+'"/></a>');
+			}
 			edit_links = $('<span class="gp_gallery_edit gp_floating_area"></span>').appendTo('body').hide();
 			AddLink(edit_links,'gp_gallery_caption','page_edit');
 			AddLink(edit_links,'gp_gallery_rm','delete');
@@ -165,11 +194,20 @@
 				edit_links.hide();
 			});
 
-			AddListeners();
+			$(document).delegate(settings.edit_links_target,{
+				'mouseenter.gp_edit':function(){
+					var offset = $(this).offset();
+					edit_links.show().css({'left':offset.left,'top':offset.top});
+					current_image = this;
 
-			function AddLink(div,name,img){
-				div.append('<a data-cmd="'+name+'"><img src="'+gpBase+'/include/imgs/blank.gif" height="16" width="16" class="'+img+'"/></a>');
-			}
+				},
+				'mouseleave.gp_edit':function(){
+					edit_links.hide();
+				},
+				'mousedown.gp_edit':function(){
+					edit_links.hide();
+				}
+			});
 
 			$gp.links.gp_gallery_caption = function(){
 				edit_links.hide();
@@ -204,29 +242,12 @@
 				caption_div.html(text);
 				text = caption_div.html(); //browsers may change the text
 
-				$(current_image).find('a, img').attr('title', text );
 				$gp.CloseAdminBox();
 				gp_editor.updateCaption(current_image,text);
 			}
 
 		}
 
-		function AddListeners(){
-
-			sortable_area
-			.children('li')
-			.unbind('mouseenter.gp_edit, mouseleave.gp_edit, mousedown.gp_edit')
-			.bind('mouseenter.gp_edit',function(){
-				var offset = $(this).offset();
-				edit_links.show().css({'left':offset.left,'top':offset.top});
-				current_image = this;
-
-			}).bind('mouseleave.gp_edit',function(){
-				edit_links.hide();
-			}).bind('mousedown.gp_edit',function(){
-				edit_links.hide();
-			});
-		}
 
 		function MakeSortable(){
 			sortable_area.sortable({
@@ -272,7 +293,8 @@
 				sortable_area.append(li);
 			}
 
-			AddListeners(); //refresh the listeners
+			li.trigger('gp_gallery_add');
+			gp_editor.addedImage(li);
 		}
 
 
@@ -364,8 +386,6 @@
 				$this.slideUp(700);
 			}
 		}
-
-
 
 
 		/**

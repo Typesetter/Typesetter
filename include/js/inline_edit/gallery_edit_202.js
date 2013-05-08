@@ -56,6 +56,13 @@
 		addedImage:function($li){
 		},
 
+		/**
+		 * Whether or not to show the size options for the gallery
+		 *
+		 */
+		gp_size_options : false,
+
+
 		checkDirty:function(){
 			return false;
 		},
@@ -175,7 +182,17 @@
 			$('#ckeditor_top').html('<div id="gp_image_area"></div><div id="gp_upload_queue"></div>');
 			$('#ckeditor_controls').prepend('<div id="gp_folder_options"></div>');
 
-			LoadImages(false);
+			LoadImages(false,settings);
+
+
+			/**
+			 * Add image size options
+			 *
+			 */
+
+			if( settings.gp_size_options ){
+				$('#ckeditor_save').before('<table id="gp_size_options"><tr><td>'+gplang.Width+':</td><td><input class="ck_input" type="text" id="gp_gallery_width" name="width" /></td><td> &nbsp; '+gplang.Height+':</td><td><input class="ck_input" type="text" id="gp_gallery_height" name="height" /></td></tr></table>');
+			}
 
 
 			/**
@@ -396,7 +413,7 @@
 			var frm = this.form;
 			var dir = frm.dir.value;
 			var newdir = dir+'/'+frm.newdir.value
-			LoadImages(newdir);
+			LoadImages(newdir,settings);
 		}
 
 

@@ -336,7 +336,6 @@ class admin_uploaded{
 		//echo '<a data-cmd="remote" class="ckeditor_control full_width">Add Images From inder</a>';
 		//echo common::Link('Admin_Browser','Add Images From Finder','','class="ckeditor_control full_width" data-cmd="browser_dialog"');
 
-
 		if( $add_all_images && $image_count > 0 ){
 			echo '<a data-cmd="gp_gallery_add_all" class="ckeditor_control half_width">'.$langmessage['Add All Images'].'</a>';
 		}
@@ -355,6 +354,7 @@ class admin_uploaded{
 			echo '</div>';
 			echo '</form>';
 		}
+
 		$folder_options = ob_get_clean();
 
 

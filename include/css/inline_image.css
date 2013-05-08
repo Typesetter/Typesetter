@@ -297,20 +297,31 @@
 #gp_current_image label{
 	margin-right:5px;
 	}
+#gp_size_options .ck_input,
 #gp_current_image .ck_input{
 	width:40px;
 	border:1px solid #ccc;
 	padding:2px 3px;
 	border-radius: 3px;
 	text-align:right;
+	line-height:17px;
+	height:auto;
+	margin:0;
 	}
+#gp_size_options,
 #gp_current_image table{
 	width:237px;
 	float:left;
 	}
-#gp_current_image td{
-	text-align:right;
+#gp_size_options{
+	margin-bottom:5px;
 	}
+body #gp_size_options td,
+body #gp_current_image td{
+	text-align:right;
+	vertical-align:middle;
+	}
+#gp_size_options td:nth-child(2n),
 #gp_current_image td:nth-child(2n){
 	text-align:left;
 	}
@@ -352,7 +363,7 @@
 	display:inline-block;
 	float:none;
 	vertical-align:top;
-	width:120px;
+	width:260px;
 	}
 
 #ckeditor_area.docked #ckeditor_controls .ckeditor_control{

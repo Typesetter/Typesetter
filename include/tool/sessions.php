@@ -484,7 +484,7 @@ class gpsession{
 		//make sure forms have admin nonce
 		ob_start(array('gpsession','AdminBuffer'));
 
-		$GP_LANG_VALUES += array('cancel'=>'ca','update'=>'up','caption'=>'cp');
+		$GP_LANG_VALUES += array('cancel'=>'ca','update'=>'up','caption'=>'cp','Width'=>'Width','Height'=>'Height');
 		common::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css');
 
 		return true;

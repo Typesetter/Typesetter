@@ -187,10 +187,10 @@ class gpsession{
 		$posted_pass = false;
 		switch($pash_hash){
 
-			//case 'md5':
-			//	$posted_pass = $_POST['pass_md5'];
-			//	$nonced_pass = sha1($nonce.$user_pass);
-			//break;
+			case 'md5':
+				$posted_pass = $_POST['pass_md5'];
+				$nonced_pass = sha1($nonce.$user_pass);
+			break;
 
 			case 'sha1':
 				$posted_pass = $_POST['pass_sha'];
@@ -198,8 +198,9 @@ class gpsession{
 			break;
 
 			case 'sha512':
-				$posted_pass = $_POST['pass_sha512'];
-				$nonced_pass = hash('sha512',$nonce.$user_pass);
+				//javascript only loops through sha512 50 times
+				$posted_pass = common::hash($_POST['pass_sha512'],'sha512',950);
+				$nonced_pass = $user_pass;
 			break;
 		}
 
@@ -1041,7 +1042,7 @@ class gpsession{
 	static function FatalNotices(){
 		global $dataDir, $page;
 
-		if( strpos($page->title,'Admin_Errors') !== false ){
+		if( is_object($page) && strpos($page->title,'Admin_Errors') !== false ){
 			return;
 		}
 

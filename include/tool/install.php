@@ -188,7 +188,7 @@ class Install_Tools{
 		$config['langeditor'] = 'inherit';
 		$config['dateformat'] = '%m/%d/%y - %I:%M %p';
 		$config['gpversion'] = gpversion;
-		$config['passhash'] = 'sha1'; //'sha512';
+		$config['passhash'] = 'sha512';
 		if( !isset($config['gpuniq']) ){
 			$config['gpuniq'] = common::RandomString(20);
 		}

@@ -20,8 +20,9 @@ $(function(){
 		if( this.encrypted.checked ){
 			var pwd = this.password.value;
 			var nonce = this.login_nonce.value;
+			this.pass_md5.value = hex_sha1(nonce+hex_md5(pwd));
 			this.pass_sha.value = hex_sha1(nonce+hex_sha1(pwd));
-			this.pass_sha512.value = sha512(pwd,nonce);
+			this.pass_sha512.value = sha512(pwd);
 			this.password.value = '';
 
 			this.user_sha.value = hex_sha1(nonce+this.username.value);
@@ -29,21 +30,16 @@ $(function(){
 		}
 	});
 
-	function sha512(pwd,nonce){
+	function sha512(pwd){
 
-		var salt_start = 0;
-		var salt_len = 3;
 		for(var i = 0; i < 50; i++ ){
+			var ints = pwd.replace(/[a-f]/g,'');
+			var salt_start = parseInt(ints.substr(0,1));
+			var salt_len = parseInt(ints.substr(2,1));
 			var salt = pwd.substr(salt_start,salt_len);
 			var shaObj = new jsSHA(pwd+salt,'TEXT');
 			pwd = shaObj.getHash('SHA-512', 'HEX');
-			var ints = pwd.replace(/[a-f]/g,'');
-			salt_start = ints.substr(0,1);
-			salt_len = ints.substr(2,1);
 		}
-
-		var shaObj = new jsSHA(nonce+pwd,'TEXT');
-		pwd = shaObj.getHash('SHA-512', 'HEX');
 
 		return pwd;
 	}

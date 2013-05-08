@@ -388,6 +388,7 @@ class admin_display extends display{
 			echo '<label>';
 			echo $langmessage['password'];
 			echo '<input type="password" class="login_text password" name="password" value="" />';
+			echo '<input type="hidden" name="pass_md5" value="" />';
 			echo '<input type="hidden" name="pass_sha" value="" />';
 			echo '<input type="hidden" name="pass_sha512" value="" />';
 			echo '</label>';

@@ -2361,38 +2361,34 @@ class common{
 
 	/**
 	 * Return the hash of $arg using the appropriate hashing function for the installation
-	 * Note: $config['shahash'] won't be set for install!
+	 *
+	 * @param string $arg The string to be hashed
+	 * @param string $algo The hashing algorithm to be used
+	 * @param int $loops The number of times to loop the $arg through the algorithm
 	 *
 	 */
-	static function hash($arg,$algo=false){
-		global $config;
-
+	static function hash( $arg, $algo='sha512', $loops = 1000){
 		$arg = trim($arg);
-
-		if( !$algo ){
-			$algo = $config['passhash'];
-		}
 
 		switch($algo){
 
 			//md5
-			//case 'md5':
-			//return md5($arg);
+			case 'md5':
+			trigger_error('md5 should not be used, please reset your password');
+			return md5($arg);
 
 			//sha1
 			case 'sha1':
 			return sha1($arg);
 		}
 
-		//looped sha512 with dynamic salt
-		$salt_start = 0;
-		$salt_len = 3;
-		for($i=0;$i<50;$i++){
-			$salt = substr($arg,$salt_start,$salt_len);
-			$arg = hash('sha512',$arg.$salt);
+		//looped with dynamic salt
+		for( $i=0; $i<$loops; $i++ ){
 			$ints = preg_replace('#[a-f]#','',$arg);
-			$salt_start = substr($ints,0,1);
-			$salt_len = substr($ints,2,1);
+			$salt_start = (int)substr($ints,0,1);
+			$salt_len = (int)substr($ints,2,1);
+			$salt = substr($arg,$salt_start,$salt_len);
+			$arg = hash($algo,$arg.$salt);
 		}
 
 		return $arg;

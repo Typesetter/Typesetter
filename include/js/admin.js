@@ -896,7 +896,7 @@ $(function(){
 		 *
 		 */
 		$(document).on('contextmenu','.editable_area, #gp_edit_overlay',function(evt){
-			if( evt.ctrlKey || evt.altKey || evt.shiftKey ) return;
+			if( evt.ctrlKey || evt.altKey || evt.shiftKey || gp_editor ) return;
 			if( lnk_span ){
 				evt.preventDefault();
 				var $win = $(window);

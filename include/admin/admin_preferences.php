@@ -67,7 +67,7 @@ class admin_preferences extends admin_users{
 	}
 
 	function ChangePass(){
-		global $langmessage;
+		global $langmessage, $config;
 
 
 		$fields = 0;

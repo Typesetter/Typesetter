@@ -2386,13 +2386,13 @@ class common{
 
 		//looped sha512 with dynamic salt
 		$salt_start = 0;
-		$salt_end = 3;
+		$salt_len = 3;
 		for($i=0;$i<50;$i++){
-			$salt = substr($arg,$salt_start,$salt_end);
+			$salt = substr($arg,$salt_start,$salt_len);
 			$arg = hash('sha512',$arg.$salt);
 			$ints = preg_replace('#[a-f]#','',$arg);
 			$salt_start = substr($ints,0,1);
-			$salt_end = substr($ints,2,1);
+			$salt_len = substr($ints,2,1);
 		}
 
 		return $arg;

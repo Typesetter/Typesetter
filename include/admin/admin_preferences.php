@@ -140,9 +140,9 @@ class admin_preferences extends admin_users{
 		echo '</div>';
 
 
-		echo '<h4 class="head gp_collapsed"><a data-cmd="collapsible">'.$langmessage['change_password'].'</a></h4>';
+		echo '<h4 class="head"><a data-cmd="collapsible">'.$langmessage['change_password'].'</a></h4>';
 
-		echo '<div class="nodisplay">';
+		echo '<div>';
 		echo '<table class="bordered configuration">';
 		echo '<tr>';
 			echo '<td>';

@@ -310,7 +310,6 @@
 	}
 #gp_size_options,
 #gp_current_image table{
-	width:237px;
 	float:left;
 	}
 #gp_size_options{
@@ -320,6 +319,7 @@ body #gp_size_options td,
 body #gp_current_image td{
 	text-align:right;
 	vertical-align:middle;
+	width:59px;
 	}
 #gp_size_options td:nth-child(2n),
 #gp_current_image td:nth-child(2n){

@@ -1742,6 +1742,7 @@ class common{
 		common::GetLangFile();
 		common::GetPagesPHP();
 
+
 		//upgrade?
 		if( version_compare($config['gpversion'],'2.3.4','<') ){
 			includeFile('tool/upgrade.php');
@@ -2383,10 +2384,17 @@ class common{
 			return sha1($arg);
 		}
 
-		//sha512
-		for($i=0;$i<20;$i++){
-			$arg = hash('sha512',$arg);
+		//looped sha512 with dynamic salt
+		$salt_start = 0;
+		$salt_end = 3;
+		for($i=0;$i<50;$i++){
+			$salt = substr($arg,$salt_start,$salt_end);
+			$arg = hash('sha512',$arg.$salt);
+			$ints = preg_replace('#[a-f]#','',$arg);
+			$salt_start = substr($ints,0,1);
+			$salt_end = substr($ints,2,1);
 		}
+
 		return $arg;
 	}
 

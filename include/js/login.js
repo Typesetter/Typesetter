@@ -1,7 +1,8 @@
 
 
 $(function(){
-	if( IE_LT_8 ){
+
+	if( typeof(IE_LT_8) != 'undefined' && IE_LT_8 ){
 		$('#browser_warning').show();
 	}
 	$('#loginform .login_text:first').focus();
@@ -30,13 +31,19 @@ $(function(){
 
 	function sha512(pwd,nonce){
 
-		for(var i = 0; i < 20; i++ ){
-			var shaObj = new jsSHA(pwd,"TEXT");
-			pwd = shaObj.getHash("SHA-512", "HEX");
+		var salt_start = 0;
+		var salt_end = 3;
+		for(var i = 0; i < 50; i++ ){
+			var salt = pwd.substr(salt_start,salt_end);
+			var shaObj = new jsSHA(pwd+salt,'TEXT');
+			pwd = shaObj.getHash('SHA-512', 'HEX');
+			var ints = pwd.replace(/[a-f]/g,'');
+			salt_start = ints.substr(0,1);
+			salt_end = ints.substr(2,1);
 		}
 
-		var shaObj = new jsSHA(nonce+pwd,"TEXT");
-		pwd = shaObj.getHash("SHA-512", "HEX");
+		var shaObj = new jsSHA(nonce+pwd,'TEXT');
+		pwd = shaObj.getHash('SHA-512', 'HEX');
 
 		return pwd;
 	}

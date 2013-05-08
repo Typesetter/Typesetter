@@ -55,7 +55,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		$cmd = common::GetCommand();
 
-		$this->avail_menus['gpmenu'] = $langmessage['Main Menu'];
+		$this->avail_menus['gpmenu'] = $langmessage['Main Menu'].' / '.$langmessage['site_map'];
 		$this->avail_menus['all'] = $langmessage['All Pages'];
 		$this->avail_menus['hidden'] = $langmessage['Not In Main Menu'];
 		$this->avail_menus['nomenus'] = $langmessage['Not In Any Menus'];

@@ -57,10 +57,32 @@
 		},
 
 		/**
+		 * Called when the inline editor has loaded
+		 *
+		 */
+		editorLoaded:function(){
+		},
+
+		/**
+		 * Called when the width setting is changed
+		 *
+		 */
+		widthChanged:function(width){
+		},
+
+		/**
+		 * Called when the height setting is changed
+		 *
+		 */
+		heightChanged:function(height){
+		},
+
+		/**
 		 * Whether or not to show the size options for the gallery
 		 *
 		 */
-		gp_size_options : false,
+		width_option : false,
+		height_option : false,
 
 
 		checkDirty:function(){
@@ -167,6 +189,7 @@
 		//replace with raw content then start ckeditor
 		edit_div.get(0).innerHTML = section_object.content;
 		ShowEditor();
+		gp_editor.editorLoaded();
 
 
 		function ShowEditor(){
@@ -190,8 +213,27 @@
 			 *
 			 */
 
-			if( settings.gp_size_options ){
-				$('#ckeditor_save').before('<table id="gp_size_options"><tr><td>'+gplang.Width+':</td><td><input class="ck_input" type="text" id="gp_gallery_width" name="width" /></td><td> &nbsp; '+gplang.Height+':</td><td><input class="ck_input" type="text" id="gp_gallery_height" name="height" /></td></tr></table>');
+			if( settings.width_option || settings.height_option ){
+				var size_table = '<table id="gp_size_options"><tr>';
+
+				if( settings.width_option ){
+					size_table += '<td>'+gplang.Width+':</td><td><input class="ck_input" type="text" id="gp_gallery_width" name="width" /></td>';
+				}
+				if( settings.height_option ){
+					size_table += '<td> '+gplang.Height+':</td><td><input class="ck_input" type="text" id="gp_gallery_height" name="height" /></td>';
+				}
+				size_table += '</tr></table>';
+
+				$('#ckeditor_save').before(size_table);
+
+				$('#gp_gallery_width').on('keyup paste change',function(){
+					gp_editor.widthChanged(this.value);
+				});
+
+				$('#gp_gallery_height').on('keyup paste change',function(){
+					gp_editor.heightChanged(this.value);
+				});
+
 			}
 
 

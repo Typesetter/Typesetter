@@ -215,7 +215,9 @@ class gp_combine{
 
 				'bootstrap-alert'			=> array(
 												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-alert.js',
-												'package' => 'bootstrap'),
+												'package' => 'bootstrap',
+												'requires' => array('bootstrap-transition')
+												),
 
 				'bootstrap-button'			=> array(
 												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-button.js',
@@ -228,7 +230,9 @@ class gp_combine{
 
 				'bootstrap-collapse'		=> array(
 												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-collapse.js',
-												'package' => 'bootstrap'),
+												'package' => 'bootstrap',
+												'requires' => array('bootstrap-transition')
+												),
 
 				'bootstrap-dropdown'		=> array(
 												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-dropdown.js',
@@ -240,7 +244,9 @@ class gp_combine{
 
 				'bootstrap-popover'			=> array(
 												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-popover.js',
-												'package' => 'bootstrap'),
+												'package' => 'bootstrap',
+												'requires' => array('bootstrap-tooltip')
+												),
 
 				'bootstrap-scrollspy'		=> array(
 												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-scrollspy.js',
@@ -248,11 +254,15 @@ class gp_combine{
 
 				'bootstrap-tab'				=> array(
 												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-tab.js',
-												'package' => 'bootstrap'),
+												'package' => 'bootstrap',
+												'requires' => array('bootstrap-transition')
+												),
 
 				'bootstrap-tooltip'			=> array(
 												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-tooltip.js',
-												'package' => 'bootstrap'),
+												'package' => 'bootstrap',
+												'requires' => array('bootstrap-transition')
+												),
 
 				'bootstrap-transition'		=> array(
 												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-transition.js',

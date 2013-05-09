@@ -1690,7 +1690,7 @@ class common{
 		global $config, $dataDir;
 
 		require($dataDir.'/data/_site/config.php');
-		if( !is_array($config) ){
+		if( !is_array($config) || !array_key_exists('gpversion',$config) ){
 			common::stop();
 		}
 		$GLOBALS['fileModTimes']['config.php'] = $fileModTime;
@@ -1752,7 +1752,7 @@ class common{
 
 	static function stop(){
 		die('<p>Notice: The site configuration did not load properly.</p>'
-			.'<p>If you are the site administrator, you can troubleshoot the problem turning debugging "on" or bypass it by enabling safe mode.</p>'
+			.'<p>If you are the site administrator, you can troubleshoot the problem turning debugging "on" or bypass it by enabling gpEasy safe mode.</p>'
 			.'<p>More information is available in the <a href="http://docs.gpeasy.com/Main/Troubleshooting">gpEasy documentation</a>.</p>'
 			.common::ErrorBuffer(true,false)
 			);

@@ -492,7 +492,7 @@ class editing_page extends display{
 			echo '</td><td style="white-space:nowrap">';
 			echo '<input class="gpinput" type="text" name="attr_value[]" value="'.htmlspecialchars($value).'" size="40" />';
 			if( $attr == 'class' ){
-				echo '<div class="class_only">gpEasy Generated: GPAREA filetype-'.$section['type'].'</div>';
+				echo '<div class="class_only admin_note">'.$langmessage['default'].': GPAREA filetype-'.$section['type'].'</div>';
 			}
 			echo '</td></tr>';
 		}

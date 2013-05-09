@@ -716,7 +716,12 @@ class gp_edit{
 			break;
 		}
 
-		$section['content'] = gpPlugin::Filter('GetDefaultContent',array($section['content'],$type));
+		$content = gpPlugin::Filter('GetDefaultContent',array($section['content'],$type));
+		if( is_array($content) ){
+			$section = $content + $section;
+		}else{
+			$section['content'] = $content;
+		}
 
 		return $section;
 	}

@@ -107,6 +107,9 @@
 			});
 
 
+			//height & width
+			args.width = $('#gp_gallery_width').val();
+			args.height = $('#gp_gallery_height').val();
 
 			//get content
 			var data = edit_div.clone();
@@ -217,10 +220,10 @@
 				var size_table = '<table id="gp_size_options"><tr>';
 
 				if( settings.width_option ){
-					size_table += '<td>'+gplang.Width+':</td><td><input class="ck_input" type="text" id="gp_gallery_width" name="width" /></td>';
+					size_table += '<td>'+gplang.Width+':</td><td><input class="ck_input" type="text" id="gp_gallery_width" name="width" value="'+section_object.width+'"/></td>';
 				}
 				if( settings.height_option ){
-					size_table += '<td> '+gplang.Height+':</td><td><input class="ck_input" type="text" id="gp_gallery_height" name="height" /></td>';
+					size_table += '<td> '+gplang.Height+':</td><td><input class="ck_input" type="text" id="gp_gallery_height" name="height" value="'+section_object.height+'"/></td>';
 				}
 				size_table += '</tr></table>';
 

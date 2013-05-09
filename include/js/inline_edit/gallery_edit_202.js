@@ -35,6 +35,14 @@
 
 	gp_editor = {
 
+		sortable_area_sel:	'.gp_gallery',
+		img_name:			'gallery',
+		img_rel:			'gallery_gallery',
+		edit_links_target:	false,
+		width_option:		false,
+		height_option:		false,
+		make_sortable:		true,
+
 		/**
 		 * Called when a caption is edited
 		 *
@@ -88,7 +96,7 @@
 		checkDirty:function(){
 			return false;
 		},
-		getData:function(edit_div,settings){
+		getData:function(edit_div){
 
 			var args = {
 				images: [],
@@ -97,12 +105,12 @@
 
 
 			//images
-			edit_div.find(settings.sortable_area_sel).find('li > a').each(function(){
+			edit_div.find(gp_editor.sortable_area_sel).find('li > a').each(function(){
 				args.images.push( $(this).attr('href') );
 			});
 
 			//captions
-			edit_div.find(settings.edit_links_target).find('.caption').each(function(){
+			edit_div.find(gp_editor.edit_links_target).find('.caption').each(function(){
 				args.captions.push( $(this).html() );
 			});
 
@@ -123,24 +131,17 @@
 		}
 	};
 
-	function gp_init_inline_edit(area_id,section_object,options){
+	function gp_init_inline_edit(area_id,section_object){
 
 		$gp.LoadStyle('/include/css/inline_image.css');
 
-		var defaults = {
-			sortable_area_sel:	'.gp_gallery',
-			img_name:			'gallery',
-			img_rel:			'gallery_gallery',
-			edit_links_target:	'.gp_gallery > li',
-			width_option:		false,
-			height_option:		false,
-			make_sortable:		true
-		};
-		var settings = $.extend(settings, defaults, options);
-
 		//options for inline editing can be set using the global variable gp_gallery_options
+		// @deprecated gp_gallery_options
 		if( typeof(gp_gallery_options) !== 'undefined' ){
-			var settings = $.extend(settings, defaults, gp_gallery_options);
+			$.extend(gp_editor, gp_gallery_options);
+		}
+		if( !gp_editor.edit_links_target ){
+			gp_editor.edit_links_target = gp_editor.sortable_area_sel+' > li'
 		}
 
 		//components that can be removed
@@ -182,7 +183,7 @@
 		};
 
 		gp_editor.gp_saveData = function(){
-			return gp_editor.getData(edit_div,settings);
+			return gp_editor.getData(edit_div,gp_editor);
 		}
 
 
@@ -199,8 +200,8 @@
 
 
 		function ShowEditor(){
-			sortable_area = edit_div.find(settings.sortable_area_sel);
-			if( settings.make_sortable ){
+			sortable_area = edit_div.find(gp_editor.sortable_area_sel);
+			if( gp_editor.make_sortable ){
 				MakeSortable();
 			}
 			gp_editor.resetDirty();
@@ -213,7 +214,7 @@
 			$('#ckeditor_top').html('<div id="gp_image_area"></div><div id="gp_upload_queue"></div>');
 			$('#ckeditor_controls').prepend('<div id="gp_folder_options"></div>');
 
-			LoadImages(false,settings);
+			LoadImages(false,gp_editor);
 
 
 			/**
@@ -221,13 +222,13 @@
 			 *
 			 */
 
-			if( settings.width_option || settings.height_option ){
+			if( gp_editor.width_option || gp_editor.height_option ){
 				var size_table = '<table id="gp_size_options"><tr>';
 
-				if( settings.width_option ){
+				if( gp_editor.width_option ){
 					size_table += '<td>'+gplang.Width+':</td><td><input class="ck_input" type="text" id="gp_gallery_width" name="width" value="'+section_object.width+'"/></td>';
 				}
-				if( settings.height_option ){
+				if( gp_editor.height_option ){
 					size_table += '<td> '+gplang.Height+':</td><td><input class="ck_input" type="text" id="gp_gallery_height" name="height" value="'+section_object.height+'"/></td>';
 				}
 				size_table += '</tr></table>';
@@ -261,7 +262,8 @@
 				edit_links.hide();
 			});
 
-			$(document).delegate(settings.edit_links_target,{
+
+			$(document).delegate(gp_editor.edit_links_target,{
 				'mouseenter.gp_edit':function(){
 					var offset = $(this).offset();
 					edit_links.show().css({'left':offset.left,'top':offset.top});
@@ -283,7 +285,7 @@
 
 
 				var popup = '<div class="inline_box" id="gp_gallery_caption"><form><h3>'+gplang.cp+'</h3>'
-							+ '<textarea name="caption" cols="200" rows="3">'+$gp.htmlchars(caption)+'</textarea>'
+							+ '<textarea name="caption" cols="50" rows="3">'+$gp.htmlchars(caption)+'</textarea>'
 							+ '<p><input type="submit" name="cmd" value="'+gplang.up+'" class="gp_gallery_update" /> '
 							+ '<input type="button" name="" value="'+gplang.ca+'" class="admin_box_close" /></p>'
 							+ '</form></div>';
@@ -353,7 +355,7 @@
 		function AddImage(img,holder){
 
 			edit_div.find('.gp_to_remove').remove();
-			img.attr({'data-cmd':settings.img_name,'data-arg':settings.img_rel,'title':'','class':settings.img_rel})
+			img.attr({'data-cmd':gp_editor.img_name,'data-arg':gp_editor.img_rel,'title':'','class':gp_editor.img_rel})
 			var li = $('<li>').append(img).append('<div class="caption"></div>');
 			if( holder ){
 				holder.replaceWith(li);
@@ -396,20 +398,20 @@
 
 			form.find('.file').auto_upload({
 
-				start: function(name, settings){
-					settings['bar'] = $('<a data-cmd="gp_file_uploading">'+name+'</a>').appendTo('#gp_upload_queue');
-					settings['holder'] = $('<li class="holder" style="display:none"></li>').appendTo(sortable_area);
+				start: function(name, args){
+					args['bar'] = $('<a data-cmd="gp_file_uploading">'+name+'</a>').appendTo('#gp_upload_queue');
+					args['holder'] = $('<li class="holder" style="display:none"></li>').appendTo(sortable_area);
 					return true;
 				},
 
-				progress: function(progress, name, settings) {
+				progress: function(progress, name, args) {
 					progress = Math.round(progress*100);
 					progress = Math.min(98,progress-1);
-					settings['bar'].text(progress+'% '+name);
+					args['bar'].text(progress+'% '+name);
 				},
 
-				finish: function( response, name, settings) {
-					var progress_bar = settings['bar'];
+				finish: function( response, name, args) {
+					var progress_bar = args['bar'];
 					progress_bar.text('100% '+name);
 
 					var $contents = $(response);
@@ -425,7 +427,7 @@
 						var img = $(message).appendTo(avail);
 						//var img_link = img.find('a[name=gp_gallery_add]');
 						var img_link = img.find('a[name=gp_gallery_add],a[data-cmd=gp_gallery_add]');
-						AddImage(img_link.clone(),settings['holder']);
+						AddImage(img_link.clone(),args['holder']);
 
 					}else if( status == 'notimage' ){
 						progress_bar.addClass('success');
@@ -464,7 +466,7 @@
 			var frm = this.form;
 			var dir = frm.dir.value;
 			var newdir = dir+'/'+frm.newdir.value
-			LoadImages(newdir,settings);
+			LoadImages(newdir,gp_editor);
 		}
 
 

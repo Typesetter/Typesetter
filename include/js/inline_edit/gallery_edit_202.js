@@ -34,6 +34,7 @@
 
 
 	gp_editor = {
+
 		/**
 		 * Called when a caption is edited
 		 *
@@ -42,10 +43,17 @@
 		},
 
 		/**
-		 * Called when an image is removed
+		 * Called before an image is removed
 		 *
 		 */
 		removeImage:function(image){
+		},
+
+		/**
+		 * Called after an image is removed
+		 *
+		 */
+		removedImage:function(edit_div){
 		},
 
 		/**
@@ -76,14 +84,6 @@
 		 */
 		heightChanged:function(height){
 		},
-
-		/**
-		 * Whether or not to show the size options for the gallery
-		 *
-		 */
-		width_option : false,
-		height_option : false,
-
 
 		checkDirty:function(){
 			return false;
@@ -131,7 +131,10 @@
 			sortable_area_sel:	'.gp_gallery',
 			img_name:			'gallery',
 			img_rel:			'gallery_gallery',
-			edit_links_target:	'.gp_gallery > li'
+			edit_links_target:	'.gp_gallery > li',
+			width_option:		false,
+			height_option:		false,
+			make_sortable:		true
 		};
 		var settings = $.extend(settings, defaults, options);
 
@@ -197,7 +200,9 @@
 
 		function ShowEditor(){
 			sortable_area = edit_div.find(settings.sortable_area_sel);
-			MakeSortable();
+			if( settings.make_sortable ){
+				MakeSortable();
+			}
 			gp_editor.resetDirty();
 
 			var edit_path = strip_from(save_path,'?');
@@ -290,6 +295,7 @@
 				gp_editor.removeImage(current_image);
 				$(current_image).remove();
 				edit_links.hide(); //so that a new mouseover will happen
+				gp_editor.removedImage(edit_div);
 			}
 
 			/**
@@ -346,7 +352,7 @@
 
 		function AddImage(img,holder){
 
-			sortable_area.find('.gp_to_remove').remove();
+			edit_div.find('.gp_to_remove').remove();
 			img.attr({'data-cmd':settings.img_name,'data-arg':settings.img_rel,'title':'','class':settings.img_rel})
 			var li = $('<li>').append(img).append('<div class="caption"></div>');
 			if( holder ){

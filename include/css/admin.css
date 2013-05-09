@@ -1006,7 +1006,7 @@ table.tablesorter th.gp_header_desc:before{
 	color:#444 !important;
 	padding:2px 17px;
 	border:1px solid transparent;
-	margin:0;
+	margin:0 24px 0 0;
 	font-size:12px !important;
 	cursor:pointer;
 	}
@@ -1034,6 +1034,7 @@ table.tablesorter th.gp_header_desc:before{
 	background: url('../imgs/admin_icons.png') no-repeat -6px -230px;
 	height:18px;
 	width:18px;
+	margin:0;
 	}
 #gp_edit_overlay span.gp_hover a.gp_overlay_expand{
 	float:right;
@@ -1041,9 +1042,6 @@ table.tablesorter th.gp_header_desc:before{
 	background: url('../imgs/cancel.png') no-repeat 50% 50%;
 	}
 
-#gp_edit_overlay span a:nth-child(2){
-	margin-right:24px;
-	}
 
 /* adminlinks */
 #adminlinks2{

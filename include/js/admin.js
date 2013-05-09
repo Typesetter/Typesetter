@@ -506,6 +506,17 @@ $gp.inputs.check_all = function(){
 };
 
 
+/**
+ * Send form using cookiecmd
+ *
+ */
+$gp.inputs.cnreq = function(evt){
+	evt.preventDefault();
+	var query = $(this.form).serialize();
+	$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
+	window.location = strip_from(strip_from(this.form.action,'#'),'?');
+};
+
 
 /**
  * Escape special html characters in a string similar to php's htmlspecialchars() function

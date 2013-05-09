@@ -615,7 +615,7 @@ class editing_page extends display{
 		echo '<input type="hidden" name="last_mod" value="'.$this->fileModTime.'" />';
 		echo '<input type="hidden" name="section" value="'.htmlspecialchars($_GET['section']).'" />';
 		echo '<input type="hidden" name="cmd" value="add_section" />';
-		echo '<input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit"/>';
+		echo '<input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit" data-cmd="cnreq" />';
 		echo ' <input type="button" name="" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
 		echo '</p>';
 

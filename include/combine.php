@@ -223,7 +223,8 @@ class gp_combine{
 
 				'bootstrap-carousel'		=> array(
 												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-carousel.js',
-												'package' => 'bootstrap'),
+												'package' => 'bootstrap',
+												'requires' => array('bootstrap-transition')),
 
 				'bootstrap-collapse'		=> array(
 												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-collapse.js',

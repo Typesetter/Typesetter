@@ -116,10 +116,8 @@
 			});
 
 
-			//height & width
-			args.width = $('#gp_gallery_width').val();
-			args.height = $('#gp_gallery_height').val();
-			args.auto_start = $('#gp_gallery_auto_start').prop('checked');
+			//options
+			var options = $('#gp_gallery_options').find('input,select').serialize();
 
 			//get content
 			var data = edit_div.clone();
@@ -127,7 +125,7 @@
 			data.find('ul').enableSelection().removeClass('ui-sortable').removeAttr('unselectable');
 			data.find('.gp_nosave').remove();
 			data = data.html();
-			return $.param(args)+'&gpcontent='+encodeURIComponent(data);
+			return $.param(args)+'&'+options+'&gpcontent='+encodeURIComponent(data);
 		},
 		updateElement:function(){
 		}
@@ -219,7 +217,7 @@
 
 			LoadImages(false,gp_editor);
 
-			var option_area = $('<div>').prependTo('#ckeditor_save');
+			var option_area = $('<div id="gp_gallery_options">').prependTo('#ckeditor_save');
 
 
 			/**
@@ -228,7 +226,7 @@
 			 */
 			if( gp_editor.heightChanged ){
 
-				$('<div class="half_area">'+gplang.Height+': <input class="ck_input" type="text" id="gp_gallery_height" name="height" /></div>')
+				$('<div class="half_area">'+gplang.Height+': <input class="ck_input" type="text" name="height" /></div>')
 					.appendTo(option_area)
 					.find('input')
 					.val(section_object.height)
@@ -245,7 +243,7 @@
 			if( gp_editor.widthChanged ){
 				debug(gp_editor.widthChanged);
 
-				$('<div class="half_area">'+gplang.Width+': <input class="ck_input" type="text" id="gp_gallery_width" name="width" /></div>')
+				$('<div class="half_area">'+gplang.Width+': <input class="ck_input" type="text" name="width" /></div>')
 					.appendTo(option_area)
 					.find('input')
 					.val(section_object.width)
@@ -261,7 +259,7 @@
 			 */
 			if( gp_editor.auto_start ){
 				gplang.Auto_Start = 'Auto Start';
-				$('<div class="half_area">'+gplang.Auto_Start+': <input class="ck_input" type="checkbox" id="gp_gallery_auto_start" name="auto_start" /></div>')
+				$('<div class="half_area">'+gplang.Auto_Start+': <input class="ck_input" type="checkbox" name="auto_start" value="true" /></div>')
 					.appendTo(option_area)
 					.find('input')
 					.prop('checked',section_object.auto_start)

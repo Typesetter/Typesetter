@@ -297,7 +297,7 @@
 #gp_current_image label{
 	margin-right:5px;
 	}
-#gp_size_options .ck_input,
+#ckeditor_area .ck_input,
 #gp_current_image .ck_input{
 	width:40px;
 	border:1px solid #ccc;
@@ -332,6 +332,15 @@ body #gp_current_image td{
     padding: 4px 0;
     width: 120px;
     }
+
+#ckeditor_area .half_area{
+	width:120px;
+	margin:0 6px 4px 0;
+	display:inline-block;
+	text-align:center;
+	min-height:21px;
+	}
+
 
 
 .gp_image_edit{

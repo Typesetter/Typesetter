@@ -39,8 +39,7 @@
 		img_name:			'gallery',
 		img_rel:			'gallery_gallery',
 		edit_links_target:	false,
-		width_option:		false,
-		height_option:		false,
+		auto_start:			false,
 		make_sortable:		true,
 
 		/**
@@ -82,16 +81,18 @@
 		/**
 		 * Called when the width setting is changed
 		 *
+		 * widthChanged:function(width){}
+		 *
 		 */
-		widthChanged:function(width){
-		},
+		widthChanged: false,
 
 		/**
 		 * Called when the height setting is changed
 		 *
+		 * heightChanged:function(height){},
 		 */
-		heightChanged:function(height){
-		},
+		heightChanged: false,
+
 
 		checkDirty:function(){
 			return false;
@@ -118,6 +119,7 @@
 			//height & width
 			args.width = $('#gp_gallery_width').val();
 			args.height = $('#gp_gallery_height').val();
+			args.auto_start = $('#gp_gallery_auto_start').prop('checked');
 
 			//get content
 			var data = edit_div.clone();
@@ -143,6 +145,7 @@
 		if( !gp_editor.edit_links_target ){
 			gp_editor.edit_links_target = gp_editor.sortable_area_sel+' > li'
 		}
+
 
 		//components that can be removed
 		var edit_links = false,
@@ -216,32 +219,53 @@
 
 			LoadImages(false,gp_editor);
 
+			var option_area = $('<div>').prependTo('#ckeditor_save');
+
 
 			/**
-			 * Add image size options
+			 * Height Option
 			 *
 			 */
+			if( gp_editor.heightChanged ){
 
-			if( gp_editor.width_option || gp_editor.height_option ){
-				var size_table = '<table id="gp_size_options"><tr>';
+				$('<div class="half_area">'+gplang.Height+': <input class="ck_input" type="text" id="gp_gallery_height" name="height" /></div>')
+					.appendTo(option_area)
+					.find('input')
+					.val(section_object.height)
+					.on('keyup paste change',gp_editor.heightChanged)
+					;
 
-				if( gp_editor.width_option ){
-					size_table += '<td>'+gplang.Width+':</td><td><input class="ck_input" type="text" id="gp_gallery_width" name="width" value="'+section_object.width+'"/></td>';
-				}
-				if( gp_editor.height_option ){
-					size_table += '<td> '+gplang.Height+':</td><td><input class="ck_input" type="text" id="gp_gallery_height" name="height" value="'+section_object.height+'"/></td>';
-				}
-				size_table += '</tr></table>';
+			}
 
-				$('#ckeditor_save').before(size_table);
 
-				$('#gp_gallery_width').on('keyup paste change',function(){
-					gp_editor.widthChanged(this.value);
-				});
+			/**
+			 * Width Option
+			 *
+			 */
+			if( gp_editor.widthChanged ){
+				debug(gp_editor.widthChanged);
 
-				$('#gp_gallery_height').on('keyup paste change',function(){
-					gp_editor.heightChanged(this.value);
-				});
+				$('<div class="half_area">'+gplang.Width+': <input class="ck_input" type="text" id="gp_gallery_width" name="width" /></div>')
+					.appendTo(option_area)
+					.find('input')
+					.val(section_object.width)
+					.on('keyup paste change',gp_editor.widthChanged)
+					;
+
+			}
+
+
+			/**
+			 * Auto Start
+			 *
+			 */
+			if( gp_editor.auto_start ){
+				gplang.Auto_Start = 'Auto Start';
+				$('<div class="half_area">'+gplang.Auto_Start+': <input class="ck_input" type="checkbox" id="gp_gallery_auto_start" name="auto_start" /></div>')
+					.appendTo(option_area)
+					.find('input')
+					.prop('checked',section_object.auto_start)
+					;
 
 			}
 

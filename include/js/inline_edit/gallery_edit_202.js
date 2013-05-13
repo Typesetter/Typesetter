@@ -100,6 +100,14 @@
 		 */
 		intervalSpeed: false,
 
+		/**
+		 * Called when an image is moved backwards
+		 *
+		 * moveBack:function(current_image){},
+		 */
+		moveBack: false,
+		moveForward: false,
+
 
 		checkDirty:function(){
 			return false;
@@ -276,6 +284,7 @@
 
 
 			/**
+			 * Interval Speed
 			 *
 			 */
 			if( gp_editor.intervalSpeed ){
@@ -284,7 +293,38 @@
 					.appendTo(option_area)
 					.find('input')
 					.val(section_object.interval_speed)
+					.on('keyup paste change',gp_editor.intervalSpeed)
 					;
+			}
+
+
+			/**
+			 * Image options (move, caption, delete)
+			 *
+			 */
+			function AddLink(div,name,img){
+				div.append('<a data-cmd="'+name+'"><img src="'+gpBase+'/include/imgs/blank.gif" height="16" width="16" class="'+img+'"/></a>');
+			}
+			edit_links = $('<span class="gp_gallery_edit gp_floating_area"></span>').appendTo('body').hide();
+
+
+			/**
+			 * Move Back/Forward
+			 *
+			 */
+			if( gp_editor.moveBack ){
+				$('<a>&lsaquo;</a>')
+					.appendTo(edit_links)
+					.on('click',function(){
+						gp_editor.moveBack(current_image);
+					});
+			}
+			if( gp_editor.moveForward ){
+				$('<a>&rsaquo;</a>')
+					.appendTo(edit_links)
+					.on('click',function(){
+						gp_editor.moveForward(current_image);
+					});
 			}
 
 
@@ -292,12 +332,14 @@
 			 * Caption & delete links
 			 *
 			 */
-			function AddLink(div,name,img){
-				div.append('<a data-cmd="'+name+'"><img src="'+gpBase+'/include/imgs/blank.gif" height="16" width="16" class="'+img+'"/></a>');
-			}
-			edit_links = $('<span class="gp_gallery_edit gp_floating_area"></span>').appendTo('body').hide();
 			AddLink(edit_links,'gp_gallery_caption','page_edit');
 			AddLink(edit_links,'gp_gallery_rm','delete');
+
+
+			/**
+			 * Show/Hide Edit Links
+			 *
+			 */
 			edit_links.bind('mouseenter.gp_edit',function(){
 				edit_links.show();
 			}).bind('mouseleave.gp_edit',function(){
@@ -310,7 +352,6 @@
 					var offset = $(this).offset();
 					edit_links.show().css({'left':offset.left,'top':offset.top});
 					current_image = this;
-
 				},
 				'mouseleave.gp_edit':function(){
 					edit_links.hide();

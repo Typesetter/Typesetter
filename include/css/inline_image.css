@@ -174,9 +174,19 @@
 	padding:2px;
 	background-color:#f1f1f1;
 }
-.gp_gallery_edit img{
-	margin:3px;
+.gp_gallery_edit a{
+    color: #777777;
+    display: inline-block;
+    font-size: 24px;
+    font-weight: bold;
+    height: 16px;
+    line-height: 15px;
+    padding: 3px;
+    text-align: center;
+    width: 16px;
+    cursor:pointer;
 	}
+.gp_gallery_edit img{}
 
 .gp_gallery_edit img.page_edit{
 	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -32px;

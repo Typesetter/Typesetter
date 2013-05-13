@@ -326,14 +326,6 @@ body #gp_current_image td{
     width: 120px;
     }
 
-#ckeditor_area .half_area{
-	width:120px;
-	margin:0 6px 4px 0;
-	display:inline-block;
-	text-align:center;
-	min-height:21px;
-	}
-
 
 
 .gp_image_edit{

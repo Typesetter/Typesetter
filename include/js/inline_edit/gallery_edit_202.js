@@ -93,6 +93,13 @@
 		 */
 		heightChanged: false,
 
+		/**
+		 * Called when the interval speed setting is changed
+		 *
+		 * intervalSpeed:function(height){},
+		 */
+		intervalSpeed: false,
+
 
 		checkDirty:function(){
 			return false;
@@ -125,7 +132,7 @@
 			data.find('ul').enableSelection().removeClass('ui-sortable').removeAttr('unselectable');
 			data.find('.gp_nosave').remove();
 			data = data.html();
-			return $.param(args)+'&'+options+'&gpcontent='+encodeURIComponent(data);
+			return 'images[]=&captions[]=&'+$.param(args)+'&'+options+'&gpcontent='+encodeURIComponent(data);
 		},
 		updateElement:function(){
 		}
@@ -226,7 +233,7 @@
 			 */
 			if( gp_editor.heightChanged ){
 
-				$('<div class="half_area">'+gplang.Height+': <input class="ck_input" type="text" name="height" /></div>')
+				$('<div class="half_width">'+gplang.Height+': <input class="ck_input" type="text" name="height" /></div>')
 					.appendTo(option_area)
 					.find('input')
 					.val(section_object.height)
@@ -243,7 +250,7 @@
 			if( gp_editor.widthChanged ){
 				debug(gp_editor.widthChanged);
 
-				$('<div class="half_area">'+gplang.Width+': <input class="ck_input" type="text" name="width" /></div>')
+				$('<div class="half_width">'+gplang.Width+': <input class="ck_input" type="text" name="width" /></div>')
 					.appendTo(option_area)
 					.find('input')
 					.val(section_object.width)
@@ -259,12 +266,25 @@
 			 */
 			if( gp_editor.auto_start ){
 				gplang.Auto_Start = 'Auto Start';
-				$('<div class="half_area">'+gplang.Auto_Start+': <input class="ck_input" type="checkbox" name="auto_start" value="true" /></div>')
+				$('<div class="half_width">'+gplang.Auto_Start+': <input class="ck_input" type="checkbox" name="auto_start" value="true" /></div>')
 					.appendTo(option_area)
 					.find('input')
 					.prop('checked',section_object.auto_start)
 					;
 
+			}
+
+
+			/**
+			 *
+			 */
+			if( gp_editor.intervalSpeed ){
+				gplang.Interval_Speed = 'Interval Speed';
+				$('<div class="full_width">'+gplang.Interval_Speed+': <input class="ck_input" type="text" name="interval_speed" /></div>')
+					.appendTo(option_area)
+					.find('input')
+					.val(section_object.interval_speed)
+					;
 			}
 
 

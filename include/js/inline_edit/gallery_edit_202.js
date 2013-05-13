@@ -140,7 +140,7 @@
 			data.find('ul').enableSelection().removeClass('ui-sortable').removeAttr('unselectable');
 			data.find('.gp_nosave').remove();
 			data = data.html();
-			return 'images[]=&captions[]=&'+$.param(args)+'&'+options+'&gpcontent='+encodeURIComponent(data);
+			return $.param(args)+'&'+options+'&gpcontent='+encodeURIComponent(data);
 		},
 		updateElement:function(){
 		}

@@ -326,7 +326,7 @@ body #gp_admin_html #admincontent{
 #admincontent_panel.toolbar:hover .admin_arrow_out{
 	visibility:visible;
 	}
-#admincontent_panel.toolbar .close_home{
+.gp_floating_area .close_home{
 	display:inline-block;
 	height:16px;
 	width:16px;
@@ -1477,7 +1477,6 @@ body #gp_admin_html .layout_links a.selected{
 	min-height:18px;
 	cursor:move;
 	font-weight:bold;
-	padding:0 5px;
 	font-size:13px;
 	position:relative;
 	color:#777 !important;
@@ -1490,7 +1489,7 @@ body #gp_admin_html .layout_links a.selected{
 .gp_floating_area .gp_right a,
 .gp_floating_area .gp_right span{
 	display:inline-block;
-	margin:0 4px;
+	margin:0 0 0 8px;
 	}
 
 .gp_floating_area .admin_arrow_out{

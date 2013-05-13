@@ -8,13 +8,6 @@
 	display:none !important;
 	}
 
-#ckeditor_area .half_width,
-#ckeditor_area .half_width:hover,
-#ckeditor_area .half_width:active{
-	text-align:center !important;
-	width:111px;
-	display:inline-block;
-	}
 
 #ckeditor_area .ck_reset_size{
 	border: 1px solid #CCCCCC !important;
@@ -373,12 +366,6 @@ body #gp_current_image td{
 	float:none;
 	vertical-align:top;
 	width:260px;
-	}
-
-#ckeditor_area.docked #ckeditor_controls .ckeditor_control{
-	text-align:center !important;
-	width:111px;
-	display:inline-block;
 	}
 
 #ckeditor_area.docked #gp_option_area{

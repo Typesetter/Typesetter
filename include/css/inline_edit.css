@@ -49,6 +49,7 @@
 
 
 #ckeditor_area .ckeditor_control{
+
 	font-family:Arial, sans-serif !important;
 	font-size:12px !important;
 	text-decoration:none !important;
@@ -73,15 +74,28 @@
 	margin: 0 3px 4px 0 !important;
 	color:#444 !important;
 	text-shadow:1px 1px 0 #fff;
+
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	-moz-box-sizing:border-box;
+	overflow:hidden;
+	vertical-align:top;
 	}
 
-#ckeditor_save{}
 
 #ckeditor_area .full_width,
 #ckeditor_area .full_width:hover,
 #ckeditor_area .full_width:active{
 	text-align:center !important;
-	width:182px;
+	width:195px;
+	}
+
+#ckeditor_area .half_width,
+#ckeditor_area .half_width:hover,
+#ckeditor_area .half_width:active{
+	text-align:center !important;
+	width:123px;
+	display:inline-block;
 	}
 
 /**

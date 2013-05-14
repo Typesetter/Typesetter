@@ -17,6 +17,7 @@
 .slideshowb_images{
 	position:relative;
 	height:400px;
+	line-height:400px;
 	overflow:hidden;
 	white-space:nowrap;
 	display:block;
@@ -34,8 +35,8 @@
 
 	/* background: url(../imgs/loaderA64.gif) 50% 50% no-repeat; */
 	background: url(../../../../include/imgs/loader64.gif) 50% 50% no-repeat;
-	height:400px;
-	line-height:400px;
+	height:inherit;
+	line-height:inherit;
 	z-index:0;
 	outline:0 none;
 	vertical-align:middle;
@@ -52,7 +53,7 @@
 	left:0;
 	}
 .slideshowb_images img{
-	max-height:400px;
+	max-height:100%;
 	max-width:90%;
 	vertical-align:middle;
 	}
@@ -60,13 +61,13 @@
 .slideshowb_icons{
 	position:absolute;
 	top:0;
+	bottom:0;
 	left:-45px;
 	width: 80px;
 	display:inline-block;
 	overflow:hidden;
 	line-height:100%;
 	z-index:100;
-	min-height:500px;
 	transition:left .5s linear, background .5s linear;
 	}
 

@@ -97,7 +97,7 @@ class TwitterCarousel{
 		if( !$section_data['auto_start'] ){
 			$class .= ' start_paused';
 		}
-		$attr = ' data-speed="1000"';
+		$attr = ' data-speed="5000"';
 		if( isset($section_data['interval_speed']) && is_numeric($section_data['interval_speed']) ){
 			$attr = ' data-speed="'.$section_data['interval_speed'].'"';
 		}

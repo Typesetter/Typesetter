@@ -184,6 +184,29 @@ $(function(){
 		return hash;
 	}
 
+	//auto start
+	$('.slideshowb_wrap.start').each(function(){
+		var $slideshow = $(this);
+		var speed = $slideshow.data('speed') || 5000;
+
+		window.setInterval(function(){
+			if( !$slideshow.hasClass('hover') ){
+				NextImg( $slideshow );
+			}
+		},speed);
+
+		//cancel on mouseover
+		$slideshow.on('mouseenter',function(){
+			$slideshow.addClass('hover');
+		}).on('mouseleave',function(){
+			$slideshow.removeClass('hover');
+		});
+
+
+	});
+
+
+
 });
 
 

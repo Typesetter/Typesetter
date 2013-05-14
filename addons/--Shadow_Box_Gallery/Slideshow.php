@@ -82,7 +82,16 @@ class SlideshowB{
 		ob_start();
 
 
-		echo '<div class="slideshowb_wrap">';
+		$class = 'slideshowb_wrap';
+		if( $section_data['auto_start'] ){
+			$class .= ' start';
+		}
+		$attr = ' data-speed="5000"';
+		if( isset($section_data['interval_speed']) && is_numeric($section_data['interval_speed']) ){
+			$attr = ' data-speed="'.$section_data['interval_speed'].'"';
+		}
+
+		echo '<div class="'.$class.'"'.$attr.'>';
 		echo '<div class="slideshowb_images">';
 		echo $first_image;
 		echo '</div>';
@@ -104,22 +113,23 @@ class SlideshowB{
 	 * @static
 	 */
 	static function DefaultContent($default_content,$type){
-		if( $type == self::ContentKey() ){
-			ob_start();
-			echo '<div class="slideshowb_wrap">';
-			echo '<div class="slideshowb_images">';
-			//echo $images;
-			echo '</div>';
-			echo '<div class="slideshowb_caption prov_caption">';
-			//echo $caption.'&nbsp;';
-			echo '</div>';
-			echo '<div class="slideshowb_icons prov_icons"><span></span><ul>';
-			//echo $icons;
-			echo '</ul></div>';
-			echo '</div>';
-			return ob_get_clean();
+		if( $type != self::ContentKey() ){
+			return $default_content;
 		}
-		return $default_content;
+
+		ob_start();
+		echo '<div class="slideshowb_wrap">';
+		echo '<div class="slideshowb_images">';
+		//echo $images;
+		echo '</div>';
+		echo '<div class="slideshowb_caption prov_caption">';
+		//echo $caption.'&nbsp;';
+		echo '</div>';
+		echo '<div class="slideshowb_icons prov_icons"><span></span><ul>';
+		//echo $icons;
+		echo '</ul></div>';
+		echo '</div>';
+		return ob_get_clean();
 	}
 
 	/**
@@ -131,8 +141,14 @@ class SlideshowB{
 			return $return;
 		}
 
+		$_POST += array('auto_start'=>'');
+		$page->file_sections[$section]['auto_start'] = ($_POST['auto_start'] == 'true');
 		$page->file_sections[$section]['images'] = $_REQUEST['images'];
 		$page->file_sections[$section]['captions'] = $_REQUEST['captions'];
+		$page->file_sections[$section]['interval_speed'] = 5000;
+		if( isset($_POST['interval_speed']) && is_numeric($_POST['interval_speed']) ){
+			$page->file_sections[$section]['interval_speed'] = $_POST['interval_speed'];
+		}
 		$page->file_sections[$section]['content'] = self::GenerateContent($page->file_sections[$section]);
 
 		return true;

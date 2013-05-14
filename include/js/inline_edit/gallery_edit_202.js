@@ -288,8 +288,8 @@
 			 *
 			 */
 			if( gp_editor.intervalSpeed ){
-				gplang.Interval_Speed = 'Interval Speed';
-				$('<div class="full_width">'+gplang.Interval_Speed+': <input class="ck_input" type="text" name="interval_speed" /></div>')
+				gplang.Speed = 'Speed';
+				$('<div class="half_width">'+gplang.Speed+': <input class="ck_input" type="text" name="interval_speed" /></div>')
 					.appendTo(option_area)
 					.find('input')
 					.val(section_object.interval_speed)

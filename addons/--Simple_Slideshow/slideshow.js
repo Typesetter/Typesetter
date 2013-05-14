@@ -149,11 +149,14 @@ $(function(){
 			//change to pause
 			play_pause.removeClass('gp_slide_play');
 		}else{
+
+			var speed = container.data('speed') || 3000;
+
 			//change to play
 			play_pause.addClass('gp_slide_play');
 			interval = window.setInterval(function(){
 				PlayNext();
-			},3000);
+			},speed);
 		}
 
 		function PlayNext(){
@@ -202,6 +205,10 @@ $(function(){
 		container.find('.first_image').attr('id',hash);
 		gp_slideshow.ImgSelect(first_img.get(0));
 
+		//auto start
+		if( container.hasClass('start') ){
+			container.find('.gp_slide_play_pause').click();
+		}
 	});
 
 		//// Set Navigation Key Bindings

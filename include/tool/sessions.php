@@ -1042,6 +1042,10 @@ class gpsession{
 	static function FatalNotices(){
 		global $dataDir, $page;
 
+		if( !admin_tools::HasPermission('Admin_Errors') ){
+			return;
+		}
+
 		if( is_object($page) && strpos($page->title,'Admin_Errors') !== false ){
 			return;
 		}

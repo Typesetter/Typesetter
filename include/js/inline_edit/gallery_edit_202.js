@@ -348,7 +348,7 @@
 
 
 			$(document).delegate(gp_editor.edit_links_target,{
-				'mouseenter.gp_edit':function(){
+				'mousemove.gp_edit':function(){
 					var offset = $(this).offset();
 					edit_links.show().css({'left':offset.left,'top':offset.top});
 					current_image = this;
@@ -376,6 +376,11 @@
 				$gp.AdminBoxC(popup);
 			}
 
+			/**
+			 * Remove an image from a gallery
+			 * gp_editor functions called before and after removal
+			 *
+			 */
 			$gp.links.gp_gallery_rm = function(){
 				gp_editor.removeImage(current_image);
 				$(current_image).remove();

@@ -311,7 +311,7 @@ class SimpleBlogCommon{
 	function SaveNew(){
 		global $langmessage;
 
-		$_POST += array('title'=>'','content'=>'','subtitle'=>'');
+		$_POST += array('title'=>'','content'=>'','subtitle'=>'','isDraft'=>'');
 
 		$_POST['subtitle'] = htmlspecialchars($_POST['subtitle']);
 
@@ -336,11 +336,9 @@ class SimpleBlogCommon{
 		$posts[$post_index]['title'] = $title;
 		$posts[$post_index]['content'] = $content;
 		$posts[$post_index]['subtitle'] = $_POST['subtitle'];
-                if (isset($_POST['isDraft'])) {
-                    $posts[$post_index]['isDraft'] = $_POST['isDraft'];
-                } else {
-                    $posts[$post_index]['isDraft'] = 'off';
-                }
+		if( $_POST['isDraft'] === 'on' ){
+			$posts[$post_index]['isDraft'] = true;
+		}
 		$posts[$post_index]['time'] = time();
 
 		//save to data file
@@ -379,7 +377,7 @@ class SimpleBlogCommon{
 	function SaveEdit(){
 		global $langmessage;
 
-		$_POST += array('title'=>'','content'=>'','subtitle'=>'');
+		$_POST += array('title'=>'','content'=>'','subtitle'=>'','isDraft'=>'');
 		$_REQUEST += array('id'=>'');
 
 		$post_index = $_REQUEST['id'];
@@ -406,11 +404,9 @@ class SimpleBlogCommon{
 		$posts[$post_index]['title'] = $title;
 		$posts[$post_index]['content'] = $content;
 		$posts[$post_index]['subtitle'] = $_POST['subtitle'];
-                if (isset($_POST['isDraft'])) {
-                    $posts[$post_index]['isDraft'] = $_POST['isDraft'];
-                } else {
-                    $posts[$post_index]['isDraft'] = 'off';
-                }
+		if( $_POST['isDraft'] === 'on' ){
+			$posts[$post_index]['isDraft'] = true;
+		}
 
 		//save to data file
 		if( !gpFiles::SaveArray($post_file,'posts',$posts) ){
@@ -533,57 +529,44 @@ class SimpleBlogCommon{
 
 		includeFile('tool/editing.php');
 
-		$array += array('title'=>'','content'=>'','subtitle'=>'', 'isDraft'=>'');
+		$array += array('title'=>'','content'=>'','subtitle'=>'', 'isDraft'=>false);
 		$array['title'] = SimpleBlogCommon::Underscores( $array['title'] );
 
 		echo '<form action="'.common::GetUrl('Special_Blog').'" method="post">';
 		echo '<table style="width:100%">';
 
-		echo '<tr>';
-			echo '<td>';
+		echo '<tr><td>';
 			echo 'Title';
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo '<input type="text" name="title" value="'.$array['title'].'" />';
-			echo '</td>';
-			echo '</tr>';
+			echo '</td></tr>';
 
-		echo '<tr>';
-			echo '<td>';
+		echo '<tr><td>';
 			echo 'Sub-Title';
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo '<input type="text" name="subtitle" value="'.$array['subtitle'].'" />';
-			echo '</td>';
-			echo '</tr>';
-                        
-		echo '<tr>';
-			echo '<td>';
+			echo '</td></tr>';
+
+		echo '<tr><td>';
 			echo 'Draft';
-			echo '</td>';
-			echo '<td>';
-			echo '<input type="checkbox" name="isDraft"';
-                        if ($array['isDraft'] == 'on') echo 'checked="true"';
-                        echo '" />';
-			echo '</td>';
-			echo '</tr>';
+			echo '</td><td>';
+			echo '<input type="checkbox" name="isDraft" value="on" ';
+				if( $array['isDraft'] ) echo 'checked="true"';
+				echo '" />';
+			echo '</td></tr>';
 
 		$this->show_category_list($post_id);
 
-		echo '<tr>';
-			echo '<td colspan="2">';
+		echo '<tr><td colspan="2">';
 			gp_edit::UseCK($array['content'],'content');
-			echo '</td>';
-			echo '</tr>';
+			echo '</td></tr>';
 
-		echo '<tr>';
-			echo '<td colspan="2">';
+		echo '<tr><td colspan="2">';
 			echo '<input type="hidden" name="cmd" value="'.$cmd.'" />';
 			echo '<input type="hidden" name="id" value="'.$post_id.'" />';
 			echo '<input type="submit" name="" value="'.$langmessage['save'].'" /> ';
 			echo '<input type="submit" name="cmd" value="'.$langmessage['cancel'].'" />';
-			echo '</td>';
-			echo '</tr>';
+			echo '</td></tr>';
 
 		echo '</table>';
 		echo '</form>';

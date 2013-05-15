@@ -212,12 +212,12 @@ class SimpleBlog extends SimpleBlogCommon{
 
 
 		$post =& $posts[$post_index];
-                if( !common::LoggedIn() ){
-                    if ($post['isDraft'] === 'on') {
-                        message($langmessage['OOPS']);
-			return;
-                    }; //How to make 404 page?
-                }
+		if( !common::LoggedIn() ){
+			if( isset($post['isDraft']) && $post['isDraft'] ){
+				message($langmessage['OOPS']);
+				return;
+			} //How to make 404 page?
+		}
 		$this->ShowPostContent($post,$post_index);
 
 		$page->label = SimpleBlogCommon::Underscores( $post['title'] );
@@ -365,18 +365,17 @@ class SimpleBlog extends SimpleBlogCommon{
 		echo '<p class="blog_nav_links">';
 
 		//check for older posts and if older post is draft
-                $i = 0;
-                do {
-                    $i++;
-                    $prev_index = $this->IndexFromKey($post_key+$i);
-                    if ( $prev_index ) {
-                        $post = $this->GetPostContent($prev_index);
-                        $isDraft = $post['isDraft'];
-                    } else {
-                        break;
-                    }
-                }
-                while ($isDraft === 'on');
+		$i = 0;
+		do {
+			$i++;
+			$prev_index = $this->IndexFromKey($post_key+$i);
+			if ( $prev_index ) {
+				$post = $this->GetPostContent($prev_index);
+				$isDraft = isset($post['isDraft']) && $post['isDraft'];
+			} else {
+				break;
+			}
+		}while($isDraft);
 
 		//blog home
 		$html = common::Link('Special_Blog','%s');
@@ -385,15 +384,15 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		// check for newer posts and if post is draft
 		if( $post_key > 0 ){
-                    
-                    $i = 0;
-                    do {
-                        $i++;
-                        $next_index = $this->IndexFromKey($post_key-$i);
-                        $post = $this->GetPostContent($next_index);
-                        $isDraft = $post['isDraft'];
-                    }
-                    while ($isDraft === 'on') ;
+
+			$i = 0;
+			do {
+				$i++;
+				$next_index = $this->IndexFromKey($post_key-$i);
+				$post = $this->GetPostContent($next_index);
+				$isDraft = isset($post['isDraft']) && $post['isDraft'];
+			}while( $isDraft );
+
 		    $html = common::Link('Special_Blog','%s','id='.$next_index,'class="blog_newer"');
 		    echo gpOutput::GetAddonText('Newer Entry',$html);
 		}
@@ -503,11 +502,12 @@ class SimpleBlog extends SimpleBlogCommon{
 	 */
 	function ShowPostContent( &$post, &$post_index, $limit = 0){
 		global $langmessage;
-                if( !common::LoggedIn() ){
-                    if ($post['isDraft'] === 'on') return false; //How to make 404 page?
-                }
-                
-                //If user enter random Blog url, he didn't see any 404, but nothng.
+
+		if( !common::LoggedIn() ){
+			if( isset($post['isDraft']) && $post['isDraft'] ) return false; //How to make 404 page?
+		}
+
+		//If user enter random Blog url, he didn't see any 404, but nothng.
 		$id = $class = '';
 		if( common::LoggedIn() ){
 
@@ -539,14 +539,13 @@ class SimpleBlog extends SimpleBlogCommon{
 			$class .= ' editable_area';
 			$id = 'id="ExtraEditArea'.$edit_index.'"';
 		}
-                if ($post['isDraft'] === 'on') {
-                    $isDraft = '<span style="opacity:0.3;">';
-                    $isDraft .= gpOutput::SelectText('Draft');
-                    $isDraft .= '</span> ';
-                } else {
-                    $isDraft = '';
-                }
-		//echo '<div class="blog_post">';
+
+		$isDraft = '';
+		if( isset($post['isDraft']) && $post['isDraft'] ){
+			$isDraft = '<span style="opacity:0.3;">';
+			$isDraft .= gpOutput::SelectText('Draft');
+			$isDraft .= '</span> ';
+		}
 		echo '<div class="blog_post'.$class.'" '.$id.'>';
 
 		$header = '<h2 id="blog_post_'.$post_index.'">';

@@ -147,7 +147,11 @@
 		 */
 		function InfoHtml(){
 			//get data
-			var this_html, data = jQuery.parseJSON( $current.find('span').html() );
+			var this_html, data;
+
+			data = $current.find('span').html();
+			data = unspecialchars( data );
+			data = jQuery.parseJSON( data );
 
 			var external = $current.find('.external').length;
 
@@ -158,6 +162,8 @@
 			}
 
 			data = $.extend({}, {title:'',layout_color:'',layout_label:'',types:'',size:'',mtime:'',opts:''}, data);
+
+			//debug(data.opts);
 
 			var reg,parts = ['title','key','url','layout_label','types','size','mtime','opts'];
 			$.each(parts,function(){
@@ -214,6 +220,10 @@
 						.replace(/&lt;/g, '<')
 						.replace(/&gt;/g, '>')
 						;
+					/*
+				    .replace(/"/g, "&quot;")
+				    .replace(/'/g, "&#039;");
+				    */
 		}
 
 

@@ -802,6 +802,7 @@ class admin_menu_new extends admin_menu_tools{
 
 	function MenuData($data){
 		$data = common::JsonEncode($data);
+
 		echo '<span style="display:none">'.htmlspecialchars($data,ENT_NOQUOTES).'</span>';
 	}
 

@@ -179,17 +179,20 @@ class admin_addon_install extends admin_addons_tool{
 		}
 
 		if( !$result ){
+			if( $use_cache ) unlink($cache_file);
 			echo '<p>'.$langmessage['Sorry, data not fetched'].' (f1)</p>';
 			return;
 		}
 		if( strpos($result,'a:') !== 0 ){
+			if( $use_cache ) unlink($cache_file);
 			echo '<p>'.$langmessage['Sorry, data not fetched'].' (f2)</p>';
 			return;
 		}
 
-		$data = unserialize($result);
+		$data = @unserialize($result);
 
-		if( count($data) == 0 ){
+		if( !is_array($data) || count($data) == 0 ){
+			if( $use_cache ) unlink($cache_file);
 			echo '<p>'.$langmessage['Sorry, data not fetched'].' (f3)</p>';
 			return;
 		}

@@ -1917,7 +1917,7 @@ class admin_menu_new extends admin_menu_tools{
 		$index = common::NewFileIndex();
 		$gp_index[$title] = $index;
 
-		if( !gpFiles::NewTitle($title,$section['content'],$type) ){
+		if( !gpFiles::NewTitle($title,$section,$type) ){
 			message($langmessage['OOPS'].' (cn1)');
 			unset($gp_index[$title]);
 			return false;

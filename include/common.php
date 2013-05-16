@@ -2878,10 +2878,15 @@ class gpFiles{
 		}
 
 		$file_sections = array();
-		$file_sections[0] = array(
-			'type' => $type,
-			'content' => $section_content
-			);
+		if( is_array($section_content) ){
+			$file_sections[0] = $section_content;
+		}else{
+			$file_sections[0] = array(
+				'type' => $type,
+				'content' => $section_content
+				);
+		}
+
 
 		$meta_data = array(
 			'file_number' => gpFiles::NewFileNumber(),

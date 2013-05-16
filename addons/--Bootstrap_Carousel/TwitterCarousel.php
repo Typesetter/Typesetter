@@ -101,7 +101,7 @@ class TwitterCarousel{
 		if( isset($section_data['interval_speed']) && is_numeric($section_data['interval_speed']) ){
 			$attr = ' data-speed="'.$section_data['interval_speed'].'"';
 		}
-		$attr = ' style="padding-bottom:'.$section_data['height'].'"';
+		$attr .= ' style="padding-bottom:'.$section_data['height'].'"';
 		echo '<div id="'.$id.'" class="'.$class.'"'.$attr.'>';
 
 		// Indicators

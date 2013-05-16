@@ -338,6 +338,8 @@ class SimpleBlogCommon{
 		$posts[$post_index]['subtitle'] = $_POST['subtitle'];
 		if( $_POST['isDraft'] === 'on' ){
 			$posts[$post_index]['isDraft'] = true;
+		}else{
+			unset($posts[$post_index]['isDraft']);
 		}
 		$posts[$post_index]['time'] = time();
 
@@ -406,6 +408,8 @@ class SimpleBlogCommon{
 		$posts[$post_index]['subtitle'] = $_POST['subtitle'];
 		if( $_POST['isDraft'] === 'on' ){
 			$posts[$post_index]['isDraft'] = true;
+		}else{
+			unset($posts[$post_index]['isDraft']);
 		}
 
 		//save to data file

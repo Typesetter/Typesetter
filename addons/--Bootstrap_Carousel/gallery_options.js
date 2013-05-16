@@ -52,13 +52,13 @@ $.extend(gp_editor,{
 	 */
 	removeImage : function(current_image){
 		var index = $(current_image).index();
-		var $indicators = $('.gp_editing .carousel-indicators > li');
+		var $indicator_area = $('.gp_editing .carousel-indicators');
 
 		//remove indicator
-		$indicators.eq(index).remove();
+		$indicator_area.children().eq(index).remove();
 
 		//reorder indicatorss
-		$indicators.each(function(i){
+		$indicator_area.children().each(function(i){
 			$(this).attr('data-slide-to',i).data('slide-to',i);
 		});
 	},

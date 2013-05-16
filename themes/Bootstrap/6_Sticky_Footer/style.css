@@ -1,3 +1,10 @@
+.navbar .GPAREA{
+	display:inline;
+	}
+.navbar div.GPAREA:after{
+	display:none;
+	}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 

@@ -8,7 +8,12 @@ body {
 #gpx_content div.GPAREA[class*="span"] {
 	clear:none;
 	}
-
+.navbar .GPAREA{
+	display:inline;
+	}
+.navbar div.GPAREA:after{
+	display:none;
+	}
 
 @media (max-width: 980px) {
 	.navbar-fixed-top{

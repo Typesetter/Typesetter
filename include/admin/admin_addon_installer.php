@@ -214,8 +214,13 @@ class admin_addon_installer extends admin_addons_tool{
 
 		//check ini contents
 		$this->display_name = basename($this->source);
-		if( !$this->GetINI($this->source) ){
-			return false;
+		if( !$this->GetINI($this->source,$error) ){
+
+			//local themes don't need addon.ini files
+			if( empty($this->new_layout) ){
+				$this->message( $error );
+				return false;
+			}
 		}
 
 
@@ -349,19 +354,15 @@ class admin_addon_installer extends admin_addons_tool{
 	 * @return bool
 	 *
 	 */
-	function GetINI($ini_dir){
+	function GetINI($ini_dir,&$error){
 		global $langmessage;
+
+		$error = false;
 
 		$ini_file = $ini_dir.'/Addon.ini';
 
 		if( !file_exists($ini_file) ){
-
-			//local themes don't need addon.ini files
-			if( !empty($this->new_layout) ){
-				return true;
-			}
-
-			$this->message( sprintf($langmessage['File_Not_Found'],' <em>'.$ini_file.'</em>') );
+			$error = sprintf($langmessage['File_Not_Found'],' <em>'.$ini_file.'</em>');
 			return false;
 		}
 
@@ -370,23 +371,23 @@ class admin_addon_installer extends admin_addons_tool{
 		$this->ini_contents = gp_ini::ParseString($this->ini_text);
 
 		if( !$this->ini_contents ){
-			$this->message( $langmessage['Ini_Error'].' '.$langmessage['Ini_Submit_Bug'] );
+			$error = $langmessage['Ini_Error'].' '.$langmessage['Ini_Submit_Bug'];
 			return false;
 		}
 
 		if( !isset($this->ini_contents['Addon_Name']) ){
-			$this->message( $langmessage['Ini_No_Name'].' '.$langmessage['Ini_Submit_Bug'] );
+			$error = $langmessage['Ini_No_Name'].' '.$langmessage['Ini_Submit_Bug'];
 			return false;
 		}
 
 		if( isset($this->ini_contents['Addon_Unique_ID']) && !is_numeric($this->ini_contents['Addon_Unique_ID']) ){
-			$this->message('Invalid Unique ID');
+			$error = 'Invalid Unique ID';
 			return false;
 		}
 
 		// Check Versions
 		if( !empty($this->ini_contents['min_gpeasy_version']) && version_compare($this->ini_contents['min_gpeasy_version'], gpversion,'>') ){
-			$this->message( sprintf($langmessage['min_version'],$this->ini_contents['min_gpeasy_version']).' '.$langmessage['min_version_upgrade'] );
+			$error = sprintf($langmessage['min_version'],$this->ini_contents['min_gpeasy_version']).' '.$langmessage['min_version_upgrade'];
 			return false;
 		}
 

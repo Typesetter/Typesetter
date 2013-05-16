@@ -160,7 +160,7 @@
 	font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
 	position:relative;
 	height:0;
-	padding-bottom:20%; /* responsive height */
+	padding-bottom:30%; /* responsive height */
 	}
 
 .gp_twitter_carousel .carousel-indicators a,
@@ -189,11 +189,17 @@
 	}
 
 .gp_twitter_carousel .item img{
-	min-height:100%;
-	min-width:100%;
-	max-width:none;
-	max-height:none;
+	height:100%;
+	width:100%;
+
+	background-position:center center;
+	background-repeat:no-repeat;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
 	}
+
 .gp_twitter_carousel .no_caption{
 	display:none;
 	}

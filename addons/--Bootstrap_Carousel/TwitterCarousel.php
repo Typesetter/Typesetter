@@ -76,7 +76,7 @@ class TwitterCarousel{
 				$caption_class = 'no_caption';
 			}
 			$images .= '<div class="item '.$class.'">'
-						.'<img src="'.$img.'" alt="">'
+						.'<img src="'.common::GetDir('/include/imgs/blank.gif').'" style="background-image:url('.$img.')" alt="">'
 						.'<div class="caption carousel-caption '.$caption_class.'">'.$caption.'</div>'
 						.'</div>';
 
@@ -117,6 +117,7 @@ class TwitterCarousel{
 		// Carousel nav
 		echo '<a class="carousel-control left" data-target="#'.$id.'" data-slide="prev">&lsaquo;</a>';
 		echo '<a class="carousel-control right" data-target="#'.$id.'" data-slide="next">&rsaquo;</a>';
+		echo '<span class="gp_blank_img" data-src="'.common::GetDir('/include/imgs/blank.gif').'" style="display:none"></span>';
 		echo '</div>';
 
 
@@ -141,7 +142,7 @@ class TwitterCarousel{
 		ob_start();
 		$id = 'carousel_'.time();
 
-		echo '<div id="'.$id.'" class="gp_twitter_carousel carousel slide">';
+		echo '<div id="'.$id.'" class="gp_twitter_carousel carousel slide" style="padding-bottom:30%">';
 		echo '<ol class="carousel-indicators">';
 		echo '<li class="active gp_to_remove"></li>';
 		echo '</ol>';
@@ -154,6 +155,7 @@ class TwitterCarousel{
 		//<!-- Carousel nav -->
 		echo '<a class="carousel-control left" data-target="#'.$id.'" data-slide="prev">&lsaquo;</a>';
 		echo '<a class="carousel-control right" data-target="#'.$id.'" data-slide="next">&rsaquo;</a>';
+		echo '<span class="gp_blank_img" data-src="'.common::GetDir('/include/imgs/blank.gif').'" style="display:none"></span>';
 		echo '</div>';
 
 		$section['content'] = ob_get_clean();

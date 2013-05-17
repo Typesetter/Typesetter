@@ -56,6 +56,8 @@ class TwitterCarousel{
 			}
 			$caption =& trim($section_data['captions'][$i]);
 
+			//msg('<textarea>'.htmlspecialchars($caption).'</textarea>');
+
 			$class = '';
 			if( $j == 0 ){
 				$class = 'active';
@@ -112,10 +114,7 @@ class TwitterCarousel{
 		echo '<span class="gp_blank_img" data-src="'.common::GetDir('/include/imgs/blank.gif').'" style="display:none"></span>';
 		echo '</div>';
 
-
-		$str = ob_get_clean();
-		return str_replace('<',"\n<",$str);
-
+		return ob_get_clean();
 	}
 
 
@@ -173,21 +172,16 @@ class TwitterCarousel{
 		$page->file_sections[$section]['auto_start'] = ($_POST['auto_start'] == 'true');
 		$page->file_sections[$section]['images'] = $_POST['images'];
 		$page->file_sections[$section]['captions'] = $_POST['captions'];
-
-		$page->file_sections[$section]['height'] = $_POST['height']; //need to
-
-		/*if( !empty($_POST['height']) ){
-			$page->file_sections[$section]['height'] = $_POST['height'];
-		}else{
-			unset($page->file_sections[$section]['height']);
-		}
-		*/
-
+		$page->file_sections[$section]['height'] = $_POST['height'];
 		if( isset($_POST['interval_speed']) && is_numeric($_POST['interval_speed']) ){
 			$page->file_sections[$section]['interval_speed'] = $_POST['interval_speed'];
 		}
 
 		$page->file_sections[$section]['content'] = self::GenerateContent($page->file_sections[$section]);
+
+		//foreach($page->file_sections[$section]['captions'] as $caption){
+		//	msg('<textarea>'.htmlspecialchars($caption).'</textarea>');
+		//}
 
 		return true;
 	}

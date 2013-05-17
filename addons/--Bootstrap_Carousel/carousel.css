@@ -11,7 +11,7 @@
 .carousel-inner {
   position: relative;
   width: 100%;
-  overflow: visible; /* different from original bootstrap */
+  overflow:hidden;
 }
 
 .carousel-inner > .item {
@@ -224,4 +224,8 @@
   .carousel-control{
     display:none;
   }
+  .carousel-inner {
+    overflow: visible;
+  }
+
 }

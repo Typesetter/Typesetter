@@ -11,7 +11,7 @@
 .carousel-inner {
   position: relative;
   width: 100%;
-  overflow: hidden;
+  overflow: visible; /* different from original bootstrap */
 }
 
 .carousel-inner > .item {
@@ -159,7 +159,7 @@
 .gp_twitter_carousel{
 	font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
 	position:relative;
-	height:0;
+	height: auto; /* for ie */
 	padding-bottom:30%; /* responsive height */
 	}
 
@@ -203,3 +203,25 @@
 .gp_twitter_carousel .no_caption{
 	display:none;
 	}
+
+
+@media (max-width: 480px) {
+  .carousel{
+    margin-bottom:36px;
+  }
+  .carousel-caption{
+    position:static;
+    height:16px;
+  }
+  .carousel-caption,
+  .carousel-caption *{
+    font-size: 14px;
+    font-weight:normal;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .carousel-control{
+    display:none;
+  }
+}

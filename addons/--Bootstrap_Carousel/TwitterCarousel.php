@@ -56,8 +56,6 @@ class TwitterCarousel{
 			}
 			$caption =& trim($section_data['captions'][$i]);
 
-			//msg('<textarea>'.htmlspecialchars($caption).'</textarea>');
-
 			$class = '';
 			if( $j == 0 ){
 				$class = 'active';
@@ -178,10 +176,6 @@ class TwitterCarousel{
 		}
 
 		$page->file_sections[$section]['content'] = self::GenerateContent($page->file_sections[$section]);
-
-		//foreach($page->file_sections[$section]['captions'] as $caption){
-		//	msg('<textarea>'.htmlspecialchars($caption).'</textarea>');
-		//}
 
 		return true;
 	}

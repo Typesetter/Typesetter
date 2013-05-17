@@ -15,6 +15,10 @@ $(function(){
 			.carousel('pause')
 			.resize(function(){
 				debug('resize');
+			}).swiperight(function() {
+				$carousel.carousel('prev');
+			}).swipeleft(function() {
+				$carousel.carousel('next');
 			});
 	});
 

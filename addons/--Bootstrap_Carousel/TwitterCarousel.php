@@ -50,7 +50,6 @@ class TwitterCarousel{
 		$images = '';
 		$indicators = '';
 		$j = 0;
-		$max_w = $max_h = 99999;
 		foreach($section_data['images'] as $i => $img){
 			if( empty($img) ){
 				continue;
@@ -62,13 +61,6 @@ class TwitterCarousel{
 				$class = 'active';
 			}
 
-			//size
-			$full_path = $dataDir.rawurldecode($img);
-			$size_a = getimagesize($full_path);
-			if( $size_a){
-				$max_w = min($size_a[0],$max_w);
-				$max_h = min($size_a[1],$max_h);
-			}
 
 			//images
 			$caption_class = '';
@@ -224,6 +216,7 @@ class TwitterCarousel{
 		common::LoadComponents( 'bootstrap-carousel' );
 
 		//$page->admin_js = true; //loads main.js
+		$page->head_js[] = '/data/_addoncode/'.$addonFolderName.'/jquery.mobile.custom.js';
 		$page->head_js[] = '/data/_addoncode/'.$addonFolderName.'/carousel.js';
 		$page->css_user[] = '/data/_addoncode/'.$addonFolderName.'/carousel.css';
 

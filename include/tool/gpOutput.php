@@ -274,6 +274,8 @@ class gpOutput{
 	static function GetgpOutInfo($gpOutCmd){
 		global $gpOutConf,$config;
 
+		//echo 'here';
+
 		$key = $gpOutCmd = trim($gpOutCmd,':');
 		$info = false;
 		$arg = '';
@@ -405,10 +407,12 @@ class gpOutput{
 	}
 
 	static function ExecArea($info){
-
 		//retreive from gadget cache if set
-		if( isset($info['gpOutCmd']) && substr($info['gpOutCmd'],0,7) == 'Gadget:' ){
-			$gadget = substr($info['gpOutCmd'],7);
+		if( isset($info['gpOutCmd']) ){
+			$gadget = $info['gpOutCmd'];
+			if( substr($gadget,0,7) == 'Gadget:' ){
+				$gadget = substr($gadget,7);
+			}
 			if( isset(self::$gadget_cache[$gadget]) ){
 				echo self::$gadget_cache[$gadget];
 				return;

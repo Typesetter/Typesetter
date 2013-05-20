@@ -159,6 +159,11 @@ body #admin_menu li.ui-sortable-helper{
 
 #admin_menu_div .layout_icon{
 	border-radius: 5px;
+    display: block;
+    float: left;
+    height: 16px;
+    margin-right: 7px;
+    width: 16px;
 	}
 
 #admin_menu_div .undo_icon{

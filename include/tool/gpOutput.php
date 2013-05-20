@@ -405,10 +405,14 @@ class gpOutput{
 	}
 
 	static function ExecArea($info){
+
 		//retreive from gadget cache if set
-		if( isset($info['gpOutCmd']) && isset(self::$gadget_cache[$info['gpOutCmd']]) ){
-			echo self::$gadget_cache[$info['gpOutCmd']];
-			return;
+		if( isset($info['gpOutCmd']) && substr($info['gpOutCmd'],0,7) == 'Gadget:' ){
+			$gadget = substr($info['gpOutCmd'],7);
+			if( isset(self::$gadget_cache[$gadget]) ){
+				echo self::$gadget_cache[$gadget];
+				return;
+			}
 		}
 
 

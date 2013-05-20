@@ -70,7 +70,6 @@ class admin_theme_content extends admin_addon_install{
 
 		$this->possible = $this->GetPossible();
 
-
 		$cmd = common::GetCommand();
 
 		//layout requests
@@ -547,6 +546,13 @@ class admin_theme_content extends admin_addon_install{
 			}
 		}
 
+		//theme name
+		echo '<li>';
+		echo '<span>'.$langmessage['theme'].': '.$this->ThemeLabel($info['theme_name']).'</span>';
+		echo '</li>';
+
+
+
 
 		//default
 		echo '<li>';
@@ -615,7 +621,6 @@ class admin_theme_content extends admin_addon_install{
 		if( !count($theme_colors) ){
 			return;
 		}
-
 
 		if( $this->layout_request ){
 			echo '<div><div class="dd_menu">';
@@ -1370,6 +1375,9 @@ class admin_theme_content extends admin_addon_install{
 			$index = $name.'(package)';
 
 			$themes[$index]['name'] = $name;
+			if( isset($ini_info['Addon_Name']) ){
+				$themes[$index]['name'] = $ini_info['Addon_Name'];
+			}
 			$themes[$index]['colors'] = $this->GetThemeColors($full_dir);
 			$themes[$index]['folder'] = $name;
 			$themes[$index]['is_addon'] = false;
@@ -1839,14 +1847,24 @@ class admin_theme_content extends admin_addon_install{
 
 	function ThemeLabel($theme_color){
 
-		list($theme,$color) = explode('/',$theme_color);
+		$theme = $theme_color;
+		$color = false;
+		if( strpos($theme_color,'/') ){
+			list($theme,$color) = explode('/',$theme_color);
+		}
 
 		foreach($this->possible as $info){
+
 			if( $info['folder'] == $theme ){
-				return $info['name'].'/'.$color;
+				$theme = $info['name'];
+				break;
 			}
 		}
-		return $theme_color;
+
+		if( $color ){
+			return $theme.'/'.$color;
+		}
+		return $theme;
 	}
 
 	function TitlesCount($layout){

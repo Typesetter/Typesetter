@@ -33,7 +33,7 @@ gp_defined('gp_write_lock_time',30);
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php'); message('local browse path');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
-define('gpversion','4.0RC3');
+define('gpversion','4.0');
 define('gp_random',common::RandomString());
 
 

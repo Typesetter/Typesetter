@@ -565,11 +565,24 @@ class gp_combine{
 		}
 
 		$all_scripts = array_filter($all_scripts);
+		$first_scripts = array();
 
 		//make sure jquery is the first
 		if( array_key_exists('jquery',$all_scripts) ){
-			$all_scripts = array('jquery'=>$all_scripts['jquery']) + $all_scripts;
+			$first_scripts['jquery'] = $all_scripts['jquery'];
 		}
+
+		// move any bootstrap components to front to prevent conflicts
+		// hack for conflict between jquery ui button and bootstrap button
+		foreach($all_scripts as $key => $script){
+			if( !array_key_exists('package',$script) || $script['package'] !== 'bootstrap' ){
+				continue;
+			}
+			$first_scripts[$key] = $script;
+		}
+
+		$all_scripts = $first_scripts + $all_scripts;
+
 
 		//remove any excludes
 		$excludes = array();

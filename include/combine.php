@@ -543,11 +543,6 @@ class gp_combine{
 
 		$all_scripts = array();
 
-		//make sure jquery is the first
-		if( $root_call ){
-			$all_scripts['jquery'] = self::$scripts['jquery'];
-		}
-
 		//get all scripts
 		foreach($components as $component){
 			if( !array_key_exists($component,self::$scripts) ){
@@ -570,6 +565,11 @@ class gp_combine{
 		}
 
 		$all_scripts = array_filter($all_scripts);
+
+		//make sure jquery is the first
+		if( array_key_exists('jquery',$all_scripts) ){
+			$all_scripts = array('jquery'=>$all_scripts['jquery']) + $all_scripts;
+		}
 
 		//remove any excludes
 		$excludes = array();

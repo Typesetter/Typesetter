@@ -202,6 +202,7 @@ class admin_addon_installer extends admin_addons_tool{
 	 *
 	 */
 	function InstallSteps(){
+		global $dataDir;
 
 		$this->GetAddonData();			// addonHistory
 		$this->Init_PT();				// $this->config
@@ -245,6 +246,8 @@ class admin_addon_installer extends admin_addons_tool{
 		//the data folder will not always be the same as the addon folder
 		if( isset($this->config[$this->config_key]['data_folder']) ){
 			$this->data_folder = $this->config[$this->config_key]['data_folder'];
+		}elseif( $this->upgrade_key && file_exists( $dataDir.'/data/_addondata/'.$this->upgrade_key) ){
+			$this->data_folder = $this->upgrade_key;
 		}else{
 			$this->data_folder = $this->dest_name;
 		}
@@ -566,6 +569,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 		//code folder
 		$this->config[$this->config_key]['code_folder_part'] = $this->addon_folder_rel.'/'.$this->dest_name;
+		$this->config[$this->config_key]['data_folder'] = $this->data_folder;
 
 
 		//general configuration

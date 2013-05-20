@@ -40,7 +40,9 @@ body #gp_admin_html form{
 	margin:0;
 	padding:0;
 	}
-
+body #gp_admin_html input{
+	width:auto;
+	}
 body #gp_admin_html table{
 	/* margin:0; changes bordered display */
 	/* width:auto; /* this changes ckeditor display */

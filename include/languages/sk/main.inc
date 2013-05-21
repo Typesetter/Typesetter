@@ -115,7 +115,7 @@ $langmessage = array(
 'logout'=>'Odhlásiť sa',
 'preview'=>'Náhľad',
 'layout'=>'Rozmiestnenie',
-'Layout Options'=>'Layout Options',
+'Layout Options'=>'Možnosti rozmiestnenia',
 'color'=>'Farba',
 'style'=>'Štýl',
 'Links'=>'Odkazy',
@@ -498,8 +498,8 @@ $langmessage = array(
 'Restore this revision'=>'Obnoviť túto revíziu',
 
 //for use with php's strftime() method
-'strftime_datetime'=>'%b %e, %Y @ %H:%M',
-'strftime_date'=>'%b %e, %Y',
+'strftime_datetime'=>'%e. %b. %Y @ %H:%M',
+'strftime_date'=>'%e. %b. %Y',
 'strftime_time'=>'%H:%M',
 
 '_characters' => '%s znakov',

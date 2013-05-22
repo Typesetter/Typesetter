@@ -239,7 +239,7 @@ class admin_extra{
 	 *
 	 */
 	function NewSection(){
-		global $langmessage;
+		global $langmessage, $gpAdmin;
 
 		$title = gp_edit::CleanTitle($_REQUEST['file']);
 		if( empty($title) ){
@@ -249,6 +249,9 @@ class admin_extra{
 
 		$data = gp_edit::DefaultContent($_POST['type']);
 		$file = $this->folder.'/'.$title.'.php';
+
+		$data['created'] = time();
+		$data['created_by'] = $gpAdmin['username'];
 
 		if( !gpFiles::SaveArray($file,'extra_content',$data) ){
 			message($langmessage['OOPS']);

@@ -390,7 +390,7 @@ class editing_page extends display{
 	 *
 	 */
 	function AddNewSection(){
-		global $langmessage;
+		global $langmessage, $gpAdmin;
 
 		if( $_POST['last_mod'] != $this->fileModTime ){
 			message($langmessage['OOPS']);
@@ -411,6 +411,8 @@ class editing_page extends display{
 
 		if( isset($_POST['copy']) ){
 			$start_content = $this->file_sections[$section];
+			unset($start_content['modified']);
+			unset($start_content['modified_by']);
 		}else{
 			$start_content = gp_edit::DefaultContent($_POST['content_type']);
 			if( is_array($start_content) && $start_content['content'] === false ){
@@ -418,6 +420,10 @@ class editing_page extends display{
 				return;
 			}
 		}
+
+		$start_content['created'] = time();
+		$start_content['created_by'] = $gpAdmin['username'];
+
 
 		if( isset($_POST['insert']) && $_POST['insert'] == 'before' ){
 			array_splice( $this->file_sections , $section , 0, 'temporary' );

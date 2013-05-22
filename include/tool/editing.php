@@ -804,7 +804,7 @@ class gp_edit{
 	 *
 	 */
 	static function SectionFromPost( &$existing_section, $section_num, $title, $file_stats ){
-		global $page;
+		global $page, $gpAdmin;
 
 		$section_before = $existing_section;
 		$type = $existing_section['type'];
@@ -832,6 +832,9 @@ class gp_edit{
 		if( !$save_this ){
 			$page->file_sections[$section_num] = $existing_section = $section_before;
 		}
+
+		$page->file_sections[$section_num]['modified'] = time();
+		$page->file_sections[$section_num]['modified_by'] = $gpAdmin['username'];
 
 		return $save_this;
 	}

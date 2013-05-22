@@ -158,9 +158,8 @@ class SimpleSlideshow{
 			//indicators
 			$thumb_path = common::ThumbnailPath($img);
 			$indicators .= '<li>'
-							.'<a data-cmd="gp_slideshow" href="'.$img.'" title="" class="">'
+							.'<a data-cmd="gp_slideshow" href="'.$img.'" title="'.htmlspecialchars($caption).'" class="">'
 							.'<img alt="" src="'.$thumb_path.'"></a>'
-							.'<div class="caption">'.$caption.'</div>'
 							.'</li>';
 		}
 

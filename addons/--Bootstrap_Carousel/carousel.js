@@ -11,15 +11,16 @@ $(function(){
 
 		$carousel
 			.carousel({interval:speed})
-			.filter('.start_paused')
-			.carousel('pause')
-			.resize(function(){
-				debug('resize');
-			}).swiperight(function() {
+			.swiperight(function() {
 				$carousel.carousel('prev');
 			}).swipeleft(function() {
 				$carousel.carousel('next');
-			});
+			})
+			.filter('.start_paused')
+			.carousel('pause');
+
+
+
 	});
 
 });

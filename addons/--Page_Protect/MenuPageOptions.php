@@ -10,6 +10,9 @@ $protect_object = new PageProtect();
 function ProtectOptions($title,$menu_key,$menu_value,$layout_info){
 	global $protect_object;
 
+	if( !admin_tools::HasPermission('Admin_Protect') ){
+		return;
+	}
 
 	$is_protected = $protect_object->IsProtected($menu_key);
 
@@ -29,6 +32,10 @@ function ProtectOptions($title,$menu_key,$menu_value,$layout_info){
 
 function ProtectCommand($cmd){
 	global $protect_object,$gp_titles,$langmessage;
+
+	if( !admin_tools::HasPermission('Admin_Protect') ){
+		return;
+	}
 
 	switch($cmd){
 		case 'passprotect':

@@ -27,7 +27,7 @@ class PageProtect{
 
 		$this->IsProtected($page->gp_index);
 
-		if( common::loggedIn() ){
+		if( admin_tools::HasPermission('Admin_Protect') ){
 			$page->admin_links[] = common::Link($page->title,'Page Protect','cmd=passprotect','name="gpajax"');
 			return $this->Admin($cmd,$page->gp_index);
 		}
@@ -65,6 +65,11 @@ class PageProtect{
 
 	function Admin($cmd,$index){
 		global $gp_titles,$langmessage,$page;
+
+		if( !admin_tools::HasPermission('Admin_Protect') ){
+			return;
+		}
+
 
 		switch($cmd){
 			case 'passprotect':

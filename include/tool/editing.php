@@ -816,7 +816,7 @@ class gp_edit{
 			break;
 			case 'gallery':
 				$save_this = true;
-				self::SectionFromPost_Text( $existing_section );
+				self::SectionFromPost_Gallery( $existing_section );
 			break;
 			case 'include':
 				$save_this = self::SectionFromPost_Include( $existing_section, $section_num, $title, $file_stats );
@@ -855,6 +855,40 @@ class gp_edit{
 		}
 
 		return true;
+	}
+
+	/**
+	 * Save Gallery Content
+	 *
+	 */
+	static function SectionFromPost_Gallery( &$section ){
+		if( empty($_POST['images']) ){
+			$section['content'] = '<ul class="gp_gallery"><li class="gp_to_remove"></li></ul>';
+			return;
+		}
+
+		ob_start();
+
+		echo '<ul class="gp_gallery">';
+
+		foreach($_POST['images'] as $i => $image ){
+
+			$thumb_path = common::ThumbnailPath($image);
+			$caption = $_POST['captions'][$i];
+			gpFiles::cleanText($caption);
+
+			echo '<li>';
+			echo '<a class="gallery_gallery" title="" data-arg="gallery_gallery" href="'.$image.'" data-cmd="gallery">';
+			echo '<img src="'.$thumb_path.'" alt="" /></a>';
+			echo '<div class="caption">';
+			echo $caption;
+			echo '</div>';
+			echo '</li>';
+		}
+		echo '</ul>';
+		$section['content'] = ob_get_clean();
+		$section['images'] = $_POST['images'];
+		$section['captions'] = $_POST['captions'];
 	}
 
 	/**

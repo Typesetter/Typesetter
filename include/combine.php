@@ -687,7 +687,7 @@ class gp_combine_css{
 			$import = trim($import,'"\'');
 			$media = substr($import_orig,$end_url_pos+1);
 		}elseif( $import_orig[0] == '"' || $import_orig[0] == "'" ){
-			$end_url_pos = strpos($import_orig,$import_orig[0]);
+			$end_url_pos = strpos($import_orig,$import_orig[0],1);
 			$import = substr($import_orig,1, $end_url_pos-1);
 			$import = trim($import);
 			$media = substr($import_orig,$end_url_pos+1);

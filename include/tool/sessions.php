@@ -425,7 +425,7 @@ class gpsession{
 	 *
 	 */
 	static function start($session_id){
-		global $langmessage, $dataDir,$GP_LANG_VALUES;
+		global $langmessage, $dataDir,$GP_LANG_VALUES,$wbMessageBuffer;
 
 		//get the session file
 		$sessions = gpsession::GetSessionIds();
@@ -487,6 +487,13 @@ class gpsession{
 
 		$GP_LANG_VALUES += array('cancel'=>'ca','update'=>'up','caption'=>'cp','Width'=>'Width','Height'=>'Height');
 		common::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css');
+
+
+		//prepend messages from message buffer
+		if( isset($GLOBALS['gpAdmin']['message_buffer']) && count($GLOBALS['gpAdmin']['message_buffer']) ){
+			$wbMessageBuffer = array_merge($GLOBALS['gpAdmin']['message_buffer'],$wbMessageBuffer);
+			unset($GLOBALS['gpAdmin']['message_buffer']);
+		}
 
 		return true;
 	}

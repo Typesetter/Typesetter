@@ -83,7 +83,7 @@ $gpversion = gpversion; // @deprecated 3.5b2
 $addonDataFolder = $addonCodeFolder = false;//deprecated
 $addonPathData = $addonPathCode = false;
 $checkFileIndex = true;
-$wbErrorBuffer = $gp_not_writable = array();
+$wbErrorBuffer = $gp_not_writable = $wbMessageBuffer = array();
 
 
 
@@ -2093,6 +2093,13 @@ class common{
 	 *
 	 */
 	static function Redirect($path,$code = 301){
+		global $wbMessageBuffer, $gpAdmin;
+
+		//store any messages for display after the redirect
+		if( common::LoggedIn() && count($wbMessageBuffer) ){
+			$gpAdmin['message_buffer'] = $wbMessageBuffer;
+		}
+
 
 		//prevent a cache from creating an infinite redirect
 		Header( 'Last-Modified: ' . gmdate( 'D, j M Y H:i:s' ) . ' GMT' );

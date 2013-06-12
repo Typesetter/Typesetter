@@ -82,6 +82,7 @@ body #gp_admin_html h1 a{
 	font-weight:normal;
 	text-shadow:none;
 	color:#333;
+	text-align:left;
 	}
 
 body #gp_admin_html h2,
@@ -90,6 +91,7 @@ body #gp_admin_html h2 a{
 	font-weight:normal;
 	text-shadow:none;
 	color:#333;
+	text-align:left;
 	}
 
 body #gp_admin_html h3,
@@ -98,6 +100,7 @@ body #gp_admin_html h3 a{
 	font-weight:normal;
 	text-shadow:none;
 	color:#333;
+	text-align:left;
 	}
 
 body #gp_admin_html h4,
@@ -106,6 +109,7 @@ body #gp_admin_html h4 a{
 	font-weight:normal;
 	text-shadow:none;
 	color:#333;
+	text-align:left;
 	}
 
 

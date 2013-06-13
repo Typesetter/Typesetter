@@ -10,12 +10,24 @@ gpPlugin::incl('SimpleBlogCommon.php','require_once');
 
 class SimpleBlog extends SimpleBlogCommon{
 
-
+	var $post_id = false;
 
 	function SimpleBlog(){
 		global $page, $langmessage, $addonFolderName;
 
 		$this->Init();
+
+		//get the post id
+		if( isset($_REQUEST['id']) && ctype_digit($_REQUEST['id']) ){
+			$this->post_id = $_REQUEST['id'];
+
+		}elseif( strpos($page->requested,'/') !== false ){
+			$parts = explode('/',$page->requested);
+			if( ctype_digit($parts[1]) ){
+				$this->post_id = $parts[1];
+			}
+		}
+
 
 		$cmd = common::GetCommand();
 		$show = true;
@@ -35,9 +47,6 @@ class SimpleBlog extends SimpleBlogCommon{
 				//delete prompts
 				case 'deleteentry':
 					$this->DeleteEntryPrompt();
-				return;
-				case 'delete_comment_prompt':
-					$this->DeleteCommentPrompt();
 				return;
 
 				//delete
@@ -71,7 +80,6 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			}
 
-
 			$page->admin_links[] = array('Special_Blog','Blog Home');
 
 			$page->admin_links[] = array('Special_Blog','New Blog Post','cmd=new_form');
@@ -84,9 +92,14 @@ class SimpleBlog extends SimpleBlogCommon{
 			$page->admin_links[$label] = '';
 		}
 
+
 		if( $show ){
-			if( empty($cmd) && isset($_REQUEST['id']) && ctype_digit($_REQUEST['id']) ){
-				$cmd = 'post';
+
+			//post requests
+			if( empty($cmd) ){
+				if( $this->post_id > 0 ){
+					$cmd = 'post';
+				}
 			}
 			switch($cmd){
 				case 'opencomments':
@@ -113,25 +126,6 @@ class SimpleBlog extends SimpleBlogCommon{
 	}
 
 
-	/**
-	 * Prompt the user if they want to delete the blog comment
-	 *
-	 */
-	function DeleteCommentPrompt(){
-		global $langmessage;
-
-		echo '<div class="inline_box">';
-
-		echo '<form method="post" action="'.common::GetUrl('Special_Blog').'">';
-			echo $langmessage['delete_confirm'];
-			echo ' <input type="hidden" name="id" value="'.$_GET['id'].'" />';
-			echo ' <input type="hidden" name="comment_id" value="'.$_GET['comment'].'" />';
-			echo  ' <input type="hidden" name="cmd" value="delete_comment" />';
-			echo  ' <input type="submit" name="aaa" value="'.$langmessage['delete'].'" />';
-		echo '</form>';
-		echo '</div>';
-
-	}
 
 	/**
 	 * Prompt the user if they want to delete the blog post
@@ -163,12 +157,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	function ShowPost($cmd){
 		global $langmessage,$page;
 
-		if( !isset($_REQUEST['id']) ){
-			message($langmessage['OOPS']);
-			return;
-		}
-
-		$post_index = $_REQUEST['id'];
+		$post_index = $this->post_id;
 		$posts = $this->GetPostFile($post_index,$post_file);
 		if( $posts === false ){
 			message($langmessage['OOPS']);
@@ -551,7 +540,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		$header = '<h2 id="blog_post_'.$post_index.'">';
 		$header .= $isDraft;
 		$label = SimpleBlogCommon::Underscores( $post['title'] );
-		$header .= common::Link('Special_Blog',$label,'id='.$post_index);
+		$header .= $this->PostLink($post_index,$label);
 		$header .= '</h2>';
 
 		$this->BlogHead($header,$post_index,$post);
@@ -592,7 +581,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		}
 		$content = SimpleBlogCommon::substr($content,0,$limit).' ... ';
 		$label = gpOutput::SelectText('Read More');
-		return $content . common::Link('Special_Blog',$label,'id='.$post_index);
+		return $content . $this->PostLink($post_index,$label);
 	}
 
 
@@ -611,7 +600,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		$data = $this->GetCommentData($post_index);
 
-		$comment = $_POST['comment_id'];
+		$comment = $_POST['comment'];
 		if( !isset($data[$comment]) ){
 			message($langmessage['OOPS']);
 			return;
@@ -724,7 +713,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			if( common::LoggedIn() ){
 				echo ' &nbsp; ';
-				echo common::Link('Special_Blog',$langmessage['delete'],'cmd=delete_comment_prompt&id='.$post_index.'&comment='.$key,' name="gpabox"');
+				echo common::Link('Special_Blog',$langmessage['delete'],'cmd=delete_comment&id='.$post_index.'&comment='.$key,array('class'=>'delete gpconfirm','data-cmd'=>'postlink','title'=>$langmessage['delete_confirm']));
 			}
 
 

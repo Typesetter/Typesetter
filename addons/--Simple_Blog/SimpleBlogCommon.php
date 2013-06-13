@@ -190,7 +190,8 @@ class SimpleBlogCommon{
 						'comment_captcha'=>true,
 						'subtitle_separator'=>' <span class="space"> | </span> ',
 						'post_count'=>0,
-						'str_index'=>''
+						'str_index'=>'',
+						'urls'=>'Standard',
 						);
 
 	}
@@ -365,8 +366,6 @@ class SimpleBlogCommon{
 		}
 
 		message($langmessage['SAVED']);
-
-		$this->UpdateThirdParty($post_index,$title,$content);
 
 		return true;
 	}
@@ -863,23 +862,6 @@ class SimpleBlogCommon{
 
 
 	/**
-	 * Update twitter status
-	 * Not updated for oauth
-	 * @deprecated
-	 */
-	function UpdateThirdParty($post_index,$title,$message){
-
-		if( isset($_SERVER['HTTP_HOST']) ){
-			$server = 'http://'.$_SERVER['HTTP_HOST'];
-		}else{
-			$server = 'http://'.$_SERVER['SERVER_NAME'];
-		}
-		$link = $server.common::GetUrl('Special_Blog','id='.$post_index,false);
-
-	}
-
-
-	/**
 	 *  B L O G    C A T E G O R Y     F U N C T I O N S
 	 *
 	 */
@@ -1125,6 +1107,23 @@ class SimpleBlogCommon{
 		}
 
 		return true;
+	}
+
+	function PostLink($post,$label,$query=''){
+		return '<a href="'.$this->PostUrl($post,$query,true).'">'.common::Ampersands($label).'</a>';
+		//return '<a href="'.common::GetUrl($href,$query,true,$nonce_action).'" '.common::LinkAttr($attr,$label).'>'.common::Ampersands($label).'</a>';
+	}
+
+	function PostUrl($post,$query=''){
+
+		switch( $this->blogData['urls'] ){
+
+			case 'Tiny':
+			return common::GetUrl('Special_Blog/'.$post);
+
+			default:
+			return common::GetUrl('Special_Blog','id='.$post);
+		}
 	}
 
 }

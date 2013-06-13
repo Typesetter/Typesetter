@@ -44,6 +44,11 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		global $langmessage;
 
 
+		$options = self::Options();
+		if( isset($_POST['urls']) && isset($options['urls'][$_POST['urls']]) ){
+			$this->blogData['urls'] = $_POST['urls'];
+		}
+
 		if( is_numeric($_POST['per_page']) ){
 			$this->blogData['per_page'] = (int)$_POST['per_page'];
 		}
@@ -90,19 +95,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 			$this->blogData['comment_captcha'] = false;
 		}
 
-
 		$this->blogData['subtitle_separator'] = (string)$_POST['subtitle_separator'];
-
-
-		//twitter/bitly
-/*
-		$this->blogData['twitter_username'] = (string)$_POST['twitter_username'];
-		$this->blogData['twitter_password'] = (string)$_POST['twitter_password'];
-		$this->blogData['bitly_login'] = (string)$_POST['bitly_login'];
-		$this->blogData['bitly_key'] = (string)$_POST['bitly_key'];
-*/
-
-
 
 		if( !$this->SaveIndex() ){
 			message($langmessage['OOPS']);
@@ -151,12 +144,26 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo 'Default';
 		echo '</th></tr>';
 
+
+		$options = self::Options();
+
+		//Pretty Urls
+		echo '<tr><td>Pretty Urls</td><td>';
+		self::Radio('urls',$options['urls'],$array['urls']);
+		echo '</td><td>';
+		echo $defaults['urls'];
+		echo '</td></tr>';
+
+
+		//Entries Per Page
 		echo '<tr><td>Entries Per Page</td><td>';
 		echo '<input type="text" name="per_page" size="20" value="'.htmlspecialchars($array['per_page']).'" class="gpinput" />';
 		echo '</td><td>';
 		echo $defaults['per_page'];
 		echo '</td></tr>';
 
+
+		//Entries Abbreviation Length
 		echo '<tr><td>';
 		echo 'Entries Abbreviation Length';
 		echo '</td><td>';
@@ -165,6 +172,8 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo $defaults['post_abbrev'];
 		echo '</td></tr>';
 
+
+		//Entries For Gadget
 		echo '<tr><td>';
 		echo 'Entries For Gadget';
 		echo '</td><td>';
@@ -173,6 +182,8 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo $defaults['gadget_entries'];
 		echo '</td></tr>';
 
+
+		//Gadget Abbreviation Length
 		echo '<tr><td>';
 		echo 'Gadget Abbreviation Length';
 		echo '</td><td>';
@@ -182,6 +193,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo '</td></tr>';
 
 
+		//Date Format
 		echo '<tr><td>';
 		echo 'Date Format';
 		//echo ' (<a href="http://php.net/manual/en/function.date.php" target="_blank">About</a>)';
@@ -194,6 +206,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo '</td></tr>';
 
 
+		//Entries For Feed
 		echo '<tr><td>';
 		echo 'Entries For Feed';
 		echo '</td><td>';
@@ -202,6 +215,8 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo $defaults['feed_entries'];
 		echo '</td></tr>';
 
+
+		//Feed Abbreviation Length
 		echo '<tr><td>';
 		echo 'Feed Abbreviation Length';
 		echo '</td><td>';
@@ -210,6 +225,8 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo $defaults['feed_abbrev'];
 		echo '</td></tr>';
 
+
+		//Subtitle Separator
 		echo '<tr><td>';
 		echo 'Subtitle Separator';
 		echo '</td><td>';
@@ -218,6 +235,8 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo htmlspecialchars($defaults['subtitle_separator']);
 		echo '</td></tr>';
 
+
+		//Comments
 		echo '<tr><th>';
 		echo 'Comments';
 		echo '</th><th>';
@@ -298,6 +317,45 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo '</form>';
 	}
 
+	static function Options(){
+
+		return array(
+
+			'urls' => array(
+				'Standard'	=> 'Standard - /Blog?id=1234',
+				'Tiny'		=> 'Tiny - /Blog/1234',
+				//'Full'		=> 'Full - /Blog/1234_Post_Title'
+			),
+
+		);
+
+	}
+
+	function Select($name,$options,$current){
+		echo '<select name="'.$name.'" class="gpselect">';
+		foreach($options as $value => $label){
+			$selected = '';
+			if( $current == $value){
+				$selected = ' selected="selected"';
+			}
+			echo '<option value="'.$value.'"'.$selected.'">'.$label.'</option>';
+		}
+		echo '</select>';
+	}
+
+	function Radio($name,$options,$current){
+
+		foreach($options as $value => $label){
+			echo '<label>';
+			$checked = '';
+			if( $current == $value){
+				$checked = ' checked="checked"';
+			}
+			echo '<input type="radio" name="'.$name.'" value="'.$value.'"'.$checked.'" /> ';
+			echo $label;
+			echo '</label>';
+		}
+	}
 
 
 

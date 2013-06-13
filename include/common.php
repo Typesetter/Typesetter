@@ -1915,9 +1915,11 @@ class common{
 	/**
 	 * Traverse the $menu and gather all the descendants of a title given by it's $index
 	 * @param string $index The data index of the child title
+	 * @param array $menu The menu to use to check for descendants
+	 * @param bool $children_only Option to return a list of children instead of all descendants. Since gpEasy 4.3
 	 * @return array
 	 */
-	static function Descendants($index,$menu){
+	static function Descendants( $index, $menu, $children_only = false){
 
 		$titles = array();
 
@@ -1936,7 +1938,11 @@ class common{
 				return $titles;
 			}
 
-			$titles[] = $id;
+			if( !$children_only ){
+				$titles[] = $id;
+			}elseif( $level == $start_level +1 ){
+				$titles[] = $id;
+			}
 		}
 		return $titles;
 

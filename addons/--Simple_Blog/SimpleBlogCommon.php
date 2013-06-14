@@ -1109,21 +1109,25 @@ class SimpleBlogCommon{
 		return true;
 	}
 
-	function PostLink($post,$label,$query=''){
-		return '<a href="'.$this->PostUrl($post,$query,true).'">'.common::Ampersands($label).'</a>';
-		//return '<a href="'.common::GetUrl($href,$query,true,$nonce_action).'" '.common::LinkAttr($attr,$label).'>'.common::Ampersands($label).'</a>';
+	function PostLink($post,$label,$query='',$attr=''){
+		return '<a href="'.$this->PostUrl($post,$query,true).'" '.common::LinkAttr($attr,$label).'>'.common::Ampersands($label).'</a>';
 	}
 
 	function PostUrl($post,$query=''){
 
+		$url = 'Special_Blog';
 		switch( $this->blogData['urls'] ){
 
 			case 'Tiny':
-			return common::GetUrl('Special_Blog/'.$post);
+			$url = 'Special_Blog/'.$post;
+			break;
 
 			default:
-			return common::GetUrl('Special_Blog','id='.$post);
+			$query = trim($query.'&id='.$post,'&');
+			break;
 		}
+
+		return common::GetUrl($url,$query);
 	}
 
 }

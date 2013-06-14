@@ -1,11 +1,14 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
+gpPlugin::incl('SimpleBlogCommon.php','require_once');
 
-class BlogSearch{
+class BlogSearch extends SimpleBlogCommon{
 
 	function BlogSearch($args){
 		global $addonPathData;
+
+		$this->Init();
 
 		$search_obj = $args[0];
 		$label = common::GetLabelIndex('special_blog');
@@ -29,7 +32,9 @@ class BlogSearch{
 			foreach($posts as $id => $post){
 				$title = $label.': '.str_replace('_',' ',$post['title']);
 				$content = str_replace('_',' ',$post['title']).' '.$post['content'];
-				$search_obj->FindString($content, $title, 'Special_Blog', 'cmd=post&id='.$id);
+
+				$this->UrlQuery( $id, $url, $query );
+				$search_obj->FindString($content, $title, $url, $query);
 			}
 			$posts = array();
 		}

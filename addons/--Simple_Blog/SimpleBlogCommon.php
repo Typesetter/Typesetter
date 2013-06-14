@@ -622,7 +622,7 @@ class SimpleBlogCommon{
 
 			echo '<entry>'."\n";
 			echo '<title>'.SimpleBlogCommon::Underscores( $post['title'] ).'</title>'."\n";
-			echo '<link href="'.$server.common::GetUrl('Special_Blog','id='.$post_index).'"></link>'."\n";
+			echo '<link href="'.$server.$this->PostUrl($post_index).'"></link>'."\n";
 			echo '<id>urn:uuid:'.$this->uuid($post_index).'</id>'."\n";
 			echo '<updated>'.date($atomFormat, $post['time']).'</updated>'."\n";
 
@@ -630,7 +630,7 @@ class SimpleBlogCommon{
 			if( ($this->blogData['feed_abbrev']> 0) && (SimpleBlogCommon::strlen($content) > $this->blogData['feed_abbrev']) ){
 				$content = SimpleBlogCommon::substr($content,0,$this->blogData['feed_abbrev']).' ... ';
 				$label = gpOutput::SelectText('Read More');
-				$content .= '<a href="'.$server.common::GetUrl('Special_Blog',$label,'id='.$post_index).'">'.$label.'</a>';
+				$content .= '<a href="'.$server.$this->PostUrl($post_index,$label).'">'.$label.'</a>';
 			}
 
 			//old images
@@ -761,7 +761,7 @@ class SimpleBlogCommon{
 
 			$header = '<b class="simple_blog_title">';
 			$label = SimpleBlogCommon::Underscores( $post['title'] );
-			$header .= common::Link('Special_Blog',$label,'id='.$post_index);
+			$header .= $this->PostLink($post_index,$label);
 			$header .= '</b>';
 
 			$this->BlogHead($header,$post_index,$post,true);
@@ -780,7 +780,7 @@ class SimpleBlogCommon{
 				$content = SimpleBlogCommon::substr($content,0,$cut).' ... ';
 
 				$label = gpOutput::SelectText('Read More');
-				$content .= common::Link('Special_Blog',$label,'id='.$post_index);
+				$content .= $this->PostLink($post_index,$label);
 			}
 
 			echo '<p class="simple_blog_abbrev">';

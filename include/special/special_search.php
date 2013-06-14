@@ -121,7 +121,6 @@ class special_gpsearch{
 		if( !empty($_REQUEST['q']) ){
 			$this->SearchPattern();
 			$this->SearchPages();
-			$this->SearchBlog();
 			gpPlugin::Action('Search',array($this));
 		}
 
@@ -357,56 +356,6 @@ class special_gpsearch{
 	}
 
 
-	/**
-	 * @deprecated gpEasy 3.5b2
-	 */
-	function SearchBlog(){
-		global $dataDir, $gp_index, $gp_titles, $config;
-
-		$blog_index = special_gpsearch::BlogInstalled();
-		if( !$blog_index ){
-			return;
-		}
-
-		$slug = array_search($blog_index,$gp_index);
-		$addon = $gp_titles[$blog_index]['addon'];
-		$blog_label = $gp_titles[$blog_index]['label'];
-
-		//blod data folder
-		$addon_info = $config['addons'][$addon];
-		if( isset($addon_info['data_folder']) ){
-			$blog_data_folder = $dataDir.'/data/_addondata/'.$addon_info['data_folder'];
-		}else{
-			$blog_data_folder = $dataDir.'/data/_addondata/'.$addon;
-		}
-
-
-		// config of installed addon to get to know how many post files are
-		$full_path = $blog_data_folder.'/index.php';
-		if( !file_exists($full_path) ){
-			//nothing in the blog yet
-			return;
-		}
-
-		require($full_path);
-		$fileIndexMax = floor($blogData['post_index']/20); // '20' I found in SimpleBlogCommon.php function GetPostFile (line 62)
-
-		for ($fileIndex = 0; $fileIndex <= $fileIndexMax; $fileIndex++) {
-			$postFile = $blog_data_folder.'/posts_'.$fileIndex.'.php';
-			if( !file_exists($postFile) ){
-				continue;
-			}
-			require($postFile);
-
-			foreach($posts as $id => $post){
-				$title = $blog_label.': '.str_replace('_',' ',$post['title']);
-				$content = str_replace('_',' ',$post['title']).' '.$post['content'];
-				$this->FindString($content, $title, 'Special_Blog', 'cmd=post&id='.$id);
-			}
-			$posts = array();
-		}
-	}
-
 	public function FindString(&$content, $label, $slug, $link_query = ''){
 		$this->search_count++;
 
@@ -486,29 +435,5 @@ class special_gpsearch{
 		$strength = $factor/$len;
 		return round($strength,8);
 	}
-
-	/**
-	 * Determine if the Simple Blog addon is also installed
-	 * If installed return the index
-	 *
-	 */
-	function BlogInstalled(){
-		global $gp_index, $gp_titles;
-
-		//pre 3.0 check
-		if( isset($gp_index['Special_Blog']) ){
-			return $gp_index['Special_Blog'];
-		}
-
-
-		//3.0+ check
-		if( isset($gp_titles['special_blog']) ){
-			return 'special_blog';
-		}
-
-		return false;
-	}
-
-
 
 }

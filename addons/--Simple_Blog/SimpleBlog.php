@@ -600,7 +600,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		$data = $this->GetCommentData($post_index);
 
-		$comment = $_POST['comment_id'];
+		$comment = $_POST['comment_index'];
 		if( !isset($data[$comment]) ){
 			message($langmessage['OOPS']);
 			return;
@@ -713,7 +713,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			if( common::LoggedIn() ){
 				echo ' &nbsp; ';
-				echo $this->PostLink($post_index,$langmessage['delete'],'cmd=delete_comment&id='.$post_index.'&comment_id='.$key,array('class'=>'delete gpconfirm','data-cmd'=>'postlink','title'=>$langmessage['delete_confirm']));
+				echo $this->PostLink($post_index,$langmessage['delete'],'cmd=delete_comment&comment_index='.$key,array('class'=>'delete gpconfirm','data-cmd'=>'postlink','title'=>$langmessage['delete_confirm']));
 			}
 
 

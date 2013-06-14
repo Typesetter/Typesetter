@@ -14,6 +14,7 @@ class SimpleBlogCommon{
 	var $blogData = array();
 	var $new_install = false;
 	var $addonPathData;
+	var $post_id = false;
 
 	var $categories;
 	var $categories_file;
@@ -462,8 +463,8 @@ class SimpleBlogCommon{
 	 */
 	function InlineEdit(){
 
-		$post_index = (int)$_REQUEST['id'];
-		$content = $this->GetPostContent($post_index);
+
+		$content = $this->GetPostContent($this->post_id);
 		if( !$content ){
 			echo 'false';
 			return false;
@@ -482,31 +483,25 @@ class SimpleBlogCommon{
 	function EditPost(){
 		global $langmessage;
 
-		if( isset($_POST['id']) ){
-
-			$post_index = $_POST['id'];
-			$post = $_POST;
-
-		}else{
-
-			$post_index = $_REQUEST['id'];
-			$posts = $this->GetPostFile($post_index,$post_file);
-			if( $posts === false ){
-				message($langmessage['OOPS']);
-				return;
-			}
-
-			if( !isset($posts[$post_index]) ){
-				message($langmessage['OOPS']);
-				return;
-			}
-			$post = $posts[$post_index];
+		$posts = $this->GetPostFile($this->post_id,$post_file);
+		if( $posts === false ){
+			message($langmessage['OOPS']);
+			return;
 		}
 
+		if( !isset($posts[$this->post_id]) ){
+			message($langmessage['OOPS']);
+			return;
+		}
 
+		$_POST += $posts[$this->post_id];
 
-		echo '<h2>Edit Post</h2>';
-		$this->PostForm($post,'save_edit',$post_index);
+		echo '<h2>';
+		$title = htmlspecialchars($_POST['title'],ENT_COMPAT,'UTF-8',false);
+		echo $this->PostLink($this->post_id,$title);
+		echo ' &#187; ';
+		echo 'Edit Post</h2>';
+		$this->PostForm($_POST,'save_edit',$this->post_id);
 		return true;
 	}
 
@@ -535,7 +530,8 @@ class SimpleBlogCommon{
 		$array += array('title'=>'','content'=>'','subtitle'=>'', 'isDraft'=>false);
 		$array['title'] = SimpleBlogCommon::Underscores( $array['title'] );
 
-		echo '<form action="'.common::GetUrl('Special_Blog').'" method="post">';
+		echo '<form action="'.$this->PostUrl($post_id).'" method="post">';
+
 		echo '<table style="width:100%">';
 
 		echo '<tr><td>';
@@ -1113,21 +1109,26 @@ class SimpleBlogCommon{
 		return '<a href="'.$this->PostUrl($post,$query,true).'" '.common::LinkAttr($attr,$label).'>'.common::Ampersands($label).'</a>';
 	}
 
-	function PostUrl($post,$query=''){
+	function PostUrl( $post = false, $query='' ){
+		$this->UrlQuery( $post, $url, $query );
+		return common::GetUrl( $url, $query );
+	}
+
+	function UrlQuery( $post = false, &$url, &$query ){
 
 		$url = 'Special_Blog';
-		switch( $this->blogData['urls'] ){
+		if( $post > 0 ){
+			switch( $this->blogData['urls'] ){
 
-			case 'Tiny':
-			$url = 'Special_Blog/'.$post;
-			break;
+				case 'Tiny':
+				$url = 'Special_Blog/'.$post;
+				break;
 
-			default:
-			$query = trim($query.'&id='.$post,'&');
-			break;
+				default:
+				$query = trim($query.'&id='.$post,'&');
+				break;
+			}
 		}
-
-		return common::GetUrl($url,$query);
 	}
 
 }

@@ -10,8 +10,6 @@ gpPlugin::incl('SimpleBlogCommon.php','require_once');
 
 class SimpleBlog extends SimpleBlogCommon{
 
-	var $post_id = false;
-
 	function SimpleBlog(){
 		global $page, $langmessage, $addonFolderName;
 
@@ -63,6 +61,7 @@ class SimpleBlog extends SimpleBlogCommon{
 						break;
 					}
 				case 'edit':
+				case 'edit_post';
 					$this->EditPost();
 					$show = false;
 				break;
@@ -294,7 +293,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		echo '</h3>';
 
 
-		echo '<form method="post" action="'.common::GetUrl('Special_Blog','id='.$post_index).'">';
+		echo '<form method="post" action="'.$this->PostUrl($post_index).'">';
 		echo '<ul>';
 		echo '<li>';
 			echo '<label>';
@@ -500,25 +499,24 @@ class SimpleBlog extends SimpleBlogCommon{
 		$id = $class = '';
 		if( common::LoggedIn() ){
 
-			//$edit_link = gpOutput::EditAreaLink($edit_index,'Special_Blog',$langmessage['edit'],'cmd=edit&id='.$post_index);
-			$edit_link = gpOutput::EditAreaLink($edit_index,'Special_Blog',$langmessage['edit'].' (TWYSIWYG)','id='.$post_index,'name="inline_edit_generic" rel="text_inline_edit"');
+			$query = 'dummyparameter';
+			$this->UrlQuery( $post_index, $url, $query );
+			$edit_link = gpOutput::EditAreaLink($edit_index,$url,$langmessage['edit'].' (TWYSIWYG)',$query,'name="inline_edit_generic" rel="text_inline_edit"');
+
 			echo '<span style="display:none;" id="ExtraEditLnks'.$edit_index.'">';
 			echo $edit_link;
 
-			echo common::Link('Special_Blog',$langmessage['edit'].' (All)','cmd=edit&id='.$post_index,' style="display:none"');
-			echo common::Link('Special_Blog',$langmessage['delete'],'cmd=deleteentry&del_id='.$post_index,' name="gpabox" style="display:none"');
+			echo $this->PostLink($post_index,$langmessage['edit'].' (All)','cmd=edit_post',' style="display:none"');
+			echo common::Link('Special_Blog',$langmessage['delete'],'cmd=deleteentry&del_id='.$post_index,array('class'=>'delete gpconfirm','data-cmd'=>'postlink','title'=>$langmessage['delete_confirm']));
 
 			if( $this->blogData['allow_comments'] ){
+
 				if( isset($this->blogData['post_info'][$post_index]) && isset($this->blogData['post_info'][$post_index]['closecomments']) ){
 					$label = gpOutput::SelectText('Open Comments');
-					echo common::Link('Special_Blog',$label,'cmd=opencomments&id='.$post_index,'name="creq" style="display:none"');
-					//echo common::Link('Special_Blog','%s','cmd=opencomments&id='.$post_index,'name="creq"');
-					//echo gpOutput::GetAddonText('Open Comments',$html);
+					echo $this->PostLink($post_index,$label,'cmd=opencomments','name="creq" style="display:none"');
 				}else{
 					$label = gpOutput::SelectText('Close Comments');
-					echo common::Link('Special_Blog',$label,'cmd=closecomments&id='.$post_index,'name="creq" style="display:none"');
-					//echo common::Link('Special_Blog','%s','cmd=closecomments&id='.$post_index,'name="creq"');
-					//echo gpOutput::GetAddonText('Close Comments',$html);
+					echo $this->PostLink($post_index,$label,'cmd=closecomments','name="creq" style="display:none"');
 				}
 			}
 

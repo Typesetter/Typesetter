@@ -363,6 +363,12 @@ class SimpleBlog extends SimpleBlogCommon{
 			} else {
 				break;
 			}
+
+			$html = $this->PostLink($prev_index,'%s','','class="blog_older"');
+			echo gpOutput::GetAddonText('Older Entry',$html);
+			echo '&nbsp;';
+
+
 		}while($isDraft);
 
 		//blog home
@@ -381,7 +387,7 @@ class SimpleBlog extends SimpleBlogCommon{
 				$isDraft = isset($post['isDraft']) && $post['isDraft'];
 			}while( $isDraft );
 
-		    $html = common::Link('Special_Blog','%s','id='.$next_index,'class="blog_newer"');
+		    $html = $this->PostLink($next_index,'%s','','class="blog_newer"');
 		    echo gpOutput::GetAddonText('Newer Entry',$html);
 		}
 

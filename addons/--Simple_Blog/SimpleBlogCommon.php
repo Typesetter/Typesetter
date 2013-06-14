@@ -79,28 +79,38 @@ class SimpleBlogCommon{
 
 		SimpleBlogCommon::$data = $blogData + SimpleBlogCommon::Defaults();
 		$this->GenIndexStr();
+		$this->GenCommentStr();
 	}
 
 	/**
 	 * Generate a string to use as the post index
 	 * Using a string of numbers can use 1/4 of the memory of an array
 	 *
+	 * As of 1.9, Uses | and : instead , and :
 	 */
 	function GenIndexStr(){
 
 		if( !empty(SimpleBlogCommon::$data['str_index']) ){
+			if( SimpleBlogCommon::$data['str_index'][0] == ',' ){
+				SimpleBlogCommon::$data['str_index'] = str_replace(',', '|', SimpleBlogCommon::$data['str_index']);
+			}
 			return;
 		}
 		if( !isset(SimpleBlogCommon::$data['post_list']) ){
 			return;
 		}
 
+		SimpleBlogCommon::$data['str_index'] = self::StrFromArray(SimpleBlogCommon::$data['post_list']);
+	}
+
+	static function StrFromArray($array){
 		$str = '';
-		foreach(SimpleBlogCommon::$data['post_list'] as $key => $value){
-			$str .= ','.$key.':'.$value;
+		$i=0;
+		foreach($array as $value){
+			$str .= '|'.$i.':'.$value;
+			$i++;
 		}
-		$str .= ',';
-		SimpleBlogCommon::$data['str_index'] = $str;
+		return $str.'|';
 	}
 
 
@@ -110,7 +120,7 @@ class SimpleBlogCommon{
 	 */
 	function AdjustIndex(){
 		static $index = 0;
-		return ','.$index++.':';
+		return '|'.$index++.':';
 	}
 
 	/**
@@ -121,14 +131,14 @@ class SimpleBlogCommon{
 		static $integers = '0123456789';
 		$index = SimpleBlogCommon::$data['str_index'];
 
-		$prev_key_str = ','.$key.':';
+		$prev_key_str = '|'.$key.':';
 		$prev_pos = SimpleBlogCommon::strpos($index,$prev_key_str);
 		if( $prev_pos === false ){
 			return false;
 		}
 		$offset = $prev_pos+1;
 
-		$prev_comma = SimpleBlogCommon::strpos($index,',',$offset);
+		$prev_comma = SimpleBlogCommon::strpos($index,'|',$offset);
 
 		$offset = $prev_pos+SimpleBlogCommon::strlen($prev_key_str);
 		return SimpleBlogCommon::substr($index,$offset,$prev_comma - $offset);
@@ -142,12 +152,12 @@ class SimpleBlogCommon{
 		static $integers = '0123456789';
 		$index = SimpleBlogCommon::$data['str_index'];
 		$len = strlen($index);
-		$post_pos = strpos($index,':'.$post_index.',');
+		$post_pos = strpos($index,':'.$post_index.'|');
 
 		$offset = $post_pos-$len;
 
 
-		$post_key_pos = strrpos($index,',',$offset);
+		$post_key_pos = strrpos($index,'|',$offset);
 		$post_key_len = strspn($index,$integers,$post_key_pos+1);
 		return substr($index,$post_key_pos+1,$post_key_len);
 	}
@@ -211,7 +221,7 @@ class SimpleBlogCommon{
 		unset(SimpleBlogCommon::$data['post_list']);
 
 		//set some stats
-		SimpleBlogCommon::$data['str_index'] = ','.trim(SimpleBlogCommon::$data['str_index'],',').',';
+		SimpleBlogCommon::$data['str_index'] = '|'.trim(SimpleBlogCommon::$data['str_index'],'|').'|';
 		SimpleBlogCommon::$data['post_count'] = substr_count(SimpleBlogCommon::$data['str_index'],':');
 
 		return gpFiles::SaveArray($this->indexFile,'blogData',SimpleBlogCommon::$data);
@@ -287,8 +297,9 @@ class SimpleBlogCommon{
 
 		//reset the index string
 		$new_index = SimpleBlogCommon::$data['str_index'];
-		$new_index = preg_replace('#,\d+:'.$post_index.',#',',',$new_index);
-		SimpleBlogCommon::$data['str_index'] = preg_replace_callback('#,(\d+):#',array('SimpleBlogCommon','AdjustIndex'),$new_index);
+		$new_index = preg_replace('#\|\d+:'.$post_index.'\|#', '|', $new_index);
+		preg_match_all('#(?:\|\d+:)([^\|:])*#',$new_index,$matches);
+		SimpleBlogCommon::$data['str_index'] = self::StrFromArray($matches[1]);
 
 
 		if( !$this->SaveIndex() ){
@@ -316,7 +327,7 @@ class SimpleBlogCommon{
 	function SaveNew(){
 		global $langmessage;
 
-		$_POST += array('title'=>'','content'=>'','subtitle'=>'','isDraft'=>'');
+		$_POST += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'');
 
 		$_POST['subtitle'] = htmlspecialchars($_POST['subtitle']);
 
@@ -360,7 +371,7 @@ class SimpleBlogCommon{
 
 		//add new entry to the beginning of the index string then reorder the keys
 		$new_index = ',0:'.$post_index.SimpleBlogCommon::$data['str_index'];
-		SimpleBlogCommon::$data['str_index'] = preg_replace_callback('#,(\d+):#',array('SimpleBlogCommon','AdjustIndex'),$new_index);
+		SimpleBlogCommon::$data['str_index'] = preg_replace_callback('#,(\d+):#',array('SimpleBlogCommon', 'AdjustIndex'),$new_index);
 
 		//save index file
 		SimpleBlogCommon::$data['post_index'] = $post_index;
@@ -382,7 +393,7 @@ class SimpleBlogCommon{
 	function SaveEdit(){
 		global $langmessage;
 
-		$_POST += array('title'=>'','content'=>'','subtitle'=>'','isDraft'=>'');
+		$_POST += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'');
 		$_REQUEST += array('id'=>'');
 
 		$post_index = $_REQUEST['id'];
@@ -454,7 +465,7 @@ class SimpleBlogCommon{
 			return false;
 		}
 
-		$page->ajaxReplace[] = array('ck_saved','','');
+		$page->ajaxReplace[] = array('ck_saved', '', '');
 		message($langmessage['SAVED']);
 		return true;
 	}
@@ -530,7 +541,7 @@ class SimpleBlogCommon{
 
 		includeFile('tool/editing.php');
 
-		$array += array('title'=>'','content'=>'','subtitle'=>'', 'isDraft'=>false);
+		$array += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>false);
 		$array['title'] = SimpleBlogCommon::Underscores( $array['title'] );
 
 		echo '<form action="'.$this->PostUrl($post_id).'" method="post">';
@@ -584,7 +595,7 @@ class SimpleBlogCommon{
 		ob_start();
 
 		$atomFormat = 'Y-m-d\TH:i:s\Z';
-		if( version_compare('phpversion','5.1.3','>=') ){
+		if( version_compare('phpversion', '5.1.3', '>=') ){
 			$atomFormat = 'Y-m-d\TH:i:sP';
 		}
 
@@ -603,7 +614,7 @@ class SimpleBlogCommon{
 		echo '<?xml version="1.0" encoding="utf-8"?>'."\n";
 		echo '<feed xmlns="http://www.w3.org/2005/Atom">'."\n";
 		echo '<title>'.$config['title'].'</title>'."\n";
-		echo '<link href="'.$serverWithDir.'/data/_addondata/'.str_replace(' ','%20',$addonFolderName).'/feed.atom" rel="self" />'."\n";
+		echo '<link href="'.$serverWithDir.'/data/_addondata/'.str_replace(' ', '%20',$addonFolderName).'/feed.atom" rel="self" />'."\n";
 		echo '<link href="'.$server.common::GetUrl('Special_Blog').'" />'."\n";
 		echo '<id>urn:uuid:'.$this->uuid($serverWithDir).'</id>'."\n";
 		echo '<updated>'.date($atomFormat, time()).'</updated>'."\n";
@@ -638,13 +649,13 @@ class SimpleBlogCommon{
 
 			//old images
 			$replacement = $server.'/';
-			$content = str_replace('src="/','src="'.$replacement,$content);
+			$content = str_replace('src="/', 'src="'.$replacement,$content);
 
 			//new images
-			$content = str_replace('src="../','src="'.$serverWithDir,$content);
+			$content = str_replace('src="../', 'src="'.$serverWithDir,$content);
 
 			//images without /index.php/
-			$content = str_replace('src="./','src="'.$serverWithDir,$content);
+			$content = str_replace('src="./', 'src="'.$serverWithDir,$content);
 
 
 			//href
@@ -843,7 +854,7 @@ class SimpleBlogCommon{
 
 
 		$format = '{header} <div class="simple_blog_info"> {blog_info} {separator} {blog_date} {separator} {blog_comments} </div>';
-		$search = array('{header}','{blog_info}','{blog_date}','{blog_comments}');
+		$search = array('{header}', '{blog_info}', '{blog_date}', '{blog_comments}');
 		$replace = array($header, $blog_info, $blog_date, $blog_comments);
 
 		$result = str_replace($search,$replace,$format);
@@ -1024,9 +1035,9 @@ class SimpleBlogCommon{
 
 	function Underscores($str){
 		if( function_exists('mb_ereg_replace') ){
-			return mb_ereg_replace('_',' ',$str);
+			return mb_ereg_replace('_', ' ', $str);
 		}
-		return str_replace('_',' ',$str);
+		return str_replace('_', ' ', $str);
 	}
 
 	static function FileData($file){

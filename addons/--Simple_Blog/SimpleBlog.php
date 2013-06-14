@@ -356,7 +356,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		$i = 0;
 		do {
 			$i++;
-			$prev_index = $this->IndexFromKey($post_key+$i);
+			$prev_index = self::AStrValue('str_index',$post_key+$i);
 			if ( $prev_index ) {
 				$post = $this->GetPostContent($prev_index);
 				$isDraft = isset($post['isDraft']) && $post['isDraft'];
@@ -382,7 +382,7 @@ class SimpleBlog extends SimpleBlogCommon{
 			$i = 0;
 			do {
 				$i++;
-				$next_index = $this->IndexFromKey($post_key-$i);
+				$next_index = self::AStrValue('str_index',$post_key-$i);
 				$post = $this->GetPostContent($next_index);
 				$isDraft = isset($post['isDraft']) && $post['isDraft'];
 			}while( $isDraft );
@@ -453,20 +453,6 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		echo '</p>';
 
-	}
-
-	/**
-	 * Get a list of post indeces
-	 *
-	 */
-	function WhichPosts($start,$len){
-		$posts = array();
-		$end = $start+$len;
-		for($i = $start; $i < $end; $i++){
-			$index = $this->IndexFromKey($i);
-			if( $index ) $posts[] = $index;
-		}
-		return $posts;
 	}
 
 

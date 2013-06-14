@@ -23,6 +23,7 @@ class SimpleBlogCommon{
 	var $archives_file;
 	var $months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
 
+
 	/**
 	 * When SimpleBlogCommon is created as an object, it will regenerate the static files
 	 *
@@ -103,46 +104,76 @@ class SimpleBlogCommon{
 		SimpleBlogCommon::$data['str_index'] = self::StrFromArray(SimpleBlogCommon::$data['post_list']);
 	}
 
+
+	/**
+	 * Serialize comment counts
+	 *
+	 */
+	function GenCommentStr(){
+
+		if( !isset(SimpleBlogCommon::$data['post_info']) ){
+			return;
+		}
+
+		$counts = array();
+		foreach(SimpleBlogCommon::$data['post_info'] as $post_id => $info){
+			if( isset($info['comments']) ){
+				$counts[$post_id] = $info['comments'];
+			}
+		}
+		SimpleBlogCommon::$data['comment_counts'] = self::StrFromArray($counts);
+		msg('comment_counts: '.SimpleBlogCommon::$data['comment_counts']);
+	}
+
+
+	/**
+	 * Serialize a simple array into a string
+	 *
+	 */
 	static function StrFromArray($array){
 		$str = '';
-		$i=0;
-		foreach($array as $value){
-			$str .= '|'.$i.':'.$value;
-			$i++;
+		foreach($array as $key => $value){
+			$str .= '|'.$key.':'.$value;
 		}
 		return $str.'|';
 	}
 
 
 	/**
-	 * Reassign indexes to the index string
-	 *
-	 */
-	function AdjustIndex(){
-		static $index = 0;
-		return '|'.$index++.':';
-	}
-
-	/**
 	 * Get a post index from it's key
 	 *
 	 */
 	function IndexFromKey($key){
+		return self::AStrValue('str_index',$key);
+	}
+
+
+	/**
+	 * Get the value from a serialized string
+	 *
+	 */
+	static function AStrValue( $data_string, $key ){
 		static $integers = '0123456789';
-		$index = SimpleBlogCommon::$data['str_index'];
+
+		if( !isset(SimpleBlogCommon::$data[$data_string]) ){
+			return false;
+		}
+
+		$string =& SimpleBlogCommon::$data[$data_string];
 
 		$prev_key_str = '|'.$key.':';
-		$prev_pos = SimpleBlogCommon::strpos($index,$prev_key_str);
+		$prev_pos = SimpleBlogCommon::strpos($string,$prev_key_str);
 		if( $prev_pos === false ){
 			return false;
 		}
 		$offset = $prev_pos+1;
 
-		$prev_comma = SimpleBlogCommon::strpos($index,'|',$offset);
+		$prev_comma = SimpleBlogCommon::strpos($string,'|',$offset);
 
 		$offset = $prev_pos+SimpleBlogCommon::strlen($prev_key_str);
-		return SimpleBlogCommon::substr($index,$offset,$prev_comma - $offset);
+		return SimpleBlogCommon::substr($string,$offset,$prev_comma - $offset);
 	}
+
 
 	/**
 	 * Get a post key from it's index
@@ -171,11 +202,12 @@ class SimpleBlogCommon{
 		$posts = array();
 		$end = $start+$len;
 		for($i = $start; $i < $end; $i++){
-			$index = $this->IndexFromKey($i);
+			$index = self::AStrValue('str_index',$i);
 			if( $index ) $posts[] = $index;
 		}
 		return $posts;
 	}
+
 
 	/**
 	 * Return the configuration defaults
@@ -370,8 +402,10 @@ class SimpleBlogCommon{
 		$this->update_post_in_archives($post_index,$posts[$post_index]);
 
 		//add new entry to the beginning of the index string then reorder the keys
-		$new_index = ',0:'.$post_index.SimpleBlogCommon::$data['str_index'];
-		SimpleBlogCommon::$data['str_index'] = preg_replace_callback('#,(\d+):#',array('SimpleBlogCommon', 'AdjustIndex'),$new_index);
+		$new_index = '|0:'.$post_index.SimpleBlogCommon::$data['str_index'];
+		preg_match_all('#(?:\|\d+:)([^\|:])*#',$new_index,$matches);
+		SimpleBlogCommon::$data['str_index'] = self::StrFromArray($matches[1]);
+
 
 		//save index file
 		SimpleBlogCommon::$data['post_index'] = $post_index;
@@ -838,18 +872,16 @@ class SimpleBlogCommon{
 		$blog_date .= '</span>';
 
 		$blog_comments = '{empty_blog_piece}';
-		if( SimpleBlogCommon::$data['allow_comments']
-			&& isset(SimpleBlogCommon::$data['post_info'][$post_index])
-			&& isset(SimpleBlogCommon::$data['post_info'][$post_index]['comments']) ){
-
-				$blog_comments = '<span class="simple_blog_comments">';
-				if( $cacheable ){
-					$blog_comments .= gpOutput::SelectText('Comments');
-				}else{
-					$blog_comments .= gpOutput::GetAddonText('Comments');
-				}
-				$blog_comments .= ': '.SimpleBlogCommon::$data['post_info'][$post_index]['comments'];
-				$blog_comments .= '</span>';
+		$count = self::AStrValue('comment_counts',$post_index);
+		if( $count > 0 ){
+			$blog_comments = '<span class="simple_blog_comments">';
+			if( $cacheable ){
+				$blog_comments .= gpOutput::SelectText('Comments');
+			}else{
+				$blog_comments .= gpOutput::GetAddonText('Comments');
+			}
+			$blog_comments .= ': '.SimpleBlogCommon::$data['post_info'][$post_index]['comments'];
+			$blog_comments .= '</span>';
 		}
 
 

@@ -76,12 +76,12 @@ class SimpleBlogComments extends SimpleBlogCommon{
 
 
 		echo '</td><td>';
-		//echo strftime($this->blogData['strftime_format'],$comment['time']);
+		//echo strftime(SimpleBlogCommon::$data['strftime_format'],$comment['time']);
 		echo strftime( "%Y-%m-%d %H:%M:%S", $comment['time'] );
 		echo '<br/>';
-		if( ($this->blogData['commenter_website'] == 'nofollow') && !empty($comment['website']) ){
+		if( (SimpleBlogCommon::$data['commenter_website'] == 'nofollow') && !empty($comment['website']) ){
 			echo '<a href="'.$comment['website'].'" rel="nofollow">'.$comment['website'].'</a>';
-		}elseif( ($this->blogData['commenter_website'] == 'link') && !empty($comment['website']) ){
+		}elseif( (SimpleBlogCommon::$data['commenter_website'] == 'link') && !empty($comment['website']) ){
 			echo '<a href="'.$comment['website'].'">'.$comment['website'].'</a>';
 		}
 

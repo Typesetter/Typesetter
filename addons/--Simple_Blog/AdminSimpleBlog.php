@@ -46,56 +46,56 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 
 		$options = self::Options();
 		if( isset($_POST['urls']) && isset($options['urls'][$_POST['urls']]) ){
-			$this->blogData['urls'] = $_POST['urls'];
+			SimpleBlogCommon::$data['urls'] = $_POST['urls'];
 		}
 
 		if( is_numeric($_POST['per_page']) ){
-			$this->blogData['per_page'] = (int)$_POST['per_page'];
+			SimpleBlogCommon::$data['per_page'] = (int)$_POST['per_page'];
 		}
 
 		if( is_numeric($_POST['post_abbrev']) ){
-			$this->blogData['post_abbrev'] = (int)$_POST['post_abbrev'];
+			SimpleBlogCommon::$data['post_abbrev'] = (int)$_POST['post_abbrev'];
 		}elseif( empty($_POST['post_abbrev']) ){
-			$this->blogData['post_abbrev'] = '';
+			SimpleBlogCommon::$data['post_abbrev'] = '';
 		}
 
 		if( is_numeric($_POST['gadget_entries']) ){
-			$this->blogData['gadget_entries'] = (int)$_POST['gadget_entries'];
+			SimpleBlogCommon::$data['gadget_entries'] = (int)$_POST['gadget_entries'];
 		}
 
 		if( is_numeric($_POST['gadget_abbrev']) ){
-			$this->blogData['gadget_abbrev'] = (int)$_POST['gadget_abbrev'];
+			SimpleBlogCommon::$data['gadget_abbrev'] = (int)$_POST['gadget_abbrev'];
 		}
 
 		$format = htmlspecialchars($_POST['strftime_format']);
 		if( @strftime($format) ){
-			$this->blogData['strftime_format'] = $format;
+			SimpleBlogCommon::$data['strftime_format'] = $format;
 		}
 
 
 		if( is_numeric($_POST['feed_entries']) ){
-			$this->blogData['feed_entries'] = (int)$_POST['feed_entries'];
+			SimpleBlogCommon::$data['feed_entries'] = (int)$_POST['feed_entries'];
 		}
 
 		if( is_numeric($_POST['feed_abbrev']) ){
-			$this->blogData['feed_abbrev'] = (int)$_POST['feed_abbrev'];
+			SimpleBlogCommon::$data['feed_abbrev'] = (int)$_POST['feed_abbrev'];
 		}
 
 		//comments
 		if( isset($_POST['allow_comments']) ){
-			$this->blogData['allow_comments'] = true;
+			SimpleBlogCommon::$data['allow_comments'] = true;
 		}else{
-			$this->blogData['allow_comments'] = false;
+			SimpleBlogCommon::$data['allow_comments'] = false;
 		}
-		$this->blogData['commenter_website'] = (string)$_POST['commenter_website'];
+		SimpleBlogCommon::$data['commenter_website'] = (string)$_POST['commenter_website'];
 
 		if( isset($_POST['comment_captcha']) ){
-			$this->blogData['comment_captcha'] = true;
+			SimpleBlogCommon::$data['comment_captcha'] = true;
 		}else{
-			$this->blogData['comment_captcha'] = false;
+			SimpleBlogCommon::$data['comment_captcha'] = false;
 		}
 
-		$this->blogData['subtitle_separator'] = (string)$_POST['subtitle_separator'];
+		SimpleBlogCommon::$data['subtitle_separator'] = (string)$_POST['subtitle_separator'];
 
 		if( !$this->SaveIndex() ){
 			message($langmessage['OOPS']);
@@ -117,7 +117,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 
 
 		$defaults = SimpleBlogCommon::Defaults();
-		$array =& $this->blogData;
+		$array =& SimpleBlogCommon::$data;
 
 		$label = gpOutput::SelectText('Blog');
 

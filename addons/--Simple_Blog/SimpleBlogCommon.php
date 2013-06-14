@@ -7,11 +7,11 @@ if( function_exists('mb_internal_encoding') ){
 	mb_internal_encoding('UTF-8');
 }
 
-
 class SimpleBlogCommon{
 
 	var $indexFile;
-	var $blogData = array();
+	static $data = false;
+
 	var $new_install = false;
 	var $addonPathData;
 	var $post_id = false;
@@ -38,6 +38,11 @@ class SimpleBlogCommon{
 	 */
 	function Init(){
 		global $addonPathData;
+
+		if( SimpleBlogCommon::$data ){
+			return;
+		}
+
 		$this->addonPathData = $addonPathData;
 		$this->indexFile = $this->addonPathData.'/index.php';
 		$this->GetBlogData();
@@ -47,8 +52,6 @@ class SimpleBlogCommon{
 
 	function AddCSS(){
 		global $addonFolderName,$page;
-		static $added = false;
-		if( $added ) return;
 
 		//$page->head_script .= 'gplinks.blog_gadget = function(){$(this).next(".nodisplay").toggle();};';
 		$page->jQueryCode .= '$(".blog_gadget_link").click(function(){$(this).next(".nodisplay").toggle();});';
@@ -74,7 +77,7 @@ class SimpleBlogCommon{
 			unset($blogData['twitter_password']);
 		}
 
-		$this->blogData = $blogData + SimpleBlogCommon::Defaults();
+		SimpleBlogCommon::$data = $blogData + SimpleBlogCommon::Defaults();
 		$this->GenIndexStr();
 	}
 
@@ -85,19 +88,19 @@ class SimpleBlogCommon{
 	 */
 	function GenIndexStr(){
 
-		if( !empty($this->blogData['str_index']) ){
+		if( !empty(SimpleBlogCommon::$data['str_index']) ){
 			return;
 		}
-		if( !isset($this->blogData['post_list']) ){
+		if( !isset(SimpleBlogCommon::$data['post_list']) ){
 			return;
 		}
 
 		$str = '';
-		foreach($this->blogData['post_list'] as $key => $value){
+		foreach(SimpleBlogCommon::$data['post_list'] as $key => $value){
 			$str .= ','.$key.':'.$value;
 		}
 		$str .= ',';
-		$this->blogData['str_index'] = $str;
+		SimpleBlogCommon::$data['str_index'] = $str;
 	}
 
 
@@ -116,7 +119,7 @@ class SimpleBlogCommon{
 	 */
 	function IndexFromKey($key){
 		static $integers = '0123456789';
-		$index = $this->blogData['str_index'];
+		$index = SimpleBlogCommon::$data['str_index'];
 
 		$prev_key_str = ','.$key.':';
 		$prev_pos = SimpleBlogCommon::strpos($index,$prev_key_str);
@@ -137,7 +140,7 @@ class SimpleBlogCommon{
 	 */
 	function KeyFromIndex($post_index){
 		static $integers = '0123456789';
-		$index = $this->blogData['str_index'];
+		$index = SimpleBlogCommon::$data['str_index'];
 		$len = strlen($index);
 		$post_pos = strpos($index,':'.$post_index.',');
 
@@ -205,13 +208,13 @@ class SimpleBlogCommon{
 	function SaveIndex(){
 
 		$this->GenIndexStr();
-		unset($this->blogData['post_list']);
+		unset(SimpleBlogCommon::$data['post_list']);
 
 		//set some stats
-		$this->blogData['str_index'] = ','.trim($this->blogData['str_index'],',').',';
-		$this->blogData['post_count'] = substr_count($this->blogData['str_index'],':');
+		SimpleBlogCommon::$data['str_index'] = ','.trim(SimpleBlogCommon::$data['str_index'],',').',';
+		SimpleBlogCommon::$data['post_count'] = substr_count(SimpleBlogCommon::$data['str_index'],':');
 
-		return gpFiles::SaveArray($this->indexFile,'blogData',$this->blogData);
+		return gpFiles::SaveArray($this->indexFile,'blogData',SimpleBlogCommon::$data);
 	}
 
 	/**
@@ -283,9 +286,9 @@ class SimpleBlogCommon{
 		unset($posts[$post_index]); //don't use array_splice here because it will reset the numeric keys
 
 		//reset the index string
-		$new_index = $this->blogData['str_index'];
+		$new_index = SimpleBlogCommon::$data['str_index'];
 		$new_index = preg_replace('#,\d+:'.$post_index.',#',',',$new_index);
-		$this->blogData['str_index'] = preg_replace_callback('#,(\d+):#',array('SimpleBlogCommon','AdjustIndex'),$new_index);
+		SimpleBlogCommon::$data['str_index'] = preg_replace_callback('#,(\d+):#',array('SimpleBlogCommon','AdjustIndex'),$new_index);
 
 
 		if( !$this->SaveIndex() ){
@@ -330,7 +333,7 @@ class SimpleBlogCommon{
 
 
 		//use current data file or create new one
-		$post_index = $this->blogData['post_index'] +1;
+		$post_index = SimpleBlogCommon::$data['post_index'] +1;
 		$posts = $this->GetPostFile($post_index,$post_file);
 
 
@@ -356,11 +359,11 @@ class SimpleBlogCommon{
 		$this->update_post_in_archives($post_index,$posts[$post_index]);
 
 		//add new entry to the beginning of the index string then reorder the keys
-		$new_index = ',0:'.$post_index.$this->blogData['str_index'];
-		$this->blogData['str_index'] = preg_replace_callback('#,(\d+):#',array('SimpleBlogCommon','AdjustIndex'),$new_index);
+		$new_index = ',0:'.$post_index.SimpleBlogCommon::$data['str_index'];
+		SimpleBlogCommon::$data['str_index'] = preg_replace_callback('#,(\d+):#',array('SimpleBlogCommon','AdjustIndex'),$new_index);
 
 		//save index file
-		$this->blogData['post_index'] = $post_index;
+		SimpleBlogCommon::$data['post_index'] = $post_index;
 		if( !$this->SaveIndex() ){
 			message($langmessage['OOPS']);
 			return false;
@@ -586,7 +589,7 @@ class SimpleBlogCommon{
 		}
 
 		$posts = array();
-		$show_posts = $this->WhichPosts(0,$this->blogData['feed_entries']);
+		$show_posts = $this->WhichPosts(0,SimpleBlogCommon::$data['feed_entries']);
 
 
 		if( isset($_SERVER['HTTP_HOST']) ){
@@ -627,8 +630,8 @@ class SimpleBlogCommon{
 			echo '<updated>'.date($atomFormat, $post['time']).'</updated>'."\n";
 
 			$content =& $post['content'];
-			if( ($this->blogData['feed_abbrev']> 0) && (SimpleBlogCommon::strlen($content) > $this->blogData['feed_abbrev']) ){
-				$content = SimpleBlogCommon::substr($content,0,$this->blogData['feed_abbrev']).' ... ';
+			if( (SimpleBlogCommon::$data['feed_abbrev']> 0) && (SimpleBlogCommon::strlen($content) > SimpleBlogCommon::$data['feed_abbrev']) ){
+				$content = SimpleBlogCommon::substr($content,0,SimpleBlogCommon::$data['feed_abbrev']).' ... ';
 				$label = gpOutput::SelectText('Read More');
 				$content .= '<a href="'.$server.$this->PostUrl($post_index,$label).'">'.$label.'</a>';
 			}
@@ -735,7 +738,7 @@ class SimpleBlogCommon{
 		global $langmessage;
 
 		$posts = array();
-		$show_posts = $this->WhichPosts(0,$this->blogData['gadget_entries']);
+		$show_posts = $this->WhichPosts(0,SimpleBlogCommon::$data['gadget_entries']);
 
 
 		ob_start();
@@ -769,9 +772,9 @@ class SimpleBlogCommon{
 
 			$content = strip_tags($post['content']);
 
-			if( $this->blogData['gadget_abbrev'] > 6 && (SimpleBlogCommon::strlen($content) > $this->blogData['gadget_abbrev']) ){
+			if( SimpleBlogCommon::$data['gadget_abbrev'] > 6 && (SimpleBlogCommon::strlen($content) > SimpleBlogCommon::$data['gadget_abbrev']) ){
 
-				$cut = $this->blogData['gadget_abbrev'];
+				$cut = SimpleBlogCommon::$data['gadget_abbrev'];
 
 				$pos = SimpleBlogCommon::strpos($content,' ',$cut-5);
 				if( ($pos > 0) && ($cut+20 > $pos) ){
@@ -789,7 +792,7 @@ class SimpleBlogCommon{
 
 		}
 
-		if( $this->blogData['post_count'] > 3 ){
+		if( SimpleBlogCommon::$data['post_count'] > 3 ){
 
 			$label = gpOutput::SelectText('More Blog Entries');
 			echo common::Link('Special_Blog',$label);
@@ -820,13 +823,13 @@ class SimpleBlogCommon{
 		}
 
 		$blog_date = '<span class="simple_blog_date">';
-		$blog_date .= strftime($this->blogData['strftime_format'],$post['time']);
+		$blog_date .= strftime(SimpleBlogCommon::$data['strftime_format'],$post['time']);
 		$blog_date .= '</span>';
 
 		$blog_comments = '{empty_blog_piece}';
-		if( $this->blogData['allow_comments']
-			&& isset($this->blogData['post_info'][$post_index])
-			&& isset($this->blogData['post_info'][$post_index]['comments']) ){
+		if( SimpleBlogCommon::$data['allow_comments']
+			&& isset(SimpleBlogCommon::$data['post_info'][$post_index])
+			&& isset(SimpleBlogCommon::$data['post_info'][$post_index]['comments']) ){
 
 				$blog_comments = '<span class="simple_blog_comments">';
 				if( $cacheable ){
@@ -834,7 +837,7 @@ class SimpleBlogCommon{
 				}else{
 					$blog_comments .= gpOutput::GetAddonText('Comments');
 				}
-				$blog_comments .= ': '.$this->blogData['post_info'][$post_index]['comments'];
+				$blog_comments .= ': '.SimpleBlogCommon::$data['post_info'][$post_index]['comments'];
 				$blog_comments .= '</span>';
 		}
 
@@ -852,7 +855,7 @@ class SimpleBlogCommon{
 		$reg = '#\{separator\}(\s*){empty_blog_piece\}#';
 		$result = preg_replace($reg,'\1',$result);
 
-		echo str_replace('{separator}',$this->blogData['subtitle_separator'],$result);
+		echo str_replace('{separator}',SimpleBlogCommon::$data['subtitle_separator'],$result);
 	}
 
 
@@ -1093,7 +1096,7 @@ class SimpleBlogCommon{
 			unlink($commentDataFile);
 		}
 
-		$this->blogData['post_info'][$post_index]['comments'] = count($data);
+		SimpleBlogCommon::$data['post_info'][$post_index]['comments'] = count($data);
 		$this->SaveIndex();
 
 		//clear comments cache
@@ -1118,7 +1121,7 @@ class SimpleBlogCommon{
 
 		$url = 'Special_Blog';
 		if( $post > 0 ){
-			switch( $this->blogData['urls'] ){
+			switch( SimpleBlogCommon::$data['urls'] ){
 
 				case 'Tiny':
 				$url = 'Special_Blog/'.$post;

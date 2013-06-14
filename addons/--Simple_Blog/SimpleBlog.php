@@ -87,7 +87,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			$page->admin_links[] = array('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addonFolderName),' name="gpabox" ');
 
-			$label = 'Number of Posts: '. $this->blogData['post_count'];
+			$label = 'Number of Posts: '. SimpleBlogCommon::$data['post_count'];
 			$page->admin_links[$label] = '';
 		}
 
@@ -212,7 +212,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		$this->PostLinks($post_index);
 
 		//comments
-		if( $this->blogData['allow_comments'] ){
+		if( SimpleBlogCommon::$data['allow_comments'] ){
 			echo '<div class="comment_container">';
 			$this->ShowComments($post_index);
 			if( !$commentSaved ){
@@ -249,7 +249,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	function CloseComments($post_index){
 		global $langmessage;
 
-		$this->blogData['post_info'][$post_index]['closecomments'] = true;
+		SimpleBlogCommon::$data['post_info'][$post_index]['closecomments'] = true;
 		if( !$this->SaveIndex() ){
 			message($langmessage['OOPS']);
 		}else{
@@ -264,7 +264,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	function OpenComments($post_index){
 		global $langmessage;
 
-		unset($this->blogData['post_info'][$post_index]['closecomments']);
+		unset(SimpleBlogCommon::$data['post_info'][$post_index]['closecomments']);
 		if( !$this->SaveIndex() ){
 			message($langmessage['OOPS']);
 		}else{
@@ -278,7 +278,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 */
 	function CommentForm($post_index,$showCaptcha=false){
 
-		if( isset($this->blogData['post_info'][$post_index]) && isset($this->blogData['post_info'][$post_index]['closecomments']) ){
+		if( isset(SimpleBlogCommon::$data['post_info'][$post_index]) && isset(SimpleBlogCommon::$data['post_info'][$post_index]['closecomments']) ){
 			echo '<div class="comments_closed">';
 			echo gpOutput::GetAddonText('Comments have been closed.');
 			echo '</div>';
@@ -302,7 +302,7 @@ class SimpleBlog extends SimpleBlogCommon{
 			echo '<input type="text" name="name" class="text" value="'.htmlspecialchars($_POST['name']).'" />';
 			echo '</li>';
 
-		if( !empty($this->blogData['commenter_website']) ){
+		if( !empty(SimpleBlogCommon::$data['commenter_website']) ){
 			echo '<li>';
 				echo '<label>';
 				echo gpOutput::GetAddonText('Website');
@@ -321,7 +321,7 @@ class SimpleBlog extends SimpleBlogCommon{
 			echo '</li>';
 
 
-		if( $showCaptcha && $this->blogData['comment_captcha'] && gp_recaptcha::isActive() ){
+		if( $showCaptcha && SimpleBlogCommon::$data['comment_captcha'] && gp_recaptcha::isActive() ){
 			echo '<input type="hidden" name="anti_spam_submitted" value="anti_spam_submitted" />';
 			echo '<li>';
 			echo '<label>';
@@ -408,7 +408,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 */
 	function ShowPage(){
 
-		$per_page = $this->blogData['per_page'];
+		$per_page = SimpleBlogCommon::$data['per_page'];
 		$page = 0;
 		if( isset($_GET['page']) && is_numeric($_GET['page']) ){
 			$page = (int)$_GET['page'];
@@ -427,7 +427,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			$post =& $posts[$post_index];
 
-			$this->ShowPostContent( $post, $post_index, $this->blogData['post_abbrev'] );
+			$this->ShowPostContent( $post, $post_index, SimpleBlogCommon::$data['post_abbrev'] );
 		}
 
 		echo '<p class="blog_nav_links">';
@@ -441,7 +441,7 @@ class SimpleBlog extends SimpleBlogCommon{
 			echo '&nbsp;';
 		}
 
-		if( ( ($page+1) * $per_page) < $this->blogData['post_count'] ){
+		if( ( ($page+1) * $per_page) < SimpleBlogCommon::$data['post_count'] ){
 			$html = common::Link('Special_Blog','%s','page='.($page+1),'class="blog_older"');
 			echo gpOutput::GetAddonText('Older Entries',$html);
 		}
@@ -515,9 +515,9 @@ class SimpleBlog extends SimpleBlogCommon{
 			echo $this->PostLink($post_index,$langmessage['edit'].' (All)','cmd=edit_post',' style="display:none"');
 			echo common::Link('Special_Blog',$langmessage['delete'],'cmd=deleteentry&del_id='.$post_index,array('class'=>'delete gpconfirm','data-cmd'=>'postlink','title'=>$langmessage['delete_confirm']));
 
-			if( $this->blogData['allow_comments'] ){
+			if( SimpleBlogCommon::$data['allow_comments'] ){
 
-				if( isset($this->blogData['post_info'][$post_index]) && isset($this->blogData['post_info'][$post_index]['closecomments']) ){
+				if( isset(SimpleBlogCommon::$data['post_info'][$post_index]) && isset(SimpleBlogCommon::$data['post_info'][$post_index]['closecomments']) ){
 					$label = gpOutput::SelectText('Open Comments');
 					echo $this->PostLink($post_index,$label,'cmd=opencomments','name="creq" style="display:none"');
 				}else{
@@ -629,14 +629,14 @@ class SimpleBlog extends SimpleBlogCommon{
 	function AddComment($post_index){
 		global $langmessage;
 
-		if( isset($this->blogData['post_info'][$post_index]) && isset($this->blogData['post_info'][$post_index]['closecomments']) ){
+		if( isset(SimpleBlogCommon::$data['post_info'][$post_index]) && isset(SimpleBlogCommon::$data['post_info'][$post_index]['closecomments']) ){
 			return;
 		}
 
 		$data = $this->GetCommentData($post_index);
 
 		//need a captcha?
-		if( $this->blogData['comment_captcha'] && gp_recaptcha::isActive() ){
+		if( SimpleBlogCommon::$data['comment_captcha'] && gp_recaptcha::isActive() ){
 
 			if( !isset($_POST['anti_spam_submitted']) ){
 			//if( !isset($_POST['recaptcha_challenge_field']) ){
@@ -702,16 +702,16 @@ class SimpleBlog extends SimpleBlogCommon{
 		foreach($data as $key => $comment){
 			echo '<div class="comment_area">';
 			echo '<p class="name">';
-			if( ($this->blogData['commenter_website'] == 'nofollow') && !empty($comment['website']) ){
+			if( (SimpleBlogCommon::$data['commenter_website'] == 'nofollow') && !empty($comment['website']) ){
 				echo '<b><a href="'.$comment['website'].'" rel="nofollow">'.$comment['name'].'</a></b>';
-			}elseif( ($this->blogData['commenter_website'] == 'link') && !empty($comment['website']) ){
+			}elseif( (SimpleBlogCommon::$data['commenter_website'] == 'link') && !empty($comment['website']) ){
 				echo '<b><a href="'.$comment['website'].'">'.$comment['name'].'</a></b>';
 			}else{
 				echo '<b>'.$comment['name'].'</b>';
 			}
 			echo ' &nbsp; ';
 			echo '<span>';
-			echo strftime($this->blogData['strftime_format'],$comment['time']);
+			echo strftime(SimpleBlogCommon::$data['strftime_format'],$comment['time']);
 			echo '</span>';
 
 

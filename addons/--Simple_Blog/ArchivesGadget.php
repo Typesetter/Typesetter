@@ -6,6 +6,7 @@ gpPlugin::incl('SimpleBlogCommon.php','require_once');
 class SimpleBlogArchives extends SimpleBlogCommon{
 
 	function SimpleBlogArchives(){
+		$this->Init();
 		$this->load_blog_archives();
 		$this->Run();
 		SimpleBlogCommon::AddCSS();
@@ -48,7 +49,7 @@ class SimpleBlogArchives extends SimpleBlogCommon{
 			echo '<ul class="simple_blog_category_posts nodisplay">';
 			foreach($posts as $post_index => $post_title){
 				echo '<li>';
-				echo common::Link('Special_Blog',$post_title,'id='.$post_index);
+				echo $this->PostLink($post_index,$post_title);
 				echo '</li>';
 			}
 			echo '</ul>';

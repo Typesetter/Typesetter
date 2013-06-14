@@ -8,6 +8,7 @@ class SimpleBlogCategories extends SimpleBlogCommon{
 	var $categories_file;
 
 	function SimpleBlogCategories(){
+		$this->Init();
 		$this->load_blog_categories();
 		$this->Run();
 		SimpleBlogCommon::AddCSS();
@@ -39,7 +40,7 @@ class SimpleBlogCategories extends SimpleBlogCommon{
 				echo '<ul class="nodisplay">';
 				foreach($catdata['posts'] as $post_index => $post_title){
 					echo '<li>';
-					echo common::Link('Special_Blog',$post_title,'id='.$post_index);
+					echo $this->PostLink($post_index,$post_title);
 					echo '</li>';
 				}
 				echo '</ul>';

@@ -348,7 +348,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 */
 	function PostLinks($post_index){
 
-		$post_key = $this->KeyFromIndex($post_index);
+		$post_key = self::AStrKey('str_index',$post_index);
 
 		echo '<p class="blog_nav_links">';
 

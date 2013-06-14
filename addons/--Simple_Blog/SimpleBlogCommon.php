@@ -101,7 +101,7 @@ class SimpleBlogCommon{
 			return;
 		}
 
-		SimpleBlogCommon::$data['str_index'] = self::StrFromArray(SimpleBlogCommon::$data['post_list']);
+		SimpleBlogCommon::$data['str_index'] = self::AStrFromArray(SimpleBlogCommon::$data['post_list']);
 	}
 
 
@@ -121,77 +121,10 @@ class SimpleBlogCommon{
 				$counts[$post_id] = $info['comments'];
 			}
 		}
-		SimpleBlogCommon::$data['comment_counts'] = self::StrFromArray($counts);
+		SimpleBlogCommon::$data['comment_counts'] = self::AStrFromArray($counts);
 		msg('comment_counts: '.SimpleBlogCommon::$data['comment_counts']);
 	}
 
-
-	/**
-	 * Serialize a simple array into a string
-	 *
-	 */
-	static function StrFromArray($array){
-		$str = '';
-		foreach($array as $key => $value){
-			$str .= '|'.$key.':'.$value;
-		}
-		return $str.'|';
-	}
-
-
-	/**
-	 * Get a post index from it's key
-	 *
-	 */
-	function IndexFromKey($key){
-		return self::AStrValue('str_index',$key);
-	}
-
-
-	/**
-	 * Get the value from a serialized string
-	 *
-	 */
-	static function AStrValue( $data_string, $key ){
-		static $integers = '0123456789';
-
-		if( !isset(SimpleBlogCommon::$data[$data_string]) ){
-			return false;
-		}
-
-		$string =& SimpleBlogCommon::$data[$data_string];
-
-		$prev_key_str = '|'.$key.':';
-		$prev_pos = SimpleBlogCommon::strpos($string,$prev_key_str);
-		if( $prev_pos === false ){
-			return false;
-		}
-		$offset = $prev_pos+1;
-
-		$prev_comma = SimpleBlogCommon::strpos($string,'|',$offset);
-
-		$offset = $prev_pos+SimpleBlogCommon::strlen($prev_key_str);
-		return SimpleBlogCommon::substr($string,$offset,$prev_comma - $offset);
-	}
-
-
-	/**
-	 * Get a post key from it's index
-	 *
-	 */
-	function KeyFromIndex($post_index){
-		static $integers = '0123456789';
-		$index = SimpleBlogCommon::$data['str_index'];
-		$len = strlen($index);
-		$post_pos = strpos($index,':'.$post_index.'|');
-
-		$offset = $post_pos-$len;
-
-
-		$post_key_pos = strrpos($index,'|',$offset);
-		$post_key_len = strspn($index,$integers,$post_key_pos+1);
-		return substr($index,$post_key_pos+1,$post_key_len);
-	}
 
 
 	/**
@@ -331,7 +264,7 @@ class SimpleBlogCommon{
 		$new_index = SimpleBlogCommon::$data['str_index'];
 		$new_index = preg_replace('#\|\d+:'.$post_index.'\|#', '|', $new_index);
 		preg_match_all('#(?:\|\d+:)([^\|:])*#',$new_index,$matches);
-		SimpleBlogCommon::$data['str_index'] = self::StrFromArray($matches[1]);
+		SimpleBlogCommon::$data['str_index'] = self::AStrFromArray($matches[1]);
 
 
 		if( !$this->SaveIndex() ){
@@ -404,7 +337,7 @@ class SimpleBlogCommon{
 		//add new entry to the beginning of the index string then reorder the keys
 		$new_index = '|0:'.$post_index.SimpleBlogCommon::$data['str_index'];
 		preg_match_all('#(?:\|\d+:)([^\|:])*#',$new_index,$matches);
-		SimpleBlogCommon::$data['str_index'] = self::StrFromArray($matches[1]);
+		SimpleBlogCommon::$data['str_index'] = self::AStrFromArray($matches[1]);
 
 
 		//save index file
@@ -1176,6 +1109,82 @@ class SimpleBlogCommon{
 			}
 		}
 	}
+
+
+
+	/**
+	 *		A R R A Y - S T R I N G   F U N C T I O N S
+	 *
+	 *
+	 */
+
+
+	/**
+	 * Serialize a simple array into a string
+	 *
+	 */
+	static function AStrFromArray($array){
+		$str = '';
+		foreach($array as $key => $value){
+			$str .= '|'.$key.':'.$value;
+		}
+		return $str.'|';
+	}
+
+
+	/**
+	 * Get the value from a serialized string
+	 *
+	 */
+	static function AStrValue( $data_string, $key ){
+		static $integers = '0123456789';
+
+		if( !isset(SimpleBlogCommon::$data[$data_string]) ){
+			return false;
+		}
+
+		$string =& SimpleBlogCommon::$data[$data_string];
+
+		$prev_key_str = '|'.$key.':';
+		$prev_pos = SimpleBlogCommon::strpos($string,$prev_key_str);
+		if( $prev_pos === false ){
+			return false;
+		}
+		$offset = $prev_pos+1;
+
+		$prev_comma = SimpleBlogCommon::strpos($string,'|',$offset);
+
+		$offset = $prev_pos+SimpleBlogCommon::strlen($prev_key_str);
+		return SimpleBlogCommon::substr($string,$offset,$prev_comma - $offset);
+	}
+
+
+	/**
+	 * Get the key for a given value
+	 *
+	 */
+	static function AStrKey( $data_string, $value ){
+		static $integers = '0123456789';
+
+		if( !isset(SimpleBlogCommon::$data[$data_string]) ){
+			return false;
+		}
+
+		$string = SimpleBlogCommon::$data[$data_string];
+
+		$len = strlen($string);
+		$post_pos = strpos($string,':'.$value.'|');
+
+		$offset = $post_pos-$len;
+
+
+		$post_key_pos = strrpos( $string, '|', $offset );
+		$post_key_len = strspn( $string, $integers, $post_key_pos+1 );
+		return substr( $string, $post_key_pos+1, $post_key_len );
+	}
+
+
+
 
 }
 

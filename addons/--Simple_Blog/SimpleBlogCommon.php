@@ -1219,6 +1219,21 @@ class SimpleBlogCommon{
 		return substr( $string, $post_key_pos+1, $post_key_len );
 	}
 
+	/**
+	 * Remove a key-value
+	 *
+	 */
+	static function AStrRemove( $data_string, $key ){
+
+		if( !isset(SimpleBlogCommon::$data[$data_string]) ){
+			return false;
+		}
+
+		$string =& SimpleBlogCommon::$data[$data_string];
+
+		$string = preg_replace('#\|'.$key.':[^\|:]*\|#', '|', $string);
+	}
+
 }
 
 

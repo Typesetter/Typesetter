@@ -80,7 +80,11 @@ class SimpleBlogCommon{
 
 		SimpleBlogCommon::$data = $blogData + SimpleBlogCommon::Defaults();
 		$this->GenIndexStr();
-		$this->GenCommentStr();
+
+		//update to simple blog 1.9 data
+		if( isset(SimpleBlogCommon::$data['post_info']) ){
+			$this->DataUpdate19();
+		}
 	}
 
 	/**
@@ -109,19 +113,23 @@ class SimpleBlogCommon{
 	 * Serialize comment counts
 	 *
 	 */
-	function GenCommentStr(){
+	function DataUpdate19(){
 
-		if( !isset(SimpleBlogCommon::$data['post_info']) ){
-			return;
-		}
-
-		$counts = array();
+		$comment_counts = array();
+		$comments_closed = array();
 		foreach(SimpleBlogCommon::$data['post_info'] as $post_id => $info){
 			if( isset($info['comments']) ){
-				$counts[$post_id] = $info['comments'];
+				$comment_counts[$post_id] = $info['comments'];
+			}
+
+			if( isset($info['closecomments']) ){
+				$comments_closed[$post_id] = 1;
 			}
 		}
-		SimpleBlogCommon::$data['comment_counts'] = self::AStrFromArray($counts);
+
+
+		SimpleBlogCommon::$data['comment_counts'] = self::AStrFromArray($comment_counts);
+		SimpleBlogCommon::$data['comments_closed'] = self::AStrFromArray($comments_closed);
 	}
 
 
@@ -162,7 +170,6 @@ class SimpleBlogCommon{
 						'strftime_format'=>'%'.$zero_strip.'m/%'.$zero_strip.'e/%Y',
 						'bitly_login'=>'',
 						'bitly_key'=>'',
-						'post_info'=>'',
 						'allow_comments'=>false,
 						'commenter_website'=>'',
 						'comment_captcha'=>true,

@@ -249,7 +249,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	function CloseComments($post_index){
 		global $langmessage;
 
-		SimpleBlogCommon::$data['post_info'][$post_index]['closecomments'] = true;
+		SimpleBlogCommon::AStrValue('comments_closed',$post_index,1);
 		if( !$this->SaveIndex() ){
 			message($langmessage['OOPS']);
 		}else{
@@ -264,7 +264,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	function OpenComments($post_index){
 		global $langmessage;
 
-		unset(SimpleBlogCommon::$data['post_info'][$post_index]['closecomments']);
+		SimpleBlogCommon::AStrValue('comments_closed',$post_index,0);
 		if( !$this->SaveIndex() ){
 			message($langmessage['OOPS']);
 		}else{
@@ -278,7 +278,8 @@ class SimpleBlog extends SimpleBlogCommon{
 	 */
 	function CommentForm($post_index,$showCaptcha=false){
 
-		if( isset(SimpleBlogCommon::$data['post_info'][$post_index]) && isset(SimpleBlogCommon::$data['post_info'][$post_index]['closecomments']) ){
+		$comments_closed = SimpleBlogCommon::AStrValue('comments_closed',$post_index);
+		if( $comments_closed ){
 			echo '<div class="comments_closed">';
 			echo gpOutput::GetAddonText('Comments have been closed.');
 			echo '</div>';
@@ -503,7 +504,8 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			if( SimpleBlogCommon::$data['allow_comments'] ){
 
-				if( isset(SimpleBlogCommon::$data['post_info'][$post_index]) && isset(SimpleBlogCommon::$data['post_info'][$post_index]['closecomments']) ){
+				$comments_closed = SimpleBlogCommon::AStrValue('comments_closed',$post_index);
+				if( $comments_closed ){
 					$label = gpOutput::SelectText('Open Comments');
 					echo $this->PostLink($post_index,$label,'cmd=opencomments','name="creq" style="display:none"');
 				}else{
@@ -615,7 +617,8 @@ class SimpleBlog extends SimpleBlogCommon{
 	function AddComment($post_index){
 		global $langmessage;
 
-		if( isset(SimpleBlogCommon::$data['post_info'][$post_index]) && isset(SimpleBlogCommon::$data['post_info'][$post_index]['closecomments']) ){
+		$comments_closed = SimpleBlogCommon::AStrValue('comments_closed',$post_index);
+		if( $comments_closed ){
 			return;
 		}
 
@@ -625,7 +628,6 @@ class SimpleBlog extends SimpleBlogCommon{
 		if( SimpleBlogCommon::$data['comment_captcha'] && gp_recaptcha::isActive() ){
 
 			if( !isset($_POST['anti_spam_submitted']) ){
-			//if( !isset($_POST['recaptcha_challenge_field']) ){
 				return false;
 
 			}elseif( !gp_recaptcha::Check() ){

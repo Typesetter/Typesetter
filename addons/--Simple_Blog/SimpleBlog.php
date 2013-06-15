@@ -42,12 +42,8 @@ class SimpleBlog extends SimpleBlogCommon{
 				break;
 
 
-				//delete prompts
-				case 'deleteentry':
-					$this->DeleteEntryPrompt();
-				return;
-
 				//delete
+				case 'deleteentry':
 				case 'delete':
 					if( $this->Delete() ){
 						$this->GenStaticContent();
@@ -124,29 +120,6 @@ class SimpleBlog extends SimpleBlogCommon{
 
 	}
 
-
-
-	/**
-	 * Prompt the user if they want to delete the blog post
-	 *
-	 */
-	function DeleteEntryPrompt(){
-		global $langmessage;
-
-		echo '<div class="inline_box">';
-		echo '<form method="post" action="'.common::GetUrl('Special_Blog').'">';
-		echo $langmessage['delete_confirm'];
-		echo ' <input type="hidden" name="id" value="'.htmlspecialchars($_GET['del_id']).'" />';
-		echo  ' <input type="hidden" name="cmd" value="delete" />';
-
-		echo '<p>';
-		echo ' <input type="submit" name="aaa" value="'.$langmessage['delete'].'" />';
-		echo ' <input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close" /> ';
-		echo '</p>';
-
-		echo '</form>';
-		echo '</div>';
-	}
 
 
 	/**
@@ -439,20 +412,24 @@ class SimpleBlog extends SimpleBlogCommon{
 		}
 
 		echo '<p class="blog_nav_links">';
-		if( $page > 0 ){
-			$html = common::Link('Special_Blog','%s','page='.($page-1),'class="blog_newer"');
-			echo gpOutput::GetAddonText('Newer Entries',$html);
-			echo '&nbsp;';
-
-			$html = common::Link('Special_Blog','%s');
-			echo gpOutput::GetAddonText('Blog Home',$html);
-			echo '&nbsp;';
-		}
 
 		if( ( ($page+1) * $per_page) < SimpleBlogCommon::$data['post_count'] ){
 			$html = common::Link('Special_Blog','%s','page='.($page+1),'class="blog_older"');
 			echo gpOutput::GetAddonText('Older Entries',$html);
 		}
+
+
+		if( $page > 0 ){
+
+			$html = common::Link('Special_Blog','%s');
+			echo gpOutput::GetAddonText('Blog Home',$html);
+			echo '&nbsp;';
+
+			$html = common::Link('Special_Blog','%s','page='.($page-1),'class="blog_newer"');
+			echo gpOutput::GetAddonText('Newer Entries',$html);
+			echo '&nbsp;';
+		}
+
 
 		if( common::LoggedIn() ){
 			echo '&nbsp;';

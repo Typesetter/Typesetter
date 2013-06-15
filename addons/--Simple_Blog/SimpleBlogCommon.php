@@ -85,19 +85,22 @@ class SimpleBlogCommon{
 		if( isset(SimpleBlogCommon::$data['post_info']) ){
 			$this->DataUpdate19();
 		}
+
+		// deleting a post should delete from other AStrings as well
+		//
 	}
 
 	/**
 	 * Generate a string to use as the post index
 	 * Using a string of numbers can use 1/4 of the memory of an array
 	 *
-	 * As of 1.9, Uses | and : instead , and :
+	 * As of 1.9, Uses " and > instead , and :
 	 */
 	function GenIndexStr(){
 
 		if( !empty(SimpleBlogCommon::$data['str_index']) ){
 			if( SimpleBlogCommon::$data['str_index'][0] == ',' ){
-				SimpleBlogCommon::$data['str_index'] = str_replace(',', '|', SimpleBlogCommon::$data['str_index']);
+				SimpleBlogCommon::$data['str_index'] = str_replace( array(',',':'), array('"','>'), SimpleBlogCommon::$data['str_index']);
 			}
 			return;
 		}
@@ -211,8 +214,8 @@ class SimpleBlogCommon{
 		unset(SimpleBlogCommon::$data['post_list']);
 
 		//set some stats
-		SimpleBlogCommon::$data['str_index'] = '|'.trim(SimpleBlogCommon::$data['str_index'],'|').'|';
-		SimpleBlogCommon::$data['post_count'] = substr_count(SimpleBlogCommon::$data['str_index'],':');
+		SimpleBlogCommon::$data['str_index'] = '"'.trim(SimpleBlogCommon::$data['str_index'],'"').'"';
+		SimpleBlogCommon::$data['post_count'] = substr_count(SimpleBlogCommon::$data['str_index'],'>');
 
 		return gpFiles::SaveArray($this->indexFile,'blogData',SimpleBlogCommon::$data);
 	}
@@ -267,7 +270,7 @@ class SimpleBlogCommon{
 	function Delete(){
 		global $langmessage;
 
-		$post_index = $_POST['id'];
+		$post_index = $_POST['del_id'];
 		$posts = $this->GetPostFile($post_index,$post_file);
 		if( $posts === false ){
 			message($langmessage['OOPS']);
@@ -287,8 +290,8 @@ class SimpleBlogCommon{
 
 		//reset the index string
 		$new_index = SimpleBlogCommon::$data['str_index'];
-		$new_index = preg_replace('#\|\d+:'.$post_index.'\|#', '|', $new_index);
-		preg_match_all('#(?:\|\d+:)([^\|:])*#',$new_index,$matches);
+		$new_index = preg_replace('#"\d+>'.$post_index.'"#', '"', $new_index);
+		preg_match_all('#(?:"\d+>)([^">])*#',$new_index,$matches);
 		SimpleBlogCommon::$data['str_index'] = self::AStrFromArray($matches[1]);
 
 
@@ -361,8 +364,8 @@ class SimpleBlogCommon{
 		$this->update_post_in_archives($post_index,$posts[$post_index]);
 
 		//add new entry to the beginning of the index string then reorder the keys
-		$new_index = '|0:'.$post_index.SimpleBlogCommon::$data['str_index'];
-		preg_match_all('#(?:\|\d+:)([^\|:])*#',$new_index,$matches);
+		$new_index = '"0>'.$post_index.SimpleBlogCommon::$data['str_index'];
+		preg_match_all('#(?:"\d+>)([^">])*#',$new_index,$matches);
 		SimpleBlogCommon::$data['str_index'] = self::AStrFromArray($matches[1]);
 
 
@@ -1157,9 +1160,9 @@ class SimpleBlogCommon{
 	static function AStrFromArray($array){
 		$str = '';
 		foreach($array as $key => $value){
-			$str .= '|'.$key.':'.$value;
+			$str .= '"'.$key.'>'.$value;
 		}
-		return $str.'|';
+		return $str.'"';
 	}
 
 
@@ -1178,10 +1181,10 @@ class SimpleBlogCommon{
 
 
 		//get position of current value
-		$prev_key_str = '|'.$key.':';
+		$prev_key_str = '"'.$key.'>';
 		$prev_pos = SimpleBlogCommon::strpos($string,$prev_key_str);
 		if( $prev_pos !== false ){
-			$prev_comma = SimpleBlogCommon::strpos($string,'|',$prev_pos+1);
+			$prev_comma = SimpleBlogCommon::strpos($string,'"',$prev_pos+1);
 			$offset = $prev_pos+SimpleBlogCommon::strlen($prev_key_str);
 		}
 
@@ -1198,7 +1201,7 @@ class SimpleBlogCommon{
 
 
 		//new value operations
-		$new_value = str_replace(array('|',':'),'',$new_value);
+		$new_value = str_replace(array('"','>'),'',$new_value);
 		if( ctype_digit(substr($new_value,1)) ){
 			if( $new_value[0] === '+' || $new_value[0] === '-' ){
 				$new_value = (int)$current_value+(int)$new_value;
@@ -1208,9 +1211,9 @@ class SimpleBlogCommon{
 		//setting values
 		if( $prev_pos === false ){
 			if( empty($string) ){
-				$string = '|';
+				$string = '"';
 			}
-			$string .= $key.':'.$new_value.'|';
+			$string .= $key.'>'.$new_value.'"';
 		}else{
 			$string = substr_replace($string,$new_value,$offset,$prev_comma - $offset);
 		}
@@ -1233,12 +1236,12 @@ class SimpleBlogCommon{
 		$string = SimpleBlogCommon::$data[$data_string];
 
 		$len = strlen($string);
-		$post_pos = strpos($string,':'.$value.'|');
+		$post_pos = strpos($string,'>'.$value.'"');
 
 		$offset = $post_pos-$len;
 
 
-		$post_key_pos = strrpos( $string, '|', $offset );
+		$post_key_pos = strrpos( $string, '"', $offset );
 		$post_key_len = strspn( $string, $integers, $post_key_pos+1 );
 		return substr( $string, $post_key_pos+1, $post_key_len );
 	}
@@ -1255,7 +1258,7 @@ class SimpleBlogCommon{
 
 		$string =& SimpleBlogCommon::$data[$data_string];
 
-		$string = preg_replace('#\|'.$key.':[^\|:]*\|#', '|', $string);
+		$string = preg_replace('#"'.$key.'>[^">]*\"#', '"', $string);
 	}
 
 }

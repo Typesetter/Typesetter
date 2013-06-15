@@ -130,6 +130,24 @@ class SimpleBlogCommon{
 
 		SimpleBlogCommon::$data['comment_counts'] = self::AStrFromArray($comment_counts);
 		SimpleBlogCommon::$data['comments_closed'] = self::AStrFromArray($comments_closed);
+
+
+		//post data
+		$drafts = array();
+		for($i=0; $i<SimpleBlogCommon::$data['post_index']; $i++ ){
+			$post_id = self::AStrValue('str_index',$i);
+			$post = $this->GetPostContent($post_id);
+
+			if( isset($post['isDraft']) && $post['isDraft'] ){
+				$drafts[$post_id] = 1;
+			}
+		}
+		SimpleBlogCommon::$data['drafts'] = self::AStrFromArray($drafts);
+
+
+		unset(SimpleBlogCommon::$data['post_info']);
+		unset(SimpleBlogCommon::$data['post_list']);
+
 	}
 
 
@@ -177,6 +195,7 @@ class SimpleBlogCommon{
 						'post_count'=>0,
 						'str_index'=>'',
 						'urls'=>'Standard',
+						'drafts'=>'',
 						);
 
 	}
@@ -294,6 +313,7 @@ class SimpleBlogCommon{
 	/**
 	 * Save a new blog post
 	 * @return bool
+	 *
 	 */
 	function SaveNew(){
 		global $langmessage;
@@ -324,9 +344,9 @@ class SimpleBlogCommon{
 		$posts[$post_index]['content'] = $content;
 		$posts[$post_index]['subtitle'] = $_POST['subtitle'];
 		if( $_POST['isDraft'] === 'on' ){
-			$posts[$post_index]['isDraft'] = true;
+			SimpleBlogCommon::AStrValue('drafts',$post_index,1);
 		}else{
-			unset($posts[$post_index]['isDraft']);
+			SimpleBlogCommon::AStrRemove('drafts',$post_index);
 		}
 		$posts[$post_index]['time'] = time();
 
@@ -393,10 +413,11 @@ class SimpleBlogCommon{
 		$posts[$post_index]['title'] = $title;
 		$posts[$post_index]['content'] = $content;
 		$posts[$post_index]['subtitle'] = $_POST['subtitle'];
+		unset($posts[$post_index]['isDraft']);
 		if( $_POST['isDraft'] === 'on' ){
-			$posts[$post_index]['isDraft'] = true;
+			SimpleBlogCommon::AStrValue('drafts',$post_index,1);
 		}else{
-			unset($posts[$post_index]['isDraft']);
+			SimpleBlogCommon::AStrRemove('drafts',$post_index);
 		}
 
 		//save to data file
@@ -404,6 +425,8 @@ class SimpleBlogCommon{
 			message($langmessage['OOPS']);
 			return false;
 		}
+
+		$this->SaveIndex();
 
 		//find and update the edited post in categories and archives
 		$this->update_post_in_categories($post_index,$title);
@@ -481,6 +504,7 @@ class SimpleBlogCommon{
 			return;
 		}
 
+		$post['isDraft'] = SimpleBlogCommon::AStrValue('drafts',$this->post_id);
 		$_POST += $posts[$this->post_id];
 
 		echo '<h2>';

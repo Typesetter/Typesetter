@@ -200,11 +200,10 @@ class SimpleBlog extends SimpleBlogCommon{
 
 
 		$post =& $posts[$post_index];
-		if( !common::LoggedIn() ){
-			if( isset($post['isDraft']) && $post['isDraft'] ){
-				message($langmessage['OOPS']);
-				return;
-			} //How to make 404 page?
+		if( !common::LoggedIn() && SimpleBlogCommon::AStrValue('drafts',$post_index) ){
+			//How to make 404 page?
+			message($langmessage['OOPS']);
+			return;
 		}
 		$this->ShowPostContent($post,$post_index);
 
@@ -355,22 +354,26 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		//check for older posts and if older post is draft
 		$i = 0;
-		do {
+		$isDraft = false;
+		do{
 			$i++;
 			$prev_index = self::AStrValue('str_index',$post_key+$i);
-			if ( $prev_index ) {
-				$post = $this->GetPostContent($prev_index);
-				$isDraft = isset($post['isDraft']) && $post['isDraft'];
-			} else {
+
+			if( $prev_index === false ){
 				break;
 			}
 
-			$html = $this->PostLink($prev_index,'%s','','class="blog_older"');
-			echo gpOutput::GetAddonText('Older Entry',$html);
-			echo '&nbsp;';
+			if( !common::loggedIn() ){
+				$isDraft = SimpleBlogCommon::AStrValue('drafts',$prev_index);
+			}
 
+			if( !$isDraft ){
+				$html = $this->PostLink($prev_index,'%s','','class="blog_older"');
+				echo gpOutput::GetAddonText('Older Entry',$html);
+				echo '&nbsp;';
+			}
 
-		}while($isDraft);
+		}while( $isDraft );
 
 		//blog home
 		$html = common::Link('Special_Blog','%s');
@@ -378,18 +381,22 @@ class SimpleBlog extends SimpleBlogCommon{
 		echo '&nbsp;';
 
 		// check for newer posts and if post is draft
+		$isDraft = false;
 		if( $post_key > 0 ){
 
 			$i = 0;
 			do {
 				$i++;
 				$next_index = self::AStrValue('str_index',$post_key-$i);
-				$post = $this->GetPostContent($next_index);
-				$isDraft = isset($post['isDraft']) && $post['isDraft'];
+				if( !common::loggedIn() ){
+					$isDraft = SimpleBlogCommon::AStrValue('drafts',$next_index);
+				}
 			}while( $isDraft );
 
-		    $html = $this->PostLink($next_index,'%s','','class="blog_newer"');
-		    echo gpOutput::GetAddonText('Newer Entry',$html);
+			if( !$isDraft ){
+				$html = $this->PostLink($next_index,'%s','','class="blog_newer"');
+				echo gpOutput::GetAddonText('Newer Entry',$html);
+			}
 		}
 
 		if( common::LoggedIn() ){
@@ -484,8 +491,8 @@ class SimpleBlog extends SimpleBlogCommon{
 	function ShowPostContent( &$post, &$post_index, $limit = 0){
 		global $langmessage;
 
-		if( !common::LoggedIn() ){
-			if( isset($post['isDraft']) && $post['isDraft'] ) return false; //How to make 404 page?
+		if( !common::LoggedIn() && SimpleBlogCommon::AStrValue('drafts',$post_index) ){
+			return false; //How to make 404 page?
 		}
 
 		//If user enter random Blog url, he didn't see any 404, but nothng.
@@ -522,7 +529,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		}
 
 		$isDraft = '';
-		if( isset($post['isDraft']) && $post['isDraft'] ){
+		if( SimpleBlogCommon::AStrValue('drafts',$post_index) ){
 			$isDraft = '<span style="opacity:0.3;">';
 			$isDraft .= gpOutput::SelectText('Draft');
 			$isDraft .= '</span> ';

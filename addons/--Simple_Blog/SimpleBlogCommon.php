@@ -122,7 +122,6 @@ class SimpleBlogCommon{
 			}
 		}
 		SimpleBlogCommon::$data['comment_counts'] = self::AStrFromArray($counts);
-		msg('comment_counts: '.SimpleBlogCommon::$data['comment_counts']);
 	}
 
 
@@ -813,7 +812,7 @@ class SimpleBlogCommon{
 			}else{
 				$blog_comments .= gpOutput::GetAddonText('Comments');
 			}
-			$blog_comments .= ': '.SimpleBlogCommon::$data['post_info'][$post_index]['comments'];
+			$blog_comments .= ': '.$count;
 			$blog_comments .= '</span>';
 		}
 
@@ -1072,7 +1071,8 @@ class SimpleBlogCommon{
 			unlink($commentDataFile);
 		}
 
-		SimpleBlogCommon::$data['post_info'][$post_index]['comments'] = count($data);
+		SimpleBlogCommon::AStrValue('comment_counts',$post_index,count($data));
+
 		$this->SaveIndex();
 
 		//clear comments cache
@@ -1133,29 +1133,58 @@ class SimpleBlogCommon{
 
 
 	/**
-	 * Get the value from a serialized string
+	 * Get/Set the value from a serialized string
 	 *
 	 */
-	static function AStrValue( $data_string, $key ){
+	static function AStrValue( $data_string, $key, $new_value = false ){
 		static $integers = '0123456789';
 
-		if( !isset(SimpleBlogCommon::$data[$data_string]) ){
+		//get string
+		if( !isset(SimpleBlogCommon::$data[$data_string]) && $new_value === false ){
 			return false;
 		}
-
 		$string =& SimpleBlogCommon::$data[$data_string];
 
+
+		//get position of current value
 		$prev_key_str = '|'.$key.':';
 		$prev_pos = SimpleBlogCommon::strpos($string,$prev_key_str);
-		if( $prev_pos === false ){
-			return false;
+		if( $prev_pos !== false ){
+			$prev_comma = SimpleBlogCommon::strpos($string,'|',$prev_pos+1);
+			$offset = $prev_pos+SimpleBlogCommon::strlen($prev_key_str);
 		}
-		$offset = $prev_pos+1;
 
-		$prev_comma = SimpleBlogCommon::strpos($string,'|',$offset);
+		$current_value = false;
+		if( $prev_pos !== false ){
+			$current_value = SimpleBlogCommon::substr($string,$offset,$prev_comma - $offset);
+		}
 
-		$offset = $prev_pos+SimpleBlogCommon::strlen($prev_key_str);
-		return SimpleBlogCommon::substr($string,$offset,$prev_comma - $offset);
+
+		//returning value
+		if( $new_value === false ){
+			return $current_value;
+		}
+
+
+		//new value operations
+		$new_value = str_replace(array('|',':'),'',$new_value);
+		if( ctype_digit(substr($new_value,1)) ){
+			if( $new_value[0] === '+' || $new_value[0] === '-' ){
+				$new_value = (int)$current_value+(int)$new_value;
+			}
+		}
+
+		//setting values
+		if( $prev_pos === false ){
+			if( empty($string) ){
+				$string = '|';
+			}
+			$string .= $key.':'.$new_value.'|';
+		}else{
+			$string = substr_replace($string,$new_value,$offset,$prev_comma - $offset);
+		}
+
+		return true;
 	}
 
 
@@ -1182,9 +1211,6 @@ class SimpleBlogCommon{
 		$post_key_len = strspn( $string, $integers, $post_key_pos+1 );
 		return substr( $string, $post_key_pos+1, $post_key_len );
 	}
-
-
-
 
 }
 

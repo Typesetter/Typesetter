@@ -296,29 +296,35 @@ class SimpleBlogCommon{
 	function Delete(){
 		global $langmessage;
 
-		$post_index = $_POST['del_id'];
-		$posts = $this->GetPostFile($post_index,$post_file);
+		$post_id = $_POST['del_id'];
+		$posts = $this->GetPostFile($post_id,$post_file);
 		if( $posts === false ){
 			message($langmessage['OOPS']);
 			return false;
 		}
 
-		if( !isset($posts[$post_index]) ){
+		if( !isset($posts[$post_id]) ){
 			message($langmessage['OOPS']);
 			return false;
 		}
 
 		//now delete post also from categories:
-		$this->delete_post_from_categories($post_index);
-		$this->delete_post_from_archive($post_index, $posts[$post_index]['time']);
+		$this->delete_post_from_categories($post_id);
+		$this->delete_post_from_archive($post_id, $posts[$post_id]['time']);
 
-		unset($posts[$post_index]); //don't use array_splice here because it will reset the numeric keys
+		unset($posts[$post_id]); //don't use array_splice here because it will reset the numeric keys
 
 		//reset the index string
 		$new_index = SimpleBlogCommon::$data['str_index'];
-		$new_index = preg_replace('#"\d+>'.$post_index.'"#', '"', $new_index);
+		$new_index = preg_replace('#"\d+>'.$post_id.'"#', '"', $new_index);
 		preg_match_all('#(?:"\d+>)([^">])*#',$new_index,$matches);
 		SimpleBlogCommon::$data['str_index'] = self::AStrFromArray($matches[1]);
+
+
+		//remove post from other index strings
+		self::AStrRemove('drafts',$post_id);
+		self::AStrRemove('comments_closed',$post_id);
+		self::AStrRemove('titles',$post_id);
 
 
 		if( !$this->SaveIndex() ){
@@ -1216,15 +1222,15 @@ class SimpleBlogCommon{
 
 		//get position of current value
 		$prev_key_str = '"'.$key.'>';
-		$prev_pos = SimpleBlogCommon::strpos($string,$prev_key_str);
+		$prev_pos = strpos($string,$prev_key_str);
 		if( $prev_pos !== false ){
-			$prev_comma = SimpleBlogCommon::strpos($string,'"',$prev_pos+1);
-			$offset = $prev_pos+SimpleBlogCommon::strlen($prev_key_str);
+			$prev_comma = strpos($string,'"',$prev_pos+1);
+			$offset = $prev_pos+strlen($prev_key_str);
 		}
 
 		$current_value = false;
 		if( $prev_pos !== false ){
-			$current_value = SimpleBlogCommon::substr($string,$offset,$prev_comma - $offset);
+			$current_value = substr($string,$offset,$prev_comma - $offset);
 		}
 
 

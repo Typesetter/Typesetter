@@ -494,7 +494,7 @@ class SimpleBlog extends SimpleBlogCommon{
 			echo $edit_link;
 
 			echo $this->PostLink($post_index,$langmessage['edit'].' (All)','cmd=edit_post',' style="display:none"');
-			echo common::Link('Special_Blog',$langmessage['delete'],'cmd=deleteentry&del_id='.$post_index,array('class'=>'delete gpconfirm','data-cmd'=>'postlink','title'=>$langmessage['delete_confirm']));
+			echo common::Link('Special_Blog',$langmessage['delete'],'cmd=deleteentry&del_id='.$post_index,array('class'=>'delete gpconfirm','data-cmd'=>'cnreq','title'=>$langmessage['delete_confirm']));
 
 			if( SimpleBlogCommon::$data['allow_comments'] ){
 

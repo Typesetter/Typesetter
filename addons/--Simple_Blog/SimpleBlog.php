@@ -21,8 +21,9 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		}elseif( strpos($page->requested,'/') !== false ){
 			$parts = explode('/',$page->requested);
-			if( ctype_digit($parts[1]) ){
-				$this->post_id = $parts[1];
+			$ints = strspn($parts[1],'0123456789');
+			if( $ints > 0 ){
+				$this->post_id = substr($parts[1],0,$ints);
 			}
 		}
 
@@ -127,68 +128,77 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Handle comment actions
 	 */
 	function ShowPost($cmd){
-		global $langmessage,$page;
+		global $langmessage, $page;
 
-		$post_index = $this->post_id;
-		$posts = $this->GetPostFile($post_index,$post_file);
+		$posts = $this->GetPostFile($this->post_id,$post_file);
 		if( $posts === false ){
 			message($langmessage['OOPS']);
 			return;
 		}
 
 
-		if( !isset($posts[$post_index]) ){
+		if( !isset($posts[$this->post_id]) ){
 			message($langmessage['OOPS']);
 			return;
 		}
 
+
 		$commentSaved = false;
 		switch($cmd){
 
+			//redirect to correct url if needed
+			case 'post':
+				$this->UrlQuery($this->post_id,$expected_url,$query);
+				if( $page->requested != $expected_url ){
+					$expected_url = common::GetUrl( $expected_url, $query, false );
+					common::Redirect($expected_url,301);
+				}
+			break;
+
 			//close comments
 			case 'closecomments':
-				$this->CloseComments($post_index);
+				$this->CloseComments($this->post_id);
 			break;
 			case 'opencomments':
-				$this->OpenComments($post_index);
+				$this->OpenComments($this->post_id);
 			break;
 
 
 			//commments
 			case 'Add Comment':
-				if( $this->AddComment($post_index) ){
+				if( $this->AddComment($this->post_id) ){
 					$commentSaved = true;
 				}else{
 					echo '<div class="comment_container">';
-					$this->CommentForm($post_index,true);
+					$this->CommentForm($this->post_id,true);
 					echo '</div>';
 					return;
 				}
 			break;
 			case 'delete_comment':
-				$this->DeleteComment($post_index);
+				$this->DeleteComment($this->post_id);
 			break;
 		}
 
 
 
-		$post =& $posts[$post_index];
-		if( !common::LoggedIn() && SimpleBlogCommon::AStrValue('drafts',$post_index) ){
+		$post =& $posts[$this->post_id];
+		if( !common::LoggedIn() && SimpleBlogCommon::AStrValue('drafts',$this->post_id) ){
 			//How to make 404 page?
 			message($langmessage['OOPS']);
 			return;
 		}
-		$this->ShowPostContent($post,$post_index);
+		$this->ShowPostContent($post,$this->post_id);
 
 		$page->label = SimpleBlogCommon::Underscores( $post['title'] );
-		$this->PostLinks($post_index);
+		$this->PostLinks($this->post_id);
 
 		//comments
 		if( SimpleBlogCommon::$data['allow_comments'] ){
 			echo '<div class="comment_container">';
-			$this->ShowComments($post_index);
+			$this->ShowComments($this->post_id);
 			if( !$commentSaved ){
-				$this->CommentForm($post_index);
+				$this->CommentForm($this->post_id);
 			}
 			echo '</div>';
 		}
@@ -308,7 +318,7 @@ class SimpleBlog extends SimpleBlogCommon{
 			echo '<input type="hidden" name="cmd" value="Add Comment" />';
 			$html = '<input type="submit" name="" class="submit" value="%s" />';
 			echo gpOutput::GetAddonText('Add Comment',$html);
-			echo '</li';
+			echo '</li>';
 
 		echo '</ul>';
 		echo '</form>';

@@ -322,9 +322,9 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		return array(
 
 			'urls' => array(
-				'Standard'	=> 'Standard - /Blog?id=1234',
+				'Default'	=> 'Default - /Blog?id=1234',
 				'Tiny'		=> 'Tiny - /Blog/1234',
-				//'Full'		=> 'Full - /Blog/1234_Post_Title'
+				'Full'		=> 'Full - /Blog/1234_Post_Title'
 			),
 
 		);

@@ -7,10 +7,19 @@ if( function_exists('mb_internal_encoding') ){
 	mb_internal_encoding('UTF-8');
 }
 
+/**
+ * To Do
+ *
+ * Deleting a post should delete from other AStrings as well.. especially titles!
+ * WhichPosts() should just return an array with the post content
+ *
+ */
+
 class SimpleBlogCommon{
 
 	var $indexFile;
 	static $data = false;
+	static $root_url = 'Special_Blog';
 
 	var $new_install = false;
 	var $addonPathData;
@@ -46,6 +55,8 @@ class SimpleBlogCommon{
 
 		$this->addonPathData = $addonPathData;
 		$this->indexFile = $this->addonPathData.'/index.php';
+		self::$root_url = common::SpecialHref('Special_Blog');
+
 		$this->GetBlogData();
 		SimpleBlogCommon::AddCSS();
 	}
@@ -86,8 +97,6 @@ class SimpleBlogCommon{
 			$this->DataUpdate19();
 		}
 
-		// deleting a post should delete from other AStrings as well
-		//
 	}
 
 	/**
@@ -137,16 +146,21 @@ class SimpleBlogCommon{
 
 		//post data
 		$drafts = array();
+		$titles = array();
 		for($i=0; $i<SimpleBlogCommon::$data['post_index']; $i++ ){
 			$post_id = self::AStrValue('str_index',$i);
 			$post = $this->GetPostContent($post_id);
+			if( !$post ){
+				continue;
+			}
 
 			if( isset($post['isDraft']) && $post['isDraft'] ){
 				$drafts[$post_id] = 1;
 			}
+			$titles[$post_id] = $post['title'];
 		}
 		SimpleBlogCommon::$data['drafts'] = self::AStrFromArray($drafts);
-
+		SimpleBlogCommon::$data['titles'] = self::AStrFromArray($titles);
 
 		unset(SimpleBlogCommon::$data['post_info']);
 		unset(SimpleBlogCommon::$data['post_list']);
@@ -159,12 +173,24 @@ class SimpleBlogCommon{
 	 * Get a list of post indeces
 	 *
 	 */
-	function WhichPosts($start,$len){
+	function WhichPosts($start, $len, $include_drafts = false){
+
 		$posts = array();
 		$end = $start+$len;
 		for($i = $start; $i < $end; $i++){
-			$index = self::AStrValue('str_index',$i);
-			if( $index ) $posts[] = $index;
+
+			//get post id
+			$post_id = self::AStrValue('str_index',$i);
+			if( !$post_id ){
+				continue;
+			}
+
+			//exclude drafts
+			if( !$include_drafts && SimpleBlogCommon::AStrValue('drafts',$post_id) ){
+				continue;
+			}
+
+			$posts[] = $post_id;
 		}
 		return $posts;
 	}
@@ -197,7 +223,7 @@ class SimpleBlogCommon{
 						'subtitle_separator'=>' <span class="space"> | </span> ',
 						'post_count'=>0,
 						'str_index'=>'',
-						'urls'=>'Standard',
+						'urls'=>'Default',
 						'drafts'=>'',
 						);
 
@@ -365,11 +391,12 @@ class SimpleBlogCommon{
 
 		//add new entry to the beginning of the index string then reorder the keys
 		$new_index = '"0>'.$post_index.SimpleBlogCommon::$data['str_index'];
-		preg_match_all('#(?:"\d+>)([^">])*#',$new_index,$matches);
+		preg_match_all('#(?:"\d+>)([^">]*)#',$new_index,$matches);
 		SimpleBlogCommon::$data['str_index'] = self::AStrFromArray($matches[1]);
 
 
 		//save index file
+		self::AStrValue('titles',$post_index,$title);
 		SimpleBlogCommon::$data['post_index'] = $post_index;
 		if( !$this->SaveIndex() ){
 			message($langmessage['OOPS']);
@@ -1127,18 +1154,25 @@ class SimpleBlogCommon{
 		return common::GetUrl( $url, $query );
 	}
 
-	function UrlQuery( $post = false, &$url, &$query ){
+	function UrlQuery( $post_id = false, &$url, &$query ){
 
-		$url = 'Special_Blog';
-		if( $post > 0 ){
+		$url = self::$root_url;
+
+		if( $post_id > 0 ){
 			switch( SimpleBlogCommon::$data['urls'] ){
 
+				case 'Full':
+					$title = SimpleBlogCommon::AStrValue('titles',$post_id);
+					$title = str_replace(array('?',' '),array('','_'),$title);
+					$url .= '/'.$post_id.'_'.$title;
+				break;
+
 				case 'Tiny':
-				$url = 'Special_Blog/'.$post;
+				$url .= '/'.$post_id;
 				break;
 
 				default:
-				$query = trim($query.'&id='.$post,'&');
+				$query = trim($query.'&id='.$post_id,'&');
 				break;
 			}
 		}

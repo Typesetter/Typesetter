@@ -96,6 +96,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		}
 
 		SimpleBlogCommon::$data['subtitle_separator'] = (string)$_POST['subtitle_separator'];
+		SimpleBlogCommon::$data['email_comments'] = $_POST['email_comments'];
 
 		if( !$this->SaveIndex() ){
 			message($langmessage['OOPS']);
@@ -113,7 +114,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 	 *
 	 */
 	function Config(){
-		global $langmessage,$addonFolderName;
+		global $langmessage, $addonFolderName, $gpversion;
 
 
 		$defaults = SimpleBlogCommon::Defaults();
@@ -149,7 +150,11 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 
 		//Pretty Urls
 		echo '<tr><td>Pretty Urls</td><td>';
-		self::Radio('urls',$options['urls'],$array['urls']);
+		if( version_compare($gpversion,'4.0','>=') ){
+			self::Radio('urls',$options['urls'],$array['urls']);
+		}else{
+			echo 'Available in gpEasy 4.0+';
+		}
 		echo '</td><td>';
 		echo $defaults['urls'];
 		echo '</td></tr>';
@@ -245,6 +250,8 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo 'Default';
 		echo '</th></tr>';
 
+
+		//Allow Comments
 		echo '<tr><td>';
 		echo 'Allow Comments';
 		echo '</td><td>';
@@ -253,9 +260,17 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		}else{
 			echo '<input type="checkbox" name="allow_comments" value="allow" />';
 		}
+		echo '</td><td></td></tr>';
+
+
+		//Email New Comment
+		echo '<tr><td>';
+		echo 'Email New Comments';
 		echo '</td><td>';
-		echo '';
-		echo '</td></tr>';
+		echo '<input type="text" name="email_comments" value="'.htmlspecialchars($array['email_comments']).'"  />';
+		echo '</td><td></td></tr>';
+
+
 
 		echo '<tr><td>';
 		echo 'Commenter Website';
@@ -346,14 +361,14 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 	function Radio($name,$options,$current){
 
 		foreach($options as $value => $label){
-			echo '<label>';
+			echo '<div><label>';
 			$checked = '';
 			if( $current == $value){
 				$checked = ' checked="checked"';
 			}
 			echo '<input type="radio" name="'.$name.'" value="'.$value.'"'.$checked.'" /> ';
 			echo $label;
-			echo '</label>';
+			echo '</label></div>';
 		}
 	}
 

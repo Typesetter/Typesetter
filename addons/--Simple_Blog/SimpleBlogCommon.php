@@ -10,8 +10,8 @@ if( function_exists('mb_internal_encoding') ){
 /**
  * To Do
  *
- * Deleting a post should delete from other AStrings as well.. especially titles!
- * WhichPosts() should just return an array with the post content
+ * Comment approval
+ * Clean Category Storage
  *
  */
 
@@ -55,7 +55,10 @@ class SimpleBlogCommon{
 
 		$this->addonPathData = $addonPathData;
 		$this->indexFile = $this->addonPathData.'/index.php';
-		self::$root_url = common::SpecialHref('Special_Blog');
+		self::$root_url = 'Special_Blog';
+		if( is_callable( array('common','SpecialHref') ) ){
+			self::$root_url = common::SpecialHref('Special_Blog');
+		}
 
 		$this->GetBlogData();
 		SimpleBlogCommon::AddCSS();
@@ -225,6 +228,7 @@ class SimpleBlogCommon{
 						'str_index'=>'',
 						'urls'=>'Default',
 						'drafts'=>'',
+						'email_comments'=>'',
 						);
 
 	}
@@ -1152,7 +1156,7 @@ class SimpleBlogCommon{
 	}
 
 	function PostLink($post,$label,$query='',$attr=''){
-		return '<a href="'.$this->PostUrl($post,$query,true).'" '.common::LinkAttr($attr,$label).'>'.common::Ampersands($label).'</a>';
+		return '<a href="'.$this->PostUrl($post,$query,true).'" '.$attr.'>'.common::Ampersands($label).'</a>';
 	}
 
 	function PostUrl( $post = false, $query='' ){

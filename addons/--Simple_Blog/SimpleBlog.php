@@ -660,13 +660,36 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		$data[] = $temp;
 
-		if( $this->SaveCommentData($post_index,$data) ){
-			message($langmessage['SAVED']);
-			return true;
-		}else{
+		if( !$this->SaveCommentData($post_index,$data) ){
 			message($langmessage['OOPS']);
 			return false;
 		}
+
+		message($langmessage['SAVED']);
+
+
+		//email new comments
+		if( !empty(SimpleBlogCommon::$data['email_comments']) ){
+
+
+
+			$subject = 'New Comment';
+			$body = '';
+			if( !empty($temp['name']) ){
+				$body .= '<p>From: '.$temp['name'].'</p>';
+			}
+			if( !empty($temp['website']) ){
+				$body .= '<p>Website: '.$temp['name'].'</p>';
+			}
+			$body .= '<p>'.$temp['comment'].'</p>';
+
+			global $gp_mailer;
+			includeFile('tool/email_mailer.php');
+			$gp_mailer->SendEmail(SimpleBlogCommon::$data['email_comments'], $subject, $body);
+		}
+
+
+		return true;
 	}
 
 
@@ -699,7 +722,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			if( common::LoggedIn() ){
 				echo ' &nbsp; ';
-				echo $this->PostLink($post_index,$langmessage['delete'],'cmd=delete_comment&comment_index='.$key,array('class'=>'delete gpconfirm','data-cmd'=>'postlink','title'=>$langmessage['delete_confirm']));
+				echo $this->PostLink($post_index,$langmessage['delete'],'cmd=delete_comment&comment_index='.$key,' class="delete gpconfirm" name="postlink" title="'.$langmessage['delete_confirm'].'"');
 			}
 
 

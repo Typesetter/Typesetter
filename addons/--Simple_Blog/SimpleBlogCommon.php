@@ -25,8 +25,6 @@ class SimpleBlogCommon{
 	var $addonPathData;
 	var $post_id = false;
 
-	var $categories;
-	var $categories_file;
 
 	var $archives;
 	var $archives_file;
@@ -104,9 +102,9 @@ class SimpleBlogCommon{
 
 		//use AStr data for categories
 		if( !isset(SimpleBlogCommon::$data['categories']) ){
-			$this->load_blog_categories();
+			$old_categories = $this->load_blog_categories();
 			$categories = $categories_hidden = $category_posts = array();
-			foreach($this->categories as $key => $cat){
+			foreach($old_categories as $key => $cat){
 				$cat['ct'] = htmlspecialchars($cat['ct'],ENT_COMPAT,'UTF-8',false);
 				$categories[$key] = $cat['ct'];
 				if( isset($cat['visible']) && !$cat['visible'] ){
@@ -997,17 +995,18 @@ class SimpleBlogCommon{
 
 	/**
 	 * Get all the categories in use by the blog
+	 * @deprecated 1.9
 	 *
 	 */
 	function load_blog_categories(){
 		global $addonPathData;
-		$this->categories_file = $addonPathData.'/categories.php';
-		if( file_exists($this->categories_file) ){
-			include($this->categories_file);
-			$this->categories = $categories;
-		}else{
-			$this->categories = array( 'a' => array( 'ct'=>'Unsorted posts', 'visible'=>false,'posts'=>array() ) );
+		$categories_file = $addonPathData.'/categories.php';
+
+		$categories = array( 'a' => array( 'ct'=>'Unsorted posts', 'visible'=>false,'posts'=>array() ) );
+		if( file_exists($categories_file) ){
+			include($categories_file);
 		}
+		return $categories;
 	}
 
 

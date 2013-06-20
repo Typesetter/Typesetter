@@ -6,6 +6,7 @@ gpPlugin::incl('SimpleBlogCommon.php','require_once');
 class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 
 	var $itlist = array();
+	var $categories;
 
 
 	function AdminSimpleBlogCategories(){

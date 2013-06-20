@@ -416,7 +416,7 @@ class SimpleBlogCommon{
 	function SaveNew(){
 		global $langmessage;
 
-		$_POST += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'');
+		$_POST += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'','category'=>array());
 
 		$_POST['subtitle'] = htmlspecialchars($_POST['subtitle']);
 
@@ -441,6 +441,8 @@ class SimpleBlogCommon{
 		$posts[$post_index]['title'] = $title;
 		$posts[$post_index]['content'] = $content;
 		$posts[$post_index]['subtitle'] = $_POST['subtitle'];
+		$posts[$post_index]['categories'] = $_POST['category'];
+
 		if( $_POST['isDraft'] === 'on' ){
 			SimpleBlogCommon::AStrValue('drafts',$post_index,1);
 		}else{
@@ -488,7 +490,7 @@ class SimpleBlogCommon{
 	function SaveEdit(){
 		global $langmessage;
 
-		$_POST += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'');
+		$_POST += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'','category'=>array());
 		$_REQUEST += array('id'=>'');
 
 		$post_index = $_REQUEST['id'];
@@ -515,12 +517,14 @@ class SimpleBlogCommon{
 		$posts[$post_index]['title'] = $title;
 		$posts[$post_index]['content'] = $content;
 		$posts[$post_index]['subtitle'] = $_POST['subtitle'];
+		$posts[$post_index]['categories'] = $_POST['category'];
 		unset($posts[$post_index]['isDraft']);
 		if( $_POST['isDraft'] === 'on' ){
 			SimpleBlogCommon::AStrValue('drafts',$post_index,1);
 		}else{
 			SimpleBlogCommon::AStrRm('drafts',$post_index);
 		}
+
 
 		//save to data file
 		if( !gpFiles::SaveArray($post_file,'posts',$posts) ){

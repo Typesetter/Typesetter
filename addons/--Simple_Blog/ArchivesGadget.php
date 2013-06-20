@@ -49,7 +49,7 @@ class SimpleBlogArchives extends SimpleBlogCommon{
 			echo '<ul class="simple_blog_category_posts nodisplay">';
 			foreach($posts as $post_index => $post_title){
 				echo '<li>';
-				echo $this->PostLink($post_index,$post_title);
+				echo self::PostLink($post_index,$post_title);
 				echo '</li>';
 			}
 			echo '</ul>';

@@ -148,7 +148,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			//redirect to correct url if needed
 			case 'post':
-				$this->UrlQuery( $this->post_id, $expected_url, $query );
+				self::UrlQuery( $this->post_id, $expected_url, $query );
 				$expected_url = str_replace('&amp;','&',$expected_url); //because of htmlspecialchars($cattitle)
 				if( $page->requested != $expected_url ){
 					$expected_url = common::GetUrl( $expected_url, $query, false );
@@ -192,7 +192,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		$this->ShowPostContent($post,$this->post_id);
 
 		$page->label = SimpleBlogCommon::Underscores( $post['title'] );
-		$this->PostLinks($this->post_id);
+		self::PostLinks($this->post_id);
 
 		//comments
 		if( SimpleBlogCommon::$data['allow_comments'] ){
@@ -277,7 +277,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		echo '</h3>';
 
 
-		echo '<form method="post" action="'.$this->PostUrl($post_index).'">';
+		echo '<form method="post" action="'.self::PostUrl($post_index).'">';
 		echo '<ul>';
 		echo '<li>';
 			echo '<label>';
@@ -352,7 +352,7 @@ class SimpleBlog extends SimpleBlogCommon{
 			}
 
 			if( !$isDraft ){
-				$html = $this->PostLink($prev_index,'%s','','class="blog_older"');
+				$html = self::PostLink($prev_index,'%s','','class="blog_older"');
 				echo gpOutput::GetAddonText('Older Entry',$html);
 				echo '&nbsp;';
 			}
@@ -378,7 +378,7 @@ class SimpleBlog extends SimpleBlogCommon{
 			}while( $isDraft );
 
 			if( !$isDraft ){
-				$html = $this->PostLink($next_index,'%s','','class="blog_newer"');
+				$html = self::PostLink($next_index,'%s','','class="blog_newer"');
 				echo gpOutput::GetAddonText('Newer Entry',$html);
 			}
 		}
@@ -488,13 +488,13 @@ class SimpleBlog extends SimpleBlogCommon{
 		if( common::LoggedIn() ){
 
 			$query = 'dummyparameter';
-			$this->UrlQuery( $post_index, $url, $query );
+			self::UrlQuery( $post_index, $url, $query );
 			$edit_link = gpOutput::EditAreaLink($edit_index,$url,$langmessage['edit'].' (TWYSIWYG)',$query,'name="inline_edit_generic" rel="text_inline_edit"');
 
 			echo '<span style="display:none;" id="ExtraEditLnks'.$edit_index.'">';
 			echo $edit_link;
 
-			echo $this->PostLink($post_index,$langmessage['edit'].' (All)','cmd=edit_post',' style="display:none"');
+			echo self::PostLink($post_index,$langmessage['edit'].' (All)','cmd=edit_post',' style="display:none"');
 			echo common::Link('Special_Blog',$langmessage['delete'],'cmd=deleteentry&del_id='.$post_index,array('class'=>'delete gpconfirm','data-cmd'=>'cnreq','title'=>$langmessage['delete_confirm']));
 
 			if( SimpleBlogCommon::$data['allow_comments'] ){
@@ -502,10 +502,10 @@ class SimpleBlog extends SimpleBlogCommon{
 				$comments_closed = SimpleBlogCommon::AStrValue('comments_closed',$post_index);
 				if( $comments_closed ){
 					$label = gpOutput::SelectText('Open Comments');
-					echo $this->PostLink($post_index,$label,'cmd=opencomments','name="creq" style="display:none"');
+					echo self::PostLink($post_index,$label,'cmd=opencomments','name="creq" style="display:none"');
 				}else{
 					$label = gpOutput::SelectText('Close Comments');
-					echo $this->PostLink($post_index,$label,'cmd=closecomments','name="creq" style="display:none"');
+					echo self::PostLink($post_index,$label,'cmd=closecomments','name="creq" style="display:none"');
 				}
 			}
 
@@ -527,7 +527,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		$header = '<h2 id="blog_post_'.$post_index.'">';
 		$header .= $isDraft;
 		$label = SimpleBlogCommon::Underscores( $post['title'] );
-		$header .= $this->PostLink($post_index,$label);
+		$header .= self::PostLink($post_index,$label);
 		$header .= '</h2>';
 
 		$this->BlogHead($header,$post_index,$post);
@@ -568,7 +568,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		}
 		$content = SimpleBlogCommon::substr($content,0,$limit).' ... ';
 		$label = gpOutput::SelectText('Read More');
-		return $content . $this->PostLink($post_index,$label);
+		return $content . self::PostLink($post_index,$label);
 	}
 
 
@@ -723,7 +723,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			if( common::LoggedIn() ){
 				echo ' &nbsp; ';
-				echo $this->PostLink($post_index,$langmessage['delete'],'cmd=delete_comment&comment_index='.$key,' class="delete gpconfirm" name="postlink" title="'.$langmessage['delete_confirm'].'"');
+				echo self::PostLink($post_index,$langmessage['delete'],'cmd=delete_comment&comment_index='.$key,' class="delete gpconfirm" name="postlink" title="'.$langmessage['delete_confirm'].'"');
 			}
 
 

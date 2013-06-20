@@ -579,7 +579,7 @@ class SimpleBlogCommon{
 
 		echo '<h2>';
 		$title = htmlspecialchars($_POST['title'],ENT_COMPAT,'UTF-8',false);
-		echo $this->PostLink($this->post_id,$title);
+		echo self::PostLink($this->post_id,$title);
 		echo ' &#187; ';
 		echo 'Edit Post</h2>';
 		$this->PostForm($_POST,'save_edit',$this->post_id);
@@ -611,7 +611,7 @@ class SimpleBlogCommon{
 		$array += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>false);
 		$array['title'] = SimpleBlogCommon::Underscores( $array['title'] );
 
-		echo '<form action="'.$this->PostUrl($post_id).'" method="post">';
+		echo '<form action="'.self::PostUrl($post_id).'" method="post">';
 
 		echo '<table style="width:100%">';
 
@@ -703,7 +703,7 @@ class SimpleBlogCommon{
 
 			echo '<entry>'."\n";
 			echo '<title>'.SimpleBlogCommon::Underscores( $post['title'] ).'</title>'."\n";
-			echo '<link href="'.$server.$this->PostUrl($post_index).'"></link>'."\n";
+			echo '<link href="'.$server.self::PostUrl($post_index).'"></link>'."\n";
 			echo '<id>urn:uuid:'.$this->uuid($post_index).'</id>'."\n";
 			echo '<updated>'.date($atomFormat, $post['time']).'</updated>'."\n";
 
@@ -711,7 +711,7 @@ class SimpleBlogCommon{
 			if( (SimpleBlogCommon::$data['feed_abbrev']> 0) && (SimpleBlogCommon::strlen($content) > SimpleBlogCommon::$data['feed_abbrev']) ){
 				$content = SimpleBlogCommon::substr($content,0,SimpleBlogCommon::$data['feed_abbrev']).' ... ';
 				$label = gpOutput::SelectText('Read More');
-				$content .= '<a href="'.$server.$this->PostUrl($post_index,$label).'">'.$label.'</a>';
+				$content .= '<a href="'.$server.self::PostUrl($post_index,$label).'">'.$label.'</a>';
 			}
 
 			//old images
@@ -843,7 +843,7 @@ class SimpleBlogCommon{
 
 			$header = '<b class="simple_blog_title">';
 			$label = SimpleBlogCommon::Underscores( $post['title'] );
-			$header .= $this->PostLink($post_index,$label);
+			$header .= self::PostLink($post_index,$label);
 			$header .= '</b>';
 
 			$this->BlogHead($header,$post_index,$post,true);
@@ -862,7 +862,7 @@ class SimpleBlogCommon{
 				$content = SimpleBlogCommon::substr($content,0,$cut).' ... ';
 
 				$label = gpOutput::SelectText('Read More');
-				$content .= $this->PostLink($post_index,$label);
+				$content .= self::PostLink($post_index,$label);
 			}
 
 			echo '<p class="simple_blog_abbrev">';
@@ -919,7 +919,7 @@ class SimpleBlogCommon{
 			foreach($posts as $post_id => $n){
 				$post_title = SimpleBlogCommon::AStrValue('titles',$post_id);
 				echo '<li>';
-				echo $this->PostLink( $post_id, $post_title );
+				echo self::PostLink( $post_id, $post_title );
 				echo '</li>';
 			}
 			echo '</ul></li>';
@@ -1239,16 +1239,16 @@ class SimpleBlogCommon{
 		return true;
 	}
 
-	function PostLink($post,$label,$query='',$attr=''){
-		return '<a href="'.$this->PostUrl($post,$query,true).'" '.$attr.'>'.common::Ampersands($label).'</a>';
+	static function PostLink($post,$label,$query='',$attr=''){
+		return '<a href="'.self::PostUrl($post,$query,true).'" '.$attr.'>'.common::Ampersands($label).'</a>';
 	}
 
-	function PostUrl( $post = false, $query='' ){
-		$this->UrlQuery( $post, $url, $query );
+	static function PostUrl( $post = false, $query='' ){
+		self::UrlQuery( $post, $url, $query );
 		return common::GetUrl( $url, $query );
 	}
 
-	function UrlQuery( $post_id = false, &$url, &$query ){
+	static function UrlQuery( $post_id = false, &$url, &$query ){
 
 		$url = self::$root_url;
 

@@ -26,8 +26,6 @@ class SimpleBlogCommon{
 	var $post_id = false;
 
 
-	var $archives;
-	var $archives_file;
 	var $months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
 
 
@@ -67,10 +65,13 @@ class SimpleBlogCommon{
 	function AddCSS(){
 		global $addonFolderName,$page;
 
-		//$page->head_script .= 'gplinks.blog_gadget = function(){$(this).next(".nodisplay").toggle();};';
-		$page->jQueryCode .= '$(".blog_gadget_link").click(function(){$(this).next(".nodisplay").toggle();});';
-		$page->css_user[] = '/data/_addoncode/'.$addonFolderName.'/style.css';
-		$added = true;
+		static $added = false;
+		if( !$added ){
+			//$page->head_script .= 'gplinks.blog_gadget = function(){$(this).next(".nodisplay").toggle();};';
+			$page->jQueryCode .= '$(".blog_gadget_link").click(function(){ $(this).next(".nodisplay").toggle(); });';
+			$page->css_user[] = '/data/_addoncode/'.$addonFolderName.'/style.css';
+			$added = true;
+		}
 	}
 
 
@@ -126,6 +127,7 @@ class SimpleBlogCommon{
 			}
 
 			$this->GenCategoryGadget();
+			$this->GenArchiveGadget();
 		}
 	}
 
@@ -180,6 +182,7 @@ class SimpleBlogCommon{
 		//post data
 		$drafts = array();
 		$titles = array();
+		$post_times = array();
 		for($i=0; $i<SimpleBlogCommon::$data['post_index']; $i++ ){
 			$post_id = self::AStrValue('str_index',$i);
 			$post = $this->GetPostContent($post_id);
@@ -191,9 +194,13 @@ class SimpleBlogCommon{
 				$drafts[$post_id] = 1;
 			}
 			$titles[$post_id] = $post['title'];
+			$post_times[$post_id] = $post['time'];
 		}
+
 		SimpleBlogCommon::$data['drafts'] = self::AStrFromArray($drafts);
 		SimpleBlogCommon::$data['titles'] = self::AStrFromArray($titles);
+		SimpleBlogCommon::$data['post_times'] = self::AStrFromArray($post_times);
+
 
 		unset(SimpleBlogCommon::$data['post_info']);
 		unset(SimpleBlogCommon::$data['post_list']);
@@ -340,7 +347,6 @@ class SimpleBlogCommon{
 
 		//now delete post also from categories:
 		$this->delete_post_from_categories($post_id);
-		$this->delete_post_from_archive($post_id, $posts[$post_id]['time']);
 
 		unset($posts[$post_id]); //don't use array_splice here because it will reset the numeric keys
 
@@ -355,6 +361,8 @@ class SimpleBlogCommon{
 		self::AStrRm('drafts',$post_id);
 		self::AStrRm('comments_closed',$post_id);
 		self::AStrRm('titles',$post_id);
+		self::AStrRm('post_times',$post_id);
+
 
 
 		if( !$this->SaveIndex() ){
@@ -413,7 +421,9 @@ class SimpleBlogCommon{
 		}else{
 			SimpleBlogCommon::AStrRm('drafts',$post_index);
 		}
-		$posts[$post_index]['time'] = time();
+
+		$time = time();
+		$posts[$post_index]['time'] = $time;
 
 		//save to data file
 		if( !gpFiles::SaveArray($post_file,'posts',$posts) ){
@@ -423,7 +433,6 @@ class SimpleBlogCommon{
 
 		//update categories and archive
 		$this->update_post_in_categories($post_index,$title);
-		$this->update_post_in_archives($post_index,$posts[$post_index]);
 
 		//add new entry to the beginning of the index string then reorder the keys
 		$new_index = '"0>'.$post_index.SimpleBlogCommon::$data['str_index'];
@@ -433,6 +442,8 @@ class SimpleBlogCommon{
 
 		//save index file
 		self::AStrValue('titles',$post_index,$title);
+		self::AStrValue('post_times',$post_index,$time);
+
 		SimpleBlogCommon::$data['post_index'] = $post_index;
 		if( !$this->SaveIndex() ){
 			message($langmessage['OOPS']);
@@ -495,7 +506,6 @@ class SimpleBlogCommon{
 
 		//find and update the edited post in categories and archives
 		$this->update_post_in_categories($post_index,$title);
-		$this->update_post_in_archives($post_index,$posts[$post_index]);
 
 
 		$this->SaveIndex();
@@ -805,6 +815,7 @@ class SimpleBlogCommon{
 		$this->GenFeed();
 		$this->GenGadget();
 		$this->GenCategoryGadget();
+		$this->GenArchiveGadget();
 	}
 
 	/**
@@ -929,6 +940,72 @@ class SimpleBlogCommon{
 		$content = ob_get_clean();
 
 		$gadgetFile = $this->addonPathData.'/gadget_categories.php';
+		gpFiles::Save( $gadgetFile, $content );
+	}
+
+
+	/**
+	 * Regenerate the static content used to display the archive gadget
+	 *
+	 */
+	function GenArchiveGadget(){
+
+		//get list of posts and times
+		$list = SimpleBlogCommon::AStrToArray( SimpleBlogCommon::$data['post_times'] );
+		if( !count($list) ) return;
+
+		//get year counts
+		$archive = array();
+		foreach($list as $post_id => $time){
+			$ym = date('Ym',$time); //year&month
+			$archive[$ym][] = $post_id;
+		}
+
+
+		ob_start();
+		echo '<div class="simple_blog_gadget"><div>';
+
+		echo '<span class="simple_blog_gadget_label">';
+		echo gpOutput::GetAddonText('Archives');
+		echo '</span>';
+
+		$prev_year = false;
+		echo '<ul>';
+		foreach( $archive as $ym => $posts ){
+			$y = floor($ym/100);
+			$m = $ym%100;
+			if( $y != $prev_year ){
+				if( $prev_year !== false ){
+					echo '</li>';
+				}
+				echo '<li><div class="simple_blog_gadget_year">'.$y.'</div>';
+				$prev_year = $y;
+			}
+			$sum = count($posts);
+			if( !$sum ){
+				continue;
+			}
+
+			echo '<ul>';
+			echo '<li><a class="blog_gadget_link">'.$this->months[$m-1].' ('.$sum.')</a>';
+			echo '<ul class="simple_blog_category_posts nodisplay">';
+			foreach($posts as $post_id ){
+				$post_title = SimpleBlogCommon::AStrValue('titles',$post_id);
+				echo '<li>';
+				echo self::PostLink($post_id, $post_title );
+				echo '</li>';
+			}
+			echo '</ul>';
+			echo '</li>';
+			echo '</ul>';
+		}
+
+		echo '</li></ul>';
+		echo '</div></div>';
+
+		$content = ob_get_clean();
+
+		$gadgetFile = $this->addonPathData.'/gadget_archive.php';
 		gpFiles::Save( $gadgetFile, $content );
 	}
 
@@ -1074,49 +1151,6 @@ class SimpleBlogCommon{
 	 *
 	 */
 
-
-	/**
-	 * Get all the archives in use by the blog
-	 *
-	 */
-	function load_blog_archives(){
-		global $addonPathData;
-		$this->archives_file = $addonPathData.'/archives.php';
-		if( file_exists($this->archives_file) ){
-			include($this->archives_file);
-			$this->archives = $archives;
-		}else{
-			$this->archives = array();
-		}
-	}
-
-	/**
-	 * Remove a blog entry from an archive
-	 *
-	 */
-	function delete_post_from_archive($post_index,$time){
-		$this->load_blog_archives();
-		$ym=date('Ym',$time); //year&month
-		if ( isset($this->archives[$ym][$post_index]) ){
-			unset($this->archives[$ym][$post_index]);
-			if (!count($this->archives[$ym]))
-				unset($this->archives[$ym]); //remove empty yearmonth
-			gpFiles::SaveArray($this->archives_file,'archives',$this->archives); //save archives
-		}
-	}
-
-	/**
-	 * Update an archive when a blog entry is edited  -- called from SaveNew() and SaveEdit()
-	 *
-	 */
-	function update_post_in_archives($post_index,$array){
-		$this->load_blog_archives();
-		$ym=date('Ym',$array['time']); //year&month
-		$this->archives[$ym][$post_index] = $array['title'];
-		krsort($this->archives[$ym]);
-		krsort($this->archives);
-		gpFiles::SaveArray($this->archives_file,'archives',$this->archives); //save archives
-	}
 
 	function substr( $str, $start, $length = false ){
 		if( function_exists('mb_substr') ){

@@ -33,35 +33,9 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 			case 'delete_category':
 				$this->DeleteCategory();
 			break;
-
-
-			//archive commands
-			case 'fill_archive':
-				$this->FillArchive();
-			break;
-			case 'clear_archive':
-				$this->ClearArchive();
-			break;
 		}
 
 
-
-		/*
-		if( isset($_POST['save_posts']) ){
-			foreach( $this->categories as $catindex => $catdata){
-				$clean = array( 'ct'=>$catdata['ct'], 'visible'=>$catdata['visible']);
-				$this->categories[$catindex] = $clean; //clean categories
-			}
-			foreach( $this->itlist as $postindex => $postdata){
-				if( isset($_POST['post'.$postindex]) ){
-					foreach ($_POST['post'.$postindex] as $catindex){
-						$this->categories[$catindex][$postindex] = $postdata['title'];
-					}
-				}
-			}
-			gpFiles::SaveArray($this->categories_file,'categories',$this->categories); //save
-		}
-		*/
 
 		$page->css_admin[] = '/include/css/addons.css'; //for hmargin css pre gpEasy 3.6
 
@@ -135,53 +109,8 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 			echo '</form>';
 		}
 		*/
-
-		// archives
-		echo '<br/><h2>Archives</h2>';
-		echo common::Link('Admin_BlogCategories','Fill archive with all posts','cmd=fill_archive',' name="cnreq"').'<br/>';
-		echo common::Link('Admin_BlogCategories','Clear all posts from archive','cmd=clear_archive',' name="cnreq"');
 	}
 
-	/**
-	 * Regenerate the blog's archive
-	 *
-	 */
-	function FillArchive(){
-		global $langmessage;
-
-		$this->create_itlist();
-		$this->load_blog_archives(); //only for setting the 'archives_file' path variable
-		$this->archives = array();
-		//$test = array(5, 'c'=>100, 10, 15, 20); $this->arrayReverse($test); var_export($test);
-
-		$this->arrayReverse($this->itlist); //latest years first
-		foreach( $this->itlist as $postindex => $postdata){
-			$ym = date('Ym',$postdata['time']); //year&month
-			$this->archives[$ym][$postindex] = $postdata['title'];
-		}
-		krsort($this->archives);
-		foreach( $this->archives as $ym=>$posts ){
-			krsort($this->archives[$ym]);
-		}
-
-		//save
-		if( gpFiles::SaveArray($this->archives_file,'archives',$this->archives) ){
-			message($langmessage['SAVED']);
-		}
-	}
-
-	/**
-	 * Empty the blog's archive
-	 *
-	 */
-	function ClearArchive(){
-		global $langmessage;
-		$this->load_blog_archives(); //only for setting the 'archives_file' path variable
-		$this->archives = array();
-		if( gpFiles::SaveArray($this->archives_file,'archives',$this->archives) ){
-			message($langmessage['SAVED']);
-		}
-	}
 
 
 	/**
@@ -319,36 +248,6 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 
 		$this->GenStaticContent();
 		message($langmessage['SAVED']);
-	}
-
-	/**
-	 * Creates the list of all posts (get all post indexes and titles and times)
-	 *
-	 */
-	function create_itlist(){
-		global $addonPathData;
-		$file_index=0;
-		while( file_exists($post_file = $addonPathData.'/posts_'.$file_index.'.php') ){
-			//echo $post_file; //like in function GetPostFile() in SimpleBlogCommon.php
-			include($post_file);
-			foreach( $posts as $postindex => $postdata ){
-				$this->itlist[$postindex]['title'] = $postdata['title'];
-				$this->itlist[$postindex]['time'] = $postdata['time']; // this is useful for blog archives list
-			}
-			$file_index++;
-		}
-	}
-
-	function arrayReverse(&$arr)
-	{
-		if (!is_array($arr) || empty($arr))
-			return;
-		$rev = array();
-		while ( false !== ( $val=end($arr) ) ){
-			$rev[key($arr)] = $val;
-			unset( $arr[ key($arr) ] );
-		}
-		$arr = $rev;
 	}
 
 }

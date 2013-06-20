@@ -246,7 +246,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	function OpenComments($post_index){
 		global $langmessage;
 
-		SimpleBlogCommon::AStrRemove('comments_closed',$post_index);
+		SimpleBlogCommon::AStrRm('comments_closed',$post_index);
 		if( !$this->SaveIndex() ){
 			message($langmessage['OOPS']);
 		}else{

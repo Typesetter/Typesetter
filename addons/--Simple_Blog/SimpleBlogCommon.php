@@ -100,7 +100,36 @@ class SimpleBlogCommon{
 			$this->DataUpdate19();
 		}
 
+
+		//use AStr data for categories
+		if( !isset(SimpleBlogCommon::$data['categories']) ){
+			$this->load_blog_categories();
+			$categories = $categories_hidden = $category_posts = array();
+			foreach($this->categories as $key => $cat){
+				$cat['ct'] = htmlspecialchars($cat['ct'],ENT_COMPAT,'UTF-8',false);
+				$categories[$key] = $cat['ct'];
+				if( isset($cat['visible']) && !$cat['visible'] ){
+					$categories_hidden[] = $key;
+				}
+
+				if( isset($cat['posts']) && is_array($cat['posts']) ){
+					$category_posts[$key] = array();
+					foreach($cat['posts'] as $post => $title){
+						$category_posts[$key][$post] = 1;
+					}
+				}
+			}
+
+			SimpleBlogCommon::$data['categories'] = self::AStrFromArray($categories);
+			SimpleBlogCommon::$data['categories_hidden'] = self::AStrFromArray($categories_hidden);
+			foreach($category_posts as $key => $posts){
+				SimpleBlogCommon::$data['category_posts_'.$key] = self::AStrFromArray($posts);
+			}
+		}
+
+		msg('moving categories to astr... will need to cache categories gadget');
 	}
+
 
 	/**
 	 * Generate a string to use as the post index
@@ -132,13 +161,15 @@ class SimpleBlogCommon{
 
 		$comment_counts = array();
 		$comments_closed = array();
-		foreach(SimpleBlogCommon::$data['post_info'] as $post_id => $info){
-			if( isset($info['comments']) ){
-				$comment_counts[$post_id] = $info['comments'];
-			}
+		if( isset(SimpleBlogCommon::$data['post_info']) && is_array(SimpleBlogCommon::$data['post_info']) ){
+			foreach(SimpleBlogCommon::$data['post_info'] as $post_id => $info){
+				if( isset($info['comments']) ){
+					$comment_counts[$post_id] = $info['comments'];
+				}
 
-			if( isset($info['closecomments']) ){
-				$comments_closed[$post_id] = 1;
+				if( isset($info['closecomments']) ){
+					$comments_closed[$post_id] = 1;
+				}
 			}
 		}
 
@@ -321,14 +352,14 @@ class SimpleBlogCommon{
 		//reset the index string
 		$new_index = SimpleBlogCommon::$data['str_index'];
 		$new_index = preg_replace('#"\d+>'.$post_id.'"#', '"', $new_index);
-		preg_match_all('#(?:"\d+>)([^">])*#',$new_index,$matches);
+		preg_match_all('#(?:"\d+>)([^">]*)#',$new_index,$matches);
 		SimpleBlogCommon::$data['str_index'] = self::AStrFromArray($matches[1]);
 
 
 		//remove post from other index strings
-		self::AStrRemove('drafts',$post_id);
-		self::AStrRemove('comments_closed',$post_id);
-		self::AStrRemove('titles',$post_id);
+		self::AStrRm('drafts',$post_id);
+		self::AStrRm('comments_closed',$post_id);
+		self::AStrRm('titles',$post_id);
 
 
 		if( !$this->SaveIndex() ){
@@ -385,7 +416,7 @@ class SimpleBlogCommon{
 		if( $_POST['isDraft'] === 'on' ){
 			SimpleBlogCommon::AStrValue('drafts',$post_index,1);
 		}else{
-			SimpleBlogCommon::AStrRemove('drafts',$post_index);
+			SimpleBlogCommon::AStrRm('drafts',$post_index);
 		}
 		$posts[$post_index]['time'] = time();
 
@@ -457,7 +488,7 @@ class SimpleBlogCommon{
 		if( $_POST['isDraft'] === 'on' ){
 			SimpleBlogCommon::AStrValue('drafts',$post_index,1);
 		}else{
-			SimpleBlogCommon::AStrRemove('drafts',$post_index);
+			SimpleBlogCommon::AStrRm('drafts',$post_index);
 		}
 
 		//save to data file
@@ -466,11 +497,13 @@ class SimpleBlogCommon{
 			return false;
 		}
 
-		$this->SaveIndex();
 
 		//find and update the edited post in categories and archives
 		$this->update_post_in_categories($post_index,$title);
 		$this->update_post_in_archives($post_index,$posts[$post_index]);
+
+
+		$this->SaveIndex();
 
 		message($langmessage['SAVED']);
 		return true;
@@ -927,18 +960,17 @@ class SimpleBlogCommon{
 		}
 	}
 
+
 	/**
 	 * Remove a blog entry from a category
 	 *
 	 */
 	function delete_post_from_categories($post_index){
-		$this->load_blog_categories();
-		foreach ($this->categories as $catindex => $catdata){
-			if (isset($catdata['posts'][$post_index]))	{
-				unset($this->categories[$catindex]['posts'][$post_index]);
-			}
+
+		$categories = SimpleBlogCommon::AStrToArray( SimpleBlogCommon::$data['categories'] );
+		foreach($categories as $catindex => $catname){
+			SimpleBlogCommon::AStrRm( 'category_posts_'.$catindex, $post_index );
 		}
-		gpFiles::SaveArray($this->categories_file,'categories',$this->categories); //save
 	}
 
 
@@ -946,40 +978,42 @@ class SimpleBlogCommon{
 	 * Update a category when a blog entry is edited
 	 *
 	 */
-	function update_post_in_categories($post_index,$title){
-		$this->load_blog_categories();
-		foreach( $this->categories as $catindex => $catdata ){
-			$selected = false;
-			if( isset($_POST['category']) ){
-				foreach( $_POST['category'] as $catindex1 ){
-					if( $catindex == $catindex1 ){
-						$selected = true;
-					}
-				}
-			}
+	function update_post_in_categories( $post_index, $title ){
 
-			if( $selected ){
-				$this->categories[$catindex]['posts'][$post_index] = $title;
-			}elseif( isset($catdata['posts'][$post_index]) ){
-				unset($this->categories[$catindex]['posts'][$post_index]);
+		$_POST += array('category'=>array());
+
+		$categories = SimpleBlogCommon::AStrToArray( SimpleBlogCommon::$data['categories'] );
+		foreach( $categories as $catindex => $catname ){
+
+			SimpleBlogCommon::AStrRm('category_posts_'.$catindex,$post_index);
+			if( in_array($catindex, $_POST['category']) ){
+				SimpleBlogCommon::AStrValue('category_posts_'.$catindex,$post_index,1);
 			}
 		}
-		gpFiles::SaveArray($this->categories_file,'categories',$this->categories); //save
+
 	}
 
 	/**
 	 * Show a list of all categories
 	 *
 	 */
-	function show_category_list($postindex){
-		if( $postindex == false ){
-			$postindex =- 1;
-		}
-		$this->load_blog_categories();
+	function show_category_list( $post_id ){
+
+		$_POST += array('category'=>array());
+
 		echo '<tr><td>Category</td><td>';
 		echo '<select name="category[]" multiple="multiple">';
-		foreach( $this->categories as $catindex => $catdata ){
-			echo '<option value="'.$catindex.'" '.(isset($catdata['posts'][$postindex])? 'selected="selected"':'').'>'.$catdata['ct'].'</option>';
+		$categories = SimpleBlogCommon::AStrToArray( SimpleBlogCommon::$data['categories'] );
+		foreach( $categories as $catindex => $catname ){
+
+			$selected = '';
+			if( $post_id && SimpleBlogCommon::AStrValue('category_posts_'.$catindex, $post_id ) ){
+				$selected = 'selected="selected"';
+			}elseif( in_array($catindex, $_POST['category']) ){
+				$selected = 'selected="selected"';
+			}
+
+			echo '<option value="'.$catindex.'" '.$selected.'>'.$catname.'</option>';
 		}
 		echo '</select></td></tr>';
 	}
@@ -1193,6 +1227,8 @@ class SimpleBlogCommon{
 	/**
 	 *		A R R A Y - S T R I N G   F U N C T I O N S
 	 *
+	 * Memory usage is much better for strings than arrays
+	 * Speed is not significantly affected if used sparingly
 	 *
 	 */
 
@@ -1204,6 +1240,8 @@ class SimpleBlogCommon{
 	static function AStrFromArray($array){
 		$str = '';
 		foreach($array as $key => $value){
+			$key = str_replace(array('"','>'),'',$key);
+			$value = str_replace(array('"','>'),'',$value);
 			$str .= '"'.$key.'>'.$value;
 		}
 		return $str.'"';
@@ -1215,51 +1253,35 @@ class SimpleBlogCommon{
 	 *
 	 */
 	static function AStrValue( $data_string, $key, $new_value = false ){
-		static $integers = '0123456789';
 
 		//get string
-		if( !isset(SimpleBlogCommon::$data[$data_string]) && $new_value === false ){
-			return false;
-		}
 		$string =& SimpleBlogCommon::$data[$data_string];
 
 
 		//get position of current value
-		$prev_key_str = '"'.$key.'>';
-		$prev_pos = strpos($string,$prev_key_str);
-		if( $prev_pos !== false ){
-			$prev_comma = strpos($string,'"',$prev_pos+1);
-			$offset = $prev_pos+strlen($prev_key_str);
-		}
-
-		$current_value = false;
-		if( $prev_pos !== false ){
-			$current_value = substr($string,$offset,$prev_comma - $offset);
-		}
-
-
-		//returning value
-		if( $new_value === false ){
-			return $current_value;
-		}
-
-
-		//new value operations
-		$new_value = str_replace(array('"','>'),'',$new_value);
-		if( ctype_digit(substr($new_value,1)) ){
-			if( $new_value[0] === '+' || $new_value[0] === '-' ){
-				$new_value = (int)$current_value+(int)$new_value;
+		$prev_key_str = $key.'>';
+		$offset = strpos($string,$prev_key_str);
+		if( $offset !== false ){
+			$offset += strlen($prev_key_str);
+			$length = strpos($string,'"',$offset) - $offset;
+			if( $new_value === false ){
+				return substr($string,$offset,$length);
 			}
+
+		}elseif( $new_value === false ){
+			return false;
 		}
+
 
 		//setting values
-		if( $prev_pos === false ){
+		if( $offset === false ){
 			if( empty($string) ){
 				$string = '"';
 			}
+			$key = str_replace(array('"','>'),'',$key);
 			$string .= $key.'>'.$new_value.'"';
 		}else{
-			$string = substr_replace($string,$new_value,$offset,$prev_comma - $offset);
+			$string = substr_replace($string,$new_value,$offset,$length);
 		}
 
 		return true;
@@ -1268,6 +1290,7 @@ class SimpleBlogCommon{
 
 	/**
 	 * Get the key for a given value
+	 * Should be changed to allow for non-numeric keys
 	 *
 	 */
 	static function AStrKey( $data_string, $value ){
@@ -1290,20 +1313,43 @@ class SimpleBlogCommon{
 		return substr( $string, $post_key_pos+1, $post_key_len );
 	}
 
+
 	/**
 	 * Remove a key-value
 	 *
 	 */
-	static function AStrRemove( $data_string, $key ){
-
-		if( !isset(SimpleBlogCommon::$data[$data_string]) ){
-			return false;
-		}
+	static function AStrRm( $data_string, $key ){
 
 		$string =& SimpleBlogCommon::$data[$data_string];
-
 		$string = preg_replace('#"'.$key.'>[^">]*\"#', '"', $string);
 	}
+
+
+	static function AStrRmValue( $data_string, $value ){
+
+		$string =& SimpleBlogCommon::$data[$data_string];
+		$string = preg_replace('#"[^">]*>'.$value.'\"#', '"', $string);
+
+	}
+
+
+	/**
+	 * Convert an AStr to an array
+	 *
+	 */
+	static function AStrToArray( $string ){
+
+		$count = preg_match_all('#(?:([^">]*)>)([^">]*)#',$string,$matches);
+		if( !$count ){
+			return array();
+		}
+
+		$keys = $matches[1];
+		$values = $matches[2];
+
+		return array_combine($matches[1],$matches[2]);
+	}
+
 
 }
 

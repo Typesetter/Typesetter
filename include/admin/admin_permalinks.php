@@ -253,7 +253,6 @@ class admin_permalinks{
 		//if TestResponse Fails, undo the changes
 		//only need to test for hiding
 		if( $this->changed_to_hide && !admin_permalinks::TestResponse() ){
-			message('hmm');
 			if( $original_contents === false ){
 				$gp_filesystem->unlink($filesystem_path);
 			}else{

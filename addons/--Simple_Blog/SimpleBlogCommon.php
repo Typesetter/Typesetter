@@ -1324,6 +1324,28 @@ class SimpleBlogCommon{
 		}
 	}
 
+	static function CategoryLink( $catindex, $cattitle, $label, $query = '', $attr = '' ){
+
+		$url = 'Special_Blog_Categories';
+		switch( SimpleBlogCommon::$data['urls'] ){
+
+			case 'Full':
+				$cattitle = str_replace(array('?',' '),array('','_'),$cattitle);
+				$url .= '/'.$cattitle;
+			break;
+
+			case 'Tiny':
+				$url .= '/'.$catindex;
+			break;
+
+			default:
+				$query = trim('cat='.$catindex.'&'.$query,'&');
+			break;
+		}
+
+		return '<a href="'.common::GetUrl( $url, $query ).'" '.$attr.'>'.common::Ampersands($label).'</a>';
+	}
+
 
 
 	/**

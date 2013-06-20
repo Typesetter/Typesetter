@@ -11,21 +11,36 @@ class BlogCategories extends SimpleBlog{
 	var $total_posts = 0;
 
 	function __construct(){
+		global $page;
 
 		$this->Init();
 		$this->categories = SimpleBlogCommon::AStrToArray( 'categories' );
 
 		//show category list
-		if( !isset($_REQUEST['cat'])
-			|| !isset($this->categories[$_REQUEST['cat']])
-			|| self::AStrValue('categories_hidden',$_REQUEST['cat'])
-			){
-			$this->ShowCategories();
-			return;
+		if( isset($_REQUEST['cat'])	){
+			$this->catindex = $_REQUEST['cat'];
+
+		}elseif( strpos($page->requested,'/') !== false ){
+			$parts = explode('/',$page->requested);
+
+			if( SimpleBlogCommon::$data['urls'] === 'Full' ){
+
+				$parts[1] = str_replace('_',' ',$parts[1]);
+				$this->catindex = array_search($parts[1],$this->categories);
+
+			}elseif( SimpleBlogCommon::$data['urls'] === 'Tiny' ){
+				$this->catindex = $parts[1];
+			}
+
 		}
 
-		$this->catindex = $_REQUEST['cat'];
-		$this->ShowCategory();
+
+		if( $this->catindex && isset($this->categories[$this->catindex]) && !self::AStrValue('categories_hidden',$this->catindex) ){
+			$this->ShowCategory();
+		}else{
+			$this->ShowCategories();
+		}
+
 	}
 
 	function ShowCategory(){
@@ -50,13 +65,14 @@ class BlogCategories extends SimpleBlog{
 		echo '<p class="blog_nav_links">';
 
 		if( ( ($page+1) * $per_page) < $this->total_posts ){
-			$html = common::Link('Special_Blog_Categories','%s','cat='.$this->catindex.'&page='.($page+1),'class="blog_older"');
+
+			$html = self::CategoryLink( $this->catindex, $catname, '%s', 'page='.($page+1), 'class="blog_older"' );
 			echo gpOutput::GetAddonText('Older Entries',$html);
 		}
 
 
 		if( $page > 0 ){
-			$html = common::Link('Special_Blog_Categories','%s','cat='.$this->catindex.'&page='.($page-1),'class="blog_newer"');
+			$html = self::CategoryLink( $this->catindex, $catname, '%s', 'page='.($page-1), 'class="blog_newer"' );
 			echo gpOutput::GetAddonText('Newer Entries',$html);
 			echo '&nbsp;';
 		}
@@ -132,7 +148,7 @@ class BlogCategories extends SimpleBlog{
 			}
 
 			echo '<li>';
-			echo common::Link('Special_Blog_Categories',$catname.' ('.$count.')','cat='.$catindex);
+			echo self::CategoryLink( $catindex, $catname, $catname.' ('.$count.')' );
 			echo '</li>';
 		}
 		echo '</ul>';

@@ -129,8 +129,6 @@ class SimpleBlogCommon{
 
 			$this->GenCategoryGadget();
 		}
-
-		msg('moving categories to astr... will need to cache categories gadget');
 	}
 
 
@@ -273,14 +271,12 @@ class SimpleBlogCommon{
 	 */
 	function SaveIndex(){
 
-		$this->GenIndexStr();
-
-		//set some stats
 		SimpleBlogCommon::$data['str_index'] = '"'.trim(SimpleBlogCommon::$data['str_index'],'"').'"';
 		SimpleBlogCommon::$data['post_count'] = substr_count(SimpleBlogCommon::$data['str_index'],'>');
 
 		return gpFiles::SaveArray($this->indexFile,'blogData',SimpleBlogCommon::$data);
 	}
+
 
 	/**
 	 * Get the data file for a blog post

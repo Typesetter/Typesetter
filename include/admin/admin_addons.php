@@ -316,6 +316,10 @@ class admin_addons extends admin_addon_install{
 
 		$info = $config['addons'][$addon_key];
 
+		//versions available online
+		includeFile('tool/update.php');
+		update_class::VersionsAndCheckTime($this->new_versions);
+
 		$this->FindForm();
 
 		echo '<h2 class="hmargin">';
@@ -323,7 +327,6 @@ class admin_addons extends admin_addon_install{
 		echo ' &#187; ';
 		echo $info['name'];
 		echo '</h2>';
-
 
 		echo '<div id="adminlinks2">';
 		$this->PluginPanelGroup($addon_key,$info);
@@ -470,7 +473,7 @@ class admin_addons extends admin_addon_install{
 
 		//versions available online
 		includeFile('tool/update.php');
-		update_class::VersionsAndCheckTime($new_versions);
+		update_class::VersionsAndCheckTime($this->new_versions);
 
 		//set upgrade_from
 		foreach($available as $folder => $info){
@@ -594,8 +597,8 @@ class admin_addons extends admin_addon_install{
 		echo '</ul>';
 
 		//upgrade gpeasy.com
-		if( isset($addon_config['id']) && isset($new_versions[$addon_config['id']]) ){
-			$version_info = $new_versions[$addon_config['id']];
+		if( isset($addon_config['id']) && isset($this->new_versions[$addon_config['id']]) ){
+			$version_info = $this->new_versions[$addon_config['id']];
 			echo '<div class="gp_notice">';
 			echo '<a href="'.addon_browse_path.'/Plugins?id='.$addon_config['id'].'" data-cmd="remote">';
 			echo $langmessage['new_version'];

@@ -22,6 +22,7 @@ class admin_addon_install extends admin_addons_tool{
 	var $find_label;
 	var $code_folder_name = '_addoncode';
 	var $can_install_links = true;
+	var $new_versions = array();
 
 
 

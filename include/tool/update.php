@@ -104,6 +104,7 @@ class update_class{
 			}
 		}
 
+		$config['addons']['5m3z4qu']['version'] = '1.8';
 
 		//check addon versions
 		if( isset($config['addons']) && is_array($config['addons']) ){

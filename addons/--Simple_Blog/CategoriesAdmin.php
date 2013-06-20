@@ -7,20 +7,17 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 
 	var $itlist = array();
 
-	/**
-	 * Set object variables used to manage categories
-	 *
-	 */
-	function Init(){
-
-		// load existing categories
-		$this->load_blog_categories();
-	}
 
 	function AdminSimpleBlogCategories(){
 		global $langmessage;
 
 		$this->Init();
+
+		$this->categories = SimpleBlogCommon::AStrToArray( SimpleBlogCommon::$data['categories'] );
+
+		// load existing categories
+		//$this->load_blog_categories();
+
 
 		$cmd = common::GetCommand();
 		switch($cmd){
@@ -88,23 +85,34 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 		echo '<form name="categories" action="'.common::GetUrl('Admin_BlogCategories').'" method="post">';
 		echo '<table class="bordered">';
 		echo '<tr><th>Category</th><th>Number of Posts</th><th>Visible</th><th>Options</th></tr>';
-		foreach( $this->categories as $catindex => $catdata ){
+
+		foreach( $this->categories as $catindex => $catname ){
 			echo '<tr><td>';
-			echo '<input type="text" name="cattitle'.$catindex.'" value="'.$catdata['ct'].'" class="gpinput" />';
+			echo '<input type="text" name="cattitle['.$catindex.']" value="'.$catname.'" class="gpinput" />';
 			echo '</td><td>';
-			echo count($catdata['posts']);
+
+			$astr =& SimpleBlogCommon::$data['category_posts_'.$catindex];
+			echo substr_count($astr,'>');
+
 			echo '</td><td>';
-			echo ' <input type="checkbox" name="catvis'.$catindex.'"'.($catdata['visible']?' checked="checked"':'').' /> ';
+
+			$checked = '';
+			if( !self::AStrValue('categories_hidden',$catindex) ){
+				$checked = ' checked="checked"';
+			}
+
+			echo ' <input type="checkbox" name="catvis['.$catindex.']"'.$checked.'/> ';
 			echo '</td><td>';
 			echo common::Link('Admin_BlogCategories',$langmessage['delete'],'cmd=delete_category&index='.$catindex,' name="postlink" class="gpconfirm" title="Delete this Category?" ');
 			echo '</td></tr>';
 		}
+
 		echo '</table>';
 		echo '<p>';
 		echo '<input type="hidden" name="cmd" value="save_categories" />';
 		echo '<input type="submit" value="'.$langmessage['save_changes'].'" class="gpsubmit"/>';
 		echo ' &nbsp; ';
-		echo common::Link('Admin_BlogCategories','Add New Category','cmd=new_category',' name="admin_box" ');
+		echo common::Link('Admin_BlogCategories','Add New Category','cmd=new_category',' name="gpabox" ');
 		echo '</p>';
 		echo '</form>';
 
@@ -183,17 +191,30 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 	 *
 	 */
 	function SaveCategories(){
+		global $langmessage;
 
-		foreach( $this->categories as $catindex => $catdata ){
-			if( isset($_POST['cattitle'.$catindex]) ){
-				$this->categories[$catindex]['visible'] = isset($_POST['catvis'.$catindex]);
-				$title = trim($_POST['cattitle'.$catindex]);
-				if( !empty($title) ){
-					$this->categories[$catindex]['ct'] = htmlspecialchars($title);
-				}
-			}
+		//category titles
+		$categories_hidden = array();
+		foreach($_POST['cattitle'] as $key => $title){
+			$this->categories[$key] = htmlspecialchars($title);
+			$categories_hidden[$key] = 1;
 		}
-		return gpFiles::SaveArray($this->categories_file,'categories',$this->categories); //save
+
+		//visibility
+		foreach($_POST['catvis'] as $key => $title){
+			unset($categories_hidden[$key]);
+		}
+
+
+		SimpleBlogCommon::$data['categories'] = self::AStrFromArray($this->categories);
+		SimpleBlogCommon::$data['categories_hidden'] = self::AStrFromArray($categories_hidden);
+
+		if( !$this->SaveIndex() ){
+			message($langmessage['OOPS']);
+			return false;
+		}
+
+		message($langmessage['SAVED']);
 	}
 
 
@@ -204,6 +225,8 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 	function SaveNewCategory(){
 		global $langmessage;
 
+
+
 		//find free index
 		$new_catindex = $this->NewCatIndex();
 
@@ -213,12 +236,18 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 			return false;
 		}
 
-		$this->categories[$new_catindex] = array();
-		$this->categories[$new_catindex]['ct'] = $new_title;
-		$this->categories[$new_catindex]['visible'] = true;
-		$this->categories[$new_catindex]['posts'] = array();
+		$new_catindex = $this->NewCatIndex();
 
-		return gpFiles::SaveArray($this->categories_file,'categories',$this->categories);
+		$this->categories[$new_catindex] = $new_title;
+
+		SimpleBlogCommon::$data['categories'] = self::AStrFromArray($this->categories);
+
+		if( !$this->SaveIndex() ){
+			message($langmessage['OOPS']);
+			return false;
+		}
+
+		message($langmessage['SAVED']);
 	}
 
 	/**
@@ -278,7 +307,17 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 		}
 
 		unset($this->categories[$index]);
-		return gpFiles::SaveArray($this->categories_file,'categories',$this->categories);
+		unset(SimpleBlogCommon::$data['category_posts_'.$index]);
+		self::AStrRm('categories_hidden',$index);
+
+		SimpleBlogCommon::$data['categories'] = self::AStrFromArray($this->categories);
+
+		if( !$this->SaveIndex() ){
+			message($langmessage['OOPS']);
+			return false;
+		}
+
+		message($langmessage['SAVED']);
 	}
 
 	/**

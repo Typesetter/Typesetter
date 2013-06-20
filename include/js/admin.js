@@ -439,7 +439,7 @@ $gp.links.collapsible = function(){
  *
  */
 $gp.links.ajax_box = $gp.links.admin_box = function(evt){
-	debug(' "ajax_box" and "admin_box" are deprecated link arguments');
+	debug(' "ajax_box" and "admin_box" are deprecated link arguments. Use gpabox instead.');
 	evt.preventDefault();
 	$gp.loading();
 	var href = $gp.jPrep(this.href,'gpreq=flush');

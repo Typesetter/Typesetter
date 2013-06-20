@@ -109,7 +109,7 @@ class SimpleBlogCommon{
 				$cat['ct'] = htmlspecialchars($cat['ct'],ENT_COMPAT,'UTF-8',false);
 				$categories[$key] = $cat['ct'];
 				if( isset($cat['visible']) && !$cat['visible'] ){
-					$categories_hidden[] = $key;
+					$categories_hidden[$key] = 1;
 				}
 
 				if( isset($cat['posts']) && is_array($cat['posts']) ){
@@ -198,7 +198,6 @@ class SimpleBlogCommon{
 
 		unset(SimpleBlogCommon::$data['post_info']);
 		unset(SimpleBlogCommon::$data['post_list']);
-
 	}
 
 
@@ -272,7 +271,6 @@ class SimpleBlogCommon{
 	function SaveIndex(){
 
 		$this->GenIndexStr();
-		unset(SimpleBlogCommon::$data['post_list']);
 
 		//set some stats
 		SimpleBlogCommon::$data['str_index'] = '"'.trim(SimpleBlogCommon::$data['str_index'],'"').'"';

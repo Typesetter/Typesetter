@@ -235,6 +235,7 @@ class SimpleBlogCommon{
 	}
 
 
+
 	/**
 	 * Return the configuration defaults
 	 * @static
@@ -1108,12 +1109,30 @@ class SimpleBlogCommon{
 		$_POST += array('category'=>array());
 
 		$categories = SimpleBlogCommon::AStrToArray( 'categories' );
+		$edited_categories = array();
 		foreach( $categories as $catindex => $catname ){
 
 			SimpleBlogCommon::AStrRm('category_posts_'.$catindex,$post_index);
 			if( in_array($catindex, $_POST['category']) ){
+				$edited_categories[] = $catindex;
 				SimpleBlogCommon::AStrValue('category_posts_'.$catindex,$post_index,1);
 			}
+		}
+
+		//get order of all posts
+		$post_times = SimpleBlogCommon::AStrToArray( 'post_times' );
+		arsort($post_times);
+		$post_times = array_keys($post_times);
+
+		//order category posts
+		foreach($edited_categories as $catindex){
+
+			$category_posts = SimpleBlogCommon::AStrToArray( 'category_posts_'.$catindex );
+			$category_posts = array_keys($category_posts);
+			$category_posts = array_intersect($post_times, $category_posts);
+			$category_posts = array_fill_keys($category_posts, 1);
+			SimpleBlogCommon::$data['category_posts_'.$catindex] = self::AStrFromArray($category_posts);
+
 		}
 
 	}

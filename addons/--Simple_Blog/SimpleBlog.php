@@ -407,21 +407,12 @@ class SimpleBlog extends SimpleBlogCommon{
 		}
 		$start = $page * $per_page;
 
-		$show_posts = $this->WhichPosts($start,$per_page);
+		$include_drafts = common::LoggedIn();
+		$show_posts = $this->WhichPosts($start,$per_page,$include_drafts);
 
-		$posts = array();
-		foreach($show_posts as $post_index){
+		$this->ShowPosts($show_posts);
 
-			//get $posts
-			if( !isset($posts[$post_index]) ){
-				$posts = $this->GetPostFile($post_index,$post_file);
-			}
-
-			$post =& $posts[$post_index];
-
-			$this->ShowPostContent( $post, $post_index, SimpleBlogCommon::$data['post_abbrev'] );
-		}
-
+		//pagination links
 		echo '<p class="blog_nav_links">';
 
 		if( ( ($page+1) * $per_page) < SimpleBlogCommon::$data['post_count'] ){
@@ -452,14 +443,11 @@ class SimpleBlog extends SimpleBlogCommon{
 	}
 
 
-	/**
-	 * Display a blog page with multiple blog posts
-	 *
-	 */
-	function ShowPageOld(){
+
+	function ShowPosts($post_list){
 
 		$posts = array();
-		foreach($show_posts as $post_index){
+		foreach($post_list as $post_index){
 
 			//get $posts
 			if( !isset($posts[$post_index]) ){
@@ -468,8 +456,9 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			$post =& $posts[$post_index];
 
-			$this->ShowPostContent($post,$post_index);
+			$this->ShowPostContent( $post, $post_index, SimpleBlogCommon::$data['post_abbrev'] );
 		}
+
 	}
 
 	/**

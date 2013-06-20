@@ -10,7 +10,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 
 
 	function AdminSimpleBlogCategories(){
-		global $langmessage;
+		global $langmessage, $addonRelativeCode, $addonFolderName, $page;
 
 		$this->Init();
 
@@ -38,6 +38,8 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 
 
 		$page->css_admin[] = '/include/css/addons.css'; //for hmargin css pre gpEasy 3.6
+		$page->head_js[] = '/data/_addoncode/'.$addonFolderName.'/admin.js';
+
 
 		$label = gpOutput::SelectText('Blog');
 		echo '<h2 class="hmargin">';
@@ -52,14 +54,15 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 		echo '</h2>';
 
 		// print all categories and settings
-		//echo '<h3>Existing Categories (empty field removes category)</h3>';
-
 		echo '<form name="categories" action="'.common::GetUrl('Admin_BlogCategories').'" method="post">';
 		echo '<table class="bordered">';
-		echo '<tr><th>Category</th><th>Number of Posts</th><th>Visible</th><th>Options</th></tr>';
+		echo '<tr><th>&nbsp;</th><th>Category</th><th>Number of Posts</th><th>Visible</th><th>Options</th></tr>';
 
+		echo '<tbody class="sortable_table">';
 		foreach( $this->categories as $catindex => $catname ){
-			echo '<tr><td>';
+			echo '<tr><td style="vertical-align:middle">';
+			echo '<img src="'.$addonRelativeCode.'/grip.png" height="15" width="15" style="padding:2px;cursor:pointer;"/>';
+			echo '</td><td>';
 			echo '<input type="text" name="cattitle['.$catindex.']" value="'.$catname.'" class="gpinput" />';
 			echo '</td><td>';
 
@@ -78,6 +81,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 			echo common::Link('Admin_BlogCategories',$langmessage['delete'],'cmd=delete_category&index='.$catindex,' name="postlink" class="gpconfirm" title="Delete this Category?" ');
 			echo '</td></tr>';
 		}
+		echo '</tbody>';
 
 		echo '</table>';
 		echo '<p>';
@@ -122,6 +126,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 
 		//category titles
 		$categories_hidden = array();
+		$this->categories = array();
 		foreach($_POST['cattitle'] as $key => $title){
 			$this->categories[$key] = htmlspecialchars($title);
 			$categories_hidden[$key] = 1;

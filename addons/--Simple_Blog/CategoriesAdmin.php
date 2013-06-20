@@ -14,7 +14,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 
 		$this->Init();
 
-		$this->categories = SimpleBlogCommon::AStrToArray( SimpleBlogCommon::$data['categories'] );
+		$this->categories = SimpleBlogCommon::AStrToArray( 'categories' );
 
 
 		$cmd = common::GetCommand();

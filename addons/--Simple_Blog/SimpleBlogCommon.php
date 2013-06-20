@@ -99,36 +99,6 @@ class SimpleBlogCommon{
 		if( isset(SimpleBlogCommon::$data['post_info']) ){
 			$this->DataUpdate19();
 		}
-
-
-		//use AStr data for categories
-		if( !isset(SimpleBlogCommon::$data['categories']) ){
-			$old_categories = $this->load_blog_categories();
-			$categories = $categories_hidden = $category_posts = array();
-			foreach($old_categories as $key => $cat){
-				$cat['ct'] = htmlspecialchars($cat['ct'],ENT_COMPAT,'UTF-8',false);
-				$categories[$key] = $cat['ct'];
-				if( isset($cat['visible']) && !$cat['visible'] ){
-					$categories_hidden[$key] = 1;
-				}
-
-				if( isset($cat['posts']) && is_array($cat['posts']) ){
-					$category_posts[$key] = array();
-					foreach($cat['posts'] as $post => $title){
-						$category_posts[$key][$post] = 1;
-					}
-				}
-			}
-
-			SimpleBlogCommon::$data['categories'] = self::AStrFromArray($categories);
-			SimpleBlogCommon::$data['categories_hidden'] = self::AStrFromArray($categories_hidden);
-			foreach($category_posts as $key => $posts){
-				SimpleBlogCommon::$data['category_posts_'.$key] = self::AStrFromArray($posts);
-			}
-
-			$this->GenCategoryGadget();
-			$this->GenArchiveGadget();
-		}
 	}
 
 
@@ -204,6 +174,36 @@ class SimpleBlogCommon{
 
 		unset(SimpleBlogCommon::$data['post_info']);
 		unset(SimpleBlogCommon::$data['post_list']);
+
+
+		//use AStr data for categories
+		if( !isset(SimpleBlogCommon::$data['categories']) ){
+			$old_categories = $this->load_blog_categories();
+			$categories = $categories_hidden = $category_posts = array();
+			foreach($old_categories as $key => $cat){
+				$cat['ct'] = htmlspecialchars($cat['ct'],ENT_COMPAT,'UTF-8',false);
+				$categories[$key] = $cat['ct'];
+				if( isset($cat['visible']) && !$cat['visible'] ){
+					$categories_hidden[$key] = 1;
+				}
+
+				if( isset($cat['posts']) && is_array($cat['posts']) ){
+					$category_posts[$key] = array();
+					foreach($cat['posts'] as $post => $title){
+						$category_posts[$key][$post] = 1;
+					}
+				}
+			}
+
+			SimpleBlogCommon::$data['categories'] = self::AStrFromArray($categories);
+			SimpleBlogCommon::$data['categories_hidden'] = self::AStrFromArray($categories_hidden);
+			foreach($category_posts as $key => $posts){
+				SimpleBlogCommon::$data['category_posts_'.$key] = self::AStrFromArray($posts);
+			}
+
+			$this->GenCategoryGadget();
+			$this->GenArchiveGadget();
+		}
 	}
 
 
@@ -898,7 +898,7 @@ class SimpleBlogCommon{
 	 */
 	function GenCategoryGadget(){
 
-		$categories = SimpleBlogCommon::AStrToArray( SimpleBlogCommon::$data['categories'] );
+		$categories = SimpleBlogCommon::AStrToArray( 'categories' );
 
 		ob_start();
 		echo '<div class="simple_blog_gadget"><div>';
@@ -915,12 +915,11 @@ class SimpleBlogCommon{
 				continue;
 			}
 
-			$posts_astr =& self::$data['category_posts_'.$catindex];
-			$sum = substr_count($posts_astr,'>');
+			$posts = self::AStrToArray('category_posts_'.$catindex);
+			$sum = count($posts);
 			if( !$sum ){
 				continue;
 			}
-			$posts = self::AStrToArray($posts_astr);
 
 			echo '<li>';
 			echo '<a class="blog_gadget_link">'.$catname.' ('.$sum.')</a>';
@@ -951,7 +950,7 @@ class SimpleBlogCommon{
 	function GenArchiveGadget(){
 
 		//get list of posts and times
-		$list = SimpleBlogCommon::AStrToArray( SimpleBlogCommon::$data['post_times'] );
+		$list = SimpleBlogCommon::AStrToArray( 'post_times' );
 		if( !count($list) ) return;
 
 		//get year counts
@@ -1093,7 +1092,7 @@ class SimpleBlogCommon{
 	 */
 	function delete_post_from_categories($post_index){
 
-		$categories = SimpleBlogCommon::AStrToArray( SimpleBlogCommon::$data['categories'] );
+		$categories = SimpleBlogCommon::AStrToArray( 'categories' );
 		foreach($categories as $catindex => $catname){
 			SimpleBlogCommon::AStrRm( 'category_posts_'.$catindex, $post_index );
 		}
@@ -1108,7 +1107,7 @@ class SimpleBlogCommon{
 
 		$_POST += array('category'=>array());
 
-		$categories = SimpleBlogCommon::AStrToArray( SimpleBlogCommon::$data['categories'] );
+		$categories = SimpleBlogCommon::AStrToArray( 'categories' );
 		foreach( $categories as $catindex => $catname ){
 
 			SimpleBlogCommon::AStrRm('category_posts_'.$catindex,$post_index);
@@ -1129,7 +1128,8 @@ class SimpleBlogCommon{
 
 		echo '<tr><td>Category</td><td>';
 		echo '<select name="category[]" multiple="multiple">';
-		$categories = SimpleBlogCommon::AStrToArray( SimpleBlogCommon::$data['categories'] );
+
+		$categories = SimpleBlogCommon::AStrToArray( 'categories' );
 		foreach( $categories as $catindex => $catname ){
 
 			$selected = '';
@@ -1420,9 +1420,11 @@ class SimpleBlogCommon{
 	 * Convert an AStr to an array
 	 *
 	 */
-	static function AStrToArray( $string ){
+	static function AStrToArray( $data_string ){
 
-		$count = preg_match_all('#(?:([^">]*)>)([^">]*)#',$string,$matches);
+		$string =& SimpleBlogCommon::$data[$data_string];
+
+		$count = preg_match_all('#(?:([^">]*)>)([^">]*)#', $string, $matches);
 		if( !$count ){
 			return array();
 		}

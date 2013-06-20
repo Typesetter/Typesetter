@@ -95,6 +95,8 @@ class SimpleBlogCommon{
 		SimpleBlogCommon::$data = $blogData + SimpleBlogCommon::Defaults();
 		$this->GenIndexStr();
 
+		msg('need to make sure category posts are organized during update');
+
 		//update to simple blog 1.9 data
 		if( isset(SimpleBlogCommon::$data['post_info']) ){
 			$this->DataUpdate19();
@@ -149,37 +151,10 @@ class SimpleBlogCommon{
 		SimpleBlogCommon::$data['comments_closed'] = self::AStrFromArray($comments_closed);
 
 
-		//post data
-		$drafts = array();
-		$titles = array();
-		$post_times = array();
-		for($i=0; $i<SimpleBlogCommon::$data['post_index']; $i++ ){
-			$post_id = self::AStrValue('str_index',$i);
-			$post = $this->GetPostContent($post_id);
-			if( !$post ){
-				continue;
-			}
-
-			if( isset($post['isDraft']) && $post['isDraft'] ){
-				$drafts[$post_id] = 1;
-			}
-			$titles[$post_id] = $post['title'];
-			$post_times[$post_id] = $post['time'];
-		}
-
-		SimpleBlogCommon::$data['drafts'] = self::AStrFromArray($drafts);
-		SimpleBlogCommon::$data['titles'] = self::AStrFromArray($titles);
-		SimpleBlogCommon::$data['post_times'] = self::AStrFromArray($post_times);
-
-
-		unset(SimpleBlogCommon::$data['post_info']);
-		unset(SimpleBlogCommon::$data['post_list']);
-
-
 		//use AStr data for categories
+		$categories = $categories_hidden = $category_posts = $post_categories = array();
 		if( !isset(SimpleBlogCommon::$data['categories']) ){
 			$old_categories = $this->load_blog_categories();
-			$categories = $categories_hidden = $category_posts = array();
 			foreach($old_categories as $key => $cat){
 				$cat['ct'] = htmlspecialchars($cat['ct'],ENT_COMPAT,'UTF-8',false);
 				$categories[$key] = $cat['ct'];
@@ -191,19 +166,68 @@ class SimpleBlogCommon{
 					$category_posts[$key] = array();
 					foreach($cat['posts'] as $post => $title){
 						$category_posts[$key][$post] = 1;
+						$post_categories[$post][] = $key;
 					}
 				}
 			}
+		}
 
-			SimpleBlogCommon::$data['categories'] = self::AStrFromArray($categories);
-			SimpleBlogCommon::$data['categories_hidden'] = self::AStrFromArray($categories_hidden);
-			foreach($category_posts as $key => $posts){
-				SimpleBlogCommon::$data['category_posts_'.$key] = self::AStrFromArray($posts);
+
+		//post data
+		$drafts = array();
+		$titles = array();
+		$post_times = array();
+
+		$i = 0;
+		do{
+
+			$posts = $this->GetPostFile($i,$post_file);
+			if( !$posts ){
+				break;
 			}
 
-			$this->GenCategoryGadget();
-			$this->GenArchiveGadget();
+			foreach($posts as $post_id => $post){
+
+				if( isset($post['isDraft']) && $post['isDraft'] ){
+					$drafts[$post_id] = 1;
+				}
+				$titles[$post_id] = $post['title'];
+				$post_times[$post_id] = $post['time'];
+
+				$posts[$post_id]['categories'] = array();
+				if( isset($post_categories[$post_id]) ){
+					$posts[$post_id]['categories'] = $post_categories[$post_id];
+				}
+			}
+
+			gpFiles::SaveArray($post_file,'posts',$posts);
+
+			$i +=20 ;
+		}while( $posts );
+
+
+		//convert arrays to astr
+		SimpleBlogCommon::$data['drafts'] = self::AStrFromArray($drafts);
+		SimpleBlogCommon::$data['titles'] = self::AStrFromArray($titles);
+		SimpleBlogCommon::$data['post_times'] = self::AStrFromArray($post_times);
+
+		SimpleBlogCommon::$data['categories'] = self::AStrFromArray($categories);
+		SimpleBlogCommon::$data['categories_hidden'] = self::AStrFromArray($categories_hidden);
+		foreach($category_posts as $key => $posts){
+			SimpleBlogCommon::$data['category_posts_'.$key] = self::AStrFromArray($posts);
 		}
+
+
+		//generate static content
+		$this->GenCategoryGadget();
+		$this->GenArchiveGadget();
+
+
+		unset(SimpleBlogCommon::$data['post_info']);
+		unset(SimpleBlogCommon::$data['post_list']);
+
+
+		$this->SaveIndex();
 	}
 
 

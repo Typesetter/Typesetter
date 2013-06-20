@@ -1049,6 +1049,7 @@ class SimpleBlogCommon{
 	function BlogHead($header,$post_index,$post,$cacheable=false){
 
 
+		//subtitle
 		$blog_info = '{empty_blog_piece}';
 		if( !empty($post['subtitle']) ){
 			$blog_info = '<span class="simple_blog_subtitle">';
@@ -1056,10 +1057,13 @@ class SimpleBlogCommon{
 			$blog_info .= '</span>';
 		}
 
+		//blog date
 		$blog_date = '<span class="simple_blog_date">';
 		$blog_date .= strftime(SimpleBlogCommon::$data['strftime_format'],$post['time']);
 		$blog_date .= '</span>';
 
+
+		//blog comments
 		$blog_comments = '{empty_blog_piece}';
 		$count = self::AStrValue('comment_counts',$post_index);
 		if( $count > 0 ){
@@ -1073,10 +1077,32 @@ class SimpleBlogCommon{
 			$blog_comments .= '</span>';
 		}
 
+		//blog categories
+		$blog_categories = '{empty_blog_piece}';
+		if( isset($post['categories']) && count($post['categories']) ){
+			$temp = array();
+			foreach($post['categories'] as $catindex){
+				$title = SimpleBlogCommon::AStrValue( 'categories', $catindex );
+				if( !$title ){
+					continue;
+				}
+				if( self::AStrValue('categories_hidden',$catindex) ){
+					continue;
+				}
+				$temp[] = self::CategoryLink($catindex, $title, $title);
+			}
 
-		$format = '{header} <div class="simple_blog_info"> {blog_info} {separator} {blog_date} {separator} {blog_comments} </div>';
-		$search = array('{header}', '{blog_info}', '{blog_date}', '{blog_comments}');
-		$replace = array($header, $blog_info, $blog_date, $blog_comments);
+			if( count($temp) ){
+				$blog_categories = implode(', ',$temp);
+			}
+		}
+
+
+
+		// format content
+		$format = '{header} <div class="simple_blog_info"> {blog_info} {separator} {blog_date} {separator} {blog_comments} {separator} {blog_categories} </div>';
+		$search = array('{header}', '{blog_info}', '{blog_date}', '{blog_comments}','{blog_categories}');
+		$replace = array($header, $blog_info, $blog_date, $blog_comments, $blog_categories);
 
 		$result = str_replace($search,$replace,$format);
 
@@ -1180,13 +1206,18 @@ class SimpleBlogCommon{
 		foreach( $categories as $catindex => $catname ){
 
 			$selected = '';
+			$label = $catname;
 			if( $post_id && SimpleBlogCommon::AStrValue('category_posts_'.$catindex, $post_id ) ){
 				$selected = 'selected="selected"';
 			}elseif( in_array($catindex, $_POST['category']) ){
 				$selected = 'selected="selected"';
 			}
 
-			echo '<option value="'.$catindex.'" '.$selected.'>'.$catname.'</option>';
+			if( SimpleBlogCommon::AStrValue('categories_hidden', $catindex) ){
+				$label .= ' (Hidden)';
+			}
+
+			echo '<option value="'.$catindex.'" '.$selected.'>'.$label.'</option>';
 		}
 		echo '</select></td></tr>';
 	}

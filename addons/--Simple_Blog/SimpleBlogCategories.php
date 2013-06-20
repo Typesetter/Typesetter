@@ -34,7 +34,6 @@ class BlogCategories extends SimpleBlog{
 
 		}
 
-
 		if( $this->catindex && isset($this->categories[$this->catindex]) && !self::AStrValue('categories_hidden',$this->catindex) ){
 			$this->ShowCategory();
 		}else{

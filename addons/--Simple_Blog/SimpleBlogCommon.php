@@ -49,12 +49,13 @@ class SimpleBlogCommon{
 	function Init(){
 		global $addonPathData;
 
+		$this->addonPathData = $addonPathData;
+		$this->indexFile = $this->addonPathData.'/index.php';
+
 		if( SimpleBlogCommon::$data ){
 			return;
 		}
 
-		$this->addonPathData = $addonPathData;
-		$this->indexFile = $this->addonPathData.'/index.php';
 		self::$root_url = 'Special_Blog';
 		if( is_callable( array('common','SpecialHref') ) ){
 			self::$root_url = common::SpecialHref('Special_Blog');
@@ -125,6 +126,8 @@ class SimpleBlogCommon{
 			foreach($category_posts as $key => $posts){
 				SimpleBlogCommon::$data['category_posts_'.$key] = self::AStrFromArray($posts);
 			}
+
+			$this->GenCategoryGadget();
 		}
 
 		msg('moving categories to astr... will need to cache categories gadget');
@@ -807,6 +810,7 @@ class SimpleBlogCommon{
 	function GenStaticContent(){
 		$this->GenFeed();
 		$this->GenGadget();
+		$this->GenCategoryGadget();
 	}
 
 	/**
@@ -880,6 +884,58 @@ class SimpleBlogCommon{
 		$gadget = ob_get_clean();
 		$gadgetFile = $this->addonPathData.'/gadget.php';
 		gpFiles::Save($gadgetFile,$gadget);
+	}
+
+
+	/**
+	 * Regenerate the static content used to display the category gadget
+	 *
+	 */
+	function GenCategoryGadget(){
+
+		$categories = SimpleBlogCommon::AStrToArray( SimpleBlogCommon::$data['categories'] );
+
+		ob_start();
+		echo '<div class="simple_blog_gadget"><div>';
+
+		echo '<span class="simple_blog_gadget_label">';
+		echo gpOutput::GetAddonText('Categories');
+		echo '</span>';
+
+		echo '<ul>';
+		foreach($categories as $catindex => $catname){
+
+			//skip hidden categories
+			if( self::AStrValue('categories_hidden',$catindex) ){
+				continue;
+			}
+
+			$posts_astr =& self::$data['category_posts_'.$catindex];
+			$sum = substr_count($posts_astr,'>');
+			if( !$sum ){
+				continue;
+			}
+			$posts = self::AStrToArray($posts_astr);
+
+			echo '<li>';
+			echo '<a class="blog_gadget_link">'.$catname.' ('.$sum.')</a>';
+			echo '<ul class="nodisplay">';
+			foreach($posts as $post_id => $n){
+				$post_title = SimpleBlogCommon::AStrValue('titles',$post_id);
+				echo '<li>';
+				echo $this->PostLink( $post_id, $post_title );
+				echo '</li>';
+			}
+			echo '</ul></li>';
+		}
+		echo '</ul>';
+
+		echo '</div></div>';
+
+		$content = ob_get_clean();
+
+		$gadgetFile = $this->addonPathData.'/gadget_categories.php';
+		gpFiles::Save( $gadgetFile, $content );
 	}
 
 

@@ -148,7 +148,8 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			//redirect to correct url if needed
 			case 'post':
-				$this->UrlQuery($this->post_id,$expected_url,$query);
+				$this->UrlQuery( $this->post_id, $expected_url, $query );
+				$expected_url = str_replace('&amp;','&',$expected_url); //because of htmlspecialchars($cattitle)
 				if( $page->requested != $expected_url ){
 					$expected_url = common::GetUrl( $expected_url, $query, false );
 					common::Redirect($expected_url,301);

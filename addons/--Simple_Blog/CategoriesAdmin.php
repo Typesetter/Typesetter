@@ -15,9 +15,6 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 
 		$this->categories = SimpleBlogCommon::AStrToArray( SimpleBlogCommon::$data['categories'] );
 
-		// load existing categories
-		//$this->load_blog_categories();
-
 
 		$cmd = common::GetCommand();
 		switch($cmd){
@@ -214,6 +211,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 			return false;
 		}
 
+		$this->GenStaticContent();
 		message($langmessage['SAVED']);
 	}
 
@@ -247,6 +245,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 			return false;
 		}
 
+		$this->GenStaticContent();
 		message($langmessage['SAVED']);
 	}
 
@@ -317,6 +316,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 			return false;
 		}
 
+		$this->GenStaticContent();
 		message($langmessage['SAVED']);
 	}
 

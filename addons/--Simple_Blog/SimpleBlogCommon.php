@@ -97,9 +97,9 @@ class SimpleBlogCommon{
 
 		msg('need to make sure category posts are organized during update');
 
-		//update to simple blog 1.9 data
+		//update to simple blog 2.0 data
 		if( isset(SimpleBlogCommon::$data['post_info']) ){
-			$this->DataUpdate19();
+			$this->DataUpdate20();
 		}
 	}
 
@@ -108,7 +108,7 @@ class SimpleBlogCommon{
 	 * Generate a string to use as the post index
 	 * Using a string of numbers can use 1/4 of the memory of an array
 	 *
-	 * As of 1.9, Uses " and > instead , and :
+	 * As of 2.0, Uses " and > instead , and :
 	 */
 	function GenIndexStr(){
 
@@ -130,7 +130,7 @@ class SimpleBlogCommon{
 	 * Serialize comment counts
 	 *
 	 */
-	function DataUpdate19(){
+	function DataUpdate20(){
 
 		$comment_counts = array();
 		$comments_closed = array();
@@ -1126,7 +1126,7 @@ class SimpleBlogCommon{
 
 	/**
 	 * Get all the categories in use by the blog
-	 * @deprecated 1.9
+	 * @deprecated 2.0
 	 *
 	 */
 	function load_blog_categories(){

@@ -95,8 +95,6 @@ class SimpleBlogCommon{
 		SimpleBlogCommon::$data = $blogData + SimpleBlogCommon::Defaults();
 		$this->GenIndexStr();
 
-		msg('need to make sure category posts are organized during update');
-
 		//update to simple blog 2.0 data
 		if( isset(SimpleBlogCommon::$data['post_info']) ){
 			$this->DataUpdate20();
@@ -165,7 +163,7 @@ class SimpleBlogCommon{
 				if( isset($cat['posts']) && is_array($cat['posts']) ){
 					$category_posts[$key] = array();
 					foreach($cat['posts'] as $post => $title){
-						$category_posts[$key][$post] = 1;
+						$category_posts[$key][] = $post;
 						$post_categories[$post][] = $key;
 					}
 				}
@@ -645,7 +643,7 @@ class SimpleBlogCommon{
 
 		includeFile('tool/editing.php');
 
-		$array += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>false);
+		$array += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>false, 'categories'=>array() );
 		$array['title'] = SimpleBlogCommon::Underscores( $array['title'] );
 
 		echo '<form action="'.self::PostUrl($post_id).'" method="post">';
@@ -672,7 +670,7 @@ class SimpleBlogCommon{
 				echo '" />';
 			echo '</td></tr>';
 
-		$this->show_category_list($post_id);
+		$this->show_category_list($post_id,$array);
 
 		echo '<tr><td colspan="2">';
 			gp_edit::UseCK($array['content'],'content');
@@ -953,7 +951,7 @@ class SimpleBlogCommon{
 			echo '<li>';
 			echo '<a class="blog_gadget_link">'.$catname.' ('.$sum.')</a>';
 			echo '<ul class="nodisplay">';
-			foreach($posts as $post_id => $n){
+			foreach($posts as $post_id){
 				$post_title = SimpleBlogCommon::AStrValue('titles',$post_id);
 				echo '<li>';
 				echo self::PostLink( $post_id, $post_title );
@@ -1077,32 +1075,12 @@ class SimpleBlogCommon{
 			$blog_comments .= '</span>';
 		}
 
-		//blog categories
-		$blog_categories = '{empty_blog_piece}';
-		if( isset($post['categories']) && count($post['categories']) ){
-			$temp = array();
-			foreach($post['categories'] as $catindex){
-				$title = SimpleBlogCommon::AStrValue( 'categories', $catindex );
-				if( !$title ){
-					continue;
-				}
-				if( self::AStrValue('categories_hidden',$catindex) ){
-					continue;
-				}
-				$temp[] = self::CategoryLink($catindex, $title, $title);
-			}
-
-			if( count($temp) ){
-				$blog_categories = implode(', ',$temp);
-			}
-		}
-
 
 
 		// format content
-		$format = '{header} <div class="simple_blog_info"> {blog_info} {separator} {blog_date} {separator} {blog_comments} {separator} {blog_categories} </div>';
-		$search = array('{header}', '{blog_info}', '{blog_date}', '{blog_comments}','{blog_categories}');
-		$replace = array($header, $blog_info, $blog_date, $blog_comments, $blog_categories);
+		$format = '{header} <div class="simple_blog_info"> {blog_info} {separator} {blog_date} {separator} {blog_comments} </div>';
+		$search = array('{header}', '{blog_info}', '{blog_date}', '{blog_comments}');
+		$replace = array($header, $blog_info, $blog_date, $blog_comments);
 
 		$result = str_replace($search,$replace,$format);
 
@@ -1145,11 +1123,11 @@ class SimpleBlogCommon{
 	 * Remove a blog entry from a category
 	 *
 	 */
-	function delete_post_from_categories($post_index){
+	function delete_post_from_categories( $post_id ){
 
 		$categories = SimpleBlogCommon::AStrToArray( 'categories' );
 		foreach($categories as $catindex => $catname){
-			SimpleBlogCommon::AStrRm( 'category_posts_'.$catindex, $post_index );
+			SimpleBlogCommon::AStrRmValue( 'category_posts_'.$catindex, $post_id );
 		}
 	}
 
@@ -1158,35 +1136,30 @@ class SimpleBlogCommon{
 	 * Update a category when a blog entry is edited
 	 *
 	 */
-	function update_post_in_categories( $post_index, $title ){
+	function update_post_in_categories( $post_id, $title ){
 
 		$_POST += array('category'=>array());
-
-		$categories = SimpleBlogCommon::AStrToArray( 'categories' );
-		$edited_categories = array();
-		foreach( $categories as $catindex => $catname ){
-
-			SimpleBlogCommon::AStrRm('category_posts_'.$catindex,$post_index);
-			if( in_array($catindex, $_POST['category']) ){
-				$edited_categories[] = $catindex;
-				SimpleBlogCommon::AStrValue('category_posts_'.$catindex,$post_index,1);
-			}
-		}
 
 		//get order of all posts
 		$post_times = SimpleBlogCommon::AStrToArray( 'post_times' );
 		arsort($post_times);
 		$post_times = array_keys($post_times);
 
-		//order category posts
-		foreach($edited_categories as $catindex){
 
-			$category_posts = SimpleBlogCommon::AStrToArray( 'category_posts_'.$catindex );
-			$category_posts = array_keys($category_posts);
-			$category_posts = array_intersect($post_times, $category_posts);
-			$category_posts = array_fill_keys($category_posts, 1);
-			SimpleBlogCommon::$data['category_posts_'.$catindex] = self::AStrFromArray($category_posts);
+		//loop through each category
+		$categories = SimpleBlogCommon::AStrToArray( 'categories' );
+		$edited_categories = array();
+		foreach( $categories as $catindex => $catname ){
 
+			SimpleBlogCommon::AStrRmValue('category_posts_'.$catindex, $post_id );
+			if( in_array($catindex, $_POST['category']) ){
+
+				//add and order correctly
+				$category_posts = SimpleBlogCommon::AStrToArray( 'category_posts_'.$catindex );
+				$category_posts[] = $post_id;
+				$category_posts = array_intersect($post_times, $category_posts);
+				SimpleBlogCommon::$data['category_posts_'.$catindex] = self::AStrFromArray($category_posts);
+			}
 		}
 
 	}
@@ -1195,7 +1168,7 @@ class SimpleBlogCommon{
 	 * Show a list of all categories
 	 *
 	 */
-	function show_category_list( $post_id ){
+	function show_category_list( $post_id, $post ){
 
 		$_POST += array('category'=>array());
 
@@ -1207,7 +1180,7 @@ class SimpleBlogCommon{
 
 			$selected = '';
 			$label = $catname;
-			if( $post_id && SimpleBlogCommon::AStrValue('category_posts_'.$catindex, $post_id ) ){
+			if( $post_id && in_array($catindex, $post['categories']) ){
 				$selected = 'selected="selected"';
 			}elseif( in_array($catindex, $_POST['category']) ){
 				$selected = 'selected="selected"';
@@ -1288,17 +1261,17 @@ class SimpleBlogCommon{
 	 * Get the comment data for a single post
 	 *
 	 */
-	function GetCommentData($post_index){
+	function GetCommentData($post_id){
 
 		// pre 1.7.4
-		$commentDataFile = $this->addonPathData.'/comments_data_'.$post_index.'.txt';
+		$commentDataFile = $this->addonPathData.'/comments_data_'.$post_id.'.txt';
 		$data = SimpleBlogCommon::FileData($commentDataFile);
 		if( $data ){
 			return $data;
 		}
 
 		// 1.7.4+
-		$commentDataFile = $this->addonPathData.'/comments/'.$post_index.'.txt';
+		$commentDataFile = $this->addonPathData.'/comments/'.$post_id.'.txt';
 		$data = SimpleBlogCommon::FileData($commentDataFile);
 		if( $data ){
 			return $data;

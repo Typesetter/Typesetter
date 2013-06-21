@@ -44,6 +44,7 @@ class BlogCategories extends SimpleBlog{
 
 	function ShowCategory(){
 
+		$this->showing_category = $this->catindex;
 		$catname = $this->categories[$this->catindex];
 
 		//paginate
@@ -89,36 +90,17 @@ class BlogCategories extends SimpleBlog{
 		//remove drafts
 		$show_posts = array();
 		if( !$include_drafts ){
-			foreach($cat_posts as $post_id => $n){
+			foreach($cat_posts as $post_id){
 				if( !SimpleBlogCommon::AStrValue('drafts',$post_id) ){
 					$show_posts[] = $post_id;
 				}
 			}
 		}else{
-			$show_posts = array_keys($cat_posts);
+			$show_posts = $cat_posts;
 		}
 		$this->total_posts = count($show_posts);
 
 		return array_slice($show_posts,$start,$len);
-
-		$posts = array();
-		$end = $start+$len;
-		for($i = $start; $i < $end; $i++){
-
-			//get post id
-			$post_id = self::AStrValue('str_index',$i);
-			if( !$post_id ){
-				continue;
-			}
-
-			//exclude drafts
-			if( !$include_drafts && SimpleBlogCommon::AStrValue('drafts',$post_id) ){
-				continue;
-			}
-
-			$posts[] = $post_id;
-		}
-		return $posts;
 	}
 
 

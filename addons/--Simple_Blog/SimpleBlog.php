@@ -10,6 +10,8 @@ gpPlugin::incl('SimpleBlogCommon.php','require_once');
 
 class SimpleBlog extends SimpleBlogCommon{
 
+	var $showing_category = false;
+
 	function SimpleBlog(){
 		global $page, $langmessage, $addonFolderName;
 
@@ -192,6 +194,31 @@ class SimpleBlog extends SimpleBlogCommon{
 		$this->ShowPostContent($post,$this->post_id);
 
 		$page->label = SimpleBlogCommon::Underscores( $post['title'] );
+
+		//blog categories
+		if( isset($post['categories']) && count($post['categories']) ){
+			$temp = array();
+			foreach($post['categories'] as $catindex){
+				$title = SimpleBlogCommon::AStrValue( 'categories', $catindex );
+				if( !$title ){
+					continue;
+				}
+				if( self::AStrValue('categories_hidden',$catindex) ){
+					continue;
+				}
+				$temp[] = self::CategoryLink($catindex, $title, $title);
+			}
+
+			if( count($temp) ){
+				echo '<div class="category_container">';
+				echo '<b>';
+				echo gpOutput::GetAddonText('Categories');
+				echo ':</b> ';
+				echo implode(', ',$temp);
+				echo '</div>';
+			}
+		}
+
 		self::PostLinks($this->post_id);
 
 		//comments

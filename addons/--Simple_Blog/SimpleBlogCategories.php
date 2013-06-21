@@ -64,18 +64,19 @@ class BlogCategories extends SimpleBlog{
 		//pagination links
 		echo '<p class="blog_nav_links">';
 
-		if( ( ($page+1) * $per_page) < $this->total_posts ){
-
-			$html = self::CategoryLink( $this->catindex, $catname, '%s', 'page='.($page+1), 'class="blog_older"' );
-			echo gpOutput::GetAddonText('Older Entries',$html);
-		}
-
-
 		if( $page > 0 ){
 			$html = self::CategoryLink( $this->catindex, $catname, '%s', 'page='.($page-1), 'class="blog_newer"' );
 			echo gpOutput::GetAddonText('Newer Entries',$html);
 			echo '&nbsp;';
 		}
+
+
+		if( ( ($page+1) * $per_page) < $this->total_posts ){
+			$html = self::CategoryLink( $this->catindex, $catname, '%s', 'page='.($page+1), 'class="blog_older"' );
+			echo gpOutput::GetAddonText('Older Entries',$html);
+		}
+
+
 
 		echo '</p>';
 	}

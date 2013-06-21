@@ -363,6 +363,34 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		echo '<p class="blog_nav_links">';
 
+
+		//blog home
+		$html = common::Link('Special_Blog','%s');
+		echo gpOutput::GetAddonText('Blog Home',$html);
+		echo '&nbsp;';
+
+
+		// check for newer posts and if post is draft
+		$isDraft = false;
+		if( $post_key > 0 ){
+
+			$i = 0;
+			do {
+				$i++;
+				$next_index = self::AStrValue('str_index',$post_key-$i);
+				if( !common::loggedIn() ){
+					$isDraft = SimpleBlogCommon::AStrValue('drafts',$next_index);
+				}
+			}while( $isDraft );
+
+			if( !$isDraft ){
+				$html = self::PostLink($next_index,'%s','','class="blog_newer"');
+				echo gpOutput::GetAddonText('Newer Entry',$html);
+				echo '&nbsp;';
+			}
+		}
+
+
 		//check for older posts and if older post is draft
 		$i = 0;
 		$isDraft = false;
@@ -381,34 +409,10 @@ class SimpleBlog extends SimpleBlogCommon{
 			if( !$isDraft ){
 				$html = self::PostLink($prev_index,'%s','','class="blog_older"');
 				echo gpOutput::GetAddonText('Older Entry',$html);
-				echo '&nbsp;';
 			}
 
 		}while( $isDraft );
 
-		//blog home
-		$html = common::Link('Special_Blog','%s');
-		echo gpOutput::GetAddonText('Blog Home',$html);
-		echo '&nbsp;';
-
-		// check for newer posts and if post is draft
-		$isDraft = false;
-		if( $post_key > 0 ){
-
-			$i = 0;
-			do {
-				$i++;
-				$next_index = self::AStrValue('str_index',$post_key-$i);
-				if( !common::loggedIn() ){
-					$isDraft = SimpleBlogCommon::AStrValue('drafts',$next_index);
-				}
-			}while( $isDraft );
-
-			if( !$isDraft ){
-				$html = self::PostLink($next_index,'%s','','class="blog_newer"');
-				echo gpOutput::GetAddonText('Newer Entry',$html);
-			}
-		}
 
 		if( common::LoggedIn() ){
 			echo '&nbsp;';
@@ -442,12 +446,6 @@ class SimpleBlog extends SimpleBlogCommon{
 		//pagination links
 		echo '<p class="blog_nav_links">';
 
-		if( ( ($page+1) * $per_page) < SimpleBlogCommon::$data['post_count'] ){
-			$html = common::Link('Special_Blog','%s','page='.($page+1),'class="blog_older"');
-			echo gpOutput::GetAddonText('Older Entries',$html);
-		}
-
-
 		if( $page > 0 ){
 
 			$html = common::Link('Special_Blog','%s');
@@ -457,6 +455,12 @@ class SimpleBlog extends SimpleBlogCommon{
 			$html = common::Link('Special_Blog','%s','page='.($page-1),'class="blog_newer"');
 			echo gpOutput::GetAddonText('Newer Entries',$html);
 			echo '&nbsp;';
+
+		}
+
+		if( ( ($page+1) * $per_page) < SimpleBlogCommon::$data['post_count'] ){
+			$html = common::Link('Special_Blog','%s','page='.($page+1),'class="blog_older"');
+			echo gpOutput::GetAddonText('Older Entries',$html);
 		}
 
 

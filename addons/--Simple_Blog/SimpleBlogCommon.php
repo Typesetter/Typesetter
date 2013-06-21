@@ -52,6 +52,7 @@ class SimpleBlogCommon{
 			return;
 		}
 
+
 		self::$root_url = 'Special_Blog';
 		if( is_callable( array('common','SpecialHref') ) ){
 			self::$root_url = common::SpecialHref('Special_Blog');
@@ -1415,7 +1416,7 @@ class SimpleBlogCommon{
 
 
 		//get position of current value
-		$prev_key_str = $key.'>';
+		$prev_key_str = '"'.$key.'>';
 		$offset = strpos($string,$prev_key_str);
 		if( $offset !== false ){
 			$offset += strlen($prev_key_str);

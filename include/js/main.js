@@ -356,10 +356,16 @@ $(function(){
 	 * Handle clicks on forms
 	 *
 	 */
-	$(document).on('click', 'input',function(evt){
+	$(document).on('click', 'input,button',function(evt){
 
 		verify(this.form);
 		var $this = $(this);
+
+		//html5 validation
+		if( $this.hasClass('gpvalidate') && typeof(this.form.checkValidity) == 'function' && !this.form.checkValidity() ){
+			return;
+		}
+
 
 		//get the first class
 		var cmd = $this.data('cmd');

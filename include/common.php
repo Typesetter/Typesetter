@@ -279,7 +279,9 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	}elseif( $report_error ){
 		global $gp_mailer;
 		includeFile('tool/email_mailer.php');
-		$gp_mailer->SendEmail(gpdebug, 'debug ', $mess);
+		if( is_object($gp_mailer) ){
+			$gp_mailer->SendEmail(gpdebug, 'debug ', $mess);
+		}
 	}
 	return false;
 }

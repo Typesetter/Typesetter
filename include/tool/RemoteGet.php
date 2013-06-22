@@ -188,6 +188,7 @@ class gpRemoteGet{
 		$theHeaders = gpRemoteGet::StreamHeaders($handle);
 		fclose($handle);
 
+		msg($theHeaders);
 		$processedHeaders = gpRemoteGet::processHeaders($theHeaders);
 
 		// If location is found, then assume redirect and redirect to location.
@@ -323,6 +324,9 @@ class gpRemoteGet{
 
 		//check location for releative value
 		$location = $headers['headers']['location'];
+		if( is_array($location) ){
+			$location = array_pop($location);
+		}
 		if( $location{0} == '/' ){
 			$location = $arrURL['scheme'].'://'.$arrURL['host'].$location;
 		}

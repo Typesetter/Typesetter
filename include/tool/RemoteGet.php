@@ -188,7 +188,6 @@ class gpRemoteGet{
 		$theHeaders = gpRemoteGet::StreamHeaders($handle);
 		fclose($handle);
 
-		msg($theHeaders);
 		$processedHeaders = gpRemoteGet::processHeaders($theHeaders);
 
 		// If location is found, then assume redirect and redirect to location.

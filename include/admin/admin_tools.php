@@ -1118,21 +1118,16 @@ class admin_tools{
 			return $bool;
 		}
 
-		includeFile('tool/RemoteGet.php');
+		$bool = false;
+		if( defined('gp_remote_addons')
+			&& gp_remote_addons === false
+			&& function_exists('gzinflate') //used by pclzip
+			){
 
-		$bool = true;
-
-		if( !gpRemoteGet::Test() ){
-			$bool = false;
-		}
-
-		//used by pclzip
-		if( !function_exists('gzinflate') ){
-			$bool = false;
-		}
-
-		if( defined('gp_remote_addons') && gp_remote_addons === false ){
-			$bool = false;
+			includeFile('tool/RemoteGet.php');
+			if( gpRemoteGet::Test() ){
+				$bool = true;
+			}
 		}
 
 		return $bool;

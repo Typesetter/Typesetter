@@ -1,6 +1,7 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
+
 gp_defined('gp_lock_time',900); // = 15 minutes
 includeFile('admin/admin_tools.php');
 includeFile('tool/editing.php');
@@ -17,20 +18,20 @@ class gpsession{
 
 		switch( $cmd ){
 			case 'logout':
-				gpsession::LogOut();
+				self::LogOut();
 			return;
 			case 'login':
-				gpsession::LogIn();
+				self::LogIn();
 			return;
 			case 'enable_component':
-				gpsession::EnableComponent();
+				self::EnableComponent();
 			break;
 
 		}
 
 		if( isset($_COOKIE[gp_session_cookie]) ){
-			gpsession::CheckPosts();
-			gpsession::start($_COOKIE[gp_session_cookie]);
+			self::CheckPosts();
+			self::start($_COOKIE[gp_session_cookie]);
 		}
 
 	}
@@ -54,14 +55,14 @@ class gpsession{
 
 		//delete the entry in $sessions if we're going to create another one with login
 		if( isset($_COOKIE[gp_session_cookie]) ){
-			gpsession::CleanSession($_COOKIE[gp_session_cookie]);
+			self::CleanSession($_COOKIE[gp_session_cookie]);
 		}
 
 
 		include($dataDir.'/data/_site/users.php');
-		$username = gpsession::GetLoginUser( $users, $nonce );
+		$username = self::GetLoginUser( $users, $nonce );
 		if( $username === false ){
-			gpsession::IncorrectLogin('1');
+			self::IncorrectLogin('1');
 			return false;
 		}
 		$users[$username] += array('attempts'=> 0,'granted'=>''); // 'editing' will be set EditingValue()
@@ -84,20 +85,20 @@ class gpsession{
 			$pass_hash = $userinfo['passhash'];
 		}
 
-		if( !empty($userinfo['newpass']) && gpsession::CheckPassword($userinfo['newpass'],$nonce,$pass_hash) ){
+		if( !empty($userinfo['newpass']) && self::CheckPassword($userinfo['newpass'],$nonce,$pass_hash) ){
 			$userinfo['password'] = $userinfo['newpass'];
 			$passed = true;
 
 		//check password
-		}elseif( gpsession::CheckPassword($userinfo['password'],$nonce,$pass_hash) ){
+		}elseif( self::CheckPassword($userinfo['password'],$nonce,$pass_hash) ){
 			$passed = true;
 		}
 
 
 		//if passwords don't match
 		if( $passed !== true ){
-			gpsession::IncorrectLogin('2');
-			gpsession::UpdateAttempts($users,$username);
+			self::IncorrectLogin('2');
+			self::UpdateAttempts($users,$username);
 			return false;
 		}
 
@@ -106,14 +107,14 @@ class gpsession{
 			unset($userinfo['newpass']);
 		}
 
-		$session_id = gpsession::create($userinfo,$username);
+		$session_id = self::create($userinfo,$username);
 		if( !$session_id ){
 			message($langmessage['OOPS'].' (Data Not Saved)');
-			gpsession::UpdateAttempts($users,$username,true);
+			self::UpdateAttempts($users,$username,true);
 			return false;
 		}
 
-		$logged_in = gpsession::start($session_id);
+		$logged_in = self::start($session_id);
 
 		if( $logged_in === true ){
 			message($langmessage['logged_in']);
@@ -122,7 +123,7 @@ class gpsession{
 		//need to save the user info regardless of success or not
 		//also saves file_name in users.php
 		$users[$username] = $userinfo;
-		gpsession::UpdateAttempts($users,$username,true);
+		self::UpdateAttempts($users,$username,true);
 
 		//redirect to prevent resubmission
 		$redirect = 'Admin';
@@ -233,7 +234,7 @@ class gpsession{
 				$old_file_name = 'gpsess_'.md5($username.$userinfo['password']);
 
 			}
-			$userinfo['file_name'] = gpsession::UpdateFileName($old_file_name);
+			$userinfo['file_name'] = self::UpdateFileName($old_file_name);
 		}
 		return $userinfo;
 	}
@@ -269,16 +270,16 @@ class gpsession{
 		$session_id = $_COOKIE[gp_session_cookie];
 
 		gpFiles::Unlock('admin',sha1(sha1($session_id)));
-		gpsession::cookie(gp_session_cookie,'',time()-42000);
-		gpsession::CleanSession($session_id);
+		self::cookie(gp_session_cookie,'',time()-42000);
+		self::CleanSession($session_id);
 		message($langmessage['LOGGED_OUT']);
 	}
 
 	static function CleanSession($session_id){
 		//remove the session_id from session_ids.php
-		$sessions = gpsession::GetSessionIds();
+		$sessions = self::GetSessionIds();
 		unset($sessions[$session_id]);
-		gpsession::SaveSessionIds($sessions);
+		self::SaveSessionIds($sessions);
 	}
 
 	/**
@@ -331,14 +332,14 @@ class gpsession{
 
 		//update the session files to .php files
 		//changes to $userinfo will be saved by UpdateAttempts() below
-		$user_info = gpsession::SetSessionFileName($user_info,$username);
+		$user_info = self::SetSessionFileName($user_info,$username);
 		$user_file_name = $user_info['file_name'];
 		$user_file = $dataDir.'/data/_sessions/'.$user_file_name;
 
 
 		//use an existing session_id if the new login matches an existing session (uid and file_name)
-		$sessions = gpsession::GetSessionIds();
-		$uid = gpsession::auth_browseruid();
+		$sessions = self::GetSessionIds();
+		$uid = self::auth_browseruid();
 		$session_id = false;
 		foreach($sessions as $sess_temp_id => $sess_temp_info){
 			if( isset($sess_temp_info['uid']) && $sess_temp_info['uid'] == $uid && $sess_temp_info['file_name'] == $user_file_name ){
@@ -354,19 +355,19 @@ class gpsession{
 		}
 
 		$expires = !isset($_POST['remember']);
-		gpsession::cookie(gp_session_cookie,$session_id,$expires);
+		self::cookie(gp_session_cookie,$session_id,$expires);
 
 		//save session id
 		$sessions[$session_id] = array();
 		$sessions[$session_id]['file_name'] = $user_file_name;
 		$sessions[$session_id]['uid'] = $uid;
 		//$sessions[$session_id]['time'] = time(); //for session locking
-		if( !gpsession::SaveSessionIds($sessions) ){
+		if( !self::SaveSessionIds($sessions) ){
 			return false;
 		}
 
 		//make sure the user's file exists
-		$new_data = gpsession::SessionData($user_file,$checksum);
+		$new_data = self::SessionData($user_file,$checksum);
 		$new_data['username'] = $username;
 		$new_data['granted'] = $user_info['granted'];
 		if( isset($user_info['editing']) ){
@@ -428,9 +429,9 @@ class gpsession{
 		global $langmessage, $dataDir,$GP_LANG_VALUES,$wbMessageBuffer;
 
 		//get the session file
-		$sessions = gpsession::GetSessionIds();
+		$sessions = self::GetSessionIds();
 		if( !isset($sessions[$session_id]) ){
-			gpsession::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
+			self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
 			message($langmessage['Session Expired'].' (timeout)');
 			return false;
 		}
@@ -438,10 +439,10 @@ class gpsession{
 
 		//check ~ip, ~user agent ...
 		if( gp_browser_auth && isset($sess_info['uid']) ){
-			$auth_uid = gpsession::auth_browseruid();
-			$auth_uid_legacy = gpsession::auth_browseruid(true);//legacy option added to prevent logging users out, added 2.0b2
+			$auth_uid = self::auth_browseruid();
+			$auth_uid_legacy = self::auth_browseruid(true);//legacy option added to prevent logging users out, added 2.0b2
 			if( ($sess_info['uid'] != $auth_uid) && ($sess_info['uid'] != $auth_uid_legacy) ){
-				gpsession::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
+				self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
 				message($langmessage['Session Expired'].' (browser auth)');
 				return false;
 			}
@@ -450,7 +451,7 @@ class gpsession{
 
 		$session_file = $dataDir.'/data/_sessions/'.$sess_info['file_name'];
 		if( ($session_file === false) || !file_exists($session_file) ){
-			gpsession::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
+			self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
 			message($langmessage['Session Expired'].' (invalid)');
 			return false;
 		}
@@ -463,7 +464,7 @@ class gpsession{
 		Header( 'Pragma: no-cache' ); // HTTP/1.0
 
 
-		$GLOBALS['gpAdmin'] = gpsession::SessionData($session_file,$checksum);
+		$GLOBALS['gpAdmin'] = self::SessionData($session_file,$checksum);
 
 
 		//lock to prevent conflicting edits
@@ -480,7 +481,7 @@ class gpsession{
 
 		register_shutdown_function(array('gpsession','close'),$session_file,$checksum);
 
-		gpsession::SaveSetting();
+		self::SaveSetting();
 
 		//make sure forms have admin nonce
 		ob_start(array('gpsession','AdminBuffer'));
@@ -564,8 +565,8 @@ class gpsession{
 			$checksum = $gpAdmin['checksum'];
 		}
 
-		//$gpAdmin = gpsession::gpui_defaults() + $gpAdmin; //reset the defaults
-		return $gpAdmin + gpsession::gpui_defaults();
+		//$gpAdmin = self::gpui_defaults() + $gpAdmin; //reset the defaults
+		return $gpAdmin + self::gpui_defaults();
 	}
 
 	static function gpui_defaults(){
@@ -596,11 +597,11 @@ class gpsession{
 		}
 
 		if( empty($_POST['verified']) ){
-			gpsession::StripPost('XSS Verification Parameter Error');
+			self::StripPost('XSS Verification Parameter Error');
 			return;
 		}
 		if( !common::verify_nonce('post',$_POST['verified'],true) ){
-			gpsession::StripPost('XSS Verification Parameter Mismatch');
+			self::StripPost('XSS Verification Parameter Mismatch');
 			return;
 		}
 	}
@@ -629,7 +630,7 @@ class gpsession{
 		global $gpAdmin;
 
 		self::FatalNotices();
-		gpsession::Cron();
+		self::Cron();
 		self::LayoutInfo();
 
 		unset($gpAdmin['checksum']);
@@ -740,7 +741,7 @@ class gpsession{
 			return;
 		}
 
-		gpsession::CleanTemp();
+		self::CleanTemp();
 		gpFiles::SaveArray($time_file,'cron_info',$cron_info);
 	}
 
@@ -777,7 +778,7 @@ class gpsession{
 
 		switch($cmd){
 			case 'savegpui':
-				gpsession::SaveGPUI();
+				self::SaveGPUI();
 			//dies
 		}
 	}
@@ -789,7 +790,7 @@ class gpsession{
 	static function SaveGPUI(){
 		global $gpAdmin;
 
-		gpsession::SetGPUI();
+		self::SetGPUI();
 		includeFile('tool/ajax.php');
 
 		//send response so an error is not thrown
@@ -870,14 +871,11 @@ class gpsession{
 	 *
 	 */
 	static function GPUIVars(){
-		global $gpAdmin,$page,$config;
+		global $gpAdmin, $page, $config;
 
 
 		echo 'var gpui={';
 		echo 'ph:'.$gpAdmin['gpui_ph'];
-		//echo ',pposx:'.$gpAdmin['gpui_pposx'];
-		//echo ',pposy:'.$gpAdmin['gpui_pposy'];
-		//echo ',pw:'.$gpAdmin['gpui_pw'];
 		echo ',cmpct:'.(int)$gpAdmin['gpui_cmpct'];
 
 		//the following control which admin toolbar areas are expanded
@@ -946,7 +944,7 @@ class gpsession{
 				}
 			}
 		}else{
-			$ip = gpsession::clientIP(true);
+			$ip = self::clientIP(true);
 			$uid .= substr($ip,0,strpos($ip,'.'));
 		}
 

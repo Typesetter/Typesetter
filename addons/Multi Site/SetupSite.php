@@ -1894,10 +1894,15 @@ class SetupSite{
 		$new_config['language'] = $config['language'];
 		$config['gpuniq'] = $new_config['gpuniq'] = $this->NewId();
 
+		ob_start();
 		if( !Install_Tools::Install_DataFiles_New( $destination, $new_config, false ) ){
 			$this->Install_Aborted($destination);
+			$dataDir = $oldDir;
+			$config['gpuniq'] = $old_unique;
+			ob_get_clean();
 			return false;
 		}
+		ob_get_clean();
 
 		$dataDir = $oldDir;
 		$config['gpuniq'] = $old_unique;

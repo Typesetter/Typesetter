@@ -2148,8 +2148,9 @@ class gpOutput{
 		//add error notice if there was a fatal error
 		if( !ini_get('display_errors') && function_exists('error_get_last') ){
 
+
 			//check for fatal error
-			$fatal_errors = array(E_ERROR,E_PARSE);
+			$fatal_errors = array( E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR );
 			$last_error = error_get_last();
 			if( is_array($last_error) && in_array($last_error['type'],$fatal_errors) ){
 

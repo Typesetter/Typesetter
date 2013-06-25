@@ -2174,6 +2174,11 @@ class common{
 	 */
 	static function sessions(){
 
+		//alternate sessions
+		if( defined('gpcom_sessions') ){
+			include(gpcom_sessions);
+		}
+
 		$cmd = '';
 		if( isset($_GET['cmd']) && $_GET['cmd'] == 'logout' ){
 			$cmd = 'logout';

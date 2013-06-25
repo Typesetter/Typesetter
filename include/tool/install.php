@@ -5,6 +5,8 @@ defined('is_running') or die('Not an entry point...');
 
 class Install_Tools{
 
+	static $file_count = 0;
+
 	/**
 	 * Display the basic configuration options for installation:
 	 *  - Website Title
@@ -152,6 +154,7 @@ class Install_Tools{
 	}
 
 	static function Install_Title(){
+		$_POST += array( 'site_title' => 'My gpEasy CMS' );
 		$title = $_POST['site_title'];
 		$title = htmlspecialchars($title);
 		$title = trim($title);
@@ -232,9 +235,9 @@ class Install_Tools{
 		</ul>';
 
 
-		gpFiles::NewTitle('Home',$content);
+		self::NewTitle( $destination, 'Home', $content);
 
-		gpFiles::NewTitle('Help_Videos','<h1>Help Videos</h1>
+		self::NewTitle( $destination, 'Help_Videos','<h1>Help Videos</h1>
 		<p>Video tutorials are often a fast and easy way to learn new things quickly.
 		We now have an English version and Deutsch (German) available below.
 		If you make a video tutorial for gpEasy, <a href="http://gpeasy.com/Contact">let us know</a>, and we\'ll make sure it\'s included in our list.
@@ -253,9 +256,9 @@ class Install_Tools{
 		<p><iframe width="640" height="360" src="http://www.youtube.com/embed/04cNgR1EiFY" frameborder="0" allowfullscreen></iframe></p>
 		');
 
-		gpFiles::NewTitle('Child_Page','<h1>A Child Page</h1><p>This was created as a subpage of your <em>Help Videos</em> . You can easily change the arrangement of all your pages using the '.Install_Tools::Install_Link_Content('Admin_Menu','Page Manager').'.</p>');
+		self::NewTitle( $destination, 'Child_Page','<h1>A Child Page</h1><p>This was created as a subpage of your <em>Help Videos</em> . You can easily change the arrangement of all your pages using the '.Install_Tools::Install_Link_Content('Admin_Menu','Page Manager').'.</p>');
 
-		gpFiles::NewTitle('About','<h1>About gpEasy CMS</h1><p><a href="http://gpEasy.com" title="gpEasy.com">gp|Easy</a> is a complete Content Management System (CMS) that can help you create rich and flexible web sites with a simple and easy to use interface.</p>
+		self::NewTitle( $destination, 'About','<h1>About gpEasy CMS</h1><p><a href="http://gpEasy.com" title="gpEasy.com">gp|Easy</a> is a complete Content Management System (CMS) that can help you create rich and flexible web sites with a simple and easy to use interface.</p>
 		<h2>gpEasy CMS How To</h2>
 		<p>Learn how to <a href="http://docs.gpeasy.com/Main/Admin" title="gpEasy File Management">manage your files</a>,
 		<a href="http://docs.gpeasy.com/Main/Creating%20Galleries" title="Creating Galleries in gpEasy CMS">create galleries</a> and more in the
@@ -441,6 +444,7 @@ class Install_Tools{
 		//save config
 		//not using SaveConfig() because $config is not global here
 		echo '<li>';
+		$config['file_count'] = self::$file_count;
 		if( !gpFiles::SaveArray($destination.'/data/_site/config.php','config',$config) ){
 			echo '<span class="failed">';
 			echo sprintf($langmessage['COULD_NOT_SAVE'],'config.php');
@@ -458,7 +462,28 @@ class Install_Tools{
 			Install_Tools::InstallHtaccess($destination,$config);
 		}
 
+		gpFiles::Unlock('write',gp_random);
+
 		return true;
+	}
+
+	static function NewTitle( $dataDir, $title, $content ){
+
+		$file = $dataDir.'/data/_pages/'.str_replace('/','_',$title).'.php';
+		self::$file_count++;
+
+		$file_sections = array();
+		$file_sections[0] = array(
+				'type' => 'text',
+				'content' => $content
+				);
+
+		$meta_data = array(
+			'file_number' => self::$file_count,
+			'file_type' => 'text',
+			);
+
+		return gpFiles::SaveArray($file,'meta_data',$meta_data,'file_sections',$file_sections);
 	}
 
 

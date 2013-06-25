@@ -204,7 +204,7 @@ class update_class{
 
 
 			case 'update';
-				if( $this->Update() ){
+				if( gp_remote_addons && $this->Update() ){
 					$show = false;
 				}
 			break;
@@ -430,7 +430,11 @@ class update_class{
 			echo $langmessage['New_version_available'];
 			echo ' &nbsp; ';
 			echo '</span>';
-			echo '<a href="?cmd=update"> &#187; '.$langmessage['Update_Now'].' &#171; </a>';
+			if( gp_remote_addons ){
+				echo '<a href="?cmd=update"> &#187; '.$langmessage['Update_Now'].' &#171; </a>';
+			}else{
+				echo 'Remote Updating is not available';
+			}
 
 			echo '<table>';
 			echo '<tr>';

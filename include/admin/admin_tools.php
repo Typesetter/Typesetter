@@ -376,13 +376,13 @@ class admin_tools{
 
 
 		//updates
-		if( count($new_versions) > 0 ){
+		if( gp_remote_addons && count($new_versions) > 0 ){
 			echo '<div class="panelgroup" id="panelgroup_versions'.$id_piece.'">';
 			self::PanelHeading($in_panel, $langmessage['updates'], 'icon_rfrsh', 'upd' );
 			echo '<ul class="submenu">';
 			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['updates'].'</a></li>';
 
-			if( isset($new_versions['core']) ){
+			if( gp_remote_addons && isset($new_versions['core']) ){
 				echo '<li>';
 				echo '<a href="'.common::GetDir('/include/install/update.php').'">gpEasy '.$new_versions['core'].'</a>';
 				echo '</li>';
@@ -720,9 +720,11 @@ class admin_tools{
 			echo common::Link('Admin_Theme_Content/'.urlencode($page->gpLayout),$langmessage['edit_this_layout']);
 			echo '</li>';
 		}
-		echo '<li>';
-		echo common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']);
-		echo '</li>';
+		if( gp_remote_addons ){
+			echo '<li>';
+			echo common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']);
+			echo '</li>';
+		}
 
 		//list of layouts
 		$expand_class = 'expand_child';
@@ -1056,9 +1058,11 @@ class admin_tools{
 			echo '<li>';
 			echo common::Link('Admin_Addons',$langmessage['manage']);
 			echo '</li>';
-			echo '<li class="seperator">';
-			echo common::Link('Admin_Addons/Remote',$langmessage['Download Plugins']);
-			echo '</li>';
+			if( gp_remote_addons ){
+				echo '<li class="seperator">';
+				echo common::Link('Admin_Addons/Remote',$langmessage['Download Plugins']);
+				echo '</li>';
+			}
 		}
 
 
@@ -1120,7 +1124,7 @@ class admin_tools{
 
 		$bool = false;
 		if( defined('gp_remote_addons')
-			&& gp_remote_addons === false
+			&& gp_remote_addons === true
 			&& function_exists('gzinflate') //used by pclzip
 			){
 

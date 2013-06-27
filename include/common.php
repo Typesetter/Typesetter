@@ -1074,6 +1074,8 @@ class common{
 
 	static function EntryPoint($level=0,$expecting='index.php',$sessions=true){
 
+		common::CheckRequest();
+
 		clearstatcache();
 
 		$ob_gzhandler = false;
@@ -1101,6 +1103,49 @@ class common{
 			common::sessions();
 		}
 	}
+
+
+	/**
+	 * Perform some
+	 *
+	 */
+	static function CheckRequest(){
+
+		msg('CheckRequest()');
+
+		if( count($_POST) == 0 ){
+			return;
+		}
+
+
+		if( !isset($_SERVER['CONTENT_LENGTH']) ){
+			header('HTTP/1.1 503 Service Temporarily Unavailable');
+			header('Status: 503 Service Temporarily Unavailable');
+			header('Retry-After: 300');//300 seconds
+			die();
+		}
+
+
+		if( function_exists('getallheaders') ){
+
+			$headers = getallheaders();
+			if( !isset($headers['Content-Length']) ){
+				header('HTTP/1.1 503 Service Temporarily Unavailable');
+				header('Status: 503 Service Temporarily Unavailable');
+				header('Retry-After: 300');//300 seconds
+				die();
+			}
+
+			if( (int)$headers['Content-Length'] !== (int)$_SERVER['CONTENT_LENGTH'] ){
+				header('HTTP/1.1 503 Service Temporarily Unavailable');
+				header('Status: 503 Service Temporarily Unavailable');
+				header('Retry-After: 300');//300 seconds
+				die();
+			}
+
+		}
+	}
+
 
 
 	/**

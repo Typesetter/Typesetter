@@ -600,6 +600,8 @@ class gpsession{
 			self::StripPost('XSS Verification Parameter Error');
 			return;
 		}
+
+
 		if( !common::verify_nonce('post',$_POST['verified'],true) ){
 			self::StripPost('XSS Verification Parameter Mismatch');
 			return;

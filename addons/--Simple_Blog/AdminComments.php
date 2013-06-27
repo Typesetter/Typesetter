@@ -86,7 +86,7 @@ class SimpleBlogComments extends SimpleBlogCommon{
 		}
 
 		echo '</td><td>';
-		echo self::PostLink($comment['post_id'],'View&nbsp;Post');
+		echo SimpleBlogCommon::PostLink($comment['post_id'],'View&nbsp;Post');
 		echo ' &nbsp; ';
 		echo common::Link('Admin_BlogComments',$langmessage['delete'],'cmd=delete_comment&id='.$comment['post_id'].'&comment_time='.$comment['time'],array('name'=>'postlink','class'=>'gpconfirm','title'=>$langmessage['delete_confirm']));
 		echo '</td></tr>';

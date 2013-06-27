@@ -34,12 +34,11 @@ class BlogCategories extends SimpleBlog{
 
 		}
 
-		if( $this->catindex && isset($this->categories[$this->catindex]) && !self::AStrValue('categories_hidden',$this->catindex) ){
+		if( $this->catindex && isset($this->categories[$this->catindex]) && !SimpleBlogCommon::AStrValue('categories_hidden',$this->catindex) ){
 			$this->ShowCategory();
 		}else{
 			$this->ShowCategories();
 		}
-
 	}
 
 	function ShowCategory(){
@@ -65,14 +64,14 @@ class BlogCategories extends SimpleBlog{
 		echo '<p class="blog_nav_links">';
 
 		if( $page > 0 ){
-			$html = self::CategoryLink( $this->catindex, $catname, '%s', 'page='.($page-1), 'class="blog_newer"' );
+			$html = SimpleBlogCommon::CategoryLink( $this->catindex, $catname, '%s', 'page='.($page-1), 'class="blog_newer"' );
 			echo gpOutput::GetAddonText('Newer Entries',$html);
 			echo '&nbsp;';
 		}
 
 
 		if( ( ($page+1) * $per_page) < $this->total_posts ){
-			$html = self::CategoryLink( $this->catindex, $catname, '%s', 'page='.($page+1), 'class="blog_older"' );
+			$html = SimpleBlogCommon::CategoryLink( $this->catindex, $catname, '%s', 'page='.($page+1), 'class="blog_older"' );
 			echo gpOutput::GetAddonText('Older Entries',$html);
 		}
 
@@ -85,7 +84,7 @@ class BlogCategories extends SimpleBlog{
 
 	function WhichCatPosts($start, $len, $include_drafts = false){
 
-		$cat_posts = self::AStrToArray('category_posts_'.$this->catindex);
+		$cat_posts = SimpleBlogCommon::AStrToArray('category_posts_'.$this->catindex);
 
 
 		//remove drafts
@@ -118,11 +117,11 @@ class BlogCategories extends SimpleBlog{
 		foreach($this->categories as $catindex => $catname){
 
 			//skip hidden categories
-			if( self::AStrValue('categories_hidden',$catindex) ){
+			if( SimpleBlogCommon::AStrValue('categories_hidden',$catindex) ){
 				continue;
 			}
 
-			$cat_posts_str =& self::$data['category_posts_'.$catindex];
+			$cat_posts_str =& SimpleBlogCommon::$data['category_posts_'.$catindex];
 			$count = substr_count($cat_posts_str ,'>');
 
 			if( !$count ){
@@ -130,7 +129,7 @@ class BlogCategories extends SimpleBlog{
 			}
 
 			echo '<li>';
-			echo self::CategoryLink( $catindex, $catname, $catname.' ('.$count.')' );
+			echo SimpleBlogCommon::CategoryLink( $catindex, $catname, $catname.' ('.$count.')' );
 			echo '</li>';
 		}
 		echo '</ul>';

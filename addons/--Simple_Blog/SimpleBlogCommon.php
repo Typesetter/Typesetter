@@ -53,9 +53,9 @@ class SimpleBlogCommon{
 		}
 
 
-		self::$root_url = 'Special_Blog';
+		SimpleBlogCommon::$root_url = 'Special_Blog';
 		if( is_callable( array('common','SpecialHref') ) ){
-			self::$root_url = common::SpecialHref('Special_Blog');
+			SimpleBlogCommon::$root_url = common::SpecialHref('Special_Blog');
 		}
 
 		$this->GetBlogData();
@@ -121,7 +121,7 @@ class SimpleBlogCommon{
 			return;
 		}
 
-		SimpleBlogCommon::$data['str_index'] = self::AStrFromArray(SimpleBlogCommon::$data['post_list']);
+		SimpleBlogCommon::$data['str_index'] = SimpleBlogCommon::AStrFromArray(SimpleBlogCommon::$data['post_list']);
 	}
 
 
@@ -146,8 +146,8 @@ class SimpleBlogCommon{
 		}
 
 
-		SimpleBlogCommon::$data['comment_counts'] = self::AStrFromArray($comment_counts);
-		SimpleBlogCommon::$data['comments_closed'] = self::AStrFromArray($comments_closed);
+		SimpleBlogCommon::$data['comment_counts'] = SimpleBlogCommon::AStrFromArray($comment_counts);
+		SimpleBlogCommon::$data['comments_closed'] = SimpleBlogCommon::AStrFromArray($comments_closed);
 
 
 		//use AStr data for categories
@@ -206,14 +206,14 @@ class SimpleBlogCommon{
 
 
 		//convert arrays to astr
-		SimpleBlogCommon::$data['drafts'] = self::AStrFromArray($drafts);
-		SimpleBlogCommon::$data['titles'] = self::AStrFromArray($titles);
-		SimpleBlogCommon::$data['post_times'] = self::AStrFromArray($post_times);
+		SimpleBlogCommon::$data['drafts'] = SimpleBlogCommon::AStrFromArray($drafts);
+		SimpleBlogCommon::$data['titles'] = SimpleBlogCommon::AStrFromArray($titles);
+		SimpleBlogCommon::$data['post_times'] = SimpleBlogCommon::AStrFromArray($post_times);
 
-		SimpleBlogCommon::$data['categories'] = self::AStrFromArray($categories);
-		SimpleBlogCommon::$data['categories_hidden'] = self::AStrFromArray($categories_hidden);
+		SimpleBlogCommon::$data['categories'] = SimpleBlogCommon::AStrFromArray($categories);
+		SimpleBlogCommon::$data['categories_hidden'] = SimpleBlogCommon::AStrFromArray($categories_hidden);
 		foreach($category_posts as $key => $posts){
-			SimpleBlogCommon::$data['category_posts_'.$key] = self::AStrFromArray($posts);
+			SimpleBlogCommon::$data['category_posts_'.$key] = SimpleBlogCommon::AStrFromArray($posts);
 		}
 
 
@@ -242,7 +242,7 @@ class SimpleBlogCommon{
 		for($i = $start; $i < $end; $i++){
 
 			//get post id
-			$post_id = self::AStrValue('str_index',$i);
+			$post_id = SimpleBlogCommon::AStrValue('str_index',$i);
 			if( !$post_id ){
 				continue;
 			}
@@ -278,8 +278,6 @@ class SimpleBlogCommon{
 						'feed_author'=>$config['title'],
 						'date_format'=>'n/j/Y',
 						'strftime_format'=>'%'.$zero_strip.'m/%'.$zero_strip.'e/%Y',
-						'bitly_login'=>'',
-						'bitly_key'=>'',
 						'allow_comments'=>false,
 						'commenter_website'=>'',
 						'comment_captcha'=>true,
@@ -378,14 +376,14 @@ class SimpleBlogCommon{
 		$new_index = SimpleBlogCommon::$data['str_index'];
 		$new_index = preg_replace('#"\d+>'.$post_id.'"#', '"', $new_index);
 		preg_match_all('#(?:"\d+>)([^">]*)#',$new_index,$matches);
-		SimpleBlogCommon::$data['str_index'] = self::AStrFromArray($matches[1]);
+		SimpleBlogCommon::$data['str_index'] = SimpleBlogCommon::AStrFromArray($matches[1]);
 
 
 		//remove post from other index strings
-		self::AStrRm('drafts',$post_id);
-		self::AStrRm('comments_closed',$post_id);
-		self::AStrRm('titles',$post_id);
-		self::AStrRm('post_times',$post_id);
+		SimpleBlogCommon::AStrRm('drafts',$post_id);
+		SimpleBlogCommon::AStrRm('comments_closed',$post_id);
+		SimpleBlogCommon::AStrRm('titles',$post_id);
+		SimpleBlogCommon::AStrRm('post_times',$post_id);
 
 
 
@@ -457,18 +455,17 @@ class SimpleBlogCommon{
 			return false;
 		}
 
-		//update categories and archive
-		$this->update_post_in_categories($post_index,$title);
 
 		//add new entry to the beginning of the index string then reorder the keys
 		$new_index = '"0>'.$post_index.SimpleBlogCommon::$data['str_index'];
 		preg_match_all('#(?:"\d+>)([^">]*)#',$new_index,$matches);
-		SimpleBlogCommon::$data['str_index'] = self::AStrFromArray($matches[1]);
+		SimpleBlogCommon::$data['str_index'] = SimpleBlogCommon::AStrFromArray($matches[1]);
 
 
 		//save index file
-		self::AStrValue('titles',$post_index,$title);
-		self::AStrValue('post_times',$post_index,$time);
+		SimpleBlogCommon::AStrValue('titles',$post_index,$title);
+		SimpleBlogCommon::AStrValue('post_times',$post_index,$time);
+		$this->update_post_in_categories($post_index,$title);
 
 		SimpleBlogCommon::$data['post_index'] = $post_index;
 		if( !$this->SaveIndex() ){
@@ -615,7 +612,7 @@ class SimpleBlogCommon{
 
 		echo '<h2>';
 		$title = htmlspecialchars($_POST['title'],ENT_COMPAT,'UTF-8',false);
-		echo self::PostLink($this->post_id,$title);
+		echo SimpleBlogCommon::PostLink($this->post_id,$title);
 		echo ' &#187; ';
 		echo 'Edit Post</h2>';
 		$this->PostForm($_POST,'save_edit',$this->post_id);
@@ -647,7 +644,7 @@ class SimpleBlogCommon{
 		$array += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>false, 'categories'=>array() );
 		$array['title'] = SimpleBlogCommon::Underscores( $array['title'] );
 
-		echo '<form action="'.self::PostUrl($post_id).'" method="post">';
+		echo '<form action="'.SimpleBlogCommon::PostUrl($post_id).'" method="post">';
 
 		echo '<table style="width:100%">';
 
@@ -739,7 +736,7 @@ class SimpleBlogCommon{
 
 			echo '<entry>'."\n";
 			echo '<title>'.SimpleBlogCommon::Underscores( $post['title'] ).'</title>'."\n";
-			echo '<link href="'.$server.self::PostUrl($post_index).'"></link>'."\n";
+			echo '<link href="'.$server.SimpleBlogCommon::PostUrl($post_index).'"></link>'."\n";
 			echo '<id>urn:uuid:'.$this->uuid($post_index).'</id>'."\n";
 			echo '<updated>'.date($atomFormat, $post['time']).'</updated>'."\n";
 
@@ -747,7 +744,7 @@ class SimpleBlogCommon{
 			if( (SimpleBlogCommon::$data['feed_abbrev']> 0) && (SimpleBlogCommon::strlen($content) > SimpleBlogCommon::$data['feed_abbrev']) ){
 				$content = SimpleBlogCommon::substr($content,0,SimpleBlogCommon::$data['feed_abbrev']).' ... ';
 				$label = gpOutput::SelectText('Read More');
-				$content .= '<a href="'.$server.self::PostUrl($post_index,$label).'">'.$label.'</a>';
+				$content .= '<a href="'.$server.SimpleBlogCommon::PostUrl($post_index,$label).'">'.$label.'</a>';
 			}
 
 			//old images
@@ -880,7 +877,7 @@ class SimpleBlogCommon{
 
 			$header = '<b class="simple_blog_title">';
 			$label = SimpleBlogCommon::Underscores( $post['title'] );
-			$header .= self::PostLink($post_index,$label);
+			$header .= SimpleBlogCommon::PostLink($post_index,$label);
 			$header .= '</b>';
 
 			$this->BlogHead($header,$post_index,$post,true);
@@ -899,7 +896,7 @@ class SimpleBlogCommon{
 				$content = SimpleBlogCommon::substr($content,0,$cut).' ... ';
 
 				$label = gpOutput::SelectText('Read More');
-				$content .= self::PostLink($post_index,$label);
+				$content .= SimpleBlogCommon::PostLink($post_index,$label);
 			}
 
 			echo '<p class="simple_blog_abbrev">';
@@ -939,11 +936,11 @@ class SimpleBlogCommon{
 		foreach($categories as $catindex => $catname){
 
 			//skip hidden categories
-			if( self::AStrValue('categories_hidden',$catindex) ){
+			if( SimpleBlogCommon::AStrValue('categories_hidden',$catindex) ){
 				continue;
 			}
 
-			$posts = self::AStrToArray('category_posts_'.$catindex);
+			$posts = SimpleBlogCommon::AStrToArray('category_posts_'.$catindex);
 			$sum = count($posts);
 			if( !$sum ){
 				continue;
@@ -955,7 +952,7 @@ class SimpleBlogCommon{
 			foreach($posts as $post_id){
 				$post_title = SimpleBlogCommon::AStrValue('titles',$post_id);
 				echo '<li>';
-				echo self::PostLink( $post_id, $post_title );
+				echo SimpleBlogCommon::PostLink( $post_id, $post_title );
 				echo '</li>';
 			}
 			echo '</ul></li>';
@@ -1019,7 +1016,7 @@ class SimpleBlogCommon{
 			foreach($posts as $post_id ){
 				$post_title = SimpleBlogCommon::AStrValue('titles',$post_id);
 				echo '<li>';
-				echo self::PostLink($post_id, $post_title );
+				echo SimpleBlogCommon::PostLink($post_id, $post_title );
 				echo '</li>';
 			}
 			echo '</ul>';
@@ -1064,7 +1061,7 @@ class SimpleBlogCommon{
 
 		//blog comments
 		$blog_comments = '{empty_blog_piece}';
-		$count = self::AStrValue('comment_counts',$post_index);
+		$count = SimpleBlogCommon::AStrValue('comment_counts',$post_index);
 		if( $count > 0 ){
 			$blog_comments = '<span class="simple_blog_comments">';
 			if( $cacheable ){
@@ -1159,7 +1156,7 @@ class SimpleBlogCommon{
 				$category_posts = SimpleBlogCommon::AStrToArray( 'category_posts_'.$catindex );
 				$category_posts[] = $post_id;
 				$category_posts = array_intersect($post_times, $category_posts);
-				SimpleBlogCommon::$data['category_posts_'.$catindex] = self::AStrFromArray($category_posts);
+				SimpleBlogCommon::$data['category_posts_'.$catindex] = SimpleBlogCommon::AStrFromArray($category_posts);
 			}
 		}
 
@@ -1325,17 +1322,17 @@ class SimpleBlogCommon{
 	}
 
 	static function PostLink($post,$label,$query='',$attr=''){
-		return '<a href="'.self::PostUrl($post,$query,true).'" '.$attr.'>'.common::Ampersands($label).'</a>';
+		return '<a href="'.SimpleBlogCommon::PostUrl($post,$query,true).'" '.$attr.'>'.common::Ampersands($label).'</a>';
 	}
 
 	static function PostUrl( $post = false, $query='' ){
-		self::UrlQuery( $post, $url, $query );
+		SimpleBlogCommon::UrlQuery( $post, $url, $query );
 		return common::GetUrl( $url, $query );
 	}
 
 	static function UrlQuery( $post_id = false, &$url, &$query ){
 
-		$url = self::$root_url;
+		$url = SimpleBlogCommon::$root_url;
 
 		if( $post_id > 0 ){
 			switch( SimpleBlogCommon::$data['urls'] ){

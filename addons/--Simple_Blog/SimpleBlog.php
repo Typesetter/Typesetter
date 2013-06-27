@@ -150,7 +150,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			//redirect to correct url if needed
 			case 'post':
-				self::UrlQuery( $this->post_id, $expected_url, $query );
+				SimpleBlogCommon::UrlQuery( $this->post_id, $expected_url, $query );
 				$expected_url = str_replace('&amp;','&',$expected_url); //because of htmlspecialchars($cattitle)
 				if( $page->requested != $expected_url ){
 					$expected_url = common::GetUrl( $expected_url, $query, false );
@@ -203,10 +203,10 @@ class SimpleBlog extends SimpleBlogCommon{
 				if( !$title ){
 					continue;
 				}
-				if( self::AStrValue('categories_hidden',$catindex) ){
+				if( SimpleBlogCommon::AStrValue('categories_hidden',$catindex) ){
 					continue;
 				}
-				$temp[] = self::CategoryLink($catindex, $title, $title);
+				$temp[] = SimpleBlogCommon::CategoryLink($catindex, $title, $title);
 			}
 
 			if( count($temp) ){
@@ -219,7 +219,7 @@ class SimpleBlog extends SimpleBlogCommon{
 			}
 		}
 
-		self::PostLinks($this->post_id);
+		SimpleBlog::PostLinks($this->post_id);
 
 		//comments
 		if( SimpleBlogCommon::$data['allow_comments'] ){
@@ -304,7 +304,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		echo '</h3>';
 
 
-		echo '<form method="post" action="'.self::PostUrl($post_index).'">';
+		echo '<form method="post" action="'.SimpleBlogCommon::PostUrl($post_index).'">';
 		echo '<ul>';
 		echo '<li>';
 			echo '<label>';
@@ -357,9 +357,9 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Display the links at the bottom of a post
 	 *
 	 */
-	function PostLinks($post_index){
+	static function PostLinks($post_index){
 
-		$post_key = self::AStrKey('str_index',$post_index);
+		$post_key = SimpleBlogCommon::AStrKey('str_index',$post_index);
 
 		echo '<p class="blog_nav_links">';
 
@@ -377,14 +377,14 @@ class SimpleBlog extends SimpleBlogCommon{
 			$i = 0;
 			do {
 				$i++;
-				$next_index = self::AStrValue('str_index',$post_key-$i);
+				$next_index = SimpleBlogCommon::AStrValue('str_index',$post_key-$i);
 				if( !common::loggedIn() ){
 					$isDraft = SimpleBlogCommon::AStrValue('drafts',$next_index);
 				}
 			}while( $isDraft );
 
 			if( !$isDraft ){
-				$html = self::PostLink($next_index,'%s','','class="blog_newer"');
+				$html = SimpleBlogCommon::PostLink($next_index,'%s','','class="blog_newer"');
 				echo gpOutput::GetAddonText('Newer Entry',$html);
 				echo '&nbsp;';
 			}
@@ -396,7 +396,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		$isDraft = false;
 		do{
 			$i++;
-			$prev_index = self::AStrValue('str_index',$post_key+$i);
+			$prev_index = SimpleBlogCommon::AStrValue('str_index',$post_key+$i);
 
 			if( $prev_index === false ){
 				break;
@@ -407,7 +407,7 @@ class SimpleBlog extends SimpleBlogCommon{
 			}
 
 			if( !$isDraft ){
-				$html = self::PostLink($prev_index,'%s','','class="blog_older"');
+				$html = SimpleBlogCommon::PostLink($prev_index,'%s','','class="blog_older"');
 				echo gpOutput::GetAddonText('Older Entry',$html);
 			}
 
@@ -508,13 +508,13 @@ class SimpleBlog extends SimpleBlogCommon{
 		if( common::LoggedIn() ){
 
 			$query = 'dummyparameter';
-			self::UrlQuery( $post_index, $url, $query );
+			SimpleBlogCommon::UrlQuery( $post_index, $url, $query );
 			$edit_link = gpOutput::EditAreaLink($edit_index,$url,$langmessage['edit'].' (TWYSIWYG)',$query,'name="inline_edit_generic" rel="text_inline_edit"');
 
 			echo '<span style="display:none;" id="ExtraEditLnks'.$edit_index.'">';
 			echo $edit_link;
 
-			echo self::PostLink($post_index,$langmessage['edit'].' (All)','cmd=edit_post',' style="display:none"');
+			echo SimpleBlogCommon::PostLink($post_index,$langmessage['edit'].' (All)','cmd=edit_post',' style="display:none"');
 			echo common::Link('Special_Blog',$langmessage['delete'],'cmd=deleteentry&del_id='.$post_index,array('class'=>'delete gpconfirm','data-cmd'=>'cnreq','title'=>$langmessage['delete_confirm']));
 
 			if( SimpleBlogCommon::$data['allow_comments'] ){
@@ -522,10 +522,10 @@ class SimpleBlog extends SimpleBlogCommon{
 				$comments_closed = SimpleBlogCommon::AStrValue('comments_closed',$post_index);
 				if( $comments_closed ){
 					$label = gpOutput::SelectText('Open Comments');
-					echo self::PostLink($post_index,$label,'cmd=opencomments','name="creq" style="display:none"');
+					echo SimpleBlogCommon::PostLink($post_index,$label,'cmd=opencomments','name="creq" style="display:none"');
 				}else{
 					$label = gpOutput::SelectText('Close Comments');
-					echo self::PostLink($post_index,$label,'cmd=closecomments','name="creq" style="display:none"');
+					echo SimpleBlogCommon::PostLink($post_index,$label,'cmd=closecomments','name="creq" style="display:none"');
 				}
 			}
 
@@ -547,7 +547,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		$header = '<h2 id="blog_post_'.$post_index.'">';
 		$header .= $isDraft;
 		$label = SimpleBlogCommon::Underscores( $post['title'] );
-		$header .= self::PostLink($post_index,$label);
+		$header .= SimpleBlogCommon::PostLink($post_index,$label);
 		$header .= '</h2>';
 
 		$this->BlogHead($header,$post_index,$post);
@@ -588,7 +588,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		}
 		$content = SimpleBlogCommon::substr($content,0,$limit).' ... ';
 		$label = gpOutput::SelectText('Read More');
-		return $content . self::PostLink($post_index,$label);
+		return $content . SimpleBlogCommon::PostLink($post_index,$label);
 	}
 
 
@@ -743,7 +743,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			if( common::LoggedIn() ){
 				echo ' &nbsp; ';
-				echo self::PostLink($post_index,$langmessage['delete'],'cmd=delete_comment&comment_index='.$key,' class="delete gpconfirm" name="postlink" title="'.$langmessage['delete_confirm'].'"');
+				echo SimpleBlogCommon::PostLink($post_index,$langmessage['delete'],'cmd=delete_comment&comment_index='.$key,' class="delete gpconfirm" name="postlink" title="'.$langmessage['delete_confirm'].'"');
 			}
 
 

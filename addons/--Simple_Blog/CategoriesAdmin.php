@@ -72,7 +72,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 			echo '</td><td>';
 
 			$checked = '';
-			if( !self::AStrValue('categories_hidden',$catindex) ){
+			if( !SimpleBlogCommon::AStrValue('categories_hidden',$catindex) ){
 				$checked = ' checked="checked"';
 			}
 
@@ -138,8 +138,8 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 		}
 
 
-		SimpleBlogCommon::$data['categories'] = self::AStrFromArray($this->categories);
-		SimpleBlogCommon::$data['categories_hidden'] = self::AStrFromArray($categories_hidden);
+		SimpleBlogCommon::$data['categories'] = SimpleBlogCommon::AStrFromArray($this->categories);
+		SimpleBlogCommon::$data['categories_hidden'] = SimpleBlogCommon::AStrFromArray($categories_hidden);
 
 		if( !$this->SaveIndex() ){
 			message($langmessage['OOPS']);
@@ -173,7 +173,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 
 		$this->categories[$new_catindex] = $new_title;
 
-		SimpleBlogCommon::$data['categories'] = self::AStrFromArray($this->categories);
+		SimpleBlogCommon::$data['categories'] = SimpleBlogCommon::AStrFromArray($this->categories);
 
 		if( !$this->SaveIndex() ){
 			message($langmessage['OOPS']);
@@ -242,9 +242,9 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 
 		unset($this->categories[$index]);
 		unset(SimpleBlogCommon::$data['category_posts_'.$index]);
-		self::AStrRm('categories_hidden',$index);
+		SimpleBlogCommon::AStrRm('categories_hidden',$index);
 
-		SimpleBlogCommon::$data['categories'] = self::AStrFromArray($this->categories);
+		SimpleBlogCommon::$data['categories'] = SimpleBlogCommon::AStrFromArray($this->categories);
 
 		if( !$this->SaveIndex() ){
 			message($langmessage['OOPS']);

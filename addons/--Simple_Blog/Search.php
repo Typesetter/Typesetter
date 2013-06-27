@@ -33,7 +33,7 @@ class BlogSearch extends SimpleBlogCommon{
 				$title = $label.': '.str_replace('_',' ',$post['title']);
 				$content = str_replace('_',' ',$post['title']).' '.$post['content'];
 
-				self::UrlQuery( $id, $url, $query );
+				SimpleBlogCommon::UrlQuery( $id, $url, $query );
 				$search_obj->FindString($content, $title, $url, $query);
 			}
 			$posts = array();

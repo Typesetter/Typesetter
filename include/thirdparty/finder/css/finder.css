@@ -584,7 +584,7 @@
 .finder-cwd-icon-group             { background-position:0 -1300px;}
 
 /* textfield inside icon */
-.finder-cwd input { width:100%; border:0px solid; margin:0; padding:0; }
+.finder-cwd input { width:100% !important; border:0px solid; margin:0; padding:0; }
 .finder-cwd-view-icons input {text-align:center; }
 
 .finder-cwd-view-icons { text-align:center; }

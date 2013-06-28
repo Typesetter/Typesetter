@@ -430,7 +430,7 @@ class gpOutput{
 	 *
 	 */
 	static function ExecInfo($info,$args=array()){
-		global $dataDir, $addonFolderName, $installed_addon, $config, $GP_EXEC_STACK, $page;
+		global $dataDir, $addonFolderName, $installed_addon, $config, $GP_EXEC_STACK, $page, $gp_overwrite_scripts;
 
 
 		//addonDir is deprecated as of 2.0b3
@@ -465,7 +465,12 @@ class gpOutput{
 		$has_script = false;
 		if( isset($info['script']) ){
 
-			$full_path = $dataDir.$info['script'];
+			if( is_array($gp_overwrite_scripts) && isset($gp_overwrite_scripts[$info['script']]) ){
+				$full_path = $gp_overwrite_scripts[$info['script']];
+			}else{
+				$full_path = $dataDir.$info['script'];
+			}
+
 			if( !file_exists($full_path) ){
 				$name =& $config['addons'][$addonFolderName]['name'];
 				trigger_error('gpEasy Error: Addon hook script doesn\'t exist. Script: '.$info['script'].' Addon: '.$name);

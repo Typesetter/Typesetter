@@ -1111,8 +1111,6 @@ class common{
 	 */
 	static function CheckRequest(){
 
-		msg('CheckRequest()');
-
 		if( count($_POST) == 0 ){
 			return;
 		}
@@ -1135,7 +1133,6 @@ class common{
 				header('Retry-After: 300');//300 seconds
 				die();
 			}
-
 
 		}
 	}

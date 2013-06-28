@@ -1106,7 +1106,7 @@ class common{
 
 
 	/**
-	 * Perform some
+	 * Reject Invalid Requests
 	 *
 	 */
 	static function CheckRequest(){
@@ -1136,12 +1136,6 @@ class common{
 				die();
 			}
 
-			if( (int)$headers['Content-Length'] !== (int)$_SERVER['CONTENT_LENGTH'] ){
-				header('HTTP/1.1 503 Service Temporarily Unavailable');
-				header('Status: 503 Service Temporarily Unavailable');
-				header('Retry-After: 300');//300 seconds
-				die();
-			}
 
 		}
 	}

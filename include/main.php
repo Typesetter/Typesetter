@@ -1,7 +1,7 @@
 <?php
 
 
-//$start_time = microtime();
+define('gp_start_time',microtime());
 
 defined('is_running') or define('is_running',true);
 require_once('common.php');
@@ -41,9 +41,6 @@ switch($type){
 }
 
 gpOutput::RunOut();
-
-//echo '<h2>'.microtime_diff($start_time,microtime()).'</h2>';
-
 
 
 

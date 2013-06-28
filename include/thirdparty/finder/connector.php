@@ -55,6 +55,15 @@ function upload_check( $event, $args, $finder ){
 	return $args;
 }
 
+function rename_check( $event, $args, $finder ){
+
+	if( gp_restrict_uploads && !admin_uploaded::AllowedExtension($name) ){
+		return false;
+	}
+
+	return $args;
+}
+
 
 function SaveFinderData($data){
 	global $config;
@@ -96,6 +105,7 @@ $opts = array(
 	'bind' => array(
 		'duplicate upload rename rm paste resize' => array('admin_uploaded','FinderChange'),//drag+drop = cut+paste
 		'upload-before' => 'upload_check',
+		'rename-before' => 'rename_check',
 	)
 );
 

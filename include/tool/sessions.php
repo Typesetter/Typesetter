@@ -303,7 +303,7 @@ class gpsession{
 			$expires = 0; //expire at end of session
 		}
 
-		setcookie($name, $value, $expires, $cookiePath, '', '', true);
+		setcookie($name, $value, $expires, $cookiePath, '', false, true);
 	}
 
 

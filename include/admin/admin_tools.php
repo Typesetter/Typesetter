@@ -1259,4 +1259,39 @@ class admin_tools{
 	    return $s;
 	}
 
+
+	/**
+	 * Return the size in bytes of the /data directory
+	 *
+	 */
+	static function DiskUsage(){
+		global $dataDir;
+
+		$dir = $dataDir.'/data';
+		return self::DirSize($dir);
+	}
+
+	static function DirSize($dir){
+		$size = 0;
+		$files = scandir($dir);
+		$len = count($files);
+		for($i=0;$i<$len;$i++){
+			$file = $files[$i];
+			if( $file == '.' || $file == '..' ){
+				continue;
+			}
+			$full_path = $dir.'/'.$file;
+			if( is_link($full_path) ){
+				continue;
+			}
+			if( is_dir($full_path) ){
+				$size += self::DirSize($full_path);
+				continue;
+			}
+
+			$size += filesize($full_path);
+		}
+		return $size;
+	}
+
 }

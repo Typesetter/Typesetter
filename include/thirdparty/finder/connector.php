@@ -50,6 +50,7 @@ function upload_check( $event, $args, $finder ){
 		if( !admin_uploaded::AllowedExtension($name) ){
 			return false;
 		}
+		$files['name'][$i] = $name;
 	}
 
 	return $args;
@@ -57,9 +58,11 @@ function upload_check( $event, $args, $finder ){
 
 function rename_check( $event, $args, $finder ){
 
+	$name = $args['name'];
 	if( gp_restrict_uploads && !admin_uploaded::AllowedExtension($name) ){
 		return false;
 	}
+	$args['name'] = $name;
 
 	return $args;
 }

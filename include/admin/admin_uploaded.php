@@ -587,31 +587,57 @@ class admin_uploaded{
 	}
 
 
-	static function AllowedExtension($file){
+	static function AllowedExtension( &$file ){
 		global $upload_extensions_allow, $upload_extensions_deny;
-		static $AllowedExtensions = false;
+		static $allowed_types = false;
+
+		$file = gpFiles::NoNull($file);
 
 		if( !gp_restrict_uploads ){
 			return true;
 		}
 
-		if( !gp_restrict_uploads ){
-			return true;
-		}
-
-
-		$file_type = admin_uploaded::GetFileType($file);
-		if( !$AllowedExtensions ){
-			$AllowedExtensions = array('7z', 'aiff', 'asf', 'avi', 'bmp', 'bz', 'csv', 'doc', 'fla', 'flv', 'gif', 'gz', 'gzip', 'jpeg', 'jpg', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ods', 'odt', 'pdf', 'png', 'ppt', 'pxd', 'qt', 'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 'sdc', 'sitd', 'swf', 'sxc', 'sxw', 'tar', 'tgz', 'tif', 'tiff', 'txt', 'vsd', 'wav', 'wma', 'wmv', 'xls', 'xml', 'zip');
+		//build list of allowed extensions once
+		if( !$allowed_types ){
+			$allowed_types = array('7z', 'aiff', 'asf', 'avi', 'bmp', 'bz', 'csv', 'doc', 'fla', 'flv', 'gif', 'gz', 'gzip', 'jpeg', 'jpg', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ods', 'odt', 'pdf', 'png', 'ppt', 'pxd', 'qt', 'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 'sdc', 'sitd', 'swf', 'sxc', 'sxw', 'tar', 'tgz', 'tif', 'tiff', 'txt', 'vsd', 'wav', 'wma', 'wmv', 'xls', 'xml', 'zip');
 			if( is_array($upload_extensions_allow) ){
-				$AllowedExtensions = array_merge($AllowedExtensions,$upload_extensions_allow);
+				array_walk( $upload_extensions_allow, 'trim');
+				array_walk( $upload_extensions_allow, 'strtolower');
+				$allowed_types = array_merge($allowed_types,$upload_extensions_allow);
 			}
 			if( is_array($upload_extensions_deny) ){
-				$AllowedExtensions = array_diff($AllowedExtensions,$upload_extensions_deny);
+				array_walk( $upload_extensions_allow, 'trim');
+				array_walk( $upload_extensions_allow, 'strtolower');
+				$allowed_types = array_diff($allowed_types,$upload_extensions_deny);
 			}
 		}
 
-		return in_array( $file_type, $AllowedExtensions );
+
+		//make sure the extension is allowed
+		$parts = explode('.',$file);
+		$file_type = array_pop($parts);
+		if( !in_array( strtolower($file_type), $allowed_types ) ){
+			return false;
+		}
+
+
+		//clean other parts of the name
+		$clean_name = '';
+		$dot = $dash = '';
+		foreach($parts as $part){
+
+			if( in_array( strtolower($part), $allowed_types ) ){
+				$clean_name .= $dot.$part;
+			}else{
+				$clean_name .= $dash.$part;
+			}
+			$dot = '.';
+			$dash = '_';
+		}
+
+		$file = ltrim($clean_name,'.').'.'.$file_type;
+
+		return true;
 	}
 
 	/**

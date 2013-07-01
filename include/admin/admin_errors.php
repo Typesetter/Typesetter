@@ -220,7 +220,7 @@ class admin_errors{
 	static function ClearError($hash){
 		global $dataDir;
 
-		if( empty($hash) || !ctype_alnum($hash) ){
+		if( !preg_match('#^[a-zA-Z0-9_]+$#',$hash) ){
 			message('Invalid Request');
 			return;
 		}

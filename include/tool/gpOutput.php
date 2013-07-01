@@ -2,11 +2,11 @@
 defined('is_running') or die('Not an entry point...');
 
 //for output handlers, see admin_theme_content.php for more info
-global $GP_ARRANGE, $gpOutConf, $GP_LANG_VALUES, $GP_INLINE_VARS, $GP_EXEC_STACK;
+global $GP_ARRANGE, $gpOutConf, $GP_LANG_VALUES, $GP_INLINE_VARS;
 
 $GP_ARRANGE = true;
 $GP_NESTED_EDIT = false;
-$gpOutConf = $GP_LANG_VALUES = $GP_INLINE_VARS = $GP_EXEC_STACK = array();
+$gpOutConf = $GP_LANG_VALUES = $GP_INLINE_VARS = array();
 
 
 //named menus should just be shortcuts to the numbers in custom menu
@@ -70,6 +70,7 @@ class gpOutput{
 
 	public static $edit_area_id = '';
 
+	private static $catchable = array();
 	public static $fatal_notices = array();
 
 
@@ -148,7 +149,8 @@ class gpOutput{
 		}
 		gpOutput::TemplateSettings();
 		header('Content-Type: text/html; charset=utf-8');
-		require($page->theme_dir.'/template.php'); // !! Using IncludeScript() here could cause unrelated fatal errors from breaking a site
+		$path = $page->theme_dir.'/template.php';
+		require( $path ); // !! Using IncludeScript() here could cause unrelated fatal errors from breaking a site
 		//IncludeScript($path,'require',array('page','GP_ARRANGE','GP_MENU_LINKS','GP_MENU_CLASS','GP_MENU_CLASSES','GP_MENU_ELEMENTS'));
 		gpPlugin::ClearDataFolder();
 
@@ -429,7 +431,7 @@ class gpOutput{
 	 *
 	 */
 	static function ExecInfo($info,$args=array()){
-		global $dataDir, $addonFolderName, $installed_addon, $config, $GP_EXEC_STACK, $page, $gp_overwrite_scripts;
+		global $dataDir, $addonFolderName, $installed_addon, $config, $page, $gp_overwrite_scripts;
 
 
 		//addonDir is deprecated as of 2.0b3
@@ -448,12 +450,10 @@ class gpOutput{
 		}
 
 		// check for fatal errors
-		$curr_hash = 'exec'.common::ArrayHash($info);
-		if( self::FatalNotice($curr_hash) ){
+		if( self::FatalNotice( 'exec', $info ) ){
 			return $args;
 		}
 
-		$GP_EXEC_STACK[] = $curr_hash;
 
 		//data
 		if( !empty($info['data']) ){
@@ -519,7 +519,8 @@ class gpOutput{
 		}
 
 		gpPlugin::ClearDataFolder();
-		array_pop($GP_EXEC_STACK);
+
+		gpOutput::PopExecStack();
 
 		return $args;
 	}
@@ -530,10 +531,14 @@ class gpOutput{
 	 * Notify administrators of disabled components
 	 *
 	 */
-	static function FatalNotice( $hash ){
-		global $dataDir,$page;
+	static function FatalNotice( $type, $info ){
+		global $dataDir, $page;
 		static $notified = array();
 
+		$info = (array)$info;
+		$info['catchable_type'] = $type;
+		$hash = $type.'_'.common::ArrayHash($info);
+		self::$catchable[$hash] = $info;
 
 		//no file = no fatal error
 		$file = $dataDir.'/data/_site/fatal_'.$hash;
@@ -563,7 +568,6 @@ class gpOutput{
 				}
 
 			}
-			$error_text = pre($error_info);
 		}
 
 
@@ -574,19 +578,29 @@ class gpOutput{
 		}
 		if( common::LoggedIn() ){
 
-			if( !in_array($info_hash,self::$fatal_notices) ){
+			if( !isset(self::$fatal_notices[$info_hash]) ){
 				$message .= ' <br/> '.common::Link($page->title,'Enable Component','cmd=enable_component&hash='.$hash) //cannot be creq
 							.' &nbsp; <a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>'
 							.'<div class="nodisplay">'
-							.$error_text
+							.pre($error_text)
 							.'</div>';
 
 				msg( $message );
-				self::$fatal_notices[] = $info_hash;
+
+				self::$fatal_notices[$info_hash] = $error_text;
 			}
 		}
 
+		self::PopExecStack();
+
+		//echo pre($info);
+		//die();
+
 		return true;
+	}
+
+	static function PopExecStack(){
+		array_pop(self::$catchable);
 	}
 
 
@@ -2147,7 +2161,7 @@ class gpOutput{
 	 * @return string finalized response
 	 */
 	static function BufferOut($buffer){
-		global $config,	$gp_head_content, $addonFolderName, $dataDir, $GP_EXEC_STACK, $addon_current_id, $wbErrorBuffer;
+		global $config,	$gp_head_content, $addonFolderName, $dataDir, $addon_current_id, $wbErrorBuffer;
 
 
 		//add error notice if there was a fatal error
@@ -2170,7 +2184,7 @@ class gpOutput{
 				$reload = false;
 
 				//disable execution
-				if( count($GP_EXEC_STACK) ){
+				if( count(self::$catchable) ){
 
 					$last_error['time'] = time();
 					$last_error['request_method'] = $_SERVER['REQUEST_METHOD'];
@@ -2178,13 +2192,32 @@ class gpOutput{
 						$last_error['file_modified'] = filemtime($last_error['file']);
 						$last_error['file_size'] = filesize($last_error['file']);
 					}
-					$content = json_encode($last_error);
 
-					$error_hash = array_pop($GP_EXEC_STACK);
-					foreach($GP_EXEC_STACK as $error_hash){
+					//error text, check for existing fatal notice
+					if( count(self::$fatal_notices) ){
+						$content = end(self::$fatal_notices);
+						reset(self::$fatal_notices);
+						if( $content[0] == '{' && $temp = json_decode($content,true) ){
+							$last_error = $temp;
+						}
+					}else{
+						$content = json_encode($last_error);
+					}
+
+					//$buffer .= pre(self::$catchable).'<hr/>';
+					//$buffer .= '<h3>Existing Fatal Notices</h3>'.pre(self::$fatal_notices).'<hr/>';
+
+
+					$temp = array_reverse(self::$catchable);
+					foreach($temp as $error_hash => $info){
+
 						$file = $dataDir.'/data/_site/fatal_'.$error_hash;
 						gpFiles::Save($file,$content);
 						$reload = true;
+
+						if( $info['catchable_type'] == 'exec' ){
+							break;
+						}
 					}
 				}
 

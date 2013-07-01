@@ -1066,7 +1066,7 @@ class gpsession{
 			}
 			$full_path = $dir.'/'.$file;
 			$info_hash = md5_file($full_path);
-			if( in_array($info_hash,gpOutput::$fatal_notices) ){
+			if( isset(gpOutput::$fatal_notices[$info_hash]) ){
 				continue;
 			}
 			$has_fatal = true;

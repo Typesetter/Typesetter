@@ -438,14 +438,8 @@ function includeFile( $file ){
  * @param array List of global variables to set
  */
 function IncludeScript($file, $include_variation = 'include_once', $globals = array() ){
-	global $GP_EXEC_STACK;
 
 	$exists = file_exists($file);
-	$hash = 'include'.md5($file).sha1($file);
-	if( gpOutput::FatalNotice($hash) ){
-		return false;
-	}
-
 
 	//check to see if it exists
 	$include_variation = str_replace('_if','',$include_variation,$has_if);
@@ -453,12 +447,17 @@ function IncludeScript($file, $include_variation = 'include_once', $globals = ar
 		return;
 	}
 
+	//check for fatal errors
+	if( gpOutput::FatalNotice( 'include', $file ) ){
+		return false;
+	}
+
+
 	//set global variables
 	foreach($globals as $global){
 		global $$global;
 	}
 
-	$GP_EXEC_STACK[] = $hash;
 
 	switch($include_variation){
 		case 'include':
@@ -475,7 +474,7 @@ function IncludeScript($file, $include_variation = 'include_once', $globals = ar
 		break;
 	}
 
-	array_pop($GP_EXEC_STACK);
+	gpOutput::PopExecStack();
 
 	return $return;
 }
@@ -764,16 +763,6 @@ class display{
 		}
 
 		$layout_info = common::LayoutInfo($layout);
-
-
-		//check for fatal error in template.php file
-		if( $layout_info ){
-			$file = $layout_info['dir'].'/template.php';
-			$hash = 'file'.md5($file).sha1($file);
-			if( gpOutput::FatalNotice($hash) ){
-				$layout_info = false;
-			}
-		}
 
 		if( !$layout_info ){
 			$this->gpLayout = false;

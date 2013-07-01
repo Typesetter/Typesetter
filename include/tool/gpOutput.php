@@ -150,8 +150,7 @@ class gpOutput{
 		gpOutput::TemplateSettings();
 		header('Content-Type: text/html; charset=utf-8');
 		$path = $page->theme_dir.'/template.php';
-		require( $path ); // !! Using IncludeScript() here could cause unrelated fatal errors from breaking a site
-		//IncludeScript($path,'require',array('page','GP_ARRANGE','GP_MENU_LINKS','GP_MENU_CLASS','GP_MENU_CLASSES','GP_MENU_ELEMENTS'));
+		IncludeScript($path,'require',array('page','GP_ARRANGE','GP_MENU_LINKS','GP_MENU_CLASS','GP_MENU_CLASSES','GP_MENU_ELEMENTS'));
 		gpPlugin::ClearDataFolder();
 
 		gpOutput::HeadContent();
@@ -520,7 +519,7 @@ class gpOutput{
 
 		gpPlugin::ClearDataFolder();
 
-		gpOutput::PopExecStack();
+		gpOutput::PopCatchable();
 
 		return $args;
 	}
@@ -591,7 +590,7 @@ class gpOutput{
 			}
 		}
 
-		self::PopExecStack();
+		self::PopCatchable();
 
 		//echo pre($info);
 		//die();
@@ -599,7 +598,7 @@ class gpOutput{
 		return true;
 	}
 
-	static function PopExecStack(){
+	static function PopCatchable(){
 		array_pop(self::$catchable);
 	}
 

@@ -474,7 +474,7 @@ function IncludeScript($file, $include_variation = 'include_once', $globals = ar
 		break;
 	}
 
-	gpOutput::PopExecStack();
+	gpOutput::PopCatchable();
 
 	return $return;
 }
@@ -763,6 +763,18 @@ class display{
 		}
 
 		$layout_info = common::LayoutInfo($layout);
+
+
+		//theme dir
+		if( $layout_info ){
+			$template_path = $layout_info['dir'].'/template.php';
+			if( gpOutput::FatalNotice( 'include', $template_path ) ){
+				$layout_info = false;
+			}
+			gpOutput::PopCatchable();
+		}
+
+
 
 		if( !$layout_info ){
 			$this->gpLayout = false;

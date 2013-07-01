@@ -137,9 +137,10 @@ class gpOutput{
 	/**
 	 * Send all content according to the current layout
 	 * @static
+	 *
 	 */
 	static function Template(){
-		global $page, $get_all_gadgets_called, $addon_current_id;
+		global $page, $GP_ARRANGE, $GP_STYLES, $get_all_gadgets_called, $addon_current_id, $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES, $GP_MENU_ELEMENTS;
 		$get_all_gadgets_called = false;
 
 		if( isset($page->theme_addon_id) ){
@@ -147,15 +148,13 @@ class gpOutput{
 		}
 		gpOutput::TemplateSettings();
 		header('Content-Type: text/html; charset=utf-8');
-
-		$path = $page->theme_dir.'/template.php';
-		IncludeScript($path,'require',array('page','GP_ARRANGE','GP_MENU_LINKS','GP_MENU_CLASS','GP_MENU_CLASSES','GP_MENU_ELEMENTS'));
-		self::$template_included = true;
-
+		require($page->theme_dir.'/template.php'); // !! Using IncludeScript() here could cause unrelated fatal errors from breaking a site
+		//IncludeScript($path,'require',array('page','GP_ARRANGE','GP_MENU_LINKS','GP_MENU_CLASS','GP_MENU_CLASSES','GP_MENU_ELEMENTS'));
 		gpPlugin::ClearDataFolder();
 
 		gpOutput::HeadContent();
 	}
+
 
 	/**
 	 * Get the settings for the current theme if settings.php exists
@@ -531,7 +530,7 @@ class gpOutput{
 	 * Notify administrators of disabled components
 	 *
 	 */
-	static function FatalNotice($hash){
+	static function FatalNotice( $hash ){
 		global $dataDir,$page;
 		static $notified = array();
 
@@ -581,6 +580,7 @@ class gpOutput{
 							.'<div class="nodisplay">'
 							.$error_text
 							.'</div>';
+
 				msg( $message );
 				self::$fatal_notices[] = $info_hash;
 			}

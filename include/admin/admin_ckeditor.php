@@ -142,6 +142,10 @@ class admin_ckeditor{
 	function UploadPlugin(){
 		global $langmessage, $dataDir;
 
+		includeFile('admin/admin_uploaded.php');
+		includeFile('thirdparty/pclzip-2-8-2/pclzip.lib.php');
+
+
 		if( empty($_FILES['plugin']) ){
 			message($langmessage['OOPS'].' (No File)');
 			return;
@@ -156,23 +160,32 @@ class admin_ckeditor{
 
 		// Unzip uses a lot of memory, but not this much hopefully
 		@ini_set('memory_limit', '256M');
-		includeFile('thirdparty/pclzip-2-8-2/pclzip.lib.php');
 		$archive = new PclZip( $plugin_file['tmp_name'] );
 
 
-		// get plugin name
+		// get plugin name and check file types
 		$plugin_name = false;
 		$remove_path = '';
 		$list = $archive->listContent();
 		foreach($list as $file){
 
-			if( strpos($file['filename'],'plugin.js') !== false ){
+			//plugin name
+			if( !$plugin_name && strpos($file['filename'],'plugin.js') !== false ){
 				$filename = $file['filename'];
 				$remove_path = dirname($filename);
 				$plugin_name = basename( $remove_path );
-				break;
 			}
+
+
+			if( !admin_uploaded::AllowedExtension($file['filename']) ){
+				message($langmessage['OOPS'].' (File type not allowed)');
+				return false;
+			}
+
 		}
+
+
+
 
 		//message('remove path: '.$remove_path);
 		//message('plugin name: '.$plugin_name);

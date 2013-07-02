@@ -587,7 +587,11 @@ class admin_uploaded{
 	}
 
 
-	static function AllowedExtension( &$file ){
+	/**
+	 * Check the file extension agains $allowed_types
+	 *
+	 */
+	static function AllowedExtension( &$file , $fix = true ){
 		global $upload_extensions_allow, $upload_extensions_deny;
 		static $allowed_types = false;
 
@@ -628,8 +632,10 @@ class admin_uploaded{
 
 			if( in_array( strtolower($part), $allowed_types ) ){
 				$clean_name .= $dot.$part;
-			}else{
+			}elseif( $fix ){
 				$clean_name .= $dash.$part;
+			}else{
+				return false;
 			}
 			$dot = '.';
 			$dash = '_';

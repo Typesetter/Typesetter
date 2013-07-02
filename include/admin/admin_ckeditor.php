@@ -177,7 +177,7 @@ class admin_ckeditor{
 			}
 
 
-			if( !admin_uploaded::AllowedExtension($file['filename']) ){
+			if( !admin_uploaded::AllowedExtension($file['filename'], false) ){
 				message($langmessage['OOPS'].' (File type not allowed)');
 				return false;
 			}

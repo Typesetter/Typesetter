@@ -113,8 +113,8 @@ $opts = array(
 );
 
 
-if( is_array($gp_finder_root) ){
-	$opts['roots'][0] = $gp_finder_root + $opts['roots'][0];
+if( function_exists('gpSettingsOverride') ){
+	gpSettingsOverride('finder_options_server',$opts);
 }
 
 

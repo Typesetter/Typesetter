@@ -96,7 +96,7 @@ class admin_uploaded{
 
 
 		if( function_exists('gpSettingsOverride') ){
-			gpSettingsOverride('finder_options',$this->finder_opts);
+			gpSettingsOverride('finder_options_client',$this->finder_opts);
 		}
 
 		$page->head_script .= "\n".'var finder_opts = '.json_encode($this->finder_opts).';';

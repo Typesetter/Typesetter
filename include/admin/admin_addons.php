@@ -55,7 +55,7 @@ class admin_addons extends admin_addon_install{
 
 		//
 		$display = 'main';
-		if( gp_remote_addons && strpos($page->requested,'/') ){
+		if( gp_remote_plugins && strpos($page->requested,'/') ){
 			$parts = explode('/',$page->requested);
 			switch(strtolower($parts[1])){
 				case 'remote':
@@ -392,7 +392,7 @@ class admin_addons extends admin_addon_install{
 
 		echo '<h2 class="hmargin">';
 		echo $langmessage['Manage Plugins'];
-		if( gp_remote_addons ){
+		if( gp_remote_plugins ){
 			echo ' <span>|</span> ';
 			echo common::Link($this->path_remote,$langmessage['Find Plugins']);
 		}

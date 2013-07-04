@@ -30,9 +30,13 @@ gp_defined('E_USER_DEPRECATED',16384);
 gp_defined('gpdebug_tools',false);
 gp_defined('gp_backup_limit',10);
 gp_defined('gp_write_lock_time',30);
-gp_defined('gp_remote_addons',true);
-//gp_defined('addon_browse_path','http://gpeasy.loc/index.php'); message('local browse path');
-gp_defined('addon_browse_path','http://gpeasy.com/index.php');
+gp_defined('gp_remote_addons',true); //deprecated 4.0.1
+gp_defined('gp_remote_plugins',gp_remote_addons);
+gp_defined('gp_remote_themes',gp_remote_addons);
+gp_defined('gp_remote_update',gp_remote_addons);
+
+gp_defined('addon_browse_path','http://gpeasy.loc/index.php'); message('local browse path');
+//gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
 define('gpversion','4.0');
 define('gp_random',common::RandomString());

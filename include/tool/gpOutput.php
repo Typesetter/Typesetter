@@ -1942,7 +1942,6 @@ class gpOutput{
 				'isadmin' => true,
 				'gpBLink' => common::HrefEncode($linkPrefix,false),
 				'post_nonce' => common::new_nonce('post',true),
-				'gpRem' => admin_tools::CanRemoteInstall(),
 				'admin_resizable' => true,
 				);
 			gpsession::GPUIVars();

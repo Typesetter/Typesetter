@@ -379,13 +379,10 @@ class admin_tools{
 
 
 		//updates
-		if( gp_remote_addons && count($new_versions) > 0 ){
-			echo '<div class="panelgroup" id="panelgroup_versions'.$id_piece.'">';
-			self::PanelHeading($in_panel, $langmessage['updates'], 'icon_rfrsh', 'upd' );
-			echo '<ul class="submenu">';
-			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['updates'].'</a></li>';
+		if( count($new_versions) > 0 ){
 
-			if( gp_remote_addons && isset($new_versions['core']) ){
+			ob_start();
+			if( gp_remote_update && isset($new_versions['core']) ){
 				echo '<li>';
 				echo '<a href="'.common::GetDir('/include/install/update.php').'">gpEasy '.$new_versions['core'].'</a>';
 				echo '</li>';
@@ -397,19 +394,28 @@ class admin_tools{
 				}
 
 				$label = $new_addon_info['name'].':  '.$new_addon_info['version'];
-				if( $new_addon_info['type'] == 'theme' ){
+				if( $new_addon_info['type'] == 'theme' && gp_remote_themes ){
 					echo '<li>'.common::Link('Admin_Theme_Content/Remote',$label).'</li>';
 
-				}elseif( $new_addon_info['type'] == 'plugin' ){
+				}elseif( $new_addon_info['type'] == 'plugin' && gp_remote_plugins ){
 					echo '<li>'.common::Link('Admin_Addons/Remote',$label).'</li>';
 				}else{
 					continue;
 				}
 			}
 
-			echo '</ul>';
-			echo '</div>';
-			echo '</div>';
+			$list = ob_get_clean();
+			if( !empty($list) ){
+				echo '<div class="panelgroup" id="panelgroup_versions'.$id_piece.'">';
+				self::PanelHeading($in_panel, $langmessage['updates'], 'icon_rfrsh', 'upd' );
+				echo '<ul class="submenu">';
+				echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['updates'].'</a></li>';
+				echo $list;
+				echo '</ul>';
+				echo '</div>';
+				echo '</div>';
+			}
+
 		}
 
 
@@ -723,7 +729,7 @@ class admin_tools{
 			echo common::Link('Admin_Theme_Content/'.urlencode($page->gpLayout),$langmessage['edit_this_layout']);
 			echo '</li>';
 		}
-		if( gp_remote_addons ){
+		if( gp_remote_themes ){
 			echo '<li>';
 			echo common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']);
 			echo '</li>';
@@ -1061,7 +1067,7 @@ class admin_tools{
 			echo '<li>';
 			echo common::Link('Admin_Addons',$langmessage['manage']);
 			echo '</li>';
-			if( gp_remote_addons ){
+			if( gp_remote_plugins ){
 				echo '<li class="seperator">';
 				echo common::Link('Admin_Addons/Remote',$langmessage['Download Plugins']);
 				echo '</li>';
@@ -1112,33 +1118,6 @@ class admin_tools{
 
 	}
 
-
-
-	/**
-	 * Determine if the installation should be allowed to process remote installations
-	 *
-	 */
-	static function CanRemoteInstall(){
-		static $bool;
-
-		if( isset($bool) ){
-			return $bool;
-		}
-
-		$bool = false;
-		if( defined('gp_remote_addons')
-			&& gp_remote_addons === true
-			&& function_exists('gzinflate') //used by pclzip
-			){
-
-			includeFile('tool/RemoteGet.php');
-			if( gpRemoteGet::Test() ){
-				$bool = true;
-			}
-		}
-
-		return $bool;
-	}
 
 
 	/**

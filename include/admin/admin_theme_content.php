@@ -76,7 +76,7 @@ class admin_theme_content extends admin_addon_install{
 		if( strpos($page->requested,'/') ){
 			$parts = explode('/',$page->requested);
 			$layout_part = $parts[1];
-			if( gp_remote_addons && strtolower($layout_part) == 'remote' ){
+			if( gp_remote_themes && strtolower($layout_part) == 'remote' ){
 				$this->RemoteBrowse();
 			}
 
@@ -1514,7 +1514,7 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '<h2 class="hmargin">';
 		echo $langmessage['Manage Layouts'];
-		if( gp_remote_addons ){
+		if( gp_remote_themes ){
 			echo ' <span>|</span> ';
 			echo common::Link($this->path_remote,$this->find_label);
 		}
@@ -1660,7 +1660,7 @@ class admin_theme_content extends admin_addon_install{
 			if( $info['is_addon'] ){
 
 				//upgrade
-				if( gp_remote_addons && isset($info['id']) && isset($new_versions[$info['id']]) ){
+				if( gp_remote_themes && isset($info['id']) && isset($new_versions[$info['id']]) ){
 					echo '<a href="'.addon_browse_path.'/Themes?id='.$info['id'].'" data-cmd="remote">';
 					echo $langmessage['upgrade'].' (gpEasy.com)';
 					echo '</a>';

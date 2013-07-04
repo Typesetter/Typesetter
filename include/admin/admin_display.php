@@ -213,10 +213,10 @@ class admin_display extends display{
 		echo '<div class="panelgroup2">';
 		echo '<ul>';
 
-		if( admin_tools::HasPermission('Admin_Addons') ){
+		if( gp_remote_plugins && admin_tools::HasPermission('Admin_Addons') ){
 			echo '<li>'.common::Link('Admin_Addons/Remote',$langmessage['Download Plugins']).'</li>';
 		}
-		if( admin_tools::HasPermission('Admin_Theme_Content') ){
+		if( gp_remote_themes && admin_tools::HasPermission('Admin_Theme_Content') ){
 			echo '<li>'.common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']).'</li>';
 		}
 		echo '<li><a href="http://gpeasy.com">Support Forum</a></li>';

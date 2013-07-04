@@ -793,12 +793,30 @@ class admin_addon_installer extends admin_addons_tool{
 				return false;
 		}
 
-		if( $this->type != 'plugin' && $this->type != 'theme' ){
+		// allowed to remote install?
+		switch($this->type){
+
+			case 'plugin':
+				if( !gp_remote_plugins ){
+					$this->message($langmessage['OOPS'].' (Can\'t remote install plugins)');
+					return false;
+				}
+			break;
+
+			case 'theme':
+				if( !gp_remote_themes ){
+					$this->message($langmessage['OOPS'].' (Can\'t remote install themes)');
+					return false;
+				}
+			break;
+
+			default:
 			$this->message($langmessage['OOPS'].' (Invalid Type)');
 			return false;
 		}
 
-		if( !admin_tools::CanRemoteInstall() ){
+		// able to remote install?
+		if( !function_exists('gzinflate') || !gpRemoteGet::Test() ){
 			$this->message($langmessage['OOPS'].' (Can\'t remote install)');
 			return false;
 		}

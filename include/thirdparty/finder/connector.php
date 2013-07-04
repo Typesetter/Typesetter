@@ -1,7 +1,7 @@
 <?php
 
 defined('is_running') or die('Not an entry point...');
-global $dataDir, $gp_finder_root;
+global $dataDir;
 
 includeFile('admin/admin_uploaded.php');
 includeFile('thirdparty/finder/php/Finder.class.php');
@@ -113,9 +113,7 @@ $opts = array(
 );
 
 
-if( function_exists('gpSettingsOverride') ){
-	gpSettingsOverride('finder_options_server',$opts);
-}
+gpSettingsOverride('finder_options_server',$opts);
 
 
 

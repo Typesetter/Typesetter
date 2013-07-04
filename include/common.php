@@ -45,6 +45,9 @@ define('gp_random',common::RandomString());
 if( function_exists('mb_internal_encoding') ){
 	mb_internal_encoding('UTF-8');
 }
+if( !function_exists('gpSettingsOverride') ){
+	function gpSettingsOverride(){}
+}
 
 //see /var/www/others/mediawiki-1.15.0/languages/Names.php
 $languages = array(

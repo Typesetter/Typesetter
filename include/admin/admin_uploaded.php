@@ -18,7 +18,7 @@ class admin_uploaded{
 
 
 	function Finder(){
-		global $page, $GP_INLINE_VARS, $config, $dataDir, $gp_finder_opts;
+		global $page, $GP_INLINE_VARS, $config, $dataDir;
 
 		$GP_INLINE_VARS['admin_resizable'] = false;
 
@@ -94,10 +94,7 @@ class admin_uploaded{
 
 		$this->FinderPrep();
 
-
-		if( function_exists('gpSettingsOverride') ){
-			gpSettingsOverride('finder_options_client',$this->finder_opts);
-		}
+		gpSettingsOverride('finder_options_client',$this->finder_opts);
 
 		$page->head_script .= "\n".'var finder_opts = '.json_encode($this->finder_opts).';';
 	}

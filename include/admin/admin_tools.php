@@ -5,7 +5,7 @@ class admin_tools{
 
 
 	static function AdminScripts(){
-		global $langmessage, $config, $gp_admin_overwrite;
+		global $langmessage, $config;
 		$scripts = array();
 
 
@@ -133,10 +133,8 @@ class admin_tools{
 		$scripts['Admin_Addon_Themes']['list'] = false;
 */
 
-		if( isset($gp_admin_overwrite) && is_array($gp_admin_overwrite) ){
-			$scripts = $gp_admin_overwrite + $scripts;
-			$scripts = array_filter($scripts);
-		}
+
+		gpSettingsOverride('admin_scripts',$scripts);
 
 		return $scripts;
 	}

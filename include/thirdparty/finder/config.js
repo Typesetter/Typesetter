@@ -1,51 +1,6 @@
 
 $(function(){
 
-	var uiOptions = {
-		// toolbar configuration
-		toolbar : [
-			['back', 'forward','up','reload'],
-			['home','netmount'],
-			['mkdir', 'upload'], //'mkfile',
-			['open', 'download', 'getfile'],
-			['info'],
-			['quicklook'],
-			['copy', 'cut', 'paste'],
-			['rm'],
-			['duplicate', 'rename', 'edit', 'resize'],
-			['extract', 'archive'],
-			['search'],
-			['view','sort'],
-			['help']
-		],
-
-		// directories tree options
-		tree : {
-			// expand current root on init
-			openRootOnLoad : true,
-			// auto load current dir parents
-			syncTree : true
-		},
-
-		// navbar options
-		navbar : {
-			minWidth : 150,
-			maxWidth : 500
-		},
-
-		// current working directory options
-		cwd : {
-			// display parent directory in listing as ".."
-			oldSchool : false
-		}
-	}
-
-	finder_opts.customData = {verified : post_nonce};
-
-	$.extend(finder_opts,{
-		uiOptions : uiOptions
-	});
-
 
 	/**
 	 * Start finder for ckeditor

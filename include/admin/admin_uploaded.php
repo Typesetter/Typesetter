@@ -18,7 +18,7 @@ class admin_uploaded{
 
 
 	function Finder(){
-		global $page, $GP_INLINE_VARS, $config, $dataDir;
+		global $page, $GP_INLINE_VARS, $config, $dataDir, $gp_finder_opts;
 
 		$GP_INLINE_VARS['admin_resizable'] = false;
 
@@ -48,9 +48,57 @@ class admin_uploaded{
 			$language = 'en';
 		}
 		$this->finder_opts['lang'] = $language;
+		$this->finder_opts['customData']['verified'] = common::new_nonce('post',true);
+
+
+		$this->finder_opts['uiOptions'] = array(
+
+			// toolbar configuration
+			'toolbar' => array(
+				array('back', 'forward','up','reload'),
+				array('home','netmount'),
+				array('mkdir', 'upload'), //'mkfile',
+				array('open', 'download', 'getfile'),
+				array('info'),
+				array('quicklook'),
+				array('copy', 'cut', 'paste'),
+				array('rm'),
+				array('duplicate', 'rename', 'edit', 'resize'),
+				array('extract', 'archive'),
+				array('search'),
+				array('view','sort'),
+				array('help')
+			),
+
+			// directories tree options
+			'tree' => array(
+				// expand current root on init
+				'openRootOnLoad' => true,
+				// auto load current dir parents
+				'syncTree' => true,
+			),
+
+			// navbar options
+			'navbar' => array(
+				'minWidth' => 150,
+				'maxWidth' => 500
+			),
+
+			// current working directory options
+			'cwd' => array(
+				// display parent directory in listing as ".."
+				'oldSchool' => false
+			)
+		);
 
 
 		$this->FinderPrep();
+
+
+		if( function_exists('gpSettingsOverride') ){
+			gpSettingsOverride('finder_options',$this->finder_opts);
+		}
+
 		$page->head_script .= "\n".'var finder_opts = '.json_encode($this->finder_opts).';';
 	}
 

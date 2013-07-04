@@ -1,7 +1,7 @@
 <?php
 
 defined('is_running') or die('Not an entry point...');
-global $dataDir;
+global $dataDir, $gp_finder_root;
 
 includeFile('admin/admin_uploaded.php');
 includeFile('thirdparty/finder/php/Finder.class.php');
@@ -102,7 +102,7 @@ $opts = array(
 			'uploadOverwrite'=> false,
 			'tmbPathMode'	=> gp_chmod_dir,
 			'dirMode'		=> gp_chmod_dir,
-			'fileMode'		=> gp_chmod_file
+			'fileMode'		=> gp_chmod_file,
 		),
 	),
 	'bind' => array(
@@ -111,6 +111,11 @@ $opts = array(
 		'rename-before' => 'rename_check',
 	)
 );
+
+
+if( is_array($gp_finder_root) ){
+	$opts['roots'][0] = $gp_finder_root + $opts['roots'][0];
+}
 
 
 

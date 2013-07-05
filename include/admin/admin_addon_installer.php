@@ -816,7 +816,7 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 
 		// able to remote install?
-		if( !function_exists('gzinflate') || !gpRemoteGet::Test() ){
+		if( !admin_tools::CanRemoteInstall() ){
 			$this->message($langmessage['OOPS'].' (Can\'t remote install)');
 			return false;
 		}

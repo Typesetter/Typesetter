@@ -120,6 +120,8 @@ class gpOutput{
 
 		$page->head_script .= 'var gp_bodyashtml = true;';
 
+		gpOutput::TemplateSettings();
+
 		header('Content-Type: text/html; charset=utf-8');
 		echo '<!DOCTYPE html><html><head><meta charset="UTF-8" />';
 		gpOutput::getHead();
@@ -1942,8 +1944,10 @@ class gpOutput{
 				'isadmin' => true,
 				'gpBLink' => common::HrefEncode($linkPrefix,false),
 				'post_nonce' => common::new_nonce('post',true),
+				'gpRem' => admin_tools::CanRemoteInstall(),
 				'admin_resizable' => true,
 				);
+
 			gpsession::GPUIVars();
 		}
 

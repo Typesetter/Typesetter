@@ -1118,6 +1118,40 @@ class admin_tools{
 
 	}
 
+	/**
+	* Determine if the installation should be allowed to process remote installations
+	*
+	*/
+	static function CanRemoteInstall(){
+		static $bit;
+
+		if( isset($bit) ){
+			return $bit;
+		}
+
+		if( !gp_remote_themes && !gp_remote_plugins ){
+			return $bit = 0;
+		}
+
+		if( !function_exists('gzinflate') ){
+			return $bit = 0;
+		}
+
+		includeFile('tool/RemoteGet.php');
+		if( !gpRemoteGet::Test() ){
+			return $bit = 0;
+		}
+
+		if( gp_remote_themes ){
+			$bit = 1;
+		}
+		if( gp_remote_plugins ){
+			$bit += 2;
+		}
+
+		return $bit;
+	}
+
 
 
 	/**

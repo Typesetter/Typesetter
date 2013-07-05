@@ -35,8 +35,8 @@ gp_defined('gp_remote_plugins',gp_remote_addons);
 gp_defined('gp_remote_themes',gp_remote_addons);
 gp_defined('gp_remote_update',gp_remote_addons);
 
-//gp_defined('addon_browse_path','http://gpeasy.loc/index.php'); message('local browse path');
-gp_defined('addon_browse_path','http://gpeasy.com/index.php');
+gp_defined('addon_browse_path','http://gpeasy.loc/index.php');
+//gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
 define('gpversion','4.0');
 define('gp_random',common::RandomString());

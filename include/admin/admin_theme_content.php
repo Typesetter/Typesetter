@@ -698,7 +698,7 @@ class admin_theme_content extends admin_addon_install{
 		$display = $langmessage['available_themes'];
 		if( $curr_theme_id ){
 			$display = htmlspecialchars($curr_theme_id.' / '.$curr_color);
-			$display = str_replace(array('_','(remote)','(package)'),array(' ','',''),$display);
+			$display = str_replace(array('_','(remote)','(local)'),array(' ','',''),$display);
 		}
 
 		echo '<div class="dd_menu">';
@@ -1369,7 +1369,7 @@ class admin_theme_content extends admin_addon_install{
 
 			$ini_info = admin_addons_tool::GetAvailInstall($full_dir);
 
-			$index = $name.'(package)';
+			$index = $name.'(local)';
 
 			$themes[$index]['name'] = $name;
 			if( isset($ini_info['Addon_Name']) ){
@@ -1387,6 +1387,7 @@ class admin_theme_content extends admin_addon_install{
 				$themes[$index]['id'] = $ini_info['Addon_Unique_ID'];
 			}
 
+			//msg('ok '.$index);
 		}
 
 		//downloaded themes

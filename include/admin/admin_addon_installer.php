@@ -511,7 +511,10 @@ class admin_addon_installer extends admin_addons_tool{
 			$this->new_layout['addon_key'] = $this->config_key;
 		}
 		if( isset($this->ini_contents['id']) && is_numeric($this->ini_contents['id']) ){
-			$this->new_layout['addon_id'] = $this->ini_contents['id']['id'];
+			$this->new_layout['addon_id'] = $this->ini_contents['id'];
+		}
+		if( isset($this->ini_contents['Addon_Version']) ){
+			$this->new_layout['version'] = $this->ini_contents['Addon_Version'];
 		}
 
 		$temp = $this->TempFile();

@@ -2365,6 +2365,10 @@ class gpOutput{
 		}
 
 		echo GetMessages();
+
+
+		global $gpLayouts;
+		echo pre($gpLayouts);
 	}
 
 

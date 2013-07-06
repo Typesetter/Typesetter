@@ -315,10 +315,6 @@ class admin_addons extends admin_addon_install{
 
 		$info = $config['addons'][$addon_key];
 
-		//versions available online
-		includeFile('tool/update.php');
-		update_class::VersionsAndCheckTime($this->new_versions);
-
 		$this->FindForm();
 
 		echo '<h2 class="hmargin">';
@@ -471,10 +467,6 @@ class admin_addons extends admin_addon_install{
 			return false;
 		}
 
-
-		//versions available online
-		includeFile('tool/update.php');
-		update_class::VersionsAndCheckTime($this->new_versions);
 
 		//set upgrade_from
 		foreach($available as $folder => $info){

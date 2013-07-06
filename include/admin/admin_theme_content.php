@@ -1595,11 +1595,6 @@ class admin_theme_content extends admin_addon_install{
 
 		$this->GetAddonData();
 
-		//versions available online
-		includeFile('tool/update.php');
-		update_class::VersionsAndCheckTime($new_versions);
-
-
 		$avail_count = 0;
 		foreach($this->possible as $theme_id => $info){
 			$avail_count += count($info['colors']);
@@ -1660,7 +1655,7 @@ class admin_theme_content extends admin_addon_install{
 			if( $info['is_addon'] ){
 
 				//upgrade
-				if( gp_remote_themes && isset($info['id']) && isset($new_versions[$info['id']]) ){
+				if( gp_remote_themes && isset($info['id']) && isset($this->new_versions[$info['id']]) ){
 					echo '<a href="'.addon_browse_path.'/Themes?id='.$info['id'].'" data-cmd="remote">';
 					echo $langmessage['upgrade'].' (gpEasy.com)';
 					echo '</a>';

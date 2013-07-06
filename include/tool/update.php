@@ -84,13 +84,7 @@ class update_class{
 	static function VersionsAndCheckTime(&$new_versions){
 		global $config, $dataDir;
 
-		includeFile('tool/RemoteGet.php');
-
 		$new_versions = array();
-
-		if( !gpRemoteGet::Test() ){
-			return update_class::CheckIncompatible();
-		}
 
 		update_class::GetDataStatic($update_data,$data_timestamp);
 
@@ -115,23 +109,21 @@ class update_class{
 			update_class::CheckArray($new_versions,$config['themes'],$update_data);
 		}
 
-/*
-		echo '<blockquote style="z-index:100;position:fixed;">';
-		echo showArray($config['themes']);
-		echo showArray($new_versions);
-		echo '</blockquote>';
-*/
 
-
+		// checked recently
 		$diff = time() - $data_timestamp;
-
-		//get new information
-		//604800 one week
-		if( $diff > 604800 ){
-			return 'embedcheck';
+		if( $diff < 604800 ){
+			return 'checklater';
 		}
 
-		return 'checklater';
+		//determin check in type
+		includeFile('tool/RemoteGet.php');
+		if( !gpRemoteGet::Test() ){
+			update_class::SaveDataStatic($update_data);
+			return 'checkincompat';
+		}
+
+		return 'embedcheck';
 	}
 
 	static function CheckArray(&$new_versions,$array,$update_data){
@@ -169,16 +161,6 @@ class update_class{
 
 
 	static function CheckIncompatible(){
-
-		update_class::GetDataStatic($update_data,$data_timestamp);
-		$diff = time() - $data_timestamp;
-		if( $diff < 604800 ){
-			return 'checklater';
-		}
-
-		if( empty($data_timestamp) || ($data_timestamp < 1) ){
-			return 'checklater';
-		}
 
 		update_class::SaveDataStatic($update_data);
 		return 'checkincompat';

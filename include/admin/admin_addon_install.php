@@ -35,6 +35,11 @@ class admin_addon_install extends admin_addons_tool{
 		$GP_INLINE_VARS += array(
 			'gpRem' => admin_tools::CanRemoteInstall(),
 		);
+
+
+		//versions available online
+		includeFile('tool/update.php');
+		update_class::VersionsAndCheckTime($this->new_versions);
 	}
 
 

@@ -196,7 +196,8 @@ class admin_display extends display{
 		$cmd = common::GetCommand();
 		switch($cmd){
 			case 'embededcheck':
-				$this->EmbededCheck();
+				includeFile('tool/update.php');
+				new update_class('embededcheck');
 			return;
 		}
 
@@ -238,12 +239,6 @@ class admin_display extends display{
 		echo '<li>Icons by <a href="http://www.famfamfam.com/">famfamfam.com</a></li>';
 		echo '</ul>';
 		echo '</div>';
-	}
-
-
-	function EmbededCheck(){
-		includeFile('tool/update.php');
-		new update_class('embededcheck');
 	}
 
 

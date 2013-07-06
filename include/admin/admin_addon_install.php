@@ -32,28 +32,9 @@ class admin_addon_install extends admin_addons_tool{
 		$page->css_admin[] = '/include/css/addons.css';
 		$page->head_js[] = '/include/js/rate.js';
 
-
-		//install url
-		/*
-		global $linkPrefix;
-		$install_url = 'http://';
-		if( isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ){
-			$install_url = 'https://';
-		}
-		if( isset($_SERVER['HTTP_HOST']) ){
-			$install_url .= $_SERVER['HTTP_HOST'];
-		}else{
-			$install_url .= $_SERVER['SERVER_NAME'];
-		}
-		$install_url = $install_url.common::HrefEncode($linkPrefix,false);
-		*/
-
 		$GP_INLINE_VARS += array(
 			'gpRem' => admin_tools::CanRemoteInstall(),
-			//'inUrl' => $install_url
 		);
-
-
 	}
 
 

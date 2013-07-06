@@ -1727,6 +1727,8 @@ class admin_theme_content extends admin_addon_install{
 
 
 		// layouts with hooks
+		ob_start();
+		$addon_config = false;
 		if( isset($layout_info['addon_key']) ){
 			$addon_key = $layout_info['addon_key'];
 			$addon_config = gpPlugin::GetAddonConfig($addon_key);
@@ -1735,26 +1737,36 @@ class admin_theme_content extends admin_addon_install{
 			echo '</li>';
 
 			//hooks
-			$addon_config = gpPlugin::GetAddonConfig($addon_key);
 			$this->AddonPanelGroup($addon_key, $addon_config, false );
+		}
 
-			//options
+
+		//version
+		if( !empty($layout_info['version']) ){
+			echo '<li><a>'.$langmessage['Your_version'].' '.$layout_info['version']. '</a></li>';
+		}elseif( $addon_config && !empty($addon_config['version']) ){
+			echo '<li><a>'.$langmessage['Your_version'].' '.$addon_config['version']. '</a></li>';
+		}
+
+		//upgrade
+		echo '<li>';
+		echo common::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=upgrade&layout='.$layout,'data-cmd="creq"');
+		echo '</li>';
+
+
+		$options = ob_get_clean();
+
+		if( !empty($options) ){
 			echo '<li class="expand_child_click">';
 			echo '<a>'.$langmessage['options'].'</a>';
 			echo '<ul>';
-			echo '<li>';
-			echo common::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=upgrade&layout='.$layout,'data-cmd="creq"');
-			echo '</li>';
 
-			//version
-			if( !empty($addon_config['version']) ){
-				echo '<li><a>'.$langmessage['Your_version'].' '.$addon_config['version']. '</a></li>';
-			}
+			echo $options;
 
 			echo '</ul></li>';
-
-
 		}
+
+
 
 
 		echo '</ul>';

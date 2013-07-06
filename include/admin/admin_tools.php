@@ -25,6 +25,7 @@ class admin_tools{
 			if( $core_version && version_compare(gpversion,$core_version,'<') ){
 				self::$new_versions['core'] = $core_version;
 			}
+			self::$new_versions['core'] = $core_version;
 		}
 
 
@@ -37,6 +38,7 @@ class admin_tools{
 		if( isset($config['themes']) && is_array($config['themes']) ){
 			self::CheckArray($config['themes'],$update_data);
 		}
+
 
 		// checked recently
 		$diff = time() - $data_timestamp;
@@ -87,21 +89,22 @@ class admin_tools{
 	static function CheckArray($array,$update_data){
 
 		foreach($array as $addon => $addon_info){
+
 			if( !isset($addon_info['id']) ){
 				continue;
 			}
 
-			if( !isset($addon_info['version']) ){
-				$installed_version = 0;
-			}else{
-				$installed_version = $addon_info['version'];
-			}
-
 			$addon_id = $addon_info['id'];
-
 			if( !isset($update_data['packages'][$addon_id]) ){
 				continue;
 			}
+
+
+			$installed_version = 0;
+			if( isset($addon_info['version']) ){
+				$installed_version = $addon_info['version'];
+			}
+
 
 			$new_addon_info = $update_data['packages'][$addon_id];
 			$new_addon_version = $new_addon_info['version'];

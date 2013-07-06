@@ -2367,8 +2367,10 @@ class gpOutput{
 		echo GetMessages();
 
 
-		global $gpLayouts;
-		echo pre($gpLayouts);
+		//global $gpLayouts;
+		//echo pre($gpLayouts);
+		//$included = get_included_files();
+		//echo pre($included);
 	}
 
 

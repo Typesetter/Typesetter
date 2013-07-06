@@ -22,7 +22,6 @@ class admin_addon_install extends admin_addons_tool{
 	var $find_label;
 	var $code_folder_name = '_addoncode';
 	var $can_install_links = true;
-	var $new_versions = array();
 
 
 	function __construct(){
@@ -36,12 +35,7 @@ class admin_addon_install extends admin_addons_tool{
 			'gpRem' => admin_tools::CanRemoteInstall(),
 		);
 
-
-		//versions available online
-		includeFile('tool/update.php');
-		update_class::VersionsAndCheckTime($this->new_versions);
 	}
-
 
 
 	/**

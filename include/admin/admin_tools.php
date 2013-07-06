@@ -3,6 +3,14 @@ defined('is_running') or die('Not an entry point...');
 
 class admin_tools{
 
+	static $new_versions = array();
+	static $update_status = 'checklater';
+
+	static function AdminPrep(){
+		includeFile('tool/update.php');
+		self::$update_status = update_class::VersionsAndCheckTime(self::$new_versions);
+	}
+
 
 	static function AdminScripts(){
 		global $langmessage, $config;
@@ -224,7 +232,7 @@ class admin_tools{
 	 * @param array $new_versions Data about newly available versions of gpEasy and addons
 	 * @static
 	 */
-	static function GetAdminPanel($new_versions){
+	static function GetAdminPanel(){
 		global $page, $gpAdmin, $config;
 
 		//don't send the panel when it's a gpreq=json request
@@ -257,7 +265,7 @@ class admin_tools{
 			echo '</div>';
 
 
-			admin_tools::AdminPanelLinks(true,$new_versions);
+			admin_tools::AdminPanelLinks(true);
 
 		echo '</div></div>'; //end simplepanel
 
@@ -267,10 +275,9 @@ class admin_tools{
 	/**
 	 * Output the link areas that are displayed in the main admin toolbar and admin_main
 	 * @param bool $in_panel Whether or not the links will be displayed in the toolbar
-	 * @param array $new_versions Data about newly available versions of gpEasy and addons
 	 * @static
 	 */
-	static function AdminPanelLinks($in_panel=true,$new_versions=array()){
+	static function AdminPanelLinks($in_panel=true){
 		global $langmessage, $page, $gpAdmin, $config;
 
 		$expand_class = 'expand_child';
@@ -379,16 +386,16 @@ class admin_tools{
 
 
 		//updates
-		if( count($new_versions) > 0 ){
+		if( count(self::$new_versions) > 0 ){
 
 			ob_start();
-			if( gp_remote_update && isset($new_versions['core']) ){
+			if( gp_remote_update && isset(self::$new_versions['core']) ){
 				echo '<li>';
-				echo '<a href="'.common::GetDir('/include/install/update.php').'">gpEasy '.$new_versions['core'].'</a>';
+				echo '<a href="'.common::GetDir('/include/install/update.php').'">gpEasy '.self::$new_versions['core'].'</a>';
 				echo '</li>';
 			}
 
-			foreach($new_versions as $addon_id => $new_addon_info){
+			foreach(self::$new_versions as $addon_id => $new_addon_info){
 				if( !is_numeric($addon_id) ){
 					continue;
 				}
@@ -597,11 +604,11 @@ class admin_tools{
 
 
 	//uses $status from update codes to execute some cleanup code on a regular interval (7 days)
-	static function ScheduledTasks($status){
+	static function ScheduledTasks(){
 		global $dataDir;
 
 
-		switch($status){
+		switch(self::$update_status){
 			case 'embedcheck':
 			case 'checkincompat':
 				//these will continue
@@ -632,13 +639,11 @@ class admin_tools{
 		global $page, $gp_admin_html;
 
 		ob_start();
-		includeFile('tool/update.php');
-		$update_status = update_class::VersionsAndCheckTime($new_versions);
 
 		echo '<div id="loading1" class="nodisplay"></div>';
 		echo '<div id="loading2" class="nodisplay"></div>';
 
-		admin_tools::GetAdminPanel($new_versions);
+		admin_tools::GetAdminPanel();
 		admin_tools::InlineEditArea();
 		echo '<div class="nodisplay" id="gp_hidden"></div>';
 
@@ -646,14 +651,16 @@ class admin_tools{
 			echo $page->admin_html;
 		}
 
-		admin_tools::CheckStatus($update_status);
-		admin_tools::ScheduledTasks($update_status);
+
+		admin_tools::CheckStatus();
+		admin_tools::ScheduledTasks();
 		$gp_admin_html .= ob_get_clean();
+
 	}
 
-	static function CheckStatus($status){
+	static function CheckStatus(){
 
-		switch($status){
+		switch(self::$update_status){
 			case 'embedcheck':
 				$img_path = common::GetUrl('Admin','cmd=embededcheck');
 				common::IdReq($img_path);

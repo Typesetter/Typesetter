@@ -83,6 +83,13 @@ class update_class{
 	 */
 	static function VersionsAndCheckTime(&$new_versions){
 		global $config, $dataDir;
+		static $version_info = false;
+		static $return = false;
+
+		if( is_array($version_info) ){
+			$new_versions = $version_info;
+			return $return;
+		}
 
 		$new_versions = array();
 
@@ -109,21 +116,22 @@ class update_class{
 			update_class::CheckArray($new_versions,$config['themes'],$update_data);
 		}
 
+		$version_info = $new_versions;
 
 		// checked recently
 		$diff = time() - $data_timestamp;
 		if( $diff < 604800 ){
-			return 'checklater';
+			return $return = 'checklater';
 		}
 
 		//determin check in type
 		includeFile('tool/RemoteGet.php');
 		if( !gpRemoteGet::Test() ){
 			update_class::SaveDataStatic($update_data);
-			return 'checkincompat';
+			return $return = 'checkincompat';
 		}
 
-		return 'embedcheck';
+		return $return = 'embedcheck';
 	}
 
 	static function CheckArray(&$new_versions,$array,$update_data){
@@ -157,15 +165,6 @@ class update_class{
 		}
 
 	}
-
-
-
-	static function CheckIncompatible(){
-
-		update_class::SaveDataStatic($update_data);
-		return 'checkincompat';
-	}
-
 
 
 	function Run(){

@@ -1655,7 +1655,7 @@ class admin_theme_content extends admin_addon_install{
 			if( $info['is_addon'] ){
 
 				//upgrade
-				if( gp_remote_themes && isset($info['id']) && isset($this->new_versions[$info['id']]) ){
+				if( gp_remote_themes && isset($info['id']) && isset(admin_tools::$new_versions[$info['id']]) ){
 					echo '<a href="'.addon_browse_path.'/Themes?id='.$info['id'].'" data-cmd="remote">';
 					echo $langmessage['upgrade'].' (gpEasy.com)';
 					echo '</a>';

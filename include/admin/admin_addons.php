@@ -590,8 +590,8 @@ class admin_addons extends admin_addon_install{
 		echo '</ul>';
 
 		//upgrade gpeasy.com
-		if( isset($addon_config['id']) && isset($this->new_versions[$addon_config['id']]) ){
-			$version_info = $this->new_versions[$addon_config['id']];
+		if( isset($addon_config['id']) && isset(admin_tools::$new_versions[$addon_config['id']]) ){
+			$version_info = admin_tools::$new_versions[$addon_config['id']];
 			echo '<div class="gp_notice">';
 			echo '<a href="'.addon_browse_path.'/Plugins?id='.$addon_config['id'].'" data-cmd="remote">';
 			echo $langmessage['new_version'];

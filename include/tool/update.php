@@ -126,7 +126,7 @@ class update_class{
 	 */
 	function GetData(){
 
-		$this->data_timestamp = admin_tools::UpdateData($update_data);
+		$this->data_timestamp = admin_tools::VersionData($update_data);
 		$this->update_data = $update_data;
 	}
 
@@ -230,7 +230,7 @@ class update_class{
 			$this->data_timestamp = time();
 		}
 
-		admin_tools::UpdateData($this->update_data);
+		admin_tools::VersionData($this->update_data);
 
 	}
 
@@ -413,7 +413,7 @@ class update_class{
 		if( $gp_filesystem ){
 			$gp_filesystem->destruct();
 		}
-		admin_tools::UpdateData($this->update_data); //save any changes made by the steps
+		admin_tools::VersionData($this->update_data); //save any changes made by the steps
 
 		if( !$done ){
 			if( $passed ){

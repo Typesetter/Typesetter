@@ -15,7 +15,7 @@ class admin_tools{
 	static function VersionsAndCheckTime(){
 		global $config, $dataDir;
 
-		$data_timestamp = self::UpdateData($update_data);
+		$data_timestamp = self::VersionData($update_data);
 
 		//check core version
 		// only report new versions if it's a root install
@@ -47,7 +47,7 @@ class admin_tools{
 		//determin check in type
 		includeFile('tool/RemoteGet.php');
 		if( !gpRemoteGet::Test() ){
-			self::UpdateData($update_data);
+			self::VersionData($update_data);
 			self::$update_status = 'checkincompat';
 			return;
 		}
@@ -60,7 +60,7 @@ class admin_tools{
 	 * Get or cache data about available versions of gpEasy and addons
 	 *
 	 */
-	static function UpdateData(&$update_data){
+	static function VersionData(&$update_data){
 		global $dataDir;
 
 		$file = $dataDir.'/data/_updates/updates.php';

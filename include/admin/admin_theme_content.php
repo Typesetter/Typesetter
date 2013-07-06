@@ -1748,6 +1748,16 @@ class admin_theme_content extends admin_addon_install{
 		echo common::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=upgrade&layout='.$layout,'data-cmd="creq"');
 		echo '</li>';
 
+		//upgrade
+		/*
+		if( gp_remote_themes && isset($info['id']) && isset(admin_tools::$new_versions[$info['id']]) ){
+			echo '<a href="'.addon_browse_path.'/Themes?id='.$info['id'].'" data-cmd="remote">';
+			echo $langmessage['upgrade'].' (gpEasy.com)';
+			echo '</a>';
+			echo ' &nbsp; ';
+		}
+		*/
+
 
 		$options = ob_get_clean();
 

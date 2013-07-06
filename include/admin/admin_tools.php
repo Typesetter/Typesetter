@@ -16,6 +16,7 @@ class admin_tools{
 		global $config, $dataDir;
 
 		$data_timestamp = self::VersionData($update_data);
+		msg($update_data);
 
 		//check core version
 		// only report new versions if it's a root install

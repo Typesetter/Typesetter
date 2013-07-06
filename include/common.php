@@ -2470,7 +2470,7 @@ class common{
 
 
 	static function IdUrl($request_cmd='cv'){
-		global $config, $dataDir;
+		global $config, $dataDir, $gpLayouts;
 
 		$path = addon_browse_path.'/Resources?';
 
@@ -2497,29 +2497,42 @@ class common{
 		$addon_ids = array();
 		if( isset($config['addons']) && is_array($config['addons']) ){
 			foreach($config['addons'] as $addon => $addon_info){
-				if( isset($addon_info['id']) ){
-					$addon_id = $addon_info['id'];
-					if( isset($addon_info['order']) ){
-						$addon_id .= '.'.$addon_info['order'];
-					}
-					$addon_ids[] = $addon_id;
+				if( !isset($addon_info['id']) ){
+					continue;
 				}
+				$addon_id = $addon_info['id'];
+				if( isset($addon_info['order']) ){
+					$addon_id .= '.'.$addon_info['order'];
+				}
+				$addon_ids[] = $addon_id;
 			}
 		}
 
 		//themes
 		if( isset($config['themes']) && is_array($config['themes']) ){
 			foreach($config['themes'] as $addon => $addon_info){
-				if( isset($addon_info['id']) ){
-					$addon_id = $addon_info['id'];
-					if( isset($addon_info['order']) ){
-						$addon_id .= '.'.$addon_info['order'];
-					}
-					$addon_ids[] = $addon_id;
+				if( !isset($addon_info['id']) ){
+					continue;
 				}
+				$addon_id = $addon_info['id'];
+				if( isset($addon_info['order']) ){
+					$addon_id .= '.'.$addon_info['order'];
+				}
+				$addon_ids[] = $addon_id;
 			}
 		}
 
+		//layouts
+		if( is_array($gpLayouts) ){
+			foreach($gpLayouts as $layout_info){
+				if( !isset($layout_info['addon_id']) ){
+					continue;
+				}
+				$addon_ids[] = $layout_info['addon_id'];
+			}
+		}
+
+		$addon_ids = array_unique($addon_ids);
 		$args['as'] = implode('-',$addon_ids);
 
 		return $path . http_build_query($args,'','&');

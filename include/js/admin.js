@@ -193,31 +193,6 @@ $gp.links.admin_box_close = gpinputs.admin_box_close = $gp.CloseAdminBox;
 
 
 /**
- * Remote Browse
- * @param object evt Event object
- *
- */
-$gp.links.remote = function(evt){
-	evt.preventDefault();
-	var loc = strip_from(window.location.href,'#');
-	var src = $gp.jPrep(this.href,'gpreq=body');
-
-	//can remote install
-	if( gpRem ){
-		src += '&in='+encodeURIComponent(loc)
-			+ '&blink='+encodeURIComponent(gpBLink);
-	}
-
-	//40px margin + 17px*2 border + 20px padding + 10 (extra padding) = approx 130
-	var height = $(window).height() - 130;
-
-	var iframe = '<iframe src="'+src+'" style="height:'+height+'px;" frameborder="0" />';
-	$gp.AdminBoxC(iframe,'iframe');
-};
-
-
-
-/**
  * Save admin user settings
  *
  */

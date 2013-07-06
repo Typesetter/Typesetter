@@ -39,3 +39,32 @@ $(function(){
 });
 
 
+
+/**
+ * Remote Browse
+ * @param object evt Event object
+ *
+ */
+$gp.links.remote = function(evt){
+	evt.preventDefault();
+	var src = $gp.jPrep(this.href,'gpreq=body');
+
+	//can remote install
+	if( gpRem ){
+		var pathArray = window.location.href.split( '/' );
+		var url = pathArray[0] + '//' + pathArray[2]+gpBase;
+		if( window.location.href.indexOf('index.php') > 0 ){
+			url += '/index.php';
+		}
+
+		src += '&inUrl='+encodeURIComponent(url)
+			+ '&gpRem='+encodeURIComponent(gpRem);
+	}
+
+	//40px margin + 17px*2 border + 20px padding + 10 (extra padding) = approx 130
+	var height = $(window).height() - 130;
+
+	var iframe = '<iframe src="'+src+'" style="height:'+height+'px;" frameborder="0" />';
+	$gp.AdminBoxC(iframe,'iframe');
+};
+

@@ -35,9 +35,8 @@ class admin_addons extends admin_addon_install{
 		$this->find_label = $langmessage['Find Plugins'];
 		$this->manage_label = $langmessage['Manage Plugins'];
 
-		$page->css_admin[] = '/include/css/addons.css';
 		$page->head_js[] = '/include/js/auto_width.js';
-		$page->head_js[] = '/include/js/rate.js';
+		parent::__construct();
 
 		$this->InitRating();
 

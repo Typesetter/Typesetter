@@ -60,13 +60,11 @@ class admin_theme_content extends admin_addon_install{
 		$this->find_label = $langmessage['Find Themes'];
 		$this->manage_label = $langmessage['Manage Layouts'];
 
-
 		$page->head_js[] = '/include/js/theme_content.js';
 		$page->head_js[] = '/include/js/dragdrop.js';
-		$page->head_js[] = '/include/js/rate.js';
-
 		$page->css_admin[] = '/include/css/theme_content.css';
-		$page->css_admin[] = '/include/css/addons.css';
+
+		parent::__construct();
 
 		$this->possible = $this->GetPossible();
 
@@ -78,6 +76,7 @@ class admin_theme_content extends admin_addon_install{
 			$layout_part = $parts[1];
 			if( gp_remote_themes && strtolower($layout_part) == 'remote' ){
 				$this->RemoteBrowse();
+				return;
 			}
 
 			if( isset($gpLayouts[$layout_part]) ){

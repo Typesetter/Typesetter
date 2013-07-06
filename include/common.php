@@ -35,8 +35,8 @@ gp_defined('gp_remote_plugins',gp_remote_addons);
 gp_defined('gp_remote_themes',gp_remote_addons);
 gp_defined('gp_remote_update',gp_remote_addons);
 
-gp_defined('addon_browse_path','http://gpeasy.loc/index.php');
-//gp_defined('addon_browse_path','http://gpeasy.com/index.php');
+//gp_defined('addon_browse_path','http://gpeasy.loc/index.php');
+gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
 define('gpversion','4.0');
 define('gp_random',common::RandomString());
@@ -2420,7 +2420,6 @@ class common{
 
 		//default gpEasy Variables
 		echo 'var gplinks={},gpinputs={},gpresponse={}'
-				.',gpRem=true'
 				.',isadmin=false'
 				.',gpBase="'.rtrim(common::GetDir(''),'/').'"'
 				.',post_nonce=""'

@@ -488,7 +488,7 @@ class gpsession{
 
 		$GP_LANG_VALUES += array('cancel'=>'ca','update'=>'up','caption'=>'cp','Width'=>'Width','Height'=>'Height');
 		common::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css');
-		admin_tools::AdminPrep();
+		admin_tools::VersionsAndCheckTime();
 
 
 		//prepend messages from message buffer

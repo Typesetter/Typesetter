@@ -77,95 +77,6 @@ class update_class{
 
 	}
 
-	/*
-	 * @static
-	 *
-	 */
-	static function VersionsAndCheckTime(&$new_versions){
-		global $config, $dataDir;
-		static $version_info = false;
-		static $return = false;
-
-		if( is_array($version_info) ){
-			$new_versions = $version_info;
-			return $return;
-		}
-
-		$new_versions = array();
-
-		update_class::GetDataStatic($update_data,$data_timestamp);
-
-		//check core version
-		// only report new versions if it's a root install
-		if( !defined('multi_site_unique') && isset($update_data['packages']['core']) ){
-			$core_version = $update_data['packages']['core']['version'];
-
-			if( $core_version && version_compare(gpversion,$core_version,'<') ){
-				$new_versions['core'] = $core_version;
-			}
-		}
-
-
-		//check addon versions
-		if( isset($config['addons']) && is_array($config['addons']) ){
-			update_class::CheckArray($new_versions,$config['addons'],$update_data);
-		}
-
-		//check theme versions
-		if( isset($config['themes']) && is_array($config['themes']) ){
-			update_class::CheckArray($new_versions,$config['themes'],$update_data);
-		}
-
-		$version_info = $new_versions;
-
-		// checked recently
-		$diff = time() - $data_timestamp;
-		if( $diff < 604800 ){
-			return $return = 'checklater';
-		}
-
-		//determin check in type
-		includeFile('tool/RemoteGet.php');
-		if( !gpRemoteGet::Test() ){
-			update_class::SaveDataStatic($update_data);
-			return $return = 'checkincompat';
-		}
-
-		return $return = 'embedcheck';
-	}
-
-	static function CheckArray(&$new_versions,$array,$update_data){
-
-		foreach($array as $addon => $addon_info){
-			if( !isset($addon_info['id']) ){
-				continue;
-			}
-
-			if( !isset($addon_info['version']) ){
-				$installed_version = 0;
-			}else{
-				$installed_version = $addon_info['version'];
-			}
-
-			$addon_id = $addon_info['id'];
-
-			if( !isset($update_data['packages'][$addon_id]) ){
-				continue;
-			}
-
-			$new_addon_info = $update_data['packages'][$addon_id];
-			$new_addon_version = $new_addon_info['version'];
-			if( version_compare($installed_version,$new_addon_version,'>=') ){
-				continue;
-			}
-
-			//new version found
-			$new_versions[$addon_id] = $new_addon_info;
-			$new_versions[$addon_id]['name'] = $addon_info['name'];
-		}
-
-	}
-
 
 	function Run(){
 
@@ -202,49 +113,23 @@ class update_class{
 	}
 
 
-	//
-	//	$update_data['packages'][id] = array()
-	//
-	//		--type--
-	//		array['id'] = id of addon (unique across all types), "core" if type is "core"
-	//		array['type'] = [core,plugin,theme]
-	//		array['md5'] = expected md5 sum of zip file
-	//		array['zip'] = name of file on remote server
-	//		array['file'] = file on local system
-	//		array['version'] = version of the package
-	//
-	//
+	/**
+	 * $update_data['packages'][id] = array()
+	 *
+	 *		array['id']			= id of addon (unique across all types), "core" if type is "core"
+	 *		array['type']		= [core,plugin,theme]
+	 *		array['md5']		= expected md5 sum of zip file
+	 *		array['zip']		= name of file on remote server
+	 *		array['file']		= file on local system
+	 *		array['version']	= version of the package
+	 *
+	 */
 	function GetData(){
 
-		update_class::GetDataStatic($update_data,$timestamp);
-
+		$this->data_timestamp = admin_tools::UpdateData($update_data);
 		$this->update_data = $update_data;
-		$this->data_timestamp = $timestamp;
 	}
 
-	static function GetDataStatic(&$update_data,&$data_timestamp){
-		global $dataDir;
-
-		$data_timestamp = 0;
-		$update_data = array();
-		$file = $dataDir.'/data/_updates/updates.php';
-		if( file_exists($file) ){
-			require($file);
-			$data_timestamp = $fileModTime;
-		}
-
-		$update_data += array('packages'=>array());
-	}
-
-	static function SaveDataStatic(&$update_data){
-		global $dataDir;
-		$file = $dataDir.'/data/_updates/updates.php';
-		gpFiles::SaveArray($file,'update_data',$update_data);
-	}
-
-	function SaveData(){
-		update_class::SaveDataStatic($this->update_data);
-	}
 
 	function CheckPHP(){
 		global $dataDir, $langmessage;
@@ -345,7 +230,8 @@ class update_class{
 			$this->data_timestamp = time();
 		}
 
-		$this->SaveData();
+		admin_tools::UpdateData($this->update_data);
+
 	}
 
 	function DoRemoteCheck2(){
@@ -378,19 +264,6 @@ class update_class{
 			}
 			$this->update_data['packages'][$id] = $info;
 		}
-
-
-
-		//save some info in $config
-/*
-		if( $core_version && version_compare(gpversion,$core_version,'<') ){
-			$config['updates']['core'] = time();
-		}
-		$config['updates']['checked'] = time();
-*/
-
-		//admin_tools::SaveConfig();
-
 
 		return true;
 	}
@@ -540,7 +413,7 @@ class update_class{
 		if( $gp_filesystem ){
 			$gp_filesystem->destruct();
 		}
-		$this->SaveData(); //save any changes made by the steps
+		admin_tools::UpdateData($this->update_data); //save any changes made by the steps
 
 		if( !$done ){
 			if( $passed ){

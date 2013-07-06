@@ -6,9 +6,114 @@ class admin_tools{
 	static $new_versions = array();
 	static $update_status = 'checklater';
 
-	static function AdminPrep(){
-		includeFile('tool/update.php');
-		self::$update_status = update_class::VersionsAndCheckTime(self::$new_versions);
+
+	/**
+	 * Check available versions of gpEasy and addons
+	 * @static
+	 *
+	 */
+	static function VersionsAndCheckTime(){
+		global $config, $dataDir;
+
+		$data_timestamp = self::UpdateData($update_data);
+
+		//check core version
+		// only report new versions if it's a root install
+		if( !defined('multi_site_unique') && isset($update_data['packages']['core']) ){
+			$core_version = $update_data['packages']['core']['version'];
+
+			if( $core_version && version_compare(gpversion,$core_version,'<') ){
+				self::$new_versions['core'] = $core_version;
+			}
+		}
+
+
+		//check addon versions
+		if( isset($config['addons']) && is_array($config['addons']) ){
+			self::CheckArray($config['addons'],$update_data);
+		}
+
+		//check theme versions
+		if( isset($config['themes']) && is_array($config['themes']) ){
+			self::CheckArray($config['themes'],$update_data);
+		}
+
+		// checked recently
+		$diff = time() - $data_timestamp;
+		if( $diff < 604800 ){
+			return;
+		}
+
+		//determin check in type
+		includeFile('tool/RemoteGet.php');
+		if( !gpRemoteGet::Test() ){
+			self::UpdateData($update_data);
+			self::$update_status = 'checkincompat';
+			return;
+		}
+
+		self::$update_status = 'embedcheck';
+	}
+
+
+	/**
+	 * Get or cache data about available versions of gpEasy and addons
+	 *
+	 */
+	static function UpdateData(&$update_data){
+		global $dataDir;
+
+		$file = $dataDir.'/data/_updates/updates.php';
+
+		//set
+		if( !is_null($update_data) ){
+			return gpFiles::SaveArray($file,'update_data',$update_data);
+		}
+
+		//get
+		$data_timestamp = 0;
+		$update_data = array();
+		if( file_exists($file) ){
+			require($file);
+			$data_timestamp = $fileModTime;
+		}
+
+		$update_data += array('packages'=>array());
+
+		return $data_timestamp;
+	}
+
+
+	static function CheckArray($array,$update_data){
+
+		foreach($array as $addon => $addon_info){
+			if( !isset($addon_info['id']) ){
+				continue;
+			}
+
+			if( !isset($addon_info['version']) ){
+				$installed_version = 0;
+			}else{
+				$installed_version = $addon_info['version'];
+			}
+
+			$addon_id = $addon_info['id'];
+
+			if( !isset($update_data['packages'][$addon_id]) ){
+				continue;
+			}
+
+			$new_addon_info = $update_data['packages'][$addon_id];
+			$new_addon_version = $new_addon_info['version'];
+			if( version_compare($installed_version,$new_addon_version,'>=') ){
+				continue;
+			}
+
+			//new version found
+			self::$new_versions[$addon_id] = $new_addon_info;
+			self::$new_versions[$addon_id]['name'] = $addon_info['name'];
+		}
+
 	}
 
 
@@ -229,7 +334,6 @@ class admin_tools{
 
 	/**
 	 * Output the main admin toolbar
-	 * @param array $new_versions Data about newly available versions of gpEasy and addons
 	 * @static
 	 */
 	static function GetAdminPanel(){

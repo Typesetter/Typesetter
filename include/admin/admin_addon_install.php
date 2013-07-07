@@ -55,7 +55,6 @@ class admin_addon_install extends admin_addons_tool{
 
 		echo '<form action="'.common::GetUrl($page->requested).'" method="post">';
 		echo '<input type="hidden" name="cmd" value="remote_install_confirmed" />';
-		echo '<input type="hidden" name="type" value="'.htmlspecialchars($_REQUEST['type']).'" />';
 		echo '<input type="hidden" name="id" value="'.htmlspecialchars($_REQUEST['id']).'" />';
 		echo '<input type="hidden" name="order" value="'.htmlspecialchars($_REQUEST['order']).'" />';
 		echo '<input type="hidden" name="name" value="'.htmlspecialchars($_REQUEST['name']).'" />';
@@ -64,7 +63,7 @@ class admin_addon_install extends admin_addons_tool{
 		echo '</form>';
 	}
 
-	function RemoteInstallConfirmed(){
+	function RemoteInstallConfirmed($type = 'plugin'){
 
 		$_POST += array('order'=>'');
 
@@ -76,8 +75,10 @@ class admin_addon_install extends admin_addons_tool{
 		$installer->config_index = $this->config_index;
 		$installer->can_install_links = $this->can_install_links;
 
-		$installer->InstallRemote( $_POST['type'], $_POST['id'], $_POST['order'] );
+		$installer->InstallRemote( $type, $_POST['id'], $_POST['order'] );
 		$installer->OutputMessages();
+
+		return $installer;
 	}
 
 

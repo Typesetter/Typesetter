@@ -37,6 +37,28 @@ $gpOutConf = array() of output functions/classes.. to use with the theme content
 //includeFile('admin/admin_menu_tools.php');
 includeFile('admin/admin_addon_install.php');
 
+
+/*
+      [theme] => (string)8rtgj6h/default
+      [color] => (string)#6aa84f
+      [label] => (string)Emerald 2/default
+      [is_addon] => (boolean)true
+      [addon_id] => (string)171
+      [version] => (string)1.2
+      [name] => (string)Emerald 2
+      *
+      *
+      *
+      [theme] => (string)jgpv39y/default
+      [color] => (string)#d0e0e3
+      [label] => (string)Emerald 2/default
+      [is_addon] => (boolean)false
+      [addon_id] => (string)171
+      [version] => (string)1.2
+      [name] => (string)Emerald 2
+*/
+
+
 class admin_theme_content extends admin_addon_install{
 
 	var $layout_request = false;
@@ -44,6 +66,7 @@ class admin_theme_content extends admin_addon_install{
 	var $LayoutArray;
 	var $scriptUrl = 'Admin_Theme_Content';
 	var $possible = array();
+	var $versions = array();
 
 
 	//remote install variables
@@ -66,7 +89,7 @@ class admin_theme_content extends admin_addon_install{
 
 		parent::__construct();
 
-		$this->possible = $this->GetPossible();
+		$this->GetPossible();
 
 		$cmd = common::GetCommand();
 
@@ -107,17 +130,15 @@ class admin_theme_content extends admin_addon_install{
 				$this->RemoteInstall();
 			return;
 			case 'remote_install_confirmed':
-				$this->RemoteInstallConfirmed();
-				$this->possible = $this->GetPossible();
+				$installer = $this->RemoteInstallConfirmed('theme');
+				$this->GetPossible();
+				$this->UpdateLayouts( $installer );
 			break;
 
 
 			case 'deletetheme':
 				$this->DeleteTheme();
-			return;
-
-			case 'delete_theme_confirmed':
-				$this->DeleteThemeConfirmed();
+				$this->GetPossible();
 			break;
 
 
@@ -148,8 +169,8 @@ class admin_theme_content extends admin_addon_install{
 					return;
 				}
 			break;
-			case 'upgrade':
-				$this->UpgradeLayout();
+			case 'updatetheme':
+				$this->UpdateTheme($_REQUEST['source']);
 			break;
 
 
@@ -1146,27 +1167,104 @@ class admin_theme_content extends admin_addon_install{
 			$page->SetTheme();
 			$this->SetLayoutArray();
 		}
-
 	}
 
-	function UpgradeLayout(){
-		global $langmessage,$dataDir;
 
-		includeFile('admin/admin_addon_installer.php');
-		$installer = new admin_addon_installer();
+	/**
+	 * Update theme hooks and references in any related layouts
+	 *
+	 *
+	 */
+	function UpdateTheme($theme){
+		global $langmessage, $dataDir, $gpLayouts;
 
+		$theme_info = $this->ThemeInfo($theme);
 
-		$layout =& $_REQUEST['layout'];
-		$layout_info = common::LayoutInfo($layout);
-		if( !$layout_info ){
-			message($langmessage['OOPS'].'(Invalid Layout)');
+		if( !$theme_info ){
+			message($langmessage['OOPS'].'(Invalid Source)');
 			return false;
 		}
 
-		$installer->source = $dataDir.dirname($layout_info['path']); //$theme_info['dir'] may be the style folder
-		$installer->Install();
+
+		//install addon
+		includeFile('admin/admin_addon_installer.php');
+		$installer = new admin_addon_installer();
+		$installer->addon_folder_rel = dirname($theme_info['rel']);
+		$installer->code_folder_name = '_themes';
+		$installer->source = $theme_info['full_dir'];
+
+		$success = $installer->Install();
 		$installer->OutputMessages();
+
+		if( !$success ){
+			return;
+		}
+
+		$this->UpdateLayouts( $installer );
 	}
+
+
+	/**
+	 * Update related layouts with new $theme_info
+	 *
+	 */
+	function UpdateLayouts( $installer ){
+		global $gpLayouts;
+
+		$ini_contents = $installer->ini_contents;
+
+		$theme_folder = basename($installer->dest);
+
+
+		$new_layout_info = array();
+		if( strpos($installer->dest,'/data/_themes') !== false ){
+			$new_layout_info['is_addon'] = true;
+		}else{
+			$new_layout_info['is_addon'] = false;
+		}
+
+		if( $installer->has_hooks ){
+			$new_layout_info['addon_key'] = $installer->config_key;
+		}
+
+		if( isset($ini_contents['Addon_Unique_ID']) ){
+			$new_layout_info['addon_id'] = $ini_contents['Addon_Unique_ID'];
+		}
+
+		if( isset($ini_contents['Addon_Version']) ){
+			$new_layout_info['version'] = $ini_contents['Addon_Version'];
+		}
+
+		if( isset($ini_contents['Addon_Name']) ){
+			$new_layout_info['name'] = $ini_contents['Addon_Name'];
+		}
+
+		// update each layout
+		foreach($gpLayouts as $layout => $layout_info){
+
+			if( isset($ini_contents['Addon_Unique_ID']) && isset($layout_info['addon_id']) && $layout_info['addon_id'] == $ini_contents['Addon_Unique_ID'] ){
+				//update
+			}elseif( ( !isset($layout_info['is_addon']) || !$layout_info['is_addon']) && strpos($installer->dest,'/themes/'.dirname($layout_info['theme'])) !== false ){
+				//update
+			}else{
+				continue;
+			}
+
+			unset( $layout_info['is_addon'], $layout_info['addon_id'], $layout_info['version'], $layout_info['name'], $layout_info['addon_key'] );
+
+			$layout_info += $new_layout_info;
+
+			$layout_info['theme'] = $theme_folder.'/'.basename($layout_info['theme']);;
+
+			$gpLayouts[$layout] = $layout_info;
+		}
+
+		if( !admin_tools::SavePagesPHP() ){
+			message($langmessage['OOPS'].'(Layout Info Not Saved)');
+		}
+	}
+
+
 
 	/**
 	 * Display some options before copying a layout
@@ -1351,12 +1449,15 @@ class admin_theme_content extends admin_addon_install{
 	/**
 	 * Return an array of available themes
 	 * @return array
+	 *
 	 */
 	function GetPossible(){
 		global $dataDir,$dirPrefix;
-		$themes = array();
 
-		//packaged themes
+		$themes = array();
+		$this->versions = array();
+
+		//local themes
 		$dir = $dataDir.'/themes';
 		$layouts = gpFiles::readDir($dir,1);
 		foreach($layouts as $name){
@@ -1366,10 +1467,23 @@ class admin_theme_content extends admin_addon_install{
 				continue;
 			}
 
-
+			$index = $name.'(local)';
 			$ini_info = admin_addons_tool::GetAvailInstall($full_dir);
 
-			$index = $name.'(local)';
+			//check version
+			$addon_id = $version = false;
+			if( isset($ini_info['Addon_Version']) && isset($ini_info['Addon_Unique_ID']) ){
+				$addon_id = $ini_info['Addon_Unique_ID'];
+				$version = $ini_info['Addon_Version'];
+
+				//skip if we already have a newer version
+				if( isset($this->versions[$addon_id]) && version_compare($this->versions[$addon_id]['version'],$version,'>') ){
+					continue;
+				}
+				$this->versions[$addon_id] = array('version'=>$version,'index'=>$index);;
+			}
+
+
 
 			$themes[$index]['name'] = $name;
 			if( isset($ini_info['Addon_Name']) ){
@@ -1380,15 +1494,14 @@ class admin_theme_content extends admin_addon_install{
 			$themes[$index]['is_addon'] = false;
 			$themes[$index]['full_dir'] = $full_dir;
 			$themes[$index]['rel'] = '/themes/'.$name;
-			if( isset($ini_info['Addon_Version']) ){
+			if( $version ){
 				$themes[$index]['version'] = $ini_info['Addon_Version'];
 			}
-			if( isset($ini_info['Addon_Unique_ID']) ){
+			if( $addon_id ){
 				$themes[$index]['id'] = $ini_info['Addon_Unique_ID'];
 			}
-
-			//msg('ok '.$index);
 		}
+
 
 		//downloaded themes
 		$dir = $dataDir.'/data/_themes';
@@ -1402,8 +1515,22 @@ class admin_theme_content extends admin_addon_install{
 			}
 
 			$ini_info = admin_addons_tool::GetAvailInstall($full_dir);
-
 			$index = $ini_info['Addon_Name'].'(remote)';
+
+			//check version
+			$addon_id = $version = false;
+			if( isset($ini_info['Addon_Version']) && isset($ini_info['Addon_Unique_ID']) ){
+				$addon_id = $ini_info['Addon_Unique_ID'];
+				$version = $ini_info['Addon_Version'];
+
+				//skip if we already have a newer version
+				if( isset($this->versions[$addon_id]) && version_compare($this->versions[$addon_id]['version'],$version,'>') ){
+					continue;
+				}
+				$this->versions[$addon_id] = array('version'=>$version,'index'=>$index);
+			}
+
+
 			$themes[$index]['name'] = $ini_info['Addon_Name'];
 			$themes[$index]['colors'] = $this->GetThemeColors($full_dir);
 			$themes[$index]['folder'] = $folder;
@@ -1416,9 +1543,24 @@ class admin_theme_content extends admin_addon_install{
 			}
 		}
 
-		uksort($themes,'strnatcasecmp');
 
-		return $themes;
+		//remove older versions
+		$this->possible = array();
+		foreach($themes as $index => $info){
+
+			if( !isset($info['id']) || !isset($info['version']) ){
+				$this->possible[$index] = $info;
+				continue;
+			}
+
+			if( version_compare($this->versions[$info['id']]['version'], $info['version'],'>') ){
+				continue;
+			}
+
+			$this->possible[$index] = $info;
+		}
+
+		uksort($this->possible,'strnatcasecmp');
 	}
 
 	/**
@@ -1616,8 +1758,9 @@ class admin_theme_content extends admin_addon_install{
 
 		$i=0;
 		foreach($this->possible as $theme_id => $info){
+			$theme_label = str_replace('_',' ',$info['name']);
 			echo '<tr class="'.($i++ % 2 ? ' even' : '').'"><td class="nowrap">';
-			echo str_replace('_',' ',$info['name']);
+			echo $theme_label;
 			echo '</td><td>';
 			if( isset($info['version']) ){
 				echo $info['version'];
@@ -1632,6 +1775,7 @@ class admin_theme_content extends admin_addon_install{
 			}
 
 			echo '</td><td>';
+
 
 			if( isset($info['id']) && is_numeric($info['id']) ){
 				$id = $info['id'];
@@ -1650,21 +1794,26 @@ class admin_theme_content extends admin_addon_install{
 				$label = '<span class="nowrap">'.$langmessage['rate'].' '.$this->ShowRating($info['rel'],$rating).'</span>';
 				echo $label;
 				echo ' &nbsp; ';
+
+				//remote upgrade
+				if( gp_remote_themes && isset($id) && isset(admin_tools::$new_versions[$id]) && version_compare(admin_tools::$new_versions[$id]['version'], $info['version'] ,'>') ){
+					$version_info = admin_tools::$new_versions[$id];
+					$label = $langmessage['new_version'].' &nbsp; '.$version_info['version'].' &nbsp; (gpEasy.com)';
+					echo '<div style="white-space:nowrap">';
+					echo common::Link('Admin_Theme_Content',$label,'cmd=remote_install&id='.$id.'&name='.rawurlencode($version_info['name']));
+					echo '</div>';
+				}
+
 			}
+
 
 			if( $info['is_addon'] ){
 
-				//upgrade
-				if( gp_remote_themes && isset($info['id']) && isset(admin_tools::$new_versions[$info['id']]) ){
-					echo '<a href="'.addon_browse_path.'/Themes?id='.$info['id'].'" data-cmd="remote">';
-					echo $langmessage['upgrade'].' (gpEasy.com)';
-					echo '</a>';
-					echo ' &nbsp; ';
-				}
-
 				//delete
 				$folder = $info['folder'];
-				echo common::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletetheme&folder='.rawurlencode($folder).'&label='.rawurlencode($theme_id),'data-cmd="gpabox"');
+				$title = sprintf($langmessage['generic_delete_confirm'], $theme_label );
+				$attr = array( 'data-cmd'=>'cnreq','class'=>'gpconfirm','title'=> $title );
+				echo common::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletetheme&folder='.rawurlencode($folder),$attr);
 
 				//order
 				if( isset($config['themes'][$folder]['order']) ){
@@ -1745,18 +1894,13 @@ class admin_theme_content extends admin_addon_install{
 
 		//upgrade
 		echo '<li>';
-		echo common::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=upgrade&layout='.$layout,'data-cmd="creq"');
-		echo '</li>';
-
-		//upgrade
-		/*
-		if( gp_remote_themes && isset($info['id']) && isset(admin_tools::$new_versions[$info['id']]) ){
-			echo '<a href="'.addon_browse_path.'/Themes?id='.$info['id'].'" data-cmd="remote">';
-			echo $langmessage['upgrade'].' (gpEasy.com)';
-			echo '</a>';
-			echo ' &nbsp; ';
+		if( $layout_info['is_addon'] ){
+			$source = $layout_info['name'].'(remote)/'.$layout_info['theme_color'];
+		}else{
+			$source = $layout_info['theme_name'].'(local)/'.$layout_info['theme_color'];
 		}
-		*/
+		echo common::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=updatetheme&source='.rawurlencode($source),'data-cmd="creq"');
+		echo '</li>';
 
 
 		$options = ob_get_clean();
@@ -1771,7 +1915,31 @@ class admin_theme_content extends admin_addon_install{
 			echo '</ul></li>';
 		}
 
+		//new versions
+		if( isset($layout_info['addon_id']) ){
+			$addon_id = $layout_info['addon_id'];
+			$version = $layout_info['version'];
 
+			//local or already downloaded
+			if( isset($this->versions[$addon_id]) && version_compare($this->versions[$addon_id]['version'],$version,'>') ){
+				$version_info = $this->versions[$addon_id];
+				$label = $langmessage['upgrade'].' &nbsp; '.$version_info['version'];
+				$source = $version_info['index'].'/'.$layout_info['theme_color']; //could be different folder
+				echo '<div class="gp_notice">';
+				echo common::Link('Admin_Theme_Content',$label,'cmd=updatetheme&source='.$source,'data-cmd="creq"');
+				echo '</div>';
+
+
+			//remote version
+			}elseif( gp_remote_themes && isset(admin_tools::$new_versions[$addon_id]) && version_compare(admin_tools::$new_versions[$addon_id]['version'],$version,'>') ){
+				$version_info = admin_tools::$new_versions[$addon_id];
+				$label = $langmessage['new_version'].' &nbsp; '.$version_info['version'].' &nbsp; (gpEasy.com)';
+				echo '<div class="gp_notice">';
+				echo common::Link('Admin_Theme_Content',$label,'cmd=remote_install&id='.$addon_id.'&name='.rawurlencode($version_info['name']).'&layout='.$layout);
+				echo '</div>';
+			}
+
+		}
 
 
 		echo '</ul>';
@@ -3176,60 +3344,19 @@ class admin_theme_content extends admin_addon_install{
 	}
 
 
-	/*
-	 * Remote Themes
-	 *
-	 *
-	 */
-
-
-	function DeleteTheme(){
-		global $langmessage, $dataDir;
-
-		echo '<div class="inline_box">';
-		echo '<form action="'.common::GetUrl('Admin_Theme_Content').'" method="post">';
-
-		$can_delete = true;
-		$theme_folder_name =& $_GET['folder'];
-		$theme_folder = $dataDir.'/data/_themes/'.$theme_folder_name;
-		if( empty($theme_folder_name) || !ctype_alnum($theme_folder_name) || empty($_GET['label']) ){
-			echo $langmessage['OOPS'];
-			$can_delete = false;
-		}
-
-		if( !$this->CanDeleteTheme($theme_folder_name,$message) ){
-			echo $message;
-			$can_delete = false;
-		}
-
-		if( $can_delete ){
-			$label = htmlspecialchars($_GET['label']);
-			echo '<input type="hidden" name="cmd" value="delete_theme_confirmed" />';
-			echo '<input type="hidden" name="folder" value="'.htmlspecialchars($theme_folder_name).'" />';
-			echo sprintf($langmessage['generic_delete_confirm'], '<i>'.$label.'</i>');
-		}
-
-		echo '<p>';
-		echo ' <input type="submit" name="" value="'.$langmessage['continue'].'" />';
-		echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close" />';
-		echo '</p>';
-
-		echo '</form>';
-		echo '</div>';
-	}
-
 	/**
-	 * Finalize theme removal
+	 * Delete a remote theme
 	 *
 	 */
-	function DeleteThemeConfirmed(){
+	function DeleteTheme(){
 		global $langmessage, $dataDir, $gpLayouts, $config;
 
 		$config_before = $config;
 		$gpLayoutsBefore = $gpLayouts;
 		$theme_folder_name =& $_POST['folder'];
 		$theme_folder = $dataDir.'/data/_themes/'.$theme_folder_name;
-		if( empty($theme_folder_name) || !ctype_alnum($theme_folder_name) || !isset($config['themes'][$theme_folder_name]) ){
+
+		if( empty($theme_folder_name) || !ctype_alnum($theme_folder_name) ){
 			message($langmessage['OOPS'].' (Invalid Request)');
 			return false;
 		}

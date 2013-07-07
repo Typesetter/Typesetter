@@ -13,20 +13,18 @@ class admin_tools{
 	 *
 	 */
 	static function VersionsAndCheckTime(){
-		global $config, $dataDir;
+		global $config, $dataDir, $gpLayouts;
 
 		$data_timestamp = self::VersionData($update_data);
-		msg($update_data);
 
 		//check core version
 		// only report new versions if it's a root install
-		if( !defined('multi_site_unique') && isset($update_data['packages']['core']) ){
+		if( gp_remote_update && !defined('multi_site_unique') && isset($update_data['packages']['core']) ){
 			$core_version = $update_data['packages']['core']['version'];
 
 			if( $core_version && version_compare(gpversion,$core_version,'<') ){
 				self::$new_versions['core'] = $core_version;
 			}
-			self::$new_versions['core'] = $core_version;
 		}
 
 
@@ -39,6 +37,9 @@ class admin_tools{
 		if( isset($config['themes']) && is_array($config['themes']) ){
 			self::CheckArray($config['themes'],$update_data);
 		}
+
+		//check layout versions
+		self::CheckArray($gpLayouts,$update_data);
 
 
 		// checked recently
@@ -91,12 +92,14 @@ class admin_tools{
 
 		foreach($array as $addon => $addon_info){
 
-			if( !isset($addon_info['id']) ){
-				continue;
+			$addon_id = false;
+			if( isset($addon_info['id']) ){
+				$addon_id = $addon_info['id'];
+			}elseif( isset($addon_info['addon_id']) ){ //for layouts
+				$addon_id = $addon_info['addon_id'];
 			}
 
-			$addon_id = $addon_info['id'];
-			if( !isset($update_data['packages'][$addon_id]) ){
+			if( !$addon_id || !isset($update_data['packages'][$addon_id]) ){
 				continue;
 			}
 
@@ -114,8 +117,10 @@ class admin_tools{
 			}
 
 			//new version found
+			if( !isset($new_addon_info['name']) && isset($addon_info['name']) ){
+				$new_addon_info['name'] = $addon_info['name'];
+			}
 			self::$new_versions[$addon_id] = $new_addon_info;
-			self::$new_versions[$addon_id]['name'] = $addon_info['name'];
 		}
 
 	}

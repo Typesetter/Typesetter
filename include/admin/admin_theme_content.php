@@ -38,27 +38,6 @@ $gpOutConf = array() of output functions/classes.. to use with the theme content
 includeFile('admin/admin_addon_install.php');
 
 
-/*
-      [theme] => (string)8rtgj6h/default
-      [color] => (string)#6aa84f
-      [label] => (string)Emerald 2/default
-      [is_addon] => (boolean)true
-      [addon_id] => (string)171
-      [version] => (string)1.2
-      [name] => (string)Emerald 2
-      *
-      *
-      *
-      [theme] => (string)jgpv39y/default
-      [color] => (string)#d0e0e3
-      [label] => (string)Emerald 2/default
-      [is_addon] => (boolean)false
-      [addon_id] => (string)171
-      [version] => (string)1.2
-      [name] => (string)Emerald 2
-*/
-
-
 class admin_theme_content extends admin_addon_install{
 
 	var $layout_request = false;

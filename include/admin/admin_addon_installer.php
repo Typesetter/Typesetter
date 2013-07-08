@@ -858,7 +858,7 @@ class admin_addon_installer extends admin_addons_tool{
 		// download failed and a message was sent
 		if( isset($full_result['headers']['x-error']) ){
 			$this->message( htmlspecialchars($full_result['headers']['x-error']) );
-			$this->message( sprintf($langmessage['download_failed_xerror'],'href="'.$this->DetailUrl($_POST).'" data-cmd="remote"') );
+			$this->message( sprintf($langmessage['download_failed_xerror'],'href="'.$this->DetailUrl($_POST['type'],$_POST['id']).'" data-cmd="remote"') );
 			return false;
 		}
 

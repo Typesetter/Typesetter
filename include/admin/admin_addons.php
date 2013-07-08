@@ -402,14 +402,7 @@ class admin_addons extends admin_addon_install{
 
 
 	function Instructions(){
-		global $langmessage;
-
-		$lang = 'To install a new addon, you\'ll need to first <a href="http://gpeasy.com/index.php/Special_Addons" target="_blank">download the addon package</a> and unzip/untar the package. Then upload the contents of the uncompressed package to your /addons directory.';
-		$lang .= ' Once the code for the addon has been uploaded to your server, <a href="%s">refresh</a> this page and follow the install instructions for the addon.';
-
-		echo '<p>';
-		echo sprintf($lang,common::GetUrl('Admin_Addons','cmd=new'));
-		echo '</p>';
+		echo '<a href="http://gpeasy.org/Docs/Plugins">Plugin Documentation</a>';
 	}
 
 
@@ -469,7 +462,7 @@ class admin_addons extends admin_addon_install{
 				$info += array('About'=>'');
 
 				echo '<tr class="'.($i % 2 ? 'even' : '').'"><td>';
-				echo $info['Addon_Name'];
+				echo str_replace(' ','&nbsp;',$info['Addon_Name']);
 				echo '<br/><em class="admin_note">/addons/'.$folder.'</em>';
 				echo '</td><td>';
 				echo $info['Addon_Version'];
@@ -477,6 +470,10 @@ class admin_addons extends admin_addon_install{
 				echo common::Link('Admin_Addons',$langmessage['Install'],'cmd=local_install&source='.$folder,'data-cmd="creq"');
 				echo '</td><td>';
 				echo $info['About'];
+				if( isset($info['Addon_Unique_ID']) && is_numeric($info['Addon_Unique_ID']) ){
+					echo '<br/>';
+					echo $this->DetailLink('plugin', $info['Addon_Unique_ID'],'More Info...');
+				}
 				echo '</td></tr>';
 				$i++;
 			}

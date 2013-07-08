@@ -1747,6 +1747,13 @@ class admin_theme_content extends admin_addon_install{
 			$theme_label = str_replace('_',' ',$info['name']);
 			echo '<tr class="'.($i++ % 2 ? ' even' : '').'"><td class="nowrap">';
 			echo $theme_label;
+
+			if( isset($info['id']) ){
+				echo '<br/>';
+				echo $this->DetailLink('theme', $info['id'],'More Info...');
+			}
+
+
 			echo '</td><td>';
 			if( isset($info['version']) ){
 				echo $info['version'];
@@ -1904,7 +1911,7 @@ class admin_theme_content extends admin_addon_install{
 		//new versions
 		if( isset($layout_info['addon_id']) ){
 			$addon_id = $layout_info['addon_id'];
-			$version = $layout_info['version'];
+			$version =& $layout_info['version'];
 
 			//local or already downloaded
 			if( isset($this->versions[$addon_id]) && version_compare($this->versions[$addon_id]['version'],$version,'>') ){

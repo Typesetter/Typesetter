@@ -1455,11 +1455,12 @@ class admin_theme_content extends admin_addon_install{
 				$addon_id = $ini_info['Addon_Unique_ID'];
 				$version = $ini_info['Addon_Version'];
 
-				//skip if we already have a newer version
-				if( isset($this->versions[$addon_id]) && version_compare($this->versions[$addon_id]['version'],$version,'>') ){
-					continue;
+				if( !isset($this->versions[$addon_id]) ){
+					$this->versions[$addon_id] = array('version'=>$version,'index'=>$index);
+				}elseif( version_compare($this->versions[$addon_id]['version'],$version,'<') ){
+					$this->versions[$addon_id] = array('version'=>$version,'index'=>$index);
 				}
-				$this->versions[$addon_id] = array('version'=>$version,'index'=>$index);;
+
 			}
 
 
@@ -1502,11 +1503,11 @@ class admin_theme_content extends admin_addon_install{
 				$addon_id = $ini_info['Addon_Unique_ID'];
 				$version = $ini_info['Addon_Version'];
 
-				//skip if we already have a newer version
-				if( isset($this->versions[$addon_id]) && version_compare($this->versions[$addon_id]['version'],$version,'>') ){
-					continue;
+				if( !isset($this->versions[$addon_id]) ){
+					$this->versions[$addon_id] = array('version'=>$version,'index'=>$index);
+				}elseif( version_compare($this->versions[$addon_id]['version'],$version,'<') ){
+					$this->versions[$addon_id] = array('version'=>$version,'index'=>$index);
 				}
-				$this->versions[$addon_id] = array('version'=>$version,'index'=>$index);
 			}
 
 
@@ -1520,6 +1521,12 @@ class admin_theme_content extends admin_addon_install{
 			if( isset($ini_info['Addon_Version']) ){
 				$themes[$index]['version'] = $ini_info['Addon_Version'];
 			}
+		}
+
+
+		if( !gp_unique_addons ){
+			$this->possible = $themes;
+			return;
 		}
 
 

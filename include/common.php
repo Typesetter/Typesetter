@@ -34,6 +34,8 @@ gp_defined('gp_remote_addons',true); //deprecated 4.0.1
 gp_defined('gp_remote_plugins',gp_remote_addons);
 gp_defined('gp_remote_themes',gp_remote_addons);
 gp_defined('gp_remote_update',gp_remote_addons);
+gp_defined('gp_unique_addons',false);
+
 
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');

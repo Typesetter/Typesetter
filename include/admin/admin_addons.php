@@ -373,6 +373,10 @@ class admin_addons extends admin_addon_install{
 			}
 		}
 
+		if( !gp_unique_addons ){
+			return $avail;
+		}
+
 		//show only the most recent versions
 		$temp = array();
 		foreach($avail as $key => $info){

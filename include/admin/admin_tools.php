@@ -542,7 +542,7 @@ class admin_tools{
 		//username
 		echo '<div class="panelgroup" id="panelgroup_user'.$id_piece.'">';
 
-			self::PanelHeading($in_panel, $gpAdmin['username'], 'icon_user', 'use' );
+			self::PanelHeading($in_panel, $gpAdmin['useralias'], 'icon_user', 'use' );
 
 			echo '<ul class="submenu">';
 			echo '<li class="submenu_top"><a class="submenu_top">'.$gpAdmin['username'].'</a></li>';

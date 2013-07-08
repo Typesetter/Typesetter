@@ -497,6 +497,12 @@ class gpsession{
 			unset($GLOBALS['gpAdmin']['message_buffer']);
 		}
 
+		//alias
+		if( isset($_COOKIE['gp_alias']) ){
+			$GLOBALS['gpAdmin']['useralias'] = $_COOKIE['gp_alias'];
+		}else{
+			$GLOBALS['gpAdmin']['useralias'] = $GLOBALS['gpAdmin']['username'];
+		}
 
 		return true;
 	}
@@ -651,7 +657,9 @@ class gpsession{
 
 		$gpAdmin['checksum'] = $checksum; //store the new checksum
 		gpFiles::SaveArray($file,'gpAdmin',$gpAdmin);
+
 	}
+
 
 	/**
 	 * Update layout information if needed

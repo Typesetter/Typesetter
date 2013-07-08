@@ -329,7 +329,10 @@ class admin_addons extends admin_addon_install{
 	}
 
 
-
+	/**
+	 * Get a list of available addons
+	 *
+	 */
 	function GetAvailAddons(){
 		global $dataDir;
 
@@ -344,7 +347,7 @@ class admin_addons extends admin_addon_install{
 
 
 		$folders = gpFiles::ReadDir($addonPath,1);
-		$avail = array();
+		$versions = $avail = array();
 
 		foreach($folders as $key => $value){
 			$fullPath = $addonPath .'/'.$key;
@@ -355,10 +358,42 @@ class admin_addons extends admin_addon_install{
 			}
 			$info['upgrade_key'] = admin_addons_tool::UpgradePath($info);
 			$avail[$key] = $info;
+
+
+			if( isset($info['Addon_Version']) && isset($info['Addon_Unique_ID']) ){
+				$id = $info['Addon_Unique_ID'];
+				$version = $info['Addon_Version'];
+				if( !isset($versions[$id]) ){
+					$versions[$id] = $version;
+					continue;
+				}
+				if( version_compare($versions[$id],$version,'<') ){
+					$versions[$id] = $version;
+				}
+			}
+		}
+
+		//show only the most recent versions
+		$temp = array();
+		foreach($avail as $key => $info){
+
+			if( !isset($info['Addon_Version']) || !isset($info['Addon_Unique_ID']) ){
+				$temp[$key] = $info;
+				continue;
+			}
+
+			$id = $info['Addon_Unique_ID'];
+			$version = $info['Addon_Version'];
+
+			if( version_compare($versions[$id], $version,'>') ){
+				continue;
+			}
+
+			$temp[$key] = $info;
 		}
 
 
-		return $avail;
+		return $temp;
 	}
 
 

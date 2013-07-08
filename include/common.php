@@ -30,6 +30,7 @@ gp_defined('E_USER_DEPRECATED',16384);
 gp_defined('gpdebug_tools',false);
 gp_defined('gp_backup_limit',10);
 gp_defined('gp_write_lock_time',30);
+gp_defined('gp_dir_index',true);
 gp_defined('gp_remote_addons',true); //deprecated 4.0.1
 gp_defined('gp_remote_plugins',gp_remote_addons);
 gp_defined('gp_remote_themes',gp_remote_addons);
@@ -92,7 +93,6 @@ $languages = array(
 $gpversion = gpversion; // @deprecated 3.5b2
 $addonDataFolder = $addonCodeFolder = false;//deprecated
 $addonPathData = $addonPathCode = false;
-$checkFileIndex = true;
 $wbErrorBuffer = $gp_not_writable = $wbMessageBuffer = array();
 
 
@@ -3332,7 +3332,7 @@ class gpFiles{
 	 * @return bool True on success
 	 */
 	static function CheckDir($dir,$index=true){
-		global $config,$checkFileIndex;
+		global $config;
 
 		if( !file_exists($dir) ){
 			$parent = common::DirName($dir);
@@ -3354,7 +3354,7 @@ class gpFiles{
 		}
 
 		//make sure there's an index.html file
-		if( $index && $checkFileIndex ){
+		if( $index && gp_dir_index ){
 			$indexFile = $dir.'/index.html';
 			if( !file_exists($indexFile) ){
 				gpFiles::Save($indexFile,'<html></html>',false);

@@ -40,11 +40,13 @@ define('gp_index_filenames',true);
 
 
 /**
- * gp_remote_addons
+ * gp_remote_plugins, gp_remote_themes, gp_remote_update
  * Disable installation of remote addons
  * Defaults to true
  */
-define('gp_remote_addons',true);
+define('gp_remote_plugins',true);
+define('gp_remote_themes',true);
+define('gp_remote_update',true);
 
 
 /**

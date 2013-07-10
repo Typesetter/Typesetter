@@ -26,7 +26,7 @@ class SimpleBlogCommon{
 	var $post_id = false;
 
 
-	var $months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+	static $months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
 
 
 	/**
@@ -218,8 +218,8 @@ class SimpleBlogCommon{
 
 
 		//generate static content
-		$this->GenCategoryGadget();
-		$this->GenArchiveGadget();
+		self::GenCategoryGadget();
+		self::GenArchiveGadget();
 
 
 		unset(SimpleBlogCommon::$data['post_info']);
@@ -839,8 +839,8 @@ class SimpleBlogCommon{
 	function GenStaticContent(){
 		$this->GenFeed();
 		$this->GenGadget();
-		$this->GenCategoryGadget();
-		$this->GenArchiveGadget();
+		self::GenCategoryGadget();
+		self::GenArchiveGadget();
 	}
 
 	/**
@@ -921,17 +921,12 @@ class SimpleBlogCommon{
 	 * Regenerate the static content used to display the category gadget
 	 *
 	 */
-	function GenCategoryGadget(){
+	static function GenCategoryGadget(){
+		global $addonPathData;
 
 		$categories = SimpleBlogCommon::AStrToArray( 'categories' );
 
 		ob_start();
-		echo '<div class="simple_blog_gadget"><div>';
-
-		echo '<span class="simple_blog_gadget_label">';
-		echo gpOutput::GetAddonText('Categories');
-		echo '</span>';
-
 		echo '<ul>';
 		foreach($categories as $catindex => $catname){
 
@@ -959,11 +954,10 @@ class SimpleBlogCommon{
 		}
 		echo '</ul>';
 
-		echo '</div></div>';
-
 		$content = ob_get_clean();
 
-		$gadgetFile = $this->addonPathData.'/gadget_categories.php';
+
+		$gadgetFile = $addonPathData.'/gadget_categories.php';
 		gpFiles::Save( $gadgetFile, $content );
 	}
 
@@ -972,7 +966,8 @@ class SimpleBlogCommon{
 	 * Regenerate the static content used to display the archive gadget
 	 *
 	 */
-	function GenArchiveGadget(){
+	static function GenArchiveGadget(){
+		global $addonPathData;
 
 		//get list of posts and times
 		$list = SimpleBlogCommon::AStrToArray( 'post_times' );
@@ -987,11 +982,6 @@ class SimpleBlogCommon{
 
 
 		ob_start();
-		echo '<div class="simple_blog_gadget"><div>';
-
-		echo '<span class="simple_blog_gadget_label">';
-		echo gpOutput::GetAddonText('Archives');
-		echo '</span>';
 
 		$prev_year = false;
 		echo '<ul>';
@@ -1011,7 +1001,7 @@ class SimpleBlogCommon{
 			}
 
 			echo '<ul>';
-			echo '<li><a class="blog_gadget_link">'.$this->months[$m-1].' ('.$sum.')</a>';
+			echo '<li><a class="blog_gadget_link">'.self::$months[$m-1].' ('.$sum.')</a>';
 			echo '<ul class="simple_blog_category_posts nodisplay">';
 			foreach($posts as $post_id ){
 				$post_title = SimpleBlogCommon::AStrValue('titles',$post_id);
@@ -1025,11 +1015,10 @@ class SimpleBlogCommon{
 		}
 
 		echo '</li></ul>';
-		echo '</div></div>';
 
 		$content = ob_get_clean();
 
-		$gadgetFile = $this->addonPathData.'/gadget_archive.php';
+		$gadgetFile = $addonPathData.'/gadget_archive.php';
 		gpFiles::Save( $gadgetFile, $content );
 	}
 

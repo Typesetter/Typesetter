@@ -337,6 +337,11 @@ $(function(){
 				debug_info.data = ajaxOptions.data.substr(0,100);
 			}
 
+			//log everything if possible
+			if( window.console && console.log ){
+				console.log( debug_info );
+			}
+
 			if( typeof(debug) === 'function' ){
 				debug( debug_info );
 			}else{

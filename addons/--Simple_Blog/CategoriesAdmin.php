@@ -124,6 +124,8 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 	function SaveCategories(){
 		global $langmessage;
 
+		$_POST += array('cattitle'=>array(),'catvis'=>array());
+
 		//category titles
 		$categories_hidden = array();
 		$this->categories = array();

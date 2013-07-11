@@ -10,9 +10,10 @@ class SimpleBlogArchives{
 
 		SimpleBlogCommon::AddCSS();
 
+		$content = '';
 		$gadget_file = $addonPathData.'/gadget_archive.php';
 		if( file_exists($gadget_file) ){
-			$contents = file_get_contents($gadget_file);
+			$content = file_get_contents($gadget_file);
 		}
 
 		//fix edit links

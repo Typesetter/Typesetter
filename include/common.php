@@ -1792,7 +1792,6 @@ class common{
 			}
 		}
 
-
 		common::GetLangFile();
 		common::GetPagesPHP();
 
@@ -2905,11 +2904,12 @@ class gpFiles{
 	 *
 	 * @param string $text The string to be cleansed. Passed by reference
 	 */
-	static function cleanText(&$text){
+	static function CleanText(&$text){
 		includeFile('tool/editing.php');
 		gp_edit::tidyFix($text);
 		gpFiles::rmPHP($text);
 		gpFiles::FixTags($text);
+		$text = gpPlugin::Filter('CleanText',array($text));
 	}
 
 	/**

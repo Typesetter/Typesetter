@@ -110,7 +110,7 @@ class gpPlugin{
 	 *
 	 */
 	static function Filter($hook, $args = array() ){
-		global $config;
+		global $gp_hooks;
 
 		if( !gpPlugin::HasHook($hook) ){
 			if( isset($args[0]) ){
@@ -119,7 +119,7 @@ class gpPlugin{
 			return false;
 		}
 
-		foreach($config['hooks'][$hook] as $hook_info){
+		foreach($gp_hooks[$hook] as $hook_info){
 			$args[0] = gpPlugin::ExecHook($hook,$hook_info,$args);
 		}
 
@@ -131,18 +131,18 @@ class gpPlugin{
 
 
 	static function OneFilter( $hook, $args=array(), $addon = false ){
-		global $config;
+		global $gp_hooks;
 
 		if( !gpPlugin::HasHook($hook) ){
 			return false;
 		}
 
 		if( $addon === false ){
-			$hook_info = end($config['hooks'][$hook]);
+			$hook_info = end($gp_hooks[$hook]);
 			return gpPlugin::ExecHook($hook,$hook_info,$args);
 		}
 
-		foreach($config['hooks'][$hook] as $addon_key => $hook_info){
+		foreach($gp_hooks[$hook] as $addon_key => $hook_info){
 			if( $addon_key === $addon ){
 				return gpPlugin::ExecHook($hook,$hook_info,$args);
 			}
@@ -152,13 +152,13 @@ class gpPlugin{
 	}
 
 	static function Action($hook, $args = array() ){
-		global $config;
+		global $gp_hooks;
 
 		if( !gpPlugin::HasHook($hook) ){
 			return;
 		}
 
-		foreach($config['hooks'][$hook] as $hook_info){
+		foreach($gp_hooks[$hook] as $hook_info){
 			gpPlugin::ExecHook($hook,$hook_info,$args);
 		}
 	}
@@ -170,8 +170,8 @@ class gpPlugin{
 	 *
 	 */
 	static function HasHook($hook){
-		global $config;
-		if( empty($config['hooks']) || empty($config['hooks'][$hook]) ){
+		global $gp_hooks;
+		if( empty($gp_hooks) || empty($gp_hooks[$hook]) ){
 			return false;
 		}
 		return true;

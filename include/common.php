@@ -1731,7 +1731,7 @@ class common{
 	 *
 	 */
 	static function GetConfig(){
-		global $config, $dataDir;
+		global $config, $dataDir, $gp_hooks;
 
 		require($dataDir.'/data/_site/config.php');
 		if( !is_array($config) || !array_key_exists('gpversion',$config) ){
@@ -1769,6 +1769,7 @@ class common{
 				'themes' => array(),
 				'gadgets' => array(),
 				'passhash' => 'sha1',
+				'hooks' => array(),
 				);
 
 		//shahash deprecated 4.0
@@ -1782,6 +1783,15 @@ class common{
 								'Contact' 		=> array('script'=>'/include/special/special_contact.php','class'=>'special_contact_gadget'),
 								'Search'		=> array('script'=>'/include/special/special_search.php','method'=>array('special_gpsearch','gadget')), //3.5
 								);
+
+		foreach($config['hooks'] as $hook => $hook_info){
+			if( isset($gp_hooks[$hook]) ){
+				$gp_hooks[$hook] += $hook_info;
+			}else{
+				$gp_hooks[$hook] = $hook_info;
+			}
+		}
+
 
 		common::GetLangFile();
 		common::GetPagesPHP();

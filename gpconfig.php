@@ -136,7 +136,7 @@ define('gpdebug',true);
  * Set to "1" if gpEasy is unable to display errors with gpdebug set to "true" (see above)
  *
  */
-@ini_set('display_errors',1);
+@ini_set('display_errors',0);
 
 /**
  * gp_safe_mode

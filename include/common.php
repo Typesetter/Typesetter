@@ -774,17 +774,6 @@ class display{
 		$layout_info = common::LayoutInfo($layout);
 
 
-		//theme dir
-		if( $layout_info ){
-			$template_path = $layout_info['dir'].'/template.php';
-			if( gpOutput::FatalNotice( 'include', $template_path ) ){
-				$layout_info = false;
-			}
-			gpOutput::PopCatchable();
-		}
-
-
-
 		if( !$layout_info ){
 			$this->gpLayout = false;
 			$this->theme_name = 'Three_point_5';

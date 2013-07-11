@@ -152,7 +152,12 @@ class gpOutput{
 		gpOutput::TemplateSettings();
 		header('Content-Type: text/html; charset=utf-8');
 		$path = $page->theme_dir.'/template.php';
-		IncludeScript($path,'require',array('page','GP_ARRANGE','GP_MENU_LINKS','GP_MENU_CLASS','GP_MENU_CLASSES','GP_MENU_ELEMENTS'));
+		$return = IncludeScript($path,'require',array('page','GP_ARRANGE','GP_MENU_LINKS','GP_MENU_CLASS','GP_MENU_CLASSES','GP_MENU_ELEMENTS'));
+
+		//return will be false if there's a fatal error with the template.php file
+		if( $return === false ){
+			gpOutput::BodyAsHtml();
+		}
 		gpPlugin::ClearDataFolder();
 
 		gpOutput::HeadContent();

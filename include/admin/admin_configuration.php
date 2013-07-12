@@ -220,6 +220,7 @@ class admin_configuration{
 											'smtp'=>'smtp',
 											'smtpauth'=>'SMTPAuth');
 
+		gpSettingsOverride('configuration',$possible);
 
 
 		return $possible;

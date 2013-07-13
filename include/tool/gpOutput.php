@@ -2369,6 +2369,10 @@ class gpOutput{
 			echo '</span>';
 		}
 
+
+		gpPlugin::Action('GetAdminLink');
+
+
 		echo GetMessages();
 
 

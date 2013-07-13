@@ -487,9 +487,8 @@ class SimpleBlogCommon{
 		global $langmessage;
 
 		$_POST += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'','category'=>array());
-		$_REQUEST += array('id'=>'');
 
-		$post_index = $_REQUEST['id'];
+		$post_index = $this->post_id;
 		$posts = $this->GetPostFile($post_index,$post_file);
 		if( $posts === false ){
 			message($langmessage['OOPS'].' (Invalid ID)');
@@ -547,7 +546,7 @@ class SimpleBlogCommon{
 		global $page,$langmessage;
 		$page->ajaxReplace = array();
 
-		$post_index = $_REQUEST['id'];
+		$post_index = $this->post_id;
 		$posts = $this->GetPostFile($post_index,$post_file);
 		if( $posts === false ){
 			message($langmessage['OOPS']);

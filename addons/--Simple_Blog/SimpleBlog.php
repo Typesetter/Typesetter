@@ -507,7 +507,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		$id = $class = '';
 		if( common::LoggedIn() ){
 
-			$query = 'dummyparameter';
+			$query = 'du'; //dummy parameter
 			SimpleBlogCommon::UrlQuery( $post_index, $url, $query );
 			$edit_link = gpOutput::EditAreaLink($edit_index,$url,$langmessage['edit'].' (TWYSIWYG)',$query,'name="inline_edit_generic" rel="text_inline_edit"');
 

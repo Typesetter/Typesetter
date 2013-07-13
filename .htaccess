@@ -5,3 +5,9 @@ AddType text/xml .xml
 
 AcceptPathInfo On
 
+RewriteEngine On
+RewriteBase /
+
+
+RewriteCond %{REQUEST_URI} ^/construction.html
+RewriteRule .* / [R=302,L]

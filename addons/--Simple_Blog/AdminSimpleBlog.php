@@ -149,7 +149,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		$options = self::Options();
 
 		//Pretty Urls
-		echo '<tr><td>Pretty Urls</td><td>';
+		echo '<tr><td>Urls</td><td>';
 		if( version_compare($gpversion,'4.0','>=') ){
 			self::Radio('urls',$options['urls'],$array['urls']);
 		}else{

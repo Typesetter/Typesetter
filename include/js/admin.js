@@ -128,18 +128,26 @@ $gp.LoadStyle = function(file){
  *		- this box resizes without javascript calls (height)
  *		- less animation
  */
-$gp.AdminBoxC = function(data,context){
+$gp.AdminBoxC = function(data,options){
 	$gp.CloseAdminBox();
 	if( data === '' ){
 		return false;
 	}
+
+	if( typeof(options) == 'string' ){
+		options = {context:options}
+	}else if( typeof(options) == 'undefined' ){
+		options = {};
+	}
+
+	options = $.extend({context:'',width:640}, options);
 
 	/*
 	var win_width = $win.width();
 	var box_width = Math.max(660, Math.round(win_width*0.70));
 	*/
 	var $win = $(window);
-	var box_width = 640;
+	var box_width = options.width;
 	var left = Math.round( ($win.width() - box_width - 40)/2);
 	var height = Math.max( $(document).height(), $('body').outerHeight(true) );
 
@@ -153,7 +161,7 @@ $gp.AdminBoxC = function(data,context){
 				.css({'zIndex':'11001','left':left,'top': $win.scrollTop() })
 				.stop(true,true,true)
 				.fadeIn(400)
-				.html('<a class="gp_admin_box_close" data-cmd="admin_box_close"></a><div id="gp_admin_boxc" class="'+(context||'')+'" style="width:'+box_width+'px"></div>')
+				.html('<a class="gp_admin_box_close" data-cmd="admin_box_close"></a><div id="gp_admin_boxc" class="'+(options.context||'')+'" style="width:'+box_width+'px"></div>')
 				.find('#gp_admin_boxc')
 				.html(data)
 				.find('input:visible:first')

@@ -305,7 +305,7 @@ class admin_addon_install extends admin_addons_tool{
 	}
 
 	function DetailLink( $type, $id, $label = 'Details', $q = '', $attr='' ){
-		echo '<a href="'.$this->DetailUrl($type,$id,$q).'" data-cmd="remote" '.$attr.'>'.$label.'</a>';
+		echo '<a href="'.$this->DetailUrl($type,$id,$q).'" data-cmd="remote" data-width="700" '.$attr.'>'.$label.'</a>';
 	}
 
 	function DetailUrl($type,$id,$q=''){

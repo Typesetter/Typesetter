@@ -1732,7 +1732,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '<h2>'.$langmessage['available_themes'].': '.$avail_count.'</h2>';
 
 		echo '<table class="bordered gp_available_themes" style="width:100%">';
-		echo '<tr><th>';
+		echo '<tr><th>&nbsp;</th><th>';
 		echo $langmessage['name'];
 		echo '</th><th>';
 		echo $langmessage['version'];
@@ -1745,7 +1745,20 @@ class admin_theme_content extends admin_addon_install{
 		$i=0;
 		foreach($this->possible as $theme_id => $info){
 			$theme_label = str_replace('_',' ',$info['name']);
-			echo '<tr class="'.($i++ % 2 ? ' even' : '').'"><td class="nowrap">';
+			$version = '';
+			if( isset($info['version']) ){
+				$version = $info['version'];
+			}
+
+			echo '<tr class="'.($i++ % 2 ? ' even' : '').'"><td>';
+
+			$screenshot_full = $info['full_dir'].'/screenshot.png';
+			if( file_exists($screenshot_full) ){
+				$rel = $info['rel'].'/screenshot.png';
+				echo '<img src="'.$rel.'" class="shot gp_theme_shot" />';
+			}
+
+			echo '</td><td class="nowrap">';
 			echo $theme_label;
 
 			if( isset($info['id']) ){
@@ -1754,12 +1767,9 @@ class admin_theme_content extends admin_addon_install{
 			}
 
 
+
 			echo '</td><td>';
-			if( isset($info['version']) ){
-				echo $info['version'];
-			}else{
-				echo '';
-			}
+			echo $version;
 			echo '</td><td>';
 
 			$comma = '';
@@ -1789,7 +1799,7 @@ class admin_theme_content extends admin_addon_install{
 				echo ' &nbsp; ';
 
 				//remote upgrade
-				if( gp_remote_themes && isset($id) && isset(admin_tools::$new_versions[$id]) && version_compare(admin_tools::$new_versions[$id]['version'], $info['version'] ,'>') ){
+				if( gp_remote_themes && isset($id) && isset(admin_tools::$new_versions[$id]) && version_compare(admin_tools::$new_versions[$id]['version'], $version ,'>') ){
 					$version_info = admin_tools::$new_versions[$id];
 					$label = $langmessage['new_version'].' &nbsp; '.$version_info['version'].' &nbsp; (gpEasy.com)';
 					echo '<div style="white-space:nowrap">';

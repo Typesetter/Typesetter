@@ -1743,9 +1743,11 @@ class admin_theme_content extends admin_addon_install{
 				$id = $info['id'];
 			}
 
-			echo '<div>';
+			echo '<div class="expand_child_click">';
 
-			echo '<b>'.$theme_label.' '.$version.'</b>';
+			echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';
+
+			//echo '<a data-cmd="gp_show_options"><span class="icon_cog"></span></a>';
 
 			echo '<div>';
 

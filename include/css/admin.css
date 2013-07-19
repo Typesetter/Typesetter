@@ -773,6 +773,7 @@ table.tablesorter th.gp_header_desc:before{
 	background:url('../imgs/admin_icons.png') no-repeat -8px -105px;
 	vertical-align:top;
 	}
+#gp_avail_themes .icon_cog,
 #simplepanel .icon_cog,
 #adminlinks2 .icon_cog span{
 	background:url('../imgs/admin_icons.png') no-repeat 0 -129px;

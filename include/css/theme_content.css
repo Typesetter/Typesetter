@@ -183,10 +183,6 @@ body #gp_admin_html #theme_toolbar a{
 	height:350px;
 	}
 
-.gp_theme_shot{
-	max-height:160px;
-	max-width:160px;
-	}
 
 /**
  * Drag n drop css
@@ -208,10 +204,112 @@ body #gp_admin_html #theme_toolbar a{
 	padding:10px;
 }
 
+
+/**
+ * Available Themes
+ *
+ */
 #gp_admin_html .gp_available_themes a.gpsubmit{
 	min-width:100px;
 	overflow:hidden;
 	text-overflow:ellipsis;
+	}
+
+#gp_avail_themes{
+	margin-right:-30px;
+	}
+#gp_avail_themes > div{
+	display:inline-block;
+	vertical-align:top;
+	width:300px;
+	padding:20px 20px 0 0;
+	-moz-box-sizing:border-box;
+	box-sizing:border-box;
+	}
+
+.columns_3 #gp_avail_themes > div{
+	width:33%;
+	}
+
+.columns_2 #gp_avail_themes > div{
+	width:49%;
+	}
+
+.columns_1 #gp_avail_themes > div{
+	width:99%;
+	}
+
+
+#gp_avail_themes b{
+	display:block;
+	font-size:16px;
+	line-height:22px;
+	font-weight:normal;
+	}
+
+#gp_avail_themes > div > div{
+	height:0;
+	padding-bottom:70%;
+	border:1px solid #ddd;
+	vertical-align:top;
+	overflow:hidden;
+	position:relative;
+	}
+
+
+#gp_avail_themes .gp_theme_shot{
+	position:absolute;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	z-index:1;
+	}
+
+#gp_avail_themes .gp_theme_shot img{
+	min-width:100%;
+	min-height:100%;
+	}
+
+
+#gp_avail_themes .gp_theme_options{
+	position:absolute;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	z-index:2;
+	background:#fff;
+	background:rgba(255,255,255,0.95);
+	padding:15px;
+	-moz-box-sizing:border-box;
+	box-sizing:border-box;
+	overflow:auto;
+
+	opacity: 0;
+	filter: alpha(opacity = 0);
+	-webkit-transition: opacity .5s ease-out;
+	-moz-transition: opacity .5s ease-out;
+	-ms-transition: opacity .5s ease-out;
+	transition: opacity .5s ease-out;
+	}
+
+#gp_avail_themes > div > div:hover .gp_theme_options{
+	opacity:1;
+	filter: alpha(opacity = 100);
+	}
+
+#gp_avail_themes ul,
+#gp_avail_themes li{
+	list-style:none;
+	padding:0;
+	margin:0;
+	}
+#gp_avail_themes li{
+	padding:3px 0 4px 15px;
+	}
+#gp_avail_themes ul{
+	margin-bottom:15px;
 	}
 
 

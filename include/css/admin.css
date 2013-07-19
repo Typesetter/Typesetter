@@ -1053,36 +1053,48 @@ table.tablesorter th.gp_header_desc:before{
 #adminlinks2{
 	position:relative;
 	z-index:10;
-	margin-right:-20px;
+	margin-right:-30px;
 	}
+
 
 #adminlinks2 .panelgroup{
 	display:inline-block;
 	vertical-align:top;
-	margin:10px 20px 10px 0;
-	border:1px solid #ddd;
-	padding:0;
+	padding:10px 20px 10px 0;
 	width:270px;
-	border-radius:4px;
-	background:#f7f7f7;
-	background: #ededed;
-	background: #ededed -moz-linear-gradient(top, #fafafa 5px, #ededed 25px);
-	background: #ededed -webkit-linear-gradient(top, #fafafa 5px,#ededed 25px);
-	background: #ededed linear-gradient(top, #fafafa 5px,#ededed 25px);
+	-moz-box-sizing:border-box;
+	box-sizing:border-box;
 	}
+
+.columns_3 #adminlinks2 .panelgroup{
+	width:33%;
+	}
+
+.columns_2 #adminlinks2 .panelgroup{
+	width:49%;
+	}
+
+.columns_1 #adminlinks2 .panelgroup{
+	width:99%;
+	}
+
+
 #adminlinks2 .panelgroup2{
 	height:260px;
 	border:1px solid #ddd;
-	background:#fff;
-	margin:0 4px 4px 4px;
-	border-radius:2px;
+	box-shadow:0 0 3px #eee;
+	border-radius:4px;
 	overflow:hidden;
+	margin:3px 0;
 	}
 
 
 #adminlinks2 > div > span{
-	padding:0 5px;
+	padding:0;
 	display:block;
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
 	}
 
 #adminlinks2 > div > span > a,
@@ -1090,12 +1102,9 @@ table.tablesorter th.gp_header_desc:before{
 	padding:7px 0 3px 30px;
 	display:block;
 	text-shadow: 0 1px 0 #fff;
-	font-size:15px;
+	font-size:18px;
 	vertical-align:middle;
 	color:#333 !important;
-	}
-#adminlinks2 > div > span.layout_label > a{
-	padding-left:7px;
 	}
 
 
@@ -1189,6 +1198,9 @@ table.tablesorter th.gp_header_desc:before{
 	background:#f7f7f7;
 	}
 
+#adminlinks2 .gp_notice{
+	margin:5px;
+	}
 
 /*
  *

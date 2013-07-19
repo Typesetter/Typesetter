@@ -4,30 +4,21 @@
 $(function(){
 
 	//auto width
-	var $area_wrap = $('#adminlinks2');
-	var $children = $area_wrap.children('div');
-	var child_count = $children.length;
-	var adjust = 22;
-	var min_width = 280;
-	var max_width = 500;
-	var width_2 = 600;
-	var width_3 = 900;
+	var $container = $('#admincontainer');
+	var container_class = $container.attr('class') || '';
 
+	$container.resize(function(){
 
-	$('#admincontainer').resize(function(){
-
-		var width = $area_wrap.width();
+		var width = $container.width();
 		var cols = 1;
 
-		if( width > width_3 ){
+		if( width > 900 ){
 			cols = 3;
-		}else if( width > width_2 ){
+		}else if( width > 600 ){
 			cols = 2;
 		}
-		cols = Math.min(child_count,cols);
-		width = (width/cols)-adjust;
-		width = Math.min(width, max_width);
-		$children.width( width );
+
+		$container.attr('class',container_class+' columns_'+cols);
 
 	}).resize();
 

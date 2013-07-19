@@ -260,12 +260,12 @@ class admin_addon_install extends admin_addons_tool{
 			foreach($data['rows'] as $row){
 				echo '<tr class="'.($i % 2 ? 'even' : '').'">';
 				echo '<td>';
-				$this->DetailLink($row['type'], $row['id'], '<img src="'.$row['icon'].'" height="100" width="100" alt=""/>','',' class="shot"');
+				echo $this->DetailLink($row['type'], $row['id'], '<img src="'.$row['icon'].'" height="100" width="100" alt=""/>','',' class="shot"');
 				echo '</td>';
 				echo '<td class="nowrap">';
 				echo '<b>'.$row['name'].'</b>';
 				echo '<br/>';
-				$this->DetailLink($row['type'], $row['id'] );
+				echo $this->DetailLink($row['type'], $row['id'] );
 				echo ' | ';
 				$this->InstallLink($row);
 				echo '</td><td>';
@@ -305,7 +305,7 @@ class admin_addon_install extends admin_addons_tool{
 	}
 
 	function DetailLink( $type, $id, $label = 'Details', $q = '', $attr='' ){
-		echo '<a href="'.$this->DetailUrl($type,$id,$q).'" data-cmd="remote" data-width="700" '.$attr.'>'.$label.'</a>';
+		return '<a href="'.$this->DetailUrl($type,$id,$q).'" data-cmd="remote" '.$attr.'>'.$label.'</a>';
 	}
 
 	function DetailUrl($type,$id,$q=''){
@@ -339,7 +339,7 @@ class admin_addon_install extends admin_addons_tool{
 
 		if( !$installed && ($row['price_unit'] > 0) ){
 			$label = ' Install For $'.$row['price_unit'];
-			$this->DetailLink($row['type'], $row['id'], $label, '&amp;cmd=install_info');
+			echo $this->DetailLink($row['type'], $row['id'], $label, '&amp;cmd=install_info');
 			return;
 		}
 

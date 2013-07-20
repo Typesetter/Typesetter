@@ -298,7 +298,7 @@ body #gp_admin_html #theme_toolbar a{
 	right:0;
 	bottom:0;
 	left:0;
-	z-index:3;
+	z-index:1;
 	}
 
 #gp_avail_themes .gp_theme_options{

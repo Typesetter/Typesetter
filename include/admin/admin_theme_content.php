@@ -1743,17 +1743,17 @@ class admin_theme_content extends admin_addon_install{
 				$id = $info['id'];
 			}
 
-			echo '<div class="expand_child_click">';
-
-			echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';
-
-			//echo '<a data-cmd="gp_show_options"><span class="icon_cog"></span></a>';
-
-			echo '<div>';
+			$has_screenshot = file_exists($info['full_dir'].'/screenshot.png');
 
 			//screenshot
-			if( file_exists($info['full_dir'].'/screenshot.png') ){
-				echo '<div class="gp_theme_shot"><img src="'.$info['rel'].'/screenshot.png" /></div>';
+			if( $has_screenshot ){
+				echo '<div class="expand_child_click">';
+				echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';
+				echo '<div style="background-image:url(\''.common::GetDir($info['rel'].'/screenshot.png').'\')">';
+			}else{
+				echo '<div>';
+				echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';
+				echo '<div>';
 			}
 
 			//options

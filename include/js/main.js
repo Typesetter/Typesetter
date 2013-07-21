@@ -30,8 +30,7 @@ var $gp = {
 	 *
 	 */
 	cGoTo : function(a,samepage){
-		var query = a.search + '&verified='+post_nonce;
-		$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
+		$gp.Cookie('cookie_cmd',encodeURIComponent(a.search),1);
 
 		if( samepage ){
 			$gp.Reload();

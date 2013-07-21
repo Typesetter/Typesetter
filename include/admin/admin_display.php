@@ -34,6 +34,7 @@ class admin_display extends display{
 		}
 
 		$this->head .= "\n".'<meta name="robots" content="noindex,nofollow" />';
+		@header( 'X-Frame-Options: SAMEORIGIN' );
 	}
 
 	function RunScript(){

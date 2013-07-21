@@ -1101,7 +1101,6 @@ class common{
 		if( $sessions ){
 			common::sessions();
 		}
-
 	}
 
 
@@ -1385,17 +1384,16 @@ class common{
 			if( isset($attr['name']) && !isset($attr['data-cmd']) ){
 				$attr['data-cmd'] = $attr['name'];
 				unset($attr['name']);
-
-				/*
-				if( isset($attr['rel']) && !isset($attr['data-arg']) ){
-					$attr['data-arg'] = $attr['rel'];
-					unset($attr['rel']);
-				}
-				*/
 			}
 
-			if( isset($attr['data-cmd']) && $attr['data-cmd'] == 'postlink' ){
-				$attr['data-nonce'] = common::new_nonce('post',true);
+			if( isset($attr['data-cmd']) ){
+				switch( $attr['data-cmd'] ){
+					case 'creq':
+					case 'cnreq':
+					case 'postlink':
+						$attr['data-nonce'] = common::new_nonce('post',true);
+					break;
+				}
 			}
 			foreach($attr as $attr_name => $attr_value){
 				$string .= ' '.$attr_name.'="'.htmlspecialchars($attr_value,ENT_COMPAT,'UTF-8',false).'"';
@@ -1410,7 +1408,12 @@ class common{
 			// @since 3.6
 			if( strpos($string,'name="postlink"') !== false ){
 				$string .= ' data-nonce="'.common::new_nonce('post',true).'"';
+
+			// @since 4.1
+			}elseif( strpos($string,'name="cnreq"') !== false || strpos($string,'name="creq"') !== false ){
+				$string .= ' data-nonce="'.common::new_nonce('post',true).'"';
 			}
+
 		}
 
 		if( !$has_title && !empty($label) ){

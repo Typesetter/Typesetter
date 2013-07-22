@@ -32,8 +32,15 @@ class admin_addons extends admin_addon_install{
 	function admin_addons(){
 		global $langmessage,$config,$page;
 
-		$this->find_label = $langmessage['Find Plugins'];
-		$this->manage_label = $langmessage['Manage Plugins'];
+		//header links
+		$this->header_paths = array(
+			'Admin_Addons'			=> $langmessage['Manage Plugins'],
+			);
+
+		if( gp_remote_plugins ){
+			$this->header_paths['Admin_Addons/Remote'] = $langmessage['Find Plugins'];
+		}
+
 
 		$page->head_js[] = '/include/js/auto_width.js';
 		parent::__construct();
@@ -315,13 +322,7 @@ class admin_addons extends admin_addon_install{
 
 		$info = $config['addons'][$addon_key];
 
-		$this->FindForm();
-
-		echo '<h2 class="hmargin">';
-		echo common::Link('Admin_Addons',$langmessage['Manage Plugins']);
-		echo ' &#187; ';
-		echo $info['name'];
-		echo '</h2>';
+		$this->ShowHeader();
 
 		echo '<div id="adminlinks2">';
 		$this->PluginPanelGroup($addon_key,$info);
@@ -415,16 +416,7 @@ class admin_addons extends admin_addon_install{
 		$instructions = true;
 		$available = $this->GetAvailAddons();
 
-		$this->FindForm();
-
-		echo '<h2 class="hmargin">';
-		echo $langmessage['Manage Plugins'];
-		if( gp_remote_plugins ){
-			echo ' <span>|</span> ';
-			echo common::Link($this->path_remote,$langmessage['Find Plugins']);
-		}
-		echo '</h2>';
-
+		$this->ShowHeader();
 
 		if( !$this->ShowInstalled($available) ){
 			$this->Instructions();

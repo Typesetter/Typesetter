@@ -304,9 +304,9 @@ body #gp_admin_html #theme_toolbar a{
 #gp_avail_themes .gp_theme_options{
 	position:absolute;
 	top:0;
-	bottom:0;
 	left:0;
 	right:0;
+	bottom:0;
 	z-index:2;
 	background:#fff;
 	background:rgba(255,255,255,0.95);
@@ -317,15 +317,17 @@ body #gp_admin_html #theme_toolbar a{
 	}
 
 #gp_avail_themes .expand_child_click .gp_theme_options{
+	visibility:hidden;
 	opacity: 0;
 	filter: alpha(opacity = 0);
-	-webkit-transition: opacity .5s ease-out;
-	-moz-transition: opacity .5s ease-out;
-	-ms-transition: opacity .5s ease-out;
-	transition: opacity .5s ease-out;
+	-webkit-transition: opacity .5s ease-out, visibility .5s ease-out;
+	-moz-transition: opacity .5s ease-out, visibility .5s ease-out;
+	-ms-transition: opacity .5s ease-out, visibility .5s ease-out;
+	transition: opacity .5s ease-out, visibility .5s ease-out;
 	}
 
 #gp_avail_themes .expand .gp_theme_options{
+	visibility:visible;
 	opacity:1;
 	filter: alpha(opacity = 100);
 	}

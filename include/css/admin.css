@@ -1689,6 +1689,11 @@ body #gp_admin_html .layout_links a.selected{
 	margin-bottom:1em;
 	color:#333;
 	}
+.hmargin a,
+.hmargin span{
+	display:inline-block;
+	white-space:nowrap;
+	}
 .hmargin a{
 	color:#888 !important;
 	}

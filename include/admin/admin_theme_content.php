@@ -46,21 +46,18 @@ class admin_theme_content extends admin_addon_install{
 	var $scriptUrl = 'Admin_Theme_Content';
 	var $possible = array();
 	var $versions = array();
+	var $avail_count = 0;
 
 
 	//remote install variables
 	var $config_index = 'themes';
 	var $code_folder_name = '_themes';
-	var $path_root = 'Admin_Theme_Content';
 	var $path_remote = 'Admin_Theme_Content/Remote';
 	var $can_install_links = false;
 
 
 	function admin_theme_content(){
 		global $page,$config,$gpLayouts, $langmessage;
-
-		$this->find_label = $langmessage['Find Themes'];
-		$this->manage_label = $langmessage['Manage Layouts'];
 
 		$page->head_js[] = '/include/js/theme_content.js';
 		$page->head_js[] = '/include/js/dragdrop.js';
@@ -70,16 +67,36 @@ class admin_theme_content extends admin_addon_install{
 
 		$this->GetPossible();
 
+
+		//header links
+		$this->header_paths = array(
+			'Admin_Theme_Content'			=> $langmessage['Manage Layouts'],
+			'Admin_Theme_Content/Available'	=> $langmessage['available_themes'].' ('.$this->avail_count.')',
+			);
+
+		if( gp_remote_themes ){
+			$this->header_paths['Admin_Theme_Content/Remote'] = $langmessage['Find Themes'];
+		}
+
+
+
 		$cmd = common::GetCommand();
 
 		//layout requests
 		if( strpos($page->requested,'/') ){
 			$parts = explode('/',$page->requested);
 			$layout_part = $parts[1];
+
 			if( gp_remote_themes && strtolower($layout_part) == 'remote' ){
 				$this->RemoteBrowse();
 				return;
 			}
+
+			if( strtolower($layout_part) == 'available' ){
+				$this->ShowAvailable();
+				return;
+			}
+
 
 			if( isset($gpLayouts[$layout_part]) ){
 				$this->layout_request = true;
@@ -1526,27 +1543,36 @@ class admin_theme_content extends admin_addon_install{
 
 		if( !gp_unique_addons ){
 			$this->possible = $themes;
-			return;
-		}
+
+		}else{
 
 
-		//remove older versions
-		$this->possible = array();
-		foreach($themes as $index => $info){
+			//remove older versions
+			$this->possible = array();
+			foreach($themes as $index => $info){
 
-			if( !isset($info['id']) || !isset($info['version']) ){
+				if( !isset($info['id']) || !isset($info['version']) ){
+					$this->possible[$index] = $info;
+					continue;
+				}
+
+				if( version_compare($this->versions[$info['id']]['version'], $info['version'],'>') ){
+					continue;
+				}
+
 				$this->possible[$index] = $info;
-				continue;
 			}
 
-			if( version_compare($this->versions[$info['id']]['version'], $info['version'],'>') ){
-				continue;
-			}
-
-			$this->possible[$index] = $info;
+			uksort($this->possible,'strnatcasecmp');
 		}
 
-		uksort($this->possible,'strnatcasecmp');
+
+		//get available count
+		$this->avail_count = 0;
+		foreach($this->possible as $theme_id => $info){
+			$this->avail_count += count($info['colors']);
+		}
+
 	}
 
 	/**
@@ -1638,15 +1664,7 @@ class admin_theme_content extends admin_addon_install{
 
 		$page->head_js[] = '/include/js/auto_width.js';
 
-		$this->FindForm();
-
-		echo '<h2 class="hmargin">';
-		echo $langmessage['Manage Layouts'];
-		if( gp_remote_themes ){
-			echo ' <span>|</span> ';
-			echo common::Link($this->path_remote,$this->find_label);
-		}
-		echo '</h2>';
+		$this->ShowHeader();
 
 
 		echo '<div id="adminlinks2">';
@@ -1655,8 +1673,6 @@ class admin_theme_content extends admin_addon_install{
 		}
 		echo '</div>';
 
-		echo '<br/>';
-		$this->ShowAvailable();
 		echo '<p class="admin_note">';
 		echo $langmessage['see_also'].' '.common::Link('Admin_Menu',$langmessage['file_manager']);
 		echo '</p>';
@@ -1714,22 +1730,19 @@ class admin_theme_content extends admin_addon_install{
 	}
 
 
+
+
 	/**
 	 * Show available themes and style variations
 	 *
 	 */
 	function ShowAvailable(){
-		global $langmessage,$config;
+		global $langmessage, $config, $page;
 
+		$page->head_js[] = '/include/js/auto_width.js';
 		$this->GetAddonData();
 
-		$avail_count = 0;
-		foreach($this->possible as $theme_id => $info){
-			$avail_count += count($info['colors']);
-		}
-
-
-		echo '<h2>'.$langmessage['available_themes'].': '.$avail_count.'</h2>';
+		$this->ShowHeader();
 
 		echo '<div id="gp_avail_themes">';
 		foreach($this->possible as $theme_id => $info){

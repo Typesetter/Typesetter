@@ -17,11 +17,11 @@ class admin_addon_install extends admin_addons_tool{
 
 	//remote browsing
 	var $config_index = 'addons';
-	var $path_root = 'Admin_Addons';
 	var $path_remote = 'Admin_Addons/Remote';
-	var $find_label;
 	var $code_folder_name = '_addoncode';
 	var $can_install_links = true;
+
+	var $header_paths = array();
 
 
 	function __construct(){
@@ -34,6 +34,27 @@ class admin_addon_install extends admin_addons_tool{
 		$GP_INLINE_VARS += array(
 			'gpRem' => admin_tools::CanRemoteInstall(),
 		);
+
+	}
+
+	function ShowHeader(){
+		global $page;
+
+		$list = array();
+		foreach($this->header_paths as $slug => $label){
+
+			if( $page->requested == $slug ){
+				$list[] = $label;
+			}else{
+				$list[] = common::Link($slug,$label);
+			}
+		}
+
+		$this->FindForm();
+
+		echo '<h2 class="hmargin">';
+		echo implode(' <span>|</span> ', $list );
+		echo '</h2>';
 
 	}
 
@@ -225,19 +246,7 @@ class admin_addon_install extends admin_addons_tool{
 		}
 		$this->searchOffset = $this->searchPage*$this->searchPerPage;
 
-		$this->FindForm();
-
-		echo '<h2 class="hmargin">';
-		echo common::Link($this->path_root,$this->manage_label);
-		echo ' <span>|</span> ';
-		if( !empty($_GET['q']) ){
-			echo common::Link($this->path_remote,$this->find_label);
-			echo ' &#187; ';
-			echo htmlspecialchars($_GET['q']);
-		}else{
-			echo $this->find_label;
-		}
-		echo '</h2>';
+		$this->ShowHeader();
 
 		echo '<div class="gp_search_options">';
 		$this->SearchNavLinks();

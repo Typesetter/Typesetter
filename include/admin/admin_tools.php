@@ -849,6 +849,9 @@ class admin_tools{
 			echo common::Link('Admin_Theme_Content/'.urlencode($page->gpLayout),$langmessage['edit_this_layout']);
 			echo '</li>';
 		}
+		echo '<li>';
+		echo common::Link('Admin_Theme_Content/Available',$langmessage['available_themes']);
+		echo '</li>';
 		if( gp_remote_themes ){
 			echo '<li>';
 			echo common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']);

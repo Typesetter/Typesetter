@@ -1730,8 +1730,6 @@ class admin_theme_content extends admin_addon_install{
 	}
 
 
-
-
 	/**
 	 * Show available themes and style variations
 	 *

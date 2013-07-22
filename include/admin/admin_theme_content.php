@@ -1773,7 +1773,7 @@ class admin_theme_content extends admin_addon_install{
 			echo '<div class="gp_theme_options">';
 
 				//colors
-				echo '<b>'.$langmessage['style'].'</b>';
+				echo '<b>'.$langmessage['preview'].'</b>';
 				echo '<ul>';
 				foreach($info['colors'] as $color){
 					echo '<li>';

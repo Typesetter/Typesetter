@@ -320,10 +320,10 @@ body #gp_admin_html #theme_toolbar a{
 	visibility:hidden;
 	opacity: 0;
 	filter: alpha(opacity = 0);
-	-webkit-transition: opacity .5s ease-out, visibility .5s ease-out;
-	-moz-transition: opacity .5s ease-out, visibility .5s ease-out;
-	-ms-transition: opacity .5s ease-out, visibility .5s ease-out;
-	transition: opacity .5s ease-out, visibility .5s ease-out;
+	-webkit-transition: all .5s ease-out;
+	-moz-transition: all .5s ease-out;
+	-ms-transition: all .5s ease-out;
+	transition: all .5s ease-out;
 	}
 
 #gp_avail_themes .expand .gp_theme_options{

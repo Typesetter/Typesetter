@@ -157,6 +157,7 @@ div.GPAREA:after{
 	height: 0 !important;
 	clear: both;
 	visibility: hidden;
+	overflow:hidden;
 }
 
 /* for IE7... does not validate */

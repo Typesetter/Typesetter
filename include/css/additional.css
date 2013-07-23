@@ -154,7 +154,7 @@ body .messages a{
 div.GPAREA:after{
 	content: ".";
 	display: block;
-	height: 0;
+	height: 0 !important;
 	clear: both;
 	visibility: hidden;
 }

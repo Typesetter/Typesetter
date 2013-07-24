@@ -3393,14 +3393,20 @@ class gpFiles{
 
 		$success = true;
 		$subDirs = array();
+		$files = scandir($path);
 		$files = gpFiles::ReadDir($path,false);
 		foreach($files as $file){
 			$full_path = $path.'/'.$file;
-			if( is_dir($full_path) ){
+
+			if( !is_link($full_path) && is_dir($full_path) ){
 				$subDirs[] = $full_path;
-			}elseif( !@unlink($full_path) ){
+				continue;
+			}
+
+			if( !@unlink($full_path) ){
 				$success = false;
 			}
+
 		}
 
 		foreach($subDirs as $subDir){

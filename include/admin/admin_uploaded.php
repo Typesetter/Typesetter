@@ -653,13 +653,13 @@ class admin_uploaded{
 			}
 
 			if( is_array($upload_extensions_allow) ){
-				array_walk( $upload_extensions_allow, 'trim');
-				array_walk( $upload_extensions_allow, 'strtolower');
+				$upload_extensions_allow = array_map('trim',$upload_extensions_allow);
+				$upload_extensions_allow = array_map('strtolower',$upload_extensions_allow);
 				$allowed_types = array_merge($allowed_types,$upload_extensions_allow);
 			}
 			if( is_array($upload_extensions_deny) ){
-				array_walk( $upload_extensions_allow, 'trim');
-				array_walk( $upload_extensions_allow, 'strtolower');
+				$upload_extensions_allow = array_map('trim',$upload_extensions_allow);
+				$upload_extensions_allow = array_map('strtolower',$upload_extensions_allow);
 				$allowed_types = array_diff($allowed_types,$upload_extensions_deny);
 			}
 		}

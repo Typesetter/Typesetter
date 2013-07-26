@@ -1,8 +1,7 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-require_once($GLOBALS['rootDir'].'/include/admin/admin_users.php');
-
+includeFile('admin/admin_users.php');
 
 class admin_preferences extends admin_users{
 	var $username;

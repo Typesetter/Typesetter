@@ -31,7 +31,7 @@ class gp_edit{
 				continue;
 			}
 
-			$tag = $node['tag'];
+			$tag =& $node['tag'];
 			if( $tag != 'img' || !isset($node['attributes']['src']) ){
 				continue;
 			}

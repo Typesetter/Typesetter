@@ -264,11 +264,12 @@ body #gp_admin_html #theme_toolbar a{
 	left:2px;
 	bottom:-1px;
 	border-radius:3px 3px 0 0;
-	content:'\25B8';
+	content:'\25B6';
 	color:#666;
+	font-size:10px;
 	}
 #gp_avail_themes .expand .gp_theme_head:before{
-	content:'\25BE';
+	content:'\25BC';
 	}
 
 

@@ -46,7 +46,6 @@ class admin_theme_content extends admin_addon_install{
 	var $scriptUrl = 'Admin_Theme_Content';
 	var $possible = array();
 	var $versions = array();
-	var $avail_count = 0;
 
 
 	//remote install variables
@@ -71,7 +70,7 @@ class admin_theme_content extends admin_addon_install{
 		//header links
 		$this->header_paths = array(
 			'Admin_Theme_Content'			=> $langmessage['Manage Layouts'],
-			'Admin_Theme_Content/Available'	=> $langmessage['available_themes'].' ('.$this->avail_count.')',
+			'Admin_Theme_Content/Available'	=> $langmessage['available_themes'].' ('.count($this->possible).')',
 			);
 
 		if( gp_remote_themes ){
@@ -1566,9 +1565,6 @@ class admin_theme_content extends admin_addon_install{
 			uksort($this->possible,'strnatcasecmp');
 		}
 
-
-		//get available count
-		$this->avail_count = count($this->possible);
 	}
 
 	/**

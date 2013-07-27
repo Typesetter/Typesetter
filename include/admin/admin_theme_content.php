@@ -1749,7 +1749,6 @@ class admin_theme_content extends admin_addon_install{
 		$this->searchOrderOptions['rating_score']	= $langmessage['Highest Rated'];
 		$this->searchOrderOptions['downloads']		= $langmessage['Most Downloaded'];
 		$this->searchOrderOptions['modified']		= $langmessage['Recently Updated'];
-		$search_query = '';
 
 		$this->SearchOrder();
 

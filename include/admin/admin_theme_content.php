@@ -1742,8 +1742,77 @@ class admin_theme_content extends admin_addon_install{
 
 		$this->ShowHeader();
 
-		echo '<div id="gp_avail_themes">';
+		//search settings
+		$this->searchPerPage = 10;
+		$this->searchUrl = 'Admin_Theme_Content/Available';
+		$this->searchOrderOptions = array();
+		$this->searchOrderOptions['rating_score']	= $langmessage['Highest Rated'];
+		$this->searchOrderOptions['downloads']		= $langmessage['Most Downloaded'];
+		$this->searchOrderOptions['modified']		= $langmessage['Recently Updated'];
+		$search_query = '';
+
+		$this->SearchOrder();
+
+
+		// get addon information for ordering
+		admin_tools::VersionData($version_data);
+		$version_data = $version_data['packages'];
+
+		// combine remote addon information
 		foreach($this->possible as $theme_id => $info){
+
+			if( isset($info['id']) ){
+				$id = $info['id'];
+
+				if( isset($version_data[$id]) ){
+					$info = array_merge($info,$version_data[$id]);
+					$info['rt'] *= 5;
+				}
+
+				//use local rating
+				if( isset($this->addonReviews[$id]) ){
+					$info['rt'] = $this->addonReviews[$id]['rating'];
+				}
+
+			}
+			$info += array('dn'=>0,'rt'=>0,'tm'=>filemtime($info['full_dir'].'/template.php') );
+
+
+			$this->possible[$theme_id] = $info;
+		}
+
+		// sort
+		switch($this->searchOrder){
+
+			case 'downloads':
+				uasort( $this->possible, array('admin_theme_content','SortDownloads') );
+			break;
+
+			case 'modified':
+				uasort( $this->possible, array('admin_theme_content','SortUpdated') );
+			break;
+
+			case 'rating_score':
+			default:
+				uasort( $this->possible, array('admin_theme_content','SortRating') );
+			break;
+		}
+
+		// pagination
+		$this->searchMax = count($this->possible);
+		if( isset($_REQUEST['page']) && ctype_digit($_REQUEST['page']) ){
+			$this->searchPage = $_REQUEST['page'];
+		}
+		$start = $this->searchPage * $this->searchPerPage;
+		$possible = array_slice( $this->possible, $start, $this->searchPerPage, true);
+
+
+		$this->SearchOptions();
+
+
+		// show themes
+		echo '<div id="gp_avail_themes">';
+		foreach($possible as $theme_id => $info){
 			$theme_label = str_replace('_',' ',$info['name']);
 			$version = '';
 			$id = false;
@@ -1794,13 +1863,26 @@ class admin_theme_content extends admin_addon_install{
 					echo '<li><a href="'.addon_browse_path.'/Forum?show=f'.$forum_id.'" target="_blank">'.$langmessage['Support'].'</a></li>';
 
 					//rating
-					$rating = 5;
-					if( isset($this->addonReviews[$id]) ){
-						$rating = $this->addonReviews[$id]['rating'];
+					$rating = 0;
+					if( $info['rt'] > 0 ){
+						$rating = $info['rt'];
 					}
-
 					echo '<li><span class="nowrap">'.$langmessage['rate'].' '.$this->ShowRating($info['rel'],$rating).'</span></li>';
+
+
+					//downloads
+					if( $info['dn'] > 0 ){
+						echo '<li><span class="nowrap">Downloads: '.number_format($info['dn']).'</span></li>';
+					}
 				}
+
+				//last updated
+				if( $info['tm'] > 0 ){
+					echo '<li><span class="nowrap">'.$langmessage['Modified'].': ';
+					echo common::date($langmessage['strftime_datetime'],$info['tm']);
+					echo '</span></li>';
+				}
+
 
 
 				if( $info['is_addon'] ){
@@ -1816,6 +1898,8 @@ class admin_theme_content extends admin_addon_install{
 						echo '<li>Order: '.$config['themes'][$folder]['order'].'</li>';
 					}
 				}
+
+
 				$options = ob_get_clean();
 
 				if( !empty($options) ){
@@ -1840,6 +1924,15 @@ class admin_theme_content extends admin_addon_install{
 
 	}
 
+	static function SortDownloads($a,$b){
+		return $b['dn'] > $a['dn'];
+	}
+	static function SortRating($a,$b){
+		return $b['rt'] > $a['rt'];
+	}
+	static function SortUpdated($a,$b){
+		return $b['tm'] > $a['tm'];
+	}
 
 
 	/**

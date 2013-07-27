@@ -38,10 +38,10 @@ gp_defined('gp_remote_update',gp_remote_addons);
 gp_defined('gp_unique_addons',false);
 
 
-//gp_defined('addon_browse_path','http://gpeasy.loc/index.php');
-gp_defined('addon_browse_path','http://gpeasy.com/index.php');
+gp_defined('addon_browse_path','http://gpeasy.loc/index.php');
+//gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
-define('gpversion','4.0');
+define('gpversion','4.1');
 define('gp_random',common::RandomString());
 
 
@@ -2492,6 +2492,7 @@ class common{
 		$args['php'] = phpversion();
 		$args['se'] =& $_SERVER['SERVER_SOFTWARE'];
 		$args['data'] = $dataDir;
+		$args['zlib'] = (int)function_exists('gzcompress');
 
 		if( defined('service_provider_id') && is_numeric(service_provider_id) ){
 			$args['provider'] = service_provider_id;

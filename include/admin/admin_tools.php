@@ -15,12 +15,12 @@ class admin_tools{
 	static function VersionsAndCheckTime(){
 		global $config, $dataDir, $gpLayouts;
 
-		$data_timestamp = self::VersionData($update_data);
+		$data_timestamp = self::VersionData($version_data);
 
 		//check core version
 		// only report new versions if it's a root install
-		if( gp_remote_update && !defined('multi_site_unique') && isset($update_data['packages']['core']) ){
-			$core_version = $update_data['packages']['core']['version'];
+		if( gp_remote_update && !defined('multi_site_unique') && isset($version_data['packages']['core']) ){
+			$core_version = $version_data['packages']['core']['version'];
 
 			if( $core_version && version_compare(gpversion,$core_version,'<') ){
 				self::$new_versions['core'] = $core_version;
@@ -30,16 +30,16 @@ class admin_tools{
 
 		//check addon versions
 		if( isset($config['addons']) && is_array($config['addons']) ){
-			self::CheckArray($config['addons'],$update_data);
+			self::CheckArray($config['addons'],$version_data);
 		}
 
 		//check theme versions
 		if( isset($config['themes']) && is_array($config['themes']) ){
-			self::CheckArray($config['themes'],$update_data);
+			self::CheckArray($config['themes'],$version_data);
 		}
 
 		//check layout versions
-		self::CheckArray($gpLayouts,$update_data);
+		self::CheckArray($gpLayouts,$version_data);
 
 
 		// checked recently
@@ -51,7 +51,7 @@ class admin_tools{
 		//determin check in type
 		includeFile('tool/RemoteGet.php');
 		if( !gpRemoteGet::Test() ){
-			self::VersionData($update_data);
+			self::VersionData($version_data);
 			self::$update_status = 'checkincompat';
 			return;
 		}

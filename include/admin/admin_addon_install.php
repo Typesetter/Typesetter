@@ -24,6 +24,16 @@ class admin_addon_install extends admin_addons_tool{
 	var $header_paths = array();
 
 
+	//searching
+	var $searchUrl		= '';
+	var $searchPage		= 0;
+	var $searchMax		= 0;
+	var $searchPerPage	= 20;
+	var $searchOrder	= '';
+	var $searchQuery 	= '';
+	var $searchOrderOptions = array();
+
+
 	function __construct(){
 		global $page, $GP_INLINE_VARS;
 
@@ -50,7 +60,12 @@ class admin_addon_install extends admin_addons_tool{
 			}
 		}
 
-		$this->FindForm();
+
+		if( $this->config_index == 'themes' && gp_remote_themes ){
+			$this->FindForm();
+		}elseif( $this->config_index == 'addons' && gp_remote_plugins ){
+			$this->FindForm();
+		}
 
 		echo '<h2 class="hmargin">';
 		echo implode(' <span>|</span> ', $list );
@@ -165,19 +180,18 @@ class admin_addon_install extends admin_addons_tool{
 
 		includeFile('tool/RemoteGet.php');
 
-		$orderby = array();
-		$orderby['rating_score']	= $langmessage['Highest Rated'];
-		$orderby['downloads']		= $langmessage['Most Downloaded'];
-		$orderby['modified']		= $langmessage['Recently Updated'];
-		$orderby['created']			= $langmessage['Newest'];
+		//search settings
+		$this->searchUrl = $this->path_remote;
+		$this->searchOrderOptions['rating_score']	= $langmessage['Highest Rated'];
+		$this->searchOrderOptions['downloads']		= $langmessage['Most Downloaded'];
+		$this->searchOrderOptions['modified']		= $langmessage['Recently Updated'];
+		$this->searchOrderOptions['created']		= $langmessage['Newest'];
 
 		$_GET += array('q'=>'');
-		$this->searchPage = 0;
 		if( isset($_REQUEST['page']) && ctype_digit($_REQUEST['page']) ){
 			$this->searchPage = $_REQUEST['page'];
 		}
 
-		$this->searchQuery = '';
 
 		//version specific search
 		$search_version = false;
@@ -189,13 +203,8 @@ class admin_addon_install extends admin_addons_tool{
 		if( !empty($_GET['q']) ){
 			$this->searchQuery .= '&q='.rawurlencode($_GET['q']);
 		}
-		if( isset($_GET['order']) && isset($orderby[$_GET['order']]) ){
-			$this->searchOrder = $_GET['order'];
-			$this->searchQuery .= '&order='.rawurlencode($_GET['order']);
-		}else{
-			reset($orderby);
-			$this->searchOrder = key($orderby);
-		}
+
+		$this->SearchOrder();
 
 		$slug = 'Plugins';
 		if( $this->config_index == 'themes' ){
@@ -244,22 +253,9 @@ class admin_addon_install extends admin_addons_tool{
 		}else{
 			$this->searchPerPage = count($data['rows']);
 		}
-		$this->searchOffset = $this->searchPage*$this->searchPerPage;
 
 		$this->ShowHeader();
-
-		echo '<div class="gp_search_options">';
-		$this->SearchNavLinks();
-
-		echo '<div class="search_order">';
-		foreach($orderby as $key => $label){
-			if( $key === $this->searchOrder ){
-				echo '<span>'.$label.'</span>';
-			}else{
-				echo common::Link($this->path_remote,$label,$this->searchQuery.'&order='.$key);
-			}
-		}
-		echo '</div></div>';
+		$this->SearchOptions();
 
 		echo '<table class="bordered full_width">';
 		echo '<tr><th></th><th>'.$langmessage['name'].'</th><th>'.$langmessage['version'].'</th><th>'.$langmessage['Statistics'].'</th><th>'.$langmessage['description'].'</th></tr>';
@@ -303,14 +299,41 @@ class admin_addon_install extends admin_addons_tool{
 
 		if( $search_version ){
 			echo '<b>'.$langmessage['On'].'</b> &nbsp; ';
-			echo common::Link($this->path_remote,$langmessage['Off'],$this->searchQuery.'&search_option=noversion',' data-cmd="gpajax"');
+			echo common::Link($this->searchUrl,$langmessage['Off'],$this->searchQuery.'&search_option=noversion',' data-cmd="gpajax"');
 
 		}else{
-			echo common::Link($this->path_remote,$langmessage['On'],$this->searchQuery.'&search_option=version',' data-cmd="gpajax"');
+			echo common::Link($this->searchUrl,$langmessage['On'],$this->searchQuery.'&search_option=version',' data-cmd="gpajax"');
 			echo ' &nbsp;  <b>'.$langmessage['Off'].'</b>';
 		}
 		echo '</li>';
 		echo '</ul>';
+	}
+
+	function SearchOrder(){
+
+		if( isset($_REQUEST['order']) && isset($this->searchOrderOptions[$_REQUEST['order']]) ){
+			$this->searchOrder = $_REQUEST['order'];
+			$this->searchQuery .= '&order='.rawurlencode($_REQUEST['order']);
+		}else{
+			reset($this->searchOrderOptions);
+			$this->searchOrder = key($this->searchOrderOptions);
+		}
+
+	}
+
+	function SearchOptions(){
+		echo '<div class="gp_search_options">';
+		$this->SearchNavLinks();
+
+		echo '<div class="search_order">';
+		foreach($this->searchOrderOptions as $key => $label){
+			if( $key === $this->searchOrder ){
+				echo '<span>'.$label.'</span>';
+			}else{
+				echo common::Link($this->searchUrl,$label,$this->searchQuery.'&order='.$key);
+			}
+		}
+		echo '</div></div>';
 	}
 
 	function DetailLink( $type, $id, $label = 'Details', $q = '', $attr='' ){
@@ -379,9 +402,9 @@ class admin_addon_install extends admin_addons_tool{
 		if( $this->searchPage > 0 ){
 			//previous
 			if( $this->searchPage > 1 ){
-				echo common::Link($this->path_remote,$langmessage['Previous'],$this->searchQuery.'&page='.($this->searchPage-1));
+				echo common::Link($this->searchUrl,$langmessage['Previous'],$this->searchQuery.'&page='.($this->searchPage-1));
 			}else{
-				echo common::Link($this->path_remote,$langmessage['Previous'],$this->searchQuery);
+				echo common::Link($this->searchUrl,$langmessage['Previous'],$this->searchQuery);
 			}
 		}else{
 			echo '<span>'.$langmessage['Previous'].'</span>';
@@ -391,7 +414,7 @@ class admin_addon_install extends admin_addons_tool{
 		//always show link for first page
 		$start_page = max(0,$this->searchPage-5);
 		if( $start_page > 0 ){
-			echo common::Link($this->path_remote,'1',$this->searchQuery); //.'&offset=0');
+			echo common::Link($this->searchUrl,'1',$this->searchQuery); //.'&offset=0');
 			if( $start_page > 1 ){
 				echo '<span>...</span>';
 			}
@@ -402,13 +425,13 @@ class admin_addon_install extends admin_addons_tool{
 
 		for($j=$start_page;$j<$max_page;$j++){
 			$new_offset = ($j*$this->searchPerPage);
-			if( $this->searchOffset == $new_offset ){
+			if( $this->searchPage == $j ){
 				echo '<span>'.($j+1).'</span>';
 			}else{
 				if( $j == 0 ){
-					echo common::Link($this->path_remote,($j+1),$this->searchQuery);
+					echo common::Link($this->searchUrl,($j+1),$this->searchQuery);
 				}else{
-					echo common::Link($this->path_remote,($j+1),$this->searchQuery.'&page='.($j));
+					echo common::Link($this->searchUrl,($j+1),$this->searchQuery.'&page='.($j));
 				}
 			}
 		}
@@ -418,14 +441,12 @@ class admin_addon_install extends admin_addons_tool{
 			if( ($max_page+1) < $pages ){
 				echo '<span>...</span>';
 			}
-			echo common::Link($this->path_remote,($pages),$this->searchQuery.'&page='.($pages-1));
+			echo common::Link($this->searchUrl,($pages),$this->searchQuery.'&page='.($pages-1));
 		}
 
 
-		$last = $this->searchOffset+$this->searchPerPage;
-		if( $last < $this->searchMax ){
-			//next
-			echo common::Link($this->path_remote,$langmessage['Next'],$this->searchQuery.'&page='.($this->searchPage+1));
+		if( $this->searchPage < $pages ){
+			echo common::Link($this->searchUrl,$langmessage['Next'],$this->searchQuery.'&page='.($this->searchPage+1));
 		}else{
 			echo '<span>'.$langmessage['Next'].'</span>';
 		}

@@ -119,7 +119,6 @@ class update_class{
 	 *		array['id']			= id of addon (unique across all types), "core" if type is "core"
 	 *		array['type']		= [core,plugin,theme]
 	 *		array['md5']		= expected md5 sum of zip file
-	 *		array['zip']		= name of file on remote server
 	 *		array['file']		= file on local system
 	 *		array['version']	= version of the package
 	 *
@@ -235,19 +234,56 @@ class update_class{
 	}
 
 	function DoRemoteCheck2(){
-		global $config;
+		global $config, $dataDir;
 
 		$path = common::IdUrl();
-		$result = gpRemoteGet::Get_Successful($path);
 
+		//add any locally available themes with addon ids
+		includeFile('admin/admin_addons_tool.php');
+		$dir = $dataDir.'/themes';
+		$themes = scandir($dir);
+		$theme_ids = array();
+		foreach($themes as $name){
+			if( $name == '.' || $name == '..' ){
+				continue;
+			}
+			$full_dir = $dir.'/'.$name;
+			$templateFile = $full_dir.'/template.php';
+			if( !file_exists($templateFile) ){
+				continue;
+			}
+			$ini_info = admin_addons_tool::GetAvailInstall($full_dir);
+			if( isset($ini_info['Addon_Unique_ID']) ){
+				$theme_ids[] = $ini_info['Addon_Unique_ID'];
+			}
+		}
+		$theme_ids  = array_unique($theme_ids );
+		if( count($theme_ids) ){
+			$path .= '&th='.implode('-',$theme_ids );
+		}
+
+
+		//get data from gpEasy
+		$result = gpRemoteGet::Get_Successful($path);
 		if( !$result ){
 			return false;
 		}
 
-		parse_str($result,$array);
+
+		//zipped data possible as of gpEasy 4.1
+		if( function_exists('gzinflate') ){
+			$temp = gzinflate($result);
+			if( $temp ){
+				$result = $temp;
+			}
+		}
+
+		$array = json_decode($result, true); //json as of gpEasy 4.1
 		if( !is_array($array) || (count($array) < 1) ){
 			return false;
 		}
+
+		$this->update_data['packages'] = array();
 
 		$core_version = false;
 		foreach($array as $info){
@@ -772,7 +808,7 @@ class update_class{
 		 * $download = 'http://test.gpeasy.com/gpEasy_test.zip';
 		 * $download = 'http://gpeasy.loc/rocky/x_gpEasy_test.zip';
 		 */
-		$download = addon_browse_path.'/Special_gpEasy?cmd=download&version='.urlencode($package['version']).'&file='.urlencode($package['zip']);
+		$download = addon_browse_path.'/Special_gpEasy?cmd=download';
 
 		echo '<li>Downloading version '.$package['version'].' from gpEasy.com.</li>';
 

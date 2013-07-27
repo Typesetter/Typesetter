@@ -1772,8 +1772,10 @@ class admin_theme_content extends admin_addon_install{
 				if( isset($this->addonReviews[$id]) ){
 					$info['rt'] = $this->addonReviews[$id]['rating'];
 				}
-
+			}else{
+				$info['rt'] = 6; //give local themes a high rating to make them appear first, rating won't actually display
 			}
+
 			$info += array('dn'=>0,'rt'=>0,'tm'=>filemtime($info['full_dir'].'/template.php') );
 
 

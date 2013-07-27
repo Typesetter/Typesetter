@@ -547,10 +547,9 @@ class gpsession{
 
 
 		//add $gp_admin_html to the document
-		$pos_body = strpos($buffer,'<body');
+		$pos_body = strpos($buffer,'</body');
 		if( $html_doc && $pos_body ){
-			$pos = strpos($buffer,'>',$pos_body);
-			$buffer = substr_replace($buffer,'<div id="gp_admin_html">'.$gp_admin_html.gpOutput::$editlinks.'</div>',$pos+1,0);
+			$buffer = substr_replace($buffer,"\n<div id=\"gp_admin_html\">".$gp_admin_html.gpOutput::$editlinks."</div>\n",$pos_body,0);
 		}
 
 		return $buffer;

@@ -1568,11 +1568,7 @@ class admin_theme_content extends admin_addon_install{
 
 
 		//get available count
-		$this->avail_count = 0;
-		foreach($this->possible as $theme_id => $info){
-			$this->avail_count += count($info['colors']);
-		}
-
+		$this->avail_count = count($this->possible);
 	}
 
 	/**

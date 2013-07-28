@@ -160,8 +160,11 @@
 	font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
 	position:relative;
 	height: auto; /* for ie */
+	}
+.gp_twitter_carousel > div{
 	padding-bottom:30%; /* responsive height */
 	}
+
 
 .gp_twitter_carousel .carousel-indicators a,
 .gp_twitter_carousel .carousel-indicators div{

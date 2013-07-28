@@ -93,8 +93,8 @@ class TwitterCarousel{
 		if( isset($section_data['interval_speed']) && is_numeric($section_data['interval_speed']) ){
 			$attr = ' data-speed="'.$section_data['interval_speed'].'"';
 		}
-		$attr .= ' style="padding-bottom:'.$section_data['height'].'"';
 		echo '<div id="'.$id.'" class="'.$class.'"'.$attr.'>';
+		echo '<div style="padding-bottom:'.$section_data['height'].'">';
 
 		// Indicators
 		echo '<ol class="carousel-indicators">';
@@ -110,7 +110,7 @@ class TwitterCarousel{
 		echo '<a class="carousel-control left" data-target="#'.$id.'" data-slide="prev">&lsaquo;</a>';
 		echo '<a class="carousel-control right" data-target="#'.$id.'" data-slide="next">&rsaquo;</a>';
 		echo '<span class="gp_blank_img" data-src="'.common::GetDir('/include/imgs/blank.gif').'" style="display:none"></span>';
-		echo '</div>';
+		echo '</div></div>';
 
 		return ob_get_clean();
 	}

@@ -36,6 +36,11 @@ class TwitterCarousel{
 			return $section_data;
 		}
 
+		//update content
+		if( !isset($section_data['content_version']) ){
+			$section_data['content'] = self::GenerateContent($section_data);
+		}
+
 		self::AddComponents();
 
 		return $section_data;
@@ -131,7 +136,8 @@ class TwitterCarousel{
 		ob_start();
 		$id = 'carousel_'.time();
 
-		echo '<div id="'.$id.'" class="gp_twitter_carousel carousel slide" style="padding-bottom:30%">';
+		echo '<div id="'.$id.'" class="gp_twitter_carousel carousel slide">';
+		echo '<div style="padding-bottom:30%">';
 		echo '<ol class="carousel-indicators">';
 		echo '<li class="active gp_to_remove"></li>';
 		echo '</ol>';
@@ -145,7 +151,7 @@ class TwitterCarousel{
 		echo '<a class="carousel-control left" data-target="#'.$id.'" data-slide="prev">&lsaquo;</a>';
 		echo '<a class="carousel-control right" data-target="#'.$id.'" data-slide="next">&rsaquo;</a>';
 		echo '<span class="gp_blank_img" data-src="'.common::GetDir('/include/imgs/blank.gif').'" style="display:none"></span>';
-		echo '</div>';
+		echo '</div></div>';
 
 		$section['content'] = ob_get_clean();
 		$section['height'] = '30%';
@@ -171,6 +177,8 @@ class TwitterCarousel{
 		$page->file_sections[$section]['images'] = $_POST['images'];
 		$page->file_sections[$section]['captions'] = $_POST['captions'];
 		$page->file_sections[$section]['height'] = $_POST['height'];
+		$page->file_sections[$section]['content_version'] = 2;
+
 		if( isset($_POST['interval_speed']) && is_numeric($_POST['interval_speed']) ){
 			$page->file_sections[$section]['interval_speed'] = $_POST['interval_speed'];
 		}

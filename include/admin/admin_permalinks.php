@@ -6,13 +6,23 @@ includeFile('tool/RemoteGet.php');
 
 class admin_permalinks{
 
+	var $rule_file_name = '';
+	var $rule_file = '';
 	var $changed_to_hide = false;
+
 
 	function admin_permalinks(){
 		global $langmessage,$dataDir;
 
-		$this->htaccess_file = $dataDir.'/.htaccess';
-		gp_filesystem_base::init($this->htaccess_file);
+		$iis7 = self::IIS7();
+		if( $iis7 ){
+			$this->rule_file_name = 'web.config';
+		}else{
+			$this->rule_file_name = '.htaccess';
+		}
+		$this->rule_file = $dataDir.'/'.$this->rule_file_name;
+
+		gp_filesystem_base::init($this->rule_file);
 
 		echo '<h2>'.$langmessage['permalink_settings'].'</h2>';
 
@@ -20,8 +30,9 @@ class admin_permalinks{
 		$cmd = common::GetCommand();
 		switch($cmd){
 			case 'continue':
-				$this->SaveHtaccess();
-			break;
+				if( !$this->SaveHtaccess() ){
+					break;
+				}
 
 			default:
 				$this->ShowForm();
@@ -29,8 +40,12 @@ class admin_permalinks{
 		}
 	}
 
+	/**
+	 * Display Permalink Options
+	 *
+	 */
 	function ShowForm(){
-		global $langmessage,$gp_filesystem;
+		global $langmessage, $gp_filesystem;
 
 
 
@@ -51,7 +66,11 @@ class admin_permalinks{
 
 		$this->CheckHtaccess();
 
-		echo '<table class="padded_table">';
+		echo '<form method="post" action="'.common::GetUrl('Admin_Permalinks').'">';
+		echo '<table class="bordered">';
+
+		echo '<tr><th colspan="2">'.$langmessage['options'].'</th></tr>';
+
 		//default
 			$checked = '';
 			if( !$_SERVER['gp_rewrite'] ){
@@ -60,14 +79,14 @@ class admin_permalinks{
 
 			echo '<tr><td>';
 
-
-			$label = '<input type="radio" name="none" '.$checked.' /> '.$langmessage['use_index.php'];
-			echo common::Link('Admin_Permalinks',$label,'cmd=continue&rewrite_setting=no_rewrite',array('data-cmd'=>'postlink','class'=>'gpsubmit'));
+			echo '<label>';
+			echo '<input type="radio" name="rewrite_setting" value="no_rewrite" '.$checked.' /> '.$langmessage['use_index.php'];
+			echo '</label>';
 
 			echo '</td><td>';
-			echo ' <tt>';
+			echo ' <pre>';
 			echo $this->ExampleUrl(true);
-			echo '</tt>';
+			echo '</pre>';
 			echo '</td></tr>';
 
 		//hide index.php
@@ -78,17 +97,26 @@ class admin_permalinks{
 
 			echo '<tr><td>';
 
-			$label = '<input type="radio" name="none" '.$checked.' /> '.$langmessage['hide_index'];
-			echo common::Link('Admin_Permalinks',$label,'cmd=continue&rewrite_setting=hide_index',array('data-cmd'=>'postlink','class'=>'gpsubmit'));
+			echo '<label>';
+			echo '<input type="radio" name="rewrite_setting" value="hide_index" '.$checked.' /> '.$langmessage['hide_index'];
+			echo '</label>';
 
 			echo '</td><td>';
-			echo ' <tt>';
+			echo ' <pre>';
 			echo $this->ExampleUrl(false);
-			echo '</tt>';
+			echo '</pre>';
 			echo '</td></tr>';
 
-
 		echo '</table>';
+
+		echo '<p>';
+
+		echo '<input type="hidden" name="cmd" value="continue" />';
+		echo '<input type="submit" name="" class="gpsubmit" value="'.$langmessage['continue'].'"/>';
+		echo '</p>';
+
+		echo '</form>';
+
 	}
 
 	function ExampleUrl($index_php){
@@ -113,11 +141,14 @@ class admin_permalinks{
 	}
 
 
-	//check to see MOD_ENV is working
+	/**
+	 * Check for MOD_ENV
+	 *
+	 */
 	function CheckHtaccess(){
 		global $langmessage;
 
-		if( !file_exists($this->htaccess_file) ){
+		if( !file_exists($this->rule_file) ){
 			return;
 		}
 
@@ -126,36 +157,23 @@ class admin_permalinks{
 			return;
 		}
 
+		$iis7 = self::IIS7();
+		if( $iis7 ){
+			$begin_comment = '<!-- BEGIN gpEasy -->';
+		}else{
+			$begin_comment = '# BEGIN gpEasy';
+		}
 
-		$contents = file_get_contents($this->htaccess_file);
+		$contents = file_get_contents($this->rule_file);
 
-		//strip gpEasy code
-		$pos = strpos($contents,'# BEGIN gpEasy');
+		$pos = strpos($contents,$begin_comment);
 		if( $pos === false ){
 			return;
 		}
 
-		$pos2 = strpos($contents,'# END gpEasy');
-		if( $pos2 > $pos ){
-			$contents = substr($contents,$pos, $pos2-$pos);
-		}else{
-			$contents = substr($contents,$pos);
-		}
-
-		$lines = explode("\n",$contents);
-		$HasRule = false;
-		foreach($lines as $line){
-			$line = trim($line);
-			if( strpos($line,'RewriteRule') !== false ){
-				$HasRule = true;
-			}
-		}
-
-		if( $HasRule ){
-			echo '<p class="gp_notice">';
-			echo $langmessage['gp_indexphp_note'];
-			echo '</p>';
-		}
+		echo '<p class="gp_notice">';
+		echo $langmessage['gp_indexphp_note'];
+		echo '</p>';
 
 	}
 
@@ -175,38 +193,62 @@ class admin_permalinks{
 		$rules = admin_permalinks::Rewrite_Rules($this->changed_to_hide,$dirPrefix,$config['gpuniq']);
 
 
-		//only proceed with hide if we can test the results
-		if( gpRemoteGet::Test() ){
-			if( $gp_filesystem->ConnectOrPrompt('Admin_Permalinks') ){
-				if( $this->SaveRules($this->htaccess_file,$rules) ){
-					message($langmessage['SAVED']);
-
-					$_SERVER['gp_rewrite'] = $this->changed_to_hide;
-					common::SetLinkPrefix();
-
-					echo '<form method="GET" action="'.common::GetUrl('Admin_Permalinks').'">';
-					echo '<input type="submit" value="'.$langmessage['continue'].'" class="gpsubmit" />';
-					echo '</form>';
-
-					return true;
-				}
-
-				message($langmessage['OOPS']);
-				$gp_filesystem->CompleteForm($_POST,'Admin_Permalinks');
-			}
+		// only proceed with hide if we can test the results
+		if( !gpRemoteGet::Test() ){
+			$this->ManualMethod($rules);
+			return false;
 		}
 
 
-		echo '<h3>'.$langmessage['manual_method'].'</h3>';
-		echo '<p>';
-		echo $langmessage['manual_htaccess'];
-		echo '</p>';
+		if( !$gp_filesystem->ConnectOrPrompt('Admin_Permalinks') ){
+			$this->ManualMethod($rules);
+			return false;
+		}
 
-		echo '<textarea cols="60" rows="7" readonly="readonly" onClick="this.focus();this.select();" class="gptextarea">';
-		echo htmlspecialchars($rules);
-		echo '</textarea>';
+
+		if( $this->SaveRules($this->rule_file,$rules) ){
+			message($langmessage['SAVED']);
+
+			$_SERVER['gp_rewrite'] = $this->changed_to_hide;
+			common::SetLinkPrefix();
+
+			return true;
+		}
+
+		//message($langmessage['OOPS']);
+		$gp_filesystem->CompleteForm($_POST,'Admin_Permalinks');
+		$this->ManualMethod($rules);
 
 		return false;
+	}
+
+
+	/**
+	 * Display instructions for manually creating the htaccess/web.config file
+	 *
+	 */
+	function ManualMethod($rules){
+		global $langmessage;
+
+		echo '<h3>'.$langmessage['manual_method'].'</h3>';
+		echo '<p>';
+		echo str_replace('.htaccess',$this->rule_file_name,$langmessage['manual_htaccess']);
+		echo '</p>';
+
+		//display rewrite code in textarea
+		$lines = explode("\n",$rules);
+		$len = 70;
+		foreach($lines as $line){
+			$line_len = strlen($line)+(substr_count($line,"\t")*3);
+			$len = max($len,$line_len);
+		}
+		$len = min(140,$len);
+		echo '<textarea cols="'.$len.'" rows="'.(count($lines)+1).'" readonly="readonly" onClick="this.focus();this.select();" class="gptextarea">';
+		echo htmlspecialchars($rules);
+		echo '</textarea>';
+		echo '<form action="'.common::GetUrl('Admin_Permalinks').'" method="get">';
+		echo '<input type="submit" value="'.$langmessage['continue'].'" class="gpsubmit"/>';
+		echo '</form>';
 
 	}
 
@@ -223,9 +265,6 @@ class admin_permalinks{
 	 */
 	function SaveRules($path,$rules){
 		global $gp_filesystem, $langmessage;
-
-		//force a 500 error for testing
-		//$rules .= "\n</IfModule>";
 
 
 		//get current .htaccess
@@ -244,7 +283,7 @@ class admin_permalinks{
 			return false;
 		}
 
-		$filesystem_path = $filesystem_base.'/.htaccess';
+		$filesystem_path = $filesystem_base.'/'.$this->rule_file_name;
 
 		if( !$gp_filesystem->put_contents($filesystem_path,$contents) ){
 			return false;
@@ -326,46 +365,94 @@ class admin_permalinks{
 	 * Return the .htaccess code that can be used to hide index.php
 	 *
 	 */
-	static function Rewrite_Rules($HideRules = true,$home_root,$uniq=false){
+	static function Rewrite_Rules( $hide_index = true, $home_root, $uniq=false ){
 
-		$home_root = rtrim($home_root,'/').'/';
-
-		$RuleArray = array();
-		if( $HideRules ){
-
-			$RuleArray[] = '# BEGIN gpEasy';
-			$RuleArray[] = '<IfModule mod_rewrite.c>';
-			$RuleArray[] = '<IfModule mod_env.c>';
-			if( $uniq ){
-				$RuleArray[] = 'SetEnv gp_rewrite '.substr($uniq,0,7);
-			}else{
-				$RuleArray[] = 'SetEnv gp_rewrite On';
-			}
-			$RuleArray[] = '</IfModule>';
-
-			$RuleArray[] = 'RewriteEngine On';
-			$RuleArray[] = 'RewriteBase "'.$home_root.'"';
-			$RuleArray[] = 'RewriteRule ^index\.php$ - [L]'; // Prevent -f checks on index.php.
-
-			$RuleArray[] = 'RewriteCond %{REQUEST_FILENAME} !-f';
-
-			//comment to give gpEasy files preference over directories
-			//uncomment if directories need to be accessible... sub installations
-			$RuleArray[] = 'RewriteCond %{REQUEST_FILENAME} !-d';
-
-			//append the requested title to the end for systems using mod_cache. Also reported in wordpress http://core.trac.wordpress.org/ticket/12175
-			$RuleArray[] = '<IfModule mod_cache.c>';
-			$RuleArray[] = 'RewriteRule /?(.*) "'.$home_root.'index.php?$1" [qsa,L]';
-			$RuleArray[] = '</IfModule>';
-			$RuleArray[] = '<IfModule !mod_cache.c>';
-			$RuleArray[] = 'RewriteRule . "'.$home_root.'index.php" [L]';
-			$RuleArray[] = '</IfModule>';
-
-			$RuleArray[] = '</IfModule>';
-			$RuleArray[] = '# END gpEasy';
+		if( !$hide_index ){
+			return '';
 		}
 
+		$home_root = rtrim($home_root,'/').'/';
+		$RuleArray = array();
+
+		//rules for iis server
+		$iis7 = self::IIS7();
+		if( $iis7 ){
+			return '<?'.'xml version="1.0" encoding="UTF-8" ?'.'>
+<!-- BEGIN gpEasy -->
+<configuration>
+<system.webServer>
+	<rewrite>
+		<rules>
+			<rule name="Redirect index.php" stopProcessing="true">
+				<match url="index\.php/(.*)" />
+				<action type="Redirect" url="{R:1}" appendQueryString="false" />
+			</rule>
+			<rule name="Rewrite index.php">
+				<match url="(.*)" />
+				<conditions>
+					<add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+					<add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+				</conditions>
+				<action type="Rewrite" url="index.php/{R:1}" />
+			</rule>
+		</rules>
+	</rewrite>
+</system.webServer>
+</configuration>
+<!-- END gpEasy -->';
+
+		}
+
+
+		//defaults to apache rules
+		$RuleArray[] = '# BEGIN gpEasy';
+		$RuleArray[] = '<IfModule mod_rewrite.c>';
+		$RuleArray[] = '<IfModule mod_env.c>';
+		if( $uniq ){
+			$RuleArray[] = 'SetEnv gp_rewrite '.substr($uniq,0,7);
+		}else{
+			$RuleArray[] = 'SetEnv gp_rewrite On';
+		}
+		$RuleArray[] = '</IfModule>';
+
+		$RuleArray[] = 'RewriteEngine On';
+		$RuleArray[] = 'RewriteBase "'.$home_root.'"';
+		$RuleArray[] = 'RewriteRule ^index\.php$ - [L]'; // Prevent -f checks on index.php.
+
+		$RuleArray[] = 'RewriteCond %{REQUEST_FILENAME} !-f';
+
+		//comment to give gpEasy files preference over directories
+		//uncomment if directories need to be accessible... sub installations
+		$RuleArray[] = 'RewriteCond %{REQUEST_FILENAME} !-d';
+
+		//append the requested title to the end for systems using mod_cache. Also reported in wordpress http://core.trac.wordpress.org/ticket/12175
+		$RuleArray[] = '<IfModule mod_cache.c>';
+		$RuleArray[] = 'RewriteRule /?(.*) "'.$home_root.'index.php?$1" [qsa,L]';
+		$RuleArray[] = '</IfModule>';
+		$RuleArray[] = '<IfModule !mod_cache.c>';
+		$RuleArray[] = 'RewriteRule . "'.$home_root.'index.php" [L]';
+		$RuleArray[] = '</IfModule>';
+
+		$RuleArray[] = '</IfModule>';
+		$RuleArray[] = '# END gpEasy';
+
 		return "\n" . implode("\n",$RuleArray) . "\n";
+	}
+
+
+	/**
+	 * Determine if gpEasy installed on an IIS Server
+	 *
+	 */
+	static function IIS7(){
+		return true;
+
+		if( strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false || strpos($_SERVER['SERVER_SOFTWARE'], 'ExpressionDevServer') !== false ){
+			if( strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS/7.') !== false ){
+				return true;
+			}
+		}
+		return false;
 	}
 
 

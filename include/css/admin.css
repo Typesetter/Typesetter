@@ -40,7 +40,8 @@ body #gp_admin_html form{
 	margin:0;
 	padding:0;
 	}
-body #gp_admin_html input{
+body #gp_admin_html input,
+body #gp_admin_html textarea{
 	width:auto;
 	}
 body #gp_admin_html table{
@@ -75,6 +76,11 @@ body #gp_admin_html a *{
 	text-decoration:inherit;
 	}
 
+body #gp_admin_html h1,
+body #gp_admin_html h2,
+body #gp_admin_html h3{
+	margin:.8em 0;
+	}
 
 body #gp_admin_html h1,
 body #gp_admin_html h1 a{
@@ -92,6 +98,7 @@ body #gp_admin_html h2 a{
 	text-shadow:none;
 	color:#333;
 	text-align:left;
+	line-height:25px;
 	}
 
 body #gp_admin_html h3,
@@ -111,7 +118,6 @@ body #gp_admin_html h4 a{
 	color:#333;
 	text-align:left;
 	}
-
 
 body #gp_admin_html h1 a,
 body #gp_admin_html h1 a:visited,

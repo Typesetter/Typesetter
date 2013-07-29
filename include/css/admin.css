@@ -29,6 +29,9 @@ body #gp_admin_html *{
 	font-family:inherit;
 	line-height:inherit;
 	text-shadow:none;
+	-moz-box-sizing:content-box;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
 	/* background: none; prevents other backgrounds from showing. "inherit" wouldn't make sense */
 	}
 body #gp_admin_html li{

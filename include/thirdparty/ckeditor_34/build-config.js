@@ -88,7 +88,8 @@ var CKBUILDER_CONFIG = {
 		'stylesheetparser' : 1,
 		'tableresize' : 1,
 		'sourcedialog' : 1,
-		'sharedspace' : 1
+		'sharedspace' : 1,
+		'indentlist' : 1
 	},
 	languages : {
 		'ar' : 1,

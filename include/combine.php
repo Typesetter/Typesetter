@@ -338,7 +338,7 @@ class gp_combine{
 
 			// change modified time to extend cache
 			$diff = time() - filemtime($cache_file);
-			if( $diff < 304800 ){
+			if( $diff > 172800 ){ //two days
 				touch($cache_file);
 			}
 

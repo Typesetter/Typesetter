@@ -1576,10 +1576,12 @@ class admin_theme_content extends admin_addon_install{
 		$colors = array();
 		asort($subdirs);
 		foreach($subdirs as $subdir){
-			$style_path = $dir.'/'.$subdir.'/style.css';
-			if( file_exists($style_path) ){
+			$css_path = $dir.'/'.$subdir.'/style.css';
+			$less_path = $dir.'/'.$subdir.'/style.less';
+			if( file_exists($css_path) || file_exists($less_path) ){
 				$colors[$subdir] = $subdir;
 			}
+
 		}
 		return $colors;
 	}

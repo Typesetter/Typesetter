@@ -2080,7 +2080,16 @@ class gpOutput{
 
 		//after other styles, so themes can overwrite defaults
 		if( !empty($page->theme_name) && $page->get_theme_css === true ){
-			$scripts[] = rawurldecode($page->theme_path).'/style.css';
+
+			if( file_exists($page->theme_dir . '/' . $page->theme_color . '/style.css') ){
+				$scripts[] = rawurldecode($page->theme_path).'/style.css';
+			}
+
+			$less_file = $page->theme_dir . '/' . $page->theme_color . '/style.less';
+			if( file_exists($less_file) ){
+				gpOutput::Less($less_file);
+			}
+
 		}
 
 		//layout css
@@ -2467,6 +2476,7 @@ class gpOutput{
 		}
 	}
 
+
 	/**
 	 * Add one or more components to the page. Output the <script> and/or <style> immediately
 	 * @param string $names comma separated list of components
@@ -2479,5 +2489,71 @@ class gpOutput{
 		gpOutput::CombineFiles($scripts['js'], 'js', false );
 	}
 
+
+	/**
+	 * Convert a .less file to .css and include it in the page
+	 * @param string $file The absolute or relative path of the .less file
+	 *
+	 */
+	function Less( $less_file ){
+		global $dataDir, $page;
+
+		includeFile('thirdparty/lessphp/lessc.inc.php');
+		$less = new lessc();
+
+		// handle relative and absolute paths
+		if( strpos($less_file,$dataDir) === false ){
+			$less_file = $dataDir.'/'.ltrim($less_file,'/');
+		}
+		$less_file_relative = substr($less_file,strlen($dataDir));
+
+
+		// generate name for compiled css file
+		$output_relative = '/data/_cache/less_'.md5($less_file_relative).'.css';
+ 		$output = $dataDir.$output_relative;
+		$page->css_user[] = $output_relative;
+ 		$object_file = $dataDir.$output_relative.'.php';
+
+
+		// get cache object if it exists
+		$last_updated = 0;
+		$less_cache = array();
+ 		if( file_exists($object_file) ){
+			include($object_file);
+			$last_updated = $less_cache['updated'];
+			$less->cachedCompile($less_cache);
+
+
+		// if we dont have a cache file, use $less_file
+		}else{
+
+	 		try{
+
+				$less_cache = $less->cachedCompile($less_file);
+
+			}catch(Exception $e){
+				if( common::LoggedIn() ){
+					msg($e->getMessage());
+				}
+				return;
+			}
+		}
+
+
+		//save the cache results
+		if( !$last_updated || $last_updated < $less_cache['updated'] ){
+			msg('save cache and css file');
+			file_put_contents($output, $less_cache['compiled']);
+			gpFiles::SaveArray($object_file,'less_cache',$less_cache);
+
+
+		//touch the files to extend the cache
+		}elseif( (time() - $last_updated) > 172800 ){ //two days
+			touch($object_file);
+			touch($output);
+
+		}
+
+	}
 
 }

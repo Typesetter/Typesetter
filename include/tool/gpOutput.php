@@ -2082,13 +2082,22 @@ class gpOutput{
 		// add theme css
 		if( !empty($page->theme_name) && $page->get_theme_css === true ){
 
-			if( file_exists($page->theme_dir . '/' . $page->theme_color . '/style.css') ){
-				$scripts[] = rawurldecode($page->theme_path).'/style.css';
-			}
+			for($i=0;$i<10;$i++){
 
-			$less_file = $page->theme_dir . '/' . $page->theme_color . '/style.less';
-			if( file_exists($less_file) ){
-				$scripts[] = gpOutput::Less($less_file);
+				$name = '/style';
+				if( $i ){
+					$name = '/style'.$i;
+				}
+
+				$less_file = $page->theme_dir . '/' . $page->theme_color . $name .'.less';
+				if( file_exists($page->theme_dir . '/' . $page->theme_color . $name . '.css') ){
+					$scripts[] = rawurldecode($page->theme_path).$name.'.css';
+				}elseif( file_exists($less_file) ){
+					$scripts[] = gpOutput::Less($less_file);
+				}else{
+					break;
+				}
+
 			}
 		}
 

@@ -461,7 +461,7 @@ class admin_theme_content extends admin_addon_install{
 				echo str_replace('_',' ',$gadget);
 				echo '</td><td>';
 				if( isset($gadget_info[$gadget]) ){
-					echo $this->LayoutLink( $this->curr_layout, $langmessage['remove'], 'cmd=rmgadget&gadget='.urlencode($gadget), 'data-cmd="cnreq"' );
+					echo $this->LayoutLink( $this->curr_layout, $langmessage['remove'], 'cmd=rmgadget&gadget='.urlencode($gadget), array('data-cmd'=>'cnreq') );
 				}else{
 					echo $langmessage['disabled'];
 				}
@@ -599,8 +599,8 @@ class admin_theme_content extends admin_addon_install{
 		//content arrangement
 		echo '<li>';
 		if( $handlers_count ){
-			echo $this->LayoutLink( $layout, $langmessage['restore_defaults'], 'cmd=restore', 'data-cmd="creq"' );
-			//echo $this->LayoutLink( $layout, $langmessage['content_arrangement'].': '.$langmessage['restore_defaults'], 'cmd=restore', 'data-cmd="creq"' );
+			echo $this->LayoutLink( $layout, $langmessage['restore_defaults'], 'cmd=restore', array('data-cmd'=>'creq') );
+			//echo $this->LayoutLink( $layout, $langmessage['content_arrangement'].': '.$langmessage['restore_defaults'], 'cmd=restore', array('data-cmd'=>'creq') );
 		}else{
 			echo '<span>'.$langmessage['content_arrangement'].': '.$langmessage['default'].'</span>';
 		}
@@ -652,7 +652,7 @@ class admin_theme_content extends admin_addon_install{
 				echo '<b>'.$color_label.'</b>';
 			}else{
 				echo '<li>';
-				echo $this->LayoutLink( $layout, $color_label, 'cmd=change_layout_color&color='.$color, ' data-cmd="cnreq"' );
+				echo $this->LayoutLink( $layout, $color_label, 'cmd=change_layout_color&color='.$color, array('data-cmd'=>'cnreq') );
 			}
 			echo '</li>';
 		}
@@ -1839,7 +1839,7 @@ class admin_theme_content extends admin_addon_install{
 				echo '<ul>';
 				foreach($info['colors'] as $color){
 					echo '<li>';
-					echo common::Link('Admin_Theme_Content',str_replace('_','&nbsp;',$color),'cmd=preview&theme='.rawurlencode($theme_id.'/'.$color),''); //,' data-cmd="creq" ');
+					echo common::Link('Admin_Theme_Content',str_replace('_','&nbsp;',$color),'cmd=preview&theme='.rawurlencode($theme_id.'/'.$color),'');
 					echo '</li>';
 				}
 				echo '</ul>';
@@ -2001,7 +2001,7 @@ class admin_theme_content extends admin_addon_install{
 		}else{
 			$source = $layout_info['theme_name'].'(local)/'.$layout_info['theme_color'];
 		}
-		echo common::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=updatetheme&source='.rawurlencode($source),'data-cmd="creq"');
+		echo common::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=updatetheme&source='.rawurlencode($source),array('data-cmd'=>'creq'));
 		echo '</li>';
 
 
@@ -2028,7 +2028,7 @@ class admin_theme_content extends admin_addon_install{
 				$label = $langmessage['upgrade'].' &nbsp; '.$version_info['version'];
 				$source = $version_info['index'].'/'.$layout_info['theme_color']; //could be different folder
 				echo '<div class="gp_notice">';
-				echo common::Link('Admin_Theme_Content',$label,'cmd=updatetheme&source='.$source,'data-cmd="creq"');
+				echo common::Link('Admin_Theme_Content',$label,'cmd=updatetheme&source='.$source,array('data-cmd'=>'creq'));
 				echo '</div>';
 
 
@@ -2418,7 +2418,7 @@ class admin_theme_content extends admin_addon_install{
 					echo '<tr><td>';
 					echo str_replace('_',' ',$extraName);
 					echo '</td><td class="add">';
-					echo common::Link($slug,$langmessage['add'],$addQuery.'&insert=Extra:'.$extraName,'data-cmd="creq"');
+					echo common::Link($slug,$langmessage['add'],$addQuery.'&insert=Extra:'.$extraName,array('data-cmd'=>'creq'));
 					echo '</td></tr>';
 				}
 
@@ -2462,7 +2462,7 @@ class admin_theme_content extends admin_addon_install{
 							echo str_replace('_',' ',$gadget);
 							echo '</td>';
 							echo '<td class="add">';
-							echo common::Link($slug,$langmessage['add'],$addQuery.'&insert='.$gadget,'data-cmd="creq"');
+							echo common::Link($slug,$langmessage['add'],$addQuery.'&insert='.$gadget,array('data-cmd'=>'creq'));
 							echo '</td>';
 							echo '</tr>';
 					}

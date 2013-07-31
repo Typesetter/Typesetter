@@ -775,7 +775,7 @@ class editing_page extends display{
 			echo '</td><td>';
 			echo $username;
 			echo '</td><td>';
-			echo common::Link($this->title,$langmessage['preview'],'cmd=view_revision&time='.$time,'data-cmd="cnreq"');
+			echo common::Link($this->title,$langmessage['preview'],'cmd=view_revision&time='.$time,array('data-cmd'=>'cnreq'));
 			echo '</td></tr>';
 			$i++;
 		}
@@ -817,7 +817,7 @@ class editing_page extends display{
 
 		$date = common::date($langmessage['strftime_datetime'],$time);
 		$message = sprintf($langmessage['viewing_revision'],$date);
-		$message .= ' <br/> '.common::Link($this->title,$langmessage['Restore this revision'],'cmd=use_revision&time='.$time,'data-cmd="cnreq"');
+		$message .= ' <br/> '.common::Link($this->title,$langmessage['Restore this revision'],'cmd=use_revision&time='.$time,array('data-cmd'=>'cnreq'));
 		$message .= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 		message( $message );
 	}
@@ -934,7 +934,7 @@ class editing_page extends display{
 				echo $link;
 
 				if( $section_num > 0 ){
-					echo common::Link($this->title,$langmessage['move_up'],'cmd=move_up&section='.$section_key,' data-cmd="creq"','move_up'.$section_key);
+					echo common::Link($this->title,$langmessage['move_up'],'cmd=move_up&section='.$section_key,array('data-cmd'=>'creq'),'move_up'.$section_key);
 				}
 
 				echo common::Link($this->title,$langmessage['options'].'...','cmd=section_options&section='.$section_key,array('data-cmd'=>'gpabox'));
@@ -942,7 +942,7 @@ class editing_page extends display{
 				echo common::Link($this->title,$langmessage['New Section'].'...','cmd=new_section&section='.$section_key,array('data-cmd'=>'gpabox'));
 
 				$q = 'cmd=add_section&copy=copy&section='.$section_key.'&last_mod='.rawurlencode($this->fileModTime);
-				echo common::Link($this->title,$langmessage['Copy'],$q,' data-cmd="creq"');
+				echo common::Link($this->title,$langmessage['Copy'],$q,array('data-cmd'=>'creq'));
 
 
 				//remove section link

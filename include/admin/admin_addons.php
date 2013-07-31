@@ -459,7 +459,7 @@ class admin_addons extends admin_addon_install{
 				echo '</td><td>';
 				echo $info['Addon_Version'];
 				echo '</td><td>';
-				echo common::Link('Admin_Addons',$langmessage['Install'],'cmd=local_install&source='.$folder,'data-cmd="creq"');
+				echo common::Link('Admin_Addons',$langmessage['Install'],'cmd=local_install&source='.$folder, array('data-cmd'=>'creq'));
 				echo '</td><td>';
 				echo $info['About'];
 				if( isset($info['Addon_Unique_ID']) && is_numeric($info['Addon_Unique_ID']) ){
@@ -559,7 +559,7 @@ class admin_addons extends admin_addon_install{
 				//upgrade link
 				if( isset($addon_config['upgrade_from']) ){
 					echo '<li>';
-					echo common::Link('Admin_Addons',$langmessage['upgrade'],'cmd=local_install&source='.$addon_config['upgrade_from'],'data-cmd="creq"');
+					echo common::Link('Admin_Addons',$langmessage['upgrade'],'cmd=local_install&source='.$addon_config['upgrade_from'],array('data-cmd'=>'creq'));
 					echo '</li>';
 				}
 
@@ -632,7 +632,7 @@ class admin_addons extends admin_addon_install{
 			if(version_compare($addon_config['upgrade_version'],$addon_config['version'] ,'>') ){
 				echo '<div class="gp_notice">';
 				$label = $langmessage['new_version'].' &nbsp; '.$addon_config['upgrade_version'];
-				echo common::Link('Admin_Addons',$label,'cmd=local_install&source='.$addon_config['upgrade_from'],'data-cmd="creq"');
+				echo common::Link('Admin_Addons',$label,'cmd=local_install&source='.$addon_config['upgrade_from'],array('data-cmd'=>'creq'));
 				echo '</div>';
 			}
 		}

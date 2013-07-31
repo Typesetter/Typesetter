@@ -30,7 +30,9 @@ var $gp = {
 	 *
 	 */
 	cGoTo : function(a,samepage){
-		$gp.Cookie('cookie_cmd',encodeURIComponent(a.search),1);
+		var $link = $(a);
+		var query = a.search +'&verified='+encodeURIComponent($link.data('nonce'));
+		$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
 
 		if( samepage ){
 			$gp.Reload();

@@ -441,7 +441,7 @@ class admin_menu_new extends admin_menu_tools{
 			if( $menu_id == $this->curr_menu_id ){
 				echo '<span>'.$menu_label.'</span>';
 			}else{
-				echo '<span>'.common::Link('Admin_Menu',$menu_label,'menu='.$menu_id,' data-cmd="cnreq"').'</span>';
+				echo '<span>'.common::Link('Admin_Menu',$menu_label,'menu='.$menu_id, array('data-cmd'=>'cnreq')).'</span>';
 			}
 
 		}
@@ -454,7 +454,7 @@ class admin_menu_new extends admin_menu_tools{
 			if( $menu_id == $this->curr_menu_id ){
 			}else{
 			}
-			echo '<span>'.common::Link('Admin_Menu',$menu_label,'menu='.$menu_id,'data-cmd="creq"').'</span>';
+			echo '<span>'.common::Link('Admin_Menu',$menu_label,'menu='.$menu_id,array('data-cmd'=>'creq')).'</span>';
 		}
 		echo '</div>';
 

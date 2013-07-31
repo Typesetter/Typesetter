@@ -351,7 +351,7 @@ class gpOutput{
 			$class .= ' gp_output_area';
 
 			echo '<div class="gp_inner_links nodisplay">';
-			echo common::Link('Admin_Theme_Content/'.$page->gpLayout,$param,'cmd=drag_area&dragging='.urlencode($param).'&to=%s','data-cmd="creq" class="dragdroplink nodisplay"'); //drag-drop link
+			echo common::Link('Admin_Theme_Content/'.$page->gpLayout,$param,'cmd=drag_area&dragging='.urlencode($param).'&to=%s',array('data-cmd'=>'creq','class'=>'dragdroplink nodisplay')); //drag-drop link
 			if( !$empty_container ){
 				echo '<div class="output_area_label">';
 				echo ' '.gpOutput::GpOutLabel($info['gpOutCmd']);
@@ -359,7 +359,7 @@ class gpOutput{
 			}
 			echo '<div class="output_area_link">';
 			if( !$empty_container ){
-				echo ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['remove'],'cmd=rm_area&param='.$param,'data-cmd="creq"');
+				echo ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['remove'],'cmd=rm_area&param='.$param,array('data-cmd'=>'creq'));
 			}
 			echo ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['insert'],'cmd=insert&param='.$param,array('data-cmd'=>'gpabox'));
 			echo '</div></div>';
@@ -2364,7 +2364,7 @@ class gpOutput{
 		if( !isset($config['showlogin']) || $config['showlogin'] ){
 			echo ' <span class="login_link">';
 				if( common::LoggedIn() ){
-					echo common::Link($page->title,$langmessage['logout'],'cmd=logout','data-cmd="creq" rel="nofollow" ');
+					echo common::Link($page->title,$langmessage['logout'],'cmd=logout',array('data-cmd'=>'creq','rel'=>'nofollow'));
 				}else{
 					echo common::Link('Admin',$langmessage['login'],'file='.rawurlencode($page->title),' rel="nofollow" data-cmd="login"');
 				}

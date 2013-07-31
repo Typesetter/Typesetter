@@ -2078,7 +2078,8 @@ class gpOutput{
 			$scripts = array_merge($scripts,$page->css_user);
 		}
 
-		//after other styles, so themes can overwrite defaults
+
+		// add theme css
 		if( !empty($page->theme_name) && $page->get_theme_css === true ){
 
 			if( file_exists($page->theme_dir . '/' . $page->theme_color . '/style.css') ){
@@ -2087,10 +2088,10 @@ class gpOutput{
 
 			$less_file = $page->theme_dir . '/' . $page->theme_color . '/style.less';
 			if( file_exists($less_file) ){
-				gpOutput::Less($less_file);
+				$scripts[] = gpOutput::Less($less_file);
 			}
-
 		}
+
 
 		//layout css
 		if( isset($page->layout_css) && $page->layout_css ){
@@ -2498,8 +2499,11 @@ class gpOutput{
 	function Less( $less_file ){
 		global $dataDir, $page;
 
+		//get lessc object
 		includeFile('thirdparty/lessphp/lessc.inc.php');
 		$less = new lessc();
+		$less->setImportDir( array('', $dataDir.'/include/thirdparty/Bootstrap/less/') );
+
 
 		// handle relative and absolute paths
 		if( strpos($less_file,$dataDir) === false ){
@@ -2511,7 +2515,6 @@ class gpOutput{
 		// generate name for compiled css file
 		$output_relative = '/data/_cache/less_'.md5($less_file_relative).'.css';
  		$output = $dataDir.$output_relative;
-		$page->css_user[] = $output_relative;
  		$object_file = $dataDir.$output_relative.'.php';
 
 
@@ -2521,7 +2524,7 @@ class gpOutput{
  		if( file_exists($object_file) ){
 			include($object_file);
 			$last_updated = $less_cache['updated'];
-			$less->cachedCompile($less_cache);
+			$less_cache = $less->cachedCompile($less_cache);
 
 
 		// if we dont have a cache file, use $less_file
@@ -2542,7 +2545,6 @@ class gpOutput{
 
 		//save the cache results
 		if( !$last_updated || $last_updated < $less_cache['updated'] ){
-			msg('save cache and css file');
 			file_put_contents($output, $less_cache['compiled']);
 			gpFiles::SaveArray($object_file,'less_cache',$less_cache);
 
@@ -2554,6 +2556,7 @@ class gpOutput{
 
 		}
 
+		return $output_relative;
 	}
 
 }

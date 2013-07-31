@@ -211,7 +211,8 @@ class gp_combine{
 
 				'bootstrap-responsive-css'	=>	array(
 												'file' => '/include/thirdparty/Bootstrap/css/bootstrap-responsive.min.css',
-												'requires'=> array('bootstrap-css') ),
+												'requires'=> array('bootstrap-css')
+												),
 
 				'bootstrap-alert'			=> array(
 												'file' => '/include/thirdparty/Bootstrap/js/bootstrap-alert.js',

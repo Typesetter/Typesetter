@@ -994,6 +994,7 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function NewLayout($cmd){
+		global $langmessage;
 
 		//check the requested theme
 		$theme =& $_REQUEST['theme'];

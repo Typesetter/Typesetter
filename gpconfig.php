@@ -58,14 +58,6 @@ define('gp_unique_addons',false);
 
 
 /**
- * For use along with Admin_Permalink settings if Admin_Permalinks cannot finish hiding index.php alone
- * A false setting without the necessary mod_rewrite settings will break site navigation. See Admin_Permalinks for more information.
- * Defaults to false
- */
- // define('gp_indexphp',false);
-
-
-/**
  * Using setlocale() may enable more language specific ouptput for dates, times etc
  * http://php.net/manual/en/function.setlocale.php
  * Defaults to en_US

@@ -205,19 +205,18 @@ class admin_permalinks{
 			return false;
 		}
 
-
-		if( $this->SaveRules($this->rule_file,$rules) ){
-			message($langmessage['SAVED']);
-
-			$_SERVER['gp_rewrite'] = $this->changed_to_hide;
-			common::SetLinkPrefix();
-
-			return true;
+		if( !$this->SaveRules($this->rule_file,$rules) ){
+			$gp_filesystem->CompleteForm($_POST,'Admin_Permalinks');
+			$this->ManualMethod($rules);
+			return false;
 		}
 
-		//message($langmessage['OOPS']);
-		$gp_filesystem->CompleteForm($_POST,'Admin_Permalinks');
-		$this->ManualMethod($rules);
+		message($langmessage['SAVED']);
+		$_SERVER['gp_rewrite'] = $this->changed_to_hide;
+		common::SetLinkPrefix();
+
+		$redir = common::GetUrl('Admin_Permalinks');
+		common::Redirect($redir,302);
 
 		return false;
 	}
@@ -276,7 +275,7 @@ class admin_permalinks{
 
 		// new gpeasy rules
 		admin_permalinks::StripRules($contents);
-		$contents .= $rules;
+		$contents .= "\n\n".$rules;
 
 		$filesystem_base = $gp_filesystem->get_base_dir();
 		if( $filesystem_base === false ){
@@ -292,6 +291,7 @@ class admin_permalinks{
 		//if TestResponse Fails, undo the changes
 		//only need to test for hiding
 		if( $this->changed_to_hide && !admin_permalinks::TestResponse() ){
+
 			if( $original_contents === false ){
 				$gp_filesystem->unlink($filesystem_path);
 			}else{
@@ -345,15 +345,26 @@ class admin_permalinks{
 	 * @param string $contents .htaccess file contents
 	 */
 	static function StripRules(&$contents){
+
+		$iis7 = self::IIS7();
+		if( $iis7 ){
+			$begin_comment = '<!-- BEGIN gpEasy -->';
+			$end_comment = '<!-- END gpEasy -->';
+		}else{
+			$begin_comment = '# BEGIN gpEasy';
+			$end_comment = '# END gpEasy';
+		}
+
+
 		//strip gpEasy code
-		$pos = strpos($contents,'# BEGIN gpEasy');
+		$pos = strpos($contents,$begin_comment);
 		if( $pos === false ){
 			return;
 		}
 
-		$pos2 = strpos($contents,'# END gpEasy');
+		$pos2 = strpos($contents,$end_comment);
 		if( $pos2 > $pos ){
-			$contents = substr_replace($contents,'',$pos,$pos2-$pos+12);
+			$contents = substr_replace($contents,'',$pos,$pos2-$pos+strlen($end_comment));
 		}else{
 			$contents = substr($contents,0,$pos);
 		}
@@ -377,66 +388,66 @@ class admin_permalinks{
 		//rules for iis server
 		$iis7 = self::IIS7();
 		if( $iis7 ){
-			return '<?'.'xml version="1.0" encoding="UTF-8" ?'.'>
-<!-- BEGIN gpEasy -->
+			return '<?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
 <system.webServer>
 	<rewrite>
 		<rules>
 			<rule name="Redirect index.php" stopProcessing="true">
-				<match url="index\.php/(.*)" />
-				<action type="Redirect" url="{R:1}" appendQueryString="false" />
+				<match url="index\.php/?(.*)" />
+				<action type="Redirect" url="{R:1}" appendQueryString="false" redirectType="Found" />
 			</rule>
-			<rule name="Rewrite index.php">
+
+			<rule name="Rewrite index.php" stopProcessing="true">
 				<match url="(.*)" />
 				<conditions>
 					<add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
 					<add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
 				</conditions>
-				<action type="Rewrite" url="index.php/{R:1}" />
+				<action type="Rewrite" url="index.php?gp_rewrite={R:1}" />
+			</rule>
+
+			<rule name="Rewrite Root" stopProcessing="true">
+				<match url="^$" />
+				<action type="Rewrite" url="index.php?gp_rewrite" />
 			</rule>
 		</rules>
 	</rewrite>
 </system.webServer>
-</configuration>
-<!-- END gpEasy -->';
+</configuration>';
 
 		}
 
 
-		//defaults to apache rules
-		$RuleArray[] = '# BEGIN gpEasy';
-		$RuleArray[] = '<IfModule mod_rewrite.c>';
-		$RuleArray[] = '<IfModule mod_env.c>';
-		if( $uniq ){
-			$RuleArray[] = 'SetEnv gp_rewrite '.substr($uniq,0,7);
-		}else{
-			$RuleArray[] = 'SetEnv gp_rewrite On';
-		}
-		$RuleArray[] = '</IfModule>';
+		// Apache
+		return '# BEGIN gpEasy
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase "'.$home_root.'"
 
-		$RuleArray[] = 'RewriteEngine On';
-		$RuleArray[] = 'RewriteBase "'.$home_root.'"';
-		$RuleArray[] = 'RewriteRule ^index\.php$ - [L]'; // Prevent -f checks on index.php.
 
-		$RuleArray[] = 'RewriteCond %{REQUEST_FILENAME} !-f';
+	# Don\'t rewrite multiple times
+	RewriteCond %{QUERY_STRING} gp_rewrite
+	RewriteRule .* - [L]
 
-		//comment to give gpEasy files preference over directories
-		//uncomment if directories need to be accessible... sub installations
-		$RuleArray[] = 'RewriteCond %{REQUEST_FILENAME} !-d';
+	# Redirect away from requests with index.php
+	RewriteRule index\.php(.*) $1 [R=302,L]
 
-		//append the requested title to the end for systems using mod_cache. Also reported in wordpress http://core.trac.wordpress.org/ticket/12175
-		$RuleArray[] = '<IfModule mod_cache.c>';
-		$RuleArray[] = 'RewriteRule /?(.*) "'.$home_root.'index.php?$1" [qsa,L]';
-		$RuleArray[] = '</IfModule>';
-		$RuleArray[] = '<IfModule !mod_cache.c>';
-		$RuleArray[] = 'RewriteRule . "'.$home_root.'index.php" [L]';
-		$RuleArray[] = '</IfModule>';
+	# Add gp_rewrite to root requests
+	RewriteRule ^$ /index.php?gp_rewrite [L]
 
-		$RuleArray[] = '</IfModule>';
-		$RuleArray[] = '# END gpEasy';
+	# Don\'t rewrite for static files
+	RewriteCond %{REQUEST_FILENAME} -f [OR]
+	RewriteCond %{REQUEST_FILENAME} -d [OR]
+	RewriteCond %{REQUEST_URI} \.(js|css|jpe?g|jpe|gif|png)$ [NC]
+	RewriteRule .* - [L]
 
-		return "\n" . implode("\n",$RuleArray) . "\n";
+	# Send all other requests to index.php
+	# Append the gp_rewrite argument to tell gpEasy not to use index.php and to prevent multiple rewrites
+	RewriteRule /?(.*) "/index.php?gp_rewrite=$1" [qsa,L]
+
+</IfModule>
+# END gpEasy';
 	}
 
 
@@ -445,7 +456,6 @@ class admin_permalinks{
 	 *
 	 */
 	static function IIS7(){
-		return true;
 
 		if( strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false || strpos($_SERVER['SERVER_SOFTWARE'], 'ExpressionDevServer') !== false ){
 			if( strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS/7.') !== false ){

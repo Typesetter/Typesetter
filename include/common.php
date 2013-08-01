@@ -1220,20 +1220,29 @@ class common{
 
 		$linkPrefix = $dirPrefix;
 
-		if( !isset($_SERVER['gp_rewrite']) ){
-			if( defined('gp_indexphp') && (gp_indexphp === false) ){
-				$_SERVER['gp_rewrite'] = true;
-			}else{
-				$_SERVER['gp_rewrite'] = false;
-			}
-		}else{
+		// gp_rewrite = 'On' and gp_rewrite = 'gpuniq' are deprecated as of gpEasy 4.1
+		// gp_rewrite = bool will still be used internally
+		if( isset($_SERVER['gp_rewrite']) ){
 			if( $_SERVER['gp_rewrite'] === true || $_SERVER['gp_rewrite'] == 'On' ){
 				$_SERVER['gp_rewrite'] = true;
 			}elseif( $_SERVER['gp_rewrite'] == substr($config['gpuniq'],0,7) ){
 				$_SERVER['gp_rewrite'] = true;
-			}else{
-				$_SERVER['gp_rewrite'] = false;
 			}
+
+		}elseif( isset($_REQUEST['gp_rewrite']) ){
+			$_SERVER['gp_rewrite'] = true;
+
+		// gp_indexphp is deprecated as of gpEasy 4.1
+		}elseif( defined('gp_indexphp') ){
+
+			if( gp_indexphp === false ){
+				$_SERVER['gp_rewrite'] = true;
+			}
+
+		}
+
+		if( !isset($_SERVER['gp_rewrite']) ){
+			$_SERVER['gp_rewrite'] = false;
 		}
 
 		if( !$_SERVER['gp_rewrite'] ){

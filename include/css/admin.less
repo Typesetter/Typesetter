@@ -1575,7 +1575,7 @@ body #gp_admin_html .layout_links a.selected{
 
 .dd_menu .dd_list{
 	position:absolute;
-	padding:3px;
+	padding:3px 0;
 	display:none;
 	border-radius: 5px;
 	border:1px solid #ccc;
@@ -1585,11 +1585,14 @@ body #gp_admin_html .layout_links a.selected{
 	}
 
 
-.dd_list .list_heading,
 .dd_list .list_heading{
 	font-weight:bold;
-	padding:0 7px;
-	background:#fff !important;
+	padding:0 10px;
+	background:#f1f1f1 !important;
+	border-bottom:1px solid #ddd;
+	border-top:1px solid #ddd;
+	margin-top:3px;
+	font-size:15px;
 	}
 
 .dd_list > ul{
@@ -1602,18 +1605,24 @@ body #gp_admin_html .layout_links a.selected{
 .dd_list li > span,
 .dd_list li > b,
 .dd_list li > a{
-	padding:2px 10px !important;
+	padding:3px 17px !important;
 	display:block;
 	min-width:200px;
-	margin-bottom:3px !important;
+	position:relative;
 	}
 
 .dd_list li.selected > *{
 	font-weight:bold;
-	background:#f5f5f5;
 	}
 .dd_list li > *:hover{
 	background:#f5f5f5;
+	}
+.dd_list li.selected > *:before{
+	content:"\25B6";
+	font-size:8px;
+	color:#aaa;
+	margin-left:-10px;
+	position:absolute;
 	}
 
 

@@ -721,6 +721,9 @@ class admin_theme_content extends admin_addon_install{
 		echo '<a data-cmd="dd_menu">'.$display.'</a>';
 
 		echo '<div class="dd_list"><ul>';
+
+		uasort( $this->possible, array('admin_theme_content','SortName') );
+
 		foreach($this->possible as $theme_id => $info){
 			echo '<li><span class="list_heading">'.htmlspecialchars(str_replace('_',' ',$info['name'])).'</span>';
 			echo '</li>';
@@ -1930,6 +1933,9 @@ class admin_theme_content extends admin_addon_install{
 	}
 	static function SortUpdated($a,$b){
 		return $b['tm'] > $a['tm'];
+	}
+	static function SortName($a,$b){
+		return strnatcasecmp($a['name'],$b['name']);
 	}
 
 

@@ -18,7 +18,7 @@ class gp_combine{
 									),
 
 				'gp-admin-css'=> array(
-									'file' => '/include/css/admin.css',
+									'file' => '/include/css/admin.less',
 									'type' => 'css',
 									'requires' => 'ui-theme'
 									),

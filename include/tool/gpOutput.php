@@ -2531,12 +2531,17 @@ class gpOutput{
 	 *
 	 */
 	function Less( $less_file ){
-		global $dataDir, $page;
+		global $dataDir, $page, $dirPrefix;
 
 		//get lessc object
 		includeFile('thirdparty/lessphp/lessc.inc.php');
 		$less = new lessc();
 		$less->setImportDir( array('', $dataDir.'/include/thirdparty/Bootstrap/less/') );
+
+		//set vars
+		$vars = array();
+		$vars['dirPrefix'] = '"'.$dirPrefix.'"';
+		$less->setVariables( $vars );
 
 
 		// handle relative and absolute paths

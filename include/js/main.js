@@ -464,7 +464,7 @@ $(function(){
 			var cmd = $this.data('cmd');
 			var arg = $this.data('arg');
 			if( !cmd ){
-				/* deprecated 3.6 */
+				// deprecated 3.6
 				cmd = $this.attr('name');
 				arg = $this.attr('rel');
 			}
@@ -478,7 +478,7 @@ $(function(){
 				return $gp.links[cmd].call(this,evt,arg);
 			}
 
-			/* @deprecated 3.6 */
+			// @deprecated 3.6
 			if( typeof(gplinks[cmd]) === 'function' ){
 				return gplinks[cmd].call(this,arg,evt);
 			}

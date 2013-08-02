@@ -2522,9 +2522,7 @@ class gpOutput{
 
 
 		// generate name for compiled css file
-		$output_relative = '/data/_cache/less_'.md5($less_file_relative).'.css';
- 		$output = $dataDir.$output_relative;
- 		$object_file = $dataDir.$output_relative.'.php';
+ 		$object_file = $dataDir.'/data/_cache/less_'.md5($less_file_relative).'.php';
 
 
 		// get cache object if it exists
@@ -2552,8 +2550,14 @@ class gpOutput{
 		}
 
 
+		//use updated time, length and file md5 to create css file name
+		$output_name = common::GenEtag( count($less_cache['files']), $less_cache['updated'], strlen($less_cache['compiled']) );
+		$output_relative = '/data/_cache/less_'.$output_name.'.css';
+ 		$output = $dataDir.$output_relative;
+
+
 		//save the cache results
-		if( !$last_updated || $last_updated < $less_cache['updated'] ){
+		if( !$last_updated || $last_updated < $less_cache['updated'] || !file_exists($output) ){
 			file_put_contents($output, $less_cache['compiled']);
 			gpFiles::SaveArray($object_file,'less_cache',$less_cache);
 
@@ -2567,5 +2571,6 @@ class gpOutput{
 
 		return $output_relative;
 	}
+
 
 }

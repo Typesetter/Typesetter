@@ -1018,9 +1018,21 @@ class common{
 		return @header( $status_header, true, $header );
 	}
 
-	static function GenEtag($modified,$content_length){
-		return base_convert( $modified, 10, 36).'.'.base_convert( $content_length, 10, 36);
+	static function GenEtag(){
+		global $dirPrefix, $dataDir;
+		$etag = '';
+		$args = func_get_args();
+		$args[] = $dataDir.$dirPrefix;
+		foreach($args as $arg){
+			if( !ctype_digit($arg) ){
+				$arg = crc32( $arg );
+				$arg = sprintf("%u\n", $arg );
+			}
+			$etag .= base_convert( $arg, 10, 36);
+		}
+		return $etag;
 	}
+
 
 	static function CheckTheme(){
 		global $page;

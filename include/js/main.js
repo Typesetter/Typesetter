@@ -283,7 +283,7 @@ var $gp = {
 			$.colorbox.launch(this);
 		}
 
-	}
+	},
 
 
 }
@@ -326,13 +326,13 @@ $(function(){
 
 			//collect some debug info
 			var debug_info = {
-				thrownError:thrownError,
-				text:XMLHttpRequest.responseText,
-				status:XMLHttpRequest.status,
-				statusText:XMLHttpRequest.statusText,
-				url:ajaxOptions.url,
-				type:ajaxOptions.type,
-				browser:$.param($.browser) //$.browser is deprecated and may be removed in future jquery releases
+				thrownError		: thrownError,
+				text			: XMLHttpRequest.responseText,
+				status			: XMLHttpRequest.status,
+				statusText		: XMLHttpRequest.statusText,
+				url				: ajaxOptions.url,
+				type			: ajaxOptions.type,
+				browser			: navigator.userAgent
 			};
 			if( ajaxOptions.data ){
 				debug_info.data = ajaxOptions.data.substr(0,100);
@@ -345,17 +345,24 @@ $(function(){
 
 			if( typeof(debug) === 'function' ){
 				debug( debug_info );
-			}else{
-				//console.log( debug_info );
+
+				//report to gpeasy
+				debug_info.cmd = 'javascript_error';
+				$.ajax({
+					type: 'POST',
+					url: 'http://www.gpeasy.com/Resources',
+					data: debug_info,
+					success: function(){},
+					error: function(){}
+				});
+
 			}
-			//LOGO( XMLHttpRequest );
-			//LOGO( event );
-			//alert('Error detected');
 			return;
 		}
 
 		alert($gp.error);
 	});
+
 
 
 	/**

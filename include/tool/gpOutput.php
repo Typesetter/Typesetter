@@ -2581,8 +2581,9 @@ class gpOutput{
 
 
 		//use updated time, length and file md5 to create css file name
-		$output_name = common::GenEtag( count($less_cache['files']), $less_cache['updated'], strlen($less_cache['compiled']) );
-		$output_relative = '/data/_cache/less_'.$output_name.'.css';
+
+		$output_name = 'less_'.str_replace('.less','',basename($less_file)).'_'.common::GenEtag( count($less_cache['files']), $less_cache['updated'], strlen($less_cache['compiled']) );
+		$output_relative = '/data/_cache/'.$output_name.'.css';
  		$output = $dataDir.$output_relative;
 
 

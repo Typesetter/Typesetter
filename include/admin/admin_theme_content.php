@@ -60,7 +60,7 @@ class admin_theme_content extends admin_addon_install{
 
 		$page->head_js[] = '/include/js/theme_content.js';
 		$page->head_js[] = '/include/js/dragdrop.js';
-		$page->css_admin[] = '/include/css/theme_content.css';
+		$page->css_admin[] = '/include/css/theme_content.less';
 
 		parent::__construct();
 

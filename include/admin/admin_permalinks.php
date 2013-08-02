@@ -314,7 +314,8 @@ class admin_permalinks{
 			return;
 		}
 
-		$pos2 = strpos($contents,'# END gpEasy');
+		$end_comment = '# END gpEasy';
+		$pos2 = strpos($contents,$end_comment);
 		if( $pos2 > $pos ){
 			$contents = substr_replace($contents,'',$pos,$pos2-$pos+strlen($end_comment));
 		}else{

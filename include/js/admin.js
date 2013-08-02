@@ -986,6 +986,9 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 
 	//dragging
 	$(document).off('mousedown.sdrag',selector).on('mousedown.sdrag',selector,function(e){
+
+		if( e.which != 1 ) return;
+
 		/* if( e.target.nodeName != 'DIV') return; */
 
 		var box, click_offsetx, click_offsety;
@@ -1319,6 +1322,8 @@ function SimpleResize(resize_area,options){
 	$('<span class="gp_admin_resize"></span><span class="gp_admin_resize gp_resize_right"></span>')
 		.appendTo($resize_area)
 		.on('mousedown.sres',function(evt){
+
+			if( evt.which != 1 ) return;
 
 			var start_x = evt.clientX;
 			var new_w = $resize_area.width(), start_w = new_w;

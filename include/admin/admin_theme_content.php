@@ -1918,6 +1918,8 @@ class admin_theme_content extends admin_addon_install{
 		}
 		echo '</div>';
 
+		$this->SearchNavLinks();
+
 	}
 
 	static function SortDownloads($a,$b){

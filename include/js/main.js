@@ -283,7 +283,7 @@ var $gp = {
 			$.colorbox.launch(this);
 		}
 
-	},
+	}
 
 
 }

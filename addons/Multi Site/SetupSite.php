@@ -277,7 +277,7 @@ class SetupSite{
 
 		//add the gpeasy rules
 		admin_permalinks::StripRules($contents);
-		$contents .= admin_permalinks::Rewrite_Rules($to_hide_index,$prefix,$site_uniq);
+		$contents .= admin_permalinks::Rewrite_Rules($to_hide_index,$prefix);
 		if( !gpFiles::Save($file_path,$contents) ){
 			message($langmessage['OOPS'].' (Couldn\'t save .htaccess)');
 			return false;

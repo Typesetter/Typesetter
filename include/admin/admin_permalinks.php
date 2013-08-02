@@ -14,8 +14,9 @@ class admin_permalinks{
 	function admin_permalinks(){
 		global $langmessage,$dataDir;
 
-		$iis7 = self::IIS7();
-		if( $iis7 ){
+
+		$iis = self::IIS();
+		if( $iis ){
 			$this->rule_file_name = 'web.config';
 		}else{
 			$this->rule_file_name = '.htaccess';
@@ -63,8 +64,6 @@ class admin_permalinks{
 			echo '</p>';
 		}
 
-
-		$this->CheckHtaccess();
 
 		echo '<form method="post" action="'.common::GetUrl('Admin_Permalinks').'">';
 		echo '<table class="bordered">';
@@ -142,79 +141,41 @@ class admin_permalinks{
 
 
 	/**
-	 * Check for MOD_ENV
-	 *
-	 */
-	function CheckHtaccess(){
-		global $langmessage;
-
-		if( !file_exists($this->rule_file) ){
-			return;
-		}
-
-		//it's working
-		if( $_SERVER['gp_rewrite'] ){
-			return;
-		}
-
-		$iis7 = self::IIS7();
-		if( $iis7 ){
-			$begin_comment = '<!-- BEGIN gpEasy -->';
-		}else{
-			$begin_comment = '# BEGIN gpEasy';
-		}
-
-		$contents = file_get_contents($this->rule_file);
-
-		$pos = strpos($contents,$begin_comment);
-		if( $pos === false ){
-			return;
-		}
-
-		echo '<p class="gp_notice">';
-		echo $langmessage['gp_indexphp_note'];
-		echo '</p>';
-
-	}
-
-
-	/**
 	 * Determine how to save the htaccess file to the server (ftp,direct,manual) and give user the appropriate options
 	 *
 	 * @return boolean true if the .htaccess file is saved
 	 */
 	function SaveHtaccess(){
-		global $gp_filesystem,$config,$langmessage, $dirPrefix;
+		global $gp_filesystem, $langmessage, $dirPrefix;
 
 		if( isset($_POST['rewrite_setting']) && $_POST['rewrite_setting'] == 'hide_index' ){
 			$this->changed_to_hide = true;
 		}
 
-		$rules = admin_permalinks::Rewrite_Rules($this->changed_to_hide,$dirPrefix,$config['gpuniq']);
-
 
 		// only proceed with hide if we can test the results
 		if( !gpRemoteGet::Test() ){
-			$this->ManualMethod($rules);
+			$this->ManualMethod();
 			return false;
 		}
 
 
 		if( !$gp_filesystem->ConnectOrPrompt('Admin_Permalinks') ){
-			$this->ManualMethod($rules);
+			$this->ManualMethod();
 			return false;
 		}
 
-		if( !$this->SaveRules($this->rule_file,$rules) ){
+		if( !$this->SaveRules() ){
 			$gp_filesystem->CompleteForm($_POST,'Admin_Permalinks');
-			$this->ManualMethod($rules);
+			$this->ManualMethod();
 			return false;
 		}
 
 		message($langmessage['SAVED']);
+
+		//redirect to new permalink structure
 		$_SERVER['gp_rewrite'] = $this->changed_to_hide;
 		common::SetLinkPrefix();
-
 		$redir = common::GetUrl('Admin_Permalinks');
 		common::Redirect($redir,302);
 
@@ -226,8 +187,10 @@ class admin_permalinks{
 	 * Display instructions for manually creating the htaccess/web.config file
 	 *
 	 */
-	function ManualMethod($rules){
-		global $langmessage;
+	function ManualMethod(){
+		global $langmessage, $dirPrefix;
+
+		$rules = admin_permalinks::Rewrite_Rules( $this->changed_to_hide, $dirPrefix );
 
 		echo '<h3>'.$langmessage['manual_method'].'</h3>';
 		echo '<p>';
@@ -258,24 +221,23 @@ class admin_permalinks{
 	 * @access public
 	 * @since 1.7
 	 *
-	 * @param string $path The path to the local .htaccess file
-	 * @param string $rules The rules to be added to the .htaccess file
 	 * @return boolean
 	 */
-	function SaveRules($path,$rules){
-		global $gp_filesystem, $langmessage;
-
+	function SaveRules(){
+		global $gp_filesystem, $langmessage, $dirPrefix;
 
 		//get current .htaccess
-		$contents = '';
 		$original_contents = false;
-		if( file_exists($path) ){
-			$original_contents = $contents = file_get_contents($path);
+		if( file_exists($this->rule_file) ){
+			$original_contents = file_get_contents($this->rule_file);
 		}
 
-		// new gpeasy rules
-		admin_permalinks::StripRules($contents);
-		$contents .= "\n\n".$rules;
+		//add/remove gpEasy rules from $original_contents to get new $contents
+		$contents = admin_permalinks::Rewrite_Rules( $this->changed_to_hide, $dirPrefix, $original_contents );
+
+		if( $contents === false ){
+			return false;
+		}
 
 		$filesystem_base = $gp_filesystem->get_base_dir();
 		if( $filesystem_base === false ){
@@ -287,6 +249,7 @@ class admin_permalinks{
 		if( !$gp_filesystem->put_contents($filesystem_path,$contents) ){
 			return false;
 		}
+
 
 		//if TestResponse Fails, undo the changes
 		//only need to test for hiding
@@ -314,7 +277,6 @@ class admin_permalinks{
 	 * @return boolean
 	 */
 	static function TestResponse(){
-		global $config;
 
 		//get url, force gp_rewrite to $new_gp_rewrite
 		$rewrite_before = $_SERVER['gp_rewrite'];
@@ -346,23 +308,13 @@ class admin_permalinks{
 	 */
 	static function StripRules(&$contents){
 
-		$iis7 = self::IIS7();
-		if( $iis7 ){
-			$begin_comment = '<!-- BEGIN gpEasy -->';
-			$end_comment = '<!-- END gpEasy -->';
-		}else{
-			$begin_comment = '# BEGIN gpEasy';
-			$end_comment = '# END gpEasy';
-		}
-
-
 		//strip gpEasy code
-		$pos = strpos($contents,$begin_comment);
+		$pos = strpos($contents,'# BEGIN gpEasy');
 		if( $pos === false ){
 			return;
 		}
 
-		$pos2 = strpos($contents,$end_comment);
+		$pos2 = strpos($contents,'# END gpEasy');
 		if( $pos2 > $pos ){
 			$contents = substr_replace($contents,'',$pos,$pos2-$pos+strlen($end_comment));
 		}else{
@@ -376,51 +328,26 @@ class admin_permalinks{
 	 * Return the .htaccess code that can be used to hide index.php
 	 *
 	 */
-	static function Rewrite_Rules( $hide_index = true, $home_root, $uniq=false ){
+	static function Rewrite_Rules( $hide_index = true, $home_root, $existing_contents = '' ){
+
+		if( !$existing_contents ){
+			$existing_contents = '';
+		}
+
+		// IIS
+		if( self::IIS() ){
+			return self::Rewrite_RulesIIS( $hide_index, $existing_contents );
+		}
+
+		// Apache
+		admin_permalinks::StripRules($existing_contents);
 
 		if( !$hide_index ){
-			return '';
+			return $existing_contents;
 		}
 
 		$home_root = rtrim($home_root,'/').'/';
-		$RuleArray = array();
-
-		//rules for iis server
-		$iis7 = self::IIS7();
-		if( $iis7 ){
-			return '<?xml version="1.0" encoding="UTF-8" ?>
-<configuration>
-<system.webServer>
-	<rewrite>
-		<rules>
-			<rule name="Redirect index.php" stopProcessing="true">
-				<match url="index\.php/?(.*)" />
-				<action type="Redirect" url="{R:1}" appendQueryString="false" redirectType="Found" />
-			</rule>
-
-			<rule name="Rewrite index.php" stopProcessing="true">
-				<match url="(.*)" />
-				<conditions>
-					<add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
-					<add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
-				</conditions>
-				<action type="Rewrite" url="index.php?gp_rewrite={R:1}" />
-			</rule>
-
-			<rule name="Rewrite Root" stopProcessing="true">
-				<match url="^$" />
-				<action type="Rewrite" url="index.php?gp_rewrite" />
-			</rule>
-		</rules>
-	</rewrite>
-</system.webServer>
-</configuration>';
-
-		}
-
-
-		// Apache
-		return '# BEGIN gpEasy
+		return $existing_contents . "\n\n".'# BEGIN gpEasy
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 	RewriteBase "'.$home_root.'"
@@ -452,15 +379,66 @@ class admin_permalinks{
 
 
 	/**
+	 * Optimally, generating rules for IIS would involve parsing the xml and integrating gpEasy rules
+	 *
+	 */
+	function Rewrite_RulesIIS( $hide_index = true, $existing_contents ){
+
+
+		// anything less than 80 characters can be replaced safely
+		// other than that, users should handle manually
+		// Example empty configuration: < ?xml version="1.0" encoding="UTF-8" ? > <configuration> </configuration>
+		if( strlen($existing_contents) > 80 ){
+			return false;
+		}
+
+		if( !$hide_index ){
+			return '<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+</configuration>';
+		}
+
+
+
+		return '<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+<system.webServer>
+	<rewrite>
+		<rules>
+			<rule name="Redirect index.php" stopProcessing="true">
+				<match url="index\.php/?(.*)" />
+				<action type="Redirect" url="{R:1}" appendQueryString="false" redirectType="Found" />
+			</rule>
+
+			<rule name="Rewrite index.php" stopProcessing="true">
+				<match url="(.*)" />
+				<conditions>
+					<add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+					<add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+				</conditions>
+				<action type="Rewrite" url="index.php?gp_rewrite={R:1}" />
+			</rule>
+
+			<rule name="Rewrite Root" stopProcessing="true">
+				<match url="^$" />
+				<action type="Rewrite" url="index.php?gp_rewrite" />
+			</rule>
+		</rules>
+	</rewrite>
+</system.webServer>
+</configuration>';
+
+	}
+
+
+	/**
 	 * Determine if gpEasy installed on an IIS Server
 	 *
 	 */
-	static function IIS7(){
+	static function IIS(){
 
 		if( strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false || strpos($_SERVER['SERVER_SOFTWARE'], 'ExpressionDevServer') !== false ){
-			if( strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS/7.') !== false ){
-				return true;
-			}
+			return true;
 		}
 		return false;
 	}

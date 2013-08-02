@@ -519,7 +519,7 @@ class Install_Tools{
 		}
 
 		admin_permalinks::StripRules($contents); //the .htaccess file should not contain any rules
-		$contents .= admin_permalinks::Rewrite_Rules(true,$dirPrefix,$config['gpuniq']);
+		$contents .= admin_permalinks::Rewrite_Rules(true,$dirPrefix);
 
 		if( !isset($config['useftp']) ){
 			//echo 'not using ftp';

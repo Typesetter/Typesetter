@@ -39,7 +39,9 @@ body #gp_admin_html li{
 	background-image:none; /* ex: a bullet image for <li>, but it messes up ckeditor */
 	}
 
+body #gp_admin_html table,
 body #gp_admin_html form{
+	background:#fff;
 	margin:0;
 	padding:0;
 	}

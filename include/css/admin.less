@@ -1,25 +1,5 @@
 
-.opacity(@opacity) {
-	opacity: @opacity / 100;
-	filter: ~"alpha(opacity=@{opacity})";
-}
-
-.box-shadow(@shadow) {
-	-webkit-box-shadow: @shadow;
-	-moz-box-shadow: @shadow;
-	box-shadow: @shadow;
-}
-
-.box-sizing(@boxmodel) {
-  -webkit-box-sizing: @boxmodel;
-     -moz-box-sizing: @boxmodel;
-          box-sizing: @boxmodel;
-}
-
-.gpimg( @name, @right, @top ){
-	background:url('@{dirPrefix}/include/imgs/@{name}') no-repeat @right @top;
-}
-
+@import 'mixins.less';
 
 /*
  * Reset CSS

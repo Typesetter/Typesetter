@@ -2533,22 +2533,23 @@ class gpOutput{
 	function Less( $less_file ){
 		global $dataDir, $page, $dirPrefix;
 
-		//get lessc object
-		includeFile('thirdparty/lessphp/lessc.inc.php');
-		$less = new lessc();
-		$less->setImportDir( array('', $dataDir.'/include/thirdparty/Bootstrap/less/') );
-
-		//set vars
-		$vars = array();
-		$vars['dirPrefix'] = '"'.$dirPrefix.'"';
-		$less->setVariables( $vars );
-
 
 		// handle relative and absolute paths
 		if( strpos($less_file,$dataDir) === false ){
 			$less_file = $dataDir.'/'.ltrim($less_file,'/');
 		}
 		$less_file_relative = substr($less_file,strlen($dataDir));
+
+
+		//get lessc object
+		includeFile('thirdparty/lessphp/lessc.inc.php');
+		$less = new lessc();
+		$less->setImportDir( array( dirname($less_file), $dataDir.'/include/thirdparty/Bootstrap/less/') );
+
+		//set vars
+		$vars = array();
+		$vars['dirPrefix'] = '"'.$dirPrefix.'"';
+		$less->setVariables( $vars );
 
 
 		// generate name for compiled css file

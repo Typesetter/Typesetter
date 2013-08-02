@@ -2070,7 +2070,7 @@ class gpOutput{
 	 * @static
 	 */
 	static function GetHead_CSS($scripts){
-		global $page, $config;
+		global $page, $config, $dataDir;
 
 		//remote jquery ui
 		if( $config['jquery'] == 'jquery_ui' && isset($scripts['ui-theme']) ){
@@ -2096,8 +2096,8 @@ class gpOutput{
 				$less_file = $page->theme_dir . '/' . $page->theme_color . $name .'.less';
 				if( file_exists($page->theme_dir . '/' . $page->theme_color . $name . '.css') ){
 					$scripts[] = rawurldecode($page->theme_path).$name.'.css';
-				}elseif( file_exists($less_file) ){
-					$scripts[] = gpOutput::Less($less_file);
+				}elseif( file_exists($page->theme_dir . '/' . $page->theme_color . $name . '.less') ){
+					$scripts[] = rawurldecode($page->theme_path).$name.'.less';
 				}else{
 					break;
 				}
@@ -2115,6 +2115,27 @@ class gpOutput{
 		if( isset($page->css_admin) && is_array($page->css_admin) ){
 			$scripts = array_merge($scripts,$page->css_admin);
 		}
+
+
+		//convert .less files to .css
+		foreach($scripts as $key => $script){
+
+			$file = $script;
+			if( is_array($script) ){
+				$file = $script['file'];
+			}
+
+			$pos = strpos($file,'.less');
+			if( strpos($file,'.less') === (strlen($file)-5)){
+				$full_path = $dataDir.$file;
+				if( !file_exists($full_path) ){
+					continue;
+				}
+
+				$scripts[$key] = gpOutput::Less($full_path);
+			}
+		}
+
 
 		gpOutput::CombineFiles($scripts,'css',$config['combinecss']);
 	}

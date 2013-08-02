@@ -604,6 +604,9 @@ class gp_combine{
 			if( empty($script['type']) ){
 				$script['type'] = pathinfo($script['file'], PATHINFO_EXTENSION);
 			}
+			if( $script['type'] == 'less' ){
+				$script['type'] = 'css';
+			}
 			$return[$script['type']][$key] = $script;
 		}
 

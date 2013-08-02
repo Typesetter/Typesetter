@@ -2192,6 +2192,9 @@ class gpOutput{
 		if( !$combine || (isset($_REQUEST['no_combine']) && common::LoggedIn()) ){
 			foreach($files as $file_key => $file){
 				gp_combine::CheckFile($file);
+				if( common::LoggedIn() ){
+					$file .= '?v='.rawurlencode(gpversion);
+				}
 				echo sprintf($html,common::GetDir($file,true));
 			}
 			return;

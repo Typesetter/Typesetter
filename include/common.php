@@ -1608,8 +1608,8 @@ class common{
 		$query = '';
 		$pos = mb_strpos($dir,'?');
 		if( $pos !== false ){
-			$dir = mb_substr($dir,0,$pos);
 			$query = mb_substr($dir,$pos);
+			$dir = mb_substr($dir,0,$pos);
 		}
 		$dir = $dirPrefix.'/'.ltrim($dir,'/');
 		return common::HrefEncode($dir,$ampersands).$query;

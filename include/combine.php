@@ -693,8 +693,8 @@ class gp_combine_css{
 		}
 
 
-		//keep @import when the file is on a remote server?
-		if( strpos($import,'://') !== false ){
+		// keep @import when the file is on a remote server?
+		if( strpos($import,'//') !== false ){
 			$this->imports .= substr($this->content, $replace_start, $replace_len );
 			$this->content = substr_replace( $this->content, '', $replace_start, $replace_len);
 			$this->CSS_Import($offset);

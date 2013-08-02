@@ -1941,7 +1941,11 @@ class gpOutput{
 		ob_start();
 
 		if( gpdebugjs ){
-			$GP_INLINE_VARS['debugjs'] = gpdebugjs;
+			if( is_string(gpdebugjs) ){
+				$GP_INLINE_VARS['debugjs'] = 'send';
+			}else{
+				$GP_INLINE_VARS['debugjs'] = true;
+			}
 		}
 
 		if( common::LoggedIn() ){

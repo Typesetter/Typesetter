@@ -318,49 +318,61 @@ $(function(){
 		if( typeof(ajaxOptions.error) === 'function' ){
 			return;
 		}
+
 		if( thrownError == '' ){
 			return;
 		}
 
-		if( typeof(debugjs) !== 'undefined' ){
+		if( typeof(debugjs) === 'undefined' ){
+			alert($gp.error);
+		}
 
-			//collect some debug info
-			var debug_info = {
-				thrownError		: thrownError,
-				text			: XMLHttpRequest.responseText,
-				status			: XMLHttpRequest.status,
-				statusText		: XMLHttpRequest.statusText,
-				url				: ajaxOptions.url,
-				type			: ajaxOptions.type,
-				browser			: navigator.userAgent
-			};
+
+		// collect some debug info
+		var debug_info = {
+			thrownError		: thrownError,
+			responseText	: XMLHttpRequest.responseText,
+			responseStatus	: XMLHttpRequest.status,
+			statusText		: XMLHttpRequest.statusText,
+			url				: ajaxOptions.url,
+			type			: ajaxOptions.type,
+			browser			: navigator.userAgent
+		};
+
+		// log everything if possible
+		if( window.console && console.log ){
+			console.log( debug_info );
+		}
+
+
+		// display to user
+		if( debugjs === true && typeof(debug) === 'function' ){
 			if( ajaxOptions.data ){
 				debug_info.data = ajaxOptions.data.substr(0,100);
 			}
-
-			//log everything if possible
-			if( window.console && console.log ){
-				console.log( debug_info );
-			}
-
-			if( typeof(debug) === 'function' ){
-				debug( debug_info );
-
-				//report to gpeasy
-				debug_info.cmd = 'javascript_error';
-				$.ajax({
-					type: 'POST',
-					url: 'http://www.gpeasy.com/Resources',
-					data: debug_info,
-					success: function(){},
-					error: function(){}
-				});
-
-			}
-			return;
+			debug( debug_info );
 		}
 
-		alert($gp.error);
+
+		// report to gpeasy
+		if( debugjs === 'send' ){
+
+			alert($gp.error);
+
+			if( ajaxOptions.data ){
+				debug_info.data = ajaxOptions.data;
+			}
+
+			debug_info.cmd = 'javascript_error';
+			$.ajax({
+				type: 'POST',
+				url: 'http://www.gpeasy.com/Resources',
+				data: debug_info,
+				success: function(){},
+				error: function(){}
+			});
+		}
+
 	});
 
 

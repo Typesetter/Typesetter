@@ -1,3 +1,4 @@
+@import 'mixins.less';
 
 #theme_toolbar{
 	height:35px;
@@ -8,13 +9,7 @@
 
 	border-bottom:1px solid #aaa;
 	width:100%;
-
-	background: #ededed;
-	background: #ededed -moz-linear-gradient(top, #fafafa 5px, #ededed 100%);
-	background: #ededed -webkit-linear-gradient(top, #fafafa 5px,#ededed 100%);
-	background: #ededed -o-linear-gradient(top, #fafafa 5px,#ededed 100%);
-	background: #ededed -ms-linear-gradient(top, #fafafa 5px,#ededed 100%);
-	background: #ededed linear-gradient(top, #fafafa 5px,#ededed 100%);
+	.gradient-vertical(#fafafa, #ededed);
 	}
 body #gp_admin_html #theme_toolbar a{
 	color:#333;
@@ -277,18 +272,13 @@ body #gp_admin_html #theme_toolbar a{
 	height:0;
 	padding-bottom:70%;
 	border:1px solid #ddd;
-	box-shadow:0 0 3px #eee;
-	-moz-box-shadow:0 0 3px #eee;
-	-webkit-box-shadow:0 0 3px #eee;
 	vertical-align:top;
 	overflow:hidden;
 	position:relative;
 
 	background-repeat:no-repeat;
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
+	.background-size( cover );
+	.box-shadow(0 0 3px #eee );
 	}
 
 #gp_avail_themes > div > div:after{
@@ -312,25 +302,19 @@ body #gp_admin_html #theme_toolbar a{
 	background:#fff;
 	background:rgba(255,255,255,0.95);
 	padding:15px;
-	-moz-box-sizing:border-box;
-	box-sizing:border-box;
 	overflow:auto;
+	.box-sizing(border-box);
 	}
 
 #gp_avail_themes .expand_child_click .gp_theme_options{
 	visibility:hidden;
-	opacity: 0;
-	filter: alpha(opacity = 0);
-	-webkit-transition: all .5s ease-out;
-	-moz-transition: all .5s ease-out;
-	-ms-transition: all .5s ease-out;
-	transition: all .5s ease-out;
+	.transition( all .5s ease-out);
+	.opacity(0);
 	}
 
 #gp_avail_themes .expand .gp_theme_options{
 	visibility:visible;
-	opacity:1;
-	filter: alpha(opacity = 100);
+	.opacity(100);
 	}
 
 #gp_avail_themes ul,

@@ -1163,9 +1163,16 @@ class Finder {
 
 		// check and upload content in $files array
 		foreach( $files['name'] as $i => $name ){
+
 			$error = $files['error'][$i];
+
 			if( $error > 0 ){
-				$result['warning'] = $this->error('errUploadFile', $name, $error == UPLOAD_ERR_INI_SIZE || $error == UPLOAD_ERR_FORM_SIZE ? 'errUploadFileSize' : 'errUploadTransfer');
+				$error_response = 'errUploadTransfer';
+				if( $error == UPLOAD_ERR_INI_SIZE || $error == UPLOAD_ERR_FORM_SIZE ){
+					$error_response = 'errUploadFileSize';
+				}
+
+				$result['warning'] = $this->error('errUploadFile', $name, $error_response, $error);
 				$this->uploadDebug = 'Upload error code: '.$error;
 				break;
 			}
@@ -1174,14 +1181,14 @@ class Finder {
 
 			//make sure it's an uploaded file
 			if( !is_uploaded_file($tmpname) ){
-				$result['warning'] = $this->error('errUploadFile', $name, 'errUploadTransfer');
+				$result['warning'] = $this->error('errUploadFile', $name, 'errUploadTransfer','Not Uploaded File');
 				$this->uploadDebug = 'Upload error: not an uploaded file';
 				break;
 			}
 
 			$fp = fopen($tmpname, 'rb');
 			if( $fp === false ){
-				$result['warning'] = $this->error('errUploadFile', $name, 'errUploadTransfer');
+				$result['warning'] = $this->error('errUploadFile', $name, 'errUploadTransfer',' Couldn\'t Open');
 				$this->uploadDebug = 'Upload error: unable open tmp file';
 				break;
 			}

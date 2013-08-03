@@ -85,8 +85,8 @@
 
 				if(itemElement != this.currentItem[0] //cannot intersect with itself
 					&&	this.placeholder[intersection == 1 ? "next" : "prev"]()[0] != itemElement //no useless actions that have been done before
-					&&	!$.ui.contains(this.placeholder[0], itemElement) //no action if the item moved is the parent of the item checked
-					&& (this.options.type == 'semi-dynamic' ? !$.ui.contains(this.element[0], itemElement) : true)
+					&&	!$.contains(this.placeholder[0], itemElement) //no action if the item moved is the parent of the item checked
+					&& (this.options.type == 'semi-dynamic' ? !$.contains(this.element[0], itemElement) : true)
 					//&& itemElement.parentNode == this.placeholder[0].parentNode // only rearrange items within the same container
 				) {
 

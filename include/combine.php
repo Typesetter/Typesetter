@@ -53,7 +53,7 @@ class gp_combine{
 
 				//jquery ui core
 				'ui-theme'	=> array(
-									'file' => '/include/thirdparty/jquery_ui/jquery-ui.custom.css',
+									'file' => '/include/thirdparty/jquery_ui/jquery-ui.custom.min.css',
 									'type' => 'css',
 									'package' => 'jquery_ui'
 									),

@@ -289,6 +289,8 @@ var $gp = {
 }
 
 
+//erase cookie_cmd as soon as possible
+$gp.Cookie('cookie_cmd','',-1);
 
 
 
@@ -302,9 +304,6 @@ $(function(){
 	//add a class to the body
 	//this also affects the display of elements using the req_script css class
 	$('body').addClass('STCLASS');
-
-	//erase cookie_cmd
-	$gp.Cookie('cookie_cmd','',-1);
 
 
 	/**

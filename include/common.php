@@ -415,7 +415,7 @@ function GetMessages( $wrap = true ){
 
 			if( isset($args[1]) ){
 				$result .= '<li>'.call_user_func_array('sprintf',$args).'</li>';
-			}elseif( is_array($args[0]) ){
+			}elseif( is_array($args[0]) || is_object($args[0]) ){
 				$result .= '<li>'.pre($args[0]).'</li>';
 			}else{
 				$result .= '<li>'.$args[0].'</li>';

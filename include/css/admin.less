@@ -1,6 +1,8 @@
 
 @import 'mixins.less';
 
+@family: "verdana";
+
 /*
  * Reset CSS
  * There are two admin content containers where we attempt to reset the css
@@ -1575,24 +1577,14 @@ body #gp_admin_html .layout_links a.selected{
 
 .dd_menu .dd_list{
 	position:absolute;
-	padding:3px 0;
+	padding:0;
 	display:none;
 	border-radius: 5px;
 	border:1px solid #ccc;
 	top:100%;
 	margin-top:-1px;
 	z-index:11020; /* place over messages */
-	}
-
-
-.dd_list .list_heading{
-	font-weight:bold;
-	padding:0 10px;
-	background:#f1f1f1 !important;
-	border-bottom:1px solid #ddd;
-	border-top:1px solid #ddd;
-	margin-top:3px;
-	font-size:15px;
+	overflow:hidden;
 	}
 
 .dd_list > ul{
@@ -1601,6 +1593,20 @@ body #gp_admin_html .layout_links a.selected{
 	overflow-x:hidden !important;
 	overflow-y:auto !important;
 }
+
+.dd_list .list_heading{
+	font-weight:bold;
+	padding:0 10px;
+	background:#f1f1f1 !important;
+	border-bottom:1px solid #ddd;
+	border-top:1px solid #ddd;
+	margin-bottom:3px;
+	font-size:15px;
+	}
+.dd_list li:first-child .list_heading{
+	border-top:0 none;
+	}
+
 
 .dd_list li > span,
 .dd_list li > b,

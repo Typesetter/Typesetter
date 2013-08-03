@@ -158,6 +158,7 @@ class admin_theme_content extends admin_addon_install{
 
 			//new layouts
 			case 'preview':
+			case 'preview_iframe':
 			case 'newlayout':
 			case 'addlayout':
 				if( $this->NewLayout($cmd) ){
@@ -315,7 +316,6 @@ class admin_theme_content extends admin_addon_install{
 		global $page,$gpLayouts,$langmessage,$config;
 
 
-
 		$GLOBALS['GP_ARRANGE_CONTENT'] = true;
 		$page->head_js[] = '/include/js/inline_edit/inline_editing.js';
 
@@ -341,7 +341,7 @@ class admin_theme_content extends admin_addon_install{
 			case 'gallery_folder':
 			case 'gallery_images':
 				$this->GalleryImages();
-			break;
+			return;
 			case 'image_editor':
 				$this->ImageEditor();
 			return;
@@ -370,11 +370,34 @@ class admin_theme_content extends admin_addon_install{
 			case 'rm_area':
 				$this->RemoveArea();
 			break;
+
 		}
 
 		if( $this->LayoutCommands($cmd) ){
 			return;
 		}
+
+
+		//control what is displayed
+		switch( $cmd ){
+
+			case 'change_layout_color':
+			break;
+
+			//case 'makedefault':
+			case 'addcontent':
+			case 'rm_area':
+			case 'drag_area':
+			case 'show':
+				$page->head .= "\n".'<script type="text/javascript">var gpLayouts=true;</script>';
+				$page->show_admin_content = false;
+				admin_tools::$show_toolbar = false;
+				$this->PrepareCSS();
+			return;
+		}
+
+		msg('cmd: '.$cmd);
+
 
 
 		$layout_info = common::LayoutInfo($layout,false);
@@ -390,10 +413,10 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 		$page->label = $langmessage['layouts'] . ' » '.$layout_info['label'];
-		$page->show_admin_content = false;
-		$page->head .= "\n".'<script type="text/javascript">var gpLayouts=true;</script>';
 
-		$this->PrepareCSS();
+		$_REQUEST += array('gpreq' => 'body'); //force showing only the body as a complete html document
+		$page->get_theme_css = false;
+
 		$this->Toolbar($layout, $layout_info );
 	}
 
@@ -496,6 +519,8 @@ class admin_theme_content extends admin_addon_install{
 
 		ob_start();
 
+		echo '<div id="theme_editor">';
+
 		echo '<div id="theme_toolbar">';
 
 
@@ -534,8 +559,19 @@ class admin_theme_content extends admin_addon_install{
 		echo '</div>';//theme_left
 
 		echo '</div>'; //theme_toolbar
+
 		$this->ColorSelector($layout);
+
+		//show site in iframe
+		$url = common::GetUrl('Admin_Theme_Content/'.rawurlencode($layout),'cmd=show');
+		echo '<iframe src="'.$url.'" id="gp_layout_iframe"><iframe>';
+
+
+		echo '</div>';
+
 		$page->admin_html = ob_get_clean();
+
+
 	}
 
 
@@ -1017,6 +1053,10 @@ class admin_theme_content extends admin_addon_install{
 				}
 			break;
 
+			case 'preview_iframe':
+				$this->PreviewThemeIframe($theme,$theme_info);
+			return true;
+
 			case 'newlayout':
 				$this->NewLayoutPrompt($theme, $theme_info);
 			return true;
@@ -1038,30 +1078,19 @@ class admin_theme_content extends admin_addon_install{
 		global $langmessage,$config,$page;
 
 		$theme_id = dirname($theme);
-		$template = $theme_info['folder'];
 		$color = $theme_info['color'];
-		$display = htmlspecialchars($theme_info['name'].' / '.$theme_info['color']);
-		$display = str_replace('_',' ',$display);
-		$this->LoremIpsum();
-		$page->gpLayout = false;
-		$page->theme_name = $template;
-		$page->theme_color = $color;
-		$page->theme_dir = $theme_info['full_dir'];
-		$page->layout_css = false;
-		$page->theme_rel = $theme_info['rel'].'/'.$color;
 
-		if( isset($theme_info['id']) ){
-			$page->theme_addon_id = $theme_info['id'];
-		}
 
-		$page->theme_path = common::GetDir($theme_info['rel'].'/'.$color);
-
+		$_REQUEST += array('gpreq' => 'body'); //force showing only the body as a complete html document
+		$page->get_theme_css = false;
 		$page->show_admin_content = false;
+		$page->get_theme_css = false;
 
 		$this->ToolbarCSS();
 
 
 		ob_start();
+		echo '<div id="theme_editor">';
 		echo '<div id="theme_toolbar"><div>';
 
 		//theme_right
@@ -1085,8 +1114,43 @@ class admin_theme_content extends admin_addon_install{
 		echo '</div>';
 
 		echo '</div></div>';
+
+
+		//show site in iframe
+		$url = common::GetUrl('Admin_Theme_Content','cmd=preview_iframe&theme='.rawurlencode($theme));
+		echo '<iframe src="'.$url.'" id="gp_layout_iframe"><iframe>';
+
+
+		echo '</div>';
 		$page->admin_html = ob_get_clean();
 		return true;
+	}
+
+	function PreviewThemeIframe($theme, $theme_info){
+		global $langmessage,$config,$page;
+
+		admin_tools::$show_toolbar = false;
+
+		$theme_id = dirname($theme);
+		$template = $theme_info['folder'];
+		$color = $theme_info['color'];
+		$display = htmlspecialchars($theme_info['name'].' / '.$theme_info['color']);
+		$display = str_replace('_',' ',$display);
+		$this->LoremIpsum();
+		$page->gpLayout = false;
+		$page->theme_name = $template;
+		$page->theme_color = $color;
+		$page->theme_dir = $theme_info['full_dir'];
+		$page->layout_css = false;
+		$page->theme_rel = $theme_info['rel'].'/'.$color;
+
+		if( isset($theme_info['id']) ){
+			$page->theme_addon_id = $theme_info['id'];
+		}
+
+		$page->theme_path = common::GetDir($theme_info['rel'].'/'.$color);
+
+		$page->show_admin_content = false;
 	}
 
 

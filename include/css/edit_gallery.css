@@ -118,6 +118,7 @@
 #gp_galleries td{
 	width:50% !important;
 	padding-right:15px;
+	vertical-align:top;
 	}
 #gp_galleries td:last-child{
 	padding-left:15px;

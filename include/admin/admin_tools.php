@@ -5,6 +5,7 @@ class admin_tools{
 
 	static $new_versions = array();
 	static $update_status = 'checklater';
+	static $show_toolbar = true;
 
 
 	/**
@@ -349,7 +350,7 @@ class admin_tools{
 		global $page, $gpAdmin, $config;
 
 		//don't send the panel when it's a gpreq=json request
-		if( !empty($_REQUEST['gpreq']) ){
+		if( !empty($_REQUEST['gpreq']) || !self::$show_toolbar ){
 			return;
 		}
 

@@ -1,6 +1,12 @@
-
 .user_submitted,
 .user_submitted *{
 	max-width:500px;
 	word-wrap:break-word;
 	}
+td input[type=text] {
+	width: 100%;
+	padding: 0;
+}
+td select {
+	width: 100%;
+}

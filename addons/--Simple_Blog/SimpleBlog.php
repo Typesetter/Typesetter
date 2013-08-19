@@ -431,6 +431,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 */
 	function ShowPage(){
 
+        echo '<div class="'. get_class($this) .'">';
 		$per_page = SimpleBlogCommon::$data['per_page'];
 		$page = 0;
 		if( isset($_GET['page']) && is_numeric($_GET['page']) ){
@@ -470,6 +471,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		}
 
 		echo '</p>';
+		echo '</div>';
 
 	}
 

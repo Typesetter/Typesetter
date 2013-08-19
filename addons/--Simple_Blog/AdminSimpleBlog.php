@@ -124,6 +124,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 
 		$page->css_admin[] = '/include/css/addons.css'; //for hmargin css pre gpEasy 3.6
 
+		echo '<div class="'. get_class($this) .'">';
 		echo '<h2 class="hmargin">';
 		echo common::Link('Special_Blog',$label);
 		echo ' &#187; ';
@@ -330,6 +331,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo '</p>';
 
 		echo '</form>';
+		echo '</div>';
 	}
 
 	static function Options(){

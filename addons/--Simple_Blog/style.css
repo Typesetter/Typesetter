@@ -1,4 +1,13 @@
+.SimpleBlog input[name='title'], 
+.SimpleBlog input[name='subtitle'],  
+.SimpleBlog select[name='category[]'] {
+        width: 100%;
+        margin-bottom: 10px;
+}
 
+.SimpleBlog input[name='isDraft'] {
+        margin-bottom: 10px;
+} 
 
 .blog_post h2{
 	margin-bottom:.1em;
@@ -30,9 +39,6 @@
 .simple_blog_gadget a{
 	cursor:pointer;
 	}
-.simple_blog_gadget ul{
-	margin:0;
-	}
 
 
 .simple_blog_gadget_label{
@@ -40,4 +46,3 @@
 	}
 
 .simple_blog_category{}
-

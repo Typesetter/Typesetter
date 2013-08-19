@@ -270,7 +270,7 @@ class SimpleBlogCommon{
 
 		return array(	'post_index'=>0,
 						'per_page'=>10,
-						'post_abbrev'=>'',
+						'post_abbrev'=>'number or code e.g. <!--more-->',
 						'gadget_entries'=>3,
 						'gadget_abbrev'=>90,
 						'feed_entries'=>10,
@@ -609,12 +609,14 @@ class SimpleBlogCommon{
 		$post['isDraft'] = SimpleBlogCommon::AStrValue('drafts',$this->post_id);
 		$_POST += $posts[$this->post_id];
 
+		echo '<div class="'. get_class($this) .'">';
 		echo '<h2>';
 		$title = htmlspecialchars($_POST['title'],ENT_COMPAT,'UTF-8',false);
 		echo SimpleBlogCommon::PostLink($this->post_id,$title);
 		echo ' &#187; ';
 		echo 'Edit Post</h2>';
 		$this->PostForm($_POST,'save_edit',$this->post_id);
+                echo '</div>';
 		return true;
 	}
 

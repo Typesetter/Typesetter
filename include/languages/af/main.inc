@@ -4,7 +4,7 @@
 
 Want to help translate gpEasy?
 Then check out http://ptrans.wikyblog.com/pt/gpEasy
-
+Translated by : Johannes Pretorius (Dominion IT)
 
 */
 

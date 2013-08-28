@@ -270,7 +270,7 @@ class SimpleBlogCommon{
 
 		return array(	'post_index'=>0,
 						'per_page'=>10,
-						'post_abbrev'=>'number or code e.g. <!--more-->',
+						'post_abbrev'=>'numbre or code, e.g.&lt;!--more--&gt;',
 						'gadget_entries'=>3,
 						'gadget_abbrev'=>90,
 						'feed_entries'=>10,

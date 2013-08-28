@@ -573,10 +573,13 @@ class SimpleBlog extends SimpleBlogCommon{
 	 */
 	function AbbrevContent( $content, $post_index, $limit = 0 ){
 
-		if( !is_numeric($limit) || $limit == 0 ){
+		if( !isset($limit) || $limit === 0 || $limit === '' ){
 			return $content;
 		}
 
+                switch (isset($limit)){
+                
+                case is_numeric($limit):
 		$content = strip_tags($content);
 
 		if( SimpleBlogCommon::strlen($content) < $limit ){
@@ -588,9 +591,29 @@ class SimpleBlog extends SimpleBlogCommon{
 		if( ($pos > 0) && ($limit+20 > $pos) ){
 			$limit = $pos;
 		}
+                        
+                        
+                        
 		$content = SimpleBlogCommon::substr($content,0,$limit).' ... ';
 		$label = gpOutput::SelectText('Read More');
-		return $content . SimpleBlogCommon::PostLink($post_index,$label);
+                        return $content . common::Link('Special_Blog',$label,'id='.$post_index);
+                    
+                        
+                case is_string($limit):
+                        if ( $success = strstr($content, $limit, TRUE) ){
+                                $content = $success;
+                                $label = gpOutput::SelectText('Read More').$limit;
+                                return $content . common::Link('Special_Blog',$label,'id='.$post_index);
+                        } else {
+                                return $content;
+                        }
+                    
+                    
+
+                        
+                    
+                
+                }
 	}
 
 

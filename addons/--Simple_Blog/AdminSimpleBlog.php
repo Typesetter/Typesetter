@@ -53,10 +53,11 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 			SimpleBlogCommon::$data['per_page'] = (int)$_POST['per_page'];
 		}
 
-		if( is_numeric($_POST['post_abbrev']) ){
-			SimpleBlogCommon::$data['post_abbrev'] = (int)$_POST['post_abbrev'];
-		}elseif( empty($_POST['post_abbrev']) ){
-			SimpleBlogCommon::$data['post_abbrev'] = '';
+		if( isset($_POST['post_abbrev']) ){
+			$this->blogData['post_abbrev'] = $_POST['post_abbrev'];
+		}
+                elseif( empty($_POST['post_abbrev']) ){
+			$this->blogData['post_abbrev'] = '';
 		}
 
 		if( is_numeric($_POST['gadget_entries']) ){

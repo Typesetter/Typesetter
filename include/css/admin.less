@@ -43,7 +43,7 @@ body #gp_admin_html li{
 
 body #gp_admin_html table,
 body #gp_admin_html form{
-	background:#fff;
+	background:none;
 	margin:0;
 	padding:0;
 	}
@@ -1524,6 +1524,7 @@ body #gp_admin_html .layout_links a.selected{
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	width:150px;
 	}
 .dd_menu ul,
 .dd_menu li,
@@ -1539,6 +1540,7 @@ body #gp_admin_html .layout_links a.selected{
 	}
 .dd_menu a{
 	color:#333 !important;
+	position:relative;
 	}
 .dd_menu{
 	position:relative;
@@ -1550,8 +1552,7 @@ body #gp_admin_html .layout_links a.selected{
 	overflow:hidden;
 	border-radius: 3px;
 	background:#fff;
-	width:120px;
-	display:inline-block;
+	display:block;
 	padding:0 20px 0 7px;
 	line-height:24px !important;
 	height:24px;
@@ -1565,7 +1566,7 @@ body #gp_admin_html .layout_links a.selected{
 
 .dd_menu > a:after{
 	position:absolute;
-	right:1px;
+	right:0;
 	padding:0 4px;
 	border-radius:2px;
 	font-size:10px;

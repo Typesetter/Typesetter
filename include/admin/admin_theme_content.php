@@ -245,9 +245,6 @@ class admin_theme_content extends admin_addon_install{
 			case 'save_css':
 				$this->SaveCSS();
 			break;
-			case 'css':
-				$this->EditCSS();
-			return true;
 
 
 			case 'change_layout_color':
@@ -381,22 +378,14 @@ class admin_theme_content extends admin_addon_install{
 		//control what is displayed
 		switch( $cmd ){
 
-			case 'change_layout_color':
-			break;
-
-			//case 'makedefault':
+			//show the layout (displayed within an iframe)
 			case 'addcontent':
 			case 'rm_area':
 			case 'drag_area':
-			case 'show':
-				$page->head .= "\n".'<script type="text/javascript">var gpLayouts=true;</script>';
-				$page->show_admin_content = false;
-				admin_tools::$show_toolbar = false;
-				$this->PrepareCSS();
+			case 'in_iframe':
+				$this->ShowInIframe();
 			return;
 		}
-
-		msg('cmd: '.$cmd);
 
 
 
@@ -417,7 +406,10 @@ class admin_theme_content extends admin_addon_install{
 		$_REQUEST += array('gpreq' => 'body'); //force showing only the body as a complete html document
 		$page->get_theme_css = false;
 
-		$this->Toolbar($layout, $layout_info );
+
+		ob_start();
+		$this->LayoutEditor($layout, $layout_info );
+		$page->admin_html = ob_get_clean();
 	}
 
 
@@ -511,66 +503,97 @@ class admin_theme_content extends admin_addon_install{
 	 * Display the toolbar for layout editing
 	 *
 	 */
-	function Toolbar($layout, $layout_info ){
+	function LayoutEditor($layout, $layout_info ){
 		global $page,$langmessage,$config;
 		$page->show_admin_content = false;
-		$this->ToolbarCSS();
 
-
-		ob_start();
 
 		echo '<div id="theme_editor">';
+		echo '<form action="'.common::GetUrl('Admin_Theme_Content/'.$this->curr_layout).'" method="post" class="full_height">';
+		echo '<table border="0">';
+		echo '<tr><td>';
 
-		echo '<div id="theme_toolbar">';
 
-
-		//theme_right
-		echo '<div id="theme_right">';
 
 		echo '<div>';
-		$this->ThemeSelect();
-		echo '</div>';
-
-		echo '</div>';
-
-
-		//theme_left
-		echo '<div id="theme_left">';
-		echo '<div class="step"><b>'. common::Link('Admin_Theme_Content',$langmessage['layouts']).'</b></div>';
-
-		echo '<div class="step">';
+		echo common::Link('Admin_Theme_Content',$langmessage['layouts']);
+		echo '<div class="layout_select">';
 		$this->LayoutSelect($layout,$layout_info);
 		echo '</div>';
+		echo '</div>';
 
+		echo '<div class="separator"></div>';
+
+
+		echo '<div>';
 
 		//options
 		echo '<div><div class="dd_menu">';
 		echo '<a data-cmd="dd_menu">'.$langmessage['Layout Options'].'</a>';
 		echo '<div class="dd_list">';
 		echo '<ul>';
-		echo '<li>'.common::Link('Admin_Theme_Content/'.rawurlencode($layout),'CSS','cmd=css','data-cmd="gpabox"').'</li>';
 		$this->LayoutOptions($layout,$layout_info);
 		echo '</ul>';
 		echo '</div>';
 		echo '</div></div>';
 
+		//style options
 		$this->StyleOptions($layout, $layout_info);
 
-		echo '</div>';//theme_left
 
-		echo '</div>'; //theme_toolbar
+		//css textarea
+		echo '</div>';
+		echo '<div class="separator"></div>';
 
-		$this->ColorSelector($layout);
+		echo '<div>';
 
-		//show site in iframe
-		$url = common::GetUrl('Admin_Theme_Content/'.rawurlencode($layout),'cmd=show');
-		echo '<iframe src="'.$url.'" id="gp_layout_iframe"><iframe>';
+
+		//get variables defined in the less files
+		/*
+		$variables = $this->LessVariables();
+		if( count($variables) ){
+			echo '<select style="width:205px">';
+			foreach($variables as $name => $value){
+				echo '<option>@'.htmlspecialchars($name).' => '.htmlspecialchars($value).'</option>';
+			}
+			echo '</select>';
+		}
+		*/
 
 
 		echo '</div>';
 
-		$page->admin_html = ob_get_clean();
+		echo '</td></tr><tr><td class="textarea"><div class="full_height">';
 
+		$css = $this->layoutCSS($this->curr_layout);
+		echo '<textarea name="css" id="gp_layout_css" class="gptextarea" placeholder="Add your CSS here.">';
+		echo htmlspecialchars($css);
+		echo '</textarea>';
+
+
+
+
+		//save button
+		echo '</div></td></tr><tr><td><div>';
+
+		echo ' <input type="hidden" name="cmd" value="save_css" />';
+		echo ' <input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit"/>';
+
+
+		echo '</div></td></tr>';
+		echo '</table>';
+		echo '</form>';
+
+
+		//show site in iframe
+		echo '<div id="gp_iframe_wrap">';
+		$url = common::GetUrl('Admin_Theme_Content/'.rawurlencode($layout),'cmd=in_iframe');
+		echo '<iframe src="'.$url.'" id="gp_layout_iframe"><iframe>';
+		echo '</div>';
+
+
+
+		echo '</div>'; //#theme_editor
 
 	}
 
@@ -779,47 +802,128 @@ class admin_theme_content extends admin_addon_install{
 	}
 
 
-	/**
-	 * Output textarea for adding css to a layout
-	 *
-	 */
-	function EditCSS(){
-		global $langmessage, $page;
-
-		$css = $this->layoutCSS($this->curr_layout);
-
-		if( $this->layout_request ){
-			echo '<form action="'.common::GetUrl('Admin_Theme_Content/'.$this->curr_layout).'" method="post">';
-		}else{
-			echo '<form action="'.common::GetUrl('Admin_Theme_Content').'" method="post">';
-			echo ' <input type="hidden" name="layout" value="'.$this->curr_layout.'" />';
-		}
-
-		echo '<h2>CSS</h2>';
-		echo '<textarea name="css" id="gp_layout_css" class="layout_css gptextarea" rows="10" cols="50" placeholder="Add your CSS here.">';
-		echo htmlspecialchars($css);
-		echo '</textarea>';
-		echo '<p>';
-		echo ' <input type="hidden" name="cmd" value="save_css" />';
-		echo ' <input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit"/>';
-		echo ' <input type="button" name="" value="Cancel" class="admin_box_close gpcancel"/>';
-		echo '</p>';
-		echo '</form>';
-
-		$page->ajaxReplace[] = array('EditCSS','','');
-	}
 
 	/**
 	 * Prepare the page for css editing
 	 *
 	 */
-	function PrepareCSS(){
-		global $page;
+	function ShowInIframe(){
+		global $page,$dirPrefix;
 
+		$page->show_admin_content = false;
+		admin_tools::$show_toolbar = false;
+
+
+		//less variables
+		$less_variables = ' @dirPrefix: "'.$dirPrefix.'"; ';
+		//<style type="text/css" rel="stylesheet/less">'.$less_variables.'</style>
+
+		// <head>
 		$css = $this->layoutCSS($this->curr_layout);
-		$page->head .= '<style id="gp_layout_style" type="text/css">'.$css.'</style>';
-		$page->layout_css = false;
+		$page->head .= '
+	<style id="gp_layout_style" type="text/css" rel="stylesheet/less">'.$css.'</style>
+	<script type="text/javascript">var gpLayouts=true;</script>
+	<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/lesscss/less.js').'"></script>
+';
+
+
+/*
+<script type="text/javascript">
+    less = {
+        env: "development", // or "production"
+        async: false,       // load imports async
+        fileAsync: false,   // load imports async when in a page under
+                            // a file protocol
+        poll: 1000,         // when in watch mode, time in ms between polls
+        functions: {},      // user functions, keyed by name
+        dumpLineNumbers: "comments", // or "mediaQuery" or "all"
+        relativeUrls: false,// whether to adjust url's to be relative
+                            // if false, url's are already relative to the
+                            // entry less file
+        rootpath: ":/a.com/"// a path to add on to the start of every url
+                            //resource
+    };
+</script>
+*/
 	}
+
+
+	/**
+	 * Get a list of all the LESS variables for a layout
+	 *
+	 */
+	function LessVariables(){
+		global $dataDir, $page;
+		return array();
+
+		msg('need to update cache file');
+
+		$variables = array();
+		$less_files = array();
+
+		$less_file = $page->theme_dir . '/' . $page->theme_color .'/style.less';
+		if( !file_exists($less_file) ){
+			return;
+		}
+
+		$less_files[] = $less_file;
+
+		$less_file = $dataDir.'/data/_layouts/'.$page->gpLayout.'/custom.css';
+		if( file_exists($less_file) ){
+			$less_files[] = $less_file;
+		}
+
+
+		$object_file = $dataDir.'/data/_cache/less_'.common::ArrayHash($less_files).'.php';
+
+		//make sure the object file exists
+		if( !file_exists($object_file) ){
+			gpOutput::Less($less_files);
+
+			if( !file_exists($object_file) ){
+				continue;
+			}
+		}
+
+
+		//get variables from each file
+		$less_cache = array();
+		include($object_file);
+		//foreach($less_cache['files'] as $file => $mtime){
+		//	$variables = array_merge($variables, $this->LessVariablesFile($file));
+		//}
+
+		return $variables;
+	}
+
+
+	/**
+	 * Extract the variables from a less file
+	 * Using a regular expression won't be 100% accurate
+	 *
+	 */
+	function LessVariablesFile($file){
+
+		if( !file_exists($file) ){
+			return array();
+		}
+
+		$contents = file_get_contents($file);
+
+		$reg = '#@([a-z0-9\-_]+)\s*:\s*(.*);#i';
+		$reg = '#@([a-z0-9\-_]+)\s*:\s*([\'"]?[^\'"\n\r\f]*?[\'"]?);#i';
+		$num = preg_match_all( $reg, $contents, $matches );
+		if( !$num ){
+			return array();
+		}
+
+		$variables = $matches[1];
+		$values = $matches[2];
+
+		return array_combine($variables, $values);
+	}
+
+
 
 	/**
 	 * Get the custom css for a layout if it exists
@@ -1090,7 +1194,6 @@ class admin_theme_content extends admin_addon_install{
 
 
 		ob_start();
-		echo '<div id="theme_editor">';
 		echo '<div id="theme_toolbar"><div>';
 
 		//theme_right
@@ -1113,7 +1216,10 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '</div>';
 
-		echo '</div></div>';
+		echo '</div></div>'; //end toolbar
+
+
+		echo '<div id="theme_editor">';
 
 
 		//show site in iframe
@@ -1141,7 +1247,6 @@ class admin_theme_content extends admin_addon_install{
 		$page->theme_name = $template;
 		$page->theme_color = $color;
 		$page->theme_dir = $theme_info['full_dir'];
-		$page->layout_css = false;
 		$page->theme_rel = $theme_info['rel'].'/'.$color;
 
 		if( isset($theme_info['id']) ){
@@ -2159,8 +2264,6 @@ class admin_theme_content extends admin_addon_install{
 		ob_start();
 		echo '<ul id="layout_css_ul_'.$layout.'">';
 
-		//edit custom css
-		echo '<li>'.common::Link('Admin_Theme_Content',$langmessage['edit'],'cmd=css&layout='.rawurlencode($layout),'data-cmd="gpabox"').'</li>';
 
 		// name based menu classes
 		echo '<li>';

@@ -1,7 +1,7 @@
 
 $(function(){
 	LayoutSetup();
-
+	CssSetup();
 
 	/**
 	 * Show the layout color and label editor
@@ -112,7 +112,59 @@ $(function(){
 		}
 	});
 
+
+
+
 });
+
+
+/**
+ * Prepare a layout for css editing
+ *
+ */
+function CssSetup(){
+
+	// get the textarea
+	var textarea = $('#gp_layout_css');
+	if( !textarea.length ){
+		return;
+	}
+
+
+	// get the css area that contains the custom css
+	var style_area = $('#gp_layout_iframe').contents().find('#gp_layout_style');
+	if( !style_area.length ){
+		setTimeout(function(){CssSetup()},400);
+		return;
+	}
+
+
+	//watch for changes
+	var start_value = style_area.html();
+	var prev_value = start_value;
+	var less = document.getElementById('gp_layout_iframe').contentWindow.less;
+
+	var interval = window.setInterval(function(){
+
+		var new_value = textarea.val();
+
+		//don't call less.refresh more than needed
+		if( new_value == prev_value ){
+			return;
+		}
+
+		style_area.html(new_value);
+		prev_value = new_value;
+
+
+		//refresh with less
+		//less.refresh();
+		//less.modifyVars({});
+		//less.refreshStyles();
+
+	},1000);
+
+}
 
 
 /**
@@ -197,23 +249,5 @@ function LayoutSetup(){
 }
 
 
-/**
- * Prepare the page for editing css
- * CSS edits will be applied to the page every second
- *
- */
-$gp.response.EditCSS = function(){
-	var textarea = $('#gp_layout_css');
-	var style_area = $('#gp_layout_style');
-	var start_value = $('#gp_layout_style').html();
-	var interval = window.setInterval(function(){
-		if( textarea.is(':visible') ){
-			style_area.html(textarea.val());
-		}else{
-			style_area.html(start_value);
-			window.clearInterval(interval);
-		}
 
-	},1000);
-};
 

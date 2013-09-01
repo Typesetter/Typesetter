@@ -503,6 +503,8 @@ function pre($mixed){
 	switch($type){
 		case 'object':
 			$type = get_class($mixed).' object';
+			$output = $type.'(...)'."\n"; //recursive object references creates an infinite loop
+		break;
 		case 'array':
 			$output = $type.'('."\n";
 			foreach($mixed as $key => $value){
@@ -597,7 +599,6 @@ class display{
 	var $theme_rel;
 	var $theme_addon_id = false;
 	var $theme_is_addon = false;/* @deprecated 3.5 */
-	var $layout_css = false;
 	var $menu_css_ordered = true;
 	var $menu_css_indexed = true;
 	var $gpLayout;
@@ -788,10 +789,6 @@ class display{
 			$this->theme_rel = $layout_info['path'];
 			$this->theme_dir = $layout_info['dir'];
 
-
-			if( isset($layout_info['css']) && $layout_info['css'] ){
-				$this->layout_css = true;
-			}
 			if( isset($layout_info['addon_id']) ){
 				$this->theme_addon_id = $layout_info['addon_id'];
 			}
@@ -1113,6 +1110,38 @@ class common{
 		if( $sessions ){
 			common::sessions();
 		}
+
+
+
+		/*
+		try{
+			includeFile('thirdparty/x_agar-less.php/Parser.php');
+			$parser = new \Less\Parser();
+			//$parser->getEnvironment()->setCompress(true);
+			$parser->parseFile('/var/www/gpeasy/themes/x_Bootstrap_Cerulean/6_Sticky_Footer/style.less');
+
+		}catch(Exception $e){
+			echo '<pre>';
+			print_r($e);
+			echo '</pre>';
+			die();
+		}
+
+		$css = $parser->getCss();
+		echo pre($css);
+		die('testing');
+
+		//
+		$test = array(
+			'/var/www/gpeasy/themes/x_Bootstrap_Cerulean/6_Sticky_Footer/style.less',
+			'/var/www/gpeasy/data/_layouts/o59s97o/custom.css',
+		);
+
+		gpOutput::Less($test);
+		die('done');
+		*/
+
+
 	}
 
 
@@ -1252,6 +1281,9 @@ class common{
 			}
 
 		}
+
+		unset($_GET['gp_rewrite']);
+		unset($_REQUEST['gp_rewrite']);
 
 		if( !isset($_SERVER['gp_rewrite']) ){
 			$_SERVER['gp_rewrite'] = false;
@@ -2161,6 +2193,7 @@ class common{
 		}
 
 		if( isset($config['homepath']) && $path == $config['homepath'] ){
+			$args = $_GET;
 			common::Redirect(common::GetUrl('',http_build_query($_GET),false));
 		}
 

@@ -2574,7 +2574,7 @@ class gpOutput{
  		//custom version of CachedCompile()
 		$compiled_file = false;
 		$less_cache = false;
- 		if( file_exists($object_file) ){
+ 		if( false && file_exists($object_file) ){
 			include($object_file);
 			$compiled_file = $dataDir.$less_cache['compiled_file'];
 
@@ -2614,9 +2614,16 @@ class gpOutput{
 			$first_file = current($less_files);
 			includeFile('thirdparty/x_phpless/Less.php');
 			$parser = new Less_Parser();
+			$parser->SetCacheDir( $dataDir.'/data/_cache' );
+
+			$import_dirs[$dataDir.'/include/thirdparty/Bootstrap/less/'] = common::GetDir('/include/thirdparty/Bootstrap/less/');
+			$parser->SetImportDirs($import_dirs);
+
 
 			//set vars
 			$less = '@dirPrefix: "'.$dirPrefix.'";';
+
+
 
 			//combine files
 			$import_dirs = array();
@@ -2630,14 +2637,8 @@ class gpOutput{
 					$relative = substr($file,strlen($dataDir));
 				}
 
-				$import_dirs[dirname($file)] = common::GetDir($file);
-				$less .= file_get_contents($file)."\n";
-				Less_Parser::AddParsedFile($file);
+				$parser->ParseFile( $file, common::GetDir($relative) );
 			}
-			$import_dirs[$dataDir.'/include/thirdparty/Bootstrap/less/'] = common::GetDir('/include/thirdparty/Bootstrap/less/');
-
-			$parser->SetImportDirs($import_dirs);
-			$parser->parse($less);
 			$compiled = $parser->getCss();
 
 		}catch(Exception $e){

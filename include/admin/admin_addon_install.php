@@ -321,9 +321,12 @@ class admin_addon_install extends admin_addons_tool{
 
 	}
 
-	function SearchOptions(){
+	function SearchOptions( $nav_on_top = true ){
 		echo '<div class="gp_search_options">';
-		$this->SearchNavLinks();
+
+		if( $nav_on_top ){
+			$this->SearchNavLinks();
+		}
 
 		echo '<div class="search_order">';
 		foreach($this->searchOrderOptions as $key => $label){
@@ -333,7 +336,13 @@ class admin_addon_install extends admin_addons_tool{
 				echo common::Link($this->searchUrl,$label,$this->searchQuery.'&order='.$key);
 			}
 		}
-		echo '</div></div>';
+		echo '</div>';
+
+		if( !$nav_on_top ){
+			$this->SearchNavLinks();
+		}
+
+		echo '</div>';
 	}
 
 	function DetailLink( $type, $id, $label = 'Details', $q = '', $attr='' ){

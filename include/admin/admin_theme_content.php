@@ -1201,17 +1201,10 @@ class admin_theme_content extends admin_addon_install{
 		//theme_right
 		$this->LayoutSelect();
 
-		echo '<div class="step"><b>';
 		echo common::Link('Admin_Theme_Content',$langmessage['available_themes']);
-		echo '</b></div>';
 
-		echo '<div class="step">';
 		$this->ThemeSelect($theme_id,$color);
-		echo '</div>';
 
-		echo '<div class="add_layout">';
-		echo common::Link('Admin_Theme_Content',$langmessage['use_this_theme'],'cmd=newlayout&theme='.rawurlencode($theme),'data-cmd="gpabox"');
-		echo '</div>';
 
 		echo '</div>';
 
@@ -1224,8 +1217,15 @@ class admin_theme_content extends admin_addon_install{
 		echo '<div id="theme_editor">';
 		echo '<div class="gp_scroll_area">';
 
+		echo common::Link('Admin_Theme_Content','&#171; '.$langmessage['available_themes']);
+
+		echo '<div class="add_layout">';
+		echo common::Link('Admin_Theme_Content',$langmessage['use_this_theme'],'cmd=newlayout&theme='.rawurlencode($theme),'data-cmd="gpabox"');
+		echo '</div>';
+
+
 		$this->searchUrl = 'Admin_Theme_Content';
-		$this->AvailableList();
+		$this->AvailableList( false );
 
 		echo '</div>';
 
@@ -1922,7 +1922,7 @@ class admin_theme_content extends admin_addon_install{
 		$this->AvailableList();
 	}
 
-	function AvailableList(){
+	function AvailableList( $options_on_top = true ){
 		global $langmessage, $config;
 
 		//search settings
@@ -1990,7 +1990,9 @@ class admin_theme_content extends admin_addon_install{
 		$possible = array_slice( $this->possible, $start, $this->searchPerPage, true);
 
 
-		$this->SearchOptions();
+		if( $options_on_top ){
+			$this->SearchOptions();
+		}
 
 
 		// show themes
@@ -2105,7 +2107,13 @@ class admin_theme_content extends admin_addon_install{
 		}
 		echo '</div>';
 
-		$this->SearchNavLinks();
+
+ 		if( $options_on_top ){
+			$this->SearchNavLinks();
+		}else{
+			$this->SearchOptions( false );
+		}
+
 
 	}
 

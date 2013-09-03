@@ -2613,16 +2613,11 @@ class gpOutput{
 			reset($less_files);
 			$first_file = current($less_files);
 			includeFile('thirdparty/x_phpless/Less.php');
-			$parser = new Less_Parser();
+			$parser = new Less_Parser(array('compress'=>true));
 			$parser->SetCacheDir( $dataDir.'/data/_cache' );
 
 			$import_dirs[$dataDir.'/include/thirdparty/Bootstrap/less/'] = common::GetDir('/include/thirdparty/Bootstrap/less/');
 			$parser->SetImportDirs($import_dirs);
-
-
-			//set vars
-			$less = '@dirPrefix: "'.$dirPrefix.'";';
-
 
 
 			//combine files
@@ -2637,7 +2632,7 @@ class gpOutput{
 					$relative = substr($file,strlen($dataDir));
 				}
 
-				$parser->ParseFile( $file, common::GetDir($relative) );
+				$parser->ParseFile( $file, common::GetDir(dirname($relative)) );
 			}
 			$compiled = $parser->getCss();
 
@@ -2649,6 +2644,7 @@ class gpOutput{
 			return false;
 		}
 
+		//msg('<textarea>'.htmlspecialchars($compiled).'</textarea>');
 
 
 		// Set cache values

@@ -1,50 +1,5 @@
 @import 'mixins.less';
 
-#theme_toolbar{
-	height:35px;
-	top:0;
-	min-width:810px;
-	position:fixed;
-	z-index: 9000;
-
-	border-bottom:1px solid #aaa;
-	width:100%;
-	.gradient-vertical(#fafafa, #ededed);
-	}
-body #gp_admin_html #theme_toolbar a{
-	color:#333;
-	}
-
-#theme_left{
-	padding-left:40px;
-	}
-
-#theme_right,
-#theme_left{
-	height:35px;
-	float:left;
-	}
-
-#theme_right > div,
-#theme_left > div{
-	float:left;
-	padding:0 7px;
-	line-height:35px;
-	}
-#theme_right{
-	float:right;
-	margin-right:-1px;
-	}
-
-#theme_left > div{
-	border:0 none;
-	height:35px;
-	}
-#theme_left > div.step{
-	padding-right:30px;
-	background:url('../imgs/layout_arrow_35.png') no-repeat 100% 0;
-	}
-
 
 #layout_ident{
 	position:absolute;
@@ -67,65 +22,97 @@ body #gp_admin_html #theme_toolbar a{
 	}
 
 
+/**
+ * For javascript drag-n-drop
+ *
+ */
 #theme_content_drop{
 	position:absolute;
 	top:0;
 	left:0;
 	height:0;
 	width:0;
+
+	.draggable_element{
+		background:#888;
+		z-index:8100; /*  given 8100 z-index by js */
+		border:3px dotted #FFF;
+		border-radius: 3px;
+	}
+
+	.hover{
+		z-index:9000;
+	}
+
+	.target{
+		background:#FFAAAA;
+		padding:6px;
+		margin-top:-6px;
+		margin-left:-6px;
+	}
+
+	.output_area_label{
+		font-weight:bold;
+		overflow:hidden;
+		padding:3px;
+		font-size:13px;
+	}
+
+	.output_area_link{
+		/* position:relative;
+		float:right; */
+		font-weight:bold;
+		margin-bottom:7px;
+	}
+
+	.output_area_link a{
+		/* position:relative;
+		float:right; */
+		float:left;
+		border:1px solid #333;
+		background-color:#555;
+		color:#fff !important;
+		font-weight:bold;
+		padding:2px 4px;
+
+		margin:3px;
+		text-decoration:none;
+
+		border-radius:3px !important;
+		z-index:8300;
+	}
+
+	.output_area_link a:hover{
+		background-color:#444;
+		z-index:8300;
+	}
+
 }
 
-#theme_content_drop .draggable_element{
-	background:#888;
-	z-index:8100; /*  given 8100 z-index by js */
-	border:3px dotted #FFF;
+
+/**
+ * Drag n drop css
+ *
+ */
+#gp_drag_n_drop{
+	position:absolute;
+	width:300px;
+	z-index:8200;
+	cursor:pointer;
+	}
+#gp_drag_n_drop > div{
+	padding:10px;
+}
+#gp_drag_n_drop > div > div{
+	background-color:#fff;
+	border:1px solid #ddd;
 	border-radius: 3px;
-	}
-
-#theme_content_drop .hover{
-	z-index:9000;
+	padding:10px;
 }
 
-#theme_content_drop .target{
-	background:#FFAAAA;
-	padding:6px;
-	margin-top:-6px;
-	margin-left:-6px;
-	}
 
-#theme_content_drop .output_area_label{
-	font-weight:bold;
-	overflow:hidden;
-	padding:3px;
-	font-size:13px;
-	}
-#theme_content_drop .output_area_link{
-	/* position:relative;
-	float:right; */
-	font-weight:bold;
-	margin-bottom:7px;
-	}
 
-#theme_content_drop .output_area_link a{
-	/* position:relative;
-	float:right; */
-	float:left;
-	border:1px solid #333;
-	background-color:#555;
-	color:#fff !important;
-	font-weight:bold;
-	padding:2px 4px;
 
-	margin:3px;
-	text-decoration:none;
-
-	border-radius:3px !important;
-	z-index:8300;
-}
-#theme_content_drop .output_area_link a:hover{
-	background-color:#444;
-	z-index:8300;
-}
 
 .titles_using{
 	margin:0;
@@ -156,6 +143,7 @@ body #gp_admin_html #theme_toolbar a{
 	width:24px;
 	height:24px;
 	}
+
 .add_layout a{
 	border-radius: 3px;
 	padding:4px 7px;
@@ -165,36 +153,11 @@ body #gp_admin_html #theme_toolbar a{
     border: 1px solid #176B00;
 	}
 
-#theme_right .dd_list{
-	right:0;
-	}
 .dd_menu{
 	margin:5px 0;
 	}
 
 
-
-
-
-/**
- * Drag n drop css
- *
- */
-#gp_drag_n_drop{
-	position:absolute;
-	width:300px;
-	z-index:8200;
-	cursor:pointer;
-	}
-#gp_drag_n_drop > div{
-	padding:10px;
-}
-#gp_drag_n_drop > div > div{
-	background-color:#fff;
-	border:1px solid #ddd;
-	border-radius: 3px;
-	padding:10px;
-}
 
 
 /**

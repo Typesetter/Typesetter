@@ -1199,11 +1199,8 @@ class admin_theme_content extends admin_addon_install{
 		echo '<div id="theme_toolbar"><div>';
 
 		//theme_right
-		echo '<div id="theme_right">';
 		$this->LayoutSelect();
-		echo '</div>';
 
-		echo '<div id="theme_left">';
 		echo '<div class="step"><b>';
 		echo common::Link('Admin_Theme_Content',$langmessage['available_themes']);
 		echo '</b></div>';

@@ -1190,10 +1190,12 @@ class admin_theme_content extends admin_addon_install{
 		$page->show_admin_content = false;
 		$page->get_theme_css = false;
 
-		$this->ToolbarCSS();
+		$page->head_js[] = '/include/js/auto_width.js';
 
 
 		ob_start();
+		/*
+		$this->ToolbarCSS();
 		echo '<div id="theme_toolbar"><div>';
 
 		//theme_right
@@ -1217,15 +1219,25 @@ class admin_theme_content extends admin_addon_install{
 		echo '</div>';
 
 		echo '</div></div>'; //end toolbar
+		*/
 
 
+
+		//new
 		echo '<div id="theme_editor">';
+		echo '<div class="gp_scroll_area">';
+
+		$this->searchUrl = 'Admin_Theme_Content';
+		$this->AvailableList();
+
+		echo '</div>';
 
 
 		//show site in iframe
+		echo '<div id="gp_iframe_wrap">';
 		$url = common::GetUrl('Admin_Theme_Content','cmd=preview_iframe&theme='.rawurlencode($theme));
 		echo '<iframe src="'.$url.'" id="gp_layout_iframe"><iframe>';
-
+		echo '</div>';
 
 		echo '</div>';
 		$page->admin_html = ob_get_clean();
@@ -1908,10 +1920,16 @@ class admin_theme_content extends admin_addon_install{
 		$this->GetAddonData();
 
 		$this->ShowHeader();
+		$this->searchUrl = 'Admin_Theme_Content/Available';
+
+		$this->AvailableList();
+	}
+
+	function AvailableList(){
+		global $langmessage, $config;
 
 		//search settings
 		$this->searchPerPage = 10;
-		$this->searchUrl = 'Admin_Theme_Content/Available';
 		$this->searchOrderOptions = array();
 		$this->searchOrderOptions['rating_score']	= $langmessage['Highest Rated'];
 		$this->searchOrderOptions['downloads']		= $langmessage['Most Downloaded'];

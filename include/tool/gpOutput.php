@@ -2574,7 +2574,7 @@ class gpOutput{
  		//custom version of CachedCompile()
 		$compiled_file = false;
 		$less_cache = false;
- 		if( false && file_exists($object_file) ){
+ 		if( file_exists($object_file) ){
 			include($object_file);
 			$compiled_file = $dataDir.$less_cache['compiled_file'];
 

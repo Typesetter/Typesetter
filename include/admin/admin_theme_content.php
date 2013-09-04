@@ -487,17 +487,6 @@ class admin_theme_content extends admin_addon_install{
 	}
 
 
-	/**
-	 * Add CSS to the page to add space for the editing toolbar
-	 *
-	 */
-	function ToolbarCSS(){
-		global $page;
-		$page->head .= '<style type="text/css" media="screen">'
-					. 'html { margin-top: 36px !important; } * html body { margin-top: 36px !important; }'
-					. '.messages{top:37px !important;}'
-					. '</style>';
-	}
 
 	/**
 	 * Display the toolbar for layout editing
@@ -563,7 +552,7 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '</div>';
 
-		echo '</td></tr><tr><td class="textarea"><div class="full_height">';
+		echo '</td></tr><tr><td class="full_height"><div class="full_height">';
 
 		$css = $this->layoutCSS($this->curr_layout);
 		echo '<textarea name="css" id="gp_layout_css" class="gptextarea" placeholder="Add your CSS here.">';
@@ -764,46 +753,6 @@ class admin_theme_content extends admin_addon_install{
 
 
 	/**
-	 * Display all the available theme in a <select>
-	 *
-	 */
-	function ThemeSelect($curr_theme_id = false, $curr_color = false){
-		global $langmessage;
-
-		$display = $langmessage['available_themes'];
-		if( $curr_theme_id ){
-			$display = htmlspecialchars($curr_theme_id.' / '.$curr_color);
-			$display = str_replace(array('_','(remote)','(local)'),array(' ','',''),$display);
-		}
-
-		echo '<div class="dd_menu">';
-		echo '<a data-cmd="dd_menu">'.$display.'</a>';
-
-		echo '<div class="dd_list"><ul>';
-
-		uasort( $this->possible, array('admin_theme_content','SortName') );
-
-		foreach($this->possible as $theme_id => $info){
-			echo '<li><span class="list_heading">'.htmlspecialchars(str_replace('_',' ',$info['name'])).'</span>';
-			echo '</li>';
-			foreach($info['colors'] as $color){
-				$attr = '';
-				if( $theme_id == $curr_theme_id && $color == $curr_color ){
-					$attr = ' class="selected"';
-				}
-				echo '<li'.$attr.'>';
-
-				echo common::Link('Admin_Theme_Content',htmlspecialchars(str_replace('_',' ',$color)),'cmd=preview&theme='.rawurlencode($theme_id.'/'.$color));
-				echo '</li>';
-			}
-		}
-		echo '</ul></div>';
-		echo '</div>';
-	}
-
-
-
-	/**
 	 * Prepare the page for css editing
 	 *
 	 */
@@ -820,12 +769,9 @@ class admin_theme_content extends admin_addon_install{
 
 		// <head>
 		$css = $this->layoutCSS($this->curr_layout);
-		$page->head .= '
-	<style id="gp_layout_style" type="text/css" rel="stylesheet/less">'.$css.'</style>
-	<script type="text/javascript">var gpLayouts=true;</script>
-	<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/lesscss/less.js').'"></script>
-';
-
+		$page->head .= '<style id="gp_layout_style" type="text/css" rel="stylesheet/less">'.$css.'</style>';
+		$page->head .= '<script type="text/javascript">var gpLayouts=true;</script>';
+		//$page->head .= '<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/lesscss/less.js').'"></script>';
 
 /*
 <script type="text/javascript">
@@ -1194,38 +1140,29 @@ class admin_theme_content extends admin_addon_install{
 
 
 		ob_start();
-		/*
-		$this->ToolbarCSS();
-		echo '<div id="theme_toolbar"><div>';
-
-		//theme_right
-		$this->LayoutSelect();
-
-		echo common::Link('Admin_Theme_Content',$langmessage['available_themes']);
-
-		$this->ThemeSelect($theme_id,$color);
-
-
-		echo '</div>';
-
-		echo '</div></div>'; //end toolbar
-		*/
-
-
 
 		//new
 		echo '<div id="theme_editor">';
 		echo '<div class="gp_scroll_area">';
 
-		echo common::Link('Admin_Theme_Content','&#171; '.$langmessage['available_themes']);
 
+		echo '<div>';
+		echo common::Link('Admin_Theme_Content/Available','&#171; '.$langmessage['available_themes']);
 		echo '<div class="add_layout">';
 		echo common::Link('Admin_Theme_Content',$langmessage['use_this_theme'],'cmd=newlayout&theme='.rawurlencode($theme),'data-cmd="gpabox"');
 		echo '</div>';
+		echo '</div>';
 
 
-		$this->searchUrl = 'Admin_Theme_Content';
+		echo '<div class="separator"></div>';
+
+
+		$this->searchUrl = 'Admin_Theme_Content/Available';
 		$this->AvailableList( false );
+
+		//search options
+		$this->searchQuery .= '&cmd=preview&theme='.rawurlencode($theme);
+		$this->SearchOptions( false );
 
 		echo '</div>';
 
@@ -1913,6 +1850,21 @@ class admin_theme_content extends admin_addon_install{
 	function ShowAvailable(){
 		global $langmessage, $config, $page;
 
+
+		$cmd = common::GetCommand();
+
+		switch($cmd){
+			case 'preview':
+			case 'preview_iframe':
+			case 'newlayout':
+			case 'addlayout':
+				if( $this->NewLayout($cmd) ){
+					return;
+				}
+			break;
+		}
+
+
 		$page->head_js[] = '/include/js/auto_width.js';
 		$this->GetAddonData();
 
@@ -1922,7 +1874,7 @@ class admin_theme_content extends admin_addon_install{
 		$this->AvailableList();
 	}
 
-	function AvailableList( $options_on_top = true ){
+	function AvailableList( $show_options = true ){
 		global $langmessage, $config;
 
 		//search settings
@@ -1964,6 +1916,7 @@ class admin_theme_content extends admin_addon_install{
 			$this->possible[$theme_id] = $info;
 		}
 
+
 		// sort
 		switch($this->searchOrder){
 
@@ -1986,11 +1939,12 @@ class admin_theme_content extends admin_addon_install{
 		if( isset($_REQUEST['page']) && ctype_digit($_REQUEST['page']) ){
 			$this->searchPage = $_REQUEST['page'];
 		}
+
 		$start = $this->searchPage * $this->searchPerPage;
 		$possible = array_slice( $this->possible, $start, $this->searchPerPage, true);
 
 
-		if( $options_on_top ){
+		if( $show_options ){
 			$this->SearchOptions();
 		}
 
@@ -2029,7 +1983,11 @@ class admin_theme_content extends admin_addon_install{
 				echo '<ul>';
 				foreach($info['colors'] as $color){
 					echo '<li>';
-					echo common::Link('Admin_Theme_Content',str_replace('_','&nbsp;',$color),'cmd=preview&theme='.rawurlencode($theme_id.'/'.$color),'');
+					$q = 'cmd=preview&theme='.rawurlencode($theme_id.'/'.$color).$this->searchQuery;
+					if( $this->searchPage ){
+						$q .= '&page='.$this->searchPage;
+					}
+					echo common::Link('Admin_Theme_Content/Available',str_replace('_','&nbsp;',$color),$q);
 					echo '</li>';
 				}
 				echo '</ul>';
@@ -2108,10 +2066,8 @@ class admin_theme_content extends admin_addon_install{
 		echo '</div>';
 
 
- 		if( $options_on_top ){
+ 		if( $show_options ){
 			$this->SearchNavLinks();
-		}else{
-			$this->SearchOptions( false );
 		}
 
 

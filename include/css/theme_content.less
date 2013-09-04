@@ -318,22 +318,39 @@
 		.box-sizing(border-box);
 		}
 
-	table{
-		width:250px;
+	.gp_scroll_area,
+	form{
+		border-right:1px solid #aaa;
+		.box-sizing(border-box);
 		height:100%;
+		position:relative;
+		width:250px;
+		}
+
+	.gp_scroll_area{
+		overflow:auto;
+	}
+
+	.gp_scroll_area > div{
+		padding:10px;
+		}
+
+
+	table{
 		border-collapse:collapse;
 		padding:0;
 		margin:0;
 		border:0 none;
+		height:100%;
 	}
 	td{
 		padding:0;
 		height:0;
 		background:0 none;
 		width:250px;
-		border-right:1px solid #aaa;
 	}
 
+	form > div,
 	td > div{
 		padding:8px 10px 6px 10px;
 		position:relative;
@@ -341,7 +358,7 @@
 
 	.separator{
 		margin:0;
-		padding:0;
+		padding:0 !important;
 		border-bottom:1px solid #fff;
 		}
 
@@ -349,14 +366,10 @@
 		content:"";
 		border-top:1px solid #ddd;
 		display:block;
-		position:absolute;
+		position:relative;
 		bottom:0;
 		left:0;
 		right:0;
-		}
-
-	td.textarea{
-		height:100%;
 		}
 
 	#gp_layout_css{
@@ -371,6 +384,7 @@
 		left:250px;
 		bottom:0;
 		right:0;
+		background:#fff;
 	}
 
 	#gp_layout_iframe{
@@ -384,15 +398,6 @@
 		}
 
 
-	// available themes within preview
-	.gp_scroll_area{
-		overflow:auto;
-		position:relative;
-		width:250px;
-		height:100%;
-		padding:10px 10px 20px 10px;
-		.box-sizing(border-box);
-		}
 
 	#gp_avail_themes{
 		margin:0;
@@ -407,6 +412,19 @@
 	.search_pages{
 		float:none;
 		}
+
+	.gp_search_options{
+		padding:10px 0;
+	}
+
+	.search_pages{
+		padding:10px 0;
+	}
+
+	.search_pages a,
+	.search_pages span{
+		padding:1px 5px 1px 0;
+	}
 }
 
 

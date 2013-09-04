@@ -505,7 +505,7 @@ class admin_theme_content extends admin_addon_install{
 
 
 		echo '<div>';
-		echo common::Link('Admin_Theme_Content',$langmessage['layouts']);
+		echo common::Link('Admin_Theme_Content','&#171; '.$langmessage['layouts']);
 		echo '<div class="layout_select">';
 		$this->LayoutSelect($layout,$layout_info);
 		echo '</div>';

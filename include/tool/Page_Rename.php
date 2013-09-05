@@ -4,14 +4,13 @@ defined('is_running') or die('Not an entry point...');
 
 class gp_rename{
 
-	static function RenameForm($title,$action){
+	static function RenameForm( $index, $action ){
 		global $langmessage,$page,$gp_index,$gp_titles;
 
+		$label = common::GetLabelIndex($index);
+		$title = common::IndexToTitle($index);
 
-		$id = $gp_index[$title];
-		$label = common::GetLabel($title);
-
-		$title_info = $gp_titles[$id];
+		$title_info = $gp_titles[$index];
 
 		if( empty($_REQUEST['new_title']) ){
 			$new_title = common::LabelSpecialChars($label);

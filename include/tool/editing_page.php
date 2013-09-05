@@ -274,7 +274,7 @@ class editing_page extends display{
 
 		includeFile('tool/Page_Rename.php');
 		$action = common::GetUrl($this->title);
-		gp_rename::RenameForm($this->title,$action);
+		gp_rename::RenameForm( $this->gp_index, $action );
 	}
 
 

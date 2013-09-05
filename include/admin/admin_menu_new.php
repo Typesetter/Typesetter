@@ -821,7 +821,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<a href="[url]" class="view_edit_link">'.$img.htmlspecialchars($langmessage['view/edit_page']).'</a>';
 
 		$img = '<span class="menu_icon page_edit_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&title=[title]',array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
+		echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&index=[key]',array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
 
 		$img = '<span class="menu_icon copy_icon"></span>';
 		echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&title=[title]',array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
@@ -1033,7 +1033,7 @@ class admin_menu_new extends admin_menu_tools{
 				echo '<div>';
 				echo '<b>Options:</b>';
 				$img = '<span class="menu_icon page_edit_icon"></span>';
-				echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&title='.urlencode($title),array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
+				echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&index='.urlencode($title_index),array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
 
 				$img = '<span class="menu_icon copy_icon"></span>';
 				echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&title='.urlencode($title),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
@@ -1401,15 +1401,9 @@ class admin_menu_new extends admin_menu_tools{
 		includeFile('tool/Page_Rename.php');
 
 		//prepare variables
-		$title =& $_REQUEST['title'];
-
-		if( !isset($gp_index[$title]) ){
-			echo $langmessage['OOPS'];
-			return;
-		}
-
+		$title =& $_REQUEST['index'];
 		$action = $this->GetUrl('Admin_Menu');
-		gp_rename::RenameForm($title,$action);
+		gp_rename::RenameForm( $_REQUEST['index'], $action );
 	}
 
 	function RenameFile(){

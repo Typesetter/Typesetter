@@ -38,7 +38,7 @@ class editing_page extends display{
 
 			// Having the layout link here complicates things.. would need layout link for special pages
 			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
-			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['Copy'],'cmd=copypage&redir=redir&title='.urlencode($this->title),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
+			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['Copy'],'cmd=copypage&redir=redir&index='.urlencode($this->gp_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 		}
 
 		if( admin_tools::HasPermission('Admin_User') ){

@@ -824,7 +824,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&index=[key]',array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
 
 		$img = '<span class="menu_icon copy_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&title=[title]',array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
+		echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&index=[key]',array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 
 		if( admin_tools::HasPermission('Admin_User') ){
 			$img = '<span class="menu_icon icon_user"></span>';
@@ -1036,7 +1036,7 @@ class admin_menu_new extends admin_menu_tools{
 				echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&index='.urlencode($title_index),array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
 
 				$img = '<span class="menu_icon copy_icon"></span>';
-				echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&title='.urlencode($title),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
+				echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&index='.urlencode($title_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 
 				$layout = admin_menu_tools::CurrentLayout($title_index);
 				$layout_info = $gpLayouts[$layout];
@@ -2521,8 +2521,11 @@ class admin_menu_new extends admin_menu_tools{
 	function CopyForm(){
 		global $langmessage, $gp_index, $page;
 
-		$from_title = $_REQUEST['title'];
-		if( !isset($gp_index[$from_title]) ){
+
+		$index = $_REQUEST['index'];
+		$from_title = common::IndexToTitle($index);
+
+		if( !$from_title ){
 			message($langmessage['OOPS_TITLE']);
 			return false;
 		}

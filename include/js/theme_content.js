@@ -120,6 +120,7 @@ $(function(){
 
 /**
  * Prepare a layout for css editing
+ * Watch for changes to the css/less textarea to apply changes to the page as they're made
  *
  */
 function CssSetup(){
@@ -139,10 +140,11 @@ function CssSetup(){
 	}
 
 
-	//watch for changes
+
+	//Watch for changes
 	var start_value = style_area.html();
 	var prev_value = start_value;
-	var less = document.getElementById('gp_layout_iframe').contentWindow.less;
+	//var less = document.getElementById('gp_layout_iframe').contentWindow.less;
 
 	var interval = window.setInterval(function(){
 
@@ -152,10 +154,11 @@ function CssSetup(){
 		if( new_value == prev_value ){
 			return;
 		}
-
-		style_area.html(new_value);
 		prev_value = new_value;
 
+
+		//apply new value
+		style_area.html(new_value);
 
 		//refresh with less
 		//less.refresh();
@@ -163,6 +166,7 @@ function CssSetup(){
 		//less.refreshStyles();
 
 	},1000);
+	*/
 
 }
 

@@ -117,6 +117,8 @@ gpSettingsOverride('finder_options_server',$opts);
 
 
 
+sleep(15);
+
 // run Finder
 $connector = new Finder($opts);
 $connector->run();

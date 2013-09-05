@@ -51,7 +51,7 @@ var $gp = {
 		var frm = $(a).closest('form');
 
 		var b = frm.serialize() + '&verified='+encodeURIComponent(post_nonce); //needed when $gp.post is called without an input click
-		if( a.nodeName === 'INPUT' ){
+		if( a.nodeName === 'INPUT' || a.nodeName === 'BUTTON' ){
 			b += '&'+encodeURIComponent(a.name)+'='+encodeURIComponent(a.value);
 		}
 		if( data ){
@@ -313,7 +313,12 @@ $(function(){
 	$(document).ajaxError(function(event, XMLHttpRequest, ajaxOptions, thrownError){
 		$gp.loaded();
 
-		//don't use this error handler if another one is set for the ajax request
+		//
+		if( XMLHttpRequest.statusText == 'abort' ){
+			return;
+		}
+
+		// don't use this error handler if another one is set for the ajax request
 		if( typeof(ajaxOptions.error) === 'function' ){
 			return;
 		}
@@ -407,18 +412,6 @@ $(function(){
 
 
 		switch(cmd){
-
-			case 'testsave':
-
-				var path = this.form.action;
-				var query = '';
-				query += '&cmd=save';
-				query += '&newcontentstring';
-
-				$gp.postC( path, query);
-
-			return false;
-
 			case 'gppost':
 			case 'gpajax':
 			return $gp.post(this);

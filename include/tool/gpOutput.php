@@ -2130,29 +2130,28 @@ class gpOutput{
 
 		$files = array();
 
+		$custom_file = $dataDir.'/data/_layouts/'.$page->gpLayout.'/custom.css';
+
 		//css file
 		if( file_exists($page->theme_dir . '/' . $page->theme_color . '/style.css') ){
 
 			$files[] = rawurldecode($page->theme_path).'/style.css';
 
-
-			if( $page->gpLayout && file_exists($dataDir.'/data/_layouts/'.$page->gpLayout.'/custom.css') ){
-				$files[] = '/data/_layouts/'.$page->gpLayout.'/custom.css';
+			if( $page->gpLayout && file_exists($custom_file) ){
+				$files[] = gpOutput::Less( $custom_file );
 			}
 
 			return $files;
 		}
 
-
 		//less file
-		$less_files[] = $page->theme_dir . '/' . $page->theme_color . '/style.less';
+		$files[] = $page->theme_dir . '/' . $page->theme_color . '/style.less';
 
-		$custom_file = $dataDir.'/data/_layouts/'.$page->gpLayout.'/custom.css';
 		if( $page->gpLayout && file_exists($custom_file) ){
-			$less_files[] = $custom_file;
+			$files[] = $custom_file;
 		}
 
-		$files[] = gpOutput::Less($less_files);
+		$files = array( gpOutput::Less($files) );
 
 		return $files;
 	}

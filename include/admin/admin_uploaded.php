@@ -113,6 +113,7 @@ class admin_uploaded{
 
 
 	function admin_uploaded(){
+
 		$file_cmd = common::GetCommand('file_cmd');
 		if( !empty($file_cmd) || (isset($_REQUEST['show']) && $_REQUEST['show'] == 'inline') ){
 			$this->do_admin_uploaded($file_cmd);

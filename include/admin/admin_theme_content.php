@@ -245,6 +245,9 @@ class admin_theme_content extends admin_addon_install{
 			case 'save_css':
 				$this->SaveCSS();
 			break;
+			case 'preview_css':
+				$this->PreviewCSS();
+			break;
 
 
 			case 'change_layout_color':
@@ -560,13 +563,11 @@ class admin_theme_content extends admin_addon_install{
 		echo '</textarea>';
 
 
-
-
 		//save button
 		echo '</div></td></tr><tr><td><div>';
 
-		echo ' <input type="hidden" name="cmd" value="save_css" />';
-		echo ' <input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit"/>';
+		echo ' <button class="gpsubmit" name="cmd" type="submit" value="preview_css" />'.$langmessage['preview'].'</button>';
+		echo ' <button class="gpsubmit" name="cmd" type="submit" value="save_css"  />'.$langmessage['save'].'</button>';
 
 
 		echo '</div></td></tr>';
@@ -926,6 +927,20 @@ class admin_theme_content extends admin_addon_install{
 		}
 		message($langmessage['SAVED']);
 	}
+
+
+	/**
+	 * Preview changes to the custom css/less
+	 *
+	 */
+	function PreviewCSS(){
+		msg($_POST);
+
+		$scripts = array_merge( $scripts, self::LayoutStyleFiles() );
+
+
+	}
+
 
 	/**
 	 * Remove the custom css file for a layout

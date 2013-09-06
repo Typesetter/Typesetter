@@ -2109,7 +2109,7 @@ class gpOutput{
 				continue;
 			}
 
-			$scripts[$key] = gpOutput::Less($dataDir.$file);
+			$scripts[$key] = gpOutput::CacheLess($dataDir.$file);
 		}
 
 		gpOutput::CombineFiles($scripts,'css',$config['combinecss']);
@@ -2133,7 +2133,7 @@ class gpOutput{
 			$files[] = rawurldecode($page->theme_path).'/style.css';
 
 			if( $page->gpLayout && file_exists($custom_file) ){
-				$files[] = gpOutput::Less( $custom_file );
+				$files[] = gpOutput::CacheLess( $custom_file );
 			}
 
 			return $files;
@@ -2146,7 +2146,7 @@ class gpOutput{
 			$files[] = $custom_file;
 		}
 
-		$files = array( gpOutput::Less($files) );
+		$files = array( gpOutput::CacheLess($files) );
 
 		return $files;
 	}
@@ -2554,7 +2554,7 @@ class gpOutput{
 	 * @param mixed $less_files A strin or array of less filesThe absolute or relative path of the .less file
 	 *
 	 */
-	static function Less( $less_files ){
+	static function CacheLess( $less_files ){
 		global $dataDir;
 
 		$less_files = (array)$less_files;
@@ -2602,7 +2602,7 @@ class gpOutput{
 
 		reset($less_files);
 		$first_file = current($less_files);
-		$compiled = gpOutput::LessFiles( $less_files );
+		$compiled = gpOutput::ParseLess( $less_files );
 		if( !$compiled ){
 			return false;
 		}
@@ -2634,7 +2634,7 @@ class gpOutput{
 	 * @return mixed Compiled css string or false
 	 *
 	 */
-	static function LessFiles( &$less_files ){
+	static function ParseLess( &$less_files ){
 		global $dataDir;
 
 
@@ -2649,18 +2649,25 @@ class gpOutput{
 
 		// combine files
  		try{
-			foreach($less_files as $file){
+			foreach($less_files as $less){
 
-				// handle relative and absolute paths
-				if( strpos($file,$dataDir) === false ){
-					$relative = $file;
-					$file = $dataDir.'/'.ltrim($file,'/');
-				}else{
-					$relative = substr($file,strlen($dataDir));
+				//treat as less markup if there are newline characters
+				if( strpos($less,"\n") !== false ){
+					$parser->Parse( $less );
+					continue;
 				}
 
-				$parser->ParseFile( $file, common::GetDir(dirname($relative)) );
+				// handle relative and absolute paths
+				if( strpos($less,$dataDir) === false ){
+					$relative = $less;
+					$less = $dataDir.'/'.ltrim($less,'/');
+				}else{
+					$relative = substr($less,strlen($dataDir));
+				}
+
+				$parser->ParseFile( $less, common::GetDir(dirname($relative)) );
 			}
+
 			$compiled = $parser->getCss();
 
 		}catch(Exception $e){
@@ -2674,8 +2681,6 @@ class gpOutput{
 
 		return $compiled;
 	}
-
-
 
 
 }

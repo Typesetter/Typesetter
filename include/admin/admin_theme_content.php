@@ -240,7 +240,6 @@ class admin_theme_content extends admin_addon_install{
 		switch($cmd){
 
 
-
 			// CSS editing
 			case 'save_css':
 				$this->SaveCSS();
@@ -382,6 +381,8 @@ class admin_theme_content extends admin_addon_install{
 		switch( $cmd ){
 
 			//show the layout (displayed within an iframe)
+			case 'save_css':
+			case 'preview_css':
 			case 'addcontent':
 			case 'rm_area':
 			case 'drag_area':
@@ -501,7 +502,7 @@ class admin_theme_content extends admin_addon_install{
 
 
 		echo '<div id="theme_editor">';
-		echo '<form action="'.common::GetUrl('Admin_Theme_Content/'.$this->curr_layout).'" method="post" class="full_height">';
+		echo '<form action="'.common::GetUrl('Admin_Theme_Content/'.$this->curr_layout).'" method="post" class="full_height" target="gp_layout_iframe">';
 		echo '<table border="0">';
 		echo '<tr><td>';
 
@@ -566,7 +567,7 @@ class admin_theme_content extends admin_addon_install{
 		//save button
 		echo '</div></td></tr><tr><td><div>';
 
-		//echo ' <button name="cmd" type="submit" value="preview_css" class="gpsubmit" data-cmd="gppost" />'.$langmessage['preview'].'</button>';
+		echo ' <button name="cmd" type="submit" value="preview_css" class="gpsubmit" />'.$langmessage['preview'].'</button>';
 		echo ' <button name="cmd" type="submit" value="save_css" class="gpsubmit" />'.$langmessage['save'].'</button>';
 
 
@@ -578,7 +579,7 @@ class admin_theme_content extends admin_addon_install{
 		//show site in iframe
 		echo '<div id="gp_iframe_wrap">';
 		$url = common::GetUrl('Admin_Theme_Content/'.rawurlencode($layout),'cmd=in_iframe');
-		echo '<iframe src="'.$url.'" id="gp_layout_iframe"><iframe>';
+		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"><iframe>';
 		echo '</div>';
 
 
@@ -772,29 +773,6 @@ class admin_theme_content extends admin_addon_install{
 		$css = $this->layoutCSS($this->curr_layout);
 		$page->head .= '<style id="gp_layout_style" type="text/css" rel="stylesheet/less">'.$css.'</style>';
 		$page->head .= '<script type="text/javascript">var gpLayouts=true;</script>';
-		//$page->head .= '<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/lesscss/less.js').'"></script>';
-
-/*
-<script type="text/javascript">
-    less = {
-        env: "development", // or "production"
-        async: false,       // load imports async
-        fileAsync: false,   // load imports async when in a page under
-                            // a file protocol
-        poll: 1000,         // when in watch mode, time in ms between polls
-        functions: {},      // user functions, keyed by name
-        dumpLineNumbers: "comments", // or "mediaQuery" or "all"
-        relativeUrls: false,// whether to adjust url's to be relative
-                            // if false, url's are already relative to the
-                            // entry less file
-        rootpath: ":/a.com/"// a path to add on to the start of every url
-                            //resource
-    };
-</script>
-*/
-
-		//$page->get_theme_css = false;
-
 	}
 
 
@@ -828,7 +806,7 @@ class admin_theme_content extends admin_addon_install{
 
 		//make sure the object file exists
 		if( !file_exists($object_file) ){
-			gpOutput::Less($less_files);
+			gpOutput::CacheLess($less_files);
 
 			if( !file_exists($object_file) ){
 				continue;
@@ -937,21 +915,27 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function PreviewCSS(){
-		global $page;
-		$page->get_theme_css = false;
+		global $page, $langmessage;
 
+		$less = array();
 
 		if( file_exists($page->theme_dir . '/' . $page->theme_color . '/style.css') ){
 			$page->css_user[] = rawurldecode($page->theme_path).'/style.css';
-
 		}else{
-
-			//need to generate a css file from the less components
-			$page->css_user[] = $page->theme_dir . '/' . $page->theme_color . '/style.less';
-
-			$compiled = gpOutput::LessFiles( $less_files );
-
+			$less[] = $page->theme_dir . '/' . $page->theme_color . '/style.less';
 		}
+
+		$less[] = $_REQUEST['css']. "\n"; //make sure gpOutput::ParseLess sees this as code and not a filename
+
+		$compiled = gpOutput::ParseLess( $less );
+		if( !$compiled ){
+			message($langmessage['OOPS'].' (Invalid LESS)');
+			return false;
+		}
+
+
+		$page->get_theme_css = false;
+		$page->head .= '<style>'.$compiled.'</style>';
 	}
 
 
@@ -1198,7 +1182,7 @@ class admin_theme_content extends admin_addon_install{
 		//show site in iframe
 		echo '<div id="gp_iframe_wrap">';
 		$url = common::GetUrl('Admin_Theme_Content','cmd=preview_iframe&theme='.rawurlencode($theme));
-		echo '<iframe src="'.$url.'" id="gp_layout_iframe"><iframe>';
+		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"><iframe>';
 		echo '</div>';
 
 		echo '</div>';

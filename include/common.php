@@ -1137,7 +1137,7 @@ class common{
 			'/var/www/gpeasy/data/_layouts/o59s97o/custom.css',
 		);
 
-		gpOutput::Less($test);
+		gpOutput::CacheLess($test);
 		die('done');
 		*/
 

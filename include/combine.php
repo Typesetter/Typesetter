@@ -336,10 +336,7 @@ class gp_combine{
 		if( file_exists($cache_file) ){
 
 			// change modified time to extend cache
-			$diff = time() - filemtime($cache_file);
-			if( $diff > 172800 ){ //two days
-				touch($cache_file);
-			}
+			touch($cache_file);
 
 			return $cache_relative;
 		}
@@ -385,48 +382,10 @@ class gp_combine{
 		}
 
 
-		self::CleanCacheNew();
+		admin_tools::CleanCache();
 		return $cache_relative;
 	}
 
-
-	static function CleanCacheNew(){
-		global $dataDir;
-		$dir = $dataDir.'/data/_cache';
-		$files = scandir($dir);
-		$times = array();
-		$count = 0;
-		foreach($files as $file){
-			if( $file == '.' || $file == '..' || strpos($file,'.php') !== false ){
-				continue;
-			}
-			$full_path = $dir.'/'.$file;
-			$time = filemtime($full_path);
-			$diff = time() - $time;
-			//if relatively new, don't delete it
-			if( $diff < 604800 ){
-				$count++;
-				continue;
-			}
-			//if old, delete it
-			if( $diff > 2592000 ){
-				unlink($full_path);
-				continue;
-			}
-			$times[$file] = $time;
-		}
-
-		//reduce further if needed till we have less than 100 files
-		asort($times);
-		foreach($times as $file => $time){
-			if( $count < 100 ){
-				return;
-			}
-			$full_path = $dir.'/'.$file;
-			unlink($full_path);
-			$count--;
-		}
-	}
 
 	/**
 	 * Make sure the file is a css or js file and that it exists

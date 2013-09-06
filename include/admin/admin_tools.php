@@ -721,7 +721,6 @@ class admin_tools{
 	static function ScheduledTasks(){
 		global $dataDir;
 
-
 		switch(self::$update_status){
 			case 'embedcheck':
 			case 'checkincompat':
@@ -733,18 +732,48 @@ class admin_tools{
 			return;
 		}
 
-		//clean cache
-		//delete files older than 2 weeks, they will be regenerated if needed
-		$cache_dir = $dataDir.'/data/_cache';
-		$cache_files = gpFiles::ReadDir($cache_dir,'css');
-		$time = time();
-		foreach($cache_files as $file){
-			$full_path = $cache_dir.'/'.$file.'.css';
-			if( $time - filemtime($full_path) > 1209600 ){
-				@unlink($full_path);
+		self::CleanCache();
+
+	}
+
+
+	/**
+	 * Delete all files older than 2 weeks
+	 * If there are more than 200 files older than one week
+	 *
+	 */
+	static function CleanCache(){
+		global $dataDir;
+		$dir = $dataDir.'/data/_cache';
+		$files = scandir($dir);
+		$times = array();
+		foreach($files as $file){
+			if( $file == '.' || $file == '..' || strpos($file,'.php') !== false ){
+				continue;
 			}
+			$full_path = $dir.'/'.$file;
+			$time = filemtime($full_path);
+			$diff = time() - $time;
+
+			//if relatively new ( < 3 days), don't delete it
+			if( $diff < 259200 ){
+				continue;
+			}
+
+			//if old ( > 14 days ), delete it
+			if( $diff > 1209600 ){
+				unlink($full_path);
+				continue;
+			}
+			$times[$file] = $time;
 		}
 
+		//reduce further if needed till we have less than 200 files
+		arsort($times);
+		while( count($times) > 200 ){
+			$full_path = $dir.'/'.array_pop($times);
+			unlink($full_path);
+		}
 	}
 
 

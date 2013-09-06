@@ -115,65 +115,47 @@ $(function(){
 
 
 
+
+	/**
+	 * Watch for changes to the custom css area
+	 *
+	 */
+	function CssSetup(){
+
+		// get the textarea
+		var $textarea = $('#gp_layout_css');
+		if( !$textarea.length ){
+			return;
+		}
+
+		var prev_value = $textarea.val();
+
+		$gp.inputs.preview_css = function(evt){};
+
+		// if save or reset are clicked, remove the edited class
+		$gp.inputs.reset_css = function(evt){
+			$textarea.removeClass('edited');
+			prev_value = $textarea.val();
+		};
+
+
+		// watch for changes
+		window.setInterval(function(){
+
+			if( $textarea.val() != prev_value ){
+				$textarea.addClass('edited');
+			}
+
+		},1000);
+
+	}
+
+
 });
 
 
-/**
- * Prepare a layout for css editing
- * Watch for changes to the css/less textarea to apply changes to the page as they're made
- * This is a complicated feature with less.
- * 		The fastest method would be to use less.js, but we'd have to do something for @import paths for bootstrap components and
- *
- * 		Server side handling of the less would make less processing more consistent, but parsing the theme + bootstrap + custom less
- * 		with each change is expensive and slow and wouldn't be very responsive
- *
- */
-function CssSetup(){
-
-	// get the textarea
-	var textarea = $('#gp_layout_css');
-	if( !textarea.length ){
-		return;
-	}
 
 
-	// get the css area that contains the custom css
-	var style_area = $('#gp_layout_iframe').contents().find('#gp_layout_style');
-	if( !style_area.length ){
-		setTimeout(function(){CssSetup()},400);
-		return;
-	}
-
-
-
-	//Watch for changes
-	var start_value = style_area.html();
-	var prev_value = start_value;
-	//var less = document.getElementById('gp_layout_iframe').contentWindow.less;
-
-	var interval = window.setInterval(function(){
-
-		var new_value = textarea.val();
-
-		//don't call less.refresh more than needed
-		if( new_value == prev_value ){
-			return;
-		}
-		prev_value = new_value;
-
-
-		//apply new value
-		style_area.html(new_value);
-
-		//refresh with less
-		//less.refresh();
-		//less.modifyVars({});
-		//less.refreshStyles();
-
-	},1000);
-	*/
-
-}
 
 
 /**

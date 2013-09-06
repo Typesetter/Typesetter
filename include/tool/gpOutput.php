@@ -2123,11 +2123,6 @@ class gpOutput{
 	static function LayoutStyleFiles(){
 		global $page, $dataDir;
 
-		if( !$page->get_theme_css || empty($page->theme_name) ){
-			return array();
-		}
-
-
 		$files = array();
 
 		$custom_file = $dataDir.'/data/_layouts/'.$page->gpLayout.'/custom.css';
@@ -2559,8 +2554,8 @@ class gpOutput{
 	 * @param mixed $less_files A strin or array of less filesThe absolute or relative path of the .less file
 	 *
 	 */
-	function Less( $less_files ){
-		global $dataDir, $page, $dirPrefix;
+	static function Less( $less_files ){
+		global $dataDir;
 
 		$less_files = (array)$less_files;
 		$less_files = array_filter($less_files);
@@ -2573,7 +2568,7 @@ class gpOutput{
  		//custom version of CachedCompile()
 		$compiled_file = false;
 		$less_cache = false;
- 		if( file_exists($object_file) ){
+ 		if( false && file_exists($object_file) ){
 			include($object_file);
 			$compiled_file = $dataDir.$less_cache['compiled_file'];
 
@@ -2605,22 +2600,55 @@ class gpOutput{
 			}
 		}
 
+		reset($less_files);
+		$first_file = current($less_files);
+		$compiled = gpOutput::LessFiles( $less_files );
+		if( !$compiled ){
+			return false;
+		}
 
-		// convert less to css
+		//msg('<textarea>'.htmlspecialchars($compiled).'</textarea>');
+
+
+		// Set cache values
+		$less_cache = array();
+		$less_cache['updated'] = time();
+		$less_cache['files'] = $less_files;
+
+
+		//save the cache
+		$copiled_name = 'less_'.str_replace('.less','',basename($first_file)).'_'.common::GenEtag( count($less_cache['files']), $less_cache['updated'], strlen($compiled) );
+		$less_cache['compiled_file'] = '/data/_cache/'.$copiled_name.'.css';
+		$compiled_file = $dataDir.$less_cache['compiled_file'];
+		file_put_contents($compiled_file, $compiled);
+		gpFiles::SaveArray($object_file,'less_cache',$less_cache);
+
+
+		return $less_cache['compiled_file'];
+	}
+
+
+	/**
+	 * Handle the processing of multiple less files into css
+	 *
+	 * @return mixed Compiled css string or false
+	 *
+	 */
+	static function LessFiles( &$less_files ){
+		global $dataDir;
+
+
+		//prepare the processor
+		includeFile('thirdparty/x_phpless/Less.php');
+		$parser = new Less_Parser(array('compress'=>true));
+		$parser->SetCacheDir( $dataDir.'/data/_cache' );
+
+		$import_dirs[$dataDir.'/include/thirdparty/Bootstrap/less/'] = common::GetDir('/include/thirdparty/Bootstrap/less/');
+		$parser->SetImportDirs($import_dirs);
+
+
+		// combine files
  		try{
-
-			reset($less_files);
-			$first_file = current($less_files);
-			includeFile('thirdparty/x_phpless/Less.php');
-			$parser = new Less_Parser(array('compress'=>true));
-			$parser->SetCacheDir( $dataDir.'/data/_cache' );
-
-			$import_dirs[$dataDir.'/include/thirdparty/Bootstrap/less/'] = common::GetDir('/include/thirdparty/Bootstrap/less/');
-			$parser->SetImportDirs($import_dirs);
-
-
-			//combine files
-			$import_dirs = array();
 			foreach($less_files as $file){
 
 				// handle relative and absolute paths
@@ -2638,31 +2666,16 @@ class gpOutput{
 		}catch(Exception $e){
 			if( common::LoggedIn() ){
 				msg('LESS Compile Failed: '.$e->getMessage());
-				//echo pre($e->getTrace());
 			}
 			return false;
 		}
 
-		//msg('<textarea>'.htmlspecialchars($compiled).'</textarea>');
+		$less_files = $parser->allParsedFiles();
 
-
-		// Set cache values
-		$less_cache = array();
-		$less_cache['updated'] = time();
-		$less_cache['files'] = $parser->allParsedFiles();
-
-
-		//save the cache
-		$first_file = array_shift($less_files);
-		$copiled_name = 'less_'.str_replace('.less','',basename($first_file)).'_'.common::GenEtag( count($less_cache['files']), $less_cache['updated'], strlen($compiled) );
-		$less_cache['compiled_file'] = '/data/_cache/'.$copiled_name.'.css';
-		$compiled_file = $dataDir.$less_cache['compiled_file'];
-		file_put_contents($compiled_file, $compiled);
-		gpFiles::SaveArray($object_file,'less_cache',$less_cache);
-
-
-		return $less_cache['compiled_file'];
+		return $compiled;
 	}
+
+
 
 
 }

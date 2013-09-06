@@ -566,8 +566,8 @@ class admin_theme_content extends admin_addon_install{
 		//save button
 		echo '</div></td></tr><tr><td><div>';
 
-		echo ' <button class="gpsubmit" name="cmd" type="submit" value="preview_css" />'.$langmessage['preview'].'</button>';
-		echo ' <button class="gpsubmit" name="cmd" type="submit" value="save_css"  />'.$langmessage['save'].'</button>';
+		//echo ' <button name="cmd" type="submit" value="preview_css" class="gpsubmit" data-cmd="gppost" />'.$langmessage['preview'].'</button>';
+		echo ' <button name="cmd" type="submit" value="save_css" class="gpsubmit" />'.$langmessage['save'].'</button>';
 
 
 		echo '</div></td></tr>';
@@ -792,6 +792,9 @@ class admin_theme_content extends admin_addon_install{
     };
 </script>
 */
+
+		//$page->get_theme_css = false;
+
 	}
 
 
@@ -934,11 +937,21 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function PreviewCSS(){
-		msg($_POST);
+		global $page;
+		$page->get_theme_css = false;
 
-		$scripts = array_merge( $scripts, self::LayoutStyleFiles() );
 
+		if( file_exists($page->theme_dir . '/' . $page->theme_color . '/style.css') ){
+			$page->css_user[] = rawurldecode($page->theme_path).'/style.css';
 
+		}else{
+
+			//need to generate a css file from the less components
+			$page->css_user[] = $page->theme_dir . '/' . $page->theme_color . '/style.less';
+
+			$compiled = gpOutput::LessFiles( $less_files );
+
+		}
 	}
 
 

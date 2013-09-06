@@ -121,6 +121,11 @@ $(function(){
 /**
  * Prepare a layout for css editing
  * Watch for changes to the css/less textarea to apply changes to the page as they're made
+ * This is a complicated feature with less.
+ * 		The fastest method would be to use less.js, but we'd have to do something for @import paths for bootstrap components and
+ *
+ * 		Server side handling of the less would make less processing more consistent, but parsing the theme + bootstrap + custom less
+ * 		with each change is expensive and slow and wouldn't be very responsive
  *
  */
 function CssSetup(){

@@ -2568,7 +2568,7 @@ class gpOutput{
  		if( file_exists($list_file) ){
 
 			//get info about the list file
-			$compiled_name = 'less_'.$hash.'_'.common::GenEtag( filemtime($list_file), filesize($list_file) ).'.css';
+			$compiled_name = 'less_'.$hash.'_'.common::GenEtag( filesize($list_file) ).'.css';
 			$compiled_file = '/data/_cache/'.$compiled_name;
 
 
@@ -2576,6 +2576,7 @@ class gpOutput{
 			if( file_exists($dataDir.$compiled_file) ){
 
 				$list = explode("\n",file_get_contents($list_file));
+				$list_updated = filemtime($list_file);
 
 				foreach($list as $file ){
 					if( !file_exists($file) || filemtime($file) > $list_updated ){
@@ -2615,7 +2616,7 @@ class gpOutput{
 
 
 		//save the css
-		$compiled_name = 'less_'.$hash.'_'.common::GenEtag( filemtime($list_file), filesize($list_file) ).'.css';
+		$compiled_name = 'less_'.$hash.'_'.common::GenEtag( filesize($list_file) ).'.css';
 		$compiled_file = '/data/_cache/'.$compiled_name;
 		file_put_contents( $dataDir.$compiled_file, $compiled );
 

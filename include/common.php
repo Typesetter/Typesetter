@@ -2807,7 +2807,7 @@ class common{
 	 *
 	 */
 	static function ArrayHash($array){
-		return md5(serialize($array) );
+		return md5(json_encode($array) );
 	}
 
 	/**

@@ -344,7 +344,6 @@ $langmessage = array(
 'supply_ftp_values_to_continue'=>'Folytatáshoz adja meg a kiszolgáló FTP kapcsolódási adatait.',
 'manual_method'=>'Kézi eljárás',
 'manual_htaccess'=>'Manuálisan is engedélyezheti ezeket a szolgáltatásokat, csak hozzon létre egy .htaccess állományt a kiszolgálón az alábbi tartalommal. ',
-'gp_indexphp_note'=>'Amennyiben engedélyezte az index.php elrejtését és továbbra is megjelenik az index.hpp, akkor a <i>gp_indexphp</i> kulcsnak <i>false</i> értéket kell adni a gpconfig.php állományban.',
 'file_editing'=>'Állomány szerkesztés',
 'All'=>'Mind',
 'Link Errors'=>'Hiányzó hivatkozások',

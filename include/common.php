@@ -58,34 +58,36 @@ if( !function_exists('gpSettingsOverride') ){
 
 //see /var/www/others/mediawiki-1.15.0/languages/Names.php
 $languages = array(
+	'af' => 'Afrikaans',
 	'ar' => 'العربية',			# Arabic
 	'bg' => 'Български',		# Bulgarian
 	'ca' => 'Català',
 	'cs' => 'Česky',			# Czech
 	'da' => 'Dansk',
 	'de' => 'Deutsch',
-	'el' => 'Ελληνικά',		# Greek
+	'el' => 'Ελληνικά',			# Greek
 	'en' => 'English',
 	'es' => 'Español',
 	'fi' => 'Suomi',			# Finnish
 	'fr' => 'Français',
 	'gl' => 'Galego',			# Galician
+	'hr' => 'hrvatski',			# Croatian
 	'hu' => 'Magyar',			# Hungarian
 	'it' => 'Italiano',
 	'ja' => '日本語',			# Japanese
-	'lt' => 'Lietuvių',		# Lithuanian
+	'lt' => 'Lietuvių',			# Lithuanian
 	'nl' => 'Nederlands',		# Dutch
 	'no' => 'Norsk',			# Norwegian
 	'pl' => 'Polski',			# Polish
 	'pt' => 'Português',
 	'pt-br' => 'Português do Brasil',
-	'ru' => 'Русский',		# Russian
+	'ru' => 'Русский',			# Russian
 	'sk' => 'Slovenčina',		# Slovak
-	'sl' => 'Slovenščina',	# Slovenian
-	'sv' => 'Svenska',		# Swedish
+	'sl' => 'Slovenščina',		# Slovenian
+	'sv' => 'Svenska',			# Swedish
 	'tr' => 'Türkçe',			# Turkish
 	'uk' => 'Українська',		# Ukrainian
-	'zh' => '中文',			# (Zhōng Wén) - Chinese
+	'zh' => '中文',				# (Zhōng Wén) - Chinese
 	);
 
 

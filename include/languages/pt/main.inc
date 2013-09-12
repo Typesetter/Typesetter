@@ -344,7 +344,6 @@ $langmessage = array(
 'supply_ftp_values_to_continue'=>'Continuar a introduzir os valores para o seu servidor ftp.',
 'manual_method'=>'Método manual',
 'manual_htaccess'=>'Você pode habilitar manualmente esses recursos, mas tem que criar .htaccess no seu servidor com o seguinte conteúdo.',
-'gp_indexphp_note'=>'If you have enabled index.php hiding and you\'re still seeing index.php, you may need to set <i>gp_indexphp</i> to <i>false</i> in your gpconfig.php file.',
 'file_editing'=>'Editando arquivo',
 'All'=>'todas',
 'Link Errors'=>'Links em falta',

@@ -344,7 +344,6 @@ $langmessage = array(
 'supply_ftp_values_to_continue'=>'Συνεχίστε εισάγοντας τις τιμές FTP για τον server σας.',
 'manual_method'=>'Χειροκίνητη Μέθοδος',
 'manual_htaccess'=>'Μπορείτε να ενεργοποιήσετε χειροκίνητα αυτές τις δυνατότητες, αλλά δημιουργώντας ένα αρχείο .htaccess στον server σας με το ακόλουθο περιεχόμενο.',
-'gp_indexphp_note'=>'Αν έχετε ενεργοποιήσει την απόκρυψη του index.php και ακόμα το βλέπετε, θα πρέπει να ορίσετε το <i>gp_indexphp</i> σε <i>false</i> στο αρχείο gpconfig.php.',
 'file_editing'=>'Επεξεργασία Αρχείου',
 'All'=>'Όλα',
 'Link Errors'=>'Χαμένοι Σύνδεσμοι',

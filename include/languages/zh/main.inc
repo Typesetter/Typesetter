@@ -344,7 +344,6 @@ $langmessage = array(
 'supply_ftp_values_to_continue'=>'請先輸入您伺服器的 ftp 設定值。',
 'manual_method'=>'手動方式',
 'manual_htaccess'=>'您可手動啟用這些功能而不須新建一個內容如下的 .htaccess 檔在您的伺服器上。',
-'gp_indexphp_note'=>'如果您已啟用隱藏 index.php 但仍可訪問 index.php，您或許得在 gpconfig.php 檔裡將 <i>gp_indexphp</i> 設為 <i>false</i>。',
 'file_editing'=>'編輯檔案',
 'All'=>'全選',
 'Link Errors'=>'遺漏的連結',

@@ -344,7 +344,6 @@ $langmessage = array(
 'supply_ftp_values_to_continue'=>'Tęsti įvedant FTP reikšmes Jūsų serveriui.',
 'manual_method'=>'Rankinis metodas',
 'manual_htaccess'=>'Jūs galite rankiniu būdu įjungti šia opcijas sukuriant .htaccess bylą jūsų serveryje su tokiu turiniu.',
-'gp_indexphp_note'=>'Jei įjungėte index.php slėpimą ir vis dar matome index.php, Jums gali tekti nustatyti gpconfig.php byloje <i>gp_indexphp</i> į <i>false</i>.',
 'file_editing'=>'Bylų redagavimas',
 'All'=>'Visi',
 'Link Errors'=>'Trukstamos nuorodos',

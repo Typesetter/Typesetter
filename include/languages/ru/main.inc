@@ -344,7 +344,6 @@ $langmessage = array(
 'supply_ftp_values_to_continue'=>'Введите данные ftp вашего сайта',
 'manual_method'=>'Вручную',
 'manual_htaccess'=>'Вы можете вручную включить эти функции создания .htaccess файла на вашем сервере со следующим содержанием. ',
-'gp_indexphp_note'=>'Если вы выбрали опцию скрытия index.php и по-прежнему видите его, то, возможно, необходимо установить значение <i>gp_indexphp</i> на <i>false</i> в файле gpconfig.php.',
 'file_editing'=>'Редактирование файла',
 'All'=>'Вcе',
 'Link Errors'=>'Ошибочные ссылки',

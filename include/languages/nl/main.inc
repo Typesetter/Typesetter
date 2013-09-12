@@ -344,7 +344,6 @@ $langmessage = array(
 'supply_ftp_values_to_continue'=>'Geef de ftp gegevens van uw server op om door te gaan.',
 'manual_method'=>'Handmatige methode',
 'manual_htaccess'=>'U kunt deze opties handmatig activeren door het creeren van een .htaccess bestand op uw server met de volgende inhoud.',
-'gp_indexphp_note'=>'Als u de optie index.php verstoppen hebt aangezet en je ziet nog steeds index.php, moet u mogelijk <i>gp_indexphp</i> op <i>false</i> zetten in uw gpconfig.php bestand.',
 'file_editing'=>'Bestand bewerken',
 'All'=>'Alle',
 'Link Errors'=>'Ontbrekende links',

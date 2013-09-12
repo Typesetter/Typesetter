@@ -344,7 +344,6 @@ $langmessage = array(
 'supply_ftp_values_to_continue'=>'Pokračujte zadáním FTP údajů pro váš server.',
 'manual_method'=>'Ruční metoda',
 'manual_htaccess'=>'Můžete ručně povolit tyto funkce, kromě vytvoření .htaccess na vašem serveru s tímto obsahem.',
-'gp_indexphp_note'=>'Jestli jsi aktivoval skrývání index.php a ještě pořád spatřuješ index.php, možná potřebuješ nastavit <i>gp_indexphp</i> na <i>false</i> ve tvém gpconfig.php souboru.',
 'file_editing'=>'Editace souboru',
 'All'=>'Vše',
 'Link Errors'=>'Chybějící odkazy',

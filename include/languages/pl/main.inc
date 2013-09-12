@@ -345,7 +345,6 @@ $langmessage = array(
 'supply_ftp_values_to_continue'=>'Kontynuuj wpisując parametry ftp twojego serwera',
 'manual_method'=>'Metoda ręczna',
 'manual_htaccess'=>'Możesz ręcznie uaktywnić te funkcje tworząc na swoim serwerze plik .htacces o następującej treści.',
-'gp_indexphp_note'=>'If you have enabled index.php hiding and you\'re still seeing index.php, you may need to set <i>gp_indexphp</i> to <i>false</i> in your gpconfig.php file.',
 'file_editing'=>'Edycja pliku',
 'All'=>'Wszystkie',
 'Link Errors'=>'Zagubiony odnośnik',

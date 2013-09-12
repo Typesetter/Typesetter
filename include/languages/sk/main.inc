@@ -344,7 +344,6 @@ $langmessage = array(
 'supply_ftp_values_to_continue'=>'Pokračuj vložením ftp hodnôt pre tvoj server.',
 'manual_method'=>'Ručná metóda',
 'manual_htaccess'=>'Môžeš manuálne povoliť tieto vlastnosti, okrem vytvorenia .htaccess súboru na tvojom serveri s nasledujúcim obsahom.',
-'gp_indexphp_note'=>'Ak si povolil skrývanie súboru index.php ale stále je viditeľný, možno že potrebuješ nastaviť <i>gp_indexphp</i> na <i>false</i> v tvojom gpconfig.php súbore.',
 'file_editing'=>'Editovanie súboru',
 'All'=>'všetky',
 'Link Errors'=>'Chýbajúce linky',

@@ -344,7 +344,6 @@ $langmessage = array(
 'supply_ftp_values_to_continue'=>'Fortsæt ved at indtaste ftp værdier for din server.',
 'manual_method'=>'Manuel metode',
 'manual_htaccess'=>'Du kan manuelt aktivere disse funktioner, ved at skabe en. htaccess fil på din server med følgende indhold.',
-'gp_indexphp_note'=>'Hvis du har aktiveret index.php skjul og du stadig får index.php, skal du muligvis indstille <i>gp_indexphp</i> til <i>false</i> i din gpconfig.php fil.',
 'file_editing'=>'Fil Redigering',
 'All'=>'alle',
 'Link Errors'=>'Manglende Links',

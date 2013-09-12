@@ -530,14 +530,10 @@ class admin_theme_content extends admin_addon_install{
 		echo '</div>';
 		echo '</div></div>';
 
-		//style options
-		$this->StyleOptions($layout, $layout_info);
-
 
 		//css textarea
 		echo '</div>';
 		echo '<div class="separator"></div>';
-
 		echo '<div>';
 
 
@@ -554,8 +550,10 @@ class admin_theme_content extends admin_addon_install{
 		*/
 
 
-		echo '</div>';
+		//style options
+		$this->StyleOptions($layout, $layout_info);
 
+		echo '</div>';
 		echo '</td></tr><tr><td class="full_height"><div class="full_height">';
 
 		$css = $this->layoutCSS($this->curr_layout);
@@ -686,36 +684,19 @@ class admin_theme_content extends admin_addon_install{
 			return;
 		}
 
-		if( $this->layout_request ){
-			echo '<div><div class="dd_menu">';
-			echo '<a data-cmd="dd_menu">'.$langmessage['style'].'</a>';
-			echo '<div class="dd_list">';
-		}else{
-			echo '<li class="expand_child_click">';
-			echo '<a>'.$langmessage['style'].'</a>';
-		}
-
-		echo '<ul>';
+		echo $langmessage['style'];
+		echo '<select name="color">';
 		foreach($theme_colors as $color){
 			$color_label = str_replace('_',' ',$color);
 			if( $color == $layout_info['theme_color'] ){
-				echo '<li class="selected">';
-				echo '<b>'.$color_label.'</b>';
+				echo '<option value="'.htmlspecialchars($color).'" selected="selected">';
 			}else{
-				echo '<li>';
-				echo $this->LayoutLink( $layout, $color_label, 'cmd=change_layout_color&color='.$color, array('data-cmd'=>'cnreq') );
+				echo '<option value="'.htmlspecialchars($color).'">';
 			}
-			echo '</li>';
+			echo htmlspecialchars($color_label);
+			echo '</option>';
 		}
-		echo '</ul>';
-
-
-		if( $this->layout_request ){
-			echo '</div>';
-			echo '</div></div>';
-		}else{
-			echo '</li>';
-		}
+		echo '</select>';
 	}
 
 
@@ -918,14 +899,25 @@ class admin_theme_content extends admin_addon_install{
 	function PreviewCSS(){
 		global $page, $langmessage;
 
-		$less = array();
+		$layout_info = common::LayoutInfo($this->curr_layout,false);
+		$theme_colors = $this->GetThemeColors($layout_info['dir']);
 
+		// which color option
+		$color =& $_REQUEST['color'];
+		if( isset($theme_colors[$color]) ){
+			$page->theme_color = $color;
+			$page->theme_rel = dirname($page->theme_rel).'/'.$color;
+			$page->theme_path = dirname($page->theme_path).'/'.$color;
+		}
+
+
+		// which css files
+		$less = array();
 		if( file_exists($page->theme_dir . '/' . $page->theme_color . '/style.css') ){
 			$page->css_user[] = rawurldecode($page->theme_path).'/style.css';
 		}else{
 			$less[] = $page->theme_dir . '/' . $page->theme_color . '/style.less';
 		}
-
 		$less[] = $_REQUEST['css']. "\n"; //make sure gpOutput::ParseLess sees this as code and not a filename
 
 		$compiled = gpOutput::ParseLess( $less );
@@ -2130,9 +2122,6 @@ class admin_theme_content extends admin_addon_install{
 		$this->LayoutOptions($layout,$layout_info);
 		echo '</ul>';
 
-
-		//color variations
-		$this->StyleOptions($layout, $layout_info);
 
 
 		//css options

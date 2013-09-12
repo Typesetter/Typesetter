@@ -53,6 +53,7 @@ body .messages li{
 	line-height:normal;
 	line-height: 18px;
 	text-decoration:none;
+	float:none;
 	}
 body .messages li li{
 	list-style:disc;

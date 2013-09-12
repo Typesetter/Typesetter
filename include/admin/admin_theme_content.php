@@ -248,11 +248,6 @@ class admin_theme_content extends admin_addon_install{
 				$this->PreviewCSS();
 			break;
 
-
-			case 'change_layout_color':
-				$this->ChangeLayoutColor();
-			break;
-
 			case 'restore':
 				$this->Restore();
 			break;
@@ -860,35 +855,48 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function SaveCSS(){
-		global $langmessage, $dataDir, $gpLayouts;
+		global $langmessage, $dataDir, $gpLayouts, $page;
 
+		$layout_info = common::LayoutInfo($this->curr_layout,false);
+		$theme_colors = $this->GetThemeColors($layout_info['dir']);
 		$path = $dataDir.'/data/_layouts/'.$this->curr_layout.'/custom.css';
 		$css =& $_POST['css'];
+		$color =& $_REQUEST['color'];
 
 
-		//delete if empty
-		if( empty($css) ){
-			unset($gpLayouts[$this->curr_layout]['css']);
-			if( !admin_tools::SavePagesPHP() ){
-				message($langmessage['OOPS'].' (Data not saved)');
-				return false;
-			}
-			$this->RemoveCSS($this->curr_layout);
+		//check theme color
+		if( !isset($theme_colors[$color]) ){
+			message($langmessage['OOPS'].' (Invalid Color)');
+			return false;
 		}
 
+		$old_info = $new_info = $gpLayouts[$this->curr_layout];
+		$theme_name = dirname($new_info['theme']);
+		$new_info['theme'] = $theme_name.'/'.$color;
+		$gpLayouts[$this->curr_layout] = $new_info;
+
+
+		//delete css file if empty
+		if( empty($css) ){
+			unset($gpLayouts[$this->curr_layout]['css']);
+			$this->RemoveCSS($this->curr_layout);
 
 		//save if not empty
-		if( !gpFiles::Save($path,$css) ){
+		}elseif( !gpFiles::Save($path,$css) ){
 			message($langmessage['OOPS'].' (CSS not saved)');
 			return false;
 		}
 
 		$gpLayouts[$this->curr_layout]['css'] = true;
 		if( !admin_tools::SavePagesPHP() ){
+			$gpLayouts[$this->curr_layout] = $old_info;
 			message($langmessage['OOPS'].' (Data not saved)');
 			return false;
 		}
+
 		message($langmessage['SAVED']);
+		$page->SetTheme($this->curr_layout);
+
 	}
 
 
@@ -995,39 +1003,6 @@ class admin_theme_content extends admin_addon_install{
 		$content = $this->CSSPreferenceForm($this->curr_layout,$new_info);
 		$page->ajaxReplace = array();
 		$page->ajaxReplace[] = array('replace','#layout_css_ul_'.$this->curr_layout,$content);
-	}
-
-	/**
-	 * Change the color variant for $layout
-	 *
-	 */
-	function ChangeLayoutColor(){
-		global $langmessage,$gpLayouts,$page;
-
-		$color =& $_REQUEST['color'];
-		$layout_info = common::LayoutInfo($this->curr_layout,false);
-		$theme_colors = $this->GetThemeColors($layout_info['dir']);
-
-		if( !isset($theme_colors[$color]) ){
-			message($langmessage['OOPS'].' (Invalid Color)');
-			return false;
-		}
-
-		$old_info = $new_info = $gpLayouts[$this->curr_layout];
-		$theme_name = dirname($new_info['theme']);
-		$new_info['theme'] = $theme_name.'/'.$color;
-		$gpLayouts[$this->curr_layout] = $new_info;
-
-		if( !admin_tools::SavePagesPHP() ){
-			$gpLayouts[$this->curr_layout] = $old_info;
-			message($langmessage['OOPS'].' (Not Saved)');
-			return;
-		}
-
-		if( $this->layout_request || $page->gpLayout == $this->curr_layout ){
-			$page->SetTheme($this->curr_layout);
-		}
-
 	}
 
 

@@ -508,12 +508,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '<div class="layout_select">';
 		$this->LayoutSelect($layout,$layout_info);
 		echo '</div>';
-		echo '</div>';
 
-		echo '<div class="separator"></div>';
-
-
-		echo '<div>';
 
 		//options
 		echo '<div><div class="dd_menu">';

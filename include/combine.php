@@ -204,8 +204,11 @@ class gp_combine{
 				'printshiv' => array(	'file' => '/include/thirdparty/js/shiv/html5shiv-printshiv.js' ),
 
 
+				//respond.js
+				'respondjs' => array(	'file' => '/include/thirdparty/js/respond.min.js' ),
 
-				//bootstrap
+
+				//bootstrap 2.3.2 (deprecated)
 				'bootstrap-css'				=>	array(
 												'file' => '/include/thirdparty/Bootstrap/css/bootstrap.min.css'),
 
@@ -284,6 +287,18 @@ class gp_combine{
 												'package' => 'bootstrap',
 												'requires'=> array('bootstrap-responsive-css','bootstrap-js')
 												 ),
+
+
+				// Bootstrap3
+				'bootstrap3-js'				=> array(
+												'file' => '/include/thirdparty/Bootstrap3/js/bootstrap.min.js',
+												'package' => 'bootstrap3',
+
+												//'exclude'=> array('bootstrap3-alert','bootstrap3-button','bootstrap3-carousel','bootstrap3-collapse','bootstrap3-dropdown','bootstrap3-modal',
+												//	'bootstrap3-popover','bootstrap3-scrollspy','bootstrap3-tab','bootstrap3-tooltip','bootstrap3-transition','bootstrap3-typeahead')
+												),
+
+
 
 		);
 

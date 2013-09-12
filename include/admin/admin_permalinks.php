@@ -367,7 +367,7 @@ class admin_permalinks{
 	# Don\'t rewrite for static files
 	RewriteCond %{REQUEST_FILENAME} -f [OR]
 	RewriteCond %{REQUEST_FILENAME} -d [OR]
-	RewriteCond %{REQUEST_URI} \.(js|css|jpe?g|jpe|gif|png)$ [NC]
+	RewriteCond %{REQUEST_URI} \.(js|css|jpe?g|jpe|gif|png|ico)$ [NC]
 	RewriteRule .* - [L]
 
 	# Send all other requests to index.php

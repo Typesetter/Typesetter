@@ -162,7 +162,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 
 		//Entries Per Page
 		echo '<tr><td>Entries Per Page</td><td>';
-		echo '<input type="text" name="per_page" size="20" value="'.htmlspecialchars($array['per_page']).'" class="gpinput" />';
+		echo '<input type="text" name="per_page" value="'.htmlspecialchars($array['per_page']).'" class="gpinput" />';
 		echo '</td><td>';
 		echo $defaults['per_page'];
 		echo '</td></tr>';
@@ -172,7 +172,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo '<tr><td>';
 		echo 'Entries Abbreviation Length';
 		echo '</td><td>';
-		echo '<input type="text" name="post_abbrev" size="20" value="'.htmlspecialchars($array['post_abbrev']).'" class="gpinput" />';
+		echo '<input type="text" name="post_abbrev" value="'.htmlspecialchars($array['post_abbrev']).'" class="gpinput" />';
 		echo '</td><td>';
 		echo $defaults['post_abbrev'];
 		echo '</td></tr>';
@@ -182,7 +182,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo '<tr><td>';
 		echo 'Entries For Gadget';
 		echo '</td><td>';
-		echo '<input type="text" name="gadget_entries" size="20" value="'.htmlspecialchars($array['gadget_entries']).'" class="gpinput" />';
+		echo '<input type="text" name="gadget_entries" value="'.htmlspecialchars($array['gadget_entries']).'" class="gpinput" />';
 		echo '</td><td>';
 		echo $defaults['gadget_entries'];
 		echo '</td></tr>';
@@ -192,7 +192,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo '<tr><td>';
 		echo 'Gadget Abbreviation Length';
 		echo '</td><td>';
-		echo '<input type="text" name="gadget_abbrev" size="20" value="'.htmlspecialchars($array['gadget_abbrev']).'" class="gpinput" />';
+		echo '<input type="text" name="gadget_abbrev" value="'.htmlspecialchars($array['gadget_abbrev']).'" class="gpinput" />';
 		echo '</td><td>';
 		echo $defaults['gadget_abbrev'];
 		echo '</td></tr>';
@@ -205,7 +205,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo ' (<a href="http://www.php.net/manual/en/function.strftime.php" target="_blank">About</a>)';
 		echo '</td><td>';
 		//echo '<input type="text" name="date_format" size="20" value="'.htmlspecialchars($array['date_format']).'" class="gpinput" />';
-		echo '<input type="text" name="strftime_format" size="20" value="'.htmlspecialchars($array['strftime_format']).'" class="gpinput" />';
+		echo '<input type="text" name="strftime_format" value="'.htmlspecialchars($array['strftime_format']).'" class="gpinput" />';
 		echo '</td><td>';
 		echo $defaults['strftime_format'];
 		echo '</td></tr>';
@@ -215,7 +215,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		echo '<tr><td>';
 		echo 'Entries For Feed';
 		echo '</td><td>';
-		echo '<input type="text" name="feed_entries" size="20" value="'.htmlspecialchars($array['feed_entries']).'" class="gpinput" />';
+		echo '<input type="text" name="feed_entries" value="'.htmlspecialchars($array['feed_entries']).'" class="gpinput" />';
 		echo '</td><td>';
 		echo $defaults['feed_entries'];
 		echo '</td></tr>';

@@ -1123,9 +1123,7 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '<div>';
 		echo common::Link('Admin_Theme_Content/Available','&#171; '.$langmessage['available_themes']);
-		echo '<div class="add_layout">';
-		echo common::Link('Admin_Theme_Content',$langmessage['use_this_theme'],'cmd=newlayout&theme='.rawurlencode($theme),'data-cmd="gpabox"');
-		echo '</div>';
+		echo common::Link('Admin_Theme_Content',$langmessage['use_this_theme'],'cmd=newlayout&theme='.rawurlencode($theme),'data-cmd="gpabox" class="add_layout"');
 		echo '</div>';
 
 
@@ -1849,15 +1847,16 @@ class admin_theme_content extends admin_addon_install{
 		$this->AvailableList();
 	}
 
+
 	function AvailableList( $show_options = true ){
 		global $langmessage, $config;
 
 		//search settings
 		$this->searchPerPage = 10;
 		$this->searchOrderOptions = array();
+		$this->searchOrderOptions['modified']		= $langmessage['Recently Updated'];
 		$this->searchOrderOptions['rating_score']	= $langmessage['Highest Rated'];
 		$this->searchOrderOptions['downloads']		= $langmessage['Most Downloaded'];
-		$this->searchOrderOptions['modified']		= $langmessage['Recently Updated'];
 
 		$this->SearchOrder();
 
@@ -1885,14 +1884,20 @@ class admin_theme_content extends admin_addon_install{
 				$info['rt'] = 6; //give local themes a high rating to make them appear first, rating won't actually display
 			}
 
-			$info += array('dn'=>0,'rt'=>0,'tm'=>filemtime($info['full_dir'].'/template.php') );
+			$info += array( 'dn'=>0, 'rt'=>0 );
+
+			//modified time
+			if( !isset($info['tm']) ){
+				$info['tm'] = self::ModifiedTime( $info['full_dir'] );
+			}
 
 
 			$this->possible[$theme_id] = $info;
 		}
 
 
-		// sort
+		// sort by
+		uasort( $this->possible, array('admin_theme_content','SortUpdated') );
 		switch($this->searchOrder){
 
 			case 'downloads':
@@ -1900,6 +1905,7 @@ class admin_theme_content extends admin_addon_install{
 			break;
 
 			case 'modified':
+				uasort( $this->possible, array('admin_theme_content','SortRating') );
 				uasort( $this->possible, array('admin_theme_content','SortUpdated') );
 			break;
 
@@ -2045,7 +2051,26 @@ class admin_theme_content extends admin_addon_install{
 			$this->SearchNavLinks();
 		}
 
+	}
 
+	static function ModifiedTime($directory){
+
+		$files = scandir( $directory );
+		$time = filemtime( $directory );
+		foreach($files as $file){
+			if( $file == '..' || $file == '.' ){
+				continue;
+			}
+
+			$full_path = $directory.'/'.$file;
+
+			if( is_dir($full_path) ){
+				$time = max( $time, self::ModifiedTime( $full_path ) );
+			}else{
+				$time = max( $time, filemtime( $full_path ) );
+			}
+		}
+		return $time;
 	}
 
 	static function SortDownloads($a,$b){

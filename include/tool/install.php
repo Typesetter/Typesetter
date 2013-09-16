@@ -316,6 +316,7 @@ class Install_Tools{
 		<p>Community driven development</p>
 		<p><a href="http://gpeasy.com/Our_CMS" title="Features of Our CMS">And More...</a></p>
 		<p>If you like gpEasy, then you might also like
+		<a href="http://lessphp.gpeasy.com" title="A Less to CSS compiler based on the official lesscss project">Less.php</a>,
 		<a href="http://gpfinder.org" title="gpFinder is a free and open-source AJAX file manager">gpFinder.org</a>,
 		<a href="http://phpeasymin.com" title="Minimize JavaScript and CSS files easily">phpEasyMin.com</a>,
 		<a href="http://whatcms.org" title="What CMS? Find out what CMS a site is using">WhatCMS.org</a> and

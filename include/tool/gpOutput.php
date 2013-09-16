@@ -2635,7 +2635,7 @@ class gpOutput{
 
 
 		//prepare the processor
-		includeFile('thirdparty/x_phpless/Less.php');
+		includeFile('thirdparty/less.php/Less.php');
 		$parser = new Less_Parser(); //array('compress'=>true)
 		$parser->SetCacheDir( $dataDir.'/data/_cache' );
 

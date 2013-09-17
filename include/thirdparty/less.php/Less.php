@@ -3393,8 +3393,15 @@ class Less_Tree_Selector {
 	public function match($other) {
 		$len   = count($this->elements);
 
-		$offset = (count($other->elements) && $other->elements[0]->value === "&") ? 1 : 0;
-		$olen = count($other->elements) - $offset;
+		$olen = $offset = 0;
+		if( $other && count($other->elements) ){
+
+			if( $other->elements[0]->value === "&" ){
+				$offset = 1;
+			}
+			$olen = count($other->elements) - $offset;
+		}
+
 		$max = min($len, $olen);
 
 		if( !$max ){
@@ -3409,6 +3416,10 @@ class Less_Tree_Selector {
 
 		return true;
 	}
+
+
+
+
 
 	public function compile($env) {
 		$extendList = array();
@@ -3792,8 +3803,8 @@ class Less_Parser{
     /**
      *
      */
-    const version = '1.4.2';
-    const cache_version = '142';
+    const version = '1.4.2b2';
+    const cache_version = '142b2';
     const less_version = '1.4.2';
 
     /**
@@ -4246,9 +4257,12 @@ class Less_Parser{
             return;
         }
 
+
 		if ($this->PeekChar('/', 1)) {
+
 			return new Less_Tree_Comment($this->MatchReg('/^\/\/.*/'), true);
-		}elseif( $comment = $this->MatchReg('/^\/\*(?:[^*]|\*+[^\/*])*\*+\/\n?/')) {
+		//}elseif( $comment = $this->MatchReg('/^\/\*(?:[^*]|\*+[^\/*])*\*+\/\n?/')) {
+		}elseif( $comment = $this->MatchReg('/^\/\*.*?\*+\/\n?/s') ) { //not the same as less.js to prevent fatal errors
 			return new Less_Tree_Comment($comment, false);
 		}
     }

@@ -397,6 +397,7 @@ class gp_combine{
 		}
 
 
+		includeFile('admin/admin_tools.php');
 		admin_tools::CleanCache();
 		return $cache_relative;
 	}

@@ -331,6 +331,7 @@ class admin_theme_content extends admin_addon_install{
 			 */
 			case 'inlineedit':
 				$this->InlineEdit();
+
 			return;
 			case 'gallery_folder':
 			case 'gallery_images':

@@ -146,7 +146,7 @@ class admin_trash{
 			$trash_titles = admin_trash::TrashFiles();
 		}
 
-		if( !isset($trash_titles[$title]) ){
+		if( !array_key_exists($title,$trash_titles) ){
 			return false;
 		}
 
@@ -383,7 +383,9 @@ class admin_trash{
 
 		$types = array();
 		$file_sections = array();
-		require($file);
+		if( file_exists($file) ){
+			include($file);
+		}
 		foreach($file_sections as $section){
 			$types[] = $section['type'];
 		}

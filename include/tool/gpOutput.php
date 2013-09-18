@@ -2612,7 +2612,7 @@ class gpOutput{
 
 		//save the cache
 		$cache = implode("\n",$less_files);
-		file_put_contents( $list_file, $cache );
+		gpFiles::Save( $list_file, $cache );
 
 
 		//save the css
@@ -2637,7 +2637,7 @@ class gpOutput{
 		//prepare the processor
 		includeFile('thirdparty/less.php/Less.php');
 		$parser = new Less_Parser(); //array('compress'=>true)
-		//$parser->SetCacheDir( $dataDir.'/data/_cache' );
+		$parser->SetCacheDir( $dataDir.'/data/_cache' );
 
 		$import_dirs[$dataDir] = common::GetDir('/');
 		$parser->SetImportDirs($import_dirs);

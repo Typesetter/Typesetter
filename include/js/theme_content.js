@@ -173,6 +173,16 @@ function LayoutSetup(){
 	}
 
 
+	// adjust link targets to point at parent unless they're layout links
+	$('a').each(function(){
+		if( this.href.indexOf('Admin_Theme_Content') > 0 ){
+			return;
+		}
+		this.target = '_parent';
+	});
+
+
+
 	//disable editable areas, there could be conflicts with the layout toolbar and content toolbars
 	$('a.ExtraEditLink').detach();
 	$('.editable_area').removeClass('editable_area');

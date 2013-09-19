@@ -216,8 +216,14 @@ class special_gpsearch{
 
 	function SearchPattern(){
 		$query = strtolower($_REQUEST['q']);
-		preg_match_all("/\S+/", $query, $words);
-		$words = array_unique($words[0]);
+		// Search for the exact query when it is doubled quoted
+		if (substr($query, 0, 1) == '"' && substr($query, -1) == '"') {
+			$query = substr($query, 1, -1);
+			$words = array($query);
+		} else {
+			preg_match_all("/\S+/", $query, $words);
+			$words = array_unique($words[0]);
+		}
 
 		$sub_pattern1 = $sub_pattern2 = array();
 		foreach($words as $word){

@@ -61,7 +61,7 @@ $(function(){
 		var source = data();
 
 		// create autocomplete
-		$search.not(':ui-autocomplete')
+		var $autocomplete = $search.not(':ui-autocomplete')
 			.autocomplete({
 				source: source,
 				delay: 100,
@@ -93,13 +93,21 @@ $(function(){
 					$hidden.val('');
 					$parent.css({'border-color':'#CC0000'});
 				}
-			})
-			.data( 'autocomplete' )._renderItem = function( ul, item ) {
-				return $( '<li></li>' )
-					.data( 'item.autocomplete', item )
-					.append( '<a>' + item[0] + '<span>'+item[1]+'</span></a>' )
-					.appendTo( ul );
-			};
+			});
+
+
+		// support jqueryui changes
+		var data_key = 'autocomplete';
+		if( $autocomplete.data('ui-autocomplete') ){
+			data_key = 'ui-autocomplete';
+		}
+		$autocomplete.data( data_key )._renderItem = function( ul, item ) {
+			return $( '<li></li>' )
+				.data( 'item.autocomplete', item )
+				.append( '<a>' + item[0] + '<span>'+item[1]+'</span></a>' )
+				.appendTo( ul );
+		};
+
 
 		function data(){
 			var str = $search

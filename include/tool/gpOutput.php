@@ -2558,6 +2558,48 @@ class gpOutput{
 		global $dataDir;
 
 
+		/**
+		 * Using LessCache
+		 *
+		$less_files = (array)$less_files;
+		$to_parse = array();
+		foreach( $less_files as $file_or_less ){
+
+			if( strpos($file_or_less,"\n") !== false ){
+				$to_parse[] = $file_or_less;
+				continue;
+			}
+
+			// handle relative and absolute paths
+			if( strpos($file_or_less,$dataDir) === false ){
+				$relative = $file_or_less;
+				$file_or_less = $dataDir.'/'.ltrim($file_or_less,'/');
+			}else{
+				$relative = substr($file_or_less,strlen($dataDir));
+			}
+			$to_parse[ $file_or_less ] = common::GetDir(dirname($relative));
+		}
+
+
+		// prepare Less_Cache class
+		includeFile('thirdparty/less.php/LessCache.php');
+		Less_Cache::$cache_dir = $dataDir.'/data/_cache';
+		Less_Cache::$import_dirs[$dataDir] = common::GetDir('/');
+
+		$css_file = Less_Cache::Cache( $to_parse );
+
+		//if we don't have the name of a css file, get the errro
+		if( !$css_file ){
+			if( common::LoggedIn() ){
+				msg('LESS Compile Failed: '.Less_Cache::$error->getMessage());
+			}
+			return false;
+		}
+
+		return '/data/_cache/'.$css_file;
+		*/
+
+
 		// generate name for compiled css file
 		$hash = common::ArrayHash($less_files);
  		$list_file = $dataDir.'/data/_cache/less_'.$hash.'.list';
@@ -2601,14 +2643,10 @@ class gpOutput{
 
 		$less_files = (array)$less_files;
 		$less_files = array_filter($less_files);
-		$first_file = reset($less_files);
 		$compiled = gpOutput::ParseLess( $less_files );
 		if( !$compiled ){
 			return false;
 		}
-
-		//msg('<textarea>'.htmlspecialchars($compiled).'</textarea>');
-
 
 		//save the cache
 		$cache = implode("\n",$less_files);

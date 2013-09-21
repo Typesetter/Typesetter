@@ -922,7 +922,7 @@ class admin_theme_content extends admin_addon_install{
 		}else{
 			$less[] = $page->theme_dir . '/' . $page->theme_color . '/style.less';
 		}
-		$less[] = $_REQUEST['css']. "\n"; //make sure gpOutput::ParseLess sees this as code and not a filename
+		$less[] = $_REQUEST['css']. "\n"; //make sure this is seen as code and not a filename
 
 		$compiled = gpOutput::ParseLess( $less );
 		if( !$compiled ){

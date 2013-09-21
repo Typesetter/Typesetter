@@ -92,9 +92,11 @@ var CKBUILDER_CONFIG = {
 		'indentlist' : 1
 	},
 	languages : {
+		'af' : 1,
 		'ar' : 1,
 		'bg' : 1,
 		'ca' : 1,
+		'hr' : 1,
 		'cs' : 1,
 		'da' : 1,
 		'de' : 1,

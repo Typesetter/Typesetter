@@ -121,9 +121,6 @@ $langmessage = array(
 'Links'=>'Σύνδεσμοι',
 'Link_Menus'=>'Σύνδεσμοι Μενού',
 'Add New Area'=>'Προσθήκη νέας Περιοχής',
-Commit summary: Extended description: (optional)
-christosvas21 christosvas21@gmail.com
-
 'Custom Menu'=>'Προσαρμογή Μενού',
 'Add New Menu'=>'Προσθήκη νέου Μενού',
 'Show Titles...'=>'Εμφάνιση Τίτλων...',

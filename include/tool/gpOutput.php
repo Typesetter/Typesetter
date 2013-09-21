@@ -2045,7 +2045,7 @@ class gpOutput{
 				}
 			}
 			if( $has_jquery_ui ){
-				echo "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js\"></script>";
+				echo "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js\"></script>";
 			}
 		}
 
@@ -2074,7 +2074,7 @@ class gpOutput{
 
 		//remote jquery ui
 		if( $config['jquery'] == 'jquery_ui' && isset($scripts['ui-theme']) ){
-			echo "\n<link rel=\"stylesheet\" type=\"text/css\" href=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css\" />";
+			echo "\n<link rel=\"stylesheet\" type=\"text/css\" href=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css\" />";
 			unset($scripts['ui-theme']);
 		}
 

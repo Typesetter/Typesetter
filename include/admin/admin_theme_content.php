@@ -58,6 +58,7 @@ class admin_theme_content extends admin_addon_install{
 	function admin_theme_content(){
 		global $page,$config,$gpLayouts, $langmessage;
 
+
 		$page->head_js[] = '/include/js/theme_content.js';
 		$page->head_js[] = '/include/js/dragdrop.js';
 		$page->css_admin[] = '/include/css/theme_content.less';
@@ -498,7 +499,7 @@ class admin_theme_content extends admin_addon_install{
 
 
 		echo '<div id="theme_editor">';
-		echo '<form action="'.common::GetUrl('Admin_Theme_Content/'.$this->curr_layout).'" method="post" class="full_height" target="gp_layout_iframe">';
+		echo '<form action="'.common::GetUrl('Admin_Theme_Content/'.$this->curr_layout,'cmd=in_iframe').'" method="post" class="full_height" target="gp_layout_iframe">';
 		echo '<table border="0">';
 		echo '<tr><td>';
 

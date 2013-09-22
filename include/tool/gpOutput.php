@@ -2631,9 +2631,13 @@ class gpOutput{
 				// return relative path if we don't need to regenerate
 				if( $compiled_file ){
 
-					//touch the files to extend the cache
-					touch($list_file);
-					touch($dataDir.$compiled_file);
+
+					// touch the files to extend the cache
+					// don't do too often
+					if( (time() - filemtime($list_file)) > 604800 ){
+						touch($list_file);
+						touch($dataDir.$compiled_file);
+					}
 
 					return $compiled_file;
 				}

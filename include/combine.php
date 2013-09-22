@@ -371,7 +371,9 @@ class gp_combine{
 		if( file_exists($cache_file) ){
 
 			// change modified time to extend cache
-			touch($cache_file);
+			if( (time() - filemtime($cache_file)) > 604800 ){
+				touch($cache_file);
+			}
 
 			return $cache_relative;
 		}
@@ -419,6 +421,7 @@ class gp_combine{
 
 		includeFile('admin/admin_tools.php');
 		admin_tools::CleanCache();
+
 		return $cache_relative;
 	}
 
@@ -509,7 +512,9 @@ class gp_combine{
 
 	static function FileStat_Static( $file_path, &$modified, &$content_length ){
 		$content_length += @filesize($file_path);
-		$modified = max( $modified, @filemtime($file_path) );
+		if( strpos($file_path,'/data/_cache/') === false ){
+			$modified = max( $modified, @filemtime($file_path) );
+		}
 		return $modified;
 	}
 

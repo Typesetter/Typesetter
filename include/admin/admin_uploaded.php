@@ -1013,7 +1013,7 @@ class admin_uploaded{
 				continue;
 			}
 			foreach($list as $key => $info){
-				if( !isset($info['realpath']) ){
+				if( isset($info['hash']) && !isset($info['realpath']) ){
 					$array[$type][$key]['realpath'] = $finder->realpath($info['hash']);
 				}
 			}

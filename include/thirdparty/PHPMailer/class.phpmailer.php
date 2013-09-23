@@ -410,7 +410,7 @@ class PHPMailer
      *   string  $subject       the subject
      *   string  $body          the email body
      *   string  $from          email address of sender
-     * 
+     *
      * @type string
      */
     public $action_function = '';
@@ -1138,6 +1138,8 @@ class PHPMailer
      */
     public function getSMTPInstance()
     {
+		require_once( dirname(__FILE__).DIRECTORY_SEPARATOR.'class.smtp.php' );
+
         if (!is_object($this->smtp)) {
             $this->smtp = new SMTP;
         }
@@ -1255,6 +1257,8 @@ class PHPMailer
                 $host = $hostinfo[1];
                 $port = $hostinfo[2];
             }
+
+
             if ($this->smtp->connect(($ssl ? 'ssl://' : '') . $host, $port, $this->Timeout, $options)) {
                 try {
                     if ($this->Helo) {
@@ -1264,7 +1268,7 @@ class PHPMailer
                     }
                     $this->smtp->hello($hello);
 
-                    if ($tls) {
+                    if ($host_tls) {
                         if (!$this->smtp->startTLS()) {
                             throw new phpmailerException($this->lang('connect_host'));
                         }
@@ -1289,7 +1293,7 @@ class PHPMailer
                     //We must have connected, but then failed TLS or Auth, so close connection nicely
                     $this->smtp->quit();
                 }
-            }
+			}
         }
         //If we get here, all connection attempts have failed, so close connection hard
         $this->smtp->close();

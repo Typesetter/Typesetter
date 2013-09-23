@@ -384,7 +384,7 @@ class admin_theme_content extends admin_addon_install{
 			case 'rm_area':
 			case 'drag_area':
 			case 'in_iframe':
-				$this->ShowInIframe();
+				$this->ShowInIframe($cmd);
 			return;
 		}
 
@@ -732,7 +732,7 @@ class admin_theme_content extends admin_addon_install{
 	 * Prepare the page for css editing
 	 *
 	 */
-	function ShowInIframe(){
+	function ShowInIframe($cmd){
 		global $page,$dirPrefix;
 
 		$page->show_admin_content = false;
@@ -744,9 +744,11 @@ class admin_theme_content extends admin_addon_install{
 		//<style type="text/css" rel="stylesheet/less">'.$less_variables.'</style>
 
 		// <head>
-		$css = $this->layoutCSS($this->curr_layout);
-		$page->head .= '<style id="gp_layout_style" type="text/css" rel="stylesheet/less">'.$css.'</style>';
-		$page->head .= '<script type="text/javascript">var gpLayouts=true;</script>';
+		if( $cmd != 'preview_css' ){
+			$css = $this->layoutCSS($this->curr_layout);
+			$page->head .= '<style id="gp_layout_style" type="text/css" rel="stylesheet/less">'.$css.'</style>';
+			$page->head .= '<script type="text/javascript">var gpLayouts=true;</script>';
+		}
 	}
 
 

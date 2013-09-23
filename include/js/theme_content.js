@@ -164,14 +164,11 @@ $(function(){
  */
 function LayoutSetup(){
 
-	if( $('#theme_toolbar').length ){
-		$('body').addClass('edit_layout');
-	}
-
 	if( typeof(gpLayouts) == 'undefined' ){
 		return;
 	}
 
+	$('body').addClass('edit_layout');
 
 	// adjust link targets to point at parent unless they're layout links
 	$('a').each(function(){

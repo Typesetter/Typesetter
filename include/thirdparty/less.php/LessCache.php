@@ -8,9 +8,10 @@ class Less_Cache{
 	public static $error;
 
     const cache_version = '1422';
+	protected static $clean_cache = true;
 
 
-	function Cache( $less_files, $parser_options = array() ){
+	function Get( $less_files, $parser_options = array() ){
 
 		//check $cache_dir
 		if( empty(self::$cache_dir) ){
@@ -19,7 +20,7 @@ class Less_Cache{
 		}
 
 		self::$cache_dir = str_replace('\\','/',self::$cache_dir);
-		self::$cache_dir = rtrim(self::$cache_dir,'/');
+		self::$cache_dir = rtrim(self::$cache_dir,'/').'/';
 
 		if( !is_dir(self::$cache_dir) ){
 			throw new Exception('cache_dir does not exist');
@@ -29,9 +30,8 @@ class Less_Cache{
 
 		// generate name for compiled css file
 		$less_files = (array)$less_files;
-		$less_files = array_filter($less_files);
 		$hash = md5(json_encode($less_files));
- 		$list_file = self::$cache_dir.'/lessphp_'.$hash.'.list';
+ 		$list_file = self::$cache_dir.'lessphp_'.$hash.'.list';
 
 
  		// check cached content
@@ -41,7 +41,7 @@ class Less_Cache{
 
 			//get info about the list file
 			$compiled_name = self::CompiledName( $hash, $list_file );
-			$compiled_file = self::$cache_dir.'/'.$compiled_name;
+			$compiled_file = self::$cache_dir.$compiled_name;
 
 
 			//check modified time of all included files
@@ -71,7 +71,7 @@ class Less_Cache{
 
 		}
 
-		$compiled = self::Parse( $less_files );
+		$compiled = self::Cache( $less_files );
 		if( !$compiled ){
 			return false;
 		}
@@ -84,16 +84,24 @@ class Less_Cache{
 
 		//save the css
 		$compiled_name = self::CompiledName( $hash, $list_file );
-		file_put_contents( self::$cache_dir.'/'.$compiled_name, $compiled );
+		file_put_contents( self::$cache_dir.$compiled_name, $compiled );
+
+
+		//clean up
+		self::CleanCache();
 
 		return $compiled_name;
 
 	}
 
-	function Parse( &$less_files ){
+	function Cache( &$less_files ){
 
 		//prepare the processor
-		include_once('Less.php');
+		if( !class_exists('Less_Parser') ){
+			include_once('Less.php');
+		}
+
+
 		$parser = new Less_Parser(); //array('compress'=>true)
 		$parser->SetCacheDir( self::$cache_dir );
 		$parser->SetImportDirs( self::$import_dirs );
@@ -129,11 +137,27 @@ class Less_Cache{
 
 		$etag = base_convert( self::cache_version, 10, 36 ) . base_convert( filesize($list_file), 10, 36 );
 
-		return 'less_'.$hash.'_'.$etag.'.css';
+		return 'lessphp_'.$hash.'_'.$etag.'.css';
 	}
 
-	static function GenEtag(){
-	}
 
+	public static function CleanCache(){
+		static $clean = false;
+
+		if( $clean ){
+			return;
+		}
+
+		$files = glob(self::$cache_dir.'lessphp_.*');
+		$check_time = time() - 604800;
+		foreach($files as $file){
+			if( filemtime($file) > $check_time ){
+				continue;
+			}
+			unlink($file);
+		}
+
+		$clean = true;
+	}
 
 }

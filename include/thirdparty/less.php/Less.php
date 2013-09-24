@@ -1,7 +1,9 @@
 <?php
 
 
-class Less_Parser{
+require 'LessCache.php';
+
+class Less_Parser extends Less_Cache{
 
 
     private $input;		// LeSS input string
@@ -20,11 +22,6 @@ class Less_Parser{
      */
     private $path;
 
-	/**
-	 * @var array
-	 */
-	static $import_dirs = array();
-
     /**
      * @var string
      */
@@ -35,7 +32,6 @@ class Less_Parser{
      *
      */
     const version = '1.4.2b2';
-    const cache_version = '142b2';
     const less_version = '1.4.2';
 
     /**
@@ -45,8 +41,6 @@ class Less_Parser{
     private $rules = array();
 
 	private static $imports = array();
-	private static $cache_dir = false;	// directory less.php can use for storing data
-	private static $clean_cache = true;
 
 
 
@@ -124,7 +118,7 @@ class Less_Parser{
      * @param bool $returnRoot Indicates whether the return value should be a css string a root node
      * @return Less_Tree_Ruleset|Less_Parser
      */
-	public function parseFile($filename, $uri_root = '', $returnRoot = false){
+	public function parseFile( $filename, $uri_root = '', $returnRoot = false){
 
 		if( !file_exists($filename) ){
 			throw new Less_ParserException(sprintf('File `%s` not found.', $filename));
@@ -153,7 +147,7 @@ class Less_Parser{
 	public function SetFileInfo( $filename, $uri_root = ''){
 
 		$this->path = pathinfo($filename, PATHINFO_DIRNAME);
-		$this->filename = realpath($filename);
+		$this->filename = $filename;
 
 		$dirname = preg_replace('/[^\/\\\\]*$/','',$this->filename);
 
@@ -178,6 +172,7 @@ class Less_Parser{
 	public function SetCacheDir( $dir ){
 
 		if( is_dir($dir) && is_writable($dir) ){
+			$dir = str_replace('\\','/',$dir);
 			self::$cache_dir = rtrim($dir,'/').'/';
 			return true;
 		}
@@ -186,6 +181,10 @@ class Less_Parser{
 
 	public function SetImportDirs( $dirs ){
 		foreach($dirs as $path => $uri_root){
+
+			$path = str_replace('\\','/',$path);
+			$uri_root = str_replace('\\','/',$uri_root);
+
 			if( !empty($path) ){
 				$path = rtrim($path,'/').'/';
 			}
@@ -234,7 +233,7 @@ class Less_Parser{
 			file_put_contents( $cache_file, serialize($rules) );
 
 			if( self::$clean_cache ){
-				$this->CleanCache();
+				self::CleanCache();
 			}
 
 		}
@@ -248,21 +247,10 @@ class Less_Parser{
 		if( $file_path && self::$cache_dir ){
 			$file_size = filesize( $file_path );
 			$file_mtime = filemtime( $file_path );
-			return self::$cache_dir.base_convert( md5($file_path), 16, 36).'.'.base_convert($file_size,10,36).'.'.base_convert($file_mtime,10,36).'.'.self::cache_version.'.lesscache';
+			return self::$cache_dir.'lessphp_'.base_convert( md5($file_path), 16, 36).'.'.base_convert($file_size,10,36).'.'.base_convert($file_mtime,10,36).'.'.self::cache_version.'.lesscache';
 		}
 	}
 
-	private function CleanCache(){
-
-		$files = glob(self::$cache_dir.'/*.lesscache');
-		$check_time = time() - 604800;
-		foreach($files as $file){
-			if( filemtime($file) > $check_time ){
-				continue;
-			}
-			unlink($file);
-		}
-	}
 
 	static function AddParsedFile($file){
 		self::$imports[] = $file;
@@ -1705,7 +1693,7 @@ class Less_Parser{
 			echo Pre($arg);
 		}
 	}
- 
+
 
 //less.js : lib/less/colors.js
 
@@ -1882,7 +1870,7 @@ class Less_Colors {
 	}
 
 }
- 
+
 
 //less.js : lib/less/functions.js
 
@@ -2573,9 +2561,9 @@ class Less_Environment{
 		$filePath = str_replace('\\','/',$filePath);
 		if( Less_Environment::isPathRelative($filePath) ){
 			if( $this->relativeUrls ){
-				$filePath = rtrim($this->currentFileInfo['currentDirectory'],'/').'/'.$filePath;
+				$filePath = Less_Environment::NormPath(rtrim($this->currentFileInfo['currentDirectory'],'/').'/'.$filePath);
 			} else {
-				$filePath = rtrim($this->currentFileInfo['entryPath'],'/').'/'.$filePath;
+				$filePath = Less_Environment::NormPath(rtrim($this->currentFileInfo['entryPath'],'/').'/'.$filePath);
 			}
 		}
 
@@ -2640,8 +2628,38 @@ class Less_Environment{
 
 	}
 
+
+	/**
+	 * Canonicalize a path by resolving references to '/./', '/../'
+	 * Does not remove leading "../"
+	 * @param string path or url
+	 * @return string Canonicalized path
+	 *
+	 */
+	static function NormPath($path){
+
+		$temp = explode('/',$path);
+		$result = array();
+		foreach($temp as $i => $p){
+			if( $p == '.' ){
+				continue;
+			}
+			if( $p == '..' ){
+				for($j=$i-1;$j>0;$j--){
+					if( isset($result[$j]) ){
+						unset($result[$j]);
+						continue 2;
+					}
+				}
+			}
+			$result[$i] = $p;
+		}
+
+		return implode('/',$result);
+	}
+
 }
- 
+
 
 //less.js : lib/less/functions.js
 
@@ -2672,7 +2690,7 @@ class Less_Mime{
 		// assumes all text types are UTF-8
 		return $type && preg_match('/^text\//',$type) ? 'UTF-8' : '';
 	}
-} 
+}
 
 
 class Less_Tree_Alpha{
@@ -2699,7 +2717,7 @@ class Less_Tree_Alpha{
 		}
 		return $this;
 	}
-} 
+}
 
 
 class Less_Tree_Anonymous{
@@ -2734,7 +2752,7 @@ class Less_Tree_Anonymous{
 		return $left < $right ? -1 : 1;
 	}
 }
- 
+
 
 
 class Less_Tree_Assignment {
@@ -2766,7 +2784,7 @@ class Less_Tree_Assignment {
     }
 
 }
- 
+
 
 
 class Less_Tree_Attribute{
@@ -2803,7 +2821,7 @@ class Less_Tree_Attribute{
 
 		return '[' . $value . ']';
 	}
-} 
+}
 
 
 //
@@ -2884,7 +2902,7 @@ class Less_Tree_Call{
     }
 
 }
- 
+
 
 
 class Less_Tree_Color{
@@ -3054,7 +3072,7 @@ class Less_Tree_Color{
             $x->alpha === $this->alpha) ? 0 : -1;
     }
 }
- 
+
 
 // less.js : lib/less/tree/element.js
 
@@ -3087,7 +3105,7 @@ class Less_Tree_Combinator {
 		return $v[$this->value];
 	}
 }
- 
+
 
 class Less_Tree_Comment{
 
@@ -3110,7 +3128,7 @@ class Less_Tree_Comment{
     }
 
 }
- 
+
 
 class Less_Tree_Condition {
 
@@ -3170,7 +3188,7 @@ class Less_Tree_Condition {
     }
 
 }
- 
+
 
 
 class Less_Tree_Dimension{
@@ -3352,7 +3370,7 @@ class Less_Tree_Dimension{
 		return new Less_Tree_Dimension( $value, $unit);
     }
 }
- 
+
 
 class Less_Tree_Directive{
 
@@ -3416,7 +3434,7 @@ class Less_Tree_Directive{
     }
 
 }
- 
+
 
 //less.js : lib/less/tree/element.js
 
@@ -3471,7 +3489,7 @@ class Less_Tree_Element{
 		);
 	}
 }
- 
+
 
 class Less_Tree_Expression {
 
@@ -3552,7 +3570,7 @@ class Less_Tree_Expression {
 		}
 	}
 }
- 
+
 
 
 class Less_Tree_Extend{
@@ -3606,7 +3624,7 @@ class Less_Tree_Extend{
 
 		$this->selfSelectors = array(new Less_Tree_Selector($selfElements));
 	}
-} 
+}
 
 
 
@@ -3699,7 +3717,7 @@ class Less_Tree_Import{
 			$pathValue = $path->value;
 			// Add the base path if the import is relative
 			if( $pathValue && $env->isPathRelative($pathValue) ){
-				$path->value = $this->currentFileInfo['uri_root']. $pathValue;
+				$path->value = Less_Environment::NormPath($this->currentFileInfo['uri_root']. $pathValue);
 			}
 		}
 		return $path;
@@ -3716,8 +3734,8 @@ class Less_Tree_Import{
 			foreach(Less_Parser::$import_dirs as $rootpath => $rooturi){
 				$temp = $rootpath.$evald_path;
 				if( file_exists($temp) ){
-					$full_path = $temp;
-					$uri = dirname($rooturi.$evald_path);
+					$full_path = Less_Environment::NormPath($temp);
+					$uri = Less_Environment::NormPath(dirname($rooturi.$evald_path));
 					break;
 				}
 			}
@@ -3752,7 +3770,7 @@ class Less_Tree_Import{
 	}
 }
 
- 
+
 
 class Less_Tree_Javascript{
 
@@ -3772,7 +3790,7 @@ class Less_Tree_Javascript{
 		return $env->compress ? '' : '/* Sorry, can not do JavaScript evaluation in PHP... :( */';
 	}
 }
- 
+
 
 
 class Less_Tree_Keyword{
@@ -3798,7 +3816,7 @@ class Less_Tree_Keyword{
 		}
 	}
 }
- 
+
 
 //less.js : lib/less/tree/media.js
 
@@ -3956,7 +3974,7 @@ class Less_Tree_Media {
     }
 
 }
- 
+
 
 
 class Less_Tree_Mixin_Call{
@@ -4079,7 +4097,7 @@ class Less_Tree_Mixin_Call{
 }
 
 
- 
+
 
 class Less_Tree_Mixin_Definition extends Less_Tree_Ruleset{
 	//public $type = 'MixinDefinition';
@@ -4301,7 +4319,7 @@ class Less_Tree_Mixin_Definition extends Less_Tree_Ruleset{
 	}
 
 }
- 
+
 
 
 class Less_Tree_Negative{
@@ -4330,7 +4348,7 @@ class Less_Tree_Negative{
 		}
 		return new Less_Tree_Negative( $this->value->compile($env) );
 	}
-} 
+}
 
 class Less_Tree_Operation{
 
@@ -4376,7 +4394,7 @@ class Less_Tree_Operation{
 		return $this->operands[0]->toCSS($env) . $separator . $this->op . $separator . $this->operands[1]->toCSS($env);
 	}
 }
- 
+
 
 class Less_Tree_Paren {
 
@@ -4402,7 +4420,7 @@ class Less_Tree_Paren {
 	}
 
 }
- 
+
 
 
 class Less_Tree_Quoted{
@@ -4467,7 +4485,7 @@ class Less_Tree_Quoted{
 		return $left < $right ? -1 : 1;
 	}
 }
- 
+
 
 
 class Less_Tree_Rule{
@@ -4546,7 +4564,7 @@ class Less_Tree_Rule{
 	}
 
 }
- 
+
 
 //less.js : /lib/less/tree/ruleset.js
 
@@ -5048,7 +5066,7 @@ class Less_Tree_Ruleset{
 		}
 	}
 }
- 
+
 
 //less.js : lib/less/tree/selector.js
 
@@ -5146,7 +5164,7 @@ class Less_Tree_Selector {
 	}
 
 }
- 
+
 
 
 class Less_Tree_UnicodeDescriptor{
@@ -5164,7 +5182,7 @@ class Less_Tree_UnicodeDescriptor{
 	}
 }
 
- 
+
 
 
 class Less_Tree_Unit{
@@ -5297,7 +5315,7 @@ class Less_Tree_Unit{
 
 }
 
- 
+
 
 
 class Less_Tree_UnitConversions{
@@ -5325,7 +5343,7 @@ class Less_Tree_UnitConversions{
 		'turn'=> 1
 		);
 
-} 
+}
 
 
 class Less_Tree_Url{
@@ -5366,7 +5384,7 @@ class Less_Tree_Url{
 	}
 
 }
- 
+
 
 
 class Less_Tree_Value{
@@ -5407,7 +5425,7 @@ class Less_Tree_Value{
 		return implode($env->compress ? ',' : ', ', $ret);
 	}
 }
- 
+
 
 
 class Less_Tree_Variable {
@@ -5449,7 +5467,7 @@ class Less_Tree_Variable {
 	}
 
 }
- 
+
 
 
 class Less_extendFinderVisitor extends Less_visitor{
@@ -5542,7 +5560,7 @@ class Less_extendFinderVisitor extends Less_visitor{
 }
 
 
- 
+
 
 /*
 class Less_importVisitor{
@@ -5637,7 +5655,7 @@ class Less_importVisitor{
 	}
 
 }
-*/ 
+*/
 
 class Less_joinSelectorVisitor extends Less_visitor{
 
@@ -5676,7 +5694,7 @@ class Less_joinSelectorVisitor extends Less_visitor{
 
 }
 
- 
+
 
 
 class Less_processExtendsVisitor extends Less_visitor{
@@ -6018,7 +6036,7 @@ class Less_processExtendsVisitor extends Less_visitor{
 		array_pop($this->allExtendsStack);
 	}
 
-} 
+}
 
 class Less_visitor{
 
@@ -6056,7 +6074,7 @@ class Less_visitor{
 
 }
 
- 
+
 
 
 class Less_CompilerException extends \Exception {
@@ -6076,9 +6094,9 @@ class Less_CompilerException extends \Exception {
 		return $this->message . " (" . $this->filename . ")";
 	}
 }
- 
+
 
 
 class Less_ParserException extends \Exception{
 
-} 
+}

@@ -281,8 +281,6 @@ class gpOutput{
 	static function GetgpOutInfo($gpOutCmd){
 		global $gpOutConf,$config;
 
-		//echo 'here';
-
 		$key = $gpOutCmd = trim($gpOutCmd,':');
 		$info = false;
 		$arg = '';
@@ -2716,7 +2714,6 @@ class gpOutput{
 		}
 
 		$less_files = $parser->allParsedFiles();
-
 		return $compiled;
 	}
 

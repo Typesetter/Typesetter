@@ -549,7 +549,7 @@ class admin_theme_content extends admin_addon_install{
 		echo '</td></tr><tr><td class="full_height"><div class="full_height">';
 
 		$css = $this->layoutCSS($this->curr_layout);
-		echo '<textarea name="css" id="gp_layout_css" class="gptextarea" placeholder="Add your CSS here.">';
+		echo '<textarea name="css" id="gp_layout_css" class="gptextarea" placeholder="'.$langmessage['Add your LESS and CSS here'].'">';
 		echo htmlspecialchars($css);
 		echo '</textarea>';
 

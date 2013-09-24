@@ -231,6 +231,7 @@ $langmessage = array(
 'maxthumbsize'=>'Gallery Thumbnail Size',
 'auto_redir'=>'Auto Redirect Percent',
 'restore_defaults'=>'Gjenopprett standardinnstillinger',
+'Add your LESS and CSS here'=>'Add your LESS and CSS here',
 'default'=>'Standard',
 'see_also'=>'Se også:',
 'general_settings'=>'General Settings',

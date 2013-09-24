@@ -231,6 +231,7 @@ $langmessage = array(
 'maxthumbsize'=>'Gallery Thumbnail Size',
 'auto_redir'=>'Auto Redirect Percent',
 'restore_defaults'=>'Palauta oletusasetukset',
+'Add your LESS and CSS here'=>'Add your LESS and CSS here',
 'default'=>'Oletusarvo',
 'see_also'=>'Katso myös:',
 'general_settings'=>'Yleiset asetukset',

@@ -231,6 +231,7 @@ $langmessage = array(
 'maxthumbsize'=>'Размер эскизов в галерее',
 'auto_redir'=>'Процент автоматических перенаправлений',
 'restore_defaults'=>'Восстановить настройки по умолчанию',
+'Add your LESS and CSS here'=>'Add your LESS and CSS here',
 'default'=>'по умолчанию',
 'see_also'=>'Смотрите также:',
 'general_settings'=>'Общие настройки',

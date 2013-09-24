@@ -231,6 +231,7 @@ $langmessage = array(
 'maxthumbsize'=>'Veľkosť dlaždičiek v galérii',
 'auto_redir'=>'Percento automaticky presmerovaných',
 'restore_defaults'=>'Obnoviť predvolené',
+'Add your LESS and CSS here'=>'Add your LESS and CSS here',
 'default'=>'Základné',
 'see_also'=>'Pozri tiež:',
 'general_settings'=>'Hlavné nastavenia',
@@ -497,7 +498,7 @@ $langmessage = array(
 'Restore this revision'=>'Obnoviť túto revíziu',
 
 //for use with php's strftime() method
-'strftime_datetime'=>'%e. %b. %Y @ %H:%M',
+'strftime_datetime'=>'%e. %b. %Y o %H:%M',
 'strftime_date'=>'%e. %b. %Y',
 'strftime_time'=>'%H:%M',
 

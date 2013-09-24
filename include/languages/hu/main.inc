@@ -231,6 +231,7 @@ $langmessage = array(
 'maxthumbsize'=>'Galéria bélyegkép méret',
 'auto_redir'=>'Automatikus átirányítás százalékos érték',
 'restore_defaults'=>'Alapértelmezett visszaállítása',
+'Add your LESS and CSS here'=>'Add your LESS and CSS here',
 'default'=>'Alapértelmezett',
 'see_also'=>'Lásd még:',
 'general_settings'=>'Általános beállítások',

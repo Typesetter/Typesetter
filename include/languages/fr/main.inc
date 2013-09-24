@@ -232,6 +232,7 @@ $langmessage = array(
 'maxthumbsize'=>'Taille des vignettes de la galerie',
 'auto_redir'=>'Pourcentage de redirection automatique',
 'restore_defaults'=>'Rétablir les valeurs par défaut',
+'Add your LESS and CSS here'=>'Add your LESS and CSS here',
 'default'=>'Défaut',
 'see_also'=>'Voir aussi :',
 'general_settings'=>'Paramètres généraux',

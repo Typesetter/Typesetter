@@ -233,6 +233,7 @@ $langmessage = array(
 'maxthumbsize'=>'Gallery Thumbnail Size',
 'auto_redir'=>'Auto Redirect Percent',
 'restore_defaults'=>'デフォルトを復元',
+'Add your LESS and CSS here'=>'Add your LESS and CSS here',
 'default'=>'デフォルト',
 'see_also'=>'関連する設定:',
 'general_settings'=>'全般設定',

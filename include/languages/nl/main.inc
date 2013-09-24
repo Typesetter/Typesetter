@@ -231,6 +231,7 @@ $langmessage = array(
 'maxthumbsize'=>'Gallerij Miniatuurgrootte',
 'auto_redir'=>'Automatisch doorverwijs percentage',
 'restore_defaults'=>'Standaard instellingen terugplaatsen',
+'Add your LESS and CSS here'=>'Add your LESS and CSS here',
 'default'=>'Standaard',
 'see_also'=>'Tevens:',
 'general_settings'=>'Algemene Instellingen',

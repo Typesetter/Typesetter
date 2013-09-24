@@ -231,6 +231,7 @@ $langmessage = array(
 'maxthumbsize'=>'Velikost sličic galerije',
 'auto_redir'=>'Odstotek avtomatičnih preusmeritev',
 'restore_defaults'=>'Ponastavi privzeto',
+'Add your LESS and CSS here'=>'Add your LESS and CSS here',
 'default'=>'Privzeto',
 'see_also'=>'Oglejte si tudi',
 'general_settings'=>'Nastavitve',

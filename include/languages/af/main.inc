@@ -231,6 +231,7 @@ $langmessage = array(
 'maxthumbsize'=>'Gallery Duimnaelskets Grootte',
 'auto_redir'=>'Outomaties Herlei persentasie',
 'restore_defaults'=>'Herstel Standaard',
+'Add your LESS and CSS here'=>'Add your LESS and CSS here',
 'default'=>'Verstek',
 'see_also'=>'Sien ook:',
 'general_settings'=>'Algemene Instellings',

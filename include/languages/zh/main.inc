@@ -231,6 +231,7 @@ $langmessage = array(
 'maxthumbsize'=>'圖庫縮圖尺寸',
 'auto_redir'=>'自動轉址百分比',
 'restore_defaults'=>'還原為預設值',
+'Add your LESS and CSS here'=>'Add your LESS and CSS here',
 'default'=>'預設值',
 'see_also'=>'請見：',
 'general_settings'=>'一般設定',

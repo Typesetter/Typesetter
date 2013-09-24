@@ -31,7 +31,7 @@ class Less_Parser extends Less_Cache{
     /**
      *
      */
-    const version = '1.4.2b2';
+    const version = '1.4.2b3';
     const less_version = '1.4.2';
 
     /**
@@ -147,7 +147,7 @@ class Less_Parser extends Less_Cache{
 	public function SetFileInfo( $filename, $uri_root = ''){
 
 		$this->path = pathinfo($filename, PATHINFO_DIRNAME);
-		$this->filename = $filename;
+		$this->filename = Less_Environment::NormPath($filename);
 
 		$dirname = preg_replace('/[^\/\\\\]*$/','',$this->filename);
 
@@ -1693,7 +1693,7 @@ class Less_Parser extends Less_Cache{
 			echo Pre($arg);
 		}
 	}
-
+ 
 
 //less.js : lib/less/colors.js
 
@@ -1870,7 +1870,7 @@ class Less_Colors {
 	}
 
 }
-
+ 
 
 //less.js : lib/less/functions.js
 
@@ -2659,7 +2659,7 @@ class Less_Environment{
 	}
 
 }
-
+ 
 
 //less.js : lib/less/functions.js
 
@@ -2690,7 +2690,7 @@ class Less_Mime{
 		// assumes all text types are UTF-8
 		return $type && preg_match('/^text\//',$type) ? 'UTF-8' : '';
 	}
-}
+} 
 
 
 class Less_Tree_Alpha{
@@ -2717,7 +2717,7 @@ class Less_Tree_Alpha{
 		}
 		return $this;
 	}
-}
+} 
 
 
 class Less_Tree_Anonymous{
@@ -2752,7 +2752,7 @@ class Less_Tree_Anonymous{
 		return $left < $right ? -1 : 1;
 	}
 }
-
+ 
 
 
 class Less_Tree_Assignment {
@@ -2784,7 +2784,7 @@ class Less_Tree_Assignment {
     }
 
 }
-
+ 
 
 
 class Less_Tree_Attribute{
@@ -2821,7 +2821,7 @@ class Less_Tree_Attribute{
 
 		return '[' . $value . ']';
 	}
-}
+} 
 
 
 //
@@ -2902,7 +2902,7 @@ class Less_Tree_Call{
     }
 
 }
-
+ 
 
 
 class Less_Tree_Color{
@@ -3072,7 +3072,7 @@ class Less_Tree_Color{
             $x->alpha === $this->alpha) ? 0 : -1;
     }
 }
-
+ 
 
 // less.js : lib/less/tree/element.js
 
@@ -3105,7 +3105,7 @@ class Less_Tree_Combinator {
 		return $v[$this->value];
 	}
 }
-
+ 
 
 class Less_Tree_Comment{
 
@@ -3128,7 +3128,7 @@ class Less_Tree_Comment{
     }
 
 }
-
+ 
 
 class Less_Tree_Condition {
 
@@ -3160,35 +3160,48 @@ class Less_Tree_Condition {
 
 		$i = $this->index;
 
-		$result = function($op) use ($a, $b) {
-			switch ($op) {
-				case 'and':
-					return $a && $b;
-				case 'or':
-					return $a || $b;
-				default:
-					$aReflection = new \ReflectionClass($a);
-					$bReflection = new \ReflectionClass($b);
-					if ($aReflection->hasMethod('compare')) {
-						$result = $a->compare($b);
-					} elseif ($bReflection->hasMethod('compare')) {
-						$result = $b->compare($a);
-					} else {
-						throw new Less_CompilerException('Unable to perform comparison', $this->index);
-					}
-					switch ($result) {
-						case -1: return $op === '<' || $op === '=<';
-						case  0: return $op === '=' || $op === '>=' || $op === '=<';
-						case  1: return $op === '>' || $op === '>=';
-					}
-			}
-		};
-		$result = $result($this->op);
+		switch( $this->op ){
+			case 'and':
+				$result = $a && $b;
+			break;
+
+			case 'or':
+				$result = $a || $b;
+			break;
+
+			default:
+				$aReflection = new \ReflectionClass($a);
+				$bReflection = new \ReflectionClass($b);
+				if ($aReflection->hasMethod('compare')) {
+					$result = $a->compare($b);
+				} elseif ($bReflection->hasMethod('compare')) {
+					$result = $b->compare($a);
+				} else {
+					throw new Less_CompilerException('Unable to perform comparison', $this->index);
+				}
+				switch ($result) {
+					case -1:
+					$result = $this->op === '<' || $this->op === '=<';
+					break;
+
+					case  0:
+					$result = $this->op === '=' || $this->op === '>=' || $this->op === '=<';
+					break;
+
+					case  1:
+					$result = $this->op === '>' || $this->op === '>=';
+					break;
+				}
+			break;
+		}
+
+		$with_result = $result;
+
 		return $this->negate ? !$result : $result;
     }
 
 }
-
+ 
 
 
 class Less_Tree_Dimension{
@@ -3370,7 +3383,7 @@ class Less_Tree_Dimension{
 		return new Less_Tree_Dimension( $value, $unit);
     }
 }
-
+ 
 
 class Less_Tree_Directive{
 
@@ -3434,7 +3447,7 @@ class Less_Tree_Directive{
     }
 
 }
-
+ 
 
 //less.js : lib/less/tree/element.js
 
@@ -3489,7 +3502,7 @@ class Less_Tree_Element{
 		);
 	}
 }
-
+ 
 
 class Less_Tree_Expression {
 
@@ -3570,7 +3583,7 @@ class Less_Tree_Expression {
 		}
 	}
 }
-
+ 
 
 
 class Less_Tree_Extend{
@@ -3624,7 +3637,7 @@ class Less_Tree_Extend{
 
 		$this->selfSelectors = array(new Less_Tree_Selector($selfElements));
 	}
-}
+} 
 
 
 
@@ -3770,7 +3783,7 @@ class Less_Tree_Import{
 	}
 }
 
-
+ 
 
 class Less_Tree_Javascript{
 
@@ -3790,7 +3803,7 @@ class Less_Tree_Javascript{
 		return $env->compress ? '' : '/* Sorry, can not do JavaScript evaluation in PHP... :( */';
 	}
 }
-
+ 
 
 
 class Less_Tree_Keyword{
@@ -3816,7 +3829,7 @@ class Less_Tree_Keyword{
 		}
 	}
 }
-
+ 
 
 //less.js : lib/less/tree/media.js
 
@@ -3974,7 +3987,7 @@ class Less_Tree_Media {
     }
 
 }
-
+ 
 
 
 class Less_Tree_Mixin_Call{
@@ -4097,7 +4110,7 @@ class Less_Tree_Mixin_Call{
 }
 
 
-
+ 
 
 class Less_Tree_Mixin_Definition extends Less_Tree_Ruleset{
 	//public $type = 'MixinDefinition';
@@ -4319,7 +4332,7 @@ class Less_Tree_Mixin_Definition extends Less_Tree_Ruleset{
 	}
 
 }
-
+ 
 
 
 class Less_Tree_Negative{
@@ -4348,7 +4361,7 @@ class Less_Tree_Negative{
 		}
 		return new Less_Tree_Negative( $this->value->compile($env) );
 	}
-}
+} 
 
 class Less_Tree_Operation{
 
@@ -4394,7 +4407,7 @@ class Less_Tree_Operation{
 		return $this->operands[0]->toCSS($env) . $separator . $this->op . $separator . $this->operands[1]->toCSS($env);
 	}
 }
-
+ 
 
 class Less_Tree_Paren {
 
@@ -4420,7 +4433,7 @@ class Less_Tree_Paren {
 	}
 
 }
-
+ 
 
 
 class Less_Tree_Quoted{
@@ -4485,7 +4498,7 @@ class Less_Tree_Quoted{
 		return $left < $right ? -1 : 1;
 	}
 }
-
+ 
 
 
 class Less_Tree_Rule{
@@ -4564,7 +4577,7 @@ class Less_Tree_Rule{
 	}
 
 }
-
+ 
 
 //less.js : /lib/less/tree/ruleset.js
 
@@ -5066,7 +5079,7 @@ class Less_Tree_Ruleset{
 		}
 	}
 }
-
+ 
 
 //less.js : lib/less/tree/selector.js
 
@@ -5164,7 +5177,7 @@ class Less_Tree_Selector {
 	}
 
 }
-
+ 
 
 
 class Less_Tree_UnicodeDescriptor{
@@ -5182,7 +5195,7 @@ class Less_Tree_UnicodeDescriptor{
 	}
 }
 
-
+ 
 
 
 class Less_Tree_Unit{
@@ -5315,7 +5328,7 @@ class Less_Tree_Unit{
 
 }
 
-
+ 
 
 
 class Less_Tree_UnitConversions{
@@ -5343,7 +5356,7 @@ class Less_Tree_UnitConversions{
 		'turn'=> 1
 		);
 
-}
+} 
 
 
 class Less_Tree_Url{
@@ -5384,7 +5397,7 @@ class Less_Tree_Url{
 	}
 
 }
-
+ 
 
 
 class Less_Tree_Value{
@@ -5425,7 +5438,7 @@ class Less_Tree_Value{
 		return implode($env->compress ? ',' : ', ', $ret);
 	}
 }
-
+ 
 
 
 class Less_Tree_Variable {
@@ -5467,7 +5480,7 @@ class Less_Tree_Variable {
 	}
 
 }
-
+ 
 
 
 class Less_extendFinderVisitor extends Less_visitor{
@@ -5560,7 +5573,7 @@ class Less_extendFinderVisitor extends Less_visitor{
 }
 
 
-
+ 
 
 /*
 class Less_importVisitor{
@@ -5655,7 +5668,7 @@ class Less_importVisitor{
 	}
 
 }
-*/
+*/ 
 
 class Less_joinSelectorVisitor extends Less_visitor{
 
@@ -5694,7 +5707,7 @@ class Less_joinSelectorVisitor extends Less_visitor{
 
 }
 
-
+ 
 
 
 class Less_processExtendsVisitor extends Less_visitor{
@@ -6036,7 +6049,7 @@ class Less_processExtendsVisitor extends Less_visitor{
 		array_pop($this->allExtendsStack);
 	}
 
-}
+} 
 
 class Less_visitor{
 
@@ -6074,7 +6087,7 @@ class Less_visitor{
 
 }
 
-
+ 
 
 
 class Less_CompilerException extends \Exception {
@@ -6094,9 +6107,9 @@ class Less_CompilerException extends \Exception {
 		return $this->message . " (" . $this->filename . ")";
 	}
 }
-
+ 
 
 
 class Less_ParserException extends \Exception{
 
-}
+} 

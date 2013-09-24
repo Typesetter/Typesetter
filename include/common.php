@@ -41,7 +41,7 @@ gp_defined('gp_unique_addons',false);
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
-define('gpversion','4.3b1');
+define('gpversion','4.3b2');
 define('gp_random',common::RandomString());
 
 

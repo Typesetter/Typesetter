@@ -571,7 +571,7 @@ class PHPMailer
     {
         $this->exceptions = ($exceptions == true);
         //Make sure our autoloader is loaded
-        if (!in_array('PHPMailerAutoload', spl_autoload_functions())) {
+        if (!spl_autoload_functions() || !in_array('PHPMailerAutoload', spl_autoload_functions())) {
             require 'PHPMailerAutoload.php';
         }
     }
@@ -1021,7 +1021,12 @@ class PHPMailer
                 case 'mail':
                     return $this->mailSend($this->MIMEHeader, $this->MIMEBody);
                 default:
-                    return $this->mailSend($this->MIMEHeader, $this->MIMEBody);
+                    if (method_exists($this,$this->Mailer.'Send')) {
+                      $sendMethod = $this->Mailer.'Send';
+                      return $this->$sendMethod($this->MIMEHeader, $this->MIMEBody);
+                    } else {
+                      return $this->mailSend($this->MIMEHeader, $this->MIMEBody);
+                    }
             }
         } catch (phpmailerException $e) {
             $this->setError($e->getMessage());
@@ -1138,8 +1143,6 @@ class PHPMailer
      */
     public function getSMTPInstance()
     {
-		require_once( dirname(__FILE__).DIRECTORY_SEPARATOR.'class.smtp.php' );
-
         if (!is_object($this->smtp)) {
             $this->smtp = new SMTP;
         }
@@ -1245,21 +1248,30 @@ class PHPMailer
         $lastexception = null;
 
         foreach ($hosts as $hostentry) {
+
             $hostinfo = array();
-            $host = $hostentry;
+            $host = trim($hostentry);
             $port = $this->Port;
-            if (preg_match(
-                '/^(.+):([0-9]+)$/',
-                $hostentry,
-                $hostinfo
-            )
-            ) { //If $hostentry contains 'address:port', override default
+
+            //If $hostentry contains 'address:port', override default
+            if (preg_match('/^(.+):([0-9]+)$/', $hostentry, $hostinfo)) {
                 $host = $hostinfo[1];
                 $port = $hostinfo[2];
             }
 
+            //tls per host
+            $host_tls = $tls;
+            if (stripos($host,'tls://') === 0) {
+                $host_tls = true;
+                $host = substr($host,6);
+            }
 
-            if ($this->smtp->connect(($ssl ? 'ssl://' : '') . $host, $port, $this->Timeout, $options)) {
+            //add ssl:// to host if it's missing
+            if ($ssl && stripos($host,'ssl://') === false) {
+                $host = 'ssl://'.$host;
+            }
+
+            if ($this->smtp->connect($host, $port, $this->Timeout, $options)) {
                 try {
                     if ($this->Helo) {
                         $hello = $this->Helo;
@@ -1293,7 +1305,7 @@ class PHPMailer
                     //We must have connected, but then failed TLS or Auth, so close connection nicely
                     $this->smtp->quit();
                 }
-			}
+            }
         }
         //If we get here, all connection attempts have failed, so close connection hard
         $this->smtp->close();

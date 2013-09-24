@@ -770,6 +770,7 @@ class admin_tools{
 
 		//reduce further if needed till we have less than 200 files
 		arsort($times);
+		$times = array_keys($times);
 		while( count($times) > 200 ){
 			$full_path = $dir.'/'.array_pop($times);
 			unlink($full_path);

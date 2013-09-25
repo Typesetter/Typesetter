@@ -718,7 +718,7 @@ class admin_theme_content extends admin_addon_install{
 
 			$display = '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span> &nbsp; '. $info['label'];
 			if( $config['gpLayout'] == $layout ){
-				$display .= ' &nbsp; ('.$langmessage['default'].')';
+				$display .= ' <span class="layout_default"> ('.$langmessage['default'].')</span>';
 			}
 			echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$display);
 			echo '</li>';
@@ -2223,7 +2223,8 @@ class admin_theme_content extends admin_addon_install{
 		echo '&nbsp;';
 		echo $layout_info['label'];
 		if( $config['gpLayout'] == $layout ){
-			echo ' &nbsp; ('.$langmessage['default'].')';
+			echo ' <span class="layout_default"> ('.$langmessage['default'].')</span>';
+
 		}
 		echo '</a>';
 		echo '</span>';

@@ -17,7 +17,7 @@ class admin_configuration{
 
 
 		//add examples to smtp_hosts
-		$langmessage['about_config']['smtp_hosts'] .= ' smtp.yourserver.com ; ssl://smtp.gmail.com:465';
+		$langmessage['about_config']['smtp_hosts'] .= 'ssl://smtp.gmail.com:465 ; tls://smtp.live.com:587';
 		$langmessage['about_config']['showgplink'] = 'Showing the "powered by" link on your site is a great way to support gpEasy CMS.';
 		$langmessage['jquery'] = 'Google CDN';
 

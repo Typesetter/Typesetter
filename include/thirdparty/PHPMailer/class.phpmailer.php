@@ -1242,36 +1242,36 @@ class PHPMailer
         $this->smtp->setDebugLevel($this->SMTPDebug);
         $this->smtp->setDebugOutput($this->Debugoutput);
         $this->smtp->setVerp($this->do_verp);
-        $tls = ($this->SMTPSecure == 'tls');
-        $ssl = ($this->SMTPSecure == 'ssl');
         $hosts = explode(';', $this->Host);
         $lastexception = null;
 
         foreach ($hosts as $hostentry) {
-
             $hostinfo = array();
-            $host = trim($hostentry);
+            if (!preg_match('/^((ssl|tls):\/\/)*([a-zA-Z0-9\.-]*):?([0-9]*)$/', trim($hostentry), $hostinfo)) {
+                //Not a valid host entry
+                continue;
+            }
+            //$hostinfo[2]: optional ssl or tls prefix
+            //$hostinfo[3]: the hostname
+            //$hostinfo[4]: optional port number
+            //The host string prefix can temporarily override the current setting for SMTPSecure
+            //If it's not specified, the default value is used
+            $prefix = '';
+            $tls = ($this->SMTPSecure == 'tls');
+            if ($hostinfo[2] == 'ssl' or ($hostinfo[2] == '' and $this->SMTPSecure == 'ssl')) {
+                $prefix = 'ssl://';
+                $tls = false; //Can't have SSL and TLS at once
+            } elseif ($hostinfo[2] == 'tls') {
+                $tls = true;
+                //tls doesn't use a prefix
+            }
+            $host = $hostinfo[3];
             $port = $this->Port;
-
-            //If $hostentry contains 'address:port', override default
-            if (preg_match('/^(.+):([0-9]+)$/', $hostentry, $hostinfo)) {
-                $host = $hostinfo[1];
-                $port = $hostinfo[2];
+            $tport = (integer)$hostinfo[4];
+            if ($tport > 0 and $tport < 65536) {
+                $port = $tport;
             }
-
-            //tls per host
-            $host_tls = $tls;
-            if (stripos($host,'tls://') === 0) {
-                $host_tls = true;
-                $host = substr($host,6);
-            }
-
-            //add ssl:// to host if it's missing
-            if ($ssl && stripos($host,'ssl://') === false) {
-                $host = 'ssl://'.$host;
-            }
-
-            if ($this->smtp->connect($host, $port, $this->Timeout, $options)) {
+            if ($this->smtp->connect($prefix . $host, $port, $this->Timeout, $options)) {
                 try {
                     if ($this->Helo) {
                         $hello = $this->Helo;
@@ -1280,7 +1280,7 @@ class PHPMailer
                     }
                     $this->smtp->hello($hello);
 
-                    if ($host_tls) {
+                    if ($tls) {
                         if (!$this->smtp->startTLS()) {
                             throw new phpmailerException($this->lang('connect_host'));
                         }

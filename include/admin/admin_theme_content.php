@@ -1737,8 +1737,6 @@ class admin_theme_content extends admin_addon_install{
 			return;
 		}
 
-		message($langmessage['SAVED']);
-
 		//send new label
 		$layout_info = common::LayoutInfo($layout,false);
 		$replace = $this->GetLayoutLabel($layout, $layout_info);

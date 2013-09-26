@@ -443,6 +443,7 @@ class admin_uploaded{
 		$thumb = ' <img src="'.$thumb_url.'" alt="" />';
 
 		//get size
+		$size = '';
 		$size_a = getimagesize($full_path);
 		if( $size_a ){
 			$size = ' data-width="'.$size_a[0].'" data-height="'.$size_a[1].'"';

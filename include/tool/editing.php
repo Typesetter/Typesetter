@@ -878,7 +878,7 @@ class gp_edit{
 			gpFiles::cleanText($caption);
 
 			echo '<li>';
-			echo '<a class="gallery_gallery" title="" data-arg="gallery_gallery" href="'.$image.'" data-cmd="gallery">';
+			echo '<a class="gallery_gallery" title="'.htmlspecialchars($caption).'" data-arg="gallery_gallery" href="'.$image.'" data-cmd="gallery">';
 			echo '<img src="'.$thumb_path.'" alt="" /></a>';
 			echo '<div class="caption">';
 			echo $caption;

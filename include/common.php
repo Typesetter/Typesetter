@@ -3229,7 +3229,7 @@ class gpFiles{
 
 			$contents = @file_get_contents($lock_file);
 			if( $value === $contents ){
-				touch($lock_file);
+				@touch($lock_file);
 				return true;
 			}
 

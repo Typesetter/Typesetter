@@ -399,7 +399,7 @@ $(function(){
 		//get the first class
 		var cmd = $this.data('cmd');
 		if( !cmd ){
-			cmd = strip_from( $this.attr('class'), ' ' );
+			cmd = strip_from( $this.attr('class'), ' ' ); //deprecated
 		}
 
 		if( typeof($gp.inputs[cmd]) === 'function' ){

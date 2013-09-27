@@ -1477,7 +1477,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<tr><th colspan="2">'.$langmessage['options'].'</th></tr>';
 
 		echo '<tr><td>'.$langmessage['label'].'</td>';
-		echo '<td><input type="text" name="title" maxlength="100" size="50" value="'.htmlspecialchars($title).'" class="gpinput" /></td>';
+		echo '<td><input type="text" name="title" maxlength="100" size="50" value="'.htmlspecialchars($title).'" class="gpinput" required/></td>';
 		echo '</tr>';
 
 		echo '<tr><td>'.$langmessage['Content Type'].'</td>';
@@ -1497,7 +1497,7 @@ class admin_menu_new extends admin_menu_tools{
 			}else{
 				echo '<input type="hidden" name="cmd" value="new_hidden" />';
 			}
-			echo '<input type="submit" name="aaa" value="'.$langmessage['create_new_file'].'" class="gppost gpsubmit"/> '; //class="menupost" is not needed because we're adding hidden files
+			echo '<input type="submit" name="aaa" value="'.$langmessage['create_new_file'].'" class="gppost gpsubmit gpvalidate"/> '; //class="menupost" is not needed because we're adding hidden files
 			echo '<input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
 			echo '</p>';
 

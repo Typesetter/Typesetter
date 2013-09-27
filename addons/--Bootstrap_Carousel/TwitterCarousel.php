@@ -208,8 +208,11 @@ class TwitterCarousel{
 
 		if( $done ) return;
 
-		//common::LoadComponents( 'bootstrap-all' );
-		common::LoadComponents( 'bootstrap-carousel' );
+		if( version_compare(gpversion,'4.3b2','>=') ){
+			common::LoadComponents( 'bootstrap3-carousel' );
+		}else{
+			common::LoadComponents( 'bootstrap-carousel' );
+		}
 
 		//$page->admin_js = true; //loads main.js
 		$page->head_js[] = '/data/_addoncode/'.$addonFolderName.'/jquery.mobile.custom.js';

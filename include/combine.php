@@ -574,10 +574,14 @@ class gp_combine{
 		// move any bootstrap components to front to prevent conflicts
 		// hack for conflict between jquery ui button and bootstrap button
 		foreach($all_scripts as $key => $script){
-			if( !array_key_exists('package',$script) || $script['package'] !== 'bootstrap' ){
+			if( !array_key_exists('package',$script) ){
 				continue;
 			}
-			$first_scripts[$key] = $script;
+
+			if( $script['package'] == 'bootstrap' || $script['package'] == 'bootstrap3'  ){
+				$first_scripts[$key] = $script;
+			}
+
 		}
 
 		$all_scripts = $first_scripts + $all_scripts;

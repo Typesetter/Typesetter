@@ -1112,38 +1112,6 @@ class common{
 		if( $sessions ){
 			common::sessions();
 		}
-
-
-
-		/*
-		try{
-			includeFile('thirdparty/x_agar-less.php/Parser.php');
-			$parser = new \Less\Parser();
-			//$parser->getEnvironment()->setCompress(true);
-			$parser->parseFile('/var/www/gpeasy/themes/x_Bootstrap_Cerulean/6_Sticky_Footer/style.less');
-
-		}catch(Exception $e){
-			echo '<pre>';
-			print_r($e);
-			echo '</pre>';
-			die();
-		}
-
-		$css = $parser->getCss();
-		echo pre($css);
-		die('testing');
-
-		//
-		$test = array(
-			'/var/www/gpeasy/themes/x_Bootstrap_Cerulean/6_Sticky_Footer/style.less',
-			'/var/www/gpeasy/data/_layouts/o59s97o/custom.css',
-		);
-
-		gpOutput::CacheLess($test);
-		die('done');
-		*/
-
-
 	}
 
 

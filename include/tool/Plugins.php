@@ -264,7 +264,7 @@ class gpPlugin{
 			trigger_error('Corrupted configuration for addon: '.$addon_key); //.pre($config['addons']));
 			return false;
 		}
-		$addon_config += array( 'version'=>false, 'id'=>false, 'data_folder'=>$addon_key, 'order'=>false, 'code_folder_part'=>'/data/_addoncode/'.$addon_key );
+		$addon_config += array( 'version'=>false, 'id'=>false, 'data_folder'=>$addon_key, 'order'=>false, 'code_folder_part'=>'/data/_addoncode/'.$addon_key,'name'=>$addon_key );
 
 		//data folder
 		$addon_config['data_folder_part'] = '/data/_addondata/'.$addon_config['data_folder'];

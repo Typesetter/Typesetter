@@ -27,11 +27,12 @@ class gp_edit{
 		//resize images
 		$gp_html_output = new gp_html_output($html_content);
 		foreach($gp_html_output->dom_array as $key => $node){
-			if( !is_array($node) ){
+
+			if( !is_array($node) || !array_key_exists('tag',$node) ){
 				continue;
 			}
 
-			$tag =& $node['tag'];
+			$tag = $node['tag'];
 			if( $tag != 'img' || !isset($node['attributes']['src']) ){
 				continue;
 			}
@@ -304,7 +305,8 @@ class gp_edit{
 		//resize images
 		$gp_html_output = new gp_html_output($html_content);
 		foreach($gp_html_output->dom_array as $key => $node){
-			if( !is_array($node) ){
+
+			if( !is_array($node) || !array_key_exists('tag',$node) ){
 				continue;
 			}
 

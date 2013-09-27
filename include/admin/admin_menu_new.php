@@ -999,7 +999,7 @@ class admin_menu_new extends admin_menu_tools{
 			}
 		}
 
-		echo $this->Link('Admin_Menu',$langmessage['create_new_file'],'cmd=add_hidden',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpajax'));
+		echo $this->Link('Admin_Menu',$langmessage['create_new_file'],'cmd=add_hidden',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpabox'));
 		echo '</div>';
 		$links = ob_get_clean();
 
@@ -1463,8 +1463,6 @@ class admin_menu_new extends admin_menu_tools{
 	function AddHidden(){
 		global $langmessage,$page;
 
-		ob_start();
-
 		$title = '';
 		if( isset($_REQUEST['title']) ){
 			$title = $_REQUEST['title'];
@@ -1505,9 +1503,6 @@ class admin_menu_new extends admin_menu_tools{
 
 		echo '</form>';
 		echo '</div>';
-
-		$content = ob_get_clean();
-		$page->ajaxReplace[] = array('admin_box_data','',$content);
 	}
 
 

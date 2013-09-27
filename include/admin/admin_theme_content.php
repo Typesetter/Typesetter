@@ -3848,6 +3848,7 @@ class admin_theme_content extends admin_addon_install{
 
 		//images in theme
 		includeFile('tool/Images.php');
+		$images = array();
 		self::GetAvailThemeImages( $current_dir, $current_url, $images );
 		ob_start();
 		foreach($images as $image ){
@@ -4054,6 +4055,7 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function GetAvailThemeImages( $dir, $url, &$images ){
+
 		$files = scandir($dir);
 		$files = array_diff($files,array('.','..'));
 		foreach($files as $file){

@@ -184,9 +184,8 @@ class thumbnail{
 		if( is_numeric($value) ){
 			return (int)$value;
 		}
-		$value = strtolower($value);
 
-		$lastChar = $value{strlen($value)-1};
+		$lastChar = strtolower(substr($value,-1));
 		$num = (int)substr($value,0,-1);
 
 		switch($lastChar){
@@ -199,6 +198,7 @@ class thumbnail{
 				$num *= 1024;
 			break;
 		}
+
 		return $num;
 	}
 

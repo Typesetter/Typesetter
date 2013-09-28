@@ -197,44 +197,16 @@ class admin_uploaded{
 
 
 	static function Max_File_Size(){
-		$max = admin_uploaded::getByteValue();
+		$value = ini_get('upload_max_filesize');
+		if( empty($value) ){
+			return;
+		}
+		$max = thumbnail::getByteValue($value);
 		if( $max !== false ){
 			echo '<input type="hidden" name="MAX_FILE_SIZE" value="'.$max.'" />';
 		}
 	}
 
-	static function getByteValue($value=false){
-
-		if( $value === false ){
-			$value = ini_get('upload_max_filesize');
-		}
-
-		if( empty($value) ){
-			return false;
-			//$value = '2M';
-		}
-
-		if( is_numeric($value) ){
-			return (int)$value;
-		}
-
-
-		$lastChar = $value{strlen($value)-1};
-		$num = (int)substr($value,0,-1);
-
-		switch(strtolower($lastChar)){
-
-			case 'g':
-				$num *= 1024;
-			case 'm':
-				$num *= 1024;
-			case 'k':
-				$num *= 1024;
-			break;
-		}
-		return $num;
-
-	}
 
 	/**
 	 * Upload one image

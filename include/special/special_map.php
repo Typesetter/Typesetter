@@ -71,7 +71,7 @@ class special_map{
 				echo '<loc>';
 				echo 'http://';
 				echo $_SERVER['SERVER_NAME'];
-				echo common::GetUrl(urlencode($title));
+				echo common::GetUrl($title);
 				echo '</loc>';
 				echo '</url>';
 			}

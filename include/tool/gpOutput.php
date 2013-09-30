@@ -2581,8 +2581,7 @@ class gpOutput{
 
 
 			if( file_exists($dataDir.$compiled_file) ){
-				msg('regen');
-				//return $compiled_file;
+				return $compiled_file;
 			}
 
 		}

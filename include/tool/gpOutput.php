@@ -2107,10 +2107,7 @@ class gpOutput{
 				continue;
 			}
 
-			$temp = gpOutput::CacheLess($dataDir.$file);
-			$scripts[$key] = $temp;
-			msg($temp);
-
+			$scripts[$key] = gpOutput::CacheLess($dataDir.$file);
 		}
 
 		gpOutput::CombineFiles($scripts,'css',$config['combinecss']);

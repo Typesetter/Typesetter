@@ -2107,7 +2107,10 @@ class gpOutput{
 				continue;
 			}
 
-			$scripts[$key] = gpOutput::CacheLess($dataDir.$file);
+			$temp = gpOutput::CacheLess($dataDir.$file);
+			$scripts[$key] = $temp;
+			msg($temp);
+
 		}
 
 		gpOutput::CombineFiles($scripts,'css',$config['combinecss']);
@@ -2556,70 +2559,66 @@ class gpOutput{
 		global $dataDir;
 
 
-		// generate name for compiled css file
+		//generage the name of the css file from the modified times and content length of each imported less file
 		$hash = common::ArrayHash($less_files);
  		$list_file = $dataDir.'/data/_cache/less_'.$hash.'.list';
-
- 		//custom version of CachedCompile()
-		$compiled_file = false;
-		$less_cache = false;
  		if( file_exists($list_file) ){
 
-			//get info about the list file
-			$compiled_name = 'less_'.$hash.'_'.common::GenEtag( filesize($list_file) ).'.css';
+			$list = explode("\n",file_get_contents($list_file));
+
+
+			//pop the etag
+			$etag = array_pop($list);
+			if( !ctype_alnum($etag) ){
+				$list[] = $etag;
+				$etag = false;
+			}
+
+			// generate an etag if needed or if logged in
+			if( !$etag || common::LoggedIn() ){
+				$etag = common::FilesEtag( $list );
+			}
+
+			$compiled_name = 'less_'.$hash.'_'.$etag.'.css';
 			$compiled_file = '/data/_cache/'.$compiled_name;
 
 
-			//check modified time of all included files
 			if( file_exists($dataDir.$compiled_file) ){
-
-				$list = explode("\n",file_get_contents($list_file));
-				$list_updated = filemtime($list_file);
-
-				foreach($list as $file ){
-					if( !file_exists($file) || filemtime($file) > $list_updated ){
-						$compiled_file = false;
-						break;
-					}
-				}
-
-
-				// return relative path if we don't need to regenerate
-				if( $compiled_file ){
-
-
-					// touch the files to extend the cache
-					// don't do too often
-					if( (time() - filemtime($list_file)) > 604800 ){
-						touch($list_file);
-						touch($dataDir.$compiled_file);
-					}
-
-					return $compiled_file;
-				}
+				return $compiled_file;
 			}
 
 		}
 
 		$less_files = (array)$less_files;
-		$less_files = array_filter($less_files);
 		$compiled = gpOutput::ParseLess( $less_files );
 		if( !$compiled ){
 			return false;
 		}
 
-		//save the cache
+
+		// generate the file name
+		$etag = common::FilesEtag( $list );
+		$compiled_name = 'less_'.$hash.'_'.$etag.'.css';
+		$compiled_file = '/data/_cache/'.$compiled_name;
+
+
+		// save the cache
+		// use the last line for the etag
+		$less_files[] = $etag;
 		$cache = implode("\n",$less_files);
-		gpFiles::Save( $list_file, $cache );
+		if( !gpFiles::Save( $list_file, $cache ) ){
+			return false;
+		}
 
 
 		//save the css
-		$compiled_name = 'less_'.$hash.'_'.common::GenEtag( filesize($list_file) ).'.css';
-		$compiled_file = '/data/_cache/'.$compiled_name;
-		file_put_contents( $dataDir.$compiled_file, $compiled );
+		if( file_put_contents( $dataDir.$compiled_file, $compiled ) ){
+			return $compiled_file;
+		}
 
-		return $compiled_file;
+		return false;
 	}
+
 
 
 	/**

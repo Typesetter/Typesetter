@@ -1033,6 +1033,23 @@ class common{
 	}
 
 
+	/**
+	 * Generate an etag from the filemtime and filesize of each file
+	 * @param array $files
+	 *
+	 */
+	static function FilesEtag( $files ){
+		$modified = 0;
+		$content_length = 0;
+		foreach($files as $file ){
+			$content_length += @filesize( $file );
+			$modified = max($modified, @filemtime($file) );
+		}
+
+		return common::GenEtag( $modified, $content_length );
+	}
+
+
 	static function CheckTheme(){
 		global $page;
 		if( $page->theme_name === false ){

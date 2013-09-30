@@ -885,6 +885,7 @@ class admin_theme_content extends admin_addon_install{
 			message($langmessage['OOPS'].' (CSS not saved)');
 			return false;
 		}
+		touch($path);
 
 		$gpLayouts[$this->curr_layout]['css'] = true;
 		if( !admin_tools::SavePagesPHP() ){

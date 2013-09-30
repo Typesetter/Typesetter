@@ -2594,7 +2594,7 @@ class gpOutput{
 
 
 		// generate the file name
-		$etag = common::FilesEtag( $list );
+		$etag = common::FilesEtag( $less_files );
 		$compiled_name = 'less_'.$hash.'_'.$etag.'.css';
 		$compiled_file = '/data/_cache/'.$compiled_name;
 

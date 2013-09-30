@@ -175,31 +175,10 @@ class thumbnail{
 	}
 
 	/**
-	 * Convert a string representation of a byte value to an number
-	 * @param string $value
-	 * @return int
+	 * @deprecated 4.3
 	 */
 	static function getByteValue($value){
-
-		if( is_numeric($value) ){
-			return (int)$value;
-		}
-
-		$lastChar = strtolower(substr($value,-1));
-		$num = (int)substr($value,0,-1);
-
-		switch($lastChar){
-
-			case 'g':
-				$num *= 1024;
-			case 'm':
-				$num *= 1024;
-			case 'k':
-				$num *= 1024;
-			break;
-		}
-
-		return $num;
+		return common::getByteValue($value);
 	}
 
 

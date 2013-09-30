@@ -2581,7 +2581,8 @@ class gpOutput{
 
 
 			if( file_exists($dataDir.$compiled_file) ){
-				return $compiled_file;
+				msg('regen');
+				//return $compiled_file;
 			}
 
 		}
@@ -2626,6 +2627,16 @@ class gpOutput{
 	 */
 	static function ParseLess( &$less_files ){
 		global $dataDir;
+
+		// don't use less if the memory limit is less than 64M
+		$limit = @ini_get('memory_limit');
+		if( $limit ){
+			$limit = common::getByteValue( $limit );
+			if( $limit < 67108864 && @ini_set('64M') === false ){
+				return false;
+			}
+		}
+
 
 
 		//prepare the processor

@@ -2797,6 +2797,35 @@ class common{
 		return md5(json_encode($array) );
 	}
 
+
+	/**
+	 * Convert a string representation of a byte value to an number
+	 * @param string $value
+	 * @return int
+	 */
+	static function getByteValue($value){
+
+		if( is_numeric($value) ){
+			return (int)$value;
+		}
+
+		$lastChar = strtolower(substr($value,-1));
+		$num = (int)substr($value,0,-1);
+
+		switch($lastChar){
+
+			case 'g':
+				$num *= 1024;
+			case 'm':
+				$num *= 1024;
+			case 'k':
+				$num *= 1024;
+			break;
+		}
+
+		return $num;
+	}
+
 	/**
 	 * @deprecated 3.0
 	 * use gp_edit::UseCK();

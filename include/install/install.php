@@ -46,6 +46,7 @@ div,p,td,th{
 a{
 	color:#4466aa;
 	text-decoration:none;
+	border-bottom:1px dotted #869ece;
 	}
 
 h1{
@@ -367,6 +368,33 @@ class gp_install{
 			$this->StatusRow($checkValue,$langmessage['Off'],$langmessage['On']);
 			echo '</tr>';
 
+
+		// memory_limit
+		// LESS compiling uses a fair amount of memory
+		$checkValue = ini_get('memory_limit');
+		echo '<tr>';
+			echo '<td>';
+			echo '<a href="http://php.net/manual/ini.core.php#ini.memory-limit" target="_blank">';
+			echo 'Memory Limit';
+			echo '</a>';
+			echo '</td>';
+
+			//can't get memory_limit value
+			if( !$checkValue ){
+				echo '<td class="passed_orange">';
+				echo '???';
+				echo '</td>';
+			}else{
+				$checkValue = common::getByteValue($checkValue);
+				if( $checkValue < 67108864 && @ini_set('memory_limit','64M') === false ){
+					$this->StatusRow(false,'>=64M+','64M');
+				}else{
+					$this->StatusRow(true,'>=64M','64M');
+				}
+			}
+			echo '</tr>';
+
+
 		echo '<tr>';
 		echo '<th>'.$langmessage['Checking'].'...</th>';
 		echo '<th>'.$langmessage['Status'].'</th>';
@@ -413,7 +441,7 @@ class gp_install{
 			echo '<td class="passed">'.$langmessage['Passed'].'</td>';
 			echo '<td class="passed">'.$label_true.'</td>';
 		}else{
-			echo '<td class="failed">'.$langmessage['Failed'].': '.$langmessage['See_Below'].'</td>';
+			echo '<td class="failed">'.$langmessage['Failed'].'</td>';
 			echo '<td class="failed">'.$label_true.'</td>';
 		}
 		echo '<td>'.$label_true.'</td>';

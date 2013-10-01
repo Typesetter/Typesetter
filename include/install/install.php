@@ -380,18 +380,32 @@ class gp_install{
 			echo '</td>';
 
 			//can't get memory_limit value
-			if( !$checkValue ){
+			if( @ini_set('memory_limit','64M') !== false ){
+				echo '<td class="passed">'.$langmessage['Passed'].'</td>';
+				echo '<td class="passed">Adjustable</td>';
+
+			}elseif( !$checkValue ){
+				echo '<td class="passed_orange">'.$langmessage['Passed'].'</td>';
 				echo '<td class="passed_orange">';
 				echo '???';
 				echo '</td>';
+
 			}else{
-				$checkValue = common::getByteValue($checkValue);
-				if( $checkValue < 67108864 && @ini_set('memory_limit','64M') === false ){
-					$this->StatusRow(false,'>=64M+','64M');
+
+				$byte_value = common::getByteValue($checkValue);
+				if( $byte_value > 67108864 ){
+					echo '<td class="passed">'.$langmessage['Passed'].'</td>';
+					echo '<td class="passed">';
+					echo $checkValue;
+					echo '</td>';
+
 				}else{
-					$this->StatusRow(true,'>=64M','64M');
+					echo '<td class="failed">'.$langmessage['Failed'].'</td>';
+					echo '<td class="failed">'.$checkValue.'</td>';
+					$ok = false;
 				}
 			}
+			echo '<td> <span style="font-size:10px">&gt;=</span>64M or Adjustable</td>';
 			echo '</tr>';
 
 

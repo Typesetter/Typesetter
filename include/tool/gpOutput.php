@@ -2140,6 +2140,13 @@ class gpOutput{
 		//less file
 		$files[] = $page->theme_dir . '/' . $page->theme_color . '/style.less';
 
+
+		//variables.less
+		$var_file = $page->theme_dir . '/' . $page->theme_color . '/variables.less';
+		if( file_exists($var_file) ){
+			$files[] = $var_file;
+		}
+
 		if( $page->gpLayout && file_exists($custom_file) ){
 			$files[] = $custom_file;
 		}

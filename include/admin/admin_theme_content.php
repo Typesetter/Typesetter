@@ -535,8 +535,17 @@ class admin_theme_content extends admin_addon_install{
 		echo '</div>';
 		echo '</td></tr><tr><td class="full_height"><div class="full_height">';
 
+
+		//custom css
 		$css = $this->layoutCSS($this->curr_layout);
-		echo '<textarea name="css" id="gp_layout_css" class="gptextarea" placeholder="'.$langmessage['Add your LESS and CSS here'].'">';
+		if( empty($css) ){
+			$var_file = $layout_info['dir'].'/1_Starter_Template/variables.less';
+			if( file_exists($var_file) ){
+				$css = file_get_contents($var_file);
+			}
+		}
+
+		echo '<textarea name="css" id="gp_layout_css" class="gptextarea" placeholder="'.htmlspecialchars($langmessage['Add your LESS and CSS here']).'">';
 		echo htmlspecialchars($css);
 		echo '</textarea>';
 
@@ -727,8 +736,6 @@ class admin_theme_content extends admin_addon_install{
 
 		// <head>
 		if( $cmd != 'preview_css' ){
-			$css = $this->layoutCSS($this->curr_layout);
-			$page->head .= '<style id="gp_layout_style" type="text/css" rel="stylesheet/less">'.$css.'</style>';
 			$page->head .= '<script type="text/javascript">var gpLayouts=true;</script>';
 		}
 	}
@@ -831,6 +838,14 @@ class admin_theme_content extends admin_addon_install{
 		}else{
 			$less[] = $page->theme_dir . '/' . $page->theme_color . '/style.less';
 		}
+
+		// variables.less
+		$var_file = $page->theme_dir . '/' . $page->theme_color . '/variables.less';
+		if( file_exists($var_file) ){
+			$less[] = $var_file;
+		}
+
+
 		$less[] = $_REQUEST['css']. "\n"; //make sure this is seen as code and not a filename
 
 		$compiled = gpOutput::ParseLess( $less );

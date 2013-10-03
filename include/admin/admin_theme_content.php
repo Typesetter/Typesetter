@@ -529,19 +529,6 @@ class admin_theme_content extends admin_addon_install{
 		echo '<div>';
 
 
-		//get variables defined in the less files
-		/*
-		$variables = $this->LessVariables();
-		if( count($variables) ){
-			echo '<select style="width:205px">';
-			foreach($variables as $name => $value){
-				echo '<option>@'.htmlspecialchars($name).' => '.htmlspecialchars($value).'</option>';
-			}
-			echo '</select>';
-		}
-		*/
-
-
 		//style options
 		$this->StyleOptions($layout, $layout_info);
 
@@ -738,11 +725,6 @@ class admin_theme_content extends admin_addon_install{
 		$page->show_admin_content = false;
 		admin_tools::$show_toolbar = false;
 
-
-		//less variables
-		$less_variables = ' @dirPrefix: "'.$dirPrefix.'"; ';
-		//<style type="text/css" rel="stylesheet/less">'.$less_variables.'</style>
-
 		// <head>
 		if( $cmd != 'preview_css' ){
 			$css = $this->layoutCSS($this->curr_layout);
@@ -750,83 +732,6 @@ class admin_theme_content extends admin_addon_install{
 			$page->head .= '<script type="text/javascript">var gpLayouts=true;</script>';
 		}
 	}
-
-
-	/**
-	 * Get a list of all the LESS variables for a layout
-	 *
-	 */
-	function LessVariables(){
-		global $dataDir, $page;
-		return array();
-
-		msg('need to update cache file');
-
-		$variables = array();
-		$less_files = array();
-
-		$less_file = $page->theme_dir . '/' . $page->theme_color .'/style.less';
-		if( !file_exists($less_file) ){
-			return;
-		}
-
-		$less_files[] = $less_file;
-
-		$less_file = $dataDir.'/data/_layouts/'.$page->gpLayout.'/custom.css';
-		if( file_exists($less_file) ){
-			$less_files[] = $less_file;
-		}
-
-
-		$object_file = $dataDir.'/data/_cache/less_'.common::ArrayHash($less_files).'.php';
-
-		//make sure the object file exists
-		if( !file_exists($object_file) ){
-			gpOutput::CacheLess($less_files);
-
-			if( !file_exists($object_file) ){
-				continue;
-			}
-		}
-
-
-		//get variables from each file
-		$less_cache = array();
-		include($object_file);
-		//foreach($less_cache['files'] as $file => $mtime){
-		//	$variables = array_merge($variables, $this->LessVariablesFile($file));
-		//}
-
-		return $variables;
-	}
-
-
-	/**
-	 * Extract the variables from a less file
-	 * Using a regular expression won't be 100% accurate
-	 *
-	 */
-	function LessVariablesFile($file){
-
-		if( !file_exists($file) ){
-			return array();
-		}
-
-		$contents = file_get_contents($file);
-
-		$reg = '#@([a-z0-9\-_]+)\s*:\s*(.*);#i';
-		$reg = '#@([a-z0-9\-_]+)\s*:\s*([\'"]?[^\'"\n\r\f]*?[\'"]?);#i';
-		$num = preg_match_all( $reg, $contents, $matches );
-		if( !$num ){
-			return array();
-		}
-
-		$variables = $matches[1];
-		$values = $matches[2];
-
-		return array_combine($variables, $values);
-	}
-
 
 
 	/**

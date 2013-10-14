@@ -526,13 +526,13 @@ class admin_theme_content extends admin_addon_install{
 		//css textarea
 		echo '</div>';
 		echo '<div class="separator"></div>';
-		echo '<div>';
 
 
 		//style options
+		//echo '<div>';
 		//$this->StyleOptions($layout, $layout_info);
+		//echo '</div>';
 
-		echo '</div>';
 		echo '</td></tr><tr><td class="full_height"><div class="full_height">';
 
 

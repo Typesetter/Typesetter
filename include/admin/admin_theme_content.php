@@ -530,7 +530,7 @@ class admin_theme_content extends admin_addon_install{
 
 
 		//style options
-		$this->StyleOptions($layout, $layout_info);
+		//$this->StyleOptions($layout, $layout_info);
 
 		echo '</div>';
 		echo '</td></tr><tr><td class="full_height"><div class="full_height">';
@@ -769,16 +769,19 @@ class admin_theme_content extends admin_addon_install{
 		global $langmessage, $dataDir, $gpLayouts, $page;
 
 		$layout_info = common::LayoutInfo($this->curr_layout,false);
+		$color = $layout_info['theme_color'];
 		$theme_colors = $this->GetThemeColors($layout_info['dir']);
 		$path = $dataDir.'/data/_layouts/'.$this->curr_layout.'/custom.css';
 		$css =& $_POST['css'];
-		$color =& $_REQUEST['color'];
-
 
 		//check theme color
-		if( !isset($theme_colors[$color]) ){
-			message($langmessage['OOPS'].' (Invalid Color)');
-			return false;
+		if( array_key_exists('color',$_REQUEST) ){
+
+			if( !isset($theme_colors[$color]) ){
+				message($langmessage['OOPS'].' (Invalid Color)');
+				return false;
+			}
+			$color = $_REQUEST['color'];
 		}
 
 		$old_info = $new_info = $gpLayouts[$this->curr_layout];
@@ -821,14 +824,22 @@ class admin_theme_content extends admin_addon_install{
 
 		$layout_info = common::LayoutInfo($this->curr_layout,false);
 		$theme_colors = $this->GetThemeColors($layout_info['dir']);
+		$color = $layout_info['theme_color'];
 
 		// which color option
-		$color =& $_REQUEST['color'];
-		if( isset($theme_colors[$color]) ){
-			$page->theme_color = $color;
-			$page->theme_rel = dirname($page->theme_rel).'/'.$color;
-			$page->theme_path = dirname($page->theme_path).'/'.$color;
+		if( array_key_exists('color',$_REQUEST) ){
+
+			if( !isset($theme_colors[$color]) ){
+				message($langmessage['OOPS'].' (Invalid Color)');
+				return false;
+			}
+			$color = $_REQUEST['color'];
 		}
+
+		$page->theme_color = $color;
+		$page->theme_rel = dirname($page->theme_rel).'/'.$color;
+		$page->theme_path = dirname($page->theme_path).'/'.$color;
+
 
 
 		// which css files
@@ -846,17 +857,23 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 
-		$less[] = $_REQUEST['css']. "\n"; //make sure this is seen as code and not a filename
-
-		$compiled = gpOutput::ParseLess( $less );
-		if( !$compiled ){
-			message($langmessage['OOPS'].' (Invalid LESS)');
-			return false;
+		$temp = trim($_REQUEST['css']);
+		if( !empty($temp) ){
+			$less[] = $_REQUEST['css']. "\n"; //make sure this is seen as code and not a filename
 		}
 
 
+		if( count($less) ){
+			$compiled = gpOutput::ParseLess( $less );
+			if( !$compiled ){
+				message($langmessage['OOPS'].' (Invalid LESS)');
+				return false;
+			}
+
+			$page->head .= '<style>'.$compiled.'</style>';
+		}
+
 		$page->get_theme_css = false;
-		$page->head .= '<style>'.$compiled.'</style>';
 	}
 
 

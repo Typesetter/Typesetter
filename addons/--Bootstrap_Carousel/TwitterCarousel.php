@@ -171,7 +171,7 @@ class TwitterCarousel{
 			return $return;
 		}
 
-		$_POST += array('auto_start'=>'');
+		$_POST += array('auto_start'=>'','images'=>array());
 
 		$page->file_sections[$section]['auto_start'] = ($_POST['auto_start'] == 'true');
 		$page->file_sections[$section]['images'] = $_POST['images'];

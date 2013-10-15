@@ -99,6 +99,7 @@ var CKBUILDER_CONFIG = {
 		'hr' : 1,
 		'cs' : 1,
 		'da' : 1,
+		'et' : 1,
 		'de' : 1,
 		'el' : 1,
 		'en' : 1,

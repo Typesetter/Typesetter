@@ -1,6 +1,11 @@
 #login_container{
 	position:relative;
 	}
+#login_container *{
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	}
 
 #loginform,
 #browser_warning{

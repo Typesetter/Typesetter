@@ -56,7 +56,7 @@ if( !function_exists('gpSettingsOverride') ){
 	function gpSettingsOverride(){}
 }
 
-//see /var/www/others/mediawiki-1.15.0/languages/Names.php
+//see mediawiki/languages/Names.php
 $languages = array(
 	'af' => 'Afrikaans',
 	'ar' => 'العربية',			# Arabic
@@ -68,6 +68,7 @@ $languages = array(
 	'el' => 'Ελληνικά',			# Greek
 	'en' => 'English',
 	'es' => 'Español',
+	'et' => 'eesti',			# Estonian
 	'fi' => 'Suomi',			# Finnish
 	'fr' => 'Français',
 	'gl' => 'Galego',			# Galician

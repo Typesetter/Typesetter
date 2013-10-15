@@ -780,8 +780,8 @@ class display{
 
 		if( !$layout_info ){
 			$this->gpLayout = false;
-			$this->theme_name = 'Three_point_5';
-			$this->theme_color = 'Shore';
+			$this->theme_name = 'Bootswatch_Flatly';
+			$this->theme_color = '4_Sticky_Footer';
 			$this->theme_rel = '/themes/'.$this->theme_name.'/'.$this->theme_color;
 			$this->theme_dir = $dataDir.'/themes/'.$this->theme_name;
 

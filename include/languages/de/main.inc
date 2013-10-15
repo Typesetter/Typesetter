@@ -232,7 +232,7 @@ Achten Sie darauf, dass Sie einen modernen Browser wie etwa Mozilla FireFox oder
 'maxthumbsize'=>'Galeriebildgrösse',
 'auto_redir'=>'Prozent der automatischen Weiterleitung',
 'restore_defaults'=>'Voreinstellungen wiederherstellen',
-'Add your LESS and CSS here'=>'Add your LESS and CSS here',
+'Add your LESS and CSS here'=>'LESS und CSS hier einfügen',
 'default'=>'Voreingestellt',
 'see_also'=>'Siehe auch:',
 'general_settings'=>'Allgemeine Einstellungen',

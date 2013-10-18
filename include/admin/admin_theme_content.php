@@ -545,7 +545,7 @@ class admin_theme_content extends admin_addon_install{
 			}
 		}
 
-		echo '<textarea name="css" id="gp_layout_css" class="gptextarea" placeholder="'.htmlspecialchars($langmessage['Add your LESS and CSS here']).'">';
+		echo '<textarea name="css" id="gp_layout_css" class="gptextarea" placeholder="'.htmlspecialchars($langmessage['Add your LESS and CSS here']).'" wrap="off">';
 		echo htmlspecialchars($css);
 		echo '</textarea>';
 

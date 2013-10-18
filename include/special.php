@@ -138,6 +138,10 @@ class special_display extends display{
 			if( isset($gp_index[$requested]) ){
 
 				$index = $gp_index[$requested];
+				// Merge page data & script data if both exist
+				if( isset($scripts[$index]) && isset($gp_titles[$index])){
+					return array_merge($scripts[$index], $gp_titles[$index]);
+				}
 				if( isset($scripts[$index]) ){
 					return $scripts[$index];
 				}

@@ -254,7 +254,7 @@ body #gp_admin_html pre{
     white-space: pre-wrap;
 	}
 
-/*
+/**
  * floating admin container
  *
  */
@@ -263,9 +263,6 @@ body #gp_admin_html pre{
 	position:absolute;
 	z-index:8900;
 }
-
-
-
 
 
 #admin_drag_box{
@@ -278,6 +275,49 @@ body #gp_admin_html pre{
 	background-color:#fff; /* important for ie to prevent text selection underneath drag box */
 	.opacity(40);
 }
+
+
+/**
+ * Full Size Admin Area
+ *
+ */
+#admincontainer.gp_full_size{
+	border-radius:0;
+	border:0 none;
+	position:fixed;
+	top:0;
+	right:0;
+	left:0;
+	bottom:24px;
+	}
+
+#admincontainer.gp_full_size #gpx_content,
+#admincontainer.gp_full_size #admincontent{
+	height:100%;
+	padding-left:0;
+	padding-right:0;
+	padding-bottom:0;
+	.box-sizing( border-box );
+	}
+#admincontainer.gp_full_size #admincontent_inner{
+	height:100%;
+	overflow:auto;
+	border-right:0 none;
+	border-left:0 none;
+	border-bottom:0 none;
+	border-radius:0;
+	padding-right:30px;
+	.box-sizing( border-box );
+	}
+
+#admincontainer.gp_full_size .toolbar{
+	cursor:auto;
+	}
+#admincontainer.gp_full_size .admin_arrow_out{
+	display:none;
+	}
+
+
 
 
 
@@ -333,12 +373,21 @@ body #gp_admin_html #admincontent{
 #admincontent_panel.toolbar:hover .admin_arrow_out{
 	visibility:visible;
 	}
+
+.gp_floating_area .gp_maximize,
 .gp_floating_area .close_home{
 	display:inline-block;
 	height:16px;
 	width:16px;
 	border:1px solid transparent;
 	.gpimg('cancel.png',50%,50%);
+	}
+
+.gp_floating_area .gp_maximize{
+	.gpimg( 'admin_icons.png', -8px, -488px );
+	}
+.gp_floating_area.gp_full_size .gp_maximize{
+	.gpimg( 'admin_icons.png', -8px, -519px );
 	}
 
 

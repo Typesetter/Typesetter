@@ -578,17 +578,18 @@ class gpsession{
 
 	static function gpui_defaults(){
 
-		return array(	'gpui_cmpct'=>0,
-						'gpui_tx'=>6,
-						'gpui_ty'=>10,
-						'gpui_ckx'=>20,
-						'gpui_cky'=>240,
-						'gpui_ckd'=>false,
-						'gpui_pposx'=>0,
-						'gpui_pposy'=>0,
-						'gpui_pw'=>0,
-						'gpui_ph'=>0,
-						'gpui_vis'=>'cur',
+		return array(	'gpui_cmpct'	=> 0,
+						'gpui_tx'		=> 6,
+						'gpui_ty'		=> 10,
+						'gpui_ckx'		=> 20,
+						'gpui_cky'		=> 240,
+						'gpui_ckd'		=> false,
+						'gpui_pposx'	=> 0,
+						'gpui_pposy'	=> 0,
+						'gpui_pw'		=> 0,
+						'gpui_ph'		=> 0,
+						'gpui_vis'		=> 'cur',
+						'admin_full'	=> false,
 						);
 	}
 
@@ -781,6 +782,7 @@ class gpsession{
 	 *
 	 */
 	static function SaveSetting(){
+		global $gpAdmin;
 
 		$cmd = common::GetCommand();
 		if( empty($cmd) ){
@@ -788,6 +790,10 @@ class gpsession{
 		}
 
 		switch($cmd){
+			case 'toggle_view':
+				$gpAdmin['admin_full'] = !$gpAdmin['admin_full'];
+			break;
+
 			case 'savegpui':
 				self::SaveGPUI();
 			//dies
@@ -866,6 +872,7 @@ class gpsession{
 		}
 
 		//remove gpui_ settings no longer in $possible
+		unset($gpAdmin['gpui_pdock']);
 		unset($gpAdmin['gpui_con']);
 		unset($gpAdmin['gpui_cur']);
 		unset($gpAdmin['gpui_app']);

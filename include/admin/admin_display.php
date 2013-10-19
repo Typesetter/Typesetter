@@ -15,7 +15,8 @@ class admin_display extends display{
 	var $admin_html = '';
 
 	function admin_display($title){
-		global $langmessage;
+		global $langmessage, $gpAdmin;
+
 
 		$this->requested = str_replace(' ','_',$title);
 		$this->title = $title;
@@ -35,7 +36,15 @@ class admin_display extends display{
 
 		$this->head .= "\n".'<meta name="robots" content="noindex,nofollow" />';
 		@header( 'X-Frame-Options: SAMEORIGIN' );
+
+
+		//display admin area in full window?
+		if( $gpAdmin['admin_full'] && common::RequestType() == 'template' ){
+			$_REQUEST['gpreq'] = 'admin';
+		}
+
 	}
+
 
 	function RunScript(){
 		global $page;

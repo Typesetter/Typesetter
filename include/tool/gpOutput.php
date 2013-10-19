@@ -2496,6 +2496,11 @@ class gpOutput{
 				self::BodyAsHTML();
 			break;
 
+			case 'admin':
+				common::CheckTheme();
+				self::BodyAsHTML();
+			break;
+
 			// <a data-cmd="gpajax">
 			// <a data-cmd="gpabox">
 			// <input data-cmd="gpabox">

@@ -954,6 +954,7 @@ class common{
 				case 'flush':
 				case 'json':
 				case 'content':
+				case 'admin';
 				return $_REQUEST['gpreq'];
 			}
 		}

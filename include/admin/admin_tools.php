@@ -684,7 +684,8 @@ class admin_tools{
 
 		echo '<div id="admincontent_panel" class="toolbar">';
 		echo '<div class="gp_right">';
-		echo '<span class="admin_arrow_out"></span>';
+		//echo '<span class="admin_arrow_out"></span>';
+		echo common::Link('','','cmd=toggle_view',array('data-cmd'=>'creq','class'=>'gp_maximize'));
 		echo common::Link('','','','class="close_home"');
 		echo '</div>';
 
@@ -712,7 +713,16 @@ class admin_tools{
 			$gpAdmin['gpui_pw'] = 960;
 		}
 
-		return '<div id="admincontainer" class="gp_floating_area" style="left:'.$gpAdmin['gpui_pposx'].'px;top:'.$gpAdmin['gpui_pposy'].'px;width:'.Max($gpAdmin['gpui_pw'],300).'px;">';
+		$class = 'gp_floating_area';
+		if( common::RequestType() == 'admin' ){
+			$class .= ' gp_full_size';
+			$style = '';
+		}else{
+			$style = ' style="left:'.$gpAdmin['gpui_pposx'].'px;top:'.$gpAdmin['gpui_pposy'].'px;width:'.Max($gpAdmin['gpui_pw'],300).'px;"';
+		}
+
+
+		return '<div id="admincontainer" class="'.$class.'" '.$style.'>';
 	}
 
 

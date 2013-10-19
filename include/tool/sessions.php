@@ -784,7 +784,7 @@ class gpsession{
 	static function SaveSetting(){
 		global $gpAdmin;
 
-		$cmd = common::GetCommand();
+		$cmd = common::GetCommand('do');
 		if( empty($cmd) ){
 			return;
 		}

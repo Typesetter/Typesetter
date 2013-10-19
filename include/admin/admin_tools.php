@@ -685,7 +685,7 @@ class admin_tools{
 		echo '<div id="admincontent_panel" class="toolbar">';
 		echo '<div class="gp_right">';
 		//echo '<span class="admin_arrow_out"></span>';
-		echo common::Link('','','cmd=toggle_view',array('data-cmd'=>'creq','class'=>'gp_maximize'));
+		echo common::Link('','','do=toggle_view',array('data-cmd'=>'creq','class'=>'gp_maximize'));
 		echo common::Link('','','','class="close_home"');
 		echo '</div>';
 

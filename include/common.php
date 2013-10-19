@@ -2423,13 +2423,19 @@ class common{
 			$test = substr($test,1);
 		}
 
+		parse_str($test,$cookie_args);
+		if( !$cookie_args ){
+			return;
+		}
+
+
 		//parse_str will overwrite values in $_GET/$_REQUEST
-		parse_str($test,$_GET);
-		parse_str($test,$_REQUEST);
+		$_GET = $cookie_args + $_GET;
+		$_REQUEST = $cookie_args + $_REQUEST;
 
 		//for requests with verification, we'll set $_POST
 		if( !empty($_GET['verified']) ){
-			parse_str($test,$_POST);
+			$_POST = $cookie_args + $_POST;
 		}
 
 		$done = true;

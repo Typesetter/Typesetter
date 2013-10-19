@@ -208,7 +208,7 @@ $gp.SaveGPUI = function(){
 	if( !isadmin ){
 		return;
 	}
-	var data = 'cmd=savegpui';
+	var data = 'do=savegpui';
 	$.each(gpui,function(i,value){
 		data += '&gpui_'+i+'='+value;
 	});

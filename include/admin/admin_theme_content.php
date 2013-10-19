@@ -497,9 +497,9 @@ class admin_theme_content extends admin_addon_install{
 		global $page,$langmessage,$config;
 		$page->show_admin_content = false;
 
-		$page->head_js[] = '/include/thirdparty/x_codemirror/lib/codemirror.js';
-		$page->head_js[] = '/include/thirdparty/x_codemirror/mode/less/less.js';
-		$page->css_user[] = '/include/thirdparty/x_codemirror/lib/codemirror.css';
+		$page->head_js[] = '/include/thirdparty/codemirror/lib/codemirror.js';
+		$page->head_js[] = '/include/thirdparty/codemirror/mode/less/less.js';
+		$page->css_user[] = '/include/thirdparty/codemirror/lib/codemirror.css';
 
 
 

@@ -146,7 +146,7 @@ $(function(){
 
 		var codeMirrorConfig = {
 				mode:'less',
-				lineWrapping:false,
+				lineWrapping:false
 			};
 
 		var editor = CodeMirror.fromTextArea($textarea.get(0),codeMirrorConfig);

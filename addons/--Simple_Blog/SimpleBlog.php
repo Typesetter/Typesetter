@@ -743,7 +743,8 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			if( common::LoggedIn() ){
 				echo ' &nbsp; ';
-				echo SimpleBlogCommon::PostLink($post_index,$langmessage['delete'],'cmd=delete_comment&comment_index='.$key,' class="delete gpconfirm" name="postlink" title="'.$langmessage['delete_confirm'].'"');
+				$attr = 'class="delete gpconfirm" title="'.$langmessage['delete_confirm'].'" name="postlink" data-nonce= "'.common::new_nonce('post',true).'"';
+				echo SimpleBlogCommon::PostLink($post_index,$langmessage['delete'],'cmd=delete_comment&comment_index='.$key,$attr);
 			}
 
 

@@ -560,7 +560,7 @@ class admin_theme_content extends admin_addon_install{
 
 		echo ' <button name="cmd" type="submit" value="preview_css" class="gpsubmit" data-cmd="preview_css" />'.$langmessage['preview'].'</button>';
 		echo ' <button name="cmd" type="submit" value="save_css" class="gpsubmit" data-cmd="reset_css" />'.$langmessage['save'].'</button>';
-		echo ' <input type="reset" class="gpsubmit" data-cmd="reset_css" />';
+		//echo ' <input type="reset" class="gpsubmit" data-cmd="reset_css" />';
 
 
 		echo '</div></td></tr>';

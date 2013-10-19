@@ -144,6 +144,19 @@ $(function(){
 			return;
 		}
 
+		var codeMirrorConfig = {
+				mode:'less',
+				lineWrapping:false,
+			};
+
+		var editor = CodeMirror.fromTextArea($textarea.get(0),codeMirrorConfig);
+
+		$(window).resize(function(){
+			var parent = $textarea.parent();
+			editor.setSize(225,100);//shrink the editor so we can get the container size
+			editor.setSize(225,parent.height()-5);
+		}).resize();
+
 		var prev_value = $textarea.val();
 
 		$gp.inputs.preview_css = function(evt){};

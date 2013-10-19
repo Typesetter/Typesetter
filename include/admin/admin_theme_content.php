@@ -497,6 +497,11 @@ class admin_theme_content extends admin_addon_install{
 		global $page,$langmessage,$config;
 		$page->show_admin_content = false;
 
+		$page->head_js[] = '/include/thirdparty/x_codemirror/lib/codemirror.js';
+		$page->head_js[] = '/include/thirdparty/x_codemirror/mode/less/less.js';
+		$page->css_user[] = '/include/thirdparty/x_codemirror/lib/codemirror.css';
+
+
 
 		echo '<div id="theme_editor">';
 		echo '<form action="'.common::GetUrl('Admin_Theme_Content/'.$this->curr_layout,'cmd=in_iframe').'" method="post" class="full_height" target="gp_layout_iframe">';

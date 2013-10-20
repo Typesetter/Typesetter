@@ -59,6 +59,7 @@ class admin_display extends display{
 			&& $this->show_admin_content
 			){
 			$_REQUEST['gpreq'] = 'admin';
+			$page->get_theme_css = false;
 		}
 	}
 

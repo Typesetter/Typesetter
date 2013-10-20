@@ -527,13 +527,15 @@ class admin_tools{
 
 				$label = $new_addon_info['name'].':  '.$new_addon_info['version'];
 				if( $new_addon_info['type'] == 'theme' && gp_remote_themes ){
-					echo '<li>'.common::Link('Admin_Theme_Content/Remote',$label).'</li>';
-
+					$url = 'Themes';
 				}elseif( $new_addon_info['type'] == 'plugin' && gp_remote_plugins ){
-					echo '<li>'.common::Link('Admin_Addons/Remote',$label).'</li>';
+					$url = 'Plugins';
 				}else{
 					continue;
 				}
+
+				echo '<li><a href="'.addon_browse_path.'/'.$url.'/'.$addon_id.'" data-cmd="remote">'.$label.'</a></li>';
+
 			}
 
 			$list = ob_get_clean();

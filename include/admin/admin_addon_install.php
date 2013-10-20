@@ -35,16 +35,11 @@ class admin_addon_install extends admin_addons_tool{
 
 
 	function __construct(){
-		global $page, $GP_INLINE_VARS;
+		global $page;
 
 		// css and js
 		$page->css_admin[] = '/include/css/addons.css';
 		$page->head_js[] = '/include/js/rate.js';
-
-		$GP_INLINE_VARS += array(
-			'gpRem' => admin_tools::CanRemoteInstall(),
-		);
-
 	}
 
 	function ShowHeader(){

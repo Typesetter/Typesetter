@@ -426,7 +426,7 @@ class gpsession{
 	 *
 	 */
 	static function start($session_id){
-		global $langmessage, $dataDir,$GP_LANG_VALUES,$wbMessageBuffer;
+		global $langmessage, $dataDir, $GP_LANG_VALUES, $wbMessageBuffer, $GP_INLINE_VARS;
 
 		//get the session file
 		$sessions = self::GetSessionIds();
@@ -489,6 +489,11 @@ class gpsession{
 		$GP_LANG_VALUES += array('cancel'=>'ca','update'=>'up','caption'=>'cp','Width'=>'Width','Height'=>'Height');
 		common::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css');
 		admin_tools::VersionsAndCheckTime();
+
+
+		$GP_INLINE_VARS += array(
+			'gpRem' => admin_tools::CanRemoteInstall(),
+		);
 
 
 		//prepend messages from message buffer

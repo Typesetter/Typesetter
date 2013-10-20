@@ -36,18 +36,11 @@ class admin_display extends display{
 
 		$this->head .= "\n".'<meta name="robots" content="noindex,nofollow" />';
 		@header( 'X-Frame-Options: SAMEORIGIN' );
-
-
-		//display admin area in full window?
-		if( $gpAdmin['admin_full'] && common::RequestType() == 'template' ){
-			$_REQUEST['gpreq'] = 'admin';
-		}
-
 	}
 
 
 	function RunScript(){
-		global $page;
+		global $page, $gpAdmin;
 
 		$this->SetTheme();
 
@@ -58,6 +51,12 @@ class admin_display extends display{
 			$this->RunAdminScript();
 		}
 		$this->contentBuffer = ob_get_clean();
+
+
+		//display admin area in full window?
+		if( $gpAdmin['admin_full'] && common::RequestType() == 'template' ){
+			$_REQUEST['gpreq'] = 'admin';
+		}
 	}
 
 

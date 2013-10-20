@@ -54,7 +54,10 @@ class admin_display extends display{
 
 
 		//display admin area in full window?
-		if( $gpAdmin['admin_full'] && common::RequestType() == 'template' ){
+		if( $gpAdmin['admin_full']
+			&& common::RequestType() == 'template'
+			&& $this->show_admin_content
+			){
 			$_REQUEST['gpreq'] = 'admin';
 		}
 	}

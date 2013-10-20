@@ -360,17 +360,23 @@ class admin_tools{
 		}
 
 		$class = '';
-		if( isset($gpAdmin['gpui_cmpct']) && $gpAdmin['gpui_cmpct'] ){
+		$position = '';
+
+		if( common::RequestType() == 'admin' ){
+			$class = ' gp_full_size';
+
+		}elseif( isset($gpAdmin['gpui_cmpct']) && $gpAdmin['gpui_cmpct'] ){
 			$class = ' compact';
+			$position = ' style="top:'.max(-10,$gpAdmin['gpui_ty']).'px;left:'.max(-10,$gpAdmin['gpui_tx']).'px"';
 			if( $gpAdmin['gpui_cmpct'] === 2 ){
 				$class = ' compact min';
 			}elseif( $gpAdmin['gpui_cmpct'] === 3 ){
 				$class = ' minb';
 			}
 		}
+
 		$class = ' class="keep_viewable'.$class.'"';
 
-		$position = ' style="top:'.max(-10,$gpAdmin['gpui_ty']).'px;left:'.max(-10,$gpAdmin['gpui_tx']).'px"';
 
 		echo "\n\n";
 		echo '<div id="simplepanel"'.$class.$position.'><div>';

@@ -277,52 +277,6 @@ body #gp_admin_html pre{
 }
 
 
-/**
- * Full Size Admin Area
- *
- */
-#admincontainer.gp_full_size{
-	border-radius:0;
-	border:0 none;
-	position:fixed;
-	top:0;
-	right:0;
-	left:0;
-	bottom:24px;
-	}
-
-#admincontainer.gp_full_size #gpx_content,
-#admincontainer.gp_full_size #admincontent{
-	height:100%;
-	padding-left:0;
-	padding-right:0;
-	padding-bottom:0;
-	.box-sizing( border-box );
-	}
-#admincontainer.gp_full_size #admincontent_inner{
-	height:100%;
-	overflow:auto;
-	border-right:0 none;
-	border-left:0 none;
-	border-bottom:0 none;
-	border-radius:0;
-	padding-right:60px;
-	padding-left:60px;
-	.box-sizing( border-box );
-	}
-
-#admincontainer.gp_full_size .toolbar{
-	padding-left:60px;
-	cursor:auto;
-	}
-#admincontainer.gp_full_size .admin_arrow_out{
-	display:none;
-	}
-
-
-
-
-
 /*
  *  Admin Pages
  *
@@ -917,12 +871,10 @@ table.tablesorter th.gp_header_desc:before{
 	display:block;
 	padding:3px 14px;
 	white-space:nowrap;
+	overflow:hidden;
 	}
 #simplepanel .submenu a.submenu_top{
 	display:none;
-	}
-#simplepanel .submenu a:hover{
-	background-color:#222;
 	}
 #simplepanel .submenu .expand_child > a:after{
 	font-size:10px;
@@ -930,6 +882,14 @@ table.tablesorter th.gp_header_desc:before{
 	color:#aaa;
 	content:"\25B6";
 	padding-left:9px;
+	position:absolute;
+	right:0px;
+	padding-right:3px;
+	background:#2B2B2B;
+	}
+#simplepanel .submenu a:hover,
+#simplepanel .submenu a:hover:after{
+	background-color:#222;
 	}
 
 
@@ -1738,3 +1698,69 @@ body #gp_admin_html .layout_links a.selected{
 	margin:0 5px;
 	}
 
+
+
+
+/**
+ * Full Size Admin Area
+ *
+ */
+#admincontainer.gp_full_size{
+	border-radius:0;
+	border:0 none;
+	position:fixed;
+	top:0;
+	right:0;
+	left:180px;
+	bottom:24px;
+	.box-shadow( none );
+
+	#gpx_content,
+	#admincontent{
+		height:100%;
+		padding-left:0;
+		padding-right:0;
+		padding-bottom:0;
+		.box-sizing( border-box );
+	}
+
+	#admincontent_inner{
+		height:100%;
+		overflow:auto;
+		border-right:0 none;
+		border-left:0 none;
+		border-bottom:0 none;
+		border-radius:0;
+		padding-right:40px;
+		padding-left:40px;
+		.box-sizing( border-box );
+	}
+
+	.toolbar{
+		padding-left:40px;
+		cursor:auto;
+	}
+	.admin_arrow_out{
+		display:none;
+	}
+}
+
+#simplepanel.gp_full_size{
+	top:0;
+	left:0;
+	bottom:0;
+
+	> div{
+		border-radius:0;
+		height:100%;
+		width:180px;
+	}
+
+	.toggle_panel,
+	.icon_admin_home,
+	.admin_arrow_out{
+		display:none;
+		}
+
+
+}

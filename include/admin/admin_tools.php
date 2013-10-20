@@ -350,7 +350,12 @@ class admin_tools{
 		global $page, $gpAdmin, $config;
 
 		//don't send the panel when it's a gpreq=json request
-		if( !empty($_REQUEST['gpreq']) || !self::$show_toolbar ){
+		if( !self::$show_toolbar ){
+			return;
+		}
+
+		$reqtype = common::RequestType();
+		if( $reqtype != 'template' && $reqtype != 'admin' ){
 			return;
 		}
 

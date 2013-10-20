@@ -545,6 +545,7 @@ $(function(){
 	});
 
 	if( !isadmin || (typeof(gp_bodyashtml) !== 'undefined') ){
+		UIEffects();
 		return;
 	}
 

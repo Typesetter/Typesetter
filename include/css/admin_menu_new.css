@@ -208,6 +208,7 @@ body #admin_menu li.ui-sortable-helper{
 
 #gp_menu_available .gp_search_links{
 	text-align:right;
+	margin-bottom:10px;
 	}
 #gp_menu_available .gp_search_links a,
 #gp_menu_available .gp_search_links a:link,

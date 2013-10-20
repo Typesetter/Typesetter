@@ -7,7 +7,12 @@ $(function(){
 	var $container = $('#admincontainer');
 	var container_class = $container.attr('class') || '';
 
-	$container.resize(function(){
+	var $resize_area = $container;
+	if( $('.gp_full_size').length ){
+		$resize_area = $(window);
+	}
+
+	$resize_area.resize(function(){
 
 		var width = $container.width();
 		var cols = 1;

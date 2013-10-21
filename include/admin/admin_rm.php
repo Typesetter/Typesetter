@@ -34,7 +34,7 @@ class admin_status{
 			echo sprintf($langmessage['data_check_passed'],$checked,$checked);
 			echo '</p>';
 
-			$this->CheckPageFiles();
+			//$this->CheckPageFiles();
 			return;
 		}
 

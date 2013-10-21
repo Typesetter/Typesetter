@@ -365,13 +365,15 @@ class admin_tools{
 		if( common::RequestType() == 'admin' ){
 			$class = ' gp_full_size';
 
-		}elseif( isset($gpAdmin['gpui_cmpct']) && $gpAdmin['gpui_cmpct'] ){
-			$class = ' compact';
+		}else{
 			$position = ' style="top:'.max(-10,$gpAdmin['gpui_ty']).'px;left:'.max(-10,$gpAdmin['gpui_tx']).'px"';
-			if( $gpAdmin['gpui_cmpct'] === 2 ){
-				$class = ' compact min';
-			}elseif( $gpAdmin['gpui_cmpct'] === 3 ){
-				$class = ' minb';
+			if( isset($gpAdmin['gpui_cmpct']) && $gpAdmin['gpui_cmpct'] ){
+				$class = ' compact';
+				if( $gpAdmin['gpui_cmpct'] === 2 ){
+					$class = ' compact min';
+				}elseif( $gpAdmin['gpui_cmpct'] === 3 ){
+					$class = ' minb';
+				}
 			}
 		}
 

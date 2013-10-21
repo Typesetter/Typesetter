@@ -40,7 +40,7 @@ class admin_display extends display{
 
 
 	function RunScript(){
-		global $page, $gpAdmin;
+		global $page;
 
 		$this->SetTheme();
 
@@ -54,13 +54,24 @@ class admin_display extends display{
 
 
 		//display admin area in full window?
+		if( $page->FullDisplay() ){
+			$_REQUEST['gpreq'] = 'admin';
+			$page->get_theme_css = false;
+		}
+	}
+
+	//display admin area in full window?
+	function FullDisplay(){
+		global $gpAdmin;
+
 		if( $gpAdmin['admin_full']
 			&& common::RequestType() == 'template'
 			&& $this->show_admin_content
 			){
-			$_REQUEST['gpreq'] = 'admin';
-			$page->get_theme_css = false;
+				return true;
 		}
+
+		return false;
 	}
 
 

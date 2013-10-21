@@ -104,13 +104,18 @@ class admin_uploaded{
 
 		//options
 		$this->finder_opts['url'] = common::GetUrl('Admin_Finder');
-		$this->finder_opts['width'] = $gpAdmin['gpui_pw'];
-		if( $gpAdmin['gpui_ph'] > 0 ){
-			$this->finder_opts['height'] = $gpAdmin['gpui_ph'];
+
+		if( $page->FullDisplay() ){
+			$this->finder_opts['height'] = 'auto';
+			$this->finder_opts['resizable'] = false;
+
+		}else{
+
+			$this->finder_opts['width'] = $gpAdmin['gpui_pw'];
+			if( $gpAdmin['gpui_ph'] > 0 ){
+				$this->finder_opts['height'] = $gpAdmin['gpui_ph'];
+			}
 		}
-
-		//msg(common::RequestType());
-
 
 	}
 

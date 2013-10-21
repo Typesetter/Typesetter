@@ -109,6 +109,9 @@ class admin_uploaded{
 			$this->finder_opts['height'] = $gpAdmin['gpui_ph'];
 		}
 
+		//msg(common::RequestType());
+
+
 	}
 
 

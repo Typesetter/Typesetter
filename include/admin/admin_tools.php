@@ -381,7 +381,7 @@ class admin_tools{
 		echo '<div id="simplepanel"'.$class.$position.'><div>';
 
 			//toolbar
-			echo '<div class="toolbar cf">';
+			echo '<div class="toolbar">';
 				echo '<a class="toggle_panel" data-cmd="toggle_panel"></a>';
 				echo common::Link('Admin','','','class="icon_admin_home"');
 				echo common::Link('special_gpsearch','','',array('class'=>'icon_admin_search','data-cmd'=>'gpabox'));
@@ -803,7 +803,6 @@ class admin_tools{
 		ob_start();
 
 
-		admin_tools::GetAdminPanel();
 		admin_tools::InlineEditArea();
 
 		echo '<div class="nodisplay" id="gp_hidden"></div>';
@@ -814,10 +813,12 @@ class admin_tools{
 			echo $page->admin_html;
 		}
 
+		admin_tools::GetAdminPanel();
+
 
 		admin_tools::CheckStatus();
 		admin_tools::ScheduledTasks();
-		$gp_admin_html .= ob_get_clean();
+		$gp_admin_html = ob_get_clean() . $gp_admin_html;
 
 	}
 

@@ -229,7 +229,7 @@ class admin_display extends display{
 
 		echo '<h2>'.$langmessage['administration'].'</h2>';
 
-		echo '<div id="adminlinks2" class="cf">';
+		echo '<div id="adminlinks2">';
 		admin_tools::AdminPanelLinks(false);
 
 		//resources

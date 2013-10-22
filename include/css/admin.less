@@ -1713,14 +1713,17 @@ body #addon_about{
 
 	#gp_admin_html{
 		position:relative;
+		height:auto;
 	}
 
 	#admincontainer{
 		border-radius:0;
 		border:0 none;
-		left:180px;
+		margin-left:180px;
 		right:0;
 		.box-shadow( none );
+		position:relative;
+
 
 		#gpx_content,
 		#admincontent{
@@ -1738,6 +1741,7 @@ body #addon_about{
 			border-radius:0;
 			padding-right:40px;
 			padding-left:40px;
+			min-height:800px;
 		}
 
 		.toolbar{
@@ -1750,15 +1754,17 @@ body #addon_about{
 	}
 
 	#simplepanel{
-		position:relative;
+		position:absolute;
 		width:180px;
 		top:0;
 		left:0;
+		bottom:0;
 
 		> div{
-			border-radius:0 0 5px 0;
+			border-radius:0;
 			height:100%;
 			width:180px;
+			/* background:#2B2B2B;*/
 		}
 
 		.toggle_panel,

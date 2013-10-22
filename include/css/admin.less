@@ -1707,58 +1707,67 @@ body #addon_about{
  * Full Size Admin Area
  *
  */
-.gp_full_size #admincontainer{
-	border-radius:0;
-	border:0 none;
-	left:180px;
-	right:0;
-	.box-shadow( none );
+.gp_full_size{
+	margin:0;
+	padding:0;
 
-	#gpx_content,
-	#admincontent{
-		height:100%;
-		padding-left:0;
-		padding-right:0;
-		padding-bottom:0;
-		.box-sizing( border-box );
+	#gp_admin_html{
+		position:relative;
 	}
 
-	#admincontent_inner{
-		border-right:0 none;
-		border-left:0 none;
-		border-bottom:0 none;
+	#admincontainer{
 		border-radius:0;
-		padding-right:40px;
-		padding-left:40px;
+		border:0 none;
+		left:180px;
+		right:0;
+		.box-shadow( none );
+
+		#gpx_content,
+		#admincontent{
+			height:100%;
+			padding-left:0;
+			padding-right:0;
+			padding-bottom:0;
+			.box-sizing( border-box );
+		}
+
+		#admincontent_inner{
+			border-right:0 none;
+			border-left:0 none;
+			border-bottom:0 none;
+			border-radius:0;
+			padding-right:40px;
+			padding-left:40px;
+		}
+
+		.toolbar{
+			padding-left:40px;
+			cursor:auto;
+		}
+		.admin_arrow_out{
+			display:none;
+		}
 	}
 
-	.toolbar{
-		padding-left:40px;
-		cursor:auto;
-	}
-	.admin_arrow_out{
-		display:none;
-	}
-}
-
-.gp_full_size #simplepanel{
-	top:0;
-	left:0;
-	bottom:0;
-
-	> div{
-		border-radius:0;
-		height:100%;
+	#simplepanel{
+		position:relative;
 		width:180px;
+		top:0;
+		left:0;
+
+		> div{
+			border-radius:0 0 5px 0;
+			height:100%;
+			width:180px;
+		}
+
+		.toggle_panel,
+		.admin_arrow_out{
+			display:none;
+		}
+
+		.toolbar{
+			cursor:auto;
+		}
 	}
-
-	.toggle_panel,
-	.admin_arrow_out{
-		display:none;
-		}
-	.toolbar{
-		cursor:auto;
-		}
-
-
 }

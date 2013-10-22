@@ -126,7 +126,13 @@ class gpOutput{
 		echo '<!DOCTYPE html><html><head><meta charset="UTF-8" />';
 		gpOutput::getHead();
 		echo '</head>';
-		echo '<body class="gpbody">';
+
+		$class = 'gpbody';
+		if( common::RequestType() == 'admin' ){
+			$class .= ' gp_full_size';
+		}
+
+		echo '<body class="'.$class.'">';
 		echo GetMessages();
 
 		$page->GetGpxContent();

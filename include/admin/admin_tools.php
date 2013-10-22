@@ -362,10 +362,7 @@ class admin_tools{
 		$class = '';
 		$position = '';
 
-		if( common::RequestType() == 'admin' ){
-			$class = ' gp_full_size';
-
-		}else{
+		if( common::RequestType() != 'admin' ){
 			$position = ' style="top:'.max(-10,$gpAdmin['gpui_ty']).'px;left:'.max(-10,$gpAdmin['gpui_tx']).'px"';
 			if( isset($gpAdmin['gpui_cmpct']) && $gpAdmin['gpui_cmpct'] ){
 				$class = ' compact';
@@ -728,16 +725,12 @@ class admin_tools{
 			$gpAdmin['gpui_pw'] = 960;
 		}
 
-		$class = 'gp_floating_area';
-		if( common::RequestType() == 'admin' ){
-			$class .= ' gp_full_size';
-			$style = '';
-		}else{
+		$style = '';
+		if( common::RequestType() != 'admin' ){
 			$style = ' style="left:'.$gpAdmin['gpui_pposx'].'px;top:'.$gpAdmin['gpui_pposy'].'px;width:'.Max($gpAdmin['gpui_pw'],300).'px;"';
 		}
 
-
-		return '<div id="admincontainer" class="'.$class.'" '.$style.'>';
+		return '<div id="admincontainer" class="gp_floating_area" '.$style.'>';
 	}
 
 

@@ -816,10 +816,9 @@ table.tablesorter th.gp_header_desc:before{
 	display:block;
 	white-space:nowrap;
 	margin:0;
-	padding:7px 8px;
 	border-top:1px solid #3f3f3f;
 	border-bottom:1px solid #000;
-	height:16px;
+	height:30px;
 	}
 
 #simplepanel .toplink img{
@@ -828,9 +827,13 @@ table.tablesorter th.gp_header_desc:before{
 	width:16px;
 	}
 #simplepanel .toplink span{
-	padding-left:24px;
-	font-size:13px;
-	line-height: 14px;
+	padding:7px 8px 7px 30px;
+    display: block;
+    font-size: 13px;
+    line-height: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width:130px;
 	}
 #simplepanel.compact .toplink span{
 	display:none;

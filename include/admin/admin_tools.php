@@ -383,7 +383,8 @@ class admin_tools{
 			//toolbar
 			echo '<div class="toolbar">';
 				echo '<a class="toggle_panel" data-cmd="toggle_panel"></a>';
-				echo common::Link('Admin','','','class="icon_admin_home"');
+				echo common::Link('','','','class="icon_admin_home"');
+				echo common::Link('Admin','','','class="icon_admin"');
 				echo common::Link('special_gpsearch','','',array('class'=>'icon_admin_search','data-cmd'=>'gpabox'));
 				echo '<span class="extra admin_arrow_out"></span>';
 			echo '</div>';
@@ -499,7 +500,7 @@ class admin_tools{
 		//settings
 		if( $links = admin_tools::GetAdminGroup('settings') ){
 			echo '<div class="panelgroup" id="panelgroup_settings'.$id_piece.'">';
-			self::PanelHeading($in_panel, $langmessage['Settings'], 'icon_cog', 'set' );
+			self::PanelHeading($in_panel, $langmessage['Settings'], 'icon_edapp', 'set' );
 			echo '<ul class="submenu">';
 			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Settings'].'</a></li>';
 			echo $links;

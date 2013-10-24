@@ -707,23 +707,24 @@ table.tablesorter th.gp_header_desc:before{
 	cursor:move;
 	line-height:0;
 	}
-#simplepanel .toolbar > img,
-#simplepanel .toolbar > a{
+#simplepanel .toolbar > a,
+#simplepanel .toolbar > span{
 	display:inline-block;
-	height:16px;
-	width:16px;
-	padding:7px 8px;
+	height:32px;
+	width:20% !important;
+	min-width:32px;
+	.box-sizing( border-box );
 	}
 
 #simplepanel .toolbar .toggle_panel{
-	.gpimg( 'admin_icons.png', 0, -32px );
+	.gpimg( 'admin_icons.png', 50%, -32px );
 	}
 #simplepanel.compact > div{
 	width:32px;
 	min-width:0;
 	}
 #simplepanel.compact .toolbar .toggle_panel{
-	.gpimg( 'admin_icons.png', 0, -352px );
+	.gpimg( 'admin_icons.png', 50%, -352px );
 	}
 #simplepanel.minb:hover > div{
 	margin:0 0 200px 0; /* prevent the menu from disappearing if changing the display makes the user mouseout */
@@ -732,7 +733,7 @@ table.tablesorter th.gp_header_desc:before{
 	margin:0 !important; /* don't add margin at bottom if the display was just changed */
 	}
 #simplepanel.minb .toolbar .toggle_panel{
-	.gpimg( 'admin_icons.png', 0, 0 );
+	.gpimg( 'admin_icons.png', 50%, 0 );
 	}
 
 #simplepanel .toolbar .extra{
@@ -764,10 +765,16 @@ table.tablesorter th.gp_header_desc:before{
 	vertical-align:top;
 	.gpimg( 'admin_icons.png', -8px, -105px );
 	}
-#simplepanel .icon_cog,
+#simplepanel .icon_cog, /*deprecated 4.3 */
 #adminlinks2 .icon_cog span{
 	.gpimg( 'admin_icons.png', 0, -129px );
 	}
+
+#simplepanel .icon_edapp,
+#adminlinks2 .icon_edapp span{
+	.gpimg( 'admin_icons.png', 0, -545px );
+	}
+
 #simplepanel .icon_rfrsh,
 #adminlinks2 .icon_rfrsh span{
 	.gpimg( 'admin_icons.png', 0, -161px );
@@ -795,6 +802,12 @@ table.tablesorter th.gp_header_desc:before{
 	width:16px;
 	.gpimg( 'admin_icons.png', 50%, -448px );
 	}
+.icon_admin{
+	height:16px;
+	width:16px;
+	.gpimg( 'admin_icons.png', 50%, -128px );
+	}
+
 .icon_admin_search{
 	height:16px;
 	width:16px;
@@ -937,6 +950,7 @@ table.tablesorter th.gp_header_desc:before{
 	}
 #simplepanel.minb .icon_admin_search,
 #simplepanel.minb .icon_admin_home,
+#simplepanel.minb .icon_admin,
 #simplepanel.minb .panelgroup{
 	display:none;
 	}
@@ -944,12 +958,14 @@ table.tablesorter th.gp_header_desc:before{
 	display:block;
 	}
 #simplepanel.minb:hover .icon_admin_home,
+#simplepanel.minb:hover .icon_admin,
 #simplepanel.minb:hover .icon_admin_search{
 	display:inline-block;
 	}
 #simplepanel.toggledmin .panelgroup,
 #simplepanel.toggledmin .extra,
 #simplepanel.toggledmin .icon_admin_home,
+#simplepanel.toggledmin .icon_admin,
 #simplepanel.toggledmin .icon_admin_search{
 	display:none !important;
 	}

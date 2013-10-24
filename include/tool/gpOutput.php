@@ -1813,7 +1813,6 @@ class gpOutput{
 
 	static function HeadContent(){
 		global $config, $page, $gp_head_content, $wbMessageBuffer;
-		$gp_head_content = '';
 
 		//before ob_start() so plugins can get buffer content
 		gpPlugin::Action('HeadContent');
@@ -1857,7 +1856,7 @@ class gpOutput{
 			echo $page->head;
 		}
 
-		$gp_head_content = ob_get_clean();
+		$gp_head_content .= ob_get_clean();
 	}
 
 	/**

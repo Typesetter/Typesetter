@@ -411,7 +411,7 @@ class SimpleBlogCommon{
 	 *
 	 */
 	function SaveNew(){
-		global $langmessage;
+		global $langmessage, $gpAdmin;
 
 		$_POST += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'','category'=>array());
 
@@ -449,6 +449,9 @@ class SimpleBlogCommon{
 		$time = time();
 		$posts[$post_index]['time'] = $time;
 
+		// Save author username
+		$posts[$post_index]['username'] = $gpAdmin['username'];
+		
 		//save to data file
 		if( !gpFiles::SaveArray($post_file,'posts',$posts) ){
 			message($langmessage['OOPS']);

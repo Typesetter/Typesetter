@@ -2645,6 +2645,8 @@ class gpOutput{
 	static function ParseLess( &$less_files ){
 		global $dataDir;
 
+		$compiled = false;
+
 		// don't use less if the memory limit is less than 64M
 		$limit = @ini_get('memory_limit');
 		if( $limit ){
@@ -2656,7 +2658,6 @@ class gpOutput{
 				return false;
 			}
 		}
-
 
 
 		//prepare the processor
@@ -2703,6 +2704,7 @@ class gpOutput{
 		if( function_exists('gc_collect_cycles') ){
 			gc_collect_cycles();
 		}
+
 
 		$less_files = $parser->allParsedFiles();
 		return $compiled;

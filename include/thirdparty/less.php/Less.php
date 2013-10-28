@@ -352,7 +352,7 @@ class Less_Parser extends Less_Cache{
 	private function MatchString($string){
 		$len = strlen($string);
 
-		if( (strlen($this->input) > $this->pos) && substr_compare( $this->input, $string, $this->pos, $len, true ) === 0 ){
+		if( (strlen($this->input) >= ($this->pos+$len)) && substr_compare( $this->input, $string, $this->pos, $len, true ) === 0 ){
 			$this->skipWhitespace( $len );
 			$this->sync();
 			return $string;
@@ -686,7 +686,8 @@ class Less_Parser extends Less_Cache{
     //     0.5em 95%
     //
     private function parseEntitiesDimension(){
-        $c = ord($this->input[$this->pos]);
+
+        $c = @ord($this->input[$this->pos]);
 
 		//Is the first char of the dimension 0-9, '.', '+' or '-'
 		if (($c > 57 || $c < 43) || $c === 47 || $c == 44){

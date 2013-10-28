@@ -2383,7 +2383,7 @@ class gpOutput{
 			$replacement = "\n".'<div style="position:absolute;top:-1px;right:0;z-index:10000;padding:5px 10px;background:rgba(255,255,255,0.95);border:1px solid rgba(0,0,0,0.2);font-size:11px">'
 					.'<b>Debug Tools</b>'
 					.'<table>'
-					//.'<tr><td>Memory Usage:</td><td> '.number_format(memory_get_usage()).'</td></tr>'
+					.'<tr><td>Memory Usage:</td><td> '.number_format(memory_get_usage()).'</td></tr>'
 					.'<tr><td>Memory:</td><td> '.number_format($max_used).'</td></tr>'
 					//.'<tr><td>% of Limit:</td><td> '.$percentage.'%</td></tr>'
 					.'<tr><td>Time (PHP):</td><td> '.microtime_diff(gp_start_time,microtime()).'</td></tr>'
@@ -2598,6 +2598,7 @@ class gpOutput{
 
 
 			if( file_exists($dataDir.$compiled_file) ){
+				//msg('not returning');
 				return $compiled_file;
 			}
 
@@ -2695,6 +2696,12 @@ class gpOutput{
 				msg('LESS Compile Failed: '.$e->getMessage());
 			}
 			return false;
+		}
+
+
+		// significant difference in used memory 15,000,000 -> 6,000,000. Max still @ 15,000,000
+		if( function_exists('gc_collect_cycles') ){
+			gc_collect_cycles();
 		}
 
 		$less_files = $parser->allParsedFiles();

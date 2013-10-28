@@ -680,13 +680,11 @@ class gp_install{
 	function Installed(){
 		global $langmessage;
 		echo '<h4>'.$langmessage['Installation_Was_Successfull'].'</h4>';
-		echo '<ul>';
-		echo '<li>';
+
+		echo '<h2>';
 		echo common::Link('',$langmessage['View_your_web_site']);
-		echo '</li>';
-		echo '<li>';
-		echo common::Link('Admin',$langmessage['Log_in_and_start_editing']);
-		echo '</li>';
+		echo '</h2>';
+
 		echo '</ul>';
 
 		echo '<p>';

@@ -3174,8 +3174,8 @@ class Less_Tree_Condition {
 			break;
 
 			default:
-				$aReflection = new \ReflectionClass($a);
-				$bReflection = new \ReflectionClass($b);
+				$aReflection = new ReflectionClass($a);
+				$bReflection = new ReflectionClass($b);
 				if ($aReflection->hasMethod('compare')) {
 					$result = $a->compare($b);
 				} elseif ($bReflection->hasMethod('compare')) {
@@ -3871,7 +3871,7 @@ class Less_Tree_Media {
 		}
 		try {
 			$media->features = $this->features->compile($env);
-		}catch(\Exception $e){}
+		}catch(Exception $e){}
 
 		if( $strictMathBypass ){
 			$env->strictMath = false;
@@ -4542,7 +4542,7 @@ class Less_Tree_Rule{
 				return $this->name . ($env->compress ? ':' : ': ')
 					. $this->value->toCSS($env)
 					. $this->important . ($this->inline ? "" : ";");
-			}catch( \Exception $e ){
+			}catch( Exception $e ){
 				$e->index = $this->index;
 				$e->filename = $this->currentFileInfo['filename'];
 				throw $e;
@@ -4565,7 +4565,7 @@ class Less_Tree_Rule{
 										$this->currentFileInfo,
 										$this->index, $this->inline);
 		}
-		catch(\Exception $e){}
+		catch(Exception $e){}
 
 		if( $strictMathBypass ){
 			$env->strictMath = false;
@@ -5816,7 +5816,7 @@ class Less_processExtendsVisitor extends Less_visitor{
 				try{
 					$selectorOne = $extendsToAdd[0]->selfSelectors[0]->toCSS();
 					$selectorTwo = $extendsToAdd[0]->selector->toCSS();
-				}catch(\Exception $e){}
+				}catch(Exception $e){}
 				throw new Less_ParserException("extend circular reference detected. One of the circular extends is currently:"+$selectorOne+":extend(" + $selectorTwo+")");
 			}
 
@@ -6094,11 +6094,11 @@ class Less_visitor{
  
 
 
-class Less_CompilerException extends \Exception {
+class Less_CompilerException extends Exception {
 
 	private $filename;
 
-	public function __construct($message = null, $code = 0, \Exception $previous = null, $filename = null) {
+	public function __construct($message = null, $code = 0, Exception $previous = null, $filename = null) {
 		parent::__construct($message, $code, $previous);
 		$this->filename = $filename;
 	}
@@ -6114,6 +6114,6 @@ class Less_CompilerException extends \Exception {
  
 
 
-class Less_ParserException extends \Exception{
+class Less_ParserException extends Exception{
 
 } 

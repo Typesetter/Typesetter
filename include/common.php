@@ -1255,7 +1255,7 @@ class common{
 		if( isset($_SERVER['gp_rewrite']) ){
 			if( $_SERVER['gp_rewrite'] === true || $_SERVER['gp_rewrite'] == 'On' ){
 				$_SERVER['gp_rewrite'] = true;
-			}elseif( $_SERVER['gp_rewrite'] == substr($config['gpuniq'],0,7) ){
+			}elseif( $_SERVER['gp_rewrite'] == @substr($config['gpuniq'],0,7) ){
 				$_SERVER['gp_rewrite'] = true;
 			}
 

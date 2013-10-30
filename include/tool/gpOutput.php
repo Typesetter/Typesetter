@@ -2556,7 +2556,7 @@ class gpOutput{
 	 * @param string $names comma separated list of components
 	 *
 	 */
-	function GetComponents($names = ''){
+	static function GetComponents($names = ''){
 		includeFile('combine.php');
 		$scripts = gp_combine::ScriptInfo( $names );
 		gpOutput::CombineFiles($scripts['css'], 'css', false );

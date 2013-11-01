@@ -780,8 +780,8 @@ class display{
 
 		if( !$layout_info ){
 			$this->gpLayout = false;
-			$this->theme_name = 'Bootswatch_Flatly';
-			$this->theme_color = '4_Sticky_Footer';
+			$this->theme_name = 'Bootswatch_Flatly'; //'Three_point_5';
+			$this->theme_color = '4_Sticky_Footer'; //'Shore';
 			$this->theme_rel = '/themes/'.$this->theme_name.'/'.$this->theme_color;
 			$this->theme_dir = $dataDir.'/themes/'.$this->theme_name;
 
@@ -1777,6 +1777,7 @@ class common{
 	 */
 	static function GetConfig(){
 		global $config, $dataDir, $gp_hooks;
+
 
 		require($dataDir.'/data/_site/config.php');
 		if( !is_array($config) || !array_key_exists('gpversion',$config) ){

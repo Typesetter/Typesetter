@@ -207,13 +207,20 @@ class Less_Parser extends Less_Cache{
 	 */
 	private function GetRules( $file_path ){
 
-		$cache_file = $this->CacheFile( $file_path );
-		if( $cache_file && file_exists($cache_file) && ($cache = file_get_contents( $cache_file )) && ($cache = unserialize($cache)) ){
-			touch($cache_file);
-			return $cache;
-		}
-
+		$cache_file = false;
 		if( $file_path ){
+
+			$cache_file = substr($file_path,0,-5).'.lesscache';
+			if( file_exists($cache_file) && ($cache = file_get_contents( $cache_file )) && ($cache = unserialize($cache)) ){
+				return $cache;
+			}
+
+			$cache_file = $this->CacheFile( $file_path );
+			if( $cache_file && file_exists($cache_file) && ($cache = file_get_contents( $cache_file )) && ($cache = unserialize($cache)) ){
+				touch($cache_file);
+				return $cache;
+			}
+
 			$this->input = file_get_contents( $file_path );
 		}
 
@@ -246,7 +253,7 @@ class Less_Parser extends Less_Cache{
 	}
 
 
-	private function CacheFile( $file_path ){
+	public function CacheFile( $file_path ){
 
 		if( $file_path && self::$cache_dir ){
 			$file_size = filesize( $file_path );
@@ -1669,6 +1676,14 @@ class Less_Parser extends Less_Cache{
         }
     }
 
+	/**
+	 * Some versions of php have trouble with method_exists($a,$b) if $a is not an object
+	 *
+	 */
+    public static function is_method($a,$b){
+		return is_object($a) && method_exists($a,$b);
+	}
+
 
 }
 
@@ -1698,7 +1713,7 @@ class Less_Parser extends Less_Cache{
 			echo Pre($arg);
 		}
 	}
-
+ 
 
 //less.js : lib/less/colors.js
 
@@ -1875,7 +1890,7 @@ class Less_Colors {
 	}
 
 }
-
+ 
 
 //less.js : lib/less/functions.js
 
@@ -2664,7 +2679,7 @@ class Less_Environment{
 	}
 
 }
-
+ 
 
 //less.js : lib/less/functions.js
 
@@ -2695,7 +2710,7 @@ class Less_Mime{
 		// assumes all text types are UTF-8
 		return $type && preg_match('/^text\//',$type) ? 'UTF-8' : '';
 	}
-}
+} 
 
 
 class Less_Tree_Alpha{
@@ -2722,7 +2737,7 @@ class Less_Tree_Alpha{
 		}
 		return $this;
 	}
-}
+} 
 
 
 class Less_Tree_Anonymous{
@@ -2743,7 +2758,7 @@ class Less_Tree_Anonymous{
 	}
 
 	function compare($x){
-		if( !method_exists( $x, 'toCSS' ) ){
+		if( !Less_Parser::is_method( $x, 'toCSS' ) ){
 			return -1;
 		}
 
@@ -2757,7 +2772,7 @@ class Less_Tree_Anonymous{
 		return $left < $right ? -1 : 1;
 	}
 }
-
+ 
 
 
 class Less_Tree_Assignment {
@@ -2782,14 +2797,14 @@ class Less_Tree_Assignment {
     }
 
     public function compile($env) {
-		if( is_object($this->value) && method_exists($this->value,'compile') ){
+		if( Less_Parser::is_method($this->value,'compile') ){
 			return new Less_Tree_Assignment( $this->key, $this->value->compile($env));
         }
         return $this;
     }
 
 }
-
+ 
 
 
 class Less_Tree_Attribute{
@@ -2812,8 +2827,8 @@ class Less_Tree_Attribute{
 	*/
 
 	function compile($env){
-		return new Less_Tree_Attribute( (method_exists($this->key,'compile') ? $this->key->compile($env) : $this->key),
-			$this->op, ($this->value && method_exists($this->value,'compile')) ? $this->value->compile($env) : $this->value);
+		return new Less_Tree_Attribute( ( (Less_Parser::is_method($this->key,'compile')) ? $this->key->compile($env) : $this->key),
+			$this->op, ( Less_Parser::is_method($this->value,'compile')) ? $this->value->compile($env) : $this->value);
 	}
 
 	function toCSS($env){
@@ -2821,12 +2836,12 @@ class Less_Tree_Attribute{
 
 		if( $this->op ){
 			$value .= $this->op;
-			$value .= ( method_exists($this->value,'toCSS') ? $this->value->toCSS($env) : $this->value);
+			$value .= ( Less_Parser::is_method($this->value,'toCSS') ? $this->value->toCSS($env) : $this->value);
 		}
 
 		return '[' . $value . ']';
 	}
-}
+} 
 
 
 //
@@ -2880,7 +2895,7 @@ class Less_Tree_Call{
 			$name = 'datauri';
 		}
 
-		if (method_exists($env, $name)) { // 1.
+		if( Less_Parser::is_method($env, $name) ){ // 1.
 			try {
 
 				$result = call_user_func_array( array($env, $name), $args);
@@ -2907,7 +2922,7 @@ class Less_Tree_Call{
     }
 
 }
-
+ 
 
 
 class Less_Tree_Color{
@@ -3077,7 +3092,7 @@ class Less_Tree_Color{
             $x->alpha === $this->alpha) ? 0 : -1;
     }
 }
-
+ 
 
 // less.js : lib/less/tree/element.js
 
@@ -3110,7 +3125,7 @@ class Less_Tree_Combinator {
 		return $v[$this->value];
 	}
 }
-
+ 
 
 class Less_Tree_Comment{
 
@@ -3133,7 +3148,7 @@ class Less_Tree_Comment{
     }
 
 }
-
+ 
 
 class Less_Tree_Condition {
 
@@ -3175,15 +3190,14 @@ class Less_Tree_Condition {
 			break;
 
 			default:
-				$aReflection = new ReflectionClass($a);
-				$bReflection = new ReflectionClass($b);
-				if ($aReflection->hasMethod('compare')) {
+				if( Less_Parser::is_method($a, 'compare') ){
 					$result = $a->compare($b);
-				} elseif ($bReflection->hasMethod('compare')) {
+				}elseif( Less_Parser::is_method($b, 'compare') ){
 					$result = $b->compare($a);
-				} else {
+				}else{
 					throw new Less_CompilerException('Unable to perform comparison', $this->index);
 				}
+
 				switch ($result) {
 					case -1:
 					$result = $this->op === '<' || $this->op === '=<';
@@ -3204,7 +3218,7 @@ class Less_Tree_Condition {
     }
 
 }
-
+ 
 
 
 class Less_Tree_Dimension{
@@ -3386,7 +3400,7 @@ class Less_Tree_Dimension{
 		return new Less_Tree_Dimension( $value, $unit);
     }
 }
-
+ 
 
 class Less_Tree_Directive{
 
@@ -3450,7 +3464,7 @@ class Less_Tree_Directive{
     }
 
 }
-
+ 
 
 //less.js : lib/less/tree/element.js
 
@@ -3505,7 +3519,7 @@ class Less_Tree_Element{
 		);
 	}
 }
-
+ 
 
 class Less_Tree_Expression {
 
@@ -3566,7 +3580,7 @@ class Less_Tree_Expression {
 
 		$ret = array();
 		foreach($this->value as $e){
-			$ret[] = method_exists($e, 'toCSS') ? $e->toCSS($env) : '';
+			$ret[] = Less_Parser::is_method($e, 'toCSS') ? $e->toCSS($env) : '';
 		}
 
 		return implode(' ',$ret);
@@ -3586,7 +3600,7 @@ class Less_Tree_Expression {
 		}
 	}
 }
-
+ 
 
 
 class Less_Tree_Extend{
@@ -3640,7 +3654,7 @@ class Less_Tree_Extend{
 
 		$this->selfSelectors = array(new Less_Tree_Selector($selfElements));
 	}
-}
+} 
 
 
 
@@ -3786,7 +3800,7 @@ class Less_Tree_Import{
 	}
 }
 
-
+ 
 
 class Less_Tree_Javascript{
 
@@ -3806,7 +3820,7 @@ class Less_Tree_Javascript{
 		return $env->compress ? '' : '/* Sorry, can not do JavaScript evaluation in PHP... :( */';
 	}
 }
-
+ 
 
 
 class Less_Tree_Keyword{
@@ -3832,7 +3846,7 @@ class Less_Tree_Keyword{
 		}
 	}
 }
-
+ 
 
 //less.js : lib/less/tree/media.js
 
@@ -3947,7 +3961,7 @@ class Less_Tree_Media {
 		foreach($permuted as $path){
 
 			for( $i=0, $len=count($path); $i < $len; $i++){
-				$path[$i] = method_exists($path[$i], 'toCSS') ? $path[$i] : new Less_Tree_Anonymous($path[$i]);
+				$path[$i] = Less_Parser::is_method($path[$i], 'toCSS') ? $path[$i] : new Less_Tree_Anonymous($path[$i]);
 			}
 
 			for( $i = count($path) - 1; $i > 0; $i-- ){
@@ -3990,7 +4004,7 @@ class Less_Tree_Media {
     }
 
 }
-
+ 
 
 
 class Less_Tree_Mixin_Call{
@@ -4063,7 +4077,7 @@ class Less_Tree_Mixin_Call{
 				}
 
 				if ($mixin->matchArgs($args, $env)) {
-					if( !method_exists($mixin,'matchCondition') || $mixin->matchCondition($args, $env) ){
+					if( !Less_Parser::is_method($mixin,'matchCondition') || $mixin->matchCondition($args, $env) ){
 						try {
 							$rules = array_merge($rules, $mixin->compile($env, $args, $this->important)->rules);
 						} catch (Exception $e) {
@@ -4091,7 +4105,7 @@ class Less_Tree_Mixin_Call{
 					if( $a['name'] ){
 						$argValue += $a['name']+':';
 					}
-					if( $a['value'] && method_exists($a['value'],'toCSS') ){
+					if( Less_Parser::is_method($a['value'],'toCSS') ){
 						$argValue += $a['value']->toCSS();
 					}else{
 						$argValue += '???';
@@ -4113,7 +4127,7 @@ class Less_Tree_Mixin_Call{
 }
 
 
-
+ 
 
 class Less_Tree_Mixin_Definition extends Less_Tree_Ruleset{
 	//public $type = 'MixinDefinition';
@@ -4335,7 +4349,7 @@ class Less_Tree_Mixin_Definition extends Less_Tree_Ruleset{
 	}
 
 }
-
+ 
 
 
 class Less_Tree_Negative{
@@ -4364,7 +4378,7 @@ class Less_Tree_Negative{
 		}
 		return new Less_Tree_Negative( $this->value->compile($env) );
 	}
-}
+} 
 
 class Less_Tree_Operation{
 
@@ -4395,7 +4409,7 @@ class Less_Tree_Operation{
 					throw new Less_CompilerError("Operation on an invalid type");
 				}
 			}
-			if ( !$a || !method_exists($a,'operate') ) {
+			if ( !Less_Parser::is_method($a,'operate') ) {
 				throw new Less_CompilerError("Operation on an invalid type");
 			}
 
@@ -4410,7 +4424,7 @@ class Less_Tree_Operation{
 		return $this->operands[0]->toCSS($env) . $separator . $this->op . $separator . $this->operands[1]->toCSS($env);
 	}
 }
-
+ 
 
 class Less_Tree_Paren {
 
@@ -4436,7 +4450,7 @@ class Less_Tree_Paren {
 	}
 
 }
-
+ 
 
 
 class Less_Tree_Quoted{
@@ -4487,7 +4501,7 @@ class Less_Tree_Quoted{
 
 	function compare($x) {
 
-		if( !method_exists($x, 'toCSS') ){
+		if( !Less_Parser::is_method($x, 'toCSS') ){
 			return -1;
 		}
 
@@ -4501,7 +4515,7 @@ class Less_Tree_Quoted{
 		return $left < $right ? -1 : 1;
 	}
 }
-
+ 
 
 
 class Less_Tree_Rule{
@@ -4580,7 +4594,7 @@ class Less_Tree_Rule{
 	}
 
 }
-
+ 
 
 //less.js : /lib/less/tree/ruleset.js
 
@@ -4617,7 +4631,7 @@ class Less_Tree_Ruleset{
 		$selectors = array();
 		if( $this->selectors ){
 			foreach($this->selectors as $s){
-				if( is_object($s) && method_exists($s,'compile') ){
+				if( Less_Parser::is_method($s,'compile') ){
 					$selectors[] = $s->compile($env);
 				}
 			}
@@ -4685,7 +4699,7 @@ class Less_Tree_Ruleset{
 
 		foreach($ruleset->rules as $i => $rule) {
 			if(! ($rule instanceof Less_Tree_Mixin_Definition) ){
-				$ruleset->rules[$i] = method_exists($rule,'compile') ? $rule->compile($env) : $rule;
+				$ruleset->rules[$i] = Less_Parser::is_method($rule,'compile') ? $rule->compile($env) : $rule;
 			}
 		}
 
@@ -4727,9 +4741,9 @@ class Less_Tree_Ruleset{
 
 		$important_rules = array();
 		foreach($rules as $rule){
-			if( method_exists($rule,'makeImportant') && property_exists($rule,'selectors') ){
+			if( Less_Parser::is_method($rule,'makeImportant') && property_exists($rule,'selectors') ){
 				$important_rules[] = $rule->makeImportant($rule->selectors, $rule->rules, $strictImports);
-			}elseif( method_exists($rule,'makeImportant') ){
+			}elseif( Less_Parser::is_method($rule,'makeImportant') ){
 				$important_rules[] = $rule->makeImportant();
 			}else{
 				$important_rules[] = $rule;
@@ -4854,7 +4868,7 @@ class Less_Tree_Ruleset{
 					}
 				}
 			} else {
-				if( method_exists($rule, 'toCSS') && (!isset($rule->variable) || !$rule->variable) ){
+				if( Less_Parser::is_method($rule, 'toCSS') && (!isset($rule->variable) || !$rule->variable) ){
                     if( $this->firstRoot && $rule instanceof Less_Tree_Rule ){
 						throw new Less_CompilerError("properties must be inside selector blocks, they cannot be in the root.");
                     }
@@ -5084,7 +5098,7 @@ class Less_Tree_Ruleset{
 		}
 	}
 }
-
+ 
 
 //less.js : lib/less/tree/selector.js
 
@@ -5182,7 +5196,7 @@ class Less_Tree_Selector {
 	}
 
 }
-
+ 
 
 
 class Less_Tree_UnicodeDescriptor{
@@ -5200,7 +5214,7 @@ class Less_Tree_UnicodeDescriptor{
 	}
 }
 
-
+ 
 
 
 class Less_Tree_Unit{
@@ -5333,7 +5347,7 @@ class Less_Tree_Unit{
 
 }
 
-
+ 
 
 
 class Less_Tree_UnitConversions{
@@ -5361,7 +5375,7 @@ class Less_Tree_UnitConversions{
 		'turn'=> 1
 		);
 
-}
+} 
 
 
 class Less_Tree_Url{
@@ -5402,7 +5416,7 @@ class Less_Tree_Url{
 	}
 
 }
-
+ 
 
 
 class Less_Tree_Value{
@@ -5443,7 +5457,7 @@ class Less_Tree_Value{
 		return implode($env->compress ? ',' : ', ', $ret);
 	}
 }
-
+ 
 
 
 class Less_Tree_Variable {
@@ -5485,7 +5499,7 @@ class Less_Tree_Variable {
 	}
 
 }
-
+ 
 
 
 class Less_extendFinderVisitor extends Less_visitor{
@@ -5527,7 +5541,8 @@ class Less_extendFinderVisitor extends Less_visitor{
 		for($i = 0; $i < count($rulesetNode->paths); $i++ ){
 
 			$selectorPath = $rulesetNode->paths[$i];
-			$selector = $selectorPath[ count($selectorPath)-1];
+			$selector = end($selectorPath); //$selectorPath[ count($selectorPath)-1];
+
 
 			$list = array_slice($selector->extendList,0);
 			$list = array_merge($list, $allSelectorsExtendList);
@@ -5578,7 +5593,7 @@ class Less_extendFinderVisitor extends Less_visitor{
 }
 
 
-
+ 
 
 /*
 class Less_importVisitor{
@@ -5673,7 +5688,7 @@ class Less_importVisitor{
 	}
 
 }
-*/
+*/ 
 
 class Less_joinSelectorVisitor extends Less_visitor{
 
@@ -5688,7 +5703,7 @@ class Less_joinSelectorVisitor extends Less_visitor{
 	}
 
 	function visitRuleset($rulesetNode) {
-		$context = $this->contexts[ count($this->contexts) - 1];
+		$context = end($this->contexts); //$context = $this->contexts[ count($this->contexts) - 1];
 		$paths = array();
 		//$this->contexts[] = $paths;
 		if( !$rulesetNode->root ){
@@ -5706,13 +5721,13 @@ class Less_joinSelectorVisitor extends Less_visitor{
 	}
 
 	function visitMedia($mediaNode) {
-		$context = $this->contexts[ count($this->contexts) - 1];
+		$context = end($this->contexts); //$context = $this->contexts[ count($this->contexts) - 1];
 		$mediaNode->ruleset->root = ( count($context) === 0 || @$context[0]->multiMedia);
 	}
 
 }
 
-
+ 
 
 
 class Less_processExtendsVisitor extends Less_visitor{
@@ -5851,7 +5866,7 @@ class Less_processExtendsVisitor extends Less_visitor{
 			return;
 		}
 
-		$allExtends = $this->allExtendsStack[ count($this->allExtendsStack)-1];
+		$allExtends = end($this->allExtendsStack); //$this->allExtendsStack[ count($this->allExtendsStack)-1];
 		$selectorsToAdd = array();
 		$extendVisitor = $this;
 
@@ -5997,7 +6012,8 @@ class Less_processExtendsVisitor extends Less_visitor{
 			);
 
 			if( $match['pathIndex'] > $currentSelectorPathIndex && $currentSelectorPathElementIndex > 0 ){
-				$path[ count($path)-1]->elements = array_merge( $path[ count($path) - 1]->elements, array_slice( $selectorPath[$currentSelectorPathIndex]->elements, $currentSelectorPathElementIndex));
+				$last_key = count($path)-1;
+				$path[$last_key]->elements = array_merge( $path[$last_key]->elements, array_slice( $selectorPath[$currentSelectorPathIndex]->elements, $currentSelectorPathElementIndex));
 				$currentSelectorPathElementIndex = 0;
 				$currentSelectorPathIndex++;
 			}
@@ -6021,7 +6037,8 @@ class Less_processExtendsVisitor extends Less_visitor{
 		}
 
 		if( $currentSelectorPathIndex < count($selectorPath) && $currentSelectorPathElementIndex > 0 ){
-			$path[ count($path) - 1]->elements = array_merge( $path[ count($path) - 1]->elements, array_slice($selectorPath[$currentSelectorPathIndex]->elements, $currentSelectorPathElementIndex));
+			$last_key = count($path) - 1;
+			$path[$last_key]->elements = array_merge( $path[$last_key]->elements, array_slice($selectorPath[$currentSelectorPathIndex]->elements, $currentSelectorPathElementIndex));
 			$currentSelectorPathElementIndex = 0;
 			$currentSelectorPathIndex++;
 		}
@@ -6034,7 +6051,8 @@ class Less_processExtendsVisitor extends Less_visitor{
 
 
 	function visitMedia( $mediaNode ){
-		$newAllExtends = array_merge( $mediaNode->allExtends, $this->allExtendsStack[ count($this->allExtendsStack)-1 ] );
+		//$newAllExtends = array_merge( $mediaNode->allExtends, $this->allExtendsStack[ count($this->allExtendsStack)-1 ] );
+		$newAllExtends = array_merge( $mediaNode->allExtends, end($this->allExtendsStack) );
 		$newAllExtends = array_merge($newAllExtends, $this->doExtendChaining($newAllExtends, $mediaNode->allExtends));
 		$this->allExtendsStack[] = $newAllExtends;
 	}
@@ -6054,7 +6072,7 @@ class Less_processExtendsVisitor extends Less_visitor{
 		array_pop($this->allExtendsStack);
 	}
 
-}
+} 
 
 class Less_visitor{
 
@@ -6079,7 +6097,7 @@ class Less_visitor{
 			}
 
 			$deeper_property = $funcName.'Deeper';
-			if( !isset($this->$deeper_property) && method_exists($node,'accept') ){
+			if( !isset($this->$deeper_property) && Less_Parser::is_method($node,'accept') ){
 				$node->accept($this);
 			}
 
@@ -6092,7 +6110,7 @@ class Less_visitor{
 
 }
 
-
+ 
 
 
 class Less_CompilerException extends Exception {
@@ -6112,9 +6130,9 @@ class Less_CompilerException extends Exception {
 		return $this->message . " (" . $this->filename . ")";
 	}
 }
-
+ 
 
 
 class Less_ParserException extends Exception{
 
-}
+} 

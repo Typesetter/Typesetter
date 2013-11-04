@@ -22,11 +22,11 @@ class Install_Tools{
 		$_POST += array('username'=>'','site_title'=>'My gpEasy CMS','email'=>'');
 
 		echo '<tr><th colspan="2">'.$langmessage['configuration'].'</th></tr>';
-		echo '<tr><td>'.$langmessage['Website_Title'].'</td><td><input type="text" class="text" name="site_title" value="'.htmlspecialchars($_POST['site_title']).'" /></td></tr>';
-		echo '<tr><td>'.$langmessage['Admin_Username'].'</td><td><input type="text" class="text" name="username" value="'.htmlspecialchars($_POST['username']).'" /></td></tr>';
-		echo '<tr><td>'.$langmessage['email_address'].'</td><td><input type="text" class="text" name="email" value="'.htmlspecialchars($_POST['email']).'" /></td></tr>';
-		echo '<tr><td>'.$langmessage['Admin_Password'].'</td><td><input type="password" class="text" name="password" value="" /></td></tr>';
-		echo '<tr><td>'.$langmessage['repeat_password'].'</td><td><input type="password" class="text" name="password1" value="" /></td></tr>';
+		echo '<tr><td>'.$langmessage['Website_Title'].'</td><td><input type="text" class="text" name="site_title" value="'.htmlspecialchars($_POST['site_title']).'" required /></td></tr>';
+		echo '<tr><td>'.$langmessage['Admin_Username'].'</td><td><input type="text" class="text" name="username" value="'.htmlspecialchars($_POST['username']).'" required /></td></tr>';
+		echo '<tr><td>'.$langmessage['email_address'].'</td><td><input type="email" class="text" name="email" value="'.htmlspecialchars($_POST['email']).'" required /></td></tr>';
+		echo '<tr><td>'.$langmessage['Admin_Password'].'</td><td><input type="password" class="text" name="password" value="" required /></td></tr>';
+		echo '<tr><td>'.$langmessage['repeat_password'].'</td><td><input type="password" class="text" name="password1" value="" required /></td></tr>';
 	}
 
 	/**

@@ -2662,7 +2662,7 @@ class gpOutput{
 
 		//prepare the processor
 		includeFile('thirdparty/less.php/Less.php');
-		$parser = new Less_Parser(); //array('compress'=>true)
+		$parser = new Less_Parser(); //array('compress'=>true));
 		$parser->SetCacheDir( $dataDir.'/data/_cache' );
 
 		$import_dirs[$dataDir] = common::GetDir('/');

@@ -1,6 +1,7 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
+includeFile('tool/gpOutput.php');
 
 
 class Install_Tools{
@@ -461,12 +462,14 @@ class Install_Tools{
 
 		if( $base_install ){
 			Install_Tools::InstallHtaccess($destination,$config);
+			Install_Tools::PrepareLess();
 		}
 
 		gpFiles::Unlock('write',gp_random);
 
 		return true;
 	}
+
 
 	static function NewTitle( $dataDir, $title, $content ){
 
@@ -575,6 +578,12 @@ class Install_Tools{
 				fclose($temp);
 			}
 		}
+	}
+
+	static function PrepareLess(){
+		global $dataDir;
+		$less_files = $dataDir.'/include/css/admin.less';
+		gpOutput::CacheLess($less_files);
 	}
 
 

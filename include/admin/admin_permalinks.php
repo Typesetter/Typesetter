@@ -372,7 +372,7 @@ class admin_permalinks{
 
 	# Send all other requests to index.php
 	# Append the gp_rewrite argument to tell gpEasy not to use index.php and to prevent multiple rewrites
-	RewriteRule /?(.*) "/index.php?gp_rewrite=$1" [qsa,L]
+	RewriteRule /?(.*) "'.$home_root.'index.php?gp_rewrite=$1" [qsa,L]
 
 </IfModule>
 # END gpEasy';

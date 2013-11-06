@@ -1113,6 +1113,7 @@ class common{
 			$ob_gzhandler = true;
 		}
 
+
 		common::SetGlobalPaths($level,$expecting);
 		includeFile('tool/gpOutput.php');
 		includeFile('tool/functions.php');

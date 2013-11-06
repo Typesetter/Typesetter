@@ -201,7 +201,7 @@ class gpAjax{
 		$section_data += array('type'=>'','content'=>'');
 
 		self::Header();
-
+		Header('Vary: Accept,Accept-Encoding');// for proxies
 
 		$scripts = array();
 		$scripts[] = '/include/js/inline_edit/inline_editing.js';

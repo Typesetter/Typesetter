@@ -99,16 +99,21 @@ class gpOutput{
 	 */
 	static function Flush(){
 		global $page;
-		header('Content-Type: text/html; charset=utf-8');
+		self::StandardHeaders();
 		echo GetMessages();
 		echo $page->contentBuffer;
 	}
 
 	static function Content(){
 		global $page;
-		header('Content-Type: text/html; charset=utf-8');
+		self::StandardHeaders();
 		echo GetMessages();
 		$page->GetGpxContent();
+	}
+
+	static function StandardHeaders(){
+		header('Content-Type: text/html; charset=utf-8');
+		Header('Vary: Accept,Accept-Encoding');// for proxies
 	}
 
 	/**
@@ -122,7 +127,8 @@ class gpOutput{
 
 		gpOutput::TemplateSettings();
 
-		header('Content-Type: text/html; charset=utf-8');
+		self::StandardHeaders();
+
 		echo '<!DOCTYPE html><html><head><meta charset="UTF-8" />';
 		gpOutput::getHead();
 		echo '</head>';
@@ -156,7 +162,9 @@ class gpOutput{
 			$addon_current_id = $page->theme_addon_id;
 		}
 		gpOutput::TemplateSettings();
-		header('Content-Type: text/html; charset=utf-8');
+
+		self::StandardHeaders();
+
 		$path = $page->theme_dir.'/template.php';
 		$return = IncludeScript($path,'require',array('page','GP_ARRANGE','GP_MENU_LINKS','GP_MENU_CLASS','GP_MENU_CLASSES','GP_MENU_ELEMENTS'));
 

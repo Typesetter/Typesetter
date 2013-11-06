@@ -1,8 +1,6 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-//sleep(3); //for testing
-
 
 class gpAjax{
 

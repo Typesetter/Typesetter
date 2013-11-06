@@ -3,6 +3,7 @@ defined('is_running') or die('Not an entry point...');
 
 //sleep(3); //for testing
 
+
 class gpAjax{
 
 	static function ReplaceContent($id,$content){
@@ -127,12 +128,80 @@ class gpAjax{
 		return $callback;
 	}
 
+
+	/**
+	 * Send a header for the javascript request
+	 * Attempt to find an appropriate type within the accept header
+	 *
+	 */
+	static function Header(){
+
+		$accept = self::RequestHeaders('accept');
+		$mime = 'application/javascript'; //default mime
+
+		if( $accept && preg_match_all('#([^,;\s]+)\s*;?\s*([^,;\s]+)?#',$accept,$matches,PREG_SET_ORDER) ){
+			$mimes = array('application/javascript','application/x-javascript','text/javascript');
+
+
+			//organize by importance
+			$accept = array();
+			$i = 1;
+			foreach($matches as $match){
+				if( isset($match[2]) ){
+					$accept[$match[1]] = $match[2];
+				}else{
+					$accept[$match[1]] = $i++;
+				}
+			}
+			arsort($accept);
+
+			//get matching mime
+			foreach($accept as $part => $priority){
+				if( in_array(trim($part),$mimes) ){
+					$mime = $part;
+					break;
+				}
+			}
+		}
+
+		//add charset
+		header('Content-Type: '.$mime.'; charset=UTF-8');
+	}
+
+
+	/**
+	 * Return a list of all headers
+	 *
+	 */
+	static function RequestHeaders($which = false){
+	    $headers = array();
+	    foreach($_SERVER as $key => $value) {
+	        if( substr($key, 0, 5) <> 'HTTP_' ){
+	            continue;
+	        }
+
+	        $header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
+
+	        if( $which ){
+				if( strnatcasecmp($which,$header) === 0){
+					return $value;
+				}
+			}
+
+	        $headers[$header] = $value;
+	    }
+	    if( !$which ){
+			return $headers;
+		}
+	}
+
 	static function InlineEdit($section_data){
 		global $dataDir,$dirPrefix;
 
 		$section_data += array('type'=>'','content'=>'');
 
-		header('Content-type: application/x-javascript');
+		self::Header();
+
 
 		$scripts = array();
 		$scripts[] = '/include/js/inline_edit/inline_editing.js';

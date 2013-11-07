@@ -362,7 +362,7 @@ class admin_permalinks{
 	RewriteRule index\.php(.*) $1 [R=302,L]
 
 	# Add gp_rewrite to root requests
-	RewriteRule ^$ /index.php?gp_rewrite [L]
+	RewriteRule ^$ /index.php?gp_rewrite [qsa,L]
 
 	# Don\'t rewrite for static files
 	RewriteCond %{REQUEST_FILENAME} -f [OR]

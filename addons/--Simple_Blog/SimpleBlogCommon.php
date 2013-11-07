@@ -451,7 +451,7 @@ class SimpleBlogCommon{
 
 		// Save author username
 		$posts[$post_index]['username'] = $gpAdmin['username'];
-		
+
 		//save to data file
 		if( !gpFiles::SaveArray($post_file,'posts',$posts) ){
 			message($langmessage['OOPS']);
@@ -530,6 +530,8 @@ class SimpleBlogCommon{
 			return false;
 		}
 
+		//update title
+		SimpleBlogCommon::AStrValue('titles',$post_index,$title);
 
 		//find and update the edited post in categories and archives
 		$this->update_post_in_categories($post_index,$title);

@@ -186,7 +186,7 @@ class Install_Tools{
 		if( @ini_set('memory_limit','96M') === false ){
 			$limit = ini_get('memory_limit');
 			$limit = common::getByteValue($limit);
-			if( $byte_value < 100663296 ){
+			if( $limit < 100663296 ){
 				$gpLayouts['default']['theme'] = 'Three_point_5/Shore';
 				$gpLayouts['default']['label'] = 'Three_point_5/Shore';
 			}

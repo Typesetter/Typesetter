@@ -178,9 +178,21 @@ class Install_Tools{
 		//$config = array(); //because of ftp values
 
 		$gpLayouts = array();
-		$gpLayouts['default']['theme'] = 'Bootswatch_Flatly/4_Sticky_Footer'; //'Three_point_5/Shore';
+
+
+		//use bootswatch theme if server has enough memory
+		$gpLayouts['default']['theme'] = 'Bootswatch_Flatly/4_Sticky_Footer';
+		$gpLayouts['default']['label'] = 'Bootswatch_Flatly/4_Sticky_Footer';
+		if( @ini_set('memory_limit','96M') === false ){
+			$limit = ini_get('memory_limit');
+			$limit = common::getByteValue($limit);
+			if( $byte_value < 100663296 ){
+				$gpLayouts['default']['theme'] = 'Three_point_5/Shore';
+				$gpLayouts['default']['label'] = 'Three_point_5/Shore';
+			}
+		}
+
 		$gpLayouts['default']['color'] = '#93c47d';
-		$gpLayouts['default']['label'] = $langmessage['default'];
 
 
 		$config['toemail'] = $_POST['email'];

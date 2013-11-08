@@ -2659,11 +2659,17 @@ class gpOutput{
 		$limit = @ini_get('memory_limit');
 		if( $limit ){
 			$limit = common::getByteValue( $limit );
-			if( $limit < 67108864 && @ini_set('memory_limit','64M') === false ){
+
+			//if less than 64M, disable less compiler if we can't increase
+			if( $limit < 67108864 && @ini_set('memory_limit','96M') === false ){
 				if( common::LoggedIn() ){
 					msg('LESS compilation disabled. Please increase php\'s memory_limit');
 				}
 				return false;
+
+			//if less than 96M, try to increase
+			}elseif( $limit < 100663296 ){
+				@ini_set('memory_limit','96M');
 			}
 		}
 

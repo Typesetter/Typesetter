@@ -720,7 +720,8 @@ class admin_tools{
 
 		// if the admin window doesn't have a position
 		if( !isset($gpAdmin['gpui_pposx']) || !isset($gpAdmin['gpui_pposy']) || ($gpAdmin['gpui_pposx'] == 0 && $gpAdmin['gpui_pposy'] == 0) ){
-			$gpAdmin['gpui_pposx'] = $gpAdmin['gpui_pposy'] = 70;
+			$gpAdmin['gpui_pposx'] = 190;
+			$gpAdmin['gpui_pposy'] = 70;
 		}
 		if( !isset($gpAdmin['gpui_pw']) || $gpAdmin['gpui_pw'] == 0 ){
 			$gpAdmin['gpui_pw'] = 960;

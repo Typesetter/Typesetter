@@ -940,7 +940,7 @@ class Less_Parser extends Less_Cache{
 		}
 
 		if( count($elements) > 0 && ($this->MatchChar(';') || $this->PeekChar('}')) ){
-			return new Less_Tree_Mixin_Call($elements, $args, $index, $this->env->currentFileInfo, $important);
+			return new Less_Tree_MixinCall($elements, $args, $index, $this->env->currentFileInfo, $important);
 		}
 
 		$this->restore();
@@ -1118,7 +1118,7 @@ class Less_Parser extends Less_Cache{
             $ruleset = $this->parseBlock();
 
             if( is_array($ruleset) ){
-                return new Less_Tree_Mixin_Definition($name, $params, $ruleset, $cond, $variadic);
+                return new Less_Tree_MixinDefinition($name, $params, $ruleset, $cond, $variadic);
             } else {
 				$this->restore();
 			}
@@ -3165,13 +3165,13 @@ class Less_Tree_Color{
 	public function toARGB(){
 		$argb = array_merge( (array) round($this->alpha * 255), $this->rgb);
 
-		$temp = array();
+		$temp = '';
 		foreach($argb as $i){
 			$i = round($i);
 			$i = dechex($i > 255 ? 255 : ($i < 0 ? 0 : $i));
-			$temp[] = str_pad($i, 2, '0', STR_PAD_LEFT);
+			$temp .= str_pad($i, 2, '0', STR_PAD_LEFT);
 		}
-		return '#' . implode('',$temp);
+		return '#' . $temp;
 	}
 
     public function compare($x){
@@ -3551,11 +3551,6 @@ class Less_Tree_Directive{
     public function find($selector)
     {
         return $this->ruleset->find($selector, $this);
-    }
-
-    public function rulesets()
-    {
-        return $this->ruleset->rulesets();
     }
 
 }
@@ -4008,10 +4003,6 @@ class Less_Tree_Media {
 		return $this->ruleset->find($selector, $this);
 	}
 
-	public function rulesets() {
-		return $this->ruleset->rulesets();
-	}
-
 	public function emptySelectors(){
 		$el = new Less_Tree_Element('','&', 0);
 		return array(new Less_Tree_Selector(array($el)));
@@ -4102,7 +4093,7 @@ class Less_Tree_Media {
  
 
 
-class Less_Tree_Mixin_Call{
+class Less_Tree_MixinCall{
 
 	//public $type = 'MixinCall';
 	private $selector;
@@ -4160,7 +4151,7 @@ class Less_Tree_Mixin_Call{
 
 				$isRecursive = false;
 				foreach($env->frames as $recur_frame){
-					if( !($mixin instanceof Less_Tree_Mixin_Definition) ){
+					if( !($mixin instanceof Less_Tree_MixinDefinition) ){
 						if( (isset($recur_frame->originalRuleset) && $mixin === $recur_frame->originalRuleset) || ($mixin === $recur_frame) ){
 							$isRecursive = true;
 							break;
@@ -4176,7 +4167,8 @@ class Less_Tree_Mixin_Call{
 						try {
 							$rules = array_merge($rules, $mixin->compile($env, $args, $this->important)->rules);
 						} catch (Exception $e) {
-							throw new Less_CompilerException($e->message, $e->index, null, $this->currentFileInfo['filename']);
+							//throw new Less_CompilerException($e->getMessage(), $e->index, null, $this->currentFileInfo['filename']);
+							throw new Less_CompilerException($e->getMessage(), null, null, $this->currentFileInfo['filename']);
 						}
 					}
 					$match = true;
@@ -4208,7 +4200,7 @@ class Less_Tree_Mixin_Call{
 					$message[] = $argValue;
 				}
 			}
-			$message = implode(', ');
+			$message = implode(', ',$message);
 
 
 			throw new Less_CompilerException('No matching definition was found for `'.
@@ -4224,7 +4216,7 @@ class Less_Tree_Mixin_Call{
 
  
 
-class Less_Tree_Mixin_Definition extends Less_Tree_Ruleset{
+class Less_Tree_MixinDefinition extends Less_Tree_Ruleset{
 	//public $type = 'MixinDefinition';
 	public $name;
 	public $selectors;
@@ -4755,7 +4747,7 @@ class Less_Tree_Ruleset{
 		// Store the frames around mixin definitions,
 		// so they can be evaluated like closures when the time comes.
 		foreach($ruleset->rules as $i => $rule) {
-			if ($rule instanceof Less_Tree_Mixin_Definition) {
+			if ($rule instanceof Less_Tree_MixinDefinition) {
 				$ruleset->rules[$i]->frames = array_slice($env->frames,0);
 			}
 		}
@@ -4768,7 +4760,7 @@ class Less_Tree_Ruleset{
 		// Evaluate mixin calls.
 		for($i=0; $i < count($ruleset->rules); $i++){
 			$rule = $ruleset->rules[$i];
-			if( $rule instanceof Less_Tree_Mixin_Call ){
+			if( $rule instanceof Less_Tree_MixinCall ){
 				$rules = $rule->compile($env);
 
 				$temp = array();
@@ -4793,7 +4785,7 @@ class Less_Tree_Ruleset{
 
 
 		foreach($ruleset->rules as $i => $rule) {
-			if(! ($rule instanceof Less_Tree_Mixin_Definition) ){
+			if(! ($rule instanceof Less_Tree_MixinDefinition) ){
 				$ruleset->rules[$i] = Less_Parser::is_method($rule,'compile') ? $rule->compile($env) : $rule;
 			}
 		}
@@ -4878,16 +4870,6 @@ class Less_Tree_Ruleset{
 	}
 
 
-	public function rulesets(){
-		$rulesets = array();
-		foreach($this->rules as $r){
-			if( ($r instanceof Less_Tree_Ruleset) || ($r instanceof Less_Tree_Mixin_Definition) ){
-				$rulesets[] = $r;
-			}
-		}
-		return $rulesets;
-	}
-
 
 	public function find( $selector, $self = null, $env = null){
 
@@ -4900,20 +4882,25 @@ class Less_Tree_Ruleset{
 		if( !array_key_exists($key, $this->lookups) ){
 			$this->lookups[$key] = array();;
 
-			foreach( $this->rulesets() as $rule ){
+
+			foreach($this->rules as $rule){
+
 				if( $rule == $self ){
 					continue;
 				}
 
-				foreach( $rule->selectors as $ruleSelector ){
-					if( $selector->match($ruleSelector) ){
+				if( ($rule instanceof Less_Tree_Ruleset) || ($rule instanceof Less_Tree_MixinDefinition) ){
 
-						if (count($selector->elements) > count($ruleSelector->elements)) {
-							$this->lookups[$key] = array_merge($this->lookups[$key], $rule->find( new Less_Tree_Selector(array_slice($selector->elements, 1)), $self, $env));
-						} else {
-							$this->lookups[$key][] = $rule;
+					foreach( $rule->selectors as $ruleSelector ){
+						if( $selector->match($ruleSelector) ){
+
+							if (count($selector->elements) > count($ruleSelector->elements)) {
+								$this->lookups[$key] = array_merge($this->lookups[$key], $rule->find( new Less_Tree_Selector(array_slice($selector->elements, 1)), $self, $env));
+							} else {
+								$this->lookups[$key][] = $rule;
+							}
+							break;
 						}
-						break;
 					}
 				}
 			}
@@ -4928,7 +4915,7 @@ class Less_Tree_Ruleset{
 	//	 `context` holds an array of arrays.
 	//
 	public function toCSS($env){
-		$css = array();	  // The CSS output
+		$css = '';	  // The CSS output
 		$rules = array();	// node.Rule instances
 		$_rules = array();
 		$rulesets = array(); // node.Ruleset instances
@@ -4974,33 +4961,29 @@ class Less_Tree_Ruleset{
 			}
 		}
 
-        // Remove last semicolon
-		if( $env->compress && count($rules) ){
-			$rule =& $rules[ count($rules)-1 ];
-			if( substr($rule, -1 ) === ';' ){
-				$rule = substr($rule,0,-1);
-			}
-		}
-
 		$rulesets = implode('', $rulesets);
 
 		// If this is the root node, we don't render
 		// a selector, or {}.
 		// Otherwise, only output if this ruleset has rules.
 		if ($this->root) {
-			$css[] = implode($env->compress ? '' : "\n", $rules);
+			if( $env->compress ){
+				$css .= rtrim(implode('', $rules),';');
+			}else{
+				$css .= implode("\n", $rules);
+			}
 		} else {
 			if (count($rules)) {
 
 				$selector = array();
 				foreach($this->paths as $p){
-					$_p = array();
+					$_p = '';
 					foreach($p as $s){
-						$_p[] = $s->toCSS($env);
+						$_p .= $s->toCSS($env);
 					}
-					$selector[] = trim(implode('',$_p));
+					$selector[] = trim($_p);
 				}
-				$selector = implode($env->compress ? ',' : ",\n", $selector);
+				$css .= implode($env->compress ? ',' : ",\n", $selector);
 
 				// Remove duplicates
 				for ($i = count($rules) - 1; $i >= 0; $i--) {
@@ -5010,15 +4993,16 @@ class Less_Tree_Ruleset{
 				}
 				$rules = $_rules;
 
-				$css[] = $selector;
-				$css[] = ($env->compress ? '{' : " {\n  ") .
-						 implode($env->compress ? '' : "\n  ", $rules) .
-						 ($env->compress ? '}' : "\n}\n");
+				if( $env->compress ){
+					$css .= '{'.rtrim(implode('',$rules),';').'}';
+				}else{
+					$css .= " {\n  ".implode("\n  ",$rules)."\n}\n";
+				}
 			}
 		}
-		$css[] = $rulesets;
+		$css .= $rulesets;
 
-		return implode('', $css) . ($env->compress ? "\n" : '' );
+		return $css . ($env->compress ? "\n" : '' );
 	}
 
 
@@ -5277,15 +5261,13 @@ class Less_Tree_Selector {
 			$this->_css = '';
 		}
 
-		$temp = array();
 		foreach($this->elements as $e){
 			if( is_string($e) ){
-				$temp[] = ' ' . trim($e);
+				$this->_css .= ' ' . trim($e);
 			}else{
-				$temp[] = $e->toCSS($env);
+				$this->_css .= $e->toCSS($env);
 			}
 		}
-		$this->_css .= implode('', $temp);
 
 		return $this->_css;
 	}
@@ -6185,8 +6167,7 @@ class Less_visitor{
 			}
 
 			$class = get_class($node);
-			$funcName = 'visit' . substr( $class, strrpos( $class, '_')+1 );
-
+			$funcName = 'visit'.substr($class,10); //remove 'Less_Tree_' from the class name
 
 			if( method_exists($this,$funcName) ){
 				$this->$funcName( $node );

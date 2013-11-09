@@ -67,6 +67,9 @@ class Less_Parser extends Less_Cache{
      */
     public function getCss(){
 
+		$precision = ini_get('precision');
+		@ini_set('precision',16);
+
  		$root = new Less_Tree_Ruleset(null, $this->rules );
 		$root->root = true;
 
@@ -86,6 +89,9 @@ class Less_Parser extends Less_Cache{
 		if( $this->env->compress ){
 			$css = preg_replace('/(\s)+/',"$1", $css);
 		}
+
+		@ini_set('precision',$precision);
+
 
         return $css;
     }
@@ -121,6 +127,7 @@ class Less_Parser extends Less_Cache{
 
 		$previousFileInfo = $this->env->currentFileInfo;
 		$this->SetFileInfo($filename, $uri_root);
+
 		$previousImportDirs = self::$import_dirs;
 		self::AddParsedFile($filename);
 
@@ -132,7 +139,9 @@ class Less_Parser extends Less_Cache{
 			$this->_parse( $filename );
 		}
 
-		$this->env->currentFileInfo = $previousFileInfo;
+		if( $previousFileInfo ){
+			$this->env->currentFileInfo = $previousFileInfo;
+		}
 		self::$import_dirs = $previousImportDirs;
 
 		return $return;
@@ -145,7 +154,6 @@ class Less_Parser extends Less_Cache{
 		$this->filename = Less_Environment::NormPath($filename);
 
 		$dirname = preg_replace('/[^\/\\\\]*$/','',$this->filename);
-
 
 		$currentFileInfo = array();
 		$currentFileInfo['currentDirectory'] = $dirname;
@@ -2675,11 +2683,17 @@ class Less_Environment{
 
 		$filePath = str_replace('\\','/',$filePath);
 		if( Less_Environment::isPathRelative($filePath) ){
+
 			if( $this->relativeUrls ){
-				$filePath = Less_Environment::NormPath(rtrim($this->currentFileInfo['currentDirectory'],'/').'/'.$filePath);
+				$temp = $this->currentFileInfo['currentDirectory'];
 			} else {
-				$filePath = Less_Environment::NormPath(rtrim($this->currentFileInfo['entryPath'],'/').'/'.$filePath);
+				$temp = $this->currentFileInfo['entryPath'];
 			}
+
+			if( !empty($temp) ){
+				$filePath = Less_Environment::NormPath(rtrim($temp,'/').'/'.$filePath);
+			}
+
 		}
 
 
@@ -2705,6 +2719,7 @@ class Less_Environment{
 		}else{
 			$useBase64 = preg_match('/;base64$/',$mimetype);
 		}
+
 
 		if( file_exists($filePath) ){
 			$buf = @file_get_contents($filePath);

@@ -544,7 +544,7 @@ class admin_theme_content extends admin_addon_install{
 		//custom css
 		$css = $this->layoutCSS($this->curr_layout);
 		if( empty($css) ){
-			$var_file = $layout_info['dir'].'/1_Starter_Template/variables.less';
+			$var_file = $layout_info['dir'].'/'.$layout_info['theme_color'].'/variables.less';
 			if( file_exists($var_file) ){
 				$css = file_get_contents($var_file);
 			}

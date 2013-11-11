@@ -3406,8 +3406,8 @@ class Less_Tree_Dimension{
 		if( $op === '+' || $op === '-' ){
 
 			if( !count($unit->numerator) && !count($unit->denominator) ){
-				$unit->numerator = array_slice($other->unit->numerator,0);
-				$unit->denominator = array_slice($other->unit->denominator,0);
+				$unit->numerator = $other->unit->numerator;
+				$unit->denominator = $other->unit->denominator;
 			}elseif( !count($other->unit->numerator) && !count($other->unit->denominator) ){
 				// do nothing
 			}else{
@@ -4101,7 +4101,7 @@ class Less_Tree_Media {
 	}
 
     function bubbleSelectors($selectors) {
-		$this->ruleset = new Less_Tree_Ruleset( array_slice($selectors,0), array($this->ruleset) );
+		$this->ruleset = new Less_Tree_Ruleset( $selectors, array($this->ruleset) );
     }
 
 }
@@ -4281,7 +4281,7 @@ class Less_Tree_MixinDefinition extends Less_Tree_Ruleset{
 	public function compileParams($env, $mixinEnv, $args = array() , &$evaldArguments = array() ){
 		$frame = new Less_Tree_Ruleset(null, array());
 		$varargs;
-		$params = array_slice($this->params,0);
+		$params = $this->params;
 		$val;
 		$name;
 		$isNamedFound;
@@ -4290,8 +4290,6 @@ class Less_Tree_MixinDefinition extends Less_Tree_Ruleset{
 		$mixinEnv = clone $mixinEnv;
 		$mixinEnv->frames = array_merge( array($frame), $mixinEnv->frames);
 		//$mixinEnv = $mixinEnv->copyEvalEnv( array_merge( array($frame), $mixinEnv->frames) );
-
-		$args = array_slice($args,0);
 
 		for($i = 0; $i < count($args); $i++ ){
 			$arg = $args[$i];
@@ -4738,7 +4736,7 @@ class Less_Tree_Ruleset{
 				}
 			}
 		}
-		$ruleset = new Less_Tree_Ruleset($selectors, array_slice($this->rules,0), $this->strictImports);
+		$ruleset = new Less_Tree_Ruleset($selectors, $this->rules, $this->strictImports);
 		$rules = array();
 
 		$ruleset->originalRuleset = $this;
@@ -4763,7 +4761,7 @@ class Less_Tree_Ruleset{
 		// so they can be evaluated like closures when the time comes.
 		foreach($ruleset->rules as $i => $rule) {
 			if ($rule instanceof Less_Tree_MixinDefinition) {
-				$ruleset->rules[$i]->frames = array_slice($env->frames,0);
+				$ruleset->rules[$i]->frames = $env->frames;
 			}
 		}
 
@@ -5117,9 +5115,9 @@ class Less_Tree_Ruleset{
 							//construct the joined selector - if & is the first thing this will be empty,
 							// if not newJoinedSelector will be the last set of elements in the selector
 							if ( count($sel) > 0) {
-								$newSelectorPath = array_slice($sel,0);
+								$newSelectorPath = $sel;
 								$lastSelector = array_pop($newSelectorPath);
-								$newJoinedSelector = new Less_Tree_Selector( array_slice($lastSelector->elements,0), $selector->extendList);
+								$newJoinedSelector = new Less_Tree_Selector( $lastSelector->elements, $selector->extendList);
 								$newJoinedSelectorEmpty = false;
 							}
 							else {
@@ -5322,8 +5320,6 @@ class Less_Tree_Unit{
 	}
 
 	function __clone(){
-		$this->numerator = array_slice($this->numerator,0);
-		$this->denominator = array_slice($this->denominator,0);
 	}
 
 	function toCSS($env){
@@ -5636,8 +5632,7 @@ class Less_extendFinderVisitor extends Less_visitor{
 			$selector = end($selectorPath); //$selectorPath[ count($selectorPath)-1];
 
 
-			$list = array_slice($selector->extendList,0);
-			$list = array_merge($list, $allSelectorsExtendList);
+			$list = array_merge($selector->extendList, $allSelectorsExtendList);
 
 			$extendList = array();
 			foreach($list as $allSelectorsExtend){
@@ -5856,7 +5851,6 @@ class Less_processExtendsVisitor extends Less_visitor{
 		// we look at each selector at a time, as is done in visitRuleset
 
 		$extendsToAdd = array();
-		$extendVisitor = $this;
 
 
 		//loop through comparing every extend with every target extend.
@@ -5878,7 +5872,7 @@ class Less_processExtendsVisitor extends Less_visitor{
 
 				// find a match in the target extends self selector (the bit before :extend)
 				$selectorPath = array( $targetExtend->selfSelectors[0] );
-				$matches = $extendVisitor->findMatch( $extend, $selectorPath);
+				$matches = $this->findMatch( $extend, $selectorPath);
 
 
 				if( $matches ){
@@ -5888,7 +5882,7 @@ class Less_processExtendsVisitor extends Less_visitor{
 
 
 						// process the extend as usual
-						$newSelector = $extendVisitor->extendSelector( $matches, $selectorPath, $selfSelector);
+						$newSelector = $this->extendSelector( $matches, $selectorPath, $selfSelector);
 
 						// but now we create a new extend from it
 						$newExtend = new Less_Tree_Extend( $targetExtend->selector, $targetExtend->option, 0);
@@ -5931,7 +5925,7 @@ class Less_processExtendsVisitor extends Less_visitor{
 			}
 
 			// now process the new extends on the existing rules so that we can handle a extending b extending c ectending d extending e...
-			$extendsToAdd = $extendVisitor->doExtendChaining( $extendsToAdd, $extendsListTarget, $iterationCount+1);
+			$extendsToAdd = $this->doExtendChaining( $extendsToAdd, $extendsListTarget, $iterationCount+1);
 		}
 
 		return array_merge($extendsList, $extendsToAdd);
@@ -5955,19 +5949,19 @@ class Less_processExtendsVisitor extends Less_visitor{
 	}
 
 
-	function visitRuleset($rulesetNode) {
+	function visitRuleset($rulesetNode){
+
+
 		if( $rulesetNode->root ){
 			return;
 		}
 
 		$allExtends = end($this->allExtendsStack);
-		$selectorsToAdd = array();
-		$extendVisitor = $this;
+		$paths_len = count($rulesetNode->paths);
 
 		// look at each selector path in the ruleset, find any extend matches and then copy, find and replace
-
 		for( $extendIndex = 0, $all_extend_len = count($allExtends); $extendIndex < $all_extend_len; $extendIndex++ ){
-			for($pathIndex = 0, $paths_len = count($rulesetNode->paths); $pathIndex < $paths_len; $pathIndex++ ){
+			for($pathIndex = 0; $pathIndex < $paths_len; $pathIndex++ ){
 
 				$selectorPath = $rulesetNode->paths[$pathIndex];
 
@@ -5978,12 +5972,11 @@ class Less_processExtendsVisitor extends Less_visitor{
 
 				if( $matches ){
 					foreach($allExtends[$extendIndex]->selfSelectors as $selfSelector ){
-						$selectorsToAdd[] = $extendVisitor->extendSelector($matches, $selectorPath, $selfSelector);
+						$rulesetNode->paths[] = $this->extendSelector($matches, $selectorPath, $selfSelector);
 					}
 				}
 			}
 		}
-		$rulesetNode->paths = array_merge($rulesetNode->paths,$selectorsToAdd);
 	}
 
 	function findMatch($extend, $haystackSelectorPath ){
@@ -5994,7 +5987,6 @@ class Less_processExtendsVisitor extends Less_visitor{
 		//
 		$needleElements = $extend->selector->elements;
 		$needleElements_len = count($needleElements);
-		//$extendVisitor = $this;
 		$potentialMatches = array();
 		$potentialMatches_len = 0;
 		$potentialMatch = null;

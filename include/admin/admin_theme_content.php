@@ -569,9 +569,12 @@ class admin_theme_content extends admin_addon_install{
 
 
 		//show site in iframe
+		echo '<h1>Why</h1>';
 		echo '<div id="gp_iframe_wrap">';
 		$url = common::GetUrl('Admin_Theme_Content/'.rawurlencode($layout),'cmd=in_iframe');
-		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"><iframe>';
+		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';
+
+		echo '<div id="gp_loading_img"><img src="'.common::GetDir('/include/imgs/loader64.gif').'" /></div>';
 		echo '</div>';
 
 
@@ -740,6 +743,7 @@ class admin_theme_content extends admin_addon_install{
 		admin_tools::$show_toolbar = false;
 
 		// <head>
+		$page->head .= '<script type="text/javascript">parent.$gp.iframeloaded();</script>';
 		if( $cmd != 'preview_css' ){
 			$page->head .= '<script type="text/javascript">var gpLayouts=true;</script>';
 		}
@@ -1090,7 +1094,7 @@ class admin_theme_content extends admin_addon_install{
 		//show site in iframe
 		echo '<div id="gp_iframe_wrap">';
 		$url = common::GetUrl('Admin_Theme_Content','cmd=preview_iframe&theme='.rawurlencode($theme));
-		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"><iframe>';
+		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';
 		echo '</div>';
 
 		echo '</div>';

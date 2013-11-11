@@ -159,13 +159,20 @@ $(function(){
 
 		var prev_value = $textarea.val();
 
-		$gp.inputs.preview_css = function(evt){};
+		// preview button
+		$gp.inputs.preview_css = function(evt){
+			$('#gp_loading_img').show(); //show loading image
+		};
 
 		// if save or reset are clicked, remove the edited class
 		$gp.inputs.reset_css = function(evt){
 			$textarea.removeClass('edited');
 			prev_value = $textarea.val();
+
+			$('#gp_loading_img').show(); //show loading image
 		};
+
+
 
 
 		// watch for changes
@@ -258,6 +265,16 @@ $(function(){
 		window.setInterval(function(){
 			drag_elements.trigger('gp_position');
 		},2000);
+	}
+
+
+
+	/**
+	 * Hide loading image after iframe has loaded
+	 *
+	 */
+	$gp.iframeloaded = function(){
+		$('#gp_loading_img').hide();
 	}
 
 

@@ -441,6 +441,29 @@ a.add_layout{
 	.search_pages span{
 		padding:1px 5px 1px 0;
 	}
+
+	#gp_loading_img{
+		position:absolute;
+		top:0;
+		left:0;
+		bottom:0;
+		right:0;
+		z-index:1000;
+		text-align:center;
+		background:rgba(255,255,255,0.2);
+		height:100%;
+		vertical-align:middle;
+	}
+	#gp_loading_img:before{
+		content: "";
+		display: inline-block;
+		height: 100%;
+		vertical-align: middle;
+    }
+
+	#gp_loading_img img{
+		vertical-align:middle;
+	}
 }
 
 

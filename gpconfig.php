@@ -119,7 +119,7 @@ define('gpdebug',false);
  * Set to true to display some basic debug tools in the browser window.
  * Defaults to false
  */
-//define('gpdebug_tools',true);
+define('gpdebug_tools',true);
 
 
 /**

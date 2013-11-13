@@ -350,13 +350,14 @@ class special_gpsearch{
 		}
 
 		$file_sections = $file_stats = array();
+		ob_start();
 		include($full_path);
-		if( !isset($file_sections) || !is_array($file_sections) || !count($file_sections) ){
-			return;
+		if( isset($file_sections) && is_array($file_sections) ){
+			echo section_content::Render($file_sections,$title,$file_stats);
 		}
+		$content = ob_get_clean();
 
 
-		$content = section_content::Render($file_sections,$title,$file_stats);
 		$label = common::GetLabel($title);
 		$this->FindString($content, $label, $title);
 	}

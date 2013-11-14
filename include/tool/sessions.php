@@ -594,7 +594,7 @@ class gpsession{
 						'gpui_pw'		=> 0,
 						'gpui_ph'		=> 0,
 						'gpui_vis'		=> 'cur',
-						'admin_full'	=> false,
+						'admin_full'	=> true,
 						);
 	}
 

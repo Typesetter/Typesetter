@@ -850,6 +850,9 @@ class update_class{
 
 		$connect_result = $gp_filesystem->connect();
 		if( $connect_result === true ){
+
+			$this->DoRemoteCheck2(); //make sure we have the latest information
+
 			echo '<ul class="progress">';
 			echo '<li>';
 			echo $langmessage['your_installation_is_ready_for_upgrade'];

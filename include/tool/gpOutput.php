@@ -2606,8 +2606,8 @@ class gpOutput{
 
 
 			if( file_exists($dataDir.$compiled_file) ){
-				//msg('not returning');
-				return $compiled_file;
+				msg('not returning');
+				//return $compiled_file;
 			}
 
 		}
@@ -2678,6 +2678,12 @@ class gpOutput{
 		}
 
 
+
+		//msg('not using cache');
+		//$use_cache = false;
+
+
+
 		//prepare the processor
 		includeFile('thirdparty/less.php/Less.php');
 		$parser = new Less_Parser(); //array('compress'=>true));
@@ -2685,7 +2691,7 @@ class gpOutput{
 		// Only use caching if php has plenty of memory
 		// Caching uses php's serialize() method and needs additional memory
 		if( $use_cache ){
-			$parser->SetCacheDir( $dataDir.'/data/_cache' );
+			//$parser->SetCacheDir( $dataDir.'/data/_cache' );
 		}
 
 		$import_dirs[$dataDir] = common::GetDir('/');

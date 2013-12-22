@@ -2606,8 +2606,7 @@ class gpOutput{
 
 
 			if( file_exists($dataDir.$compiled_file) ){
-				msg('not returning');
-				//return $compiled_file;
+				return $compiled_file;
 			}
 
 		}
@@ -2657,9 +2656,7 @@ class gpOutput{
 
 		// don't use less if the memory limit is less than 64M
 		$limit = @ini_get('memory_limit');
-		$use_cache = false;
 		if( $limit ){
-			$use_cache = true;
 			$limit = common::getByteValue( $limit );
 
 			//if less than 64M, disable less compiler if we can't increase
@@ -2671,29 +2668,14 @@ class gpOutput{
 
 			//if less than 96M, try to increase
 			}elseif( $limit < 100663296 ){
-				if( @ini_set('memory_limit','96M') === false ){
-					$use_cache = false;
-				}
+				@ini_set('memory_limit','96M');
 			}
 		}
-
-
-
-		//msg('not using cache');
-		//$use_cache = false;
-
 
 
 		//prepare the processor
 		includeFile('thirdparty/less.php/Less.php');
 		$parser = new Less_Parser(); //array('compress'=>true));
-
-		// Only use caching if php has plenty of memory
-		// Caching uses php's serialize() method and needs additional memory
-		if( $use_cache ){
-			//$parser->SetCacheDir( $dataDir.'/data/_cache' );
-		}
-
 		$import_dirs[$dataDir] = common::GetDir('/');
 		$parser->SetImportDirs($import_dirs);
 

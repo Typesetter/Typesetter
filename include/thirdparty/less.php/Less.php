@@ -1374,7 +1374,7 @@ class Less_Parser extends Less_Cache{
 
 			// prefer to try to parse first if its a variable or we are compressing
 			// but always fallback on the other one
-			if( !$tryAnonymous && (Less_Environment::$compress || ( $name[0] === '@')) ){
+			if( !$tryAnonymous && $name[0] === '@' ){
 				$value = $this->MatchFuncs( array('parseValue','parseAnonymousValue'));
 			}else{
 				$value = $this->MatchFuncs( array('parseAnonymousValue','parseValue'));
@@ -7219,8 +7219,8 @@ class Less_CompilerException extends Exception {
 
 	private $filename;
 
-	public function __construct($message = null, $code = 0, Exception $previous = null, $filename = null) {
-		parent::__construct($message, $code, $previous);
+	public function __construct($message = null, $code = 0, Exception $previous = null, $filename = null ){
+		parent::__construct($message, $code);
 		$this->filename = $filename;
 	}
 

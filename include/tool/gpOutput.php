@@ -2606,6 +2606,7 @@ class gpOutput{
 
 
 			if( file_exists($dataDir.$compiled_file) ){
+				//msg('not using cache');
 				return $compiled_file;
 			}
 

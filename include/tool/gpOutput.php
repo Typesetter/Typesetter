@@ -2681,6 +2681,10 @@ class gpOutput{
 		$parser->SetImportDirs($import_dirs);
 
 
+		$parser->cache_method = 'php';
+		$parser->SetCacheDir( $dataDir.'/data/_cache' );
+
+
 		// combine files
  		try{
 			foreach($less_files as $less){

@@ -515,7 +515,7 @@ class admin_addons_tool{
 
 
 	function CleanHooks($addon,$keep_hooks = array()){
-		global $config;
+		global $config, $gp_hooks;
 
 		if( !isset($config['hooks']) ){
 			return;
@@ -532,6 +532,7 @@ class admin_addons_tool{
 
 				if( !isset($keep_hooks[$hook_name]) ){
 					unset($config['hooks'][$hook_name][$hook_dir]);
+					unset($gp_hooks[$hook_name][$hook_dir]);
 					//message('remove this hook: '.$hook_name);
 				}
 			}
@@ -541,6 +542,7 @@ class admin_addons_tool{
 		foreach($config['hooks'] as $hook_name => $hook_array){
 			if( empty($hook_array) ){
 				unset($config['hooks'][$hook_name]);
+				unset($gp_hooks[$hook_name]);
 			}
 		}
 

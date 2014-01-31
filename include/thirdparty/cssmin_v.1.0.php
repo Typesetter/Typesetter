@@ -30,7 +30,7 @@ class cssmin
 	 * @param 	string	$v	Stylesheet definitions as string
 	 * @return 	string		Minified stylesheet definitions
 	 */
-	function minify($v)
+	static function minify($v)
 		{
 		$v = trim($v);
 		$v = str_replace("\r\n", "\n", $v);

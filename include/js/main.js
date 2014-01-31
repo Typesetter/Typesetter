@@ -203,6 +203,13 @@ var $gp = {
 					//alert('nothing for: '+obj.DO);
 				break;
 			}
+
+			//standard functions
+			var $selected = $(obj.SELECTOR);
+			if( typeof($selected[obj.DO]) == 'function' ){
+				$selected[obj.DO](obj.CONTENT);
+			}
+
 		});
 
 		$gp.loaded();

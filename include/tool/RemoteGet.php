@@ -5,6 +5,8 @@
 
 class gpRemoteGet{
 
+	public static $redirected;
+
 
 
 	/* determine if the functions exist for fetching remote files,
@@ -329,6 +331,9 @@ class gpRemoteGet{
 		if( $location{0} == '/' ){
 			$location = $arrURL['scheme'].'://'.$arrURL['host'].$location;
 		}
+
+		self::$redirected = $location;
+
 		return gpRemoteGet::Get($location, $r);
 	}
 

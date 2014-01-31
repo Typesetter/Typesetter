@@ -571,6 +571,8 @@ class gpOutput{
 		// if the file that caused the fatal error has been modified, treat as fixed
 		if( $error_text[0] == '{' && $error_info = json_decode($error_text,true) ){
 
+			$error_text = $error_info;
+
 			if( !empty($error_info['file']) && file_exists($error_info['file']) ){
 
 				//compare modified time
@@ -2582,8 +2584,8 @@ class gpOutput{
 
 
 		//generage the name of the css file from the modified times and content length of each imported less file
-		$hash = common::ArrayHash($less_files);
- 		$list_file = $dataDir.'/data/_cache/less_'.$hash.'.list';
+		$files_hash = common::ArrayHash($less_files);
+ 		$list_file = $dataDir.'/data/_cache/less_'.$files_hash.'.list';
  		if( file_exists($list_file) ){
 
 			$list = explode("\n",file_get_contents($list_file));
@@ -2601,7 +2603,7 @@ class gpOutput{
 				$etag = common::FilesEtag( $list );
 			}
 
-			$compiled_name = 'less_'.$hash.'_'.$etag.'.css';
+			$compiled_name = 'less_'.$files_hash.'_'.$etag.'.css';
 			$compiled_file = '/data/_cache/'.$compiled_name;
 
 
@@ -2613,7 +2615,7 @@ class gpOutput{
 		}
 
 		$less_files = (array)$less_files;
-		$compiled = gpOutput::ParseLess( $less_files );
+		$compiled = gpOutput::ParseLess( $less_files, $files_hash );
 		if( !$compiled ){
 			return false;
 		}
@@ -2621,7 +2623,7 @@ class gpOutput{
 
 		// generate the file name
 		$etag = common::FilesEtag( $less_files );
-		$compiled_name = 'less_'.$hash.'_'.$etag.'.css';
+		$compiled_name = 'less_'.$files_hash.'_'.$etag.'.css';
 		$compiled_file = '/data/_cache/'.$compiled_name;
 
 
@@ -2650,8 +2652,12 @@ class gpOutput{
 	 * @return mixed Compiled css string or false
 	 *
 	 */
-	static function ParseLess( &$less_files ){
+	static function ParseLess( &$less_files, $files_hash = false ){
 		global $dataDir;
+
+		if( !$files_hash ){
+			$files_hash = common::ArrayHash($less_files);
+		}
 
 		$compiled = false;
 
@@ -2674,9 +2680,22 @@ class gpOutput{
 		}
 
 
-		//prepare the processor
+		//compiler options
+		$options = array();
+		//$options['compress']			= true;
+
+		/*
+		$source_map_file = '/data/_cache/'.$files_hash.'.map';
+		$options['sourceMap']			= true;
+		$options['sourceMapBasepath']	= $dataDir;
+		$options['sourceMapWriteTo']	= $dataDir.$source_map_file;
+		$options['sourceMapURL']		= common::GetDir($source_map_file);
+		*/
+
+
+		//prepare the compiler
 		includeFile('thirdparty/less.php/Less.php');
-		$parser = new Less_Parser(); //array('compress'=>true));
+		$parser = new Less_Parser($options);
 		$import_dirs[$dataDir] = common::GetDir('/');
 		$parser->SetImportDirs($import_dirs);
 

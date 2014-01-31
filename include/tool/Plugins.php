@@ -32,11 +32,11 @@ class gpPlugin{
 	 * Aliases of gpPlugin_incl()
 	 * @deprecated 3.5.3
 	 */
-	function incl($file){
+	static function incl($file){
 		return gpPlugin_incl($file);
 	}
 
-	function inc($file){
+	static function inc($file){
 		return gpPlugin_incl($file);
 	}
 
@@ -47,7 +47,7 @@ class gpPlugin{
 	 * @param string $file The path of the css file relative to the addon folder
 	 *
 	 */
-	function css($file){
+	static function css($file){
 		global $page;
 		$file = common::WinPath( $file );
 		$page->css_admin[] = self::$current['code_folder_part'].'/'.ltrim($file,'/');
@@ -60,7 +60,7 @@ class gpPlugin{
 	 * @param string $file The path of the js file relative to the addon folder
 	 *
 	 */
-	function js($file){
+	static function js($file){
 		global $page;
 		$file = common::WinPath( $file );
 		$page->head_js[] = self::$current['code_folder_part'].'/'.ltrim($file,'/');

@@ -1,5 +1,6 @@
 <?php
 
+require_once( dirname(__FILE__).'/Version.php');
 
 class Less_Cache{
 

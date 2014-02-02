@@ -250,6 +250,12 @@ class Install_Tools{
 
 		self::NewTitle( $destination, 'Home', $content);
 
+		self::NewTitle( $destination, 'Heading_Page','<h1>A Heading Page</h1>
+		<ul><li>'.Install_Tools::Install_Link_Content('Help_Videos','Help Videos').'</li>
+		<li>'.Install_Tools::Install_Link_Content('Child_Page','Child Page').'</li>
+		</ul>');
+
+
 		self::NewTitle( $destination, 'Help_Videos','<h1>Help Videos</h1>
 		<p>Video tutorials are often a fast and easy way to learn new things quickly.
 		We now have an English version and Deutsch (German) available below.
@@ -270,6 +276,14 @@ class Install_Tools{
 		');
 
 		self::NewTitle( $destination, 'Child_Page','<h1>A Child Page</h1><p>This was created as a subpage of your <em>Help Videos</em> . You can easily change the arrangement of all your pages using the '.Install_Tools::Install_Link_Content('Admin_Menu','Page Manager').'.</p>');
+
+
+		self::NewTitle( $destination, 'More','<h1>More</h1>
+		<ul><li>'.Install_Tools::Install_Link_Content('About','About').'</li>
+		<li>'.Install_Tools::Install_Link_Content('Contact','Contact').'</li>
+		</ul>');
+
+
 
 		self::NewTitle( $destination, 'About','<h1>About gpEasy CMS</h1><p><a href="http://gpEasy.com" title="gpEasy.com">gp|Easy</a> is a complete Content Management System (CMS) that can help you create rich and flexible web sites with a simple and easy to use interface.</p>
 		<h2>gpEasy CMS How To</h2>
@@ -353,9 +367,11 @@ class Install_Tools{
 		// gp_index
 		$new_index = array();
 		$new_index['Home'] = 'a';
-		$new_index['Help_Videos'] = 'b';
-		$new_index['Child_Page'] = 'c';
-		$new_index['About'] = 'd';
+		$new_index['Heading_Page'] = 'b';
+		$new_index['Help_Videos'] = 'c';
+		$new_index['Child_Page'] = 'd';
+		$new_index['More'] = 'e';
+		$new_index['About'] = 'f';
 		$new_index['Contact'] = 'special_contact';
 		$new_index['Site_Map'] = 'special_site_map';
 		$new_index['Galleries'] = 'special_galleries';
@@ -368,7 +384,9 @@ class Install_Tools{
 		$new_menu['a'] = array('level'=>0);
 		$new_menu['b'] = array('level'=>0);
 		$new_menu['c'] = array('level'=>1);
-		$new_menu['d'] = array('level'=>0);
+		$new_menu['d'] = array('level'=>1);
+		$new_menu['e'] = array('level'=>0);
+		$new_menu['f'] = array('level'=>1);
 		$new_menu['special_contact'] = array('level'=>1);
 
 		//	links
@@ -376,14 +394,20 @@ class Install_Tools{
 		$new_titles['a']['label'] = 'Home';
 		$new_titles['a']['type'] = 'text';
 
-		$new_titles['b']['label'] = 'Help Videos';
+		$new_titles['b']['label'] = 'Heading Page';
 		$new_titles['b']['type'] = 'text';
 
-		$new_titles['c']['label'] = 'Child Page';
+		$new_titles['c']['label'] = 'Help Videos';
 		$new_titles['c']['type'] = 'text';
 
-		$new_titles['d']['label'] = 'About';
+		$new_titles['d']['label'] = 'Child Page';
 		$new_titles['d']['type'] = 'text';
+
+		$new_titles['e']['label'] = 'More';
+		$new_titles['e']['type'] = 'text';
+
+		$new_titles['f']['label'] = 'About';
+		$new_titles['f']['type'] = 'text';
 
 		$new_titles['special_contact']['lang_index'] = 'contact';
 		$new_titles['special_contact']['type'] = 'special';

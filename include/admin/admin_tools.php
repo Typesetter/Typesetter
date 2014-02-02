@@ -924,13 +924,22 @@ class admin_tools{
 		}else{
 			echo '<ul>';
 		}
+
+
+		if( !empty($page->gpLayout) ){
+			$to_hightlight = $page->gpLayout;
+		}else{
+			$to_hightlight = $config['gpLayout'];
+		}
+
 		foreach($gpLayouts as $layout => $info){
-			echo '<li>';
-			$display = $info['label'];
-			if( $config['gpLayout'] == $layout ){
-				$display = '<b>'.$display.'</b>';
+			if( $to_hightlight == $layout ){
+				echo '<li class="selected">';
+			}else{
+				echo '<li>';
 			}
-			$display = '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span>&nbsp; '.$display;
+
+			$display = '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span>&nbsp; '.$info['label'];
 			echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$display);
 			echo '</li>';
 		}

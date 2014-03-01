@@ -234,7 +234,7 @@ class admin_display extends display{
 
 		//resources
 		echo '<div class="panelgroup" id="panelgroup_resources">';
-		echo '<span class="icon_page_gear"><span>'.$langmessage['resources'].' (gpEasy.com)</span></span>';
+		echo '<span class="icon_page_gear"><span>'.$langmessage['resources'].'</span></span>';
 		echo '<div class="panelgroup2">';
 		echo '<ul>';
 

@@ -625,13 +625,20 @@ class admin_uploaded{
 			return true;
 		}
 
+
+		$parts = explode('.',$file);
+		if( count($parts) < 2 ){
+			return true;
+		}
+
+
 		//build list of allowed extensions once
 		if( !$allowed_types ){
 
 			if( is_string($upload_extensions_deny) && strtolower($upload_extensions_deny) === 'all' ){
 				$allowed_types = array();
 			}else{
-				$allowed_types = array('7z', 'aiff', 'asf', 'avi', 'bmp', 'bz', 'csv', 'doc', 'fla', 'flv', 'gif', 'gz', 'gzip', 'jpeg', 'jpg', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ods', 'odt', 'pdf', 'png', 'ppt', 'pxd', 'qt', 'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 'sdc', 'sitd', 'swf', 'sxc', 'sxw', 'tar', 'tgz', 'tif', 'tiff', 'txt', 'vsd', 'wav', 'wma', 'wmv', 'xls', 'xml', 'zip');
+				$allowed_types = array('7z', 'aiff', 'asf', 'avi', 'bmp', 'bz', 'csv', 'doc', 'fla', 'flv', 'gif', 'gz', 'gzip', 'jpeg', 'jpg', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ods', 'odt', 'pdf', 'png', 'ppt', 'pxd', 'qt', 'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 'sdc', 'sitd', 'swf', 'sxc', 'sxw', 'tar', 'tgz', 'tif', 'tiff', 'txt', 'vsd', 'wav', 'wma', 'wmv', 'xls', 'xml', 'zip', 'md', 'js');
 			}
 
 			if( is_array($upload_extensions_allow) ){
@@ -648,33 +655,18 @@ class admin_uploaded{
 
 
 		//make sure the extension is allowed
-		$parts = explode('.',$file);
 		$file_type = array_pop($parts);
 		if( !in_array( strtolower($file_type), $allowed_types ) ){
 			return false;
 		}
 
-
-		//clean other parts of the name
-		$clean_name = '';
-		$dot = $dash = '';
-		foreach($parts as $part){
-
-			if( in_array( strtolower($part), $allowed_types ) ){
-				$clean_name .= $dot.$part;
-			}elseif( $fix ){
-				$clean_name .= $dash.$part;
-			}else{
-				return false;
-			}
-			$dot = '.';
-			$dash = '_';
+		if( $fix ){
+			return implode('_',$parts).'.'.$file_type;
+		}else{
+			return implode('.',$parts).'.'.$file_type;
 		}
-
-		$file = ltrim($clean_name,'.').'.'.$file_type;
-
-		return true;
 	}
+
 
 	/**
 	 * Clean up temporary file and folder if they exist

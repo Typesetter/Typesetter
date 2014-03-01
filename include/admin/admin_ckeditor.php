@@ -171,14 +171,16 @@ class admin_ckeditor{
 
 			//plugin name
 			if( !$plugin_name && strpos($file['filename'],'plugin.js') !== false ){
-				$filename = $file['filename'];
-				$remove_path = dirname($filename);
-				$plugin_name = basename( $remove_path );
+				$plugin_name = $this->FindPluginName($archive, $file);
+				if( !$plugin_name ){
+					message($langmessage['OOPS'].' (Couldn\'t find plugin name)');
+					return;
+				}
 			}
 
 
 			if( !admin_uploaded::AllowedExtension($file['filename'], false) ){
-				message($langmessage['OOPS'].' (File type not allowed)');
+				message($langmessage['OOPS'].' (File type not allowed:'.htmlspecialchars($file['filename']).')');
 				return false;
 			}
 
@@ -207,6 +209,7 @@ class admin_ckeditor{
 				return;
 			}
 		}elseif( !gpFiles::CheckDir($destination) ){
+			msg($destination);
 			message($langmessage['OOPS'].' (Couldn\'t create plugin folder)');
 			return;
 		}
@@ -239,6 +242,23 @@ class admin_ckeditor{
 			gpFiles::RmAll( $temp_dir );
 		}
 
+	}
+
+	function FindPluginName($archive, $file){
+		$file = $archive->extractByIndex($file['index'], PCLZIP_OPT_EXTRACT_AS_STRING);
+		if( !$file ){
+			return false;
+		}
+
+
+		//use regular expression to look for "CKEDITOR.plugins.add('plugin-name'"
+		$pattern = '/CKEDITOR\s*\.\s*plugins\s*\.\s*add\s*\(\s*[\'"]([^\'"]+)[\'"]/';
+
+		if( !preg_match($pattern,$file[0]['content'],$match) ){
+			return false;
+		}
+
+		return $match[1];
 	}
 
 

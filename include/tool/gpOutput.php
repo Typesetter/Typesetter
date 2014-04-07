@@ -1624,9 +1624,6 @@ class gpOutput{
 				$attributes_a['value'] = common::GetLabel($title);
 				$attributes_a['title'] = common::GetBrowserTitle($title);
 
-				if( !empty($gp_titles[$menu_key]['rel']) ){
-					$attributes_a['rel'] = $gp_titles[$menu_key]['rel'];
-				}
 			}
 
 			$result[] = self::FormatMenuElement('li',$attributes_li);

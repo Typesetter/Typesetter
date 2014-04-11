@@ -44,7 +44,7 @@ class Less_Parser{
 	private $input_len;				// input string length
 	private $pos;					// current index in `input`
 	private $saveStack = array();	// holds state for backtracking
-	private $farthest;
+	private $furthest;
 
 	/**
 	 * @var Less_Environment
@@ -195,14 +195,9 @@ class Less_Parser{
 	 */
 	private function PreVisitors($root){
 
-		$preEvalVisitors = array();
-		for($i = 0; $i < count($preEvalVisitors); $i++ ){
-			$preEvalVisitors[$i]->run($root);
-		}
-
 		if( Less_Parser::$options['plugins'] ){
 			foreach(Less_Parser::$options['plugins'] as $plugin){
-				if( property_exists($plugin,'isPreEvalVisitor') && $plugin->isPreEvalVisitor ){
+				if( !empty($plugin->isPreEvalVisitor) ){
 					$plugin->run($root);
 				}
 			}
@@ -261,7 +256,7 @@ class Less_Parser{
 		}else{
 			$file_uri = self::WinPath($file_uri);
 			$filename = basename($file_uri);
-			$uri_root = dirname($uri_root);
+			$uri_root = dirname($file_uri);
 		}
 
 		$previousFileInfo = $this->env->currentFileInfo;
@@ -477,7 +472,7 @@ class Less_Parser{
 		$rules = $this->parsePrimary();
 
 		if( $this->pos < $this->input_len ){
-			throw new Less_Exception_Chunk($this->input, null, $this->farthest, $this->env->currentFileInfo);
+			throw new Less_Exception_Chunk($this->input, null, $this->furthest, $this->env->currentFileInfo);
 		}
 
 		$this->UnsetInput();
@@ -517,7 +512,7 @@ class Less_Parser{
 			$this->input = file_get_contents( $file_path );
 		}
 
-		$this->pos = $this->farthest = 0;
+		$this->pos = $this->furthest = 0;
 
 		// Remove potential UTF Byte Order Mark
 		$this->input = preg_replace('/\\G\xEF\xBB\xBF/', '', $this->input);
@@ -537,7 +532,7 @@ class Less_Parser{
 	 *
 	 */
 	public function UnsetInput(){
-		unset($this->input, $this->pos, $this->input_len, $this->farthest);
+		unset($this->input, $this->pos, $this->input_len, $this->furthest);
 		$this->saveStack = array();
 	}
 
@@ -582,7 +577,6 @@ class Less_Parser{
 	}
 
 	private function restore() {
-		$this->farthest = $this->pos;
 		$this->pos = array_pop($this->saveStack);
 	}
 
@@ -1019,7 +1013,7 @@ class Less_Parser{
 			return;
 		}
 
-		$value = $this->match( array('parseEntitiesQuoted','parseEntitiesVariable','/\\G(?:(?:\\\\[\(\)\'"])|[^\(\)\'"])+/') );
+		$value = $this->match( array('parseEntitiesQuoted','parseEntitiesVariable','/\\Gdata\:.*?[^\)]+/','/\\G(?:(?:\\\\[\(\)\'"])|[^\(\)\'"])+/') );
 		if( !$value ){
 			$value = '';
 		}
@@ -1452,7 +1446,7 @@ class Less_Parser{
 			// .mixincall(@a: {rule: set;});
 			// so we have to be nice and restore
 			if( !$this->MatchChar(')') ){
-				//furthest = i;
+				$this->furthest = $this->pos;
 				$this->restore();
 				return;
 			}
@@ -1735,6 +1729,8 @@ class Less_Parser{
 			}
 		}
 
+		// Backtrack
+		$this->furthest = $this->pos;
 		$this->restore();
 	}
 
@@ -1820,6 +1816,7 @@ class Less_Parser{
 				$this->forget();
 				return $this->NewObj6('Less_Tree_Rule',array( $name, $value, $important, $merge, $startOfRule, $this->env->currentFileInfo));
 			}else{
+				$this->furthest = $this->pos;
 				$this->restore();
 				if( $value && !$tryAnonymous ){
 					return $this->parseRule(true);
@@ -2527,7 +2524,7 @@ class Less_Parser{
 	}
 
 	public function Error($msg){
-		throw new Less_Exception_Parser($msg, null, $this->farthest, $this->env->currentFileInfo);
+		throw new Less_Exception_Parser($msg, null, $this->furthest, $this->env->currentFileInfo);
 	}
 
 	public static function WinPath($path){
@@ -2905,6 +2902,10 @@ class Less_Functions{
 	}
 
 	static function fround( $value ){
+
+		if( $value === 0 ){
+			return $value;
+		}
 
 		if( Less_Parser::$options['numPrecision'] ){
 			$p = pow(10, Less_Parser::$options['numPrecision']);
@@ -4673,19 +4674,6 @@ class Less_Tree_Color extends Less_Tree{
 			$rgb[$c] = Less_Functions::operate( $op, $this->rgb[$c], $other->rgb[$c]);
 		}
 		return new Less_Tree_Color($rgb, $alpha);
-
-
-
-		$result = array();
-
-		if (! ($other instanceof Less_Tree_Color)) {
-			$other = $other->toColor();
-		}
-
-		for ($c = 0; $c < 3; $c++) {
-			$result[$c] = Less_Functions::operate( $op, $this->rgb[$c], $other->rgb[$c]);
-		}
-		return new Less_Tree_Color($result, $this->alpha + $other->alpha);
 	}
 
 	public function toRGB(){
@@ -9291,8 +9279,9 @@ class Less_Exception_Parser extends Exception{
 				$count = count($lines);
 				$start_line = max(0, $line-3);
 				$last_line = min($count, $start_line+6);
+				$num_len = strlen($last_line);
 				for( $i = $start_line; $i < $last_line; $i++ ){
-					$this->message .= "\n".($i+1).') '.$lines[$i];
+					$this->message .= "\n".str_pad($i+1,$num_len,'0',STR_PAD_LEFT).'| '.$lines[$i];
 				}
 			}
 		}
@@ -9357,6 +9346,7 @@ class Less_Exception_Chunk extends Less_Exception_Parser{
 		$this->message = 'ParseError: Unexpected input'; //default message
 
 		$this->index = $index;
+
 		$this->currentFile = $currentFile;
 
 		$this->input = $input;
@@ -9491,6 +9481,10 @@ class Less_Exception_Chunk extends Less_Exception_Parser{
 		} else if ( $parenLevel !== 0 ){
 			return $this->fail("missing closing `)`", $lastParen);
 		}
+
+
+		//chunk didn't fail
+
 
 		//$this->emitChunk(true);
 	}

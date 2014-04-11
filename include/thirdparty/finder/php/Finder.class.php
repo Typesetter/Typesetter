@@ -255,10 +255,13 @@ class Finder {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	public function run() {
+
 		$isPost = $_SERVER["REQUEST_METHOD"] == 'POST';
-		$src    = $_SERVER["REQUEST_METHOD"] == 'POST' ? $_POST : $_GET;
+		//$src    = $_SERVER["REQUEST_METHOD"] == 'POST' ? $_POST : $_GET;
+		$src    = $_SERVER["REQUEST_METHOD"] == 'POST' ? $_POST : array();
 		$cmd    = isset($src['cmd']) ? $src['cmd'] : '';
 		$args   = array();
+
 
 		if (!function_exists('json_encode')) {
 			$error = $this->error('errConf', 'errJSON');

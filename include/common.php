@@ -2211,7 +2211,7 @@ class common{
 	 * @param string $code http redirect code: 301 or 302
 	 *
 	 */
-	static function Redirect($path,$code = 301){
+	static function Redirect($path,$code = 302){
 		global $wbMessageBuffer, $gpAdmin;
 
 		//store any messages for display after the redirect

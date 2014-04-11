@@ -2708,8 +2708,8 @@ class common{
 	 *
 	 */
 	static function JsonEncode($data){
-		static $search = array('\\','"',"\n","\r",'<script','</script>');
-		static $repl = array('\\\\','\"','\n','\r','<"+"script','<"+"/script>');
+		static $search = array('\\','"',"\n","\r","\t",'<script','</script>');
+		static $repl = array('\\\\','\"','\n','\r','\t',<"+"script','<"+"/script>');
 
 		$type = gettype($data);
 		switch( $type ){

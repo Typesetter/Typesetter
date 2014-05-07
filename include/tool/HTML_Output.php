@@ -121,10 +121,10 @@ class gp_html_output extends gp_html_parse{
 				continue;
 			}
 
-			if( isset($dom_element['attributes'])
-				&& is_array($dom_element['attributes'])
-				&& isset($dom_element['attributes']['class'])
-				){
+			if( isset($dom_element['attributes']) && is_array($dom_element['attributes']) ){
+
+				//remove classes used by gpeasy
+				if( isset($dom_element['attributes']['class']) ){
 					$class = ' '.$dom_element['attributes']['class'].' ';
 					$gpeasy_element = false;
 					if( strpos($class,' editable_area ') !== false ){
@@ -144,6 +144,16 @@ class gp_html_output extends gp_html_parse{
 						$no_save_levels[1] = $dom_element['tag'];
 						$this->dom_array[$key] = false;
 					}
+				}
+
+				//remove javascript from links
+				if( isset($dom_element['attributes']['href']) ){
+					$href = $dom_element['attributes']['href'];
+					if( stripos(ltrim($href),'javascript:') === 0 ){
+						$this->dom_array[$key]['attributes']['href'] = '';
+					}
+
+				}
 			}
 		}
 	}

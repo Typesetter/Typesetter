@@ -3,18 +3,16 @@
 	margin-top:2em;
 	}
 #admin_menu{
-	padding:0 0 0 10px;
+	padding:0;
 	margin:0;
 	list-style:none;
 	overflow:visible;
+	width:340px;
 	}
 #admin_menu ul{
 	overflow:visible;
 	padding-left:30px;
 	margin:0;
-	}
-#admin_menu{
-	width:330px;
 	}
 body #admin_menu li{
 	list-style:none;
@@ -353,3 +351,9 @@ body #gp_menu_select *{
 	font-weight:normal !important;
 	color:#990000 !important;
 	}
+
+.homepage_setting .icon_admin_home{
+	display:inline-block;
+	background:url('../imgs/admin_icons.png') no-repeat 50% -455px;
+	margin:0 7px -2px 0;
+}

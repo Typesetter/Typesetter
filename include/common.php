@@ -1934,7 +1934,9 @@ class common{
 		}
 
 		//title related configuration settings
-		$config['homepath_key'] = key($gp_menu);
+		if( empty($config['homepath_key']) ){
+			$config['homepath_key'] = key($gp_menu);
+		}
 		$config['homepath'] = common::IndexToTitle($config['homepath_key']);
 
 	}

@@ -2421,9 +2421,8 @@ class gpOutput{
 	 * Return true if the current page is the home page
 	 */
 	static function is_front_page(){
-		global $gp_menu, $page;
-		reset($gp_menu);
-		return $page->gp_index == key($gp_menu);
+		global $config, $page;
+		return $page->gp_index == $config['homepath_key'];
 	}
 
 

@@ -50,6 +50,7 @@ $langmessage = array(
 'DOESNT_EXIST'=>'<em>%1$s</em> does not exist. Would you like to <a href="%2$s">create it</a>?',
 'OOPS_TITLE'=>'Oops, that file doesn\'t exist. Please try again.',
 'file_manager'=>'Page Manager',
+'Homepage'=>'Homepage',
 'Available Pages'=>'Available Pages',
 'page_options'=>'Page Options',
 'view/edit_page'=>'View & Edit Page',

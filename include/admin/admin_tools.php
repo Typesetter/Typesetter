@@ -688,7 +688,7 @@ class admin_tools{
 	}
 
 	static function AdminContentPanel(){
-		global $page, $config, $langmessage, $gp_menu;
+		global $page, $config, $langmessage;
 
 		//the login form does not need the panel
 		if( !common::LoggedIn() ){
@@ -702,9 +702,7 @@ class admin_tools{
 		echo common::Link('','','','class="close_home"');
 		echo '</div>';
 
-		reset($gp_menu);
-		$homepath = common::IndexToTitle(key($gp_menu));
-		echo common::Link_Page($homepath);
+		echo common::Link('',$langmessage['Homepage']);
 		echo ' &#187; ';
 		echo common::Link('Admin',$langmessage['administration']);
 		if( !empty($page->title) && !empty($page->label) && $page->title != 'Admin' ){

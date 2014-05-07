@@ -112,6 +112,13 @@ class admin_menu_new extends admin_menu_tools{
 				$this->NewMenu();
 			return;
 
+			case 'homepage_select':
+				$this->HomepageSelect();
+			return;
+			case 'homepage_save':
+				$this->HomepageSave();
+			return;
+
 			//rename
 			case 'renameform':
 				$this->RenameForm(); //will die()
@@ -330,7 +337,7 @@ class admin_menu_new extends admin_menu_tools{
 	 *
 	 */
 	function ShowForm(){
-		global $langmessage,$page;
+		global $langmessage, $page, $config;
 
 
 		$replace_id = '';
@@ -407,6 +414,16 @@ class admin_menu_new extends admin_menu_tools{
 		echo '</h2>';
 
 		echo '</form>';
+
+
+		//homepage
+		echo '<div class="homepage_setting">';
+		$this->HomepageDisplay();
+		echo '</div>';
+		gp_edit::PrepAutoComplete(true,false);
+
+
+
 
 
 		echo '<div id="admin_menu_div">';
@@ -2625,5 +2642,86 @@ class admin_menu_new extends admin_menu_tools{
 		return $index;
 	}
 
+
+	/**
+	 * Display a form for selecting the homepage
+	 *
+	 */
+	function HomepageSelect(){
+		global $langmessage;
+
+		echo '<div class="inline_box">';
+		echo '<form action="'.common::GetUrl('Admin_Menu').'" method="post">';
+		echo '<input type="hidden" name="cmd" value="homepage_save" />';
+
+		echo '<h3>';
+		echo $langmessage['Homepage'];
+		echo '</h3>';
+
+		echo '<p class="homepage_setting">';
+		echo '<span class="icon_admin_home"></span>';
+		echo ' &nbsp; ';
+		echo '<input type="text" class="autocomplete gpinput" name="homepage" />';
+		echo '</p>';
+
+
+		echo '<p>';
+		echo '<input type="submit" name="aa" value="'.htmlspecialchars($langmessage['save']).'" class="gppost gpsubmit" />';
+		echo ' <input type="submit" value="'.htmlspecialchars($langmessage['cancel']).'" class="admin_box_close gpcancel" /> ';
+		echo '</p>';
+
+		echo '</form>';
+		echo '</div>';
+
+	}
+
+	function HomepageDisplay(){
+		global $langmessage, $config;
+
+		$label = common::GetLabelIndex($config['homepath_key']);
+
+		echo '<span class="icon_admin_home"></span>';
+		echo $langmessage['Homepage'].': ';
+		echo common::Link('Admin_Menu',$label,'cmd=homepage_select','data-cmd="gpabox"');
+	}
+
+
+
+	function HomepageSave(){
+		global $langmessage, $config, $gp_index, $gp_titles, $page;
+
+		$homepage = $_POST['homepage'];
+		$homepage_key = false;
+		if( isset($gp_index[$homepage]) ){
+			$homepage_key = $gp_index[$homepage];
+		}else{
+
+			foreach($gp_titles as $index => $title){
+				if( $title['label'] === $homepage ){
+					$homepage_key = $index;
+					break;
+				}
+			}
+
+			if( !$homepage_key ){
+				message($langmessage['OOPS']);
+				return;
+			}
+		}
+
+		$config['homepath_key'] = $homepage_key;
+		$config['homepath']		= common::IndexToTitle($config['homepath_key']);
+		if( !admin_tools::SaveConfig() ){
+			message($langmessage['OOPS']);
+			return;
+		}
+
+		//update the display
+		ob_start();
+		$this->HomepageDisplay();
+		$content = ob_get_clean();
+
+		$page->ajaxReplace[] = array('inner','.homepage_setting',$content);
+	}
 
 }

@@ -1624,8 +1624,10 @@ class gpOutput{
 				$attributes_a['value'] = common::GetLabel($title);
 				$attributes_a['title'] = common::GetBrowserTitle($title);
 
+				//get valid rel attr
 				if( !empty($gp_titles[$menu_key]['rel']) ){
-					$attributes_a['rel'] = $gp_titles[$menu_key]['rel'];
+					$rel = explode(',',$gp_titles[$menu_key]['rel']);
+					$attributes_a['rel'] = array_intersect( array('alternate','author','bookmark','help','icon','license','next','nofollow','noreferrer','prefetch','prev','search','stylesheet','tag'), $rel);
 				}
 			}
 

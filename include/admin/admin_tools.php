@@ -806,8 +806,6 @@ class admin_tools{
 		admin_tools::InlineEditArea();
 
 		echo '<div class="nodisplay" id="gp_hidden"></div>';
-		echo '<div id="loading1" class="nodisplay"></div>';
-		echo '<div id="loading2" class="nodisplay"></div>';
 
 		if( isset($page->admin_html) ){
 			echo $page->admin_html;

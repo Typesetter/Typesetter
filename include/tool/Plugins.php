@@ -49,8 +49,12 @@ class gpPlugin{
 	 */
 	static function css($file){
 		global $page;
-		$file = common::WinPath( $file );
-		$page->css_admin[] = self::$current['code_folder_part'].'/'.ltrim($file,'/');
+
+		$file 				= common::WinPath( $file );
+		$file				= self::$current['code_folder_part'].'/'.ltrim($file,'/');
+		$page->css_admin[] = $file;
+
+		return $file;
 	}
 
 

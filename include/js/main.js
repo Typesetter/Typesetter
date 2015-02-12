@@ -221,8 +221,12 @@ var $gp = {
 	 *
 	 */
 	loading : function(){
-		$('#loading1').css('zIndex',99000).fadeTo(1,0.3)
-		.next().css('zIndex',99001).show();
+		var $loading = $('#loading1');
+		if( $loading.length == 0 ){
+			$loading = $('<div id="loading1"/>').appendTo('body');
+		}
+
+		$loading.css('zIndex',99000).fadeIn();
 	},
 
 
@@ -231,7 +235,7 @@ var $gp = {
 	 *
 	 */
 	loaded :function(){
-		$('#loading1, #loading2').clearQueue().hide();
+		$('#loading1').clearQueue().fadeOut();
 	},
 
 
@@ -399,6 +403,12 @@ $(function(){
 
 		//html5 validation
 		if( $this.hasClass('gpvalidate') && typeof(this.form.checkValidity) == 'function' && !this.form.checkValidity() ){
+			return;
+		}
+
+		//confirm prompt
+		if( $this.hasClass('gpconfirm') && !confirm(this.title) ){
+			evt.preventDefault();
 			return;
 		}
 

@@ -15,7 +15,6 @@ class gpsession{
 		gp_defined('gp_session_cookie',self::SessionCookie($config['gpuniq']));
 
 		$cmd = common::GetCommand();
-
 		switch( $cmd ){
 			case 'logout':
 				self::LogOut();
@@ -39,6 +38,7 @@ class gpsession{
 
 	static function LogIn(){
 		global $dataDir, $langmessage, $config, $gp_index;
+
 
 		// check nonce
 		// expire the nonce after 10 minutes
@@ -78,6 +78,7 @@ class gpsession{
 		}
 
 
+
 		//check against password sent to a user's email address from the forgot_password form
 		$passed = false;
 		$pass_hash = $config['passhash'];
@@ -107,18 +108,20 @@ class gpsession{
 			unset($userinfo['newpass']);
 		}
 
-		$session_id = self::create($userinfo,$username);
+		$session_id = self::create($username, $userinfo, $sessions);
 		if( !$session_id ){
 			message($langmessage['OOPS'].' (Data Not Saved)');
 			self::UpdateAttempts($users,$username,true);
 			return false;
 		}
 
-		$logged_in = self::start($session_id);
+
+		$logged_in = self::start($session_id,$sessions);
 
 		if( $logged_in === true ){
 			message($langmessage['logged_in']);
 		}
+
 
 		//need to save the user info regardless of success or not
 		//also saves file_name in users.php
@@ -126,12 +129,14 @@ class gpsession{
 		self::UpdateAttempts($users,$username,true);
 
 		//redirect to prevent resubmission
-		$redirect = 'Admin';
-		if( isset($_REQUEST['file']) && isset($gp_index[$_REQUEST['file']]) ){
-			$redirect = $_REQUEST['file'];
+		if( $logged_in ){
+			$redirect = 'Admin';
+			if( isset($_REQUEST['file']) && isset($gp_index[$_REQUEST['file']]) ){
+				$redirect = $_REQUEST['file'];
+			}
+			$url = common::GetUrl($redirect,'',false);
+			//common::Redirect($url);
 		}
-		$url = common::GetUrl($redirect,'',false);
-		common::Redirect($url);
 
 	}
 
@@ -298,7 +303,7 @@ class gpsession{
 
 
 		if( $expires === false ){
-			$expires = time()+2592000;
+			$expires = time()+2592000; //30 days
 		}elseif( $expires === true ){
 			$expires = 0; //expire at end of session
 		}
@@ -327,7 +332,7 @@ class gpsession{
 
 
 	//called when a user logs in
-	static function create(&$user_info,$username){
+	static function create( $username, &$user_info, &$sessions ){
 		global $dataDir, $langmessage;
 
 		//update the session files to .php files
@@ -374,6 +379,15 @@ class gpsession{
 			$new_data['editing'] = $user_info['editing'];
 		}
 		admin_tools::EditingValue($new_data);
+
+		// may needt to extend the cookie life later
+		if( isset($_POST['remember']) ){
+			$new_data['remember'] = time();
+		}else{
+			unset($new_data['remember']);
+		}
+
+
 		gpFiles::SaveArray($user_file,'gpAdmin',$new_data);
 		return $session_id;
 	}
@@ -425,16 +439,21 @@ class gpsession{
 	 * Determine if $session_id represents a valid session and if so start the session
 	 *
 	 */
-	static function start($session_id){
+	static function start($session_id, $sessions = false ){
 		global $langmessage, $dataDir, $GP_LANG_VALUES, $wbMessageBuffer, $GP_INLINE_VARS;
 
+
 		//get the session file
-		$sessions = self::GetSessionIds();
-		if( !isset($sessions[$session_id]) ){
-			self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
-			message($langmessage['Session Expired'].' (timeout)');
-			return false;
+		if( !$sessions ){
+
+			$sessions = self::GetSessionIds();
+			if( !isset($sessions[$session_id]) ){
+				self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
+				message($langmessage['Session Expired'].' (timeout)');
+				return false;
+			}
 		}
+
 		$sess_info = $sessions[$session_id];
 
 		//check ~ip, ~user agent ...
@@ -456,13 +475,13 @@ class gpsession{
 			return false;
 		}
 
+
 		//prevent browser caching when editing
 		Header( 'Last-Modified: ' . gmdate( 'D, j M Y H:i:s' ) . ' GMT' );
 		Header( 'Expires: ' . gmdate( 'D, j M Y H:i:s', time() ) . ' GMT' );
 		Header( 'Cache-Control: no-store, no-cache, must-revalidate'); // HTTP/1.1
 		Header( 'Cache-Control: post-check=0, pre-check=0', false );
 		Header( 'Pragma: no-cache' ); // HTTP/1.0
-
 
 		$GLOBALS['gpAdmin'] = self::SessionData($session_file,$checksum);
 
@@ -475,6 +494,14 @@ class gpsession{
 				$GLOBALS['gpAdmin']['locked'] = true;
 			}else{
 				unset($GLOBALS['gpAdmin']['locked']);
+			}
+		}
+
+		//extend cookie?
+		if( isset($GLOBALS['gpAdmin']['remember']) ){
+			$elapsed = time() - $GLOBALS['gpAdmin']['remember'];
+			if( $elapsed > 604800 ){ //7 days
+				self::cookie(gp_session_cookie,$session_id);
 			}
 		}
 
@@ -1074,7 +1101,7 @@ class gpsession{
 			return;
 		}
 
-		if( is_object($page) && strpos($page->title,'Admin_Errors') !== false ){
+		if( is_object($page) && property_exists($page,'title') && strpos($page->title,'Admin_Errors') !== false ){
 			return;
 		}
 

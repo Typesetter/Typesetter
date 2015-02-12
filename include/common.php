@@ -299,7 +299,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	$mess .= '</div></div>';
 	$mess .= '</p></fieldset>';
 
-	if( gpdebug === true ){
+	if( gpdebug === true || common::loggedIn() ){
 		message($mess);
 	}elseif( $report_error ){
 		global $gp_mailer;
@@ -1024,9 +1024,15 @@ class common{
 	 * @return unknown
 	 */
 	static function status_header( $header, $text ) {
-		$protocol = $_SERVER['SERVER_PROTOCOL'];
-		if( 'HTTP/1.1' != $protocol && 'HTTP/1.0' != $protocol )
+
+		$protocol = '';
+		if( isset($_SERVER['SERVER_PROTOCOL']) ){
+			$protocol = $_SERVER['SERVER_PROTOCOL'];
+		}
+		if( 'HTTP/1.1' != $protocol && 'HTTP/1.0' != $protocol ){
 			$protocol = 'HTTP/1.0';
+		}
+
 		$status_header = "$protocol $header $text";
 		return @header( $status_header, true, $header );
 	}

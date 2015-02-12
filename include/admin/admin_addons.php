@@ -545,7 +545,7 @@ class admin_addons extends admin_addon_install{
 
 		//options
 		if( !isset($addon_config['is_theme']) || !$addon_config['is_theme'] ){
-			echo '<li class="expand_child_click">';
+			echo '<li>'; // class="expand_child_click"
 			echo '<a>'.$langmessage['options'].'</a>';
 			echo '<ul>';
 

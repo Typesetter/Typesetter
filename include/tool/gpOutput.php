@@ -592,7 +592,7 @@ class gpOutput{
 
 
 		//notify admin
-		$message = 'Warning: A compenent of this page has been disabled because it caused fatal errors:';
+		$message = 'Warning: A component of this page has been disabled because it caused fatal errors:';
 		if( !count(self::$fatal_notices) ){
 			error_log( $message );
 		}
@@ -1941,7 +1941,9 @@ class gpOutput{
 		if( !empty($description) ){
 			echo "\n<meta name=\"description\" content=\"".$description."\" />";
 		}
-		echo "\n<meta name=\"generator\" content=\"gpEasy CMS\" />";
+		if( !isset($config['showgplink']) || $config['showgplink'] ){
+			echo "\n<meta name=\"generator\" content=\"gpEasy CMS\" />";
+		}
 
 	}
 

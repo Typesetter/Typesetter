@@ -29,7 +29,7 @@ gp_defined('E_DEPRECATED',8192);
 gp_defined('E_USER_DEPRECATED',16384);
 gp_defined('gpdebug_tools',false);
 gp_defined('gp_backup_limit',10);
-gp_defined('gp_write_lock_time',30);
+gp_defined('gp_write_lock_time',5);
 gp_defined('gp_dir_index',true);
 gp_defined('gp_remote_addons',true); //deprecated 4.0.1
 gp_defined('gp_remote_plugins',gp_remote_addons);
@@ -3196,25 +3196,25 @@ class gpFiles{
 	 *
 	 * @param string $file The path of the file to be saved
 	 * @param string $contents The contents of the file to be saved
-	 * @param bool $checkDir Whether or not to check to see if the parent directory exists before attempting to save the file
 	 * @return bool True on success
 	 */
-	static function Save($file,$contents,$checkDir=true){
+	static function Save($file,$contents){
 		global $gp_not_writable;
 
 		if( !self::WriteLock() ){
 			return false;
 		}
 
+		$exists = file_exists($file);
+
 		//make sure directory exists
-		if( $checkDir && !file_exists($file) ){
+		if( !$exists ){
 			$dir = common::DirName($file);
 			if( !file_exists($dir) ){
 				gpFiles::CheckDir($dir);
 			}
 		}
 
-		$exists = file_exists($file);
 
 		$fp = @fopen($file,'wb');
 		if( $fp === false ){
@@ -3261,14 +3261,20 @@ class gpFiles{
  	 */
 	static function Lock($file,$value,&$expires){
 		global $dataDir;
-		$checked_time = false;
-		$tries = 0;
-		$lock_file = $dataDir.'/data/_lock_'.$file;
+
+		$tries			= 0;
+		$lock_file		= $dataDir.'/data/_lock_'.sha1($file);
+		$file_time		= 0;
+
+
 		while($tries < 1000){
 
 			if( !file_exists($lock_file) ){
 				file_put_contents($lock_file,$value);
 				usleep(100);
+
+			}elseif( !$file_time ){
+				$file_time		= filemtime($lock_file);
 			}
 
 			$contents = @file_get_contents($lock_file);
@@ -3277,10 +3283,9 @@ class gpFiles{
 				return true;
 			}
 
-			if( !$checked_time ){
-				$checked_time = true;
-				$diff = time() - @filemtime($lock_file);
-				if( $diff > $expires ){
+			if( $file_time ){
+				$elapsed = time() - $file_time;
+				if( $elapsed > $expires ){
 					@unlink( $lock_file);
 				}else{
 					$expires -= $diff;
@@ -3300,7 +3305,7 @@ class gpFiles{
 	static function Unlock($file,$value){
 		global $dataDir;
 
-		$lock_file = $dataDir.'/data/_lock_'.$file;
+		$lock_file = $dataDir.'/data/_lock_'.sha1($file);
 		if( !file_exists($lock_file) ){
 			return true;
 		}
@@ -3460,7 +3465,9 @@ class gpFiles{
 		if( $index && gp_dir_index ){
 			$indexFile = $dir.'/index.html';
 			if( !file_exists($indexFile) ){
-				gpFiles::Save($indexFile,'<html></html>',false);
+				//not using gpFiles::Save() so we can avoid infinite looping (it's safe since we already know the directory exists and we're not concerned about the content)
+				file_put_contents($indexFile,'<html></html>');
+				@chmod($indexFile,gp_chmod_file);
 			}
 		}
 

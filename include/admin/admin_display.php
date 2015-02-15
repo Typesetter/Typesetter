@@ -181,6 +181,7 @@ class admin_display extends display{
 				}
 			}
 
+
 			//these are here because they should be available to everyone
 			switch($request_string){
 				case 'Admin_Browser':
@@ -199,8 +200,11 @@ class admin_display extends display{
 				return;
 
 				case 'Admin_Finder':
-					includeFile('thirdparty/finder/connector.php');
-				return;
+					if( admin_tools::HasPermission('Admin_Uploaded') ){
+						includeFile('thirdparty/finder/connector.php');
+						return;
+					}
+				break;
 
 			}
 			array_pop($parts);

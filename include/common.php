@@ -3494,7 +3494,7 @@ class gpFiles{
 
 		$success = true;
 		$subDirs = array();
-		$files = scandir($path);
+		//$files = scandir($path);
 		$files = gpFiles::ReadDir($path,false);
 		foreach($files as $file){
 			$full_path = $path.'/'.$file;

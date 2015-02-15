@@ -8,7 +8,7 @@ class admin_users{
 	var $users;
 	var $possible_permissions = array();
 
-	function admin_users(){
+	function __construct(){
 		global $page,$langmessage;
 
 		$page->head_js[] = '/include/js/admin_users.js';

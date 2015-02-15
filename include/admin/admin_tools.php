@@ -225,6 +225,12 @@ class admin_tools{
 		$scripts['Admin_Status']['group'] = 'settings';
 
 
+		$scripts['Admin_Cache']['script'] = '/include/admin/admin_cache.php';
+		$scripts['Admin_Cache']['class'] = 'admin_cache';
+		$scripts['Admin_Cache']['label'] = $langmessage['Resource Cache'];
+		$scripts['Admin_Cache']['group'] = 'settings';
+
+
 		$scripts['Admin_Uninstall']['script'] = '/include/admin/admin_rm.php';
 		$scripts['Admin_Uninstall']['class'] = 'admin_rm';
 		$scripts['Admin_Uninstall']['label'] = $langmessage['uninstall_prep'];

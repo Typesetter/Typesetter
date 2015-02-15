@@ -93,6 +93,7 @@ $langmessage = array(
 'UPLOAD_ERROR'=>'Oops, <em>%s</em> failed to upload. Please try again.',
 'uninstall_prep'=>'Uninstall Prep',
 'Site Status'=>'Site Status',
+'Resource Cache'=>'Resource Cache',
 'File Owner'=>'File Owner',
 'data_check_failed'=>'%s out of %s files did not pass the health check. Your system may have trouble deleting or modifying these files.',
 'data_check_passed'=>'100%% of your data files passed the health check. A total of %s files were checked.', //%s out of %s files passed the health check.',

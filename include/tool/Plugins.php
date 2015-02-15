@@ -45,14 +45,20 @@ class gpPlugin{
 	 * Add a css file to the page
 	 * @since gpEasy 4.0
 	 * @param string $file The path of the css file relative to the addon folder
-	 *
+	 * @param bool $combine Set to false to keep the file from being combined with other css files
 	 */
-	static function css($file){
+	static function css($file, $combine = true){
 		global $page;
 
 		$file 				= common::WinPath( $file );
 		$file				= self::$current['code_folder_part'].'/'.ltrim($file,'/');
-		$page->css_admin[] = $file;
+
+		if( $combine ){
+			$page->css_admin[] = $file;
+		}else{
+			$url = self::$current['code_folder_rel'].'/'.ltrim($file,'/');
+			$page->head .= "\n".'<link rel="stylesheet" type="text/css" href="'.$url.'"/>';
+		}
 
 		return $file;
 	}
@@ -62,13 +68,21 @@ class gpPlugin{
 	 * Add a js file to the page
 	 * @since gpEasy 4.0
 	 * @param string $file The path of the js file relative to the addon folder
-	 *
+	 * @param bool $combine Set to false to keep the file from being combined with other js files
 	 */
-	static function js($file){
+	static function js($file, $combine = true ){
 		global $page;
+
 		$file = common::WinPath( $file );
-		$page->head_js[] = self::$current['code_folder_part'].'/'.ltrim($file,'/');
+
+		if( $combine ){
+			$page->head_js[] = self::$current['code_folder_part'].'/'.ltrim($file,'/');
+		}else{
+			$url = self::$current['code_folder_rel'].'/'.ltrim($file,'/');
+			$page->head .= "\n".'<script type="text/javascript" src="'.$url.'"></script>';
+		}
 	}
+
 
 	/**
 	 * Similar to php's register_shutdown_function()

@@ -179,7 +179,7 @@ class admin_tools{
 		$scripts['Admin_Configuration']['class'] = 'admin_configuration';
 		$scripts['Admin_Configuration']['label'] = $langmessage['configuration'];
 		$scripts['Admin_Configuration']['group'] = 'settings';
-		$scripts['Admin_Configuration']['popup'] = true;
+		//$scripts['Admin_Configuration']['popup'] = true;
 
 
 		$scripts['Admin_Users']['script'] = '/include/admin/admin_users.php';
@@ -867,6 +867,7 @@ class admin_tools{
 			}else{
 				echo common::Link($script,$info['label']);
 			}
+
 
 			echo '</li>';
 

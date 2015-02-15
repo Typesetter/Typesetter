@@ -148,8 +148,13 @@ class gp_html_output extends gp_html_parse{
 
 				//remove javascript from links
 				if( isset($dom_element['attributes']['href']) ){
+
 					$href = $dom_element['attributes']['href'];
-					if( stripos(ltrim($href),'javascript:') === 0 ){
+					if( stripos(ltrim($href),'javascript') === 0 ){
+						$this->dom_array[$key]['attributes']['href'] = '';
+					}
+
+					if( stripos(ltrim($href),'vbscript') === 0 ){
 						$this->dom_array[$key]['attributes']['href'] = '';
 					}
 

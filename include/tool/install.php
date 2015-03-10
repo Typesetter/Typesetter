@@ -461,7 +461,7 @@ class Install_Tools{
 		if( $base_install ){
 			includeFile('tool/sessions.php');
 			define('gp_session_cookie',gpsession::SessionCookie($config['gpuniq']));
-			gpsession::create($user_info,$username);
+			gpsession::create($user_info, $username, $sessions);
 		}
 		$users[$username] = $user_info;
 

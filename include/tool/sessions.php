@@ -108,7 +108,7 @@ class gpsession{
 			unset($userinfo['newpass']);
 		}
 
-		$session_id = self::create($username, $userinfo, $sessions);
+		$session_id = self::create($userinfo, $username, $sessions);
 		if( !$session_id ){
 			message($langmessage['OOPS'].' (Data Not Saved)');
 			self::UpdateAttempts($users,$username,true);

@@ -51,16 +51,15 @@ class gpPlugin{
 		global $page;
 
 		$file 				= common::WinPath( $file );
-		$file				= self::$current['code_folder_part'].'/'.ltrim($file,'/');
 
 		if( $combine ){
-			$page->css_admin[] = $file;
+			$page->css_admin[] = self::$current['code_folder_part'].'/'.ltrim($file,'/');
 		}else{
 			$url = self::$current['code_folder_rel'].'/'.ltrim($file,'/');
 			$page->head .= "\n".'<link rel="stylesheet" type="text/css" href="'.$url.'"/>';
 		}
 
-		return $file;
+		return self::$current['code_folder_part'].'/'.ltrim($file,'/');
 	}
 
 

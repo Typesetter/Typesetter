@@ -3288,7 +3288,7 @@ class gpFiles{
 				if( $elapsed > $expires ){
 					@unlink( $lock_file);
 				}else{
-					$expires -= $diff;
+					$expires -= $elapsed;
 				}
 			}
 			clearstatcache();

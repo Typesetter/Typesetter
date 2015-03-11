@@ -332,7 +332,7 @@ class gpsession{
 
 
 	//called when a user logs in
-	static function create( $username, &$user_info, &$sessions ){
+	static function create( &$user_info, $username, &$sessions ){
 		global $dataDir, $langmessage;
 
 		//update the session files to .php files
@@ -400,8 +400,10 @@ class gpsession{
 	 */
 	static function GetSessionIds(){
 		global $dataDir;
-		$sessions = array();
-		$sessions_file = $dataDir.'/data/_site/session_ids.php';
+
+		$sessions		= array();
+		$sessions_file	= $dataDir.'/data/_site/session_ids.php';
+
 		if( file_exists($sessions_file) ){
 			require($sessions_file);
 		}
@@ -445,7 +447,6 @@ class gpsession{
 
 		//get the session file
 		if( !$sessions ){
-
 			$sessions = self::GetSessionIds();
 			if( !isset($sessions[$session_id]) ){
 				self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted

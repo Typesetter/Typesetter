@@ -135,7 +135,7 @@ class gpsession{
 				$redirect = $_REQUEST['file'];
 			}
 			$url = common::GetUrl($redirect,'',false);
-			//common::Redirect($url);
+			common::Redirect($url);
 		}
 
 	}

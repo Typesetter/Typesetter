@@ -3224,6 +3224,8 @@ class gpFiles{
 
 		if( !$exists ){
 			@chmod($file,gp_chmod_file);
+		}elseif( function_exists('opcache_invalidate') && substr($file,-4) === '.php' ){
+			opcache_invalidate($file);
 		}
 
 		$return = fwrite($fp,$contents);

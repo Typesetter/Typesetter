@@ -1780,7 +1780,7 @@ class common{
 	 *
 	 */
 	static function GetConfig(){
-		global $config, $dataDir, $gp_hooks;
+		global $config, $gp_hooks;
 
 
 		$config = gpFiles::Get('_site/config');
@@ -1869,15 +1869,13 @@ class common{
 	 *
 	 */
 	static function GetPagesPHP(){
-		global $gp_index, $gp_titles, $gp_menu, $dataDir, $gpLayouts, $config;
+		global $gp_index, $gp_titles, $gp_menu, $gpLayouts, $config;
 		$gp_index = array();
 
 
 		$pages		= gpFiles::Get('_site/pages');
 		$GLOBALS['fileModTimes']['pages.php'] = gpFiles::$last_modified;
 
-
-		$gpLayouts = $pages['gpLayouts'];
 
 
 		//update for < 2.0a3
@@ -1899,9 +1897,10 @@ class common{
 			return;
 		}
 
-		$gp_index = $pages['gp_index'];
-		$gp_titles = $pages['gp_titles'];
-		$gp_menu = $pages['gp_menu'];
+		$gpLayouts		= $pages['gpLayouts'];
+		$gp_index		= $pages['gp_index'];
+		$gp_titles		= $pages['gp_titles'];
+		$gp_menu		= $pages['gp_menu'];
 
 		if( !is_array($gp_menu) ){
 			common::stop();
@@ -3290,7 +3289,6 @@ class gpFiles{
 	 * @since 3.5.3
 	 */
 	static function WriteLock(){
-		global $dataDir;
 
 		if( defined('gp_has_lock') ){
 			return gp_has_lock;

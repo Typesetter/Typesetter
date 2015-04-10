@@ -4,18 +4,18 @@ includeFile('tool/parse_ini.php');
 
 
 class admin_addons_tool{
-	var $rate_testing = false; //for testing on local server
+	var $rate_testing		= false; //for testing on local server
 
-	var $ShowRatingText = true;
-	var $scriptUrl = 'Admin_Addons';
-	var $addonHistory = array();
-	var $addonReviews = array();
+	var $ShowRatingText		= true;
+	var $scriptUrl			= 'Admin_Addons';
+	var $addonHistory		= array();
+	var $addonReviews		= array();
 
 
 	var $type;
-	var $CanRate = true;
-	var $messages = array();
-	var $addon_info = array();
+	var $CanRate			= true;
+	var $messages			= array();
+	var $addon_info			= array();
 	var $dataFile;
 
 
@@ -33,13 +33,17 @@ class admin_addons_tool{
 		$this->GetAddonData();
 	}
 
+	/**
+	 * Get addon history and review data
+	 *
+	 */
 	function GetAddonData(){
 		global $dataDir;
-		//review data
-		$this->dataFile = $dataDir.'/data/_site/addonData.php';
 
-		if( file_exists($this->dataFile) ){
-			require($this->dataFile);
+		$this->dataFile = $dataDir.'/data/_site/addonData.php';
+		$addonData		= gpFiles::Get('_site/addonData');
+
+		if( $addonData ){
 			$this->addonHistory = $addonData['history'];
 			$this->addonReviews = $addonData['reviews'];
 		}

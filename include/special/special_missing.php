@@ -11,10 +11,11 @@ class special_missing{
 
 	function Init(){
 		global $dataDir;
+
 		$this->datafile = $dataDir.'/data/_site/error_data.php';
+
 		if( file_exists($this->datafile) ){
-			require($this->datafile);
-			$this->error_data = $error_data;
+			$this->error_data = gpFiles::Get($this->datafile,'error_data');
 		}
 	}
 

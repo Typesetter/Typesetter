@@ -699,38 +699,35 @@ class display{
 	 */
 	function GetFile(){
 
-		$fileModTime = $fileVersion = false;
-		$file_sections = $meta_data = $file_stats = array();
+		$this->file_sections	= gpFiles::Get($this->file,'file_sections');
+		$this->meta_data		= gpFiles::$last_meta;
+		$this->fileModTime		= gpFiles::$last_modified;
+		$this->file_stats		= gpFiles::$last_stats;
 
-		ob_start();
-		if( file_exists($this->file) ){
-			require($this->file);
-		}
-		$content = ob_get_clean();
 
 		//update page to 2.0 if it wasn't done in upgrade.php
-		if( !empty($content) && count($file_sections) == 0 ){
-			if( !empty($meta_data['file_type']) ){
-				$file_type =& $meta_data['file_type'];
+		if( !empty($content) && count($this->file_sections) == 0 ){
+			if( !empty($this->meta_data['file_type']) ){
+				$file_type =& $this->meta_data['file_type'];
 			}elseif( !isset($file_type) ){
 				$file_type = 'text';
 			}
 
 			switch($file_type){
 				case 'gallery':
-					$meta_data['file_type'] = 'text,gallery';
-					$file_sections[0] = array(
+					$this->meta_data['file_type'] = 'text,gallery';
+					$this->file_sections[0] = array(
 						'type' => 'text',
 						'content' => '<h2>'.strip_tags(common::GetLabel($this->title)).'</h2>',
 						);
-					$file_sections[1] = array(
+					$this->file_sections[1] = array(
 						'type' => 'gallery',
 						'content' => $content,
 						);
 				break;
 
 				default:
-					$file_sections[0] = array(
+					$this->file_sections[0] = array(
 						'type' => 'text',
 						'content' => $content,
 						);
@@ -740,37 +737,25 @@ class display{
 		}
 
 		//fix gallery pages that weren't updated correctly
-		if( isset($fileVersion) && version_compare($fileVersion,'2.0','<=') ){
-			foreach($file_sections as $section_index => $section_info){
+		if( isset($this->file_stats['gpversion']) && version_compare($this->file_stats['gpversion'],'2.0','<=') ){
+			foreach($this->file_sections as $section_index => $section_info){
 				if( $section_info['type'] == 'text' && strpos($section_info['content'],'gp_gallery') !== false ){
 					//check further
 					$lower_content = strtolower($section_info['content']);
 					if( strpos($lower_content,'<ul class="gp_gallery">') !== false
 						|| strpos($lower_content,'<ul class=gp_gallery>') !== false ){
-							$file_sections[$section_index]['type'] = 'gallery';
+							$this->file_sections[$section_index]['type'] = 'gallery';
 					}
 				}
 			}
 		}
 
 
-		if( count($file_sections) == 0 ){
-			$file_sections[0] = array(
+		if( count($this->file_sections) == 0 ){
+			$this->file_sections[0] = array(
 				'type' => 'text',
 				'content' => '<p>Oops, this page no longer has any content.</p>',
 				);
-		}
-
-		$this->file_sections = $file_sections;
-		$this->meta_data = $meta_data;
-		$this->fileModTime = $fileModTime;
-		$this->file_stats = $file_stats;
-		/* for data files older than gpEasy 3.0 */
-		if( !isset($this->file_stats['modified']) ){
-			$this->file_stats['modified'] = $fileModTime;
-		}
-		if( !isset($this->file_stats['gpversion']) ){
-			$this->file_stats['gpversion'] = $fileVersion;
 		}
 	}
 
@@ -1798,11 +1783,13 @@ class common{
 		global $config, $dataDir, $gp_hooks;
 
 
-		require($dataDir.'/data/_site/config.php');
+		$config = gpFiles::Get('_site/config');
+
 		if( !is_array($config) || !array_key_exists('gpversion',$config) ){
 			common::stop();
 		}
-		$GLOBALS['fileModTimes']['config.php'] = $fileModTime;
+		$GLOBALS['fileModTimes']['config.php'] = gpFiles::$last_modified;
+
 
 		//remove old values
 		if( isset($config['linkto']) ) unset($config['linkto']);
@@ -1885,9 +1872,11 @@ class common{
 		global $gp_index, $gp_titles, $gp_menu, $dataDir, $gpLayouts, $config;
 		$gp_index = array();
 
-		$pages = array();
-		require($dataDir.'/data/_site/pages.php');
-		$GLOBALS['fileModTimes']['pages.php'] = $fileModTime;
+
+		$pages		= gpFiles::Get('_site/pages');
+		$GLOBALS['fileModTimes']['pages.php'] = gpFiles::$last_modified;
+
+
 		$gpLayouts = $pages['gpLayouts'];
 
 
@@ -1927,7 +1916,7 @@ class common{
 		}
 
 		//fix the gpmenu
-		if( version_compare($fileVersion,'3.0b1','<') ){
+		if( version_compare(gpFiles::$last_version,'3.0b1','<') ){
 			$gp_menu = gpOutput::FixMenu($gp_menu);
 
 			// fix gp_titles for gpEasy 3.0+
@@ -2884,6 +2873,69 @@ class common{
  *
  */
 class gpFiles{
+
+	static $last_modified; 		//the modified time of the last file retrieved with gpFiles::Get();
+	static $last_version; 		//the gpEasy version of the last file retrieved with gpFiles::Get();
+	static $last_stats; 		//the stats of the last file retrieved with gpFiles::Get();
+	static $last_meta; 			//the meta data of the last file retrieved with gpFiles::Get();
+
+
+	/**
+	 * Get array from data file
+	 * Example:
+	 * $config = gpFiles::Get('_site/config','config'); or $config = gpFiles::Get('_site/config');
+	 *
+	 */
+	static function Get($file,$var_name=false){
+		global $dataDir;
+
+		self::$last_modified	= null;
+		self::$last_version		= null;
+		self::$last_stats		= null;
+		self::$last_meta		= null;
+
+
+		if( !$var_name ){
+			$var_name	= basename($file);
+		}
+
+		//if( substr($file,-4) === '.php' ){
+		//	$file = substr($file,0,-4);
+		//}
+
+		if( strpos($file,$dataDir) !== 0 ){
+			$file = $dataDir.'/data/'.ltrim($file,'/').'.php';
+		}
+
+		if( !file_exists($file) ){
+			return;
+		}
+
+		include($file);
+		if( !isset(${$var_name}) ){
+			return;
+		}
+
+
+		// For data files older than gpEasy 3.0
+		if( !isset($file_stats['modified']) ){
+			$file_stats['modified'] = $fileModTime;
+		}
+		if( !isset($file_stats['gpversion']) ){
+			$file_stats['gpversion'] = $fileVersion;
+		}
+
+		// File stats
+		self::$last_modified		= $fileModTime;
+		self::$last_version			= $fileVersion;
+		self::$last_stats			= $file_stats;
+		if( isset($meta_data) ){
+			self::$last_meta		= $meta_data;
+		}
+
+
+		return ${$var_name};
+	}
 
 
 	/**

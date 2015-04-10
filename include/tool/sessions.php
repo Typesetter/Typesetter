@@ -399,16 +399,7 @@ class gpsession{
 	 * @return array array of all sessions
 	 */
 	static function GetSessionIds(){
-		global $dataDir;
-
-		$sessions		= array();
-		$sessions_file	= $dataDir.'/data/_site/session_ids.php';
-
-		if( file_exists($sessions_file) ){
-			require($sessions_file);
-		}
-
-		return $sessions;
+		return gpFiles::Get('_site/session_ids','sessions');
 	}
 
 	/**
@@ -596,16 +587,14 @@ class gpsession{
 	 */
 	static function SessionData($session_file,&$checksum){
 
-		$gpAdmin = array();
-		if( file_exists($session_file) ){
-			require($session_file);
-		}
-		$checksum = '';
+		$gpAdmin	= gpFiles::Get($session_file,'gpAdmin');
+
+		$checksum	= '';
+
 		if( isset($gpAdmin['checksum']) ){
 			$checksum = $gpAdmin['checksum'];
 		}
 
-		//$gpAdmin = self::gpui_defaults() + $gpAdmin; //reset the defaults
 		return $gpAdmin + self::gpui_defaults();
 	}
 
@@ -775,12 +764,11 @@ class gpsession{
 	 */
 	static function Cron(){
 		global $dataDir;
-
-		$file_stats = $cron_info = array();
 		$time_file = $dataDir.'/data/_site/cron_info.php';
-		if( file_exists($time_file) ){
-			require($time_file);
-		}
+
+		$cron_info	= gpFiles::Get('_site/cron_info');
+		$file_stats	= gpFiles::$last_stats;
+
 		$file_stats += array('modified' => 0);
 		if( (time() - $file_stats['modified']) < 3600 ){
 			return;

@@ -195,10 +195,13 @@ class section_content{
 		}
 
 		$includes++;
-		$file_sections = array();
 		ob_start();
-		require($file);
+		$file_sections = gpFiles::Get($file,'file_sections');
 		ob_get_clean();
+
+		if( !$file_sections ){
+			return;
+		}
 
 		$replacement = '';
 		foreach($file_sections as $section_num => $section_data){
@@ -321,8 +324,12 @@ class section_content{
 			return '{{'.htmlspecialchars($requested).'}}';
 		}
 
-		$file_sections = array();
-		require($file);
+
+		$file_sections = gpFiles::Get($file,'file_sections');
+		if( !$file_sections ){
+			return '{{'.htmlspecialchars($requested).'}}';
+		}
+
 		return self::Render($file_sections,self::$title,self::$meta);
 	}
 

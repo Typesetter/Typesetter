@@ -503,7 +503,7 @@ class admin_port{
 		}
 
 		//set the cookie for the new data
-		require($dataDir.'/data/_site/config.php');
+		$config = gpFiles::Get('_site/config');
 		$session_cookie = 'gpEasy_'.substr(sha1($config['gpuniq']),12,12);
 		gpsession::cookie($session_cookie,$session_id);
 

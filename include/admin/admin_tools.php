@@ -75,17 +75,11 @@ class admin_tools{
 			return gpFiles::SaveArray($file,'update_data',$update_data);
 		}
 
-		//get
-		$data_timestamp = 0;
-		$update_data = array();
-		if( file_exists($file) ){
-			require($file);
-			$data_timestamp = $fileModTime;
-		}
 
-		$update_data += array('packages'=>array());
+		$update_data	= gpFiles::Get('_updates/updates','update_data');
+		$update_data	+= array('packages'=>array());
 
-		return $data_timestamp;
+		return gpFiles::$last_modified;
 	}
 
 

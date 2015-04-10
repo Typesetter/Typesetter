@@ -625,11 +625,8 @@ class admin_users{
 	}
 
 	function GetUsers(){
-		global $dataDir;
 
-		require($dataDir.'/data/_site/users.php');
-
-		$this->users = $users;
+		$this->users		= gpFiles::Get('_site/users');
 
 		//fix the editing value
 		foreach($this->users as $username => $userinfo){

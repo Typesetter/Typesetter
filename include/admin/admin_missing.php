@@ -55,15 +55,21 @@ class admin_missing extends special_missing{
 		}
 	}
 
-	/* static */
 
+	/**
+	 * Add instructions for a 301 or 302 redirect
+	 *
+	 */
 	function AddRedirect($source,$target){
 		global $dataDir;
-		$error_data = array();
-		$datafile = $dataDir.'/data/_site/error_data.php';
-		if( file_exists($datafile) ){
-			require($datafile);
+
+
+		$datafile		= $dataDir.'/data/_site/error_data.php';
+		$error_data		= gpFiles::Get('_site/error_data');
+		if( !$error_data ){
+			$error_data = array();
 		}
+
 		$changed = false;
 
 		//remove redirects from the $target

@@ -851,19 +851,18 @@ class gpOutput{
 	 * @return array menu data
 	 */
 	static function GetMenuArray($id){
-		global $dataDir, $gp_menu, $config;
+		global $dataDir, $gp_menu;
+
 
 		$menu_file = $dataDir.'/data/_menus/'.$id.'.php';
-		if( !file_exists($menu_file) ){
+		if( empty($id) || !file_exists($menu_file) ){
 			return gpPlugin::Filter('GetMenuArray',array($gp_menu));
 		}
 
 
-		$menu = array();
-		$fileVersion = false;
-		require($menu_file);
+		$menu = gpFiles::Get('_menus/'.$id,'menu');
 
-		if( $fileVersion && version_compare($fileVersion,'3.0b1','<') ){
+		if( gpFiles::$last_version && version_compare(gpFiles::$last_version,'3.0b1','<') ){
 			$menu = gpOutput::FixMenu($menu);
 		}
 

@@ -208,16 +208,14 @@ class special_galleries{
 	 * @static
 	 */
 	static function GetData(){
-		global $dataDir;
 
-		$galleries = array();
-		$fileVersion = '0';
-		$file = $dataDir.'/data/_site/galleries.php';
-		if( file_exists($file) ){
-			require($file);
-			if( version_compare($fileVersion,'2.2','<=') ){
-				special_galleries::UpdateData($galleries);
-			}
+		$galleries = gpFiles::Get('_site/galleries');
+		if( !$galleries ){
+			return array();
+		}
+
+		if( version_compare(gpFiles::$last_version,'2.2','<=') ){
+			special_galleries::UpdateData($galleries);
 		}
 
 		return $galleries;

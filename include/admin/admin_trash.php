@@ -78,21 +78,21 @@ class admin_trash{
 
 
 
-	/*
+	/**
 	 * Return a sorted array of files in the trash
 	 * @static
+	 *
 	 */
 	static function TrashFiles(){
 		global $dataDir;
-		$trash_dir = $dataDir.'/data/_site/trash.php';
 
-		if( !file_exists($trash_dir) ){
+		$trash_file = $dataDir.'/data/_site/trash.php';
+
+		if( !file_exists($trash_file) ){
 			return admin_trash::GenerateTrashIndex();
 		}
 
-		$trash_titles = array();
-		include($trash_dir);
-		return $trash_titles;
+		return gpFiles::Get($trash_file,'trash_titles');
 	}
 
 
@@ -180,22 +180,19 @@ class admin_trash{
 	static function MoveToTrash_File($title, $index, &$trash_data){
 		global $dataDir, $gp_titles;
 
-		$source_file = gpFiles::PageFile($title);
-		$trash_file_name = sha1($title).'.php';
-		$trash_file = $dataDir.'/data/_trash/'.$trash_file_name;
+		$source_file		= gpFiles::PageFile($title);
+		$trash_file_name	= sha1($title).'.php';
+		$trash_file			= $dataDir.'/data/_trash/'.$trash_file_name;
 
-		$trash_data[$title] = $gp_titles[$index];
-		$trash_data[$title]['file'] = $trash_file_name;
+		$trash_data[$title]				= $gp_titles[$index];
+		$trash_data[$title]['file']		= $trash_file_name;
 
 		if( !file_exists($source_file) ){
 			return false;
 		}
 
 		//get the file data
-		$file_sections = array();
-		ob_start();
-		include($source_file);
-		ob_get_clean();
+		$file_sections = gpFiles::Get($source_file,'file_sections');
 
 
 		if( file_exists($trash_file) ){
@@ -331,12 +328,8 @@ class admin_trash{
 	 *
 	 */
 	static function RestoreFile($title,$file,$title_info){
-		//get the file data
-		$file_sections = array();
-		ob_start();
-		include($file);
-		ob_get_clean();
 
+		$file_sections = gpFiles::Get($file,'file_sections');
 
 		// Restore resized images
 		if( count($file_sections) ){
@@ -381,11 +374,9 @@ class admin_trash{
 	 */
 	static function GetTypes($file){
 
-		$types = array();
-		$file_sections = array();
-		if( file_exists($file) ){
-			include($file);
-		}
+		$types			= array();
+		$file_sections	= gpFiles::Get($file,'file_sections');
+
 		foreach($file_sections as $section){
 			$types[] = $section['type'];
 		}

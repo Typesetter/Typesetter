@@ -800,25 +800,33 @@ class editing_page extends display{
 
 		//if it's a compressed file, we need an uncompressed version
 		if( strpos($full_path,'.gze') !== false ){
-			$dir = common::DirName($full_path);
+
 			ob_start();
 			readgzfile($full_path);
-			$contents = ob_get_clean();
-			$full_path = tempnam($dir,'backup');
+			$contents	= ob_get_clean();
+
+			$dir		= common::DirName($full_path);
+			$full_path	= tempnam($dir,'backup');
+
 			gpFiles::Save( $full_path, $contents );
-			include($full_path);
+
+			$file_sections	= gpFiles::Get($full_path,'file_sections');
+
 			unlink($full_path);
+
 		}else{
-			include($full_path);
+			$file_sections	= gpFiles::Get($full_path,'file_sections');
 		}
 
-		$this->contentBuffer = section_content::Render($file_sections,$this->title,$file_stats);
+
+		$this->contentBuffer = section_content::Render($file_sections,$this->title,gpFiles::$last_stats);
 
 
-		$date = common::date($langmessage['strftime_datetime'],$time);
-		$message = sprintf($langmessage['viewing_revision'],$date);
-		$message .= ' <br/> '.common::Link($this->title,$langmessage['Restore this revision'],'cmd=use_revision&time='.$time,array('data-cmd'=>'cnreq'));
-		$message .= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+		$date		= common::date($langmessage['strftime_datetime'],$time);
+		$message	= sprintf($langmessage['viewing_revision'],$date);
+		$message	.= ' <br/> '.common::Link($this->title,$langmessage['Restore this revision'],'cmd=use_revision&time='.$time,array('data-cmd'=>'cnreq'));
+		$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+
 		message( $message );
 	}
 

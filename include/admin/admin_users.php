@@ -111,17 +111,17 @@ class admin_users{
 	function UserFileDetails($username,$is_curr_user){
 		global $dataDir;
 
-		$user_info = $this->users[$username];
-		$user_file_name = $user_info['file_name'];
-		$user_file = $dataDir.'/data/_sessions/'.$user_file_name;
+		$user_info			= $this->users[$username];
+		$user_file			= $dataDir.'/data/_sessions/'.$user_info['file_name'];
 
-		if( !$is_curr_user ){
-			if( !file_exists($user_file) ){
-				return;
-			}
-			include($user_file);
-		}else{
+		if( $is_curr_user ){
 			global $gpAdmin;
+		}else{
+			$gpAdmin = gpFiles::Get($user_file,'gpAdmin');
+		}
+
+		if( !$gpAdmin ){
+			return;
 		}
 
 		$gpAdmin['granted'] = $user_info['granted'];

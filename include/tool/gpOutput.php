@@ -1183,6 +1183,9 @@ class gpOutput{
 	}
 
 	static function ExtraContent( $title, &$file_stats = array() ){
+
+		//$extra_content = gpFiles::Get('_extra/'.$title,'extra_content');
+
 		global $dataDir;
 		$file = $dataDir.'/data/_extra/'.$title.'.php';
 

@@ -3256,8 +3256,8 @@ class admin_theme_content extends admin_addon_install{
 			return false;
 		}
 
-		include($file);
-		if( !isset($texts) || !is_array($texts) || (count($texts) == 0 ) ){
+		$texts = gpFiles::Get($file,'texts');
+		if( !$texts ){
 			return false;
 		}
 

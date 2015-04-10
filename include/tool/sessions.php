@@ -59,8 +59,9 @@ class gpsession{
 		}
 
 
-		include($dataDir.'/data/_site/users.php');
-		$username = self::GetLoginUser( $users, $nonce );
+		$users		= gpFiles::Get('_site/users');
+		$username	= self::GetLoginUser( $users, $nonce );
+
 		if( $username === false ){
 			self::IncorrectLogin('1');
 			return false;

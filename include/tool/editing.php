@@ -567,15 +567,14 @@ class gp_edit{
 	}
 
 	static function CKAdminConfig(){
-		global $dataDir;
 		static $cke_config;
 
 		//get ckeditor configuration set by users
 		if( !is_array($cke_config) ){
-			$cke_config = array();
-			$config_path = $dataDir.'/data/_ckeditor/config.php';
-			if( file_exists($config_path) ){
-				include($config_path);
+
+			$cke_config = gpFiles::Get('_ckeditor/config','cke_config');
+			if( !$cke_config ){
+				$cke_config = array();
 			}
 
 			$cke_config += array('plugins'=>array(),'custom_config'=>array());

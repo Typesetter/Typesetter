@@ -386,11 +386,8 @@ class admin_ckeditor{
 	function Init(){
 		global $dataDir;
 
-		$this->config_file = $dataDir.'/data/_ckeditor/config.php';
-		if( file_exists($this->config_file) ){
-			include($this->config_file);
-			$this->cke_config = $cke_config;
-		}
+		$this->config_file	= $dataDir.'/data/_ckeditor/config.php';
+		$this->cke_config	= gpFiles::Get($this->config_file,'cke_config');
 
 		//$this->cke_config += array('custom_config'=>array());
 		$this->cke_config += array('plugins'=>array());

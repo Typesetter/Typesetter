@@ -555,29 +555,25 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 	function connect(){
 		global $config, $dataDir, $langmessage;
 
-		$save_values = false;
-		$args = false;
 
-		//get connection values
-		$connect_args = array();
-		$connection_file = $dataDir.'/data/_updates/connect.php';
-		if( file_exists($connection_file) ){
-			include($connection_file);
-		}
-		if( !isset($connection_file['ftp_user']) && isset($config['ftp_user']) ){
-			$connect_args['ftp_user'] = $config['ftp_user'];
-			$connect_args['ftp_server'] = $config['ftp_server'];
-			$connect_args['ftp_pass'] = $config['ftp_pass'];
-			$connect_args['ftp_root'] = $config['ftp_root'];
+		$save_values						= false;
+		$connect_args						= gpFiles::Get('_updates/connect','connect_args');
+
+		if( !$connect_args || (!isset($connect_args['ftp_user']) && isset($config['ftp_user'])) ){
+			$connect_args['ftp_user']		= $config['ftp_user'];
+			$connect_args['ftp_server']		= $config['ftp_server'];
+			$connect_args['ftp_pass']		= $config['ftp_pass'];
+			$connect_args['ftp_root']		= $config['ftp_root'];
 			$save_values = true;
 		}
+
 		if( isset($_POST['ftp_pass']) ){
-			$connect_args = $_POST;
-			$save_values = true;
+			$connect_args					= $_POST;
+			$save_values					= true;
 		}
-		$connect_args = $this->get_connect_vars($connect_args);
 
-		$connected = $this->connect_handler($connect_args);
+		$connect_args						= $this->get_connect_vars($connect_args);
+		$connected							= $this->connect_handler($connect_args);
 
 		if( $connected !== true ){
 			return $connected;
@@ -601,6 +597,8 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 		if( !$save_values ){
 			return $connected;
 		}
+
+		$connection_file	= $dataDir.'/data/_updates/connect.php';
 		if( !gpFiles::SaveArray($connection_file,'connect_args',$connect_args) ){
 			return $connected;
 		}

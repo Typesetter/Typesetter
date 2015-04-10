@@ -203,15 +203,15 @@ class gp_resized{
 			return;
 		}
 
-		$index_file = $dataDir.'/data/_site/image_index.php';
-		self::$index = array();
-		if( file_exists($index_file) ){
-			include($index_file);
-			self::$index = $image_index;
-			self::$index_checksum = self::checksum($image_index);
-			self::$last_index = $file_stats['last_index'];
+		$index_file		= $dataDir.'/data/_site/image_index.php';
+		self::$index	= gpFiles::Get($index_file,'image_index');
+
+		if( self::$index ){
+			self::$index_checksum	= self::checksum(self::$index);
+			self::$last_index		= gpFiles::$last_stats['last_index'];
 		}
 	}
+
 
 	/**
 	 * Save the image index information if the checksum has changed
@@ -220,7 +220,7 @@ class gp_resized{
 	static function SaveIndex(){
 		global $dataDir;
 		if( self::$index_checksum === self::checksum(self::$index) ){
-			return true;
+			//return true;
 		}
 
 		$file_stats = array('last_index'=>self::$last_index);
@@ -242,13 +242,7 @@ class gp_resized{
 	 *
 	 */
 	static function GetUsage($index){
-		global $dataDir;
-		$data_file = $dataDir.'/data/_resized/'.$index.'/data.php';
-		$usage = array();
-		if( file_exists($data_file) ){
-			include($data_file);
-		}
-		return $usage;
+		return gpFiles::Get('_resized/'.$index.'/data','usage');
 	}
 
 	/**

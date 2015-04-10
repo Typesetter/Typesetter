@@ -491,7 +491,7 @@ function IncludeScript($file, $include_variation = 'include_once', $globals = ar
 			$return = include_once($file);
 		break;
 		case 'require':
-			$return = require_once($file);
+			$return = require($file);
 		break;
 		case 'require_once':
 			$return = require_once($file);
@@ -2873,10 +2873,10 @@ class common{
  */
 class gpFiles{
 
-	static $last_modified; 		//the modified time of the last file retrieved with gpFiles::Get();
-	static $last_version; 		//the gpEasy version of the last file retrieved with gpFiles::Get();
-	static $last_stats; 		//the stats of the last file retrieved with gpFiles::Get();
-	static $last_meta; 			//the meta data of the last file retrieved with gpFiles::Get();
+	static $last_modified; 						//the modified time of the last file retrieved with gpFiles::Get();
+	static $last_version; 						//the gpEasy version of the last file retrieved with gpFiles::Get();
+	static $last_stats			= array(); 		//the stats of the last file retrieved with gpFiles::Get();
+	static $last_meta			= array(); 		//the meta data of the last file retrieved with gpFiles::Get();
 
 
 	/**
@@ -2890,8 +2890,8 @@ class gpFiles{
 
 		self::$last_modified	= null;
 		self::$last_version		= null;
-		self::$last_stats		= null;
-		self::$last_meta		= null;
+		self::$last_stats		= array();
+		self::$last_meta		= array();
 
 
 		if( !$var_name ){
@@ -2907,12 +2907,12 @@ class gpFiles{
 		}
 
 		if( !file_exists($file) ){
-			return;
+			return array();
 		}
 
 		include($file);
-		if( !isset(${$var_name}) ){
-			return;
+		if( !isset(${$var_name}) || !is_array(${$var_name}) ){
+			return array();
 		}
 
 
@@ -3185,14 +3185,8 @@ class gpFiles{
 	 * @return array
 	 */
 	static function GetTitleMeta($file){
-
-		$meta_data = array();
-		if( file_exists($file) ){
-			ob_start();
-			include($file);
-			ob_end_clean();
-		}
-		return $meta_data;
+		gpFiles::Get($file,'meta_data');
+		return gpFiles::$last_meta;
 	}
 
 	/**
@@ -3200,23 +3194,13 @@ class gpFiles{
 	 *
 	 */
 	static function GetFileStats($file){
-		$file_stats = array();
-		if( file_exists($file) ){
-			ob_start();
-			include($file);
-			ob_end_clean();
 
-			if( !isset($file_stats['modified']) && isset($fileModTime) ){
-				$file_stats['modified'] = $fileModTime;
-			}
-			if( !isset($file_stats['gpversion']) && isset($fileVersion) ){
-				$file_stats['gpversion'] = $fileVersion;
-			}
-		}else{
-			$file_stats['created'] = time();
+		if( file_exists($file) ){
+			gpFiles::Get($file,'file_stats');
+			return gpFiles::$last_stats;
 		}
 
-		return $file_stats;
+		return array('created'=> time());
 	}
 
 
@@ -3419,6 +3403,7 @@ class gpFiles{
 		global $gpAdmin;
 
 		if( $time === false ) $time = time();
+
 
 		//file stats
 		$file_stats = (array)$file_stats + gpFiles::GetFileStats($file);

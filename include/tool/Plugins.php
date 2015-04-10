@@ -319,9 +319,11 @@ class gpPlugin{
 		global $addonRelativeCode,$addonRelativeData,$addonPathData,$addonPathCode,$addonFolderName,$addon_current_id,$addon_current_version;
 
 
-		$addonFolderName = false;
-		$addonDataFolder = $addonCodeFolder = false;
-		$addonRelativeCode = $addonRelativeData = $addonPathData = $addonPathCode = $addon_current_id = $addon_current_version = false;
+		self::$current		= array();
+		$addonFolderName	= false;
+		$addonDataFolder	= false;
+		$addonCodeFolder	= false;
+		$addonRelativeCode	= $addonRelativeData = $addonPathData = $addonPathCode = $addon_current_id = $addon_current_version = false;
 
 		//Make the most recent addon folder or addon id in the stack the current addon
 		if( count(self::$stack) > 0 ){
@@ -361,13 +363,9 @@ class gpPlugin{
 	 *
 	 */
 	static function GetConfig(){
-		global $addonPathData;
-		$config = array();
-		$file = $addonPathData.'/_config.php';
-		if( file_exists($file) ){
-			include($file);
-		}
-		return $config;
+
+		$file = self::$current['data_folder_full'].'/_config.php';
+		return gpFiles::Get($file,'config');
 	}
 
 
@@ -377,9 +375,8 @@ class gpPlugin{
 	 *
 	 */
 	function SaveConfig($config){
-		global $addonPathData;
 
-		$file = $addonPathData.'/_config.php';
+		$file = self::$current['data_folder_full'].'/_config.php';
 
 		if( gpFiles::SaveArray($file,'config',$config) ){
 			return true;

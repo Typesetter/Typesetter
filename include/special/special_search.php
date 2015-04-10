@@ -256,15 +256,13 @@ class special_gpsearch{
 		return false;
 	}
 
+	/**
+	 * Get the search configuration
+	 *
+	 */
 	function GetConfig(){
-
-		$search_config = array();
-		if( file_exists($this->config_file) ){
-			include($this->config_file);
-		}
-
-		$search_config += array('search_hidden'=>false);
-		$this->search_config = $search_config;
+		$this->search_config 	= gpFiles::Get($this->config_file,'search_config');
+		$this->search_config	+= array('search_hidden'=>false);
 	}
 
 	function SaveConfig(){
@@ -339,26 +337,21 @@ class special_gpsearch{
 	function SearchPage($title,$index){
 		global $gp_menu;
 
-		$full_path = gpFiles::PageFile($title);
-		if( !file_exists($full_path) ){
-			return;
-		}
-
 		//search hidden?
 		if( !$this->search_hidden && !isset($gp_menu[$index]) ){
 			return;
 		}
 
-		$file_sections = $file_stats = array();
-		ob_start();
-		include($full_path);
-		if( isset($file_sections) && is_array($file_sections) ){
-			echo section_content::Render($file_sections,$title,$file_stats);
+		$full_path		= gpFiles::PageFile($title);
+		$file_sections	= gpFiles::Get($full_path,'file_sections');
+
+		if( !$file_sections ){
+			return;
 		}
-		$content = ob_get_clean();
 
+		$content		= section_content::Render($file_sections,$title,gpFiles::$last_stats);
+		$label			= common::GetLabel($title);
 
-		$label = common::GetLabel($title);
 		$this->FindString($content, $label, $title);
 	}
 

@@ -30,7 +30,6 @@ $(function(){
 
 
 	//expand_child_click
-	/*
 	$(document).on('click','.expand_child_click',function(evt){
 
 		evt.preventDefault();
@@ -94,6 +93,5 @@ $(function(){
 
 		return JSON.parse( localStorage.gp_expand_child_click );
 	}
-	*/
 
 });

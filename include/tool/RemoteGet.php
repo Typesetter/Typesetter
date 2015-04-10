@@ -179,7 +179,7 @@ class gpRemoteGet{
 		$arrContext = array();
 		$arrContext['http'] = array(
 				'method'			=> 'GET',
-				'user_agent'		=> $r['user-agent'],
+				'user_agent'		=> 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:36.0) Gecko/20100101 Firefox/36.0', //$r['user-agent'],
 				'max_redirects'		=> $r['redirection'],
 				'protocol_version'	=> (float) $r['httpversion'],
 				'timeout'			=> $r['timeout'],
@@ -196,8 +196,6 @@ class gpRemoteGet{
 			}
 			$arrContext['http']['header'] = trim($arrContext['http']['header']);
 		}
-
-
 
 		$context = stream_context_create($arrContext);
 

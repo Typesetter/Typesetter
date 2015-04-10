@@ -1167,11 +1167,10 @@ class admin_tools{
 	}
 
 
-	//
-	//	functions for gp_menu, gp_titles
-	//
-
-	//admin_tools::SaveAllConfig();
+	/**
+	 * Save config.php and pages.php
+	 *
+	 */
 	static function SaveAllConfig(){
 		if( !admin_tools::SaveConfig() ){
 			return false;

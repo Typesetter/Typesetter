@@ -1315,13 +1315,17 @@ class admin_menu_new extends admin_menu_tools{
 		unset($gp_titles[$index]);
 		unset($gp_index[$title]);
 
+		$this->ResetHomepage();
+
+
+
 		if( !admin_trash::ModTrashData($trash_data,null) ){
 			message($langmessage['OOPS']);
 			$this->RestoreSettings();
 			return false;
 		}
 
-		if( !admin_tools::SavePagesPHP() ){
+		if( !admin_tools::SaveAllConfig() ){
 			$this->RestoreSettings();
 			return false;
 		}
@@ -1342,9 +1346,24 @@ class admin_menu_new extends admin_menu_tools{
 	}
 
 
-	/*
-	 *	Remove key from curr_menu_array
-	 * 	Adjust children levels if necessary
+	/**
+	 * Make sure the homepage has a value
+	 *
+	 */
+	function ResetHomepage(){
+		global $config, $gp_menu, $gp_titles;
+
+		if( !isset($gp_titles[$config['homepath_key']]) ){
+			$config['homepath_key'] = key($gp_menu);
+			$config['homepath'] = common::IndexToTitle($config['homepath_key']);
+		}
+	}
+
+
+	/**
+	 * Remove key from curr_menu_array
+	 * Adjust children levels if necessary
+	 *
 	 */
 	function RmFromMenu($search_key,$curr_menu=true){
 		global $gp_menu;
@@ -2687,6 +2706,10 @@ class admin_menu_new extends admin_menu_tools{
 
 
 
+	/**
+	 * Save the posted page as the homepage
+	 *
+	 */
 	function HomepageSave(){
 		global $langmessage, $config, $gp_index, $gp_titles, $page;
 

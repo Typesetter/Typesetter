@@ -375,7 +375,7 @@ class admin_ckeditor{
 	 *
 	 */
 	function SaveConfig(){
-		return gpFiles::SaveArray($this->config_file,'cke_config',$this->cke_config);
+		return gpFiles::SaveData($this->config_file,'cke_config',$this->cke_config);
 	}
 
 

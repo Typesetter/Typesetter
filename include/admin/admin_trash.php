@@ -129,7 +129,7 @@ class admin_trash{
 		global $dataDir;
 		$index_file = $dataDir.'/data/_site/trash.php';
 		uksort($trash_titles,'strnatcasecmp');
-		return gpFiles::SaveArray($index_file,'trash_titles',$trash_titles);
+		return gpFiles::SaveData($index_file,'trash_titles',$trash_titles);
 	}
 
 

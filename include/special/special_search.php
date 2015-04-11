@@ -274,7 +274,7 @@ class special_gpsearch{
 			$search_config['search_hidden'] = false;
 		}
 
-		if( gpFiles::SaveArray($this->config_file,'search_config',$search_config) ){
+		if( gpFiles::SaveData($this->config_file,'search_config',$search_config) ){
 			message($langmessage['SAVED']);
 			$this->search_config = $search_config;
 			return true;

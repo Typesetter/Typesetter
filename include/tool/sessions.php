@@ -310,7 +310,7 @@ class gpsession{
 			$users[$username]['attempts']++;
 		}
 		$users[$username]['lastattempt'] = time();
-		gpFiles::SaveArray($dataDir.'/data/_site/users.php','users',$users);
+		gpFiles::SaveData($dataDir.'/data/_site/users.php','users',$users);
 	}
 
 
@@ -373,7 +373,7 @@ class gpsession{
 		}
 
 
-		gpFiles::SaveArray($user_file,'gpAdmin',$new_data);
+		gpFiles::SaveData($user_file,'gpAdmin',$new_data);
 		return $session_id;
 	}
 
@@ -410,7 +410,7 @@ class gpsession{
 
 		//clean
 		$sessions_file = $dataDir.'/data/_site/session_ids.php';
-		return gpFiles::SaveArray($sessions_file,'sessions',$sessions);
+		return gpFiles::SaveData($sessions_file,'sessions',$sessions);
 	}
 
 	/**
@@ -663,7 +663,7 @@ class gpsession{
 		}
 
 		$gpAdmin['checksum'] = $checksum; //store the new checksum
-		gpFiles::SaveArray($file,'gpAdmin',$gpAdmin);
+		gpFiles::SaveData($file,'gpAdmin',$gpAdmin);
 
 	}
 
@@ -760,7 +760,7 @@ class gpsession{
 		}
 
 		self::CleanTemp();
-		gpFiles::SaveArray($time_file,'cron_info',$cron_info);
+		gpFiles::SaveData($time_file,'cron_info',$cron_info);
 	}
 
 	/**

@@ -181,13 +181,6 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 			 );
 
 
-	// since we supported php 4.3+, there may be a lot of strict errors
-	//if( $errno === E_STRICT ){
-		//$report_error = false;
-		//return;
-	//}
-
-
 	// for functions prepended with @ symbol to suppress errors
 	$error_reporting = error_reporting();
 	if( $error_reporting === 0 ){
@@ -230,8 +223,15 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	}
 
 	if( gpdebug === false ){
+
 		if( !$report_error ){
 			return false;
+		}
+
+
+		// since we supported php 4.3+, there may be a lot of strict errors
+		if( $errno === E_STRICT ){
+			return;
 		}
 
 		//if it's an addon error, only report if the addon was installed remotely
@@ -2898,12 +2898,13 @@ class gpFiles{
 			$var_name	= basename($file);
 		}
 
-		//if( substr($file,-4) === '.php' ){
-		//	$file = substr($file,0,-4);
-		//}
-
 		if( strpos($file,$dataDir) !== 0 ){
 			$file = $dataDir.'/data/'.ltrim($file,'/').'.php';
+		}
+
+		//json
+		if( gp_data_type === '.json' ){
+			return self::Get_Json($file,$var_name);
 		}
 
 		if( !file_exists($file) ){
@@ -2936,11 +2937,48 @@ class gpFiles{
 		return ${$var_name};
 	}
 
-	static function Exists($file){
 
-		//if( substr($file,-4) === '.php' ){
-		//	$file .= '.php';
-		//}
+	/**
+	 * Experimental
+	 *
+	 */
+	private static function Get_Json($file,$var_name){
+
+		$file		= substr($file,0,-4).'.json';
+
+		if( !file_exists($file) ){
+			return array();
+		}
+
+		$contents	= file_get_contents($file);
+		$data		= json_decode($contents,true);
+
+		if( !isset($data[$var_name]) || !is_array($data[$var_name]) ){
+			return array();
+		}
+
+
+		// File stats
+		self::$last_modified		= $data['file_stats']['modified'];
+		self::$last_version			= $data['file_stats']['gpversion'];
+		self::$last_stats			= $data['file_stats'];
+		self::$last_meta			= $data['meta_data'];
+
+
+		return $data[$var_name];
+
+	}
+
+	static function Exists($file){
+		global $dataDir;
+
+		if( strpos($file,$dataDir) !== 0 ){
+			$file = $dataDir.'/data/'.ltrim($file,'/').'.php';
+		}
+
+		if( gp_data_type === '.json' ){
+			$file		= substr($file,0,-4).'.json';
+		}
 
 		return file_exists($file);
 	}
@@ -3384,6 +3422,11 @@ class gpFiles{
 	 */
 	static function SaveArray(){
 
+		if( gp_data_type === '.json' ){
+			throw new Exception('SaveArray() cannot be used for json data saving');
+		}
+
+
 		$args = func_get_args();
 		$count = count($args);
 		if( ($count %2 !== 1) || ($count < 3) ){
@@ -3413,12 +3456,49 @@ class gpFiles{
 
 	static function SaveData($file, $varname, $array, $meta = array() ){
 
-		$data = gpFiles::FileStart($file);
-		$data .= gpFiles::ArrayToPHP($varname,$array);
-		$data .= "\n\n";
-		$data .= gpFiles::ArrayToPHP('meta_data',$meta);
+		if( gp_data_type === '.json' ){
 
-		return gpFiles::Save($file,$data);
+			$file				= substr($file,0,-4).'.json';
+
+			$json				= self::FileStart_Json($file);
+			$json[$varname]		= $array;
+			$json['meta_data']	= $meta;
+			$content			= json_encode($json);
+
+		}else{
+			$content	= gpFiles::FileStart($file);
+			$content	.= gpFiles::ArrayToPHP($varname,$array);
+			$content	.= "\n\n";
+			$content	.= gpFiles::ArrayToPHP('meta_data',$meta);
+		}
+
+		return gpFiles::Save($file,$content);
+	}
+
+	/**
+	 * Experimental
+	 *
+	 */
+	private static function FileStart_Json($file, $time ){
+		global $gpAdmin;
+
+		if( $time === false ) $time = time();
+
+
+		//file stats
+		$file_stats					= (array)$file_stats + gpFiles::GetFileStats($file);
+		$file_stats['gpversion']	= gpversion;
+		$file_stats['modified']		= $time;
+		$file_stats['username']		= false;
+
+		if( common::loggedIn() ){
+			$file_stats['username'] = $gpAdmin['username'];
+		}
+
+		$json						= array();
+		$json['file_stats']			= $file_stats;
+
+		return $json;
 	}
 
 
@@ -3450,6 +3530,7 @@ class gpFiles{
 				. "\n".gpFiles::ArrayToPHP('file_stats',$file_stats)
 				. "\n\n";
 	}
+
 
 	static function ArrayToPHP($varname,&$array){
 		return '$'.$varname.' = '.var_export($array,true).';';

@@ -253,7 +253,7 @@ class admin_extra{
 		$data['created'] = time();
 		$data['created_by'] = $gpAdmin['username'];
 
-		if( !gpFiles::SaveArray($file,'extra_content',$data) ){
+		if( !gpFiles::SaveData($file,'extra_content',$data) ){
 			message($langmessage['OOPS']);
 			$this->EditExtra();
 			return false;
@@ -322,7 +322,7 @@ class admin_extra{
 
 		//save the new content
 		$file_full = $this->folder.'/'.$file.'.php';
-		if( !gpFiles::SaveArray( $file_full, 'extra_content', $data ) ){
+		if( !gpFiles::SaveData( $file_full, 'extra_content', $data ) ){
 			message($langmessage['OOPS']);
 			$this->EditExtra();
 			return false;

@@ -378,7 +378,7 @@ class gpPlugin{
 
 		$file = self::$current['data_folder_full'].'/_config.php';
 
-		if( gpFiles::SaveArray($file,'config',$config) ){
+		if( gpFiles::SaveData($file,'config',$config) ){
 			return true;
 		}
 		return false;

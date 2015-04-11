@@ -599,7 +599,7 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 		}
 
 		$connection_file	= $dataDir.'/data/_updates/connect.php';
-		if( !gpFiles::SaveArray($connection_file,'connect_args',$connect_args) ){
+		if( !gpFiles::SaveData($connection_file,'connect_args',$connect_args) ){
 			return $connected;
 		}
 

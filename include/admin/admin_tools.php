@@ -72,7 +72,7 @@ class admin_tools{
 
 		//set
 		if( !is_null($update_data) ){
-			return gpFiles::SaveArray($file,'update_data',$update_data);
+			return gpFiles::SaveData($file,'update_data',$update_data);
 		}
 
 
@@ -1194,7 +1194,7 @@ class admin_tools{
 		$pages['gp_titles'] = $gp_titles;
 		$pages['gpLayouts'] = $gpLayouts;
 
-		if( !gpFiles::SaveArray($dataDir.'/data/_site/pages.php','pages',$pages) ){
+		if( !gpFiles::SaveData($dataDir.'/data/_site/pages.php','pages',$pages) ){
 			return false;
 		}
 		return true;
@@ -1213,7 +1213,7 @@ class admin_tools{
 
 		if( !isset($config['gpuniq']) ) $config['gpuniq'] = common::RandomString(20);
 
-		return gpFiles::SaveArray($dataDir.'/data/_site/config.php','config',$config);
+		return gpFiles::SaveData($dataDir.'/data/_site/config.php','config',$config);
 	}
 
 

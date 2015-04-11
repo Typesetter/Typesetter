@@ -441,7 +441,7 @@ class special_galleries{
 		includeFile('admin/admin_tools.php');
 
 		$file = $dataDir.'/data/_site/galleries.php';
-		return gpFiles::SaveArray($file,'galleries',$galleries);
+		return gpFiles::SaveData($file,'galleries',$galleries);
 	}
 
 

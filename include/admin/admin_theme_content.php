@@ -2968,7 +2968,7 @@ class admin_theme_content extends admin_addon_install{
 			return $title;
 		}
 
-		if( !gpFiles::SaveArray($file,'extra_content',$data) ){
+		if( !gpFiles::SaveData($file,'extra_content',$data) ){
 			message($langmessage['OOPS']);
 			return false;
 		}

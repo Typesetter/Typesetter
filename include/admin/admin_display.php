@@ -303,7 +303,7 @@ class admin_display extends display{
 		}
 
 		$users[$username]['newpass'] = common::hash($newpass,$pass_hash);
-		if( !gpFiles::SaveArray($dataDir.'/data/_site/users.php','users',$users) ){
+		if( !gpFiles::SaveData($dataDir.'/data/_site/users.php','users',$users) ){
 			message($langmessage['OOPS']);
 			return false;
 		}

@@ -126,7 +126,7 @@ class admin_users{
 
 		$gpAdmin['granted'] = $user_info['granted'];
 		$gpAdmin['editing'] = $user_info['editing'];
-		gpFiles::SaveArray($user_file,'gpAdmin',$gpAdmin);
+		gpFiles::SaveData($user_file,'gpAdmin',$gpAdmin);
 	}
 
 	/**
@@ -307,7 +307,7 @@ class admin_users{
 	function SaveUserFile($refresh = true ){
 		global $langmessage, $dataDir;
 
-		if( !gpFiles::SaveArray($dataDir.'/data/_site/users.php','users',$this->users) ){
+		if( !gpFiles::SaveData($dataDir.'/data/_site/users.php','users',$this->users) ){
 			message($langmessage['OOPS']);
 			return false;
 		}

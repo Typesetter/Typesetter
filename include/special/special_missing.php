@@ -18,7 +18,7 @@ class special_missing{
 	}
 
 	function SaveData(){
-		return gpFiles::SaveArray($this->datafile,'error_data',$this->error_data);
+		return gpFiles::SaveData($this->datafile,'error_data',$this->error_data);
 	}
 
 	function special_missing($requested=false){

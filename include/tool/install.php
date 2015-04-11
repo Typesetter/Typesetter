@@ -429,7 +429,7 @@ class Install_Tools{
 		$pages['gpLayouts'] = $gpLayouts;
 
 		echo '<li>';
-		if( !gpFiles::SaveArray($destination.'/data/_site/pages.php','pages',$pages) ){
+		if( !gpFiles::SaveData($destination.'/data/_site/pages.php','pages',$pages) ){
 			echo '<span class="failed">';
 			//echo 'Could not save pages.php';
 			echo sprintf($langmessage['COULD_NOT_SAVE'],'pages.php');
@@ -463,7 +463,7 @@ class Install_Tools{
 		}
 		$users[$username] = $user_info;
 
-		if( !gpFiles::SaveArray($destination.'/data/_site/users.php','users',$users) ){
+		if( !gpFiles::SaveData($destination.'/data/_site/users.php','users',$users) ){
 			echo '<span class="failed">';
 			echo sprintf($langmessage['COULD_NOT_SAVE'],'users.php');
 			echo '</span>';
@@ -481,7 +481,7 @@ class Install_Tools{
 		//not using SaveConfig() because $config is not global here
 		echo '<li>';
 		$config['file_count'] = self::$file_count;
-		if( !gpFiles::SaveArray($destination.'/data/_site/config.php','config',$config) ){
+		if( !gpFiles::SaveData($destination.'/data/_site/config.php','config',$config) ){
 			echo '<span class="failed">';
 			echo sprintf($langmessage['COULD_NOT_SAVE'],'config.php');
 			echo '</span>';
@@ -521,12 +521,12 @@ class Install_Tools{
 			'file_type' => 'text',
 			);
 
-		return gpFiles::SaveArray($file,'meta_data',$meta_data,'file_sections',$file_sections);
+		return gpFiles::SaveData($file,'file_sections',$file_sections,$meta_data);
 	}
 
 	static function NewExtra($file, $content){
 		$extra_content = array('type'=>'text','content'=>$content);
-		return gpFiles::SaveArray($file,'extra_content',$extra_content);
+		return gpFiles::SaveData($file,'extra_content',$extra_content);
 	}
 
 

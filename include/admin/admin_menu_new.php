@@ -325,7 +325,7 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 		$menu_file = $dataDir.'/data/_menus/'.$this->curr_menu_id.'.php';
-		return gpFiles::SaveArray($menu_file,'menu',$this->curr_menu_array);
+		return gpFiles::SaveData($menu_file,'menu',$this->curr_menu_array);
 	}
 
 
@@ -2264,7 +2264,7 @@ class admin_menu_new extends admin_menu_tools{
 		$id = 'm'.$index;
 
 		$menu_file = $dataDir.'/data/_menus/'.$id.'.php';
-		if( !gpFiles::SaveArray($menu_file,'menu',$new_menu) ){
+		if( !gpFiles::SaveData($menu_file,'menu',$new_menu) ){
 			message($langmessage['OOPS'].' (Menu Not Saved)');
 			return false;
 		}

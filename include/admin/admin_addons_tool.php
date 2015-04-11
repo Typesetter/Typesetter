@@ -65,7 +65,7 @@ class admin_addons_tool{
 
 		$addonData['history'] = $this->addonHistory;
 		$addonData['reviews'] = $this->addonReviews;
-		return gpFiles::SaveArray($this->dataFile,'addonData',$addonData);
+		return gpFiles::SaveData($this->dataFile,'addonData',$addonData);
 	}
 
 

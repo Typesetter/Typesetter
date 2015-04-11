@@ -410,7 +410,7 @@ class gp_combine{
 				if( count($new_imported) ){
 					$import_data = $new_imported + $import_data;
 				}
-				gpFiles::SaveArray($imported_file,'import_data',$import_data);
+				gpFiles::SaveData($imported_file,'import_data',$import_data);
 			}
 		}
 

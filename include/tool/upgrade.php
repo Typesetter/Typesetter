@@ -74,7 +74,7 @@ class gpupgrade{
 				if( gpFiles::Exists($menu_file) ){
 					$menu = gpOutput::GetMenuArray($key);
 					$menu = $this->FixMenu($menu,$special_indexes);
-					gpFiles::SaveArray($menu_file,'menu',$menu);
+					gpFiles::SaveData($menu_file,'menu',$menu);
 				}
 			}
 		}

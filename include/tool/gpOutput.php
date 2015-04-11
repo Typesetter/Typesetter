@@ -1182,18 +1182,22 @@ class gpOutput{
 
 	}
 
+
+	/**
+	 * Get and return the extra content specified by $title
+	 *
+	 */
 	static function ExtraContent( $title, &$file_stats = array() ){
 
-		//$extra_content = gpFiles::Get('_extra/'.$title,'extra_content');
-
-		global $dataDir;
-		$file = $dataDir.'/data/_extra/'.$title.'.php';
+		$file = 'data/_extra/'.$title;
 
 		$extra_content = array();
 		if( gpFiles::Exists($file) ){
+
 			ob_start();
-			include($file);
+			$extra_content = gpFiles::Get($file,'extra_content');
 			$extra_content_string = ob_get_clean();
+
 			if( !count($extra_content) ){
 				$extra_content['content'] = $extra_content_string;
 			}

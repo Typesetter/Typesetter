@@ -233,7 +233,7 @@ class gp_resized{
 		$meta = array('last_index'=>self::$last_index);
 
 		$index_file = $dataDir.'/data/_site/image_index.php';
-		return gpFiles::SaveArray($index_file,'image_index',self::$index,'meta_data',$meta);
+		return gpFiles::SaveData($index_file,'image_index',self::$index,'meta_data',$meta);
 	}
 
 	/**
@@ -259,7 +259,7 @@ class gp_resized{
 	static function SaveUsage($index,$data){
 		global $dataDir;
 		$data_file = $dataDir.'/data/_resized/'.$index.'/data.php';
-		return gpFiles::SaveArray($data_file,'usage',$data);
+		return gpFiles::SaveData($data_file,'usage',$data);
 	}
 
 

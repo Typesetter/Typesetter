@@ -87,7 +87,7 @@ class admin_missing extends special_missing{
 
 
 		if( $changed ){
-			gpFiles::SaveArray($datafile,'error_data',$error_data);
+			gpFiles::SaveData($datafile,'error_data',$error_data);
 		}
 	}
 

@@ -571,7 +571,7 @@ class admin_tools{
 			echo '</li>';
 
 			echo '<li>';
-			echo common::Link('Admin_About','About gpEasy','',array('data-cmd'=>'gpabox'));
+			echo common::Link('Admin_About','About gpEasy');
 			echo '</li>';
 			echo '</ul>';
 			echo '</div>';

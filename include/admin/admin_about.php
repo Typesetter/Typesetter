@@ -33,10 +33,8 @@ class admin_about{
 		echo ' There are multiple ways to give us feedback. The following services allow you to rate and comment on gpEasy. ';
 		echo '</p>';
 		echo '<ul>';
-		echo '<li><a href="<a href="https://github.com/oyejorge/gpEasy-CMS">Fork on Github</a></li>';
-		echo '<li><a href="http://php.opensourcecms.com/scripts/details.php?scriptid=360&amp;name=gpEasy%20CMS">OpensourceCMS.com</a></li>';
-		echo '<li><a href="http://freshmeat.net/projects/gpeasy">Freshmeat.net</a></li>';
-		echo '<li><a href="https://sourceforge.net/projects/gpeasy/">Sourceforge.net</a></li>';
+		echo '<li><a href="https://github.com/oyejorge/gpEasy-CMS" target="_blank">Fork on Github</a></li>';
+		echo '<li><a href="http://php.opensourcecms.com/scripts/details.php?scriptid=360&amp;name=gpEasy%20CMS" target="_blank">OpensourceCMS.com</a></li>';
 		echo '</ul>';
 
 

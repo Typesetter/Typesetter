@@ -271,12 +271,11 @@ class admin_display extends display{
 
 
 	function SendPassword(){
-		global $langmessage, $dataDir, $gp_mailer, $config;
+		global $langmessage, $gp_mailer, $config;
 
 		includeFile('tool/email_mailer.php');
-		include($dataDir.'/data/_site/users.php');
-
-		$username = $_POST['username'];
+		$users		= gpFiles::Get('_site/users');
+		$username	= $_POST['username'];
 
 		if( !isset($users[$username]) ){
 			message($langmessage['OOPS']);
@@ -292,18 +291,13 @@ class admin_display extends display{
 			return false;
 		}
 
-		$passwordChars = str_repeat('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',3);
-		$newpass = str_shuffle($passwordChars);
-		$newpass = substr($newpass,0,8);
-
-
-		$pass_hash = $config['passhash'];
-		if( isset($users[$username]['passhash']) ){
-			$pass_hash = $users[$username]['passhash'];
-		}
+		$passwordChars	= str_repeat('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',3);
+		$newpass		= str_shuffle($passwordChars);
+		$newpass		= substr($newpass,0,8);
+		$pass_hash		= gpsession::PassAlgo($userinfo);
 
 		$users[$username]['newpass'] = common::hash($newpass,$pass_hash);
-		if( !gpFiles::SaveData($dataDir.'/data/_site/users.php','users',$users) ){
+		if( !gpFiles::SaveData('_site/users','users',$users) ){
 			message($langmessage['OOPS']);
 			return false;
 		}

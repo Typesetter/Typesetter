@@ -2511,8 +2511,10 @@ class common{
 			return sha1($arg);
 		}
 
-		//looped with dynamic salt
+
+		//sha512: looped with dynamic salt
 		for( $i=0; $i<$loops; $i++ ){
+
 			$ints = preg_replace('#[a-f]#','',$arg);
 			$salt_start = (int)substr($ints,0,1);
 			$salt_len = (int)substr($ints,2,1);
@@ -3491,14 +3493,14 @@ class gpFiles{
 	 * Experimental
 	 *
 	 */
-	private static function FileStart_Json($file, $time ){
+	private static function FileStart_Json($file, $time = false ){
 		global $gpAdmin;
 
 		if( $time === false ) $time = time();
 
 
 		//file stats
-		$file_stats					= (array)$file_stats + gpFiles::GetFileStats($file);
+		$file_stats					= gpFiles::GetFileStats($file);
 		$file_stats['gpversion']	= gpversion;
 		$file_stats['modified']		= $time;
 		$file_stats['username']		= false;

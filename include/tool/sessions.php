@@ -165,12 +165,19 @@ class gpsession{
 	 *
 	 */
 	static function PasswordPassed( &$userinfo, $nonce ){
-		global $config;
 
-		$pass_algo = $config['passhash'];
-		if( isset($userinfo['passhash']) ){
-			$pass_algo = $userinfo['passhash'];
+		if( gp_require_encrypt && !empty($_POST['password']) ){
+			return false;
 		}
+
+		//if not encrypted with js
+		if( !empty($_POST['password']) ){
+			$_POST['pass_md5']		= sha1($nonce.md5($_POST['password']));
+			$_POST['pass_sha']		= sha1($nonce.sha1($_POST['password']));
+			$_POST['pass_sha512']	= common::hash($_POST['password'],'sha512',50);
+		}
+
+		$pass_algo = self::PassAlgo($userinfo);
 
 		if( !empty($userinfo['newpass']) && self::CheckPassword($userinfo['newpass'],$nonce,$pass_algo) ){
 			$userinfo['password'] = $userinfo['newpass'];
@@ -187,6 +194,19 @@ class gpsession{
 	}
 
 	/**
+	 * Return the algorithm used by the user for passwords
+	 *
+	 */
+	static function PassAlgo($userinfo){
+		global $config;
+
+		if( isset($userinfo['passhash']) ){
+			return $userinfo['passhash'];
+		}
+		return $config['passhash'];
+	}
+
+	/**
 	 * Check password, choose between plaintext, md5 encrypted or sha-1 encrypted
 	 * @param string $user_pass
 	 * @param string $nonce
@@ -196,36 +216,30 @@ class gpsession{
 	static function CheckPassword( $user_pass, $nonce, $pass_algo ){
 		global $config;
 
-		//without encryption
-		if( !gp_require_encrypt && !empty($_POST['password']) ){
-			$pass = common::hash($_POST['password'],$pass_algo);
-			if( $user_pass === $pass ){
-				return true;
-			}
-			return false;
-		}
-
 		$posted_pass = false;
 		switch($pass_algo){
 
 			case 'md5':
 				$posted_pass = $_POST['pass_md5'];
-				$nonced_pass = sha1($nonce.$user_pass);
+				$user_pass = sha1($nonce.$user_pass);
 			break;
 
 			case 'sha1':
 				$posted_pass = $_POST['pass_sha'];
-				$nonced_pass = sha1($nonce.$user_pass);
+				$user_pass = sha1($nonce.$user_pass);
 			break;
 
 			case 'sha512':
 				//javascript only loops through sha512 50 times
 				$posted_pass = common::hash($_POST['pass_sha512'],'sha512',950);
-				$nonced_pass = $user_pass;
 			break;
+
+			case 'password_hash':
+			return password_verify($_POST['pass_sha512'],$user_pass);
+
 		}
 
-		if( $posted_pass && $posted_pass === $nonced_pass ){
+		if( $posted_pass && $posted_pass === $user_pass ){
 			return true;
 		}
 

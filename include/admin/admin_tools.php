@@ -563,7 +563,7 @@ class admin_tools{
 			admin_tools::GetFrequentlyUsed($in_panel);
 
 			echo '<li>';
-			echo common::Link('Admin_Preferences',$langmessage['Preferences'],'',array('data-cmd'=>'gpabox'));
+			echo common::Link('Admin_Preferences',$langmessage['Preferences']);
 			echo '</li>';
 
 			echo '<li>';

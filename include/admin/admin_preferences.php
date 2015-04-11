@@ -65,6 +65,10 @@ class admin_preferences extends admin_users{
 		return (bool)preg_match('/^[^@]+@[^@]+\.[^@]+$/', $email);
 	}
 
+	/**
+	 * Save a user's new password
+	 *
+	 */
 	function ChangePass(){
 		global $langmessage, $config;
 
@@ -84,25 +88,22 @@ class admin_preferences extends admin_users{
 		}
 
 
-		//see also admin_users for password checking
+		//make sure password and password1 match
 		if( !$this->CheckPasswords() ){
 			return false;
 		}
 
 
-		$pass_hash = $config['passhash'];
-		if( isset($this->user_info['passhash']) ){
-			$pass_hash = $this->user_info['passhash'];
-		}
+		//check the old password
+		$pass_hash		= gpsession::PassAlgo($this->user_info);
+		$oldpass		= common::hash($_POST['oldpassword'],$pass_hash);
 
-		$oldpass = common::hash($_POST['oldpassword'],$pass_hash);
 		if( $this->user_info['password'] != $oldpass ){
 			message($langmessage['couldnt_reset_pass']);
 			return false;
 		}
 
-		$this->users[$this->username]['password'] = common::hash($_POST['password'],'sha512');
-		$this->users[$this->username]['passhash'] = 'sha512';
+		self::SetUserPass( $this->users[$this->username], $_POST['password']);
 	}
 
 
@@ -126,14 +127,11 @@ class admin_preferences extends admin_users{
 		echo '<div>';
 		echo '<table class="bordered configuration">';
 
-		echo '<tr>';
-			echo '<td>';
-			echo $langmessage['email_address'];
-			echo '</td>';
-			echo '<td>';
-			echo '<input type="text" name="email" value="'.htmlspecialchars($array['email']).'" class="gpinput"/>';
-			echo '</td>';
-			echo '</tr>';
+		echo '<tr><td>';
+		echo $langmessage['email_address'];
+		echo '</td><td>';
+		echo '<input type="text" name="email" value="'.htmlspecialchars($array['email']).'" class="gpinput"/>';
+		echo '</td></tr>';
 
 		echo '</table>';
 		echo '</div>';

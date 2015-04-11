@@ -240,11 +240,31 @@ class admin_users{
 			$this->users[$newname]['email'] = $_POST['email'];
 		}
 
-		$this->users[$newname]['password']	= common::hash($_POST['password'],'sha512');
 		$this->users[$newname]['granted']	= $this->GetPostedPermissions($newname);
 		$this->users[$newname]['editing']	= $this->GetEditingPermissions();
-		$this->users[$newname]['passhash']	= 'sha512';
+
+		self::SetUserPass( $this->users[$newname], $_POST['password']);
+
 		return $this->SaveUserFile();
+	}
+
+
+	/**
+	 * Set the user password and password hash algorithm
+	 *
+	 */
+	static function SetUserPass( &$user_info, $password ){
+
+		if( function_exists('password_hash') ){
+			$temp					= common::hash($_POST['password'],'sha512',50);
+			$user_info['password']	= password_hash($temp,PASSWORD_DEFAULT);
+			$user_info['passhash']	= 'password_hash';
+
+		}else{
+			$user_info['password']	= common::hash($_POST['password'],'sha512');
+			$user_info['passhash']	= 'sha512';
+		}
+
 	}
 
 
@@ -334,6 +354,8 @@ class admin_users{
 		echo '<tr><th>';
 		echo $langmessage['username'];
 		echo '</th><th>';
+		echo 'Password Algorithm';
+		echo '</th><th>';
 		echo $langmessage['permissions'];
 		echo '</th><th>';
 		echo $langmessage['file_editing'];
@@ -343,13 +365,16 @@ class admin_users{
 
 		foreach($this->users as $username => $userinfo){
 
-			echo '<tr>';
-			echo '<td>';
+			echo '<tr><td>';
 			echo $username;
-			echo '</td>';
+
+			//algorithm
+			echo '</td><td>';
+			self::PassAlgo($userinfo);
+
 
 			//admin permissions
-			echo '<td>';
+			echo '</td><td>';
 				if( $userinfo['granted'] == 'all' ){
 					echo 'all';
 				}elseif( !empty($userinfo['granted']) ){
@@ -406,14 +431,24 @@ class admin_users{
 			echo '</td>';
 			echo '</tr>';
 		}
-		echo '<tr><th colspan="4">';
+		echo '<tr><th colspan="5">';
 		echo common::Link('Admin_Users',$langmessage['new_user'],'cmd=newuserform');
 		echo '</th>';
 
 		echo '</table>';
-
-
 	}
+
+	static function PassAlgo($userinfo){
+		$algo = gpsession::PassAlgo($userinfo);
+		switch($algo){
+			case 'md5':
+			case 'sha1':
+			echo '<span style="color:red">'.$algo.'</span>';
+			return;
+		}
+		echo $algo;
+	}
+
 
 	function NewUserForm(){
 		global $langmessage;
@@ -585,6 +620,7 @@ class admin_users{
 
 	/**
 	 * Save a user's new password
+	 *
 	 */
 	function ResetPass(){
 		global $langmessage, $config;
@@ -599,12 +635,9 @@ class admin_users{
 			return false;
 		}
 
-		$pass_hash = $config['passhash'];
-		if( isset($this->users[$username]['passhash']) ){
-			$pass_hash = $this->users[$username]['passhash'];
-		}
+		$pass_hash								= gpsession::PassAlgo($this->users[$username]);
+		$this->users[$username]['password']		= common::hash($_POST['password'],$pass_hash);
 
-		$this->users[$username]['password'] = common::hash($_POST['password'],$pass_hash);
 		return $this->SaveUserFile();
 	}
 

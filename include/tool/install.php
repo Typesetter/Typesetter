@@ -447,7 +447,17 @@ class Install_Tools{
 		//users
 		echo '<li>';
 		$user_info = array();
-		$user_info['password']		= common::hash($_POST['password'],$config['passhash']);
+
+		if( function_exists('password_hash') ){
+			$temp					= common::hash($_POST['password'],'sha512',50);
+			$user_info['password']	= password_hash($temp,PASSWORD_DEFAULT);
+			$user_info['passhash']	= 'password_hash';
+
+		}else{
+			$user_info['password']	= common::hash($_POST['password'],'sha512');
+			$user_info['passhash']	= 'sha512';
+		}
+
 		$user_info['granted']		= 'all';
 		$user_info['editing']		= 'all';
 		$user_info['email']			= $_POST['email'];

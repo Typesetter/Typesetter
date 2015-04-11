@@ -281,7 +281,7 @@ class gp_install{
 				echo '<td class="failed">???</td>';
 				$ok = false;
 
-			}elseif( version_compare(phpversion(),'5.2','>=') ){
+			}elseif( version_compare(phpversion(),'5.3','>=') ){
 				echo '<td class="passed">'.$langmessage['Passed'].'</td>';
 				echo '<td class="passed">'.phpversion().'</td>';
 
@@ -291,7 +291,7 @@ class gp_install{
 				$ok = false;
 
 			}
-			echo '<td>5.2+</td>';
+			echo '<td>5.3+</td>';
 			echo '</tr>';
 
 

@@ -1,6 +1,8 @@
 
-@import 'mixins.less';
+@import 'include/thirdparty/Bootstrap3/less/bootstrap_all.less';
 
+
+@import 'mixins.less';
 @family: "verdana";
 
 /*
@@ -33,7 +35,7 @@
 	font-family:inherit;
 	line-height:inherit;
 	text-shadow:none;
-	.box-sizing( content-box );
+	//.box-sizing( content-box );
 	/* background: none; prevents other backgrounds from showing. "inherit" wouldn't make sense */
 	}
 
@@ -1101,7 +1103,6 @@ table.tablesorter th.gp_header_desc:before{
 	border-radius:3px;
 	overflow:hidden;
 	margin:3px 0;
-	.box-shadow(0 0 3px #eee);
 	}
 
 
@@ -1191,7 +1192,7 @@ table.tablesorter th.gp_header_desc:before{
 	}
 
 #adminlinks2 li.expand_child_click ul{
-	display:block;
+	//display:block;
 	position:relative;
 	z-index:11;
 	background:#fff;

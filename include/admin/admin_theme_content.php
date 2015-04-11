@@ -2082,11 +2082,11 @@ class admin_theme_content extends admin_addon_install{
 			$addon_key = $layout_info['addon_key'];
 			$addon_config = gpPlugin::GetAddonConfig($addon_key);
 			echo '<li>';
-			echo common::link('Admin_Addons','<span class="img_icon_plug"></span> '.$addon_config['name'],'cmd=show&addon='.$addon_key);
+			echo common::link('Admin_Addons/'.rawurlencode($addon_key),'<span class="img_icon_plug"></span> '.$addon_config['name']);
 			echo '</li>';
 
 			//hooks
-			$this->AddonPanelGroup($addon_key, $addon_config, false );
+			$this->AddonPanelGroup($addon_key, false );
 		}
 
 

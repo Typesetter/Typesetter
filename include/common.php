@@ -1128,7 +1128,6 @@ class common{
 		}
 
 		common::RequestLevel();
-		common::gpInstalled();
 		common::GetConfig();
 		common::SetLinkPrefix();
 		common::SetCookieArgs();
@@ -1170,27 +1169,10 @@ class common{
 		}
 	}
 
-
-
 	/**
-	 * Determine if gpEasy has been installed
-	 *
+	 * @deprectated
 	 */
-	static function gpInstalled(){
-		global $dataDir;
-
-		if( gpFiles::Exists($dataDir.'/data/_site/config.php') ){
-			return;
-		}
-
-		if( file_exists($dataDir.'/include/install/install.php') ){
-			common::SetLinkPrefix();
-			includeFile('install/install.php');
-			die();
-		}
-
-		die('<p>Sorry, this site is temporarily unavailable.</p>');
-	}
+	static function gpInstalled(){}
 
 	static function SetGlobalPaths($DirectoriesAway,$expecting){
 		global $dataDir, $dirPrefix, $rootDir;
@@ -1855,7 +1837,24 @@ class common{
 		}
 	}
 
+
+	/**
+	 * Stop loading gpEasy
+	 * Check to see if gpEasy has already been installed
+	 *
+	 */
 	static function stop(){
+		global $dataDir;
+
+		if( !gpFiles::Exists($dataDir.'/data/_site/config.php') ){
+
+			if( file_exists($dataDir.'/include/install/install.php') ){
+				common::SetLinkPrefix();
+				includeFile('install/install.php');
+				die();
+			}
+		}
+
 		die('<p>Notice: The site configuration did not load properly.</p>'
 			.'<p>If you are the site administrator, you can troubleshoot the problem turning debugging "on" or bypass it by enabling gpEasy safe mode.</p>'
 			.'<p>More information is available in the <a href="http://docs.gpeasy.com/Main/Troubleshooting">gpEasy documentation</a>.</p>'

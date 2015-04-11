@@ -37,7 +37,7 @@ class gpsession{
 
 
 	static function LogIn(){
-		global $dataDir, $langmessage, $config, $gp_index;
+		global $langmessage, $config, $gp_index;
 
 
 		// check nonce
@@ -81,20 +81,7 @@ class gpsession{
 
 
 		//check against password sent to a user's email address from the forgot_password form
-		$passed = false;
-		$pass_hash = $config['passhash'];
-		if( isset($userinfo['passhash']) ){
-			$pass_hash = $userinfo['passhash'];
-		}
-
-		if( !empty($userinfo['newpass']) && self::CheckPassword($userinfo['newpass'],$nonce,$pass_hash) ){
-			$userinfo['password'] = $userinfo['newpass'];
-			$passed = true;
-
-		//check password
-		}elseif( self::CheckPassword($userinfo['password'],$nonce,$pass_hash) ){
-			$passed = true;
-		}
+		$passed = self::PasswordPassed($userinfo,$nonce);
 
 
 		//if passwords don't match
@@ -173,18 +160,45 @@ class gpsession{
 
 
 	/**
-	 * check password, choose between plaintext, md5 encrypted or sha-1 encrypted
-	 * @param string $user_pass
-	 * @param string $nonce
-	 * @param string $pass_hash Password hashing algorithm
+	 * Check the posted password
+	 * Check against reset password if set
 	 *
 	 */
-	static function CheckPassword( $user_pass, $nonce, $pash_hash ){
+	static function PasswordPassed( &$userinfo, $nonce ){
+		global $config;
+
+		$pass_algo = $config['passhash'];
+		if( isset($userinfo['passhash']) ){
+			$pass_algo = $userinfo['passhash'];
+		}
+
+		if( !empty($userinfo['newpass']) && self::CheckPassword($userinfo['newpass'],$nonce,$pass_algo) ){
+			$userinfo['password'] = $userinfo['newpass'];
+			return true;
+		}
+
+
+		//check password
+		if( self::CheckPassword($userinfo['password'],$nonce,$pass_algo) ){
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check password, choose between plaintext, md5 encrypted or sha-1 encrypted
+	 * @param string $user_pass
+	 * @param string $nonce
+	 * @param string $pass_algo Password hashing algorithm
+	 *
+	 */
+	static function CheckPassword( $user_pass, $nonce, $pass_algo ){
 		global $config;
 
 		//without encryption
 		if( !gp_require_encrypt && !empty($_POST['password']) ){
-			$pass = common::hash($_POST['password'],$pash_hash);
+			$pass = common::hash($_POST['password'],$pass_algo);
 			if( $user_pass === $pass ){
 				return true;
 			}
@@ -192,7 +206,7 @@ class gpsession{
 		}
 
 		$posted_pass = false;
-		switch($pash_hash){
+		switch($pass_algo){
 
 			case 'md5':
 				$posted_pass = $_POST['pass_md5'];
@@ -302,7 +316,6 @@ class gpsession{
 	 *
 	 */
 	static function UpdateAttempts($users,$username,$reset = false){
-		global $dataDir;
 
 		if( $reset ){
 			$users[$username]['attempts'] = 0;
@@ -310,7 +323,7 @@ class gpsession{
 			$users[$username]['attempts']++;
 		}
 		$users[$username]['lastattempt'] = time();
-		gpFiles::SaveData($dataDir.'/data/_site/users.php','users',$users);
+		gpFiles::SaveData('_site/users','users',$users);
 	}
 
 
@@ -393,7 +406,6 @@ class gpsession{
 	 * @return bool
 	 */
 	static function SaveSessionIds($sessions){
-		global $dataDir;
 
 		while( $current = current($sessions) ){
 			$key = key($sessions);
@@ -409,8 +421,7 @@ class gpsession{
 		}
 
 		//clean
-		$sessions_file = $dataDir.'/data/_site/session_ids.php';
-		return gpFiles::SaveData($sessions_file,'sessions',$sessions);
+		return gpFiles::SaveData('_site/session_ids','sessions',$sessions);
 	}
 
 	/**
@@ -748,8 +759,6 @@ class gpsession{
 	 *
 	 */
 	static function Cron(){
-		global $dataDir;
-		$time_file = $dataDir.'/data/_site/cron_info.php';
 
 		$cron_info	= gpFiles::Get('_site/cron_info');
 		$file_stats	= gpFiles::$last_stats;
@@ -760,7 +769,7 @@ class gpsession{
 		}
 
 		self::CleanTemp();
-		gpFiles::SaveData($time_file,'cron_info',$cron_info);
+		gpFiles::SaveData('_site/cron_info','cron_info',$cron_info);
 	}
 
 	/**
@@ -1055,7 +1064,6 @@ class gpsession{
 	 *
 	 */
 	function EnableComponent(){
-		global $dataDir,$page;
 
 		includeFile('admin/admin_errors.php');
 		admin_errors::ClearError($_REQUEST['hash']);

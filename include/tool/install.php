@@ -447,10 +447,10 @@ class Install_Tools{
 		//users
 		echo '<li>';
 		$user_info = array();
-		$user_info['password'] = common::hash($_POST['password'],$config['passhash']);
-		$user_info['granted'] = 'all';
-		$user_info['editing'] = 'all';
-		$user_info['email'] = $_POST['email'];
+		$user_info['password']		= common::hash($_POST['password'],$config['passhash']);
+		$user_info['granted']		= 'all';
+		$user_info['editing']		= 'all';
+		$user_info['email']			= $_POST['email'];
 
 		$users = array();
 		$username = $_POST['username'];

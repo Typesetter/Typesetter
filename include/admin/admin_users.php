@@ -240,10 +240,10 @@ class admin_users{
 			$this->users[$newname]['email'] = $_POST['email'];
 		}
 
-		$this->users[$newname]['password'] = common::hash($_POST['password'],'sha512');
-		$this->users[$newname]['granted'] = $this->GetPostedPermissions($newname);
-		$this->users[$newname]['editing'] = $this->GetEditingPermissions();
-		$this->users[$newname]['passhash'] = 'sha512';
+		$this->users[$newname]['password']	= common::hash($_POST['password'],'sha512');
+		$this->users[$newname]['granted']	= $this->GetPostedPermissions($newname);
+		$this->users[$newname]['editing']	= $this->GetEditingPermissions();
+		$this->users[$newname]['passhash']	= 'sha512';
 		return $this->SaveUserFile();
 	}
 

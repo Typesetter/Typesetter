@@ -1785,25 +1785,25 @@ class common{
 
 		//make sure defaults are set
 		$config += array(
-				'maximgarea' => '691200',
-				'maxthumbsize' => '100',
-				'check_uploads' => false,
-				'colorbox_style' => 'example1',
-				'combinecss' => true,
-				'combinejs' => true,
-				'etag_headers' => true,
-				'customlang' => array(),
-				'showgplink' => true,
-				'showsitemap' => true,
-				'showlogin' => true,
-				'auto_redir' => 90,	//2.5
-				'resize_images' => true,	//3.5
-				'jquery' => 'local',
-				'addons' => array(),
-				'themes' => array(),
-				'gadgets' => array(),
-				'passhash' => 'sha1',
-				'hooks' => array(),
+				'maximgarea'		=> '691200',
+				'maxthumbsize'		=> '100',
+				'check_uploads'		=> false,
+				'colorbox_style'	=> 'example1',
+				'combinecss'		=> true,
+				'combinejs'			=> true,
+				'etag_headers'		=> true,
+				'customlang'		=> array(),
+				'showgplink'		=> true,
+				'showsitemap'		=> true,
+				'showlogin'			=> true,
+				'auto_redir'		=> 90,			//2.5
+				'resize_images'		=> true,		//3.5
+				'jquery'			=> 'local',
+				'addons'			=> array(),
+				'themes'			=> array(),
+				'gadgets'			=> array(),
+				'passhash'			=> 'sha1',
+				'hooks'				=> array(),
 				);
 
 		//shahash deprecated 4.0
@@ -3416,6 +3416,7 @@ class gpFiles{
 	 * @param string $varname The name of the variable being saved
 	 * @param array $array The value of $varname to be saved
 	 *
+	 * @deprecated 4.3.5
 	 */
 	static function SaveArray(){
 
@@ -3450,8 +3451,22 @@ class gpFiles{
 		return gpFiles::Save($file,$data);
 	}
 
-
+	/**
+	 * Save array to a $file location
+	 *
+	 * @param string $file The location of the file to be saved
+	 * @param string $varname The name of the variable being saved
+	 * @param array $array The value of $varname to be saved
+	 * @param array $meta meta data to be saved along with $array
+	 *
+	 */
 	static function SaveData($file, $varname, $array, $meta = array() ){
+		global $dataDir;
+
+		if( strpos($file,$dataDir) !== 0 ){
+			$file = $dataDir.'/data/'.ltrim($file,'/').'.php';
+		}
+
 
 		if( gp_data_type === '.json' ){
 

@@ -10,9 +10,8 @@ class special_missing{
 
 
 	function Init(){
-		global $dataDir;
 
-		$this->datafile		= $dataDir.'/data/_site/error_data.php';
+		$this->datafile		= 'data/_site/error_data';
 		$this->error_data	= gpFiles::Get($this->datafile,'error_data');
 
 	}

@@ -1338,7 +1338,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		//delete the file in /_pages
 		$file = gpFiles::PageFile($title);
-		if( file_exists($file) ){
+		if( gpFiles::Exists($file) ){
 			unlink($file);
 		}
 
@@ -2334,7 +2334,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		//delete menu file
 		$menu_file = $dataDir.'/data/_menus/'.$menu_id.'.php';
-		if( file_exists($menu_file) ){
+		if( gpFiles::Exists($menu_file) ){
 			unlink($menu_file);
 		}
 

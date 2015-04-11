@@ -2948,7 +2948,10 @@ class admin_theme_content extends admin_addon_install{
 		return true;
 	}
 
-	//return the name of the cleansed extra area name, create file if it doesn't already exist
+	/**
+	 * Return the name of the cleansed extra area name, create file if it doesn't already exist
+	 *
+	 */
 	function NewExtraArea(){
 		global $langmessage, $dataDir;
 
@@ -2961,7 +2964,7 @@ class admin_theme_content extends admin_addon_install{
 		$data = gp_edit::DefaultContent($_POST['type']);
 		$file = $dataDir.'/data/_extra/'.$title.'.php';
 
-		if( file_exists($file) ){
+		if( gpFiles::Exists($file) ){
 			return $title;
 		}
 
@@ -3256,7 +3259,9 @@ class admin_theme_content extends admin_addon_install{
 			return false;
 		}
 
-		$texts = gpFiles::Get($file,'texts');
+		$texts = array();
+		include($file);
+
 		if( !$texts ){
 			return false;
 		}

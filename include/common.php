@@ -1179,7 +1179,7 @@ class common{
 	static function gpInstalled(){
 		global $dataDir;
 
-		if( @file_exists($dataDir.'/data/_site/config.php') ){
+		if( gpFiles::Exists($dataDir.'/data/_site/config.php') ){
 			return;
 		}
 
@@ -2938,9 +2938,9 @@ class gpFiles{
 
 	function Exists($file){
 
-		if( substr($file,-4) !== '.php' ){
-			$file .= '.php';
-		}
+		//if( substr($file,-4) === '.php' ){
+		//	$file .= '.php';
+		//}
 
 		return file_exists($file);
 	}
@@ -3164,7 +3164,7 @@ class gpFiles{
 		}
 
 		$normal_path = $dataDir.'/data/_pages/'.str_replace('/','_',$title).'.php';
-		if( !$index_path || file_exists($normal_path) ){
+		if( !$index_path || gpFiles::Exists($normal_path) ){
 			return $normal_path;
 		}
 
@@ -3204,9 +3204,10 @@ class gpFiles{
 	 */
 	static function GetFileStats($file){
 
-		if( file_exists($file) ){
-			gpFiles::Get($file,'file_stats');
-			return gpFiles::$last_stats;
+
+		$file_stats = gpFiles::Get($file,'file_stats');
+		if( $file_stats ){
+			return $file_stats;
 		}
 
 		return array('created'=> time());
@@ -3249,7 +3250,7 @@ class gpFiles{
 			return false;
 		}
 
-		$exists = file_exists($file);
+		$exists = gpFiles::Exists($file);
 
 		//make sure directory exists
 		if( !$exists ){

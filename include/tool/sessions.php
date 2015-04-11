@@ -446,7 +446,7 @@ class gpsession{
 
 
 		$session_file = $dataDir.'/data/_sessions/'.$sess_info['file_name'];
-		if( ($session_file === false) || !file_exists($session_file) ){
+		if( ($session_file === false) || !gpFiles::Exists($session_file) ){
 			self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
 			message($langmessage['Session Expired'].' (invalid)');
 			return false;

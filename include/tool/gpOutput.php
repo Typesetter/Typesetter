@@ -855,7 +855,7 @@ class gpOutput{
 
 
 		$menu_file = $dataDir.'/data/_menus/'.$id.'.php';
-		if( empty($id) || !file_exists($menu_file) ){
+		if( empty($id) || !gpFiles::Exists($menu_file) ){
 			return gpPlugin::Filter('GetMenuArray',array($gp_menu));
 		}
 
@@ -1190,7 +1190,7 @@ class gpOutput{
 		$file = $dataDir.'/data/_extra/'.$title.'.php';
 
 		$extra_content = array();
-		if( file_exists($file) ){
+		if( gpFiles::Exists($file) ){
 			ob_start();
 			include($file);
 			$extra_content_string = ob_get_clean();

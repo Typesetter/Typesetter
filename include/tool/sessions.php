@@ -227,43 +227,26 @@ class gpsession{
 	}
 
 
-	//get/set the value of $userinfo['file_name']
+	/**
+	 * Set the value of $userinfo['file_name']
+	 *
+	 */
 	static function SetSessionFileName($userinfo,$username){
-
-		if( !isset($userinfo['file_name']) ){
-
-			if( isset($userinfo['cookie_id']) ){
-				$old_file_name = 'gpsess_'.$userinfo['cookie_id'];
-				unset($userinfo['cookie_id']);
-			}else{
-				//$old_file_name = 'gpsess_'.md5($username.$pass);
-				$old_file_name = 'gpsess_'.md5($username.$userinfo['password']);
-
-			}
-			$userinfo['file_name'] = self::UpdateFileName($old_file_name);
-		}
-		return $userinfo;
-	}
-
-	static function UpdateFileName($old_file_name){
 		global $dataDir;
 
-		//get a new unique name
+
+		if( isset($userinfo['file_name']) ){
+			return $userinfo;
+		}
+
 		do{
-			$new_file_name = 'gpsess_'.common::RandomString(40).'.php';
-			$new_file = $dataDir.'/data/_sessions/'.$new_file_name;
-		}while( file_exists($new_file) );
+			$new_file_name	= 'gpsess_'.common::RandomString(40).'.php';
+			$new_file		= $dataDir.'/data/_sessions/'.$new_file_name;
+		}while( gpFiles::Exists($new_file) );
 
+		$userinfo['file_name']	= $new_file_name;
 
-		$old_file = $dataDir.'/data/_sessions/'.$old_file_name;
-		if( !file_exists($old_file) ){
-			return $new_file_name;
-		}
-
-		if( rename($old_file,$new_file) ){
-			return $new_file_name;
-		}
-		return $old_file_name;
+		return $userinfo;
 	}
 
 	static function LogOut(){
@@ -338,15 +321,15 @@ class gpsession{
 
 		//update the session files to .php files
 		//changes to $userinfo will be saved by UpdateAttempts() below
-		$user_info = self::SetSessionFileName($user_info,$username);
-		$user_file_name = $user_info['file_name'];
-		$user_file = $dataDir.'/data/_sessions/'.$user_file_name;
+		$user_info			= self::SetSessionFileName($user_info,$username);
+		$user_file_name		= $user_info['file_name'];
+		$user_file			= $dataDir.'/data/_sessions/'.$user_file_name;
 
 
 		//use an existing session_id if the new login matches an existing session (uid and file_name)
-		$sessions = self::GetSessionIds();
-		$uid = self::auth_browseruid();
-		$session_id = false;
+		$sessions			= self::GetSessionIds();
+		$uid				= self::auth_browseruid();
+		$session_id			= false;
 		foreach($sessions as $sess_temp_id => $sess_temp_info){
 			if( isset($sess_temp_info['uid']) && $sess_temp_info['uid'] == $uid && $sess_temp_info['file_name'] == $user_file_name ){
 				$session_id = $sess_temp_id;
@@ -364,18 +347,19 @@ class gpsession{
 		self::cookie(gp_session_cookie,$session_id,$expires);
 
 		//save session id
-		$sessions[$session_id] = array();
-		$sessions[$session_id]['file_name'] = $user_file_name;
-		$sessions[$session_id]['uid'] = $uid;
+		$sessions[$session_id]					= array();
+		$sessions[$session_id]['file_name']		= $user_file_name;
+		$sessions[$session_id]['uid']			= $uid;
 		//$sessions[$session_id]['time'] = time(); //for session locking
 		if( !self::SaveSessionIds($sessions) ){
 			return false;
 		}
 
 		//make sure the user's file exists
-		$new_data = self::SessionData($user_file,$checksum);
-		$new_data['username'] = $username;
-		$new_data['granted'] = $user_info['granted'];
+		$new_data					= self::SessionData($user_file,$checksum);
+		$new_data['username']		= $username;
+		$new_data['granted']		= $user_info['granted'];
+
 		if( isset($user_info['editing']) ){
 			$new_data['editing'] = $user_info['editing'];
 		}

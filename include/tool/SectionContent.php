@@ -188,21 +188,15 @@ class section_content{
 		}
 
 
-		$file = gpFiles::PageFile($title);
-		if( !file_exists($file) ){
+		$file			= gpFiles::PageFile($title);
+		$file_sections	= gpFiles::Get($file,'file_sections');
+
+		if( !$file_sections ){
 			self::ReplaceContent($content,$pos2);
 			return;
 		}
 
 		$includes++;
-		ob_start();
-		$file_sections = gpFiles::Get($file,'file_sections');
-		ob_get_clean();
-
-		if( !$file_sections ){
-			return;
-		}
-
 		$replacement = '';
 		foreach($file_sections as $section_num => $section_data){
 			$replacement .= '<div class="gpinclude" title="'.$title.'" >'; //contentEditable="false"
@@ -319,13 +313,9 @@ class section_content{
 			return '{{'.htmlspecialchars($requested).'}}';
 		}
 
-		$file = gpFiles::PageFile($requested);
-		if( !file_exists($file) ){
-			return '{{'.htmlspecialchars($requested).'}}';
-		}
+		$file			= gpFiles::PageFile($requested);
+		$file_sections	= gpFiles::Get($file,'file_sections');
 
-
-		$file_sections = gpFiles::Get($file,'file_sections');
 		if( !$file_sections ){
 			return '{{'.htmlspecialchars($requested).'}}';
 		}

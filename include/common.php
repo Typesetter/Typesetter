@@ -2885,7 +2885,7 @@ class gpFiles{
 	 * $config = gpFiles::Get('_site/config','config'); or $config = gpFiles::Get('_site/config');
 	 *
 	 */
-	static function Get($file,$var_name=false){
+	static function Get( $file, $var_name=false ){
 		global $dataDir;
 
 		self::$last_modified	= null;
@@ -2934,6 +2934,15 @@ class gpFiles{
 
 
 		return ${$var_name};
+	}
+
+	function Exists($file){
+
+		if( substr($file,-4) !== '.php' ){
+			$file .= '.php';
+		}
+
+		return file_exists($file);
 	}
 
 

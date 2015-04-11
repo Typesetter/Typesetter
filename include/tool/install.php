@@ -246,8 +246,6 @@ class Install_Tools{
 		<li>Get help in the <a href="http://gpeasy.com/Forum" title="gpEasy CMS Forum">gpEasy forum</a>.</li>
 		<li>Show off your <a href="http://gpeasy.com/Powered_by" title="Sites Using gpEasy CMS">gpEasy powered site</a> or list your <a href="http://gpeasy.com/Service_Provider" title="Businesses Using gpEasy CMS">gpEasy related business</a>.</li>
 		</ul>';
-
-
 		self::NewTitle( $destination, 'Home', $content);
 
 		self::NewTitle( $destination, 'Heading_Page','<h1>A Heading Page</h1>
@@ -316,8 +314,8 @@ class Install_Tools{
 		</ul>');
 
 		//Side_Menu
-		$file = $destination.'/data/_extra/Side_Menu.php';
-		$content = '<h3>Join the gpEasy Community</h3>
+		$file		= $destination.'/data/_extra/Side_Menu.php';
+		$content	= '<h3>Join the gpEasy Community</h3>
 		<p>Visit gpEasy.com to access the many <a href="http://gpeasy.com/Resources" title="gpEasy Community Resources">available resources</a> to help you get the most out of our CMS.</p>
 		<ul>
 		<li><a href="http://gpeasy.com/Themes" title="gpEasy CMS Themes">Download Themes</a></li>
@@ -327,17 +325,17 @@ class Install_Tools{
 		<li><a href="http://gpeasy.com/Resources" title="gpEasy Community Resources">And Much More...</a></li>
 		</ul>
 		<p class="sm">(Edit this content by clicking &quot;Edit&quot;, it&#39;s that easy!)</p>';
-		gpFiles::SaveFile($file,$content);
+		self::NewExtra($file,$content);
 
 		//Header
-		$file = $destination.'/data/_extra/Header.php';
-		$contents = '<h1>'.Install_Tools::Install_Link('',$config['title']).'</h1>';
-		$contents .= '<h4>'.'The Fast and Easy CMS'.'</h4>';
-		gpFiles::SaveFile($file,$contents);
+		$file		= $destination.'/data/_extra/Header.php';
+		$content	= '<h1>'.$config['title'].'</h1>
+		<h4>'.'The Fast and Easy CMS'.'</h4>';
+		self::NewExtra($file,$content);
 
 		//Footer
-		$file = $destination.'/data/_extra/Footer.php';
-		$content = '<h3><a href="http://gpeasy.com/Our_CMS" title="Features of Our CMS">gpEasy CMS Features</a></h3>
+		$file		= $destination.'/data/_extra/Footer.php';
+		$content	= '<h3><a href="http://gpeasy.com/Our_CMS" title="Features of Our CMS">gpEasy CMS Features</a></h3>
 		<p>Easy to use True WYSIWYG Editing.</p>
 		<p>Flat-file data storage and advanced resource management for fast websites.</p>
 		<p>Community driven development</p>
@@ -349,19 +347,19 @@ class Install_Tools{
 		<a href="http://whatcms.org" title="What CMS? Find out what CMS a site is using">WhatCMS.org</a> and
 		<a href="http://whichcms.org" title="Which CMS? Find out which CMS has the features you\'re looking for.">WhichCMS.org</a>.
 		</p>';
-		gpFiles::SaveFile($file,$content);
+		self::NewExtra($file,$content);
 
 
 		//Another example area
-		$file = $destination.'/data/_extra/Lorem.php';
-		$content = '<h3>Heading</h3>
+		$file		= $destination.'/data/_extra/Lorem.php';
+		$content	= '<h3>Heading</h3>
 		<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>';
-		gpFiles::SaveFile($file,$content);
+		self::NewExtra($file,$content);
 
 
 		//contact html
 		$file = $destination.'/data/_extra/Contact.php';
-		gpFiles::SaveFile($file,'<h2>Contact Us</h2><p>Use the form below to contact us, and be sure to enter a valid email address if you want to hear back from us.</p>');
+		self::NewExtra($file,'<h2>Contact Us</h2><p>Use the form below to contact us, and be sure to enter a valid email address if you want to hear back from us.</p>');
 
 
 		// gp_index
@@ -526,6 +524,11 @@ class Install_Tools{
 		return gpFiles::SaveArray($file,'meta_data',$meta_data,'file_sections',$file_sections);
 	}
 
+	static function NewExtra($file, $content){
+		$extra_content = array('type'=>'text','content'=>$content);
+		return gpFiles::SaveArray($file,'extra_content',$extra_content);
+	}
+
 
 	/**
 	 * attempt to create an htaccess file
@@ -630,22 +633,6 @@ class Install_Tools{
 			( strpos( php_sapi_name(), 'isapi' ) === false );
 
 		return $UsePathInfo;
-	}
-
-	static function Install_Link($href,$label,$query='',$attr=''){
-
-		$charlist = "\\'";
-		$href = addcslashes($href,$charlist);
-		$label = addcslashes($label,$charlist);
-		$query = addcslashes($query,$charlist);
-		$attr = addcslashes($attr,$charlist);
-
-		$text = '<';
-		$text .= '?php';
-		$text .= ' echo common::Link(\''.$href.'\',\''.$label.'\',\''.$query.'\',\''.$attr.'\'); ';
-		$text .= '?';
-		$text .= '>';
-		return $text;
 	}
 
 	static function Install_Link_Content($href,$label,$query='',$attr=''){

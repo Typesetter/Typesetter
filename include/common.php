@@ -3323,14 +3323,18 @@ class gpFiles{
 				$elapsed = time() - $file_time;
 				if( $elapsed > $expires ){
 					@unlink( $lock_file);
-				}else{
-					$expires -= $elapsed;
 				}
 			}
+
 			clearstatcache();
 			usleep(100);
 			$tries++;
 		}
+
+		if( $file_time ){
+			$expires -= $elapsed;
+		}
+
 		return false;
 	}
 

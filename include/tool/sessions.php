@@ -487,7 +487,6 @@ class gpsession{
 				$GLOBALS['gpAdmin']['locked'] = true;
 			}else{
 				unset($GLOBALS['gpAdmin']['locked']);
-				msg('lock obtained');
 			}
 		}
 

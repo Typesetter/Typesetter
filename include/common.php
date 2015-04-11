@@ -1771,7 +1771,6 @@ class common{
 		if( !is_array($config) || !array_key_exists('gpversion',$config) ){
 			common::stop();
 		}
-		$GLOBALS['fileModTimes']['config.php'] = gpFiles::$last_modified;
 
 
 		//remove old values
@@ -1874,8 +1873,6 @@ class common{
 
 
 		$pages		= gpFiles::Get('_site/pages');
-		$GLOBALS['fileModTimes']['pages.php'] = gpFiles::$last_modified;
-
 
 
 		//update for < 2.0a3

@@ -208,7 +208,13 @@ class gp_resized{
 
 		if( self::$index ){
 			self::$index_checksum	= self::checksum(self::$index);
-			self::$last_index		= gpFiles::$last_stats['last_index'];
+
+			if( isset(gpFiles::$last_meta['last_index']) ){
+				self::$last_index		= gpFiles::$last_meta['last_index'];
+			}elseif( isset(gpFiles::$last_stats['last_index']) ){			//pre 4.3.6
+				self::$last_index		= gpFiles::$last_stats['last_index'];
+			}
+
 		}
 	}
 
@@ -219,14 +225,15 @@ class gp_resized{
 	 */
 	static function SaveIndex(){
 		global $dataDir;
+
 		if( self::$index_checksum === self::checksum(self::$index) ){
-			//return true;
+			return true;
 		}
 
-		$file_stats = array('last_index'=>self::$last_index);
+		$meta = array('last_index'=>self::$last_index);
 
 		$index_file = $dataDir.'/data/_site/image_index.php';
-		return gpFiles::SaveArray($index_file,'image_index',self::$index,'file_stats',$file_stats);
+		return gpFiles::SaveArray($index_file,'image_index',self::$index,'meta_data',$meta);
 	}
 
 	/**

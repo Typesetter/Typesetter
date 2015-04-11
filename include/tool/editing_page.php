@@ -666,7 +666,8 @@ class editing_page extends display{
 			$this->SaveBackup(); //make a backup of the page file
 		}
 
-		return gpFiles::SaveArray($this->file,'meta_data',$this->meta_data,'file_sections',$this->file_sections);
+
+		return gpFiles::SaveData($this->file,'file_sections',$this->file_sections,$this->meta_data);
 	}
 
 	/**

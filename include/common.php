@@ -36,6 +36,7 @@ gp_defined('gp_remote_plugins',gp_remote_addons);
 gp_defined('gp_remote_themes',gp_remote_addons);
 gp_defined('gp_remote_update',gp_remote_addons);
 gp_defined('gp_unique_addons',false);
+gp_defined('gp_data_type','.php');
 
 
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php');
@@ -181,10 +182,10 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 
 
 	// since we supported php 4.3+, there may be a lot of strict errors
-	if( $errno === E_STRICT ){
+	//if( $errno === E_STRICT ){
 		//$report_error = false;
-		return;
-	}
+		//return;
+	//}
 
 
 	// for functions prepended with @ symbol to suppress errors
@@ -2935,7 +2936,7 @@ class gpFiles{
 		return ${$var_name};
 	}
 
-	function Exists($file){
+	static function Exists($file){
 
 		//if( substr($file,-4) === '.php' ){
 		//	$file .= '.php';
@@ -3140,7 +3141,8 @@ class gpFiles{
 			'file_type' => $type,
 			);
 
-		return gpFiles::SaveArray($file,'meta_data',$meta_data,'file_sections',$file_sections);
+
+		return gpFiles::SaveData($file,'file_sections',$file_sections,$meta_data);
 	}
 
 	/**
@@ -3407,6 +3409,18 @@ class gpFiles{
 
 		return gpFiles::Save($file,$data);
 	}
+
+
+	static function SaveData($file, $varname, $array, $meta = array() ){
+
+		$data = gpFiles::FileStart($file);
+		$data .= gpFiles::ArrayToPHP($varname,$array);
+		$data .= "\n\n";
+		$data .= gpFiles::ArrayToPHP('meta_data',$meta);
+
+		return gpFiles::Save($file,$data);
+	}
+
 
 	/**
 	 * Return the beginning content of a data file

@@ -63,7 +63,7 @@ class SimpleBlogCommon{
 	}
 
 
-	function AddCSS(){
+	static function AddCSS(){
 		global $addonFolderName,$page;
 
 		static $added = false;

@@ -40,22 +40,22 @@ includeFile('admin/admin_addon_install.php');
 
 class admin_theme_content extends admin_addon_install{
 
-	var $layout_request = false;
-	var $curr_layout = false;
+	var $layout_request		= false;
+	var $curr_layout		= false;
 	var $LayoutArray;
-	var $scriptUrl = 'Admin_Theme_Content';
-	var $possible = array();
-	var $versions = array();
+	var $scriptUrl			= 'Admin_Theme_Content';
+	var $possible			= array();
+	var $versions			= array();
 
 
 	//remote install variables
-	var $config_index = 'themes';
-	var $code_folder_name = '_themes';
-	var $path_remote = 'Admin_Theme_Content/Remote';
-	var $can_install_links = false;
+	var $config_index		= 'themes';
+	var $code_folder_name	= '_themes';
+	var $path_remote		= 'Admin_Theme_Content/Remote';
+	var $can_install_links	= false;
 
 
-	function admin_theme_content(){
+	function __construct(){
 		global $page,$config,$gpLayouts, $langmessage;
 
 
@@ -1701,8 +1701,11 @@ class admin_theme_content extends admin_addon_install{
 
 		$this->ShowHeader();
 
+		$default_layout = $config['gpLayout'];
 
 		echo '<div id="adminlinks2">';
+
+		//all other layouts
 		foreach($gpLayouts as $layout => $info){
 			$this->LayoutDiv($layout,$info);
 		}
@@ -2166,13 +2169,13 @@ class admin_theme_content extends admin_addon_install{
 		echo '<a data-cmd="layout_id" title="'.$layout_info['color'].'" data-arg="'.$layout_info['color'].'">';
 		echo '<input type="hidden" name="layout" value="'.htmlspecialchars($layout).'"  /> ';
 		echo '<input type="hidden" name="layout_label" value="'.$layout_info['label'].'"  /> ';
-		echo '<span class="layout_color_id" style="background-color:'.$layout_info['color'].';"></span>';
-		echo '&nbsp;';
-		echo $layout_info['label'];
+		echo '<span class="layout_color_id" style="background-color:'.$layout_info['color'].';"></span> ';
 		if( $config['gpLayout'] == $layout ){
 			echo ' <span class="layout_default"> ('.$langmessage['default'].')</span>';
-
+			echo '&nbsp;';
 		}
+		echo $layout_info['label'];
+
 		echo '</a>';
 		echo '</span>';
 		return ob_get_clean();

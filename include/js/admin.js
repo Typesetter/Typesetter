@@ -198,6 +198,14 @@ $gp.AdminBoxC = function(data,options){
 				.focus();
 
 	$('.messages').detach();
+
+	//close on escape key
+	$(document).on('keypress.abox',function(e) {
+		if( e.keyCode == 27 ){
+			$gp.CloseAdminBox();
+		}
+	});
+
 	return true;
 };
 
@@ -210,6 +218,9 @@ $gp.CloseAdminBox = function(evt){
 	if( evt ){
 		evt.preventDefault();
 	}
+
+	$(document).off('keypress.abox');
+
 	$('#gp_admin_box1').fadeOut();
 	$('#gp_admin_box').fadeOut(300,function(){
 

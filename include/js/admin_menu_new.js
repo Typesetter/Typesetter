@@ -109,13 +109,41 @@
 		$gp.links.menu_info = function(evt){
 
 			evt.preventDefault();
-			var $current	= $(this).parent();
+			var $this		= $(this);
+			var $current	= $this.parent();
 			var cntrl		= evt.ctrlKey;
-
 
 			if( evt.ctrlKey ){
 				$current.toggleClass('current');
-				var $current = $('.current');
+				$current = $('.current');
+
+			}else if( evt.shiftKey ){
+
+				$('.current').removeClass('current');
+				var $all	= $('#admin_menu .gp_label');
+				var i		= $all.index(this);
+				var j		= 0;
+
+				var $last 	= $('.last_clicked');
+				if( $last.length ){
+					j 		= $all.index($last);
+				}
+
+
+				var in_min	= Math.min(i,j);
+				var in_max	= Math.max(i,j);
+
+				$all.each(function(i){
+					if( i >= in_min  && i <= in_max ){
+						$(this).parent().addClass('current');
+					}
+				});
+
+				$current = $('.current');
+
+			}else{
+				$('.last_clicked').removeClass('last_clicked');
+				$this.addClass('last_clicked');
 			}
 
 			//display options box after the sortable actions are done

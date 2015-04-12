@@ -500,6 +500,7 @@ class gpOutput{
 		//class & method
 		if( !empty($info['class']) ){
 			if( class_exists($info['class']) ){
+
 				$object = new $info['class']($args);
 
 				if( !empty($info['method']) ){
@@ -511,7 +512,9 @@ class gpOutput{
 				}
 			}elseif( $has_script ){
 				$name =& $config['addons'][$addonFolderName]['name'];
-				trigger_error('gpEasy Error: Addon hook class doesn\'t exist. Script: '.$info['class'].' Addon: '.$name);
+				trigger_error('gpEasy Error: Addon class doesn\'t exist. Class: '.$info['class'].' Addon: '.$name);
+			}else{
+				trigger_error('gpEasy Error: Addon class doesn\'t exist. Class: '.$info['class']);
 			}
 		}elseif( !empty($info['method']) ){
 

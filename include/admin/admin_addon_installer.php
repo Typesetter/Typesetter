@@ -583,6 +583,7 @@ class admin_addon_installer extends admin_addons_tool{
 		$this->UpdateConfigInfo('Addon_Name','name');
 		$this->UpdateConfigInfo('Addon_Version','version');
 		$this->UpdateConfigInfo('Addon_Unique_ID','id');
+		$this->UpdateConfigInfo('Namespace','Namespace');
 
 
 		//remote
@@ -1244,9 +1245,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 		$result = array();
 		foreach($links as $linkName => $linkInfo){
-			if( !isset($linkInfo['script']) ){
-				continue;
-			}
+
 			if( !isset($linkInfo['label']) ){
 				continue;
 			}
@@ -1257,7 +1256,10 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 			$result[$linkName] = array();
-			$result[$linkName]['script'] = $linkInfo['script'];
+
+			if( isset($linkInfo['script']) ){
+				$result[$linkName]['script'] = $linkInfo['script'];
+			}
 			$result[$linkName]['label'] = $linkInfo['label'];
 
 			if( isset($linkInfo['class']) ){

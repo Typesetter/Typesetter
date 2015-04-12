@@ -1135,6 +1135,48 @@ class common{
 		if( $sessions ){
 			common::sessions();
 		}
+
+		spl_autoload_register( array('common','Autoload') );
+	}
+
+	/**
+	 * Setup SPL Autoloading
+	 *
+	 */
+	static function Autoload($class){
+		global $config;
+
+		$parts		= explode('\\',$class);
+		$part_0		= array_shift($parts);
+
+		if( !$parts ){
+			return;
+		}
+
+		//look for addon namespace
+		if( $part_0 === 'Addon' ){
+
+			$namespace = array_shift($parts);
+			if( !$parts ){
+				return;
+			}
+
+			foreach($config['addons'] as $addon_key => $addon){
+				if( isset($addon['Namespace']) && $addon['Namespace'] == $namespace ){
+
+					gpPlugin::SetDataFolder($addon_key);
+					$file			= gpPlugin::$current['code_folder_full'].'/'.implode('/',$parts).'.php';
+
+					if( file_exists($file) ){
+						include($file);
+					}else{
+						trigger_error('Script not found in namespaced autoloader for '.$class);
+					}
+
+					gpPlugin::ClearDataFolder();
+				}
+			}
+		}
 	}
 
 

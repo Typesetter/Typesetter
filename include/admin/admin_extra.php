@@ -9,7 +9,7 @@ class admin_extra{
 	var $folder;
 	var $areas = array();
 
-	function admin_extra(){
+	function __construct(){
 		global $langmessage, $dataDir;
 
 		$this->folder = $dataDir.'/data/_extra';

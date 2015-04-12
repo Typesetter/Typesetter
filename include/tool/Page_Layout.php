@@ -9,7 +9,7 @@ class page_layout{
 	var $show_popup = false;
 	var $title = false;
 
-	function page_layout($cmd,$url,$query_string=''){
+	function __construct($cmd,$url,$query_string=''){
 		global $gp_index;
 
 		//if the request is made from the page, we want to remember that and send an appropriate response

@@ -12,7 +12,7 @@ includeFile('special/special_missing.php');
 
 class admin_missing extends special_missing{
 
-	function admin_missing(){
+	function __construct(){
 		global $langmessage;
 
 		$this->Init();

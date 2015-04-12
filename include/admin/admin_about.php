@@ -3,7 +3,7 @@ defined('is_running') or die('Not an entry point...');
 
 class admin_about{
 
-	function admin_about(){
+	function __construct(){
 
 		echo '<div style="width:600px;padding:0 20px;">';
 		echo '<h2>gpEasy CMS Version '.gpversion.'</h2>';

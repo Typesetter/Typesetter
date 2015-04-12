@@ -210,7 +210,7 @@ class gp_install{
 	var $can_write_data = true;
 
 
-	function gp_install(){
+	function __construct(){
 		global $languages,$install_language,$langmessage;
 
 		//language preferences

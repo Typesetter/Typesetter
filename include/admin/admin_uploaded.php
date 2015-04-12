@@ -17,6 +17,17 @@ class admin_uploaded{
 
 
 
+
+	function __construct(){
+
+		$file_cmd = common::GetCommand('file_cmd');
+		if( !empty($file_cmd) || (isset($_REQUEST['show']) && $_REQUEST['show'] == 'inline') ){
+			$this->do_admin_uploaded($file_cmd);
+		}else{
+			$this->Finder();
+		}
+	}
+
 	function Finder(){
 		global $page, $GP_INLINE_VARS, $config, $dataDir;
 
@@ -119,16 +130,6 @@ class admin_uploaded{
 
 	}
 
-
-	function admin_uploaded(){
-
-		$file_cmd = common::GetCommand('file_cmd');
-		if( !empty($file_cmd) || (isset($_REQUEST['show']) && $_REQUEST['show'] == 'inline') ){
-			$this->do_admin_uploaded($file_cmd);
-		}else{
-			$this->Finder();
-		}
-	}
 
 	function do_admin_uploaded($file_cmd){
 		global $page;

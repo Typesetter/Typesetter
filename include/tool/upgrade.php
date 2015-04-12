@@ -4,7 +4,7 @@ defined('is_running') or die('Not an entry point...');
 
 class gpupgrade{
 
-	function gpupgrade(){
+	function __construct(){
 		global $config;
 
 		includeFile('admin/admin_tools.php');

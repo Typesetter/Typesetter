@@ -14,7 +14,7 @@ class special_gpsearch{
 	var $gpabox = false;
 
 
-	function special_gpsearch(){
+	function __construct(){
 		global $page, $langmessage, $dataDir;
 
 		$this->config_file = $dataDir.'/data/_site/config_search.php';

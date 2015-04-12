@@ -6,7 +6,7 @@ class special_galleries{
 	var $title_removed = false;
 	var $not_visible = array();
 
-	function special_galleries(){
+	function __construct(){
 		$this->galleries = special_galleries::GetData();
 
 		if( common::LoggedIn() ){

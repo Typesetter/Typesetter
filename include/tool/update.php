@@ -54,8 +54,8 @@ class update_class{
 
 	}
 
-	/* constructor */
-	function update_class($process='page'){
+
+	function __construct($process='page'){
 
 		includeFile('tool/RemoteGet.php');
 		includeFile('tool/FileSystem.php');

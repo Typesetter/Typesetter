@@ -20,7 +20,7 @@ class special_missing{
 		return gpFiles::SaveData($this->datafile,'error_data',$this->error_data);
 	}
 
-	function special_missing($requested=false){
+	function __construct($requested=false){
 		global $langmessage;
 
 		$this->Init();

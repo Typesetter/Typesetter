@@ -3,7 +3,8 @@ defined('is_running') or die('Not an entry point...');
 
 
 class special_map{
-	function special_map(){
+
+	function __construct(){
 		global $page,$langmessage,$config;
 
 

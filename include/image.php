@@ -27,7 +27,7 @@ class gp_resized{
 	 * Check the path of the img, return full path of image if the requested image is found
 	 *
 	 */
-	function gp_resized(){
+	function __construct(){
 		global $dataDir;
 
 		if( !isset($_GET['w']) || !isset($_GET['h']) || !isset($_GET['img']) ){

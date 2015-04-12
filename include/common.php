@@ -638,7 +638,7 @@ class display{
 	var $editable_content = true;
 	var $editable_details = true;
 
-	function display($title){
+	function __construct($title){
 		$this->title = $title;
 	}
 

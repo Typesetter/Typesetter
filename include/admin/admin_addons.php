@@ -29,7 +29,7 @@ class admin_addons extends admin_addon_install{
 	var $dataFile;
 
 
-	function admin_addons(){
+	function __construct(){
 		global $langmessage,$config,$page;
 
 		//header links

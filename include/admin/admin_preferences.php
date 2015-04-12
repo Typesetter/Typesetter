@@ -7,7 +7,7 @@ class admin_preferences extends admin_users{
 	var $username;
 
 
-	function admin_preferences(){
+	function __construct(){
 		global $gpAdmin,$langmessage,$page;
 
 		//only need to return messages if it's ajax request

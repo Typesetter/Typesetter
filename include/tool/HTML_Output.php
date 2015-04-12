@@ -68,8 +68,8 @@ class gp_html_output extends gp_html_parse{
 								'textarea'=>	array('cols'=>'','rows'=>'')
 								);
 
-	function gp_html_output($text){
-		$this->gp_html_parse($text);
+	function __construct($text){
+		parent::__construct($text);
 
 		$this->dom_array = gpPlugin::Filter('Html_Output',array($this->dom_array));
 

@@ -637,7 +637,7 @@ class gp_combine_css{
 	var $imported = array();
 	var $imports = '';
 
-	function gp_combine_css($file){
+	function __construct($file){
 		global $dataDir;
 
 		includeFile('thirdparty/cssmin_v.1.0.php');

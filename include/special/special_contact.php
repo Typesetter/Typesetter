@@ -10,10 +10,6 @@ $message_send_attempt = false;
 class special_contact extends special_contact_gadget{
 	var $sent = false;
 
-	function special_contact(){
-		$this->special_contact_gadget();
-	}
-
 	function ShowForm(){
 		global $page,$langmessage,$config;
 
@@ -26,7 +22,7 @@ class special_contact extends special_contact_gadget{
 class special_contact_gadget{
 	var $sent = false;
 
-	function special_contact_gadget(){
+	function __construct(){
 		global $page,$langmessage,$config,$contact_message_sent,$message_send_attempt;
 
 		$this->sent = $contact_message_sent;

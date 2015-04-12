@@ -9,7 +9,7 @@ class admin_configuration{
 	var $variables;
 	//var $defaultVals = array();
 
-	function admin_configuration(){
+	function __construct(){
 		global $langmessage,$page;
 
 		$page->ajaxReplace = array();

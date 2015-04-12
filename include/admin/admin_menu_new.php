@@ -39,7 +39,7 @@ class admin_menu_new extends admin_menu_tools{
 	var $list_displays = array('search'=>true, 'all'=>true, 'hidden'=>true, 'nomenus'=>true );
 
 
-	function admin_menu_new(){
+	function __construct(){
 		global $langmessage,$page,$config;
 
 		$page->ajaxReplace = array();

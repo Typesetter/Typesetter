@@ -3,7 +3,7 @@ defined('is_running') or die('Not an entry point...');
 
 class admin_trash{
 
-	function admin_trash(){
+	function __construct(){
 		global $langmessage;
 
 		$cmd = common::GetCommand();

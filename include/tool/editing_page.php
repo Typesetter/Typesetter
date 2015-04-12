@@ -7,8 +7,8 @@ includeFile('tool/SectionContent.php');
 class editing_page extends display{
 
 
-	function editing_page($title,$type){
-		parent::display($title,$type);
+	function __construct($title,$type){
+		parent::__construct($title,$type);
 	}
 
 	function RunScript(){

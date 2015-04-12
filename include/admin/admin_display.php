@@ -14,12 +14,13 @@ class admin_display extends display{
 	var $non_admin_content = '';
 	var $admin_html = '';
 
-	function admin_display($title){
+	function __construct($title){
 		global $langmessage, $gpAdmin;
 
 
-		$this->requested = str_replace(' ','_',$title);
-		$this->title = $title;
+		$this->requested	= str_replace(' ','_',$title);
+		$this->title		= $title;
+
 
 		$scripts = admin_tools::AdminScripts();
 

@@ -9,7 +9,7 @@ class admin_ckeditor{
 	var $subpages;
 	var $current_subpage = '';
 
-	function admin_ckeditor(){
+	function __construct(){
 		global $page, $langmessage;
 
 		$page->css_admin[] = '/include/css/addons.css';

@@ -11,7 +11,7 @@ class admin_permalinks{
 	var $changed_to_hide = false;
 
 
-	function admin_permalinks(){
+	function __construct(){
 		global $langmessage,$dataDir;
 
 

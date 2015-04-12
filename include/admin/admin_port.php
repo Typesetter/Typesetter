@@ -43,7 +43,7 @@ class admin_port{
 	var $iframe = '';
 
 
-	function admin_port(){
+	function __construct(){
 		global $langmessage,$dataDir,$page;
 
 		$this->export_dir = $dataDir.'/data/_exports';

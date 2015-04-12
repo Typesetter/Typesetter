@@ -495,7 +495,7 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 	var $ftp_root = false;
 	var $method = 'gp_filesystem_ftp';
 
-	function gp_filesystem_ftp(){
+	function __construct(){
 		includeFile('tool/ftp.php');
 	}
 

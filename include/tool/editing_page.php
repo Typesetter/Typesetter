@@ -685,7 +685,7 @@ class editing_page extends display{
 			$time = $_REQUEST['revision'];
 		}
 
-		$contents = file_get_contents( $this->file );
+		$contents = gpFiles::GetRaw($this->file);
 
 		//backup file name
 		$len = strlen($contents);

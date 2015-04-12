@@ -312,9 +312,11 @@ $gp.Cookie('cookie_cmd','',-1);
  */
 $(function(){
 
+
 	//add a class to the body
 	//this also affects the display of elements using the req_script css class
 	$('body').addClass('STCLASS');
+
 
 
 	/**
@@ -469,63 +471,64 @@ $(function(){
 	 */
 	$(document).on('click', 'a',function(evt){
 
-			var $this = $(this);
-			var cmd = $this.data('cmd');
-			var arg = $this.data('arg');
-			if( !cmd ){
-				// deprecated 3.6
-				cmd = $this.attr('name');
-				arg = $this.attr('rel');
-			}
 
-			if( $this.hasClass('gpconfirm') && !confirm(this.title) ){
-				evt.preventDefault();
-				return;
-			}
+		var $this = $(this);
+		var cmd = $this.data('cmd');
+		var arg = $this.data('arg');
+		if( !cmd ){
+			// deprecated 3.6
+			cmd = $this.attr('name');
+			arg = $this.attr('rel');
+		}
 
-			if( typeof($gp.links[cmd]) === 'function' ){
-				return $gp.links[cmd].call(this,evt,arg);
-			}
+		if( $this.hasClass('gpconfirm') && !confirm(this.title) ){
+			evt.preventDefault();
+			return;
+		}
 
-			// @deprecated 3.6
-			if( typeof(gplinks[cmd]) === 'function' ){
-				return gplinks[cmd].call(this,arg,evt);
-			}
+		if( typeof($gp.links[cmd]) === 'function' ){
+			return $gp.links[cmd].call(this,evt,arg);
+		}
 
-			switch(cmd){
+		// @deprecated 3.6
+		if( typeof(gplinks[cmd]) === 'function' ){
+			return gplinks[cmd].call(this,arg,evt);
+		}
 
-				case 'toggle_show':
-					$(arg).toggle();
-				break;
+		switch(cmd){
 
-				case 'inline_box':
-					$gp.CopyVals(arg,this);
-					$.fn.colorbox(
-						//$.extend(colorbox_options,{inline:true,href:b, open:true})
-						$gp.cboxSettings({inline:true,href:arg, open:true})
-					);
-				break;
+			case 'toggle_show':
+				$(arg).toggle();
+			break;
 
-				case 'postlink':
-					$gp.post_link(this);
-				break;
+			case 'inline_box':
+				$gp.CopyVals(arg,this);
+				$.fn.colorbox(
+					//$.extend(colorbox_options,{inline:true,href:b, open:true})
+					$gp.cboxSettings({inline:true,href:arg, open:true})
+				);
+			break;
 
-				case 'gpajax':
-					$gp.jGoTo(this.href);
-				break;
-				case 'creq':
-					$gp.cGoTo(this,true);
-				break;
-				case 'cnreq':
-					$gp.cGoTo(this,false);
-				break;
-				case 'close_message':
-					$this.closest('div').slideUp();
-				break;
+			case 'postlink':
+				$gp.post_link(this);
+			break;
 
-				default:
-				return true;
-			}
+			case 'gpajax':
+				$gp.jGoTo(this.href);
+			break;
+			case 'creq':
+				$gp.cGoTo(this,true);
+			break;
+			case 'cnreq':
+				$gp.cGoTo(this,false);
+			break;
+			case 'close_message':
+				$this.closest('div').slideUp();
+			break;
+
+			default:
+			return true;
+		}
 
 		evt.preventDefault();
 		return false;

@@ -662,10 +662,11 @@ class display{
 			return false;
 		}
 
-		$this->gp_index = $gp_index[$this->title];
-		$this->TitleInfo =& $gp_titles[$this->gp_index]; //so changes made by rename are seen
-		$this->label = common::GetLabel($this->title);
-		$this->file = gpFiles::PageFile($this->title);
+		$this->gp_index		= $gp_index[$this->title];
+		$this->TitleInfo	=& $gp_titles[$this->gp_index]; //so changes made by rename are seen
+		$this->label		= common::GetLabel($this->title);
+		$this->file			= gpFiles::PageFile($this->title);
+
 		gpPlugin::Action('PageSetVars');
 
 		return true;
@@ -3008,6 +3009,24 @@ class gpFiles{
 
 		return $data[$var_name];
 
+	}
+
+	/**
+	 * Get the raw contents of a data file
+	 *
+	 */
+	static function GetRaw($file){
+		global $dataDir;
+
+		if( strpos($file,$dataDir) !== 0 ){
+			$file = $dataDir.'/data/'.ltrim($file,'/').'.php';
+		}
+
+		if( gp_data_type === '.json' ){
+			$file		= substr($file,0,-4).'.json';
+		}
+
+		return file_get_contents($file);
 	}
 
 	static function Exists($file){

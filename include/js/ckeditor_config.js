@@ -130,17 +130,7 @@ CKEDITOR.on( 'dialogDefinition', function( ev ){
 	}
 });
 
-/**
- * Prevent premature onbeforeupload event in IE
- *
- */
-CKEDITOR.on('instanceReady', function(event) {
-	if(CKEDITOR.env.ie){
-		event.editor.on('dialogShow', function(dialogShowEvent) {
-			$(dialogShowEvent.data._.element.$).find('a[href*="void(0)"]').removeAttr('href');
-		});
-	}
-});
+
 
 
 

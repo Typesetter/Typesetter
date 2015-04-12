@@ -829,14 +829,20 @@ class admin_users{
 			return;
 		}
 
+		$cleaned = array();
 		foreach($indexes as $index){
 			if( !isset($gp_titles[$index]) ){
-				message($langmessage['OOPS'].' Invalid Title (2)');
-				return;
+				continue;
 			}
+			$cleaned[] = $index;
 		}
 
-		return $indexes;
+		if( !$cleaned ){
+			message($langmessage['OOPS'].' Invalid Title (2)');
+			return;
+		}
+
+		return $cleaned;
 	}
 
 }

@@ -182,11 +182,10 @@
 			//if multiple selected, get all the keys
 			if( multiple_selected ){
 				data.key			= $current.find('.gp_label').map(function(){ return $(this).data('arg');}).toArray().join(',');
-			}
 
 
 			//external link
-			if( $current.find('.external').length ){
+			}else if( $current.find('.external').length ){
 				this_html = info_html_extern;
 			}
 

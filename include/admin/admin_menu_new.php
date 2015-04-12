@@ -877,6 +877,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		//layout
 		if( $this->is_main_menu ){
+			echo '<div class="not_multiple">';
 			echo '<b>'.$langmessage['layout'].'</b>';
 			echo '<span>';
 
@@ -891,6 +892,7 @@ class admin_menu_new extends admin_menu_tools{
 			$img = '<span class="layout_icon"></span>';
 			echo $this->Link('Admin_Menu',$img.'[layout_label]','cmd=layout&index=[key]',' title="'.$langmessage['layout'].'" data-cmd="gpabox" class="no_layout"');
 			echo '</span>';
+			echo '</div>';
 		}
 
 		$this->InsertLinks();
@@ -1301,25 +1303,18 @@ class admin_menu_new extends admin_menu_tools{
 		$_POST		+= array('index'=>'');
 		$indexes	= explode(',',$_POST['index']);
 
-		// Check each index
-		foreach($indexes as $index){
-			$title	= common::IndexToTitle($index);
-			if( !$title ){
-				message($langmessage['OOPS'].' (Invalid Index)');
-				return;
-			}
-		}
-
 
 		foreach($indexes as $index){
 
 			$title	= common::IndexToTitle($index);
 
 			// Create file in trash
-			if( !admin_trash::MoveToTrash_File($title,$index,$trash_data) ){
-				message($langmessage['OOPS']);
-				$this->RestoreSettings();
-				return false;
+			if( $title ){
+				if( !admin_trash::MoveToTrash_File($title,$index,$trash_data) ){
+					message($langmessage['OOPS']);
+					$this->RestoreSettings();
+					return false;
+				}
 			}
 
 
@@ -1367,6 +1362,10 @@ class admin_menu_new extends admin_menu_tools{
 		foreach($indexes as $index){
 
 			$title	= common::IndexToTitle($index);
+			if( !$title ){
+				continue;
+			}
+
 			$file = gpFiles::PageFile($title);
 			if( gpFiles::Exists($file) ){
 				unlink($file);

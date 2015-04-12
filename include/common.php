@@ -42,7 +42,7 @@ gp_defined('gp_data_type','.php');
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
-define('gpversion','4.3.5');
+define('gpversion','4.4b1');
 define('gp_random',common::RandomString());
 
 

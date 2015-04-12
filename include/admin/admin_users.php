@@ -702,30 +702,58 @@ class admin_users{
 	 *
 	 */
 	function FilePermissions(){
-		global $gp_titles,$langmessage;
-		$index = $_REQUEST['index'];
-		if( !isset($gp_titles[$index]) ){
-			message($langmessage['OOPS'].' (Invalid Title)');
+		global $gp_titles, $langmessage;
+
+		$indexes 		= $this->RequestedIndexes();
+		if( !$indexes ){
 			return;
 		}
+
+		$count			= count($indexes);
+		$first_index	= $indexes[0];
+
+
 		echo '<div class="inline_box">';
 		echo '<form action="'.common::GetUrl('Admin_Users').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="save_file_permissions">';
-		echo '<input type="hidden" name="index" value="'.$index.'">';
+		echo '<input type="hidden" name="index" value="'.htmlspecialchars($_REQUEST['index']).'">';
 
-		$label = strip_tags(common::GetLabelIndex($index));
-		//echo '<h3>'.sprintf($langmessage['Permissions_for'],$label).'</h3>';
-		echo '<h2>'.common::Link('Admin_Users',$langmessage['user_permissions']).' &#187; <i>'.$label.'</i></h2>';
 
+		//heading
+		echo '<h2>'.common::Link('Admin_Users',$langmessage['user_permissions']).' &#187; <i>';
+		if( $count > 1 ){
+			echo sprintf($langmessage['%s Pages'],$count);
+		}else{
+			echo strip_tags(common::GetLabelIndex($indexes[0]));
+		}
+		echo '</i></h2>';
+
+
+		//list of files
+		if( $count > 1 ){
+			$labels = array();
+			foreach( $indexes as $index ){
+				$labels[] = strip_tags(common::GetLabelIndex($index));
+			}
+			echo '<p>';
+			echo implode(', ',$labels);
+			echo '</p>';
+		}
+
+
+		//list of users
 		echo '<div class="all_checkboxes">';
 		foreach($this->users as $username => $userinfo){
 			$attr = '';
 			if( $userinfo['editing'] == 'all'){
 				$attr = ' checked="checked" disabled="disabled"';
-			}elseif(strpos($userinfo['editing'],','.$index.',') !== false ){
+			}elseif(strpos($userinfo['editing'],','.$first_index.',') !== false ){
 				$attr = ' checked="checked"';
 			}
-			echo '<label class="all_checkbox"><input type="checkbox" name="users['.htmlspecialchars($username).']" value="'.htmlspecialchars($username).'" '.$attr.'/> '.$username.'</label> ';
+			echo '<label class="all_checkbox">';
+			echo '<input type="checkbox" name="users['.htmlspecialchars($username).']" value="'.htmlspecialchars($username).'" '.$attr.'/>';
+			echo $username;
+			echo '</label> ';
 		}
 		echo '</div>';
 
@@ -738,6 +766,7 @@ class admin_users{
 		echo '</div>';
 	}
 
+
 	/**
 	 * Save the permissions for a specific file
 	 *
@@ -745,24 +774,29 @@ class admin_users{
 	function SaveFilePermissions(){
 		global $gp_titles, $langmessage, $gp_index, $gpAdmin;
 
-		$index = $_REQUEST['index'];
-		if( !isset($gp_titles[$index]) ){
-			message($langmessage['OOPS'].' (Invalid Title)');
+		$indexes 		= $this->RequestedIndexes();
+		if( !$indexes ){
 			return;
 		}
 
 
 		foreach($this->users as $username => $userinfo){
+
 			if( $userinfo['editing'] == 'all'){
 				continue;
 			}
 
-			$before = $editing = $userinfo['editing'];
-			if( isset($_POST['users'][$username]) ){
-				$editing .= $index.',';
-			}else{
-				$editing = str_replace( ','.$index.',', ',', $editing);
+			$editing = $userinfo['editing'];
+
+			foreach($indexes as $index){
+
+				if( isset($_POST['users'][$username]) ){
+					$editing .= $index.',';
+				}else{
+					$editing = str_replace( ','.$index.',', ',', $editing);
+				}
 			}
+
 			$editing = explode(',',trim($editing,','));
 			$editing = array_intersect($editing,$gp_index);
 			if( count($editing) ){
@@ -770,8 +804,8 @@ class admin_users{
 			}else{
 				$editing = '';
 			}
-			$this->users[$username]['editing'] = $editing;
 
+			$this->users[$username]['editing'] = $editing;
 			$is_curr_user = ($gpAdmin['username'] == $username);
 			$this->UserFileDetails($username,$is_curr_user);
 		}
@@ -779,6 +813,31 @@ class admin_users{
 		return $this->SaveUserFile(false);
 	}
 
+
+	/**
+	 * Get the menu indexes
+	 *
+	 */
+	function RequestedIndexes(){
+		global $langmessage, $gp_titles;
+
+		$_REQUEST		+= array('index'=>'');
+		$indexes		= explode(',',$_REQUEST['index']);
+
+		if( !$indexes ){
+			message($langmessage['OOPS'].' Invalid Title (1)');
+			return;
+		}
+
+		foreach($indexes as $index){
+			if( !isset($gp_titles[$index]) ){
+				message($langmessage['OOPS'].' Invalid Title (2)');
+				return;
+			}
+		}
+
+		return $indexes;
+	}
 
 }
 

@@ -363,6 +363,7 @@ class admin_menu_new extends admin_menu_tools{
 				$this->GetMenus();
 			}
 
+			$page->ajaxReplace[] = array('gp_menu_prep','','');
 			$page->ajaxReplace[] = array('inner',$replace_id,$content);
 			$page->ajaxReplace[] = array('gp_menu_refresh','','');
 			return;
@@ -736,9 +737,8 @@ class admin_menu_new extends admin_menu_tools{
 			$data['title'] = substr($data['title'],0,30).'...';
 		}
 
-		echo '<a class="gp_label sort external" data-cmd="menu_info" data-arg="'.str_replace('&','&amp;',$menu_key).'">';
+		$this->MenuLink($data,true);
 		echo common::LabelSpecialChars($menu_value['label']);
-		$this->MenuData($data);
 		echo '</a>';
 	}
 
@@ -811,48 +811,64 @@ class admin_menu_new extends admin_menu_tools{
 			$data['opts'] = $menu_options;
 		}
 
-		echo '<a class="gp_label sort" data-cmd="menu_info" data-arg="'.str_replace('&','&amp;',$menu_key).'">';
+		$this->MenuLink($data);
 		echo common::LabelSpecialChars($label);
-		$this->MenuData($data);
 		echo '</a>';
 	}
 
-	function MenuData($data){
-		$data = common::JsonEncode($data);
 
-		echo '<span style="display:none">'.htmlspecialchars($data,ENT_NOQUOTES).'</span>';
+	/**
+	 * Output Sortable Menu Link and data about the title or external link
+	 *
+	 */
+	function MenuLink($data, $external = false){
+
+		$class = 'gp_label sort';
+		if( $external ){
+			$class .= ' external';
+		}
+
+		$json = common::JsonEncode($data);
+		echo '<a class="'.$class.'" data-cmd="menu_info" data-arg="'.str_replace('&','&amp;',$data['key']).'" data-json=\''.htmlspecialchars($json,ENT_NOQUOTES).'\'>';
 	}
 
 
+	/**
+	 * Output html for the menu editing options displayed for selected titles
+	 *
+	 */
 	function MenuSkeleton(){
 		global $langmessage;
 
-		/*
-		 * page options
-		 */
+		//page options
 		echo '<b>'.$langmessage['page_options'].'</b>';
 
 		echo '<span>';
 
-		$img = '<span class="menu_icon icon_page"></span>';
-		echo '<a href="[url]" class="view_edit_link">'.$img.htmlspecialchars($langmessage['view/edit_page']).'</a>';
+		$img	= '<span class="menu_icon icon_page"></span>';
+		echo '<a href="[url]" class="view_edit_link not_multiple">'.$img.htmlspecialchars($langmessage['view/edit_page']).'</a>';
 
-		$img = '<span class="menu_icon page_edit_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&index=[key]',array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
+		$img	= '<span class="menu_icon page_edit_icon"></span>';
+		$attrs	= array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax','class'=>'not_multiple');
+		echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&index=[key]',$attrs);
 
-		$img = '<span class="menu_icon copy_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&index=[key]',array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
+		$img	= '<span class="menu_icon copy_icon"></span>';
+		$attrs	= array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox','class'=>'not_multiple');
+		echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&index=[key]',$attrs);
 
 		if( admin_tools::HasPermission('Admin_User') ){
-			$img = '<span class="menu_icon icon_user"></span>';
-			echo $this->Link('Admin_Users',$img.$langmessage['permissions'],'cmd=file_permissions&index=[key]',array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
+			$img	= '<span class="menu_icon icon_user"></span>';
+			$attrs	= array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox');
+			echo $this->Link('Admin_Users',$img.$langmessage['permissions'],'cmd=file_permissions&index=[key]',$attrs);
 		}
 
-		$img = '<span class="menu_icon cut_list_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&key=[key]',array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'menupost','class'=>'gpconfirm'));
+		$img	= '<span class="menu_icon cut_list_icon"></span>';
+		$attrs	= array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'menupost','class'=>'gpconfirm');
+		echo $this->Link('Admin_Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&key=[key]',$attrs);
 
-		$img = '<span class="menu_icon bin_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$langmessage['delete'],'cmd=trash&index=[key]',array('title'=>$langmessage['delete_page'],'data-cmd'=>'menupost','class'=>'gpconfirm not_special'));
+		$img	= '<span class="menu_icon bin_icon"></span>';
+		$attrs	= array('title'=>$langmessage['delete_page'],'data-cmd'=>'menupost','class'=>'gpconfirm not_special');
+		echo $this->Link('Admin_Menu',$img.$langmessage['delete'],'cmd=trash&index=[key]',$attrs);
 
 		echo '[opts]'; //replaced with the contents of gpPlugin::Action('MenuPageOptions',array($title,$menu_key,$menu_value,$layout_info));
 
@@ -881,6 +897,7 @@ class admin_menu_new extends admin_menu_tools{
 
 
 		//file stats
+		echo '<div class="not_multiple">';
 		echo '<b>'.$langmessage['Page Info'].'</b>';
 		echo '<span>';
 		echo '<a>'.$langmessage['Slug/URL'].': [title]</a>';
@@ -888,8 +905,8 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<a class="not_special">'.$langmessage['File Size'].': [size]</a>';
 		echo '<a class="not_special">'.$langmessage['Modified'].': [mtime]</a>';
 		echo '<a>Data Index: [key]</a>';
-
 		echo '</span>';
+		echo '</div>';
 
 	}
 
@@ -912,12 +929,14 @@ class admin_menu_new extends admin_menu_tools{
 
 	}
 
-	/*
-	 * insert
+	/**
+	 * Output Insert links displayed with page options
+	 *
 	 */
 	function InsertLinks(){
 		global $langmessage;
 
+		echo '<div class="not_multiple">';
 		echo '<b>'.$langmessage['insert_into_menu'].'</b>';
 		echo '<span>';
 
@@ -935,6 +954,7 @@ class admin_menu_new extends admin_menu_tools{
 		$query = 'cmd=insert_child&insert_where=[key]';
 		echo $this->Link('Admin_Menu',$img.$langmessage['insert_child'],$query,array('title'=>$langmessage['insert_child'],'data-cmd'=>'gpabox','class'=>'insert_child'));
 		echo '</span>';
+		echo '</div>';
 	}
 
 	/**

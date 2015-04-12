@@ -1,26 +1,26 @@
 
 	$(function(){
 
-		var $sortable_area = $('#admin_menu');
-		var $admin_menu_tools = $('#admin_menu_tools');
-		var $current = false;
-		var current_id = false;
-		var original_parent = false;
-		var info_html = $('#menu_info').html();//.get(0).innerHTML;
-		var info_html_extern = $('#menu_info_extern').html();//.get(0).innerHTML;
+		var $sortable_area			= $('#admin_menu');
+		var $admin_menu_tools		= $('#admin_menu_tools');
+		var current_id				= false;
+		var original_parent			= false;
+		var info_html				= $('#menu_info').html();
+		var info_html_extern		= $('#menu_info_extern').html();
 
 
 		$sortable_area.nestedSortable({
-			disableNesting: 'no-nest',
-			forcePlaceholderSize: true,
-			handle: 'a.sort',
-			items: 'li',
-			opacity: .8,
-			placeholder: 'placeholder',
-			tabSize: 25,
-			toleranceElement: '> div',
-			listType: 'ul',
-			delay:2,
+			disableNesting:			'no-nest',
+			forcePlaceholderSize:	true,
+			handle:					'a.sort',
+			items:					'li',
+			opacity:				.8,
+			placeholder:			'placeholder',
+			tabSize:				25,
+			toleranceElement:		'> div',
+			listType:				'ul',
+			delay:					2,
+
 			/* cancel: 'gp_no_sort', */
 			/* tolerance: 'pointer', */
 			/* connectWith: '.sortable_menu', */
@@ -71,8 +71,18 @@
 		}).disableSelection();
 
 
+		/**
+		 * Prepare for the menu to be refreshed
+		 *
+		 */
+		gpresponse.gp_menu_prep = function(){
+			//todo: collect the id's of the selected items
+		}
 
-
+		/**
+		 * Make sure new menu html sent from the server asynchronously is sortable
+		 *
+		 */
 		gpresponse.gp_menu_refresh = function(j){
 			$sortable_area.nestedSortable('refresh');
 
@@ -92,25 +102,38 @@
 		}
 
 
+		/**
+		 * Handle clicks on sortable menu items
+		 *
+		 */
 		$gp.links.menu_info = function(evt){
+
 			evt.preventDefault();
-			var $this = $(this).parent();
+			var $current	= $(this).parent();
+			var cntrl		= evt.ctrlKey;
 
-			//this should all happen after the sortable actions are done
-			window.setTimeout(function(){
 
-				ShowInfo($this);
-
-			},100);
-		}
-
-		function ShowInfo($new_current){
-
-			if( $current ){
-				$current.removeClass('current');
+			if( evt.ctrlKey ){
+				$current.toggleClass('current');
+				var $current = $('.current');
 			}
 
-			$current = $new_current;
+			//display options box after the sortable actions are done
+			window.setTimeout(function(){
+				ShowInfo($current);
+			},100);
+
+		}
+
+
+		/**
+		 * Display page options for selected titles
+		 *
+		 */
+		function ShowInfo($current){
+
+			$('.current').removeClass('current');
+
 			if( !$current.length ){
 				$admin_menu_tools.hide();
 				return;
@@ -119,9 +142,12 @@
 			current_id = $current.attr('id');
 			$current.addClass('current');
 
-			InfoHtml();
-			var tools_height = $admin_menu_tools.height();
-			var sortable_height = $sortable_area.height();
+			InfoHtml($current);
+
+
+			var tools_height		= $admin_menu_tools.height();
+			var sortable_height		= $sortable_area.height();
+
 			if( sortable_height < tools_height ){
 				$sortable_area.css('min-height',tools_height);
 			}
@@ -145,25 +171,28 @@
 		 * Format the info window with the current title's information
 		 *
 		 */
-		function InfoHtml(){
-			//get data
-			var this_html, data;
+		function InfoHtml($current){
 
-			data = $current.find('span').html();
-			data = unspecialchars( data );
-			data = jQuery.parseJSON( data );
+			var this_html			= info_html,
+				data				= jQuery.extend({}, $current.find('.gp_label').data('json')), //clone the json object
+				multiple_selected	= ($current.length > 1);
 
-			var external = $current.find('.external').length;
 
-			if( external ){
+
+			//if multiple selected, get all the keys
+			if( multiple_selected ){
+				data.key			= $current.find('.gp_label').map(function(){ return $(this).data('arg');}).toArray().join(',');
+			}
+
+
+			//external link
+			if( $current.find('.external').length ){
 				this_html = info_html_extern;
-			}else{
-				this_html = info_html;
 			}
 
 			data = $.extend({}, {title:'',layout_color:'',layout_label:'',types:'',size:'',mtime:'',opts:''}, data);
 
-			//debug(data.opts);
+
 
 			var reg,parts = ['title','key','url','layout_label','types','size','mtime','opts'];
 			$.each(parts,function(){
@@ -171,11 +200,17 @@
 				this_html = this_html.replace(reg,data[this]);
 			});
 
+
 			$admin_menu_tools
 				.show()
 				.html(this_html)
 				.find('.layout_icon').css({'background':data.layout_color});
-				;
+
+
+			//multiple
+			if( multiple_selected ){
+				$admin_menu_tools.find('.not_multiple').hide();
+			}
 
 
 			//special links
@@ -210,25 +245,10 @@
 
 		}
 
+
 		/**
-		 * Unescape special characters in the title's data
-		 * single and double quotation marks are not escaped by php for this data
+		 * Keep track of which titles are collapsed
 		 *
-		 */
-		function unspecialchars(str){
-			return str.replace(/&amp;/g, '&')
-						.replace(/&lt;/g, '<')
-						.replace(/&gt;/g, '>')
-						;
-					/*
-				    .replace(/"/g, "&quot;")
-				    .replace(/'/g, "&#039;");
-				    */
-		}
-
-
-		/*
-		 * Save the list of title that are collapsed
 		 */
 		function SaveSettings(){
 

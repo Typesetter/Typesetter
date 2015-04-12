@@ -19,15 +19,15 @@ class admin_display extends display{
 
 
 		$this->requested	= str_replace(' ','_',$title);
-		$this->title		= $title;
-
-
-		$scripts = admin_tools::AdminScripts();
+		$scripts			= admin_tools::AdminScripts();
 
 		$pos = strpos($title,'/');
 		if( $pos > 0 ){
 			$title = substr($title,0,$pos);
 		}
+		$this->title		= $title;
+
+
 		if( isset($scripts[$title]) && isset($scripts[$title]['label']) ){
 			$this->label = $scripts[$title]['label'];
 		}else{

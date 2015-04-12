@@ -6,7 +6,9 @@ defined('is_running') or die('Not an entry point...');
 class admin_users{
 
 	var $users;
-	var $possible_permissions = array();
+	var $possible_permissions	= array();
+	var $has_weak_pass			= false;
+
 
 	function __construct(){
 		global $page,$langmessage;
@@ -159,11 +161,9 @@ class admin_users{
 
 		$this->DetailsForm($userinfo,$username);
 
-		echo '<tr>';
-			echo '<td>';
-			echo '</td>';
-			echo '<td>';
-			echo ' <input type="submit" name="aaa" value="'.$langmessage['continue'].'" class="gpsubmit"/>';
+		echo '<tr><td>';
+			echo '</td><td>';
+			echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit"/>';
 			echo ' <input type="reset" class="gpsubmit" />';
 			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="gpcancel"/>';
 			echo '</td>';
@@ -350,7 +350,9 @@ class admin_users{
 
 
 		echo '<h2>'.$langmessage['user_permissions'].'</h2>';
-		echo '<table class="bordered">';
+
+		ob_start();
+		echo '<table class="bordered full_width">';
 		echo '<tr><th>';
 		echo $langmessage['username'];
 		echo '</th><th>';
@@ -370,7 +372,7 @@ class admin_users{
 
 			//algorithm
 			echo '</td><td>';
-			self::PassAlgo($userinfo);
+			$this->PassAlgo($userinfo);
 
 
 			//admin permissions
@@ -436,13 +438,30 @@ class admin_users{
 		echo '</th>';
 
 		echo '</table>';
+
+		$content = ob_get_clean();
+
+		if( $this->has_weak_pass ){
+			echo '<p class="gp_notice"><b>Warning:</b> ';
+			echo 'Weak algorithms are being used for one or more users. To fix this issue, reset the user\'s password. ';
+			echo '</p>';
+		}
+
+		echo $content;
 	}
 
-	static function PassAlgo($userinfo){
+
+	/**
+	 * Display the password algorithm being used for the user
+	 *
+	 */
+	function PassAlgo($userinfo){
+
 		$algo = gpsession::PassAlgo($userinfo);
 		switch($algo){
 			case 'md5':
 			case 'sha1':
+			$this->has_weak_pass = true;
 			echo '<span style="color:red">'.$algo.'</span>';
 			return;
 		}
@@ -450,6 +469,10 @@ class admin_users{
 	}
 
 
+	/**
+	 * Display form for adding new admin user
+	 *
+	 */
 	function NewUserForm(){
 		global $langmessage;
 
@@ -480,15 +503,18 @@ class admin_users{
 		$_POST['editing'] = $this->GetEditingPermissions();
 		$this->DetailsForm($_POST);
 
-		echo '</table>';
-		echo '<p>';
+
+		echo '<tr><td>';
+			echo '</td><td>';
 			echo '<input type="hidden" name="cmd" value="newuser" />';
-			echo ' <input type="submit" name="aaa" value="'.$langmessage['continue'].'" class="gpsubmit"/>';
+			echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit"/>';
 			echo ' <input type="reset" class="gpsubmit"/>';
 			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="gpcancel"/>';
-			echo '</p>';
-		echo '</form>';
+			echo '</td>';
+			echo '</tr>';
 
+		echo '</table>';
+		echo '</form>';
 	}
 
 
@@ -611,7 +637,7 @@ class admin_users{
 			echo '</td></tr>';
 		echo '<tr><td>';
 			echo '</td><td>';
-			echo '<input type="submit" name="aaa" value="'.$langmessage['continue'].'" class="gpsubmit" />';
+			echo '<input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit" />';
 			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="gpcancel" />';
 			echo '</td></tr>';
 		echo '</table>';

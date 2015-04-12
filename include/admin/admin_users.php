@@ -443,7 +443,7 @@ class admin_users{
 
 		if( $this->has_weak_pass ){
 			echo '<p class="gp_notice"><b>Warning:</b> ';
-			echo 'Weak algorithms are being used for one or more users. To fix this issue, reset the user\'s password. ';
+			echo 'Weak password algorithms are being used for one or more users. To fix this issue, reset the user\'s password. ';
 			echo '</p>';
 		}
 

@@ -4,6 +4,7 @@
 		var $sortable_area			= $('#admin_menu');
 		var $admin_menu_tools		= $('#admin_menu_tools');
 		var current_id				= false;
+		var current_index			= false;
 		var original_parent			= false;
 		var info_html				= $('#menu_info').html();
 		var info_html_extern		= $('#menu_info_extern').html();
@@ -76,20 +77,40 @@
 		 *
 		 */
 		gpresponse.gp_menu_prep = function(){
-			//todo: collect the id's of the selected items
+
+			//get id of .current
+			var $current	= $('.current:first');
+			current_id		= $current.attr('id');
+
+			//get index of .current
+			var $all		= $('#admin_menu .gp_label');
+			current_index	= $all.index($current.find('.gp_label'));
 		}
+
 
 		/**
 		 * Make sure new menu html sent from the server asynchronously is sortable
 		 *
 		 */
 		gpresponse.gp_menu_refresh = function(j){
+
 			$sortable_area.nestedSortable('refresh');
 
 			if( current_id ){
-				var $new_current = $('#'+current_id);
-				ShowInfo($new_current);
+				var $current = $('#'+current_id);
 			}
+
+			if( !$current.length ){
+
+				if( current_index > 0 ){
+					$current = $('#admin_menu .gp_label').eq(current_index).parent();
+				}
+
+				if( !$current.length ){
+					$current = $('.gp_label:first').parent();
+				}
+			}
+			ShowInfo($current);
 		}
 
 
@@ -167,7 +188,6 @@
 				return;
 			}
 
-			current_id = $current.attr('id');
 			$current.addClass('current');
 
 			InfoHtml($current);

@@ -1294,49 +1294,56 @@ class admin_menu_new extends admin_menu_tools{
 	function MoveToTrash($cmd){
 		global $gp_titles, $gp_index, $langmessage, $gp_menu;
 
-		if( $_SERVER['REQUEST_METHOD'] != 'POST'){
-			message($langmessage['OOPS'].' (Invalid Request)');
-			return;
-		}
-
 		includeFile('admin/admin_trash.php');
 		admin_trash::PrepFolder();
 		$this->CacheSettings();
 
-		$index =& $_POST['index'];
-		$title = common::IndexToTitle($index);
+		$_POST		+= array('index'=>'');
+		$indexes	= explode(',',$_POST['index']);
 
-		if( !$title ){
-			message($langmessage['OOPS'].' (Invalid Index)');
-			return;
-		}
-
-		$index = $gp_index[$title];
-
-		if( isset($gp_menu[$index]) ){
-			if( count($gp_menu) == 1 ){
-				message($langmessage['OOPS'].' (The main menu cannot be empty)');
+		// Check each index
+		foreach($indexes as $index){
+			$title	= common::IndexToTitle($index);
+			if( !$title ){
+				message($langmessage['OOPS'].' (Invalid Index)');
 				return;
 			}
+		}
 
-			if( !$this->RmFromMenu($index,false) ){
+
+		foreach($indexes as $index){
+
+			$title	= common::IndexToTitle($index);
+
+			// Create file in trash
+			if( !admin_trash::MoveToTrash_File($title,$index,$trash_data) ){
 				message($langmessage['OOPS']);
 				$this->RestoreSettings();
 				return false;
 			}
+
+
+			// Remove from menu
+			if( isset($gp_menu[$index]) ){
+
+				if( count($gp_menu) == 1 ){
+					continue;
+				}
+
+				if( !$this->RmFromMenu($index,false) ){
+					message($langmessage['OOPS']);
+					$this->RestoreSettings();
+					return false;
+				}
+			}
+
+
+			unset($gp_titles[$index]);
+			unset($gp_index[$title]);
 		}
 
-		if( !admin_trash::MoveToTrash_File($title,$index,$trash_data) ){
-			message($langmessage['OOPS']);
-			$this->RestoreSettings();
-			return false;
-		}
-
-		unset($gp_titles[$index]);
-		unset($gp_index[$title]);
 
 		$this->ResetHomepage();
-
 
 
 		if( !admin_trash::ModTrashData($trash_data,null) ){
@@ -1356,10 +1363,14 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 
-		//delete the file in /_pages
-		$file = gpFiles::PageFile($title);
-		if( gpFiles::Exists($file) ){
-			unlink($file);
+		//finally, delete the files in /_pages
+		foreach($indexes as $index){
+
+			$title	= common::IndexToTitle($index);
+			$file = gpFiles::PageFile($title);
+			if( gpFiles::Exists($file) ){
+				unlink($file);
+			}
 		}
 
 		return true;

@@ -758,7 +758,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo $this->Link('Admin_Menu',$img.$langmessage['edit'],'cmd=edit_external&key=[key]',array('title'=>$langmessage['edit'],'data-cmd'=>'gpabox'));
 
 		$img = '<span class="menu_icon cut_list_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&key=[key]',array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'menupost','class'=>'gpconfirm'));
+		echo $this->Link('Admin_Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&index=[key]',array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'menupost','class'=>'gpconfirm'));
 
 		echo '</span>';
 
@@ -864,7 +864,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		$img	= '<span class="menu_icon cut_list_icon"></span>';
 		$attrs	= array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'menupost','class'=>'gpconfirm');
-		echo $this->Link('Admin_Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&key=[key]',$attrs);
+		echo $this->Link('Admin_Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&index=[key]',$attrs);
 
 		$img	= '<span class="menu_icon bin_icon"></span>';
 		$attrs	= array('title'=>$langmessage['delete_page'],'data-cmd'=>'menupost','class'=>'gpconfirm not_special');
@@ -1478,6 +1478,11 @@ class admin_menu_new extends admin_menu_tools{
 		gp_rename::RenameFile($title);
 	}
 
+
+	/**
+	 * Remove from the menu
+	 *
+	 */
 	function Hide(){
 		global $langmessage;
 
@@ -1485,22 +1490,28 @@ class admin_menu_new extends admin_menu_tools{
 			message($langmessage['OOPS'].'(1)');
 			return false;
 		}
-		if( count($this->curr_menu_array) == 1 ){
-			message($langmessage['OOPS'].' (The menu cannot be empty)');
-			return false;
-		}
 
 		$this->CacheSettings();
-		$key = $_POST['key']; //using gplinks.menupost()
-		if( !isset($this->curr_menu_array[$key]) ){
-			message($langmessage['OOPS'].'(3)');
-			return false;
-		}
 
-		if( !$this->RmFromMenu($key) ){
-			message($langmessage['OOPS'].'(4)');
-			$this->RestoreSettings();
-			return false;
+		$_POST		+= array('index'=>'');
+		$indexes 	= explode(',',$_POST['index']);
+
+		foreach($indexes as $index ){
+
+			if( count($this->curr_menu_array) == 1 ){
+				break;
+			}
+
+			if( !isset($this->curr_menu_array[$index]) ){
+				message($langmessage['OOPS'].'(3)');
+				return false;
+			}
+
+			if( !$this->RmFromMenu($index) ){
+				message($langmessage['OOPS'].'(4)');
+				$this->RestoreSettings();
+				return false;
+			}
 		}
 
 		if( $this->SaveMenu(false) ){

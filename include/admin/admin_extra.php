@@ -157,6 +157,7 @@ class admin_extra{
 			$extraName = $file;
 			$data = gpOutput::ExtraContent($file);
 
+
 			if( $i%2 == 0 ){
 				echo '<tr class="even">';
 			}else{

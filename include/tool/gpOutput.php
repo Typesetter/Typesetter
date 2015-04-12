@@ -1192,7 +1192,7 @@ class gpOutput{
 	 */
 	static function ExtraContent( $title, &$file_stats = array() ){
 
-		$file = 'data/_extra/'.$title;
+		$file = '_extra/'.$title;
 
 		$extra_content = array();
 		if( gpFiles::Exists($file) ){

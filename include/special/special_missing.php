@@ -11,7 +11,7 @@ class special_missing{
 
 	function Init(){
 
-		$this->datafile		= 'data/_site/error_data';
+		$this->datafile		= '_site/error_data';
 		$this->error_data	= gpFiles::Get($this->datafile,'error_data');
 
 	}

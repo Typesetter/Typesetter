@@ -40,7 +40,7 @@ class admin_configuration{
 						'desc'=>'textarea',
 
 						'Interface'=>false,
-						'colorbox_style' => array('example1'=>'Example 1', 'example2'=>'Example 2', 'example3'=>'Example 3', 'example4'=>'Example 4', 'example5'=>'Example 5', 'example6'=>'Example 6'),
+						'colorbox_style' => array('example1'=>'Example 1', 'example2'=>'Example 2', 'example3'=>'Example 3', 'example4'=>'Example 4', 'example5'=>'Example 5' ),
 						'language'=>'',
 						'langeditor'=>'',
 						'showsitemap'=>'boolean',

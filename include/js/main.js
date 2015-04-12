@@ -289,9 +289,9 @@ var $gp = {
 
 			$.colorbox.remove();
 			$(selector).colorbox(
-				$gp.cboxSettings({resize:true,rel:selector})
+				$gp.cboxSettings({resize:true,rel:selector,open:true})
 			);
-			$.colorbox.launch(this);
+			//$.colorbox.launch(this);
 		}
 
 	}

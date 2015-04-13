@@ -1079,7 +1079,7 @@ class gpsession{
 	 * Re-enable components that were disabled because of fatal errors
 	 *
 	 */
-	function EnableComponent(){
+	static function EnableComponent(){
 
 		includeFile('admin/admin_errors.php');
 		admin_errors::ClearError($_REQUEST['hash']);

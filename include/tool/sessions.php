@@ -459,7 +459,7 @@ class gpsession{
 		$sess_info = $sessions[$session_id];
 
 		//check ~ip, ~user agent ...
-		if( gp_browser_auth && isset($sess_info['uid']) ){
+		if( gp_browser_auth && !empty($sess_info['uid']) ){
 
 			$auth_uid			= self::auth_browseruid();
 			$auth_uid_legacy	= self::auth_browseruid(true);	//legacy option added to prevent logging users out, added 2.0b2

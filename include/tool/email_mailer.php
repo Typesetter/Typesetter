@@ -3,7 +3,10 @@ defined('is_running') or die('Not an entry point...');
 
 global $gp_mailer;
 //includeFile('tool/email.php');
+
+includeFile('thirdparty/PHPMailer/PHPMailerAutoload.php');
 includeFile('thirdparty/PHPMailer/class.phpmailer.php');
+
 
 
 /**

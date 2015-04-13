@@ -460,8 +460,10 @@ class gpsession{
 
 		//check ~ip, ~user agent ...
 		if( gp_browser_auth && isset($sess_info['uid']) ){
-			$auth_uid = self::auth_browseruid();
-			$auth_uid_legacy = self::auth_browseruid(true);//legacy option added to prevent logging users out, added 2.0b2
+
+			$auth_uid			= self::auth_browseruid();
+			$auth_uid_legacy	= self::auth_browseruid(true);	//legacy option added to prevent logging users out, added 2.0b2
+
 			if( ($sess_info['uid'] != $auth_uid) && ($sess_info['uid'] != $auth_uid_legacy) ){
 				self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
 				message($langmessage['Session Expired'].' (browser auth)');

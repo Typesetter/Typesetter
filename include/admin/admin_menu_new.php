@@ -899,14 +899,15 @@ class admin_menu_new extends admin_menu_tools{
 
 
 		//file stats
-		echo '<div class="not_multiple">';
+		echo '<div>';
 		echo '<b>'.$langmessage['Page Info'].'</b>';
 		echo '<span>';
-		echo '<a>'.$langmessage['Slug/URL'].': [title]</a>';
-		echo '<a>'.$langmessage['Content Type'].': [types]</a>';
+		echo '<a class="not_multiple">'.$langmessage['Slug/URL'].': [title]</a>';
+		echo '<a class="not_multiple">'.$langmessage['Content Type'].': [types]</a>';
+		echo '<a class="not_special only_multiple">'.sprintf($langmessage['%s Pages'],'[files]').'</a>';
 		echo '<a class="not_special">'.$langmessage['File Size'].': [size]</a>';
-		echo '<a class="not_special">'.$langmessage['Modified'].': [mtime]</a>';
-		echo '<a>Data Index: [key]</a>';
+		echo '<a class="not_special not_multiple">'.$langmessage['Modified'].': [mtime]</a>';
+		echo '<a class="not_multiple">Data Index: [key]</a>';
 		echo '</span>';
 		echo '</div>';
 

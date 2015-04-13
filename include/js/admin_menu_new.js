@@ -229,7 +229,9 @@
 
 			//if multiple selected, get all the keys
 			if( multiple_selected ){
+
 				data.key			= $current.find('.gp_label').map(function(){ return $(this).data('arg');}).toArray().join(',');
+				data.files			= $current.length;
 
 
 			//external link
@@ -241,7 +243,7 @@
 
 
 
-			var reg,parts = ['title','key','url','layout_label','types','size','mtime','opts'];
+			var reg,parts = ['title','key','url','layout_label','types','size','mtime','opts','files'];
 			$.each(parts,function(){
 				reg = new RegExp('(%5B'+this+'%5D|\\['+this+'\\])','gi');
 				this_html = this_html.replace(reg,data[this]);
@@ -257,6 +259,9 @@
 			//multiple
 			if( multiple_selected ){
 				$admin_menu_tools.find('.not_multiple').hide();
+				$admin_menu_tools.find('.only_multiple').show();
+			}else{
+				$admin_menu_tools.find('.only_multiple').hide();
 			}
 
 

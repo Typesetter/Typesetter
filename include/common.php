@@ -195,6 +195,11 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 		return false;
 	}
 
+	// since we supported php 4.3+, there may be a lot of strict errors
+	if( $errno === E_STRICT ){
+		return;
+	}
+
 	//get the backtrace and function where the error was thrown
 	$backtrace = debug_backtrace();
 
@@ -228,11 +233,6 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 			return false;
 		}
 
-
-		// since we supported php 4.3+, there may be a lot of strict errors
-		if( $errno === E_STRICT ){
-			return;
-		}
 
 		//if it's an addon error, only report if the addon was installed remotely
 		if( isset($addonFolderName) && $addonFolderName ){

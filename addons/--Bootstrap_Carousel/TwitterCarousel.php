@@ -59,7 +59,7 @@ class TwitterCarousel{
 			if( empty($img) ){
 				continue;
 			}
-			$caption =& trim($section_data['captions'][$i]);
+			$caption = trim($section_data['captions'][$i]);
 
 			$class = '';
 			if( $j == 0 ){

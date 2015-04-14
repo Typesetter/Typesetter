@@ -4,14 +4,24 @@ defined('is_running') or die('Not an entry point...');
 
 class TwitterCarousel{
 
+	const content_key = 'Carousel232';
+
 	/**
-	 * Generate a pseudo-random key for the content key to prevent duplicates
+	 * Determine if the $type matches this content key
 	 *
 	 */
-	static function ContentKey(){
+	static function ContentKeyMatch($type){
 		global $addonFolderName;
-		return $addonFolderName;
+
+		if( $addonFolderName === $type ){ //legacy support
+			return true;
+		}
+
+		if( $type === self::content_key ){
+			return true;
+		}
 	}
+
 
 
 	/**
@@ -20,7 +30,7 @@ class TwitterCarousel{
 	 */
 	static function SectionTypes($section_types, $generated_key = false ){
 
-		$section_types[self::ContentKey()] = array('label' => 'Bootstrap Carousel Gallery');
+		$section_types[self::content_key] = array('label' => 'Bootstrap Carousel Gallery');
 
 		return $section_types;
 	}
@@ -32,7 +42,7 @@ class TwitterCarousel{
 	static function SectionToContent($section_data){
 		global $dataDir;
 
-		if( $section_data['type'] != self::ContentKey() ){
+		if( !self::ContentKeyMatch($section_data['type']) ){
 			return $section_data;
 		}
 
@@ -126,7 +136,8 @@ class TwitterCarousel{
 	 * @static
 	 */
 	static function DefaultContent($default_content,$type){
-		if( $type != self::ContentKey() ){
+
+		if( !self::ContentKeyMatch($type) ){
 			return $default_content;
 		}
 
@@ -165,19 +176,20 @@ class TwitterCarousel{
 	 * @static
 	 *
 	 */
-	static function SaveSection($return,$section,$type){
+	static function SaveSection($return, $section, $type){
 		global $page;
-		if( $type != self::ContentKey() ){
+
+		if( !self::ContentKeyMatch($type) ){
 			return $return;
 		}
 
 		$_POST += array('auto_start'=>'','images'=>array());
 
-		$page->file_sections[$section]['auto_start'] = ($_POST['auto_start'] == 'true');
-		$page->file_sections[$section]['images'] = $_POST['images'];
-		$page->file_sections[$section]['captions'] = $_POST['captions'];
-		$page->file_sections[$section]['height'] = $_POST['height'];
-		$page->file_sections[$section]['content_version'] = 2;
+		$page->file_sections[$section]['auto_start']		= ($_POST['auto_start'] == 'true');
+		$page->file_sections[$section]['images']			= $_POST['images'];
+		$page->file_sections[$section]['captions']			= $_POST['captions'];
+		$page->file_sections[$section]['height']			= $_POST['height'];
+		$page->file_sections[$section]['content_version']	= 2;
 
 		if( isset($_POST['interval_speed']) && is_numeric($_POST['interval_speed']) ){
 			$page->file_sections[$section]['interval_speed'] = $_POST['interval_speed'];
@@ -229,7 +241,8 @@ class TwitterCarousel{
 	 */
 	static function InlineEdit_Scripts($scripts,$type){
 		global $addonRelativeCode;
-		if( $type !== self::ContentKey() ){
+
+		if( !self::ContentKeyMatch($type) ){
 			return $scripts;
 		}
 

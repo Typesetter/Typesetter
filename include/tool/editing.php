@@ -758,14 +758,14 @@ class gp_edit{
 		echo '<span class="label">';
 		echo $langmessage['File Include'];
 		echo '</span>';
-		echo '<input type="text" size="" id="gp_file_include" name="file_include" class="autocomplete" value="'.htmlspecialchars($file_content).'" />';
+		echo '<input type="text" size="" id="gp_file_include" name="file_include" class="title-autocomplete" value="'.htmlspecialchars($file_content).'" />';
 		echo '</div>';
 
 		echo '<div class="gp_inlude_edit">';
 		echo '<span class="label">';
 		echo $langmessage['gadgets'];
 		echo '</span>';
-		echo '<input type="text" size="" id="gp_gadget_include" name="gadget_include" class="autocomplete" value="'.htmlspecialchars($gadget_content).'" />';
+		echo '<input type="text" size="" id="gp_gadget_include" name="gadget_include" class="title-autocomplete" value="'.htmlspecialchars($gadget_content).'" />';
 		echo '</div>';
 
 		echo '<div id="gp_option_area">';
@@ -807,9 +807,11 @@ class gp_edit{
 	static function SectionFromPost( &$existing_section, $section_num, $title, $file_stats ){
 		global $page, $gpAdmin;
 
-		$section_before = $existing_section;
-		$type = $existing_section['type'];
-		$save_this = false;
+		$section_before		= $existing_section;
+		$type				= $existing_section['type'];
+		$save_this			= false;
+
+
 		switch($type){
 			case 'text':
 				$save_this = true;
@@ -824,18 +826,17 @@ class gp_edit{
 			break;
 		}
 
-
 		// Hack: SaveSection used $page->file_sections
-		$page->file_sections[$section_num] = $existing_section;
-		$save_this = gpPlugin::Filter( 'SaveSection', array( $save_this, $section_num, $type) );
-		$existing_section = $page->file_sections[$section_num];
+		$page->file_sections[$section_num]	= $existing_section;
+		$save_this							= gpPlugin::Filter( 'SaveSection', array( $save_this, $section_num, $type) );
+		$existing_section					= $page->file_sections[$section_num];
 
 		if( !$save_this ){
 			$page->file_sections[$section_num] = $existing_section = $section_before;
 		}
 
-		$page->file_sections[$section_num]['modified'] = time();
-		$page->file_sections[$section_num]['modified_by'] = $gpAdmin['username'];
+		$page->file_sections[$section_num]['modified']		= time();
+		$page->file_sections[$section_num]['modified_by']	= $gpAdmin['username'];
 
 		return $save_this;
 	}

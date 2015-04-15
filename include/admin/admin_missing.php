@@ -340,7 +340,7 @@ class admin_missing extends special_missing{
 		echo '<tr><td>';
 		echo $langmessage['Target URL'];
 		echo '</td><td>';
-		echo '<input type="text" name="target" value="'.htmlspecialchars($values['target']).'" class="autocomplete gpinput" size="40" />';
+		echo '<input type="text" name="target" value="'.htmlspecialchars($values['target']).'" class="title-autocomplete gpinput" size="40" />';
 		echo '</td></tr>';
 
 		echo '<tr><td>';

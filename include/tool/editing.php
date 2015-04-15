@@ -504,7 +504,7 @@ class gp_edit{
 					$url = common::GetUrl($url,'',false);
 					$url = rawurldecode($url);
 				}
-				$array[] = array($label,$slug);
+				$array[] = array($info['label'],$url);
 			}
 		}
 

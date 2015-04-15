@@ -483,11 +483,6 @@ class gp_edit{
 
 
 		//internal link array
-		if( $options['var_name'] ){
-			$code = 'var '.$options['var_name'].'= ';
-		}
-		$code .= '[';
-
 		$array = array();
 		foreach($gp_index as $slug => $id){
 
@@ -498,7 +493,6 @@ class gp_edit{
 				$slug = common::GetUrl($slug,'',false);
 				$slug = rawurldecode($slug);
 			}
-			$code .= '["'.addslashes($label).'","'.addslashes($slug).'"],';
 			$array[] = array($label,$slug);
 		}
 
@@ -510,15 +504,14 @@ class gp_edit{
 					$url = common::GetUrl($url,'',false);
 					$url = rawurldecode($url);
 				}
-				$code .= '["'.addslashes($info['label']).'","'.addslashes($url).'"],';
 				$array[] = array($label,$slug);
 			}
 		}
-		$code = trim($code,',');
+
+		$code = json_encode($array);
+
 		if( $options['var_name'] ){
-			$code .= '];';
-		}else{
-			$code = json_encode($array);
+			$code = 'var '.$options['var_name'].' = '.$code.';';
 		}
 		return $code;
 	}

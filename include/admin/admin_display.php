@@ -228,6 +228,11 @@ class admin_display extends display{
 				includeFile('tool/update.php');
 				new update_class('embededcheck');
 			return;
+
+			case 'autocomplete-titles':
+			$opts = array('var_name'=>false);
+			echo gp_edit::AutoCompleteValues(false,$opts);
+			die();
 		}
 
 		$page->head_js[] = '/include/js/auto_width.js';

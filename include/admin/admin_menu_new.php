@@ -373,7 +373,7 @@ class admin_menu_new extends admin_menu_tools{
 		// search form
 		echo '<form action="'.common::GetUrl('Admin_Menu').'" method="post" id="page_search">';
 		$_REQUEST += array('q'=>'');
-		echo '<input type="text" name="q" size="15" value="'.htmlspecialchars($_REQUEST['q']).'" class="gptext gpinput" /> ';
+		echo '<input type="text" name="q" size="15" value="'.htmlspecialchars($_REQUEST['q']).'" class="gptext gpinput title-autocomplete" /> ';
 		echo '<input type="submit" name="cmd" value="'.$langmessage['search pages'].'" class="gpbutton" />';
 		echo '<input type="hidden" name="menu" value="search" />';
 		echo '</form>';
@@ -421,7 +421,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<div class="homepage_setting">';
 		$this->HomepageDisplay();
 		echo '</div>';
-		gp_edit::PrepAutoComplete(true,false);
+		gp_edit::PrepAutoComplete();
 
 
 

@@ -16,7 +16,7 @@ class admin_missing extends special_missing{
 		global $langmessage;
 
 		$this->Init();
-		gp_edit::PrepAutoComplete(true,false);
+		gp_edit::PrepAutoComplete();
 
 
 		$cmd = common::GetCommand();

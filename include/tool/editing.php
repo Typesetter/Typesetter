@@ -483,7 +483,12 @@ class gp_edit{
 
 
 		//internal link array
-		$code = 'var '.$options['var_name'].'=[';
+		if( $options['var_name'] ){
+			$code = 'var '.$options['var_name'].'= ';
+		}
+		$code .= '[';
+
+		$array = array();
 		foreach($gp_index as $slug => $id){
 
 			$label = common::GetLabel($slug);
@@ -494,6 +499,7 @@ class gp_edit{
 				$slug = rawurldecode($slug);
 			}
 			$code .= '["'.addslashes($label).'","'.addslashes($slug).'"],';
+			$array[] = array($label,$slug);
 		}
 
 
@@ -505,24 +511,26 @@ class gp_edit{
 					$url = rawurldecode($url);
 				}
 				$code .= '["'.addslashes($info['label']).'","'.addslashes($url).'"],';
+				$array[] = array($label,$slug);
 			}
 		}
 		$code = trim($code,',');
-		$code .= '];';
+		if( $options['var_name'] ){
+			$code .= '];';
+		}else{
+			$code = json_encode($array);
+		}
 		return $code;
 	}
 
 
-	static function PrepAutoComplete($autocomplete_js=true,$GetUrl=true){
+	static function PrepAutoComplete(){
 		global $page;
 
 		common::LoadComponents('autocomplete');
-		if( $autocomplete_js ){
-			$page->head_js[] = '/include/js/autocomplete.js';
-		}
-
-		$page->head_script .= gp_edit::AutoCompleteValues($GetUrl);
+		$page->head_js[] = '/include/js/autocomplete.js';
 	}
+
 
 	/**
 	 * Use ckeditor for to edit content
@@ -545,7 +553,8 @@ class gp_edit{
 		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/ckeditor_34/ckeditor.js').'?'.rawurlencode(gpversion).'"></script>';
 		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/js/ckeditor_config.js').'?'.rawurlencode(gpversion).'"></script>';
 
-		gp_edit::PrepAutoComplete(false,true);
+		common::LoadComponents('autocomplete');
+		$page->head_script .= gp_edit::AutoCompleteValues(true);
 
 		ob_start();
 		echo "\n\n";

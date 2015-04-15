@@ -170,6 +170,8 @@ class special_display extends display{
 		header('Content-type: application/javascript');
 		includeFile('tool/editing.php');
 
+		trigger_error('Deprecated: special_extrajs');
+
 		$_GET += array('which'=>array());
 
 		foreach((array)$_GET['which'] as $which_code){

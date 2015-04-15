@@ -251,7 +251,8 @@ class gpAjax{
 
 			if( !file_exists($full_path) ){
 				if( common::LoggedIn() ){
-					echo 'if(isadmin){alert("Admin Notice: The following file could not be found: \n\n'.addslashes($full_path).'");}';
+					$msg = 'Admin Notice: The following file could not be found: \n\n'.$full_path;
+					echo 'if(isadmin){alert('.json_encode($msg).');}';
 				}
 				continue;
 			}

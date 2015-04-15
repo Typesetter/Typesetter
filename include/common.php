@@ -2654,7 +2654,7 @@ class common{
 		//error function defined to prevent the default error function in main.js from firing
 		if( $jquery ){
 			echo '<script type="text/javascript" style="display:none !important">';
-			echo '$.ajax("'.addslashes($img_path).'",{error:function(){}});';
+			echo '$.ajax('.json_encode($img_path).',{error:function(){}});';
 			echo '</script>';
 			return;
 		}

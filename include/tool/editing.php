@@ -789,13 +789,13 @@ class gp_edit{
 
 
 		//gadget include autocomplete
-		$code = 'var source=[';
+		$codea = array();
 		if( isset($config['gadgets']) ){
 			foreach($config['gadgets'] as $uniq => $info){
-				$code .= '["'.addslashes($uniq).'","'.addslashes($uniq).'"],';
+				$codea[] = array($uniq,$uniq);
 			}
 		}
-		$code .= ']';
+		$code = 'var source='.json_encode($codea);
 
 		$page->ajaxReplace[] = array('gp_autocomplete_include','gadget',$code);
 

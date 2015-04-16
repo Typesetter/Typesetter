@@ -383,10 +383,9 @@ class admin_tools{
 			//toolbar
 			echo '<div class="toolbar">';
 				echo '<a class="toggle_panel" data-cmd="toggle_panel"></a>';
-				//echo common::Link('','','','class="icon_admin_home"');
 				echo common::Link('','<i class="gpicon_home"></i>');
-				echo common::Link('Admin','','','class="icon_admin"');
-				echo common::Link('special_gpsearch','','',array('class'=>'icon_admin_search','data-cmd'=>'gpabox'));
+				echo common::Link('Admin','<i class="gpicon_admin"></i>');
+				echo common::Link('special_gpsearch','<i class="gpicon_search"></i>','',array('data-cmd'=>'gpabox'));
 				echo '<a class="extra admin_arrow_out"></a>';
 			echo '</div>';
 

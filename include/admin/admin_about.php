@@ -5,15 +5,15 @@ class admin_about{
 
 	function __construct(){
 
-		echo '<div style="width:600px;padding:0 20px;">';
-		echo '<h2>gpEasy CMS Version '.gpversion.'</h2>';
+		echo '<h2>gpEasy CMS</h2>';
+
+		echo '<p>You\'re currently using version '.gpversion.' of our free, open source and easy to use content management system.</p>';
+
 		echo '<p>';
-		echo 'Free, Open Source and easy to use.';
-		echo '</p>';
-		echo '<p>';
-		echo ' The gpEasy CMS code is <a href="https://github.com/oyejorge/gpEasy-CMS">hosted on github</a> ';
+		echo ' Our code is <a href="https://github.com/oyejorge/gpEasy-CMS">hosted on github</a> ';
 		echo 'and licensed under version 2 of the <a href="http://www.gnu.org/licenses/gpl-2.0.html">GNU General Public License</a>. ';
 		echo '</p>';
+
 
 
 		echo '<h3>Thanks For Using gpEasy</h3>';
@@ -64,8 +64,6 @@ class admin_about{
 			echo '</td></tr>';
 		}
 		echo '</table>';
-
-		echo '</div>';
 
 	}
 

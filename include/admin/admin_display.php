@@ -191,11 +191,13 @@ class admin_display extends display{
 				return;
 
 				case 'Admin_Preferences':
+					$this->label = $langmessage['Preferences'];
 					includeFile('admin/admin_preferences.php');
 					new admin_preferences();
 				return;
 
 				case 'Admin_About':
+					$this->label = 'About gpEasy';
 					includeFile('admin/admin_about.php');
 					new admin_about();
 				return;

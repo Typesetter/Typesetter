@@ -2397,23 +2397,12 @@ class gpOutput{
 			$buffer = substr_replace($buffer,$replacement,$pos,$len+20);
 		}
 
-
-		if( gpdebug_tools && function_exists('memory_get_peak_usage') && ($pos = strpos($buffer,'<body')) ){
-			$pos = strpos($buffer,'>',$pos);
-			$max_used = memory_get_peak_usage();
-			//$limit = @ini_get('memory_limit'); //need to convert to byte value
-			//$percentage = round($max_used/$limit,2);
-			$replacement = "\n".'<div style="position:absolute;top:-1px;right:0;z-index:10000;padding:5px 10px;background:rgba(255,255,255,0.95);border:1px solid rgba(0,0,0,0.2);font-size:11px">'
-					.'<b>Debug Tools</b>'
-					.'<table>'
-					.'<tr><td>Memory Usage:</td><td> '.number_format(memory_get_usage()).'</td></tr>'
-					.'<tr><td>Memory:</td><td> '.number_format($max_used).'</td></tr>'
-					//.'<tr><td>% of Limit:</td><td> '.$percentage.'%</td></tr>'
-					.'<tr><td>Time (PHP):</td><td> '.microtime_diff(gp_start_time,microtime()).'</td></tr>'
-					.'<tr><td>Time (Request):</td><td> '.microtime_diff($_SERVER['REQUEST_TIME'],microtime()).'</td></tr>'
-					.'</table>'
-					.'</div>';
-			$buffer = substr_replace($buffer,$replacement,$pos+1,0);
+		if( strpos($buffer,'<body') !== false ){
+			if( function_exists('memory_get_peak_usage') ){
+				$buffer = str_replace('<span gpeasy-memory-usage>?</span>',admin_tools::FormatBytes(memory_get_usage()),$buffer);
+				$buffer = str_replace('<span gpeasy-memory-max>?</span>',admin_tools::FormatBytes(memory_get_peak_usage()),$buffer);
+			}
+			$buffer = str_replace('<span gpeasy-time-php>?</span>',microtime_diff(gp_start_time,microtime(),3),$buffer);
 		}
 
 		return $buffer;

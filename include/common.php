@@ -13,7 +13,6 @@ set_error_handler('showError');
 
 gp_defined('gp_restrict_uploads',false);
 gp_defined('gpdebugjs',gpdebug);
-gp_defined('gpdebug_tools',false);
 gp_defined('gptesting',false);
 gp_defined('gptesting',false);
 gp_defined('gp_cookie_cmd',true);
@@ -27,7 +26,6 @@ gp_defined('E_STRICT',2048);
 gp_defined('E_RECOVERABLE_ERROR',4096);
 gp_defined('E_DEPRECATED',8192);
 gp_defined('E_USER_DEPRECATED',16384);
-gp_defined('gpdebug_tools',false);
 gp_defined('gp_backup_limit',10);
 gp_defined('gp_write_lock_time',5);
 gp_defined('gp_dir_index',true);
@@ -317,7 +315,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
  * Calculate the difference between two micro times
  *
  */
-function microtime_diff($a, $b = false, $eff = 6) {
+function microtime_diff($a, $b = false, $eff = 6){
 	if( !$b ) $b = microtime();
 	$a = array_sum(explode(" ", $a));
 	$b = array_sum(explode(" ", $b));

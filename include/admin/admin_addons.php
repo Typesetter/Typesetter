@@ -535,9 +535,8 @@ class admin_addons extends admin_addon_install{
 
 		echo '<div class="panelgroup" id="panelgroup_'.md5($addon_key).'">';
 
-		echo '<span class="icon_plug">';
-		echo common::Link('Admin_Addons/'.rawurlencode($addon_key),$addon_config['name']);
-		echo '</span>';
+		$label = '<i class="gpicon_plug"></i>'.$addon_config['name'];
+		echo common::Link('Admin_Addons/'.rawurlencode($addon_key),$label);
 
 		echo '<div class="panelgroup2">';
 		echo '<ul class="submenu">';

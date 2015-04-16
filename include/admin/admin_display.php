@@ -244,7 +244,10 @@ class admin_display extends display{
 
 		//resources
 		echo '<div class="panelgroup" id="panelgroup_resources">';
-		echo '<span class="icon_page_gear"><span>'.$langmessage['resources'].'</span></span>';
+		echo '<span>';
+		echo '<i class="gpicon_page_gear"></i>';
+		echo $langmessage['resources'];
+		echo '</span>';
 		echo '<div class="panelgroup2">';
 		echo '<ul>';
 

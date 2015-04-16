@@ -511,7 +511,7 @@ class admin_tools{
 
 
 		//updates
-		if( count(self::$new_versions) > 0 ){
+		//if( count(self::$new_versions) > 0 ){
 
 			ob_start();
 			if( gp_remote_update && isset(self::$new_versions['core']) ){
@@ -539,7 +539,7 @@ class admin_tools{
 			}
 
 			$list = ob_get_clean();
-			if( !empty($list) ){
+			//if( !empty($list) ){
 				echo '<div class="panelgroup" id="panelgroup_versions'.$id_piece.'">';
 				self::PanelHeading($in_panel, $langmessage['updates'], 'icon_rfrsh', 'upd' );
 				echo '<ul class="submenu">';
@@ -548,9 +548,9 @@ class admin_tools{
 				echo '</ul>';
 				echo '</div>';
 				echo '</div>';
-			}
+			//}
 
-		}
+		//}
 
 
 		//username
@@ -598,14 +598,20 @@ class admin_tools{
 		global $gpAdmin;
 
 		if( !$in_panel ){
-			echo '<span class="'.$icon.'"><span>'.$label.'</span></span>';
+			//echo '<span class="'.$icon.'"><span>'.$label.'</span></span>';
+			echo '<span>';
+			echo '<i class="gp'.$icon.'"></i>';
+			echo '<span>'.$label.'</span>';
+			echo '</span>';
 			echo '<div class="panelgroup2">';
 			return;
 		}
 
-		echo '<a class="toplink '.$icon.'" data-cmd="toplink" data-arg="'.$arg.'"><span>';
-		echo $label;
-		echo '</span></a>';
+		//echo '<a class="toplink '.$icon.'" data-cmd="toplink" data-arg="'.$arg.'"><span>';
+		echo '<a class="toplink" data-cmd="toplink" data-arg="'.$arg.'">';
+		echo '<i class="gp'.$icon.'"></i>';
+		echo '<span>'.$label.'</span>';
+		echo '</a>';
 
 		if( $gpAdmin['gpui_vis'] == $arg ){
 			echo '<div class="panelgroup2 in_window">';

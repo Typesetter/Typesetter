@@ -703,7 +703,7 @@ table.tablesorter th.gp_header_desc:before{
 
 #simplepanel .toolbar{
 	position:relative;
-	border-bottom:1px solid #111;
+	//border-bottom:1px solid #111;
 	cursor:move;
 	line-height:0;
 	}
@@ -749,51 +749,38 @@ table.tablesorter th.gp_header_desc:before{
 
 
 /* icons */
-#simplepanel .icon_app,
-#adminlinks2 .icon_app span{
-	.gpimg( 'admin_icons.png', 0, -65px );
+.gpicon_app,
+.gpicon_chart,
+.gpicon_edapp,
+.gpicon_page_gear,
+.gpicon_page,
+.gpicon_plug,
+.gpicon_rfrsh,
+.gpicon_user,{
+	height:16px;
+	width:16px;
+	display:inline-block;
+	vertical-align:top;
+	.gpimg( 'admin_icons.png', 50%, -72px );
 	}
-#simplepanel .icon_plug,
-#adminlinks2 .icon_plug span,
-#adminlinks2 .icon_plug a{
-	.gpimg( 'admin_icons.png', 0, -97px );
-	}
+
+.gpicon_app{		background-position: 50% -72px; }
+.gpicon_chart{		background-position: 50% -580px; }
+.gpicon_edapp{		background-position: 50% -552px; }
+.gpicon_page_gear{	background-position: 50% -264px; }
+.gpicon_page{		background-position: 50% -232px; }
+.gpicon_plug{		background-position: 50% -105px; }
+.gpicon_rfrsh{		background-position: 50% -168px; }
+.gpicon_user{		background-position: 50% -200px; }
+
+
+
 .img_icon_plug{
 	display:inline-block;
 	height:16px;
 	width:16px;
 	vertical-align:top;
 	.gpimg( 'admin_icons.png', -8px, -105px );
-	}
-#simplepanel .icon_cog, /*deprecated 4.3 */
-#adminlinks2 .icon_cog span{
-	.gpimg( 'admin_icons.png', 0, -129px );
-	}
-
-#simplepanel .icon_edapp,
-#adminlinks2 .icon_edapp span{
-	.gpimg( 'admin_icons.png', 0, -545px );
-	}
-
-#simplepanel .icon_rfrsh,
-#adminlinks2 .icon_rfrsh span{
-	.gpimg( 'admin_icons.png', 0, -161px );
-	}
-#simplepanel .icon_user,
-#adminlinks2 .icon_user span{
-	.gpimg( 'admin_icons.png', 0, -193px );
-	}
-#simplepanel .icon_page,
-#adminlinks2 .icon_page span{
-	.gpimg( 'admin_icons.png', 0, -225px );
-	}
-#simplepanel .icon_page_gear,
-#adminlinks2 .icon_page_gear span{
-	.gpimg( 'admin_icons.png', 0, -257px );
-	}
-#simplepanel .icon_chart,
-#adminlinks2 .icon_chart span{
-	.gpimg( 'admin_icons.png', 0, -572px );
 	}
 
 
@@ -830,29 +817,23 @@ table.tablesorter th.gp_header_desc:before{
 /* toplink */
 #simplepanel .toplink{
 	text-decoration:none;
-	font-weight:bold;
-	color:#f5f5f5 !important;
 	display:block;
 	white-space:nowrap;
 	margin:0;
-	border-top:1px solid #3f3f3f;
-	border-bottom:1px solid #000;
-	height:30px;
+	height:16px;
+	padding:8px;
 	}
 
-#simplepanel .toplink img{
-	vertical-align:top;
-	height:16px;
-	width:16px;
-	}
 #simplepanel .toplink span{
-	padding:7px 8px 7px 30px;
-    display: block;
+    display: inline-block;
     font-size: 13px;
-    line-height: 14px;
+    line-height: 16px;
+    height:16px;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width:130px;
+    color:#f5f5f5;
+    padding-left:8px;
 	}
 #simplepanel.compact .toplink span{
 	display:none;
@@ -878,6 +859,8 @@ table.tablesorter th.gp_header_desc:before{
 #simplepanel .submenu{
 	position:relative;
 	background-color:#2b2b2b;
+	border-top:1px solid #111;
+	border-bottom:1px solid #3f3f3f;
 	margin:0;
 	padding:0;
 	}
@@ -1110,25 +1093,25 @@ table.tablesorter th.gp_header_desc:before{
 	}
 
 
+#adminlinks2 > div > a,
 #adminlinks2 > div > span{
-	padding:0;
+	padding:7px 3px;
 	display:block;
 	white-space:nowrap;
 	overflow:hidden;
 	text-overflow:ellipsis;
-	}
-
-#adminlinks2 > div > span > a,
-#adminlinks2 > div > span > span{
-	padding:7px 0 3px 30px;
-	display:block;
 	text-shadow: 0 1px 0 #fff;
 	font-size:18px;
-	vertical-align:middle;
 	color:#333 !important;
 	}
+
+#adminlinks2 > div > a > i,
+#adminlinks2 > div > span > i{
+	margin-right:7px;
+	}
+
 #adminlinks2 > div > span.layout_label > a {
-	padding-left:13px;
+	color:#333;
 	}
 
 #adminlinks2 ul,

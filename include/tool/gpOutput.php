@@ -2400,7 +2400,8 @@ class gpOutput{
 			}
 
 			$time	= microtime(true) - gp_start_time;
-			$buffer	= str_replace('<span gpeasy-time-php>?</span>',round($time,3),$buffer);
+			$buffer	= str_replace('<span gpeasy-seconds>?</span>',round($time,3),$buffer);
+			$buffer	= str_replace('<span gpeasy-ms>?</span>',round($time*1000),$buffer);
 		}
 
 		return $buffer;

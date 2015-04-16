@@ -586,12 +586,12 @@ class admin_tools{
 			echo '<li class="submenu_top"><a class="submenu_top">hmm</a></li>';
 			echo '<li><a><span gpeasy-memory-usage>?</span> Memory</a></li>';
 			echo '<li><a><span gpeasy-memory-max>?</span> Max Memory</a></li>';
-			echo '<li><a><span gpeasy-time-php>?</span> Seconds</a></li>';
+			echo '<li><a><span gpeasy-seconds>?</span> Seconds</a></li>';
+			echo '<li><a><span gpeasy-ms>?</span> Milliseconds</a></li>';
+			echo '<li><a>0 DB Queries</a></li>';
 			echo '</ul>';
 		echo '</div>';
 		echo '</div>';
-
-
 	}
 
 	static function PanelHeading( $in_panel, $label, $icon, $arg ){

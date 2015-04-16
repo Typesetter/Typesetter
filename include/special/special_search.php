@@ -26,14 +26,11 @@ class special_gpsearch{
 
 		//admin popup or visitor
 		$_REQUEST += array('q'=>'');
-		$start_time = microtime();
 		if( common::LoggedIn() && isset($_REQUEST['gpx_content']) && $_REQUEST['gpx_content'] == 'gpabox' ){
 			$this->AdminSearch();
 		}else{
 			$this->Search();
 		}
-
-		//echo '<p>'.microtime_diff($start_time,microtime()).' seconds</p>';
 	}
 
 	function AdminSearch(){

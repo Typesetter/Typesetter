@@ -1,7 +1,7 @@
 <?php
 
 
-define('gp_start_time',microtime());
+define('gp_start_time',microtime(true));
 
 defined('is_running') or define('is_running',true);
 require_once('common.php');

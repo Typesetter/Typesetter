@@ -983,7 +983,6 @@ class gpOutput{
 
 
 
-			//$start_time = microtime();
 			//reduce the menu to the current group
 			$submenu = gpOutput::MenuReduce_Group($menu,$curr_title_key,$expand_level,$curr_level);
 			//message('group: ('.count($submenu).') '.showArray($submenu));
@@ -1021,9 +1020,6 @@ class gpOutput{
 			// titles above selected title, deeper than $expand_level, and within the group
 			gpOutput::MenuReduce_Sub($good_titles,$submenu,$curr_title_key,$expand_level,$curr_level);
 			gpOutput::MenuReduce_Sub($good_titles,array_reverse($submenu),$curr_title_key,$expand_level,$curr_level);
-
-			//message('time: '.microtime_diff($start_time,microtime()));
-
 		}
 
 
@@ -2402,7 +2398,9 @@ class gpOutput{
 				$buffer = str_replace('<span gpeasy-memory-usage>?</span>',admin_tools::FormatBytes(memory_get_usage()),$buffer);
 				$buffer = str_replace('<span gpeasy-memory-max>?</span>',admin_tools::FormatBytes(memory_get_peak_usage()),$buffer);
 			}
-			$buffer = str_replace('<span gpeasy-time-php>?</span>',microtime_diff(gp_start_time,microtime(),3),$buffer);
+
+			$time	= microtime(true) - gp_start_time;
+			$buffer	= str_replace('<span gpeasy-time-php>?</span>',round($time,3),$buffer);
 		}
 
 		return $buffer;

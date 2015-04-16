@@ -312,14 +312,11 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 
 
 /**
- * Calculate the difference between two micro times
- *
+ * Deprecated
+ * 2015-04-15
  */
 function microtime_diff($a, $b = false, $eff = 6){
-	if( !$b ) $b = microtime();
-	$a = array_sum(explode(" ", $a));
-	$b = array_sum(explode(" ", $b));
-	return sprintf('%0.'.$eff.'f', $b-$a);
+	trigger_error('microtime_diff is deprecated');
 }
 
 

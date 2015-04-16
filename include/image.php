@@ -1,7 +1,7 @@
 <?php
 
 if( !defined('is_running' ) ){
-	$start_time = microtime();
+
 	define('is_running',true);
 	define('gpdebug',false);
 	define('gp_cookie_cmd',false);

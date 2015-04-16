@@ -2715,13 +2715,11 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<form action="'.common::GetUrl('Admin_Menu').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="homepage_save" />';
 
-		echo '<h3>';
+		echo '<h3><i class="gpicon_home"></i>';
 		echo $langmessage['Homepage'];
 		echo '</h3>';
 
 		echo '<p class="homepage_setting">';
-		echo '<span class="icon_admin_home"></span>';
-		echo ' &nbsp; ';
 		echo '<input type="text" class="title-autocomplete gpinput" name="homepage" />';
 		echo '</p>';
 
@@ -2741,7 +2739,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		$label = common::GetLabelIndex($config['homepath_key']);
 
-		echo '<span class="icon_admin_home"></span>';
+		echo '<span class="gpicon_home"></span>';
 		echo $langmessage['Homepage'].': ';
 		echo common::Link('Admin_Menu',$label,'cmd=homepage_select','data-cmd="gpabox"');
 	}

@@ -3675,17 +3675,20 @@ class gpFiles{
 				@chmod($dir,gp_chmod_dir); //some systems need more than just the 0755 in the mkdir() function
 			}
 
+
+			// make sure there's an index.html file
+			// only check if we just created the directory, we don't want to keep creating an index.html file if a user deletes it
+			if( $index && gp_dir_index ){
+				$indexFile = $dir.'/index.html';
+				if( !file_exists($indexFile) ){
+					//not using gpFiles::Save() so we can avoid infinite looping (it's safe since we already know the directory exists and we're not concerned about the content)
+					file_put_contents($indexFile,'<html></html>');
+					@chmod($indexFile,gp_chmod_file);
+				}
+			}
+
 		}
 
-		//make sure there's an index.html file
-		if( $index && gp_dir_index ){
-			$indexFile = $dir.'/index.html';
-			if( !file_exists($indexFile) ){
-				//not using gpFiles::Save() so we can avoid infinite looping (it's safe since we already know the directory exists and we're not concerned about the content)
-				file_put_contents($indexFile,'<html></html>');
-				@chmod($indexFile,gp_chmod_file);
-			}
-		}
 
 		return true;
 	}

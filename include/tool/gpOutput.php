@@ -2393,7 +2393,7 @@ class gpOutput{
 			$buffer = substr_replace($buffer,$replacement,$pos,$len+20);
 		}
 
-		if( strpos($buffer,'<body') !== false ){
+		if( strpos($buffer,'<body') !== false && class_exists('admin_tools') ){
 			if( function_exists('memory_get_peak_usage') ){
 				$buffer = str_replace('<span gpeasy-memory-usage>?</span>',admin_tools::FormatBytes(memory_get_usage()),$buffer);
 				$buffer = str_replace('<span gpeasy-memory-max>?</span>',admin_tools::FormatBytes(memory_get_peak_usage()),$buffer);

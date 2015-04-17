@@ -34,6 +34,7 @@ gp_defined('gp_remote_themes',gp_remote_addons);
 gp_defined('gp_remote_update',gp_remote_addons);
 gp_defined('gp_unique_addons',false);
 gp_defined('gp_data_type','.php');
+gp_defined('gp_default_theme','Three_point_5/Shore'); 	//Bootswatch_Flatly/4_Sticky_Footer
 
 
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php');
@@ -772,18 +773,19 @@ class display{
 
 
 		if( !$layout_info ){
-			$this->gpLayout = false;
-			$this->theme_name = 'Three_point_5'; //'Bootswatch_Flatly';
-			$this->theme_color = 'Shore'; //'4_Sticky_Footer';
-			$this->theme_rel = '/themes/'.$this->theme_name.'/'.$this->theme_color;
-			$this->theme_dir = $dataDir.'/themes/'.$this->theme_name;
+			$default_theme		= explode('/',gp_default_theme);
+			$this->gpLayout		= false;
+			$this->theme_name	= $default_theme[0];
+			$this->theme_color	= $default_theme[1];
+			$this->theme_rel	= '/themes/'.$this->theme_name.'/'.$this->theme_color;
+			$this->theme_dir	= $dataDir.'/themes/'.$this->theme_name;
 
 		}else{
-			$this->gpLayout = $layout;
-			$this->theme_name = $layout_info['theme_name'];
-			$this->theme_color = $layout_info['theme_color'];
-			$this->theme_rel = $layout_info['path'];
-			$this->theme_dir = $layout_info['dir'];
+			$this->gpLayout		= $layout;
+			$this->theme_name	= $layout_info['theme_name'];
+			$this->theme_color	= $layout_info['theme_color'];
+			$this->theme_rel	= $layout_info['path'];
+			$this->theme_dir	= $layout_info['dir'];
 
 			if( isset($layout_info['addon_id']) ){
 				$this->theme_addon_id = $layout_info['addon_id'];

@@ -2399,7 +2399,11 @@ class gpOutput{
 				$buffer = str_replace('<span gpeasy-memory-max>?</span>',admin_tools::FormatBytes(memory_get_peak_usage()),$buffer);
 			}
 
-			$time	= microtime(true) - gp_start_time;
+			if( isset($_SERVER['REQUEST_TIME_FLOAT']) ){
+				$time	= microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
+			}else{
+				$time	= microtime(true) - gp_start_time;
+			}
 			$buffer	= str_replace('<span gpeasy-seconds>?</span>',round($time,3),$buffer);
 			$buffer	= str_replace('<span gpeasy-ms>?</span>',round($time*1000),$buffer);
 		}

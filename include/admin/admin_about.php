@@ -5,20 +5,27 @@ class admin_about{
 
 	function __construct(){
 
+		echo '<div style="min-width:600px;width:75%;">';
+
 		echo '<h2>gpEasy CMS</h2>';
 
-		echo '<p>You\'re currently using version '.gpversion.' of our free, open source and easy to use content management system.</p>';
+		echo '<hr/>';
 
-		echo '<p>';
+
+		echo '<p>You\'re currently using version '.gpversion.' of our free, open source and easy to use content management system.';
 		echo ' Our code is <a href="https://github.com/oyejorge/gpEasy-CMS">hosted on github</a> ';
 		echo 'and licensed under version 2 of the <a href="http://www.gnu.org/licenses/gpl-2.0.html">GNU General Public License</a>. ';
 		echo '</p>';
 
+		echo '<br/>';
+
 
 
 		echo '<h3>Thanks For Using gpEasy</h3>';
+		echo '<hr/>';
+
 		echo '<p>';
-		echo 'Thanks for using gpEasy CMS. We\'ve worked very hard to find a balance between the ease of use and functionality in Content Management Systems and we think we\'ve done a pretty good job. ';
+		echo 'We\'ve worked very hard to find a balance between the ease of use and functionality in Content Management Systems and we think we\'ve done a pretty good job. ';
 		echo ' You may agree or disagree though, and the only way for us to know is to hear from you. ';
 		echo ' We want to know what you think. Here\'s how:';
 		echo '</p>';
@@ -49,7 +56,9 @@ class admin_about{
 		$projects['PHPMailer'] 		= 'github.com/Synchro/PHPMailer';
 
 
+		echo '<br/>';
 		echo '<h3>Our Thanks</h3>';
+		echo '<hr/>';
 		echo '<p>gpEasy would not have been possible if it wasn\'t for the prosperous open source community and rich selection of successful open source projects. ';
 		echo ' We have benefited tremendously from the community and have borrowed ideas as well as integrated other freely available code. ';
 		echo ' Here are some of the projects we have benefited the most from. ';
@@ -65,6 +74,7 @@ class admin_about{
 		}
 		echo '</table>';
 
+		echo '</div>';
 	}
 
 }

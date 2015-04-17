@@ -510,31 +510,26 @@ class SetupSite{
 		echo '</tr>';
 
 
-		echo '<tr>';
-		echo '<th>FTP</th>';
-		echo '<th>&nbsp;</th>';
-		echo '</tr>';
+		if( function_exists('ftp_connect') ){
+			echo '<tr><th>FTP</th>';
+			echo '<th>&nbsp;</th>';
+			echo '</tr>';
 
-		echo '<tr>';
-		echo '<td>FTP Server</td>';
-		echo '<td>';
-		echo '<input type="text" name="ftp_server" value="'.$ftp_vals['ftp_server'].'" size="30" />';
-		echo '</td>';
-		echo '</tr>';
+			echo '<tr><td>FTP Server</td>';
+			echo '<td>';
+			echo '<input type="text" name="ftp_server" value="'.$ftp_vals['ftp_server'].'" size="30" />';
+			echo '</td></tr>';
 
-		echo '<tr>';
-		echo '<td>FTP Username</td>';
-		echo '<td>';
-		echo '<input type="text" name="ftp_user" value="'.$ftp_vals['ftp_user'].'" size="30" />';
-		echo '</td>';
-		echo '</tr>';
+			echo '<tr><td>FTP Username</td>';
+			echo '<td>';
+			echo '<input type="text" name="ftp_user" value="'.$ftp_vals['ftp_user'].'" size="30" />';
+			echo '</td></tr>';
 
-		echo '<tr>';
-		echo '<td>FTP Password</td>';
-		echo '<td>';
-		echo '<input type="password" name="ftp_pass" value="" size="30" />';
-		echo '</td>';
-		echo '</tr>';
+			echo '<tr><td>FTP Password</td>';
+			echo '<td>';
+			echo '<input type="password" name="ftp_pass" value="" size="30" />';
+			echo '</td></tr>';
+		}
 
 		echo '</table>';
 
@@ -788,6 +783,10 @@ class SetupSite{
 			return false;
 		}
 
+		if( !function_exists('ftp_connect') ){
+			return false;
+		}
+
 		$conn_id = gpFiles::FTPConnect();
 		if( !$conn_id ){
 			return false;
@@ -1022,14 +1021,10 @@ class SetupSite{
 	}
 
 
-
-	/*
-	 *
-	 * File Handling Functions
+	/**
+	 * Save the ftp connection information if a connection can be made
 	 *
 	 */
-
-
 	function SaveFTPInformation(){
 		global $config, $langmessage;
 
@@ -1057,9 +1052,9 @@ class SetupSite{
 		}
 
 
-		$config['ftp_user'] = $_POST['ftp_user'];
-		$config['ftp_server'] = $_POST['ftp_server'];
-		$config['ftp_pass'] = $_POST['ftp_pass'];
+		$config['ftp_user']		= $_POST['ftp_user'];
+		$config['ftp_server']	= $_POST['ftp_server'];
+		$config['ftp_pass']		= $_POST['ftp_pass'];
 
 		if( !admin_tools::SaveConfig() ){
 			message('Oops, there was an error saving your ftp information.');
@@ -1088,7 +1083,7 @@ class SetupSite{
 		//make sure default theme exists
 		$path = $rootDir.'/themes/'.$default_theme[0];
 		if( !file_exists($path) ){
-			message('The default theme for gpEasy "Light_Texture" does not exist. Please make sure it exists before continuing.');
+			message('The default theme for gpEasy "'.$default_theme[0].'" does not exist. Please make sure it exists before continuing.');
 			return;
 		}
 
@@ -1199,7 +1194,7 @@ class SetupSite{
 				return;
 			}
 
-			if( empty($config['ftp_server']) ){
+			if( empty($config['ftp_server']) || !function_exists('ftp_connect') ){
 				unset($_REQUEST['install'][$new_val_key]);
 				message($langmessage['not_written_to']);
 				return;
@@ -1335,21 +1330,26 @@ class SetupSite{
 			echo '<tr>';
 
 			echo '<td>';
-			//light texture
-			echo '<input type="hidden" name="install[themes][]" value="Light_Texture" />';
-			echo '<label class="all_checkbox">';
-			echo '<input type="checkbox" name="install[themes][]" value="Light_Texture" checked="checked" disabled="disabled" />';
-			echo 'Light Texture';
-			echo '</label>';
-			echo ' And ... <br/>';
 
+
+			$default_theme = explode('/',gp_default_theme);
+
+			//default theme
+			echo '<input type="hidden" name="install[themes][]" value="'.$default_theme[0].'" />';
+			echo '<label class="all_checkbox">';
+			echo '<input type="checkbox" name="install[themes][]" value="'.$default_theme[0].'" checked="checked" disabled="disabled" />';
+			echo $default_theme[0];
+			echo '</label>';
+
+			//all other available themes
+			echo ' And ... <br/>';
 			echo '<p>';
 			$dir = $rootDir.'/themes';
 			$layouts = gpFiles::readDir($dir,1);
 			asort($layouts);
 			$i = 1;
 			foreach($layouts as $name){
-				if( $name == 'Light_Texture' ){
+				if( $name == $default_theme[0] ){
 					continue;
 				}
 
@@ -1799,7 +1799,7 @@ class SetupSite{
 		}
 
 
-		if( empty($config['ftp_server']) ){
+		if( empty($config['ftp_server']) || !function_exists('ftp_connect') ){
 			message($langmessage['not_created']);
 			return false;
 		}

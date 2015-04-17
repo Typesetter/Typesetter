@@ -3783,13 +3783,13 @@ class gpFiles{
 
 		$conn_id = @ftp_connect($config['ftp_server'],21,6);
 		if( !$conn_id ){
-			trigger_error('ftp_connect() failed for server : '.$config['ftp_server']);
+			//trigger_error('ftp_connect() failed for server : '.$config['ftp_server']);
 			return false;
 		}
 
 		$login_result = @ftp_login($conn_id,$config['ftp_user'],$config['ftp_pass'] );
 		if( !$login_result ){
-			trigger_error('ftp_login() failed for server : '.$config['ftp_server'].' and user: '.$config['ftp_user']);
+			//trigger_error('ftp_login() failed for server : '.$config['ftp_server'].' and user: '.$config['ftp_user']);
 			return false;
 		}
 		register_shutdown_function(array('gpFiles','ftpClose'),$conn_id);

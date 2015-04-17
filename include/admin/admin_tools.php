@@ -583,7 +583,7 @@ class admin_tools{
 		echo '<div class="panelgroup" id="panelgroup_gpeasy'.$id_piece.'">';
 			self::PanelHeading($in_panel, $langmessage['Performance'], 'icon_chart', 'gpe' );
 			echo '<ul class="submenu">';
-			echo '<li class="submenu_top"><a class="submenu_top">hmm</a></li>';
+			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Performance'].'</a></li>';
 			echo '<li><a><span gpeasy-memory-usage>?</span> Memory</a></li>';
 			echo '<li><a><span gpeasy-memory-max>?</span> Max Memory</a></li>';
 			echo '<li><a><span gpeasy-seconds>?</span> Seconds</a></li>';

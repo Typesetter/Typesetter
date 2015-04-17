@@ -1083,8 +1083,10 @@ class SetupSite{
 	function InstallStatus($cmd){
 		global $rootDir;
 
+		$default_theme = explode('/',gp_default_theme);
+
 		//make sure default theme exists
-		$path = $rootDir.'/themes/Light_Texture';
+		$path = $rootDir.'/themes/'.$default_theme[0];
 		if( !file_exists($path) ){
 			message('The default theme for gpEasy "Light_Texture" does not exist. Please make sure it exists before continuing.');
 			return;

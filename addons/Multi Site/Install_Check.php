@@ -30,6 +30,12 @@ function Install_Check(){
 	}
 
 
+	if( !function_exists('ftp_connect') ){
+		echo '<p style="color:red">PHP\'s <a href="http://php.net/manual/en/book.ftp.php" target="_blank">ftp extension</a> is not available.</p>';
+		$passed = false;
+	}
+
+
 	if( isset($config['useftp']) ){
 		echo '<p style="color:red">Cannot install this addon. Your installation of PHP has safe_mode enabled.</p>';
 		$passed = false;

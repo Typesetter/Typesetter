@@ -35,15 +35,10 @@
 	}
 
 #parent_folders{
-	border:1px solid #ccc;
-	padding:2px;
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
-	margin-bottom:4px;
+	margin-bottom:10px;
 	}
-#parent_folders span{
+
+#parent_folders a{
 	display:inline-block;
 	background: #efefef;
 	-moz-border-radius: 5px;
@@ -54,11 +49,18 @@
 	padding:0;
 	margin:1px;
 	line-height:24px;
-}
+	padding: 3px 10px;
+	color:#333 !important;
+	height:18px;
+	line-height:18px;
+
+	}
+
 #parent_folders form,
 #parent_folders input{
 	display:inline;
 	}
+
 #parent_folders input{
 	display:inline-block;
 	background: #fff;
@@ -73,12 +75,6 @@
 	width:70px;
 	}
 
-#parent_folders a{
-	display:block;
-	padding: 3px 10px;
-	color:#333 !important;
-	height:18px;
-	}
 #destination_select ul{
 	list-style:none;
 	margin:1px 0;

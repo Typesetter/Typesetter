@@ -1475,7 +1475,10 @@ class SetupSite{
 	}
 
 
-
+	/**
+	 * Display window for selecting where to install
+	 *
+	 */
 	function InstallFolder($destination){
 
 		echo '<table>';
@@ -1490,7 +1493,7 @@ class SetupSite{
 		do{
 			$previous = $parent;
 			$query_array = array('cmd'=>'expandfolder','folder'=>$parent);
-			$links[] = '<span>'.$this->InstallLink(basename($parent).'/',$query_array,' name="gpajax" ').'</span>';
+			$links[] = $this->InstallLink(basename($parent).'/',$query_array,' name="gpajax" ');
 			$parent = dirname($parent);
 		}while( $previous != $parent );
 
@@ -1505,6 +1508,8 @@ class SetupSite{
 		echo '<input type="hidden" name="cmd" value="subfolder" />';
 		echo '</form>';
 		echo '</div>';
+
+
 
 		//show subfolders
 		echo '<div style="clear:both"></div>';

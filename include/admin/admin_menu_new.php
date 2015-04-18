@@ -23,20 +23,20 @@ common::LoadComponents('sortable');
 
 class admin_menu_new extends admin_menu_tools{
 
-	var $cookie_settings = array();
-	var $hidden_levels = array();
-	var $search_page = 0;
-	var $search_max_per_page = 20;
+	var $cookie_settings		= array();
+	var $hidden_levels			= array();
+	var $search_page			= 0;
+	var $search_max_per_page	= 20;
 	var $query_string;
 
-	var $avail_menus = array();
+	var $avail_menus			= array();
 	var $curr_menu_id;
-	var $curr_menu_array = false;
-	var $is_alt_menu = false;
-	var $max_level_index = 3;
+	var $curr_menu_array		= false;
+	var $is_alt_menu			= false;
+	var $max_level_index		= 3;
 
 	var $main_menu_count;
-	var $list_displays = array('search'=>true, 'all'=>true, 'hidden'=>true, 'nomenus'=>true );
+	var $list_displays			= array('search'=>true, 'all'=>true, 'hidden'=>true, 'nomenus'=>true );
 
 
 	function __construct(){
@@ -829,7 +829,7 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 		$json = common::JsonEncode($data);
-		echo '<a class="'.$class.'" data-cmd="menu_info" data-arg="'.str_replace('&','&amp;',$data['key']).'" data-json=\''.htmlspecialchars($json,ENT_NOQUOTES).'\'>';
+		echo '<a class="'.$class.'" data-cmd="menu_info" data-arg="'.str_replace('&','&amp;',$data['key']).'" data-json=\''.htmlspecialchars($json,ENT_QUOTES & ~ENT_COMPAT).'\'>';
 	}
 
 

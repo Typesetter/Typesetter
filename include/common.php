@@ -544,7 +544,7 @@ function pre($mixed){
 /**
  * @deprecated 2.6
  */
-function showArray($mixed){ return pre($mixed);}
+function showArray($mixed){ trigger_error('Deprecated function showArray()'); }
 
 
 /**

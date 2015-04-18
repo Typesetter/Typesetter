@@ -29,70 +29,38 @@ $(function(){
 	 * Use jquery ui autocomplete in place of <select>
 	 *
 	 */
-	$('span.combobox').live('mousedown',function(evt){
+	$(document).on('mousedown','span.combobox',function(evt){
 		if( evt.target.nodeName != 'INPUT' ){
 			evt.preventDefault();
 			$(this).find('input').focus();
 		}
 	});
-	$('input.combobox').live('focus',function(){
+
+	$(document).on('focus','input.combobox',function(){
 
 		//once the comobox is initiated, we dont' need to create it again
-		var $search = $(this).removeClass('combobox');
+		var $search		= $(this).removeClass('combobox');
+		var $parent		= $search.parent();
+		var source		= $( $parent.data('source') ).data('json');
 
-		var $parent = $search.parent();
-		var $hidden = $parent.find('input[type=hidden]');
-		if( $hidden.val() == '' ){
-			$parent.css({'border-color':'#CC0000'});
-		}
-
-
-
-
-		/*
-		var $list = $search.closest('div').find('option');
-		var source = [];
-		$list.each(function(){
-			source.push([this.innerHTML,this.value]);
-		});
-		*/
-
-		//alert( $search.closest('div').find('.data').html() );
-		var source = data();
 
 		// create autocomplete
 		var $autocomplete = $search.not(':ui-autocomplete')
 			.autocomplete({
-				source: source,
-				delay: 100,
-				minLength: 1,
+				source:		source,
+				delay:		100,
+				minLength:	1,
+
 				select: function(event,ui){
 					if( ui.item ){
 
-						$search.val(	ui.item[0]
-										.replace(/&quot;/g, '"')
-										.replace(/&#039;/g, "'")
-										.replace(/&lt;/g, '<')
-										.replace(/&gt;/g, '>')
-										.replace(/&amp;/g, '&')
-								);
-
+						$search.val( ui.item[0] );
 
 						$parent.css({'border-color':''});
-
-						if( ui.item[2] ){
-							$hidden.val( ui.item[2] );
-						}else{
-							$hidden.val( ui.item[1] );
-						}
-
 						return false;
 					}
 				},
-				search: function(){
-					$hidden.val('');
-					$parent.css({'border-color':'#CC0000'});
-				}
+
 			});
 
 
@@ -108,18 +76,6 @@ $(function(){
 				.appendTo( ul );
 		};
 
-
-		function data(){
-			var str = $search
-					.closest('div')
-					.find('.data')
-					.html()
-					.replace(/&lt;/g, '<')
-					.replace(/&gt;/g, '>')
-					.replace(/&amp;/g, '&');
-
-			return jQuery.parseJSON(str);
-		}
 	});
 
 });

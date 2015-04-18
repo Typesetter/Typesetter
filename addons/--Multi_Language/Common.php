@@ -7,14 +7,20 @@ class MultiLang_Common{
 
 	var $config_file;
 	var $config;
-	var $lists = array();
+	var $lists	= array();
 	var $titles = array();
-	var $langs = array();
+	var $langs	= array();
+
+	var $lang;
+	var $language;
+
 
 	function Init(){
-		global $addonPathData, $config;
-		$this->config_file = $addonPathData.'/config.php';
-		$this->lang = $config['language'];
+		global $addonPathData, $config, $ml_languages;
+
+		$this->config_file	= $addonPathData.'/config.php';
+		$this->lang			= $config['language'];
+
 		$this->GetData();
 	}
 
@@ -28,10 +34,20 @@ class MultiLang_Common{
 
 		$config += array('titles'=>array(),'lists'=>array(),'langs'=>array());
 
-		$this->config = $config;
+		$this->config	= $config;
 		$this->FixConfig();
-		$this->lists = $this->config['lists'];
-		$this->titles = $this->config['titles'];
+		$this->lists	= $this->config['lists'];
+		$this->titles	= $this->config['titles'];
+
+
+		//primary lang
+		if( isset($this->config['primary']) ){
+			$this->lang = $this->config['primary'];
+		}
+		$this->language		= $ml_languages[$this->lang];
+
+
+
 
 		if( !count($this->config['langs']) ){
 			$this->langs = $ml_languages;
@@ -68,11 +84,10 @@ class MultiLang_Common{
 	 *
 	 */
 	function GetList($page_index){
-		global $config;
 
 		$list_index = $this->GetListIndex($page_index);
 		if( $list_index === false ){
-			return false;
+			return array();
 		}
 
 		return $this->lists[$list_index];

@@ -163,9 +163,6 @@ class SetupSite{
 			return false;
 		}
 
-		//message('Posted: '.showArray($_POST));
-		//message('site data: '.showArray($this->siteData['sites'][$site]));
-
 		switch($cmd){
 			case 'save_options';
 				$this->Options_Save($site);
@@ -189,8 +186,7 @@ class SetupSite{
 		echo $langmessage['site url'];
 		echo '</td><td>';
 		echo '<input type="text" name="url" value="'.htmlspecialchars($args['url']).'" />';
-		echo '</td>';
-		echo '</tr>';
+		echo '</td></tr>';
 
 		echo '<tr><td class="label">';
 		echo $langmessage['hide_index'];

@@ -20,9 +20,9 @@ class MultiLang extends MultiLang_Common{
 	function WhichPage($path){
 		global $config;
 
-		$home_title = $config['homepath'];
-		$config['homepath_key'] = false;
-		$config['homepath'] = false;
+		$home_title					= $config['homepath'];
+		$config['homepath_key']		= false;
+		$config['homepath']			= false;
 
 		//only if homepage
 		if( !empty($path) ){
@@ -84,14 +84,77 @@ class MultiLang extends MultiLang_Common{
 	}
 
 
-
 	/**
 	 * Gadget Function
 	 * Show related titles
 	 *
 	 */
 	function Gadget(){
-		global $page, $ml_languages, $config, $addonRelativeCode;
+		global $page, $ml_languages;
+
+		$this->AddResources();
+
+		//admin and special pages cannot be translated
+		if( $page->pagetype != 'display' ){
+			return;
+		}
+
+		$list = $this->GetList($page->gp_index);
+
+		if( !$list && !common::loggedIn() ){
+			return;
+		}
+
+		$current_page_lang = array_search($page->gp_index,$list);
+
+
+		//show the list
+		echo '<div class="multi_lang_select"><div>';
+		echo '<b>Languages</b>';
+		$links = array();
+		foreach($ml_languages as $lang_code => $lang_label){
+
+			if( !isset($list[$lang_code]) ){
+				continue;
+			}
+
+			if( $lang_code == $current_page_lang ){
+				continue;
+			}
+
+			$index		= $list[$lang_code];
+			$title		= common::IndexToTitle($index);
+			$links[]	= common::Link($title,$lang_label);
+		}
+
+		if( $links ){
+			echo '<ul><li>';
+			echo implode('</li><li>', $links);
+			echo '</li></ul>';
+		}
+
+		if( common::loggedIn() ){
+			echo '<p>Admin: ';
+			echo common::Link('Admin_MultiLang','Add Translation','cmd=title_settings&index='.$page->gp_index,' name="gpabox"');
+			echo '</p>';
+		}
+
+		echo '</div></div>';
+	}
+
+
+	/**
+	 * Add multi language elements to the $page
+	 *
+	 */
+	function AddResources(){
+		global $page, $addonRelativeCode;
+		static $added = false;
+
+		if( $added ){
+			return;
+		}
+
 
 		if( $page->pagetype == 'display' ){
 			$page->admin_links[] = common::Link('Admin_MultiLang','Multi Language','cmd=title_settings&index='.$page->gp_index,' name="gpabox"');
@@ -99,46 +162,7 @@ class MultiLang extends MultiLang_Common{
 		$page->head_js[] = $addonRelativeCode.'/script.js'; //needed for admin pages as well
 		$page->css_admin[] = $addonRelativeCode.'/admin.css';
 
-
-		$list = $this->GetList($page->gp_index);
-
-		//admin and special pages cannot be translated
-		if( $page->pagetype != 'display' ){
-			return;
-		}
-
-		if( !$list && !common::loggedIn() ){
-			return;
-		}
-
-		//show the list
-		echo '<div class="multi_lang_select"><div>';
-		echo '<b>Languages</b>';
-		echo '<ul>';
-		foreach($ml_languages as $lang_code => $lang_label){
-			if( !isset($list[$lang_code]) ){
-				continue;
-			}
-			$index = $list[$lang_code];
-
-			if( $index == $page->gp_index ){
-				continue;
-			}
-			$title = common::IndexToTitle($index);
-
-			echo '<li>';
-			echo common::Link($title,$lang_label);
-			echo '</li>';
-		}
-
-		if( common::loggedIn() ){
-			echo '<li>';
-			echo common::Link('Admin_MultiLang','Add Language','cmd=title_settings&index='.$page->gp_index,' name="gpabox"');
-			echo '</li>';
-		}
-		echo '</ul>';
-
-		echo '</div></div>';
+		$added = true;
 	}
 
 
@@ -148,22 +172,27 @@ class MultiLang extends MultiLang_Common{
 	 *
 	 */
 	function GetMenuArray($menu){
-		global $page, $config;
+		global $page;
+
 
 		//which language is the current page
 		$list = $this->GetList($page->gp_index);
-		if( !is_array($list) ){
+		if( !$list ){
 			return $menu;
 		}
+
 		$page_lang = array_search($page->gp_index,$list);
+
 		if( !$page_lang ){
 			return $menu;
 		}
 
 		//if it's the default language, we don't need to change the menu
-		if( $page_lang == $config['language'] ){
-			return $menu;
-		}
+		// ... if the menu isn't actually in the primary language, we still want to translate it
+		//if( $page_lang == $this->lang ){
+		//	return $menu;
+		//}
+
 
 		//if we can determine the language of the current page, then we can translate the menu
 		$new_menu = array();

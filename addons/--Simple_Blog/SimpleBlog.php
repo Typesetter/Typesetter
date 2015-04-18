@@ -560,7 +560,6 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		echo '<br/>';
 
-		//echo showArray($post);
 		echo '<div class="clear"></div>';
 
 	}

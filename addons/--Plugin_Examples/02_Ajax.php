@@ -32,7 +32,7 @@ class Example_Ajax{
 
 		//output the $_REQUEST variable
 		echo '<h3>Request</h3>';
-		echo showArray($_REQUEST);
+		echo pre($_REQUEST);
 
 
 		//plugin example navigation

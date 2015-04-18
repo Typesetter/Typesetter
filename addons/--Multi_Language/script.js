@@ -59,8 +59,7 @@ $(function(){
 						$parent.css({'border-color':''});
 						return false;
 					}
-				},
-
+				}
 			});
 
 

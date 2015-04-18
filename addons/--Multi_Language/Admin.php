@@ -549,11 +549,18 @@ class MultiLang_Admin extends MultiLang_Common{
 
 
 		// already a part of a list?
-		if( $this->GetListIndex($to_index) ){
-			$label = common::GetLabelIndex($to_index);
-			$link = common::Link('Admin_MultiLang',$label,'cmd=title_settings&index='.$to_index,' name="gpabox"');
-			message('Sorry, '.$link.' is already part of a translation.');
-			return false;
+		$change_list = $this->GetListIndex($to_index);
+		if( $change_list ){
+
+			// don't stop if there's only one title in the list
+			$list		= $this->GetList($to_index);
+			if( count($list) > 1 ){
+				$label = common::GetLabelIndex($to_index);
+				$link = common::Link('Admin_MultiLang',$label,'cmd=title_settings&index='.$to_index,' name="gpabox"');
+				message('Sorry, '.$link.' is already part of a translation.');
+				return false;
+			}
+
 		}
 
 
@@ -562,6 +569,13 @@ class MultiLang_Admin extends MultiLang_Common{
 		if( !$list_index ){
 			$list_index = $this->NewListIndex();
 		}
+
+
+		// delete abandoned list
+		if( $change_list ){
+			unset($this->config['lists'][$change_list]);
+		}
+
 
 
 		//save data

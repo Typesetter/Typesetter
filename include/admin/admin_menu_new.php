@@ -387,7 +387,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<form action="'.common::GetUrl('Admin_Menu').'" method="post" id="gp_menu_select_form">';
 		echo '<input type="hidden" name="curr_menu" id="gp_curr_menu" value="'.$this->curr_menu_id.'" />';
 
-		echo '<h2>';
+		echo '<h2 class="first-child">';
 		echo $langmessage['file_manager'].' &#187;  ';
 		echo '<select id="gp_menu_select" name="gp_menu_select" class="gpselect">';
 

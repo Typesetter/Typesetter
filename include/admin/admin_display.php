@@ -108,8 +108,9 @@ class admin_display extends display{
 		ob_start();
 		echo '<div id="gpx_content"><div id="admincontent">';
 		$this->AdminContentPanel();
+		$this->BreadCrumbs();
 		echo '<div id="admincontent_inner">';
-		//$this->BreadCrumbs();
+
 
 
 		echo $this->contentBuffer;
@@ -126,17 +127,18 @@ class admin_display extends display{
 	function BreadCrumbs(){
 		global $langmessage, $page;
 
-		//echo '<div id="admin_breadcrumbs" class="cf">';
-		echo common::Link('',$langmessage['Homepage']);
-		echo ' &#187; ';
+		echo '<div id="admin_breadcrumbs" class="cf">';
+		//echo common::Link('',$langmessage['Homepage']);
+		//echo ' &#187; ';
 		echo common::Link('Admin',$langmessage['administration']);
 
 		if( !empty($page->title) && !empty($page->label) && $page->title != 'Admin' ){
 			echo ' &#187; ';
 			echo common::Link($page->title,$page->label);
 		}
-		//echo '</div>';
+		echo '</div>';
 	}
+
 
 	/**
 	 * Output toolbar for admin window
@@ -151,7 +153,7 @@ class admin_display extends display{
 		}
 
 		echo '<div id="admincontent_panel" class="toolbar cf">';
-		$this->BreadCrumbs();
+		gpOutput::Get('Menu');
 		echo '</div>';
 	}
 

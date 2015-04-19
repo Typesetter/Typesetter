@@ -618,12 +618,7 @@ class gpsession{
 						'gpui_ckx'		=> 20,
 						'gpui_cky'		=> 240,
 						'gpui_ckd'		=> false,
-						'gpui_pposx'	=> 0,
-						'gpui_pposy'	=> 0,
-						'gpui_pw'		=> 0,
-						'gpui_ph'		=> 0,
 						'gpui_vis'		=> 'cur',
-						'admin_full'	=> true,
 						);
 	}
 
@@ -821,10 +816,6 @@ class gpsession{
 		}
 
 		switch($cmd){
-			case 'toggle_view':
-				$gpAdmin['admin_full'] = !$gpAdmin['admin_full'];
-			break;
-
 			case 'savegpui':
 				self::SaveGPUI();
 			//dies
@@ -858,14 +849,6 @@ class gpsession{
 		global $gpAdmin;
 
 		$possible = array();
-
-		//only change the panel position if it's the default layout
-		if( isset($_POST['gpui_dlayout']) && $_POST['gpui_dlayout'] == 'true' ){
-			$possible['gpui_pposx']	= 'integer';
-			$possible['gpui_pposy']	= 'integer';
-			$possible['gpui_pw']	= 'integer';
-			$possible['gpui_ph']	= 'integer';
-		}
 
 		$possible['gpui_cmpct']	= 'integer';
 		$possible['gpui_vis']	= array('con'=>'con','cur'=>'cur','app'=>'app','add'=>'add','set'=>'set','upd'=>'upd','use'=>'use','gpe'=>'gpe','false'=>false);
@@ -924,8 +907,7 @@ class gpsession{
 
 
 		echo 'var gpui={';
-		echo 'ph:'.$gpAdmin['gpui_ph'];
-		echo ',cmpct:'.(int)$gpAdmin['gpui_cmpct'];
+		echo 'cmpct:'.(int)$gpAdmin['gpui_cmpct'];
 
 		//the following control which admin toolbar areas are expanded
 		echo ',vis:"'.$gpAdmin['gpui_vis'].'"';

@@ -1,4 +1,4 @@
-/*global $gp:false, gpui:false, gplinks:false, gpinputs:false isadmin:false, gpBase:false, strip_from:false, gpRem:false, gpBLink:false, admin_resizable:false */
+/*global $gp:false, gpui:false, gplinks:false, gpinputs:false isadmin:false, gpBase:false, strip_from:false, gpRem:false, gpBLink:false */
 /*jshint forin:true, noarg:true, noempty:true, eqeqeq:true, bitwise:true, strict:true, undef:true, unused:true, curly:true, browser:true, jquery:true, indent:4, maxerr:100, newcap:false, white:false*/
 //"use strict";
 
@@ -589,7 +589,6 @@ $(function(){
 		return;
 	}
 
-	ContentPosition();
 	$('body').addClass('gpAdmin').trigger('AdminReady');
 
 	window.setTimeout(function(){
@@ -626,36 +625,6 @@ $(function(){
 		}
 		return;
 	});
-
-
-
-
-	/**
-	 * Position admincontent over page
-	 *
-	 */
-	function ContentPosition(){
-
-		var container = $('#admincontainer');
-		if( container.length < 1 ){
-			return;
-		}
-
-		//move the after content down
-		$('#gpAfterContent').css('margin-top',container.height()+100);
-
-		SimpleDrag('#admincontent_panel',container,'absolute',function(newpos){
-			gpui.pposx = newpos.left;
-			gpui.pposy = newpos.top;
-
-			container.css({
-							'left':Math.max(5,gpui.pposx)
-							,'top':Math.max(5,gpui.pposy)
-							});
-			$gp.SaveGPUI();
-		});
-
-	} /* end ContentPosition() */
 
 
 	/**
@@ -959,21 +928,6 @@ $(function(){
 			gpui.ty = newpos.top;
 			$gp.SaveGPUI();
 		},true);
-
-
-		if( admin_resizable ){
-			SimpleResize('#admincontainer',
-				{
-					min_w:300,
-					finish:function(width,left){
-						gpui.pposx = left;
-						gpui.pw = width;
-						$gp.SaveGPUI();
-					}
-				});
-		}else{
-			$('#admincontainer').css('width','auto');
-		}
 
 
 		//keep expanding areas within the viewable window

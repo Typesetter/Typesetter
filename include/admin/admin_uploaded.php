@@ -29,9 +29,7 @@ class admin_uploaded{
 	}
 
 	function Finder(){
-		global $page, $GP_INLINE_VARS, $config, $dataDir;
-
-		$GP_INLINE_VARS['admin_resizable'] = false;
+		global $page, $config, $dataDir;
 
 		$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.common::GetDir('/include/thirdparty/finder/css/finder.css').'">';
 		$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.common::GetDir('/include/thirdparty/finder/style.css').'">';
@@ -111,23 +109,9 @@ class admin_uploaded{
 	}
 
 	function FinderPrep(){
-		global $page, $gpAdmin;
-
-		//options
-		$this->finder_opts['url'] = common::GetUrl('Admin_Finder');
-
-		if( $page->FullDisplay() ){
-			$this->finder_opts['height'] = 'auto';
-			$this->finder_opts['resizable'] = false;
-
-		}else{
-
-			$this->finder_opts['width'] = $gpAdmin['gpui_pw'];
-			if( $gpAdmin['gpui_ph'] > 0 ){
-				$this->finder_opts['height'] = $gpAdmin['gpui_ph'];
-			}
-		}
-
+		$this->finder_opts['url']			= common::GetUrl('Admin_Finder');
+		$this->finder_opts['height']		= 'auto';
+		$this->finder_opts['resizable'] 	= false;
 	}
 
 

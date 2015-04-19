@@ -133,12 +133,7 @@ class gpOutput{
 		gpOutput::getHead();
 		echo '</head>';
 
-		$class = 'gpbody';
-		if( common::RequestType() == 'admin' ){
-			$class .= ' gp_full_size';
-		}
-
-		echo '<body class="'.$class.'">';
+		echo '<body class="gpbody">';
 		echo GetMessages();
 
 		$page->GetGpxContent();
@@ -148,6 +143,29 @@ class gpOutput{
 
 		gpOutput::HeadContent();
 	}
+
+	static function AdminHtml(){
+		global $page;
+
+		$page->head_script .= 'var gp_bodyashtml = true;';
+
+		self::StandardHeaders();
+
+		echo '<!DOCTYPE html><html><head><meta charset="UTF-8" />';
+		gpOutput::getHead();
+		echo '</head>';
+
+		echo '<body class="gpbody admin_body">';
+		echo GetMessages();
+
+		$page->GetGpxContent();
+
+		echo '</body>';
+		echo '</html>';
+
+		gpOutput::HeadContent();
+	}
+
 
 	/**
 	 * Send all content according to the current layout
@@ -1977,10 +1995,9 @@ class gpOutput{
 
 		if( common::LoggedIn() ){
 			$GP_INLINE_VARS += array(
-				'isadmin' => true,
-				'gpBLink' => common::HrefEncode($linkPrefix,false),
-				'post_nonce' => common::new_nonce('post',true),
-				'admin_resizable' => true,
+				'isadmin'		=> true,
+				'gpBLink'		=> common::HrefEncode($linkPrefix,false),
+				'post_nonce'	=> common::new_nonce('post',true),
 				);
 
 			gpsession::GPUIVars();
@@ -2521,8 +2538,7 @@ class gpOutput{
 			break;
 
 			case 'admin':
-				common::CheckTheme();
-				self::BodyAsHTML();
+				self::AdminHtml();
 			break;
 
 			// <a data-cmd="gpajax">

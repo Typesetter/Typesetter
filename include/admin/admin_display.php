@@ -63,10 +63,8 @@ class admin_display extends display{
 
 	//display admin area in full window?
 	function FullDisplay(){
-		global $gpAdmin;
 
-		if( $gpAdmin['admin_full']
-			&& common::RequestType() == 'template'
+		if( common::RequestType() == 'template'
 			&& $this->show_admin_content
 			){
 				return true;
@@ -109,8 +107,11 @@ class admin_display extends display{
 
 		ob_start();
 		echo '<div id="gpx_content"><div id="admincontent">';
-		admin_tools::AdminContentPanel();
+		$this->AdminContentPanel();
 		echo '<div id="admincontent_inner">';
+		//$this->BreadCrumbs();
+
+
 		echo $this->contentBuffer;
 		echo '</div></div></div>';
 		$admin_content = ob_get_clean();
@@ -120,6 +121,38 @@ class admin_display extends display{
 			return;
 		}
 		echo $admin_content;
+	}
+
+	function BreadCrumbs(){
+		global $langmessage, $page;
+
+		//echo '<div id="admin_breadcrumbs" class="cf">';
+		echo common::Link('',$langmessage['Homepage']);
+		echo ' &#187; ';
+		echo common::Link('Admin',$langmessage['administration']);
+
+		if( !empty($page->title) && !empty($page->label) && $page->title != 'Admin' ){
+			echo ' &#187; ';
+			echo common::Link($page->title,$page->label);
+		}
+		//echo '</div>';
+	}
+
+	/**
+	 * Output toolbar for admin window
+	 *
+	 */
+	function AdminContentPanel(){
+		global $page, $langmessage;
+
+		//the login form does not need the panel
+		if( !common::LoggedIn() ){
+			return;
+		}
+
+		echo '<div id="admincontent_panel" class="toolbar cf">';
+		$this->BreadCrumbs();
+		echo '</div>';
 	}
 
 	function AnonUser(){

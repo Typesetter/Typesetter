@@ -353,7 +353,7 @@ class admin_tools{
 	 * @static
 	 */
 	static function GetAdminPanel(){
-		global $page, $gpAdmin, $config;
+		global $page, $gpAdmin;
 
 		//don't send the panel when it's a gpreq=json request
 		if( !self::$show_toolbar ){
@@ -409,7 +409,7 @@ class admin_tools{
 	 * @static
 	 */
 	static function AdminPanelLinks($in_panel=true){
-		global $langmessage, $page, $gpAdmin, $config;
+		global $langmessage, $page, $gpAdmin;
 
 		$expand_class = 'expand_child';
 		$id_piece = '';
@@ -714,53 +714,11 @@ class admin_tools{
 		echo '</li>';
 	}
 
-	/**
-	 * Output toolbar for admin window
-	 *
-	 */
-	static function AdminContentPanel(){
-		global $page, $config, $langmessage;
-
-		//the login form does not need the panel
-		if( !common::LoggedIn() ){
-			return;
-		}
-
-		echo '<div id="admincontent_panel" class="toolbar">';
-		echo '<div class="gp_right">';
-		echo common::Link('','','do=toggle_view',array('data-cmd'=>'creq','class'=>'gp_maximize'));
-		echo common::Link('','','','class="close_home"');
-		echo '</div>';
-
-		echo common::Link('',$langmessage['Homepage']);
-		echo ' &#187; ';
-		echo common::Link('Admin',$langmessage['administration']);
-
-		if( !empty($page->title) && !empty($page->label) && $page->title != 'Admin' ){
-			echo ' &#187; ';
-			echo common::Link($page->title,$page->label);
-		}
-		echo '</div>';
-	}
+	//deprecated v4.4
+	static function AdminContentPanel(){}
 
 	static function AdminContainer(){
-		global $gpAdmin;
-
-		// if the admin window doesn't have a position
-		if( !isset($gpAdmin['gpui_pposx']) || !isset($gpAdmin['gpui_pposy']) || ($gpAdmin['gpui_pposx'] == 0 && $gpAdmin['gpui_pposy'] == 0) ){
-			$gpAdmin['gpui_pposx'] = 190;
-			$gpAdmin['gpui_pposy'] = 70;
-		}
-		if( !isset($gpAdmin['gpui_pw']) || $gpAdmin['gpui_pw'] == 0 ){
-			$gpAdmin['gpui_pw'] = 960;
-		}
-
-		$style = '';
-		if( common::RequestType() != 'admin' ){
-			$style = ' style="left:'.$gpAdmin['gpui_pposx'].'px;top:'.$gpAdmin['gpui_pposy'].'px;width:'.Max($gpAdmin['gpui_pw'],300).'px;"';
-		}
-
-		return '<div id="admincontainer" class="gp_floating_area" '.$style.'>';
+		return '<div id="admincontainer" class="gp_floating_area">';
 	}
 
 

@@ -5,6 +5,8 @@
 @import 'mixins.less';
 @family: "verdana";
 
+
+
 /*
  * Reset CSS
  * There are two admin content containers where we attempt to reset the css
@@ -15,13 +17,9 @@
  *
  */
 #gp_admin_html{
-	position:absolute;
-	top:0;
-	left:0;
-	right:0;
-	height:0;
+	position:relative;
+	height:auto;
 	text-transform: none;
-	/* 	width:100%; for file browser */
 	}
 
 #gp_admin_html{
@@ -262,14 +260,34 @@
 	}
 
 /**
- * floating admin container
+ * Admin container
  *
  */
-
 #admincontainer{
-	position:absolute;
-	z-index:8900;
+	border-radius:0;
+	border:0 none;
+	margin-left:180px;
+	position:relative;
 }
+
+#admincontent_panel{
+	display:block;
+	padding:2px 5px 2px 40px;
+	cursor:auto;		//not draggable
+	font-size:13.5px;
+	font-weight:normal;
+	line-height:21px;
+	}
+
+#admincontent_panel a{
+	color:#999 !important;
+}
+#admincontent_panel:hover a{
+	color:#666 !important;
+	}
+#admincontent_panel a:hover{
+	color:#333 !important;
+	}
 
 
 #admin_drag_box{
@@ -289,70 +307,28 @@
  *
  */
 
-
+#gpx_content,
 #admincontent{
-	/* display:none; */
 	position:relative;
 	color:#333;
 	font-size:13px;
 	width:auto;
-	}
+	height:100%;
+	padding-left:0;
+	padding-right:0;
+	padding-bottom:0;
+	.box-sizing( border-box );
+}
 
-/*
-#gp_admin_html #admincontent{
-	display:block;
-	}
-*/
+
 
 #admincontent_inner{
-	padding:20px 20px 10em 20px;
+	padding:20px 40px 10em 40px;
 	overflow:hidden;
-	border-radius: 3px;
+
 	background-color:#fff;
-	border:1px solid #ccc;
+	border-top:1px solid #ccc;
 }
-
-
-#admincontent_panel{
-	display:block;
-	}
-#admincontent_panel.toolbar{
-	padding:2px 5px;
-	font-size:13.5px;
-	font-weight:normal;
-	line-height:21px;
-	}
-#admincontent_panel.toolbar a{
-	color:#999 !important;
-}
-#admincontent_panel.toolbar:hover a{
-	color:#666 !important;
-	}
-#admincontent_panel.toolbar a:hover{
-	color:#333 !important;
-	}
-#admincontent_panel.toolbar .admin_arrow_out{
-	visibility:hidden;
-	}
-#admincontent_panel.toolbar:hover .admin_arrow_out{
-	visibility:visible;
-	}
-
-.gp_floating_area .gp_maximize,
-.gp_floating_area .close_home{
-	display:inline-block;
-	height:16px;
-	width:16px;
-	border:1px solid transparent;
-	.gpimg('cancel.png',50%,50%);
-	}
-
-.gp_floating_area .gp_maximize{
-	.gpimg( 'admin_icons.png', -8px, -488px );
-	}
-.gp_full_size .gp_floating_area .gp_maximize{
-	.gpimg( 'admin_icons.png', -8px, -519px );
-	}
 
 
 
@@ -1707,51 +1683,9 @@ body #addon_about{
  * Full Size Admin Area
  *
  */
-.gp_full_size{
+.admin_body{
 	margin:0;
 	padding:0;
-
-	#gp_admin_html{
-		position:relative;
-		height:auto;
-	}
-
-	#admincontainer{
-		border-radius:0;
-		border:0 none;
-		margin-left:180px;
-		right:0;
-		.box-shadow( none );
-		position:relative;
-
-
-		#gpx_content,
-		#admincontent{
-			height:100%;
-			padding-left:0;
-			padding-right:0;
-			padding-bottom:0;
-			.box-sizing( border-box );
-		}
-
-		#admincontent_inner{
-			border-right:0 none;
-			border-left:0 none;
-			border-bottom:0 none;
-			border-radius:0;
-			padding-right:40px;
-			padding-left:40px;
-			min-height:800px;
-		}
-
-		.toolbar{
-			padding-left:40px;
-			cursor:auto;
-		}
-		.admin_arrow_out{
-			display:none;
-		}
-	}
 
 	#simplepanel{
 		position:absolute;

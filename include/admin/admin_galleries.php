@@ -49,11 +49,16 @@ class admin_galleries extends special_galleries{
 
 		$not_visible = array();
 
-		echo '<table id="gp_galleries"><tr><td>';
+		echo '<table id="gp_galleries">';
 
-		echo '<h3>'.$langmessage['visible_galleries'].'</h2>';
+		echo '<tr><td>';
+		echo '<h3>'.$langmessage['visible_galleries'].'</h3>';
+		echo '</td><td>';
+		echo '<h3>'.$langmessage['hidden_galleries'].'</h3>';
+		echo '</td></tr>';
 
-		echo '<div class="drag_galleries active_galleries">';
+		echo '<tr><td class="drag_gal_td">';
+		echo '<div class="drag_galleries active_galleries cf">';
 
 		foreach($this->galleries as $title => $info ){
 
@@ -64,20 +69,19 @@ class admin_galleries extends special_galleries{
 			$this->GalleryEditBox( $title, $info );
 		}
 
-		echo '<br class="gpclear"/>';
+
 		echo '</div>';
-		echo '</td><td>';
+		echo '</td><td class="drag_gal_td">';
 
-		echo '<h3>'.$langmessage['hidden_galleries'].'</h2>';
 
-		echo '<div class="drag_galleries inactive_galleries">';
+		echo '<div class="drag_galleries inactive_galleries cf">';
 		if( count($this->not_visible) > 0 ){
 			foreach($this->not_visible as $title => $info){
 				$this->GalleryEditBox( $title, $info );
 			}
 		}
 
-		echo '<br class="gpclear"/>';
+
 		echo '</div>';
 
 		echo '</td></tr></table>';

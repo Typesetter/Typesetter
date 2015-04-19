@@ -92,9 +92,6 @@
 .drag_galleries{
 	min-height:250px; /* give it some dimensions for dropping */
 	min-width:250px;
-	border:1px solid #ccc;
-	background:#f7f7f7;
-	padding:5px;
 	}
 
 .drag_galleries > div{
@@ -106,21 +103,28 @@
 	background:#fff;
 	border:1px solid #f1f1f1;
 	}
+
 .drag_galleries > .draggable{
 	cursor:pointer;
 	}
+
 .drag_galleries .caption{
 	white-space:nowrap;
 	width:100px;
 	overflow:hidden;
 	}
 
+#gp_galleries{
+	width:100%;
+	}
+
 #gp_galleries td{
 	width:50% !important;
-	padding-right:15px;
 	vertical-align:top;
 	}
-#gp_galleries td:last-child{
-	padding-left:15px;
-	padding-right:0;
+
+#gp_galleries .drag_gal_td{
+	border:1px solid #ccc;
+	background:#f7f7f7;
+	padding:5px;
 	}

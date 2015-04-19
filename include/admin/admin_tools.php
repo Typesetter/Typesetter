@@ -127,7 +127,7 @@ class admin_tools{
 
 
 		/**
-		 * Settings
+		 * Content
 		 *
 		 */
 		$scripts['Admin_Menu']['script'] = '/include/admin/admin_menu_new.php';
@@ -146,6 +146,12 @@ class admin_tools{
 		$scripts['Admin_Extra']['class'] = 'admin_extra';
 		$scripts['Admin_Extra']['label'] = $langmessage['theme_content'];
 		$scripts['Admin_Extra']['group'] = 'content';
+
+		$scripts['Admin_Galleries']['script'] = '/include/admin/admin_galleries.php';
+		$scripts['Admin_Galleries']['class'] = 'admin_galleries';
+		$scripts['Admin_Galleries']['label'] = $langmessage['galleries'];
+		$scripts['Admin_Galleries']['group'] = 'content';
+
 
 
 		$scripts['Admin_Trash']['script'] = '/include/admin/admin_trash.php';

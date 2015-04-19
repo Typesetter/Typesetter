@@ -2344,7 +2344,7 @@ class gpOutput{
 					}
 				}else{
 					$buffer .= '<h3>Error Details</h3>'
-							.showArray($last_error)
+							.pre($last_error)
 							.'<p><a href="">Reload this page</a></p>';
 					if( $reload ){
 						$buffer .= '<p><a href="">Reload this page with the faulty component disabled</a></p>'

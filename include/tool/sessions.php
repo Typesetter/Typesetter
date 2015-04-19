@@ -846,7 +846,7 @@ class gpsession{
 		die();
 
 		//for debugging
-		die('debug: '.showArray($_POST).'result: '.showArray($gpAdmin));
+		die('debug: '.pre($_POST).'result: '.pre($gpAdmin));
 	}
 
 

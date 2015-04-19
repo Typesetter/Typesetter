@@ -2085,7 +2085,7 @@ class admin_theme_content extends admin_addon_install{
 			$addon_key = $layout_info['addon_key'];
 			$addon_config = gpPlugin::GetAddonConfig($addon_key);
 			echo '<li>';
-			echo common::link('Admin_Addons/'.rawurlencode($addon_key),'<span class="gpicon_plug"></span> '.$addon_config['name']);
+			echo common::link('Admin_Addons/'.admin_tools::encode64($addon_key),'<span class="gpicon_plug"></span> '.$addon_config['name']);
 			echo '</li>';
 
 			//hooks

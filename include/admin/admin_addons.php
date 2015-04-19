@@ -317,6 +317,8 @@ class admin_addons extends admin_addon_install{
 	function ShowAddon($addon_key){
 		global $config, $langmessage;
 
+		$addon_key = admin_tools::decode64($addon_key);
+
 		if( !isset($config['addons'][$addon_key]) ){
 			message($langmessage['OOPS'].'(Addon Not Found)');
 			$this->Select();
@@ -536,7 +538,7 @@ class admin_addons extends admin_addon_install{
 		echo '<div class="panelgroup" id="panelgroup_'.md5($addon_key).'">';
 
 		$label = '<i class="gpicon_plug"></i>'.$addon_config['name'];
-		echo common::Link('Admin_Addons/'.rawurlencode($addon_key),$label);
+		echo common::Link('Admin_Addons/'.admin_tools::encode64($addon_key),$label);
 
 		echo '<div class="panelgroup2">';
 		echo '<ul class="submenu">';

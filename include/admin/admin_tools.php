@@ -1308,7 +1308,7 @@ class admin_tools{
 				}
 
 				if( $addon_permissions ){
-					echo common::Link('Admin_Addons/'.rawurlencode($addon),$addonName);
+					echo common::Link('Admin_Addons/'.self::encode64($addon),$addonName);
 				}else{
 					echo '<a>'.$addonName.'</a>';
 				}
@@ -1515,4 +1515,11 @@ class admin_tools{
 		return $size;
 	}
 
+	static function encode64($input){
+		return strtr(base64_encode($input), '+/=', '-_,');
+	}
+
+	function decode64($input) {
+		return base64_decode(strtr($input, '-_,', '+/='));
+	}
 }

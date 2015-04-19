@@ -709,6 +709,11 @@ class gpOutput{
 	static function PrepGadgetContent(){
 		global $page;
 
+		// ? disable floating admin view
+		//if( $page->pagetype == 'admin_display' ){
+		//	return;
+		//}
+
 		$gadget_info = gpOutput::WhichGadgets($page->gpLayout);
 
 		foreach($gadget_info as $gpOutCmd => $info){

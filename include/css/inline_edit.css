@@ -146,7 +146,12 @@
 	display:block;
 	}
 
-.gp_inlude_edit input{
+#gp_admin_html .gp_inlude_edit .label{
+	margin:0;
+	background:none;
+	color:#444;
+	}
+#gp_admin_html .gp_inlude_edit input{
 	border:1px solid #ccc;
 	border-radius: 5px;
 	padding:4px;

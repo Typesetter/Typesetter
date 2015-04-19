@@ -5,10 +5,20 @@ gpPlugin::Incl('Common.php');
 
 class MultiLang extends MultiLang_Common{
 
-	function MultiLang(){
+	function __construct(){
 		$this->Init();
 	}
 
+
+	static function GetObject(){
+		static $object;
+
+		if( !$object ){
+			$object = new MultiLang();
+		}
+
+		return $object;
+	}
 
 	/**
 	 * Determine a user's language preference and redirect them to the appropriate homepage if necessary
@@ -17,6 +27,11 @@ class MultiLang extends MultiLang_Common{
 	 * 	... redirect all empty paths?
 	 *
 	 */
+	function _WhichPage($path){
+		$object = self::GetObject();
+		return $object->WhichPage($path);
+	}
+
 	function WhichPage($path){
 		global $config;
 
@@ -89,6 +104,10 @@ class MultiLang extends MultiLang_Common{
 	 * Show related titles
 	 *
 	 */
+	static function _Gadget(){
+		$object = self::GetObject();
+		$object->Gadget();
+	}
 	function Gadget(){
 		global $page, $ml_languages;
 
@@ -171,6 +190,11 @@ class MultiLang extends MultiLang_Common{
 	 * Translate a menu array using the translation lists
 	 *
 	 */
+	static function _GetMenuArray($menu){
+		$object = self::GetObject();
+		return $object->GetMenuArray($menu);
+	}
+
 	function GetMenuArray($menu){
 		global $page;
 
@@ -217,6 +241,6 @@ class MultiLang extends MultiLang_Common{
 
 }
 
+//for backwards compat
 global $ml_object;
-$ml_object = new MultiLang();
-
+$ml_object = MultiLang::GetObject();

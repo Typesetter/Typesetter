@@ -14,7 +14,6 @@ class MultiLang_Common{
 	var $lang;
 	var $language;
 
-
 	function Init(){
 		global $addonPathData, $config, $ml_languages;
 

@@ -117,7 +117,7 @@ class admin_display extends display{
 		$admin_content = ob_get_clean();
 
 		if( !$ajax && common::LoggedIn() ){
-			$gp_admin_html .= admin_tools::AdminContainer().$admin_content.'</div>';
+			$gp_admin_html .= '<div id="admincontainer" >'.$admin_content.'</div>';
 			return;
 		}
 		echo $admin_content;

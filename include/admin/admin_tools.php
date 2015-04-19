@@ -714,14 +714,6 @@ class admin_tools{
 		echo '</li>';
 	}
 
-	//deprecated v4.4
-	static function AdminContentPanel(){}
-
-	static function AdminContainer(){
-		return '<div id="admincontainer" class="gp_floating_area">';
-	}
-
-
 
 	//uses $status from update codes to execute some cleanup code on a regular interval (7 days)
 	static function ScheduledTasks(){
@@ -1486,4 +1478,9 @@ class admin_tools{
 	function decode64($input) {
 		return base64_decode(strtr($input, '-_,', '+/='));
 	}
+
+
+	//deprecated v4.4
+	static function AdminContentPanel(){}
+	static function AdminContainer(){}
 }

@@ -128,8 +128,9 @@ class admin_display extends display{
 		global $langmessage, $page;
 
 		echo '<div id="admin_breadcrumbs" class="cf">';
-		//echo common::Link('',$langmessage['Homepage']);
-		//echo ' &#187; ';
+
+		echo common::Link('',$langmessage['Homepage']);
+		echo ' &#187; ';
 		echo common::Link('Admin',$langmessage['administration']);
 
 		if( !empty($page->title) && !empty($page->label) && $page->title != 'Admin' ){

@@ -41,27 +41,20 @@ class admin_display extends display{
 
 
 	function RunScript(){
-		global $page;
-
-		$this->SetTheme();
 
 		ob_start();
-		if( !common::LoggedIn() ){
-			$this->AnonUser();
-		}else{
-			$this->RunAdminScript();
-		}
+		$this->RunAdminScript();
 		$this->contentBuffer = ob_get_clean();
 
 
 		//display admin area in full window?
-		if( $page->FullDisplay() ){
+		if( $this->FullDisplay() ){
+			$this->get_theme_css = false;
 			$_REQUEST['gpreq'] = 'admin';
-			$page->get_theme_css = false;
 		}
 	}
 
-	//display admin area in full window?
+	//display admin area in full window
 	function FullDisplay(){
 
 		if( common::RequestType() == 'template'
@@ -125,7 +118,7 @@ class admin_display extends display{
 	}
 
 	function BreadCrumbs(){
-		global $langmessage, $page;
+		global $langmessage;
 
 		echo '<div id="admin_breadcrumbs" class="cf">';
 
@@ -133,9 +126,10 @@ class admin_display extends display{
 		echo ' &#187; ';
 		echo common::Link('Admin',$langmessage['administration']);
 
-		if( !empty($page->title) && !empty($page->label) && $page->title != 'Admin' ){
+
+		if( !empty($this->title) && !empty($this->label) && $this->label != $langmessage['administration'] ){
 			echo ' &#187; ';
-			echo common::Link($page->title,$page->label);
+			echo common::Link($this->title,$this->label);
 		}
 		echo '</div>';
 	}
@@ -146,7 +140,7 @@ class admin_display extends display{
 	 *
 	 */
 	function AdminContentPanel(){
-		global $page, $langmessage;
+		global $langmessage;
 
 		//the login form does not need the panel
 		if( !common::LoggedIn() ){
@@ -265,7 +259,7 @@ class admin_display extends display{
 	 *
 	 */
 	function AdminPanel(){
-		global $langmessage, $page;
+		global $langmessage;
 
 		$cmd = common::GetCommand();
 		switch($cmd){
@@ -280,7 +274,7 @@ class admin_display extends display{
 			die();
 		}
 
-		$page->head_js[] = '/include/js/auto_width.js';
+		$this->head_js[] = '/include/js/auto_width.js';
 
 		echo '<h2>'.$langmessage['administration'].'</h2>';
 
@@ -322,204 +316,6 @@ class admin_display extends display{
 		echo '</ul>';
 		echo '</div>';
 	}
-
-
-	function SendPassword(){
-		global $langmessage, $gp_mailer, $config;
-
-		includeFile('tool/email_mailer.php');
-		$users		= gpFiles::Get('_site/users');
-		$username	= $_POST['username'];
-
-		if( !isset($users[$username]) ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-		$userinfo = $users[$username];
-
-
-
-		if( empty($userinfo['email']) ){
-			message($langmessage['no_email_provided']);
-			return false;
-		}
-
-		$passwordChars	= str_repeat('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',3);
-		$newpass		= str_shuffle($passwordChars);
-		$newpass		= substr($newpass,0,8);
-		$pass_hash		= gpsession::PassAlgo($userinfo);
-
-		$users[$username]['newpass'] = common::hash($newpass,$pass_hash);
-		if( !gpFiles::SaveData('_site/users','users',$users) ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-		if( isset($_SERVER['HTTP_HOST']) ){
-			$server = $_SERVER['HTTP_HOST'];
-		}else{
-			$server = $_SERVER['SERVER_NAME'];
-		}
-
-		$link = common::AbsoluteLink('Admin',$langmessage['login']);
-		$message = sprintf($langmessage['passwordremindertext'],$server,$link,$username,$newpass);
-
-		if( $gp_mailer->SendEmail($userinfo['email'], $langmessage['new_password'], $message) ){
-			list($namepart,$sitepart) = explode('@',$userinfo['email']);
-			$showemail = substr($namepart,0,3).'...@'.$sitepart;
-			message(sprintf($langmessage['password_sent'],$username,$showemail));
-			return true;
-		}
-
-
-		message($langmessage['OOPS'].' (Email not sent)');
-
-		return false;
-	}
-
-
-	function FogottenPassword(){
-		global $langmessage, $page;
-		$_POST += array('username'=>'');
-		$page->css_admin[] = '/include/css/login.css';
-
-
-		echo '<div id="loginform">';
-		echo '<form class="loginform" action="'.common::GetUrl('Admin').'" method="post">';
-		echo '<p><b>'.$langmessage['send_password'].'</b></p>';
-		//echo '<b>'.sprintf($langmessage['forgotten_password'],'').'</b>';
-
-		echo '<label>';
-		echo $langmessage['username'];
-		echo '<input type="text" name="username" value="'.htmlspecialchars($_POST['username']).'" class="login_text" />';
-		echo '</label>';
-
-		echo '<input type="hidden" name="cmd" value="send_password" />';
-		echo '<input type="submit" name="aa" value="'.$langmessage['send_password'].'" class="login_submit" />';
-		echo ' &nbsp; <label>'. common::Link('Admin',$langmessage['back']).'</label>';
-
-		echo '</form>';
-		echo '</div>';
-
-	}
-
-	function LoginForm(){
-		global $langmessage,$page;
-
-
-		$page->head .= "\n<script type=\"text/javascript\">var IE_LT_8 = false;</script><!--[if lt IE 8]>\n<script type=\"text/javascript\">IE_LT_8=true;</script>\n<![endif]-->";
-		$page->head_js[] = '/include/js/login.js';
-		$page->head_js[] = '/include/js/md5_sha.js';
-		$page->head_js[] = '/include/thirdparty/js/jsSHA.js';
-
-		$page->css_admin[] = '/include/css/login.css';
-
-
-		$_POST += array('username'=>'');
-		$_REQUEST += array('file'=>'');
-		$page->admin_js = true;
-		includeFile('tool/sessions.php');
-		gpsession::cookie('g',2);
-
-		echo '<div class="req_script nodisplay" id="login_container">';
-
-		echo '<div id="browser_warning" class="nodisplay">';
-		echo '<div><b>'.$langmessage['Browser Warning'].'</b></div>';
-		echo '<p>';
-		echo $langmessage['Browser !Supported'];
-		echo '</p>';
-		echo '<p>';
-		echo '<a href="http://www.mozilla.com/">Firefox</a>';
-		echo '<a href="http://www.google.com/chrome">Chrome</a>';
-		echo '<a href="http://www.apple.com/safari">Safari</a>';
-		echo '<a href="http://www.microsoft.com/windows/internet-explorer/default.aspx">Explorer</a>';
-
-		echo '</p>';
-		echo'</div>';
-
-		echo '<div id="loginform">';
-		echo '<p><b>'.$langmessage['LOGIN_REQUIRED'].'</b></p>';
-			echo '<div id="login_timeout" class="nodisplay">Log in Timeout: '.common::Link('Admin','Reload to continue...').'</div>';
-
-			echo '<form action="'.common::GetUrl('Admin').'" method="post" id="login_form">';
-			echo '<input type="hidden" name="file" value="'.htmlspecialchars($_REQUEST['file']).'">';
-
-			echo '<div>';
-			echo '<input type="hidden" name="cmd" value="login" />';
-			echo '<input type="hidden" name="login_nonce" value="'.htmlspecialchars(common::new_nonce('login_nonce',true,300)).'" />';
-			echo '</div>';
-
-			echo '<label>';
-			echo $langmessage['username'];
-			echo '<input type="text" class="login_text" name="username" value="'.htmlspecialchars($_POST['username']).'" />';
-			echo '<input type="hidden" name="user_sha" value="" />';
-			echo '</label>';
-
-			echo '<label>';
-			echo $langmessage['password'];
-			echo '<input type="password" class="login_text password" name="password" value="" />';
-			echo '<input type="hidden" name="pass_md5" value="" />';
-			echo '<input type="hidden" name="pass_sha" value="" />';
-			echo '<input type="hidden" name="pass_sha512" value="" />';
-			echo '</label>';
-
-			echo '<input type="submit" class="login_submit" name="aa" value="'.$langmessage['login'].'" />';
-
-			echo '<p>';
-			echo '<label>';
-			echo '<input type="checkbox" name="remember" '.$this->checked('remember').'/> ';
-			echo '<span>'.$langmessage['remember_me'].'</span>';
-			echo '</label> ';
-
-			echo '<label>';
-			echo '<input type="checkbox" name="encrypted" '.$this->checked('encrypted').'/> ';
-			echo '<span>'.$langmessage['send_encrypted'].'</span>';
-			echo '</label>';
-			echo '</p>';
-
-			echo '<p>';
-			echo '<label>';
-			$url = common::GetUrl('Admin','cmd=forgotten');
-			echo sprintf($langmessage['forgotten_password'],$url);
-			echo '</label>';
-			echo '</p>';
-
-
-			echo '</form>';
-		echo '</div>';
-
-		echo '</div>';
-
-		echo '<div class="without_script" id="javascript_warning">';
-		echo '<p><b>'.$langmessage['JAVASCRIPT_REQ'].'</b></p>';
-		echo '<p>';
-		echo $langmessage['INCOMPAT_BROWSER'];
-		echo ' ';
-		echo $langmessage['MODERN_BROWSER'];
-		echo '</p>';
-		echo '</div>';
-
-
-
-
-
-	}
-
-	function Checked($name){
-
-		if( strtoupper($_SERVER['REQUEST_METHOD']) !== 'POST' )
-			return ' checked="checked" ';
-
-		if( !isset($_POST[$name]) )
-			return '';
-
-		return ' checked="checked" ';
-	}
-
-
-
-
 
 
 	static function OrganizeFrequentScripts($page){

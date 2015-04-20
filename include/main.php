@@ -26,8 +26,13 @@ switch($type){
 	break;
 
 	case 'admin':
-		includeFile('admin/admin_display.php');
-		$page = new admin_display($title,$type);
+		if( common::LoggedIn() ){
+			includeFile('admin/admin_display.php');
+			$page = new admin_display($title,$type);
+		}else{
+			includeFile('admin/admin_login.php');
+			$page = new admin_login($title,$type);
+		}
 	break;
 
 	default:

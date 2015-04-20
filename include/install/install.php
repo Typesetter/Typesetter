@@ -207,7 +207,10 @@ echo '</body></html>';
 //Install Class
 class gp_install{
 
-	var $can_write_data = true;
+	var $can_write_data		= true;
+	var $ftp_root			= false;
+	var $root_mode;
+
 
 
 	function __construct(){
@@ -234,7 +237,7 @@ class gp_install{
 		switch($cmd){
 
 			case 'Continue':
-				FTP_Prepare();
+				$this->FTP_Prepare();
 			break;
 
 			case 'Install':
@@ -470,9 +473,7 @@ class gp_install{
 	function CheckDataFolder(){
 		global $ok,$dataDir,$langmessage;
 
-		echo '<tr>';
-
-		echo '<td class="nowrap">';
+		echo '<tr><td class="nowrap">';
 		$folder = $dataDir.'/data';
 		if( strlen($folder) > 23 ){
 			$show = '...'.substr($folder,-20);
@@ -644,6 +645,239 @@ class gp_install{
 	}
 
 
+
+	/**
+	 * Change the permissions of the data directory
+	 *
+	 */
+	function FTP_Prepare(){
+		global $langmessage;
+
+		echo '<h2>'.$langmessage['Using_FTP'].'...</h2>';
+		echo '<ul>';
+		$this->_FTP_Prepare();
+		$this->FTP_RestoreMode();
+		echo '</ul>';
+	}
+
+
+	function _FTP_Prepare(){
+
+		if( !$this->FTPConnection() ){
+			return;
+		}
+
+		if( $this->FTP_DataFolder() ){
+			return;
+		}
+
+		$this->FTP_DataMode();
+	}
+
+	/**
+	 * If recreating the data folder with php doesn't work
+	 * Attempt to change the mode of the folder directly
+	 *
+	 */
+	function FTP_DataMode(){
+		global $langmessage, $install_ftp_connection, $dataDir;
+
+		//Change Mode of /data
+		$ftpData = $this->ftp_root.'/data';
+		$modDir = ftp_site($install_ftp_connection, 'CHMOD 0777 '. $ftpData );
+		if( !$modDir ){
+			echo '<li><span class="failed">';
+			echo sprintf($langmessage['Could_Not_'],'<em>CHMOD 0777 '. $ftpData.'</em>');
+			echo '</span></li>';
+			return false;
+		}
+
+		echo '<li><span class="passed">';
+		echo sprintf($langmessage['FTP_PERMISSIONS_CHANGED'],'<em>'.$ftpData.'</em>');
+		echo '</span></li>';
+
+
+
+		//passed
+		echo '<li><span class="passed"><b>';
+		echo $langmessage['Success_continue_below'];
+		echo '</b></span></li>';
+	}
+
+
+	/**
+	 * Create the data folder with appropriate permissions
+	 *
+	 * 1) make parent directory writable
+	 * 2) delete existing /data folder
+	 * 3) create /data folder with php's mkdir() (so it has the correct owner)
+	 * 4) restore parent directory
+	 *
+	 */
+	function FTP_DataFolder(){
+		global $dataDir, $install_ftp_connection, $langmessage;
+
+		$this->root_mode = fileperms($dataDir);
+		if( !$this->root_mode ){
+			return false;
+		}
+
+
+		// (1)
+		$modDir = ftp_site($install_ftp_connection, 'CHMOD 0777 '. $this->ftp_root );
+		if( !$modDir ){
+			echo '<li><span class="failed">';
+			echo sprintf($langmessage['Could_Not_'],'<em>CHMOD 0777 '. $this->ftp_root.'</em>');
+			echo '</span></li>';
+			return false;
+		}
+
+		// (2) use rename instead of trying to delete recursively
+		$php_dir	= $dataDir.'/data';
+		$del_name	= false;
+
+		if( file_exists($php_dir) ){
+
+			$ftp_dir	= rtrim($this->ftp_root,'/').'/data';
+			$del_name	= '/data-delete-'.rand(0,10000);
+			$ftp_del	= rtrim($this->ftp_root,'/').$del_name;
+
+			$changed	= ftp_rename($install_ftp_connection, $ftp_dir , $ftp_del );
+			if( !$changed ){
+				echo '<li><span class="failed">';
+				echo sprintf($langmessage['Could_Not_'],'<em>Remove '. $this->ftp_root.'/data</em>');
+				echo '</span></li>';
+				return false;
+			}
+		}
+
+
+		// (3) use rename instead of trying to delete recursively
+		$mode = 0755;
+		if( defined(gp_chmod_dir) ){
+			$mode = gp_chmod_dir;
+		}
+		if( !mkdir($php_dir,$mode) ){
+			echo '<li><span class="failed">';
+			echo sprintf($langmessage['Could_Not_'],'<em>mkdir('.$php_dir.')</em>');
+			echo '</span></li>';
+			return false;
+		}
+
+
+		// (4) will be done afterwards
+
+
+		// make sure it's writable ?
+		clearstatcache();
+		if( !gp_is_writable($php_dir) ){
+			return false;
+		}
+
+		echo '<li><span class="passed"><b>';
+		echo $langmessage['Success_continue_below'];
+		echo '</b></span></li>';
+
+		return true;
+	}
+
+	function CopyData($
+
+
+	/**
+	 * Restore the mode of the root directory to it's original mode
+	 *
+	 */
+	function FTP_RestoreMode(){
+		global $install_ftp_connection, $langmessage;
+
+		if( !$this->root_mode || !$install_ftp_connection ){
+			return;
+		}
+
+
+		$mode		= $this->root_mode & 0777;
+		$mode		= '0'.decoct($mode);
+		$ftp_cmd	= 'CHMOD '.$mode.' '.$this->ftp_root;
+
+		if( !ftp_site($install_ftp_connection, $ftp_cmd ) ){
+			echo '<li><span class="failed">';
+			echo sprintf($langmessage['Could_Not_'],'<em>Restore mode for '. $this->ftp_root.': '.$ftp_cmd.'</em>');
+			echo '</span></li>';
+			return;
+		}
+	}
+
+
+	/**
+	 * Establish an FTP connection to be used by the installer
+	 * todo: remove $install_ftp_connection globabl
+	 */
+	function FTPConnection(){
+		global $dataDir, $langmessage, $install_ftp_connection;
+
+
+		//test for functions
+		if( !function_exists('ftp_connect') ){
+			echo '<li>';
+			echo '<span class="failed">';
+			echo $langmessage['FTP_UNAVAILABLE'];
+			echo '</span>';
+			echo '</li>';
+			return false;
+		}
+
+
+		//Try to connect
+		echo '<li>';
+		$install_ftp_connection = @ftp_connect($_POST['ftp_server'],21,6);
+		if( !$install_ftp_connection ){
+			echo '<span class="failed">';
+			echo sprintf($langmessage['FAILED_TO_CONNECT'],'<em>'.htmlspecialchars($_POST['ftp_server']).'</em>');
+			echo '</span>';
+			echo '</li>';
+			return false;
+		}
+
+		echo '<span class="passed">';
+		echo sprintf($langmessage['CONNECTED_TO'],'<em>'.htmlspecialchars($_POST['ftp_server']).'</em>');
+		echo '</span></li>';
+
+
+		//Log in
+		echo '<li>';
+		$login_result = @ftp_login($install_ftp_connection, $_POST['ftp_user'], $_POST['ftp_pass']);
+		if( !$login_result ){
+			echo '<span class="failed">';
+			echo sprintf($langmessage['NOT_LOOGED_IN'],'<em>'.htmlspecialchars($_POST['ftp_user']).'</em>');
+			echo '</span></li>';
+			return false;
+		}
+
+		echo '<span class="passed">';
+		echo sprintf($langmessage['LOGGED_IN'],'<em>'.htmlspecialchars($_POST['ftp_user']).'</em>');
+		echo '</span></li>';
+
+
+		//Get FTP Root
+		echo '<li>';
+		if( $login_result ){
+			$this->ftp_root = gpftp::GetFTPRoot($install_ftp_connection,$dataDir);
+		}
+		if( !$this->ftp_root ){
+			echo '<span class="failed">';
+			echo $langmessage['ROOT_DIRECTORY_NOT_FOUND'];
+			echo '</span>';
+			echo '</li>';
+			return false;
+		}
+
+		echo '<span class="passed">';
+		echo sprintf($langmessage['FTP_ROOT'],'<em>'.$this->ftp_root.'</em>');
+		echo '</span></li>';
+
+		return true;
+	}
 
 
 }//end class
@@ -832,136 +1066,6 @@ class gp_install{
 	}
 
 
-	function FTP_Prepare(){
-		global $langmessage, $install_ftp_connection, $dataDir;
-
-		echo '<h2>'.$langmessage['Using_FTP'].'...</h2>';
-		echo '<ul>';
-
-
-		// 1) make parent directory writable
-		// 2) delete existing /data folder
-		// 3) create /data folder with php's mkdir() (so it has the correct owner)
-		// 4) restore parent directory
-
-
-		//$current = decoct(fileperms($dataDir));
-		//echo pre($current);
-		//return;
-
-
-		$ftp_root = false;
-		if( Install_FTPConnection($ftp_root) === false ){
-			return;
-		}
-
-
-		//Change Mode of /data
-		echo '<li>';
-			$ftpData = $ftp_root.'/data';
-			$modDir = ftp_site($install_ftp_connection, 'CHMOD 0777 '. $ftpData );
-			if( !$modDir ){
-				echo '<span class="failed">';
-				echo sprintf($langmessage['Could_Not_'],'<em>CHMOD 0777 '. $ftpData.'</em>');
-				//echo 'Could not <em>CHMOD 0777 '. $ftpData.'</em>';
-				echo '</span>';
-				echo '</li></ul>';
-				return false;
-			}else{
-				echo '<span class="passed">';
-				echo sprintf($langmessage['FTP_PERMISSIONS_CHANGED'],'<em>'.$ftpData.'</em>');
-				//echo 'File permissions for <em>'.$ftpData.'</em> changed.';
-				echo '</span>';
-			}
-			echo '</li>';
-
-		echo '<li>';
-				echo '<span class="passed">';
-				echo '<b>'.$langmessage['Success_continue_below'].'</b>';
-				echo '</span>';
-				echo '</li>';
-
-		echo '</ul>';
-	}
-
-
-	function Install_FTPConnection(&$ftp_root){
-		global $dataDir,$langmessage,$install_ftp_connection;
-
-		//test for functions
-		echo '<li>';
-			if( !function_exists('ftp_connect') ){
-				echo '<span class="failed">';
-				echo $langmessage['FTP_UNAVAILABLE'];
-				echo '</span>';
-				echo '</li></ul>';
-				return false;
-			}else{
-				echo '<span class="passed">';
-				echo $langmessage['FTP_AVAILABLE'];
-				echo '</span>';
-			}
-			echo '</li>';
-
-		//Try to connect
-		echo '<li>';
-			$install_ftp_connection = @ftp_connect($_POST['ftp_server'],21,6);
-			if( !$install_ftp_connection ){
-				echo '<span class="failed">';
-				echo sprintf($langmessage['FAILED_TO_CONNECT'],'<em>'.htmlspecialchars($_POST['ftp_server']).'</em>');
-				echo '</span>';
-				echo '</li></ul>';
-				return false;
-			}else{
-				echo '<span class="passed">';
-				echo sprintf($langmessage['CONNECTED_TO'],'<em>'.htmlspecialchars($_POST['ftp_server']).'</em>');
-				//echo 'Connected to <em>'.$_POST['ftp_server'].'</em>';
-				echo '</span>';
-			}
-			echo '</li>';
-
-		//Log in
-		echo '<li>';
-			$login_result = @ftp_login($install_ftp_connection, $_POST['ftp_user'], $_POST['ftp_pass']);
-			if( !$login_result ){
-				echo '<span class="failed">';
-				echo sprintf($langmessage['NOT_LOOGED_IN'],'<em>'.htmlspecialchars($_POST['ftp_user']).'</em>');
-				//echo 'Could not log in user  <em>'.$_POST['ftp_user'].'</em>';
-				echo '</span>';
-				echo '</li></ul>';
-				return false;
-			}else{
-				echo '<span class="passed">';
-				echo sprintf($langmessage['LOGGED_IN'],'<em>'.htmlspecialchars($_POST['ftp_user']).'</em>');
-				//echo 'User <em>'.$_POST['ftp_user'].'</em> logged in.';
-				echo '</span>';
-			}
-			echo '</li>';
-
-		//Get FTP Root
-
-		echo '<li>';
-			$ftp_root = false;
-			if( $login_result ){
-				$ftp_root = gpftp::GetFTPRoot($install_ftp_connection,$dataDir);
-			}
-			if( !$ftp_root ){
-			//if( !$login_result ){
-				echo '<span class="failed">';
-				echo $langmessage['ROOT_DIRECTORY_NOT_FOUND'];
-				echo '</span>';
-				echo '</li></ul>';
-				return false;
-			}else{
-				echo '<span class="passed">';
-				echo sprintf($langmessage['FTP_ROOT'],'<em>'.$ftp_root.'</em>');
-				//echo 'FTP Root found: <em>'.$ftp_root.'</em>';
-				echo '</span>';
-			}
-			echo '</li>';
-
-		return true;
-	}
 
 
 

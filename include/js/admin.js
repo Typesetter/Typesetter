@@ -1077,15 +1077,10 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 			return;
 		}
 
-		var is_fixed = ($elem.css('position') === 'fixed');
-		var pos, gp_left, css = {};
+		var gp_left
+			, css = {}
+			, pos = $elem.position();
 
-		//get current position
-		pos = $elem.position();
-		if( is_fixed ){
-			pos.left -= $win.scrollLeft();
-			pos.top -= $win.scrollTop();
-		}
 
 		//move back to the right if $elem has been moved left
 		if( init ){
@@ -1108,22 +1103,6 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 			css.top = winbottom + 2*tolerance; //tolerance is negative
 		}
 
-
-		/*
-		var height = $elem.height();
-		var winheight = $win.height();
-		var checkbottom = $win.height() - height - tolerance;
-		if( pos.top < tolerance ){
-			css.top = tolerance;
-
-		}else if( pos.top > checkbottom ){
-			if( height > winheight ){
-				css.top = checkbottom + ( height - winheight);
-			}else{
-				css.top = checkbottom;
-			}
-		}
-		*/
 
 		//right
 		var checkright = $win.width()  - width - tolerance;

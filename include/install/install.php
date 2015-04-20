@@ -481,8 +481,7 @@ class gp_install{
 			$show = $folder;
 		}
 		echo sprintf($langmessage['Permissions_for'],$show);
-		echo ' &nbsp; ';
-		echo '</td>';
+		echo ' &nbsp; </td>';
 
 
 		if( !is_dir($folder)){
@@ -498,6 +497,7 @@ class gp_install{
 			echo '<td class="passed_orange">'.$langmessage['See_Below'].' (1)</td>';
 			$this->can_write_data = $ok = false;
 		}
+
 
 		//show current info
 		$expected = '777';
@@ -734,13 +734,14 @@ class gp_install{
 
 		// (2) use rename instead of trying to delete recursively
 		$php_dir	= $dataDir.'/data';
-		$del_name	= false;
+		$php_del	= false;
 
 		if( file_exists($php_dir) ){
 
 			$ftp_dir	= rtrim($this->ftp_root,'/').'/data';
 			$del_name	= '/data-delete-'.rand(0,10000);
 			$ftp_del	= rtrim($this->ftp_root,'/').$del_name;
+			$php_del	= $dataDir.$del_name;
 
 			$changed	= ftp_rename($install_ftp_connection, $ftp_dir , $ftp_del );
 			if( !$changed ){
@@ -778,10 +779,37 @@ class gp_install{
 		echo $langmessage['Success_continue_below'];
 		echo '</b></span></li>';
 
+		if( $php_del ){
+			$this->CopyData($php_del, $php_dir);
+		}
+
 		return true;
 	}
 
-	function CopyData($
+	/**
+	 * Copy files from the "deleted" data folder to the new data folder
+	 *
+	 */
+	function CopyData($from_dir, $to_dir){
+
+		$files = scandir($from_dir);
+		foreach($files as $file){
+
+			if( $file === '..' || $file === '.' ){
+				continue;
+			}
+
+			$from = $from_dir.'/'.$file;
+
+			//no directories
+			if( is_dir($from) ){
+				continue;
+			}
+
+			$to = $to_dir.'/'.$file;
+			copy($from,$to);
+		}
+	}
 
 
 	/**

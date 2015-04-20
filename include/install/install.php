@@ -37,9 +37,10 @@ body{
 	margin:1em 5em;
 	font-family: "Lucida Grande",Verdana,"Bitstream Vera Sans",Arial,sans-serif;
 	background:#f1f1f1;
-
+	font-size:13px;
 }
-div,p,td,th{
+
+td,th{
 	font-size:12px;
 	}
 
@@ -110,8 +111,11 @@ h3,h4{
 	padding:1px;
 	border:0 none;
 	}
-.padded_table td{
-	padding:5px;
+.padded_table{
+	border-collapse:collapse;
+}
+.padded_table > tbody > tr > td{
+	padding:5px 8px;
 }
 
 
@@ -162,6 +166,7 @@ input.text:focus{
 	padding:5px 7px;
 	white-space:nowrap;
 	background-color:#f5f5f5;
+	display:block;
 	}
 .nowrap{
 	white-space:nowrap;
@@ -443,7 +448,7 @@ class gp_install{
 		}
 
 		if( !$this->can_write_data ){
-			Form_Permissions();
+			$this->Form_Permissions();
 		}else{
 			echo '<h3>'.$langmessage['Notes'].'</h3>';
 			echo '<div>';
@@ -475,12 +480,12 @@ class gp_install{
 
 		echo '<tr><td class="nowrap">';
 		$folder = $dataDir.'/data';
-		if( strlen($folder) > 23 ){
-			$show = '...'.substr($folder,-20);
+		if( strlen($folder) > 33 ){
+			$show = '...'.substr($folder,-30);
 		}else{
 			$show = $folder;
 		}
-		echo sprintf($langmessage['Permissions_for'],$show);
+		echo $show;
 		echo ' &nbsp; </td>';
 
 
@@ -498,27 +503,17 @@ class gp_install{
 			$this->can_write_data = $ok = false;
 		}
 
-
-		//show current info
-		$expected = '777';
-		if( file_exists($folder) && $current = @substr(decoct(fileperms($folder)), -3) ){
-			$expected = FileSystem::getExpectedPerms($folder);
-			if( FileSystem::perm_compare($expected,$current) ){
-				echo '<td class="passed">';
-				echo $current;
-			}else{
-				echo '<td class="passed_orange">';
-				echo $current;
-			}
+		if( $this->can_write_data ){
+			echo '<td class="passed">';
+			echo $langmessage['Writable'];
 		}else{
 			echo '<td class="passed_orange">';
-			echo '???';
+			echo $langmessage['Not Writable'];
 		}
-		echo '</td>';
-		echo '<td>';
-		echo $expected;
-		echo '</td>';
-		echo '</tr>';
+
+		echo '</td><td>';
+		echo $langmessage['Writable'];
+		echo '</td></tr>';
 	}
 
 
@@ -908,6 +903,110 @@ class gp_install{
 	}
 
 
+	function Form_Permissions(){
+		global $langmessage,$dataDir;
+
+		echo '<div>';
+		echo '<h2>'.$langmessage['Changing_File_Permissions'].'</h2>';
+		echo '<p>';
+		echo $langmessage['REFRESH_AFTER_CHANGE'];
+		echo '</p>';
+
+		echo '<table class="styledtable fullwidth">';
+
+		//manual method
+		echo '<tr><th>';
+		echo $langmessage['manual_method'];
+		echo '</th></tr>';
+		echo '<tr><td><p>';
+		echo $langmessage['LINUX_CHOWN'];
+		echo '</p>';
+
+		$owner = $this->GetPHPOwner();
+		if( $owner ){
+			echo '<tt class="code">chown '.$owner.' "'.$dataDir.'/data"</tt>';
+			echo '<small>Note: "'.$owner.'" appears to be the owner uid of PHP on your server</small>';
+		}else{
+			echo '<tt class="code">chown ?? "'.$dataDir.'/data"</tt>';
+			echo '<small>Replace ?? with the owner uid of PHP on your server</small>';
+		}
+
+		echo '<p><a href="">'.$langmessage['Refresh'].'</a></p>';
+		echo '</td></tr>';
+
+		//ftp
+		echo '<tr><th>FTP</th></tr>';
+		echo '<tr><td><p>';
+		echo $langmessage['MOST_FTP_CLIENTS'];
+		echo '</p>';
+
+		echo '<p>Using your FTP client, we recommend the following steps to make the data directory writable</p>';
+
+		echo '<ol>';
+		echo '<li>Make "'.$dataDir.'" writable</li>';
+		echo '<li>Delete "'.$dataDir.'/data"</li>';
+		echo '<li>Run gpEasy Installer by refreshing this page</li>';
+		echo '<li>Restore the permissions of "'.$dataDir.'"</li>';
+		echo '</ol>';
+
+		echo '</td></tr>';
+
+
+		//
+		if( function_exists('ftp_connect') ){
+			echo '<tr><th>';
+			echo $langmessage['Installer'];
+			echo '</th>';
+			echo '</tr>';
+			echo '<tr><td>';
+			echo '<p>';
+			echo $langmessage['FTP_CHMOD'];
+			echo '</p>';
+			echo '<form action="'.common::GetUrl('').'" method="post">';
+			echo '<table class="padded_table">';
+			Form_FTPDetails();
+			echo '<tr>';
+				echo '<td align="left">&nbsp;</td><td>';
+				echo '<input type="hidden" name="cmd" value="Continue" />';
+				echo '<input type="submit" class="submit" name="aaa" value="'.$langmessage['continue'].'" />';
+				echo '</td>';
+				echo '</tr>';
+			echo '</table>';
+			echo '</form>';
+			echo '</td>';
+			echo '</tr>';
+		}
+
+
+
+		echo '</table>';
+		echo '</div>';
+	}
+
+	/**
+	 * Attempt to get the owner of php
+	 *
+	 */
+	function GetPHPOwner(){
+		global $dataDir;
+
+		if( !function_exists('fileowner') ){
+			return;
+		}
+
+
+		$name = tempnam( sys_get_temp_dir(), 'gpinstall-' );
+		if( !$name ){
+			return;
+		}
+
+		return fileowner($name);
+	}
+
+
+
+
+
 }//end class
 
 
@@ -976,76 +1075,6 @@ class gp_install{
 		echo '</form>';
 	}
 
-
-	function Form_Permissions(){
-		global $langmessage,$dataDir;
-
-		echo '<div>';
-		echo '<h3>'.$langmessage['Changing_File_Permissions'].'</h3>';
-		echo '<p>';
-		echo $langmessage['REFRESH_AFTER_CHANGE'];
-		echo '</p>';
-
-		echo '<table class="styledtable fullwidth">';
-
-		echo '<tr>';
-		echo '<th>';
-		echo $langmessage['manual_method'];
-		echo '</th>';
-		echo '</tr><tr>';
-		echo '<td>';
-		echo '<p>';
-		echo $langmessage['LINUX_CHMOD'];
-		echo '</p>';
-		echo '<div class="code"><tt>';
-		echo 'chmod 777 "'.$dataDir.'/data"';
-		//echo 'chmod 777 "/'.$langmessage['your_install_directory'].'/data"';
-		echo '</tt></div>';
-		echo '<p>';
-		echo '<a href="">'.$langmessage['Refresh'].'</a>';
-		echo '</p>';
-		echo '</td></tr>';
-
-		echo '<tr><th>FTP</th>';
-		echo '</tr>';
-		echo '<tr><td>';
-		echo '<p>';
-		echo $langmessage['MOST_FTP_CLIENTS'];
-		echo '</p>';
-		echo '</td>';
-		echo '</tr>';
-
-		if( function_exists('ftp_connect') ){
-			echo '<tr><th>';
-			echo $langmessage['Installer'];
-			echo '</th>';
-			echo '</tr>';
-			echo '<tr><td>';
-			echo '<p>';
-			echo $langmessage['FTP_CHMOD'];
-			echo '</p>';
-			echo '<form action="'.common::GetUrl('').'" method="post">';
-			echo '<table class="padded_table">';
-			Form_FTPDetails();
-			echo '<tr>';
-				echo '<td align="left">&nbsp;</td><td>';
-				echo '<input type="hidden" name="cmd" value="Continue" />';
-				echo '<input type="submit" class="submit" name="aaa" value="'.$langmessage['continue'].'" />';
-				echo '</td>';
-				echo '</tr>';
-			echo '</table>';
-			echo '</form>';
-			echo '</td>';
-			echo '</tr>';
-		}
-
-
-
-		echo '</table>';
-		echo '</div>';
-
-
-	}
 
 	function Form_FTPDetails($required=false){
 		global $langmessage;

@@ -284,13 +284,6 @@ class admin_display extends display{
 		echo '</div>';
 
 
-		echo '<div id="adminfooter">';
-		echo '<ul>';
-		echo '<li>WYSIWYG editor by  <a href="http://ckeditor.com/">CKEditor.net</a></li>';
-		echo '<li>Galleries made possible by <a href="http://colorpowered.com/colorbox/">ColorBox</a></li>';
-		echo '<li>Icons by <a href="http://www.famfamfam.com/">famfamfam.com</a></li>';
-		echo '</ul>';
-		echo '</div>';
 	}
 
 

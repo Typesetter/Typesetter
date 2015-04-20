@@ -833,15 +833,28 @@ class gp_install{
 
 
 	function FTP_Prepare(){
-		global $langmessage,$install_ftp_connection;
+		global $langmessage, $install_ftp_connection, $dataDir;
 
 		echo '<h2>'.$langmessage['Using_FTP'].'...</h2>';
 		echo '<ul>';
+
+
+		// 1) make parent directory writable
+		// 2) delete existing /data folder
+		// 3) create /data folder with php's mkdir() (so it has the correct owner)
+		// 4) restore parent directory
+
+
+		//$current = decoct(fileperms($dataDir));
+		//echo pre($current);
+		//return;
+
 
 		$ftp_root = false;
 		if( Install_FTPConnection($ftp_root) === false ){
 			return;
 		}
+
 
 		//Change Mode of /data
 		echo '<li>';
@@ -869,10 +882,8 @@ class gp_install{
 				echo '</li>';
 
 		echo '</ul>';
-
-
-
 	}
+
 
 	function Install_FTPConnection(&$ftp_root){
 		global $dataDir,$langmessage,$install_ftp_connection;

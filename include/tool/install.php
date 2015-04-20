@@ -794,6 +794,7 @@ class FileSystem{
 
 	static function file_owner($file) {
 		$info = FileSystem::file_info($file);
+		echo pre($info);
 		if (is_array($info)) {
 			if (isset($info['name'])) {
 				return $info['name'];

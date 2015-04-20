@@ -110,7 +110,7 @@ class admin_display extends display{
 		echo '</div></div></div>';
 		$admin_content = ob_get_clean();
 
-		if( !$ajax && common::LoggedIn() ){
+		if( !$ajax ){
 			$gp_admin_html .= '<div id="admincontainer" >'.$admin_content.'</div>';
 			return;
 		}
@@ -142,11 +142,6 @@ class admin_display extends display{
 	function AdminContentPanel(){
 		global $langmessage;
 
-		//the login form does not need the panel
-		if( !common::LoggedIn() ){
-			return;
-		}
-
 		echo '<div id="admincontent_panel" class="toolbar cf">';
 		gpOutput::Get('Menu');
 
@@ -159,25 +154,6 @@ class admin_display extends display{
 		echo '</div>';
 	}
 
-	function AnonUser(){
-		$cmd = common::GetCommand();
-		switch($cmd){
-			case 'send_password';
-				if( $this->SendPassword() ){
-					$this->LoginForm();
-				}else{
-					$this->FogottenPassword();
-				}
-			break;
-
-			case 'forgotten':
-				$this->FogottenPassword();
-			break;
-			default:
-				$this->LoginForm();
-			break;
-		}
-	}
 
 	/**
 	 * Find the requested admin script and execute it if the user has permissions to view it

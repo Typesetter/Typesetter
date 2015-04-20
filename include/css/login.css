@@ -1,40 +1,88 @@
 #login_container{
 	position:relative;
+	height:100%;
+	font:13px sans-serif;
+
+	background: #222;
+	/*
+	background: -moz-radial-gradient(center, ellipse cover, #666 0%, #111 85%);
+	background: -webkit-radial-gradient(center, ellipse cover, #666 0%, #111 85%);
+	background: -o-radial-gradient(center, ellipse cover, #666 0%, #111 85%);
+	background: -ms-radial-gradient(center, ellipse cover, #666 0%, #111 85%);
+	background: radial-gradient(ellipse at center, #666 0%, #111 85%);
+	*/
 	}
+
+#login_container a{
+	color:#333;
+	}
+
+#login_container table{
+	width:100%;
+	height:100%;
+	}
+
+#login_container td{
+	vertical-align:middle;
+	}
+
+
 #login_container *{
-	-webkit-box-sizing: content-box;
-	-moz-box-sizing: content-box;
-	box-sizing: content-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 	}
 
 #loginform,
 #browser_warning{
-	float:left;
 	position:relative;
-	padding:15px;
-	margin:10px;
-	width:250px;
+	padding:20px;
+	width:320px;
 	color:#444;
 	border-radius:6px;
+	margin:0 auto;
 	}
 
 
 #loginform{
-	background-color: #f1f1f1; /* #ccffcc; */
-	border:1px solid #aaa; /*339933;*/
+	background-color: #ddd;
+	border:1px solid rgba(255,255,255,0.7);
+	box-shadow: 0 0 30px rgba(0,0,0,0.6);
+	position:relative;
+	z-index:1;
 }
+#loginform:before,
+#loginform:after{
+	content:'';
+	position:absolute;
+	top:6px;
+	left:7px;
+	background:rgba(255,255,255,0.2);
+	width:100%;
+	height:100%;
+	border-radius:9px;
+	z-index:-1;
+	}
+
+#loginform:before{
+	top:-6px;
+	left:-7px;
+	}
+
+
 #loginform .login_submit{
 
-	border:1px solid #444;
+	border:1px solid rgba(0,0,0,0.4);
 	background:#444;
+	background:linear-gradient(to bottom, #555, #333);
 
 	color:#fff;
 	font-size:14px;
 	font-weight:normal;
+	text-shadow:0 1px 1px #111;
 
-	padding:3px 10px;
-	margin:1.5em 0;
-	border-radius:6px;
+	padding:5px 10px;
+	border-radius:5px;
 	cursor:pointer;
 	}
 #loginform .login_submit:focus{
@@ -45,19 +93,25 @@
 #loginform p{
 	vertical-align:top;
 	padding:0;
-	margin:0.5em 0;
+	margin:0 0 20px 0;
 	}
 
-#loginform .login_text{
+
+#loginform .login_text input{
 	display:block;
-	width:230px;
-	padding:5px;
+	width:100%;
+	padding:8px;
 	font-size:14px;
 	color:#444;
+	border:1px solid #ccc;
+	background-color: #e5e5e5;
+	border-radius:3px;
 
-	border:1px solid #888;
-	background-color: #fff;
+	-webkit-box-shadow: 0 0 2px #fff;
+	-moz-box-shadow: 0 0 2px #fff;
+	box-shadow: 0 0 2px #fff;
 	}
+
 #loginform .login_text:focus{
 	border:1px solid #000;
 	background-color: #fff;

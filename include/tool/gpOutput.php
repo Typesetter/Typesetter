@@ -151,11 +151,11 @@ class gpOutput{
 
 		self::StandardHeaders();
 
-		echo '<!DOCTYPE html><html><head><meta charset="UTF-8" />';
+		echo '<!DOCTYPE html><html class="admin_body"><head><meta charset="UTF-8" />';
 		gpOutput::getHead();
 		echo '</head>';
 
-		echo '<body class="gpbody admin_body">';
+		echo '<body class="gpbody">';
 		echo GetMessages();
 
 		$page->GetGpxContent();

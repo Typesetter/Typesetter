@@ -110,7 +110,7 @@ class admin_uploaded{
 
 	function FinderPrep(){
 		$this->finder_opts['url']			= common::GetUrl('Admin_Finder');
-		$this->finder_opts['height']		= 'auto';
+		$this->finder_opts['height']		= '100%';
 		$this->finder_opts['resizable'] 	= false;
 	}
 

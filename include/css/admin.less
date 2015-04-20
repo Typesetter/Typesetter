@@ -17,7 +17,7 @@
 @gp_nav_link_padding_y:			10px;
 
 
-@gp_bread_bg:					#f1f1f1;
+@gp_bread_bg:					#ededed;	//matches elfinder
 @gp_bread_font_size:			13px;
 @gp_bread_link_color:			#777;
 @gp_bread_link_color_hover: 	#333;
@@ -35,7 +35,9 @@
  *
  */
 #gp_admin_html{
-	position:relative;
+	position:absolute;
+	top:0;
+	left:0;
 	height:auto;
 	text-transform: none;
 	}
@@ -292,12 +294,21 @@
 	display:block;
 	padding:0 40px 0 (40px - @gp_nav_link_padding_x);
 	font-weight:normal;
-
 	background: @gp_panel_bg;
 	font-size: @gp_nav_font_size;
 	line-height: @gp_nav_font_size;
 	}
 
+#admincontent_panel .GPAREA{
+	display:inline;
+	}
+#admincontent_panel div.GPAREA:after{
+	display:none;
+	}
+
+#admincontent_panel ul{
+	float:left;
+	}
 #admincontent_panel ul,
 #admincontent_panel li,
 #admincontent_panel a{
@@ -317,6 +328,29 @@
 
 #admincontent_panel a:hover{
 	color: @gp_nav_link_color_hover !important;
+	}
+
+#panel_search{
+	float:right;
+}
+#panel_search input{
+	border:0 none;
+	border-radius:3px;
+	width:140px;
+	color: @gp_nav_link_color_hover;
+	font-size: @gp_nav_font_size;
+	padding: (@gp_nav_link_padding_y - 4px) 4px (@gp_nav_link_padding_y - 4px) 26px;
+	margin:4px 0;
+	.gpimg( 'page_white_magnify.png', 5px, 50% );
+	background-color: overlay(@gp_panel_bg,#fff);
+	.transition( all .2s ease-out);
+	}
+#panel_search input:focus{
+	background-color: #f1f1f1;
+	color: #333;
+	}
+#panel_search button{
+	display:none;
 	}
 
 /**
@@ -1734,6 +1768,23 @@ body #addon_about{
 .admin_body{
 	margin:0;
 	padding:0;
+	height:100%;
+	box-sizing:border-box;
+
+	body{
+		margin:0;
+		padding:0;
+		height:100%;
+		box-sizing:border-box;
+		}
+
+	#gp_admin_html{
+		position:relative;
+		text-transform: none;
+		box-sizing:border-box;
+	}
+
+
 
 	#simplepanel{
 		position:absolute;
@@ -1744,10 +1795,25 @@ body #addon_about{
 
 		> div{
 			border-radius:0;
+			border:0 none;
 			height:100%;
 			width:180px;
-			/* background:#2B2B2B;*/
+			margin:0;
+			.box-shadow( none );
 		}
+
+		> div:after{
+			content:'';
+			position:fixed;
+			width:180px;
+			top:0;
+			left:0;
+			bottom:0;
+			border:1px solid #000;
+			background: @gp_panel_bg;
+			.box-shadow( 0 0 3px rgba(0,0,0,0.6) );
+			z-index:-1;
+			}
 
 		.toggle_panel,
 		.admin_arrow_out{

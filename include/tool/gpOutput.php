@@ -1466,14 +1466,17 @@ class gpOutput{
 	}
 
 
-	static function BreadcrumbNav(){
-		global $gp_menu, $page, $gp_index;
+	static function BreadcrumbNav($arg=''){
+		global $page, $gp_index, $GP_MENU_CLASSES;
+
+		$source_menu_array = gpOutput::GetMenuArray($arg);
+
 
 		$output = array();
 		$thisLevel = -1;
 		$lastTitle = '';
 
-		$rmenu = array_reverse($gp_menu);
+		$rmenu = array_reverse($source_menu_array);
 		foreach($rmenu as $index => $info){
 			$level = $info['level'];
 
@@ -1498,14 +1501,31 @@ class gpOutput{
 		}
 
 
-		reset($gp_menu);
+		reset($source_menu_array);
 
 		//add homepage
-		$first_index = key($gp_menu);
+		$first_index = key($source_menu_array);
 		$first_title = common::IndexToTitle($first_index);
 		if( $lastTitle != $first_title ){
 			array_unshift($output,$first_title);
 		}
+
+
+
+		self::PrepMenuOutput();
+		$clean_attributes = array( 'attr'=>'', 'class'=>array(), 'id'=>'' );
+		$clean_attributes_a = array('href' => '', 'attr' => '', 'value' => '', 'title' => '', 'class' =>array() );
+
+
+		// opening ul
+		$attributes_ul = $clean_attributes;
+		$attributes_ul['class']['menu_top'] = $GP_MENU_CLASSES['menu_top'];
+		if( self::$edit_area_id ){
+			$attributes_ul['id'] = self::$edit_area_id;
+			$attributes_ul['class']['editable_area'] = 'editable_area';
+		}
+
+		self::FormatMenuElement('div',$attributes_ul);
 
 		$len = count($output);
 		for( $i = 0; $i < $len; $i++){
@@ -1517,6 +1537,8 @@ class gpOutput{
 				echo common::Link($output[$i], $label,'','class="selected"');
 			}
 		}
+
+		echo '</div>';
 	}
 
 
@@ -1532,31 +1554,7 @@ class gpOutput{
 			$source_menu =& $gp_menu;
 		}
 
-
-		//menu classes
-		if( !is_array($GP_MENU_CLASSES) ){
-			$GP_MENU_CLASSES = array();
-		}
-		if( empty($GP_MENU_CLASS) ){
-			$GP_MENU_CLASS = 'menu_top';
-		}
-		$GP_MENU_CLASSES += array(
-							'menu_top'			=> $GP_MENU_CLASS,
-							'selected'			=> 'selected',
-							'selected_li'		=> 'selected_li',
-							'childselected'		=> 'childselected',
-							'childselected_li'	=> 'childselected_li',
-							'li_'				=> 'li_',
-							'li_title'			=> 'li_title',
-							'haschildren'		=> 'haschildren',
-							'haschildren_li'	=> '',
-							'child_ul'			=> '',
-							);
-
-		if( empty($GP_MENU_LINKS) ){
-			$GP_MENU_LINKS = '<a href="{$href_text}" title="{$title}"{$attr}>{$label}</a>';
-		}
-
+		self::PrepMenuOutput();
 		$clean_attributes = array( 'attr'=>'', 'class'=>array(), 'id'=>'' );
 		$clean_attributes_a = array('href' => '', 'attr' => '', 'value' => '', 'title' => '', 'class' =>array() );
 
@@ -1571,12 +1569,12 @@ class gpOutput{
 		}
 
 		if( !count($menu) ){
-			$attributes_ul['class']['empty_menu'] = 'empty_menu';
-			$result[] = self::FormatMenuElement('div',$attributes_ul).'</div>'; //an empty <ul> is not valid xhtml
+			//$attributes_ul['class']['empty_menu'] = 'empty_menu';
+			//self::FormatMenuElement('div',$attributes_ul).'</div>'; //an empty <ul> is not valid xhtml
 			return;
 		}
 
-		$result = array();
+
 		$prev_level = $start_level;
 		$page_title_full = common::GetUrl($page->title);
 		$open = false;
@@ -1591,7 +1589,7 @@ class gpOutput{
 
 
 		//output
-		$result[] = self::FormatMenuElement('ul',$attributes_ul);
+		self::FormatMenuElement('ul',$attributes_ul);
 
 
 		$menu = array_keys($menu);
@@ -1656,36 +1654,40 @@ class gpOutput{
 			if( $this_level > $prev_level ){
 
 				if( $menu_index === 0 ){ //only needed if the menu starts below the start_level
-					$result[] = self::FormatMenuElement('li',$attributes_li);
+					self::FormatMenuElement('li',$attributes_li);
 				}
 
 				if( !empty($GP_MENU_CLASSES['child_ul']) ){
 					$attributes_ul['class'][] = $GP_MENU_CLASSES['child_ul'];
 				}
 
-				while( $this_level > $prev_level){
-					$result[] = self::FormatMenuElement('ul',$attributes_ul);
-					$result[] = '<li>';
-					$prev_level++;
-					$attributes_ul = $clean_attributes;
+				if( $this_level > $prev_level ){
+					$open_loops = $this_level - $prev_level;
+
+					for($i = 0; $i<$open_loops; $i++){
+						self::FormatMenuElement('ul',$attributes_ul);
+						if( $i < $open_loops-1 ){
+							echo '<li>';
+						}
+						$prev_level++;
+						$attributes_ul = $clean_attributes;
+					}
 				}
-				array_pop($result);//remove the last <li>
 
 			//current is higher than the previous
 			}elseif( $this_level < $prev_level ){
 				while( $this_level < $prev_level){
-					$result[] = '</li>';
-					$result[] = '</ul>';
+					echo '</li></ul>';
 
 					$prev_level--;
 				}
 
 				if( $open ){
-					$result[] = '</li>';
+					echo '</li>';
 				}
 
 			}elseif( $open ){
-				$result[] = '</li>';
+				echo '</li>';
 			}
 
 
@@ -1718,8 +1720,8 @@ class gpOutput{
 				}
 			}
 
-			$result[] = self::FormatMenuElement('li',$attributes_li);
-			$result[] = self::FormatMenuElement('a',$attributes_a);
+			self::FormatMenuElement('li',$attributes_li);
+			self::FormatMenuElement('a',$attributes_a);
 
 
 
@@ -1728,12 +1730,38 @@ class gpOutput{
 		}
 
 		while( $start_level <= $prev_level){
-			$result[] = '</li>';
-			$result[] = '</ul>';
+			echo '</li></ul>';
 			$prev_level--;
 		}
+	}
 
-		echo implode('',$result); //don't separate by spaces so css inline can be more functional
+	static function PrepMenuOutput(){
+		global $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES;
+
+		//menu classes
+		if( !is_array($GP_MENU_CLASSES) ){
+			$GP_MENU_CLASSES = array();
+		}
+		if( empty($GP_MENU_CLASS) ){
+			$GP_MENU_CLASS = 'menu_top';
+		}
+		$GP_MENU_CLASSES += array(
+							'menu_top'			=> $GP_MENU_CLASS,
+							'selected'			=> 'selected',
+							'selected_li'		=> 'selected_li',
+							'childselected'		=> 'childselected',
+							'childselected_li'	=> 'childselected_li',
+							'li_'				=> 'li_',
+							'li_title'			=> 'li_title',
+							'haschildren'		=> 'haschildren',
+							'haschildren_li'	=> '',
+							'child_ul'			=> '',
+							);
+
+		if( empty($GP_MENU_LINKS) ){
+			$GP_MENU_LINKS = '<a href="{$href_text}" title="{$title}"{$attr}>{$label}</a>';
+		}
+
 	}
 
 	static function FormatMenuElement( $node, $attributes){
@@ -1760,22 +1788,16 @@ class gpOutput{
 		if( !empty($GP_MENU_ELEMENTS) && is_callable($GP_MENU_ELEMENTS) ){
 			$return = call_user_func($GP_MENU_ELEMENTS, $node, $attributes);
 			if( is_string($return) ){
-				return $return;
+				echo $return;
+				return;
 			}
 		}
 
-		switch($node){
-
-			case 'ul';
-			case 'li':
-			case 'div';
-			return '<'.$node.$attributes['attr'].'>';
-
-
-			//links
-			case 'a';
+		if( $node == 'a' ){
 			$search = array('{$href_text}','{$attr}','{$label}','{$title}');
-			return str_replace( $search, $attributes, $GP_MENU_LINKS );
+			echo str_replace( $search, $attributes, $GP_MENU_LINKS );
+		}else{
+			echo '<'.$node.$attributes['attr'].'>';
 		}
 	}
 

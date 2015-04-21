@@ -153,7 +153,8 @@ input.text:focus{
 	}
 .failed{
 	color:#FF0000;
-}
+
+
 .passed{
 	color:#009900;
 }
@@ -246,15 +247,15 @@ class gp_install{
 			break;
 
 			case 'Install':
-				$installed = Install_Normal();
+				$installed = $this->Install_Normal();
 			break;
 		}
 
 		if( !$installed ){
-			LanguageForm();
+			$this->LanguageForm();
 			$this->CheckFolders();
 		}else{
-			Installed();
+			$this->Installed();
 		}
 
 	}
@@ -443,7 +444,7 @@ class gp_install{
 		echo '<br/>';
 
 		if( $ok ){
-			Form_Entry();
+			$this->Form_Entry();
 			return;
 		}
 
@@ -956,25 +957,13 @@ class gp_install{
 		if( function_exists('ftp_connect') ){
 			echo '<tr><th>';
 			echo $langmessage['Installer'];
-			echo '</th>';
-			echo '</tr>';
+			echo '</th></tr>';
 			echo '<tr><td>';
 			echo '<p>';
 			echo $langmessage['FTP_CHMOD'];
 			echo '</p>';
-			echo '<form action="'.common::GetUrl('').'" method="post">';
-			echo '<table class="padded_table">';
-			Form_FTPDetails();
-			echo '<tr>';
-				echo '<td align="left">&nbsp;</td><td>';
-				echo '<input type="hidden" name="cmd" value="Continue" />';
-				echo '<input type="submit" class="submit" name="aaa" value="'.$langmessage['continue'].'" />';
-				echo '</td>';
-				echo '</tr>';
-			echo '</table>';
-			echo '</form>';
-			echo '</td>';
-			echo '</tr>';
+			$this->Form_FTPDetails();
+			echo '</td></tr>';
 		}
 
 
@@ -1004,14 +993,34 @@ class gp_install{
 	}
 
 
+	function Form_FTPDetails(){
+		global $langmessage;
 
+		$_POST += array('ftp_server'=>gpftp::GetFTPServer(),'ftp_user'=>'');
 
+		echo '<form action="'.common::GetUrl('').'" method="post">';
+		echo '<table class="padded_table">';
+		echo '<tr><td align="left">'.$langmessage['FTP_Server'].' </td><td>';
+		echo '<input type="text" class="text" size="20" name="ftp_server" value="'. htmlspecialchars($_POST['ftp_server']) .'" required />';
+		echo '</td></tr>';
 
-}//end class
+		echo '<tr><td align="left">'.$langmessage['FTP_Username'].' </td><td>';
+		echo '<input type="text" class="text" size="20" name="ftp_user" value="'. htmlspecialchars($_POST['ftp_user']) .'" />';
+		echo '</td></tr>';
 
+		echo '<tr><td align="left">'.$langmessage['FTP_Password'].' </td><td>';
+		echo '<input type="password" class="text" size="20" name="ftp_pass" value="" />';
+		echo '</td></tr>';
 
+		echo '<tr><td align="left">&nbsp;</td><td>';
+		echo '<input type="hidden" name="cmd" value="Continue" />';
+		echo '<input type="submit" class="submit" name="aaa" value="'.$langmessage['continue'].'" />';
+		echo '</td></tr>';
+		echo '</table>';
+		echo '</form>';
 
-//Install Functions
+	}
+
 
 
 	function LanguageForm(){
@@ -1041,8 +1050,6 @@ class gp_install{
 	}
 
 
-
-
 	function Installed(){
 		global $langmessage;
 		echo '<h4>'.$langmessage['Installation_Was_Successfull'].'</h4>';
@@ -1057,6 +1064,7 @@ class gp_install{
 		echo 'For added security, you may delete the /include/install/install.php file from your server.';
 		echo '</p>';
 	}
+
 
 	function Form_Entry(){
 		global $langmessage;
@@ -1076,34 +1084,6 @@ class gp_install{
 	}
 
 
-	function Form_FTPDetails($required=false){
-		global $langmessage;
-		$_POST += array('ftp_server'=>gpftp::GetFTPServer(),'ftp_user'=>'');
-
-		if( $required ){
-			$required = '*';
-		}
-		echo '<tr>';
-			echo '<td align="left">'.$langmessage['FTP_Server'].$required.' </td><td>';
-			echo '<input type="text" class="text" size="20" name="ftp_server" value="'. htmlspecialchars($_POST['ftp_server']) .'" />';
-			echo '</td>';
-			echo '</tr>';
-
-		echo '<tr>';
-			echo '<td align="left">'.$langmessage['FTP_Username'].$required.' </td><td>';
-			echo '<input type="text" class="text" size="20" name="ftp_user" value="'. htmlspecialchars($_POST['ftp_user']) .'" />';
-			echo '</td>';
-			echo '</tr>';
-
-		echo '<tr>';
-			echo '<td align="left">'.$langmessage['FTP_Password'].$required.' </td><td>';
-			echo '<input type="password" class="text" size="20" name="ftp_pass" value="" />';
-			echo '</td>';
-			echo '</tr>';
-	}
-
-
-
 	function Install_Normal(){
 		global $langmessage,$install_language;
 
@@ -1121,6 +1101,14 @@ class gp_install{
 
 		return $success;
 	}
+
+
+}//end class
+
+
+
+
+
 
 
 

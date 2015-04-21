@@ -420,7 +420,7 @@ class admin_tools{
 
 
 		//current page
-		if( $in_panel && !isset($GLOBALS['GP_ARRANGE_CONTENT']) ){
+		if( $in_panel && !isset($GLOBALS['GP_ARRANGE_CONTENT']) && $page->pagetype != 'admin_display' ){
 			echo '<div class="panelgroup" id="current_page_panel">';
 
 			self::PanelHeading($in_panel, $langmessage['Current Page'], 'icon_page_gear', 'cur' );

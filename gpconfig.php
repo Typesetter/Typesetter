@@ -13,6 +13,15 @@ $upload_extensions_deny = array();
 
 
 /**
+ * gp_default_theme
+ * Theme/color to be used when gpEasy is first installed.
+ * Also the theme/color that gpEasy will use should the user specified theme become unavailable
+ *
+ */
+define('gp_default_theme','Three_point_5/Shore');
+
+
+/**
  * gp_browser_auth
  * Set to true to enable additional security by requiring a static browser identity for user session. Disabled by default since gpEasy 2.3.2
  * Enabling this feature may require administrators to log back in. If administrators report they are being logged out, then you may need to disable this feature
@@ -113,13 +122,6 @@ define('gpdebug',true);
  */
 //define('gpdebugjs',false);
 
-
-/**
- * gpdebug_tools
- * Set to true to display some basic debug tools in the browser window.
- * Defaults to false
- */
-//define('gpdebug_tools',true);
 
 
 /**

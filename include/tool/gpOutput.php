@@ -59,6 +59,10 @@ $gpOutConf['Extra']['method']			= array('gpOutput','GetExtra');
 $gpOutConf['Gadget']['method']			= array('gpOutput','GetGadget');
 
 
+$gpOutConf['Breadcrumbs']['method']		= array('gpOutput','BreadcrumbNav');
+$gpOutConf['Breadcrumbs']['link']		= 'Breadcrumb Links';
+
+
 class gpOutput{
 
 	public static $components = '';
@@ -1461,6 +1465,61 @@ class gpOutput{
 
 	}
 
+
+	static function BreadcrumbNav(){
+		global $gp_menu, $page, $gp_index;
+
+		$output = array();
+		$thisLevel = -1;
+		$lastTitle = '';
+
+		$rmenu = array_reverse($gp_menu);
+		foreach($rmenu as $index => $info){
+			$level = $info['level'];
+
+			$title = common::IndexToTitle($index);
+
+			if( $thisLevel >= 0 ){
+				if( $thisLevel == $level ){
+					array_unshift($output,$title);
+					$lastTitle = $title;
+					if( $thisLevel == 0 ){
+						break;
+					}
+					$thisLevel--;
+				}
+			}
+
+			if( $title == $page->title ){
+				array_unshift($output,$title);
+				$thisLevel = $level-1;
+				$lastTitle = $title;
+			}
+		}
+
+
+		reset($gp_menu);
+
+		//add homepage
+		$first_index = key($gp_menu);
+		$first_title = common::IndexToTitle($first_index);
+		if( $lastTitle != $first_title ){
+			array_unshift($output,$first_title);
+		}
+
+		$len = count($output);
+		for( $i = 0; $i < $len; $i++){
+			$label = common::GetLabel($output[$i], false);
+			if( $i < $len-1 ){
+				echo common::Link($output[$i], $label);
+				echo gpOutput::GetAddonText(' &gt; ','%s','breadcrumb_sep');
+			}else{
+				echo common::Link($output[$i], $label,'','class="selected"');
+			}
+		}
+	}
+
+
 	/**
 	 * Output a navigation menu
 	 * @static
@@ -1778,28 +1837,28 @@ class gpOutput{
 
 	/* similar to ReturnText() but links to script for editing all addon texts */
 	// the $html parameter should primarily be used when the text is to be placed inside of a link or other element that cannot have a link and/or span as a child node
-	static function GetAddonText($key,$html='%s'){
+	static function GetAddonText($key,$html='%s', $wrapper_class = ''){
 		global $addonFolderName;
 
 		if( !$addonFolderName ){
-			return gpOutput::ReturnText($key,$html);
+			return gpOutput::ReturnText($key, $html, $wrapper_class);
 		}
 
 		$query = 'cmd=addontext&addon='.urlencode($addonFolderName).'&key='.urlencode($key);
-		return gpOutput::ReturnTextWorker($key,$html,$query);
+		return gpOutput::ReturnTextWorker($key,$html,$query, $wrapper_class);
 	}
 
-	static function ReturnText($key,$html='%s'){
+	static function ReturnText($key,$html='%s', $wrapper_class = ''){
 		$query = 'cmd=edittext&key='.urlencode($key);
-		return gpOutput::ReturnTextWorker($key,$html,$query);
+		return gpOutput::ReturnTextWorker($key,$html,$query, $wrapper_class);
 	}
 
-	static function ReturnTextWorker($key,$html,$query){
+	static function ReturnTextWorker($key,$html,$query, $wrapper_class=''){
 		global $langmessage;
 
-		$result = '';
-		$wrap = gpOutput::ShowEditLink('Admin_Theme_Content');
-		if( $wrap ){
+		$result = '<span class="'.$wrapper_class.'">';
+		$editable = gpOutput::ShowEditLink('Admin_Theme_Content');
+		if( $editable ){
 
 			$title = htmlspecialchars(strip_tags($key));
 			if( strlen($title) > 20 ){
@@ -1807,15 +1866,12 @@ class gpOutput{
 			}
 
 			gpOutput::$editlinks .= gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],$query,' title="'.$title.'" data-cmd="gpabox" ');
-			$result .= '<span class="editable_area" id="ExtraEditArea'.$edit_index.'">';
+			$result .= '<span class="editable_area '.$wrapper_class.'" id="ExtraEditArea'.$edit_index.'">';
 		}
 
 		$text = gpOutput::SelectText($key);
 		$result .= str_replace('%s',$text,$html); //in case there's more than one %s
-
-		if( $wrap ){
-			$result .= '</span>';
-		}
+		$result .= '</span>';
 
 		return $result;
 

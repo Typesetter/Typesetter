@@ -61,7 +61,6 @@ include_once($path);
 		</div>
 
 
-
 		<div class="container">
 		<?php
 		$page->GetContent();

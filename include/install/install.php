@@ -153,6 +153,7 @@ input.text:focus{
 	}
 .failed{
 	color:#FF0000;
+}
 
 
 .passed{

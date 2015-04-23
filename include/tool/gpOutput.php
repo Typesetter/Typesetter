@@ -1469,23 +1469,19 @@ class gpOutput{
 	static function BreadcrumbNav($arg=''){
 		global $page, $gp_index, $GP_MENU_CLASSES;
 
-		$source_menu_array = gpOutput::GetMenuArray($arg);
-
-
-		$output = array();
-		$thisLevel = -1;
-		$lastTitle = '';
+		$source_menu_array	= gpOutput::GetMenuArray($arg);
+		$output				= array();
+		$thisLevel			= -1;
+		$last_index			= '';
 
 		$rmenu = array_reverse($source_menu_array);
 		foreach($rmenu as $index => $info){
 			$level = $info['level'];
 
-			$title = common::IndexToTitle($index);
-
 			if( $thisLevel >= 0 ){
 				if( $thisLevel == $level ){
-					array_unshift($output,$title);
-					$lastTitle = $title;
+					array_unshift($output,$index);
+					$last_index = $index;
 					if( $thisLevel == 0 ){
 						break;
 					}
@@ -1493,10 +1489,10 @@ class gpOutput{
 				}
 			}
 
-			if( $title == $page->title ){
-				array_unshift($output,$title);
+			if( $index == $page->gp_index ){
+				array_unshift($output,$index);
 				$thisLevel = $level-1;
-				$lastTitle = $title;
+				$last_index = $index;
 			}
 		}
 
@@ -1505,9 +1501,8 @@ class gpOutput{
 
 		//add homepage
 		$first_index = key($source_menu_array);
-		$first_title = common::IndexToTitle($first_index);
-		if( $lastTitle != $first_title ){
-			array_unshift($output,$first_title);
+		if( $last_index != $first_index ){
+			array_unshift($output,$first_index);
 		}
 
 
@@ -1524,21 +1519,39 @@ class gpOutput{
 			$attributes_ul['id'] = self::$edit_area_id;
 			$attributes_ul['class']['editable_area'] = 'editable_area';
 		}
+		self::FormatMenuElement('ul',$attributes_ul);
 
-		self::FormatMenuElement('div',$attributes_ul);
 
+		//
 		$len = count($output);
 		for( $i = 0; $i < $len; $i++){
-			$label = common::GetLabel($output[$i], false);
-			if( $i < $len-1 ){
-				echo common::Link($output[$i], $label);
-				echo gpOutput::GetAddonText(' &gt; ','%s','breadcrumb_sep');
-			}else{
-				echo common::Link($output[$i], $label,'','class="selected"');
+
+			$index					= $output[$i];
+			$title					= common::IndexToTitle($index);
+			$attributes_li			= $clean_attributes;
+
+			$attributes_a			= $clean_attributes_a;
+			$attributes_a['href']	= common::GetUrl($title);
+			$attributes_a['value']	= common::GetLabel($title);
+			$attributes_a['title']	= common::GetBrowserTitle($title);
+
+			if( $title == $page->title ){
+				$attributes_a['class']['selected']		= $GP_MENU_CLASSES['selected'];
+				$attributes_li['class']['selected_li']	= $GP_MENU_CLASSES['selected_li'];
 			}
+
+
+			self::FormatMenuElement('li',$attributes_li);
+
+			if( $i < $len-1 ){
+				self::FormatMenuElement('a',$attributes_a);
+			}else{
+				self::FormatMenuElement('a',$attributes_a);
+			}
+			echo '</li>';
 		}
 
-		echo '</div>';
+		echo '</ul>';
 	}
 
 

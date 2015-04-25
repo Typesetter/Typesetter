@@ -86,11 +86,6 @@ class editing_page extends display{
 
 			switch($cmd){
 
-				//section editing
-				case 'rm_section':
-					$this->RmSection();
-				break;
-
 				case 'rawcontent':
 					$this->RawContent();
 				break;
@@ -254,8 +249,30 @@ class editing_page extends display{
 			$new_sections[$i] = $new_section;
 		}
 
+
+		//make sure there's at least one section
+		if( !$new_sections ){
+			message($langmessage['OOPS'].' (1 Section Minimum)');
+			return false;
+		}
+
+
 		$this->file_sections = $new_sections;
 		$this->ResetFileTypes(false);
+
+
+		/*
+		if( $section_data['type'] == 'gallery' ){
+			$this->GalleryEdited();
+		}
+
+		//update usage of resized images
+		if( isset($section_data['resized_imgs']) ){
+			includeFile('image.php');
+			gp_resized::SetIndex();
+			gp_edit::ResizedImageUse($section_data['resized_imgs'],array());
+		}
+		*/
 
 		if( !$this->SaveThis() ){
 			$this->file_sections = $original_sections;
@@ -407,56 +424,6 @@ class editing_page extends display{
 		includeFile('tool/Page_Rename.php');
 		$action = common::GetUrl($this->title);
 		gp_rename::RenameForm( $this->gp_index, $action );
-	}
-
-
-	/**
-	 * Remove a content area from a page
-	 *
-	 */
-	function RmSection(){
-		global $langmessage,$page;
-
-		if( !isset($_POST['total']) || $_POST['total'] != count($this->file_sections) ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-		if( !isset($_POST['section']) ){
-			message($langmessage['OOPS'].'(1)');
-			return;
-		}
-
-		$section = $_POST['section'];
-
-		if( !isset($this->file_sections[$section]) ){
-			message($langmessage['OOPS'].'(2)');
-			return;
-		}
-
-		$section_data = $this->file_sections[$section];
-
-		array_splice( $this->file_sections , $section , 1 );
-
-		$this->ResetFileTypes(false);
-
-		if( !$this->SaveThis() ){
-			message($langmessage['OOPS'].'(4)');
-			return;
-		}
-
-		if( $section_data['type'] == 'gallery' ){
-			$this->GalleryEdited();
-		}
-
-		//update usage of resized images
-		if( isset($section_data['resized_imgs']) ){
-			includeFile('image.php');
-			gp_resized::SetIndex();
-			gp_edit::ResizedImageUse($section_data['resized_imgs'],array());
-		}
-
-		message($langmessage['SAVED']);
 	}
 
 
@@ -779,19 +746,7 @@ class editing_page extends display{
 			ob_start();
 			echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 			echo $link;
-
 			echo common::Link($this->title,$langmessage['Manage Sections'].'...','cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
-
-			//remove section link
-			if( count($this->file_sections) > 1 ){
-				$title_attr = $langmessage['rm_section_confirm'];
-				if( $section_data['type'] != 'include' ){
-					$title_attr .= "\n\n".$langmessage['rm_section_confirm_deleting'];
-				}
-
-				echo common::Link($this->title,$langmessage['Remove Section'].'...','cmd=rm_section&section='.$section_num.'&total='.count($this->file_sections), array('title'=>$title_attr,'data-cmd'=>'creq','class'=>'gpconfirm'));
-			}
-
 			echo '</span>';
 
 			gpOutput::$editlinks .= ob_get_clean();

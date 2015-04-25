@@ -91,11 +91,6 @@ class editing_page extends display{
 					$this->NewSectionPrompt();
 				return;
 
-				case 'section_options_save':
-				case 'section_options':
-					$this->SectionOptions($cmd);
-				return;
-
 				case 'add_section':
 					$this->AddNewSection();
 				break;
@@ -279,6 +274,21 @@ class editing_page extends display{
 		message($langmessage['SAVED']);
 	}
 
+
+
+	static function InvalidAttributes($attributes){
+		$invalid = array();
+		foreach($attributes as $attr_name => $attr_value){
+			if( strtolower($attr_name) == 'id' ){
+				$invalid[] = 'id';
+				continue;
+			}
+			if( preg_match('#\s#',$attr_name) ){
+				$invalid[] = $attr_name;
+			}
+		}
+		return $invalid;
+	}
 
 	/**
 	 * Perform various section editing commands
@@ -523,137 +533,6 @@ class editing_page extends display{
 
 
 		message($langmessage['SAVED']);
-	}
-
-
-	/**
-	 * Display section options
-	 * 	- attributes (style, data-*)
-	 * @deprecated
-	 *
-	 */
-	function SectionOptions($cmd){
-		global $langmessage;
-
-		$section_num = $_REQUEST['section'];
-		if( !array_key_exists($section_num,$this->file_sections) ){
-			msg($langmessage['OOPS'].' (Invalid Section)');
-			return false;
-		}
-
-		$section =& $this->file_sections[$section_num];
-		$section += array('attributes' => array() );
-		$section['attributes'] += array('class' => '' );
-
-
-		if( $cmd == 'section_options_save' && $this->SectionOptionsSave($section_num) ){
-			return true;
-		}
-
-		ob_start();
-
-		echo '<div class="inline_box">';
-
-		echo '<h2>'.$langmessage['options'].'</h2>';
-		echo '<form method="post" action="'.common::GetUrl($this->title).'">';
-		echo '<table class="bordered full_width">';
-
-		//attributes
-		echo '<thead><tr><th>Attributes</th><th>'.$langmessage['Value'].'</th></tr></thead>';
-		echo '<tbody>';
-		$invalid = self::InvalidAttributes($section['attributes']);
-		foreach($section['attributes'] as $attr => $value){
-			echo '<tr><td>';
-			$class = 'gpinput';
-			if( in_array($attr,$invalid) ){
-				$class .= ' gpinput_warning';
-			}
-			echo '<input class="'.$class.'" type="text" name="attr_name[]" value="'.htmlspecialchars($attr).'" size="8" pattern="^([^\s]|i[^d\s]|[^i\s]d|[^i\s][^d\s]|[^\s]{3,})$" />';
-			echo '</td><td style="white-space:nowrap">';
-			echo '<input class="gpinput" type="text" name="attr_value[]" value="'.htmlspecialchars($value).'" size="40" />';
-			if( $attr == 'class' ){
-				echo '<div class="class_only admin_note">'.$langmessage['default'].': GPAREA filetype-'.$section['type'].'</div>';
-			}
-			echo '</td></tr>';
-		}
-
-		echo '<tr><td colspan="3">';
-		echo '<a data-cmd="add_table_row">Add Attribute</a>';
-		echo '</td></tr>';
-		echo '</tbody>';
-		echo '</table>';
-
-		echo '<p>';
-		echo '<input type="hidden" name="last_mod" value="'.$this->fileModTime.'" />';
-		echo '<input type="hidden" name="section" value="'.htmlspecialchars($_REQUEST['section']).'" />';
-		echo '<input type="hidden" name="cmd" value="section_options_save" />';
-		echo '<input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit" data-cmd="gpabox" /> ';
-		echo '<input type="button" name="" value="'.$langmessage['cancel'].'" class="gpcancel" data-cmd="admin_box_close" />';
-		echo '</p>';
-
-
-
-		echo '</form>';
-		echo '</div>';
-		$this->contentBuffer = ob_get_clean();
-		return false;
-	}
-
-	/**
-	 * Save Section Options
-	 * 	- attributes (style, data-*)
-	 *
-	 */
-	function SectionOptionsSave($section_num){
-		global $langmessage;
-
-		if( !is_array($_POST['attr_name']) || count($_POST['attr_name']) != count($_POST['attr_value']) ){
-			msg($langmessage['OOPS'].' (Invalid Request)');
-			return false;
-		}
-
-
-		//build attribute array
-		$_POST['attr_name'] = array_map('trim',$_POST['attr_name']);
-		$attributes = array('class'=>'');
-		foreach($_POST['attr_name'] as $i => $attr_name){
-			if( empty($attr_name) ){
-				continue;
-			}
-			$attributes[$attr_name] = $_POST['attr_value'][$i];
-		}
-		$this->file_sections[$section_num]['attributes'] = $attributes;
-
-
-		//check for valid attributes
-		$invalid = self::InvalidAttributes($attributes);
-		if( count($invalid) ){
-			msg($langmessage['OOPS'].' (Invalid Attributes)');
-			return false;
-		}
-
-		//save
-		if( !$this->SaveThis(false) ){
-			msg($langmessage['OOPS'].' (Not Saved)');
-			return false;
-		}
-
-		msg($langmessage['SAVED'].' '.$langmessage['REFRESH']);
-		return true;
-	}
-
-	static function InvalidAttributes($attributes){
-		$invalid = array();
-		foreach($attributes as $attr_name => $attr_value){
-			if( strtolower($attr_name) == 'id' ){
-				$invalid[] = 'id';
-				continue;
-			}
-			if( preg_match('#\s#',$attr_name) ){
-				$invalid[] = $attr_name;
-			}
-		}
-		return $invalid;
 	}
 
 
@@ -1027,8 +906,6 @@ class editing_page extends display{
 			echo $link;
 
 			echo common::Link($this->title,$langmessage['Manage Sections'].'...','cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
-
-			echo common::Link($this->title,$langmessage['options'].'...','cmd=section_options&section='.$section_num,array('data-cmd'=>'gpabox'));
 
 			echo common::Link($this->title,$langmessage['New Section'].'...','cmd=new_section&section='.$section_num,array('data-cmd'=>'gpabox'));
 

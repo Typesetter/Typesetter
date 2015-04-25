@@ -25,13 +25,13 @@ class section_content{
 		$section_num		= 0;
 		$sections_count		= count($sections);
 		do{
-			$content .= self::_RenderSection($sections, $section_num);
+			$content .= self::GetSection($sections, $section_num);
 		}while( $section_num < $sections_count );
 
 		return $content;
 	}
 
-	private static function _RenderSection($sections, &$section_num ){
+	private static function GetSection($sections, &$section_num ){
 
 		$curr_section_num	= $section_num;
 		$section_data		= $sections[$curr_section_num];
@@ -43,7 +43,7 @@ class section_content{
 		if( $section_data['type'] == 'wrapper_section' ){
 
 			for( $cc=0; $cc < $section_data['contains_sections']; $cc++ ){
-				$content			.= self::_RenderSection($sections, $section_num);
+				$content			.= self::GetSection($sections, $section_num);
 			}
 		}else{
 			$content				.= self::SectionToContent($section_data,$curr_section_num);

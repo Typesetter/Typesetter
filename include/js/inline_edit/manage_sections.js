@@ -38,7 +38,7 @@
 				var type	= gp_editor.TypeFromClass(this);
 				var value	= $this.data('gp-section');
 
-				if( $this.hasClass('new_section') && !$this.hasClass('copied_section') ){
+				if( $this.hasClass('new_section') ){
 					value = type;
 				}
 
@@ -77,7 +77,16 @@
 			return $.param(args);
 		},
 
+		/**
+		 * Called when saved
+		 *
+		 */
 		resetDirty:function(){
+
+			$('#gpx_content').find('.editable_area').each( function(i){
+				$(this).data('gp-section',i).attr('data-gp-section',i).removeClass('new_section');
+			});
+
 			gp_editor.saved_data	= gp_editor.gp_saveData();
 		},
 
@@ -140,9 +149,7 @@
 				html += '<li data-area-id="'+this.id+'">';
 				html += '<div><span class="options">';
 				html += '<a class="gpicon_edapp" data-cmd="SectionOptions" title="Options"></a>';
-				if( !$this.hasClass('new_section') ){
-					html += '<a class="copy_icon" data-cmd="CopySection" title="Copy"></a>';
-				}
+				html += '<a class="copy_icon" data-cmd="CopySection" title="Copy"></a>';
 				html += '<a class="bin_icon" data-cmd="RemoveSection" title="Remove"></a>';
 				html += '</span>';
 				html += '<i>'+(i+1)+' '+gp_editor.ucfirst(type)+'</i>';
@@ -270,7 +277,7 @@
 	$gp.links.CopySection = function(evt){
 		var area	= gp_editor.GetArea( $(this).closest('li') ).clone();
 		var id		= 'Copied_'+Math.floor((Math.random() * 100000) + 1)+'_'+area.attr('id');
-		area.attr('id',id).addClass('new_section copied_section');
+		area.attr('id',id).addClass('new_section');
 		$('#gpx_content').append(area);
 		gp_editor.InitSorting();
 	}

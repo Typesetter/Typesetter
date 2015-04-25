@@ -204,8 +204,10 @@ class editing_page extends display{
 
 		$page->ajaxReplace		= array();
 		$original_sections		= $this->file_sections;
+		$unused_sections		= $this->file_sections;				//keep track of sections that aren't used
 		$new_sections			= array();
 		$section_types			= section_content::GetTypes();
+
 
 
 		foreach($_POST['section_order'] as $i => $arg ){
@@ -219,6 +221,7 @@ class editing_page extends display{
 					return false;
 				}
 
+				unset($unused_sections[$arg]);
 				$new_section = $this->file_sections[$arg];
 
 			// otherwise, new sections
@@ -261,19 +264,7 @@ class editing_page extends display{
 		$this->ResetFileTypes(false);
 
 
-		/*
-		if( $section_data['type'] == 'gallery' ){
-			$this->GalleryEdited();
-		}
-
-		//update usage of resized images
-		if( isset($section_data['resized_imgs']) ){
-			includeFile('image.php');
-			gp_resized::SetIndex();
-			gp_edit::ResizedImageUse($section_data['resized_imgs'],array());
-		}
-		*/
-
+		// save a send message to user
 		if( !$this->SaveThis() ){
 			$this->file_sections = $original_sections;
 			message($langmessage['OOPS'].'(4)');
@@ -282,6 +273,23 @@ class editing_page extends display{
 
 		$page->ajaxReplace[] = array('ck_saved','','');
 		message($langmessage['SAVED']);
+
+
+		//update gallery info
+		$this->GalleryEdited();
+
+
+		//update usage of resized images
+		msg('unused sections: '.count($unused_sections));
+		msg($unused_sections);
+		foreach($unused_sections as $section_data){
+			if( isset($section_data['resized_imgs']) ){
+				includeFile('image.php');
+				gp_resized::SetIndex();
+				gp_edit::ResizedImageUse($section_data['resized_imgs'],array());
+			}
+		}
+
 	}
 
 

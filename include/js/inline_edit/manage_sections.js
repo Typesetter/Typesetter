@@ -126,7 +126,7 @@
 
 			$('.section_drag_area').sortable({
 				stop:					gp_editor.DragStop,
-				connectWith:			'.section_drag_area',
+				connectWith:			'.section_drag_area'
 			}).disableSelection();
 
 

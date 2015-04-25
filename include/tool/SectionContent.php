@@ -55,9 +55,11 @@ class section_content{
 		static $types = false;
 
 		if( !$types ){
-			$types['text']['label']		= $langmessage['editable_text'];
-			$types['gallery']['label']	= $langmessage['Image Gallery'];
-			$types['include']['label']	= $langmessage['File Include'];
+			$types['text']['label']				= $langmessage['editable_text'];
+			$types['gallery']['label']			= $langmessage['Image Gallery'];
+			$types['include']['label']			= $langmessage['File Include'];
+			$types['wrapper_section']['label']	= $langmessage['Section Wrapper'];
+
 			$types = gpPlugin::Filter('SectionTypes',array($types));
 		}
 

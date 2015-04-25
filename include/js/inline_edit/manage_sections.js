@@ -6,8 +6,17 @@
 	gp_editor = {
 		save_path: '?',
 
+		saved_data: '',
+
 		destroy:function(){},
-		checkDirty:function(){},
+
+		checkDirty:function(){
+			var curr_data	= gp_editor.gp_saveData();
+			if( gp_editor.saved_data != curr_data ){
+				return true;
+			}
+			return false;
+		},
 
 		/**
 		 * Organize the section content to be saved
@@ -69,11 +78,10 @@
 		},
 
 		resetDirty:function(){
-			//alert('reset dirty');
+			gp_editor.saved_data	= gp_editor.gp_saveData();
 		},
 
-		updateElement:function(){
-		},
+		updateElement:function(){},
 
 		/**
 		 * Init Editor
@@ -82,6 +90,7 @@
 		InitEditor: function(){
 			$('#ckeditor_top').append('<ul id="section_sorting" class="section_drag_area">');
 
+			gp_editor.resetDirty();
 			gp_editor.InitSorting();
 			gp_editor.InitNewSection();
 		},

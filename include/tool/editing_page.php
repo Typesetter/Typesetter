@@ -280,6 +280,7 @@ class editing_page extends display{
 			return;
 		}
 
+		$page->ajaxReplace[] = array('ck_saved','','');
 		message($langmessage['SAVED']);
 	}
 
@@ -370,7 +371,6 @@ class editing_page extends display{
 
 	/**
 	 * Recalculate the file_type string for this file
-	 * Used by AddNewSection(), RmSection()
 	 * Updates $this->meta_data and $gp_titles
 	 *
 	 */

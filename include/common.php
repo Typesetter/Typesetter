@@ -2143,14 +2143,14 @@ class common{
 		}
 
 
-		$fullPath = $dataDir.'/include/languages/'.$language.'/main.inc';
+		$fullPath = $dataDir.'/include/languages/'.$language.'.main.inc';
 		if( file_exists($fullPath) ){
 			include($fullPath);
 			return;
 		}
 
 		//try to get the english file
-		$fullPath = $dataDir.'/include/languages/en/main.inc';
+		$fullPath = $dataDir.'/include/languages/en.main.inc';
 		if( file_exists($fullPath) ){
 			include($fullPath);
 		}

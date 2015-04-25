@@ -713,6 +713,10 @@ class gp_edit{
 				$section['content'] = '<ul class="gp_gallery"><li class="gp_to_remove"></li></ul>';
 			break;
 
+			case 'wrapper_section':
+				$section['content'] = '';
+			break;
+
 			case 'text':
 			default:
 				$section['content'] = '<p>'.$langmessage['New Section'].'</p>';

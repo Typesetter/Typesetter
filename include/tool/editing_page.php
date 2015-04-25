@@ -739,23 +739,31 @@ class editing_page extends display{
 		$section_data['attributes']						+= array('class' => '' );
 		$section_data['attributes']['data-gp-class']	= $section_data['attributes']['class'];
 		$section_data['attributes']['data-gp-section']	= $section_num;
+		$section_types									= section_content::GetTypes();
+
 
 		if( gpOutput::ShowEditLink() && admin_tools::CanEdit($this->gp_index) ){
 
-			//edit link
-			$title_attr		= sprintf($langmessage['Section %s'],$section_num+1);
+
+			if( isset($section_types[$section_data['type']]) ){
+				$title_attr		= $section_types[$section_data['type']]['label'];
+			}else{
+				$title_attr		= sprintf($langmessage['Section %s'],$section_num+1);
+			}
+
 			$attrs			= array('title'=>$title_attr,'data-cmd'=>'inline_edit_generic','data-arg'=>$section_data['type'].'_inline_edit');
 			$link			= gpOutput::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$section_num.'&amp;revision='.$this->fileModTime,$attrs);
 
 
 			//section control links
-			ob_start();
-			echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
-			echo $link;
-			echo common::Link($this->title,$langmessage['Manage Sections'].'...','cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
-			echo '</span>';
-
-			gpOutput::$editlinks .= ob_get_clean();
+			if( $section_data['type'] != 'wrapper_section' ){
+				ob_start();
+				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
+				echo $link;
+				echo common::Link($this->title,$langmessage['Manage Sections'].'...','cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+				echo '</span>';
+				gpOutput::$editlinks .= ob_get_clean();
+			}
 
 			$section_data['attributes']['id']		= 'ExtraEditArea'.$edit_index;
 			$section_data['attributes']['class']	.= ' editable_area'; // class="edit_area" added by javascript

@@ -191,9 +191,7 @@ class admin_configuration{
 
 
 		//website language
-		$langDir = $dataDir.'/include/languages';
-		$possible['language'] = gpFiles::readDir($langDir,1);
-		asort($possible['language']);
+		$possible['language'] = $this->GetPossibleLanguages();
 
 		//jQuery
 		$possible['jquery'] = array('local'=>$langmessage['None'],'google'=>'jQuery','jquery_ui'=>'jQuery & jQuery UI');
@@ -224,6 +222,27 @@ class admin_configuration{
 
 
 		return $possible;
+	}
+
+	/**
+	 * Return a list of possible languages
+	 * Based on the files in /include/languages
+	 */
+	function GetPossibleLanguages(){
+		global $dataDir;
+		$lang_dir = $dataDir.'/include/languages';
+
+		$files		= scandir($lang_dir);
+		$languages	= array();
+		foreach($files as $file){
+			if( $file == '.' || $file == '..' || strpos($file,'main.inc') === false ){
+				continue;
+			}
+
+			$languages[] = str_replace('.main.inc','',$file);
+		}
+
+		return $languages;
 	}
 
 	function showForm(){

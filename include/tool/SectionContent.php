@@ -20,16 +20,41 @@ class section_content{
 	static function Render($sections,$title,$meta = array()){
 		self::SetVars($title,$meta);
 
-		$content = '';
-		foreach($sections as $section_num => $section_data){
-			$section_data += array('attributes' => array() );
-			$content .= '<div'.self::SectionAttributes($section_data['attributes'],$section_data['type']).'>';
-			$content .= self::SectionToContent($section_data,$section_num);
-			$content .= '<div class="gpclear"></div>';
-			$content .= '</div>';
-		}
+
+		$content			= '';
+		$section_num		= 0;
+		$sections_count		= count($sections);
+		do{
+			$content .= self::_RenderSection($sections, $section_num);
+		}while( $section_num < $sections_count );
+
 		return $content;
 	}
+
+	private static function _RenderSection($sections, &$section_num ){
+
+		$curr_section_num	= $section_num;
+		$section_data		= $sections[$curr_section_num];
+		$section_data		+= array('attributes' => array() );
+		$content 			= '<div'.self::SectionAttributes($section_data['attributes'],$section_data['type']).'>';
+		$section_num++;
+
+		//
+		if( $section_data['type'] == 'wrapper_section' ){
+
+			for( $cc=0; $cc < $section_data['contains_sections']; $cc++ ){
+				$content			.= self::_RenderSection($sections, $section_num);
+			}
+		}else{
+			$content				.= self::SectionToContent($section_data,$curr_section_num);
+		}
+
+		$content			.= '<div class="gpclear"></div>';
+		$content			.= '</div>';
+
+		return $content;
+	}
+
 
 	/**
 	 * Render the content of a single page section

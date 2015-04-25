@@ -280,8 +280,6 @@ class editing_page extends display{
 
 
 		//update usage of resized images
-		msg('unused sections: '.count($unused_sections));
-		msg($unused_sections);
 		foreach($unused_sections as $section_data){
 			if( isset($section_data['resized_imgs']) ){
 				includeFile('image.php');

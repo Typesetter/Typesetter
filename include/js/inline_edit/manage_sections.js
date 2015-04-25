@@ -177,20 +177,21 @@
 			var area		= gp_editor.GetArea( ui.item );
 			var prev_area	= gp_editor.GetArea( ui.item.prev() );
 
+			//moved after another section
 			if( prev_area.length ){
-				console.log('after sibling');
 				area.insertAfter(prev_area);
 				return;
 			}
 
+			//move to beginning of gpx_content
 			var $ul			= ui.item.parent().closest('ul');
 			if( $ul.attr('id') == 'section_sorting' ){
-				console.log('at beginning of gpx_content');
 				area.prependTo('#gpx_content');
 				return;
 			}
 
-			console.log('at beginning of wrapper');
+
+			//moved to beginning of wrapper
 			gp_editor.GetArea( $ul.parent() ).prepend(area);
 
 		},

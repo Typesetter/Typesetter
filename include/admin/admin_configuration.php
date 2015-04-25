@@ -242,7 +242,7 @@ class admin_configuration{
 			$languages[] = str_replace('.main.inc','',$file);
 		}
 
-		return $languages;
+		return array_combine($languages, $languages);
 	}
 
 	function showForm(){

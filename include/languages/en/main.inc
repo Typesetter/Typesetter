@@ -196,7 +196,7 @@ continue using your old password.</p>',
 'remember_me'=>'Stay Signed In',
 'send_encrypted'=>'Encrypt Login',
 'Manage Sections'=>'Manage Sections',
-'move_up'=>'Move Up',
+
 'hidden_galleries'=>'Hidden Galleries',
 'visible_galleries'=>'Visible Galleries',
 'hidden'=>'Hidden',

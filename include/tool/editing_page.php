@@ -87,10 +87,6 @@ class editing_page extends display{
 			switch($cmd){
 
 				//section editing
-				case 'move_up':
-					$this->MoveUp();
-				break;
-
 				case 'new_section':
 					$this->NewSectionPrompt();
 				return;
@@ -411,63 +407,6 @@ class editing_page extends display{
 		gp_rename::RenameForm( $this->gp_index, $action );
 	}
 
-
-	function MoveUp(){
-		global $langmessage;
-
-
-		$move_key =& $_REQUEST['section'];
-		if( !isset($this->file_sections[$move_key]) ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-		if( !common::verify_nonce('move_up'.$move_key) ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-
-		$move_content = $this->file_sections[$move_key];
-
-		$file_keys = array_keys($this->file_sections);
-		$file_values = array_values($this->file_sections);
-		$insert_key = array_search($move_key,$file_keys);
-		if( ($insert_key === null) || ($insert_key === false) || ($insert_key === 0) ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-		$prev_key = $insert_key-1;
-
-		if( !isset($file_keys[$prev_key]) ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-		$old_sections = $this->file_sections;
-
-		//rebuild
-		$new_sections = array();
-		foreach($file_values as $temp_key => $file_value){
-
-			if( $temp_key === $prev_key ){
-				$new_sections[] = $move_content;
-			}elseif( $temp_key === $insert_key ){
-				//moved section
-				continue;
-			}
-			$new_sections[] = $file_value;
-		}
-
-		$this->file_sections = $new_sections;
-
-		if( !$this->SaveThis() ){
-			$this->file_sections = $old_sections;
-			message($langmessage['OOPS'].'(4)');
-			return;
-		}
-	}
 
 	/**
 	 * Remove a content area from a page
@@ -1088,11 +1027,6 @@ class editing_page extends display{
 			echo $link;
 
 			echo common::Link($this->title,$langmessage['Manage Sections'].'...','cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
-
-
-			if( $section_num > 0 ){
-				echo common::Link($this->title,$langmessage['move_up'],'cmd=move_up&section='.$section_num,array('data-cmd'=>'creq'),'move_up'.$section_num);
-			}
 
 			echo common::Link($this->title,$langmessage['options'].'...','cmd=section_options&section='.$section_num,array('data-cmd'=>'gpabox'));
 

@@ -150,7 +150,7 @@
 				html += '<div><span class="options">';
 				html += '<a class="gpicon_edapp" data-cmd="SectionOptions" title="Options"></a>';
 				html += '<a class="copy_icon" data-cmd="CopySection" title="Copy"></a>';
-				html += '<a class="bin_icon" data-cmd="RemoveSection" title="Remove"></a>';
+				html += '<a class="bin_icon RemoveSection" data-cmd="RemoveSection" title="Remove"></a>';
 				html += '</span>';
 				html += '<i>'+(i+1)+' '+gp_editor.ucfirst(type)+'</i>';
 				html += '</div>';
@@ -265,9 +265,13 @@
 	 *
 	 */
 	$gp.links.RemoveSection = function(evt){
-		var $li = $(this).closest('li');
-		gp_editor.GetArea( $li ).remove();
-		$li.remove();
+
+		//make sure there's at least one section
+		if( $('#gpx_content').find('.editable_area').length > 1 ){
+			var $li = $(this).closest('li');
+			gp_editor.GetArea( $li ).remove();
+			$li.remove();
+		}
 	}
 
 	/**

@@ -22,6 +22,10 @@
 	border:none;
 	}
 
+#section_sorting > li:only-child .RemoveSection{
+	display:none;
+	}
+
 #section_sorting div{
 	padding:3px 0 3px 12px;
 	cursor:pointer;

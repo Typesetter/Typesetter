@@ -938,9 +938,8 @@ class gp_edit{
 	 *
 	 */
 	function PreviewSection( $section, $section_num, $title, $file_stats ){
-		global $page,$langmessage;
+		global $page, $langmessage;
 
-		//for ajax responses
 		$page->ajaxReplace = array();
 
 		switch($section['type']){

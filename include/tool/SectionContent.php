@@ -4,9 +4,9 @@ defined('is_running') or die('Not an entry point...');
 
 class section_content{
 
-	static $title = '';
-	static $label = '';
-	static $meta = array();
+	static $title	= '';
+	static $label	= '';
+	static $meta	= array();
 
 
 	/**

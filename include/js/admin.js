@@ -80,8 +80,10 @@ $gp.links.iadmin_box = function(evt,arg){
  *
  */
 $gp.links.inline_edit_generic = function(evt,rel){
+
 	evt.preventDefault();
 	$gp.loading();
+
 
 	//legacy inline editing support
 	//can also be used for development/troubleshooting
@@ -92,9 +94,14 @@ $gp.links.inline_edit_generic = function(evt,rel){
 
 	$gp.LoadStyle('/include/css/inline_edit.css');
 
-	var file_path = strip_from(this.href,'#');
-	var id = $(this).attr('id').substr(13);
-	var script = file_path+'&cmd=inlineedit&area_id='+id;
+	var script	= strip_from(this.href,'#');
+	if( rel == 'manage_sections' ){
+		$gp.LoadStyle('/include/css/manage_sections.css');
+	}else{
+		var id			= $(this).attr('id').substr(13);
+		script			+= '&cmd=inlineedit&area_id='+id;
+	}
+
 	$.getScript( script,function(data){
 		if( data === 'false' ){
 			alert($gp.error);

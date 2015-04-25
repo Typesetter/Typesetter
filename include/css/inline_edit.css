@@ -53,7 +53,6 @@
 
 	font-size:12px !important;
 	text-decoration:none !important;
-	padding:3px 5px !important;
 
 	border-top:1px solid #fafafa !important;
 	border-left:1px solid #fafafa !important;
@@ -68,7 +67,6 @@
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f7f7f7',GradientType=0 );
 	background: linear-gradient(top, #fff, #f7f7f7);
 
-	line-height:18px;
 	display:inline-block;
 	border-radius:5px;
 	margin: 0 3px 4px 0 !important;
@@ -79,6 +77,10 @@
 	text-overflow:ellipsis;
 	overflow:hidden;
 	vertical-align:top;
+
+	line-height:18px;
+	padding:3px 5px !important;
+	height:26px;
 
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;

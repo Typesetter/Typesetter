@@ -194,12 +194,9 @@ class gpAjax{
 	}
 
 	static function InlineEdit($section_data){
-		global $dataDir,$dirPrefix;
 
 		$section_data += array('type'=>'','content'=>'');
 
-		self::Header();
-		Header('Vary: Accept,Accept-Encoding');// for proxies
 
 		$scripts = array();
 		$scripts[] = '/include/js/inline_edit/inline_editing.js';
@@ -233,6 +230,40 @@ class gpAjax{
 		}
 
 		$scripts = gpPlugin::Filter('InlineEdit_Scripts',array($scripts,$type));
+
+		self::SendScripts($scripts);
+
+
+		//replace resized images with their originals
+		if( isset($section_data['resized_imgs']) && is_array($section_data['resized_imgs']) && count($section_data['resized_imgs']) ){
+			includeFile('tool/editing.php');
+			$section_data['content'] = gp_edit::RestoreImages($section_data['content'],$section_data['resized_imgs']);
+		}
+
+		//create the section object that will be passed to gp_init_inline_edit
+		$section_object = common::JsonEncode($section_data);
+
+
+		//send call to gp_init_inline_edit()
+		echo ';if( typeof(gp_init_inline_edit) == "function" ){';
+		echo 'gp_init_inline_edit(';
+		echo gpAjax::quote($_GET['area_id']);
+		echo ','.$section_object;
+		echo ');';
+		echo '}else{alert("gp_init_inline_edit() is not defined");}';
+	}
+
+	/**
+	 * Send content of all files in the $scripts array to the client
+	 *
+	 */
+	static function SendScripts($scripts){
+		global $dataDir, $dirPrefix;
+
+		self::Header();
+		Header('Vary: Accept,Accept-Encoding');// for proxies
+
+
 		$scripts = array_unique($scripts);
 
 		//send all scripts
@@ -261,24 +292,6 @@ class gpAjax{
 			//echo "\n/**\n* $script\n*\n*/\n";
 			readfile($full_path);
 		}
-
-		//replace resized images with their originals
-		if( isset($section_data['resized_imgs']) && is_array($section_data['resized_imgs']) && count($section_data['resized_imgs']) ){
-			includeFile('tool/editing.php');
-			$section_data['content'] = gp_edit::RestoreImages($section_data['content'],$section_data['resized_imgs']);
-		}
-
-		//create the section object that will be passed to gp_init_inline_edit
-		$section_object = common::JsonEncode($section_data);
-
-
-		//send call to gp_init_inline_edit()
-		echo ';if( typeof(gp_init_inline_edit) == "function" ){';
-		echo 'gp_init_inline_edit(';
-		echo gpAjax::quote($_GET['area_id']);
-		echo ','.$section_object;
-		echo ');';
-		echo '}else{alert("gp_init_inline_edit() is not defined");}';
 	}
 
 	static function InlineEdit_Text($scripts){

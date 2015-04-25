@@ -341,10 +341,6 @@ $(function(){
 			return;
 		}
 
-		if( typeof(debugjs) === 'undefined' ){
-			alert($gp.error);
-		}
-
 
 		// collect some debug info
 		var debug_info = {
@@ -362,18 +358,19 @@ $(function(){
 			console.log( debug_info );
 		}
 
+		// generic error message
+		if( typeof(debugjs) === 'undefined' ){
+			alert($gp.error);
 
-		// display to user
-		if( debugjs === true && typeof(debug) === 'function' ){
+		// detailed error
+		}else if( debugjs === true && typeof(debug) === 'function' ){
 			if( ajaxOptions.data ){
 				debug_info.data = ajaxOptions.data.substr(0,100);
 			}
 			debug( debug_info );
-		}
 
-
-		// report to gpeasy
-		if( debugjs === 'send' ){
+		// send to gpeasy bug tracker
+		}else if( debugjs === 'send' ){
 
 			alert($gp.error);
 
@@ -434,6 +431,7 @@ $(function(){
 		switch(cmd){
 			case 'gppost':
 			case 'gpajax':
+			evt.preventDefault();
 			return $gp.post(this);
 		}
 

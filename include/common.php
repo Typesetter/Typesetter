@@ -2982,7 +2982,7 @@ class gpFiles{
 	 */
 	private static function Get_Json($file,$var_name){
 
-		$file		= substr($file,0,-4).'.json';
+		$file		= substr($file,0,-4).'.gpjson';
 
 		if( !file_exists($file) ){
 			return array();
@@ -3019,7 +3019,7 @@ class gpFiles{
 		}
 
 		if( gp_data_type === '.json' ){
-			$file		= substr($file,0,-4).'.json';
+			$file		= substr($file,0,-4).'.gpjson';
 		}
 
 		return file_get_contents($file);
@@ -3033,7 +3033,7 @@ class gpFiles{
 		}
 
 		if( gp_data_type === '.json' ){
-			$file		= substr($file,0,-4).'.json';
+			$file		= substr($file,0,-4).'.gpjson';
 		}
 
 		return file_exists($file);
@@ -3529,7 +3529,7 @@ class gpFiles{
 
 		if( gp_data_type === '.json' ){
 
-			$file				= substr($file,0,-4).'.json';
+			$file				= substr($file,0,-4).'.gpjson';
 
 			$json				= self::FileStart_Json($file);
 			$json[$varname]		= $array;

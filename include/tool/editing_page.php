@@ -87,14 +87,6 @@ class editing_page extends display{
 			switch($cmd){
 
 				//section editing
-				case 'new_section':
-					$this->NewSectionPrompt();
-				return;
-
-				case 'add_section':
-					$this->AddNewSection();
-				break;
-
 				case 'rm_section':
 					$this->RmSection();
 				break;
@@ -469,123 +461,6 @@ class editing_page extends display{
 
 
 	/**
-	 * Add a new section to the page
-	 *
-	 */
-	function AddNewSection(){
-		global $langmessage, $gpAdmin;
-
-		if( $_POST['last_mod'] != $this->fileModTime ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-		if( !isset($_POST['section']) ){
-			message($langmessage['OOPS'].'(1)');
-			return;
-		}
-
-		$section = $_POST['section'];
-
-		if( !isset($this->file_sections[$section]) ){
-			message($langmessage['OOPS'].'(2)');
-			return;
-		}
-
-		if( isset($_POST['copy']) ){
-			$start_content = $this->file_sections[$section];
-			unset($start_content['modified']);
-			unset($start_content['modified_by']);
-		}else{
-			$start_content = gp_edit::DefaultContent($_POST['content_type']);
-			if( is_array($start_content) && $start_content['content'] === false ){
-				message($langmessage['OOPS'].'(3)');
-				return;
-			}
-		}
-
-		$start_content['created'] = time();
-		$start_content['created_by'] = $gpAdmin['username'];
-
-
-		if( isset($_POST['insert']) && $_POST['insert'] == 'before' ){
-			array_splice( $this->file_sections , $section , 0, 'temporary' );
-			$new_section = $section;
-		}else{
-			array_splice( $this->file_sections , $section+1 , 0, 'temporary' );
-			$new_section = $section+1;
-		}
-
-		if( $this->file_sections[$new_section] != 'temporary' ){
-			message($langmessage['OOPS'].'(4)');
-			return;
-		}
-
-
-		$this->file_sections[$new_section] = $start_content;
-
-		$this->ResetFileTypes(false);
-
-		if( !$this->SaveThis() ){
-			message($langmessage['OOPS'].'(4)');
-			return;
-		}
-
-
-		message($langmessage['SAVED']);
-	}
-
-
-	/**
-	 * Display a form for adding a new section to the page
-	 *
-	 */
-	function NewSectionPrompt(){
-		global $langmessage;
-
-		ob_start();
-		echo '<div class="inline_box">';
-		echo '<form method="post" action="'.common::GetUrl($this->title).'">';
-		echo '<h2>'.$langmessage['new_section_about'].'</h2>';
-
-		echo '<table class="bordered full_width">';
-		echo '<tr><th colspan="2">'.$langmessage['New Section'].'</th></tr>';
-
-		echo '<tr><td>';
-		echo $langmessage['Content Type'];
-		echo '</td><td>';
-		editing_page::SectionTypes();
-		echo '</td></tr>';
-
-		echo '<tr><td>';
-		echo $langmessage['Insert Location'];
-		echo '</td><td>';
-		echo '<label><input type="radio" name="insert" value="before" /> ';
-		echo $langmessage['insert_before'];
-		echo '</label>';
-		echo '<label><input type="radio" name="insert" value="after" checked="checked" /> ';
-		echo $langmessage['insert_after'];
-		echo '</label>';
-		echo '</td></tr>';
-
-		echo '</table>';
-
-		echo '<p>';
-		echo '<input type="hidden" name="last_mod" value="'.$this->fileModTime.'" />';
-		echo '<input type="hidden" name="section" value="'.htmlspecialchars($_GET['section']).'" />';
-		echo '<input type="hidden" name="cmd" value="add_section" />';
-		echo '<input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit" data-cmd="cnreq" />';
-		echo ' <input type="button" name="" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
-		echo '</p>';
-
-
-		echo '</form>';
-		echo '</div>';
-		$this->contentBuffer = ob_get_clean();
-
-	}
-
-	/**
 	 * Return a list of section types
 	 * @static
 	 */
@@ -906,12 +781,6 @@ class editing_page extends display{
 			echo $link;
 
 			echo common::Link($this->title,$langmessage['Manage Sections'].'...','cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
-
-			echo common::Link($this->title,$langmessage['New Section'].'...','cmd=new_section&section='.$section_num,array('data-cmd'=>'gpabox'));
-
-			$q = 'cmd=add_section&copy=copy&section='.$section_num.'&last_mod='.rawurlencode($this->fileModTime);
-			echo common::Link($this->title,$langmessage['Copy'],$q,array('data-cmd'=>'creq'));
-
 
 			//remove section link
 			if( count($this->file_sections) > 1 ){

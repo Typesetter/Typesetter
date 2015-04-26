@@ -855,7 +855,7 @@ class update_class{
 
 			echo '<ul class="progress">';
 			echo '<li>';
-			echo $langmessage['your_installation_is_ready_for_upgrade'];
+			echo $langmessage['ready_for_upgrade'];
 			echo '</li>';
 			echo '</ul>';
 			return true;

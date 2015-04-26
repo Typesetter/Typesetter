@@ -21,10 +21,8 @@ gp_defined('gp_chmod_file',0666);
 gp_defined('gp_chmod_dir',0755);
 gp_defined('gp_index_filenames',true);
 gp_defined('gp_safe_mode',false);
-gp_defined('E_STRICT',2048);
-gp_defined('E_RECOVERABLE_ERROR',4096);
-gp_defined('E_DEPRECATED',8192);
-gp_defined('E_USER_DEPRECATED',16384);
+gp_defined('E_DEPRECATED',8192);			// since php 5.3
+gp_defined('E_USER_DEPRECATED',16384);		// since php 5.3
 gp_defined('gp_backup_limit',10);
 gp_defined('gp_write_lock_time',5);
 gp_defined('gp_dir_index',true);

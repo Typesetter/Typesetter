@@ -638,7 +638,7 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 		global $langmessage;
 
 		echo '<p>';
-		echo $langmessage['supply_ftp_values_to_continue'];
+		echo $langmessage['supply_ftp_values'];
 		echo '</p>';
 
 		if( $action === false ){

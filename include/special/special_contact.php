@@ -63,8 +63,12 @@ class special_contact_gadget{
 
 
 		$headers = array();
-		$_POST += array('subject'=>'','contact_nonce'=>'');
+		$_POST += array('subject'=>'','contact_nonce'=>'','message'=>'');
 
+		if empty($_POST['message']) ){
+			message($langmessage['OOPS'].'(Invalid Message)');
+			return;
+		}
 
 		//check nonce
 		if( !common::verify_nonce('contact_post',$_POST['contact_nonce'],true) ){

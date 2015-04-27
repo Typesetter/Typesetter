@@ -3387,8 +3387,9 @@ class gpFiles{
 			return true;
 		}
 
+
+
 		trigger_error('gpEasy write lock could not be obtained.');
-		message('Oops, a write lock could not be obtained. The existing lock will expire in '.($expires).' seconds.');
 		define('gp_has_lock',false);
 		return false;
 	}

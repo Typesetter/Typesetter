@@ -8,7 +8,7 @@
 
 $langmessage = array (
 	'LOGGED_OUT'                     => 'You have been logged out.',
-	'configuration'                  => 'Configuration',
+    'configuration'                  => 'Configuration',
 	'Current Configuration'          => 'Current Configuration',
 	'Appearance'                     => 'Appearance',
 	'Content'                        => 'Content',
@@ -214,7 +214,7 @@ continue using your old password.</p>',
 	'recaptcha_public'               => 'reCaptcha Public Key',
 	'recaptcha_private'              => 'reCaptcha Private Key',
 	'recaptcha_language'             => 'reCaptcha Language',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Get a <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> to use CAPTCHA verification on the contact form.',
 	'maximgarea'                     => 'Maximum square pixels for uploaded images. A 600 x 800 pixel image has 480,000 sq/pixels.',

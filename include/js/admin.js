@@ -180,13 +180,12 @@ $gp.AdminBoxC = function(data,options){
 	options = $.extend({context:'',width:640}, options);
 
 	/*
-	var win_width = $win.width();
+	var win_width = $gp.$win.width();
 	var box_width = Math.max(660, Math.round(win_width*0.70));
 	*/
-	var $win = $(window);
 	var box_width = options.width;
-	var left = Math.round( ($win.width() - box_width - 40)/2);
-	var height = Math.max( $(document).height(), $('body').outerHeight(true) );
+	var left = Math.round( ($gp.$win.width() - box_width - 40)/2);
+	var height = Math.max( $gp.$doc.height(), $('body').outerHeight(true) );
 
 	$gp.div('gp_admin_box1')
 		.css({'zIndex':11000,'min-height':height})
@@ -195,7 +194,7 @@ $gp.AdminBoxC = function(data,options){
 		.fadeTo(200,0.2);
 
 	$gp.div('gp_admin_box')
-				.css({'zIndex':'11001','left':left,'top': $win.scrollTop() })
+				.css({'zIndex':'11001','left':left,'top': $gp.$win.scrollTop() })
 				.stop(true,true,true)
 				.fadeIn(400)
 				.html('<a class="gp_admin_box_close" data-cmd="admin_box_close"></a><div id="gp_admin_boxc" class="'+(options.context||'')+'" style="width:'+box_width+'px"></div>')
@@ -207,7 +206,7 @@ $gp.AdminBoxC = function(data,options){
 	$('.messages').detach();
 
 	//close on escape key
-	$(document).on('keypress.abox',function(e) {
+	$gp.$doc.on('keypress.abox',function(e) {
 		if( e.keyCode == 27 ){
 			$gp.CloseAdminBox();
 		}
@@ -226,7 +225,7 @@ $gp.CloseAdminBox = function(evt){
 		evt.preventDefault();
 	}
 
-	$(document).off('keypress.abox');
+	$gp.$doc.off('keypress.abox');
 
 	$('#gp_admin_box1').fadeOut();
 	$('#gp_admin_box').fadeOut(300,function(){
@@ -577,8 +576,11 @@ $gp.response.location = function(obj){
  */
 $(function(){
 
+	$gp.$win = $(window);
+	$gp.$doc = $(document);
+
 	//add return value to form
-	$(document).on('mousedown','form',function(){
+	$gp.$doc.on('mousedown','form',function(){
 		var $this = $(this);
 
 		if( $this.data('gpForms') === 'checked' ){
@@ -610,7 +612,7 @@ $(function(){
 	 * Update character counts
 	 *
 	 */
-	$(document).on('keyup keypress paste change', '.show_character_count', function(){
+	$gp.$doc.on('keyup keypress paste change', '.show_character_count', function(){
 		$(this).parent().find('.character_count span').html( this.value.length );
 	});
 
@@ -619,7 +621,7 @@ $(function(){
 	 * Warn before closing a page if an inline edit area has been changed
 	 *
 	 */
-	$(window).on('beforeunload',function(){
+	$gp.$win.on('beforeunload',function(){
 		if( !gp_editor ){
 			return;
 		}
@@ -642,7 +644,7 @@ $(function(){
 	function EditableBar(){
 
 		$('#current_page_panel').bind('mouseenter.edb touchstart.edb',function(){
-			var count = 0,box, $win = $(window);
+			var count = 0,box;
 			var list = $('#editable_areas_list').html('');
 
 			//the overlay box
@@ -688,7 +690,7 @@ $(function(){
 								.fadeIn();
 
 							//scroll to show edit area
-							if( $win.scrollTop() > loc.top || ( $win.scrollTop() + $win.height() ) < loc.top ){
+							if( $gp.$win.scrollTop() > loc.top || ( $gp.$win.scrollTop() + $gp.$win.height() ) < loc.top ){
 								$('html,body').stop(true,true,true).animate({scrollTop: Math.max(0,loc.top-100)},'slow');
 							}
 						}).on('mouseleave touchend',function(){
@@ -906,21 +908,20 @@ $(function(){
 		 * Right Click to show menu
 		 *
 		 */
-		$(document).on('contextmenu','.editable_area, #gp_edit_overlay',function(evt){
+		$gp.$doc.on('contextmenu','.editable_area, #gp_edit_overlay',function(evt){
 			if( evt.ctrlKey || evt.altKey || evt.shiftKey || gp_editor ) return;
 			if( lnk_span ){
 				evt.preventDefault();
-				var $win = $(window);
 
 
 				//show and position menu
 				ShowMenu();
-				var left = evt.pageX-$win.scrollLeft();
-				var diff = left + lnk_span.width() - $win.width();
+				var left = evt.pageX-$gp.$win.scrollLeft();
+				var diff = left + lnk_span.width() - $gp.$win.width();
 				if( diff > 0 ){
 					left -= diff;
 				}
-				lnk_span.css({'top':(evt.pageY-$win.scrollTop()),'left':left,'right':'auto','position':'fixed'});
+				lnk_span.css({'top':(evt.pageY-$gp.$win.scrollTop()),'left':left,'right':'auto','position':'fixed'});
 				fixed_pos = true;
 			}
 		});
@@ -945,14 +946,13 @@ $(function(){
 				var pos = panel.offset();
 				var right = pos.left + panel.width();
 				var bottom = pos.top + panel.height();
-				var $win = $(window);
 
 
-				if( right > $win.width() + $win.scrollLeft() ){
+				if( right > $gp.$win.width() + $gp.$win.scrollLeft() ){
 					panel.css({'right':'100%','left':'auto'});
 				}
 
-				var winbottom = $win.height() + $win.scrollTop();
+				var winbottom = $gp.$win.height() + $gp.$win.scrollTop();
 				if( bottom > winbottom ){
 					var diff = winbottom +  - bottom - 10;
 					panel.css({'top':diff});
@@ -982,16 +982,12 @@ $(function(){
 function SimpleDrag(selector,drag_area,positioning,callback_done){
 	var tolerance = -10;
 	var $drag_area = $(drag_area);
-	var $win = $(window);
-	var $doc = $(document);
 
 
 	//dragging
-	$(document).off('mousedown.sdrag',selector).on('mousedown.sdrag',selector,function(e){
+	$gp.$doc.off('mousedown.sdrag',selector).on('mousedown.sdrag',selector,function(e){
 
 		if( e.which != 1 ) return;
-
-		/* if( e.target.nodeName != 'DIV') return; */
 
 		var box, click_offsetx, click_offsety;
 		e.preventDefault();
@@ -1001,18 +997,12 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 		init();
 		function init(){
 			var pos = $drag_area.offset();
-			click_offsetx = e.clientX - pos.left + $win.scrollLeft();
-			click_offsety = e.clientY - pos.top + $win.scrollTop();
-
-			//$drag_area.fadeTo(0,.5);
-
-			//if( positioning === 'fixed' ){
-				//box = $drag_area;
-			//}
+			click_offsetx = e.clientX - pos.left + $gp.$win.scrollLeft();
+			click_offsety = e.clientY - pos.top + $gp.$win.scrollTop();
 		}
 
 
-		$doc.bind('mousemove.sdrag',function(e){
+		$gp.$doc.bind('mousemove.sdrag',function(e){
 
 			//initiate the box
 			if( !box ){
@@ -1030,9 +1020,9 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 
 
 
-		$doc.unbind('mouseup.sdrag').bind('mouseup.sdrag',function(e){
+		$gp.$doc.unbind('mouseup.sdrag').bind('mouseup.sdrag',function(e){
 			var newposleft,newpostop,pos_obj;
-			$doc.unbind('mousemove.sdrag mouseup.sdrag');
+			$gp.$doc.unbind('mousemove.sdrag mouseup.sdrag');
 
 			if( !box ){
 				return false;
@@ -1051,8 +1041,8 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 
 			//add scroll back in for absolute position
 			if( positioning === 'absolute' ){
-				newposleft += $win.scrollLeft();
-				newpostop += $win.scrollTop();
+				newposleft += $gp.$win.scrollLeft();
+				newpostop += $gp.$win.scrollTop();
 			}
 
 			newposleft = Math.max(tolerance,newposleft);
@@ -1101,7 +1091,7 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 
 
 		//keep the top of the area from being placed too high in the window
-		var winbottom = $win.height();
+		var winbottom = $gp.$win.height();
 		if( pos.top < tolerance ){
 			css.top = tolerance;
 
@@ -1112,7 +1102,7 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 
 
 		//right
-		var checkright = $win.width()  - width - tolerance;
+		var checkright = $gp.$win.width()  - width - tolerance;
 		if( pos.left > checkright ){
 			css.left = checkright;
 		}
@@ -1122,7 +1112,7 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 		}
 	}
 
-	$win.resize(function(){
+	$gp.$win.resize(function(){
 		$('.keep_viewable').each(function(){
 			KeepViewable($(this),false);
 		});
@@ -1316,7 +1306,7 @@ function SimpleResize(resize_area,options){
 
 			evt.preventDefault();
 
-			//$(document)
+			//
 			$('<div style="position:fixed;top:0;right:0;bottom:0;left:0;cursor:e-resize;z-index:999000;">')
 				.appendTo('body')
 				.on('mousemove.sres',function(evt){
@@ -1353,8 +1343,7 @@ function SimpleResize(resize_area,options){
 			}).off('mouseup.sres').on('mouseup.sres',function(evt){
 
 				evt.preventDefault();
-				//$('body').enableSelection();
-				//$(document).off('mousemove.sres mouseup.sres');
+				//$('body').enableSelection()
 				$(this).off('mousemove.sres mouseup.sres').remove()
 
 				options.finish.call($resize_area,new_w,new_l);

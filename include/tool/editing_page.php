@@ -12,7 +12,7 @@ class editing_page extends display{
 	}
 
 	function RunScript(){
-		global $langmessage,$page;
+		global $langmessage, $page;
 		$cmd = common::GetCommand();
 
 		//prevent overwriting the content to maintain overlay editin links
@@ -209,8 +209,8 @@ class editing_page extends display{
 		$section_types			= section_content::GetTypes();
 
 
-
 		foreach($_POST['section_order'] as $i => $arg ){
+
 
 			// moved / copied sections
 			if( ctype_digit($arg) ){

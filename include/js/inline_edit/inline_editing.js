@@ -107,12 +107,11 @@ var gp_editing = {
 	 * Initiate dragging
 	 */
 	editor_tools:function(){
-		var editor_area = $('#ckeditor_area');
 
 		$('#ckeditor_top').html('');
 		$('#ckeditor_bottom').html('');
 
-		SimpleDrag('#ckeditor_area .toolbar',editor_area,'fixed',function(pos){
+		SimpleDrag('#ckeditor_area .toolbar','#ckeditor_area','fixed',function(pos){
 			gpui.ckx = pos.left;
 			gpui.cky = pos.top;
 
@@ -167,7 +166,7 @@ var gp_editing = {
 			.css({'top':gpui.cky,'left':gpui.ckx,'bottom':'auto'})
 			.unbind('.gpdock');
 
-			$(window).resize();
+			$gp.$win.resize();
 		}
 
 		//return editor_area;

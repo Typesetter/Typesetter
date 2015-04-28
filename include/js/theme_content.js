@@ -210,15 +210,6 @@ $(function(){
 		var pos = $content.offset();
 		var w = $content.width();
 
-		/*
-		var drag_note = $('#gp_drag_n_drop')
-						.show()
-						.css({'top':pos.top,'left':(pos.left+w-300)})
-						.appendTo('#gp_admin_html');
-		SimpleDrag('#gp_drag_n_drop',drag_note,'absolute',function(){});
-		*/
-
-
 
 		//prepare the drag area
 		var drag_area = $('<div class="draggable_droparea" id="theme_content_drop"></div>').appendTo('#gp_admin_html');

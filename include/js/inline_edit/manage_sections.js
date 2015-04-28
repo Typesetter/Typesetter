@@ -98,7 +98,7 @@
 		 */
 		InitEditor: function(){
 			$('<ul id="section_sorting" class="section_drag_area" style="overflow:auto">')
-				.appendTo('#ckeditor_top');
+				.appendTo('#ckeditor_top')
 
 
 			gp_editor.resetDirty();
@@ -106,14 +106,21 @@
 			gp_editor.InitNewSection();
 
 
-			$(window).on('resize', function(){
-				var $ckeditor_area	= $('#ckeditor_area');
-				var $section_area	= $('#section_sorting');
-				var listMaxHeight	= $(window).height() - $ckeditor_area.offset().top - $ckeditor_area.height() + $section_area.height();
-				$section_area.css( 'max-height', listMaxHeight );
-			}).resize();
+			$gp.$win.on('resize', gp_editor.MaxHeight ).resize();
 
+			$('#ckeditor_area').on('dragstop',gp_editor.MaxHeight);
+		},
 
+		/**
+		 * Set maximum height of editor
+		 *
+		 */
+		MaxHeight: function(){
+			console.log('called');
+			var $ckeditor_area	= $('#ckeditor_area');
+			var $section_area	= $('#section_sorting');
+			var listMaxHeight	= $gp.$win.height() - $ckeditor_area.offset().top - $ckeditor_area.height() + $section_area.height();
+			$section_area.css( 'max-height', listMaxHeight );
 		},
 
 		/**

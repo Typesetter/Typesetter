@@ -135,7 +135,7 @@ $gp.links.remote = function(evt){
 	}
 
 	//40px margin + 17px*2 border + 20px padding + 10 (extra padding) = approx 130
-	var height = $(window).height() - 130;
+	var height = $gp.$win.height() - 130;
 
 	var opts = {context:'iframe',width:780};
 
@@ -769,7 +769,7 @@ $(function(){
 			rmNoOverlay(edit_area);
 		});
 
-		$(window).scroll(function(){
+		$gp.$win.scroll(function(){
 			SpanPosition();
 		});
 
@@ -797,7 +797,7 @@ $(function(){
 
 			var off = lnk_span.offset(),
 				pos = lnk_span.position(),
-				top = $(window).scrollTop(),
+				top = $gp.$win.scrollTop(),
 				diff = Math.max(0,top - (off.top - pos.top));
 
 			lnk_span.stop(true,true,true).animate({'top':diff});
@@ -931,7 +931,7 @@ $(function(){
 
 	function UIEffects(){
 
-		SimpleDrag('#simplepanel .toolbar, #simplepanel .toolbar a','#simplepanel','fixed',function(newpos){
+		SimpleDrag('#simplepanel .toolbar, #simplepanel .toolbar a', '#simplepanel', 'fixed', function(newpos){
 			gpui.tx = newpos.left;
 			gpui.ty = newpos.top;
 			$gp.SaveGPUI();
@@ -979,9 +979,10 @@ $(function(){
  * @param string positioning (absolute,relative,fixed)
  * @param function callback_done function to call once the drag 'n drop is done
  */
-function SimpleDrag(selector,drag_area,positioning,callback_done){
-	var tolerance = -10;
-	var $drag_area = $(drag_area);
+function SimpleDrag(selector, drag_area, positioning, callback_done){
+
+	var tolerance	= -10;
+	var $drag_area	= $(drag_area);
 
 
 	//dragging
@@ -1015,6 +1016,7 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 
 			box.css({'left':Math.max(tolerance,e.clientX - click_offsetx),'top': Math.max(tolerance,e.clientY - click_offsety)});
 			e.preventDefault();
+
 			return false;
 		});
 
@@ -1056,6 +1058,8 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 			if( typeof(callback_done) === 'function' ){
 				callback_done.call($drag_area,pos_obj,e);
 			}
+
+			$drag_area.trigger('dragstop');
 			return false;
 		});
 

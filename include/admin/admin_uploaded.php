@@ -623,18 +623,24 @@ class admin_uploaded{
 			if( is_string($upload_extensions_deny) && strtolower($upload_extensions_deny) === 'all' ){
 				$allowed_types = array();
 			}else{
-				$allowed_types = array('7z', 'aiff', 'asf', 'avi', 'bmp', 'bz', 'csv', 'doc', 'fla', 'flv', 'gif', 'gz', 'gzip', 'jpeg', 'jpg', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ods', 'odt', 'pdf', 'png', 'ppt', 'pxd', 'qt', 'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 'sdc', 'sitd', 'swf', 'sxc', 'sxw', 'tar', 'tgz', 'tif', 'tiff', 'txt', 'vsd', 'wav', 'wma', 'wmv', 'xls', 'xml', 'zip', 'md', 'js');
+				$allowed_types = array(
+					/** Images **/		'bmp', 'gif', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'wav', 'wma',
+					/** Media **/		'aiff', 'asf', 'avi', 'fla', 'flv', 'm4v', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ogg','oga','ogv','opus', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'webm', 'wmv',
+					/** Archives **/	'7z', 'bz', 'gz', 'gzip', 'rar', 'sdc', 'sitd', 'tar', 'tgz', 'zip',
+					/** Text/Docs **/	'csv', 'doc', 'docx', 'htm', 'html', 'js', 'md', 'ods', 'odt', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'sxc', 'sxw', 'vsd', 'xls', 'xlsx', 'xml' );
+
+
 			}
 
 			if( is_array($upload_extensions_allow) ){
-				$upload_extensions_allow = array_map('trim',$upload_extensions_allow);
-				$upload_extensions_allow = array_map('strtolower',$upload_extensions_allow);
-				$allowed_types = array_merge($allowed_types,$upload_extensions_allow);
+				$upload_extensions_allow	= array_map('trim',$upload_extensions_allow);
+				$upload_extensions_allow	= array_map('strtolower',$upload_extensions_allow);
+				$allowed_types				= array_merge($allowed_types,$upload_extensions_allow);
 			}
 			if( is_array($upload_extensions_deny) ){
-				$upload_extensions_allow = array_map('trim',$upload_extensions_allow);
-				$upload_extensions_allow = array_map('strtolower',$upload_extensions_allow);
-				$allowed_types = array_diff($allowed_types,$upload_extensions_deny);
+				$upload_extensions_allow	= array_map('trim',$upload_extensions_allow);
+				$upload_extensions_allow	= array_map('strtolower',$upload_extensions_allow);
+				$allowed_types				= array_diff($allowed_types,$upload_extensions_deny);
 			}
 		}
 

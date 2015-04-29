@@ -5,7 +5,7 @@ $(function(){
 	if( typeof(IE_LT_8) != 'undefined' && IE_LT_8 ){
 		$('#browser_warning').show();
 	}
-	$('#loginform .login_text:first').focus();
+	$('#loginform .login_text:first input').focus();
 
 
 	window.setTimeout(function(){

@@ -1050,6 +1050,10 @@ abstract class FinderVolumeDriver {
 
 		$this->options['treeDeep'] = $this->options['treeDeep'] > 0 ? (int)$this->options['treeDeep'] : 1;
 
+		//debug($dir);
+		//debug('path',$path);
+
+
 		$dirs = $this->gettree($path, $deep > 0 ? $deep -1 : $this->options['treeDeep']-1, $exclude ? $this->decode($exclude) : null);
 		array_unshift($dirs, $dir);
 

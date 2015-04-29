@@ -812,6 +812,16 @@ class Finder {
 			}
 		}
 
+		// get parent folders of cwd
+		if( $init ){
+			$tree = $vol->parents($cwd['hash']);
+			if( $tree !== false ){
+				$files = array_merge($files, $tree);
+			}
+		}
+
+
+
 		// get current working directory files list and add to $files if not exists in it
 		$ls = $volume->scandir($cwd['hash']);
 		if( $ls === false) {
@@ -827,7 +837,7 @@ class Finder {
 		$result = array(
 			'cwd'     => $cwd,
 			'options' => $volume->options($cwd['hash']),
-			'files'   => $files
+			'files'   => $this->CleanFiles($files)
 		);
 
 		if (!empty($args['init'])) {
@@ -836,6 +846,21 @@ class Finder {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Remove duplicates from the list of files
+	 *
+	 */
+	protected function CleanFiles($files){
+
+		$new_list = array();
+
+		foreach($files as $file){
+			$new_list[$file['hash']] = $file;
+		}
+
+		return array_values($new_list);
 	}
 
 	/**

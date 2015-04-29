@@ -313,6 +313,7 @@ $gp.Cookie('cookie_cmd','',-1);
  */
 $(function(){
 
+	var $document = $(document);
 
 	//add a class to the body
 	//this also affects the display of elements using the req_script css class
@@ -324,7 +325,7 @@ $(function(){
 	 *	Handle AJAX errors
 	 *
 	 */
-	$(document).ajaxError(function(event, XMLHttpRequest, ajaxOptions, thrownError){
+	$document.ajaxError(function(event, XMLHttpRequest, ajaxOptions, thrownError){
 		$gp.loaded();
 
 		//
@@ -396,7 +397,7 @@ $(function(){
 	 * Handle clicks on forms
 	 *
 	 */
-	$(document).on('click', 'input,button',function(evt){
+	$document.on('click', 'input,button',function(evt){
 
 		verify(this.form);
 		var $this = $(this);
@@ -438,7 +439,7 @@ $(function(){
 		return true;
 	});
 
-	$(document).on('submit','form',function(){
+	$document.on('submit','form',function(){
 		verify(this);
 	});
 
@@ -450,7 +451,7 @@ $(function(){
 
 
 	//expanding menus
-	$(document).delegate('.expand_child',{
+	$document.delegate('.expand_child',{
 		'mouseenter': function(){
 			var $this = $(this).addClass('expand');
 			if( $this.hasClass('simple_top') ){
@@ -468,7 +469,7 @@ $(function(){
 	 * Use of name and rel attributes is deprecated as of gpEasy 3.6
 	 *
 	 */
-	$(document).on('click', 'a',function(evt){
+	$document.on('click', 'a',function(evt){
 
 
 		var $this = $(this);

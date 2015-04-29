@@ -36,7 +36,9 @@ $(function(){
 		var top			= $finder.offset().top;
 		var win_height	= $window.height();
 
-		$finder.height(win_height-top).resize();
+		if( parseInt(win_height-top) != $finder.height() ){//prevent too much recursion
+			$finder.height(win_height-top).resize();
+		}
 
 	}).resize();
 

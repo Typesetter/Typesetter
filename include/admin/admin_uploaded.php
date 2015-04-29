@@ -8,12 +8,12 @@ includeFile('image.php');
 class admin_uploaded{
 
 	var $baseDir;
-	var $subdir = false;
+	var $subdir			= false;
 	var $thumbFolder;
-	var $isThumbDir = false;
+	var $isThumbDir		= false;
 	var	$imgTypes;
-	var $errorMessages = array();
-	var $finder_opts = array();
+	var $errorMessages	= array();
+	var $finder_opts	= array();
 
 
 
@@ -136,12 +136,12 @@ class admin_uploaded{
 	function Init(){
 		global $langmessage, $dataDir,$page;
 
-		$this->baseDir = $dataDir.'/data/_uploaded';
-		$this->thumbFolder = $dataDir.'/data/_uploaded/image/thumbnails';
-		$this->currentDir = $this->baseDir;
-		$page->label = $langmessage['uploaded_files'];
+		$this->baseDir		= $dataDir.'/data/_uploaded';
+		$this->thumbFolder	= $dataDir.'/data/_uploaded/image/thumbnails';
+		$this->currentDir	= $this->baseDir;
+		$page->label		= $langmessage['uploaded_files'];
 
-		$this->imgTypes = array('bmp'=>1,'png'=>1,'jpg'=>1,'jpeg'=>1,'gif'=>1,'tiff'=>1,'tif'=>1);
+		$this->imgTypes		= array('bmp'=>1,'png'=>1,'jpg'=>1,'jpeg'=>1,'gif'=>1,'tiff'=>1,'tif'=>1);
 
 
 		//get the current path

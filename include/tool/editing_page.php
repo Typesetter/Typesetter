@@ -245,8 +245,8 @@ class editing_page extends display{
 
 
 			// wrapper section 'contains_sections'
-			if( $new_section['type'] == 'wrapper_section' && isset($_POST['contains_sections'][$i]) && $_POST['contains_sections'][$i] > 0 ){
-				$new_section['contains_sections'] = $_POST['contains_sections'][$i];
+			if( $new_section['type'] == 'wrapper_section' ){
+				$new_section['contains_sections'] = isset($_POST['contains_sections']) ? $_POST['contains_sections'][$i] : '0';
 			}
 
 			$new_sections[$i] = $new_section;

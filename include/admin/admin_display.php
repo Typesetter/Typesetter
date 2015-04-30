@@ -256,34 +256,7 @@ class admin_display extends display{
 
 		echo '<div id="adminlinks2">';
 		admin_tools::AdminPanelLinks(false);
-
-		//resources
-		echo '<div class="panelgroup" id="panelgroup_resources">';
-		echo '<span>';
-		echo '<i class="gpicon_page_gear"></i>';
-		echo $langmessage['resources'];
-		echo '</span>';
-		echo '<div class="panelgroup2">';
-		echo '<ul>';
-
-		if( gp_remote_plugins && admin_tools::HasPermission('Admin_Addons') ){
-			echo '<li>'.common::Link('Admin_Addons/Remote',$langmessage['Download Plugins']).'</li>';
-		}
-		if( gp_remote_themes && admin_tools::HasPermission('Admin_Theme_Content') ){
-			echo '<li>'.common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']).'</li>';
-		}
-		echo '<li><a href="http://gpeasy.com">Support Forum</a></li>';
-		echo '<li><a href="http://gpeasy.com/Services">Service Providers</a></li>';
-		echo '<li><a href="http://gpeasy.com">Official gpEasy Site</a></li>';
-		echo '<li><a href="https://github.com/oyejorge/gpEasy-CMS/issues">Report A Bug</a></li>';
-		echo '</ul>';
 		echo '</div>';
-		echo '</div>';
-
-
-		echo '</div>';
-
-
 	}
 
 

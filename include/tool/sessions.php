@@ -851,7 +851,7 @@ class gpsession{
 		$possible = array();
 
 		$possible['gpui_cmpct']	= 'integer';
-		$possible['gpui_vis']	= array('con'=>'con','cur'=>'cur','app'=>'app','add'=>'add','set'=>'set','upd'=>'upd','use'=>'use','gpe'=>'gpe','false'=>false);
+		$possible['gpui_vis']	= array('con'=>'con','cur'=>'cur','app'=>'app','add'=>'add','set'=>'set','upd'=>'upd','use'=>'use','gpe'=>'gpe','res'=>'res','false'=>false);
 
 
 		$possible['gpui_tx']	= 'integer';

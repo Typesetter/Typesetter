@@ -238,8 +238,17 @@ class editing_page extends display{
 			// attributes
 			$new_section['attributes'] = array();
 			if( isset($_POST['attributes'][$i]) ){
-				foreach($_POST['attributes'][$i] as $attr_set){
-					$new_section['attributes'][$attr_set[0]] = $attr_set[1];
+				foreach($_POST['attributes'][$i] as $attr_name => $attr_value){
+
+					$attr_name		= strtolower($attr_name);
+					$attr_name		= trim($attr_name);
+					$attr_value		= trim($attr_value);
+
+					if( empty($attr_name) || empty($attr_value) || $attr_name == 'id' || substr($attr_name,0,7) == 'data-gp' ){
+						continue;
+					}
+
+					$new_section['attributes'][$attr_name] = $attr_value;
 				}
 			}
 
@@ -290,21 +299,6 @@ class editing_page extends display{
 
 	}
 
-
-
-	static function InvalidAttributes($attributes){
-		$invalid = array();
-		foreach($attributes as $attr_name => $attr_value){
-			if( strtolower($attr_name) == 'id' ){
-				$invalid[] = 'id';
-				continue;
-			}
-			if( preg_match('#\s#',$attr_name) ){
-				$invalid[] = $attr_name;
-			}
-		}
-		return $invalid;
-	}
 
 	/**
 	 * Perform various section editing commands
@@ -737,7 +731,7 @@ class editing_page extends display{
 		$section_data									= $this->file_sections[$section_num];
 		$section_data									+= array('attributes' => array(),'type'=>'text' );
 		$section_data['attributes']						+= array('class' => '' );
-		$section_data['attributes']['data-gp-class']	= $section_data['attributes']['class'];
+		$orig_attrs										= json_encode($section_data['attributes']);
 		$section_data['attributes']['data-gp-section']	= $section_num;
 		$section_types									= section_content::GetTypes();
 
@@ -769,7 +763,7 @@ class editing_page extends display{
 			$section_data['attributes']['class']	.= ' editable_area'; // class="edit_area" added by javascript
 		}
 
-		$content			.= "\n".'<div'.section_content::SectionAttributes($section_data['attributes'],$section_data['type']).'>';
+		$content			.= "\n".'<div'.section_content::SectionAttributes($section_data['attributes'],$section_data['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>';
 
 		if( $section_data['type'] == 'wrapper_section' ){
 

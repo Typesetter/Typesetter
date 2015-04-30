@@ -317,7 +317,7 @@
 			}
 
 			var value = $.trim(this);
-			if( value == '' ){
+			if( value == '' && name != 'class' ){
 				return;
 			}
 

@@ -610,13 +610,20 @@ class admin_tools{
 			if( gp_remote_themes && admin_tools::HasPermission('Admin_Theme_Content') ){
 				echo '<li>'.common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']).'</li>';
 			}
-			echo '<li><a href="http://gpeasy.com">Support Forum</a></li>';
+			echo '<li><a href="http://gpeasy.com/Forum">Support Forum</a></li>';
 			echo '<li><a href="http://gpeasy.com/Services">Service Providers</a></li>';
 			echo '<li><a href="http://gpeasy.com">Official gpEasy Site</a></li>';
 			echo '<li><a href="https://github.com/oyejorge/gpEasy-CMS/issues">Report A Bug</a></li>';
 			echo '</ul>';
 			echo '</div>';
 			echo '</div>';
+
+			if( $in_panel ){
+				echo '<div class="gpversion">';
+				echo 'gpEasy '.gpversion;
+				echo '</div>';
+			}
+
 		}
 
 	}

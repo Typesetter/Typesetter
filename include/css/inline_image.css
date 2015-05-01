@@ -204,7 +204,10 @@
 	padding: 0 !important;
 	position: relative;
 	width: 250px;
+	height:auto;
+
 	}
+
 .gp_edit_select_options{
 	padding:0 5px 5px 15px;
 	overflow:auto;

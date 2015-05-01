@@ -234,7 +234,6 @@ class editing_page extends display{
 				$new_section = gp_edit::DefaultContent($arg);
 			}
 
-
 			// attributes
 			$new_section['attributes'] = array();
 			if( isset($_POST['attributes'][$i]) ){
@@ -713,26 +712,36 @@ class editing_page extends display{
 
 		$content				= '';
 		$sections_count			= count($this->file_sections);
-		$this->sectionCounter	= 0;
+		$section_num			= 0;
 
 		do{
-			$content .= $this->GetSection( $this->sectionCounter );
-		}while( $this->sectionCounter < $sections_count );
+
+			$content .= $this->GetSection( $section_num );
+		}while( $section_num < $sections_count );
 
 
 		return $content;
 	}
 
-	function GetSection($section_num){
+	function GetSection(&$section_num){
 		global $langmessage, $GP_NESTED_EDIT;
 
-		$content = '';
 
-		$section_data									= $this->file_sections[$section_num];
+		if( !isset($this->file_sections[$section_num]) ){
+			trigger_error('invalid section number');
+			return;
+		}
+
+		$curr_section_num								= $section_num;
+		$section_num++;
+
+
+		$content										= '';
+		$section_data									= $this->file_sections[$curr_section_num];
 		$section_data									+= array('attributes' => array(),'type'=>'text' );
 		$section_data['attributes']						+= array('class' => '' );
 		$orig_attrs										= json_encode($section_data['attributes']);
-		$section_data['attributes']['data-gp-section']	= $section_num;
+		$section_data['attributes']['data-gp-section']	= $curr_section_num;
 		$section_types									= section_content::GetTypes();
 
 
@@ -742,11 +751,11 @@ class editing_page extends display{
 			if( isset($section_types[$section_data['type']]) ){
 				$title_attr		= $section_types[$section_data['type']]['label'];
 			}else{
-				$title_attr		= sprintf($langmessage['Section %s'],$section_num+1);
+				$title_attr		= sprintf($langmessage['Section %s'],$curr_section_num+1);
 			}
 
 			$attrs			= array('title'=>$title_attr,'data-cmd'=>'inline_edit_generic','data-arg'=>$section_data['type'].'_inline_edit');
-			$link			= gpOutput::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$section_num.'&amp;revision='.$this->fileModTime,$attrs);
+			$link			= gpOutput::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$curr_section_num.'&amp;revision='.$this->fileModTime,$attrs);
 
 
 			//section control links
@@ -767,21 +776,19 @@ class editing_page extends display{
 
 		if( $section_data['type'] == 'wrapper_section' ){
 
-			for( $cc=1; $cc <= $section_data['contains_sections']; $cc++ ){
-				$nextSectionNumber		= $section_num + $cc;
-				$content				.= $this->GetSection($nextSectionNumber);
+			for( $cc=0; $cc < $section_data['contains_sections']; $cc++ ){
+				$content		.= $this->GetSection($section_num);
 			}
 
 		}else{
 			$GP_NESTED_EDIT		= true;
-			$content			.= section_content::RenderSection($section_data,$section_num,$this->title,$this->file_stats);
+			$content			.= section_content::RenderSection($section_data,$curr_section_num,$this->title,$this->file_stats);
 			$GP_NESTED_EDIT		= false;
 		}
 
 		$content			.= '<div class="gpclear"></div>';
 		$content			.= '</div>';
 
-		$this->sectionCounter++;
 
 		return $content;
 	}

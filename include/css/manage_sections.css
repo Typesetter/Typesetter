@@ -22,7 +22,7 @@
 	border:none;
 	}
 
-#section_sorting > li:only-child .RemoveSection{
+#section_sorting > li:only-child > div .RemoveSection{
 	display:none;
 	}
 

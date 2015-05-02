@@ -602,7 +602,9 @@ $(function(){
 
 	window.setTimeout(function(){
 		EditOutlines();
-		EditableBar();
+
+		$('#editable_areas_list').one('mouseenter.edb touchstart.edb',EditableBar);
+
 		UIEffects();
 	}
 	,500);
@@ -643,72 +645,71 @@ $(function(){
 	 */
 	function EditableBar(){
 
-		$('#current_page_panel').bind('mouseenter.edb touchstart.edb',function(){
-			var count = 0,box;
-			var list = $('#editable_areas_list').html('');
+		var count = 0,box;
 
-			//the overlay box
-			box = $gp.div('gp_edit_box');
+		var list = $(this).find('ul').html('');
 
-			$('a.ExtraEditLink')
-				.clone(false)
-				.attr('class','')
-				.css('display','block')
-				.show()
-				.each(function(){
-					var title,$b,area;
-					$b = $(this);
-					var id_number = $b.attr('id').substr(13);
-					area = $('#ExtraEditArea'+id_number);
-
-					if( area.hasClass('gp_no_overlay') || area.length === 0 ){
-						return true;
-					}
-					count++;
-
-					title = this.title.replace(/_/g,' ');
-					title = decodeURIComponent(title);
-					if( title.length > 15 ){
-						title = title.substr(0,14)+'...';
-					}
+		//add manage sections link
+		list.append( $('.manage_sections:first').clone().wrap('<li class="separator">').parent() );
 
 
-					$b
-						//add to list
-						.attr('id','editable_mark'+id_number)
-						.text(title)
-						.appendTo(list)
-						.wrap('<li>')
+		//the overlay box
+		box = $gp.div('gp_edit_box');
 
-						//add handlers
-						.on('mouseenter touchstart',function(){
+		$('a.ExtraEditLink')
+			.clone(false)
+			.attr('class','')
+			.css('display','block')
+			.show()
+			.each(function(){
+				var title,$b,area;
+				$b = $(this);
+				var id_number = $b.attr('id').substr(13);
+				area = $('#ExtraEditArea'+id_number);
 
-							//the red edit box
-							var loc = $gp.Coords(area);
-							box	.stop(true,true,true)
-								.css({'top':(loc.top-3),'left':(loc.left-2),'width':(loc.w+4),'height':(loc.h+5)})
-								.fadeIn();
+				if( area.hasClass('gp_no_overlay') || area.length === 0 ){
+					return true;
+				}
 
-							//scroll to show edit area
-							if( $gp.$win.scrollTop() > loc.top || ( $gp.$win.scrollTop() + $gp.$win.height() ) < loc.top ){
-								$('html,body').stop(true,true,true).animate({scrollTop: Math.max(0,loc.top-100)},'slow');
-							}
-						}).on('mouseleave touchend',function(){
-							box.stop(true,true,true).fadeOut();
-						}).click(function(){
-							$(this).unbind('mouseenter touchstart');
-							window.setTimeout(function(){
-								$(this).remove();
-								box.hide();
-							},100);
-						});
-				});
 
-			//if( !count ){
-			//	alert('count: '+count);
-			//}
+				title = this.title.replace(/_/g,' ');
+				title = decodeURIComponent(title);
+				if( title.length > 15 ){
+					title = title.substr(0,14)+'...';
+				}
 
-		});
+
+				$b
+					//add to list
+					.attr('id','editable_mark'+id_number)
+					.text(title)
+					.appendTo(list)
+					.wrap('<li>')
+
+					//add handlers
+					.on('mouseenter touchstart',function(){
+
+						//the red edit box
+						var loc = $gp.Coords(area);
+						box	.stop(true,true,true)
+							.css({'top':(loc.top-3),'left':(loc.left-2),'width':(loc.w+4),'height':(loc.h+5)})
+							.fadeIn();
+
+						//scroll to show edit area
+						if( $gp.$win.scrollTop() > loc.top || ( $gp.$win.scrollTop() + $gp.$win.height() ) < loc.top ){
+							$('html,body').stop(true,true,true).animate({scrollTop: Math.max(0,loc.top-100)},'slow');
+						}
+					}).on('mouseleave touchend',function(){
+						box.stop(true,true,true).fadeOut();
+					}).click(function(){
+						$(this).unbind('mouseenter touchstart');
+						window.setTimeout(function(){
+							$(this).remove();
+							box.hide();
+						},100);
+					});
+			});
+
 	}
 
 

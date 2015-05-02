@@ -7,6 +7,7 @@
 
 
 @gp_panel_bg:					#222;
+@gp_panel_bg_light:				#2b2b2b;
 @gp_panel_link_color:			#f5f5f5;
 
 
@@ -904,7 +905,7 @@ table.tablesorter th.gp_header_desc:before{
 /* submenu */
 #simplepanel .submenu{
 	position:relative;
-	background-color:#2b2b2b;
+	background-color: @gp_panel_bg_light;
 	border-top:1px solid #111;
 	border-bottom:1px solid #3f3f3f;
 	margin:0;
@@ -916,6 +917,8 @@ table.tablesorter th.gp_header_desc:before{
 	padding:0;
 	list-style:none;
 	}
+
+
 #simplepanel .submenu ul{
 	z-index:9010;
 	margin-left:-1px;
@@ -971,9 +974,17 @@ table.tablesorter th.gp_header_desc:before{
 #simplepanel .submenu li.seperator a{
 	border-bottom:1px solid #444;
 	}
-#simplepanel .submenu li:last-child a{
+#simplepanel .submenu li:last-child > a{
 	border-bottom:0 none !important;
 	}
+
+#simplepanel .submenu li.separator{
+	border-bottom:1px solid #3f3f3f;
+	}
+
+
+
+
 
 
 /* third level */
@@ -982,9 +993,12 @@ table.tablesorter th.gp_header_desc:before{
 	position:absolute;
 	left:100%;
 	top:0;
-	background-color:#2b2b2b;
-	border:1px solid #000;
+	background-color:@gp_panel_bg;
+	border:1px solid rgba(0,0,0,0.4);
 	border-radius: 5px;
+	}
+#simplepanel .expand ul a:hover{
+	background: @gp_panel_bg_light;
 	}
 
 
@@ -1190,7 +1204,7 @@ table.tablesorter th.gp_header_desc:before{
 	display:none;
 	}
 
-#adminlinks2 li.seperator{
+#adminlinks2 li.separator{
 	border-bottom:1px dotted #ccc;
 	}
 

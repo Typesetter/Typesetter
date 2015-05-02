@@ -450,8 +450,8 @@ class admin_tools{
 				echo '</li>';
 			}
 
-			echo '<li class="'.$expand_class.'"><a>'.$langmessage['Editable Areas'].'</a>';
-			echo '<ul class="in_window" id="editable_areas_list">';
+			echo '<li class="'.$expand_class.'" id="editable_areas_list"><a>'.$langmessage['Editable Areas'].'</a>';
+			echo '<ul class="in_window">';
 			echo '<li><a>empty</a></li>';
 			echo '</ul>';
 			echo '</li>';
@@ -1257,7 +1257,7 @@ class admin_tools{
 			echo common::Link('Admin_Addons',$langmessage['manage']);
 			echo '</li>';
 			if( gp_remote_plugins ){
-				echo '<li class="seperator">';
+				echo '<li class="separator">';
 				echo common::Link('Admin_Addons/Remote',$langmessage['Download Plugins']);
 				echo '</li>';
 			}

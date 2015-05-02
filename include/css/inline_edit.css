@@ -133,11 +133,6 @@
 	z-index:9000;
 	}
 
-body.gpAdmin div.editable_area{
-	min-height:1em !important;
-}
-
-
 #ckeditor_area .label{
 	margin-right:4px;
 	}

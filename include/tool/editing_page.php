@@ -191,11 +191,13 @@ class editing_page extends display{
 		$new_section	= gp_edit::DefaultContent($_REQUEST['content_type']);
 		$content		= section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);
 
+
+		$orig_attrs								= json_encode($new_section['attributes']);
 		$new_section['attributes']['id']		= 'rand-'.time().rand(0,10000);
 		$new_section['attributes']['class']		.= ' editable_area new_section';
 
 
-		$content		= '<div'.section_content::SectionAttributes($new_section['attributes'],$new_section['type']).'>'.$content.'</div>';
+		$content		= '<div'.section_content::SectionAttributes($new_section['attributes'],$new_section['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>'.$content.'</div>';
 
 		$page->ajaxReplace[] = array('AddSection','',$content);
 	}

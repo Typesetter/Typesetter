@@ -65,7 +65,7 @@ class special_contact_gadget{
 		$headers = array();
 		$_POST += array('subject'=>'','contact_nonce'=>'','message'=>'');
 
-		if empty($_POST['message']) ){
+		if( empty($_POST['message']) ){
 			message($langmessage['OOPS'].'(Invalid Message)');
 			return;
 		}

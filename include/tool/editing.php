@@ -701,8 +701,8 @@ class gp_edit{
 	static function DefaultContent($type='text'){
 		global $langmessage;
 
-		$section = array();
-		$section['type'] = $type;
+		$section			= array();
+		$section['type']	= $type;
 		$section['content'] = '';
 
 		switch($type){
@@ -729,6 +729,10 @@ class gp_edit{
 		}else{
 			$section['content'] = $content;
 		}
+
+
+		$section					+= array('attributes'=>array());
+		$section['attributes']		+= array('class'=>'');
 
 		return $section;
 	}

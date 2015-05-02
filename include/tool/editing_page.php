@@ -188,9 +188,14 @@ class editing_page extends display{
 		$page->ajaxReplace = array();
 
 		$num			= time().rand(0,10000);
-		$start_content	= gp_edit::DefaultContent($_REQUEST['content_type']);
-		$content		= section_content::RenderSection($start_content,$num,$this->title,$this->file_stats);
-		$content		= '<div class="GPAREA filetype-'.$_REQUEST['content_type'].' editable_area new_section" id="rand-'.time().rand(0,10000).'">'.$content.'</div>';
+		$new_section	= gp_edit::DefaultContent($_REQUEST['content_type']);
+		$content		= section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);
+
+		$new_section['attributes']['id']		= 'rand-'.time().rand(0,10000);
+		$new_section['attributes']['class']		.= ' editable_area new_section';
+
+
+		$content		= '<div'.section_content::SectionAttributes($new_section['attributes'],$new_section['type']).'>'.$content.'</div>';
 
 		$page->ajaxReplace[] = array('AddSection','',$content);
 	}
@@ -207,7 +212,6 @@ class editing_page extends display{
 		$unused_sections		= $this->file_sections;				//keep track of sections that aren't used
 		$new_sections			= array();
 		$section_types			= section_content::GetTypes();
-
 
 		foreach($_POST['section_order'] as $i => $arg ){
 
@@ -235,8 +239,8 @@ class editing_page extends display{
 			}
 
 			// attributes
-			$new_section['attributes'] = array();
-			if( isset($_POST['attributes'][$i]) ){
+			$new_section += array('attributes' => array());
+			if( isset($_POST['attributes'][$i]) && is_array($_POST['attributes'][$i]) ){
 				foreach($_POST['attributes'][$i] as $attr_name => $attr_value){
 
 					$attr_name		= strtolower($attr_name);

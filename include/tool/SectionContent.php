@@ -352,8 +352,8 @@ class section_content{
 
 	static function SectionAttributes($attributes,$type){
 
-		$attributes += array('class' => '' );
-		$attributes['class'] = trim('GPAREA filetype-'.$type.' '.$attributes['class']);
+		$attributes				+= array('class' => '' );
+		$attributes['class']	= trim('GPAREA filetype-'.$type.' '.$attributes['class']);
 
 		$attr_string = '';
 		foreach($attributes as $attr => $value){

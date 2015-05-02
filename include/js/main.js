@@ -121,8 +121,11 @@ var $gp = {
 	 *
 	 */
 	cboxSettings : function(options){
-		options = options||{};
-		colorbox_lang = colorbox_lang||{};
+		options			= options||{};
+
+		if( typeof(colorbox_lang) != 'object' ){
+			colorbox_lang	= {};
+		}
 		return $.extend(colorbox_lang,{opacity:0.75,maxWidth:'90%',maxHeight:'90%'},options);
 	},
 

@@ -838,7 +838,12 @@ $(function(){
 				return;
 			}
 
-			id = edit_area.attr('id').substr(13); //edit_area is always ExtraEditArea#
+			id = edit_area.attr('id');
+			if( !id ){
+				return;
+			}
+
+			id = id.substr(13); //edit_area is always ExtraEditArea#
 
 			//get the edit links
 			var edit_links = $('#ExtraEditLnks'+id).find('a');

@@ -145,7 +145,13 @@
 
 				var $this = $(this);
 
+				if( !this.id ){
+					this.id = gp_editor.GenerateId();
+				}
+
+
 				var type = gp_editor.TypeFromClass(this);
+
 				html += '<li data-area-id="'+this.id+'">';
 				html += '<div><span class="options">';
 				html += '<a class="gpicon_edapp" data-cmd="SectionOptions" title="Options"></a>';
@@ -155,7 +161,7 @@
 				html += '<i>'+(i+1)+' '+gp_editor.ucfirst(type)+'</i>';
 				html += '</div>';
 
-				if( type == 'wrapper_section' ){
+				if( $this.hasClass('filetype-wrapper_section') ){
 					html += '<ul class="section_drag_area">';
 					html += gp_editor.BuildSortHtml( $this );
 					html += '</ul>';
@@ -165,6 +171,18 @@
 			});
 
 			return html;
+		},
+
+		GenerateId: function(){
+
+			var uniqid;
+
+			do{
+				var randLetter	= String.fromCharCode(65 + Math.floor(Math.random() * 26));
+				uniqid			= randLetter + Date.now();
+			}while( document.getElementById(uniqid) );
+
+			return uniqid;
 		},
 
 

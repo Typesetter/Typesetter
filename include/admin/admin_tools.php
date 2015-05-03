@@ -452,7 +452,12 @@ class admin_tools{
 
 			echo '<li class="'.$expand_class.'" id="editable_areas_list"><a>'.$langmessage['Editable Areas'].'</a>';
 			echo '<ul class="in_window">';
-			echo '<li><a>empty</a></li>';
+			if( $page->pagetype == 'display' ){
+				echo '<li>';
+				echo common::Link($page->title,$langmessage['Manage Sections'].'...','cmd=ManageSections',array('class'=>'manage_sections','data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+				echo '</li>';
+			}
+			echo '<li style="display:none"></li>';//for valid html
 			echo '</ul>';
 			echo '</li>';
 

@@ -647,11 +647,7 @@ $(function(){
 
 		var count = 0,box;
 
-		var list = $(this).find('ul').html('');
-
-		//add manage sections link
-		list.append( $('.manage_sections:first').clone().wrap('<li class="separator">').parent() );
-
+		var list = $(this).find('ul');
 
 		//the overlay box
 		box = $gp.div('gp_edit_box');

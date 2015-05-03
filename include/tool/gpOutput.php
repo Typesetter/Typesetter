@@ -557,6 +557,7 @@ class gpOutput{
 
 			}elseif( $has_script ){
 				$name =& $config['addons'][$addonFolderName]['name'];
+				msg($info['method']);
 				trigger_error('gpEasy Error: Addon hook method doesn\'t exist. Script: '.$info['method'].' Addon: '.$name);
 			}
 		}

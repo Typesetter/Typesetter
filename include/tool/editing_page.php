@@ -155,7 +155,7 @@ class editing_page extends display{
 		//section types
 		$section_types = section_content::GetTypes();
 		ob_start();
-		echo '<div id="new_section_links">';
+		echo '<div id="new_section_links" style="display:none" class="manage_section_area">';
 		foreach($section_types as $type => $type_info){
 			echo common::Link($page->title,$type_info['label'],'cmd=NewSectionContent&content_type='.rawurlencode($type),array('data-cmd'=>'postlink'));
 		}
@@ -198,11 +198,10 @@ class editing_page extends display{
 		global $page;
 		$page->ajaxReplace = array();
 
-		$nested					= 2;
-		$wrapper_class			= 'row';
-		$children_classes[0]	= 'col-sm-6';
-		$children_classes[1]	= 'col-sm-6';
-
+		$args						= array();
+		$args['wrapper_class']		= 'row';
+		$args['child_classes'][0]	= 'col-sm-6';
+		$args['child_classes'][1]	= 'col-sm-6';
 
 
 		$num			= time().rand(0,10000);
@@ -210,7 +209,7 @@ class editing_page extends display{
 		$content		= section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);
 
 
-		$new_section['attributes']['class']		.= ' '.$wrapper_class;
+		$new_section['attributes']['class']		.= ' '.$args['wrapper_class'];
 		$orig_attrs								= json_encode($new_section['attributes']);
 
 		$new_section['attributes']['id']		= 'rand-'.time().rand(0,10000);
@@ -221,8 +220,9 @@ class editing_page extends display{
 		ob_start();
 		echo '<div'.section_content::SectionAttributes($new_section['attributes'],$new_section['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>';
 
+		$nested = count($args['child_classes']);
 		for( $cc=0; $cc < $nested; $cc++ ){
-			echo $this->GetNewSection('text', $children_classes[0]);
+			echo $this->GetNewSection('text', $args['child_classes'][0]);
 		}
 
 		echo '</div>';

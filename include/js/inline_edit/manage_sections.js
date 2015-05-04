@@ -78,8 +78,16 @@
 		 *
 		 */
 		InitEditor: function(){
-			$('<ul id="section_sorting" class="section_drag_area" style="overflow:auto">')
-				.appendTo('#ckeditor_top')
+
+			var h	= '<div>';
+			h		+= '<a class="ckeditor_control" data-cmd="SwitchEditArea" data-arg="#section_sorting">Organize</a>';
+			h		+= '<a class="ckeditor_control" data-cmd="SwitchEditArea" data-arg="#new_section_links">Add</a>';
+			h		+= '</div>';
+
+
+			$('#ckeditor_area .toolbar').append(h);
+
+			$('#ckeditor_top').append('<ul id="section_sorting" class="section_drag_area manage_section_area" style="overflow:auto">');
 
 
 			gp_editor.resetDirty();
@@ -417,6 +425,21 @@
 		$area.data('gp-attrs',new_attrs);
 
 		$gp.CloseAdminBox();
+	}
+
+	/**
+	 * Control which editing area is displayed
+	 *
+	 */
+	$gp.links.SwitchEditArea = function(){
+		var $this = $(this);
+
+		$('.manage_section_area').hide();
+
+		$( $this.data('arg') ).show();
+
+		console.log('clicked: '+$this.data('arg') );
+
 	}
 
 

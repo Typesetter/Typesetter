@@ -378,8 +378,7 @@ function fix_magic_quotes( &$arr ) {
  *
  */
 function message(){
-	global $wbMessageBuffer;
-	$wbMessageBuffer[] = func_get_args();
+	call_user_func_array('msg',func_get_args());
 }
 
 /**
@@ -388,7 +387,20 @@ function message(){
  */
 function msg(){
 	global $wbMessageBuffer;
-	$wbMessageBuffer[] = func_get_args();
+
+	$args = func_get_args();
+
+	if( empty($args[0]) ){
+		return;
+	}
+
+	if( isset($args[1]) ){
+		$wbMessageBuffer[] = '<li>'.call_user_func_array('sprintf',$args).'</li>';
+	}elseif( is_array($args[0]) || is_object($args[0]) ){
+		$wbMessageBuffer[] = '<li>'.pre($args[0]).'</li>';
+	}else{
+		$wbMessageBuffer[] = '<li>'.$args[0].'</li>';
+	}
 }
 
 /**
@@ -413,24 +425,12 @@ function GetMessages( $wrap = true ){
 	}
 	if( !empty($wbMessageBuffer) ){
 
+		$wbMessageBuffer = array_unique($wbMessageBuffer);
+
 		$result .= '<div class="messages"><div>';
 		$result .= '<a style="" href="#" class="req_script close_message" data-cmd="close_message"></a>';
 		$result .= '<ul>';
-
-		foreach($wbMessageBuffer as $args){
-			if( !isset($args[0]) ){
-				continue;
-			}
-
-			if( isset($args[1]) ){
-				$result .= '<li>'.call_user_func_array('sprintf',$args).'</li>';
-			}elseif( is_array($args[0]) || is_object($args[0]) ){
-				$result .= '<li>'.pre($args[0]).'</li>';
-			}else{
-				$result .= '<li>'.$args[0].'</li>';
-			}
-		}
-
+		$result .= implode('',$wbMessageBuffer);
 		$result .= '</ul></div></div>';
 	}
 

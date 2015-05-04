@@ -444,6 +444,7 @@ class gpsession{
 	 */
 	static function start($session_id, $sessions = false ){
 		global $langmessage, $dataDir, $GP_LANG_VALUES, $wbMessageBuffer, $GP_INLINE_VARS;
+		static $locked_message = false;
 
 
 		//get the session file
@@ -495,7 +496,7 @@ class gpsession{
 			$expires = gp_lock_time;
 			if( !gpFiles::Lock('admin',sha1(sha1($session_id)),$expires) ){
 				message( $langmessage['site_locked'].' '.sprintf($langmessage['lock_expires_in'],ceil($expires/60)) );
-				$GLOBALS['gpAdmin']['locked'] = true;
+				$locked_message = true;
 			}else{
 				unset($GLOBALS['gpAdmin']['locked']);
 			}

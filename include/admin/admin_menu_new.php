@@ -1956,7 +1956,7 @@ class admin_menu_new extends admin_menu_tools{
 	 *
 	 */
 	function CreateNew(){
-		global $gp_index, $gp_titles, $langmessage;
+		global $gp_index, $gp_titles, $langmessage, $gpAdmin;
 		includeFile('tool/editing_page.php');
 		includeFile('tool/editing.php');
 
@@ -1995,6 +1995,19 @@ class admin_menu_new extends admin_menu_tools{
 		$new_titles[$index]['label'] = $label;
 		$new_titles[$index]['type'] = $type;
 		$gp_titles += $new_titles;
+
+
+		//add to users editing
+		if( $gpAdmin['editing'] != 'all' ){
+			$gpAdmin['editing'] = rtrim($gpAdmin['editing'],',').','.$index.',';
+
+
+			$users		= gpFiles::Get('_site/users');
+			$users[$gpAdmin['username']]['editing'] = $gpAdmin['editing'];
+			gpFiles::SaveData('_site/users','users',$users);
+
+		}
+
 
 		return $index;
 	}

@@ -506,8 +506,7 @@ $(function(){
 
 			case 'inline_box':
 				$gp.CopyVals(arg,this);
-				$.fn.colorbox(
-					//$.extend(colorbox_options,{inline:true,href:b, open:true})
+				$(this).colorbox(
 					$gp.cboxSettings({inline:true,href:arg, open:true})
 				);
 			break;

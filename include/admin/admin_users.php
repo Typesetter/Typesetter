@@ -73,7 +73,7 @@ class admin_users{
 	 *
 	 */
 	function SaveChanges(){
-		global $langmessage, $dataDir,$gpAdmin;
+		global $langmessage,$gpAdmin;
 
 		$username =& $_REQUEST['username'];
 		if( !isset($this->users[$username]) ){
@@ -325,9 +325,9 @@ class admin_users{
 
 
 	function SaveUserFile($refresh = true ){
-		global $langmessage, $dataDir;
+		global $langmessage;
 
-		if( !gpFiles::SaveData($dataDir.'/data/_site/users.php','users',$this->users) ){
+		if( !gpFiles::SaveData('_site/users','users',$this->users) ){
 			message($langmessage['OOPS']);
 			return false;
 		}

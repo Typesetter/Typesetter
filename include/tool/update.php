@@ -13,6 +13,7 @@ wordpress/wp-admin/includes/class-wp-filesystem-ftpext.php
 class update_class{
 
 	//page variables
+	var $pagetype = 'update';
 	var $label = 'gpEasy Updater';
 	var $head = '';
 	var $admin_css = '';
@@ -806,9 +807,10 @@ class update_class{
 
 		/* for testing
 		 * $download = 'http://test.gpeasy.com/gpEasy_test.zip';
-		 * $download = 'http://gpeasy.loc/rocky/x_gpEasy_test.zip';
+		 * $download = 'http://gpeasy.loc/x_gpEasy.zip';
 		 */
 		$download = addon_browse_path.'/Special_gpEasy?cmd=download';
+
 
 		echo '<li>Downloading version '.$package['version'].' from gpEasy.com.</li>';
 

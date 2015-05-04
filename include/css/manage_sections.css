@@ -98,17 +98,15 @@
 
 
 /**
- * New section Table
+ * New section options
  *
  */
-#new_section_table{
-	width:100%;
-	}
-#new_section_table button.ckeditor_control{
+#new_section_links a{
+	display:inline-block;
+	border:1px solid #ddd;
+	padding:3px 7px;
+	background:#fff;
 	white-space:nowrap;
-	width:auto;
-	margin-right:0 !important;
-	}
-#new_section_table select{
-	width:100%;
+	margin:0 3px 3px 0;
+	color:#666 !important;
 	}

@@ -116,6 +116,9 @@ class editing_page extends display{
 				case 'NewSectionContent':
 					$this->NewSectionContent();
 				return;
+				case 'NewNestedSection':
+					$this->NewNestedSection();
+				return;
 				case 'SaveSections':
 					$this->SaveSections();
 				return;
@@ -144,7 +147,7 @@ class editing_page extends display{
 	 *
 	 */
 	function ManageSections(){
-		global $langmessage;
+		global $langmessage, $page;
 
 		includeFile('tool/ajax.php');
 
@@ -152,19 +155,14 @@ class editing_page extends display{
 		//section types
 		$section_types = section_content::GetTypes();
 		ob_start();
-		echo '<form action="?">';
-		echo '<table id="new_section_table"><tr><td>';
-		echo '<select name="content_type" class="ckeditor_control">';
+		echo '<div id="new_section_links">';
 		foreach($section_types as $type => $type_info){
-			echo '<option value="'.htmlspecialchars($type).'">';
-			echo htmlspecialchars($type_info['label']);
-			echo '</option>';
+			echo common::Link($page->title,$type_info['label'],'cmd=NewSectionContent&content_type='.rawurlencode($type),array('data-cmd'=>'postlink'));
 		}
-		echo '</select>';
-		echo '</td><td>';
-		echo '<button name="cmd" value="NewSectionContent" class="ckeditor_control" id="add_section" data-cmd="gppost">'.$langmessage['New Section'].'</button>';
-		echo '</table>';
-		echo '</form>';
+
+		echo common::Link($page->title,'Nested Section','cmd=NewNestedSection&content_type=two_columns',array('data-cmd'=>'postlink'));
+
+		echo '</div>';
 		echo 'var section_types = '.json_encode(ob_get_clean()).';';
 
 
@@ -185,22 +183,74 @@ class editing_page extends display{
 	 */
 	function NewSectionContent(){
 		global $page;
+
+		$page->ajaxReplace		= array();
+		$content				= $this->GetNewSection($_REQUEST['content_type']);
+		$page->ajaxReplace[] 	= array('AddSection','',$content);
+	}
+
+
+	/**
+	 * Send multiple sections to the client
+	 *
+	 */
+	function NewNestedSection(){
+		global $page;
 		$page->ajaxReplace = array();
 
+		$nested					= 2;
+		$wrapper_class			= 'row';
+		$children_classes[0]	= 'col-sm-6';
+		$children_classes[1]	= 'col-sm-6';
+
+
+
 		$num			= time().rand(0,10000);
-		$new_section	= gp_edit::DefaultContent($_REQUEST['content_type']);
+		$new_section	= gp_edit::DefaultContent('wrapper_section');
 		$content		= section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);
 
 
+		$new_section['attributes']['class']		.= ' '.$wrapper_class;
 		$orig_attrs								= json_encode($new_section['attributes']);
+
 		$new_section['attributes']['id']		= 'rand-'.time().rand(0,10000);
 		$new_section['attributes']['class']		.= ' editable_area new_section';
 
 
-		$content		= '<div'.section_content::SectionAttributes($new_section['attributes'],$new_section['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>'.$content.'</div>';
 
-		$page->ajaxReplace[] = array('AddSection','',$content);
+		ob_start();
+		echo '<div'.section_content::SectionAttributes($new_section['attributes'],$new_section['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>';
+
+		for( $cc=0; $cc < $nested; $cc++ ){
+			echo $this->GetNewSection('text', $children_classes[0]);
+		}
+
+		echo '</div>';
+
+		$page->ajaxReplace[] = array('AddSection','',ob_get_clean());
 	}
+
+	function GetNewSection($type, $class = ''){
+		static $num 	= null;
+
+		if( !$num ){
+			$num		= time().rand(0,10000);
+		}
+
+		$num++;
+		$new_section	= gp_edit::DefaultContent($type);
+		$content		= section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);
+
+		$new_section['attributes']['class']		.= ' '.$class;
+		$orig_attrs								= json_encode($new_section['attributes']);
+
+		$new_section['attributes']['id']		= 'rand-'.time().rand(0,10000);
+		$new_section['attributes']['class']		.= ' editable_area new_section';
+
+
+		return '<div'.section_content::SectionAttributes($new_section['attributes'],$new_section['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>'.$content.'</div>';
+	}
+
 
 	/**
 	 * Save new/rearranged sections

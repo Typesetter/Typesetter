@@ -279,10 +279,22 @@
 
 
 	/**
+	 * Handle new section clicks
+	 *
+	 */
+	$gp.links.AddSection = function(evt){
+		evt.preventDefault();
+		$(this).fadeTo(700,0.4).addClass('loading-section');
+		$gp.jGoTo(this.href);
+	}
+
+
+	/**
 	 * Handle new section response from server
 	 *
 	 */
 	$gp.response.AddSection = function(data){
+		$('.loading-section').removeClass('loading-section').finish().fadeTo(700,1);
 		$('#gpx_content').append(data.CONTENT);
 		gp_editor.InitSorting();
 	}
@@ -437,10 +449,8 @@
 		$('.manage_section_area').hide();
 
 		$( $this.data('arg') ).show();
-
-		console.log('clicked: '+$this.data('arg') );
-
 	}
+
 
 
 

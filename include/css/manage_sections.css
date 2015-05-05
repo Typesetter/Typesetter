@@ -104,9 +104,35 @@
 #new_section_links a{
 	display:inline-block;
 	border:1px solid #ddd;
-	padding:3px 7px;
+	border-radius:3px;
+	padding:0;
 	background:#fff;
-	white-space:nowrap;
 	margin:0 3px 3px 0;
 	color:#666 !important;
+	width:96px;
+	box-sizing:border-box;
+	text-align:center;
+	height:52px;
+	vertical-align:top;
+	overflow:hidden;
+	/* transition: opacity 0.5s; */
+	outline:none;
 	}
+
+#new_section_links a:hover{
+	border-color:#aaa;
+	}
+
+#new_section_links span{
+	font-size:13px;
+	padding:4px;
+	position:relative;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+	display:inline-block;
+	}
+
+
+

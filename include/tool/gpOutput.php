@@ -1967,6 +1967,11 @@ class gpOutput{
 		includeFile('combine.php');
 		$scripts = gp_combine::ScriptInfo( gpOutput::$components );
 
+		//check for bootstrap theme
+		if( strpos(gpOutput::$components,'bootstrap') ){
+			//this would only find bootstrap themes that include css
+		}
+
 		gpOutput::GetHead_TKD();
 		gpOutput::GetHead_CSS($scripts['css']); //css before js so it's available to scripts
 		gpOutput::GetHead_Lang();

@@ -296,7 +296,8 @@ class editing_page extends display{
 				}
 
 				unset($unused_sections[$arg]);
-				$new_section = $this->file_sections[$arg];
+				$new_section				= $this->file_sections[$arg];
+				$new_section['attributes']	= array();
 
 			// otherwise, new sections
 			}else{
@@ -305,11 +306,10 @@ class editing_page extends display{
 					message($langmessage['OOPS'].' (Unknown Type)');
 					return false;
 				}
-				$new_section = gp_edit::DefaultContent($arg);
+				$new_section	= gp_edit::DefaultContent($arg);
 			}
 
 			// attributes
-			$new_section += array('attributes' => array());
 			if( isset($_POST['attributes'][$i]) && is_array($_POST['attributes'][$i]) ){
 				foreach($_POST['attributes'][$i] as $attr_name => $attr_value){
 

@@ -80,7 +80,7 @@
 		InitEditor: function(){
 
 			var h	= '<div>';
-			h		+= '<a class="ckeditor_control" data-cmd="SwitchEditArea" data-arg="#section_sorting">Organize</a>';
+			h		+= '<a class="ckeditor_control selected" data-cmd="SwitchEditArea" data-arg="#section_sorting">Organize</a>';
 			h		+= '<a class="ckeditor_control" data-cmd="SwitchEditArea" data-arg="#new_section_links">Add</a>';
 			h		+= '</div>';
 
@@ -98,6 +98,8 @@
 			$gp.$win.on('resize', gp_editor.MaxHeight ).resize();
 
 			$('#ckeditor_area').on('dragstop',gp_editor.MaxHeight);
+
+			$('#ckeditor_bottom').hide();
 		},
 
 		/**
@@ -445,6 +447,9 @@
 	 */
 	$gp.links.SwitchEditArea = function(){
 		var $this = $(this);
+
+		$('.ckeditor_control.selected').removeClass('selected');
+		$this.addClass('selected');
 
 		$('.manage_section_area').hide();
 

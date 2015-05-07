@@ -33,17 +33,12 @@ class section_content{
 
 	private static function GetSection($sections, &$section_num ){
 
+		$content			= '';
 		$curr_section_num	= $section_num;
 		$section_data		= $sections[$curr_section_num];
 		$section_data		+= array('attributes' => array() );
 		$section_num++;
 
-
-		if( !isset($section_data['nodeName']) ){
-			$content 			= '<div'.self::SectionAttributes($section_data['attributes'],$section_data['type']).'>';
-		}else{
-			$content 			= '<'.$section_data['nodeName'].self::SectionAttributes($section_data['attributes'],$section_data['type']).'>';
-		}
 
 		if( $section_data['type'] == 'wrapper_section' ){
 
@@ -54,11 +49,21 @@ class section_content{
 			$content				.= self::SectionToContent($section_data,$curr_section_num);
 		}
 
+
 		if( !isset($section_data['nodeName']) ){
-			$content			.= '<div class="gpclear"></div>';
-			$content			.= '</div>';
+			$content 			= '<div'.self::SectionAttributes($section_data['attributes'],$section_data['type']).'>'
+								. $content
+								. '<div class="gpclear"></div></div>';
 		}else{
-			$content			.= '</'.$section_data['nodeName'].'>';
+
+			if( empty($content) ){
+				$content 			= '<'.$section_data['nodeName'].self::SectionAttributes($section_data['attributes'],$section_data['type']).' />';
+			}else{
+				$content 			= '<'.$section_data['nodeName'].self::SectionAttributes($section_data['attributes'],$section_data['type']).'>'
+									. $content
+									. '</'.$section_data['nodeName'].'>';
+			}
+
 		}
 
 		return $content;

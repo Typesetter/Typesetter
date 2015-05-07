@@ -546,17 +546,5 @@
 		}
 
 
-		/**
-		 *
-		 */
-		gpinputs.gp_gallery_folder_add = function(rel,evt){
-			evt.preventDefault();
-			var frm = this.form;
-			var dir = frm.dir.value;
-			var newdir = dir+'/'+frm.newdir.value
-			LoadImages(newdir,gp_editor);
-		}
-
-
 	}
 

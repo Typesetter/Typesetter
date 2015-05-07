@@ -36,10 +36,15 @@ class section_content{
 		$curr_section_num	= $section_num;
 		$section_data		= $sections[$curr_section_num];
 		$section_data		+= array('attributes' => array() );
-		$content 			= '<div'.self::SectionAttributes($section_data['attributes'],$section_data['type']).'>';
 		$section_num++;
 
-		//
+
+		if( !isset($section_data['nodeName']) ){
+			$content 			= '<div'.self::SectionAttributes($section_data['attributes'],$section_data['type']).'>';
+		}else{
+			$content 			= '<'.$section_data['nodeName'].self::SectionAttributes($section_data['attributes'],$section_data['type']).'>';
+		}
+
 		if( $section_data['type'] == 'wrapper_section' ){
 
 			for( $cc=0; $cc < $section_data['contains_sections']; $cc++ ){
@@ -49,8 +54,12 @@ class section_content{
 			$content				.= self::SectionToContent($section_data,$curr_section_num);
 		}
 
-		$content			.= '<div class="gpclear"></div>';
-		$content			.= '</div>';
+		if( !isset($section_data['nodeName']) ){
+			$content			.= '<div class="gpclear"></div>';
+			$content			.= '</div>';
+		}else{
+			$content			.= '</'.$section_data['nodeName'].'>';
+		}
 
 		return $content;
 	}
@@ -84,6 +93,7 @@ class section_content{
 			$types['gallery']['label']			= $langmessage['Image Gallery'];
 			$types['include']['label']			= $langmessage['File Include'];
 			$types['wrapper_section']['label']	= $langmessage['Section Wrapper'];
+			$types['image']['label']			= $langmessage['Image'];
 
 			$types = gpPlugin::Filter('SectionTypes',array($types));
 		}

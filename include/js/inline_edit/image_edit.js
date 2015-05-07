@@ -7,8 +7,15 @@
 
 		var save_path = gp_editing.get_path(area_id);
 		var edit_img = gp_editing.get_edit_area(area_id);
+
+		// <div> or <img>?
+		if( edit_img.get(0).nodeName !== 'IMG' ){
+			edit_img = edit_img.find('img');
+		}
+
 		edit_img.addClass('gp_image_edit');
 		var img_src = edit_img.attr('src');
+
 		var edited = false;
 		var save_obj = {};
 
@@ -33,7 +40,7 @@
 				return edited;
 			},
 			gp_saveData:function(){
-				return jQuery.param( save_obj )+'&cmd=save_image';
+				return jQuery.param( save_obj )+'&cmd=save_inline';
 			},
 			resetDirty:function(){
 				edited = false;

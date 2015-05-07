@@ -84,7 +84,7 @@ var gp_editing = {
 		if( path.indexOf('?') > 0 ){
 			query = strip_to(path,'?')+'&';
 		}
-		query += 'cmd=save&';
+		query += 'cmd=save_inline&';
 		query += gp_editor.gp_saveData();
 
 		//the saved function

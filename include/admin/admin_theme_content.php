@@ -332,7 +332,6 @@ class admin_theme_content extends admin_addon_install{
 			 */
 			case 'inlineedit':
 				$this->InlineEdit();
-
 			return;
 			case 'gallery_folder':
 			case 'gallery_images':
@@ -341,7 +340,7 @@ class admin_theme_content extends admin_addon_install{
 			case 'image_editor':
 				$this->ImageEditor();
 			return;
-			case 'save_image':
+			case 'save_inline':
 				$this->SaveHeaderImage();
 			return;
 
@@ -3868,7 +3867,7 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '<div id="gp_source_options">';
 		echo '<b>'.$langmessage['Select Image'].'</b>';
-		echo common::Link('Admin_Theme_Content/'.rawurlencode($this->curr_layout),$langmessage['Theme Images'],'cmd=theme_images',' data-cmd="gpajax" class="ckeditor_control half_width" ');
+		echo common::Link('Admin_Theme_Content/'.rawurlencode($this->curr_layout),$langmessage['Theme Images'].'..','cmd=theme_images',' data-cmd="gpajax" class="ckeditor_control half_width" ');
 		echo '<a class="ckeditor_control half_width" data-cmd="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
 		echo '</div>';
 

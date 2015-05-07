@@ -91,7 +91,7 @@ class editing_page extends display{
 				break;
 
 
-				/* gallery editing */
+				/* gallery/image editing */
 				case 'gallery_folder':
 				case 'gallery_images':
 					$this->GalleryImages();
@@ -103,11 +103,17 @@ class editing_page extends display{
 
 				/* inline editing */
 				case 'save':
+				case 'save_inline':
 				case 'preview':
 				case 'inlineedit':
 				case 'include_dialog':
 					$this->SectionEdit($cmd);
 				return;
+
+				case 'image_editor':
+					gp_edit::ImageEditor();
+				return;
+
 
 				/* Manage section */
 				case 'ManageSections':
@@ -266,7 +272,12 @@ class editing_page extends display{
 		$new_section['attributes']['class']		.= ' editable_area new_section';
 
 
-		return '<div'.section_content::SectionAttributes($new_section['attributes'],$new_section['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>'.$content.'</div>';
+		if( !isset($new_section['nodeName']) ){
+			return '<div'.section_content::SectionAttributes($new_section['attributes'],$new_section['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>'.$content.'</div>';
+		}
+
+		return '<'.$new_section['nodeName'].section_content::SectionAttributes($new_section['attributes'],$new_section['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>'.$content.'</'.$new_section['nodeName'].'>';
+
 	}
 
 
@@ -846,7 +857,12 @@ class editing_page extends display{
 			$section_data['attributes']['class']	.= ' editable_area'; // class="edit_area" added by javascript
 		}
 
-		$content			.= "\n".'<div'.section_content::SectionAttributes($section_data['attributes'],$section_data['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>';
+
+		if( !isset($section_data['nodeName']) ){
+			$content			.= "\n".'<div'.section_content::SectionAttributes($section_data['attributes'],$section_data['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>';
+		}else{
+			$content			.= "\n".'<'.$section_data['nodeName'].section_content::SectionAttributes($section_data['attributes'],$section_data['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>';
+		}
 
 		if( $section_data['type'] == 'wrapper_section' ){
 
@@ -860,9 +876,12 @@ class editing_page extends display{
 			$GP_NESTED_EDIT		= false;
 		}
 
-		$content			.= '<div class="gpclear"></div>';
-		$content			.= '</div>';
-
+		if( !isset($section_data['nodeName']) ){
+			$content			.= '<div class="gpclear"></div>';
+			$content			.= '</div>';
+		}else{
+			$content			.= '</'.$section_data['nodeName'].'>';
+		}
 
 		return $content;
 	}

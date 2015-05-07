@@ -222,7 +222,6 @@ class gpAjax{
 
 			case 'image';
 				echo 'var gp_blank_img = '.gpAjax::quote(common::GetDir('/include/imgs/blank.gif')).';';
-
 				$scripts[] = '/include/js/jquery.auto_upload.js';
 				$scripts[] = '/include/js/inline_edit/image_common.js';
 				$scripts[] = '/include/js/inline_edit/image_edit.js';

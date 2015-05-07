@@ -1421,7 +1421,7 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 		$len = strlen($label);
-		if( $len > 15 ){
+		if( $len > 25 ){
 			$label = substr($label,0,$len-2);
 		}
 		if( substr($label,$len-2,1) === '_' && is_numeric(substr($label,$len-1,1)) ){
@@ -1743,7 +1743,7 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '<tr><td>';
 		echo ' <a class="layout_color_id" id="current_color"></a> ';
-		echo '<input type="text" name="layout_label" value="" maxlength="15"/>';
+		echo '<input type="text" name="layout_label" value="" maxlength="25"/>';
 		echo '</td></tr>';
 
 		echo '<tr><td>';

@@ -87,7 +87,7 @@
 
 			$('#ckeditor_area .toolbar').append(h);
 
-			$('#ckeditor_top').append('<ul id="section_sorting" class="section_drag_area manage_section_area" style="overflow:auto">');
+			$('#ckeditor_top').append('<ul id="section_sorting" class="section_drag_area inline_edit_area" style="overflow:auto">');
 
 
 			gp_editor.resetDirty();
@@ -439,21 +439,6 @@
 		$area.data('gp-attrs',new_attrs);
 
 		$gp.CloseAdminBox();
-	}
-
-	/**
-	 * Control which editing area is displayed
-	 *
-	 */
-	$gp.links.SwitchEditArea = function(){
-		var $this = $(this);
-
-		$('.ckeditor_control.selected').removeClass('selected');
-		$this.addClass('selected');
-
-		$('.manage_section_area').hide();
-
-		$( $this.data('arg') ).show();
 	}
 
 

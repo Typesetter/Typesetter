@@ -161,7 +161,7 @@ class editing_page extends display{
 		//section types
 		$section_types = section_content::GetTypes();
 		ob_start();
-		echo '<div id="new_section_links" style="display:none" class="manage_section_area">';
+		echo '<div id="new_section_links" style="display:none" class="inline_edit_area">';
 		foreach($section_types as $type => $type_info){
 
 			$img_rel	= '/include/imgs/section-'.$type.'.png';

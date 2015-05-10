@@ -1061,7 +1061,8 @@ class gp_edit{
 		//image options
 		ob_start();
 
-		echo '<div id="gp_current_image">';
+		//edit current image
+		echo '<div id="gp_current_image" class="inline_edit_area">';
 		echo '<input type="hidden" name="orig_height">';
 		echo '<input type="hidden" name="orig_width">';
 		echo '<span id="gp_image_wrap"><img/></span>';
@@ -1076,20 +1077,32 @@ class gp_edit{
 		echo '</table>';
 		echo '</div>';
 
-		echo '<div id="gp_source_options">';
-		echo '<b>'.$langmessage['Select Image'].'</b>';
+
+		//select image
+		echo '<div id="gp_source_options" class="inline_edit_area" style="display:none">';
 
 		//echo common::Link('Admin_Theme_Content/'.rawurlencode($this->curr_layout),$langmessage['Theme Images'].'..','cmd=theme_images',' data-cmd="gpajax" class="ckeditor_control half_width" ');
 
 		echo '<a class="ckeditor_control half_width" data-cmd="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
-		echo '</div>';
 
 		echo '<div id="gp_image_area"></div><div id="gp_upload_queue"></div>';
 
+		echo '</div>';
 		$content = ob_get_clean();
 
 		$page->ajaxReplace[] = array('inner','#ckeditor_top',$content);
 		$page->ajaxReplace[] = array('image_options_loaded','',''); //tell the script the images have been loaded
+
+
+
+		//tabs
+		ob_start();
+		echo '<div id="cktabs">';
+		echo '<a class="ckeditor_control selected" data-cmd="SwitchEditArea" data-arg="#gp_current_image">'.$langmessage['edit'].'</a>';
+		echo '<a class="ckeditor_control" data-cmd="SwitchEditArea" data-arg="#gp_source_options">'.$langmessage['Select Image'].'</a>';
+		echo '</a>';
+		$page->ajaxReplace[] = array('append','#ckeditor_area .toolbar',ob_get_clean());
+
 	}
 
 

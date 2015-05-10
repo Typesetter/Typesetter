@@ -201,17 +201,15 @@ var $gp = {
 					$(obj.CONTENT).appendTo('body').show().css({'top':0});
 				break;
 
+				//standard functions
 				default:
-					//do nothing
-					//alert('nothing for: '+obj.DO);
+					var $selected = $(obj.SELECTOR);
+					if( typeof($selected[obj.DO]) == 'function' ){
+						$selected[obj.DO](obj.CONTENT);
+					}
 				break;
 			}
 
-			//standard functions
-			var $selected = $(obj.SELECTOR);
-			if( typeof($selected[obj.DO]) == 'function' ){
-				$selected[obj.DO](obj.CONTENT);
-			}
 
 		});
 

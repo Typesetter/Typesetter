@@ -185,11 +185,15 @@ var gp_editing = {
 $gp.links.ck_close = gp_editing.close_editor;
 $gp.links.ck_save = gp_editing.save_changes;
 
-gplinks.ck_docklink = function(rel,evt){
-	gpui.ckd = !gpui.ckd;
-	gp_editing.setdock(true);
-}
 
+	/**
+	 * Change docking of inline editor
+	 *
+	 */
+	$gp.links.ck_docklink = function(){
+		gpui.ckd = !gpui.ckd;
+		gp_editing.setdock(true);
+	}
 
 
 	/**

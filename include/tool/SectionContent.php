@@ -95,10 +95,10 @@ class section_content{
 
 		if( !$types ){
 			$types['text']['label']				= $langmessage['editable_text'];
+			$types['image']['label']			= $langmessage['Image'];
 			$types['gallery']['label']			= $langmessage['Image Gallery'];
 			$types['include']['label']			= $langmessage['File Include'];
 			$types['wrapper_section']['label']	= $langmessage['Section Wrapper'];
-			$types['image']['label']			= $langmessage['Image'];
 
 			$types = gpPlugin::Filter('SectionTypes',array($types));
 		}

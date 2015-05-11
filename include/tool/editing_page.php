@@ -179,12 +179,8 @@ class editing_page extends display{
 		}
 
 
-		//section combos
-		$img_path = common::GetDir('/include/imgs/section-combo-text-gallery.png');
-		$label = '<img src="'.$img_path.'"/>';
-		$label .= '<span>Nested Section</span>';
-
-		echo common::Link($page->title,$label,'cmd=NewNestedSection&content_type=two_columns',array('data-cmd'=>'AddSection'));
+		$this->NestedSectionLink('text,image','/include/imgs/section-combo-text-image.png');		//section combo: text & image
+		$this->NestedSectionLink('text,gallery','/include/imgs/section-combo-text-gallery.png');	//section combo: text & gallery
 
 		echo '</div>';
 		echo 'var section_types = '.json_encode(ob_get_clean()).';';
@@ -198,6 +194,31 @@ class editing_page extends display{
 
 		gpAjax::SendScripts($scripts);
 		die();
+	}
+
+	/**
+	 * Add link to manage section admin for nested section type
+	 *
+	 */
+	function NestedSectionLink($types, $img){
+
+		$section_types = section_content::GetTypes();
+
+		$_types			= explode(',',$types);
+		$text_label		= array();
+		foreach($_types as $type){
+			if( isset($section_types[$type]) ){
+				$text_label[] = $section_types[$type]['label'];
+			}else{
+				$text_label[] = $type;
+			}
+		}
+
+		$img_path = common::GetDir($img);
+		$label = '<img src="'.$img_path.'"/>';
+		$label .= '<span>'.implode(' &amp; ',$text_label).'</span>';
+		echo common::Link($page->title,$label,'cmd=NewNestedSection&types='.$types,array('data-cmd'=>'AddSection'));
+
 	}
 
 
@@ -220,14 +241,16 @@ class editing_page extends display{
 	 */
 	function NewNestedSection(){
 		global $page;
-		$page->ajaxReplace = array();
+		$page->ajaxReplace				= array();
+
+		$_REQUEST						+= array('types'=>'text,image');
+		$types 							= explode(',',$_REQUEST['types']);
+		$cols							= count($types);
 
 		$args							= array();
 		$args['wrapper_class']			= 'row';
-		$args['children'][0]['type']	= 'text';
-		$args['children'][0]['class']	= 'col-sm-6';
-		$args['children'][1]['type']	= 'gallery';
-		$args['children'][1]['class']	= 'col-sm-6';
+		$args['col-class']				= 'col-sm-'.floor(12/$cols);
+
 
 
 		$num			= time().rand(0,10000);
@@ -245,11 +268,9 @@ class editing_page extends display{
 
 		ob_start();
 		echo '<div'.section_content::SectionAttributes($new_section['attributes'],$new_section['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>';
-
-		foreach($args['children'] as $child){
-			echo $this->GetNewSection($child['type'], $child['class']);
+		foreach($types as $type){
+			echo $this->GetNewSection($type, $args['col-class']);
 		}
-
 		echo '</div>';
 
 		$page->ajaxReplace[] = array('AddSection','',ob_get_clean());

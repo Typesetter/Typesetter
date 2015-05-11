@@ -167,13 +167,14 @@ class editing_page extends display{
 			$img_rel	= '/include/imgs/section-'.$type.'.png';
 			$img_full	= $dataDir.$img_rel;
 
+			$label = '';
 			if( file_exists($img_full) ){
 				$img_path = common::GetDir($img_rel);
 				$label = '<img src="'.$img_path.'"/>';
-			}else{
-				$label = $type_info['label'];
-				$label = '<span>'.$label.'</span>';
 			}
+
+			$label .= '<span>'.$type_info['label'].'</span>';
+
 			echo common::Link($page->title,$label,'cmd=NewSectionContent&content_type='.rawurlencode($type),array('data-cmd'=>'AddSection'));
 		}
 
@@ -181,7 +182,7 @@ class editing_page extends display{
 		//section combos
 		$img_path = common::GetDir('/include/imgs/section-combo-text-gallery.png');
 		$label = '<img src="'.$img_path.'"/>';
-		//$label = '<span>Nested Section</span>';
+		$label .= '<span>Nested Section</span>';
 
 		echo common::Link($page->title,$label,'cmd=NewNestedSection&content_type=two_columns',array('data-cmd'=>'AddSection'));
 

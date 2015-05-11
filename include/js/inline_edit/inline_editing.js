@@ -172,12 +172,34 @@ var gp_editing = {
 		//return editor_area;
 	},
 
-	/*
+	/**
 	 * Make sure certain gpEasy elements aren't copied into the html of pages
 	 * @deprecated
 	 */
 	strip_special:function(data){
 		return data;
+	},
+
+	/**
+	 * Set up tabs
+	 *
+	 */
+	CreateTabs: function(){
+
+		var $areas = $('.inline_edit_area');
+		if( !$areas.length ){
+			return;
+		}
+
+		var c = 'selected'
+		var h = '<div id="cktabs">';
+		$areas.each(function(){
+			h += '<a class="ckeditor_control '+c+'" data-cmd="SwitchEditArea" data-arg="#'+this.id+'">'+this.title+'</a>';
+			c = '';
+		});
+		h += '</div>';
+
+		$('#ckeditor_area .toolbar').append(h);
 	}
 
 }

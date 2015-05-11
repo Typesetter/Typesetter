@@ -248,7 +248,7 @@
  *
  */
 #ckeditor_area.docked .inline_edit_area{
-	display:inline-block;
+	display:inline-block !important;
 	}
 #ckeditor_area.docked #cktabs{
 	display:none;

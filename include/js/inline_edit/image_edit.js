@@ -68,6 +68,10 @@
 		var change_timeout = false;
 		gpresponse.image_options_loaded = function(){
 
+			gp_editing.CreateTabs();
+			LoadImages(false);
+
+
 			//change src to blank and set as background image
 			var width = edit_img.width();
 			var height = edit_img.height()

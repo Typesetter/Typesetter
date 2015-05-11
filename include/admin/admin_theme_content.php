@@ -3891,7 +3891,6 @@ class admin_theme_content extends admin_addon_install{
 		includeFile('tool/Images.php');
 		includeFile('tool/editing.php');
 		$page->ajaxReplace = array();
-		//$dest_dir = $dataDir.'/data/_layouts/'.$this->curr_layout; //Not used anywhere.
 
 
 		//source file

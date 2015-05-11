@@ -79,15 +79,7 @@
 		 */
 		InitEditor: function(){
 
-			var h	= '<div id="cktabs">';
-			h		+= '<a class="ckeditor_control selected" data-cmd="SwitchEditArea" data-arg="#section_sorting">Organize</a>';
-			h		+= '<a class="ckeditor_control" data-cmd="SwitchEditArea" data-arg="#new_section_links">Add</a>';
-			h		+= '</div>';
-
-
-			$('#ckeditor_area .toolbar').append(h);
-
-			$('#ckeditor_top').append('<ul id="section_sorting" class="section_drag_area inline_edit_area" style="overflow:auto">');
+			$('#ckeditor_top').append('<ul id="section_sorting" class="section_drag_area inline_edit_area" style="overflow:auto" title="Organize">');
 
 
 			gp_editor.resetDirty();
@@ -100,6 +92,8 @@
 			$('#ckeditor_area').on('dragstop',gp_editor.MaxHeight);
 
 			$('#ckeditor_bottom').hide();
+
+			gp_editing.CreateTabs();
 		},
 
 		/**

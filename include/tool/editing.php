@@ -58,7 +58,7 @@ class gp_edit{
 
 
 	/**
-	 * Attempt to create a resized image resized image
+	 * Attempt to create a resized image
 	 *
 	 */
 	static function ResizedImage($attributes){
@@ -842,7 +842,7 @@ class gp_edit{
 			break;
 
 			case 'image':
-				msg($_POST);
+				$save_this = self::SectionFromPost_Imagme( $existing_section );
 			break;
 		}
 
@@ -859,6 +859,107 @@ class gp_edit{
 		$page->file_sections[$section_num]['modified_by']	= $gpAdmin['username'];
 
 		return $save_this;
+	}
+
+	/**
+	 * Get the posted content for an image area
+	 *
+	 */
+	static function SectionFromPost_Imagme( &$section ){
+		global $page, $dataDir, $dirPrefix, $langmessage;
+		includeFile('tool/Images.php');
+		includeFile('tool/editing.php');
+		$page->ajaxReplace = array();
+
+
+		//msg($_POST);
+
+		//source file
+		//$source_file_rel = $_REQUEST['file'];
+		if( !empty($_REQUEST['src']) ){
+			$source_file_rel = rawurldecode($_REQUEST['src']);
+			if( !empty($dirPrefix) ){
+				$len = strlen($dirPrefix);
+				$source_file_rel = substr($source_file_rel,$len);
+			}
+		}
+		$source_file_rel = '/'.ltrim($source_file_rel,'/');
+		$source_file_full = $dataDir.$source_file_rel;
+		if( !file_exists($source_file_full) ){
+			message($langmessage['OOPS'].' (Source file not found)');
+			return;
+		}
+		$src_img = thumbnail::getSrcImg($source_file_full);
+		if( !$src_img ){
+			message($langmessage['OOPS'].' (Couldn\'t create image [1])');
+			return;
+		}
+
+
+		//size and position variables
+		$orig_w = $width = imagesx($src_img);
+		$orig_h = $height = imagesy($src_img);
+		$posx = $posy = 0;
+		if( isset($_REQUEST['posx']) && is_numeric($_REQUEST['posx']) ){
+			$posx = $_REQUEST['posx'];
+		}
+		if( isset($_REQUEST['posy']) && is_numeric($_REQUEST['posy']) ){
+			$posy = $_REQUEST['posy'];
+		}
+		if( isset($_REQUEST['width']) && is_numeric($_REQUEST['width']) ){
+			$width = $_REQUEST['width'];
+		}
+		if( isset($_REQUEST['height']) && is_numeric($_REQUEST['height']) ){
+			$height = $_REQUEST['height'];
+		}
+
+
+		//check to see if the image needs to be resized
+		if( $posx == 0 && $posy == 0 && $width == $orig_w && $height == $orig_h ){
+			$section['attributes']['src']		= common::GetDir($source_file_rel);
+			$section['attributes']['height']	= $height;
+			$section['attributes']['width']		= $width;
+			return true;
+		}
+
+		//destination file
+		$name	= basename($source_file_rel);
+		$parts	= explode('.',$name);
+		$type	= array_pop($parts);
+		if( count($parts) > 1 ){
+			$time_part = array_pop($parts);
+			if( !ctype_digit($time_part) ){
+				$parts[] = $time_part;
+			}
+		}
+		$name = implode('.',$parts);
+		$time = time();
+		if( isset($_REQUEST['time']) && ctype_digit($_REQUEST['time']) ){
+			$time = $_REQUEST['time'];
+		}
+
+
+		$dest_img_rel = '/data/_uploaded/headers/'.$name.'.'.$time.'.png';
+		$dest_img_full = $dataDir.$dest_img_rel;
+
+		//make sure the folder exists
+		if( !gpFiles::CheckDir( dirname($dest_img_full) ) ){
+			message($langmessage['OOPS'].' (Couldn\'t create directory)');
+			return false;
+		}
+
+		if( !thumbnail::createImg($src_img, $dest_img_full, $posx, $posy, 0, 0, $orig_w, $orig_h, $orig_w, $orig_h, $width, $height) ){
+			message($langmessage['OOPS'].' (Couldn\'t create image [2])');
+			return false;
+		}
+
+		$section['attributes']['src']		= common::GetDir($dest_img_rel);
+		$section['attributes']['height']	= $height;
+		$section['attributes']['width']		= $width;
+
+		includeFile('admin/admin_uploaded.php');
+		admin_uploaded::CreateThumbnail($dest_img_full);
+		return true;
 	}
 
 
@@ -1062,7 +1163,7 @@ class gp_edit{
 		ob_start();
 
 		//edit current image
-		echo '<div id="gp_current_image" class="inline_edit_area">';
+		echo '<div id="gp_current_image" class="inline_edit_area" title="'.$langmessage['edit'].'">';
 		echo '<input type="hidden" name="orig_height">';
 		echo '<input type="hidden" name="orig_width">';
 		echo '<span id="gp_image_wrap"><img/></span>';
@@ -1079,7 +1180,7 @@ class gp_edit{
 
 
 		//select image
-		echo '<div id="gp_source_options" class="inline_edit_area" style="display:none">';
+		echo '<div id="gp_source_options" class="inline_edit_area" style="display:none" title="'.$langmessage['Select Image'].'">';
 
 		//echo common::Link('Admin_Theme_Content/'.rawurlencode($this->curr_layout),$langmessage['Theme Images'].'..','cmd=theme_images',' data-cmd="gpajax" class="ckeditor_control half_width" ');
 
@@ -1092,17 +1193,6 @@ class gp_edit{
 
 		$page->ajaxReplace[] = array('inner','#ckeditor_top',$content);
 		$page->ajaxReplace[] = array('image_options_loaded','',''); //tell the script the images have been loaded
-
-
-
-		//tabs
-		ob_start();
-		echo '<div id="cktabs">';
-		echo '<a class="ckeditor_control selected" data-cmd="SwitchEditArea" data-arg="#gp_current_image">'.$langmessage['edit'].'</a>';
-		echo '<a class="ckeditor_control" data-cmd="SwitchEditArea" data-arg="#gp_source_options">'.$langmessage['Select Image'].'</a>';
-		echo '</a>';
-		$page->ajaxReplace[] = array('append','#ckeditor_area .toolbar',ob_get_clean());
-
 	}
 
 

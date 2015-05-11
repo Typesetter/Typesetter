@@ -79,7 +79,7 @@
 		 */
 		InitEditor: function(){
 
-			var h	= '<div>';
+			var h	= '<div id="cktabs">';
 			h		+= '<a class="ckeditor_control selected" data-cmd="SwitchEditArea" data-arg="#section_sorting">Organize</a>';
 			h		+= '<a class="ckeditor_control" data-cmd="SwitchEditArea" data-arg="#new_section_links">Add</a>';
 			h		+= '</div>';

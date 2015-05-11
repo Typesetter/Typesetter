@@ -189,3 +189,24 @@ gplinks.ck_docklink = function(rel,evt){
 	gpui.ckd = !gpui.ckd;
 	gp_editing.setdock(true);
 }
+
+
+
+	/**
+	 * Control which editing area is displayed
+	 *
+	 */
+	$gp.links.SwitchEditArea = function(){
+		var $this = $(this);
+
+		$('.ckeditor_control.selected').removeClass('selected');
+		$this.addClass('selected');
+
+		$('.manage_section_area').hide();
+
+		$('.inline_edit_area').hide();
+
+		$( $this.data('arg') ).show();
+	}
+
+

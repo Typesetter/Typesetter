@@ -243,4 +243,13 @@
 	margin-right:5px;
 	}
 
-
+/**
+ * ckeditor area tabs
+ *
+ */
+#ckeditor_area.docked .inline_edit_area{
+	display:inline-block;
+	}
+#ckeditor_area.docked #cktabs{
+	display:none;
+	}

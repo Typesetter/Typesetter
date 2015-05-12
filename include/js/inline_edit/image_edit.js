@@ -13,8 +13,6 @@
 		var edited		= false;
 		var save_obj	= {
 			src			: edit_img.attr('src'),
-			posx		: 0,
-			posy		: 0
 			};
 
 		var anim_values = {
@@ -48,6 +46,13 @@
 				return edited;
 			},
 			gp_saveData:function(){
+
+				save_obj.posx	= field_x.value;
+				save_obj.posy	= field_y.value;
+
+				save_obj.width	= field_w.value;
+				save_obj.height = field_h.value;
+
 				return jQuery.param( save_obj )+'&cmd=save_inline';
 			},
 			resetDirty:function(){
@@ -113,10 +118,6 @@
 			$('#gp_current_image input').on('keyup keydown change paste',function(evt){
 				edited				= true;
 
-				//width - height
-				save_obj.width		= field_w.value;
-				save_obj.height		= field_h.value;
-
 				//left - top
 				var left			= field_x.value;
 				var top				= field_y.value;
@@ -132,8 +133,8 @@
 		window.setInterval(function(){
 
 			//height/width
-			var animw			= AnimValue( save_obj.width, anim_values.width );
-			var animh			= AnimValue( save_obj.height, anim_values.height );
+			var animw			= AnimValue( field_w.value, anim_values.width );
+			var animh			= AnimValue( field_h.value, anim_values.height );
 			anim_values.width	= animw;
 			anim_values.height	= animh;
 
@@ -141,8 +142,8 @@
 
 
 			//position
-			var animx			= AnimValue( save_obj.posx, anim_values.posx );
-			var animy			= AnimValue( save_obj.posy, anim_values.posy );
+			var animx			= AnimValue( field_x.value, anim_values.posx );
+			var animy			= AnimValue( field_y.value, anim_values.posy );
 			anim_values.posx	= animx;
 			anim_values.posy	= animy;
 
@@ -190,8 +191,8 @@
 				evt.preventDefault();
 				mousedown = true;
 
-				pos_startx = posx = save_obj.posx || 0;
-				pos_starty = posy = save_obj.posy || 0;
+				pos_startx = posx = field_x.value || 0;
+				pos_starty = posy = field_y.value || 0;
 
 				mouse_startx = evt.pageX;
 				mouse_starty = evt.pageY;
@@ -225,9 +226,6 @@
 			SetCurrentImage( $this.attr('href'), width, height );
 			SetPosition(0,0);
 
-			//make sure this information is saved
-			save_obj.width		= field_w.value;
-			save_obj.height		= field_h.value;
 			edited = true;
 		}
 
@@ -235,9 +233,6 @@
 
 			field_x.value = posx;
 			field_y.value = posy;
-
-			save_obj.posx = posx;
-			save_obj.posy = posy;
 
 			//edit_img.css({'background-position':posx+'px '+posy+'px'});
 			edited = true;
@@ -259,9 +254,6 @@
 
 				field_w.value	= width;
 				field_h.value	= height;
-
-				save_obj.width	= width;
-				save_obj.height = height;
 			}
 		}
 
@@ -281,8 +273,6 @@
 
 			field_w.value 		= img.width();
 			field_h.value		= img.height();
-			save_obj.width		= field_w.value;
-			save_obj.height 	= field_h.value;
 
 			img.remove();
 

@@ -230,6 +230,8 @@
 			value('height',img.height() );
 			input('width').change();
 
+			img.remove();
+
 			SetPosition(0,0);
 		}
 

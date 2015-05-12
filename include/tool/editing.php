@@ -62,7 +62,7 @@ class gp_edit{
 	 *
 	 */
 	static function ResizedImage($attributes){
-		global $dataDir,$dirPrefix;
+		global $dataDir, $dirPrefix;
 
 
 		//height and width from style
@@ -175,10 +175,10 @@ class gp_edit{
 			return false;
 		}
 
-		$data['index'] = $dest_index;
-		$data['w'] = $width;
-		$data['h'] = $height;
-		$data['img'] = $src_relative;
+		$data['index']	= $dest_index;
+		$data['w']		= $width;
+		$data['h']		= $height;
+		$data['img']	= $src_relative;
 		return $data;
 	}
 
@@ -939,8 +939,8 @@ class gp_edit{
 		}
 
 
-		$dest_img_rel = '/data/_uploaded/headers/'.$name.'.'.$time.'.png';
-		$dest_img_full = $dataDir.$dest_img_rel;
+		$dest_img_rel	= '/data/_resized/img_type/'.$name.'.'.$time.'.png';
+		$dest_img_full	= $dataDir.$dest_img_rel;
 
 		//make sure the folder exists
 		if( !gpFiles::CheckDir( dirname($dest_img_full) ) ){

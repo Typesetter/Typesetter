@@ -24,6 +24,10 @@
 			width		: 0,
 			};
 
+
+		var $field_w, $field_h, $field_x, $field_y;
+
+
 		$gp.loaded();
 		gp_editing.editor_tools();
 
@@ -71,6 +75,13 @@
 		 */
 		gpresponse.image_options_loaded = function(){
 
+			$field_w			= input('width');
+			$field_h			= input('height');
+			$field_x			= input('left');
+			$field_y			= input('top');
+
+
+
 			gp_editing.CreateTabs();
 			LoadImages(false);
 
@@ -103,12 +114,12 @@
 				edited				= true;
 
 				//width - height
-				save_obj.width		= value('width');
-				save_obj.height		= value('height');
+				save_obj.width		= $field_w.val();
+				save_obj.height		= $field_h.val();
 
 				//left - top
-				var left			= value('left');
-				var top				= value('top');
+				var left			= $field_x.val();
+				var top				= $field_y.val();
 				SetPosition(left,top);
 			});
 
@@ -160,14 +171,9 @@
 		}
 
 
-		function value(name){
-			return parseInt( input(name).val() );
-		}
-
 		function input(name){
 			return $('#gp_current_image input[name='+name+']');
 		}
-
 
 
 		/**
@@ -220,15 +226,15 @@
 			SetPosition(0,0);
 
 			//make sure this information is saved
-			save_obj.width		= value('width');
-			save_obj.height		= value('height');
+			save_obj.width		= $field_w.val();
+			save_obj.height		= $field_h.val();;
 			edited = true;
 		}
 
 		function SetPosition(posx,posy){
 
-			input('left').val(posx);
-			input('top').val(posy)
+			$field_x.val(posx);
+			$field_y.val(posy)
 
 			save_obj.posx = posx;
 			save_obj.posy = posy;
@@ -250,8 +256,9 @@
 			$('#gp_current_image img').attr('src', src );
 
 			if( width > 0 && height > 0 ){
-				input('width').val( width );
-				input('height').val( height );
+
+				$field_w.val( width );
+				$field_h.val( height );
 
 				save_obj.width = width;
 				save_obj.height = height;
@@ -273,9 +280,8 @@
 			//get original image size
 			var img = $('<img>').css({'height':'auto','width':'auto','padding':0}).attr('src',save_obj.src).appendTo('body');
 
-
-			input('height').val( img.height() );
-			input('width').val( img.width() ).change();
+			$field_h.val( img.height() );
+			$field_w.val( img.width() ).change();
 
 			img.remove();
 

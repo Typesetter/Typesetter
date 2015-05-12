@@ -365,13 +365,25 @@ class section_content{
 		return self::Render($file_sections,self::$title,self::$meta);
 	}
 
-	static function SectionAttributes($attributes,$type){
+	/**
+	 * Convert array of html attributes into a string for output
+	 *
+	 */
+	static function SectionAttributes($attrs,$type){
 
-		$attributes				+= array('class' => '' );
-		$attributes['class']	= trim('GPAREA filetype-'.$type.' '.$attributes['class']);
+		switch($type){
+			case 'image':
+				$attrs['src'] = common::GetDir($attrs['src']);
+			break;
+		}
+
+
+
+		$attrs				+= array('class' => '' );
+		$attrs['class']	= trim('GPAREA filetype-'.$type.' '.$attrs['class']);
 
 		$attr_string = '';
-		foreach($attributes as $attr => $value){
+		foreach($attrs as $attr => $value){
 			$attr_string .= ' '.htmlspecialchars($attr).'="'.htmlspecialchars($value).'"';
 		}
 		return $attr_string;

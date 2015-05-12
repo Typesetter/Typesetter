@@ -719,7 +719,7 @@ class gp_edit{
 
 			case 'image':
 				$section['nodeName']				= 'img';
-				$section['attributes']['src']		= common::getdir('include/imgs/default_image.png');
+				$section['attributes']['src']		= 'include/imgs/default_image.png';
 				$section['attributes']['style']		= 'height:400px';
 			break;
 
@@ -916,7 +916,7 @@ class gp_edit{
 
 		//check to see if the image needs to be resized
 		if( $posx == 0 && $posy == 0 && $width == $orig_w && $height == $orig_h ){
-			$section['attributes']['src']		= common::GetDir($source_file_rel);
+			$section['attributes']['src']		= $source_file_rel;
 			$section['attributes']['height']	= $height;
 			$section['attributes']['width']		= $width;
 			return true;
@@ -953,7 +953,7 @@ class gp_edit{
 			return false;
 		}
 
-		$section['attributes']['src']		= common::GetDir($dest_img_rel);
+		$section['attributes']['src']		= $dest_img_rel;
 		$section['attributes']['height']	= $height;
 		$section['attributes']['width']		= $width;
 

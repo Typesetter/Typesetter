@@ -80,3 +80,10 @@
 		LoadImages(newdir,gp_editor);
 	}
 
+
+	/**
+	 * Adjust size/position with keyboard arrows
+	 *
+	 */
+	$('.ck_size_field').keyup
+

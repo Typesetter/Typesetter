@@ -79,32 +79,43 @@
 
 			edit_img.attr('src',gp_blank_img); //after getting size
 
+			//up/down arrows
+			$('#gp_current_image input').on('keydown',function(evt){
+				switch(evt.which){
+					case 38: //up
+						this.value = parseInt(this.value) + 1;
+					break;
+
+					case 40: // down
+						this.value = parseInt(this.value) - 1;
+					break;
+				}
+			});
+
+
 			//set up height/width listeners
-			$('#gp_current_image input').on('keyup keydown change paste',function(){
+			$('#gp_current_image input').on('keyup keydown change paste',function(evt){
+
 				if( change_timeout ) clearTimeout(change_timeout);
 				change_timeout = setTimeout(function(){
-					edited = true;
+					edited				= true;
 
 					//width - height
-					save_obj.width = value('width');
-					save_obj.height = value('height');
+					save_obj.width		= value('width');
+					save_obj.height		= value('height');
 					edit_img.stop(true,true).animate({'width':save_obj.width,'height':save_obj.height});
 
 					//left - top
-					var left = value('left');
-					var top = value('top');
+					var left			= value('left');
+					var top				= value('top');
 					SetPosition(left,top);
 
 				},400);
 			});
 		}
 
-		function value(name,value){
-			var field = input(name);
-			if( typeof(value) !== 'undefined' ){
-				field.val( value );
-			}
-			return parseInt( field.val() );
+		function value(name){
+			return parseInt( input(name).val() );
 		}
 
 		function input(name){
@@ -156,21 +167,26 @@
 			evt.preventDefault();
 			var $this = $(this).stop(true,true);
 
-			var width = $this.data('width');
-			var height = $this.data('height');
+			var width			= $this.data('width');
+			var height			= $this.data('height');
 
 			SetCurrentImage( $this.attr('href'), width, height );
 			SetPosition(0,0);
 
 			//make sure this information is saved
-			save_obj.width = value('width');
-			save_obj.height = value('height');
+			save_obj.width		= value('width');
+			save_obj.height		= value('height');
 			edited = true;
 		}
 
 		function SetPosition(posx,posy){
-			save_obj.posx = posx = value('left', posx );
-			save_obj.posy = posy = value('top',  posy );
+
+			input('left').val(posx);
+			input('top').val(posy)
+
+			save_obj.posx = posx;
+			save_obj.posy = posy;
+
 			edit_img.css({'background-position':posx+'px '+posy+'px'});
 			edited = true;
 		}
@@ -188,8 +204,8 @@
 			$('#gp_current_image img').attr('src', src );
 
 			if( width > 0 && height > 0 ){
-				value('width', width );
-				value('height', height );
+				input('width').val( width );
+				input('height').val( height );
 				edit_img.stop(true,true).animate({'width':width,'height':height});
 			}
 		}
@@ -203,32 +219,14 @@
 			LoadImages(false);
 		}
 
-		/*
-		function setVisibleThemeImages(){
-			var minWidth = value('orig_width') - (value('orig_width') * 0.20);
-			var maxWidth = (value('orig_width') * 1.20);
-			var minHeight = value('orig_height') - (value('orig_height') * 0.20);
-			var maxHeight = (value('orig_height') * 1.20);
-			$('#gp_gallery_avail_imgs a').each(function(ind){
-			   var width =  $(this).attr('data-width');
-			   var height =  $(this).attr('data-height');
-			   if (!((width <= maxWidth) && (width >= minWidth) &&
-			      (height <= maxHeight) && (height >= minHeight))) {
-				  $(this).parent().hide();
-			   }
-			});
-		}
-		*/
-
 		$gp.links.deafult_sizes = function(){
 
 			//get original image size
 			var img = $('<img>').css({'height':'auto','width':'auto','padding':0}).attr('src',save_obj.src).appendTo('body');
 
 
-			value('width', img.width() );
-			value('height',img.height() );
-			input('width').change();
+			input('height').val( img.height() );
+			input('width').val( img.width() ).change();
 
 			img.remove();
 

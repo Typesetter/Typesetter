@@ -1164,8 +1164,6 @@ class gp_edit{
 
 		//edit current image
 		echo '<div id="gp_current_image" class="inline_edit_area" title="'.$langmessage['edit'].'">';
-		echo '<input type="hidden" name="orig_height">';
-		echo '<input type="hidden" name="orig_width">';
 		echo '<span id="gp_image_wrap"><img/></span>';
 		echo '<table>';
 		echo '<tr><td>'.$langmessage['Width'].'</td><td><input type="text" name="width" class="ck_input"/></td>';

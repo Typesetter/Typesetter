@@ -14,15 +14,14 @@
 		}
 
 		edit_img.addClass('gp_image_edit');
-		var img_src = edit_img.attr('src');
 
-		var edited = false;
-		var save_obj = {};
+		var edited		= false;
+		var save_obj	= {};
+		save_obj.src	= edit_img.attr('src');
 
 		$gp.loaded();
 		gp_editing.editor_tools();
 
-		//$('#ckeditor_top').html('');
 		$('#ckeditor_controls').prepend('<div id="gp_folder_options"></div>');
 
 
@@ -75,9 +74,7 @@
 			//change src to blank and set as background image
 			var width = edit_img.width();
 			var height = edit_img.height()
-			value('orig_width', width );
-			value('orig_height', height );
-			SetCurrentImage( img_src, width, height );
+			SetCurrentImage( save_obj.src, width, height );
 			SetupDrag();
 
 			edit_img.attr('src',gp_blank_img); //after getting size
@@ -184,7 +181,7 @@
 		 */
 		function SetCurrentImage( src, width, height){
 			delete save_obj.src;
-			if( src !== img_src ){
+			if( src !== save_obj.src ){
 				save_obj.src = src;
 			}
 			edit_img.css({'background-image':'url("'+src+'")'});
@@ -224,8 +221,13 @@
 		*/
 
 		$gp.links.deafult_sizes = function(){
-			value('width', value('orig_width') );
-			value('height', value('orig_height') );
+
+			//get original image size
+			var img = $('<img>').css({'height':'auto','width':'auto','padding':0}).attr('src',save_obj.src).appendTo('body');
+
+
+			value('width', img.width() );
+			value('height',img.height() );
 			input('width').change();
 
 			SetPosition(0,0);

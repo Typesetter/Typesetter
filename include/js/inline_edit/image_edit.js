@@ -10,7 +10,6 @@
 
 		edit_img.addClass('gp_image_edit');
 
-		var edited		= false;
 		var save_obj	= {
 			src			: edit_img.attr('src'),
 			};
@@ -38,12 +37,18 @@
 		gp_editor = {
 			save_path: save_path,
 
+			saved_data: '',
+
 			/**
 			 * Check to see if there is unsaved data
 			 *
 			 */
 			checkDirty:function(){
-				return edited;
+				var curr_data	= gp_editor.gp_saveData();
+				if( gp_editor.saved_data != curr_data ){
+					return true;
+				}
+				return false;
 			},
 			gp_saveData:function(){
 
@@ -56,7 +61,7 @@
 				return jQuery.param( save_obj )+'&cmd=save_inline';
 			},
 			resetDirty:function(){
-				edited = false;
+				gp_editor.saved_data	= gp_editor.gp_saveData();
 			},
 			updateElement:function(){}
 		}
@@ -100,30 +105,21 @@
 
 			edit_img.attr('src',gp_blank_img); //after getting size
 
+			gp_editor.saved_data = gp_editor.gp_saveData();
+
+
 			//up/down arrows
 			$('#gp_current_image input').on('keydown',function(evt){
 				switch(evt.which){
 					case 38: //up
-						this.value = parseInt(this.value) + 1;
+						this.value	= parseInt(this.value) + 1;
 					break;
 
 					case 40: // down
-						this.value = parseInt(this.value) - 1;
+						this.value	= parseInt(this.value) - 1;
 					break;
 				}
 			});
-
-
-			//set up height/width listeners
-			$('#gp_current_image input').on('keyup keydown change paste',function(evt){
-				edited				= true;
-
-				//left - top
-				var left			= field_x.value;
-				var top				= field_y.value;
-				SetPosition(left,top);
-			});
-
 		}
 
 		/**
@@ -165,10 +161,10 @@
 			}
 
 			if( desired > current ){
-				return current + Math.min(10,desired-current);
+				return current + Math.min(20,desired-current);
 			}
 
-			return current - Math.min(10,current-desired);
+			return current - Math.min(20,current-desired);
 		}
 
 
@@ -225,18 +221,13 @@
 
 			SetCurrentImage( $this.attr('href'), width, height );
 			SetPosition(0,0);
-
-			edited = true;
 		}
 
 		function SetPosition(posx,posy){
-
 			field_x.value = posx;
 			field_y.value = posy;
-
-			//edit_img.css({'background-position':posx+'px '+posy+'px'});
-			edited = true;
 		}
+
 
 		/**
 		 * Set the current image
@@ -273,10 +264,9 @@
 
 			field_w.value 		= img.width();
 			field_h.value		= img.height();
+			SetPosition(0,0);
 
 			img.remove();
-
-			SetPosition(0,0);
 		}
 
 

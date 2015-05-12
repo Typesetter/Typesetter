@@ -12,8 +12,8 @@
 #ckeditor_area .ck_reset_size{
 	border: 1px solid #CCCCCC !important;
 	font-size: 18px !important;
-	line-height: 19px;
-	padding: 0 4px !important;
+	line-height: 24px;
+	padding: 0 5px 0 4px !important;
 	text-align: center;
 	}
 

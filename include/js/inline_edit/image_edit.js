@@ -5,19 +5,24 @@
 		//show edit window
 		$gp.LoadStyle('/include/css/inline_image.css');
 
-		var save_path = gp_editing.get_path(area_id);
-		var edit_img = gp_editing.get_edit_area(area_id);
-
-		// <div> or <img>?
-		if( edit_img.get(0).nodeName !== 'IMG' ){
-			edit_img = edit_img.find('img');
-		}
+		var save_path	= gp_editing.get_path(area_id);
+		var edit_img	= gp_editing.get_edit_area(area_id);
 
 		edit_img.addClass('gp_image_edit');
 
 		var edited		= false;
-		var save_obj	= {};
-		save_obj.src	= edit_img.attr('src');
+		var save_obj	= {
+			src			: edit_img.attr('src'),
+			posx		: 0,
+			posy		: 0
+			};
+
+		var anim_values = {
+			posx		: 0,
+			posy		: 0,
+			height		: 0,
+			width		: 0,
+			};
 
 		$gp.loaded();
 		gp_editing.editor_tools();
@@ -64,7 +69,6 @@
 		 * Set up editing display after content has loaded from php
 		 *
 		 */
-		var change_timeout = false;
 		gpresponse.image_options_loaded = function(){
 
 			gp_editing.CreateTabs();
@@ -72,9 +76,10 @@
 
 
 			//change src to blank and set as background image
-			var width = edit_img.width();
-			var height = edit_img.height()
-			SetCurrentImage( save_obj.src, width, height );
+			anim_values.width	= edit_img.width();
+			anim_values.height	= edit_img.height();
+
+			SetCurrentImage( save_obj.src, anim_values.width, anim_values.height );
 			SetupDrag();
 
 			edit_img.attr('src',gp_blank_img); //after getting size
@@ -95,24 +100,65 @@
 
 			//set up height/width listeners
 			$('#gp_current_image input').on('keyup keydown change paste',function(evt){
+				edited				= true;
 
-				if( change_timeout ) clearTimeout(change_timeout);
-				change_timeout = setTimeout(function(){
-					edited				= true;
+				//width - height
+				save_obj.width		= value('width');
+				save_obj.height		= value('height');
 
-					//width - height
-					save_obj.width		= value('width');
-					save_obj.height		= value('height');
-					edit_img.stop(true,true).animate({'width':save_obj.width,'height':save_obj.height});
-
-					//left - top
-					var left			= value('left');
-					var top				= value('top');
-					SetPosition(left,top);
-
-				},400);
+				//left - top
+				var left			= value('left');
+				var top				= value('top');
+				SetPosition(left,top);
 			});
+
 		}
+
+		/**
+		 * Continuous animation
+		 *
+		 */
+		window.setInterval(function(){
+
+			//height/width
+			var animw			= AnimValue( save_obj.width, anim_values.width );
+			var animh			= AnimValue( save_obj.height, anim_values.height );
+			anim_values.width	= animw;
+			anim_values.height	= animh;
+
+			edit_img.stop(true,true).animate({'width':animw,'height':animh},100);
+
+
+			//position
+			var animx			= AnimValue( save_obj.posx, anim_values.posx );
+			var animy			= AnimValue( save_obj.posy, anim_values.posy );
+			anim_values.posx	= animx;
+			anim_values.posy	= animy;
+
+			edit_img.css({'background-position':animx+'px '+animy+'px'});
+
+		},100);
+
+
+		/**
+		 * Get amount we should animate by
+		 *
+		 */
+		function AnimValue(desired, current){
+			desired = parseInt(desired);
+			current = parseInt(current);
+
+			if( desired == current ){
+				return desired;
+			}
+
+			if( desired > current ){
+				return current + Math.min(10,desired-current);
+			}
+
+			return current - Math.min(10,current-desired);
+		}
+
 
 		function value(name){
 			return parseInt( input(name).val() );
@@ -187,7 +233,7 @@
 			save_obj.posx = posx;
 			save_obj.posy = posy;
 
-			edit_img.css({'background-position':posx+'px '+posy+'px'});
+			//edit_img.css({'background-position':posx+'px '+posy+'px'});
 			edited = true;
 		}
 
@@ -206,7 +252,10 @@
 			if( width > 0 && height > 0 ){
 				input('width').val( width );
 				input('height').val( height );
-				edit_img.stop(true,true).animate({'width':width,'height':height});
+
+				save_obj.width = width;
+				save_obj.height = height;
+				//edit_img.stop(true,true).animate({'width':width,'height':height});
 			}
 		}
 

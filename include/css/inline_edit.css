@@ -243,12 +243,16 @@
 	margin-right:5px;
 	}
 
+
 /**
  * ckeditor area tabs
  *
  */
 #ckeditor_area.docked .inline_edit_area{
 	display:inline-block !important;
+	vertical-align:top;
+	min-width:200px;
+	margin-right:10px;
 	}
 #ckeditor_area.docked #cktabs{
 	display:none;

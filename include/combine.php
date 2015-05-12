@@ -772,6 +772,10 @@ class gp_combine_css{
 		$url = trim($url);
 		$url = trim($url,'"\'');
 
+		if( empty($url) ){
+			return;
+		}
+
 		//relative url
 		if( $url{0} == '/' ){
 			return;

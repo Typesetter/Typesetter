@@ -875,8 +875,9 @@ class editing_page extends display{
 				gpOutput::$editlinks .= ob_get_clean();
 			}
 
-			$section_data['attributes']['id']		= 'ExtraEditArea'.$edit_index;
-			$section_data['attributes']['class']	.= ' editable_area'; // class="edit_area" added by javascript
+			$section_data['attributes']['id']				= 'ExtraEditArea'.$edit_index;
+			$section_data['attributes']['class']			.= ' editable_area'; // class="edit_area" added by javascript
+			//$section_data['attributes']['data-gp-editarea']	= $edit_index;
 		}
 
 

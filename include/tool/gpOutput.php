@@ -1187,7 +1187,8 @@ class gpOutput{
 			echo '</span>';
 			gpOutput::$editlinks .= ob_get_clean();
 
-			echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
+			//echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'" data-gp-editarea="'.$edit_index.'">'; // class="edit_area" added by javascript
+			echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'">';
 			echo section_content::RenderSection($extra_content,0,'',$file_stats);
 			echo '</div>';
 		}else{

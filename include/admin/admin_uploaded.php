@@ -249,7 +249,7 @@ class admin_uploaded{
 	 * Output a list a images in a director for use in inline editing
 	 * @static
 	 */
-	static function InlineList($dir_piece,$add_all_images = true){
+	static function InlineList($dir_piece){
 		global $page,$langmessage,$dataDir;
 		$page->ajaxReplace = array();
 
@@ -344,8 +344,8 @@ class admin_uploaded{
 		// Folder controls
 		ob_start();
 
-		if( $add_all_images && $image_count > 0 ){
-			echo '<a data-cmd="gp_gallery_add_all" class="ckeditor_control half_width">'.$langmessage['Add All Images'].'</a>';
+		if( $image_count > 0 ){
+			echo '<a data-cmd="gp_gallery_add_all" class="ckeditor_control half_width add_all_images">'.$langmessage['Add All Images'].'</a>';
 		}
 
 		if( $dir_piece != '/' ){

@@ -3844,7 +3844,7 @@ class admin_theme_content extends admin_addon_install{
 	function GalleryImages(){
 		$_GET += array('dir'=>'/headers');
 		includeFile('admin/admin_uploaded.php');
-		admin_uploaded::InlineList($_GET['dir'],false);
+		admin_uploaded::InlineList($_GET['dir']);
 	}
 
 	function SaveHeaderImage(){

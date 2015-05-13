@@ -390,3 +390,14 @@ body #gp_current_image td{
 	width:520px;
 	}
 
+
+/**
+ * Multiple images
+ *
+ */
+.add_all_images{
+	display:none !important;
+	}
+.multiple_images .add_all_images{
+	display:inline-block !important;
+}

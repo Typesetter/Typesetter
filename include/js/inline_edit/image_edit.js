@@ -28,10 +28,6 @@
 		$gp.loaded();
 		gp_editing.editor_tools();
 
-		//$('#gp_source_options').prepend('<div id="gp_folder_options"></div>');
-
-
-
 
 		//create gp_editor object
 		gp_editor = {

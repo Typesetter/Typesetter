@@ -331,7 +331,7 @@ class admin_menu_new extends admin_menu_tools{
 
 
 
-	/*
+	/**
 	 * Primary Display
 	 *
 	 *
@@ -358,11 +358,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		// json response
 		if( isset($_REQUEST['gpreq']) && ($_REQUEST['gpreq'] == 'json') ){
-
-			if( isset($_REQUEST['menus']) ){
-				$this->GetMenus();
-			}
-
+			$this->GetMenus();
 			$page->ajaxReplace[] = array('gp_menu_prep','','');
 			$page->ajaxReplace[] = array('inner',$replace_id,$content);
 			$page->ajaxReplace[] = array('gp_menu_refresh','','');
@@ -517,38 +513,11 @@ class admin_menu_new extends admin_menu_tools{
 
 	//we do the json here because we're replacing more than just the content
 	function GetMenus(){
-		global $page, $GP_MENU_LINKS, $GP_MENU_CLASSES;
-
-		foreach($_REQUEST['menus'] as $id => $menu){
-
-			$info = gpOutput::GetgpOutInfo($menu);
-
-			if( !isset($info['method']) ){
-				continue;
-			}
-
-			$array = array();
-			$array[0] = 'replace';
-			$array[1] = '#'.$id;
-			gpOutput::$edit_area_id = $id;
-
-			if( !empty($_REQUEST['menuh'][$id]) ){
-				$GP_MENU_LINKS = rawurldecode($_REQUEST['menuh'][$id]);
-			}
-			if( !empty($_REQUEST['menuc'][$id]) ){
-				$menu_classes = json_decode( rawurldecode($_REQUEST['menuc'][$id]), true );
-				if( is_array($menu_classes) ){
-					$GP_MENU_CLASSES = $menu_classes;
-				}
-			}
-
-			ob_start();
-			call_user_func($info['method'],$info['arg'],$info);
-			$array[2] = ob_get_clean();
-
-			$page->ajaxReplace[] = $array;
-
-		}
+		global $page;
+		ob_start();
+		gpOutput::GetMenu();
+		$content = ob_get_clean();
+		$page->ajaxReplace[] = array('inner','#admin_menu_wrap',$content);
 	}
 
 
@@ -758,7 +727,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo $this->Link('Admin_Menu',$img.$langmessage['edit'],'cmd=edit_external&key=[key]',array('title'=>$langmessage['edit'],'data-cmd'=>'gpabox'));
 
 		$img = '<span class="menu_icon cut_list_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&index=[key]',array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'menupost','class'=>'gpconfirm'));
+		echo $this->Link('Admin_Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&index=[key]',array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
 
 		echo '</span>';
 
@@ -863,11 +832,11 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 		$img	= '<span class="menu_icon cut_list_icon"></span>';
-		$attrs	= array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'menupost','class'=>'gpconfirm');
+		$attrs	= array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'postlink','class'=>'gpconfirm');
 		echo $this->Link('Admin_Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&index=[key]',$attrs);
 
 		$img	= '<span class="menu_icon bin_icon"></span>';
-		$attrs	= array('title'=>$langmessage['delete_page'],'data-cmd'=>'menupost','class'=>'gpconfirm not_special');
+		$attrs	= array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm not_special');
 		echo $this->Link('Admin_Menu',$img.$langmessage['delete'],'cmd=trash&index=[key]',$attrs);
 
 		echo '[opts]'; //replaced with the contents of gpPlugin::Action('MenuPageOptions',array($title,$menu_key,$menu_value,$layout_info));
@@ -1087,7 +1056,7 @@ class admin_menu_new extends admin_menu_tools{
 				$is_special = common::SpecialOrAdmin($title);
 				if( !$is_special ){
 					$img = '<span class="menu_icon bin_icon"></span>';
-					echo $this->Link('Admin_Menu',$img.$langmessage['delete'],'cmd=trash&index='.urlencode($title_index),array('title'=>$langmessage['delete_page'],'data-cmd'=>'menupost','class'=>'gpconfirm'));
+					echo $this->Link('Admin_Menu',$img.$langmessage['delete'],'cmd=trash&index='.urlencode($title_index),array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
 				}
 
 				gpPlugin::Action('MenuPageOptions',array($title,$title_index,false,$layout_info));
@@ -1575,7 +1544,7 @@ class admin_menu_new extends admin_menu_tools{
 			}else{
 				echo '<input type="hidden" name="cmd" value="new_hidden" />';
 			}
-			echo '<input type="submit" name="aaa" value="'.$langmessage['create_new_file'].'" class="gppost gpsubmit gpvalidate"/> '; //class="menupost" is not needed because we're adding hidden files
+			echo '<input type="submit" name="aaa" value="'.$langmessage['create_new_file'].'" class="gpsubmit gpvalidate" data-cmd="gppost"/> ';
 			echo '<input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
 			echo '</p>';
 
@@ -1632,7 +1601,7 @@ class admin_menu_new extends admin_menu_tools{
 					echo '<input type="hidden" name="insert_where" value="'.htmlspecialchars($_GET['insert_where']).'" />';
 
 					echo '<input type="hidden" name="cmd" value="new_file" />';
-					echo '<input type="submit" name="aaa" value="'.$langmessage['create_new_file'].'" class="menupost gpsubmit"/> ';
+					echo '<input type="submit" name="aaa" value="'.$langmessage['create_new_file'].'" class="gpsubmit" data-cmd="gppost"/> ';
 					echo '<input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
 					echo '</p>';
 
@@ -1691,7 +1660,7 @@ class admin_menu_new extends admin_menu_tools{
 				echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($cmd).'" />';
 				echo '<input type="hidden" name="insert_where" value="'.htmlspecialchars($_GET['insert_where']).'" />';
 				echo '<input type="hidden" name="cmd" value="insert_from_hidden"  />';
-				echo '<input type="submit" name="" value="'.$langmessage['insert_into_menu'].'" class="menupost gpsubmit" />';
+				echo '<input type="submit" name="" value="'.$langmessage['insert_into_menu'].'" class="gpsubmit" data-cmd="gppost" />';
 				echo ' <input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
 				echo '</p>';
 
@@ -1741,7 +1710,7 @@ class admin_menu_new extends admin_menu_tools{
 				echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($cmd).'" />';
 				echo '<input type="hidden" name="insert_where" value="'.htmlspecialchars($_GET['insert_where']).'" />';
 				echo '<input type="hidden" name="cmd" value="restore"  />';
-				echo '<input type="submit" name="" value="'.$langmessage['restore'].'" class="menupost gpsubmit" />';
+				echo '<input type="submit" name="" value="'.$langmessage['restore'].'" class="gpsubmit" data-cmd="gppost"/>';
 				echo ' <input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
 				echo '</p>';
 
@@ -2467,7 +2436,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<p>';
 
 		echo '<input type="hidden" name="cmd" value="'.htmlspecialchars($cmd).'" />';
-		echo '<input type="submit" name="" value="'.$submit.'" class="menupost gpsubmit" /> ';
+		echo '<input type="submit" name="" value="'.$submit.'" class="gpsubmit" data-cmd="gppost"/> ';
 		echo '<input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
 		echo '</p>';
 
@@ -2647,7 +2616,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		echo '<p>';
 		echo '<input type="hidden" name="cmd" value="copyit"/> ';
-		echo '<input type="submit" name="" value="'.$langmessage['continue'].'" class="gppost gpsubmit"/>';
+		echo '<input type="submit" name="" value="'.$langmessage['continue'].'" class="gpsubmit" data-cmd="gppost"/>';
 		echo '<input type="button" class="admin_box_close gpcancel" name="" value="'.$langmessage['cancel'].'" />';
 		echo '</p>';
 
@@ -2738,7 +2707,7 @@ class admin_menu_new extends admin_menu_tools{
 
 
 		echo '<p>';
-		echo '<input type="submit" name="aa" value="'.htmlspecialchars($langmessage['save']).'" class="gppost gpsubmit" />';
+		echo '<input type="submit" name="aa" value="'.htmlspecialchars($langmessage['save']).'" class="gpsubmit" data-cmd="gppost" />';
 		echo ' <input type="submit" value="'.htmlspecialchars($langmessage['cancel']).'" class="admin_box_close gpcancel" /> ';
 		echo '</p>';
 

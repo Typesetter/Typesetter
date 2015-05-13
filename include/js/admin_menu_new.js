@@ -54,7 +54,6 @@
 				$gp.loading();
 
 				data = jQuery.param(data,true);
-				data += getmenus();
 				$gp.postC( window.location.href , data);
 
 				return;
@@ -345,44 +344,6 @@
 
 			//$.cookie('gp_menu_settings', null, cookie_options );
 			$.cookie('gp_menu_prefs', $('#gp_menu_select_form').serialize(), cookie_options );
-		}
-
-
-
-		/*
-		 * Get information about the current menus so we can reload them as they change
-		 *
-		 * menu_markers aren't next to the actual menus any more
-		 *
-		 */
-		function getmenus(){
-			var vals,id,result = '';
-
-			$('.menu_marker').each(function(){
-				var $this = $(this);
-				id = $this.data('menuid');
-				vals = $this.children();
-
-				result += '&menus['+id+']='+encodeURIComponent(vals.eq(0).val());
-				result += '&menuh['+id+']='+encodeURIComponent(vals.eq(1).val());
-				result += '&menuc['+id+']='+encodeURIComponent(vals.eq(2).val());
-			});
-			return result;
-		}
-
-		gpinputs.menupost = function(){
-			var a = getmenus();
-			var frm = $(this).closest('form');
-			frm.attr('action', $gp.jPrep(frm.attr('action'),a));
-			$gp.post(this);
-			return false;
-		}
-
-		$gp.links.menupost = function(evt){
-			evt.preventDefault();
-			var query = strip_to(this.search,'?');
-			query += getmenus();
-			$gp.postC( this.href, query);
 		}
 
 

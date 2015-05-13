@@ -402,7 +402,6 @@ class gpOutput{
 
 		//editable links only .. other editable_areas are handled by their output functions
 		if( $permission ){
-			$menu_marker = false;
 			if( isset($info['link']) ){
 				$label = $langmessage[$info['link']];
 
@@ -413,7 +412,6 @@ class gpOutput{
 				echo '</span>';
 
 				self::$edit_area_id = 'ExtraEditArea'.$edit_index;
-				$menu_marker = true;
 
 			}elseif( isset($info['key']) && ($info['key'] == 'CustomMenu') ){
 
@@ -424,16 +422,6 @@ class gpOutput{
 				echo '</span>';
 
 				self::$edit_area_id = 'ExtraEditArea'.$edit_index;
-				$menu_marker = true;
-			}
-
-			//for menu arrangement, admin_menu_new.js
-			if( $menu_marker ){
-				echo '<div class="menu_marker nodisplay" data-menuid="'.self::$edit_area_id.'">';
-				echo '<input type="hidden" value="'.htmlspecialchars($info['gpOutCmd']).'" />';
-				echo '<input type="hidden" value="'.htmlspecialchars($GP_MENU_LINKS).'" />';
-				echo '<input type="hidden" value="'.htmlspecialchars(json_encode($GP_MENU_CLASSES)).'" />';
-				echo '</div>';
 			}
 		}
 		gpOutput::$editlinks .= ob_get_clean();

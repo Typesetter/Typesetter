@@ -190,7 +190,7 @@ class gp_rename{
 
 		echo '<p>';
 			echo '<input type="hidden" name="cmd" value="renameit"/> ';
-			echo '<input type="submit" name="" value="'.$langmessage['save_changes'].'" class="menupost gpsubmit"/>';
+			echo '<input type="submit" name="" value="'.$langmessage['save_changes'].'...'.'" class="gpsubmit" data-cmd="gppost"/>';
 			echo '<input type="button" class="admin_box_close gpcancel" name="" value="'.$langmessage['cancel'].'" />';
 			echo '</p>';
 

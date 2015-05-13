@@ -143,7 +143,9 @@ class admin_display extends display{
 		global $langmessage;
 
 		echo '<div id="admincontent_panel" class="toolbar cf">';
-		gpOutput::Get('Menu');
+		echo '<div id="admin_menu_wrap">';
+		gpOutput::GetMenu();
+		echo '</div>';
 
 
 		echo '<form method="get" action="/index.php/Search" id="panel_search" class="cf">';

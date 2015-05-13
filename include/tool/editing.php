@@ -710,7 +710,12 @@ class gp_edit{
 			break;
 
 			case 'gallery':
-				$section['content'] = '<ul class="gp_gallery"><li class="gp_to_remove"></li></ul>';
+				$section['content']		= '<ul class="gp_gallery"><li class="gp_to_remove">'
+										.'<a class="gallery_gallery" data-cmd="gallery" href="'.common::GetDir('/include/imgs/default_image.jpg').'" data-arg="gallery_gallery">'
+										.'<img alt="" src="'.common::GetDir('/include/imgs/default_thumb.jpg').'" />'
+										.'</a>'
+										.'<div class="caption">Image caption</div>'
+										.'</li></ul>';
 			break;
 
 			case 'wrapper_section':
@@ -719,8 +724,9 @@ class gp_edit{
 
 			case 'image':
 				$section['nodeName']				= 'img';
-				$section['attributes']['src']		= 'include/imgs/default_image.png';
-				$section['attributes']['style']		= 'height:400px';
+				$section['attributes']['src']		= 'include/imgs/default_image.jpg';
+				$section['attributes']['width']		= '400px';
+				$section['attributes']['height']	= '300px';
 			break;
 
 			case 'text':

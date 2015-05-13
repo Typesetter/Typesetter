@@ -338,7 +338,8 @@ class admin_theme_content extends admin_addon_install{
 				$this->GalleryImages();
 			return;
 			case 'image_editor':
-				$this->ImageEditor();
+				includeFile('tool/editing.php');
+				gp_edit::ImageEditor($this->curr_layout);
 			return;
 			case 'save_inline':
 				$this->SaveHeaderImage();
@@ -3839,46 +3840,6 @@ class admin_theme_content extends admin_addon_install{
 		die();
 	}
 
-	/**
-	 * Output content for use with the inline image editor
-	 *
-	 */
-	function ImageEditor(){
-		global $page, $langmessage;
-		$page->ajaxReplace = array();
-
-		//image options
-		ob_start();
-
-		echo '<div id="gp_current_image">';
-		echo '<input type="hidden" name="orig_height">';
-		echo '<input type="hidden" name="orig_width">';
-		echo '<span id="gp_image_wrap"><img/></span>';
-		echo '<table>';
-		echo '<tr><td>'.$langmessage['Width'].'</td><td><input type="text" name="width" class="ck_input"/></td>';
-		echo '<td>'.$langmessage['Height'].'</td><td><input type="text" name="height" class="ck_input"/></td>';
-		echo '<td><a data-cmd="deafult_sizes" class="ckeditor_control ck_reset_size" title="'.$langmessage['Theme_default_sizes'].'">&#10226;</a></td>';
-		echo '</tr>';
-		echo '<tr><td>'.$langmessage['Left'].'</td><td><input type="text" name="left" class="ck_input" value="0"/></td>';
-		echo '<td>'.$langmessage['Top'].'</td><td><input type="text" name="top" class="ck_input" value="0"/></td>';
-		echo '</tr>';
-		echo '</table>';
-		echo '</div>';
-
-		echo '<div id="gp_source_options">';
-		echo '<b>'.$langmessage['Select Image'].'</b>';
-		echo common::Link('Admin_Theme_Content/'.rawurlencode($this->curr_layout),$langmessage['Theme Images'].'..','cmd=theme_images',' data-cmd="gpajax" class="ckeditor_control half_width" ');
-		echo '<a class="ckeditor_control half_width" data-cmd="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
-		echo '</div>';
-
-		echo '<div id="gp_image_area"></div><div id="gp_upload_queue"></div>';
-
-		$content = ob_get_clean();
-
-		$page->ajaxReplace[] = array('inner','#ckeditor_top',$content);
-		$page->ajaxReplace[] = array('image_options_loaded','',''); //tell the script the images have been loaded
-	}
-
 
 	function GalleryImages(){
 		$_GET += array('dir'=>'/headers');
@@ -3889,7 +3850,6 @@ class admin_theme_content extends admin_addon_install{
 	function SaveHeaderImage(){
 		global $page, $dataDir, $dirPrefix, $langmessage;
 		includeFile('tool/Images.php');
-		includeFile('tool/editing.php');
 		$page->ajaxReplace = array();
 
 

@@ -28,7 +28,7 @@
 		$gp.loaded();
 		gp_editing.editor_tools();
 
-		$('#ckeditor_controls').prepend('<div id="gp_folder_options"></div>');
+		//$('#gp_source_options').prepend('<div id="gp_folder_options"></div>');
 
 
 

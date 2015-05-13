@@ -82,6 +82,12 @@ $gp.links.iadmin_box = function(evt,arg){
 $gp.links.inline_edit_generic = function(evt,rel){
 
 	evt.preventDefault();
+	var $body = $('body');
+	if( $body.hasClass('inline_editing') ){
+		return;
+	}
+
+	$body.addClass('inline_editing');
 	$gp.loading();
 
 

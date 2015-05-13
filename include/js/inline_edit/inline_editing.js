@@ -3,7 +3,6 @@
  * http://www.webreference.com/js/column79/4.html
  *
  */
-
 var gp_editing = {
 
 	/*

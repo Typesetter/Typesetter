@@ -506,6 +506,7 @@ class gpsession{
 		if( isset($GLOBALS['gpAdmin']['remember']) ){
 			$elapsed = time() - $GLOBALS['gpAdmin']['remember'];
 			if( $elapsed > 604800 ){ //7 days
+				$GLOBALS['gpAdmin']['remember'] = time();
 				self::cookie(gp_session_cookie,$session_id);
 			}
 		}

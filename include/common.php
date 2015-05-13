@@ -38,7 +38,7 @@ gp_defined('gp_default_theme','Three_point_5/Shore'); 	//Bootswatch_Flatly/4_Sti
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
-define('gpversion','4.5a1');
+define('gpversion','4.5b1');
 define('gp_random',common::RandomString());
 
 
@@ -2648,7 +2648,7 @@ class common{
 		//error function defined to prevent the default error function in main.js from firing
 		if( $jquery ){
 			echo '<script type="text/javascript" style="display:none !important">';
-			echo '$.ajax('.json_encode($img_path).',{error:function(){}});';
+			echo '$.ajax('.json_encode($img_path).',{error:function(){}, dataType: "jsonp"});';
 			echo '</script>';
 			return;
 		}

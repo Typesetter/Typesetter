@@ -208,7 +208,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Public Key',
 	'recaptcha_private'              => 'reCaptcha Private Key',
 	'recaptcha_language'             => 'Język reCaptcha',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Pobierz <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">klucz reCaptcha </a> aby używać CAPTCHA do weryfikacji wpisów przez formularz kontaktowy.',
 	'maximgarea'                     => 'Maksymalna wielkość wysyłanego obrazka. Obrazek 600x800 pikseli to 480\'000 pikseli kwadratowych.',

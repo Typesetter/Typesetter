@@ -208,7 +208,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha offisiell nøkkel',
 	'recaptcha_private'              => 'reCaptcha privat nøkkel',
 	'recaptcha_language'             => 'reCaptcha Language',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Hent en <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha-nøkkel</a> for å bruke verifiseringsbilde (CAPTCHA) på kontaktskjemaet.',
 	'maximgarea'                     => 'Maksimum antall kvadratpiksler for opplastede bilder. Et bilde på 600 x 800 piksler har 480,000 kv/piksler.',

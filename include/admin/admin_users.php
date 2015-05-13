@@ -255,7 +255,7 @@ class admin_users{
 	 */
 	static function SetUserPass( &$user_info, $password ){
 
-		if( function_exists('password_hash') ){
+		if( function_exists('password_hash') && $_REQUEST['algo'] == 'password_hash' ){
 			$temp					= common::hash($_POST['password'],'sha512',50);
 			$user_info['password']	= password_hash($temp,PASSWORD_DEFAULT);
 			$user_info['passhash']	= 'password_hash';
@@ -356,7 +356,7 @@ class admin_users{
 		echo '<tr><th>';
 		echo $langmessage['username'];
 		echo '</th><th>';
-		echo 'Password Algorithm';
+		echo $langmessage['Password Algorithm'];
 		echo '</th><th>';
 		echo $langmessage['permissions'];
 		echo '</th><th>';
@@ -499,6 +499,8 @@ class admin_users{
 			echo '<input type="password" name="password1" value="" class="gpinput"/>';
 			echo '</td></tr>';
 
+		$this->AlgoSelect();
+
 		$_POST['granted'] = $this->GetPostedPermissions(false);
 		$_POST['editing'] = $this->GetEditingPermissions();
 		$this->DetailsForm($_POST);
@@ -510,11 +512,50 @@ class admin_users{
 			echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit"/>';
 			echo ' <input type="reset" class="gpsubmit"/>';
 			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="gpcancel"/>';
-			echo '</td>';
-			echo '</tr>';
+			echo '</td></tr>';
 
 		echo '</table>';
 		echo '</form>';
+	}
+
+	/**
+	 * Display <select> for password algorithm
+	 *
+	 */
+	function AlgoSelect(){
+		global $langmessage;
+
+		$algos						= array();
+		if( function_exists('password_hash') ){
+			$algos['password_hash']		= true;
+			$algos['sha512']			= true;
+		}else{
+			$algos['sha512']			= true;
+			$algos['password_hash']		= false;
+		}
+
+		echo '<tr><td>';
+		echo str_replace(' ','&nbsp;',$langmessage['Password Algorithm']);
+		echo '</td><td>';
+		echo '<select name="algo" class="gpselect">';
+		foreach($algos as $algo => $avail){
+
+			$attr = '';
+			if( !$avail ){
+				$attr .= 'disabled';
+			}
+			if( $algo == $_REQUEST['algo'] ){
+				$attr .= ' selected';
+			}
+			echo '<option value="'.$algo.'" '.$attr.'>'.$algo.'</option>';
+		}
+		echo '</select>';
+
+		echo ' &nbsp; <span class="sm text-muted">password_hash requires PHP 5.5+</span>';
+
+		echo '</td></tr>';
+
+
 	}
 
 
@@ -635,6 +676,9 @@ class admin_users{
 			echo '</td><td>';
 			echo '<input type="password" name="password1" value="" class="gpinput"/>';
 			echo '</td></tr>';
+
+		$this->AlgoSelect();
+
 		echo '<tr><td>';
 			echo '</td><td>';
 			echo '<input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit" />';
@@ -661,8 +705,7 @@ class admin_users{
 			return false;
 		}
 
-		$pass_hash								= gpsession::PassAlgo($this->users[$username]);
-		$this->users[$username]['password']		= common::hash($_POST['password'],$pass_hash);
+		self::SetUserPass( $this->users[$username], $_POST['password']);
 
 		return $this->SaveUserFile();
 	}

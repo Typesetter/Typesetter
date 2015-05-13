@@ -208,7 +208,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'Clau pública reCaptcha',
 	'recaptcha_private'              => 'Clau provada reCaptcha',
 	'recaptcha_language'             => 'Idioma reCaptcha',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Aconseguiu <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">una clau reCaptcha</a> per a usar la verificació CAPTCHA al formulari de contacte.',
 	'maximgarea'                     => 'Maximum square pixels for uploaded images. A 600 x 800 pixel image has 480,000 sq/pixels.',

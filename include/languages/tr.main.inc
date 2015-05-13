@@ -214,7 +214,7 @@ continue using your old password.</p>',
 	'recaptcha_public'               => 'reCaptcha Genel Anahtarı',
 	'recaptcha_private'              => 'reCaptcha Gizli Anahtarı',
 	'recaptcha_language'             => 'Yeniden-reCaptcha Dili',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Get a <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> to use CAPTCHA verification on the contact form.',
 	'maximgarea'                     => 'Maximum square pixels for uploaded images. A 600 x 800 pixel image has 480,000 sq/pixels.',

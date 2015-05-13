@@ -208,7 +208,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'Открытый ключ reCaptcha',
 	'recaptcha_private'              => 'Личный ключ reCaptcha',
 	'recaptcha_language'             => 'Выберите язык.',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Получите <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">ключ reCaptcha</a> чтобы использовать CAPTCHA в форме контактов.',
 	'maximgarea'                     => 'Максимальное количесво пикселей для загружаемого изображения. Н/п изображение разрешением 600 х 800 имеет 480,000 пикселей.',

@@ -208,7 +208,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Public Key',
 	'recaptcha_private'              => 'reCaptcha Private Key',
 	'recaptcha_language'             => 'reCaptcha kieli',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Hae <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> käyttääksesi CAPTCHA kuvavarmennusta yhteydenottolomakkeessa.',
 	'maximgarea'                     => 'Maksimi neliöpikselimäärä lähetettäville kuville. 600 x 800 pixelin kuvassa on 480,000 neliöpikseliä.',

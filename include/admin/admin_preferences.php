@@ -141,30 +141,24 @@ class admin_preferences extends admin_users{
 
 		echo '<div>';
 		echo '<table class="bordered configuration">';
-		echo '<tr>';
-			echo '<td>';
+		echo '<tr><td>';
 			echo $langmessage['old_password'];
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo '<input type="password" name="oldpassword" value="" class="gpinput"/>';
-			echo '</td>';
-			echo '</tr>';
-		echo '<tr>';
-			echo '<td>';
+			echo '</td></tr>';
+		echo '<tr><td>';
 			echo $langmessage['new_password'];
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo '<input type="password" name="password" value="" class="gpinput"/>';
-			echo '</td>';
-			echo '</tr>';
-		echo '<tr>';
-			echo '<td>';
+			echo '</td></tr>';
+		echo '<tr><td>';
 			echo $langmessage['repeat_password'];
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo '<input type="password" name="password1" value="" class="gpinput"/>';
-			echo '</td>';
-			echo '</tr>';
+			echo '</td></tr>';
+
+		$this->AlgoSelect();
+
 		echo '</table>';
 		echo '</div>';
 

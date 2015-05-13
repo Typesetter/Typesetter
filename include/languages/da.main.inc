@@ -208,7 +208,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Offentlig nøgle',
 	'recaptcha_private'              => 'reCaptcha Private nøgle',
 	'recaptcha_language'             => 'reCAPTCHA Sprog',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Få en<a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Nøgle</a> for at bruge CAPTCHA kontrol på kontakt formular.',
 	'maximgarea'                     => 'Største kvadrat pixels for uploadede billeder. Et 600 x 800 pixels billed er på 480.000 kvadrat pixel.',

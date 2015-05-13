@@ -209,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'Clé publique reCaptcha',
 	'recaptcha_private'              => 'Clé privée reCaptcha',
 	'recaptcha_language'             => 'Langue du Captcha (cryptogramme visuel)',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Obtenir une <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">clé reCaptcha</a> pour utiliser Captcha (cryptogramme visuel) dans le formulaire.',
 	'maximgarea'                     => 'Dimension maximum (en pixels) pour les images envoyées. Une image de 600×800 contient 480 000 pixels.',

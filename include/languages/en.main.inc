@@ -105,6 +105,7 @@ $langmessage = array (
 	'new_user'                       => 'New User',
 	'invalid_username'               => 'Your username should use a combination of alphanumeric characters with optional underscore "_" and dot "." characters.',
 	'repeat_password'                => 'Repeat Password',
+	'Password Algorithm'			 => 'Password Algorithm',
 	'password'                       => 'Password',
 	'invalid_password'               => 'Oops, the passwords are either empty or don\'t match. Please try again.',
 	'permissions'                    => 'Permissions',

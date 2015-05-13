@@ -208,7 +208,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha nyilvános kulcs',
 	'recaptcha_private'              => 'reCaptcha titkos kulcs',
 	'recaptcha_language'             => 'reCaptcha nyelv',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Igénylek egy <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha kulcsot</a> a CAPTCHA ellenőrzéshez a kapcsolati űrlapon.',
 	'maximgarea'                     => 'Legnagyobb feltölthető kép négyzetpixelben. Egy 600 x 800 pixeles kép 480 000 négyzetpixel.',

@@ -209,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha avalik võti',
 	'recaptcha_private'              => 'reCaptcha privaatne võti',
 	'recaptcha_language'             => 'reCaptcha keel',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Taotle <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha võti</a>, et kasutada CAPTCHA kontrolli kontakti vormil.',
 	'maximgarea'                     => 'Üleslaaditud piltide maksimaalne ruutpikslite arv. 600 x 800 pikslisel pildil on 480 000 ruutpikslit.',

@@ -208,7 +208,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Verejný kľúč',
 	'recaptcha_private'              => 'reCaptcha Súkromný kľúč',
 	'recaptcha_language'             => 'reCaptcha jazyk',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Zaobstarajte si <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha kľúč</a> pre použitie CAPTCHA overenia na kontaktnom formulári.',
 	'maximgarea'                     => 'Maximum štvorcových pixelov pre nahraté obrázky. Obrázok 600 x 800 má 480,000 štv.pixelov.',

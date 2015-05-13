@@ -208,7 +208,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'كود reCaptcha العام',
 	'recaptcha_private'              => 'كود reCaptcha الخاص',
 	'recaptcha_language'             => 'لغة reCaptcha',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'احصل على <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> لاستخدام صورة التحقق',
 	'maximgarea'                     => 'أقصى مربع بكسل للصور التي تم تحميلها. صورة 600 × 800 بكسل و480،000 مترا مربعا / بكسل.',

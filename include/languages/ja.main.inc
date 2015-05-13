@@ -210,7 +210,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha パブリックキー',
 	'recaptcha_private'              => 'reCaptcha プライベートキー',
 	'recaptcha_language'             => 'reCaptcha 使用時の言語',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'コンタクトフォームで CAPTCHA 認証を行うには、<a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha キー</a> を取得してください。',
 	'maximgarea'                     => 'アップロードする画像の最大面積のピクセル数を設定。例)縦800ピクセルx横600ピクセルの画像ならば、面積は480,000ピクセル。',

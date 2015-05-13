@@ -208,7 +208,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha viešasis raktas (Public Key)',
 	'recaptcha_private'              => 'reCaptcha privatus raktas (Private Key)',
 	'recaptcha_language'             => 'reCaptcha kalba',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Gaukite <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Raktą</a> tam kad naudotis CAPTCHA patikros funkcija kontaktų formoje.',
 	'maximgarea'                     => 'Maksimalus kvadratinių pikselių skaičius įkeltiems vaizdams. Pvz. 600 x 800 pikselių vaizdas turi 480,000 kv./pikselių.',

@@ -145,7 +145,7 @@ class admin_uploaded{
 
 
 		//get the current path
-		$parts = str_replace( array('\\','//'),array('/','/'),$page->title);
+		$parts = str_replace( array('\\','//'),array('/','/'),$page->requested);
 		$parts = trim($parts,'/');
 		$parts = explode('/',$parts);
 		array_shift($parts);

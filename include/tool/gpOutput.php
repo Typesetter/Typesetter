@@ -1891,8 +1891,11 @@ class gpOutput{
 	static function ReturnTextWorker($key,$html,$query, $wrapper_class=''){
 		global $langmessage;
 
-		$result = '<span class="'.$wrapper_class.'">';
-		$editable = gpOutput::ShowEditLink('Admin_Theme_Content');
+		$text		= gpOutput::SelectText($key);
+		$result		= str_replace('%s',$text,$html); //in case there's more than one %s
+
+
+		$editable	= gpOutput::ShowEditLink('Admin_Theme_Content');
 		if( $editable ){
 
 			$title = htmlspecialchars(strip_tags($key));
@@ -1901,12 +1904,12 @@ class gpOutput{
 			}
 
 			gpOutput::$editlinks .= gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],$query,' title="'.$title.'" data-cmd="gpabox" ');
-			$result .= '<span class="editable_area '.$wrapper_class.'" id="ExtraEditArea'.$edit_index.'">';
+			return '<span class="editable_area '.$wrapper_class.'" id="ExtraEditArea'.$edit_index.'">'.$result.'</span>';
 		}
 
-		$text = gpOutput::SelectText($key);
-		$result .= str_replace('%s',$text,$html); //in case there's more than one %s
-		$result .= '</span>';
+		if( $wrapper_class ){
+			return '<span class="'.$wrapper_class.'">'.$result.'</span>';
+		}
 
 		return $result;
 

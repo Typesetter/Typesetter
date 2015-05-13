@@ -85,14 +85,8 @@
 	}
 
 #ckeditor_area .ckeditor_control.selected{
-
-	background: -moz-linear-gradient(top, #f7f7f7, #fff );
-	background: -webkit-linear-gradient(top, #f7f7f7, #fff );
-	background: -o-linear-gradient(top, #f7f7f7, #fff );
-	background: -ms-linear-gradient(top, #f7f7f7, #fff );
-	background: linear-gradient(top, #f7f7f7, #fff );
-
-	border-color: #dad9d9 #fafafa #fafafa #dad9d9 !important;
+	background: rgba(0,0,0,0.01);
+	border-color: #eee #f5f5f5 #f5f5f5 #eee !important;
 	font-weight:bold;
 }
 

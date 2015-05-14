@@ -1091,7 +1091,7 @@ class gp_edit{
 	 * Display a form for creating a new directory
 	 *
 	 */
-	function NewDirForm(){
+	static function NewDirForm(){
 		global $langmessage, $page;
 		includeFile('admin/admin_uploaded.php');
 

@@ -183,8 +183,9 @@
 				evt.preventDefault();
 				mousedown = true;
 
-				pos_startx = posx = field_x.value || 0;
-				pos_starty = posy = field_y.value || 0;
+				pos_startx = posx = parseInt(field_x.value || 0);
+				pos_starty = posy = parseInt(field_y.value || 0);
+
 
 				mouse_startx = evt.pageX;
 				mouse_starty = evt.pageY;
@@ -196,6 +197,7 @@
 				if( mousedown ){
 					posx = pos_startx + evt.pageX - mouse_startx;
 					posy = pos_starty + evt.pageY - mouse_starty;
+
 					SetPosition(posx,posy);
 				}
 			});

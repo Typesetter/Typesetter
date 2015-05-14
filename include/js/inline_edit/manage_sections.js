@@ -102,9 +102,10 @@
 		 */
 		MaxHeight: function(){
 			var $ckeditor_area	= $('#ckeditor_area');
-			var $section_area	= $('#section_sorting');
+			var $section_area	= $('#ckeditor_top').css('overflow','hidden'); //attempt to get rid of the scroll bar
 			var listMaxHeight	= $gp.$win.height() - $ckeditor_area.offset().top - $ckeditor_area.height() + $section_area.height() + $gp.$win.scrollTop();
 
+			$section_area.css('overflow','auto');
 			$section_area.css( 'max-height', listMaxHeight );
 		},
 

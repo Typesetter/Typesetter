@@ -160,7 +160,7 @@ class admin_permalinks{
 		}
 
 
-		if( !$gp_filesystem->ConnectOrPrompt('Admin_Permalinks') ){
+		if( !$gp_filesystem || !$gp_filesystem->ConnectOrPrompt('Admin_Permalinks') ){
 			$this->ManualMethod();
 			return false;
 		}

@@ -175,7 +175,9 @@ class editing_page extends display{
 
 			$label .= '<span>'.$type_info['label'].'</span>';
 
+			echo '<div>';
 			echo common::Link($page->title,$label,'cmd=NewSectionContent&content_type='.rawurlencode($type),array('data-cmd'=>'AddSection'));
+			echo '</div>';
 		}
 
 
@@ -217,7 +219,9 @@ class editing_page extends display{
 		$img_path = common::GetDir($img);
 		$label = '<img src="'.$img_path.'"/>';
 		$label .= '<span>'.implode(' &amp; ',$text_label).'</span>';
+		echo '<div>';
 		echo common::Link($page->title,$label,'cmd=NewNestedSection&types='.$types,array('data-cmd'=>'AddSection'));
+		echo '</div>';
 
 	}
 

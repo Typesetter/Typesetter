@@ -101,15 +101,20 @@
  * New section options
  *
  */
-#new_section_links a{
+#new_section_links > div{
 	display:inline-block;
+	max-width:96px;
+	width:50%;
+}
+
+#new_section_links a{
+	display:block;
 	border:1px solid #ddd;
 	border-radius:3px;
 	padding:0;
 	background:#fff;
 	margin:0 3px 3px 0;
 	color:#666 !important;
-	width:96px;
 	box-sizing:border-box;
 	text-align:center;
 	height:52px;

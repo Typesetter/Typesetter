@@ -125,21 +125,15 @@
 		window.setInterval(function(){
 
 			//height/width
-			var animw			= AnimValue( field_w.value, anim_values.width );
-			var animh			= AnimValue( field_h.value, anim_values.height );
-			anim_values.width	= animw;
-			anim_values.height	= animh;
-
-			edit_img.stop(true,true).animate({'width':animw,'height':animh},100);
+			anim_values.width	= AnimValue( field_w.value, anim_values.width );
+			anim_values.height	= AnimValue( field_h.value, anim_values.height );
+			edit_img.stop(true,true).animate({'width':anim_values.width,'height':anim_values.height},100);
 
 
 			//position
-			var animx			= AnimValue( field_x.value, anim_values.posx );
-			var animy			= AnimValue( field_y.value, anim_values.posy );
-			anim_values.posx	= animx;
-			anim_values.posy	= animy;
-
-			edit_img.css({'background-position':animx+'px '+animy+'px'});
+			anim_values.posx	= AnimValue( field_x.value, anim_values.posx );
+			anim_values.posy	= AnimValue( field_y.value, anim_values.posy );
+			edit_img.css({'background-position':anim_values.posx+'px '+anim_values.posy+'px'});
 
 		},100);
 

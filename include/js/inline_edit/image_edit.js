@@ -11,14 +11,14 @@
 		edit_img.addClass('gp_image_edit');
 
 		var save_obj	= {
-			src			: edit_img.attr('src'),
+			src			: edit_img.attr('src')
 			};
 
 		var anim_values = {
 			posx		: 0,
 			posy		: 0,
 			height		: 0,
-			width		: 0,
+			width		: 0
 			};
 
 

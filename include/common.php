@@ -378,7 +378,8 @@ function fix_magic_quotes( &$arr ) {
  *
  */
 function message(){
-	call_user_func_array('msg',func_get_args());
+	$args = func_get_args(); //for php previous to 5.3
+	call_user_func_array('msg',$args);
 }
 
 /**

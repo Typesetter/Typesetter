@@ -27,7 +27,7 @@
 	}
 
 #section_sorting div{
-	padding:3px 0 3px 12px;
+	padding:5px 0 3px 12px;
 	cursor:pointer;
 	white-space:nowrap;
 	overflow:hidden;
@@ -103,7 +103,7 @@
  */
 #new_section_links > div{
 	display:inline-block;
-	max-width:96px;
+	max-width:100px;
 	width:50%;
 }
 

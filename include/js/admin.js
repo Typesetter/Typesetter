@@ -941,14 +941,23 @@ $(function(){
 
 	} /* end EditOutlines */
 
+
+	/**
+	 * Get user highlighted/selected text
+	 *
+	 */
 	function getSelectionText(){
-	    var text = "";
-	    if (window.getSelection) {
-	        text = window.getSelection().toString();
-	    } else if (document.selection && document.selection.type != "Control") {
-	        text = document.selection.createRange().text;
-	    }
-	    return text;
+
+		if( window.getSelection ){
+			return window.getSelection().toString();
+		}
+
+		//ie8
+		if( document.selection && document.selection.type != 'Control' ){
+			return document.selection.createRange().text;
+		}
+
+		return '';
 	}
 
 

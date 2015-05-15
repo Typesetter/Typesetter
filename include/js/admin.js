@@ -918,6 +918,11 @@ $(function(){
 		 */
 		$gp.$doc.on('contextmenu','.editable_area, #gp_edit_overlay',function(evt){
 			if( evt.ctrlKey || evt.altKey || evt.shiftKey || gp_editor ) return;
+
+			if( getSelectionText() != '' ){
+				return;
+			}
+
 			if( lnk_span ){
 				evt.preventDefault();
 
@@ -935,6 +940,16 @@ $(function(){
 		});
 
 	} /* end EditOutlines */
+
+	function getSelectionText(){
+	    var text = "";
+	    if (window.getSelection) {
+	        text = window.getSelection().toString();
+	    } else if (document.selection && document.selection.type != "Control") {
+	        text = document.selection.createRange().text;
+	    }
+	    return text;
+	}
 
 
 	function UIEffects(){

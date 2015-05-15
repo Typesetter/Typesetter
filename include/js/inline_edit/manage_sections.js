@@ -130,6 +130,7 @@
 			$list.html(html);
 
 			$('.section_drag_area').sortable({
+				tolerance:				'pointer',
 				stop:					gp_editor.DragStop,
 				connectWith:			'.section_drag_area'
 			}).disableSelection();

@@ -169,3 +169,20 @@ div.GPAREA{
 .cf:before,.cf:after{content:"";display:table}
 .cf:after{clear:both}
 .cf{zoom:1}
+
+
+/**
+ * Columns
+ */
+
+.row{
+	box-sizing:border-box;
+	margin:0 -15px;
+	}
+
+.col-sm-6{
+	box-sizing:border-box;
+	padding:0 15px;
+	width:50%;
+	float:left;
+	}

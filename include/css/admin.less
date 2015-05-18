@@ -1055,23 +1055,34 @@ table.tablesorter th.gp_header_desc:before{
 
 #gp_edit_overlay > span{
 	position:absolute;
+	z-index:8999;
+	display:block;
+
+	/*
 	top:0;
 	right:0;
 	margin-top:-7px;
 	margin-right:-13px;
-	z-index:8999;
-	display:block;
 	background: #f1f1f1;
 	background: #f1f1f1 -moz-linear-gradient(top, #fafafa 5px, #f1f1f1 25px);
 	background: #f1f1f1 -webkit-linear-gradient(top, #fafafa 5px, #f1f1f1 25px);
 	background: #f1f1f1 -o-linear-gradient(top, #fafafa 5px, #f1f1f1 25px);
 	background: #f1f1f1 -ms-linear-gradient(top, #fafafa 5px, #f1f1f1 25px);
 	background: #f1f1f1 linear-gradient(top, #fafafa 5px, #f1f1f1 25px);
+	.box-shadow( 0 0 3px rgba(0,0,0,0.6) );
+	padding:1px;
+	*/
 	border-radius:3px;
 	overflow:hidden;
-	padding:1px;
-	.box-shadow( 0 0 3px rgba(0,0,0,0.6) );
+
+	top:0px;
+	right:1px;
+	margin:1px auto 0 auto;
+	max-width:200px;
+	background: rgba(238,238,238,0.8); /* #eee */
+	padding:5px;
 	}
+
 #gp_edit_overlay span a{
 	position:relative;
 	display:none !important;
@@ -1079,14 +1090,16 @@ table.tablesorter th.gp_header_desc:before{
 	padding:2px 17px;
 	border:1px solid transparent;
 	margin:0 24px 0 0;
-	font-size:12px !important;
+	font-size:15px !important;
 	cursor:pointer;
+	white-space:nowrap;
 	}
 
 #gp_edit_overlay span a:hover{
-	border:1px solid #d1d1d1;
 	background:#e5e5e5;
+	/*
 	border-radius:2px;
+	border:1px solid #d1d1d1;
 	background: #ddd;
 	background: #ddd -moz-linear-gradient(top, #f5f5f5 5px, #ddd 25px);
 	background: #ddd -webkit-linear-gradient(top, #f5f5f5 5px,#ddd 25px);
@@ -1094,6 +1107,7 @@ table.tablesorter th.gp_header_desc:before{
 	background: #ddd -ms-linear-gradient(top, #f5f5f5 5px,#ddd 25px);
 	background: #ddd linear-gradient(top, #f5f5f5 5px,#ddd 25px);
 	.box-shadow( inset 0 0 2px rgba(255,255,255,1) );
+	*/
 	}
 #gp_edit_overlay span.gp_hover a{
 	display:block !important;

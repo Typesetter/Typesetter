@@ -916,10 +916,6 @@ $(function(){
 		$gp.$doc.on('contextmenu','.editable_area, #gp_edit_overlay',function(evt){
 			if( evt.ctrlKey || evt.altKey || evt.shiftKey || gp_editor ) return;
 
-			if( getSelectionText() != '' ){
-				return;
-			}
-
 			if( edit_area.hasClass('gp_no_overlay') ){
 				return;
 			}
@@ -930,25 +926,6 @@ $(function(){
 		});
 
 	} /* end EditOutlines */
-
-
-	/**
-	 * Get user highlighted/selected text
-	 *
-	 */
-	function getSelectionText(){
-
-		if( window.getSelection ){
-			return window.getSelection().toString();
-		}
-
-		//ie8
-		if( document.selection && document.selection.type != 'Control' ){
-			return document.selection.createRange().text;
-		}
-
-		return '';
-	}
 
 
 	function UIEffects(){

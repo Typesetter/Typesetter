@@ -82,12 +82,10 @@ $gp.links.iadmin_box = function(evt,arg){
 $gp.links.inline_edit_generic = function(evt,rel){
 
 	evt.preventDefault();
-	var $body = $('body');
-	if( $body.hasClass('inline_editing') ){
+	if( typeof(gp_editing) !== 'undefined' ){
 		return;
 	}
 
-	$body.addClass('inline_editing');
 	$gp.loading();
 
 
@@ -831,11 +829,15 @@ $(function(){
 
 
 		/**
-		 * Display the eidt links and overlay that outlines an editable area
+		 * Display the edit links and overlay that outlines an editable area
 		 *
 		 */
 		function AreaOverlay(edit_area){
 			var id,loc,width;
+
+			if( typeof(gp_editing) !== 'undefined' ){
+				return;
+			}
 
 			//don't show overlay
 			//	- for an area that is being edited

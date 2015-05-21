@@ -307,7 +307,7 @@ class admin_configuration{
 
 
 			if( is_array($possible_value) ){
-				$this->formSelect($key,$possible_value,$value);
+				self::formSelect($key,$possible_value,$value);
 			}else{
 				switch($possible_value){
 					case 'boolean':
@@ -381,7 +381,7 @@ class admin_configuration{
 		echo '<textarea id="'.$name.'" name="'.$name.'" cols="40" rows="2" class="gptextarea show_character_count">'.htmlspecialchars($value).'</textarea><span class="character_count">'.$count_label.'</span>';
 	}
 
-	function formSelect($name,$possible,$value=null){
+	static function formSelect($name,$possible,$value=null){
 
 		echo '<div>';
 		echo "\n".'<select name="'.$name.'" class="gpselect">';
@@ -389,12 +389,12 @@ class admin_configuration{
 			echo '<option value="" selected="selected"></option>';
 		}
 
-		$this->formOptions($possible,$value);
+		self::formOptions($possible,$value);
 		echo '</select>';
 		echo '</div>';
 	}
 
-	function formOptions($array,$current_value){
+	static function formOptions($array,$current_value){
 		global $languages;
 
 		foreach($array as $key => $value){

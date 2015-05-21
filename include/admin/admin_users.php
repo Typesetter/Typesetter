@@ -96,7 +96,6 @@ class admin_users{
 
 
 		if( !$this->SaveUserFile() ){
-			message($langmessage['OOPS']);
 			return false;
 		}
 
@@ -544,7 +543,7 @@ class admin_users{
 			if( !$avail ){
 				$attr .= 'disabled';
 			}
-			if( $algo == $_REQUEST['algo'] ){
+			if( isset($_REQUEST['algo']) && $algo == $_REQUEST['algo'] ){
 				$attr .= ' selected';
 			}
 			echo '<option value="'.$algo.'" '.$attr.'>'.$algo.'</option>';

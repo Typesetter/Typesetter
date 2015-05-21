@@ -921,6 +921,9 @@ $(function(){
 			}
 
 			if( lnk_span ){
+				if( !gpui.ctx ){
+					evt.preventDefault();
+				}
 				ShowMenu();
 			}
 		});

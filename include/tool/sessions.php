@@ -862,6 +862,7 @@ class gpsession{
 		$possible['gpui_cky']	= 'integer';
 		$possible['gpui_ckd']	= 'boolean';
 
+		$possible['gpui_ctx']	= array('enabled'=>'enabled','disabled'=>'disabled');
 
 		foreach($possible as $key => $key_possible){
 
@@ -929,6 +930,10 @@ class gpsession{
 		}else{
 			echo ',dlayout:false';
 		}
+
+		//context menu
+		echo ',ctx:'.( isset($gpAdmin['gpui_ctx']) && $gpAdmin['gpui_ctx'] == 'disabled' ? 'false' : 'true' ); // disabled browser context menu
+
 		echo '};';
 	}
 

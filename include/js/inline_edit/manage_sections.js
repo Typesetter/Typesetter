@@ -293,7 +293,17 @@
 	 */
 	$gp.response.AddSection = function(data){
 		$('.loading-section').removeClass('loading-section').finish().fadeTo(700,1);
-		$('#gpx_content').append(data.CONTENT);
+
+		var $new_content	= $(data.CONTENT).appendTo('#gpx_content');
+		var top				= Math.max( 0, $new_content.position().top - 200);
+		$new_content.hide().addClass('section-highlight');
+
+		$('html,body').stop().animate({scrollTop: top},{complete:function(){
+			$new_content.slideDown(function(){
+				$new_content.removeClass('section-highlight');
+			});
+		}});
+
 		gp_editor.InitSorting();
 	}
 

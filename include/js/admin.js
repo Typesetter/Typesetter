@@ -718,7 +718,7 @@ $(function(){
 	 *
 	 */
 	function EditOutlines(){
-		var timeout = false, overlay, lnk_span=false, edit_area, highlight_box;
+		var timeout = false, overlay, lnk_span=false, edit_area, highlight_box, fixed_pos = false;
 
 		overlay = $gp.div('gp_edit_overlay');
 		overlay.click(function(evt){
@@ -792,7 +792,8 @@ $(function(){
 		 *
 		 */
 		function SpanPosition(){
-			if( !lnk_span ){
+
+			if( !lnk_span || fixed_pos ){
 				return;
 			}
 
@@ -882,7 +883,9 @@ $(function(){
 			edit_links = edit_links.clone(true)
 				.removeClass('ExtraEditLink');
 
+			fixed_pos = false;
 			lnk_span
+				.css({'left':'auto','top':0,'right':0,'position':'absolute'})
 				.html('<a class="gp_overlay_expand"></a>')
 				.append(edit_links)
 				.unbind('mouseenter touchstart')
@@ -918,16 +921,23 @@ $(function(){
 		$gp.$doc.on('contextmenu','.editable_area, #gp_edit_overlay',function(evt){
 			if( evt.ctrlKey || evt.altKey || evt.shiftKey || gp_editor ) return;
 
-			if( edit_area.hasClass('gp_no_overlay') ){
+			if( edit_area.hasClass('gp_no_overlay') || !lnk_span ){
 				return;
 			}
 
-			if( lnk_span ){
-				if( !gpui.ctx ){
-					evt.preventDefault();
+			ShowMenu();
+
+			if( !gpui.ctx ){
+				evt.preventDefault();
+				var left = evt.pageX-$gp.$win.scrollLeft();
+				var diff = left + lnk_span.width() - $gp.$win.width();
+				if( diff > 0 ){
+					left -= diff;
 				}
-				ShowMenu();
+				lnk_span.css({'top':(evt.pageY-$gp.$win.scrollTop()),'left':left,'right':'auto','position':'fixed'});
+				fixed_pos = true;
 			}
+
 		});
 
 	} /* end EditOutlines */

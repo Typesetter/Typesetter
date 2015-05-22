@@ -180,9 +180,8 @@ class editing_page extends display{
 			echo '</div>';
 		}
 
-
-		$this->NestedSectionLink('text,image','/include/imgs/section-combo-text-image.png');		//section combo: text & image
-		$this->NestedSectionLink('text,gallery','/include/imgs/section-combo-text-gallery.png');	//section combo: text & gallery
+		$this->NestedSectionLink( array('text.col-sm-6','image.col-sm-6'),'/include/imgs/section-combo-text-image.png');		//section combo: text & image
+		$this->NestedSectionLink( array('text.col-sm-6','gallery.col-sm-6'),'/include/imgs/section-combo-text-gallery.png');	//section combo: text & gallery
 
 		echo '</div>';
 		echo 'var section_types = '.json_encode(ob_get_clean()).';';
@@ -206,9 +205,15 @@ class editing_page extends display{
 
 		$section_types = section_content::GetTypes();
 
-		$_types			= explode(',',$types);
 		$text_label		= array();
-		foreach($_types as $type){
+		foreach($types as $type){
+
+			if( strpos($type,'.') ){
+				list($type,$class) = explode('.',$type,2);
+			}else{
+				$class = '';
+			}
+
 			if( isset($section_types[$type]) ){
 				$text_label[] = $section_types[$type]['label'];
 			}else{
@@ -220,9 +225,9 @@ class editing_page extends display{
 		$label = '<img src="'.$img_path.'"/>';
 		$label .= '<span>'.implode(' &amp; ',$text_label).'</span>';
 		echo '<div>';
-		echo common::Link($page->title,$label,'cmd=NewNestedSection&types='.$types,array('data-cmd'=>'AddSection'));
+		$q = array('cmd'=>'NewNestedSection','types' => $types);
+		echo common::Link($page->title,$label,http_build_query($q,'','&amp;'),array('data-cmd'=>'AddSection'));
 		echo '</div>';
-
 	}
 
 
@@ -244,25 +249,21 @@ class editing_page extends display{
 	 *
 	 */
 	function NewNestedSection(){
-		global $page;
+		global $page, $langmessage;
 		$page->ajaxReplace				= array();
 
-		$_REQUEST						+= array('types'=>'text,image');
-		$types 							= explode(',',$_REQUEST['types']);
-		$cols							= count($types);
+		if( empty($_REQUEST['types']) || !is_array($_REQUEST['types']) ){
+			message($langmessage['OOPS'].' (Invalid Types)');
+			return;
+		}
 
-		$args							= array();
-		$args['wrapper_class']			= 'row';
-		$args['col-class']				= 'col-sm-'.floor(12/$cols);
-
-
-
-		$num			= time().rand(0,10000);
-		$new_section	= gp_edit::DefaultContent('wrapper_section');
-		$content		= section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);
+		$wrapper_class		= 'row';
+		$num				= time().rand(0,10000);
+		$new_section		= gp_edit::DefaultContent('wrapper_section');
+		$content			= section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);
 
 
-		$new_section['attributes']['class']		.= ' '.$args['wrapper_class'];
+		$new_section['attributes']['class']		.= ' '.$wrapper_class;
 		$orig_attrs								= json_encode($new_section['attributes']);
 
 		$new_section['attributes']['id']		= 'rand-'.time().rand(0,10000);
@@ -272,8 +273,15 @@ class editing_page extends display{
 
 		ob_start();
 		echo '<div'.section_content::SectionAttributes($new_section['attributes'],$new_section['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>';
-		foreach($types as $type){
-			echo $this->GetNewSection($type, $args['col-class']);
+		foreach($_REQUEST['types'] as $type){
+
+			if( strpos($type,'.') ){
+				list($type,$class) = explode('.',$type,2);
+			}else{
+				$class = '';
+			}
+
+			echo $this->GetNewSection($type, $class);
 		}
 		echo '</div>';
 

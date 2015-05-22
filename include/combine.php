@@ -365,7 +365,7 @@ class gp_combine{
 		}
 
 		//check to see if file exists
-		$etag = common::GenEtag( count($files), $modified, $content_length );
+		$etag = common::GenEtag( json_encode($files), $modified, $content_length );
 		$cache_relative = '/data/_cache/combined_'.$etag.'.'.$type;
 		$cache_file = $dataDir.$cache_relative;
 		if( file_exists($cache_file) ){

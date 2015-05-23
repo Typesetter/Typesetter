@@ -299,7 +299,7 @@
 		$new_content.hide().addClass('section-highlight');
 
 		$('html,body').stop().animate({scrollTop: top},{complete:function(){
-			$new_content.slideDown(function(){
+			$new_content.delay(200).slideDown(function(){
 				$new_content.removeClass('section-highlight');
 			});
 		}});

@@ -180,8 +180,8 @@ class editing_page extends display{
 			echo '</div>';
 		}
 
-		$this->NestedSectionLink( array('text.col-sm-6','image.col-sm-6'),'/include/imgs/section-combo-text-image.png');		//section combo: text & image
-		$this->NestedSectionLink( array('text.col-sm-6','gallery.col-sm-6'),'/include/imgs/section-combo-text-gallery.png');	//section combo: text & gallery
+		$this->NestedSectionLink( array('text.col-sm-6','image.col-sm-6'),'/include/imgs/section-combo-text-image.png' );		//section combo: text & image
+		$this->NestedSectionLink( array('text.col-sm-6','gallery.col-sm-6'),'/include/imgs/section-combo-text-gallery.png' );	//section combo: text & gallery
 
 		echo '</div>';
 		echo 'var section_types = '.json_encode(ob_get_clean()).';';
@@ -201,7 +201,7 @@ class editing_page extends display{
 	 * Add link to manage section admin for nested section type
 	 *
 	 */
-	function NestedSectionLink($types, $img){
+	function NestedSectionLink($types, $img, $wrapper_class = 'row' ){
 
 		$section_types = section_content::GetTypes();
 
@@ -225,7 +225,7 @@ class editing_page extends display{
 		$label = '<img src="'.$img_path.'"/>';
 		$label .= '<span>'.implode(' &amp; ',$text_label).'</span>';
 		echo '<div>';
-		$q = array('cmd'=>'NewNestedSection','types' => $types);
+		$q = array('cmd'=>'NewNestedSection','types' => $types,'wrapper_class'=>$wrapper_class);
 		echo common::Link($page->title,$label,http_build_query($q,'','&amp;'),array('data-cmd'=>'AddSection'));
 		echo '</div>';
 	}
@@ -257,7 +257,9 @@ class editing_page extends display{
 			return;
 		}
 
-		$wrapper_class		= 'row';
+		$_REQUEST			+= array('wrapper_class'=>'row');
+
+		$wrapper_class		= $_REQUEST['wrapper_class'];
 		$num				= time().rand(0,10000);
 		$new_section		= gp_edit::DefaultContent('wrapper_section');
 		$content			= section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);

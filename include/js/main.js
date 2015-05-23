@@ -30,8 +30,14 @@ var $gp = {
 	 *
 	 */
 	cGoTo : function(a,samepage){
-		var $link = $(a);
-		var query = a.search +'&verified='+encodeURIComponent($link.data('nonce'));
+
+		var $link	= $(a);
+		var query	= a.search;
+		var nonce	= $link.data('nonce');
+		if( nonce ){
+			query	+= '&verified='+encodeURIComponent(nonce);
+		}
+
 		$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
 
 		if( samepage ){

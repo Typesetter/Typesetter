@@ -18,12 +18,12 @@ if( function_exists('mb_internal_encoding') ){
 class SimpleBlogCommon{
 
 	var $indexFile;
-	static $data = false;
-	static $root_url = 'Special_Blog';
+	static $data		= false;
+	static $root_url	= 'Special_Blog';
 
-	var $new_install = false;
+	var $new_install	= false;
 	var $addonPathData;
-	var $post_id = false;
+	var $post_id		= false;
 
 
 	static $months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
@@ -131,7 +131,7 @@ class SimpleBlogCommon{
 	 */
 	function DataUpdate20(){
 
-		$comment_counts = array();
+		$comment_counts	= array();
 		$comments_closed = array();
 		if( isset(SimpleBlogCommon::$data['post_info']) && is_array(SimpleBlogCommon::$data['post_info']) ){
 			foreach(SimpleBlogCommon::$data['post_info'] as $post_id => $info){
@@ -600,22 +600,18 @@ class SimpleBlogCommon{
 	function EditPost(){
 		global $langmessage;
 
-		$posts = $this->GetPostFile($this->post_id,$post_file);
-		if( $posts === false ){
+		$post				= $this->GetPostContent($this->post_id);
+
+		if( $post === false ){
 			message($langmessage['OOPS']);
 			return;
 		}
 
-		if( !isset($posts[$this->post_id]) ){
-			message($langmessage['OOPS']);
-			return;
-		}
-
-		$post['isDraft'] = SimpleBlogCommon::AStrValue('drafts',$this->post_id);
-		$_POST += $posts[$this->post_id];
+		$post['isDraft']	= SimpleBlogCommon::AStrValue('drafts',$this->post_id);
+		$_POST				+= $post;
+		$title				= htmlspecialchars($_POST['title'],ENT_COMPAT,'UTF-8',false);
 
 		echo '<h2>';
-		$title = htmlspecialchars($_POST['title'],ENT_COMPAT,'UTF-8',false);
 		echo SimpleBlogCommon::PostLink($this->post_id,$title);
 		echo ' &#187; ';
 		echo 'Edit Post</h2>';
@@ -727,16 +723,11 @@ class SimpleBlogCommon{
 
 		foreach($show_posts as $post_index){
 
-			//get $posts
-			if( !isset($posts[$post_index]) ){
-				$posts = $this->GetPostFile($post_index,$post_file);
-			}
+			$post = $this->GetPostContent($post_index);
 
-			if( !isset($posts[$post_index]) ){
+			if( !$post ){
 				continue;
 			}
-
-			$post =& $posts[$post_index];
 
 			echo '<entry>'."\n";
 			echo '<title>'.SimpleBlogCommon::Underscores( $post['title'] ).'</title>'."\n";
@@ -868,21 +859,16 @@ class SimpleBlogCommon{
 
 		foreach($show_posts as $post_index){
 
-			//get $posts
-			if( !isset($posts[$post_index]) ){
-				$posts = $this->GetPostFile($post_index,$post_file);
-			}
+			$post		= $this->GetPostContent($post_index);
 
-			if( !isset($posts[$post_index]) ){
+			if( !$post ){
 				continue;
 			}
 
-			$post =& $posts[$post_index];
-
-			$header = '<b class="simple_blog_title">';
-			$label = SimpleBlogCommon::Underscores( $post['title'] );
-			$header .= SimpleBlogCommon::PostLink($post_index,$label);
-			$header .= '</b>';
+			$header		= '<b class="simple_blog_title">';
+			$label		= SimpleBlogCommon::Underscores( $post['title'] );
+			$header		.= SimpleBlogCommon::PostLink($post_index,$label);
+			$header		.= '</b>';
 
 			$this->BlogHead($header,$post_index,$post,true);
 

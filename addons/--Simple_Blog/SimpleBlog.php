@@ -30,8 +30,9 @@ class SimpleBlog extends SimpleBlogCommon{
 		}
 
 
-		$cmd = common::GetCommand();
-		$show = true;
+		$cmd	= common::GetCommand();
+		$show	= true;
+
 		if( common::LoggedIn() ){
 
 			switch($cmd){
@@ -40,6 +41,7 @@ class SimpleBlog extends SimpleBlogCommon{
 				case 'inlineedit':
 					$this->InlineEdit();
 				die();
+				case 'save_inline':
 				case 'save':
 					$this->SaveInline();
 				break;
@@ -132,18 +134,12 @@ class SimpleBlog extends SimpleBlogCommon{
 	function ShowPost($cmd){
 		global $langmessage, $page;
 
-		$posts = $this->GetPostFile($this->post_id,$post_file);
-		if( $posts === false ){
+		$post	= $this->GetPostContent($this->post_id);
+
+		if( $post === false ){
 			message($langmessage['OOPS']);
 			return;
 		}
-
-
-		if( !isset($posts[$this->post_id]) ){
-			message($langmessage['OOPS']);
-			return;
-		}
-
 
 		$commentSaved = false;
 		switch($cmd){
@@ -185,7 +181,8 @@ class SimpleBlog extends SimpleBlogCommon{
 
 
 
-		$post =& $posts[$this->post_id];
+		$post	= $this->GetPostContent($this->post_id);
+
 		if( !common::LoggedIn() && SimpleBlogCommon::AStrValue('drafts',$this->post_id) ){
 			//How to make 404 page?
 			message($langmessage['OOPS']);
@@ -474,19 +471,15 @@ class SimpleBlog extends SimpleBlogCommon{
 	}
 
 
-
+	/**
+	 * Output the blog posts in the array $post_list
+	 *
+	 */
 	function ShowPosts($post_list){
 
 		$posts = array();
 		foreach($post_list as $post_index){
-
-			//get $posts
-			if( !isset($posts[$post_index]) ){
-				$posts = $this->GetPostFile($post_index,$post_file);
-			}
-
-			$post =& $posts[$post_index];
-
+			$post	= $this->GetPostContent($post_index);
 			$this->ShowPostContent( $post, $post_index, SimpleBlogCommon::$data['post_abbrev'] );
 		}
 

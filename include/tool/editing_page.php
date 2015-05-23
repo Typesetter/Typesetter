@@ -153,36 +153,29 @@ class editing_page extends display{
 	 *
 	 */
 	function ManageSections(){
-		global $langmessage, $page, $dataDir;
+		global $langmessage, $page;
 
 		includeFile('tool/ajax.php');
 
 
 		//section types
-		$section_types = section_content::GetTypes();
-		ob_start();
-		echo '<div id="new_section_links" style="display:none" class="inline_edit_area" title="Add">';
+		$section_types	= section_content::GetTypes();
+		$links			= array();
 		foreach($section_types as $type => $type_info){
-
 			$img_rel	= '/include/imgs/section-'.$type.'.png';
-			$img_full	= $dataDir.$img_rel;
-
-			$label = '';
-			if( file_exists($img_full) ){
-				$img_path = common::GetDir($img_rel);
-				$label = '<img src="'.$img_path.'"/>';
-			}
-
-			$label .= '<span>'.$type_info['label'].'</span>';
-
-			echo '<div>';
-			echo common::Link($page->title,$label,'cmd=NewSectionContent&content_type='.rawurlencode($type),array('data-cmd'=>'AddSection'));
-			echo '</div>';
+			$links[]	= $this->NewSectionLink( $type, $img_rel );
 		}
 
-		$this->NestedSectionLink( array('text.col-sm-6','image.col-sm-6'),'/include/imgs/section-combo-text-image.png' );		//section combo: text & image
-		$this->NestedSectionLink( array('text.col-sm-6','gallery.col-sm-6'),'/include/imgs/section-combo-text-gallery.png' );	//section combo: text & gallery
+		$links[]		= $this->NewSectionLink( array('text.col-sm-6','image.col-sm-6'),'/include/imgs/section-combo-text-image.png' );		//section combo: text & image
+		$links[]		= $this->NewSectionLink( array('text.col-sm-6','gallery.col-sm-6'),'/include/imgs/section-combo-text-gallery.png' );	//section combo: text & gallery
 
+
+		$links = gpPlugin::Filter('ManageSections',array($links));
+
+		//output links
+		ob_start();
+		echo '<div id="new_section_links" style="display:none" class="inline_edit_area" title="Add">';
+		echo implode('',$links);
 		echo '</div>';
 		echo 'var section_types = '.json_encode(ob_get_clean()).';';
 
@@ -201,11 +194,13 @@ class editing_page extends display{
 	 * Add link to manage section admin for nested section type
 	 *
 	 */
-	function NestedSectionLink($types, $img, $wrapper_class = 'row' ){
+	function NewSectionLink($types, $img, $wrapper_class = 'row' ){
+		global $dataDir;
 
-		$section_types = section_content::GetTypes();
-
+		$types			= (array)$types;
+		$section_types	= section_content::GetTypes();
 		$text_label		= array();
+
 		foreach($types as $type){
 
 			if( strpos($type,'.') ){
@@ -221,13 +216,21 @@ class editing_page extends display{
 			}
 		}
 
-		$img_path = common::GetDir($img);
-		$label = '<img src="'.$img_path.'"/>';
-		$label .= '<span>'.implode(' &amp; ',$text_label).'</span>';
-		echo '<div>';
-		$q = array('cmd'=>'NewNestedSection','types' => $types,'wrapper_class'=>$wrapper_class);
-		echo common::Link($page->title,$label,http_build_query($q,'','&amp;'),array('data-cmd'=>'AddSection'));
-		echo '</div>';
+		if( count($types) > 1 ){
+			$q = array('cmd'=>'NewNestedSection','types' => $types,'wrapper_class'=>$wrapper_class);
+		}else{
+			$q = array('cmd'=> 'NewSectionContent','type' => $type );
+		}
+
+
+		$label			= '';
+		$img_full		= $dataDir.$img;
+		if( file_exists($img_full) ){
+			$label		= '<img src="'.common::GetDir($img).'"/>';
+		}
+		$label			.= '<span>'.implode(' &amp; ',$text_label).'</span>';
+
+		return '<div>'.common::Link($page->title,$label,http_build_query($q,'','&amp;'),array('data-cmd'=>'AddSection')).'</div>';
 	}
 
 
@@ -239,7 +242,7 @@ class editing_page extends display{
 		global $page;
 
 		$page->ajaxReplace		= array();
-		$content				= $this->GetNewSection($_REQUEST['content_type']);
+		$content				= $this->GetNewSection($_REQUEST['type']);
 		$page->ajaxReplace[] 	= array('AddSection','',$content);
 	}
 

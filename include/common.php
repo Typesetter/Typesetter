@@ -67,6 +67,7 @@ $languages = array(
 	'es' => 'Español',
 	'et' => 'eesti',			# Estonian
 	'fi' => 'Suomi',			# Finnish
+	'fo' => 'Føroyskt',			# Faroese
 	'fr' => 'Français',
 	'gl' => 'Galego',			# Galician
 	'hr' => 'hrvatski',			# Croatian

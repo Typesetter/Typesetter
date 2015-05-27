@@ -353,7 +353,7 @@ class editing_page extends display{
 			}else{
 
 				if( !isset($section_types[$arg]) ){
-					message($langmessage['OOPS'].' (Unknown Type)');
+					message($langmessage['OOPS'].' (Unknown Type: '.$arg.')');
 					return false;
 				}
 				$new_section	= gp_edit::DefaultContent($arg);

@@ -38,6 +38,10 @@
 				var type	= gp_editor.TypeFromClass(this);
 				var value	= $this.data('gp-section');
 
+				if( !type ){
+					return;
+				}
+
 				if( typeof(value) == 'undefined' ){
 					value = type;
 				}

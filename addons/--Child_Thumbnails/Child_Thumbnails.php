@@ -43,6 +43,7 @@ class Child_Thumbnails{
 	 *
 	 */
 	function Child($title){
+		global $dirPrefix;
 		$file = gpFiles::PageFile($title);
 
 		$file_sections = $file_stats = array();
@@ -71,6 +72,11 @@ class Child_Thumbnails{
 		}
 		$src_pos = strpos($src,$quote,1);
 		$src = substr($src,1,$src_pos-1);
+
+		// check for resized image, get original source if img is resized
+		if( strpos($src,'image.php') !== false && strpos($src,'img=') !== false ){
+			$src = $dirPrefix . '/data/_uploaded/' . urldecode(substr($src,strpos($src,'img=')+4));
+		}
 
 		$thumb_path = common::ThumbnailPath($src);
 

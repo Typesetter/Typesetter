@@ -2101,21 +2101,28 @@ class gpOutput{
 			echo ';';
 		}
 
+		$inline = ob_get_clean();
+
+		if( !empty($inline) ){
+			echo "\n<script>\n".$inline."\n</script>";
+		}
+
+
+
+		ob_start();
 		echo $page->head_script;
 
 		if( !empty($page->jQueryCode) ){
 			echo '$(function(){';
+			echo ' var test = {"id"}';
 			echo $page->jQueryCode;
 			echo '});';
 		}
 
 		$inline = ob_get_clean();
-
-
+		$inline = ltrim($inline);
 		if( !empty($inline) ){
-			echo "\n<script type=\"text/javascript\">\n";
-			echo $inline;
-			echo "\n</script>";
+			echo "\n<script>\n".$inline."\n</script>\n";
 		}
 	}
 

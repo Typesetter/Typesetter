@@ -121,6 +121,7 @@ class admin_preferences extends admin_users{
 			$array = $_POST;
 		}else{
 			$array = $this->user_info + $gpAdmin;
+			$array += array('gpui_ctx' => 'enabled' );
 
 		}
 		$array += array('email'=>'');

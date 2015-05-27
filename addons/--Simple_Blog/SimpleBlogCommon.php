@@ -3,10 +3,6 @@ defined('is_running') or die('Not an entry point...');
 
 includeFile('tool/recaptcha.php');
 
-if( function_exists('mb_internal_encoding') ){
-	mb_internal_encoding('UTF-8');
-}
-
 /**
  * To Do
  *
@@ -45,8 +41,8 @@ class SimpleBlogCommon{
 	function Init(){
 		global $addonPathData;
 
-		$this->addonPathData = $addonPathData;
-		$this->indexFile = $this->addonPathData.'/index.php';
+		$this->addonPathData	= $addonPathData;
+		$this->indexFile		= $this->addonPathData.'/index.php';
 
 		if( SimpleBlogCommon::$data ){
 			return;
@@ -63,15 +59,19 @@ class SimpleBlogCommon{
 	}
 
 
+	/**
+	 * Add css and some js to the page
+	 *
+	 */
 	static function AddCSS(){
 		global $addonFolderName,$page;
 
-		static $added = false;
+		static $added			= false;
+
 		if( !$added ){
-			//$page->head_script .= 'gplinks.blog_gadget = function(){$(this).next(".nodisplay").toggle();};';
-			$page->jQueryCode .= '$(".blog_gadget_link").click(function(){ $(this).next(".nodisplay").toggle(); });';
-			$page->css_user[] = '/data/_addoncode/'.$addonFolderName.'/style.css';
-			$added = true;
+			$page->jQueryCode	.= '$(".blog_gadget_link").click(function(){ $(this).next(".nodisplay").toggle(); });';
+			$page->css_user[]	= '/data/_addoncode/'.$addonFolderName.'/style.css';
+			$added				= true;
 		}
 	}
 

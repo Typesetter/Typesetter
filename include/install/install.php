@@ -17,6 +17,7 @@ includeFile('tool/ftp.php');
 <head>
 <title>gpEasy Installation</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta name="robots" content="noindex,nofollow"/>
 <script type="text/javascript">
 
 function toggleOptions(){

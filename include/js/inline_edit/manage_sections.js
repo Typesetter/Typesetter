@@ -396,6 +396,8 @@
 		html += '</form></div>';
 
 		$gp.AdminBoxC(html);
+
+		$(document).trigger("section_options:loaded");
 	}
 
 	/**

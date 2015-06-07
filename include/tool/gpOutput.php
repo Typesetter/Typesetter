@@ -2114,7 +2114,6 @@ class gpOutput{
 
 		if( !empty($page->jQueryCode) ){
 			echo '$(function(){';
-			echo ' var test = {"id"}';
 			echo $page->jQueryCode;
 			echo '});';
 		}

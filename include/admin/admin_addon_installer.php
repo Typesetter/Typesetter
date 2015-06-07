@@ -1195,6 +1195,7 @@ class admin_addon_installer extends admin_addons_tool{
 			$link_array['method'] = $method;
 		}
 
+
 		if( !empty($new_info['value']) ){
 			$link_array['value'] = $new_info['value'];
 		}
@@ -1266,11 +1267,10 @@ class admin_addon_installer extends admin_addons_tool{
 				$result[$linkName]['class'] = $linkInfo['class'];
 			}
 
-			/*	method only available for gadgets as of 1.7b1
 			if( isset($linkInfo['method']) ){
 				$result[$linkName]['method'] = $linkInfo['method'];
 			}
-			*/
+
 
 			if( $linkType ){
 				$result[$linkName]['type'] = $linkType;

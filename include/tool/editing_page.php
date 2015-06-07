@@ -166,8 +166,8 @@ class editing_page extends display{
 			$links[]	= $this->NewSectionLink( $type, $img_rel );
 		}
 
-		$links[]		= $this->NewSectionLink( array('text.col-sm-6','image.col-sm-6'),'/include/imgs/section-combo-text-image.png' );		//section combo: text & image
-		$links[]		= $this->NewSectionLink( array('text.col-sm-6','gallery.col-sm-6'),'/include/imgs/section-combo-text-gallery.png' );	//section combo: text & gallery
+		$links[]		= $this->NewSectionLink( array('text.gpCol-6','image.gpCol-6'),'/include/imgs/section-combo-text-image.png' );		//section combo: text & image
+		$links[]		= $this->NewSectionLink( array('text.gpCol-6','gallery.gpCol-6'),'/include/imgs/section-combo-text-gallery.png' );	//section combo: text & gallery
 
 
 		$links = gpPlugin::Filter('ManageSections',array($links));
@@ -194,7 +194,7 @@ class editing_page extends display{
 	 * Add link to manage section admin for nested section type
 	 *
 	 */
-	function NewSectionLink($types, $img, $wrapper_class = 'row' ){
+	function NewSectionLink($types, $img, $wrapper_class = 'gpRow' ){
 		global $dataDir;
 
 		$types			= (array)$types;

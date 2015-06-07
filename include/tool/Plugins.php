@@ -82,6 +82,10 @@ class gpPlugin{
 		}
 	}
 
+	static function GetDir($path='',$ampersands = false){
+		$path = self::$current['code_folder_part'].'/'.ltrim($path,'/');
+		return common::GetDir($path, $ampersands);
+	}
 
 	/**
 	 * Similar to php's register_shutdown_function()

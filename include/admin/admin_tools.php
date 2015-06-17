@@ -1355,8 +1355,8 @@ class admin_tools{
 	static function GetAddonSubLinks($addon=false){
 		global $config;
 
-		$special_links = admin_tools::GetAddonTitles( $addon);
-		$admin_links = admin_tools::GetAddonComponents( $config['admin_links'], $addon);
+		$special_links	= admin_tools::GetAddonTitles( $addon);
+		$admin_links	= admin_tools::GetAddonComponents( $config['admin_links'], $addon);
 
 
 		$result = '';
@@ -1411,11 +1411,12 @@ class admin_tools{
 	 *
 	 */
 	static function GetAddonComponents($from,$addon){
+		$result = array();
+
 		if( !is_array($from) ){
-			return;
+			return $result;
 		}
 
-		$result = array();
 		foreach($from as $name => $value){
 			if( !is_array($value) ){
 				continue;

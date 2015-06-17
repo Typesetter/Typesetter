@@ -99,13 +99,13 @@
 				var $current = $('#'+current_id);
 			}
 
-			if( !$current.length ){
+			if( !current_id || !$current.length ){
 
 				if( current_index > 0 ){
 					$current = $('#admin_menu .gp_label').eq(current_index).parent();
 				}
 
-				if( !$current.length ){
+				if( !$current || !$current.length ){
 					$current = $('.gp_label:first').parent();
 				}
 			}

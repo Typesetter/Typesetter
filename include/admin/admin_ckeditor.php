@@ -164,17 +164,24 @@ class admin_ckeditor{
 
 
 		// get plugin name and check file types
-		$plugin_name = false;
-		$remove_path = '';
-		$list = $archive->listContent();
+		$plugin_name	= false;
+		$remove_path	= '';
+		$list			= $archive->listContent();
 		foreach($list as $file){
 
 			//plugin name
-			if( !$plugin_name && strpos($file['filename'],'plugin.js') !== false ){
-				$plugin_name = $this->FindPluginName($archive, $file);
-				if( !$plugin_name ){
-					message($langmessage['OOPS'].' (Couldn\'t find plugin name)');
-					return;
+			if( strpos($file['filename'],'plugin.js') !== false ){
+
+				$new_plugin_name = $this->FindPluginName($archive, $file);
+				if( !$new_plugin_name ){
+					continue;
+				}
+
+				//use the most relevant plugin name
+				$new_path	= dirname($file['filename']);
+				if( !$plugin_name || strlen($new_path) < strlen($remove_path) ){
+					$plugin_name	= $new_plugin_name;
+					$remove_path	= $new_path;
 				}
 			}
 
@@ -190,13 +197,6 @@ class admin_ckeditor{
 			}
 
 		}
-
-
-
-
-		//message('remove path: '.$remove_path);
-		//message('plugin name: '.$plugin_name);
-		//return;
 
 		if( !$plugin_name ){
 			message($langmessage['OOPS'].' (Unknown plugin name)');
@@ -219,6 +219,8 @@ class admin_ckeditor{
 			return;
 		}
 
+		//extract
+
 
 		// extract
 		$return = $archive->extract( PCLZIP_OPT_PATH, $destination, PCLZIP_OPT_REMOVE_PATH, $remove_path );
@@ -237,6 +239,7 @@ class admin_ckeditor{
 		if( !array_key_exists( $plugin_name, $this->cke_config['plugins'] ) ){
 			$this->cke_config['plugins'][$plugin_name] = array('installed'=>time());
 		}
+
 		$this->cke_config['plugins'][$plugin_name]['updated'] = time();
 		$this->SaveConfig();
 
@@ -249,6 +252,9 @@ class admin_ckeditor{
 
 	}
 
+	/**
+	 *
+	 */
 	function FindPluginName($archive, $file){
 		$file = $archive->extractByIndex($file['index'], PCLZIP_OPT_EXTRACT_AS_STRING);
 		if( !$file ){
@@ -390,7 +396,7 @@ class admin_ckeditor{
 	 */
 	function Init(){
 
-		$this->config_file	= '/data/_ckeditor/config';
+		$this->config_file	= '_ckeditor/config';
 		$this->cke_config	= gpFiles::Get($this->config_file,'cke_config');
 
 		//$this->cke_config += array('custom_config'=>array());

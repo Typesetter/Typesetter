@@ -670,7 +670,6 @@ class gp_edit{
 		$options = $admin_config['custom_config'] + $options;
 		$options['extraPlugins'] = implode(',',$extra_plugins);
 
-
 		//browser paths
 		if( $options['browser'] ){
 			$options['filebrowserBrowseUrl'] = common::GetUrl('Admin_Browser').'?type=all';

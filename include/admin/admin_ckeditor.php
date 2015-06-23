@@ -178,6 +178,11 @@ class admin_ckeditor{
 				}
 			}
 
+			//don't check extensions on folder
+			if( isset($file['folder']) && $file['folder'] ){
+				continue;
+			}
+
 
 			if( !admin_uploaded::AllowedExtension($file['filename'], false) ){
 				message($langmessage['OOPS'].' (File type not allowed:'.htmlspecialchars($file['filename']).')');

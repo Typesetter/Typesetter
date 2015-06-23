@@ -5,6 +5,7 @@ global $page;
 ?><!DOCTYPE html>
 <html>
 <head>
+<meta name="robots" content="noindex,nofollow"/>
 
 <style type="text/css">
 

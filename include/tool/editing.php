@@ -623,7 +623,7 @@ class gp_edit{
 															array('Link','Unlink','Anchor','Image','Flash','Table'), //'CreatePlaceholder'
 															array('Format','Font','FontSize'),
 															array('JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','NumberedList','BulletedList','Outdent','Indent'),
-															array('Bold','Italic','Underline','Strike','Blockquote','Subscript','Superscript')
+															array('Bold','Italic','Underline','Strike','Blockquote','Subscript','Superscript','About')
 														),
 						/*
 						'toolbar'					=> array(

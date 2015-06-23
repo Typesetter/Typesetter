@@ -22,7 +22,7 @@ class SimpleBlogCommon{
 	var $post_id		= false;
 
 
-	static $months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+	static $months		= array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
 
 
 	/**

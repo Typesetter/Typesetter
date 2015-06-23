@@ -41,9 +41,10 @@ class section_content{
 
 
 		if( $section_data['type'] == 'wrapper_section' ){
-
-			for( $cc=0; $cc < $section_data['contains_sections']; $cc++ ){
-				$content			.= self::GetSection($sections, $section_num);
+			if( isset($section_data['contains_sections']) ){
+				for( $cc=0; $cc < $section_data['contains_sections']; $cc++ ){
+					$content			.= self::GetSection($sections, $section_num);
+				}
 			}
 		}else{
 			$content				.= self::SectionToContent($section_data,$curr_section_num);

@@ -158,24 +158,10 @@ class editing_page extends display{
 		includeFile('tool/ajax.php');
 
 
-		//section types
-		$section_types	= section_content::GetTypes();
-		$links			= array();
-		foreach($section_types as $type => $type_info){
-			$img_rel	= '/include/imgs/section-'.$type.'.png';
-			$links[]	= $this->NewSectionLink( $type, $img_rel );
-		}
-
-		$links[]		= $this->NewSectionLink( array('text.gpCol-6','image.gpCol-6'),'/include/imgs/section-combo-text-image.png' );		//section combo: text & image
-		$links[]		= $this->NewSectionLink( array('text.gpCol-6','gallery.gpCol-6'),'/include/imgs/section-combo-text-gallery.png' );	//section combo: text & gallery
-
-
-		$links = gpPlugin::Filter('ManageSections',array($links));
-
 		//output links
 		ob_start();
 		echo '<div id="new_section_links" style="display:none" class="inline_edit_area" title="Add">';
-		echo implode('',$links);
+		self::SectionTypes();
 		echo '</div>';
 		echo 'var section_types = '.json_encode(ob_get_clean()).';';
 
@@ -188,49 +174,6 @@ class editing_page extends display{
 
 		gpAjax::SendScripts($scripts);
 		die();
-	}
-
-	/**
-	 * Add link to manage section admin for nested section type
-	 *
-	 */
-	function NewSectionLink($types, $img, $wrapper_class = 'gpRow' ){
-		global $dataDir;
-
-		$types			= (array)$types;
-		$section_types	= section_content::GetTypes();
-		$text_label		= array();
-
-		foreach($types as $type){
-
-			if( strpos($type,'.') ){
-				list($type,$class) = explode('.',$type,2);
-			}else{
-				$class = '';
-			}
-
-			if( isset($section_types[$type]) ){
-				$text_label[] = $section_types[$type]['label'];
-			}else{
-				$text_label[] = $type;
-			}
-		}
-
-		if( count($types) > 1 ){
-			$q = array('cmd'=>'NewNestedSection','types' => $types,'wrapper_class'=>$wrapper_class);
-		}else{
-			$q = array('cmd'=> 'NewSectionContent','type' => $type );
-		}
-
-
-		$label			= '';
-		$img_full		= $dataDir.$img;
-		if( file_exists($img_full) ){
-			$label		= '<img src="'.common::GetDir($img).'"/>';
-		}
-		$label			.= '<span>'.implode(' &amp; ',$text_label).'</span>';
-
-		return '<div>'.common::Link($page->title,$label,http_build_query($q,'','&amp;'),array('data-cmd'=>'AddSection')).'</div>';
 	}
 
 
@@ -260,7 +203,7 @@ class editing_page extends display{
 			return;
 		}
 
-		$_REQUEST			+= array('wrapper_class'=>'row');
+		$_REQUEST			+= array('wrapper_class'=>'gpRow');
 
 		$wrapper_class		= $_REQUEST['wrapper_class'];
 		$num				= time().rand(0,10000);
@@ -554,20 +497,92 @@ class editing_page extends display{
 	 * Return a list of section types
 	 * @static
 	 */
-	static function SectionTypes(){
-		global $langmessage;
+	static function SectionTypes($checkboxes = false){
 
-		$section_types = section_content::GetTypes();
-
-		$checked = 'checked="checked"';
+		$section_types	= section_content::GetTypes();
+		$links			= array();
 		foreach($section_types as $type => $type_info){
-			echo '<label>';
-			echo '<input type="radio" name="content_type" value="'.htmlspecialchars($type).'" '.$checked.'/> ';
-			echo htmlspecialchars($type_info['label']);
-			echo '</label>';
-			$checked = '';
+			$img_rel	= '/include/imgs/section-'.$type.'.png';
+			$links[]	= array( $type, $img_rel );
+		}
+
+		$links[]		= array( array('text.gpCol-6','image.gpCol-6'),'/include/imgs/section-combo-text-image.png' );
+		$links[]		= array( array('text.gpCol-6','gallery.gpCol-6'),'/include/imgs/section-combo-text-gallery.png' );	//section combo: text & gallery
+
+		$links			= gpPlugin::Filter('NewSections',array($links));
+		foreach($links as $link){
+			$link += array('','','gpRow');
+			echo self::NewSectionLink( $link[0], $link[1], $link[2], $checkboxes );
 		}
 	}
+
+
+	/**
+	 * Add link to manage section admin for nested section type
+	 *
+	 */
+	static function NewSectionLink($types, $img, $wrapper_class = 'gpRow', $checkbox = false ){
+		global $dataDir, $page;
+
+		$types			= (array)$types;
+		$section_types	= section_content::GetTypes();
+		$text_label		= array();
+
+		foreach($types as $type){
+
+			if( strpos($type,'.') ){
+				list($type,$class) = explode('.',$type,2);
+			}else{
+				$class = '';
+			}
+
+			if( isset($section_types[$type]) ){
+				$text_label[] = $section_types[$type]['label'];
+			}else{
+				$text_label[] = $type;
+			}
+		}
+
+		$label			= '';
+		if( !empty($img) ){
+			$img_full		= $dataDir.$img;
+			if( file_exists($img_full) ){
+				$label		= '<img src="'.common::GetDir($img).'"/>';
+			}
+		}
+		$label			.= '<span>'.implode(' &amp; ',$text_label).'</span>';
+
+		//checkbox used for new pages
+		if( $checkbox ){
+
+
+			if( count($types) > 1 ){
+				$q		= array('types' => $types,'wrapper_class'=>$wrapper_class);
+				$q		= json_encode($q);
+			}else{
+				$q		= $type;
+			}
+
+			$id		= 'checkbox_'.md5($q);
+			echo '<div>';
+			echo '<input name="content_type" type="radio" value="'.htmlspecialchars($q).'" id="'.$id.'" required />';
+			echo '<label for="'.$id.'">';
+			echo $label;
+			echo '</label></div>';
+			return;
+		}
+
+
+		//links used for new sections
+		if( count($types) > 1 ){
+			$q = array('cmd'=> 'NewNestedSection','types' => $types,'wrapper_class'=>$wrapper_class);
+		}else{
+			$q = array('cmd'=> 'NewSectionContent','type' => $type );
+		}
+
+		return '<div>'.common::Link($page->title,$label,http_build_query($q,'','&amp;'),array('data-cmd'=>'AddSection')).'</div>';
+	}
+
 
 
 	function SaveThis( $backup = true ){

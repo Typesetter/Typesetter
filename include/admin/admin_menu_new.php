@@ -1508,7 +1508,9 @@ class admin_menu_new extends admin_menu_tools{
 	 *
 	 */
 	function AddHidden(){
-		global $langmessage,$page;
+		global $langmessage, $page;
+
+		includeFile('tool/editing_page.php');
 
 		$title = '';
 		if( isset($_REQUEST['title']) ){
@@ -1523,17 +1525,21 @@ class admin_menu_new extends admin_menu_tools{
 
 		echo '<tr><th colspan="2">'.$langmessage['options'].'</th></tr>';
 
-		echo '<tr><td>'.$langmessage['label'].'</td>';
-		echo '<td><input type="text" name="title" maxlength="100" size="50" value="'.htmlspecialchars($title).'" class="gpinput" required/></td>';
-		echo '</tr>';
+		//title
+		echo '<tr><td>';
+		echo $langmessage['label'];
+		echo '</td><td>';
+		echo '<input type="text" name="title" maxlength="100" size="50" value="'.htmlspecialchars($title).'" class="gpinput" required/>';
+		echo '</td></tr>';
 
-		echo '<tr><td>'.$langmessage['Content Type'].'</td>';
-			echo '<td>';
-
-			includeFile('tool/editing_page.php');
-			editing_page::SectionTypes();
-
-			echo '</td></tr>';
+		//content type
+		echo '<tr><td>';
+		echo str_replace(' ','&nbsp;',$langmessage['Content Type']);
+		echo '</td><td>';
+		echo '<div id="new_section_links">';
+		editing_page::SectionTypes(true);
+		echo '</div>';
+		echo '</td></tr>';
 
 		echo '</table>';
 
@@ -1589,7 +1595,9 @@ class admin_menu_new extends admin_menu_tools{
 					echo '<td>';
 
 					includeFile('tool/editing_page.php');
-					editing_page::SectionTypes();
+					echo '<div id="new_section_links">';
+					editing_page::SectionTypes(true);
+					echo '</div>';
 
 					echo '</td>';
 					echo '</tr>';
@@ -1929,41 +1937,75 @@ class admin_menu_new extends admin_menu_tools{
 		includeFile('tool/editing_page.php');
 		includeFile('tool/editing.php');
 
-		$title = $_POST['title'];
-		$title = admin_tools::CheckPostedNewPage($title,$message);
+
+		//check title
+		$title		= $_POST['title'];
+		$title		= admin_tools::CheckPostedNewPage($title,$message);
 		if( $title === false ){
 			message($message);
 			return false;
 		}
 
-		$type = $_POST['content_type'];
-		$section = gp_edit::DefaultContent($type);
 
-		if( $section['content'] === false ){
-			return false;
+		//multiple section types
+		$type		= $_POST['content_type'];
+		if( strpos($type,'{') === 0 ){
+			$types = json_decode($type,true);
+			if( $types ){
+
+				$types								+= array('wrapper_class'=>'gpRow');
+				$content							= array();
+
+				//wrapper section
+				$section							= gp_edit::DefaultContent('wrapper_section');
+				$section['contains_sections']		= count($types['types']);
+				$section['attributes']['class']		= $types['class'];
+				$content[]							= $section;
+
+
+				//nested sections
+				foreach($types['types'] as $type){
+
+					if( strpos($type,'.') ){
+						list($type,$class)			= explode('.',$type,2);
+					}else{
+						$class						= '';
+					}
+
+					$section						= gp_edit::DefaultContent($type);
+					$section['attributes']['class']	.= ' '.$class;
+					$content[]						= $section;
+				}
+			}
+
+		//single section type
+		}else{
+			$content	= gp_edit::DefaultContent($type);
+			if( $content['content'] === false ){
+				return false;
+			}
+
+			if( $type == 'text' ){
+				$content['content']			= '<h2>'.strip_tags($_POST['title']).'</h2>'.$content['content'];
+			}
 		}
 
-		$label = admin_tools::PostedLabel($_POST['title']);
-
-		if( $type == 'text' ){
-			$section['content'] = '<h2>'.strip_tags($_POST['title']).'</h2>'.$section['content'];
-		}
 
 		//add to $gp_index first!
-		$index = common::NewFileIndex();
-		$gp_index[$title] = $index;
+		$index							= common::NewFileIndex();
+		$gp_index[$title]				= $index;
 
-		if( !gpFiles::NewTitle($title,$section,$type) ){
+		if( !gpFiles::NewTitle($title,$content,$type) ){
 			message($langmessage['OOPS'].' (cn1)');
 			unset($gp_index[$title]);
 			return false;
 		}
 
 		//add to gp_titles
-		$new_titles = array();
-		$new_titles[$index]['label'] = $label;
-		$new_titles[$index]['type'] = $type;
-		$gp_titles += $new_titles;
+		$new_titles						= array();
+		$new_titles[$index]['label']	= admin_tools::PostedLabel($_POST['title']);
+		$new_titles[$index]['type']		= $type;
+		$gp_titles						+= $new_titles;
 
 
 		//add to users editing

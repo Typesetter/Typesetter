@@ -718,7 +718,8 @@ class gp_edit{
 			break;
 
 			case 'wrapper_section':
-				$section['content'] = '';
+				$section['content']					= '';
+				$section['contains_sections']		= 0;
 			break;
 
 			case 'image':
@@ -730,7 +731,7 @@ class gp_edit{
 
 			case 'text':
 			default:
-				$section['content'] = '<p>'.$langmessage['New Section'].'</p>';
+				$section['content']					= '<p>'.$langmessage['New Section'].'</p>';
 			break;
 		}
 

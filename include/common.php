@@ -3209,8 +3209,9 @@ class gpFiles{
 	 * @since 1.8a1
 	 *
 	 */
-	static function NewTitle($title,$section_content = false,$type='text'){
+	static function NewTitle($title, $section_content = false, $type='text'){
 
+		// get the file for the title
 		if( empty($title) ){
 			return false;
 		}
@@ -3219,20 +3220,23 @@ class gpFiles{
 			return false;
 		}
 
+		// organize section data
 		$file_sections = array();
-		if( is_array($section_content) ){
-			$file_sections[0] = $section_content;
+		if( is_array($section_content) && isset($section_content['type']) ){
+			$file_sections[0]	= $section_content;
+		}elseif( is_array($section_content) ){
+			$file_sections		= $section_content;
 		}else{
 			$file_sections[0] = array(
-				'type' => $type,
-				'content' => $section_content
+				'type'			=> $type,
+				'content'		=> $section_content
 				);
 		}
 
-
+		// add meta data
 		$meta_data = array(
-			'file_number' => gpFiles::NewFileNumber(),
-			'file_type' => $type,
+			'file_number'	=> gpFiles::NewFileNumber(),
+			'file_type'		=> $type,
 			);
 
 

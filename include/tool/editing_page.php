@@ -499,17 +499,23 @@ class editing_page extends display{
 	 */
 	static function SectionTypes($checkboxes = false){
 
-		$section_types	= section_content::GetTypes();
-		$links			= array();
+		$types_with_imgs	= array('text','image','gallery');
+
+		$section_types		= section_content::GetTypes();
+		$links				= array();
 		foreach($section_types as $type => $type_info){
-			$img_rel	= '/include/imgs/section-'.$type.'.png';
-			$links[]	= array( $type, $img_rel );
+			$img			= '';
+			if( in_array($type,$types_with_imgs) ){
+				$img		= common::GetDir('/include/imgs/section-'.$type.'.png');
+			}
+			$links[]		= array( $type, $img );
 		}
 
-		$links[]		= array( array('text.gpCol-6','image.gpCol-6'),'/include/imgs/section-combo-text-image.png' );
-		$links[]		= array( array('text.gpCol-6','gallery.gpCol-6'),'/include/imgs/section-combo-text-gallery.png' );	//section combo: text & gallery
+		$links[]			= array( array('text.gpCol-6','image.gpCol-6'),common::GetDir('/include/imgs/section-combo-text-image.png') );
+		$links[]			= array( array('text.gpCol-6','gallery.gpCol-6'),common::GetDir('/include/imgs/section-combo-text-gallery.png') );	//section combo: text & gallery
 
-		$links			= gpPlugin::Filter('NewSections',array($links));
+		$links				= gpPlugin::Filter('NewSections',array($links));
+
 		foreach($links as $link){
 			$link += array('','','gpRow');
 			echo self::NewSectionLink( $link[0], $link[1], $link[2], $checkboxes );
@@ -545,10 +551,7 @@ class editing_page extends display{
 
 		$label			= '';
 		if( !empty($img) ){
-			$img_full		= $dataDir.$img;
-			if( file_exists($img_full) ){
-				$label		= '<img src="'.common::GetDir($img).'"/>';
-			}
+			$label		= '<img src="'.$img.'"/>';
 		}
 		$label			.= '<span>'.implode(' &amp; ',$text_label).'</span>';
 

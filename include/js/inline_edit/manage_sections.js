@@ -98,6 +98,7 @@
 			$('#ckeditor_bottom').hide();
 
 			gp_editing.CreateTabs();
+			$(document).trigger("section_sorting:loaded");
 		},
 
 		/**

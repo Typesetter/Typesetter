@@ -53,7 +53,7 @@ class Less_Parser{
 	 */
 	private $env;
 
-	private $rules = array();
+	protected $rules = array();
 
 	private static $imports = array();
 
@@ -3659,7 +3659,7 @@ class Less_Functions{
 
 			if( $order[$j]->unit->toString() === "" && $unitClone ){
 				$temp = new Less_Tree_Dimension( $order[$j]->value, $unitClone);
-				$referenceUnified = $temp->unifiy();
+				$referenceUnified = $temp->unify();
 			}else{
 				$referenceUnified = $order[$j]->unify();
 			}
@@ -10228,13 +10228,9 @@ class Less_SourceMap_Generator extends Less_Configurable {
 		$this->encoder = new Less_SourceMap_Base64VLQ();
 
 		$this->SetOptions($options);
-
-
-		// fix windows paths
-		if( !empty($this->options['sourceMapRootpath']) ){
-			$this->options['sourceMapRootpath'] = str_replace('\\', '/', $this->options['sourceMapRootpath']);
-			$this->options['sourceMapRootpath'] = rtrim($this->options['sourceMapRootpath'],'/').'/';
-		}
+		
+		$this->options['sourceMapRootpath'] = $this->fixWindowsPath($this->options['sourceMapRootpath'], true);
+		$this->options['sourceMapBasepath'] = $this->fixWindowsPath($this->options['sourceMapBasepath'], true);
 	}
 
 	/**
@@ -10304,7 +10300,8 @@ class Less_SourceMap_Generator extends Less_Configurable {
 	 */
 	protected function normalizeFilename($filename){
 
-		$filename = str_replace('\\', '/', $filename);
+		$filename = $this->fixWindowsPath($filename);
+
 		$rootpath = $this->getOption('sourceMapRootpath');
 		$basePath = $this->getOption('sourceMapBasepath');
 
@@ -10485,6 +10482,21 @@ class Less_SourceMap_Generator extends Less_Configurable {
 	 */
 	protected function findFileIndex($filename){
 		return $this->source_keys[$filename];
+	}
+
+	/**
+	 * fix windows paths
+	 * @param  string $path
+	 * @return string      
+	 */
+	public function fixWindowsPath($path, $addEndSlash = false){
+		$slash = ($addEndSlash) ? '/' : '';
+		if( !empty($path) ){
+			$path = str_replace('\\', '/', $path);
+			$path = rtrim($path,'/') . $slash;
+		}
+
+		return $path;
 	}
 
 } 

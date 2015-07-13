@@ -139,7 +139,8 @@ class special_gpsearch{
 		// remove duplicates
 		$links = array();
 		foreach($this->results as $key => $result){
-			$link = common::GetUrl( $result['slug'], $result['query'] );
+			//$link = common::GetUrl( $result['slug'], $result['query'] );
+			$link =  isset($result['url']) ? $result['url'] : common::GetUrl( $result['slug'], $result['query'] );
 			$link = strtolower($link);
 			if( in_array($link,$links) ){
 				unset($this->results[$key]);
@@ -172,7 +173,8 @@ class special_gpsearch{
 		echo '<div class="result_list">';
 		foreach($this->results as $result){
 			echo '<div><h4>';
-			echo common::Link($result['slug'],$result['label'],$result['query']);
+			//echo common::Link($result['slug'],$result['label'],$result['query']);
+			echo isset($result['link']) ? $result['link'] : common::Link($result['slug'],$result['label'],$result['query']);
 			echo '</h4>';
 
 			echo $result['content'];

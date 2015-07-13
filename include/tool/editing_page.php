@@ -161,7 +161,7 @@ class editing_page extends display{
 		//output links
 		ob_start();
 		echo '<div id="new_section_links" style="display:none" class="inline_edit_area" title="Add">';
-		self::SectionTypes();
+		self::NewSections();
 		echo '</div>';
 		echo 'var section_types = '.json_encode(ob_get_clean()).';';
 
@@ -497,7 +497,7 @@ class editing_page extends display{
 	 * Return a list of section types
 	 * @static
 	 */
-	static function SectionTypes($checkboxes = false){
+	static function NewSections($checkboxes = false){
 
 		$types_with_imgs	= array('text','image','gallery');
 

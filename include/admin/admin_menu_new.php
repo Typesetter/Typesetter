@@ -1537,7 +1537,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo str_replace(' ','&nbsp;',$langmessage['Content Type']);
 		echo '</td><td>';
 		echo '<div id="new_section_links">';
-		editing_page::SectionTypes(true);
+		editing_page::NewSections(true);
 		echo '</div>';
 		echo '</td></tr>';
 
@@ -1596,7 +1596,7 @@ class admin_menu_new extends admin_menu_tools{
 
 					includeFile('tool/editing_page.php');
 					echo '<div id="new_section_links">';
-					editing_page::SectionTypes(true);
+					editing_page::NewSections(true);
 					echo '</div>';
 
 					echo '</td>';

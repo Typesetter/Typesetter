@@ -57,6 +57,7 @@ class admin_extra{
 
 			/* inline editing */
 			case 'save':
+			case 'save_inline':
 			case 'inlineedit':
 			case 'include_dialog':
 			case 'preview':

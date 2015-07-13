@@ -449,7 +449,7 @@ $(function(){
 	//add a unique verifiable string to confirm posts are
 	//called twice because of bug in jquery 1.4.2 (live) and IE
 	function verify(a){
-		$(a).filter('[method=post]').append('<input type="hidden" name="verified" value="'+post_nonce+'" />');
+		$(a).filter('[method=post]').filter(':not(:has(input[type=hidden][name=verified]))').append('<input type="hidden" name="verified" value="'+post_nonce+'" />');
 	}
 
 

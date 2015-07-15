@@ -1959,7 +1959,7 @@ class admin_menu_new extends admin_menu_tools{
 				//wrapper section
 				$section							= gp_edit::DefaultContent('wrapper_section');
 				$section['contains_sections']		= count($types['types']);
-				$section['attributes']['class']		= $types['class'];
+				$section['attributes']['class']		= $types['wrapper_class'];
 				$content[]							= $section;
 
 

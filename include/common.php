@@ -38,7 +38,7 @@ gp_defined('gp_default_theme','Three_point_5/Shore'); 	//Bootswatch_Flatly/4_Sti
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
-define('gpversion','4.5rc1');
+define('gpversion','4.5rc2');
 define('gp_random',common::RandomString());
 
 

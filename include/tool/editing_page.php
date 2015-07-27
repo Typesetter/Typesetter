@@ -529,6 +529,7 @@ class editing_page extends display{
 	 */
 	static function NewSectionLink($types, $img, $wrapper_class = 'gpRow', $checkbox = false ){
 		global $dataDir, $page;
+		static $fi = 0;
 
 		$types			= (array)$types;
 		$section_types	= section_content::GetTypes();
@@ -558,7 +559,6 @@ class editing_page extends display{
 		//checkbox used for new pages
 		if( $checkbox ){
 
-
 			if( count($types) > 1 ){
 				$q		= array('types' => $types,'wrapper_class'=>$wrapper_class);
 				$q		= json_encode($q);
@@ -566,9 +566,17 @@ class editing_page extends display{
 				$q		= $type;
 			}
 
+			//checked
+			if( isset($_REQUEST['content_type']) && $_REQUEST['content_type'] == $id ){
+				$checked = ' checked';
+			}elseif( empty($_REQUEST['content_type']) && $fi === 0 ){
+				$checked = ' checked';
+				$fi++;
+			}
+
 			$id		= 'checkbox_'.md5($q);
 			echo '<div>';
-			echo '<input name="content_type" type="radio" value="'.htmlspecialchars($q).'" id="'.$id.'" required />';
+			echo '<input name="content_type" type="radio" value="'.htmlspecialchars($q).'" id="'.$id.'" required '.$checked.' />';
 			echo '<label for="'.$id.'">';
 			echo $label;
 			echo '</label></div>';

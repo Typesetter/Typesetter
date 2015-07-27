@@ -225,7 +225,7 @@ class admin_extra{
 		echo '<h2>';
 		echo common::Link('Admin_Extra',$langmessage['theme_content']);
 		echo ' &#187; '.str_replace('_',' ',$title).'</h2>';
-		echo '<input type="hidden" name="cmd" value="save" />';
+		echo '<input type="hidden" name="cmd" value="save_inline" />';
 
 		gp_edit::UseCK( $data['content'] );
 

@@ -627,7 +627,7 @@ class admin_uploaded{
 					/** Images **/		'bmp', 'gif', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'wav', 'wma','svg',
 					/** Media **/		'aiff', 'asf', 'avi', 'fla', 'flv', 'm4v', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ogg','oga','ogv','opus', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'webm', 'wmv',
 					/** Archives **/	'7z', 'bz', 'gz', 'gzip', 'rar', 'sdc', 'sitd', 'tar', 'tgz', 'zip',
-					/** Text/Docs **/	'css', 'csv', 'doc', 'docx', 'htm', 'html', 'js', 'less', 'md', 'ods', 'odt', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'sxc', 'sxw', 'vsd', 'xls', 'xlsx', 'xml' );
+					/** Text/Docs **/	'css', 'csv', 'doc', 'docx', 'htm', 'html', 'js', 'json', 'less', 'md', 'ods', 'odt', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'sxc', 'sxw', 'vsd', 'xls', 'xlsx', 'xml' );
 
 
 			}
@@ -643,6 +643,8 @@ class admin_uploaded{
 				$allowed_types				= array_diff($allowed_types,$upload_extensions_deny);
 			}
 		}
+
+		$allowed_types = gpPlugin::Filter('AllowedTypes',array($allowed_types));
 
 
 		//make sure the extension is allowed

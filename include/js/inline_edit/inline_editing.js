@@ -198,7 +198,10 @@ var gp_editing = {
 		});
 		h += '</div>';
 
-		$('#ckeditor_area .toolbar').append(h);
+		$('#ckeditor_area .toolbar').append(h).find('a').mousedown(function(e) {
+			e.stopPropagation(); //prevent dragging
+		});
+
 	}
 
 }

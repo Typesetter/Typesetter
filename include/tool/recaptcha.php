@@ -39,7 +39,6 @@ class gp_recaptcha{
 	static function GetForm(){
 		global $config,$dataDir;
 
-
 		$html = '';
 		if( gp_recaptcha::hasRecaptcha() ){
 			includeFile('thirdparty/recaptcha/autoload.php');

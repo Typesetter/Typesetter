@@ -42,9 +42,9 @@ class gp_recaptcha{
 
 		$html = '';
 		if( gp_recaptcha::hasRecaptcha() ){
-			require_once($dataDir.'/include/thirdparty/recaptcha/autoload.php');
+			includeFile('thirdparty/recaptcha/autoload.php');
 			$html = '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
-			$theme = "dark"; // dark || light https://developers.google.com/recaptcha/docs/display
+			$theme = "dark"; // dark || light see-> https://developers.google.com/recaptcha/docs/display
     		$html .= '<div class="g-recaptcha" data-theme="'.$theme.'" data-sitekey="'.$config['recaptcha_public'].'"></div>';
 		}
 
@@ -74,12 +74,7 @@ class gp_recaptcha{
 		// if recaptcha inactive, stop
 		if( !gp_recaptcha::hasRecaptcha() ) return true;
 
-
-		//prevent undefined index warnings if there is a bot
-		//$_POST += array('recaptcha_challenge_field'=>'','recaptcha_response_field'=>'');
-
-		//includeFile('thirdparty/recaptchalib.php');
-		require_once($dataDir.'/include/thirdparty/recaptcha/autoload.php');
+		includeFile('thirdparty/recaptcha/autoload.php');
 
 		if (!ini_get('allow_url_fopen')) {
 			// allow_url_fopen = Off

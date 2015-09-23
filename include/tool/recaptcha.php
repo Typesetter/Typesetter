@@ -39,32 +39,13 @@ class gp_recaptcha{
 	static function GetForm(){
 		global $config,$dataDir;
 
+
 		$html = '';
 		if( gp_recaptcha::hasRecaptcha() ){
-
-			includeFile('thirdparty/recaptchalib.php');
-			$themes = array('red','white','blackglass','clean');
-			$theme = 'clean';
-
-
-			$lang = $config['recaptcha_language'];
-			if( $lang == 'inherit' ){
-				$lang = $config['language'];
-			}
-
-			$recaptchaLangs['en'] = true;
-			$recaptchaLangs['nl'] = true;
-			$recaptchaLangs['fr'] = true;
-			$recaptchaLangs['de'] = true;
-			$recaptchaLangs['pt'] = true;
-			$recaptchaLangs['ru'] = true;
-			$recaptchaLangs['es'] = true;
-			$recaptchaLangs['tr'] = true;
-			if( isset($recaptchaLangs[$lang]) ){
-				$html .= '<script type="text/javascript">var RecaptchaOptions = { lang : "'.$lang.'", theme:"'.$theme.'" };</script>';
-			}
-
-			$html .= recaptcha_get_html($config['recaptcha_public']);
+			require_once($dataDir.'/include/thirdparty/recaptcha/autoload.php');
+			$html = '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
+			$theme = "dark"; // dark || light https://developers.google.com/recaptcha/docs/display
+    		$html .= '<div class="g-recaptcha" data-theme="'.$theme.'" data-sitekey="'.$config['recaptcha_public'].'"></div>';
 		}
 
 		return gpPlugin::Filter('AntiSpam_Form',array($html));
@@ -95,22 +76,31 @@ class gp_recaptcha{
 
 
 		//prevent undefined index warnings if there is a bot
-		$_POST += array('recaptcha_challenge_field'=>'','recaptcha_response_field'=>'');
+		//$_POST += array('recaptcha_challenge_field'=>'','recaptcha_response_field'=>'');
 
 		//includeFile('thirdparty/recaptchalib.php');
-		require_once($dataDir.'/include/thirdparty/recaptchalib.php');
-		$resp = recaptcha_check_answer($config['recaptcha_private'],
-										$_SERVER['REMOTE_ADDR'],
-										$_POST['recaptcha_challenge_field'],
-										$_POST['recaptcha_response_field']);
+		require_once($dataDir.'/include/thirdparty/recaptcha/autoload.php');
 
+		if (!ini_get('allow_url_fopen')) {
+			// allow_url_fopen = Off
+			$recaptcha = new \ReCaptcha\ReCaptcha($config['recaptcha_private'], new \ReCaptcha\RequestMethod\SocketPost());
+		}
+		else {
+			// allow_url_fopen = On
+			$recaptcha = new \ReCaptcha\ReCaptcha($config['recaptcha_private']);
+		}
 
-
-		if (!$resp->is_valid) {
+		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+			$ip = $_SERVER['HTTP_CLIENT_IP'];
+		} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		} else {
+			$ip = $_SERVER['REMOTE_ADDR'];
+		}
+		$resp = $recaptcha->verify($_POST['g-recaptcha-response'], $ip);
+		if (!$resp->isSuccess()) {
+			error_log($resp->getErrorCodes());
 			message($langmessage['INCORRECT_CAPTCHA']);
-			//if( common::LoggedIn() ){
-			//	message($langmessage['recaptcha_said'],$resp->error);
-			//}
 			return false;
 		}
 

@@ -73,7 +73,7 @@ class gp_recaptcha{
 		// if recaptcha inactive, stop
 		if( !gp_recaptcha::hasRecaptcha() ) return true;
 
-		includeFile('thirdparty/recaptcha/autoload.php');
+		require_once($dataDir.'/include/thirdparty/recaptcha/autoload.php');
 
 		if (!ini_get('allow_url_fopen')) {
 			// allow_url_fopen = Off

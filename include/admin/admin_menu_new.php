@@ -1341,6 +1341,8 @@ class admin_menu_new extends admin_menu_tools{
 				unlink($file);
 			}
 		}
+		
+		gpPlugin::Action('MenuPageTrashed',array($indexes));
 
 		return true;
 	}

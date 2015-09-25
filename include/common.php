@@ -427,7 +427,9 @@ function GetMessages( $wrap = true ){
 	}
 	if( !empty($wbMessageBuffer) ){
 
-		$wbMessageBuffer = array_unique($wbMessageBuffer);
+		if( gpdebug === false ){
+			$wbMessageBuffer = array_unique($wbMessageBuffer);
+		}
 
 		$result .= '<div class="messages"><div>';
 		$result .= '<a style="" href="#" class="req_script close_message" data-cmd="close_message"></a>';

@@ -12,7 +12,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 	var $showing_category = false;
 
-	function SimpleBlog(){
+	function __construct(){
 		global $page, $langmessage, $addonFolderName;
 
 		$this->Init();
@@ -714,7 +714,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		global $langmessage;
 
 		if( !is_array($data) ){
-			continue;
+			return;
 		}
 
 		foreach($data as $key => $comment){

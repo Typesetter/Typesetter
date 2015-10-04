@@ -5,7 +5,7 @@ gpPlugin::incl('SimpleBlogCommon.php','require_once');
 
 class SimpleBlogCategories{
 
-	function SimpleBlogCategories(){
+	function __construct(){
 		global $addonPathData;
 
 		SimpleBlogCommon::AddCSS();

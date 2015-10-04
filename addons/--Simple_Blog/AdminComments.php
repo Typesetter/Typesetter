@@ -11,7 +11,7 @@ class SimpleBlogComments extends SimpleBlogCommon{
 	var $cache = array();
 	var $cache_mod = 0;
 
-	function SimpleBlogComments(){
+	function __construct(){
 		global $page, $addonFolderName;
 
 		$this->Init();

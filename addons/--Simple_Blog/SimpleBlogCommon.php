@@ -29,7 +29,7 @@ class SimpleBlogCommon{
 	 * When SimpleBlogCommon is created as an object, it will regenerate the static files
 	 *
 	 */
-	function SimpleBlogCommon(){
+	function __construct(){
 		$this->Init();
 		$this->GenStaticContent();
 	}

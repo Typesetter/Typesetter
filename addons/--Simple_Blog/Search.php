@@ -5,7 +5,7 @@ gpPlugin::incl('SimpleBlogCommon.php','require_once');
 
 class BlogSearch extends SimpleBlogCommon{
 
-	function BlogSearch($args){
+	function __construct($args){
 		global $addonPathData;
 
 		$this->Init();

@@ -36,15 +36,14 @@ class gp_recaptcha{
 	 * @static
 	 * @return string
 	 */
-	static function GetForm(){
-		global $config,$dataDir;
+	static function GetForm($theme='dark'){
+		global $config;
 
 		$html = '';
 		if( gp_recaptcha::hasRecaptcha() ){
 			includeFile('thirdparty/recaptcha/autoload.php');
 			$html = '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
-			$theme = "dark"; // dark || light see-> https://developers.google.com/recaptcha/docs/display
-    		$html .= '<div class="g-recaptcha" data-theme="'.$theme.'" data-sitekey="'.$config['recaptcha_public'].'"></div>';
+    		$html .= '<div class="g-recaptcha" data-theme="'.$theme.'" data-sitekey="'.$config['recaptcha_public'].'"></div>'; //data-size="compact"
 		}
 
 		return gpPlugin::Filter('AntiSpam_Form',array($html));
@@ -55,8 +54,8 @@ class gp_recaptcha{
 	 * @static
 	 *
 	 */
-	static function Form(){
-		echo gp_recaptcha::GetForm();
+	static function Form($theme='dark'){
+		echo gp_recaptcha::GetForm($theme);
 	}
 
 	/**
@@ -93,7 +92,8 @@ class gp_recaptcha{
 		}
 		$resp = $recaptcha->verify($_POST['g-recaptcha-response'], $ip);
 		if (!$resp->isSuccess()) {
-			error_log($resp->getErrorCodes());
+			//$error_codes = $resp->getErrorCodes();
+			//error_log();
 			message($langmessage['INCORRECT_CAPTCHA']);
 			return false;
 		}

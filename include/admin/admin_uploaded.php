@@ -103,6 +103,7 @@ class admin_uploaded{
 
 		$this->FinderPrep();
 
+		$this->finder_opts = gpPlugin::Filter('FinderOptionsClient',array($this->finder_opts));
 		gpSettingsOverride('finder_options_client',$this->finder_opts);
 
 		$page->head_script .= "\n".'var finder_opts = '.json_encode($this->finder_opts).';';

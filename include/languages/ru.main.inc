@@ -147,7 +147,7 @@ $langmessage = array (
 	'MODERN_BROWSER'                 => 'Удостоверьтесь, что вы используете современный браузер (Mozilla FireFox или Google Chrome) и включен джава-скрипт.',
 	'Browser Warning'                => 'Предупреждение браузера',
 	'Browser !Supported'             => 'Используемый браузер поддерживается не полностью. Пожалуйста, установите один из более современных браузеров или версий. ',
-	'logged_in'                      => 'Вы не вошли в аккаунт.',
+	'logged_in'                      => 'Вы вошли в аккаунт.',
 	'site_map'                       => 'Карта сайта',
 	'galleries'                      => 'Галереи',
 	'file_name'                      => 'Название файла',
@@ -210,7 +210,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'Открытый ключ reCaptcha',
 	'recaptcha_private'              => 'Личный ключ reCaptcha',
 	'recaptcha_language'             => 'Выберите язык.',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Получите <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">ключ reCaptcha</a> чтобы использовать CAPTCHA в форме контактов.',
 	'maximgarea'                     => 'Максимальное количесво пикселей для загружаемого изображения. Н/п изображение разрешением 600 х 800 имеет 480,000 пикселей.',

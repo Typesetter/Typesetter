@@ -79,6 +79,8 @@ $langmessage = array (
 	'Menu'                           => 'Menu',
 	'Lists'                          => 'Liste',
 	'uploaded_files'                 => 'Files caricati',
+	'Image'                          => 'Image',
+	'image'                          => 'immagine',
 	'images'                         => 'immagini',
 	'delete_confirm'                 => 'Sei sicuro di voler rimuovere i file in modo permanente? ',
 	'generic_delete_confirm'         => 'Sei sicuro di voler rimuovere in modo permanente %s? ',
@@ -103,6 +105,7 @@ $langmessage = array (
 	'new_user'                       => 'Nuovo utente',
 	'invalid_username'               => 'Il tuo nome utente deve essere una combinazione di caratteri e numeri (sono ammessi i caratteri sottolineato "_" e punto ".").',
 	'repeat_password'                => 'Ripeti password',
+	'Password Algorithm'             => 'Password Algorithm',
 	'password'                       => 'Password',
 	'invalid_password'               => 'Oops, la password immessa è vuota o non coincide. Riprova.',
 	'permissions'                    => 'Permessi',
@@ -191,7 +194,6 @@ $langmessage = array (
 	'visible_galleries'              => 'Gallerie visibili',
 	'hidden'                         => 'Nascosto',
 	'email_address'                  => 'Indirizzo email',
-	'image'                          => 'immagine',
 	'frequently_used'                => 'Usati frequentemente',
 	'Current Page'                   => 'Pagina corrente',
 	'Slug/URL'                       => 'Slug/URL',
@@ -208,7 +210,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'Chiave pubblica reCaptcha',
 	'recaptcha_private'              => 'Chiave privata reCaptcha',
 	'recaptcha_language'             => 'Lingua reCaptcha',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Prendi <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">la chiave reCaptcha</a> per usare la verifica CAPTCHA sulla pagina dei contatti.',
 	'maximgarea'                     => 'Massima superficie in pixel per il caricamento delle immagini. Una immagine 600x800 pixel ha 480.000 pixel di superficie.',
@@ -487,4 +489,5 @@ Compressione',
 	'strftime_time'                  => '%H:%M',
 	'_characters'                    => '%s caratteri',
 	'Theme_default_sizes'            => 'Dimensione di default',
+	'context menu'                   => 'Browser Context Menu',
 );

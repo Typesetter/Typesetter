@@ -79,6 +79,8 @@ $langmessage = array (
 	'Menu'                           => 'Menü',
 	'Lists'                          => 'Listen',
 	'uploaded_files'                 => 'Dateiverwaltung',
+	'Image'                          => 'Image',
+	'image'                          => 'Bild',
 	'images'                         => 'Bilder',
 	'delete_confirm'                 => 'Wollen Sie wirklich diese Seite dauerhaft entfernen? ',
 	'generic_delete_confirm'         => 'Wollen Sie wirklich %s UNWIDERRUFLICH löschen? ',
@@ -103,6 +105,7 @@ $langmessage = array (
 	'new_user'                       => 'Neuer Benutzer',
 	'invalid_username'               => 'Ihr Benutzername sollte eine Kombination von alphanumerischen Zeichen sein (optional mit Unterstrichen "_" und Punkten ".").',
 	'repeat_password'                => 'Passwort wiederholen',
+	'Password Algorithm'             => 'Password Algorithm',
 	'password'                       => 'Passwort',
 	'invalid_password'               => 'Upps, es wurde kein Passwort eingegeben oder es stimmt nicht mit dem gespeicherten Passwort überein. Bitte versuchen Sie es noch einmal.',
 	'permissions'                    => 'Berechtigungen',
@@ -192,7 +195,6 @@ Achten Sie darauf, dass Sie einen modernen Browser wie etwa Mozilla FireFox oder
 	'visible_galleries'              => 'Sichtbare Galerien',
 	'hidden'                         => 'Versteckt',
 	'email_address'                  => 'Email-Adresse',
-	'image'                          => 'Bild',
 	'frequently_used'                => 'Häufig verwendet',
 	'Current Page'                   => 'Aktuelle Seite',
 	'Slug/URL'                       => 'Slug/URL',
@@ -209,7 +211,7 @@ Achten Sie darauf, dass Sie einen modernen Browser wie etwa Mozilla FireFox oder
 	'recaptcha_public'               => 'Öffentlicher reCaptcha-Schlüssel',
 	'recaptcha_private'              => 'Privater reCaptcha-Schlüssel',
 	'recaptcha_language'             => 'Sprache reCaptcha',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Sie haben noch keinen? <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">Holen Sie sich hier einen reCaptcha-Schüssel</a> für die CAPTCHA-Prüfung.',
 	'maximgarea'                     => 'Maximale Größe für hochgeladene Bilder (in Pixel). Ein Bild mit einer Größe von 600x800 Pixeln hat 480.000 Pixel.',
@@ -486,4 +488,5 @@ Achten Sie darauf, dass Sie einen modernen Browser wie etwa Mozilla FireFox oder
 	'strftime_time'                  => '%H:%M',
 	'_characters'                    => '%s Zeichen',
 	'Theme_default_sizes'            => 'Standardgröße',
+	'context menu'                   => 'Browser Context Menu',
 );

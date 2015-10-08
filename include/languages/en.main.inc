@@ -8,7 +8,7 @@
 
 $langmessage = array (
 	'LOGGED_OUT'                     => 'You have been logged out.',
-    'configuration'                  => 'Configuration',
+	'configuration'                  => 'Configuration',
 	'Current Configuration'          => 'Current Configuration',
 	'Appearance'                     => 'Appearance',
 	'Content'                        => 'Content',
@@ -105,7 +105,7 @@ $langmessage = array (
 	'new_user'                       => 'New User',
 	'invalid_username'               => 'Your username should use a combination of alphanumeric characters with optional underscore "_" and dot "." characters.',
 	'repeat_password'                => 'Repeat Password',
-	'Password Algorithm'			 => 'Password Algorithm',
+	'Password Algorithm'             => 'Password Algorithm',
 	'password'                       => 'Password',
 	'invalid_password'               => 'Oops, the passwords are either empty or don\'t match. Please try again.',
 	'permissions'                    => 'Permissions',
@@ -216,7 +216,7 @@ continue using your old password.</p>',
 	'recaptcha_public'               => 'reCaptcha Public Key',
 	'recaptcha_private'              => 'reCaptcha Private Key',
 	'recaptcha_language'             => 'reCaptcha Language',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Get a <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> to use CAPTCHA verification on the contact form.',
 	'maximgarea'                     => 'Maximum square pixels for uploaded images. A 600 x 800 pixel image has 480,000 sq/pixels.',
@@ -493,5 +493,5 @@ continue using your old password.</p>',
 	'strftime_time'                  => '%H:%M',
 	'_characters'                    => '%s characters',
 	'Theme_default_sizes'            => 'Default Size',
-	'context menu'					 => 'Browser Context Menu',
+	'context menu'                   => 'Browser Context Menu',
 );

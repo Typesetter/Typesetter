@@ -79,7 +79,7 @@ $langmessage = array (
 	'Menu'                           => 'Menu',
 	'Lists'                          => 'Lijsten',
 	'uploaded_files'                 => 'Ge-Uploade Bestanden',
-	'Image'                          => 'Image',
+	'Image'                          => 'Afbeelding',
 	'image'                          => 'afbeelding',
 	'images'                         => 'afbeeldingen',
 	'delete_confirm'                 => 'Weet u zeker dat het bestand verwijderd moet worden? ',
@@ -210,7 +210,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Public Key',
 	'recaptcha_private'              => 'reCaptcha Private Key',
 	'recaptcha_language'             => 'reCaptcha Taal',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Verkrijg een <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> om CAPTCHA verificatie op het contact formulier in te schakelen.',
 	'maximgarea'                     => 'Maximale aantal pixels voor ge-uploade plaatjes is 600 x 800 pixel een plaatje heeft 480,000 sq/pixels.',

@@ -79,7 +79,7 @@ $langmessage = array (
 	'Menu'                           => 'Menu',
 	'Lists'                          => 'Listas',
 	'uploaded_files'                 => 'Ficheiros Transferidos',
-	'Image'                          => 'Image',
+	'Image'                          => 'Imagem',
 	'image'                          => 'imagem',
 	'images'                         => 'imagens',
 	'delete_confirm'                 => 'Tem a certeza que deseja apagar este ficheiro? ',
@@ -210,7 +210,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha chave pública',
 	'recaptcha_private'              => 'reCaptcha chave privada',
 	'recaptcha_language'             => 'Idioma reCaptcha',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Obtenha uma <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> para usar a verificação CAPTCHA no formulário de contacto.',
 	'maximgarea'                     => 'Máximo de pixels quadrados para imagens transferidas. Uma imagem de 600 x 800 pixel tem 480,000 pixels/quadrados.',

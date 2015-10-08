@@ -79,7 +79,7 @@ $langmessage = array (
 	'Menu'                           => 'Μενού',
 	'Lists'                          => 'Λίστες',
 	'uploaded_files'                 => 'Ανεβασμένα Αρχεία',
-	'Image'                          => 'Image',
+	'Image'                          => 'εικόνα',
 	'image'                          => 'εικόνα',
 	'images'                         => 'εικόνες',
 	'delete_confirm'                 => 'Είστε σίγουροι ότι θέλετε να καταργήσετε οριστικά το αρχείο? ',
@@ -210,7 +210,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Κοινόχρηστο Κλειδί',
 	'recaptcha_private'              => 'reCaptcha Προσωπικό Κλειδί',
 	'recaptcha_language'             => 'Γλώσσα reCaptcha',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Πάρτε ένα <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCAPTCHA Κλειδί</a> για να χρησιμοποιήσετε το CAPTCHA επαλήθευσης της φόρμας επικοινωνίας.',
 	'maximgarea'                     => 'Μέγιστος αριθμός pixels για φόρτωμα εικόνων. Μια εικόνα 600x800 pixel έχει 480.000 sq/pixels.',

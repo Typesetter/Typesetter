@@ -79,7 +79,7 @@ $langmessage = array (
 	'Menu'                           => 'Menu',
 	'Lists'                          => 'Seznam',
 	'uploaded_files'                 => 'Naložite datoteke',
-	'Image'                          => 'Image',
+	'Image'                          => 'Slika',
 	'image'                          => 'slika',
 	'images'                         => 'slike',
 	'delete_confirm'                 => 'Ste prepričani da želite za vedno zbrisati to datoteko? ',
@@ -210,7 +210,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha javni ključ',
 	'recaptcha_private'              => 'reCaptcha privatni ključ',
 	'recaptcha_language'             => 'reCaptcha jezik',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Pridobite si <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha ključ</a> da boste lahko uporabljali CAPTCHA preverjanje pri uporabi kontakntega obrazca.',
 	'maximgarea'                     => 'Največje število pik za naložene slike. Slika velikosti 600 x 800 pik ima 480,000 sq/pik.',

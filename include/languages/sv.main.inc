@@ -79,7 +79,7 @@ $langmessage = array (
 	'Menu'                           => 'Meny',
 	'Lists'                          => 'Listar',
 	'uploaded_files'                 => 'Uppladdade filer',
-	'Image'                          => 'Image',
+	'Image'                          => 'Bild',
 	'image'                          => 'Bild',
 	'images'                         => 'Bilder',
 	'delete_confirm'                 => 'Är du säker på att du vill permanent ta bort den filen? ',
@@ -210,7 +210,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Publik nyckel',
 	'recaptcha_private'              => 'reCaptcha privat nyckel',
 	'recaptcha_language'             => 'reCaptcha språk',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Skaffa en <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha nyckel</a> för att använda CAPTCHA kontroll på kontaktformuläret.',
 	'maximgarea'                     => 'Maximal kvadratiska pixlar för uppladdade bilder. En 600x800 pixel bild har 480.000 kvm/pixlar.',

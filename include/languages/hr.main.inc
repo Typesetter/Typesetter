@@ -79,7 +79,7 @@ $langmessage = array (
 	'Menu'                           => 'Izbornik',
 	'Lists'                          => 'Popisi',
 	'uploaded_files'                 => 'Prenešene datoteke',
-	'Image'                          => 'Image',
+	'Image'                          => 'Slika',
 	'image'                          => 'slika',
 	'images'                         => 'slike',
 	'delete_confirm'                 => 'Jesi li siguran da želiš trajno ukloniti datoteku? ',
@@ -216,7 +216,7 @@ continue using your old password.</p>',
 	'recaptcha_public'               => 'reCaptcha Javni Ključ',
 	'recaptcha_private'              => 'reCaptcha Privatni Ključ',
 	'recaptcha_language'             => 'reCaptcha Jezik',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Get a <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> to use CAPTCHA verification on the contact form.',
 	'maximgarea'                     => 'Maksimalni četvorokut piksela za učitanu sliku. 600 x 800 piksela slika ima 480.000 kvadratnih piksela.',

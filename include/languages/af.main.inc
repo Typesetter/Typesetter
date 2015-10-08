@@ -79,7 +79,7 @@ $langmessage = array (
 	'Menu'                           => 'Spyskaart',
 	'Lists'                          => 'Lyste',
 	'uploaded_files'                 => 'Opgelaaide lêers',
-	'Image'                          => 'Image',
+	'Image'                          => 'Beeld',
 	'image'                          => 'beeld',
 	'images'                         => 'beelde',
 	'delete_confirm'                 => 'Is jy seker jy wil die lêer permanent verwyder ? ',
@@ -210,7 +210,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCAPTCHA Openbare Sleutel',
 	'recaptcha_private'              => 'reCAPTCHA Private Sleutel',
 	'recaptcha_language'             => 'reCAPTCHA taal',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Kry \'n <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html"> reCAPTCHA Sleutel </a> om CAPTCHA verifikasie te gebruik op die kontak vorm.',
 	'maximgarea'                     => 'Maksimum vierkante pixels vir opgelaaide beelde. ŉ 600 x 800 pixel beeld het 480,000 vk / pixels.',

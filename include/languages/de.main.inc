@@ -79,7 +79,7 @@ $langmessage = array (
 	'Menu'                           => 'Menü',
 	'Lists'                          => 'Listen',
 	'uploaded_files'                 => 'Dateiverwaltung',
-	'Image'                          => 'Image',
+	'Image'                          => 'Bild',
 	'image'                          => 'Bild',
 	'images'                         => 'Bilder',
 	'delete_confirm'                 => 'Wollen Sie wirklich diese Seite dauerhaft entfernen? ',
@@ -211,7 +211,7 @@ Achten Sie darauf, dass Sie einen modernen Browser wie etwa Mozilla FireFox oder
 	'recaptcha_public'               => 'Öffentlicher reCaptcha-Schlüssel',
 	'recaptcha_private'              => 'Privater reCaptcha-Schlüssel',
 	'recaptcha_language'             => 'Sprache reCaptcha',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Sie haben noch keinen? <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">Holen Sie sich hier einen reCaptcha-Schüssel</a> für die CAPTCHA-Prüfung.',
 	'maximgarea'                     => 'Maximale Größe für hochgeladene Bilder (in Pixel). Ein Bild mit einer Größe von 600x800 Pixeln hat 480.000 Pixel.',

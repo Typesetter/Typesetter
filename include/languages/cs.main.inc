@@ -79,7 +79,7 @@ $langmessage = array (
 	'Menu'                           => 'Nabídka',
 	'Lists'                          => 'Seznamy',
 	'uploaded_files'                 => 'Nahrané obrázky',
-	'Image'                          => 'Image',
+	'Image'                          => 'Obrázek',
 	'image'                          => 'obrázek',
 	'images'                         => 'obrázky',
 	'delete_confirm'                 => 'Jste si jisti, že chcete trvale odstranit ten file? ',
@@ -210,7 +210,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha veřejný klíč',
 	'recaptcha_private'              => 'reCaptcha soukromý klíč',
 	'recaptcha_language'             => 'reCaptcha jazyk',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Získejte <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">recaptcha klíč</a> pro použití CAPTCHA ověřování na kontaktním formuláři.',
 	'maximgarea'                     => 'Maximální rozlišení pro nahrávané obrázky. Obrázek 600x800 obrazových bodů má 480.000 čtverečních bodů.',

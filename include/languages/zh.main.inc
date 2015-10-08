@@ -79,7 +79,7 @@ $langmessage = array (
 	'Menu'                           => '選單',
 	'Lists'                          => '清單',
 	'uploaded_files'                 => '已上傳的檔案',
-	'Image'                          => 'Image',
+	'Image'                          => '圖片',
 	'image'                          => '圖片',
 	'images'                         => '圖片',
 	'delete_confirm'                 => '您確定要永遠刪除這個檔案？ ',
@@ -210,7 +210,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha 公眾金鑰',
 	'recaptcha_private'              => 'reCaptcha 私人金鑰',
 	'recaptcha_language'             => 'reCaptcha 語言',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => '取得一個 <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha 金鑰</a>方可在聯絡表單上使用 CAPTCHA 驗證機制。',
 	'maximgarea'                     => '上傳圖片的最大平方像素。一個 600 x 800 像素的圖片有 480,000 平方像素。',

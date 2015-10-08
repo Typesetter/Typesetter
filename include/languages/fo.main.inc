@@ -79,7 +79,7 @@ $langmessage = array (
 	'Menu'                           => 'Valmynd',
 	'Lists'                          => 'Listar',
 	'uploaded_files'                 => 'Uppsendar fílur',
-	'Image'                          => 'Image',
+	'Image'                          => 'Mynd',
 	'image'                          => 'mynd',
 	'images'                         => 'myndir',
 	'delete_confirm'                 => 'Er tað í lagi at strika hesa fílu endaliga? ',
@@ -210,7 +210,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Almennur lykil',
 	'recaptcha_private'              => 'reCaptcha Privatur lykil',
 	'recaptcha_language'             => 'reCAPTCHA Mál',
-	'about_config'                   => 
+	'about_config'                   =>
 	array (
 	'recaptcha_public'               => 'Fá ein<a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Lykil</a> fyri at kunna brúka CAPTCHA stýring á samskiftis formin.',
 	'maximgarea'                     => 'Størstu kvadrat pixels til uppsendar myndir. Ein 600 x 800 pixels mynd er 480.000 kvadrat pixel.',

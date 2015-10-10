@@ -36,8 +36,16 @@ class section_content{
 		$content			= '';
 		$curr_section_num	= $section_num;
 		$section_data		= $sections[$curr_section_num];
-		$section_data		+= array('attributes' => array() );
 		$section_num++;
+
+
+		//make sure section_data is an array
+		$type				= gettype($section_data);
+		if( $type !== 'array' ){
+			trigger_error('$section_data is '.$type.'. Array expected');
+			return;
+		}
+		$section_data		+= array('attributes' => array() );
 
 
 		if( $section_data['type'] == 'wrapper_section' ){

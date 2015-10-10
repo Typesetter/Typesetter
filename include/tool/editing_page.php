@@ -888,6 +888,15 @@ class editing_page extends display{
 
 		$content										= '';
 		$section_data									= $this->file_sections[$curr_section_num];
+
+		//make sure section_data is an array
+		$type											= gettype($section_data);
+		if( $type !== 'array' ){
+			trigger_error('$section_data is '.$type.'. Array expected');
+			return;
+		}
+
+
 		$section_data									+= array('attributes' => array(),'type'=>'text' );
 		$section_data['attributes']						+= array('class' => '' );
 		$orig_attrs										= json_encode($section_data['attributes']);

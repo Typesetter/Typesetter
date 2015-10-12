@@ -852,6 +852,14 @@ class gp_edit{
 			break;
 		}
 
+		//make sure $existing_section is still an array
+		$type = gettype($existing_section);
+		if( $type !== 'array' ){
+			trigger_error('$existing_section is '.$type.'. Array expected');
+			return;
+		}
+
+
 		// Hack: SaveSection used $page->file_sections
 		$page->file_sections[$section_num]	= $existing_section;
 		$save_this							= gpPlugin::Filter( 'SaveSection', array( $save_this, $section_num, $type) );

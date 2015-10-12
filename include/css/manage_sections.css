@@ -16,10 +16,23 @@
 	}
 #section_sorting li{
 	border-bottom:1px solid #f1f1f1;
-	background: #fff url('../imgs/drag_handle.gif') no-repeat 2px 5px;
+	background: #fff url('../imgs/drag_handle.gif') no-repeat 5px 5px;
+	position:relative;
+	border-left:#aabbcc 4px solid;
+	padding-left:3px;
 	}
+
+#section_sorting .color_handle{
+	position:absolute;
+	top:0;
+	left:-4px;
+	bottom:0;
+	width:4px;
+	cursor:pointer;
+	}
+
 #section_sorting li:last-child{
-	border:none;
+	border-bottom:none;
 	}
 
 #section_sorting > li:only-child > div .RemoveSection{
@@ -95,4 +108,39 @@
 	}
 
 
+/**
+ * Color selection
+ *
+ */
+
+ul#section_sorting li span.secsort_color_swatches {
+	display:block;
+	position:absolute;
+	top:0;
+	left:4px;
+	width:105px;
+	height:22px;
+	padding:2px;
+	background:#fff;
+	border:1px solid #ddd;
+	box-shadow:0 1px 2px rgba(0,0,0,0.32);
+	cursor:default;
+	z-index:1;
+}
+
+ul#section_sorting li span.secsort_color_swatches a{
+	display:block;
+	float:left;
+	width:9px;
+	height:9px;
+	margin:1px 2px;
+	padding:0;
+	overflow:visible;
+	cursor:pointer;
+}
+
+ul#section_sorting li span.secsort_color_swatches a:hover {
+	outline:1px solid rgba(0,0,0,0.32);
+	outline-offset:-1px;
+}
 

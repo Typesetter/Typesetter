@@ -29,6 +29,7 @@
 			args.attributes			= [];
 			args.contains_sections	= [];
 			args.labels				= [];
+			args.colors				= [];
 			args.cmd				= 'SaveSections';
 
 			$('#gpx_content').find('.editable_area').each( function(i) {
@@ -38,7 +39,6 @@
 				var $this	= $(this);
 				var type	= gp_editor.TypeFromClass(this);
 				var value	= $this.data('gp-section');
-				var label	= $this.data('gp-label');
 
 				if( !type ){
 					return;
@@ -58,8 +58,11 @@
 					args.contains_sections[i] = $this.children('.editable_area').length;
 				}
 
-				//labels
-				args.labels[i] = label;
+				//label
+				args.labels[i] = $this.data('gp-label');
+
+				//color
+				args.colors[i] = $this.data('gp-color');
 
 
 			});
@@ -129,21 +132,23 @@
 						if( evt.type != 'blur' && evt.which !== 13 && evt.which !== 27 ) return;
 
 						$div.children().show();
-
-						if( evt.which !== 27 ){
-
-							var label = tmpInput.val();
-							console.log('label: '+label);
-
-							if( $this.text() !== label ){
-								console.log('set it');
-								$this.text( label );
-								var $li		= $div.closest('li');
-								gp_editor.GetArea( $li ).attr('data-gp-label',label).data('gp-label',label);
-							}
-
-						}
+						var label = tmpInput.val();
 						tmpInput.remove();
+
+						//esc key -> don't save changes
+						if( evt.which === 27 ){
+							return;
+						}
+
+						//nothing changed -> don't save changes
+						if( $this.text() === label ){
+							return;
+						}
+
+						$this.text( label );
+						var $li		= $div.closest('li');
+						gp_editor.GetArea( $li ).attr('data-gp-label',label).data('gp-label',label);
+
 					});
 			});
 		},
@@ -210,13 +215,24 @@
 
 
 				var type	= gp_editor.TypeFromClass(this);
+
+				//label
 				var label	= $this.data('gp-label');
 				if( !label ){
 					label	= (i+1)+' '+gp_editor.ucfirst(type);
 				}
 
-				html += '<li data-area-id="'+this.id+'">';
-				html += '<div><span class="options">';
+				//color
+				var color	= $this.data('gp-color');
+				var style	= '';
+				if( color ){
+					style	= 'style="border-left-color:'+color+'"';
+				}
+
+
+				html += '<li data-area-id="'+this.id+'" '+style+'>';
+				html += '<div><a class="color_handle" data-cmd="SectionColor"></a>';
+				html += '<span class="options">';
 				html += '<a class="gpicon_edapp" data-cmd="SectionOptions" title="Options"></a>';
 				html += '<a class="copy_icon" data-cmd="CopySection" title="Copy"></a>';
 				html += '<a class="bin_icon RemoveSection" data-cmd="RemoveSection" title="Remove"></a>';
@@ -389,6 +405,47 @@
 		$('#gpx_content').append(area);
 		gp_editor.InitSorting();
 	}
+
+	/**
+	 * Section Color
+	 *
+	 */
+	$gp.links.SectionColor = function(evt){
+
+		var $this	= $(this);
+		var $li		= $this.closest('li');
+		var colors	= [ '#1192D6','#3E5DE8','#8D3EE8','#C41FDD', '#ED2F94','#ED4B1E','#FF8C19','#FFD419','#C5E817','#5AC92A','#0DA570','#017C7C','#DDDDDD','#888888','#555555','#000000' ];
+
+
+		//build html
+		var html = '<span class="secsort_color_swatches">';
+		for( var i=0; i<colors.length; i++ ){
+			html += '<a style="background:' + colors[i] + ';" data-color="' + colors[i] + '"  data-cmd="SelectColor"/>';
+		}
+
+		var $colors	= $(html+'</span>').appendTo($li);
+
+		$li.mouseleave(function(){
+			$colors.remove();
+		});
+	}
+
+	/**
+	 * Change section color
+	 *
+	 */
+	$gp.links.SelectColor = function(evt){
+
+		var $this		= $(this);
+		var $li			= $this.closest('li');
+		var $area		= gp_editor.GetArea( $li );
+		var newColor 	= $this.attr('data-color');
+
+		$li.css('border-left-color', newColor);
+		$area.attr('data-gp-color',newColor).data('gp-color',newColor);
+		$li.find('.secsort_color_swatches').remove();
+	}
+
 
 	/**
 	 * Edit the Attributes of the section

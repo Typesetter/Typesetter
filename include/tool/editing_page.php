@@ -268,6 +268,9 @@ class editing_page extends display{
 			$attributes		.= ' data-gp-label="'.htmlspecialchars($section['_label']).'" ';
 		}
 
+		if( !empty($section['_color']) ){
+			$attributes		.= ' data-gp-color="'.htmlspecialchars($section['_color']).'" ';
+		}
 
 		if( !isset($new_section['nodeName']) ){
 			return "\n<div".$attributes.'>';
@@ -344,10 +347,13 @@ class editing_page extends display{
 				$new_section['_label']	= $_POST['labels'][$i];
 			}
 
+			//color?
+			if( !empty($_POST['colors'][$i]) ){
+				$new_section['_color']	= $_POST['colors'][$i];
+			}
+
 			$new_sections[$i] = $new_section;
 		}
-
-		msg($new_sections);
 
 
 		//make sure there's at least one section

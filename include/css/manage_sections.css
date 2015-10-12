@@ -113,34 +113,26 @@
  *
  */
 
-ul#section_sorting li span.secsort_color_swatches {
+#section_sorting li span.secsort_color_swatches {
+	margin-left:4px;
 	display:block;
-	position:absolute;
-	top:0;
-	left:4px;
-	width:105px;
-	height:22px;
-	padding:2px;
-	background:#fff;
-	border:1px solid #ddd;
-	box-shadow:0 1px 2px rgba(0,0,0,0.32);
-	cursor:default;
-	z-index:1;
+	text-align:center;
 }
 
-ul#section_sorting li span.secsort_color_swatches a{
-	display:block;
-	float:left;
-	width:9px;
-	height:9px;
-	margin:1px 2px;
-	padding:0;
-	overflow:visible;
+#section_sorting li span.secsort_color_swatches a{
+	display:inline-block;
+	width:6px;
+	height:16px;
+	margin:4px 2px 2px;
 	cursor:pointer;
 }
 
-ul#section_sorting li span.secsort_color_swatches a:hover {
-	outline:1px solid rgba(0,0,0,0.32);
+#section_sorting li span.secsort_color_swatches a:hover {
+	outline:1px solid rgba(0,0,0,0.5);
 	outline-offset:-1px;
 }
 
+/**
+ * Collapsable Sections
+ *
+ */

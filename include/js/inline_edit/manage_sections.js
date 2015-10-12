@@ -423,10 +423,12 @@
 			html += '<a style="background:' + colors[i] + ';" data-color="' + colors[i] + '"  data-cmd="SelectColor"/>';
 		}
 
+		$li.children().hide();
 		var $colors	= $(html+'</span>').appendTo($li);
 
 		$li.mouseleave(function(){
 			$colors.remove();
+			$li.children().show();
 		});
 	}
 
@@ -444,6 +446,7 @@
 		$li.css('border-left-color', newColor);
 		$area.attr('data-gp-color',newColor).data('gp-color',newColor);
 		$li.find('.secsort_color_swatches').remove();
+		$li.children().show();
 	}
 
 

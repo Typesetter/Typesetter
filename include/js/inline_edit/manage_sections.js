@@ -28,6 +28,7 @@
 			args.section_order		= [];
 			args.attributes			= [];
 			args.contains_sections	= [];
+			args.labels				= [];
 			args.cmd				= 'SaveSections';
 
 			$('#gpx_content').find('.editable_area').each( function(i) {
@@ -37,6 +38,7 @@
 				var $this	= $(this);
 				var type	= gp_editor.TypeFromClass(this);
 				var value	= $this.data('gp-section');
+				var label	= $this.data('gp-label');
 
 				if( !type ){
 					return;
@@ -55,6 +57,9 @@
 				if( type == 'wrapper_section' ){
 					args.contains_sections[i] = $this.children('.editable_area').length;
 				}
+
+				//labels
+				args.labels[i] = label;
 
 
 			});
@@ -98,8 +103,51 @@
 			$('#ckeditor_bottom').hide();
 
 			gp_editing.CreateTabs();
+			gp_editor.LabelEdit();
 			$(document).trigger("section_sorting:loaded");
 		},
+
+		/**
+		 * Init Label editing
+		 *
+		 */
+		LabelEdit: function(){
+			$(document).on('dblclick','.section_label',function(){
+
+				var $this			= $(this);
+				var $div			= $this.parent();
+				$div.children().hide();
+				var tmpInput		= $('<input type="text" value="' + $this.text() + '"/>')
+					.appendTo($div)
+					.focus()
+					.select()
+					// when blurred, remove <input> and show hidden elements
+					// same when esc or enter key is entered
+					.on('keydown blur', function(evt){
+
+						// stop if not enter key or
+						if( evt.type != 'blur' && evt.which !== 13 && evt.which !== 27 ) return;
+
+						$div.children().show();
+
+						if( evt.which !== 27 ){
+
+							var label = tmpInput.val();
+							console.log('label: '+label);
+
+							if( $this.text() !== label ){
+								console.log('set it');
+								$this.text( label );
+								var $li		= $div.closest('li');
+								gp_editor.GetArea( $li ).attr('data-gp-label',label).data('gp-label',label);
+							}
+
+						}
+						tmpInput.remove();
+					});
+			});
+		},
+
 
 		/**
 		 * Set maximum height of editor
@@ -161,7 +209,11 @@
 				}
 
 
-				var type = gp_editor.TypeFromClass(this);
+				var type	= gp_editor.TypeFromClass(this);
+				var label	= $this.data('gp-label');
+				if( !label ){
+					label	= (i+1)+' '+gp_editor.ucfirst(type);
+				}
 
 				html += '<li data-area-id="'+this.id+'">';
 				html += '<div><span class="options">';
@@ -169,7 +221,7 @@
 				html += '<a class="copy_icon" data-cmd="CopySection" title="Copy"></a>';
 				html += '<a class="bin_icon RemoveSection" data-cmd="RemoveSection" title="Remove"></a>';
 				html += '</span>';
-				html += '<i>'+(i+1)+' '+gp_editor.ucfirst(type)+'</i>';
+				html += '<i class="section_label">'+label+'</i>';
 				html += '</div>';
 
 				if( $this.hasClass('filetype-wrapper_section') ){

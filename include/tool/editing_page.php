@@ -220,7 +220,7 @@ class editing_page extends display{
 
 
 		ob_start();
-		echo '<div'.section_content::SectionAttributes($new_section['attributes'],$new_section['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>';
+		echo $this->SectionNode($new_section, $orig_attrs);
 		foreach($_REQUEST['types'] as $type){
 
 			if( strpos($type,'.') ){
@@ -253,13 +253,27 @@ class editing_page extends display{
 		$new_section['attributes']['id']		= 'rand-'.time().rand(0,10000);
 		$new_section['attributes']['class']		.= ' editable_area new_section';
 
-
 		if( !isset($new_section['nodeName']) ){
-			return '<div'.section_content::SectionAttributes($new_section['attributes'],$new_section['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>'.$content.'</div>';
+			return $this->SectionNode($new_section, $orig_attrs).$content.'</div>';
 		}
 
-		return '<'.$new_section['nodeName'].section_content::SectionAttributes($new_section['attributes'],$new_section['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>'.$content.'</'.$new_section['nodeName'].'>';
+		return $this->SectionNode($new_section, $orig_attrs).$content.'</'.$new_section['nodeName'].'>';
+	}
 
+	function SectionNode($section,$orig_attrs){
+
+		$attributes			= section_content::SectionAttributes($section['attributes'],$section['type']);
+		$attributes			.= ' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'';
+		if( !empty($section['_label']) ){
+			$attributes		.= ' data-gp-label="'.htmlspecialchars($section['_label']).'" ';
+		}
+
+
+		if( !isset($new_section['nodeName']) ){
+			return "\n<div".$attributes.'>';
+		}
+
+		return "\n<".$new_section['nodeName'].$attributes.'>';
 	}
 
 
@@ -275,6 +289,7 @@ class editing_page extends display{
 		$unused_sections		= $this->file_sections;				//keep track of sections that aren't used
 		$new_sections			= array();
 		$section_types			= section_content::GetTypes();
+
 
 		foreach($_POST['section_order'] as $i => $arg ){
 
@@ -324,8 +339,15 @@ class editing_page extends display{
 				$new_section['contains_sections'] = isset($_POST['contains_sections']) ? $_POST['contains_sections'][$i] : '0';
 			}
 
+			//label?
+			if( !empty($_POST['labels'][$i]) ){
+				$new_section['_label']	= $_POST['labels'][$i];
+			}
+
 			$new_sections[$i] = $new_section;
 		}
+
+		msg($new_sections);
 
 
 		//make sure there's at least one section
@@ -567,6 +589,7 @@ class editing_page extends display{
 			}
 
 			//checked
+			$checked = '';
 			if( isset($_REQUEST['content_type']) && $_REQUEST['content_type'] == $id ){
 				$checked = ' checked';
 			}elseif( empty($_REQUEST['content_type']) && $fi === 0 ){
@@ -933,11 +956,7 @@ class editing_page extends display{
 		}
 
 
-		if( !isset($section_data['nodeName']) ){
-			$content			.= "\n".'<div'.section_content::SectionAttributes($section_data['attributes'],$section_data['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>';
-		}else{
-			$content			.= "\n".'<'.$section_data['nodeName'].section_content::SectionAttributes($section_data['attributes'],$section_data['type']).' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'>';
-		}
+		$content			.= $this->SectionNode($section_data, $orig_attrs);
 
 		if( $section_data['type'] == 'wrapper_section' ){
 

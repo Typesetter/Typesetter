@@ -106,51 +106,7 @@
 			$('#ckeditor_bottom').hide();
 
 			gp_editing.CreateTabs();
-			gp_editor.LabelEdit();
 			$(document).trigger("section_sorting:loaded");
-		},
-
-		/**
-		 * Init Label editing
-		 *
-		 */
-		LabelEdit: function(){
-			$(document).on('dblclick','.section_label',function(){
-
-				var $this			= $(this);
-				var $div			= $this.parent();
-				$div.children().hide();
-				var tmpInput		= $('<input type="text" value="' + $this.text() + '"/>')
-					.appendTo($div)
-					.focus()
-					.select()
-					// when blurred, remove <input> and show hidden elements
-					// same when esc or enter key is entered
-					.on('keydown blur', function(evt){
-
-						// stop if not enter key or
-						if( evt.type != 'blur' && evt.which !== 13 && evt.which !== 27 ) return;
-
-						$div.children().show();
-						var label = tmpInput.val();
-						tmpInput.remove();
-
-						//esc key -> don't save changes
-						if( evt.which === 27 ){
-							return;
-						}
-
-						//nothing changed -> don't save changes
-						if( $this.text() === label ){
-							return;
-						}
-
-						$this.text( label );
-						var $li		= $div.closest('li');
-						gp_editor.GetArea( $li ).attr('data-gp-label',label).data('gp-label',label);
-
-					});
-			});
 		},
 
 
@@ -237,7 +193,15 @@
 				html += '<a class="copy_icon" data-cmd="CopySection" title="Copy"></a>';
 				html += '<a class="bin_icon RemoveSection" data-cmd="RemoveSection" title="Remove"></a>';
 				html += '</span>';
-				html += '<i class="section_label">'+label+'</i>';
+				html += '<i class="section_label_wrap">';
+
+				//wrapper collapse link
+				if( type == 'wrapper_section' ){
+					html += '<a data-cmd="WrapperToggle" class="secsort_wrapper_toggle"/>';
+				}
+
+				html += '<span class="section_label">'+label+'</span>';
+				html += '</i>';
 				html += '</div>';
 
 				if( $this.hasClass('filetype-wrapper_section') ){
@@ -449,6 +413,14 @@
 		$li.children().show();
 	}
 
+	/**
+	 * Toggle wrapper display
+	 *
+	 */
+	$gp.links.WrapperToggle = function(evt){
+		$(this).closest('li').toggleClass('wrapper_collapsed');
+	}
+
 
 	/**
 	 * Edit the Attributes of the section
@@ -567,6 +539,48 @@
 	}
 
 
+	/**
+	 * Init Label editing
+	 *
+	 */
+	$(document).on('dblclick','.section_label_wrap',function(){
+
+		var $this			= $(this);
+		var $div			= $this.parent();
+		$div.children().hide();
+		var tmpInput		= $('<input type="text" value="' + $this.text() + '"/>')
+			.appendTo($div)
+			.focus()
+			.select()
+			// when blurred, remove <input> and show hidden elements
+			// same when esc or enter key is entered
+			.on('keydown blur', function(evt){
+
+				// stop if not enter key or
+				if( evt.type != 'blur' && evt.which !== 13 && evt.which !== 27 ) return;
+
+				$div.children().show();
+				var label = tmpInput.val();
+				tmpInput.remove();
+
+				//esc key -> don't save changes
+				if( evt.which === 27 ){
+					return;
+				}
+
+				//nothing changed -> don't save changes
+				if( $this.text() === label ){
+					return;
+				}
+
+				$this.text( label );
+				var $li		= $div.closest('li');
+				gp_editor.GetArea( $li ).attr('data-gp-label',label).data('gp-label',label);
+
+			});
+	});
+
+
 
 
 	/**
@@ -576,4 +590,7 @@
 	gp_editing.editor_tools();
 	gp_editor.InitEditor();
 	loaded();
+
+
+
 

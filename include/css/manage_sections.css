@@ -136,3 +136,43 @@
  * Collapsable Sections
  *
  */
+#section_sorting .secsort_wrapper_toggle:before{
+	display:inline-block;
+	content:"\25bc";
+	position:relative;
+	color:#333;
+	top:-0.2em;
+	padding:0 2px;
+	margin-right:0.25em;
+	font-size:10px!important;
+}
+
+#section_sorting .wrapper_collapsed .secsort_wrapper_toggle:before{
+	content:"\25b6";
+}
+
+#section_sorting .wrapper_collapsed > ul > li{
+	display:inline-block;
+	height:8px;
+	width:0;
+	border-bottom:none;
+	border-left-width:8px;
+	}
+
+#section_sorting .wrapper_collapsed > ul > li > *{
+	display:none;
+}
+
+#section_sorting .wrapper_collapsed>ul.section_drag_area,
+#section_sorting .wrapper_collapsed>ul.section_drag_area:empty {
+	min-height:0!important;
+	height:12px;
+	-webkit-transition:all 0.3s;
+	-moz-transition:all 0.3s;
+	-ms-transition:all 0.3s;
+	transition:all 0.3s;
+	overflow:hidden;
+	border:none;
+}
+
+

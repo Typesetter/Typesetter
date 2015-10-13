@@ -144,9 +144,11 @@
 			$list.html(html);
 
 			$('.section_drag_area').sortable({
-				tolerance:				'pointer',
+				//tolerance:				'pointer',
 				stop:					gp_editor.DragStop,
-				connectWith:			'.section_drag_area'
+				connectWith:			'.section_drag_area',
+				cursorAt:				{ left: 7, top: 7 }
+
 			}).disableSelection();
 
 

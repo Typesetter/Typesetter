@@ -11,7 +11,7 @@
 	border:1px solid #ddd;
 	background:#fff;
 	border-radius:3px;
-	padding:3px;
+	padding: 3px 3px 20px;
 	margin-bottom:5px;
 	}
 #section_sorting li{
@@ -31,7 +31,7 @@
 	cursor:pointer;
 	}
 
-#section_sorting li:last-child{
+#section_sorting ul li:last-child{
 	border-bottom:none;
 	}
 
@@ -52,6 +52,11 @@
 	padding:2px 0 2px 2px;
 	border-radius:3px;
 	clear:both;
+
+	-webkit-transition:all 0.7s;
+	-moz-transition:all 0.7s;
+	-ms-transition:all 0.7s;
+	transition:all 0.7s;
 	}
 
 #section_sorting ul:empty{
@@ -151,28 +156,38 @@
 	content:"\25b6";
 }
 
+#section_sorting .wrapper_collapsed>ul,
+#section_sorting .wrapper_collapsed>ul:empty {
+	min-height:8px !important;
+	line-height:8px;
+	height:auto;
+	padding:3px 3px 0 3px;
+	overflow:hidden;
+	border-color:transparent;
+}
+
 #section_sorting .wrapper_collapsed > ul > li{
 	display:inline-block;
-	height:8px;
+	height:10px;
 	width:0;
 	border-bottom:none;
-	border-left-width:8px;
+	border-left-width:10px;
+	vertical-align:top;
+	padding:0;
+	margin:0 3px 3px 0;
 	}
 
 #section_sorting .wrapper_collapsed > ul > li > *{
 	display:none;
 }
 
-#section_sorting .wrapper_collapsed>ul.section_drag_area,
-#section_sorting .wrapper_collapsed>ul.section_drag_area:empty {
-	min-height:0!important;
-	height:12px;
-	-webkit-transition:all 0.3s;
-	-moz-transition:all 0.3s;
-	-ms-transition:all 0.3s;
-	transition:all 0.3s;
-	overflow:hidden;
-	border:none;
-}
+#section_sorting .ui-sortable-helper{
+	border-left-width:15px !important;
+	width:0 !important;
+	height:15px !important;
+	border-bottom: 0 none !important;
+	}
 
-
+#section_sorting .ui-sortable-helper *{
+	display:none !important;
+	}

@@ -297,7 +297,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	$mess .= '</div></div>';
 	$mess .= '</p></fieldset>';
 
-	if( gpdebug === true || common::loggedIn() ){
+	if( gpdebug === true ){
 		message($mess);
 	}elseif( $report_error ){
 		global $gp_mailer;

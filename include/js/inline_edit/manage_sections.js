@@ -389,8 +389,8 @@
 			html += '<a style="background:' + colors[i] + ';" data-color="' + colors[i] + '"  data-cmd="SelectColor"/>';
 		}
 
-		$li.children().hide();
-		var $colors	= $(html+'</span>').appendTo($li);
+		$li.children('div').hide();
+		var $colors	= $(html+'</span>').prependTo($li);
 
 		$li.mouseleave(function(){
 			$colors.remove();

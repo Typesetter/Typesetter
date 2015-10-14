@@ -47,12 +47,11 @@
 	}
 
 #section_sorting ul{
-	margin:0 0 3px 5px;
-	border:1px solid #f1f1f1;
-	padding:2px 0 2px 2px;
-	border-radius:3px;
-	clear:both;
+    border-top: 1px solid #f1f1f1;
+    clear: both;
+    margin: 0 0 3px 3px;
 
+    transition: all 0.7s ease 0s;
 	-webkit-transition:all 0.7s;
 	-moz-transition:all 0.7s;
 	-ms-transition:all 0.7s;
@@ -75,7 +74,6 @@
 	}
 
 #section_sorting li.section-item-hover{
-	/* background-color:#dff1df; */
 	background-color:#f5f5f5;
 	}
 
@@ -119,14 +117,15 @@
  */
 
 #section_sorting li span.secsort_color_swatches {
-	margin-left:4px;
+	margin-left:-3px;
 	display:block;
 	text-align:center;
+	background:#fff;
 }
 
 #section_sorting li span.secsort_color_swatches a{
 	display:inline-block;
-	width:6px;
+	width:5px;
 	height:16px;
 	margin:4px 2px 2px;
 	cursor:pointer;

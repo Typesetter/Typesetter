@@ -272,11 +272,11 @@ class editing_page extends display{
 			}
 		}
 
-		if( !isset($new_section['nodeName']) ){
+		if( !isset($section['nodeName']) ){
 			return "\n<div".$attributes.'>';
 		}
 
-		return "\n<".$new_section['nodeName'].$attributes.'>';
+		return "\n<".$section['nodeName'].$attributes.'>';
 	}
 
 

@@ -24,13 +24,14 @@
 		 */
 		gp_saveData:function(){
 
-			var args				= {};
-			args.section_order		= [];
-			args.attributes			= [];
-			args.contains_sections	= [];
-			args.labels				= [];
-			args.colors				= [];
-			args.cmd				= 'SaveSections';
+			var args					= {};
+			args.section_order			= [];
+			args.attributes				= [];
+			args.contains_sections		= [];
+			args.gp_label				= [];
+			args.gp_color				= [];
+			args.gp_collapse			= [];
+			args.cmd					= 'SaveSections';
 
 			$('#gpx_content').find('.editable_area').each( function(i) {
 
@@ -59,10 +60,13 @@
 				}
 
 				//label
-				args.labels[i] = $this.data('gp-label');
+				args.gp_label[i]		= $this.data('gp_label');
 
 				//color
-				args.colors[i] = $this.data('gp-color');
+				args.gp_color[i]		= $this.data('gp_color');
+
+				//collapse
+				args.gp_collapse[i]	= $this.data('gp_collapse');
 
 
 			});
@@ -175,17 +179,20 @@
 				var type	= gp_editor.TypeFromClass(this);
 
 				//label
-				var label	= $this.data('gp-label');
+				var label	= $this.data('gp_label');
 				if( !label ){
 					label	= (i+1)+' '+gp_editor.ucfirst(type);
 				}
 
 				//color
-				var color	= $this.data('gp-color');
+				var color	= $this.data('gp_color');
 				var style	= '';
 				if( color ){
 					style	= 'style="border-left-color:'+color+'"';
 				}
+
+				//collapsed
+				style	+= ' class="'+$this.data('gp_collapse')+'"';
 
 
 				html += '<li data-area-id="'+this.id+'" '+style+'>';
@@ -410,7 +417,7 @@
 		var newColor 	= $this.attr('data-color');
 
 		$li.css('border-left-color', newColor);
-		$area.attr('data-gp-color',newColor).data('gp-color',newColor);
+		$area.attr('data-gp_color',newColor).data('gp_color',newColor);
 		$li.find('.secsort_color_swatches').remove();
 		$li.children().show();
 	}
@@ -420,7 +427,19 @@
 	 *
 	 */
 	$gp.links.WrapperToggle = function(evt){
-		$(this).closest('li').toggleClass('wrapper_collapsed');
+
+		var $li			= $(this).closest('li');
+		var clss		= 'wrapper_collapsed';
+		var $area		= gp_editor.GetArea( $li );
+
+		if( $li.hasClass(clss) ){
+			$li.removeClass(clss);
+			clss = '';
+		}else{
+			$li.addClass(clss);
+		}
+
+		$area.attr('data-gp_collapse',clss).data('gp_collapse',clss);
 	}
 
 
@@ -577,9 +596,10 @@
 
 				$this.text( label );
 				var $li		= $div.closest('li');
-				gp_editor.GetArea( $li ).attr('data-gp-label',label).data('gp-label',label);
+				gp_editor.GetArea( $li ).attr('data-gp_label',label).data('gp_label',label);
 
 			});
+
 	});
 
 

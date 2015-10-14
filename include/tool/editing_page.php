@@ -264,12 +264,12 @@ class editing_page extends display{
 
 		$attributes			= section_content::SectionAttributes($section['attributes'],$section['type']);
 		$attributes			.= ' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'';
-		if( !empty($section['_label']) ){
-			$attributes		.= ' data-gp-label="'.htmlspecialchars($section['_label']).'" ';
-		}
 
-		if( !empty($section['_color']) ){
-			$attributes		.= ' data-gp-color="'.htmlspecialchars($section['_color']).'" ';
+		$section_attrs		= array('gp_label','gp_color','gp_collapse');
+		foreach($section_attrs as $attr){
+			if( !empty($section[$attr]) ){
+				$attributes		.= ' data-'.$attr.'="'.htmlspecialchars($section[$attr]).'" ';
+			}
 		}
 
 		if( !isset($new_section['nodeName']) ){
@@ -292,6 +292,8 @@ class editing_page extends display{
 		$unused_sections		= $this->file_sections;				//keep track of sections that aren't used
 		$new_sections			= array();
 		$section_types			= section_content::GetTypes();
+
+		$section_attrs			= array('gp_label','gp_color','gp_collapse');
 
 
 		foreach($_POST['section_order'] as $i => $arg ){
@@ -342,14 +344,12 @@ class editing_page extends display{
 				$new_section['contains_sections'] = isset($_POST['contains_sections']) ? $_POST['contains_sections'][$i] : '0';
 			}
 
-			//label?
-			if( !empty($_POST['labels'][$i]) ){
-				$new_section['_label']	= $_POST['labels'][$i];
-			}
-
-			//color?
-			if( !empty($_POST['colors'][$i]) ){
-				$new_section['_color']	= $_POST['colors'][$i];
+			// section attributes
+			foreach($section_attrs as $attr){
+				unset($new_section[$attr]);
+				if( !empty($_POST[$attr][$i]) ){
+					$new_section[$attr]		= $_POST[$attr][$i];
+				}
 			}
 
 			$new_sections[$i] = $new_section;

@@ -73,10 +73,8 @@
 	display:inline-block;
 	margin:0;
 	padding:0;
-	max-width:200px;
-	max-height:200px;
-	min-width:70px;
-	min-height:70px;
+	width:100%;
+	height:auto;
 	background:#fff;
 	}
 

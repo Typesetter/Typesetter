@@ -236,6 +236,18 @@ class admin_ckeditor{
 		}
 
 
+		//make sure plugin name isn't already in build_config
+		if( $this->build_config
+			&& isset($this->build_config['plugins'])
+			&& isset($this->build_config['plugins'][$plugin_name])
+			&& $this->build_config['plugins'][$plugin_name] > 0 ){
+				msg($langmessage['addon_key_defined'], '<i>'.$plugin_name.'</i>');
+				return;
+		}
+
+
+
+
 		// check destination directory
 		$destination = $dataDir.'/data/_ckeditor/'.$plugin_name;
 		$temp_dir = false;

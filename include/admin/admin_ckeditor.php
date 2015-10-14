@@ -4,7 +4,8 @@ defined('is_running') or die('Not an entry point...');
 class admin_ckeditor{
 
 	var $config_file;
-	var $cke_config = array();
+	var $cke_config			= array();
+	var $build_config;
 
 	var $subpages;
 	var $current_subpage = '';
@@ -132,6 +133,37 @@ class admin_ckeditor{
 
 		echo '</table>';
 		echo '</form>';
+
+
+		//$this->build_config
+		if( $this->build_config && isset($this->build_config['plugins']) ){
+
+			$ordered = array();
+			$count = 0;
+			foreach($this->build_config['plugins'] as $plugin => $status){
+				if( !$status ){
+					continue;
+				}
+
+				$char				= strtoupper($plugin[0]);
+				$ordered[$char][]	= '<a href="http://ckeditor.com/addon/'.$plugin.'" target="_blank">'.ucfirst($plugin).'</a>';
+				$count++;
+			}
+
+			//echo '<h3>'.$langmessage['Installed'].'</h3>';
+			echo '<p><br/></p>';
+			echo '<table class="bordered">';
+			echo '<tr><th colspan="2">'.$langmessage['Installed'].' ('.$count.')</th></tr>';
+			foreach($ordered as $char => $plugins){
+				echo '<tr><td>';
+				echo '<b>'.$char.'</b>';
+				echo '</td><td>';
+				echo implode(', ',$plugins);
+				echo '</td></tr>';
+			}
+			echo '</table>';
+		}
+
 	}
 
 
@@ -396,13 +428,53 @@ class admin_ckeditor{
 	 */
 	function Init(){
 
-		$this->config_file	= '_ckeditor/config';
-		$this->cke_config	= gpFiles::Get($this->config_file,'cke_config');
+		$this->config_file		= '_ckeditor/config';
+		$this->cke_config		= gpFiles::Get($this->config_file,'cke_config');
 
-		//$this->cke_config += array('custom_config'=>array());
-		$this->cke_config += array('plugins'=>array());
+		//$this->cke_config 	+= array('custom_config'=>array());
+		$this->cke_config		+= array('plugins'=>array());
 
+		$this->BuildConfig();
 	}
+
+
+	/**
+	 * Get the ckeditor build configuration
+	 *
+	 */
+	function BuildConfig(){
+		global $dataDir;
+
+
+
+		//get data from build-config.js to determine which plugins are already included
+		$build_file				= $dataDir.'/include/thirdparty/ckeditor_34/build-config.js';
+		$build_config			= file_get_contents($build_file);
+		if( !$build_config ){
+			return;
+		}
+
+
+		// quotes
+		$build_config			= str_replace('\'','"',$build_config);
+		$build_config			= str_replace("\r\n", "\n", $build_config);
+
+		// remove comments
+		$build_config			= preg_replace("/\/\*[\d\D]*?\*\//",'',$build_config);
+
+		// remove "var CKBUILDER_CONFIG = "
+		$pos					= strpos($build_config,'{');
+		$build_config			= substr($build_config,$pos);
+		$build_config			= trim($build_config);
+		$build_config			= trim($build_config,';');
+
+		// fix variable names
+		$build_config			= preg_replace("/([a-zA-Z0-9_]+?)\s*:/" , "\"$1\":", $build_config);
+
+		$this->build_config		= json_decode($build_config,true);
+	}
+
+
 
 
 	/**

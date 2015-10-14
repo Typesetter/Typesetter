@@ -545,10 +545,10 @@
 	 * Init Label editing
 	 *
 	 */
-	$(document).on('dblclick','.section_label_wrap',function(){
+	$(document).on('dblclick','.section_label',function(){
 
 		var $this			= $(this);
-		var $div			= $this.parent();
+		var $div			= $this.closest('div');
 		$div.children().hide();
 		var tmpInput		= $('<input type="text" value="' + $this.text() + '"/>')
 			.appendTo($div)

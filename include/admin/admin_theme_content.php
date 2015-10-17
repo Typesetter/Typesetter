@@ -569,7 +569,6 @@ class admin_theme_content extends admin_addon_install{
 
 
 		//show site in iframe
-		echo '<h1>Why</h1>';
 		echo '<div id="gp_iframe_wrap">';
 		$url = common::GetUrl('Admin_Theme_Content/'.rawurlencode($layout),'cmd=in_iframe');
 		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';

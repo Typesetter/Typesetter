@@ -54,12 +54,14 @@ class Child_Thumbnails{
 		if( !is_array($file_sections) ){
 			return;
 		}
-		
+
+		//prevent infinite loops
 		foreach($file_sections as $key=>$val){
-		if($val['type']=='include')
-		unset($file_sections[$key]) ;
+			if($val['type']=='include'){
+				unset($file_sections[$key]);
+			}
 		}
-		
+
 		//get the image
 		$content = section_content::Render($file_sections,$title,$file_stats);
 		$img_pos = strpos($content,'<img');

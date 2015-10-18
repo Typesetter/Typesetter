@@ -221,7 +221,7 @@ class special_contact_gadget{
 		}
 
 			if( $this->sent ){
-				echo gpOutput::ReturnText('message_sent');
+				echo gpOutput::ReturnText('message_sent','%s','message_sent');
 			}else{
 				echo '<input type="hidden" name="cmd" value="gp_send_message" />';
 

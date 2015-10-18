@@ -188,7 +188,7 @@ class SimpleBlog extends SimpleBlogCommon{
 			message($langmessage['OOPS']);
 			return;
 		}
-		$this->ShowPostContent($post,$this->post_id);
+		$this->ShowPostContent($post,$this->post_id,0,'single_blog_item');
 
 		$page->label = SimpleBlogCommon::Underscores( $post['title'] );
 
@@ -480,7 +480,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		$posts = array();
 		foreach($post_list as $post_index){
 			$post	= $this->GetPostContent($post_index);
-			$this->ShowPostContent( $post, $post_index, SimpleBlogCommon::$data['post_abbrev'] );
+			$this->ShowPostContent( $post, $post_index, SimpleBlogCommon::$data['post_abbrev'], 'post_list_item' );
 		}
 
 	}
@@ -489,7 +489,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Display the html for a single blog post
 	 *
 	 */
-	function ShowPostContent( &$post, &$post_index, $limit = 0){
+	function ShowPostContent( &$post, &$post_index, $limit = 0, $class = '' ){
 		global $langmessage;
 
 		if( !common::LoggedIn() && SimpleBlogCommon::AStrValue('drafts',$post_index) ){
@@ -497,7 +497,8 @@ class SimpleBlog extends SimpleBlogCommon{
 		}
 
 		//If user enter random Blog url, he didn't see any 404, but nothng.
-		$id = $class = '';
+		$id = '';
+		$class = $class == '' ? '' : ' '.$class;
 		if( common::LoggedIn() ){
 
 			$query = 'du'; //dummy parameter

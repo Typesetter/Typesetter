@@ -234,3 +234,11 @@ div.GPAREA{
   .gpCol-12 { width:100%; }
 
 }
+
+
+/**
+ * Search results
+ *
+ */
+ul.search_nav_bottom { list-style:none; }
+ul.search_nav_bottom li { display:inline; margin-right:0.5em; }

@@ -18,6 +18,7 @@ defined('is_running') or die('Not an entry point...');
 defined('gp_max_menu_level') OR define('gp_max_menu_level',6);
 
 includeFile('admin/admin_menu_tools.php');
+includeFile('tool/SectionContent.php');
 common::LoadComponents('sortable');
 
 
@@ -38,28 +39,32 @@ class admin_menu_new extends admin_menu_tools{
 	var $main_menu_count;
 	var $list_displays			= array('search'=>true, 'all'=>true, 'hidden'=>true, 'nomenus'=>true );
 
+	var $section_types;
+
 
 	function __construct(){
 		global $langmessage,$page,$config;
 
-		$page->ajaxReplace = array();
 
-		$page->css_admin[] = '/include/css/admin_menu_new.css';
+		$this->section_types			= section_content::GetTypes();
 
-		$page->head_js[] = '/include/thirdparty/js/nestedSortable.js';
-		$page->head_js[] = '/include/thirdparty/js/jquery_cookie.js';
-		$page->head_js[] = '/include/js/admin_menu_new.js';
+		$page->ajaxReplace				= array();
 
-		$this->max_level_index = max(3,gp_max_menu_level-1);
-		$page->head_script .= 'var max_level_index = '.$this->max_level_index.';';
+		$page->css_admin[]				= '/include/css/admin_menu_new.css';
 
-		$cmd = common::GetCommand();
+		$page->head_js[]				= '/include/thirdparty/js/nestedSortable.js';
+		$page->head_js[]				= '/include/thirdparty/js/jquery_cookie.js';
+		$page->head_js[]				= '/include/js/admin_menu_new.js';
 
-		$this->avail_menus['gpmenu'] = $langmessage['Main Menu'].' / '.$langmessage['site_map'];
-		$this->avail_menus['all'] = $langmessage['All Pages'];
-		$this->avail_menus['hidden'] = $langmessage['Not In Main Menu'];
-		$this->avail_menus['nomenus'] = $langmessage['Not In Any Menus'];
-		$this->avail_menus['search'] = $langmessage['search pages'];
+		$this->max_level_index			= max(3,gp_max_menu_level-1);
+		$page->head_script				.= 'var max_level_index = '.$this->max_level_index.';';
+
+
+		$this->avail_menus['gpmenu']	= $langmessage['Main Menu'].' / '.$langmessage['site_map'];
+		$this->avail_menus['all']		= $langmessage['All Pages'];
+		$this->avail_menus['hidden']	= $langmessage['Not In Main Menu'];
+		$this->avail_menus['nomenus']	= $langmessage['Not In Any Menus'];
+		$this->avail_menus['search']	= $langmessage['search pages'];
 
 		if( isset($config['menus']) ){
 			foreach($config['menus'] as $id => $menu_label){
@@ -68,6 +73,7 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 		//early commands
+		$cmd = common::GetCommand();
 		switch($cmd){
 			case 'altmenu_create':
 				$this->AltMenu_Create();
@@ -882,11 +888,6 @@ class admin_menu_new extends admin_menu_tools{
 
 	}
 
-	function FileStats($key,$title,$is_special){
-		global $langmessage,$gp_titles;
-
-
-	}
 
 	/**
 	 * Output Insert links displayed with page options
@@ -1045,7 +1046,7 @@ class admin_menu_new extends admin_menu_tools{
 	 *
 	 */
 	function SearchDisplayRow($title){
-		global $langmessage, $gpLayouts, $gp_index, $gp_menu, $gp_titles;
+		global $langmessage, $gpLayouts, $gp_index, $gp_menu;
 
 		$title_index		= $gp_index[$title];
 		$is_special			= common::SpecialOrAdmin($title);
@@ -1096,7 +1097,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		//types
 		echo '</td><td>';
-		echo str_replace(',',', ',$gp_titles[$title_index]['type']);
+		$this->TitleTypes($title_index);
 
 		//children
 		echo '</td><td>';
@@ -1121,6 +1122,27 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 		echo '</td></tr>';
+	}
+
+
+	/**
+	 * List section types
+	 *
+	 */
+	function TitleTypes($title_index){
+		global $gp_titles;
+
+		$types		= explode(',',$gp_titles[$title_index]['type']);
+		$types		= array_filter($types);
+		$types		= array_unique($types);
+
+		foreach($types as $i => $type){
+			if( isset($this->section_types[$type]) && isset($this->section_types[$type]['label']) ){
+				$types[$i] = $this->section_types[$type]['label'];
+			}
+		}
+
+		echo implode(', ',$types);
 	}
 
 

@@ -853,9 +853,9 @@ class gp_edit{
 		}
 
 		//make sure $existing_section is still an array
-		$type = gettype($existing_section);
-		if( $type !== 'array' ){
-			trigger_error('$existing_section is '.$type.'. Array expected');
+		$type_check = gettype($existing_section);
+		if( $type_check !== 'array' ){
+			trigger_error('$existing_section is '.$type_check.'. Array expected');
 			return false;
 		}
 

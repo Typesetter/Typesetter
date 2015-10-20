@@ -362,7 +362,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 
 		//blog home
-		$html = common::Link('Special_Blog','%s');
+		$html = common::Link('Special_Blog','%s','','class="blog_home"');
 		echo gpOutput::GetAddonText('Blog Home',$html);
 		echo '&nbsp;';
 
@@ -413,7 +413,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		if( common::LoggedIn() ){
 			echo '&nbsp;';
-			echo common::Link('Special_Blog','New Post','cmd=new_form');
+			echo common::Link('Special_Blog','New Post','cmd=new_form','class="blog_post_new"');
 		}
 
 		echo '</p>';

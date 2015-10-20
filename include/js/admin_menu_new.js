@@ -139,7 +139,7 @@
 
 			}else if( evt.shiftKey ){
 
-				$('.current').removeClass('current');
+				$('#admin_menu .current').removeClass('current');
 				var $all	= $('#admin_menu .gp_label');
 				var i		= $all.index(this);
 				var j		= 0;
@@ -159,7 +159,7 @@
 					}
 				});
 
-				$current = $('.current');
+				$current = $('#admin_menu .current');
 
 			}else{
 				$('.last_clicked').removeClass('last_clicked');
@@ -180,7 +180,7 @@
 		 */
 		function ShowInfo($current){
 
-			$('.current').removeClass('current');
+			$('#admin_menu .current').removeClass('current');
 
 			if( !$current.length ){
 				$admin_menu_tools.hide();

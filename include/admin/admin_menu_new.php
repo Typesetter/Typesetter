@@ -989,6 +989,8 @@ class admin_menu_new extends admin_menu_tools{
 		echo sprintf($langmessage['SHOWING'],($start+1),$stop,$max);
 		echo '</span>';
 
+		echo '<span>';
+
 		if( ($start !== 0) || ($stop < $max) ){
 			for( $i = 0; ($i*$this->search_max_per_page) < $max; $i++ ){
 				$class = '';
@@ -1000,6 +1002,7 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 		echo $this->Link('Admin_Menu',$langmessage['create_new_file'],'cmd=add_hidden',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpabox'));
+		echo '</span>';
 		echo '</div>';
 		$links = ob_get_clean();
 

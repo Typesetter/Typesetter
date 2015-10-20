@@ -1005,7 +1005,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		echo $links;
 
-		echo '<table class="bordered">';
+		echo '<table class="bordered striped">';
 		echo '<thead>';
 		echo '<tr><th>';
 		echo $langmessage['file_name'];

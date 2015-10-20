@@ -237,11 +237,6 @@ body #admin_menu li.ui-sortable-helper{
 	margin-right:4px;
 	}
 
-#gp_menu_available tr:nth-child(2n) td{
-	background:#f5f5f5;
-	border-bottom: 1px solid #E2E2E2;
-	border-top: 1px solid #E2E2E2;
-	}
 #gp_menu_available td:nth-child(2){
 	white-space:nowrap;
 	}

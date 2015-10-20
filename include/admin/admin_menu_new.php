@@ -405,8 +405,11 @@ class admin_menu_new extends admin_menu_tools{
 		echo '</optgroup>';
 		echo '<optgroup label="'.$langmessage['Lists'].'">';
 			foreach($lists as $menu_id => $menu_label){
+
 				if( $menu_id == $this->curr_menu_id ){
 					echo '<option value="'.$menu_id.'" selected="selected">';
+				}elseif( $menu_id == 'search' ){
+					continue;
 				}else{
 					echo '<option value="'.$menu_id.'">';
 				}
@@ -1078,7 +1081,6 @@ class admin_menu_new extends admin_menu_tools{
 		echo $this->Link('Admin_Menu',$langmessage['Copy'],'cmd=copypage&index='.urlencode($title_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 
 		echo '<span>';
-		//$img = '<span style="background-color:'.$layout_info['color'].';" class="layout_icon"></span>';
 		echo $langmessage['layout'].': ';
 		echo $this->Link('Admin_Menu',$layout_info['label'],'cmd=layout&index='.urlencode($title_index),array('title'=>$langmessage['layout'],'data-cmd'=>'gpabox'));
 		echo '</span>';

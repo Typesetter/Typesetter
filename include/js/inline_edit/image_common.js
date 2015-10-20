@@ -62,8 +62,8 @@
 	 * Remove an image from the list of available images
 	 *
 	 */
-	gpresponse.img_deleted_id = function(){
-		$('#'+this.CONTENT).remove();
+	$gp.response.img_deleted_id = function(obj){
+		$('#'+obj.CONTENT).remove();
 	}
 
 

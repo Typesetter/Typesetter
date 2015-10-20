@@ -329,7 +329,7 @@
 	$gp.links.AddSection = function(evt){
 		evt.preventDefault();
 		$(this).fadeTo(700,0.4).addClass('loading-section');
-		$gp.jGoTo(this.href);
+		$gp.jGoTo(this.href, this);
 	}
 
 

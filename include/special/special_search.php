@@ -43,8 +43,8 @@ class special_gpsearch{
 		echo '<div id="admin_search">';
 		echo '<form action="'.common::GetUrl('special_gpsearch').'" method="get">';
 		echo '<h3>'.$langmessage['Search'].'</h3>';
-		echo '<input name="q" type="text" class="gpinput" value="'.htmlspecialchars($_REQUEST['q']).'"/>';
-		echo '<input type="submit" name="" value="'.$langmessage['Search'].'" class="gpabox gpsubmit" />';
+		echo '<input name="q" type="text" class="gpinput" value="'.htmlspecialchars($_REQUEST['q']).'" required />';
+		echo '<input type="submit" name="" value="'.$langmessage['Search'].'" class="gpabox gpsubmit gpvalidate" />';
 		echo '<input type="submit" name="" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
 		echo '</form>';
 

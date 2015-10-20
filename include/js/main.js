@@ -17,10 +17,12 @@ var $gp = {
 	 * Handler for loading json content
 	 *
 	 */
-	jGoTo : function(a){
+	jGoTo : function(a,this_context){
 		$gp.loading();
 		a = $gp.jPrep(a);
-		$.getJSON(a,$gp.Response);
+		$.getJSON(a,function(data,textStatus,jqXHR){
+			$gp.Response.call(this_context,data,textStatus,jqXHR);
+		});
 	},
 
 
@@ -52,13 +54,14 @@ var $gp = {
 	 * Post request to server
 	 *
 	 */
-	post : function(a,data){
+	post : function(this_context,data){
+		console.log('post');
 		$gp.loading();
-		var frm = $(a).closest('form');
+		var frm = $(this_context).closest('form');
 
 		var b = frm.serialize() + '&verified='+encodeURIComponent(post_nonce); //needed when $gp.post is called without an input click
-		if( a.nodeName === 'INPUT' || a.nodeName === 'BUTTON' ){
-			b += '&'+encodeURIComponent(a.name)+'='+encodeURIComponent(a.value);
+		if( this_context.nodeName === 'INPUT' || this_context.nodeName === 'BUTTON' ){
+			b += '&'+encodeURIComponent(this_context.name)+'='+encodeURIComponent(this_context.value);
 		}
 		if( data ){
 			b += '&'+data;
@@ -67,7 +70,9 @@ var $gp = {
 		$.post(
 			$gp.jPrep(frm.attr('action')),
 			b,
-			$gp.Response,
+			function(data,textStatus,jqXHR){
+				$gp.Response.call(this_context,data,textStatus,jqXHR);
+			},
 			'json'
 			);
 		return false;
@@ -88,7 +93,9 @@ var $gp = {
 		$.post(
 			strip_from(lnk.href,'?'),
 			data,
-			$gp.Response,
+			function(data,textStatus,jqXHR){
+				$gp.Response.call(lnk,data,textStatus,jqXHR);
+			},
 			'json'
 			);
 	},
@@ -99,7 +106,7 @@ var $gp = {
 	 * Arguments order is same as jQuery's $.post()
 	 *
 	 */
-	postC : function(url,data,callback,datatype){
+	postC : function(url,data,callback,datatype,this_context){
 		callback = callback || $gp.Response;
 		datatype = datatype || 'json';
 
@@ -115,7 +122,9 @@ var $gp = {
 		$.post(
 			strip_from(url,'?'),
 			data,
-			callback,
+			function(data,textStatus,jqXHR){
+				callback.call(this_context,data,textStatus,jqXHR);
+			},
 			datatype
 			);
 	},
@@ -169,6 +178,7 @@ var $gp = {
 	Response : function(data,textStatus,jqXHR){
 
 		$('.messages').detach();
+
 		try{
 			$gp.CloseAdminBox();
 		}catch(a){}
@@ -178,15 +188,17 @@ var $gp = {
 		} catch(a){}
 
 
+		var this_context = this;
+
 		$.each(data,function(i,obj){
 
 			if( typeof($gp.response[obj.DO]) === 'function' ){
-				$gp.response[obj.DO].call(this,obj,textStatus,jqXHR);
+				$gp.response[obj.DO].call(this_context,obj,textStatus,jqXHR);
 				return;
 			}
 
 			if( typeof(gpresponse[obj.DO]) === 'function' ){
-				gpresponse[obj.DO].call(this,obj,textStatus,jqXHR);
+				gpresponse[obj.DO].call(this_context,obj,textStatus,jqXHR);
 				return;
 			}
 
@@ -520,7 +532,7 @@ $(function(){
 			break;
 
 			case 'gpajax':
-				$gp.jGoTo(this.href);
+				$gp.jGoTo(this.href,this);
 			break;
 			case 'creq':
 				$gp.cGoTo(this,true);

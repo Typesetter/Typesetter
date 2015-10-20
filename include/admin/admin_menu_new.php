@@ -1089,7 +1089,9 @@ class admin_menu_new extends admin_menu_tools{
 		gpPlugin::Action('MenuPageOptions',array($title,$title_index,false,$layout_info));
 
 		//stats
-		echo '<a>Data Index: '.$title_index.'</a>';
+		if( gpdebug ){
+			echo '<span>Data Index: '.$title_index.'</span>';
+		}
 		echo '</div>&nbsp;</div>';
 
 		//types

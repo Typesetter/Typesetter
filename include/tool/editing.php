@@ -953,7 +953,15 @@ class gp_edit{
 		}
 
 
-		$dest_img_rel	= '/data/_resized/img_type/'.$name.'.'.$time.'.png';
+		$source_file_rel_n = str_replace ("/data/_uploaded/image/", "", $source_file_rel );
+		$parts2 = explode("/", $source_file_rel_n);
+		$name2=array_pop($parts2);
+		$name = $name."-_-".$type;
+		foreach($parts2 as $part){
+					$name=$part."-_-".$name;
+			}
+
+		$dest_img_rel	= '/data/_resized/img_type/'.$name.'-_-'.$time.'.png';
 		$dest_img_full	= $dataDir.$dest_img_rel;
 
 		//make sure the folder exists

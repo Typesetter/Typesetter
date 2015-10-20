@@ -611,11 +611,13 @@ class SimpleBlogCommon{
 		$_POST				+= $post;
 		$title				= htmlspecialchars($_POST['title'],ENT_COMPAT,'UTF-8',false);
 
+		echo '<div class="blog_post_edit">';
 		echo '<h2>';
 		echo SimpleBlogCommon::PostLink($this->post_id,$title);
 		echo ' &#187; ';
 		echo 'Edit Post</h2>';
 		$this->PostForm($_POST,'save_edit',$this->post_id);
+		echo '</div>'
 		return true;
 	}
 
@@ -626,9 +628,11 @@ class SimpleBlogCommon{
 	function NewForm(){
 		global $langmessage;
 
+		echo '<div class="blog_post_new">';
 		echo '<h2>New Blog Post</h2>';
 
 		$this->PostForm($_POST);
+		echo '</div>';
 	}
 
 
@@ -644,7 +648,7 @@ class SimpleBlogCommon{
 		$array += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>false, 'categories'=>array() );
 		$array['title'] = SimpleBlogCommon::Underscores( $array['title'] );
 
-		echo '<form action="'.SimpleBlogCommon::PostUrl($post_id).'" method="post">';
+		echo '<form class="post_form" action="'.SimpleBlogCommon::PostUrl($post_id).'" method="post">';
 
 		echo '<table style="width:100%">';
 
@@ -677,8 +681,8 @@ class SimpleBlogCommon{
 		echo '<tr><td colspan="2">';
 			echo '<input type="hidden" name="cmd" value="'.$cmd.'" />';
 			echo '<input type="hidden" name="id" value="'.$post_id.'" />';
-			echo '<input type="submit" name="" value="'.$langmessage['save'].'" /> ';
-			echo '<input type="submit" name="cmd" value="'.$langmessage['cancel'].'" />';
+			echo '<input class="post_form_save" type="submit" name="" value="'.$langmessage['save'].'" /> ';
+			echo '<input class="post_form_cancel" type="submit" name="cmd" value="'.$langmessage['cancel'].'" />';
 			echo '</td></tr>';
 
 		echo '</table>';

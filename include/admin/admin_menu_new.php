@@ -885,19 +885,6 @@ class admin_menu_new extends admin_menu_tools{
 	function FileStats($key,$title,$is_special){
 		global $langmessage,$gp_titles;
 
-		echo '<a>'.$langmessage['Slug/URL'].': '.htmlspecialchars($title).'</a>';
-		echo '<a>'.$langmessage['Content Type'].': '.str_replace(',',', ',$gp_titles[$key]['type']).'</a>';
-		if( !$is_special ){
-			$file = gpFiles::PageFile($title);
-			$stats = @stat($file);
-			if( $stats ){
-				$mtime = $stats['mtime'];
-				$size = $stats['size'];
-				echo '<a>'.$langmessage['File Size'].': '.admin_tools::FormatBytes($size).'</a>';
-				echo '<a>'.$langmessage['Modified'].': '.common::date($langmessage['strftime_datetime'],$mtime).'</a>';
-			}
-		}
-		echo '<a>Data Index: '.$key.'</a>';
 
 	}
 
@@ -1019,9 +1006,14 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<tr><th>';
 		echo $langmessage['file_name'];
 		echo '</th><th>';
+		echo $langmessage['Content Type'];
+		echo '</th><th>';
 		echo $langmessage['Child Pages'];
-		echo '</th>';
-		echo '</tr>';
+		echo '</th><th>';
+		echo $langmessage['File Size'];
+		echo '</th><th>';
+		echo $langmessage['Modified'];
+		echo '</th></tr>';
 		echo '</thead>';
 
 
@@ -1030,57 +1022,10 @@ class admin_menu_new extends admin_menu_tools{
 		if( count($show_list) > 0 ){
 			for( $i = $start; $i < $stop; $i++ ){
 				$title = $show_list[$i];
-				$title_index = $gp_index[$title];
-
-				echo '<tr><td>';
-
-				$label = common::GetLabel($title);
-				echo common::Link($title,common::LabelSpecialChars($label));
-
-
-				//area only display on mouseover
-				echo '<div>';
-				echo '<b>Options:</b>';
-				$img = '<span class="menu_icon page_edit_icon"></span>';
-				echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&index='.urlencode($title_index),array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
-
-				$img = '<span class="menu_icon copy_icon"></span>';
-				echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&index='.urlencode($title_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
-
-				$layout = admin_menu_tools::CurrentLayout($title_index);
-				$layout_info = $gpLayouts[$layout];
-
-				$img = '<span style="background-color:'.$layout_info['color'].';" class="layout_icon"></span>';
-				echo $this->Link('Admin_Menu',$img.$layout_info['label'],'cmd=layout&index='.urlencode($title_index),array('title'=>$langmessage['layout'],'data-cmd'=>'gpabox'));
-
-				$is_special = common::SpecialOrAdmin($title);
-				if( !$is_special ){
-					$img = '<span class="menu_icon bin_icon"></span>';
-					echo $this->Link('Admin_Menu',$img.$langmessage['delete'],'cmd=trash&index='.urlencode($title_index),array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
-				}
-
-				gpPlugin::Action('MenuPageOptions',array($title,$title_index,false,$layout_info));
-
-				//stats
-				echo '<br/>';
-				echo '<b>'.$langmessage['Page Info'].':</b>';
-				$this->FileStats($title_index,$title,$is_special);
-
-				echo '</div>';
-
-				echo '</td><td>';
-
-				if( isset($Inherit_Info[$title_index]) && isset($Inherit_Info[$title_index]['children']) ){
-					echo $Inherit_Info[$title_index]['children'];
-				}elseif( isset($gp_menu[$title_index]) ){
-					echo '0';
-				}else{
-					echo $langmessage['Not In Main Menu'];
-				}
-
-				echo '</td></tr>';
+				$this->SearchDisplayRow($title);
 			}
 		}
+
 		echo '</tbody>';
 		echo '</table>';
 
@@ -1092,8 +1037,87 @@ class admin_menu_new extends admin_menu_tools{
 
 		echo '<br/>';
 		echo $links;
+	}
 
 
+	/**
+	 * Display row
+	 *
+	 */
+	function SearchDisplayRow($title){
+		global $langmessage, $gpLayouts, $gp_index, $gp_menu, $gp_titles;
+
+		$title_index		= $gp_index[$title];
+		$is_special			= common::SpecialOrAdmin($title);
+		$file				= gpFiles::PageFile($title);
+		$stats				= @stat($file);
+		$mtime				= false;
+		$size				= false;
+
+		if( $stats ){
+			$mtime = $stats['mtime'];
+			$size = $stats['size'];
+		}
+
+
+		echo '<tr style="position:relative"><td>';
+
+		$label = common::GetLabel($title);
+		echo common::Link($title,common::LabelSpecialChars($label));
+
+
+		//area only display on mouseover
+		echo '<p><br/></p>';
+		echo '<div style="position:absolute;bottom:0;left:10px;right:10px;">';
+
+		echo $this->Link('Admin_Menu',$langmessage['rename/details'],'cmd=renameform&index='.urlencode($title_index),array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
+
+		echo $this->Link('Admin_Menu',$langmessage['Copy'],'cmd=copypage&index='.urlencode($title_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
+
+		$layout = admin_menu_tools::CurrentLayout($title_index);
+		$layout_info = $gpLayouts[$layout];
+
+		$img = '<span style="background-color:'.$layout_info['color'].';" class="layout_icon"></span>';
+		echo $this->Link('Admin_Menu',$img.$layout_info['label'],'cmd=layout&index='.urlencode($title_index),array('title'=>$langmessage['layout'],'data-cmd'=>'gpabox'));
+
+		if( !$is_special ){
+			$img = '<span class="menu_icon bin_icon"></span>';
+			echo $this->Link('Admin_Menu',$img.$langmessage['delete'],'cmd=trash&index='.urlencode($title_index),array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
+		}
+
+		gpPlugin::Action('MenuPageOptions',array($title,$title_index,false,$layout_info));
+
+		//stats
+		echo '<a>Data Index: '.$title_index.'</a>';
+		echo '</div>';
+
+		//types
+		echo '</td><td>';
+		echo str_replace(',',', ',$gp_titles[$title_index]['type']);
+
+		//children
+		echo '</td><td>';
+		if( isset($Inherit_Info[$title_index]) && isset($Inherit_Info[$title_index]['children']) ){
+			echo $Inherit_Info[$title_index]['children'];
+		}elseif( isset($gp_menu[$title_index]) ){
+			echo '0';
+		}else{
+			echo $langmessage['Not In Main Menu'];
+		}
+
+		//size
+		echo '</td><td>';
+		if( $size ){
+			echo admin_tools::FormatBytes($size);
+		}
+
+		//modified
+		echo '</td><td>';
+		if( $mtime ){
+			echo common::date($langmessage['strftime_datetime'],$mtime);
+		}
+
+		echo '</td></tr>';
 	}
 
 
@@ -1341,7 +1365,7 @@ class admin_menu_new extends admin_menu_tools{
 				unlink($file);
 			}
 		}
-		
+
 		gpPlugin::Action('MenuPageTrashed',array($indexes));
 
 		return true;

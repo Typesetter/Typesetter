@@ -1053,6 +1053,9 @@ class admin_menu_new extends admin_menu_tools{
 		$stats				= @stat($file);
 		$mtime				= false;
 		$size				= false;
+		$layout				= admin_menu_tools::CurrentLayout($title_index);
+		$layout_info		= $gpLayouts[$layout];
+
 
 		if( $stats ){
 			$mtime = $stats['mtime'];
@@ -1060,36 +1063,34 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 
-		echo '<tr style="position:relative"><td>';
+		echo '<tr><td>';
 
 		$label = common::GetLabel($title);
 		echo common::Link($title,common::LabelSpecialChars($label));
 
 
 		//area only display on mouseover
-		echo '<p><br/></p>';
-		echo '<div style="position:absolute;bottom:0;left:10px;right:10px;">';
+		echo '<div><div>';//style="position:absolute;bottom:0;left:10px;right:10px;"
 
 		echo $this->Link('Admin_Menu',$langmessage['rename/details'],'cmd=renameform&index='.urlencode($title_index),array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
 
 		echo $this->Link('Admin_Menu',$langmessage['Copy'],'cmd=copypage&index='.urlencode($title_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 
-		$layout = admin_menu_tools::CurrentLayout($title_index);
-		$layout_info = $gpLayouts[$layout];
-
-		$img = '<span style="background-color:'.$layout_info['color'].';" class="layout_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$layout_info['label'],'cmd=layout&index='.urlencode($title_index),array('title'=>$langmessage['layout'],'data-cmd'=>'gpabox'));
+		echo '<span>';
+		//$img = '<span style="background-color:'.$layout_info['color'].';" class="layout_icon"></span>';
+		echo $langmessage['layout'].': ';
+		echo $this->Link('Admin_Menu',$layout_info['label'],'cmd=layout&index='.urlencode($title_index),array('title'=>$langmessage['layout'],'data-cmd'=>'gpabox'));
+		echo '</span>';
 
 		if( !$is_special ){
-			$img = '<span class="menu_icon bin_icon"></span>';
-			echo $this->Link('Admin_Menu',$img.$langmessage['delete'],'cmd=trash&index='.urlencode($title_index),array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
+			echo $this->Link('Admin_Menu',$langmessage['delete'],'cmd=trash&index='.urlencode($title_index),array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
 		}
 
 		gpPlugin::Action('MenuPageOptions',array($title,$title_index,false,$layout_info));
 
 		//stats
 		echo '<a>Data Index: '.$title_index.'</a>';
-		echo '</div>';
+		echo '</div>&nbsp;</div>';
 
 		//types
 		echo '</td><td>';

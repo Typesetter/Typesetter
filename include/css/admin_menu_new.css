@@ -157,8 +157,7 @@ body #admin_menu li.ui-sortable-helper{
 
 #admin_menu_div .layout_icon{
 	border-radius: 5px;
-    display: block;
-    float: left;
+    display: inline-block;
     height: 16px;
     margin-right: 7px;
     width: 16px;
@@ -251,25 +250,36 @@ body #admin_menu li.ui-sortable-helper{
 	font-size:14px;
 	color:#333 !important;
 	}
-#gp_menu_available table div{
+
+#gp_menu_available td > div{
+	position:relative;
+	padding:10px 0 0;
+	}
+#gp_menu_available td > div > div{
 	visibility:hidden;
+	padding:10px 0 0;
 	font-size:11px;
-	}
-#gp_menu_available table b{
-	color:#666;
-	font-weight:normal;
-	min-width:60px;
-	display:inline-block;
-	}
-#gp_menu_available table div a{
-	padding:2px 5px;
-	margin:3px;
-	display:inline-block;
-	min-width:100px;
+	position:absolute;
+	top:0;
+	left:0;
 	white-space:nowrap;
 	}
 
-#gp_menu_available tr:hover div{
+#gp_menu_available table div > span,
+#gp_menu_available table div > a{
+	margin-right:6px;
+	display:inline-block;
+	white-space:nowrap;
+	padding-right:6px;
+	border-right:1px solid #ccc;
+	line-height:11px;
+	}
+
+#gp_menu_available table div > *:last-child{
+	border-right:0 none;
+	}
+
+#gp_menu_available tr:hover div > div{
 	visibility:visible;
 	}
 #gp_menu_available .in_menu{

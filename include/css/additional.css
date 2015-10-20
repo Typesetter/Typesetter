@@ -112,7 +112,7 @@ body .messages a{
 	width:60%;
 }
 .contactform textarea{
-	height:180px!important;
+	height:180px;
 	width:98%;
 }
 .contactform .submit{

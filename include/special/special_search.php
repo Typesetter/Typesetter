@@ -189,10 +189,10 @@ class special_gpsearch{
 		echo '</div>';
 
 		if( $total_pages > 1 ){
-			echo '<p class="search_nav search_nav_bottom">';
+			echo '<ul class="search_nav search_nav_bottom pagination">';
 			for($i=0;$i<$total_pages;$i++){
 				if( $i == $current_page ){
-					echo '<span>'.($i+1).'</span> ';
+					echo '<li><span>'.($i+1).'</span></li> ';
 					continue;
 				}
 				$query = 'q='.rawurlencode($_REQUEST['q']);
@@ -203,9 +203,9 @@ class special_gpsearch{
 				if( $this->gpabox ){
 					$attr = 'data-cmd="gpabox"';
 				}
-				echo common::Link('special_gpsearch',($i+1),$query,$attr).' ';
+				echo '<li>'.common::Link('special_gpsearch',($i+1),$query,$attr).'</li>';
 			}
-			echo '</p>';
+			echo '</ul>';
 		}
 	}
 

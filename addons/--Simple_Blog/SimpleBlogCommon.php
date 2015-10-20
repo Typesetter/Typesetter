@@ -617,7 +617,7 @@ class SimpleBlogCommon{
 		echo ' &#187; ';
 		echo 'Edit Post</h2>';
 		$this->PostForm($_POST,'save_edit',$this->post_id);
-		echo '</div>'
+		echo '</div>';
 		return true;
 	}
 

@@ -885,9 +885,6 @@ class gp_edit{
 		includeFile('tool/editing.php');
 		$page->ajaxReplace = array();
 
-
-		//msg($_POST);
-
 		//source file
 		//$source_file_rel = $_REQUEST['file'];
 		if( !empty($_REQUEST['src']) ){
@@ -897,8 +894,9 @@ class gp_edit{
 				$source_file_rel = substr($source_file_rel,$len);
 			}
 		}
-		$source_file_rel = '/'.ltrim($source_file_rel,'/');
-		$source_file_full = $dataDir.$source_file_rel;
+		$source_file_rel	= '/'.ltrim($source_file_rel,'/');
+		$source_file_full	= $dataDir.$source_file_rel;
+
 		if( !file_exists($source_file_full) ){
 			message($langmessage['OOPS'].' (Source file not found)');
 			return;
@@ -933,28 +931,31 @@ class gp_edit{
 			$section['attributes']['src']		= $source_file_rel;
 			$section['attributes']['height']	= $height;
 			$section['attributes']['width']		= $width;
+			$section['orig_src']				= $_REQUEST['src'];
+			$section['posx']					= 0;
+			$section['posy']					= 0;
 			return true;
 		}
+
 
 		//destination file
 		$name	= basename($source_file_rel);
 		$parts	= explode('.',$name);
 		$type	= array_pop($parts);
+
+		//remove the time portion of the filename
 		if( count($parts) > 1 ){
 			$time_part = array_pop($parts);
 			if( !ctype_digit($time_part) ){
 				$parts[] = $time_part;
 			}
-		}
-		$name = implode('.',$parts);
-		$time = time();
-		if( isset($_REQUEST['time']) && ctype_digit($_REQUEST['time']) ){
-			$time = $_REQUEST['time'];
+
 		}
 
-
-		$dest_img_rel	= '/data/_resized/img_type/'.$name.'.'.$time.'.png';
-		$dest_img_full	= $dataDir.$dest_img_rel;
+		$name				= implode('.',$parts);
+		$time				= time();
+		$dest_img_rel		= '/data/_resized/img_type/'.$name.'.'.$time.'.png';
+		$dest_img_full		= $dataDir.$dest_img_rel;
 
 		//make sure the folder exists
 		if( !gpFiles::CheckDir( dirname($dest_img_full) ) ){
@@ -967,9 +968,12 @@ class gp_edit{
 			return false;
 		}
 
-		$section['attributes']['src']		= $dest_img_rel;
-		$section['attributes']['height']	= $height;
-		$section['attributes']['width']		= $width;
+		$section['attributes']['src']			= $dest_img_rel;
+		$section['attributes']['height']		= $height;
+		$section['attributes']['width']			= $width;
+		$section['orig_src']					= $_REQUEST['src'];
+		$section['posx']						= $posx;
+		$section['posy']						= $posy;
 
 		includeFile('admin/admin_uploaded.php');
 		admin_uploaded::CreateThumbnail($dest_img_full);

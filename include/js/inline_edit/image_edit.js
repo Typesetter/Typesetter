@@ -14,6 +14,18 @@
 			src			: edit_img.attr('src')
 			};
 
+
+		// gpEasy 4.6a2+
+		// use the original image
+		if( section_object.orig_src ){
+			save_obj.src		= section_object.orig_src;
+			save_obj.posx		= section_object.posx;
+			save_obj.posy		= section_object.posy;
+			save_obj.width		= section_object.attributes.width;
+			save_obj.height 	= section_object.attributes.height;
+		}
+
+
 		var anim_values = {
 			posx		: 0,
 			posy		: 0,

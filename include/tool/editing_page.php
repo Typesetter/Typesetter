@@ -893,11 +893,9 @@ class editing_page extends display{
 		$sections_count			= count($this->file_sections);
 		$section_num			= 0;
 
-		do{
-
+		while( $section_num < $sections_count ){
 			$content .= $this->GetSection( $section_num );
-		}while( $section_num < $sections_count );
-
+		}
 
 		return $content;
 	}

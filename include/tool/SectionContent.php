@@ -24,9 +24,10 @@ class section_content{
 		$content			= '';
 		$section_num		= 0;
 		$sections_count		= count($sections);
-		do{
+
+		while( $section_num < $sections_count ){
 			$content .= self::GetSection($sections, $section_num);
-		}while( $section_num < $sections_count );
+		}
 
 		return $content;
 	}

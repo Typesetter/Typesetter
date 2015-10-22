@@ -196,8 +196,7 @@
 
 
 				//classes
-				var attrs		= $this.data('gp-attrs');
-				var classes		= attrs.class;
+				var classes		= $this.data('gp-attrs').class || label;
 
 
 
@@ -526,6 +525,7 @@
 		var new_attrs	= {};
 
 		var $temp_node	= $('<div>');
+		var classes		= '';
 
 		//prep old_attrs list
 		//remove old attrs from $area
@@ -552,6 +552,10 @@
 				return;
 			}
 
+			if( attr_name == 'class' ){
+				classes = attr_value;
+			}
+
 			var curr_value		= $area.attr(attr_name) || '';
 
 			$temp_node.attr('class',curr_value);
@@ -559,7 +563,17 @@
 			$area.attr(attr_name, $temp_node.attr('class'));
 
 			new_attrs[attr_name] = attr_value;
+
 		});
+
+
+		//update title of <li> in section manager
+		var $li		= $('#section_sorting li[data-area-id='+$area.attr('id'));
+		if( classes == '' ){
+			classes = $li.find('> div .section_label').text();
+		}
+		$li.attr('title',classes);
+
 
 		$area.data('gp-attrs',new_attrs);
 

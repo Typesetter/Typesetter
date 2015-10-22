@@ -19,7 +19,7 @@
 	background: #fff url('../imgs/drag_handle.gif') no-repeat 5px 5px;
 	position:relative;
 	border-left:#aabbcc 4px solid;
-	padding-left:3px;
+	padding:1px 1px 1px 3px;
 	}
 
 #section_sorting .color_handle{
@@ -40,7 +40,7 @@
 	}
 
 #section_sorting div{
-	padding:5px 0 3px 12px;
+	padding:4px 0 2px 12px;
 	cursor:pointer;
 	white-space:nowrap;
 	overflow:hidden;
@@ -80,7 +80,18 @@
 #section_sorting li.section-item-hover > div > .options{
 	display:inline-block;
 	}
-
+#section_sorting input{
+	border:1px solid #ddd;
+	border-radius:3px;
+	box-shadow:none;
+	background:#fff;
+	margin:2px 0;
+	font-size:13px;
+	display:block;
+	height:21px;
+	padding:0 3px;
+	box-sizing:border-box;
+	}
 
 #section_sorting i{
 	display:block;

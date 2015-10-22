@@ -569,9 +569,9 @@
 
 		var $this			= $(this);
 		var $div			= $this.closest('div');
-		$div.children().hide();
+		$div.hide();
 		var tmpInput		= $('<input type="text" value="' + $this.text() + '"/>')
-			.appendTo($div)
+			.insertAfter($div)
 			.focus()
 			.select()
 			// when blurred, remove <input> and show hidden elements
@@ -581,7 +581,7 @@
 				// stop if not enter key or
 				if( evt.type != 'blur' && evt.which !== 13 && evt.which !== 27 ) return;
 
-				$div.children().show();
+				$div.show();
 				var label = tmpInput.val();
 				tmpInput.remove();
 

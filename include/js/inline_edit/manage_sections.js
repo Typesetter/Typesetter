@@ -372,10 +372,11 @@
 	 *
 	 */
 	$gp.links.CopySection = function(evt){
-		var area	= gp_editor.GetArea( $(this).closest('li') ).clone();
-		var id		= 'Copied_'+Math.floor((Math.random() * 100000) + 1)+'_'+area.attr('id');
-		area.attr('id',id).addClass('new_section');
-		$('#gpx_content').append(area);
+		var from_area	= gp_editor.GetArea( $(this).closest('li') );
+		var new_area	= from_area.clone();
+		var id			= 'Copied_'+Math.floor((Math.random() * 100000) + 1)+'_'+new_area.attr('id');
+		new_area.attr('id',id).addClass('new_section');
+		from_area.after(new_area);
 		gp_editor.InitSorting();
 	}
 

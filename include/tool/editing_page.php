@@ -363,7 +363,7 @@ class editing_page extends display{
 		}
 
 
-		$this->file_sections = $new_sections;
+		$this->file_sections = array_values($new_sections);
 		$this->ResetFileTypes(false);
 
 
@@ -891,7 +891,9 @@ class editing_page extends display{
 
 		$content				= '';
 		$sections_count			= count($this->file_sections);
+		$this->file_sections	= array_values($this->file_sections);
 		$section_num			= 0;
+
 
 		while( $section_num < $sections_count ){
 			$content .= $this->GetSection( $section_num );

@@ -24,6 +24,7 @@ class section_content{
 		$content			= '';
 		$section_num		= 0;
 		$sections_count		= count($sections);
+		$sections			= array_values($sections);
 
 		while( $section_num < $sections_count ){
 			$content .= self::GetSection($sections, $section_num);

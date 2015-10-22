@@ -71,12 +71,26 @@ class section_content{
 			}else{
 				$content 			= '<'.$section_data['nodeName'].self::SectionAttributes($section_data['attributes'],$section_data['type']).'>'
 									. $content
-									. '</'.$section_data['nodeName'].'>';
+									. section_content::EndTag($section_data['nodeName']);
 			}
 
 		}
 
 		return $content;
+	}
+
+
+	/**
+	 * Output an end tag if appropriate
+	 *
+	 */
+	static function EndTag($node_name){
+
+		$empty_nodes = array('link','track','param','area','command','col','base','meta','hr','source','img','keygen','br','wbr','input');
+		if( in_array($node_name,$empty_nodes) ){
+			return;
+		}
+		return '</'.$node_name.'>';
 	}
 
 

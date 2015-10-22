@@ -257,7 +257,7 @@ class editing_page extends display{
 			return $this->SectionNode($new_section, $orig_attrs).$content.'</div>';
 		}
 
-		return $this->SectionNode($new_section, $orig_attrs).$content.'</'.$new_section['nodeName'].'>';
+		return $this->SectionNode($new_section, $orig_attrs).$content.section_content::EndTag($new_section['nodeName']);
 	}
 
 	function SectionNode($section,$orig_attrs){
@@ -978,7 +978,7 @@ class editing_page extends display{
 			$content			.= '<div class="gpclear"></div>';
 			$content			.= '</div>';
 		}else{
-			$content			.= '</'.$section_data['nodeName'].'>';
+			$content			.= section_content::EndTag($section_data['nodeName']);
 		}
 
 		return $content;

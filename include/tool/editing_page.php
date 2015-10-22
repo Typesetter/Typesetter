@@ -273,10 +273,10 @@ class editing_page extends display{
 		}
 
 		if( !isset($section['nodeName']) ){
-			return "\n<div".$attributes.'>';
+			return '<div'.$attributes.'>';
 		}
 
-		return "\n<".$section['nodeName'].$attributes.'>';
+		return '<'.$section['nodeName'].$attributes.'>';
 	}
 
 

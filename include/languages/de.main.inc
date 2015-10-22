@@ -385,6 +385,7 @@ $langmessage = array (
 	'Refresh'                        => 'Test wiederholen',
 	'Install'                        => 'Installieren',
 	'Installing'                     => 'Installiere',
+	'Installed'                      => 'Installiert',
 	'index.html exists'              => 'In Ihrem Wurzelverzeichnis gibt es eine Datei index.html, die verhindert, dass gpEasy angezeigt wird. Bitte löschen Sie diese!',
 	'Notes'                          => 'Anmerkungen',
 	'Install_Conflict'               => 'gpEasy kann mit den aktuellen Einstellungen nicht auf Ihrem Server installiert werden. ',

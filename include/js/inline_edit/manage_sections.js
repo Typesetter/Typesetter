@@ -195,7 +195,13 @@
 				style	+= ' class="'+$this.data('gp_collapse')+'"';
 
 
-				html += '<li data-area-id="'+this.id+'" '+style+'>';
+				//classes
+				var attrs		= $this.data('gp-attrs');
+				var classes		= attrs.class;
+
+
+
+				html += '<li data-area-id="'+this.id+'" '+style+' title="'+classes+'">';
 				html += '<div><a class="color_handle" data-cmd="SectionColor"></a>';
 				html += '<span class="options">';
 				html += '<a class="gpicon_edapp" data-cmd="SectionOptions" title="Options"></a>';

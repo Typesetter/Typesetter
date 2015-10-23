@@ -62,6 +62,12 @@ class Child_Thumbnails{
 			}
 		}
 
+		if( !$file_sections) ){
+			return;
+		}
+
+		$file_sections = array_values($file_sections);
+
 		//get the image
 		$content = section_content::Render($file_sections,$title,$file_stats);
 		$img_pos = strpos($content,'<img');

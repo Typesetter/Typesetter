@@ -326,6 +326,48 @@
 
 	}
 
+	/**
+	 * Preview new section
+	 *
+	 */
+	$(document).on('mouseenter','.preview_section',function(){
+		var $this = $(this);
+
+		if( !$this.hasClass('previewing') ){
+
+			//remove other preview
+			$('.previewing').removeClass('previewing');
+			$('.temporary-section').slideUp(function(){
+				$(this).remove();
+			});
+
+			//scroll the page
+			var $last	= $('#gpx_content .editable_area:not(.temporary-section):last');
+			var top		= $last.position().top + $last.height() - 200;
+			$('html,body').stop().animate({scrollTop: top});
+
+
+			//begin new preview
+			$this.addClass('previewing');
+
+			var that	= this;
+			var href	= this.href + '&preview='+new Date().getTime();
+			href		= $gp.jPrep(href);
+
+			$.getJSON(href,function(data,textStatus,jqXHR){
+				$gp.Response.call(that,data,textStatus,jqXHR);
+			});
+		}
+	}).on('mouseleave','.preview_section',function(){
+
+		$(this).removeClass('previewing');
+		$('.temporary-section').slideUp(function(){
+			$(this).remove();
+		});
+
+	});
+
+
 
 	/**
 	 * Handle new section clicks
@@ -343,20 +385,34 @@
 	 *
 	 */
 	$gp.response.AddSection = function(data){
-		$('.loading-section').removeClass('loading-section').finish().fadeTo(700,1);
-
-		var $new_content	= $(data.CONTENT).appendTo('#gpx_content');
-		var top				= Math.max( 0, $new_content.position().top - 200);
-		$new_content.hide().addClass('section-highlight');
-
-		$('html,body').stop().animate({scrollTop: top},{complete:function(){
-			$new_content.delay(200).slideDown(function(){
-				$new_content.removeClass('section-highlight');
-			});
-		}});
-
+		DisplaySection(data);
 		gp_editor.InitSorting();
 	}
+
+	$gp.response.PreviewSection = function(data){
+
+		var $this = $(this);
+		if( !$this.hasClass('previewing') ){
+			return;
+		}
+
+		DisplaySection(data,'temporary-section');
+	}
+
+	function DisplaySection(data, add_class ){
+
+		$('.loading-section').removeClass('loading-section').finish().fadeTo(700,1);
+
+		var $new_content	= $(data.CONTENT).addClass(add_class).appendTo('#gpx_content');
+		$new_content
+			.hide()
+			.addClass('section-highlight')
+			.delay(200).slideDown(function(){
+				$new_content.removeClass('section-highlight');
+			});
+
+	}
+
 
 	/**
 	 * Remove a section

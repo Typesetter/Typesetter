@@ -184,9 +184,15 @@ class editing_page extends display{
 	function NewSectionContent(){
 		global $page;
 
+
 		$page->ajaxReplace		= array();
 		$content				= $this->GetNewSection($_REQUEST['type']);
-		$page->ajaxReplace[] 	= array('AddSection','',$content);
+
+		if( isset($_REQUEST['preview']) ){
+			$page->ajaxReplace[] 	= array('PreviewSection','',$content);
+		}else{
+			$page->ajaxReplace[] 	= array('AddSection','',$content);
+		}
 	}
 
 
@@ -233,7 +239,12 @@ class editing_page extends display{
 		}
 		echo '</div>';
 
-		$page->ajaxReplace[] = array('AddSection','',ob_get_clean());
+		if( isset($_REQUEST['preview']) ){
+			$page->ajaxReplace[] 	= array('PreviewSection','',ob_get_clean());
+		}else{
+			$page->ajaxReplace[] 	= array('AddSection','',ob_get_clean());
+		}
+
 	}
 
 	function GetNewSection($type, $class = ''){
@@ -620,7 +631,7 @@ class editing_page extends display{
 			$q = array('cmd'=> 'NewSectionContent','type' => $type );
 		}
 
-		return '<div>'.common::Link($page->title,$label,http_build_query($q,'','&amp;'),array('data-cmd'=>'AddSection')).'</div>';
+		return '<div>'.common::Link($page->title,$label,http_build_query($q,'','&amp;'),array('data-cmd'=>'AddSection','class'=>'preview_section')).'</div>';
 	}
 
 

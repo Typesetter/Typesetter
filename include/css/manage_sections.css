@@ -36,7 +36,9 @@
 	}
 
 #section_sorting > li:only-child > div .RemoveSection{
-	display:none;
+	opacity: 0.3;
+	pointer-events: none;
+	cursor: default;
 	}
 
 #section_sorting div{

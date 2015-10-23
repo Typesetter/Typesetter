@@ -53,6 +53,13 @@ if( !function_exists('gpSettingsOverride') ){
 	function gpSettingsOverride(){}
 }
 
+if( !function_exists('gzopen') && function_exists('gzopen64') ){
+	function gzopen( $filename, $mode, $use_include_path = 0 ){
+		return gzopen64( $filename, $mode, $use_include_path );
+	}
+}
+
+
 //see mediawiki/languages/Names.php
 $languages = array(
 	'af' => 'Afrikaans',

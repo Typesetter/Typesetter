@@ -342,7 +342,7 @@
 			});
 
 			//scroll the page
-			var $last	= $('#gpx_content .editable_area:not(.temporary-section):last');
+			var $last	= $('#gpx_content .editable_area:last');
 			var top		= $last.position().top + $last.height() - 200;
 			$('html,body').stop().animate({scrollTop: top});
 
@@ -399,12 +399,18 @@
 		DisplaySection(data,'temporary-section');
 	}
 
-	function DisplaySection(data, add_class ){
+	function DisplaySection(data, temporary ){
 
 		$('.loading-section').removeClass('loading-section').finish().fadeTo(700,1);
 
-		var $new_content	= $(data.CONTENT).addClass(add_class).appendTo('#gpx_content');
+		var $new_content	= $(data.CONTENT);
+
+		if( temporary ){
+			$new_content.addClass('temporary-section').removeClass('editable_area');
+		}
+
 		$new_content
+			.appendTo('#gpx_content')
 			.hide()
 			.addClass('section-highlight')
 			.delay(200).slideDown(function(){

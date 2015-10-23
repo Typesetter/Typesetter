@@ -386,6 +386,7 @@ $langmessage = array (
 	'Refresh'                        => 'Recharger',
 	'Install'                        => 'Installer',
 	'Installing'                     => 'Installation',
+	'Installed'                      => 'Installée',
 	'index.html exists'              => 'Un fichier index.html est présent dans votre dossier racine, il peut empêcher gpEasy de s\'exécuter.',
 	'Notes'                          => 'Remarques',
 	'Install_Conflict'               => 'La configuration actuelle de votre serveur ne permet pas l\'installation de gp|Esy ',

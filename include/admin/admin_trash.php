@@ -3,7 +3,7 @@ defined('is_running') or die('Not an entry point...');
 
 class admin_trash{
 
-	function admin_trash(){
+	function __construct(){
 		global $langmessage;
 
 		$cmd = common::GetCommand();
@@ -55,7 +55,7 @@ class admin_trash{
 			}else{
 				$trash_file = $dataDir.'/data/_trash/'.$trash_titles[$title]['file'];
 			}
-			if( file_exists($trash_file) ){
+			if( gpFiles::Exists($trash_file) ){
 				unlink($trash_file);
 			}
 
@@ -78,21 +78,21 @@ class admin_trash{
 
 
 
-	/*
+	/**
 	 * Return a sorted array of files in the trash
 	 * @static
+	 *
 	 */
 	static function TrashFiles(){
 		global $dataDir;
-		$trash_dir = $dataDir.'/data/_site/trash.php';
 
-		if( !file_exists($trash_dir) ){
+		$trash_file = $dataDir.'/data/_site/trash.php';
+
+		if( !gpFiles::Exists($trash_file) ){
 			return admin_trash::GenerateTrashIndex();
 		}
 
-		$trash_titles = array();
-		include($trash_dir);
-		return $trash_titles;
+		return gpFiles::Get($trash_file,'trash_titles');
 	}
 
 
@@ -129,7 +129,7 @@ class admin_trash{
 		global $dataDir;
 		$index_file = $dataDir.'/data/_site/trash.php';
 		uksort($trash_titles,'strnatcasecmp');
-		return gpFiles::SaveArray($index_file,'trash_titles',$trash_titles);
+		return gpFiles::SaveData($index_file,'trash_titles',$trash_titles);
 	}
 
 
@@ -146,7 +146,7 @@ class admin_trash{
 			$trash_titles = admin_trash::TrashFiles();
 		}
 
-		if( !isset($trash_titles[$title]) ){
+		if( !array_key_exists($title,$trash_titles) ){
 			return false;
 		}
 
@@ -180,25 +180,22 @@ class admin_trash{
 	static function MoveToTrash_File($title, $index, &$trash_data){
 		global $dataDir, $gp_titles;
 
-		$source_file = gpFiles::PageFile($title);
-		$trash_file_name = sha1($title).'.php';
-		$trash_file = $dataDir.'/data/_trash/'.$trash_file_name;
+		$source_file		= gpFiles::PageFile($title);
+		$trash_file_name	= sha1($title).'.php';
+		$trash_file			= $dataDir.'/data/_trash/'.$trash_file_name;
 
-		$trash_data[$title] = $gp_titles[$index];
-		$trash_data[$title]['file'] = $trash_file_name;
+		$trash_data[$title]				= $gp_titles[$index];
+		$trash_data[$title]['file']		= $trash_file_name;
 
-		if( !file_exists($source_file) ){
+
+		//get the file data
+		$file_sections = gpFiles::Get($source_file,'file_sections');
+		if( !$file_sections ){
 			return false;
 		}
 
-		//get the file data
-		$file_sections = array();
-		ob_start();
-		include($source_file);
-		ob_get_clean();
 
-
-		if( file_exists($trash_file) ){
+		if( gpFiles::Exists($trash_file) ){
 			if( !unlink($trash_file) ){
 				return false;
 			}
@@ -296,7 +293,7 @@ class admin_trash{
 
 			//make sure the trash file exists
 			$trash_file = $dataDir.'/data/_trash/'.$title_info['file'];
-			if( !file_exists($trash_file) ){
+			if( !gpFiles::Exists($trash_file) ){
 				unset($gp_index[$new_title]);
 				continue;
 			}
@@ -331,12 +328,8 @@ class admin_trash{
 	 *
 	 */
 	static function RestoreFile($title,$file,$title_info){
-		//get the file data
-		$file_sections = array();
-		ob_start();
-		include($file);
-		ob_get_clean();
 
+		$file_sections = gpFiles::Get($file,'file_sections');
 
 		// Restore resized images
 		if( count($file_sections) ){
@@ -381,9 +374,9 @@ class admin_trash{
 	 */
 	static function GetTypes($file){
 
-		$types = array();
-		$file_sections = array();
-		require($file);
+		$types			= array();
+		$file_sections	= gpFiles::Get($file,'file_sections');
+
 		foreach($file_sections as $section){
 			$types[] = $section['type'];
 		}

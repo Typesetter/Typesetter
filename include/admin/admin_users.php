@@ -6,9 +6,11 @@ defined('is_running') or die('Not an entry point...');
 class admin_users{
 
 	var $users;
-	var $possible_permissions = array();
+	var $possible_permissions	= array();
+	var $has_weak_pass			= false;
 
-	function admin_users(){
+
+	function __construct(){
 		global $page,$langmessage;
 
 		$page->head_js[] = '/include/js/admin_users.js';
@@ -71,7 +73,7 @@ class admin_users{
 	 *
 	 */
 	function SaveChanges(){
-		global $langmessage, $dataDir,$gpAdmin;
+		global $langmessage,$gpAdmin;
 
 		$username =& $_REQUEST['username'];
 		if( !isset($this->users[$username]) ){
@@ -94,7 +96,6 @@ class admin_users{
 
 
 		if( !$this->SaveUserFile() ){
-			message($langmessage['OOPS']);
 			return false;
 		}
 
@@ -111,22 +112,22 @@ class admin_users{
 	function UserFileDetails($username,$is_curr_user){
 		global $dataDir;
 
-		$user_info = $this->users[$username];
-		$user_file_name = $user_info['file_name'];
-		$user_file = $dataDir.'/data/_sessions/'.$user_file_name;
+		$user_info			= $this->users[$username];
+		$user_file			= $dataDir.'/data/_sessions/'.$user_info['file_name'];
 
-		if( !$is_curr_user ){
-			if( !file_exists($user_file) ){
-				return;
-			}
-			include($user_file);
-		}else{
+		if( $is_curr_user ){
 			global $gpAdmin;
+		}else{
+			$gpAdmin = gpFiles::Get($user_file,'gpAdmin');
+		}
+
+		if( !$gpAdmin ){
+			return;
 		}
 
 		$gpAdmin['granted'] = $user_info['granted'];
 		$gpAdmin['editing'] = $user_info['editing'];
-		gpFiles::SaveArray($user_file,'gpAdmin',$gpAdmin);
+		gpFiles::SaveData($user_file,'gpAdmin',$gpAdmin);
 	}
 
 	/**
@@ -159,11 +160,9 @@ class admin_users{
 
 		$this->DetailsForm($userinfo,$username);
 
-		echo '<tr>';
-			echo '<td>';
-			echo '</td>';
-			echo '<td>';
-			echo ' <input type="submit" name="aaa" value="'.$langmessage['continue'].'" class="gpsubmit"/>';
+		echo '<tr><td>';
+			echo '</td><td>';
+			echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit"/>';
 			echo ' <input type="reset" class="gpsubmit" />';
 			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="gpcancel"/>';
 			echo '</td>';
@@ -240,11 +239,31 @@ class admin_users{
 			$this->users[$newname]['email'] = $_POST['email'];
 		}
 
-		$this->users[$newname]['password'] = common::hash($_POST['password'],'sha512');
-		$this->users[$newname]['granted'] = $this->GetPostedPermissions($newname);
-		$this->users[$newname]['editing'] = $this->GetEditingPermissions();
-		$this->users[$newname]['passhash'] = 'sha512';
+		$this->users[$newname]['granted']	= $this->GetPostedPermissions($newname);
+		$this->users[$newname]['editing']	= $this->GetEditingPermissions();
+
+		self::SetUserPass( $this->users[$newname], $_POST['password']);
+
 		return $this->SaveUserFile();
+	}
+
+
+	/**
+	 * Set the user password and password hash algorithm
+	 *
+	 */
+	static function SetUserPass( &$user_info, $password ){
+
+		if( function_exists('password_hash') && $_REQUEST['algo'] == 'password_hash' ){
+			$temp					= common::hash($_POST['password'],'sha512',50);
+			$user_info['password']	= password_hash($temp,PASSWORD_DEFAULT);
+			$user_info['passhash']	= 'password_hash';
+
+		}else{
+			$user_info['password']	= common::hash($_POST['password'],'sha512');
+			$user_info['passhash']	= 'sha512';
+		}
+
 	}
 
 
@@ -305,9 +324,9 @@ class admin_users{
 
 
 	function SaveUserFile($refresh = true ){
-		global $langmessage, $dataDir;
+		global $langmessage;
 
-		if( !gpFiles::SaveArray($dataDir.'/data/_site/users.php','users',$this->users) ){
+		if( !gpFiles::SaveData('_site/users','users',$this->users) ){
 			message($langmessage['OOPS']);
 			return false;
 		}
@@ -330,9 +349,13 @@ class admin_users{
 
 
 		echo '<h2>'.$langmessage['user_permissions'].'</h2>';
-		echo '<table class="bordered">';
+
+		ob_start();
+		echo '<table class="bordered full_width">';
 		echo '<tr><th>';
 		echo $langmessage['username'];
+		echo '</th><th>';
+		echo $langmessage['Password Algorithm'];
 		echo '</th><th>';
 		echo $langmessage['permissions'];
 		echo '</th><th>';
@@ -343,13 +366,16 @@ class admin_users{
 
 		foreach($this->users as $username => $userinfo){
 
-			echo '<tr>';
-			echo '<td>';
+			echo '<tr><td>';
 			echo $username;
-			echo '</td>';
+
+			//algorithm
+			echo '</td><td>';
+			$this->PassAlgo($userinfo);
+
 
 			//admin permissions
-			echo '<td>';
+			echo '</td><td>';
 				if( $userinfo['granted'] == 'all' ){
 					echo 'all';
 				}elseif( !empty($userinfo['granted']) ){
@@ -406,15 +432,46 @@ class admin_users{
 			echo '</td>';
 			echo '</tr>';
 		}
-		echo '<tr><th colspan="4">';
+		echo '<tr><th colspan="5">';
 		echo common::Link('Admin_Users',$langmessage['new_user'],'cmd=newuserform');
 		echo '</th>';
 
 		echo '</table>';
 
+		$content = ob_get_clean();
 
+		if( $this->has_weak_pass ){
+			echo '<p class="gp_notice"><b>Warning:</b> ';
+			echo 'Weak password algorithms are being used for one or more users. To fix this issue, reset the user\'s password. ';
+			echo '</p>';
+		}
+
+		echo $content;
 	}
 
+
+	/**
+	 * Display the password algorithm being used for the user
+	 *
+	 */
+	function PassAlgo($userinfo){
+
+		$algo = gpsession::PassAlgo($userinfo);
+		switch($algo){
+			case 'md5':
+			case 'sha1':
+			$this->has_weak_pass = true;
+			echo '<span style="color:red">'.$algo.'</span>';
+			return;
+		}
+		echo $algo;
+	}
+
+
+	/**
+	 * Display form for adding new admin user
+	 *
+	 */
 	function NewUserForm(){
 		global $langmessage;
 
@@ -441,18 +498,62 @@ class admin_users{
 			echo '<input type="password" name="password1" value="" class="gpinput"/>';
 			echo '</td></tr>';
 
+		$this->AlgoSelect();
+
 		$_POST['granted'] = $this->GetPostedPermissions(false);
 		$_POST['editing'] = $this->GetEditingPermissions();
 		$this->DetailsForm($_POST);
 
-		echo '</table>';
-		echo '<p>';
+
+		echo '<tr><td>';
+			echo '</td><td>';
 			echo '<input type="hidden" name="cmd" value="newuser" />';
-			echo ' <input type="submit" name="aaa" value="'.$langmessage['continue'].'" class="gpsubmit"/>';
+			echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit"/>';
 			echo ' <input type="reset" class="gpsubmit"/>';
 			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="gpcancel"/>';
-			echo '</p>';
+			echo '</td></tr>';
+
+		echo '</table>';
 		echo '</form>';
+	}
+
+	/**
+	 * Display <select> for password algorithm
+	 *
+	 */
+	function AlgoSelect(){
+		global $langmessage;
+
+		$algos						= array();
+		if( function_exists('password_hash') ){
+			$algos['password_hash']		= true;
+			$algos['sha512']			= true;
+		}else{
+			$algos['sha512']			= true;
+			$algos['password_hash']		= false;
+		}
+
+		echo '<tr><td>';
+		echo str_replace(' ','&nbsp;',$langmessage['Password Algorithm']);
+		echo '</td><td>';
+		echo '<select name="algo" class="gpselect">';
+		foreach($algos as $algo => $avail){
+
+			$attr = '';
+			if( !$avail ){
+				$attr .= 'disabled';
+			}
+			if( isset($_REQUEST['algo']) && $algo == $_REQUEST['algo'] ){
+				$attr .= ' selected';
+			}
+			echo '<option value="'.$algo.'" '.$attr.'>'.$algo.'</option>';
+		}
+		echo '</select>';
+
+		echo ' &nbsp; <span class="sm text-muted">password_hash requires PHP 5.5+</span>';
+
+		echo '</td></tr>';
+
 
 	}
 
@@ -574,9 +675,12 @@ class admin_users{
 			echo '</td><td>';
 			echo '<input type="password" name="password1" value="" class="gpinput"/>';
 			echo '</td></tr>';
+
+		$this->AlgoSelect();
+
 		echo '<tr><td>';
 			echo '</td><td>';
-			echo '<input type="submit" name="aaa" value="'.$langmessage['continue'].'" class="gpsubmit" />';
+			echo '<input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit" />';
 			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="gpcancel" />';
 			echo '</td></tr>';
 		echo '</table>';
@@ -585,6 +689,7 @@ class admin_users{
 
 	/**
 	 * Save a user's new password
+	 *
 	 */
 	function ResetPass(){
 		global $langmessage, $config;
@@ -599,12 +704,8 @@ class admin_users{
 			return false;
 		}
 
-		$pass_hash = $config['passhash'];
-		if( isset($this->users[$username]['passhash']) ){
-			$pass_hash = $this->users[$username]['passhash'];
-		}
+		self::SetUserPass( $this->users[$username], $_POST['password']);
 
-		$this->users[$username]['password'] = common::hash($_POST['password'],$pass_hash);
 		return $this->SaveUserFile();
 	}
 
@@ -625,11 +726,8 @@ class admin_users{
 	}
 
 	function GetUsers(){
-		global $dataDir;
 
-		require($dataDir.'/data/_site/users.php');
-
-		$this->users = $users;
+		$this->users		= gpFiles::Get('_site/users');
 
 		//fix the editing value
 		foreach($this->users as $username => $userinfo){
@@ -646,30 +744,58 @@ class admin_users{
 	 *
 	 */
 	function FilePermissions(){
-		global $gp_titles,$langmessage;
-		$index = $_REQUEST['index'];
-		if( !isset($gp_titles[$index]) ){
-			message($langmessage['OOPS'].' (Invalid Title)');
+		global $gp_titles, $langmessage;
+
+		$indexes 		= $this->RequestedIndexes();
+		if( !$indexes ){
 			return;
 		}
+
+		$count			= count($indexes);
+		$first_index	= $indexes[0];
+
+
 		echo '<div class="inline_box">';
 		echo '<form action="'.common::GetUrl('Admin_Users').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="save_file_permissions">';
-		echo '<input type="hidden" name="index" value="'.$index.'">';
+		echo '<input type="hidden" name="index" value="'.htmlspecialchars($_REQUEST['index']).'">';
 
-		$label = strip_tags(common::GetLabelIndex($index));
-		//echo '<h3>'.sprintf($langmessage['Permissions_for'],$label).'</h3>';
-		echo '<h2>'.common::Link('Admin_Users',$langmessage['user_permissions']).' &#187; <i>'.$label.'</i></h2>';
 
+		//heading
+		echo '<h2>'.common::Link('Admin_Users',$langmessage['user_permissions']).' &#187; <i>';
+		if( $count > 1 ){
+			echo sprintf($langmessage['%s Pages'],$count);
+		}else{
+			echo strip_tags(common::GetLabelIndex($indexes[0]));
+		}
+		echo '</i></h2>';
+
+
+		//list of files
+		if( $count > 1 ){
+			$labels = array();
+			foreach( $indexes as $index ){
+				$labels[] = strip_tags(common::GetLabelIndex($index));
+			}
+			echo '<p>';
+			echo implode(', ',$labels);
+			echo '</p>';
+		}
+
+
+		//list of users
 		echo '<div class="all_checkboxes">';
 		foreach($this->users as $username => $userinfo){
 			$attr = '';
 			if( $userinfo['editing'] == 'all'){
 				$attr = ' checked="checked" disabled="disabled"';
-			}elseif(strpos($userinfo['editing'],','.$index.',') !== false ){
+			}elseif(strpos($userinfo['editing'],','.$first_index.',') !== false ){
 				$attr = ' checked="checked"';
 			}
-			echo '<label class="all_checkbox"><input type="checkbox" name="users['.htmlspecialchars($username).']" value="'.htmlspecialchars($username).'" '.$attr.'/> '.$username.'</label> ';
+			echo '<label class="all_checkbox">';
+			echo '<input type="checkbox" name="users['.htmlspecialchars($username).']" value="'.htmlspecialchars($username).'" '.$attr.'/>';
+			echo $username;
+			echo '</label> ';
 		}
 		echo '</div>';
 
@@ -682,6 +808,7 @@ class admin_users{
 		echo '</div>';
 	}
 
+
 	/**
 	 * Save the permissions for a specific file
 	 *
@@ -689,24 +816,29 @@ class admin_users{
 	function SaveFilePermissions(){
 		global $gp_titles, $langmessage, $gp_index, $gpAdmin;
 
-		$index = $_REQUEST['index'];
-		if( !isset($gp_titles[$index]) ){
-			message($langmessage['OOPS'].' (Invalid Title)');
+		$indexes 		= $this->RequestedIndexes();
+		if( !$indexes ){
 			return;
 		}
 
 
 		foreach($this->users as $username => $userinfo){
+
 			if( $userinfo['editing'] == 'all'){
 				continue;
 			}
 
-			$before = $editing = $userinfo['editing'];
-			if( isset($_POST['users'][$username]) ){
-				$editing .= $index.',';
-			}else{
-				$editing = str_replace( ','.$index.',', ',', $editing);
+			$editing = $userinfo['editing'];
+
+			foreach($indexes as $index){
+
+				if( isset($_POST['users'][$username]) ){
+					$editing .= $index.',';
+				}else{
+					$editing = str_replace( ','.$index.',', ',', $editing);
+				}
 			}
+
 			$editing = explode(',',trim($editing,','));
 			$editing = array_intersect($editing,$gp_index);
 			if( count($editing) ){
@@ -714,8 +846,8 @@ class admin_users{
 			}else{
 				$editing = '';
 			}
-			$this->users[$username]['editing'] = $editing;
 
+			$this->users[$username]['editing'] = $editing;
 			$is_curr_user = ($gpAdmin['username'] == $username);
 			$this->UserFileDetails($username,$is_curr_user);
 		}
@@ -723,6 +855,37 @@ class admin_users{
 		return $this->SaveUserFile(false);
 	}
 
+
+	/**
+	 * Get the menu indexes
+	 *
+	 */
+	function RequestedIndexes(){
+		global $langmessage, $gp_titles;
+
+		$_REQUEST		+= array('index'=>'');
+		$indexes		= explode(',',$_REQUEST['index']);
+
+		if( !$indexes ){
+			message($langmessage['OOPS'].' Invalid Title (1)');
+			return;
+		}
+
+		$cleaned = array();
+		foreach($indexes as $index){
+			if( !isset($gp_titles[$index]) ){
+				continue;
+			}
+			$cleaned[] = $index;
+		}
+
+		if( !$cleaned ){
+			message($langmessage['OOPS'].' Invalid Title (2)');
+			return;
+		}
+
+		return $cleaned;
+	}
 
 }
 

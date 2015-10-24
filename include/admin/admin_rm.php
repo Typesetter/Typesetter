@@ -8,7 +8,7 @@ class admin_status{
 	var $passed_count = 0;
 	var $show_failed_max = 50;
 
-	function admin_status(){
+	function __construct(){
 		global $dataDir,$langmessage;
 
 		includeFile('tool/install.php');
@@ -34,7 +34,7 @@ class admin_status{
 			echo sprintf($langmessage['data_check_passed'],$checked,$checked);
 			echo '</p>';
 
-			$this->CheckPageFiles();
+			//$this->CheckPageFiles();
 			return;
 		}
 
@@ -195,7 +195,7 @@ class admin_rm{
 
 
 	//should have a way to switch them back!
-	function admin_rm(){
+	function __construct(){
 		global $langmessage;
 		$cmd = common::GetCommand();
 		switch($cmd){

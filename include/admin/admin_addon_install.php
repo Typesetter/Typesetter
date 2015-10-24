@@ -35,19 +35,18 @@ class admin_addon_install extends admin_addons_tool{
 
 
 	function __construct(){
-		global $page, $GP_INLINE_VARS;
+		global $page;
 
 		// css and js
 		$page->css_admin[] = '/include/css/addons.css';
 		$page->head_js[] = '/include/js/rate.js';
-
-		$GP_INLINE_VARS += array(
-			'gpRem' => admin_tools::CanRemoteInstall(),
-		);
-
 	}
 
-	function ShowHeader(){
+	/**
+	 * Output addon heading
+	 *
+	 */
+	function ShowHeader( $addon_name = false ){
 		global $page;
 
 		$list = array();
@@ -69,6 +68,11 @@ class admin_addon_install extends admin_addons_tool{
 
 		echo '<h2 class="hmargin">';
 		echo implode(' <span>|</span> ', $list );
+
+		if( $addon_name ){
+			echo ' <span>|</span> '.$addon_name;
+		}
+
 		echo '</h2>';
 
 	}

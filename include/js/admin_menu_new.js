@@ -1,26 +1,27 @@
 
 	$(function(){
 
-		var $sortable_area = $('#admin_menu');
-		var $admin_menu_tools = $('#admin_menu_tools');
-		var $current = false;
-		var current_id = false;
-		var original_parent = false;
-		var info_html = $('#menu_info').html();//.get(0).innerHTML;
-		var info_html_extern = $('#menu_info_extern').html();//.get(0).innerHTML;
+		var $sortable_area			= $('#admin_menu');
+		var $admin_menu_tools		= $('#admin_menu_tools');
+		var current_id				= false;
+		var current_index			= false;
+		var original_parent			= false;
+		var info_html				= $('#menu_info').html();
+		var info_html_extern		= $('#menu_info_extern').html();
 
 
 		$sortable_area.nestedSortable({
-			disableNesting: 'no-nest',
-			forcePlaceholderSize: true,
-			handle: 'a.sort',
-			items: 'li',
-			opacity: .8,
-			placeholder: 'placeholder',
-			tabSize: 25,
-			toleranceElement: '> div',
-			listType: 'ul',
-			delay:2,
+			disableNesting:			'no-nest',
+			forcePlaceholderSize:	true,
+			handle:					'a.sort',
+			items:					'li',
+			opacity:				.8,
+			placeholder:			'placeholder',
+			tabSize:				25,
+			toleranceElement:		'> div',
+			listType:				'ul',
+			delay:					2,
+
 			/* cancel: 'gp_no_sort', */
 			/* tolerance: 'pointer', */
 			/* connectWith: '.sortable_menu', */
@@ -53,7 +54,6 @@
 				$gp.loading();
 
 				data = jQuery.param(data,true);
-				data += getmenus();
 				$gp.postC( window.location.href , data);
 
 				return;
@@ -71,15 +71,45 @@
 		}).disableSelection();
 
 
+		/**
+		 * Prepare for the menu to be refreshed
+		 *
+		 */
+		gpresponse.gp_menu_prep = function(){
+
+			//get id of .current
+			var $current	= $('.current:first');
+			current_id		= $current.attr('id');
+
+			//get index of .current
+			var $all		= $('#admin_menu .gp_label');
+			current_index	= $all.index($current.find('.gp_label'));
+		}
 
 
+		/**
+		 * Make sure new menu html sent from the server asynchronously is sortable
+		 *
+		 */
 		gpresponse.gp_menu_refresh = function(j){
+
 			$sortable_area.nestedSortable('refresh');
 
 			if( current_id ){
-				var $new_current = $('#'+current_id);
-				ShowInfo($new_current);
+				var $current = $('#'+current_id);
 			}
+
+			if( !current_id || !$current.length ){
+
+				if( current_index > 0 ){
+					$current = $('#admin_menu .gp_label').eq(current_index).parent();
+				}
+
+				if( !$current || !$current.length ){
+					$current = $('.gp_label:first').parent();
+				}
+			}
+			ShowInfo($current);
 		}
 
 
@@ -92,36 +122,79 @@
 		}
 
 
+		/**
+		 * Handle clicks on sortable menu items
+		 *
+		 */
 		$gp.links.menu_info = function(evt){
+
 			evt.preventDefault();
-			var $this = $(this).parent();
+			var $this		= $(this);
+			var $current	= $this.parent();
+			var cntrl		= evt.ctrlKey;
 
-			//this should all happen after the sortable actions are done
-			window.setTimeout(function(){
+			if( evt.ctrlKey ){
+				$current.toggleClass('current');
+				$current = $('.current');
 
-				ShowInfo($this);
+			}else if( evt.shiftKey ){
 
-			},100);
-		}
+				$('#admin_menu .current').removeClass('current');
+				var $all	= $('#admin_menu .gp_label');
+				var i		= $all.index(this);
+				var j		= 0;
 
-		function ShowInfo($new_current){
+				var $last 	= $('.last_clicked');
+				if( $last.length ){
+					j 		= $all.index($last);
+				}
 
-			if( $current ){
-				$current.removeClass('current');
+
+				var in_min	= Math.min(i,j);
+				var in_max	= Math.max(i,j);
+
+				$all.each(function(i){
+					if( i >= in_min  && i <= in_max ){
+						$(this).parent().addClass('current');
+					}
+				});
+
+				$current = $('#admin_menu .current');
+
+			}else{
+				$('.last_clicked').removeClass('last_clicked');
+				$this.addClass('last_clicked');
 			}
 
-			$current = $new_current;
+			//display options box after the sortable actions are done
+			window.setTimeout(function(){
+				ShowInfo($current);
+			},100);
+
+		}
+
+
+		/**
+		 * Display page options for selected titles
+		 *
+		 */
+		function ShowInfo($current){
+
+			$('#admin_menu .current').removeClass('current');
+
 			if( !$current.length ){
 				$admin_menu_tools.hide();
 				return;
 			}
 
-			current_id = $current.attr('id');
 			$current.addClass('current');
 
-			InfoHtml();
-			var tools_height = $admin_menu_tools.height();
-			var sortable_height = $sortable_area.height();
+			InfoHtml($current);
+
+
+			var tools_height		= $admin_menu_tools.height();
+			var sortable_height		= $sortable_area.height();
+
 			if( sortable_height < tools_height ){
 				$sortable_area.css('min-height',tools_height);
 			}
@@ -145,37 +218,50 @@
 		 * Format the info window with the current title's information
 		 *
 		 */
-		function InfoHtml(){
-			//get data
-			var this_html, data;
+		function InfoHtml($current){
 
-			data = $current.find('span').html();
-			data = unspecialchars( data );
-			data = jQuery.parseJSON( data );
+			var this_html			= info_html,
+				data				= jQuery.extend({}, $current.find('.gp_label').data('json')), //clone the json object
+				multiple_selected	= ($current.length > 1);
 
-			var external = $current.find('.external').length;
 
-			if( external ){
+
+			//if multiple selected, get all the keys
+			if( multiple_selected ){
+
+				data.key			= $current.find('.gp_label').map(function(){ return $(this).data('arg');}).toArray().join(',');
+				data.files			= $current.length;
+
+
+			//external link
+			}else if( $current.find('.external').length ){
 				this_html = info_html_extern;
-			}else{
-				this_html = info_html;
 			}
 
 			data = $.extend({}, {title:'',layout_color:'',layout_label:'',types:'',size:'',mtime:'',opts:''}, data);
 
-			//debug(data.opts);
 
-			var reg,parts = ['title','key','url','layout_label','types','size','mtime','opts'];
+
+			var reg,parts = ['title','key','url','layout_label','types','size','mtime','opts','files'];
 			$.each(parts,function(){
 				reg = new RegExp('(%5B'+this+'%5D|\\['+this+'\\])','gi');
 				this_html = this_html.replace(reg,data[this]);
 			});
 
+
 			$admin_menu_tools
 				.show()
 				.html(this_html)
 				.find('.layout_icon').css({'background':data.layout_color});
-				;
+
+
+			//multiple
+			if( multiple_selected ){
+				$admin_menu_tools.find('.not_multiple').hide();
+				$admin_menu_tools.find('.only_multiple').show();
+			}else{
+				$admin_menu_tools.find('.only_multiple').hide();
+			}
 
 
 			//special links
@@ -210,25 +296,10 @@
 
 		}
 
+
 		/**
-		 * Unescape special characters in the title's data
-		 * single and double quotation marks are not escaped by php for this data
+		 * Keep track of which titles are collapsed
 		 *
-		 */
-		function unspecialchars(str){
-			return str.replace(/&amp;/g, '&')
-						.replace(/&lt;/g, '<')
-						.replace(/&gt;/g, '>')
-						;
-					/*
-				    .replace(/"/g, "&quot;")
-				    .replace(/'/g, "&#039;");
-				    */
-		}
-
-
-		/*
-		 * Save the list of title that are collapsed
 		 */
 		function SaveSettings(){
 
@@ -273,44 +344,6 @@
 
 			//$.cookie('gp_menu_settings', null, cookie_options );
 			$.cookie('gp_menu_prefs', $('#gp_menu_select_form').serialize(), cookie_options );
-		}
-
-
-
-		/*
-		 * Get information about the current menus so we can reload them as they change
-		 *
-		 * menu_markers aren't next to the actual menus any more
-		 *
-		 */
-		function getmenus(){
-			var vals,id,result = '';
-
-			$('.menu_marker').each(function(){
-				var $this = $(this);
-				id = $this.data('menuid');
-				vals = $this.children();
-
-				result += '&menus['+id+']='+encodeURIComponent(vals.eq(0).val());
-				result += '&menuh['+id+']='+encodeURIComponent(vals.eq(1).val());
-				result += '&menuc['+id+']='+encodeURIComponent(vals.eq(2).val());
-			});
-			return result;
-		}
-
-		gpinputs.menupost = function(){
-			var a = getmenus();
-			var frm = $(this).closest('form');
-			frm.attr('action', $gp.jPrep(frm.attr('action'),a));
-			$gp.post(this);
-			return false;
-		}
-
-		$gp.links.menupost = function(evt){
-			evt.preventDefault();
-			var query = strip_to(this.search,'?');
-			query += getmenus();
-			$gp.postC( this.href, query);
 		}
 
 

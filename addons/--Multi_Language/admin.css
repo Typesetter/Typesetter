@@ -1,12 +1,16 @@
 
 .ml_stats{
-	width:350px;
+	width:50%;
+	min-width:350px;
 	display:inline-block;
-	margin:0 20px 20px 0;
 	vertical-align:top;
+}
+.ml_stats > div{
+	margin:0 20px 20px 0;
 	border-left:1px solid #ddd;
 	border-right:1px solid #ddd;
 	}
+
 .ml_stats .bordered{
 	width:100%;
 	margin:0;

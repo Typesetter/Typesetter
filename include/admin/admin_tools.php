@@ -72,20 +72,14 @@ class admin_tools{
 
 		//set
 		if( !is_null($update_data) ){
-			return gpFiles::SaveArray($file,'update_data',$update_data);
+			return gpFiles::SaveData($file,'update_data',$update_data);
 		}
 
-		//get
-		$data_timestamp = 0;
-		$update_data = array();
-		if( file_exists($file) ){
-			require($file);
-			$data_timestamp = $fileModTime;
-		}
 
-		$update_data += array('packages'=>array());
+		$update_data	= gpFiles::Get('_updates/updates','update_data');
+		$update_data	+= array('packages'=>array());
 
-		return $data_timestamp;
+		return gpFiles::$last_modified;
 	}
 
 
@@ -133,7 +127,7 @@ class admin_tools{
 
 
 		/**
-		 * Settings
+		 * Content
 		 *
 		 */
 		$scripts['Admin_Menu']['script'] = '/include/admin/admin_menu_new.php';
@@ -152,6 +146,12 @@ class admin_tools{
 		$scripts['Admin_Extra']['class'] = 'admin_extra';
 		$scripts['Admin_Extra']['label'] = $langmessage['theme_content'];
 		$scripts['Admin_Extra']['group'] = 'content';
+
+		$scripts['Admin_Galleries']['script'] = '/include/admin/admin_galleries.php';
+		$scripts['Admin_Galleries']['class'] = 'admin_galleries';
+		$scripts['Admin_Galleries']['label'] = $langmessage['galleries'];
+		$scripts['Admin_Galleries']['group'] = 'content';
+
 
 
 		$scripts['Admin_Trash']['script'] = '/include/admin/admin_trash.php';
@@ -179,7 +179,7 @@ class admin_tools{
 		$scripts['Admin_Configuration']['class'] = 'admin_configuration';
 		$scripts['Admin_Configuration']['label'] = $langmessage['configuration'];
 		$scripts['Admin_Configuration']['group'] = 'settings';
-		$scripts['Admin_Configuration']['popup'] = true;
+		//$scripts['Admin_Configuration']['popup'] = true;
 
 
 		$scripts['Admin_Users']['script'] = '/include/admin/admin_users.php';
@@ -223,6 +223,12 @@ class admin_tools{
 		$scripts['Admin_Status']['class'] = 'admin_status';
 		$scripts['Admin_Status']['label'] = $langmessage['Site Status'];
 		$scripts['Admin_Status']['group'] = 'settings';
+
+
+		$scripts['Admin_Cache']['script'] = '/include/admin/admin_cache.php';
+		$scripts['Admin_Cache']['class'] = 'admin_cache';
+		$scripts['Admin_Cache']['label'] = $langmessage['Resource Cache'];
+		$scripts['Admin_Cache']['group'] = 'settings';
 
 
 		$scripts['Admin_Uninstall']['script'] = '/include/admin/admin_rm.php';
@@ -347,35 +353,46 @@ class admin_tools{
 	 * @static
 	 */
 	static function GetAdminPanel(){
-		global $page, $gpAdmin, $config;
+		global $page, $gpAdmin;
 
 		//don't send the panel when it's a gpreq=json request
-		if( !empty($_REQUEST['gpreq']) || !self::$show_toolbar ){
+		if( !self::$show_toolbar ){
+			return;
+		}
+
+		$reqtype = common::RequestType();
+		if( $reqtype != 'template' && $reqtype != 'admin' ){
 			return;
 		}
 
 		$class = '';
-		if( isset($gpAdmin['gpui_cmpct']) && $gpAdmin['gpui_cmpct'] ){
-			$class = ' compact';
-			if( $gpAdmin['gpui_cmpct'] === 2 ){
-				$class = ' compact min';
-			}elseif( $gpAdmin['gpui_cmpct'] === 3 ){
-				$class = ' minb';
+		$position = '';
+
+		if( common::RequestType() != 'admin' ){
+			$position = ' style="top:'.max(-10,$gpAdmin['gpui_ty']).'px;left:'.max(-10,$gpAdmin['gpui_tx']).'px"';
+			if( isset($gpAdmin['gpui_cmpct']) && $gpAdmin['gpui_cmpct'] ){
+				$class = ' compact';
+				if( $gpAdmin['gpui_cmpct'] === 2 ){
+					$class = ' compact min';
+				}elseif( $gpAdmin['gpui_cmpct'] === 3 ){
+					$class = ' minb';
+				}
 			}
 		}
+
 		$class = ' class="keep_viewable'.$class.'"';
 
-		$position = ' style="top:'.max(-10,$gpAdmin['gpui_ty']).'px;left:'.max(-10,$gpAdmin['gpui_tx']).'px"';
 
 		echo "\n\n";
 		echo '<div id="simplepanel"'.$class.$position.'><div>';
 
 			//toolbar
-			echo '<div class="toolbar cf">';
+			echo '<div class="toolbar">';
 				echo '<a class="toggle_panel" data-cmd="toggle_panel"></a>';
-				echo common::Link('Admin','','','class="icon_admin_home"');
-				echo common::Link('special_gpsearch','','',array('class'=>'icon_admin_search','data-cmd'=>'gpabox'));
-				echo '<span class="extra admin_arrow_out"></span>';
+				echo common::Link('','<i class="gpicon_home"></i>');
+				echo common::Link('Admin','<i class="gpicon_admin"></i>');
+				echo common::Link('special_gpsearch','<i class="gpicon_search"></i>','',array('data-cmd'=>'gpabox'));
+				echo '<a class="extra admin_arrow_out"></a>';
 			echo '</div>';
 
 
@@ -392,7 +409,7 @@ class admin_tools{
 	 * @static
 	 */
 	static function AdminPanelLinks($in_panel=true){
-		global $langmessage, $page, $gpAdmin, $config;
+		global $langmessage, $page, $gpAdmin;
 
 		$expand_class = 'expand_child';
 		$id_piece = '';
@@ -403,7 +420,7 @@ class admin_tools{
 
 
 		//current page
-		if( $in_panel && !isset($GLOBALS['GP_ARRANGE_CONTENT']) ){
+		if( $in_panel && !isset($GLOBALS['GP_ARRANGE_CONTENT']) && $page->pagetype != 'admin_display' ){
 			echo '<div class="panelgroup" id="current_page_panel">';
 
 			self::PanelHeading($in_panel, $langmessage['Current Page'], 'icon_page_gear', 'cur' );
@@ -433,9 +450,14 @@ class admin_tools{
 				echo '</li>';
 			}
 
-			echo '<li class="'.$expand_class.'"><a>'.$langmessage['Editable Areas'].'</a>';
-			echo '<ul class="in_window" id="editable_areas_list">';
-			echo '<li><a>empty</a></li>';
+			echo '<li class="'.$expand_class.'" id="editable_areas_list"><a>'.$langmessage['Editable Areas'].'</a>';
+			echo '<ul class="in_window">';
+			if( $page->pagetype == 'display' ){
+				echo '<li class="separator">';
+				echo common::Link($page->title,$langmessage['Manage Sections'].'...','cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+				echo '</li>';
+			}
+			echo '<li style="display:none"></li>';//for valid html
 			echo '</ul>';
 			echo '</li>';
 
@@ -489,7 +511,7 @@ class admin_tools{
 		//settings
 		if( $links = admin_tools::GetAdminGroup('settings') ){
 			echo '<div class="panelgroup" id="panelgroup_settings'.$id_piece.'">';
-			self::PanelHeading($in_panel, $langmessage['Settings'], 'icon_cog', 'set' );
+			self::PanelHeading($in_panel, $langmessage['Settings'], 'icon_edapp', 'set' );
 			echo '<ul class="submenu">';
 			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Settings'].'</a></li>';
 			echo $links;
@@ -516,13 +538,15 @@ class admin_tools{
 
 				$label = $new_addon_info['name'].':  '.$new_addon_info['version'];
 				if( $new_addon_info['type'] == 'theme' && gp_remote_themes ){
-					echo '<li>'.common::Link('Admin_Theme_Content/Remote',$label).'</li>';
-
+					$url = 'Themes';
 				}elseif( $new_addon_info['type'] == 'plugin' && gp_remote_plugins ){
-					echo '<li>'.common::Link('Admin_Addons/Remote',$label).'</li>';
+					$url = 'Plugins';
 				}else{
 					continue;
 				}
+
+				echo '<li><a href="'.addon_browse_path.'/'.$url.'/'.$addon_id.'" data-cmd="remote">'.$label.'</a></li>';
+
 			}
 
 			$list = ob_get_clean();
@@ -550,7 +574,7 @@ class admin_tools{
 			admin_tools::GetFrequentlyUsed($in_panel);
 
 			echo '<li>';
-			echo common::Link('Admin_Preferences',$langmessage['Preferences'],'',array('data-cmd'=>'gpabox'));
+			echo common::Link('Admin_Preferences',$langmessage['Preferences']);
 			echo '</li>';
 
 			echo '<li>';
@@ -558,26 +582,75 @@ class admin_tools{
 			echo '</li>';
 
 			echo '<li>';
-			echo common::Link('Admin_About','About gpEasy','',array('data-cmd'=>'gpabox'));
+			echo common::Link('Admin_About','About gpEasy');
 			echo '</li>';
 			echo '</ul>';
 			echo '</div>';
-
 		echo '</div>';
+
+
+
+		//gpEasy stats
+		echo '<div class="panelgroup" id="panelgroup_gpeasy'.$id_piece.'">';
+			self::PanelHeading($in_panel, $langmessage['Performance'], 'icon_chart', 'gpe' );
+			echo '<ul class="submenu">';
+			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Performance'].'</a></li>';
+			echo '<li><a><span gpeasy-memory-usage>?</span> Memory</a></li>';
+			echo '<li><a><span gpeasy-memory-max>?</span> Max Memory</a></li>';
+			echo '<li><a><span gpeasy-seconds>?</span> Seconds</a></li>';
+			echo '<li><a><span gpeasy-ms>?</span> Milliseconds</a></li>';
+			echo '<li><a>0 DB Queries</a></li>';
+			echo '</ul>';
+		echo '</div>';
+		echo '</div>';
+
+		//resources
+		if( $page->pagetype === 'admin_display' ){
+			echo '<div class="panelgroup" id="panelgroup_resources'.$id_piece.'">';
+			self::PanelHeading($in_panel, $langmessage['resources'], 'icon_page_gear', 'res' );
+			echo '<ul class="submenu">';
+			if( gp_remote_plugins && admin_tools::HasPermission('Admin_Addons') ){
+				echo '<li>'.common::Link('Admin_Addons/Remote',$langmessage['Download Plugins']).'</li>';
+			}
+			if( gp_remote_themes && admin_tools::HasPermission('Admin_Theme_Content') ){
+				echo '<li>'.common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']).'</li>';
+			}
+			echo '<li><a href="http://gpeasy.com/Forum">Support Forum</a></li>';
+			echo '<li><a href="http://gpeasy.com/Services">Service Providers</a></li>';
+			echo '<li><a href="http://gpeasy.com">Official gpEasy Site</a></li>';
+			echo '<li><a href="https://github.com/oyejorge/gpEasy-CMS/issues">Report A Bug</a></li>';
+			echo '</ul>';
+			echo '</div>';
+			echo '</div>';
+
+			if( $in_panel ){
+				echo '<div class="gpversion">';
+				echo 'gpEasy '.gpversion;
+				echo '</div>';
+			}
+
+		}
+
 	}
 
 	static function PanelHeading( $in_panel, $label, $icon, $arg ){
 		global $gpAdmin;
 
 		if( !$in_panel ){
-			echo '<span class="'.$icon.'"><span>'.$label.'</span></span>';
+			//echo '<span class="'.$icon.'"><span>'.$label.'</span></span>';
+			echo '<span>';
+			echo '<i class="gp'.$icon.'"></i>';
+			echo '<span>'.$label.'</span>';
+			echo '</span>';
 			echo '<div class="panelgroup2">';
 			return;
 		}
 
-		echo '<a class="toplink '.$icon.'" data-cmd="toplink" data-arg="'.$arg.'"><span>';
-		echo $label;
-		echo '</span></a>';
+		//echo '<a class="toplink '.$icon.'" data-cmd="toplink" data-arg="'.$arg.'"><span>';
+		echo '<a class="toplink" data-cmd="toplink" data-arg="'.$arg.'">';
+		echo '<i class="gp'.$icon.'"></i>';
+		echo '<span>'.$label.'</span>';
+		echo '</a>';
 
 		if( $gpAdmin['gpui_vis'] == $arg ){
 			echo '<div class="panelgroup2 in_window">';
@@ -674,48 +747,6 @@ class admin_tools{
 		echo '</li>';
 	}
 
-	static function AdminContentPanel(){
-		global $page, $config, $langmessage, $gp_menu;
-
-		//the login form does not need the panel
-		if( !common::LoggedIn() ){
-			return;
-		}
-
-		echo '<div id="admincontent_panel" class="toolbar">';
-		echo '<div class="gp_right">';
-		echo '<span class="admin_arrow_out"></span>';
-		echo common::Link('','','','class="close_home"');
-		echo '</div>';
-
-		reset($gp_menu);
-		$homepath = common::IndexToTitle(key($gp_menu));
-		echo common::Link_Page($homepath);
-		echo ' &#187; ';
-		echo common::Link('Admin',$langmessage['administration']);
-		if( !empty($page->title) && !empty($page->label) && $page->title != 'Admin' ){
-			echo ' &#187; ';
-			echo common::Link($page->title,$page->label);
-		}
-		echo '</div>';
-
-	}
-
-	static function AdminContainer(){
-		global $gpAdmin;
-
-		// if the admin window doesn't have a position
-		if( !isset($gpAdmin['gpui_pposx']) || !isset($gpAdmin['gpui_pposy']) || ($gpAdmin['gpui_pposx'] == 0 && $gpAdmin['gpui_pposy'] == 0) ){
-			$gpAdmin['gpui_pposx'] = $gpAdmin['gpui_pposy'] = 70;
-		}
-		if( !isset($gpAdmin['gpui_pw']) || $gpAdmin['gpui_pw'] == 0 ){
-			$gpAdmin['gpui_pw'] = 960;
-		}
-
-		return '<div id="admincontainer" class="gp_floating_area" style="left:'.$gpAdmin['gpui_pposx'].'px;top:'.$gpAdmin['gpui_pposy'].'px;width:'.Max($gpAdmin['gpui_pw'],300).'px;">';
-	}
-
-
 
 	//uses $status from update codes to execute some cleanup code on a regular interval (7 days)
 	static function ScheduledTasks(){
@@ -770,6 +801,7 @@ class admin_tools{
 
 		//reduce further if needed till we have less than 200 files
 		arsort($times);
+		$times = array_keys($times);
 		while( count($times) > 200 ){
 			$full_path = $dir.'/'.array_pop($times);
 			unlink($full_path);
@@ -783,21 +815,21 @@ class admin_tools{
 
 		ob_start();
 
-		echo '<div id="loading1" class="nodisplay"></div>';
-		echo '<div id="loading2" class="nodisplay"></div>';
 
-		admin_tools::GetAdminPanel();
 		admin_tools::InlineEditArea();
+
 		echo '<div class="nodisplay" id="gp_hidden"></div>';
 
 		if( isset($page->admin_html) ){
 			echo $page->admin_html;
 		}
 
+		admin_tools::GetAdminPanel();
+
 
 		admin_tools::CheckStatus();
 		admin_tools::ScheduledTasks();
-		$gp_admin_html .= ob_get_clean();
+		$gp_admin_html = ob_get_clean() . $gp_admin_html;
 
 	}
 
@@ -843,12 +875,13 @@ class admin_tools{
 				echo common::Link($script,$info['label']);
 			}
 
+
 			echo '</li>';
 
 			switch($script){
 				case 'Admin_Menu':
 					echo '<li>';
-					echo common::Link('Admin_Menu','+ '.$langmessage['create_new_file'],'cmd=add_hidden&redir=redir',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpajax'));
+					echo common::Link('Admin_Menu','+ '.$langmessage['create_new_file'],'cmd=add_hidden&redir=redir',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpabox'));
 					echo '</li>';
 				break;
 			}
@@ -901,13 +934,22 @@ class admin_tools{
 		}else{
 			echo '<ul>';
 		}
+
+
+		if( !empty($page->gpLayout) ){
+			$to_hightlight = $page->gpLayout;
+		}else{
+			$to_hightlight = $config['gpLayout'];
+		}
+
 		foreach($gpLayouts as $layout => $info){
-			echo '<li>';
-			$display = $info['label'];
-			if( $config['gpLayout'] == $layout ){
-				$display = '<b>'.$display.'</b>';
+			if( $to_hightlight == $layout ){
+				echo '<li class="selected">';
+			}else{
+				echo '<li>';
 			}
-			$display = '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span>&nbsp; '.$display;
+
+			$display = '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span>&nbsp; '.$info['label'];
 			echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$display);
 			echo '</li>';
 		}
@@ -1132,11 +1174,10 @@ class admin_tools{
 	}
 
 
-	//
-	//	functions for gp_menu, gp_titles
-	//
-
-	//admin_tools::SaveAllConfig();
+	/**
+	 * Save config.php and pages.php
+	 *
+	 */
 	static function SaveAllConfig(){
 		if( !admin_tools::SaveConfig() ){
 			return false;
@@ -1166,7 +1207,7 @@ class admin_tools{
 		$pages['gp_titles'] = $gp_titles;
 		$pages['gpLayouts'] = $gpLayouts;
 
-		if( !gpFiles::SaveArray($dataDir.'/data/_site/pages.php','pages',$pages) ){
+		if( !gpFiles::SaveData($dataDir.'/data/_site/pages.php','pages',$pages) ){
 			return false;
 		}
 		return true;
@@ -1185,7 +1226,7 @@ class admin_tools{
 
 		if( !isset($config['gpuniq']) ) $config['gpuniq'] = common::RandomString(20);
 
-		return gpFiles::SaveArray($dataDir.'/data/_site/config.php','config',$config);
+		return gpFiles::SaveData($dataDir.'/data/_site/config.php','config',$config);
 	}
 
 
@@ -1221,7 +1262,7 @@ class admin_tools{
 			echo common::Link('Admin_Addons',$langmessage['manage']);
 			echo '</li>';
 			if( gp_remote_plugins ){
-				echo '<li class="seperator">';
+				echo '<li class="separator">';
 				echo common::Link('Admin_Addons/Remote',$langmessage['Download Plugins']);
 				echo '</li>';
 			}
@@ -1256,7 +1297,7 @@ class admin_tools{
 				}
 
 				if( $addon_permissions ){
-					echo common::Link('Admin_Addons',$addonName,'cmd=show&addon='.rawurlencode($addon));
+					echo common::Link('Admin_Addons/'.self::encode64($addon),$addonName);
 				}else{
 					echo '<a>'.$addonName.'</a>';
 				}
@@ -1314,8 +1355,8 @@ class admin_tools{
 	static function GetAddonSubLinks($addon=false){
 		global $config;
 
-		$special_links = admin_tools::GetAddonTitles( $addon);
-		$admin_links = admin_tools::GetAddonComponents( $config['admin_links'], $addon);
+		$special_links	= admin_tools::GetAddonTitles( $addon);
+		$admin_links	= admin_tools::GetAddonComponents( $config['admin_links'], $addon);
 
 
 		$result = '';
@@ -1370,11 +1411,12 @@ class admin_tools{
 	 *
 	 */
 	static function GetAddonComponents($from,$addon){
+		$result = array();
+
 		if( !is_array($from) ){
-			return;
+			return $result;
 		}
 
-		$result = array();
 		foreach($from as $name => $value){
 			if( !is_array($value) ){
 				continue;
@@ -1463,4 +1505,16 @@ class admin_tools{
 		return $size;
 	}
 
+	static function encode64($input){
+		return strtr(base64_encode($input), '+/=', '-_,');
+	}
+
+	function decode64($input) {
+		return base64_decode(strtr($input, '-_,', '+/='));
+	}
+
+
+	//deprecated v4.4
+	static function AdminContentPanel(){}
+	static function AdminContainer(){}
 }

@@ -13,6 +13,7 @@ wordpress/wp-admin/includes/class-wp-filesystem-ftpext.php
 class update_class{
 
 	//page variables
+	var $pagetype = 'update';
 	var $label = 'gpEasy Updater';
 	var $head = '';
 	var $admin_css = '';
@@ -54,8 +55,8 @@ class update_class{
 
 	}
 
-	/* constructor */
-	function update_class($process='page'){
+
+	function __construct($process='page'){
 
 		includeFile('tool/RemoteGet.php');
 		includeFile('tool/FileSystem.php');
@@ -806,9 +807,10 @@ class update_class{
 
 		/* for testing
 		 * $download = 'http://test.gpeasy.com/gpEasy_test.zip';
-		 * $download = 'http://gpeasy.loc/rocky/x_gpEasy_test.zip';
+		 * $download = 'http://gpeasy.loc/x_gpEasy.zip';
 		 */
 		$download = addon_browse_path.'/Special_gpEasy?cmd=download';
+
 
 		echo '<li>Downloading version '.$package['version'].' from gpEasy.com.</li>';
 
@@ -850,9 +852,12 @@ class update_class{
 
 		$connect_result = $gp_filesystem->connect();
 		if( $connect_result === true ){
+
+			$this->DoRemoteCheck2(); //make sure we have the latest information
+
 			echo '<ul class="progress">';
 			echo '<li>';
-			echo $langmessage['your_installation_is_ready_for_upgrade'];
+			echo $langmessage['ready_for_upgrade'];
 			echo '</li>';
 			echo '</ul>';
 			return true;

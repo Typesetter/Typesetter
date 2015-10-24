@@ -15,7 +15,6 @@ class gpsession{
 		gp_defined('gp_session_cookie',self::SessionCookie($config['gpuniq']));
 
 		$cmd = common::GetCommand();
-
 		switch( $cmd ){
 			case 'logout':
 				self::LogOut();
@@ -38,7 +37,8 @@ class gpsession{
 
 
 	static function LogIn(){
-		global $dataDir, $langmessage, $config, $gp_index;
+		global $langmessage, $config, $gp_index;
+
 
 		// check nonce
 		// expire the nonce after 10 minutes
@@ -59,8 +59,9 @@ class gpsession{
 		}
 
 
-		include($dataDir.'/data/_site/users.php');
-		$username = self::GetLoginUser( $users, $nonce );
+		$users		= gpFiles::Get('_site/users');
+		$username	= self::GetLoginUser( $users, $nonce );
+
 		if( $username === false ){
 			self::IncorrectLogin('1');
 			return false;
@@ -78,21 +79,9 @@ class gpsession{
 		}
 
 
+
 		//check against password sent to a user's email address from the forgot_password form
-		$passed = false;
-		$pass_hash = $config['passhash'];
-		if( isset($userinfo['passhash']) ){
-			$pass_hash = $userinfo['passhash'];
-		}
-
-		if( !empty($userinfo['newpass']) && self::CheckPassword($userinfo['newpass'],$nonce,$pass_hash) ){
-			$userinfo['password'] = $userinfo['newpass'];
-			$passed = true;
-
-		//check password
-		}elseif( self::CheckPassword($userinfo['password'],$nonce,$pass_hash) ){
-			$passed = true;
-		}
+		$passed = self::PasswordPassed($userinfo,$nonce);
 
 
 		//if passwords don't match
@@ -107,18 +96,20 @@ class gpsession{
 			unset($userinfo['newpass']);
 		}
 
-		$session_id = self::create($userinfo,$username);
+		$session_id = self::create($userinfo, $username, $sessions);
 		if( !$session_id ){
 			message($langmessage['OOPS'].' (Data Not Saved)');
 			self::UpdateAttempts($users,$username,true);
 			return false;
 		}
 
-		$logged_in = self::start($session_id);
+
+		$logged_in = self::start($session_id,$sessions);
 
 		if( $logged_in === true ){
 			message($langmessage['logged_in']);
 		}
+
 
 		//need to save the user info regardless of success or not
 		//also saves file_name in users.php
@@ -126,12 +117,14 @@ class gpsession{
 		self::UpdateAttempts($users,$username,true);
 
 		//redirect to prevent resubmission
-		$redirect = 'Admin';
-		if( isset($_REQUEST['file']) && isset($gp_index[$_REQUEST['file']]) ){
-			$redirect = $_REQUEST['file'];
+		if( $logged_in ){
+			$redirect = 'Admin';
+			if( isset($_REQUEST['file']) && isset($gp_index[$_REQUEST['file']]) ){
+				$redirect = $_REQUEST['file'];
+			}
+			$url = common::GetUrl($redirect,'',false);
+			common::Redirect($url);
 		}
-		$url = common::GetUrl($redirect,'',false);
-		common::Redirect($url);
 
 	}
 
@@ -167,45 +160,86 @@ class gpsession{
 
 
 	/**
-	 * check password, choose between plaintext, md5 encrypted or sha-1 encrypted
-	 * @param string $user_pass
-	 * @param string $nonce
-	 * @param string $pass_hash Password hashing algorithm
+	 * Check the posted password
+	 * Check against reset password if set
 	 *
 	 */
-	static function CheckPassword( $user_pass, $nonce, $pash_hash ){
-		global $config;
+	static function PasswordPassed( &$userinfo, $nonce ){
 
-		//without encryption
-		if( !gp_require_encrypt && !empty($_POST['password']) ){
-			$pass = common::hash($_POST['password'],$pash_hash);
-			if( $user_pass === $pass ){
-				return true;
-			}
+		if( gp_require_encrypt && !empty($_POST['password']) ){
 			return false;
 		}
 
+		//if not encrypted with js
+		if( !empty($_POST['password']) ){
+			$_POST['pass_md5']		= sha1($nonce.md5($_POST['password']));
+			$_POST['pass_sha']		= sha1($nonce.sha1($_POST['password']));
+			$_POST['pass_sha512']	= common::hash($_POST['password'],'sha512',50);
+		}
+
+		$pass_algo = self::PassAlgo($userinfo);
+
+		if( !empty($userinfo['newpass']) && self::CheckPassword($userinfo['newpass'],$nonce,$pass_algo) ){
+			$userinfo['password'] = $userinfo['newpass'];
+			return true;
+		}
+
+
+		//check password
+		if( self::CheckPassword($userinfo['password'],$nonce,$pass_algo) ){
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Return the algorithm used by the user for passwords
+	 *
+	 */
+	static function PassAlgo($userinfo){
+		global $config;
+
+		if( isset($userinfo['passhash']) ){
+			return $userinfo['passhash'];
+		}
+		return $config['passhash'];
+	}
+
+	/**
+	 * Check password, choose between plaintext, md5 encrypted or sha-1 encrypted
+	 * @param string $user_pass
+	 * @param string $nonce
+	 * @param string $pass_algo Password hashing algorithm
+	 *
+	 */
+	static function CheckPassword( $user_pass, $nonce, $pass_algo ){
+		global $config;
+
 		$posted_pass = false;
-		switch($pash_hash){
+		switch($pass_algo){
 
 			case 'md5':
 				$posted_pass = $_POST['pass_md5'];
-				$nonced_pass = sha1($nonce.$user_pass);
+				$user_pass = sha1($nonce.$user_pass);
 			break;
 
 			case 'sha1':
 				$posted_pass = $_POST['pass_sha'];
-				$nonced_pass = sha1($nonce.$user_pass);
+				$user_pass = sha1($nonce.$user_pass);
 			break;
 
 			case 'sha512':
 				//javascript only loops through sha512 50 times
 				$posted_pass = common::hash($_POST['pass_sha512'],'sha512',950);
-				$nonced_pass = $user_pass;
 			break;
+
+			case 'password_hash':
+			return password_verify($_POST['pass_sha512'],$user_pass);
+
 		}
 
-		if( $posted_pass && $posted_pass === $nonced_pass ){
+		if( $posted_pass && $posted_pass === $user_pass ){
 			return true;
 		}
 
@@ -221,43 +255,26 @@ class gpsession{
 	}
 
 
-	//get/set the value of $userinfo['file_name']
+	/**
+	 * Set the value of $userinfo['file_name']
+	 *
+	 */
 	static function SetSessionFileName($userinfo,$username){
-
-		if( !isset($userinfo['file_name']) ){
-
-			if( isset($userinfo['cookie_id']) ){
-				$old_file_name = 'gpsess_'.$userinfo['cookie_id'];
-				unset($userinfo['cookie_id']);
-			}else{
-				//$old_file_name = 'gpsess_'.md5($username.$pass);
-				$old_file_name = 'gpsess_'.md5($username.$userinfo['password']);
-
-			}
-			$userinfo['file_name'] = self::UpdateFileName($old_file_name);
-		}
-		return $userinfo;
-	}
-
-	static function UpdateFileName($old_file_name){
 		global $dataDir;
 
-		//get a new unique name
+
+		if( isset($userinfo['file_name']) ){
+			return $userinfo;
+		}
+
 		do{
-			$new_file_name = 'gpsess_'.common::RandomString(40).'.php';
-			$new_file = $dataDir.'/data/_sessions/'.$new_file_name;
-		}while( file_exists($new_file) );
+			$new_file_name	= 'gpsess_'.common::RandomString(40).'.php';
+			$new_file		= $dataDir.'/data/_sessions/'.$new_file_name;
+		}while( gpFiles::Exists($new_file) );
 
+		$userinfo['file_name']	= $new_file_name;
 
-		$old_file = $dataDir.'/data/_sessions/'.$old_file_name;
-		if( !file_exists($old_file) ){
-			return $new_file_name;
-		}
-
-		if( rename($old_file,$new_file) ){
-			return $new_file_name;
-		}
-		return $old_file_name;
+		return $userinfo;
 	}
 
 	static function LogOut(){
@@ -298,7 +315,7 @@ class gpsession{
 
 
 		if( $expires === false ){
-			$expires = time()+2592000;
+			$expires = time()+2592000; //30 days
 		}elseif( $expires === true ){
 			$expires = 0; //expire at end of session
 		}
@@ -313,7 +330,6 @@ class gpsession{
 	 *
 	 */
 	static function UpdateAttempts($users,$username,$reset = false){
-		global $dataDir;
 
 		if( $reset ){
 			$users[$username]['attempts'] = 0;
@@ -321,26 +337,26 @@ class gpsession{
 			$users[$username]['attempts']++;
 		}
 		$users[$username]['lastattempt'] = time();
-		gpFiles::SaveArray($dataDir.'/data/_site/users.php','users',$users);
+		gpFiles::SaveData('_site/users','users',$users);
 	}
 
 
 
 	//called when a user logs in
-	static function create(&$user_info,$username){
+	static function create( &$user_info, $username, &$sessions ){
 		global $dataDir, $langmessage;
 
 		//update the session files to .php files
 		//changes to $userinfo will be saved by UpdateAttempts() below
-		$user_info = self::SetSessionFileName($user_info,$username);
-		$user_file_name = $user_info['file_name'];
-		$user_file = $dataDir.'/data/_sessions/'.$user_file_name;
+		$user_info			= self::SetSessionFileName($user_info,$username);
+		$user_file_name		= $user_info['file_name'];
+		$user_file			= $dataDir.'/data/_sessions/'.$user_file_name;
 
 
 		//use an existing session_id if the new login matches an existing session (uid and file_name)
-		$sessions = self::GetSessionIds();
-		$uid = self::auth_browseruid();
-		$session_id = false;
+		$sessions			= self::GetSessionIds();
+		$uid				= self::auth_browseruid();
+		$session_id			= false;
 		foreach($sessions as $sess_temp_id => $sess_temp_info){
 			if( isset($sess_temp_info['uid']) && $sess_temp_info['uid'] == $uid && $sess_temp_info['file_name'] == $user_file_name ){
 				$session_id = $sess_temp_id;
@@ -358,23 +374,33 @@ class gpsession{
 		self::cookie(gp_session_cookie,$session_id,$expires);
 
 		//save session id
-		$sessions[$session_id] = array();
-		$sessions[$session_id]['file_name'] = $user_file_name;
-		$sessions[$session_id]['uid'] = $uid;
+		$sessions[$session_id]					= array();
+		$sessions[$session_id]['file_name']		= $user_file_name;
+		$sessions[$session_id]['uid']			= $uid;
 		//$sessions[$session_id]['time'] = time(); //for session locking
 		if( !self::SaveSessionIds($sessions) ){
 			return false;
 		}
 
 		//make sure the user's file exists
-		$new_data = self::SessionData($user_file,$checksum);
-		$new_data['username'] = $username;
-		$new_data['granted'] = $user_info['granted'];
+		$new_data					= self::SessionData($user_file,$checksum);
+		$new_data['username']		= $username;
+		$new_data['granted']		= $user_info['granted'];
+
 		if( isset($user_info['editing']) ){
 			$new_data['editing'] = $user_info['editing'];
 		}
 		admin_tools::EditingValue($new_data);
-		gpFiles::SaveArray($user_file,'gpAdmin',$new_data);
+
+		// may needt to extend the cookie life later
+		if( isset($_POST['remember']) ){
+			$new_data['remember'] = time();
+		}else{
+			unset($new_data['remember']);
+		}
+
+
+		gpFiles::SaveData($user_file,'gpAdmin',$new_data);
 		return $session_id;
 	}
 
@@ -385,14 +411,7 @@ class gpsession{
 	 * @return array array of all sessions
 	 */
 	static function GetSessionIds(){
-		global $dataDir;
-		$sessions = array();
-		$sessions_file = $dataDir.'/data/_site/session_ids.php';
-		if( file_exists($sessions_file) ){
-			require($sessions_file);
-		}
-
-		return $sessions;
+		return gpFiles::Get('_site/session_ids','sessions');
 	}
 
 	/**
@@ -401,7 +420,6 @@ class gpsession{
 	 * @return bool
 	 */
 	static function SaveSessionIds($sessions){
-		global $dataDir;
 
 		while( $current = current($sessions) ){
 			$key = key($sessions);
@@ -417,30 +435,36 @@ class gpsession{
 		}
 
 		//clean
-		$sessions_file = $dataDir.'/data/_site/session_ids.php';
-		return gpFiles::SaveArray($sessions_file,'sessions',$sessions);
+		return gpFiles::SaveData('_site/session_ids','sessions',$sessions);
 	}
 
 	/**
 	 * Determine if $session_id represents a valid session and if so start the session
 	 *
 	 */
-	static function start($session_id){
-		global $langmessage, $dataDir,$GP_LANG_VALUES,$wbMessageBuffer;
+	static function start($session_id, $sessions = false ){
+		global $langmessage, $dataDir, $GP_LANG_VALUES, $wbMessageBuffer, $GP_INLINE_VARS;
+		static $locked_message = false;
+
 
 		//get the session file
-		$sessions = self::GetSessionIds();
-		if( !isset($sessions[$session_id]) ){
-			self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
-			message($langmessage['Session Expired'].' (timeout)');
-			return false;
+		if( !$sessions ){
+			$sessions = self::GetSessionIds();
+			if( !isset($sessions[$session_id]) ){
+				self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
+				message($langmessage['Session Expired'].' (timeout)');
+				return false;
+			}
 		}
+
 		$sess_info = $sessions[$session_id];
 
 		//check ~ip, ~user agent ...
-		if( gp_browser_auth && isset($sess_info['uid']) ){
-			$auth_uid = self::auth_browseruid();
-			$auth_uid_legacy = self::auth_browseruid(true);//legacy option added to prevent logging users out, added 2.0b2
+		if( gp_browser_auth && !empty($sess_info['uid']) ){
+
+			$auth_uid			= self::auth_browseruid();
+			$auth_uid_legacy	= self::auth_browseruid(true);	//legacy option added to prevent logging users out, added 2.0b2
+
 			if( ($sess_info['uid'] != $auth_uid) && ($sess_info['uid'] != $auth_uid_legacy) ){
 				self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
 				message($langmessage['Session Expired'].' (browser auth)');
@@ -450,11 +474,12 @@ class gpsession{
 
 
 		$session_file = $dataDir.'/data/_sessions/'.$sess_info['file_name'];
-		if( ($session_file === false) || !file_exists($session_file) ){
+		if( ($session_file === false) || !gpFiles::Exists($session_file) ){
 			self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
 			message($langmessage['Session Expired'].' (invalid)');
 			return false;
 		}
+
 
 		//prevent browser caching when editing
 		Header( 'Last-Modified: ' . gmdate( 'D, j M Y H:i:s' ) . ' GMT' );
@@ -462,7 +487,6 @@ class gpsession{
 		Header( 'Cache-Control: no-store, no-cache, must-revalidate'); // HTTP/1.1
 		Header( 'Cache-Control: post-check=0, pre-check=0', false );
 		Header( 'Pragma: no-cache' ); // HTTP/1.0
-
 
 		$GLOBALS['gpAdmin'] = self::SessionData($session_file,$checksum);
 
@@ -472,9 +496,18 @@ class gpsession{
 			$expires = gp_lock_time;
 			if( !gpFiles::Lock('admin',sha1(sha1($session_id)),$expires) ){
 				message( $langmessage['site_locked'].' '.sprintf($langmessage['lock_expires_in'],ceil($expires/60)) );
-				$GLOBALS['gpAdmin']['locked'] = true;
+				$locked_message = true;
 			}else{
 				unset($GLOBALS['gpAdmin']['locked']);
+			}
+		}
+
+		//extend cookie?
+		if( isset($GLOBALS['gpAdmin']['remember']) ){
+			$elapsed = time() - $GLOBALS['gpAdmin']['remember'];
+			if( $elapsed > 604800 ){ //7 days
+				$GLOBALS['gpAdmin']['remember'] = time();
+				self::cookie(gp_session_cookie,$session_id);
 			}
 		}
 
@@ -489,6 +522,11 @@ class gpsession{
 		$GP_LANG_VALUES += array('cancel'=>'ca','update'=>'up','caption'=>'cp','Width'=>'Width','Height'=>'Height');
 		common::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css');
 		admin_tools::VersionsAndCheckTime();
+
+
+		$GP_INLINE_VARS += array(
+			'gpRem' => admin_tools::CanRemoteInstall(),
+		);
 
 
 		//prepend messages from message buffer
@@ -563,32 +601,26 @@ class gpsession{
 	 */
 	static function SessionData($session_file,&$checksum){
 
-		$gpAdmin = array();
-		if( file_exists($session_file) ){
-			require($session_file);
-		}
-		$checksum = '';
+		$gpAdmin	= gpFiles::Get($session_file,'gpAdmin');
+
+		$checksum	= '';
+
 		if( isset($gpAdmin['checksum']) ){
 			$checksum = $gpAdmin['checksum'];
 		}
 
-		//$gpAdmin = self::gpui_defaults() + $gpAdmin; //reset the defaults
 		return $gpAdmin + self::gpui_defaults();
 	}
 
 	static function gpui_defaults(){
 
-		return array(	'gpui_cmpct'=>0,
-						'gpui_tx'=>6,
-						'gpui_ty'=>10,
-						'gpui_ckx'=>20,
-						'gpui_cky'=>240,
-						'gpui_ckd'=>false,
-						'gpui_pposx'=>0,
-						'gpui_pposy'=>0,
-						'gpui_pw'=>0,
-						'gpui_ph'=>0,
-						'gpui_vis'=>'cur',
+		return array(	'gpui_cmpct'	=> 0,
+						'gpui_tx'		=> 6,
+						'gpui_ty'		=> 10,
+						'gpui_ckx'		=> 20,
+						'gpui_cky'		=> 240,
+						'gpui_ckd'		=> false,
+						'gpui_vis'		=> 'cur',
 						);
 	}
 
@@ -655,7 +687,7 @@ class gpsession{
 		}
 
 		$gpAdmin['checksum'] = $checksum; //store the new checksum
-		gpFiles::SaveArray($file,'gpAdmin',$gpAdmin);
+		gpFiles::SaveData($file,'gpAdmin',$gpAdmin);
 
 	}
 
@@ -740,20 +772,17 @@ class gpsession{
 	 *
 	 */
 	static function Cron(){
-		global $dataDir;
 
-		$file_stats = $cron_info = array();
-		$time_file = $dataDir.'/data/_site/cron_info.php';
-		if( file_exists($time_file) ){
-			require($time_file);
-		}
+		$cron_info	= gpFiles::Get('_site/cron_info');
+		$file_stats	= gpFiles::$last_stats;
+
 		$file_stats += array('modified' => 0);
 		if( (time() - $file_stats['modified']) < 3600 ){
 			return;
 		}
 
 		self::CleanTemp();
-		gpFiles::SaveArray($time_file,'cron_info',$cron_info);
+		gpFiles::SaveData('_site/cron_info','cron_info',$cron_info);
 	}
 
 	/**
@@ -781,8 +810,9 @@ class gpsession{
 	 *
 	 */
 	static function SaveSetting(){
+		global $gpAdmin;
 
-		$cmd = common::GetCommand();
+		$cmd = common::GetCommand('do');
 		if( empty($cmd) ){
 			return;
 		}
@@ -809,7 +839,7 @@ class gpsession{
 		die();
 
 		//for debugging
-		die('debug: '.showArray($_POST).'result: '.showArray($gpAdmin));
+		die('debug: '.pre($_POST).'result: '.pre($gpAdmin));
 	}
 
 
@@ -822,16 +852,8 @@ class gpsession{
 
 		$possible = array();
 
-		//only change the panel position if it's the default layout
-		if( isset($_POST['gpui_dlayout']) && $_POST['gpui_dlayout'] == 'true' ){
-			$possible['gpui_pposx']	= 'integer';
-			$possible['gpui_pposy']	= 'integer';
-			$possible['gpui_pw']	= 'integer';
-			$possible['gpui_ph']	= 'integer';
-		}
-
 		$possible['gpui_cmpct']	= 'integer';
-		$possible['gpui_vis']	= array('con'=>'con','cur'=>'cur','app'=>'app','add'=>'add','set'=>'set','upd'=>'upd','use'=>'use','false'=>false);
+		$possible['gpui_vis']	= array('con'=>'con','cur'=>'cur','app'=>'app','add'=>'add','set'=>'set','upd'=>'upd','use'=>'use','gpe'=>'gpe','res'=>'res','false'=>false);
 
 
 		$possible['gpui_tx']	= 'integer';
@@ -840,6 +862,7 @@ class gpsession{
 		$possible['gpui_cky']	= 'integer';
 		$possible['gpui_ckd']	= 'boolean';
 
+		$possible['gpui_ctx']	= array('enabled'=>'enabled','disabled'=>'disabled');
 
 		foreach($possible as $key => $key_possible){
 
@@ -866,6 +889,7 @@ class gpsession{
 		}
 
 		//remove gpui_ settings no longer in $possible
+		unset($gpAdmin['gpui_pdock']);
 		unset($gpAdmin['gpui_con']);
 		unset($gpAdmin['gpui_cur']);
 		unset($gpAdmin['gpui_app']);
@@ -886,8 +910,7 @@ class gpsession{
 
 
 		echo 'var gpui={';
-		echo 'ph:'.$gpAdmin['gpui_ph'];
-		echo ',cmpct:'.(int)$gpAdmin['gpui_cmpct'];
+		echo 'cmpct:'.(int)$gpAdmin['gpui_cmpct'];
 
 		//the following control which admin toolbar areas are expanded
 		echo ',vis:"'.$gpAdmin['gpui_vis'].'"';
@@ -907,6 +930,10 @@ class gpsession{
 		}else{
 			echo ',dlayout:false';
 		}
+
+		//context menu
+		echo ',ctx:'.( isset($gpAdmin['gpui_ctx']) && $gpAdmin['gpui_ctx'] == 'disabled' ? 'false' : 'true' ); // disabled browser context menu
+
 		echo '};';
 	}
 
@@ -1041,8 +1068,7 @@ class gpsession{
 	 * Re-enable components that were disabled because of fatal errors
 	 *
 	 */
-	function EnableComponent(){
-		global $dataDir,$page;
+	static function EnableComponent(){
 
 		includeFile('admin/admin_errors.php');
 		admin_errors::ClearError($_REQUEST['hash']);
@@ -1062,7 +1088,7 @@ class gpsession{
 			return;
 		}
 
-		if( is_object($page) && strpos($page->title,'Admin_Errors') !== false ){
+		if( is_object($page) && property_exists($page,'title') && strpos($page->title,'Admin_Errors') !== false ){
 			return;
 		}
 

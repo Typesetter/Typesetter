@@ -1,12 +1,12 @@
 
 $(function(){
 
-
 	/**
 	 * Start finder for ckeditor
 	 *
 	 */
 	if( finder_opts.getFileCallback ){
+
 		finder_opts.getFileCallback = function(file) {
 			var funcNum = getUrlParam('CKEditorFuncNum');
 			if( typeof(file) == 'object' ){
@@ -16,33 +16,32 @@ $(function(){
 			window.top.close();
 			window.top.opener.focus() ;
 		};
-	var $finder = $('#finder').finder(finder_opts);
-	var $window = $(window);
+	}
 
-	$window.resize(function(){
-		var win_height = $window.height()-10;
-		if( $finder.height() != win_height ){
-			$finder.height(win_height).resize();
-		}
-	})
 
 	/**
-	 * Start finder for uploaded files manager
+	 * Init finder
 	 *
 	 */
-	}else{
-		$('#finder')
-			.finder(finder_opts)
-			//
+	var $finder = $('#finder').finder(finder_opts);
 
-			//save the height and width
-			.bind('resizestop', function(){
-				var $this = $(this);
-				gpui.pw = $this.width();
-				gpui.ph = $this.height();
-				$gp.SaveGPUI();
-		});
-	}
+
+	/**
+	 * Size to window
+	 *
+	 */
+	var $window = $(window);
+	$window.resize(function(){
+
+		var top			= $finder.offset().top;
+		var win_height	= $window.height();
+
+		if( parseInt(win_height-top) != $finder.height() ){//prevent too much recursion
+			$finder.height(win_height-top).resize();
+		}
+
+	}).resize();
+
 
 
 	/**

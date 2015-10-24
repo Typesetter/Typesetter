@@ -21,6 +21,16 @@ CKEDITOR.on( 'instanceCreated', function(e){
 	editor.on( 'uiSpace', function(){
 	//editor.on( 'pluginsLoaded', function(){
 
+		// don't show both source buttons
+		if( editor.elementMode !== CKEDITOR.ELEMENT_MODE_INLINE ){
+			for( i in editor.config.toolbar){
+				var index = editor.config.toolbar[i].indexOf('Sourcedialog');
+				if( index > -1 ){
+					editor.config.toolbar[i].splice(index,1);
+				}
+			}
+		}
+
 		// this is a list of buttons standard to ckeditor
 		//var standard_items = ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', 'BidiLtr', 'BidiRtl', 'Blockquote', 'Cut', 'Copy', 'Paste', 'TextColor', 'BGColor', 'Templates', 'CreateDiv', '-', 'NumberedList', 'BulletedList', 'Indent', 'Outdent', 'Find', 'Replace', 'Flash', 'Font', 'FontSize', 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField', 'Format', 'HorizontalRule', 'Iframe', 'Image', 'Smiley', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', 'Link', 'Unlink', 'Anchor', 'Maximize', 'NewPage', 'PageBreak', 'PasteText', 'PasteFromWord', 'RemoveFormat', 'Save', 'SelectAll', 'ShowBlocks', 'Source', 'Sourcedialog', 'SpecialChar', 'Styles', 'Table', 'Undo', 'Redo' ];
 		var standard_items = ['About', 'Bold', 'Italic', 'Underline','Scayt', 'Strike', 'Subscript', 'Superscript', 'BidiLtr', 'BidiRtl', 'Blockquote', 'Cut', 'Copy', 'Paste', 'TextColor', 'BGColor', 'Templates', 'CreateDiv', '-', 'NumberedList', 'BulletedList', 'Indent', 'Outdent', 'Find', 'Replace', 'Flash', 'Font', 'FontSize', 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField', 'Format', 'HorizontalRule', 'Iframe', 'Image', 'Smiley', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', 'Link', 'Unlink', 'Anchor', 'Maximize', 'NewPage', 'PageBreak', 'PasteText', 'PasteFromWord', 'RemoveFormat', 'Save', 'SelectAll', 'ShowBlocks', 'Source', 'Sourcedialog', 'SpecialChar', 'Styles', 'Table', 'Undo', 'Redo' ];
@@ -108,28 +118,19 @@ CKEDITOR.on( 'dialogDefinition', function( ev ){
 						}
 					}
 
-				}).data( "autocomplete" )._renderItem = function( ul, item ) {
+				}).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
 					return $( "<li></li>" )
 						.data( "ui-autocomplete-item", item[1] )
 						.append( '<a>' + $gp.htmlchars(item[0]) + '<span>'+$gp.htmlchars(item[1])+'</span></a>' )
 						.appendTo( ul );
 				};
+
 			}
 		});
 	}
 });
 
-/**
- * Prevent premature onbeforeupload event in IE
- *
- */
-CKEDITOR.on('instanceReady', function(event) {
-	if(CKEDITOR.env.ie){
-		event.editor.on('dialogShow', function(dialogShowEvent) {
-			$(dialogShowEvent.data._.element.$).find('a[href*="void(0)"]').removeAttr('href');
-		});
-	}
-});
+
 
 
 

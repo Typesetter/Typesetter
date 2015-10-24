@@ -12,11 +12,11 @@ includeFile('special/special_missing.php');
 
 class admin_missing extends special_missing{
 
-	function admin_missing(){
+	function __construct(){
 		global $langmessage;
 
 		$this->Init();
-		gp_edit::PrepAutoComplete(true,false);
+		gp_edit::PrepAutoComplete();
 
 
 		$cmd = common::GetCommand();
@@ -55,15 +55,21 @@ class admin_missing extends special_missing{
 		}
 	}
 
-	/* static */
 
+	/**
+	 * Add instructions for a 301 or 302 redirect
+	 *
+	 */
 	function AddRedirect($source,$target){
 		global $dataDir;
-		$error_data = array();
-		$datafile = $dataDir.'/data/_site/error_data.php';
-		if( file_exists($datafile) ){
-			require($datafile);
+
+
+		$datafile		= $dataDir.'/data/_site/error_data.php';
+		$error_data		= gpFiles::Get('_site/error_data');
+		if( !$error_data ){
+			$error_data = array();
 		}
+
 		$changed = false;
 
 		//remove redirects from the $target
@@ -81,7 +87,7 @@ class admin_missing extends special_missing{
 
 
 		if( $changed ){
-			gpFiles::SaveArray($datafile,'error_data',$error_data);
+			gpFiles::SaveData($datafile,'error_data',$error_data);
 		}
 	}
 
@@ -334,7 +340,7 @@ class admin_missing extends special_missing{
 		echo '<tr><td>';
 		echo $langmessage['Target URL'];
 		echo '</td><td>';
-		echo '<input type="text" name="target" value="'.htmlspecialchars($values['target']).'" class="autocomplete gpinput" size="40" />';
+		echo '<input type="text" name="target" value="'.htmlspecialchars($values['target']).'" class="title-autocomplete gpinput" size="40" />';
 		echo '</td></tr>';
 
 		echo '<tr><td>';

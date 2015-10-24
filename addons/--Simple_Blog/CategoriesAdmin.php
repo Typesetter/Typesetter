@@ -9,7 +9,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 	var $categories;
 
 
-	function AdminSimpleBlogCategories(){
+	function __construct(){
 		global $langmessage, $addonRelativeCode, $addonFolderName, $page;
 
 		$this->Init();

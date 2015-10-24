@@ -1,6 +1,7 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
+includeFile('tool/gpOutput.php');
 
 
 class Install_Tools{
@@ -21,11 +22,11 @@ class Install_Tools{
 		$_POST += array('username'=>'','site_title'=>'My gpEasy CMS','email'=>'');
 
 		echo '<tr><th colspan="2">'.$langmessage['configuration'].'</th></tr>';
-		echo '<tr><td>'.$langmessage['Website_Title'].'</td><td><input type="text" class="text" name="site_title" value="'.htmlspecialchars($_POST['site_title']).'" /></td></tr>';
-		echo '<tr><td>'.$langmessage['Admin_Username'].'</td><td><input type="text" class="text" name="username" value="'.htmlspecialchars($_POST['username']).'" /></td></tr>';
-		echo '<tr><td>'.$langmessage['email_address'].'</td><td><input type="text" class="text" name="email" value="'.htmlspecialchars($_POST['email']).'" /></td></tr>';
-		echo '<tr><td>'.$langmessage['Admin_Password'].'</td><td><input type="password" class="text" name="password" value="" /></td></tr>';
-		echo '<tr><td>'.$langmessage['repeat_password'].'</td><td><input type="password" class="text" name="password1" value="" /></td></tr>';
+		echo '<tr><td>'.$langmessage['Website_Title'].'</td><td><input type="text" class="text" name="site_title" value="'.htmlspecialchars($_POST['site_title']).'" required /></td></tr>';
+		echo '<tr><td>'.$langmessage['email_address'].'</td><td><input type="email" class="text" name="email" value="'.htmlspecialchars($_POST['email']).'" required /></td></tr>';
+		echo '<tr><td>'.$langmessage['Admin_Username'].'</td><td><input type="text" class="text" name="username" value="'.htmlspecialchars($_POST['username']).'" required /></td></tr>';
+		echo '<tr><td>'.$langmessage['Admin_Password'].'</td><td><input type="password" class="text" name="password" value="" required /></td></tr>';
+		echo '<tr><td>'.$langmessage['repeat_password'].'</td><td><input type="password" class="text" name="password1" value="" required /></td></tr>';
 	}
 
 	/**
@@ -177,9 +178,21 @@ class Install_Tools{
 		//$config = array(); //because of ftp values
 
 		$gpLayouts = array();
-		$gpLayouts['default']['theme'] = 'Three_point_5/Shore';
+
+
+		//use bootswatch theme if server has enough memory
+		$gpLayouts['default']['theme'] = 'Bootswatch_Flatly/4_Sticky_Footer';
+		$gpLayouts['default']['label'] = 'Bootswatch_Flatly/4_Sticky_Footer';
+		if( @ini_set('memory_limit','96M') === false ){
+			$limit = ini_get('memory_limit');
+			$limit = common::getByteValue($limit);
+			if( $limit < 100663296 ){
+				$gpLayouts['default']['theme'] = 'Three_point_5/Shore';
+				$gpLayouts['default']['label'] = 'Three_point_5/Shore';
+			}
+		}
+
 		$gpLayouts['default']['color'] = '#93c47d';
-		$gpLayouts['default']['label'] = $langmessage['default'];
 
 
 		$config['toemail'] = $_POST['email'];
@@ -233,9 +246,13 @@ class Install_Tools{
 		<li>Get help in the <a href="http://gpeasy.com/Forum" title="gpEasy CMS Forum">gpEasy forum</a>.</li>
 		<li>Show off your <a href="http://gpeasy.com/Powered_by" title="Sites Using gpEasy CMS">gpEasy powered site</a> or list your <a href="http://gpeasy.com/Service_Provider" title="Businesses Using gpEasy CMS">gpEasy related business</a>.</li>
 		</ul>';
-
-
 		self::NewTitle( $destination, 'Home', $content);
+
+		self::NewTitle( $destination, 'Heading_Page','<h1>A Heading Page</h1>
+		<ul><li>'.Install_Tools::Install_Link_Content('Help_Videos','Help Videos').'</li>
+		<li>'.Install_Tools::Install_Link_Content('Child_Page','Child Page').'</li>
+		</ul>');
+
 
 		self::NewTitle( $destination, 'Help_Videos','<h1>Help Videos</h1>
 		<p>Video tutorials are often a fast and easy way to learn new things quickly.
@@ -243,10 +260,6 @@ class Install_Tools{
 		If you make a video tutorial for gpEasy, <a href="http://gpeasy.com/Contact">let us know</a>, and we\'ll make sure it\'s included in our list.
 		</p>
 		<p>And as always, to edit this page, just click the "Edit" button while logged in.</p>
-
-		<h2>English</h2>
-		<p>Created by <a href="http://gpeasy.com/Service_Provider?id=114" title="JGladwillDesign">JGladwillDesign</a></p>
-		<p><iframe width="640" height="360" src="http://www.youtube.com/embed/jN-hF4GLb-U" frameborder="0" allowfullscreen></iframe></p>
 
 		<h2>Português</h2>
 		<p><iframe width="640" height="360" src="http://www.youtube.com/embed/KCnGpUzYTbQ" frameborder="0" allowfullscreen></iframe></p>
@@ -257,6 +270,14 @@ class Install_Tools{
 		');
 
 		self::NewTitle( $destination, 'Child_Page','<h1>A Child Page</h1><p>This was created as a subpage of your <em>Help Videos</em> . You can easily change the arrangement of all your pages using the '.Install_Tools::Install_Link_Content('Admin_Menu','Page Manager').'.</p>');
+
+
+		self::NewTitle( $destination, 'More','<h1>More</h1>
+		<ul><li>'.Install_Tools::Install_Link_Content('About','About').'</li>
+		<li>'.Install_Tools::Install_Link_Content('Contact','Contact').'</li>
+		</ul>');
+
+
 
 		self::NewTitle( $destination, 'About','<h1>About gpEasy CMS</h1><p><a href="http://gpEasy.com" title="gpEasy.com">gp|Easy</a> is a complete Content Management System (CMS) that can help you create rich and flexible web sites with a simple and easy to use interface.</p>
 		<h2>gpEasy CMS How To</h2>
@@ -281,16 +302,11 @@ class Install_Tools{
 		<li>Fast and Easy Installation</li>
 		<li>reCaptcha for Contact Form</li>
 		<li>HTML Tidy (when available)</li>
-		</ul>
-		<h2>If You Like gpEasy...</h2>
-		<p>If you like gpEasy, then you might also like:</p>
-		<ul>
-		<li><a href="http://phpeasymin.com" title="Minimize JavaScript and CSS files easily">phpEasyMin.com</a> - Minimize multiple JavaScript and CSS files in one sweep.</li>
 		</ul>');
 
 		//Side_Menu
-		$file = $destination.'/data/_extra/Side_Menu.php';
-		$content = '<h3>Join the gpEasy Community</h3>
+		$file		= $destination.'/data/_extra/Side_Menu.php';
+		$content	= '<h3>Join the gpEasy Community</h3>
 		<p>Visit gpEasy.com to access the many <a href="http://gpeasy.com/Resources" title="gpEasy Community Resources">available resources</a> to help you get the most out of our CMS.</p>
 		<ul>
 		<li><a href="http://gpeasy.com/Themes" title="gpEasy CMS Themes">Download Themes</a></li>
@@ -300,48 +316,49 @@ class Install_Tools{
 		<li><a href="http://gpeasy.com/Resources" title="gpEasy Community Resources">And Much More...</a></li>
 		</ul>
 		<p class="sm">(Edit this content by clicking &quot;Edit&quot;, it&#39;s that easy!)</p>';
-		gpFiles::SaveFile($file,$content);
+		self::NewExtra($file,$content);
 
 		//Header
-		$file = $destination.'/data/_extra/Header.php';
-		$contents = '<h1>'.Install_Tools::Install_Link('',$config['title']).'</h1>';
-		$contents .= '<h4>'.'The Fast and Easy CMS'.'</h4>';
-		gpFiles::SaveFile($file,$contents);
+		$file		= $destination.'/data/_extra/Header.php';
+		$content	= '<h1>'.$config['title'].'</h1>
+		<h4>'.'The Fast and Easy CMS'.'</h4>';
+		self::NewExtra($file,$content);
 
 		//Footer
-		$file = $destination.'/data/_extra/Footer.php';
-		$content = '<h3><a href="http://gpeasy.com/Our_CMS" title="Features of Our CMS">gpEasy CMS Features</a></h3>
+		$file		= $destination.'/data/_extra/Footer.php';
+		$content	= '<h3><a href="http://gpeasy.com/Our_CMS" title="Features of Our CMS">gpEasy CMS Features</a></h3>
 		<p>Easy to use True WYSIWYG Editing.</p>
 		<p>Flat-file data storage and advanced resource management for fast websites.</p>
 		<p>Community driven development</p>
 		<p><a href="http://gpeasy.com/Our_CMS" title="Features of Our CMS">And More...</a></p>
 		<p>If you like gpEasy, then you might also like
-		<a href="http://gpfinder.org" title="gpFinder is a free and open-source AJAX file manager">gpFinder.org</a>,
-		<a href="http://phpeasymin.com" title="Minimize JavaScript and CSS files easily">phpEasyMin.com</a>,
+		<a href="http://lessphp.gpeasy.com" title="A Less to CSS compiler based on the official lesscss project">Less.php</a>,
 		<a href="http://whatcms.org" title="What CMS? Find out what CMS a site is using">WhatCMS.org</a> and
 		<a href="http://whichcms.org" title="Which CMS? Find out which CMS has the features you\'re looking for.">WhichCMS.org</a>.
 		</p>';
-		gpFiles::SaveFile($file,$content);
+		self::NewExtra($file,$content);
 
 
 		//Another example area
-		$file = $destination.'/data/_extra/Lorem.php';
-		$content = '<h3>Heading</h3>
+		$file		= $destination.'/data/_extra/Lorem.php';
+		$content	= '<h3>Heading</h3>
 		<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>';
-		gpFiles::SaveFile($file,$content);
+		self::NewExtra($file,$content);
 
 
 		//contact html
 		$file = $destination.'/data/_extra/Contact.php';
-		gpFiles::SaveFile($file,'<h2>Contact Us</h2><p>Use the form below to contact us, and be sure to enter a valid email address if you want to hear back from us.</p>');
+		self::NewExtra($file,'<h2>Contact Us</h2><p>Use the form below to contact us, and be sure to enter a valid email address if you want to hear back from us.</p>');
 
 
 		// gp_index
 		$new_index = array();
 		$new_index['Home'] = 'a';
-		$new_index['Help_Videos'] = 'b';
-		$new_index['Child_Page'] = 'c';
-		$new_index['About'] = 'd';
+		$new_index['Heading_Page'] = 'b';
+		$new_index['Help_Videos'] = 'c';
+		$new_index['Child_Page'] = 'd';
+		$new_index['More'] = 'e';
+		$new_index['About'] = 'f';
 		$new_index['Contact'] = 'special_contact';
 		$new_index['Site_Map'] = 'special_site_map';
 		$new_index['Galleries'] = 'special_galleries';
@@ -354,7 +371,9 @@ class Install_Tools{
 		$new_menu['a'] = array('level'=>0);
 		$new_menu['b'] = array('level'=>0);
 		$new_menu['c'] = array('level'=>1);
-		$new_menu['d'] = array('level'=>0);
+		$new_menu['d'] = array('level'=>1);
+		$new_menu['e'] = array('level'=>0);
+		$new_menu['f'] = array('level'=>1);
 		$new_menu['special_contact'] = array('level'=>1);
 
 		//	links
@@ -362,14 +381,20 @@ class Install_Tools{
 		$new_titles['a']['label'] = 'Home';
 		$new_titles['a']['type'] = 'text';
 
-		$new_titles['b']['label'] = 'Help Videos';
+		$new_titles['b']['label'] = 'Heading Page';
 		$new_titles['b']['type'] = 'text';
 
-		$new_titles['c']['label'] = 'Child Page';
+		$new_titles['c']['label'] = 'Help Videos';
 		$new_titles['c']['type'] = 'text';
 
-		$new_titles['d']['label'] = 'About';
+		$new_titles['d']['label'] = 'Child Page';
 		$new_titles['d']['type'] = 'text';
+
+		$new_titles['e']['label'] = 'More';
+		$new_titles['e']['type'] = 'text';
+
+		$new_titles['f']['label'] = 'About';
+		$new_titles['f']['type'] = 'text';
 
 		$new_titles['special_contact']['lang_index'] = 'contact';
 		$new_titles['special_contact']['type'] = 'special';
@@ -393,7 +418,7 @@ class Install_Tools{
 		$pages['gpLayouts'] = $gpLayouts;
 
 		echo '<li>';
-		if( !gpFiles::SaveArray($destination.'/data/_site/pages.php','pages',$pages) ){
+		if( !gpFiles::SaveData($destination.'/data/_site/pages.php','pages',$pages) ){
 			echo '<span class="failed">';
 			//echo 'Could not save pages.php';
 			echo sprintf($langmessage['COULD_NOT_SAVE'],'pages.php');
@@ -411,10 +436,11 @@ class Install_Tools{
 		//users
 		echo '<li>';
 		$user_info = array();
-		$user_info['password'] = common::hash($_POST['password'],$config['passhash']);
-		$user_info['granted'] = 'all';
-		$user_info['editing'] = 'all';
-		$user_info['email'] = $_POST['email'];
+		$user_info['password']		= common::hash($_POST['password'],'sha512');
+		$user_info['passhash']		= 'sha512';
+		$user_info['granted']		= 'all';
+		$user_info['editing']		= 'all';
+		$user_info['email']			= $_POST['email'];
 
 		$users = array();
 		$username = $_POST['username'];
@@ -423,11 +449,11 @@ class Install_Tools{
 		if( $base_install ){
 			includeFile('tool/sessions.php');
 			define('gp_session_cookie',gpsession::SessionCookie($config['gpuniq']));
-			gpsession::create($user_info,$username);
+			gpsession::create($user_info, $username, $sessions);
 		}
 		$users[$username] = $user_info;
 
-		if( !gpFiles::SaveArray($destination.'/data/_site/users.php','users',$users) ){
+		if( !gpFiles::SaveData($destination.'/data/_site/users.php','users',$users) ){
 			echo '<span class="failed">';
 			echo sprintf($langmessage['COULD_NOT_SAVE'],'users.php');
 			echo '</span>';
@@ -445,7 +471,7 @@ class Install_Tools{
 		//not using SaveConfig() because $config is not global here
 		echo '<li>';
 		$config['file_count'] = self::$file_count;
-		if( !gpFiles::SaveArray($destination.'/data/_site/config.php','config',$config) ){
+		if( !gpFiles::SaveData($destination.'/data/_site/config.php','config',$config) ){
 			echo '<span class="failed">';
 			echo sprintf($langmessage['COULD_NOT_SAVE'],'config.php');
 			echo '</span>';
@@ -460,12 +486,14 @@ class Install_Tools{
 
 		if( $base_install ){
 			Install_Tools::InstallHtaccess($destination,$config);
+			Install_Tools::PrepareLess();
 		}
 
 		gpFiles::Unlock('write',gp_random);
 
 		return true;
 	}
+
 
 	static function NewTitle( $dataDir, $title, $content ){
 
@@ -483,7 +511,12 @@ class Install_Tools{
 			'file_type' => 'text',
 			);
 
-		return gpFiles::SaveArray($file,'meta_data',$meta_data,'file_sections',$file_sections);
+		return gpFiles::SaveData($file,'file_sections',$file_sections,$meta_data);
+	}
+
+	static function NewExtra($file, $content){
+		$extra_content = array('type'=>'text','content'=>$content);
+		return gpFiles::SaveData($file,'extra_content',$extra_content);
 	}
 
 
@@ -576,6 +609,12 @@ class Install_Tools{
 		}
 	}
 
+	static function PrepareLess(){
+		global $dataDir;
+		$less_files = $dataDir.'/include/css/admin.less';
+		gpOutput::CacheLess($less_files);
+	}
+
 
 	function GetPathInfo(){
 		$UsePathInfo =
@@ -584,22 +623,6 @@ class Install_Tools{
 			( strpos( php_sapi_name(), 'isapi' ) === false );
 
 		return $UsePathInfo;
-	}
-
-	static function Install_Link($href,$label,$query='',$attr=''){
-
-		$charlist = "\\'";
-		$href = addcslashes($href,$charlist);
-		$label = addcslashes($label,$charlist);
-		$query = addcslashes($query,$charlist);
-		$attr = addcslashes($attr,$charlist);
-
-		$text = '<';
-		$text .= '?php';
-		$text .= ' echo common::Link(\''.$href.'\',\''.$label.'\',\''.$query.'\',\''.$attr.'\'); ';
-		$text .= '?';
-		$text .= '>';
-		return $text;
 	}
 
 	static function Install_Link_Content($href,$label,$query='',$attr=''){
@@ -751,6 +774,7 @@ class FileSystem{
 
 	static function file_owner($file) {
 		$info = FileSystem::file_info($file);
+
 		if (is_array($info)) {
 			if (isset($info['name'])) {
 				return $info['name'];

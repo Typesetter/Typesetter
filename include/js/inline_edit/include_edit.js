@@ -94,7 +94,7 @@
 					}
 				}
 
-			}).data( "autocomplete" )._renderItem = function( ul, item ) {
+			}).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
 				return $( "<li></li>" )
 					.data( "ui-autocomplete-item", item[1] )
 					.append( '<a>' + $gp.htmlchars(item[0]) + '<span>'+$gp.htmlchars(item[1])+'</span></a>' )

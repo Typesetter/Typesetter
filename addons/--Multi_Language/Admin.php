@@ -14,9 +14,7 @@ class MultiLang_Admin extends MultiLang_Common{
 		$cmd = common::GetCommand();
 		switch($cmd){
 			case 'title_settings_add':
-			case 'title_settings_save':
 				$this->TitleSettingsSave($cmd);
-				$this->TitleSettings();
 			return;
 			case 'title_settings':
 				$this->TitleSettings();
@@ -36,12 +34,83 @@ class MultiLang_Admin extends MultiLang_Common{
 				$this->SelectLanguages();
 			break;
 
+			case 'PrimaryLanguage':
+				$this->PrimaryLanguage();
+			break;
+			case 'PrimaryLanguageSave':
+				$this->PrimaryLanguageSave();
+				$this->DefaultDisplay();
+			break;
+
 			default:
-				$this->ShowStats();
+				$this->DefaultDisplay();
 			break;
 		}
 	}
 
+	function DefaultDisplay(){
+		$this->ShowStats();
+		$this->AllMenus();
+		$this->SmLinks();
+	}
+
+	/**
+	 * Display for for selecting the primary language
+	 *
+	 */
+	function PrimaryLanguage(){
+		global $ml_languages, $langmessage;
+
+		echo '<div>';
+		echo '<form method="post" action="'.common::GetUrl('Admin_MultiLang').'">';
+		echo '<input type="hidden" name="cmd" value="PrimaryLanguageSave" />';
+		echo '<h3>Select Primary Language</h3>';
+
+		echo '<select class="gpselect" name="primary">';
+		foreach($ml_languages as $lang => $language){
+			if( $lang == $this->lang ){
+				echo '<option value="'.$lang.'" selected>'.htmlspecialchars($language).'</option>';
+			}else{
+				echo '<option value="'.$lang.'">'.htmlspecialchars($language).'</option>';
+			}
+		}
+		echo '</select>';
+
+		echo '<hr/>';
+
+		echo '<input type="submit" class="gpsubmit" value="'.$langmessage['save'].'"  />';
+		echo '<input type="button" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
+
+		echo '</form>';
+		echo '</div>';
+	}
+
+	function PrimaryLanguageSave(){
+		global $ml_languages, $langmessage;
+
+		$primary = $_REQUEST['primary'];
+
+		if( !isset($ml_languages[$primary]) ){
+			message($langmessage['OOPS'].' (Invalid Language)');
+			return;
+		}
+
+
+		$this->config['primary']	= $primary;
+
+		if( $this->SaveConfig() ){
+			message($langmessage['SAVED']);
+			$this->lang				= $primary;
+			$this->language			= $ml_languages[$this->lang];
+		}else{
+			message($langmessage['OOPS']);
+		}
+	}
+
+	/**
+	 * Save the list of languages to be used
+	 *
+	 */
 	function SaveLanguages(){
 		global $ml_languages, $langmessage;
 
@@ -106,7 +175,7 @@ class MultiLang_Admin extends MultiLang_Common{
 
 
 	function ShowStats(){
-		global $ml_languages, $gp_index, $config;
+		global $ml_languages, $gp_index;
 
 		//get some data
 		$per_lang = array();
@@ -124,10 +193,10 @@ class MultiLang_Admin extends MultiLang_Common{
 			}
 		}
 
-		echo '<h3>Statistics</h3>';
+		echo '<h2>Statistics</h2>';
 
 		//Page Statistics
-		echo '<div class="ml_stats">';
+		echo '<div class="ml_stats"><div>';
 		echo '<table class="bordered"><tr><th colspan="2">Page Statistics</th></tr>';
 
 		//count titles with translations
@@ -152,28 +221,36 @@ class MultiLang_Admin extends MultiLang_Common{
 		}
 		echo '<tr><td>Average Pages Per List</td><td>'.number_format($average,1).'</td></tr>';
 
-		echo '</table></div>';
+		echo '</table></div></div>';
 
 
 		//Language Statistics
-		echo '<div class="ml_stats">';
-		echo '<table class="bordered"><tr><th colspan="2">Langauge Statistics</th></tr>';
+		echo '<div class="ml_stats"><div>';
+		echo '<table class="bordered"><tr><th>Langauge</th><th>Page Count</th></tr>';
 
 		// # of pages per language
 		foreach($per_lang as $lang => $count){
 			echo '<tr><td>';
-			$label = 'Pages in '.$ml_languages[$lang];
+
 			if( $lang == $this->lang ){
-				$label = '<b>'.$label.'</b><i> ('.common::Link('Admin_Configuration','Primary Language','','name="gpabox"').')</i>';
+				echo '<b>'.$ml_languages[$lang].'</b><br/>'.common::Link('Admin_MultiLang','Primary Language','cmd=PrimaryLanguage','name="gpabox"').'</i>';
+			}else{
+				echo ''.$ml_languages[$lang];
 			}
-			echo $label;
 
 			echo '</td><td>'.number_format($count).'</td></tr>';
 		}
-		echo '</table></div>';
+		echo '</table></div></div>';
 
 
 		//Show lists
+		//$this->PageLists($list_sizes);
+	}
+
+	/*
+	function PageLists($list_sizes){
+		global $ml_languages;
+
 		echo '<h3>Page Lists</h3>';
 		$lang_label = $ml_languages[$this->lang];
 		asort($list_sizes);
@@ -197,11 +274,112 @@ class MultiLang_Admin extends MultiLang_Common{
 			echo '</td></tr>';
 		}
 		echo '</table>';
+	}
+	*/
 
-		$this->SmLinks();
 
+	/**
+	 * Display all pages and their associated translations
+	 *
+	 */
+	function AllMenus(){
+		global $gp_menu, $config;
+
+		//show main menu
+		$this->ShowMenu($gp_menu,'','Main Menu');
+
+
+		//all other menus
+		foreach($config['menus'] as $id => $menu_label){
+
+			$array = gpOutput::GetMenuArray($id);
+			$this->ShowMenu($array, $id, $menu_label);
+		}
 	}
 
+
+	/**
+	 * Display a menu and it's translated pages
+	 *
+	 */
+	function ShowMenu($menu, $id, $menu_label){
+		global $ml_languages;
+
+
+		echo '<h3>';
+		echo common::Link('Admin_Menu',$menu_label,'menu='.$id,array('data-arg'=>'cnreq'));
+		echo '</h3>';
+
+
+		$langs = $this->WhichLanguages();
+		unset($langs[$this->lang]);
+
+		echo '<table class="bordered full_width">';
+
+		echo '<tr><th width="1">'.$this->language.' (Primary Language) </th>';
+		foreach($langs as $lang){
+			echo '<th width="1">'.$ml_languages[$lang].'</th>';
+		}
+		echo '<th width="1">&nbsp;</th></tr>';
+
+
+		$i = 0;
+		foreach($menu as $page_index => $title_info){
+
+			$page_list = $this->GetList($page_index);
+
+			//primary language
+			echo '<tr class="'.($i % 2 ? 'even' : '').'"><td>';
+			if( isset($page_list[$this->lang]) ){
+				$title = common::IndexToTitle($page_list[$this->lang]);
+				echo common::Link_Page($title);
+			}else{
+				$title = common::IndexToTitle($page_index);
+				echo common::Link_Page($title);
+			}
+			echo '</td>';
+
+
+			foreach($langs as $lang){
+
+				echo '<td>';
+				if( isset($page_list[$lang]) ){
+					$title = common::IndexToTitle($page_list[$lang]);
+					echo common::Link_Page($title);
+				}
+				echo '</td>';
+			}
+
+
+			echo '<td>';
+			echo common::Link('Admin_MultiLang','Options','cmd=title_settings&index='.$page_index,' name="gpabox"');
+			echo '</td></tr>';
+			$i++;
+		}
+
+		echo '</table>';
+	}
+
+
+	/**
+	 * Which languages
+	 * Return a list of languages being used
+	 *
+	 */
+	function WhichLanguages(){
+
+		$langs = array();
+
+		foreach($this->lists as $list_index => $list){
+			foreach($list as $lang => $index){
+				if( !isset($per_lang[$lang]) ){
+					$langs[$lang] = $lang;
+				}
+			}
+		}
+
+		return $langs;
+	}
 
 
 	/**
@@ -209,7 +387,7 @@ class MultiLang_Admin extends MultiLang_Common{
 	 *
 	 */
 	function NotTranslated(){
-		global $ml_languages, $gp_index, $config, $gp_menu, $page;
+		global $gp_index, $config, $gp_menu, $page;
 
 		$page->head_js[] = '/include/thirdparty/tablesorter/tablesorter.js';
 		$page->jQueryCode .= '$("table.tablesorter").tablesorter({cssHeader:"gp_header",cssAsc:"gp_header_asc",cssDesc:"gp_header_desc"});';
@@ -268,8 +446,8 @@ class MultiLang_Admin extends MultiLang_Common{
 			return false;
 		}
 
-		$this->lists = $this->config['lists'];
-		$this->titles = $this->config['titles'];
+		$this->lists	= $this->config['lists'];
+		$this->titles	= $this->config['titles'];
 		if( count($this->config['langs']) ){
 			$this->langs = $this->config['langs'];
 		}
@@ -282,63 +460,27 @@ class MultiLang_Admin extends MultiLang_Common{
 	 * Display drop down menu for selecting a language
 	 *
 	 */
-	function LanguageSelect($name,$default,$exclude= array()){
-		global $ml_languages, $langmessage;
+	function LanguageSelect($name, $default = '', $exclude= array() ){
 
 		echo '<div>';
-
-		$data = array();
-		foreach($this->langs as $code => $label){
-			$data[] = array($label,$code);
-		}
-		echo '<span class="data" style="display:none">';
-		$data = json_encode($data);
-		echo htmlspecialchars($data,ENT_NOQUOTES);
+		echo '<span class="gpinput combobox" data-source="#lang_data">';
+		echo '<input type="text" name="'.$name.'" value="'.htmlspecialchars($default).'" class="combobox"/>';
 		echo '</span>';
-
-		$default_label = '';
-		if( $default ){
-			$default_label = $ml_languages[$default];
-		}
-		echo '<span class="gpinput combobox">';
-		echo '<input type="text" name="'.$name.'" value="'.htmlspecialchars($default_label).'" class="combobox"/>';
-		echo '<input type="hidden" name="'.$name.'_hidden" value="'.htmlspecialchars($default).'" />';
-		echo '</span>';
-
 		echo '</div>';
 	}
 
-	function TitleSelect($default_index,$exclude=array()){
+	/**
+	 * Title selection input
+	 *
+	 */
+	function TitleSelect($default,$exclude=array()){
 		global $gp_index,$gp_titles, $langmessage;
 
 		$exclude = (array)$exclude;
 
 		echo '<div>';
-
-		$data = array();
-		foreach($gp_index as $url => $index){
-			if( in_array($index,$exclude) ){
-				continue;
-			}
-			$label = common::GetLabelIndex($index);
-			$data[] = array( common::LabelSpecialChars($label), $url, $index );
-		}
-
-		//$data = array_slice($data,107,1);
-		echo '<span class="data" style="display:none">';
-		$data = json_encode($data);
-		echo htmlspecialchars($data,ENT_NOQUOTES);
-		echo '</span>';
-
-
-		$default_url = '';
-		if( $default_index ){
-			$default_url = common::IndexToTitle($default_index);
-		}
-
-		echo '<span class="gpinput combobox">';
-		echo '<input type="text" name="title" value="'.htmlspecialchars($default_url).'" class="combobox"/>';
-		echo '<input type="hidden" name="title_index" value="'.htmlspecialchars($default_index).'" />';
+		echo '<span class="gpinput combobox" data-source="#lang_titles">';
+		echo '<input type="text" name="to_slug" value="'.htmlspecialchars($default).'" class="combobox" />';
 		echo '</span>';
 
 		echo '</div>';
@@ -346,194 +488,189 @@ class MultiLang_Admin extends MultiLang_Common{
 
 
 	/**
-	 *
+	 * Save new translations
 	 *
 	 */
 	function TitleSettingsSave($cmd){
-		global $gp_titles, $ml_languages, $langmessage, $gp_index;
 
+		$saved = $this->_TitleSettingsSave($cmd);
 
-		$index_a = $_POST['index'];
-		if( !isset($gp_titles[$index_a]) ){
-			message($langmessage['OOPS'].' (Invalid Title - 1)');
-			return;
-		}
-
-		$lang_a = $_POST['ml_lang_hidden'];
-		if( !$lang_a ){
-			message($langmessage['OOPS'].' (Invalid Language)');
-			return;
-		}
-
-		$index_b = $_POST['title_index'];
-		if( empty($index_b) ){
-			message($langmessage['OOPS'].' (No Title)');
-			return;
-		}
-
-		if( !isset($gp_titles[$index_b]) ){
-			message($langmessage['OOPS'].' (Invalid Title - 2)');
-			return;
-		}
-
-
-		//a title can't be a translation of  itself
-		if( $index_b == $index_a ){
-			message($langmessage['OOPS'].' (Same Title)');
-			return;
-		}
-
-
-		//adding to a list
-		$list_index = false;
-		if( $cmd == 'title_settings_add' ){
-			$temp = $index_a;
-			$index_a = $index_b;
-			$index_b = $temp;
-
-			$list_index = $this->GetListIndex($index_b);
-			if( !$list_index ){
-				message($langmessage['OOPS'].' (List Not Found)');
-				return;
-			}
-
-		//new list
+		if( $saved ){
+			$this->TitleSettings();
 		}else{
+			$this->TitleSettings($_POST);
+		}
+	}
 
-			//$list_index = $this->GetListIndex($index_b);
-			if( $this->GetListIndex($index_b) ){
-				$label = common::GetLabelIndex($index_b);
-				$link = common::Link('Admin_MultiLang',$label,'cmd=title_settings&index='.$index_b,' name="gpabox"');
+	function _TitleSettingsSave($cmd){
+		global $gp_titles, $langmessage, $gp_index;
+
+
+		//check from index
+		$from_index = $_POST['index'];
+		if( !isset($gp_titles[$from_index]) ){
+			message($langmessage['OOPS'].' (Invalid Title - 1)');
+			return false;
+		}
+
+
+		//from language?
+		$from_lang = $this->lang;
+		if( isset($_POST['from_lang']) ){
+			$from_lang	= $this->PostedLanguage($_POST['from_lang']);
+			if( !$from_lang ){
+				message($langmessage['OOPS'].'. (Language not found)');
+				return false;
+			}
+		}
+
+
+		//check to language
+		$to_lang	= $this->PostedLanguage($_POST['to_lang']);
+		if( !$to_lang ){
+			message($langmessage['OOPS'].'. (Language not found)');
+			return false;
+		}
+
+
+		//check to index
+		$to_index	= $this->PostedTitle($_POST['to_slug']);
+		if( !$to_index ){
+			message($langmessage['OOPS'].'. (Title not found)');
+			return false;
+		}
+
+
+		// a title can't be a translation of itself
+		if( $from_index == $to_index ){
+			message($langmessage['OOPS'].' (Same Title)');
+			return false;
+		}
+
+
+		// already a part of a list?
+		$change_list = $this->GetListIndex($to_index);
+		if( $change_list ){
+
+			// don't stop if there's only one title in the list
+			$list		= $this->GetList($to_index);
+			if( count($list) > 1 ){
+				$label = common::GetLabelIndex($to_index);
+				$link = common::Link('Admin_MultiLang',$label,'cmd=title_settings&index='.$to_index,' name="gpabox"');
 				message('Sorry, '.$link.' is already part of a translation.');
-				//message($langmessage['OOPS'].' (Already Translated)');
-				return;
-			}
-
-			$lang_b = $_POST['ml_lang_b_hidden'];
-			if( !$lang_b ){
-				message($langmessage['OOPS'].' (Invalid Language)');
-				return;
+				return false;
 			}
 
 		}
 
-		$list_index_a = $this->GetListIndex($index_a);
-		if( $list_index_a ){
-			message($langmessage['OOPS'].' (Already Translated)');
-			return;
 
-		}
-
-		//new list
+		//new or existing list
+		$list_index = $this->GetListIndex($from_index);
 		if( !$list_index ){
 			$list_index = $this->NewListIndex();
-			$this->config['lists'][$list_index][$lang_b] = $index_b;
-			$this->config['titles'][$index_b] = $list_index;
 		}
 
-		$this->config['lists'][$list_index][$lang_a] = $index_a;
-		$this->config['titles'][$index_a] = $list_index;
+
+		// delete abandoned list
+		if( $change_list ){
+			unset($this->config['lists'][$change_list]);
+		}
 
 
-		//echo '<h3>New configuration</h3>';
-		//echo showArray($this->config);
-		//echo '<hr/>';
-		//echo showArray($_POST);
-		//return;
+
+		//save data
+		$this->config['lists'][$list_index][$from_lang]		= $from_index;
+		$this->config['titles'][$from_index]				= $list_index;
+
+		$this->config['lists'][$list_index][$to_lang]		= $to_index;
+		$this->config['titles'][$to_index]					= $list_index;
+
 
 		if( $this->SaveConfig() ){
 			message($langmessage['SAVED'].' '.$langmessage['REFRESH']);
-		}else{
-			message($langmessage['OOPS']);
+			return true;
+		}
+
+		message($langmessage['OOPS']);
+		return false;
+	}
+
+
+	/**
+	 * Get the language key from the language name
+	 *
+	 */
+	function PostedLanguage($lang){
+		global $ml_languages;
+
+		if( in_array($lang,$ml_languages) ){
+			return array_search($lang,$ml_languages);
 		}
 	}
 
 	/**
-	 * Set the language of the title
+	 * Get the title index from the posted title
 	 *
 	 */
-	function TitleSettings(){
-		global $gp_titles, $langmessage;
+	function PostedTitle($posted_slug){
+		global $gp_index;
 
-		$index = $_REQUEST['index'];
-		if( !isset($gp_titles[$index]) ){
+		foreach($gp_index as $slug => $index){
+
+			if( $slug === $posted_slug ){
+				return $index;
+			}
+		}
+
+	}
+
+
+	/**
+	 * Language selection popup
+	 *
+	 */
+	function TitleSettings( $args = array() ){
+		global $gp_titles, $langmessage, $langmessage, $ml_languages, $gp_index;
+
+		$args += array('to_lang'=>'','to_slug'=>'');
+
+		$page_index = $_REQUEST['index'];
+		if( !isset($gp_titles[$page_index]) ){
 			echo $langmessage['OOPS'].' (Invalid Title - 3)';
 			return;
 		}
 
-		//make sure it's not already in a list
-		$list_index = $this->GetListIndex($index);
-		if( $list_index !== false ){
-			$this->ListSettings($index);
-			return;
-		}
-
-
-		echo '<div>';
-
-		echo '<h2>';
-		echo common::GetLabelIndex($index);
-		echo '</h2>';
-
-		echo '<form method="post" action="'.common::GetUrl('Admin_MultiLang').'">';
-		echo '<input type="hidden" name="cmd" value="title_settings_save" />';
-		echo '<input type="hidden" name="index" value="'.$index.'" />';
-
-		echo '<table cellpadding="10" border="0"><tr><td rowspan="2">';
-		echo '<h3>1) Language of Current Page</h3>';
-		echo 'What language is this page in?';
-		echo '</td><td></td></tr>';
-		echo '<tr><td style="vertical-align:bottom">';
-		$this->LanguageSelect('ml_lang',$this->lang);
-		echo '</td></tr>';
-
-
-		echo '<tr><td rowspan="2">';
-		echo '<h3>2) Corresponding Page</h3>';
-		echo 'What page is this page a translation of?';
-		echo '</td><td></td></tr>';
-		echo '<tr><td style="vertical-align:bottom">';
-		$this->TitleSelect('');
-		echo '</td></tr>';
-
-		echo '<tr><td>';
-		echo 'What language is this page in?';
-		echo '</td><td style="vertical-align:bottom">';
-		$this->LanguageSelect('ml_lang_b',false);
-		echo '</td></tr>';
-
-		echo '</table>';
-
-		echo '<p>';
-		echo '<input type="submit" value="'.$langmessage['save'].'" class="gpabox gpsubmit" /> ';
-		echo '<input type="button" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
-		echo '</p>';
-
-		echo '</form>';
-
-		$this->SmLinks();
-
-		echo '</div>';
-	}
-
-	/**
-	 * Give users the option of removing the settings for a page
-	 *
-	 */
-	function ListSettings($page_index){
-		global $langmessage, $ml_languages;
-
-		$list = $this->GetList($page_index);
+		$list		= $this->GetList($page_index);
 
 		echo '<div>';
 		echo '<form method="post" action="'.common::GetUrl('Admin_MultiLang').'">';
 		echo '<input type="hidden" name="cmd" value="title_settings_add" />';
 		echo '<input type="hidden" name="index" value="'.$page_index.'" />';
 
-		echo '<h3>Settings</h3>';
-		echo '<p>This page has been associated with the following list of pages.</p>';
 
+
+
+		echo '<h3>Page Settings</h3>';
 		echo '<table class="bordered"><tr><th>Language</th><th>Title</th><th>Options</th></tr>';
+
+
+		//not set yet
+		if( !$list ){
+			$in_menu	= $this->InMenu($page_index);
+			echo '<tr><td>';
+			if( $in_menu ){
+				echo $this->language;
+			}else{
+				$this->LanguageSelect('from_lang');
+			}
+
+			echo '</td><td>';
+			$title = common::IndexToTitle($page_index);
+			echo common::Link_Page($title);
+			echo '</td><td>';
+			echo '</td></tr>';
+		}
+
 
 		//current settings
 		foreach($ml_languages as $lang => $language){
@@ -558,9 +695,9 @@ class MultiLang_Admin extends MultiLang_Common{
 
 		//option to add another title
 		echo '<tr><td>';
-		$this->LanguageSelect('ml_lang',false,$this->lang);
+		$this->LanguageSelect('to_lang',$args['to_lang'], $this->lang);
 		echo '</td><td>';
-		$this->TitleSelect('',$list);
+		$this->TitleSelect($args['to_slug'],$list);
 		echo '</td><td>';
 		echo '<input type="submit" value="'.$langmessage['save'].'" class="gpabox gpbutton" /> ';
 		echo '</td></tr>';
@@ -571,8 +708,52 @@ class MultiLang_Admin extends MultiLang_Common{
 
 		$this->SmLinks();
 
-		echo '</div>';
 
+		//add languages as json
+		$data = array();
+		foreach($this->langs as $code => $label){
+			$data[] = array($label,$code);
+		}
+		echo "\n";
+		echo '<span id="lang_data" data-json=\''.htmlspecialchars(json_encode($data),ENT_QUOTES & ~ENT_COMPAT).'\'></span>';
+
+
+		//add titles as json
+		$data = array();
+		foreach($gp_index as $slug => $index){
+			$label = common::GetLabelIndex($index);
+			$data[] = array( $slug, common::LabelSpecialChars($label) );
+		}
+		echo "\n";
+		echo '<span id="lang_titles" data-json=\''.htmlspecialchars(json_encode($data),ENT_QUOTES & ~ENT_COMPAT,'UTF-8',false).'\'></span>';
+
+
+		echo '</div>';
+	}
+
+
+	/**
+	 * Determine if the page is in a menu
+	 *
+	 */
+	function InMenu($page_index){
+		global $gp_menu, $config;
+
+
+		//show main menu
+		if( isset($gp_menu[$page_index]) ){
+			return true;
+		}
+
+
+		foreach($config['menus'] as $id => $menu_label){
+			$array = gpOutput::GetMenuArray($id);
+			if( isset($array[$page_index]) ){
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

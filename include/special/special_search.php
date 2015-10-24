@@ -14,7 +14,7 @@ class special_gpsearch{
 	var $gpabox = false;
 
 
-	function special_gpsearch(){
+	function __construct(){
 		global $page, $langmessage, $dataDir;
 
 		$this->config_file = $dataDir.'/data/_site/config_search.php';
@@ -26,14 +26,11 @@ class special_gpsearch{
 
 		//admin popup or visitor
 		$_REQUEST += array('q'=>'');
-		$start_time = microtime();
 		if( common::LoggedIn() && isset($_REQUEST['gpx_content']) && $_REQUEST['gpx_content'] == 'gpabox' ){
 			$this->AdminSearch();
 		}else{
 			$this->Search();
 		}
-
-		//echo '<p>'.microtime_diff($start_time,microtime()).' seconds</p>';
 	}
 
 	function AdminSearch(){
@@ -46,8 +43,8 @@ class special_gpsearch{
 		echo '<div id="admin_search">';
 		echo '<form action="'.common::GetUrl('special_gpsearch').'" method="get">';
 		echo '<h3>'.$langmessage['Search'].'</h3>';
-		echo '<input name="q" type="text" class="gpinput" value="'.htmlspecialchars($_REQUEST['q']).'"/>';
-		echo '<input type="submit" name="" value="'.$langmessage['Search'].'" class="gpabox gpsubmit" />';
+		echo '<input name="q" type="text" class="gpinput" value="'.htmlspecialchars($_REQUEST['q']).'" required />';
+		echo '<input type="submit" name="" value="'.$langmessage['Search'].'" class="gpabox gpsubmit gpvalidate" />';
 		echo '<input type="submit" name="" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
 		echo '</form>';
 
@@ -142,7 +139,8 @@ class special_gpsearch{
 		// remove duplicates
 		$links = array();
 		foreach($this->results as $key => $result){
-			$link = common::GetUrl( $result['slug'], $result['query'] );
+			//$link = common::GetUrl( $result['slug'], $result['query'] );
+			$link =  isset($result['url']) ? $result['url'] : common::GetUrl( $result['slug'], $result['query'] );
 			$link = strtolower($link);
 			if( in_array($link,$links) ){
 				unset($this->results[$key]);
@@ -175,7 +173,8 @@ class special_gpsearch{
 		echo '<div class="result_list">';
 		foreach($this->results as $result){
 			echo '<div><h4>';
-			echo common::Link($result['slug'],$result['label'],$result['query']);
+			//echo common::Link($result['slug'],$result['label'],$result['query']);
+			echo isset($result['link']) ? $result['link'] : common::Link($result['slug'],$result['label'],$result['query']);
 			echo '</h4>';
 
 			echo $result['content'];
@@ -190,10 +189,10 @@ class special_gpsearch{
 		echo '</div>';
 
 		if( $total_pages > 1 ){
-			echo '<p class="search_nav search_nav_bottom">';
+			echo '<ul class="search_nav search_nav_bottom pagination">';
 			for($i=0;$i<$total_pages;$i++){
 				if( $i == $current_page ){
-					echo '<span>'.($i+1).'</span> ';
+					echo '<li><span>'.($i+1).'</span></li> ';
 					continue;
 				}
 				$query = 'q='.rawurlencode($_REQUEST['q']);
@@ -204,9 +203,9 @@ class special_gpsearch{
 				if( $this->gpabox ){
 					$attr = 'data-cmd="gpabox"';
 				}
-				echo common::Link('special_gpsearch',($i+1),$query,$attr).' ';
+				echo '<li>'.common::Link('special_gpsearch',($i+1),$query,$attr).'</li>';
 			}
-			echo '</p>';
+			echo '</ul>';
 		}
 	}
 
@@ -216,8 +215,14 @@ class special_gpsearch{
 
 	function SearchPattern(){
 		$query = strtolower($_REQUEST['q']);
-		preg_match_all("/\S+/", $query, $words);
-		$words = array_unique($words[0]);
+		// Search for the exact query when it is doubled quoted
+		if (substr($query, 0, 1) == '"' && substr($query, -1) == '"') {
+			$query = substr($query, 1, -1);
+			$words = array($query);
+		} else {
+			preg_match_all("/\S+/", $query, $words);
+			$words = array_unique($words[0]);
+		}
 
 		$sub_pattern1 = $sub_pattern2 = array();
 		foreach($words as $word){
@@ -250,15 +255,13 @@ class special_gpsearch{
 		return false;
 	}
 
+	/**
+	 * Get the search configuration
+	 *
+	 */
 	function GetConfig(){
-
-		$search_config = array();
-		if( file_exists($this->config_file) ){
-			include($this->config_file);
-		}
-
-		$search_config += array('search_hidden'=>false);
-		$this->search_config = $search_config;
+		$this->search_config 	= gpFiles::Get($this->config_file,'search_config');
+		$this->search_config	+= array('search_hidden'=>false);
 	}
 
 	function SaveConfig(){
@@ -270,7 +273,7 @@ class special_gpsearch{
 			$search_config['search_hidden'] = false;
 		}
 
-		if( gpFiles::SaveArray($this->config_file,'search_config',$search_config) ){
+		if( gpFiles::SaveData($this->config_file,'search_config',$search_config) ){
 			message($langmessage['SAVED']);
 			$this->search_config = $search_config;
 			return true;
@@ -333,25 +336,21 @@ class special_gpsearch{
 	function SearchPage($title,$index){
 		global $gp_menu;
 
-		$full_path = gpFiles::PageFile($title);
-		if( !file_exists($full_path) ){
-			return;
-		}
-
 		//search hidden?
 		if( !$this->search_hidden && !isset($gp_menu[$index]) ){
 			return;
 		}
 
-		$file_sections = $file_stats = array();
-		include($full_path);
-		if( !isset($file_sections) || !is_array($file_sections) || !count($file_sections) ){
+		$full_path		= gpFiles::PageFile($title);
+		$file_sections	= gpFiles::Get($full_path,'file_sections');
+
+		if( !$file_sections ){
 			return;
 		}
 
+		$content		= section_content::Render($file_sections,$title,gpFiles::$last_stats);
+		$label			= common::GetLabel($title);
 
-		$content = section_content::Render($file_sections,$title,$file_stats);
-		$label = common::GetLabel($title);
 		$this->FindString($content, $label, $title);
 	}
 

@@ -32,11 +32,11 @@ class gpPlugin{
 	 * Aliases of gpPlugin_incl()
 	 * @deprecated 3.5.3
 	 */
-	function incl($file){
+	static function incl($file){
 		return gpPlugin_incl($file);
 	}
 
-	function inc($file){
+	static function inc($file){
 		return gpPlugin_incl($file);
 	}
 
@@ -45,12 +45,21 @@ class gpPlugin{
 	 * Add a css file to the page
 	 * @since gpEasy 4.0
 	 * @param string $file The path of the css file relative to the addon folder
-	 *
+	 * @param bool $combine Set to false to keep the file from being combined with other css files
 	 */
-	function css($file){
+	static function css($file, $combine = true){
 		global $page;
-		$file = common::WinPath( $file );
-		$page->css_admin[] = self::$current['code_folder_part'].'/'.ltrim($file,'/');
+
+		$file 				= common::WinPath( $file );
+
+		if( $combine ){
+			$page->css_admin[] = self::$current['code_folder_part'].'/'.ltrim($file,'/');
+		}else{
+			$url = self::$current['code_folder_rel'].'/'.ltrim($file,'/');
+			$page->head .= "\n".'<link rel="stylesheet" type="text/css" href="'.$url.'"/>';
+		}
+
+		return self::$current['code_folder_part'].'/'.ltrim($file,'/');
 	}
 
 
@@ -58,12 +67,24 @@ class gpPlugin{
 	 * Add a js file to the page
 	 * @since gpEasy 4.0
 	 * @param string $file The path of the js file relative to the addon folder
-	 *
+	 * @param bool $combine Set to false to keep the file from being combined with other js files
 	 */
-	function js($file){
+	static function js($file, $combine = true ){
 		global $page;
+
 		$file = common::WinPath( $file );
-		$page->head_js[] = self::$current['code_folder_part'].'/'.ltrim($file,'/');
+
+		if( $combine ){
+			$page->head_js[] = self::$current['code_folder_part'].'/'.ltrim($file,'/');
+		}else{
+			$url = self::$current['code_folder_rel'].'/'.ltrim($file,'/');
+			$page->head .= "\n".'<script type="text/javascript" src="'.$url.'"></script>';
+		}
+	}
+
+	static function GetDir($path='',$ampersands = false){
+		$path = self::$current['code_folder_part'].'/'.ltrim($path,'/');
+		return common::GetDir($path, $ampersands);
 	}
 
 	/**
@@ -264,7 +285,7 @@ class gpPlugin{
 			trigger_error('Corrupted configuration for addon: '.$addon_key); //.pre($config['addons']));
 			return false;
 		}
-		$addon_config += array( 'version'=>false, 'id'=>false, 'data_folder'=>$addon_key, 'order'=>false, 'code_folder_part'=>'/data/_addoncode/'.$addon_key );
+		$addon_config += array( 'version'=>false, 'id'=>false, 'data_folder'=>$addon_key, 'order'=>false, 'code_folder_part'=>'/data/_addoncode/'.$addon_key,'name'=>$addon_key );
 
 		//data folder
 		$addon_config['data_folder_part'] = '/data/_addondata/'.$addon_config['data_folder'];
@@ -302,9 +323,11 @@ class gpPlugin{
 		global $addonRelativeCode,$addonRelativeData,$addonPathData,$addonPathCode,$addonFolderName,$addon_current_id,$addon_current_version;
 
 
-		$addonFolderName = false;
-		$addonDataFolder = $addonCodeFolder = false;
-		$addonRelativeCode = $addonRelativeData = $addonPathData = $addonPathCode = $addon_current_id = $addon_current_version = false;
+		self::$current		= array();
+		$addonFolderName	= false;
+		$addonDataFolder	= false;
+		$addonCodeFolder	= false;
+		$addonRelativeCode	= $addonRelativeData = $addonPathData = $addonPathCode = $addon_current_id = $addon_current_version = false;
 
 		//Make the most recent addon folder or addon id in the stack the current addon
 		if( count(self::$stack) > 0 ){
@@ -344,13 +367,9 @@ class gpPlugin{
 	 *
 	 */
 	static function GetConfig(){
-		global $addonPathData;
-		$config = array();
-		$file = $addonPathData.'/_config.php';
-		if( file_exists($file) ){
-			include($file);
-		}
-		return $config;
+
+		$file = self::$current['data_folder_full'].'/_config.php';
+		return gpFiles::Get($file,'config');
 	}
 
 
@@ -360,11 +379,10 @@ class gpPlugin{
 	 *
 	 */
 	function SaveConfig($config){
-		global $addonPathData;
 
-		$file = $addonPathData.'/_config.php';
+		$file = self::$current['data_folder_full'].'/_config.php';
 
-		if( gpFiles::SaveArray($file,'config',$config) ){
+		if( gpFiles::SaveData($file,'config',$config) ){
 			return true;
 		}
 		return false;

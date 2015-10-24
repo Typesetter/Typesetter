@@ -13,8 +13,6 @@ set_error_handler('showError');
 
 gp_defined('gp_restrict_uploads',false);
 gp_defined('gpdebugjs',gpdebug);
-gp_defined('gpdebug_tools',false);
-gp_defined('gptesting',false);
 gp_defined('gptesting',false);
 gp_defined('gp_cookie_cmd',true);
 gp_defined('gp_browser_auth',false);
@@ -23,31 +21,30 @@ gp_defined('gp_chmod_file',0666);
 gp_defined('gp_chmod_dir',0755);
 gp_defined('gp_index_filenames',true);
 gp_defined('gp_safe_mode',false);
-gp_defined('E_STRICT',2048);
-gp_defined('E_RECOVERABLE_ERROR',4096);
-gp_defined('E_DEPRECATED',8192);
-gp_defined('E_USER_DEPRECATED',16384);
-gp_defined('gpdebug_tools',false);
+gp_defined('E_DEPRECATED',8192);			// since php 5.3
+gp_defined('E_USER_DEPRECATED',16384);		// since php 5.3
 gp_defined('gp_backup_limit',10);
-gp_defined('gp_write_lock_time',30);
+gp_defined('gp_write_lock_time',5);
 gp_defined('gp_dir_index',true);
 gp_defined('gp_remote_addons',true); //deprecated 4.0.1
 gp_defined('gp_remote_plugins',gp_remote_addons);
 gp_defined('gp_remote_themes',gp_remote_addons);
 gp_defined('gp_remote_update',gp_remote_addons);
 gp_defined('gp_unique_addons',false);
+gp_defined('gp_data_type','.php');
+gp_defined('gp_default_theme','Three_point_5/Shore'); 	//Bootswatch_Flatly/4_Sticky_Footer
 
 
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php');
 gp_defined('addon_browse_path','http://gpeasy.com/index.php');
 
-define('gpversion','4.1');
+define('gpversion','4.6a1');
 define('gp_random',common::RandomString());
 
 
 @ini_set( 'session.use_only_cookies', '1' );
 @ini_set( 'default_charset', 'utf-8' );
-@ini_set( 'html_errors', true );
+@ini_set( 'html_errors', false );
 
 if( function_exists('mb_internal_encoding') ){
 	mb_internal_encoding('UTF-8');
@@ -56,7 +53,14 @@ if( !function_exists('gpSettingsOverride') ){
 	function gpSettingsOverride(){}
 }
 
-//see /var/www/others/mediawiki-1.15.0/languages/Names.php
+if( !function_exists('gzopen') && function_exists('gzopen64') ){
+	function gzopen( $filename, $mode, $use_include_path = 0 ){
+		return gzopen64( $filename, $mode, $use_include_path );
+	}
+}
+
+
+//see mediawiki/languages/Names.php
 $languages = array(
 	'af' => 'Afrikaans',
 	'ar' => 'العربية',			# Arabic
@@ -68,7 +72,9 @@ $languages = array(
 	'el' => 'Ελληνικά',			# Greek
 	'en' => 'English',
 	'es' => 'Español',
+	'et' => 'eesti',			# Estonian
 	'fi' => 'Suomi',			# Finnish
+	'fo' => 'Føroyskt',			# Faroese
 	'fr' => 'Français',
 	'gl' => 'Galego',			# Galician
 	'hr' => 'hrvatski',			# Croatian
@@ -179,13 +185,6 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 			 );
 
 
-	// since we supported php 4.3+, there may be a lot of strict errors
-	if( $errno === E_STRICT ){
-		//$report_error = false;
-		return;
-	}
-
-
 	// for functions prepended with @ symbol to suppress errors
 	$error_reporting = error_reporting();
 	if( $error_reporting === 0 ){
@@ -200,12 +199,21 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 		return false;
 	}
 
+	// since we supported php 4.3+, there may be a lot of strict errors
+	if( $errno === E_STRICT ){
+		return;
+	}
+
 	//get the backtrace and function where the error was thrown
 	$backtrace = debug_backtrace();
+
 	//remove showError() from backtrace
 	if( strtolower($backtrace[0]['function']) == 'showerror' ){
-		@array_shift($backtrace);
+		$backtrace = array_slice($backtrace,1,5);
+	}else{
+		$backtrace = array_slice($backtrace,0,5);
 	}
+
 
 	//record one error per function and only record the error once per request
 	if( isset($backtrace[0]['function']) ){
@@ -218,10 +226,17 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	}
 	$reported[$uniq] = true;
 
+	//disable showError after 20 errors
+	if( count($reported) >= 1 ){
+		restore_error_handler();
+	}
+
 	if( gpdebug === false ){
+
 		if( !$report_error ){
 			return false;
 		}
+
 
 		//if it's an addon error, only report if the addon was installed remotely
 		if( isset($addonFolderName) && $addonFolderName ){
@@ -272,11 +287,14 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 		$mess .= '<br/> &nbsp; &nbsp; Mysql Error ('.mysql_errno().')'. mysql_error();
 	}
 
-	//backtrace, don't add entire object to backtrace
-	$backtrace = array_slice($backtrace,0,7);
+	//attempting to entire all data can result in a blank screen
 	foreach($backtrace as $i => $trace){
-		if( !empty($trace['object']) ){
-			$backtrace[$i]['object'] = get_class($trace['object']);
+		foreach($trace as $tk => $tv){
+			if( is_array($tv) ){
+				$backtrace[$i][$tk] = 'array('.count($tv).')';
+			}elseif( is_object($tv) ){
+				$backtrace[$i][$tk] = 'object '.get_class($tv);
+			}
 		}
 	}
 
@@ -300,14 +318,11 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 
 
 /**
- * Calculate the difference between two micro times
- *
+ * Deprecated
+ * 2015-04-15
  */
-function microtime_diff($a, $b = false, $eff = 6) {
-	if( !$b ) $b = microtime();
-	$a = array_sum(explode(" ", $a));
-	$b = array_sum(explode(" ", $b));
-	return sprintf('%0.'.$eff.'f', $b-$a);
+function microtime_diff($a, $b = false, $eff = 6){
+	trigger_error('microtime_diff is deprecated');
 }
 
 
@@ -371,8 +386,8 @@ function fix_magic_quotes( &$arr ) {
  *
  */
 function message(){
-	global $wbMessageBuffer;
-	$wbMessageBuffer[] = func_get_args();
+	$args = func_get_args(); //for php previous to 5.3
+	call_user_func_array('msg',$args);
 }
 
 /**
@@ -381,7 +396,20 @@ function message(){
  */
 function msg(){
 	global $wbMessageBuffer;
-	$wbMessageBuffer[] = func_get_args();
+
+	$args = func_get_args();
+
+	if( empty($args[0]) ){
+		return;
+	}
+
+	if( isset($args[1]) ){
+		$wbMessageBuffer[] = '<li>'.call_user_func_array('sprintf',$args).'</li>';
+	}elseif( is_array($args[0]) || is_object($args[0]) ){
+		$wbMessageBuffer[] = '<li>'.pre($args[0]).'</li>';
+	}else{
+		$wbMessageBuffer[] = '<li>'.$args[0].'</li>';
+	}
 }
 
 /**
@@ -406,24 +434,14 @@ function GetMessages( $wrap = true ){
 	}
 	if( !empty($wbMessageBuffer) ){
 
+		if( gpdebug === false ){
+			$wbMessageBuffer = array_unique($wbMessageBuffer);
+		}
+
 		$result .= '<div class="messages"><div>';
 		$result .= '<a style="" href="#" class="req_script close_message" data-cmd="close_message"></a>';
 		$result .= '<ul>';
-
-		foreach($wbMessageBuffer as $args){
-			if( !isset($args[0]) ){
-				continue;
-			}
-
-			if( isset($args[1]) ){
-				$result .= '<li>'.call_user_func_array('sprintf',$args).'</li>';
-			}elseif( is_array($args[0]) || is_object($args[0]) ){
-				$result .= '<li>'.pre($args[0]).'</li>';
-			}else{
-				$result .= '<li>'.$args[0].'</li>';
-			}
-		}
-
+		$result .= implode('',$wbMessageBuffer);
 		$result .= '</ul></div></div>';
 	}
 
@@ -478,7 +496,7 @@ function IncludeScript($file, $include_variation = 'include_once', $globals = ar
 			$return = include_once($file);
 		break;
 		case 'require':
-			$return = require_once($file);
+			$return = require($file);
 		break;
 		case 'require_once':
 			$return = require_once($file);
@@ -535,7 +553,7 @@ function pre($mixed){
 /**
  * @deprecated 2.6
  */
-function showArray($mixed){ return pre($mixed);}
+function showArray($mixed){ trigger_error('Deprecated function showArray(). Use pre() instead'); }
 
 
 /**
@@ -624,7 +642,7 @@ class display{
 	var $editable_content = true;
 	var $editable_details = true;
 
-	function display($title){
+	function __construct($title){
 		$this->title = $title;
 	}
 
@@ -648,10 +666,11 @@ class display{
 			return false;
 		}
 
-		$this->gp_index = $gp_index[$this->title];
-		$this->TitleInfo =& $gp_titles[$this->gp_index]; //so changes made by rename are seen
-		$this->label = common::GetLabel($this->title);
-		$this->file = gpFiles::PageFile($this->title);
+		$this->gp_index		= $gp_index[$this->title];
+		$this->TitleInfo	=& $gp_titles[$this->gp_index]; //so changes made by rename are seen
+		$this->label		= common::GetLabel($this->title);
+		$this->file			= gpFiles::PageFile($this->title);
+
 		gpPlugin::Action('PageSetVars');
 
 		return true;
@@ -686,38 +705,35 @@ class display{
 	 */
 	function GetFile(){
 
-		$fileModTime = $fileVersion = false;
-		$file_sections = $meta_data = $file_stats = array();
+		$this->file_sections	= gpFiles::Get($this->file,'file_sections');
+		$this->meta_data		= gpFiles::$last_meta;
+		$this->fileModTime		= gpFiles::$last_modified;
+		$this->file_stats		= gpFiles::$last_stats;
 
-		ob_start();
-		if( file_exists($this->file) ){
-			require($this->file);
-		}
-		$content = ob_get_clean();
 
 		//update page to 2.0 if it wasn't done in upgrade.php
-		if( !empty($content) && count($file_sections) == 0 ){
-			if( !empty($meta_data['file_type']) ){
-				$file_type =& $meta_data['file_type'];
+		if( !empty($content) && count($this->file_sections) == 0 ){
+			if( !empty($this->meta_data['file_type']) ){
+				$file_type =& $this->meta_data['file_type'];
 			}elseif( !isset($file_type) ){
 				$file_type = 'text';
 			}
 
 			switch($file_type){
 				case 'gallery':
-					$meta_data['file_type'] = 'text,gallery';
-					$file_sections[0] = array(
+					$this->meta_data['file_type'] = 'text,gallery';
+					$this->file_sections[0] = array(
 						'type' => 'text',
 						'content' => '<h2>'.strip_tags(common::GetLabel($this->title)).'</h2>',
 						);
-					$file_sections[1] = array(
+					$this->file_sections[1] = array(
 						'type' => 'gallery',
 						'content' => $content,
 						);
 				break;
 
 				default:
-					$file_sections[0] = array(
+					$this->file_sections[0] = array(
 						'type' => 'text',
 						'content' => $content,
 						);
@@ -727,37 +743,25 @@ class display{
 		}
 
 		//fix gallery pages that weren't updated correctly
-		if( isset($fileVersion) && version_compare($fileVersion,'2.0','<=') ){
-			foreach($file_sections as $section_index => $section_info){
+		if( isset($this->file_stats['gpversion']) && version_compare($this->file_stats['gpversion'],'2.0','<=') ){
+			foreach($this->file_sections as $section_index => $section_info){
 				if( $section_info['type'] == 'text' && strpos($section_info['content'],'gp_gallery') !== false ){
 					//check further
 					$lower_content = strtolower($section_info['content']);
 					if( strpos($lower_content,'<ul class="gp_gallery">') !== false
 						|| strpos($lower_content,'<ul class=gp_gallery>') !== false ){
-							$file_sections[$section_index]['type'] = 'gallery';
+							$this->file_sections[$section_index]['type'] = 'gallery';
 					}
 				}
 			}
 		}
 
 
-		if( count($file_sections) == 0 ){
-			$file_sections[0] = array(
+		if( count($this->file_sections) == 0 ){
+			$this->file_sections[0] = array(
 				'type' => 'text',
 				'content' => '<p>Oops, this page no longer has any content.</p>',
 				);
-		}
-
-		$this->file_sections = $file_sections;
-		$this->meta_data = $meta_data;
-		$this->fileModTime = $fileModTime;
-		$this->file_stats = $file_stats;
-		/* for data files older than gpEasy 3.0 */
-		if( !isset($this->file_stats['modified']) ){
-			$this->file_stats['modified'] = $fileModTime;
-		}
-		if( !isset($this->file_stats['gpversion']) ){
-			$this->file_stats['gpversion'] = $fileVersion;
 		}
 	}
 
@@ -778,18 +782,19 @@ class display{
 
 
 		if( !$layout_info ){
-			$this->gpLayout = false;
-			$this->theme_name = 'Three_point_5';
-			$this->theme_color = 'Shore';
-			$this->theme_rel = '/themes/'.$this->theme_name.'/'.$this->theme_color;
-			$this->theme_dir = $dataDir.'/themes/'.$this->theme_name;
+			$default_theme		= explode('/',gp_default_theme);
+			$this->gpLayout		= false;
+			$this->theme_name	= $default_theme[0];
+			$this->theme_color	= $default_theme[1];
+			$this->theme_rel	= '/themes/'.$this->theme_name.'/'.$this->theme_color;
+			$this->theme_dir	= $dataDir.'/themes/'.$this->theme_name;
 
 		}else{
-			$this->gpLayout = $layout;
-			$this->theme_name = $layout_info['theme_name'];
-			$this->theme_color = $layout_info['theme_color'];
-			$this->theme_rel = $layout_info['path'];
-			$this->theme_dir = $layout_info['dir'];
+			$this->gpLayout		= $layout;
+			$this->theme_name	= $layout_info['theme_name'];
+			$this->theme_color	= $layout_info['theme_color'];
+			$this->theme_rel	= $layout_info['path'];
+			$this->theme_dir	= $layout_info['dir'];
 
 			if( isset($layout_info['addon_id']) ){
 				$this->theme_addon_id = $layout_info['addon_id'];
@@ -953,6 +958,7 @@ class common{
 				case 'flush':
 				case 'json':
 				case 'content':
+				case 'admin';
 				return $_REQUEST['gpreq'];
 			}
 		}
@@ -1010,9 +1016,15 @@ class common{
 	 * @return unknown
 	 */
 	static function status_header( $header, $text ) {
-		$protocol = $_SERVER['SERVER_PROTOCOL'];
-		if( 'HTTP/1.1' != $protocol && 'HTTP/1.0' != $protocol )
+
+		$protocol = '';
+		if( isset($_SERVER['SERVER_PROTOCOL']) ){
+			$protocol = $_SERVER['SERVER_PROTOCOL'];
+		}
+		if( 'HTTP/1.1' != $protocol && 'HTTP/1.0' != $protocol ){
 			$protocol = 'HTTP/1.0';
+		}
+
 		$status_header = "$protocol $header $text";
 		return @header( $status_header, true, $header );
 	}
@@ -1030,6 +1042,23 @@ class common{
 			$etag .= base_convert( $arg, 10, 36);
 		}
 		return $etag;
+	}
+
+
+	/**
+	 * Generate an etag from the filemtime and filesize of each file
+	 * @param array $files
+	 *
+	 */
+	static function FilesEtag( $files ){
+		$modified = 0;
+		$content_length = 0;
+		foreach($files as $file ){
+			$content_length += @filesize( $file );
+			$modified = max($modified, @filemtime($file) );
+		}
+
+		return common::GenEtag( $modified, $content_length );
 	}
 
 
@@ -1094,6 +1123,7 @@ class common{
 			$ob_gzhandler = true;
 		}
 
+
 		common::SetGlobalPaths($level,$expecting);
 		includeFile('tool/gpOutput.php');
 		includeFile('tool/functions.php');
@@ -1105,7 +1135,6 @@ class common{
 		}
 
 		common::RequestLevel();
-		common::gpInstalled();
 		common::GetConfig();
 		common::SetLinkPrefix();
 		common::SetCookieArgs();
@@ -1113,37 +1142,47 @@ class common{
 			common::sessions();
 		}
 
+		spl_autoload_register( array('common','Autoload') );
+	}
 
+	/**
+	 * Setup SPL Autoloading
+	 *
+	 */
+	static function Autoload($class){
+		global $config;
 
-		/*
-		try{
-			includeFile('thirdparty/x_agar-less.php/Parser.php');
-			$parser = new \Less\Parser();
-			//$parser->getEnvironment()->setCompress(true);
-			$parser->parseFile('/var/www/gpeasy/themes/x_Bootstrap_Cerulean/6_Sticky_Footer/style.less');
+		$parts		= explode('\\',$class);
+		$part_0		= array_shift($parts);
 
-		}catch(Exception $e){
-			echo '<pre>';
-			print_r($e);
-			echo '</pre>';
-			die();
+		if( !$parts ){
+			return;
 		}
 
-		$css = $parser->getCss();
-		echo pre($css);
-		die('testing');
+		//look for addon namespace
+		if( $part_0 === 'Addon' ){
 
-		//
-		$test = array(
-			'/var/www/gpeasy/themes/x_Bootstrap_Cerulean/6_Sticky_Footer/style.less',
-			'/var/www/gpeasy/data/_layouts/o59s97o/custom.css',
-		);
+			$namespace = array_shift($parts);
+			if( !$parts ){
+				return;
+			}
 
-		gpOutput::CacheLess($test);
-		die('done');
-		*/
+			foreach($config['addons'] as $addon_key => $addon){
+				if( isset($addon['Namespace']) && $addon['Namespace'] == $namespace ){
 
+					gpPlugin::SetDataFolder($addon_key);
+					$file			= gpPlugin::$current['code_folder_full'].'/'.implode('/',$parts).'.php';
 
+					if( file_exists($file) ){
+						include($file);
+					}else{
+						trigger_error('Script not found in namespaced autoloader for '.$class);
+					}
+
+					gpPlugin::ClearDataFolder();
+				}
+			}
+		}
 	}
 
 
@@ -1179,27 +1218,10 @@ class common{
 		}
 	}
 
-
-
 	/**
-	 * Determine if gpEasy has been installed
-	 *
+	 * @deprectated
 	 */
-	static function gpInstalled(){
-		global $dataDir;
-
-		if( @file_exists($dataDir.'/data/_site/config.php') ){
-			return;
-		}
-
-		if( file_exists($dataDir.'/include/install/install.php') ){
-			common::SetLinkPrefix();
-			includeFile('install/install.php');
-			die();
-		}
-
-		die('<p>Sorry, this site is temporarily unavailable.</p>');
-	}
+	static function gpInstalled(){}
 
 	static function SetGlobalPaths($DirectoriesAway,$expecting){
 		global $dataDir, $dirPrefix, $rootDir;
@@ -1268,7 +1290,7 @@ class common{
 		if( isset($_SERVER['gp_rewrite']) ){
 			if( $_SERVER['gp_rewrite'] === true || $_SERVER['gp_rewrite'] == 'On' ){
 				$_SERVER['gp_rewrite'] = true;
-			}elseif( $_SERVER['gp_rewrite'] == substr($config['gpuniq'],0,7) ){
+			}elseif( $_SERVER['gp_rewrite'] == @substr($config['gpuniq'],0,7) ){
 				$_SERVER['gp_rewrite'] = true;
 			}
 
@@ -1789,13 +1811,15 @@ class common{
 	 *
 	 */
 	static function GetConfig(){
-		global $config, $dataDir, $gp_hooks;
+		global $config, $gp_hooks;
 
-		require($dataDir.'/data/_site/config.php');
+
+		$config = gpFiles::Get('_site/config');
+
 		if( !is_array($config) || !array_key_exists('gpversion',$config) ){
 			common::stop();
 		}
-		$GLOBALS['fileModTimes']['config.php'] = $fileModTime;
+
 
 		//remove old values
 		if( isset($config['linkto']) ) unset($config['linkto']);
@@ -1809,25 +1833,25 @@ class common{
 
 		//make sure defaults are set
 		$config += array(
-				'maximgarea' => '691200',
-				'maxthumbsize' => '100',
-				'check_uploads' => false,
-				'colorbox_style' => 'example1',
-				'combinecss' => true,
-				'combinejs' => true,
-				'etag_headers' => true,
-				'customlang' => array(),
-				'showgplink' => true,
-				'showsitemap' => true,
-				'showlogin' => true,
-				'auto_redir' => 90,	//2.5
-				'resize_images' => true,	//3.5
-				'jquery' => 'local',
-				'addons' => array(),
-				'themes' => array(),
-				'gadgets' => array(),
-				'passhash' => 'sha1',
-				'hooks' => array(),
+				'maximgarea'		=> '691200',
+				'maxthumbsize'		=> '100',
+				'check_uploads'		=> false,
+				'colorbox_style'	=> 'example1',
+				'combinecss'		=> true,
+				'combinejs'			=> true,
+				'etag_headers'		=> true,
+				'customlang'		=> array(),
+				'showgplink'		=> true,
+				'showsitemap'		=> true,
+				'showlogin'			=> true,
+				'auto_redir'		=> 90,			//2.5
+				'resize_images'		=> true,		//3.5
+				'jquery'			=> 'local',
+				'addons'			=> array(),
+				'themes'			=> array(),
+				'gadgets'			=> array(),
+				'passhash'			=> 'sha1',
+				'hooks'				=> array(),
 				);
 
 		//shahash deprecated 4.0
@@ -1861,7 +1885,24 @@ class common{
 		}
 	}
 
+
+	/**
+	 * Stop loading gpEasy
+	 * Check to see if gpEasy has already been installed
+	 *
+	 */
 	static function stop(){
+		global $dataDir;
+
+		if( !gpFiles::Exists($dataDir.'/data/_site/config.php') ){
+
+			if( file_exists($dataDir.'/include/install/install.php') ){
+				common::SetLinkPrefix();
+				includeFile('install/install.php');
+				die();
+			}
+		}
+
 		die('<p>Notice: The site configuration did not load properly.</p>'
 			.'<p>If you are the site administrator, you can troubleshoot the problem turning debugging "on" or bypass it by enabling gpEasy safe mode.</p>'
 			.'<p>More information is available in the <a href="http://docs.gpeasy.com/Main/Troubleshooting">gpEasy documentation</a>.</p>'
@@ -1875,13 +1916,11 @@ class common{
 	 *
 	 */
 	static function GetPagesPHP(){
-		global $gp_index, $gp_titles, $gp_menu, $dataDir, $gpLayouts, $config;
+		global $gp_index, $gp_titles, $gp_menu, $gpLayouts, $config;
 		$gp_index = array();
 
-		$pages = array();
-		require($dataDir.'/data/_site/pages.php');
-		$GLOBALS['fileModTimes']['pages.php'] = $fileModTime;
-		$gpLayouts = $pages['gpLayouts'];
+
+		$pages		= gpFiles::Get('_site/pages');
 
 
 		//update for < 2.0a3
@@ -1903,9 +1942,10 @@ class common{
 			return;
 		}
 
-		$gp_index = $pages['gp_index'];
-		$gp_titles = $pages['gp_titles'];
-		$gp_menu = $pages['gp_menu'];
+		$gpLayouts		= $pages['gpLayouts'];
+		$gp_index		= $pages['gp_index'];
+		$gp_titles		= $pages['gp_titles'];
+		$gp_menu		= $pages['gp_menu'];
 
 		if( !is_array($gp_menu) ){
 			common::stop();
@@ -1920,7 +1960,7 @@ class common{
 		}
 
 		//fix the gpmenu
-		if( version_compare($fileVersion,'3.0b1','<') ){
+		if( version_compare(gpFiles::$last_version,'3.0b1','<') ){
 			$gp_menu = gpOutput::FixMenu($gp_menu);
 
 			// fix gp_titles for gpEasy 3.0+
@@ -1933,7 +1973,9 @@ class common{
 		}
 
 		//title related configuration settings
-		$config['homepath_key'] = key($gp_menu);
+		if( empty($config['homepath_key']) ){
+			$config['homepath_key'] = key($gp_menu);
+		}
 		$config['homepath'] = common::IndexToTitle($config['homepath_key']);
 
 	}
@@ -2110,14 +2152,14 @@ class common{
 		}
 
 
-		$fullPath = $dataDir.'/include/languages/'.$language.'/main.inc';
+		$fullPath = $dataDir.'/include/languages/'.$language.'.main.inc';
 		if( file_exists($fullPath) ){
 			include($fullPath);
 			return;
 		}
 
 		//try to get the english file
-		$fullPath = $dataDir.'/include/languages/en/main.inc';
+		$fullPath = $dataDir.'/include/languages/en.main.inc';
 		if( file_exists($fullPath) ){
 			include($fullPath);
 		}
@@ -2210,7 +2252,7 @@ class common{
 	 * @param string $code http redirect code: 301 or 302
 	 *
 	 */
-	static function Redirect($path,$code = 301){
+	static function Redirect($path,$code = 302){
 		global $wbMessageBuffer, $gpAdmin;
 
 		//store any messages for display after the redirect
@@ -2436,13 +2478,19 @@ class common{
 			$test = substr($test,1);
 		}
 
+		parse_str($test,$cookie_args);
+		if( !$cookie_args ){
+			return;
+		}
+
+
 		//parse_str will overwrite values in $_GET/$_REQUEST
-		parse_str($test,$_GET);
-		parse_str($test,$_REQUEST);
+		$_GET = $cookie_args + $_GET;
+		$_REQUEST = $cookie_args + $_REQUEST;
 
 		//for requests with verification, we'll set $_POST
 		if( !empty($_GET['verified']) ){
-			parse_str($test,$_POST);
+			$_POST = $cookie_args + $_POST;
 		}
 
 		$done = true;
@@ -2511,8 +2559,10 @@ class common{
 			return sha1($arg);
 		}
 
-		//looped with dynamic salt
+
+		//sha512: looped with dynamic salt
 		for( $i=0; $i<$loops; $i++ ){
+
 			$ints = preg_replace('#[a-f]#','',$arg);
 			$salt_start = (int)substr($ints,0,1);
 			$salt_len = (int)substr($ints,2,1);
@@ -2609,7 +2659,7 @@ class common{
 		//error function defined to prevent the default error function in main.js from firing
 		if( $jquery ){
 			echo '<script type="text/javascript" style="display:none !important">';
-			echo '$.ajax("'.addslashes($img_path).'",{error:function(){}});';
+			echo '$.ajax('.json_encode($img_path).',{error:function(){}, dataType: "jsonp"});';
 			echo '</script>';
 			return;
 		}
@@ -2701,8 +2751,8 @@ class common{
 	 *
 	 */
 	static function JsonEncode($data){
-		static $search = array('\\','"',"\n","\r",'<script','</script>');
-		static $repl = array('\\\\','\"','\n','\r','<"+"script','<"+"/script>');
+		static $search = array('\\','"',"\n","\r","\t",'<script','</script>');
+		static $repl = array('\\\\','\"','\n','\r','\t','<"+"script','<"+"/script>');
 
 		$type = gettype($data);
 		switch( $type ){
@@ -2812,6 +2862,35 @@ class common{
 		return md5(json_encode($array) );
 	}
 
+
+	/**
+	 * Convert a string representation of a byte value to an number
+	 * @param string $value
+	 * @return int
+	 */
+	static function getByteValue($value){
+
+		if( is_numeric($value) ){
+			return (int)$value;
+		}
+
+		$lastChar = strtolower(substr($value,-1));
+		$num = (int)substr($value,0,-1);
+
+		switch($lastChar){
+
+			case 'g':
+				$num *= 1024;
+			case 'm':
+				$num *= 1024;
+			case 'k':
+				$num *= 1024;
+			break;
+		}
+
+		return $num;
+	}
+
 	/**
 	 * @deprecated 3.0
 	 * use gp_edit::UseCK();
@@ -2840,6 +2919,134 @@ class common{
  *
  */
 class gpFiles{
+
+	static $last_modified; 						//the modified time of the last file retrieved with gpFiles::Get();
+	static $last_version; 						//the gpEasy version of the last file retrieved with gpFiles::Get();
+	static $last_stats			= array(); 		//the stats of the last file retrieved with gpFiles::Get();
+	static $last_meta			= array(); 		//the meta data of the last file retrieved with gpFiles::Get();
+
+
+	/**
+	 * Get array from data file
+	 * Example:
+	 * $config = gpFiles::Get('_site/config','config'); or $config = gpFiles::Get('_site/config');
+	 *
+	 */
+	static function Get( $file, $var_name=false ){
+		global $dataDir;
+
+		self::$last_modified	= null;
+		self::$last_version		= null;
+		self::$last_stats		= array();
+		self::$last_meta		= array();
+
+
+		if( !$var_name ){
+			$var_name	= basename($file);
+		}
+
+		if( strpos($file,$dataDir) !== 0 ){
+			$file = $dataDir.'/data/'.ltrim($file,'/').'.php';
+		}
+
+		//json
+		if( gp_data_type === '.json' ){
+			return self::Get_Json($file,$var_name);
+		}
+
+		if( !file_exists($file) ){
+			return array();
+		}
+
+		include($file);
+		if( !isset(${$var_name}) || !is_array(${$var_name}) ){
+			return array();
+		}
+
+
+		// For data files older than gpEasy 3.0
+		if( !isset($file_stats['modified']) ){
+			$file_stats['modified'] = $fileModTime;
+		}
+		if( !isset($file_stats['gpversion']) ){
+			$file_stats['gpversion'] = $fileVersion;
+		}
+
+		// File stats
+		self::$last_modified		= $fileModTime;
+		self::$last_version			= $fileVersion;
+		self::$last_stats			= $file_stats;
+		if( isset($meta_data) ){
+			self::$last_meta		= $meta_data;
+		}
+
+
+		return ${$var_name};
+	}
+
+
+	/**
+	 * Experimental
+	 *
+	 */
+	private static function Get_Json($file,$var_name){
+
+		$file		= substr($file,0,-4).'.gpjson';
+
+		if( !file_exists($file) ){
+			return array();
+		}
+
+		$contents	= file_get_contents($file);
+		$data		= json_decode($contents,true);
+
+		if( !isset($data[$var_name]) || !is_array($data[$var_name]) ){
+			return array();
+		}
+
+
+		// File stats
+		self::$last_modified		= $data['file_stats']['modified'];
+		self::$last_version			= $data['file_stats']['gpversion'];
+		self::$last_stats			= $data['file_stats'];
+		self::$last_meta			= $data['meta_data'];
+
+
+		return $data[$var_name];
+
+	}
+
+	/**
+	 * Get the raw contents of a data file
+	 *
+	 */
+	static function GetRaw($file){
+		global $dataDir;
+
+		if( strpos($file,$dataDir) !== 0 ){
+			$file = $dataDir.'/data/'.ltrim($file,'/').'.php';
+		}
+
+		if( gp_data_type === '.json' ){
+			$file		= substr($file,0,-4).'.gpjson';
+		}
+
+		return file_get_contents($file);
+	}
+
+	static function Exists($file){
+		global $dataDir;
+
+		if( strpos($file,$dataDir) !== 0 ){
+			$file = $dataDir.'/data/'.ltrim($file,'/').'.php';
+		}
+
+		if( gp_data_type === '.json' ){
+			$file		= substr($file,0,-4).'.gpjson';
+		}
+
+		return file_exists($file);
+	}
 
 
 	/**
@@ -3011,8 +3218,9 @@ class gpFiles{
 	 * @since 1.8a1
 	 *
 	 */
-	static function NewTitle($title,$section_content = false,$type='text'){
+	static function NewTitle($title, $section_content = false, $type='text'){
 
+		// get the file for the title
 		if( empty($title) ){
 			return false;
 		}
@@ -3021,23 +3229,27 @@ class gpFiles{
 			return false;
 		}
 
+		// organize section data
 		$file_sections = array();
-		if( is_array($section_content) ){
-			$file_sections[0] = $section_content;
+		if( is_array($section_content) && isset($section_content['type']) ){
+			$file_sections[0]	= $section_content;
+		}elseif( is_array($section_content) ){
+			$file_sections		= $section_content;
 		}else{
 			$file_sections[0] = array(
-				'type' => $type,
-				'content' => $section_content
+				'type'			=> $type,
+				'content'		=> $section_content
 				);
 		}
 
-
+		// add meta data
 		$meta_data = array(
-			'file_number' => gpFiles::NewFileNumber(),
-			'file_type' => $type,
+			'file_number'	=> gpFiles::NewFileNumber(),
+			'file_type'		=> $type,
 			);
 
-		return gpFiles::SaveArray($file,'meta_data',$meta_data,'file_sections',$file_sections);
+
+		return gpFiles::SaveData($file,'file_sections',$file_sections,$meta_data);
 	}
 
 	/**
@@ -3060,7 +3272,7 @@ class gpFiles{
 		}
 
 		$normal_path = $dataDir.'/data/_pages/'.str_replace('/','_',$title).'.php';
-		if( !$index_path || file_exists($normal_path) ){
+		if( !$index_path || gpFiles::Exists($normal_path) ){
 			return $normal_path;
 		}
 
@@ -3090,14 +3302,8 @@ class gpFiles{
 	 * @return array
 	 */
 	static function GetTitleMeta($file){
-
-		$meta_data = array();
-		if( file_exists($file) ){
-			ob_start();
-			include($file);
-			ob_end_clean();
-		}
-		return $meta_data;
+		gpFiles::Get($file,'meta_data');
+		return gpFiles::$last_meta;
 	}
 
 	/**
@@ -3105,23 +3311,14 @@ class gpFiles{
 	 *
 	 */
 	static function GetFileStats($file){
-		$file_stats = array();
-		if( file_exists($file) ){
-			ob_start();
-			include($file);
-			ob_end_clean();
 
-			if( !isset($file_stats['modified']) && isset($fileModTime) ){
-				$file_stats['modified'] = $fileModTime;
-			}
-			if( !isset($file_stats['gpversion']) && isset($fileVersion) ){
-				$file_stats['gpversion'] = $fileVersion;
-			}
-		}else{
-			$file_stats['created'] = time();
+
+		$file_stats = gpFiles::Get($file,'file_stats');
+		if( $file_stats ){
+			return $file_stats;
 		}
 
-		return $file_stats;
+		return array('created'=> time());
 	}
 
 
@@ -3152,25 +3349,25 @@ class gpFiles{
 	 *
 	 * @param string $file The path of the file to be saved
 	 * @param string $contents The contents of the file to be saved
-	 * @param bool $checkDir Whether or not to check to see if the parent directory exists before attempting to save the file
 	 * @return bool True on success
 	 */
-	static function Save($file,$contents,$checkDir=true){
+	static function Save($file,$contents){
 		global $gp_not_writable;
 
 		if( !self::WriteLock() ){
 			return false;
 		}
 
+		$exists = gpFiles::Exists($file);
+
 		//make sure directory exists
-		if( $checkDir && !file_exists($file) ){
+		if( !$exists ){
 			$dir = common::DirName($file);
 			if( !file_exists($dir) ){
 				gpFiles::CheckDir($dir);
 			}
 		}
 
-		$exists = file_exists($file);
 
 		$fp = @fopen($file,'wb');
 		if( $fp === false ){
@@ -3180,6 +3377,8 @@ class gpFiles{
 
 		if( !$exists ){
 			@chmod($file,gp_chmod_file);
+		}elseif( function_exists('opcache_invalidate') && substr($file,-4) === '.php' ){
+			opcache_invalidate($file);
 		}
 
 		$return = fwrite($fp,$contents);
@@ -3192,7 +3391,6 @@ class gpFiles{
 	 * @since 3.5.3
 	 */
 	static function WriteLock(){
-		global $dataDir;
 
 		if( defined('gp_has_lock') ){
 			return gp_has_lock;
@@ -3204,8 +3402,9 @@ class gpFiles{
 			return true;
 		}
 
+
+
 		trigger_error('gpEasy write lock could not be obtained.');
-		message('Oops, a write lock could not be obtained. The existing lock will expire in '.($expires).' seconds.');
 		define('gp_has_lock',false);
 		return false;
 	}
@@ -3217,35 +3416,44 @@ class gpFiles{
  	 */
 	static function Lock($file,$value,&$expires){
 		global $dataDir;
-		$checked_time = false;
-		$tries = 0;
-		$lock_file = $dataDir.'/data/_lock_'.$file;
+
+		$tries			= 0;
+		$lock_file		= $dataDir.'/data/_lock_'.sha1($file);
+		$file_time		= 0;
+
+
 		while($tries < 1000){
 
 			if( !file_exists($lock_file) ){
 				file_put_contents($lock_file,$value);
 				usleep(100);
+
+			}elseif( !$file_time ){
+				$file_time		= filemtime($lock_file);
 			}
 
 			$contents = @file_get_contents($lock_file);
 			if( $value === $contents ){
-				touch($lock_file);
+				@touch($lock_file);
 				return true;
 			}
 
-			if( !$checked_time ){
-				$checked_time = true;
-				$diff = time() - @filemtime($lock_file);
-				if( $diff > $expires ){
+			if( $file_time ){
+				$elapsed = time() - $file_time;
+				if( $elapsed > $expires ){
 					@unlink( $lock_file);
-				}else{
-					$expires -= $diff;
 				}
 			}
+
 			clearstatcache();
 			usleep(100);
 			$tries++;
 		}
+
+		if( $file_time ){
+			$expires -= $elapsed;
+		}
+
 		return false;
 	}
 
@@ -3256,7 +3464,7 @@ class gpFiles{
 	static function Unlock($file,$value){
 		global $dataDir;
 
-		$lock_file = $dataDir.'/data/_lock_'.$file;
+		$lock_file = $dataDir.'/data/_lock_'.sha1($file);
 		if( !file_exists($lock_file) ){
 			return true;
 		}
@@ -3281,8 +3489,14 @@ class gpFiles{
 	 * @param string $varname The name of the variable being saved
 	 * @param array $array The value of $varname to be saved
 	 *
+	 * @deprecated 4.3.5
 	 */
 	static function SaveArray(){
+
+		if( gp_data_type === '.json' ){
+			throw new Exception('SaveArray() cannot be used for json data saving');
+		}
+
 
 		$args = func_get_args();
 		$count = count($args);
@@ -3311,6 +3525,69 @@ class gpFiles{
 	}
 
 	/**
+	 * Save array to a $file location
+	 *
+	 * @param string $file The location of the file to be saved
+	 * @param string $varname The name of the variable being saved
+	 * @param array $array The value of $varname to be saved
+	 * @param array $meta meta data to be saved along with $array
+	 *
+	 */
+	static function SaveData($file, $varname, $array, $meta = array() ){
+		global $dataDir;
+
+		if( strpos($file,$dataDir) !== 0 ){
+			$file = $dataDir.'/data/'.ltrim($file,'/').'.php';
+		}
+
+
+		if( gp_data_type === '.json' ){
+
+			$file				= substr($file,0,-4).'.gpjson';
+
+			$json				= self::FileStart_Json($file);
+			$json[$varname]		= $array;
+			$json['meta_data']	= $meta;
+			$content			= json_encode($json);
+
+		}else{
+			$content	= gpFiles::FileStart($file);
+			$content	.= gpFiles::ArrayToPHP($varname,$array);
+			$content	.= "\n\n";
+			$content	.= gpFiles::ArrayToPHP('meta_data',$meta);
+		}
+
+		return gpFiles::Save($file,$content);
+	}
+
+	/**
+	 * Experimental
+	 *
+	 */
+	private static function FileStart_Json($file, $time = false ){
+		global $gpAdmin;
+
+		if( $time === false ) $time = time();
+
+
+		//file stats
+		$file_stats					= gpFiles::GetFileStats($file);
+		$file_stats['gpversion']	= gpversion;
+		$file_stats['modified']		= $time;
+		$file_stats['username']		= false;
+
+		if( common::loggedIn() ){
+			$file_stats['username'] = $gpAdmin['username'];
+		}
+
+		$json						= array();
+		$json['file_stats']			= $file_stats;
+
+		return $json;
+	}
+
+
+	/**
 	 * Return the beginning content of a data file
 	 *
 	 */
@@ -3318,6 +3595,7 @@ class gpFiles{
 		global $gpAdmin;
 
 		if( $time === false ) $time = time();
+
 
 		//file stats
 		$file_stats = (array)$file_stats + gpFiles::GetFileStats($file);
@@ -3337,6 +3615,7 @@ class gpFiles{
 				. "\n".gpFiles::ArrayToPHP('file_stats',$file_stats)
 				. "\n\n";
 	}
+
 
 	static function ArrayToPHP($varname,&$array){
 		return '$'.$varname.' = '.var_export($array,true).';';
@@ -3410,15 +3689,20 @@ class gpFiles{
 				@chmod($dir,gp_chmod_dir); //some systems need more than just the 0755 in the mkdir() function
 			}
 
+
+			// make sure there's an index.html file
+			// only check if we just created the directory, we don't want to keep creating an index.html file if a user deletes it
+			if( $index && gp_dir_index ){
+				$indexFile = $dir.'/index.html';
+				if( !file_exists($indexFile) ){
+					//not using gpFiles::Save() so we can avoid infinite looping (it's safe since we already know the directory exists and we're not concerned about the content)
+					file_put_contents($indexFile,'<html></html>');
+					@chmod($indexFile,gp_chmod_file);
+				}
+			}
+
 		}
 
-		//make sure there's an index.html file
-		if( $index && gp_dir_index ){
-			$indexFile = $dir.'/index.html';
-			if( !file_exists($indexFile) ){
-				gpFiles::Save($indexFile,'<html></html>',false);
-			}
-		}
 
 		return true;
 	}
@@ -3450,7 +3734,7 @@ class gpFiles{
 
 		$success = true;
 		$subDirs = array();
-		$files = scandir($path);
+		//$files = scandir($path);
 		$files = gpFiles::ReadDir($path,false);
 		foreach($files as $file){
 			$full_path = $path.'/'.$file;
@@ -3513,13 +3797,13 @@ class gpFiles{
 
 		$conn_id = @ftp_connect($config['ftp_server'],21,6);
 		if( !$conn_id ){
-			trigger_error('ftp_connect() failed for server : '.$config['ftp_server']);
+			//trigger_error('ftp_connect() failed for server : '.$config['ftp_server']);
 			return false;
 		}
 
 		$login_result = @ftp_login($conn_id,$config['ftp_user'],$config['ftp_pass'] );
 		if( !$login_result ){
-			trigger_error('ftp_login() failed for server : '.$config['ftp_server'].' and user: '.$config['ftp_user']);
+			//trigger_error('ftp_login() failed for server : '.$config['ftp_server'].' and user: '.$config['ftp_user']);
 			return false;
 		}
 		register_shutdown_function(array('gpFiles','ftpClose'),$conn_id);

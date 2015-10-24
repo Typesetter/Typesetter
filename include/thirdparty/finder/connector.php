@@ -112,12 +112,10 @@ $opts = array(
 	)
 );
 
-
+$opts = gpPlugin::Filter('FinderOptionsServer',array($opts));
 gpSettingsOverride('finder_options_server',$opts);
 
 
-
-sleep(15);
 
 // run Finder
 $connector = new Finder($opts);

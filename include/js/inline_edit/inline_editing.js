@@ -3,7 +3,6 @@
  * http://www.webreference.com/js/column79/4.html
  *
  */
-
 var gp_editing = {
 
 	/*
@@ -84,7 +83,7 @@ var gp_editing = {
 		if( path.indexOf('?') > 0 ){
 			query = strip_to(path,'?')+'&';
 		}
-		query += 'cmd=save&';
+		query += 'cmd=save_inline&';
 		query += gp_editor.gp_saveData();
 
 		//the saved function
@@ -107,12 +106,11 @@ var gp_editing = {
 	 * Initiate dragging
 	 */
 	editor_tools:function(){
-		var editor_area = $('#ckeditor_area');
 
 		$('#ckeditor_top').html('');
 		$('#ckeditor_bottom').html('');
 
-		SimpleDrag('#ckeditor_area .toolbar',editor_area,'fixed',function(pos){
+		SimpleDrag('#ckeditor_area .toolbar','#ckeditor_area','fixed',function(pos){
 			gpui.ckx = pos.left;
 			gpui.cky = pos.top;
 
@@ -167,18 +165,43 @@ var gp_editing = {
 			.css({'top':gpui.cky,'left':gpui.ckx,'bottom':'auto'})
 			.unbind('.gpdock');
 
-			$(window).resize();
+			$gp.$win.resize();
 		}
 
 		//return editor_area;
 	},
 
-	/*
+	/**
 	 * Make sure certain gpEasy elements aren't copied into the html of pages
 	 * @deprecated
 	 */
 	strip_special:function(data){
 		return data;
+	},
+
+	/**
+	 * Set up tabs
+	 *
+	 */
+	CreateTabs: function(){
+
+		var $areas = $('.inline_edit_area');
+		if( !$areas.length ){
+			return;
+		}
+
+		var c = 'selected'
+		var h = '<div id="cktabs">';
+		$areas.each(function(){
+			h += '<a class="ckeditor_control '+c+'" data-cmd="SwitchEditArea" data-arg="#'+this.id+'">'+this.title+'</a>';
+			c = '';
+		});
+		h += '</div>';
+
+		$('#ckeditor_area .toolbar').append(h).find('a').mousedown(function(e) {
+			e.stopPropagation(); //prevent dragging
+		});
+
 	}
 
 }
@@ -186,7 +209,32 @@ var gp_editing = {
 $gp.links.ck_close = gp_editing.close_editor;
 $gp.links.ck_save = gp_editing.save_changes;
 
-gplinks.ck_docklink = function(rel,evt){
-	gpui.ckd = !gpui.ckd;
-	gp_editing.setdock(true);
-}
+
+	/**
+	 * Change docking of inline editor
+	 *
+	 */
+	$gp.links.ck_docklink = function(){
+		gpui.ckd = !gpui.ckd;
+		gp_editing.setdock(true);
+	}
+
+
+	/**
+	 * Control which editing area is displayed
+	 *
+	 */
+	$gp.links.SwitchEditArea = function(){
+		var $this = $(this);
+
+		$('.ckeditor_control.selected').removeClass('selected');
+		$this.addClass('selected');
+
+		$('.manage_section_area').hide();
+
+		$('.inline_edit_area').hide();
+
+		$( $this.data('arg') ).show();
+	}
+
+

@@ -583,6 +583,7 @@ class admin_addon_installer extends admin_addons_tool{
 		$this->UpdateConfigInfo('Addon_Name','name');
 		$this->UpdateConfigInfo('Addon_Version','version');
 		$this->UpdateConfigInfo('Addon_Unique_ID','id');
+		$this->UpdateConfigInfo('Namespace','Namespace');
 
 
 		//remote
@@ -1194,6 +1195,7 @@ class admin_addon_installer extends admin_addons_tool{
 			$link_array['method'] = $method;
 		}
 
+
 		if( !empty($new_info['value']) ){
 			$link_array['value'] = $new_info['value'];
 		}
@@ -1244,9 +1246,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 		$result = array();
 		foreach($links as $linkName => $linkInfo){
-			if( !isset($linkInfo['script']) ){
-				continue;
-			}
+
 			if( !isset($linkInfo['label']) ){
 				continue;
 			}
@@ -1257,18 +1257,20 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 			$result[$linkName] = array();
-			$result[$linkName]['script'] = $linkInfo['script'];
+
+			if( isset($linkInfo['script']) ){
+				$result[$linkName]['script'] = $linkInfo['script'];
+			}
 			$result[$linkName]['label'] = $linkInfo['label'];
 
 			if( isset($linkInfo['class']) ){
 				$result[$linkName]['class'] = $linkInfo['class'];
 			}
 
-			/*	method only available for gadgets as of 1.7b1
 			if( isset($linkInfo['method']) ){
 				$result[$linkName]['method'] = $linkInfo['method'];
 			}
-			*/
+
 
 			if( $linkType ){
 				$result[$linkName]['type'] = $linkType;

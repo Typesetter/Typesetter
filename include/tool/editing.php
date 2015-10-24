@@ -27,11 +27,12 @@ class gp_edit{
 		//resize images
 		$gp_html_output = new gp_html_output($html_content);
 		foreach($gp_html_output->dom_array as $key => $node){
-			if( !is_array($node) ){
+
+			if( !is_array($node) || !array_key_exists('tag',$node) ){
 				continue;
 			}
 
-			$tag =& $node['tag'];
+			$tag = $node['tag'];
 			if( $tag != 'img' || !isset($node['attributes']['src']) ){
 				continue;
 			}
@@ -57,11 +58,11 @@ class gp_edit{
 
 
 	/**
-	 * Attempt to create a resized image resized image
+	 * Attempt to create a resized image
 	 *
 	 */
 	static function ResizedImage($attributes){
-		global $dataDir,$dirPrefix;
+		global $dataDir, $dirPrefix;
 
 
 		//height and width from style
@@ -174,10 +175,10 @@ class gp_edit{
 			return false;
 		}
 
-		$data['index'] = $dest_index;
-		$data['w'] = $width;
-		$data['h'] = $height;
-		$data['img'] = $src_relative;
+		$data['index']	= $dest_index;
+		$data['w']		= $width;
+		$data['h']		= $height;
+		$data['img']	= $src_relative;
 		return $data;
 	}
 
@@ -304,7 +305,8 @@ class gp_edit{
 		//resize images
 		$gp_html_output = new gp_html_output($html_content);
 		foreach($gp_html_output->dom_array as $key => $node){
-			if( !is_array($node) ){
+
+			if( !is_array($node) || !array_key_exists('tag',$node) ){
 				continue;
 			}
 
@@ -481,7 +483,7 @@ class gp_edit{
 
 
 		//internal link array
-		$code = 'var '.$options['var_name'].'=[';
+		$array = array();
 		foreach($gp_index as $slug => $id){
 
 			$label = common::GetLabel($slug);
@@ -491,7 +493,7 @@ class gp_edit{
 				$slug = common::GetUrl($slug,'',false);
 				$slug = rawurldecode($slug);
 			}
-			$code .= '["'.addslashes($label).'","'.addslashes($slug).'"],';
+			$array[] = array($label,$slug);
 		}
 
 
@@ -502,25 +504,26 @@ class gp_edit{
 					$url = common::GetUrl($url,'',false);
 					$url = rawurldecode($url);
 				}
-				$code .= '["'.addslashes($info['label']).'","'.addslashes($url).'"],';
+				$array[] = array($info['label'],$url);
 			}
 		}
-		$code = trim($code,',');
-		$code .= '];';
+
+		$code = json_encode($array);
+
+		if( $options['var_name'] ){
+			$code = 'var '.$options['var_name'].' = '.$code.';';
+		}
 		return $code;
 	}
 
 
-	static function PrepAutoComplete($autocomplete_js=true,$GetUrl=true){
+	static function PrepAutoComplete(){
 		global $page;
 
 		common::LoadComponents('autocomplete');
-		if( $autocomplete_js ){
-			$page->head_js[] = '/include/js/autocomplete.js';
-		}
-
-		$page->head_script .= gp_edit::AutoCompleteValues($GetUrl);
+		$page->head_js[] = '/include/js/autocomplete.js';
 	}
+
 
 	/**
 	 * Use ckeditor for to edit content
@@ -543,7 +546,8 @@ class gp_edit{
 		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/thirdparty/ckeditor_34/ckeditor.js').'?'.rawurlencode(gpversion).'"></script>';
 		$page->head .= "\n".'<script type="text/javascript" src="'.common::GetDir('/include/js/ckeditor_config.js').'?'.rawurlencode(gpversion).'"></script>';
 
-		gp_edit::PrepAutoComplete(false,true);
+		common::LoadComponents('autocomplete');
+		$page->head_script .= gp_edit::AutoCompleteValues(true);
 
 		ob_start();
 		echo "\n\n";
@@ -565,15 +569,14 @@ class gp_edit{
 	}
 
 	static function CKAdminConfig(){
-		global $dataDir;
 		static $cke_config;
 
 		//get ckeditor configuration set by users
 		if( !is_array($cke_config) ){
-			$cke_config = array();
-			$config_path = $dataDir.'/data/_ckeditor/config.php';
-			if( file_exists($config_path) ){
-				include($config_path);
+
+			$cke_config = gpFiles::Get('_ckeditor/config','cke_config');
+			if( !$cke_config ){
+				$cke_config = array();
 			}
 
 			$cke_config += array('plugins'=>array(),'custom_config'=>array());
@@ -620,7 +623,7 @@ class gp_edit{
 															array('Link','Unlink','Anchor','Image','Flash','Table'), //'CreatePlaceholder'
 															array('Format','Font','FontSize'),
 															array('JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','NumberedList','BulletedList','Outdent','Indent'),
-															array('Bold','Italic','Underline','Strike','Blockquote','Subscript','Superscript')
+															array('Bold','Italic','Underline','Strike','Blockquote','Subscript','Superscript','About')
 														),
 						/*
 						'toolbar'					=> array(
@@ -667,7 +670,6 @@ class gp_edit{
 		$options = $admin_config['custom_config'] + $options;
 		$options['extraPlugins'] = implode(',',$extra_plugins);
 
-
 		//browser paths
 		if( $options['browser'] ){
 			$options['filebrowserBrowseUrl'] = common::GetUrl('Admin_Browser').'?type=all';
@@ -698,8 +700,8 @@ class gp_edit{
 	static function DefaultContent($type='text'){
 		global $langmessage;
 
-		$section = array();
-		$section['type'] = $type;
+		$section			= array();
+		$section['type']	= $type;
 		$section['content'] = '';
 
 		switch($type){
@@ -707,12 +709,29 @@ class gp_edit{
 			break;
 
 			case 'gallery':
-				$section['content'] = '<ul class="gp_gallery"><li class="gp_to_remove"></li></ul>';
+				$section['content']		= '<ul class="gp_gallery"><li class="gp_to_remove">'
+										.'<a class="gallery_gallery" data-cmd="gallery" href="'.common::GetDir('/include/imgs/default_image.jpg').'" data-arg="gallery_gallery">'
+										.'<img alt="" src="'.common::GetDir('/include/imgs/default_thumb.jpg').'" />'
+										.'</a>'
+										.'<div class="caption">Image caption</div>'
+										.'</li></ul>';
+			break;
+
+			case 'wrapper_section':
+				$section['content']					= '';
+				$section['contains_sections']		= 0;
+			break;
+
+			case 'image':
+				$section['nodeName']				= 'img';
+				$section['attributes']['src']		= 'include/imgs/default_image.jpg';
+				$section['attributes']['width']		= '400px';
+				$section['attributes']['height']	= '300px';
 			break;
 
 			case 'text':
 			default:
-				$section['content'] = '<p>'.$langmessage['New Section'].'</p>';
+				$section['content']					= '<p>'.$langmessage['New Section'].'</p>';
 			break;
 		}
 
@@ -722,6 +741,10 @@ class gp_edit{
 		}else{
 			$section['content'] = $content;
 		}
+
+
+		$section					+= array('attributes'=>array());
+		$section['attributes']		+= array('class'=>'');
 
 		return $section;
 	}
@@ -757,14 +780,14 @@ class gp_edit{
 		echo '<span class="label">';
 		echo $langmessage['File Include'];
 		echo '</span>';
-		echo '<input type="text" size="" id="gp_file_include" name="file_include" class="autocomplete" value="'.htmlspecialchars($file_content).'" />';
+		echo '<input type="text" size="" id="gp_file_include" name="file_include" class="title-autocomplete" value="'.htmlspecialchars($file_content).'" />';
 		echo '</div>';
 
 		echo '<div class="gp_inlude_edit">';
 		echo '<span class="label">';
 		echo $langmessage['gadgets'];
 		echo '</span>';
-		echo '<input type="text" size="" id="gp_gadget_include" name="gadget_include" class="autocomplete" value="'.htmlspecialchars($gadget_content).'" />';
+		echo '<input type="text" size="" id="gp_gadget_include" name="gadget_include" class="title-autocomplete" value="'.htmlspecialchars($gadget_content).'" />';
 		echo '</div>';
 
 		echo '<div id="gp_option_area">';
@@ -786,13 +809,13 @@ class gp_edit{
 
 
 		//gadget include autocomplete
-		$code = 'var source=[';
+		$codea = array();
 		if( isset($config['gadgets']) ){
 			foreach($config['gadgets'] as $uniq => $info){
-				$code .= '["'.addslashes($uniq).'","'.addslashes($uniq).'"],';
+				$codea[] = array($uniq,$uniq);
 			}
 		}
-		$code .= ']';
+		$code = 'var source='.json_encode($codea);
 
 		$page->ajaxReplace[] = array('gp_autocomplete_include','gadget',$code);
 
@@ -806,9 +829,11 @@ class gp_edit{
 	static function SectionFromPost( &$existing_section, $section_num, $title, $file_stats ){
 		global $page, $gpAdmin;
 
-		$section_before = $existing_section;
-		$type = $existing_section['type'];
-		$save_this = false;
+		$section_before		= $existing_section;
+		$type				= $existing_section['type'];
+		$save_this			= false;
+
+
 		switch($type){
 			case 'text':
 				$save_this = true;
@@ -821,22 +846,138 @@ class gp_edit{
 			case 'include':
 				$save_this = self::SectionFromPost_Include( $existing_section, $section_num, $title, $file_stats );
 			break;
+
+			case 'image':
+				$save_this = self::SectionFromPost_Imagme( $existing_section );
+			break;
+		}
+
+		//make sure $existing_section is still an array
+		$type_check = gettype($existing_section);
+		if( $type_check !== 'array' ){
+			trigger_error('$existing_section is '.$type_check.'. Array expected');
+			return false;
 		}
 
 
 		// Hack: SaveSection used $page->file_sections
-		$page->file_sections[$section_num] = $existing_section;
-		$save_this = gpPlugin::Filter( 'SaveSection', array( $save_this, $section_num, $type) );
-		$existing_section = $page->file_sections[$section_num];
+		$page->file_sections[$section_num]	= $existing_section;
+		$save_this							= gpPlugin::Filter( 'SaveSection', array( $save_this, $section_num, $type) );
+		$existing_section					= $page->file_sections[$section_num];
 
 		if( !$save_this ){
 			$page->file_sections[$section_num] = $existing_section = $section_before;
 		}
 
-		$page->file_sections[$section_num]['modified'] = time();
-		$page->file_sections[$section_num]['modified_by'] = $gpAdmin['username'];
+		$page->file_sections[$section_num]['modified']		= time();
+		$page->file_sections[$section_num]['modified_by']	= $gpAdmin['username'];
 
 		return $save_this;
+	}
+
+	/**
+	 * Get the posted content for an image area
+	 *
+	 */
+	static function SectionFromPost_Imagme( &$section ){
+		global $page, $dataDir, $dirPrefix, $langmessage;
+		includeFile('tool/Images.php');
+		includeFile('tool/editing.php');
+		$page->ajaxReplace = array();
+
+		//source file
+		//$source_file_rel = $_REQUEST['file'];
+		if( !empty($_REQUEST['src']) ){
+			$source_file_rel = rawurldecode($_REQUEST['src']);
+			if( !empty($dirPrefix) ){
+				$len = strlen($dirPrefix);
+				$source_file_rel = substr($source_file_rel,$len);
+			}
+		}
+		$source_file_rel	= '/'.ltrim($source_file_rel,'/');
+		$source_file_full	= $dataDir.$source_file_rel;
+
+		if( !file_exists($source_file_full) ){
+			message($langmessage['OOPS'].' (Source file not found)');
+			return;
+		}
+		$src_img = thumbnail::getSrcImg($source_file_full);
+		if( !$src_img ){
+			message($langmessage['OOPS'].' (Couldn\'t create image [1])');
+			return;
+		}
+
+
+		//size and position variables
+		$orig_w = $width = imagesx($src_img);
+		$orig_h = $height = imagesy($src_img);
+		$posx = $posy = 0;
+		if( isset($_REQUEST['posx']) && is_numeric($_REQUEST['posx']) ){
+			$posx = $_REQUEST['posx'];
+		}
+		if( isset($_REQUEST['posy']) && is_numeric($_REQUEST['posy']) ){
+			$posy = $_REQUEST['posy'];
+		}
+		if( isset($_REQUEST['width']) && is_numeric($_REQUEST['width']) ){
+			$width = $_REQUEST['width'];
+		}
+		if( isset($_REQUEST['height']) && is_numeric($_REQUEST['height']) ){
+			$height = $_REQUEST['height'];
+		}
+
+
+		//check to see if the image needs to be resized
+		if( $posx == 0 && $posy == 0 && $width == $orig_w && $height == $orig_h ){
+			$section['attributes']['src']		= $source_file_rel;
+			$section['attributes']['height']	= $height;
+			$section['attributes']['width']		= $width;
+			$section['orig_src']				= $_REQUEST['src'];
+			$section['posx']					= 0;
+			$section['posy']					= 0;
+			return true;
+		}
+
+
+		//destination file
+		$name	= basename($source_file_rel);
+		$parts	= explode('.',$name);
+		$type	= array_pop($parts);
+
+		//remove the time portion of the filename
+		if( count($parts) > 1 ){
+			$time_part = array_pop($parts);
+			if( !ctype_digit($time_part) ){
+				$parts[] = $time_part;
+			}
+
+		}
+
+		$name				= implode('.',$parts);
+		$time				= time();
+		$dest_img_rel		= '/data/_resized/img_type/'.$name.'.'.$time.'.png';
+		$dest_img_full		= $dataDir.$dest_img_rel;
+
+		//make sure the folder exists
+		if( !gpFiles::CheckDir( dirname($dest_img_full) ) ){
+			message($langmessage['OOPS'].' (Couldn\'t create directory)');
+			return false;
+		}
+
+		if( !thumbnail::createImg($src_img, $dest_img_full, $posx, $posy, 0, 0, $orig_w, $orig_h, $orig_w, $orig_h, $width, $height) ){
+			message($langmessage['OOPS'].' (Couldn\'t create image [2])');
+			return false;
+		}
+
+		$section['attributes']['src']			= $dest_img_rel;
+		$section['attributes']['height']		= $height;
+		$section['attributes']['width']			= $width;
+		$section['orig_src']					= $_REQUEST['src'];
+		$section['posx']						= $posx;
+		$section['posy']						= $posy;
+
+		includeFile('admin/admin_uploaded.php');
+		admin_uploaded::CreateThumbnail($dest_img_full);
+		return true;
 	}
 
 
@@ -878,7 +1019,7 @@ class gp_edit{
 			gpFiles::cleanText($caption);
 
 			echo '<li>';
-			echo '<a class="gallery_gallery" title="" data-arg="gallery_gallery" href="'.$image.'" data-cmd="gallery">';
+			echo '<a class="gallery_gallery" title="'.htmlspecialchars($caption).'" data-arg="gallery_gallery" href="'.$image.'" data-cmd="gallery">';
 			echo '<img src="'.$thumb_path.'" alt="" /></a>';
 			echo '<div class="caption">';
 			echo $caption;
@@ -934,9 +1075,8 @@ class gp_edit{
 	 *
 	 */
 	function PreviewSection( $section, $section_num, $title, $file_stats ){
-		global $page,$langmessage;
+		global $page, $langmessage;
 
-		//for ajax responses
 		$page->ajaxReplace = array();
 
 		switch($section['type']){
@@ -963,7 +1103,7 @@ class gp_edit{
 	 * Display a form for creating a new directory
 	 *
 	 */
-	function NewDirForm(){
+	static function NewDirForm(){
 		global $langmessage, $page;
 		includeFile('admin/admin_uploaded.php');
 
@@ -1018,8 +1158,7 @@ class gp_edit{
 			gpAjax::InlineEdit( $section );
 			die();
 
-
-			case 'save':
+			case 'save_inline':
 			return gp_edit::SectionFromPost( $section, $section_num, $title, $file_stats );
 
 		}
@@ -1028,6 +1167,51 @@ class gp_edit{
 		return false;
 	}
 
+
+
+	/**
+	 * Output content for use with the inline image editor
+	 *
+	 */
+	static function ImageEditor( $layout = false ){
+		global $page, $langmessage;
+		$page->ajaxReplace = array();
+
+		//image options
+		ob_start();
+
+		//edit current image
+		echo '<div id="gp_current_image" class="inline_edit_area" title="'.$langmessage['edit'].'">';
+		echo '<span id="gp_image_wrap"><img/></span>';
+		echo '<table>';
+		echo '<tr><td>'.$langmessage['Width'].'</td><td><input type="text" name="width" class="ck_input"/></td>';
+		echo '<td>'.$langmessage['Height'].'</td><td><input type="text" name="height" class="ck_input"/></td>';
+		echo '<td><a data-cmd="deafult_sizes" class="ckeditor_control ck_reset_size" title="'.$langmessage['Theme_default_sizes'].'">&#10226;</a></td>';
+		echo '</tr>';
+		echo '<tr><td>'.$langmessage['Left'].'</td><td><input type="text" name="left" class="ck_input" value="0"/></td>';
+		echo '<td>'.$langmessage['Top'].'</td><td><input type="text" name="top" class="ck_input" value="0"/></td>';
+		echo '</tr>';
+		echo '</table>';
+		echo '</div>';
+
+
+		//select image
+		echo '<div id="gp_source_options" class="inline_edit_area" style="display:none" title="'.$langmessage['Select Image'].'">';
+
+		if( $layout ){
+			echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['Theme Images'].'..','cmd=theme_images',' data-cmd="gpajax" class="ckeditor_control half_width" ');
+			echo '<a class="ckeditor_control half_width" data-cmd="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
+		}
+
+		echo '<div id="gp_image_area"></div><div id="gp_upload_queue"></div>';
+
+		echo '<div id="gp_folder_options"></div>';
+		echo '</div>';
+		$content = ob_get_clean();
+
+		$page->ajaxReplace[] = array('inner','#ckeditor_top',$content);
+		$page->ajaxReplace[] = array('image_options_loaded','',''); //tell the script the images have been loaded
+	}
 
 
 

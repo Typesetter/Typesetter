@@ -163,9 +163,6 @@ class SetupSite{
 			return false;
 		}
 
-		//message('Posted: '.showArray($_POST));
-		//message('site data: '.showArray($this->siteData['sites'][$site]));
-
 		switch($cmd){
 			case 'save_options';
 				$this->Options_Save($site);
@@ -189,8 +186,7 @@ class SetupSite{
 		echo $langmessage['site url'];
 		echo '</td><td>';
 		echo '<input type="text" name="url" value="'.htmlspecialchars($args['url']).'" />';
-		echo '</td>';
-		echo '</tr>';
+		echo '</td></tr>';
 
 		echo '<tr><td class="label">';
 		echo $langmessage['hide_index'];
@@ -338,7 +334,7 @@ class SetupSite{
 	function FrontPage(){
 		global $langmessage;
 		echo '<div id="install_wrap">';
-		echo '<h3>gpEasy Multi-Site Plugin</h3>';
+		echo '<h2>gpEasy Multi-Site Plugin</h2>';
 
 		echo '<div class="sm">';
 		echo 'Easily add multiple installations of gpEasy to your server.';
@@ -361,24 +357,24 @@ class SetupSite{
 		global $langmessage;
 
 		echo '<div id="install_wrap">';
-		echo '<h3>';
+		echo '<h2>';
 		echo $langmessage['about'];
-		echo '</h3>';
+		echo '</h2>';
 		echo '<p>';
 		echo $langmessage['easily add installations'];
 		echo '</p>';
 
-		echo ' <h3>';
+		echo ' <h2>';
 		echo $langmessage['Notes'];
-		echo '</h3> ';
+		echo '</h2> ';
 		echo '<p>';
 		echo $langmessage['multi_site_notes'];
 		echo '</p>';
 
 
-		echo '<h3>';
+		echo '<h2>';
 		echo common::Link('Admin_Site_Setup',$langmessage['Settings'],'cmd=settings');
-		echo '</h3>';
+		echo '</h2>';
 
 		echo '<dl>';
 		echo '<dt>Service Provider ID</dt>';
@@ -472,7 +468,7 @@ class SetupSite{
 
 
 		echo '<div id="install_wrap">';
-		echo '<h3>Settings</h3>';
+		echo '<h2>Settings</h2>';
 		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="post">';
 		echo '<table class="bordered" width="100%">';
 
@@ -510,31 +506,26 @@ class SetupSite{
 		echo '</tr>';
 
 
-		echo '<tr>';
-		echo '<th>FTP</th>';
-		echo '<th>&nbsp;</th>';
-		echo '</tr>';
+		if( function_exists('ftp_connect') ){
+			echo '<tr><th>FTP</th>';
+			echo '<th>&nbsp;</th>';
+			echo '</tr>';
 
-		echo '<tr>';
-		echo '<td>FTP Server</td>';
-		echo '<td>';
-		echo '<input type="text" name="ftp_server" value="'.$ftp_vals['ftp_server'].'" size="30" />';
-		echo '</td>';
-		echo '</tr>';
+			echo '<tr><td>FTP Server</td>';
+			echo '<td>';
+			echo '<input type="text" name="ftp_server" value="'.$ftp_vals['ftp_server'].'" size="30" />';
+			echo '</td></tr>';
 
-		echo '<tr>';
-		echo '<td>FTP Username</td>';
-		echo '<td>';
-		echo '<input type="text" name="ftp_user" value="'.$ftp_vals['ftp_user'].'" size="30" />';
-		echo '</td>';
-		echo '</tr>';
+			echo '<tr><td>FTP Username</td>';
+			echo '<td>';
+			echo '<input type="text" name="ftp_user" value="'.$ftp_vals['ftp_user'].'" size="30" />';
+			echo '</td></tr>';
 
-		echo '<tr>';
-		echo '<td>FTP Password</td>';
-		echo '<td>';
-		echo '<input type="password" name="ftp_pass" value="" size="30" />';
-		echo '</td>';
-		echo '</tr>';
+			echo '<tr><td>FTP Password</td>';
+			echo '<td>';
+			echo '<input type="password" name="ftp_pass" value="" size="30" />';
+			echo '</td></tr>';
+		}
 
 		echo '</table>';
 
@@ -788,6 +779,10 @@ class SetupSite{
 			return false;
 		}
 
+		if( !function_exists('ftp_connect') ){
+			return false;
+		}
+
 		$conn_id = gpFiles::FTPConnect();
 		if( !$conn_id ){
 			return false;
@@ -1022,14 +1017,10 @@ class SetupSite{
 	}
 
 
-
-	/*
-	 *
-	 * File Handling Functions
+	/**
+	 * Save the ftp connection information if a connection can be made
 	 *
 	 */
-
-
 	function SaveFTPInformation(){
 		global $config, $langmessage;
 
@@ -1057,9 +1048,9 @@ class SetupSite{
 		}
 
 
-		$config['ftp_user'] = $_POST['ftp_user'];
-		$config['ftp_server'] = $_POST['ftp_server'];
-		$config['ftp_pass'] = $_POST['ftp_pass'];
+		$config['ftp_user']		= $_POST['ftp_user'];
+		$config['ftp_server']	= $_POST['ftp_server'];
+		$config['ftp_pass']		= $_POST['ftp_pass'];
 
 		if( !admin_tools::SaveConfig() ){
 			message('Oops, there was an error saving your ftp information.');
@@ -1083,10 +1074,12 @@ class SetupSite{
 	function InstallStatus($cmd){
 		global $rootDir;
 
+		$default_theme = explode('/',gp_default_theme);
+
 		//make sure default theme exists
-		$path = $rootDir.'/themes/Light_Texture';
+		$path = $rootDir.'/themes/'.$default_theme[0];
 		if( !file_exists($path) ){
-			message('The default theme for gpEasy "Light_Texture" does not exist. Please make sure it exists before continuing.');
+			message('The default theme for gpEasy "'.$default_theme[0].'" does not exist. Please make sure it exists before continuing.');
 			return;
 		}
 
@@ -1102,24 +1095,21 @@ class SetupSite{
 			}
 		}
 
-		$this->CheckValues();
+		$this->CheckFolder();
 
 		$ready = true;
 
 		echo '<div id="install_wrap">';
-		echo '<h3>Installation</h3>';
+		echo '<h2>Installation</h2>';
 
-		echo '<table id="install_status" cellpadding="0" cellspacing="0">';
-
+		echo '<div id="install_status">';
+		echo '<table  cellpadding="0" cellspacing="0">';
 
 		$ready = $this->InstallStatus_Step($cmd,$ready,'Destination','new_destination','folder');
 		$ready = $this->InstallStatus_Step($cmd,$ready,'Themes','new_themes','themes');
 		$this->InstallStatus_Step($cmd,$ready,'Plugins','new_plugins','plugins','plugins_submitted');
 
-		echo '<tr>';
-			echo '<th>';
-			echo 'Status';
-			echo '</th>';
+		echo '<tr><th>Status</th>';
 			if( $ready ){
 				echo '<td id="install_state" class="ready">';
 				$query_array = array('cmd'=>'new_install');
@@ -1129,17 +1119,13 @@ class SetupSite{
 				}
 			}else{
 				echo '<td id="install_state" class="not_ready">';
-				//$query_array = array('cmd'=>$cmd);
-				//echo $this->InstallLink('Not Ready',$query_array);
 				echo 'Not Ready to Install';
-
 			}
 
-			echo '</td>';
-			echo '</tr>';
-
-
+		echo '</td></tr>';
 		echo '</table>';
+		echo '</div>';
+
 
 		echo '<div id="install_step"><div id="install_step_inner">';
 		switch($cmd){
@@ -1168,88 +1154,116 @@ class SetupSite{
 		echo '</div>';
 	}
 
-	/*
-	 * Check new values further before continuing with the installation process
+
+	/**
+	 * Make sure the install folder is writable before continuing with the installation process
 	 *
 	 */
+	function CheckFolder(){
+		global $config;
 
-	function CheckValues(){
-		global $config, $langmessage;
-
-		$langmessage['not_written_to'] = 'Sorry, the selected folder could not be written to. You may still be able to install in this folder by doing one of the following:';
-		$langmessage['not_written_to'] .= '<ul>';
-		$langmessage['not_written_to'] .= '<li>Make the folder writable by changing it\'s permissions.</li>';
-		$langmessage['not_written_to'] .= '<li>Supply your server\'s <a href="%s">ftp information</a> to this plugin.</li>';
-		$langmessage['not_written_to'] .= '</ul>';
-
-		$langmessage['not_written_to'] = sprintf($langmessage['not_written_to'],common::GetUrl('Admin_Site_Setup','cmd=settings'));
-
-		if( !isset($_REQUEST['new_val']) ){
+		if( empty($_REQUEST['install']['folder']) ){
 			return;
 		}
 
-		$new_val_key = $_REQUEST['new_val'];
+		$folder = $_REQUEST['install']['folder'];
 
-		if( $new_val_key == 'folder' ){
-			$folder = $_REQUEST['install'][$new_val_key];
+		if( is_writable($folder) ){
+			return true;
+		}
 
-			if( is_writable($folder) ){
-				return;
+		if( !function_exists('ftp_connect') ){
+			$this->FolderNotWritable('FTP Extension Not Available');
+			return false;
+		}
+
+		if( empty($config['ftp_server']) ){
+			$this->FolderNotWritable('FTP connection values not set');
+			return false;
+		}
+
+
+		$conn_id	= gpFiles::FTPConnect();
+		if( !$conn_id ){
+			$this->FolderNotWritable('FTP connection could not be made with the supplied values');
+			return false;
+		}
+
+
+		$ftp_root	= gpftp::GetFTPRoot($conn_id,$folder);
+		if( !$ftp_root ){
+			$this->FolderNotWritable('Root folder not found by FTP');
+			return false;
+		}
+	}
+
+
+	/**
+	 * Display message to user about not being able to write to the installation folder
+	 *
+	 */
+	function FolderNotWritable($reason = ''){
+		global $langmessage;
+
+		$message = '<p>Sorry, the selected folder could not be written to.</p> ';
+		$message .= '<em>'.$reason.'</em> ';
+		$message .= '<p>You may still be able to install in this folder by doing one of the following:</p>';
+		$message .= '<ul>';
+		$message .= '<li>Make the folder writable by changing it\'s permissions.</li>';
+
+		if( function_exists('ftp_connect') ){
+			$message .= '<li>Supply your server\'s <a href="%s">ftp connection information</a>.</li>';
+		}else{
+			$message .= '<li>Enabling the FTP extension in php and supplying <a href="%s">ftp connection information</a>.</li>';
+		}
+		$message = sprintf($message,common::GetUrl('Admin_Site_Setup','cmd=settings'));
+		$message .= '</ul>';
+
+
+
+		//message($langmessage['not_created'].' (FTP Connection Failed)');
+		unset($_REQUEST['install']['folder']);
+		message($message);
+	}
+
+	/**
+	 * Show an installation step and it's status
+	 *
+	 */
+	function InstallStatus_Step(&$cmd,$ready,$label,$step_cmd,$step_key,$step_key2=false){
+
+		echo '<tr><th>';
+		echo $label;
+		echo '</th><td>';
+		if( isset($_REQUEST['install'][$step_key]) ){
+			$step_value = $_REQUEST['install'][$step_key];
+			if( is_array($step_value) ){
+				$link_label = implode(', ',$step_value);
+				if( strlen($link_label) > 40 ){
+					$link_label = substr($link_label,0,40).'...';
+				}
+			}else{
+				$link_label = $step_value;
 			}
+		}elseif( $step_key2 && isset($_REQUEST['install'][$step_key2]) ){
+			$link_label = 'Empty';
+		}else{
+			$ready = false;
+			$query_array = array('cmd'=>'new_destination');
+			$link_label = 'Not Set';
 
-			if( empty($config['ftp_server']) ){
-				unset($_REQUEST['install'][$new_val_key]);
-				message($langmessage['not_written_to']);
-				return;
-			}
-
-			$conn_id = gpFiles::FTPConnect();
-			$ftp_root = gpftp::GetFTPRoot($conn_id,$folder);
-
-			if( !$ftp_root ){
-				unset($_REQUEST['install'][$new_val_key]);
-				message($langmessage['not_written_to']);
-				return;
+			if( !$cmd ){
+				$cmd = $step_cmd;
 			}
 		}
 
-	}
-
-	function InstallStatus_Step(&$cmd,$ready,$label,$step_cmd,$step_key,$step_key2=false){
-		echo '<tr>';
-			echo '<th>';
-			echo $label;
-			echo '</th>';
-			echo '<td>';
-			if( isset($_REQUEST['install'][$step_key]) ){
-				$step_value = $_REQUEST['install'][$step_key];
-				if( is_array($step_value) ){
-					$link_label = implode(', ',$step_value);
-					if( strlen($link_label) > 40 ){
-						$link_label = substr($link_label,0,40).'...';
-					}
-				}else{
-					$link_label = $step_value;
-				}
-			}elseif( $step_key2 && isset($_REQUEST['install'][$step_key2]) ){
-				$link_label = 'Empty';
-			}else{
-				$ready = false;
-				$query_array = array('cmd'=>'new_destination');
-				$link_label = 'Not Set';
-
-				if( !$cmd ){
-					$cmd = $step_cmd;
-				}
-			}
-
-			if( empty($link_label) ){
-				$link_label = 'Empty';
-			}
-			$query_array = array('cmd'=>$step_cmd);
-			echo $this->InstallLink($link_label,$query_array);
-			echo '</td>';
-			echo '</tr>';
+		if( empty($link_label) ){
+			$link_label = 'Empty';
+		}
+		$query_array = array('cmd'=>$step_cmd);
+		echo $this->InstallLink($link_label,$query_array);
+		echo '</td>';
+		echo '</tr>';
 
 		return $ready;
 	}
@@ -1333,21 +1347,26 @@ class SetupSite{
 			echo '<tr>';
 
 			echo '<td>';
-			//light texture
-			echo '<input type="hidden" name="install[themes][]" value="Light_Texture" />';
-			echo '<label class="all_checkbox">';
-			echo '<input type="checkbox" name="install[themes][]" value="Light_Texture" checked="checked" disabled="disabled" />';
-			echo 'Light Texture';
-			echo '</label>';
-			echo ' And ... <br/>';
 
+
+			$default_theme = explode('/',gp_default_theme);
+
+			//default theme
+			echo '<input type="hidden" name="install[themes][]" value="'.$default_theme[0].'" />';
+			echo '<label class="all_checkbox">';
+			echo '<input type="checkbox" name="install[themes][]" value="'.$default_theme[0].'" checked="checked" disabled="disabled" />';
+			echo $default_theme[0];
+			echo '</label>';
+
+			//all other available themes
+			echo ' And ... <br/>';
 			echo '<p>';
 			$dir = $rootDir.'/themes';
 			$layouts = gpFiles::readDir($dir,1);
 			asort($layouts);
 			$i = 1;
 			foreach($layouts as $name){
-				if( $name == 'Light_Texture' ){
+				if( $name == $default_theme[0] ){
 					continue;
 				}
 
@@ -1452,7 +1471,10 @@ class SetupSite{
 	}
 
 
-
+	/**
+	 * Display window for selecting where to install
+	 *
+	 */
 	function InstallFolder($destination){
 
 		echo '<table>';
@@ -1467,7 +1489,7 @@ class SetupSite{
 		do{
 			$previous = $parent;
 			$query_array = array('cmd'=>'expandfolder','folder'=>$parent);
-			$links[] = '<span>'.$this->InstallLink(basename($parent).'/',$query_array,' name="gpajax" ').'</span>';
+			$links[] = $this->InstallLink(basename($parent).'/',$query_array,' name="gpajax" ');
 			$parent = dirname($parent);
 		}while( $previous != $parent );
 
@@ -1482,6 +1504,8 @@ class SetupSite{
 		echo '<input type="hidden" name="cmd" value="subfolder" />';
 		echo '</form>';
 		echo '</div>';
+
+
 
 		//show subfolders
 		echo '<div style="clear:both"></div>';
@@ -1586,7 +1610,7 @@ class SetupSite{
 			return false;
 		}
 
-		$query_array = array('cmd'=>'Continue','new_val'=>'folder','install'=>array('folder'=>$dir));
+		$query_array = array('cmd'=>'Continue','install'=>array('folder'=>$dir));
 		echo $this->InstallLink('Install Here',$query_array,' class="select" ');
 
 		$query_array = array('cmd'=>'rmdir','dir'=>$dir);
@@ -1796,8 +1820,7 @@ class SetupSite{
 			return true;
 		}
 
-
-		if( empty($config['ftp_server']) ){
+		if( $this->HasFTP() ){
 			message($langmessage['not_created']);
 			return false;
 		}
@@ -1825,16 +1848,17 @@ class SetupSite{
 		return true;
 	}
 
+
 	function NewCreate(){
 		global $rootDir,$config,$checkFileIndex;
 		global $dataDir; //for SaveTitle(), SaveConfig()
 
 		includeFile('tool/install.php');
 
-		$_POST += array('themes'=>array(),'plugins'=>array());
-		$destination = $_REQUEST['install']['folder'];
-		$this->site_uniq_id = $this->NewId();
-		$checkFileIndex = false;
+		$_POST					+= array('themes'=>array(),'plugins'=>array());
+		$destination			= $_REQUEST['install']['folder'];
+		$this->site_uniq_id 	= $this->NewId();
+		$checkFileIndex			= false;
 
 
 		//prevent reposting
@@ -1937,26 +1961,18 @@ class SetupSite{
 
 	}
 
-}
+	/**
+	 * Return true if FTP can be used
+	 *
+	 */
+	function HasFTP(){
+		global $config;
 
-
-if( !function_exists('http_build_query') ){
-	function http_build_query($data, $prefix='', $sep='', $key='') {
-		$ret = array();
-		foreach((array)$data as $k => $v) {
-
-			if (is_int($k) && $prefix != null) {
-				$k = urlencode($prefix . $k);
-			}
-			if((!empty($key)) || ($key === 0)) $k = $key.'['.urlencode($k).']';
-
-			if (is_array($v) || is_object($v)) {
-				array_push($ret, http_build_query($v, '', $sep, $k));
-			} else {
-				array_push($ret, $k.'='.urlencode($v));
-			}
+		if( empty($config['ftp_server']) || !function_exists('ftp_connect') ){
+			return false;
 		}
-		if (empty($sep)) $sep = ini_get('arg_separator.output');
-		return implode($sep, $ret);
+
+		return true;
 	}
+
 }

@@ -4,12 +4,13 @@ defined('is_running') or die('Not an entry point...');
 class admin_ckeditor{
 
 	var $config_file;
-	var $cke_config = array();
+	var $cke_config			= array();
+	var $build_config;
 
 	var $subpages;
 	var $current_subpage = '';
 
-	function admin_ckeditor(){
+	function __construct(){
 		global $page, $langmessage;
 
 		$page->css_admin[] = '/include/css/addons.css';
@@ -132,6 +133,37 @@ class admin_ckeditor{
 
 		echo '</table>';
 		echo '</form>';
+
+
+		//$this->build_config
+		if( $this->build_config && isset($this->build_config['plugins']) ){
+
+			$ordered = array();
+			$count = 0;
+			foreach($this->build_config['plugins'] as $plugin => $status){
+				if( !$status ){
+					continue;
+				}
+
+				$char				= strtoupper($plugin[0]);
+				$ordered[$char][]	= '<a href="http://ckeditor.com/addon/'.$plugin.'" target="_blank">'.ucfirst($plugin).'</a>';
+				$count++;
+			}
+
+			//echo '<h3>'.$langmessage['Installed'].'</h3>';
+			echo '<p><br/></p>';
+			echo '<table class="bordered">';
+			echo '<tr><th colspan="2">'.$langmessage['Installed'].' ('.$count.')</th></tr>';
+			foreach($ordered as $char => $plugins){
+				echo '<tr><td>';
+				echo '<b>'.$char.'</b>';
+				echo '</td><td>';
+				echo implode(', ',$plugins);
+				echo '</td></tr>';
+			}
+			echo '</table>';
+		}
+
 	}
 
 
@@ -164,37 +196,56 @@ class admin_ckeditor{
 
 
 		// get plugin name and check file types
-		$plugin_name = false;
-		$remove_path = '';
-		$list = $archive->listContent();
+		$plugin_name	= false;
+		$remove_path	= '';
+		$list			= $archive->listContent();
 		foreach($list as $file){
 
 			//plugin name
-			if( !$plugin_name && strpos($file['filename'],'plugin.js') !== false ){
-				$filename = $file['filename'];
-				$remove_path = dirname($filename);
-				$plugin_name = basename( $remove_path );
+			if( strpos($file['filename'],'plugin.js') !== false ){
+
+				$new_plugin_name = $this->FindPluginName($archive, $file);
+				if( !$new_plugin_name ){
+					continue;
+				}
+
+				//use the most relevant plugin name
+				$new_path	= dirname($file['filename']);
+				if( !$plugin_name || strlen($new_path) < strlen($remove_path) ){
+					$plugin_name	= $new_plugin_name;
+					$remove_path	= $new_path;
+				}
+			}
+
+			//don't check extensions on folder
+			if( isset($file['folder']) && $file['folder'] ){
+				continue;
 			}
 
 
 			if( !admin_uploaded::AllowedExtension($file['filename'], false) ){
-				message($langmessage['OOPS'].' (File type not allowed)');
+				message($langmessage['OOPS'].' (File type not allowed:'.htmlspecialchars($file['filename']).')');
 				return false;
 			}
 
 		}
 
-
-
-
-		//message('remove path: '.$remove_path);
-		//message('plugin name: '.$plugin_name);
-		//return;
-
 		if( !$plugin_name ){
 			message($langmessage['OOPS'].' (Unknown plugin name)');
 			return;
 		}
+
+
+		//make sure plugin name isn't already in build_config
+		if( $this->build_config
+			&& isset($this->build_config['plugins'])
+			&& isset($this->build_config['plugins'][$plugin_name])
+			&& $this->build_config['plugins'][$plugin_name] > 0 ){
+				msg($langmessage['addon_key_defined'], '<i>'.$plugin_name.'</i>');
+				return;
+		}
+
+
 
 
 		// check destination directory
@@ -207,9 +258,12 @@ class admin_ckeditor{
 				return;
 			}
 		}elseif( !gpFiles::CheckDir($destination) ){
+			msg($destination);
 			message($langmessage['OOPS'].' (Couldn\'t create plugin folder)');
 			return;
 		}
+
+		//extract
 
 
 		// extract
@@ -229,6 +283,7 @@ class admin_ckeditor{
 		if( !array_key_exists( $plugin_name, $this->cke_config['plugins'] ) ){
 			$this->cke_config['plugins'][$plugin_name] = array('installed'=>time());
 		}
+
 		$this->cke_config['plugins'][$plugin_name]['updated'] = time();
 		$this->SaveConfig();
 
@@ -239,6 +294,26 @@ class admin_ckeditor{
 			gpFiles::RmAll( $temp_dir );
 		}
 
+	}
+
+	/**
+	 *
+	 */
+	function FindPluginName($archive, $file){
+		$file = $archive->extractByIndex($file['index'], PCLZIP_OPT_EXTRACT_AS_STRING);
+		if( !$file ){
+			return false;
+		}
+
+
+		//use regular expression to look for "CKEDITOR.plugins.add('plugin-name'"
+		$pattern = '/CKEDITOR\s*\.\s*plugins\s*\.\s*add\s*\(\s*[\'"]([^\'"]+)[\'"]/';
+
+		if( !preg_match($pattern,$file[0]['content'],$match) ){
+			return false;
+		}
+
+		return $match[1];
 	}
 
 
@@ -355,7 +430,7 @@ class admin_ckeditor{
 	 *
 	 */
 	function SaveConfig(){
-		return gpFiles::SaveArray($this->config_file,'cke_config',$this->cke_config);
+		return gpFiles::SaveData($this->config_file,'cke_config',$this->cke_config);
 	}
 
 
@@ -364,18 +439,54 @@ class admin_ckeditor{
 	 *
 	 */
 	function Init(){
+
+		$this->config_file		= '_ckeditor/config';
+		$this->cke_config		= gpFiles::Get($this->config_file,'cke_config');
+
+		//$this->cke_config 	+= array('custom_config'=>array());
+		$this->cke_config		+= array('plugins'=>array());
+
+		$this->BuildConfig();
+	}
+
+
+	/**
+	 * Get the ckeditor build configuration
+	 *
+	 */
+	function BuildConfig(){
 		global $dataDir;
 
-		$this->config_file = $dataDir.'/data/_ckeditor/config.php';
-		if( file_exists($this->config_file) ){
-			include($this->config_file);
-			$this->cke_config = $cke_config;
+
+
+		//get data from build-config.js to determine which plugins are already included
+		$build_file				= $dataDir.'/include/thirdparty/ckeditor_34/build-config.js';
+		$build_config			= file_get_contents($build_file);
+		if( !$build_config ){
+			return;
 		}
 
-		//$this->cke_config += array('custom_config'=>array());
-		$this->cke_config += array('plugins'=>array());
 
+		// quotes
+		$build_config			= str_replace('\'','"',$build_config);
+		$build_config			= str_replace("\r\n", "\n", $build_config);
+
+		// remove comments
+		$build_config			= preg_replace("/\/\*[\d\D]*?\*\//",'',$build_config);
+
+		// remove "var CKBUILDER_CONFIG = "
+		$pos					= strpos($build_config,'{');
+		$build_config			= substr($build_config,$pos);
+		$build_config			= trim($build_config);
+		$build_config			= trim($build_config,';');
+
+		// fix variable names
+		$build_config			= preg_replace("/([a-zA-Z0-9_]+?)\s*:/" , "\"$1\":", $build_config);
+
+		$this->build_config		= json_decode($build_config,true);
 	}
+
+
 
 
 	/**

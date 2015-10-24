@@ -9,7 +9,7 @@ class special_display extends display{
 	var $editable_content = false;
 	var $editable_details = false; //true; //could be true
 
-	function special_display($title){
+	function __construct($title){
 		global $langmessage,$config;
 
 		$this->requested = $title;
@@ -138,6 +138,10 @@ class special_display extends display{
 			if( isset($gp_index[$requested]) ){
 
 				$index = $gp_index[$requested];
+				// Merge page data & script data if both exist
+				if( isset($scripts[$index]) && isset($gp_titles[$index])){
+					return array_merge($scripts[$index], $gp_titles[$index]);
+				}
 				if( isset($scripts[$index]) ){
 					return $scripts[$index];
 				}
@@ -165,6 +169,8 @@ class special_display extends display{
 	function ExtraJS(){
 		header('Content-type: application/javascript');
 		includeFile('tool/editing.php');
+
+		trigger_error('Deprecated: special_extrajs');
 
 		$_GET += array('which'=>array());
 

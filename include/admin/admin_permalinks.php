@@ -11,7 +11,7 @@ class admin_permalinks{
 	var $changed_to_hide = false;
 
 
-	function admin_permalinks(){
+	function __construct(){
 		global $langmessage,$dataDir;
 
 
@@ -160,7 +160,7 @@ class admin_permalinks{
 		}
 
 
-		if( !$gp_filesystem->ConnectOrPrompt('Admin_Permalinks') ){
+		if( !$gp_filesystem || !$gp_filesystem->ConnectOrPrompt('Admin_Permalinks') ){
 			$this->ManualMethod();
 			return false;
 		}
@@ -362,7 +362,7 @@ class admin_permalinks{
 	RewriteRule index\.php(.*) $1 [R=302,L]
 
 	# Add gp_rewrite to root requests
-	RewriteRule ^$ /index.php?gp_rewrite [L]
+	RewriteRule ^$ "'.$home_root.'index.php?gp_rewrite" [qsa,L]
 
 	# Don\'t rewrite for static files
 	RewriteCond %{REQUEST_FILENAME} -f [OR]
@@ -372,7 +372,7 @@ class admin_permalinks{
 
 	# Send all other requests to index.php
 	# Append the gp_rewrite argument to tell gpEasy not to use index.php and to prevent multiple rewrites
-	RewriteRule /?(.*) "/index.php?gp_rewrite=$1" [qsa,L]
+	RewriteRule /?(.*) "'.$home_root.'index.php?gp_rewrite=$1" [qsa,L]
 
 </IfModule>
 # END gpEasy';

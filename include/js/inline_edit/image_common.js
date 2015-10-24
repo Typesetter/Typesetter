@@ -1,4 +1,5 @@
 
+
 	/**
 	 * Folder drop down
 	 *
@@ -61,7 +62,28 @@
 	 * Remove an image from the list of available images
 	 *
 	 */
-	gpresponse.img_deleted_id = function(){
-		$('#'+this.CONTENT).remove();
+	$gp.response.img_deleted_id = function(obj){
+		$('#'+obj.CONTENT).remove();
 	}
+
+
+
+	/**
+	 * Add folder to images
+	 *
+	 */
+	gpinputs.gp_gallery_folder_add = function(rel,evt){
+		evt.preventDefault();
+		var frm = this.form;
+		var dir = frm.dir.value;
+		var newdir = dir+'/'+frm.newdir.value
+		LoadImages(newdir,gp_editor);
+	}
+
+
+	/**
+	 * Adjust size/position with keyboard arrows
+	 *
+	 */
+	$('.ck_size_field').keyup
 

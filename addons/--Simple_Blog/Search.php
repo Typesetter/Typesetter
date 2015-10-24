@@ -5,16 +5,15 @@ gpPlugin::incl('SimpleBlogCommon.php','require_once');
 
 class BlogSearch extends SimpleBlogCommon{
 
-	function BlogSearch($args){
+	function __construct($args){
 		global $addonPathData;
 
 		$this->Init();
 
-		$search_obj = $args[0];
-		$label = common::GetLabelIndex('special_blog');
+		$search_obj		= $args[0];
+		$label			= common::GetLabelIndex('special_blog');
+		$full_path		= $addonPathData.'/index.php';				// config of installed addon to get to know how many post files are
 
-		// config of installed addon to get to know how many post files are
-		$full_path = $addonPathData.'/index.php';
 		if( !file_exists($full_path) ){
 			return;
 		}

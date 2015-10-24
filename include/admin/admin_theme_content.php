@@ -40,23 +40,24 @@ includeFile('admin/admin_addon_install.php');
 
 class admin_theme_content extends admin_addon_install{
 
-	var $layout_request = false;
-	var $curr_layout = false;
+	var $layout_request		= false;
+	var $curr_layout		= false;
 	var $LayoutArray;
-	var $scriptUrl = 'Admin_Theme_Content';
-	var $possible = array();
-	var $versions = array();
+	var $scriptUrl			= 'Admin_Theme_Content';
+	var $possible			= array();
+	var $versions			= array();
 
 
 	//remote install variables
-	var $config_index = 'themes';
-	var $code_folder_name = '_themes';
-	var $path_remote = 'Admin_Theme_Content/Remote';
-	var $can_install_links = false;
+	var $config_index		= 'themes';
+	var $code_folder_name	= '_themes';
+	var $path_remote		= 'Admin_Theme_Content/Remote';
+	var $can_install_links	= false;
 
 
-	function admin_theme_content(){
+	function __construct(){
 		global $page,$config,$gpLayouts, $langmessage;
+
 
 		$page->head_js[] = '/include/js/theme_content.js';
 		$page->head_js[] = '/include/js/dragdrop.js';
@@ -337,9 +338,10 @@ class admin_theme_content extends admin_addon_install{
 				$this->GalleryImages();
 			return;
 			case 'image_editor':
-				$this->ImageEditor();
+				includeFile('tool/editing.php');
+				gp_edit::ImageEditor($this->curr_layout);
 			return;
-			case 'save_image':
+			case 'save_inline':
 				$this->SaveHeaderImage();
 			return;
 
@@ -382,7 +384,7 @@ class admin_theme_content extends admin_addon_install{
 			case 'rm_area':
 			case 'drag_area':
 			case 'in_iframe':
-				$this->ShowInIframe();
+				$this->ShowInIframe($cmd);
 			return;
 		}
 
@@ -495,9 +497,14 @@ class admin_theme_content extends admin_addon_install{
 		global $page,$langmessage,$config;
 		$page->show_admin_content = false;
 
+		$page->head_js[] = '/include/thirdparty/codemirror/lib/codemirror.js';
+		$page->head_js[] = '/include/thirdparty/codemirror/mode/less/less.js';
+		$page->css_user[] = '/include/thirdparty/codemirror/lib/codemirror.css';
+
+
 
 		echo '<div id="theme_editor">';
-		echo '<form action="'.common::GetUrl('Admin_Theme_Content/'.$this->curr_layout).'" method="post" class="full_height" target="gp_layout_iframe">';
+		echo '<form action="'.common::GetUrl('Admin_Theme_Content/'.$this->curr_layout,'cmd=in_iframe').'" method="post" class="full_height" target="gp_layout_iframe">';
 		echo '<table border="0">';
 		echo '<tr><td>';
 
@@ -524,30 +531,26 @@ class admin_theme_content extends admin_addon_install{
 		//css textarea
 		echo '</div>';
 		echo '<div class="separator"></div>';
-		echo '<div>';
-
-
-		//get variables defined in the less files
-		/*
-		$variables = $this->LessVariables();
-		if( count($variables) ){
-			echo '<select style="width:205px">';
-			foreach($variables as $name => $value){
-				echo '<option>@'.htmlspecialchars($name).' => '.htmlspecialchars($value).'</option>';
-			}
-			echo '</select>';
-		}
-		*/
 
 
 		//style options
-		$this->StyleOptions($layout, $layout_info);
+		//echo '<div>';
+		//$this->StyleOptions($layout, $layout_info);
+		//echo '</div>';
 
-		echo '</div>';
 		echo '</td></tr><tr><td class="full_height"><div class="full_height">';
 
+
+		//custom css
 		$css = $this->layoutCSS($this->curr_layout);
-		echo '<textarea name="css" id="gp_layout_css" class="gptextarea" placeholder="Add your CSS here.">';
+		if( empty($css) ){
+			$var_file = $layout_info['dir'].'/'.$layout_info['theme_color'].'/variables.less';
+			if( file_exists($var_file) ){
+				$css = file_get_contents($var_file);
+			}
+		}
+
+		echo '<textarea name="css" id="gp_layout_css" class="gptextarea" placeholder="'.htmlspecialchars($langmessage['Add your LESS and CSS here']).'" wrap="off">';
 		echo htmlspecialchars($css);
 		echo '</textarea>';
 
@@ -557,7 +560,7 @@ class admin_theme_content extends admin_addon_install{
 
 		echo ' <button name="cmd" type="submit" value="preview_css" class="gpsubmit" data-cmd="preview_css" />'.$langmessage['preview'].'</button>';
 		echo ' <button name="cmd" type="submit" value="save_css" class="gpsubmit" data-cmd="reset_css" />'.$langmessage['save'].'</button>';
-		echo ' <input type="reset" class="gpsubmit" data-cmd="reset_css" />';
+		//echo ' <input type="reset" class="gpsubmit" data-cmd="reset_css" />';
 
 
 		echo '</div></td></tr>';
@@ -568,7 +571,9 @@ class admin_theme_content extends admin_addon_install{
 		//show site in iframe
 		echo '<div id="gp_iframe_wrap">';
 		$url = common::GetUrl('Admin_Theme_Content/'.rawurlencode($layout),'cmd=in_iframe');
-		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"><iframe>';
+		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';
+
+		echo '<div id="gp_loading_img"><img src="'.common::GetDir('/include/imgs/loader64.gif').'" /></div>';
 		echo '</div>';
 
 
@@ -716,7 +721,7 @@ class admin_theme_content extends admin_addon_install{
 
 			$display = '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span> &nbsp; '. $info['label'];
 			if( $config['gpLayout'] == $layout ){
-				$display .= ' &nbsp; ('.$langmessage['default'].')';
+				$display .= ' <span class="layout_default"> ('.$langmessage['default'].')</span>';
 			}
 			echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$display);
 			echo '</li>';
@@ -730,99 +735,18 @@ class admin_theme_content extends admin_addon_install{
 	 * Prepare the page for css editing
 	 *
 	 */
-	function ShowInIframe(){
+	function ShowInIframe($cmd){
 		global $page,$dirPrefix;
 
 		$page->show_admin_content = false;
 		admin_tools::$show_toolbar = false;
 
-
-		//less variables
-		$less_variables = ' @dirPrefix: "'.$dirPrefix.'"; ';
-		//<style type="text/css" rel="stylesheet/less">'.$less_variables.'</style>
-
 		// <head>
-		$css = $this->layoutCSS($this->curr_layout);
-		$page->head .= '<style id="gp_layout_style" type="text/css" rel="stylesheet/less">'.$css.'</style>';
-		$page->head .= '<script type="text/javascript">var gpLayouts=true;</script>';
+		$page->head .= '<script type="text/javascript">parent.$gp.iframeloaded();</script>';
+		if( $cmd != 'preview_css' ){
+			$page->head .= '<script type="text/javascript">var gpLayouts=true;</script>';
+		}
 	}
-
-
-	/**
-	 * Get a list of all the LESS variables for a layout
-	 *
-	 */
-	function LessVariables(){
-		global $dataDir, $page;
-		return array();
-
-		msg('need to update cache file');
-
-		$variables = array();
-		$less_files = array();
-
-		$less_file = $page->theme_dir . '/' . $page->theme_color .'/style.less';
-		if( !file_exists($less_file) ){
-			return;
-		}
-
-		$less_files[] = $less_file;
-
-		$less_file = $dataDir.'/data/_layouts/'.$page->gpLayout.'/custom.css';
-		if( file_exists($less_file) ){
-			$less_files[] = $less_file;
-		}
-
-
-		$object_file = $dataDir.'/data/_cache/less_'.common::ArrayHash($less_files).'.php';
-
-		//make sure the object file exists
-		if( !file_exists($object_file) ){
-			gpOutput::CacheLess($less_files);
-
-			if( !file_exists($object_file) ){
-				continue;
-			}
-		}
-
-
-		//get variables from each file
-		$less_cache = array();
-		include($object_file);
-		//foreach($less_cache['files'] as $file => $mtime){
-		//	$variables = array_merge($variables, $this->LessVariablesFile($file));
-		//}
-
-		return $variables;
-	}
-
-
-	/**
-	 * Extract the variables from a less file
-	 * Using a regular expression won't be 100% accurate
-	 *
-	 */
-	function LessVariablesFile($file){
-
-		if( !file_exists($file) ){
-			return array();
-		}
-
-		$contents = file_get_contents($file);
-
-		$reg = '#@([a-z0-9\-_]+)\s*:\s*(.*);#i';
-		$reg = '#@([a-z0-9\-_]+)\s*:\s*([\'"]?[^\'"\n\r\f]*?[\'"]?);#i';
-		$num = preg_match_all( $reg, $contents, $matches );
-		if( !$num ){
-			return array();
-		}
-
-		$variables = $matches[1];
-		$values = $matches[2];
-
-		return array_combine($variables, $values);
-	}
-
 
 
 	/**
@@ -853,16 +777,19 @@ class admin_theme_content extends admin_addon_install{
 		global $langmessage, $dataDir, $gpLayouts, $page;
 
 		$layout_info = common::LayoutInfo($this->curr_layout,false);
+		$color = $layout_info['theme_color'];
 		$theme_colors = $this->GetThemeColors($layout_info['dir']);
 		$path = $dataDir.'/data/_layouts/'.$this->curr_layout.'/custom.css';
 		$css =& $_POST['css'];
-		$color =& $_REQUEST['color'];
-
 
 		//check theme color
-		if( !isset($theme_colors[$color]) ){
-			message($langmessage['OOPS'].' (Invalid Color)');
-			return false;
+		if( array_key_exists('color',$_REQUEST) ){
+
+			if( !isset($theme_colors[$color]) ){
+				message($langmessage['OOPS'].' (Invalid Color)');
+				return false;
+			}
+			$color = $_REQUEST['color'];
 		}
 
 		$old_info = $new_info = $gpLayouts[$this->curr_layout];
@@ -881,6 +808,7 @@ class admin_theme_content extends admin_addon_install{
 			message($langmessage['OOPS'].' (CSS not saved)');
 			return false;
 		}
+
 
 		$gpLayouts[$this->curr_layout]['css'] = true;
 		if( !admin_tools::SavePagesPHP() ){
@@ -904,14 +832,22 @@ class admin_theme_content extends admin_addon_install{
 
 		$layout_info = common::LayoutInfo($this->curr_layout,false);
 		$theme_colors = $this->GetThemeColors($layout_info['dir']);
+		$color = $layout_info['theme_color'];
 
 		// which color option
-		$color =& $_REQUEST['color'];
-		if( isset($theme_colors[$color]) ){
-			$page->theme_color = $color;
-			$page->theme_rel = dirname($page->theme_rel).'/'.$color;
-			$page->theme_path = dirname($page->theme_path).'/'.$color;
+		if( array_key_exists('color',$_REQUEST) ){
+
+			if( !isset($theme_colors[$color]) ){
+				message($langmessage['OOPS'].' (Invalid Color)');
+				return false;
+			}
+			$color = $_REQUEST['color'];
 		}
+
+		$page->theme_color = $color;
+		$page->theme_rel = dirname($page->theme_rel).'/'.$color;
+		$page->theme_path = dirname($page->theme_path).'/'.$color;
+
 
 
 		// which css files
@@ -921,17 +857,31 @@ class admin_theme_content extends admin_addon_install{
 		}else{
 			$less[] = $page->theme_dir . '/' . $page->theme_color . '/style.less';
 		}
-		$less[] = $_REQUEST['css']. "\n"; //make sure gpOutput::ParseLess sees this as code and not a filename
 
-		$compiled = gpOutput::ParseLess( $less );
-		if( !$compiled ){
-			message($langmessage['OOPS'].' (Invalid LESS)');
-			return false;
+		// variables.less
+		$var_file = $page->theme_dir . '/' . $page->theme_color . '/variables.less';
+		if( file_exists($var_file) ){
+			$less[] = $var_file;
 		}
 
 
+		$temp = trim($_REQUEST['css']);
+		if( !empty($temp) ){
+			$less[] = $_REQUEST['css']. "\n"; //make sure this is seen as code and not a filename
+		}
+
+
+		if( count($less) ){
+			$compiled = gpOutput::ParseLess( $less );
+			if( !$compiled ){
+				message($langmessage['OOPS'].' (Invalid LESS)');
+				return false;
+			}
+
+			$page->head .= '<style>'.$compiled.'</style>';
+		}
+
 		$page->get_theme_css = false;
-		$page->head .= '<style>'.$compiled.'</style>';
 	}
 
 
@@ -1143,7 +1093,7 @@ class admin_theme_content extends admin_addon_install{
 		//show site in iframe
 		echo '<div id="gp_iframe_wrap">';
 		$url = common::GetUrl('Admin_Theme_Content','cmd=preview_iframe&theme='.rawurlencode($theme));
-		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"><iframe>';
+		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';
 		echo '</div>';
 
 		echo '</div>';
@@ -1471,7 +1421,7 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 		$len = strlen($label);
-		if( $len > 15 ){
+		if( $len > 25 ){
 			$label = substr($label,0,$len-2);
 		}
 		if( substr($label,$len-2,1) === '_' && is_numeric(substr($label,$len-1,1)) ){
@@ -1733,8 +1683,6 @@ class admin_theme_content extends admin_addon_install{
 			return;
 		}
 
-		message($langmessage['SAVED']);
-
 		//send new label
 		$layout_info = common::LayoutInfo($layout,false);
 		$replace = $this->GetLayoutLabel($layout, $layout_info);
@@ -1752,8 +1700,11 @@ class admin_theme_content extends admin_addon_install{
 
 		$this->ShowHeader();
 
+		$default_layout = $config['gpLayout'];
 
 		echo '<div id="adminlinks2">';
+
+		//all other layouts
 		foreach($gpLayouts as $layout => $info){
 			$this->LayoutDiv($layout,$info);
 		}
@@ -1792,7 +1743,7 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '<tr><td>';
 		echo ' <a class="layout_color_id" id="current_color"></a> ';
-		echo '<input type="text" name="layout_label" value="" maxlength="15"/>';
+		echo '<input type="text" name="layout_label" value="" maxlength="25"/>';
 		echo '</td></tr>';
 
 		echo '<tr><td>';
@@ -2133,11 +2084,11 @@ class admin_theme_content extends admin_addon_install{
 			$addon_key = $layout_info['addon_key'];
 			$addon_config = gpPlugin::GetAddonConfig($addon_key);
 			echo '<li>';
-			echo common::link('Admin_Addons','<span class="img_icon_plug"></span> '.$addon_config['name'],'cmd=show&addon='.$addon_key);
+			echo common::link('Admin_Addons/'.admin_tools::encode64($addon_key),'<span class="gpicon_plug"></span> '.$addon_config['name']);
 			echo '</li>';
 
 			//hooks
-			$this->AddonPanelGroup($addon_key, $addon_config, false );
+			$this->AddonPanelGroup($addon_key, false );
 		}
 
 
@@ -2217,12 +2168,13 @@ class admin_theme_content extends admin_addon_install{
 		echo '<a data-cmd="layout_id" title="'.$layout_info['color'].'" data-arg="'.$layout_info['color'].'">';
 		echo '<input type="hidden" name="layout" value="'.htmlspecialchars($layout).'"  /> ';
 		echo '<input type="hidden" name="layout_label" value="'.$layout_info['label'].'"  /> ';
-		echo '<span class="layout_color_id" style="background-color:'.$layout_info['color'].';"></span>';
-		echo '&nbsp;';
-		echo $layout_info['label'];
+		echo '<span class="layout_color_id" style="background-color:'.$layout_info['color'].';"></span> ';
 		if( $config['gpLayout'] == $layout ){
-			echo ' &nbsp; ('.$langmessage['default'].')';
+			echo ' <span class="layout_default"> ('.$langmessage['default'].')</span>';
+			echo '&nbsp;';
 		}
+		echo $layout_info['label'];
+
 		echo '</a>';
 		echo '</span>';
 		return ob_get_clean();
@@ -2998,7 +2950,10 @@ class admin_theme_content extends admin_addon_install{
 		return true;
 	}
 
-	//return the name of the cleansed extra area name, create file if it doesn't already exist
+	/**
+	 * Return the name of the cleansed extra area name, create file if it doesn't already exist
+	 *
+	 */
 	function NewExtraArea(){
 		global $langmessage, $dataDir;
 
@@ -3011,11 +2966,11 @@ class admin_theme_content extends admin_addon_install{
 		$data = gp_edit::DefaultContent($_POST['type']);
 		$file = $dataDir.'/data/_extra/'.$title.'.php';
 
-		if( file_exists($file) ){
+		if( gpFiles::Exists($file) ){
 			return $title;
 		}
 
-		if( !gpFiles::SaveArray($file,'extra_content',$data) ){
+		if( !gpFiles::SaveData($file,'extra_content',$data) ){
 			message($langmessage['OOPS']);
 			return false;
 		}
@@ -3306,8 +3261,10 @@ class admin_theme_content extends admin_addon_install{
 			return false;
 		}
 
+		$texts = array();
 		include($file);
-		if( !isset($texts) || !is_array($texts) || (count($texts) == 0 ) ){
+
+		if( !$texts ){
 			return false;
 		}
 
@@ -3845,6 +3802,7 @@ class admin_theme_content extends admin_addon_install{
 
 		//images in theme
 		includeFile('tool/Images.php');
+		$images = array();
 		self::GetAvailThemeImages( $current_dir, $current_url, $images );
 		ob_start();
 		foreach($images as $image ){
@@ -3881,59 +3839,17 @@ class admin_theme_content extends admin_addon_install{
 		die();
 	}
 
-	/**
-	 * Output content for use with the inline image editor
-	 *
-	 */
-	function ImageEditor(){
-		global $page, $langmessage;
-		$page->ajaxReplace = array();
-
-		//image options
-		ob_start();
-
-		echo '<div id="gp_current_image">';
-		echo '<input type="hidden" name="orig_height">';
-		echo '<input type="hidden" name="orig_width">';
-		echo '<span id="gp_image_wrap"><img/></span>';
-		echo '<table>';
-		echo '<tr><td>'.$langmessage['Width'].'</td><td><input type="text" name="width" class="ck_input"/></td>';
-		echo '<td>'.$langmessage['Height'].'</td><td><input type="text" name="height" class="ck_input"/></td>';
-		echo '<td><a data-cmd="deafult_sizes" class="ckeditor_control ck_reset_size" title="'.$langmessage['Theme_default_sizes'].'">&#10226;</a></td>';
-		echo '</tr>';
-		echo '<tr><td>'.$langmessage['Left'].'</td><td><input type="text" name="left" class="ck_input" value="0"/></td>';
-		echo '<td>'.$langmessage['Top'].'</td><td><input type="text" name="top" class="ck_input" value="0"/></td>';
-		echo '</tr>';
-		echo '</table>';
-		echo '</div>';
-
-		echo '<div id="gp_source_options">';
-		echo '<b>'.$langmessage['Select Image'].'</b>';
-		echo common::Link('Admin_Theme_Content/'.rawurlencode($this->curr_layout),$langmessage['Theme Images'],'cmd=theme_images',' data-cmd="gpajax" class="ckeditor_control half_width" ');
-		echo '<a class="ckeditor_control half_width" data-cmd="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
-		echo '</div>';
-
-		echo '<div id="gp_image_area"></div><div id="gp_upload_queue"></div>';
-
-		$content = ob_get_clean();
-
-		$page->ajaxReplace[] = array('inner','#ckeditor_top',$content);
-		$page->ajaxReplace[] = array('image_options_loaded','',''); //tell the script the images have been loaded
-	}
-
 
 	function GalleryImages(){
 		$_GET += array('dir'=>'/headers');
 		includeFile('admin/admin_uploaded.php');
-		admin_uploaded::InlineList($_GET['dir'],false);
+		admin_uploaded::InlineList($_GET['dir']);
 	}
 
 	function SaveHeaderImage(){
 		global $page, $dataDir, $dirPrefix, $langmessage;
 		includeFile('tool/Images.php');
-		includeFile('tool/editing.php');
 		$page->ajaxReplace = array();
-		//$dest_dir = $dataDir.'/data/_layouts/'.$this->curr_layout; //Not used anywhere.
 
 
 		//source file
@@ -4051,6 +3967,7 @@ class admin_theme_content extends admin_addon_install{
 	 *
 	 */
 	function GetAvailThemeImages( $dir, $url, &$images ){
+
 		$files = scandir($dir);
 		$files = array_diff($files,array('.','..'));
 		foreach($files as $file){

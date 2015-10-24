@@ -7,7 +7,7 @@ gpPlugin::incl('SimpleBlogCommon.php','require_once');
 
 class AdminSimpleBlog extends SimpleBlogCommon{
 
-	function AdminSimpleBlog(){
+	function __construct(){
 		global $langmessage;
 
 		$this->Init();

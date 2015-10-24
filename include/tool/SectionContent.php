@@ -4,9 +4,9 @@ defined('is_running') or die('Not an entry point...');
 
 class section_content{
 
-	static $title = '';
-	static $label = '';
-	static $meta = array();
+	static $title	= '';
+	static $label	= '';
+	static $meta	= array();
 
 
 	/**
@@ -20,16 +20,80 @@ class section_content{
 	static function Render($sections,$title,$meta = array()){
 		self::SetVars($title,$meta);
 
-		$content = '';
-		foreach($sections as $section_num => $section_data){
-			$section_data += array('attributes' => array() );
-			$content .= '<div'.self::SectionAttributes($section_data['attributes'],$section_data['type']).'>';
-			$content .= self::SectionToContent($section_data,$section_num);
-			$content .= '<div class="gpclear"></div>';
-			$content .= '</div>';
+
+		$content			= '';
+		$section_num		= 0;
+		$sections_count		= count($sections);
+		$sections			= array_values($sections);
+
+		while( $section_num < $sections_count ){
+			$content .= self::GetSection($sections, $section_num);
 		}
+
 		return $content;
 	}
+
+	private static function GetSection($sections, &$section_num ){
+
+		$content			= '';
+		$curr_section_num	= $section_num;
+		$section_data		= $sections[$curr_section_num];
+		$section_num++;
+
+
+		//make sure section_data is an array
+		$type				= gettype($section_data);
+		if( $type !== 'array' ){
+			trigger_error('$section_data is '.$type.'. Array expected');
+			return;
+		}
+		$section_data		+= array('attributes' => array() );
+
+
+		if( $section_data['type'] == 'wrapper_section' ){
+			if( isset($section_data['contains_sections']) ){
+				for( $cc=0; $cc < $section_data['contains_sections']; $cc++ ){
+					$content			.= self::GetSection($sections, $section_num);
+				}
+			}
+		}else{
+			$content				.= self::SectionToContent($section_data,$curr_section_num);
+		}
+
+
+		if( !isset($section_data['nodeName']) ){
+			$content 			= '<div'.self::SectionAttributes($section_data['attributes'],$section_data['type']).'>'
+								. $content
+								. '<div class="gpclear"></div></div>';
+		}else{
+
+			if( empty($content) ){
+				$content 			= '<'.$section_data['nodeName'].self::SectionAttributes($section_data['attributes'],$section_data['type']).' />';
+			}else{
+				$content 			= '<'.$section_data['nodeName'].self::SectionAttributes($section_data['attributes'],$section_data['type']).'>'
+									. $content
+									. section_content::EndTag($section_data['nodeName']);
+			}
+
+		}
+
+		return $content;
+	}
+
+
+	/**
+	 * Output an end tag if appropriate
+	 *
+	 */
+	static function EndTag($node_name){
+
+		$empty_nodes = array('link','track','param','area','command','col','base','meta','hr','source','img','keygen','br','wbr','input');
+		if( in_array($node_name,$empty_nodes) ){
+			return;
+		}
+		return '</'.$node_name.'>';
+	}
+
 
 	/**
 	 * Render the content of a single page section
@@ -55,9 +119,12 @@ class section_content{
 		static $types = false;
 
 		if( !$types ){
-			$types['text']['label']		= $langmessage['editable_text'];
-			$types['gallery']['label']	= $langmessage['Image Gallery'];
-			$types['include']['label']	= $langmessage['File Include'];
+			$types['text']['label']				= $langmessage['editable_text'];
+			$types['image']['label']			= $langmessage['Image'];
+			$types['gallery']['label']			= $langmessage['Image Gallery'];
+			$types['include']['label']			= $langmessage['File Include'];
+			$types['wrapper_section']['label']	= $langmessage['Section Wrapper'];
+
 			$types = gpPlugin::Filter('SectionTypes',array($types));
 		}
 
@@ -188,18 +255,15 @@ class section_content{
 		}
 
 
-		$file = gpFiles::PageFile($title);
-		if( !file_exists($file) ){
+		$file			= gpFiles::PageFile($title);
+		$file_sections	= gpFiles::Get($file,'file_sections');
+
+		if( !$file_sections ){
 			self::ReplaceContent($content,$pos2);
 			return;
 		}
 
 		$includes++;
-		$file_sections = array();
-		ob_start();
-		require($file);
-		ob_get_clean();
-
 		$replacement = '';
 		foreach($file_sections as $section_num => $section_data){
 			$replacement .= '<div class="gpinclude" title="'.$title.'" >'; //contentEditable="false"
@@ -316,23 +380,35 @@ class section_content{
 			return '{{'.htmlspecialchars($requested).'}}';
 		}
 
-		$file = gpFiles::PageFile($requested);
-		if( !file_exists($file) ){
+		$file			= gpFiles::PageFile($requested);
+		$file_sections	= gpFiles::Get($file,'file_sections');
+
+		if( !$file_sections ){
 			return '{{'.htmlspecialchars($requested).'}}';
 		}
 
-		$file_sections = array();
-		require($file);
 		return self::Render($file_sections,self::$title,self::$meta);
 	}
 
-	static function SectionAttributes($attributes,$type){
+	/**
+	 * Convert array of html attributes into a string for output
+	 *
+	 */
+	static function SectionAttributes($attrs,$type){
 
-		$attributes += array('class' => '' );
-		$attributes['class'] = trim('GPAREA filetype-'.$type.' '.$attributes['class']);
+		switch($type){
+			case 'image':
+				$attrs['src'] = common::GetDir($attrs['src']);
+			break;
+		}
+
+
+
+		$attrs				+= array('class' => '' );
+		$attrs['class']	= trim('GPAREA filetype-'.$type.' '.$attrs['class']);
 
 		$attr_string = '';
-		foreach($attributes as $attr => $value){
+		foreach($attrs as $attr => $value){
 			$attr_string .= ' '.htmlspecialchars($attr).'="'.htmlspecialchars($value).'"';
 		}
 		return $attr_string;

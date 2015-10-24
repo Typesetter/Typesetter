@@ -3,7 +3,8 @@ defined('is_running') or die('Not an entry point...');
 
 
 class special_map{
-	function special_map(){
+
+	function __construct(){
 		global $page,$langmessage,$config;
 
 
@@ -69,9 +70,7 @@ class special_map{
 				echo "\n";
 				echo '<url>';
 				echo '<loc>';
-				echo 'http://';
-				echo $_SERVER['SERVER_NAME'];
-				echo common::GetUrl(urlencode($title));
+				echo isset($info['url']) ? $info['url'] : 'http://' . $_SERVER['SERVER_NAME'] . common::GetUrl($title);
 				echo '</loc>';
 				echo '</url>';
 			}

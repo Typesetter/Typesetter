@@ -9,7 +9,7 @@ class admin_extra{
 	var $folder;
 	var $areas = array();
 
-	function admin_extra(){
+	function __construct(){
 		global $langmessage, $dataDir;
 
 		$this->folder = $dataDir.'/data/_extra';
@@ -57,6 +57,7 @@ class admin_extra{
 
 			/* inline editing */
 			case 'save':
+			case 'save_inline':
 			case 'inlineedit':
 			case 'include_dialog':
 			case 'preview':
@@ -157,6 +158,7 @@ class admin_extra{
 			$extraName = $file;
 			$data = gpOutput::ExtraContent($file);
 
+
 			if( $i%2 == 0 ){
 				echo '<tr class="even">';
 			}else{
@@ -223,7 +225,7 @@ class admin_extra{
 		echo '<h2>';
 		echo common::Link('Admin_Extra',$langmessage['theme_content']);
 		echo ' &#187; '.str_replace('_',' ',$title).'</h2>';
-		echo '<input type="hidden" name="cmd" value="save" />';
+		echo '<input type="hidden" name="cmd" value="save_inline" />';
 
 		gp_edit::UseCK( $data['content'] );
 
@@ -253,7 +255,7 @@ class admin_extra{
 		$data['created'] = time();
 		$data['created_by'] = $gpAdmin['username'];
 
-		if( !gpFiles::SaveArray($file,'extra_content',$data) ){
+		if( !gpFiles::SaveData($file,'extra_content',$data) ){
 			message($langmessage['OOPS']);
 			$this->EditExtra();
 			return false;
@@ -322,7 +324,7 @@ class admin_extra{
 
 		//save the new content
 		$file_full = $this->folder.'/'.$file.'.php';
-		if( !gpFiles::SaveArray( $file_full, 'extra_content', $data ) ){
+		if( !gpFiles::SaveData( $file_full, 'extra_content', $data ) ){
 			message($langmessage['OOPS']);
 			$this->EditExtra();
 			return false;

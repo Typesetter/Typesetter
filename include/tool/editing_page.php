@@ -7,12 +7,12 @@ includeFile('tool/SectionContent.php');
 class editing_page extends display{
 
 
-	function editing_page($title,$type){
-		parent::display($title,$type);
+	function __construct($title,$type){
+		parent::__construct($title,$type);
 	}
 
 	function RunScript(){
-		global $langmessage,$page;
+		global $langmessage, $page;
 		$cmd = common::GetCommand();
 
 		//prevent overwriting the content to maintain overlay editin links
@@ -86,34 +86,12 @@ class editing_page extends display{
 
 			switch($cmd){
 
-				//section editing
-				case 'move_up':
-					$this->MoveUp();
-				break;
-
-				case 'new_section':
-					$this->NewSectionPrompt();
-				return;
-
-				case 'section_options_save':
-				case 'section_options':
-					$this->SectionOptions($cmd);
-				return;
-
-				case 'add_section':
-					$this->AddNewSection();
-				break;
-
-				case 'rm_section':
-					$this->RmSection();
-				break;
-
 				case 'rawcontent':
 					$this->RawContent();
 				break;
 
 
-				/* gallery editing */
+				/* gallery/image editing */
 				case 'gallery_folder':
 				case 'gallery_images':
 					$this->GalleryImages();
@@ -125,10 +103,30 @@ class editing_page extends display{
 
 				/* inline editing */
 				case 'save':
+				case 'save_inline':
 				case 'preview':
 				case 'inlineedit':
 				case 'include_dialog':
 					$this->SectionEdit($cmd);
+				return;
+
+				case 'image_editor':
+					gp_edit::ImageEditor();
+				return;
+
+
+				/* Manage section */
+				case 'ManageSections':
+					$this->ManageSections();
+				//dies
+				case 'NewSectionContent':
+					$this->NewSectionContent();
+				return;
+				case 'NewNestedSection':
+					$this->NewNestedSection();
+				return;
+				case 'SaveSections':
+					$this->SaveSections();
 				return;
 
 
@@ -151,6 +149,252 @@ class editing_page extends display{
 
 
 	/**
+	 * Send js to client for managing content sections
+	 *
+	 */
+	function ManageSections(){
+		global $langmessage, $page;
+
+		includeFile('tool/ajax.php');
+
+
+		//output links
+		ob_start();
+		echo '<div id="new_section_links" style="display:none" class="inline_edit_area" title="Add">';
+		self::NewSections();
+		echo '</div>';
+		echo 'var section_types = '.json_encode(ob_get_clean()).';';
+
+
+
+		$scripts	= array();
+		$scripts[]	= '/include/thirdparty/js/nestedSortable.js';
+		$scripts[]	= '/include/js/inline_edit/inline_editing.js';
+		$scripts[]	= '/include/js/inline_edit/manage_sections.js';
+
+		gpAjax::SendScripts($scripts);
+		die();
+	}
+
+
+	/**
+	 * Send new section content to the client
+	 *
+	 */
+	function NewSectionContent(){
+		global $page;
+
+		$page->ajaxReplace		= array();
+		$content				= $this->GetNewSection($_REQUEST['type']);
+		$page->ajaxReplace[] 	= array('AddSection','',$content);
+	}
+
+
+	/**
+	 * Send multiple sections to the client
+	 *
+	 */
+	function NewNestedSection(){
+		global $page, $langmessage;
+		$page->ajaxReplace				= array();
+
+		if( empty($_REQUEST['types']) || !is_array($_REQUEST['types']) ){
+			message($langmessage['OOPS'].' (Invalid Types)');
+			return;
+		}
+
+		$_REQUEST			+= array('wrapper_class'=>'gpRow');
+
+		$wrapper_class		= $_REQUEST['wrapper_class'];
+		$num				= time().rand(0,10000);
+		$new_section		= gp_edit::DefaultContent('wrapper_section');
+		$content			= section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);
+
+
+		$new_section['attributes']['class']		.= ' '.$wrapper_class;
+		$orig_attrs								= json_encode($new_section['attributes']);
+
+		$new_section['attributes']['id']		= 'rand-'.time().rand(0,10000);
+		$new_section['attributes']['class']		.= ' editable_area new_section';
+
+
+
+		ob_start();
+		echo $this->SectionNode($new_section, $orig_attrs);
+		foreach($_REQUEST['types'] as $type){
+
+			if( strpos($type,'.') ){
+				list($type,$class) = explode('.',$type,2);
+			}else{
+				$class = '';
+			}
+
+			echo $this->GetNewSection($type, $class);
+		}
+		echo '</div>';
+
+		$page->ajaxReplace[] = array('AddSection','',ob_get_clean());
+	}
+
+	function GetNewSection($type, $class = ''){
+		static $num 	= null;
+
+		if( !$num ){
+			$num		= time().rand(0,10000);
+		}
+
+		$num++;
+		$new_section	= gp_edit::DefaultContent($type);
+		$content		= section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);
+
+		$new_section['attributes']['class']		.= ' '.$class;
+		$orig_attrs								= json_encode($new_section['attributes']);
+
+		$new_section['attributes']['id']		= 'rand-'.time().rand(0,10000);
+		$new_section['attributes']['class']		.= ' editable_area new_section';
+
+		if( !isset($new_section['nodeName']) ){
+			return $this->SectionNode($new_section, $orig_attrs).$content.'</div>';
+		}
+
+		return $this->SectionNode($new_section, $orig_attrs).$content.section_content::EndTag($new_section['nodeName']);
+	}
+
+	function SectionNode($section,$orig_attrs){
+
+		$attributes			= section_content::SectionAttributes($section['attributes'],$section['type']);
+		$attributes			.= ' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'';
+
+		$section_attrs		= array('gp_label','gp_color','gp_collapse');
+		foreach($section_attrs as $attr){
+			if( !empty($section[$attr]) ){
+				$attributes		.= ' data-'.$attr.'="'.htmlspecialchars($section[$attr]).'" ';
+			}
+		}
+
+		if( !isset($section['nodeName']) ){
+			return '<div'.$attributes.'>';
+		}
+
+		return '<'.$section['nodeName'].$attributes.'>';
+	}
+
+
+	/**
+	 * Save new/rearranged sections
+	 *
+	 */
+	function SaveSections(){
+		global $page, $langmessage;
+
+		$page->ajaxReplace		= array();
+		$original_sections		= $this->file_sections;
+		$unused_sections		= $this->file_sections;				//keep track of sections that aren't used
+		$new_sections			= array();
+		$section_types			= section_content::GetTypes();
+
+		$section_attrs			= array('gp_label','gp_color','gp_collapse');
+
+
+		foreach($_POST['section_order'] as $i => $arg ){
+
+
+			// moved / copied sections
+			if( ctype_digit($arg) ){
+				$arg = (int)$arg;
+
+				if( !isset($this->file_sections[$arg]) ){
+					message($langmessage['OOPS'].' (Invalid Section Number)');
+					return false;
+				}
+
+				unset($unused_sections[$arg]);
+				$new_section				= $this->file_sections[$arg];
+				$new_section['attributes']	= array();
+
+			// otherwise, new sections
+			}else{
+
+				if( !isset($section_types[$arg]) ){
+					message($langmessage['OOPS'].' (Unknown Type: '.$arg.')');
+					return false;
+				}
+				$new_section	= gp_edit::DefaultContent($arg);
+			}
+
+			// attributes
+			if( isset($_POST['attributes'][$i]) && is_array($_POST['attributes'][$i]) ){
+				foreach($_POST['attributes'][$i] as $attr_name => $attr_value){
+
+					$attr_name		= strtolower($attr_name);
+					$attr_name		= trim($attr_name);
+					$attr_value		= trim($attr_value);
+
+					if( empty($attr_name) || empty($attr_value) || $attr_name == 'id' || substr($attr_name,0,7) == 'data-gp' ){
+						continue;
+					}
+
+					$new_section['attributes'][$attr_name] = $attr_value;
+				}
+			}
+
+
+			// wrapper section 'contains_sections'
+			if( $new_section['type'] == 'wrapper_section' ){
+				$new_section['contains_sections'] = isset($_POST['contains_sections']) ? $_POST['contains_sections'][$i] : '0';
+			}
+
+			// section attributes
+			foreach($section_attrs as $attr){
+				unset($new_section[$attr]);
+				if( !empty($_POST[$attr][$i]) ){
+					$new_section[$attr]		= $_POST[$attr][$i];
+				}
+			}
+
+			$new_sections[$i] = $new_section;
+		}
+
+
+		//make sure there's at least one section
+		if( !$new_sections ){
+			message($langmessage['OOPS'].' (1 Section Minimum)');
+			return false;
+		}
+
+
+		$this->file_sections = array_values($new_sections);
+		$this->ResetFileTypes(false);
+
+
+		// save a send message to user
+		if( !$this->SaveThis() ){
+			$this->file_sections = $original_sections;
+			message($langmessage['OOPS'].'(4)');
+			return;
+		}
+
+		$page->ajaxReplace[] = array('ck_saved','','');
+		message($langmessage['SAVED']);
+
+
+		//update gallery info
+		$this->GalleryEdited();
+
+
+		//update usage of resized images
+		foreach($unused_sections as $section_data){
+			if( isset($section_data['resized_imgs']) ){
+				includeFile('image.php');
+				gp_resized::SetIndex();
+				gp_edit::ResizedImageUse($section_data['resized_imgs'],array());
+			}
+		}
+
+	}
+
+
+	/**
 	 * Perform various section editing commands
 	 *
 	 */
@@ -159,7 +403,7 @@ class editing_page extends display{
 
 		$section_num = $_REQUEST['section'];
 		if( !is_numeric($section_num) || !isset($this->file_sections[$section_num])){
-			echo 'false';
+			echo 'false;';
 			return false;
 		}
 
@@ -221,7 +465,6 @@ class editing_page extends display{
 
 	/**
 	 * Recalculate the file_type string for this file
-	 * Used by AddNewSection(), RmSection()
 	 * Updates $this->meta_data and $gp_titles
 	 *
 	 */
@@ -278,378 +521,108 @@ class editing_page extends display{
 	}
 
 
-	function MoveUp(){
-		global $langmessage;
-
-
-		$move_key =& $_REQUEST['section'];
-		if( !isset($this->file_sections[$move_key]) ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-		if( !common::verify_nonce('move_up'.$move_key) ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-
-		$move_content = $this->file_sections[$move_key];
-
-		$file_keys = array_keys($this->file_sections);
-		$file_values = array_values($this->file_sections);
-		$insert_key = array_search($move_key,$file_keys);
-		if( ($insert_key === null) || ($insert_key === false) || ($insert_key === 0) ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-		$prev_key = $insert_key-1;
-
-		if( !isset($file_keys[$prev_key]) ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-		$old_sections = $this->file_sections;
-
-		//rebuild
-		$new_sections = array();
-		foreach($file_values as $temp_key => $file_value){
-
-			if( $temp_key === $prev_key ){
-				$new_sections[] = $move_content;
-			}elseif( $temp_key === $insert_key ){
-				//moved section
-				continue;
-			}
-			$new_sections[] = $file_value;
-		}
-
-		$this->file_sections = $new_sections;
-
-		if( !$this->SaveThis() ){
-			$this->file_sections = $old_sections;
-			message($langmessage['OOPS'].'(4)');
-			return;
-		}
-	}
-
-	/**
-	 * Remove a content area from a page
-	 *
-	 */
-	function RmSection(){
-		global $langmessage,$page;
-
-		if( !isset($_POST['total']) || $_POST['total'] != count($this->file_sections) ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-		if( !isset($_POST['section']) ){
-			message($langmessage['OOPS'].'(1)');
-			return;
-		}
-
-		$section = $_POST['section'];
-
-		if( !isset($this->file_sections[$section]) ){
-			message($langmessage['OOPS'].'(2)');
-			return;
-		}
-
-		$section_data = $this->file_sections[$section];
-
-		array_splice( $this->file_sections , $section , 1 );
-
-		$this->ResetFileTypes(false);
-
-		if( !$this->SaveThis() ){
-			message($langmessage['OOPS'].'(4)');
-			return;
-		}
-
-		if( $section_data['type'] == 'gallery' ){
-			$this->GalleryEdited();
-		}
-
-		//update usage of resized images
-		if( isset($section_data['resized_imgs']) ){
-			includeFile('image.php');
-			gp_resized::SetIndex();
-			gp_edit::ResizedImageUse($section_data['resized_imgs'],array());
-		}
-
-		message($langmessage['SAVED']);
-	}
-
-
-	/**
-	 * Add a new section to the page
-	 *
-	 */
-	function AddNewSection(){
-		global $langmessage, $gpAdmin;
-
-		if( $_POST['last_mod'] != $this->fileModTime ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-		if( !isset($_POST['section']) ){
-			message($langmessage['OOPS'].'(1)');
-			return;
-		}
-
-		$section = $_POST['section'];
-
-		if( !isset($this->file_sections[$section]) ){
-			message($langmessage['OOPS'].'(2)');
-			return;
-		}
-
-		if( isset($_POST['copy']) ){
-			$start_content = $this->file_sections[$section];
-			unset($start_content['modified']);
-			unset($start_content['modified_by']);
-		}else{
-			$start_content = gp_edit::DefaultContent($_POST['content_type']);
-			if( is_array($start_content) && $start_content['content'] === false ){
-				message($langmessage['OOPS'].'(3)');
-				return;
-			}
-		}
-
-		$start_content['created'] = time();
-		$start_content['created_by'] = $gpAdmin['username'];
-
-
-		if( isset($_POST['insert']) && $_POST['insert'] == 'before' ){
-			array_splice( $this->file_sections , $section , 0, 'temporary' );
-			$new_section = $section;
-		}else{
-			array_splice( $this->file_sections , $section+1 , 0, 'temporary' );
-			$new_section = $section+1;
-		}
-
-		if( $this->file_sections[$new_section] != 'temporary' ){
-			message($langmessage['OOPS'].'(4)');
-			return;
-		}
-
-
-		$this->file_sections[$new_section] = $start_content;
-
-		$this->ResetFileTypes(false);
-
-		if( !$this->SaveThis() ){
-			message($langmessage['OOPS'].'(4)');
-			return;
-		}
-
-
-		message($langmessage['SAVED']);
-	}
-
-
-	/**
-	 * Display section options
-	 * 	- attributes (style, data-*)
-	 *
-	 */
-	function SectionOptions($cmd){
-		global $langmessage;
-
-		$section_num = $_REQUEST['section'];
-		if( !array_key_exists($section_num,$this->file_sections) ){
-			msg($langmessage['OOPS'].' (Invalid Section)');
-			return false;
-		}
-
-		$section =& $this->file_sections[$section_num];
-		$section += array('attributes' => array() );
-		$section['attributes'] += array('class' => '' );
-
-
-		if( $cmd == 'section_options_save' && $this->SectionOptionsSave($section_num) ){
-			return true;
-		}
-
-		ob_start();
-
-		echo '<div class="inline_box">';
-
-		echo '<h2>'.$langmessage['options'].'</h2>';
-		echo '<form method="post" action="'.common::GetUrl($this->title).'">';
-		echo '<table class="bordered full_width">';
-
-		//attributes
-		echo '<thead><tr><th>Attributes</th><th>'.$langmessage['Value'].'</th></tr></thead>';
-		echo '<tbody>';
-		$invalid = self::InvalidAttributes($section['attributes']);
-		foreach($section['attributes'] as $attr => $value){
-			echo '<tr><td>';
-			$class = 'gpinput';
-			if( in_array($attr,$invalid) ){
-				$class .= ' gpinput_warning';
-			}
-			echo '<input class="'.$class.'" type="text" name="attr_name[]" value="'.htmlspecialchars($attr).'" size="8" pattern="^([^\s]|i[^d\s]|[^i\s]d|[^i\s][^d\s]|[^\s]{3,})$" />';
-			echo '</td><td style="white-space:nowrap">';
-			echo '<input class="gpinput" type="text" name="attr_value[]" value="'.htmlspecialchars($value).'" size="40" />';
-			if( $attr == 'class' ){
-				echo '<div class="class_only admin_note">'.$langmessage['default'].': GPAREA filetype-'.$section['type'].'</div>';
-			}
-			echo '</td></tr>';
-		}
-
-		echo '<tr><td colspan="3">';
-		echo '<a name="add_table_row">Add Attribute</a>';
-		echo '</td></tr>';
-		echo '</tbody>';
-		echo '</table>';
-
-		echo '<p>';
-		echo '<input type="hidden" name="last_mod" value="'.$this->fileModTime.'" />';
-		echo '<input type="hidden" name="section" value="'.htmlspecialchars($_REQUEST['section']).'" />';
-		echo '<input type="hidden" name="cmd" value="section_options_save" />';
-		echo '<input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit" data-cmd="gpabox" />';
-		echo ' <input type="button" name="" value="'.$langmessage['cancel'].'" class="gpcancel" data-cmd="admin_box_close" />';
-		echo '</p>';
-
-
-
-		echo '</form>';
-		echo '</div>';
-		$this->contentBuffer = ob_get_clean();
-		return false;
-	}
-
-	/**
-	 * Save Section Options
-	 * 	- attributes (style, data-*)
-	 *
-	 */
-	function SectionOptionsSave($section_num){
-		global $langmessage;
-
-		if( !is_array($_POST['attr_name']) || count($_POST['attr_name']) != count($_POST['attr_value']) ){
-			msg($langmessage['OOPS'].' (Invalid Request)');
-			return false;
-		}
-
-
-		//build attribute array
-		$_POST['attr_name'] = array_map('trim',$_POST['attr_name']);
-		$attributes = array('class'=>'');
-		foreach($_POST['attr_name'] as $i => $attr_name){
-			if( empty($attr_name) ){
-				continue;
-			}
-			$attributes[$attr_name] = $_POST['attr_value'][$i];
-		}
-		$this->file_sections[$section_num]['attributes'] = $attributes;
-
-
-		//check for valid attributes
-		$invalid = self::InvalidAttributes($attributes);
-		if( count($invalid) ){
-			msg($langmessage['OOPS'].' (Invalid Attributes)');
-			return false;
-		}
-
-		//save
-		if( !$this->SaveThis(false) ){
-			msg($langmessage['OOPS'].' (Not Saved)');
-			return false;
-		}
-
-		msg($langmessage['SAVED'].' '.$langmessage['REFRESH']);
-		return true;
-	}
-
-	static function InvalidAttributes($attributes){
-		$invalid = array();
-		foreach($attributes as $attr_name => $attr_value){
-			if( strtolower($attr_name) == 'id' ){
-				$invalid[] = 'id';
-				continue;
-			}
-			if( preg_match('#\s#',$attr_name) ){
-				$invalid[] = $attr_name;
-			}
-		}
-		return $invalid;
-	}
-
-
-	/**
-	 * Display a form for adding a new section to the page
-	 *
-	 */
-	function NewSectionPrompt(){
-		global $langmessage;
-
-		ob_start();
-		echo '<div class="inline_box">';
-		echo '<form method="post" action="'.common::GetUrl($this->title).'">';
-		echo '<h2>'.$langmessage['new_section_about'].'</h2>';
-
-		echo '<table class="bordered full_width">';
-		echo '<tr><th colspan="2">'.$langmessage['New Section'].'</th></tr>';
-
-		echo '<tr><td>';
-		echo $langmessage['Content Type'];
-		echo '</td><td>';
-		editing_page::SectionTypes();
-		echo '</td></tr>';
-
-		echo '<tr><td>';
-		echo $langmessage['Insert Location'];
-		echo '</td><td>';
-		echo '<label><input type="radio" name="insert" value="before" /> ';
-		echo $langmessage['insert_before'];
-		echo '</label>';
-		echo '<label><input type="radio" name="insert" value="after" checked="checked" /> ';
-		echo $langmessage['insert_after'];
-		echo '</label>';
-		echo '</td></tr>';
-
-		echo '</table>';
-
-		echo '<p>';
-		echo '<input type="hidden" name="last_mod" value="'.$this->fileModTime.'" />';
-		echo '<input type="hidden" name="section" value="'.htmlspecialchars($_GET['section']).'" />';
-		echo '<input type="hidden" name="cmd" value="add_section" />';
-		echo '<input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit" data-cmd="cnreq" />';
-		echo ' <input type="button" name="" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
-		echo '</p>';
-
-
-		echo '</form>';
-		echo '</div>';
-		$this->contentBuffer = ob_get_clean();
-
-	}
-
 	/**
 	 * Return a list of section types
 	 * @static
 	 */
-	static function SectionTypes(){
-		global $langmessage;
+	static function NewSections($checkboxes = false){
 
-		$section_types = section_content::GetTypes();
+		$types_with_imgs	= array('text','image','gallery');
 
-		$checked = 'checked="checked"';
+		$section_types		= section_content::GetTypes();
+		$links				= array();
 		foreach($section_types as $type => $type_info){
-			echo '<label>';
-			echo '<input type="radio" name="content_type" value="'.htmlspecialchars($type).'" '.$checked.'/> ';
-			echo htmlspecialchars($type_info['label']);
-			echo '</label>';
-			$checked = '';
+			$img			= '';
+			if( in_array($type,$types_with_imgs) ){
+				$img		= common::GetDir('/include/imgs/section-'.$type.'.png');
+			}
+			$links[]		= array( $type, $img );
+		}
+
+		$links[]			= array( array('text.gpCol-6','image.gpCol-6'),common::GetDir('/include/imgs/section-combo-text-image.png') );
+		$links[]			= array( array('text.gpCol-6','gallery.gpCol-6'),common::GetDir('/include/imgs/section-combo-text-gallery.png') );	//section combo: text & gallery
+
+		$links				= gpPlugin::Filter('NewSections',array($links));
+
+		foreach($links as $link){
+			$link += array('','','gpRow');
+			echo self::NewSectionLink( $link[0], $link[1], $link[2], $checkboxes );
 		}
 	}
+
+
+	/**
+	 * Add link to manage section admin for nested section type
+	 *
+	 */
+	static function NewSectionLink($types, $img, $wrapper_class = 'gpRow', $checkbox = false ){
+		global $dataDir, $page;
+		static $fi = 0;
+
+		$types			= (array)$types;
+		$section_types	= section_content::GetTypes();
+		$text_label		= array();
+
+		foreach($types as $type){
+
+			if( strpos($type,'.') ){
+				list($type,$class) = explode('.',$type,2);
+			}else{
+				$class = '';
+			}
+
+			if( isset($section_types[$type]) ){
+				$text_label[] = $section_types[$type]['label'];
+			}else{
+				$text_label[] = $type;
+			}
+		}
+
+		$label			= '';
+		if( !empty($img) ){
+			$label		= '<img src="'.$img.'"/>';
+		}
+		$label			.= '<span>'.implode(' &amp; ',$text_label).'</span>';
+
+		//checkbox used for new pages
+		if( $checkbox ){
+
+			if( count($types) > 1 ){
+				$q		= array('types' => $types,'wrapper_class'=>$wrapper_class);
+				$q		= json_encode($q);
+			}else{
+				$q		= $type;
+			}
+
+			//checked
+			$checked = '';
+			if( isset($_REQUEST['content_type']) && $_REQUEST['content_type'] == $id ){
+				$checked = ' checked';
+			}elseif( empty($_REQUEST['content_type']) && $fi === 0 ){
+				$checked = ' checked';
+				$fi++;
+			}
+
+			$id		= 'checkbox_'.md5($q);
+			echo '<div>';
+			echo '<input name="content_type" type="radio" value="'.htmlspecialchars($q).'" id="'.$id.'" required '.$checked.' />';
+			echo '<label for="'.$id.'">';
+			echo $label;
+			echo '</label></div>';
+			return;
+		}
+
+
+		//links used for new sections
+		if( count($types) > 1 ){
+			$q = array('cmd'=> 'NewNestedSection','types' => $types,'wrapper_class'=>$wrapper_class);
+		}else{
+			$q = array('cmd'=> 'NewSectionContent','type' => $type );
+		}
+
+		return '<div>'.common::Link($page->title,$label,http_build_query($q,'','&amp;'),array('data-cmd'=>'AddSection')).'</div>';
+	}
+
 
 
 	function SaveThis( $backup = true ){
@@ -666,7 +639,8 @@ class editing_page extends display{
 			$this->SaveBackup(); //make a backup of the page file
 		}
 
-		return gpFiles::SaveArray($this->file,'meta_data',$this->meta_data,'file_sections',$this->file_sections);
+
+		return gpFiles::SaveData($this->file,'file_sections',$this->file_sections,$this->meta_data);
 	}
 
 	/**
@@ -684,7 +658,7 @@ class editing_page extends display{
 			$time = $_REQUEST['revision'];
 		}
 
-		$contents = file_get_contents( $this->file );
+		$contents = gpFiles::GetRaw($this->file);
 
 		//backup file name
 		$len = strlen($contents);
@@ -800,25 +774,33 @@ class editing_page extends display{
 
 		//if it's a compressed file, we need an uncompressed version
 		if( strpos($full_path,'.gze') !== false ){
-			$dir = common::DirName($full_path);
+
 			ob_start();
 			readgzfile($full_path);
-			$contents = ob_get_clean();
-			$full_path = tempnam($dir,'backup');
+			$contents	= ob_get_clean();
+
+			$dir		= common::DirName($full_path);
+			$full_path	= tempnam($dir,'backup');
+
 			gpFiles::Save( $full_path, $contents );
-			include($full_path);
+
+			$file_sections	= gpFiles::Get($full_path,'file_sections');
+
 			unlink($full_path);
+
 		}else{
-			include($full_path);
+			$file_sections	= gpFiles::Get($full_path,'file_sections');
 		}
 
-		$this->contentBuffer = section_content::Render($file_sections,$this->title,$file_stats);
+
+		$this->contentBuffer = section_content::Render($file_sections,$this->title,gpFiles::$last_stats);
 
 
-		$date = common::date($langmessage['strftime_datetime'],$time);
-		$message = sprintf($langmessage['viewing_revision'],$date);
-		$message .= ' <br/> '.common::Link($this->title,$langmessage['Restore this revision'],'cmd=use_revision&time='.$time,array('data-cmd'=>'cnreq'));
-		$message .= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+		$date		= common::date($langmessage['strftime_datetime'],$time);
+		$message	= sprintf($langmessage['viewing_revision'],$date);
+		$message	.= ' <br/> '.common::Link($this->title,$langmessage['Restore this revision'],'cmd=use_revision&time='.$time,array('data-cmd'=>'cnreq'));
+		$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+
 		message( $message );
 	}
 
@@ -902,94 +884,108 @@ class editing_page extends display{
 	}
 
 	function GenerateContent_Admin(){
-		global $langmessage,$GP_NESTED_EDIT;
 
 		//add to all pages in case a user adds a gallery
 		gpPlugin::Action('GenerateContent_Admin');
 		common::ShowingGallery();
 
-		$content = '';
-		$section_num = 0;
-		foreach($this->file_sections as $section_key => $section_data){
-			$content .= "\n";
-
-			$section_data += array('attributes' => array(),'type'=>'text' );
-			$section_data['attributes'] += array('class' => '' );
-
-			$type = $section_data['type'];
+		$content				= '';
+		$sections_count			= count($this->file_sections);
+		$this->file_sections	= array_values($this->file_sections);
+		$section_num			= 0;
 
 
-			if( gpOutput::ShowEditLink() && admin_tools::CanEdit($this->gp_index) ){
-
-				$link_name = 'inline_edit_generic';
-				$link_rel = $type.'_inline_edit';
-
-
-				$title_attr = sprintf($langmessage['Section %s'],$section_key+1);
-				$link = gpOutput::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$section_key.'&amp;revision='.$this->fileModTime,array('title'=>$title_attr,'data-cmd'=>$link_name,'data-arg'=>$link_rel));
-
-				//section control links
-				ob_start();
-				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
-				echo $link;
-
-				if( $section_num > 0 ){
-					echo common::Link($this->title,$langmessage['move_up'],'cmd=move_up&section='.$section_key,array('data-cmd'=>'creq'),'move_up'.$section_key);
-				}
-
-				echo common::Link($this->title,$langmessage['options'].'...','cmd=section_options&section='.$section_key,array('data-cmd'=>'gpabox'));
-
-				echo common::Link($this->title,$langmessage['New Section'].'...','cmd=new_section&section='.$section_key,array('data-cmd'=>'gpabox'));
-
-				$q = 'cmd=add_section&copy=copy&section='.$section_key.'&last_mod='.rawurlencode($this->fileModTime);
-				echo common::Link($this->title,$langmessage['Copy'],$q,array('data-cmd'=>'creq'));
-
-
-				//remove section link
-				if( count($this->file_sections) > 1 ){
-					$title_attr = $langmessage['rm_section_confirm'];
-					if( $type != 'include' ){
-						$title_attr .= "\n\n".$langmessage['rm_section_confirm_deleting'];
-					}
-
-					echo common::Link($this->title,$langmessage['Remove Section'].'...','cmd=rm_section&section='.$section_key.'&total='.count($this->file_sections), array('title'=>$title_attr,'data-cmd'=>'creq','class'=>'gpconfirm'));
-				}
-				echo '</span>';
-				gpOutput::$editlinks .= ob_get_clean();
-
-				$section_data['attributes']['id'] = 'ExtraEditArea'.$edit_index;
-				$section_data['attributes']['class'] .= ' editable_area'; // class="edit_area" added by javascript
-			}
-
-			$content .= '<div'.section_content::SectionAttributes($section_data['attributes'],$type).'>';
-
-			$GP_NESTED_EDIT = true;
-			$content .= section_content::RenderSection($section_data,$section_num,$this->title,$this->file_stats);
-			$GP_NESTED_EDIT = false;
-
-			$content .= '<div class="gpclear"></div>';
-			$content .= '</div>';
-			$section_num++;
+		while( $section_num < $sections_count ){
+			$content .= $this->GetSection( $section_num );
 		}
+
 		return $content;
 	}
 
+	function GetSection(&$section_num){
+		global $langmessage, $GP_NESTED_EDIT;
 
-	/*
-	 * sends image information to gallery editor
-	 *
-	 *
-	 * gallery editor uses this html to create the new gallery html
-		<li>
-			<a href="'.$imgPath.'" data-cmd="gallery" data-arg="gallery_gallery" title="'.htmlspecialchars($caption).'">
-			<img src="'.$thumbPath.'" height="100" width="100" alt=""/>
-			</a>
-			<div class="caption">
-			$caption
-			</div>
-		</li>
-	 *
-	 */
+
+		if( !isset($this->file_sections[$section_num]) ){
+			trigger_error('invalid section number');
+			return;
+		}
+
+		$curr_section_num								= $section_num;
+		$section_num++;
+
+
+		$content										= '';
+		$section_data									= $this->file_sections[$curr_section_num];
+
+		//make sure section_data is an array
+		$type											= gettype($section_data);
+		if( $type !== 'array' ){
+			trigger_error('$section_data is '.$type.'. Array expected');
+			return;
+		}
+
+
+		$section_data									+= array('attributes' => array(),'type'=>'text' );
+		$section_data['attributes']						+= array('class' => '' );
+		$orig_attrs										= json_encode($section_data['attributes']);
+		$section_data['attributes']['data-gp-section']	= $curr_section_num;
+		$section_types									= section_content::GetTypes();
+
+
+		if( gpOutput::ShowEditLink() && admin_tools::CanEdit($this->gp_index) ){
+
+
+			if( isset($section_types[$section_data['type']]) ){
+				$title_attr		= $section_types[$section_data['type']]['label'];
+			}else{
+				$title_attr		= sprintf($langmessage['Section %s'],$curr_section_num+1);
+			}
+
+			$attrs			= array('title'=>$title_attr,'data-cmd'=>'inline_edit_generic','data-arg'=>$section_data['type'].'_inline_edit');
+			$link			= gpOutput::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$curr_section_num.'&amp;revision='.$this->fileModTime,$attrs);
+
+
+			//section control links
+			if( $section_data['type'] != 'wrapper_section' ){
+				ob_start();
+				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
+				echo $link;
+				echo common::Link($this->title,$langmessage['Manage Sections'].'...','cmd=ManageSections',array('class'=>'manage_sections','data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+				echo '</span>';
+				gpOutput::$editlinks .= ob_get_clean();
+			}
+
+			$section_data['attributes']['id']				= 'ExtraEditArea'.$edit_index;
+			$section_data['attributes']['class']			.= ' editable_area'; // class="edit_area" added by javascript
+			//$section_data['attributes']['data-gp-editarea']	= $edit_index;
+		}
+
+
+		$content			.= $this->SectionNode($section_data, $orig_attrs);
+
+		if( $section_data['type'] == 'wrapper_section' ){
+
+			for( $cc=0; $cc < $section_data['contains_sections']; $cc++ ){
+				$content		.= $this->GetSection($section_num);
+			}
+
+		}else{
+			$GP_NESTED_EDIT		= true;
+			$content			.= section_content::RenderSection($section_data,$curr_section_num,$this->title,$this->file_stats);
+			$GP_NESTED_EDIT		= false;
+		}
+
+		if( !isset($section_data['nodeName']) ){
+			$content			.= '<div class="gpclear"></div>';
+			$content			.= '</div>';
+		}else{
+			$content			.= section_content::EndTag($section_data['nodeName']);
+		}
+
+		return $content;
+	}
+
 
 	function GalleryImages(){
 

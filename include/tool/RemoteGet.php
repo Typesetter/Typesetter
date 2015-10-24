@@ -5,6 +5,9 @@
 
 class gpRemoteGet{
 
+	public static $redirected;
+	public static $maxlength = -1;	// The maximum bytes to read. eg: stream_get_contents($handle, $maxlength)
+
 
 
 	/* determine if the functions exist for fetching remote files,
@@ -77,6 +80,11 @@ class gpRemoteGet{
 	 * Loop through all potential methods until successful
 	 */
 	static function Get($url,$args=array()){
+		self::$redirected = null;
+		return self::_get($url,$args);
+	}
+
+	static function _get($url, $args = array()){
 		$url = rawurldecode($url);
 
 		$methods = array('stream','fopen','fsockopen');
@@ -87,7 +95,7 @@ class gpRemoteGet{
 
 			$result = gpRemoteGet::GetMethod($method,$url,$args);
 			if( $result === false ){
-				continue;
+				return false;
 			}
 
 			return $result;
@@ -102,11 +110,12 @@ class gpRemoteGet{
 
 		//arguments
 		$defaults = array(
-			'method' => 'GET',
-			'timeout' => 5,
-			'redirection' => 5,
-			'httpversion' => '1.0',
-			'user-agent' => 'gpEasy RemoteGet'
+			'method'			=> 'GET',
+			'timeout'			=> 5,
+			'redirection'		=> 5,
+			'httpversion'		=> '1.0',
+			'user-agent'		=> 'Mozilla/5.0 (gpEasy RemoteGet) ',
+			//'user-agent'		=> 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0',
 
 			//could be added
 			//'blocking' => true,
@@ -169,22 +178,36 @@ class gpRemoteGet{
 		//create context
 		$arrContext = array();
 		$arrContext['http'] = array(
-				'method' => 'GET',
-				'user_agent' => $r['user-agent'],
-				'max_redirects' => $r['redirection'],
-				'protocol_version' => (float) $r['httpversion'],
-				'timeout' => $r['timeout'],
+				'method'			=> 'GET',
+				'user_agent'		=> 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:36.0) Gecko/20100101 Firefox/36.0', //$r['user-agent'],
+				'max_redirects'		=> $r['redirection'],
+				'protocol_version'	=> (float) $r['httpversion'],
+				'timeout'			=> $r['timeout'],
 			);
+
+		if( isset($r['http']) ){
+			$arrContext['http'] = $r['http'] + $arrContext['http'];
+		}
+
+		if( isset($r['headers']) ){
+			$arrContext['http']['header'] = '';
+			foreach($r['headers'] as $hk => $hv){
+				$arrContext['http']['header'] .= $hk.': '.$hv."\r\n";
+			}
+			$arrContext['http']['header'] = trim($arrContext['http']['header']);
+		}
 
 		$context = stream_context_create($arrContext);
 
 		$handle = @fopen($url, 'r', false, $context);
 
-		if ( !$handle ) return false;
+		if( !$handle ){
+			return false;
+		}
 
 		gpRemoteGet::stream_timeout($handle,$r['timeout']);
 
-		$strResponse = stream_get_contents($handle);
+		$strResponse = stream_get_contents($handle, self::$maxlength);
 		$theHeaders = gpRemoteGet::StreamHeaders($handle);
 		fclose($handle);
 
@@ -329,7 +352,10 @@ class gpRemoteGet{
 		if( $location{0} == '/' ){
 			$location = $arrURL['scheme'].'://'.$arrURL['host'].$location;
 		}
-		return gpRemoteGet::Get($location, $r);
+
+		self::$redirected = $location;
+
+		return gpRemoteGet::_get($location, $r);
 	}
 
 
@@ -405,6 +431,10 @@ class gpRemoteGet{
 		}
 
 		$meta = stream_get_meta_data($handle);
+		if( !isset($meta['wrapper_data']) ){
+			return false;
+		}
+
 		$theHeaders = $meta['wrapper_data'];
 		if( isset($meta['wrapper_data']['headers']) ){
 			$theHeaders = $meta['wrapper_data']['headers'];
@@ -457,25 +487,27 @@ class gpRemoteGet{
 
 		$cookies = array();
 		$newheaders = array();
-		foreach ( $headers as $tempheader ) {
-			if ( empty($tempheader) )
-				continue;
+		if( is_array($headers) ){
+			foreach ( $headers as $tempheader ) {
+				if ( empty($tempheader) )
+					continue;
 
-			if ( false === strpos($tempheader, ':') ) {
-				list( , $iResponseCode, $strResponseMsg) = explode(' ', $tempheader, 3);
-				$response['code'] = $iResponseCode;
-				$response['message'] = $strResponseMsg;
-				continue;
-			}
+				if ( false === strpos($tempheader, ':') ) {
+					list( , $iResponseCode, $strResponseMsg) = explode(' ', $tempheader, 3);
+					$response['code'] = $iResponseCode;
+					$response['message'] = $strResponseMsg;
+					continue;
+				}
 
-			list($key, $value) = explode(':', $tempheader, 2);
+				list($key, $value) = explode(':', $tempheader, 2);
 
-			if ( !empty( $value ) ) {
-				$key = strtolower( $key );
-				if ( isset( $newheaders[$key] ) ) {
-					$newheaders[$key] = array( $newheaders[$key], trim( $value ) );
-				} else {
-					$newheaders[$key] = trim( $value );
+				if ( !empty( $value ) ) {
+					$key = strtolower( $key );
+					if ( isset( $newheaders[$key] ) ) {
+						$newheaders[$key] = array( $newheaders[$key], trim( $value ) );
+					} else {
+						$newheaders[$key] = trim( $value );
+					}
 				}
 			}
 		}

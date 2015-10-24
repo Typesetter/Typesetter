@@ -4,7 +4,8 @@ defined('is_running') or die('Not an entry point...');
 includeFile('admin/admin_uploaded.php');
 
 class admin_browser extends admin_uploaded{
-	function admin_browser(){
+
+	function __construct(){
 		global $page;
 
 		$_REQUEST += array('gpreq' => 'body'); //force showing only the body as a complete html document
@@ -19,8 +20,9 @@ class admin_browser extends admin_uploaded{
 	}
 
 	function FinderPrep(){
-		$this->finder_opts['url'] = common::GetUrl('Admin_Finder');
-		$this->finder_opts['getFileCallback'] = true;
+		$this->finder_opts['url']				= common::GetUrl('Admin_Finder');
+		$this->finder_opts['getFileCallback']	= true;
+		$this->finder_opts['resizable'] 		= false;
 	}
 
 }

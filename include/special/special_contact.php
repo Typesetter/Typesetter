@@ -10,10 +10,6 @@ $message_send_attempt = false;
 class special_contact extends special_contact_gadget{
 	var $sent = false;
 
-	function special_contact(){
-		$this->special_contact_gadget();
-	}
-
 	function ShowForm(){
 		global $page,$langmessage,$config;
 
@@ -26,7 +22,7 @@ class special_contact extends special_contact_gadget{
 class special_contact_gadget{
 	var $sent = false;
 
-	function special_contact_gadget(){
+	function __construct(){
 		global $page,$langmessage,$config,$contact_message_sent,$message_send_attempt;
 
 		$this->sent = $contact_message_sent;
@@ -67,8 +63,12 @@ class special_contact_gadget{
 
 
 		$headers = array();
-		$_POST += array('subject'=>'','contact_nonce'=>'');
+		$_POST += array('subject'=>'','contact_nonce'=>'','message'=>'');
 
+		if( empty($_POST['message']) ){
+			message($langmessage['OOPS'].'(Invalid Message)');
+			return;
+		}
 
 		//check nonce
 		if( !common::verify_nonce('contact_post',$_POST['contact_nonce'],true) ){
@@ -221,7 +221,7 @@ class special_contact_gadget{
 		}
 
 			if( $this->sent ){
-				echo gpOutput::ReturnText('message_sent');
+				echo gpOutput::ReturnText('message_sent','%s','message_sent');
 			}else{
 				echo '<input type="hidden" name="cmd" value="gp_send_message" />';
 

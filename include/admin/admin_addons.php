@@ -29,7 +29,7 @@ class admin_addons extends admin_addon_install{
 	var $dataFile;
 
 
-	function admin_addons(){
+	function __construct(){
 		global $langmessage,$config,$page;
 
 		//header links
@@ -59,14 +59,22 @@ class admin_addons extends admin_addon_install{
 		$cmd = common::GetCommand();
 
 
-		//
-		$display = 'main';
-		if( gp_remote_plugins && strpos($page->requested,'/') ){
-			$parts = explode('/',$page->requested);
-			switch(strtolower($parts[1])){
+		$request_parts = array();
+		if( strpos($page->requested,'/') ){
+			$request_parts = explode('/',$page->requested);
+		}
+
+		if( $request_parts ){
+			switch(strtolower($request_parts[1])){
 				case 'remote':
-					$this->RemoteBrowse();
+					if( gp_remote_plugins ){
+						$this->RemoteBrowse();
+					}
 				return;
+				default:
+					$this->ShowAddon($request_parts[1]);
+				return;
+
 			}
 		}
 
@@ -97,10 +105,6 @@ class admin_addons extends admin_addon_install{
 			case 'enable':
 			case 'disable':
 				$this->GadgetVisibility($cmd);
-			return;
-
-			case 'show':
-				$this->ShowAddon();
 			return;
 
 			case 'uninstall':
@@ -310,10 +314,11 @@ class admin_addons extends admin_addon_install{
 	 * Display addon details
 	 *
 	 */
-	function ShowAddon(){
+	function ShowAddon($addon_key){
 		global $config, $langmessage;
 
-		$addon_key =& $_REQUEST['addon'];
+		$addon_key = admin_tools::decode64($addon_key);
+
 		if( !isset($config['addons'][$addon_key]) ){
 			message($langmessage['OOPS'].'(Addon Not Found)');
 			$this->Select();
@@ -532,9 +537,8 @@ class admin_addons extends admin_addon_install{
 
 		echo '<div class="panelgroup" id="panelgroup_'.md5($addon_key).'">';
 
-		echo '<span class="icon_plug">';
-		echo common::Link('Admin_Addons',$addon_config['name'],'cmd=show&addon='.rawurlencode($addon_key));
-		echo '</span>';
+		$label = '<i class="gpicon_plug"></i>'.$addon_config['name'];
+		echo common::Link('Admin_Addons/'.admin_tools::encode64($addon_key),$label);
 
 		echo '<div class="panelgroup2">';
 		echo '<ul class="submenu">';

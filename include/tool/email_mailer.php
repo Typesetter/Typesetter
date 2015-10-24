@@ -3,7 +3,10 @@ defined('is_running') or die('Not an entry point...');
 
 global $gp_mailer;
 //includeFile('tool/email.php');
+
+includeFile('thirdparty/PHPMailer/PHPMailerAutoload.php');
 includeFile('thirdparty/PHPMailer/class.phpmailer.php');
+
 
 
 /**
@@ -14,8 +17,10 @@ includeFile('thirdparty/PHPMailer/class.phpmailer.php');
  */
 class gp_phpmailer extends PHPMailer{
 
-	function gp_phpmailer(){
+	function __construct(){
 		global $dataDir,$config;
+
+		parent::__construct();
 
 		$this->Reset();
 		$this->PluginDir = $dataDir.'/include/thirdparty/PHPMailer/';

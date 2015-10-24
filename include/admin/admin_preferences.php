@@ -2,12 +2,14 @@
 defined('is_running') or die('Not an entry point...');
 
 includeFile('admin/admin_users.php');
+includeFile('admin/admin_configuration.php');
+
 
 class admin_preferences extends admin_users{
 	var $username;
+	var $variables;
 
-
-	function admin_preferences(){
+	function __construct(){
 		global $gpAdmin,$langmessage,$page;
 
 		//only need to return messages if it's ajax request
@@ -20,8 +22,14 @@ class admin_preferences extends admin_users{
 			message($langmessage['OOPS']);
 			return;
 		}
-		$this->user_info =  $this->users[$this->username];
-		$cmd = common::GetCommand();
+
+		$this->user_info		=  $this->users[$this->username];
+		$cmd					= common::GetCommand();
+
+
+		$this->variables			= array(
+			'gpui_ctx'			=> array('enabled'=>$langmessage['enabled'],'disabled'=>$langmessage['disabled'])
+		);
 
 		switch($cmd){
 			case 'changeprefs':
@@ -42,7 +50,6 @@ class admin_preferences extends admin_users{
 		gpsession::SetGPUI();
 
 		$this->SaveUserFile();
-
 	}
 
 	function ChangeEmail(){
@@ -65,6 +72,10 @@ class admin_preferences extends admin_users{
 		return (bool)preg_match('/^[^@]+@[^@]+\.[^@]+$/', $email);
 	}
 
+	/**
+	 * Save a user's new password
+	 *
+	 */
 	function ChangePass(){
 		global $langmessage, $config;
 
@@ -84,25 +95,22 @@ class admin_preferences extends admin_users{
 		}
 
 
-		//see also admin_users for password checking
+		//make sure password and password1 match
 		if( !$this->CheckPasswords() ){
 			return false;
 		}
 
 
-		$pass_hash = $config['passhash'];
-		if( isset($this->user_info['passhash']) ){
-			$pass_hash = $this->user_info['passhash'];
-		}
+		//check the old password
+		$pass_hash		= gpsession::PassAlgo($this->user_info);
+		$oldpass		= common::hash($_POST['oldpassword'],$pass_hash);
 
-		$oldpass = common::hash($_POST['oldpassword'],$pass_hash);
 		if( $this->user_info['password'] != $oldpass ){
 			message($langmessage['couldnt_reset_pass']);
 			return false;
 		}
 
-		$this->users[$this->username]['password'] = common::hash($_POST['password'],'sha512');
-		$this->users[$this->username]['passhash'] = 'sha512';
+		self::SetUserPass( $this->users[$this->username], $_POST['password']);
 	}
 
 
@@ -112,10 +120,11 @@ class admin_preferences extends admin_users{
 		if( $_SERVER['REQUEST_METHOD'] == 'POST'){
 			$array = $_POST;
 		}else{
-			$array = $this->user_info;
+			$array = $this->user_info + $gpAdmin;
+			$array += array('gpui_ctx' => 'enabled' );
+
 		}
 		$array += array('email'=>'');
-
 
 		echo '<h2>'.$langmessage['Preferences'].'</h2>';
 
@@ -126,14 +135,21 @@ class admin_preferences extends admin_users{
 		echo '<div>';
 		echo '<table class="bordered configuration">';
 
-		echo '<tr>';
-			echo '<td>';
-			echo $langmessage['email_address'];
-			echo '</td>';
-			echo '<td>';
-			echo '<input type="text" name="email" value="'.htmlspecialchars($array['email']).'" class="gpinput"/>';
-			echo '</td>';
-			echo '</tr>';
+
+		//email
+		echo '<tr><td>';
+		echo $langmessage['email_address'];
+		echo '</td><td>';
+		echo '<input type="text" name="email" value="'.htmlspecialchars($array['email']).'" class="gpinput"/>';
+		echo '</td></tr>';
+
+		//context menu
+		echo '<tr><td>';
+		echo $langmessage['context menu'];
+		echo '</td><td>';
+		admin_configuration::formSelect('gpui_ctx',$this->variables['gpui_ctx'],$array['gpui_ctx']);
+		echo '</td></tr>';
+
 
 		echo '</table>';
 		echo '</div>';
@@ -143,37 +159,31 @@ class admin_preferences extends admin_users{
 
 		echo '<div>';
 		echo '<table class="bordered configuration">';
-		echo '<tr>';
-			echo '<td>';
+		echo '<tr><td>';
 			echo $langmessage['old_password'];
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo '<input type="password" name="oldpassword" value="" class="gpinput"/>';
-			echo '</td>';
-			echo '</tr>';
-		echo '<tr>';
-			echo '<td>';
+			echo '</td></tr>';
+		echo '<tr><td>';
 			echo $langmessage['new_password'];
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo '<input type="password" name="password" value="" class="gpinput"/>';
-			echo '</td>';
-			echo '</tr>';
-		echo '<tr>';
-			echo '<td>';
+			echo '</td></tr>';
+		echo '<tr><td>';
 			echo $langmessage['repeat_password'];
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo '<input type="password" name="password1" value="" class="gpinput"/>';
-			echo '</td>';
-			echo '</tr>';
+			echo '</td></tr>';
+
+		$this->AlgoSelect();
+
 		echo '</table>';
 		echo '</div>';
 
 		echo '<p>';
 		echo '<input type="hidden" name="cmd" value="changeprefs" />';
-		echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gppost gpsubmit"/>';
-		echo ' <input type="button" name="" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel"/>';
+		echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit"/>';
+		echo ' <input type="button" name="" value="'.$langmessage['cancel'].'" class="gpcancel"/>';
 		echo '</p>';
 
 		echo '<p class="admin_note">';

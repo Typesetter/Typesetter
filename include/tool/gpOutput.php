@@ -59,6 +59,10 @@ $gpOutConf['Extra']['method']			= array('gpOutput','GetExtra');
 $gpOutConf['Gadget']['method']			= array('gpOutput','GetGadget');
 
 
+$gpOutConf['Breadcrumbs']['method']		= array('gpOutput','BreadcrumbNav');
+$gpOutConf['Breadcrumbs']['link']		= 'Breadcrumb Links';
+
+
 class gpOutput{
 
 	public static $components = '';
@@ -99,16 +103,21 @@ class gpOutput{
 	 */
 	static function Flush(){
 		global $page;
-		header('Content-Type: text/html; charset=utf-8');
+		self::StandardHeaders();
 		echo GetMessages();
 		echo $page->contentBuffer;
 	}
 
 	static function Content(){
 		global $page;
-		header('Content-Type: text/html; charset=utf-8');
+		self::StandardHeaders();
 		echo GetMessages();
 		$page->GetGpxContent();
+	}
+
+	static function StandardHeaders(){
+		header('Content-Type: text/html; charset=utf-8');
+		Header('Vary: Accept,Accept-Encoding');// for proxies
 	}
 
 	/**
@@ -122,10 +131,12 @@ class gpOutput{
 
 		gpOutput::TemplateSettings();
 
-		header('Content-Type: text/html; charset=utf-8');
+		self::StandardHeaders();
+
 		echo '<!DOCTYPE html><html><head><meta charset="UTF-8" />';
 		gpOutput::getHead();
 		echo '</head>';
+
 		echo '<body class="gpbody">';
 		echo GetMessages();
 
@@ -136,6 +147,29 @@ class gpOutput{
 
 		gpOutput::HeadContent();
 	}
+
+	static function AdminHtml(){
+		global $page;
+
+		$page->head_script .= 'var gp_bodyashtml = true;';
+
+		self::StandardHeaders();
+
+		echo '<!DOCTYPE html><html class="admin_body"><head><meta charset="UTF-8" />';
+		gpOutput::getHead();
+		echo '</head>';
+
+		echo '<body class="gpbody">';
+		echo GetMessages();
+
+		$page->GetGpxContent();
+
+		echo '</body>';
+		echo '</html>';
+
+		gpOutput::HeadContent();
+	}
+
 
 	/**
 	 * Send all content according to the current layout
@@ -150,7 +184,9 @@ class gpOutput{
 			$addon_current_id = $page->theme_addon_id;
 		}
 		gpOutput::TemplateSettings();
-		header('Content-Type: text/html; charset=utf-8');
+
+		self::StandardHeaders();
+
 		$path = $page->theme_dir.'/template.php';
 		$return = IncludeScript($path,'require',array('page','GP_ARRANGE','GP_MENU_LINKS','GP_MENU_CLASS','GP_MENU_CLASSES','GP_MENU_ELEMENTS'));
 
@@ -281,8 +317,6 @@ class gpOutput{
 	static function GetgpOutInfo($gpOutCmd){
 		global $gpOutConf,$config;
 
-		//echo 'here';
-
 		$key = $gpOutCmd = trim($gpOutCmd,':');
 		$info = false;
 		$arg = '';
@@ -368,7 +402,6 @@ class gpOutput{
 
 		//editable links only .. other editable_areas are handled by their output functions
 		if( $permission ){
-			$menu_marker = false;
 			if( isset($info['link']) ){
 				$label = $langmessage[$info['link']];
 
@@ -379,7 +412,6 @@ class gpOutput{
 				echo '</span>';
 
 				self::$edit_area_id = 'ExtraEditArea'.$edit_index;
-				$menu_marker = true;
 
 			}elseif( isset($info['key']) && ($info['key'] == 'CustomMenu') ){
 
@@ -390,16 +422,6 @@ class gpOutput{
 				echo '</span>';
 
 				self::$edit_area_id = 'ExtraEditArea'.$edit_index;
-				$menu_marker = true;
-			}
-
-			//for menu arrangement, admin_menu_new.js
-			if( $menu_marker ){
-				echo '<div class="menu_marker nodisplay" data-menuid="'.self::$edit_area_id.'">';
-				echo '<input type="hidden" value="'.htmlspecialchars($info['gpOutCmd']).'" />';
-				echo '<input type="hidden" value="'.htmlspecialchars($GP_MENU_LINKS).'" />';
-				echo '<input type="hidden" value="'.htmlspecialchars(json_encode($GP_MENU_CLASSES)).'" />';
-				echo '</div>';
 			}
 		}
 		gpOutput::$editlinks .= ob_get_clean();
@@ -488,6 +510,7 @@ class gpOutput{
 		//class & method
 		if( !empty($info['class']) ){
 			if( class_exists($info['class']) ){
+
 				$object = new $info['class']($args);
 
 				if( !empty($info['method']) ){
@@ -499,7 +522,9 @@ class gpOutput{
 				}
 			}elseif( $has_script ){
 				$name =& $config['addons'][$addonFolderName]['name'];
-				trigger_error('gpEasy Error: Addon hook class doesn\'t exist. Script: '.$info['class'].' Addon: '.$name);
+				trigger_error('gpEasy Error: Addon class doesn\'t exist. Class: '.$info['class'].' Addon: '.$name);
+			}else{
+				trigger_error('gpEasy Error: Addon class doesn\'t exist. Class: '.$info['class']);
 			}
 		}elseif( !empty($info['method']) ){
 
@@ -559,6 +584,8 @@ class gpOutput{
 		// if the file that caused the fatal error has been modified, treat as fixed
 		if( $error_text[0] == '{' && $error_info = json_decode($error_text,true) ){
 
+			$error_text = $error_info;
+
 			if( !empty($error_info['file']) && file_exists($error_info['file']) ){
 
 				//compare modified time
@@ -578,7 +605,7 @@ class gpOutput{
 
 
 		//notify admin
-		$message = 'Warning: A compenent of this page has been disabled because it caused fatal errors:';
+		$message = 'Warning: A component of this page has been disabled because it caused fatal errors:';
 		if( !count(self::$fatal_notices) ){
 			error_log( $message );
 		}
@@ -691,6 +718,11 @@ class gpOutput{
 	 */
 	static function PrepGadgetContent(){
 		global $page;
+
+		//not needed for admin pages
+		if( $page->pagetype == 'admin_display' ){
+			return;
+		}
 
 		$gadget_info = gpOutput::WhichGadgets($page->gpLayout);
 
@@ -837,19 +869,18 @@ class gpOutput{
 	 * @return array menu data
 	 */
 	static function GetMenuArray($id){
-		global $dataDir, $gp_menu, $config;
+		global $dataDir, $gp_menu;
+
 
 		$menu_file = $dataDir.'/data/_menus/'.$id.'.php';
-		if( !file_exists($menu_file) ){
+		if( empty($id) || !gpFiles::Exists($menu_file) ){
 			return gpPlugin::Filter('GetMenuArray',array($gp_menu));
 		}
 
 
-		$menu = array();
-		$fileVersion = false;
-		require($menu_file);
+		$menu = gpFiles::Get('_menus/'.$id,'menu');
 
-		if( $fileVersion && version_compare($fileVersion,'3.0b1','<') ){
+		if( gpFiles::$last_version && version_compare(gpFiles::$last_version,'3.0b1','<') ){
 			$menu = gpOutput::FixMenu($menu);
 		}
 
@@ -967,7 +998,6 @@ class gpOutput{
 
 
 
-			//$start_time = microtime();
 			//reduce the menu to the current group
 			$submenu = gpOutput::MenuReduce_Group($menu,$curr_title_key,$expand_level,$curr_level);
 			//message('group: ('.count($submenu).') '.showArray($submenu));
@@ -1005,9 +1035,6 @@ class gpOutput{
 			// titles above selected title, deeper than $expand_level, and within the group
 			gpOutput::MenuReduce_Sub($good_titles,$submenu,$curr_title_key,$expand_level,$curr_level);
 			gpOutput::MenuReduce_Sub($good_titles,array_reverse($submenu),$curr_title_key,$expand_level,$curr_level);
-
-			//message('time: '.microtime_diff($start_time,microtime()));
-
 		}
 
 
@@ -1160,7 +1187,8 @@ class gpOutput{
 			echo '</span>';
 			gpOutput::$editlinks .= ob_get_clean();
 
-			echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
+			//echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'" data-gp-editarea="'.$edit_index.'">'; // class="edit_area" added by javascript
+			echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'">';
 			echo section_content::RenderSection($extra_content,0,'',$file_stats);
 			echo '</div>';
 		}else{
@@ -1169,15 +1197,22 @@ class gpOutput{
 
 	}
 
+
+	/**
+	 * Get and return the extra content specified by $title
+	 *
+	 */
 	static function ExtraContent( $title, &$file_stats = array() ){
-		global $dataDir;
-		$file = $dataDir.'/data/_extra/'.$title.'.php';
+
+		$file = '_extra/'.$title;
 
 		$extra_content = array();
-		if( file_exists($file) ){
+		if( gpFiles::Exists($file) ){
+
 			ob_start();
-			include($file);
+			$extra_content = gpFiles::Get($file,'extra_content');
 			$extra_content_string = ob_get_clean();
+
 			if( !count($extra_content) ){
 				$extra_content['content'] = $extra_content_string;
 			}
@@ -1419,6 +1454,96 @@ class gpOutput{
 
 	}
 
+
+	static function BreadcrumbNav($arg=''){
+		global $page, $gp_index, $GP_MENU_CLASSES;
+
+		$source_menu_array	= gpOutput::GetMenuArray($arg);
+		$output				= array();
+		$thisLevel			= -1;
+		$last_index			= '';
+
+		$rmenu = array_reverse($source_menu_array);
+		foreach($rmenu as $index => $info){
+			$level = $info['level'];
+
+			if( $thisLevel >= 0 ){
+				if( $thisLevel == $level ){
+					array_unshift($output,$index);
+					$last_index = $index;
+					if( $thisLevel == 0 ){
+						break;
+					}
+					$thisLevel--;
+				}
+			}
+
+			if( $index == $page->gp_index ){
+				array_unshift($output,$index);
+				$thisLevel = $level-1;
+				$last_index = $index;
+			}
+		}
+
+
+		reset($source_menu_array);
+
+		//add homepage
+		$first_index = key($source_menu_array);
+		if( $last_index != $first_index ){
+			array_unshift($output,$first_index);
+		}
+
+
+
+		self::PrepMenuOutput();
+		$clean_attributes = array( 'attr'=>'', 'class'=>array(), 'id'=>'' );
+		$clean_attributes_a = array('href' => '', 'attr' => '', 'value' => '', 'title' => '', 'class' =>array() );
+
+
+		// opening ul
+		$attributes_ul = $clean_attributes;
+		$attributes_ul['class']['menu_top'] = $GP_MENU_CLASSES['menu_top'];
+		if( self::$edit_area_id ){
+			$attributes_ul['id'] = self::$edit_area_id;
+			$attributes_ul['class']['editable_area'] = 'editable_area';
+		}
+		self::FormatMenuElement('ul',$attributes_ul);
+
+
+		//
+		$len = count($output);
+		for( $i = 0; $i < $len; $i++){
+
+			$index					= $output[$i];
+			$title					= common::IndexToTitle($index);
+			$attributes_li			= $clean_attributes;
+
+			$attributes_a			= $clean_attributes_a;
+			$attributes_a['href']	= common::GetUrl($title);
+			$attributes_a['value']	= common::GetLabel($title);
+			$attributes_a['title']	= common::GetBrowserTitle($title);
+
+			if( $title == $page->title ){
+				$attributes_a['class']['selected']		= $GP_MENU_CLASSES['selected'];
+				$attributes_li['class']['selected_li']	= $GP_MENU_CLASSES['selected_li'];
+			}
+
+
+			self::FormatMenuElement('li',$attributes_li);
+
+			if( $i < $len-1 ){
+				self::FormatMenuElement('a',$attributes_a);
+			}else{
+				self::FormatMenuElement('a',$attributes_a);
+			}
+			echo '</li>';
+		}
+
+		echo '</ul>';
+	}
+
+
 	/**
 	 * Output a navigation menu
 	 * @static
@@ -1431,31 +1556,7 @@ class gpOutput{
 			$source_menu =& $gp_menu;
 		}
 
-
-		//menu classes
-		if( !is_array($GP_MENU_CLASSES) ){
-			$GP_MENU_CLASSES = array();
-		}
-		if( empty($GP_MENU_CLASS) ){
-			$GP_MENU_CLASS = 'menu_top';
-		}
-		$GP_MENU_CLASSES += array(
-							'menu_top'			=> $GP_MENU_CLASS,
-							'selected'			=> 'selected',
-							'selected_li'		=> 'selected_li',
-							'childselected'		=> 'childselected',
-							'childselected_li'	=> 'childselected_li',
-							'li_'				=> 'li_',
-							'li_title'			=> 'li_title',
-							'haschildren'		=> 'haschildren',
-							'haschildren_li'	=> '',
-							'child_ul'			=> '',
-							);
-
-		if( empty($GP_MENU_LINKS) ){
-			$GP_MENU_LINKS = '<a href="{$href_text}" title="{$title}"{$attr}>{$label}</a>';
-		}
-
+		self::PrepMenuOutput();
 		$clean_attributes = array( 'attr'=>'', 'class'=>array(), 'id'=>'' );
 		$clean_attributes_a = array('href' => '', 'attr' => '', 'value' => '', 'title' => '', 'class' =>array() );
 
@@ -1470,12 +1571,12 @@ class gpOutput{
 		}
 
 		if( !count($menu) ){
-			$attributes_ul['class']['empty_menu'] = 'empty_menu';
-			$result[] = self::FormatMenuElement('div',$attributes_ul).'</div>'; //an empty <ul> is not valid xhtml
+			//$attributes_ul['class']['empty_menu'] = 'empty_menu';
+			//self::FormatMenuElement('div',$attributes_ul).'</div>'; //an empty <ul> is not valid xhtml
 			return;
 		}
 
-		$result = array();
+
 		$prev_level = $start_level;
 		$page_title_full = common::GetUrl($page->title);
 		$open = false;
@@ -1490,7 +1591,7 @@ class gpOutput{
 
 
 		//output
-		$result[] = self::FormatMenuElement('ul',$attributes_ul);
+		self::FormatMenuElement('ul',$attributes_ul);
 
 
 		$menu = array_keys($menu);
@@ -1555,36 +1656,40 @@ class gpOutput{
 			if( $this_level > $prev_level ){
 
 				if( $menu_index === 0 ){ //only needed if the menu starts below the start_level
-					$result[] = self::FormatMenuElement('li',$attributes_li);
+					self::FormatMenuElement('li',$attributes_li);
 				}
 
 				if( !empty($GP_MENU_CLASSES['child_ul']) ){
 					$attributes_ul['class'][] = $GP_MENU_CLASSES['child_ul'];
 				}
 
-				while( $this_level > $prev_level){
-					$result[] = self::FormatMenuElement('ul',$attributes_ul);
-					$result[] = '<li>';
-					$prev_level++;
-					$attributes_ul = $clean_attributes;
+				if( $this_level > $prev_level ){
+					$open_loops = $this_level - $prev_level;
+
+					for($i = 0; $i<$open_loops; $i++){
+						self::FormatMenuElement('ul',$attributes_ul);
+						if( $i < $open_loops-1 ){
+							echo '<li>';
+						}
+						$prev_level++;
+						$attributes_ul = $clean_attributes;
+					}
 				}
-				array_pop($result);//remove the last <li>
 
 			//current is higher than the previous
 			}elseif( $this_level < $prev_level ){
 				while( $this_level < $prev_level){
-					$result[] = '</li>';
-					$result[] = '</ul>';
+					echo '</li></ul>';
 
 					$prev_level--;
 				}
 
 				if( $open ){
-					$result[] = '</li>';
+					echo '</li>';
 				}
 
 			}elseif( $open ){
-				$result[] = '</li>';
+				echo '</li>';
 			}
 
 
@@ -1610,13 +1715,15 @@ class gpOutput{
 				$attributes_a['value'] = common::GetLabel($title);
 				$attributes_a['title'] = common::GetBrowserTitle($title);
 
+				//get valid rel attr
 				if( !empty($gp_titles[$menu_key]['rel']) ){
-					$attributes_a['rel'] = $gp_titles[$menu_key]['rel'];
+					$rel = explode(',',$gp_titles[$menu_key]['rel']);
+					$attributes_a['rel'] = array_intersect( array('alternate','author','bookmark','help','icon','license','next','nofollow','noreferrer','prefetch','prev','search','stylesheet','tag'), $rel);
 				}
 			}
 
-			$result[] = self::FormatMenuElement('li',$attributes_li);
-			$result[] = self::FormatMenuElement('a',$attributes_a);
+			self::FormatMenuElement('li',$attributes_li);
+			self::FormatMenuElement('a',$attributes_a);
 
 
 
@@ -1625,12 +1732,38 @@ class gpOutput{
 		}
 
 		while( $start_level <= $prev_level){
-			$result[] = '</li>';
-			$result[] = '</ul>';
+			echo '</li></ul>';
 			$prev_level--;
 		}
+	}
 
-		echo implode('',$result); //don't separate by spaces so css inline can be more functional
+	static function PrepMenuOutput(){
+		global $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES;
+
+		//menu classes
+		if( !is_array($GP_MENU_CLASSES) ){
+			$GP_MENU_CLASSES = array();
+		}
+		if( empty($GP_MENU_CLASS) ){
+			$GP_MENU_CLASS = 'menu_top';
+		}
+		$GP_MENU_CLASSES += array(
+							'menu_top'			=> $GP_MENU_CLASS,
+							'selected'			=> 'selected',
+							'selected_li'		=> 'selected_li',
+							'childselected'		=> 'childselected',
+							'childselected_li'	=> 'childselected_li',
+							'li_'				=> 'li_',
+							'li_title'			=> 'li_title',
+							'haschildren'		=> 'haschildren',
+							'haschildren_li'	=> '',
+							'child_ul'			=> '',
+							);
+
+		if( empty($GP_MENU_LINKS) ){
+			$GP_MENU_LINKS = '<a href="{$href_text}" title="{$title}"{$attr}>{$label}</a>';
+		}
+
 	}
 
 	static function FormatMenuElement( $node, $attributes){
@@ -1657,22 +1790,16 @@ class gpOutput{
 		if( !empty($GP_MENU_ELEMENTS) && is_callable($GP_MENU_ELEMENTS) ){
 			$return = call_user_func($GP_MENU_ELEMENTS, $node, $attributes);
 			if( is_string($return) ){
-				return $return;
+				echo $return;
+				return;
 			}
 		}
 
-		switch($node){
-
-			case 'ul';
-			case 'li':
-			case 'div';
-			return '<'.$node.$attributes['attr'].'>';
-
-
-			//links
-			case 'a';
+		if( $node == 'a' ){
 			$search = array('{$href_text}','{$attr}','{$label}','{$title}');
-			return str_replace( $search, $attributes, $GP_MENU_LINKS );
+			echo str_replace( $search, $attributes, $GP_MENU_LINKS );
+		}else{
+			echo '<'.$node.$attributes['attr'].'>';
 		}
 	}
 
@@ -1734,28 +1861,31 @@ class gpOutput{
 
 	/* similar to ReturnText() but links to script for editing all addon texts */
 	// the $html parameter should primarily be used when the text is to be placed inside of a link or other element that cannot have a link and/or span as a child node
-	static function GetAddonText($key,$html='%s'){
+	static function GetAddonText($key,$html='%s', $wrapper_class = ''){
 		global $addonFolderName;
 
 		if( !$addonFolderName ){
-			return gpOutput::ReturnText($key,$html);
+			return gpOutput::ReturnText($key, $html, $wrapper_class);
 		}
 
 		$query = 'cmd=addontext&addon='.urlencode($addonFolderName).'&key='.urlencode($key);
-		return gpOutput::ReturnTextWorker($key,$html,$query);
+		return gpOutput::ReturnTextWorker($key,$html,$query, $wrapper_class);
 	}
 
-	static function ReturnText($key,$html='%s'){
+	static function ReturnText($key,$html='%s', $wrapper_class = ''){
 		$query = 'cmd=edittext&key='.urlencode($key);
-		return gpOutput::ReturnTextWorker($key,$html,$query);
+		return gpOutput::ReturnTextWorker($key,$html,$query, $wrapper_class);
 	}
 
-	static function ReturnTextWorker($key,$html,$query){
+	static function ReturnTextWorker($key,$html,$query, $wrapper_class=''){
 		global $langmessage;
 
-		$result = '';
-		$wrap = gpOutput::ShowEditLink('Admin_Theme_Content');
-		if( $wrap ){
+		$text		= gpOutput::SelectText($key);
+		$result		= str_replace('%s',$text,$html); //in case there's more than one %s
+
+
+		$editable	= gpOutput::ShowEditLink('Admin_Theme_Content');
+		if( $editable ){
 
 			$title = htmlspecialchars(strip_tags($key));
 			if( strlen($title) > 20 ){
@@ -1763,14 +1893,11 @@ class gpOutput{
 			}
 
 			gpOutput::$editlinks .= gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],$query,' title="'.$title.'" data-cmd="gpabox" ');
-			$result .= '<span class="editable_area" id="ExtraEditArea'.$edit_index.'">';
+			return '<span class="editable_area '.$wrapper_class.'" id="ExtraEditArea'.$edit_index.'">'.$result.'</span>';
 		}
 
-		$text = gpOutput::SelectText($key);
-		$result .= str_replace('%s',$text,$html); //in case there's more than one %s
-
-		if( $wrap ){
-			$result .= '</span>';
+		if( $wrapper_class ){
+			return '<span class="'.$wrapper_class.'">'.$result.'</span>';
 		}
 
 		return $result;
@@ -1809,7 +1936,6 @@ class gpOutput{
 
 	static function HeadContent(){
 		global $config, $page, $gp_head_content, $wbMessageBuffer;
-		$gp_head_content = '';
 
 		//before ob_start() so plugins can get buffer content
 		gpPlugin::Action('HeadContent');
@@ -1833,6 +1959,11 @@ class gpOutput{
 		includeFile('combine.php');
 		$scripts = gp_combine::ScriptInfo( gpOutput::$components );
 
+		//check for bootstrap theme
+		if( strpos(gpOutput::$components,'bootstrap') ){
+			//this would only find bootstrap themes that include css
+		}
+
 		gpOutput::GetHead_TKD();
 		gpOutput::GetHead_CSS($scripts['css']); //css before js so it's available to scripts
 		gpOutput::GetHead_Lang();
@@ -1853,7 +1984,7 @@ class gpOutput{
 			echo $page->head;
 		}
 
-		$gp_head_content = ob_get_clean();
+		$gp_head_content .= ob_get_clean();
 	}
 
 	/**
@@ -1926,7 +2057,9 @@ class gpOutput{
 		if( !empty($description) ){
 			echo "\n<meta name=\"description\" content=\"".$description."\" />";
 		}
-		echo "\n<meta name=\"generator\" content=\"gpEasy CMS\" />";
+		if( !isset($config['showgplink']) || $config['showgplink'] ){
+			echo "\n<meta name=\"generator\" content=\"gpEasy CMS\" />";
+		}
 
 	}
 
@@ -1950,10 +2083,9 @@ class gpOutput{
 
 		if( common::LoggedIn() ){
 			$GP_INLINE_VARS += array(
-				'isadmin' => true,
-				'gpBLink' => common::HrefEncode($linkPrefix,false),
-				'post_nonce' => common::new_nonce('post',true),
-				'admin_resizable' => true,
+				'isadmin'		=> true,
+				'gpBLink'		=> common::HrefEncode($linkPrefix,false),
+				'post_nonce'	=> common::new_nonce('post',true),
 				);
 
 			gpsession::GPUIVars();
@@ -1969,6 +2101,15 @@ class gpOutput{
 			echo ';';
 		}
 
+		$inline = ob_get_clean();
+
+		if( !empty($inline) ){
+			echo "\n<script>\n".$inline."\n</script>";
+		}
+
+
+
+		ob_start();
 		echo $page->head_script;
 
 		if( !empty($page->jQueryCode) ){
@@ -1978,12 +2119,9 @@ class gpOutput{
 		}
 
 		$inline = ob_get_clean();
-
-
+		$inline = ltrim($inline);
 		if( !empty($inline) ){
-			echo "\n<script type=\"text/javascript\">\n";
-			echo $inline;
-			echo "\n</script>";
+			echo "\n<script>\n".$inline."\n</script>\n";
 		}
 	}
 
@@ -2045,7 +2183,7 @@ class gpOutput{
 				}
 			}
 			if( $has_jquery_ui ){
-				echo "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js\"></script>";
+				echo "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js\"></script>";
 			}
 		}
 
@@ -2074,7 +2212,7 @@ class gpOutput{
 
 		//remote jquery ui
 		if( $config['jquery'] == 'jquery_ui' && isset($scripts['ui-theme']) ){
-			echo "\n<link rel=\"stylesheet\" type=\"text/css\" href=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css\" />";
+			echo "\n<link rel=\"stylesheet\" type=\"text/css\" href=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css\" />";
 			unset($scripts['ui-theme']);
 		}
 
@@ -2141,6 +2279,13 @@ class gpOutput{
 
 		//less file
 		$files[] = $page->theme_dir . '/' . $page->theme_color . '/style.less';
+
+
+		//variables.less
+		$var_file = $page->theme_dir . '/' . $page->theme_color . '/variables.less';
+		if( file_exists($var_file) ){
+			$files[] = $var_file;
+		}
 
 		if( $page->gpLayout && file_exists($custom_file) ){
 			$files[] = $custom_file;
@@ -2310,7 +2455,7 @@ class gpOutput{
 					}
 				}else{
 					$buffer .= '<h3>Error Details</h3>'
-							.showArray($last_error)
+							.pre($last_error)
 							.'<p><a href="">Reload this page</a></p>';
 					if( $reload ){
 						$buffer .= '<p><a href="">Reload this page with the faulty component disabled</a></p>'
@@ -2364,23 +2509,19 @@ class gpOutput{
 			$buffer = substr_replace($buffer,$replacement,$pos,$len+20);
 		}
 
+		if( strpos($buffer,'<body') !== false && class_exists('admin_tools') ){
+			if( function_exists('memory_get_peak_usage') ){
+				$buffer = str_replace('<span gpeasy-memory-usage>?</span>',admin_tools::FormatBytes(memory_get_usage()),$buffer);
+				$buffer = str_replace('<span gpeasy-memory-max>?</span>',admin_tools::FormatBytes(memory_get_peak_usage()),$buffer);
+			}
 
-		if( gpdebug_tools && function_exists('memory_get_peak_usage') && ($pos = strpos($buffer,'<body')) ){
-			$pos = strpos($buffer,'>',$pos);
-			$max_used = memory_get_peak_usage();
-			//$limit = @ini_get('memory_limit'); //need to convert to byte value
-			//$percentage = round($max_used/$limit,2);
-			$replacement = "\n".'<div style="position:absolute;top:-1px;right:0;z-index:10000;padding:5px 10px;background:rgba(255,255,255,0.95);border:1px solid rgba(0,0,0,0.2);font-size:11px">'
-					.'<b>Debug Tools</b>'
-					.'<table>'
-					//.'<tr><td>Memory Usage:</td><td> '.number_format(memory_get_usage()).'</td></tr>'
-					.'<tr><td>Memory:</td><td> '.number_format($max_used).'</td></tr>'
-					//.'<tr><td>% of Limit:</td><td> '.$percentage.'%</td></tr>'
-					.'<tr><td>Time (PHP):</td><td> '.microtime_diff(gp_start_time,microtime()).'</td></tr>'
-					.'<tr><td>Time (Request):</td><td> '.microtime_diff($_SERVER['REQUEST_TIME'],microtime()).'</td></tr>'
-					.'</table>'
-					.'</div>';
-			$buffer = substr_replace($buffer,$replacement,$pos+1,0);
+			if( isset($_SERVER['REQUEST_TIME_FLOAT']) ){
+				$time	= microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
+			}else{
+				$time	= microtime(true) - gp_start_time;
+			}
+			$buffer	= str_replace('<span gpeasy-seconds>?</span>',round($time,3),$buffer);
+			$buffer	= str_replace('<span gpeasy-ms>?</span>',round($time*1000),$buffer);
 		}
 
 		return $buffer;
@@ -2401,9 +2542,8 @@ class gpOutput{
 	 * Return true if the current page is the home page
 	 */
 	static function is_front_page(){
-		global $gp_menu, $page;
-		reset($gp_menu);
-		return $page->gp_index == key($gp_menu);
+		global $config, $page;
+		return $page->gp_index == $config['homepath_key'];
 	}
 
 
@@ -2491,6 +2631,10 @@ class gpOutput{
 				self::BodyAsHTML();
 			break;
 
+			case 'admin':
+				self::AdminHtml();
+			break;
+
 			// <a data-cmd="gpajax">
 			// <a data-cmd="gpabox">
 			// <input data-cmd="gpabox">
@@ -2541,7 +2685,7 @@ class gpOutput{
 	 * @param string $names comma separated list of components
 	 *
 	 */
-	function GetComponents($names = ''){
+	static function GetComponents($names = ''){
 		includeFile('combine.php');
 		$scripts = gp_combine::ScriptInfo( $names );
 		gpOutput::CombineFiles($scripts['css'], 'css', false );
@@ -2558,70 +2702,67 @@ class gpOutput{
 		global $dataDir;
 
 
-		// generate name for compiled css file
-		$hash = common::ArrayHash($less_files);
- 		$list_file = $dataDir.'/data/_cache/less_'.$hash.'.list';
-
- 		//custom version of CachedCompile()
-		$compiled_file = false;
-		$less_cache = false;
+		//generage the name of the css file from the modified times and content length of each imported less file
+		$files_hash = common::ArrayHash($less_files);
+ 		$list_file = $dataDir.'/data/_cache/less_'.$files_hash.'.list';
  		if( file_exists($list_file) ){
 
-			//get info about the list file
-			$compiled_name = 'less_'.$hash.'_'.common::GenEtag( filesize($list_file) ).'.css';
+			$list = explode("\n",file_get_contents($list_file));
+
+
+			//pop the etag
+			$etag = array_pop($list);
+			if( !ctype_alnum($etag) ){
+				$list[] = $etag;
+				$etag = false;
+			}
+
+			// generate an etag if needed or if logged in
+			if( !$etag || common::LoggedIn() ){
+				$etag = common::FilesEtag( $list );
+			}
+
+			$compiled_name = 'less_'.$files_hash.'_'.$etag.'.css';
 			$compiled_file = '/data/_cache/'.$compiled_name;
 
 
-			//check modified time of all included files
 			if( file_exists($dataDir.$compiled_file) ){
-
-				$list = explode("\n",file_get_contents($list_file));
-				$list_updated = filemtime($list_file);
-
-				foreach($list as $file ){
-					if( !file_exists($file) || filemtime($file) > $list_updated ){
-						$compiled_file = false;
-						break;
-					}
-				}
-
-
-				// return relative path if we don't need to regenerate
-				if( $compiled_file ){
-
-					//touch the files to extend the cache
-					touch($list_file);
-					touch($dataDir.$compiled_file);
-
-					return $compiled_file;
-				}
+				//msg('not using cache');
+				return $compiled_file;
 			}
 
 		}
 
 		$less_files = (array)$less_files;
-		$less_files = array_filter($less_files);
-		$first_file = reset($less_files);
-		$compiled = gpOutput::ParseLess( $less_files );
+		$compiled = gpOutput::ParseLess( $less_files, $files_hash );
 		if( !$compiled ){
 			return false;
 		}
 
-		//msg('<textarea>'.htmlspecialchars($compiled).'</textarea>');
+
+		// generate the file name
+		$etag = common::FilesEtag( $less_files );
+		$compiled_name = 'less_'.$files_hash.'_'.$etag.'.css';
+		$compiled_file = '/data/_cache/'.$compiled_name;
 
 
-		//save the cache
+		// save the cache
+		// use the last line for the etag
+		$less_files[] = $etag;
 		$cache = implode("\n",$less_files);
-		file_put_contents( $list_file, $cache );
+		if( !gpFiles::Save( $list_file, $cache ) ){
+			return false;
+		}
 
 
 		//save the css
-		$compiled_name = 'less_'.$hash.'_'.common::GenEtag( filesize($list_file) ).'.css';
-		$compiled_file = '/data/_cache/'.$compiled_name;
-		file_put_contents( $dataDir.$compiled_file, $compiled );
+		if( file_put_contents( $dataDir.$compiled_file, $compiled ) ){
+			return $compiled_file;
+		}
 
-		return $compiled_file;
+		return false;
 	}
+
 
 
 	/**
@@ -2630,18 +2771,56 @@ class gpOutput{
 	 * @return mixed Compiled css string or false
 	 *
 	 */
-	static function ParseLess( &$less_files ){
+	static function ParseLess( &$less_files, $files_hash = false ){
 		global $dataDir;
 
+		if( !$files_hash ){
+			$files_hash = common::ArrayHash($less_files);
+		}
 
-		//prepare the processor
-		includeFile('thirdparty/x_phpless/Less.php');
-		$parser = new Less_Parser(); //array('compress'=>true)
-		$parser->SetCacheDir( $dataDir.'/data/_cache' );
+		$compiled = false;
 
-		//$import_dirs[$dataDir.'/include/thirdparty/Bootstrap/less/'] = common::GetDir('/include/thirdparty/Bootstrap/less/');
+		// don't use less if the memory limit is less than 64M
+		$limit = @ini_get('memory_limit');
+		if( $limit ){
+			$limit = common::getByteValue( $limit );
+
+			//if less than 64M, disable less compiler if we can't increase
+			if( $limit < 67108864 && @ini_set('memory_limit','96M') === false ){
+				if( common::LoggedIn() ){
+					msg('LESS compilation disabled. Please increase php\'s memory_limit');
+				}
+				return false;
+
+			//if less than 96M, try to increase
+			}elseif( $limit < 100663296 ){
+				@ini_set('memory_limit','96M');
+			}
+		}
+
+
+		//compiler options
+		$options = array();
+		//$options['compress']			= true;
+
+		/*
+		$source_map_file = '/data/_cache/'.$files_hash.'.map';
+		$options['sourceMap']			= true;
+		$options['sourceMapBasepath']	= $dataDir;
+		$options['sourceMapWriteTo']	= $dataDir.$source_map_file;
+		$options['sourceMapURL']		= common::GetDir($source_map_file);
+		*/
+
+
+		//prepare the compiler
+		includeFile('thirdparty/less.php/Less.php');
+		$parser = new Less_Parser($options);
 		$import_dirs[$dataDir] = common::GetDir('/');
 		$parser->SetImportDirs($import_dirs);
+
+
+		$parser->cache_method = 'php';
+		$parser->SetCacheDir( $dataDir.'/data/_cache' );
 
 
 		// combine files
@@ -2674,8 +2853,14 @@ class gpOutput{
 			return false;
 		}
 
-		$less_files = $parser->allParsedFiles();
 
+		// significant difference in used memory 15,000,000 -> 6,000,000. Max still @ 15,000,000
+		if( function_exists('gc_collect_cycles') ){
+			gc_collect_cycles();
+		}
+
+
+		$less_files = $parser->allParsedFiles();
 		return $compiled;
 	}
 

@@ -17,6 +17,7 @@ includeFile('tool/ftp.php');
 <head>
 <title>gpEasy Installation</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta name="robots" content="noindex,nofollow"/>
 <script type="text/javascript">
 
 function toggleOptions(){
@@ -37,15 +38,17 @@ body{
 	margin:1em 5em;
 	font-family: "Lucida Grande",Verdana,"Bitstream Vera Sans",Arial,sans-serif;
 	background:#f1f1f1;
-
+	font-size:13px;
 }
-div,p,td,th{
+
+td,th{
 	font-size:12px;
 	}
 
 a{
 	color:#4466aa;
 	text-decoration:none;
+	border-bottom:1px dotted #869ece;
 	}
 
 h1{
@@ -109,8 +112,11 @@ h3,h4{
 	padding:1px;
 	border:0 none;
 	}
-.padded_table td{
-	padding:5px;
+.padded_table{
+	border-collapse:collapse;
+}
+.padded_table > tbody > tr > td{
+	padding:5px 8px;
 }
 
 
@@ -149,6 +155,8 @@ input.text:focus{
 .failed{
 	color:#FF0000;
 }
+
+
 .passed{
 	color:#009900;
 }
@@ -161,6 +169,7 @@ input.text:focus{
 	padding:5px 7px;
 	white-space:nowrap;
 	background-color:#f5f5f5;
+	display:block;
 	}
 .nowrap{
 	white-space:nowrap;
@@ -206,10 +215,13 @@ echo '</body></html>';
 //Install Class
 class gp_install{
 
-	var $can_write_data = true;
+	var $can_write_data		= true;
+	var $ftp_root			= false;
+	var $root_mode;
 
 
-	function gp_install(){
+
+	function __construct(){
 		global $languages,$install_language,$langmessage;
 
 		//language preferences
@@ -233,19 +245,19 @@ class gp_install{
 		switch($cmd){
 
 			case 'Continue':
-				FTP_Prepare();
+				$this->FTP_Prepare();
 			break;
 
 			case 'Install':
-				$installed = Install_Normal();
+				$installed = $this->Install_Normal();
 			break;
 		}
 
 		if( !$installed ){
-			LanguageForm();
+			$this->LanguageForm();
 			$this->CheckFolders();
 		}else{
-			Installed();
+			$this->Installed();
 		}
 
 	}
@@ -280,7 +292,7 @@ class gp_install{
 				echo '<td class="failed">???</td>';
 				$ok = false;
 
-			}elseif( version_compare(phpversion(),'5.2','>=') ){
+			}elseif( version_compare(phpversion(),'5.3','>=') ){
 				echo '<td class="passed">'.$langmessage['Passed'].'</td>';
 				echo '<td class="passed">'.phpversion().'</td>';
 
@@ -290,7 +302,7 @@ class gp_install{
 				$ok = false;
 
 			}
-			echo '<td>5.2+</td>';
+			echo '<td>5.3+</td>';
 			echo '</tr>';
 
 
@@ -367,6 +379,52 @@ class gp_install{
 			$this->StatusRow($checkValue,$langmessage['Off'],$langmessage['On']);
 			echo '</tr>';
 
+
+		// memory_limit
+		// LESS compiling uses a fair amount of memory
+		$checkValue = ini_get('memory_limit');
+		echo '<tr>';
+			echo '<td>';
+			echo '<a href="http://php.net/manual/ini.core.php#ini.memory-limit" target="_blank">';
+			echo 'Memory Limit';
+			echo '</a>';
+			echo '</td>';
+
+			//can't get memory_limit value
+			if( @ini_set('memory_limit','96M') !== false ){
+				echo '<td class="passed">'.$langmessage['Passed'].'</td>';
+				echo '<td class="passed">Adjustable</td>';
+
+			}elseif( !$checkValue ){
+				echo '<td class="passed_orange">'.$langmessage['Passed'].'</td>';
+				echo '<td class="passed_orange">';
+				echo '???';
+				echo '</td>';
+
+			}else{
+				$byte_value = common::getByteValue($checkValue);
+				if( $byte_value > 100663296 ){
+					echo '<td class="passed">'.$langmessage['Passed'].'</td>';
+					echo '<td class="passed">';
+					echo $checkValue;
+					echo '</td>';
+
+				}elseif( $byte_value > 67108864 ){
+					echo '<td class="passed_orange">'.$langmessage['Passed'].'</td>';
+					echo '<td class="passed_orange">';
+					echo $checkValue;
+					echo '</td>';
+
+				}else{
+					echo '<td class="failed">'.$langmessage['Failed'].'</td>';
+					echo '<td class="failed">'.$checkValue.'</td>';
+					$ok = false;
+				}
+			}
+			echo '<td> 96M+ or Adjustable</td>';
+			echo '</tr>';
+
+
 		echo '<tr>';
 		echo '<th>'.$langmessage['Checking'].'...</th>';
 		echo '<th>'.$langmessage['Status'].'</th>';
@@ -388,12 +446,12 @@ class gp_install{
 		echo '<br/>';
 
 		if( $ok ){
-			Form_Entry();
+			$this->Form_Entry();
 			return;
 		}
 
 		if( !$this->can_write_data ){
-			Form_Permissions();
+			$this->Form_Permissions();
 		}else{
 			echo '<h3>'.$langmessage['Notes'].'</h3>';
 			echo '<div>';
@@ -413,7 +471,7 @@ class gp_install{
 			echo '<td class="passed">'.$langmessage['Passed'].'</td>';
 			echo '<td class="passed">'.$label_true.'</td>';
 		}else{
-			echo '<td class="failed">'.$langmessage['Failed'].': '.$langmessage['See_Below'].'</td>';
+			echo '<td class="failed">'.$langmessage['Failed'].'</td>';
 			echo '<td class="failed">'.$label_true.'</td>';
 		}
 		echo '<td>'.$label_true.'</td>';
@@ -423,18 +481,15 @@ class gp_install{
 	function CheckDataFolder(){
 		global $ok,$dataDir,$langmessage;
 
-		echo '<tr>';
-
-		echo '<td class="nowrap">';
+		echo '<tr><td class="nowrap">';
 		$folder = $dataDir.'/data';
-		if( strlen($folder) > 23 ){
-			$show = '...'.substr($folder,-20);
+		if( strlen($folder) > 33 ){
+			$show = '...'.substr($folder,-30);
 		}else{
 			$show = $folder;
 		}
-		echo sprintf($langmessage['Permissions_for'],$show);
-		echo ' &nbsp; ';
-		echo '</td>';
+		echo $show;
+		echo ' &nbsp; </td>';
 
 
 		if( !is_dir($folder)){
@@ -451,26 +506,17 @@ class gp_install{
 			$this->can_write_data = $ok = false;
 		}
 
-		//show current info
-		$expected = '777';
-		if( file_exists($folder) && $current = @substr(decoct(fileperms($folder)), -3) ){
-			$expected = FileSystem::getExpectedPerms($folder);
-			if( FileSystem::perm_compare($expected,$current) ){
-				echo '<td class="passed">';
-				echo $current;
-			}else{
-				echo '<td class="passed_orange">';
-				echo $current;
-			}
+		if( $this->can_write_data ){
+			echo '<td class="passed">';
+			echo $langmessage['Writable'];
 		}else{
 			echo '<td class="passed_orange">';
-			echo '???';
+			echo $langmessage['Not Writable'];
 		}
-		echo '</td>';
-		echo '<td>';
-		echo $expected;
-		echo '</td>';
-		echo '</tr>';
+
+		echo '</td><td>';
+		echo $langmessage['Writable'];
+		echo '</td></tr>';
 	}
 
 
@@ -598,12 +644,385 @@ class gp_install{
 
 
 
+	/**
+	 * Change the permissions of the data directory
+	 *
+	 */
+	function FTP_Prepare(){
+		global $langmessage;
 
-}//end class
+		echo '<h2>'.$langmessage['Using_FTP'].'...</h2>';
+		echo '<ul>';
+		$this->_FTP_Prepare();
+		$this->FTP_RestoreMode();
+		echo '</ul>';
+	}
+
+
+	function _FTP_Prepare(){
+
+		if( !$this->FTPConnection() ){
+			return;
+		}
+
+		if( $this->FTP_DataFolder() ){
+			return;
+		}
+
+		$this->FTP_DataMode();
+	}
+
+	/**
+	 * If recreating the data folder with php doesn't work
+	 * Attempt to change the mode of the folder directly
+	 *
+	 */
+	function FTP_DataMode(){
+		global $langmessage, $install_ftp_connection, $dataDir;
+
+		//Change Mode of /data
+		$ftpData = $this->ftp_root.'/data';
+		$modDir = ftp_site($install_ftp_connection, 'CHMOD 0777 '. $ftpData );
+		if( !$modDir ){
+			echo '<li><span class="failed">';
+			echo sprintf($langmessage['Could_Not_'],'<em>CHMOD 0777 '. $ftpData.'</em>');
+			echo '</span></li>';
+			return false;
+		}
+
+		echo '<li><span class="passed">';
+		echo sprintf($langmessage['FTP_PERMISSIONS_CHANGED'],'<em>'.$ftpData.'</em>');
+		echo '</span></li>';
 
 
 
-//Install Functions
+		//passed
+		echo '<li><span class="passed"><b>';
+		echo $langmessage['Success_continue_below'];
+		echo '</b></span></li>';
+	}
+
+
+	/**
+	 * Create the data folder with appropriate permissions
+	 *
+	 * 1) make parent directory writable
+	 * 2) delete existing /data folder
+	 * 3) create /data folder with php's mkdir() (so it has the correct owner)
+	 * 4) restore parent directory
+	 *
+	 */
+	function FTP_DataFolder(){
+		global $dataDir, $install_ftp_connection, $langmessage;
+
+		$this->root_mode = fileperms($dataDir);
+		if( !$this->root_mode ){
+			return false;
+		}
+
+
+		// (1)
+		$modDir = ftp_site($install_ftp_connection, 'CHMOD 0777 '. $this->ftp_root );
+		if( !$modDir ){
+			echo '<li><span class="failed">';
+			echo sprintf($langmessage['Could_Not_'],'<em>CHMOD 0777 '. $this->ftp_root.'</em>');
+			echo '</span></li>';
+			return false;
+		}
+
+		// (2) use rename instead of trying to delete recursively
+		$php_dir	= $dataDir.'/data';
+		$php_del	= false;
+
+		if( file_exists($php_dir) ){
+
+			$ftp_dir	= rtrim($this->ftp_root,'/').'/data';
+			$del_name	= '/data-delete-'.rand(0,10000);
+			$ftp_del	= rtrim($this->ftp_root,'/').$del_name;
+			$php_del	= $dataDir.$del_name;
+
+			$changed	= ftp_rename($install_ftp_connection, $ftp_dir , $ftp_del );
+			if( !$changed ){
+				echo '<li><span class="failed">';
+				echo sprintf($langmessage['Could_Not_'],'<em>Remove '. $this->ftp_root.'/data</em>');
+				echo '</span></li>';
+				return false;
+			}
+		}
+
+
+		// (3) use rename instead of trying to delete recursively
+		$mode = 0755;
+		if( defined(gp_chmod_dir) ){
+			$mode = gp_chmod_dir;
+		}
+		if( !mkdir($php_dir,$mode) ){
+			echo '<li><span class="failed">';
+			echo sprintf($langmessage['Could_Not_'],'<em>mkdir('.$php_dir.')</em>');
+			echo '</span></li>';
+			return false;
+		}
+
+
+		// (4) will be done afterwards
+
+
+		// make sure it's writable ?
+		clearstatcache();
+		if( !gp_is_writable($php_dir) ){
+			return false;
+		}
+
+		echo '<li><span class="passed"><b>';
+		echo $langmessage['Success_continue_below'];
+		echo '</b></span></li>';
+
+		if( $php_del ){
+			$this->CopyData($php_del, $php_dir);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Copy files from the "deleted" data folder to the new data folder
+	 *
+	 */
+	function CopyData($from_dir, $to_dir){
+
+		$files = scandir($from_dir);
+		foreach($files as $file){
+
+			if( $file === '..' || $file === '.' ){
+				continue;
+			}
+
+			$from = $from_dir.'/'.$file;
+
+			//no directories
+			if( is_dir($from) ){
+				continue;
+			}
+
+			$to = $to_dir.'/'.$file;
+			copy($from,$to);
+		}
+	}
+
+
+	/**
+	 * Restore the mode of the root directory to it's original mode
+	 *
+	 */
+	function FTP_RestoreMode(){
+		global $install_ftp_connection, $langmessage;
+
+		if( !$this->root_mode || !$install_ftp_connection ){
+			return;
+		}
+
+
+		$mode		= $this->root_mode & 0777;
+		$mode		= '0'.decoct($mode);
+		$ftp_cmd	= 'CHMOD '.$mode.' '.$this->ftp_root;
+
+		if( !ftp_site($install_ftp_connection, $ftp_cmd ) ){
+			echo '<li><span class="failed">';
+			echo sprintf($langmessage['Could_Not_'],'<em>Restore mode for '. $this->ftp_root.': '.$ftp_cmd.'</em>');
+			echo '</span></li>';
+			return;
+		}
+	}
+
+
+	/**
+	 * Establish an FTP connection to be used by the installer
+	 * todo: remove $install_ftp_connection globabl
+	 */
+	function FTPConnection(){
+		global $dataDir, $langmessage, $install_ftp_connection;
+
+
+		//test for functions
+		if( !function_exists('ftp_connect') ){
+			echo '<li>';
+			echo '<span class="failed">';
+			echo $langmessage['FTP_UNAVAILABLE'];
+			echo '</span>';
+			echo '</li>';
+			return false;
+		}
+
+
+		//Try to connect
+		echo '<li>';
+		$install_ftp_connection = @ftp_connect($_POST['ftp_server'],21,6);
+		if( !$install_ftp_connection ){
+			echo '<span class="failed">';
+			echo sprintf($langmessage['FAILED_TO_CONNECT'],'<em>'.htmlspecialchars($_POST['ftp_server']).'</em>');
+			echo '</span>';
+			echo '</li>';
+			return false;
+		}
+
+		echo '<span class="passed">';
+		echo sprintf($langmessage['CONNECTED_TO'],'<em>'.htmlspecialchars($_POST['ftp_server']).'</em>');
+		echo '</span></li>';
+
+
+		//Log in
+		echo '<li>';
+		$login_result = @ftp_login($install_ftp_connection, $_POST['ftp_user'], $_POST['ftp_pass']);
+		if( !$login_result ){
+			echo '<span class="failed">';
+			echo sprintf($langmessage['NOT_LOOGED_IN'],'<em>'.htmlspecialchars($_POST['ftp_user']).'</em>');
+			echo '</span></li>';
+			return false;
+		}
+
+		echo '<span class="passed">';
+		echo sprintf($langmessage['LOGGED_IN'],'<em>'.htmlspecialchars($_POST['ftp_user']).'</em>');
+		echo '</span></li>';
+
+
+		//Get FTP Root
+		echo '<li>';
+		if( $login_result ){
+			$this->ftp_root = gpftp::GetFTPRoot($install_ftp_connection,$dataDir);
+		}
+		if( !$this->ftp_root ){
+			echo '<span class="failed">';
+			echo $langmessage['ROOT_DIRECTORY_NOT_FOUND'];
+			echo '</span>';
+			echo '</li>';
+			return false;
+		}
+
+		echo '<span class="passed">';
+		echo sprintf($langmessage['FTP_ROOT'],'<em>'.$this->ftp_root.'</em>');
+		echo '</span></li>';
+
+		return true;
+	}
+
+
+	function Form_Permissions(){
+		global $langmessage,$dataDir;
+
+		echo '<div>';
+		echo '<h2>'.$langmessage['Changing_File_Permissions'].'</h2>';
+		echo '<p>';
+		echo $langmessage['REFRESH_AFTER_CHANGE'];
+		echo '</p>';
+
+		echo '<table class="styledtable fullwidth">';
+
+		//manual method
+		echo '<tr><th>';
+		echo $langmessage['manual_method'];
+		echo '</th></tr>';
+		echo '<tr><td><p>';
+		echo $langmessage['LINUX_CHOWN'];
+		echo '</p>';
+
+		$owner = $this->GetPHPOwner();
+		if( $owner ){
+			echo '<tt class="code">chown '.$owner.' "'.$dataDir.'/data"</tt>';
+			echo '<small>Note: "'.$owner.'" appears to be the owner uid of PHP on your server</small>';
+		}else{
+			echo '<tt class="code">chown ?? "'.$dataDir.'/data"</tt>';
+			echo '<small>Replace ?? with the owner uid of PHP on your server</small>';
+		}
+
+		echo '<p><a href="">'.$langmessage['Refresh'].'</a></p>';
+		echo '</td></tr>';
+
+		//ftp
+		echo '<tr><th>FTP</th></tr>';
+		echo '<tr><td><p>';
+		echo $langmessage['MOST_FTP_CLIENTS'];
+		echo '</p>';
+
+		echo '<p>Using your FTP client, we recommend the following steps to make the data directory writable</p>';
+
+		echo '<ol>';
+		echo '<li>Make "'.$dataDir.'" writable</li>';
+		echo '<li>Delete "'.$dataDir.'/data"</li>';
+		echo '<li>Run gpEasy Installer by refreshing this page</li>';
+		echo '<li>Restore the permissions of "'.$dataDir.'"</li>';
+		echo '</ol>';
+
+		echo '</td></tr>';
+
+
+		//
+		if( function_exists('ftp_connect') ){
+			echo '<tr><th>';
+			echo $langmessage['Installer'];
+			echo '</th></tr>';
+			echo '<tr><td>';
+			echo '<p>';
+			echo $langmessage['FTP_CHMOD'];
+			echo '</p>';
+			$this->Form_FTPDetails();
+			echo '</td></tr>';
+		}
+
+
+
+		echo '</table>';
+		echo '</div>';
+	}
+
+	/**
+	 * Attempt to get the owner of php
+	 *
+	 */
+	function GetPHPOwner(){
+		global $dataDir;
+
+		if( !function_exists('fileowner') ){
+			return;
+		}
+
+
+		$name = tempnam( sys_get_temp_dir(), 'gpinstall-' );
+		if( !$name ){
+			return;
+		}
+
+		return fileowner($name);
+	}
+
+
+	function Form_FTPDetails(){
+		global $langmessage;
+
+		$_POST += array('ftp_server'=>gpftp::GetFTPServer(),'ftp_user'=>'');
+
+		echo '<form action="'.common::GetUrl('').'" method="post">';
+		echo '<table class="padded_table">';
+		echo '<tr><td align="left">'.$langmessage['FTP_Server'].' </td><td>';
+		echo '<input type="text" class="text" size="20" name="ftp_server" value="'. htmlspecialchars($_POST['ftp_server']) .'" required />';
+		echo '</td></tr>';
+
+		echo '<tr><td align="left">'.$langmessage['FTP_Username'].' </td><td>';
+		echo '<input type="text" class="text" size="20" name="ftp_user" value="'. htmlspecialchars($_POST['ftp_user']) .'" />';
+		echo '</td></tr>';
+
+		echo '<tr><td align="left">'.$langmessage['FTP_Password'].' </td><td>';
+		echo '<input type="password" class="text" size="20" name="ftp_pass" value="" />';
+		echo '</td></tr>';
+
+		echo '<tr><td align="left">&nbsp;</td><td>';
+		echo '<input type="hidden" name="cmd" value="Continue" />';
+		echo '<input type="submit" class="submit" name="aaa" value="'.$langmessage['continue'].'" />';
+		echo '</td></tr>';
+		echo '</table>';
+		echo '</form>';
+
+	}
+
 
 
 	function LanguageForm(){
@@ -633,24 +1052,21 @@ class gp_install{
 	}
 
 
-
-
 	function Installed(){
 		global $langmessage;
 		echo '<h4>'.$langmessage['Installation_Was_Successfull'].'</h4>';
-		echo '<ul>';
-		echo '<li>';
+
+		echo '<h2>';
 		echo common::Link('',$langmessage['View_your_web_site']);
-		echo '</li>';
-		echo '<li>';
-		echo common::Link('Admin',$langmessage['Log_in_and_start_editing']);
-		echo '</li>';
+		echo '</h2>';
+
 		echo '</ul>';
 
 		echo '<p>';
 		echo 'For added security, you may delete the /include/install/install.php file from your server.';
 		echo '</p>';
 	}
+
 
 	function Form_Entry(){
 		global $langmessage;
@@ -668,104 +1084,6 @@ class gp_install{
 		echo '</p>';
 		echo '</form>';
 	}
-
-
-	function Form_Permissions(){
-		global $langmessage,$dataDir;
-
-		echo '<div>';
-		echo '<h3>'.$langmessage['Changing_File_Permissions'].'</h3>';
-		echo '<p>';
-		echo $langmessage['REFRESH_AFTER_CHANGE'];
-		echo '</p>';
-
-		echo '<table class="styledtable fullwidth">';
-
-		echo '<tr>';
-		echo '<th>';
-		echo $langmessage['manual_method'];
-		echo '</th>';
-		echo '</tr><tr>';
-		echo '<td>';
-		echo '<p>';
-		echo $langmessage['LINUX_CHMOD'];
-		echo '</p>';
-		echo '<div class="code"><tt>';
-		echo 'chmod 777 "'.$dataDir.'/data"';
-		//echo 'chmod 777 "/'.$langmessage['your_install_directory'].'/data"';
-		echo '</tt></div>';
-		echo '<p>';
-		echo '<a href="">'.$langmessage['Refresh'].'</a>';
-		echo '</p>';
-		echo '</td></tr>';
-
-		echo '<tr><th>FTP</th>';
-		echo '</tr>';
-		echo '<tr><td>';
-		echo '<p>';
-		echo $langmessage['MOST_FTP_CLIENTS'];
-		echo '</p>';
-		echo '</td>';
-		echo '</tr>';
-
-		if( function_exists('ftp_connect') ){
-			echo '<tr><th>';
-			echo $langmessage['Installer'];
-			echo '</th>';
-			echo '</tr>';
-			echo '<tr><td>';
-			echo '<p>';
-			echo $langmessage['FTP_CHMOD'];
-			echo '</p>';
-			echo '<form action="'.common::GetUrl('').'" method="post">';
-			echo '<table class="padded_table">';
-			Form_FTPDetails();
-			echo '<tr>';
-				echo '<td align="left">&nbsp;</td><td>';
-				echo '<input type="hidden" name="cmd" value="Continue" />';
-				echo '<input type="submit" class="submit" name="aaa" value="'.$langmessage['continue'].'" />';
-				echo '</td>';
-				echo '</tr>';
-			echo '</table>';
-			echo '</form>';
-			echo '</td>';
-			echo '</tr>';
-		}
-
-
-
-		echo '</table>';
-		echo '</div>';
-
-
-	}
-
-	function Form_FTPDetails($required=false){
-		global $langmessage;
-		$_POST += array('ftp_server'=>gpftp::GetFTPServer(),'ftp_user'=>'');
-
-		if( $required ){
-			$required = '*';
-		}
-		echo '<tr>';
-			echo '<td align="left">'.$langmessage['FTP_Server'].$required.' </td><td>';
-			echo '<input type="text" class="text" size="20" name="ftp_server" value="'. htmlspecialchars($_POST['ftp_server']) .'" />';
-			echo '</td>';
-			echo '</tr>';
-
-		echo '<tr>';
-			echo '<td align="left">'.$langmessage['FTP_Username'].$required.' </td><td>';
-			echo '<input type="text" class="text" size="20" name="ftp_user" value="'. htmlspecialchars($_POST['ftp_user']) .'" />';
-			echo '</td>';
-			echo '</tr>';
-
-		echo '<tr>';
-			echo '<td align="left">'.$langmessage['FTP_Password'].$required.' </td><td>';
-			echo '<input type="password" class="text" size="20" name="ftp_pass" value="" />';
-			echo '</td>';
-			echo '</tr>';
-	}
-
 
 
 	function Install_Normal(){
@@ -787,125 +1105,14 @@ class gp_install{
 	}
 
 
-	function FTP_Prepare(){
-		global $langmessage,$install_ftp_connection;
-
-		echo '<h2>'.$langmessage['Using_FTP'].'...</h2>';
-		echo '<ul>';
-
-		$ftp_root = false;
-		if( Install_FTPConnection($ftp_root) === false ){
-			return;
-		}
-
-		//Change Mode of /data
-		echo '<li>';
-			$ftpData = $ftp_root.'/data';
-			$modDir = ftp_site($install_ftp_connection, 'CHMOD 0777 '. $ftpData );
-			if( !$modDir ){
-				echo '<span class="failed">';
-				echo sprintf($langmessage['Could_Not_'],'<em>CHMOD 0777 '. $ftpData.'</em>');
-				//echo 'Could not <em>CHMOD 0777 '. $ftpData.'</em>';
-				echo '</span>';
-				echo '</li></ul>';
-				return false;
-			}else{
-				echo '<span class="passed">';
-				echo sprintf($langmessage['FTP_PERMISSIONS_CHANGED'],'<em>'.$ftpData.'</em>');
-				//echo 'File permissions for <em>'.$ftpData.'</em> changed.';
-				echo '</span>';
-			}
-			echo '</li>';
-
-		echo '<li>';
-				echo '<span class="passed">';
-				echo '<b>'.$langmessage['Success_continue_below'].'</b>';
-				echo '</span>';
-				echo '</li>';
-
-		echo '</ul>';
+}//end class
 
 
 
-	}
 
-	function Install_FTPConnection(&$ftp_root){
-		global $dataDir,$langmessage,$install_ftp_connection;
 
-		//test for functions
-		echo '<li>';
-			if( !function_exists('ftp_connect') ){
-				echo '<span class="failed">';
-				echo $langmessage['FTP_UNAVAILABLE'];
-				echo '</span>';
-				echo '</li></ul>';
-				return false;
-			}else{
-				echo '<span class="passed">';
-				echo $langmessage['FTP_AVAILABLE'];
-				echo '</span>';
-			}
-			echo '</li>';
 
-		//Try to connect
-		echo '<li>';
-			$install_ftp_connection = @ftp_connect($_POST['ftp_server'],21,6);
-			if( !$install_ftp_connection ){
-				echo '<span class="failed">';
-				echo sprintf($langmessage['FAILED_TO_CONNECT'],'<em>'.htmlspecialchars($_POST['ftp_server']).'</em>');
-				echo '</span>';
-				echo '</li></ul>';
-				return false;
-			}else{
-				echo '<span class="passed">';
-				echo sprintf($langmessage['CONNECTED_TO'],'<em>'.htmlspecialchars($_POST['ftp_server']).'</em>');
-				//echo 'Connected to <em>'.$_POST['ftp_server'].'</em>';
-				echo '</span>';
-			}
-			echo '</li>';
 
-		//Log in
-		echo '<li>';
-			$login_result = @ftp_login($install_ftp_connection, $_POST['ftp_user'], $_POST['ftp_pass']);
-			if( !$login_result ){
-				echo '<span class="failed">';
-				echo sprintf($langmessage['NOT_LOOGED_IN'],'<em>'.htmlspecialchars($_POST['ftp_user']).'</em>');
-				//echo 'Could not log in user  <em>'.$_POST['ftp_user'].'</em>';
-				echo '</span>';
-				echo '</li></ul>';
-				return false;
-			}else{
-				echo '<span class="passed">';
-				echo sprintf($langmessage['LOGGED_IN'],'<em>'.htmlspecialchars($_POST['ftp_user']).'</em>');
-				//echo 'User <em>'.$_POST['ftp_user'].'</em> logged in.';
-				echo '</span>';
-			}
-			echo '</li>';
-
-		//Get FTP Root
-
-		echo '<li>';
-			$ftp_root = false;
-			if( $login_result ){
-				$ftp_root = gpftp::GetFTPRoot($install_ftp_connection,$dataDir);
-			}
-			if( !$ftp_root ){
-			//if( !$login_result ){
-				echo '<span class="failed">';
-				echo $langmessage['ROOT_DIRECTORY_NOT_FOUND'];
-				echo '</span>';
-				echo '</li></ul>';
-				return false;
-			}else{
-				echo '<span class="passed">';
-				echo sprintf($langmessage['FTP_ROOT'],'<em>'.$ftp_root.'</em>');
-				//echo 'FTP Root found: <em>'.$ftp_root.'</em>';
-				echo '</span>';
-			}
-			echo '</li>';
-
-		return true;
-	}
 
 
 

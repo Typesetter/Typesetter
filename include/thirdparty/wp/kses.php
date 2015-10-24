@@ -406,7 +406,7 @@
 	$allowedprotocols = array( 'http', 'https', 'ftp', 'ftps', 'mailto', 'news', 'irc', 'gopher', 'nntp', 'feed', 'telnet', 'mms', 'rtsp', 'svn' );
 
 
-	//$allowedposttags = array_map( '_wp_add_global_attributes', $allowedposttags ); //commented for gpEasy
+	$allowedposttags = array_map( '_wp_add_global_attributes', $allowedposttags );
 
 
 /**

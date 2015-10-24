@@ -5,38 +5,71 @@
 		//show edit window
 		$gp.LoadStyle('/include/css/inline_image.css');
 
-		var save_path = gp_editing.get_path(area_id);
-		var edit_img = gp_editing.get_edit_area(area_id);
+		var save_path	= gp_editing.get_path(area_id);
+		var edit_img	= gp_editing.get_edit_area(area_id);
+
 		edit_img.addClass('gp_image_edit');
-		var img_src = edit_img.attr('src');
-		var edited = false;
-		var save_obj = {};
+
+		var save_obj	= {
+			src			: edit_img.attr('src')
+			};
+
+
+		// gpEasy 4.6a2+
+		// use the original image
+		if( section_object.orig_src ){
+			save_obj.src		= section_object.orig_src;
+			save_obj.posx		= section_object.posx;
+			save_obj.posy		= section_object.posy;
+			save_obj.width		= section_object.attributes.width;
+			save_obj.height 	= section_object.attributes.height;
+		}
+
+
+		var anim_values = {
+			posx		: 0,
+			posy		: 0,
+			height		: 0,
+			width		: 0
+			};
+
+
+		var field_w, field_h, field_x, field_y;
+
 
 		$gp.loaded();
 		gp_editing.editor_tools();
-
-		//$('#ckeditor_top').html('');
-		$('#ckeditor_controls').prepend('<div id="gp_folder_options"></div>');
-
-
 
 
 		//create gp_editor object
 		gp_editor = {
 			save_path: save_path,
 
+			saved_data: '',
+
 			/**
 			 * Check to see if there is unsaved data
 			 *
 			 */
 			checkDirty:function(){
-				return edited;
+				var curr_data	= gp_editor.gp_saveData();
+				if( gp_editor.saved_data != curr_data ){
+					return true;
+				}
+				return false;
 			},
 			gp_saveData:function(){
-				return jQuery.param( save_obj )+'&cmd=save_image';
+
+				save_obj.posx	= field_x.value;
+				save_obj.posy	= field_y.value;
+
+				save_obj.width	= field_w.value;
+				save_obj.height = field_h.value;
+
+				return jQuery.param( save_obj )+'&cmd=save_inline';
 			},
 			resetDirty:function(){
-				edited = false;
+				gp_editor.saved_data	= gp_editor.gp_saveData();
 			},
 			updateElement:function(){}
 		}
@@ -58,51 +91,88 @@
 		 * Set up editing display after content has loaded from php
 		 *
 		 */
-		var change_timeout = false;
 		gpresponse.image_options_loaded = function(){
 
+			field_w			= input('width');
+			field_h			= input('height');
+			field_x			= input('left');
+			field_y			= input('top');
+
+
+
+			gp_editing.CreateTabs();
+			LoadImages(false);
+
+
 			//change src to blank and set as background image
-			var width = edit_img.width();
-			var height = edit_img.height()
-			value('orig_width', width );
-			value('orig_height', height );
-			SetCurrentImage( img_src, width, height );
+			anim_values.width	= edit_img.width();
+			anim_values.height	= edit_img.height();
+
+			SetCurrentImage( save_obj.src, anim_values.width, anim_values.height );
 			SetupDrag();
 
 			edit_img.attr('src',gp_blank_img); //after getting size
 
-			//set up height/width listeners
-			$('#gp_current_image input').on('keyup keydown change paste',function(){
-				if( change_timeout ) clearTimeout(change_timeout);
-				change_timeout = setTimeout(function(){
-					edited = true;
+			gp_editor.saved_data = gp_editor.gp_saveData();
 
-					//width - height
-					save_obj.width = value('width');
-					save_obj.height = value('height');
-					edit_img.stop(true,true).animate({'width':save_obj.width,'height':save_obj.height});
 
-					//left - top
-					var left = value('left');
-					var top = value('top');
-					SetPosition(left,top);
+			//up/down arrows
+			$('#gp_current_image input').on('keydown',function(evt){
+				switch(evt.which){
+					case 38: //up
+						this.value	= parseInt(this.value) + 1;
+					break;
 
-				},400);
+					case 40: // down
+						this.value	= parseInt(this.value) - 1;
+					break;
+				}
 			});
 		}
 
-		function value(name,value){
-			var field = input(name);
-			if( typeof(value) !== 'undefined' ){
-				field.val( value );
+		/**
+		 * Continuous animation
+		 *
+		 */
+		window.setInterval(function(){
+
+			//height/width
+			anim_values.width	= AnimValue( field_w.value, anim_values.width );
+			anim_values.height	= AnimValue( field_h.value, anim_values.height );
+			edit_img.stop(true,true).animate({'width':anim_values.width,'height':anim_values.height},100);
+
+
+			//position
+			anim_values.posx	= AnimValue( field_x.value, anim_values.posx );
+			anim_values.posy	= AnimValue( field_y.value, anim_values.posy );
+			edit_img.css({'background-position':anim_values.posx+'px '+anim_values.posy+'px'});
+
+		},100);
+
+
+		/**
+		 * Get amount we should animate by
+		 *
+		 */
+		function AnimValue(desired, current){
+			desired = parseInt(desired);
+			current = parseInt(current);
+
+			if( desired == current ){
+				return desired;
 			}
-			return parseInt( field.val() );
+
+			if( desired > current ){
+				return current + Math.min(20,desired-current);
+			}
+
+			return current - Math.min(20,current-desired);
 		}
+
 
 		function input(name){
-			return $('#gp_current_image input[name='+name+']');
+			return $('#gp_current_image input[name='+name+']').get(0);
 		}
-
 
 
 		/**
@@ -119,8 +189,9 @@
 				evt.preventDefault();
 				mousedown = true;
 
-				pos_startx = posx = save_obj.posx || 0;
-				pos_starty = posy = save_obj.posy || 0;
+				pos_startx = posx = parseInt(field_x.value || 0);
+				pos_starty = posy = parseInt(field_y.value || 0);
+
 
 				mouse_startx = evt.pageX;
 				mouse_starty = evt.pageY;
@@ -132,6 +203,7 @@
 				if( mousedown ){
 					posx = pos_startx + evt.pageX - mouse_startx;
 					posy = pos_starty + evt.pageY - mouse_starty;
+
 					SetPosition(posx,posy);
 				}
 			});
@@ -148,24 +220,18 @@
 			evt.preventDefault();
 			var $this = $(this).stop(true,true);
 
-			var width = $this.data('width');
-			var height = $this.data('height');
+			var width			= $this.data('width');
+			var height			= $this.data('height');
 
 			SetCurrentImage( $this.attr('href'), width, height );
 			SetPosition(0,0);
-
-			//make sure this information is saved
-			save_obj.width = value('width');
-			save_obj.height = value('height');
-			edited = true;
 		}
 
 		function SetPosition(posx,posy){
-			save_obj.posx = posx = value('left', posx );
-			save_obj.posy = posy = value('top',  posy );
-			edit_img.css({'background-position':posx+'px '+posy+'px'});
-			edited = true;
+			field_x.value = posx;
+			field_y.value = posy;
 		}
+
 
 		/**
 		 * Set the current image
@@ -173,16 +239,16 @@
 		 */
 		function SetCurrentImage( src, width, height){
 			delete save_obj.src;
-			if( src !== img_src ){
+			if( src !== save_obj.src ){
 				save_obj.src = src;
 			}
 			edit_img.css({'background-image':'url("'+src+'")'});
 			$('#gp_current_image img').attr('src', src );
 
 			if( width > 0 && height > 0 ){
-				value('width', width );
-				value('height', height );
-				edit_img.stop(true,true).animate({'width':width,'height':height});
+
+				field_w.value	= width;
+				field_h.value	= height;
 			}
 		}
 
@@ -195,29 +261,16 @@
 			LoadImages(false);
 		}
 
-		/*
-		function setVisibleThemeImages(){
-			var minWidth = value('orig_width') - (value('orig_width') * 0.20);
-			var maxWidth = (value('orig_width') * 1.20);
-			var minHeight = value('orig_height') - (value('orig_height') * 0.20);
-			var maxHeight = (value('orig_height') * 1.20);
-			$('#gp_gallery_avail_imgs a').each(function(ind){
-			   var width =  $(this).attr('data-width');
-			   var height =  $(this).attr('data-height');
-			   if (!((width <= maxWidth) && (width >= minWidth) &&
-			      (height <= maxHeight) && (height >= minHeight))) {
-				  $(this).parent().hide();
-			   }
-			});
-		}
-		*/
-
 		$gp.links.deafult_sizes = function(){
-			value('width', value('orig_width') );
-			value('height', value('orig_height') );
-			input('width').change();
 
+			//get original image size
+			var img = $('<img>').css({'height':'auto','width':'auto','padding':0}).attr('src',save_obj.src).appendTo('body');
+
+			field_w.value 		= img.width();
+			field_h.value		= img.height();
 			SetPosition(0,0);
+
+			img.remove();
 		}
 
 
@@ -279,3 +332,4 @@
 		}
 
 	}
+

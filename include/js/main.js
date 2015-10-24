@@ -17,10 +17,12 @@ var $gp = {
 	 * Handler for loading json content
 	 *
 	 */
-	jGoTo : function(a){
+	jGoTo : function(a,this_context){
 		$gp.loading();
 		a = $gp.jPrep(a);
-		$.getJSON(a,$gp.Response);
+		$.getJSON(a,function(data,textStatus,jqXHR){
+			$gp.Response.call(this_context,data,textStatus,jqXHR);
+		});
 	},
 
 
@@ -30,8 +32,14 @@ var $gp = {
 	 *
 	 */
 	cGoTo : function(a,samepage){
-		var $link = $(a);
-		var query = a.search +'&verified='+encodeURIComponent($link.data('nonce'));
+
+		var $link	= $(a);
+		var query	= a.search;
+		var nonce	= $link.data('nonce');
+		if( nonce ){
+			query	+= '&verified='+encodeURIComponent(nonce);
+		}
+
 		$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
 
 		if( samepage ){
@@ -46,13 +54,14 @@ var $gp = {
 	 * Post request to server
 	 *
 	 */
-	post : function(a,data){
+	post : function(this_context,data){
+		console.log('post');
 		$gp.loading();
-		var frm = $(a).closest('form');
+		var frm = $(this_context).closest('form');
 
 		var b = frm.serialize() + '&verified='+encodeURIComponent(post_nonce); //needed when $gp.post is called without an input click
-		if( a.nodeName === 'INPUT' || a.nodeName === 'BUTTON' ){
-			b += '&'+encodeURIComponent(a.name)+'='+encodeURIComponent(a.value);
+		if( this_context.nodeName === 'INPUT' || this_context.nodeName === 'BUTTON' ){
+			b += '&'+encodeURIComponent(this_context.name)+'='+encodeURIComponent(this_context.value);
 		}
 		if( data ){
 			b += '&'+data;
@@ -61,7 +70,9 @@ var $gp = {
 		$.post(
 			$gp.jPrep(frm.attr('action')),
 			b,
-			$gp.Response,
+			function(data,textStatus,jqXHR){
+				$gp.Response.call(this_context,data,textStatus,jqXHR);
+			},
 			'json'
 			);
 		return false;
@@ -82,7 +93,9 @@ var $gp = {
 		$.post(
 			strip_from(lnk.href,'?'),
 			data,
-			$gp.Response,
+			function(data,textStatus,jqXHR){
+				$gp.Response.call(lnk,data,textStatus,jqXHR);
+			},
 			'json'
 			);
 	},
@@ -93,7 +106,7 @@ var $gp = {
 	 * Arguments order is same as jQuery's $.post()
 	 *
 	 */
-	postC : function(url,data,callback,datatype){
+	postC : function(url,data,callback,datatype,this_context){
 		callback = callback || $gp.Response;
 		datatype = datatype || 'json';
 
@@ -109,7 +122,9 @@ var $gp = {
 		$.post(
 			strip_from(url,'?'),
 			data,
-			callback,
+			function(data,textStatus,jqXHR){
+				callback.call(this_context,data,textStatus,jqXHR);
+			},
 			datatype
 			);
 	},
@@ -121,8 +136,11 @@ var $gp = {
 	 *
 	 */
 	cboxSettings : function(options){
-		options = options||{};
-		colorbox_lang = colorbox_lang||{};
+		options			= options||{};
+
+		if( typeof(colorbox_lang) != 'object' ){
+			colorbox_lang	= {};
+		}
 		return $.extend(colorbox_lang,{opacity:0.75,maxWidth:'90%',maxHeight:'90%'},options);
 	},
 
@@ -160,6 +178,7 @@ var $gp = {
 	Response : function(data,textStatus,jqXHR){
 
 		$('.messages').detach();
+
 		try{
 			$gp.CloseAdminBox();
 		}catch(a){}
@@ -169,15 +188,17 @@ var $gp = {
 		} catch(a){}
 
 
+		var this_context = this;
+
 		$.each(data,function(i,obj){
 
 			if( typeof($gp.response[obj.DO]) === 'function' ){
-				$gp.response[obj.DO].call(this,obj,textStatus,jqXHR);
+				$gp.response[obj.DO].call(this_context,obj,textStatus,jqXHR);
 				return;
 			}
 
 			if( typeof(gpresponse[obj.DO]) === 'function' ){
-				gpresponse[obj.DO].call(this,obj,textStatus,jqXHR);
+				gpresponse[obj.DO].call(this_context,obj,textStatus,jqXHR);
 				return;
 			}
 
@@ -198,11 +219,16 @@ var $gp = {
 					$(obj.CONTENT).appendTo('body').show().css({'top':0});
 				break;
 
+				//standard functions
 				default:
-					//do nothing
-					//alert('nothing for: '+obj.DO);
+					var $selected = $(obj.SELECTOR);
+					if( typeof($selected[obj.DO]) == 'function' ){
+						$selected[obj.DO](obj.CONTENT);
+					}
 				break;
 			}
+
+
 		});
 
 		$gp.loaded();
@@ -214,8 +240,12 @@ var $gp = {
 	 *
 	 */
 	loading : function(){
-		$('#loading1').css('zIndex',99000).fadeTo(1,0.3)
-		.next().css('zIndex',99001).show();
+		var $loading = $('#loading1');
+		if( $loading.length == 0 ){
+			$loading = $('<div id="loading1"/>').appendTo('body');
+		}
+
+		$loading.css('zIndex',99000).fadeIn();
 	},
 
 
@@ -224,7 +254,7 @@ var $gp = {
 	 *
 	 */
 	loaded :function(){
-		$('#loading1, #loading2').clearQueue().hide();
+		$('#loading1').clearQueue().fadeOut();
 	},
 
 
@@ -280,7 +310,8 @@ var $gp = {
 			$(selector).colorbox(
 				$gp.cboxSettings({resize:true,rel:selector})
 			);
-			$.colorbox.launch(this);
+
+			$(this).trigger('click.cbox');
 		}
 
 	}
@@ -301,16 +332,19 @@ $gp.Cookie('cookie_cmd','',-1);
  */
 $(function(){
 
+	var $document = $(document);
+
 	//add a class to the body
 	//this also affects the display of elements using the req_script css class
 	$('body').addClass('STCLASS');
+
 
 
 	/**
 	 *	Handle AJAX errors
 	 *
 	 */
-	$(document).ajaxError(function(event, XMLHttpRequest, ajaxOptions, thrownError){
+	$document.ajaxError(function(event, XMLHttpRequest, ajaxOptions, thrownError){
 		$gp.loaded();
 
 		//
@@ -325,10 +359,6 @@ $(function(){
 
 		if( thrownError == '' ){
 			return;
-		}
-
-		if( typeof(debugjs) === 'undefined' ){
-			alert($gp.error);
 		}
 
 
@@ -348,18 +378,19 @@ $(function(){
 			console.log( debug_info );
 		}
 
+		// generic error message
+		if( typeof(debugjs) === 'undefined' ){
+			alert($gp.error);
 
-		// display to user
-		if( debugjs === true && typeof(debug) === 'function' ){
+		// detailed error
+		}else if( debugjs === true && typeof(debug) === 'function' ){
 			if( ajaxOptions.data ){
 				debug_info.data = ajaxOptions.data.substr(0,100);
 			}
 			debug( debug_info );
-		}
 
-
-		// report to gpeasy
-		if( debugjs === 'send' ){
+		// send to gpeasy bug tracker
+		}else if( debugjs === 'send' ){
 
 			alert($gp.error);
 
@@ -385,7 +416,7 @@ $(function(){
 	 * Handle clicks on forms
 	 *
 	 */
-	$(document).on('click', 'input,button',function(evt){
+	$document.on('click', 'input,button',function(evt){
 
 		verify(this.form);
 		var $this = $(this);
@@ -395,11 +426,17 @@ $(function(){
 			return;
 		}
 
+		//confirm prompt
+		if( $this.hasClass('gpconfirm') && !confirm(this.title) ){
+			evt.preventDefault();
+			return;
+		}
+
 
 		//get the first class
 		var cmd = $this.data('cmd');
 		if( !cmd ){
-			cmd = strip_from( $this.attr('class'), ' ' );
+			cmd = strip_from( $this.attr('class'), ' ' ); //deprecated
 		}
 
 		if( typeof($gp.inputs[cmd]) === 'function' ){
@@ -414,13 +451,14 @@ $(function(){
 		switch(cmd){
 			case 'gppost':
 			case 'gpajax':
+			evt.preventDefault();
 			return $gp.post(this);
 		}
 
 		return true;
 	});
 
-	$(document).on('submit','form',function(){
+	$document.on('submit','form',function(){
 		verify(this);
 	});
 
@@ -432,7 +470,7 @@ $(function(){
 
 
 	//expanding menus
-	$(document).delegate('.expand_child',{
+	$document.delegate('.expand_child',{
 		'mouseenter': function(){
 			var $this = $(this).addClass('expand');
 			if( $this.hasClass('simple_top') ){
@@ -450,65 +488,65 @@ $(function(){
 	 * Use of name and rel attributes is deprecated as of gpEasy 3.6
 	 *
 	 */
-	$(document).on('click', 'a',function(evt){
+	$document.on('click', 'a',function(evt){
 
-			var $this = $(this);
-			var cmd = $this.data('cmd');
-			var arg = $this.data('arg');
-			if( !cmd ){
-				// deprecated 3.6
-				cmd = $this.attr('name');
-				arg = $this.attr('rel');
-			}
 
-			if( $this.hasClass('gpconfirm') && !confirm(this.title) ){
-				evt.preventDefault();
-				return;
-			}
+		var $this = $(this);
+		var cmd = $this.data('cmd');
+		var arg = $this.data('arg');
+		if( !cmd ){
+			// deprecated 3.6
+			cmd = $this.attr('name');
+			arg = $this.attr('rel');
+		}
 
-			if( typeof($gp.links[cmd]) === 'function' ){
-				return $gp.links[cmd].call(this,evt,arg);
-			}
+		if( $this.hasClass('gpconfirm') && !confirm(this.title) ){
+			evt.preventDefault();
+			return;
+		}
 
-			// @deprecated 3.6
-			if( typeof(gplinks[cmd]) === 'function' ){
-				return gplinks[cmd].call(this,arg,evt);
-			}
+		if( typeof($gp.links[cmd]) === 'function' ){
+			return $gp.links[cmd].call(this,evt,arg);
+		}
 
-			switch(cmd){
+		// @deprecated 3.6
+		if( typeof(gplinks[cmd]) === 'function' ){
+			return gplinks[cmd].call(this,arg,evt);
+		}
 
-				case 'toggle_show':
-					$(arg).toggle();
-				break;
+		switch(cmd){
 
-				case 'inline_box':
-					$gp.CopyVals(arg,this);
-					$.fn.colorbox(
-						//$.extend(colorbox_options,{inline:true,href:b, open:true})
-						$gp.cboxSettings({inline:true,href:arg, open:true})
-					);
-				break;
+			case 'toggle_show':
+				$(arg).toggle();
+			break;
 
-				case 'postlink':
-					$gp.post_link(this);
-				break;
+			case 'inline_box':
+				$gp.CopyVals(arg,this);
+				$(this).colorbox(
+					$gp.cboxSettings({inline:true,href:arg, open:true})
+				);
+			break;
 
-				case 'gpajax':
-					$gp.jGoTo(this.href);
-				break;
-				case 'creq':
-					$gp.cGoTo(this,true);
-				break;
-				case 'cnreq':
-					$gp.cGoTo(this,false);
-				break;
-				case 'close_message':
-					$this.closest('div').slideUp();
-				break;
+			case 'postlink':
+				$gp.post_link(this);
+			break;
 
-				default:
-				return true;
-			}
+			case 'gpajax':
+				$gp.jGoTo(this.href,this);
+			break;
+			case 'creq':
+				$gp.cGoTo(this,true);
+			break;
+			case 'cnreq':
+				$gp.cGoTo(this,false);
+			break;
+			case 'close_message':
+				$this.closest('div').slideUp();
+			break;
+
+			default:
+			return true;
+		}
 
 		evt.preventDefault();
 		return false;

@@ -109,7 +109,7 @@ class Archive_Tar
     *
     * @access public
     */
-    function Archive_Tar($p_tarname, $p_compress = null)
+    function __construct($p_tarname, $p_compress = null)
     {
         $this->_compress = false;
         $this->_compress_type = 'none';

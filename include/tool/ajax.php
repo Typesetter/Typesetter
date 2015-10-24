@@ -1,7 +1,6 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-//sleep(3); //for testing
 
 class gpAjax{
 
@@ -127,12 +126,77 @@ class gpAjax{
 		return $callback;
 	}
 
+
+	/**
+	 * Send a header for the javascript request
+	 * Attempt to find an appropriate type within the accept header
+	 *
+	 */
+	static function Header(){
+
+		$accept = self::RequestHeaders('accept');
+		$mime = 'application/javascript'; //default mime
+
+		if( $accept && preg_match_all('#([^,;\s]+)\s*;?\s*([^,;\s]+)?#',$accept,$matches,PREG_SET_ORDER) ){
+			$mimes = array('application/javascript','application/x-javascript','text/javascript');
+
+
+			//organize by importance
+			$accept = array();
+			$i = 1;
+			foreach($matches as $match){
+				if( isset($match[2]) ){
+					$accept[$match[1]] = $match[2];
+				}else{
+					$accept[$match[1]] = $i++;
+				}
+			}
+			arsort($accept);
+
+			//get matching mime
+			foreach($accept as $part => $priority){
+				if( in_array(trim($part),$mimes) ){
+					$mime = $part;
+					break;
+				}
+			}
+		}
+
+		//add charset
+		header('Content-Type: '.$mime.'; charset=UTF-8');
+	}
+
+
+	/**
+	 * Return a list of all headers
+	 *
+	 */
+	static function RequestHeaders($which = false){
+	    $headers = array();
+	    foreach($_SERVER as $key => $value) {
+	        if( substr($key, 0, 5) <> 'HTTP_' ){
+	            continue;
+	        }
+
+	        $header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
+
+	        if( $which ){
+				if( strnatcasecmp($which,$header) === 0){
+					return $value;
+				}
+			}
+
+	        $headers[$header] = $value;
+	    }
+	    if( !$which ){
+			return $headers;
+		}
+	}
+
 	static function InlineEdit($section_data){
-		global $dataDir,$dirPrefix;
 
 		$section_data += array('type'=>'','content'=>'');
 
-		header('Content-type: application/x-javascript');
 
 		$scripts = array();
 		$scripts[] = '/include/js/inline_edit/inline_editing.js';
@@ -158,7 +222,6 @@ class gpAjax{
 
 			case 'image';
 				echo 'var gp_blank_img = '.gpAjax::quote(common::GetDir('/include/imgs/blank.gif')).';';
-
 				$scripts[] = '/include/js/jquery.auto_upload.js';
 				$scripts[] = '/include/js/inline_edit/image_common.js';
 				$scripts[] = '/include/js/inline_edit/image_edit.js';
@@ -166,31 +229,9 @@ class gpAjax{
 		}
 
 		$scripts = gpPlugin::Filter('InlineEdit_Scripts',array($scripts,$type));
-		$scripts = array_unique($scripts);
 
-		//send all scripts
-		foreach($scripts as $script){
+		self::SendScripts($scripts);
 
-			//absolute paths don't need $dataDir
-			$full_path = $script;
-			if( strpos($script,$dataDir) !== 0 ){
-
-				//fix addon paths that use $addonRelativeCode
-				if( !empty($dirPrefix) && strpos($script,$dirPrefix) === 0 ){
-					$script = substr($script,strlen($dirPrefix));
-				}
-				$full_path = $dataDir.$script;
-			}
-
-			if( !file_exists($full_path) ){
-				echo 'if(isadmin){alert("Admin Notice: The following file could not be found: \n\n'.addslashes($full_path).'");}';
-				continue;
-			}
-
-			echo ';';
-			//echo "\n/**\n* $script\n*\n*/\n";
-			readfile($full_path);
-		}
 
 		//replace resized images with their originals
 		if( isset($section_data['resized_imgs']) && is_array($section_data['resized_imgs']) && count($section_data['resized_imgs']) ){
@@ -209,6 +250,47 @@ class gpAjax{
 		echo ','.$section_object;
 		echo ');';
 		echo '}else{alert("gp_init_inline_edit() is not defined");}';
+	}
+
+	/**
+	 * Send content of all files in the $scripts array to the client
+	 *
+	 */
+	static function SendScripts($scripts){
+		global $dataDir, $dirPrefix;
+
+		self::Header();
+		Header('Vary: Accept,Accept-Encoding');// for proxies
+
+
+		$scripts = array_unique($scripts);
+
+		//send all scripts
+		foreach($scripts as $script){
+
+			//absolute paths don't need $dataDir
+			$full_path = $script;
+			if( strpos($script,$dataDir) !== 0 ){
+
+				//fix addon paths that use $addonRelativeCode
+				if( !empty($dirPrefix) && strpos($script,$dirPrefix) === 0 ){
+					$script = substr($script,strlen($dirPrefix));
+				}
+				$full_path = $dataDir.$script;
+			}
+
+			if( !file_exists($full_path) ){
+				if( common::LoggedIn() ){
+					$msg = 'Admin Notice: The following file could not be found: \n\n'.$full_path;
+					echo 'if(isadmin){alert('.json_encode($msg).');}';
+				}
+				continue;
+			}
+
+			echo ';';
+			//echo "\n/**\n* $script\n*\n*/\n";
+			readfile($full_path);
+		}
 	}
 
 	static function InlineEdit_Text($scripts){

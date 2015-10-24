@@ -9,30 +9,6 @@
  */
 
 
-	/*
-	 *
-	$gp.links.browser_dialog = function(evt){
-
-		evt.preventDefault();
-
-		var $window = $(window);
-		var windowFeatures =    'height=400'+
-						',width=800'+
-						',toolbar=0'+
-						',scrollbars=0'+
-						',status=0'+
-						',resizable=1'+
-						',location=0'+
-						',menuBar=0'+
-						',left='+ Math.round( ($window.width()-800)/2 )+
-						',top='+ Math.round( ($window.height()-400)/2 )
-						;
-
-		window.open(this.href, 'select_images',windowFeatures).focus();
-	};
-	 */
-
-
 	gp_editor = {
 
 		sortable_area_sel:	'.gp_gallery',
@@ -229,6 +205,7 @@
 			//floating editor
 			$('#ckeditor_top').html('<div id="gp_image_area"></div><div id="gp_upload_queue"></div>');
 			$('#ckeditor_controls').prepend('<div id="gp_folder_options"></div>');
+			$('#ckeditor_wrap').addClass('multiple_images'); //indicate the multiple images can be added
 
 			LoadImages(false,gp_editor);
 
@@ -543,18 +520,6 @@
 			if( remove ){
 				$this.slideUp(700);
 			}
-		}
-
-
-		/**
-		 *
-		 */
-		gpinputs.gp_gallery_folder_add = function(rel,evt){
-			evt.preventDefault();
-			var frm = this.form;
-			var dir = frm.dir.value;
-			var newdir = dir+'/'+frm.newdir.value
-			LoadImages(newdir,gp_editor);
 		}
 
 

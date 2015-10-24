@@ -1050,6 +1050,10 @@ abstract class FinderVolumeDriver {
 
 		$this->options['treeDeep'] = $this->options['treeDeep'] > 0 ? (int)$this->options['treeDeep'] : 1;
 
+		//debug($dir);
+		//debug('path',$path);
+
+
 		$dirs = $this->gettree($path, $deep > 0 ? $deep -1 : $this->options['treeDeep']-1, $exclude ? $this->decode($exclude) : null);
 		array_unshift($dirs, $dir);
 
@@ -3395,9 +3399,13 @@ abstract class FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _joinPath($dir, $name){
-		$dir = $this->_separator($dir);
-		$name = $this->_separator($name);
-		return $dir . $this->separator . ltrim($name,$this->separator);
+		$dir	= $this->_separator($dir);
+		$name	= $this->_separator($name);
+		$name 	= ltrim($name,$this->separator);
+		if( !empty($name) ){
+			return $dir . $this->separator . $name;
+		}
+		return $dir;
 	}
 
 

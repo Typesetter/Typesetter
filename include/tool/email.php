@@ -9,7 +9,7 @@ trigger_error('Deprecated class, please use email_mailer.php instead');
 class gp_email{
 
 
-	function SendEmail($to,$subject,$message,$headers=array(),$from_info=array() ){
+	function SendEmail( $to, $subject, $message, $headers=array(), $from_info=array() ){
 		global $config;
 
 		trigger_error('gp_email::SendEmail() should not be used');

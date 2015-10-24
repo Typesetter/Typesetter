@@ -20,6 +20,7 @@
 .finder-workzone{
 	border-left:1px solid #aaa !important;
 	}
+
 /*
 .finder-button{
 	height:18px;
@@ -33,3 +34,16 @@
 	height:26px;
 	}
 	*/
+
+/**
+ * gp_full_size
+ *
+ */
+.gp_full_size #finder{
+	position:fixed;
+	top:27px;
+	left:180px;
+	right:0;
+	bottom:0;
+	}
+

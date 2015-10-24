@@ -6,6 +6,22 @@ Open source CMS written in PHP focused on ease of use with true WYSIWYG editing 
 * [gpEasy Demo](http://gpeasy.com/Demo)
 * [gpEasy Forum](http://gpeasy.com/Special_Forum)
 
+##Requirements##
+* PHP 5.2+
+* PHP Safe Mode Off
+
+##Installation##
+1. Download the latest stable release of gpEasy from gpeasy.com
+
+2. Upload the extracted contents to your server
+
+3. Using your web browser, navigate to the folder you just uploaded the unzipped contents to
+
+4. Complete the installation form and submit
+
+You can find more detailed installation information on [gpEasy.com](http://gpeasy.com/Docs/Installation)
+
+
 ##Contribute##
 Submitting bug fixes and enhancements is easy:
 

@@ -4,7 +4,7 @@ defined('is_running') or die('Not an entry point...');
 
 class gpupgrade{
 
-	function gpupgrade(){
+	function __construct(){
 		global $config;
 
 		includeFile('admin/admin_tools.php');
@@ -71,10 +71,10 @@ class gpupgrade{
 		if( isset($config['menus']) && is_array($config['menus']) ){
 			foreach($config['menus'] as $key => $value){
 				$menu_file = $dataDir.'/data/_menus/'.$key.'.php';
-				if( file_exists($menu_file) ){
+				if( gpFiles::Exists($menu_file) ){
 					$menu = gpOutput::GetMenuArray($key);
 					$menu = $this->FixMenu($menu,$special_indexes);
-					gpFiles::SaveArray($menu_file,'menu',$menu);
+					gpFiles::SaveData($menu_file,'menu',$menu);
 				}
 			}
 		}

@@ -7,7 +7,7 @@ $(function(){
 	var $container = $('#admincontainer');
 	var container_class = $container.attr('class') || '';
 
-	$container.resize(function(){
+	$(window).resize(function(){
 
 		var width = $container.width();
 		var cols = 1;

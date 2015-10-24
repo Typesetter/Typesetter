@@ -1,7 +1,7 @@
 <?php
 
 if( !defined('is_running' ) ){
-	$start_time = microtime();
+
 	define('is_running',true);
 	define('gpdebug',false);
 	define('gp_cookie_cmd',false);
@@ -27,7 +27,7 @@ class gp_resized{
 	 * Check the path of the img, return full path of image if the requested image is found
 	 *
 	 */
-	function gp_resized(){
+	function __construct(){
 		global $dataDir;
 
 		if( !isset($_GET['w']) || !isset($_GET['h']) || !isset($_GET['img']) ){
@@ -203,15 +203,21 @@ class gp_resized{
 			return;
 		}
 
-		$index_file = $dataDir.'/data/_site/image_index.php';
-		self::$index = array();
-		if( file_exists($index_file) ){
-			include($index_file);
-			self::$index = $image_index;
-			self::$index_checksum = self::checksum($image_index);
-			self::$last_index = $file_stats['last_index'];
+		$index_file		= $dataDir.'/data/_site/image_index.php';
+		self::$index	= gpFiles::Get($index_file,'image_index');
+
+		if( self::$index ){
+			self::$index_checksum	= self::checksum(self::$index);
+
+			if( isset(gpFiles::$last_meta['last_index']) ){
+				self::$last_index		= gpFiles::$last_meta['last_index'];
+			}elseif( isset(gpFiles::$last_stats['last_index']) ){			//pre 4.3.6
+				self::$last_index		= gpFiles::$last_stats['last_index'];
+			}
+
 		}
 	}
+
 
 	/**
 	 * Save the image index information if the checksum has changed
@@ -219,14 +225,15 @@ class gp_resized{
 	 */
 	static function SaveIndex(){
 		global $dataDir;
+
 		if( self::$index_checksum === self::checksum(self::$index) ){
 			return true;
 		}
 
-		$file_stats = array('last_index'=>self::$last_index);
+		$meta = array('last_index'=>self::$last_index);
 
 		$index_file = $dataDir.'/data/_site/image_index.php';
-		return gpFiles::SaveArray($index_file,'image_index',self::$index,'file_stats',$file_stats);
+		return gpFiles::SaveData($index_file,'image_index',self::$index,'meta_data',$meta);
 	}
 
 	/**
@@ -242,13 +249,7 @@ class gp_resized{
 	 *
 	 */
 	static function GetUsage($index){
-		global $dataDir;
-		$data_file = $dataDir.'/data/_resized/'.$index.'/data.php';
-		$usage = array();
-		if( file_exists($data_file) ){
-			include($data_file);
-		}
-		return $usage;
+		return gpFiles::Get('_resized/'.$index.'/data','usage');
 	}
 
 	/**
@@ -258,7 +259,7 @@ class gp_resized{
 	static function SaveUsage($index,$data){
 		global $dataDir;
 		$data_file = $dataDir.'/data/_resized/'.$index.'/data.php';
-		return gpFiles::SaveArray($data_file,'usage',$data);
+		return gpFiles::SaveData($data_file,'usage',$data);
 	}
 
 

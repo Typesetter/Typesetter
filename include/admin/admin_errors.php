@@ -256,7 +256,7 @@ class admin_errors{
 	static function ReadableLog(){
 		$error_log = ini_get('error_log');
 
-		if( !file_exists($error_log) ){
+		if( empty($error_log) || !file_exists($error_log) ){
 			return false;
 		}
 

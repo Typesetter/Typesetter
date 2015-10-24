@@ -5,7 +5,7 @@ gpPlugin::incl('SimpleBlogCommon.php','require_once');
 
 class SimpleBlogArchives{
 
-	function SimpleBlogArchives(){
+	function __construct(){
 		global $addonPathData;
 
 		SimpleBlogCommon::AddCSS();

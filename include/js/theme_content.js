@@ -3,6 +3,22 @@ $(function(){
 	LayoutSetup();
 	CssSetup();
 
+
+
+	/**
+	 * Adjust link targets to point at parent unless they're layout links
+	 *
+	 */
+	if( window.self !== window.top ){
+		$('a').each(function(){
+			if( this.href.indexOf('Admin_Theme_Content') > 0 ){
+				return;
+			}
+			this.target = '_parent';
+		});
+	}
+
+
 	/**
 	 * Show the layout color and label editor
 	 *
@@ -128,15 +144,35 @@ $(function(){
 			return;
 		}
 
+		var codeMirrorConfig = {
+				mode:'less',
+				lineWrapping:false
+			};
+
+		var editor = CodeMirror.fromTextArea($textarea.get(0),codeMirrorConfig);
+
+		$(window).resize(function(){
+			var parent = $textarea.parent();
+			editor.setSize(225,100);//shrink the editor so we can get the container size
+			editor.setSize(225,parent.height()-5);
+		}).resize();
+
 		var prev_value = $textarea.val();
 
-		$gp.inputs.preview_css = function(evt){};
+		// preview button
+		$gp.inputs.preview_css = function(evt){
+			$('#gp_loading_img').show(); //show loading image
+		};
 
 		// if save or reset are clicked, remove the edited class
 		$gp.inputs.reset_css = function(evt){
 			$textarea.removeClass('edited');
 			prev_value = $textarea.val();
+
+			$('#gp_loading_img').show(); //show loading image
 		};
+
+
 
 
 		// watch for changes
@@ -151,6 +187,88 @@ $(function(){
 	}
 
 
+
+	/**
+	 * Prepare the page for editing a layout by setting up drag-n-drop areas
+	 *
+	 */
+	function LayoutSetup(){
+
+		if( typeof(gpLayouts) == 'undefined' ){
+			return;
+		}
+
+		$('body').addClass('edit_layout');
+
+
+		//disable editable areas, there could be conflicts with the layout toolbar and content toolbars
+		$('a.ExtraEditLink').detach();
+		$('.editable_area').removeClass('editable_area');
+
+		//show drag-n-drop message
+		var $content = $('.filetype-text');
+		var pos = $content.offset();
+		var w = $content.width();
+
+
+		//prepare the drag area
+		var drag_area = $('<div class="draggable_droparea" id="theme_content_drop"></div>').appendTo('#gp_admin_html');
+
+
+		//create a draggable box for each output_area
+		var $inner_links = $('.gp_inner_links');
+		$('.gp_output_area').each(function(i,b){
+			var loc, lnks, $this = $(b);
+
+			loc = $gp.Coords($this);
+
+			lnks = $inner_links.eq(i);
+
+			if( lnks.length > 0 ){
+
+
+				$('<div class="draggable_element" style="position:absolute;height:5px;width:5px;"></div>')
+				.appendTo(drag_area)
+				.append(lnks) //.output_area_link
+				.fadeTo('fast',.5)
+				.height(loc.h-3).width(loc.w-3)
+				.on('gp_position',function(){
+
+					var loc = $gp.Coords($this);
+
+					//make sure there's at least a small box to work with
+					if( loc.h < 20 ){
+						$this.height(20);
+						loc.h = 20;
+					}
+					if( loc.w < 20 ){
+						$this.width(20);
+						loc.w = 20;
+					}
+
+					$(this).css({'top':loc.top,'left':loc.left})
+				});
+			}
+		});
+
+		var drag_elements = $('.draggable_element');
+		drag_elements.trigger('gp_position');
+		window.setInterval(function(){
+			drag_elements.trigger('gp_position');
+		},2000);
+	}
+
+
+
+	/**
+	 * Hide loading image after iframe has loaded
+	 *
+	 */
+	$gp.iframeloaded = function(){
+		$('#gp_loading_img').hide();
+	}
+
+
 });
 
 
@@ -158,86 +276,6 @@ $(function(){
 
 
 
-/**
- * Prepare the page for editing a layout by setting up drag-n-drop areas
- *
- */
-function LayoutSetup(){
-
-	if( $('#theme_toolbar').length ){
-		$('body').addClass('edit_layout');
-	}
-
-	if( typeof(gpLayouts) == 'undefined' ){
-		return;
-	}
-
-
-	//disable editable areas, there could be conflicts with the layout toolbar and content toolbars
-	$('a.ExtraEditLink').detach();
-	$('.editable_area').removeClass('editable_area');
-
-	//show drag-n-drop message
-	var $content = $('.filetype-text');
-	var pos = $content.offset();
-	var w = $content.width();
-
-	/*
-	var drag_note = $('#gp_drag_n_drop')
-					.show()
-					.css({'top':pos.top,'left':(pos.left+w-300)})
-					.appendTo('#gp_admin_html');
-	SimpleDrag('#gp_drag_n_drop',drag_note,'absolute',function(){});
-	*/
-
-
-
-	//prepare the drag area
-	var drag_area = $('<div class="draggable_droparea" id="theme_content_drop"></div>').appendTo('#gp_admin_html');
-
-
-	//create a draggable box for each output_area
-	var $inner_links = $('.gp_inner_links');
-	$('.gp_output_area').each(function(i,b){
-		var loc, lnks, $this = $(b);
-
-		loc = $gp.Coords($this);
-
-		lnks = $inner_links.eq(i);
-
-		if( lnks.length > 0 ){
-
-
-			$('<div class="draggable_element" style="position:absolute;height:5px;width:5px;"></div>')
-			.appendTo(drag_area)
-			.append(lnks) //.output_area_link
-			.fadeTo('fast',.5)
-			.height(loc.h-3).width(loc.w-3)
-			.on('gp_position',function(){
-
-				var loc = $gp.Coords($this);
-
-				//make sure there's at least a small box to work with
-				if( loc.h < 20 ){
-					$this.height(20);
-					loc.h = 20;
-				}
-				if( loc.w < 20 ){
-					$this.width(20);
-					loc.w = 20;
-				}
-
-				$(this).css({'top':loc.top,'left':loc.left})
-			});
-		}
-	});
-
-	var drag_elements = $('.draggable_element');
-	drag_elements.trigger('gp_position');
-	window.setInterval(function(){
-		drag_elements.trigger('gp_position');
-	},2000);
-}
 
 
 

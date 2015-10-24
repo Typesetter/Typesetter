@@ -15,7 +15,7 @@ class gp_html_parse{
 	var $mark_escaped_single;
 	var $mark_escaped_double;
 
-	function gp_html_parse($text){
+	function __construct($text){
 		$this->doc = $text;
 		$this->Init_Parse();
 		$this->Parse();

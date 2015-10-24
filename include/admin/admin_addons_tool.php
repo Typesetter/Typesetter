@@ -4,18 +4,18 @@ includeFile('tool/parse_ini.php');
 
 
 class admin_addons_tool{
-	var $rate_testing = false; //for testing on local server
+	var $rate_testing		= false; //for testing on local server
 
-	var $ShowRatingText = true;
-	var $scriptUrl = 'Admin_Addons';
-	var $addonHistory = array();
-	var $addonReviews = array();
+	var $ShowRatingText		= true;
+	var $scriptUrl			= 'Admin_Addons';
+	var $addonHistory		= array();
+	var $addonReviews		= array();
 
 
 	var $type;
-	var $CanRate = true;
-	var $messages = array();
-	var $addon_info = array();
+	var $CanRate			= true;
+	var $messages			= array();
+	var $addon_info			= array();
 	var $dataFile;
 
 
@@ -33,13 +33,17 @@ class admin_addons_tool{
 		$this->GetAddonData();
 	}
 
+	/**
+	 * Get addon history and review data
+	 *
+	 */
 	function GetAddonData(){
 		global $dataDir;
-		//review data
-		$this->dataFile = $dataDir.'/data/_site/addonData.php';
 
-		if( file_exists($this->dataFile) ){
-			require($this->dataFile);
+		$this->dataFile = $dataDir.'/data/_site/addonData.php';
+		$addonData		= gpFiles::Get('_site/addonData');
+
+		if( $addonData ){
 			$this->addonHistory = $addonData['history'];
 			$this->addonReviews = $addonData['reviews'];
 		}
@@ -61,7 +65,7 @@ class admin_addons_tool{
 
 		$addonData['history'] = $this->addonHistory;
 		$addonData['reviews'] = $this->addonReviews;
-		return gpFiles::SaveArray($this->dataFile,'addonData',$addonData);
+		return gpFiles::SaveData($this->dataFile,'addonData',$addonData);
 	}
 
 
@@ -515,7 +519,7 @@ class admin_addons_tool{
 
 
 	function CleanHooks($addon,$keep_hooks = array()){
-		global $config;
+		global $config, $gp_hooks;
 
 		if( !isset($config['hooks']) ){
 			return;
@@ -532,6 +536,7 @@ class admin_addons_tool{
 
 				if( !isset($keep_hooks[$hook_name]) ){
 					unset($config['hooks'][$hook_name][$hook_dir]);
+					unset($gp_hooks[$hook_name][$hook_dir]);
 					//message('remove this hook: '.$hook_name);
 				}
 			}
@@ -541,6 +546,7 @@ class admin_addons_tool{
 		foreach($config['hooks'] as $hook_name => $hook_array){
 			if( empty($hook_array) ){
 				unset($config['hooks'][$hook_name]);
+				unset($gp_hooks[$hook_name]);
 			}
 		}
 
@@ -587,36 +593,52 @@ class admin_addons_tool{
 
 
 
-	function AddonPanelGroup($addon_key, $addon_config, $show_hooks = true ){
-		global $langmessage, $config;
+	function AddonPanelGroup($addon_key, $show_hooks = true ){
 
-		$new_version = false;
+		$this->AddonPanel_Special($addon_key);
+		$this->AddonPanel_Admin($addon_key);
+		$this->AddonPanel_Gadget($addon_key);
 
+		if( $show_hooks ){
+			$this->AddonPanel_Hooks($addon_key);
+		}
+	}
+
+	function AdminLinkList($links,$class=''){
+		echo '<ul class="'.$class.'">';
+		foreach($links as $linkName => $linkInfo){
+			echo '<li>'.common::Link($linkName,$linkInfo['label']).'</li>';
+		}
+		echo '</ul>';
+	}
+
+	function AddonPanel_Special($addon_key ){
 
 		//show Special Links
 		$sublinks = admin_tools::GetAddonTitles( $addon_key );
 		if( !empty($sublinks) ){
 			echo '<li class="expand_child_click">';
 			echo '<a>Special Links ('.count($sublinks).')</a>';
-			echo '<ul>';
-			foreach($sublinks as $linkName => $linkInfo){
-				echo '<li>'.common::Link($linkName,$linkInfo['label']).'</li>';
-			}
-			echo '</ul></li>';
+			$this->AdminLinkList($sublinks);
+			echo '</li>';
 		}
+	}
 
+	function AddonPanel_Admin($addon_key){
+		global $langmessage, $config;
 
 		//show Admin Links
 		$sublinks = admin_tools::GetAddonComponents($config['admin_links'],$addon_key);
 		if( !empty($sublinks) ){
 			echo '<li class="expand_child_click">';
 			echo '<a>Admin Links ('.count($sublinks).')</a>';
-			echo '<ul>';
-			foreach($sublinks as $linkName => $linkInfo){
-				echo '<li>'.common::Link($linkName,$linkInfo['label']).'</li>';
-			}
-			echo '</ul></li>';
+			$this->AdminLinkList($sublinks);
+			echo '</li>';
 		}
+	}
+
+	function AddonPanel_Gadget($addon_key){
+		global $langmessage, $config;
 
 		//show Gadgets
 		$gadgets = admin_tools::GetAddonComponents($config['gadgets'],$addon_key);
@@ -631,21 +653,21 @@ class admin_addons_tool{
 			}
 			echo '</ul></li>';
 		}
+	}
+
+	function AddonPanel_Hooks($addon_key){
 
 		//hooks
-		if( $show_hooks ){
-			$hooks = self::AddonHooks($addon_key);
-			if( count($hooks) > 0 ){
-				echo '<li class="expand_child_click">';
-				echo '<a>Hooks</a>';
-				echo '<ul>';
-				foreach($hooks as $name => $hook_info){
-					echo '<li><a>'.str_replace('_',' ',$name).'</a></li>';
-				}
-				echo '</ul></li>';
+		$hooks = self::AddonHooks($addon_key);
+		if( count($hooks) > 0 ){
+			echo '<li class="expand_child_click">';
+			echo '<a>Hooks</a>';
+			echo '<ul>';
+			foreach($hooks as $name => $hook_info){
+				echo '<li><a>'.str_replace('_',' ',$name).'</a></li>';
 			}
+			echo '</ul></li>';
 		}
-
 	}
 
 

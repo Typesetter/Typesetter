@@ -12,7 +12,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 	var $showing_category = false;
 
-	function SimpleBlog(){
+	function __construct(){
 		global $page, $langmessage, $addonFolderName;
 
 		$this->Init();
@@ -30,8 +30,9 @@ class SimpleBlog extends SimpleBlogCommon{
 		}
 
 
-		$cmd = common::GetCommand();
-		$show = true;
+		$cmd	= common::GetCommand();
+		$show	= true;
+
 		if( common::LoggedIn() ){
 
 			switch($cmd){
@@ -40,6 +41,7 @@ class SimpleBlog extends SimpleBlogCommon{
 				case 'inlineedit':
 					$this->InlineEdit();
 				die();
+				case 'save_inline':
 				case 'save':
 					$this->SaveInline();
 				break;
@@ -132,18 +134,12 @@ class SimpleBlog extends SimpleBlogCommon{
 	function ShowPost($cmd){
 		global $langmessage, $page;
 
-		$posts = $this->GetPostFile($this->post_id,$post_file);
-		if( $posts === false ){
+		$post	= $this->GetPostContent($this->post_id);
+
+		if( $post === false ){
 			message($langmessage['OOPS']);
 			return;
 		}
-
-
-		if( !isset($posts[$this->post_id]) ){
-			message($langmessage['OOPS']);
-			return;
-		}
-
 
 		$commentSaved = false;
 		switch($cmd){
@@ -185,13 +181,14 @@ class SimpleBlog extends SimpleBlogCommon{
 
 
 
-		$post =& $posts[$this->post_id];
+		$post	= $this->GetPostContent($this->post_id);
+
 		if( !common::LoggedIn() && SimpleBlogCommon::AStrValue('drafts',$this->post_id) ){
 			//How to make 404 page?
 			message($langmessage['OOPS']);
 			return;
 		}
-		$this->ShowPostContent($post,$this->post_id);
+		$this->ShowPostContent($post,$this->post_id,0,'single_blog_item');
 
 		$page->label = SimpleBlogCommon::Underscores( $post['title'] );
 
@@ -365,7 +362,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 
 		//blog home
-		$html = common::Link('Special_Blog','%s');
+		$html = common::Link('Special_Blog','%s','','class="blog_home"');
 		echo gpOutput::GetAddonText('Blog Home',$html);
 		echo '&nbsp;';
 
@@ -416,7 +413,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		if( common::LoggedIn() ){
 			echo '&nbsp;';
-			echo common::Link('Special_Blog','New Post','cmd=new_form');
+			echo common::Link('Special_Blog','New Post','cmd=new_form','class="blog_post_new"');
 		}
 
 		echo '</p>';
@@ -474,20 +471,16 @@ class SimpleBlog extends SimpleBlogCommon{
 	}
 
 
-
+	/**
+	 * Output the blog posts in the array $post_list
+	 *
+	 */
 	function ShowPosts($post_list){
 
 		$posts = array();
 		foreach($post_list as $post_index){
-
-			//get $posts
-			if( !isset($posts[$post_index]) ){
-				$posts = $this->GetPostFile($post_index,$post_file);
-			}
-
-			$post =& $posts[$post_index];
-
-			$this->ShowPostContent( $post, $post_index, SimpleBlogCommon::$data['post_abbrev'] );
+			$post	= $this->GetPostContent($post_index);
+			$this->ShowPostContent( $post, $post_index, SimpleBlogCommon::$data['post_abbrev'], 'post_list_item' );
 		}
 
 	}
@@ -496,7 +489,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Display the html for a single blog post
 	 *
 	 */
-	function ShowPostContent( &$post, &$post_index, $limit = 0){
+	function ShowPostContent( &$post, &$post_index, $limit = 0, $class = '' ){
 		global $langmessage;
 
 		if( !common::LoggedIn() && SimpleBlogCommon::AStrValue('drafts',$post_index) ){
@@ -504,7 +497,8 @@ class SimpleBlog extends SimpleBlogCommon{
 		}
 
 		//If user enter random Blog url, he didn't see any 404, but nothng.
-		$id = $class = '';
+		$id = '';
+		$class = $class == '' ? '' : ' '.$class;
 		if( common::LoggedIn() ){
 
 			$query = 'du'; //dummy parameter
@@ -560,7 +554,6 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		echo '<br/>';
 
-		//echo showArray($post);
 		echo '<div class="clear"></div>';
 
 	}
@@ -722,7 +715,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		global $langmessage;
 
 		if( !is_array($data) ){
-			continue;
+			return;
 		}
 
 		foreach($data as $key => $comment){
@@ -743,7 +736,8 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			if( common::LoggedIn() ){
 				echo ' &nbsp; ';
-				echo SimpleBlogCommon::PostLink($post_index,$langmessage['delete'],'cmd=delete_comment&comment_index='.$key,' class="delete gpconfirm" name="postlink" title="'.$langmessage['delete_confirm'].'"');
+				$attr = 'class="delete gpconfirm" title="'.$langmessage['delete_confirm'].'" name="postlink" data-nonce= "'.common::new_nonce('post',true).'"';
+				echo SimpleBlogCommon::PostLink($post_index,$langmessage['delete'],'cmd=delete_comment&comment_index='.$key,$attr);
 			}
 
 

@@ -9,7 +9,7 @@ class admin_configuration{
 	var $variables;
 	//var $defaultVals = array();
 
-	function admin_configuration(){
+	function __construct(){
 		global $langmessage,$page;
 
 		$page->ajaxReplace = array();
@@ -17,7 +17,7 @@ class admin_configuration{
 
 
 		//add examples to smtp_hosts
-		$langmessage['about_config']['smtp_hosts'] .= ' smtp.yourserver.com ; ssl://smtp.gmail.com:465';
+		$langmessage['about_config']['smtp_hosts'] .= 'ssl://smtp.gmail.com:465 ; tls://smtp.live.com:587';
 		$langmessage['about_config']['showgplink'] = 'Showing the "powered by" link on your site is a great way to support gpEasy CMS.';
 		$langmessage['jquery'] = 'Google CDN';
 
@@ -40,7 +40,7 @@ class admin_configuration{
 						'desc'=>'textarea',
 
 						'Interface'=>false,
-						'colorbox_style' => array('example1'=>'Example 1', 'example2'=>'Example 2', 'example3'=>'Example 3', 'example4'=>'Example 4', 'example5'=>'Example 5', 'example6'=>'Example 6'),
+						'colorbox_style' => array('example1'=>'Example 1', 'example2'=>'Example 2', 'example3'=>'Example 3', 'example4'=>'Example 4', 'example5'=>'Example 5' ),
 						'language'=>'',
 						'langeditor'=>'',
 						'showsitemap'=>'boolean',
@@ -191,9 +191,7 @@ class admin_configuration{
 
 
 		//website language
-		$langDir = $dataDir.'/include/languages';
-		$possible['language'] = gpFiles::readDir($langDir,1);
-		asort($possible['language']);
+		$possible['language'] = $this->GetPossibleLanguages();
 
 		//jQuery
 		$possible['jquery'] = array('local'=>$langmessage['None'],'google'=>'jQuery','jquery_ui'=>'jQuery & jQuery UI');
@@ -224,6 +222,27 @@ class admin_configuration{
 
 
 		return $possible;
+	}
+
+	/**
+	 * Return a list of possible languages
+	 * Based on the files in /include/languages
+	 */
+	function GetPossibleLanguages(){
+		global $dataDir;
+		$lang_dir = $dataDir.'/include/languages';
+
+		$files		= scandir($lang_dir);
+		$languages	= array();
+		foreach($files as $file){
+			if( $file == '.' || $file == '..' || strpos($file,'main.inc') === false ){
+				continue;
+			}
+
+			$languages[] = str_replace('.main.inc','',$file);
+		}
+
+		return array_combine($languages, $languages);
 	}
 
 	function showForm(){
@@ -288,7 +307,7 @@ class admin_configuration{
 
 
 			if( is_array($possible_value) ){
-				$this->formSelect($key,$possible_value,$value);
+				self::formSelect($key,$possible_value,$value);
 			}else{
 				switch($possible_value){
 					case 'boolean':
@@ -362,7 +381,7 @@ class admin_configuration{
 		echo '<textarea id="'.$name.'" name="'.$name.'" cols="40" rows="2" class="gptextarea show_character_count">'.htmlspecialchars($value).'</textarea><span class="character_count">'.$count_label.'</span>';
 	}
 
-	function formSelect($name,$possible,$value=null){
+	static function formSelect($name,$possible,$value=null){
 
 		echo '<div>';
 		echo "\n".'<select name="'.$name.'" class="gpselect">';
@@ -370,12 +389,12 @@ class admin_configuration{
 			echo '<option value="" selected="selected"></option>';
 		}
 
-		$this->formOptions($possible,$value);
+		self::formOptions($possible,$value);
 		echo '</select>';
 		echo '</div>';
 	}
 
-	function formOptions($array,$current_value){
+	static function formOptions($array,$current_value){
 		global $languages;
 
 		foreach($array as $key => $value){

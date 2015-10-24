@@ -308,11 +308,6 @@ a.add_layout{
 	bottom:0;
 	.gradient-vertical(#fafafa, #ededed);
 
-	a{
-		color:#333;
-		}
-
-
 	.full_height{
 		height:100%;
 		.box-sizing(border-box);
@@ -375,6 +370,7 @@ a.add_layout{
 	#gp_layout_css{
 		width:100% !important;
 		height:100%;
+		resize:none;
 		.box-sizing(border-box);
 	}
 
@@ -440,15 +436,41 @@ a.add_layout{
 	.search_pages span{
 		padding:1px 5px 1px 0;
 	}
+
+	#gp_loading_img{
+		position:absolute;
+		top:0;
+		left:0;
+		bottom:0;
+		right:0;
+		z-index:1000;
+		text-align:center;
+		background:rgba(255,255,255,0.2);
+		height:100%;
+		vertical-align:middle;
+	}
+	#gp_loading_img:before{
+		content: "";
+		display: inline-block;
+		height: 100%;
+		vertical-align: middle;
+    }
+
+	#gp_loading_img img{
+		vertical-align:middle;
+	}
 }
 
 
+#gp_admin_html .CodeMirror{
 
+	border:1px solid #ccc;
+	border-radius: 3px;
 
-/**
- * Fix for bootstrap css
- */
-body.edit_layout .navbar-fixed-top{
-	top:36px;
+	pre{
+		background:none;
+		border:0 none;
+		padding:0 4px;
+		margin:0;
 	}
-
+}

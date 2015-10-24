@@ -1,4 +1,4 @@
-/*global $gp:false, gpui:false, gplinks:false, gpinputs:false isadmin:false, gpBase:false, strip_from:false, gpRem:false, gpBLink:false, admin_resizable:false */
+/*global $gp:false, gpui:false, gplinks:false, gpinputs:false isadmin:false, gpBase:false, strip_from:false, gpRem:false, gpBLink:false */
 /*jshint forin:true, noarg:true, noempty:true, eqeqeq:true, bitwise:true, strict:true, undef:true, unused:true, curly:true, browser:true, jquery:true, indent:4, maxerr:100, newcap:false, white:false*/
 //"use strict";
 
@@ -80,8 +80,14 @@ $gp.links.iadmin_box = function(evt,arg){
  *
  */
 $gp.links.inline_edit_generic = function(evt,rel){
+
 	evt.preventDefault();
+	if( typeof(gp_editing) !== 'undefined' ){
+		return;
+	}
+
 	$gp.loading();
+
 
 	//legacy inline editing support
 	//can also be used for development/troubleshooting
@@ -92,9 +98,14 @@ $gp.links.inline_edit_generic = function(evt,rel){
 
 	$gp.LoadStyle('/include/css/inline_edit.css');
 
-	var file_path = strip_from(this.href,'#');
-	var id = $(this).attr('id').substr(13);
-	var script = file_path+'&cmd=inlineedit&area_id='+id;
+	var script	= strip_from(this.href,'#');
+	if( rel == 'manage_sections' ){
+		$gp.LoadStyle('/include/css/manage_sections.css');
+	}else{
+		var id			= $(this).attr('id').substr(13);
+		script			+= '&cmd=inlineedit&area_id='+id;
+	}
+
 	$.getScript( script,function(data){
 		if( data === 'false' ){
 			alert($gp.error);
@@ -105,6 +116,36 @@ $gp.links.inline_edit_generic = function(evt,rel){
 	});
 };
 
+
+/**
+ * Remote Browse
+ * @param object evt Event object
+ *
+ */
+$gp.links.remote = function(evt){
+	evt.preventDefault();
+	var src = $gp.jPrep(this.href,'gpreq=body');
+
+	//can remote install
+	if( gpRem ){
+		var pathArray = window.location.href.split( '/' );
+		var url = pathArray[0] + '//' + pathArray[2]+gpBase;
+		if( window.location.href.indexOf('index.php') > 0 ){
+			url += '/index.php';
+		}
+
+		src += '&inUrl='+encodeURIComponent(url)
+			+ '&gpRem='+encodeURIComponent(gpRem);
+	}
+
+	//40px margin + 17px*2 border + 20px padding + 10 (extra padding) = approx 130
+	var height = $gp.$win.height() - 130;
+
+	var opts = {context:'iframe',width:780};
+
+	var iframe = '<iframe src="'+src+'" style="height:'+height+'px;" frameborder="0" />';
+	$gp.AdminBoxC(iframe,opts);
+};
 
 
 /**
@@ -143,13 +184,12 @@ $gp.AdminBoxC = function(data,options){
 	options = $.extend({context:'',width:640}, options);
 
 	/*
-	var win_width = $win.width();
+	var win_width = $gp.$win.width();
 	var box_width = Math.max(660, Math.round(win_width*0.70));
 	*/
-	var $win = $(window);
 	var box_width = options.width;
-	var left = Math.round( ($win.width() - box_width - 40)/2);
-	var height = Math.max( $(document).height(), $('body').outerHeight(true) );
+	var left = Math.round( ($gp.$win.width() - box_width - 40)/2);
+	var height = Math.max( $gp.$doc.height(), $('body').outerHeight(true) );
 
 	$gp.div('gp_admin_box1')
 		.css({'zIndex':11000,'min-height':height})
@@ -158,7 +198,7 @@ $gp.AdminBoxC = function(data,options){
 		.fadeTo(200,0.2);
 
 	$gp.div('gp_admin_box')
-				.css({'zIndex':'11001','left':left,'top': $win.scrollTop() })
+				.css({'zIndex':'11001','left':left,'top': $gp.$win.scrollTop() })
 				.stop(true,true,true)
 				.fadeIn(400)
 				.html('<a class="gp_admin_box_close" data-cmd="admin_box_close"></a><div id="gp_admin_boxc" class="'+(options.context||'')+'" style="width:'+box_width+'px"></div>')
@@ -168,6 +208,14 @@ $gp.AdminBoxC = function(data,options){
 				.focus();
 
 	$('.messages').detach();
+
+	//close on escape key
+	$gp.$doc.on('keypress.abox',function(e) {
+		if( e.keyCode == 27 ){
+			$gp.CloseAdminBox();
+		}
+	});
+
 	return true;
 };
 
@@ -180,6 +228,9 @@ $gp.CloseAdminBox = function(evt){
 	if( evt ){
 		evt.preventDefault();
 	}
+
+	$gp.$doc.off('keypress.abox');
+
 	$('#gp_admin_box1').fadeOut();
 	$('#gp_admin_box').fadeOut(300,function(){
 
@@ -208,7 +259,7 @@ $gp.SaveGPUI = function(){
 	if( !isadmin ){
 		return;
 	}
-	var data = 'cmd=savegpui';
+	var data = 'do=savegpui';
 	$.each(gpui,function(i,value){
 		data += '&gpui_'+i+'='+value;
 	});
@@ -529,8 +580,11 @@ $gp.response.location = function(obj){
  */
 $(function(){
 
+	$gp.$win = $(window);
+	$gp.$doc = $(document);
+
 	//add return value to form
-	$(document).on('mousedown','form',function(){
+	$gp.$doc.on('mousedown','form',function(){
 		var $this = $(this);
 
 		if( $this.data('gpForms') === 'checked' ){
@@ -548,12 +602,13 @@ $(function(){
 		return;
 	}
 
-	ContentPosition();
 	$('body').addClass('gpAdmin').trigger('AdminReady');
 
 	window.setTimeout(function(){
 		EditOutlines();
-		EditableBar();
+
+		$('#editable_areas_list').one('mouseenter.edb touchstart.edb',EditableBar);
+
 		UIEffects();
 	}
 	,500);
@@ -563,7 +618,7 @@ $(function(){
 	 * Update character counts
 	 *
 	 */
-	$(document).on('keyup keypress paste change', '.show_character_count', function(){
+	$gp.$doc.on('keyup keypress paste change', '.show_character_count', function(){
 		$(this).parent().find('.character_count span').html( this.value.length );
 	});
 
@@ -572,7 +627,7 @@ $(function(){
 	 * Warn before closing a page if an inline edit area has been changed
 	 *
 	 */
-	$(window).on('beforeunload',function(){
+	$gp.$win.on('beforeunload',function(){
 		if( !gp_editor ){
 			return;
 		}
@@ -587,36 +642,6 @@ $(function(){
 	});
 
 
-
-
-	/**
-	 * Position admincontent over page
-	 *
-	 */
-	function ContentPosition(){
-
-		var container = $('#admincontainer');
-		if( container.length < 1 ){
-			return;
-		}
-
-		//move the after content down
-		$('#gpAfterContent').css('margin-top',container.height()+100);
-
-		SimpleDrag('#admincontent_panel',container,'absolute',function(newpos){
-			gpui.pposx = newpos.left;
-			gpui.pposy = newpos.top;
-
-			container.css({
-							'left':Math.max(5,gpui.pposx)
-							,'top':Math.max(5,gpui.pposy)
-							});
-			$gp.SaveGPUI();
-		});
-
-	} /* end ContentPosition() */
-
-
 	/**
 	 * Populate the editable areas section of "Current Page" on hover
 	 * Links are listed in order that they appear in the DOM
@@ -624,72 +649,67 @@ $(function(){
 	 */
 	function EditableBar(){
 
-		$('#current_page_panel').bind('mouseenter.edb touchstart.edb',function(){
-			var count = 0,box, $win = $(window);
-			var list = $('#editable_areas_list').html('');
+		var count = 0,box;
 
-			//the overlay box
-			box = $gp.div('gp_edit_box');
+		var list = $(this).find('ul');
 
-			$('a.ExtraEditLink')
-				.clone(false)
-				.attr('class','')
-				.css('display','block')
-				.show()
-				.each(function(){
-					var title,$b,area;
-					$b = $(this);
-					var id_number = $b.attr('id').substr(13);
-					area = $('#ExtraEditArea'+id_number);
+		//the overlay box
+		box = $gp.div('gp_edit_box');
 
-					if( area.hasClass('gp_no_overlay') || area.length === 0 ){
-						return true;
-					}
-					count++;
+		$('a.ExtraEditLink')
+			.clone(false)
+			.attr('class','')
+			.css('display','block')
+			.show()
+			.each(function(){
+				var title,$b,area;
+				$b = $(this);
+				var id_number = $b.attr('id').substr(13);
+				area = $('#ExtraEditArea'+id_number);
 
-					title = this.title.replace(/_/g,' ');
-					title = decodeURIComponent(title);
-					if( title.length > 15 ){
-						title = title.substr(0,14)+'...';
-					}
+				if( area.hasClass('gp_no_overlay') || area.length === 0 ){
+					return true;
+				}
 
 
-					$b
-						//add to list
-						.attr('id','editable_mark'+id_number)
-						.text(title)
-						.appendTo(list)
-						.wrap('<li>')
+				title = this.title.replace(/_/g,' ');
+				title = decodeURIComponent(title);
+				if( title.length > 15 ){
+					title = title.substr(0,14)+'...';
+				}
 
-						//add handlers
-						.on('mouseenter touchstart',function(){
 
-							//the red edit box
-							var loc = $gp.Coords(area);
-							box	.stop(true,true,true)
-								.css({'top':(loc.top-3),'left':(loc.left-2),'width':(loc.w+4),'height':(loc.h+5)})
-								.fadeIn();
+				$b
+					//add to list
+					.attr('id','editable_mark'+id_number)
+					.text(title)
+					.appendTo(list)
+					.wrap('<li>')
 
-							//scroll to show edit area
-							if( $win.scrollTop() > loc.top || ( $win.scrollTop() + $win.height() ) < loc.top ){
-								$('html,body').stop(true,true,true).animate({scrollTop: Math.max(0,loc.top-100)},'slow');
-							}
-						}).on('mouseleave touchend',function(){
-							box.stop(true,true,true).fadeOut();
-						}).click(function(){
-							$(this).unbind('mouseenter touchstart');
-							window.setTimeout(function(){
-								$(this).remove();
-								box.hide();
-							},100);
-						});
-				});
+					//add handlers
+					.on('mouseenter touchstart',function(){
 
-			//if( !count ){
-			//	alert('count: '+count);
-			//}
+						//the red edit box
+						var loc = $gp.Coords(area);
+						box	.stop(true,true,true)
+							.css({'top':(loc.top-3),'left':(loc.left-2),'width':(loc.w+4),'height':(loc.h+5)})
+							.fadeIn();
 
-		});
+						//scroll to show edit area
+						if( $gp.$win.scrollTop() > loc.top || ( $gp.$win.scrollTop() + $gp.$win.height() ) < loc.top ){
+							$('html,body').stop(true,true,true).animate({scrollTop: Math.max(0,loc.top-100)},'slow');
+						}
+					}).on('mouseleave touchend',function(){
+						box.stop(true,true,true).fadeOut();
+					}).click(function(){
+						$(this).unbind('mouseenter touchstart');
+						window.setTimeout(function(){
+							$(this).remove();
+							box.hide();
+						},100);
+					});
+			});
+
 	}
 
 
@@ -750,7 +770,7 @@ $(function(){
 			rmNoOverlay(edit_area);
 		});
 
-		$(window).scroll(function(){
+		$gp.$win.scroll(function(){
 			SpanPosition();
 		});
 
@@ -772,14 +792,15 @@ $(function(){
 		 *
 		 */
 		function SpanPosition(){
+
 			if( !lnk_span || fixed_pos ){
 				return;
 			}
 
-			var off = lnk_span.offset(),
-				pos = lnk_span.position(),
-				top = $(window).scrollTop(),
-				diff = Math.max(0,top - (off.top - pos.top));
+			var off		= lnk_span.offset(),
+				pos		= lnk_span.position(),
+				top		= $gp.$win.scrollTop(),
+				diff	= Math.max(0,top - (off.top - pos.top));
 
 			lnk_span.stop(true,true,true).animate({'top':diff});
 		}
@@ -809,11 +830,15 @@ $(function(){
 
 
 		/**
-		 * Display the eidt links and overlay that outlines an editable area
+		 * Display the edit links and overlay that outlines an editable area
 		 *
 		 */
 		function AreaOverlay(edit_area){
 			var id,loc,width;
+
+			if( typeof(gp_editing) !== 'undefined' ){
+				return;
+			}
 
 			//don't show overlay
 			//	- for an area that is being edited
@@ -822,7 +847,12 @@ $(function(){
 				return;
 			}
 
-			id = edit_area.attr('id').substr(13); //edit_area is always ExtraEditArea#
+			id = edit_area.attr('id');
+			if( !id ){
+				return;
+			}
+
+			id = id.substr(13); //edit_area is always ExtraEditArea#
 
 			//get the edit links
 			var edit_links = $('#ExtraEditLnks'+id).find('a');
@@ -851,8 +881,7 @@ $(function(){
 
 			//add the edit links
 			edit_links = edit_links.clone(true)
-				.removeClass('ExtraEditLink')
-				;
+				.removeClass('ExtraEditLink');
 
 			fixed_pos = false;
 			lnk_span
@@ -889,23 +918,26 @@ $(function(){
 		 * Right Click to show menu
 		 *
 		 */
-		$(document).on('contextmenu','.editable_area, #gp_edit_overlay',function(evt){
+		$gp.$doc.on('contextmenu','.editable_area, #gp_edit_overlay',function(evt){
 			if( evt.ctrlKey || evt.altKey || evt.shiftKey || gp_editor ) return;
-			if( lnk_span ){
+
+			if( edit_area.hasClass('gp_no_overlay') || !lnk_span ){
+				return;
+			}
+
+			ShowMenu();
+
+			if( !gpui.ctx ){
 				evt.preventDefault();
-				var $win = $(window);
-
-
-				//show and position menu
-				ShowMenu();
-				var left = evt.pageX-$win.scrollLeft();
-				var diff = left + lnk_span.width() - $win.width();
+				var left = evt.pageX-$gp.$win.scrollLeft();
+				var diff = left + lnk_span.width() - $gp.$win.width();
 				if( diff > 0 ){
 					left -= diff;
 				}
-				lnk_span.css({'top':(evt.pageY-$win.scrollTop()),'left':left,'right':'auto','position':'fixed'});
+				lnk_span.css({'top':(evt.pageY-$gp.$win.scrollTop()),'left':left,'right':'auto','position':'fixed'});
 				fixed_pos = true;
 			}
+
 		});
 
 	} /* end EditOutlines */
@@ -913,26 +945,11 @@ $(function(){
 
 	function UIEffects(){
 
-		SimpleDrag('#simplepanel .toolbar, #simplepanel .toolbar a','#simplepanel','fixed',function(newpos){
+		SimpleDrag('#simplepanel .toolbar, #simplepanel .toolbar a', '#simplepanel', 'fixed', function(newpos){
 			gpui.tx = newpos.left;
 			gpui.ty = newpos.top;
 			$gp.SaveGPUI();
 		},true);
-
-
-		if( admin_resizable ){
-			SimpleResize('#admincontainer',
-				{
-					min_w:300,
-					finish:function(width,left){
-						gpui.pposx = left;
-						gpui.pw = width;
-						$gp.SaveGPUI();
-					}
-				});
-		}else{
-			$('#admincontainer').css('width','auto');
-		}
 
 
 		//keep expanding areas within the viewable window
@@ -943,14 +960,13 @@ $(function(){
 				var pos = panel.offset();
 				var right = pos.left + panel.width();
 				var bottom = pos.top + panel.height();
-				var $win = $(window);
 
 
-				if( right > $win.width() + $win.scrollLeft() ){
+				if( right > $gp.$win.width() + $gp.$win.scrollLeft() ){
 					panel.css({'right':'100%','left':'auto'});
 				}
 
-				var winbottom = $win.height() + $win.scrollTop();
+				var winbottom = $gp.$win.height() + $gp.$win.scrollTop();
 				if( bottom > winbottom ){
 					var diff = winbottom +  - bottom - 10;
 					panel.css({'top':diff});
@@ -977,19 +993,16 @@ $(function(){
  * @param string positioning (absolute,relative,fixed)
  * @param function callback_done function to call once the drag 'n drop is done
  */
-function SimpleDrag(selector,drag_area,positioning,callback_done){
-	var tolerance = -10;
-	var $drag_area = $(drag_area);
-	var $win = $(window);
-	var $doc = $(document);
+function SimpleDrag(selector, drag_area, positioning, callback_done){
+
+	var tolerance	= -10;
+	var $drag_area	= $(drag_area);
 
 
 	//dragging
-	$(document).off('mousedown.sdrag',selector).on('mousedown.sdrag',selector,function(e){
+	$gp.$doc.off('mousedown.sdrag',selector).on('mousedown.sdrag',selector,function(e){
 
 		if( e.which != 1 ) return;
-
-		/* if( e.target.nodeName != 'DIV') return; */
 
 		var box, click_offsetx, click_offsety;
 		e.preventDefault();
@@ -999,18 +1012,12 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 		init();
 		function init(){
 			var pos = $drag_area.offset();
-			click_offsetx = e.clientX - pos.left + $win.scrollLeft();
-			click_offsety = e.clientY - pos.top + $win.scrollTop();
-
-			//$drag_area.fadeTo(0,.5);
-
-			//if( positioning === 'fixed' ){
-				//box = $drag_area;
-			//}
+			click_offsetx = e.clientX - pos.left + $gp.$win.scrollLeft();
+			click_offsety = e.clientY - pos.top + $gp.$win.scrollTop();
 		}
 
 
-		$doc.bind('mousemove.sdrag',function(e){
+		$gp.$doc.bind('mousemove.sdrag',function(e){
 
 			//initiate the box
 			if( !box ){
@@ -1023,14 +1030,15 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 
 			box.css({'left':Math.max(tolerance,e.clientX - click_offsetx),'top': Math.max(tolerance,e.clientY - click_offsety)});
 			e.preventDefault();
+
 			return false;
 		});
 
 
 
-		$doc.unbind('mouseup.sdrag').bind('mouseup.sdrag',function(e){
+		$gp.$doc.unbind('mouseup.sdrag').bind('mouseup.sdrag',function(e){
 			var newposleft,newpostop,pos_obj;
-			$doc.unbind('mousemove.sdrag mouseup.sdrag');
+			$gp.$doc.unbind('mousemove.sdrag mouseup.sdrag');
 
 			if( !box ){
 				return false;
@@ -1049,8 +1057,8 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 
 			//add scroll back in for absolute position
 			if( positioning === 'absolute' ){
-				newposleft += $win.scrollLeft();
-				newpostop += $win.scrollTop();
+				newposleft += $gp.$win.scrollLeft();
+				newpostop += $gp.$win.scrollTop();
 			}
 
 			newposleft = Math.max(tolerance,newposleft);
@@ -1064,6 +1072,8 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 			if( typeof(callback_done) === 'function' ){
 				callback_done.call($drag_area,pos_obj,e);
 			}
+
+			$drag_area.trigger('dragstop');
 			return false;
 		});
 
@@ -1082,15 +1092,10 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 			return;
 		}
 
-		var is_fixed = ($elem.css('position') === 'fixed');
-		var pos, gp_left, css = {};
+		var gp_left
+			, css = {}
+			, pos = $elem.position();
 
-		//get current position
-		pos = $elem.position();
-		if( is_fixed ){
-			pos.left -= $win.scrollLeft();
-			pos.top -= $win.scrollTop();
-		}
 
 		//move back to the right if $elem has been moved left
 		if( init ){
@@ -1104,7 +1109,7 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 
 
 		//keep the top of the area from being placed too high in the window
-		var winbottom = $win.height();
+		var winbottom = $gp.$win.height();
 		if( pos.top < tolerance ){
 			css.top = tolerance;
 
@@ -1114,24 +1119,8 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 		}
 
 
-		/*
-		var height = $elem.height();
-		var winheight = $win.height();
-		var checkbottom = $win.height() - height - tolerance;
-		if( pos.top < tolerance ){
-			css.top = tolerance;
-
-		}else if( pos.top > checkbottom ){
-			if( height > winheight ){
-				css.top = checkbottom + ( height - winheight);
-			}else{
-				css.top = checkbottom;
-			}
-		}
-		*/
-
 		//right
-		var checkright = $win.width()  - width - tolerance;
+		var checkright = $gp.$win.width()  - width - tolerance;
 		if( pos.left > checkright ){
 			css.left = checkright;
 		}
@@ -1141,7 +1130,7 @@ function SimpleDrag(selector,drag_area,positioning,callback_done){
 		}
 	}
 
-	$win.resize(function(){
+	$gp.$win.resize(function(){
 		$('.keep_viewable').each(function(){
 			KeepViewable($(this),false);
 		});
@@ -1335,7 +1324,7 @@ function SimpleResize(resize_area,options){
 
 			evt.preventDefault();
 
-			//$(document)
+			//
 			$('<div style="position:fixed;top:0;right:0;bottom:0;left:0;cursor:e-resize;z-index:999000;">')
 				.appendTo('body')
 				.on('mousemove.sres',function(evt){
@@ -1372,8 +1361,7 @@ function SimpleResize(resize_area,options){
 			}).off('mouseup.sres').on('mouseup.sres',function(evt){
 
 				evt.preventDefault();
-				//$('body').enableSelection();
-				//$(document).off('mousemove.sres mouseup.sres');
+				//$('body').enableSelection()
 				$(this).off('mousemove.sres mouseup.sres').remove()
 
 				options.finish.call($resize_area,new_w,new_l);

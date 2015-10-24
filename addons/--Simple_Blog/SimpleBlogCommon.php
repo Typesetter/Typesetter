@@ -3,10 +3,6 @@ defined('is_running') or die('Not an entry point...');
 
 includeFile('tool/recaptcha.php');
 
-if( function_exists('mb_internal_encoding') ){
-	mb_internal_encoding('UTF-8');
-}
-
 /**
  * To Do
  *
@@ -18,22 +14,22 @@ if( function_exists('mb_internal_encoding') ){
 class SimpleBlogCommon{
 
 	var $indexFile;
-	static $data = false;
-	static $root_url = 'Special_Blog';
+	static $data		= false;
+	static $root_url	= 'Special_Blog';
 
-	var $new_install = false;
+	var $new_install	= false;
 	var $addonPathData;
-	var $post_id = false;
+	var $post_id		= false;
 
 
-	static $months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+	static $months		= array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
 
 
 	/**
 	 * When SimpleBlogCommon is created as an object, it will regenerate the static files
 	 *
 	 */
-	function SimpleBlogCommon(){
+	function __construct(){
 		$this->Init();
 		$this->GenStaticContent();
 	}
@@ -45,8 +41,8 @@ class SimpleBlogCommon{
 	function Init(){
 		global $addonPathData;
 
-		$this->addonPathData = $addonPathData;
-		$this->indexFile = $this->addonPathData.'/index.php';
+		$this->addonPathData	= $addonPathData;
+		$this->indexFile		= $this->addonPathData.'/index.php';
 
 		if( SimpleBlogCommon::$data ){
 			return;
@@ -63,15 +59,19 @@ class SimpleBlogCommon{
 	}
 
 
-	function AddCSS(){
+	/**
+	 * Add css and some js to the page
+	 *
+	 */
+	static function AddCSS(){
 		global $addonFolderName,$page;
 
-		static $added = false;
+		static $added			= false;
+
 		if( !$added ){
-			//$page->head_script .= 'gplinks.blog_gadget = function(){$(this).next(".nodisplay").toggle();};';
-			$page->jQueryCode .= '$(".blog_gadget_link").click(function(){ $(this).next(".nodisplay").toggle(); });';
-			$page->css_user[] = '/data/_addoncode/'.$addonFolderName.'/style.css';
-			$added = true;
+			$page->jQueryCode	.= '$(".blog_gadget_link").click(function(){ $(this).next(".nodisplay").toggle(); });';
+			$page->css_user[]	= '/data/_addoncode/'.$addonFolderName.'/style.css';
+			$added				= true;
 		}
 	}
 
@@ -131,7 +131,7 @@ class SimpleBlogCommon{
 	 */
 	function DataUpdate20(){
 
-		$comment_counts = array();
+		$comment_counts	= array();
 		$comments_closed = array();
 		if( isset(SimpleBlogCommon::$data['post_info']) && is_array(SimpleBlogCommon::$data['post_info']) ){
 			foreach(SimpleBlogCommon::$data['post_info'] as $post_id => $info){
@@ -411,7 +411,7 @@ class SimpleBlogCommon{
 	 *
 	 */
 	function SaveNew(){
-		global $langmessage;
+		global $langmessage, $gpAdmin;
 
 		$_POST += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'','category'=>array());
 
@@ -448,6 +448,9 @@ class SimpleBlogCommon{
 
 		$time = time();
 		$posts[$post_index]['time'] = $time;
+
+		// Save author username
+		$posts[$post_index]['username'] = $gpAdmin['username'];
 
 		//save to data file
 		if( !gpFiles::SaveArray($post_file,'posts',$posts) ){
@@ -527,6 +530,8 @@ class SimpleBlogCommon{
 			return false;
 		}
 
+		//update title
+		SimpleBlogCommon::AStrValue('titles',$post_index,$title);
 
 		//find and update the edited post in categories and archives
 		$this->update_post_in_categories($post_index,$title);
@@ -595,26 +600,24 @@ class SimpleBlogCommon{
 	function EditPost(){
 		global $langmessage;
 
-		$posts = $this->GetPostFile($this->post_id,$post_file);
-		if( $posts === false ){
+		$post				= $this->GetPostContent($this->post_id);
+
+		if( $post === false ){
 			message($langmessage['OOPS']);
 			return;
 		}
 
-		if( !isset($posts[$this->post_id]) ){
-			message($langmessage['OOPS']);
-			return;
-		}
+		$post['isDraft']	= SimpleBlogCommon::AStrValue('drafts',$this->post_id);
+		$_POST				+= $post;
+		$title				= htmlspecialchars($_POST['title'],ENT_COMPAT,'UTF-8',false);
 
-		$post['isDraft'] = SimpleBlogCommon::AStrValue('drafts',$this->post_id);
-		$_POST += $posts[$this->post_id];
-
+		echo '<div class="blog_post_edit">';
 		echo '<h2>';
-		$title = htmlspecialchars($_POST['title'],ENT_COMPAT,'UTF-8',false);
 		echo SimpleBlogCommon::PostLink($this->post_id,$title);
 		echo ' &#187; ';
 		echo 'Edit Post</h2>';
 		$this->PostForm($_POST,'save_edit',$this->post_id);
+		echo '</div>';
 		return true;
 	}
 
@@ -625,9 +628,11 @@ class SimpleBlogCommon{
 	function NewForm(){
 		global $langmessage;
 
+		echo '<div class="blog_post_new">';
 		echo '<h2>New Blog Post</h2>';
 
 		$this->PostForm($_POST);
+		echo '</div>';
 	}
 
 
@@ -643,7 +648,7 @@ class SimpleBlogCommon{
 		$array += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>false, 'categories'=>array() );
 		$array['title'] = SimpleBlogCommon::Underscores( $array['title'] );
 
-		echo '<form action="'.SimpleBlogCommon::PostUrl($post_id).'" method="post">';
+		echo '<form class="post_form" action="'.SimpleBlogCommon::PostUrl($post_id).'" method="post">';
 
 		echo '<table style="width:100%">';
 
@@ -676,8 +681,8 @@ class SimpleBlogCommon{
 		echo '<tr><td colspan="2">';
 			echo '<input type="hidden" name="cmd" value="'.$cmd.'" />';
 			echo '<input type="hidden" name="id" value="'.$post_id.'" />';
-			echo '<input type="submit" name="" value="'.$langmessage['save'].'" /> ';
-			echo '<input type="submit" name="cmd" value="'.$langmessage['cancel'].'" />';
+			echo '<input class="post_form_save" type="submit" name="" value="'.$langmessage['save'].'" /> ';
+			echo '<input class="post_form_cancel" type="submit" name="cmd" value="'.$langmessage['cancel'].'" />';
 			echo '</td></tr>';
 
 		echo '</table>';
@@ -722,16 +727,11 @@ class SimpleBlogCommon{
 
 		foreach($show_posts as $post_index){
 
-			//get $posts
-			if( !isset($posts[$post_index]) ){
-				$posts = $this->GetPostFile($post_index,$post_file);
-			}
+			$post = $this->GetPostContent($post_index);
 
-			if( !isset($posts[$post_index]) ){
+			if( !$post ){
 				continue;
 			}
-
-			$post =& $posts[$post_index];
 
 			echo '<entry>'."\n";
 			echo '<title>'.SimpleBlogCommon::Underscores( $post['title'] ).'</title>'."\n";
@@ -863,21 +863,16 @@ class SimpleBlogCommon{
 
 		foreach($show_posts as $post_index){
 
-			//get $posts
-			if( !isset($posts[$post_index]) ){
-				$posts = $this->GetPostFile($post_index,$post_file);
-			}
+			$post		= $this->GetPostContent($post_index);
 
-			if( !isset($posts[$post_index]) ){
+			if( !$post ){
 				continue;
 			}
 
-			$post =& $posts[$post_index];
-
-			$header = '<b class="simple_blog_title">';
-			$label = SimpleBlogCommon::Underscores( $post['title'] );
-			$header .= SimpleBlogCommon::PostLink($post_index,$label);
-			$header .= '</b>';
+			$header		= '<b class="simple_blog_title">';
+			$label		= SimpleBlogCommon::Underscores( $post['title'] );
+			$header		.= SimpleBlogCommon::PostLink($post_index,$label);
+			$header		.= '</b>';
 
 			$this->BlogHead($header,$post_index,$post,true);
 

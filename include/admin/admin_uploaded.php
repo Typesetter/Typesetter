@@ -8,19 +8,28 @@ includeFile('image.php');
 class admin_uploaded{
 
 	var $baseDir;
-	var $subdir = false;
+	var $subdir			= false;
 	var $thumbFolder;
-	var $isThumbDir = false;
+	var $isThumbDir		= false;
 	var	$imgTypes;
-	var $errorMessages = array();
-	var $finder_opts = array();
+	var $errorMessages	= array();
+	var $finder_opts	= array();
 
 
+
+
+	function __construct(){
+
+		$file_cmd = common::GetCommand('file_cmd');
+		if( !empty($file_cmd) || (isset($_REQUEST['show']) && $_REQUEST['show'] == 'inline') ){
+			$this->do_admin_uploaded($file_cmd);
+		}else{
+			$this->Finder();
+		}
+	}
 
 	function Finder(){
-		global $page, $GP_INLINE_VARS, $config, $dataDir;
-
-		$GP_INLINE_VARS['admin_resizable'] = false;
+		global $page, $config, $dataDir;
 
 		$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.common::GetDir('/include/thirdparty/finder/css/finder.css').'">';
 		$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.common::GetDir('/include/thirdparty/finder/style.css').'">';
@@ -94,33 +103,18 @@ class admin_uploaded{
 
 		$this->FinderPrep();
 
+		$this->finder_opts = gpPlugin::Filter('FinderOptionsClient',array($this->finder_opts));
 		gpSettingsOverride('finder_options_client',$this->finder_opts);
 
 		$page->head_script .= "\n".'var finder_opts = '.json_encode($this->finder_opts).';';
 	}
 
 	function FinderPrep(){
-		global $page, $gpAdmin;
-
-		//options
-		$this->finder_opts['url'] = common::GetUrl('Admin_Finder');
-		$this->finder_opts['width'] = $gpAdmin['gpui_pw'];
-		if( $gpAdmin['gpui_ph'] > 0 ){
-			$this->finder_opts['height'] = $gpAdmin['gpui_ph'];
-		}
-
+		$this->finder_opts['url']			= common::GetUrl('Admin_Finder');
+		$this->finder_opts['height']		= '100%';
+		$this->finder_opts['resizable'] 	= false;
 	}
 
-
-	function admin_uploaded(){
-
-		$file_cmd = common::GetCommand('file_cmd');
-		if( !empty($file_cmd) || (isset($_REQUEST['show']) && $_REQUEST['show'] == 'inline') ){
-			$this->do_admin_uploaded($file_cmd);
-		}else{
-			$this->Finder();
-		}
-	}
 
 	function do_admin_uploaded($file_cmd){
 		global $page;
@@ -143,16 +137,16 @@ class admin_uploaded{
 	function Init(){
 		global $langmessage, $dataDir,$page;
 
-		$this->baseDir = $dataDir.'/data/_uploaded';
-		$this->thumbFolder = $dataDir.'/data/_uploaded/image/thumbnails';
-		$this->currentDir = $this->baseDir;
-		$page->label = $langmessage['uploaded_files'];
+		$this->baseDir		= $dataDir.'/data/_uploaded';
+		$this->thumbFolder	= $dataDir.'/data/_uploaded/image/thumbnails';
+		$this->currentDir	= $this->baseDir;
+		$page->label		= $langmessage['uploaded_files'];
 
-		$this->imgTypes = array('bmp'=>1,'png'=>1,'jpg'=>1,'jpeg'=>1,'gif'=>1,'tiff'=>1,'tif'=>1);
+		$this->imgTypes		= array('bmp'=>1,'png'=>1,'jpg'=>1,'jpeg'=>1,'gif'=>1,'tiff'=>1,'tif'=>1);
 
 
 		//get the current path
-		$parts = str_replace( array('\\','//'),array('/','/'),$page->title);
+		$parts = str_replace( array('\\','//'),array('/','/'),$page->requested);
 		$parts = trim($parts,'/');
 		$parts = explode('/',$parts);
 		array_shift($parts);
@@ -197,44 +191,16 @@ class admin_uploaded{
 
 
 	static function Max_File_Size(){
-		$max = admin_uploaded::getByteValue();
+		$value = ini_get('upload_max_filesize');
+		if( empty($value) ){
+			return;
+		}
+		$max = thumbnail::getByteValue($value);
 		if( $max !== false ){
 			echo '<input type="hidden" name="MAX_FILE_SIZE" value="'.$max.'" />';
 		}
 	}
 
-	static function getByteValue($value=false){
-
-		if( $value === false ){
-			$value = ini_get('upload_max_filesize');
-		}
-
-		if( empty($value) ){
-			return false;
-			//$value = '2M';
-		}
-
-		if( is_numeric($value) ){
-			return (int)$value;
-		}
-
-
-		$lastChar = $value{strlen($value)-1};
-		$num = (int)substr($value,0,-1);
-
-		switch(strtolower($lastChar)){
-
-			case 'g':
-				$num *= 1024;
-			case 'm':
-				$num *= 1024;
-			case 'k':
-				$num *= 1024;
-			break;
-		}
-		return $num;
-
-	}
 
 	/**
 	 * Upload one image
@@ -284,7 +250,7 @@ class admin_uploaded{
 	 * Output a list a images in a director for use in inline editing
 	 * @static
 	 */
-	static function InlineList($dir_piece,$add_all_images = true){
+	static function InlineList($dir_piece){
 		global $page,$langmessage,$dataDir;
 		$page->ajaxReplace = array();
 
@@ -379,8 +345,8 @@ class admin_uploaded{
 		// Folder controls
 		ob_start();
 
-		if( $add_all_images && $image_count > 0 ){
-			echo '<a data-cmd="gp_gallery_add_all" class="ckeditor_control half_width">'.$langmessage['Add All Images'].'</a>';
+		if( $image_count > 0 ){
+			echo '<a data-cmd="gp_gallery_add_all" class="ckeditor_control half_width add_all_images">'.$langmessage['Add All Images'].'</a>';
 		}
 
 		if( $dir_piece != '/' ){
@@ -443,6 +409,7 @@ class admin_uploaded{
 		$thumb = ' <img src="'.$thumb_url.'" alt="" />';
 
 		//get size
+		$size = '';
 		$size_a = getimagesize($full_path);
 		if( $size_a ){
 			$size = ' data-width="'.$size_a[0].'" data-height="'.$size_a[1].'"';
@@ -644,56 +611,56 @@ class admin_uploaded{
 			return true;
 		}
 
+
+		$parts = explode('.',$file);
+		if( count($parts) < 2 ){
+			return true;
+		}
+
+
 		//build list of allowed extensions once
 		if( !$allowed_types ){
 
 			if( is_string($upload_extensions_deny) && strtolower($upload_extensions_deny) === 'all' ){
 				$allowed_types = array();
 			}else{
-				$allowed_types = array('7z', 'aiff', 'asf', 'avi', 'bmp', 'bz', 'csv', 'doc', 'fla', 'flv', 'gif', 'gz', 'gzip', 'jpeg', 'jpg', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ods', 'odt', 'pdf', 'png', 'ppt', 'pxd', 'qt', 'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 'sdc', 'sitd', 'swf', 'sxc', 'sxw', 'tar', 'tgz', 'tif', 'tiff', 'txt', 'vsd', 'wav', 'wma', 'wmv', 'xls', 'xml', 'zip');
+				$allowed_types = array(
+					/** Images **/		'bmp', 'gif', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'wav', 'wma','svg',
+					/** Media **/		'aiff', 'asf', 'avi', 'fla', 'flv', 'm4v', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ogg','oga','ogv','opus', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'webm', 'wmv',
+					/** Archives **/	'7z', 'bz', 'gz', 'gzip', 'rar', 'sdc', 'sitd', 'tar', 'tgz', 'zip',
+					/** Text/Docs **/	'css', 'csv', 'doc', 'docx', 'htm', 'html', 'js', 'json', 'less', 'md', 'ods', 'odt', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'sxc', 'sxw', 'vsd', 'xls', 'xlsx', 'xml' );
+
+
 			}
 
 			if( is_array($upload_extensions_allow) ){
-				$upload_extensions_allow = array_map('trim',$upload_extensions_allow);
-				$upload_extensions_allow = array_map('strtolower',$upload_extensions_allow);
-				$allowed_types = array_merge($allowed_types,$upload_extensions_allow);
+				$upload_extensions_allow	= array_map('trim',$upload_extensions_allow);
+				$upload_extensions_allow	= array_map('strtolower',$upload_extensions_allow);
+				$allowed_types				= array_merge($allowed_types,$upload_extensions_allow);
 			}
 			if( is_array($upload_extensions_deny) ){
-				$upload_extensions_allow = array_map('trim',$upload_extensions_allow);
-				$upload_extensions_allow = array_map('strtolower',$upload_extensions_allow);
-				$allowed_types = array_diff($allowed_types,$upload_extensions_deny);
+				$upload_extensions_allow	= array_map('trim',$upload_extensions_allow);
+				$upload_extensions_allow	= array_map('strtolower',$upload_extensions_allow);
+				$allowed_types				= array_diff($allowed_types,$upload_extensions_deny);
 			}
 		}
 
+		$allowed_types = gpPlugin::Filter('AllowedTypes',array($allowed_types));
+
 
 		//make sure the extension is allowed
-		$parts = explode('.',$file);
 		$file_type = array_pop($parts);
 		if( !in_array( strtolower($file_type), $allowed_types ) ){
 			return false;
 		}
 
-
-		//clean other parts of the name
-		$clean_name = '';
-		$dot = $dash = '';
-		foreach($parts as $part){
-
-			if( in_array( strtolower($part), $allowed_types ) ){
-				$clean_name .= $dot.$part;
-			}elseif( $fix ){
-				$clean_name .= $dash.$part;
-			}else{
-				return false;
-			}
-			$dot = '.';
-			$dash = '_';
+		if( $fix ){
+			return implode('_',$parts).'.'.$file_type;
+		}else{
+			return implode('.',$parts).'.'.$file_type;
 		}
-
-		$file = ltrim($clean_name,'.').'.'.$file_type;
-
-		return true;
 	}
+
 
 	/**
 	 * Clean up temporary file and folder if they exist
@@ -1013,7 +980,7 @@ class admin_uploaded{
 				continue;
 			}
 			foreach($list as $key => $info){
-				if( !isset($info['realpath']) ){
+				if( isset($info['hash']) && !isset($info['realpath']) ){
 					$array[$type][$key]['realpath'] = $finder->realpath($info['hash']);
 				}
 			}

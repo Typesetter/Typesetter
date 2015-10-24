@@ -10,19 +10,17 @@ class special_missing{
 
 
 	function Init(){
-		global $dataDir;
-		$this->datafile = $dataDir.'/data/_site/error_data.php';
-		if( file_exists($this->datafile) ){
-			require($this->datafile);
-			$this->error_data = $error_data;
-		}
+
+		$this->datafile		= '_site/error_data';
+		$this->error_data	= gpFiles::Get($this->datafile,'error_data');
+
 	}
 
 	function SaveData(){
-		return gpFiles::SaveArray($this->datafile,'error_data',$this->error_data);
+		return gpFiles::SaveData($this->datafile,'error_data',$this->error_data);
 	}
 
-	function special_missing($requested=false){
+	function __construct($requested=false){
 		global $langmessage;
 
 		$this->Init();
@@ -158,7 +156,7 @@ class special_missing{
 		if( common::LoggedIn() ){
 			if( $this->requested && !common::SpecialOrAdmin($this->requested) ){
 				$with_spaces = htmlspecialchars($this->requested);
-				$link = common::GetUrl('Admin_Menu','cmd=add_hidden&redir=redir&title='.rawurlencode($this->requested)).'" title="'.$langmessage['create_new_file'].'" data-cmd="gpajax';
+				$link = common::GetUrl('Admin_Menu','cmd=add_hidden&redir=redir&title='.rawurlencode($this->requested)).'" title="'.$langmessage['create_new_file'].'" data-cmd="gpabox';
 				$message = sprintf($langmessage['DOESNT_EXIST'],$with_spaces,$link);
 				message($message);
 			}

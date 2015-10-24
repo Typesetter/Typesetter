@@ -43,7 +43,7 @@ class admin_port{
 	var $iframe = '';
 
 
-	function admin_port(){
+	function __construct(){
 		global $langmessage,$dataDir,$page;
 
 		$this->export_dir = $dataDir.'/data/_exports';
@@ -496,14 +496,14 @@ class admin_port{
 		// get user info
 		include($dataDir.'/data/_site/users.php');
 		$userinfo =& $users[$username];
-		$session_id = gpsession::create($userinfo,$username);
+		$session_id = gpsession::create($userinfo, $username);
 
 		if( !$session_id ){
 			return;
 		}
 
 		//set the cookie for the new data
-		require($dataDir.'/data/_site/config.php');
+		$config = gpFiles::Get('_site/config');
 		$session_cookie = 'gpEasy_'.substr(sha1($config['gpuniq']),12,12);
 		gpsession::cookie($session_cookie,$session_id);
 

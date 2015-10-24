@@ -902,7 +902,10 @@ class display{
 		}
 
 		echo '<div id="gpx_content" class="'.$class.' cf">';
-
+		
+		gpOutput::GetHTagTitle();
+		gpPlugin::Action('ContentBuffer_Before');
+		
 		echo $this->contentBuffer;
 
 

@@ -104,6 +104,23 @@ class gp_rename{
 			echo '</td>';
 			echo '</tr>';
 
+		//h_tag_title
+			$h_tag_title = '';
+			if( isset($title_info['h_tag_title']) ){
+				echo '<tr>';
+				$h_tag_title = $title_info['h_tag_title'];
+			}else{
+				echo '<tr class="nodisplay">';
+				$hidden_rows = true;
+			}
+			echo '<td class="formlabel">';
+			echo isset($langmessage['h_tag_title']) ? $langmessage['h_tag_title'] : 'Html Title';
+			echo '</td>';
+			echo '<td>';
+			echo '<input type="text" class="gpinput" size="50" name="h_tag_title" value="'.$h_tag_title.'" />';
+			echo '</td>';
+			echo '</tr>';
+			
 		//meta keywords
 			$keywords = '';
 			if( isset($title_info['keywords']) ){
@@ -262,6 +279,14 @@ class gp_rename{
 			unset($title_info['browser_title']);
 		}
 
+		//h_tag_title
+		if( isset($_POST['h_tag_title']) ){
+			$title_info['h_tag_title'] = htmlspecialchars($_POST['h_tag_title']);
+			if( empty($title_info['h_tag_title']) ){
+				unset($title_info['h_tag_title']);
+			}
+		}
+		
 		//keywords
 		if( isset($_POST['keywords']) ){
 			$title_info['keywords'] = htmlspecialchars($_POST['keywords']);

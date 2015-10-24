@@ -724,7 +724,7 @@ class gp_edit{
 
 			case 'image':
 				$section['nodeName']				= 'img';
-				$section['attributes']['src']		= 'include/imgs/default_image.jpg';
+				$section['attributes']['src']		= '/include/imgs/default_image.jpg';
 				$section['attributes']['width']		= '400px';
 				$section['attributes']['height']	= '300px';
 			break;

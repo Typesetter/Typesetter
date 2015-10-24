@@ -148,7 +148,7 @@ class section_content{
 	 * @return string
 	 *
 	 */
-	static function SectionToContent(&$section_data,$section_num){
+	static function SectionToContent($section_data,$section_num){
 
 		$section_data = gpPlugin::Filter('SectionToContent',array($section_data,$section_num));
 
@@ -403,9 +403,8 @@ class section_content{
 		}
 
 
-
 		$attrs				+= array('class' => '' );
-		$attrs['class']	= trim('GPAREA filetype-'.$type.' '.$attrs['class']);
+		$attrs['class']		= trim('GPAREA filetype-'.$type.' '.$attrs['class']);
 
 		$attr_string = '';
 		foreach($attrs as $attr => $value){

@@ -523,11 +523,13 @@
 		var attrs	= gp_editor.GetArea( $li ).data('gp-attrs');
 
 
-		//popup
-		html = '<div class="inline_box"><form id="section_attributes_form" data-area-id="'+id+'">';
-		html += '<h2>Section Attributes</h2>';
-		html += '<table class="bordered full_width">';
-		html += '<thead><tr><th>Attribute</th><th>Value</th></tr></thead><tbody>';
+
+		//options table
+		html = '<div id="section_options" class="section_drag_area inline_edit_area" title="Options">';
+		html += '<form id="section_attributes_form" data-area-id="'+id+'">';
+		html += '<table class="full_width">';
+		html += '<thead><tr><td colspan="2">Section: '+$li.find('> div .section_label').text()+'</td></tr></thead>';
+		html += '<tbody>';
 
 
 		$.each(attrs,function(name){
@@ -548,12 +550,9 @@
 
 
 			html += '<tr><td>';
-			html += '<input class="gpinput attr_name" value="'+$gp.htmlchars(name)+'" size="8" />';
+			html += '<input class="gpinput attr_name" value="'+$gp.htmlchars(name)+'" />';
 			html += '</td><td style="white-space:nowrap">';
-			html += '<input class="gpinput attr_value" value="'+$gp.htmlchars(value)+'" size="40" />';
-			if( name == 'class' ){
-				html += '<div class="class_only admin_note">Default: GPAREA filetype-*</div>';
-			}
+			html += '<input class="gpinput attr_value" value="'+$gp.htmlchars(value)+'" />';
 			html += '</td></tr>';
 		});
 
@@ -562,71 +561,74 @@
 		html += '</td></tr>';
 		html += '</tbody></table>';
 
-		html += '<p>';
-		html += '<input type="button" name="" value="'+gplang.up+'" class="gpsubmit" data-cmd="UpdateAttrs" /> ';
-		html += '<input type="button" name="" value="'+gplang.ca+'" class="gpcancel" data-cmd="admin_box_close" />';
-		html += '</p>';
 
 		html += '</form></div>';
 
-		$gp.AdminBoxC(html);
+		$html = $(html);
 
-		$(document).trigger("section_options:loaded");
+		gp_editing.AddTab($html, 'section_options');
+
 	}
 
 	/**
 	 * Update the attributes
 	 *
 	 */
-	$gp.inputs.UpdateAttrs = function(evt){
-		evt.preventDefault();
+	$(document).on('input','#section_options input',function(){
 
 		var $form		= $('#section_attributes_form');
 		var $area		= gp_editor.GetArea( $form );
 		var old_attrs	= $area.data('gp-attrs');
 		var new_attrs	= {};
+		var class_value	= '';
 
 		var $temp_node	= $('<div>');
 		var classes		= '';
 
+
+
 		//prep old_attrs list
 		//remove old attrs from $area
 		$.each(old_attrs,function(attr_name){
+			if( attr_name == 'class' ){
+				return;
+			}
 
 			new_attrs[attr_name]	= '';
-			var curr_value			= $area.attr(attr_name) || '';
-
-			$temp_node.attr('class',curr_value);
-			$temp_node.removeClass(''+this);
-
-			$area.attr(attr_name, $temp_node.attr('class'));
+			$area.attr(attr_name, '');
 		});
 
 
 		//add new values
 		$form.find('tbody tr').each(function(){
-			var $row			= $(this);
-			var attr_name		= $row.find('.attr_name').val();
-			var attr_value		= $row.find('.attr_value').val();
-			attr_name			= $.trim(attr_name).toLowerCase();
+			var $row				= $(this);
+			var attr_name			= $row.find('.attr_name').val();
+			attr_name				= $.trim(attr_name).toLowerCase();
 
 			if( !attr_name || attr_name == 'id' || attr_name.substr(0,7) == 'data-gp' ){
 				return;
 			}
 
+			var attr_value			= $row.find('.attr_value').val();
+
 			if( attr_name == 'class' ){
-				classes = attr_value;
+				class_value = attr_value;
+				return;
 			}
 
-			var curr_value		= $area.attr(attr_name) || '';
-
-			$temp_node.attr('class',curr_value);
-			$temp_node.addClass(attr_value);
-			$area.attr(attr_name, $temp_node.attr('class'));
-
-			new_attrs[attr_name] = attr_value;
-
+			new_attrs[attr_name]	= attr_value;
+			$area.attr(attr_name, attr_value);
 		});
+
+
+		//handle class uniquely so that we don't remove classes used by gpEasy
+		var curr_value			= $area.attr('class') || '';
+		$temp_node.attr('class',curr_value);
+		$temp_node.removeClass(old_attrs.class);
+		$temp_node.addClass(class_value);
+		$area.attr('class', $temp_node.attr('class'));
+		new_attrs['class'] = class_value;
+
 
 
 		//update title of <li> in section manager
@@ -640,7 +642,8 @@
 		$area.data('gp-attrs',new_attrs);
 
 		$gp.CloseAdminBox();
-	}
+
+	});
 
 
 	/**

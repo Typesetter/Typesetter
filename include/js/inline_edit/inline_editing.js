@@ -202,7 +202,29 @@ var gp_editing = {
 			e.stopPropagation(); //prevent dragging
 		});
 
+	},
+
+	/**
+	 * Add Tab
+	 *
+	 */
+	AddTab: function(html, id){
+
+		var $area = $('#'+id);
+		if( !$area.length ){
+			$area = $(html).appendTo('#ckeditor_top');
+
+			$('<a class="ckeditor_control" data-cmd="SwitchEditArea" data-arg="#'+id+'">'+$area.attr('title')+'</a>')
+				.appendTo('#cktabs')
+				.click();
+		}else{
+			$area.replaceWith(html);
+			$('#cktabs .ckeditor_control[data-arg="#'+id+'"]').click();
+
+		}
+
 	}
+
 
 }
 

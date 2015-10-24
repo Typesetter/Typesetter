@@ -7,6 +7,8 @@
 	list-style:none;
 	display:block;
 	}
+
+#section_options,
 #section_sorting{
 	border:1px solid #ddd;
 	background:#fff;
@@ -202,4 +204,32 @@
 
 #section_sorting .ui-sortable-helper *{
 	display:none !important;
+	}
+
+
+/**
+ * Section options
+ *
+ */
+#section_options table.full_width,
+#section_options input{
+	width:100% !important;
+	}
+#section_options td{
+	padding:2px 0;
+	}
+
+#section_options td:first-child{
+	width:50px;
+}
+#section_options input.gpinput{
+	border:1px solid #ddd;
+	box-shadow:none;
+	}
+#section_options td input.gpinput{
+	border-radius:3px 0 0 3px;
+	}
+#section_options td:last-child input.gpinput{
+	border-radius:0 3px 3px 0;
+	margin-left:-1px;
 	}

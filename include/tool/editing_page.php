@@ -218,7 +218,7 @@ class editing_page extends display{
 
 
 		$new_section['attributes']['class']		.= ' '.$wrapper_class;
-		$orig_attrs								= json_encode($new_section['attributes']);
+		$orig_attrs								= $new_section['attributes'];
 
 		$new_section['attributes']['id']		= 'rand-'.time().rand(0,10000);
 		$new_section['attributes']['class']		.= ' editable_area new_section';
@@ -259,7 +259,7 @@ class editing_page extends display{
 		$content		= section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);
 
 		$new_section['attributes']['class']		.= ' '.$class;
-		$orig_attrs								= json_encode($new_section['attributes']);
+		$orig_attrs								= $new_section['attributes'];
 
 		$new_section['attributes']['id']		= 'rand-'.time().rand(0,10000);
 		$new_section['attributes']['class']		.= ' editable_area new_section';
@@ -273,6 +273,12 @@ class editing_page extends display{
 
 	function SectionNode($section,$orig_attrs){
 
+		//if image type, make sure the src is a complete path
+		if( $section['type'] == 'image' ){
+			$orig_attrs['src'] = common::GetDir($orig_attrs['src']);
+		}
+
+		$orig_attrs			= json_encode($orig_attrs);
 		$attributes			= section_content::SectionAttributes($section['attributes'],$section['type']);
 		$attributes			.= ' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'';
 
@@ -939,7 +945,7 @@ class editing_page extends display{
 
 		$section_data									+= array('attributes' => array(),'type'=>'text' );
 		$section_data['attributes']						+= array('class' => '' );
-		$orig_attrs										= json_encode($section_data['attributes']);
+		$orig_attrs										= $section_data['attributes'];
 		$section_data['attributes']['data-gp-section']	= $curr_section_num;
 		$section_types									= section_content::GetTypes();
 

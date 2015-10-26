@@ -141,7 +141,7 @@ class special_gpsearch{
 		foreach($this->results as $key => $result){
 			//$link = common::GetUrl( $result['slug'], $result['query'] );
 			$link =  isset($result['url']) ? $result['url'] : common::GetUrl( $result['slug'], $result['query'] );
-			$link = strtolower($link);
+			$link = mb_strtolower($link);
 			if( in_array($link,$links) ){
 				unset($this->results[$key]);
 			}else{
@@ -214,7 +214,7 @@ class special_gpsearch{
 	}
 
 	function SearchPattern(){
-		$query = strtolower($_REQUEST['q']);
+		$query = mb_strtolower($_REQUEST['q']);
 		// Search for the exact query when it is doubled quoted
 		if (substr($query, 0, 1) == '"' && substr($query, -1) == '"') {
 			$query = substr($query, 1, -1);
@@ -359,6 +359,7 @@ class special_gpsearch{
 		$this->search_count++;
 
 		//search all of the content include html
+		$content= mb_strtolower($content);
 		$content = $label.' '.$content;
 		$match_count = preg_match_all($this->search_pattern,$content,$matches,PREG_OFFSET_CAPTURE);
 		if( $match_count < 1 ){

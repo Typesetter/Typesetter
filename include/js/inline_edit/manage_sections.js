@@ -543,16 +543,21 @@
 				return;
 			}
 
-			var value = $.trim(this);
+			var value			= $.trim(this);
+			var input_class		= '';
 			if( value == '' && name != 'class' ){
 				return;
+			}
+
+			if( name == 'class' ){
+				input_class = 'class-attribute';
 			}
 
 
 			html += '<tr><td>';
 			html += '<input class="gpinput attr_name" value="'+$gp.htmlchars(name)+'" />';
 			html += '</td><td style="white-space:nowrap">';
-			html += '<input class="gpinput attr_value" value="'+$gp.htmlchars(value)+'" />';
+			html += '<input class="gpinput attr_value '+input_class+'" value="'+$gp.htmlchars(value)+'" />';
 			html += '</td></tr>';
 		});
 
@@ -565,6 +570,13 @@
 		html += '</form></div>';
 
 		$html = $(html);
+
+		var avail_classes = ['jumbotron','row','col-xs-1','col-xs-2','col-xs-3','col-xs-4','col-xs-5','col-xs-6','col-xs-7','col-xs-8','col-xs-9','col-xs-10','col-xs-11','col-xs-12'];
+
+		$html.find('.class-attribute').autocomplete({
+			source: avail_classes,
+			appendTo:'#ckeditor_wrap'
+		});
 
 		gp_editing.AddTab($html, 'section_options');
 

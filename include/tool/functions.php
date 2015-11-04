@@ -89,3 +89,9 @@ if( !function_exists('mb_explode') ){
 		return call_user_func_array('mb_split',$args);
 	}
 }
+
+if( !function_exists('gzopen') && function_exists('gzopen64') ){
+	function gzopen( $filename, $mode, $use_include_path = 0 ){
+		return gzopen64( $filename, $mode, $use_include_path );
+	}
+}

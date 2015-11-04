@@ -573,10 +573,49 @@
 
 		var avail_classes = ['jumbotron','row','col-xs-1','col-xs-2','col-xs-3','col-xs-4','col-xs-5','col-xs-6','col-xs-7','col-xs-8','col-xs-9','col-xs-10','col-xs-11','col-xs-12'];
 
-		$html.find('.class-attribute').autocomplete({
-			source: avail_classes,
-			appendTo:'#ckeditor_wrap'
-		});
+		$html.find('.class-attribute')
+			// don't navigate away from the field on tab when selecting an item
+			.bind( 'keydown', function( evt ){
+				if( evt.keyCode === $.ui.keyCode.TAB && $( this ).autocomplete( 'instance' ).menu.active ){
+					evt.preventDefault();
+				}
+			})
+			.autocomplete({
+				appendTo:'#gp_admin_fixed',
+				position: { my: 'right top', at: 'right bottom' },
+				minLength: 0,
+				//source: avail_classes,
+				source: function( request, response ) {
+					// delegate back to autocomplete, but extract the last term
+					response(
+						$.ui.autocomplete.filter(
+							avail_classes, request.term.split( /\s+/ ).pop()
+						)
+					);
+				},
+				focus: function() {
+					// prevent value inserted on focus
+					return false;
+				},
+				select: function( event, ui ){
+					var terms = this.value.split( /\s+/ );
+					// remove the current input
+					terms.pop();
+					// add the selected item
+					terms.push( ui.item.value );
+					// add placeholder to get the comma-and-space at the end
+					terms.push( '' );
+					this.value = terms.join(' ');
+
+					$(this).trigger('input');
+
+					return false;
+				}
+			});
+
+
+
+
 
 		gp_editing.AddTab($html, 'section_options');
 

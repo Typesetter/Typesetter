@@ -1326,6 +1326,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		$_POST		+= array('index'=>'');
 		$indexes	= explode(',',$_POST['index']);
+		$trash_data	= array();
 
 
 		foreach($indexes as $index){

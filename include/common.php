@@ -310,15 +310,6 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 
 
 /**
- * Deprecated
- * 2015-04-15
- */
-function microtime_diff($a, $b = false, $eff = 6){
-	trigger_error('microtime_diff is deprecated');
-}
-
-
-/**
  * Define a constant if it hasn't already been set
  * @param string $var The name of the constant
  * @param mixed $default The value to set the constant if it hasn't been set

@@ -469,9 +469,6 @@ class update_class{
 		echo '</form>';
 
 
-		//echo showArray($this->update_data);
-		//echo showArray($core_package);
-
 		return true;
 	}
 

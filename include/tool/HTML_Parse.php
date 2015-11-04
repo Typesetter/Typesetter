@@ -95,7 +95,6 @@ class gp_html_parse{
 			$this->dom_array[] = substr($this->doc,$offset);
 		}
 
-		//message(showArray($this->dom_array));
 	}
 
 	function TagName($pos,&$name_len){

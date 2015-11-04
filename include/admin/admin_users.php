@@ -638,7 +638,6 @@ class admin_users{
 		echo '</div>';
 		echo '</td></tr>';
 
-		//echo '<tr><td colspan="2">'.showArray($values).'</td></tr>';
 	}
 
 	/**

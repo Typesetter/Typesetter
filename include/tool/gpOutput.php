@@ -1000,7 +1000,6 @@ class gpOutput{
 
 			//reduce the menu to the current group
 			$submenu = gpOutput::MenuReduce_Group($menu,$curr_title_key,$expand_level,$curr_level);
-			//message('group: ('.count($submenu).') '.showArray($submenu));
 
 
 			// titles even-with selected title within group
@@ -1137,8 +1136,6 @@ class gpOutput{
 			//we're back at the $top_level, start over
 			if( $level <= $top_level ){
 				$result_menu = array();
-				//message('start over: '.$title_key);
-				//message('start over: '.showArray($result_menu));
 				continue;
 			}
 
@@ -1245,7 +1242,6 @@ class gpOutput{
 			&& isset($gpLayouts[$page->gpLayout]['images'][$container_id])
 			&& is_array($gpLayouts[$page->gpLayout]['images'][$container_id])
 			){
-				//echo showArray($gpLayouts[$page->gpLayout]['images'][$container_id]);
 				//shuffle($gpLayouts[$page->gpLayout]['images'][$container_id]); //Does not make sense ? There will always be only 1 entry in for this container as it is per img element
 				$image = $gpLayouts[$page->gpLayout]['images'][$container_id][0]; //call to current also not needed, there will only be 1 entry
 				$img_full = $dataDir.$image['img_rel'];

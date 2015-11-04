@@ -339,12 +339,6 @@ if( function_exists( 'get_magic_quotes_gpc' ) && version_compare(phpversion(),'5
 	fix_magic_quotes( $_POST );
 	fix_magic_quotes( $_COOKIE );
 	fix_magic_quotes( $_REQUEST );
-
-	//In version 4, $_ENV was also quoted
-	//fix_magic_quotes( $_ENV ); //use GETENV() instead of $_ENV
-
-	//doing this can break the application, the $_SERVER variable is not affected by magic_quotes
-	//fix_magic_quotes( $_SERVER );
 }
 
 //If Register Globals

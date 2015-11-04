@@ -95,3 +95,7 @@ if( !function_exists('gzopen') && function_exists('gzopen64') ){
 		return gzopen64( $filename, $mode, $use_include_path );
 	}
 }
+
+if( !function_exists('gpSettingsOverride') ){
+	function gpSettingsOverride(){}
+}

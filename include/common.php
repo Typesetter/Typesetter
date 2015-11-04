@@ -49,9 +49,6 @@ define('gp_random',common::RandomString());
 if( function_exists('mb_internal_encoding') ){
 	mb_internal_encoding('UTF-8');
 }
-if( !function_exists('gpSettingsOverride') ){
-	function gpSettingsOverride(){}
-}
 
 
 

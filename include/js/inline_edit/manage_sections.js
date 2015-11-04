@@ -571,7 +571,7 @@
 
 		$html = $(html);
 
-		var avail_classes = ['jumbotron','row','col-xs-1','col-xs-2','col-xs-3','col-xs-4','col-xs-5','col-xs-6','col-xs-7','col-xs-8','col-xs-9','col-xs-10','col-xs-11','col-xs-12'];
+
 
 		$html.find('.class-attribute')
 			// don't navigate away from the field on tab when selecting an item
@@ -584,12 +584,11 @@
 				appendTo:'#gp_admin_fixed',
 				position: { my: 'right top', at: 'right bottom' },
 				minLength: 0,
-				//source: avail_classes,
 				source: function( request, response ) {
 					// delegate back to autocomplete, but extract the last term
 					response(
 						$.ui.autocomplete.filter(
-							avail_classes, request.term.split( /\s+/ ).pop()
+							gp_avail_classes, request.term.split( /\s+/ ).pop()
 						)
 					);
 				},

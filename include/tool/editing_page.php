@@ -166,6 +166,11 @@ class editing_page extends display{
 		echo 'var section_types = '.json_encode(ob_get_clean()).';';
 
 
+		//classes
+		$avail_classes	= array('jumbotron','row','col-xs-1','col-xs-2','col-xs-3','col-xs-4','col-xs-5','col-xs-6','col-xs-7','col-xs-8','col-xs-9','col-xs-10','col-xs-11','col-xs-12');
+		echo 'var gp_avail_classes = '.json_encode($avail_classes).';';
+
+
 
 		$scripts	= array();
 		$scripts[]	= '/include/thirdparty/js/nestedSortable.js';

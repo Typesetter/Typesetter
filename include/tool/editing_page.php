@@ -312,6 +312,12 @@ class editing_page extends display{
 
 		$section_attrs			= array('gp_label','gp_color','gp_collapse');
 
+		//make sure section_order isn't empty
+		if( empty($_POST['section_order']) ){
+			message($langmessage['OOPS'].' (Invalid Request)');
+			return false;
+		}
+
 
 		foreach($_POST['section_order'] as $i => $arg ){
 

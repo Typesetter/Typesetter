@@ -220,6 +220,8 @@ $langmessage = array (
 	'smtp_hosts'                     => 'Exemple: ',
 	'auto_redir'                     => 'Rediriger une requête automatiquement si elle est semblable à une page existante endéans ce pourcentage.',
 	),
+	'page_title_h_tag'               => 'Balise Hx de titres des pages',
+	'h_tag_title'                    => 'Titre Balise Hx',	
 	'desc'                           => 'Description',
 	'keywords'                       => 'Mots clés',
 	'robots'                         => 'Robot Visibility',

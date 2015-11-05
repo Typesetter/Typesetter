@@ -2860,5 +2860,22 @@ class gpOutput{
 		return $compiled;
 	}
 
+	static function GetHTagTitle() {
+		global $config, $page;
 
+		if (!in_array($page->pagetype, array('display', 'editing_page'))) {
+			return;
+		}
+
+		if (!isset($page->TitleInfo['h_tag_title'])) {
+			return;
+		}
+
+		if (!isset($config['page_title_h_tag'])) {
+			return;
+		}
+
+		echo '<'.$config['page_title_h_tag'].'>'.$page->TitleInfo['h_tag_title'].'</'.$config['page_title_h_tag'].'>';
+	}
+	
 }

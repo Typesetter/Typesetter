@@ -879,7 +879,10 @@ class display{
 		}
 
 		echo '<div id="gpx_content" class="'.$class.' cf">';
-
+		
+		gpOutput::GetHTagTitle();
+		gpPlugin::Action('ContentBuffer_Before');
+		
 		echo $this->contentBuffer;
 
 
@@ -1810,6 +1813,7 @@ class common{
 
 		//make sure defaults are set
 		$config += array(
+				'page_title_h_tag'	=> 'h2',
 				'maximgarea'		=> '691200',
 				'maxthumbsize'		=> '100',
 				'check_uploads'		=> false,

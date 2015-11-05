@@ -38,6 +38,7 @@ class admin_configuration{
 						'title'=>'',
 						'keywords'=>'',
 						'desc'=>'textarea',
+						'page_title_h_tag'=> array('h1'=>'h1', 'h2'=>'h2', 'h3'=>'h3', 'h4'=>'h4', 'h5'=>'h5', 'h6' =>'h6' ),
 
 						'Interface'=>false,
 						'colorbox_style' => array('example1'=>'Example 1', 'example2'=>'Example 2', 'example3'=>'Example 3', 'example4'=>'Example 4', 'example5'=>'Example 5' ),

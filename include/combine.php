@@ -36,140 +36,152 @@ class gp_combine{
 
 
 				//jquery ui core
-				'ui-theme'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery-ui.custom.min.css',
+				'ui-theme'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery-ui.min.css',
 										'type'			=> 'css',
 										'package'		=> 'jquery_ui'),
 
-				'ui-core'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.core.min.js',
+				'ui-core'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/core.js',
 										'package'		=> 'jquery_ui'),
 
-				'mouse'		=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.mouse.min.js',
+				'mouse'		=> array(	'file'			=> '/include/thirdparty/jquery_ui/mouse.js',
 										'requires'		=> 'ui-core,widget',
 										'package' 		=> 'jquery_ui'),
 
-				'position'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.position.min.js',
+				'position'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/position.js',
 										'package'		=> 'jquery_ui'),
 
-				'widget'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.widget.min.js',
+				'widget'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/widget.js',
 										'package'		=> 'jquery_ui'),
 
 
 
 				//jquery ui interactions
-				'draggable'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.draggable.min.js'
+				'draggable'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/draggable.js'
 										,'requires'		=> 'ui-core,widget,mouse'
 										,'package'		=> 'jquery_ui'),
 
-				'droppable'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.droppable.min.js'
+				'droppable'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/droppable.js'
 										,'requires'		=> 'ui-core,widget,mouse,draggable'
 										,'package'		=> 'jquery_ui'),
 
-				'resizable'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.resizable.min.js'
+				'resizable'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/resizable.js'
 										,'requires'		=> 'ui-core,widget,mouse,ui-theme'
 										,'package'		=> 'jquery_ui'),
 
-				'selectable'=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.selectable.min.js'
+				'selectable'=> array(	'file'			=> '/include/thirdparty/jquery_ui/selectable.js'
 										,'requires'		=> 'ui-core,widget,mouse,ui-theme'
 										,'package'		=> 'jquery_ui'),
 
-				'sortable'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.sortable.min.js'
+				'selectmenu'=> array(	'file'			=> '/include/thirdparty/jquery_ui/selectmenu.js'
+										,'requires'		=> 'ui-core,widget,position,menu,ui-theme'
+										,'package'		=> 'jquery_ui'),
+
+				'sortable'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/sortable.js'
 										,'requires'		=> 'ui-core,widget,mouse'
 										,'package'		=> 'jquery_ui'),
 
 				//jquery ui widgets
-				'accordion'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.accordion.min.js'
+				'accordion'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/accordion.js'
 										,'requires'		=> 'ui-core,widget,ui-theme'
 										,'package'		=> 'jquery_ui'),
 
-				'autocomplete'=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.autocomplete.min.js'
+				'autocomplete'=> array(	'file'			=> '/include/thirdparty/jquery_ui/autocomplete.js'
 										,'requires'		=> 'ui-core,widget,position,menu,ui-theme'
 										,'package'		=> 'jquery_ui'),
 
-				'button'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.button.min.js'
+				'button'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/button.js'
 										,'requires'		=> 'ui-core,widget,ui-theme'
 										,'package'		=> 'jquery_ui'),
 
-				'datepicker'=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.datepicker.min.js'
+				'datepicker'=> array(	'file'			=> '/include/thirdparty/jquery_ui/datepicker.js'
 										,'requires'		=> 'ui-core,ui-theme'
 										,'package'		=> 'jquery_ui'),
 
-				'dialog'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.dialog.min.js'
+				'dialog'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/dialog.js'
 										,'requires'		=> 'ui-core,widget,button,position,ui-theme'
 										,'package'		=> 'jquery_ui'),
 
 
-				'menu'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.menu.min.js'
+				'menu'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/menu.js'
 										,'requires'		=> 'ui-core,widget,position,ui-theme'
 										,'package'		=> 'jquery_ui'),
 
 
-				'progressbar'	=> array('file'			=> '/include/thirdparty/jquery_ui/jquery.ui.progressbar.min.js'
+				'progressbar'	=> array('file'			=> '/include/thirdparty/jquery_ui/progressbar.js'
 										,'requires'		=> 'ui-core,widget,ui-theme'
 										,'package'		=> 'jquery_ui'),
 
-				'slider'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.slider.min.js'
+				'slider'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/slider.js'
 										,'requires'		=> 'ui-core,widget,mouse,ui-theme'
 										,'package'		=> 'jquery_ui'),
 
-				'tabs'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.tabs.min.js'
+				'tabs'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/tabs.js'
 										,'requires'		=> 'ui-core,widget,ui-theme'
 										,'package'		=> 'jquery_ui'),
 
 
 
 				//jquery ui effects
-				'effects-core'	=> array('file'			=> '/include/thirdparty/jquery_ui/jquery.ui.effect.min.js'
+				'effects-core'	=> array('file'			=> '/include/thirdparty/jquery_ui/effect.js'
 										,'package'		=> 'jquery_ui'),
 
-				'blind'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.effect-blind.min.js'
+				'blind'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/effect-blind.js'
 										,'requires'		=> 'effects-core'
 										,'package'		=> 'jquery_ui'),
 
-				'bounce'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.effect-bounce.min.js'
+				'bounce'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/effect-bounce.js'
 										,'requires'		=> 'effects-core'
 										,'package'		=> 'jquery_ui'),
 
-				'clip'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.effect-clip.min.js'
+				'clip'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/effect-clip.js'
 										,'requires'		=> array('effects-core')
 										,'package'		=> 'jquery_ui'),
 
-				'drop'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.effect-drop.min.js'
+				'drop'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/effect-drop.js'
 										,'requires'		=> array('effects-core')
 										,'package'		=> 'jquery_ui'),
 
-				'explode'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.effect-explode.min.js'
+				'explode'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/effect-explode.js'
 										,'requires'		=> array('effects-core')
 										,'package'		=> 'jquery_ui'),
 
-				'fade'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.effect-fade.min.js'
+				'fade'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/effect-fade.js'
 										,'requires'		=> array('effects-core')
 										,'package'		=> 'jquery_ui'),
 
-				'fold'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.effect-fold.min.js'
+				'fold'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/effect-fold.js'
 										,'requires'		=> array('effects-core')
 										,'package'		=> 'jquery_ui'),
 
-				'highlight'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.effect-highlight.min.js'
+				'highlight'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/effect-highlight.js'
 										,'requires'		=> array('effects-core')
 										,'package'		=> 'jquery_ui'),
 
-				'pulsate'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.effect-pulsate.min.js'
+				'puff'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/effect-puff.js'
 										,'requires'		=> array('effects-core')
 										,'package'		=> 'jquery_ui'),
 
-				'scale'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.effect-scale.min.js'
+				'pulsate'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/effect-pulsate.js'
 										,'requires'		=> array('effects-core')
 										,'package'		=> 'jquery_ui'),
 
-				'shake'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.effect-shake.min.js'
+				'scale'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/effect-scale.js'
 										,'requires'		=> array('effects-core')
 										,'package'		=> 'jquery_ui'),
 
-				'slide'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.effect-slide.min.js'
+				'shake'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/effect-shake.js'
 										,'requires'		=> array('effects-core')
 										,'package'		=> 'jquery_ui'),
 
-				'transfer'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery.ui.effect-transfer.min.js'
+				'size'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/effect-size.js'
+										,'requires'		=> array('effects-core')
+										,'package'		=> 'jquery_ui'),
+
+				'slide'	=> array(		'file'			=> '/include/thirdparty/jquery_ui/effect-slide.js'
+										,'requires'		=> array('effects-core')
+										,'package'		=> 'jquery_ui'),
+
+				'transfer'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/effect-transfer.js'
 										,'requires'		=> array('effects-core')
 										,'package'		=> 'jquery_ui'),
 

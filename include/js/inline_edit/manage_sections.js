@@ -523,13 +523,11 @@
 		var attrs	= gp_editor.GetArea( $li ).data('gp-attrs');
 
 
-
-		//options table
-		html = '<div id="section_options" class="section_drag_area inline_edit_area" title="Options">';
-		html += '<form id="section_attributes_form" data-area-id="'+id+'">';
-		html += '<table class="full_width">';
-		html += '<thead><tr><td colspan="2">Section: '+$li.find('> div .section_label').text()+'</td></tr></thead>';
-		html += '<tbody>';
+		//popup
+		html = '<div class="inline_box"><form id="section_attributes_form" data-area-id="'+id+'">';
+		html += '<h2>Section Attributes</h2>';
+		html += '<table class="bordered full_width">';
+		html += '<thead><tr><th>Attribute</th><th>Value</th></tr></thead><tbody>';
 
 
 		$.each(attrs,function(name){
@@ -543,21 +541,19 @@
 				return;
 			}
 
-			var value			= $.trim(this);
-			var input_class		= '';
+			var value = $.trim(this);
 			if( value == '' && name != 'class' ){
 				return;
 			}
 
-			if( name == 'class' ){
-				input_class = 'class-attribute';
-			}
-
 
 			html += '<tr><td>';
-			html += '<input class="gpinput attr_name" value="'+$gp.htmlchars(name)+'" />';
+			html += '<input class="gpinput attr_name" value="'+$gp.htmlchars(name)+'" size="8" />';
 			html += '</td><td style="white-space:nowrap">';
-			html += '<input class="gpinput attr_value '+input_class+'" value="'+$gp.htmlchars(value)+'" />';
+			html += '<input class="gpinput attr_value" value="'+$gp.htmlchars(value)+'" size="40" />';
+			if( name == 'class' ){
+				html += '<div class="class_only admin_note">Default: GPAREA filetype-*</div>';
+			}
 			html += '</td></tr>';
 		});
 
@@ -566,65 +562,26 @@
 		html += '</td></tr>';
 		html += '</tbody></table>';
 
+		html += '<p>';
+		html += '<input type="button" name="" value="'+gplang.up+'" class="gpsubmit" data-cmd="UpdateAttrs" /> ';
+		html += '<input type="button" name="" value="'+gplang.ca+'" class="gpcancel" data-cmd="admin_box_close" />';
+		html += '</p>';
 
 		html += '</form></div>';
 
-		$html = $(html);
 
+		$gp.AdminBoxC(html);
 
+		//$('#section_attributes_form input').on('input',function(){UpdateAttrs()});
 
-		$html.find('.class-attribute')
-			// don't navigate away from the field on tab when selecting an item
-			.bind( 'keydown', function( evt ){
-				if( evt.keyCode === $.ui.keyCode.TAB && $( this ).autocomplete( 'instance' ).menu.active ){
-					evt.preventDefault();
-				}
-			})
-			.autocomplete({
-				appendTo:'#gp_admin_fixed',
-				position: { my: 'right top', at: 'right bottom' },
-				minLength: 0,
-				source: function( request, response ) {
-					// delegate back to autocomplete, but extract the last term
-					response(
-						$.ui.autocomplete.filter(
-							gp_avail_classes, request.term.split( /\s+/ ).pop()
-						)
-					);
-				},
-				focus: function() {
-					// prevent value inserted on focus
-					return false;
-				},
-				select: function( event, ui ){
-					var terms = this.value.split( /\s+/ );
-					// remove the current input
-					terms.pop();
-					// add the selected item
-					terms.push( ui.item.value );
-					// add placeholder to get the comma-and-space at the end
-					terms.push( '' );
-					this.value = terms.join(' ');
-
-					$(this).trigger('input');
-
-					return false;
-				}
-			});
-
-
-
-
-
-		gp_editing.AddTab($html, 'section_options');
-
+		$(document).trigger("section_options:loaded");
 	}
 
 	/**
 	 * Update the attributes
 	 *
 	 */
-	$(document).on('input','#section_options input',function(){
+	$gp.inputs.UpdateAttrs = function(){
 
 		var $form		= $('#section_attributes_form');
 		var $area		= gp_editor.GetArea( $form );
@@ -692,8 +649,7 @@
 		$area.data('gp-attrs',new_attrs);
 
 		$gp.CloseAdminBox();
-
-	});
+	}
 
 
 	/**

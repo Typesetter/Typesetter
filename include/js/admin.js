@@ -504,7 +504,7 @@ $gp.links.add_table_row = function(evt){
 	var $tr = $(this).closest('tr');
 	var $new_row = $tr.closest('tbody').find('tr:first').clone();
 	$new_row.find('.class_only').remove();
-	$new_row.find('input').val('');
+	$new_row.find('input').val('').attr('value','');
 	$tr.before($new_row);
 }
 

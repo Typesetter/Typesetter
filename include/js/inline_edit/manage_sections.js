@@ -461,7 +461,7 @@
 		//build html
 		var html = '<span class="secsort_color_swatches">';
 		for( var i=0; i<colors.length; i++ ){
-			html += '<a style="background:' + colors[i] + ';" data-color="' + colors[i] + '"  data-cmd="SelectColor"/>';
+			html += '<a style="background:' + colors[i] + ';" data-color="' + colors[i] + '"	data-cmd="SelectColor"/>';
 		}
 
 		$li.children('div').hide();
@@ -518,9 +518,10 @@
 	 */
 	$gp.links.SectionOptions = function(evt){
 
-		var $li		= $(this).closest('li');
-		var id		= $li.data('area-id')
-		var attrs	= gp_editor.GetArea( $li ).data('gp-attrs');
+		var $li					= $(this).closest('li');
+		var id					= $li.data('area-id')
+		var attrs				= gp_editor.GetArea( $li ).data('gp-attrs');
+		var current_classes		= '';
 
 
 		//popup
@@ -546,6 +547,10 @@
 				return;
 			}
 
+			if( name == 'class' ){
+				current_classes = value;
+			}
+
 
 			html += '<tr><td>';
 			html += '<input class="gpinput attr_name" value="'+$gp.htmlchars(name)+'" size="8" />';
@@ -562,20 +567,136 @@
 		html += '</td></tr>';
 		html += '</tbody></table>';
 
+		html += '<br/>';
+
+
+		//available classes
+		html += '<div id="gp_avail_classes">';
+		html += '<table class="bordered full_width">';
+		html += '<thead><tr><th colspan="2">Available Classes</th></tr></thead>';
+		html += '<tbody>';
+		for( var i=0; i < gp_avail_classes.length; i++ ){
+			html += '<tr><td>';
+			html += ClassSelect(gp_avail_classes[i].classnames, current_classes);
+			html += '</td><td class="sm text-muted">';
+			html += gp_avail_classes[i].description;
+			html += '</td></tr>';
+		}
+
+		html += '</table>';
+		html += '</tbody>';
+		html += '</div>';
+
+
 		html += '<p>';
 		html += '<input type="button" name="" value="'+gplang.up+'" class="gpsubmit" data-cmd="UpdateAttrs" /> ';
 		html += '<input type="button" name="" value="'+gplang.ca+'" class="gpcancel" data-cmd="admin_box_close" />';
 		html += '</p>';
 
 		html += '</form></div>';
+		var $html = $(html);
 
+		//
+		var selects = $html.find('select').on('change input',function(){
+			var $checkbox = $(this).closest('label').find('.gpcheck');
+			$checkbox.prop('checked',true);
+			$gp.inputs.ClassChecked.apply($checkbox);
+		});
 
-		$gp.AdminBoxC(html);
+		$gp.AdminBoxC( $html );
 
 		//$('#section_attributes_form input').on('input',function(){UpdateAttrs()});
 
 		$(document).trigger("section_options:loaded");
 	}
+
+	/**
+	 * Create a class select
+	 *
+	 */
+	function ClassSelect(classes, current_classes){
+
+		classes		= classes.split(' ');
+
+		var html	= '<label class="gpcheckbox" >';
+		html 		+= '<input class="gpcheck" type="checkbox" data-cmd="ClassChecked" />';
+
+		//multiple classes
+		if( classes.length > 1 ){
+			html += '<select>';
+			for(var i = 0; i < classes.length; i++ ){
+				html += '<option value="'+classes[i]+'">'+classes[i]+'</option>';
+			}
+			html += '</select>';
+
+			html += '<span class="gpcaret"></span>';
+
+
+		//single class
+		}else{
+			html += '<span>'+classes[0]+'</span>';
+		}
+
+		html		+= '</label>';
+
+		return html;
+	}
+
+
+	/**
+	 * Handle clicks on class checkboxes
+	 *
+	 */
+	$gp.inputs.ClassChecked = function(){
+
+		var $checkbox	= $(this);
+		var action		= $checkbox.prop('checked') ? 'add' : 'remove';
+		var $select		= $checkbox.siblings('select');
+		var classNames	= '';
+
+
+		//span
+		if( $select.length == 0 ){
+			classNames	= $checkbox.siblings('span').text();
+			setSectionClasses( classNames, action);
+			return;
+		}
+
+
+		//remove all from select first
+		classNames = [];
+		$select.find('option').each(function(){
+			classNames.push(this.value);
+		});
+		classNames = classNames.join(" ");
+		setSectionClasses( classNames, 'remove');
+
+		//add selected
+		if( action == 'add' ){
+			classNames	= $select.val();
+			setSectionClasses( classNames, 'add');
+		}
+	}
+
+
+	function setSectionClasses( classNames, action ){
+
+		console.log('action: '+action+' classes: '+classNames);
+
+		var input			= $('#section_attributes_form td input.attr_name[value="class"]').closest('tr').find('input.attr_value');
+		var value			= input.val();
+		var tmp				 = $("<div/>").addClass(value);
+
+		if( action == 'add' ){
+			tmp.addClass(classNames);
+		}else{
+			tmp.removeClass(classNames);
+		}
+		input.val(tmp.attr('class'));
+		tmp.remove();
+	}
+
+
 
 	/**
 	 * Update the attributes

@@ -205,3 +205,50 @@
 	display:none !important;
 	}
 
+/**
+ * Available classes
+ *
+ */
+#gp_avail_classes tbody{
+	display:block;
+	background:#f8f8f8;
+	max-height:256px;
+	overflow-y:auto;
+	}
+#gp_avail_classes td{
+	background:#f8f8f8;
+	border:0 none;
+	}
+
+#gp_avail_classes label.gpcheckbox{
+	display:block !important;
+	}
+#gp_avail_classes label.gpcheckbox input[type=checkbox]{
+	margin-right:6px !important;
+	}
+
+#gp_avail_classes label.gpcheckbox select{
+	margin-right:0!important;
+	padding:1px 0!important;
+	position:relative;
+	left:-5px;
+	width:114px;
+	border:none!important;
+	border-radius:0!important;
+	appearance:none;
+	-moz-appearance:none;
+	-webkit-appearance:none;
+	background: none;
+	outline:none;
+	}
+
+.gpcaret{
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px dashed;
+    display: inline-block;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    width: 0;
+}

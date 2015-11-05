@@ -548,7 +548,7 @@
 			}
 
 			if( name == 'class' ){
-				current_classes = value;
+				current_classes = value.split(' ');
 			}
 
 
@@ -616,16 +616,22 @@
 	 */
 	function ClassSelect(classes, current_classes){
 
-		classes		= classes.split(' ');
+		classes			= classes.split(' ');
+		var html		= '';
+		var checked		= '';
 
-		var html	= '<label class="gpcheckbox" >';
-		html 		+= '<input class="gpcheck" type="checkbox" data-cmd="ClassChecked" />';
 
 		//multiple classes
 		if( classes.length > 1 ){
 			html += '<select>';
 			for(var i = 0; i < classes.length; i++ ){
-				html += '<option value="'+classes[i]+'">'+classes[i]+'</option>';
+				var selected = '';
+				if( current_classes.indexOf(classes[i]) >= 0 ){
+					checked = 'checked';
+					selected = 'selected'
+				}
+
+				html += '<option value="'+classes[i]+'" '+selected+'>'+classes[i]+'</option>';
 			}
 			html += '</select>';
 
@@ -634,9 +640,16 @@
 
 		//single class
 		}else{
+
+			if( current_classes.indexOf(classes[0]) >= 0 ){
+				checked = 'checked';
+			}
+
 			html += '<span>'+classes[0]+'</span>';
 		}
 
+
+		html		= '<label class="gpcheckbox"><input class="gpcheck" type="checkbox" data-cmd="ClassChecked" '+checked+'/>'+html;
 		html		+= '</label>';
 
 		return html;

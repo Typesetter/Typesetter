@@ -78,21 +78,19 @@
 				})
 				.autocomplete({
 
-				source:source,
-				delay: 100, /* since we're using local data */
-				minLength: 0,
+					source		: source,
+					delay		: 100, /* since we're using local data */
+					minLength	: 0,
+					appendTo	: '#gp_admin_fixed',
+					open		: function(event,ui){},
+					select		: function(event,ui){
 
-				open: function(event,ui){
-				},
-				select: function(event,ui){
-
-					$('#gp_include_form .autocomplete').val('');
-
-					if( ui.item ){
-						this.value = ui.item[1];
-						return false;
+						$('#gp_include_form .autocomplete').val('');
+						if( ui.item ){
+							this.value = ui.item[1];
+							return false;
+						}
 					}
-				}
 
 			}).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
 				return $( "<li></li>" )

@@ -508,6 +508,17 @@ $gp.links.add_table_row = function(evt){
 	$tr.before($new_row);
 }
 
+/**
+ * Remove a table row
+ *
+ */
+$gp.links.rm_table_row = function(evt){
+	var $this = $(this);
+	if( $this.closest('tbody').find('.rm_table_row').length < 2 ){
+		return;
+	}
+	$this.closest('tr').remove();
+}
 
 /**
  * Post a gpabox request

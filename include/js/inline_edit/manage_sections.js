@@ -577,9 +577,9 @@
 		html += '<tbody>';
 		for( var i=0; i < gp_avail_classes.length; i++ ){
 			html += '<tr><td>';
-			html += ClassSelect(gp_avail_classes[i].classnames, current_classes);
+			html += ClassSelect(gp_avail_classes[i].names, current_classes);
 			html += '</td><td class="sm text-muted">';
-			html += gp_avail_classes[i].description;
+			html += gp_avail_classes[i].desc;
 			html += '</td></tr>';
 		}
 

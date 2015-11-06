@@ -169,7 +169,7 @@ class update_class{
 			}else{
 				echo '<span class="failed">'.$langmessage['False'].'</span>';
 				if( gpdebug ){
-					message('This feature is not normally available in a multi-site installation.
+					msg('This feature is not normally available in a multi-site installation.
 							It is currently accessible because gpdebug is set to true.
 							Continuing is not recommended.');
 				}else{
@@ -224,9 +224,9 @@ class update_class{
 		}
 
 		if( !$this->DoRemoteCheck2() ){
-			message($langmessage['check_remote_failed']);
+			msg($langmessage['check_remote_failed']);
 		}else{
-			message($langmessage['check_remote_success']);
+			msg($langmessage['check_remote_success']);
 			$this->data_timestamp = time();
 		}
 
@@ -375,7 +375,7 @@ class update_class{
 
 		//already up to date?
 		if( ($curr_step < 4) && version_compare(gpversion,$core_package['version'],'>=') ){
-			message($langmessage['UP_TO_DATE']);
+			msg($langmessage['UP_TO_DATE']);
 			return false;
 		}
 
@@ -387,7 +387,7 @@ class update_class{
 			$curr_step = 1;
 			$this->DetectFileSystem();
 			if( !$gp_filesystem ){
-				message('Update Aborted: Could not establish a file writing method compatible with your server.');
+				msg('Update Aborted: Could not establish a file writing method compatible with your server.');
 				return false;
 			}
 			$filesystem_method = $gp_filesystem->method;
@@ -575,7 +575,7 @@ class update_class{
 
 		unset($config['updating_message']);
 		if( !admin_tools::SaveConfig() ){
-			message($langmessage['error_updating_settings']);
+			msg($langmessage['error_updating_settings']);
 			return false;
 		}
 
@@ -834,7 +834,7 @@ class update_class{
 		//save contents
 		$tempfile = $this->tempfile();
 		if( !gpFiles::Save($tempfile,$contents) ){
-			message($langmessage['download_failed'].' (2)');
+			msg($langmessage['download_failed'].' (2)');
 			return false;
 		}
 
@@ -860,7 +860,7 @@ class update_class{
 			return true;
 
 		}elseif( isset($_POST['connect_values_submitted']) ){
-			message($connect_result);
+			msg($connect_result);
 		}
 
 		//not connected, show form

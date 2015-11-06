@@ -98,7 +98,7 @@ class gp_recaptcha{
 		if (!$resp->isSuccess()) {
 			//$error_codes = $resp->getErrorCodes();
 			//error_log();
-			message($langmessage['INCORRECT_CAPTCHA']);
+			msg($langmessage['INCORRECT_CAPTCHA']);
 			return false;
 		}
 

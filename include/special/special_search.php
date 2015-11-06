@@ -274,12 +274,12 @@ class special_gpsearch{
 		}
 
 		if( gpFiles::SaveData($this->config_file,'search_config',$search_config) ){
-			message($langmessage['SAVED']);
+			msg($langmessage['SAVED']);
 			$this->search_config = $search_config;
 			return true;
 		}
 
-		message($langmessage['OOPS']);
+		msg($langmessage['OOPS']);
 		$this->Config($_POST);
 		return false;
 

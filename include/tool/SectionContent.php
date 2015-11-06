@@ -305,7 +305,7 @@ class section_content{
 
 		if( self::$title == $requested ){
 			if( common::LoggedIn() ){
-				message('Infinite loop detected: '.htmlspecialchars($requested) );
+				msg('Infinite loop detected: '.htmlspecialchars($requested) );
 			}
 			return;
 		}

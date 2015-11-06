@@ -91,7 +91,7 @@ class special_display extends display{
 		includeFile('tool/Page_Rename.php');
 		$new_title = gp_rename::RenameFile($this->title);
 		if( ($new_title !== false) && $new_title != $this->title ){
-			message(sprintf($langmessage['will_redirect'],common::Link_Page($new_title)));
+			msg(sprintf($langmessage['will_redirect'],common::Link_Page($new_title)));
 			$page->head .= '<meta http-equiv="refresh" content="15;url='.common::GetUrl($new_title).'">';
 			return true;
 		}

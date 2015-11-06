@@ -898,12 +898,12 @@ class gp_edit{
 		$source_file_full	= $dataDir.$source_file_rel;
 
 		if( !file_exists($source_file_full) ){
-			message($langmessage['OOPS'].' (Source file not found)');
+			msg($langmessage['OOPS'].' (Source file not found)');
 			return;
 		}
 		$src_img = thumbnail::getSrcImg($source_file_full);
 		if( !$src_img ){
-			message($langmessage['OOPS'].' (Couldn\'t create image [1])');
+			msg($langmessage['OOPS'].' (Couldn\'t create image [1])');
 			return;
 		}
 
@@ -959,12 +959,12 @@ class gp_edit{
 
 		//make sure the folder exists
 		if( !gpFiles::CheckDir( dirname($dest_img_full) ) ){
-			message($langmessage['OOPS'].' (Couldn\'t create directory)');
+			msg($langmessage['OOPS'].' (Couldn\'t create directory)');
 			return false;
 		}
 
 		if( !thumbnail::createImg($src_img, $dest_img_full, $posx, $posy, 0, 0, $orig_w, $orig_h, $orig_w, $orig_h, $width, $height) ){
-			message($langmessage['OOPS'].' (Couldn\'t create image [2])');
+			msg($langmessage['OOPS'].' (Couldn\'t create image [2])');
 			return false;
 		}
 
@@ -1044,7 +1044,7 @@ class gp_edit{
 		if( !empty($_POST['gadget_include']) ){
 			$gadget = $_POST['gadget_include'];
 			if( !isset($config['gadgets'][$gadget]) ){
-				message($langmessage['OOPS_TITLE']);
+				msg($langmessage['OOPS_TITLE']);
 				return false;
 			}
 
@@ -1053,7 +1053,7 @@ class gp_edit{
 		}else{
 			$include_title = $_POST['file_include'];
 			if( !isset($gp_index[$include_title]) ){
-				message($langmessage['OOPS_TITLE']);
+				msg($langmessage['OOPS_TITLE']);
 				return false;
 			}
 			$existing_section['include_type'] = common::SpecialOrAdmin($include_title);
@@ -1095,7 +1095,7 @@ class gp_edit{
 			return;
 		}
 
-		message($langmessage['OOPS'].'(2)');
+		msg($langmessage['OOPS'].'(2)');
 	}
 
 
@@ -1163,7 +1163,7 @@ class gp_edit{
 
 		}
 
-		message($langmessage['OOPS'].'(Uknown Command)');
+		msg($langmessage['OOPS'].'(Uknown Command)');
 		return false;
 	}
 

@@ -625,7 +625,7 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 		if( $connected === true ){
 			return true;
 		}elseif( isset($_POST['connect_values_submitted']) ){
-			message($connected);
+			msg($connected);
 		}
 		$this->CompleteForm($_POST, $action);
 

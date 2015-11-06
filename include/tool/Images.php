@@ -227,7 +227,7 @@ class thumbnail{
 				}
 			break;
 		}
-		//message('not supported for thumbnail: '.$img_type);
+		//msg('not supported for thumbnail: '.$img_type);
 		return false;
 	}
 

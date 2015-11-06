@@ -232,7 +232,7 @@ class gp_rename{
 
 
 		if( !isset($gp_index[$title]) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return false;
 		}
 
@@ -293,11 +293,11 @@ class gp_rename{
 
 
 		if( !admin_tools::SavePagesPHP() ){
-			message($langmessage['OOPS'].' (R1)');
+			msg($langmessage['OOPS'].' (R1)');
 			return false;
 		}
 
-		message($langmessage['SAVED']);
+		msg($langmessage['SAVED']);
 		return $title;
 	}
 
@@ -324,7 +324,7 @@ class gp_rename{
 		}
 
 		if( !admin_tools::CheckTitle($new_title,$message) ){
-			message($message);
+			msg($message);
 			return false;
 		}
 
@@ -346,7 +346,7 @@ class gp_rename{
 
 			//if the file being renamed doesn't use the index naming convention, then we'll still need to rename it
 			}elseif( !rename($old_file,$new_file) ){
-				message($langmessage['OOPS'].' (N3)');
+				msg($langmessage['OOPS'].' (N3)');
 				$gp_index = $old_gp_index;
 				return false;
 			}

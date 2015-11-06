@@ -44,12 +44,12 @@ class gpsession{
 		// expire the nonce after 10 minutes
 		$nonce = $_POST['login_nonce'];
 		if( !common::verify_nonce( 'login_nonce', $nonce, true, 300 ) ){
-			message($langmessage['OOPS'].' (Expired Nonce)');
+			msg($langmessage['OOPS'].' (Expired Nonce)');
 			return;
 		}
 
 		if( !isset($_COOKIE['g']) && !isset($_COOKIE[gp_session_cookie]) ){
-			message($langmessage['COOKIES_REQUIRED']);
+			msg($langmessage['COOKIES_REQUIRED']);
 			return false;
 		}
 
@@ -73,7 +73,7 @@ class gpsession{
 		if( $userinfo['attempts'] >= 5 ){
 			$timeDiff = (time() - $userinfo['lastattempt'])/60; //minutes
 			if( $timeDiff < 10 ){
-				message($langmessage['LOGIN_BLOCK'],ceil(10-$timeDiff));
+				msg($langmessage['LOGIN_BLOCK'],ceil(10-$timeDiff));
 				return false;
 			}
 		}
@@ -98,7 +98,7 @@ class gpsession{
 
 		$session_id = self::create($userinfo, $username, $sessions);
 		if( !$session_id ){
-			message($langmessage['OOPS'].' (Data Not Saved)');
+			msg($langmessage['OOPS'].' (Data Not Saved)');
 			self::UpdateAttempts($users,$username,true);
 			return false;
 		}
@@ -107,7 +107,7 @@ class gpsession{
 		$logged_in = self::start($session_id,$sessions);
 
 		if( $logged_in === true ){
-			message($langmessage['logged_in']);
+			msg($langmessage['logged_in']);
 		}
 
 
@@ -249,9 +249,9 @@ class gpsession{
 
 	static function IncorrectLogin($i){
 		global $langmessage;
-		message($langmessage['incorrect_login'].' ('.$i.')');
+		msg($langmessage['incorrect_login'].' ('.$i.')');
 		$url = common::GetUrl('Admin','cmd=forgotten');
-		message($langmessage['forgotten_password'],$url);
+		msg($langmessage['forgotten_password'],$url);
 	}
 
 
@@ -289,7 +289,7 @@ class gpsession{
 		gpFiles::Unlock('admin',sha1(sha1($session_id)));
 		self::cookie(gp_session_cookie,'',time()-42000);
 		self::CleanSession($session_id);
-		message($langmessage['LOGGED_OUT']);
+		msg($langmessage['LOGGED_OUT']);
 	}
 
 	static function CleanSession($session_id){
@@ -452,7 +452,7 @@ class gpsession{
 			$sessions = self::GetSessionIds();
 			if( !isset($sessions[$session_id]) ){
 				self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
-				message($langmessage['Session Expired'].' (timeout)');
+				msg($langmessage['Session Expired'].' (timeout)');
 				return false;
 			}
 		}
@@ -467,7 +467,7 @@ class gpsession{
 
 			if( ($sess_info['uid'] != $auth_uid) && ($sess_info['uid'] != $auth_uid_legacy) ){
 				self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
-				message($langmessage['Session Expired'].' (browser auth)');
+				msg($langmessage['Session Expired'].' (browser auth)');
 				return false;
 			}
 		}
@@ -476,7 +476,7 @@ class gpsession{
 		$session_file = $dataDir.'/data/_sessions/'.$sess_info['file_name'];
 		if( ($session_file === false) || !gpFiles::Exists($session_file) ){
 			self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
-			message($langmessage['Session Expired'].' (invalid)');
+			msg($langmessage['Session Expired'].' (invalid)');
 			return false;
 		}
 
@@ -495,7 +495,7 @@ class gpsession{
 		if( gp_lock_time > 0 && ( !empty($GLOBALS['gpAdmin']['editing']) || !empty($GLOBALS['gpAdmin']['granted']) ) ){
 			$expires = gp_lock_time;
 			if( !gpFiles::Lock('admin',sha1(sha1($session_id)),$expires) ){
-				message( $langmessage['site_locked'].' '.sprintf($langmessage['lock_expires_in'],ceil($expires/60)) );
+				msg( $langmessage['site_locked'].' '.sprintf($langmessage['lock_expires_in'],ceil($expires/60)) );
 				$locked_message = true;
 			}else{
 				unset($GLOBALS['gpAdmin']['locked']);
@@ -653,7 +653,7 @@ class gpsession{
 	 */
 	static function StripPost($message){
 		global $langmessage, $post_quarantine;
-		message($langmessage['OOPS'].' ('.$message.')');
+		msg($langmessage['OOPS'].' ('.$message.')');
 		$post_quarantine = $_POST;
 		foreach($_POST as $key => $value){
 			unset($_POST[$key]);

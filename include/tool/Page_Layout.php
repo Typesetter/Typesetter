@@ -60,25 +60,25 @@ class page_layout{
 		$title = common::IndexToTitle($index);
 
 		if( !$title ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return;
 		}
 		$this->title = $title;
 
 		if( !common::verify_nonce('restore') ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return;
 		}
 
 
 		unset($gp_titles[$index]['gpLayout']);
 		if( !admin_tools::SavePagesPHP() ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return false;
 		}
 
 		//reset the layout array
-		message($langmessage['SAVED']);
+		msg($langmessage['SAVED']);
 	}
 
 
@@ -93,19 +93,19 @@ class page_layout{
 		$title = common::IndexToTitle($index);
 
 		if( !$title ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return;
 		}
 		$this->title = $title;
 
 		$layout = $_POST['layout'];
 		if( !isset($gpLayouts[$layout]) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return;
 		}
 
 		if( !common::verify_nonce('use_'.$layout) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return;
 		}
 
@@ -118,11 +118,11 @@ class page_layout{
 		}
 
 		if( !admin_tools::SavePagesPHP() ){
-			message($langmessage['OOPS'].'(3)');
+			msg($langmessage['OOPS'].'(3)');
 			return false;
 		}
 
-		message($langmessage['SAVED']);
+		msg($langmessage['SAVED']);
 	}
 
 

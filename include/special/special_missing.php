@@ -158,7 +158,7 @@ class special_missing{
 				$with_spaces = htmlspecialchars($this->requested);
 				$link = common::GetUrl('Admin_Menu','cmd=add_hidden&redir=redir&title='.rawurlencode($this->requested)).'" title="'.$langmessage['create_new_file'].'" data-cmd="gpabox';
 				$message = sprintf($langmessage['DOESNT_EXIST'],$with_spaces,$link);
-				message($message);
+				msg($message);
 			}
 		}
 

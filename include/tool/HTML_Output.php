@@ -105,7 +105,7 @@ class gp_html_output extends gp_html_parse{
 							$no_save_level--;
 						}else{
 							//error?
-							//message('end tag not in no_save_levels');
+							//msg('end tag not in no_save_levels');
 						}
 					}elseif( !isset($this->self_closing_tags[$tag]) ){
 						$no_save_level++;
@@ -261,5 +261,5 @@ content after.. poorly fomatted xml
 
 //$gp_html_output = new gp_html_output($test);
 //$text = $gp_html_output->result;
-//message('<textarea cols="100" rows="10">'.htmlspecialchars($gp_html_output->result).'</textarea>');
+//msg('<textarea cols="100" rows="10">'.htmlspecialchars($gp_html_output->result).'</textarea>');
 

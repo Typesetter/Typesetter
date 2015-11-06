@@ -211,7 +211,7 @@ class editing_page extends display{
 		$page->ajaxReplace				= array();
 
 		if( empty($_REQUEST['types']) || !is_array($_REQUEST['types']) ){
-			message($langmessage['OOPS'].' (Invalid Types)');
+			msg($langmessage['OOPS'].' (Invalid Types)');
 			return;
 		}
 
@@ -320,7 +320,7 @@ class editing_page extends display{
 
 		//make sure section_order isn't empty
 		if( empty($_POST['section_order']) ){
-			message($langmessage['OOPS'].' (Invalid Request)');
+			msg($langmessage['OOPS'].' (Invalid Request)');
 			return false;
 		}
 
@@ -333,7 +333,7 @@ class editing_page extends display{
 				$arg = (int)$arg;
 
 				if( !isset($this->file_sections[$arg]) ){
-					message($langmessage['OOPS'].' (Invalid Section Number)');
+					msg($langmessage['OOPS'].' (Invalid Section Number)');
 					return false;
 				}
 
@@ -345,7 +345,7 @@ class editing_page extends display{
 			}else{
 
 				if( !isset($section_types[$arg]) ){
-					message($langmessage['OOPS'].' (Unknown Type: '.$arg.')');
+					msg($langmessage['OOPS'].' (Unknown Type: '.$arg.')');
 					return false;
 				}
 				$new_section	= gp_edit::DefaultContent($arg);
@@ -387,7 +387,7 @@ class editing_page extends display{
 
 		//make sure there's at least one section
 		if( !$new_sections ){
-			message($langmessage['OOPS'].' (1 Section Minimum)');
+			msg($langmessage['OOPS'].' (1 Section Minimum)');
 			return false;
 		}
 
@@ -399,12 +399,12 @@ class editing_page extends display{
 		// save a send message to user
 		if( !$this->SaveThis() ){
 			$this->file_sections = $original_sections;
-			message($langmessage['OOPS'].'(4)');
+			msg($langmessage['OOPS'].'(4)');
 			return;
 		}
 
 		$page->ajaxReplace[] = array('ck_saved','','');
-		message($langmessage['SAVED']);
+		msg($langmessage['SAVED']);
 
 
 		//update gallery info
@@ -448,12 +448,12 @@ class editing_page extends display{
 		$check_after = serialize($this);
 		$check_after = sha1( $check_after ) . md5( $check_after );
 		if( $check_before != $check_after && !$this->SaveThis() ){
-			message($langmessage['OOPS'].'(3)');
+			msg($langmessage['OOPS'].'(3)');
 			return false;
 		}
 
 		$page->ajaxReplace[] = array('ck_saved','','');
-		message($langmessage['SAVED']);
+		msg($langmessage['SAVED']);
 
 
 		//update gallery information
@@ -479,12 +479,12 @@ class editing_page extends display{
 
 		$section = $_REQUEST['section'];
 		if( !is_numeric($section) ){
-			message($langmessage['OOPS'].'(1)');
+			msg($langmessage['OOPS'].'(1)');
 			return false;
 		}
 
 		if( !isset($this->file_sections[$section]) ){
-			message($langmessage['OOPS'].'(1)');
+			msg($langmessage['OOPS'].'(1)');
 			return false;
 		}
 
@@ -533,7 +533,7 @@ class editing_page extends display{
 		includeFile('tool/Page_Rename.php');
 		$new_title = gp_rename::RenameFile($this->title);
 		if( ($new_title !== false) && $new_title != $this->title ){
-			message(sprintf($langmessage['will_redirect'],common::Link_Page($new_title)));
+			msg(sprintf($langmessage['will_redirect'],common::Link_Page($new_title)));
 			$page->head .= '<meta http-equiv="refresh" content="15;url='.common::GetUrl($new_title).'">';
 			return true;
 		}
@@ -830,7 +830,7 @@ class editing_page extends display{
 		$message	.= ' <br/> '.common::Link($this->title,$langmessage['Restore this revision'],'cmd=use_revision&time='.$time,array('data-cmd'=>'cnreq'));
 		$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 
-		message( $message );
+		msg( $message );
 	}
 
 	/**
@@ -857,7 +857,7 @@ class editing_page extends display{
 		gpFiles::Save( $this->file, $contents );
 		$this->GetFile();
 		$this->ResetFileTypes(false);
-		message($langmessage['SAVED']);
+		msg($langmessage['SAVED']);
 	}
 
 	/**

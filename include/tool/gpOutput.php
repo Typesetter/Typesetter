@@ -833,7 +833,6 @@ class gpOutput{
 
 		//Reduce for expansion
 		//first reduction
-		//message('expand level: '.$expand_level);
 		if( (int)$expand_level >= 1 ){
 			if( $expand_all ){
 				$menu = gpOutput::MenuReduce_ExpandAll($menu,$expand_level,$title_index,$top_level);
@@ -846,8 +845,6 @@ class gpOutput{
 		//Reduce if $top_level >= 0
 		//second reduction
 		if( (int)$top_level > 0 ){
-			//echo 'top level: '.$top_level;
-			//message('top: '.$top_level);
 			$menu = gpOutput::MenuReduce_Top($menu,$top_level,$title_index);
 		}else{
 			$top_level = 0;
@@ -856,7 +853,6 @@ class gpOutput{
 		//Reduce by trimming off titles below $bottom_level
 		// last reduction : in case the selected link is below $bottom_level
 		if( $bottom_level > 0 ){
-			//message('bottom: '.$bottom_level);
 			$menu = gpOutput::MenuReduce_Bottom($menu,$bottom_level);
 		}
 
@@ -1124,12 +1120,10 @@ class gpOutput{
 
 			//no longer in subgroup, we can stop now
 			if( $foundGroup && ($level <= $top_level) ){
-				//message('no long in subgroup: '.$title_key);
 				break;
 			}
 
 			if( $title_key == $curr_title_key ){
-				//message('found: '.$title_key);
 				$foundGroup = true;
 			}
 

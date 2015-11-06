@@ -151,7 +151,6 @@ class gpRemoteGet{
 			return gpRemoteGet::fsockopen_request($url,$args);
 
 			default:
-				//message($langmessage['OOPS']);
 			return false;
 
 		}

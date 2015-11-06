@@ -31,7 +31,7 @@ class special_contact_gadget{
 
 			if( common::LoggedIn() ){
 				$url = common::GetUrl('Admin_Configuration');
-				message($langmessage['enable_contact'],$url);
+				msg($langmessage['enable_contact'],$url);
 			}
 
 			echo $langmessage['not_enabled'];
@@ -66,17 +66,17 @@ class special_contact_gadget{
 		$_POST += array('subject'=>'','contact_nonce'=>'','message'=>'');
 
 		if( empty($_POST['message']) ){
-			message($langmessage['OOPS'].'(Invalid Message)');
+			msg($langmessage['OOPS'].'(Invalid Message)');
 			return;
 		}
 
 		//check nonce
 		if( !common::verify_nonce('contact_post',$_POST['contact_nonce'],true) ){
-			message($langmessage['OOPS'].'(Invalid Nonce)');
+			msg($langmessage['OOPS'].'(Invalid Nonce)');
 			return;
 		}
 		if( !empty($_POST['contact_void']) ){
-			message($langmessage['OOPS'].'(Robot Detected)');
+			msg($langmessage['OOPS'].'(Robot Detected)');
 			return;
 		}
 
@@ -103,7 +103,7 @@ class special_contact_gadget{
 
 			//check format
 			if( !$this->ValidEmail($_POST['email']) ){
-				message($langmessage['invalid_email']);
+				msg($langmessage['invalid_email']);
 				return false;
 			}
 
@@ -124,7 +124,7 @@ class special_contact_gadget{
 		if( strpos($require_email,'email') !== false ){
 			if( empty($_POST['email']) ){
 				$field = gpOutput::SelectText('your_email');
-				message($langmessage['OOPS_REQUIRED'],$field);
+				msg($langmessage['OOPS_REQUIRED'],$field);
 				return false;
 			}
 		}
@@ -132,12 +132,12 @@ class special_contact_gadget{
 
 			if( empty($_POST['subject']) ){
 				$field = gpOutput::SelectText('subject');
-				message($langmessage['OOPS_REQUIRED'],$field);
+				msg($langmessage['OOPS_REQUIRED'],$field);
 				return false;
 			}
 			if( empty($message) ){
 				$field = gpOutput::SelectText('message');
-				message($langmessage['OOPS_REQUIRED'],$field);
+				msg($langmessage['OOPS_REQUIRED'],$field);
 				return false;
 			}
 		}
@@ -145,11 +145,11 @@ class special_contact_gadget{
 
 
 		if( $gp_mailer->SendEmail($config['toemail'], $_POST['subject'], $message) ){
-			message($langmessage['message_sent']);
+			msg($langmessage['message_sent']);
 			return true;
 		}
 
-		message($langmessage['OOPS'].' (Send Failed)');
+		msg($langmessage['OOPS'].' (Send Failed)');
 		return false;
 	}
 

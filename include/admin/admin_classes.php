@@ -147,15 +147,17 @@ class admin_classes{
 		$classes[] = array('names'=>'','desc'=>'');
 
 
+		$page->jQueryCode .= '$(".sortable_table").sortable({items : "tr",handle: "td"});';
 
 		// FORM
 		echo '<form action="' . $this->admin_link . '" method="post">';
-		echo '<table class="bordered full_width">';
+		echo '<table class="bordered full_width sortable_table">';
 		echo '<thead><tr><th>className(s)</th><th>Description (optional)</th></tr></thead>';
 		echo '<tbody>';
 
 		foreach( $classes as $key => $classArray ){
 			echo '<tr><td>';
+			echo '<img alt="" src="'.common::GetDir('/include/imgs/drag_handle.gif').'" /> &nbsp; ';
 			echo '<input size="16" class="gpinput" type="text" name="class_names[]" value="' . $classArray['names'] . '"/>';
 			echo '</td><td>';
 			echo '<input size="64" class="gpinput" type="text" name="class_desc[]" value="' . $classArray['desc'] . '"/> ';

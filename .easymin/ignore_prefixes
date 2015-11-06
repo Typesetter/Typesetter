@@ -7,3 +7,5 @@ xx_
 XX_
 .easymin
 Boxfile
+.phpunit
+phpunit.xml

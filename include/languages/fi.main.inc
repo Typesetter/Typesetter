@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'Lisävalinnat',
 	'will_redirect'                  => 'edelleen ohjaus %s 15 sekunnin kuluttua',
 	'Preferences'                    => 'Asetukset',
-	'New Section'                    => 'Uusi osio',
 	'Content Type'                   => 'Sisältötyyppi',
 	'Image Gallery'                  => 'Kuvagalleria',
 	'File Include'                   => 'Liitä tiedosto',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Public Key',
 	'recaptcha_private'              => 'reCaptcha Private Key',
 	'recaptcha_language'             => 'reCaptcha kieli',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Hae <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> käyttääksesi CAPTCHA kuvavarmennusta yhteydenottolomakkeessa.',
 	'maximgarea'                     => 'Maksimi neliöpikselimäärä lähetettäville kuville. 600 x 800 pixelin kuvassa on 480,000 neliöpikseliä.',
@@ -385,6 +384,7 @@ $langmessage = array (
 	'Refresh'                        => 'Lataa uudelleen',
 	'Install'                        => 'Asenna',
 	'Installing'                     => 'Asennetaan',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'Juurihakemistossasi on tiedosto index.html, joka saattaa estää näyttämästä gpEasyä.',
 	'Notes'                          => 'Huomautukset',
 	'Install_Conflict'               => 'gpEasyä ei voi asentaa palvelimellesi nykyisillä asetuksilla. ',

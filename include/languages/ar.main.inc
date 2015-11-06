@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'خيارات إضافية',
 	'will_redirect'                  => 'سيتم تحويلك خلال 15 ثانية إلى %s',
 	'Preferences'                    => 'التفضيلات',
-	'New Section'                    => 'قطاع جديد',
 	'Content Type'                   => 'نوع المحتوى',
 	'Image Gallery'                  => 'معرض الصور',
 	'File Include'                   => 'إحتواى الملف',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'كود reCaptcha العام',
 	'recaptcha_private'              => 'كود reCaptcha الخاص',
 	'recaptcha_language'             => 'لغة reCaptcha',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'احصل على <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> لاستخدام صورة التحقق',
 	'maximgarea'                     => 'أقصى مربع بكسل للصور التي تم تحميلها. صورة 600 × 800 بكسل و480،000 مترا مربعا / بكسل.',
@@ -385,6 +384,7 @@ $langmessage = array (
 	'Refresh'                        => 'تحديث',
 	'Install'                        => 'التثبيت',
 	'Installing'                     => 'تثبيت',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'There is an index.html file in your root directory and may prevent gpEasy from displaying.',
 	'Notes'                          => 'ملاحظات',
 	'Install_Conflict'               => 'gpEasy cannot be installed on your server with the current settings. ',

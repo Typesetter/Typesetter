@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'Fleiri ValmøguleikarFlere valgmuligheder',
 	'will_redirect'                  => 'Um 15 sekund verður flutt til %s.',
 	'Preferences'                    => 'Stillingar',
-	'New Section'                    => 'Nýtt Øki',
 	'Content Type'                   => 'Slag av Innihaldi',
 	'Image Gallery'                  => 'Myndasavn',
 	'File Include'                   => 'Inkludéra Fílu',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Almennur lykil',
 	'recaptcha_private'              => 'reCaptcha Privatur lykil',
 	'recaptcha_language'             => 'reCAPTCHA Mál',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Fá ein<a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Lykil</a> fyri at kunna brúka CAPTCHA stýring á samskiftis formin.',
 	'maximgarea'                     => 'Størstu kvadrat pixels til uppsendar myndir. Ein 600 x 800 pixels mynd er 480.000 kvadrat pixel.',
@@ -385,6 +384,7 @@ $langmessage = array (
 	'Refresh'                        => 'Endurnýggja',
 	'Install'                        => 'Installera',
 	'Installing'                     => 'Installatión',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'Tað finst ein index.html fíla í rótmappuni ið kann forða fyri, at gpEasy verður víst.',
 	'Notes'                          => 'Notur',
 	'Install_Conflict'               => 'gpEasy kann ikki installerast á tín servara við verandi stillingum. ',

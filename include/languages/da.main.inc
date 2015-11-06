@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'Flere valgmuligheder',
 	'will_redirect'                  => 'Du vil blive omdirigeret om 15 sekunder til %s.',
 	'Preferences'                    => 'Indstillinger',
-	'New Section'                    => 'Ny sektion',
 	'Content Type'                   => 'Indholdstype',
 	'Image Gallery'                  => 'Billedgalleri',
 	'File Include'                   => 'Inkludér Fil',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Offentlig nøgle',
 	'recaptcha_private'              => 'reCaptcha Private nøgle',
 	'recaptcha_language'             => 'reCAPTCHA Sprog',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Få en<a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Nøgle</a> for at bruge CAPTCHA kontrol på kontakt formular.',
 	'maximgarea'                     => 'Største kvadrat pixels for uploadede billeder. Et 600 x 800 pixels billed er på 480.000 kvadrat pixel.',
@@ -385,6 +384,7 @@ $langmessage = array (
 	'Refresh'                        => 'Forny',
 	'Install'                        => 'Installer',
 	'Installing'                     => 'Installation',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'Der er en index.html fil i din rodmappe som kan forhindre gpEasy bliver vist.',
 	'Notes'                          => 'Notater',
 	'Install_Conflict'               => 'gpEasy kan ikke installeres på din server med de aktuelle indstillinger. ',

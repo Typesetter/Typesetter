@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'Meer opties',
 	'will_redirect'                  => 'U wordt binnen 15 seconden doorgestuurd naar %s.',
 	'Preferences'                    => 'Voorkeuren',
-	'New Section'                    => 'Nieuwe Sectie',
 	'Content Type'                   => 'Type Inhoud',
 	'Image Gallery'                  => 'Afbeeldingen Gallerij',
 	'File Include'                   => 'Toegevoegd Bestand',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Public Key',
 	'recaptcha_private'              => 'reCaptcha Private Key',
 	'recaptcha_language'             => 'reCaptcha Taal',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Verkrijg een <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> om CAPTCHA verificatie op het contact formulier in te schakelen.',
 	'maximgarea'                     => 'Maximale aantal pixels voor ge-uploade plaatjes is 600 x 800 pixel een plaatje heeft 480,000 sq/pixels.',
@@ -385,6 +384,7 @@ $langmessage = array (
 	'Refresh'                        => 'Ververs',
 	'Install'                        => 'Installeer',
 	'Installing'                     => 'Installeren',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'Er is een index.html bestand in uw hoofd map, dit kan dit cms hinderen.',
 	'Notes'                          => 'Opmerkingen',
 	'Install_Conflict'               => 'gpEasy kan niet worden geïnstalleerd op uw server met de huidige instellingen. ',

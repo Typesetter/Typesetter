@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'Περισσότερες Επιλογές',
 	'will_redirect'                  => 'Θα μεταφερθείτε σε 15 δευτερόλεπτα στο %s.',
 	'Preferences'                    => 'Προτιμήσεις',
-	'New Section'                    => 'Νέα Ενότητα',
 	'Content Type'                   => 'Τύπος Περιεχομένου',
 	'Image Gallery'                  => 'Γκάλερι Εικόνων',
 	'File Include'                   => 'Συμπερίληψη Αρχείου',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Κοινόχρηστο Κλειδί',
 	'recaptcha_private'              => 'reCaptcha Προσωπικό Κλειδί',
 	'recaptcha_language'             => 'Γλώσσα reCaptcha',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Πάρτε ένα <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCAPTCHA Κλειδί</a> για να χρησιμοποιήσετε το CAPTCHA επαλήθευσης της φόρμας επικοινωνίας.',
 	'maximgarea'                     => 'Μέγιστος αριθμός pixels για φόρτωμα εικόνων. Μια εικόνα 600x800 pixel έχει 480.000 sq/pixels.',
@@ -385,6 +384,7 @@ $langmessage = array (
 	'Refresh'                        => 'Ανανέωση',
 	'Install'                        => 'Εγκατάσταση',
 	'Installing'                     => 'Εγκαθίσταται',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'Υπάρχει ένα αρχείο index.html στο Κεντρικό Φάκελό σας και μπορεί να αποτρέψει την εμφάνιση από το gpEasy.',
 	'Notes'                          => 'Σημειώσεις',
 	'Install_Conflict'               => 'Το gpEasy δεν μπορεί να εγκατασταθεί στον server σας με τις τρέχουσες ρυθμίσεις. ',

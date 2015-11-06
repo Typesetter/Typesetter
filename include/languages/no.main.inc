@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'More Options',
 	'will_redirect'                  => 'You will be redirected in 15 seconds to %s.',
 	'Preferences'                    => 'Innstillinger',
-	'New Section'                    => 'New Section',
 	'Content Type'                   => 'Content Type',
 	'Image Gallery'                  => 'Image Gallery',
 	'File Include'                   => 'File Include',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha offisiell nøkkel',
 	'recaptcha_private'              => 'reCaptcha privat nøkkel',
 	'recaptcha_language'             => 'reCaptcha Language',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Hent en <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha-nøkkel</a> for å bruke verifiseringsbilde (CAPTCHA) på kontaktskjemaet.',
 	'maximgarea'                     => 'Maksimum antall kvadratpiksler for opplastede bilder. Et bilde på 600 x 800 piksler har 480,000 kv/piksler.',
@@ -385,6 +384,7 @@ $langmessage = array (
 	'Refresh'                        => 'Oppdater',
 	'Install'                        => 'Installer',
 	'Installing'                     => 'Installerer',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'There is an index.html file in your root directory and may prevent gpEasy from displaying.',
 	'Notes'                          => 'Notes',
 	'Install_Conflict'               => 'gpEasy cannot be installed on your server with the current settings. ',

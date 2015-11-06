@@ -203,7 +203,6 @@ $langmessage = array (
 	'more_options'                   => '詳細オプション',
 	'will_redirect'                  => '15 秒後に %s に移動します。',
 	'Preferences'                    => 'ユーザー設定',
-	'New Section'                    => '新規セクション',
 	'Content Type'                   => 'コンテンツの種類',
 	'Image Gallery'                  => 'イメージギャラリー',
 	'File Include'                   => 'ファイル取り込み',
@@ -212,7 +211,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha パブリックキー',
 	'recaptcha_private'              => 'reCaptcha プライベートキー',
 	'recaptcha_language'             => 'reCaptcha 使用時の言語',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'コンタクトフォームで CAPTCHA 認証を行うには、<a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha キー</a> を取得してください。',
 	'maximgarea'                     => 'アップロードする画像の最大面積のピクセル数を設定。例)縦800ピクセルx横600ピクセルの画像ならば、面積は480,000ピクセル。',
@@ -387,6 +386,7 @@ $langmessage = array (
 	'Refresh'                        => '更新',
 	'Install'                        => 'インストール',
 	'Installing'                     => 'インストールしています',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'ルートディレクトリに index.html が存在するため、gpEasy が正しく表示されない可能性があります。',
 	'Notes'                          => '内容',
 	'Install_Conflict'               => '現在のサーバの設定では gpEasy をインストールできません。 ',

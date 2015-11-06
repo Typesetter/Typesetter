@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'Weitere Optionen',
 	'will_redirect'                  => 'Sie werden in 15 Sekunden auf %s weitergeleitet.',
 	'Preferences'                    => 'Einstellungen',
-	'New Section'                    => 'Neuer Abschnitt',
 	'Content Type'                   => 'Inhaltstyp',
 	'Image Gallery'                  => 'Bildergalerie',
 	'File Include'                   => 'Datei einbinden',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'Öffentlicher reCaptcha-Schlüssel',
 	'recaptcha_private'              => 'Privater reCaptcha-Schlüssel',
 	'recaptcha_language'             => 'Sprache reCaptcha',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Sie haben noch keinen? <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">Holen Sie sich hier einen reCaptcha-Schüssel</a> für die CAPTCHA-Prüfung.',
 	'maximgarea'                     => 'Maximale Größe für hochgeladene Bilder (in Pixel). Ein Bild mit einer Größe von 600x800 Pixeln hat 480.000 Pixel.',

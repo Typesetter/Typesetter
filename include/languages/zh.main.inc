@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => '更多選項',
 	'will_redirect'                  => '您將在 15 秒內被重新導向至 %s。',
 	'Preferences'                    => '參數選擇',
-	'New Section'                    => '新區塊',
 	'Content Type'                   => '內容類型',
 	'Image Gallery'                  => '圖片畫廊',
 	'File Include'                   => '所含檔案',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha 公眾金鑰',
 	'recaptcha_private'              => 'reCaptcha 私人金鑰',
 	'recaptcha_language'             => 'reCaptcha 語言',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => '取得一個 <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha 金鑰</a>方可在聯絡表單上使用 CAPTCHA 驗證機制。',
 	'maximgarea'                     => '上傳圖片的最大平方像素。一個 600 x 800 像素的圖片有 480,000 平方像素。',
@@ -385,6 +384,7 @@ $langmessage = array (
 	'Refresh'                        => '重新整理',
 	'Install'                        => '安裝',
 	'Installing'                     => '安裝',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => '您的根目錄裡有個 index.html 且可能會導致 gpEasy 無法正常顯示。',
 	'Notes'                          => '備註',
 	'Install_Conflict'               => 'gpEasy 無法以目前的設定安裝在您的伺服器上。 ',

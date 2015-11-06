@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'További tulajdonságok',
 	'will_redirect'                  => '15 másodperc múlva át lesz irányítva a következő címre: %s.',
 	'Preferences'                    => 'Beállítások',
-	'New Section'                    => 'Új szakasz',
 	'Content Type'                   => 'Tartalom típus',
 	'Image Gallery'                  => 'Képgaléria',
 	'File Include'                   => 'Állomány beillesztés',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha nyilvános kulcs',
 	'recaptcha_private'              => 'reCaptcha titkos kulcs',
 	'recaptcha_language'             => 'reCaptcha nyelv',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Igénylek egy <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha kulcsot</a> a CAPTCHA ellenőrzéshez a kapcsolati űrlapon.',
 	'maximgarea'                     => 'Legnagyobb feltölthető kép négyzetpixelben. Egy 600 x 800 pixeles kép 480 000 négyzetpixel.',
@@ -385,6 +384,7 @@ $langmessage = array (
 	'Refresh'                        => 'Frissít',
 	'Install'                        => 'Telepítés',
 	'Installing'                     => 'Telepítés',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'A gyökérkönyvtárban található egy index.html állomány, amely megelőzheti a gpEasy megjelenését.',
 	'Notes'                          => 'Megjegyzések',
 	'Install_Conflict'               => 'A gpEasy nem telepíthető a kiszolgáló aktuális beállításai mellett. ',

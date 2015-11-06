@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'Fler tillval',
 	'will_redirect'                  => 'Du kommer att omdirigeras om 15 sekunder till %s.',
 	'Preferences'                    => 'Inställningar',
-	'New Section'                    => 'Ny sektion',
 	'Content Type'                   => 'Typ av innehåll',
 	'Image Gallery'                  => 'Bildgalleri',
 	'File Include'                   => 'Inkluderade filer',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Publik nyckel',
 	'recaptcha_private'              => 'reCaptcha privat nyckel',
 	'recaptcha_language'             => 'reCaptcha språk',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Skaffa en <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha nyckel</a> för att använda CAPTCHA kontroll på kontaktformuläret.',
 	'maximgarea'                     => 'Maximal kvadratiska pixlar för uppladdade bilder. En 600x800 pixel bild har 480.000 kvm/pixlar.',
@@ -385,6 +384,7 @@ $langmessage = array (
 	'Refresh'                        => 'Uppdatera',
 	'Install'                        => 'Installera',
 	'Installing'                     => 'Installera',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'Det finns en index.html fil i din root katalog vilket kanske kommer hindra gpEasy från att visas',
 	'Notes'                          => 'Noteringar',
 	'Install_Conflict'               => 'gpEasy kan inte installeras på din server med gällande inställningar ',

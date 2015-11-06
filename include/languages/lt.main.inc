@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'Daugiau parinkčių',
 	'will_redirect'                  => 'Jūs būsite nukreiptas į %s po 15 sekundžių.',
 	'Preferences'                    => 'Nustatymai',
-	'New Section'                    => 'Naujas skyrius',
 	'Content Type'                   => 'Turinio tipas',
 	'Image Gallery'                  => 'Vaizdų galerija',
 	'File Include'                   => 'Bylos įtraukimas',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha viešasis raktas (Public Key)',
 	'recaptcha_private'              => 'reCaptcha privatus raktas (Private Key)',
 	'recaptcha_language'             => 'reCaptcha kalba',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Gaukite <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Raktą</a> tam kad naudotis CAPTCHA patikros funkcija kontaktų formoje.',
 	'maximgarea'                     => 'Maksimalus kvadratinių pikselių skaičius įkeltiems vaizdams. Pvz. 600 x 800 pikselių vaizdas turi 480,000 kv./pikselių.',
@@ -385,6 +384,7 @@ $langmessage = array (
 	'Refresh'                        => 'Atnaujinti',
 	'Install'                        => 'Diegti',
 	'Installing'                     => 'Diegama',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'Šakniniame kataloge yra index.html byla kuri gali užkirsti kelią gpEasy rodymui.',
 	'Notes'                          => 'Žymos',
 	'Install_Conflict'               => 'gpEasy negalima įdiegti šiame serveryje su esančiais nustatymais. ',

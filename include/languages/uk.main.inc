@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'Більше опцій',
 	'will_redirect'                  => 'Ви будете перенаправлені через 15 секунд на %s.',
 	'Preferences'                    => 'Уподобання',
-	'New Section'                    => 'Нова Директорія',
 	'Content Type'                   => 'Тип вмісту',
 	'Image Gallery'                  => 'Галерея зображень',
 	'File Include'                   => 'Втавлений файл',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Public Key',
 	'recaptcha_private'              => 'reCaptcha Private Key',
 	'recaptcha_language'             => 'reCaptcha Мови',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Get a <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> to use CAPTCHA verification on the contact form.',
 	'maximgarea'                     => 'Максимальна площа квадратних пікселів для завантажених зображень. 600 х 800 пікселів зображення має 480 000 кв/пікселів.',
@@ -385,6 +384,7 @@ $langmessage = array (
 	'Refresh'                        => 'Оновити',
 	'Install'                        => 'Встановити',
 	'Installing'                     => 'Установка',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'Існує файл index.html в кореневому каталозі який може запобігти gpEasy відображенню.',
 	'Notes'                          => 'Нотатки',
 	'Install_Conflict'               => 'gpEasy не може бути встановлена на вашому сервері з поточними налаштуваннями. ',

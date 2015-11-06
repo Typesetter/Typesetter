@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'Meer Opsies',
 	'will_redirect'                  => 'Jy sal herlei word in 15 sekondes na %s.',
 	'Preferences'                    => 'Voorkeure',
-	'New Section'                    => 'Nuwe Afdeling',
 	'Content Type'                   => 'Inhoud Tiepe',
 	'Image Gallery'                  => 'Beeld Gallery',
 	'File Include'                   => 'Lêer Byvoeg',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCAPTCHA Openbare Sleutel',
 	'recaptcha_private'              => 'reCAPTCHA Private Sleutel',
 	'recaptcha_language'             => 'reCAPTCHA taal',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Kry \'n <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html"> reCAPTCHA Sleutel </a> om CAPTCHA verifikasie te gebruik op die kontak vorm.',
 	'maximgarea'                     => 'Maksimum vierkante pixels vir opgelaaide beelde. ŉ 600 x 800 pixel beeld het 480,000 vk / pixels.',
@@ -385,6 +384,7 @@ $langmessage = array (
 	'Refresh'                        => 'Verfris',
 	'Install'                        => 'Installeer',
 	'Installing'                     => 'Installeer',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'Daar is \'n lêer index.html in jou stamgids en kan verhoed dat gpEasy vertoon.',
 	'Notes'                          => 'Notas',
 	'Install_Conflict'               => 'gpEasy kan nie geïnstalleer word op jou bediener met die huidige instellings. ',

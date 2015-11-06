@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'Viac možností',
 	'will_redirect'                  => 'Za 15 sekúnd budeš presmerovaný na %s.',
 	'Preferences'                    => 'Nastavenia',
-	'New Section'                    => 'Nová sekcia',
 	'Content Type'                   => 'Typ obsahu',
 	'Image Gallery'                  => 'Galéria obrázkov',
 	'File Include'                   => 'Vloženie súboru',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Verejný kľúč',
 	'recaptcha_private'              => 'reCaptcha Súkromný kľúč',
 	'recaptcha_language'             => 'reCaptcha jazyk',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Zaobstarajte si <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha kľúč</a> pre použitie CAPTCHA overenia na kontaktnom formulári.',
 	'maximgarea'                     => 'Maximum štvorcových pixelov pre nahraté obrázky. Obrázok 600 x 800 má 480,000 štv.pixelov.',
@@ -385,6 +384,7 @@ $langmessage = array (
 	'Refresh'                        => 'Obnoviť',
 	'Install'                        => 'Nainštalovať',
 	'Installing'                     => 'Inštaluje sa',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'V tvojom koreňovom adresári je súbor index.html a môže brániť zobrazovaniu gpEasy.',
 	'Notes'                          => 'Poznámky',
 	'Install_Conflict'               => 'gpEasy nemôže byť nainštalované na tvojom servri s terajšími nastaveniami. ',

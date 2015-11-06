@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'Več možnosti',
 	'will_redirect'                  => 'Preusmerjen boš v 15 sekundah na %s.',
 	'Preferences'                    => 'Nastavitve',
-	'New Section'                    => 'Nova sekcija',
 	'Content Type'                   => 'Tip vsebine',
 	'Image Gallery'                  => 'Galerija slik',
 	'File Include'                   => 'Vključi datoteko',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha javni ključ',
 	'recaptcha_private'              => 'reCaptcha privatni ključ',
 	'recaptcha_language'             => 'reCaptcha jezik',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Pridobite si <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha ključ</a> da boste lahko uporabljali CAPTCHA preverjanje pri uporabi kontakntega obrazca.',
 	'maximgarea'                     => 'Največje število pik za naložene slike. Slika velikosti 600 x 800 pik ima 480,000 sq/pik.',
@@ -385,6 +384,7 @@ $langmessage = array (
 	'Refresh'                        => 'Osveži',
 	'Install'                        => 'Namesti',
 	'Installing'                     => 'Nameščam',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'Datoteka index.html je v korenski poti in lahko prepreči prikazovanje gpEasy.',
 	'Notes'                          => 'Zapiski',
 	'Install_Conflict'               => 'gpEasy ne more biti nameščen na ta server s trenutnimi nastavitvami. ',

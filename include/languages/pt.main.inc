@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'Mais opções',
 	'will_redirect'                  => 'Será redireccionado em 15 segundos para %s.',
 	'Preferences'                    => 'Preferências',
-	'New Section'                    => 'Nova secção',
 	'Content Type'                   => 'Tipo de conteúdo',
 	'Image Gallery'                  => 'Galeria de Imagens',
 	'File Include'                   => 'Incluir arquivo',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha chave pública',
 	'recaptcha_private'              => 'reCaptcha chave privada',
 	'recaptcha_language'             => 'Idioma reCaptcha',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Obtenha uma <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> para usar a verificação CAPTCHA no formulário de contacto.',
 	'maximgarea'                     => 'Máximo de pixels quadrados para imagens transferidas. Uma imagem de 600 x 800 pixel tem 480,000 pixels/quadrados.',
@@ -385,6 +384,7 @@ $langmessage = array (
 	'Refresh'                        => 'Refescar',
 	'Install'                        => 'Instalar',
 	'Installing'                     => 'Instalando',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'Há um arquivo index.html no directório raiz e pode impedir a exibição do gpEasy.',
 	'Notes'                          => 'Notas',
 	'Install_Conflict'               => 'gpEasy não pode ser instalado em seu servidor com as definições actuais. ',

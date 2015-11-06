@@ -202,7 +202,6 @@ $langmessage = array (
 	'more_options'                   => 'Plus d\'options',
 	'will_redirect'                  => 'Redirection dans 15 secondes vers : %s.',
 	'Preferences'                    => 'Préférences',
-	'New Section'                    => 'Nouvelle section',
 	'Content Type'                   => 'Type de contenu',
 	'Image Gallery'                  => 'Galerie d\'images',
 	'File Include'                   => 'Inclure un fichier',

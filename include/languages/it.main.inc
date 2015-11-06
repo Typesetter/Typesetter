@@ -201,7 +201,6 @@ $langmessage = array (
 	'more_options'                   => 'Altre opzioni',
 	'will_redirect'                  => 'Sarete reindirizzati in 15 secondi a %s',
 	'Preferences'                    => 'Preferenze',
-	'New Section'                    => 'Nuova sezione',
 	'Content Type'                   => 'Tipo di contenuto',
 	'Image Gallery'                  => 'Galleria immagini',
 	'File Include'                   => 'Includere file',
@@ -210,7 +209,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'Chiave pubblica reCaptcha',
 	'recaptcha_private'              => 'Chiave privata reCaptcha',
 	'recaptcha_language'             => 'Lingua reCaptcha',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Prendi <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">la chiave reCaptcha</a> per usare la verifica CAPTCHA sulla pagina dei contatti.',
 	'maximgarea'                     => 'Massima superficie in pixel per il caricamento delle immagini. Una immagine 600x800 pixel ha 480.000 pixel di superficie.',
@@ -369,7 +368,7 @@ $langmessage = array (
 	'File Size'                      => 'Dimensione del file',
 	'Total'                          => 'Totale',
 	'Compression'                    => ':
-
+	
 Compressione',
 	'None'                           => 'Nessuno',
 	'Checking_server'                => 'Controllo il server',

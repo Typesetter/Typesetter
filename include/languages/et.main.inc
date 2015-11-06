@@ -202,7 +202,6 @@ $langmessage = array (
 	'more_options'                   => 'Veel valikuid',
 	'will_redirect'                  => 'Sind suunatakse 15 sekundi pärast %s-le.',
 	'Preferences'                    => 'Eelistused',
-	'New Section'                    => 'Uus sektsioon',
 	'Content Type'                   => 'Sisu tüüp',
 	'Image Gallery'                  => 'Fotogalerii',
 	'File Include'                   => 'Sisalduv fail',
@@ -211,7 +210,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha avalik võti',
 	'recaptcha_private'              => 'reCaptcha privaatne võti',
 	'recaptcha_language'             => 'reCaptcha keel',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Taotle <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha võti</a>, et kasutada CAPTCHA kontrolli kontakti vormil.',
 	'maximgarea'                     => 'Üleslaaditud piltide maksimaalne ruutpikslite arv. 600 x 800 pikslisel pildil on 480 000 ruutpikslit.',
@@ -386,6 +385,7 @@ $langmessage = array (
 	'Refresh'                        => 'Värskenda',
 	'Install'                        => 'Paigalda',
 	'Installing'                     => 'Paigaldamine',
+	'Installed'                      => 'Installed',
 	'index.html exists'              => 'Sinu juurkaustas on index.html fail ja see võib takistada gpEasy kuvamist.',
 	'Notes'                          => 'Märkused',
 	'Install_Conflict'               => 'gpEasy-t ei saa paigaldada sinu serverisse praeguste seadetega.  ',

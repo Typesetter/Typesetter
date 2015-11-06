@@ -515,6 +515,8 @@ class SimpleBlogCommon{
 		$posts[$post_index]['title'] = $title;
 		$posts[$post_index]['content'] = $content;
 		$posts[$post_index]['subtitle'] = $_POST['subtitle'];
+		$posts[$post_index]['time'] = strtotime ($_POST['time']);
+		
 		$posts[$post_index]['categories'] = $_POST['category'];
 		unset($posts[$post_index]['isDraft']);
 		if( $_POST['isDraft'] === 'on' ){
@@ -664,6 +666,12 @@ class SimpleBlogCommon{
 			echo '<input type="text" name="subtitle" value="'.$array['subtitle'].'" />';
 			echo '</td></tr>';
 
+		echo '<tr><td>';
+			echo 'Date';
+			echo '</td><td>';
+			echo '<input type="text" name="time" value="'.strftime('%m/%d/%Y',$array['time']).'" />';
+			echo '</td></tr>';
+			
 		echo '<tr><td>';
 			echo 'Draft';
 			echo '</td><td>';

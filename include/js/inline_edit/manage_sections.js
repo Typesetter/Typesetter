@@ -343,7 +343,7 @@
 
 			//scroll the page
 			var $last	= $('#gpx_content .editable_area:last');
-			var top		= $last.position().top + $last.height() - 200;
+			var top		= $last.offset().top + $last.height() - 200;
 			$('html,body').stop().animate({scrollTop: top});
 
 

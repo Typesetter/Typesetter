@@ -321,7 +321,6 @@ class SimpleBlogCommon{
 		$file_index		= floor($post_index/20);
 		$post_file		= $this->addonPathData.'/posts_'.$file_index.'.php';
 
-		msg($post_file);
 		if( !file_exists($post_file) ){
 			return false;
 		}
@@ -465,16 +464,21 @@ class SimpleBlogCommon{
 		gpFiles::cleanText($content);
 
 
+
+		$time						= time();
+		$post					= array();
+		$post['title']			= $title;
+		$post['content']		= $content;
+		$post['subtitle']		= $_POST['subtitle'];
+		$post['categories']		= $_POST['category'];
+		$post['time']			= $time;
+		$post['username']		= $gpAdmin['username'];
+
+
 		//use current data file or create new one
-		$post_index = SimpleBlogCommon::$data['post_index'] +1;
-		$posts = $this->GetPostFile($post_index,$post_file);	 //!fix
+		$post_index				= SimpleBlogCommon::$data['post_index'] +1;
 
 
-		$posts[$post_index] = array();
-		$posts[$post_index]['title'] = $title;
-		$posts[$post_index]['content'] = $content;
-		$posts[$post_index]['subtitle'] = $_POST['subtitle'];
-		$posts[$post_index]['categories'] = $_POST['category'];
 
 		if( $_POST['isDraft'] === 'on' ){
 			SimpleBlogCommon::AStrValue('drafts',$post_index,1);
@@ -482,14 +486,8 @@ class SimpleBlogCommon{
 			SimpleBlogCommon::AStrRm('drafts',$post_index);
 		}
 
-		$time = time();
-		$posts[$post_index]['time'] = $time;
-
-		// Save author username
-		$posts[$post_index]['username'] = $gpAdmin['username'];
-
 		//save to data file
-		if( !gpFiles::SaveArray($post_file,'posts',$posts) ){
+		if( !$this->SavePost($post_index, $post) ){
 			message($langmessage['OOPS']);
 			return false;
 		}
@@ -528,9 +526,8 @@ class SimpleBlogCommon{
 
 		$_POST += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'','category'=>array());
 
-		$post_index = $this->post_id;
-		$posts = $this->GetPostFile($post_index,$post_file); //!fix
-		if( $posts === false ){
+		$post			= $this->GetPostContent($this->post_id);
+		if( $post === false ){
 			message($langmessage['OOPS'].' (Invalid ID)');
 			return;
 		}
@@ -549,29 +546,29 @@ class SimpleBlogCommon{
 		gpFiles::cleanText($content);
 
 
-		$posts[$post_index]['title'] = $title;
-		$posts[$post_index]['content'] = $content;
-		$posts[$post_index]['subtitle'] = $_POST['subtitle'];
-		$posts[$post_index]['categories'] = $_POST['category'];
-		unset($posts[$post_index]['isDraft']);
+		$post['title']			= $title;
+		$post['content']		= $content;
+		$post['subtitle']		= $_POST['subtitle'];
+		$post['categories']		= $_POST['category'];
+		unset($post['isDraft']);
 		if( $_POST['isDraft'] === 'on' ){
-			SimpleBlogCommon::AStrValue('drafts',$post_index,1);
+			SimpleBlogCommon::AStrValue('drafts',$this->post_id,1);
 		}else{
-			SimpleBlogCommon::AStrRm('drafts',$post_index);
+			SimpleBlogCommon::AStrRm('drafts',$this->post_id);
 		}
 
 
 		//save to data file
-		if( !gpFiles::SaveArray($post_file,'posts',$posts) ){
+		if( !$this->SavePost($this->post_id, $post) ){
 			message($langmessage['OOPS']);
 			return false;
 		}
 
 		//update title
-		SimpleBlogCommon::AStrValue('titles',$post_index,$title);
+		SimpleBlogCommon::AStrValue('titles',$this->post_id,$title);
 
 		//find and update the edited post in categories and archives
-		$this->update_post_in_categories($post_index,$title);
+		$this->update_post_in_categories($this->post_id,$title);
 
 
 		$this->SaveIndex();
@@ -580,27 +577,28 @@ class SimpleBlogCommon{
 		return true;
 	}
 
+
 	/**
 	 * Save an inline edit
 	 *
 	 */
 	function SaveInline(){
-		global $page,$langmessage;
+		global $page, $langmessage;
 		$page->ajaxReplace = array();
 
-		$post_index = $this->post_id;
-		$posts = $this->GetPostFile($post_index,$post_file);  //!fix
-		if( $posts === false ){
+		$post_index		= $this->post_id;
+		$post			= $this->GetPostContent($this->post_id);
+		if( $post === false ){
 			message($langmessage['OOPS']);
 			return;
 		}
 
 		$content =& $_POST['gpcontent'];
 		gpFiles::cleanText($content);
-		$posts[$post_index]['content'] = $content;
+		$post['content'] = $content;
 
 		//save to data file
-		if( !gpFiles::SaveArray($post_file,'posts',$posts) ){
+		if( !$this->SavePost($this->post_id, $post) ){
 			message($langmessage['OOPS']);
 			return false;
 		}
@@ -608,6 +606,19 @@ class SimpleBlogCommon{
 		$page->ajaxReplace[] = array('ck_saved', '', '');
 		message($langmessage['SAVED']);
 		return true;
+	}
+
+
+	/**
+	 * Save a post
+	 *
+	 */
+	function SavePost($post_index, $post){
+
+		$posts					= $this->GetPostFile($post_index,$post_file);  //!fix
+		$posts[$post_index]		= $post;
+
+		return gpFiles::SaveArray($post_file,'posts',$posts);
 	}
 
 

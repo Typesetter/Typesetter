@@ -19,10 +19,10 @@ class BlogSearch extends SimpleBlogCommon{
 		}
 
 		require($full_path);
-		$fileIndexMax = floor($blogData['post_index']/20); // '20' I found in SimpleBlogCommon.php function GetPostFile (line 62)  //!fix?
+		$fileIndexMax = floor($blogData['post_index']/20); // '20' I found in SimpleBlogCommon.php function GetPostFile (line 62)
 
 		for ($fileIndex = 0; $fileIndex <= $fileIndexMax; $fileIndex++) {
-			$postFile = $addonPathData.'/posts_'.$fileIndex.'.php';
+			$postFile = $addonPathData.'/posts_'.$fileIndex.'.php'; //!fix
 			if( !file_exists($postFile) ){
 				continue;
 			}

@@ -449,31 +449,25 @@ class SimpleBlogCommon{
 	function SaveNew(){
 		global $langmessage, $gpAdmin;
 
-		$_POST += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'','category'=>array());
+		$_POST		+= array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'','category'=>array());
 
-		$_POST['subtitle'] = htmlspecialchars($_POST['subtitle']);
+		$title		= $_POST['title'];
+		$title		= htmlspecialchars($title);
+		$title		= trim($title);
 
-		$title =& $_POST['title'];
-		$title = htmlspecialchars($title);
-		$title = trim($title);
 		if( empty($title) ){
 			message($langmessage['TITLE_REQUIRED']);
 			return false;
 		}
 
-		$content =& $_POST['content'];
-		gpFiles::cleanText($content);
 
-
-
-		$time						= time();
+		$time					= time();
 		$post					= array();
 		$post['title']			= $title;
-		$post['content']		= $content;
-		$post['subtitle']		= $_POST['subtitle'];
+		$post['content']		= $_POST['content'];
+		$post['subtitle']		= htmlspecialchars($_POST['subtitle']);
 		$post['categories']		= $_POST['category'];
 		$post['time']			= $time;
-		$post['username']		= $gpAdmin['username'];
 
 
 		//use current data file or create new one
@@ -489,7 +483,6 @@ class SimpleBlogCommon{
 
 		//save to data file
 		if( !$this->SavePost($post_index, $post) ){
-			message($langmessage['OOPS']);
 			return false;
 		}
 
@@ -525,31 +518,28 @@ class SimpleBlogCommon{
 	function SaveEdit(){
 		global $langmessage;
 
-		$_POST += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'','category'=>array());
-
+		$_POST			+= array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'','category'=>array());
 		$post			= $this->GetPostContent($this->post_id);
+
 		if( $post === false ){
 			message($langmessage['OOPS'].' (Invalid ID)');
 			return;
 		}
 
-		$_POST['subtitle'] = htmlspecialchars($_POST['subtitle']);
 
-		$title =& $_POST['title'];
-		$title = htmlspecialchars($title);
-		$title = trim($title);
+		$title			= $_POST['title'];
+		$title			= htmlspecialchars($title);
+		$title			= trim($title);
+
 		if( empty($title) ){
 			message($langmessage['TITLE_REQUIRED']);
 			return false;
 		}
 
-		$content =& $_POST['content'];
-		gpFiles::cleanText($content);
-
 
 		$post['title']			= $title;
-		$post['content']		= $content;
-		$post['subtitle']		= $_POST['subtitle'];
+		$post['content']		= $_POST['content'];
+		$post['subtitle']		= htmlspecialchars($_POST['subtitle']);
 		$post['categories']		= $_POST['category'];
 		unset($post['isDraft']);
 		if( $_POST['isDraft'] === 'on' ){
@@ -561,7 +551,6 @@ class SimpleBlogCommon{
 
 		//save to data file
 		if( !$this->SavePost($this->post_id, $post) ){
-			message($langmessage['OOPS']);
 			return false;
 		}
 
@@ -587,20 +576,17 @@ class SimpleBlogCommon{
 		global $page, $langmessage;
 		$page->ajaxReplace = array();
 
-		$post_index		= $this->post_id;
 		$post			= $this->GetPostContent($this->post_id);
-		if( $post === false ){
+		if( $post === false || empty($_POST['gpcontent']) ){
 			message($langmessage['OOPS']);
 			return;
 		}
 
-		$content =& $_POST['gpcontent'];
-		gpFiles::cleanText($content);
-		$post['content'] = $content;
+
+		$post['content'] = $_POST['gpcontent'];
 
 		//save to data file
 		if( !$this->SavePost($this->post_id, $post) ){
-			message($langmessage['OOPS']);
 			return false;
 		}
 
@@ -615,9 +601,14 @@ class SimpleBlogCommon{
 	 *
 	 */
 	function SavePost($post_index, $post){
+		global $gpAdmin;
 
+		gpFiles::cleanText($post['content']);
+		$post['username']		= $gpAdmin['username'];
 		$post_file				= $this->PostFilePath($post_index);
+
 		if( !gpFiles::SaveArray($post_file,'post',$post) ){
+			message($langmessage['OOPS']);
 			return false;
 		}
 

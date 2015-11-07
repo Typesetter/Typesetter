@@ -2483,7 +2483,7 @@ class gpOutput{
 			$replacement = '';
 			if( strpos($buffer,'<script') !== false ){
 				if( $config['jquery'] != 'local' ){
-					$replacement = "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js\"></script>";
+					$replacement = "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>";
 				}else{
 					$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/js/jquery.js')."\"></script>";
 				}

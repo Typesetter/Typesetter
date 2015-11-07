@@ -111,8 +111,6 @@ class BlogCategories extends SimpleBlog{
 		echo '</h2>';
 
 
-		//$gadgetFile = $this->addonPathData.'/gadget_categories.php';
-
 		echo '<ul>';
 		foreach($this->categories as $catindex => $catname){
 

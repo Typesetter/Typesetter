@@ -15,7 +15,7 @@ class SimpleBlogComments extends SimpleBlogCommon{
 		global $page, $addonFolderName;
 
 		$this->Init();
-		$this->dir = $this->addonPathData.'/comments';
+		$this->dir = SimpleBlogCommon::$data_dir.'/comments';
 		$page->css_user[] = '/data/_addoncode/'.$addonFolderName.'/static/admin.css';
 		//gpPlugin::css('admin.css'); //gpeasy 4.0+
 
@@ -113,7 +113,7 @@ class SimpleBlogComments extends SimpleBlogCommon{
 	function GetCache(){
 		$this->cache = array();
 		$this->cache_mod = 0;
-		$this->cache_file = $this->addonPathData.'/comments/cache.txt';
+		$this->cache_file = SimpleBlogCommon::$data_dir.'/comments/cache.txt';
 
 		if( file_exists($this->cache_file) ){
 			$this->cache_mod = filemtime($this->cache_file)-100;

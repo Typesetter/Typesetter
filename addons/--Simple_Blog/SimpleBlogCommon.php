@@ -22,6 +22,7 @@ class SimpleBlogCommon{
 	var $addonPathData;
 	var $post_id		= false;
 
+	static $data_dir;
 
 	static $months		= array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
 
@@ -42,12 +43,12 @@ class SimpleBlogCommon{
 	function Init(){
 		global $addonPathData;
 
-		$this->addonPathData	= $addonPathData;
-		$this->indexFile		= $this->addonPathData.'/index.php';
-
 		if( SimpleBlogCommon::$data ){
 			return;
 		}
+
+		self::$data_dir			= $addonPathData;
+		$this->indexFile		= self::$data_dir.'/index.php';
 
 
 		SimpleBlogCommon::$root_url = 'Special_Blog';
@@ -320,7 +321,7 @@ class SimpleBlogCommon{
 		}
 
 		$file_index		= floor($post_index/20);
-		$post_file		= $this->addonPathData.'/posts_'.$file_index.'.php';
+		$post_file		= self::$data_dir.'/posts_'.$file_index.'.php';
 
 		if( !file_exists($post_file) ){
 			return false;
@@ -365,7 +366,7 @@ class SimpleBlogCommon{
 	 *
 	 */
 	function PostFilePath($post_index){
-		return $this->addonPathData.'/posts/'.$post_index.'.php'; //3.0+
+		return self::$data_dir.'/posts/'.$post_index.'.php'; //3.0+
 	}
 
 
@@ -816,7 +817,7 @@ class SimpleBlogCommon{
 		echo '</feed>'."\n";
 
 		$feed = ob_get_clean();
-		$feedFile = $this->addonPathData.'/feed.atom';
+		$feedFile = self::$data_dir.'/feed.atom';
 		gpFiles::Save($feedFile,$feed);
 	}
 
@@ -955,7 +956,7 @@ class SimpleBlogCommon{
 		}
 
 		$gadget = ob_get_clean();
-		$gadgetFile = $this->addonPathData.'/gadget.php';
+		$gadgetFile = self::$data_dir.'/gadget.php';
 		gpFiles::Save($gadgetFile,$gadget);
 	}
 
@@ -1294,14 +1295,14 @@ class SimpleBlogCommon{
 	function GetCommentData($post_id){
 
 		// pre 1.7.4
-		$commentDataFile = $this->addonPathData.'/comments_data_'.$post_id.'.txt';
+		$commentDataFile = self::$data_dir.'/comments_data_'.$post_id.'.txt';
 		$data = SimpleBlogCommon::FileData($commentDataFile);
 		if( $data ){
 			return $data;
 		}
 
 		// 1.7.4+
-		$commentDataFile = $this->addonPathData.'/comments/'.$post_id.'.txt';
+		$commentDataFile = self::$data_dir.'/comments/'.$post_id.'.txt';
 		$data = SimpleBlogCommon::FileData($commentDataFile);
 		if( $data ){
 			return $data;
@@ -1322,7 +1323,7 @@ class SimpleBlogCommon{
 
 
 		// check directory
-		$dir = $this->addonPathData.'/comments';
+		$dir = self::$data_dir.'/comments';
 		if( !gpFiles::CheckDir($dir) ){
 			return false;
 		}
@@ -1335,7 +1336,7 @@ class SimpleBlogCommon{
 
 
 		// clean pre 1.7.4 files
-		$commentDataFile = $this->addonPathData.'/comments_data_'.$post_index.'.txt';
+		$commentDataFile = self::$data_dir.'/comments_data_'.$post_index.'.txt';
 		if( file_exists($commentDataFile) ){
 			unlink($commentDataFile);
 		}
@@ -1345,7 +1346,7 @@ class SimpleBlogCommon{
 		$this->SaveIndex();
 
 		//clear comments cache
-		$cache_file = $this->addonPathData.'/comments/cache.txt';
+		$cache_file = self::$data_dir.'/comments/cache.txt';
 		if( file_exists($cache_file) ){
 			unlink($cache_file);
 		}

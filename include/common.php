@@ -2907,6 +2907,7 @@ class gpFiles{
 	 * Get array from data file
 	 * Example:
 	 * $config = gpFiles::Get('_site/config','config'); or $config = gpFiles::Get('_site/config');
+	 * @since 4.4b1
 	 *
 	 */
 	static function Get( $file, $var_name=false ){

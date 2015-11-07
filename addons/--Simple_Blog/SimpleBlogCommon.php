@@ -310,6 +310,7 @@ class SimpleBlogCommon{
 	 * Get the data file for a blog post
 	 * Return the data if it exists
 	 * 20 posts per file... if someone posts a lot (once a day for a year that would be 18 files)
+	 * @deprecated 3.0
 	 *
 	 */
 	function GetPostFile($post_index,&$post_file){
@@ -615,10 +616,19 @@ class SimpleBlogCommon{
 	 */
 	function SavePost($post_index, $post){
 
-		$posts					= $this->GetPostFile($post_index,$post_file);  //!fix
-		$posts[$post_index]		= $post;
+		$post_file				= $this->PostFilePath($post_index);
+		if( !gpFiles::SaveArray($post_file,'post',$post) ){
+			return false;
+		}
 
-		return gpFiles::SaveArray($post_file,'posts',$posts);
+		//remove from old data file
+		$posts					= $this->GetPostFile($post_index,$post_file);
+		if( isset($posts[$post_index]) ){
+			unset($posts[$post_index]);
+			gpFiles::SaveArray($post_file,'posts',$posts);
+		}
+
+		return true;
 	}
 
 

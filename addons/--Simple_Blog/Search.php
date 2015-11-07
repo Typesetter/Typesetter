@@ -6,37 +6,27 @@ gpPlugin::incl('SimpleBlogCommon.php','require_once');
 class BlogSearch extends SimpleBlogCommon{
 
 	function __construct($args){
-		global $addonPathData;
 
 		$this->Init();
 
 		$search_obj		= $args[0];
-		$label			= common::GetLabelIndex('special_blog');
-		$full_path		= $addonPathData.'/index.php';				// config of installed addon to get to know how many post files are
+		$blog_label		= common::GetLabelIndex('special_blog');
+		$post_ids		= SimpleBlogCommon::AStrToArray('str_index');
 
-		if( !file_exists($full_path) ){
-			return;
-		}
+		foreach($post_ids as $id){
+			$post		= $this->GetPostContent($id);
 
-		require($full_path);
-		$fileIndexMax = floor($blogData['post_index']/20);
-
-		for ($fileIndex = 0; $fileIndex <= $fileIndexMax; $fileIndex++) {
-			$postFile = $addonPathData.'/posts_'.$fileIndex.'.php'; //!fix
-			if( !file_exists($postFile) ){
+			if( !$post ){
 				continue;
 			}
-			require($postFile);
 
-			foreach($posts as $id => $post){
-				$title = $label.': '.str_replace('_',' ',$post['title']);
-				$content = str_replace('_',' ',$post['title']).' '.$post['content'];
+			$title		= $blog_label.': '.str_replace('_',' ',$post['title']);
+			$content	= str_replace('_',' ',$post['title']).' '.$post['content'];
 
-				SimpleBlogCommon::UrlQuery( $id, $url, $query );
-				$search_obj->FindString($content, $title, $url, $query);
-			}
-			$posts = array();
+			SimpleBlogCommon::UrlQuery( $id, $url, $query );
+			$search_obj->FindString($content, $title, $url, $query);
 		}
+
 	}
 }
 

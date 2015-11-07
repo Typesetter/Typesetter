@@ -9,6 +9,7 @@ includeFile('tool/recaptcha.php');
  * Comment approval
  * Clean Category Storage
  *
+ *
  */
 
 class SimpleBlogCommon{
@@ -70,7 +71,7 @@ class SimpleBlogCommon{
 
 		if( !$added ){
 			$page->jQueryCode	.= '$(".blog_gadget_link").click(function(){ $(this).next(".nodisplay").toggle(); });';
-			$page->css_user[]	= '/data/_addoncode/'.$addonFolderName.'/style.css';
+			$page->css_user[]	= '/data/_addoncode/'.$addonFolderName.'/static/style.css';
 			$added				= true;
 		}
 	}
@@ -317,8 +318,10 @@ class SimpleBlogCommon{
 			return false;
 		}
 
-		$file_index = floor($post_index/20);
-		$post_file = $this->addonPathData.'/posts_'.$file_index.'.php';
+		$file_index		= floor($post_index/20);
+		$post_file		= $this->addonPathData.'/posts_'.$file_index.'.php';
+
+		msg($post_file);
 		if( !file_exists($post_file) ){
 			return false;
 		}
@@ -331,11 +334,19 @@ class SimpleBlogCommon{
 		return $posts;
 	}
 
+
 	/**
 	 * Get the content from a single post
 	 *
 	 */
 	function GetPostContent($post_index){
+
+		$file		= $this->PostFilePath($post_index);
+		if( file_exists($file) ){
+			require($file);
+			return $post;
+		}
+
 		$posts = $this->GetPostFile($post_index,$post_file);
 		if( $posts === false ){
 			return false;
@@ -347,6 +358,17 @@ class SimpleBlogCommon{
 		return $posts[$post_index];
 	}
 
+
+	/**
+	 * Return the file path of the post
+	 * @since 3.0
+	 *
+	 */
+	function PostFilePath($post_index){
+		return $this->addonPathData.'/posts/'.$post_index.'.php'; //3.0+
+	}
+
+
 	/**
 	 * Delete a blog post
 	 * @return bool
@@ -355,22 +377,31 @@ class SimpleBlogCommon{
 	function Delete(){
 		global $langmessage;
 
-		$post_id = $_POST['del_id'];
-		$posts = $this->GetPostFile($post_id,$post_file);
-		if( $posts === false ){
-			message($langmessage['OOPS']);
-			return false;
-		}
+		$post_id		= $_POST['del_id'];
+		$posts			= false;
 
-		if( !isset($posts[$post_id]) ){
-			message($langmessage['OOPS']);
-			return false;
+
+		//post in single file or collection
+		$post_file		= $this->PostFilePath($post_id);
+		if( !file_exists($post_file) ){
+
+			$posts		= $this->GetPostFile($post_id,$post_file);
+			if( $posts === false ){
+				message($langmessage['OOPS']);
+				return false;
+			}
+
+			if( !isset($posts[$post_id]) ){
+				message($langmessage['OOPS']);
+				return false;
+			}
+
+			unset($posts[$post_id]); //don't use array_splice here because it will reset the numeric keys
 		}
 
 		//now delete post also from categories:
 		$this->delete_post_from_categories($post_id);
 
-		unset($posts[$post_id]); //don't use array_splice here because it will reset the numeric keys
 
 		//reset the index string
 		$new_index = SimpleBlogCommon::$data['str_index'];
@@ -392,8 +423,13 @@ class SimpleBlogCommon{
 			return false;
 		}
 
-		//save to data file
-		if( !gpFiles::SaveArray($post_file,'posts',$posts) ){
+		//save data file or remove the file
+		if( $posts ){
+			if( !gpFiles::SaveArray($post_file,'posts',$posts) ){
+				message($langmessage['OOPS']);
+				return false;
+			}
+		}elseif( !unlink($post_file) ){
 			message($langmessage['OOPS']);
 			return false;
 		}
@@ -431,7 +467,7 @@ class SimpleBlogCommon{
 
 		//use current data file or create new one
 		$post_index = SimpleBlogCommon::$data['post_index'] +1;
-		$posts = $this->GetPostFile($post_index,$post_file);
+		$posts = $this->GetPostFile($post_index,$post_file);	 //!fix
 
 
 		$posts[$post_index] = array();
@@ -485,6 +521,7 @@ class SimpleBlogCommon{
 	/**
 	 * Save an edited blog post
 	 * @return bool
+	 *
 	 */
 	function SaveEdit(){
 		global $langmessage;
@@ -492,7 +529,7 @@ class SimpleBlogCommon{
 		$_POST += array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'','category'=>array());
 
 		$post_index = $this->post_id;
-		$posts = $this->GetPostFile($post_index,$post_file);
+		$posts = $this->GetPostFile($post_index,$post_file); //!fix
 		if( $posts === false ){
 			message($langmessage['OOPS'].' (Invalid ID)');
 			return;
@@ -552,7 +589,7 @@ class SimpleBlogCommon{
 		$page->ajaxReplace = array();
 
 		$post_index = $this->post_id;
-		$posts = $this->GetPostFile($post_index,$post_file);
+		$posts = $this->GetPostFile($post_index,$post_file);  //!fix
 		if( $posts === false ){
 			message($langmessage['OOPS']);
 			return;

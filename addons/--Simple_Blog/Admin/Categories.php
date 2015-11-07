@@ -38,7 +38,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 
 
 		$page->css_admin[] = '/include/css/addons.css'; //for hmargin css pre gpEasy 3.6
-		$page->head_js[] = '/data/_addoncode/'.$addonFolderName.'/admin.js';
+		$page->head_js[] = '/data/_addoncode/'.$addonFolderName.'/static/admin.js';
 
 
 		$label = gpOutput::SelectText('Blog');
@@ -61,7 +61,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 		echo '<tbody class="sortable_table">';
 		foreach( $this->categories as $catindex => $catname ){
 			echo '<tr><td style="vertical-align:middle">';
-			echo '<img src="'.$addonRelativeCode.'/grip.png" height="15" width="15" style="padding:2px;cursor:pointer;"/>';
+			echo '<img src="'.$addonRelativeCode.'/static/grip.png" height="15" width="15" style="padding:2px;cursor:pointer;"/>';
 			echo '</td><td>';
 			echo '<input type="text" name="cattitle['.$catindex.']" value="'.$catname.'" class="gpinput" />';
 			echo '</td><td>';

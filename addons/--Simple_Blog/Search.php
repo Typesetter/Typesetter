@@ -14,7 +14,7 @@ class BlogSearch extends SimpleBlogCommon{
 		$post_ids		= SimpleBlogCommon::AStrToArray('str_index');
 
 		foreach($post_ids as $id){
-			$post		= $this->GetPostContent($id);
+			$post		= SimpleBlogCommon::GetPostContent($id);
 
 			if( !$post ){
 				continue;

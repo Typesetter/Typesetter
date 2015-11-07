@@ -340,9 +340,9 @@ class SimpleBlogCommon{
 	 * Get the content from a single post
 	 *
 	 */
-	function GetPostContent($post_index){
+	static function GetPostContent($post_index){
 
-		$file		= $this->PostFilePath($post_index);
+		$file		= self::PostFilePath($post_index);
 		if( file_exists($file) ){
 			require($file);
 			return $post;
@@ -365,7 +365,7 @@ class SimpleBlogCommon{
 	 * @since 3.0
 	 *
 	 */
-	function PostFilePath($post_index){
+	static function PostFilePath($post_index){
 		return self::$data_dir.'/posts/'.$post_index.'.php'; //3.0+
 	}
 
@@ -383,7 +383,7 @@ class SimpleBlogCommon{
 
 
 		//post in single file or collection
-		$post_file		= $this->PostFilePath($post_id);
+		$post_file		= self::PostFilePath($post_id);
 		if( !file_exists($post_file) ){
 
 			$posts		= self::GetPostFile($post_id,$post_file);
@@ -520,7 +520,7 @@ class SimpleBlogCommon{
 		global $langmessage;
 
 		$_POST			+= array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'','category'=>array());
-		$post			= $this->GetPostContent($this->post_id);
+		$post			= self::GetPostContent($this->post_id);
 
 		if( $post === false ){
 			message($langmessage['OOPS'].' (Invalid ID)');
@@ -577,7 +577,7 @@ class SimpleBlogCommon{
 		global $page, $langmessage;
 		$page->ajaxReplace = array();
 
-		$post			= $this->GetPostContent($this->post_id);
+		$post			= self::GetPostContent($this->post_id);
 		if( $post === false || empty($_POST['gpcontent']) ){
 			message($langmessage['OOPS']);
 			return;
@@ -606,7 +606,7 @@ class SimpleBlogCommon{
 
 		gpFiles::cleanText($post['content']);
 		$post['username']		= $gpAdmin['username'];
-		$post_file				= $this->PostFilePath($post_index);
+		$post_file				= self::PostFilePath($post_index);
 
 		if( !gpFiles::SaveArray($post_file,'post',$post) ){
 			message($langmessage['OOPS']);
@@ -631,7 +631,7 @@ class SimpleBlogCommon{
 	function InlineEdit(){
 
 
-		$content = $this->GetPostContent($this->post_id);
+		$content = self::GetPostContent($this->post_id);
 		if( !$content ){
 			echo 'false';
 			return false;
@@ -650,7 +650,7 @@ class SimpleBlogCommon{
 	function EditPost(){
 		global $langmessage;
 
-		$post				= $this->GetPostContent($this->post_id);
+		$post				= self::GetPostContent($this->post_id);
 
 		if( $post === false ){
 			message($langmessage['OOPS']);
@@ -777,7 +777,7 @@ class SimpleBlogCommon{
 
 		foreach($show_posts as $post_index){
 
-			$post = $this->GetPostContent($post_index);
+			$post = self::GetPostContent($post_index);
 
 			if( !$post ){
 				continue;
@@ -913,7 +913,7 @@ class SimpleBlogCommon{
 
 		foreach($show_posts as $post_index){
 
-			$post		= $this->GetPostContent($post_index);
+			$post		= self::GetPostContent($post_index);
 
 			if( !$post ){
 				continue;

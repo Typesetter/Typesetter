@@ -134,7 +134,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	function ShowPost($cmd){
 		global $langmessage, $page;
 
-		$post	= $this->GetPostContent($this->post_id);
+		$post	= SimpleBlogCommon::GetPostContent($this->post_id);
 
 		if( $post === false ){
 			message($langmessage['OOPS']);
@@ -181,7 +181,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 
 
-		$post	= $this->GetPostContent($this->post_id);
+		$post	= SimpleBlogCommon::GetPostContent($this->post_id);
 
 		if( !common::LoggedIn() && SimpleBlogCommon::AStrValue('drafts',$this->post_id) ){
 			//How to make 404 page?
@@ -479,7 +479,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		$posts = array();
 		foreach($post_list as $post_index){
-			$post	= $this->GetPostContent($post_index);
+			$post	= SimpleBlogCommon::GetPostContent($post_index);
 			$this->ShowPostContent( $post, $post_index, SimpleBlogCommon::$data['post_abbrev'], 'post_list_item' );
 		}
 

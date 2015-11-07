@@ -182,7 +182,7 @@ class SimpleBlogCommon{
 		$i = 0;
 		do{
 
-			$posts = $this->GetPostFile($i,$post_file);
+			$posts = self::GetPostFile($i,$post_file);
 			if( !$posts ){
 				break;
 			}
@@ -314,7 +314,7 @@ class SimpleBlogCommon{
 	 * @deprecated 3.0
 	 *
 	 */
-	function GetPostFile($post_index,&$post_file){
+	static function GetPostFile($post_index,&$post_file){
 
 		if( !is_numeric($post_index) ){
 			return false;
@@ -348,7 +348,7 @@ class SimpleBlogCommon{
 			return $post;
 		}
 
-		$posts = $this->GetPostFile($post_index,$post_file);
+		$posts = self::GetPostFile($post_index,$post_file);
 		if( $posts === false ){
 			return false;
 		}
@@ -386,7 +386,7 @@ class SimpleBlogCommon{
 		$post_file		= $this->PostFilePath($post_id);
 		if( !file_exists($post_file) ){
 
-			$posts		= $this->GetPostFile($post_id,$post_file);
+			$posts		= self::GetPostFile($post_id,$post_file);
 			if( $posts === false ){
 				message($langmessage['OOPS']);
 				return false;
@@ -614,7 +614,7 @@ class SimpleBlogCommon{
 		}
 
 		//remove from old data file
-		$posts					= $this->GetPostFile($post_index,$post_file);
+		$posts					= self::GetPostFile($post_index,$post_file);
 		if( isset($posts[$post_index]) ){
 			unset($posts[$post_index]);
 			gpFiles::SaveArray($post_file,'posts',$posts);

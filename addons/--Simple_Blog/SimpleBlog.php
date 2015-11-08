@@ -95,25 +95,10 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		if( $show ){
 
-			//post requests
-			if( empty($cmd) ){
-				if( $this->post_id > 0 ){
-					$cmd = 'post';
-				}
-			}
-			switch($cmd){
-				case 'opencomments':
-				case 'closecomments':
-				case 'delete_comment':
-				case 'Add Comment':
-				case 'save_edit':
-				case 'post':
-					$this->ShowPost($cmd);
-				break;
-				case 'page':
-				default:
-					$this->ShowPage();
-				break;
+			if( $this->post_id ){
+				$this->ShowPost();
+			}else{
+				$this->ShowPage();
 			}
 
 			if( common::LoggedIn() && !file_exists(self::$index_file) ){
@@ -131,7 +116,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Output the html for a single blog post
 	 * Handle comment actions
 	 */
-	function ShowPost($cmd){
+	function ShowPost(){
 
 		gpPlugin::incl('SimpleBlogPage.php','require_once');
 
@@ -204,7 +189,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		$posts = array();
 		foreach($post_list as $post_index){
 			$post	= SimpleBlogCommon::GetPostContent($post_index);
-			$this->ShowPostContent( $post, $post_index, SimpleBlogCommon::$data['post_abbrev'], 'post_list_item' );
+			$this->ShowPostContent( $post, $post_index );
 		}
 
 	}
@@ -213,57 +198,27 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Display the html for a single blog post
 	 *
 	 */
-	function ShowPostContent( &$post, &$post_index, $limit = 0, $class = '' ){
-		global $langmessage;
+	function ShowPostContent( &$post, &$post_index ){
 
 		if( !common::LoggedIn() && SimpleBlogCommon::AStrValue('drafts',$post_index) ){
-			return false; //How to make 404 page?
+			return false;
 		}
 
-		//If user enter random Blog url, he didn't see any 404, but nothng.
-		$id = '';
-		$class = $class == '' ? '' : ' '.$class;
+		$class = $id = '';
 		if( common::LoggedIn() ){
-
-			$query = 'du'; //dummy parameter
-			SimpleBlogCommon::UrlQuery( $post_index, $url, $query );
-			$edit_link = gpOutput::EditAreaLink($edit_index,$url,$langmessage['edit'].' (TWYSIWYG)',$query,'name="inline_edit_generic" rel="text_inline_edit"');
-
-			echo '<span style="display:none;" id="ExtraEditLnks'.$edit_index.'">';
-			echo $edit_link;
-
-			echo SimpleBlogCommon::PostLink($post_index,$langmessage['edit'].' (All)','cmd=edit_post',' style="display:none"');
-			echo common::Link('Special_Blog',$langmessage['delete'],'cmd=deleteentry&del_id='.$post_index,array('class'=>'delete gpconfirm','data-cmd'=>'cnreq','title'=>$langmessage['delete_confirm']));
-
-			if( SimpleBlogCommon::$data['allow_comments'] ){
-
-				$comments_closed = SimpleBlogCommon::AStrValue('comments_closed',$post_index);
-				if( $comments_closed ){
-					$label = gpOutput::SelectText('Open Comments');
-					echo SimpleBlogCommon::PostLink($post_index,$label,'cmd=opencomments','name="creq" style="display:none"');
-				}else{
-					$label = gpOutput::SelectText('Close Comments');
-					echo SimpleBlogCommon::PostLink($post_index,$label,'cmd=closecomments','name="creq" style="display:none"');
-				}
-			}
-
-			echo common::Link('Special_Blog','New Blog Post','cmd=new_form',' style="display:none"');
-			echo common::Link('Admin_Blog',$langmessage['configuration'],'',' style="display:none"');
-			echo '</span>';
-			$class .= ' editable_area';
-			$id = 'id="ExtraEditArea'.$edit_index.'"';
+			SimpleBlog::EditLinks($post_index, $class, $id);
 		}
 
-		$isDraft = '';
-		if( SimpleBlogCommon::AStrValue('drafts',$post_index) ){
-			$isDraft = '<span style="opacity:0.3;">';
-			$isDraft .= gpOutput::SelectText('Draft');
-			$isDraft .= '</span> ';
-		}
-		echo '<div class="blog_post'.$class.'" '.$id.'>';
+
+		echo '<div class="blog_post post_list_item'.$class.'" '.$id.'>';
 
 		$header = '<h2 id="blog_post_'.$post_index.'">';
-		$header .= $isDraft;
+		if( SimpleBlogCommon::AStrValue('drafts',$post_index) ){
+			$header .= '<span style="opacity:0.3;">';
+			$header .= gpOutput::SelectText('Draft');
+			$header .= '</span> ';
+		}
+
 		$label = SimpleBlogCommon::Underscores( $post['title'] );
 		$header .= SimpleBlogCommon::PostLink($post_index,$label);
 		$header .= '</h2>';
@@ -271,7 +226,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		SimpleBlogCommon::BlogHead($header,$post_index,$post);
 
 		echo '<div class="twysiwygr">';
-		echo $this->AbbrevContent( $post['content'], $post_index, $limit);
+		echo $this->AbbrevContent( $post['content'], $post_index, SimpleBlogCommon::$data['post_abbrev']);
 		echo '</div>';
 
 		echo '</div>';
@@ -279,6 +234,46 @@ class SimpleBlog extends SimpleBlogCommon{
 		echo '<br/>';
 
 		echo '<div class="clear"></div>';
+
+	}
+
+	/**
+	 * Get the edit links for the post
+	 *
+	 */
+	static function EditLinks($post_index, &$class, &$id){
+		global $langmessage;
+
+		$query		= 'du'; //dummy parameter
+
+		SimpleBlogCommon::UrlQuery( $post_index, $url, $query );
+
+		$edit_link	= gpOutput::EditAreaLink($edit_index,$url,$langmessage['edit'].' (TWYSIWYG)',$query,'name="inline_edit_generic" rel="text_inline_edit"');
+		$class 		= ' editable_area';
+		$id			= 'id="ExtraEditArea'.$edit_index.'"';
+
+
+		echo '<span style="display:none;" id="ExtraEditLnks'.$edit_index.'">';
+		echo $edit_link;
+		echo SimpleBlogCommon::PostLink($post_index,$langmessage['edit'].' (All)','cmd=edit_post',' style="display:none"');
+
+		echo common::Link('Special_Blog',$langmessage['delete'],'cmd=deleteentry&del_id='.$post_index,array('class'=>'delete gpconfirm','data-cmd'=>'cnreq','title'=>$langmessage['delete_confirm']));
+
+		if( SimpleBlogCommon::$data['allow_comments'] ){
+
+			$comments_closed = SimpleBlogCommon::AStrValue('comments_closed',$post_index);
+			if( $comments_closed ){
+				$label = gpOutput::SelectText('Open Comments');
+				echo SimpleBlogCommon::PostLink($post_index,$label,'cmd=opencomments','name="cnreq" style="display:none"');
+			}else{
+				$label = gpOutput::SelectText('Close Comments');
+				echo SimpleBlogCommon::PostLink($post_index,$label,'cmd=closecomments','name="cnreq" style="display:none"');
+			}
+		}
+
+		echo common::Link('Special_Blog','New Blog Post','cmd=new_form',' style="display:none"');
+		echo common::Link('Admin_Blog',$langmessage['configuration'],'',' style="display:none"');
+		echo '</span>';
 
 	}
 

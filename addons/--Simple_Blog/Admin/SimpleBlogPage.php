@@ -16,10 +16,10 @@ class AdminSimpleBlogPage extends SimpleBlogPage{
 
 			//close comments
 			case 'closecomments':
-				$this->CloseComments();
+				$this->ToggleComments(true);
 			break;
 			case 'opencomments':
-				$this->OpenComments();
+				$this->ToggleComments(false);
 			break;
 
 
@@ -31,35 +31,25 @@ class AdminSimpleBlogPage extends SimpleBlogPage{
 	}
 
 
-
-
 	/**
-	 * Close the comments for a blog post
+	 * Open/Close the comments for a blog post
 	 *
 	 */
-	function CloseComments(){
+	function ToggleComments($closed ){
 		global $langmessage;
 
-		SimpleBlogCommon::AStrValue('comments_closed',$this->post_id,1);
-		if( !SimpleBlogCommon::SaveIndex() ){
-			message($langmessage['OOPS']);
+		if( $closed ){
+			SimpleBlogCommon::AStrValue('comments_closed',$this->post_id,1);
 		}else{
-			message($langmessage['SAVED']);
+			SimpleBlogCommon::AStrRm('comments_closed',$this->post_id);
 		}
-	}
 
-	/**
-	 * Allow commenting for a blog post
-	 *
-	 */
-	function OpenComments(){
-		global $langmessage;
 
-		SimpleBlogCommon::AStrRm('comments_closed',$this->post_id);
-		if( !SimpleBlogCommon::SaveIndex() ){
-			message($langmessage['OOPS']);
-		}else{
+		if( SimpleBlogCommon::SaveIndex() ){
+			$this->comments_closed = $closed;
 			message($langmessage['SAVED']);
+		}else{
+			message($langmessage['OOPS']);
 		}
 	}
 

@@ -22,7 +22,6 @@ class SimpleBlogPage{
 	 *
 	 */
 	function ShowPost(){
-		global $page;
 
 		if( $this->post === false ){
 			$this->Error_404();
@@ -34,12 +33,22 @@ class SimpleBlogPage{
 			return;
 		}
 
+
 		$this->PostCommands();
+		$this->_ShowPost();
+	}
 
-		$page->label	= SimpleBlogCommon::Underscores( $this->post['title'] );
+	function _ShowPost(){
+		global $page;
 
+		$page->label = SimpleBlogCommon::Underscores( $this->post['title'] );
 
-		echo '<div class="blog_post single_blog_item">';
+		$class = $id = '';
+		if( common::LoggedIn() ){
+			SimpleBlog::EditLinks($this->post_id, $class, $id);
+		}
+
+		echo '<div class="blog_post single_blog_item '.$class.'" '.$id.'>';
 
 		//heading
 		$header			= '<h2 id="blog_post_'.$this->post_id.'">';

@@ -239,7 +239,7 @@ class SimpleBlogPage{
 
 		$data[] = $temp;
 
-		if( !$this->SaveCommentData($data) ){
+		if( !SimpleBlogCommon::SaveCommentData($data) ){
 			message($langmessage['OOPS']);
 			return false;
 		}
@@ -397,46 +397,6 @@ class SimpleBlogPage{
 
 	}
 
-
-	/**
-	 * Save the comment data for a blog post
-	 *
-	 */
-	function SaveCommentData($data){
-		global $langmessage;
-
-
-		// check directory
-		$dir = SimpleBlogCommon::$data_dir.'/comments';
-		if( !gpFiles::CheckDir($dir) ){
-			return false;
-		}
-
-		$commentDataFile = $dir.'/'.$this->post_id.'.txt';
-		$dataTxt = serialize($data);
-		if( !gpFiles::Save($commentDataFile,$dataTxt) ){
-			return false;
-		}
-
-
-		// clean pre 1.7.4 files
-		$commentDataFile = SimpleBlogCommon::$data_dir.'/comments_data_'.$this->post_id.'.txt';
-		if( file_exists($commentDataFile) ){
-			unlink($commentDataFile);
-		}
-
-		SimpleBlogCommon::AStrValue('comment_counts',$this->post_id,count($data));
-
-		SimpleBlogCommon::SaveIndex();
-
-		//clear comments cache
-		$cache_file = SimpleBlogCommon::$data_dir.'/comments/cache.txt';
-		if( file_exists($cache_file) ){
-			unlink($cache_file);
-		}
-
-		return true;
-	}
 
 	/**
 	 * todo: better 404 page

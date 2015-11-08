@@ -81,7 +81,7 @@ class AdminSimpleBlogPage extends SimpleBlogPage{
 
 		unset($data[$comment]);
 
-		if( $this->SaveCommentData($data) ){
+		if( SimpleBlogCommon::SaveCommentData($this->post_id,$data) ){
 			message($langmessage['SAVED']);
 			return true;
 		}else{

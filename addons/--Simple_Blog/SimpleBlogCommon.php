@@ -1272,7 +1272,7 @@ class SimpleBlogCommon{
 	 * Save the comment data for a blog post
 	 *
 	 */
-	function SaveCommentData($post_index,$data){
+	static function SaveCommentData($post_index,$data){
 		global $langmessage;
 
 

@@ -7,7 +7,7 @@ Open source CMS written in PHP focused on ease of use with true WYSIWYG editing 
 * [gpEasy Forum](http://gpeasy.com/Special_Forum)
 
 ##Requirements##
-* PHP 5.2+
+* PHP 5.3+
 * PHP Safe Mode Off
 
 ##Installation##

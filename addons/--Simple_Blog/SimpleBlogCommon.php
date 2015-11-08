@@ -589,14 +589,6 @@ class SimpleBlogCommon{
 	}
 
 
-
-
-	/**
-	 *  B L O G    A R C H I V E   F U N C T I O N S
-	 *
-	 */
-
-
 	function Underscores($str){
 		if( function_exists('mb_ereg_replace') ){
 			return mb_ereg_replace('_', ' ', $str);

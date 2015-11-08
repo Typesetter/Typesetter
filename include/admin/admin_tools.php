@@ -600,11 +600,11 @@ class admin_tools{
 			self::PanelHeading($in_panel, $langmessage['Performance'], 'icon_chart', 'gpe' );
 			echo '<ul class="submenu">';
 			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Performance'].'</a></li>';
-			echo '<li><a><span gpeasy-memory-usage>?</span> Memory</a></li>';
-			echo '<li><a><span gpeasy-memory-max>?</span> Max Memory</a></li>';
-			echo '<li><a><span gpeasy-seconds>?</span> Seconds</a></li>';
-			echo '<li><a><span gpeasy-ms>?</span> Milliseconds</a></li>';
-			echo '<li><a>0 DB Queries</a></li>';
+			echo '<li><span><span gpeasy-memory-usage>?</span> Memory</span></li>';
+			echo '<li><span><span gpeasy-memory-max>?</span> Max Memory</span></li>';
+			echo '<li><span><span gpeasy-seconds>?</span> Seconds</span></li>';
+			echo '<li><span><span gpeasy-ms>?</span> Milliseconds</span></li>';
+			echo '<li><span>0 DB Queries</span></li>';
 			echo '</ul>';
 		echo '</div>';
 		echo '</div>';

@@ -132,71 +132,18 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Handle comment actions
 	 */
 	function ShowPost($cmd){
-		global $langmessage, $page;
 
 		gpPlugin::incl('SimpleBlogPage.php','require_once');
 
-		$blog_page = new SimpleBlogPage($this->post_id);
+		if( common::LoggedIn() ){
+			gpPlugin::incl('Admin/SimpleBlogPage.php','require_once');
+			$blog_page = new AdminSimpleBlogPage($this->post_id);
+		}else{
+			$blog_page = new SimpleBlogPage($this->post_id);
+		}
 
 		$blog_page->ShowPost();
-
-		return;
-
-
-		switch($cmd){
-
-
-			//close comments
-			case 'closecomments':
-				$this->CloseComments($this->post_id);
-			break;
-			case 'opencomments':
-				$this->OpenComments($this->post_id);
-			break;
-
-
-			//commments
-			case 'delete_comment':
-				$this->DeleteComment($this->post_id);
-			break;
-		}
-
 	}
-
-
-
-	/**
-	 * Close the comments for a blog post
-	 *
-	 */
-	function CloseComments($post_index){
-		global $langmessage;
-
-		SimpleBlogCommon::AStrValue('comments_closed',$post_index,1);
-		if( !SimpleBlogCommon::SaveIndex() ){
-			message($langmessage['OOPS']);
-		}else{
-			message($langmessage['SAVED']);
-		}
-	}
-
-	/**
-	 * Allow commenting for a blog post
-	 *
-	 */
-	function OpenComments($post_index){
-		global $langmessage;
-
-		SimpleBlogCommon::AStrRm('comments_closed',$post_index);
-		if( !SimpleBlogCommon::SaveIndex() ){
-			message($langmessage['OOPS']);
-		}else{
-			message($langmessage['SAVED']);
-		}
-	}
-
-
-
 
 
 	/**
@@ -359,40 +306,6 @@ class SimpleBlog extends SimpleBlogCommon{
 		$content = SimpleBlogCommon::substr($content,0,$limit).' ... ';
 		$label = gpOutput::SelectText('Read More');
 		return $content . SimpleBlogCommon::PostLink($post_index,$label);
-	}
-
-
-
-	/* comments */
-
-
-
-
-	/**
-	 * Remove a comment entry from the comment data
-	 *
-	 */
-	function DeleteComment($post_index){
-		global $langmessage;
-
-		$data = $this->GetCommentData($post_index);
-
-		$comment = $_POST['comment_index'];
-		if( !isset($data[$comment]) ){
-			message($langmessage['OOPS']);
-			return;
-		}
-
-		unset($data[$comment]);
-
-		if( $this->SaveCommentData($post_index,$data) ){
-			message($langmessage['SAVED']);
-			return true;
-		}else{
-			message($langmessage['OOPS']);
-			return false;
-		}
-
 	}
 
 

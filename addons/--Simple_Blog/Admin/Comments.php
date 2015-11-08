@@ -93,9 +93,11 @@ class SimpleBlogComments extends SimpleBlogCommon{
 	}
 
 	function DeleteComment(){
-		$post_id = $_REQUEST['id'];
-		$comment_time = $_REQUEST['comment_time'];
-		$data = $this->GetCommentData($post_id);
+
+		$post_id		= $_REQUEST['id'];
+		$comment_time	= $_REQUEST['comment_time'];
+		$data			= SimpleBlogCommon::GetCommentData($post_id);
+
 		foreach($data as $key => $comment){
 			if( $comment['time'] == $comment_time ){
 				unset($data[$key]);

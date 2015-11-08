@@ -1292,19 +1292,19 @@ class SimpleBlogCommon{
 	 * Get the comment data for a single post
 	 *
 	 */
-	function GetCommentData($post_id){
+	static function GetCommentData($post_id){
 
 		// pre 1.7.4
-		$commentDataFile = self::$data_dir.'/comments_data_'.$post_id.'.txt';
-		$data = SimpleBlogCommon::FileData($commentDataFile);
-		if( $data ){
+		$file = self::$data_dir.'/comments_data_'.$post_id.'.txt';
+		$data = SimpleBlogCommon::FileData($file);
+		if( is_array($data) ){
 			return $data;
 		}
 
 		// 1.7.4+
-		$commentDataFile = self::$data_dir.'/comments/'.$post_id.'.txt';
-		$data = SimpleBlogCommon::FileData($commentDataFile);
-		if( $data ){
+		$file = self::$data_dir.'/comments/'.$post_id.'.txt';
+		$data = SimpleBlogCommon::FileData($file);
+		if( is_array($data) ){
 			return $data;
 		}
 

@@ -160,7 +160,7 @@ class SimpleBlogPage{
 	 */
 	function ShowComments(){
 
-		$data = $this->GetCommentData();
+		$data = SimpleBlogCommon::GetCommentData($this->post_id);
 		if( empty($data) ){
 			return;
 		}
@@ -171,31 +171,6 @@ class SimpleBlogPage{
 
 		$this->GetCommentHtml($data,true);
 
-	}
-
-
-	/**
-	 * Get the comment data for a single post
-	 *
-	 */
-	function GetCommentData(){
-
-		// pre 1.7.4
-		$file	= SimpleBlogCommon::$data_dir.'/comments_data_'.$this->post_id.'.txt';
-		$data	= SimpleBlogCommon::FileData($file);
-		if( $data ){
-			return $data;
-		}
-
-		// 1.7.4+
-		$file	= SimpleBlogCommon::$data_dir.'/comments/'.$this->post_id.'.txt';
-		$data	= SimpleBlogCommon::FileData($file);
-		if( $data ){
-			return $data;
-		}
-
-
-		return array();
 	}
 
 
@@ -211,7 +186,7 @@ class SimpleBlogPage{
 			return;
 		}
 
-		$data = $this->GetCommentData();
+		$data = SimpleBlogCommon::GetCommentData($this->post_id);
 
 		//need a captcha?
 		if( SimpleBlogCommon::$data['comment_captcha'] && gp_recaptcha::isActive() ){
@@ -342,6 +317,10 @@ class SimpleBlogPage{
 			echo '<div class="comments_closed">';
 			echo gpOutput::GetAddonText('Comments have been closed.');
 			echo '</div>';
+			return;
+		}
+
+		if( $this->comment_saved ){
 			return;
 		}
 

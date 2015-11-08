@@ -13,7 +13,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	var $showing_category = false;
 
 	function __construct(){
-		global $page, $langmessage, $addonFolderName;
+		global $page, $langmessage;
 
 		$this->Init();
 
@@ -24,16 +24,23 @@ class SimpleBlog extends SimpleBlogCommon{
 		}elseif( strpos($page->requested,'/') !== false ){
 			$parts = explode('/',$page->requested);
 			$ints = strspn($parts[1],'0123456789');
-			if( $ints > 0 ){
+			if( $ints ){
 				$this->post_id = substr($parts[1],0,$ints);
 			}
 		}
 
 
-		$cmd	= common::GetCommand();
-		$show	= true;
 
 		if( common::LoggedIn() ){
+
+			$page->admin_links[]		= array('Special_Blog','Blog Home');
+			$page->admin_links[]		= array('Special_Blog','New Blog Post','cmd=new_form');
+			$page->admin_links[]		= array('Admin_Blog','Configuration');
+			$page->admin_links[]		= array('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode(self::$data_dir),' name="gpabox" ');
+			$label						= 'Number of Posts: '. SimpleBlogCommon::$data['post_count'];
+			$page->admin_links[$label]	= '';
+			$cmd						= common::GetCommand();
+
 
 			switch($cmd){
 
@@ -42,61 +49,31 @@ class SimpleBlog extends SimpleBlogCommon{
 				case 'deleteentry':
 				case 'delete':
 					if( $this->Delete() ){
-						$this->GenStaticContent();
+						SimpleBlogCommon::GenStaticContent();
 					}
 				break;
 
-				//editing
-				case 'save_edit':
-					if( $this->SaveEdit() ){
-						$this->GenStaticContent();
-						break;
-					}
-				case 'edit':
-				case 'edit_post';
-					$this->EditPost();
-					$show = false;
-				break;
-
-				//creating
-				case 'save_new';
-					if( $this->SaveNew() ){
-						$this->GenStaticContent();
-						break;
-					}
+				case 'save_new':
 				case 'new_form':
-					$this->NewForm();
-					$show = false;
-				break;
+					$this->ShowPost();
+				return;
 
 			}
 
-			$page->admin_links[] = array('Special_Blog','Blog Home');
-
-			$page->admin_links[] = array('Special_Blog','New Blog Post','cmd=new_form');
-
-			$page->admin_links[] = array('Admin_Blog','Configuration');
-
-			$page->admin_links[] = array('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addonFolderName),' name="gpabox" ');
-
-			$label = 'Number of Posts: '. SimpleBlogCommon::$data['post_count'];
-			$page->admin_links[$label] = '';
 		}
 
 
-		if( $show ){
+		if( $this->post_id ){
+			$this->ShowPost();
+			return;
+		}
 
-			if( $this->post_id ){
-				$this->ShowPost();
-			}else{
-				$this->ShowPage();
-			}
 
-			if( common::LoggedIn() && !file_exists(self::$index_file) ){
-				echo '<p>Congratulations on successfully installing Simple Blog for gpEasy.</p> ';
-				echo '<p>You\'ll probably want to get started by '.common::Link('Special_Blog','creating a blog post','cmd=new_form').'.</p>';
-			}
+		$this->ShowPage();
 
+		if( common::LoggedIn() && !file_exists(self::$index_file) ){
+			echo '<p>Congratulations on successfully installing Simple Blog for gpEasy.</p> ';
+			echo '<p>You\'ll probably want to get started by '.common::Link('Special_Blog','creating a blog post','cmd=new_form').'.</p>';
 		}
 
 	}
@@ -133,10 +110,9 @@ class SimpleBlog extends SimpleBlogCommon{
 		if( isset($_GET['page']) && is_numeric($_GET['page']) ){
 			$page = (int)$_GET['page'];
 		}
-		$start = $page * $per_page;
-
-		$include_drafts = common::LoggedIn();
-		$show_posts = $this->WhichPosts($start,$per_page,$include_drafts);
+		$start				= $page * $per_page;
+		$include_drafts		= common::LoggedIn();
+		$show_posts			= SimpleBlogCommon::WhichPosts($start,$per_page,$include_drafts);
 
 		$this->ShowPosts($show_posts);
 

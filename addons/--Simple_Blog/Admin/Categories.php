@@ -148,7 +148,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 			return false;
 		}
 
-		$this->GenStaticContent();
+		SimpleBlogCommon::GenStaticContent();
 		message($langmessage['SAVED']);
 	}
 
@@ -182,7 +182,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 			return false;
 		}
 
-		$this->GenStaticContent();
+		SimpleBlogCommon::GenStaticContent();
 		message($langmessage['SAVED']);
 	}
 
@@ -253,7 +253,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 			return false;
 		}
 
-		$this->GenStaticContent();
+		SimpleBlogCommon::GenStaticContent();
 		message($langmessage['SAVED']);
 	}
 

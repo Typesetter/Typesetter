@@ -16,7 +16,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		switch($cmd){
 			//regen
 			case 'regen':
-				$this->GenStaticContent();
+				SimpleBlogCommon::GenStaticContent();
 				message($langmessage['SAVED']);
 			break;
 
@@ -24,7 +24,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 			//config
 			case 'save_config':
 				if( $this->SaveConfig() ){
-					$this->GenStaticContent();
+					SimpleBlogCommon::GenStaticContent();
 				}
 			break;
 

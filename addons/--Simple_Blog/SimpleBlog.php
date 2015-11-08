@@ -86,12 +86,12 @@ class SimpleBlog extends SimpleBlogCommon{
 	 */
 	function ShowPost(){
 
-		gpPlugin::incl('SimpleBlogPage.php','require_once');
 
 		if( common::LoggedIn() ){
 			gpPlugin::incl('Admin/SimpleBlogPage.php','require_once');
 			$blog_page = new AdminSimpleBlogPage($this->post_id);
 		}else{
+			gpPlugin::incl('SimpleBlogPage.php','require_once');
 			$blog_page = new SimpleBlogPage($this->post_id);
 		}
 
@@ -216,14 +216,14 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		SimpleBlogCommon::UrlQuery( $post_index, $url, $query );
 
-		$edit_link	= gpOutput::EditAreaLink($edit_index,$url,$langmessage['edit'].' (TWYSIWYG)',$query,'name="inline_edit_generic" rel="text_inline_edit"');
+		$edit_link	= gpOutput::EditAreaLink($edit_index,$url,$langmessage['edit'],$query,'name="inline_edit_generic" rel="text_inline_edit"');
 		$class 		= ' editable_area';
 		$id			= 'id="ExtraEditArea'.$edit_index.'"';
 
 
 		echo '<span style="display:none;" id="ExtraEditLnks'.$edit_index.'">';
 		echo $edit_link;
-		echo SimpleBlogCommon::PostLink($post_index,$langmessage['edit'].' (All)','cmd=edit_post',' style="display:none"');
+		echo SimpleBlogCommon::PostLink($post_index,$langmessage['rename/details'],'cmd=edit_post',' style="display:none" data-cmd="gpajax"');
 
 		echo common::Link('Special_Blog',$langmessage['delete'],'cmd=deleteentry&del_id='.$post_index,array('class'=>'delete gpconfirm','data-cmd'=>'cnreq','title'=>$langmessage['delete_confirm']));
 

@@ -2,6 +2,7 @@
 defined('is_running') or die('Not an entry point...');
 
 
+gpPlugin::incl('SimpleBlogPage.php','require_once');
 
 class AdminSimpleBlogPage extends SimpleBlogPage{
 
@@ -187,41 +188,49 @@ class AdminSimpleBlogPage extends SimpleBlogPage{
 
 		echo '<form class="post_form" action="'.SimpleBlogCommon::PostUrl($post_id).'" method="post">';
 
-		echo '<table style="width:100%">';
+		echo '<table class="bordered full_width">';
+		echo '<thead><tr><th colspan="2">'.$langmessage['options'].'</th></tr></thead>';
+		echo '<tbody>';
 
+		//title
 		echo '<tr><td>';
-			echo 'Title';
-			echo '</td><td>';
-			echo '<input type="text" name="title" value="'.$array['title'].'" />';
-			echo '</td></tr>';
+		echo 'Title';
+		echo '</td><td>';
+		echo '<input type="text" name="title" value="'.$array['title'].'" />';
+		echo '</td></tr>';
 
+		//sub title
 		echo '<tr><td>';
-			echo 'Sub-Title';
-			echo '</td><td>';
-			echo '<input type="text" name="subtitle" value="'.$array['subtitle'].'" />';
-			echo '</td></tr>';
+		echo 'Sub-Title';
+		echo '</td><td>';
+		echo '<input type="text" name="subtitle" value="'.$array['subtitle'].'" />';
+		echo '</td></tr>';
 
+		//draft
 		echo '<tr><td>';
-			echo 'Draft';
-			echo '</td><td>';
-			echo '<input type="checkbox" name="isDraft" value="on" ';
-				if( $array['isDraft'] ) echo 'checked="true"';
-				echo '" />';
-			echo '</td></tr>';
+		echo 'Draft';
+		echo '</td><td>';
+		echo '<input type="checkbox" name="isDraft" value="on" ';
+			if( $array['isDraft'] ) echo 'checked="true"';
+			echo '" />';
+		echo '</td></tr>';
 
 		self::ShowCategoryList($post_id,$array);
 
+		//content
 		echo '<tr><td colspan="2">';
-			gp_edit::UseCK($array['content'],'content');
-			echo '</td></tr>';
+		gp_edit::UseCK($array['content'],'content');
+		echo '</td></tr>';
 
+		//save
 		echo '<tr><td colspan="2">';
-			echo '<input type="hidden" name="cmd" value="'.$cmd.'" />';
-			echo '<input type="hidden" name="id" value="'.$post_id.'" />';
-			echo '<input class="post_form_save" type="submit" name="" value="'.$langmessage['save'].'" /> ';
-			echo '<input class="post_form_cancel" type="submit" name="cmd" value="'.$langmessage['cancel'].'" />';
-			echo '</td></tr>';
+		echo '<input type="hidden" name="cmd" value="'.$cmd.'" />';
+		echo '<input type="hidden" name="id" value="'.$post_id.'" />';
+		echo '<input class="post_form_save" type="submit" name="" value="'.$langmessage['save'].'" /> ';
+		echo '<input class="post_form_cancel" type="submit" name="cmd" value="'.$langmessage['cancel'].'" />';
+		echo '</td></tr>';
 
+		echo '</tbody>';
 		echo '</table>';
 		echo '</form>';
 	}
@@ -428,27 +437,32 @@ class AdminSimpleBlogPage extends SimpleBlogPage{
 	 *
 	 */
 	function EditPost(){
-		global $langmessage;
+		global $langmessage, $page;
 
-		$post				= SimpleBlogCommon::GetPostContent($this->post_id);
+		$page->ajaxReplace = array();
 
-		if( $post === false ){
+
+		if( $this->post === false ){
 			message($langmessage['OOPS'].' (No Post)');
 			return;
 		}
 
+		$post				= $this->post;
 		$post['isDraft']	= SimpleBlogCommon::AStrValue('drafts',$this->post_id);
 		$_POST				+= $post;
 		$title				= htmlspecialchars($_POST['title'],ENT_COMPAT,'UTF-8',false);
 
-		echo '<div class="blog_post_edit">';
-		echo '<h2>';
-		echo SimpleBlogCommon::PostLink($this->post_id,$title);
-		echo ' &#187; ';
-		echo 'Edit Post</h2>';
+
+		ob_start();
+		echo '<h2>Edit Post</h2>';
 		$this->PostForm($_POST,'save_edit',$this->post_id);
-		echo '</div>';
-		return true;
+
+
+		$array = array();
+		$array[0] = 'admin_box_data';
+		$array[1] = '';
+		$array[2] = ob_get_clean();
+		$page->ajaxReplace[] = $array;
 	}
 
 

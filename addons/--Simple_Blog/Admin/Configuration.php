@@ -2,15 +2,16 @@
 
 defined('is_running') or die('Not an entry point...');
 
-gpPlugin::incl('SimpleBlogCommon.php','require_once');
+gpPlugin::incl('Admin/Admin.php','require_once');
 
 
-class AdminSimpleBlog{
+class AdminSimpleBlogConfig extends SimipleBlogAdmin{
 
 	function __construct(){
 		global $langmessage;
 
-		SimpleBlogCommon::Init();
+		parent::__construct();
+
 
 		$cmd = common::GetCommand();
 		switch($cmd){
@@ -122,21 +123,11 @@ class AdminSimpleBlog{
 
 		$label = gpOutput::SelectText('Blog');
 
-		$page->css_admin[] = '/include/css/addons.css'; //for hmargin css pre gpEasy 3.6
+		$this->Heading('Admin_BlogConfig');
 
-		echo '<h2 class="hmargin">';
-		echo common::Link('Special_Blog',$label);
-		echo ' &#187; ';
-		echo $langmessage['configuration'];
-		echo ' <span>|</span> ';
-		echo common::Link('Admin_BlogCategories','Categories');
-		echo ' <span>|</span> ';
-		$comments = gpOutput::SelectText('Comments');
-		echo common::Link('Admin_BlogComments',$comments);
-		echo '</h2>';
 
 		echo '<form class="renameform" action="'.common::GetUrl('Admin_Blog').'" method="post">';
-		echo '<table style="width:100%" class="bordered">';
+		echo '<table class="bordered full_width">';
 		echo '<tr><th>';
 		echo 'Option';
 		echo '</th><th>';

@@ -1,7 +1,6 @@
 
 $(function(){
 
-	$('.sortable_table').sortable();
-
+	$(".sortable_table").sortable({items : "tr",handle: "td"});
 
 });

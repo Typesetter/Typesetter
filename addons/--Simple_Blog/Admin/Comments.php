@@ -2,10 +2,10 @@
 
 defined('is_running') or die('Not an entry point...');
 
-gpPlugin::incl('SimpleBlogCommon.php','require_once');
+gpPlugin::incl('Admin/Admin.php','require_once');
 
 
-class SimpleBlogComments extends SimpleBlogCommon{
+class SimpleBlogComments extends SimipleBlogAdmin{
 
 	var $dir;
 	var $cache = array();
@@ -14,9 +14,11 @@ class SimpleBlogComments extends SimpleBlogCommon{
 	function __construct(){
 		global $page, $addonFolderName;
 
-		SimpleBlogCommon::Init();
-		$this->dir = SimpleBlogCommon::$data_dir.'/comments';
-		$page->css_user[] = '/data/_addoncode/'.$addonFolderName.'/static/admin.css';
+		parent::__construct();
+
+
+		$this->dir			= SimpleBlogCommon::$data_dir.'/comments';
+		$page->css_user[]	= '/data/_addoncode/'.$addonFolderName.'/static/admin.css';
 		//gpPlugin::css('admin.css'); //gpeasy 4.0+
 
 		$this->GetCache();
@@ -34,18 +36,8 @@ class SimpleBlogComments extends SimpleBlogCommon{
 	function ShowRecent(){
 		global $langmessage;
 
-		$page->css_admin[] = '/include/css/addons.css'; //for hmargin css pre gpEasy 3.6
 
-		echo '<h2 class="hmargin">';
-		$label = gpOutput::SelectText('Blog');
-		echo common::Link('Special_Blog',$label);
-		echo ' &#187; ';
-		echo common::Link('Admin_Blog',$langmessage['configuration']);
-		echo ' <span>|</span> ';
-		echo common::Link('Admin_BlogCategories','Categories');
-		echo ' <span>|</span> ';
-		echo gpOutput::SelectText('Comments');
-		echo '</h2>';
+		$this->Heading('Admin_BlogComments');
 
 
 		echo '<table style="width:100%" class="bordered">';
@@ -103,7 +95,8 @@ class SimpleBlogComments extends SimpleBlogCommon{
 				unset($data[$key]);
 			}
 		}
-		$this->SaveCommentData($post_id,$data);
+
+		SimpleBlogCommon::SaveCommentData($post_id,$data);
 		$this->GetCache();
 	}
 

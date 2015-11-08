@@ -239,7 +239,7 @@ class SimpleBlogPage{
 
 		$data[] = $temp;
 
-		if( !SimpleBlogCommon::SaveCommentData($data) ){
+		if( !SimpleBlogCommon::SaveCommentData($this->post_id,$data) ){
 			message($langmessage['OOPS']);
 			return false;
 		}

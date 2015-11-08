@@ -1,9 +1,9 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-gpPlugin::incl('SimpleBlogCommon.php','require_once');
+gpPlugin::incl('Admin/Admin.php','require_once');
 
-class AdminSimpleBlogCategories  extends SimpleBlogCommon{
+class AdminSimpleBlogCategories extends SimipleBlogAdmin{
 
 	var $itlist = array();
 	var $categories;
@@ -12,7 +12,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 	function __construct(){
 		global $langmessage, $addonRelativeCode, $addonFolderName, $page;
 
-		SimpleBlogCommon::Init();
+		parent::__construct();
 
 		$this->categories = SimpleBlogCommon::AStrToArray( 'categories' );
 
@@ -36,22 +36,8 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 		}
 
 
+		$this->Heading('Admin_BlogCategories');
 
-		$page->css_admin[] = '/include/css/addons.css'; //for hmargin css pre gpEasy 3.6
-		$page->head_js[] = '/data/_addoncode/'.$addonFolderName.'/static/admin.js';
-
-
-		$label = gpOutput::SelectText('Blog');
-		echo '<h2 class="hmargin">';
-		echo common::Link('Special_Blog',$label);
-		echo ' &#187; ';
-		echo common::Link('Admin_Blog','Configuration');
-		echo ' <span>|</span> ';
-		echo ' Categories ';
-		echo ' <span>|</span> ';
-		$comments = gpOutput::SelectText('Comments');
-		echo common::Link('Admin_BlogComments',$comments);
-		echo '</h2>';
 
 		// print all categories and settings
 		echo '<form name="categories" action="'.common::GetUrl('Admin_BlogCategories').'" method="post">';

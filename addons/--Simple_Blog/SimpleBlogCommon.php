@@ -625,25 +625,6 @@ class SimpleBlogCommon{
 
 
 	/**
-	 * Edit a post with inline editing
-	 *
-	 */
-	function InlineEdit(){
-
-
-		$content = self::GetPostContent($this->post_id);
-		if( !$content ){
-			echo 'false';
-			return false;
-		}
-
-		$content += array('type'=>'text');
-
-		includeFile('tool/ajax.php');
-		gpAjax::InlineEdit($content);
-	}
-
-	/**
 	 * Display the form for editing an existing post
 	 *
 	 */

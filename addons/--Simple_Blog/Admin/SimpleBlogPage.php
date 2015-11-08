@@ -13,6 +13,10 @@ class AdminSimpleBlogPage extends SimpleBlogPage{
 
 		switch($cmd){
 
+			case 'inlineedit':
+				$this->InlineEdit();
+			die();
+
 
 			//close comments
 			case 'closecomments':
@@ -79,6 +83,25 @@ class AdminSimpleBlogPage extends SimpleBlogPage{
 			return false;
 		}
 
+	}
+
+
+	/**
+	 * Edit a post with inline editing
+	 *
+	 */
+	function InlineEdit(){
+
+
+		if( !$this->post ){
+			echo 'false';
+			return false;
+		}
+
+		$this->post += array('type'=>'text');
+
+		includeFile('tool/ajax.php');
+		gpAjax::InlineEdit($this->post);
 	}
 
 

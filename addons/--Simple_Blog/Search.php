@@ -7,7 +7,7 @@ class BlogSearch extends SimpleBlogCommon{
 
 	function __construct($args){
 
-		$this->Init();
+		SimpleBlogCommon::Init();
 
 		$search_obj		= $args[0];
 		$blog_label		= common::GetLabelIndex('special_blog');

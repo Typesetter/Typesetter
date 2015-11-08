@@ -31,7 +31,7 @@ class SimpleBlogCommon{
 	 *
 	 */
 	function __construct(){
-		$this->Init();
+		self::Init();
 		self::GenStaticContent();
 	}
 
@@ -39,10 +39,10 @@ class SimpleBlogCommon{
 	 * Set variables for blog display
 	 *
 	 */
-	function Init(){
+	static function Init(){
 		global $addonPathData;
 
-		if( SimpleBlogCommon::$data ){
+		if( self::$data ){
 			return;
 		}
 
@@ -50,13 +50,13 @@ class SimpleBlogCommon{
 		self::$index_file		= self::$data_dir.'/index.php';
 
 
-		SimpleBlogCommon::$root_url = 'Special_Blog';
+		self::$root_url = 'Special_Blog';
 		if( is_callable( array('common','SpecialHref') ) ){
-			SimpleBlogCommon::$root_url = common::SpecialHref('Special_Blog');
+			self::$root_url = common::SpecialHref('Special_Blog');
 		}
 
-		$this->GetBlogData();
-		SimpleBlogCommon::AddCSS();
+		self::GetBlogData();
+		self::AddCSS();
 	}
 
 	static function GenStaticContent(){
@@ -100,11 +100,11 @@ class SimpleBlogCommon{
 		}
 
 		SimpleBlogCommon::$data = $blogData + SimpleBlogCommon::Defaults();
-		$this->GenIndexStr();
+		self::GenIndexStr();
 
 		//update to simple blog 2.0 data
 		if( isset(SimpleBlogCommon::$data['post_info']) ){
-			$this->DataUpdate20();
+			self::DataUpdate20();
 		}
 	}
 
@@ -115,7 +115,7 @@ class SimpleBlogCommon{
 	 *
 	 * As of 2.0, Uses " and > instead , and :
 	 */
-	function GenIndexStr(){
+	static function GenIndexStr(){
 
 		if( !empty(SimpleBlogCommon::$data['str_index']) ){
 			if( SimpleBlogCommon::$data['str_index'][0] == ',' ){
@@ -135,7 +135,7 @@ class SimpleBlogCommon{
 	 * Serialize comment counts
 	 *
 	 */
-	function DataUpdate20(){
+	static function DataUpdate20(){
 
 		$comment_counts	= array();
 		$comments_closed = array();
@@ -159,7 +159,7 @@ class SimpleBlogCommon{
 		//use AStr data for categories
 		$categories = $categories_hidden = $category_posts = $post_categories = array();
 		if( !isset(SimpleBlogCommon::$data['categories']) ){
-			$old_categories = $this->load_blog_categories();
+			$old_categories = self::load_blog_categories();
 			foreach($old_categories as $key => $cat){
 				$cat['ct'] = htmlspecialchars($cat['ct'],ENT_COMPAT,'UTF-8',false);
 				$categories[$key] = $cat['ct'];
@@ -564,7 +564,7 @@ class SimpleBlogCommon{
 	 * @deprecated 2.0
 	 *
 	 */
-	function load_blog_categories(){
+	static function load_blog_categories(){
 		global $addonPathData;
 		$categories_file = $addonPathData.'/categories.php';
 

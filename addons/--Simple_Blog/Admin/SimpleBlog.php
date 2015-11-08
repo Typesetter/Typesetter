@@ -5,12 +5,12 @@ defined('is_running') or die('Not an entry point...');
 gpPlugin::incl('SimpleBlogCommon.php','require_once');
 
 
-class AdminSimpleBlog extends SimpleBlogCommon{
+class AdminSimpleBlog{
 
 	function __construct(){
 		global $langmessage;
 
-		$this->Init();
+		SimpleBlogCommon::Init();
 
 		$cmd = common::GetCommand();
 		switch($cmd){
@@ -98,7 +98,7 @@ class AdminSimpleBlog extends SimpleBlogCommon{
 		SimpleBlogCommon::$data['subtitle_separator'] = (string)$_POST['subtitle_separator'];
 		SimpleBlogCommon::$data['email_comments'] = $_POST['email_comments'];
 
-		if( !$this->SaveIndex() ){
+		if( !SimpleBlogCommon::SaveIndex() ){
 			message($langmessage['OOPS']);
 			return false;
 		}

@@ -12,7 +12,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 	function __construct(){
 		global $langmessage, $addonRelativeCode, $addonFolderName, $page;
 
-		$this->Init();
+		SimpleBlogCommon::Init();
 
 		$this->categories = SimpleBlogCommon::AStrToArray( 'categories' );
 
@@ -143,7 +143,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 		SimpleBlogCommon::$data['categories'] = SimpleBlogCommon::AStrFromArray($this->categories);
 		SimpleBlogCommon::$data['categories_hidden'] = SimpleBlogCommon::AStrFromArray($categories_hidden);
 
-		if( !$this->SaveIndex() ){
+		if( !SimpleBlogCommon::SaveIndex() ){
 			message($langmessage['OOPS']);
 			return false;
 		}
@@ -177,7 +177,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 
 		SimpleBlogCommon::$data['categories'] = SimpleBlogCommon::AStrFromArray($this->categories);
 
-		if( !$this->SaveIndex() ){
+		if( !SimpleBlogCommon::SaveIndex() ){
 			message($langmessage['OOPS']);
 			return false;
 		}
@@ -248,7 +248,7 @@ class AdminSimpleBlogCategories  extends SimpleBlogCommon{
 
 		SimpleBlogCommon::$data['categories'] = SimpleBlogCommon::AStrFromArray($this->categories);
 
-		if( !$this->SaveIndex() ){
+		if( !SimpleBlogCommon::SaveIndex() ){
 			message($langmessage['OOPS']);
 			return false;
 		}

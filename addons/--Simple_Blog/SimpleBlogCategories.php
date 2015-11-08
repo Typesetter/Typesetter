@@ -13,7 +13,7 @@ class BlogCategories extends SimpleBlog{
 	function __construct(){
 		global $page;
 
-		$this->Init();
+		SimpleBlogCommon::Init();
 		$this->categories = SimpleBlogCommon::AStrToArray( 'categories' );
 
 		//show category list

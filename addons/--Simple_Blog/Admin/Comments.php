@@ -14,7 +14,7 @@ class SimpleBlogComments extends SimpleBlogCommon{
 	function __construct(){
 		global $page, $addonFolderName;
 
-		$this->Init();
+		SimpleBlogCommon::Init();
 		$this->dir = SimpleBlogCommon::$data_dir.'/comments';
 		$page->css_user[] = '/data/_addoncode/'.$addonFolderName.'/static/admin.css';
 		//gpPlugin::css('admin.css'); //gpeasy 4.0+

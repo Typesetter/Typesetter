@@ -15,7 +15,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	function __construct(){
 		global $page, $langmessage;
 
-		$this->Init();
+		SimpleBlogCommon::Init();
 
 		//get the post id
 		if( isset($_REQUEST['id']) && ctype_digit($_REQUEST['id']) ){

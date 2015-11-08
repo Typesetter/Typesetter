@@ -14,7 +14,7 @@ includeFile('tool/recaptcha.php');
 
 class SimpleBlogCommon{
 
-	var $indexFile;
+	static $index_file;
 	static $data		= false;
 	static $root_url	= 'Special_Blog';
 
@@ -48,7 +48,7 @@ class SimpleBlogCommon{
 		}
 
 		self::$data_dir			= $addonPathData;
-		$this->indexFile		= self::$data_dir.'/index.php';
+		self::$index_file		= self::$data_dir.'/index.php';
 
 
 		SimpleBlogCommon::$root_url = 'Special_Blog';
@@ -85,8 +85,8 @@ class SimpleBlogCommon{
 	function GetBlogData(){
 
 		$blogData = array();
-		if( file_exists($this->indexFile) ){
-			require($this->indexFile);
+		if( file_exists(self::$index_file) ){
+			require(self::$index_file);
 		}
 
 		//old twitter auth no longer works
@@ -228,7 +228,7 @@ class SimpleBlogCommon{
 		unset(SimpleBlogCommon::$data['post_list']);
 
 
-		$this->SaveIndex();
+		SimpleBlogCommon::SaveIndex();
 	}
 
 
@@ -298,12 +298,12 @@ class SimpleBlogCommon{
 	 * Save the blog configuration and details about the blog
 	 *
 	 */
-	function SaveIndex(){
+	static function SaveIndex(){
 
 		SimpleBlogCommon::$data['str_index'] = '"'.trim(SimpleBlogCommon::$data['str_index'],'"').'"';
 		SimpleBlogCommon::$data['post_count'] = substr_count(SimpleBlogCommon::$data['str_index'],'>');
 
-		return gpFiles::SaveArray($this->indexFile,'blogData',SimpleBlogCommon::$data);
+		return gpFiles::SaveArray(self::$index_file,'blogData',SimpleBlogCommon::$data);
 	}
 
 
@@ -419,7 +419,7 @@ class SimpleBlogCommon{
 
 
 
-		if( !$this->SaveIndex() ){
+		if( !SimpleBlogCommon::SaveIndex() ){
 			message($langmessage['OOPS']);
 			return false;
 		}
@@ -500,7 +500,7 @@ class SimpleBlogCommon{
 		$this->update_post_in_categories($post_index,$title);
 
 		SimpleBlogCommon::$data['post_index'] = $post_index;
-		if( !$this->SaveIndex() ){
+		if( !SimpleBlogCommon::SaveIndex() ){
 			message($langmessage['OOPS']);
 			return false;
 		}
@@ -562,7 +562,7 @@ class SimpleBlogCommon{
 		$this->update_post_in_categories($this->post_id,$title);
 
 
-		$this->SaveIndex();
+		SimpleBlogCommon::SaveIndex();
 
 		message($langmessage['SAVED']);
 		return true;
@@ -924,7 +924,7 @@ class SimpleBlogCommon{
 			$header		.= SimpleBlogCommon::PostLink($post_index,$label);
 			$header		.= '</b>';
 
-			$this->BlogHead($header,$post_index,$post,true);
+			SimpleBlogCommon::BlogHead($header,$post_index,$post,true);
 
 
 			$content = strip_tags($post['content']);
@@ -1075,7 +1075,7 @@ class SimpleBlogCommon{
 	 * However, this would make it more difficult for theme developers to design for the blog plugin
 	 *
 	 */
-	function BlogHead($header,$post_index,$post,$cacheable=false){
+	static function BlogHead($header,$post_index,$post,$cacheable=false){
 
 
 		//subtitle
@@ -1343,7 +1343,7 @@ class SimpleBlogCommon{
 
 		SimpleBlogCommon::AStrValue('comment_counts',$post_index,count($data));
 
-		$this->SaveIndex();
+		SimpleBlogCommon::SaveIndex();
 
 		//clear comments cache
 		$cache_file = self::$data_dir.'/comments/cache.txt';

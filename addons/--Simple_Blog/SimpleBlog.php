@@ -37,12 +37,6 @@ class SimpleBlog extends SimpleBlogCommon{
 
 			switch($cmd){
 
-				/* inline editing */
-				case 'save_inline':
-				case 'save':
-					$this->SaveInline();
-				break;
-
 
 				//delete
 				case 'deleteentry':

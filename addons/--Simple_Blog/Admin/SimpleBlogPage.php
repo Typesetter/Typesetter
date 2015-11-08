@@ -13,9 +13,15 @@ class AdminSimpleBlogPage extends SimpleBlogPage{
 
 		switch($cmd){
 
+
+			// inline editing
 			case 'inlineedit':
 				$this->InlineEdit();
 			die();
+			case 'save_inline':
+			case 'save':
+				$this->SaveInline();
+			break;
 
 
 			//close comments
@@ -105,6 +111,32 @@ class AdminSimpleBlogPage extends SimpleBlogPage{
 	}
 
 
+
+	/**
+	 * Save an inline edit
+	 *
+	 */
+	function SaveInline(){
+		global $page, $langmessage;
+		$page->ajaxReplace = array();
+
+		if( $this->post === false || empty($_POST['gpcontent']) ){
+			message($langmessage['OOPS']);
+			return;
+		}
+
+
+		$this->post['content'] = $_POST['gpcontent'];
+
+		//save to data file
+		if( !SimpleBlogCommon::SavePost($this->post_id, $this->post) ){
+			return false;
+		}
+
+		$page->ajaxReplace[] = array('ck_saved', '', '');
+		message($langmessage['SAVED']);
+		return true;
+	}
 
 
 }

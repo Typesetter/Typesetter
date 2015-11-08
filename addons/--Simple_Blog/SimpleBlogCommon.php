@@ -483,7 +483,7 @@ class SimpleBlogCommon{
 		}
 
 		//save to data file
-		if( !$this->SavePost($post_index, $post) ){
+		if( !SimpleBlogCommon::SavePost($post_index, $post) ){
 			return false;
 		}
 
@@ -551,7 +551,7 @@ class SimpleBlogCommon{
 
 
 		//save to data file
-		if( !$this->SavePost($this->post_id, $post) ){
+		if( !SimpleBlogCommon::SavePost($this->post_id, $post) ){
 			return false;
 		}
 
@@ -569,39 +569,12 @@ class SimpleBlogCommon{
 	}
 
 
-	/**
-	 * Save an inline edit
-	 *
-	 */
-	function SaveInline(){
-		global $page, $langmessage;
-		$page->ajaxReplace = array();
-
-		$post			= self::GetPostContent($this->post_id);
-		if( $post === false || empty($_POST['gpcontent']) ){
-			message($langmessage['OOPS']);
-			return;
-		}
-
-
-		$post['content'] = $_POST['gpcontent'];
-
-		//save to data file
-		if( !$this->SavePost($this->post_id, $post) ){
-			return false;
-		}
-
-		$page->ajaxReplace[] = array('ck_saved', '', '');
-		message($langmessage['SAVED']);
-		return true;
-	}
-
 
 	/**
 	 * Save a post
 	 *
 	 */
-	function SavePost($post_index, $post){
+	static function SavePost($post_index, $post){
 		global $gpAdmin;
 
 		gpFiles::cleanText($post['content']);

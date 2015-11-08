@@ -491,8 +491,8 @@ class SimpleBlogCommon{
 			echo '<updated>'.date($atomFormat, $post['time']).'</updated>'."\n";
 
 			$content =& $post['content'];
-			if( (SimpleBlogCommon::$data['feed_abbrev']> 0) && (SimpleBlogCommon::strlen($content) > SimpleBlogCommon::$data['feed_abbrev']) ){
-				$content = SimpleBlogCommon::substr($content,0,SimpleBlogCommon::$data['feed_abbrev']).' ... ';
+			if( (SimpleBlogCommon::$data['feed_abbrev']> 0) && (mb_strlen($content) > SimpleBlogCommon::$data['feed_abbrev']) ){
+				$content = mb_substr($content,0,SimpleBlogCommon::$data['feed_abbrev']).' ... ';
 				$label = gpOutput::SelectText('Read More');
 				$content .= '<a href="'.$server.SimpleBlogCommon::PostUrl($post_index,$label).'">'.$label.'</a>';
 			}
@@ -529,55 +529,55 @@ class SimpleBlogCommon{
 	 */
 	function FixLinks(&$content,$server,$offset){
 
-		$pos = SimpleBlogCommon::strpos($content,'href="',$offset);
+		$pos = mb_strpos($content,'href="',$offset);
 		if( $pos <= 0 ){
 			return;
 		}
 		$pos = $pos+6;
 
-		$pos2 = SimpleBlogCommon::strpos($content,'"',$pos);
+		$pos2 = mb_strpos($content,'"',$pos);
 
 		if( $pos2 <= 0 ){
 			return;
 		}
 
 		//well formed link
-		$check = SimpleBlogCommon::strpos($content,'>',$pos);
+		$check = mb_strpos($content,'>',$pos);
 		if( ($check !== false) && ($check < $pos2) ){
 			SimpleBlogCommon::FixLinks($content,$server,$pos2);
 			return;
 		}
 
-		$title = SimpleBlogCommon::substr($content,$pos,$pos2-$pos);
+		$title = mb_substr($content,$pos,$pos2-$pos);
 
 		//internal link
-		if( SimpleBlogCommon::strpos($title,'mailto:') !== false ){
+		if( mb_strpos($title,'mailto:') !== false ){
 			SimpleBlogCommon::FixLinks($content,$server,$pos2);
 			return;
 		}
-		if( SimpleBlogCommon::strpos($title,'://') !== false ){
+		if( mb_strpos($title,'://') !== false ){
 			SimpleBlogCommon::FixLinks($content,$server,$pos2);
 			return;
 		}
 
-		if( SimpleBlogCommon::strpos($title,'/') === 0 ){
+		if( mb_strpos($title,'/') === 0 ){
 			$replacement = $server.$title;
 		}else{
 			$replacement = $server.common::GetUrl($title);
 		}
 
-		$content = SimpleBlogCommon::substr_replace($content,$replacement,$pos,$pos2-$pos);
+		$content = mb_substr_replace($content,$replacement,$pos,$pos2-$pos);
 
 		SimpleBlogCommon::FixLinks($content,$server,$pos2);
 	}
 
 	static function uuid($str){
 		$chars = md5($str);
-		return SimpleBlogCommon::substr($chars,0,8)
-				.'-'. SimpleBlogCommon::substr($chars,8,4)
-				.'-'. SimpleBlogCommon::substr($chars,12,4)
-				.'-'. SimpleBlogCommon::substr($chars,16,4)
-				.'-'. SimpleBlogCommon::substr($chars,20,12);
+		return mb_substr($chars,0,8)
+				.'-'. mb_substr($chars,8,4)
+				.'-'. mb_substr($chars,12,4)
+				.'-'. mb_substr($chars,16,4)
+				.'-'. mb_substr($chars,20,12);
 		return $uuid;
 	}
 
@@ -630,15 +630,15 @@ class SimpleBlogCommon{
 
 			$content = strip_tags($post['content']);
 
-			if( SimpleBlogCommon::$data['gadget_abbrev'] > 6 && (SimpleBlogCommon::strlen($content) > SimpleBlogCommon::$data['gadget_abbrev']) ){
+			if( SimpleBlogCommon::$data['gadget_abbrev'] > 6 && (mb_strlen($content) > SimpleBlogCommon::$data['gadget_abbrev']) ){
 
 				$cut = SimpleBlogCommon::$data['gadget_abbrev'];
 
-				$pos = SimpleBlogCommon::strpos($content,' ',$cut-5);
+				$pos = mb_strpos($content,' ',$cut-5);
 				if( ($pos > 0) && ($cut+20 > $pos) ){
 					$cut = $pos;
 				}
-				$content = SimpleBlogCommon::substr($content,0,$cut).' ... ';
+				$content = mb_substr($content,0,$cut).' ... ';
 
 				$label = gpOutput::SelectText('Read More');
 				$content .= SimpleBlogCommon::PostLink($post_index,$label);
@@ -871,39 +871,6 @@ class SimpleBlogCommon{
 	 *
 	 */
 
-
-	function substr( $str, $start, $length = false ){
-		if( function_exists('mb_substr') ){
-			if( $length !== false ){
-				return mb_substr($str,$start,$length);
-			}
-			return mb_substr($str,$start);
-		}
-		if( $length !== false ){
-			return substr($str,$start,$length);
-		}
-		return substr($str,$start);
-	}
-
-	function strlen($str){
-		if( function_exists('mb_strlen') ){
-			return mb_strlen($str);
-		}
-		return strlen($str);
-	}
-
-	function strpos($haystack,$needle,$offset=0){
-		if( function_exists('mb_strpos') ){
-			return mb_strpos($haystack,$needle,$offset);
-		}
-		return strpos($haystack,$needle,$offset);
-	}
-
-	function substr_replace( $str, $repl, $start, $length ){
-		$part_one = SimpleBlogCommon::substr( $str, 0, $start);
-		$part_two = SimpleBlogCommon::substr( $str, $start+$length);
-		return $part_one . $repl . $part_two;
-	}
 
 	function Underscores($str){
 		if( function_exists('mb_ereg_replace') ){

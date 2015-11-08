@@ -155,8 +155,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		$posts = array();
 		foreach($post_list as $post_index){
-			$post	= SimpleBlogCommon::GetPostContent($post_index);
-			$this->ShowPostContent( $post, $post_index );
+			$this->ShowPostContent( $post_index );
 		}
 
 	}
@@ -165,13 +164,15 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Display the html for a single blog post
 	 *
 	 */
-	function ShowPostContent( &$post, &$post_index ){
+	function ShowPostContent( $post_index ){
 
 		if( !common::LoggedIn() && SimpleBlogCommon::AStrValue('drafts',$post_index) ){
 			return false;
 		}
 
-		$class = $id = '';
+		$post	= SimpleBlogCommon::GetPostContent($post_index);
+		$class	= $id = '';
+
 		if( common::LoggedIn() ){
 			SimpleBlog::EditLinks($post_index, $class, $id);
 		}
@@ -256,16 +257,16 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		$content = strip_tags($content);
 
-		if( SimpleBlogCommon::strlen($content) < $limit ){
+		if( mb_strlen($content) < $limit ){
 			return $content;
 		}
 
-		$pos = SimpleBlogCommon::strpos($content,' ',$limit-5);
+		$pos = mb_strpos($content,' ',$limit-5);
 
 		if( ($pos > 0) && ($limit+20 > $pos) ){
 			$limit = $pos;
 		}
-		$content = SimpleBlogCommon::substr($content,0,$limit).' ... ';
+		$content = mb_substr($content,0,$limit).' ... ';
 		$label = gpOutput::SelectText('Read More');
 		return $content . SimpleBlogCommon::PostLink($post_index,$label);
 	}

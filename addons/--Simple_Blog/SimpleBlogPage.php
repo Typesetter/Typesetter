@@ -229,7 +229,7 @@ class SimpleBlogPage{
 
 		if( !empty($_POST['website']) && ($_POST['website'] !== 'http://') ){
 			$website = $_POST['website'];
-			if( SimpleBlogCommon::strpos($website,'://') === false ){
+			if( mb_strpos($website,'://') === false ){
 				$website = false;
 			}
 			if( $website ){

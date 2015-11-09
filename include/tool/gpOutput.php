@@ -499,8 +499,8 @@ class gpOutput{
 			}
 
 			if( !file_exists($full_path) ){
-				$name =& $config['addons'][$addonFolderName]['name'];
-				trigger_error('gpEasy Error: Addon hook script doesn\'t exist. Script: '.$info['script'].' Addon: '.$name);
+				self::ExecError('gpEasy Error: Addon hook script doesn\'t exist.',$info,'script');
+
 			}elseif( IncludeScript($full_path,'include_once',array('page','dataDir','langmessage')) ){
 				$has_script = true;
 			}
@@ -517,15 +517,13 @@ class gpOutput{
 					if( method_exists($object, $info['method']) ){
 						$args[0] = call_user_func_array(array($object, $info['method']), $args );
 					}elseif( $has_script ){
-						trigger_error('gpEasy Error: Addon hook method doesn\'t exist. Script: '.$info['method']);
+						self::ExecError('gpEasy Error: Addon hook method doesn\'t exist.',$info,'method');
 					}
 				}
-			}elseif( $has_script ){
-				$name =& $config['addons'][$addonFolderName]['name'];
-				trigger_error('gpEasy Error: Addon class doesn\'t exist. Class: '.$info['class'].' Addon: '.$name);
 			}else{
-				trigger_error('gpEasy Error: Addon class doesn\'t exist. Class: '.$info['class']);
+				self::ExecError('gpEasy Error: Addon class doesn\'t exist.',$info,'class');
 			}
+
 		}elseif( !empty($info['method']) ){
 
 			$callback = $info['method'];
@@ -544,8 +542,7 @@ class gpOutput{
 				$method_called = true;
 
 			}elseif( $has_script ){
-				$name =& $config['addons'][$addonFolderName]['name'];
-				trigger_error('gpEasy Error: Addon hook method doesn\'t exist. Script: '.$info['method'].' Addon: '.$name);
+				self::ExecError('gpEasy Error: Addon hook method doesn\'t exist.',$info,'method');
 			}
 		}
 
@@ -554,6 +551,30 @@ class gpOutput{
 		gpOutput::PopCatchable();
 
 		return $args;
+	}
+
+	/**
+	 * Trigger an error
+	 *
+	 */
+	static function ExecError( $msg, $exec_info, $error_info ){
+		global $config, $addonFolderName;
+
+		// append addon name
+		if( !empty($addonFolderName) && isset($config['addons'][$addonFolderName]) ){
+			$msg	.= ' Addon: '.$config['addons'][$addonFolderName]['name'].'. ';
+		}
+
+		// which piece of $exec_info is the problem
+		if( !isset($exec_info[$error_info]) ){
+			$msg	.= $error_info;
+		}elseif( is_array($exec_info[$error_info]) ){
+			$msg	.= $error_info.': '.implode('::',$exec_info[$error_info]);
+		}else{
+			$msg	.= $error_info.': '.$exec_info[$error_info];
+		}
+
+		trigger_error($msg);
 	}
 
 

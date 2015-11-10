@@ -185,6 +185,10 @@ class SimpleBlog extends SimpleBlogCommon{
 			$header .= '<span style="opacity:0.3;">';
 			$header .= gpOutput::SelectText('Draft');
 			$header .= '</span> ';
+		}elseif( $post['time'] > time() ){
+			$header .= '<span style="opacity:0.3;">';
+			$header .= gpOutput::SelectText('Pending');
+			$header .= '</span> ';
 		}
 
 		$label = SimpleBlogCommon::Underscores( $post['title'] );

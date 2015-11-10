@@ -242,8 +242,8 @@ class SimpleBlogCommon{
 	 */
 	static function WhichPosts($start, $len, $include_drafts = false){
 
-		$posts = array();
-		$end = $start+$len;
+		$posts		= array();
+		$end		= $start+$len;
 		for($i = $start; $i < $end; $i++){
 
 			//get post id
@@ -252,10 +252,19 @@ class SimpleBlogCommon{
 				continue;
 			}
 
-			//exclude drafts
-			if( !$include_drafts && SimpleBlogCommon::AStrValue('drafts',$post_id) ){
-				continue;
+			if( !$include_drafts ){
+				//exclude drafts
+				if( SimpleBlogCommon::AStrValue('drafts',$post_id) ){
+					continue;
+				}
+
+				//exclude future posts
+				$time = SimpleBlogCommon::AStrValue('post_times',$post_id);
+				if( $time > time() ){
+					continue;
+				}
 			}
+
 
 			$posts[] = $post_id;
 		}

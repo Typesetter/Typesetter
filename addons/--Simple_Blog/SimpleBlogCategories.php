@@ -91,9 +91,16 @@ class BlogCategories extends SimpleBlog{
 		$show_posts = array();
 		if( !$include_drafts ){
 			foreach($cat_posts as $post_id){
-				if( !SimpleBlogCommon::AStrValue('drafts',$post_id) ){
-					$show_posts[] = $post_id;
+				if( SimpleBlogCommon::AStrValue('drafts',$post_id) ){
+					continue;
 				}
+
+				$time = SimpleBlogCommon::AStrValue('post_times',$post_id);
+				if( $time > time() ){
+					continue;
+				}
+
+				$show_posts[] = $post_id;
 			}
 		}else{
 			$show_posts = $cat_posts;

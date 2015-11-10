@@ -26,11 +26,6 @@ class StaticGenerator{
 		ob_start();
 
 		$atomFormat = 'Y-m-d\TH:i:s\Z';
-		if( version_compare('phpversion', '5.1.3', '>=') ){
-			$atomFormat = 'Y-m-d\TH:i:sP';
-		}
-
-		$posts = array();
 		$show_posts = SimpleBlogCommon::WhichPosts(0,SimpleBlogCommon::$data['feed_entries']);
 
 

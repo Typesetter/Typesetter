@@ -48,9 +48,7 @@ class SimpleBlog extends SimpleBlogCommon{
 				//delete
 				case 'deleteentry':
 				case 'delete':
-					if( $this->Delete() ){
-						SimpleBlogCommon::GenStaticContent();
-					}
+					SimpleBlogCommon::Delete();
 				break;
 
 				case 'save_new':

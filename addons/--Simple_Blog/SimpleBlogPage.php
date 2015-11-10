@@ -56,6 +56,10 @@ class SimpleBlogPage{
 			$header		.= '<span style="opacity:0.3;">';
 			$header		.= gpOutput::SelectText('Draft');
 			$header		.= '</span> ';
+		}elseif( $this->post['time'] > time() ){
+			$header .= '<span style="opacity:0.3;">';
+			$header .= gpOutput::SelectText('Pending');
+			$header .= '</span> ';
 		}
 
 		$header			.= SimpleBlogCommon::PostLink($this->post_id,$page->label);

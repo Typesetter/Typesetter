@@ -423,7 +423,7 @@ class SimpleBlogCommon{
 	 * @return bool
 	 *
 	 */
-	function Delete(){
+	static function Delete(){
 		global $langmessage;
 
 		$post_id		= $_POST['del_id'];
@@ -449,7 +449,7 @@ class SimpleBlogCommon{
 		}
 
 		//now delete post also from categories:
-		$this->delete_post_from_categories($post_id);
+		self::DeletePostFromCategories($post_id);
 
 
 		//reset the index string
@@ -483,7 +483,18 @@ class SimpleBlogCommon{
 			return false;
 		}
 
+
+		//delete the comments
+		$commentDataFile = self::$data_dir.'/comments/'.$post_id.'.txt';
+		if( file_exists($commentDataFile) ){
+			unlink($commentDataFile);
+			SimpleBlogCommon::ClearCommentCache();
+		}
+
+
+		SimpleBlogCommon::GenStaticContent();
 		message($langmessage['file_deleted']);
+
 		return true;
 	}
 
@@ -625,7 +636,7 @@ class SimpleBlogCommon{
 	 * Remove a blog entry from a category
 	 *
 	 */
-	function delete_post_from_categories( $post_id ){
+	static function DeletePostFromCategories( $post_id ){
 
 		$categories = SimpleBlogCommon::AStrToArray( 'categories' );
 		foreach($categories as $catindex => $catname){
@@ -712,13 +723,20 @@ class SimpleBlogCommon{
 
 		SimpleBlogCommon::SaveIndex();
 
-		//clear comments cache
+		SimpleBlogCommon::ClearCommentCache();
+
+		return true;
+	}
+
+	/**
+	 * Delete the comments cache
+	 *
+	 */
+	static function ClearCommentCache(){
 		$cache_file = self::$data_dir.'/comments/cache.txt';
 		if( file_exists($cache_file) ){
 			unlink($cache_file);
 		}
-
-		return true;
 	}
 
 	static function PostLink($post,$label,$query='',$attr=''){

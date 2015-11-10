@@ -40,6 +40,11 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 				$this->ToggleComments(false, $_REQUEST['id']);
 			break;
 
+			//delete
+			case 'deleteentry':
+				SimpleBlogCommon::Delete();
+			break;
+
 
 		}
 
@@ -125,6 +130,8 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 			echo SimpleBlogCommon::PostLink($post_id,'View Post');
 			echo ' &nbsp; ';
 			echo common::Link('Admin_Blog/'.$post_id,$langmessage['edit'],'cmd=edit_post');
+			echo ' &nbsp; ';
+			echo common::Link('Admin_Blog',$langmessage['delete'],'cmd=deleteentry&del_id='.$post_id,array('class'=>'delete gpconfirm','data-cmd'=>'cnreq','title'=>$langmessage['delete_confirm']));
 
 			echo '</td></tr>';
 		}

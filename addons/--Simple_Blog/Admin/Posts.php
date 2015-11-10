@@ -64,9 +64,11 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 		echo '</tr></thead>';
 		echo '<tbody>';
 		foreach($post_ids as $i => $id){
-			echo '<tr><td>';
+			echo '<tr><td width="1%">';
 			if( isset($post_drafts[$id]) ){
 				echo 'Draft';
+			}elseif( $post_times[$id] > time() ){
+				echo 'Pending';
 			}
 			echo '</td><td>';
 			$title = $post_titles[$id];
@@ -386,14 +388,24 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 
 		//different time
 		//organize posts based on publish time
-		if( !isset($post['time']) || floor($_POST['time']/60) !== floor($post['time']/60) ){
-			SimpleBlogCommon::AStrValue('post_times',$post_id,$_POST['time']);
-			$post_times			= SimpleBlogCommon::AStrToArray('post_times');
-			arsort($post_times);
+		SimpleBlogCommon::AStrValue('post_times',$post_id,$_POST['time']);
+		$post_times			= SimpleBlogCommon::AStrToArray('post_times');
+		arsort($post_times);
 
-			$str_index			= array_keys($post_times);
-			SimpleBlogCommon::$data['str_index']	= SimpleBlogCommon::AStrFromArray($str_index);
+		$str_index			= array_keys($post_times);
+		SimpleBlogCommon::$data['str_index']	= SimpleBlogCommon::AStrFromArray($str_index);
+
+
+		//get next static gen time
+		asort($post_times);
+		$next_regen = false;
+		foreach($post_times as $time){
+			if( $time > time() ){
+				$next_regen = $time;
+				break;
+			}
 		}
+		SimpleBlogCommon::$data['next_regen'] = $next_regen;
 
 
 		//create post array

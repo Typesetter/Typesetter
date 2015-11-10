@@ -55,8 +55,15 @@ class SimpleBlogCommon{
 			self::$root_url = common::SpecialHref('Special_Blog');
 		}
 
+
 		self::GetBlogData();
 		self::AddCSS();
+
+		msg('Regen? '.SimpleBlogCommon::$data['next_regen'].' vs '.time() );
+		if( SimpleBlogCommon::$data['next_regen'] < time()  ){
+			msg('regen now!');
+		}
+
 	}
 
 	static function GenStaticContent(){

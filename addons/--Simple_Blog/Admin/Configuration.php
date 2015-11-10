@@ -126,7 +126,7 @@ class AdminSimpleBlogConfig extends SimipleBlogAdmin{
 		$this->Heading('Admin_BlogConfig');
 
 
-		echo '<form class="renameform" action="'.common::GetUrl('Admin_Blog').'" method="post">';
+		echo '<form class="renameform" action="'.common::GetUrl('Admin_BlogConfig').'" method="post">';
 		echo '<table class="bordered full_width">';
 		echo '<tr><th>';
 		echo 'Option';
@@ -317,7 +317,7 @@ class AdminSimpleBlogConfig extends SimipleBlogAdmin{
 		echo '<p style="text-align:center">';
 			echo common::Link('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addonFolderName),' title="'.urlencode($langmessage['editable_text']).'" name="gpabox" ');
 			echo ' &nbsp; &nbsp; ';
-			echo common::Link('Admin_Blog','Regenerate Gadget','cmd=regen',' name="creq"');
+			echo common::Link('Admin_BlogConfig','Regenerate Gadget','cmd=regen',' name="creq"');
 		echo '</p>';
 
 		echo '</form>';
@@ -328,9 +328,10 @@ class AdminSimpleBlogConfig extends SimipleBlogAdmin{
 		return array(
 
 			'urls' => array(
-				'Default'	=> 'Default - /Blog?id=1234',
-				'Tiny'		=> 'Tiny - /Blog/1234',
-				'Full'		=> 'Full - /Blog/1234_Post_Title'
+				'Default'	=> '/Blog?id=1234',
+				'Tiny'		=> '/Blog/1234',
+				'Full'		=> '/Blog/1234_Post_Title',
+				'Title'		=> '/Blog/Post_Title',
 			),
 
 		);

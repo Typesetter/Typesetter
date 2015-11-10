@@ -18,17 +18,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		SimpleBlogCommon::Init();
 
 		//get the post id
-		if( isset($_REQUEST['id']) && ctype_digit($_REQUEST['id']) ){
-			$this->post_id = $_REQUEST['id'];
-
-		}elseif( strpos($page->requested,'/') !== false ){
-			$parts = explode('/',$page->requested);
-			$ints = strspn($parts[1],'0123456789');
-			if( $ints ){
-				$this->post_id = substr($parts[1],0,$ints);
-			}
-		}
-
+		$this->post_id	= self::PostID($page->requested);
 
 
 		if( common::LoggedIn() ){
@@ -76,6 +66,30 @@ class SimpleBlog extends SimpleBlogCommon{
 
 	}
 
+
+	/**
+	 * Get the post id from the requested url
+	 *
+	 */
+	static function PostID($requested){
+
+		if( isset($_REQUEST['id']) && ctype_digit($_REQUEST['id']) ){
+			return $_REQUEST['id'];
+		}
+
+		if( strpos($requested,'/') === false ){
+			return false;
+		}
+
+		$parts	= explode('/',$requested);
+		$ints	= strspn($parts[1],'0123456789');
+
+		if( $ints ){
+			return substr($parts[1],0,$ints);
+		}
+
+		return SimpleBlogCommon::AStrKey('titles',$parts[1], true);
+	}
 
 
 	/**

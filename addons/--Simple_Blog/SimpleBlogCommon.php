@@ -765,6 +765,12 @@ class SimpleBlogCommon{
 				$url .= '/'.$post_id;
 				break;
 
+				case 'Title':
+					$title = SimpleBlogCommon::AStrValue('titles',$post_id);
+					$title = str_replace(array('?',' '),array('','_'),$title);
+					$url .= '/'.$title;
+				break;
+
 				default:
 				$query = trim($query.'&id='.$post_id,'&');
 				break;
@@ -777,6 +783,7 @@ class SimpleBlogCommon{
 		$url = 'Special_Blog_Categories';
 		switch( SimpleBlogCommon::$data['urls'] ){
 
+			case 'Title':
 			case 'Full':
 				$cattitle = str_replace(array('?',' '),array('','_'),$cattitle);
 				$url .= '/'.$cattitle;
@@ -865,23 +872,30 @@ class SimpleBlogCommon{
 	 * Should be changed to allow for non-numeric keys
 	 *
 	 */
-	static function AStrKey( $data_string, $value ){
+	static function AStrKey( $data_string, $value, $url_search = false ){
 		static $integers = '0123456789';
 
 		if( !isset(SimpleBlogCommon::$data[$data_string]) ){
 			return false;
 		}
 
-		$string = SimpleBlogCommon::$data[$data_string];
+		$string			= SimpleBlogCommon::$data[$data_string];
 
-		$len = strlen($string);
-		$post_pos = strpos($string,'>'.$value.'"');
+		if( $url_search ){
+			$string		= str_replace(array('?',' '),array('','_'),$string);
+		}
 
-		$offset = $post_pos-$len;
+		$len			= strlen($string);
+		$post_pos		= strpos($string,'>'.$value.'"');
 
+		if( $post_pos === false ){
+			return false;
+		}
 
-		$post_key_pos = strrpos( $string, '"', $offset );
-		$post_key_len = strspn( $string, $integers, $post_key_pos+1 );
+		$offset			= $post_pos-$len;
+		$post_key_pos	= strrpos( $string, '"', $offset );
+		$post_key_len	= strspn( $string, $integers, $post_key_pos+1 );
+
 		return substr( $string, $post_key_pos+1, $post_key_len );
 	}
 

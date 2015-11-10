@@ -16,23 +16,8 @@ class BlogCategories extends SimpleBlog{
 		SimpleBlogCommon::Init();
 		$this->categories = SimpleBlogCommon::AStrToArray( 'categories' );
 
-		//show category list
-		if( isset($_REQUEST['cat'])	){
-			$this->catindex = $_REQUEST['cat'];
 
-		}elseif( strpos($page->requested,'/') !== false ){
-			$parts = explode('/',$page->requested);
-
-			if( SimpleBlogCommon::$data['urls'] === 'Full' ){
-
-				$parts[1] = str_replace('_',' ',$parts[1]);
-				$this->catindex = array_search($parts[1],$this->categories);
-
-			}elseif( SimpleBlogCommon::$data['urls'] === 'Tiny' ){
-				$this->catindex = $parts[1];
-			}
-
-		}
+		$this->catindex = $this->CatIndex($page->requested);
 
 		if( $this->catindex && isset($this->categories[$this->catindex]) && !SimpleBlogCommon::AStrValue('categories_hidden',$this->catindex) ){
 			$this->ShowCategory();
@@ -40,6 +25,32 @@ class BlogCategories extends SimpleBlog{
 			$this->ShowCategories();
 		}
 	}
+
+	/**
+	 * Get the category index from the request
+	 *
+	 */
+	function CatIndex($requested){
+
+		if( isset($_REQUEST['cat'])	){
+			return $_REQUEST['cat'];
+		}
+
+		if( strpos($requested,'/') === false ){
+			return false;
+		}
+
+		$parts	= explode('/',$requested);
+
+		if( ctype_digit($parts[1]) ){
+			return $parts[1];
+		}
+
+
+		$parts[1] = str_replace('_',' ',$parts[1]);
+		return array_search($parts[1],$this->categories);
+	}
+
 
 	function ShowCategory(){
 

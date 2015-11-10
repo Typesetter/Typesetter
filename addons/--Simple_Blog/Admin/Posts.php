@@ -32,6 +32,15 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 				$this->NewForm();
 			return;
 
+			//close comments
+			case 'closecomments':
+				$this->ToggleComments(true, $_REQUEST['id']);
+			break;
+			case 'opencomments':
+				$this->ToggleComments(false, $_REQUEST['id']);
+			break;
+
+
 		}
 
 		$this->ShowPosts();
@@ -63,30 +72,59 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 		echo '<th>Options</th>';
 		echo '</tr></thead>';
 		echo '<tbody>';
-		foreach($post_ids as $i => $id){
+		foreach($post_ids as $i => $post_id){
+
+			//draft/pending
 			echo '<tr><td width="1%">';
-			if( isset($post_drafts[$id]) ){
+			if( isset($post_drafts[$post_id]) ){
 				echo 'Draft';
-			}elseif( $post_times[$id] > time() ){
+			}elseif( $post_times[$post_id] > time() ){
 				echo 'Pending';
 			}
+
+			//title
 			echo '</td><td>';
-			$title = $post_titles[$id];
-			echo SimpleBlogCommon::PostLink($id,$title);
+			$title = $post_titles[$post_id];
+			echo SimpleBlogCommon::PostLink($post_id,$title);
+
+			//post time
 			echo '</td><td>';
-			if( isset($post_times[$id]) ){
-				echo strftime(SimpleBlogCommon::$data['strftime_format'],$post_times[$id]);
+			if( isset($post_times[$post_id]) ){
+				echo strftime(SimpleBlogCommon::$data['strftime_format'],$post_times[$post_id]);
 			}
+
+			//comments
 			echo '</td><td>';
-			if( isset($post_comments[$id]) ){
-				echo $post_comments[$id];
+			echo '<span style="display:inline-block;min-width:30px">';
+			if( isset($post_comments[$post_id]) ){
+				echo $post_comments[$post_id];
 			}
+			echo '</span>';
+
+
+			if( SimpleBlogCommon::$data['allow_comments'] ){
+				$comments_closed	= SimpleBlogCommon::AStrValue('comments_closed',$post_id);
+				$open				= gpOutput::SelectText('Open');
+				$close				= gpOutput::SelectText('Close');
+
+				if( $comments_closed ){
+					echo common::Link('Admin_Blog',$open,'cmd=opencomments&id='.$post_id,'name="cnreq"');
+					echo ' &nbsp; ';
+					echo gpOutput::SelectText('Closed');
+				}else{
+					echo $open;
+					echo ' &nbsp; ';
+					echo common::Link('Admin_Blog',$close,'cmd=closecomments&id='.$post_id,'name="cnreq"');
+				}
+			}
+
+
+
+
 			echo '</td><td>';
-			if( isset($post_closed[$id]) ){
-				echo 'Closed';
-			}
+			echo SimpleBlogCommon::PostLink($post_id,'View Post');
 			echo ' &nbsp; ';
-			echo common::Link('Admin_Blog/'.$id,$langmessage['edit'],'cmd=edit_post');
+			echo common::Link('Admin_Blog/'.$post_id,$langmessage['edit'],'cmd=edit_post');
 
 			echo '</td></tr>';
 		}
@@ -175,7 +213,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 		includeFile('tool/editing.php');
 
 		$array 				+= array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>false, 'categories'=>array(), 'time'=>time() );
-		$array				+= array('isDraft'=>SimpleBlogCommon::AStrValue('drafts',$this->post_id));
+		$array				+= array('isDraft'=>SimpleBlogCommon::AStrValue('drafts',$post_id));
 		$array['title']		= SimpleBlogCommon::Underscores( $array['title'] );
 
 		$action = common::GetUrl('Admin_Blog');
@@ -191,6 +229,12 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 		echo '<input type="hidden" name="cmd" value="'.$cmd.'" />';
 		echo '<input class="gpsubmit" type="submit" name="" value="'.$langmessage['save'].'" /> ';
 		echo common::Link('Admin_Blog',$langmessage['cancel'],'',' class="gpcancel"');
+
+		if( $post_id ){
+			echo SimpleBlogCommon::PostLink($post_id,'View Post','','target="_blank"');
+		}
+
+
 		echo '</div>';
 
 		//heading
@@ -256,6 +300,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 		echo '</div>';
 
 		echo '</form>';
+
 	}
 
 

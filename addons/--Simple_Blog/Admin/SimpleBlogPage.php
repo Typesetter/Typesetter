@@ -25,10 +25,10 @@ class AdminSimpleBlogPage extends SimpleBlogPage{
 
 			//close comments
 			case 'closecomments':
-				$this->ToggleComments(true);
+				$this->ToggleComments(true, $this->post_id);
 			break;
 			case 'opencomments':
-				$this->ToggleComments(false);
+				$this->ToggleComments(false, $this->post_id);
 			break;
 
 
@@ -48,13 +48,13 @@ class AdminSimpleBlogPage extends SimpleBlogPage{
 	 * Open/Close the comments for a blog post
 	 *
 	 */
-	function ToggleComments($closed ){
+	function ToggleComments($closed, $post_id ){
 		global $langmessage;
 
 		if( $closed ){
-			SimpleBlogCommon::AStrValue('comments_closed',$this->post_id,1);
+			SimpleBlogCommon::AStrValue('comments_closed',$post_id,1);
 		}else{
-			SimpleBlogCommon::AStrRm('comments_closed',$this->post_id);
+			SimpleBlogCommon::AStrRm('comments_closed',$post_id);
 		}
 
 

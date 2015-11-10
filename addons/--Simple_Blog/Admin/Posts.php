@@ -397,15 +397,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 
 
 		//get next static gen time
-		asort($post_times);
-		$next_regen = false;
-		foreach($post_times as $time){
-			if( $time > time() ){
-				$next_regen = $time;
-				break;
-			}
-		}
-		SimpleBlogCommon::$data['next_regen'] = $next_regen;
+		SimpleBlogCommon::NextGenTime();
 
 
 		//create post array

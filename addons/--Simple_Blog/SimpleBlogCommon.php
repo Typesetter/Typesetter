@@ -59,17 +59,46 @@ class SimpleBlogCommon{
 		self::GetBlogData();
 		self::AddCSS();
 
-		msg('Regen? '.SimpleBlogCommon::$data['next_regen'].' vs '.time() );
-		if( SimpleBlogCommon::$data['next_regen'] < time()  ){
-			msg('regen now!');
-		}
 
+		//regenerate if there are pending posts that need to be published
+		if( SimpleBlogCommon::$data['next_regen'] < time()  ){
+			if( @gpFiles::WriteLock() ){
+				self::GenStaticContent();
+				SimpleBlogCommon::NextGenTime();
+				SimpleBlogCommon::SaveIndex();
+				gpFiles::Unlock('write',gp_random);
+			}
+		}
 	}
 
 	static function GenStaticContent(){
 		gpPlugin::incl('Admin/StaticGenerator.php','require_once');
 		StaticGenerator::Generate();
+
 	}
+
+	/**
+	 * Get next static gen time
+	 *
+	 */
+	static function NextGenTime(){
+
+		$post_times			= SimpleBlogCommon::AStrToArray('post_times');
+		arsort($post_times);
+
+
+		asort($post_times);
+		$next_regen = false;
+		foreach($post_times as $time){
+			if( $time > time() ){
+				$next_regen = $time;
+				break;
+			}
+		}
+		SimpleBlogCommon::$data['next_regen'] = $next_regen;
+
+	}
+
 
 
 	/**

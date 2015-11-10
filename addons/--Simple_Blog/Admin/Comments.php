@@ -18,8 +18,6 @@ class SimpleBlogComments extends SimipleBlogAdmin{
 
 
 		$this->dir			= SimpleBlogCommon::$data_dir.'/comments';
-		$page->css_user[]	= '/data/_addoncode/'.$addonFolderName.'/static/admin.css';
-		//gpPlugin::css('admin.css'); //gpeasy 4.0+
 
 		$this->GetCache();
 

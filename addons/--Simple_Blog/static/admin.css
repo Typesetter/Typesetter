@@ -4,3 +4,64 @@
 	max-width:500px;
 	word-wrap:break-word;
 	}
+
+.sb_post_container_left .cke_chrome{
+	padding: 0;
+	}
+
+@media only screen and (min-width:768px){
+	.sb_post_container{
+		margin-right:200px;
+	}
+	.sb_post_container_left{
+		float:left;
+		width:100%;
+	}
+
+	.sb_post_container_right{
+		float:right;
+		width:180px;
+		margin-right:-200px;
+		}
+}
+
+@media only screen and (min-width:960px){
+	.sb_post_container{
+		margin-right:300px;
+	}
+
+	.sb_post_container_right{
+		width:280px;
+		margin-right:-300px;
+		}
+}
+
+
+
+
+
+/**
+ * Edit boxes
+ *
+ */
+.sb_edit_box{
+	border:1px solid #ddd;
+	background:#f1f1f1;
+	padding:15px;
+	border-radius:3px;
+	margin-bottom:20px;
+}
+.sb_edit_group{
+	padding-top:15px;
+	}
+.sb_edit_group:first-child{
+	padding-top:0;
+	}
+.sb_edit_box label{
+	display:block;
+	font-weight:normal;
+	}
+.sb_edit_box .gpinput{
+	width:100% !important;
+	border-radius:3px !important;
+	}

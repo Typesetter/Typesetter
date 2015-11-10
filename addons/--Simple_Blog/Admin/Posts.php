@@ -67,13 +67,44 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 		$post_comments		= SimpleBlogCommon::AStrToArray('comment_counts');
 		$post_closed		= SimpleBlogCommon::AStrToArray('comments_closed');
 		$post_drafts		= SimpleBlogCommon::AStrToArray('drafts');
+		$total_posts		= count($post_ids);
+		$per_page			= 20;
+		$total_pages		= ceil($total_posts/$per_page);
+		$offset				= 0;
+
+
+		//offset
+		if( isset($_REQUEST['offset']) && ctype_digit($_REQUEST['offset']) && $_REQUEST['offset'] > 0 ){
+			$offset		= $_REQUEST['offset'];
+		}
+		$post_ids			= array_slice($post_ids, $offset, $per_page);
+
+
+		//pagination links
+		echo '<div  style="float:right;margin:20px 0;">';
+		echo '<span class="page_count">';
+		echo ($offset+1).' to '.min($total_posts,$offset+$per_page).' of '.$total_posts;
+		echo '</span>';
+		echo '<ul class="pagination">';
+		$links = array();
+		if( $total_posts > $per_page ){
+			for($i = 0; $i < $total_pages; $i++){
+				$_offset = $i*$per_page;
+				$class = '';
+				if( $_offset == $offset ){
+					$class = ' class="active"';
+				}
+				echo '<li '.$class.'>'.common::Link('Admin_Blog',$i+1,'offset='.($_offset)).'</li>';
+			}
+		}
+		echo '</ul>';
+		echo '</div>';
 
 
 
-
-		echo '<table class="bordered full_width">';
-		echo '<thead><tr><th></th><th>Post ('.number_format(count($post_ids)).')';
-		echo '</th><th>Date</th><th>Comments</th>';
+		echo '<table class="bordered full_width striped">';
+		echo '<thead><tr><th></th><th>Posts ('.number_format($total_posts).')';
+		echo '</th><th>Publish Time</th><th>Comments</th>';
 		echo '<th>Options</th>';
 		echo '</tr></thead>';
 		echo '<tbody>';
@@ -102,7 +133,9 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 			echo '</td><td>';
 			echo '<span style="display:inline-block;min-width:30px">';
 			if( isset($post_comments[$post_id]) ){
-				echo $post_comments[$post_id];
+				echo number_format($post_comments[$post_id]);
+			}else{
+				echo '0';
 			}
 			echo '</span>';
 
@@ -121,9 +154,9 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 					echo ' &nbsp; ';
 					echo common::Link('Admin_Blog',$close,'cmd=closecomments&id='.$post_id,'name="cnreq"');
 				}
+			}else{
+				echo common::Link('Admin_BlogConfig','Disabled');
 			}
-
-
 
 
 			echo '</td><td>';
@@ -137,8 +170,6 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 		}
 		echo '</tbody>';
 		echo '</table>';
-
-
 	}
 
 

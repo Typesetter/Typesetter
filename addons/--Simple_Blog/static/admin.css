@@ -65,3 +65,61 @@
 	width:100% !important;
 	border-radius:3px !important;
 	}
+
+/**
+ * Pagination
+ *
+ */
+.pagination{
+	display: inline-block;
+	padding-left: 0px;
+	margin: 0px;
+	border-radius: 4px;
+	vertical-align:middle;
+	}
+.pagination > li {
+    display: inline;
+}
+.pagination > li > a,
+.pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 4px 8px;
+    margin-left: -1px;
+    line-height: 1.42857;
+    color: #337AB7;
+    text-decoration: none;
+    background-color: #FFF;
+    border: 1px solid #DDD;
+}
+
+.pagination > li:first-child > a,
+.pagination > li:first-child > span {
+    margin-left: 0px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.pagination > li:last-child > a, .pagination > li:last-child > span {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.pagination > .active > a,
+.pagination > .active > a:focus,
+.pagination > .active > a:hover,
+.pagination > .active > span,
+.pagination > .active > span:focus,
+.pagination > .active > span:hover {
+    z-index: 2;
+    color: #FFF !important;
+    cursor: default;
+    background-color: #337AB7;
+    border-color: #337AB7;
+}
+
+.page_count{
+	display:inline-block;
+	margin:0;
+	vertical-align:middle;
+	padding: 4px 8px;
+	}

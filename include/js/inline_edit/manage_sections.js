@@ -371,11 +371,10 @@
 	}).on('mouseleave','.preview_section',function(){
 
 		$(this).removeClass('previewing');
-		/*
+
 		$('.temporary-section').slideUp(function(){
 			$(this).remove();
 		});
-		*/
 
 	});
 

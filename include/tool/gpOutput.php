@@ -459,7 +459,7 @@ class gpOutput{
 	 *
 	 */
 	static function ExecInfo($info,$args=array()){
-		global $dataDir, $addonFolderName, $installed_addon, $config, $page, $gp_overwrite_scripts;
+		global $addonFolderName, $installed_addon;
 
 
 		//addonDir is deprecated as of 2.0b3
@@ -482,15 +482,27 @@ class gpOutput{
 			return $args;
 		}
 
+		$args = self::_ExecInfo($info,$args);
 
-		//data
+		gpPlugin::ClearDataFolder();
+
+		gpOutput::PopCatchable();
+
+		return $args;
+
+	}
+
+	static function _ExecInfo($info,$args=array()){
+		global $dataDir, $gp_overwrite_scripts;
+
+		// get data
 		if( !empty($info['data']) ){
 			IncludeScript($dataDir.$info['data'],'include_if',array('page','dataDir','langmessage'));
 		}
 
-		//script
+		// get script
 		$has_script = false;
-		if( isset($info['script']) ){
+		if( !empty($info['script']) ){
 
 			if( is_array($gp_overwrite_scripts) && isset($gp_overwrite_scripts[$info['script']]) ){
 				$full_path = $gp_overwrite_scripts[$info['script']];
@@ -500,14 +512,16 @@ class gpOutput{
 
 			if( !file_exists($full_path) ){
 				self::ExecError('gpEasy Error: Addon hook script doesn\'t exist.',$info,'script');
+				return $args;
+			}
 
-			}elseif( IncludeScript($full_path,'include_once',array('page','dataDir','langmessage')) ){
+			if( IncludeScript($full_path,'include_once',array('page','dataDir','langmessage')) ){
 				$has_script = true;
 			}
 		}
 
 
-		//class & method
+		//class & method execution
 		$exec_class = false;
 		if( !empty($info['class_admin']) && common::LoggedIn() ){
 			$exec_class = $info['class_admin'];
@@ -516,22 +530,26 @@ class gpOutput{
 		}
 
 		if( $exec_class ){
-			if( class_exists($exec_class) ){
-
-				$object = new $exec_class($args);
-
-				if( !empty($info['method']) ){
-					if( method_exists($object, $info['method']) ){
-						$args[0] = call_user_func_array(array($object, $info['method']), $args );
-					}elseif( $has_script ){
-						self::ExecError('gpEasy Error: Addon hook method doesn\'t exist.',$info,'method');
-					}
-				}
-			}else{
+			if( !class_exists($exec_class) ){
 				self::ExecError('gpEasy Error: Addon class doesn\'t exist.',$info,'class');
+				return $args;
 			}
 
-		}elseif( !empty($info['method']) ){
+			$object = new $exec_class($args);
+
+			if( !empty($info['method']) ){
+				if( !method_exists($object, $info['method']) ){
+					$args[0] = call_user_func_array(array($object, $info['method']), $args );
+				}elseif( $has_script ){
+					self::ExecError('gpEasy Error: Addon hook method doesn\'t exist.',$info,'method');
+				}
+			}
+			return $args;
+		}
+
+
+		//method execution
+		if( !empty($info['method']) ){
 
 			$callback = $info['method'];
 
@@ -552,9 +570,6 @@ class gpOutput{
 			}
 		}
 
-		gpPlugin::ClearDataFolder();
-
-		gpOutput::PopCatchable();
 
 		return $args;
 	}

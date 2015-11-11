@@ -1321,9 +1321,8 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 
-	/*
-	 * Gadget Functions
-	 *
+	/**
+	 * Add gadgets to gpLayouts
 	 *
 	 */
 	function AddToHandlers($gadgets){

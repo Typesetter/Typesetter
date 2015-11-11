@@ -508,10 +508,17 @@ class gpOutput{
 
 
 		//class & method
-		if( !empty($info['class']) ){
-			if( class_exists($info['class']) ){
+		$exec_class = false;
+		if( !empty($info['class_admin']) && common::LoggedIn() ){
+			$exec_class = $info['class_admin'];
+		}elseif( !empty($info['class']) ){
+			$exec_class = $info['class'];
+		}
 
-				$object = new $info['class']($args);
+		if( $exec_class ){
+			if( class_exists($exec_class) ){
+
+				$object = new $exec_class($args);
 
 				if( !empty($info['method']) ){
 					if( method_exists($object, $info['method']) ){
@@ -539,7 +546,6 @@ class gpOutput{
 
 			if( is_callable($callback) ){
 				$args[0] = call_user_func_array($callback,$args);
-				$method_called = true;
 
 			}elseif( $has_script ){
 				self::ExecError('gpEasy Error: Addon hook method doesn\'t exist.',$info,'method');

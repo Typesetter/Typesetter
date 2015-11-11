@@ -1234,7 +1234,7 @@ class admin_addon_installer extends admin_addons_tool{
 	 * Make sure the extracted links are valid
 	 *
 	 */
-	function CleanLinks(&$links,$prefix,$linkType=false){
+	function CleanLinks($links,$prefix,$linkType=false){
 
 		if( !is_array($links) ){
 			return array();
@@ -1266,7 +1266,7 @@ class admin_addon_installer extends admin_addons_tool{
 	 * similar to CleanLinks()
 	 *
 	 */
-	function CleanGadgets(&$gadgets){
+	function CleanGadgets($gadgets){
 		global $gpOutConf, $langmessage, $config;
 
 		if( !is_array($gadgets) ){

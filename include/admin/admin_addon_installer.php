@@ -485,7 +485,7 @@ class admin_addon_installer extends admin_addons_tool{
 		//special links
 		$Special_Links = $this->ExtractFromInstall($this->ini_contents,'Special_Link:');
 		$Special_Links = $this->CleanLinks($Special_Links,'Special_','special');
-		$this->UpdateSpecialLinks($Special_Links);
+		$this->AddToConfig_Special($Special_Links);
 
 
 		//generic hooks
@@ -981,7 +981,7 @@ class admin_addon_installer extends admin_addons_tool{
 	 * Add an addon's special links to the configuration
 	 *
 	 */
-	function UpdateSpecialLinks($Special_Links){
+	function AddToConfig_Special($Special_Links){
 		global $gp_index, $gp_titles, $gp_menu, $langmessage;
 
 		$lower_links = array_change_key_case($Special_Links,CASE_LOWER);
@@ -1057,6 +1057,7 @@ class admin_addon_installer extends admin_addons_tool{
 				$gp_index[$new_title] = $index;
 				$gp_titles[$index] = $linkInfo;
 			}
+
 
 			$this->UpdateLinkInfo($gp_titles[$index],$linkInfo);
 		}
@@ -1169,9 +1170,17 @@ class admin_addon_installer extends admin_addons_tool{
 
 	function UpdateLinkInfo(&$link_array,$new_info){
 
-		$link_array['addon'] = $this->config_key;
+		unset($link_array['script'], $link_array['data'], $link_array['class'], $link_array['method'], $link_array['value'], $link_array['class_admin']);
 
-		unset($link_array['script'], $link_array['data'], $link_array['class'], $link_array['method'], $link_array['value']);
+		$new_info					+= array('script'=>'','data'=>'','class'=>'','method'=>'','value'=>'','class_admin'=>'');
+
+
+		$link_array['addon']		= $this->config_key;
+		$link_array['class']		= $new_info['class'];
+		$link_array['value']		= $new_info['value'];
+		$link_array['class_admin']	= $new_info['class_admin'];
+		$link_array					= array_filter($link_array);	//remove empty values
+
 
 		if( !empty($new_info['script']) ){
 			$link_array['script'] = $this->addon_folder_rel.'/'.$this->dest_name .'/'.$new_info['script'];
@@ -1181,27 +1190,16 @@ class admin_addon_installer extends admin_addons_tool{
 			$link_array['data'] = '/data/_addondata/'.$this->data_folder.'/'.$new_info['data'];
 		}
 
-		if( !empty($new_info['class']) ){
-			$link_array['class'] = $new_info['class'];
-		}
 
 		if( !empty($new_info['method']) ){
 
-			$method = $new_info['method'];
-			if( strpos($method,'::') > 0 ){
-				$method = explode('::',$method);
+			$link_array['method'] = $new_info['method'];
+			if( strpos($link_array['method'],'::') > 0 ){
+				$link_array['method'] = explode('::',$link_array['method']);
 			}
-
-			$link_array['method'] = $method;
-		}
-
-
-		if( !empty($new_info['value']) ){
-			$link_array['value'] = $new_info['value'];
 		}
 
 	}
-
 
 
 	/**
@@ -1238,47 +1236,87 @@ class admin_addon_installer extends admin_addons_tool{
 	 */
 	function CleanLinks(&$links,$prefix,$linkType=false){
 
-		$lower_prefix = strtolower($prefix);
-
-		if( !is_array($links) || (count($links) <= 0) ){
+		if( !is_array($links) ){
 			return array();
 		}
 
 		$result = array();
 		foreach($links as $linkName => $linkInfo){
 
-			if( !isset($linkInfo['label']) ){
+			if( $this->ValidInfo($linkInfo) ){
 				continue;
 			}
 
-			if( strpos(strtolower($linkName),$lower_prefix) !== 0 ){
+			if( stripos($linkName,$prefix) !== 0 ){
 				$linkName = $prefix.$linkName;
 			}
 
-
-			$result[$linkName] = array();
-
-			if( isset($linkInfo['script']) ){
-				$result[$linkName]['script'] = $linkInfo['script'];
-			}
-			$result[$linkName]['label'] = $linkInfo['label'];
-
-			if( isset($linkInfo['class']) ){
-				$result[$linkName]['class'] = $linkInfo['class'];
-			}
-
-			if( isset($linkInfo['method']) ){
-				$result[$linkName]['method'] = $linkInfo['method'];
-			}
-
+			$result[$linkName] = $linkInfo;
 
 			if( $linkType ){
 				$result[$linkName]['type'] = $linkType;
 			}
-
 		}
 
 		return $result;
+	}
+
+
+	/**
+	 * similar to CleanLinks()
+	 *
+	 */
+	function CleanGadgets(&$gadgets){
+		global $gpOutConf, $langmessage, $config;
+
+		if( !is_array($gadgets) ){
+			return array();
+		}
+
+		$result = array();
+		foreach($gadgets as $gadgetName => $gadgetInfo){
+
+			//check against $gpOutConf
+			if( isset($gpOutConf[$gadgetName]) ){
+				$this->message( sprintf($langmessage['addon_key_defined'],' <em>Gadget: '.$gadgetName.'</em>') );
+				continue;
+			}
+
+			//check against other gadgets
+			if( isset($config['gadgets'][$gadgetName]) && ($config['gadgets'][$gadgetName]['addon'] !== $this->config_key) ){
+				$this->message( sprintf($langmessage['addon_key_defined'],' <em>Gadget: '.$gadgetName.'</em>') );
+				continue;
+			}
+
+			if( $this->ValidInfo($gadgetInfo) ){
+				continue;
+			}
+
+			$result[$gadgetName] = $temp;
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 * Check the info to make sure it has a label and some way of executing code
+	 *
+	 */
+	function ValidInfo($info){
+
+		if( empty($info['label']) ){
+			return false;
+		}
+
+		$keys = array('class','class_admin','data','method','script');
+		foreach($keys as $key){
+			if( !empty($info[$key]) ){
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 
@@ -1319,56 +1357,6 @@ class admin_addon_installer extends admin_addons_tool{
 			return false;
 		}
 		return true;
-	}
-
-
-	/**
-	 * similar to CleanLinks()
-	 *
-	 */
-	function CleanGadgets(&$gadgets){
-		global $gpOutConf, $langmessage, $config;
-
-		if( !is_array($gadgets) || (count($gadgets) <= 0) ){
-			return array();
-		}
-
-		$result = array();
-		foreach($gadgets as $gadgetName => $gadgetInfo){
-
-			//check against $gpOutConf
-			if( isset($gpOutConf[$gadgetName]) ){
-				$this->message( sprintf($langmessage['addon_key_defined'],' <em>Gadget: '.$gadgetName.'</em>') );
-				continue;
-			}
-
-			//check against other gadgets
-			if( isset($config['gadgets'][$gadgetName]) && ($config['gadgets'][$gadgetName]['addon'] !== $this->config_key) ){
-				$this->message( sprintf($langmessage['addon_key_defined'],' <em>Gadget: '.$gadgetName.'</em>') );
-				continue;
-			}
-
-
-			$temp = array();
-			if( isset($gadgetInfo['script']) ){
-				$temp['script'] = $gadgetInfo['script'];
-			}
-			if( isset($gadgetInfo['class']) ){
-				$temp['class'] = $gadgetInfo['class'];
-			}
-			if( isset($gadgetInfo['data']) ){
-				$temp['data'] = $gadgetInfo['data'];
-			}
-			if( isset($gadgetInfo['method']) ){
-				$temp['method'] = $gadgetInfo['method'];
-			}
-
-			if( count($temp) > 0 ){
-				$result[$gadgetName] = $temp;
-			}
-		}
-
-		return $result;
 	}
 
 

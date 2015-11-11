@@ -308,7 +308,7 @@ class editing_page extends display{
 	 *
 	 */
 	function SaveSections(){
-		global $page, $langmessage;
+		global $page, $langmessage, $dirPrefix;
 
 		$page->ajaxReplace		= array();
 		$original_sections		= $this->file_sections;
@@ -361,6 +361,12 @@ class editing_page extends display{
 
 					if( empty($attr_name) || empty($attr_value) || $attr_name == 'id' || substr($attr_name,0,7) == 'data-gp' ){
 						continue;
+					}
+
+
+					//strip $dirPrefix
+					if( $attr_name == 'src' && !empty($dirPrefix) && strpos($attr_value,$dirPrefix) === 0 ){
+						$attr_value = substr($attr_value,strlen($dirPrefix));
 					}
 
 					$new_section['attributes'][$attr_name] = $attr_value;

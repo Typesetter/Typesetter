@@ -396,6 +396,7 @@ class section_content{
 	 */
 	static function SectionAttributes($attrs,$type){
 
+
 		switch($type){
 			case 'image':
 				$attrs['src'] = common::GetDir($attrs['src']);

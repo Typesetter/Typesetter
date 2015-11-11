@@ -1243,7 +1243,7 @@ class admin_addon_installer extends admin_addons_tool{
 		$result = array();
 		foreach($links as $linkName => $linkInfo){
 
-			if( $this->ValidInfo($linkInfo) ){
+			if( !$this->ValidInfo($linkInfo) ){
 				continue;
 			}
 
@@ -1288,11 +1288,11 @@ class admin_addon_installer extends admin_addons_tool{
 				continue;
 			}
 
-			if( $this->ValidInfo($gadgetInfo) ){
+			if( !$this->ValidInfo($gadgetInfo, false) ){
 				continue;
 			}
 
-			$result[$gadgetName] = $temp;
+			$result[$gadgetName] = $gadgetInfo;
 		}
 
 		return $result;
@@ -1303,9 +1303,9 @@ class admin_addon_installer extends admin_addons_tool{
 	 * Check the info to make sure it has a label and some way of executing code
 	 *
 	 */
-	function ValidInfo($info){
+	function ValidInfo($info, $require_label = true ){
 
-		if( empty($info['label']) ){
+		if( $require_label && empty($info['label']) ){
 			return false;
 		}
 

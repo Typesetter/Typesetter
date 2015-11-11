@@ -4,6 +4,9 @@
 	 *
 	 */
 	gp_editor = {
+
+		curr_section_type: '',
+
 		save_path: '?',
 
 		saved_data: '',
@@ -333,6 +336,13 @@
 	$(document).on('mouseenter','.preview_section',function(){
 		var $this = $(this);
 
+		//reset curr_section_type
+		if( gp_editor.curr_section_type != this.href ){
+			gp_editor.curr_section_type = '';
+		}else{
+			return;
+		}
+
 		if( !$this.hasClass('previewing') ){
 
 			//remove other preview
@@ -375,7 +385,8 @@
 	 */
 	$gp.links.AddSection = function(evt){
 		evt.preventDefault();
-		$(this).fadeTo(700,0.4).addClass('loading-section');
+		gp_editor.curr_section_type = this.href;
+		$(this).fadeTo(700,0.4).addClass('section-loading section-clicked');
 		$gp.jGoTo(this.href, this);
 	}
 
@@ -401,7 +412,7 @@
 
 	function DisplaySection(data, temporary ){
 
-		$('.loading-section').removeClass('loading-section').finish().fadeTo(700,1);
+		$('.section-loading').removeClass('section-loading').finish().fadeTo(700,1);
 
 		var $new_content	= $(data.CONTENT);
 

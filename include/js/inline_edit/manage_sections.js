@@ -371,9 +371,11 @@
 	}).on('mouseleave','.preview_section',function(){
 
 		$(this).removeClass('previewing');
+		/*
 		$('.temporary-section').slideUp(function(){
 			$(this).remove();
 		});
+		*/
 
 	});
 
@@ -407,7 +409,7 @@
 			return;
 		}
 
-		DisplaySection(data,'temporary-section');
+		DisplaySection(data,true);
 	}
 
 	function DisplaySection(data, temporary ){

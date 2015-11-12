@@ -1510,12 +1510,19 @@ class admin_tools{
 		return $size;
 	}
 
-	static function encode64($input){
-		return strtr(base64_encode($input), '+/=', '-_,');
+	static function encode64( $input ){
+		$encoded	= base64_encode($input);
+		$encoded	= rtrim($encoded,'=');
+		return strtr($encoded, '+/', '-_');
 	}
 
-	function decode64($input) {
-		return base64_decode(strtr($input, '-_,', '+/='));
+	static function decode64( $input ){
+		$mod = strlen($input) % 4;
+		if( $mod !== 0 ){
+			$append_len	= 4 - $mod;
+			$input		.= substr('===',0,$append_len);
+		}
+		return base64_decode(strtr($input, '-_', '+/'));
 	}
 
 

@@ -5,7 +5,7 @@ $(function(){
 	 * Start finder for ckeditor
 	 *
 	 */
-	if( finder_opts.getFileCallback ){
+	if( finder_opts.getFileCallback && finder_opts.getFileCallback === true ){
 
 		finder_opts.getFileCallback = function(file) {
 			var funcNum = getUrlParam('CKEditorFuncNum');

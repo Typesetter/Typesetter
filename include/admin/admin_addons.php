@@ -27,6 +27,7 @@ includeFile('admin/admin_addon_install.php');
 class admin_addons extends admin_addon_install{
 
 	var $dataFile;
+	var $avail_addons;
 
 
 	function __construct(){
@@ -42,29 +43,19 @@ class admin_addons extends admin_addon_install{
 		}
 
 
-		$page->head_js[] = '/include/js/auto_width.js';
+
 		parent::__construct();
-
 		$this->InitRating();
-
-		if( !isset($config['admin_links']) ){
-			$config['admin_links'] = array();
-		}
-
-		if( !isset($config['gadgets']) ){
-			$config['gadgets'] = array();
-		}
-
 		$this->GetData();
-		$cmd = common::GetCommand();
+
+		$page->head_js[]		= '/include/js/auto_width.js';
+		$this->avail_addons		= $this->GetAvailAddons();
+		$cmd					= common::GetCommand();
 
 
-		$request_parts = array();
+		//single addon
 		if( strpos($page->requested,'/') ){
 			$request_parts = explode('/',$page->requested);
-		}
-
-		if( $request_parts ){
 			switch(strtolower($request_parts[1])){
 				case 'remote':
 					if( gp_remote_plugins ){
@@ -123,6 +114,7 @@ class admin_addons extends admin_addon_install{
 		$this->Select();
 		$this->CleanAddonFolder();
 	}
+
 
 	/**
 	 * Remove unused code folders created by incomplete addon installations
@@ -240,11 +232,10 @@ class admin_addons extends admin_addon_install{
 	}
 
 
-
-	/*
-	Addon Data
-	*/
-
+	/**
+	 * Addon Data
+	 *
+	 */
 	function GetData(){
 		global $dataDir,$config;
 
@@ -252,6 +243,15 @@ class admin_addons extends admin_addon_install{
 		if( !isset($config['addons']) ){
 			$config['addons'] = array();
 		}
+
+		if( !isset($config['admin_links']) ){
+			$config['admin_links'] = array();
+		}
+
+		if( !isset($config['gadgets']) ){
+			$config['gadgets'] = array();
+		}
+
 
 		//fix data
 		$firstValue = current($config['addons']);
@@ -317,7 +317,7 @@ class admin_addons extends admin_addon_install{
 	function ShowAddon($addon_key){
 		global $config, $langmessage;
 
-		$addon_key = admin_tools::decode64($addon_key);
+		$addon_key	= admin_tools::decode64($addon_key);
 
 		if( !isset($config['addons'][$addon_key]) ){
 			message($langmessage['OOPS'].'(Addon Not Found)');
@@ -325,7 +325,8 @@ class admin_addons extends admin_addon_install{
 			return;
 		}
 
-		$info = $config['addons'][$addon_key];
+		$show		= $this->GetDisplayInfo();
+		$info		= $show[$addon_key];
 
 		$this->ShowHeader();
 
@@ -419,11 +420,10 @@ class admin_addons extends admin_addon_install{
 	function Select(){
 		global $langmessage,$config;
 		$instructions = true;
-		$available = $this->GetAvailAddons();
 
 		$this->ShowHeader();
 
-		if( !$this->ShowInstalled($available) ){
+		if( !$this->ShowInstalled() ){
 			$this->Instructions();
 			$instructions = false;
 		}
@@ -435,7 +435,7 @@ class admin_addons extends admin_addon_install{
 
 		echo '<div class="nodisplay" id="gpeasy_addons"></div>';
 
-		if( count($available) == 0 ){
+		if( count($this->avail_addons) == 0 ){
 			//echo ' -empty- ';
 		}else{
 			echo '<table class="bordered" style="min-width:700px">';
@@ -450,7 +450,7 @@ class admin_addons extends admin_addon_install{
 			echo '</th></tr>';
 
 			$i=0;
-			foreach($available as $folder => $info ){
+			foreach($this->avail_addons as $folder => $info ){
 
 				if( $info['upgrade_key'] ){
 					continue;
@@ -491,18 +491,37 @@ class admin_addons extends admin_addon_install{
 	 * Show installed addons
 	 *
 	 */
-	function ShowInstalled(&$available){
+	function ShowInstalled(){
+		global $config;
+
+		$show = $this->GetDisplayInfo();
+
+		echo '<div id="adminlinks2">';
+		foreach($show as $addon_key => $info){
+			$this->PluginPanelGroup($addon_key,$info);
+		}
+		echo '</div>';
+
+		return true;
+	}
+
+
+	/**
+	 * Get addon configuration along with upgrade info
+	 *
+	 */
+	function GetDisplayInfo(){
 		global $config;
 
 		//show installed addons
 		$show = $config['addons'];
 		if( !is_array($show) ){
-			return false;
+			return array();
 		}
 
 
 		//set upgrade_from
-		foreach($available as $folder => $info){
+		foreach($this->avail_addons as $folder => $info){
 			if( !$info['upgrade_key'] ){
 				continue;
 			}
@@ -517,14 +536,7 @@ class admin_addons extends admin_addon_install{
 			}
 		}
 
-
-		echo '<div id="adminlinks2">';
-		foreach($show as $addon_key => $info){
-			$this->PluginPanelGroup($addon_key,$info);
-		}
-		echo '</div>';
-
-		return true;
+		return $show;
 	}
 
 
@@ -647,8 +659,6 @@ class admin_addons extends admin_addon_install{
 	}
 
 
-
-
 	/**
 	 * Install Local Packages
 	 *
@@ -656,12 +666,21 @@ class admin_addons extends admin_addon_install{
 	function LocalInstall(){
 		global $dataDir;
 
-		$_REQUEST += array('source'=>'','mode'=>'');
-
 		includeFile('admin/admin_addon_installer.php');
-		$installer = new admin_addon_installer();
-		$installer->source = $dataDir.'/addons/'.$_REQUEST['source'];
+
+		$_REQUEST				+= array('source'=>'');
+
+		if( (strpos($_REQUEST['source'],'/') !== false ) || (strpos($_REQUEST['source'],'\\') !== false) ){
+			message($langmessage['OOPS'].' (Invalid Request)');
+			return false;
+		}
+
+
+		$installer				= new admin_addon_installer();
+		$installer->source		= $dataDir.'/addons/'.$_REQUEST['source'];
+
 		$installer->Install();
 		$installer->OutputMessages();
 	}
+
 }

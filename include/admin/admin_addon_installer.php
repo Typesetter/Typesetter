@@ -610,6 +610,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 		if( $this->can_install_links ){
 			$this->UpdateConfigInfo('editable_text','editable_text');
+			$this->UpdateConfigInfo('About','About');
 			$this->UpdateConfigInfo('html_head','html_head');
 		}
 

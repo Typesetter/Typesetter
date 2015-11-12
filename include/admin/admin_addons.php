@@ -50,7 +50,6 @@ class admin_addons extends admin_addon_install{
 
 		$page->head_js[]		= '/include/js/auto_width.js';
 		$this->avail_addons		= $this->GetAvailAddons();
-		$cmd					= common::GetCommand();
 
 
 		//single addon
@@ -70,9 +69,10 @@ class admin_addons extends admin_addon_install{
 		}
 
 
+		$cmd = common::GetCommand();
 		switch($cmd){
 
-			case 'local_install':
+			case 'LocalInstall':
 				$this->LocalInstall();
 			break;
 
@@ -314,10 +314,10 @@ class admin_addons extends admin_addon_install{
 	 * Display addon details
 	 *
 	 */
-	function ShowAddon($addon_key){
+	function ShowAddon($encoded_key){
 		global $config, $langmessage;
 
-		$addon_key	= admin_tools::decode64($addon_key);
+		$addon_key	= admin_tools::decode64($encoded_key);
 
 		if( !isset($config['addons'][$addon_key]) ){
 			message($langmessage['OOPS'].'(Addon Not Found)');
@@ -325,10 +325,28 @@ class admin_addons extends admin_addon_install{
 			return;
 		}
 
-		$show		= $this->GetDisplayInfo();
-		$info		= $show[$addon_key];
 
-		$this->ShowHeader();
+		//commands
+		$cmd = common::GetCommand();
+		switch($cmd){
+			case 'LocalInstall':
+				$this->LocalInstall();
+			break;
+		}
+
+
+		$show						= $this->GetDisplayInfo();
+		$info						= $show[$addon_key];
+
+
+		$this->ShowHeader($info['name']);
+
+		if( !empty($info['About']) ){
+			echo '<p style="font-size:20px">';
+			echo $info['About'];
+			echo '</p>';
+		}
+
 
 		echo '<div id="adminlinks2">';
 		$this->PluginPanelGroup($addon_key,$info);
@@ -464,7 +482,7 @@ class admin_addons extends admin_addon_install{
 				echo '</td><td>';
 				echo $info['Addon_Version'];
 				echo '</td><td>';
-				echo common::Link('Admin_Addons',$langmessage['Install'],'cmd=local_install&source='.$folder, array('data-cmd'=>'creq'));
+				echo common::Link('Admin_Addons',$langmessage['Install'],'cmd=LocalInstall&source='.$folder, array('data-cmd'=>'creq'));
 				echo '</td><td>';
 				echo $info['About'];
 				if( isset($info['Addon_Unique_ID']) && is_numeric($info['Addon_Unique_ID']) ){
@@ -575,7 +593,9 @@ class admin_addons extends admin_addon_install{
 				//upgrade link
 				if( isset($addon_config['upgrade_from']) ){
 					echo '<li>';
-					echo common::Link('Admin_Addons',$langmessage['upgrade'],'cmd=local_install&source='.$addon_config['upgrade_from'],array('data-cmd'=>'creq'));
+					//echo common::Link('Admin_Addons',$langmessage['upgrade'],'cmd=LocalInstall&source='.$addon_config['upgrade_from'],array('data-cmd'=>'creq'));
+					echo '<a href="?cmd=LocalInstall&source='.rawurlencode($addon_config['upgrade_from']).'" data-cmd="creq">'.$langmessage['upgrade'].'</a>';
+
 					echo '</li>';
 				}
 
@@ -648,7 +668,8 @@ class admin_addons extends admin_addon_install{
 			if(version_compare($addon_config['upgrade_version'],$addon_config['version'] ,'>') ){
 				echo '<div class="gp_notice">';
 				$label = $langmessage['new_version'].' &nbsp; '.$addon_config['upgrade_version'];
-				echo common::Link('Admin_Addons',$label,'cmd=local_install&source='.$addon_config['upgrade_from'],array('data-cmd'=>'creq'));
+				echo '<a href="?cmd=LocalInstall&source='.rawurlencode($addon_config['upgrade_from']).'" data-cmd="creq">'.$label.'</a>';
+				//echo common::Link('Admin_Addons',$label,'cmd=LocalInstall&source='.$addon_config['upgrade_from'],array('data-cmd'=>'creq'));
 				echo '</div>';
 			}
 		}

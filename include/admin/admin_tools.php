@@ -166,7 +166,7 @@ class admin_tools{
 		 */
 		$scripts['Admin_Theme_Content']['script'] = '/include/admin/admin_theme_content.php';
 		$scripts['Admin_Theme_Content']['class'] = 'admin_theme_content';
-		$scripts['Admin_Theme_Content']['label'] = $langmessage['manage'];
+		$scripts['Admin_Theme_Content']['label'] = $langmessage['Appearance'];
 		$scripts['Admin_Theme_Content']['group'] = 'appearance';
 
 
@@ -909,8 +909,10 @@ class admin_tools{
 		}
 
 		ob_start();
-		echo admin_tools::GetAdminGroup('appearance');
 
+		echo '<li>';
+		echo common::Link('Admin_Theme_Content',$langmessage['manage']);
+		echo '</li>';
 
 		if( !empty($page->gpLayout) ){
 			echo '<li>';

@@ -14,23 +14,24 @@ includeFile('admin/admin_addons_tool.php');
 
 class admin_addon_install extends admin_addons_tool{
 
+	var $scriptUrl			= 'Admin_Addons';
+	var $avail_addons		= array();
+
 
 	//remote browsing
-	var $config_index = 'addons';
-	var $path_remote = 'Admin_Addons/Remote';
-	var $code_folder_name = '_addoncode';
-	var $can_install_links = true;
-
-	var $header_paths = array();
+	var $config_index		= 'addons';
+	var $path_remote		= 'Admin_Addons/Remote';
+	var $code_folder_name	= '_addoncode';
+	var $can_install_links	= true;
 
 
 	//searching
-	var $searchUrl		= '';
-	var $searchPage		= 0;
-	var $searchMax		= 0;
-	var $searchPerPage	= 20;
-	var $searchOrder	= '';
-	var $searchQuery 	= '';
+	var $searchUrl			= '';
+	var $searchPage			= 0;
+	var $searchMax			= 0;
+	var $searchPerPage		= 20;
+	var $searchOrder		= '';
+	var $searchQuery 		= '';
 	var $searchOrderOptions = array();
 
 
@@ -38,8 +39,8 @@ class admin_addon_install extends admin_addons_tool{
 		global $page;
 
 		// css and js
-		$page->css_admin[] = '/include/css/addons.css';
-		$page->head_js[] = '/include/js/rate.js';
+		$page->css_admin[]	= '/include/css/addons.css';
+		$page->head_js[]	= '/include/js/rate.js';
 	}
 
 	/**
@@ -47,10 +48,31 @@ class admin_addon_install extends admin_addons_tool{
 	 *
 	 */
 	function ShowHeader( $addon_name = false ){
-		global $page;
+		global $page, $langmessage;
+
+		//build links
+		$header_paths[$this->scriptUrl]				= $langmessage['manage'];
+		$header_paths[$this->scriptUrl.'/Available']	= $langmessage['Available'].' ('.count($this->avail_addons).')';
+
+
+
+		if( $this->config_index == 'themes' ){
+			$root_label = $langmessage['themes'];
+			if( gp_remote_themes ){
+				$this->FindForm();
+				$header_paths[$this->scriptUrl.'/Remote'] = $langmessage['Search'];
+			}
+
+		}elseif( $this->config_index == 'addons' ){
+			$root_label = $langmessage['plugins'];
+			if( gp_remote_plugins ){
+				$this->FindForm();
+				$header_paths[$this->scriptUrl.'/Remote'] = $langmessage['Search'];
+			}
+		}
 
 		$list = array();
-		foreach($this->header_paths as $slug => $label){
+		foreach($header_paths as $slug => $label){
 
 			if( $page->requested == $slug ){
 				$list[] = $label;
@@ -60,13 +82,10 @@ class admin_addon_install extends admin_addons_tool{
 		}
 
 
-		if( $this->config_index == 'themes' && gp_remote_themes ){
-			$this->FindForm();
-		}elseif( $this->config_index == 'addons' && gp_remote_plugins ){
-			$this->FindForm();
-		}
-
 		echo '<h2 class="hmargin">';
+		echo $root_label;
+		echo ' &#187; ';
+
 		echo implode(' <span>|</span> ', $list );
 
 		if( $addon_name ){

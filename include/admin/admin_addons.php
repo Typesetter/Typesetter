@@ -31,17 +31,7 @@ class admin_addons extends admin_addon_install{
 
 
 	function __construct(){
-		global $langmessage,$config,$page;
-
-		//header links
-		$this->header_paths = array(
-			'Admin_Addons'			=> $langmessage['Manage Plugins'],
-			);
-
-		if( gp_remote_plugins ){
-			$this->header_paths['Admin_Addons/Remote'] = $langmessage['Find Plugins'];
-		}
-
+		global $langmessage,$page;
 
 
 		parent::__construct();
@@ -61,6 +51,11 @@ class admin_addons extends admin_addon_install{
 						$this->RemoteBrowse();
 					}
 				return;
+
+				case 'available':
+					$this->ShowAvailable();
+				return;
+
 				default:
 					$this->ShowAddon($request_parts[1]);
 				return;
@@ -436,20 +431,21 @@ class admin_addons extends admin_addon_install{
 	 *
 	 */
 	function Select(){
-		global $langmessage,$config;
 		$instructions = true;
 
 		$this->ShowHeader();
 
 		if( !$this->ShowInstalled() ){
 			$this->Instructions();
-			$instructions = false;
+
 		}
 
+	}
 
-		//show available addons
-		echo '<br/>';
-		echo '<h2>'.$langmessage['available_plugins'].'</h2>';
+	function ShowAvailable(){
+		global $langmessage;
+
+		$this->ShowHeader();
 
 		echo '<div class="nodisplay" id="gpeasy_addons"></div>';
 
@@ -497,10 +493,9 @@ class admin_addons extends admin_addon_install{
 		}
 
 
-		if( $instructions ){
-			echo '<h3>'.$langmessage['about'].'</h3>';
-			$this->Instructions();
-		}
+		echo '<h3>'.$langmessage['about'].'</h3>';
+		$this->Instructions();
+
 
 	}
 
@@ -510,7 +505,6 @@ class admin_addons extends admin_addon_install{
 	 *
 	 */
 	function ShowInstalled(){
-		global $config;
 
 		$show = $this->GetDisplayInfo();
 

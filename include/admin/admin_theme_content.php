@@ -67,19 +67,6 @@ class admin_theme_content extends admin_addon_install{
 
 		$this->GetPossible();
 
-
-		//header links
-		$this->header_paths = array(
-			'Admin_Theme_Content'			=> $langmessage['Manage Layouts'],
-			'Admin_Theme_Content/Available'	=> $langmessage['available_themes'].' ('.count($this->possible).')',
-			);
-
-		if( gp_remote_themes ){
-			$this->header_paths['Admin_Theme_Content/Remote'] = $langmessage['Find Themes'];
-		}
-
-
-
 		$cmd = common::GetCommand();
 
 		//layout requests
@@ -1473,11 +1460,11 @@ class admin_theme_content extends admin_addon_install{
 		$template = dirname($theme);
 		$color = basename($theme);
 
-		if( !isset($this->possible[$template]) || !isset($this->possible[$template]['colors'][$color]) ){
+		if( !isset($this->avail_addons[$template]) || !isset($this->avail_addons[$template]['colors'][$color]) ){
 			return false;
 		}
 
-		$theme_info = $this->possible[$template];
+		$theme_info = $this->avail_addons[$template];
 		$theme_info['color'] = $color;
 
 		return $theme_info;
@@ -1583,17 +1570,17 @@ class admin_theme_content extends admin_addon_install{
 
 
 		if( !gp_unique_addons ){
-			$this->possible = $themes;
+			$this->avail_addons = $themes;
 
 		}else{
 
 
 			//remove older versions
-			$this->possible = array();
+			$this->avail_addons = array();
 			foreach($themes as $index => $info){
 
 				if( !isset($info['id']) || !isset($info['version']) ){
-					$this->possible[$index] = $info;
+					$this->avail_addons[$index] = $info;
 					continue;
 				}
 
@@ -1601,10 +1588,10 @@ class admin_theme_content extends admin_addon_install{
 					continue;
 				}
 
-				$this->possible[$index] = $info;
+				$this->avail_addons[$index] = $info;
 			}
 
-			uksort($this->possible,'strnatcasecmp');
+			uksort($this->avail_addons,'strnatcasecmp');
 		}
 
 	}
@@ -1817,7 +1804,7 @@ class admin_theme_content extends admin_addon_install{
 		$version_data = $version_data['packages'];
 
 		// combine remote addon information
-		foreach($this->possible as $theme_id => $info){
+		foreach($this->avail_addons as $theme_id => $info){
 
 			if( isset($info['id']) ){
 				$id = $info['id'];
@@ -1843,37 +1830,37 @@ class admin_theme_content extends admin_addon_install{
 			}
 
 
-			$this->possible[$theme_id] = $info;
+			$this->avail_addons[$theme_id] = $info;
 		}
 
 
 		// sort by
-		uasort( $this->possible, array('admin_theme_content','SortUpdated') );
+		uasort( $this->avail_addons, array('admin_theme_content','SortUpdated') );
 		switch($this->searchOrder){
 
 			case 'downloads':
-				uasort( $this->possible, array('admin_theme_content','SortDownloads') );
+				uasort( $this->avail_addons, array('admin_theme_content','SortDownloads') );
 			break;
 
 			case 'modified':
-				uasort( $this->possible, array('admin_theme_content','SortRating') );
-				uasort( $this->possible, array('admin_theme_content','SortUpdated') );
+				uasort( $this->avail_addons, array('admin_theme_content','SortRating') );
+				uasort( $this->avail_addons, array('admin_theme_content','SortUpdated') );
 			break;
 
 			case 'rating_score':
 			default:
-				uasort( $this->possible, array('admin_theme_content','SortRating') );
+				uasort( $this->avail_addons, array('admin_theme_content','SortRating') );
 			break;
 		}
 
 		// pagination
-		$this->searchMax = count($this->possible);
+		$this->searchMax = count($this->avail_addons);
 		if( isset($_REQUEST['page']) && ctype_digit($_REQUEST['page']) ){
 			$this->searchPage = $_REQUEST['page'];
 		}
 
 		$start = $this->searchPage * $this->searchPerPage;
-		$possible = array_slice( $this->possible, $start, $this->searchPerPage, true);
+		$possible = array_slice( $this->avail_addons, $start, $this->searchPerPage, true);
 
 
 		if( $show_options ){
@@ -2242,7 +2229,7 @@ class admin_theme_content extends admin_addon_install{
 			list($theme,$color) = explode('/',$theme_color);
 		}
 
-		foreach($this->possible as $info){
+		foreach($this->avail_addons as $info){
 
 			if( $info['folder'] == $theme ){
 				$theme = $info['name'];
@@ -3766,9 +3753,9 @@ class admin_theme_content extends admin_addon_install{
 		$current_theme = false;
 
 		//which theme folder
-		if( isset($_REQUEST['theme']) && isset($this->possible[$_REQUEST['theme']]) ){
+		if( isset($_REQUEST['theme']) && isset($this->avail_addons[$_REQUEST['theme']]) ){
 			$current_theme = $_REQUEST['theme'];
-			$current_info = $this->possible[$current_theme];
+			$current_info = $this->avail_addons[$current_theme];
 			$current_label = $current_info['name'];
 			$current_dir = $current_info['full_dir'];
 			$current_url = common::GetDir($current_info['rel']);
@@ -3791,7 +3778,7 @@ class admin_theme_content extends admin_addon_install{
 
 		echo '<div class="gp_edit_select_options">';
 
-		foreach($this->possible as $theme_id => $info){
+		foreach($this->avail_addons as $theme_id => $info){
 			echo common::Link('Admin_Theme_Content/'.rawurlencode($this->curr_layout),'<span class="folder"></span>'.$info['name'],'cmd=theme_images&theme='.rawurlencode($theme_id),' data-cmd="gpajax" class="gp_gallery_folder" ');
 		}
 		echo '</div>';

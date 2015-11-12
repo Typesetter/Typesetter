@@ -166,7 +166,7 @@ class admin_tools{
 		 */
 		$scripts['Admin_Theme_Content']['script'] = '/include/admin/admin_theme_content.php';
 		$scripts['Admin_Theme_Content']['class'] = 'admin_theme_content';
-		$scripts['Admin_Theme_Content']['label'] = $langmessage['Manage Layouts'];
+		$scripts['Admin_Theme_Content']['label'] = $langmessage['manage'];
 		$scripts['Admin_Theme_Content']['group'] = 'appearance';
 
 

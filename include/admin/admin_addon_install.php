@@ -75,21 +75,21 @@ class admin_addon_install extends admin_addons_tool{
 		foreach($header_paths as $slug => $label){
 
 			if( $page->requested == $slug ){
-				$list[] = $label;
+				$list[] = '<span class="current">'.$label.'</span>';
 			}else{
 				$list[] = common::Link($slug,$label);
 			}
 		}
 
 
-		echo '<h2 class="hmargin">';
+		echo '<h2 class="hmargin_tabs">';
 		echo $root_label;
-		echo ' &#187; ';
+		echo ' &#187;';
 
-		echo implode(' <span>|</span> ', $list );
+		echo implode('', $list );
 
 		if( $addon_name ){
-			echo ' <span>|</span> '.$addon_name;
+			echo '<span class="current">'.$addon_name.'</span>';
 		}
 
 		echo '</h2>';

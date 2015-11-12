@@ -1751,6 +1751,7 @@ body #addon_about{
 
 
 
+#gp_admin_html .hmargin_tabs,
 #gp_admin_html .hmargin{
 	margin-top:0;
 	margin-bottom:1em;
@@ -1762,9 +1763,21 @@ body #addon_about{
 	display:inline-block;
 	white-space:nowrap;
 	}
+.hmargin_tabs a,
+.hmargin_tabs span{
+	border-right:2px solid #eee;
+	padding:0 10px;
+	margin:0;
+	display:inline-block;
+	white-space:nowrap;
+	}
+
+.hmargin_tabs a,
 .hmargin a{
 	color:#888 !important;
+	border-bottom:0 none  !important;
 	}
+.hmargin_tabs a:hover,
 .hmargin a:hover{
 	color:#333 !important;
 	}
@@ -1773,6 +1786,12 @@ body #addon_about{
 	margin:0 5px;
 	}
 
+.hmargin_tabs .current{
+	color:#333;
+	}
+.hmargin_tabs *:last-child{
+	border:0 none;
+	}
 
 
 

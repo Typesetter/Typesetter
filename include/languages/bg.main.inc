@@ -58,6 +58,7 @@ $langmessage = array (
 	'delete_page'                    => 'Сигурен ли си, че искаш да преместиш този файл в кошчето?',
 	'search pages'                   => 'Търси страници',
 	'Search'                         => 'Търсене',
+	'Available'                      => 'Available',
 	'Search Hidden Files'            => 'Search Hidden Files',
 	'search_no_results'              => 'Sorry, there weren\'t any results for your search.',
 	'Previous'                       => 'Предишна',
@@ -209,7 +210,7 @@ $langmessage = array (
 	'recaptcha_public'               => 'reCaptcha Public Key',
 	'recaptcha_private'              => 'reCaptcha Private Key',
 	'recaptcha_language'             => 'reCaptcha език',
-	'about_config'                   =>
+	'about_config'                   => 
 	array (
 	'recaptcha_public'               => 'Трябва ти <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a>, за да ползваш CAPTCHA на формата за контакти.',
 	'maximgarea'                     => 'Maximum square pixels for uploaded images. A 600 x 800 pixel image has 480,000 sq/pixels.',
@@ -291,9 +292,6 @@ $langmessage = array (
 	'themes'                         => 'Теми',
 	'plugins'                        => 'Добавки',
 	'Manage Plugins'                 => 'Manage Plugins',
-	'Find Plugins'                   => 'Find Plugins',
-	'Find Themes'                    => 'Find Themes',
-	'Manage Layouts'                 => 'Manage Layouts',
 	'_downloads'                     => '%s downloads',
 	'editable_text'                  => 'Текст, който може да променяте',
 	'resources'                      => 'Ресурси',

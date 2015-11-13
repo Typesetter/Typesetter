@@ -938,7 +938,7 @@ class editing_page extends display{
 	}
 
 	function GetSection(&$section_num){
-		global $langmessage, $GP_NESTED_EDIT;
+		global $langmessage;
 
 
 		if( !isset($this->file_sections[$section_num]) ){
@@ -1006,9 +1006,9 @@ class editing_page extends display{
 			}
 
 		}else{
-			$GP_NESTED_EDIT		= true;
+			gpOutput::$nested_edit		= true;
 			$content			.= section_content::RenderSection($section_data,$curr_section_num,$this->title,$this->file_stats);
-			$GP_NESTED_EDIT		= false;
+			gpOutput::$nested_edit		= false;
 		}
 
 		if( !isset($section_data['nodeName']) ){

@@ -2,11 +2,10 @@
 defined('is_running') or die('Not an entry point...');
 
 //for output handlers, see admin_theme_content.php for more info
-global $GP_ARRANGE, $gpOutConf, $GP_LANG_VALUES, $GP_INLINE_VARS;
+global $GP_ARRANGE, $gpOutConf;
 
 $GP_ARRANGE = true;
-$GP_NESTED_EDIT = false;
-$gpOutConf = $GP_LANG_VALUES = $GP_INLINE_VARS = array();
+$gpOutConf = array();
 
 
 //named menus should just be shortcuts to the numbers in custom menu
@@ -65,17 +64,22 @@ $gpOutConf['Breadcrumbs']['link']		= 'Breadcrumb Links';
 
 class gpOutput{
 
-	public static $components = '';
-	public static $editlinks = '';
-	public static $template_included = false;
+	public static $components			= '';
+	public static $editlinks			= '';
+	public static $template_included	= false;
 
-	private static $out_started = false;
-	private static $gadget_cache = array();
+	private static $out_started			= false;
+	private static $gadget_cache		= array();
 
-	public static $edit_area_id = '';
+	public static $edit_area_id			= '';
 
-	private static $catchable = array();
-	public static $fatal_notices = array();
+	private static $catchable			= array();
+	public static $fatal_notices		= array();
+
+	public static $lang_values			= array();
+	public static $inline_vars			= array();
+	public static $nested_edit			= false;
+
 
 
 	/*
@@ -680,12 +684,11 @@ class gpOutput{
 
 
 	static function ShowEditLink($permission=false){
-		global $GP_NESTED_EDIT;
 
 		if( $permission ){
-			return !$GP_NESTED_EDIT && common::LoggedIn() && admin_tools::HasPermission($permission);
+			return !gpOutput::$nested_edit && common::LoggedIn() && admin_tools::HasPermission($permission);
 		}
-		return !$GP_NESTED_EDIT && common::LoggedIn();
+		return !gpOutput::$nested_edit && common::LoggedIn();
 	}
 
 	static function EditAreaLink(&$index,$href,$label,$query='',$attr=''){
@@ -2101,20 +2104,20 @@ class gpOutput{
 	 * @static
 	 */
 	static function GetHead_InlineJS(){
-		global $page, $linkPrefix, $GP_INLINE_VARS;
+		global $page, $linkPrefix;
 
 		ob_start();
 
 		if( gpdebugjs ){
 			if( is_string(gpdebugjs) ){
-				$GP_INLINE_VARS['debugjs'] = 'send';
+				gpOutput::$inline_vars['debugjs'] = 'send';
 			}else{
-				$GP_INLINE_VARS['debugjs'] = true;
+				gpOutput::$inline_vars['debugjs'] = true;
 			}
 		}
 
 		if( common::LoggedIn() ){
-			$GP_INLINE_VARS += array(
+			gpOutput::$inline_vars += array(
 				'isadmin'		=> true,
 				'gpBLink'		=> common::HrefEncode($linkPrefix,false),
 				'post_nonce'	=> common::new_nonce('post',true),
@@ -2123,10 +2126,10 @@ class gpOutput{
 			gpsession::GPUIVars();
 		}
 
-		if( count($GP_INLINE_VARS) > 0 ){
+		if( gpOutput::$inline_vars ){
 			echo 'var ';
 			$comma = '';
-			foreach($GP_INLINE_VARS as $key => $value){
+			foreach(gpOutput::$inline_vars as $key => $value){
 				echo $comma.$key.'='.json_encode($value);
 				$comma = ',';
 			}
@@ -2163,16 +2166,16 @@ class gpOutput{
 	 * @static
 	 */
 	static function GetHead_Lang(){
-		global $langmessage, $GP_LANG_VALUES;
+		global $langmessage;
 
-		if( !count($GP_LANG_VALUES) ){
+		if( !count(gpOutput::$lang_values) ){
 			return;
 		}
 
 		echo "\n<script type=\"text/javascript\">";
 		echo 'var gplang = {';
 		$comma = '';
-		foreach($GP_LANG_VALUES as $from_key => $to_key){
+		foreach(gpOutput::$lang_values as $from_key => $to_key){
 			echo $comma;
 			echo $to_key.':"'.str_replace(array('\\','"'),array('\\\\','\"'),$langmessage[$from_key]).'"';
 			$comma = ',';

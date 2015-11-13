@@ -443,7 +443,7 @@ class gpsession{
 	 *
 	 */
 	static function start($session_id, $sessions = false ){
-		global $langmessage, $dataDir, $GP_LANG_VALUES, $wbMessageBuffer, $GP_INLINE_VARS;
+		global $langmessage, $dataDir, $wbMessageBuffer;
 		static $locked_message = false;
 
 
@@ -519,12 +519,12 @@ class gpsession{
 		//make sure forms have admin nonce
 		ob_start(array('gpsession','AdminBuffer'));
 
-		$GP_LANG_VALUES += array('cancel'=>'ca','update'=>'up','caption'=>'cp','Width'=>'Width','Height'=>'Height');
+		gpOutput::$lang_values += array('cancel'=>'ca','update'=>'up','caption'=>'cp','Width'=>'Width','Height'=>'Height');
 		common::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css');
 		admin_tools::VersionsAndCheckTime();
 
 
-		$GP_INLINE_VARS += array(
+		gpOutput::$inline_vars += array(
 			'gpRem' => admin_tools::CanRemoteInstall(),
 		);
 

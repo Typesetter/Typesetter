@@ -1377,10 +1377,8 @@ class admin_menu_new extends admin_menu_tools{
 			return false;
 		}
 
-		if( $cmd == 'trash_page' ){
-			$link = common::GetUrl('Admin_Trash');
-			message(sprintf($langmessage['MOVED_TO_TRASH'],$link));
-		}
+		$link = common::GetUrl('Admin_Trash');
+		message(sprintf($langmessage['MOVED_TO_TRASH'],$link));
 
 
 		//finally, delete the files in /_pages

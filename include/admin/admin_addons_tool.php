@@ -593,89 +593,90 @@ class admin_addons_tool{
 
 
 
-	function AddonPanelGroup($addon_key, $show_hooks = true ){
+	function AddonPanelGroup($addon_key, $show_hooks = true, $format = false ){
 
-		$this->AddonPanel_Special($addon_key);
-		$this->AddonPanel_Admin($addon_key);
-		$this->AddonPanel_Gadget($addon_key);
+		$this->AddonPanel_Special($addon_key,$format);
+		$this->AddonPanel_Admin($addon_key,$format);
+		$this->AddonPanel_Gadget($addon_key,$format);
 
 		if( $show_hooks ){
-			$this->AddonPanel_Hooks($addon_key);
+			$this->AddonPanel_Hooks($addon_key,$format);
 		}
 	}
 
-	function AdminLinkList($links,$class=''){
-		echo '<ul class="'.$class.'">';
+	function AdminLinkList($links, $label, $format){
+		$_links = array();
 		foreach($links as $linkName => $linkInfo){
-			echo '<li>'.common::Link($linkName,$linkInfo['label']).'</li>';
+			$_links[] = common::Link($linkName,$linkInfo['label']);
+		}
+		$this->FormatList($_links,$label,$format);
+	}
+
+	function FormatList($links, $label, $format = false){
+		if( empty($links) ){
+			return;
+		}
+
+		if( !$format ){
+			$format				= array();
+			$format['start']	= '<li class="expand_child_click"><a>%s <span>(%s)</span></a>';
+			$format['end']		= '</li>';
+		}
+
+		echo sprintf($format['start'], $label, count($links));
+
+		echo '<ul>';
+		foreach($links as $link){
+			echo '<li>'.$link.'</li>';
 		}
 		echo '</ul>';
+		echo $format['end'];
 	}
 
-	function AddonPanel_Special($addon_key ){
-
-		//show Special Links
+	//show Special Links
+	function AddonPanel_Special($addon_key, $format){
 		$sublinks = admin_tools::GetAddonTitles( $addon_key );
-		if( !empty($sublinks) ){
-			echo '<li class="expand_child_click">';
-			echo '<a>Special Links ('.count($sublinks).')</a>';
-			$this->AdminLinkList($sublinks);
-			echo '</li>';
-		}
+		$this->AdminLinkList($sublinks,'Special Links',$format);
 	}
 
-	function AddonPanel_Admin($addon_key){
+	//show Admin Links
+	function AddonPanel_Admin($addon_key,$format){
 		global $langmessage, $config;
 
-		//show Admin Links
 		$sublinks = admin_tools::GetAddonComponents($config['admin_links'],$addon_key);
-		if( !empty($sublinks) ){
-			echo '<li class="expand_child_click">';
-			echo '<a>Admin Links ('.count($sublinks).')</a>';
-			$this->AdminLinkList($sublinks);
-			echo '</li>';
-		}
+		$this->AdminLinkList($sublinks,'Admin Links',$format);
 	}
 
-	function AddonPanel_Gadget($addon_key){
+	//show Gadgets
+	function AddonPanel_Gadget($addon_key, $format){
 		global $langmessage, $config;
 
-		//show Gadgets
-		$gadgets = admin_tools::GetAddonComponents($config['gadgets'],$addon_key);
-		if( is_array($gadgets) && (count($gadgets) > 0) ){
-			echo '<li class="expand_child_click">';
-			echo '<a>'.$langmessage['gadgets'].' ('.count($gadgets).')</a>';
-			echo '<ul>';
-			foreach($gadgets as $name => $value){
-				echo '<li>';
-				echo $this->GadgetLink($name);
-				echo '</li>';
-			}
-			echo '</ul></li>';
+		$gadgets	= admin_tools::GetAddonComponents($config['gadgets'],$addon_key);
+		$links		= array();
+		foreach($gadgets as $name => $value){
+			$links[] = $this->GadgetLink($name);
 		}
+		$this->FormatList($links,$langmessage['gadgets'],$format);
 	}
 
-	function AddonPanel_Hooks($addon_key){
+	//hooks
+	function AddonPanel_Hooks($addon_key, $format){
 
-		//hooks
 		$hooks = self::AddonHooks($addon_key);
-		if( count($hooks) > 0 ){
-			echo '<li class="expand_child_click">';
-			echo '<a>Hooks</a>';
-			echo '<ul>';
-			foreach($hooks as $name => $hook_info){
-				echo '<li><a>'.str_replace('_',' ',$name).'</a></li>';
-			}
-			echo '</ul></li>';
+		$links = array();
+
+		foreach($hooks as $name => $hook_info){
+			$links[] = '<a href="http://www.gpeasy.com/Plugin_Hooks?hook='.$name.'" target="_blank">'.str_replace('_',' ',$name).'</a>';
 		}
+		$this->FormatList($links,'Hooks',$format);
 	}
 
 
 	/**
-	 *
+	 * Return array of hooks associated with the addon
 	 * @static
 	 */
-	function AddonHooks($addon){
+	static function AddonHooks($addon_key){
 		global $config;
 		$hooks = array();
 
@@ -683,8 +684,8 @@ class admin_addons_tool{
 			return $hooks;
 		}
 		foreach($config['hooks'] as $hook => $hook_array){
-			if( isset($hook_array[$addon]) ){
-				$hooks[$hook] = $hook_array[$addon];
+			if( isset($hook_array[$addon_key]) ){
+				$hooks[$hook] = $hook_array[$addon_key];
 			}
 		}
 		return $hooks;

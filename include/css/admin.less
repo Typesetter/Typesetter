@@ -1,6 +1,4 @@
 
-//@import 'include/thirdparty/Bootstrap3/less/bootstrap_all.less';
-
 
 @import 'mixins.less';
 @family: "verdana";
@@ -24,6 +22,15 @@
 @gp_bread_link_color_hover: 	#333;
 @gp_bread_link_padding_x:		2px;
 @gp_bread_link_padding_y:		4px;
+
+
+
+@import 'include/thirdparty/Bootstrap3/less/variables.less';
+@import 'include/thirdparty/Bootstrap3/less/mixins.less';
+@import 'include/thirdparty/Bootstrap3/less/utilities.less';
+@font-size-base:				13px;
+
+
 
 
 /*
@@ -118,60 +125,48 @@
 	text-decoration:inherit;
 	}
 
+
 #gp_admin_html h1,
 #gp_admin_html h2,
 #gp_admin_html h3{
 	margin:.8em 0;
 	}
 
+#gp_admin_html h1{
+	font-size:@font-size-h1;
+	}
+
+#gp_admin_html h2{
+	font-size:@font-size-h2;
+	}
+
+#gp_admin_html h3{
+	font-size:@font-size-h3;
+	}
+
+#gp_admin_html h4{
+	font-size:@font-size-h4;
+	}
+
 #gp_admin_html h1,
-#gp_admin_html h1 a{
-	font-size:30px;
-	font-weight:normal;
-	text-shadow:none;
-	color:#333;
-	text-align:left;
-	}
-
-#gp_admin_html h2,
-#gp_admin_html h2 a{
-	font-size:25px;
-	font-weight:normal;
-	text-shadow:none;
-	color:#333;
-	text-align:left;
-	line-height:25px;
-	}
-
-#gp_admin_html h3,
-#gp_admin_html h3 a{
-	font-size:20px;
-	font-weight:normal;
-	text-shadow:none;
-	color:#333;
-	text-align:left;
-	}
-
-#gp_admin_html h4,
-#gp_admin_html h4 a{
-	font-size:14px;
-	font-weight:normal;
-	text-shadow:none;
-	color:#333;
-	text-align:left;
-	}
-
 #gp_admin_html h1 a,
 #gp_admin_html h1 a:visited,
+#gp_admin_html h2,
 #gp_admin_html h2 a,
 #gp_admin_html h2 a:visited,
+#gp_admin_html h3,
 #gp_admin_html h3 a,
 #gp_admin_html h3 a:visited,
+#gp_admin_html h4,
 #gp_admin_html h4 a,
 #gp_admin_html h4 a:visited{
+	font-size:inherit;
 	color:#333;
-	border-bottom:1px dashed #ccc;
+	text-align:left;
+	text-shadow:none;
+	font-weight:normal;
 	}
+
 
 #gp_admin_html h1:first-child,
 #gp_admin_html h2:first-child,
@@ -405,6 +400,7 @@
 	padding-right:0;
 	padding-bottom:0;
 	.box-sizing( border-box );
+
 }
 
 
@@ -413,6 +409,13 @@
 	padding:30px 40px 10em 40px;
 	overflow:hidden;
 	background-color:#fff;
+
+	//subset of bootstrap components
+	@import 'include/thirdparty/Bootstrap3/less/scaffolding.less';
+	@import 'include/thirdparty/Bootstrap3/less/type.less';
+	@import 'include/thirdparty/Bootstrap3/less/grid.less';
+
+	//@import 'include/thirdparty/Bootstrap3/less/alerts.less';
 }
 
 
@@ -433,7 +436,7 @@
 
 #gp_admin_html .admin_note,
 #gp_admin_html .sm{
-	font-size:90%;
+	font-size:@font-size-small;
 	}
 #gp_admin_html .admin_note a{
 	text-decoration:none;
@@ -441,6 +444,7 @@
 #gp_admin_html .text-muted{
 	color:#666;
 	}
+
 
 /*** admin_box ***/
 
@@ -472,7 +476,8 @@
 	border:0;
 }
 
-#gp_admin_box h2, #gp_admin_box h3{
+#gp_admin_box h2,
+#gp_admin_box h3{
 	margin-top:0;
 	padding-top:0;
 	}
@@ -1148,7 +1153,6 @@ table.tablesorter th.gp_header_desc:before{
 
 
 #adminlinks2 .panelgroup2{
-	//height:260px;
 	border:1px solid #ddd;
 	border-radius:3px;
 	overflow:hidden;
@@ -1187,6 +1191,7 @@ table.tablesorter th.gp_header_desc:before{
 	border-bottom:1px solid transparent;
 	}
 
+
 #adminlinks2 li > a,
 #adminlinks2 li > span{
 	font-size:13px;
@@ -1195,13 +1200,11 @@ table.tablesorter th.gp_header_desc:before{
 	white-space:nowrap;
 	min-width:170px;
 	outline:0 none;
-	}
-#adminlinks2 li a{
 	color:#333 !important;
 	}
 #adminlinks2 li a:hover{
-	color:#CC4422 !important;
 	color:#226699 !important;
+	text-decoration:none;
 	}
 
 #adminlinks2 li.submenu_top{
@@ -1237,13 +1240,11 @@ table.tablesorter th.gp_header_desc:before{
 	}
 
 #adminlinks2 li.expand_child_click ul{
-	//display:block;
 	position:relative;
 	z-index:11;
 	background:#fff;
-	//max-height:120px;
-	//overflow:auto;
 	}
+
 #adminlinks2 li.expand_child_click li{
 	overflow:hidden;
 	text-overflow:ellipsis;
@@ -1251,6 +1252,7 @@ table.tablesorter th.gp_header_desc:before{
 	border-radius:0;
 	margin:0;
 	}
+
 #adminlinks2 li.expand_child_click li > a,
 #adminlinks2 li.expand_child_click li > span,
 #adminlinks2 li.expand_child_click li > b,
@@ -1786,13 +1788,17 @@ body #addon_about{
 	margin:0 5px;
 	}
 
-.hmargin_tabs .current{
-	color:#333;
-	}
 .hmargin_tabs *:last-child{
 	border:0 none;
 	}
 
+.well{
+	border:1px solid #ddd;
+	padding:20px;
+	background:#f9f9f9;
+	border-radius:3px;
+	margin-bottom:20px;
+}
 
 
 /**

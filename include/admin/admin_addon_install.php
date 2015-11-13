@@ -71,11 +71,18 @@ class admin_addon_install extends admin_addons_tool{
 			}
 		}
 
+		if( $addon_name ){
+			$header_paths = array();
+			$header_paths[$this->scriptUrl]					= $langmessage['manage'];
+			$header_paths[$page->requested]					= $addon_name;
+		}
+
+
 		$list = array();
 		foreach($header_paths as $slug => $label){
 
 			if( $page->requested == $slug ){
-				$list[] = '<span class="current">'.$label.'</span>';
+				$list[] = '<span>'.$label.'</span>';
 			}else{
 				$list[] = common::Link($slug,$label);
 			}
@@ -88,9 +95,7 @@ class admin_addon_install extends admin_addons_tool{
 
 		echo implode('', $list );
 
-		if( $addon_name ){
-			echo '<span class="current">'.$addon_name.'</span>';
-		}
+
 
 		echo '</h2>';
 

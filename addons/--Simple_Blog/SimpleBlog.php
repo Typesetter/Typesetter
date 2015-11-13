@@ -255,10 +255,17 @@ class SimpleBlog extends SimpleBlogCommon{
 		}
 
 		$thumb_path		= common::ThumbnailPath($src);
-		$img_pos2		= strpos($item,'>',$img_pos);
-		$img			= substr($item,$img_pos,$img_pos2-$img_pos+1);
 
-		echo '<img class=" img-thumbnail" src="'.$thumb_path.'"/>';
+		//make it an absolute path
+		if( isset($_SERVER['HTTP_HOST']) ){
+			$server = $_SERVER['HTTP_HOST'];
+		}else{
+			$server = $_SERVER['SERVER_NAME'];
+		}
+
+		$thumb_path = '//'.$server.$thumb_path;
+
+		echo '<img class="img-thumbnail" src="'.$thumb_path.'"/>';
 	}
 
 

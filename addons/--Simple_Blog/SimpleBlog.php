@@ -210,6 +210,11 @@ class SimpleBlog extends SimpleBlogCommon{
 		SimpleBlogCommon::BlogHead($header,$post_index,$post);
 
 		echo '<div class="twysiwygr">';
+
+		if( SimpleBlogCommon::$data['abbrev_image'] ){
+			$this->GetImageFromPost($post['content']);
+		}
+
 		echo $this->AbbrevContent( $post['content'], $post_index, SimpleBlogCommon::$data['post_abbrev']);
 		echo '</div>';
 
@@ -220,6 +225,42 @@ class SimpleBlog extends SimpleBlogCommon{
 		echo '<div class="clear"></div>';
 
 	}
+
+
+	/**
+	 * Get the fist image from the blog post
+	 *
+	 */
+	function GetImageFromPost($item){
+
+		$img_pos = strpos($item,'<img');
+		if( $img_pos === false ){
+			return;
+		}
+		$src_pos = strpos($item,'src=',$img_pos);
+		if( $src_pos === false ){
+			return;
+		}
+		$src = substr($item,$src_pos+4);
+		$quote = $src[0];
+		if( $quote != '"' && $quote != "'" ){
+			return;
+		}
+		$src_pos = strpos($src,$quote,1);
+		$src = substr($src,1,$src_pos-1);
+
+		// check for resized image, get original source if img is resized
+		if( strpos($src,'image.php') !== false && strpos($src,'img=') !== false ){
+			$src = $dirPrefix . '/data/_uploaded/' . urldecode(substr($src,strpos($src,'img=')+4));
+		}
+
+		$thumb_path		= common::ThumbnailPath($src);
+		$img_pos2		= strpos($item,'>',$img_pos);
+		$img			= substr($item,$img_pos,$img_pos2-$img_pos+1);
+
+		echo '<img class=" img-thumbnail" src="'.$thumb_path.'"/>';
+	}
+
 
 	/**
 	 * Get the edit links for the post

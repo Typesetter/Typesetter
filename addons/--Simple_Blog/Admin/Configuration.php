@@ -50,9 +50,7 @@ class AdminSimpleBlogConfig extends SimipleBlogAdmin{
 			SimpleBlogCommon::$data['urls'] = $_POST['urls'];
 		}
 
-		if( is_numeric($_POST['per_page']) ){
-			SimpleBlogCommon::$data['per_page'] = (int)$_POST['per_page'];
-		}
+		SimpleBlogCommon::$data['per_page']				= (int)$_POST['per_page'];
 
 		if( is_numeric($_POST['post_abbrev']) ){
 			SimpleBlogCommon::$data['post_abbrev'] = (int)$_POST['post_abbrev'];
@@ -60,13 +58,9 @@ class AdminSimpleBlogConfig extends SimipleBlogAdmin{
 			SimpleBlogCommon::$data['post_abbrev'] = '';
 		}
 
-		if( is_numeric($_POST['gadget_entries']) ){
-			SimpleBlogCommon::$data['gadget_entries'] = (int)$_POST['gadget_entries'];
-		}
 
-		if( is_numeric($_POST['gadget_abbrev']) ){
-			SimpleBlogCommon::$data['gadget_abbrev'] = (int)$_POST['gadget_abbrev'];
-		}
+		SimpleBlogCommon::$data['gadget_entries']		= (int)$_POST['gadget_entries'];
+		SimpleBlogCommon::$data['gadget_abbrev']		= (int)$_POST['gadget_abbrev'];
 
 		$format = htmlspecialchars($_POST['strftime_format']);
 		if( @strftime($format) ){
@@ -74,30 +68,18 @@ class AdminSimpleBlogConfig extends SimipleBlogAdmin{
 		}
 
 
-		if( is_numeric($_POST['feed_entries']) ){
-			SimpleBlogCommon::$data['feed_entries'] = (int)$_POST['feed_entries'];
-		}
+		SimpleBlogCommon::$data['feed_entries']			= (int)$_POST['feed_entries'];
+		SimpleBlogCommon::$data['feed_abbrev']			= (int)$_POST['feed_abbrev'];
 
-		if( is_numeric($_POST['feed_abbrev']) ){
-			SimpleBlogCommon::$data['feed_abbrev'] = (int)$_POST['feed_abbrev'];
-		}
+		SimpleBlogCommon::$data['abbrev_image']			= isset($_POST['abbrev_image']);
 
 		//comments
-		if( isset($_POST['allow_comments']) ){
-			SimpleBlogCommon::$data['allow_comments'] = true;
-		}else{
-			SimpleBlogCommon::$data['allow_comments'] = false;
-		}
-		SimpleBlogCommon::$data['commenter_website'] = (string)$_POST['commenter_website'];
+		SimpleBlogCommon::$data['allow_comments']		= isset($_POST['allow_comments']);
+		SimpleBlogCommon::$data['commenter_website']	= (string)$_POST['commenter_website'];
+		SimpleBlogCommon::$data['comment_captcha']		= isset($_POST['comment_captcha']);
 
-		if( isset($_POST['comment_captcha']) ){
-			SimpleBlogCommon::$data['comment_captcha'] = true;
-		}else{
-			SimpleBlogCommon::$data['comment_captcha'] = false;
-		}
-
-		SimpleBlogCommon::$data['subtitle_separator'] = (string)$_POST['subtitle_separator'];
-		SimpleBlogCommon::$data['email_comments'] = $_POST['email_comments'];
+		SimpleBlogCommon::$data['subtitle_separator']	= (string)$_POST['subtitle_separator'];
+		SimpleBlogCommon::$data['email_comments']		= $_POST['email_comments'];
 
 		if( !SimpleBlogCommon::SaveIndex() ){
 			message($langmessage['OOPS']);
@@ -151,6 +133,29 @@ class AdminSimpleBlogConfig extends SimipleBlogAdmin{
 		echo '</td></tr>';
 
 
+		//Date Format
+		echo '<tr><td>';
+		echo 'Date Format';
+		//echo ' (<a href="http://php.net/manual/en/function.date.php" target="_blank">About</a>)';
+		echo ' (<a href="http://www.php.net/manual/en/function.strftime.php" target="_blank">About</a>)';
+		echo '</td><td>';
+		//echo '<input type="text" name="date_format" size="20" value="'.htmlspecialchars($array['date_format']).'" class="gpinput" />';
+		echo '<input type="text" name="strftime_format" value="'.htmlspecialchars($array['strftime_format']).'" class="gpinput" />';
+		echo '</td><td>';
+		echo $defaults['strftime_format'];
+		echo '</td></tr>';
+
+
+		//Subtitle Separator
+		echo '<tr><td>';
+		echo 'Subtitle Separator';
+		echo '</td><td>';
+		echo '<input type="text" name="subtitle_separator" size="20" value="'.htmlspecialchars($array['subtitle_separator']).'" class="gpinput" />';
+		echo '</td><td>';
+		echo htmlspecialchars($defaults['subtitle_separator']);
+		echo '</td></tr>';
+
+
 		//Entries Per Page
 		echo '<tr><td>Entries Per Page</td><td>';
 		echo '<input type="text" name="per_page" value="'.htmlspecialchars($array['per_page']).'" class="gpinput" />';
@@ -168,6 +173,32 @@ class AdminSimpleBlogConfig extends SimipleBlogAdmin{
 		echo $defaults['post_abbrev'];
 		echo '</td></tr>';
 
+		//Entries Abbreviation Length
+		echo '<tr><td>';
+		echo 'Entries Abbreviation Length';
+		echo '</td><td>';
+		echo '<input type="text" name="post_abbrev" value="'.htmlspecialchars($array['post_abbrev']).'" class="gpinput" />';
+		echo '</td><td>';
+		echo $defaults['post_abbrev'];
+		echo '</td></tr>';
+
+		//Image in Abbrevation
+		echo '<tr><td>';
+		echo 'Image in Abbrevation';
+		echo '</td><td>';
+		if( $array['abbrev_image'] ){
+			echo '<input type="checkbox" name="abbrev_image" value="allow" checked="checked" />';
+		}else{
+			echo '<input type="checkbox" name="abbrev_image" value="allow" />';
+		}
+		echo '</td><td></td></tr>';
+
+
+
+		//Comments
+		echo '<tr><th colspan="3">';
+		echo 'Gadget';
+		echo '</th></tr>';
 
 		//Entries For Gadget
 		echo '<tr><td>';
@@ -189,18 +220,10 @@ class AdminSimpleBlogConfig extends SimipleBlogAdmin{
 		echo '</td></tr>';
 
 
-		//Date Format
-		echo '<tr><td>';
-		echo 'Date Format';
-		//echo ' (<a href="http://php.net/manual/en/function.date.php" target="_blank">About</a>)';
-		echo ' (<a href="http://www.php.net/manual/en/function.strftime.php" target="_blank">About</a>)';
-		echo '</td><td>';
-		//echo '<input type="text" name="date_format" size="20" value="'.htmlspecialchars($array['date_format']).'" class="gpinput" />';
-		echo '<input type="text" name="strftime_format" value="'.htmlspecialchars($array['strftime_format']).'" class="gpinput" />';
-		echo '</td><td>';
-		echo $defaults['strftime_format'];
-		echo '</td></tr>';
-
+		//Comments
+		echo '<tr><th colspan="3">';
+		echo 'Feed';
+		echo '</th></tr>';
 
 		//Entries For Feed
 		echo '<tr><td>';
@@ -222,23 +245,9 @@ class AdminSimpleBlogConfig extends SimipleBlogAdmin{
 		echo '</td></tr>';
 
 
-		//Subtitle Separator
-		echo '<tr><td>';
-		echo 'Subtitle Separator';
-		echo '</td><td>';
-		echo '<input type="text" name="subtitle_separator" size="20" value="'.htmlspecialchars($array['subtitle_separator']).'" class="gpinput" />';
-		echo '</td><td>';
-		echo htmlspecialchars($defaults['subtitle_separator']);
-		echo '</td></tr>';
-
-
 		//Comments
-		echo '<tr><th>';
+		echo '<tr><th colspan="3">';
 		echo 'Comments';
-		echo '</th><th>';
-		echo 'Value';
-		echo '</th><th>';
-		echo 'Default';
 		echo '</th></tr>';
 
 

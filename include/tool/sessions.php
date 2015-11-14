@@ -1009,11 +1009,18 @@ class gpsession{
 	 */
 	static function clientIP($single=false){
 	    $ip = array();
-	    $ip[] = $_SERVER['REMOTE_ADDR'];
-	    if(!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+
+	    if( isset($_SERVER['REMOTE_ADDR']) ){
+			$ip[] = $_SERVER['REMOTE_ADDR'];
+		}
+
+	    if( !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ){
 	        $ip = array_merge($ip,explode(',',str_replace(' ','',$_SERVER['HTTP_X_FORWARDED_FOR'])));
-	    if(!empty($_SERVER['HTTP_X_REAL_IP']))
+		}
+
+	    if( !empty($_SERVER['HTTP_X_REAL_IP']) ){
 	        $ip = array_merge($ip,explode(',',str_replace(' ','',$_SERVER['HTTP_X_REAL_IP'])));
+		}
 
 	    // some IPv4/v6 regexps borrowed from Feyd
 	    // see: http://forums.devnetwork.net/viewtopic.php?f=38&t=53479
@@ -1047,7 +1054,11 @@ class gpsession{
 	        if(empty($ip[$i])) unset($ip[$i]);
 	    }
 	    $ip = array_values(array_unique($ip));
-	    if(!$ip[0]) $ip[0] = '0.0.0.0'; // for some strange reason we don't have a IP
+
+		// for some strange reason we don't have a IP
+	    if( empty($ip[0]) ){
+			 $ip[0] = '0.0.0.0';
+		 }
 
 	    if(!$single) return join(',',$ip);
 

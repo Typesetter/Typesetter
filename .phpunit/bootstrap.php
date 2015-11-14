@@ -1,5 +1,7 @@
 <?php
 
+ob_start();
+
 echo "\n************************************************************************************";
 echo "\nBegin gpEasy Tests\n\n";
 
@@ -8,6 +10,8 @@ defined('is_running') or define('is_running',true);
 global $dataDir;
 $dataDir = $_SERVER['PWD'];
 include('include/common.php');
+
+common::SetLinkPrefix();
 
 includeFile('tool/display.php');
 includeFile('tool/Files.php');

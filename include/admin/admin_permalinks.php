@@ -438,6 +438,10 @@ class admin_permalinks{
 	 */
 	static function IIS(){
 
+		if( !isset($_SERVER['SERVER_SOFTWARE']) ){
+			return false;
+		}
+
 		if( strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false || strpos($_SERVER['SERVER_SOFTWARE'], 'ExpressionDevServer') !== false ){
 			return true;
 		}

@@ -109,6 +109,8 @@ class Install_Tools{
 	static function gpInstall_Check(){
 		global $langmessage;
 
+		echo "\ngpInstall_Check\n";
+
 		$_POST += array('username'=>'','site_title'=>'My gpEasy CMS','email'=>'');
 
 		$passed = array();
@@ -165,7 +167,7 @@ class Install_Tools{
 		return $title;
 	}
 
-	static function Install_DataFiles_New($destination = false, $config, $base_install = true ){
+	static function Install_DataFiles_New($destination = false, $config = array(), $base_install = true ){
 		global $langmessage;
 
 
@@ -195,22 +197,23 @@ class Install_Tools{
 		$gpLayouts['default']['color'] = '#93c47d';
 
 
-		$config['toemail'] = $_POST['email'];
-		$config['gpLayout'] = 'default';
-		$config['title'] = Install_Tools::Install_Title();
-		$config['keywords'] = 'gpEasy CMS, Easy CMS, Content Management, PHP, Free CMS, Website builder, Open Source';
-		$config['desc'] = 'A new gpEasy CMS installation. You can change your site\'s description in the configuration.';
-		$config['timeoffset'] = '0';
-		$config['langeditor'] = 'inherit';
-		$config['dateformat'] = '%m/%d/%y - %I:%M %p';
-		$config['gpversion'] = gpversion;
-		$config['passhash'] = 'sha512';
-		if( !isset($config['gpuniq']) ){
-			$config['gpuniq'] = common::RandomString(20);
-		}
-		$config['combinecss'] = Install_Tools::BooleanValue('combinecss',true);
-		$config['combinejs'] = Install_Tools::BooleanValue('combinejs',true);
-		$config['etag_headers'] = Install_Tools::BooleanValue('etag_headers',true);
+		$_config['toemail']			= $_POST['email'];
+		$_config['gpLayout']		= 'default';
+		$_config['title']			= Install_Tools::Install_Title();
+		$_config['keywords']		= 'gpEasy CMS, Easy CMS, Content Management, PHP, Free CMS, Website builder, Open Source';
+		$_config['desc']			= 'A new gpEasy CMS installation. You can change your site\'s description in the configuration.';
+		$_config['timeoffset']		= '0';
+		$_config['langeditor']		= 'inherit';
+		$_config['dateformat']		= '%m/%d/%y - %I:%M %p';
+		$_config['gpversion']		= gpversion;
+		$_config['passhash']		= 'sha512';
+		$_config['gpuniq']			= common::RandomString(20);
+		$_config['combinecss']		= Install_Tools::BooleanValue('combinecss',true);
+		$_config['combinejs']		= Install_Tools::BooleanValue('combinejs',true);
+		$_config['etag_headers'] 	= Install_Tools::BooleanValue('etag_headers',true);
+		$_config['language']		= 'en';
+
+		$config 					+= $_config;
 
 		//directories
 		gpFiles::CheckDir($destination.'/data/_uploaded/image');

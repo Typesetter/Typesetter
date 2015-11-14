@@ -1267,8 +1267,10 @@ class common{
 
 		if( isset($_SERVER['HTTP_HOST']) ){
 			$server = $_SERVER['HTTP_HOST'];
-		}else{
+		}elseif( isset($_SERVER['SERVER_NAME']) ){
 			$server = $_SERVER['SERVER_NAME'];
+		}else{
+			return common::GetUrl($href,$query,$ampersands);
 		}
 
 		$schema = '';

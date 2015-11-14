@@ -1002,8 +1002,10 @@ class admin_tools{
 	 * @return string
 	 * @since 2.4b5
 	 */
-	static function PostedSlug($string,$from_label = false){
+	static function PostedSlug($string, $from_label = false){
 		includeFile('tool/strings.php');
+
+		$orig_string = $string;
 
 		// Remove control characters
 		$string = preg_replace( '#[[:cntrl:]]#u', '', $string ) ; // 	[\x00-\x1F\x7F]
@@ -1030,7 +1032,9 @@ class admin_tools{
 		//slashes
 		$string = admin_tools::SlugSlashes($string);
 
-		return str_replace(' ','_',$string);
+		$string = str_replace(' ','_',$string);
+
+		return gpPlugin::Filter('PostedSlug',array($string, $orig_string, $from_label));
 	}
 
 	/**

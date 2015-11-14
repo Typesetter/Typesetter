@@ -3,6 +3,10 @@
 
 class phpunit_Install extends gptest_bootstrap{
 
+	/**
+	 *
+	 * @runInSeparateProcess
+	 */
 	function testInstall(){
 		global $dataDir;
 

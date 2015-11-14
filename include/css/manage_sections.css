@@ -65,8 +65,8 @@
 	min-height:25px;
 	}
 
-
-.section-highlight{
+.section-highlight,
+.temporary-section{
 	outline: 2px dotted red !important;
 	}
 

@@ -426,10 +426,7 @@
 		$new_content
 			.appendTo('#gpx_content')
 			.hide()
-			.addClass('section-highlight')
-			.delay(200).slideDown(function(){
-				$new_content.removeClass('section-highlight');
-			});
+			.delay(200).slideDown();
 
 	}
 

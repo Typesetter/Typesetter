@@ -2035,13 +2035,9 @@ class admin_menu_new extends admin_menu_tools{
 
 		//single section type
 		}else{
-			$content	= gp_edit::DefaultContent($type);
+			$content	= gp_edit::DefaultContent($type, $_POST['title']);
 			if( $content['content'] === false ){
 				return false;
-			}
-
-			if( $type == 'text' ){
-				$content['content']			= '<h2>'.strip_tags($_POST['title']).'</h2>'.$content['content'];
 			}
 		}
 

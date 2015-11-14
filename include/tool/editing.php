@@ -697,7 +697,7 @@ class gp_edit{
 	 * @since 3.6
 	 *
 	 */
-	static function DefaultContent($type='text'){
+	static function DefaultContent($type='text', $heading = 'Lorem Ipsum' ){
 		global $langmessage;
 
 		$section			= array();
@@ -731,7 +731,7 @@ class gp_edit{
 
 			case 'text':
 			default:
-				$section['content']					= '<div><h3>Lorem Ipsum</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div>';
+				$section['content']					= '<div><h2>'.strip_tags($heading).'</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div>';
 			break;
 		}
 

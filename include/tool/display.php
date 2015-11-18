@@ -8,51 +8,52 @@ defined('is_running') or die('Not an entry point...');
  *
  */
 class display{
-	var $pagetype = 'display';
+	var $pagetype			= 'display';
 	var $gp_index;
 	var $title;
 	var $label;
-	var $file = false;
+	var $file				= false;
 	var $contentBuffer;
 	var $TitleInfo;
-	var $fileType = '';
-	var $ajaxReplace = array('#gpx_content');
-	var $admin_links = array();
+	var $fileType			= '';
+	var $ajaxReplace		= array('#gpx_content');
+	var $admin_links		= array();
+	var $visibility			= false;
 
-	var $fileModTime = 0; /* @deprecated 3.0 */
-	var $file_stats = array();
+	var $fileModTime		= 0; /* @deprecated 3.0 */
+	var $file_stats			= array();
 
 	//layout & theme
-	var $theme_name = false;
-	var $theme_color = false;
-	var $get_theme_css = true;
+	var $theme_name			= false;
+	var $theme_color		= false;
+	var $get_theme_css		= true;
 	var $theme_dir;
 	var $theme_path;
 	var $theme_rel;
-	var $theme_addon_id = false;
-	var $theme_is_addon = false;/* @deprecated 3.5 */
-	var $menu_css_ordered = true;
-	var $menu_css_indexed = true;
+	var $theme_addon_id		= false;
+	var $theme_is_addon		= false;/* @deprecated 3.5 */
+	var $menu_css_ordered	= true;
+	var $menu_css_indexed	= true;
 	var $gpLayout;
 
 
 	//<head> content
-	var $head = '';
-	var $head_js = array();
-	var $head_script = '';
-	var $jQueryCode = false;
-	var $admin_js = false;
-	var $head_force_inline = false;
-	var $meta_description = '';
-	var $meta_keywords = array();
+	var $head				= '';
+	var $head_js			= array();
+	var $head_script		= '';
+	var $jQueryCode			= false;
+	var $admin_js			= false;
+	var $head_force_inline	= false;
+	var $meta_description	= '';
+	var $meta_keywords		= array();
 
 	//css arrays
-	var $css_user = array();
-	var $css_admin = array();
+	var $css_user			= array();
+	var $css_admin			= array();
 
 
-	var $editable_content = true;
-	var $editable_details = true;
+	var $editable_content	= true;
+	var $editable_details	= true;
 
 	function __construct($title){
 		$this->title = $title;
@@ -71,7 +72,7 @@ class display{
 	}
 
 	function SetVars(){
-		global $gp_index, $gp_titles;
+		global $gp_index, $gp_titles, $gp_menu;
 
 		if( !isset($gp_index[$this->title]) ){
 			$this->Error_404($this->title);
@@ -83,7 +84,26 @@ class display{
 		$this->label		= common::GetLabel($this->title);
 		$this->file			= gpFiles::PageFile($this->title);
 
+		if( !$this->CheckVisibility() ){
+			return false;
+		}
+
 		gpPlugin::Action('PageSetVars');
+
+		return true;
+	}
+
+	/**
+	 * Check the page's visibility
+	 *
+	 */
+	function CheckVisibility(){
+
+		$this->visibility	= display::OrConfig($this->gp_index,'vis');
+		if( !common::LoggedIn() && $this->visibility ){
+			$this->Error_404($this->title);
+			return false;
+		}
 
 		return true;
 	}

@@ -61,14 +61,15 @@ class special_missing{
 	/**
 	 * Redirect the request if the requested page closely matches an existing page
 	 * If it's just a difference of case, then the similarity will be 100%
+	 *
 	 */
 	function CheckSimilar(){
 		global $config;
-		$requested = trim($this->requested,'/');
-		$similar = $this->SimilarTitleArray($requested);
-		reset($similar);
-		$first_title = key($similar);
-		$first_percent = current($similar);
+
+		$requested			= trim($this->requested,'/');
+		$similar			= $this->SimilarTitleArray($requested);
+		$first_title		= key($similar);
+		$first_percent		= current($similar);
 
 		if( $config['auto_redir'] > 0 && $first_percent >= $config['auto_redir'] ){
 			$redirect = common::GetUrl($first_title,http_build_query($_GET),false);
@@ -195,30 +196,44 @@ class special_missing{
 	/**
 	 * Get a comma separated list of links to titles similar to the requested page
 	 * @return string
+	 *
 	 */
 	function SimilarTitles(){
 
-		$similar = $this->SimilarTitleArray($this->requested);
-		$similar = array_slice($similar,0,7,true);
+		$similar	= $this->SimilarTitleArray($this->requested);
+		$similar	= array_slice($similar,0,7,true);
+		$result		= '';
 
-		$result = '';
 		foreach($similar as $title => $percent_similar){
 			$result .= common::Link_Page($title).', ';
 		}
+
 		return rtrim($result,', ');
 	}
 
 	/**
 	 * Get a list of existing titles similar to the requested page
 	 * @return array
+	 *
 	 */
 	function SimilarTitleArray($title){
-		global $gp_index;
+		global $gp_index, $gp_titles;
 
-		$similar = array();
-		$percent_similar = array();
-		$lower = str_replace(' ','_',strtolower($title));
-		foreach($gp_index as $title => $id){
+		$similar			= array();
+		$percent_similar	= array();
+		$lower				= str_replace(' ','_',strtolower($title));
+		$admin				= common::LoggedIn();
+
+		foreach($gp_index as $title => $index){
+
+			//skip private pages
+			if( !$admin ){
+				$visibility	= display::OrConfig($index,'vis');
+				if( $visibility ){
+					continue;
+				}
+			}
+
 			similar_text($lower,strtolower($title),$percent);
 			$similar[$title] = $percent;
 		}

@@ -222,7 +222,8 @@
 
 			var this_html			= info_html,
 				data				= jQuery.extend({}, $current.find('.gp_label').data('json')), //clone the json object
-				multiple_selected	= ($current.length > 1);
+				multiple_selected	= ($current.length > 1),
+				$current_li			= $current.closest('li');
 
 
 
@@ -254,32 +255,49 @@
 				.html(this_html)
 				.find('.layout_icon').css({'background':data.layout_color});
 
+			var hide = []
+
 
 			//multiple
 			if( multiple_selected ){
-				$admin_menu_tools.find('.not_multiple').hide();
+				hide.push('.not_multiple');
 				$admin_menu_tools.find('.only_multiple').show();
 			}else{
-				$admin_menu_tools.find('.only_multiple').hide();
+				hide.push('.only_multiple');
 			}
+
+			//visibility
+			if( $current_li.hasClass('private-list') ){
+				hide.push('.vis_public');
+			}else if( $current_li.hasClass('private-inherited') ){
+				hide.push('.vis_private');
+				hide.push('.vis_public');
+			}else{
+				hide.push('.vis_private');
+			}
+
 
 
 			//special links
 			if( data.special ){
-				$admin_menu_tools.find('.not_special').hide();
+				hide.push('.not_special');
 			}
 
 			//has layout
 			if( data.has_layout ){
-				$admin_menu_tools.find('.no_layout').hide();
+				hide.push('.no_layout');
 			}else{
-				$admin_menu_tools.find('.has_layout').hide();
+				hide.push('.has_layout');
 			}
 
 			if( data.level >= max_level_index ){
-				$admin_menu_tools.find('.insert_child').hide();
+				hide.push('.insert_child');
 			}
+
+			$admin_menu_tools.find( hide.join(',') ).hide();
+
 		}
+
 
 		/**
 		 * Handle expanding/reducing sublink lists

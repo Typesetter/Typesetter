@@ -86,6 +86,15 @@ body #admin_menu li.ui-sortable-helper{
 	width:110%;
 	}
 
+#admin_menu li.private-inherited > div,
+#admin_menu li.private-list{
+	opacity:0.6;
+	}
+#admin_menu li.private-list li.private-inherited > div{
+	opacity:1;
+	}
+
+
 
 
 #admin_menu li p{
@@ -187,6 +196,10 @@ body #admin_menu li.ui-sortable-helper{
 #admin_menu_div .icon_user{
 	background:url('../imgs/admin_icons.png') no-repeat 50% -201px;
 	}
+#admin_menu_div .icon_vis{
+	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -128px;
+	}
+
 
 
 .placeholder{

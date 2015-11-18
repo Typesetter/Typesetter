@@ -36,6 +36,12 @@ class special_display extends display{
 		$this->gp_index = $gp_index[$this->title];
 		$this->TitleInfo = $scriptinfo;
 
+
+		if( !$this->CheckVisibility() ){
+			return false;
+		}
+
+
 		$menu_permissions = false;
 		if( common::LoggedIn() ){
 			$menu_permissions = admin_tools::HasPermission('Admin_Menu');

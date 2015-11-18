@@ -29,31 +29,8 @@ class editing_page extends display{
 			$this->ResetFileTypes();
 		}
 
-
-		//admin toolbar links
-		$menu_permissions = admin_tools::HasPermission('Admin_Menu');
-		$can_edit = admin_tools::CanEdit($this->gp_index);
-		if( $menu_permissions ){
-			$page->admin_links[] = common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
-
-			// Having the layout link here complicates things.. would need layout link for special pages
-			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
-			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['Copy'],'cmd=copypage&redir=redir&index='.urlencode($this->gp_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
-		}
-
-		if( admin_tools::HasPermission('Admin_User') ){
-			$page->admin_links[] = common::Link('Admin_Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
-		}
-
-		if( $can_edit ){
-			$page->admin_links[] = common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
-		}
-
-
-		if( $menu_permissions ){
-			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['delete_file'],'cmd=trash_page&index='.urlencode($this->gp_index),array('data-cmd'=>'postlink','title'=>$langmessage['delete_page'],'class'=>'gpconfirm'));
-
-		}
+		$can_edit			= admin_tools::CanEdit($this->gp_index);
+		$menu_permissions	= admin_tools::HasPermission('Admin_Menu');
 
 
 		//allow addons to effect page actions and how a page is displayed
@@ -72,6 +49,9 @@ class editing_page extends display{
 				case 'renameform':
 					$this->RenameForm();
 				return;
+				case 'ToggleVisibility':
+					$this->ToggleVisibility();
+				break;
 				case 'renameit':
 					if( $this->RenameFile() ){
 						return;
@@ -79,6 +59,8 @@ class editing_page extends display{
 				break;
 			}
 		}
+
+		$this->AdminLinks();
 
 
 		//file editing actions
@@ -145,6 +127,57 @@ class editing_page extends display{
 		}
 
 		$this->contentBuffer = $this->GenerateContent_Admin();
+	}
+
+
+	/**
+	 * Generate admin toolbar links
+	 *
+	 */
+	function AdminLinks(){
+		global $langmessage, $page;
+
+		$admin_links			= $page->admin_links;
+		$page->admin_links		= array();
+
+		$menu_permissions		= admin_tools::HasPermission('Admin_Menu');
+		$can_edit				= admin_tools::CanEdit($this->gp_index);
+
+		if( $menu_permissions ){
+			$page->admin_links[] = common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
+
+
+			$q							= 'cmd=ToggleVisibility';
+			$label						= $langmessage['Visibility'].': '.$langmessage['Private'];
+			if( !$this->visibility ){
+				$label					= $langmessage['Visibility'].': '.$langmessage['Public'];
+				$q						.= '&visibility=private';
+			}
+			$attrs						= array('title'=>$label,'data-cmd'=>'creq');
+			$page->admin_links[]		= common::Link($this->title,$label,$q,$attrs);
+
+
+			// Having the layout link here complicates things.. would need layout link for special pages
+			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
+			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['Copy'],'cmd=copypage&redir=redir&index='.urlencode($this->gp_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
+		}
+
+		if( admin_tools::HasPermission('Admin_User') ){
+			$page->admin_links[] = common::Link('Admin_Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
+		}
+
+		if( $can_edit ){
+			$page->admin_links[] = common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+		}
+
+
+		if( $menu_permissions ){
+			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['delete_file'],'cmd=trash_page&index='.urlencode($this->gp_index),array('data-cmd'=>'postlink','title'=>$langmessage['delete_page'],'class'=>'gpconfirm'));
+
+		}
+
+
+		$page->admin_links		= array_merge($page->admin_links, $admin_links);
 	}
 
 
@@ -554,6 +587,22 @@ class editing_page extends display{
 		$action = common::GetUrl($this->title);
 		gp_rename::RenameForm( $this->gp_index, $action );
 	}
+
+
+	/**
+	 * Toggle the visibility of the current page
+	 *
+	 */
+	function ToggleVisibility(){
+		global $gp_titles;
+
+		$_REQUEST += array('visibility'=>'');
+		includeFile('tool/Visibility.php');
+
+		\gp\tool\Visibility::Toggle($this->gp_index, $_REQUEST['visibility']);
+		$this->visibility = display::OrConfig($this->gp_index,'vis');
+	}
+
 
 
 	/**

@@ -341,15 +341,24 @@ class special_gpsearch{
 			return;
 		}
 
-		$full_path		= gpFiles::PageFile($title);
-		$file_sections	= gpFiles::Get($full_path,'file_sections');
+		//private pages
+		if( !common::LoggedIn() ){
+			$visibility		= display::OrConfig($index,'vis');
+			if( $visibility ){
+				return;
+			}
+		}
+
+
+		$full_path			= gpFiles::PageFile($title);
+		$file_sections		= gpFiles::Get($full_path,'file_sections');
 
 		if( !$file_sections ){
 			return;
 		}
 
-		$content		= section_content::Render($file_sections,$title,gpFiles::$last_stats);
-		$label			= common::GetLabel($title);
+		$content			= section_content::Render($file_sections,$title,gpFiles::$last_stats);
+		$label				= common::GetLabel($title);
 
 		$this->FindString($content, $label, $title);
 	}

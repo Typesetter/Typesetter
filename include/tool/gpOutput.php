@@ -1592,8 +1592,8 @@ class gpOutput{
 		}
 
 		self::PrepMenuOutput();
-		$clean_attributes = array( 'attr'=>'', 'class'=>array(), 'id'=>'' );
-		$clean_attributes_a = array('href' => '', 'attr' => '', 'value' => '', 'title' => '', 'class' =>array() );
+		$clean_attributes		= array( 'attr'=>'', 'class'=>array(), 'id'=>'' );
+		$clean_attributes_a		= array('href' => '', 'attr' => '', 'value' => '', 'title' => '', 'class' =>array() );
 
 
 
@@ -1612,14 +1612,14 @@ class gpOutput{
 		}
 
 
-		$prev_level = $start_level;
-		$page_title_full = common::GetUrl($page->title);
-		$open = false;
-		$li_count = array();
+		$prev_level				= $start_level;
+		$page_title_full		= common::GetUrl($page->title);
+		$open					= false;
+		$li_count				= array();
 
 		//get parent page
-		$parent_page = false;
-		$parents = common::Parents($page->gp_index,$source_menu);
+		$parent_page			= false;
+		$parents				= common::Parents($page->gp_index,$source_menu);
 		if( count($parents) ){
 			$parent_page = $parents[0];
 		}
@@ -1631,19 +1631,25 @@ class gpOutput{
 
 		$menu = array_keys($menu);
 		foreach($menu as $menu_index => $menu_key){
-			$menu_info = $source_menu[$menu_key];
-			$this_level = $menu_info['level'];
 
-			//the next entry
-			$next_info = false;
-			$next_index = $menu_index+1;
-			if( array_key_exists($next_index,$menu) ){
-				$next_index = $menu[$next_index];
-				$next_info = $source_menu[$next_index];
+			if( display::OrConfig($menu_key,'vis') ){
+				continue;
 			}
 
-			$attributes_a = $clean_attributes_a;
-			$attributes_li = $attributes_ul = $clean_attributes;
+			$menu_info			= $source_menu[$menu_key];
+			$this_level			= $menu_info['level'];
+
+			//the next entry
+			$next_info			= false;
+			$next_index			= $menu_index+1;
+
+			if( array_key_exists($next_index,$menu) ){
+				$next_index		= $menu[$next_index];
+				$next_info		= $source_menu[$next_index];
+			}
+
+			$attributes_a		= $clean_attributes_a;
+			$attributes_li		= $attributes_ul = $clean_attributes;
 
 
 			//ordered or "indexed" classes
@@ -1668,21 +1674,21 @@ class gpOutput{
 
 			//selected classes
 			if( $this_level < $next_info['level'] ){
-				$attributes_a['class']['haschildren'] = $GP_MENU_CLASSES['haschildren'];
-				$attributes_li['class']['haschildren_li'] = $GP_MENU_CLASSES['haschildren_li'];
+				$attributes_a['class']['haschildren']			= $GP_MENU_CLASSES['haschildren'];
+				$attributes_li['class']['haschildren_li']		= $GP_MENU_CLASSES['haschildren_li'];
 			}
 
 			if( isset($menu_info['url']) && ($menu_info['url'] == $page->title || $menu_info['url'] == $page_title_full) ){
-				$attributes_a['class']['selected'] = $GP_MENU_CLASSES['selected'];
-				$attributes_li['class']['selected_li'] = $GP_MENU_CLASSES['selected_li'];
+				$attributes_a['class']['selected']				= $GP_MENU_CLASSES['selected'];
+				$attributes_li['class']['selected_li']			= $GP_MENU_CLASSES['selected_li'];
 
 			}elseif( $menu_key == $page->gp_index ){
-				$attributes_a['class']['selected'] = $GP_MENU_CLASSES['selected'];
-				$attributes_li['class']['selected_li'] = $GP_MENU_CLASSES['selected_li'];
+				$attributes_a['class']['selected']				= $GP_MENU_CLASSES['selected'];
+				$attributes_li['class']['selected_li']			= $GP_MENU_CLASSES['selected_li'];
 
 			}elseif( in_array($menu_key,$parents) ){
-				$attributes_a['class']['childselected'] = $GP_MENU_CLASSES['childselected'];
-				$attributes_li['class']['childselected_li'] = $GP_MENU_CLASSES['childselected_li'];
+				$attributes_a['class']['childselected']			= $GP_MENU_CLASSES['childselected'];
+				$attributes_li['class']['childselected_li']		= $GP_MENU_CLASSES['childselected_li'];
 
 			}
 
@@ -1735,9 +1741,10 @@ class gpOutput{
 					$menu_info['title_attr'] = strip_tags($menu_info['label']);
 				}
 
-				$attributes_a['href'] = $menu_info['url'];
-				$attributes_a['value'] = $menu_info['label'];
-				$attributes_a['title'] = $menu_info['title_attr'];
+				$attributes_a['href']		= $menu_info['url'];
+				$attributes_a['value']		= $menu_info['label'];
+				$attributes_a['title']		= $menu_info['title_attr'];
+
 				if( isset($menu_info['new_win']) ){
 					$attributes_a['target'] = '_blank';
 				}
@@ -1745,10 +1752,10 @@ class gpOutput{
 			//internal link
 			}else{
 
-				$title = common::IndexToTitle($menu_key);
-				$attributes_a['href'] = common::GetUrl($title);
-				$attributes_a['value'] = common::GetLabel($title);
-				$attributes_a['title'] = common::GetBrowserTitle($title);
+				$title						= common::IndexToTitle($menu_key);
+				$attributes_a['href']		= common::GetUrl($title);
+				$attributes_a['value']		= common::GetLabel($title);
+				$attributes_a['title']		= common::GetBrowserTitle($title);
 
 				//get valid rel attr
 				if( !empty($gp_titles[$menu_key]['rel']) ){
@@ -1762,8 +1769,8 @@ class gpOutput{
 
 
 
-			$prev_level = $this_level;
-			$open = true;
+			$prev_level		= $this_level;
+			$open			= true;
 		}
 
 		while( $start_level <= $prev_level){

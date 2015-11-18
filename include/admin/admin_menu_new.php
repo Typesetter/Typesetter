@@ -125,6 +125,10 @@ class admin_menu_new extends admin_menu_tools{
 				$this->HomepageSave();
 			return;
 
+			case 'ToggleVisibility':
+				$this->ToggleVisibility();
+			break;
+
 			//rename
 			case 'renameform':
 				$this->RenameForm(); //will die()
@@ -536,7 +540,7 @@ class admin_menu_new extends admin_menu_tools{
 		$menu_adjustments_made = false;
 
 		if( $this->curr_menu_array === false ){
-			message($langmessage['OOPS'].' (Current menu not set)');
+			msg($langmessage['OOPS'].' (Current menu not set)');
 			return;
 		}
 
@@ -612,9 +616,10 @@ class admin_menu_new extends admin_menu_tools{
 				$class .= ' no-nest';
 			}
 
+			$class = $this->VisibilityClass($class, $menu_key);
 
 
-			//
+			//layout
 			$style = '';
 			if( $this->is_main_menu ){
 				if( isset($gp_titles[$menu_key]['gpLayout'])
@@ -626,6 +631,8 @@ class admin_menu_new extends admin_menu_tools{
 					//$style = 'border-color:'.$color;
 				}
 			}
+
+
 			echo '<li class="'.$class.'" style="'.$style.'">';
 
 			if( $curr_level == 0 ){
@@ -672,11 +679,37 @@ class admin_menu_new extends admin_menu_tools{
 		}
 	}
 
+
+	/**
+	 * Get the css class representing the current page's visibility
+	 *
+	 */
+	function VisibilityClass($class, $index){
+		global $gp_menu, $gp_titles;
+
+		if( $this->is_main_menu && isset($gp_titles[$index]['vis']) ){
+			$class .= ' private-list';
+			return $class;
+		}
+
+		$parents = common::Parents($index,$gp_menu);
+		foreach($parents as $parent_index){
+			if( isset($gp_titles[$parent_index]['vis']) ){
+				$class .= ' private-inherited';
+				break;
+			}
+		}
+
+		return $class;
+	}
+
+
+
 	function ShowLevel($menu_key,$menu_value,$prev_layout){
 		global $gp_titles, $gpLayouts;
 
-		$layout = admin_menu_tools::CurrentLayout($menu_key);
-		$layout_info = $gpLayouts[$layout];
+		$layout			= admin_menu_tools::CurrentLayout($menu_key);
+		$layout_info	= $gpLayouts[$layout];
 
 		echo '<div id="gp_menu_key_'.$menu_key.'">';
 
@@ -715,7 +748,7 @@ class admin_menu_new extends admin_menu_tools{
 			$data['title'] = substr($data['title'],0,30).'...';
 		}
 
-		$this->MenuLink($data,true);
+		$this->MenuLink($data,'external');
 		echo common::LabelSpecialChars($menu_value['label']);
 		echo '</a>';
 	}
@@ -752,9 +785,9 @@ class admin_menu_new extends admin_menu_tools{
 		global $langmessage, $gp_titles;
 
 
-		$title = common::IndexToTitle($menu_key);
-		$label = common::GetLabel($title);
-		$isSpecialLink = common::SpecialOrAdmin($title);
+		$title						= common::IndexToTitle($menu_key);
+		$label						= common::GetLabel($title);
+		$isSpecialLink				= common::SpecialOrAdmin($title);
 
 
 
@@ -771,6 +804,8 @@ class admin_menu_new extends admin_menu_tools{
 					,'types'		=>	$gp_titles[$menu_key]['type']
 					,'opts'			=> ''
 					);
+
+
 		if( !$isSpecialLink ){
 			$file = gpFiles::PageFile($title);
 			$stats = @stat($file);
@@ -799,14 +834,11 @@ class admin_menu_new extends admin_menu_tools{
 	 * Output Sortable Menu Link and data about the title or external link
 	 *
 	 */
-	function MenuLink($data, $external = false){
+	function MenuLink($data, $class = ''){
 
-		$class = 'gp_label sort';
-		if( $external ){
-			$class .= ' external';
-		}
+		$class	= 'gp_label sort '.$class;
+		$json	= common::JsonEncode($data);
 
-		$json = common::JsonEncode($data);
 		echo '<a class="'.$class.'" data-cmd="menu_info" data-arg="'.str_replace('&','&amp;',$data['key']).'" data-json=\''.htmlspecialchars($json,ENT_QUOTES & ~ENT_COMPAT).'\'>';
 	}
 
@@ -829,6 +861,19 @@ class admin_menu_new extends admin_menu_tools{
 		$img	= '<span class="menu_icon page_edit_icon"></span>';
 		$attrs	= array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax','class'=>'not_multiple');
 		echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&index=[key]',$attrs);
+
+
+		$img	= '<span class="menu_icon icon_vis"></span>';
+		$q		= 'cmd=ToggleVisibility&index=[key]';
+		$label	= $langmessage['Visibility'].': '.$langmessage['Private'];
+		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax','class'=>'vis_private');
+		echo $this->Link('Admin_Menu',$img.$label,$q,$attrs);
+
+		$label	= $langmessage['Visibility'].': '.$langmessage['Public'];
+		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax','class'=>'vis_public');
+		$q		.= '&visibility=private';
+		echo $this->Link('Admin_Menu',$img.$label,$q,$attrs);
+
 
 		$img	= '<span class="menu_icon copy_icon"></span>';
 		$attrs	= array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox','class'=>'not_multiple');
@@ -1052,7 +1097,7 @@ class admin_menu_new extends admin_menu_tools{
 	 *
 	 */
 	function SearchDisplayRow($title){
-		global $langmessage, $gpLayouts, $gp_index, $gp_menu;
+		global $langmessage, $gpLayouts, $gp_index, $gp_menu, $gp_titles;
 
 		$title_index		= $gp_index[$title];
 		$is_special			= common::SpecialOrAdmin($title);
@@ -1080,6 +1125,19 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<div><div>';//style="position:absolute;bottom:0;left:10px;right:10px;"
 
 		echo $this->Link('Admin_Menu',$langmessage['rename/details'],'cmd=renameform&index='.urlencode($title_index),array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
+
+
+		$q		= 'cmd=ToggleVisibility&index='.urlencode($title_index);
+		if( isset($gp_titles[$title_index]['vis']) ){
+			$label	= $langmessage['Visibility'].': '.$langmessage['Private'];
+		}else{
+			$label	= $langmessage['Visibility'].': '.$langmessage['Public'];
+			$q		.= '&visibility=private';
+		}
+
+		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax');
+		echo $this->Link('Admin_Menu',$label,$q,$attrs);
+
 
 		echo $this->Link('Admin_Menu',$langmessage['Copy'],'cmd=copypage&index='.urlencode($title_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 
@@ -1220,20 +1278,20 @@ class admin_menu_new extends admin_menu_tools{
 
 		$this->CacheSettings();
 		if( $this->curr_menu_array === false ){
-			message($langmessage['OOPS'].'(1)');
+			msg($langmessage['OOPS'].'(1)');
 			return false;
 		}
 
 		$key = $_POST['drag_key'];
 		if( !isset($this->curr_menu_array[$key]) ){
-			message($langmessage['OOPS'].' (Unknown menu key)');
+			msg($langmessage['OOPS'].' (Unknown menu key)');
 			return false;
 		}
 
 
 		$moved = $this->RmMoved($key);
 		if( !$moved ){
-			message($langmessage['OOPS'].'(3)');
+			msg($langmessage['OOPS'].'(3)');
 			return false;
 		}
 
@@ -1257,7 +1315,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		if( !$inserted ){
 			$this->RestoreSettings();
-			message($langmessage['OOPS'].'(4)');
+			msg($langmessage['OOPS'].'(4)');
 			return;
 		}
 
@@ -1336,7 +1394,7 @@ class admin_menu_new extends admin_menu_tools{
 			// Create file in trash
 			if( $title ){
 				if( !admin_trash::MoveToTrash_File($title,$index,$trash_data) ){
-					message($langmessage['OOPS']);
+					msg($langmessage['OOPS']);
 					$this->RestoreSettings();
 					return false;
 				}
@@ -1351,7 +1409,7 @@ class admin_menu_new extends admin_menu_tools{
 				}
 
 				if( !$this->RmFromMenu($index,false) ){
-					message($langmessage['OOPS']);
+					msg($langmessage['OOPS']);
 					$this->RestoreSettings();
 					return false;
 				}
@@ -1367,7 +1425,7 @@ class admin_menu_new extends admin_menu_tools{
 
 
 		if( !admin_trash::ModTrashData($trash_data,null) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			$this->RestoreSettings();
 			return false;
 		}
@@ -1378,7 +1436,7 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 		$link = common::GetUrl('Admin_Trash');
-		message(sprintf($langmessage['MOVED_TO_TRASH'],$link));
+		msg(sprintf($langmessage['MOVED_TO_TRASH'],$link));
 
 
 		//finally, delete the files in /_pages
@@ -1506,11 +1564,22 @@ class admin_menu_new extends admin_menu_tools{
 		//prepare variables
 		$title =& $_REQUEST['title'];
 		if( !isset($gp_index[$title]) ){
-			message($langmessage['OOPS'].' (R0)');
+			msg($langmessage['OOPS'].' (R0)');
 			return false;
 		}
 
 		gp_rename::RenameFile($title);
+	}
+
+
+	/**
+	 * Toggle Page Visibility
+	 *
+	 */
+	function ToggleVisibility(){
+		$_REQUEST += array('index'=>'','visibility'=>'');
+		includeFile('tool/Visibility.php');
+		\gp\tool\Visibility::Toggle($_REQUEST['index'], $_REQUEST['visibility']);
 	}
 
 
@@ -1522,7 +1591,7 @@ class admin_menu_new extends admin_menu_tools{
 		global $langmessage;
 
 		if( $this->curr_menu_array === false ){
-			message($langmessage['OOPS'].'(1)');
+			msg($langmessage['OOPS'].'(1)');
 			return false;
 		}
 
@@ -1538,12 +1607,12 @@ class admin_menu_new extends admin_menu_tools{
 			}
 
 			if( !isset($this->curr_menu_array[$index]) ){
-				message($langmessage['OOPS'].'(3)');
+				msg($langmessage['OOPS'].'(3)');
 				return false;
 			}
 
 			if( !$this->RmFromMenu($index) ){
-				message($langmessage['OOPS'].'(4)');
+				msg($langmessage['OOPS'].'(4)');
 				$this->RestoreSettings();
 				return false;
 			}
@@ -1553,7 +1622,7 @@ class admin_menu_new extends admin_menu_tools{
 			return true;
 		}
 
-		message($langmessage['OOPS'].'(5)');
+		msg($langmessage['OOPS'].'(5)');
 		$this->RestoreSettings();
 		return false;
 	}
@@ -1805,7 +1874,7 @@ class admin_menu_new extends admin_menu_tools{
 		global $langmessage, $gp_index;
 
 		if( $this->curr_menu_array === false ){
-			message($langmessage['OOPS'].' (Menu not set)');
+			msg($langmessage['OOPS'].' (Menu not set)');
 			return false;
 		}
 
@@ -1822,19 +1891,19 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 		if( count($titles) == 0 ){
-			message($langmessage['OOPS'].' (Nothing selected)');
+			msg($langmessage['OOPS'].' (Nothing selected)');
 			$this->RestoreSettings();
 			return false;
 		}
 
 		if( !$this->MenuInsert($titles,$_POST['insert_where'],$_POST['insert_how']) ){
-			message($langmessage['OOPS'].' (Insert Failed)');
+			msg($langmessage['OOPS'].' (Insert Failed)');
 			$this->RestoreSettings();
 			return false;
 		}
 
 		if( !$this->SaveMenu(false) ){
-			message($langmessage['OOPS'].' (Save Failed)');
+			msg($langmessage['OOPS'].' (Save Failed)');
 			$this->RestoreSettings();
 			return false;
 		}
@@ -1850,12 +1919,12 @@ class admin_menu_new extends admin_menu_tools{
 
 
 		if( $this->curr_menu_array === false ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return false;
 		}
 
 		if( !isset($_POST['titles']) ){
-			message($langmessage['OOPS'].' (Nothing Selected)');
+			msg($langmessage['OOPS'].' (Nothing Selected)');
 			return false;
 		}
 
@@ -1879,7 +1948,7 @@ class admin_menu_new extends admin_menu_tools{
 		$menu = admin_trash::RestoreTitles($titles);
 
 		if( count($exists) > 0 ){
-			message($langmessage['TITLES_EXIST'].implode(', ',$exists));
+			msg($langmessage['TITLES_EXIST'].implode(', ',$exists));
 
 			if( count($menu) == 0 ){
 				return false; //prevent multiple messages
@@ -1887,20 +1956,20 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 		if( count($menu) == 0 ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			$this->RestoreSettings();
 			return false;
 		}
 
 
 		if( !$this->MenuInsert($menu,$_POST['insert_where'],$_POST['insert_how']) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			$this->RestoreSettings();
 			return false;
 		}
 
 		if( !$this->SaveMenu(true) ){
-			message($langmessage['OOPS'].' (Not Saved)');
+			msg($langmessage['OOPS'].' (Not Saved)');
 			$this->RestoreSettings();
 			return false;
 		}
@@ -1936,11 +2005,11 @@ class admin_menu_new extends admin_menu_tools{
 
 
 		if( !admin_tools::SavePagesPHP() ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			$this->RestoreSettings();
 			return false;
 		}
-		message($langmessage['SAVED']);
+		msg($langmessage['SAVED']);
 		$this->search_page = 0; //take user back to first page where the new page will be displayed
 		return $new_index;
 	}
@@ -1951,13 +2020,13 @@ class admin_menu_new extends admin_menu_tools{
 
 
 		if( $this->curr_menu_array === false ){
-			message($langmessage['OOPS'].'(0)');
+			msg($langmessage['OOPS'].'(0)');
 			return false;
 		}
 
 		$neighbor = $_POST['insert_where'];
 		if( !isset($this->curr_menu_array[$neighbor]) ){
-			message($langmessage['OOPS'].'(1)');
+			msg($langmessage['OOPS'].'(1)');
 			return false;
 		}
 
@@ -1971,13 +2040,13 @@ class admin_menu_new extends admin_menu_tools{
 		$insert[$new_index] = array();
 
 		if( !$this->MenuInsert($insert,$neighbor,$_POST['insert_how']) ){
-			message($langmessage['OOPS'].' (Not Inserted)');
+			msg($langmessage['OOPS'].' (Not Inserted)');
 			$this->RestoreSettings();
 			return false;
 		}
 
 		if( !$this->SaveMenu(true) ){
-			message($langmessage['OOPS'].' (Not Saved)');
+			msg($langmessage['OOPS'].' (Not Saved)');
 			$this->RestoreSettings();
 			return false;
 		}
@@ -1997,7 +2066,7 @@ class admin_menu_new extends admin_menu_tools{
 		$title		= $_POST['title'];
 		$title		= admin_tools::CheckPostedNewPage($title,$message);
 		if( $title === false ){
-			message($message);
+			msg($message);
 			return false;
 		}
 
@@ -2047,7 +2116,7 @@ class admin_menu_new extends admin_menu_tools{
 		$gp_index[$title]				= $index;
 
 		if( !gpFiles::NewTitle($title,$content,$type) ){
-			message($langmessage['OOPS'].' (cn1)');
+			msg($langmessage['OOPS'].' (cn1)');
 			unset($gp_index[$title]);
 			return false;
 		}
@@ -2265,7 +2334,7 @@ class admin_menu_new extends admin_menu_tools{
 		$menu_id =& $_POST['id'];
 
 		if( !$this->IsAltMenu($menu_id) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return;
 		}
 
@@ -2276,7 +2345,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		$config['menus'][$menu_id] = $menu_name;
 		if( !admin_tools::SaveConfig() ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 		}else{
 			$this->avail_menus[$menu_id] = $menu_name;
 		}
@@ -2382,13 +2451,13 @@ class admin_menu_new extends admin_menu_tools{
 
 		$menu_file = $dataDir.'/data/_menus/'.$id.'.php';
 		if( !gpFiles::SaveData($menu_file,'menu',$new_menu) ){
-			message($langmessage['OOPS'].' (Menu Not Saved)');
+			msg($langmessage['OOPS'].' (Menu Not Saved)');
 			return false;
 		}
 
 		$config['menus'][$id] = $menu_name;
 		if( !admin_tools::SaveConfig() ){
-			message($langmessage['OOPS'].' (Config Not Saved)');
+			msg($langmessage['OOPS'].' (Config Not Saved)');
 		}else{
 			$this->avail_menus[$id] = $menu_name;
 			$this->curr_menu_id = $id;
@@ -2416,12 +2485,12 @@ class admin_menu_new extends admin_menu_tools{
 
 		$menu_name = gp_edit::CleanTitle($_POST['menu_name'],' ');
 		if( empty($menu_name) ){
-			message($langmessage['OOPS'].' (Empty Name)');
+			msg($langmessage['OOPS'].' (Empty Name)');
 			return false;
 		}
 
 		if( array_search($menu_name,$this->avail_menus) !== false ){
-			message($langmessage['OOPS'].' (Name Exists)');
+			msg($langmessage['OOPS'].' (Name Exists)');
 			return false;
 		}
 
@@ -2435,7 +2504,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		$menu_id =& $_POST['id'];
 		if( !$this->IsAltMenu($menu_id) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return;
 		}
 
@@ -2444,10 +2513,10 @@ class admin_menu_new extends admin_menu_tools{
 		unset($config['menus'][$menu_id]);
 		unset($this->avail_menus[$menu_id]);
 		if( !admin_tools::SaveConfig() ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 		}
 
-		message($langmessage['SAVED']);
+		msg($langmessage['SAVED']);
 
 		//delete menu file
 		$menu_file = $dataDir.'/data/_menus/'.$menu_id.'.php';
@@ -2546,7 +2615,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		$key =& $_GET['key'];
 		if( !isset($this->curr_menu_array[$key]) ){
-			message($langmessage['OOPS'].' (Current menu not set)');
+			msg($langmessage['OOPS'].' (Current menu not set)');
 			return false;
 		}
 
@@ -2572,14 +2641,14 @@ class admin_menu_new extends admin_menu_tools{
 
 		$key =& $_POST['key'];
 		if( !isset($this->curr_menu_array[$key]) ){
-			message($langmessage['OOPS'].' (Current menu not set)');
+			msg($langmessage['OOPS'].' (Current menu not set)');
 			return false;
 		}
 		$level = $this->curr_menu_array[$key]['level'];
 
 		$array = $this->ExternalPost();
 		if( !$array ){
-			message($langmessage['OOPS'].' (1)');
+			msg($langmessage['OOPS'].' (1)');
 			return;
 		}
 
@@ -2589,7 +2658,7 @@ class admin_menu_new extends admin_menu_tools{
 		$this->curr_menu_array[$key] = $array;
 
 		if( !$this->SaveMenu(false) ){
-			message($langmessage['OOPS'].' (Menu Not Saved)');
+			msg($langmessage['OOPS'].' (Menu Not Saved)');
 			$this->RestoreSettings();
 			return false;
 		}
@@ -2607,7 +2676,7 @@ class admin_menu_new extends admin_menu_tools{
 		$array = $this->ExternalPost();
 
 		if( !$array ){
-			message($langmessage['OOPS'].' (Invalid Request)');
+			msg($langmessage['OOPS'].' (Invalid Request)');
 			return;
 		}
 
@@ -2615,13 +2684,13 @@ class admin_menu_new extends admin_menu_tools{
 		$insert[$key] = $array;
 
 		if( !$this->MenuInsert($insert,$_POST['insert_where'],$_POST['insert_how']) ){
-			message($langmessage['OOPS'].' (Not inserted)');
+			msg($langmessage['OOPS'].' (Not inserted)');
 			$this->RestoreSettings();
 			return false;
 		}
 
 		if( !$this->SaveMenu(false) ){
-			message($langmessage['OOPS'].' (Menu not saved)');
+			msg($langmessage['OOPS'].' (Menu not saved)');
 			$this->RestoreSettings();
 			return false;
 		}
@@ -2674,7 +2743,7 @@ class admin_menu_new extends admin_menu_tools{
 		$from_title = common::IndexToTitle($index);
 
 		if( !$from_title ){
-			message($langmessage['OOPS_TITLE']);
+			msg($langmessage['OOPS_TITLE']);
 			return false;
 		}
 
@@ -2727,7 +2796,7 @@ class admin_menu_new extends admin_menu_tools{
 		//existing page info
 		$from_title = $_POST['from_title'];
 		if( !isset($gp_index[$from_title]) ){
-			message($langmessage['OOPS_TITLE']);
+			msg($langmessage['OOPS_TITLE']);
 			return false;
 		}
 		$from_index = $gp_index[$from_title];
@@ -2738,7 +2807,7 @@ class admin_menu_new extends admin_menu_tools{
 		$title = $_POST['title'];
 		$title = admin_tools::CheckPostedNewPage($title,$message);
 		if( $title === false ){
-			message($message);
+			msg($message);
 			return false;
 		}
 
@@ -2753,7 +2822,7 @@ class admin_menu_new extends admin_menu_tools{
 		$file = gpFiles::PageFile($title);
 
 		if( !gpFiles::Save($file,$contents) ){
-			message($langmessage['OOPS'].' (File not saved)');
+			msg($langmessage['OOPS'].' (File not saved)');
 			return false;
 		}
 
@@ -2764,15 +2833,15 @@ class admin_menu_new extends admin_menu_tools{
 		$gp_titles += $new_titles;
 
 		if( !admin_tools::SavePagesPHP() ){
-			message($langmessage['OOPS'].' (CP2)');
+			msg($langmessage['OOPS'].' (CP2)');
 			return false;
 		}
 
-		message($langmessage['SAVED']);
+		msg($langmessage['SAVED']);
 		if( isset($_REQUEST['redir']) ){
 			$url = common::AbsoluteUrl($title,'',true,false);
 			$page->ajaxReplace[] = array('location',$url,'15000');
-			message(sprintf($langmessage['will_redirect'],common::Link_Page($title)));
+			msg(sprintf($langmessage['will_redirect'],common::Link_Page($title)));
 		}
 
 		return $index;
@@ -2842,7 +2911,7 @@ class admin_menu_new extends admin_menu_tools{
 			}
 
 			if( !$homepage_key ){
-				message($langmessage['OOPS']);
+				msg($langmessage['OOPS']);
 				return;
 			}
 		}
@@ -2850,7 +2919,7 @@ class admin_menu_new extends admin_menu_tools{
 		$config['homepath_key'] = $homepage_key;
 		$config['homepath']		= common::IndexToTitle($config['homepath_key']);
 		if( !admin_tools::SaveConfig() ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return;
 		}
 

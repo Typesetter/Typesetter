@@ -71,7 +71,7 @@ class SimpleSlideshow{
 												.'<div class="loader"></div>'
 												.$first_image
 											.'</div>'
-											.'<div class="caption-container"></div>'
+											.'<div class="caption-container caption"></div>'
 										.'</div>'
 										.$section_data['content']
 									.'</div>';
@@ -140,13 +140,15 @@ class SimpleSlideshow{
 	//gpEasy 4.0rc3
 	static function FromPost(){
 
+		msg($_POST);
+
 		//each image
 		$indicators = $first_image = '';
 		foreach($_POST['images'] as $i => $img){
 			if( empty($img) ){
 				continue;
 			}
-			$caption =& trim($_POST['captions'][$i]);
+			$caption = trim($_POST['captions'][$i]);
 
 			if( empty($first_image) ){
 				$first_image = '<a href="#" name="gp_slideshow_next" class="slideshow_slide first_image" title="'.htmlspecialchars($caption).'">'
@@ -160,6 +162,7 @@ class SimpleSlideshow{
 			$indicators .= '<li>'
 							.'<a data-cmd="gp_slideshow" href="'.$img.'" title="'.htmlspecialchars($caption).'" class="">'
 							.'<img alt="" src="'.$thumb_path.'"></a>'
+							.'<span class="caption" style="display:none">'.htmlspecialchars($caption).'</span>' //for saving/editing of captions
 							.'</li>';
 		}
 
@@ -243,9 +246,6 @@ class SimpleSlideshow{
 			$scripts[] = $addonRelativeCode.'/gallery_options.js';
 			$scripts[] = '/include/js/inline_edit/inline_editing.js';
 			$scripts[] = '/include/js/inline_edit/image_common.js';
-
-			//$scripts[] = '/include/thirdparty/jquery_ui/jquery-ui.custom.min.js';
-
 			$scripts[] = '/include/js/inline_edit/gallery_edit_202.js';
 			$scripts[] = '/include/js/jquery.auto_upload.js';
 

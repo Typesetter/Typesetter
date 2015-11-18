@@ -33,31 +33,17 @@ class special_display extends display{
 			return;
 		}
 
-		$this->gp_index = $gp_index[$this->title];
-		$this->TitleInfo = $scriptinfo;
+		$this->gp_index			= $gp_index[$this->title];
+		$this->TitleInfo		= $scriptinfo;
 
 
 		if( !$this->CheckVisibility() ){
 			return false;
 		}
 
-
-		$menu_permissions = false;
-		if( common::LoggedIn() ){
-			$menu_permissions = admin_tools::HasPermission('Admin_Menu');
-			if( $menu_permissions ){
-				$page->admin_links[] = common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
-				$page->admin_links[] = common::Link('Admin_Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
-			}
-			if( admin_tools::HasPermission('Admin_User') ){
-				$page->admin_links[] = common::Link('Admin_Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
-			}
-		}
-
-
 		//allow addons to affect page actions and how a page is displayed
-		$cmd = common::GetCommand();
-		$cmd_after = gpPlugin::Filter('PageRunScript',array($cmd));
+		$cmd			= common::GetCommand();
+		$cmd_after		= gpPlugin::Filter('PageRunScript',array($cmd));
 		if( $cmd !== $cmd_after ){
 			$cmd = $cmd_after;
 			if( $cmd === 'return' ){
@@ -65,23 +51,66 @@ class special_display extends display{
 			}
 		}
 
-		if( $menu_permissions ){
-
-			switch($cmd){
-				// rename & details
-				case 'renameform':
-					$this->RenameForm();
-				return;
-				case 'renameit':
-					if( $this->RenameFile() ){
-						return;
-					}
-				break;
+		if( common::LoggedIn() ){
+			$menu_permissions = admin_tools::HasPermission('Admin_Menu');
+			if( $menu_permissions ){
+				switch($cmd){
+					// rename & details
+					case 'renameform':
+						$this->RenameForm();
+					return;
+					case 'renameit':
+						if( $this->RenameFile() ){
+							return;
+						}
+					break;
+					case 'ToggleVisibility':
+						$this->ToggleVisibility();
+					break;
+				}
 			}
+
+			$this->AdminLinks();
 		}
+
 
 		$this->contentBuffer = special_display::ExecInfo($scriptinfo);
 	}
+
+
+	/**
+	 * Generate admin toolbar links
+	 *
+	 */
+	function AdminLinks(){
+		global $langmessage, $page;
+
+		$admin_links			= $page->admin_links;
+		$page->admin_links		= array();
+		$menu_permissions		= admin_tools::HasPermission('Admin_Menu');
+
+
+		if( $menu_permissions ){
+			$page->admin_links[]		= common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
+			$page->admin_links[]		= common::Link('Admin_Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
+
+			$q							= 'cmd=ToggleVisibility';
+			$label						= $langmessage['Visibility'].': '.$langmessage['Private'];
+			if( !$this->visibility ){
+				$label					= $langmessage['Visibility'].': '.$langmessage['Public'];
+				$q						.= '&visibility=private';
+			}
+			$attrs						= array('title'=>$label,'data-cmd'=>'creq');
+			$page->admin_links[]		= common::Link($this->title,$label,$q,$attrs);
+		}
+		if( admin_tools::HasPermission('Admin_User') ){
+			$page->admin_links[] = common::Link('Admin_Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
+		}
+
+		$page->admin_links				= array_merge($page->admin_links, $admin_links);
+	}
+
+
 
 	function RenameForm(){
 		global $page,$gp_index;
@@ -103,6 +132,22 @@ class special_display extends display{
 		}
 		return false;
 	}
+
+
+	/**
+	 * Toggle the visibility of the current page
+	 *
+	 */
+	function ToggleVisibility(){
+		global $gp_titles;
+
+		$_REQUEST += array('visibility'=>'');
+		includeFile('tool/Visibility.php');
+
+		\gp\tool\Visibility::Toggle($this->gp_index, $_REQUEST['visibility']);
+		$this->visibility = display::OrConfig($this->gp_index,'vis');
+	}
+
 
 	/**
 	 *

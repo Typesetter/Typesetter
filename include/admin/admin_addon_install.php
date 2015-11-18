@@ -250,19 +250,26 @@ class admin_addon_install extends admin_addons_tool{
 			$result = gpRemoteGet::Get_Successful($src);
 		}
 
+		//no response
 		if( !$result ){
 			if( $use_cache ) unlink($cache_file);
-			echo '<p>'.$langmessage['Sorry, data not fetched'].' (F1:'.gpRemoteGet::Debug().')</p>';
+			echo '<p>'.gpRemoteGet::Debug('Sorry, data not fetched','F1').'</p>';
 			return;
 		}
-		if( strpos($result,'a:') !== 0 ){
+
+		//invalid response?
+		//if( strpos($result,'a:') !== 0 ){
 			if( $use_cache ) unlink($cache_file);
-			echo '<p>'.$langmessage['Sorry, data not fetched'].' (F2:'.gpRemoteGet::Debug(substr($result,0,2)).')</p>';
+			$debug				= array();
+			$debug['Two']		= substr($result,0,2);
+			$debug['Twotr']		= substr(trim($result),0,2);
+			echo '<p>'.gpRemoteGet::Debug('Sorry, data not fetched','F2',$debug).'</p>';
 			return;
-		}
+		//}
 
 		$data = @unserialize($result);
 
+		//not unserialized?
 		if( !is_array($data) || count($data) == 0 ){
 			if( $use_cache ) unlink($cache_file);
 			echo '<p>'.$langmessage['Sorry, data not fetched'].' (F3)</p>';

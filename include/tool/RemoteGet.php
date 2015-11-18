@@ -7,7 +7,7 @@ class gpRemoteGet{
 
 	public static $redirected;
 	public static $maxlength = -1;	// The maximum bytes to read. eg: stream_get_contents($handle, $maxlength)
-	public static $get_method;
+	public static $debug;
 
 
 
@@ -81,14 +81,20 @@ class gpRemoteGet{
 	 * Loop through all potential methods until successful
 	 */
 	static function Get($url,$args=array()){
-		self::$redirected = null;
+
+		self::$debug			= array();
+		self::$debug['Ver']		= phpversion();
+		self::$debug['Redir']	= 0;
+		self::$redirected		= null;
+
 		return self::_get($url,$args);
 	}
 
 	static function _get($url, $args = array()){
-		$url = rawurldecode($url);
 
-		$methods = array('stream','fopen','fsockopen');
+		$url					= rawurldecode($url);
+		$methods				= array('stream','fopen','fsockopen');
+
 		foreach($methods as $method){
 			if( !gpRemoteGet::Supported($method) ){
 				continue;
@@ -99,7 +105,8 @@ class gpRemoteGet{
 				return false;
 			}
 
-			self::$get_method = $method;
+			self::$debug['Method']	= $method;
+			self::$debug['Len']		= strlen($result['body']);
 
 			return $result;
 		}
@@ -154,6 +161,7 @@ class gpRemoteGet{
 			return gpRemoteGet::fsockopen_request($url,$args);
 
 			default:
+				//message($langmessage['OOPS']);
 			return false;
 
 		}
@@ -355,7 +363,8 @@ class gpRemoteGet{
 			$location = $arrURL['scheme'].'://'.$arrURL['host'].$location;
 		}
 
-		self::$redirected = $location;
+		self::$redirected		= $location;
+		self::$debug['Redir']	= 1;
 
 		return gpRemoteGet::_get($location, $r);
 	}
@@ -428,9 +437,13 @@ class gpRemoteGet{
 	 * @return array|false Array with unprocessed string headers.
 	 */
 	static function StreamHeaders($handle){
+
 		if( !function_exists('stream_get_meta_data') ){
+			$debug['stream'] = 0;
 			return false;
 		}
+
+		$debug['stream'] = 1;
 
 		$meta = stream_get_meta_data($handle);
 		if( !isset($meta['wrapper_data']) ){
@@ -441,6 +454,7 @@ class gpRemoteGet{
 		if( isset($meta['wrapper_data']['headers']) ){
 			$theHeaders = $meta['wrapper_data']['headers'];
 		}
+
 		return $theHeaders;
 	}
 
@@ -514,31 +528,28 @@ class gpRemoteGet{
 			}
 		}
 
+
+		self::$debug['Headers'] = count($newheaders);
+
 		return array('response' => $response, 'headers' => $newheaders, 'cookies' => $cookies);
 	}
+
+
 
 
 	/**
 	 * Output debug info about the most recent request
 	 *
 	 */
-	static function Debug($append = false){
-		$debug = 'Method:'.self::$get_method;
+	static function Debug($lang_key, $start, $debug = array()){
+		global $langmessage;
 
-		if( self::$redirected ){
-			$debug .= ' Redir';
-		}
+		$debug = array_merge(self::$debug,$debug);
+		$debug = json_encode($debug);
+		$debug = trim($debug,'=');
 
-		if( $append ){
-			$debug .= ':'.$append;
-		}
-
-		$debug = base64_encode($debug);
-
-		return trim($debug,'=');
+		return ' <span class="gp_debug_info">'.$langmessage[$lang_key].' <span>'.$start.'<span> '.$debug.'</span></span></span>';
 	}
-
-
 
 
 }

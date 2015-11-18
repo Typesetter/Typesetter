@@ -535,20 +535,15 @@ class gpRemoteGet{
 	}
 
 
-
-
 	/**
 	 * Output debug info about the most recent request
 	 *
 	 */
-	static function Debug($lang_key, $start, $debug = array()){
-		global $langmessage;
+	static function Debug($lang_key, $debug = array()){
 
-		$debug = array_merge(self::$debug,$debug);
-		$debug = json_encode($debug);
-		$debug = trim($debug,'=');
+		$debug	= array_merge(self::$debug,$debug);
 
-		return ' <span class="gp_debug_info">'.$langmessage[$lang_key].' <span>'.$start.'<span> '.$debug.'</span></span></span>';
+		return common::Debug($lang_key, $debug);
 	}
 
 

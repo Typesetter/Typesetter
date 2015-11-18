@@ -253,19 +253,19 @@ class admin_addon_install extends admin_addons_tool{
 		//no response
 		if( !$result ){
 			if( $use_cache ) unlink($cache_file);
-			echo '<p>'.gpRemoteGet::Debug('Sorry, data not fetched','F1').'</p>';
+			echo '<p>'.gpRemoteGet::Debug('Sorry, data not fetched').'</p>';
 			return;
 		}
 
 		//invalid response?
-		//if( strpos($result,'a:') !== 0 ){
+		if( strpos($result,'a:') !== 0 ){
 			if( $use_cache ) unlink($cache_file);
 			$debug				= array();
 			$debug['Two']		= substr($result,0,2);
 			$debug['Twotr']		= substr(trim($result),0,2);
-			echo '<p>'.gpRemoteGet::Debug('Sorry, data not fetched','F2',$debug).'</p>';
+			echo '<p>'.gpRemoteGet::Debug('Sorry, data not fetched',$debug).'</p>';
 			return;
-		//}
+		}
 
 		$data = @unserialize($result);
 

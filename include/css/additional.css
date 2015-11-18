@@ -242,31 +242,3 @@ div.GPAREA{
  */
 ul.search_nav_bottom { list-style:none; }
 ul.search_nav_bottom li { display:inline; margin-right:0.5em; }
-
-
-/**
- * Debug
- *
- */
-.gp_debug_info{
-	display:inline-block;
-	}
-.gp_debug_info > span{
-	display:inline-block !important;
-	vertical-align:bottom;
-	overflow:hidden;
-	text-overflow:ellipsis;
-	white-space:nowrap;
-	background:#f9f9f9;
-	border:1px solid #ddd;
-	border-radius:7px;
-	font-size:80% !important;
-	padding:3px 5px;
-	line-height:1 !important;
-	}
-.gp_debug_info > span > span{
-	display:none;
-	}
-.gp_debug_info:hover > span > span{
-	display:inline;
-	}

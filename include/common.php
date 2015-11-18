@@ -2295,6 +2295,20 @@ class common{
 		return '<img src="'.common::Ampersands($img_path).'" height="1" width="1" alt="" style="border:0 none !important;height:1px !important;width:1px !important;padding:0 !important;margin:0 !important;"/>';
 	}
 
+	/**
+	 * Return a debug message with link to online debug info
+	 *
+	 */
+	static function Debug($lang_key, $debug = array()){
+		global $langmessage;
+		$debug	= json_encode($debug);
+		$debug	= base64_encode($debug);
+		$debug	= trim($debug,'=');
+		$debug	= strtr($debug, '+/', '-_');
+
+		return ' <span>'.$langmessage[$lang_key].' <a href="http://www.gpeasy.com/index.php/Debug?data='.$debug.'">More Info...</a></span>';
+	}
+
 	//only include error buffer when admin is logged in
 	static function ErrorBuffer($check_user = true, $jquery = true){
 		global $wbErrorBuffer, $config, $dataDir, $rootDir;

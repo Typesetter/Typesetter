@@ -252,12 +252,12 @@ class admin_addon_install extends admin_addons_tool{
 
 		if( !$result ){
 			if( $use_cache ) unlink($cache_file);
-			echo '<p>'.$langmessage['Sorry, data not fetched'].' (f1)</p>';
+			echo '<p>'.$langmessage['Sorry, data not fetched'].' (F1:'.gpRemoteGet::Debug().')</p>';
 			return;
 		}
 		if( strpos($result,'a:') !== 0 ){
 			if( $use_cache ) unlink($cache_file);
-			echo '<p>'.$langmessage['Sorry, data not fetched'].' (f2)</p>';
+			echo '<p>'.$langmessage['Sorry, data not fetched'].' (F2:'.gpRemoteGet::Debug(substr($result,0,2)).')</p>';
 			return;
 		}
 
@@ -265,7 +265,7 @@ class admin_addon_install extends admin_addons_tool{
 
 		if( !is_array($data) || count($data) == 0 ){
 			if( $use_cache ) unlink($cache_file);
-			echo '<p>'.$langmessage['Sorry, data not fetched'].' (f3)</p>';
+			echo '<p>'.$langmessage['Sorry, data not fetched'].' (F3)</p>';
 			return;
 		}
 

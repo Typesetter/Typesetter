@@ -7,6 +7,7 @@ class gpRemoteGet{
 
 	public static $redirected;
 	public static $maxlength = -1;	// The maximum bytes to read. eg: stream_get_contents($handle, $maxlength)
+	public static $get_method;
 
 
 
@@ -97,6 +98,8 @@ class gpRemoteGet{
 			if( $result === false ){
 				return false;
 			}
+
+			self::$get_method = $method;
 
 			return $result;
 		}
@@ -515,6 +518,25 @@ class gpRemoteGet{
 	}
 
 
+	/**
+	 * Output debug info about the most recent request
+	 *
+	 */
+	static function Debug($append = false){
+		$debug = 'Method:'.self::$get_method;
+
+		if( self::$redirected ){
+			$debug .= ' Redir';
+		}
+
+		if( $append ){
+			$debug .= ':'.$append;
+		}
+
+		$debug = base64_encode($debug);
+
+		return trim($debug,'=');
+	}
 
 
 

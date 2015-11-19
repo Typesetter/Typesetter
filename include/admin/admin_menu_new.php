@@ -870,7 +870,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo $this->Link('Admin_Menu',$img.$label,$q,$attrs);
 
 		$label	= $langmessage['Visibility'].': '.$langmessage['Public'];
-		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax','class'=>'vis_public');
+		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax','class'=>'vis_public not_multiple');
 		$q		.= '&visibility=private';
 		echo $this->Link('Admin_Menu',$img.$label,$q,$attrs);
 

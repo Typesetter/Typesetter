@@ -146,7 +146,10 @@ class editing_page extends display{
 		if( $menu_permissions ){
 			$page->admin_links[] = common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
 
+			// Having the layout link here complicates things.. would need layout link for special pages
+			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
 
+			//visibility
 			$q							= 'cmd=ToggleVisibility';
 			$label						= $langmessage['Visibility'].': '.$langmessage['Private'];
 			if( !$this->visibility ){
@@ -156,9 +159,6 @@ class editing_page extends display{
 			$attrs						= array('title'=>$label,'data-cmd'=>'creq');
 			$page->admin_links[]		= common::Link($this->title,$label,$q,$attrs);
 
-
-			// Having the layout link here complicates things.. would need layout link for special pages
-			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
 			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['Copy'],'cmd=copypage&redir=redir&index='.urlencode($this->gp_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 		}
 

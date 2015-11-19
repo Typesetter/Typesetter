@@ -37,6 +37,7 @@ gp_defined('gp_default_theme','Three_point_5/Shore'); 	//Bootswatch_Flatly/4_Sti
 
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php');
 gp_defined('addon_browse_path','http://www.gpeasy.com/index.php');
+gp_defined('debug_path','http://www.gpeasy.com/index.php/Debug');
 
 gp_defined('gpversion','4.6b1');
 gp_defined('gp_random',common::RandomString());
@@ -2295,6 +2296,7 @@ class common{
 		return '<img src="'.common::Ampersands($img_path).'" height="1" width="1" alt="" style="border:0 none !important;height:1px !important;width:1px !important;padding:0 !important;margin:0 !important;"/>';
 	}
 
+
 	/**
 	 * Return a debug message with link to online debug info
 	 *
@@ -2306,8 +2308,9 @@ class common{
 		$debug	= trim($debug,'=');
 		$debug	= strtr($debug, '+/', '-_');
 
-		return ' <span>'.$langmessage[$lang_key].' <a href="http://www.gpeasy.com/index.php/Debug?data='.$debug.'">More Info...</a></span>';
+		return ' <span>'.$langmessage[$lang_key].' <a href="'.debug_path.'?data='.$debug.'">More Info...</a></span>';
 	}
+
 
 	//only include error buffer when admin is logged in
 	static function ErrorBuffer($check_user = true, $jquery = true){

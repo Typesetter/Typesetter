@@ -173,14 +173,6 @@ class AdminSimpleBlogConfig extends SimipleBlogAdmin{
 		echo $defaults['post_abbrev'];
 		echo '</td></tr>';
 
-		//Entries Abbreviation Length
-		echo '<tr><td>';
-		echo 'Entries Abbreviation Length';
-		echo '</td><td>';
-		echo '<input type="text" name="post_abbrev" value="'.htmlspecialchars($array['post_abbrev']).'" class="gpinput" />';
-		echo '</td><td>';
-		echo $defaults['post_abbrev'];
-		echo '</td></tr>';
 
 		//Image in Abbrevation
 		echo '<tr><td>';

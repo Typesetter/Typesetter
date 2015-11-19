@@ -476,7 +476,7 @@ class SimpleBlogPage{
 
 		if( common::LoggedIn() ){
 			echo '&nbsp;';
-			echo common::Link('Special_Blog','New Post','cmd=new_form','class="blog_post_new"');
+			echo common::Link('Admin_Blog','New Post','cmd=new_form','class="blog_post_new"');
 		}
 
 		echo '</p>';

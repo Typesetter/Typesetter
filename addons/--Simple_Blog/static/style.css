@@ -41,3 +41,13 @@
 
 .simple_blog_category{}
 
+
+.blog_post .img-thumbnail{
+	float: left;
+	margin: 0 10px 5px 0;
+	}
+
+.clear{
+	padding-bottom: 20px;
+	}
+

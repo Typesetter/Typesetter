@@ -1605,9 +1605,12 @@ class gpOutput{
 			$attributes_ul['class']['editable_area'] = 'editable_area';
 		}
 
+		// Without any output the menu wouldn't be editable
+		// An empty <ul> is not valid
 		if( !count($menu) ){
-			//$attributes_ul['class']['empty_menu'] = 'empty_menu';
-			//self::FormatMenuElement('div',$attributes_ul).'</div>'; //an empty <ul> is not valid xhtml
+			$attributes_ul['class']['empty_menu'] = 'empty_menu';
+			self::FormatMenuElement('div',$attributes_ul);
+			echo '</div>';
 			return;
 		}
 

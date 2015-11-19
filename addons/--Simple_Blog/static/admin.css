@@ -66,6 +66,12 @@
 	border-radius:3px !important;
 	}
 
+
+#sb_field_publish input,
+#sb_field_publish select{
+	font-size:12px;
+	}
+
 /**
  * Pagination
  *

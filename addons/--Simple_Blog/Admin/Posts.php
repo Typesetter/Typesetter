@@ -361,7 +361,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 		$pub_month	= date('n',$array['time']);
 		$months		= array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
 
-		echo '<select name="pub_month" style="width:2.5em">';
+		echo '<select name="pub_month" style="width:4.3em">';
 		for($i = 1; $i <= 12; $i++){
 			$selected = '';
 			if( $i == $pub_month ){
@@ -372,15 +372,15 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 		echo '</select>';
 
 		//day
-		echo '<input name="pub_day" value="'.date('d',$array['time']).'" style="width:1.5em"/>';
+		echo '<input name="pub_day" value="'.date('d',$array['time']).'" style="width:2em"/>';
 		echo ', ';
-		echo '<input name="pub_year" value="'.date('Y',$array['time']).'" style="width:3.5em"/>';
+		echo '<input name="pub_year" value="'.date('Y',$array['time']).'" style="width:4em"/>';
 
 		//time
 		echo '@';
-		echo '<input name="pub_hour" value="'.date('H',$array['time']).'" style="width:1.5em"/>';
+		echo '<input name="pub_hour" value="'.date('H',$array['time']).'" style="width:2em"/>';
 		echo ':';
-		echo '<input name="pub_min" value="'.date('i',$array['time']).'" style="width:1.5em"/>';
+		echo '<input name="pub_min" value="'.date('i',$array['time']).'" style="width:2em"/>';
 
 
 		echo '</div>';

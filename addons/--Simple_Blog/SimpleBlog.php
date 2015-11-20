@@ -18,7 +18,9 @@ class SimpleBlog extends SimpleBlogCommon{
 		SimpleBlogCommon::Init();
 
 		//get the post id
-		$this->post_id	= self::PostID($page->requested);
+		if( $page->pagetype == 'special_display' ){
+			$this->post_id	= self::PostID($page->requested);
+		}
 
 
 		if( common::LoggedIn() ){

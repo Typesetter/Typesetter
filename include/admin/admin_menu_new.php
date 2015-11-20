@@ -1578,7 +1578,6 @@ class admin_menu_new extends admin_menu_tools{
 	 */
 	function ToggleVisibility(){
 		$_REQUEST += array('index'=>'','visibility'=>'');
-		includeFile('tool/Visibility.php');
 		\gp\tool\Visibility::Toggle($_REQUEST['index'], $_REQUEST['visibility']);
 	}
 

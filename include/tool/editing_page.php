@@ -588,7 +588,6 @@ class editing_page extends display{
 		global $gp_titles;
 
 		$_REQUEST += array('visibility'=>'');
-		includeFile('tool/Visibility.php');
 
 		\gp\tool\Visibility::Toggle($this->gp_index, $_REQUEST['visibility']);
 		$this->visibility = display::OrConfig($this->gp_index,'vis');

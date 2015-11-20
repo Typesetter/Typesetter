@@ -772,17 +772,25 @@ class common{
 		spl_autoload_register( array('common','Autoload') );
 	}
 
+
 	/**
 	 * Setup SPL Autoloading
 	 *
 	 */
 	static function Autoload($class){
-		global $config;
+		global $config, $dataDir;
 
 		$parts		= explode('\\',$class);
 		$part_0		= array_shift($parts);
 
 		if( !$parts ){
+			return;
+		}
+
+		//gp namespace
+		if( $part_0 === 'gp' ){
+			$path	= implode('/',$parts).'.php';
+			require_once( $dataDir.'/include/'.$path );
 			return;
 		}
 

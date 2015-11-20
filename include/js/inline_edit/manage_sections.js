@@ -338,7 +338,7 @@
 
 			//remove other preview
 			$('.previewing').removeClass('previewing');
-			$('.temporary-section').slideUp(function(){
+			$('.temporary-section').stop().slideUp(function(){
 				$(this).remove();
 			});
 
@@ -363,7 +363,7 @@
 
 		$(this).removeClass('previewing');
 
-		$('.temporary-section').slideUp(function(){
+		$('.temporary-section').stop().slideUp(function(){
 			$(this).remove();
 		});
 
@@ -382,7 +382,11 @@
 
 		//change the previewed section to an editable area
 		if( $this.hasClass('previewing') ){
-			$('.temporary-section').addClass('editable_area').removeClass('temporary-section');
+
+			var section = $this.data('preview-section');
+			$(section).addClass('editable_area').removeClass('temporary-section')
+					.find('.temporary-section').addClass('editable_area').removeClass('temporary-section');
+
 			gp_editor.InitSorting();
 			$this.removeClass('previewing').trigger('mouseenter');
 			return;
@@ -410,24 +414,25 @@
 			return;
 		}
 
-		DisplaySection(data,true);
+		var section = DisplaySection(data,true);
+		$this.data('preview-section',section);
 	}
 
 	function DisplaySection(data, temporary ){
-
-		$('.section-loading').removeClass('section-loading').finish().fadeTo(700,1);
 
 		var $new_content	= $(data.CONTENT);
 
 		if( temporary ){
 			$new_content.addClass('temporary-section').removeClass('editable_area');
+			$new_content.find('.editable_area').addClass('temporary-section').removeClass('editable_area');
 		}
 
 		$new_content
 			.appendTo('#gpx_content')
 			.hide()
-			.delay(200).slideDown();
+			.delay(300).slideDown();
 
+		return $new_content.get(0);
 	}
 
 

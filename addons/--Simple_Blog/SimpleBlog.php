@@ -214,7 +214,29 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		echo '</div>';
 
-		echo '<br/>';
+
+
+		if( SimpleBlogCommon::$data['abbrev_cat'] && isset($post['categories']) && count($post['categories']) ){
+			$temp = array();
+			foreach($post['categories'] as $catindex){
+				$title = SimpleBlogCommon::AStrValue( 'categories', $catindex );
+				if( !$title ){
+					continue;
+				}
+				if( SimpleBlogCommon::AStrValue('categories_hidden',$catindex) ){
+					continue;
+				}
+				$temp[] = SimpleBlogCommon::CategoryLink($catindex, $title, $title);
+			}
+
+			if( count($temp) ){
+				echo '<div class="category_container">';
+				echo gpOutput::GetAddonText('Categories').' ';
+				echo implode(', ',$temp);
+				echo '</div>';
+			}
+		}
+
 
 		echo '<div class="clear"></div>';
 

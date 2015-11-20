@@ -72,6 +72,8 @@ class AdminSimpleBlogConfig extends SimipleBlogAdmin{
 		SimpleBlogCommon::$data['feed_abbrev']			= (int)$_POST['feed_abbrev'];
 
 		SimpleBlogCommon::$data['abbrev_image']			= isset($_POST['abbrev_image']);
+		SimpleBlogCommon::$data['abbrev_cat']			= isset($_POST['abbrev_cat']);
+
 
 		//comments
 		SimpleBlogCommon::$data['allow_comments']		= isset($_POST['allow_comments']);
@@ -185,6 +187,17 @@ class AdminSimpleBlogConfig extends SimipleBlogAdmin{
 		}
 		echo '</td><td></td></tr>';
 
+
+		//Categories in Abbreviation
+		echo '<tr><td>';
+		echo 'Categories in Abbrevation';
+		echo '</td><td>';
+		if( $array['abbrev_cat'] ){
+			echo '<input type="checkbox" name="abbrev_cat" value="allow" checked="checked" />';
+		}else{
+			echo '<input type="checkbox" name="abbrev_cat" value="allow" />';
+		}
+		echo '</td><td></td></tr>';
 
 
 		//Comments

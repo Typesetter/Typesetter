@@ -355,9 +355,20 @@
 			var href	= this.href + '&preview='+new Date().getTime();
 			href		= $gp.jPrep(href);
 
+
+			//cached response
+			var cached	= $this.data('response');
+			if( cached ){
+				$gp.Response.call(that,cached);
+				return;
+			}
+
+			//get a new response and cache it
 			$.getJSON(href,function(data,textStatus,jqXHR){
+				$this.data('response',data);
 				$gp.Response.call(that,data,textStatus,jqXHR);
 			});
+
 		}
 	}).on('mouseleave','.preview_section',function(){
 
@@ -379,34 +390,28 @@
 		var $this = $(this);
 		evt.preventDefault();
 
-
 		//change the previewed section to an editable area
-		if( $this.hasClass('previewing') ){
-
-			var section = $this.data('preview-section');
-			$(section).addClass('editable_area').removeClass('temporary-section')
-					.find('.temporary-section').addClass('editable_area').removeClass('temporary-section');
-
-			gp_editor.InitSorting();
-			$this.removeClass('previewing').trigger('mouseenter');
+		if( !$this.hasClass('previewing') ){
 			return;
 		}
 
+		//clear the cache
+		$this.data('response',false);
 
-		$(this).fadeTo(700,0.4).addClass('section-loading section-clicked');
-		$gp.jGoTo(this.href, this);
+
+		var section = $this.data('preview-section');
+		$(section).addClass('editable_area').removeClass('temporary-section')
+				.find('.temporary-section').addClass('editable_area').removeClass('temporary-section');
+
+		gp_editor.InitSorting();
+		$this.removeClass('previewing').trigger('mouseenter');
 	}
 
 
 	/**
-	 * Handle new section response from server
+	 * Handle preview section response from server
 	 *
 	 */
-	$gp.response.AddSection = function(data){
-		DisplaySection(data);
-		gp_editor.InitSorting();
-	}
-
 	$gp.response.PreviewSection = function(data){
 
 		var $this = $(this);
@@ -414,25 +419,23 @@
 			return;
 		}
 
-		var section = DisplaySection(data,true);
-		$this.data('preview-section',section);
-	}
-
-	function DisplaySection(data, temporary ){
 
 		var $new_content	= $(data.CONTENT);
 
-		if( temporary ){
-			$new_content.addClass('temporary-section').removeClass('editable_area');
-			$new_content.find('.editable_area').addClass('temporary-section').removeClass('editable_area');
-		}
+		$new_content
+			.find('.editable_area')
+			.addClass('temporary-section')
+			.removeClass('editable_area');
 
 		$new_content
+			.addClass('temporary-section')
+			.removeClass('editable_area')
 			.appendTo('#gpx_content')
 			.hide()
 			.delay(300).slideDown();
 
-		return $new_content.get(0);
+		var node = $new_content.get(0);
+		$this.data('preview-section',node);
 	}
 
 

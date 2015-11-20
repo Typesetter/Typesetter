@@ -227,11 +227,7 @@ class editing_page extends display{
 		$page->ajaxReplace		= array();
 		$content				= $this->GetNewSection($_REQUEST['type']);
 
-		if( isset($_REQUEST['preview']) ){
-			$page->ajaxReplace[] 	= array('PreviewSection','',$content);
-		}else{
-			$page->ajaxReplace[] 	= array('AddSection','',$content);
-		}
+		$page->ajaxReplace[] 	= array('PreviewSection','',$content);
 	}
 
 
@@ -278,12 +274,7 @@ class editing_page extends display{
 		}
 		echo '</div>';
 
-		if( isset($_REQUEST['preview']) ){
-			$page->ajaxReplace[] 	= array('PreviewSection','',ob_get_clean());
-		}else{
-			$page->ajaxReplace[] 	= array('AddSection','',ob_get_clean());
-		}
-
+		$page->ajaxReplace[] 	= array('PreviewSection','',ob_get_clean());
 	}
 
 	function GetNewSection($type, $class = ''){

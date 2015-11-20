@@ -83,7 +83,6 @@ class gpRemoteGet{
 	static function Get($url,$args=array()){
 
 		self::$debug			= array();
-		self::$debug['Ver']		= phpversion();
 		self::$debug['Redir']	= 0;
 		self::$redirected		= null;
 

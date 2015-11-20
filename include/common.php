@@ -37,7 +37,7 @@ gp_defined('gp_default_theme','Three_point_5/Shore'); 	//Bootswatch_Flatly/4_Sti
 
 //gp_defined('addon_browse_path','http://gpeasy.loc/index.php');
 gp_defined('addon_browse_path','http://www.gpeasy.com/index.php');
-gp_defined('debug_path','http://www.gpeasy.com/index.php/Debug');
+gp_defined('debug_path','http://gpeasy.loc/index.php/Debug'); //'http://www.gpeasy.com/index.php/Debug'
 
 gp_defined('gpversion','4.6b2');
 gp_defined('gp_random',common::RandomString());
@@ -2310,13 +2310,37 @@ class common{
 	 *
 	 */
 	static function Debug($lang_key, $debug = array()){
-		global $langmessage;
+		global $langmessage, $dataDir;
+
+
+		//add backtrace info
+		$backtrace = debug_backtrace();
+		while( count($backtrace) > 0 && !empty($backtrace[0]['function']) && $backtrace[0]['function'] == 'Debug' ){
+			array_shift($backtrace);
+		}
+
+		$debug['trace']			= array_intersect_key($backtrace[0], array('file'=>'','line'=>'','function'=>'','class'=>''));
+
+		if( !empty($debug['trace']['file']) && strpos($debug['trace']['file'],$dataDir) === 0 ){
+			$debug['trace']['file'] = substr($debug['trace']['file'], strlen($dataDir) );
+		}
+
+
+		//add php and gpeasy info
+		$debug['lang_key']		= $lang_key;
+		$debug['phpversion']	= phpversion();
+		$debug['gpversion']		= gpversion;
+		$debug['Rewrite']		= $_SERVER['gp_rewrite'];
+		$debug['Server']		= $_SERVER['SERVER_SOFTWARE'];
+
+
+		//create string
 		$debug	= json_encode($debug);
 		$debug	= base64_encode($debug);
 		$debug	= trim($debug,'=');
 		$debug	= strtr($debug, '+/', '-_');
 
-		return ' <span>'.$langmessage[$lang_key].' <a href="'.debug_path.'?data='.$debug.'">More Info...</a></span>';
+		return ' <span>'.$langmessage[$lang_key].' <a href="'.debug_path.'?data='.$debug.'" target="_blank">More Info...</a></span>';
 	}
 
 

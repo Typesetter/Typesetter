@@ -69,6 +69,9 @@
 .temporary-section{
 	outline: 2px dotted red !important;
 	}
+.temporary-section .temporary-section{
+	outline:0 none !important;
+	}
 
 #section_sorting div > .options{
 	display:none;

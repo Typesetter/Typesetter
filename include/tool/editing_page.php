@@ -9,6 +9,7 @@ class editing_page extends display{
 	var $draft_file;
 	var $draft_exists		= false;
 	var $draft_stats		= array();
+	var $draft_meta			= array();
 
 	function __construct($title,$type){
 		parent::__construct($title,$type);
@@ -119,14 +120,21 @@ class editing_page extends display{
 					$this->ViewHistory();
 				return;
 
+				//drafts
+				case 'PublishDraft':
+					$this->PublishDraft();
+				break;
+
 			}
 		}
 
 
 		//notify user we're using a draft
 		if( $this->draft_exists ){
-			$ago = time() - $this->draft_stats['modified'];
-			msg('This is a draft. Last edited '.admin_tools::Elapsed($ago).' ago');
+			$ago	= time() - $this->draft_stats['modified'];
+			$link	= common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq'));
+			msg('This is a draft. '.$link);
+			//last modified Last edited '.admin_tools::Elapsed($ago).' ago'
 		}
 
 
@@ -146,7 +154,7 @@ class editing_page extends display{
 		}
 
 		$this->file_sections	= gpFiles::Get($this->draft_file,'file_sections');
-		//$this->meta_data		= gpFiles::$last_meta;
+		$this->draft_meta		= gpFiles::$last_meta;
 		$this->draft_stats		= gpFiles::$last_stats;
 	}
 
@@ -469,7 +477,6 @@ class editing_page extends display{
 
 
 		$this->file_sections = array_values($new_sections);
-		$this->ResetFileTypes();
 
 
 		// save a send message to user
@@ -741,7 +748,11 @@ class editing_page extends display{
 	}
 
 
-
+	/**
+	 * Save the current page
+	 * Save a backup if $backup is true
+	 *
+	 */
 	function SaveThis( $backup = true ){
 
 		if( !is_array($this->meta_data) || !is_array($this->file_sections) ){
@@ -820,6 +831,29 @@ class editing_page extends display{
 
 
 	/**
+	 * Make the working draft the live file
+	 *
+	 */
+	function PublishDraft(){
+		global $langmessage;
+
+		if( !$this->draft_exists ){
+			msg($langmessage['OOPS'].' (Not a draft)');
+			return false;
+		}
+
+		if( !gpFiles::SaveData($this->file,'file_sections',$this->file_sections,$this->draft_meta) ){
+			msg($langmessage['OOPS'].' (Draft not published)');
+			return false;
+		}
+
+		unlink($this->draft_file);
+		$this->ResetFileTypes();
+		$this->draft_exists = false;
+	}
+
+
+	/**
 	 * Display the revision history of the current file
 	 *
 	 */
@@ -835,10 +869,13 @@ class editing_page extends display{
 			ob_start();
 			$size = filesize($this->draft_file);
 			echo '<tr><td>';
-			echo common::date($langmessage['strftime_datetime'],$this->draft_stats['modified']);
+			//echo common::date($langmessage['strftime_datetime'],$this->draft_stats['modified']);
+			echo admin_tools::Elapsed(time() - $this->draft_stats['modified']).' ago';
 			echo ' &nbsp; ('.$langmessage['Working Draft'].')</td><td>';
 			echo admin_tools::FormatBytes($size);
-			echo '</td><td>'.$this->draft_stats['username'].'</td><td>&nbsp;</td></tr>';
+			echo '</td><td>'.$this->draft_stats['username'].'</td><td>';
+			echo common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq'));
+			echo '</td></tr>';
 			$rows[$this->draft_stats['modified']] = ob_get_clean();
 		}
 
@@ -862,8 +899,10 @@ class editing_page extends display{
 			//output row
 			ob_start();
 			echo '<tr><td>';
-			echo common::date($langmessage['strftime_datetime'],$time);
-			echo '</td><td>';
+			$date = common::date($langmessage['strftime_datetime'],$time);
+			echo '<div title="'.htmlspecialchars($date).'">';
+			echo admin_tools::Elapsed(time() - $time).' ago';
+			echo '</div></td><td>';
 			if( $size && is_numeric($size) ){
 				echo admin_tools::FormatBytes($size);
 			}
@@ -881,7 +920,10 @@ class editing_page extends display{
 		ob_start();
 		$size = filesize($this->file);
 		echo '<tr><td>';
-		echo common::date($langmessage['strftime_datetime'],$this->fileModTime);
+		$date = common::date($langmessage['strftime_datetime'],$this->fileModTime);
+		echo '<span title="'.htmlspecialchars($date).'">';
+		echo admin_tools::Elapsed(time() - $this->fileModTime).' ago';
+		echo '</span>';
 		echo ' &nbsp; ('.$langmessage['Current Page'].')</td><td>';
 		echo admin_tools::FormatBytes($size);
 		echo '</td><td>'.$this->file_stats['username'].'</td><td>&nbsp;</td></tr>';
@@ -972,7 +1014,6 @@ class editing_page extends display{
 		gpFiles::Save( $this->draft_file, $contents ); //restore to the draft file
 		$this->GetFile();
 		$this->SaveThis(false); //save again to update the mod time and username
-		$this->ResetFileTypes();
 		msg($langmessage['SAVED']);
 	}
 

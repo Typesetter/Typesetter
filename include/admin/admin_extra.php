@@ -292,7 +292,6 @@ class admin_extra{
 		}
 		//remember browse directory
 		$this->meta_data['gallery_dir'] = $dir_piece;
-		//$this->SaveThis();
 
 		includeFile('admin/admin_uploaded.php');
 		admin_uploaded::InlineList($dir_piece);

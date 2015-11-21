@@ -28,11 +28,7 @@ body .messages > div{
 	background-color:#FEF9B0;
 	border:1px solid #f2e098;
 	border-top:0 none;
-	/*
-	box-shadow: 0 3px 5px -2px #E4E4E4;
-	-webkit-box-shadow: 0 3px 5px -2px #E4E4E4;
-	-moz-box-shadow: 0 3px 5px -2px #E4E4E4;
-	*/
+	box-shadow: 0 0 7px rgba(0,0,0,0.1);
 	border-radius:0 0 7px 7px;
 	max-height:250px;
 	overflow:auto;
@@ -41,17 +37,17 @@ body .messages > div{
 }
 body .messages ul{
 	margin:0;
-	padding:4px 2em 4px 2em;
+	padding:4px 15px;
 	}
 body .messages li{
 	list-style:none;
 	padding:0;
 	margin:0;
-	font-size:12px;
+	font-size:14px;
 	font-family:Arial, sans-serif;
 	font-family: "Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif;
 	line-height:normal;
-	line-height: 18px;
+	line-height: 24px;
 	text-decoration:none;
 	float:none;
 	}
@@ -70,10 +66,10 @@ body .messages a.close_message{
 	display:none;
 	border:0 none !important;
 	margin:0  !important;
-	padding:3px 4px;
-	height:16px;
-	width:16px;
-	background: url('../imgs/cancel.png') 50% 50% no-repeat;;
+	height:24px;
+	width:24px;
+	background: url('../imgs/cancel.png') 50% 50% no-repeat;
+	box-sizing:border-box;
 	}
 body .messages a{
 	color:#111 !important;

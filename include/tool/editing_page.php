@@ -6,6 +6,7 @@ includeFile('tool/SectionContent.php');
 
 class editing_page extends display{
 
+	var $draft_path;
 
 	function __construct($title,$type){
 		parent::__construct($title,$type);
@@ -127,6 +128,30 @@ class editing_page extends display{
 		}
 
 		$this->contentBuffer = $this->GenerateContent_Admin();
+	}
+
+
+	/**
+	 * SetVars
+	 *
+	 */
+	function SetVars(){
+		global $dataDir, $config;
+
+		if( !parent::SetVars() ){
+			return false;
+		}
+
+
+		$this->draft_path	= $dataDir.'/data/_drafts/'.substr($config['gpuniq'],0,7).'_'.$this->gp_index.'.php';
+
+		if( !file_exists($this->draft_path) ){
+			return true;
+		}
+
+		msg('Draft '.filemtime($this->draft_path));
+
+		return true;
 	}
 
 
@@ -709,6 +734,7 @@ class editing_page extends display{
 		if( !isset($this->meta_data['file_number']) ){
 			$this->meta_data['file_number'] = gpFiles::NewFileNumber();
 		}
+
 		if( $backup ){
 			$this->SaveBackup(); //make a backup of the page file
 		}
@@ -716,6 +742,7 @@ class editing_page extends display{
 
 		return gpFiles::SaveData($this->file,'file_sections',$this->file_sections,$this->meta_data);
 	}
+
 
 	/**
 	 *	Save a backup of the file

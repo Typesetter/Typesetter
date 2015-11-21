@@ -103,7 +103,7 @@ class admin_errors{
 		//modified time
 		echo '<p>';
 		$filemtime = filemtime($error_file);
-		echo self::Elapsed( time() - $filemtime ).' ago';
+		echo admin_tools::Elapsed( time() - $filemtime ).' ago';
 		echo ' - ';
 		echo common::Link('Admin_Errors','Clear Error','cmd=clear_error&hash='.$hash,array('data-cmd'=>'postlink'));
 		echo '</p>';
@@ -192,7 +192,7 @@ class admin_errors{
 						echo '</pre>';
 					}
 					echo '<p>';
-					echo self::Elapsed( time() - $new_time ).' ago ('.$date.')';
+					echo admin_tools::Elapsed( time() - $new_time ).' ago ('.$date.')';
 					echo '</p>';
 					echo '<pre>';
 					$time = $new_time;
@@ -266,22 +266,6 @@ class admin_errors{
 		return true;
 	}
 
-	static function Elapsed($difference){
-		$periods = array("second", "minute", "hour", "day", "week", "month", "year", "decade");
-		$lengths = array("60","60","24","7","4.35","12","10");
-
-		for($j = 0; $difference >= $lengths[$j] && $j < count($lengths)-1; $j++) {
-		   $difference /= $lengths[$j];
-		}
-
-		$difference = round($difference);
-
-		if($difference != 1) {
-		   $periods[$j].= "s";
-		}
-
-		return $difference.' '.$periods[$j];
-	}
 
 }
 

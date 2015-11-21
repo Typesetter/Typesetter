@@ -7,6 +7,7 @@ includeFile('tool/SectionContent.php');
 class editing_page extends display{
 
 	var $draft_file;
+	var $draft_exists		= false;
 
 	function __construct($title,$type){
 		parent::__construct($title,$type);
@@ -16,14 +17,16 @@ class editing_page extends display{
 		global $langmessage, $page;
 		$cmd = common::GetCommand();
 
-		//prevent overwriting the content to maintain overlay editin links
-		//$page->ajaxReplace = array();
 
 		if( !$this->SetVars() ){
 			return;
 		}
 
-		$this->GetFile();
+		if( $this->draft_exists ){
+			$this->GetFile($this->draft_file);
+		}else{
+			$this->GetFile();
+		}
 
 		$can_edit			= admin_tools::CanEdit($this->gp_index);
 		$menu_permissions	= admin_tools::HasPermission('Admin_Menu');
@@ -144,7 +147,10 @@ class editing_page extends display{
 			return true;
 		}
 
-		msg('Draft '.filemtime($this->draft_file));
+		$this->draft_exists = true;
+		$ago				= time() - filemtime($this->draft_file);
+
+		msg('This is a draft. Last edited '.admin_tools::Elapsed($ago).' ago');
 
 		return true;
 	}
@@ -807,12 +813,23 @@ class editing_page extends display{
 		echo '<table class="bordered full_width"><tr><th>'.$langmessage['Modified'].'</th><th>'.$langmessage['File Size'].'</th><th>'.$langmessage['username'].'</th><th>&nbsp;</th></tr>';
 		echo '<tbody>';
 
+		//working draft
+		$size = filesize($this->draft_file);
+		echo '<tr><td>';
+		echo common::date($langmessage['strftime_datetime'],$this->fileModTime);
+		echo ' &nbsp; ('.$langmessage['Working Draft'].')</td><td>';
+		echo admin_tools::FormatBytes($size);
+		echo '</td><td>'.$this->file_stats['username'].'</td><td>&nbsp;</td></tr>';
+
+
+		//current page
 		$size = filesize($this->file);
 		echo '<tr><td>';
 		echo common::date($langmessage['strftime_datetime'],$this->fileModTime);
 		echo ' &nbsp; ('.$langmessage['Current Page'].')</td><td>';
 		echo admin_tools::FormatBytes($size);
 		echo '</td><td>'.$this->file_stats['username'].'</td><td>&nbsp;</td></tr>';
+
 
 		$i = 1;
 		foreach($files as $time => $file){

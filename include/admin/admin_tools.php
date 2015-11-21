@@ -1532,6 +1532,27 @@ class admin_tools{
 	}
 
 
+	/**
+	 * Return the time in a human readable string
+	 *
+	 */
+	static function Elapsed($difference){
+		$periods = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade');
+		$lengths = array('60','60','24','7','4.35','12','10');
+
+		for($j = 0; $difference >= $lengths[$j] && $j < count($lengths)-1; $j++) {
+		   $difference /= $lengths[$j];
+		}
+
+		$difference = round($difference);
+
+		if($difference != 1) {
+		   $periods[$j].= "s";
+		}
+
+		return $difference.' '.$periods[$j];
+	}
+
 	//deprecated v4.4
 	static function AdminContentPanel(){}
 	static function AdminContainer(){}

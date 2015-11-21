@@ -88,7 +88,7 @@ class admin_cache{
 			$total_size += $size;
 
 			echo '</td><td>';
-			echo self::Elapsed( time() - filemtime($full) ).' ago ';
+			echo admin_tools::Elapsed( time() - filemtime($full) ).' ago ';
 			echo '</td><td>';
 
 			echo common::Link('Admin_Cache',$langmessage['delete'],'cmd=DeleteFile&amp;file='.rawurlencode($file),array('data-cmd'=>'cnreq','class'=>'gpconfirm','title'=>$langmessage['delete_confirm']));
@@ -190,27 +190,6 @@ class admin_cache{
 		return $file;
 	}
 
-
-	/**
-	 *
-	 *
-	 */
-	static function Elapsed($difference){
-		$periods = array("second", "minute", "hour", "day", "week", "month", "year", "decade");
-		$lengths = array("60","60","24","7","4.35","12","10");
-
-		for($j = 0; $difference >= $lengths[$j] && $j < count($lengths)-1; $j++) {
-		   $difference /= $lengths[$j];
-		}
-
-		$difference = round($difference);
-
-		if($difference != 1) {
-		   $periods[$j].= "s";
-		}
-
-		return $difference.' '.$periods[$j];
-	}
 
 
 }

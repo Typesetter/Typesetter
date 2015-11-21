@@ -1547,7 +1547,7 @@ class admin_tools{
 		$difference = round($difference);
 
 		if($difference != 1) {
-		   $periods[$j].= "s";
+		   $periods[$j].= 's';
 		}
 
 		return $difference.' '.$periods[$j];

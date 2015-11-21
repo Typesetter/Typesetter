@@ -8,6 +8,7 @@ class editing_page extends display{
 
 	var $draft_file;
 	var $draft_exists		= false;
+	var $draft_stats		= array();
 
 	function __construct($title,$type){
 		parent::__construct($title,$type);
@@ -22,11 +23,7 @@ class editing_page extends display{
 			return;
 		}
 
-		if( $this->draft_exists ){
-			$this->GetFile($this->draft_file);
-		}else{
-			$this->GetFile();
-		}
+		$this->GetFile();
 
 		$can_edit			= admin_tools::CanEdit($this->gp_index);
 		$menu_permissions	= admin_tools::HasPermission('Admin_Menu');
@@ -126,6 +123,23 @@ class editing_page extends display{
 		}
 
 		$this->contentBuffer = $this->GenerateContent_Admin();
+	}
+
+	/**
+	 * Get the data file, get draft file if it exists
+	 *
+	 */
+	function GetFile(){
+
+		parent::GetFile();
+
+		if( !$this->draft_exists ){
+			return;
+		}
+
+		$this->file_sections	= gpFiles::Get($this->draft_file,'file_sections');
+		//$this->meta_data		= gpFiles::$last_meta;
+		$this->draft_stats		= gpFiles::$last_stats;
 	}
 
 
@@ -750,18 +764,19 @@ class editing_page extends display{
 		global $dataDir;
 
 		$dir = $dataDir.'/data/_backup/pages/'.$this->gp_index;
-		gpFiles::CheckDir($dir);
 
-		$time = time();
-		if( isset($_REQUEST['revision']) && is_numeric($_REQUEST['revision']) ){
-			$time = $_REQUEST['revision'];
+
+		if( $this->draft_exists ){
+			$contents	= gpFiles::GetRaw($this->draft_file);
+			$time		= $this->draft_stats['modified'];
+		}else{
+			$contents	= gpFiles::GetRaw($this->file);
+			$time		= $this->file_stats['modified'];
 		}
 
-		$contents = gpFiles::GetRaw($this->file);
-
 		//backup file name
-		$len = strlen($contents);
-		$backup_file = $dir.'/'.$time.'.'.$len;
+		$len			= strlen($contents);
+		$backup_file	= $dir.'/'.$time.'.'.$len;
 
 		if( isset($this->file_stats['username']) && $this->file_stats['username'] ){
 			$backup_file .= '.'.$this->file_stats['username'];
@@ -805,52 +820,55 @@ class editing_page extends display{
 	function ViewHistory(){
 		global $langmessage;
 
-		$files = $this->BackupFiles();
-		krsort($files);
+		$files		= $this->BackupFiles();
+		$rows		= array();
 
-		ob_start();
-		echo '<h2>'.$langmessage['Revision History'].'</h2>';
-		echo '<table class="bordered full_width"><tr><th>'.$langmessage['Modified'].'</th><th>'.$langmessage['File Size'].'</th><th>'.$langmessage['username'].'</th><th>&nbsp;</th></tr>';
-		echo '<tbody>';
 
 		//working draft
-		$size = filesize($this->draft_file);
-		echo '<tr><td>';
-		echo common::date($langmessage['strftime_datetime'],$this->fileModTime);
-		echo ' &nbsp; ('.$langmessage['Working Draft'].')</td><td>';
-		echo admin_tools::FormatBytes($size);
-		echo '</td><td>'.$this->file_stats['username'].'</td><td>&nbsp;</td></tr>';
+		if( $this->draft_exists ){
+
+			ob_start();
+			$size = filesize($this->draft_file);
+			echo '<tr><td>';
+			echo common::date($langmessage['strftime_datetime'],$this->draft_stats['modified']);
+			echo ' &nbsp; ('.$langmessage['Working Draft'].')</td><td>';
+			echo admin_tools::FormatBytes($size);
+			echo '</td><td>'.$this->draft_stats['username'].'</td><td>&nbsp;</td></tr>';
+			$rows[$this->draft_stats['modified']+1] = ob_get_clean();
+		}
 
 
 		//current page
+		ob_start();
 		$size = filesize($this->file);
 		echo '<tr><td>';
 		echo common::date($langmessage['strftime_datetime'],$this->fileModTime);
 		echo ' &nbsp; ('.$langmessage['Current Page'].')</td><td>';
 		echo admin_tools::FormatBytes($size);
 		echo '</td><td>'.$this->file_stats['username'].'</td><td>&nbsp;</td></tr>';
+		$rows[$this->fileModTime] = ob_get_clean();
 
 
-		$i = 1;
+
 		foreach($files as $time => $file){
-
 			//remove .gze
 			if( strpos($file,'.gze') === (strlen($file)-4) ){
 				$file = substr($file,0,-4);
 			}
 
 			//get info from filename
-			$name = basename($file);
-			$parts = explode('.',$name,3);
-			$time = array_shift($parts);
-			$size = array_shift($parts);
+			$name	= basename($file);
+			$parts	= explode('.',$name,3);
+			$time	= array_shift($parts);
+			$size	= array_shift($parts);
 			$username = false;
 			if( count($parts) ){
 				$username = array_shift($parts);
 			}
 
 			//output row
-			echo '<tr class="'.($i % 2 ? 'even' : '').'"><td>';
+			ob_start();
+			echo '<tr><td>';
 			echo common::date($langmessage['strftime_datetime'],$time);
 			echo '</td><td>';
 			if( $size && is_numeric($size) ){
@@ -861,8 +879,18 @@ class editing_page extends display{
 			echo '</td><td>';
 			echo common::Link($this->title,$langmessage['preview'],'cmd=view_revision&time='.$time,array('data-cmd'=>'cnreq'));
 			echo '</td></tr>';
-			$i++;
+			$rows[$time] = ob_get_clean();
 		}
+
+
+		ob_start();
+		echo '<h2>'.$langmessage['Revision History'].'</h2>';
+		echo '<table class="bordered full_width striped"><tr><th>'.$langmessage['Modified'].'</th><th>'.$langmessage['File Size'].'</th><th>'.$langmessage['username'].'</th><th>&nbsp;</th></tr>';
+		echo '<tbody>';
+
+		krsort($rows);
+		echo implode('',$rows);
+
 		echo '</tbody>';
 		echo '</table>';
 		$this->contentBuffer = ob_get_clean();
@@ -914,6 +942,7 @@ class editing_page extends display{
 		msg( $message );
 	}
 
+
 	/**
 	 * Revert the file data to a previous revision
 	 *
@@ -940,6 +969,7 @@ class editing_page extends display{
 		$this->ResetFileTypes();
 		msg($langmessage['SAVED']);
 	}
+
 
 	/**
 	 * Return a list of the available backup for the current file

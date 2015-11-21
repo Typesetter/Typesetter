@@ -142,53 +142,6 @@ class display{
 		$this->fileModTime		= gpFiles::$last_modified;
 		$this->file_stats		= gpFiles::$last_stats;
 
-
-		//update page to 2.0 if it wasn't done in upgrade.php
-		if( !empty($content) && count($this->file_sections) == 0 ){
-			if( !empty($this->meta_data['file_type']) ){
-				$file_type =& $this->meta_data['file_type'];
-			}elseif( !isset($file_type) ){
-				$file_type = 'text';
-			}
-
-			switch($file_type){
-				case 'gallery':
-					$this->meta_data['file_type'] = 'text,gallery';
-					$this->file_sections[0] = array(
-						'type' => 'text',
-						'content' => '<h2>'.strip_tags(common::GetLabel($this->title)).'</h2>',
-						);
-					$this->file_sections[1] = array(
-						'type' => 'gallery',
-						'content' => $content,
-						);
-				break;
-
-				default:
-					$this->file_sections[0] = array(
-						'type' => 'text',
-						'content' => $content,
-						);
-				break;
-			}
-
-		}
-
-		//fix gallery pages that weren't updated correctly
-		if( isset($this->file_stats['gpversion']) && version_compare($this->file_stats['gpversion'],'2.0','<=') ){
-			foreach($this->file_sections as $section_index => $section_info){
-				if( $section_info['type'] == 'text' && strpos($section_info['content'],'gp_gallery') !== false ){
-					//check further
-					$lower_content = strtolower($section_info['content']);
-					if( strpos($lower_content,'<ul class="gp_gallery">') !== false
-						|| strpos($lower_content,'<ul class=gp_gallery>') !== false ){
-							$this->file_sections[$section_index]['type'] = 'gallery';
-					}
-				}
-			}
-		}
-
-
 		if( count($this->file_sections) == 0 ){
 			$this->file_sections[0] = array(
 				'type' => 'text',

@@ -6,7 +6,7 @@ includeFile('tool/SectionContent.php');
 
 class editing_page extends display{
 
-	var $draft_path;
+	var $draft_file;
 
 	function __construct($title,$type){
 		parent::__construct($title,$type);
@@ -138,13 +138,13 @@ class editing_page extends display{
 		}
 
 
-		$this->draft_path	= $dataDir.'/data/_drafts/'.substr($config['gpuniq'],0,7).'_'.$this->gp_index.'.php';
+		$this->draft_file	= $dataDir.'/data/_drafts/'.substr($config['gpuniq'],0,7).'_'.$this->gp_index.'.php';
 
-		if( !file_exists($this->draft_path) ){
+		if( !file_exists($this->draft_file) ){
 			return true;
 		}
 
-		msg('Draft '.filemtime($this->draft_path));
+		msg('Draft '.filemtime($this->draft_file));
 
 		return true;
 	}
@@ -732,7 +732,7 @@ class editing_page extends display{
 		}
 
 
-		return gpFiles::SaveData($this->file,'file_sections',$this->file_sections,$this->meta_data);
+		return gpFiles::SaveData($this->draft_file,'file_sections',$this->file_sections,$this->meta_data);
 	}
 
 

@@ -25,11 +25,6 @@ class editing_page extends display{
 
 		$this->GetFile();
 
-		//original alpha versions of 1.8 didn't maintain the file_type
-		if( !isset($this->meta_data['file_type']) ){
-			$this->ResetFileTypes();
-		}
-
 		$can_edit			= admin_tools::CanEdit($this->gp_index);
 		$menu_permissions	= admin_tools::HasPermission('Admin_Menu');
 
@@ -448,7 +443,7 @@ class editing_page extends display{
 
 
 		$this->file_sections = array_values($new_sections);
-		$this->ResetFileTypes(false);
+		$this->ResetFileTypes();
 
 
 		// save a send message to user
@@ -552,7 +547,7 @@ class editing_page extends display{
 	 * Updates $this->meta_data and $gp_titles
 	 *
 	 */
-	function ResetFileTypes($save = true){
+	function ResetFileTypes(){
 		global $gp_titles;
 
 		$original_types = array();
@@ -577,9 +572,6 @@ class editing_page extends display{
 
 		$gp_titles[$this->gp_index]['type'] = $new_types;
 		admin_tools::SavePagesPHP();
-		if( $save ){
-			$this->SaveThis();
-		}
 	}
 
 	function RenameFile(){
@@ -928,7 +920,7 @@ class editing_page extends display{
 		$this->SaveBackup();
 		gpFiles::Save( $this->file, $contents );
 		$this->GetFile();
-		$this->ResetFileTypes(false);
+		$this->ResetFileTypes();
 		msg($langmessage['SAVED']);
 	}
 

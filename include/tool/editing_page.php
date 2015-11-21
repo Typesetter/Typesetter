@@ -109,18 +109,26 @@ class editing_page extends display{
 
 
 				/* revision history */
-				case 'view_revision':
+				case 'ViewRevision':
 					$this->ViewRevision();
 				return;
-				case 'use_revision':
+				case 'UseRevision':
 					$this->UseRevision();
 				break;
-				case 'view_history';
+				case 'ViewHistory';
 					$this->ViewHistory();
 				return;
 
 			}
 		}
+
+
+		//notify user we're using a draft
+		if( $this->draft_exists ){
+			$ago = time() - $this->draft_stats['modified'];
+			msg('This is a draft. Last edited '.admin_tools::Elapsed($ago).' ago');
+		}
+
 
 		$this->contentBuffer = $this->GenerateContent_Admin();
 	}
@@ -162,9 +170,7 @@ class editing_page extends display{
 		}
 
 		$this->draft_exists = true;
-		$ago				= time() - filemtime($this->draft_file);
 
-		msg('This is a draft. Last edited '.admin_tools::Elapsed($ago).' ago');
 
 		return true;
 	}
@@ -207,7 +213,7 @@ class editing_page extends display{
 		}
 
 		if( $can_edit ){
-			$page->admin_links[] = common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+			$page->admin_links[] = common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 		}
 
 
@@ -826,7 +832,6 @@ class editing_page extends display{
 
 		//working draft
 		if( $this->draft_exists ){
-
 			ob_start();
 			$size = filesize($this->draft_file);
 			echo '<tr><td>';
@@ -834,20 +839,8 @@ class editing_page extends display{
 			echo ' &nbsp; ('.$langmessage['Working Draft'].')</td><td>';
 			echo admin_tools::FormatBytes($size);
 			echo '</td><td>'.$this->draft_stats['username'].'</td><td>&nbsp;</td></tr>';
-			$rows[$this->draft_stats['modified']+1] = ob_get_clean();
+			$rows[$this->draft_stats['modified']] = ob_get_clean();
 		}
-
-
-		//current page
-		ob_start();
-		$size = filesize($this->file);
-		echo '<tr><td>';
-		echo common::date($langmessage['strftime_datetime'],$this->fileModTime);
-		echo ' &nbsp; ('.$langmessage['Current Page'].')</td><td>';
-		echo admin_tools::FormatBytes($size);
-		echo '</td><td>'.$this->file_stats['username'].'</td><td>&nbsp;</td></tr>';
-		$rows[$this->fileModTime] = ob_get_clean();
-
 
 
 		foreach($files as $time => $file){
@@ -877,10 +870,22 @@ class editing_page extends display{
 			echo '</td><td>';
 			echo $username;
 			echo '</td><td>';
-			echo common::Link($this->title,$langmessage['preview'],'cmd=view_revision&time='.$time,array('data-cmd'=>'cnreq'));
+			echo common::Link($this->title,$langmessage['preview'],'cmd=ViewRevision&time='.$time,array('data-cmd'=>'cnreq'));
 			echo '</td></tr>';
 			$rows[$time] = ob_get_clean();
 		}
+
+
+		// current page
+		// this will likely overwrite one of the history entries
+		ob_start();
+		$size = filesize($this->file);
+		echo '<tr><td>';
+		echo common::date($langmessage['strftime_datetime'],$this->fileModTime);
+		echo ' &nbsp; ('.$langmessage['Current Page'].')</td><td>';
+		echo admin_tools::FormatBytes($size);
+		echo '</td><td>'.$this->file_stats['username'].'</td><td>&nbsp;</td></tr>';
+		$rows[$this->fileModTime] = ob_get_clean();
 
 
 		ob_start();
@@ -936,8 +941,8 @@ class editing_page extends display{
 
 		$date		= common::date($langmessage['strftime_datetime'],$time);
 		$message	= sprintf($langmessage['viewing_revision'],$date);
-		$message	.= ' <br/> '.common::Link($this->title,$langmessage['Restore this revision'],'cmd=use_revision&time='.$time,array('data-cmd'=>'cnreq'));
-		$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=view_history',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+		$message	.= ' <br/> '.common::Link($this->title,$langmessage['Restore this revision'],'cmd=UseRevision&time='.$time,array('data-cmd'=>'cnreq'));
+		$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 
 		msg( $message );
 	}
@@ -964,8 +969,9 @@ class editing_page extends display{
 		}
 
 		$this->SaveBackup();
-		gpFiles::Save( $this->file, $contents );
+		gpFiles::Save( $this->draft_file, $contents ); //restore to the draft file
 		$this->GetFile();
+		$this->SaveThis(false); //save again to update the mod time and username
 		$this->ResetFileTypes();
 		msg($langmessage['SAVED']);
 	}

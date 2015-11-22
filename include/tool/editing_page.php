@@ -127,6 +127,9 @@ class editing_page extends display{
 				case 'PublishDraft':
 					$this->PublishDraft();
 				break;
+				case 'DiscardDraft':
+					$this->DiscardDraft();
+				break;
 
 			}
 		}
@@ -138,7 +141,8 @@ class editing_page extends display{
 
 			$message	= 'This is a draft &nbsp; ';
 			$message	.= common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq'));
-			$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+			$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Discard Draft'],'cmd=DiscardDraft',array('data-cmd'=>'creq'));
+			$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox'));
 
 			msg($message);
 			//last modified Last edited '.admin_tools::Elapsed($ago).' ago'
@@ -812,8 +816,12 @@ class editing_page extends display{
 			$contents = gzencode($contents,9);
 		}
 
-		gpFiles::Save( $backup_file, $contents );
+		if( !gpFiles::Save( $backup_file, $contents ) ){
+			return false;
+		}
+
 		$this->CleanBackupFolder();
+		return true;
 	}
 
 
@@ -857,6 +865,40 @@ class editing_page extends display{
 		unlink($this->draft_file);
 		$this->ResetFileTypes();
 		$this->draft_exists = false;
+
+		msg($langmessage['SAVED']);
+	}
+
+
+	/**
+	 * Remove the draft file so that the user can continue editing the current version
+	 *
+	 */
+	function DiscardDraft(){
+		global $langmessage;
+
+		if( !$this->draft_exists ){
+			msg($langmessage['OOPS'].' (Not a draft)');
+			return false;
+		}
+
+
+		if( !$this->SaveBackup() ){ //create backup of draft
+			msg($langmessage['OOPS'].' (Backup not created)');
+			return false;
+		}
+
+		if( !unlink($this->draft_file) ){
+			msg($langmessage['OOPS'].' (Backup not deleted)');
+			return false;
+		}
+
+		$this->draft_exists = false;
+		$this->GetFile();
+
+		msg($langmessage['SAVED']);
+
+		return true;
 	}
 
 
@@ -875,15 +917,15 @@ class editing_page extends display{
 		if( $this->draft_exists ){
 			ob_start();
 			$size = filesize($this->draft_file);
-			echo '<tr><td>';
-			//echo common::date($langmessage['strftime_datetime'],$this->draft_stats['modified']);
+			$date = common::date($langmessage['strftime_datetime'],$this->draft_stats['modified']);
+			echo '<tr><td title="'.htmlspecialchars($date).'">';
+			echo '<b>'.$langmessage['Working Draft'].'</b><br/>';
 			echo admin_tools::Elapsed(time() - $this->draft_stats['modified']).' ago';
-			echo ' &nbsp; ('.$langmessage['Working Draft'].')</td><td>';
+			echo '</td><td>';
 			echo admin_tools::FormatBytes($size);
 			echo '</td><td>'.$this->draft_stats['username'].'</td><td>';
 			echo common::Link($this->title,$langmessage['View']);
-			echo ' &nbsp; ';
-			echo common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq'));
+			echo ' &nbsp; '.common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq'));
 			echo '</td></tr>';
 			$rows[$this->draft_stats['modified']] = ob_get_clean();
 		}
@@ -896,22 +938,21 @@ class editing_page extends display{
 			}
 
 			//get info from filename
-			$name	= basename($file);
-			$parts	= explode('.',$name,3);
-			$time	= array_shift($parts);
-			$size	= array_shift($parts);
-			$username = false;
+			$name		= basename($file);
+			$parts		= explode('.',$name,3);
+			$time		= array_shift($parts);
+			$size		= array_shift($parts);
+			$username	= false;
+			$date		= common::date($langmessage['strftime_datetime'],$time);
 			if( count($parts) ){
 				$username = array_shift($parts);
 			}
 
 			//output row
 			ob_start();
-			echo '<tr><td>';
-			$date = common::date($langmessage['strftime_datetime'],$time);
-			echo '<div title="'.htmlspecialchars($date).'">';
+			echo '<tr><td title="'.htmlspecialchars($date).'">';
 			echo admin_tools::Elapsed(time() - $time).' ago';
-			echo '</div></td><td>';
+			echo '</td><td>';
 			if( $size && is_numeric($size) ){
 				echo admin_tools::FormatBytes($size);
 			}
@@ -928,12 +969,11 @@ class editing_page extends display{
 		// this will likely overwrite one of the history entries
 		ob_start();
 		$size = filesize($this->file);
-		echo '<tr><td>';
 		$date = common::date($langmessage['strftime_datetime'],$this->fileModTime);
-		echo '<span title="'.htmlspecialchars($date).'">';
+		echo '<tr><td title="'.htmlspecialchars($date).'">';
+		echo '<b>'.$langmessage['Current Page'].'</b><br/>';
 		echo admin_tools::Elapsed(time() - $this->fileModTime).' ago';
-		echo '</span>';
-		echo ' &nbsp; ('.$langmessage['Current Page'].')</td><td>';
+		echo '</td><td>';
 		echo admin_tools::FormatBytes($size);
 		echo '</td><td>'.$this->file_stats['username'].'</td><td>';
 		echo common::Link($this->title,$langmessage['View'],'cmd=ViewCurrent');//,array('data-cmd'=>'cnreq')

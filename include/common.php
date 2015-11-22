@@ -1650,19 +1650,22 @@ class common{
 			$index = base_convert($num_index,10,36);
 			$num_index++;
 
+
 			//check backup dir
 			$backup_dir = $dataDir.'/data/_backup/pages/'.$index;
 			if( file_exists($backup_dir) ){
+				$index = false;
 				continue;
 			}
 
 			//check for draft
 			$draft_file	= $dataDir.'/data/_drafts/'.substr($config['gpuniq'],0,7).'_'.$index.'.php';
 			if( file_exists($draft_file) ){
+				$index = false;
 				continue;
 			}
 
-		}while( is_numeric($index) || isset($gp_titles[$index]) );
+		}while( !$index || is_numeric($index) || isset($gp_titles[$index]) );
 
 		return $index;
 	}

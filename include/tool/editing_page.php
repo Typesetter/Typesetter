@@ -122,6 +122,10 @@ class editing_page extends display{
 				case 'ViewCurrent':
 					$this->ViewCurrent();
 				return;
+				case 'DeleteRevision':
+					$this->DeleteRevision();
+					$this->ViewHistory();
+				return;
 
 				//drafts
 				case 'PublishDraft':
@@ -960,6 +964,8 @@ class editing_page extends display{
 			echo $username;
 			echo '</td><td>';
 			echo common::Link($this->title,$langmessage['View'],'cmd=ViewRevision&time='.$time,array('data-cmd'=>'cnreq'));
+			echo ' &nbsp; ';
+			echo common::Link($this->title,$langmessage['delete'],'cmd=DeleteRevision&time='.$time,array('data-cmd'=>'gpabox','class'=>'gpconfirm'));
 			echo '</td></tr>';
 			$rows[$time] = ob_get_clean();
 		}
@@ -991,6 +997,9 @@ class editing_page extends display{
 
 		echo '</tbody>';
 		echo '</table>';
+
+		echo '<p>'.$langmessage['History Limit'].': '.gp_backup_limit.'</p>';
+
 		$this->contentBuffer = ob_get_clean();
 	}
 
@@ -1080,6 +1089,21 @@ class editing_page extends display{
 	function ViewCurrent(){
 		$file_sections			= gpFiles::Get($this->file,'file_sections');
 		$this->contentBuffer	= section_content::Render($file_sections,$this->title,$this->file_stats);
+	}
+
+
+	/**
+	 * Delete a revision backup
+	 *
+	 */
+	function DeleteRevision(){
+		global $langmessage;
+
+		$full_path	= $this->BackupFile($_REQUEST['time']);
+		if( !$full_path ){
+			return false;
+		}
+		unlink($full_path);
 	}
 
 

@@ -834,13 +834,15 @@ class editing_page extends display{
 	 *
 	 */
 	function CleanBackupFolder(){
-		global $dataDir;
-		$files = $this->BackupFiles();
-		$file_count = count($files);
-		if( $file_count <= gp_backup_limit ){
+		global $dataDir, $config;
+
+		$files			= $this->BackupFiles();
+		$file_count		= count($files);
+
+		if( $file_count <= $config['history_limit'] ){
 			return;
 		}
-		$delete_count = $file_count - gp_backup_limit;
+		$delete_count = $file_count - $config['history_limit'];
 		$files = array_splice( $files, 0, $delete_count );
 		foreach($files as $file){
 			$full_path = $dataDir.'/data/_backup/pages/'.$this->gp_index.'/'.$file;
@@ -911,7 +913,7 @@ class editing_page extends display{
 	 *
 	 */
 	function ViewHistory(){
-		global $langmessage;
+		global $langmessage, $config;
 
 		$files		= $this->BackupFiles();
 		$rows		= array();
@@ -998,7 +1000,7 @@ class editing_page extends display{
 		echo '</tbody>';
 		echo '</table>';
 
-		echo '<p>'.$langmessage['History Limit'].': '.gp_backup_limit.'</p>';
+		echo '<p>'.$langmessage['history_limit'].': '.$config['history_limit'].'</p>';
 
 		$this->contentBuffer = ob_get_clean();
 	}

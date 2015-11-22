@@ -23,7 +23,7 @@ gp_defined('gp_index_filenames',true);
 gp_defined('gp_safe_mode',false);
 gp_defined('E_DEPRECATED',8192);			// since php 5.3
 gp_defined('E_USER_DEPRECATED',16384);		// since php 5.3
-gp_defined('gp_backup_limit',10);
+gp_defined('gp_backup_limit',30);
 gp_defined('gp_write_lock_time',5);
 gp_defined('gp_dir_index',true);
 gp_defined('gp_remote_addons',true); //deprecated 4.0.1
@@ -1482,6 +1482,7 @@ class common{
 				'showsitemap'		=> true,
 				'showlogin'			=> true,
 				'auto_redir'		=> 90,			//2.5
+				'history_limit'		=> min(gp_backup_limit,30),
 				'resize_images'		=> true,		//3.5
 				'jquery'			=> 'local',
 				'addons'			=> array(),

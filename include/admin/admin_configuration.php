@@ -17,69 +17,66 @@ class admin_configuration{
 
 
 		//add examples to smtp_hosts
-		$langmessage['about_config']['smtp_hosts'] .= 'ssl://smtp.gmail.com:465 ; tls://smtp.live.com:587';
-		$langmessage['about_config']['showgplink'] = 'Showing the "powered by" link on your site is a great way to support gpEasy CMS.';
-		$langmessage['jquery'] = 'Google CDN';
+		$langmessage['about_config']['smtp_hosts']		.= 'ssl://smtp.gmail.com:465 ; tls://smtp.live.com:587';
+		$langmessage['about_config']['showgplink']		= 'Showing the "powered by" link on your site is a great way to support gpEasy CMS.';
+		$langmessage['about_config']['history_limit']	= 'Max: '.gp_backup_limit;
+		$langmessage['jquery']							= 'Google CDN';
+
 
 		$this->variables = array(
 
-						// these values exist and are used, but not necessarily needed
-
 						// these values aren't used
-						//'author'=>'',
 						//'timeoffset'=>'',
-						//'fromname'=>'',
-						//'fromemail'=>'',
-						//'contact_message'=>'',
 						//'dateformat'=>'',
 
 						/* General Settings */
-						'general_settings'=>false,
-						'title'=>'',
-						'keywords'=>'',
-						'desc'=>'textarea',
+						'general_settings'		=> false,
+						'title'					=> '',
+						'keywords'				=> '',
+						'desc'					=> 'textarea',
 
-						'Interface'=>false,
-						'colorbox_style' => array('example1'=>'Example 1', 'example2'=>'Example 2', 'example3'=>'Example 3', 'example4'=>'Example 4', 'example5'=>'Example 5' ),
-						'language'=>'',
-						'langeditor'=>'',
-						'showsitemap'=>'boolean',
-						'showlogin'=>'boolean',
-						'showgplink'=>'boolean',
+						'Interface'				=> false,
+						'colorbox_style'		=> array('example1'=>'Example 1', 'example2'=>'Example 2', 'example3'=>'Example 3', 'example4'=>'Example 4', 'example5'=>'Example 5' ),
+						'language'				=> '',
+						'langeditor'			=> '',
+						'showsitemap'			=> 'boolean',
+						'showlogin'				=> 'boolean',
+						'showgplink'			=> 'boolean',
 
-						'Performance'=>false,
-						'jquery'=>'',
-						'maximgarea'=>'integer',
-						'maxthumbsize'=>'integer',
-						'auto_redir'=>'integer',
-						'HTML_Tidy'=>'',
-						'Report_Errors'=>'boolean',
-						'combinejs'=>'boolean',
-						'combinecss'=>'boolean',
-						'etag_headers'=>'boolean',
-						'resize_images'=>'boolean',
+						'Performance'			=> false,
+						'jquery'				=> '',
+						'maximgarea'			=> 'integer',
+						'maxthumbsize'			=> 'integer',
+						'auto_redir'			=> 'integer',
+						'history_limit'			=> 'integer',
+						'HTML_Tidy'				=> '',
+						'Report_Errors'			=> 'boolean',
+						'combinejs'				=> 'boolean',
+						'combinecss'			=> 'boolean',
+						'etag_headers'			=> 'boolean',
+						'resize_images'			=> 'boolean',
 
 
 						/* Contact Configuration */
-						'contact_config'=>false,
-						'toemail'=>'',
-						'toname'=>'',
-						'from_address'=>'',
-						'from_name'=>'',
-						'from_use_user'=>'boolean',
-						'require_email'=>'',
-						'contact_advanced'=>false,
-						'mail_method'=>'',
-						'sendmail_path'=>'',
-						'smtp_hosts'=>'',
-						'smtp_user'=>'',
-						'smtp_pass'=>'password',
-						//'fromemail'=>'',
+						'contact_config'		=> false,
+						'toemail'				=> '',
+						'toname'				=> '',
+						'from_address'			=> '',
+						'from_name'				=> '',
+						'from_use_user'			=> 'boolean',
+						'require_email'			=> '',
+						'contact_advanced'		=> false,
+						'mail_method'			=> '',
+						'sendmail_path'			=> '',
+						'smtp_hosts'			=> '',
+						'smtp_user'				=> '',
+						'smtp_pass'				=> 'password',
+						//'fromemail'			=> '',
 
-						'reCaptcha'=>false,
-						'recaptcha_public'=>'',
-						'recaptcha_private'=>'',
-						'recaptcha_language'=>'',
+						'reCaptcha'				=> false,
+						'recaptcha_public'		=> '',
+						'recaptcha_private'		=> '',
+						'recaptcha_language'	=> '',
 						);
 
 		$cmd = common::GetCommand();
@@ -117,6 +114,9 @@ class admin_configuration{
 				$config[$key] = $_POST[$key];
 			}
 		}
+
+
+		$config['history_limit'] = min($config['history_limit'],gp_backup_limit);
 
 		if( !admin_tools::SaveConfig() ){
 			message($langmessage['OOPS']);

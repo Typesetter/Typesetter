@@ -87,7 +87,7 @@ define('service_provider_id',false);
  * Limit the number of revisions to store in the backup
  *
  */
-define('gp_backup_limit',10);
+define('gp_backup_limit',30);
 
 
 /**

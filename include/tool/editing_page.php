@@ -135,8 +135,12 @@ class editing_page extends display{
 		//notify user we're using a draft
 		if( $this->draft_exists ){
 			$ago	= time() - $this->draft_stats['modified'];
-			$link	= common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq'));
-			msg('This is a draft. '.$link);
+
+			$message	= 'This is a draft &nbsp; ';
+			$message	.= common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq'));
+			$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+
+			msg($message);
 			//last modified Last edited '.admin_tools::Elapsed($ago).' ago'
 		}
 
@@ -877,6 +881,8 @@ class editing_page extends display{
 			echo ' &nbsp; ('.$langmessage['Working Draft'].')</td><td>';
 			echo admin_tools::FormatBytes($size);
 			echo '</td><td>'.$this->draft_stats['username'].'</td><td>';
+			echo common::Link($this->title,$langmessage['View']);
+			echo ' &nbsp; ';
 			echo common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq'));
 			echo '</td></tr>';
 			$rows[$this->draft_stats['modified']] = ob_get_clean();

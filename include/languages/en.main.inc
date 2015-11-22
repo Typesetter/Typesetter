@@ -119,6 +119,7 @@ $langmessage = array (
 	'couldnt_reset_pass'             => 'Oops, that didn\'t work. Make sure your old password is correct and try again.',
 	'grant_usage'                    => 'Grant Usage',
 	'logout'                         => 'Logout',
+	'View'                           => 'View',
 	'preview'                        => 'Preview',
 	'layout'                         => 'Layout',
 	'Layout Options'                 => 'Layout Options',

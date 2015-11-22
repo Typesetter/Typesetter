@@ -119,6 +119,9 @@ class editing_page extends display{
 				case 'ViewHistory';
 					$this->ViewHistory();
 				return;
+				case 'ViewCurrent':
+					$this->ViewCurrent();
+				return;
 
 				//drafts
 				case 'PublishDraft':
@@ -909,7 +912,7 @@ class editing_page extends display{
 			echo '</td><td>';
 			echo $username;
 			echo '</td><td>';
-			echo common::Link($this->title,$langmessage['preview'],'cmd=ViewRevision&time='.$time,array('data-cmd'=>'cnreq'));
+			echo common::Link($this->title,$langmessage['View'],'cmd=ViewRevision&time='.$time,array('data-cmd'=>'cnreq'));
 			echo '</td></tr>';
 			$rows[$time] = ob_get_clean();
 		}
@@ -926,7 +929,9 @@ class editing_page extends display{
 		echo '</span>';
 		echo ' &nbsp; ('.$langmessage['Current Page'].')</td><td>';
 		echo admin_tools::FormatBytes($size);
-		echo '</td><td>'.$this->file_stats['username'].'</td><td>&nbsp;</td></tr>';
+		echo '</td><td>'.$this->file_stats['username'].'</td><td>';
+		echo common::Link($this->title,$langmessage['View'],'cmd=ViewCurrent');//,array('data-cmd'=>'cnreq')
+		echo '</td></tr>';
 		$rows[$this->fileModTime] = ob_get_clean();
 
 
@@ -1011,10 +1016,24 @@ class editing_page extends display{
 		}
 
 		$this->SaveBackup();
-		gpFiles::Save( $this->draft_file, $contents ); //restore to the draft file
+		if( !gpFiles::Save( $this->draft_file, $contents ) ){ //restore to the draft file
+			msg($langmessage['OOPS'].' (Draft not saved)');
+			return false;
+		}
+		$this->draft_exists = true;
 		$this->GetFile();
 		$this->SaveThis(false); //save again to update the mod time and username
 		msg($langmessage['SAVED']);
+	}
+
+
+	/**
+	 * View the current public facing version of the file
+	 *
+	 */
+	function ViewCurrent(){
+		$file_sections			= gpFiles::Get($this->file,'file_sections');
+		$this->contentBuffer	= section_content::Render($file_sections,$this->title,$this->file_stats);
 	}
 
 

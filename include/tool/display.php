@@ -135,13 +135,9 @@ class display{
 	 * Retreive the data file for the current title and update the data if necessary
 	 *
 	 */
-	function GetFile($file = false){
+	function GetFile(){
 
-		if( $file === false ){
-			$file = $this->file;
-		}
-
-		$this->file_sections	= gpFiles::Get($file,'file_sections');
+		$this->file_sections	= gpFiles::Get($this->file,'file_sections');
 		$this->meta_data		= gpFiles::$last_meta;
 		$this->fileModTime		= gpFiles::$last_modified;
 		$this->file_stats		= gpFiles::$last_stats;

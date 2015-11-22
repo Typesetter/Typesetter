@@ -250,12 +250,13 @@ class admin_trash{
 
 		$show_titles = array();
 		foreach($titles as $title => $null){
-			$show_titles[] = htmlspecialchars($title);
+			$show_titles[] = common::Link($title,$title);
 		}
 		$title_string = implode(', ',$show_titles);
 
-		$link = common::GetUrl('Admin_Menu');
-		$message = sprintf($langmessage['file_restored'],$title_string,$link);
+		$link		= common::GetUrl('Admin_Menu');
+		$message	= sprintf($langmessage['file_restored'],$title_string,$link);
+
 		message($message);
 	}
 

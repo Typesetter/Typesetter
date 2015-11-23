@@ -1658,8 +1658,8 @@ class common{
 				continue;
 			}
 
-			//check for draft
-			$draft_file	= $dataDir.'/data/_drafts/'.substr($config['gpuniq'],0,7).'_'.$index.'.php';
+			//check for page directory
+			$draft_file	= $dataDir.'/data/_pages/'.substr($config['gpuniq'],0,7).'_'.$index;
 			if( file_exists($draft_file) ){
 				$index = false;
 				continue;

@@ -345,10 +345,14 @@ class gp_rename{
 			if( $new_file == $old_file ){
 
 			//if the file being renamed doesn't use the index naming convention, then we'll still need to rename it
-			}elseif( !gpFiles::Rename($old_file,$new_file) ){
-				msg($langmessage['OOPS'].' (N3)');
-				$gp_index = $old_gp_index;
-				return false;
+			}else{
+				$new_dir = dirname($new_file);
+				$old_dir = dirname($old_file);
+				if( !gpFiles::Rename($old_dir,$new_dir) ){
+					msg($langmessage['OOPS'].' (N3)');
+					$gp_index = $old_gp_index;
+					return false;
+				}
 			}
 
 			//gallery rename

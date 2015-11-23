@@ -185,9 +185,9 @@ class editing_page extends display{
 		}
 
 
-		$this->draft_file	= $dataDir.'/data/_drafts/'.substr($config['gpuniq'],0,7).'_'.$this->gp_index.'.php';
+		$this->draft_file	= dirname($this->file).'/draft.php';
 
-		if( !file_exists($this->draft_file) ){
+		if( !gpFiles::Exists($this->draft_file) ){
 			return true;
 		}
 

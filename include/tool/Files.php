@@ -342,7 +342,9 @@ class gpFiles{
 
 	/**
 	 * Return the data file location for a title
-	 * As of v 2.3.4, it defaults to an index based file name but falls back on title based file name for installation and backwards compatibility
+	 * Since v4.6, page files are within a subfolder
+	 * As of v2.3.4, it defaults to an index based file name but falls back on title based file name for installation and backwards compatibility
+	 *
 	 *
 	 * @param string $title
 	 * @return string The path of the data file
@@ -350,18 +352,42 @@ class gpFiles{
 	static function PageFile($title){
 		global $dataDir, $config, $gp_index;
 
+
 		$index_path = false;
 		if( gp_index_filenames && isset($gp_index[$title]) && isset($config['gpuniq']) ){
-			//original data path with data index at the end
-			$index_path = $old_path = $dataDir.'/data/_pages/'.substr($config['gpuniq'],0,7).'_'.$gp_index[$title].'.php';
-			if( file_exists($old_path) ){
-				return $old_path;
+
+			// page.php
+			$index_path = $dataDir.'/data/_pages/'.substr($config['gpuniq'],0,7).'_'.$gp_index[$title].'/page.php';
+			if( file_exists($index_path) ){
+				return $index_path;
 			}
+
+
+			// without folder -> rename it
+			$old_index = $dataDir.'/data/_pages/'.substr($config['gpuniq'],0,7).'_'.$gp_index[$title].'.php';
+			if( file_exists($old_index) ){
+				if( gpFiles::Rename($old_index, $index_path) ){
+					return $index_path;
+				}
+				return $old_index;
+			}
+
 		}
 
-		$normal_path = $dataDir.'/data/_pages/'.str_replace('/','_',$title).'.php';
+
+		//using file name instead of index
+		$normal_path = $dataDir.'/data/_pages/'.str_replace('/','_',$title).'/page.php';
 		if( !$index_path || gpFiles::Exists($normal_path) ){
 			return $normal_path;
+		}
+
+		//without folder -> rename it
+		$old_path = $dataDir.'/data/_pages/'.str_replace('/','_',$title).'.php';
+		if( gpFiles::Exists($old_path) ){
+			if( gpFiles::Rename($old_path, $normal_path) ){
+				return $normal_path;
+			}
+			return $old_path;
 		}
 
 		return $index_path;
@@ -473,6 +499,29 @@ class gpFiles{
 		fclose($fp);
 		return ($return !== false);
 	}
+
+	/**
+	 * Rename a file
+	 * @since 4.6
+	 */
+	static function Rename($from,$to){
+		global $gp_not_writable;
+
+		if( !self::WriteLock() ){
+			return false;
+		}
+
+
+		//make sure directory exists
+		$dir = common::DirName($to);
+		if( !file_exists($dir) && !gpFiles::CheckDir($dir) ){
+			return false;
+		}
+
+
+		return rename($from, $to);
+	}
+
 
 	/**
 	 * Get a write lock to prevent simultaneous writing

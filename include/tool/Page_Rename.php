@@ -345,7 +345,7 @@ class gp_rename{
 			if( $new_file == $old_file ){
 
 			//if the file being renamed doesn't use the index naming convention, then we'll still need to rename it
-			}elseif( !rename($old_file,$new_file) ){
+			}elseif( !gpFiles::Rename($old_file,$new_file) ){
 				msg($langmessage['OOPS'].' (N3)');
 				$gp_index = $old_gp_index;
 				return false;

@@ -149,7 +149,6 @@ class editing_page extends display{
 			$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox'));
 
 			msg($message);
-			//last modified Last edited '.admin_tools::Elapsed($ago).' ago'
 		}
 
 
@@ -926,7 +925,8 @@ class editing_page extends display{
 			$date = common::date($langmessage['strftime_datetime'],$this->draft_stats['modified']);
 			echo '<tr><td title="'.htmlspecialchars($date).'">';
 			echo '<b>'.$langmessage['Working Draft'].'</b><br/>';
-			echo admin_tools::Elapsed(time() - $this->draft_stats['modified']).' ago';
+			$elapsed = admin_tools::Elapsed(time() - $this->draft_stats['modified']);
+			echo sprintf($langmessage['_ago'],$elapsed);
 			echo '</td><td>';
 			echo admin_tools::FormatBytes($size);
 			echo '</td><td>'.$this->draft_stats['username'].'</td><td>';
@@ -957,7 +957,8 @@ class editing_page extends display{
 			//output row
 			ob_start();
 			echo '<tr><td title="'.htmlspecialchars($date).'">';
-			echo admin_tools::Elapsed(time() - $time).' ago';
+			$elapsed = admin_tools::Elapsed(time() - $time);
+			echo sprintf($langmessage['_ago'],$elapsed);
 			echo '</td><td>';
 			if( $size && is_numeric($size) ){
 				echo admin_tools::FormatBytes($size);
@@ -980,7 +981,8 @@ class editing_page extends display{
 		$date = common::date($langmessage['strftime_datetime'],$this->fileModTime);
 		echo '<tr><td title="'.htmlspecialchars($date).'">';
 		echo '<b>'.$langmessage['Current Page'].'</b><br/>';
-		echo admin_tools::Elapsed(time() - $this->fileModTime).' ago';
+		$elapsed = admin_tools::Elapsed(time() - $this->fileModTime);
+		echo sprintf($langmessage['_ago'],$elapsed);
 		echo '</td><td>';
 		echo admin_tools::FormatBytes($size);
 		echo '</td><td>'.$this->file_stats['username'].'</td><td>';

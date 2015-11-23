@@ -447,8 +447,7 @@ class admin_trash{
 		echo '<tr><th colspan="3">';
 		echo '<input type="checkbox" name="" class="check_all"/>';
 		echo '</th><th>';
-		echo '<button type="submit" name="cmd" value="RestoreDeleted" class="gppost gpsubmit">'.$langmessage['restore'].'</button>';
-		echo ' &nbsp; ';
+		echo '<button type="submit" name="cmd" value="RestoreDeleted" class="gppost gpsubmit">'.$langmessage['restore'].'</button> ';
 		echo '<button type="submit" name="cmd" value="DeleteFromTrash" class="gppost gpsubmit">'.$langmessage['delete'].'</button>';
 		echo '</th></tr>';
 		$heading = ob_get_clean();
@@ -472,7 +471,10 @@ class admin_trash{
 			echo '</label>';
 			echo '</td><td>';
 
-			echo admin_tools::Elapsed(time() - $info['time']).' ago';
+			if( !empty($info['time']) ){
+				$elapsed = admin_tools::Elapsed(time() - $info['time']);
+				echo sprintf($langmessage['_ago'],$elapsed);
+			}
 
 			echo '</td><td>';
 			if( isset($info['type']) ){

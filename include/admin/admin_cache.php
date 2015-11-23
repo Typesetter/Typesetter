@@ -88,7 +88,8 @@ class admin_cache{
 			$total_size += $size;
 
 			echo '</td><td>';
-			echo admin_tools::Elapsed( time() - filemtime($full) ).' ago ';
+			$elapsed = admin_tools::Elapsed( time() - filemtime($full) );
+			echo sprintf($langmessage['_ago'],$elapsed);
 			echo '</td><td>';
 
 			echo common::Link('Admin_Cache',$langmessage['delete'],'cmd=DeleteFile&amp;file='.rawurlencode($file),array('data-cmd'=>'cnreq','class'=>'gpconfirm','title'=>$langmessage['delete_confirm']));

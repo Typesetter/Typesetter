@@ -97,13 +97,15 @@ class admin_errors{
 	 *
 	 */
 	static function DisplayFatalError($error_file){
+		global $langmessage;
 
 		$hash = substr(basename($error_file),6);
 
 		//modified time
 		echo '<p>';
 		$filemtime = filemtime($error_file);
-		echo admin_tools::Elapsed( time() - $filemtime ).' ago';
+		$elapsed = admin_tools::Elapsed( time() - $filemtime );
+		echo sprintf($langmessage['_ago'],$elapsed);
 		echo ' - ';
 		echo common::Link('Admin_Errors','Clear Error','cmd=clear_error&hash='.$hash,array('data-cmd'=>'postlink'));
 		echo '</p>';
@@ -192,7 +194,10 @@ class admin_errors{
 						echo '</pre>';
 					}
 					echo '<p>';
-					echo admin_tools::Elapsed( time() - $new_time ).' ago ('.$date.')';
+					$elapsed = admin_tools::Elapsed( time() - $new_time );
+					echo sprintf($langmessage['_ago'],$elapsed);
+					echo ' ('.$date.')';
+
 					echo '</p>';
 					echo '<pre>';
 					$time = $new_time;

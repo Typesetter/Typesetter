@@ -283,6 +283,7 @@ class admin_trash{
 		$show_titles = array();
 		foreach($titles as $trash_index => $info){
 			$show_titles[] = common::Link($info['title'],$info['title']);
+			unset($this->trash_files[$trash_index]);
 		}
 		$title_string = implode(', ',$show_titles);
 
@@ -577,11 +578,11 @@ class admin_trash{
 
 
 		//delete / restore links
-		echo '<h3 class="pull-right">';
-		echo common::Link('Admin_Trash',$langmessage['restore'],'cmd=RestoreDeleted&title['.rawurlencode($trash_index).']=1',array('data-cmd'=>'postlink'));
+		echo '<div class="pull-right">';
+		echo common::Link('Admin_Trash',$langmessage['restore'],'cmd=RestoreDeleted&title['.rawurlencode($trash_index).']=1',array('data-cmd'=>'cnreq','class'=>'gpsubmit'));
 		echo ' &nbsp; ';
-		echo common::Link('Admin_Trash',$langmessage['delete'],'cmd=DeleteFromTrash&title['.rawurlencode($trash_index).']=1',array('data-cmd'=>'postlink'));
-		echo '</h3>';
+		echo common::Link('Admin_Trash',$langmessage['delete'],'cmd=DeleteFromTrash&title['.rawurlencode($trash_index).']=1',array('data-cmd'=>'cnreq','class'=>'gpsubmit'));
+		echo '</div>';
 
 
 		echo '<h2 class="hmargin">';

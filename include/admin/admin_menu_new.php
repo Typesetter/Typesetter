@@ -1828,7 +1828,11 @@ class admin_menu_new extends admin_menu_tools{
 
 					echo $info['label'];
 					echo '<span class="slug">';
-					echo '/'.$title;
+					if( isset($info['title']) ){
+						echo '/'.$info['title'];
+					}else{
+						echo '/'.$title;
+					}
 					echo '</span>';
 
 					echo '</label></li>';

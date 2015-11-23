@@ -187,7 +187,7 @@ class admin_trash{
 
 		//make sure we have a title
 		if( !isset($title_info['title']) ){
-			$title_info['title'] = $trash_index;
+			$title_info['title'] = str_replace('_',' ',$trash_index);
 		}
 
 
@@ -549,11 +549,21 @@ class admin_trash{
 			$trash_file = $dataDir.'/data/_trash/'.$trash_index.'/page.php';
 		}
 
+
+		//delete / restore links
+		echo '<h3 class="pull-right">';
+		echo common::Link('Admin_Trash',$langmessage['restore'],'cmd=RestoreDeleted&title['.rawurlencode($trash_index).']=1',array('data-cmd'=>'postlink'));
+		echo ' &nbsp; ';
+		echo common::Link('Admin_Trash',$langmessage['delete'],'cmd=DeleteFromTrash&title['.rawurlencode($trash_index).']=1',array('data-cmd'=>'postlink'));
+		echo '</h3>';
+
+
 		echo '<h2 class="hmargin">';
 		echo common::Link('Admin_Trash',$langmessage['trash']);
 		echo ' &#187; ';
 		echo htmlspecialchars($title_info['title']);
 		echo '</h2>';
+		echo '<hr>';
 
 
 		//get file sections

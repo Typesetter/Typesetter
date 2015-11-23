@@ -202,7 +202,7 @@ class admin_trash{
 	 *
 	 */
 	static function MoveToTrash_File($title, $index, &$trash_data){
-		global $dataDir, $gp_titles;
+		global $dataDir, $gp_titles, $config;
 
 
 		//get a unique index
@@ -237,6 +237,15 @@ class admin_trash{
 		if( !copy($source_file,$trash_file) ){
 			return false;
 		}
+
+
+		//copy draft
+		$src_draft								= $dataDir.'/data/_drafts/'.substr($config['gpuniq'],0,7).'_'.$index.'.php';
+		$trash_draft							= $trash_dir.'/draft.php';
+		if( gpFiles::Exists($src_draft) ){
+			copy($src_draft, $trash_draft);
+		}
+
 
 		//update image information
 		if( count($file_sections) ){
@@ -302,7 +311,7 @@ class admin_trash{
 	 *
 	 */
 	static function RestoreTitles(&$titles){
-		global $dataDir, $gp_index, $gp_titles;
+		global $dataDir, $gp_index, $gp_titles, $config;
 
 		$new_menu		= array();
 		$restored		= array();
@@ -327,9 +336,11 @@ class admin_trash{
 
 			//make sure the trash file exists
 			if( isset($title_info['file']) ){
-				$trash_file = $dataDir.'/data/_trash/'.$title_info['file'];
+				$trash_file			= $dataDir.'/data/_trash/'.$title_info['file'];
+				$trash_draft		= false;
 			}else{
-				$trash_file = $dataDir.'/data/_trash/'.$trash_index.'/page.php';
+				$trash_file			= $dataDir.'/data/_trash/'.$trash_index.'/page.php';
+				$trash_draft		= $dataDir.'/data/_trash/'.$trash_index.'/draft.php';
 			}
 
 
@@ -345,6 +356,14 @@ class admin_trash{
 				unset($gp_index[$new_title]);
 				continue;
 			}
+
+
+			//copy draft
+			if( $trash_draft && gpFiles::Exists($trash_draft) ){
+				$src_draft			= $dataDir.'/data/_drafts/'.substr($config['gpuniq'],0,7).'_'.$index.'.php';
+				copy($trash_draft,$src_draft );
+			}
+
 
 
 			//add to $gp_titles

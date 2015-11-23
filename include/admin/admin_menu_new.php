@@ -1363,15 +1363,16 @@ class admin_menu_new extends admin_menu_tools{
 	 *
 	 */
 	function MoveToTrash($cmd){
-		global $gp_titles, $gp_index, $langmessage, $gp_menu;
+		global $gp_titles, $gp_index, $langmessage, $gp_menu, $config, $dataDir;
 
 		includeFile('admin/admin_trash.php');
 		admin_trash::PrepFolder();
 		$this->CacheSettings();
 
-		$_POST		+= array('index'=>'');
-		$indexes	= explode(',',$_POST['index']);
-		$trash_data	= array();
+		$_POST			+= array('index'=>'');
+		$indexes		= explode(',',$_POST['index']);
+		$trash_data		= array();
+		$delete_files	= array();
 
 
 		foreach($indexes as $index){
@@ -1402,6 +1403,7 @@ class admin_menu_new extends admin_menu_tools{
 				}
 			}
 
+			$delete_files[$index] = gpFiles::PageFile($title);
 
 			unset($gp_titles[$index]);
 			unset($gp_index[$title]);
@@ -1426,15 +1428,16 @@ class admin_menu_new extends admin_menu_tools{
 		msg(sprintf($langmessage['MOVED_TO_TRASH'],$link));
 
 
-		//finally, delete the files in /_pages
-		foreach($indexes as $index){
+		//finally, delete the data
+		foreach($delete_files as $index => $file){
 
-			$title	= common::IndexToTitle($index);
-			if( !$title ){
-				continue;
+			//delete files in /_pages
+			if( gpFiles::Exists($file) ){
+				unlink($file);
 			}
 
-			$file = gpFiles::PageFile($title);
+			//delete draft
+			$file			= $dataDir.'/data/_drafts/'.substr($config['gpuniq'],0,7).'_'.$index.'.php';
 			if( gpFiles::Exists($file) ){
 				unlink($file);
 			}

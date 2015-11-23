@@ -445,7 +445,7 @@ class admin_trash{
 			if( isset($info['title']) ){
 				$title = $info['title'];
 			}else{
-				$title = $info['title'];
+				$title = $trash_index;
 			}
 
 			echo '<tr><td>';

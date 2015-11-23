@@ -9,13 +9,11 @@ class admin_trash{
 		$cmd = common::GetCommand();
 		switch($cmd){
 
-			case $langmessage['restore']:
-			case 'restore_one':
-				$this->RestoreNew();
+			case 'RestoreDeleted':
+				$this->RestoreDeleted();
 			break;
 
-			case $langmessage['delete']:
-			case 'delete_one':
+			case 'DeleteFromTrash':
 				$this->DeleteFromTrash();
 			break;
 
@@ -49,27 +47,22 @@ class admin_trash{
 		$trash_titles = admin_trash::TrashFiles();
 
 		//remove_from_trash
-		foreach((array)$remove_from_trash as $title => $null){
-			if( empty($trash_titles[$title]['file']) ){
-				$trash_file = $dataDir.'/data/_trash/'.$title.'.php';
-			}else{
-				$trash_file = $dataDir.'/data/_trash/'.$trash_titles[$title]['file'];
-			}
-			if( gpFiles::Exists($trash_file) ){
-				unlink($trash_file);
-			}
+		foreach((array)$remove_from_trash as $title_index => $info){
 
-			if( isset($trash_titles[$title]) ){
-				unset($trash_titles[$title]);
+			gpFiles::RmAll($info['rm_path']);
+
+			if( isset($trash_titles[$title_index]) ){
+				unset($trash_titles[$title_index]);
 			}
 		}
 
 		//add_to_trash
 		foreach((array)$add_to_trash as $title => $info){
-			$trash_titles[$title]['label'] = $info['label'];
-			$trash_titles[$title]['type'] = $info['type'];
-			$trash_titles[$title]['file'] = $info['file'];
-			$trash_titles[$title]['time'] = time();
+			$trash_titles[$title]['label']	= $info['label'];
+			$trash_titles[$title]['type']	= $info['type'];
+			//$trash_titles[$title]['file']	= $info['file'];
+			$trash_titles[$title]['title']	= $info['title'];
+			$trash_titles[$title]['time']	= time();
 
 		}
 
@@ -139,34 +132,50 @@ class admin_trash{
 	 * Get the $info array for $title for use with $gp_titles
 	 * @static
 	 */
-	static function GetInfo($title){
+	static function GetInfo($trash_index){
 		global $dataDir;
 		static $trash_titles = false;
+
 		if( $trash_titles === false ){
 			$trash_titles = admin_trash::TrashFiles();
 		}
 
-		if( !array_key_exists($title,$trash_titles) ){
+		if( !array_key_exists($trash_index,$trash_titles) ){
 			return false;
 		}
 
-		$title_info = $trash_titles[$title];
+		$title_info			= $trash_titles[$trash_index];
+		$trash_dir			= $dataDir.'/data/_trash/'.$trash_index;
 
 		//make sure we have a label
 		if( empty($title_info['label']) ){
-			$title_info['label'] = admin_tools::LabelToSlug($title);
+			$title_info['label']	= admin_tools::LabelToSlug($trash_index);
 		}
 
 		//make sure we have a file_type
 		if( empty($title_info['type']) ){
-			$trash_file = $dataDir.'/data/_trash/'.$title.'.php';
-			$title_info['type'] = admin_trash::GetTypes($trash_file);
+			$trash_file				= $dataDir.'/data/_trash/'.$trash_index.'.php';
+			$title_info['type']		= admin_trash::GetTypes($trash_file);
 		}
 
-		//make sure we have a file name
-		if( empty($title_info['file']) ){
-			$title_info['file'] = $dataDir.'/data/_trash/'.$title.'.php';
+		//make sure we have a file or dir
+		if( gpFiles::Exists($trash_dir) ){
+			$title_info['rm_path']		= $trash_dir;
+
+		}else{
+
+			if( empty($title_info['file']) ){
+				$title_info['file']		= $trash_index.'.php';
+			}
+			$title_info['rm_path']		= $dataDir.'/data/_trash/'.$title_info['file'];
 		}
+
+
+		//make sure we have a title
+		if( !isset($title_info['title']) ){
+			$title_info['title'] = $trash_index;
+		}
+
 
 		return $title_info;
 	}
@@ -180,25 +189,34 @@ class admin_trash{
 	static function MoveToTrash_File($title, $index, &$trash_data){
 		global $dataDir, $gp_titles;
 
-		$source_file		= gpFiles::PageFile($title);
-		$trash_file_name	= sha1($title).'.php';
-		$trash_file			= $dataDir.'/data/_trash/'.$trash_file_name;
 
-		$trash_data[$title]				= $gp_titles[$index];
-		$trash_data[$title]['file']		= $trash_file_name;
+		//get a unique index
+		$trash_index		= sha1($title);
+		$num_index			= preg_replace('#[^0-9]#','',$trash_index);
+		do{
+			$trash_index	= sha1($num_index);
+			$trash_dir		= $dataDir.'/data/_trash/'.$trash_index;
+			$old_file		= $dataDir.'/data/_trash/'.$trash_index.'.php';
+			$num_index++;
+
+		}while( is_numeric($trash_index) || gpFiles::Exists($trash_dir) || gpFiles::Exists($old_file) );
+
+
+		$trash_file								= $trash_dir.'/page.php';
+		$trash_data[$trash_index]				= $gp_titles[$index];
+		$trash_data[$trash_index]['title']		= $title;
 
 
 		//get the file data
-		$file_sections = gpFiles::Get($source_file,'file_sections');
+		$source_file		= gpFiles::PageFile($title);
+		$file_sections		= gpFiles::Get($source_file,'file_sections');
+
 		if( !$file_sections ){
 			return false;
 		}
 
-
-		if( gpFiles::Exists($trash_file) ){
-			if( !unlink($trash_file) ){
-				return false;
-			}
+		if( !gpFiles::CheckDir($trash_dir) ){
+			return false;
 		}
 
 		if( !copy($source_file,$trash_file) ){
@@ -216,7 +234,6 @@ class admin_trash{
 			}
 		}
 
-
 		return true;
 	}
 
@@ -225,7 +242,7 @@ class admin_trash{
 	 * Remove files from the trash by restoring them to $gp_titles and $gp_index
 	 *
 	 */
-	function RestoreNew(){
+	function RestoreDeleted(){
 		global $langmessage,$gp_titles,$gp_index;
 
 		if( empty($_POST['title']) || !is_array($_POST['title']) ){
@@ -249,8 +266,8 @@ class admin_trash{
 		admin_trash::ModTrashData(null,$titles);
 
 		$show_titles = array();
-		foreach($titles as $title => $null){
-			$show_titles[] = common::Link($title,$title);
+		foreach($titles as $trash_index => $info){
+			$show_titles[] = common::Link($info['title'],$info['title']);
 		}
 		$title_string = implode(', ',$show_titles);
 
@@ -271,33 +288,40 @@ class admin_trash{
 	static function RestoreTitles(&$titles){
 		global $dataDir, $gp_index, $gp_titles;
 
-		$new_menu = array();
-		$new_titles = array();
-		foreach($titles as $title => $empty){
-
-			$new_title = admin_tools::CheckPostedNewPage($title,$message);
-			if( !$new_title ){
-				//message($message);
-				continue;
-			}
-
-			//add to $gp_index first for PageFile()
-			$index = common::NewFileIndex();
-			$gp_index[$new_title] = $index;
+		$new_menu		= array();
+		$restored		= array();
+		foreach($titles as $trash_index => $empty){
 
 			//get trash info about file
-			$title_info = admin_trash::GetInfo($title);
+			$title_info = admin_trash::GetInfo($trash_index);
 			if( $title_info === false ){
-				unset($gp_index[$new_title]);
 				continue;
 			}
 
+			$new_title = admin_tools::CheckPostedNewPage($title_info['title'],$message);
+			if( !$new_title ){
+				continue;
+			}
+
+
+			//add to $gp_index first for PageFile()
+			$index					= common::NewFileIndex();
+			$gp_index[$new_title]	= $index;
+
+
 			//make sure the trash file exists
-			$trash_file = $dataDir.'/data/_trash/'.$title_info['file'];
+			if( isset($title_info['file']) ){
+				$trash_file = $dataDir.'/data/_trash/'.$title_info['file'];
+			}else{
+				$trash_file = $dataDir.'/data/_trash/'.$trash_index.'/page.php';
+			}
+
+
 			if( !gpFiles::Exists($trash_file) ){
 				unset($gp_index[$new_title]);
 				continue;
 			}
+
 
 			//copy the trash file to the /_pages directory
 			$new_file = gpFiles::PageFile($new_title);
@@ -306,18 +330,19 @@ class admin_trash{
 				continue;
 			}
 
-			//add to $gp_titles
-			$gp_titles[$index] = array();
-			$gp_titles[$index]['label'] = $title_info['label'];
-			$gp_titles[$index]['type'] = $title_info['type'];
 
-			$new_menu[$index] = array();
-			$new_titles[$new_title] = true;
+			//add to $gp_titles
+			$gp_titles[$index]				= array();
+			$gp_titles[$index]['label']		= $title_info['label'];
+			$gp_titles[$index]['type']		= $title_info['type'];
+
+			$new_menu[$index]				= array();
+			$restored[$trash_index]			= $title_info;
 
 			admin_trash::RestoreFile($new_title, $trash_file, $title_info);
 		}
 
-		$titles = $new_titles;
+		$titles = $restored;
 
 		return $new_menu;
 	}
@@ -400,49 +425,53 @@ class admin_trash{
 		}
 
 		echo '<form action="'.common::GetUrl('Admin_Trash').'" method="post">';
-		echo '<table class="bordered">';
+		echo '<table class="bordered striped">';
 
-		echo '<tr>';
-		echo '<th><input type="checkbox" name="" class="check_all"/></th>';
-		echo '<th>';
-		echo '<input type="submit" name="cmd" value="'.$langmessage['restore'].'" class="gppost gpsubmit" />';
+		ob_start();
+		echo '<tr><th colspan="2">';
+		echo '<input type="checkbox" name="" class="check_all"/>';
+		echo '</th><th>';
+		echo '<button type="submit" name="cmd" value="RestoreDeleted" class="gppost gpsubmit">'.$langmessage['restore'].'</button>';
 		echo ' &nbsp; ';
-		echo '<input type="submit" name="cmd" value="'.$langmessage['delete'].'" class="gppost gpsubmit" />';
-		echo '</th>';
-		echo '</tr>';
+		echo '<button type="submit" name="cmd" value="DeleteFromTrash" class="gppost gpsubmit">'.$langmessage['delete'].'</button>';
+		echo '</th></tr>';
+		$heading = ob_get_clean();
+
+		echo $heading;
 
 		$i = 0;
-		foreach($trashtitles as $title => $info){
-			echo '<tr class="'.($i++ % 2 ? 'even' : '').'">';
-			echo '<td>';
+		foreach($trashtitles as $trash_index => $info){
+
+			if( isset($info['title']) ){
+				$title = $info['title'];
+			}else{
+				$title = $info['title'];
+			}
+
+			echo '<tr><td>';
 			echo '<label style="display:block;">';
-			echo '<input type="checkbox" name="title['.htmlspecialchars($title).']" value="1" />';
+			echo '<input type="checkbox" name="title['.htmlspecialchars($trash_index).']" value="1" />';
 			echo ' &nbsp; ';
 			echo htmlspecialchars(str_replace('_',' ',$title));
 			echo '</label>';
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 
-			echo common::Link('Admin_Trash',$langmessage['restore'],'cmd=restore_one&title['.rawurlencode($title).']=1',array('data-cmd'=>'postlink'));
+			echo admin_tools::Elapsed(time() - $info['time']).' ago';
+
+			echo '</td><td>';
+
+			echo common::Link('Admin_Trash',$langmessage['restore'],'cmd=RestoreDeleted&title['.rawurlencode($trash_index).']=1',array('data-cmd'=>'postlink'));
 			echo ' &nbsp; ';
-			echo common::Link('Admin_Trash',$langmessage['delete'],'cmd=delete_one&title['.rawurlencode($title).']=1',array('data-cmd'=>'postlink'));
+			echo common::Link('Admin_Trash',$langmessage['delete'],'cmd=DeleteFromTrash&title['.rawurlencode($trash_index).']=1',array('data-cmd'=>'postlink'));
 
-			echo '</td>';
-			echo '</tr>';
+			echo '</td></tr>';
 		}
 
-		echo '<tr>';
-		echo '<th><input type="checkbox" name="" class="check_all"/></th>';
-		echo '<th>';
-		echo '<input type="submit" name="cmd" value="'.$langmessage['restore'].'" class="gppost gpsubmit" />';
-		echo ' &nbsp; ';
-		echo '<input type="submit" name="cmd" value="'.$langmessage['delete'].'" class="gppost gpsubmit" />';
-		echo '</th>';
-		echo '</tr>';
-
+		echo $heading;
 
 		echo '</table>';
 		echo '</form>';
+
 	}
 
 
@@ -458,21 +487,33 @@ class admin_trash{
 			return;
 		}
 
-		$titles = array();
-		$not_deleted = array();
-		foreach($_POST['title'] as $title => $null){
-			$title_info = admin_trash::GetInfo($title);
+		$titles			= array();
+		$not_deleted	= array();
+		$incomplete		= false;
+
+		foreach($_POST['title'] as $trash_index => $null){
+			$title_info = admin_trash::GetInfo($trash_index);
+
 			if( $title_info === false ){
-				$not_deleted[] = $title;
+				$incomplete = true;
 				continue;
 			}
-			$titles[$title] = true;
+			$titles[$trash_index] = $title_info;
 		}
 
-		admin_trash::ModTrashData(null,$titles);
 
-		if( count($not_deleted) > 0 ){
-			message($langmessage['delete_incomplete'].': '.implode(', ',$not_deleted));
+		if( !admin_trash::ModTrashData(null,$titles) ){
+			return false;
+		}
+
+		//remove the data
+		foreach($titles as $trash_index => $info){
+			gpFiles::RmAll($info['rm_path']);
+		}
+
+
+		if( $incomplete ){
+			message($langmessage['delete_incomplete']);
 		}
 	}
 

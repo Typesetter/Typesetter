@@ -1394,7 +1394,7 @@ class admin_menu_new extends admin_menu_tools{
 			// Create file in trash
 			if( $title ){
 				if( !admin_trash::MoveToTrash_File($title,$index,$trash_data) ){
-					msg($langmessage['OOPS']);
+					msg($langmessage['OOPS'].' (Not Moved)');
 					$this->RestoreSettings();
 					return false;
 				}

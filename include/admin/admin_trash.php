@@ -3,8 +3,12 @@ defined('is_running') or die('Not an entry point...');
 
 class admin_trash{
 
+	var $trash_files = array();
+
 	function __construct(){
-		global $langmessage;
+		global $langmessage, $page;
+
+		$this->trash_files = admin_trash::TrashFiles();
 
 		$cmd = common::GetCommand();
 		switch($cmd){
@@ -16,9 +20,19 @@ class admin_trash{
 			case 'DeleteFromTrash':
 				$this->DeleteFromTrash();
 			break;
-
 		}
 
+		//view a trash file
+		if( strpos($page->requested,'/') !== false ){
+			$parts = explode('/',$page->requested,2);
+			$title = $parts[1];
+			if( isset($this->trash_files[$title]) ){
+				$this->ViewTrashFile($title);
+				return;
+			}
+		}
+
+		//view all trash files
 		$this->Trash();
 
 	}
@@ -417,9 +431,8 @@ class admin_trash{
 
 		echo '<h2>'.$langmessage['trash'].'</h2>';
 
-		$trashtitles = admin_trash::TrashFiles();
 
-		if( count($trashtitles) == 0 ){
+		if( count($this->trash_files) == 0 ){
 			echo '<ul><li>'.$langmessage['TRASH_IS_EMPTY'].'</li></ul>';
 			return false;
 		}
@@ -440,7 +453,7 @@ class admin_trash{
 		echo $heading;
 
 		$i = 0;
-		foreach($trashtitles as $trash_index => $info){
+		foreach($this->trash_files as $trash_index => $info){
 
 			if( isset($info['title']) ){
 				$title = $info['title'];
@@ -452,7 +465,7 @@ class admin_trash{
 			echo '<label style="display:block;">';
 			echo '<input type="checkbox" name="title['.htmlspecialchars($trash_index).']" value="1" />';
 			echo ' &nbsp; ';
-			echo htmlspecialchars(str_replace('_',' ',$title));
+			echo common::Link('Admin_Trash/'.$trash_index,str_replace('_',' ',$title));
 			echo '</label>';
 			echo '</td><td>';
 
@@ -509,11 +522,45 @@ class admin_trash{
 		//remove the data
 		foreach($titles as $trash_index => $info){
 			gpFiles::RmAll($info['rm_path']);
+			unset($this->trash_files[$trash_index]);
 		}
 
 
 		if( $incomplete ){
 			message($langmessage['delete_incomplete']);
+		}
+	}
+
+
+	/**
+	 * View the contents of a trash file
+	 *
+	 */
+	function ViewTrashFile($trash_index){
+		global $dataDir, $langmessage, $trash_file;
+		includeFile('tool/SectionContent.php');
+
+		$title_info = admin_trash::GetInfo($trash_index);
+
+		//make sure the trash file exists
+		if( isset($title_info['file']) ){
+			$trash_file = $dataDir.'/data/_trash/'.$title_info['file'];
+		}else{
+			$trash_file = $dataDir.'/data/_trash/'.$trash_index.'/page.php';
+		}
+
+		echo '<h2 class="hmargin">';
+		echo common::Link('Admin_Trash',$langmessage['trash']);
+		echo ' &#187; ';
+		echo htmlspecialchars($title_info['title']);
+		echo '</h2>';
+
+
+		//get file sections
+		$file_sections		= gpFiles::Get($trash_file,'file_sections');
+
+		if( $file_sections ){
+			echo section_content::Render($file_sections,$title_info['title']); //,$this->file_stats
 		}
 	}
 

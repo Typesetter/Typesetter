@@ -1,19 +1,6 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-/*
- * Page/Menu Manager
- *
- * Uses the following other files
- * 		admin_menu_tools.php
- * 		admin_trash.php
- *
- *
- *
- *
- */
-
-
 
 defined('gp_max_menu_level') OR define('gp_max_menu_level',6);
 

@@ -1,6 +1,8 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
+includeFile('tool/SectionContent.php');
+
 class admin_trash{
 
 	var $trash_files = array();
@@ -74,7 +76,6 @@ class admin_trash{
 		foreach((array)$add_to_trash as $title => $info){
 			$trash_titles[$title]['label']	= $info['label'];
 			$trash_titles[$title]['type']	= $info['type'];
-			//$trash_titles[$title]['file']	= $info['file'];
 			$trash_titles[$title]['title']	= $info['title'];
 			$trash_titles[$title]['time']	= time();
 
@@ -428,6 +429,7 @@ class admin_trash{
 	function Trash(){
 		global $dataDir,$langmessage;
 
+		$this->section_types			= section_content::GetTypes();
 
 		echo '<h2>'.$langmessage['trash'].'</h2>';
 
@@ -441,7 +443,7 @@ class admin_trash{
 		echo '<table class="bordered striped">';
 
 		ob_start();
-		echo '<tr><th colspan="2">';
+		echo '<tr><th colspan="3">';
 		echo '<input type="checkbox" name="" class="check_all"/>';
 		echo '</th><th>';
 		echo '<button type="submit" name="cmd" value="RestoreDeleted" class="gppost gpsubmit">'.$langmessage['restore'].'</button>';
@@ -472,6 +474,11 @@ class admin_trash{
 			echo admin_tools::Elapsed(time() - $info['time']).' ago';
 
 			echo '</td><td>';
+			if( isset($info['type']) ){
+				$this->TitleTypes($info['type']);
+			}
+
+			echo '</td><td>';
 
 			echo common::Link('Admin_Trash',$langmessage['restore'],'cmd=RestoreDeleted&title['.rawurlencode($trash_index).']=1',array('data-cmd'=>'postlink'));
 			echo ' &nbsp; ';
@@ -487,6 +494,26 @@ class admin_trash{
 
 	}
 
+
+	/**
+	 * List section types
+	 *
+	 */
+	function TitleTypes($types){
+		global $gp_titles;
+
+		$types		= explode(',',$types);
+		$types		= array_filter($types);
+		$types		= array_unique($types);
+
+		foreach($types as $i => $type){
+			if( isset($this->section_types[$type]) && isset($this->section_types[$type]['label']) ){
+				$types[$i] = $this->section_types[$type]['label'];
+			}
+		}
+
+		echo implode(', ',$types);
+	}
 
 	/**
 	 * Check and remove the requested files from the trash
@@ -538,7 +565,6 @@ class admin_trash{
 	 */
 	function ViewTrashFile($trash_index){
 		global $dataDir, $langmessage, $trash_file;
-		includeFile('tool/SectionContent.php');
 
 		$title_info = admin_trash::GetInfo($trash_index);
 

@@ -128,36 +128,23 @@ class admin_trash{
 			$trash_titles[$file]		= $info;
 		}
 
-		uksort($trash_titles,'strnatcasecmp');
-
-		return $trash_titles;
-	}
-
-
-	/*
-	 * Create the trash.php index file based on the /_trash folder contents
-	 * @static
-	 */
-	static function GenerateTrashIndex(){
-		global $dataDir;
-
-		$trash_dir = $dataDir.'/data/_trash';
-
-		$trash_files = gpFiles::ReadDir($trash_dir);
-		natcasesort($trash_files);
-
-		$trash_titles = array();
-		foreach($trash_files as $file){
-
-			$trash_titles[$file] = array();
-			$trash_titles[$file]['label'] = admin_tools::LabelToSlug($file);
-			$trash_titles[$file]['time'] = time();
+		//make sure we have a title
+		foreach($trash_titles as $trash_index => &$info){
+			if( !isset($info['title']) ){
+				$info['title'] = str_replace('_',' ',$trash_index);
+			}
 		}
 
-		admin_trash::SaveTrashTitles($trash_titles);
+		uasort($trash_titles,array('self','TitleSort'));
 
 		return $trash_titles;
 	}
+
+
+	static function TitleSort($a,$b){
+		return strnatcasecmp($a['title'],$b['title']);
+	}
+
 
 	/*
 	 * Save $trash_titles to the trash.php index file
@@ -166,7 +153,6 @@ class admin_trash{
 	static function SaveTrashTitles($trash_titles){
 		global $dataDir;
 		$index_file = $dataDir.'/data/_site/trash.php';
-		uksort($trash_titles,'strnatcasecmp');
 		return gpFiles::SaveData($index_file,'trash_titles',$trash_titles);
 	}
 
@@ -213,11 +199,6 @@ class admin_trash{
 		//make sure we have a file_type
 		if( empty($title_info['type']) ){
 			$title_info['type']		= admin_trash::GetTypes($title_info['page_file']);
-		}
-
-		//make sure we have a title
-		if( !isset($title_info['title']) ){
-			$title_info['title'] = str_replace('_',' ',$trash_index);
 		}
 
 
@@ -352,7 +333,7 @@ class admin_trash{
 			// move the trash file to the /_pages directory if needed
 			$new_file = gpFiles::PageFile($new_title);
 			if( !gpFiles::Exists($new_file) ){
-				if( !gpFiles::Rename($trash_file,$new_file) ){
+				if( !gpFiles::Rename($title_info['page_file'],$new_file) ){
 					unset($gp_index[$new_title]);
 					continue;
 				}

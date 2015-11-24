@@ -72,6 +72,8 @@ class admin_trash{
 	static function TrashFiles(){
 		global $dataDir, $gp_index, $config;
 
+		$trash_titles 	= array();
+
 		// pre 4.6, deleted page info was stored
 		$trash_file = $dataDir.'/data/_site/trash.php';
 		if( gpFiles::Exists($trash_file) ){

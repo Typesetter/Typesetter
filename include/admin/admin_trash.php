@@ -484,7 +484,11 @@ class admin_trash{
 
 			echo '</td><td>';
 
-			echo common::Link('Admin_Trash',$langmessage['restore'],'cmd=RestoreDeleted&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'postlink'));
+			if( admin_tools::CheckPostedNewPage($title, $msg) ){
+				echo common::Link('Admin_Trash',$langmessage['restore'],'cmd=RestoreDeleted&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'postlink'));
+			}else{
+				echo '<span>'.$langmessage['restore'].'</span>';
+			}
 			echo ' &nbsp; ';
 			echo common::Link('Admin_Trash',$langmessage['delete'],'cmd=DeleteFromTrash&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'postlink'));
 

@@ -223,137 +223,6 @@ class Install_Tools{
 		gpFiles::CheckDir($destination.'/data/_sessions');
 
 
-
-
-
-		$content = '<h2>Welcome!</h2>
-		<p>Welcome to your new gpEasy powered website. Now that gpEasy is installed, you can start editing the content and customizing your site.</p>
-		<h3>Getting Started</h3>
-		<p>You are currently viewing the default home page of your website. Here\'s a quick description of how to edit this page.</p>
-		<ol>
-		<li>First make sure you&#39;re '.Install_Tools::Install_Link_Content('Admin','logged in','file=Home').'.</li>
-		<li>Then, to edit this page, click the &quot;Edit&quot; link that appears when you move your mouse over the content.</li>
-		<li>Make your edits, click &quot;Save&quot; and you&#39;re done!</li>
-		</ol>
-		<h3>More Options</h3>
-		<ul>
-		<li>Adding, renaming, deleting and organising your pages can all be done in the '.Install_Tools::Install_Link_Content('Admin_Menu','Page Manager').'.</li>
-		<li>Choose from a '.Install_Tools::Install_Link_Content('Admin_Theme_Content','variety of themes').' to give your site a custom look.</li>
-		<li>Then, you can '.Install_Tools::Install_Link_Content('Admin_Theme_Content','add, remove and rearrange','cmd=editlayout').' the content of your site without editing the html.</li>
-		<li>Take a look at the Administrator Toolbar to access all the features of gpEasy.</li>
-		</ul>
-		<h3>Online Resources</h3>
-		<p>gpEasy.com has a number of resources to help you do even more with gpEasy.</p>
-		<ul>
-		<li>Find more community developed <a href="http://gpeasy.com/Themes" title="gpEasy CMS Themes">themes</a> and <a href="http://gpeasy.com/Plugins" title="gpEasy CMS Plugin">plugins</a> to enhance your site.</li>
-		<li>Get help in the <a href="http://gpeasy.com/Forum" title="gpEasy CMS Forum">gpEasy forum</a>.</li>
-		<li>Show off your <a href="http://gpeasy.com/Powered_by" title="Sites Using gpEasy CMS">gpEasy powered site</a> or list your <a href="http://gpeasy.com/Service_Provider" title="Businesses Using gpEasy CMS">gpEasy related business</a>.</li>
-		</ul>';
-		self::NewTitle( $destination, 'Home', $content);
-
-		self::NewTitle( $destination, 'Heading_Page','<h1>A Heading Page</h1>
-		<ul><li>'.Install_Tools::Install_Link_Content('Help_Videos','Help Videos').'</li>
-		<li>'.Install_Tools::Install_Link_Content('Child_Page','Child Page').'</li>
-		</ul>');
-
-
-		self::NewTitle( $destination, 'Help_Videos','<h1>Help Videos</h1>
-		<p>Video tutorials are often a fast and easy way to learn new things quickly.
-		We now have an English version and Deutsch (German) available below.
-		If you make a video tutorial for gpEasy, <a href="http://gpeasy.com/Contact">let us know</a>, and we\'ll make sure it\'s included in our list.
-		</p>
-		<p>And as always, to edit this page, just click the "Edit" button while logged in.</p>
-
-		<h2>Português</h2>
-		<p><iframe width="640" height="360" src="http://www.youtube.com/embed/KCnGpUzYTbQ" frameborder="0" allowfullscreen></iframe></p>
-
-		<h2>Deutsch</h2>
-		<p>Created by <a href="http://gpeasy.com/Service_Provider?id=57" title="IT Ricther on gpEasy.com">IT Richter</a></p>
-		<p><iframe width="640" height="360" src="http://www.youtube.com/embed/04cNgR1EiFY" frameborder="0" allowfullscreen></iframe></p>
-		');
-
-		self::NewTitle( $destination, 'Child_Page','<h1>A Child Page</h1><p>This was created as a subpage of your <em>Help Videos</em> . You can easily change the arrangement of all your pages using the '.Install_Tools::Install_Link_Content('Admin_Menu','Page Manager').'.</p>');
-
-
-		self::NewTitle( $destination, 'More','<h1>More</h1>
-		<ul><li>'.Install_Tools::Install_Link_Content('About','About').'</li>
-		<li>'.Install_Tools::Install_Link_Content('Contact','Contact').'</li>
-		</ul>');
-
-
-
-		self::NewTitle( $destination, 'About','<h1>About gpEasy CMS</h1><p><a href="http://gpEasy.com" title="gpEasy.com">gp|Easy</a> is a complete Content Management System (CMS) that can help you create rich and flexible web sites with a simple and easy to use interface.</p>
-		<h2>gpEasy CMS How To</h2>
-		<p>Learn how to <a href="http://docs.gpeasy.com/Main/Admin" title="gpEasy File Management">manage your files</a>,
-		<a href="http://docs.gpeasy.com/Main/Creating%20Galleries" title="Creating Galleries in gpEasy CMS">create galleries</a> and more in the
-		<a href="http://docs.gpeasy.org/index.php/" title="gpEasy CMS Documentation">gpEasy Documentation</a>.
-		</p>
-
-		<h2>gpEasy CMS Features</h2>
-		<ul>
-		<li>True WYSIWYG (Using CKEditor)</li>
-		<li>Galleries (Using ColorBox)</li>
-		<li>SEO Friendly Links</li>
-		<li>Free and Open Source (GPL)</li>
-		<li>Runs on PHP</li>
-		<li>File Upload Manager</li>
-		<li>Drag \'n Drop Theme Content</li>
-		<li>Deleted File Trash Can</li>
-		<li>Multiple User Administration</li>
-		<li>Flat File Storage</li>
-		<li>Fast Page Loading</li>
-		<li>Fast and Easy Installation</li>
-		<li>reCaptcha for Contact Form</li>
-		<li>HTML Tidy (when available)</li>
-		</ul>');
-
-		//Side_Menu
-		$file		= $destination.'/data/_extra/Side_Menu.php';
-		$content	= '<h3>Join the gpEasy Community</h3>
-		<p>Visit gpEasy.com to access the many <a href="http://gpeasy.com/Resources" title="gpEasy Community Resources">available resources</a> to help you get the most out of our CMS.</p>
-		<ul>
-		<li><a href="http://gpeasy.com/Themes" title="gpEasy CMS Themes">Download Themes</a></li>
-		<li><a href="http://gpeasy.com/Plugins" title="gpEasy CMS Plugin">Download Plugins</a></li>
-		<li><a href="http://gpeasy.com/Forum" title="gpEasy CMS Forum">Get Help in the Forum</a></li>
-		<li><a href="http://gpeasy.com/Powered_by" title="Sites using gpEasy CMS">Show off Your Site</a></li>
-		<li><a href="http://gpeasy.com/Resources" title="gpEasy Community Resources">And Much More...</a></li>
-		</ul>
-		<p class="sm">(Edit this content by clicking &quot;Edit&quot;, it&#39;s that easy!)</p>';
-		self::NewExtra($file,$content);
-
-		//Header
-		$file		= $destination.'/data/_extra/Header.php';
-		$content	= '<h1>'.$config['title'].'</h1>
-		<h4>'.'The Fast and Easy CMS'.'</h4>';
-		self::NewExtra($file,$content);
-
-		//Footer
-		$file		= $destination.'/data/_extra/Footer.php';
-		$content	= '<h3><a href="http://gpeasy.com/Our_CMS" title="Features of Our CMS">gpEasy CMS Features</a></h3>
-		<p>Easy to use True WYSIWYG Editing.</p>
-		<p>Flat-file data storage and advanced resource management for fast websites.</p>
-		<p>Community driven development</p>
-		<p><a href="http://gpeasy.com/Our_CMS" title="Features of Our CMS">And More...</a></p>
-		<p>If you like gpEasy, then you might also like
-		<a href="http://lessphp.gpeasy.com" title="A Less to CSS compiler based on the official lesscss project">Less.php</a>,
-		<a href="http://whatcms.org" title="What CMS? Find out what CMS a site is using">WhatCMS.org</a> and
-		<a href="http://whichcms.org" title="Which CMS? Find out which CMS has the features you\'re looking for.">WhichCMS.org</a>.
-		</p>';
-		self::NewExtra($file,$content);
-
-
-		//Another example area
-		$file		= $destination.'/data/_extra/Lorem.php';
-		$content	= '<h3>Heading</h3>
-		<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>';
-		self::NewExtra($file,$content);
-
-
-		//contact html
-		$file = $destination.'/data/_extra/Contact.php';
-		self::NewExtra($file,'<h2>Contact Us</h2><p>Use the form below to contact us, and be sure to enter a valid email address if you want to hear back from us.</p>');
-
-
 		// gp_index
 		$new_index = array();
 		$new_index['Home'] = 'a';
@@ -436,6 +305,145 @@ class Install_Tools{
 		echo '</li>';
 
 
+
+		// Home
+		$content = '<h2>Welcome!</h2>
+		<p>Welcome to your new gpEasy powered website. Now that gpEasy is installed, you can start editing the content and customizing your site.</p>
+		<h3>Getting Started</h3>
+		<p>You are currently viewing the default home page of your website. Here\'s a quick description of how to edit this page.</p>
+		<ol>
+		<li>First make sure you&#39;re '.Install_Tools::Install_Link_Content('Admin','logged in','file=Home').'.</li>
+		<li>Then, to edit this page, click the &quot;Edit&quot; link that appears when you move your mouse over the content.</li>
+		<li>Make your edits, click &quot;Save&quot; and you&#39;re done!</li>
+		</ol>
+		<h3>More Options</h3>
+		<ul>
+		<li>Adding, renaming, deleting and organising your pages can all be done in the '.Install_Tools::Install_Link_Content('Admin_Menu','Page Manager').'.</li>
+		<li>Choose from a '.Install_Tools::Install_Link_Content('Admin_Theme_Content','variety of themes').' to give your site a custom look.</li>
+		<li>Then, you can '.Install_Tools::Install_Link_Content('Admin_Theme_Content','add, remove and rearrange','cmd=editlayout').' the content of your site without editing the html.</li>
+		<li>Take a look at the Administrator Toolbar to access all the features of gpEasy.</li>
+		</ul>
+		<h3>Online Resources</h3>
+		<p>gpEasy.com has a number of resources to help you do even more with gpEasy.</p>
+		<ul>
+		<li>Find more community developed <a href="http://gpeasy.com/Themes" title="gpEasy CMS Themes">themes</a> and <a href="http://gpeasy.com/Plugins" title="gpEasy CMS Plugin">plugins</a> to enhance your site.</li>
+		<li>Get help in the <a href="http://gpeasy.com/Forum" title="gpEasy CMS Forum">gpEasy forum</a>.</li>
+		<li>Show off your <a href="http://gpeasy.com/Powered_by" title="Sites Using gpEasy CMS">gpEasy powered site</a> or list your <a href="http://gpeasy.com/Service_Provider" title="Businesses Using gpEasy CMS">gpEasy related business</a>.</li>
+		</ul>';
+		self::NewTitle( $destination, 'Home', $content, $config, $new_index);
+
+
+		// Heading Page
+		$content = '<h1>A Heading Page</h1>
+		<ul><li>'.Install_Tools::Install_Link_Content('Help_Videos','Help Videos').'</li>
+		<li>'.Install_Tools::Install_Link_Content('Child_Page','Child Page').'</li>
+		</ul>';
+		self::NewTitle( $destination, 'Heading_Page',$content, $config, $new_index);
+
+
+		// Help Videos
+		$content = '<h1>Help Videos</h1>
+		<p>Video tutorials are often a fast and easy way to learn new things quickly.
+		We now have an English version and Deutsch (German) available below.
+		If you make a video tutorial for gpEasy, <a href="http://gpeasy.com/Contact">let us know</a>, and we\'ll make sure it\'s included in our list.
+		</p>
+		<p>And as always, to edit this page, just click the "Edit" button while logged in.</p>
+
+		<h2>Português</h2>
+		<p><iframe width="640" height="360" src="http://www.youtube.com/embed/KCnGpUzYTbQ" frameborder="0" allowfullscreen></iframe></p>
+
+		<h2>Deutsch</h2>
+		<p>Created by <a href="http://gpeasy.com/Service_Provider?id=57" title="IT Ricther on gpEasy.com">IT Richter</a></p>
+		<p><iframe width="640" height="360" src="http://www.youtube.com/embed/04cNgR1EiFY" frameborder="0" allowfullscreen></iframe></p>';
+		self::NewTitle( $destination, 'Help_Videos',$content, $config, $new_index);
+
+
+		// Child Page
+		$content = '<h1>A Child Page</h1><p>This was created as a subpage of your <em>Help Videos</em> . You can easily change the arrangement of all your pages using the '.Install_Tools::Install_Link_Content('Admin_Menu','Page Manager').'.</p>';
+		self::NewTitle( $destination, 'Child_Page',$content, $config, $new_index);
+
+		// More
+		$content = '<h1>More</h1>
+		<ul><li>'.Install_Tools::Install_Link_Content('About','About').'</li>
+		<li>'.Install_Tools::Install_Link_Content('Contact','Contact').'</li>
+		</ul>';
+		self::NewTitle( $destination, 'More',$content, $config, $new_index);
+
+
+		// About gpEasy CMS
+		$content = '<h1>About gpEasy CMS</h1><p><a href="http://gpEasy.com" title="gpEasy.com">gp|Easy</a> is a complete Content Management System (CMS) that can help you create rich and flexible web sites with a simple and easy to use interface.</p>
+		<h2>gpEasy CMS How To</h2>
+		<p>Learn how to <a href="http://docs.gpeasy.com/Main/Admin" title="gpEasy File Management">manage your files</a>,
+		<a href="http://docs.gpeasy.com/Main/Creating%20Galleries" title="Creating Galleries in gpEasy CMS">create galleries</a> and more in the
+		<a href="http://docs.gpeasy.org/index.php/" title="gpEasy CMS Documentation">gpEasy Documentation</a>.
+		</p>
+
+		<h2>gpEasy CMS Features</h2>
+		<ul>
+		<li>True WYSIWYG (Using CKEditor)</li>
+		<li>Galleries (Using ColorBox)</li>
+		<li>SEO Friendly Links</li>
+		<li>Free and Open Source (GPL)</li>
+		<li>Runs on PHP</li>
+		<li>File Upload Manager</li>
+		<li>Drag \'n Drop Theme Content</li>
+		<li>Deleted File Trash Can</li>
+		<li>Multiple User Administration</li>
+		<li>Flat File Storage</li>
+		<li>Fast Page Loading</li>
+		<li>Fast and Easy Installation</li>
+		<li>reCaptcha for Contact Form</li>
+		<li>HTML Tidy (when available)</li>
+		</ul>';
+		self::NewTitle( $destination, 'About',$content, $config, $new_index);
+
+		//Side_Menu
+		$file		= $destination.'/data/_extra/Side_Menu.php';
+		$content	= '<h3>Join the gpEasy Community</h3>
+		<p>Visit gpEasy.com to access the many <a href="http://gpeasy.com/Resources" title="gpEasy Community Resources">available resources</a> to help you get the most out of our CMS.</p>
+		<ul>
+		<li><a href="http://gpeasy.com/Themes" title="gpEasy CMS Themes">Download Themes</a></li>
+		<li><a href="http://gpeasy.com/Plugins" title="gpEasy CMS Plugin">Download Plugins</a></li>
+		<li><a href="http://gpeasy.com/Forum" title="gpEasy CMS Forum">Get Help in the Forum</a></li>
+		<li><a href="http://gpeasy.com/Powered_by" title="Sites using gpEasy CMS">Show off Your Site</a></li>
+		<li><a href="http://gpeasy.com/Resources" title="gpEasy Community Resources">And Much More...</a></li>
+		</ul>
+		<p class="sm">(Edit this content by clicking &quot;Edit&quot;, it&#39;s that easy!)</p>';
+		self::NewExtra($file,$content);
+
+		//Header
+		$file		= $destination.'/data/_extra/Header.php';
+		$content	= '<h1>'.$config['title'].'</h1>
+		<h4>'.'The Fast and Easy CMS'.'</h4>';
+		self::NewExtra($file,$content);
+
+		//Footer
+		$file		= $destination.'/data/_extra/Footer.php';
+		$content	= '<h3><a href="http://gpeasy.com/Our_CMS" title="Features of Our CMS">gpEasy CMS Features</a></h3>
+		<p>Easy to use True WYSIWYG Editing.</p>
+		<p>Flat-file data storage and advanced resource management for fast websites.</p>
+		<p>Community driven development</p>
+		<p><a href="http://gpeasy.com/Our_CMS" title="Features of Our CMS">And More...</a></p>
+		<p>If you like gpEasy, then you might also like
+		<a href="http://lessphp.gpeasy.com" title="A Less to CSS compiler based on the official lesscss project">Less.php</a>,
+		<a href="http://whatcms.org" title="What CMS? Find out what CMS a site is using">WhatCMS.org</a> and
+		<a href="http://whichcms.org" title="Which CMS? Find out which CMS has the features you\'re looking for.">WhichCMS.org</a>.
+		</p>';
+		self::NewExtra($file,$content);
+
+
+		//Another example area
+		$file		= $destination.'/data/_extra/Lorem.php';
+		$content	= '<h3>Heading</h3>
+		<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>';
+		self::NewExtra($file,$content);
+
+
+		//contact html
+		$file = $destination.'/data/_extra/Contact.php';
+		self::NewExtra($file,'<h2>Contact Us</h2><p>Use the form below to contact us, and be sure to enter a valid email address if you want to hear back from us.</p>');
+
+
 		//users
 		echo '<li>';
 		$user_info = array();
@@ -498,9 +506,9 @@ class Install_Tools{
 	}
 
 
-	static function NewTitle( $dataDir, $title, $content ){
+	static function NewTitle( $dataDir, $title, $content, $config, $index ){
 
-		$file = $dataDir.'/data/_pages/'.str_replace('/','_',$title).'.php';
+		$file = $dataDir.'/data/_pages/'.substr($config['gpuniq'],0,7).'_'.$index[$title].'/page.php';
 		self::$file_count++;
 
 		$file_sections = array();

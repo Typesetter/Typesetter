@@ -1231,13 +1231,13 @@ class admin_tools{
 	 *
 	 */
 	static function SaveConfig(){
-		global $config, $dataDir;
+		global $config;
 
 		if( !is_array($config) ) return false;
 
 		if( !isset($config['gpuniq']) ) $config['gpuniq'] = common::RandomString(20);
 
-		return gpFiles::SaveData($dataDir.'/data/_site/config.php','config',$config);
+		return gpFiles::SaveData('_site/config','config',$config);
 	}
 
 

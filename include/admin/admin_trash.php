@@ -39,17 +39,6 @@ class admin_trash{
 
 	}
 
-	/**
-	 * Make Sure the trash folder exists
-	 * admin_trash::PrepFolder();
-	 */
-	static function PrepFolder(){
-		global $dataDir;
-		$trash_dir = $dataDir.'/data/_trash';
-		gpFiles::CheckDir($trash_dir);
-
-	}
-
 
 	/**
 	 * Add/Remove titles from the trash.php index file
@@ -58,27 +47,16 @@ class admin_trash{
 	 * @static
 	 */
 	static function ModTrashData($add_to_trash,$remove_from_trash){
-		global $dataDir;
 
 		$trash_titles = admin_trash::TrashFiles();
 
-		//remove_from_trash
 		foreach((array)$remove_from_trash as $title_index => $info){
+			unset($trash_titles[$title_index]);
 
-			gpFiles::RmAll($info['rm_path']);
-
-			if( isset($trash_titles[$title_index]) ){
-				unset($trash_titles[$title_index]);
+			//only delete the files if they're in the trash directory
+			if( strpos($info['rm_path'],'/data/_trash') !== false ){
+				gpFiles::RmAll($info['rm_path']);
 			}
-		}
-
-		//add_to_trash
-		foreach((array)$add_to_trash as $title => $info){
-			$trash_titles[$title]['label']	= $info['label'];
-			$trash_titles[$title]['type']	= $info['type'];
-			$trash_titles[$title]['title']	= $info['title'];
-			$trash_titles[$title]['time']	= time();
-
 		}
 
 		return admin_trash::SaveTrashTitles($trash_titles);
@@ -92,15 +70,67 @@ class admin_trash{
 	 *
 	 */
 	static function TrashFiles(){
-		global $dataDir;
+		global $dataDir, $gp_index, $config;
 
+		// pre 4.6, deleted page info was stored
 		$trash_file = $dataDir.'/data/_site/trash.php';
-
-		if( !gpFiles::Exists($trash_file) ){
-			return admin_trash::GenerateTrashIndex();
+		if( gpFiles::Exists($trash_file) ){
+			$trash_titles = gpFiles::Get($trash_file,'trash_titles');
 		}
 
-		return gpFiles::Get($trash_file,'trash_titles');
+		// post 4.6, deleted pages are left in the data/_pages folder
+		$pages_dir		= $dataDir.'/data/_pages/';
+		$pages_dir_len	= strlen($pages_dir);
+		$files			= scandir($pages_dir);
+		$files			= array_diff($files, array('.','..','index.html'));
+
+
+		// get files associated existing titles
+		$existing		= array();
+		foreach($gp_index as $title => $index){
+
+			if( common::SpecialOrAdmin($title) ){
+				continue;
+			}
+
+
+			$file = gpFiles::PageFile($title);
+			$file = substr($file,$pages_dir_len);
+
+			if( strpos($file,'/') ){
+				$existing[] = dirname($file);
+			}else{
+				$existing[] = $file;
+			}
+		}
+
+
+		// add the new files to the list of $trash_titles
+		$new_trash_files	= array_diff($files,$existing);
+		$page_prefix		= substr($config['gpuniq'],0,7).'_';
+		foreach($new_trash_files as $file){
+
+			$info_file					= $dataDir.'/data/_pages/'.$file.'/deleted.php';
+			if( gpFiles::Exists($info_file) ){
+				$info					= gpFiles::Get($info_file,'deleted');
+				$info['page_file']		= $dataDir.'/data/_pages/'.$file.'/page.php';
+			}else{
+				$info['page_file']		= $dataDir.'/data/_pages/'.$file;
+				$info['time']			= filemtime($info['page_file']);
+			}
+
+			//get index
+			if( strpos($file,$page_prefix) === 0 ){
+				$info['index'] 			= substr($file,8); // remove page_prefix
+			}
+
+			$info['rm_path']			= $dataDir.'/data/_pages/'.$file;
+			$trash_titles[$file]		= $info;
+		}
+
+		uksort($trash_titles,'strnatcasecmp');
+
+		return $trash_titles;
 	}
 
 
@@ -162,6 +192,19 @@ class admin_trash{
 		$title_info			= $trash_titles[$trash_index];
 		$trash_dir			= $dataDir.'/data/_trash/'.$trash_index;
 
+
+		//make sure we have a file or dir
+		if( empty($title_info['rm_path']) ){
+
+			if( empty($title_info['file']) ){
+				$title_info['file']			= $trash_index.'.php';
+			}
+			$title_info['rm_path']			= $dataDir.'/data/_trash/'.$title_info['file'];
+			$title_info['page_file']		= $dataDir.'/data/_trash/'.$title_info['file'];
+		}
+
+
+
 		//make sure we have a label
 		if( empty($title_info['label']) ){
 			$title_info['label']	= admin_tools::LabelToSlug($trash_index);
@@ -169,22 +212,8 @@ class admin_trash{
 
 		//make sure we have a file_type
 		if( empty($title_info['type']) ){
-			$trash_file				= $dataDir.'/data/_trash/'.$trash_index.'.php';
-			$title_info['type']		= admin_trash::GetTypes($trash_file);
+			$title_info['type']		= admin_trash::GetTypes($title_info['page_file']);
 		}
-
-		//make sure we have a file or dir
-		if( gpFiles::Exists($trash_dir) ){
-			$title_info['rm_path']		= $trash_dir;
-
-		}else{
-
-			if( empty($title_info['file']) ){
-				$title_info['file']		= $trash_index.'.php';
-			}
-			$title_info['rm_path']		= $dataDir.'/data/_trash/'.$title_info['file'];
-		}
-
 
 		//make sure we have a title
 		if( !isset($title_info['title']) ){
@@ -205,45 +234,20 @@ class admin_trash{
 		global $dataDir, $gp_titles, $config;
 
 
-		//get a unique index
-		$trash_index		= sha1($title);
-		$num_index			= preg_replace('#[^0-9]#','',$trash_index);
-		do{
-			$trash_index	= sha1($num_index);
-			$trash_dir		= $dataDir.'/data/_trash/'.$trash_index;
-			$old_file		= $dataDir.'/data/_trash/'.$trash_index.'.php';
-			$num_index++;
-
-		}while( is_numeric($trash_index) || gpFiles::Exists($trash_dir) || gpFiles::Exists($old_file) );
-
-
-		$trash_file								= $trash_dir.'/page.php';
-		$trash_data[$trash_index]				= $gp_titles[$index];
-		$trash_data[$trash_index]['title']		= $title;
-
-
 		//get the file data
-		$source_file		= gpFiles::PageFile($title);
-		$file_sections		= gpFiles::Get($source_file,'file_sections');
+		$source_file			= gpFiles::PageFile($title);
+		$source_dir				= dirname($source_file);
+		$trash_file				= $source_dir.'/deleted.php';
+		$file_sections			= gpFiles::Get($source_file,'file_sections');
 
-		if( !$file_sections ){
+
+		//create trash info file
+		$trash_info				= $gp_titles[$index];
+		$trash_info['title']	= $title;
+		$trash_info['time']		= time();
+
+		if( !gpFiles::SaveData($trash_file,'deleted',$trash_info) ){
 			return false;
-		}
-
-		if( !gpFiles::CheckDir($trash_dir) ){
-			return false;
-		}
-
-		if( !copy($source_file,$trash_file) ){
-			return false;
-		}
-
-
-		//copy draft
-		$src_draft								= $dataDir.'/data/_drafts/'.substr($config['gpuniq'],0,7).'_'.$index.'.php';
-		$trash_draft							= $trash_dir.'/draft.php';
-		if( gpFiles::Exists($src_draft) ){
-			copy($src_draft, $trash_draft);
 		}
 
 
@@ -269,15 +273,15 @@ class admin_trash{
 	function RestoreDeleted(){
 		global $langmessage,$gp_titles,$gp_index;
 
-		if( empty($_POST['title']) || !is_array($_POST['title']) ){
+		if( empty($_POST['titles']) || !is_array($_POST['titles']) ){
 			message($langmessage['OOPS'].' (No Titles)');
 			return;
 		}
 
-		$titles = $_POST['title'];
+		$titles = $_POST['titles'];
 		admin_trash::RestoreTitles($titles);
 
-		if( count($titles) == 0 ){
+		if( !$titles ){
 			message($langmessage['OOPS'].' (R1)');
 			return false;
 		}
@@ -315,7 +319,7 @@ class admin_trash{
 
 		$new_menu		= array();
 		$restored		= array();
-		foreach($titles as $trash_index => $empty){
+		foreach($titles as $trash_index){
 
 			//get trash info about file
 			$title_info = admin_trash::GetInfo($trash_index);
@@ -329,41 +333,30 @@ class admin_trash{
 			}
 
 
-			//add to $gp_index first for PageFile()
-			$index					= common::NewFileIndex();
-			$gp_index[$new_title]	= $index;
+			//make sure the page_file exists
+			if( !gpFiles::Exists($title_info['page_file']) ){
+				continue;
+			}
 
 
-			//make sure the trash file exists
-			if( isset($title_info['file']) ){
-				$trash_file			= $dataDir.'/data/_trash/'.$title_info['file'];
-				$trash_draft		= false;
+			//add to $gp_index before PageFile()
+			if( isset($title_info['index']) ){
+				$index					= $title_info['index'];
+				$gp_index[$new_title]	= $index;
 			}else{
-				$trash_file			= $dataDir.'/data/_trash/'.$trash_index.'/page.php';
-				$trash_draft		= $dataDir.'/data/_trash/'.$trash_index.'/draft.php';
+				$index					= common::NewFileIndex();
+				$gp_index[$new_title]	= $index;
 			}
 
 
-			if( !gpFiles::Exists($trash_file) ){
-				unset($gp_index[$new_title]);
-				continue;
-			}
-
-
-			//copy the trash file to the /_pages directory
+			// move the trash file to the /_pages directory if needed
 			$new_file = gpFiles::PageFile($new_title);
-			if( !copy($trash_file,$new_file) ){
-				unset($gp_index[$new_title]);
-				continue;
+			if( !gpFiles::Exists($new_file) ){
+				if( !gpFiles::Rename($trash_file,$new_file) ){
+					unset($gp_index[$new_title]);
+					continue;
+				}
 			}
-
-
-			//copy draft
-			if( $trash_draft && gpFiles::Exists($trash_draft) ){
-				$src_draft			= $dataDir.'/data/_drafts/'.substr($config['gpuniq'],0,7).'_'.$index.'.php';
-				copy($trash_draft,$src_draft );
-			}
-
 
 
 			//add to $gp_titles
@@ -374,7 +367,7 @@ class admin_trash{
 			$new_menu[$index]				= array();
 			$restored[$trash_index]			= $title_info;
 
-			admin_trash::RestoreFile($new_title, $trash_file, $title_info);
+			admin_trash::RestoreFile($new_title, $new_file, $title_info);
 		}
 
 		$titles = $restored;
@@ -446,6 +439,10 @@ class admin_trash{
 	}
 
 
+	/**
+	 * View all files in the trash
+	 *
+	 */
 	function Trash(){
 		global $dataDir,$langmessage;
 
@@ -484,7 +481,7 @@ class admin_trash{
 
 			echo '<tr><td>';
 			echo '<label style="display:block;">';
-			echo '<input type="checkbox" name="title['.htmlspecialchars($trash_index).']" value="1" />';
+			echo '<input type="checkbox" name="titles[]" value="'.htmlspecialchars($trash_index).'" />';
 			echo ' &nbsp; ';
 			echo common::Link('Admin_Trash/'.$trash_index,str_replace('_',' ',$title));
 			echo '</label>';
@@ -502,9 +499,9 @@ class admin_trash{
 
 			echo '</td><td>';
 
-			echo common::Link('Admin_Trash',$langmessage['restore'],'cmd=RestoreDeleted&title['.rawurlencode($trash_index).']=1',array('data-cmd'=>'postlink'));
+			echo common::Link('Admin_Trash',$langmessage['restore'],'cmd=RestoreDeleted&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'postlink'));
 			echo ' &nbsp; ';
-			echo common::Link('Admin_Trash',$langmessage['delete'],'cmd=DeleteFromTrash&title['.rawurlencode($trash_index).']=1',array('data-cmd'=>'postlink'));
+			echo common::Link('Admin_Trash',$langmessage['delete'],'cmd=DeleteFromTrash&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'postlink'));
 
 			echo '</td></tr>';
 		}
@@ -544,16 +541,15 @@ class admin_trash{
 	function DeleteFromTrash(){
 		global $dataDir,$langmessage;
 
-		if( empty($_POST['title']) || !is_array($_POST['title']) ){
+		if( empty($_POST['titles']) || !is_array($_POST['titles']) ){
 			message($langmessage['OOPS'].' (No Titles)');
 			return;
 		}
 
 		$titles			= array();
-		$not_deleted	= array();
 		$incomplete		= false;
 
-		foreach($_POST['title'] as $trash_index => $null){
+		foreach($_POST['titles'] as $trash_index){
 			$title_info = admin_trash::GetInfo($trash_index);
 
 			if( $title_info === false ){
@@ -563,10 +559,10 @@ class admin_trash{
 			$titles[$trash_index] = $title_info;
 		}
 
-
 		if( !admin_trash::ModTrashData(null,$titles) ){
 			return false;
 		}
+
 
 		//remove the data
 		foreach($titles as $trash_index => $info){
@@ -590,19 +586,12 @@ class admin_trash{
 
 		$title_info = admin_trash::GetInfo($trash_index);
 
-		//make sure the trash file exists
-		if( isset($title_info['file']) ){
-			$trash_file = $dataDir.'/data/_trash/'.$title_info['file'];
-		}else{
-			$trash_file = $dataDir.'/data/_trash/'.$trash_index.'/page.php';
-		}
-
 
 		//delete / restore links
 		echo '<div class="pull-right">';
-		echo common::Link('Admin_Trash',$langmessage['restore'],'cmd=RestoreDeleted&title['.rawurlencode($trash_index).']=1',array('data-cmd'=>'cnreq','class'=>'gpsubmit'));
+		echo common::Link('Admin_Trash',$langmessage['restore'],'cmd=RestoreDeleted&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'cnreq','class'=>'gpsubmit'));
 		echo ' &nbsp; ';
-		echo common::Link('Admin_Trash',$langmessage['delete'],'cmd=DeleteFromTrash&title['.rawurlencode($trash_index).']=1',array('data-cmd'=>'cnreq','class'=>'gpsubmit'));
+		echo common::Link('Admin_Trash',$langmessage['delete'],'cmd=DeleteFromTrash&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'cnreq','class'=>'gpsubmit'));
 		echo '</div>';
 
 
@@ -615,10 +604,12 @@ class admin_trash{
 
 
 		//get file sections
-		$file_sections		= gpFiles::Get($trash_file,'file_sections');
+		$file_sections		= gpFiles::Get($title_info['page_file'],'file_sections');
 
 		if( $file_sections ){
-			echo section_content::Render($file_sections,$title_info['title']); //,$this->file_stats
+			echo section_content::Render($file_sections,$title_info['title']);
+		}else{
+			echo '<p>This page no longer has any content</p>';
 		}
 	}
 

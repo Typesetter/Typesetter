@@ -1366,7 +1366,6 @@ class admin_menu_new extends admin_menu_tools{
 		global $gp_titles, $gp_index, $langmessage, $gp_menu, $config, $dataDir;
 
 		includeFile('admin/admin_trash.php');
-		admin_trash::PrepFolder();
 		$this->CacheSettings();
 
 		$_POST			+= array('index'=>'');
@@ -1403,8 +1402,6 @@ class admin_menu_new extends admin_menu_tools{
 				}
 			}
 
-			$delete_files[$index] = gpFiles::PageFile($title);
-
 			unset($gp_titles[$index]);
 			unset($gp_index[$title]);
 		}
@@ -1412,12 +1409,6 @@ class admin_menu_new extends admin_menu_tools{
 
 		$this->ResetHomepage();
 
-
-		if( !admin_trash::ModTrashData($trash_data,null) ){
-			msg($langmessage['OOPS']);
-			$this->RestoreSettings();
-			return false;
-		}
 
 		if( !admin_tools::SaveAllConfig() ){
 			$this->RestoreSettings();
@@ -1427,21 +1418,6 @@ class admin_menu_new extends admin_menu_tools{
 		$link = common::GetUrl('Admin_Trash');
 		msg(sprintf($langmessage['MOVED_TO_TRASH'],$link));
 
-
-		//finally, delete the data
-		foreach($delete_files as $index => $file){
-
-			//delete files in /_pages
-			if( gpFiles::Exists($file) ){
-				unlink($file);
-			}
-
-			//delete draft
-			$file			= $dataDir.'/data/_drafts/'.substr($config['gpuniq'],0,7).'_'.$index.'.php';
-			if( gpFiles::Exists($file) ){
-				unlink($file);
-			}
-		}
 
 		gpPlugin::Action('MenuPageTrashed',array($indexes));
 
@@ -1924,31 +1900,12 @@ class admin_menu_new extends admin_menu_tools{
 		$this->CacheSettings();
 		includeFile('admin/admin_trash.php');
 
-		$titles_lower = array_change_key_case($gp_index,CASE_LOWER);
-		$titles = array();
-		$exists = array();
+		$titles_lower	= array_change_key_case($gp_index,CASE_LOWER);
+		$titles			= array();
+		$menu			= admin_trash::RestoreTitles($_POST['titles']);
 
-		foreach($_POST['titles'] as $title){
 
-			$new_title = admin_tools::CheckPostedNewPage($title,$message);
-			if( !$new_title ){
-				$exists[] = $title;
-				continue;
-			}
-			$titles[$title] = array();
-		}
-
-		$menu = admin_trash::RestoreTitles($titles);
-
-		if( count($exists) > 0 ){
-			msg($langmessage['TITLES_EXIST'].implode(', ',$exists));
-
-			if( count($menu) == 0 ){
-				return false; //prevent multiple messages
-			}
-		}
-
-		if( count($menu) == 0 ){
+		if( !$menu ){
 			msg($langmessage['OOPS']);
 			$this->RestoreSettings();
 			return false;

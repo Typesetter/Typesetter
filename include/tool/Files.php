@@ -384,6 +384,9 @@ class gpFiles{
 		//without folder -> rename it
 		$old_path = $dataDir.'/data/_pages/'.str_replace('/','_',$title).'.php';
 		if( gpFiles::Exists($old_path) ){
+			if( $index_path && gpFiles::Rename($old_path, $index_path) ){
+				return $index_path;
+			}
 			if( gpFiles::Rename($old_path, $normal_path) ){
 				return $normal_path;
 			}

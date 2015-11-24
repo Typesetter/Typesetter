@@ -112,6 +112,7 @@ class admin_trash{
 		$page_prefix		= substr($config['gpuniq'],0,7).'_';
 		foreach($new_trash_files as $file){
 
+			$info						= array();
 			$info_file					= $dataDir.'/data/_pages/'.$file.'/deleted.php';
 			if( gpFiles::Exists($info_file) ){
 				$info					= gpFiles::Get($info_file,'deleted');

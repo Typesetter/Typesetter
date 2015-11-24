@@ -80,14 +80,10 @@ class admin_trash{
 			$trash_titles = gpFiles::Get($trash_file,'trash_titles');
 		}
 
-		// post 4.6, deleted pages are left in the data/_pages folder
-		$pages_dir		= $dataDir.'/data/_pages/';
-		$pages_dir_len	= strlen($pages_dir);
-		$files			= scandir($pages_dir);
-		$files			= array_diff($files, array('.','..','index.html'));
-
 
 		// get files associated existing titles
+		$pages_dir		= $dataDir.'/data/_pages/';
+		$pages_dir_len	= strlen($pages_dir);
 		$existing		= array();
 		foreach($gp_index as $title => $index){
 
@@ -105,6 +101,11 @@ class admin_trash{
 				$existing[] = $file;
 			}
 		}
+
+
+		// post 4.6, deleted pages are left in the data/_pages folder
+		$files			= scandir($pages_dir);
+		$files			= array_diff($files, array('.','..','index.html'));
 
 
 		// add the new files to the list of $trash_titles

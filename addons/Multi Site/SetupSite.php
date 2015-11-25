@@ -1643,6 +1643,7 @@ class SetupSite{
 	 *
 	 */
 	function SubFolder(){
+		global $langmessage;
 
 		$folder =& $_REQUEST['folder'];
 		if( !empty($_REQUEST['sub_dir']) ){

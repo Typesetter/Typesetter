@@ -359,7 +359,7 @@ class admin_permalinks{
 	RewriteRule .* - [L]
 
 	# Redirect away from requests with index.php
-	RewriteRule index\.php(.*) $1 [R=302,L]
+	RewriteRule index\.php(.*) "'.$home_root.'$1" [R=302,L]
 
 	# Add gp_rewrite to root requests
 	RewriteRule ^$ "'.$home_root.'index.php?gp_rewrite" [qsa,L]

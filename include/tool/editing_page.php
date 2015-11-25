@@ -141,18 +141,29 @@ class editing_page extends display{
 
 		//notify user we're using a draft
 		if( $this->draft_exists ){
-			$ago	= time() - $this->draft_stats['modified'];
-
-			$message	= 'This is a draft &nbsp; ';
-			$message	.= common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq'));
-			$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Discard Draft'],'cmd=DiscardDraft',array('data-cmd'=>'creq'));
-			$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox'));
-
-			msg($message);
+			$this->PageMessage();
 		}
 
 
 		$this->contentBuffer = $this->GenerateContent_Admin();
+	}
+
+	/**
+	 * Display message about the page
+	 * If it's a draft, append info links
+	 *
+	 */
+	function PageMessage($message = ''){
+		global $langmessage;
+
+		if( $this->draft_exists ){
+			$message	.= ' &nbsp; ';
+			$message	.= common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq'));
+			$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Discard Draft'],'cmd=DiscardDraft',array('data-cmd'=>'creq'));
+			$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox'));
+		}
+
+		msg($message);
 	}
 
 	/**
@@ -501,7 +512,7 @@ class editing_page extends display{
 		}
 
 		$page->ajaxReplace[] = array('ck_saved','','');
-		msg($langmessage['SAVED']);
+		$this->PageMessage($langmessage['SAVED']);
 
 
 		//update gallery info
@@ -550,7 +561,7 @@ class editing_page extends display{
 		}
 
 		$page->ajaxReplace[] = array('ck_saved','','');
-		msg($langmessage['SAVED']);
+		$this->PageMessage($langmessage['SAVED']);
 
 
 		//update gallery information
@@ -783,7 +794,12 @@ class editing_page extends display{
 		}
 
 
-		return gpFiles::SaveData($this->draft_file,'file_sections',$this->file_sections,$this->meta_data);
+		if( !gpFiles::SaveData($this->draft_file,'file_sections',$this->file_sections,$this->meta_data) ){
+			return false;
+		}
+
+		$this->draft_exists = true;
+		return true;
 	}
 
 
@@ -1232,6 +1248,8 @@ class editing_page extends display{
 				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 				echo $link;
 				echo common::Link($this->title,$langmessage['Manage Sections'],'cmd=ManageSections',array('class'=>'manage_sections','data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+				echo '<hr/>';
+				echo common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
 				echo common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox'));
 				echo '</span>';
 				gpOutput::$editlinks .= ob_get_clean();

@@ -866,7 +866,7 @@ $(function(){
 			id = id.substr(13); //edit_area is always ExtraEditArea#
 
 			//get the edit links
-			var edit_links = $('#ExtraEditLnks'+id).find('a');
+			var edit_links = $('#ExtraEditLnks'+id).children();
 			if( edit_links.length === 0 ){
 				edit_links = $('#ExtraEditLink'+id);
 				if( edit_links.length === 0 ){

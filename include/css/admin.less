@@ -1084,9 +1084,11 @@ table.tablesorter th.gp_header_desc:before{
 
 	}
 
+#gp_edit_overlay span *{
+	display:none !important;
+	}
 #gp_edit_overlay span a{
 	position:relative;
-	display:none !important;
 	color:#444 !important;
 	padding:4px 7px;
 	border:1px solid transparent;
@@ -1102,8 +1104,14 @@ table.tablesorter th.gp_header_desc:before{
 	background: rgba(200,200,200,0.5);
 	}
 
-#gp_edit_overlay span.gp_hover a{
+#gp_edit_overlay span.gp_hover *{
 	display:block !important;
+	}
+#gp_edit_overlay span hr{
+	margin:2px 0;
+	border:0 none;
+	border-top:1px solid #ddd;
+	border-bottom:1px solid #f5f5f5;
 	}
 
 #gp_edit_overlay span a.gp_overlay_expand{

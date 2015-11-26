@@ -384,20 +384,6 @@
 
 
 		/**
-		 * Use javascript to style the checkbox labels when they're checked
-		 *
-		 */
-		$(document).on('click','input:checkbox',function(){
-			$this = $(this);
-			if( $this.filter(':checked').length > 0 ){
-				$this.closest('li').addClass('gpui-state-checked');
-			}else{
-				$this.closest('li').removeClass('gpui-state-checked');
-			}
-		});
-
-
-		/**
 		 * Reduce a list of titles by search criteria entered in gpsearch areas
 		 *
 		 */

@@ -200,6 +200,7 @@
 	}
 
 #gp_admin_html .gptextarea,
+#gp_admin_html .gpui-scrolllist,
 #gp_admin_html .gpinput{
 	background:#fff;
 	border-radius: 6px;
@@ -1955,4 +1956,39 @@ body #addon_about{
 	text-shadow:0 1px 1px #fff;
 	}
 
+
+/**
+ * Scroll list
+ *
+ */
+#gp_admin_html .gpui-scrolllist{
+	height:300px;
+	overflow:auto;
+	overflow-x:hidden;
+	width:auto;
+	display:block;
+}
+
+.gpui-scrolllist label,
+.gpui-scrolllist span{
+	display:block;
+	cursor:pointer;
+	position:relative;
+	overflow:hidden;
+	}
+
+.gpui-scrolllist input{
+	position:absolute;
+	left:-20px;
+	}
+.gpui-scrolllist label > span{
+	border:1px solid #fff;
+	border-radius:4px;
+	padding:3px 5px;
+	color:#666;
+}
+.gpui-scrolllist input:checked + span{
+	border-color:#ddd;
+	background-color:#eee;
+	}
 

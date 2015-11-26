@@ -347,24 +347,6 @@ body #admin_menu li.ui-sortable-helper{
 
 
 
-#gp_Insert_Hidden .gpui-scrolllist, #gp_Insert_Deleted .gpui-scrolllist{
-	height:300px;
-	overflow:auto;
-	overflow-x:hidden;
-	float:none;
-	width:auto;
-}
-
-.gpui-scrolllist label{
-	cursor:pointer;
-	}
-.gpui-scrolllist input{
-	float:right;
-	}
-.ui-menu .gpui-state-checked label{
-	border:1px solid #ccc;
-	background-color:#fdfdfd;
-	}
 
 body #gp_menu_select,
 body #gp_menu_select *{

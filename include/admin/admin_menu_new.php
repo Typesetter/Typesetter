@@ -1597,7 +1597,7 @@ class admin_menu_new extends admin_menu_tools{
 	 *
 	 */
 	function AddHidden(){
-		global $langmessage, $page;
+		global $langmessage, $page, $gp_index;
 
 		includeFile('tool/editing_page.php');
 
@@ -1607,7 +1607,14 @@ class admin_menu_new extends admin_menu_tools{
 		}
 		echo '<div class="inline_box">';
 
+		echo '<div class="layout_links" style="float:right">';
+		echo '<a href="#gp_new_copy" data-cmd="tabs" class="selected">'. $langmessage['Copy'] .'</a>';
+		echo '<a href="#gp_new_type" data-cmd="tabs">'. $langmessage['Content Type'] .'</a>';
+		echo '</div>';
+
+
 		echo '<h3>'.$langmessage['new_file'].'</h3>';
+
 
 		echo '<form action="'.$this->GetUrl('Admin_Menu').'" method="post">';
 		echo '<table class="bordered full_width">';
@@ -1621,29 +1628,86 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<input type="text" name="title" maxlength="100" size="50" value="'.htmlspecialchars($title).'" class="gpinput" required/>';
 		echo '</td></tr>';
 
-		//content type
+		//copy
+		echo '<tbody id="gp_new_copy">';
 		echo '<tr><td>';
+		echo $langmessage['Copy'];
+		echo '</td><td>';
+
+		$this->ScrollList($gp_index);
+
+		//copy buttons
+		echo '<p>';
+		echo '<button type="submit" name="cmd" value="copyit" class="gpsubmit gpvalidate" data-cmd="gppost">'.$langmessage['create_new_file'].'</button>';
+		echo '<input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
+		echo '<input type="hidden" name="redir" value="redir"/> ';
+		echo '</p>';
+
+
+		echo '</td></tr>';
+		echo '</tbody>';
+
+
+		//content type
+		echo '<tr id="gp_new_type" style="display:none"><td>';
 		echo str_replace(' ','&nbsp;',$langmessage['Content Type']);
 		echo '</td><td>';
 		echo '<div id="new_section_links">';
 		editing_page::NewSections(true);
 		echo '</div>';
-		echo '</td></tr>';
 
+
+		//create buttons
+		echo '<p>';
+		if( isset($_GET['redir']) ){
+			echo '<input type="hidden" name="cmd" value="new_redir" />';
+		}else{
+			echo '<input type="hidden" name="cmd" value="new_hidden" />';
+		}
+		echo '<input type="submit" name="aaa" value="'.$langmessage['create_new_file'].'" class="gpsubmit gpvalidate" data-cmd="gppost"/> ';
+		echo '<input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
+		echo '</p>';
+
+
+		echo '</td></tr>';
 		echo '</table>';
 
-			echo '<p>';
-
-			if( isset($_GET['redir']) ){
-				echo '<input type="hidden" name="cmd" value="new_redir" />';
-			}else{
-				echo '<input type="hidden" name="cmd" value="new_hidden" />';
-			}
-			echo '<input type="submit" name="aaa" value="'.$langmessage['create_new_file'].'" class="gpsubmit gpvalidate" data-cmd="gppost"/> ';
-			echo '<input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
-			echo '</p>';
 
 		echo '</form>';
+		echo '</div>';
+	}
+
+
+	/**
+	 * Create a scrollable title list
+	 *
+	 */
+	function ScrollList($list, $name = 'from_title', $type = 'radio', $index_as_value = false ){
+
+		$list_out = array();
+		foreach($list as $title => $index){
+			ob_start();
+			echo '<label>';
+			if( $index_as_value ){
+				echo '<input type="'.$type.'" name="'.$name.'" value="'.htmlspecialchars($index).'" />';
+			}else{
+				echo '<input type="'.$type.'" name="'.$name.'" value="'.htmlspecialchars($title).'" />';
+			}
+			echo '<span>';
+			$label = common::GetLabel($title);
+			echo common::LabelSpecialChars($label);
+			echo '<span class="slug">';
+			echo '/'.$title;
+			echo '</span>';
+			echo '</span>';
+			echo '</label>';
+
+			$list_out[$title] = ob_get_clean();
+		}
+
+		uksort($list_out,'strnatcasecmp');
+		echo '<div class="gpui-scrolllist">';
+		echo implode('',$list_out);
 		echo '</div>';
 	}
 
@@ -1729,29 +1793,8 @@ class admin_menu_new extends admin_menu_tools{
 				echo $langmessage['insert_into_menu'];
 				echo '</th></tr></thead>';
 				echo '</table>';
-				echo '<ul class="gpui-scrolllist ui-menu ui-widget ui-widget-content ui-corner-all">';
-
-				//sort by label
-				$sort_avail = array();
-				foreach($avail as $index => $title){
-					$sort_avail[$index] = common::GetLabel($title);
-				}
-				natcasesort($sort_avail);
-
-				foreach($sort_avail as $index => $label){
-					echo '<li class="ui-menu-item">';
-					echo '<label class="ui-corner-all">';
-					echo '<input type="checkbox" name="keys[]" value="'.htmlspecialchars($index).'" />';
-					echo common::LabelSpecialChars($label);
-					echo '<span class="slug">';
-					echo '/'.$avail[$index];
-					echo '</span>';
-					echo '</label>';
-					echo '</li>';
-				}
-
-				echo '</ul>';
-
+				$avail = array_flip($avail);
+				$this->ScrollList($avail,'keys[]','checkbox',true);
 
 				echo '<p>';
 				echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($cmd).'" />';
@@ -1786,12 +1829,11 @@ class admin_menu_new extends admin_menu_tools{
 				echo '</thead></table>';
 
 
-				echo '<ul class="gpui-scrolllist ui-menu ui-widget ui-widget-content ui-corner-all">';
+				echo '<div class="gpui-scrolllist">';
 				foreach($trashtitles as $title => $info){
-					echo '<li class="ui-menu-item">';
-					echo '<label class="ui-corner-all">';
+					echo '<label>';
 					echo '<input type="checkbox" name="titles[]" value="'.htmlspecialchars($title).'" />';
-
+					echo '<span>';
 					echo $info['label'];
 					echo '<span class="slug">';
 					if( isset($info['title']) ){
@@ -1800,11 +1842,10 @@ class admin_menu_new extends admin_menu_tools{
 						echo '/'.$title;
 					}
 					echo '</span>';
-
-					echo '</label></li>';
+					echo '</span>';
+					echo '</label>';
 				}
-
-				echo '</ul>';
+				echo '</div>';
 
 
 				echo '<p>';
@@ -2790,8 +2831,7 @@ class admin_menu_new extends admin_menu_tools{
 		msg($langmessage['SAVED']);
 		if( isset($_REQUEST['redir']) ){
 			$url = common::AbsoluteUrl($title,'',true,false);
-			$page->ajaxReplace[] = array('location',$url,'15000');
-			msg(sprintf($langmessage['will_redirect'],common::Link_Page($title)));
+			$page->ajaxReplace[] = array('location',$url,0);
 		}
 
 		return $index;

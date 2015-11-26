@@ -926,30 +926,68 @@ $(function(){
 
 
 		/**
+		 * Left click to show menu
+		 * This may not always work. Some template/user js may cancel event bubbling
+		 * Clicking on links still works
+		 *
+		 */
+		$gp.$doc.on('click','.editable_area, #gp_edit_overlay',function(evt){
+			if( ShowableMenu(evt) ){
+				MenuPos(evt);
+			}
+		});
+
+
+		/**
 		 * Right Click to show menu
 		 *
 		 */
 		$gp.$doc.on('contextmenu','.editable_area, #gp_edit_overlay',function(evt){
-			if( evt.ctrlKey || evt.altKey || evt.shiftKey || gp_editor ) return;
 
-			if( edit_area.hasClass('gp_no_overlay') || !lnk_span ){
-				return;
-			}
+			if( ShowableMenu(evt) ){
 
-			ShowMenu();
+				ShowMenu();
 
-			if( !gpui.ctx ){
-				evt.preventDefault();
-				var left = evt.pageX-$gp.$win.scrollLeft();
-				var diff = left + lnk_span.width() - $gp.$win.width();
-				if( diff > 0 ){
-					left -= diff;
+				if( !gpui.ctx ){
+					evt.preventDefault();
+					MenuPos(evt);
 				}
-				lnk_span.css({'top':(evt.pageY-$gp.$win.scrollTop()),'left':left,'right':'auto','position':'fixed'});
-				fixed_pos = true;
 			}
 
 		});
+
+
+		/**
+		 * Position link at cursor
+		 *
+		 */
+		function MenuPos(evt){
+
+			fixed_pos	= true;
+			var left	= evt.pageX-$gp.$win.scrollLeft();
+			var diff	= left + lnk_span.width() - $gp.$win.width();
+
+			if( diff > 0 ){
+				left -= diff;
+			}
+			lnk_span.css({'top':(evt.pageY-$gp.$win.scrollTop()),'left':left,'right':'auto','position':'fixed'});
+		}
+
+
+		/**
+		 * Return true if we can show the gpEasy context menu
+		 *
+		 */
+		function ShowableMenu(evt){
+
+			if( evt.ctrlKey || evt.altKey || evt.shiftKey || gp_editor ) return;
+
+			if( !edit_area || edit_area.hasClass('gp_no_overlay') || !lnk_span ){
+				return;
+			}
+
+			return true;
+		}
 
 	} /* end EditOutlines */
 

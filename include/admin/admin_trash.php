@@ -10,7 +10,8 @@ class admin_trash{
 	function __construct(){
 		global $langmessage, $page;
 
-		$this->trash_files = admin_trash::TrashFiles();
+		$page->head_js[]	= '/include/js/admin/trash.js';
+		$this->trash_files	= admin_trash::TrashFiles();
 
 		$cmd = common::GetCommand();
 		switch($cmd){
@@ -121,6 +122,7 @@ class admin_trash{
 			}else{
 				$info['page_file']		= $dataDir.'/data/_pages/'.$file;
 				$info['time']			= filemtime($info['page_file']);
+				$info['orphaned']		= true;
 			}
 
 			//get index
@@ -455,53 +457,88 @@ class admin_trash{
 
 		echo $heading;
 
-		$i = 0;
+		// non-orphaned
+		$orphaned = array();
 		foreach($this->trash_files as $trash_index => $info){
-
-			if( isset($info['title']) ){
-				$title = $info['title'];
+			if( isset($info['orphaned']) ){
+				$orphaned[$trash_index] = $info;
 			}else{
-				$title = $trash_index;
+				$this->TrashRow($trash_index, $info);
 			}
-
-			echo '<tr><td>';
-			echo '<label style="display:block;">';
-			echo '<input type="checkbox" name="titles[]" value="'.htmlspecialchars($trash_index).'" />';
-			echo ' &nbsp; ';
-			echo common::Link('Admin_Trash/'.$trash_index,str_replace('_',' ',$title));
-			echo '</label>';
-			echo '</td><td>';
-
-			if( !empty($info['time']) ){
-				$elapsed = admin_tools::Elapsed(time() - $info['time']);
-				echo sprintf($langmessage['_ago'],$elapsed);
-			}
-
-			echo '</td><td>';
-			if( isset($info['type']) ){
-				$this->TitleTypes($info['type']);
-			}
-
-			echo '</td><td>';
-
-			if( admin_tools::CheckPostedNewPage($title, $msg) ){
-				echo common::Link('Admin_Trash',$langmessage['restore'],'cmd=RestoreDeleted&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'postlink'));
-			}else{
-				echo '<span>'.$langmessage['restore'].'</span>';
-			}
-			echo ' &nbsp; ';
-			echo common::Link('Admin_Trash',$langmessage['delete'],'cmd=DeleteFromTrash&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'postlink'));
-
-			echo '</td></tr>';
 		}
+
+		// orphaned files
+		if( $orphaned ){
+			echo '<tr><td colspan="3">';
+			echo '<input type="checkbox" style="visibility:hidden"> &nbsp; ';
+			echo count($orphaned).' Orphaned Files Found';
+			echo '</td><td>';
+			echo '<a class="nowrap" data-cmd="ViewOrphaned">'.$langmessage['View'].'</a> &nbsp; ';
+			$q = array();
+			$q['titles'] = array_keys($orphaned);
+			$q = 'cmd=DeleteFromTrash&'.http_build_query($q);
+			echo common::Link('Admin_Trash',$langmessage['delete'],$q,array('data-cmd'=>'postlink'));
+			echo '</td></tr>';
+
+			foreach($orphaned as $trash_index => $info){
+				$this->TrashRow($trash_index, $info);
+			}
+		}
+
+
 
 		echo $heading;
 
 		echo '</table>';
 		echo '</form>';
-
 	}
 
+	function TrashRow($trash_index, $info, $show_orphaned = false ){
+		global $langmessage;
+
+		$class = '';
+		if( isset($info['orphaned']) ){
+			$class = 'orphaned';
+		}
+
+		//title
+		echo '<tr class="'.$class.'"><td>';
+		echo '<label style="display:block;">';
+		echo '<input type="checkbox" name="titles[]" value="'.htmlspecialchars($trash_index).'" />';
+		echo ' &nbsp; ';
+
+		if( isset($info['orphaned']) ){
+			echo '(Orphaned) &nbsp; ';
+		}
+
+		echo common::Link('Admin_Trash/'.$trash_index,str_replace('_',' ',$info['title']));
+		echo '</label>';
+
+		//time
+		echo '</td><td>';
+
+		if( !empty($info['time']) ){
+			$elapsed = admin_tools::Elapsed(time() - $info['time']);
+			echo sprintf($langmessage['_ago'],$elapsed);
+		}
+
+		echo '</td><td>';
+		if( isset($info['type']) ){
+			$this->TitleTypes($info['type']);
+		}
+
+		echo '</td><td>';
+
+		if( admin_tools::CheckPostedNewPage($info['title'], $msg) ){
+			echo common::Link('Admin_Trash',$langmessage['restore'],'cmd=RestoreDeleted&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'postlink'));
+		}else{
+			echo '<span>'.$langmessage['restore'].'</span>';
+		}
+		echo ' &nbsp; ';
+		echo common::Link('Admin_Trash',$langmessage['delete'],'cmd=DeleteFromTrash&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'postlink'));
+
+		echo '</td></tr>';
+	}
 
 	/**
 	 * List section types

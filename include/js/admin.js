@@ -944,14 +944,10 @@ $(function(){
 		 */
 		$gp.$doc.on('contextmenu','.editable_area, #gp_edit_overlay',function(evt){
 
-			if( ShowableMenu(evt) ){
-
-				ShowMenu();
-
-				if( !gpui.ctx ){
+			if( ShowableMenu(evt) && !gpui.ctx ){
 					evt.preventDefault();
+					ShowMenu();
 					MenuPos(evt);
-				}
 			}
 
 		});

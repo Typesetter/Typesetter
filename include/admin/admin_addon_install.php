@@ -238,7 +238,7 @@ class admin_addon_install extends admin_addons_tool{
 		if( $this->config_index == 'themes' ){
 			$slug = 'Themes';
 		}
-		$src = addon_browse_path.'/'.$slug.'?cmd=remote&format=json&'.$this->searchQuery.'&page='.$this->searchPage;
+		$src = addon_browse_path.'/'.$slug.'?cmd=remote&format=json&'.$this->searchQuery.'&page='.$this->searchPage; // format=json added 4.6b3
 
 		//check cache
 		$cache_file = $dataDir.'/data/_remote/'.sha1($src).'.txt';
@@ -263,6 +263,7 @@ class admin_addon_install extends admin_addons_tool{
 
 		}elseif( strpos($result,'{') === 0 ){
 			$data = json_decode($result,true);
+
 		}else{
 			if( $use_cache ) unlink($cache_file);
 			$debug				= array();

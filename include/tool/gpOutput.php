@@ -696,9 +696,9 @@ class gpOutput{
 		$count++;
 		$index = $count; //since &$index is passed by reference
 		if( is_array($attr) ){
-			$attr += array('class'=>'ExtraEditLink nodisplay','id'=>'ExtraEditLink'.$index);
+			$attr += array('class'=>'ExtraEditLink nodisplay','id'=>'ExtraEditLink'.$index,'data-area-id'=>$index);
 		}else{
-			$attr .= ' class="ExtraEditLink nodisplay" id="ExtraEditLink'.$index.'"';
+			$attr .= ' class="ExtraEditLink nodisplay" id="ExtraEditLink'.$index.'" data-area-id="'.$index.'"';
 		}
 		return common::Link($href,$label,$query,$attr);
 	}

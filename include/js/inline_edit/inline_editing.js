@@ -9,7 +9,7 @@ var gp_editing = {
 	 * Get the id associated with the edit link
 	 */
 	id:function(a){
-		return $(a).attr('id').substr(13);
+		return $(a).data('area-id');
 	},
 
 	/*

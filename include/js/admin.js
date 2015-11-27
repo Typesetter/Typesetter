@@ -61,7 +61,7 @@ $gp.links.inline_edit_generic = function(evt,rel){
 	if( rel == 'manage_sections' ){
 		$gp.LoadStyle('/include/css/manage_sections.css');
 	}else{
-		var id			= $(this).attr('id').substr(13);
+		var id			= $(this).data('area-id');
 		script			+= '&cmd=inlineedit&area_id='+id;
 	}
 
@@ -599,12 +599,10 @@ $(function(){
 	 */
 	function EditableBar(){
 
-		var count = 0,box;
+		var count	= 0;
+		var box		= box = $gp.div('gp_edit_box'); //the overlay box
+		var list	= $(this).find('ul');
 
-		var list = $(this).find('ul');
-
-		//the overlay box
-		box = $gp.div('gp_edit_box');
 
 		$('a.ExtraEditLink')
 			.clone(false)
@@ -612,10 +610,11 @@ $(function(){
 			.css('display','block')
 			.show()
 			.each(function(){
-				var title,$b,area;
-				$b = $(this);
-				var id_number = $b.attr('id').substr(13);
-				area = $('#ExtraEditArea'+id_number);
+
+				var title;
+				var $b			= $(this);
+				var id_number	= $b.data('area-id');
+				var area		= $('#ExtraEditArea'+id_number);
 
 				if( area.hasClass('gp_no_overlay') || area.length === 0 ){
 					return true;

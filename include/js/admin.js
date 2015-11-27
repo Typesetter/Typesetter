@@ -547,6 +547,7 @@ $gp.response.location = function(obj){
  *
  */
 $(function(){
+	console.time('AdminOnload');
 
 	$gp.$win = $(window);
 	$gp.$doc = $(document);
@@ -980,6 +981,7 @@ $(function(){
 
 	}
 
+	console.timeEnd('AdminOnload');
 
 });
 
@@ -1316,7 +1318,6 @@ function SimpleResize(resize_area,options){
 			var left_right = $(this).hasClass('gp_resize_right');
 			var time = new Date();
 
-			//$('body').disableSelection();
 
 			evt.preventDefault();
 
@@ -1369,28 +1370,5 @@ function SimpleResize(resize_area,options){
 		});
 
 
-}
-
-/**
- * Disable/Enable Selection
- * TODO: These override the functions in jquery ui and should probably tested and changed or removed
- *
- */
-if( typeof($.fn.disableSelection) !== 'function' ){
-	$.fn.disableSelection = function(){
-		return $(this).attr('unselectable', 'on')
-				.css('-moz-user-select', 'none')
-				.each(function() {
-				this.onselectstart = function() { return false; };
-				});
-	};
-
-	$.fn.enableSelection = function() {
-		return $(this).attr('unselectable', 'off')
-				.css('-moz-user-select', '')
-				.each(function() {
-					this.onselectstart = function() { return false; };
-				});
-	};
 }
 

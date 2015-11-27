@@ -331,6 +331,7 @@ $gp.Cookie('cookie_cmd','',-1);
  *
  */
 $(function(){
+	console.time('onload');
 
 	var $document = $(document);
 
@@ -555,6 +556,7 @@ $(function(){
 
 	$('body').trigger('gpReady');
 
+	console.timeEnd('onload');
 });
 
 
@@ -604,4 +606,6 @@ function loading(){
 function loaded(){
 	$gp.loaded();
 }
+
+
 

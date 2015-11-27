@@ -1003,6 +1003,8 @@ class admin_tools{
 	 * @since 2.4b5
 	 */
 	static function PostedSlug($string, $from_label = false){
+		global $config;
+
 		includeFile('tool/strings.php');
 
 		$orig_string = $string;
@@ -1032,7 +1034,7 @@ class admin_tools{
 		//slashes
 		$string = admin_tools::SlugSlashes($string);
 
-		$string = str_replace(' ','_',$string);
+		$string = str_replace(' ',$config['space_char'],$string);
 
 		return gpPlugin::Filter('PostedSlug',array($string, $orig_string, $from_label));
 	}

@@ -1189,45 +1189,55 @@ function SimpleDrag(selector, drag_area, positioning, callback_done){
  *
  */
 $gp.response.renameprep = function(){
-	var $form;
-	var old_title;
-	var $new_title;
-	Setup();
-
-	function Setup(){
-		$form = $('#gp_rename_form');
-		old_title = $form.find('input[name=old_title]').val().toLowerCase();
-		$new_title = $('input.new_title');
-
-		SyncSlug();
-		$('input[disabled=disabled]').each(function(a,b){
-			$(b).fadeTo(400,0.6);
-		});
-
-		$('input.title_label').bind('keyup change',SyncSlug);
-		$('.label_synchronize a').click(RenameSetup);
-
-		$gp.links.showmore = function(){
-			$('#gp_rename_table tr').show(500);
-			$(this).parent().remove();
-		};
-
-		$new_title.bind('keyup change',function(){
-			ShowRedirect();
-		});
 
 
-		//Changes to the slug
-		/* this moves the cursor to the end of the input field
-		$('input.new_title').bind('keyup change',function(){
-			this.value = this.value.replace(/ /g,'_');
-		});
-		*/
+	var $form			= $('#gp_rename_form');
+	var old_title		= $('#old_title').val().toLowerCase();
+	var $new_title		= $form.find('input.new_title').bind('keyup change',ShowRedirect);
+	var space_char		= $('#gp_space_char').val();
 
+
+	$('input:disabled').each(function(a,b){
+		$(b).fadeTo(400,0.6);
+	});
+
+	$('input.title_label').bind('keyup change',SyncSlug).change();
+
+	$gp.links.showmore = function(){
+		$('#gp_rename_table tr').show(500);
+		$(this).parent().remove();
+	};
+
+	/**
+	 * Toggle synchronization/customization of a field
+	 *
+	 */
+	$gp.links.ToggleSync = function(evt){
+		var td		= $(this).closest('td');
+		var vis		= td.find('a:visible');
+
+		td.find('a').show();
+		vis.hide();
+
+		vis			= td.find('a:visible');
+
+		if( vis.length ){
+			if( vis.hasClass('slug_edit') ){
+				td.find('input').addClass('sync_label').prop('disabled',true).fadeTo(400,0.6);
+				SyncSlug();
+			}else{
+				td.find('input').removeClass('sync_label').prop('disabled',false).fadeTo(400,1);
+			}
+		}
 	}
 
+
+	/**
+	 * Show the redirct option if the new slug doesn't match the old slug
+	 *
+	 */
 	function ShowRedirect(){
-		var new_val = $new_title.val().replace(/_/g,' ').toLowerCase();
+		var new_val = $new_title.val().replace(/ /g,space_char).toLowerCase();
 
 		if( new_val !== old_title ){
 			$('#gp_rename_redirect').show(500);
@@ -1236,33 +1246,17 @@ $gp.response.renameprep = function(){
 		}
 	}
 
-	//toggle sync
-	function RenameSetup(e){
-		e.preventDefault();
 
-		//toggle visible link
-		var td = $(this).closest('td');
-		var vis = td.find('a:visible');
-		td.find('a').show();
-		vis.hide();
-
-		vis = td.find('a:visible');
-		if( vis.length ){
-			if( vis.hasClass('slug_edit') ){
-				td.find('input').addClass('sync_label').prop('disabled','disabled').fadeTo(400,0.6);
-				SyncSlug();
-			}else{
-				td.find('input').removeClass('sync_label').prop('disabled','').fadeTo(400,1);
-			}
-		}
-	}
-
+	/**
+	 * Update the value of the slug/url field with the title
+	 *
+	 */
 	function SyncSlug(){
 
 		var label = $('input.title_label').val();
 
 
-		$('input.new_title.sync_label').val( LabelToSlug(label) );
+		$new_title.filter('.sync_label').val( LabelToSlug(label) );
 
 		$('input.browser_title.sync_label').val(label);
 
@@ -1270,6 +1264,7 @@ $gp.response.renameprep = function(){
 
 		return true;
 	}
+
 
 	/**
 	 * Convert a label to a slug
@@ -1290,7 +1285,7 @@ $gp.response.renameprep = function(){
 		str = SlugSlashes(str);
 
 		//all spaces should be underscores
-		return str.replace(/ /g,'_');
+		return str.replace(/ /g,space_char);
 	}
 
 	/**

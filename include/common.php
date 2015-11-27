@@ -1490,6 +1490,7 @@ class common{
 				'gadgets'			=> array(),
 				'passhash'			=> 'sha1',
 				'hooks'				=> array(),
+				'space_char'		=> '_',			//4.6
 				);
 
 		//shahash deprecated 4.0

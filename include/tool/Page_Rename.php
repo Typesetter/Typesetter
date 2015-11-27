@@ -5,12 +5,12 @@ defined('is_running') or die('Not an entry point...');
 class gp_rename{
 
 	static function RenameForm( $index, $action ){
-		global $langmessage,$page,$gp_index,$gp_titles;
+		global $langmessage, $page, $gp_index, $gp_titles, $config;
 
-		$label = common::GetLabelIndex($index);
-		$title = common::IndexToTitle($index);
 
-		$title_info = $gp_titles[$index];
+		$label			= common::GetLabelIndex($index);
+		$title			= common::IndexToTitle($index);
+		$title_info		= $gp_titles[$index];
 
 		if( empty($_REQUEST['new_title']) ){
 			$new_title = common::LabelSpecialChars($label);
@@ -26,20 +26,20 @@ class gp_rename{
 		ob_start();
 		echo '<div class="inline_box">';
 		echo '<form action="'.$action.'" method="post" id="gp_rename_form">';
-		echo '<input type="hidden" name="old_title" value="'.htmlspecialchars(str_replace('_',' ',$title)).'" />';
+
+		echo '<input type="hidden" name="title" id="old_title" value="'.htmlspecialchars($title).'" />';
+		echo '<input type="hidden" id="gp_space_char" value="'.htmlspecialchars($config['space_char']).'" />';
+
 
 		echo '<h2>'.$langmessage['rename/details'].'</h2>';
 
-		echo '<input type="hidden" name="title" value="'.htmlspecialchars($title).'" />';
 
 		echo '<table class="bordered full_width" id="gp_rename_table">';
 		echo '<thead>';
-		echo '<tr>';
-			echo '<th colspan="2">';
-			echo $langmessage['options'];
-			echo '</th>';
-			echo '</tr>';
-			echo '</thead>';
+		echo '<tr><th colspan="2">';
+		echo $langmessage['options'];
+		echo '</th></tr>';
+		echo '</thead>';
 
 		//label
 		echo '<tbody>';
@@ -47,130 +47,124 @@ class gp_rename{
 		echo '<td><input type="text" class="title_label gpinput" name="new_label" maxlength="100" size="50" value="'.$new_title.'" />';
 		echo '</td></tr>';
 
-		//slug
-		$attr = '';
-		$class = 'new_title';
-		$editable = true;
+
+		//slug (title)
+		$attr		= '';
+		$class		= 'new_title';
+		$editable	= true;
 
 		if( $title == admin_tools::LabelToSlug($label) ){
 			$attr = 'disabled="disabled" ';
 			$class .= ' sync_label';
 		}
-		echo '<tr><td class="formlabel">'.$langmessage['Slug/URL'].'</td>';
-		echo '<td><input type="text" class="'.$class.' gpinput" name="new_title" maxlength="100" size="50" value="'.htmlspecialchars($title).'" '.$attr.'/>';
-		if( $editable ){
-			echo ' <div class="label_synchronize">';
-			if( empty( $attr ) ){
-				echo '<a href="#">'.$langmessage['sync_with_label'].'</a>';
-				echo '<a href="#" class="slug_edit nodisplay">'.$langmessage['edit'].'</a>';
-			}else{
-				echo '<a href="#" class="nodisplay">'.$langmessage['sync_with_label'].'</a>';
-				echo '<a href="#" class="slug_edit">'.$langmessage['edit'].'</a>';
-			}
-			echo '</div>';
+		echo '<tr><td class="formlabel">'.$langmessage['Slug/URL'];
+		echo '</td><td>';
+		echo '<input type="text" class="'.$class.' gpinput" name="new_title" maxlength="100" size="50" value="'.htmlspecialchars($title).'" '.$attr.'/>';
+		echo ' <div class="label_synchronize">';
+		if( empty( $attr ) ){
+			echo '<a data-cmd="ToggleSync">'.$langmessage['sync_with_label'].'</a>';
+			echo '<a data-cmd="ToggleSync" class="slug_edit nodisplay">'.$langmessage['edit'].'</a>';
+		}else{
+			echo '<a data-cmd="ToggleSync" class="nodisplay">'.$langmessage['sync_with_label'].'</a>';
+			echo '<a data-cmd="ToggleSync" class="slug_edit">'.$langmessage['edit'].'</a>';
 		}
-		echo '</td>';
-		echo '</tr>';
+		echo '</div>';
+		echo '</td></tr>';
 
 
 
 		//browser title defaults to label
-			$attr = '';
-			$class = 'browser_title';
-			if( isset($title_info['browser_title']) ){
-				echo '<tr>';
-				$browser_title = $title_info['browser_title'];
-			}else{
-				echo '<tr class="nodisplay">';
-				$hidden_rows = true;
-				$browser_title = $label;
-				$attr = 'disabled="disabled" ';
-				$class .= ' sync_label';
-			}
-			echo '<td class="formlabel">';
-			echo $langmessage['browser_title'];
-			echo '</td>';
-			echo '<td>';
-			echo '<input type="text" class="'.$class.' gpinput" size="50" name="browser_title" value="'.$browser_title.'" '.$attr.'/>';
-			echo ' <div class="label_synchronize">';
-			if( empty( $attr ) ){
-				echo '<a href="#">'.$langmessage['sync_with_label'].'</a>';
-				echo '<a href="#" class="slug_edit nodisplay">'.$langmessage['edit'].'</a>';
-			}else{
-				echo '<a href="#" class="nodisplay">'.$langmessage['sync_with_label'].'</a>';
-				echo '<a href="#" class="slug_edit">'.$langmessage['edit'].'</a>';
-			}
-			echo '</div>';
-			echo '</td>';
-			echo '</tr>';
+		$attr		= '';
+		$class		= 'browser_title';
+		if( isset($title_info['browser_title']) ){
+			echo '<tr>';
+			$browser_title = $title_info['browser_title'];
+		}else{
+			echo '<tr class="nodisplay">';
+			$hidden_rows = true;
+			$browser_title = $label;
+			$attr = 'disabled="disabled" ';
+			$class .= ' sync_label';
+		}
+		echo '<td class="formlabel">';
+		echo $langmessage['browser_title'];
+		echo '</td><td>';
+		echo '<input type="text" class="'.$class.' gpinput" size="50" name="browser_title" value="'.$browser_title.'" '.$attr.'/>';
+		echo ' <div class="label_synchronize">';
+		if( empty( $attr ) ){
+			echo '<a data-cmd="ToggleSync">'.$langmessage['sync_with_label'].'</a>';
+			echo '<a data-cmd="ToggleSync" class="slug_edit nodisplay">'.$langmessage['edit'].'</a>';
+		}else{
+			echo '<a data-cmd="ToggleSync" class="nodisplay">'.$langmessage['sync_with_label'].'</a>';
+			echo '<a data-cmd="ToggleSync" class="slug_edit">'.$langmessage['edit'].'</a>';
+		}
+		echo '</div>';
+		echo '</td></tr>';
+
 
 		//meta keywords
-			$keywords = '';
-			if( isset($title_info['keywords']) ){
-				echo '<tr>';
-				$keywords = $title_info['keywords'];
-			}else{
-				echo '<tr class="nodisplay">';
-				$hidden_rows = true;
-			}
-			echo '<td class="formlabel">';
-			echo $langmessage['keywords'];
-			echo '</td>';
-			echo '<td>';
-			echo '<input type="text" class="gpinput" size="50" name="keywords" value="'.$keywords.'" />';
-			echo '</td>';
-			echo '</tr>';
+		$keywords = '';
+		if( isset($title_info['keywords']) ){
+			echo '<tr>';
+			$keywords = $title_info['keywords'];
+		}else{
+			echo '<tr class="nodisplay">';
+			$hidden_rows = true;
+		}
+		echo '<td class="formlabel">';
+		echo $langmessage['keywords'];
+		echo '</td><td>';
+		echo '<input type="text" class="gpinput" size="50" name="keywords" value="'.$keywords.'" />';
+		echo '</td></tr>';
+
 
 		//meta description
-			$description = '';
-			if( isset($title_info['description']) ){
-				echo '<tr>';
-				$description = $title_info['description'];
-			}else{
-				echo '<tr class="nodisplay">';
-				$hidden_rows = true;
-			}
-			echo '<td class="formlabel">';
-			echo $langmessage['description'];
-			echo '</td>';
-			echo '<td>';
-			//echo '<input type="text" class="gpinput" size="50" name="description" value="'.$description.'" />';
-			echo '<textarea class="gptextarea show_character_count" rows="2" cols="50" name="description">'.$description.'</textarea>';
+		$description = '';
+		if( isset($title_info['description']) ){
+			echo '<tr>';
+			$description = $title_info['description'];
+		}else{
+			echo '<tr class="nodisplay">';
+			$hidden_rows = true;
+		}
+		echo '<td class="formlabel">';
+		echo $langmessage['description'];
+		echo '</td><td>';
+		//echo '<input type="text" class="gpinput" size="50" name="description" value="'.$description.'" />';
+		echo '<textarea class="gptextarea show_character_count" rows="2" cols="50" name="description">'.$description.'</textarea>';
 
-			$count_label = sprintf($langmessage['_characters'],'<span>'.strlen($description).'</span>');
-			echo '<div class="character_count">'.$count_label.'</div>';
+		$count_label = sprintf($langmessage['_characters'],'<span>'.strlen($description).'</span>');
+		echo '<div class="character_count">'.$count_label.'</div>';
 
-			echo '</td>';
-			echo '</tr>';
+		echo '</td></tr>';
+
 
 		//robots
-			$rel = '';
-			if( isset($title_info['rel']) ){
-				echo '<tr>';
-				$rel = $title_info['rel'];
-			}else{
-				echo '<tr class="nodisplay">';
-				$hidden_rows = true;
-			}
-			echo '<td class="formlabel">';
-			echo $langmessage['robots'];
-			echo '</td>';
-			echo '<td>';
+		$rel = '';
+		if( isset($title_info['rel']) ){
+			echo '<tr>';
+			$rel = $title_info['rel'];
+		}else{
+			echo '<tr class="nodisplay">';
+			$hidden_rows = true;
+		}
+		echo '<td class="formlabel">';
+		echo $langmessage['robots'];
+		echo '</td><td>';
 
-			echo '<label>';
-			$checked = (strpos($rel,'nofollow') !== false) ? 'checked="checked"' : '';
-			echo '<input type="checkbox" name="nofollow" value="nofollow" '.$checked.'/> ';
-			echo '  Nofollow ';
-			echo '</label>';
+		echo '<label>';
+		$checked = (strpos($rel,'nofollow') !== false) ? 'checked="checked"' : '';
+		echo '<input type="checkbox" name="nofollow" value="nofollow" '.$checked.'/> ';
+		echo '  Nofollow ';
+		echo '</label>';
 
-			echo '<label>';
-			$checked = (strpos($rel,'noindex') !== false) ? 'checked="checked"' : '';
-			echo '<input type="checkbox" name="noindex" value="noindex" '.$checked.'/> ';
-			echo ' Noindex';
-			echo '</label>';
+		echo '<label>';
+		$checked = (strpos($rel,'noindex') !== false) ? 'checked="checked"' : '';
+		echo '<input type="checkbox" name="noindex" value="noindex" '.$checked.'/> ';
+		echo ' Noindex';
+		echo '</label>';
 
-			echo '</td>';
-			echo '</tr>';
+		echo '</td></tr>';
 
 		echo '</tbody>';
 		echo '</table>';
@@ -189,10 +183,10 @@ class gp_rename{
 		echo '</p>';
 
 		echo '<p>';
-			echo '<input type="hidden" name="cmd" value="renameit"/> ';
-			echo '<input type="submit" name="" value="'.$langmessage['save_changes'].'...'.'" class="gpsubmit" data-cmd="gppost"/>';
-			echo '<input type="button" class="admin_box_close gpcancel" name="" value="'.$langmessage['cancel'].'" />';
-			echo '</p>';
+		echo '<input type="hidden" name="cmd" value="renameit"/> ';
+		echo '<input type="submit" name="" value="'.$langmessage['save_changes'].'...'.'" class="gpsubmit" data-cmd="gppost"/>';
+		echo '<input type="button" class="admin_box_close gpcancel" name="" value="'.$langmessage['cancel'].'" />';
+		echo '</p>';
 
 		echo '</form>';
 		echo '</div>';

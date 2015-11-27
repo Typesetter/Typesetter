@@ -260,3 +260,23 @@ $gp.links.ck_save = gp_editing.save_changes;
 	}
 
 
+
+	/**
+	 * Warn before closing a page if an inline edit area has been changed
+	 *
+	 */
+	$gp.$win.on('beforeunload',function(){
+		if( !gp_editor ){
+			return;
+		}
+		if( typeof(gp_editor.checkDirty) === 'undefined' ){
+			return;
+		}
+
+		if( gp_editor.checkDirty() ){
+			return 'Unsaved changes will be lost.';
+		}
+		return;
+	});
+
+

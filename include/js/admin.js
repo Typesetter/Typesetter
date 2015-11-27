@@ -383,22 +383,23 @@ $gp.links.toplink = function(){
 
 	//must not be compact
 	var $this = $(this);
-	var panel = $('#simplepanel');
-	if( panel.hasClass('compact') ){
+	var $panel = $('#simplepanel');
+	if( $panel.hasClass('compact') ){
 		return;
 	}
 
-	var b = $this.next();
-	var is_visible = b.is(':visible') && (b.height() > 0);
+	var b		= $this.next();
+	gpui.vis	= !(b.is(':visible') && (b.height() > 0));
 
 	//hide visible areas
-	$('#simplepanel .panelgroup2:visible').slideUp(300);
-	gpui.vis = false;
+	$panel.find('.panelgroup2:visible').slideUp(300);
 
-	if( !is_visible ){
+	if( gpui.vis ){
 		gpui.vis = $this.data('arg');
 		b.slideDown(300);
 	}
+
+
 	$gp.SaveGPUI();
 };
 
@@ -571,7 +572,7 @@ $(function(){
 		return;
 	}
 
-	$('body').addClass('gpAdmin').trigger('AdminReady');
+	$('body').addClass('gpAdmin');
 
 	window.setTimeout(function(){
 		EditOutlines();
@@ -588,25 +589,6 @@ $(function(){
 	 */
 	$gp.$doc.on('keyup keypress paste change', '.show_character_count', function(){
 		$(this).parent().find('.character_count span').html( this.value.length );
-	});
-
-
-	/**
-	 * Warn before closing a page if an inline edit area has been changed
-	 *
-	 */
-	$gp.$win.on('beforeunload',function(){
-		if( !gp_editor ){
-			return;
-		}
-		if( typeof(gp_editor.checkDirty) === 'undefined' ){
-			return;
-		}
-
-		if( gp_editor.checkDirty() ){
-			return 'Unsaved changes will be lost.';
-		}
-		return;
 	});
 
 

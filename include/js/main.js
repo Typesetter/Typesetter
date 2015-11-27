@@ -387,7 +387,7 @@ $(function(){
 			if( ajaxOptions.data ){
 				debug_info.data = ajaxOptions.data.substr(0,100);
 			}
-			debug( debug_info );
+			console.log( debug_info );
 
 		// send to gpeasy bug tracker
 		}else if( debugjs === 'send' ){

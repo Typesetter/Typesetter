@@ -233,7 +233,6 @@
 			 *
 			 */
 			if( gp_editor.widthChanged ){
-				debug(gp_editor.widthChanged);
 
 				$('<div class="half_width">'+gplang.Width+': <input class="ck_input" type="text" name="width" /></div>')
 					.appendTo(option_area)

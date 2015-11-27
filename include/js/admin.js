@@ -4,36 +4,6 @@
 
 var gp_editor = false;
 
-var debug_area;
-function debug(arg){
-	if( !debug_area ){
-		debug_area = $('<div id="debug" style="position:absolute;top:0;left:0;background:#fff;padding:10px;z-index:99999;border:1px solid #333;max-width:30%;white-space:pre-wrap">').prependTo('body');
-	}
-	debug_area.prepend('<div>'+LOGO(arg)+'</div><hr/>');
-}
-
-function LOGO(obj){
-	var i,
-		type = typeof(obj),
-		result = "\n<br/> ("+type+') ';
-
-	if( type === 'object' ){
-		for(i in obj){
-			if( obj.hasOwnProperty(i) ){
-				result += "\n<b>"+i+ '</b> = ';
-				try{
-					result += $gp.htmlchars(obj[i]);
-				}catch(m){
-					result += " -- not allowed -- ";
-				}
-			}
-		}
-	}else{
-		result += $gp.htmlchars(obj);
-	}
-	return result;
-}
-
 
 /**
  * Get the coordinates for positioning editable area overlays
@@ -111,8 +81,6 @@ $gp.links.inline_edit_generic = function(evt,rel){
 			alert($gp.error);
 			$gp.loaded();
 		}
-		//for debugging
-		//debug(data);
 	});
 };
 
@@ -621,8 +589,7 @@ $(function(){
 		$('#editable_areas_list').one('mouseenter.edb touchstart.edb',EditableBar);
 
 		UIEffects();
-	}
-	,500);
+	},1);
 
 
 	/**

@@ -33,17 +33,6 @@ $gp.div = function(id){
 };
 
 
-/**
- * Inline admin box
- * @deprecated 3.6
- *
- */
-$gp.links.iadmin_box = function(evt,arg){
-	evt.preventDefault();
-	$gp.CopyVals(arg,this);
-	$gp.AdminBoxC($(arg),'inline');
-};
-
 
 /**
  * Dynamically load inline editing

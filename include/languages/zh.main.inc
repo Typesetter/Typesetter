@@ -257,6 +257,7 @@ $langmessage = array (
 	'combinecss'                     => '合併 CSS 檔',
 	'etag_headers'                   => 'Etag 標頭檔',
 	'resize_images'                  => '自動縮放圖像',
+	'space_char'                     => 'URL Space Character',
 	'combinejs'                      => '合併 JS 檔',
 	'Editable Areas'                 => '可編輯區',
 	'showlogin'                      => '顯示登入連結',

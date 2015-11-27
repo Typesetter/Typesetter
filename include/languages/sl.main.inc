@@ -257,6 +257,7 @@ $langmessage = array (
 	'combinecss'                     => 'Združi CSS datoteke',
 	'etag_headers'                   => 'Etag glave',
 	'resize_images'                  => 'Avtomatično spremeni velikost slik',
+	'space_char'                     => 'URL Space Character',
 	'combinejs'                      => 'Združi JS datoteke',
 	'Editable Areas'                 => 'Omogočena področja za urejanje',
 	'showlogin'                      => 'Prikaži povezavo Prijava',

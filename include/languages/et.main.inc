@@ -258,6 +258,7 @@ $langmessage = array (
 	'combinecss'                     => 'Kombineeri CSS failid',
 	'etag_headers'                   => 'Etag päised',
 	'resize_images'                  => 'Muuda automaatselt piltide mõõtmed',
+	'space_char'                     => 'URL Space Character',
 	'combinejs'                      => 'Kombineeri JS failid',
 	'Editable Areas'                 => 'Redigeeritavad alad',
 	'showlogin'                      => 'Näita sisselogimise link',

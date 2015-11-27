@@ -257,6 +257,7 @@ $langmessage = array (
 	'combinecss'                     => 'Sambind CSS fílur',
 	'etag_headers'                   => 'Etag Headers',
 	'resize_images'                  => 'Auto-Skalera myndir',
+	'space_char'                     => 'URL Space Character',
 	'combinejs'                      => 'Sambind JS fílur',
 	'Editable Areas'                 => 'Rættingarloyvd øki',
 	'showlogin'                      => 'Vís Innritingar Leinki',

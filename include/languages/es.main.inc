@@ -257,6 +257,7 @@ $langmessage = array (
 	'combinecss'                     => 'Combinar los archivos CSS',
 	'etag_headers'                   => 'Encabezados Etag',
 	'resize_images'                  => 'Tamaño Automático de Imágenes',
+	'space_char'                     => 'URL Space Character',
 	'combinejs'                      => 'Combinar los archivos JS',
 	'Editable Areas'                 => 'Areas Editables',
 	'showlogin'                      => 'Mostrar Enlace a Login',

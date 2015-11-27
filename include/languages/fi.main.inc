@@ -257,6 +257,7 @@ $langmessage = array (
 	'combinecss'                     => 'Yhdistä CSS-tiedostot',
 	'etag_headers'                   => 'ETag-otsakkeet',
 	'resize_images'                  => 'Muuta kuvien kokoa automaattisesti',
+	'space_char'                     => 'URL Space Character',
 	'combinejs'                      => 'Yhdistä JS-tiedostot',
 	'Editable Areas'                 => 'Muokattavat alueet',
 	'showlogin'                      => 'Näytä sisäänkirjautumislinkki',

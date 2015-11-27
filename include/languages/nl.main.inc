@@ -257,6 +257,7 @@ $langmessage = array (
 	'combinecss'                     => 'Combineer CSS-bestanden',
 	'etag_headers'                   => 'Etag Headers',
 	'resize_images'                  => 'Automatisch schalen van afbeeldingen',
+	'space_char'                     => 'URL Space Character',
 	'combinejs'                      => 'Combineer JS-bestanden',
 	'Editable Areas'                 => 'Bewerkbare gebieden',
 	'showlogin'                      => 'Toon Login link',

@@ -257,6 +257,7 @@ $langmessage = array (
 	'combinecss'                     => 'Kombinuoti CSS bylas',
 	'etag_headers'                   => 'Etag direktyva',
 	'resize_images'                  => 'Auto-Resize Images',
+	'space_char'                     => 'URL Space Character',
 	'combinejs'                      => 'Kombinuoti JS bylas',
 	'Editable Areas'                 => 'Redaguojamos sritys',
 	'showlogin'                      => 'Rodyti prisijungimo nuorodą',

@@ -13,7 +13,6 @@ class admin_configuration{
 		global $langmessage,$page;
 
 		$page->ajaxReplace = array();
-		//$page->head_js[] = '/include/js/x_forms.js';
 
 
 		//add examples to smtp_hosts
@@ -55,6 +54,7 @@ class admin_configuration{
 						'combinecss'			=> 'boolean',
 						'etag_headers'			=> 'boolean',
 						'resize_images'			=> 'boolean',
+						'space_char'			=> array('_'=>'Undersorce "_"','-'=>'Dash "-"'),
 
 
 						/* Contact Configuration */

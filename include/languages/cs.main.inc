@@ -257,6 +257,7 @@ $langmessage = array (
 	'combinecss'                     => 'Zkombinovat CSS soubory',
 	'etag_headers'                   => 'Etag hlavičky',
 	'resize_images'                  => 'Automaticky roztáhnout obrázky',
+	'space_char'                     => 'URL Space Character',
 	'combinejs'                      => 'Zkombinovat JS soubory',
 	'Editable Areas'                 => 'Editovatelní oblasti',
 	'showlogin'                      => 'Ukázat linku pro přihlášení',

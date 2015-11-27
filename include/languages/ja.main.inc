@@ -259,6 +259,7 @@ $langmessage = array (
 	'combinecss'                     => 'CSS ファイルをまとめる',
 	'etag_headers'                   => 'Etag Headers',
 	'resize_images'                  => 'Auto-Resize Images',
+	'space_char'                     => 'URL Space Character',
 	'combinejs'                      => 'JS ファイルをまとめる',
 	'Editable Areas'                 => 'Editable Areas',
 	'showlogin'                      => 'Show Login Link',

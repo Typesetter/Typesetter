@@ -257,6 +257,7 @@ $langmessage = array (
 	'combinecss'                     => 'CSS állományok egyesítése',
 	'etag_headers'                   => 'Etag fejlécek',
 	'resize_images'                  => 'Képek automatikus átméretezése',
+	'space_char'                     => 'URL Space Character',
 	'combinejs'                      => 'JS állományok egyesítése',
 	'Editable Areas'                 => 'Szerkeszthető területek',
 	'showlogin'                      => 'Jelenjen meg a "Bejelentkezés" hivatkozás',

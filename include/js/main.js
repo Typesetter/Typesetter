@@ -419,8 +419,11 @@ $(function(){
 	 */
 	$document.on('click', 'input,button',function(evt){
 
-		verify(this.form);
 		var $this = $(this);
+
+		//add a unique verifiable string to confirm posts are
+		$(this.form).filter('[method=post]').filter(':not(:has(input[type=hidden][name=verified]))').append('<input type="hidden" name="verified" value="'+post_nonce+'" />');
+
 
 		//html5 validation
 		if( $this.hasClass('gpvalidate') && typeof(this.form.checkValidity) == 'function' && !this.form.checkValidity() ){
@@ -458,16 +461,6 @@ $(function(){
 
 		return true;
 	});
-
-	$document.on('submit','form',function(){
-		verify(this);
-	});
-
-	//add a unique verifiable string to confirm posts are
-	//called twice because of bug in jquery 1.4.2 (live) and IE
-	function verify(a){
-		$(a).filter('[method=post]').filter(':not(:has(input[type=hidden][name=verified]))').append('<input type="hidden" name="verified" value="'+post_nonce+'" />');
-	}
 
 
 	//expanding menus
@@ -553,8 +546,6 @@ $(function(){
 		return false;
 	});
 
-
-	$('body').trigger('gpReady');
 
 	console.timeEnd('onload');
 });

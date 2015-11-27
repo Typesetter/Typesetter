@@ -856,7 +856,6 @@ $(function(){
 				.addClass('gp_hover')
 				.stop(true,true)
 				.show();
-				;
 
 			//show the overlay
 			highlight_box.stop(true,true).fadeIn();
@@ -956,8 +955,6 @@ $(function(){
 				}
 			},1);
 		});
-
-
 
 
 	}
@@ -1269,87 +1266,4 @@ $gp.response.renameprep = function(){
 
 };
 
-
-
-
-function SimpleResize(resize_area,options){
-
-	var defaults = {
-		max_w:10000,
-		min_w:0,
-		finish:function(area,width){}
-	};
-
-	options = $.extend({}, defaults, options);
-	var $resize_area = $(resize_area);
-	if( $resize_area.length < 1 ){
-		return;
-	}
-
-
-	$('<span class="gp_admin_resize"></span><span class="gp_admin_resize gp_resize_right"></span>')
-		.appendTo($resize_area)
-		.on('mousedown.sres',function(evt){
-
-			if( evt.which != 1 ) return;
-
-			var start_x = evt.clientX;
-			var new_w = $resize_area.width(), start_w = new_w;
-			var new_l = $resize_area.position().left, start_l = new_l;
-			var left_right = $(this).hasClass('gp_resize_right');
-			var time = new Date();
-
-
-			evt.preventDefault();
-
-			//
-			$('<div style="position:fixed;top:0;right:0;bottom:0;left:0;cursor:e-resize;z-index:999000;">')
-				.appendTo('body')
-				.on('mousemove.sres',function(evt){
-
-				//evt.preventDefault();
-
-				//reduce the number of calls
-				var new_time = new Date();
-				var diff = new_time - time;
-				if( diff < 200 ){
-					return;
-				}
-				time = new_time;
-
-
-				if( left_right ){
-					new_w = evt.clientX - start_x + start_w;
-				}else{
-					new_l = evt.clientX - start_x + start_l;
-					new_w = start_x - evt.clientX + start_w;
-
-					new_l = Math.max(0,new_l);
-					$resize_area.css({left:new_l});
-				}
-
-				new_w = Math.min(options.max_w,new_w);
-				new_w = Math.max(options.min_w,new_w);
-				$resize_area
-					.width(new_w)
-					.resize();
-
-				return false;
-
-			}).off('mouseup.sres').on('mouseup.sres',function(evt){
-
-				evt.preventDefault();
-				//$('body').enableSelection()
-				$(this).off('mousemove.sres mouseup.sres').remove()
-
-				options.finish.call($resize_area,new_w,new_l);
-
-				return false;
-			});
-
-			return false;
-		});
-
-
-}
 

@@ -218,6 +218,9 @@ class gp_rename{
 	static function RenameFile($title){
 		global $langmessage, $page, $gp_index, $gp_titles;
 
+		$page->ajaxReplace = array();
+
+
 		//change the title
 		$title = gp_rename::RenameFileWorker($title);
 		if( $title === false ){

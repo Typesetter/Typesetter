@@ -45,7 +45,9 @@ class SetupSite{
 			return;
 		}
 
-		$page->css_user[] = '/data/_addoncode/'.$addonFolderName.'/multi_site.css';
+		gpPlugin::css('multi_site.less',false);
+
+		//$page->css_user[] = '/data/_addoncode/'.$addonFolderName.'/multi_site.css';
 		//$page->head_js[] = '/data/_addoncode/'.$addonFolderName.'/multi_site.js';
 		$page->head_js[] = '/include/js/admin_users.js';
 
@@ -171,9 +173,7 @@ class SetupSite{
 
 		$args = $_POST + $this->siteData['sites'][$site] + array('url'=>'http://');
 
-		echo '<div id="install_wrap">';
 		echo '<div id="install_step">';
-		echo '<div id="install_step_inner">';
 		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="post">';
 		echo '<table width="100%">';
 
@@ -219,8 +219,6 @@ class SetupSite{
  		echo '</p>';
 
 		echo '</form>';
-		echo '</div>';
-		echo '</div>';
 		echo '</div>';
 	}
 
@@ -333,8 +331,7 @@ class SetupSite{
 
 	function FrontPage(){
 		global $langmessage;
-		echo '<div id="install_wrap">';
-		echo '<h2>gpEasy Multi-Site Plugin</h2>';
+		echo '<h1>gpEasy Multi-Site Plugin</h1>';
 
 		echo '<div class="sm">';
 		echo 'Easily add multiple installations of gpEasy to your server.';
@@ -349,32 +346,30 @@ class SetupSite{
 		echo '</div>';
 
 		$this->ShowSimple();
-		echo '</div>';
 	}
 
 
 	function About($full){
 		global $langmessage;
 
-		echo '<div id="install_wrap">';
-		echo '<h2>';
+		echo '<h1>';
 		echo $langmessage['about'];
-		echo '</h2>';
+		echo '</h1>';
 		echo '<p>';
 		echo $langmessage['easily add installations'];
 		echo '</p>';
 
-		echo ' <h2>';
+		echo ' <h1>';
 		echo $langmessage['Notes'];
-		echo '</h2> ';
+		echo '</h1> ';
 		echo '<p>';
 		echo $langmessage['multi_site_notes'];
 		echo '</p>';
 
 
-		echo '<h2>';
+		echo '<h1>';
 		echo common::Link('Admin_Site_Setup',$langmessage['Settings'],'cmd=settings');
-		echo '</h2>';
+		echo '</h1>';
 
 		echo '<dl>';
 		echo '<dt>Service Provider ID</dt>';
@@ -390,7 +385,6 @@ class SetupSite{
  		echo common::Link('Admin_Site_Setup',$langmessage['back']);
  		echo '</p>';
 
-		echo '</div>';
 	}
 
 
@@ -467,8 +461,7 @@ class SetupSite{
 		$ftp_vals = $_POST + $config + array('ftp_server'=>gpftp::GetFTPServer(),'ftp_user'=>'');
 
 
-		echo '<div id="install_wrap">';
-		echo '<h2>Settings</h2>';
+		echo '<h1>Settings</h1>';
 		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="post">';
 		echo '<table class="bordered" width="100%">';
 
@@ -536,8 +529,6 @@ class SetupSite{
 
 
 		echo '</form>';
-		echo '</div>';
-
 	}
 
 	function ShowSimple(){
@@ -630,7 +621,6 @@ class SetupSite{
 			return;
 		}
 
-		echo '<div id="install_wrap">';
 		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="get">';
 		echo '<table class="bordered">';
 		echo '<tr>';
@@ -692,7 +682,6 @@ class SetupSite{
  		echo common::Link('Admin_Site_Setup',$langmessage['back']);
  		echo '</p>';
 
-		echo '</div>';
 	}
 
 	function Search(&$array){
@@ -1099,35 +1088,11 @@ class SetupSite{
 
 		$ready = true;
 
-		echo '<div id="install_wrap">';
-		echo '<h2>Installation</h2>';
+		echo '<h1>Installation</h1>';
 
-		echo '<div id="install_status">';
-		echo '<table  cellpadding="0" cellspacing="0">';
+		$this->InstallStatus_Summary($cmd, $ready);
 
-		$ready = $this->InstallStatus_Step($cmd,$ready,'Destination','new_destination','folder');
-		$ready = $this->InstallStatus_Step($cmd,$ready,'Themes','new_themes','themes');
-		$this->InstallStatus_Step($cmd,$ready,'Plugins','new_plugins','plugins','plugins_submitted');
-
-		echo '<tr><th>Status</th>';
-			if( $ready ){
-				echo '<td id="install_state" class="ready">';
-				$query_array = array('cmd'=>'new_install');
-				echo $this->InstallLink('Ready To Install',$query_array);
-				if( $cmd === false ){
-					$cmd = 'new_install';
-				}
-			}else{
-				echo '<td id="install_state" class="not_ready">';
-				echo 'Not Ready to Install';
-			}
-
-		echo '</td></tr>';
-		echo '</table>';
-		echo '</div>';
-
-
-		echo '<div id="install_step"><div id="install_step_inner">';
+		echo '<div id="install_step">';
 		switch($cmd){
 
 			case 'subfolder':
@@ -1149,9 +1114,38 @@ class SetupSite{
 			break;
 
 		}
-		echo '</div></div>';
-
 		echo '</div>';
+	}
+
+	function InstallStatus_Summary($cmd, $ready){
+		//echo '<div class="col-sm-4">';
+		echo '<div id="install_status">';
+		echo '<table cellpadding="0" cellspacing="0">';
+
+		$ready = $this->InstallStatus_Step($cmd,$ready,'Destination','new_destination','folder');
+		$ready = $this->InstallStatus_Step($cmd,$ready,'Themes','new_themes','themes');
+		$this->InstallStatus_Step($cmd,$ready,'Plugins','new_plugins','plugins','plugins_submitted');
+
+		echo '<tr><th>Status</th>';
+			if( $ready ){
+				echo '<td id="install_state" class="ready">';
+				$query_array = array('cmd'=>'new_install');
+				echo $this->InstallLink('Ready To Install',$query_array);
+				if( $cmd === false ){
+					$cmd = 'new_install';
+				}
+			}else{
+				echo '<td id="install_state" class="not_ready">';
+				echo 'Not Ready to Install';
+			}
+
+		echo '</td></tr>';
+		echo '</table>';
+		echo '</div>';
+		//echo '</div>';
+
+
+
 	}
 
 
@@ -1296,6 +1290,11 @@ class SetupSite{
 		$this->InstallFolder($folder);
 	}
 
+
+	/**
+	 * Display form for selecting which themes should be included
+	 *
+	 */
 	function NewThemes($values=array()){
 		global $rootDir;
 
@@ -1304,10 +1303,6 @@ class SetupSite{
 		}
 		$values += array('themes'=>array());
 
-
-		//
-		//	Themes
-		//
 
 
 		$all_themes = false;
@@ -1318,35 +1313,27 @@ class SetupSite{
 		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="post">';
 		echo '<table style="width:100%">';
 		echo '<tr>';
-			echo '<th>Select Themes</th>';
-			echo '</tr>';
-		echo '<tr>';
-			echo '<td class="all_checkboxes">';
+		echo '<th>Select Themes</th>';
+		echo '</tr>';
+		echo '<tr><td class="all_checkboxes">';
 			echo '<div>';
 			echo 'Select which themes will be available to the new installation. ';
 			echo '</div>';
 			echo '<br/>';
 
 			echo '<table border="0" cellpadding="7">';
-			echo '<tr>';
-			echo '<td>';
+			echo '<tr><td>';
 			$checked = '';
 			if( $all_themes ){
 				$checked = ' checked="checked" ';
 			}
 			echo '<label class="select_all"><input type="checkbox" class="select_all" name="install[all_themes]" value="all" '.$checked.'/> All Themes</label> ';
-			echo '</td>';
-			echo '</tr>';
-			echo '<tr>';
-
-			echo '<td style="border-top:1px solid #ccc;border-bottom:1px solid #ccc;vertical-align:middle;font-weight:bold;">';
+			echo '</td></tr>';
+			echo '<tr><td style="border-top:1px solid #ccc;border-bottom:1px solid #ccc;vertical-align:middle;font-weight:bold;">';
 			echo ' OR ';
-			echo '</td>';
+			echo '</td></tr>';
 
-			echo '</tr>';
-			echo '<tr>';
-
-			echo '<td>';
+			echo '<tr><td>';
 
 
 			$default_theme = explode('/',gp_default_theme);
@@ -1355,7 +1342,7 @@ class SetupSite{
 			echo '<input type="hidden" name="install[themes][]" value="'.$default_theme[0].'" />';
 			echo '<label class="all_checkbox">';
 			echo '<input type="checkbox" name="install[themes][]" value="'.$default_theme[0].'" checked="checked" disabled="disabled" />';
-			echo $default_theme[0];
+			echo '<span>'.$default_theme[0].'</span>';
 			echo '</label>';
 
 			//all other available themes
@@ -1377,7 +1364,9 @@ class SetupSite{
 
 				echo '<label class="all_checkbox">';
 				echo '<input type="checkbox" name="install[themes]['.$i++.']" value="'.htmlspecialchars($name).'" '.$checked.'/>';
+				echo '<span>';
 				echo str_replace('_',' ',$name);
+				echo '</span>';
 				echo '</label>';
 			}
 			echo '</p>';
@@ -1426,7 +1415,9 @@ class SetupSite{
 				}
 				echo '<label class="all_checkbox">';
 				echo '<input type="checkbox" name="install[plugins]['.$i++.']" value="'.htmlspecialchars($addon).'"'.$checked.'/>';
+				echo '<span>';
 				echo str_replace('_',' ',$addon);
+				echo '</span>';
 				echo '</label>';
 			}
 
@@ -1665,7 +1656,7 @@ class SetupSite{
 		echo $this->InstallFolder($folder);
 		$content = ob_get_clean();
 
-		$page->ajaxReplace[] = array('inner','#install_step_inner',$content);
+		$page->ajaxReplace[] = array('inner','#install_step',$content);
 
 		//save the folder location
 		if( !isset($this->siteData['last_folder']) || $this->siteData['last_folder'] !== $folder ){

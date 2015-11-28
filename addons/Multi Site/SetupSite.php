@@ -331,11 +331,13 @@ class SetupSite{
 
 	function FrontPage(){
 		global $langmessage;
-		echo '<h1>gpEasy Multi-Site Plugin</h1>';
+		echo '<h1>Multi-Site</h1>';
 
-		echo '<div class="sm">';
-		echo 'Easily add multiple installations of gpEasy to your server.';
+		echo '<hr/>';
+		echo '<div class="lead">';
+		echo 'Add multiple installations of gpEasy to your server.';
 		echo '</div>';
+		echo '<hr/>';
 
 		echo '<div id="ms_links">';
 		echo common::Link('Admin_Site_Setup',$langmessage['new_installation'],'cmd=new');
@@ -349,34 +351,32 @@ class SetupSite{
 	}
 
 
+	/**
+	 * About this plugin
+	 *
+	 */
 	function About($full){
 		global $langmessage;
 
-		echo '<h1>';
-		echo $langmessage['about'];
-		echo '</h1>';
-		echo '<p>';
+		echo '<h1>'.$langmessage['about'].'</h1>';
+		echo '<hr/>';
+		echo '<p class="lead">';
 		echo $langmessage['easily add installations'];
-		echo '</p>';
-
-		echo ' <h1>';
-		echo $langmessage['Notes'];
-		echo '</h1> ';
-		echo '<p>';
 		echo $langmessage['multi_site_notes'];
 		echo '</p>';
 
+		echo '<br/>';
 
-		echo '<h1>';
+		echo '<h2>';
 		echo common::Link('Admin_Site_Setup',$langmessage['Settings'],'cmd=settings');
-		echo '</h1>';
+		echo '</h3>';
 
-		echo '<dl>';
+		echo '<dl class="lead">';
 		echo '<dt>Service Provider ID</dt>';
 		echo '<dd>When your provider id is entered, <a href="http://www.gpeasy.com/Special_Services">gpEasy.com Services</a> can attribute each installation to your service.</dd>';
 		echo '</dl>';
 
-		echo '<dl>';
+		echo '<dl class="lead">';
 		echo '<dt>Service Provider Name</dt>';
 		echo '<dd>Displayed on the site map of your hosted installations.</dd>';
 		echo '</dl>';
@@ -1086,11 +1086,9 @@ class SetupSite{
 
 		$this->CheckFolder();
 
-		$ready = true;
-
 		echo '<h1>Installation</h1>';
 
-		$this->InstallStatus_Summary($cmd, $ready);
+		$this->InstallStatus_Steps($cmd);
 
 		echo '<div id="install_step">';
 		switch($cmd){
@@ -1117,36 +1115,81 @@ class SetupSite{
 		echo '</div>';
 	}
 
-	function InstallStatus_Summary($cmd, $ready){
-		//echo '<div class="col-sm-4">';
+	function InstallStatus_Steps(&$cmd){
+		echo '<hr/>';
 		echo '<div id="install_status">';
-		echo '<table cellpadding="0" cellspacing="0">';
 
+		echo '<ul>';
+		$ready = true;
 		$ready = $this->InstallStatus_Step($cmd,$ready,'Destination','new_destination','folder');
 		$ready = $this->InstallStatus_Step($cmd,$ready,'Themes','new_themes','themes');
 		$this->InstallStatus_Step($cmd,$ready,'Plugins','new_plugins','plugins','plugins_submitted');
 
-		echo '<tr><th>Status</th>';
-			if( $ready ){
-				echo '<td id="install_state" class="ready">';
-				$query_array = array('cmd'=>'new_install');
-				echo $this->InstallLink('Ready To Install',$query_array);
-				if( $cmd === false ){
-					$cmd = 'new_install';
+
+		if( $ready ){
+			echo '<li id="install_state" class="ready">';
+			$query_array = array('cmd'=>'new_install');
+			echo $this->InstallLink('Ready To Install',$query_array);
+			if( $cmd === false ){
+				$cmd = 'new_install';
+			}
+			echo '</li>';
+		}else{
+			echo '<li id="install_state">';
+			echo '<a>Not Ready to Install</a>';
+			echo '</li>';
+		}
+
+		echo '</ul>';
+
+		echo '</div>';
+		echo '<hr/>';
+	}
+
+
+	/**
+	 * Show an installation step and it's status
+	 *
+	 */
+	function InstallStatus_Step(&$cmd,$ready,$label,$step_cmd,$step_key,$step_key2=false){
+
+		$class = 'ready';
+
+		if( isset($_REQUEST['install'][$step_key]) ){
+			$step_value = $_REQUEST['install'][$step_key];
+			if( is_array($step_value) ){
+				$link_label = implode(', ',$step_value);
+				if( strlen($link_label) > 40 ){
+					$link_label = substr($link_label,0,40).'...';
 				}
 			}else{
-				echo '<td id="install_state" class="not_ready">';
-				echo 'Not Ready to Install';
+				$link_label = $step_value;
 			}
+		}elseif( $step_key2 && isset($_REQUEST['install'][$step_key2]) ){
+			$link_label = 'Empty';
+		}else{
+			$ready			= false;
+			$query_array	= array('cmd'=>'new_destination');
+			$link_label		= 'Not Set';
+			$class			= '';
 
-		echo '</td></tr>';
-		echo '</table>';
-		echo '</div>';
-		//echo '</div>';
+			if( !$cmd ){
+				$cmd = $step_cmd;
+			}
+		}
 
+		if( empty($link_label) ){
+			$link_label = 'Empty';
+		}
+		$query_array = array('cmd'=>$step_cmd);
 
+		echo '<li class="'.$class.'">';
+		echo $this->InstallLink($label.': '.$link_label,$query_array);
+		echo '</li>';
 
+		return $ready;
 	}
+
 
 
 	/**
@@ -1218,48 +1261,6 @@ class SetupSite{
 		//message($langmessage['not_created'].' (FTP Connection Failed)');
 		unset($_REQUEST['install']['folder']);
 		message($message);
-	}
-
-	/**
-	 * Show an installation step and it's status
-	 *
-	 */
-	function InstallStatus_Step(&$cmd,$ready,$label,$step_cmd,$step_key,$step_key2=false){
-
-		echo '<tr><th>';
-		echo $label;
-		echo '</th><td>';
-		if( isset($_REQUEST['install'][$step_key]) ){
-			$step_value = $_REQUEST['install'][$step_key];
-			if( is_array($step_value) ){
-				$link_label = implode(', ',$step_value);
-				if( strlen($link_label) > 40 ){
-					$link_label = substr($link_label,0,40).'...';
-				}
-			}else{
-				$link_label = $step_value;
-			}
-		}elseif( $step_key2 && isset($_REQUEST['install'][$step_key2]) ){
-			$link_label = 'Empty';
-		}else{
-			$ready = false;
-			$query_array = array('cmd'=>'new_destination');
-			$link_label = 'Not Set';
-
-			if( !$cmd ){
-				$cmd = $step_cmd;
-			}
-		}
-
-		if( empty($link_label) ){
-			$link_label = 'Empty';
-		}
-		$query_array = array('cmd'=>$step_cmd);
-		echo $this->InstallLink($link_label,$query_array);
-		echo '</td>';
-		echo '</tr>';
-
-		return $ready;
 	}
 
 	function NewInstall(){

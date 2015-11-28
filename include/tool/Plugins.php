@@ -50,16 +50,25 @@ class gpPlugin{
 	static function css($file, $combine = true){
 		global $page;
 
-		$file 				= common::WinPath( $file );
+		$file 					= common::WinPath( $file );
 
 		if( $combine ){
-			$page->css_admin[] = self::$current['code_folder_part'].'/'.ltrim($file,'/');
-		}else{
-			$url = self::$current['code_folder_rel'].'/'.ltrim($file,'/');
-			$page->head .= "\n".'<link rel="stylesheet" type="text/css" href="'.$url.'"/>';
+			$page->css_admin[] 	= self::$current['code_folder_part'].'/'.ltrim($file,'/');
+			return self::$current['code_folder_part'].'/'.ltrim($file,'/');
 		}
 
-		return self::$current['code_folder_part'].'/'.ltrim($file,'/');
+
+		//less file
+		if( substr($file,-5) === '.less' ){
+			$full_path			= self::$current['code_folder_full'].'/'.ltrim($file,'/');
+			$path				= gpOutput::CacheLess($full_path);
+		}else{
+			$path				= self::$current['code_folder_part'].'/'.ltrim($file,'/');
+		}
+
+		$page->head			.= "\n".'<link rel="stylesheet" type="text/css" href="'.common::GetDir($path).'"/>';
+
+		return $path;
 	}
 
 

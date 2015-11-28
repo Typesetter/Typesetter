@@ -2288,7 +2288,7 @@ class gpOutput{
 
 
 			//if it's not a less file
-			if( strpos($file,'.less') !== (strlen($file)-5) ){
+			if( substr($file,-5) !== '.less' ){
 				continue;
 			}
 

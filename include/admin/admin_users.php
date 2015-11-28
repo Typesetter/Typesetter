@@ -590,7 +590,10 @@ class admin_users{
 			$current = ','.$current.',';
 		}
 
-		echo '<p><label class="select_all"><input type="checkbox" class="select_all" name="grant_all" value="all" '.$checked.'/> '.$langmessage['All'].'</label></p>';
+		echo '<p><label class="select_all">';
+		echo '<input type="checkbox" class="select_all" name="grant_all" value="all" '.$checked.'/>';
+		echo $langmessage['All'];
+		echo '</label></p>';
 
 		foreach($this->possible_permissions as $permission => $label){
 			$checked = '';
@@ -600,7 +603,10 @@ class admin_users{
 				$checked = ' checked="checked" ';
 			}
 
-			echo '<label class="all_checkbox"><input type="checkbox" name="grant[]" value="'.$permission.'" '.$checked.'/> '.$label.'</label> ';
+			echo '<label class="all_checkbox">';
+			echo '<input type="checkbox" name="grant[]" value="'.$permission.'" '.$checked.'/>';
+			echo '<span>'.$label.'</span>';
+			echo '</label> ';
 		}
 
 		echo '</td></tr>';
@@ -632,7 +638,10 @@ class admin_users{
 				$checked = ' checked="checked" ';
 			}
 
-			echo '<label class="all_checkbox"><input type="checkbox" name="titles[]" value="'.$index.'" '.$checked.'/> '.strip_tags($label).'</label> ';
+			echo '<label class="all_checkbox">';
+			echo '<input type="checkbox" name="titles[]" value="'.$index.'" '.$checked.'/>';
+			echo '<span>'.strip_tags($label).'</span>';
+			echo '</label> ';
 		}
 
 		echo '</div>';
@@ -793,7 +802,7 @@ class admin_users{
 			}
 			echo '<label class="all_checkbox">';
 			echo '<input type="checkbox" name="users['.htmlspecialchars($username).']" value="'.htmlspecialchars($username).'" '.$attr.'/>';
-			echo $username;
+			echo '<span>'.$username.'</span>';
 			echo '</label> ';
 		}
 		echo '</div>';

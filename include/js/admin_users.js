@@ -26,32 +26,29 @@ $(function(){
 	});
 
 	$('label.all_checkbox').click(function(evt){
-		//evt.preventDefault();
 		var a = contained(this);
 		CheckBoxes(a);
 	});
-	Setup();
-
-	//cannot just hide() input because of explorer
-	function Setup(){
-		$('.all_checkboxes').addClass('checkboxes_init').each(function(){
-			var area = $(this);
-			CheckBoxes(area);
-
-			//find reset buttons in the form
-			area
-				.closest('form')
-				.find('input[type="reset"]')
-				.unbind('click.checkboxes')
-				.bind('click.checkboxes',function(){
-					window.setTimeout(function(){
-						Reset();
-					},50);
-				});
 
 
-		});
-	}
+	$('.all_checkboxes').each(function(){
+		var area = $(this);
+		CheckBoxes(area);
+
+		//find reset buttons in the form
+		area
+			.closest('form')
+			.find('input[type="reset"]')
+			.unbind('click.checkboxes')
+			.bind('click.checkboxes',function(){
+				window.setTimeout(function(){
+					Reset();
+				},50);
+			});
+
+
+	});
+
 
 	function Reset(){
 		$('.all_checkboxes').each(function(){
@@ -66,11 +63,8 @@ $(function(){
 
 		//update all the checkboxes
 		container.find('label.all_checkbox input').each(function(a,b){
-			if( b.checked ){
-				$(b.parentNode).addClass('checked').removeClass('unchecked');
-			}else{
+			if( !b.checked ){
 				all = false;
-				$(b.parentNode).removeClass('checked').addClass('unchecked');
 			}
 		});
 

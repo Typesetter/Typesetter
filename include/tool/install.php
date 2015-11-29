@@ -556,14 +556,12 @@ class Install_Tools{
 		$GLOBALS['config']['homepath'] = false; //to prevent a warning from absoluteUrl()
 		$file = $destination.'/.htaccess';
 
-		$contents = '';
 		$original_contents = false;
 		if( file_exists($file) ){
-			$original_contents = $contents = file_get_contents($file);
+			$original_contents = file_get_contents($file);
 		}
 
-		admin_permalinks::StripRules($contents); //the .htaccess file should not contain any rules
-		$contents .= admin_permalinks::Rewrite_Rules(true,$dirPrefix);
+		$contents = admin_permalinks::Rewrite_Rules(true, $dirPrefix, $original_contents );
 
 		if( !isset($config['useftp']) ){
 			//echo 'not using ftp';

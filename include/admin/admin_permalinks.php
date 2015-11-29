@@ -8,22 +8,30 @@ class admin_permalinks{
 
 	var $rule_file_name		= '';
 	var $rule_file			= '';
-	var $changed_to_hide	= false;
+	var $undo_if_failed		= false;
+	var $server_name;
+	var $www_avail			= false;
+	var $www_setting		= null;
+	var $orig_rules			= false;
+	var $new_rules			= '';
 
 
 	function __construct(){
 		global $langmessage,$dataDir;
 
 
-		$iis = self::IIS();
-		if( $iis ){
-			$this->rule_file_name = 'web.config';
-		}else{
-			$this->rule_file_name = '.htaccess';
+		$this->server_name = gpsession::ServerName();
+
+		//get current rules
+		$this->rule_file_name	= self::IIS() ? 'web.config' : '.htaccess';
+		$this->rule_file		= $dataDir.'/'.$this->rule_file_name;
+		if( file_exists($this->rule_file) ){
+			$this->orig_rules = file_get_contents($this->rule_file);
 		}
-		$this->rule_file = $dataDir.'/'.$this->rule_file_name;
+
 
 		gp_filesystem_base::init($this->rule_file);
+		$this->WWWAvail();
 
 		echo '<h2>'.$langmessage['permalink_settings'].'</h2>';
 
@@ -40,6 +48,98 @@ class admin_permalinks{
 			break;
 		}
 	}
+
+
+	/**
+	 * Determine if we're able to change the www redirect of the server
+	 *
+	 */
+	function WWWAvail(){
+
+		if( !$this->server_name ){
+			return;
+		}
+
+		if( self::IIS() ){
+			return;
+		}
+
+
+		// already has www settings?
+		if( strpos($this->orig_rules,'# with www') !== false ){
+			$this->www_setting	= true;
+			$this->www_avail	= true;
+			return;
+		}
+		if( strpos($this->orig_rules,'# without www') !== false ){
+			$this->www_setting	= false;
+			$this->www_avail	= true;
+			return;
+		}
+
+
+		// check non-www site
+		$url			= $this->WWWUrl(false,'special_site_map');
+		if( !self::ConfirmGet($url) ){
+			return;
+		}
+
+
+		// check www site
+		$url			= $this->WWWUrl(true,'special_site_map');
+		if( !self::ConfirmGet($url) ){
+			return;
+		}
+
+
+		$this->www_avail = true;
+	}
+
+
+	/**
+	 * Return url with or without www
+	 *
+	 */
+	function WWWUrl($with_www = true, $slug = ''){
+
+		$schema			= ( isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ) ? 'https://' : 'http://';
+		$host			= $this->server_name;
+
+		if( $with_www ){
+			$host = 'www.'.$this->server_name;
+		}
+
+		return $schema.$host.common::GetUrl($slug,'',false);
+	}
+
+
+	/**
+	 * Confirm getting the url retreives the current installation
+	 *
+	 */
+	static function ConfirmGet($url){
+		global $config;
+
+		$mdu_check		= substr(md5($config['gpuniq']),0,20);
+		$result			= gpRemoteGet::Get_Successful($url);
+
+		if( strpos($result,$mdu_check) === false ){
+			return false;
+		}
+
+		//if redirected, make sure it's on the same host
+		if( gpRemoteGet::$redirected ){
+			$redirect_a		= parse_url(gpRemoteGet::$redirected);
+			$req_a			= parse_url($url);
+			if( $redirect_a['host'] !== $req_a['host'] ){
+				return false;
+			}
+		}
+
+
+		return true;
+	}
+
 
 	/**
 	 * Display Permalink Options
@@ -106,6 +206,57 @@ class admin_permalinks{
 		echo '</pre>';
 		echo '</td></tr>';
 
+		//www
+		if( $this->www_avail ){
+			echo '<tr><th colspan="2">www</th></tr>';
+
+			$checked = 'checked';
+			echo '<tr><td>';
+			echo '<label class="all_checkbox">';
+			echo '<input type="radio" name="www_setting" value="" '.$checked.' />';
+			echo '<span>'.$langmessage['Not_Set'].'</span>';
+			echo '</label>';
+			echo '</td><td>';
+			echo '<pre class="inline">';
+			echo $this->WWWUrl(false);
+			echo '</pre>';
+			echo ' &amp; ';
+			echo '<pre class="inline">';
+			echo $this->WWWUrl(true);
+			echo '</pre>';
+			echo '</td></tr>';
+
+
+			//without www
+			$checked = ($this->www_setting === false) ? 'checked' : '';
+			echo '<tr><td>';
+			echo '<label class="all_checkbox">';
+			echo '<input type="radio" name="www_setting" value="without" '.$checked.' />';
+			echo '<span>Without www</span>';
+			echo '</label>';
+
+			echo '</td><td>';
+			echo ' <pre>';
+			echo $this->WWWUrl(false);
+			echo '</pre>';
+			echo '</td></tr>';
+
+
+			//with www
+			$checked = ($this->www_setting === true) ? 'checked' : '';
+			echo '<tr><td>';
+			echo '<label class="all_checkbox">';
+			echo '<input type="radio" name="www_setting" value="with" '.$checked.' />';
+			echo '<span>With www</span>';
+			echo '</label>';
+
+			echo '</td><td>';
+			echo ' <pre>';
+			echo $this->WWWUrl(true);
+			echo '</pre>';
+			echo '</td></tr>';
+		}
+
 		echo '</table>';
 
 		echo '<br/>';
@@ -130,13 +281,8 @@ class admin_permalinks{
 		$schema			= ( isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ) ? 'https://' : 'http://';
 		$temp_prefix	= $index_php ? $dirPrefix.'/index.php' : $dirPrefix;
 
-
-		if( isset($_SERVER['HTTP_HOST']) ){
-			return $schema.$_SERVER['HTTP_HOST'].$temp_prefix.'/sample-page';
-		}
-
-		if( isset($_SERVER['SERVER_NAME']) ){
-			return $schema.$_SERVER['SERVER_NAME'].$temp_prefix.'/sample-page';
+		if( $this->server_name ){
+			return $schema.$this->server_name.$temp_prefix.'/sample-page';
 		}
 
 		return $temp_prefix;
@@ -151,22 +297,31 @@ class admin_permalinks{
 	function SaveHtaccess(){
 		global $gp_filesystem, $langmessage, $dirPrefix;
 
+		//hide index ?
+		$hide_index = false;
 		if( isset($_POST['rewrite_setting']) && $_POST['rewrite_setting'] == 'hide_index' ){
-			$this->changed_to_hide = true;
+			$hide_index = true;
+			$this->undo_if_failed = true;
 		}
+
+		// www preference
+		$www = null;
+		if( $_POST['www_setting'] === 'with' ){
+			$www = true;
+		}elseif( $_POST['www_setting'] === 'without' ){
+			$www = false;
+		}
+
+
+		$this->new_rules	= admin_permalinks::Rewrite_Rules( $hide_index, $dirPrefix, $this->orig_rules, $www );
 
 
 		// only proceed with hide if we can test the results
-		if( !gpRemoteGet::Test() ){
+		if( !$this->CanTestRules() ){
 			$this->ManualMethod();
 			return false;
 		}
 
-
-		if( !$gp_filesystem || !$gp_filesystem->ConnectOrPrompt('Admin_Permalinks') ){
-			$this->ManualMethod();
-			return false;
-		}
 
 		if( !$this->SaveRules() ){
 			$gp_filesystem->CompleteForm($_POST,'Admin_Permalinks');
@@ -174,15 +329,35 @@ class admin_permalinks{
 			return false;
 		}
 
-		message($langmessage['SAVED']);
+		msg($langmessage['SAVED']);
 
 		//redirect to new permalink structure
-		$_SERVER['gp_rewrite'] = $this->changed_to_hide;
+		$_SERVER['gp_rewrite'] = $hide_index;
 		common::SetLinkPrefix();
 		$redir = common::GetUrl('Admin_Permalinks');
 		common::Redirect($redir,302);
 
 		return false;
+	}
+
+
+	/**
+	 * Determine if we will be able tot test the results
+	 *
+	 */
+	function CanTestRules(){
+		global $gp_filesystem;
+
+		if( !gpRemoteGet::Test() ){
+			return false;
+		}
+
+
+		if( !$gp_filesystem || !$gp_filesystem->ConnectOrPrompt('Admin_Permalinks') ){
+			return false;
+		}
+
+		return true;
 	}
 
 
@@ -193,15 +368,13 @@ class admin_permalinks{
 	function ManualMethod(){
 		global $langmessage, $dirPrefix;
 
-		$rules = admin_permalinks::Rewrite_Rules( $this->changed_to_hide, $dirPrefix );
-
 		echo '<h3>'.$langmessage['manual_method'].'</h3>';
 		echo '<p>';
 		echo str_replace('.htaccess',$this->rule_file_name,$langmessage['manual_htaccess']);
 		echo '</p>';
 
 		//display rewrite code in textarea
-		$lines = explode("\n",$rules);
+		$lines = explode("\n",$this->new_rules);
 		$len = 70;
 		foreach($lines as $line){
 			$line_len = strlen($line)+(substr_count($line,"\t")*3);
@@ -209,7 +382,7 @@ class admin_permalinks{
 		}
 		$len = min(140,$len);
 		echo '<textarea cols="'.$len.'" rows="'.(count($lines)+1).'" readonly="readonly" onClick="this.focus();this.select();" class="gptextarea">';
-		echo htmlspecialchars($rules);
+		echo htmlspecialchars($this->new_rules);
 		echo '</textarea>';
 		echo '<form action="'.common::GetUrl('Admin_Permalinks').'" method="get">';
 		echo '<input type="submit" value="'.$langmessage['continue'].'" class="gpsubmit"/>';
@@ -229,16 +402,7 @@ class admin_permalinks{
 	function SaveRules(){
 		global $gp_filesystem, $langmessage, $dirPrefix;
 
-		//get current .htaccess
-		$original_contents = false;
-		if( file_exists($this->rule_file) ){
-			$original_contents = file_get_contents($this->rule_file);
-		}
-
-		//add/remove gpEasy rules from $original_contents to get new $contents
-		$contents = admin_permalinks::Rewrite_Rules( $this->changed_to_hide, $dirPrefix, $original_contents );
-
-		if( $contents === false ){
+		if( $this->new_rules === false ){
 			return false;
 		}
 
@@ -249,25 +413,41 @@ class admin_permalinks{
 
 		$filesystem_path = $filesystem_base.'/'.$this->rule_file_name;
 
-		if( !$gp_filesystem->put_contents($filesystem_path,$contents) ){
+		if( !$gp_filesystem->put_contents($filesystem_path,$this->new_rules) ){
 			return false;
 		}
 
 
-		//if TestResponse Fails, undo the changes
-		//only need to test for hiding
-		if( $this->changed_to_hide && !admin_permalinks::TestResponse() ){
+		return $this->TestSave($filesystem_path);
+	}
 
-			if( $original_contents === false ){
+
+	/**
+	 * Make sure the save hasn't broken the installation
+	 * if TestResponse Fails, undo the changes
+	 *
+	 */
+	function TestSave($filesystem_path){
+		global $gp_filesystem;
+
+		//only need to test if we might needt to undo
+		if( !$this->undo_if_failed ){
+			return true;
+		}
+
+		if( !admin_permalinks::TestResponse() ){
+
+			if( $this->orig_rules === false ){
 				$gp_filesystem->unlink($filesystem_path);
 			}else{
-				$gp_filesystem->put_contents($filesystem_path,$original_contents);
+				$gp_filesystem->put_contents($filesystem_path,$this->orig_rules);
 			}
 			return false;
 		}
 
 		return true;
 	}
+
 
 
 	/**
@@ -279,24 +459,20 @@ class admin_permalinks{
 	 *
 	 * @return boolean
 	 */
-	static function TestResponse(){
+	static function TestResponse($new_rewrite = true){
 
 		//get url, force gp_rewrite to $new_gp_rewrite
-		$rewrite_before = $_SERVER['gp_rewrite'];
-		$_SERVER['gp_rewrite'] = true;
+		$rewrite_before				= $_SERVER['gp_rewrite'];
+		$_SERVER['gp_rewrite']		= $new_rewrite;
 		common::SetLinkPrefix();
 
 
-		$abs_url = common::AbsoluteUrl('Site_Map','',true,false);
-		$_SERVER['gp_rewrite'] = $rewrite_before;
+		$abs_url					= common::AbsoluteUrl('special_site_map','',true,false);
+		$_SERVER['gp_rewrite']		= $rewrite_before;
 		common::SetLinkPrefix();
 
-		$result = gpRemoteGet::Get_Successful($abs_url);
-		if( !$result ){
-			return false;
-		}
 
-		return true;
+		return self::ConfirmGet($abs_url);
 	}
 
 
@@ -328,11 +504,13 @@ class admin_permalinks{
 		$contents = rtrim($contents);
 	}
 
+
 	/**
 	 * Return the .htaccess code that can be used to hide index.php
+	 * add/remove gpEasy rules from $original_contents to get new $contents
 	 *
 	 */
-	static function Rewrite_Rules( $hide_index = true, $home_root, $existing_contents = '' ){
+	static function Rewrite_Rules( $hide_index = true, $home_root, $existing_contents = '', $www = null ){
 
 		if( !$existing_contents ){
 			$existing_contents = '';
@@ -343,42 +521,88 @@ class admin_permalinks{
 			return self::Rewrite_RulesIIS( $hide_index, $existing_contents );
 		}
 
-		// Apache
-		admin_permalinks::StripRules($existing_contents);
+		return self::Rewrite_RulesApache($hide_index, $home_root, $existing_contents, $www);
+	}
 
-		if( !$hide_index ){
-			return $existing_contents;
+
+	/**
+	 * Generate rewrite rules for the apache server
+	 *
+	 */
+	static function Rewrite_RulesApache( $hide_index, $home_root, $contents, $www ){
+
+		// Apache
+		admin_permalinks::StripRules($contents);
+
+		if( !$hide_index && is_null($www) ){
+			return $contents;
 		}
 
-		$home_root = rtrim($home_root,'/').'/';
-		return $existing_contents . "\n\n".'# BEGIN gpEasy
+		$home_root			= rtrim($home_root,'/').'/';
+		$new_lines			= array();
+
+		$server_name		= gpsession::ServerName();
+
+
+		// with www
+		if( $www ){
+			$new_lines[]	= '# with www';
+			$new_lines[]	= 'RewriteCond %{HTTP_HOST} "^'.$server_name.'"';
+			$new_lines[]	= 'RewriteRule (.*) "http://www.'.$server_name.'/$1" [R=301,L]';
+
+		// without www
+		}elseif( $www === false ){
+			$new_lines[]	= '# without www';
+			$new_lines[]	= 'RewriteCond %{HTTP_HOST} "^www.'.$server_name.'"';
+			$new_lines[]	= 'RewriteRule (.*) "http://'.$server_name.'/$1" [R=301,L]';
+		}
+
+		$new_lines[]		= "\n";
+
+
+		// hide index.php
+		if( $hide_index ){
+			$new_lines[]	= 'RewriteBase "'.$home_root.'"';
+			$new_lines[]	= '';
+
+			$new_lines[]	= '# Don\'t rewrite multiple times';
+			$new_lines[]	= 'RewriteCond %{QUERY_STRING} gp_rewrite';
+			$new_lines[]	= 'RewriteRule .* - [L]';
+			$new_lines[]	= '';
+
+			$new_lines[]	= '# Redirect away from requests with index.php';
+			$new_lines[]	= 'RewriteRule index\.php(.*) "'.$home_root.'$1" [R=302,L]';
+			$new_lines[]	= '';
+
+			$new_lines[]	= '# Add gp_rewrite to root requests';
+			$new_lines[]	= 'RewriteRule ^$ "'.$home_root.'index.php?gp_rewrite" [qsa,L]';
+			$new_lines[]	= '';
+
+			$new_lines[]	= '# Don\'t rewrite for static files';
+			$new_lines[]	= 'RewriteCond %{REQUEST_FILENAME} -f [OR]';
+			$new_lines[]	= 'RewriteCond %{REQUEST_FILENAME} -d [OR]';
+			$new_lines[]	= 'RewriteCond %{REQUEST_URI} \.(js|css|jpe?g|jpe|gif|png|ico)$ [NC]';
+			$new_lines[]	= 'RewriteRule .* - [L]';
+			$new_lines[]	= '';
+
+			$new_lines[]	= '# Send all other requests to index.php';
+			$new_lines[]	= '# Append the gp_rewrite argument to tell gpEasy not to use index.php and to prevent multiple rewrites';
+			$new_lines[]	= 'RewriteRule /?(.*) "'.$home_root.'index.php?gp_rewrite=$1" [qsa,L]';
+			$new_lines[]	= '';
+		}
+
+
+
+		return $contents.'
+
+# BEGIN gpEasy
 <IfModule mod_rewrite.c>
 	RewriteEngine On
-	RewriteBase "'.$home_root.'"
 
-
-	# Don\'t rewrite multiple times
-	RewriteCond %{QUERY_STRING} gp_rewrite
-	RewriteRule .* - [L]
-
-	# Redirect away from requests with index.php
-	RewriteRule index\.php(.*) "'.$home_root.'$1" [R=302,L]
-
-	# Add gp_rewrite to root requests
-	RewriteRule ^$ "'.$home_root.'index.php?gp_rewrite" [qsa,L]
-
-	# Don\'t rewrite for static files
-	RewriteCond %{REQUEST_FILENAME} -f [OR]
-	RewriteCond %{REQUEST_FILENAME} -d [OR]
-	RewriteCond %{REQUEST_URI} \.(js|css|jpe?g|jpe|gif|png|ico)$ [NC]
-	RewriteRule .* - [L]
-
-	# Send all other requests to index.php
-	# Append the gp_rewrite argument to tell gpEasy not to use index.php and to prevent multiple rewrites
-	RewriteRule /?(.*) "'.$home_root.'index.php?gp_rewrite=$1" [qsa,L]
-
+	'.implode("\n\t",$new_lines).'
 </IfModule>
 # END gpEasy';
+
 	}
 
 
@@ -450,7 +674,6 @@ class admin_permalinks{
 		}
 		return false;
 	}
-
 
 }
 

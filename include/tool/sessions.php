@@ -287,7 +287,7 @@ class gpsession{
 		$session_id = $_COOKIE[gp_session_cookie];
 
 		gpFiles::Unlock('admin',sha1(sha1($session_id)));
-		self::cookie(gp_session_cookie,'',time()-42000);
+		self::cookie(gp_session_cookie);
 		self::CleanSession($session_id);
 		msg($langmessage['LOGGED_OUT']);
 	}
@@ -304,25 +304,63 @@ class gpsession{
 	 * Attempt to use httponly if available
 	 *
 	 */
-	static function cookie($name,$value,$expires = false){
+	static function cookie($name,$value='',$expires = false){
 		global $dirPrefix;
 
-		$cookiePath = '/';
-		if( !empty($dirPrefix) ){
-			$cookiePath = $dirPrefix;
+		$cookiePath		= empty($dirPrefix) ? '/' : $dirPrefix;
+		$cookiePath		= common::HrefEncode($cookiePath,false);
+		$secure			= (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' );
+		$domain			= self::ServerName();
+
+		if( !$domain ){
+			$domain = '';
 		}
-		$cookiePath = common::HrefEncode($cookiePath,false);
+
+		// expire if value is empty
+		// cookies are set with either www removed from the domain or with an empty string
+		if( empty($value) ){
+			$expires	= time()-2592000;
+			if( $domain ){
+				setcookie($name, $value, $expires, $cookiePath, $domain	, $secure	, true);
+				setcookie($name, $value, $expires, $cookiePath, $domain	, false		, true);
+			}
+			setcookie($name, $value, $expires, $cookiePath, ''		, $secure	, true);
+			setcookie($name, $value, $expires, $cookiePath, ''		, false		, true);
+			return;
+		}
 
 
+		// get expiration and set
 		if( $expires === false ){
 			$expires = time()+2592000; //30 days
 		}elseif( $expires === true ){
 			$expires = 0; //expire at end of session
 		}
 
-		setcookie($name, $value, $expires, $cookiePath, '', false, true);
+		setcookie($name, $value, $expires, $cookiePath, $domain, $secure, true);
 	}
 
+
+	/**
+	 * Return the non-www server name
+	 *
+	 */
+	static function ServerName(){
+
+		if( isset($_SERVER['HTTP_HOST']) ){
+			$server_name = $_SERVER['HTTP_HOST'];
+		}elseif( isset($_SERVER['SERVER_NAME']) ){
+			$server_name = $_SERVER['SERVER_NAME'];
+		}else{
+			return false;
+		}
+
+		if( strpos($server_name,'www.') === 0 ){
+			$server_name = substr($server_name,4);
+		}
+
+		return $server_name;
+	}
 
 
 	/**
@@ -451,7 +489,8 @@ class gpsession{
 		if( !$sessions ){
 			$sessions = self::GetSessionIds();
 			if( !isset($sessions[$session_id]) ){
-				self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
+				msg('hmm: '.gp_session_cookie);
+				self::cookie(gp_session_cookie); //make sure the cookie is deleted
 				msg($langmessage['Session Expired'].' (timeout)');
 				return false;
 			}
@@ -466,7 +505,7 @@ class gpsession{
 			$auth_uid_legacy	= self::auth_browseruid(true);	//legacy option added to prevent logging users out, added 2.0b2
 
 			if( ($sess_info['uid'] != $auth_uid) && ($sess_info['uid'] != $auth_uid_legacy) ){
-				self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
+				self::cookie(gp_session_cookie); //make sure the cookie is deleted
 				msg($langmessage['Session Expired'].' (browser auth)');
 				return false;
 			}
@@ -475,7 +514,7 @@ class gpsession{
 
 		$session_file = $dataDir.'/data/_sessions/'.$sess_info['file_name'];
 		if( ($session_file === false) || !gpFiles::Exists($session_file) ){
-			self::cookie(gp_session_cookie,'',time()-42000); //make sure the cookie is deleted
+			self::cookie(gp_session_cookie); //make sure the cookie is deleted
 			msg($langmessage['Session Expired'].' (invalid)');
 			return false;
 		}

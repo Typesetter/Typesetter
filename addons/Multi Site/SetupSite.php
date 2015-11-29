@@ -331,7 +331,8 @@ class SetupSite{
 
 	function FrontPage(){
 		global $langmessage;
-		echo '<h1>Multi-Site</h1>';
+
+		$this->Heading();
 
 		echo '<hr/>';
 		echo '<div class="lead">';
@@ -358,7 +359,8 @@ class SetupSite{
 	function About($full){
 		global $langmessage;
 
-		echo '<h1>'.$langmessage['about'].'</h1>';
+		$this->Heading($langmessage['about']);
+
 		echo '<hr/>';
 		echo '<p class="lead">';
 		echo $langmessage['easily add installations'];
@@ -460,8 +462,8 @@ class SetupSite{
 
 		$ftp_vals = $_POST + $config + array('ftp_server'=>gpftp::GetFTPServer(),'ftp_user'=>'');
 
+		$this->Heading('Settings');
 
-		echo '<h1>Settings</h1>';
 		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="post">';
 		echo '<table class="bordered" width="100%">';
 
@@ -1086,7 +1088,7 @@ class SetupSite{
 
 		$this->CheckFolder();
 
-		echo '<h1>Installation</h1>';
+		$this->Heading('Installation');
 
 		$this->InstallStatus_Steps($cmd);
 
@@ -1966,6 +1968,22 @@ class SetupSite{
 		}
 
 		return true;
+	}
+
+
+	/**
+	 * Multi Site Heading
+	 *
+	 */
+	function Heading($sub_heading=false){
+		echo '<h1>';
+		echo common::Link('Admin_Site_Setup','Multi-Site');
+
+		if( $sub_heading ){
+			echo ' &#187; ';
+			echo $sub_heading;
+		}
+		echo '</h1>';
 	}
 
 }

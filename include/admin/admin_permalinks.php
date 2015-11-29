@@ -6,9 +6,9 @@ includeFile('tool/RemoteGet.php');
 
 class admin_permalinks{
 
-	var $rule_file_name = '';
-	var $rule_file = '';
-	var $changed_to_hide = false;
+	var $rule_file_name		= '';
+	var $rule_file			= '';
+	var $changed_to_hide	= false;
 
 
 	function __construct(){
@@ -64,52 +64,52 @@ class admin_permalinks{
 			echo '</p>';
 		}
 
-
+		echo '<br/>';
 		echo '<form method="post" action="'.common::GetUrl('Admin_Permalinks').'">';
-		echo '<table class="bordered">';
+		echo '<table class="bordered middle">';
 
-		echo '<tr><th colspan="2">'.$langmessage['options'].'</th></tr>';
+		echo '<tr><th colspan="2">index.php</th></tr>';
 
 		//default
-			$checked = '';
-			if( !$_SERVER['gp_rewrite'] ){
-				$checked = 'checked="checked"';
-			}
+		$checked = '';
+		if( !$_SERVER['gp_rewrite'] ){
+			$checked = 'checked="checked"';
+		}
 
-			echo '<tr><td>';
+		echo '<tr><td>';
+		echo '<label class="all_checkbox">';
+		echo '<input type="radio" name="rewrite_setting" value="no_rewrite" '.$checked.' />';
+		echo '<span>'.$langmessage['use_index.php'].'</span>';
+		echo '</label>';
 
-			echo '<label>';
-			echo '<input type="radio" name="rewrite_setting" value="no_rewrite" '.$checked.' /> '.$langmessage['use_index.php'];
-			echo '</label>';
-
-			echo '</td><td>';
-			echo ' <pre>';
-			echo $this->ExampleUrl(true);
-			echo '</pre>';
-			echo '</td></tr>';
+		echo '</td><td>';
+		echo ' <pre>';
+		echo $this->ExampleUrl(true);
+		echo '</pre>';
+		echo '</td></tr>';
 
 		//hide index.php
-			$checked = '';
-			if( $_SERVER['gp_rewrite'] ){
-				$checked = 'checked="checked"';
-			}
+		$checked = '';
+		if( $_SERVER['gp_rewrite'] ){
+			$checked = 'checked="checked"';
+		}
 
-			echo '<tr><td>';
+		echo '<tr><td>';
+		echo '<label class="all_checkbox">';
+		echo '<input type="radio" name="rewrite_setting" value="hide_index" '.$checked.' />';
+		echo '<span>'.$langmessage['hide_index'].'</span>';
+		echo '</label>';
 
-			echo '<label>';
-			echo '<input type="radio" name="rewrite_setting" value="hide_index" '.$checked.' /> '.$langmessage['hide_index'];
-			echo '</label>';
-
-			echo '</td><td>';
-			echo ' <pre>';
-			echo $this->ExampleUrl(false);
-			echo '</pre>';
-			echo '</td></tr>';
+		echo '</td><td>';
+		echo ' <pre>';
+		echo $this->ExampleUrl(false);
+		echo '</pre>';
+		echo '</td></tr>';
 
 		echo '</table>';
 
+		echo '<br/>';
 		echo '<p>';
-
 		echo '<input type="hidden" name="cmd" value="continue" />';
 		echo '<input type="submit" name="" class="gpsubmit" value="'.$langmessage['continue'].'"/>';
 		echo '</p>';
@@ -118,25 +118,28 @@ class admin_permalinks{
 
 	}
 
+
+	/**
+	 * Return an example url based on potential gp_rewrite setting
+	 *
+	 *
+	 */
 	function ExampleUrl($index_php){
 		global $dirPrefix;
 
+		$schema			= ( isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ) ? 'https://' : 'http://';
+		$temp_prefix	= $index_php ? $dirPrefix.'/index.php' : $dirPrefix;
+
+
 		if( isset($_SERVER['HTTP_HOST']) ){
-			$server = $_SERVER['HTTP_HOST'];
-		}else{
-			$server = $_SERVER['SERVER_NAME'];
+			return $schema.$_SERVER['HTTP_HOST'].$temp_prefix.'/sample-page';
 		}
 
-		$schema = ( isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ) ? 'https://' : 'http://';
-
-
-		if( $index_php ){
-			$temp_prefix = $dirPrefix.'/index.php';
-		}else{
-			$temp_prefix = $dirPrefix;
+		if( isset($_SERVER['SERVER_NAME']) ){
+			return $schema.$_SERVER['SERVER_NAME'].$temp_prefix.'/sample-page';
 		}
 
-		return $schema.$server.$temp_prefix.'/sample-page';
+		return $temp_prefix;
 	}
 
 

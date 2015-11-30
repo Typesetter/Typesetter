@@ -9,6 +9,7 @@ class admin_permalinks{
 	var $rule_file_name		= '';
 	var $rule_file			= '';
 	var $undo_if_failed		= false;
+	var $hide_index			= false;
 	var $server_name;
 	var $www_avail			= false;
 	var $www_setting		= null;
@@ -117,18 +118,21 @@ class admin_permalinks{
 	 * Confirm getting the url retreives the current installation
 	 *
 	 */
-	static function ConfirmGet($url){
+	static function ConfirmGet($url, $check_redirect = true ){
 		global $config;
 
-		$mdu_check		= substr(md5($config['gpuniq']),0,20);
 		$result			= gpRemoteGet::Get_Successful($url);
 
-		if( strpos($result,$mdu_check) === false ){
-			return false;
+		if( isset($config['gpuniq']) ){
+			$mdu_check		= substr(md5($config['gpuniq']),0,20);
+
+			if( strpos($result,$mdu_check) === false ){
+				return false;
+			}
 		}
 
 		//if redirected, make sure it's on the same host
-		if( gpRemoteGet::$redirected ){
+		if( $check_redirect && gpRemoteGet::$redirected ){
 			$redirect_a		= parse_url(gpRemoteGet::$redirected);
 			$req_a			= parse_url($url);
 			if( $redirect_a['host'] !== $req_a['host'] ){
@@ -298,22 +302,24 @@ class admin_permalinks{
 		global $gp_filesystem, $langmessage, $dirPrefix;
 
 		//hide index ?
-		$hide_index = false;
 		if( isset($_POST['rewrite_setting']) && $_POST['rewrite_setting'] == 'hide_index' ){
-			$hide_index = true;
-			$this->undo_if_failed = true;
+			$this->hide_index		= true;
+			$this->undo_if_failed	= true;
 		}
 
 		// www preference
 		$www = null;
 		if( $_POST['www_setting'] === 'with' ){
-			$www = true;
+			$www					= true;
+			$this->undo_if_failed	= true;
+
 		}elseif( $_POST['www_setting'] === 'without' ){
-			$www = false;
+			$www					= false;
+			$this->undo_if_failed	= true;
 		}
 
 
-		$this->new_rules	= admin_permalinks::Rewrite_Rules( $hide_index, $dirPrefix, $this->orig_rules, $www );
+		$this->new_rules	= admin_permalinks::Rewrite_Rules( $this->hide_index, $dirPrefix, $this->orig_rules, $www );
 
 
 		// only proceed with hide if we can test the results
@@ -332,7 +338,7 @@ class admin_permalinks{
 		msg($langmessage['SAVED']);
 
 		//redirect to new permalink structure
-		$_SERVER['gp_rewrite'] = $hide_index;
+		$_SERVER['gp_rewrite'] = $this->hide_index;
 		common::SetLinkPrefix();
 		$redir = common::GetUrl('Admin_Permalinks');
 		common::Redirect($redir,302);
@@ -435,7 +441,8 @@ class admin_permalinks{
 			return true;
 		}
 
-		if( !admin_permalinks::TestResponse() ){
+
+		if( !admin_permalinks::TestResponse($this->hide_index) ){
 
 			if( $this->orig_rules === false ){
 				$gp_filesystem->unlink($filesystem_path);
@@ -467,12 +474,12 @@ class admin_permalinks{
 		common::SetLinkPrefix();
 
 
-		$abs_url					= common::AbsoluteUrl('special_site_map','',true,false);
+		$abs_url					= common::AbsoluteUrl('Site_Map','',true,false); //can't be special_site_map, otherwise common::IndexToTitle() will be called during install
 		$_SERVER['gp_rewrite']		= $rewrite_before;
 		common::SetLinkPrefix();
 
 
-		return self::ConfirmGet($abs_url);
+		return self::ConfirmGet($abs_url, false);
 	}
 
 
@@ -548,13 +555,13 @@ class admin_permalinks{
 		if( $www ){
 			$new_lines[]	= '# with www';
 			$new_lines[]	= 'RewriteCond %{HTTP_HOST} "^'.$server_name.'"';
-			$new_lines[]	= 'RewriteRule (.*) "http://www.'.$server_name.'/$1" [R=301,L]';
+			$new_lines[]	= 'RewriteRule (.*) "http://www.'.$server_name.'/$1" [R=302,L]';
 
 		// without www
 		}elseif( $www === false ){
 			$new_lines[]	= '# without www';
 			$new_lines[]	= 'RewriteCond %{HTTP_HOST} "^www.'.$server_name.'"';
-			$new_lines[]	= 'RewriteRule (.*) "http://'.$server_name.'/$1" [R=301,L]';
+			$new_lines[]	= 'RewriteRule (.*) "http://'.$server_name.'/$1" [R=302,L]';
 		}
 
 		$new_lines[]		= "\n";

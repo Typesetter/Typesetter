@@ -277,7 +277,6 @@ class admin_permalinks{
 	/**
 	 * Return an example url based on potential gp_rewrite setting
 	 *
-	 *
 	 */
 	function ExampleUrl($index_php){
 		global $dirPrefix;
@@ -554,14 +553,30 @@ class admin_permalinks{
 		// with www
 		if( $www ){
 			$new_lines[]	= '# with www';
+			$new_lines[]	= 'RewriteCond %{HTTPS} off';
 			$new_lines[]	= 'RewriteCond %{HTTP_HOST} "^'.$server_name.'"';
-			$new_lines[]	= 'RewriteRule (.*) "http://www.'.$server_name.'/$1" [R=302,L]';
+			$new_lines[]	= 'RewriteRule (.*) "http://www.'.$server_name.'/$1" [R=301,L]';
+
+			$new_lines[]	= '';
+			$new_lines[]	= '# with www and https';
+			$new_lines[]	= 'RewriteCond %{HTTPS} on';
+			$new_lines[]	= 'RewriteCond %{HTTP_HOST} "^'.$server_name.'"';
+			$new_lines[]	= 'RewriteRule (.*) "https://www.'.$server_name.'/$1" [R=301,L]';
+
 
 		// without www
 		}elseif( $www === false ){
 			$new_lines[]	= '# without www';
+			$new_lines[]	= 'RewriteCond %{HTTPS} off';
 			$new_lines[]	= 'RewriteCond %{HTTP_HOST} "^www.'.$server_name.'"';
-			$new_lines[]	= 'RewriteRule (.*) "http://'.$server_name.'/$1" [R=302,L]';
+			$new_lines[]	= 'RewriteRule (.*) "http://'.$server_name.'/$1" [R=301,L]';
+
+
+			$new_lines[]	= '';
+			$new_lines[]	= '# without www and https';
+			$new_lines[]	= 'RewriteCond %{HTTPS} on';
+			$new_lines[]	= 'RewriteCond %{HTTP_HOST} "^www.'.$server_name.'"';
+			$new_lines[]	= 'RewriteRule (.*) "https://'.$server_name.'/$1" [R=301,L]';
 		}
 
 		$new_lines[]		= "\n";

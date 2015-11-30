@@ -9,31 +9,15 @@ AcceptPathInfo On
 	RewriteEngine On
 
 	# with www
+	RewriteCond %{HTTPS} off
 	RewriteCond %{HTTP_HOST} "^gpeasy.loc"
-	RewriteRule (.*) "http://www.gpeasy.loc/$1" [R=302,L]
+	RewriteRule (.*) "http://www.gpeasy.loc/$1" [R=301,L]
+	
+	# with www and https
+	RewriteCond %{HTTPS} on
+	RewriteCond %{HTTP_HOST} "^gpeasy.loc"
+	RewriteRule (.*) "https://www.gpeasy.loc/$1" [R=301,L]
 	
 
-	RewriteBase "/"
-	
-	# Don't rewrite multiple times
-	RewriteCond %{QUERY_STRING} gp_rewrite
-	RewriteRule .* - [L]
-	
-	# Redirect away from requests with index.php
-	RewriteRule index\.php(.*) "/$1" [R=302,L]
-	
-	# Add gp_rewrite to root requests
-	RewriteRule ^$ "/index.php?gp_rewrite" [qsa,L]
-	
-	# Don't rewrite for static files
-	RewriteCond %{REQUEST_FILENAME} -f [OR]
-	RewriteCond %{REQUEST_FILENAME} -d [OR]
-	RewriteCond %{REQUEST_URI} \.(js|css|jpe?g|jpe|gif|png|ico)$ [NC]
-	RewriteRule .* - [L]
-	
-	# Send all other requests to index.php
-	# Append the gp_rewrite argument to tell gpEasy not to use index.php and to prevent multiple rewrites
-	RewriteRule /?(.*) "/index.php?gp_rewrite=$1" [qsa,L]
-	
 </IfModule>
 # END gpEasy

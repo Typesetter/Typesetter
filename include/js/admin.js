@@ -903,9 +903,6 @@ $(function(){
 				left -= diff;
 			}
 
-			console.log('pagey: '+evt.pageY);
-			console.log('scrolltop: '+$gp.$win.scrollTop());
-
 			lnk_span.stop(true,true).css({'top':(evt.pageY-$gp.$win.scrollTop()),'left':left,'right':'auto','position':'fixed'});
 		}
 

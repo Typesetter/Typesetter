@@ -514,5 +514,39 @@ class admin_addon_install extends admin_addons_tool{
 		echo '</span> ';
 	}
 
+
+	/**
+	 * Show folders in /addons that didn't make it into the available list
+	 *
+	 */
+	function InvalidFolders(){
+		global $langmessage;
+
+		if( !$this->invalid_folders ){
+			return;
+		}
+
+		echo '<br/>';
+		echo '<h3>Invalid Addon Folders</h3>';
+		echo '<table class="bordered full_width striped">';
+		echo '<tr><th>';
+		echo $langmessage['name'];
+		echo '</th><th>&nbsp;</th></tr>';
+		foreach($this->invalid_folders as $folder => $msg){
+
+			if( isset($this->avail_addons[$folder]) ){
+				continue; //skip false positives
+			}
+
+			echo '<tr><td>';
+			echo htmlspecialchars($folder);
+			echo '</td><td>';
+			echo htmlspecialchars($msg);
+			echo '</td></tr>';
+		}
+		echo '</table>';
+
+	}
+
 }
 

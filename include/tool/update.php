@@ -240,7 +240,8 @@ class update_class{
 		$path = common::IdUrl();
 
 		//add any locally available themes with addon ids
-		includeFile('admin/admin_addons_tool.php');
+		includeFile('tool/parse_ini.php');
+
 		$dir = $dataDir.'/themes';
 		$themes = scandir($dir);
 		$theme_ids = array();
@@ -248,12 +249,19 @@ class update_class{
 			if( $name == '.' || $name == '..' ){
 				continue;
 			}
-			$full_dir = $dir.'/'.$name;
-			$templateFile = $full_dir.'/template.php';
+			$full_dir		= $dir.'/'.$name;
+			$templateFile	= $full_dir.'/template.php';
+			$ini_file		= $full_dir.'/Addon.ini';
+
 			if( !file_exists($templateFile) ){
 				continue;
 			}
-			$ini_info = admin_addons_tool::GetAvailInstall($full_dir);
+
+			$ini_info = array();
+			if( file_exists($ini_file) ){
+				$ini_info = gp_ini::ParseFile($ini_file);
+			}
+
 			if( isset($ini_info['Addon_Unique_ID']) ){
 				$theme_ids[] = $ini_info['Addon_Unique_ID'];
 			}

@@ -369,9 +369,7 @@ class admin_addons extends admin_addon_install{
 	function GetAvailAddons(){
 		global $dataDir;
 
-		$addonPath = $dataDir.'/addons';
-		$installed_path  = $dataDir.'/data/_addoncode';
-
+		$addonPath			= $dataDir.'/addons';
 
 		if( !file_exists($addonPath) ){
 			message('Warning: The /addons folder "<em>'.$addonPath.'</em>" does not exist on your server.');
@@ -379,18 +377,20 @@ class admin_addons extends admin_addon_install{
 		}
 
 
-		$folders = gpFiles::ReadDir($addonPath,1);
-		$versions = $avail = array();
+		$installed_path		= $dataDir.'/data/_addoncode';
+		$folders			= gpFiles::ReadDir($addonPath,1);
+		$versions			= array();
+		$avail				= array();
 
-		foreach($folders as $key => $value){
-			$fullPath = $addonPath .'/'.$key;
-			$info = admin_addons_tool::GetAvailInstall($fullPath);
+		foreach($folders as $value){
+			$fullPath		= $addonPath .'/'.$value;
+			$info			= $this->GetAvailInstall($fullPath);
 
 			if( !$info ){
 				continue;
 			}
-			$info['upgrade_key'] = admin_addons_tool::UpgradePath($info);
-			$avail[$key] = $info;
+			$info['upgrade_key']	= admin_addons_tool::UpgradePath($info);
+			$avail[$value]			= $info;
 
 
 			if( isset($info['Addon_Version']) && isset($info['Addon_Unique_ID']) ){
@@ -500,10 +500,8 @@ class admin_addons extends admin_addon_install{
 
 		}
 
-
-		echo '<h3>'.$langmessage['about'].'</h3>';
+		$this->InvalidFolders();
 		$this->Instructions();
-
 
 	}
 

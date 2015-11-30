@@ -1485,17 +1485,18 @@ class admin_theme_content extends admin_addon_install{
 		$dir = $dataDir.'/themes';
 		$layouts = gpFiles::readDir($dir,1);
 		foreach($layouts as $name){
-			$full_dir = $dir.'/'.$name;
-			$templateFile = $full_dir.'/template.php';
-			if( !file_exists($templateFile) ){
+
+			$full_dir	= $dir.'/'.$name;
+			$index		= $name.'(local)';
+			$addon_id	= false;
+			$version	= false;
+			$ini_info	= $this->GetAvailInstall($full_dir);
+
+			if( $ini_info === false ){
 				continue;
 			}
 
-			$index = $name.'(local)';
-			$ini_info = admin_addons_tool::GetAvailInstall($full_dir);
-
 			//check version
-			$addon_id = $version = false;
 			if( isset($ini_info['Addon_Version']) && isset($ini_info['Addon_Unique_ID']) ){
 				$addon_id = $ini_info['Addon_Unique_ID'];
 				$version = $ini_info['Addon_Version'];
@@ -1509,21 +1510,21 @@ class admin_theme_content extends admin_addon_install{
 			}
 
 
+			$themes[$index]['name']			= $name;
+			$themes[$index]['folder']		= $name;
+			$themes[$index]['colors']		= $this->GetThemeColors($full_dir);
+			$themes[$index]['is_addon']		= false;
+			$themes[$index]['full_dir']		= $full_dir;
+			$themes[$index]['rel']			= '/themes/'.$name;
 
-			$themes[$index]['name'] = $name;
 			if( isset($ini_info['Addon_Name']) ){
-				$themes[$index]['name'] = $ini_info['Addon_Name'];
+				$themes[$index]['name']		= $ini_info['Addon_Name'];
 			}
-			$themes[$index]['colors'] = $this->GetThemeColors($full_dir);
-			$themes[$index]['folder'] = $name;
-			$themes[$index]['is_addon'] = false;
-			$themes[$index]['full_dir'] = $full_dir;
-			$themes[$index]['rel'] = '/themes/'.$name;
 			if( $version ){
-				$themes[$index]['version'] = $ini_info['Addon_Version'];
+				$themes[$index]['version']	= $ini_info['Addon_Version'];
 			}
 			if( $addon_id ){
-				$themes[$index]['id'] = $ini_info['Addon_Unique_ID'];
+				$themes[$index]['id']		= $ini_info['Addon_Unique_ID'];
 			}
 		}
 
@@ -1533,17 +1534,19 @@ class admin_theme_content extends admin_addon_install{
 		$layouts = gpFiles::readDir($dir,1);
 		asort($layouts);
 		foreach($layouts as $folder){
-			$full_dir = $dir.'/'.$folder;
-			$templateFile = $full_dir.'/template.php';
-			if( !file_exists($templateFile) ){
+
+			$full_dir	= $dir.'/'.$folder;
+			$addon_id	= false;
+			$version	= false;
+			$ini_info	= $this->GetAvailInstall($full_dir);
+
+			if( $ini_info === false ){
 				continue;
 			}
 
-			$ini_info = admin_addons_tool::GetAvailInstall($full_dir);
-			$index = $ini_info['Addon_Name'].'(remote)';
+			$index		= $ini_info['Addon_Name'].'(remote)';
 
 			//check version
-			$addon_id = $version = false;
 			if( isset($ini_info['Addon_Version']) && isset($ini_info['Addon_Unique_ID']) ){
 				$addon_id = $ini_info['Addon_Unique_ID'];
 				$version = $ini_info['Addon_Version'];
@@ -1556,13 +1559,13 @@ class admin_theme_content extends admin_addon_install{
 			}
 
 
-			$themes[$index]['name'] = $ini_info['Addon_Name'];
-			$themes[$index]['colors'] = $this->GetThemeColors($full_dir);
-			$themes[$index]['folder'] = $folder;
-			$themes[$index]['is_addon'] = true;
-			$themes[$index]['full_dir'] = $full_dir;
-			$themes[$index]['id'] = $ini_info['Addon_Unique_ID'];
-			$themes[$index]['rel'] = '/data/_themes/'.$folder;
+			$themes[$index]['name']			= $ini_info['Addon_Name'];
+			$themes[$index]['colors']		= $this->GetThemeColors($full_dir);
+			$themes[$index]['folder']		= $folder;
+			$themes[$index]['is_addon']		= true;
+			$themes[$index]['full_dir']		= $full_dir;
+			$themes[$index]['id']			= $ini_info['Addon_Unique_ID'];
+			$themes[$index]['rel']			= '/data/_themes/'.$folder;
 			if( isset($ini_info['Addon_Version']) ){
 				$themes[$index]['version'] = $ini_info['Addon_Version'];
 			}
@@ -1595,6 +1598,42 @@ class admin_theme_content extends admin_addon_install{
 		}
 
 	}
+
+
+	/**
+	 * Return ini info if the addon is installable
+	 *
+	 */
+	function GetAvailInstall($dir){
+		global $langmessage;
+
+		$iniFile		= $dir.'/Addon.ini';
+		$template_file	= $dir.'/template.php';
+		$dirname		= basename($dir);
+
+		if( !is_readable($dir) ){
+			$this->invalid_folders[$dirname]	= 'Directory is not readable';
+			return false;
+		}
+
+		if( !file_exists($template_file) ){
+			$this->invalid_folders[$dirname]	= 'template.php is not readable or does not exist';
+			return false;
+		}
+
+		if( !file_exists($iniFile) ){
+			return array();
+		}
+
+		$array = gp_ini::ParseFile($iniFile);
+		if( $array === false ){
+			return array();
+		}
+
+		$array += array('Addon_Version'=>'');
+		return $array;
+	}
+
 
 	/**
 	 * Get a list of theme subfolders that have style.css files
@@ -1783,6 +1822,8 @@ class admin_theme_content extends admin_addon_install{
 		$this->searchUrl = 'Admin_Theme_Content/Available';
 
 		$this->AvailableList();
+
+		$this->InvalidFolders();
 	}
 
 

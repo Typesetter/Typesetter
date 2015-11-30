@@ -18,6 +18,8 @@ class admin_addons_tool{
 	var $addon_info			= array();
 	var $dataFile;
 
+	var $invalid_folders	= array();
+
 
 
 	//
@@ -94,23 +96,42 @@ class admin_addons_tool{
 	}
 
 
-	static function GetAvailInstall($fullPath){
+	/**
+	 * Return ini info if the addon is installable
+	 *
+	 */
+	function GetAvailInstall($dir){
+		global $langmessage;
 
-		$iniFile = $fullPath.'/Addon.ini';
+		$iniFile	= $dir.'/Addon.ini';
+		$dirname	= basename($dir);
+
 		if( !file_exists($iniFile) ){
+
+			if( is_readable($dir) ){
+				$this->invalid_folders[$dirname]	= 'Addon.ini is not readable or does not exist';
+			}else{
+				$this->invalid_folders[$dirname]	= 'Directory is not readable';
+			}
+
 			return false;
 		}
+
 		$array = gp_ini::ParseFile($iniFile);
 		if( $array === false ){
+			$this->invalid_folders[$dirname]	= $langmessage['Ini_Error'];
 			return false;
 		}
 
 		if( !isset($array['Addon_Name']) ){
+			$this->invalid_folders[$dirname]	= $langmessage['Ini_No_Name'];
 			return false;
 		}
+
 		$array += array('Addon_Version'=>'');
 		return $array;
 	}
+
 
 	/**
 	 * Manage addon ratings
@@ -284,7 +305,7 @@ class admin_addons_tool{
 			return false;
 		}
 
-		$ini = admin_addons_tool::GetAvailInstall($full_dir);
+		$ini = $this->GetAvailInstall($full_dir);
 
 		if( $ini === false ){
 			$this->CanRate = false;

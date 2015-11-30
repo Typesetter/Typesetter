@@ -261,6 +261,7 @@ class admin_permalinks{
 			echo '</td></tr>';
 		}
 
+
 		echo '</table>';
 
 		echo '<br/>';
@@ -546,7 +547,6 @@ class admin_permalinks{
 
 		$home_root			= rtrim($home_root,'/').'/';
 		$new_lines			= array();
-
 		$server_name		= gpsession::ServerName();
 
 

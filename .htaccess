@@ -3,21 +3,3 @@ AddType text/css .css
 AddType text/xml .xml
 
 AcceptPathInfo On
-
-# BEGIN gpEasy
-<IfModule mod_rewrite.c>
-	RewriteEngine On
-
-	# with www
-	RewriteCond %{HTTPS} off
-	RewriteCond %{HTTP_HOST} "^gpeasy.loc"
-	RewriteRule (.*) "http://www.gpeasy.loc/$1" [R=301,L]
-	
-	# with www and https
-	RewriteCond %{HTTPS} on
-	RewriteCond %{HTTP_HOST} "^gpeasy.loc"
-	RewriteRule (.*) "https://www.gpeasy.loc/$1" [R=301,L]
-	
-
-</IfModule>
-# END gpEasy

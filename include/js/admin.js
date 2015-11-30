@@ -150,13 +150,13 @@ $gp.AdminBoxC = function(data,options){
 
 	$gp.div('gp_admin_box1')
 		.css({'zIndex':11000,'min-height':height})
-		.stop(true,true,true)
+		.stop(true,true)
 		.fadeTo(0,0) //fade in from transparent
 		.fadeTo(200,0.2);
 
 	$gp.div('gp_admin_box')
 				.css({'zIndex':'11001','left':left,'top': $gp.$win.scrollTop() })
-				.stop(true,true,true)
+				.stop(true,true)
 				.fadeIn(400)
 				.html('<a class="gp_admin_box_close" data-cmd="admin_box_close"></a><div id="gp_admin_boxc" class="'+(options.context||'')+'" style="width:'+box_width+'px"></div>')
 				.find('#gp_admin_boxc')
@@ -548,7 +548,6 @@ $gp.response.location = function(obj){
  *
  */
 $(function(){
-	console.time('AdminOnload');
 
 	$gp.$win = $(window);
 	$gp.$doc = $(document);
@@ -640,16 +639,16 @@ $(function(){
 
 						//the red edit box
 						var loc = $gp.Coords(area);
-						box	.stop(true,true,true)
+						box	.stop(true,true)
 							.css({'top':(loc.top-3),'left':(loc.left-2),'width':(loc.w+4),'height':(loc.h+5)})
 							.fadeIn();
 
 						//scroll to show edit area
 						if( $gp.$win.scrollTop() > loc.top || ( $gp.$win.scrollTop() + $gp.$win.height() ) < loc.top ){
-							$('html,body').stop(true,true,true).animate({scrollTop: Math.max(0,loc.top-100)},'slow');
+							$('html,body').stop(true,true).animate({scrollTop: Math.max(0,loc.top-100)},'slow');
 						}
 					}).on('mouseleave touchend',function(){
-						box.stop(true,true,true).fadeOut();
+						box.stop(true,true).fadeOut();
 					}).click(function(){
 						$(this).unbind('mouseenter touchstart');
 						window.setTimeout(function(){
@@ -751,7 +750,7 @@ $(function(){
 				top		= $gp.$win.scrollTop(),
 				diff	= Math.max(0,top - (off.top - pos.top));
 
-			lnk_span.stop(true,true,true).animate({'top':diff});
+			lnk_span.stop(true,true).animate({'top':diff});
 		}
 
 
@@ -903,7 +902,11 @@ $(function(){
 			if( diff > 0 ){
 				left -= diff;
 			}
-			lnk_span.css({'top':(evt.pageY-$gp.$win.scrollTop()),'left':left,'right':'auto','position':'fixed'});
+
+			console.log('pagey: '+evt.pageY);
+			console.log('scrolltop: '+$gp.$win.scrollTop());
+
+			lnk_span.stop(true,true).css({'top':(evt.pageY-$gp.$win.scrollTop()),'left':left,'right':'auto','position':'fixed'});
 		}
 
 
@@ -958,8 +961,6 @@ $(function(){
 
 
 	}
-
-	console.timeEnd('AdminOnload');
 
 });
 

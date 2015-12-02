@@ -16,7 +16,6 @@ if( !isset($gpAdmin['granted']) || ($gpAdmin['granted'] !== 'all') ){
 	die('Sorry, you do not have sufficient privileges to access this area.');
 }
 
-includeFile('admin/admin_tools.php');
 includeFile('tool/update.php');
 common::GetLangFile();
 

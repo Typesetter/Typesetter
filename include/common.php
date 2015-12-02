@@ -1802,24 +1802,17 @@ class common{
 	static function GetLangFile($file='main.inc',$language=false){
 		global $dataDir, $config, $langmessage;
 
-		if( $language === false ){
-			$language = $config['language'];
+
+		$language	= $language ? $language : $config['language'];
+		$path		= $dataDir.'/include/languages/'.$language.'.main.inc';
+
+		if( !file_exists($path) ){
+			$path	= $dataDir.'/include/languages/en.main.inc'; //default to en
 		}
 
-
-		$fullPath = $dataDir.'/include/languages/'.$language.'.main.inc';
-		if( file_exists($fullPath) ){
-			include($fullPath);
-			return;
-		}
-
-		//try to get the english file
-		$fullPath = $dataDir.'/include/languages/en.main.inc';
-		if( file_exists($fullPath) ){
-			include($fullPath);
-		}
-
+		include($path);
 	}
+
 
 	/**
 	 * Determine if the $title is a special or admin page

@@ -12,7 +12,7 @@ class phpunit_Install extends gptest_bootstrap{
 
 		//make sure it's not installed
 		$config_file = $dataDir.'/data/_site/config.php';
-		$this->assertFileNotExists($config_file,'Cannot test installation (Already Installed)');
+		self::AssertFileNotExists($config_file,'Cannot test installation (Already Installed)');
 
 
 		//mimic POST
@@ -28,11 +28,11 @@ class phpunit_Install extends gptest_bootstrap{
 		includeFile('tool/install.php');
 		$success = Install_Tools::Install_DataFiles_New();
 		ob_get_clean();
-		$this->assertTrue($success,'Installation Failed');
+		self::AssertTrue($success,'Installation Failed');
 
 
 		//double check
-		$this->assertFileExists($config_file);
+		self::AssertFileExists($config_file);
 	}
 
 }

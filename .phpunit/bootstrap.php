@@ -19,6 +19,8 @@ includeFile('tool/gpOutput.php');
 includeFile('tool/functions.php');
 includeFile('tool/Plugins.php');
 
+common::GetLangFile();
+
 
 class gptest_bootstrap extends PHPUnit_Framework_TestCase{
 

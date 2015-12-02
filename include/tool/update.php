@@ -9,6 +9,8 @@ wordpress/wp-admin/includes/class-wp-upgrader.php
 wordpress/wp-admin/includes/class-wp-filesystem-ftpext.php
 */
 
+includeFile('admin/admin_tools.php');
+
 
 class update_class{
 
@@ -33,9 +35,12 @@ class update_class{
 
 
 	//update vars
-	var $update_data = array();
-	var $data_timestamp = 0;
-	var $steps = array();
+	var $update_data		= array();
+	var $data_timestamp		= 0;
+	var $curr_step			= 1;
+	var $steps				= array();
+	var $core_package;
+	var $update_msgs		= array();
 
 
 	//content for template
@@ -126,8 +131,13 @@ class update_class{
 	 */
 	function GetData(){
 
-		$this->data_timestamp = admin_tools::VersionData($update_data);
-		$this->update_data = $update_data;
+		$this->data_timestamp	= admin_tools::VersionData($update_data);
+		$this->update_data		= $update_data;
+
+
+		if( isset($this->update_data['packages']['core']) ){
+			$this->core_package = $this->update_data['packages']['core'];
+		}
 	}
 
 
@@ -234,6 +244,11 @@ class update_class{
 
 	}
 
+
+	/**
+	 * Update available package information from gpEasy.com
+	 *
+	 */
 	function DoRemoteCheck2(){
 		global $config, $dataDir;
 
@@ -310,6 +325,11 @@ class update_class{
 			$this->update_data['packages'][$id] = $info;
 		}
 
+
+		if( isset($this->update_data['packages']['core']) ){
+			$this->core_package = $this->update_data['packages']['core'];
+		}
+
 		return true;
 	}
 
@@ -318,13 +338,12 @@ class update_class{
 	function ShowStatus(){
 		global $langmessage;
 
-		if( !isset($this->update_data['packages']['core']) ){
+		if( !$this->core_package ){
 			return;
 		}
-		$core_package = $this->update_data['packages']['core'];
 
 		echo '<div class="inline_message">';
-		if( version_compare(gpversion,$core_package['version'],'<') ){
+		if( version_compare(gpversion,$this->core_package['version'],'<') ){
 			echo '<span class="green">';
 			echo $langmessage['New_version_available'];
 			echo ' &nbsp; ';
@@ -343,7 +362,7 @@ class update_class{
 
 			echo '<tr>';
 			echo '<td>'.$langmessage['New_version'].'</td>';
-			echo '<td>'.$core_package['version'].'</td>';
+			echo '<td>'.$this->core_package['version'].'</td>';
 			echo '</tr>';
 			echo '</table>';
 
@@ -356,7 +375,6 @@ class update_class{
 			echo common::link('',$langmessage['return_to_your_site']);
 			echo '</div>';
 
-			//preliminary versions of the update software didn't run cleanup properly
 			$this->RemoveUpdateMessage();
 		}
 		echo '</div>';
@@ -368,37 +386,27 @@ class update_class{
 		global $langmessage, $gp_filesystem;
 
 
-		if( !isset($this->update_data['packages']['core']) ){
-			echo $langmessage['OOPS'];
+		if( !$this->core_package ){
+			echo $langmessage['OOPS'].' (Core Package Not Set)';
 			return false;
 		}
 
-		$core_package =& $this->update_data['packages']['core'];
 
-		if( !isset($_POST['step']) ){
-			$curr_step = 1;
-		}else{
-			$curr_step = (int)$_POST['step'];
+		if( isset($_POST['step']) ){
+			$this->curr_step = (int)$_POST['step'];
 		}
 
 		//already up to date?
-		if( ($curr_step < 4) && version_compare(gpversion,$core_package['version'],'>=') ){
+		if( ($this->curr_step < 4) && version_compare(gpversion,$this->core_package['version'],'>=') ){
 			msg($langmessage['UP_TO_DATE']);
 			return false;
 		}
 
 		//filesystem
-		$filesystem_method = false;
-		if( isset($_POST['filesystem_method']) && gp_filesystem_base::set_method($_POST['filesystem_method']) ){
-			$filesystem_method = $_POST['filesystem_method'];
-		}else{
-			$curr_step = 1;
-			$this->DetectFileSystem();
-			if( !$gp_filesystem ){
-				msg('Update Aborted: Could not establish a file writing method compatible with your server.');
-				return false;
-			}
-			$filesystem_method = $gp_filesystem->method;
+		$filesystem_method = $this->DetectFileSystem();
+		if( !$filesystem_method ){
+			msg('Update Aborted: Could not establish a file writing method compatible with your server.');
+			return false;
 		}
 
 
@@ -413,10 +421,10 @@ class update_class{
 		$curr_step_label = '';
 		foreach($this->steps as $temp_step => $message ){
 
-			if( $curr_step == $temp_step ){
+			if( $this->curr_step == $temp_step ){
 				echo '<li class="current">'.$message.'</li>';
 				$curr_step_label = $message;
-			}elseif( $temp_step < $curr_step ){
+			}elseif( $temp_step < $this->curr_step ){
 				echo '<li class="done">'.$message.'</li>';
 			}else{
 				echo '<li>'.$message.'</li>';
@@ -432,28 +440,32 @@ class update_class{
 			echo '<input type="hidden" name="filesystem_method" value="'.htmlspecialchars($filesystem_method).'" />';
 		}
 
-		$done = false;
-		$passed = false;
-		switch($curr_step){
+		$done		= false;
+		$passed		= false;
+
+
+		ob_start();
+		switch($this->curr_step){
 			case 4:
-				$done = $this->CleanUp($core_package);
+				$done = $this->CleanUp();
 			break;
 			case 3:
-				echo '<ul>';
-				$passed = $this->UnpackAndReplace($core_package);
+				$passed = $this->UnpackAndReplace();
 				$this->OldFolders();
-				echo '</ul>';
 			break;
 			case 2:
-				echo '<ul class="progress">';
-				$passed = $this->DownloadSource($core_package);
-				echo '</ul>';
+				$passed = $this->DownloadSource();
 			break;
 			case 1:
-				$passed = $this->GetServerInfo($core_package);
+				$passed = $this->GetServerInfo();
 			break;
-
 		}
+		$step_content = ob_get_clean();
+
+
+		$this->OutputMessages();
+		echo $step_content;
+
 
 		if( $gp_filesystem ){
 			$gp_filesystem->destruct();
@@ -462,10 +474,10 @@ class update_class{
 
 		if( !$done ){
 			if( $passed ){
-				echo '<input type="hidden" name="step" value="'.min(count($this->steps),$curr_step+1).'"/>';
+				echo '<input type="hidden" name="step" value="'.min(count($this->steps),$this->curr_step+1).'"/>';
 				echo '<input type="submit" class="submit" name="" value="'.htmlspecialchars($langmessage['next_step']).'" />';
-			}elseif( $curr_step < 3 ){
-				echo '<input type="hidden" name="step" value="'.min(count($this->steps),$curr_step).'"/>';
+			}elseif( $this->curr_step < 3 ){
+				echo '<input type="hidden" name="step" value="'.min(count($this->steps),$this->curr_step).'"/>';
 				echo '<input type="submit" class="submit" name="" value="'.htmlspecialchars($langmessage['continue']).'" />';
 			}else{
 				echo '<input type="hidden" name="failed_install" value="failed_install"/>';
@@ -480,29 +492,49 @@ class update_class{
 		return true;
 	}
 
+
+	/**
+	 * Determine how we'll be writing the new code to the server (ftp or direct)
+	 *
+	 */
 	function DetectFileSystem(){
-		global $dataDir;
+		global $dataDir, $gp_filesystem;
 
-		//Need to be able to write to the dataDir
-		$context[$dataDir] = 'file';
 
-		//Need to be able to rename or delete the include directory
-		$context[$dataDir . '/include'] = 'file';
+		//already determined
+		if( isset($_POST['filesystem_method']) && gp_filesystem_base::set_method($_POST['filesystem_method']) ){
+			return $_POST['filesystem_method'];
+		}
 
-		//these may have user content in them and should not be completely replaced
-		$context[$dataDir . '/themes'] = 'dir';
-		$context[$dataDir . '/addons'] = 'dir';
+
+		$this->curr_step = 1; //make sure we don't attempt anything beyond step 1
+
+
+		$context[$dataDir]					= 'file';	// Need to be able to write to the dataDir
+		$context[$dataDir . '/include']		= 'file';	// Need to be able to rename or delete the include directory
+		$context[$dataDir . '/themes']		= 'dir';	// These may have user content in them and should not be completely replaced
+		$context[$dataDir . '/addons']		= 'dir';
 		gp_filesystem_base::init($context,'list');
+
+
+		if( !$gp_filesystem ){
+			return false;
+		}
+
+		return $gp_filesystem->method;
 	}
 
 
-	function CleanUp(&$package){
+	/**
+	 * Remove folders and files that are no longer needed
+	 *
+	 */
+	function CleanUp(){
 		global $langmessage, $config, $gp_filesystem, $dataDir;
 
-		echo '<ul>';
 
 		if( $gp_filesystem->connect() !== true ){
-			echo '<li>'.$langmessage['OOPS'].': (not connected)</li>';
+			$this->msg($langmessage['OOPS'].': (not connected)');
 			return false;
 		}
 
@@ -531,51 +563,48 @@ class update_class{
 			}
 
 			if( count($not_deleted) > 0 ){
-				echo '<li>';
-				echo $langmessage['delete_incomplete'].': '.implode(', ',$not_deleted);
-				echo '</li>';
+				$this->msg($langmessage['delete_incomplete'].': '.implode(', ',$not_deleted));
 			}
 		}
 
 
+		//failed install message
 		if( isset($_POST['failed_install']) ){
-			echo '<li>'.$langmessage['settings_restored'].'</li>';
-			echo '</ul>';
+			$this->msg($langmessage['settings_restored']);
 
 			echo '<h3>';
 			echo common::link('',$langmessage['return_to_your_site']);
 			echo ' &nbsp; &nbsp; ';
 			echo '<a href="?cmd=update">'.$langmessage['try_again'].'</a>';
-
 			echo '</h3>';
-
-
-		}else{
-
-			//delete zip file
-			if( !empty($package['file']) && file_exists($package['file']) ){
-				unlink($package['file']);
-			}
-
-			echo '<li>'.$langmessage['settings_restored'].'</li>';
-			echo '<li>'.$langmessage['software_updated'].'</li>';
-
-			//get new package information .. has to be after deleting the zip
-			echo '</ul>';
-
-
-			echo '<h3>';
-			echo common::link('','&#187; '.$langmessage['return_to_your_site']);
-			echo '</h3>';
-
+			return true;
 		}
+
+
+		//delete zip file
+		if( !empty($this->core_package['file']) && file_exists($this->core_package['file']) ){
+			unlink($this->core_package['file']);
+		}
+
+		$this->msg($langmessage['settings_restored']);
+		$this->msg($langmessage['software_updated']);
+
+
+		echo '<h3>';
+		echo common::link('','&#187; '.$langmessage['return_to_your_site']);
+		echo '</h3>';
+
 
 		return true;
 	}
 
-	//remove updating message
+
+	/**
+	 * Remove configuration setting that indicates gpEasy is being updated
+	 *
+	 */
 	function RemoveUpdateMessage(){
-		global $config,$langmessage;
+		global $config, $langmessage;
 
 		if( !isset($config['updating_message']) ){
 			return true;
@@ -597,40 +626,45 @@ class update_class{
 	 * Then replace the existing directories with the new directories
 	 *
 	 */
-	function UnpackAndReplace(&$package){
+	function UnpackAndReplace(){
 		global $langmessage, $config, $gp_filesystem, $dataDir;
 
 		if( $gp_filesystem->connect() !== true ){
-			echo '<li>'.$langmessage['OOPS'].': (not connected)</li>';
+			$this->msg($langmessage['OOPS'].': (not connected)');
 			return false;
 		}
 
-		if( !$this->UnpackAndSort($package['file']) ){
+		if( !$this->UnpackAndSort($this->core_package['file']) ){
 			return false;
 		}
 
-		echo '<li>Files Sorted</li>';
-
-		echo '<li>'.$langmessage['copied_new_files'].'</li>';
+		$this->msg('Files Sorted');
 
 		$config['updating_message'] = $langmessage['sorry_currently_updating'];
 		if( !admin_tools::SaveConfig() ){
-			echo '<li>'.$langmessage['error_updating_settings'].'</li>';
+			$this->msg($langmessage['error_updating_settings']);
 			return false;
 		}
 
 		$replaced = $gp_filesystem->ReplaceDirs( $this->replace_dirs, $this->extra_dirs );
 
 		if( $replaced !== true ){
-			echo '<li>'.$langmessage['error_unpacking'].' '.$replaced.'</li>';
+			$this->msg($langmessage['error_unpacking'].' '.$replaced);
 			$this->RemoveUpdateMessage();
 			return false;
 		}
+
+		$this->msg($langmessage['copied_new_files']);
+
 		$this->RemoveUpdateMessage();
 
 		return true;
 	}
 
+	/**
+	 * Show which files will be deleted in the cleanup
+	 *
+	 */
 	function OldFolders(){
 		global $langmessage, $dataDir, $gp_filesystem;
 
@@ -642,7 +676,7 @@ class update_class{
 
 		$filesystem_base = $gp_filesystem->get_base_dir();
 
-		echo '<li>';
+		ob_start();
 		echo $langmessage['old_folders_created'];
 
 		echo '<ul>';
@@ -663,7 +697,7 @@ class update_class{
 		}
 		echo '</ul>';
 
-		echo '</li>';
+		$this->msg(ob_get_clean());
 	}
 
 
@@ -682,7 +716,7 @@ class update_class{
 		$archive = new PclZip($file);
 		$archive_root = $this->ArchiveRoot( $archive );
 		if( !$archive_root ){
-			echo '<li>'.$langmessage['error_unpacking'].' (no root)</li>';
+			$this->msg($langmessage['error_unpacking'].' (no root)');
 			return false;
 		}
 		$archive_root_len = strlen($archive_root);
@@ -693,11 +727,11 @@ class update_class{
 		@ini_set('memory_limit', '256M');
 		$archive_files = $archive->extract(PCLZIP_OPT_EXTRACT_AS_STRING);
 		if( $archive_files == false ){
-			echo '<li>'.$langmessage['OOPS'].': '.$archive->errorInfo(true).'</li>';
+			$this->msg($langmessage['OOPS'].': '.$archive->errorInfo(true));
 			return false;
 		}
 
-		echo '<li>'.$langmessage['package_unpacked'].'</li>';
+		$this->msg($langmessage['package_unpacked']);
 
 		//organize
 		foreach($archive_files as $file){
@@ -761,7 +795,7 @@ class update_class{
 
 		if( $file['folder'] ){
 			if( !$gp_filesystem->mkdir($full) ){
-				echo '<li>'.$langmessage['error_unpacking'].' (1)</li>';
+				$this->msg($langmessage['error_unpacking'].' (1)');
 				trigger_error('Could not create directory: '.$full);
 				return false;
 			}
@@ -770,7 +804,7 @@ class update_class{
 
 		if( !$gp_filesystem->put_contents($full,$file['content']) ){
 			trigger_error('Could not create file: '.$full);
-			echo '<li>'.$langmessage['error_unpacking'].' (2)</li>';
+			$this->msg($langmessage['error_unpacking'].' (2)');
 			return true;
 		}
 
@@ -807,64 +841,64 @@ class update_class{
 	}
 
 
-	function DownloadSource(&$package){
+	/**
+	 * Download the source code from gpeasy
+	 *
+	 */
+	function DownloadSource(){
 		global $langmessage;
+
+		$this->msg('Downloading version '.$this->core_package['version'].' from gpEasy.com.');
 
 		/* for testing
 		 * $download = 'http://test.gpeasy.com/gpEasy_test.zip';
 		 * $download = 'http://gpeasy.loc/x_gpEasy.zip';
 		 */
-		$download = addon_browse_path.'/Special_gpEasy?cmd=download';
 
 
-		echo '<li>Downloading version '.$package['version'].' from gpEasy.com.</li>';
+		$download 		= addon_browse_path.'/Special_gpEasy?cmd=download';
+		$contents		= gpRemoteGet::Get_Successful($download);
 
-
-		$contents = gpRemoteGet::Get_Successful($download);
 		if( !$contents || empty($contents) ){
-			echo '<li>'.$langmessage['download_failed'].' (1)</li>';
+			$this->msg($langmessage['download_failed'].'(1)');
 			return false;
 		}
-		echo '<li>'.$langmessage['package_downloaded'].'</li>';
+		$this->msg($langmessage['package_downloaded']);
 
 		$md5 = md5($contents);
-		if( $md5 != $package['md5'] ){
-			echo '<li>'.$langmessage['download_failed_md5'];
-			echo '<br/>Downloaded Checksum ('.$md5.') != Expected Checksum ('.$package['md5'].')';
-			echo '</li>';
+		if( $md5 != $this->core_package['md5'] ){
+			$this->msg($langmessage['download_failed_md5'].'<br/>Downloaded Checksum ('.$md5.') != Expected Checksum ('.$this->core_package['md5'].')');
 			return false;
 		}
 
 
-		echo '<li>'.$langmessage['download_verified'].'</li>';
+		$this->msg($langmessage['download_verified']);
 
 
 		//save contents
 		$tempfile = $this->tempfile();
 		if( !gpFiles::Save($tempfile,$contents) ){
-			msg($langmessage['download_failed'].' (2)');
+			$this->msg($langmessage['download_failed'].' (2)');
 			return false;
 		}
 
-		$package['file'] = $tempfile;
+		$this->core_package['file'] = $tempfile;
 		return true;
 	}
 
 
-
-	function GetServerInfo(&$package){
+	/**
+	 * Make sure we actuallly have the ability to write to the server using
+	 *
+	 */
+	function GetServerInfo(){
 		global $langmessage,$gp_filesystem;
 
 		$connect_result = $gp_filesystem->connect();
 		if( $connect_result === true ){
 
 			$this->DoRemoteCheck2(); //make sure we have the latest information
-
-			echo '<ul class="progress">';
-			echo '<li>';
-			echo $langmessage['ready_for_upgrade'];
-			echo '</li>';
-			echo '</ul>';
+			$this->msg($langmessage['ready_for_upgrade']);
 			return true;
 
 		}elseif( isset($_POST['connect_values_submitted']) ){
@@ -893,6 +927,25 @@ class update_class{
 		return $tempfile;
 	}
 
+	/**
+	 * Add an update message
+	 *
+	 */
+	function msg($msg){
+		$this->update_msgs[] = $msg;
+	}
 
+	function OutputMessages(){
+
+		if( !$this->update_msgs ){
+			return;
+		}
+
+		echo '<ul class="progress">';
+		foreach($this->update_msgs as $msg){
+			echo '<li>'.$msg.'</li>';
+		}
+		echo '</ul>';
+	}
 }
 

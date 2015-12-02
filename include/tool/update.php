@@ -30,8 +30,8 @@ class update_class{
 
 
 	//for unpacking and replacing
-	var $replace_dirs = array();
-	var $extra_dirs = array();
+	var $replace_dirs		= array();
+	var $extra_dirs			= array();
 
 
 	//update vars
@@ -530,41 +530,12 @@ class update_class{
 	 *
 	 */
 	function CleanUp(){
-		global $langmessage, $config, $gp_filesystem, $dataDir;
+		global $langmessage;
 
-
-		if( $gp_filesystem->connect() !== true ){
-			$this->msg($langmessage['OOPS'].': (not connected)');
-			return false;
-		}
 
 		//delete old folders
 		if( isset($_POST['old_folder']) && is_array($_POST['old_folder']) ){
-			$filesystem_base = $gp_filesystem->get_base_dir();
-			$not_deleted = array();
-			foreach($_POST['old_folder'] as $old_folder){
-
-				if( ( strpos($old_folder,'../') !== false )
-					|| ( strpos($old_folder,'./') !== false )
-					){
-					continue;
-				}
-
-				$old_folder = '/'.ltrim($old_folder,'/');
-				$old_folder_full = $filesystem_base.$old_folder;
-
-				if( !$gp_filesystem->file_exists($old_folder_full) ){
-					continue;
-				}
-
-				if( !$gp_filesystem->rmdir_all($old_folder_full) ){
-					$not_deleted[] = htmlspecialchars($old_folder);
-				}
-			}
-
-			if( count($not_deleted) > 0 ){
-				$this->msg($langmessage['delete_incomplete'].': '.implode(', ',$not_deleted));
-			}
+			$this->CleanUpFolders($_POST['old_folders']);
 		}
 
 
@@ -594,6 +565,51 @@ class update_class{
 		echo common::link('','&#187; '.$langmessage['return_to_your_site']);
 		echo '</h3>';
 
+
+		return true;
+	}
+
+
+	/**
+	 * Delete folders
+	 *
+	 */
+	function CleanUpFolders($folders){
+		global $gp_filesystem, $langmessage;
+
+		if( $gp_filesystem->connect() !== true ){
+			$this->msg($langmessage['OOPS'].' (not connected)');
+			return false;
+		}
+
+
+		$filesystem_base	= $gp_filesystem->get_base_dir();
+		$not_deleted		= array();
+
+		foreach($folders as $old_folder){
+
+			if( ( strpos($old_folder,'../') !== false )
+				|| ( strpos($old_folder,'./') !== false )
+				){
+				continue;
+			}
+
+			$old_folder			= '/'.ltrim($old_folder,'/');
+			$old_folder_full	= $filesystem_base.$old_folder;
+
+			if( !$gp_filesystem->file_exists($old_folder_full) ){
+				continue;
+			}
+
+			if( !$gp_filesystem->rmdir_all($old_folder_full) ){
+				$not_deleted[] = htmlspecialchars($old_folder);
+			}
+		}
+
+		if( count($not_deleted) > 0 ){
+			$this->msg($langmessage['delete_incomplete'].': '.implode(', ',$not_deleted));
+			return false;
+		}
 
 		return true;
 	}
@@ -736,22 +752,21 @@ class update_class{
 		//organize
 		foreach($archive_files as $file){
 
-			$filename =& $file['filename'];
 
-			if( strpos($filename,$archive_root) === false ){
+			if( strpos($file['filename'],$archive_root) === false ){
 				continue;
 			}
 
-			$rel_filename = substr($filename,$archive_root_len);
+			$rel_filename	= substr($file['filename'],$archive_root_len);
+			$name_parts		= explode('/',trim($rel_filename,'/'));
+			$dir			= array_shift($name_parts);
+			$replace_dir	= false;
 
-			$name_parts = explode('/',trim($rel_filename,'/'));
-			$dir = array_shift($name_parts);
-			$replace_dir = false;
 			switch($dir){
 
 				case 'include':
-					$replace_dir = 'include';
-					$rel_filename = implode('/',$name_parts);
+					$replace_dir	= 'include';
+					$rel_filename	= implode('/',$name_parts);
 				break;
 
 				case 'themes':
@@ -759,8 +774,8 @@ class update_class{
 					if( count($name_parts) == 0 ){
 						continue 2;
 					}
-					$replace_dir = $dir.'/'.array_shift($name_parts);
-					$rel_filename = implode('/',$name_parts);
+					$replace_dir	= $dir.'/'.array_shift($name_parts);
+					$rel_filename	= implode('/',$name_parts);
 				break;
 			}
 

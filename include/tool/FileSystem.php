@@ -375,18 +375,24 @@ class gp_filesystem_base{
 	 *
 	 */
 	function TempFile( $relative_from ){
-		static $rand_index, $dataDir;
+		global $dataDir;
+		static $rand_index;
+
+		clearstatcache();
+
 		if( is_null($rand_index) ){
 			$rand_index = rand(1000,9000);
 		}
 
-		$new_relative = $relative_from.'-'.$rand_index;
-		$full_path = $dataDir.$new_relative;
+		$new_relative	= $relative_from.'-'.$rand_index;
+		$full_path		= $dataDir.$new_relative;
 
-		while( file_exists($full_path) ){
-			$new_name = $relative_from.'-'.$rand_index;
-			$full_path = $dataDir.$new_relative;
+		$i = 0;
+		while( file_exists($full_path) && $i < 10 ){
+			$new_name		= $relative_from.'-'.$rand_index;
+			$full_path		= $dataDir.$new_relative;
 			$rand_index++;
+			$i++;
 		}
 
 		return $new_relative;
@@ -403,26 +409,29 @@ class gp_filesystem_base{
 	 function ReplaceDirs( $replace_dirs, &$clean_dirs ){
 		global $langmessage, $dataDir;
 
-		$fs_root = $this->get_base_dir();
-		$trash_dirs = array();
-		$completed = true;
+
+		$fs_root		= $this->get_base_dir();
+		$trash_dirs		= array();
+		$completed		= true;
 		$message;
 		foreach( $replace_dirs as $to_rel => $from_rel ){
 
-			$to_rel = trim($to_rel,'/');
-			$from_rel = trim($from_rel,'/');
+
+			$to_rel			= trim($to_rel,'/');
+			$from_rel		= trim($from_rel,'/');
 
 
-			$completed = false;
-			$to_full = $fs_root.'/'.$to_rel;
-			$from_full = $fs_root.'/'.$from_rel;
-			$trash_rel = $this->TempFile( $to_rel.'-old' );
-			$trash_full = $fs_root.'/'.$trash_rel;
+			$completed		= false;
+			$to_full		= $fs_root.'/'.$to_rel;
+			$from_full		= $fs_root.'/'.$from_rel;
+			$trash_rel		= $this->TempFile( $to_rel.'-old' );
+			$trash_full		= $fs_root.'/'.$trash_rel;
 
 			if( !$this->file_exists($from_full) ){
 				$message = $langmessage['dir_replace_failed'].' (Exist Check Failed - '.$this->method.' - '.htmlspecialchars($from_full).')';
 				break;
 			}
+
 
 
 			//rename the original to the trash if it exists
@@ -454,9 +463,9 @@ class gp_filesystem_base{
 		//if it's not all completed, undo the changes that were completed
 		foreach( $trash_dirs as $to_rel => $trash_rel ){
 
-			$to_full = $fs_root.'/'.$to_rel;
-			$from_full = $fs_root.'/'.$replace_dirs[$to_rel];
-			$trash_full = $fs_root.'/'.$trash_rel;
+			$to_full		= $fs_root.'/'.$to_rel;
+			$from_full		= $fs_root.'/'.$replace_dirs[$to_rel];
+			$trash_full		= $fs_root.'/'.$trash_rel;
 
 			$this->rename( $to_full, $from_full );
 			$this->rename( $trash_full, $to_full );
@@ -468,6 +477,7 @@ class gp_filesystem_base{
 	}
 
 	function file_exists($file){
+		clearstatcache(true, $file);
 		return file_exists($file);
 	}
 

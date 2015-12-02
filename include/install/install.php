@@ -238,7 +238,10 @@ class gp_install{
 			common::GetLangFile('main.inc',$install_language);
 
 
-		echo '<h1>'.$langmessage['Installation'].'</h1>';
+		echo '<h1>';
+		echo $langmessage['Installation'];
+		echo ' - v'.gpversion;
+		echo '</h1>';
 
 		$installed = false;
 		$cmd = common::GetCommand();

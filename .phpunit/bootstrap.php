@@ -26,4 +26,14 @@ class gptest_bootstrap extends PHPUnit_Framework_TestCase{
 
 	function setUP(){}
 
+	static function log($msg){
+		static $fp;
+
+		if( !$fp ){
+			$log	= __DIR__ . '/phpunit.log';
+			$fp		= fopen($log, 'a');
+		}
+		fwrite($fp, "\n".print_r($msg, TRUE));
+	}
+
 }

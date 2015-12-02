@@ -5,6 +5,7 @@ class phpunit_Update extends gptest_bootstrap{
 
 
 	/**
+	 *
 	 * @runInSeparateProcess
 	 */
 	function testUpdate(){
@@ -13,7 +14,18 @@ class phpunit_Update extends gptest_bootstrap{
 		$this->UpdateFilesystem();
 		$this->UpdatePackageInfo();
 		$this->DownloadSource();
+		$this->UnpackAndSort();
+		$this->ReplaceDirs();
 
+	}
+
+	static function AssertTrue($condition, $msg = '' ){
+		global $page;
+
+		if( $condition !== true ){
+			echo "\n --".implode("\n --",$page->update_msgs);
+		}
+		parent::assertTrue($condition,$msg);
 	}
 
 
@@ -61,6 +73,7 @@ class phpunit_Update extends gptest_bootstrap{
 
 	}
 
+
 	/**
 	 * Make sure we can get the new source from gpeasy
 	 *
@@ -73,12 +86,49 @@ class phpunit_Update extends gptest_bootstrap{
 
 	}
 
-	static function AssertTrue($condition, $msg = '' ){
+
+	/**
+	 * Make sure the unzip and file replacement works
+	 *
+	 */
+	function UnpackAndSort(){
 		global $page;
 
-		if( $condition !== true ){
-			echo "\n --".implode("\n --",$page->update_msgs);
-		}
-		parent::assertTrue($condition,$msg);
+		$success = $page->UnpackAndSort($page->core_package['file']);
+
+		self::AssertTrue($success,'UnpackAndSort Failed');
 	}
+
+
+	/**
+	 * Make sure we can replace the directories
+	 *
+	 */
+	function ReplaceDirs(){
+		global $page, $gp_filesystem;
+
+
+		$extra_dirs		= array();
+		$success		= $gp_filesystem->ReplaceDirs( $page->replace_dirs, $extra_dirs );
+		self::AssertTrue($success,'ReplaceDirs Failed');
+
+		if( !$success ){
+			return;
+		}
+
+
+		//remove what we just installed
+		$remove = array_keys($page->replace_dirs);
+		$page->CleanUpFolders($remove);
+
+
+		//reverse it
+		$replace_dirs	= $extra_dirs;
+		$extra_dirs		= array();
+		$success		= $gp_filesystem->ReplaceDirs( $replace_dirs, $extra_dirs );
+		self::AssertTrue($success,'ReplaceDirs Failed (2)');
+
+	}
+
+
 }

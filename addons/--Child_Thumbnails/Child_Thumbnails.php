@@ -5,8 +5,8 @@ includeFile('tool/SectionContent.php');
 
 class Child_Thumbnails{
 
-	function Child_Thumbnails(){
-		global $page, $gp_index, $gp_menu, $dirPrefix;
+	function __construct(){
+		global $page, $gp_index, $gp_menu;
 
 		if( !isset($gp_menu[$page->gp_index]) ){
 			return;
@@ -42,34 +42,11 @@ class Child_Thumbnails{
 	 * Get The Image
 	 *
 	 */
-	function Child($title){
+	public function Child($title){
 		global $dirPrefix;
-		$file = gpFiles::PageFile($title);
 
-		$file_sections = $file_stats = array();
-		ob_start();
-		require($file);
-		ob_get_clean();
+		$content = $this->TitleContent($title);
 
-		if( !is_array($file_sections) ){
-			return;
-		}
-
-		//prevent infinite loops
-		foreach($file_sections as $key=>$val){
-			if($val['type']=='include'){
-				unset($file_sections[$key]);
-			}
-		}
-
-		if( !$file_sections ){
-			return;
-		}
-
-		$file_sections = array_values($file_sections);
-
-		//get the image
-		$content = section_content::Render($file_sections,$title,$file_stats);
 		$img_pos = strpos($content,'<img');
 		if( $img_pos === false ){
 			return;
@@ -94,19 +71,45 @@ class Child_Thumbnails{
 		$thumb_path = common::ThumbnailPath($src);
 
 
-		$img_pos2 = strpos($content,'>',$img_pos);
-		$img = substr($content,$img_pos,$img_pos2-$img_pos+1);
-
-
-
-
-
 		echo '<li>';
 		echo '<img src="'.$thumb_path.'"/>';
-		//echo $img;
 		$label = common::GetLabel($title);
 		echo common::Link($title,$label);
 		echo '</li>';
+	}
+
+
+	/**
+	 * Return the formatted content of the title
+	 *
+	 */
+	public function TitleContent($title){
+		$file = gpFiles::PageFile($title);
+
+		$file_sections = $file_stats = array();
+		ob_start();
+		require($file);
+		ob_get_clean();
+
+		if( !is_array($file_sections) ){
+			return '';
+		}
+
+		//prevent infinite loops
+		foreach($file_sections as $key=>$val){
+			if($val['type']=='include'){
+				unset($file_sections[$key]);
+			}
+		}
+
+		if( !$file_sections ){
+			return '';
+		}
+
+		$file_sections = array_values($file_sections);
+
+
+		return section_content::Render($file_sections,$title,$file_stats);
 	}
 
 }

@@ -65,6 +65,10 @@ class gpAjax{
 			die();
 		}
 
+		if( !isset($_REQUEST['jsoncallback']) ){
+			die('Invalid Request: jsoncallback not set');
+		}
+
 		//gadgets may be using gpajax/json request/responses
 		gpOutput::TemplateSettings();
 		gpOutput::PrepGadgetContent();

@@ -62,7 +62,7 @@ class Child_Thumbnails{
 			}
 		}
 
-		if( !$file_sections) ){
+		if( !$file_sections ){
 			return;
 		}
 

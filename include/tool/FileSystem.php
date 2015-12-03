@@ -413,7 +413,7 @@ class gp_filesystem_base{
 		$fs_root		= $this->get_base_dir();
 		$trash_dirs		= array();
 		$completed		= true;
-		$message;
+		$message		= '';
 		foreach( $replace_dirs as $to_rel => $from_rel ){
 
 

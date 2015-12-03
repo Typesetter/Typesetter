@@ -2429,13 +2429,11 @@ class gpOutput{
 
 
 		//add error notice if there was a fatal error
-		if( !ini_get('display_errors') && function_exists('error_get_last') ){
+		if( !ini_get('display_errors') ){
 
+			$last_error	= self::LastFatal();
 
-			//check for fatal error
-			$fatal_errors = array( E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR );
-			$last_error = error_get_last();
-			if( is_array($last_error) && in_array($last_error['type'],$fatal_errors) ){
+			if( $last_error ){
 
 				$last_error['request'] = $_SERVER['REQUEST_URI'];
 				if( $addon_current_id ){
@@ -2468,9 +2466,6 @@ class gpOutput{
 						$content = json_encode($last_error);
 					}
 
-					//$buffer .= pre(self::$catchable).'<hr/>';
-					//$buffer .= '<h3>Existing Fatal Notices</h3>'.pre(self::$fatal_notices).'<hr/>';
-
 
 					$temp = array_reverse(self::$catchable);
 					foreach($temp as $error_hash => $info){
@@ -2485,32 +2480,7 @@ class gpOutput{
 					}
 				}
 
-
-				//reload non-logged in users automatically, display message to admins
-				$buffer .= '<p>Oops, an error occurred while generating this page.<p>';
-				if( !common::LoggedIn() ){
-					if( $reload ){
-						$buffer .= 'Reloading... <script type="text/javascript">window.setTimeout(function(){window.location.href = window.location.href},1000);</script>';
-					}else{
-						$buffer .= '<p>If you are the site administrator, you can troubleshoot the problem by changing php\'s display_errors setting to 1 in the gpconfig.php file.</p>'
-								.'<p>If the problem is being caused by an addon, you may also be able to bypass the error by enabling gpEasy\'s safe mode in the gpconfig.php file.</p>'
-								.'<p>More information is available in the <a href="http://docs.gpeasy.com/Main/Troubleshooting">gpEasy documentation</a>.</p>'
-								.'<p><a href="">Reload this page to continue</a>.</p>'
-								;
-					}
-				}else{
-					$buffer .= '<h3>Error Details</h3>'
-							.pre($last_error)
-							.'<p><a href="">Reload this page</a></p>';
-					if( $reload ){
-						$buffer .= '<p><a href="">Reload this page with the faulty component disabled</a></p>'
-								. '<p><a href="?cmd=enable_component&hash='.$error_hash.'">Reload this page with the faulty component enabled</a></p>';
-					}
-					$buffer .= '<p style="font-size:90%">Note: Error details are only displayed for logged in administrators</p>'
-							.common::ErrorBuffer(true,false);
-
-				}
-
+				$buffer .= self::FatalMessage( $reload, $last_error);
 			}
 		}
 
@@ -2567,11 +2537,66 @@ class gpOutput{
 
 
 	/**
+	 * Return the message displayed when a fatal error has been caught
+	 *
+	 */
+	public static function FatalMessage($reload, $error_details){
+
+		$message = '<p>Oops, an error occurred while generating this page.<p>';
+
+		if( !common::LoggedIn() ){
+
+			//reload non-logged in users automatically
+			if( $reload ){
+				$message .= 'Reloading... <script type="text/javascript">window.setTimeout(function(){window.location.href = window.location.href},1000);</script>';
+			}else{
+				$message .= '<p>If you are the site administrator, you can troubleshoot the problem by changing php\'s display_errors setting to 1 in the gpconfig.php file.</p>'
+						.'<p>If the problem is being caused by an addon, you may also be able to bypass the error by enabling gpEasy\'s safe mode in the gpconfig.php file.</p>'
+						.'<p>More information is available in the <a href="http://docs.gpeasy.com/Main/Troubleshooting">gpEasy documentation</a>.</p>'
+						.'<p><a href="">Reload this page to continue</a>.</p>'
+						;
+			}
+
+			return $message;
+		}
+
+
+		$message .= '<h3>Error Details</h3>'
+				.pre($error_details)
+				.'<p><a href="">Reload this page</a></p>'
+				.'<p style="font-size:90%">Note: Error details are only displayed for logged in administrators</p>'
+				.common::ErrorBuffer(true,false);
+
+		return $message;
+	}
+
+
+	/**
+	 * Determine if a fatal error has been fired
+	 * @return array
+	 */
+	public static function LastFatal(){
+
+		if( !function_exists('error_get_last') ){
+			return;
+		}
+
+
+		$fatal_errors	= array( E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR );
+		$last_error		= error_get_last();
+		if( is_array($last_error) && in_array($last_error['type'],$fatal_errors) ){
+			return $last_error;
+		}
+
+	}
+
+
+	/**
 	 * Return Performance Stats about the current request
 	 *
 	 * @return array
 	 */
-	static function PerformanceStats(){
+	public static function PerformanceStats(){
 
 		$stats = array();
 

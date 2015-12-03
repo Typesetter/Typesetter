@@ -2341,7 +2341,9 @@ class common{
 		$debug	= trim($debug,'=');
 		$debug	= strtr($debug, '+/', '-_');
 
-		return ' <span>'.$langmessage[$lang_key].' <a href="'.debug_path.'?data='.$debug.'" target="_blank">More Info...</a></span>';
+		$label	= isset($langmessage[$lang_key]) ? $langmessage[$lang_key] : $lang_key;
+
+		return ' <span>'.$label.' <a href="'.debug_path.'?data='.$debug.'" target="_blank">More Info...</a></span>';
 	}
 
 

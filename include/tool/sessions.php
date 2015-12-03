@@ -312,7 +312,7 @@ class gpsession{
 		$secure			= (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' );
 		$domain			= self::ServerName();
 
-		if( !$domain ){
+		if( !$domain || strpos($domain,'.') === false ){
 			$domain = '';
 		}
 

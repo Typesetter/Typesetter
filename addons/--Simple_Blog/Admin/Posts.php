@@ -242,14 +242,20 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 	/**
 	 * Display form for submitting posts (new and edit)
 	 *
+	 * @param string $label
+	 * @param array $array
+	 * @param string $cmd
+	 * @param int|string $post_id
 	 */
-	private function PostForm($label,&$array,$cmd='save_new',$post_id=false){
+	private function PostForm($label,&$array,$cmd='save_new',$post_id=null){
 		global $langmessage;
 
 		includeFile('tool/editing.php');
 
 		$array 				+= array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>false, 'categories'=>array(), 'time'=>time() );
-		$array				+= array('isDraft'=>SimpleBlogCommon::AStrValue('drafts',$post_id));
+		if( $post_id ){
+			$array				+= array('isDraft'=>SimpleBlogCommon::AStrValue('drafts',$post_id));
+		}
 		$array['title']		= SimpleBlogCommon::Underscores( $array['title'] );
 
 		$action = common::GetUrl('Admin_Blog');

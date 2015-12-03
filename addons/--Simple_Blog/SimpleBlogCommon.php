@@ -11,16 +11,15 @@ includeFile('tool/recaptcha.php');
  *
  *
  */
-
 class SimpleBlogCommon{
 
 	public static $index_file;
-	public static $data			= false;
+	public static $data			= null;
 	public static $root_url		= 'Special_Blog';
 
 	public $new_install			= false;
 	public $addonPathData;
-	public $post_id				= false;
+	public $post_id				= null;
 
 	public static $data_dir;
 
@@ -832,7 +831,7 @@ class SimpleBlogCommon{
 	/**
 	 * Get/Set the value from a serialized string
 	 * @param string $data_string
-	 * @param string $key
+	 * @param int|string $key
 	 * @param mixed $new_value
 	 */
 	static function AStrValue( $data_string, $key, $new_value = false ){

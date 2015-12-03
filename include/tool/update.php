@@ -290,7 +290,7 @@ class update_class{
 		//get data from gpEasy
 		$result = gpRemoteGet::Get_Successful($path);
 		if( !$result ){
-			$this->msg('No result from gpEasy.com');
+			$this->msg(gpRemoteGet::Debug('Sorry, data not fetched'));
 			return false;
 		}
 
@@ -305,7 +305,10 @@ class update_class{
 
 		$array = json_decode($result, true); //json as of gpEasy 4.1
 		if( !is_array($array) || (count($array) < 1) ){
-			$this->msg('Invalid result from gpEasy.com');
+			$debug				= array();
+			$debug['Two']		= substr($result,0,2);
+			$debug['Twotr']		= substr(trim($result),0,2);
+			$this->msg(gpRemoteGet::Debug('Sorry, data not fetched',$debug));
 			return false;
 		}
 

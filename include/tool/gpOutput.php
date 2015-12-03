@@ -2465,7 +2465,7 @@ class gpOutput{
 		//add jquery if needed
 		$placeholder = '<!-- jquery_placeholder '.gp_random.' -->';
 		$replacement = '';
-		if( strpos($buffer,'<script') !== false ){
+		if( strpos($gp_head_content,'<script') !== false || strpos($buffer,'<script') !== false ){
 			if( $config['jquery'] != 'local' ){
 				$replacement = "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>";
 			}else{

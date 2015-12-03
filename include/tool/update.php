@@ -296,12 +296,14 @@ class update_class{
 
 
 		//zipped data possible as of gpEasy 4.1
+		/*
 		if( function_exists('gzinflate') ){
 			$temp = gzinflate($result);
 			if( $temp ){
 				$result = $temp;
 			}
 		}
+		*/
 
 		$result = trim($result);
 		$array	= json_decode($result, true); //json as of gpEasy 4.1

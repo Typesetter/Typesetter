@@ -2425,62 +2425,15 @@ class gpOutput{
 	 * @return string finalized response
 	 */
 	static function BufferOut($buffer){
-		global $config,	$gp_head_content, $addonFolderName, $dataDir, $addon_current_id, $wbErrorBuffer;
+		global $config,	$gp_head_content;
 
 
 		//add error notice if there was a fatal error
 		if( !ini_get('display_errors') ){
-
 			$last_error	= self::LastFatal();
-
 			if( $last_error ){
-
-				$last_error['request'] = $_SERVER['REQUEST_URI'];
-				if( $addon_current_id ){
-					$last_error['addon_name'] = $config['addons'][$addonFolderName]['name'];
-					$last_error['addon_id'] = $addon_current_id;
-				}
-
-				$last_error['file'] = realpath($last_error['file']);//may be redundant
-				showError($last_error['type'], $last_error['message'],  $last_error['file'],  $last_error['line'], false); //send error to logger
-				$reload = false;
-
-				//disable execution
-				if( count(self::$catchable) ){
-
-					$last_error['time'] = time();
-					$last_error['request_method'] = $_SERVER['REQUEST_METHOD'];
-					if( !empty($last_error['file']) ){
-						$last_error['file_modified'] = filemtime($last_error['file']);
-						$last_error['file_size'] = filesize($last_error['file']);
-					}
-
-					//error text, check for existing fatal notice
-					if( count(self::$fatal_notices) ){
-						$content = end(self::$fatal_notices);
-						reset(self::$fatal_notices);
-						if( $content[0] == '{' && $temp = json_decode($content,true) ){
-							$last_error = $temp;
-						}
-					}else{
-						$content = json_encode($last_error);
-					}
-
-
-					$temp = array_reverse(self::$catchable);
-					foreach($temp as $error_hash => $info){
-
-						$file = $dataDir.'/data/_site/fatal_'.$error_hash;
-						gpFiles::Save($file,$content);
-						$reload = true;
-
-						if( $info['catchable_type'] == 'exec' ){
-							break;
-						}
-					}
-				}
-
-				$buffer .= self::FatalMessage( $reload, $last_error);
+				self::RecordFatal( $last_error );
+				$buffer .= self::FatalMessage( $last_error );
 			}
 		}
 
@@ -2540,21 +2493,20 @@ class gpOutput{
 	 * Return the message displayed when a fatal error has been caught
 	 *
 	 */
-	public static function FatalMessage($reload, $error_details){
+	public static function FatalMessage( $error_details ){
 
 		$message = '<p>Oops, an error occurred while generating this page.<p>';
 
 		if( !common::LoggedIn() ){
 
-			//reload non-logged in users automatically
-			if( $reload ){
+			//reload non-logged in users automatically if there were catchable errors
+			if( self::$catchable ){
 				$message .= 'Reloading... <script type="text/javascript">window.setTimeout(function(){window.location.href = window.location.href},1000);</script>';
 			}else{
 				$message .= '<p>If you are the site administrator, you can troubleshoot the problem by changing php\'s display_errors setting to 1 in the gpconfig.php file.</p>'
 						.'<p>If the problem is being caused by an addon, you may also be able to bypass the error by enabling gpEasy\'s safe mode in the gpconfig.php file.</p>'
 						.'<p>More information is available in the <a href="http://docs.gpeasy.com/Main/Troubleshooting">gpEasy documentation</a>.</p>'
-						.'<p><a href="">Reload this page to continue</a>.</p>'
-						;
+						.'<p><a href="">Reload this page to continue</a>.</p>';
 			}
 
 			return $message;
@@ -2586,6 +2538,59 @@ class gpOutput{
 		$last_error		= error_get_last();
 		if( is_array($last_error) && in_array($last_error['type'],$fatal_errors) ){
 			return $last_error;
+		}
+
+	}
+
+
+	/**
+	 * Record fatal errors in /data/_site/ so we can prevent subsequent requests from having the same issue
+	 *
+	 */
+	function RecordFatal($last_error){
+		global $dataDir, $config, $addon_current_id, $addonFolderName;
+
+		$last_error['request'] = $_SERVER['REQUEST_URI'];
+		if( $addon_current_id ){
+			$last_error['addon_name'] = $config['addons'][$addonFolderName]['name'];
+			$last_error['addon_id'] = $addon_current_id;
+		}
+
+		$last_error['file'] = realpath($last_error['file']);//may be redundant
+		showError($last_error['type'], $last_error['message'],  $last_error['file'],  $last_error['line'], false); //send error to logger
+
+		if( !self::$catchable ){
+			return;
+		}
+
+		$last_error['time'] = time();
+		$last_error['request_method'] = $_SERVER['REQUEST_METHOD'];
+		if( !empty($last_error['file']) ){
+			$last_error['file_modified'] = filemtime($last_error['file']);
+			$last_error['file_size'] = filesize($last_error['file']);
+		}
+
+		//error text, check for existing fatal notice
+		if( count(self::$fatal_notices) ){
+			$content = end(self::$fatal_notices);
+			reset(self::$fatal_notices);
+			if( $content[0] == '{' && $temp = json_decode($content,true) ){
+				$last_error = $temp;
+			}
+		}else{
+			$content = json_encode($last_error);
+		}
+
+
+		$temp = array_reverse(self::$catchable);
+		foreach($temp as $error_hash => $info){
+
+			$file = $dataDir.'/data/_site/fatal_'.$error_hash;
+			gpFiles::Save($file,$content);
+
+			if( $info['catchable_type'] == 'exec' ){
+				break;
+			}
 		}
 
 	}

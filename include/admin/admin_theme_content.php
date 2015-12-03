@@ -2788,14 +2788,21 @@ class admin_theme_content extends admin_addon_install{
 	}
 
 
-	function CustomMenuForm($arg = '',$menu_args = array()){
+	/**
+	 * Output form elements for setting custom menu settings
+	 *
+	 * @param string $arg
+	 * @param array $menu_args
+	 */
+	public function CustomMenuForm($arg = '',$menu_args = array()){
 		global $langmessage;
 
-		$upper_bound =& $menu_args['upper_bound'];
-		$lower_bound =& $menu_args['lower_bound'];
-		$expand_bound =& $menu_args['expand_bound'];
-		$expand_all =& $menu_args['expand_all'];
-		$source_menu =& $menu_args['source_menu'];
+
+		$upper_bound	=& $menu_args['upper_bound'];
+		$lower_bound	=& $menu_args['lower_bound'];
+		$expand_bound	=& $menu_args['expand_bound'];
+		$expand_all		=& $menu_args['expand_all'];
+		$source_menu	=& $menu_args['source_menu'];
 
 
 		echo '<table class="bordered">';
@@ -2803,81 +2810,54 @@ class admin_theme_content extends admin_addon_install{
 		$this->MenuSelect($source_menu);
 
 		echo '<tr><th colspan="2">';
-			echo $langmessage['Show Titles...'];
+		echo $langmessage['Show Titles...'];
 		echo '</th></tr>';
 
-		echo '<tr><td>';
-			echo $langmessage['... Below Level'];
-			echo '</td><td class="add">';
-			echo '<select name="upper_bound" class="gpselect">';
-			for($i=0;$i<=4;$i++){
-				$label = $i;
-				if( $i === 0 ){
-					$label = '&nbsp;';
-				}
-				if( $i === $upper_bound ){
-					echo '<option value="'.$i.'" selected="selected">'.$label.'</option>';
-				}else{
-					echo '<option value="'.$i.'">'.$label.'</option>';
-				}
-			}
-			echo '</select>';
-			echo '</td></tr>';
+		$this->CustomMenuSection($langmessage['... Below Level'], 'upper_bound', $upper_bound);
+		$this->CustomMenuSection($langmessage['... At And Above Level'], 'lower_bound', $lower_bound);
 
-		echo '<tr><td>';
-			echo $langmessage['... At And Above Level'];
-			echo '</td><td class="add">';
-			echo '<select name="lower_bound" class="gpselect">';
-			for($i=0;$i<=4;$i++){
-				$label = $i;
-				if( $i === 0 ){
-					$label = '&nbsp;';
-				}
-				if( $i === $lower_bound ){
-					echo '<option value="'.$i.'" selected="selected">'.$label.'</option>';
-				}else{
-					echo '<option value="'.$i.'">'.$label.'</option>';
-				}
-			}
-
-
-			echo '</select>';
-			echo '</td></tr>';
 
 		echo '<tr><th colspan="2">';
-			echo $langmessage['Expand Menu...'];
-			echo '</th></tr>';
+		echo $langmessage['Expand Menu...'];
+		echo '</th></tr>';
+
+		$this->CustomMenuSection($langmessage['... Below Level'], 'expand_bound', $expand_bound);
+
 
 		echo '<tr><td>';
-			echo $langmessage['... Below Level'];
-			echo '</td><td class="add">';
-			echo '<select name="expand_bound" class="gpselect">';
-			for($i=0;$i<=4;$i++){
-				$label = $i;
-				if( $i === 0 ){
-					$label = '&nbsp;';
-				}
-				if( $i === $expand_bound ){
-					echo '<option value="'.$i.'" selected="selected">'.$label.'</option>';
-				}else{
-					echo '<option value="'.$i.'">'.$label.'</option>';
-				}
-			}
-
-			echo '</select>';
-			echo '</td></tr>';
-
-		echo '<tr><td>';
-			echo $langmessage['... Expand All'];
-			echo '</td><td class="add">';
-			$attr = '';
-			if( $expand_all ){
-				$attr = ' checked="checked"';
-			}
-			echo '<input type="checkbox" name="expand_all" '.$attr.'>';
-			echo '</td></tr>';
+		echo $langmessage['... Expand All'];
+		echo '</td><td class="add">';
+		$attr = $expand_all ? 'checked' : '';
+		echo '<input type="checkbox" name="expand_all" '.$attr.'>';
+		echo '</td></tr>';
 
 	}
+
+
+	/**
+	 * Output section for custom menu form
+	 *
+	 * @param string $label
+	 * @param string $name
+	 * @param int $value
+	 */
+	public function CustomMenuSection($label, $name, $value){
+		echo '<tr><td>';
+		echo $label;
+		echo '</td><td class="add">';
+		echo '<select name="'.$name.'" class="gpselect">';
+		for($i=0;$i<=4;$i++){
+
+			$label		= ($i === 0) ? '' : $i;
+			$selected	= ($i === $value) ? 'selected' : '';
+
+			echo '<option value="'.$i.'" '.$selected.'>'.$label.'</option>';
+		}
+
+		echo '</select>';
+		echo '</td></tr>';
+	}
+
 
 	function MenuSelect($source_menu){
 		global $config, $langmessage;

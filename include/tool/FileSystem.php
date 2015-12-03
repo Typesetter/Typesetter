@@ -680,31 +680,31 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 			$args['ftp_server'] = gpftp::GetFTPServer();
 		}
 
+		echo '<tr><td>';
+		echo 'FTP Hostname';
+		echo '</td><td>';
 		echo '<input type="hidden" name="filesystem_method" value="'.htmlspecialchars($this->method).'" />';
 		echo '<input type="hidden" name="connect_values_submitted" value="true" />';
-		echo '<tr><td>';
-			echo 'FTP Hostname';
-			echo '</td><td>';
-			echo '<input type="text" name="ftp_server" value="'.htmlspecialchars($args['ftp_server']).'" class="gpinput"/>';
-			echo '</td></tr>';
+		echo '<input type="text" name="ftp_server" value="'.htmlspecialchars($args['ftp_server']).'" class="gpinput"/>';
+		echo '</td></tr>';
 
 		echo '<tr><td>';
-			echo 'FTP Username';
-			echo '</td><td>';
-			echo '<input type="text" name="ftp_user" value="'.htmlspecialchars($args['ftp_user']).'" class="gpinput"/>';
-			echo '</td></tr>';
+		echo 'FTP Username';
+		echo '</td><td>';
+		echo '<input type="text" name="ftp_user" value="'.htmlspecialchars($args['ftp_user']).'" class="gpinput"/>';
+		echo '</td></tr>';
 
 		echo '<tr><td>';
-			echo 'FTP Password';
-			echo '</td><td>';
-			echo '<input type="password" name="ftp_pass" value="" class="gpinput"/>';
-			echo '</td></tr>';
+		echo 'FTP Password';
+		echo '</td><td>';
+		echo '<input type="password" name="ftp_pass" value="" class="gpinput"/>';
+		echo '</td></tr>';
 
 		echo '<tr><td>';
-			echo 'FTP Port';
-			echo '</td><td>';
-			echo '<input type="text" name="port" value="'.htmlspecialchars($args['port']).'" class="gpinput"/>';
-			echo '</td></tr>';
+		echo 'FTP Port';
+		echo '</td><td>';
+		echo '<input type="text" name="port" value="'.htmlspecialchars($args['port']).'" class="gpinput"/>';
+		echo '</td></tr>';
 	}
 
 	function mkdir($path){

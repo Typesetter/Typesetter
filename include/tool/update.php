@@ -916,13 +916,14 @@ class update_class{
 			$this->msg($langmessage['ready_for_upgrade']);
 			return true;
 
-		}elseif( isset($_POST['connect_values_submitted']) ){
+		}
+
+		if( isset($_POST['connect_values_submitted']) ){
 			msg($connect_result);
 		}
 
 		//not connected, show form
 		echo '<table class="formtable">';
-		echo '<tr><td>';
 
 		$gp_filesystem->connectForm();
 

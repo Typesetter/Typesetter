@@ -7,7 +7,7 @@ class section_content{
 	static $title	= '';
 	static $label	= '';
 	static $meta	= array();
-aa
+
 
 	/**
 	 * Loop through all sections and collect the fomatted content

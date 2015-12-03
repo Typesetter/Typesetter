@@ -56,7 +56,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 	 * Show all blog posts
 	 *
 	 */
-	function ShowPosts(){
+	public function ShowPosts(){
 		global $langmessage;
 
 		$this->Heading('Admin_Blog');
@@ -65,7 +65,6 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 		$post_titles		= SimpleBlogCommon::AStrToArray('titles');
 		$post_times			= SimpleBlogCommon::AStrToArray('post_times');
 		$post_comments		= SimpleBlogCommon::AStrToArray('comment_counts');
-		$post_closed		= SimpleBlogCommon::AStrToArray('comments_closed');
 		$post_drafts		= SimpleBlogCommon::AStrToArray('drafts');
 		$total_posts		= count($post_ids);
 		$per_page			= 20;
@@ -86,7 +85,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 		echo ($offset+1).' to '.min($total_posts,$offset+$per_page).' of '.$total_posts;
 		echo '</span>';
 		echo '<ul class="pagination">';
-		$links = array();
+
 		if( $total_posts > $per_page ){
 			for($i = 0; $i < $total_pages; $i++){
 				$_offset = $i*$per_page;
@@ -177,7 +176,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 	 * Admin a blog post
 	 *
 	 */
-	function AdminPost($id){
+	public function AdminPost($id){
 		global $langmessage;
 
 		if( !ctype_digit($id) ){
@@ -198,7 +197,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 		return true;
 	}
 
-	function _AdminPost(){
+	private function _AdminPost(){
 
 		$cmd = common::GetCommand();
 		switch( $cmd ){
@@ -218,7 +217,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 	 * Display the form for editing an existing post
 	 *
 	 */
-	function EditPost(){
+	private function EditPost(){
 		global $langmessage, $page;
 
 
@@ -226,7 +225,6 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 		$page->ajaxReplace	= array();
 		$post				= $this->post;
 		$_POST				+= $post;
-		$title				= htmlspecialchars($_POST['title'],ENT_COMPAT,'UTF-8',false);
 
 		$this->PostForm('Edit Post',$_POST,'save_edit',$this->post_id);
 	}
@@ -236,7 +234,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 	 * Display the form for creating a new post
 	 *
 	 */
-	function NewForm(){
+	private function NewForm(){
 		$this->PostForm('New Blog Post',$_POST);
 	}
 
@@ -245,7 +243,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 	 * Display form for submitting posts (new and edit)
 	 *
 	 */
-	function PostForm($label,&$array,$cmd='save_new',$post_id=false){
+	private function PostForm($label,&$array,$cmd='save_new',$post_id=false){
 		global $langmessage;
 
 		includeFile('tool/editing.php');
@@ -346,7 +344,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 	 * Display fields for setting publish date
 	 *
 	 */
-	function FieldPublish($array){
+	public function FieldPublish($array){
 
 		$style = '';
 		if( $array['isDraft'] ){
@@ -425,7 +423,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 	 * @return bool
 	 *
 	 */
-	function SaveEdit(){
+	private function SaveEdit(){
 		global $langmessage;
 
 
@@ -446,7 +444,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 	 * Save the post
 	 *
 	 */
-	static function SavePost($post_id, $post){
+	public static function SavePost($post_id, $post){
 		global $langmessage;
 
 		$_POST			+= array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>'','category'=>array());
@@ -508,7 +506,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 
 
 		SimpleBlogCommon::AStrValue('titles',$post_id,$title);
-		self::UpdatePostCategories($post_id,$title);	//find and update the edited post in categories and archives
+		self::UpdatePostCategories($post_id);	//find and update the edited post in categories and archives
 
 		if( !SimpleBlogCommon::SaveIndex() ){
 			message($langmessage['OOPS'].' (Index not saved)');
@@ -528,7 +526,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 	 * Show a list of all categories
 	 *
 	 */
-	static function ShowCategoryList( $post_id, $post ){
+	public static function ShowCategoryList( $post_id, $post ){
 
 		$_POST += array('category'=>array());
 
@@ -562,7 +560,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 	 * Update a category when a blog entry is edited
 	 *
 	 */
-	static function UpdatePostCategories( $post_id, $title ){
+	private static function UpdatePostCategories( $post_id ){
 
 		$_POST += array('category'=>array());
 
@@ -574,7 +572,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 
 		//loop through each category
 		$categories = SimpleBlogCommon::AStrToArray( 'categories' );
-		$edited_categories = array();
+
 		foreach( $categories as $catindex => $catname ){
 
 			SimpleBlogCommon::AStrRmValue('category_posts_'.$catindex, $post_id );

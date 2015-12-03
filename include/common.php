@@ -1078,7 +1078,7 @@ class common{
 	 * @param string $href The href value relative to the installation root (without index.php)
 	 * @param string $label Text or html to be displayed within the hyperlink
 	 * @param string $query Optional query to be used with the href
-	 * @param string $attr Optional string of attributes like title=".." and class=".."
+	 * @param string|array $attr Optional string of attributes like title=".." and class=".."
 	 * @param mixed $nonce_action If false, no nonce will be added to the query. Given a string, it will be used as the first argument in common::new_nonce()
 	 *
 	 * @return string The formatted html hyperlink

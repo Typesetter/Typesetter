@@ -14,15 +14,15 @@ includeFile('tool/recaptcha.php');
 
 class SimpleBlogCommon{
 
-	static $index_file;
-	static $data		= false;
-	static $root_url	= 'Special_Blog';
+	public static $index_file;
+	public static $data			= false;
+	public static $root_url		= 'Special_Blog';
 
-	var $new_install	= false;
-	var $addonPathData;
-	var $post_id		= false;
+	public $new_install			= false;
+	public $addonPathData;
+	public $post_id				= false;
 
-	static $data_dir;
+	public static $data_dir;
 
 
 
@@ -647,7 +647,7 @@ class SimpleBlogCommon{
 	}
 
 
-	function Underscores($str){
+	public static function Underscores($str){
 		if( function_exists('mb_ereg_replace') ){
 			return mb_ereg_replace('_', ' ', $str);
 		}
@@ -831,7 +831,9 @@ class SimpleBlogCommon{
 
 	/**
 	 * Get/Set the value from a serialized string
-	 *
+	 * @param string $data_string
+	 * @param string $key
+	 * @param mixed $new_value
 	 */
 	static function AStrValue( $data_string, $key, $new_value = false ){
 

@@ -2272,6 +2272,7 @@ class common{
 		return addon_browse_path.'/Resources?' . http_build_query($args,'','&');
 	}
 
+
 	static function AddonIds( &$addon_ids, $array ){
 
 		foreach($array as $addon_info){
@@ -2284,9 +2285,8 @@ class common{
 			}
 			$addon_ids[] = $addon_id;
 		}
-
-
 	}
+
 
 	/**
 	 * Used to send error reports without affecting the display of a page

@@ -2555,21 +2555,39 @@ class gpOutput{
 		}
 
 		if( strpos($buffer,'<body') !== false && class_exists('admin_tools') ){
-			if( function_exists('memory_get_peak_usage') ){
-				$buffer = str_replace('<span gpeasy-memory-usage>?</span>',admin_tools::FormatBytes(memory_get_usage()),$buffer);
-				$buffer = str_replace('<span gpeasy-memory-max>?</span>',admin_tools::FormatBytes(memory_get_peak_usage()),$buffer);
-			}
-
-			if( isset($_SERVER['REQUEST_TIME_FLOAT']) ){
-				$time	= microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
-			}else{
-				$time	= microtime(true) - gp_start_time;
-			}
-			$buffer	= str_replace('<span gpeasy-seconds>?</span>',round($time,3),$buffer);
-			$buffer	= str_replace('<span gpeasy-ms>?</span>',round($time*1000),$buffer);
+			$stats		= self::PerformanceStats();
+			$buffer		= str_replace( array_keys($stats), array_values($stats), $buffer);
 		}
 
 		return $buffer;
+	}
+
+
+	/**
+	 * Return Performance Stats about the current request
+	 *
+	 * @return array
+	 */
+	static function PerformanceStats(){
+
+		$stats = array();
+
+		if( function_exists('memory_get_peak_usage') ){
+			$stats['<span gpeasy-memory-usage>?</span>']	= admin_tools::FormatBytes(memory_get_usage());
+			$stats['<span gpeasy-memory-max>?</span>']		= admin_tools::FormatBytes(memory_get_peak_usage());
+		}
+
+		if( isset($_SERVER['REQUEST_TIME_FLOAT']) ){
+			$time	= microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
+		}else{
+			$time	= microtime(true) - gp_start_time;
+		}
+
+		$stats['<span gpeasy-seconds>?</span>']		= round($time,3);
+		$stats['<span gpeasy-ms>?</span>']			= round($time*1000);
+
+
+		return $stats;
 	}
 
 

@@ -15,7 +15,7 @@ class admin_display extends display{
 	var $admin_html = '';
 
 	function __construct($title){
-		global $langmessage, $gpAdmin;
+		global $langmessage;
 
 
 		$this->requested	= str_replace(' ','_',$title);

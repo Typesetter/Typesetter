@@ -10,10 +10,9 @@ class special_display extends display{
 	var $editable_details = false; //true; //could be true
 
 	function __construct($title){
-		global $langmessage,$config;
 
-		$this->requested = $title;
-		$this->title = $title;
+		$this->requested	= $title;
+		$this->title		= $title;
 	}
 
 	function RunScript(){

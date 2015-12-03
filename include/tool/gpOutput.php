@@ -2521,30 +2521,37 @@ class gpOutput{
 		}
 
 
-		//replace the <head> placeholder with header content
+		//make sure whe have a complete html request
 		$placeholder = '<!-- get_head_placeholder '.gp_random.' -->';
-		$pos = strpos($buffer,$placeholder);
-		if( $pos === false ){
+		if( strpos($buffer,$placeholder) === false ){
 			return $buffer;
 		}
 
-		$buffer = substr_replace($buffer,$gp_head_content,$pos,strlen($placeholder));
+		$replacements			= array();
+
+
+		//performace stats
+		if( class_exists('admin_tools') ){
+			$replacements		= self::PerformanceStats();
+		}
+
+		//head content
+		$replacements[$placeholder]	= $gp_head_content;
 
 
 		//add jquery if needed
 		$placeholder = '<!-- jquery_placeholder '.gp_random.' -->';
-		$pos = strpos($buffer,$placeholder);
-		if( $pos !== false ){
-			$replacement = '';
-			if( strpos($buffer,'<script') !== false ){
-				if( $config['jquery'] != 'local' ){
-					$replacement = "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>";
-				}else{
-					$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/js/jquery.js')."\"></script>";
-				}
+		$replacement = '';
+		if( strpos($buffer,'<script') !== false ){
+			if( $config['jquery'] != 'local' ){
+				$replacement = "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>";
+			}else{
+				$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/js/jquery.js')."\"></script>";
 			}
-			$buffer = substr_replace($buffer,$replacement,$pos,strlen($placeholder));
 		}
+
+		$replacements[$placeholder]	= $replacement;
+
 
 		//messages
 		$pos = strpos($buffer,'<!-- message_start '.gp_random.' -->');
@@ -2554,12 +2561,8 @@ class gpOutput{
 			$buffer = substr_replace($buffer,$replacement,$pos,$len+20);
 		}
 
-		if( strpos($buffer,'<body') !== false && class_exists('admin_tools') ){
-			$stats		= self::PerformanceStats();
-			$buffer		= str_replace( array_keys($stats), array_values($stats), $buffer);
-		}
 
-		return $buffer;
+		return str_replace( array_keys($replacements), array_values($replacements), $buffer);
 	}
 
 

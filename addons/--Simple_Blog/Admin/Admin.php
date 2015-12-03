@@ -2,8 +2,8 @@
 
 defined('is_running') or die('Not an entry point...');
 
-gpPlugin::incl('SimpleBlogCommon.php','require_once');
-gpPlugin::incl('Admin/SimpleBlogPage.php','require_once');
+gpPlugin::incl('SimpleBlogCommon.php');
+gpPlugin::incl('Admin/SimpleBlogPage.php');
 
 
 class SimipleBlogAdmin extends AdminSimpleBlogPage{

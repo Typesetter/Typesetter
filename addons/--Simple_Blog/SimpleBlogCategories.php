@@ -1,8 +1,8 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-//gpPlugin::incl('SimpleBlogCommon.php','require_once');
-gpPlugin::incl('SimpleBlog.php','require_once');
+//gpPlugin::incl('SimpleBlogCommon.php');
+gpPlugin::incl('SimpleBlog.php');
 
 class BlogCategories extends SimpleBlog{
 

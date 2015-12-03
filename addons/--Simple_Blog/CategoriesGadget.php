@@ -1,7 +1,7 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-gpPlugin::incl('SimpleBlogCommon.php','require_once');
+gpPlugin::incl('SimpleBlogCommon.php');
 
 class SimpleBlogCategories{
 

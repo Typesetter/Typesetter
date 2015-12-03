@@ -1,7 +1,7 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-gpPlugin::incl('SimpleBlogCommon.php','require_once');
+gpPlugin::incl('SimpleBlogCommon.php');
 
 /**
  * Class for displaying the Special_Blog page and performing it's actions
@@ -96,10 +96,10 @@ class SimpleBlog extends SimpleBlogCommon{
 
 
 		if( common::LoggedIn() ){
-			gpPlugin::incl('Admin/SimpleBlogPage.php','require_once');
+			gpPlugin::incl('Admin/SimpleBlogPage.php');
 			$blog_page = new AdminSimpleBlogPage($this->post_id);
 		}else{
-			gpPlugin::incl('SimpleBlogPage.php','require_once');
+			gpPlugin::incl('SimpleBlogPage.php');
 			$blog_page = new SimpleBlogPage($this->post_id);
 		}
 

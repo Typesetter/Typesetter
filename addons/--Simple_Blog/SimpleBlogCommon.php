@@ -72,7 +72,7 @@ class SimpleBlogCommon{
 	}
 
 	static function GenStaticContent(){
-		gpPlugin::incl('Admin/StaticGenerator.php','require_once');
+		gpPlugin::incl('Admin/StaticGenerator.php');
 		StaticGenerator::Generate();
 
 	}

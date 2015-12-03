@@ -1,7 +1,7 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-gpPlugin::incl('Admin/Admin.php','require_once');
+gpPlugin::incl('Admin/Admin.php');
 
 class AdminSimpleBlogCategories extends SimipleBlogAdmin{
 

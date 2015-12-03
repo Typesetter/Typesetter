@@ -303,11 +303,13 @@ class update_class{
 			}
 		}
 
-		$array = json_decode($result, true); //json as of gpEasy 4.1
+		$result = trim($result);
+		$array	= json_decode($result, true); //json as of gpEasy 4.1
 		if( !is_array($array) ){
-			$debug				= array();
-			$debug['Type']		= gettype($array);
-			$debug['Two']		= substr($result,0,20);
+			$debug						= array();
+			$debug['Type']				= gettype($array);
+			$debug['json_last_error']	= json_last_error();
+			$debug['Two']				= substr($result,0,20);
 			$this->msg(gpRemoteGet::Debug('Sorry, data not fetched',$debug));
 			return false;
 		}

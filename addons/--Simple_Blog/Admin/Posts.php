@@ -462,15 +462,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 			return false;
 		}
 
-
-		//get post time
-		$_POST['pub_year']		= ($_POST['pub_year'] <= 0 )	? date('Y') : $_POST['pub_year'];
-		$_POST['pub_month']		= ($_POST['pub_month'] <= 0 )	? date('n') : $_POST['pub_month'];
-		$_POST['pub_day']		= ($_POST['pub_day'] > 31 )		? 31 : $_POST['pub_day'];
-		$_POST['pub_day']		= ($_POST['pub_day'] <= 0 )		? date('j') : $_POST['pub_day'];
-		$_POST['pub_hour']		= ($_POST['pub_hour'] > 23 )	? $_POST['pub_hour'] -24 : $_POST['pub_hour'];
-		$_POST['pub_min']		= ($_POST['pub_min'] > 59 ) ? $_POST['pub_min'] -60 : $_POST['pub_min'];
-		$_POST['time']			= gmmktime( $_POST['pub_hour'], $_POST['pub_min'], 0, $_POST['pub_month'], $_POST['pub_day'], $_POST['pub_year'] );
+		self::GetPostedTime();
 
 
 		//different time
@@ -525,6 +517,21 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 
 
 		return true;
+	}
+
+
+	/**
+	 * Get posted time
+	 *
+	 */
+	public static function GetPostedTime(){
+		$_POST['pub_year']		= ($_POST['pub_year'] <= 0 )	? date('Y') : $_POST['pub_year'];
+		$_POST['pub_month']		= ($_POST['pub_month'] <= 0 )	? date('n') : $_POST['pub_month'];
+		$_POST['pub_day']		= ($_POST['pub_day'] > 31 )		? 31 : $_POST['pub_day'];
+		$_POST['pub_day']		= ($_POST['pub_day'] <= 0 )		? date('j') : $_POST['pub_day'];
+		$_POST['pub_hour']		= ($_POST['pub_hour'] > 23 )	? $_POST['pub_hour'] -24 : $_POST['pub_hour'];
+		$_POST['pub_min']		= ($_POST['pub_min'] > 59 ) ? $_POST['pub_min'] -60 : $_POST['pub_min'];
+		$_POST['time']			= gmmktime( $_POST['pub_hour'], $_POST['pub_min'], 0, $_POST['pub_month'], $_POST['pub_day'], $_POST['pub_year'] );
 	}
 
 

@@ -21,7 +21,6 @@ includeFile('tool/Plugins.php');
 
 common::GetLangFile();
 
-
 class gptest_bootstrap extends PHPUnit_Framework_TestCase{
 
 	function setUP(){}

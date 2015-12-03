@@ -22,7 +22,7 @@ class phpunit_Update extends gptest_bootstrap{
 	static function AssertTrue($condition, $msg = '' ){
 		global $page;
 
-		if( $condition !== true ){
+		if( $condition !== true && $page->update_msgs ){
 			echo "\n --".implode("\n --",$page->update_msgs);
 		}
 		parent::assertTrue($condition,$msg);

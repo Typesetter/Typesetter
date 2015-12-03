@@ -1458,16 +1458,6 @@ class common{
 		}
 
 
-		//remove old values
-		if( isset($config['linkto']) ) unset($config['linkto']);
-		if( isset($config['menu_levels']) ) unset($config['menu_levels']); //2.3.2
-		if( isset($config['hidegplink']) ){ //2.4RC2
-			if( $config['hidegplink'] === 'hide' ){
-				$config['showgplink'] = false;
-			}
-			unset($config['hidegplink']);
-		}
-
 		//make sure defaults are set
 		$config += array(
 				'maximgarea'		=> '691200',

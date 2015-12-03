@@ -388,7 +388,7 @@ class gp_filesystem_base{
 		$full_path		= $dataDir.$new_relative;
 
 		$i = 0;
-		while( file_exists($full_path) && $i < 10 ){
+		while( file_exists($full_path) && $i < 100 ){
 			$new_name		= $relative_from.'-'.$rand_index;
 			$full_path		= $dataDir.$new_relative;
 			$rand_index++;

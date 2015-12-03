@@ -2332,7 +2332,7 @@ class common{
 		$debug['phpversion']	= phpversion();
 		$debug['gpversion']		= gpversion;
 		$debug['Rewrite']		= $_SERVER['gp_rewrite'];
-		$debug['Server']		= $_SERVER['SERVER_SOFTWARE'];
+		$debug['Server']		= isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : '';
 
 
 		//create string

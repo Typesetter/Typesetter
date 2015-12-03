@@ -304,13 +304,26 @@ class update_class{
 		}
 
 		$array = json_decode($result, true); //json as of gpEasy 4.1
-		if( !is_array($array) || (count($array) < 1) ){
+		if( !is_array($array) ){
 			$debug				= array();
-			$debug['Two']		= substr($result,0,2);
-			$debug['Twotr']		= substr(trim($result),0,2);
+			$debug['Type']		= gettype($array);
+			$debug['Two']		= substr($result,0,20);
 			$this->msg(gpRemoteGet::Debug('Sorry, data not fetched',$debug));
 			return false;
 		}
+
+		if( !$array ){
+			$debug				= array();
+			$debug['Count']		= count($array);
+			$debug['Two']		= substr($result,0,20);
+			$this->msg(gpRemoteGet::Debug('Sorry, data not fetched',$debug));
+			return false;
+		}
+
+
+
+
+
 
 		$this->update_data['packages'] = array();
 

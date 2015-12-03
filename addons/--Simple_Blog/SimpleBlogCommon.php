@@ -71,7 +71,7 @@ class SimpleBlogCommon{
 	}
 
 	static function GenStaticContent(){
-		gpPlugin::incl('Admin/StaticGenerator.php');
+		gpPlugin_incl('Admin/StaticGenerator.php');
 		StaticGenerator::Generate();
 
 	}
@@ -312,7 +312,7 @@ class SimpleBlogCommon{
 	 * Return the configuration defaults
 	 * @static
 	 */
-	function Defaults(){
+	public static function Defaults(){
 		global $config;
 
 		$zero_strip = stristr(PHP_OS,'win') ? '' : '-';

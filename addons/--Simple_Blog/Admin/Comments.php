@@ -2,7 +2,7 @@
 
 defined('is_running') or die('Not an entry point...');
 
-gpPlugin::incl('Admin/Admin.php');
+gpPlugin_incl('Admin/Admin.php');
 
 
 class SimpleBlogComments extends SimipleBlogAdmin{

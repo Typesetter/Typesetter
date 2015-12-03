@@ -2,7 +2,7 @@
 defined('is_running') or die('Not an entry point...');
 
 
-gpPlugin::incl('SimpleBlogPage.php');
+gpPlugin_incl('SimpleBlogPage.php');
 
 class AdminSimpleBlogPage extends SimpleBlogPage{
 

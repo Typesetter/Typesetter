@@ -30,6 +30,6 @@ $texts[] = 'Close Comments';
 
 /* this function can be used to update the addon once changes to the text values have been made */
 function OnTextChange(){
-	gpPlugin::incl('SimpleBlogCommon.php');
+	gpPlugin_incl('SimpleBlogCommon.php');
 	new SimpleBlogCommon();//regenerate the gadget and feed
 }

@@ -2229,14 +2229,13 @@ class common{
 
 
 		//checkin
-		//$args['uniq'] = $config['gpuniq'];
-		$args['mdu'] = substr(md5($config['gpuniq']),0,20);
-		$args['site'] = common::AbsoluteUrl(''); //keep full path for backwards compat
-		$args['gpv'] = gpversion;
-		$args['php'] = phpversion();
-		$args['se'] =& $_SERVER['SERVER_SOFTWARE'];
-		$args['data'] = $dataDir;
-		$args['zlib'] = (int)function_exists('gzcompress');
+		$args['mdu']		= substr(md5($config['gpuniq']),0,20);
+		$args['site']		= common::AbsoluteUrl(''); //keep full path for backwards compat
+		$args['gpv']		= gpversion;
+		$args['php']		= phpversion();
+		$args['se']			=& $_SERVER['SERVER_SOFTWARE'];
+		$args['data']		= $dataDir;
+		//$args['zlib'] = (int)function_exists('gzcompress');
 
 		if( defined('service_provider_id') && is_numeric(service_provider_id) ){
 			$args['provider'] = service_provider_id;

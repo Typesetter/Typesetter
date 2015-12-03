@@ -2219,8 +2219,6 @@ class common{
 	static function IdUrl($request_cmd='cv'){
 		global $config, $dataDir, $gpLayouts;
 
-		$path = addon_browse_path.'/Resources?';
-
 		//command
 		$args['cmd'] = $request_cmd;
 
@@ -2232,41 +2230,30 @@ class common{
 		$args['site']		= common::AbsoluteUrl(''); //keep full path for backwards compat
 		$args['gpv']		= gpversion;
 		$args['php']		= phpversion();
-		$args['se']			=& $_SERVER['SERVER_SOFTWARE'];
+		$args['se']			= $_SERVER['SERVER_SOFTWARE'];
 		$args['data']		= $dataDir;
 		//$args['zlib'] = (int)function_exists('gzcompress');
 
+
+		//service provider
 		if( defined('service_provider_id') && is_numeric(service_provider_id) ){
 			$args['provider'] = service_provider_id;
+		}
+
+		//testing
+		if( defined('gp_unit_testing') ){
+			$args['gp_unit_testing'] = 1;
 		}
 
 		//plugins
 		$addon_ids = array();
 		if( isset($config['addons']) && is_array($config['addons']) ){
-			foreach($config['addons'] as $addon => $addon_info){
-				if( !isset($addon_info['id']) ){
-					continue;
-				}
-				$addon_id = $addon_info['id'];
-				if( isset($addon_info['order']) ){
-					$addon_id .= '.'.$addon_info['order'];
-				}
-				$addon_ids[] = $addon_id;
-			}
+			self::AddonIds($addon_ids, $config['addons']);
 		}
 
 		//themes
 		if( isset($config['themes']) && is_array($config['themes']) ){
-			foreach($config['themes'] as $addon => $addon_info){
-				if( !isset($addon_info['id']) ){
-					continue;
-				}
-				$addon_id = $addon_info['id'];
-				if( isset($addon_info['order']) ){
-					$addon_id .= '.'.$addon_info['order'];
-				}
-				$addon_ids[] = $addon_id;
-			}
+			self::AddonIds($addon_ids, $config['themes']);
 		}
 
 		//layouts
@@ -2279,10 +2266,26 @@ class common{
 			}
 		}
 
-		$addon_ids = array_unique($addon_ids);
-		$args['as'] = implode('-',$addon_ids);
+		$addon_ids		= array_unique($addon_ids);
+		$args['as']		= implode('-',$addon_ids);
 
-		return $path . http_build_query($args,'','&');
+		return addon_browse_path.'/Resources?' . http_build_query($args,'','&');
+	}
+
+	static function AddonIds( &$addon_ids, $array ){
+
+		foreach($array as $addon_info){
+			if( !isset($addon_info['id']) ){
+				continue;
+			}
+			$addon_id = $addon_info['id'];
+			if( isset($addon_info['order']) ){
+				$addon_id .= '.'.$addon_info['order'];
+			}
+			$addon_ids[] = $addon_id;
+		}
+
+
 	}
 
 	/**

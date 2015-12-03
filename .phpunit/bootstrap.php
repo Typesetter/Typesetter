@@ -7,6 +7,8 @@ echo "\nBegin gpEasy Tests\n\n";
 
 
 defined('is_running') or define('is_running',true);
+defined('gp_unit_testing') or define('gp_unit_testing',true);
+
 global $dataDir;
 $dataDir = $_SERVER['PWD'];
 include('include/common.php');

@@ -140,12 +140,6 @@ define('gpdebug',true);
 //define('gp_safe_mode',false);
 
 
-/**
- * gptesting
- * Enable features currently under development
- */
-//define('gptesting',false);
-
 
 /**
  * Include clearfloats in gpeasy generated code

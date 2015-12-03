@@ -13,7 +13,6 @@ set_error_handler('showError');
 
 gp_defined('gp_restrict_uploads',false);
 gp_defined('gpdebugjs',gpdebug);
-gp_defined('gptesting',false);
 gp_defined('gp_cookie_cmd',true);
 gp_defined('gp_browser_auth',false);
 gp_defined('gp_require_encrypt',false);

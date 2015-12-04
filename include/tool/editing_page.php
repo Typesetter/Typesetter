@@ -142,9 +142,9 @@ class editing_page extends display{
 
 		if( $this->draft_exists ){
 			$message	.= ' &nbsp; ';
-			$message	.= common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq'));
-			$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Discard Draft'],'cmd=DiscardDraft',array('data-cmd'=>'creq'));
-			$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox'));
+			$message	.= common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq'),'class="msg_publish_draft"');
+			$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Discard Draft'],'cmd=DiscardDraft',array('data-cmd'=>'creq'),'class="msg_discard_draft"');
+			$message	.= ' &nbsp; '.common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox'),'class="msg_view_history"');
 		}
 
 		msg($message);

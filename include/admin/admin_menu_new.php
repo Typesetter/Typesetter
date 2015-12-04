@@ -144,9 +144,6 @@ class admin_menu_new extends admin_menu_tools{
 			case 'new_hidden':
 				$this->NewHiddenFile();
 			break;
-			case 'new_redir':
-				$this->NewHiddenFile_Redir();
-			return;
 
 			case 'CopyPage':
 				$this->CopyPage();
@@ -1605,6 +1602,22 @@ class admin_menu_new extends admin_menu_tools{
 
 		includeFile('tool/editing_page.php');
 
+
+		ob_start();
+		echo '<p>';
+		echo '<button type="submit" name="cmd" value="%s" class="gpsubmit gpvalidate" data-cmd="gppost">%s</button>';
+		echo '<button class="admin_box_close gpcancel">'.$langmessage['cancel'].'</button>';
+		if( isset($_GET['redir']) ){
+			echo '<input type="hidden" name="redir" value="redir" />';
+		}
+		echo '</p>';
+		echo '</td></tr>';
+		echo '</tbody>';
+		$format_bottom = ob_get_clean();
+
+
+
+
 		$title = '';
 		if( isset($_REQUEST['title']) ){
 			$title = $_REQUEST['title'];
@@ -1637,19 +1650,8 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<tr><td>';
 		echo $langmessage['Copy'];
 		echo '</td><td>';
-
 		$this->ScrollList($gp_index);
-
-		//copy buttons
-		echo '<p>';
-		echo '<button type="submit" name="cmd" value="CopyPage" class="gpsubmit gpvalidate" data-cmd="gppost">'.$langmessage['create_new_file'].'</button>';
-		echo '<button class="admin_box_close gpcancel">'.$langmessage['cancel'].'</button>';
-		echo '<input type="hidden" name="redir" value="redir"/> ';
-		echo '</p>';
-
-
-		echo '</td></tr>';
-		echo '</tbody>';
+		echo sprintf($format_bottom,'CopyPage',$langmessage['create_new_file']);
 
 
 		//content type
@@ -1660,23 +1662,7 @@ class admin_menu_new extends admin_menu_tools{
 		editing_page::NewSections(true);
 		echo '</div>';
 
-
-		//create buttons
-		echo '<p>';
-		if( isset($_GET['redir']) ){
-			echo '<input type="hidden" name="cmd" value="new_redir" />';
-		}else{
-			echo '<input type="hidden" name="cmd" value="new_hidden" />';
-		}
-		echo '<input type="submit" name="aaa" value="'.$langmessage['create_new_file'].'" class="gpsubmit gpvalidate" data-cmd="gppost"/> ';
-		echo '<input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
-		echo '</p>';
-
-
-		echo '</td></tr>';
-		echo '</table>';
-
-
+		echo sprintf($format_bottom,'new_hidden',$langmessage['create_new_file']);
 		echo '</form>';
 		echo '</div>';
 	}
@@ -1884,7 +1870,7 @@ class admin_menu_new extends admin_menu_tools{
 			return false;
 		}
 
-		if( !$this->SavePages($titles) ){
+		if( !$this->SaveNew($titles) ){
 			$this->RestoreSettings();
 			return false;
 		}
@@ -1925,7 +1911,7 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 
-		if( !$this->SavePages($menu) ){
+		if( !$this->SaveNew($menu) ){
 			$this->RestoreSettings();
 			return false;
 		}
@@ -1934,22 +1920,10 @@ class admin_menu_new extends admin_menu_tools{
 	}
 
 
-	public function NewHiddenFile_Redir(){
-		global $page;
-
-		$new_index = $this->NewHiddenFile();
-		if( $new_index === false ){
-			return;
-		}
-
-		$title = common::IndexToTitle($new_index);
-
-		//redirect to title
-		$url = common::AbsoluteUrl($title,'',true,false);
-		$page->ajaxReplace[] = array('location',$url,0);
-	}
-
-
+	/**
+	 * Create a new hidden
+	 *
+	 */
 	public function NewHiddenFile(){
 		global $langmessage;
 
@@ -1966,10 +1940,19 @@ class admin_menu_new extends admin_menu_tools{
 			$this->RestoreSettings();
 			return false;
 		}
+
 		msg($langmessage['SAVED']);
 		$this->search_page = 0; //take user back to first page where the new page will be displayed
+
+		if( isset($_REQUEST['redir']) ){
+			$title	= common::IndexToTitle($new_index);
+			$url	= common::AbsoluteUrl($title,'',true,false);
+			$page->ajaxReplace[] = array('location',$url,0);
+		}
+
 		return $new_index;
 	}
+
 
 	public function NewFile(){
 		global $langmessage;
@@ -1995,7 +1978,7 @@ class admin_menu_new extends admin_menu_tools{
 		$insert = array();
 		$insert[$new_index] = array();
 
-		if( !$this->SavePages($insert) ){
+		if( !$this->SaveNew($insert) ){
 			$this->RestoreSettings();
 			return false;
 		}
@@ -2096,32 +2079,17 @@ class admin_menu_new extends admin_menu_tools{
 
 	/**
 	 * Save pages
-	 * Insert titles into the current menu if needed
 	 *
 	 * @param array $titles
 	 * @return bool
 	 */
-	protected function SavePages($titles){
+	protected function SaveNew($titles){
 		global $langmessage;
 
 		//menu modification
 		if( isset($_POST['insert_where']) && isset($_POST['insert_how']) ){
-			$success = false;
-			switch($_POST['insert_how']){
-				case 'insert_before':
-				$success = $this->MenuInsert_Before($titles,$_POST['insert_where']);
-				break;
 
-				case 'insert_after':
-				$success = $this->MenuInsert_After($titles,$_POST['insert_where']);
-				break;
-
-				case 'insert_child':
-				$success = $this->MenuInsert_After($titles,$_POST['insert_where'],1);
-				break;
-			}
-
-			if( !$success ){
+			if( !$this->MenuInsert($titles,$_POST['insert_where'],$_POST['insert_how']) ){
 				msg($langmessage['OOPS'].' (Insert Failed)');
 				return false;
 			}
@@ -2143,6 +2111,25 @@ class admin_menu_new extends admin_menu_tools{
 		return true;
 	}
 
+
+	/**
+	 * Insert titles into the current menu if needed
+	 *
+	 */
+	function MenuInsert($titles,$neighbor,$insert_how){
+		switch($insert_how){
+			case 'insert_before':
+			return $this->MenuInsert_Before($titles,$neighbor);
+
+			case 'insert_after':
+			return $this->MenuInsert_After($titles,$neighbor);
+
+			case 'insert_child':
+			return $this->MenuInsert_After($titles,$neighbor,1);
+		}
+
+		return false;
+	}
 
 
 	/**
@@ -2681,7 +2668,7 @@ class admin_menu_new extends admin_menu_tools{
 		$key			= $this->NewExternalKey();
 		$insert[$key]	= $array;
 
-		if( !$this->SavePages($insert) ){
+		if( !$this->SaveNew($insert) ){
 			$this->RestoreSettings();
 			return false;
 		}
@@ -2831,7 +2818,7 @@ class admin_menu_new extends admin_menu_tools{
 		$insert = array();
 		$insert[$index] = array();
 
-		if( !$this->SavePages($insert) ){
+		if( !$this->SaveNew($insert) ){
 			$this->RestoreSettings();
 			return false;
 		}

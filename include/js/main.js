@@ -55,7 +55,6 @@ var $gp = {
 	 *
 	 */
 	post : function(this_context,data){
-		console.log('post');
 		$gp.loading();
 		var frm = $(this_context).closest('form');
 

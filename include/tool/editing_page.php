@@ -6,16 +6,21 @@ includeFile('tool/SectionContent.php');
 
 class editing_page extends display{
 
-	var $draft_file;
-	var $draft_exists		= false;
-	var $draft_stats		= array();
-	var $draft_meta			= array();
+	public $draft_file;
+	public $draft_exists		= false;
+	public $draft_stats			= array();
+	public $draft_meta			= array();
+
+	public $permission_edit;
+	public $permission_menu;
+
+	private $cmds				= array();
 
 	function __construct($title,$type){
 		parent::__construct($title,$type);
 	}
 
-	function RunScript(){
+	public function RunScript(){
 		global $langmessage, $page;
 		$cmd = common::GetCommand();
 
@@ -25,9 +30,6 @@ class editing_page extends display{
 		}
 
 		$this->GetFile();
-
-		$can_edit			= admin_tools::CanEdit($this->gp_index);
-		$menu_permissions	= admin_tools::HasPermission('Admin_Menu');
 
 
 		//allow addons to effect page actions and how a page is displayed
@@ -40,15 +42,8 @@ class editing_page extends display{
 		}
 
 		//admin actions
-		if( $menu_permissions ){
+		if( $this->permission_menu ){
 			switch($cmd){
-				// rename & details
-				case 'renameform':
-					$this->RenameForm();
-				return;
-				case 'ToggleVisibility':
-					$this->ToggleVisibility();
-				break;
 				case 'renameit':
 					if( $this->RenameFile() ){
 						return;
@@ -57,18 +52,11 @@ class editing_page extends display{
 			}
 		}
 
-		$this->AdminLinks();
-
 
 		//file editing actions
-		if( $can_edit ){
+		if( $this->permission_edit ){
 
 			switch($cmd){
-
-				case 'rawcontent':
-					$this->RawContent();
-				break;
-
 
 				/* gallery/image editing */
 				case 'gallery_folder':
@@ -93,67 +81,63 @@ class editing_page extends display{
 					gp_edit::ImageEditor();
 				return;
 
-
-				/* Manage section */
-				case 'ManageSections':
-					$this->ManageSections();
-				//dies
-				case 'NewSectionContent':
-					$this->NewSectionContent();
-				return;
 				case 'NewNestedSection':
 					$this->NewNestedSection($_REQUEST);
 				return;
-				case 'SaveSections':
-					$this->SaveSections();
-				return;
-
-
-				/* revision history */
-				case 'ViewRevision':
-					$this->ViewRevision();
-				return;
-				case 'UseRevision':
-					$this->UseRevision();
-				break;
-				case 'ViewHistory';
-					$this->ViewHistory();
-				return;
-				case 'ViewCurrent':
-					$this->ViewCurrent();
-				return;
-				case 'DeleteRevision':
-					$this->DeleteRevision();
-					$this->ViewHistory();
-				return;
-
-				//drafts
-				case 'PublishDraft':
-					$this->PublishDraft();
-				break;
-				case 'DiscardDraft':
-					$this->DiscardDraft();
-				break;
 
 			}
 		}
 
+		$this->RunCommands($cmd);
+	}
+
+
+	/**
+	 * Run Commands
+	 *
+	 */
+	public function RunCommands($cmd){
+
+		if( $cmd == 'return' ){
+			return;
+		}
+
+		$cmd = strtolower($cmd);
+
+		if( isset($this->cmds[$cmd]) ){
+			$this->$cmd();
+			$this->RunCommands($this->cmds[$cmd]);
+			return;
+		}
+
+
+		$this->DefaultDisplay();
+	}
+
+
+	/**
+	 * Display after commands have been executed
+	 *
+	 */
+	public function DefaultDisplay(){
 
 		//notify user we're using a draft
 		if( $this->draft_exists ){
 			$this->PageMessage();
 		}
 
+		$this->AdminLinks();
 
 		$this->contentBuffer = $this->GenerateContent_Admin();
 	}
+
 
 	/**
 	 * Display message about the page
 	 * If it's a draft, append info links
 	 *
 	 */
-	function PageMessage($message = ''){
+	public function PageMessage($message = ''){
 		global $langmessage;
 
 		if( $this->draft_exists ){
@@ -195,8 +179,33 @@ class editing_page extends display{
 			return false;
 		}
 
+		$this->permission_edit	= admin_tools::CanEdit($this->gp_index);
+		$this->permission_menu	= admin_tools::HasPermission('Admin_Menu');
+		$this->draft_file		= dirname($this->file).'/draft.php';
 
-		$this->draft_file	= dirname($this->file).'/draft.php';
+
+		//admin actions
+		if( $this->permission_menu ){
+			$this->cmds['renameform']			= 'return';
+			$this->cmds['togglevisibility']		= '';
+		}
+
+
+		if( $this->permission_edit ){
+			$this->cmds['rawcontent']			= 'return';
+			$this->cmds['managesections']		= 'newsectioncontent';
+			$this->cmds['newsectioncontent']	= 'return';
+			//$this->cmds['newnestedsection']		= 'return'; //need to pass $_REQUEST??
+			$this->cmds['savesections']			= 'return';
+			$this->cmds['viewrevision']			= '';
+			$this->cmds['userevision']			= '';
+			$this->cmds['viewhistory']			= 'return';
+			$this->cmds['viewcurrent']			= 'return';
+			$this->cmds['deleterevision']		= 'viewhistory';
+			$this->cmds['publishdraft']			= '';
+			$this->cmds['discarddraft']			= '';
+		}
+
 
 		if( !gpFiles::Exists($this->draft_file) ){
 			return true;
@@ -219,10 +228,8 @@ class editing_page extends display{
 		$admin_links			= $page->admin_links;
 		$page->admin_links		= array();
 
-		$menu_permissions		= admin_tools::HasPermission('Admin_Menu');
-		$can_edit				= admin_tools::CanEdit($this->gp_index);
 
-		if( $menu_permissions ){
+		if( $this->permission_menu ){
 			$page->admin_links[] = common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
 
 			// Having the layout link here complicates things.. would need layout link for special pages
@@ -245,12 +252,12 @@ class editing_page extends display{
 			$page->admin_links[] = common::Link('Admin_Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
 		}
 
-		if( $can_edit ){
+		if( $this->permission_edit ){
 			$page->admin_links[] = common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 		}
 
 
-		if( $menu_permissions ){
+		if( $this->permission_menu ){
 			$page->admin_links[] = common::Link('Admin_Menu',$langmessage['delete_file'],'cmd=trash_page&index='.urlencode($this->gp_index),array('data-cmd'=>'postlink','title'=>$langmessage['delete_page'],'class'=>'gpconfirm'));
 
 		}
@@ -1011,7 +1018,11 @@ class editing_page extends display{
 		echo sprintf($langmessage['_ago'],$elapsed);
 		echo '</td><td>';
 		echo admin_tools::FormatBytes($size);
-		echo '</td><td>'.$this->file_stats['username'].'</td><td>';
+		echo '</td><td>';
+		if( isset($this->file_stats['username']) ){
+			echo $this->file_stats['username'];
+		}
+		echo '</td><td>';
 		echo common::Link($this->title,$langmessage['View'],'cmd=ViewCurrent');//,array('data-cmd'=>'cnreq')
 		echo '</td></tr>';
 		$rows[$this->fileModTime] = ob_get_clean();

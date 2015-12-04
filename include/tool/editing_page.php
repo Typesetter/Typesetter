@@ -361,7 +361,7 @@ class editing_page extends display{
 		$output .= '</div>';
 
 		if( !isset($request['recursion']) ){
-			$page->ajaxReplace[] 	= array('PreviewSection','',$output;);
+			$page->ajaxReplace[] 	= array('PreviewSection','',$output);
 		}else{
 			return $output;
 		}

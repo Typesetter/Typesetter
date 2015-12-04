@@ -1601,8 +1601,9 @@ class admin_menu_new extends admin_menu_tools{
 		global $langmessage, $page, $gp_index;
 
 		includeFile('tool/editing_page.php');
+		$_REQUEST += array('title'=>'');
 
-
+		//reusable format
 		ob_start();
 		echo '<p>';
 		echo '<button type="submit" name="cmd" value="%s" class="gpsubmit gpvalidate" data-cmd="gppost">%s</button>';
@@ -1618,10 +1619,6 @@ class admin_menu_new extends admin_menu_tools{
 
 
 
-		$title = '';
-		if( isset($_REQUEST['title']) ){
-			$title = $_REQUEST['title'];
-		}
 		echo '<div class="inline_box">';
 
 		echo '<div class="layout_links" style="float:right">';
@@ -1642,7 +1639,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<tr><td>';
 		echo $langmessage['label'];
 		echo '</td><td>';
-		echo '<input type="text" name="title" maxlength="100" size="50" value="'.htmlspecialchars($title).'" class="gpinput full_width" required/>';
+		echo '<input type="text" name="title" maxlength="100" size="50" value="'.htmlspecialchars($_REQUEST['title']).'" class="gpinput full_width" required/>';
 		echo '</td></tr>';
 
 		//copy
@@ -1941,6 +1938,19 @@ class admin_menu_new extends admin_menu_tools{
 			return false;
 		}
 
+		$this->HiddenSaved($new_index);
+
+		return $new_index;
+	}
+
+
+	/**
+	 * Message or redirect when file is saved
+	 *
+	 */
+	public function HiddenSaved($new_index){
+		global $langmessage;
+
 		msg($langmessage['SAVED']);
 		$this->search_page = 0; //take user back to first page where the new page will be displayed
 
@@ -1950,7 +1960,6 @@ class admin_menu_new extends admin_menu_tools{
 			$page->ajaxReplace[] = array('location',$url,0);
 		}
 
-		return $new_index;
 	}
 
 
@@ -2824,11 +2833,7 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 
-		msg($langmessage['SAVED']);
-		if( isset($_REQUEST['redir']) ){
-			$url = common::AbsoluteUrl($title,'',true,false);
-			$page->ajaxReplace[] = array('location',$url,0);
-		}
+		$this->HiddenSaved($index);
 
 		return true;
 	}

@@ -265,7 +265,7 @@ $gp.links.ck_save = gp_editing.save_changes;
 	 * Warn before closing a page if an inline edit area has been changed
 	 *
 	 */
-	$gp.$win.on('beforeunload',function(){
+	$(window).on('beforeunload',function(){
 		if( !gp_editor ){
 			return;
 		}

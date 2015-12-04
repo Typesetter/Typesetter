@@ -3,6 +3,17 @@ $(function(){
 	LayoutSetup();
 	CssSetup();
 
+	/**
+	 * Resizeable editor
+	 *
+	 */
+	$("#theme_editor form").resizable({
+		handles : "e",
+		minWidth : 172,
+		resize : function(event, ui) {
+			$("#gp_iframe_wrap").css( "left", ui.size.width );
+		}
+	});
 
 
 	/**

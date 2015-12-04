@@ -160,7 +160,9 @@ a.add_layout{
 .dd_menu{
 	margin:5px 0;
 	}
-
+.dd_menu a{
+	text-overflow:ellipsis;
+	}
 
 
 
@@ -333,17 +335,19 @@ a.add_layout{
 
 
 	table{
+		table-layout:fixed;
 		border-collapse:collapse;
 		padding:0;
 		margin:0;
 		border:0 none;
 		height:100%;
+		width:100%;
 	}
 	td{
 		padding:0;
 		height:0;
 		background:0 none;
-		width:250px;
+		width:100%;
 	}
 
 	form > div,
@@ -395,7 +399,7 @@ a.add_layout{
 		}
 
 	.dd_menu{
-		width:228px;
+		width:100%;
 		}
 
 	select{
@@ -460,6 +464,12 @@ a.add_layout{
 	#gp_loading_img img{
 		vertical-align:middle;
 	}
+
+	div.ui-resizable-e{
+		position:absolute!important;
+		background: url('../imgs/drag_handle.gif')  50% 50% no-repeat;
+		right:-8px;
+	}
 }
 
 
@@ -467,6 +477,7 @@ a.add_layout{
 
 	border:1px solid #ccc;
 	border-radius: 3px;
+	width:auto!important;
 
 	pre{
 		background:none;

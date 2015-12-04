@@ -328,7 +328,6 @@ class editing_page extends display{
 		$wrapper_class		= $request['wrapper_class'];
 		$num				= time().rand(0,10000);
 		$new_section		= gp_edit::DefaultContent('wrapper_section');
-		/* this line can be removed */ //$content			= section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);
 
 
 		$new_section['attributes']['class']		.= ' '.$wrapper_class;

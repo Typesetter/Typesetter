@@ -389,12 +389,12 @@
 		 */
 		$(document).on('keyup','input.gpsearch',function(){
 			var search = this.value.toLowerCase();
-			$(this).closest('form').find('.gpui-scrolllist li:not(.gpui-state-checked)').each(function(){
+			$(this.form).find('.gpui-scrolllist > *').each(function(){
 				var $this = $(this);
 				if( $this.text().toLowerCase().indexOf(search) == -1 ){
-					$this.hide();
+					$this.addClass('filtered');
 				}else{
-					$this.show();
+					$this.removeClass('filtered');
 				}
 			});
 		});

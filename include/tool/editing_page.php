@@ -102,7 +102,7 @@ class editing_page extends display{
 					$this->NewSectionContent();
 				return;
 				case 'NewNestedSection':
-					$this->NewNestedSection();
+					$this->NewNestedSection($_REQUEST);
 				return;
 				case 'SaveSections':
 					$this->SaveSections();
@@ -314,21 +314,21 @@ class editing_page extends display{
 	 * Send multiple sections to the client
 	 *
 	 */
-	function NewNestedSection(){
+	function NewNestedSection($request){
 		global $page, $langmessage;
 		$page->ajaxReplace				= array();
 
-		if( empty($_REQUEST['types']) || !is_array($_REQUEST['types']) ){
+		if( empty($request['types']) || !is_array($request['types']) ){
 			msg($langmessage['OOPS'].' (Invalid Types)');
 			return;
 		}
 
-		$_REQUEST			+= array('wrapper_class'=>'gpRow');
+		$request			+= array('wrapper_class'=>'gpRow');
 
-		$wrapper_class		= $_REQUEST['wrapper_class'];
+		$wrapper_class		= $request['wrapper_class'];
 		$num				= time().rand(0,10000);
 		$new_section		= gp_edit::DefaultContent('wrapper_section');
-		$content			= section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);
+		/* this line can be removed */ //$content			= section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);
 
 
 		$new_section['attributes']['class']		.= ' '.$wrapper_class;
@@ -339,21 +339,32 @@ class editing_page extends display{
 
 
 
-		ob_start();
-		echo $this->SectionNode($new_section, $orig_attrs);
-		foreach($_REQUEST['types'] as $type){
-
-			if( strpos($type,'.') ){
-				list($type,$class) = explode('.',$type,2);
+		$output = (isset($output)) ? $output : '';
+		$output .= $this->SectionNode($new_section, $orig_attrs);
+		foreach($request['types'] as $type){
+			if ( is_array($type) ){
+				$new_request = array();
+				$new_request['types'] = $type[0];
+				$new_request['wrapper_class'] = isset($type[1]) ? $type[1] : '';
+				$new_request['recursion'] = true;
+				$output .= $this->NewNestedSection($new_request);
 			}else{
-				$class = '';
+				if( strpos($type,'.') ){
+					list($type,$class) = explode('.',$type,2);
+				}else{
+					$class = '';
+				}
 			}
 
-			echo $this->GetNewSection($type, $class);
+			$output .= $this->GetNewSection($type, $class);
 		}
-		echo '</div>';
+		$output .= '</div>';
 
-		$page->ajaxReplace[] 	= array('PreviewSection','',ob_get_clean());
+		if( !isset($request['recursion']) ){
+			$page->ajaxReplace[] 	= array('PreviewSection','',$output;);
+		}else{
+			return $output;
+		}
 	}
 
 	function GetNewSection($type, $class = ''){

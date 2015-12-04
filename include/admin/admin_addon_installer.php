@@ -117,21 +117,6 @@ class admin_addon_installer extends admin_addons_tool{
 			return;
 		}
 
-
-		$order = false;
-		if( isset($config['addons'][$addon]['order']) ){
-			$order = $config['addons'][$addon]['order'];
-		}
-
-
-		//tracking
-		$history = array();
-		$history['name'] = $config['addons'][$addon]['name'];
-		$history['action'] = 'uninstalled';
-		if( isset($config['addons'][$addon]['id']) ){
-			$history['id'] = $config['addons'][$addon]['id'];
-		}
-
 		unset($config['addons'][$addon]);
 
 
@@ -162,31 +147,14 @@ class admin_addon_installer extends admin_addons_tool{
 			return false;
 		}
 
-
-		//Delete the code & code folders
-		if( $this->rm_folders ){
-
-			//only delete code if remote installation
-			if( isset($addon_config['remote_install']) && $addon_config['remote_install'] ){
-
-				$installFolder = $addon_config['code_folder_full'];
-				if( file_exists($installFolder) ){
-					gpFiles::RmAll($installFolder);
-				}
-
-			}
-
-			$dataFolder = $addon_config['data_folder_full'];
-			if( file_exists($dataFolder) ){
-				gpFiles::RmAll($dataFolder);
-			}
-		}
+		$this->RemoveFolders($addon_config);
 
 		//Record the history
-		$history['time'] = time();
-		$this->addonHistory[] = $history;
+		$this->addonHistory[] = $this->UninstallHistory($addon_config);
 		$this->SaveAddonData();
-		if( $order ){
+
+
+		if( $addon_config['order'] ){
 			$img_path = common::IdUrl('ci');
 			common::IdReq($img_path);
 		}
@@ -194,6 +162,52 @@ class admin_addon_installer extends admin_addons_tool{
 
 		$this->message($langmessage['SAVED']);
 		return true;
+	}
+
+
+	/**
+	 * Delete the code & data folders for an addon
+	 * @param array $addon_config
+	 */
+	private function RemoveFolders($addon_config){
+
+		if( !$this->rm_folders ){
+			return;
+		}
+
+		//only delete code if remote installation
+		if( isset($addon_config['remote_install']) && $addon_config['remote_install'] ){
+
+			$installFolder = $addon_config['code_folder_full'];
+			if( file_exists($installFolder) ){
+				gpFiles::RmAll($installFolder);
+			}
+
+		}
+
+		$dataFolder = $addon_config['data_folder_full'];
+		if( file_exists($dataFolder) ){
+			gpFiles::RmAll($dataFolder);
+		}
+	}
+
+
+	/**
+	 * Prepare a history record for the addon history
+	 * @param array $addon_config
+	 */
+	public function UninstallHistory($addon_config){
+
+		$history			= array();
+		$history['name']	= $addon_config['name'];
+		$history['action']	= 'uninstalled';
+		$history['time']	= time();
+
+		if( isset($addon_config['id']) ){
+			$history['id'] = $addon_config['id'];
+		}
+
+		return $history;
 	}
 
 

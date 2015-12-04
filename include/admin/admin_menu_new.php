@@ -1884,19 +1884,13 @@ class admin_menu_new extends admin_menu_tools{
 			return false;
 		}
 
-		if( !$this->MenuInsert($titles,$_POST['insert_where'],$_POST['insert_how']) ){
-			msg($langmessage['OOPS'].' (Insert Failed)');
-			$this->RestoreSettings();
-			return false;
-		}
-
-		if( !$this->SaveMenu(false) ){
-			msg($langmessage['OOPS'].' (Save Failed)');
+		if( !$this->SavePages($titles) ){
 			$this->RestoreSettings();
 			return false;
 		}
 
 	}
+
 
 	/**
 	 * Add titles to the current menu from the trash
@@ -1931,20 +1925,14 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 
-		if( !$this->MenuInsert($menu,$_POST['insert_where'],$_POST['insert_how']) ){
-			msg($langmessage['OOPS']);
-			$this->RestoreSettings();
-			return false;
-		}
-
-		if( !$this->SaveMenu(true) ){
-			msg($langmessage['OOPS'].' (Not Saved)');
+		if( !$this->SavePages($menu) ){
 			$this->RestoreSettings();
 			return false;
 		}
 
 		admin_trash::ModTrashData(null,$titles);
 	}
+
 
 	function NewHiddenFile_Redir(){
 		global $page;
@@ -1993,8 +1981,7 @@ class admin_menu_new extends admin_menu_tools{
 			return false;
 		}
 
-		$neighbor = $_POST['insert_where'];
-		if( !isset($this->curr_menu_array[$neighbor]) ){
+		if( !isset($this->curr_menu_array[$_POST['insert_where']]) ){
 			msg($langmessage['OOPS'].'(1)');
 			return false;
 		}
@@ -2008,14 +1995,7 @@ class admin_menu_new extends admin_menu_tools{
 		$insert = array();
 		$insert[$new_index] = array();
 
-		if( !$this->MenuInsert($insert,$neighbor,$_POST['insert_how']) ){
-			msg($langmessage['OOPS'].' (Not Inserted)');
-			$this->RestoreSettings();
-			return false;
-		}
-
-		if( !$this->SaveMenu(true) ){
-			msg($langmessage['OOPS'].' (Not Saved)');
+		if( !$this->SavePages($insert) ){
 			$this->RestoreSettings();
 			return false;
 		}
@@ -2114,20 +2094,53 @@ class admin_menu_new extends admin_menu_tools{
 	}
 
 
-	function MenuInsert($titles,$neighbor,$insert_how){
-		switch($insert_how){
+	/**
+	 * Save pages
+	 * Insert titles into the current menu if needed
+	 *
+	 * @param array $titles
+	 * @return bool
+	 */
+	protected function SavePages($titles){
+		global $langmessage;
 
-			case 'insert_before':
-			return $this->MenuInsert_Before($titles,$neighbor);
+		//menu modification
+		if( isset($_POST['insert_where']) && isset($_POST['insert_how']) ){
+			$success = false;
+			switch($_POST['insert_how']){
+				case 'insert_before':
+				$success = $this->MenuInsert_Before($titles,$_POST['insert_where']);
+				break;
 
-			case 'insert_after':
-			return $this->MenuInsert_After($titles,$neighbor);
+				case 'insert_after':
+				$success = $this->MenuInsert_After($titles,$_POST['insert_where']);
+				break;
 
-			case 'insert_child':
-			return $this->MenuInsert_After($titles,$neighbor,1);
+				case 'insert_child':
+				$success = $this->MenuInsert_After($titles,$_POST['insert_where'],1);
+				break;
+			}
+
+			if( !$success ){
+				msg($langmessage['OOPS'].' (Insert Failed)');
+				return false;
+			}
+
+			if( !$this->SaveMenu(true) ){
+				msg($langmessage['OOPS'].' (Menu Not Saved)');
+				return false;
+			}
+
+			return true;
 		}
 
-		return false;
+
+		if( !admin_tools::SavePagesPHP() ){
+			msg($langmessage['OOPS'].' (Page index not saved)');
+			return false;
+		}
+
+		return true;
 	}
 
 
@@ -2635,6 +2648,7 @@ class admin_menu_new extends admin_menu_tools{
 
 	}
 
+
 	/**
 	 * Save a new external link in the current menu
 	 *
@@ -2650,21 +2664,15 @@ class admin_menu_new extends admin_menu_tools{
 			return;
 		}
 
-		$key = $this->NewExternalKey();
-		$insert[$key] = $array;
+		$key			= $this->NewExternalKey();
+		$insert[$key]	= $array;
 
-		if( !$this->MenuInsert($insert,$_POST['insert_where'],$_POST['insert_how']) ){
-			msg($langmessage['OOPS'].' (Not inserted)');
-			$this->RestoreSettings();
-			return false;
-		}
-
-		if( !$this->SaveMenu(false) ){
-			msg($langmessage['OOPS'].' (Menu not saved)');
+		if( !$this->SavePages($insert) ){
 			$this->RestoreSettings();
 			return false;
 		}
 	}
+
 
 	/**
 	 * Check the values of a post with external link values
@@ -2806,22 +2814,14 @@ class admin_menu_new extends admin_menu_tools{
 
 
 		//add to menu
-		if( isset($_POST['insert_where']) && isset($_POST['insert_how']) ){
-			$insert = array();
-			$insert[$index] = array();
+		$insert = array();
+		$insert[$index] = array();
 
-			if( !$this->MenuInsert($insert,$_POST['insert_where'],$_POST['insert_how']) ){
-				msg($langmessage['OOPS'].' (Not Inserted)');
-				$this->RestoreSettings();
-				return false;
-			}
-		}
-
-		if( !$this->SaveMenu(true) ){
-			msg($langmessage['OOPS'].' (Not Saved)');
+		if( !$this->SavePages($insert) ){
 			$this->RestoreSettings();
 			return false;
 		}
+
 
 		msg($langmessage['SAVED']);
 		if( isset($_REQUEST['redir']) ){

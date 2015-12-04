@@ -62,6 +62,7 @@ class admin_theme_content extends admin_addon_install{
 		$page->head_js[] = '/include/js/theme_content.js';
 		$page->head_js[] = '/include/js/dragdrop.js';
 		$page->css_admin[] = '/include/css/theme_content.less';
+		common::LoadComponents('resizable');
 
 		parent::__construct();
 
@@ -300,7 +301,6 @@ class admin_theme_content extends admin_addon_install{
 
 		$GLOBALS['GP_ARRANGE_CONTENT'] = true;
 		$page->head_js[] = '/include/js/inline_edit/inline_editing.js';
-		common::LoadComponents('resizable');
 
 
 		$this->curr_layout = $layout;

@@ -1433,12 +1433,12 @@ class admin_menu_new extends admin_menu_tools{
 	 * Make sure the homepage has a value
 	 *
 	 */
-	function ResetHomepage(){
+	public function ResetHomepage(){
 		global $config, $gp_menu, $gp_titles;
 
 		if( !isset($gp_titles[$config['homepath_key']]) ){
 			$config['homepath_key'] = key($gp_menu);
-			$config['homepath'] = common::IndexToTitle($config['homepath_key']);
+			$config['homepath']		= common::IndexToTitle($config['homepath_key']);
 		}
 	}
 
@@ -1448,7 +1448,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Adjust children levels if necessary
 	 *
 	 */
-	function RmFromMenu($search_key,$curr_menu=true){
+	protected function RmFromMenu($search_key,$curr_menu=true){
 		global $gp_menu;
 
 		if( $curr_menu ){
@@ -1510,11 +1510,11 @@ class admin_menu_new extends admin_menu_tools{
 
 
 
-	/*
+	/**
 	 * Rename
 	 *
 	 */
-	function RenameForm(){
+	public function RenameForm(){
 		global $langmessage, $gp_index;
 
 		includeFile('tool/Page_Rename.php');
@@ -1525,7 +1525,7 @@ class admin_menu_new extends admin_menu_tools{
 		gp_rename::RenameForm( $_REQUEST['index'], $action );
 	}
 
-	function RenameFile(){
+	public function RenameFile(){
 		global $langmessage, $gp_index;
 
 		includeFile('tool/Page_Rename.php');
@@ -1546,7 +1546,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Toggle Page Visibility
 	 *
 	 */
-	function ToggleVisibility(){
+	public function ToggleVisibility(){
 		$_REQUEST += array('index'=>'','visibility'=>'');
 		\gp\tool\Visibility::Toggle($_REQUEST['index'], $_REQUEST['visibility']);
 	}
@@ -1556,7 +1556,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Remove from the menu
 	 *
 	 */
-	function Hide(){
+	public function Hide(){
 		global $langmessage;
 
 		if( $this->curr_menu_array === false ){
@@ -1600,7 +1600,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Display a user form for adding a new page that won't be immediately added to a menu
 	 *
 	 */
-	function AddHidden(){
+	public function AddHidden(){
 		global $langmessage, $page, $gp_index;
 
 		includeFile('tool/editing_page.php');
@@ -1858,7 +1858,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Insert pages into the current menu from existing pages that aren't in the menu
 	 *
 	 */
-	function InsertFromHidden(){
+	public function InsertFromHidden(){
 		global $langmessage, $gp_index;
 
 		if( $this->curr_menu_array === false ){
@@ -1896,7 +1896,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Add titles to the current menu from the trash
 	 *
 	 */
-	function RestoreFromTrash(){
+	public function RestoreFromTrash(){
 		global $langmessage, $gp_index;
 
 
@@ -1934,7 +1934,7 @@ class admin_menu_new extends admin_menu_tools{
 	}
 
 
-	function NewHiddenFile_Redir(){
+	public function NewHiddenFile_Redir(){
 		global $page;
 
 		$new_index = $this->NewHiddenFile();
@@ -1950,7 +1950,7 @@ class admin_menu_new extends admin_menu_tools{
 	}
 
 
-	function NewHiddenFile(){
+	public function NewHiddenFile(){
 		global $langmessage;
 
 		$this->CacheSettings();
@@ -1971,7 +1971,7 @@ class admin_menu_new extends admin_menu_tools{
 		return $new_index;
 	}
 
-	function NewFile(){
+	public function NewFile(){
 		global $langmessage;
 		$this->CacheSettings();
 
@@ -2006,7 +2006,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Create a new page from a user post
 	 *
 	 */
-	function CreateNew(){
+	public function CreateNew(){
 		global $gp_index, $gp_titles, $langmessage, $gpAdmin;
 		includeFile('tool/editing_page.php');
 		includeFile('tool/editing.php');
@@ -2149,7 +2149,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Insert titles into menu
 	 *
 	 */
-	function MenuInsert_Before($titles,$sibling){
+	protected function MenuInsert_Before($titles,$sibling){
 
 		$old_level = $this->GetRootLevel($titles);
 
@@ -2190,7 +2190,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Place
 	 *
 	 */
-	function MenuInsert_After($titles,$sibling,$level_adjustment=0){
+	protected function MenuInsert_After($titles,$sibling,$level_adjustment=0){
 
 		if( !isset($this->curr_menu_array[$sibling]) || !isset($this->curr_menu_array[$sibling]['level']) ){
 			return false;
@@ -2244,7 +2244,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Insert $titles into $menu as children of $parent
 	 *
 	 */
-	function MenuInsert_Child($titles,$parent){
+	protected function MenuInsert_Child($titles,$parent){
 
 		if( !isset($this->curr_menu_array[$parent]) || !isset($this->curr_menu_array[$parent]['level']) ){
 			return false;
@@ -2275,7 +2275,7 @@ class admin_menu_new extends admin_menu_tools{
 		return true;
 	}
 
-	function AdjustMovedLevel($titles,$level_adjustment){
+	protected function AdjustMovedLevel($titles,$level_adjustment){
 
 		foreach($titles as $title => $info){
 			$level = 0;
@@ -2287,7 +2287,7 @@ class admin_menu_new extends admin_menu_tools{
 		return $titles;
 	}
 
-	function GetRootLevel($menu){
+	protected function GetRootLevel($menu){
 		reset($menu);
 		$info = current($menu);
 		if( isset($info['level']) ){
@@ -2297,21 +2297,21 @@ class admin_menu_new extends admin_menu_tools{
 	}
 
 
-
-
-	/*
-	 * Alternate Menus
-	 *
-	 *
+	/**
+	 * Is the menu an alternate menu
 	 *
 	 */
-
-	function IsAltMenu($id){
+	protected function IsAltMenu($id){
 		global $config;
 		return isset($config['menus'][$id]);
 	}
 
-	function AltMenu_Rename(){
+
+	/**
+	 * Rename a menu
+	 *
+	 */
+	protected function AltMenu_Rename(){
 		global $langmessage,$config;
 
 		$menu_id =& $_POST['id'];
@@ -2332,14 +2332,14 @@ class admin_menu_new extends admin_menu_tools{
 		}else{
 			$this->avail_menus[$menu_id] = $menu_name;
 		}
-
-
 	}
+
 
 	/**
 	 * Display a form for editing the name of an alternate menu
+	 *
 	 */
-	function RenameMenuPrompt(){
+	public function RenameMenuPrompt(){
 		global $langmessage;
 
 		$menu_id =& $_GET['id'];
@@ -2381,8 +2381,9 @@ class admin_menu_new extends admin_menu_tools{
 
 	/**
 	 * Display a form for creating a new menu
+	 *
 	 */
-	function NewMenu(){
+	public function NewMenu(){
 		global $langmessage;
 
 		echo '<div class="inline_box">';
@@ -2411,7 +2412,11 @@ class admin_menu_new extends admin_menu_tools{
 	}
 
 
-	function AltMenu_Create(){
+	/**
+	 * Create an alternate menu
+	 *
+	 */
+	public function AltMenu_Create(){
 		global $config, $langmessage, $dataDir;
 
 		$menu_name = $this->AltMenu_NewName();
@@ -2447,8 +2452,12 @@ class admin_menu_new extends admin_menu_tools{
 		}
 	}
 
-	//create a menu with one file
-	function AltMenu_New(){
+
+	/**
+	 * Generate menu data with a single file
+	 *
+	 */
+	public function AltMenu_New(){
 		global $gp_menu, $gp_titles;
 
 		if( count($gp_menu) ){
@@ -2463,7 +2472,11 @@ class admin_menu_new extends admin_menu_tools{
 		return $new_menu;
 	}
 
-	function AltMenu_NewName(){
+	/**
+	 * Check the posted name of a menu
+	 *
+	 */
+	public function AltMenu_NewName(){
 		global $langmessage;
 
 		$menu_name = gp_edit::CleanTitle($_POST['menu_name'],' ');
@@ -2481,8 +2494,11 @@ class admin_menu_new extends admin_menu_tools{
 	}
 
 
-
-	function AltMenu_Remove(){
+	/**
+	 * Remove an alternate menu from the configuration and delete the data file
+	 *
+	 */
+	public function AltMenu_Remove(){
 		global $langmessage,$config,$dataDir;
 
 		$menu_id =& $_POST['id'];
@@ -2506,8 +2522,6 @@ class admin_menu_new extends admin_menu_tools{
 		if( gpFiles::Exists($menu_file) ){
 			unlink($menu_file);
 		}
-
-
 	}
 
 
@@ -2837,7 +2851,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Display a form for selecting the homepage
 	 *
 	 */
-	function HomepageSelect(){
+	public function HomepageSelect(){
 		global $langmessage;
 
 		echo '<div class="inline_box">';
@@ -2863,7 +2877,12 @@ class admin_menu_new extends admin_menu_tools{
 
 	}
 
-	function HomepageDisplay(){
+
+	/**
+	 * Display the current homepage setting
+	 *
+	 */
+	public function HomepageDisplay(){
 		global $langmessage, $config;
 
 		$label = common::GetLabelIndex($config['homepath_key']);
@@ -2872,7 +2891,6 @@ class admin_menu_new extends admin_menu_tools{
 		echo $langmessage['Homepage'].': ';
 		echo common::Link('Admin_Menu',$label,'cmd=homepage_select','data-cmd="gpabox"');
 	}
-
 
 
 	/**

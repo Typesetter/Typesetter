@@ -8,52 +8,52 @@ defined('is_running') or die('Not an entry point...');
  *
  */
 class display{
-	var $pagetype			= 'display';
-	var $gp_index;
-	var $title;
-	var $label;
-	var $file				= false;
-	var $contentBuffer;
-	var $TitleInfo;
-	var $fileType			= '';
-	var $ajaxReplace		= array('#gpx_content');
-	var $admin_links		= array();
-	var $visibility			= false;
+	public $pagetype			= 'display';
+	public $gp_index;
+	public $title;
+	public $label;
+	public $file				= false;
+	public $contentBuffer;
+	public $TitleInfo;
+	public $fileType			= '';
+	public $ajaxReplace			= array('#gpx_content');
+	public $admin_links			= array();
+	public $visibility			= false;
 
-	var $fileModTime		= 0; /* @deprecated 3.0 */
-	var $file_stats			= array();
+	public $fileModTime			= 0; /* @deprecated 3.0 */
+	public $file_stats			= array();
 
 	//layout & theme
-	var $theme_name			= false;
-	var $theme_color		= false;
-	var $get_theme_css		= true;
-	var $theme_dir;
-	var $theme_path;
-	var $theme_rel;
-	var $theme_addon_id		= false;
-	var $theme_is_addon		= false;/* @deprecated 3.5 */
-	var $menu_css_ordered	= true;
-	var $menu_css_indexed	= true;
-	var $gpLayout;
+	public $theme_name			= false;
+	public $theme_color			= false;
+	public $get_theme_css		= true;
+	public $theme_dir;
+	public $theme_path;
+	public $theme_rel;
+	public $theme_addon_id		= false;
+	public $theme_is_addon		= false;/* @deprecated 3.5 */
+	public $menu_css_ordered	= true;
+	public $menu_css_indexed	= true;
+	public $gpLayout;
 
 
 	//<head> content
-	var $head				= '';
-	var $head_js			= array();
-	var $head_script		= '';
-	var $jQueryCode			= false;
-	var $admin_js			= false;
-	var $head_force_inline	= false;
-	var $meta_description	= '';
-	var $meta_keywords		= array();
+	public $head				= '';
+	public $head_js				= array();
+	public $head_script			= '';
+	public $jQueryCode			= false;
+	public $admin_js			= false;
+	public $head_force_inline	= false;
+	public $meta_description	= '';
+	public $meta_keywords		= array();
 
 	//css arrays
-	var $css_user			= array();
-	var $css_admin			= array();
+	public $css_user			= array();
+	public $css_admin			= array();
 
 
-	var $editable_content	= true;
-	var $editable_details	= true;
+	public $editable_content	= true;
+	public $editable_details	= true;
 
 	function __construct($title){
 		$this->title = $title;

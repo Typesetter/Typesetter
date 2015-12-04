@@ -520,7 +520,9 @@ body.gpAdmin div.editable_area{
 	margin-top:1em;
 	border-spacing:0;
 }
-.full_width{
+
+.full_width,
+#gp_admin_html .full_width{
 	width:100%;
 	}
 .bordered > tbody > tr > th,
@@ -1944,7 +1946,19 @@ body #addon_about{
 	overflow-x:hidden;
 	width:auto;
 	display:block;
+	padding-left:0;
+	padding-right:0;
 }
+
+.gpui-scrolllist > input.gpsearch{
+	box-sizing:border-box !important;
+	width:100% !important;
+	display:block;
+	padding:5px 10px;
+	border:0 none;
+	border-bottom:1px solid #ccc;
+	margin-bottom:3px;
+	}
 
 .gpui-scrolllist label,
 .gpui-scrolllist span{
@@ -1954,20 +1968,24 @@ body #addon_about{
 	overflow:hidden;
 	}
 
-.gpui-scrolllist input{
+.gpui-scrolllist label input{
 	position:absolute;
 	left:-20px;
+	z-index:-1;
 	}
+
 .gpui-scrolllist label > span{
 	border:1px solid #fff;
 	border-radius:4px;
 	padding:3px 5px;
 	color:#666;
-	margin-bottom:3px;
-}
+	margin:3px 6px;
+	}
+
 .gpui-scrolllist label.filtered > span{
 	display:none;
 	}
+
 .gpui-scrolllist input:checked + span{
 	display:block !important;
 	border-color:#ddd;

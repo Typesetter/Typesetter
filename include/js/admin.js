@@ -959,6 +959,24 @@ $(function(){
 
 	}
 
+
+	/**
+	 * Reduce a list of titles by search criteria entered in gpsearch areas
+	 *
+	 */
+	$(document).on('keyup','input.gpsearch',function(){
+		var search = this.value.toLowerCase();
+		$(this.form).find('.gpui-scrolllist > *').each(function(){
+			var $this = $(this);
+			if( $this.text().toLowerCase().indexOf(search) == -1 ){
+				$this.addClass('filtered');
+			}else{
+				$this.removeClass('filtered');
+			}
+		});
+	});
+
+
 });
 
 
@@ -1263,5 +1281,7 @@ $gp.response.renameprep = function(){
 	}
 
 };
+
+
 
 

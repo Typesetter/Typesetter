@@ -148,7 +148,7 @@ class admin_menu_new extends admin_menu_tools{
 				$this->NewHiddenFile_Redir();
 			return;
 
-			case 'copyit':
+			case 'CopyPage':
 				$this->CopyPage();
 			break;
 			case 'copypage':
@@ -1228,7 +1228,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Get a list of pages that are not in the main menu
 	 * @return array
 	 */
-	function GetAvailable(){
+	public function GetAvailable(){
 		global $gp_index, $gp_menu;
 
 		$avail = array();
@@ -1244,8 +1244,12 @@ class admin_menu_new extends admin_menu_tools{
 	 * Get a list of pages that are not in the current menu array
 	 * @return array
 	 */
-	function GetAvail_Current(){
+	protected function GetAvail_Current(){
 		global $gp_index;
+
+		if( $this->is_main_menu ){
+			return $this->GetAvailable();
+		}
 
 		foreach( $gp_index as $title => $index ){
 			if( !isset($this->curr_menu_array[$index]) ){
@@ -1625,7 +1629,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<tr><td>';
 		echo $langmessage['label'];
 		echo '</td><td>';
-		echo '<input type="text" name="title" maxlength="100" size="50" value="'.htmlspecialchars($title).'" class="gpinput" required/>';
+		echo '<input type="text" name="title" maxlength="100" size="50" value="'.htmlspecialchars($title).'" class="gpinput full_width" required/>';
 		echo '</td></tr>';
 
 		//copy
@@ -1638,8 +1642,8 @@ class admin_menu_new extends admin_menu_tools{
 
 		//copy buttons
 		echo '<p>';
-		echo '<button type="submit" name="cmd" value="copyit" class="gpsubmit gpvalidate" data-cmd="gppost">'.$langmessage['create_new_file'].'</button>';
-		echo '<input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
+		echo '<button type="submit" name="cmd" value="CopyPage" class="gpsubmit gpvalidate" data-cmd="gppost">'.$langmessage['create_new_file'].'</button>';
+		echo '<button class="admin_box_close gpcancel">'.$langmessage['cancel'].'</button>';
 		echo '<input type="hidden" name="redir" value="redir"/> ';
 		echo '</p>';
 
@@ -1681,8 +1685,13 @@ class admin_menu_new extends admin_menu_tools{
 	/**
 	 * Create a scrollable title list
 	 *
+	 * @param array $list
+	 * @param string $name
+	 * @pearm string $type
+	 * @param bool $index_as_value
 	 */
-	function ScrollList($list, $name = 'from_title', $type = 'radio', $index_as_value = false ){
+	public function ScrollList($list, $name = 'from_title', $type = 'radio', $index_as_value = false ){
+		global $langmessage;
 
 		$list_out = array();
 		foreach($list as $title => $index){
@@ -1707,6 +1716,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		uksort($list_out,'strnatcasecmp');
 		echo '<div class="gpui-scrolllist">';
+		echo '<input type="text" name="search" value="" class="gpsearch" placeholder="'.$langmessage['Search'].'" autocomplete="off" />';
 		echo implode('',$list_out);
 		echo '</div>';
 	}
@@ -1716,116 +1726,102 @@ class admin_menu_new extends admin_menu_tools{
 	 * Display the dialog for inserting pages into a menu
 	 *
 	 */
-	function InsertDialog($cmd){
-		global $langmessage,$page;
+	public function InsertDialog($cmd){
+		global $langmessage, $page, $gp_index;
 
 		includeFile('admin/admin_trash.php');
 
+		//create format of each tab
+		ob_start();
+		echo '<div id="%s" class="%s">';
+		echo '<form action="'.common::GetUrl('Admin_Menu').'" method="post">';
+		echo '<input type="hidden" name="insert_where" value="'.htmlspecialchars($_GET['insert_where']).'" />';
+		echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($cmd).'" />';
+		echo '<table class="bordered full_width">';
+		echo '<thead><tr><th>&nbsp;</th></tr></thead>';
+		echo '</table>';
+		$format_top = ob_get_clean();
+
+		ob_start();
+		echo '<p>';
+		echo '<button type="submit" name="cmd" value="%s" class="gpsubmit" data-cmd="gppost">%s</button>';
+		echo '<button class="admin_box_close gpcancel">'.$langmessage['cancel'].'</button>';
+		echo '</p>';
+		echo '</form>';
+		echo '</div>';
+		$format_bottom = ob_get_clean();
+
+
+
 		echo '<div class="inline_box">';
 
+			//tabs
 			echo '<div class="layout_links">';
-				echo ' <a href="#gp_Insert_New" data-cmd="tabs" class="selected">'. $langmessage['new_file'] .'</a>';
-				echo ' <a href="#gp_Insert_Hidden" data-cmd="tabs">'. $langmessage['Available Pages'] .'</a>';
-				echo ' <a href="#gp_Insert_Deleted" data-cmd="tabs">'. $langmessage['restore_from_trash'] .'</a>';
-				echo ' <a href="#gp_Insert_External" data-cmd="tabs">'. $langmessage['External Link'] .'</a>';
+			echo ' <a href="#gp_Insert_Copy" data-cmd="tabs" class="selected">'. $langmessage['Copy'] .'</a>';
+			echo ' <a href="#gp_Insert_New" data-cmd="tabs">'. $langmessage['new_file'] .'</a>';
+			echo ' <a href="#gp_Insert_Hidden" data-cmd="tabs">'. $langmessage['Available'] .'</a>';
+			echo ' <a href="#gp_Insert_External" data-cmd="tabs">'. $langmessage['External Link'] .'</a>';
+			echo ' <a href="#gp_Insert_Deleted" data-cmd="tabs">'. $langmessage['trash'] .'</a>';
 			echo '</div>';
+
+
+			// Copy
+			echo sprintf($format_top,'gp_Insert_Copy','');
+			echo '<table class="bordered full_width">';
+			echo '<tr><td>';
+			echo $langmessage['label'];
+			echo '</td><td>';
+			echo '<input type="text" name="title" maxlength="100" size="50" value="" class="gpinput full_width" required/>';
+			echo '</td></tr>';
+			echo '<tr><td>';
+			echo $langmessage['Copy'];
+			echo '</td><td>';
+			$this->ScrollList($gp_index);
+			echo '</td></tr>';
+			echo '</table>';
+			echo sprintf($format_bottom,'CopyPage',$langmessage['Copy']);
+
 
 			// Insert New
-			echo '<div id="gp_Insert_New">';
+			echo sprintf($format_top,'gp_Insert_New','nodisplay');
+			echo '<table class="bordered full_width">';
+			echo '<tr><td>';
+			echo $langmessage['label'];
+			echo '</td><td>';
+			echo '<input type="text" name="title" maxlength="100" value="" size="50" class="gpinput full_width" required />';
+			echo '</td></tr>';
 
-				echo '<form action="'.$this->GetUrl('Admin_Menu').'" method="post">';
-				echo '<table class="bordered full_width">';
-
-				echo '<tr><th>&nbsp;</th><th>&nbsp;</th></tr>';
-
-				echo '<tr>';
-					echo '<td>'.$langmessage['label'].'</td>';
-					echo '<td><input type="text" name="title" maxlength="100" value="" size="50" class="gpinput" /></td>';
-					echo '</tr>';
-
-				echo '<tr>';
-					echo '<td>'.$langmessage['Content Type'].'</td>';
-					echo '<td>';
-
-					includeFile('tool/editing_page.php');
-					echo '<div id="new_section_links">';
-					editing_page::NewSections(true);
-					echo '</div>';
-
-					echo '</td>';
-					echo '</tr>';
-
-				echo '</table>';
-
-					echo '<p>';
-					echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($cmd).'" />';
-					echo '<input type="hidden" name="insert_where" value="'.htmlspecialchars($_GET['insert_where']).'" />';
-
-					echo '<input type="hidden" name="cmd" value="new_file" />';
-					echo '<input type="submit" name="aaa" value="'.$langmessage['create_new_file'].'" class="gpsubmit" data-cmd="gppost"/> ';
-					echo '<input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
-					echo '</p>';
-
-				echo '</form>';
+			echo '<tr><td>';
+			echo $langmessage['Content Type'];
+			echo '</td><td>';
+			includeFile('tool/editing_page.php');
+			echo '<div id="new_section_links">';
+			editing_page::NewSections(true);
 			echo '</div>';
+			echo '</td></tr>';
+			echo '</table>';
+			echo sprintf($format_bottom,'new_file',$langmessage['create_new_file']);
+
 
 			// Insert Hidden
-			echo '<div id="gp_Insert_Hidden" class="nodisplay">';
-			if( $this->is_main_menu ){
-				$avail = $this->GetAvailable();
-			}else{
-				$avail = $this->GetAvail_Current();
-			}
+			$avail = $this->GetAvail_Current();
 
-			if( count($avail) == 0 ){
-				echo '<p>';
-				echo $langmessage['Empty'];
-				echo '</p>';
-			}else{
-
-				echo '<form action="'.common::GetUrl('Admin_Menu').'" method="post">';
-
-				echo '<table class="bordered full_width">';
-				echo '<thead><tr><th>';
-				echo $langmessage['title'];
-				echo ' &nbsp; <input type="text" name="search" value="" class="gpinput gpsearch" />';
-				echo '</th></tr></thead>';
-				echo '</table>';
+			if( $avail ){
+				echo sprintf($format_top,'gp_Insert_Hidden','nodisplay');
 				$avail = array_flip($avail);
 				$this->ScrollList($avail,'keys[]','checkbox',true);
-
-				echo '<p>';
-				echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($cmd).'" />';
-				echo '<input type="hidden" name="insert_where" value="'.htmlspecialchars($_GET['insert_where']).'" />';
-				echo '<input type="hidden" name="cmd" value="insert_from_hidden"  />';
-				echo '<input type="submit" name="" value="'.$langmessage['insert_into_menu'].'" class="gpsubmit" data-cmd="gppost" />';
-				echo ' <input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
-				echo '</p>';
-
-				echo '</form>';
+				echo sprintf($format_bottom,'insert_from_hidden',$langmessage['insert_into_menu']);
 			}
 
 
 
-			echo '</div>';
-
 			// Insert Deleted / Restore from trash
-			echo '<div id="gp_Insert_Deleted" class="nodisplay">';
-
 			$trashtitles = admin_trash::TrashFiles();
-			if( count($trashtitles) == 0 ){
-				echo '<p>'.$langmessage['TRASH_IS_EMPTY'].'</p>';
-			}else{
-
-				echo '<form action="'.common::GetUrl('Admin_Menu').'" method="post">';
-				echo '<table class="bordered full_width"><thead>';
-				echo '<tr><th>'.$langmessage['title'];
-				echo ' &nbsp; <input type="text" name="search" value="" class="gpinput gpsearch" />';
-				echo '</th></tr>';
-				echo '</thead></table>';
-
+			if( $trashtitles ){
+				echo sprintf($format_top,'gp_Insert_Deleted','nodisplay');
 
 				echo '<div class="gpui-scrolllist">';
+				echo '<input type="text" name="search" value="" class="gpsearch" placeholder="'.$langmessage['Search'].'" autocomplete="off" />';
 				foreach($trashtitles as $title => $info){
 					echo '<label>';
 					echo '<input type="checkbox" name="titles[]" value="'.htmlspecialchars($title).'" />';
@@ -1842,29 +1838,15 @@ class admin_menu_new extends admin_menu_tools{
 					echo '</label>';
 				}
 				echo '</div>';
-
-
-				echo '<p>';
-				echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($cmd).'" />';
-				echo '<input type="hidden" name="insert_where" value="'.htmlspecialchars($_GET['insert_where']).'" />';
-				echo '<input type="hidden" name="cmd" value="restore"  />';
-				echo '<input type="submit" name="" value="'.$langmessage['restore'].'" class="gpsubmit" data-cmd="gppost"/>';
-				echo ' <input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
-				echo '</p>';
-
-				echo '</form>';
+				echo sprintf($format_bottom,'restore',$langmessage['restore_from_trash']);
 			}
-			echo '</div>';
 
 
 			//Insert External
 			echo '<div id="gp_Insert_External" class="nodisplay">';
-
-
-				$args['insert_how'] = $cmd;
-				$args['insert_where'] = $_GET['insert_where'];
-				$this->ExternalForm('new_external',$langmessage['insert_into_menu'],$args);
-
+			$args['insert_how']		= $cmd;
+			$args['insert_where']	= $_GET['insert_where'];
+			$this->ExternalForm('new_external',$langmessage['insert_into_menu'],$args);
 			echo '</div>';
 
 
@@ -2038,6 +2020,7 @@ class admin_menu_new extends admin_menu_tools{
 			return false;
 		}
 	}
+
 
 	/**
 	 * Create a new page from a user post
@@ -2764,7 +2747,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo '</table>';
 
 		echo '<p>';
-		echo '<input type="hidden" name="cmd" value="copyit"/> ';
+		echo '<input type="hidden" name="cmd" value="CopyPage"/> ';
 		echo '<input type="submit" name="" value="'.$langmessage['continue'].'" class="gpsubmit" data-cmd="gppost"/>';
 		echo '<input type="button" class="admin_box_close gpcancel" name="" value="'.$langmessage['cancel'].'" />';
 		echo '</p>';
@@ -2780,32 +2763,34 @@ class admin_menu_new extends admin_menu_tools{
 	function CopyPage(){
 		global $gp_index, $gp_titles, $page, $langmessage;
 
+		$this->CacheSettings();
+
 		//existing page info
 		$from_title = $_POST['from_title'];
 		if( !isset($gp_index[$from_title]) ){
 			msg($langmessage['OOPS_TITLE']);
 			return false;
 		}
-		$from_index = $gp_index[$from_title];
-		$info = $gp_titles[$from_index];
+		$from_index		= $gp_index[$from_title];
+		$info			= $gp_titles[$from_index];
 
 
 		//check the new title
-		$title = $_POST['title'];
-		$title = admin_tools::CheckPostedNewPage($title,$message);
+		$title			= $_POST['title'];
+		$title			= admin_tools::CheckPostedNewPage($title,$message);
 		if( $title === false ){
 			msg($message);
 			return false;
 		}
 
 		//get the existing content
-		$from_file = gpFiles::PageFile($from_title);
-		$contents = file_get_contents($from_file);
+		$from_file		= gpFiles::PageFile($from_title);
+		$contents		= file_get_contents($from_file);
 
 
 		//add to $gp_index first!
-		$index = common::NewFileIndex();
-		$gp_index[$title] = $index;
+		$index				= common::NewFileIndex();
+		$gp_index[$title]	= $index;
 		$file = gpFiles::PageFile($title);
 
 		if( !gpFiles::Save($file,$contents) ){
@@ -2814,13 +2799,27 @@ class admin_menu_new extends admin_menu_tools{
 		}
 
 		//add to gp_titles
-		$new_titles = array();
-		$new_titles[$index]['label'] = admin_tools::PostedLabel($_POST['title']);
-		$new_titles[$index]['type'] = $info['type'];
-		$gp_titles += $new_titles;
+		$new_titles						= array();
+		$new_titles[$index]['label']	= admin_tools::PostedLabel($_POST['title']);
+		$new_titles[$index]['type']		= $info['type'];
+		$gp_titles						+= $new_titles;
 
-		if( !admin_tools::SavePagesPHP() ){
-			msg($langmessage['OOPS'].' (CP2)');
+
+		//add to menu
+		if( isset($_POST['insert_where']) && isset($_POST['insert_how']) ){
+			$insert = array();
+			$insert[$index] = array();
+
+			if( !$this->MenuInsert($insert,$_POST['insert_where'],$_POST['insert_how']) ){
+				msg($langmessage['OOPS'].' (Not Inserted)');
+				$this->RestoreSettings();
+				return false;
+			}
+		}
+
+		if( !$this->SaveMenu(true) ){
+			msg($langmessage['OOPS'].' (Not Saved)');
+			$this->RestoreSettings();
 			return false;
 		}
 
@@ -2830,7 +2829,7 @@ class admin_menu_new extends admin_menu_tools{
 			$page->ajaxReplace[] = array('location',$url,0);
 		}
 
-		return $index;
+		return true;
 	}
 
 

@@ -107,18 +107,20 @@ $gp.links.remote = function(evt){
 
 /**
  * Add stylesheets to the current document
- *
+ * @param string file
+ * @param bool already_prefixed
  */
-$gp.LoadStyle = function(file){
-	var d=new Date(),
-		t=d.getTime();
+$gp.LoadStyle = function(file, already_prefixed){
+    var d=new Date(),
+        t=d.getTime();
 
-	//href set after appending to head so that it works properly in IE
-	$('<link rel="stylesheet" type="text/css" />')
-		.appendTo('head')
-		.attr({'href':gpBase+file+'?t='+t});
+    file = already_prefixed ? file : gpBase+file;
+
+    //href set after appending to head so that it works properly in IE
+    $('<link rel="stylesheet" type="text/css" />')
+        .appendTo('head')
+        .attr({'href':file+'?t='+t});
 };
-
 
 /**
  * Show content (data) in #gp_admin_box

@@ -359,9 +359,9 @@ class editing_page extends display{
 				}else{
 					$class = '';
 				}
+			$output .= $this->GetNewSection($type, $class);	
 			}
-
-			$output .= $this->GetNewSection($type, $class);
+			
 		}
 		$output .= '</div>';
 

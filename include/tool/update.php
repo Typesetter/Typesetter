@@ -15,39 +15,41 @@ includeFile('admin/admin_tools.php');
 class update_class{
 
 	//page variables
-	var $pagetype = 'update';
-	var $label = 'gpEasy Updater';
-	var $head = '';
-	var $admin_css = '';
-	var $contentBuffer = '';
-	var $head_script = '';
-	var $gpLayout;
-	var $title = '';
-	var $admin_js = false;
-	var $meta_keywords = array();
-	var $head_js = array();
+	public $pagetype			= 'update';
+	public $label				= 'gpEasy Updater';
+	public $head				= '';
+	public $admin_css			= '';
+	public $contentBuffer		= '';
+	public $head_script			= '';
+	public $gpLayout;
+	public $title				= '';
+	public $admin_js			= false;
+	public $meta_keywords		= array();
+	public $head_js				= array();
 
 
 
 	//for unpacking and replacing
-	var $replace_dirs		= array();
-	var $extra_dirs			= array();
+	public $replace_dirs		= array();
+	public $extra_dirs			= array();
 
 
 	//update vars
-	var $update_data		= array();
-	var $data_timestamp		= 0;
-	var $curr_step			= 1;
-	var $steps				= array();
-	var $core_package;
-	var $update_msgs		= array();
+	public $update_data			= array();
+	public $data_timestamp		= 0;
+	public $curr_step			= 1;
+	public $steps				= array();
+	public $core_package;
+	public $update_msgs			= array();
+	private $FileSystem;
+
 
 
 	//content for template
-	var $output_phpcheck = '';
+	public $output_phpcheck = '';
 
 	//force inline js and css in case for updates incase the files are deleted/changed during update processs
-	var $head_force_inline = true;
+	public $head_force_inline = true;
 
 	/* methods for $page usage */
 	function GetContent(){
@@ -405,7 +407,7 @@ class update_class{
 
 
 	function Update(){
-		global $langmessage, $gp_filesystem;
+		global $langmessage;
 
 
 		if( !$this->core_package ){
@@ -489,8 +491,8 @@ class update_class{
 		echo $step_content;
 
 
-		if( $gp_filesystem ){
-			$gp_filesystem->destruct();
+		if( $this->FileSystem ){
+			$this->FileSystem->destruct();
 		}
 		admin_tools::VersionData($this->update_data); //save any changes made by the steps
 
@@ -520,7 +522,7 @@ class update_class{
 	 *
 	 */
 	function DetectFileSystem(){
-		global $dataDir, $gp_filesystem;
+		global $dataDir;
 
 
 		//already determined
@@ -536,14 +538,15 @@ class update_class{
 		$context[$dataDir . '/include']		= 'file';	// Need to be able to rename or delete the include directory
 		$context[$dataDir . '/themes']		= 'dir';	// These may have user content in them and should not be completely replaced
 		$context[$dataDir . '/addons']		= 'dir';
-		gp_filesystem_base::init($context,'list');
+
+		$this->FileSystem					= gp_filesystem_base::init($context,'list');
 
 
-		if( !$gp_filesystem ){
+		if( !$this->FileSystem ){
 			return false;
 		}
 
-		return $gp_filesystem->method;
+		return $this->FileSystem->method;
 	}
 
 
@@ -597,15 +600,15 @@ class update_class{
 	 *
 	 */
 	function CleanUpFolders($folders){
-		global $gp_filesystem, $langmessage;
+		global $langmessage;
 
-		if( $gp_filesystem->connect() !== true ){
+		if( $this->FileSystem->connect() !== true ){
 			$this->msg($langmessage['OOPS'].' (not connected)');
 			return false;
 		}
 
 
-		$filesystem_base	= $gp_filesystem->get_base_dir();
+		$filesystem_base	= $this->FileSystem->get_base_dir();
 		$not_deleted		= array();
 
 		foreach($folders as $old_folder){
@@ -619,11 +622,11 @@ class update_class{
 			$old_folder			= '/'.ltrim($old_folder,'/');
 			$old_folder_full	= $filesystem_base.$old_folder;
 
-			if( !$gp_filesystem->file_exists($old_folder_full) ){
+			if( !$this->FileSystem->file_exists($old_folder_full) ){
 				continue;
 			}
 
-			if( !$gp_filesystem->rmdir_all($old_folder_full) ){
+			if( !$this->FileSystem->rmdir_all($old_folder_full) ){
 				$not_deleted[] = htmlspecialchars($old_folder);
 			}
 		}
@@ -665,9 +668,9 @@ class update_class{
 	 *
 	 */
 	function UnpackAndReplace(){
-		global $langmessage, $config, $gp_filesystem, $dataDir;
+		global $langmessage, $config, $dataDir;
 
-		if( $gp_filesystem->connect() !== true ){
+		if( $this->FileSystem->connect() !== true ){
 			$this->msg($langmessage['OOPS'].': (not connected)');
 			return false;
 		}
@@ -684,7 +687,7 @@ class update_class{
 			return false;
 		}
 
-		$replaced = $gp_filesystem->ReplaceDirs( $this->replace_dirs, $this->extra_dirs );
+		$replaced = $this->FileSystem->ReplaceDirs( $this->replace_dirs, $this->extra_dirs );
 
 		if( $replaced !== true ){
 			$this->msg($langmessage['error_unpacking'].' '.$replaced);
@@ -704,7 +707,7 @@ class update_class{
 	 *
 	 */
 	function OldFolders(){
-		global $langmessage, $dataDir, $gp_filesystem;
+		global $langmessage, $dataDir;
 
 		$dirs = array_merge( array_values($this->replace_dirs), array_values($this->extra_dirs));
 		$dirs = array_unique( $dirs );
@@ -712,7 +715,7 @@ class update_class{
 			return;
 		}
 
-		$filesystem_base = $gp_filesystem->get_base_dir();
+		$filesystem_base = $this->FileSystem->get_base_dir();
 
 		ob_start();
 		echo $langmessage['old_folders_created'];
@@ -724,7 +727,7 @@ class update_class{
 			$folder_full = $filesystem_base.$folder;
 
 
-			if( !$gp_filesystem->file_exists($folder_full) ){
+			if( !$this->FileSystem->file_exists($folder_full) ){
 				continue;
 			}
 
@@ -746,7 +749,7 @@ class update_class{
 	 * @return bool
 	 */
 	function UnpackAndSort($file){
-		global $langmessage, $gp_filesystem;
+		global $langmessage;
 
 
 		//create archive object of $file
@@ -811,7 +814,7 @@ class update_class{
 
 			}else{
 
-				$new_relative = $gp_filesystem->TempFile( $replace_dir );
+				$new_relative = $this->FileSystem->TempFile( $replace_dir );
 				$this->replace_dirs[$replace_dir] = $new_relative;
 			}
 
@@ -826,12 +829,12 @@ class update_class{
 
 
 	function PutFile( $dest_rel, $file ){
-		global $langmessage, $gp_filesystem;
+		global $langmessage;
 
-		$full = $gp_filesystem->get_base_dir().'/'.trim($dest_rel,'/');
+		$full = $this->FileSystem->get_base_dir().'/'.trim($dest_rel,'/');
 
 		if( $file['folder'] ){
-			if( !$gp_filesystem->mkdir($full) ){
+			if( !$this->FileSystem->mkdir($full) ){
 				$this->msg($langmessage['error_unpacking'].' (1)');
 				trigger_error('Could not create directory: '.$full);
 				return false;
@@ -839,7 +842,7 @@ class update_class{
 			return true;
 		}
 
-		if( !$gp_filesystem->put_contents($full,$file['content']) ){
+		if( !$this->FileSystem->put_contents($full,$file['content']) ){
 			trigger_error('Could not create file: '.$full);
 			$this->msg($langmessage['error_unpacking'].' (2)');
 			return true;
@@ -929,9 +932,9 @@ class update_class{
 	 *
 	 */
 	function GetServerInfo(){
-		global $langmessage,$gp_filesystem;
+		global $langmessage;
 
-		$connect_result = $gp_filesystem->connect();
+		$connect_result = $this->FileSystem->connect();
 		if( $connect_result === true ){
 
 			$this->DoRemoteCheck2(); //make sure we have the latest information
@@ -947,7 +950,7 @@ class update_class{
 		//not connected, show form
 		echo '<table class="formtable">';
 
-		$gp_filesystem->connectForm();
+		$this->FileSystem->connectForm();
 
 		echo '</table>';
 		return false;

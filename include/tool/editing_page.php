@@ -195,7 +195,6 @@ class editing_page extends display{
 			$this->cmds['rawcontent']			= 'return';
 			$this->cmds['managesections']		= 'newsectioncontent';
 			$this->cmds['newsectioncontent']	= 'return';
-			//$this->cmds['newnestedsection']		= 'return'; //need to pass $_REQUEST??
 			$this->cmds['savesections']			= 'return';
 			$this->cmds['viewrevision']			= '';
 			$this->cmds['userevision']			= '';

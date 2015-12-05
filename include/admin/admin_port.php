@@ -497,7 +497,7 @@ class admin_port{
 		// get user info
 		include($dataDir.'/data/_site/users.php');
 		$userinfo =& $users[$username];
-		$session_id = gpsession::create($userinfo, $username);
+		$session_id = gpsession::create($userinfo, $username, $sessions);
 
 		if( !$session_id ){
 			return;

@@ -1,14 +1,11 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-global $gp_filesystem;
-$gp_filesystem = false;
-
 
 define('gp_filesystem_direct',1);
 define('gp_filesystem_ftp',2);
-defined('FS_CHMOD_DIR') or define('FS_CHMOD_DIR', 0755 );
-defined('FS_CHMOD_FILE') or define('FS_CHMOD_FILE', 0644 ); // 0666 causes errors on some systems
+gp_defined('FS_CHMOD_DIR',0755);
+gp_defined('FS_CHMOD_FILE',0644); // 0666 causes errors on some systems
 
 
 class gp_filesystem_base{
@@ -17,6 +14,7 @@ class gp_filesystem_base{
 	public $connect_vars	= array();
 	public $temp_file		= null;
 	public $method			= 'gp_filesystem_base';
+
 
 
 	/**
@@ -37,19 +35,22 @@ class gp_filesystem_base{
 
 	/**
 	 * Set the $gp_filesystem object based on the $method
-	 *
+	 * @param string $method
 	 */
 	public static function set_method($method){
 		global $gp_filesystem;
+
 		switch($method){
 			case 'gp_filesystem_direct':
 				$gp_filesystem = new gp_filesystem_direct();
-			return true;
+			return $gp_filesystem;
+
+
 			case 'gp_filesystem_ftp':
 				$gp_filesystem = new gp_filesystem_ftp();
-			return true;
+			return $gp_filesystem;
 		}
-		return false;
+
 	}
 
 
@@ -245,7 +246,11 @@ class gp_filesystem_base{
 	}
 
 	public function mkdir($dir){
-		return mkdir($dir,FS_CHMOD_DIR);
+		if( !mkdir($dir,FS_CHMOD_DIR) ){
+			return false;
+		}
+		chmod($dir,FS_CHMOD_DIR);
+		return true;
 	}
 
 	public function unlink($path){

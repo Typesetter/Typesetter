@@ -17,30 +17,31 @@ includeFile('tool/FileSystem.php');
 
 class admin_port{
 
-	var $export_fields = array();
-	var $export_arch;
-	var $export_dir;
-	var $exported = array();
-	var $export_ini_file;
-	var $temp_dir;
-	var $avail_compress = array();
-	var $all_extenstions = array('tgz','tar','gz','bz');
+	public $export_fields = array();
+	public $export_arch;
+	public $export_dir;
+	public $exported = array();
+	public $export_ini_file;
+	public $temp_dir;
+	public $avail_compress = array();
+	public $all_extenstions = array('tgz','tar','gz','bz');
 
-	var $archive_path;
-	var $archive_name;
+	public $archive_path;
+	public $archive_name;
 
-	var $min_import_bits = 0;
+	public $min_import_bits = 0;
 
 
 	//importing/reverting
-	var $import_object;
-	var $import_list;
-	var $import_info;
+	public $import_object;
+	public $import_list;
+	public $import_info;
+	protected $fs;
 
-	var $replace_dirs = array();
-	var $extra_dirs = array();
+	public $replace_dirs = array();
+	public $extra_dirs = array();
 
-	var $iframe = '';
+	public $iframe = '';
 
 
 	function __construct(){
@@ -319,7 +320,7 @@ class admin_port{
 	 */
 
 	function Revert($cmd){
-		global $langmessage, $gp_filesystem, $dataDir, $gpAdmin;
+		global $langmessage, $dataDir, $gpAdmin;
 
 		if( !$this->RevertFilesystem() ){
 			return false;
@@ -342,7 +343,7 @@ class admin_port{
 
 		$this->import_info = $this->ExtractIni($this->import_object);
 		if( $this->import_info === false ){
-			message($langmessage['OOPS'].' (No info)');
+			message($langmessage['OOPS'].' (No import info)');
 			return false;
 		}
 
@@ -363,7 +364,7 @@ class admin_port{
 
 		echo '<h2>'.$langmessage['Revert'].'</h2>';
 
-		if( !$gp_filesystem->ConnectOrPrompt('Admin_Port') ){
+		if( !$this->FileSystem->ConnectOrPrompt('Admin_Port') ){
 			return true;
 		}
 
@@ -410,7 +411,7 @@ class admin_port{
 	 *
 	 */
 	function RevertConfirmed(){
-		global $langmessage, $gp_filesystem, $dataDir;
+		global $langmessage, $dataDir;
 
 		//organize list
 		$data_list = array();
@@ -418,7 +419,7 @@ class admin_port{
 		$addon_list = array();
 		foreach($this->import_list as $file_info){
 
-			$filename = $file_info['filename'];
+			$filename = trim($file_info['filename']);
 
 			$pos_data = strpos( $filename, 'gpexport/data/' );
 			$pos_theme = strpos( $filename, 'gpexport/themes/' );
@@ -438,9 +439,9 @@ class admin_port{
 
 
 		//start with themes
-		//should be done with $gp_filesystem
+		//should be done with $this->FileSystem
 		if( $this->import_info['Export_Which'] & $this->bit_themes ){
-			$new_relative = $gp_filesystem->TempFile( '/themes' );
+			$new_relative = $this->FileSystem->TempFile( '/themes' );
 			$this->replace_dirs['/themes'] = $new_relative;
 			if( !$this->PutFiles( $theme_list, $new_relative ) ){
 				return false;
@@ -451,7 +452,7 @@ class admin_port{
 		//then addons, nearly identical process to themes
 		if( $this->import_info['Export_Which'] & $this->bit_addons ){
 			if( count($addon_list) > 0 ){
-				$new_relative = $gp_filesystem->TempFile( '/addons' );
+				$new_relative = $this->FileSystem->TempFile( '/addons' );
 				$this->replace_dirs['/addons'] = $new_relative;
 				if( !$this->PutFiles( $addon_list, $new_relative ) ){
 					return false;
@@ -461,9 +462,9 @@ class admin_port{
 
 
 		//replace data directory
-		//use $gp_filesystem for the first directory only
+		//use $this->FileSystem for the first directory only
 		//then copy other folders from /data so we don't lose sessions, uploaded content etc
-		$new_relative = $gp_filesystem->TempFile( '/data' );
+		$new_relative = $this->FileSystem->TempFile( '/data' );
 		$this->replace_dirs['/data'] = $new_relative;
 		if( !$this->PutFiles( $data_list, $new_relative, true ) ){
 			return false;
@@ -472,7 +473,7 @@ class admin_port{
 		$new_full = $dataDir.$new_relative;
 		$this->CopyDir( $source, $new_full );
 
-		$replaced = $gp_filesystem->ReplaceDirs( $this->replace_dirs, $this->extra_dirs );
+		$replaced = $this->FileSystem->ReplaceDirs( $this->replace_dirs, $this->extra_dirs );
 
 		if( $replaced !== true ){
 			message($langmessage['revert_failed'].$replaced);
@@ -555,17 +556,17 @@ class admin_port{
 
 
 	function RevertClean(){
-		global $langmessage, $gp_filesystem, $dataDir;
+		global $langmessage, $dataDir;
 
 		if( !$this->RevertFilesystem() ){
 			return false;
 		}
 
-		$gp_filesystem->connect();
+		$this->FileSystem->connect();
 
 		$folders =& $_REQUEST['old_folder'];
 		if( count($folders) > 0 ){
-			$fs_root = $gp_filesystem->get_base_dir();
+			$fs_root = $this->FileSystem->get_base_dir();
 
 			foreach($folders as $folder){
 				if( strpos($folder,'/') !== false || strpos($folder,'\\') !== false ){
@@ -576,7 +577,7 @@ class admin_port{
 					continue;
 				}
 				$full = $fs_root.'/'.$folder;
-				$gp_filesystem->rmdir_all($full);
+				$this->FileSystem->rmdir_all($full);
 			}
 		}
 	}
@@ -587,11 +588,12 @@ class admin_port{
 	 *
 	 */
 	function RevertFilesystem(){
-		global $gp_filesystem, $dataDir, $langmessage;
+		global $dataDir, $langmessage;
 
-		$context = array($dataDir=>'dir');
-		gp_filesystem_base::init($context,'list');
-		if( !$gp_filesystem ){
+		$context			= array($dataDir=>'dir');
+		$this->FileSystem	= gp_filesystem_base::init($context,'list');
+
+		if( is_null($this->FileSystem) ){
 			message($langmessage['OOPS'] .' (No filesystem)');
 			return false;
 		}
@@ -638,19 +640,19 @@ class admin_port{
 	 *
 	 * @param array $file_list List of files
 	 * @param string $dest_rel The relative destination directory for $file_list
-	 * @param bool $gpfiles False to use $gp_filesystem for file replacement, True for gpFiles methods
+	 * @param bool $gpfiles False to use $this->FileSystem for file replacement, True for gpFiles methods
 	 * @return bool
 	 */
 	function PutFiles( $file_list, $dest_rel, $gpfiles = false ){
-		global $gp_filesystem, $langmessage, $dataDir;
+		global $langmessage, $dataDir;
 
-		$dest_fs = $gp_filesystem->get_base_dir().$dest_rel;
+		$dest_fs = $this->FileSystem->get_base_dir().$dest_rel;
 		if( $gpfiles ){
 			$dest = $dataDir.$dest_rel;
 		}
 
 		//create destination
-		if( !$gp_filesystem->mkdir($dest_fs) ){
+		if( !$this->FileSystem->mkdir($dest_fs) ){
 			message($langmessage['revert_failed'].' Directory not created (0)');
 			return false;
 		}
@@ -658,9 +660,9 @@ class admin_port{
 
 		foreach($file_list as $file_info){
 
-			$path =& $file_info['filename'];
-			$flag = (int)$file_info['typeflag'];
-			$full_fs = $dest_fs.$file_info['relative_path'];
+			$path		= trim($file_info['filename']);
+			$flag		= (int)$file_info['typeflag'];
+			$full_fs	= $dest_fs.$file_info['relative_path'];
 			$full = false;
 			if( $gpfiles ){
 				$full = $dest.$file_info['relative_path'];
@@ -676,7 +678,7 @@ class admin_port{
 					}
 					continue;
 				}
-				if( !$gp_filesystem->mkdir( $full_fs ) ){
+				if( !$this->FileSystem->mkdir( $full_fs ) ){
 					message($langmessage['revert_failed'].' Directory not created (2)');
 					return false;
 				}
@@ -694,7 +696,7 @@ class admin_port{
 					}
 				}
 
-				if( !$gp_filesystem->put_contents( $full_fs, $contents ) ){
+				if( !$this->FileSystem->put_contents( $full_fs, $contents ) ){
 					message($langmessage['revert_failed'].' File not created (2)');
 					return false;
 				}
@@ -792,10 +794,13 @@ class admin_port{
 	}
 
 
-
+	/**
+	 * Get the export.ini contents
+	 *
+	 */
 	function ExtractIni($tar_object){
-		//get Export.ini
-		$ini_contents = $tar_object->extractInString('gpexport/Export.ini');
+
+		$ini_contents = $tar_object->extractInString('/gpexport/Export.ini');
 		if( empty($ini_contents) ){
 			return false;
 		}

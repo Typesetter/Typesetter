@@ -800,7 +800,7 @@ class admin_port{
 	 */
 	function ExtractIni($tar_object){
 
-		$ini_contents = $tar_object->extractInString('/gpexport/Export.ini');
+		$ini_contents = $tar_object->extractInString('gpexport/Export.ini');
 		if( empty($ini_contents) ){
 			return false;
 		}

@@ -34,21 +34,18 @@ class gp_filesystem_base{
 
 
 	/**
-	 * Set the $gp_filesystem object based on the $method
+	 * Return a filesystem object based on the $method
 	 * @param string $method
 	 */
 	public static function set_method($method){
-		global $gp_filesystem;
 
 		switch($method){
 			case 'gp_filesystem_direct':
-				$gp_filesystem = new gp_filesystem_direct();
-			return $gp_filesystem;
+			return new gp_filesystem_direct();
 
 
 			case 'gp_filesystem_ftp':
-				$gp_filesystem = new gp_filesystem_ftp();
-			return $gp_filesystem;
+			return new gp_filesystem_ftp();
 		}
 
 	}

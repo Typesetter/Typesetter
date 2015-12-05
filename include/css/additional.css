@@ -83,7 +83,10 @@ body .messages a.msg_view_history{
 	padding:0 8px;
 	margin:6px 12px 4px 0;
 	text-decoration:none !important;
+	border:1px solid rgba(0,0,0,0.15);
+	background:rgba(0,0,0,0.075);
 	}
+	/*
 body .messages a.msg_publish_draft{
 	border:1px solid #176b00;
 	background:#209400;
@@ -94,10 +97,7 @@ body .messages a.msg_discard_draft{
 	background:#D66126;
 	color:#fff !important;
 	}
-body .messages a.msg_view_history{
-	border:1px solid rgba(0,0,0,0.15);
-	background:rgba(0,0,0,0.075);
-	}
+	*/
 
 
 

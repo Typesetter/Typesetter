@@ -6,18 +6,20 @@ includeFile('tool/RemoteGet.php');
 
 class admin_permalinks{
 
-	var $rule_file_name		= '';
-	var $rule_file			= '';
-	var $undo_if_failed		= false;
-	var $hide_index			= false;
-	var $server_name;
-	var $www_avail			= false;
-	var $www_setting		= null;
-	var $orig_rules			= false;
-	var $new_rules			= '';
+	public $rule_file_name		= '';
+	public $rule_file			= '';
+	public $undo_if_failed		= false;
+	public $hide_index			= false;
+	public $server_name;
+	public $www_avail			= false;
+	public $www_setting			= null;
+	public $orig_rules			= false;
+	public $new_rules			= '';
+	private $FileSystem;
 
 
-	function __construct(){
+
+	public function __construct(){
 		global $langmessage,$dataDir;
 
 
@@ -31,7 +33,7 @@ class admin_permalinks{
 		}
 
 
-		gp_filesystem_base::init($this->rule_file);
+		$this->FileSystem = gp_filesystem_base::init($this->rule_file);
 		$this->WWWAvail();
 
 		echo '<h2>'.$langmessage['permalink_settings'].'</h2>';
@@ -55,7 +57,7 @@ class admin_permalinks{
 	 * Determine if we're able to change the www redirect of the server
 	 *
 	 */
-	function WWWAvail(){
+	public function WWWAvail(){
 
 		if( !$this->server_name ){
 			return;
@@ -101,7 +103,7 @@ class admin_permalinks{
 	 * Return url with or without www
 	 *
 	 */
-	function WWWUrl($with_www = true, $slug = ''){
+	public function WWWUrl($with_www = true, $slug = ''){
 
 		$schema			= ( isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ) ? 'https://' : 'http://';
 		$host			= $this->server_name;
@@ -118,7 +120,7 @@ class admin_permalinks{
 	 * Confirm getting the url retreives the current installation
 	 *
 	 */
-	static function ConfirmGet($url, $check_redirect = true ){
+	public static function ConfirmGet($url, $check_redirect = true ){
 		global $config;
 
 		$result			= gpRemoteGet::Get_Successful($url);
@@ -149,8 +151,8 @@ class admin_permalinks{
 	 * Display Permalink Options
 	 *
 	 */
-	function ShowForm(){
-		global $langmessage, $gp_filesystem;
+	public function ShowForm(){
+		global $langmessage;
 
 
 
@@ -279,7 +281,7 @@ class admin_permalinks{
 	 * Return an example url based on potential gp_rewrite setting
 	 *
 	 */
-	function ExampleUrl($index_php){
+	public function ExampleUrl($index_php){
 		global $dirPrefix;
 
 		$schema			= ( isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ) ? 'https://' : 'http://';
@@ -298,8 +300,9 @@ class admin_permalinks{
 	 *
 	 * @return boolean true if the .htaccess file is saved
 	 */
-	function SaveHtaccess(){
-		global $gp_filesystem, $langmessage, $dirPrefix;
+	public function SaveHtaccess(){
+		global $langmessage, $dirPrefix;
+
 
 		//hide index ?
 		if( isset($_POST['rewrite_setting']) && $_POST['rewrite_setting'] == 'hide_index' ){
@@ -309,13 +312,15 @@ class admin_permalinks{
 
 		// www preference
 		$www = null;
-		if( $_POST['www_setting'] === 'with' ){
-			$www					= true;
-			$this->undo_if_failed	= true;
+		if( isset($_POST['www_setting']) ){
+			if( $_POST['www_setting'] === 'with' ){
+				$www					= true;
+				$this->undo_if_failed	= true;
 
-		}elseif( $_POST['www_setting'] === 'without' ){
-			$www					= false;
-			$this->undo_if_failed	= true;
+			}elseif( $_POST['www_setting'] === 'without' ){
+				$www					= false;
+				$this->undo_if_failed	= true;
+			}
 		}
 
 
@@ -330,7 +335,7 @@ class admin_permalinks{
 
 
 		if( !$this->SaveRules() ){
-			$gp_filesystem->CompleteForm($_POST,'Admin_Permalinks');
+			$this->FileSystem->CompleteForm($_POST,'Admin_Permalinks');
 			$this->ManualMethod();
 			return false;
 		}
@@ -351,15 +356,14 @@ class admin_permalinks{
 	 * Determine if we will be able tot test the results
 	 *
 	 */
-	function CanTestRules(){
-		global $gp_filesystem;
+	public function CanTestRules(){
 
 		if( !gpRemoteGet::Test() ){
 			return false;
 		}
 
 
-		if( !$gp_filesystem || !$gp_filesystem->ConnectOrPrompt('Admin_Permalinks') ){
+		if( !$this->FileSystem || !$this->FileSystem->ConnectOrPrompt('Admin_Permalinks') ){
 			return false;
 		}
 
@@ -371,7 +375,7 @@ class admin_permalinks{
 	 * Display instructions for manually creating the htaccess/web.config file
 	 *
 	 */
-	function ManualMethod(){
+	public function ManualMethod(){
 		global $langmessage, $dirPrefix;
 
 		echo '<h3>'.$langmessage['manual_method'].'</h3>';
@@ -405,21 +409,21 @@ class admin_permalinks{
 	 *
 	 * @return boolean
 	 */
-	function SaveRules(){
-		global $gp_filesystem, $langmessage, $dirPrefix;
+	public function SaveRules(){
+		global $langmessage, $dirPrefix;
 
 		if( $this->new_rules === false ){
 			return false;
 		}
 
-		$filesystem_base = $gp_filesystem->get_base_dir();
+		$filesystem_base = $this->FileSystem->get_base_dir();
 		if( $filesystem_base === false ){
 			return false;
 		}
 
 		$filesystem_path = $filesystem_base.'/'.$this->rule_file_name;
 
-		if( !$gp_filesystem->put_contents($filesystem_path,$this->new_rules) ){
+		if( !$this->FileSystem->put_contents($filesystem_path,$this->new_rules) ){
 			return false;
 		}
 
@@ -433,8 +437,7 @@ class admin_permalinks{
 	 * if TestResponse Fails, undo the changes
 	 *
 	 */
-	function TestSave($filesystem_path){
-		global $gp_filesystem;
+	public function TestSave($filesystem_path){
 
 		//only need to test if we might needt to undo
 		if( !$this->undo_if_failed ){
@@ -445,9 +448,9 @@ class admin_permalinks{
 		if( !admin_permalinks::TestResponse($this->hide_index) ){
 
 			if( $this->orig_rules === false ){
-				$gp_filesystem->unlink($filesystem_path);
+				$this->FileSystem->unlink($filesystem_path);
 			}else{
-				$gp_filesystem->put_contents($filesystem_path,$this->orig_rules);
+				$this->FileSystem->put_contents($filesystem_path,$this->orig_rules);
 			}
 			return false;
 		}
@@ -466,7 +469,7 @@ class admin_permalinks{
 	 *
 	 * @return boolean
 	 */
-	static function TestResponse($new_rewrite = true){
+	public static function TestResponse($new_rewrite = true){
 
 		//get url, force gp_rewrite to $new_gp_rewrite
 		$rewrite_before				= $_SERVER['gp_rewrite'];
@@ -492,7 +495,7 @@ class admin_permalinks{
 	 *
 	 * @param string $contents .htaccess file contents
 	 */
-	static function StripRules(&$contents){
+	public static function StripRules(&$contents){
 
 		//strip gpEasy code
 		$pos = strpos($contents,'# BEGIN gpEasy');
@@ -517,7 +520,7 @@ class admin_permalinks{
 	 * add/remove gpEasy rules from $original_contents to get new $contents
 	 *
 	 */
-	static function Rewrite_Rules( $hide_index = true, $home_root, $existing_contents = '', $www = null ){
+	public static function Rewrite_Rules( $hide_index = true, $home_root, $existing_contents = '', $www = null ){
 
 		if( !$existing_contents ){
 			$existing_contents = '';
@@ -536,7 +539,7 @@ class admin_permalinks{
 	 * Generate rewrite rules for the apache server
 	 *
 	 */
-	static function Rewrite_RulesApache( $hide_index, $home_root, $contents, $www ){
+	public static function Rewrite_RulesApache( $hide_index, $home_root, $contents, $www ){
 
 		// Apache
 		admin_permalinks::StripRules($contents);
@@ -632,7 +635,7 @@ class admin_permalinks{
 	 * Optimally, generating rules for IIS would involve parsing the xml and integrating gpEasy rules
 	 *
 	 */
-	function Rewrite_RulesIIS( $hide_index = true, $existing_contents ){
+	public function Rewrite_RulesIIS( $hide_index = true, $existing_contents ){
 
 
 		// anything less than 80 characters can be replaced safely
@@ -685,7 +688,7 @@ class admin_permalinks{
 	 * Determine if gpEasy installed on an IIS Server
 	 *
 	 */
-	static function IIS(){
+	public static function IIS(){
 
 		if( !isset($_SERVER['SERVER_SOFTWARE']) ){
 			return false;

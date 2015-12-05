@@ -12,20 +12,21 @@ defined('FS_CHMOD_FILE') or define('FS_CHMOD_FILE', 0644 ); // 0666 causes error
 
 
 class gp_filesystem_base{
-	var $conn_id = false;
-	var $connect_vars = array();
-	var $temp_file = false;
-	var $method = 'gp_filesystem_base';
+
+	public $conn_id			= false;
+	public $connect_vars	= array();
+	public $temp_file		= null;
+	public $method			= 'gp_filesystem_base';
 
 
-	static function init($context = false, $get_method = 'basic'){
-		global $gp_filesystem;
+	/**
+	 * Determine which class is needed to write to $context
+	 *
+	 * @param array|string $context
+	 */
+	public static function init($context){
 
-		if( $gp_filesystem !== false ){
-			return true;
-		}
-
-		if( $get_method == 'list' ){
+		if( is_array($context) ){
 			$method = gp_filesystem_base::get_filesystem_method_list($context);
 		}else{
 			$method = gp_filesystem_base::get_filesystem_method($context);
@@ -33,7 +34,12 @@ class gp_filesystem_base{
 		return gp_filesystem_base::set_method($method);
 	}
 
-	static function set_method($method){
+
+	/**
+	 * Set the $gp_filesystem object based on the $method
+	 *
+	 */
+	public static function set_method($method){
 		global $gp_filesystem;
 		switch($method){
 			case 'gp_filesystem_direct':
@@ -48,14 +54,12 @@ class gp_filesystem_base{
 
 
 
-	//needed for writing to the /include, .htaccess and possibly /themes files
-	/* static */
-	static function get_filesystem_method($context = false){
-		global $dataDir;
-
-		if( $context === false ){
-			$context = $dataDir . '/include';
-		}
+	/**
+	 * Determine which class is needed to write to $context
+	 *
+	 * @param string $context
+	 */
+	public static function get_filesystem_method($context){
 
 		while( !file_exists($context) ){
 			$context = common::DirName($context);
@@ -109,12 +113,8 @@ class gp_filesystem_base{
 	 *
 	 * @param array $context array of paths (as keys) and instructions (as values), possible values are (file,dir)
 	 */
-	static function get_filesystem_method_list($context = array()){
+	public static function get_filesystem_method_list($context = array()){
 		$result = 1;
-
-		if( is_string($context) ){
-			$context = array($context);
-		}
 
 		foreach($context as $file => $instruction){
 			switch($instruction){
@@ -145,7 +145,7 @@ class gp_filesystem_base{
 	}
 
 
-	static function get_filesystem_method_dir($dir){
+	public static function get_filesystem_method_dir($dir){
 		$result = gp_filesystem_base::get_filesystem_method_file($dir);
 		if( $result === false ){
 			return false;
@@ -182,117 +182,141 @@ class gp_filesystem_base{
 
 	/**
 	 * Get the minimum filesystem_method for $file
-	 * @static
+	 *
+	 * @param string $file
 	 */
-	static function get_filesystem_method_file($file){
-
+	public static function get_filesystem_method_file($file){
 
 		if( gp_is_writable($file) ){
-			return gp_filesystem_direct;
-		}elseif( function_exists('ftp_connect') ){
-			return gp_filesystem_ftp;
-		}else{
-			return false;
-		}
-	}
-
-	/**
-	 * Get the minimum filesystem_method for $link
-	 * if the target of the symbolic link doesnt exist then is_writable($file) will return false
-	 * @static
-	 */
-	static function get_filesystem_method_link($link){
-
-		$temp = gp_filesystem_base::TempFile( $link );
-		if( @rename( $link, $temp ) ){
-			@rename( $temp, $link );
 			return gp_filesystem_direct;
 		}
 
 		if( function_exists('ftp_connect') ){
 			return gp_filesystem_ftp;
-		}else{
-			return false;
 		}
-	}
 
-
-
-	/*
-	returns true if connectForm() is needed
-	*/
-	function requiresForm($context){
 		return false;
 	}
 
-	function connectForm(){
+
+	/**
+	 * Get the minimum filesystem_method for $link
+	 * if the target of the symbolic link doesnt exist then is_writable($file) will return false
+	 *
+	 * @param string $link
+	 */
+	public static function get_filesystem_method_link($link){
+
+		$temp = gp_filesystem_base::TempFile( $link );
+		if( @rename( $link, $temp ) && @rename( $temp, $link ) ){
+			return gp_filesystem_direct;
+		}
+
+		if( function_exists('ftp_connect') ){
+			return gp_filesystem_ftp;
+		}
+
+		return false;
+	}
+
+	public function connectForm(){
 		return true;
 	}
-	function CompleteForm(){
+	public function CompleteForm(){
 		return true;
 	}
 
-	function ConnectOrPrompt(){
+	public function ConnectOrPrompt(){
 		return true;
 	}
-	function connect(){
+	public function connect(){
 		return true;
 	}
-	function connect_handler($args){
+
+	/**
+	 * @return mixed
+	 */
+	public function connect_handler($args){
 		return true;
 	}
-	function get_base_dir(){
+	public function get_base_dir(){
 		global $dataDir;
 		return $dataDir;
 	}
 
-	function mkdir($dir){
+	public function mkdir($dir){
 		return mkdir($dir,FS_CHMOD_DIR);
 	}
 
-	function unlink($path){
+	public function unlink($path){
 		return unlink($path);
 	}
 
-	function is_dir($path){
+	public function is_dir($path){
 		return is_dir($path);
 	}
 
 
-	function rmdir_all($dir){
+	/**
+	 * Remove a file, symlink or directory
+	 * @param string $path
+	 */
+	public function rmdir_all($path){
 
-		if( empty($dir) ) return false;
+		if( empty($path) ) return false;
 
-		if( is_link($dir) ){
-			return $this->unlink($dir);
+		if( is_link($path) ){
+			return $this->unlink($path);
 		}
 
-		if( !$this->is_dir($dir) ){
-			return $this->unlink($dir);
+		if( !$this->is_dir($path) ){
+			return $this->unlink($path);
 		}
 
-		$success = true;
-		$list = $this->dirlist($dir);
-		if( is_array($list) ){
-			foreach($list as $file){
-				$full_path = $dir.'/'.$file;
-				if( $this->is_dir($full_path) ){
-					if( !$this->rmdir_all($full_path) ){
-						$success = false;
-					}
-				}elseif( !$this->unlink($full_path) ){
-					$success = false;
-				}
-			}
-		}
+		$success = $this->rmdir_dir($path);
 
 		if( !$success ){
 			return false;
 		}
-		return rmdir($dir);
+		return rmdir($path);
 	}
 
-	function dirlist($dir, $show_hidden=true){
+
+	/**
+	 * Remnove a directory and all it's contents
+	 *
+	 */
+	public function rmdir_dir($dir){
+
+		$success	= true;
+		$list		= $this->dirlist($dir);
+
+		if( !is_array($list) ){
+			return true;
+		}
+
+		foreach($list as $file){
+			$full_path = $dir.'/'.$file;
+			if( $this->is_dir($full_path) ){
+				if( !$this->rmdir_all($full_path) ){
+					$success = false;
+				}
+			}elseif( !$this->unlink($full_path) ){
+				$success = false;
+			}
+		}
+
+		return $success;
+	}
+
+
+	/**
+	 * Get a list of files and folders in $dir
+	 *
+	 * @param string $dir
+	 * @param bool $show_hidden
+	 */
+	public function dirlist($dir, $show_hidden=true){
 
 		$dh = @opendir($dir);
 		if( !$dh ){
@@ -313,11 +337,11 @@ class gp_filesystem_base{
 		return $list;
 	}
 
-	function rename($old_name,$new_name){
+	public function rename($old_name,$new_name){
 		return rename($old_name,$new_name);
 	}
 
-	function put_contents($file, $contents, $type = '' ){
+	public function put_contents($file, $contents, $type = '' ){
 		if( !gpFiles::Save($file,$contents) ){
 			return false;
 		}
@@ -326,7 +350,7 @@ class gp_filesystem_base{
 		return true;
 	}
 
-	function get_connect_vars($args){
+	public function get_connect_vars($args){
 		$result = array();
 		if( is_array($args) ){
 			foreach($args as $key => $value ){
@@ -338,8 +362,8 @@ class gp_filesystem_base{
 		return $result;
 	}
 
-	function destruct(){
-		if( $this->temp_file == false ){
+	public function destruct(){
+		if( is_null($this->temp_file) ){
 			return;
 		}
 		if( file_exists($this->temp_file) ){
@@ -347,12 +371,17 @@ class gp_filesystem_base{
 		}
 	}
 
-
-	function ArrayToForm($array,$name=false){
+	/**
+	 * Create <input> elements for all the values in $array
+	 *
+	 * @param array $array
+	 * @param string $name
+	 */
+	public function ArrayToForm($array,$name=null){
 
 		foreach($array as $key => $value){
 
-			if( $name ){
+			if( !is_null($name) ){
 				$full_name = $name.'['.$key.']';
 			}else{
 				$full_name = $key;
@@ -370,11 +399,11 @@ class gp_filesystem_base{
 	/**
 	 * Append a random string to the end of $relative_from to get the path of a non-existant file
 	 *
-	 * @param string $replace_from The relative path of a file
+	 * @param string $relative_from The relative path of a file
 	 * @return string The path of a non-existant file in the same directory as $relative_from
 	 *
 	 */
-	function TempFile( $relative_from ){
+	public function TempFile( $relative_from ){
 		global $dataDir;
 		static $rand_index;
 
@@ -384,16 +413,14 @@ class gp_filesystem_base{
 			$rand_index = rand(1000,9000);
 		}
 
-		$new_relative	= $relative_from.'-'.$rand_index;
-		$full_path		= $dataDir.$new_relative;
-
 		$i = 0;
-		while( file_exists($full_path) && $i < 100 ){
-			$new_name		= $relative_from.'-'.$rand_index;
+		do{
+			$new_relative	= $relative_from.'-'.$rand_index;
 			$full_path		= $dataDir.$new_relative;
 			$rand_index++;
 			$i++;
-		}
+
+		}while( file_exists($full_path) && $i < 100 );
 
 		return $new_relative;
 	}
@@ -406,7 +433,7 @@ class gp_filesystem_base{
 	 * @return mixed true if successful, error string otherwise
 	 *
 	 */
-	 function ReplaceDirs( $replace_dirs, &$clean_dirs ){
+	 public function ReplaceDirs( $replace_dirs, &$clean_dirs ){
 		global $langmessage, $dataDir;
 
 
@@ -476,7 +503,7 @@ class gp_filesystem_base{
 		return $message;
 	}
 
-	function file_exists($file){
+	public function file_exists($file){
 		clearstatcache(true, $file);
 		return file_exists($file);
 	}
@@ -491,8 +518,8 @@ class gp_filesystem_base{
 	 * @param string $text String to test against
 	 * @return bool true if string is binary, false otherwise
 	 */
-	function is_binary( $text ) {
-		return (bool) preg_match('|[^\x20-\x7E]|', $text); //chr(32)..chr(127)
+	public function is_binary( $text ) {
+		return (bool) preg_match('|[^\x20-\x7E]|', $text);
 	}
 
 
@@ -501,18 +528,18 @@ class gp_filesystem_base{
 
 class gp_filesystem_ftp extends gp_filesystem_base{
 
-	var $connect_vars = array('ftp_server'=>'','ftp_user'=>'','ftp_pass'=>'','port'=>'21');
-	var $ftp_root = false;
-	var $method = 'gp_filesystem_ftp';
+	public $connect_vars	= array('ftp_server'=>'','ftp_user'=>'','ftp_pass'=>'','port'=>'21');
+	public $ftp_root		= null;
+	public $method			= 'gp_filesystem_ftp';
 
-	function __construct(){
+	public function __construct(){
 		includeFile('tool/ftp.php');
 	}
 
-	function get_base_dir(){
+	public function get_base_dir(){
 		global $dataDir;
 
-		if( $this->ftp_root === false ){
+		if( is_null($this->ftp_root) ){
 			$this->ftp_root = gpftp::GetFTPRoot($this->conn_id,$dataDir);
 			$this->ftp_root = rtrim($this->ftp_root,'/');
 		}
@@ -525,7 +552,7 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 	 * Connect to ftp using the supplied values
 	 * @return mixed true on success, Error string on failure
 	 */
-	function connect_handler($args){
+	public function connect_handler($args){
 		global $langmessage;
 
 		if( empty($args['ftp_server']) ){
@@ -562,7 +589,7 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 	 *
 	 * @return bool true if connected, error message otherwise
 	 */
-	function connect(){
+	public function connect(){
 		global $config, $dataDir, $langmessage;
 
 
@@ -628,7 +655,7 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 
 	}
 
-	function ConnectOrPrompt($action=false){
+	public function ConnectOrPrompt($action=''){
 
 		$connected = $this->connect();
 
@@ -644,7 +671,7 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 
 
 
-	function CompleteForm($args = false, $action=false){
+	public function CompleteForm($args = false, $action=''){
 		global $langmessage;
 
 		echo '<p>';
@@ -669,7 +696,7 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 		echo '</form>';
 	}
 
-	function connectForm($args = false){
+	public function connectForm($args = false){
 
 		if( !is_array($args) ){
 			$args = $_POST;
@@ -707,55 +734,50 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 		echo '</td></tr>';
 	}
 
-	function mkdir($path){
+	public function mkdir($path){
 
 		if( !@ftp_mkdir($this->conn_id, $path) ){
 			return false;
 		}
 
-		//@ftp_site($this->conn_id, sprintf('CHMOD %o %s', FS_CHMOD_DIR, $path));
 		return true;
 	}
 
-	function unlink($path){
+	public function unlink($path){
 		return ftp_delete($this->conn_id, $path);
 	}
 
-	function rmdir_all($dir){
 
-		if( empty($dir) ) return false;
+	/**
+	 * Remove a file, symlink or directory
+	 * @param string $path
+	 */
+	public function rmdir_all($path){
 
-		$success = true;
+		if( empty($path) ) return false;
+
+
 		$pwd = @ftp_pwd($this->conn_id);
 
-		if( !$this->is_dir($dir,$pwd) ){
-			return $this->unlink($dir);
+		if( !$this->is_dir($path,$pwd) ){
+			return $this->unlink($path);
 		}
 
-		$list = $this->dirlist($dir);
-
-		if( is_array($list) ){
-
-			foreach($list as $file){
-				$full_path = $dir.'/'.$file;
-
-				if( $this->is_dir($full_path,$pwd) ){
-					if( !$this->rmdir_all($full_path) ){
-						$success = false;
-					}
-				}elseif( !@ftp_delete($this->conn_id, $full_path) ){
-					$success = false;
-				}
-			}
-		}
-
+		$success = $this->rmdir_dir($path);
 
 		@ftp_chdir($this->conn_id, $pwd);
 
-		return @ftp_rmdir($this->conn_id, $dir);
+		return @ftp_rmdir($this->conn_id, $path);
 	}
 
-	function dirlist( $dir, $show_hidden=true ){
+
+	/**
+	 * Get a list of files and folders in $dir
+	 *
+	 * @param string $dir
+	 * @param bool $show_hidden
+	 */
+	public function dirlist( $dir, $show_hidden=true ){
 		$pwd = @ftp_pwd($this->conn_id);
 
 		// Cant change to folder = folder doesnt exist
@@ -786,7 +808,7 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 		return $list;
 	}
 
-	function is_dir($path,$pwd = false){
+	public function is_dir($path,$pwd = false){
 
 		if( $pwd === false ){
 			$pwd = @ftp_pwd($this->conn_id);
@@ -806,11 +828,11 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 	}
 
 
-	function rename($old_name,$new_name){
+	public function rename($old_name,$new_name){
 		return ftp_rename( $this->conn_id , $old_name , $new_name );
 	}
 
-	function put_contents($file, $contents, $type = '' ){
+	public function put_contents($file, $contents, $type = '' ){
 		if( empty($type) ){
 			$type = $this->is_binary($contents) ? FTP_BINARY : FTP_ASCII;
 		}
@@ -835,15 +857,23 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 		return $ret;
 	}
 
-	function put_contents_file(){
+
+	/**
+	 * Get a temporary file that will be used with ftp_fput()
+	 *
+	 */
+	private function put_contents_file(){
 		global $dataDir;
 
-		if( $this->temp_file === false ){
-			do{
-				$this->temp_file = $dataDir.'/data/_updates/temp_'.time();
-			}while( file_exists($this->temp_file) );
+		if( !is_null($this->temp_file) ){
+			return $this->temp_file;
 		}
-		return $this->temp_file;
+
+		do{
+			$this->temp_file = $dataDir.'/data/_updates/temp_'.md5(microtime(true));
+		}while( file_exists($this->temp_file) );
+
+		return $temp_file;
 	}
 
 
@@ -852,7 +882,7 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 	 * Checking for file existence with php's file_exist doesn't always work correctly for files created/deleted with ftp functions
 	 *
 	 */
-	function file_exists($file){
+	public function file_exists($file){
 
 		$size = ftp_size($this->conn_id, $file);
 		if( $size >= 0 ){
@@ -866,6 +896,6 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 }
 
 class gp_filesystem_direct extends gp_filesystem_base{
-	var $method = 'gp_filesystem_direct';
+	public $method = 'gp_filesystem_direct';
 
 }

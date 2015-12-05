@@ -20,7 +20,7 @@ class gpFiles{
 	 * @since 4.4b1
 	 *
 	 */
-	static function Get( $file, $var_name=false ){
+	static function Get( $file, $var_name=null ){
 		global $dataDir;
 
 		self::$last_modified	= null;

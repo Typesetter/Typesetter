@@ -763,7 +763,7 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 			return $this->unlink($path);
 		}
 
-		$success = $this->rmdir_dir($path);
+		$this->rmdir_dir($path);
 
 		@ftp_chdir($this->conn_id, $pwd);
 
@@ -873,7 +873,7 @@ class gp_filesystem_ftp extends gp_filesystem_base{
 			$this->temp_file = $dataDir.'/data/_updates/temp_'.md5(microtime(true));
 		}while( file_exists($this->temp_file) );
 
-		return $temp_file;
+		return $this->temp_file;
 	}
 
 

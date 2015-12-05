@@ -141,7 +141,7 @@ class editing_page extends display{
 		global $langmessage;
 
 		if( $this->draft_exists ){
-			$message	.= '&nbsp; <span style="white-space:nowrap;">';
+			$message	.= '<span class="msg_buttons">';
 			$message	.= common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq', 'class'=>'msg_publish_draft'));
 			$message	.= common::Link($this->title,$langmessage['Discard Draft'],'cmd=DiscardDraft',array('data-cmd'=>'creq', 'class'=>'msg_discard_draft'));
 			$message	.= common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox','class'=>'msg_view_history'));
@@ -360,9 +360,9 @@ class editing_page extends display{
 				}else{
 					$class = '';
 				}
-			$output .= $this->GetNewSection($type, $class);	
+			$output .= $this->GetNewSection($type, $class);
 			}
-			
+
 		}
 		$output .= '</div>';
 

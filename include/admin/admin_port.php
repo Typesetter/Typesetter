@@ -591,7 +591,7 @@ class admin_port{
 		global $dataDir, $langmessage;
 
 		$context			= array($dataDir=>'dir');
-		$this->FileSystem	= \gp\tool\FileSystem::init($context,'list');
+		$this->FileSystem	= \gp\tool\FileSystem::init($context);
 
 		if( is_null($this->FileSystem) ){
 			message($langmessage['OOPS'] .' (No filesystem)');

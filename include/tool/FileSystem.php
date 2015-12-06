@@ -51,7 +51,6 @@ class FileSystem{
 	}
 
 
-
 	/**
 	 * Determine which class is needed to write to $context
 	 *
@@ -63,44 +62,14 @@ class FileSystem{
 			$context = \common::DirName($context);
 		}
 
-
-		//direct
 		if( gp_is_writable($context) ){
-
-			if( !is_dir($context) ){
-				return 'gp_filesystem_direct';
-			}
-
-			if( function_exists('posix_getuid') && function_exists('fileowner') ){
-				$direct = false;
-
-				//check more for directories
-				$temp_file_name = $context . '/temp-write-test-' . time();
-
-				$temp_handle = @fopen($temp_file_name, 'w');
-
-				if( $temp_handle ){
-					if( posix_getuid() == @fileowner($temp_file_name) ){
-						$direct = true;
-					}
-					@fclose($temp_handle);
-					@unlink($temp_file_name);
-				}
-
-				if( $direct ){
-					return 'gp_filesystem_direct';
-				}
-
-			}
-
+			return 'gp_filesystem_direct';
 		}
 
-		//ftp
 		if( function_exists('ftp_connect') ){
 			return 'gp_filesystem_ftp';
 		}
 
-		return false;
 	}
 
 
@@ -112,88 +81,86 @@ class FileSystem{
 	 * @param array $context array of paths (as keys) and instructions (as values), possible values are (file,dir)
 	 */
 	public static function get_filesystem_method_list($context = array()){
-		$result = 1;
+		$result			= 1;
+		$writable		= false;
 
 		foreach($context as $file => $instruction){
 			switch($instruction){
 				case 'dir':
-					$temp_result = self::get_filesystem_method_dir($file);
+					$writable = self::writable($file);
 				break;
 				case 'file':
-					$temp_result = self::get_filesystem_method_file($file);
-				break;
-				default:
-					$temp_result = false;
+					$writable = gp_is_writable($file);
 				break;
 			}
-			if( $temp_result === false ){
-				return false;
-			}
-			$result = max($temp_result,$result);
-		}
 
-		switch($result){
-			case 1:
-			return 'gp_filesystem_direct';
-			case 2:
-			return 'gp_filesystem_ftp';
-			default:
+			if( $writable ){
+				continue;
+			}
+
+			if( function_exists('ftp_connect') ){
+				return 'gp_filesystem_ftp';
+			}
+
 			return false;
 		}
+
+		return 'gp_filesystem_direct';
 	}
 
 
-	public static function get_filesystem_method_dir($dir){
-		$result = self::get_filesystem_method_file($dir);
-		if( $result === false ){
+	/**
+	 * Determine if the file/directory/link is writable
+	 *
+	 */
+	public static function writable($file){
+
+		if( is_link($file) ){
+			return self::writable_link($file);
+		}
+
+		if( is_dir($file) ){
+			return self::writable_dir($file);
+		}
+
+		return gp_is_writable($file);
+	}
+
+
+	/**
+	 * Determine if the directory and all it's contents are writable
+	 *
+	 */
+	public static function writable_dir($dir){
+
+		if( !gp_is_writable($dir) ){
 			return false;
 		}
 
 		$dh = @opendir($dir);
 		if( !$dh ){
-			return $result;
+			return false;
 		}
+
+
+		$dir = str_replace('\\','/',$dir);
+		$dir = rtrim($dir,'/');
 
 		while( ($file = readdir($dh)) !== false){
-			if( strpos($file,'.') === 0){
+
+			if( $file === '.' || $file === '..' ){
 				continue;
 			}
-			$fullPath = $dir.'/'.$file;
-			if( is_link($fullPath) ){
-				$temp_result = self::get_filesystem_method_link($fullPath);
-			}elseif( is_dir($fullPath) ){
-				$temp_result = self::get_filesystem_method_dir($fullPath);
-			}else{
-				$temp_result = self::get_filesystem_method_file($fullPath);
-			}
 
+			$full_path = $dir.'/'.$file;
 
-			if( $temp_result === false ){
+			if( !self::writable($full_path) ){
 				return false;
 			}
-			$result = max($temp_result,$result);
 
 		}
 
-		return $result;
-	}
-
-	/**
-	 * Get the minimum filesystem_method for $file
-	 *
-	 * @param string $file
-	 */
-	public static function get_filesystem_method_file($file){
-
-		if( gp_is_writable($file) ){
-			return 1;
-		}
-
-		if( function_exists('ftp_connect') ){
-			return 2;
-		}
-
-		return false;
+		return true;
 	}
 
 
@@ -203,15 +170,11 @@ class FileSystem{
 	 *
 	 * @param string $link
 	 */
-	public static function get_filesystem_method_link($link){
+	public static function writable_link($link){
 
 		$temp = self::TempFile( $link );
 		if( @rename( $link, $temp ) && @rename( $temp, $link ) ){
-			return 1;
-		}
-
-		if( function_exists('ftp_connect') ){
-			return 2;
+			return true;
 		}
 
 		return false;
@@ -515,7 +478,6 @@ class FileSystem{
 	 * Determines if the string provided contains binary characters.
 	 *
 	 * @since 2.7
-	 * @access private
 	 *
 	 * @param string $text String to test against
 	 * @return bool true if string is binary, false otherwise

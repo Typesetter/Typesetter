@@ -542,7 +542,7 @@ class update_class{
 		$context[$dataDir . '/themes']		= 'dir';	// These may have user content in them and should not be completely replaced
 		$context[$dataDir . '/addons']		= 'dir';
 
-		$this->FileSystem					= \gp\tool\FileSystem::init($context,'list');
+		$this->FileSystem					= \gp\tool\FileSystem::init($context);
 
 
 		if( !$this->FileSystem ){

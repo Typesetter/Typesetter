@@ -3,4 +3,3 @@ AddType text/css .css
 AddType text/xml .xml
 
 AcceptPathInfo On
-

@@ -36,7 +36,7 @@ class admin_port{
 	public $import_object;
 	public $import_list;
 	public $import_info;
-	protected $fs;
+	protected $FileSystem;
 
 	public $replace_dirs = array();
 	public $extra_dirs = array();

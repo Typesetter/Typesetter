@@ -45,7 +45,7 @@ class admin_port{
 
 
 	public function __construct(){
-		global $langmessage,$dataDir,$page;
+		global $dataDir;
 
 		$this->export_dir		= $dataDir.'/data/_exports';
 		$this->temp_dir			= $dataDir.'/data/_temp';
@@ -55,6 +55,10 @@ class admin_port{
 
 		$this->Init();
 		$this->SetExported();
+	}
+
+	public function RunScript(){
+		global $langmessage;
 
 		$cmd = common::GetCommand();
 		switch($cmd){

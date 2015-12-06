@@ -222,6 +222,8 @@ class admin_tools{
 		//$scripts['Admin_Port']['label'] = $langmessage['Import/Export'];
 		$scripts['Admin_Port']['label'] = $langmessage['Export'];
 		$scripts['Admin_Port']['group'] = 'settings';
+		$scripts['Admin_Port']['method'] = 'RunScript';
+
 
 
 		$scripts['Admin_Status']['script'] = '/include/admin/admin_rm.php';

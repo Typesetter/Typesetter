@@ -83,25 +83,18 @@ body .msg_buttons{
 body .msg_buttons a{
 	display:inline-block;
 	border-radius:3px;
-	padding:0 8px;
+	padding:0 8px 0 24px;
 	margin:6px 6px 4px;
 	text-decoration:none !important;
 	border:1px solid rgba(0,0,0,0.15);
-	background:rgba(0,0,0,0.075);
+	background: rgba(0,0,0,0.075) url('../imgs/revision.png') 2px 0 no-repeat;
 	}
-	/*
-body .messages a.msg_publish_draft{
-	border:1px solid #176b00;
-	background:#209400;
-	color:#fff !important;
+body .msg_buttons .msg_discard_draft{
+	background-position: 2px -24px;
 	}
-body .messages a.msg_discard_draft{
-	border:1px solid #934819;
-	background:#D66126;
-	color:#fff !important;
+body .msg_buttons .msg_view_history{
+	background-position: 2px -48px;
 	}
-	*/
-
 
 
 .contactform{

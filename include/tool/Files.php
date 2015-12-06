@@ -7,10 +7,10 @@ defined('is_running') or die('Not an entry point...');
  */
 class gpFiles{
 
-	static $last_modified; 						//the modified time of the last file retrieved with gpFiles::Get();
-	static $last_version; 						//the gpEasy version of the last file retrieved with gpFiles::Get();
-	static $last_stats			= array(); 		//the stats of the last file retrieved with gpFiles::Get();
-	static $last_meta			= array(); 		//the meta data of the last file retrieved with gpFiles::Get();
+	public static $last_modified; 						//the modified time of the last file retrieved with gpFiles::Get();
+	public static $last_version; 						//the gpEasy version of the last file retrieved with gpFiles::Get();
+	public static $last_stats			= array(); 		//the stats of the last file retrieved with gpFiles::Get();
+	public static $last_meta			= array(); 		//the meta data of the last file retrieved with gpFiles::Get();
 
 
 	/**
@@ -20,7 +20,7 @@ class gpFiles{
 	 * @since 4.4b1
 	 *
 	 */
-	static function Get( $file, $var_name=null ){
+	public static function Get( $file, $var_name=null ){
 		global $dataDir;
 
 		self::$last_modified	= null;
@@ -108,7 +108,7 @@ class gpFiles{
 	 * Get the raw contents of a data file
 	 *
 	 */
-	static function GetRaw($file){
+	public static function GetRaw($file){
 		global $dataDir;
 
 		if( strpos($file,$dataDir) !== 0 ){
@@ -122,7 +122,7 @@ class gpFiles{
 		return file_get_contents($file);
 	}
 
-	static function Exists($file){
+	public static function Exists($file){
 		global $dataDir;
 
 		if( strpos($file,$dataDir) !== 0 ){
@@ -144,7 +144,7 @@ class gpFiles{
 	 * @param mixed $filetype If false, all files in $dir will be included. false=all,1=directories,'php'='.php' files
 	 * @return array() List of files in $dir
 	 */
-	static function ReadDir($dir,$filetype='php'){
+	public static function ReadDir($dir,$filetype='php'){
 		$files = array();
 		if( !file_exists($dir) ){
 			return $files;
@@ -210,7 +210,7 @@ class gpFiles{
 	 * @return array() The folders and files within $dir
 	 *
 	 */
-	static function ReadFolderAndFiles($dir){
+	public static function ReadFolderAndFiles($dir){
 		$dh = @opendir($dir);
 		if( !$dh ){
 			return array();
@@ -243,7 +243,7 @@ class gpFiles{
 	 * @param string $title The title to be cleansed
 	 * @return string The cleansed title
 	 */
-	static function CleanLabel($title=''){
+	public static function CleanLabel($title=''){
 
 		$title = str_replace(array('"'),array(''),$title);
 		$title = str_replace(array('<','>'),array('_'),$title);
@@ -259,7 +259,7 @@ class gpFiles{
 	 *
 	 * @param string $text The string to be cleansed. Passed by reference
 	 */
-	static function CleanText(&$text){
+	public static function CleanText(&$text){
 		includeFile('tool/editing.php');
 		gp_edit::tidyFix($text);
 		gpFiles::rmPHP($text);
@@ -272,7 +272,7 @@ class gpFiles{
 	 *
 	 * @param string $text The html content to be checked. Passed by reference
 	 */
-	static function FixTags(&$text){
+	public static function FixTags(&$text){
 		includeFile('tool/HTML_Output.php');
 		$gp_html_output = new gp_html_output($text);
 		$text = $gp_html_output->result;
@@ -283,7 +283,7 @@ class gpFiles{
 	 *
 	 * @param string $text The html content to be checked. Passed by reference
 	 */
-	static function rmPHP(&$text){
+	public static function rmPHP(&$text){
 		$search = array('<?','<?php','?>');
 		$replace = array('&lt;?','&lt;?php','?&gt;');
 		$text = str_replace($search,$replace,$text);
@@ -295,7 +295,7 @@ class gpFiles{
 	 * @param string $string
 	 * @return string
 	 */
-	static function NoNull($string){
+	public static function NoNull($string){
 		$string = preg_replace('/\0+/', '', $string);
 		return preg_replace('/(\\\\0)+/', '', $string);
 	}
@@ -306,7 +306,7 @@ class gpFiles{
 	 * @since 1.8a1
 	 *
 	 */
-	static function NewTitle($title, $section_content = false, $type='text'){
+	public static function NewTitle($title, $section_content = false, $type='text'){
 
 		// get the file for the title
 		if( empty($title) ){
@@ -349,7 +349,7 @@ class gpFiles{
 	 * @param string $title
 	 * @return string The path of the data file
 	 */
-	static function PageFile($title){
+	public static function PageFile($title){
 		global $dataDir, $config, $gp_index;
 
 
@@ -396,7 +396,7 @@ class gpFiles{
 		return $index_path;
 	}
 
-	static function NewFileNumber(){
+	public static function NewFileNumber(){
 		global $config;
 
 		includeFile('admin/admin_tools.php');
@@ -418,7 +418,7 @@ class gpFiles{
 	 * @param string $file
 	 * @return array
 	 */
-	static function GetTitleMeta($file){
+	public static function GetTitleMeta($file){
 		gpFiles::Get($file,'meta_data');
 		return gpFiles::$last_meta;
 	}
@@ -427,7 +427,7 @@ class gpFiles{
 	 * Return an array of info about the data file
 	 *
 	 */
-	static function GetFileStats($file){
+	public static function GetFileStats($file){
 
 
 		$file_stats = gpFiles::Get($file,'file_stats');
@@ -449,7 +449,7 @@ class gpFiles{
 	 * @param string $time The unix timestamp to be used for the $fileVersion
 	 * @return bool True on success
 	 */
-	static function SaveFile($file,$contents,$code=false,$time=false){
+	public static function SaveFile($file,$contents,$code=false,$time=false){
 
 		$result = gpFiles::FileStart($file,$time);
 		if( $result !== false ){
@@ -468,7 +468,7 @@ class gpFiles{
 	 * @param string $contents The contents of the file to be saved
 	 * @return bool True on success
 	 */
-	static function Save($file,$contents){
+	public static function Save($file,$contents){
 		global $gp_not_writable;
 
 		if( !self::WriteLock() ){
@@ -507,7 +507,7 @@ class gpFiles{
 	 * Rename a file
 	 * @since 4.6
 	 */
-	static function Rename($from,$to){
+	public static function Rename($from,$to){
 		global $gp_not_writable;
 
 		if( !self::WriteLock() ){
@@ -530,7 +530,7 @@ class gpFiles{
 	 * Get a write lock to prevent simultaneous writing
 	 * @since 3.5.3
 	 */
-	static function WriteLock(){
+	public static function WriteLock(){
 
 		if( defined('gp_has_lock') ){
 			return gp_has_lock;
@@ -554,7 +554,7 @@ class gpFiles{
  	 * Loop and delay to wait for the removal of existing locks (maximum of about .2 of a second)
  	 *
  	 */
-	static function Lock($file,$value,&$expires){
+	public static function Lock($file,$value,&$expires){
 		global $dataDir;
 
 		$tries			= 0;
@@ -601,7 +601,7 @@ class gpFiles{
 	 * Remove a lock file if the value matches
 	 *
 	 */
-	static function Unlock($file,$value){
+	public static function Unlock($file,$value){
 		global $dataDir;
 
 		$lock_file = $dataDir.'/data/_lock_'.sha1($file);
@@ -631,7 +631,7 @@ class gpFiles{
 	 *
 	 * @deprecated 4.3.5
 	 */
-	static function SaveArray(){
+	public static function SaveArray(){
 
 		if( gp_data_type === '.json' ){
 			throw new Exception('SaveArray() cannot be used for json data saving');
@@ -673,7 +673,7 @@ class gpFiles{
 	 * @param array $meta meta data to be saved along with $array
 	 *
 	 */
-	static function SaveData($file, $varname, $array, $meta = array() ){
+	public static function SaveData($file, $varname, $array, $meta = array() ){
 		global $dataDir;
 
 		if( strpos($file,$dataDir) !== 0 ){
@@ -731,7 +731,7 @@ class gpFiles{
 	 * Return the beginning content of a data file
 	 *
 	 */
-	static function FileStart($file, $time=false, $file_stats = array() ){
+	public static function FileStart($file, $time=false, $file_stats = array() ){
 		global $gpAdmin;
 
 		if( $time === false ) $time = time();
@@ -757,7 +757,7 @@ class gpFiles{
 	}
 
 
-	static function ArrayToPHP($varname,&$array){
+	public static function ArrayToPHP($varname,&$array){
 		return '$'.$varname.' = '.var_export($array,true).';';
 	}
 
@@ -773,7 +773,7 @@ class gpFiles{
 	 * @param int $length If length is omitted, nothing is removed from $array. If positive, then that many elements will be removed starting with $search_key + $offset
 	 * @return bool True on success
 	 */
-	static function ArrayInsert($search_key,$new_key,$new_value,&$array,$offset=0,$length=0){
+	public static function ArrayInsert($search_key,$new_key,$new_value,&$array,$offset=0,$length=0){
 
 		$array_keys = array_keys($array);
 		$array_values = array_values($array);
@@ -796,7 +796,7 @@ class gpFiles{
 	 * Replace a key-value pair in an associative array
 	 * ArrayReplace() is a shortcut for using gpFiles::ArrayInsert() with $offset = 0 and $length = 1
 	 */
-	static function ArrayReplace($search_key,$new_key,$new_value,&$array){
+	public static function ArrayReplace($search_key,$new_key,$new_value,&$array){
 		return gpFiles::ArrayInsert($search_key,$new_key,$new_value,$array,0,1);
 	}
 
@@ -809,7 +809,7 @@ class gpFiles{
 	 * @param bool $index Whether or not to add an index.hmtl file in the directory
 	 * @return bool True on success
 	 */
-	static function CheckDir($dir,$index=true){
+	public static function CheckDir($dir,$index=true){
 		global $config;
 
 		if( !file_exists($dir) ){
@@ -852,7 +852,7 @@ class gpFiles{
 	 * Will only work if directory is empty
 	 *
 	 */
-	static function RmDir($dir){
+	public static function RmDir($dir){
 		global $config;
 
 		//ftp
@@ -866,7 +866,7 @@ class gpFiles{
 	 * Remove a file or directory and it's contents
 	 *
 	 */
-	static function RmAll($path){
+	public static function RmAll($path){
 
 		if( empty($path) ) return false;
 		if( is_link($path) ) return @unlink($path);
@@ -905,14 +905,14 @@ class gpFiles{
 
 	/* FTP Function */
 
-	static function FTP_RmDir($dir){
+	public static function FTP_RmDir($dir){
 		$conn_id = gpFiles::FTPConnect();
 		$dir = gpFiles::ftpLocation($dir);
 
 		return ftp_rmdir($conn_id,$dir);
 	}
 
-	static function FTP_CheckDir($dir){
+	public static function FTP_CheckDir($dir){
 		$conn_id = gpFiles::FTPConnect();
 		$dir = gpFiles::ftpLocation($dir);
 
@@ -922,7 +922,7 @@ class gpFiles{
 		return ftp_site($conn_id, 'CHMOD 0777 '. $dir );
 	}
 
-	static function FTPConnect(){
+	public static function FTPConnect(){
 		global $config;
 
 		static $conn_id = false;
@@ -950,13 +950,13 @@ class gpFiles{
 		return $conn_id;
 	}
 
-	static function ftpClose($connection=false){
+	public static function ftpClose($connection=false){
 		if( $connection !== false ){
 			@ftp_quit($connection);
 		}
 	}
 
-	static function ftpLocation(&$location){
+	public static function ftpLocation(&$location){
 		global $config,$dataDir;
 
 		$len = strlen($dataDir);
@@ -970,7 +970,7 @@ class gpFiles{
 	 * Use gp_edit::CleanTitle() instead
 	 * Used by Simple_Blog1
 	 */
-	static function CleanTitle($title,$spaces = '_'){
+	public static function CleanTitle($title,$spaces = '_'){
 		trigger_error('Deprecated Function');
 		includeFile('tool/editing.php');
 		return gp_edit::CleanTitle($title,$spaces);

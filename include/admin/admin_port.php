@@ -172,6 +172,8 @@ class admin_port{
 		if( $success ){
 			$this->iframe = '<iframe src="'.common::GetDir('/data/_exports/'.$this->archive_name).'" height="0" width="0" style="visibility:hidden;height:0;width:0;"></iframe>';
 		}
+
+		return true;
 	}
 
 
@@ -355,15 +357,6 @@ class admin_port{
 			return false;
 		}
 
-		// check for current user in export data
-		// cancel the process if the current user was not in the system when the export was made
-		if( isset($this->import_info['Export_Users']) ){
-			$users = explode(',',$this->import_info['Export_Users']);
-			if( array_search($gpAdmin['username'],$users) === false ){
-				message($langmessage['revert_notice_user']);
-				return false;
-			}
-		}
 
 		echo '<h2>'.$langmessage['Revert'].'</h2>';
 

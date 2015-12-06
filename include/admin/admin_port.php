@@ -44,12 +44,12 @@ class admin_port{
 	public $iframe = '';
 
 
-	function __construct(){
+	public function __construct(){
 		global $langmessage,$dataDir,$page;
 
-		$this->export_dir = $dataDir.'/data/_exports';
-		$this->temp_dir = $dataDir.'/data/_temp';
-		$this->export_ini_file = $dataDir.'/data/_temp/Export.ini';
+		$this->export_dir		= $dataDir.'/data/_exports';
+		$this->temp_dir			= $dataDir.'/data/_temp';
+		$this->export_ini_file	= $dataDir.'/data/_temp/Export.ini';
 		@set_time_limit(90);
 		@ini_set('memory_limit','64M');
 
@@ -98,15 +98,11 @@ class admin_port{
 	}
 
 
-
-
-	/*
-	 * Export Functions
-	 *
-	 *
+	/**
+	 * Create an archive of the selected folders
 	 *
 	 */
-	function DoExport(){
+	public function DoExport(){
 		global $dataDir, $langmessage, $config;
 
 		//get list of directories to include
@@ -175,8 +171,11 @@ class admin_port{
 	}
 
 
-
-	function Create_Tar($which_exported,$add_dirs){
+	/**
+	 * Create a tar archive of the folders in $add_dirs
+	 *
+	 */
+	public function Create_Tar($which_exported,$add_dirs){
 		global $dataDir, $langmessage;
 
 
@@ -250,7 +249,7 @@ class admin_port{
 	}
 
 	//create the file that will be use for the archive
-	function NewFile($which_exported,$extension){
+	public function NewFile($which_exported,$extension){
 
 		if( !gpFiles::CheckDir($this->export_dir) ){
 			message($langmessage['OOPS'].'(Export Dir)');
@@ -272,7 +271,7 @@ class admin_port{
 		return true;
 	}
 
-	function Export_Ini($which_exported){
+	public function Export_Ini($which_exported){
 		global $dirPrefix, $dataDir;
 
 		$content = array();
@@ -297,7 +296,7 @@ class admin_port{
 	 * Add a list of registered users to the export ini file if the export includes pages, config, addons
 	 *
 	 */
-	function GetUsers($which_exported){
+	public function GetUsers($which_exported){
 		global $dataDir;
 
 		if( ($this->min_import_bits & $which_exported) != $this->min_import_bits ){
@@ -319,7 +318,7 @@ class admin_port{
 	 *
 	 */
 
-	function Revert($cmd){
+	public function Revert($cmd){
 		global $langmessage, $dataDir, $gpAdmin;
 
 		if( !$this->RevertFilesystem() ){
@@ -410,7 +409,7 @@ class admin_port{
 	 * Transfer files from the archive to the active directories
 	 *
 	 */
-	function RevertConfirmed(){
+	public function RevertConfirmed(){
 		global $langmessage, $dataDir;
 
 		//organize list
@@ -489,7 +488,7 @@ class admin_port{
 	 * Make sure the current user stays logged in after a revert is completed
 	 *
 	 */
-	function TransferSession(){
+	public function TransferSession(){
 		global $gpAdmin,$dataDir;
 
 		$username = $gpAdmin['username'];
@@ -514,7 +513,7 @@ class admin_port{
 	}
 
 
-	function RevertFinished($successful){
+	public function RevertFinished($successful){
 		global $langmessage,$dataDir;
 
 		if( $successful ){
@@ -555,7 +554,7 @@ class admin_port{
 	}
 
 
-	function RevertClean(){
+	public function RevertClean(){
 		global $langmessage, $dataDir;
 
 		if( !$this->RevertFilesystem() ){
@@ -587,7 +586,7 @@ class admin_port{
 	 * $dataDir writability is required so that we can create a temporary directory next to /data for replacement
 	 *
 	 */
-	function RevertFilesystem(){
+	public function RevertFilesystem(){
 		global $dataDir, $langmessage;
 
 		$context			= array($dataDir=>'dir');
@@ -600,7 +599,7 @@ class admin_port{
 		return true;
 	}
 
-	function CopyDir( $source, $dest ){
+	public function CopyDir( $source, $dest ){
 		global $dataDir, $langmessage;
 
 		$data_files = gpFiles::ReadDir($source,false);
@@ -643,7 +642,7 @@ class admin_port{
 	 * @param bool $gpfiles False to use $this->FileSystem for file replacement, True for gpFiles methods
 	 * @return bool
 	 */
-	function PutFiles( $file_list, $dest_rel, $gpfiles = false ){
+	public function PutFiles( $file_list, $dest_rel, $gpfiles = false ){
 		global $langmessage, $dataDir;
 
 		$dest_fs = $this->FileSystem->get_base_dir().$dest_rel;
@@ -736,7 +735,7 @@ class admin_port{
 	 * @return string The fixed path
 	 *
 	 */
-	function FixLink($link){
+	public function FixLink($link){
 		global $dataDir;
 
 		//adjust the link target?
@@ -759,11 +758,11 @@ class admin_port{
 	}
 
 
-	function GetImportContents($string){
+	public function GetImportContents($string){
 		return $this->import_object->extractInString($string);
 	}
 
-	function ArchiveToObject($archive){
+	public function ArchiveToObject($archive){
 		global $langmessage;
 
 		if( empty($archive) || !isset($this->exported[$archive]) ){
@@ -798,7 +797,7 @@ class admin_port{
 	 * Get the export.ini contents
 	 *
 	 */
-	function ExtractIni($tar_object){
+	public function ExtractIni($tar_object){
 
 		$ini_contents = $tar_object->extractInString('gpexport/Export.ini');
 		if( empty($ini_contents) ){
@@ -815,7 +814,7 @@ class admin_port{
 	 */
 
 
-	function Init(){
+	public function Init(){
 		global $langmessage;
 
 		$this->bit_pages = 1;
@@ -856,18 +855,18 @@ class admin_port{
 		}
 	}
 
-	function Init_Tar(){
+	public function Init_Tar(){
 		@ini_set('memory_limit', '256M');
 		includeFile('thirdparty/ArchiveTar/Tar.php');
 	}
 
 
-	function SetExported(){
+	public function SetExported(){
 		$this->exported = gpFiles::ReadDir($this->export_dir,$this->all_extenstions);
 		arsort($this->exported);
 	}
 
-	function DeleteConfirmed(){
+	public function DeleteConfirmed(){
 		global $langmessage;
 
 		$file =& $_POST['file'];
@@ -882,7 +881,7 @@ class admin_port{
 	}
 
 
-	function FileInfo($file){
+	public function FileInfo($file){
 		global $langmessage;
 
 
@@ -919,7 +918,7 @@ class admin_port{
 
 
 
-	function Exported(){
+	public function Exported(){
 		global $langmessage;
 
 		if( count($this->exported) == 0 ){
@@ -998,7 +997,7 @@ class admin_port{
 	 * Either must have bit_pages, bit_config and bit_addons or none of the three
 	 *
 	 */
-	function CanRevert($bits){
+	public function CanRevert($bits){
 
 		if( ($this->min_import_bits & $bits) == $this->min_import_bits ){
 			return true;
@@ -1012,7 +1011,7 @@ class admin_port{
 	}
 
 
-	function ExportForm(){
+	public function ExportForm(){
 		global $langmessage;
 
 		echo '<form action="'.common::GetUrl('Admin_Port').'" method="post">';
@@ -1042,7 +1041,7 @@ class admin_port{
 
 	}
 
-	function Checkbox_Export($name,$label){
+	public function Checkbox_Export($name,$label){
 		$checked = false;
 		$class = '';
 		if( !isset($_POST['cmd']) || ($_POST['cmd'] !== 'do_export') ){

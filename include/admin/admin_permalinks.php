@@ -33,7 +33,7 @@ class admin_permalinks{
 		}
 
 
-		$this->FileSystem = gp_filesystem_base::init($this->rule_file);
+		$this->FileSystem = \gp\tool\FileSystem::init($this->rule_file);
 		$this->WWWAvail();
 
 		echo '<h2>'.$langmessage['permalink_settings'].'</h2>';

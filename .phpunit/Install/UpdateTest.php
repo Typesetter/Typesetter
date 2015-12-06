@@ -3,6 +3,7 @@
 
 class phpunit_Update extends gptest_bootstrap{
 
+	private $FileSystem;
 
 	/**
 	 *
@@ -58,6 +59,8 @@ class phpunit_Update extends gptest_bootstrap{
 		$filesystem_method = $page->DetectFileSystem();
 		self::AssertEquals($filesystem_method,'gp_filesystem_direct');
 
+
+		$this->FileSystem = \gp\tool\FileSystem::set_method('gp_filesystem_direct');
 	}
 
 
@@ -105,11 +108,11 @@ class phpunit_Update extends gptest_bootstrap{
 	 *
 	 */
 	function ReplaceDirs(){
-		global $page, $gp_filesystem;
+		global $page;
 
 
 		$extra_dirs		= array();
-		$success		= $gp_filesystem->ReplaceDirs( $page->replace_dirs, $extra_dirs );
+		$success		= $this->FileSystem->ReplaceDirs( $page->replace_dirs, $extra_dirs );
 		self::AssertTrue($success,'ReplaceDirs Failed');
 
 		if( !$success ){
@@ -125,7 +128,7 @@ class phpunit_Update extends gptest_bootstrap{
 		//reverse it
 		$replace_dirs	= $extra_dirs;
 		$extra_dirs		= array();
-		$success		= $gp_filesystem->ReplaceDirs( $replace_dirs, $extra_dirs );
+		$success		= $this->FileSystem->ReplaceDirs( $replace_dirs, $extra_dirs );
 		self::AssertTrue($success,'ReplaceDirs Failed (2)');
 
 	}

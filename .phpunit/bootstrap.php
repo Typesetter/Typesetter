@@ -21,6 +21,7 @@ includeFile('tool/gpOutput.php');
 includeFile('tool/functions.php');
 includeFile('tool/Plugins.php');
 
+spl_autoload_register( array('common','Autoload') );
 
 
 class gptest_bootstrap extends PHPUnit_Framework_TestCase{

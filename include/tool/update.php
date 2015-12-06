@@ -526,8 +526,11 @@ class update_class{
 
 
 		//already determined
-		if( isset($_POST['filesystem_method']) && gp_filesystem_base::set_method($_POST['filesystem_method']) ){
-			return $_POST['filesystem_method'];
+		if( isset($_POST['filesystem_method']) ){
+			$this->FileSystem = \gp\tool\FileSystem::set_method($_POST['filesystem_method']);
+			if( $this->FileSystem ){
+				return $_POST['filesystem_method'];
+			}
 		}
 
 
@@ -539,7 +542,7 @@ class update_class{
 		$context[$dataDir . '/themes']		= 'dir';	// These may have user content in them and should not be completely replaced
 		$context[$dataDir . '/addons']		= 'dir';
 
-		$this->FileSystem					= gp_filesystem_base::init($context,'list');
+		$this->FileSystem					= \gp\tool\FileSystem::init($context,'list');
 
 
 		if( !$this->FileSystem ){

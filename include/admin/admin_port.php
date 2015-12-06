@@ -583,7 +583,7 @@ class admin_port{
 	}
 
 	/**
-	 * Prepare gp_filesystem for writing to $dataDir
+	 * Prepare FileSystem for writing to $dataDir
 	 * $dataDir writability is required so that we can create a temporary directory next to /data for replacement
 	 *
 	 */
@@ -591,7 +591,7 @@ class admin_port{
 		global $dataDir, $langmessage;
 
 		$context			= array($dataDir=>'dir');
-		$this->FileSystem	= gp_filesystem_base::init($context,'list');
+		$this->FileSystem	= \gp\tool\FileSystem::init($context,'list');
 
 		if( is_null($this->FileSystem) ){
 			message($langmessage['OOPS'] .' (No filesystem)');

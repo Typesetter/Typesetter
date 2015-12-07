@@ -33,7 +33,7 @@ class gptest_bootstrap extends PHPUnit_Framework_TestCase{
 		common::GetLangFile();
 	}
 
-	static function LogIn(){
+	public function SessionStart(){
 
 		common::GetConfig();
 
@@ -46,6 +46,10 @@ class gptest_bootstrap extends PHPUnit_Framework_TestCase{
 
 		self::AssertTrue($logged_in,'Not Logged In');
 
+	}
+
+	public function SessionEnd(){
+		ob_get_clean();
 	}
 
 	static function log($msg){

@@ -223,6 +223,37 @@ class FileSystem{
 
 
 	/**
+	 * Delete folders
+	 *
+	 */
+	public function CleanUpFolders($folders, &$not_deleted){
+
+		$filesystem_base	= $this->get_base_dir();
+		$not_deleted		= array();
+
+		foreach($folders as $old_folder){
+
+			if( ( strpos($old_folder,'../') !== false ) || ( strpos($old_folder,'./') !== false ) ){
+				continue;
+			}
+
+			$old_folder			= '/'.ltrim($old_folder,'/');
+			$old_folder_full	= $filesystem_base.$old_folder;
+
+			if( !$this->file_exists($old_folder_full) ){
+				continue;
+			}
+
+			if( !$this->rmdir_all($old_folder_full) ){
+				$not_deleted[] = htmlspecialchars($old_folder);
+			}
+		}
+
+		return true;
+	}
+
+
+	/**
 	 * Remove a file, symlink or directory
 	 * @param string $path
 	 */

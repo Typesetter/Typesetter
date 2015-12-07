@@ -122,7 +122,7 @@ class phpunit_Update extends gptest_bootstrap{
 
 		//remove what we just installed
 		$remove = array_keys($page->replace_dirs);
-		$page->CleanUpFolders($remove);
+		$this->FileSystem->CleanUpFolders($remove, $not_deleted);
 
 
 		//reverse it

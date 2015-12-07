@@ -611,28 +611,8 @@ class update_class{
 		}
 
 
-		$filesystem_base	= $this->FileSystem->get_base_dir();
 		$not_deleted		= array();
-
-		foreach($folders as $old_folder){
-
-			if( ( strpos($old_folder,'../') !== false )
-				|| ( strpos($old_folder,'./') !== false )
-				){
-				continue;
-			}
-
-			$old_folder			= '/'.ltrim($old_folder,'/');
-			$old_folder_full	= $filesystem_base.$old_folder;
-
-			if( !$this->FileSystem->file_exists($old_folder_full) ){
-				continue;
-			}
-
-			if( !$this->FileSystem->rmdir_all($old_folder_full) ){
-				$not_deleted[] = htmlspecialchars($old_folder);
-			}
-		}
+		$this->FileSystem->CleanUpFolders($folders, $not_deleted);
 
 		if( count($not_deleted) > 0 ){
 			$this->msg($langmessage['delete_incomplete'].': '.implode(', ',$not_deleted));

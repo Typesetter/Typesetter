@@ -489,7 +489,6 @@ class gpsession{
 		if( !$sessions ){
 			$sessions = self::GetSessionIds();
 			if( !isset($sessions[$session_id]) ){
-				msg('hmm: '.gp_session_cookie);
 				self::cookie(gp_session_cookie); //make sure the cookie is deleted
 				msg($langmessage['Session Expired'].' (timeout)');
 				return false;

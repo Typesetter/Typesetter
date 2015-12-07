@@ -554,29 +554,21 @@ class admin_port{
 	public function RevertClean(){
 		global $langmessage, $dataDir;
 
+		if( !isset($_POST['old_folder']) || !is_array($_POST['old_folder']) ){
+			return true;
+		}
+
 		if( !$this->RevertFilesystem() ){
 			return false;
 		}
 
 		$this->FileSystem->connect();
 
-		$folders =& $_REQUEST['old_folder'];
-		if( count($folders) > 0 ){
-			$fs_root = $this->FileSystem->get_base_dir();
+		$this->FileSystem->CleanUpFolders($_POST['old_folder'], $not_deleted);
 
-			foreach($folders as $folder){
-				if( strpos($folder,'/') !== false || strpos($folder,'\\') !== false ){
-					continue;
-				}
-				$check = $dataDir.'/'.$folder;
-				if( !file_exists($check) ){
-					continue;
-				}
-				$full = $fs_root.'/'.$folder;
-				$this->FileSystem->rmdir_all($full);
-			}
-		}
+		return true;
 	}
+
 
 	/**
 	 * Prepare FileSystem for writing to $dataDir

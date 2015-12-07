@@ -10,7 +10,7 @@ class phpunit_Export extends gptest_bootstrap{
 	function testExport(){
 		global $wbMessageBuffer;
 
-		$this->LogIn();
+		$this->SessionStart();
 
 		includeFile('admin/admin_port.php');
 		$admin_port = new admin_port();
@@ -39,6 +39,12 @@ class phpunit_Export extends gptest_bootstrap{
 		self::AssertTrue($reverted,'Revert Failed');
 
 
+		//clean up
+		$_POST = array('old_folder' => array_values($admin_port->extra_dirs));
+		$admin_port->RevertClean();
+
+
+		$this->SessionEnd();
 	}
 
 }

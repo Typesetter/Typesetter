@@ -586,7 +586,9 @@ class admin_port{
 			return false;
 		}
 
-		$this->FileSystem->connect();
+		if( !$this->FileSystem->connect() ){
+			return false;
+		}
 
 		$this->FileSystem->CleanUpFolders($_POST['old_folder'], $not_deleted);
 

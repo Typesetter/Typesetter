@@ -81,8 +81,6 @@ class FileSystem{
 	 * @param array $context array of paths (as keys) and instructions (as values), possible values are (file,dir)
 	 */
 	public static function get_filesystem_method_list($context = array()){
-		$result			= 1;
-		$writable		= false;
 
 		foreach($context as $file => $instruction){
 			switch($instruction){

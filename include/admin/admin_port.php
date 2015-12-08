@@ -21,7 +21,6 @@ class admin_port{
 	public $export_arch;
 	public $export_dir;
 	public $exported = array();
-	public $export_ini_file;
 	public $temp_dir;
 	public $avail_compress = array();
 	public $all_extenstions = array('tgz','tar','gz','bz');
@@ -49,7 +48,6 @@ class admin_port{
 
 		$this->export_dir		= $dataDir.'/data/_exports';
 		$this->temp_dir			= $dataDir.'/data/_temp';
-		$this->export_ini_file	= $dataDir.'/data/_temp/Export.ini';
 		@set_time_limit(90);
 		@ini_set('memory_limit','64M');
 
@@ -190,24 +188,8 @@ class admin_port{
 			return false;
 		}
 
-		if( !$this->Export_Ini($which_exported) ){
-			message($langmessage['OOPS'].'(2)');
-			return false;
-		}
-
-
-		//check to see if dirs in add_dirs even exist
-		foreach($add_dirs as $i => $dir){
-			if( !file_exists($dir) ){
-				unset($add_dirs[$i]);
-			}
-		}
-
 
 		$success = $this->Create_Tar($which_exported,$add_dirs);
-
-		//clean up
-		unlink($this->export_ini_file);
 
 
 		//iframe for download
@@ -228,30 +210,18 @@ class admin_port{
 
 
 		if( !$this->NewFile($which_exported,'tar') ){
-			return;
-		}
-
-		$this->Init_Tar();
-		$tar_object = new Archive_Tar($this->archive_path);
-
-		//$a = new PharData('archive.tar');
-		//$a->addFile('data.xls');
-		//$a->addFile('index.php');
-
-		if( !$tar_object->createModify($add_dirs, 'gpexport', $dataDir) ){
-			message($langmessage['OOPS'].'(5)');
-			unlink($this->archive_path);
 			return false;
 		}
 
-		//add in array so addModify doesn't split the string into an array
-		$temp = array();
-		$temp[] = $this->export_ini_file;
-		if( !$tar_object->addModify($temp, 'gpexport', $this->temp_dir) ){
-			message($langmessage['OOPS'].'(6)');
-			unlink($this->archive_path);
-			return false;
+		// buildFromDirectory with regular expression
+		$tar_object = new PharData($this->archive_path);
+		foreach($add_dirs as $dir){
+			$this->AddFiles($tar_object, $dir);
 		}
+
+
+		//add ini file
+		$this->Export_Ini($tar_object,$which_exported);
 
 
 		//compression
@@ -265,26 +235,10 @@ class admin_port{
 
 		switch( $compression ){
 			case 'gz':
-				//gz compress the tar
-				$gz_handle = @gzopen($new_path, 'wb9');
-				if( !$gz_handle ){
-					return true;
-				}
-				if( !@gzwrite( $gz_handle, file_get_contents($this->archive_path)) ){
-					return true;
-				}
-				@gzclose($gz_handle);
+				$p1 = $tar_object->compress(Phar::GZ);
 			break;
 			case 'bz':
-				//gz compress the tar
-				$bz_handle = @bzopen($new_path, 'w');
-				if( !$bz_handle ){
-					return true;
-				}
-				if( !@bzwrite( $bz_handle, file_get_contents($this->archive_path)) ){
-					return true;
-				}
-				@bzclose($bz_handle);
+				$p1 = $tar_object->compress(Phar::BZ2);
 			break;
 		}
 
@@ -296,7 +250,46 @@ class admin_port{
 		return true;
 	}
 
-	//create the file that will be use for the archive
+
+	/**
+	 * Add directory
+	 *
+	 */
+	public function AddFiles($tar_object, $dir){
+		global $dataDir;
+
+		if( !file_exists($dir) ){
+			return;
+		}
+
+		$files = scandir($dir);
+		foreach($files as $file){
+			if( $file === '.' || $file === '..' ){
+				continue;
+			}
+			$full_path = $dir.'/'.$file;
+
+			if( is_link($full_path) ){
+				continue;
+			}
+
+			if( is_dir($full_path) ){
+				$this->AddFiles($tar_object, $full_path);
+				continue;
+			}
+
+
+
+			$localname = '/gpexport'.substr($full_path, strlen($dataDir));
+			$tar_object->AddFile($full_path, $localname);
+		}
+	}
+
+
+	/**
+	 * Generate the name and path of the archive
+	 *
+	 */
 	public function NewFile($which_exported,$extension){
 
 		if( !gpFiles::CheckDir($this->export_dir) ){
@@ -304,22 +297,13 @@ class admin_port{
 			return false;
 		}
 
-		$init_contents = '';
+		$this->archive_name = time().'_'.$which_exported.'_'.rand(1000,9000).'.'.$extension;
+		$this->archive_path = $this->export_dir.'/'.$this->archive_name;
 
-		$filename = time().'.'.$which_exported.'.'.rand(1000,9000).'.'.$extension;
-		$full_path = $this->export_dir.'/'.$filename;
-
-		if( !gpFiles::Save($full_path,$init_contents) ){
-			message($langmessage['OOPS'].'(4)');
-			return false;
-		}
-
-		$this->archive_path = $full_path;
-		$this->archive_name = $filename;
 		return true;
 	}
 
-	public function Export_Ini($which_exported){
+	public function Export_Ini($tar_object, $which_exported){
 		global $dirPrefix, $dataDir;
 
 		$content = array();
@@ -332,11 +316,7 @@ class admin_port{
 
 		$content = implode("\n",$content);
 
-		if( !gpFiles::Save($this->export_ini_file,$content) ){
-			return false;
-		}
-
-		return true;
+		$tar_object->addFromString('/gpexport/Export.ini',$content);
 	}
 
 
@@ -842,13 +822,6 @@ class admin_port{
 		return gp_ini::ParseString($ini_contents);
 	}
 
-
-	public function Init_Tar(){
-		@ini_set('memory_limit', '256M');
-		includeFile('thirdparty/ArchiveTar/Tar.php');
-	}
-
-
 	public function SetExported(){
 		$this->exported = gpFiles::ReadDir($this->export_dir,$this->all_extenstions);
 		arsort($this->exported);
@@ -872,6 +845,8 @@ class admin_port{
 	public function FileInfo($file){
 		global $langmessage;
 
+
+		$file = str_replace('_','.',$file);
 
 		$temp = explode('.',$file);
 		if( count($temp) < 3 ){

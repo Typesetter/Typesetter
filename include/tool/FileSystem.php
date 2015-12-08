@@ -102,7 +102,7 @@ class FileSystem{
 				return 'gp_filesystem_ftp';
 			}
 
-			return false;
+			return;
 		}
 
 		return 'gp_filesystem_direct';

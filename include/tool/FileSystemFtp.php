@@ -60,6 +60,7 @@ class FileSystemFtp extends FileSystem{
 		return true;
 	}
 
+
 	/**
 	 * Connect to ftp server using either Post or saved values
 	 * Connection values will not be kept in $config in case they're being used for a system revert which will replace the config.php file

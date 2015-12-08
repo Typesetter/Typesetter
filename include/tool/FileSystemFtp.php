@@ -31,6 +31,8 @@ class FileSystemFtp extends FileSystem{
 	public function connect_handler($args){
 		global $langmessage;
 
+		$args += array('ftp_server'=>'','port'=>'','ftp_user'=>'','ftp_pass'=>'');
+
 		if( empty($args['ftp_server']) ){
 			return $langmessage['couldnt_connect'].' (Missing Arguments)';
 		}

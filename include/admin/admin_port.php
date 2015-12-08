@@ -57,6 +57,48 @@ class admin_port{
 		$this->SetExported();
 	}
 
+	public function Init(){
+		global $langmessage;
+
+		$this->bit_pages = 1;
+		$this->bit_config = 2;
+		$this->bit_media = 4;
+		$this->bit_themes = 8;
+		$this->bit_addons = 16;
+		$this->bit_trash = 32;
+
+
+		//pages, configuration and addons
+		$this->export_fields['pca']['name'] = 'pca';
+		$this->export_fields['pca']['label'] = $langmessage['Pages'].', '.$langmessage['configuration'].', '.$langmessage['add-ons'];
+		$this->export_fields['pca']['index'] = $this->bit_pages | $this->bit_config | $this->bit_addons;
+
+		$this->export_fields['media']['name'] = 'media';
+		$this->export_fields['media']['label'] = $langmessage['uploaded_files'];
+		$this->export_fields['media']['index'] = $this->bit_media;
+
+		$this->export_fields['themes']['name'] = 'themes';
+		$this->export_fields['themes']['label'] = $langmessage['themes'];
+		$this->export_fields['themes']['index'] = $this->bit_themes;
+
+		$this->export_fields['trash']['name'] = 'trash';
+		$this->export_fields['trash']['label'] = $langmessage['trash'];
+		$this->export_fields['trash']['index'] = $this->bit_trash;
+
+		$this->min_import_bits = $this->bit_pages | $this->bit_config | $this->bit_addons;
+
+
+		//supported compression types
+		$this->avail_compress = array();
+		if( function_exists('gzopen') ){
+			$this->avail_compress['gz'] = 'gzip';
+		}
+		if( function_exists('bzopen') ){
+			$this->avail_compress['bz'] = 'bzip';
+		}
+	}
+
+
 	public function RunScript(){
 		global $langmessage;
 
@@ -190,11 +232,11 @@ class admin_port{
 		}
 
 		$this->Init_Tar();
-		//$tar_object = new Archive_Tar($this->archive_path,'gz'); //didn't always work when compressin
 		$tar_object = new Archive_Tar($this->archive_path);
-		//if( gpdebug ){
-		//	$tar_object->setErrorHandling(PEAR_ERROR_PRINT);
-		//}
+
+		//$a = new PharData('archive.tar');
+		//$a->addFile('data.xls');
+		//$a->addFile('index.php');
 
 		if( !$tar_object->createModify($add_dirs, 'gpexport', $dataDir) ){
 			message($langmessage['OOPS'].'(5)');
@@ -334,19 +376,13 @@ class admin_port{
 		$archive =& $_REQUEST['archive'];
 		includeFile('tool/parse_ini.php');
 
-		$this->import_object = $this->ArchiveToObject($archive);
-		if( !$this->import_object ){
-			message($langmessage['OOPS'] .' (No Archive)');
+
+		if( !$this->ArchiveToObject($archive) ){
 			return false;
 		}
 
-		$this->import_list = $this->import_object->listContent();
-		if( $this->import_list <= 1 ){
-			message($langmessage['OOPS'] .' (Empty file list)');
-			return false;
-		}
 
-		$this->import_info = $this->ExtractIni($this->import_object);
+		$this->import_info = $this->ExtractIni($archive);
 		if( $this->import_info === false ){
 			message($langmessage['OOPS'].' (No import info)');
 			return false;
@@ -409,65 +445,24 @@ class admin_port{
 	public function RevertConfirmed(){
 		global $langmessage, $dataDir;
 
-		//organize list
-		$data_list = array();
-		$theme_list = array();
-		$addon_list = array();
-		foreach($this->import_list as $file_info){
 
-			$filename = trim($file_info['filename']);
-
-			$pos_data = strpos( $filename, 'gpexport/data/' );
-			$pos_theme = strpos( $filename, 'gpexport/themes/' );
-			$pos_addons = strpos( $filename, 'gpexport/addons/' );
-
-			if( $pos_data !== false ){
-				$file_info['relative_path'] = substr($filename,$pos_data+13);
-				$data_list[] = $file_info;
-			}elseif( $pos_theme !== false ){
-				$file_info['relative_path'] = substr($filename,$pos_theme+15);
-				$theme_list[] = $file_info;
-			}elseif( $pos_addons !== false ){
-				$file_info['relative_path'] = substr($filename,$pos_theme+15);
-				$addon_list[] = $file_info;
-			}
-		}
+		//extract to temp location
+		$temp_file 		= $this->TempFile();
+		$temp_name		= basename($temp_file);
+		$this->import_object->extractTo($temp_file);
 
 
-		//start with themes
-		//should be done with $this->FileSystem
 		if( $this->import_info['Export_Which'] & $this->bit_themes ){
-			$new_relative = $this->FileSystem->TempFile( '/themes' );
-			$this->replace_dirs['/themes'] = $new_relative;
-			if( !$this->PutFiles( $theme_list, $new_relative ) ){
-				return false;
-			}
+			$this->AddReplaceDir('themes',$temp_name);
 		}
 
-
-		//then addons, nearly identical process to themes
 		if( $this->import_info['Export_Which'] & $this->bit_addons ){
-			if( count($addon_list) > 0 ){
-				$new_relative = $this->FileSystem->TempFile( '/addons' );
-				$this->replace_dirs['/addons'] = $new_relative;
-				if( !$this->PutFiles( $addon_list, $new_relative ) ){
-					return false;
-				}
-			}
+			$this->AddReplaceDir('addons',$temp_name);
 		}
 
-
-		//replace data directory
-		//use $this->FileSystem for the first directory only
-		//then copy other folders from /data so we don't lose sessions, uploaded content etc
-		$new_relative = $this->FileSystem->TempFile( '/data' );
-		$this->replace_dirs['/data'] = $new_relative;
-		if( !$this->PutFiles( $data_list, $new_relative, true ) ){
-			return false;
+		if( $this->import_info['Export_Which'] & $this->bit_pages ){
+			$this->AddReplaceDir('data',$temp_name);
 		}
-		$source = $dataDir.'/data/';
-		$new_full = $dataDir.$new_relative;
-		$this->CopyDir( $source, $new_full );
 
 		$replaced = $this->FileSystem->ReplaceDirs( $this->replace_dirs, $this->extra_dirs );
 
@@ -480,6 +475,55 @@ class admin_port{
 
 		return true;
 	}
+
+	/**
+	 * Add themes, addons or data directories to the replace_dirs list only if they're not empty
+	 *
+	 */
+	public function AddReplaceDir($dir, $temp_name){
+		global $dataDir, $langmessage;;
+
+		$rel_path	= '/data/_temp/'.$temp_name.'/gpexport/'.$dir;
+		$full_path	= $dataDir.$rel_path;
+
+		if( !file_exists($full_path) ){
+			return true;
+		}
+
+		$files		= scandir($full_path);
+		if( count($files) === 0 ){
+			return true;
+		}
+
+
+		// move to location outside of existing /data directory
+		// otherwise ReplaceDirs() will fail when we try to replace the data directory
+		$new_relative	= $this->FileSystem->TempFile( '/themes' );
+		if( !$this->FileSystem->RelRename($rel_path, $new_relative) ){
+			message($langmessage['revert_failed'].' (AddReplaceDir Failed)');
+			return false;
+		}
+
+
+		$this->replace_dirs[$dir]	= $new_relative;
+	}
+
+
+	/**
+	 * Get the path for a temporary file
+	 *
+	 */
+	public function TempFile($ext = ''){
+
+		$i = time();
+		do{
+			$file = $this->temp_dir.'/'.sha1($i).$ext;
+			$i++;
+		}while( file_exists($file) );
+
+		return $file;
+	}
+
 
 	/**
 	 * Make sure the current user stays logged in after a revert is completed
@@ -751,6 +795,11 @@ class admin_port{
 		return $this->import_object->extractInString($string);
 	}
 
+
+	/**
+	 * Get an archive object
+	 *
+	 */
 	public function ArchiveToObject($archive){
 		global $langmessage;
 
@@ -765,20 +814,15 @@ class admin_port{
 			return false;
 		}
 
-		$compression = null;
-		$info = $this->FileInfo($archive);
-		switch($info['ext']){
-			case 'gz':
-				$compression = 'gz';
-			break;
-			case 'bz':
-				$compression = 'bz2';
-			break;
+
+		try{
+			$this->import_object	= new PharData($full_path);
+		}catch( Exception $e){
+			message($langmessage['OOPS'].' (Archive couldn\'t be opened)');
+			return false;
 		}
 
-		$this->Init_Tar();
-
-		return new Archive_Tar($full_path,$compression);
+		return true;
 	}
 
 
@@ -786,63 +830,18 @@ class admin_port{
 	 * Get the export.ini contents
 	 *
 	 */
-	public function ExtractIni($tar_object){
+	public function ExtractIni($archive){
 
-		$ini_contents = $tar_object->extractInString('gpexport/Export.ini');
+		$full_path			= $this->export_dir.'/'.$archive;
+		$ini_path			= 'phar://'.$full_path.'/gpexport/Export.ini';
+		$ini_contents		= file_get_contents($ini_path);
+
 		if( empty($ini_contents) ){
 			return false;
 		}
 		return gp_ini::ParseString($ini_contents);
 	}
 
-
-	/*
-	 *
-	 *
-	 *
-	 */
-
-
-	public function Init(){
-		global $langmessage;
-
-		$this->bit_pages = 1;
-		$this->bit_config = 2;
-		$this->bit_media = 4;
-		$this->bit_themes = 8;
-		$this->bit_addons = 16;
-		$this->bit_trash = 32;
-
-
-		//pages, configuration and addons
-		$this->export_fields['pca']['name'] = 'pca';
-		$this->export_fields['pca']['label'] = $langmessage['Pages'].', '.$langmessage['configuration'].', '.$langmessage['add-ons'];
-		$this->export_fields['pca']['index'] = $this->bit_pages | $this->bit_config | $this->bit_addons;
-
-		$this->export_fields['media']['name'] = 'media';
-		$this->export_fields['media']['label'] = $langmessage['uploaded_files'];
-		$this->export_fields['media']['index'] = $this->bit_media;
-
-		$this->export_fields['themes']['name'] = 'themes';
-		$this->export_fields['themes']['label'] = $langmessage['themes'];
-		$this->export_fields['themes']['index'] = $this->bit_themes;
-
-		$this->export_fields['trash']['name'] = 'trash';
-		$this->export_fields['trash']['label'] = $langmessage['trash'];
-		$this->export_fields['trash']['index'] = $this->bit_trash;
-
-		$this->min_import_bits = $this->bit_pages | $this->bit_config | $this->bit_addons;
-
-
-		//supported compression types
-		$this->avail_compress = array();
-		if( function_exists('gzopen') ){
-			$this->avail_compress['gz'] = 'gzip';
-		}
-		if( function_exists('bzopen') ){
-			$this->avail_compress['bz'] = 'bzip';
-		}
-	}
 
 	public function Init_Tar(){
 		@ini_set('memory_limit', '256M');
@@ -982,7 +981,7 @@ class admin_port{
 
 
 	/**
-	 * Determine if the package can be used in the rever process
+	 * Determine if the package can be used in the revert process
 	 * Either must have bit_pages, bit_config and bit_addons or none of the three
 	 *
 	 */

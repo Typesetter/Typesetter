@@ -337,6 +337,13 @@ class FileSystem{
 		return rename($old_name,$new_name);
 	}
 
+	public function RelRename($old_rel, $new_rel){
+		$fs_root		= $this->get_base_dir();
+		$old			= $fs_root.$old_rel;
+		$new			= $fs_root.$new_rel;
+		return $this->rename($old,$new);
+	}
+
 	public function put_contents($file, $contents, $type = '' ){
 		if( !\gpFiles::Save($file,$contents) ){
 			return false;

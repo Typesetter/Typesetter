@@ -74,12 +74,14 @@ class FileSystemFtp extends FileSystem{
 		$save_values						= false;
 		$connect_args						= \gpFiles::Get('_updates/connect','connect_args');
 
-		if( !$connect_args || (!isset($connect_args['ftp_user']) && isset($config['ftp_user'])) ){
-			$connect_args['ftp_user']		= $config['ftp_user'];
-			$connect_args['ftp_server']		= $config['ftp_server'];
-			$connect_args['ftp_pass']		= $config['ftp_pass'];
-			$connect_args['ftp_root']		= $config['ftp_root'];
-			$save_values = true;
+		if( !$connect_args || !isset($connect_args['ftp_user']) ){
+			if( isset($config['ftp_user']) ){
+				$connect_args['ftp_user']		= $config['ftp_user'];
+				$connect_args['ftp_server']		= $config['ftp_server'];
+				$connect_args['ftp_pass']		= $config['ftp_pass'];
+				$connect_args['ftp_root']		= $config['ftp_root'];
+				$save_values = true;
+			}
 		}
 
 		if( isset($_POST['ftp_pass']) ){

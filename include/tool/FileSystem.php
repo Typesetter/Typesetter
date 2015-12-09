@@ -153,6 +153,7 @@ class FileSystem{
 			$full_path = $dir.'/'.$file;
 
 			if( !self::writable($full_path) ){
+				msg('not writable: '.$full_path);
 				return false;
 			}
 

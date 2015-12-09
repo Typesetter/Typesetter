@@ -586,6 +586,8 @@ class admin_port{
 			return false;
 		}
 
+		//$this->FileSystem = \gp\tool\FileSystem('gp_filesystem_ftp');
+
 		if( !$this->FileSystem->connect() ){
 			return false;
 		}
@@ -598,14 +600,13 @@ class admin_port{
 
 	/**
 	 * Prepare FileSystem for writing to $dataDir
-	 * $dataDir writability is required so that we can create a temporary directory next to /data for replacement
+	 * $dataDir writability is required so that we can create & rename subfolders: $dataDir/data, $dataDir/themes
 	 *
 	 */
 	public function RevertFilesystem(){
 		global $dataDir, $langmessage;
 
-		$context			= array($dataDir=>'dir');
-		$this->FileSystem	= \gp\tool\FileSystem::init($context);
+		$this->FileSystem	= \gp\tool\FileSystem::init($dataDir);
 
 		if( is_null($this->FileSystem) ){
 			message($langmessage['OOPS'] .' (No filesystem)');

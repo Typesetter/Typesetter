@@ -23,7 +23,7 @@ class admin_port{
 	public $exported = array();
 	public $temp_dir;
 	public $avail_compress = array();
-	public $all_extenstions = array('tgz','tar','gz','bz');
+	public $all_extenstions = array('tgz','tbz','tar','gz','bz','zip');
 
 	public $archive_path;
 	public $archive_name;
@@ -88,12 +88,19 @@ class admin_port{
 
 		//supported compression types
 		$this->avail_compress = array();
+
+		if( class_exists('ZipArchive') ){
+			$this->avail_compress['zip'] = 'zip';
+		}
+
 		if( function_exists('gzopen') ){
-			$this->avail_compress['gz'] = 'gzip';
+			$this->avail_compress['tgz'] = 'gzip';
 		}
+
 		if( function_exists('bzopen') ){
-			$this->avail_compress['bz'] = 'bzip';
+			$this->avail_compress['tbz'] = 'bzip';
 		}
+
 	}
 
 
@@ -209,12 +216,13 @@ class admin_port{
 		global $dataDir, $langmessage;
 
 
-		if( !$this->NewFile($which_exported,'tar') ){
+		$compression =& $_POST['compression'];
+		if( !$this->NewFile($which_exported,$compression) ){
 			return false;
 		}
 
 		// buildFromDirectory with regular expression
-		$tar_object = new PharData($this->archive_path);
+		$tar_object = new \gp\tool\Archive($this->archive_path);
 		foreach($add_dirs as $dir){
 			$this->AddFiles($tar_object, $dir);
 		}
@@ -223,29 +231,7 @@ class admin_port{
 		//add ini file
 		$this->Export_Ini($tar_object,$which_exported);
 
-
-		//compression
-		$compression =& $_POST['compression'];
-		if( !isset($this->avail_compress[$compression]) ){
-			return true;
-		}
-
-		$new_path = $this->archive_path.'.'.$compression;
-		$new_name = $this->archive_name.'.'.$compression;
-
-		switch( $compression ){
-			case 'gz':
-				$p1 = $tar_object->compress(Phar::GZ);
-			break;
-			case 'bz':
-				$p1 = $tar_object->compress(Phar::BZ2);
-			break;
-		}
-
-		unlink($this->archive_path);
-
-		$this->archive_path = $new_path;
-		$this->archive_name = $new_name;
+		$tar_object->compress();
 
 		return true;
 	}
@@ -799,7 +785,9 @@ class admin_port{
 
 
 		try{
-			$this->import_object	= new PharData($full_path);
+
+			$this->import_object = new \gp\tool\Archive($full_path);
+
 		}catch( Exception $e){
 			message($langmessage['OOPS'].' (Archive couldn\'t be opened)');
 			return false;
@@ -815,9 +803,11 @@ class admin_port{
 	 */
 	public function ExtractIni($archive){
 
-		$full_path			= $this->export_dir.'/'.$archive;
-		$ini_path			= 'phar://'.$full_path.'/gpexport/Export.ini';
-		$ini_contents		= file_get_contents($ini_path);
+		//$full_path			= $this->export_dir.'/'.$archive;
+		//$ini_path			= 'phar://'.$full_path.'/gpexport/Export.ini';
+		//$ini_contents		= file_get_contents($ini_path);
+
+		$ini_contents		= $this->import_object->getFromName('/gpexport/Export.ini');
 
 		if( empty($ini_contents) ){
 			return false;

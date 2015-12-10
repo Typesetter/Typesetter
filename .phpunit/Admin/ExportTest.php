@@ -22,6 +22,7 @@ class phpunit_Export extends gptest_bootstrap{
 			$_POST[$key] = 'on';
 		}
 
+		$_POST['compression'] = 'zip';
 		$exported = $admin_port->DoExport();
 		self::AssertTrue($exported,'Export Failed');
 

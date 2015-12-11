@@ -93,7 +93,7 @@ class admin_port{
 			$this->avail_compress['zip'] = 'zip';
 		}
 
-		// hhvm does not handle
+		// hhvm does not handle phar.readonly the same way as php
 		// see https://github.com/facebook/hhvm/issues/6647
 		if( !defined('HHVM_VERSION') || !ini_set('phar.readonly') ){
 

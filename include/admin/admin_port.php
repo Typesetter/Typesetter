@@ -95,7 +95,7 @@ class admin_port{
 
 		// hhvm does not handle phar.readonly the same way as php
 		// see https://github.com/facebook/hhvm/issues/6647
-		if( !defined('HHVM_VERSION') || !ini_set('phar.readonly') ){
+		if( !defined('HHVM_VERSION') || !ini_get('phar.readonly') ){
 
 			if( function_exists('gzopen') ){
 				$this->avail_compress['tgz'] = 'gzip';

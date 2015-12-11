@@ -423,15 +423,23 @@ class admin_port{
 
 
 		if( $this->import_info['Export_Which'] & $this->bit_themes ){
-			$this->AddReplaceDir('themes',$temp_name);
+			if( !$this->AddReplaceDir('themes',$temp_name) ){
+				return false;
+			}
 		}
 
 		if( $this->import_info['Export_Which'] & $this->bit_addons ){
-			$this->AddReplaceDir('addons',$temp_name);
+			if( !$this->AddReplaceDir('addons',$temp_name) ){
+				return false;
+			}
 		}
 
-		if( $this->import_info['Export_Which'] & $this->bit_pages ){
-			$this->AddReplaceDir('data',$temp_name);
+		if( ($this->import_info['Export_Which'] & $this->bit_pages)
+			|| ($this->import_info['Export_Which'] & $this->bit_media)
+			){
+			if( !$this->AddReplaceDir('data',$temp_name, true) ){
+				return false;
+			}
 		}
 
 		$replaced = $this->FileSystem->ReplaceDirs( $this->replace_dirs, $this->extra_dirs );
@@ -450,8 +458,10 @@ class admin_port{
 	 * Add themes, addons or data directories to the replace_dirs list only if they're not empty
 	 *
 	 */
-	public function AddReplaceDir($dir, $temp_name){
-		global $dataDir, $langmessage;;
+	public function AddReplaceDir($dir, $temp_name, $merge = false){
+		global $dataDir, $langmessage;
+
+		msg('addreplacedir: '.$dir);
 
 		$rel_path	= '/data/_temp/'.$temp_name.'/gpexport/'.$dir;
 		$full_path	= $dataDir.$rel_path;
@@ -474,8 +484,17 @@ class admin_port{
 			return false;
 		}
 
+		// copy other folders from /data so we don't lose sessions, uploaded content etc
+		if( $merge ){
+			$source		= $dataDir.'/data/';
+			$new_full	= $dataDir.$new_relative;
+			$this->CopyDir( $source, $new_full );
+		}
+
 
 		$this->replace_dirs[$dir]	= $new_relative;
+
+		return true;
 	}
 
 

@@ -93,12 +93,17 @@ class admin_port{
 			$this->avail_compress['zip'] = 'zip';
 		}
 
-		if( function_exists('gzopen') ){
-			$this->avail_compress['tgz'] = 'gzip';
-		}
+		// hhvm does not handle
+		// see https://github.com/facebook/hhvm/issues/6647
+		if( !defined('HHVM_VERSION') || !ini_set('phar.readonly') ){
 
-		if( function_exists('bzopen') ){
-			$this->avail_compress['tbz'] = 'bzip';
+			if( function_exists('gzopen') ){
+				$this->avail_compress['tgz'] = 'gzip';
+			}
+
+			if( function_exists('bzopen') ){
+				$this->avail_compress['tbz'] = 'bzip';
+			}
 		}
 
 	}

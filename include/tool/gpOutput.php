@@ -1632,15 +1632,29 @@ class gpOutput{
 		self::FormatMenuElement('ul',$attributes_ul);
 
 
-		$menu = array_keys($menu);
-		foreach($menu as $menu_index => $menu_key){
+		$menu			= array_keys($menu);
+		$hidden_level	= null;
 
-			if( display::OrConfig($menu_key,'vis') ){
-				continue;
-			}
+		foreach($menu as $menu_index => $menu_key){
 
 			$menu_info			= $source_menu[$menu_key];
 			$this_level			= $menu_info['level'];
+
+
+			// hidden pages
+			if( !is_null($hidden_level) ){
+				if( $this_level > $hidden_level ){
+					continue;
+				}
+				$hidden_level = null;
+			}
+
+			if( isset($gp_titles[$menu_key]['vis']) ){
+				$hidde_level = $this_level;
+				continue;
+			}
+
+
 
 			//the next entry
 			$next_info			= false;

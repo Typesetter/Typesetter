@@ -364,12 +364,12 @@ $(function(){
 		// collect some debug info
 		var debug_info = {
 			thrownError		: thrownError,
-			responseText	: XMLHttpRequest.responseText,
 			responseStatus	: XMLHttpRequest.status,
 			statusText		: XMLHttpRequest.statusText,
 			url				: ajaxOptions.url,
 			type			: ajaxOptions.type,
-			browser			: navigator.userAgent
+			browser			: navigator.userAgent,
+			responseText	: XMLHttpRequest.responseText
 		};
 
 		// log everything if possible

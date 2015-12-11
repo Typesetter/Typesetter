@@ -789,9 +789,9 @@ class admin_tools{
 			if( $file == '.' || $file == '..' || strpos($file,'.php') !== false ){
 				continue;
 			}
-			$full_path = $dir.'/'.$file;
-			$time = filemtime($full_path);
-			$diff = time() - $time;
+			$full_path	= $dir.'/'.$file;
+			$time		= filemtime($full_path);
+			$diff		= time() - $time;
 
 			//if relatively new ( < 3 days), don't delete it
 			if( $diff < 259200 ){
@@ -800,7 +800,7 @@ class admin_tools{
 
 			//if old ( > 14 days ), delete it
 			if( $diff > 1209600 ){
-				unlink($full_path);
+				gpFiles::RmAll($full_path);
 				continue;
 			}
 			$times[$file] = $time;
@@ -811,7 +811,7 @@ class admin_tools{
 		$times = array_keys($times);
 		while( count($times) > 200 ){
 			$full_path = $dir.'/'.array_pop($times);
-			unlink($full_path);
+			gpFiles::RmAll($full_path);
 		}
 	}
 

@@ -23,15 +23,32 @@ body #admin_menu li.ui-sortable-helper{
 	}
 
 #admin_menu li div{
-
-	margin:1px 0;
-	/* padding:2px 5px 2px 5px; */
+	margin:2px 0;
 	cursor:pointer;
-
-	border:1px solid #fff;
+	border:1px solid #d1d1d5;
 	background: #f1f1f5 url('../imgs/blank.gif') 3px 50% no-repeat;
 	border-radius:4px;
 	}
+
+
+#admin_menu li.private-list > div{
+	opacity:0.4;
+	background:#fff;
+	}
+
+#admin_menu li.private-list > ul div{
+	opacity:0.8;
+	border-color:#f1f1f5;
+	}
+
+#admin_menu li div.current{
+	border-color: #889888;
+	background-color:#DFF1DF;
+	width:110%;
+	}
+
+
+
 #admin_menu li.hidechildren ul{
 	display:none;
 	}
@@ -78,20 +95,6 @@ body #admin_menu li.ui-sortable-helper{
 	}
 #admin_menu li div.haschildren a{
 	/* background-image:url('../imgs/cancel.png'); */
-	}
-
-#admin_menu li div.current{
-	border:1px solid #889888;
-	background-color:#DFF1DF;
-	width:110%;
-	}
-
-#admin_menu li.private-inherited > div,
-#admin_menu li.private-list{
-	opacity:0.6;
-	}
-#admin_menu li.private-list li.private-inherited > div{
-	opacity:1;
 	}
 
 

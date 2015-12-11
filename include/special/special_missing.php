@@ -228,8 +228,8 @@ class special_missing{
 
 			//skip private pages
 			if( !$admin ){
-				$visibility	= display::OrConfig($index,'vis');
-				if( $visibility ){
+
+				if( isset($gp_titles[$index]['vis']) ){
 					continue;
 				}
 			}

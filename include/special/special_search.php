@@ -334,7 +334,7 @@ class special_gpsearch{
 
 
 	function SearchPage($title,$index){
-		global $gp_menu;
+		global $gp_menu, $gp_titles;
 
 		//search hidden?
 		if( !$this->search_hidden && !isset($gp_menu[$index]) ){
@@ -343,8 +343,8 @@ class special_gpsearch{
 
 		//private pages
 		if( !common::LoggedIn() ){
-			$visibility		= display::OrConfig($index,'vis');
-			if( $visibility ){
+
+			if( isset($gp_titles[$index]['vis']) ){
 				return;
 			}
 		}

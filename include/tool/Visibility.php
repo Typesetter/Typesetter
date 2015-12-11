@@ -7,7 +7,7 @@ defined('is_running') or die('Not an entry point...');
 class Visibility{
 
 	/**
-	 * Toggle the visibility of a page
+	 * Toggle the visibility of a page given by $index
 	 *
 	 */
 	static function Toggle( $index, $visibility = '' ){
@@ -30,6 +30,22 @@ class Visibility{
 		}
 
 		return true;
+	}
+
+	/**
+	 * Toggle the visibility of a page given by the $page object
+	 *
+	 */
+	static function TogglePage( $page, $visibility ){
+		global $gp_titles;
+
+
+		\gp\tool\Visibility::Toggle($page->gp_index, $visibility);
+
+		$page->visibility = null;
+		if( isset($gp_titles[$page->gp_index]['vis']) ){
+			$page->visibility = $gp_titles[$page->gp_index]['vis'];
+		}
 	}
 
 

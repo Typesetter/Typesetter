@@ -671,7 +671,7 @@ class admin_menu_new extends admin_menu_tools{
 	function VisibilityClass($class, $index){
 		global $gp_menu, $gp_titles;
 
-		if( $this->is_main_menu && isset($gp_titles[$index]['vis']) ){
+		if( isset($gp_titles[$index]['vis']) ){
 			$class .= ' private-list';
 			return $class;
 		}

@@ -677,12 +677,8 @@ class editing_page extends display{
 	 *
 	 */
 	function ToggleVisibility(){
-		global $gp_titles;
-
 		$_REQUEST += array('visibility'=>'');
-
-		\gp\tool\Visibility::Toggle($this->gp_index, $_REQUEST['visibility']);
-		$this->visibility = display::OrConfig($this->gp_index,'vis');
+		\gp\tool\Visibility::TogglePage($this, $_REQUEST['visibility']);
 	}
 
 

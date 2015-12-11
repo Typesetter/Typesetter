@@ -18,7 +18,7 @@ class display{
 	public $fileType			= '';
 	public $ajaxReplace			= array('#gpx_content');
 	public $admin_links			= array();
-	public $visibility			= false;
+	public $visibility			= null;
 
 	public $fileModTime			= 0; /* @deprecated 3.0 */
 	public $file_stats			= array();
@@ -98,8 +98,11 @@ class display{
 	 *
 	 */
 	function CheckVisibility(){
+		global $gp_titles;
 
-		$this->visibility	= display::OrConfig($this->gp_index,'vis');
+		if( isset($gp_titles[$this->gp_index]['vis']) ){
+			$this->visibility = $gp_titles[$this->gp_index]['vis'];
+		}
 		if( !common::LoggedIn() && $this->visibility ){
 			$this->Error_404($this->title);
 			return false;

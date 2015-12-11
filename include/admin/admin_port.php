@@ -33,7 +33,6 @@ class admin_port{
 
 	//importing/reverting
 	public $import_object;
-	public $import_list;
 	public $import_info;
 	protected $FileSystem;
 
@@ -380,8 +379,8 @@ class admin_port{
 
 
 		echo '<p>';
-		$info = $this->FileInfo($archive);
-		$file_count = count($this->import_list)-1;
+		$info			= $this->FileInfo($archive);
+		$file_count		= $this->import_object->count();
 		echo sprintf($langmessage['archive_contains'],$info['time'],number_format($file_count));
 		echo '</p>';
 

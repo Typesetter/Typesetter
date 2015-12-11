@@ -4,18 +4,27 @@ namespace gp\tool;
 
 defined('is_running') or die('Not an entry point...');
 
+/**
+ * Handle zip and tar archives with a single class
+ * PharData is suppose to work for both but:
+ * 	- file_get_contents('phar://...') doesn't work for zip archives
+ *  - writing archives when phar.readonly = 1 does not work in hhvm: https://github.com/facebook/hhvm/issues/6647
+ *
+ */
 class Archive{
 
 	var $path;
 	var $php_class				= 'PharData';
 	var $php_object;
 	var $extenstion;
+	var $exists;
 
 
 	function __construct($path){
 
 		$this->path				= $path;
 		$this->extension		= $this->Extension($path);
+		$this->exists			= file_exists($path);
 
 		switch( strtolower($this->extension) ){
 			case 'zip':
@@ -35,7 +44,7 @@ class Archive{
 	 */
 	function InitTar(){
 
-		if( file_exists($this->path) ){
+		if( $this->exists ){
 			$this->php_object	= new \PharData($this->path);
 			return;
 		}
@@ -61,7 +70,7 @@ class Archive{
 		$this->php_class	= 'ZipArchive';
 		$this->php_object	= new \ZipArchive();
 
-		if( file_exists($this->path) ){
+		if( $this->exists ){
 			$this->php_object->open($this->path);
 		}else{
 			$this->php_object->open($this->path, \ZipArchive::CREATE);
@@ -121,6 +130,19 @@ class Archive{
 			break;
 		}
 
+	}
+
+	/**
+	 * Count the number of files
+	 *
+	 */
+	function Count(){
+
+		if( method_exists($this->php_object,'Count') ){
+			return $this->php_object->Count();
+		}
+
+		return $this->php_object->numFiles;
 	}
 
 }

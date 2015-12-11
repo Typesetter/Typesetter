@@ -960,7 +960,7 @@ class editing_page extends display{
 			echo admin_tools::FormatBytes($size);
 			echo '</td><td>'.$this->draft_stats['username'].'</td><td>';
 			echo common::Link($this->title,$langmessage['View']);
-			echo ' &nbsp; '.common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq'));
+			echo ' &nbsp; '.common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'cnreq'));
 			echo '</td></tr>';
 			$rows[$this->draft_stats['modified']] = ob_get_clean();
 		}

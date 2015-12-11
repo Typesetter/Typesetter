@@ -859,9 +859,14 @@ class admin_menu_new extends admin_menu_tools{
 		echo $this->Link('Admin_Menu',$img.$label,$q,$attrs);
 
 
+		$img	= '<span class="menu_icon icon_page"></span>';
+		echo '<a href="[url]?cmd=ViewHistory" class="view_edit_link not_multiple not_special" data-cmd="gpabox">'.$img.htmlspecialchars($langmessage['Revision History']).'</a>';
+
+
 		$img	= '<span class="menu_icon copy_icon"></span>';
 		$attrs	= array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox','class'=>'not_multiple');
 		echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&index=[key]',$attrs);
+
 
 		if( admin_tools::HasPermission('Admin_User') ){
 			$img	= '<span class="menu_icon icon_user"></span>';
@@ -1122,6 +1127,10 @@ class admin_menu_new extends admin_menu_tools{
 		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax');
 		echo $this->Link('Admin_Menu',$label,$q,$attrs);
 
+		if( !$is_special ){
+			$img	= '<span class="menu_icon icon_page"></span>';
+			echo common::Link($title,$langmessage['Revision History'],'cmd=ViewHistory','class="view_edit_link not_multiple" data-cmd="gpabox"');
+		}
 
 		echo $this->Link('Admin_Menu',$langmessage['Copy'],'cmd=copypage&index='.urlencode($title_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 

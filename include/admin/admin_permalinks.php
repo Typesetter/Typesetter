@@ -596,7 +596,7 @@ class admin_permalinks{
 			$new_lines[]	= '';
 
 			$new_lines[]	= '# Redirect away from requests with index.php';
-			$new_lines[]	= 'RewriteRule index\.php(.*) "'.$home_root.'$1" [R=302,L]';
+			$new_lines[]	= 'RewriteRule index\.php(.*) "'.rtrim($home_root,'/').'$1" [R=302,L]';
 			$new_lines[]	= '';
 
 			$new_lines[]	= '# Add gp_rewrite to root requests';

@@ -360,38 +360,45 @@ $(function(){
 			return;
 		}
 
-
 		// collect some debug info
 		var debug_info = {
 			thrownError		: thrownError,
-			responseStatus	: XMLHttpRequest.status,
-			statusText		: XMLHttpRequest.statusText,
-			url				: ajaxOptions.url,
-			type			: ajaxOptions.type,
-			browser			: navigator.userAgent,
-			responseText	: XMLHttpRequest.responseText
 		};
+
+		// add error details
+		var detail_keys = ['name','message','fileName','lineNumber','columnNumber','stack'];
+		for(var i = 0;i < detail_keys.length;i++){
+			if( thrownError.hasOwnProperty(detail_keys[i]) ){
+				debug_info[detail_keys[i]] = thrownError[detail_keys[i]];
+			}
+		}
+
+		//get the location of the error
+		if( thrownError.hasOwnProperty('lineNumber') ){
+			var lines				= XMLHttpRequest.responseText.split('\n');
+			debug_info.line0		= lines[thrownError.lineNumber-2];
+			debug_info.line1		= lines[thrownError.lineNumber-1];
+			debug_info.line2		= lines[thrownError.lineNumber];
+		}
+
+		debug_info.responseStatus	= XMLHttpRequest.status;
+		debug_info.statusText		= XMLHttpRequest.statusText;
+		debug_info.url				= ajaxOptions.url;
+		debug_info.type				= ajaxOptions.type;
+		debug_info.browser			= navigator.userAgent;
+		debug_info.responseText		= XMLHttpRequest.responseText;
+
+		if( ajaxOptions.data ){
+			debug_info.ajaxdata		= ajaxOptions.data.substr(0,100);
+		}
 
 		// log everything if possible
 		if( window.console && console.log ){
 			console.log( debug_info );
 		}
 
-		// generic error message
-		if( typeof(debugjs) === 'undefined' ){
-			alert($gp.error);
-
-		// detailed error
-		}else if( debugjs === true && typeof(debug) === 'function' ){
-			if( ajaxOptions.data ){
-				debug_info.data = ajaxOptions.data.substr(0,100);
-			}
-			console.log( debug_info );
-
 		// send to gpeasy bug tracker
-		}else if( debugjs === 'send' ){
-
-			alert($gp.error);
+		if( debugjs === 'send' ){
 
 			if( ajaxOptions.data ){
 				debug_info.data = ajaxOptions.data;
@@ -407,8 +414,32 @@ $(function(){
 			});
 		}
 
+		//display message to user
+		if( typeof($gp.AdminBoxC) !== 'undefined' && typeof(JSON) != 'undefined' ){
+			delete debug_info.responseText;
+
+			var _debug	= JSON.stringify(debug_info); //otherwise it's too long
+			_debug		= b64Encode(_debug);
+			_debug		= _debug.replace(/\=/g,'');
+			_debug		= _debug.replace(/\+/g,'-').replace(/\//g,'_');
+			var url		= 'http://www.gpeasy.com/index.php/Debug?data='+_debug;
+			$gp.AdminBoxC('<div class="inline_box"><h3>Error</h3><p>'+$gp.error+'</p><a href="'+url+'" target="_blank">More Info<?a></div>');
+		}else{
+			alert($gp.error);
+		}
+
 	});
 
+
+	/**
+	 * Unicode safe base64 encode
+	 *
+	 */
+	function b64Encode(str) {
+		return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+			return String.fromCharCode('0x' + p1);
+		}));
+	}
 
 
 	/**

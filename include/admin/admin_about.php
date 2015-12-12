@@ -51,7 +51,6 @@ class admin_about{
 		$projects['Bootstrap']		= 'twitter.github.io/bootstrap/';
 		$projects['jQuery'] 		= 'jquery.com';
 		$projects['jQuery UI'] 		= 'jqueryui.com';
-		$projects['Pcl Zip'] 		= 'phpconcept.net/pclzip/';
 		$projects['PHPMailer'] 		= 'github.com/Synchro/PHPMailer';
 
 

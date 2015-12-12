@@ -289,7 +289,8 @@ class admin_ckeditor{
 
 	/**
 	 * Determine if we can upload the plugin
-	 *
+	 * @param string $plugin_name
+	 * @return bool
 	 */
 	function CanUpload($plugin_name){
 		global $langmessage;
@@ -306,7 +307,7 @@ class admin_ckeditor{
 			&& isset($this->build_config['plugins'][$plugin_name])
 			&& $this->build_config['plugins'][$plugin_name] > 0 ){
 				msg($langmessage['addon_key_defined'], '<i>'.$plugin_name.'</i>');
-				return;
+				return false;
 		}
 
 		return true;

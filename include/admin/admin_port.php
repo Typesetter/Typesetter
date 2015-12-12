@@ -461,8 +461,6 @@ class admin_port{
 	public function AddReplaceDir($dir, $temp_name, $merge = false){
 		global $dataDir, $langmessage;
 
-		msg('addreplacedir: '.$dir);
-
 		$rel_path	= '/data/_temp/'.$temp_name.'/gpexport/'.$dir;
 		$full_path	= $dataDir.$rel_path;
 

@@ -145,4 +145,19 @@ class Archive{
 		return $this->php_object->numFiles;
 	}
 
+	/**
+	 * List the files in the archive
+	 * ToDo: ListFiles() for pharData
+	 *
+	 */
+	function ListFiles(){
+
+		$list	= array();
+		$count	= $this->Count();
+		for( $i = 0; $i < $count; $i++ ){
+			$list[] = $this->php_object->statIndex( $i );
+		}
+		return $list;
+	}
+
 }

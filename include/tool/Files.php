@@ -527,6 +527,40 @@ class gpFiles{
 
 
 	/**
+	 * Replace $to with $from
+	 *
+	 */
+	public static function Replace($from, $to){
+
+		$temp_dir = '';
+
+		// move the $to out of the way if it exists
+		if( file_exists($to) ){
+			$temp_dir = $to.'_'.time();
+			if( !gpFiles::rename($to,$temp_dir) ){
+				return false;
+			}
+		}
+
+
+		// rename $from -> $to
+		if( !gpFiles::rename($from, $to) ){
+			if( $temp_dir ){
+				gpFiles::rename( $temp_dir, $to );
+			}
+
+			return false;
+		}
+
+		if( !empty($temp_dir) ){
+			gpFiles::RmAll($temp_dir);
+		}
+
+		return true;
+	}
+
+
+	/**
 	 * Get a write lock to prevent simultaneous writing
 	 * @since 3.5.3
 	 */

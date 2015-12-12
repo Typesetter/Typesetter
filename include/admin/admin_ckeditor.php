@@ -175,64 +175,128 @@ class admin_ckeditor{
 		global $langmessage, $dataDir;
 
 		includeFile('admin/admin_uploaded.php');
-		includeFile('thirdparty/pclzip-2-8-2/pclzip.lib.php');
 
+		$archive = $this->UploadedArchive();
+		if( !$archive ){
+			return false;
+		}
+
+
+
+		// get plugin name and check file types
+		$list			= $archive->ListFiles();
+		$plugin_name	= '';
+		$remove_path	= '';
+
+		foreach($list as $file){
+
+			//don't check extensions on folder
+			if( $file['size'] == 0 ){
+				continue;
+			}
+
+			//check extension
+			if( !admin_uploaded::AllowedExtension($file['name'], false) ){
+				msg($langmessage['OOPS'].' (File type not allowed:'.htmlspecialchars($file['name']).')');
+				return false;
+			}
+
+
+			//plugin name
+			if( strpos($file['name'],'plugin.js') !== false ){
+
+				$new_plugin_name = $this->FindPluginName($archive, $file['name']);
+				if( !$new_plugin_name ){
+					continue;
+				}
+
+				//use the most relevant plugin name
+				$new_path	= dirname($file['name']);
+				if( !$plugin_name || strlen($new_path) < strlen($remove_path) ){
+					$plugin_name	= $new_plugin_name;
+					$remove_path	= $new_path;
+				}
+			}
+		}
+
+
+		if( !$this->CanUpload($plugin_name) ){
+			return;
+		}
+
+
+		//extract to temporary location
+		$extract_temp = $this->tempDir();
+		if( !$archive->extractTo($extract_temp) ){
+			gpFiles::RmAll($extract_temp);
+			msg($langmessage['OOPS'].' (Couldn\'t extract to temp location)');
+			return false;
+		}
+
+
+		//move to _ckeditor folder
+		$destination = $dataDir.'/data/_ckeditor/'.$plugin_name;
+		$rename_from = $extract_temp.'/'.ltrim($remove_path,'/');
+		if( !gpFiles::Replace($rename_from, $destination) ){
+			msg($langmessage['OOPS'].' (Not replaced)');
+			return false;
+		}
+
+
+		// save configuration
+		if( !array_key_exists( $plugin_name, $this->cke_config['plugins'] ) ){
+			$this->cke_config['plugins'][$plugin_name] = array('installed'=>time());
+		}
+
+		$this->cke_config['plugins'][$plugin_name]['updated'] = time();
+		$this->SaveConfig();
+
+		msg($langmessage['SAVED']);
+	}
+
+
+	/**
+	 * Get an archive object from the uploaded file
+	 *
+	 */
+	function UploadedArchive(){
+		global $langmessage;
 
 		if( empty($_FILES['plugin']) ){
-			message($langmessage['OOPS'].' (No File)');
+			msg($langmessage['OOPS'].' (No File)');
 			return;
 		}
 
 		$plugin_file = $_FILES['plugin'];
 
 		if( strpos($plugin_file['name'],'.zip') === false ){
-			message($langmessage['OOPS'].' (Not a zip file)');
+			msg($langmessage['OOPS'].' (Not a zip file)');
 			return;
 		}
 
-		// Unzip uses a lot of memory, but not this much hopefully
-		@ini_set('memory_limit', '256M');
-		$archive = new PclZip( $plugin_file['tmp_name'] );
-
-
-		// get plugin name and check file types
-		$plugin_name	= false;
-		$remove_path	= '';
-		$list			= $archive->listContent();
-		foreach($list as $file){
-
-			//plugin name
-			if( strpos($file['filename'],'plugin.js') !== false ){
-
-				$new_plugin_name = $this->FindPluginName($archive, $file);
-				if( !$new_plugin_name ){
-					continue;
-				}
-
-				//use the most relevant plugin name
-				$new_path	= dirname($file['filename']);
-				if( !$plugin_name || strlen($new_path) < strlen($remove_path) ){
-					$plugin_name	= $new_plugin_name;
-					$remove_path	= $new_path;
-				}
-			}
-
-			//don't check extensions on folder
-			if( isset($file['folder']) && $file['folder'] ){
-				continue;
-			}
-
-
-			if( !admin_uploaded::AllowedExtension($file['filename'], false) ){
-				message($langmessage['OOPS'].' (File type not allowed:'.htmlspecialchars($file['filename']).')');
-				return false;
-			}
-
+		//rename tmp file to have zip extenstion
+		if( !gpFiles::Rename($plugin_file['tmp_name'], $plugin_file['tmp_name'].'.zip') ){
+			msg($langmessage['OOPS'].' (Not renamed)');
+			return;
 		}
 
-		if( !$plugin_name ){
-			message($langmessage['OOPS'].' (Unknown plugin name)');
-			return;
+		$plugin_file['tmp_name'] .= '.zip';
+
+
+		return new \gp\tool\Archive($plugin_file['tmp_name']);
+	}
+
+
+	/**
+	 * Determine if we can upload the plugin
+	 *
+	 */
+	function CanUpload($plugin_name){
+		global $langmessage;
+
+		if( empty($plugin_name) ){
+			msg($langmessage['OOPS'].' (Unknown plugin name)');
+			return false;
 		}
 
 
@@ -245,71 +309,41 @@ class admin_ckeditor{
 				return;
 		}
 
-
-
-
-		// check destination directory
-		$destination = $dataDir.'/data/_ckeditor/'.$plugin_name;
-		$temp_dir = false;
-		if( file_exists($destination) ){
-			$temp_dir = $destination.'_'.time();
-			if( !rename($destination,$temp_dir) ){
-				message($langmessage['OOPS'].' (Couldn\'t remove old plugin)');
-				return;
-			}
-		}elseif( !gpFiles::CheckDir($destination) ){
-			msg($destination);
-			message($langmessage['OOPS'].' (Couldn\'t create plugin folder)');
-			return;
-		}
-
-		//extract
-
-
-		// extract
-		$return = $archive->extract( PCLZIP_OPT_PATH, $destination, PCLZIP_OPT_REMOVE_PATH, $remove_path );
-		if( !is_array($return) ){
-
-			if( $temp_dir ){
-				rename( $temp_dir, $destination );
-			}
-
-			message($langmessage['OOPS'].' (Extract Failed)');
-			return;
-		}
-
-
-		// save configuration
-		if( !array_key_exists( $plugin_name, $this->cke_config['plugins'] ) ){
-			$this->cke_config['plugins'][$plugin_name] = array('installed'=>time());
-		}
-
-		$this->cke_config['plugins'][$plugin_name]['updated'] = time();
-		$this->SaveConfig();
-
-		message($langmessage['SAVED']);
-
-		// remove temporary
-		if( $temp_dir ){
-			gpFiles::RmAll( $temp_dir );
-		}
-
+		return true;
 	}
 
+
 	/**
+	 * Get a temp folder
 	 *
 	 */
-	function FindPluginName($archive, $file){
-		$file = $archive->extractByIndex($file['index'], PCLZIP_OPT_EXTRACT_AS_STRING);
-		if( !$file ){
+	function tempDir(){
+		global $dataDir;
+
+		do{
+			$tempfile = $dataDir.'/data/_temp/'.rand(1000,9000);
+		}while(file_exists($tempfile));
+
+		return $tempfile;
+	}
+
+
+	/**
+	 * Get the plugin name from the plugin.js file
+	 * use regular expression to look for "CKEDITOR.plugins.add('plugin-name'"
+	 */
+	function FindPluginName($archive, $name){
+
+		$content = $archive->getFromName($name);
+
+		if( !$content ){
 			return false;
 		}
 
 
-		//use regular expression to look for "CKEDITOR.plugins.add('plugin-name'"
 		$pattern = '/CKEDITOR\s*\.\s*plugins\s*\.\s*add\s*\(\s*[\'"]([^\'"]+)[\'"]/';
 
-		if( !preg_match($pattern,$file[0]['content'],$match) ){
+		if( !preg_match($pattern,$content,$match) ){
 			return false;
 		}
 
@@ -326,15 +360,15 @@ class admin_ckeditor{
 
 		$plugin =& $_REQUEST['plugin'];
 		if( !is_array($this->cke_config['plugins']) || !array_key_exists( $plugin, $this->cke_config['plugins'] ) ){
-			message($langmessage['OOPS'].' ( )');
+			msg($langmessage['OOPS'].' ( )');
 			return;
 		}
 
 		unset( $this->cke_config['plugins'][$plugin] );
 		if( !$this->SaveConfig() ){
-			message($langmessage['OOPS'].' (Not Saved)');
+			msg($langmessage['OOPS'].' (Not Saved)');
 		}else{
-			message($langmessage['SAVED']);
+			msg($langmessage['SAVED']);
 		}
 
 
@@ -381,7 +415,7 @@ class admin_ckeditor{
 		if( !empty($custom_config) ){
 			$decoded = json_decode($custom_config,true);
 			if( !is_array($decoded) ){
-				message($langmessage['OOPS'].' (Invalid JSON String)');
+				msg($langmessage['OOPS'].' (Invalid JSON String)');
 				return false;
 			}
 		}
@@ -389,9 +423,9 @@ class admin_ckeditor{
 		$this->cke_config['custom_config'] = $decoded;
 
 		if( !$this->SaveConfig() ){
-			message($langmessage['OOPS'].' (Not Saved)');
+			msg($langmessage['OOPS'].' (Not Saved)');
 		}else{
-			message($langmessage['SAVED']);
+			msg($langmessage['SAVED']);
 		}
 
 	}

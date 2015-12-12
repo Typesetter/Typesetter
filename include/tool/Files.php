@@ -27,7 +27,10 @@ class gpFiles{
 		self::$last_version		= null;
 		self::$last_stats		= array();
 		self::$last_meta		= array();
-
+		$file_stats				= array();
+		$fileModTime			= time();
+		$fileVersion			= gpversion;
+		$meta_data				= array();
 
 		if( !$var_name ){
 			$var_name	= basename($file);
@@ -594,6 +597,7 @@ class gpFiles{
 		$tries			= 0;
 		$lock_file		= $dataDir.'/data/_lock_'.sha1($file);
 		$file_time		= 0;
+		$elapsed		= 0;
 
 
 		while($tries < 1000){
@@ -738,10 +742,10 @@ class gpFiles{
 	 * Experimental
 	 *
 	 */
-	private static function FileStart_Json($file, $time = false ){
+	private static function FileStart_Json($file, $time = null ){
 		global $gpAdmin;
 
-		if( $time === false ) $time = time();
+		if( is_null($time) ) $time = time();
 
 
 		//file stats
@@ -765,10 +769,10 @@ class gpFiles{
 	 * Return the beginning content of a data file
 	 *
 	 */
-	public static function FileStart($file, $time=false, $file_stats = array() ){
+	public static function FileStart($file, $time=null, $file_stats = array() ){
 		global $gpAdmin;
 
-		if( $time === false ) $time = time();
+		if( is_null($time) ) $time = time();
 
 
 		//file stats

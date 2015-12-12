@@ -31,9 +31,9 @@ includeFile('tool/HTML_Parse.php');
 
 class gp_html_output extends gp_html_parse{
 
-	var $result = '';
+	public $result = '';
 
-	var $empty_attributes = array('checked'=>1,
+	public $empty_attributes = array('checked'=>1,
 								'compact'=>1,
 								'declare'=>1,
 								'defer'=>1,
@@ -47,14 +47,14 @@ class gp_html_output extends gp_html_parse{
 								'readonly'=>1,
 								'selected'=>1);
 
-	var $self_closing_tags = array('img'=>1,
+	public $self_closing_tags = array('img'=>1,
 									'input'=>1,
 									'area'=>1,
 									'br'=>1,
 									'hr'=>1,
 									'link'=>1
 									);
-	var $required_attr = array(
+	public $required_attr = array(
 								'area'=>		array('alt'=>''),
 								'bdo'=>			array('dir'=>''),
 								'form'=>		array('action'=>''),

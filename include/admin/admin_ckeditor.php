@@ -226,7 +226,7 @@ class admin_ckeditor{
 
 
 		//extract to temporary location
-		$extract_temp = $this->tempDir();
+		$extract_temp = $dataDir.\gp\tool\FileSystem::TempFile('/data/_temp/'.$plugin_name);
 		if( !$archive->extractTo($extract_temp) ){
 			gpFiles::RmAll($extract_temp);
 			msg($langmessage['OOPS'].' (Couldn\'t extract to temp location)');
@@ -310,21 +310,6 @@ class admin_ckeditor{
 		}
 
 		return true;
-	}
-
-
-	/**
-	 * Get a temp folder
-	 *
-	 */
-	function tempDir(){
-		global $dataDir;
-
-		do{
-			$tempfile = $dataDir.'/data/_temp/'.rand(1000,9000);
-		}while(file_exists($tempfile));
-
-		return $tempfile;
 	}
 
 

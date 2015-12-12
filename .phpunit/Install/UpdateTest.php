@@ -113,6 +113,7 @@ class phpunit_Update extends gptest_bootstrap{
 
 		$extra_dirs		= array();
 		$success		= $this->FileSystem->ReplaceDirs( $page->replace_dirs, $extra_dirs );
+		print_r($page->replace_dirs);
 		self::AssertTrue($success,'ReplaceDirs Failed');
 
 		if( !$success ){

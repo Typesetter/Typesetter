@@ -417,7 +417,7 @@ class admin_port{
 
 
 		//extract to temp location
-		$temp_file 		= $this->TempFile();
+		$temp_file		= $dataDir.\gp\tool\FileSystem::TempFile('/data/_temp/revert');
 		$temp_name		= basename($temp_file);
 		$this->import_object->extractTo($temp_file);
 
@@ -476,7 +476,7 @@ class admin_port{
 
 		// move to location outside of existing /data directory
 		// otherwise ReplaceDirs() will fail when we try to replace the data directory
-		$new_relative	= $this->FileSystem->TempFile( '/themes' );
+		$new_relative	= \gp\tool\FileSystem::TempFile( '/themes' );
 		if( !$this->FileSystem->RelRename($rel_path, $new_relative) ){
 			message($langmessage['revert_failed'].' (AddReplaceDir Failed)');
 			return false;
@@ -493,22 +493,6 @@ class admin_port{
 		$this->replace_dirs[$dir]	= $new_relative;
 
 		return true;
-	}
-
-
-	/**
-	 * Get the path for a temporary file
-	 *
-	 */
-	public function TempFile($ext = ''){
-
-		$i = time();
-		do{
-			$file = $this->temp_dir.'/'.sha1($i).$ext;
-			$i++;
-		}while( file_exists($file) );
-
-		return $file;
 	}
 
 

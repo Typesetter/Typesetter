@@ -405,9 +405,13 @@ class FileSystem{
 	 * @return string The path of a non-existant file in the same directory as $relative_from
 	 *
 	 */
-	public function TempFile( $relative_from ){
+	public static function TempFile( $relative_from, $extension = '' ){
 		global $dataDir;
 		static $rand_index;
+
+		if( !empty($extension) ){
+			$extenstion = '.'.ltrim($extension,'.');
+		}
 
 		clearstatcache();
 
@@ -417,12 +421,11 @@ class FileSystem{
 
 		$i = 0;
 		do{
-			$new_relative	= $relative_from.'-'.$rand_index;
+			$new_relative	= $relative_from.'-'.$rand_index.$extension;
 			$full_path		= $dataDir.$new_relative;
-			$rand_index++;
 			$i++;
 
-		}while( file_exists($full_path) && $i < 100 );
+		}while( file_exists($full_path) && $i < 100 && $rand_index++ );
 
 		return $new_relative;
 	}
@@ -453,7 +456,7 @@ class FileSystem{
 			$completed		= false;
 			$to_full		= $fs_root.'/'.$to_rel;
 			$from_full		= $fs_root.'/'.$from_rel;
-			$trash_rel		= $this->TempFile( $to_rel.'-old' );
+			$trash_rel		= self::TempFile( $to_rel.'-old' );
 			$trash_full		= $fs_root.'/'.$trash_rel;
 
 			if( !$this->file_exists($from_full) ){

@@ -734,38 +734,27 @@ class update_class{
 	function UnpackAndSort($file){
 		global $langmessage;
 
+		$archive		= new \gp\tool\Archive($file);
+		$archive_root	= $this->ArchiveRoot( $archive );
 
-		//create archive object of $file
-		includeFile('thirdparty/pclzip-2-8-2/pclzip.lib.php');
-		$archive = new PclZip($file);
-		$archive_root = $this->ArchiveRoot( $archive );
-		if( !$archive_root ){
+		if( is_null($archive_root) ){
 			$this->msg($langmessage['error_unpacking'].' (no root)');
 			return false;
 		}
-		$archive_root_len = strlen($archive_root);
 
-
-
-		//requires a lot of memory, most likely not this much
-		@ini_set('memory_limit', '256M');
-		$archive_files = $archive->extract(PCLZIP_OPT_EXTRACT_AS_STRING);
-		if( $archive_files == false ){
-			$this->msg($langmessage['OOPS'].': '.$archive->errorInfo(true));
-			return false;
-		}
+		$archive_root_len	= strlen($archive_root);
+		$archive_files		= $archive->ListFiles();
 
 		$this->msg($langmessage['package_unpacked']);
 
-		//organize
 		foreach($archive_files as $file){
 
 
-			if( strpos($file['filename'],$archive_root) === false ){
+			if( strpos($file['name'],$archive_root) === false ){
 				continue;
 			}
 
-			$rel_filename	= substr($file['filename'],$archive_root_len);
+			$rel_filename	= substr($file['name'],$archive_root_len);
 			$name_parts		= explode('/',trim($rel_filename,'/'));
 			$dir			= array_shift($name_parts);
 			$replace_dir	= false;
@@ -791,18 +780,21 @@ class update_class{
 				continue;
 			}
 
-			$replace_dir = trim($replace_dir,'/');
-			if( isset( $this->replace_dirs[$replace_dir] ) ){
-				$new_relative = $this->replace_dirs[$replace_dir];
 
-			}else{
-
-				$new_relative = $this->FileSystem->TempFile( $replace_dir );
-				$this->replace_dirs[$replace_dir] = $new_relative;
+			$content	= $archive->getFromName($file['name']);
+			if( empty($content) ){
+				return true;
 			}
 
-			$file_rel = $new_relative.'/'.$rel_filename;
-			if( !$this->PutFile( $file_rel, $file ) ){
+
+			$replace_dir = trim($replace_dir,'/');
+			if( !isset( $this->replace_dirs[$replace_dir] ) ){
+				$this->replace_dirs[$replace_dir] = \gp\tool\FileSystem::TempFile( $replace_dir );
+			}
+
+			$file_rel	= $this->replace_dirs[$replace_dir].'/'.$rel_filename;
+
+			if( !$this->PutFile( $file_rel, $content ) ){
 				return false;
 			}
 		}
@@ -811,21 +803,16 @@ class update_class{
 	}
 
 
-	function PutFile( $dest_rel, $file ){
+	/**
+	 * Use FileSystem to save the file contents so permissions are consistent
+	 *
+	 */
+	private function PutFile( $dest_rel, $content ){
 		global $langmessage;
 
 		$full = $this->FileSystem->get_base_dir().'/'.trim($dest_rel,'/');
 
-		if( $file['folder'] ){
-			if( !$this->FileSystem->mkdir($full) ){
-				$this->msg($langmessage['error_unpacking'].' (1)');
-				trigger_error('Could not create directory: '.$full);
-				return false;
-			}
-			return true;
-		}
-
-		if( !$this->FileSystem->put_contents($full,$file['content']) ){
+		if( !$this->FileSystem->put_contents($full,$content) ){
 			trigger_error('Could not create file: '.$full);
 			$this->msg($langmessage['error_unpacking'].' (2)');
 			return true;
@@ -835,31 +822,29 @@ class update_class{
 	}
 
 
-
 	/**
 	 * Find $archive_root by finding Addon.ini
 	 *
 	 */
-	function ArchiveRoot( $archive ){
+	public function ArchiveRoot( $archive ){
 
-		$archive_files = $archive->listContent();
-		$archive_root = false;
+		$archive_files	= $archive->ListFiles();
+		$archive_root	= null;
 
-		//find $archive_root by finding Addon.ini
 		foreach( $archive_files as $file ){
 
-			$filename =& $file['filename'];
-			if( strpos($filename,'/Addon.ini') === false ){
+			if( strpos($file['name'],'/Addon.ini') === false ){
 				continue;
 			}
 
-			$root = common::DirName($filename);
+			$root = common::DirName($file['name']);
 
-			if( !$archive_root || ( strlen($root) < strlen($archive_root) ) ){
+			if( is_null($archive_root) || ( strlen($root) < strlen($archive_root) ) ){
 				$archive_root = $root;
 			}
 
 		}
+
 		return $archive_root;
 	}
 
@@ -869,7 +854,7 @@ class update_class{
 	 *
 	 */
 	function DownloadSource(){
-		global $langmessage;
+		global $langmessage, $dataDir;
 
 		$this->msg('Downloading version '.$this->core_package['version'].' from gpEasy.com.');
 
@@ -899,13 +884,13 @@ class update_class{
 
 
 		//save contents
-		$tempfile = $this->tempfile();
-		if( !gpFiles::Save($tempfile,$contents) ){
+		$temp_file	= $dataDir.\gp\tool\FileSystem::TempFile('/data/_temp/update','.zip');
+		if( !gpFiles::Save($temp_file,$contents) ){
 			$this->msg($langmessage['download_failed'].' (2)');
 			return false;
 		}
 
-		$this->core_package['file'] = $tempfile;
+		$this->core_package['file'] = $temp_file;
 		return true;
 	}
 
@@ -940,16 +925,6 @@ class update_class{
 
 	}
 
-
-	function tempfile(){
-		global $dataDir;
-
-		do{
-			$tempfile = $dataDir.'/data/_temp/'.rand(1000,9000).'.zip';
-		}while(file_exists($tempfile));
-
-		return $tempfile;
-	}
 
 	/**
 	 * Add an update message

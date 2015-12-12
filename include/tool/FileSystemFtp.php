@@ -314,8 +314,13 @@ class FileSystemFtp extends FileSystem{
 	}
 
 	public function put_contents($file, $contents, $type = '' ){
+
 		if( empty($type) ){
 			$type = $this->is_binary($contents) ? FTP_BINARY : FTP_ASCII;
+		}
+
+		if( !$this->CheckDir($file) ){
+			return false;
 		}
 
 		$temp = $this->put_contents_file();
@@ -336,6 +341,25 @@ class FileSystemFtp extends FileSystem{
 
 		fclose($handle);
 		return $ret;
+	}
+
+
+	/**
+	 * Make sure the directory exists for a file
+	 *
+	 */
+	public function CheckDir($file){
+
+		$dir = \common::DirName($file);
+		if( $this->file_exists($dir) ){
+			return true;
+		}
+
+		if( !$this->CheckDir($dir) ){
+			return false;
+		}
+
+		return $this->mkdir($dir);
 	}
 
 

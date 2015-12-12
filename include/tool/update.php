@@ -735,7 +735,8 @@ class update_class{
 		global $langmessage;
 
 		$archive		= new \gp\tool\Archive($file);
-		$archive_root	= $this->ArchiveRoot( $archive );
+		$archive_root	= $archive->GetRoot();
+
 
 		if( is_null($archive_root) ){
 			$this->msg($langmessage['error_unpacking'].' (no root)');
@@ -819,33 +820,6 @@ class update_class{
 		}
 
 		return true;
-	}
-
-
-	/**
-	 * Find $archive_root by finding Addon.ini
-	 *
-	 */
-	public function ArchiveRoot( $archive ){
-
-		$archive_files	= $archive->ListFiles();
-		$archive_root	= null;
-
-		foreach( $archive_files as $file ){
-
-			if( strpos($file['name'],'/Addon.ini') === false ){
-				continue;
-			}
-
-			$root = common::DirName($file['name']);
-
-			if( is_null($archive_root) || ( strlen($root) < strlen($archive_root) ) ){
-				$archive_root = $root;
-			}
-
-		}
-
-		return $archive_root;
 	}
 
 

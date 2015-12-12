@@ -20,7 +20,7 @@ class Archive{
 	var $exists;
 
 
-	function __construct($path){
+	public function __construct($path){
 
 		$this->path				= $path;
 		$this->extension		= $this->Extension($path);
@@ -42,7 +42,7 @@ class Archive{
 	 * Initialize tar
 	 *
 	 */
-	function InitTar(){
+	protected function InitTar(){
 
 		if( $this->exists ){
 			$this->php_object	= new \PharData($this->path);
@@ -65,7 +65,7 @@ class Archive{
 	 * Initialize a zip archive
 	 *
 	 */
-	function InitZip(){
+	protected function InitZip(){
 
 		$this->php_class	= 'ZipArchive';
 		$this->php_object	= new \ZipArchive();
@@ -82,7 +82,7 @@ class Archive{
 	 * Get the extension of the file
 	 *
 	 */
-	function Extension($path){
+	protected function Extension($path){
 
 		$parts		= explode('.',$path);
 		return array_pop($parts);
@@ -93,7 +93,7 @@ class Archive{
 	 * Call method on the archive object
 	 *
 	 */
-	function __call( $name , $arguments ){
+	public function __call( $name , $arguments ){
 		return call_user_func_array( array($this->php_object,$name), $arguments);
 	}
 
@@ -102,7 +102,7 @@ class Archive{
 	 * Get the contents of a file within the archive
 	 *
 	 */
-	function getFromName($name){
+	public function getFromName($name){
 
 		if( $this->php_class === 'ZipArchive' ){
 			return $this->php_object->getFromName($name);
@@ -117,7 +117,7 @@ class Archive{
 	 * Add the final compression to the archive
 	 *
 	 */
-	function Compress(){
+	public function Compress(){
 
 		switch($this->extension){
 			case 'tbz':
@@ -136,7 +136,7 @@ class Archive{
 	 * Count the number of files
 	 *
 	 */
-	function Count(){
+	public function Count(){
 
 		if( method_exists($this->php_object,'Count') ){
 			return $this->php_object->Count();
@@ -150,7 +150,7 @@ class Archive{
 	 * ToDo: ListFiles() for pharData
 	 *
 	 */
-	function ListFiles(){
+	public function ListFiles(){
 
 		$list	= array();
 		$count	= $this->Count();
@@ -158,6 +158,60 @@ class Archive{
 			$list[] = $this->php_object->statIndex( $i );
 		}
 		return $list;
+	}
+
+
+	/**
+	 * Get Archive Root
+	 *
+	 */
+	public function GetRoot($search_file = '/Addon.ini'){
+
+		$archive_files	= $this->ListFiles();
+		$archive_root	= null;
+
+		foreach( $archive_files as $file ){
+
+			if( strpos($file['name'],$search_file) === false ){
+				continue;
+			}
+
+			$root = \common::DirName($file['name']);
+
+			if( is_null($archive_root) || ( strlen($root) < strlen($archive_root) ) ){
+				$archive_root = $root;
+			}
+
+		}
+
+		return $archive_root;
+	}
+
+
+	/**
+	 * Find $archive_root by finding Addon.ini
+	 *
+	 */
+	public function ArchiveRoot( $archive ){
+
+		$archive_files	= $archive->ListFiles();
+		$archive_root	= null;
+
+		foreach( $archive_files as $file ){
+
+			if( strpos($file['name'],'/Addon.ini') === false ){
+				continue;
+			}
+
+			$root = common::DirName($file['name']);
+
+			if( is_null($archive_root) || ( strlen($root) < strlen($archive_root) ) ){
+				$archive_root = $root;
+			}
+
+		}
+
+		return $archive_root;
 	}
 
 }

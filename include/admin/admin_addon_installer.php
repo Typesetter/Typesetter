@@ -688,13 +688,13 @@ class admin_addon_installer extends admin_addons_tool{
 	 * Make sure the name won't conflict with names of addons or layouts
 	 *
 	 */
-	function TempFile($type=''){
+	function TempFile(){
 		global $config, $gpLayouts, $dataDir;
 
 		do{
 			$file = common::RandomString(7,false);
-			$full_dest = $this->addon_folder.'/'.$file.$type;
-			$data_dest = $dataDir.'/data/_addondata/'.$file.$type;
+			$full_dest = $this->addon_folder.'/'.$file;
+			$data_dest = $dataDir.'/data/_addondata/'.$file;
 
 		}while(
 			is_numeric($file)
@@ -803,7 +803,7 @@ class admin_addon_installer extends admin_addons_tool{
 	 *
 	 */
 	function GetRemote(){
-		global $langmessage;
+		global $langmessage, $dataDir;
 		includeFile('tool/RemoteGet.php');
 
 
@@ -889,15 +889,14 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 
 		//save contents
-		$tempfile = $this->TempFile('.zip');
+		$tempfile = $dataDir.\gp\tool\FileSystem::TempFile('/data/_temp/addon','.zip');
 		if( !gpFiles::Save($tempfile,$result) ){
 			$this->message( $langmessage['download_failed'].' (Package not saved)' );
 			return false;
 		}
 
-		$this->source = $this->TempFile();
-
-		$success = $this->ExtractArchive($this->source,$tempfile);
+		$this->source		= $this->TempFile();
+		$success			= $this->ExtractArchive($tempfile);
 
 		unlink($tempfile);
 
@@ -910,71 +909,33 @@ class admin_addon_installer extends admin_addons_tool{
 	 * Write Archive
 	 *
 	 */
-	function ExtractArchive($dir,$archive_path){
-		global $langmessage;
+	private function ExtractArchive($archive_path){
+		global $langmessage, $dataDir;
 
-		// Unzip uses a lot of memory, but not this much hopefully
-		@ini_set('memory_limit', '256M');
-		includeFile('thirdparty/pclzip-2-8-2/pclzip.lib.php');
-		$archive = new PclZip($archive_path);
-		$archive_files = $archive->extract(PCLZIP_OPT_EXTRACT_AS_STRING);
-
-
-		if( !gpFiles::CheckDir($dir) ){
-			$this->message( sprintf($langmessage['COULD_NOT_SAVE'],$folder) );
+		$archive		= new \gp\tool\Archive($archive_path);
+		$extract_temp	= $dataDir.\gp\tool\FileSystem::TempFile('/data/_temp/addon');
+		if( !$archive->extractTo($extract_temp) ){
+			$this->message( $langmessage['download_failed'].' (Package not extracted)' );
 			return false;
 		}
 
 		//get archive root
-		$archive_root = false;
-		foreach( $archive_files as $file ){
-			if( strpos($file['filename'],'/Addon.ini') !== false ){
-				$root = dirname($file['filename']);
-				if( !$archive_root || ( strlen($root) < strlen($archive_root) ) ){
-					$archive_root = $root;
-				}
-			}
+		$archive_root		= $archive->GetRoot();
+		if( is_null($archive_root) ){
+			$this->message( $langmessage['download_failed'].' (Root not found)' );
+			return false;
 		}
-		$archive_root_len = strlen($archive_root);
+		$archive_root_len	= strlen($archive_root);
 
-
-		foreach($archive_files as $file_info){
-
-			$filename = $file_info['filename'];
-
-			if( $archive_root ){
-				if( strpos($filename,$archive_root) !== 0 ){
-					continue;
-				}
-
-				$filename = substr($filename,$archive_root_len);
-			}
-
-			$filename = '/'.trim($filename,'/');
-			$full_path = $dir.'/'.$filename;
-
-			if( $file_info['folder'] ){
-				$folder = $full_path;
-			}else{
-				$folder = dirname($full_path);
-			}
-
-			if( !gpFiles::CheckDir($folder) ){
-				$this->message( sprintf($langmessage['COULD_NOT_SAVE'],$folder) );
-				return false;
-			}
-			if( $file_info['folder'] ){
-				continue;
-			}
-			if( !gpFiles::Save($full_path,$file_info['content']) ){
-				$this->message( sprintf($langmessage['COULD_NOT_SAVE'],$full_path) );
-				return false;
-			}
+		//rename to source folder
+		$rename_from = $extract_temp.'/'.ltrim($archive_root,'/');
+		if( !gpFiles::Replace($rename_from, $this->source) ){
+			$this->message( $langmessage['download_failed'].' (Not replaced)' );
+			return false;
 		}
 
 		return true;
 	}
-
 
 
 	/**

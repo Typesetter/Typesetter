@@ -333,7 +333,6 @@ class update_class{
 
 		$this->update_data['packages'] = array();
 
-		$core_version = false;
 		foreach($array as $info){
 			$id =& $info['id'];
 			if( !is_numeric($id) ){
@@ -344,7 +343,6 @@ class update_class{
 			}
 			if( $info['type'] == 'core' ){
 				$id = 'core';
-				$core_version = $info['version'];
 			}
 			$this->update_data['packages'][$id] = $info;
 		}

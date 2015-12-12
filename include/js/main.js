@@ -362,7 +362,7 @@ $(function(){
 
 		// collect some debug info
 		var debug_info = {
-			thrownError		: thrownError,
+			thrownError		: thrownError
 		};
 
 		// add error details
@@ -416,9 +416,9 @@ $(function(){
 
 		//display message to user
 		if( typeof($gp.AdminBoxC) !== 'undefined' && typeof(JSON) != 'undefined' ){
-			delete debug_info.responseText;
+			delete debug_info.responseText; //otherwise it's too long
 
-			var _debug	= JSON.stringify(debug_info); //otherwise it's too long
+			var _debug	= JSON.stringify(debug_info);
 			_debug		= b64Encode(_debug);
 			_debug		= _debug.replace(/\=/g,'');
 			_debug		= _debug.replace(/\+/g,'-').replace(/\//g,'_');

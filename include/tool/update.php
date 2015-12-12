@@ -775,7 +775,7 @@ class update_class{
 				break;
 			}
 
-			if( !$replace_dir ){
+			if( $replace_dir === false ){
 				continue;
 			}
 

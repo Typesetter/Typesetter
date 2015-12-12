@@ -410,7 +410,7 @@ class FileSystem{
 		static $rand_index;
 
 		if( !empty($extension) ){
-			$extenstion = '.'.ltrim($extension,'.');
+			$extension = '.'.ltrim($extension,'.');
 		}
 
 		clearstatcache();

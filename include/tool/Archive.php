@@ -13,11 +13,11 @@ defined('is_running') or die('Not an entry point...');
  */
 class Archive{
 
-	var $path;
-	var $php_class				= 'PharData';
-	var $php_object;
-	var $extenstion;
-	var $exists;
+	protected $path;
+	protected $php_class				= 'PharData';
+	protected $php_object;
+	protected $extension;
+	protected $exists;
 
 
 	public function __construct($path){

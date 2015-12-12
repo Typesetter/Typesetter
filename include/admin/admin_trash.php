@@ -88,7 +88,7 @@ class admin_trash{
 		$existing		= array();
 		foreach($gp_index as $title => $index){
 
-			if( common::SpecialOrAdmin($title) ){
+			if( common::SpecialOrAdmin($title) !== false ){
 				continue;
 			}
 

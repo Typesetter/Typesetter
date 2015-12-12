@@ -790,7 +790,7 @@ class admin_menu_new extends admin_menu_tools{
 					);
 
 
-		if( !$isSpecialLink ){
+		if( $isSpecialLink === false ){
 			$file = gpFiles::PageFile($title);
 			$stats = @stat($file);
 			if( $stats ){
@@ -1127,7 +1127,7 @@ class admin_menu_new extends admin_menu_tools{
 		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax');
 		echo $this->Link('Admin_Menu',$label,$q,$attrs);
 
-		if( !$is_special ){
+		if( $is_special === false ){
 			$img	= '<span class="menu_icon icon_history"></span>';
 			echo common::Link($title,$langmessage['Revision History'],'cmd=ViewHistory','class="view_edit_link not_multiple" data-cmd="gpabox"');
 		}
@@ -1139,7 +1139,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo $this->Link('Admin_Menu',$layout_info['label'],'cmd=layout&index='.urlencode($title_index),array('title'=>$langmessage['layout'],'data-cmd'=>'gpabox'));
 		echo '</span>';
 
-		if( !$is_special ){
+		if( $is_special === false ){
 			echo $this->Link('Admin_Menu',$langmessage['delete'],'cmd=trash&index='.urlencode($title_index),array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
 		}
 

@@ -44,7 +44,7 @@ class gpupgrade{
 
 			$info = $gp_titles[$index];
 			$type = common::SpecialOrAdmin($title);
-			if( $type == 'special' ){
+			if( $type === 'special' ){
 				$special_indexes[$index] = strtolower($title);
 				$index = strtolower($title);
 				$info['type'] = 'special'; //some older versions didn't maintain this value well

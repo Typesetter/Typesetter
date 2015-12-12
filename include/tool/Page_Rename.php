@@ -51,7 +51,6 @@ class gp_rename{
 		//slug (title)
 		$attr		= '';
 		$class		= 'new_title';
-		$editable	= true;
 
 		if( $title == admin_tools::LabelToSlug($label) ){
 			$attr = 'disabled="disabled" ';
@@ -316,7 +315,7 @@ class gp_rename{
 		}
 
 		$special_file = false;
-		if( common::SpecialOrAdmin($title) ){
+		if( common::SpecialOrAdmin($title) !== false ){
 			$special_file = true;
 		}
 

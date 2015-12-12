@@ -1625,7 +1625,7 @@ class common{
 			for($i = $max; $i > 0; $i--){
 				$last_index = current($gp_index);
 				$type = common::SpecialOrAdmin($title);
-				if( $type == 'special' ){
+				if( $type === 'special' ){
 					$title = prev($gp_index);
 					continue;
 				}

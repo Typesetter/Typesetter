@@ -259,7 +259,7 @@ class admin_missing extends special_missing{
 
 			$is_gplink = $this->isGPLink($data['target']);
 			if( !empty($data['target']) && $is_gplink ){
-				if( !isset($gp_index[$data['target']]) && !isset($admin_urls[$data['target']]) ){ //(common::SpecialOrAdmin($data['target'] !== 'admin'))
+				if( !isset($gp_index[$data['target']]) && !isset($admin_urls[$data['target']]) ){
 					$has_invalid_target = true;
 					echo ' <img src="'.common::GetDir('/include/imgs/error.png').'" alt="" height="16" width="16" style="vertical-align:middle" title="'.$langmessage['Target URL Invalid'].'"/> ';
 				}

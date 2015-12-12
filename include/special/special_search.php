@@ -325,7 +325,7 @@ class special_gpsearch{
 
 		ob_start();
 		foreach($gp_index as $title => $index){
-			if( !common::SpecialOrAdmin($title) ){
+			if( common::SpecialOrAdmin($title) === false ){
 				$this->SearchPage($title,$index);
 			}
 		}

@@ -925,7 +925,6 @@ class admin_addon_installer extends admin_addons_tool{
 			$this->message( $langmessage['download_failed'].' (Root not found)' );
 			return false;
 		}
-		$archive_root_len	= strlen($archive_root);
 
 		//rename to source folder
 		$rename_from = $extract_temp.'/'.ltrim($archive_root,'/');

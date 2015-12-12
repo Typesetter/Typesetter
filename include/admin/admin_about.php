@@ -49,7 +49,6 @@ class admin_about{
 		$projects['elFinder']		= 'elfinder.org';
 		$projects['ColorBox']		= 'colorpowered.com/colorbox/';
 		$projects['Bootstrap']		= 'twitter.github.io/bootstrap/';
-		$projects['ArchiveTar']		= 'pear.php.net/manual/en/package.filesystem.archive-tar.php';
 		$projects['jQuery'] 		= 'jquery.com';
 		$projects['jQuery UI'] 		= 'jqueryui.com';
 		$projects['Pcl Zip'] 		= 'phpconcept.net/pclzip/';

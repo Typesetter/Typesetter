@@ -197,7 +197,7 @@ class editing_page extends display{
 			$this->cmds['managesections']		= 'newsectioncontent';
 			$this->cmds['newsectioncontent']	= 'return';
 			$this->cmds['savesections']			= 'return';
-			$this->cmds['viewrevision']			= '';
+			$this->cmds['viewrevision']			= 'return';
 			$this->cmds['userevision']			= '';
 			$this->cmds['viewhistory']			= 'return';
 			$this->cmds['viewcurrent']			= 'return';

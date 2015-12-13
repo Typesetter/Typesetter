@@ -4,7 +4,11 @@ defined('is_running') or die('Not an entry point...');
 
 class gp_rename{
 
-	static function RenameForm( $index, $action ){
+	/**
+	 * Display form in popup for renaming page given by $index
+	 *
+	 */
+	public static function RenameForm( $index, $action ){
 		global $langmessage, $page, $gp_index, $gp_titles, $config;
 
 
@@ -213,8 +217,11 @@ class gp_rename{
 
 	}
 
-
-	static function RenameFile($title){
+	/**
+	 * Handle renaming a page based on POSTed data
+	 *
+	 */
+	public static function RenameFile($title){
 		global $langmessage, $page, $gp_index, $gp_titles;
 
 		$page->ajaxReplace = array();
@@ -299,7 +306,7 @@ class gp_rename{
 
 
 
-	static function RenameFileWorker($title){
+	private static function RenameFileWorker($title){
 		global $langmessage,$dataDir,$gp_index;
 
 		//use new_label or new_title

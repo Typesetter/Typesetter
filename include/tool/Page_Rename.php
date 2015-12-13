@@ -133,7 +133,6 @@ class gp_rename{
 		echo '<td class="formlabel">';
 		echo $langmessage['description'];
 		echo '</td><td>';
-		//echo '<input type="text" class="gpinput" size="50" name="description" value="'.$description.'" />';
 		echo '<textarea class="gptextarea show_character_count" rows="2" cols="50" name="description">'.$description.'</textarea>';
 
 		$count_label = sprintf($langmessage['_characters'],'<span>'.strlen($description).'</span>');
@@ -344,11 +343,8 @@ class gp_rename{
 		if( !$special_file ){
 			$new_file = gpFiles::PageFile($new_title);
 
-			//we don't have to rename files if we're using the index naming convention. See gpFiles::PageFile() for more info
-			if( $new_file == $old_file ){
-
 			//if the file being renamed doesn't use the index naming convention, then we'll still need to rename it
-			}else{
+			if( $new_file != $old_file ){
 				$new_dir = dirname($new_file);
 				$old_dir = dirname($old_file);
 				if( !gpFiles::Rename($old_dir,$new_dir) ){

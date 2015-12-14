@@ -372,4 +372,23 @@ class gp_rename{
 		return $new_title;
 	}
 
+	/**
+	 * Rename a page
+	 *
+	 */
+	public static function RenamePage($page){
+		global $langmessage, $gp_index;
+
+		includeFile('tool/Page_Rename.php');
+		$new_title = gp_rename::RenameFile($page->title);
+		if( ($new_title !== false) && $new_title != $page->title ){
+			msg(sprintf($langmessage['will_redirect'],common::Link_Page($new_title)));
+
+			$page->head				.= '<meta http-equiv="refresh" content="15;url='.common::GetUrl($new_title).'">';
+			$page->ajaxReplace[]	= array('location',common::GetUrl($new_title),15000);
+			return true;
+		}
+		return false;
+	}
+
 }

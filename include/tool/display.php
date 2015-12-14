@@ -12,13 +12,15 @@ class display{
 	public $gp_index;
 	public $title;
 	public $label;
-	public $file				= false;
+	public $file;
 	public $contentBuffer;
 	public $TitleInfo;
 	public $fileType			= '';
 	public $ajaxReplace			= array('#gpx_content');
 	public $admin_links			= array();
 	public $visibility			= null;
+	public $file_sections		= array();
+	public $meta_data			= array();
 
 	public $fileModTime			= 0; /* @deprecated 3.0 */
 	public $file_stats			= array();
@@ -55,7 +57,7 @@ class display{
 	public $editable_content	= true;
 	public $editable_details	= true;
 
-	function __construct($title){
+	public function __construct($title, $type){
 		$this->title = $title;
 	}
 

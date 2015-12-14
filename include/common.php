@@ -2479,12 +2479,12 @@ class common{
 	 * http://php.net/manual/en/function.strftime.php
 	 *
 	 */
-	static function Date($format='',$time=false){
+	static function Date($format='',$time=null){
 		if( empty($format) ){
 			return '';
 		}
 
-		if( !$time ){
+		if( is_null($time) ){
 			$time = time();
 		}
 

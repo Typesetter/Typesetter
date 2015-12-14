@@ -8,6 +8,7 @@
 @import 'variables.less';
 
 
+@import 'admin_toolbar.less';
 
 /*
  * Reset CSS
@@ -297,18 +298,25 @@
 	margin:0;
 	padding:0;
 	list-style:none;
+	color: @gp_nav_link_color !important;
 	}
-#admincontent_panel a{
+#admincontent_panel a,
+#admincontent_panel b{
 	padding: @gp_nav_link_padding_y @gp_nav_link_padding_x;
 	}
 
-
-#admincontent_panel a{
-	color: @gp_nav_link_color !important;
-}
-
 #admincontent_panel a:hover{
 	color: @gp_nav_link_color_hover !important;
+	}
+
+#admincontent_panel ul ul{
+	display:none;
+	position:absolute;
+	top:100%;
+	background: @gp_panel_bg;
+	}
+#admincontent_panel ul ul li{
+	display:block;
 	}
 
 #panel_search{
@@ -513,8 +521,6 @@ body.edit_layout .GPAREA{
 body.gpAdmin div.editable_area{
 	min-height:1em !important;
 }
-
-
 
 
 /* general */

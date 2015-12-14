@@ -229,6 +229,8 @@ class editing_page extends display{
 		$this->admin_links		= array();
 
 
+		$this->admin_links[] = common::Link($this->title,$langmessage['Manage Sections'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+
 		if( $this->permission_menu ){
 			$this->admin_links[] = common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
 

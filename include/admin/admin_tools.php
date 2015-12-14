@@ -13,7 +13,7 @@ class admin_tools{
 	 * @static
 	 *
 	 */
-	static function VersionsAndCheckTime(){
+	public static function VersionsAndCheckTime(){
 		global $config, $dataDir, $gpLayouts;
 
 		$data_timestamp = self::VersionData($version_data);
@@ -65,7 +65,7 @@ class admin_tools{
 	 * Get or cache data about available versions of gpEasy and addons
 	 *
 	 */
-	static function VersionData(&$update_data){
+	public static function VersionData(&$update_data){
 		global $dataDir;
 
 		$file = $dataDir.'/data/_updates/updates.php';
@@ -83,7 +83,7 @@ class admin_tools{
 	}
 
 
-	static function CheckArray($array,$update_data){
+	public static function CheckArray($array,$update_data){
 
 		foreach($array as $addon => $addon_info){
 
@@ -121,7 +121,7 @@ class admin_tools{
 	}
 
 
-	static function AdminScripts(){
+	public static function AdminScripts(){
 		global $langmessage, $config;
 		$scripts = array();
 
@@ -281,7 +281,7 @@ class admin_tools{
 	 * @static
 	 * @return bool
 	 */
-	static function HasPermission($script){
+	public static function HasPermission($script){
 		global $gpAdmin;
 		if( is_array($gpAdmin) ){
 			$gpAdmin += array('granted'=>'');
@@ -296,7 +296,7 @@ class admin_tools{
 	 * @since 3.0b2
 	 * @return bool
 	 */
-	static function CheckPermission($granted,$script){
+	public static function CheckPermission($granted,$script){
 
 		if( $granted == 'all' ){
 			return true;
@@ -318,7 +318,7 @@ class admin_tools{
 	 * @param string $index The data index of the page
 	 * @return bool
 	 */
-	static function CanEdit($index){
+	public static function CanEdit($index){
 		global $gpAdmin;
 
 		//pre 3.0 check
@@ -342,7 +342,7 @@ class admin_tools{
 	 * @since 3.0b2
 	 * @static
 	 */
-	static function EditingValue(&$user_info){
+	public static function EditingValue(&$user_info){
 		if( isset($user_info['editing']) ){
 			return;
 		}
@@ -359,7 +359,7 @@ class admin_tools{
 	 * Output the main admin toolbar
 	 * @static
 	 */
-	static function GetAdminPanel(){
+	public static function GetAdminPanel(){
 		global $page, $gpAdmin;
 
 		//don't send the panel when it's a gpreq=json request
@@ -408,14 +408,76 @@ class admin_tools{
 		echo '</div></div>'; //end simplepanel
 
 		echo "\n\n";
+
+		self::AdminToolbar();
 	}
+
+
+	/**
+	 * Show Admin Toolbar
+	 *
+	 */
+	public static function AdminToolbar(){
+		global $page, $langmessage;
+
+		if( $page->pagetype === 'admin_display' ){
+			return;
+		}
+
+		if( isset($GLOBALS['GP_ARRANGE_CONTENT']) ){
+			return;
+		}
+
+		if( empty($page->admin_links) ){
+			return;
+		}
+
+		echo '<div id="admincontent_panel" class="toolbar">';
+		echo '<ul>';
+		echo '<li><b>'.$langmessage['Current Page'].':</b></li>';
+
+
+		//editable areaas
+		echo '<li><a data-cmd="editable_list">'.$langmessage['Editable Areas'].'</a>';
+		echo '</li>';
+
+
+		//admin_link
+		foreach($page->admin_links as $label => $link){
+			echo '<li>';
+
+				if( is_array($link) ){
+					echo call_user_func_array(array('common','Link'),$link); /* preferred */
+
+				}elseif( is_numeric($label) ){
+					echo $link; //just a text label
+
+				}elseif( empty($link) ){
+					echo '<span>';
+					echo $label;
+					echo '</span>';
+
+				}else{
+					echo '<a href="'.$link.'">';
+					echo $label;
+					echo '</a>';
+				}
+
+			echo '</li>';
+		}
+
+
+		echo '</ul>';
+		echo '</div>';
+	}
+
 
 	/**
 	 * Output the link areas that are displayed in the main admin toolbar and admin_main
 	 * @param bool $in_panel Whether or not the links will be displayed in the toolbar
 	 * @static
 	 */
-	static function AdminPanelLinks($in_panel=true){
+	public static function AdminPanelLinks($in_panel=true){
 		global $langmessage, $page, $gpAdmin;
 
 		$expand_class = 'expand_child';
@@ -425,54 +487,6 @@ class admin_tools{
 			$id_piece = '_click';
 		}
 
-
-		//current page
-		if( $in_panel && !isset($GLOBALS['GP_ARRANGE_CONTENT']) && $page->pagetype != 'admin_display' ){
-			echo '<div class="panelgroup" id="current_page_panel">';
-
-			self::PanelHeading($in_panel, $langmessage['Current Page'], 'icon_page_gear', 'cur' );
-
-			echo '<ul class="submenu">';
-			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Current Page'].'</a></li>';
-			foreach($page->admin_links as $label => $link){
-				echo '<li>';
-
-					if( is_array($link) ){
-						echo call_user_func_array(array('common','Link'),$link); /* preferred */
-
-					}elseif( is_numeric($label) ){
-						echo $link; //just a text label
-
-					}elseif( empty($link) ){
-						echo '<span>';
-						echo $label;
-						echo '</span>';
-
-					}else{
-						echo '<a href="'.$link.'">';
-						echo $label;
-						echo '</a>';
-					}
-
-				echo '</li>';
-			}
-
-			echo '<li class="'.$expand_class.'" id="editable_areas_list"><a>'.$langmessage['Editable Areas'].'</a>';
-			echo '<ul class="in_window">';
-			if( $page->pagetype == 'display' ){
-				echo '<li class="separator">';
-				echo common::Link($page->title,$langmessage['Manage Sections'].'...','cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
-				echo '</li>';
-			}
-			echo '<li style="display:none"></li>';//for valid html
-			echo '</ul>';
-			echo '</li>';
-
-
-			echo '</ul>';
-			echo '</div>';
-			echo '</div>';
-		}
 
 
 		//content
@@ -640,7 +654,7 @@ class admin_tools{
 
 	}
 
-	static function PanelHeading( $in_panel, $label, $icon, $arg ){
+	public static function PanelHeading( $in_panel, $label, $icon, $arg ){
 		global $gpAdmin;
 
 		if( !$in_panel ){
@@ -671,7 +685,7 @@ class admin_tools{
 	 * Output the html used for inline editor toolbars
 	 * @static
 	 */
-	static function InlineEditArea(){
+	public static function InlineEditArea(){
 		global $langmessage;
 
 		//inline editor html
@@ -710,7 +724,7 @@ class admin_tools{
 	 * Get the links for the Frequently Used section of the admin toolbar
 	 *
 	 */
-	static function GetFrequentlyUsed($in_panel){
+	public static function GetFrequentlyUsed($in_panel){
 		global $langmessage, $gpAdmin;
 
 		$expand_class = 'expand_child';
@@ -756,7 +770,7 @@ class admin_tools{
 
 
 	//uses $status from update codes to execute some cleanup code on a regular interval (7 days)
-	static function ScheduledTasks(){
+	public static function ScheduledTasks(){
 		global $dataDir;
 
 		switch(self::$update_status){
@@ -780,7 +794,7 @@ class admin_tools{
 	 * If there are more than 200 files older than one week
 	 *
 	 */
-	static function CleanCache(){
+	public static function CleanCache(){
 		global $dataDir;
 		$dir = $dataDir.'/data/_cache';
 		$files = scandir($dir);
@@ -817,7 +831,7 @@ class admin_tools{
 
 
 	//admin_tools::AdminHtml();
-	static function AdminHtml(){
+	public static function AdminHtml(){
 		global $page, $gp_admin_html;
 
 		ob_start();
@@ -840,7 +854,7 @@ class admin_tools{
 
 	}
 
-	static function CheckStatus(){
+	public static function CheckStatus(){
 
 		switch(self::$update_status){
 			case 'embedcheck':
@@ -856,7 +870,7 @@ class admin_tools{
 
 
 
-	static function GetAdminGroup($grouping){
+	public static function GetAdminGroup($grouping){
 		global $langmessage,$page;
 
 		$scripts = admin_tools::AdminScripts();
@@ -903,7 +917,7 @@ class admin_tools{
 		return false;
 	}
 
-	static function GetAppearanceGroup($in_panel){
+	public static function GetAppearanceGroup($in_panel){
 		global $page, $langmessage, $gpLayouts, $config;
 
 		if( !admin_tools::HasPermission('Admin_Theme_Content') ){
@@ -975,7 +989,7 @@ class admin_tools{
 	 * Some tags will be allowed
 	 *
 	 */
-	static function PostedLabel($string){
+	public static function PostedLabel($string){
 		includeFile('tool/strings.php');
 
 		// Remove control characters
@@ -993,7 +1007,7 @@ class admin_tools{
 	 * @since 2.5b1
 	 *
 	 */
-	static function LabelToSlug($string){
+	public static function LabelToSlug($string){
 		return admin_tools::PostedSlug( $string, true);
 	}
 
@@ -1004,7 +1018,7 @@ class admin_tools{
 	 * @return string
 	 * @since 2.4b5
 	 */
-	static function PostedSlug($string, $from_label = false){
+	public static function PostedSlug($string, $from_label = false){
 		global $config;
 
 		includeFile('tool/strings.php');
@@ -1045,7 +1059,7 @@ class admin_tools{
 	 * Fix the html for page labels
 	 *
 	 */
-	static function LabelHtml($string){
+	public static function LabelHtml($string){
 
 		//prepend with space for preg_split(), space will be trimmed at the end
 		$string = ' '.$string;
@@ -1083,7 +1097,7 @@ class admin_tools{
 	 * Remove slashes and dots from a slug that could cause navigation problems
 	 *
 	 */
-	static function SlugSlashes($string){
+	public static function SlugSlashes($string){
 
 		$string = str_replace('\\','/',$string);
 
@@ -1115,7 +1129,7 @@ class admin_tools{
 	 * @return mixed false or the data index of the matched title
 	 * @since 2.4b5
 	 */
-	static function CheckTitleCase($title){
+	public static function CheckTitleCase($title){
 		global $gp_index;
 
 		$titles_lower = array_change_key_case($gp_index,CASE_LOWER);
@@ -1134,7 +1148,7 @@ class admin_tools{
 	 * @return mixed false if the title doesn't exist, string if a conflict is found
 	 * @since 2.4b5
 	 */
-	static function CheckTitle($title,&$message){
+	public static function CheckTitle($title,&$message){
 		global $gp_index, $config, $langmessage;
 
 		if( empty($title) ){
@@ -1171,7 +1185,7 @@ class admin_tools{
 	 * Check a title against existing titles and special pages
 	 *
 	 */
-	static function CheckPostedNewPage($title,&$message){
+	public static function CheckPostedNewPage($title,&$message){
 		global $langmessage,$gp_index, $config;
 
 		$title = admin_tools::LabelToSlug($title);
@@ -1193,7 +1207,7 @@ class admin_tools{
 	 * Save config.php and pages.php
 	 *
 	 */
-	static function SaveAllConfig(){
+	public static function SaveAllConfig(){
 		if( !admin_tools::SaveConfig() ){
 			return false;
 		}
@@ -1209,7 +1223,7 @@ class admin_tools{
 	 * @return bool
 	 *
 	 */
-	static function SavePagesPHP(){
+	public static function SavePagesPHP(){
 		global $gp_index, $gp_titles, $gp_menu, $gpLayouts, $dataDir;
 
 		if( !is_array($gp_menu) || !is_array($gp_index) || !is_array($gp_titles) || !is_array($gpLayouts) ){
@@ -1234,7 +1248,7 @@ class admin_tools{
 	 * @return bool
 	 *
 	 */
-	static function SaveConfig(){
+	public static function SaveConfig(){
 		global $config;
 
 		if( !is_array($config) ) return false;
@@ -1249,7 +1263,7 @@ class admin_tools{
 	 * @deprecated
 	 * used by simpleblog1
 	 */
-	static function tidyFix(&$text){
+	public static function tidyFix(&$text){
 		trigger_error('tidyFix should be called using gp_edit::tidyFix() instead of admin_tools:tidyFix()');
 		return false;
 	}
@@ -1260,7 +1274,7 @@ class admin_tools{
 	 * Return the addon section of the admin panel
 	 *
 	 */
-	static function GetAddonLinks($in_panel){
+	public static function GetAddonLinks($in_panel){
 		global $langmessage, $config;
 
 		$expand_class = 'expand_child';
@@ -1331,7 +1345,7 @@ class admin_tools{
 	* Determine if the installation should be allowed to process remote installations
 	*
 	*/
-	static function CanRemoteInstall(){
+	public static function CanRemoteInstall(){
 		static $bit;
 
 		if( isset($bit) ){
@@ -1367,7 +1381,7 @@ class admin_tools{
 	 * Return a formatted list of links associated with $addon
 	 * @return string
 	 */
-	static function GetAddonSubLinks($addon=false){
+	public static function GetAddonSubLinks($addon=false){
 		global $config;
 
 		$special_links	= admin_tools::GetAddonTitles( $addon);
@@ -1400,7 +1414,7 @@ class admin_tools{
 	 * @return array List of addon links
 	 *
 	 */
-	static function GetAddonTitles($addon){
+	public static function GetAddonTitles($addon){
 		global $gp_index, $gp_titles;
 
 		$sublinks = array();
@@ -1425,7 +1439,7 @@ class admin_tools{
 	 * @return array List of addon links
 	 *
 	 */
-	static function GetAddonComponents($from,$addon){
+	public static function GetAddonComponents($from,$addon){
 		$result = array();
 
 		if( !is_array($from) ){
@@ -1449,7 +1463,7 @@ class admin_tools{
 	}
 
 
-	static function FormatBytes($size, $precision = 2){
+	public static function FormatBytes($size, $precision = 2){
 		$base = log($size) / log(1024);
 		$suffixes = array('B', 'KB', 'MB', 'GB', 'TB');
 		$floor = max(0,floor($base));
@@ -1460,7 +1474,7 @@ class admin_tools{
 	 * Base convert that handles large numbers
 	 *
 	 */
-	static function base_convert($str, $frombase=10, $tobase=36) {
+	public static function base_convert($str, $frombase=10, $tobase=36) {
 	    $str = trim($str);
 	    if (intval($frombase) != 10) {
 	        $len = strlen($str);
@@ -1490,14 +1504,14 @@ class admin_tools{
 	 * Return the size in bytes of the /data directory
 	 *
 	 */
-	static function DiskUsage(){
+	public static function DiskUsage(){
 		global $dataDir;
 
 		$dir = $dataDir.'/data';
 		return self::DirSize($dir);
 	}
 
-	static function DirSize($dir){
+	public static function DirSize($dir){
 		$size = 0;
 		$files = scandir($dir);
 		$len = count($files);
@@ -1520,13 +1534,13 @@ class admin_tools{
 		return $size;
 	}
 
-	static function encode64( $input ){
+	public static function encode64( $input ){
 		$encoded	= base64_encode($input);
 		$encoded	= rtrim($encoded,'=');
 		return strtr($encoded, '+/', '-_');
 	}
 
-	static function decode64( $input ){
+	public static function decode64( $input ){
 		$mod = strlen($input) % 4;
 		if( $mod !== 0 ){
 			$append_len	= 4 - $mod;
@@ -1540,7 +1554,7 @@ class admin_tools{
 	 * Return the time in a human readable string
 	 *
 	 */
-	static function Elapsed($difference){
+	public static function Elapsed($difference){
 		$periods = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade');
 		$lengths = array('60','60','24','7','4.35','12','10');
 
@@ -1558,6 +1572,6 @@ class admin_tools{
 	}
 
 	//deprecated v4.4
-	static function AdminContentPanel(){}
-	static function AdminContainer(){}
+	public static function AdminContentPanel(){}
+	public static function AdminContainer(){}
 }

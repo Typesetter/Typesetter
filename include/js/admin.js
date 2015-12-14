@@ -575,13 +575,6 @@ $(function(){
 
 	$('body').addClass('gpAdmin');
 
-	window.setTimeout(function(){
-		EditOutlines();
-
-		$('#editable_areas_list').one('mouseenter.edb touchstart.edb',EditableBar);
-
-		UIEffects();
-	},1);
 
 
 	/**
@@ -598,12 +591,28 @@ $(function(){
 	 * Links are listed in order that they appear in the DOM
 	 *
 	 */
-	function EditableBar(){
+	$gp.links.editable_list = function(){
 
-		var count	= 0;
-		var box		= box = $gp.div('gp_edit_box'); //the overlay box
-		var list	= $(this).find('ul');
+		var $this	= $(this);
+		var list	= $this.siblings('ul');
 
+		if( !list.length ){
+			list	= $('<ul>').appendTo( $this.parent() );
+			AddEditableLinks(list);
+		}
+
+		list.css('display','block');
+
+		$(document).on('click.editable_list',function(evt){
+			list.css('display','');
+			$(document).off('.editable_list');
+		});
+
+	}
+
+	function AddEditableLinks(list){
+
+		var box		= $gp.div('gp_edit_box'); //the overlay box
 
 		$('a.ExtraEditLink')
 			.clone(false)
@@ -612,7 +621,6 @@ $(function(){
 			.show()
 			.each(function(){
 
-				var title;
 				var $b			= $(this);
 				var id_number	= $b.data('area-id');
 				var area		= $('#ExtraEditArea'+id_number);
@@ -622,8 +630,10 @@ $(function(){
 				}
 
 
-				title = this.title.replace(/_/g,' ');
-				title = decodeURIComponent(title);
+				var loc			= $gp.Coords(area);
+				var title		= this.title.replace(/_/g,' ');
+				title			= decodeURIComponent(title);
+
 				if( title.length > 15 ){
 					title = title.substr(0,14)+'...';
 				}
@@ -633,8 +643,6 @@ $(function(){
 					//add to list
 					.attr('id','editable_mark'+id_number)
 					.text(title)
-					.appendTo(list)
-					.wrap('<li>')
 
 					//add handlers
 					.on('mouseenter touchstart',function(){
@@ -658,7 +666,24 @@ $(function(){
 							box.hide();
 						},100);
 					});
+
+
+				//add to list
+				$('<li>')
+					.append($b)
+					.data('top',loc.top)
+					.appendTo(list);
+
+
 			});
+
+
+			// sort by position on page
+			list.find('li').sort(function(a, b){
+				var contentA = $(a).data('top');
+				var contentB = $(b).data('top');
+				return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+			}).appendTo(list);
 
 	}
 

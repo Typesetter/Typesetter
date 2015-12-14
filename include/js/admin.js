@@ -635,7 +635,7 @@ $(function(){
 				title			= decodeURIComponent(title);
 
 				if( title.length > 15 ){
-					title = title.substr(0,14)+'...';
+					title = title.substr(0,14);
 				}
 
 

@@ -1,6 +1,6 @@
 
 html{
-	margin-top:32px;
+	margin-top:@gp_nav_height;
 	}
 
 body.gpAdmin #admincontent_panel{
@@ -8,8 +8,28 @@ body.gpAdmin #admincontent_panel{
 	top:0;
 	left:0;
 	right:0;
-	height:32px;
+	height:@gp_nav_height;
 	z-index:8999;
-	border-bottom:1px solid #ccc;
 }
 
+
+
+#admincontent_panel .msg_publish_draft,
+#admincontent_panel .msg_discard_draft,
+#admincontent_panel .msg_view_history{
+	padding-left: 24px;
+	background: url('../imgs/revision.png') 2px 1px no-repeat;
+	}
+
+#admincontent_panel .msg_publish_draft{
+	background-color:#329880;
+	}
+
+#admincontent_panel .msg_discard_draft{
+	background-position: 2px -23px;
+	background-color:#c83131;
+	}
+
+#admincontent_panel .msg_view_history{
+	background-position: 2px -47px;
+	}

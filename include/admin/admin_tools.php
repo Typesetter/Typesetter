@@ -445,7 +445,7 @@ class admin_tools{
 		echo '<li><b>'.$langmessage['Current Page'].':</b></li>';
 
 		//admin_link
-		foreach($page->admin_links as $label => $link){
+		foreach($links as $label => $link){
 			echo '<li>';
 
 				if( is_array($link) ){

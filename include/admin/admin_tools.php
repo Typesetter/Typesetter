@@ -420,7 +420,7 @@ class admin_tools{
 	public static function AdminToolbar(){
 		global $page, $langmessage;
 
-		if( $page->pagetype === 'admin_display' ){
+		if( !method_exists($page,'AdminLinks') ){
 			return;
 		}
 
@@ -428,19 +428,21 @@ class admin_tools{
 			return;
 		}
 
-		if( empty($page->admin_links) ){
+		$links = $page->AdminLinks();
+
+		if( empty($links) ){
 			return;
 		}
 
 		echo '<div id="admincontent_panel" class="toolbar">';
 		echo '<ul>';
-		echo '<li><b>'.$langmessage['Current Page'].':</b></li>';
 
 
 		//editable areaas
-		echo '<li><a data-cmd="editable_list">'.$langmessage['Editable Areas'].'</a>';
-		echo '</li>';
+		echo '<li><a data-cmd="editable_list">'.$langmessage['Editable Areas'].'</a></li>';
 
+		//current page
+		echo '<li><b>'.$langmessage['Current Page'].':</b></li>';
 
 		//admin_link
 		foreach($page->admin_links as $label => $link){

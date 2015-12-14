@@ -3,20 +3,20 @@ defined('is_running') or die('Not an entry point...');
 
 
 class special_display extends display{
-	var $pagetype = 'special_display';
-	var $requested = false;
+	public $pagetype = 'special_display';
+	public $requested = false;
 
-	var $editable_content = false;
-	var $editable_details = false; //true; //could be true
+	public $editable_content = false;
+	public $editable_details = false; //true; //could be true
 
-	function __construct($title){
+	public function __construct($title){
 
 		$this->requested	= $title;
 		$this->title		= $title;
 	}
 
-	function RunScript(){
-		global $gp_index, $langmessage,$page;
+	public function RunScript(){
+		global $gp_index, $langmessage;
 
 		$scriptinfo = special_display::GetScriptInfo($this->title);
 		if( $scriptinfo === false ){
@@ -69,7 +69,6 @@ class special_display extends display{
 				}
 			}
 
-			$this->AdminLinks();
 		}
 
 
@@ -81,17 +80,17 @@ class special_display extends display{
 	 * Generate admin toolbar links
 	 *
 	 */
-	function AdminLinks(){
-		global $langmessage, $page;
+	public function AdminLinks(){
+		global $langmessage;
 
-		$admin_links			= $page->admin_links;
-		$page->admin_links		= array();
+		$admin_links			= $this->admin_links;
+		$this->admin_links		= array();
 		$menu_permissions		= admin_tools::HasPermission('Admin_Menu');
 
 
 		if( $menu_permissions ){
-			$page->admin_links[]		= common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
-			$page->admin_links[]		= common::Link('Admin_Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
+			$this->admin_links[]		= common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
+			$this->admin_links[]		= common::Link('Admin_Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
 
 			$q							= 'cmd=ToggleVisibility';
 			$label						= $langmessage['Visibility'].': '.$langmessage['Private'];
@@ -100,26 +99,27 @@ class special_display extends display{
 				$q						.= '&visibility=private';
 			}
 			$attrs						= array('title'=>$label,'data-cmd'=>'creq');
-			$page->admin_links[]		= common::Link($this->title,$label,$q,$attrs);
+			$this->admin_links[]		= common::Link($this->title,$label,$q,$attrs);
 		}
 		if( admin_tools::HasPermission('Admin_User') ){
-			$page->admin_links[] = common::Link('Admin_Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
+			$this->admin_links[] = common::Link('Admin_Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
 		}
 
-		$page->admin_links				= array_merge($page->admin_links, $admin_links);
+		$this->admin_links				= array_merge($this->admin_links, $admin_links);
+
+		return $this->admin_links;
 	}
 
 
-
-	function RenameForm(){
-		global $page,$gp_index;
+	public function RenameForm(){
+		global $gp_index;
 
 		includeFile('tool/Page_Rename.php');
 		$action = common::GetUrl($this->title);
 		gp_rename::RenameForm( $this->gp_index, $action );
 	}
 
-	function RenameFile(){
+	public function RenameFile(){
 		includeFile('tool/Page_Rename.php');
 		return gp_rename::RenamePage($this);
 	}
@@ -129,7 +129,7 @@ class special_display extends display{
 	 * Toggle the visibility of the current page
 	 *
 	 */
-	function ToggleVisibility(){
+	public function ToggleVisibility(){
 		$_REQUEST += array('visibility'=>'');
 		\gp\tool\Visibility::TogglePage($this, $_REQUEST['visibility']);
 	}
@@ -137,9 +137,8 @@ class special_display extends display{
 
 	/**
 	 *
-	 * @static
 	 */
-	static function GetScriptInfo(&$requested,$redirect=true){
+	public static function GetScriptInfo(&$requested,$redirect=true){
 		global $dataDir,$gp_index,$gp_titles;
 
 		$scripts['special_site_map']['script'] = '/include/special/special_map.php';
@@ -194,7 +193,7 @@ class special_display extends display{
 	}
 
 
-	static function ExecInfo($scriptinfo){
+	public static function ExecInfo($scriptinfo){
 		global $dataDir;
 
 		ob_start();
@@ -203,7 +202,7 @@ class special_display extends display{
 	}
 
 
-	function ExtraJS(){
+	public function ExtraJS(){
 		header('Content-type: application/javascript');
 		includeFile('tool/editing.php');
 

@@ -126,8 +126,6 @@ class editing_page extends display{
 			$this->PageMsg();
 		}
 
-		$this->AdminLinks();
-
 		$this->contentBuffer = $this->GenerateContent_Admin();
 	}
 
@@ -265,7 +263,7 @@ class editing_page extends display{
 		}
 
 
-		$this->admin_links		= array_merge($this->admin_links, $admin_links);
+		return array_merge($this->admin_links, $admin_links);
 	}
 
 

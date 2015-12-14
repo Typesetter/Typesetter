@@ -1618,9 +1618,6 @@ class admin_menu_new extends admin_menu_tools{
 		echo '<p>';
 		echo '<button type="submit" name="cmd" value="%s" class="gpsubmit gpvalidate" data-cmd="gppost">%s</button>';
 		echo '<button class="admin_box_close gpcancel">'.$langmessage['cancel'].'</button>';
-		if( isset($_GET['redir']) ){
-			echo '<input type="hidden" name="redir" value="redir" />';
-		}
 		echo '</p>';
 		echo '</td></tr>';
 		echo '</tbody>';
@@ -1641,8 +1638,12 @@ class admin_menu_new extends admin_menu_tools{
 
 
 		echo '<form action="'.$this->GetUrl('Admin_Menu').'" method="post">';
-		echo '<table class="bordered full_width">';
+		if( isset($_GET['redir']) ){
+			echo '<input type="hidden" name="redir" value="redir" />';
+		}
 
+
+		echo '<table class="bordered full_width">';
 		echo '<tr><th colspan="2">'.$langmessage['options'].'</th></tr>';
 
 		//title
@@ -1959,16 +1960,19 @@ class admin_menu_new extends admin_menu_tools{
 	 *
 	 */
 	public function HiddenSaved($new_index){
-		global $langmessage;
+		global $langmessage, $page;
 
-		msg($langmessage['SAVED']);
 		$this->search_page = 0; //take user back to first page where the new page will be displayed
 
 		if( isset($_REQUEST['redir']) ){
 			$title	= common::IndexToTitle($new_index);
 			$url	= common::AbsoluteUrl($title,'',true,false);
-			$page->ajaxReplace[] = array('location',$url,0);
+			msg(sprintf($langmessage['will_redirect'],common::Link_Page($title)));
+			$page->ajaxReplace[] = array('location',$url,15000);
+		}else{
+			msg($langmessage['SAVED']);
 		}
+
 
 	}
 

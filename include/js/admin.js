@@ -610,7 +610,7 @@ $(function(){
 		var scrollbar_width = getScrollbarWidth();
 		var toolbar_height	= $toolbar.height();
 
-		$('html').css({'height':'100%','overflow':'hidden','margin-right':scrollbar_width,'transform':'translate(0,'+toolbar_height+'px)'});
+		$('html').css({'height':'100%','overflow':'hidden','margin-right':scrollbar_width,'transform':'translateY('+toolbar_height+'px)'});
 		$('body').css({'height':'100%','overflow':'auto','margin-right':-scrollbar_width});
 		$toolbar.css({'margin-right':-scrollbar_width});
 	}

@@ -1,11 +1,17 @@
 
 html{
-	margin-top:@gp_nav_height;
+	transform:translate(0,@gp_nav_height);
+	overflow:hidden;
 	}
+
+body.gpAdmin{
+	overflow:auto;
+	}
+
 
 body.gpAdmin #admincontent_panel{
 	position:fixed;
-	top:0;
+	top:-@gp_nav_height;
 	left:0;
 	right:0;
 	height:@gp_nav_height;

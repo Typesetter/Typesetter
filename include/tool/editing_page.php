@@ -120,33 +120,11 @@ class editing_page extends display{
 	 *
 	 */
 	public function DefaultDisplay(){
-
-		//notify user we're using a draft
-		//if( $this->draft_exists ){
-		//	$this->PageMsg();
-		//}
-
 		$this->contentBuffer = $this->GenerateContent_Admin();
 	}
 
 
-	/**
-	 * Display message about the page
-	 * If it's a draft, append info links
-	 *
-	 */
 	public function PageMsg($message = ''){
-		global $langmessage;
-
-		/*if( $this->draft_exists ){
-			$message	.= '<span class="msg_buttons">';
-			$message	.= common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq', 'class'=>'msg_publish_draft'));
-			$message	.= common::Link($this->title,$langmessage['Discard Draft'],'cmd=DiscardDraft',array('data-cmd'=>'creq', 'class'=>'msg_discard_draft'));
-			$message	.= common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox','class'=>'msg_view_history'));
-			$message	.= '</span>';
-		}
-		*/
-
 		msg($message);
 	}
 
@@ -530,7 +508,7 @@ class editing_page extends display{
 		}
 
 		$this->ajaxReplace[] = array('ck_saved','','');
-		$this->PageMsg($langmessage['SAVED']);
+		msg($langmessage['SAVED']);
 
 
 		//update gallery info
@@ -579,7 +557,7 @@ class editing_page extends display{
 		}
 
 		$this->ajaxReplace[] = array('ck_saved','','');
-		$this->PageMsg($langmessage['SAVED']);
+		msg($langmessage['SAVED']);
 
 
 		//update gallery information

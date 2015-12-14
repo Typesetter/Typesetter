@@ -730,12 +730,15 @@ class editing_page extends display{
 		//checkbox used for new pages
 		if( $checkbox ){
 
+
 			if( count($types) > 1 ){
 				$q		= array('types' => $types,'wrapper_class'=>$wrapper_class);
 				$q		= json_encode($q);
 			}else{
 				$q		= $type;
 			}
+
+			$id		= 'checkbox_'.md5($q);
 
 			//checked
 			$checked = '';
@@ -746,7 +749,6 @@ class editing_page extends display{
 				$fi++;
 			}
 
-			$id		= 'checkbox_'.md5($q);
 			echo '<div>';
 			echo '<input name="content_type" type="radio" value="'.htmlspecialchars($q).'" id="'.$id.'" required '.$checked.' />';
 			echo '<label for="'.$id.'">';

@@ -434,7 +434,7 @@ class admin_tools{
 			return;
 		}
 
-		echo '<div id="admincontent_panel" class="toolbar">';
+		echo '<div id="admincontent_panel" class="fixed toolbar">';
 		echo '<ul>';
 
 

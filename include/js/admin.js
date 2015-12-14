@@ -575,6 +575,10 @@ $(function(){
 
 	$('body').addClass('gpAdmin');
 
+	window.setTimeout(function(){
+		EditOutlines();
+		UIEffects();
+	},1);
 
 
 	/**

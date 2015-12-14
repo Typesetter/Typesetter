@@ -738,17 +738,17 @@ class editing_page extends display{
 				$q		= $type;
 			}
 
-			$id		= 'checkbox_'.md5($q);
 
 			//checked
 			$checked = '';
-			if( isset($_REQUEST['content_type']) && $_REQUEST['content_type'] == $id ){
+			if( isset($_REQUEST['content_type']) && $_REQUEST['content_type'] == $q ){
 				$checked = ' checked';
 			}elseif( empty($_REQUEST['content_type']) && $fi === 0 ){
 				$checked = ' checked';
 				$fi++;
 			}
 
+			$id		= 'checkbox_'.md5($q);
 			echo '<div>';
 			echo '<input name="content_type" type="radio" value="'.htmlspecialchars($q).'" id="'.$id.'" required '.$checked.' />';
 			echo '<label for="'.$id.'">';

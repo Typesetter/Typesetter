@@ -1611,6 +1611,7 @@ class admin_menu_new extends admin_menu_tools{
 
 		includeFile('tool/editing_page.php');
 		$_REQUEST += array('title'=>'');
+		$_REQUEST['gpx_content'] = 'gpabox';
 
 		//reusable format
 		ob_start();
@@ -2791,6 +2792,12 @@ class admin_menu_new extends admin_menu_tools{
 		global $gp_index, $gp_titles, $page, $langmessage;
 
 		$this->CacheSettings();
+
+		if( !isset($_POST['from_title']) ){
+			$this->AddHidden();
+			msg($langmessage['OOPS'].' (Copy from not selected)');
+			return false;
+		}
 
 		//existing page info
 		$from_title = $_POST['from_title'];

@@ -595,12 +595,17 @@ $(function(){
 	$gp.links.expand = function(){
 
 		var list	= $(this).siblings('ul');
+
+		if( list.css('display') == 'block' ){
+			return;
+		}
+
 		list.css('display','block');
 
-		$(document).on('click.link-expand',function(evt){
+		$(document).one('click',function(evt){
 			list.css('display','');
-			$(document).off('click.link-expand');
 		});
+
 	}
 
 

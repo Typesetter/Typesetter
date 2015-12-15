@@ -32,16 +32,32 @@ class gp_combine{
 
 				//jquery
 				'jquery'	=> array(	'file'			=> '/include/thirdparty/js/jquery.js',
-										'package'		=> 'jquery'),
+										'package'		=> 'jquery',
+										'cdn'			=> array(
+															'BootstrapCDN'	=> '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js',
+															),
+
+										),
 
 
 				//jquery ui core
 				'ui-theme'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/jquery-ui.min.css',
 										'type'			=> 'css',
-										'package'		=> 'jquery_ui'),
+										'package'		=> 'jquery_ui',
+										'cdn'			=> array(
+															//'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/i18n/jquery-ui-i18n.min.js',
+															'Google'		=> '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css',
+															),
+										),
 
 				'ui-core'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/core.js',
-										'package'		=> 'jquery_ui'),
+										'package'		=> 'jquery_ui',
+										'cdn'			=> array(
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/i18n/jquery-ui-i18n.min.js',
+															'Google'		=> '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js',
+															),
+										),
 
 				'mouse'		=> array(	'file'			=> '/include/thirdparty/jquery_ui/mouse.js',
 										'requires'		=> 'ui-core,widget',
@@ -336,7 +352,12 @@ class gp_combine{
 
 				//fontawesome
 				'fontawesome'			=> array(
-										'file'			=> '/include/thirdparty/fontawesome/css/font-awesome.min.css'),
+										'file'			=> '/include/thirdparty/fontawesome/css/font-awesome.min.css',
+										'cdn'			=> array(
+															'BootstrapCDN'	=> '//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css',
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css',
+															),
+										),
 
 		);
 

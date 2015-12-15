@@ -2012,7 +2012,7 @@ class gpOutput{
 			common::LoadComponents('gp-main');
 		}
 		//defaults
-		common::LoadComponents('jquery,gp-additional');
+		common::LoadComponents('jquery,gp-additional,fontawesome');
 
 		//get css and js info
 		includeFile('combine.php');

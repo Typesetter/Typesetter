@@ -332,6 +332,12 @@ class gp_combine{
 				'bootstrap3-transition' => array(
 										'file'			=> '/include/thirdparty/Bootstrap3/js/transition.js',
 										'package'		=> 'bootstrap3'),
+
+
+				//fontawesome
+				'fontawesome'			=> array(
+										'file'			=> '/include/thirdparty/fontawesome/css/font-awesome.min.css'),
+
 		);
 
 

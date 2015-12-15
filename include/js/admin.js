@@ -13,9 +13,9 @@ $gp.Coords = function(area){
 	if( area.hasClass('inner_size') ){
 		area = area.children(':first');
 	}
-	var loc = area.offset();
-	loc.w = area.outerWidth();
-	loc.h = area.outerHeight();
+	var loc	= area.offset();
+	loc.w	= area.outerWidth();
+	loc.h	= area.outerHeight();
 	return loc;
 };
 
@@ -575,45 +575,6 @@ $(function(){
 
 	$('body').addClass('gpAdmin');
 
-	/**
-	 * Setup Admin Scrolling
-	 *
-	 */
-	var $toolbar = $('#admincontent_panel.fixed');
-	if( $toolbar.length ){
-
-		function getScrollbarWidth() {
-			var outer = document.createElement("div");
-			outer.style.visibility = "hidden";
-			outer.style.width = "100px";
-			outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
-
-			document.body.appendChild(outer);
-
-			var widthNoScroll = outer.offsetWidth;
-			// force scrollbars
-			outer.style.overflow = "scroll";
-
-			// add innerdiv
-			var inner = document.createElement("div");
-			inner.style.width = "100%";
-			outer.appendChild(inner);
-
-			var widthWithScroll = inner.offsetWidth;
-
-			// remove divs
-			outer.parentNode.removeChild(outer);
-
-			return widthNoScroll - widthWithScroll;
-		}
-
-		var scrollbar_width = getScrollbarWidth();
-		var toolbar_height	= $toolbar.height();
-
-		$('html').css({'height':'100%','overflow':'hidden','margin-right':scrollbar_width,'transform':'translateY('+toolbar_height+'px)'});
-		$('body').css({'height':'100%','overflow':'auto','margin-right':-scrollbar_width});
-		$toolbar.css({'margin-right':-scrollbar_width});
-	}
 
 
 	window.setTimeout(function(){
@@ -631,6 +592,18 @@ $(function(){
 	});
 
 
+	$gp.links.expand = function(){
+
+		var list	= $(this).siblings('ul');
+		list.css('display','block');
+
+		$(document).on('click.link-expand',function(evt){
+			list.css('display','');
+			$(document).off('click.link-expand');
+		});
+	}
+
+
 	/**
 	 * Populate the editable areas section of "Current Page" on hover
 	 * Links are listed in order that they appear in the DOM
@@ -646,14 +619,9 @@ $(function(){
 			AddEditableLinks(list);
 		}
 
-		list.css('display','block');
-
-		$(document).on('click.editable_list',function(evt){
-			list.css('display','');
-			$(document).off('.editable_list');
-		});
-
+		$gp.links.expand.call(this);
 	}
+
 
 	function AddEditableLinks(list){
 
@@ -970,12 +938,13 @@ $(function(){
 			fixed_pos	= true;
 			var left	= evt.pageX-$gp.$win.scrollLeft();
 			var diff	= left + lnk_span.width() - $gp.$win.width();
+			var top		= evt.pageY - $gp.$win.scrollTop();
 
 			if( diff > 0 ){
 				left -= diff;
 			}
 
-			lnk_span.stop(true,true).css({'top':(evt.pageY-$gp.$win.scrollTop()),'left':left,'right':'auto','position':'fixed'});
+			lnk_span.stop(true,true).css({'top':top,'left':left,'right':'auto','position':'fixed'});
 		}
 
 

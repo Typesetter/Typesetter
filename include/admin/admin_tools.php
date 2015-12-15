@@ -437,41 +437,57 @@ class admin_tools{
 		echo '<div id="admincontent_panel" class="fixed toolbar">';
 		echo '<ul>';
 
+		//current page
+		echo '<li><b>'.$langmessage['Current Page'].':</b></li>';
+
 
 		//editable areaas
 		echo '<li><a data-cmd="editable_list">'.$langmessage['Editable Areas'].'</a></li>';
 
-		//current page
-		echo '<li><b>'.$langmessage['Current Page'].':</b></li>';
-
 		//admin_link
-		foreach($links as $label => $link){
-			echo '<li>';
-
-				if( is_array($link) ){
-					echo call_user_func_array(array('common','Link'),$link); /* preferred */
-
-				}elseif( is_numeric($label) ){
-					echo $link; //just a text label
-
-				}elseif( empty($link) ){
-					echo '<span>';
-					echo $label;
-					echo '</span>';
-
-				}else{
-					echo '<a href="'.$link.'">';
-					echo $label;
-					echo '</a>';
-				}
-
-			echo '</li>';
-		}
-
+		self::FormatAdminLinks($links);
 
 		echo '</ul>';
 		echo '</div>';
 	}
+
+	public static function FormatAdminLinks($links){
+		foreach($links as $label => $link){
+			echo '<li>';
+
+			if( is_numeric($label) ){
+
+				if( is_array($link) ){
+					echo call_user_func_array(array('common','Link'),$link); /* preferred */
+				}else{
+					echo $link; //just a text label
+				}
+				echo '<li>';
+				continue;
+			}
+
+
+			if( empty($link) ){
+				echo '<span>';
+				echo $label;
+				echo '</span>';
+
+			}elseif( is_array($link) ){
+				echo '<a data-cmd="expand">'.$label.'</a>';
+				echo '<ul>';
+				self::FormatAdminLinks($link);
+				echo '</ul>';
+
+			}else{
+				echo '<a href="'.$link.'">';
+				echo $label;
+				echo '</a>';
+			}
+
+			echo '</li>';
+		}
+	}
+
 
 
 	/**

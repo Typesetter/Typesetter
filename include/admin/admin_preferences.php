@@ -2,7 +2,6 @@
 defined('is_running') or die('Not an entry point...');
 
 includeFile('admin/admin_users.php');
-includeFile('admin/admin_configuration.php');
 
 
 class admin_preferences extends admin_users{
@@ -147,7 +146,7 @@ class admin_preferences extends admin_users{
 		echo '<tr><td>';
 		echo $langmessage['context menu'];
 		echo '</td><td>';
-		admin_configuration::formSelect('gpui_ctx',$this->variables['gpui_ctx'],$array['gpui_ctx']);
+		\gp\admin\Configuration::formSelect('gpui_ctx',$this->variables['gpui_ctx'],$array['gpui_ctx']);
 		echo '</td></tr>';
 
 

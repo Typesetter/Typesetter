@@ -175,8 +175,7 @@ class admin_tools{
 		 * Settings
 		 *
 		 */
-		$scripts['Admin_Configuration']['script'] = '/include/admin/admin_configuration.php';
-		$scripts['Admin_Configuration']['class'] = 'admin_configuration';
+		$scripts['Admin_Configuration']['class'] = '\gp\admin\Configuration';
 		$scripts['Admin_Configuration']['label'] = $langmessage['configuration'];
 		$scripts['Admin_Configuration']['group'] = 'settings';
 		//$scripts['Admin_Configuration']['popup'] = true;

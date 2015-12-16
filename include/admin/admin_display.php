@@ -187,8 +187,8 @@ class admin_display extends display{
 				}
 
 				message($langmessage['not_permitted']);
-				break;
-
+				$this->AdminPanel();
+				return;
 			}
 
 

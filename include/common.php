@@ -1479,18 +1479,13 @@ class common{
 				'passhash'			=> 'sha1',
 				'hooks'				=> array(),
 				'space_char'		=> '_',			//4.6
+				'cdn'				=> '',
 				);
 
 
 		//cdn settings
-		if( isset($config['jquery']) ){
-			if( $config['jquery'] == 'jquery_ui' ){
-				$config['cdn_jquery']   = 'Google';
-				$config['cdn_ui-core']  = 'Google';
-				$config['cdn_ui-theme']  = 'Google';
-			}elseif( $config['jquery'] = 'jquery' ){
-				$config['cdn_jquery']   = 'Google';
-			}
+		if( isset($config['jquery']) && $config['jquery'] != 'local' ){
+			$config['cdn']   = 'CloudFlare';
 			unset($config['jquery']);
 		}
 

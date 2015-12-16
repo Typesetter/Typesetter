@@ -99,7 +99,7 @@ class Configuration{
 	 * Save the posted configuration
 	 *
 	 */
-	private function SaveConfig(){
+	protected function SaveConfig(){
 		global $config, $langmessage;
 
 
@@ -353,6 +353,19 @@ class Configuration{
 		echo '</table>';
 
 
+		$this->SaveButtons();
+		echo '</form>';
+	}
+
+
+	/**
+	 * Display Save buttons
+	 *
+	 */
+	protected function SaveButtons(){
+		global $langmessage;
+
+
 		echo '<div style="margin:1em 0">';
 		echo '<input type="hidden" name="cmd" value="save_config" />';
 
@@ -372,7 +385,6 @@ class Configuration{
 		echo \common::Link('Admin_Preferences',$langmessage['Preferences'],'','data-cmd="gpabox"');
 		echo '</p>';
 
-		echo '</form>';
 	}
 
 

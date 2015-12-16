@@ -2296,19 +2296,19 @@ class gpOutput{
 	static function GetHead_CDN($type,$scripts){
 		global $config;
 
+		if( empty($config['cdn']) ){
+			return $scripts;
+		}
+
+		$cdn = $config['cdn'];
+
 		foreach($scripts as $key => $script_info){
 
 			if( !isset($script_info['cdn']) ){
 				continue;
 			}
 
-			$config_key					= 'cdn_'.$key;
-			if( empty($config[$config_key]) ){
-				continue;
-			}
-
-			$config_val					= $config[$config_key];
-			$cdn_url					= $script_info['cdn'][$config_val];
+			$cdn_url					= $script_info['cdn'][$cdn];
 
 			unset($scripts[$key]);
 

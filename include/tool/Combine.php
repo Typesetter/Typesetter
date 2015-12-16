@@ -37,8 +37,8 @@ class Combine{
 				'jquery'	=> array(	'file'			=> '/include/thirdparty/js/jquery.js',
 										'package'		=> 'jquery',
 										'cdn'			=> array(
-															'Google'		=> '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
 															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js',
+															'Google'		=> '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
 															),
 
 										),
@@ -357,7 +357,6 @@ class Combine{
 				'fontawesome'			=> array(
 										'file'			=> '/include/thirdparty/fontawesome/css/font-awesome.min.css',
 										'cdn'			=> array(
-															'BootstrapCDN'	=> '//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css',
 															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css',
 															),
 										),

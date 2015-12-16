@@ -10,17 +10,14 @@ class CDN extends \gp\admin\Configuration{
 	public function __construct(){
 		global $langmessage;
 
-		$langmessage['cdn_jquery']						= 'jQuery';
-		$langmessage['cdn_ui-core']						= 'jQuery UI';
-		$langmessage['cdn_ui-theme']					= 'jQuery UI CSS';
-		$langmessage['cdn_fontawesome']					= 'Font Awesome';
+		$langmessage['jquery']						= 'jQuery';
+		$langmessage['ui-core']						= 'jQuery UI';
+		$langmessage['ui-theme']					= 'jQuery UI CSS';
+		$langmessage['fontawesome']					= 'Font Awesome';
 
 		$this->variables = array(
 						'CDN'					=> false,
-						'cdn_jquery'			=> null,
-						'cdn_ui-core'			=> null,
-						'cdn_ui-theme'			=> null,
-						'cdn_fontawesome'		=> null,
+						'cdn'
 						);
 
 
@@ -37,35 +34,89 @@ class CDN extends \gp\admin\Configuration{
 
 
 	/**
-	 * Get possible configuration values
+	 * Get possible cdn values
 	 *
 	 */
 	protected function getPossible(){
-		global $dataDir,$langmessage;
+		global $langmessage;
 
-		$possible = $this->variables;
+		$possible			= array();
+		$possible['cdn']	= array();
 
-
-		//CDN
 		foreach(\gp\tool\Combine::$scripts as $key => $script_info){
+
 			if( !isset($script_info['cdn']) ){
 				continue;
 			}
 
-			$config_key              = 'cdn_'.$key;
+			foreach($script_info['cdn'] as $cdn => $url){
+				$possible['cdn'][] = $cdn;
+			}
+		}
+		$possible['cdn']		= array_combine($possible['cdn'],$possible['cdn']);
+		$possible['cdn']['']	= $langmessage['None'];
 
-			if( !array_key_exists($config_key, $possible) ){
+		return $possible;
+	}
+
+
+	/**
+	 * Show CDN Options
+	 *
+	 */
+	protected function ShowForm(){
+		global $page, $langmessage, $config;
+
+		$possible	= $this->getPossible();
+
+		echo '<form action="'.\common::GetUrl($page->requested).'" method="post">';
+		echo '<h2>CDN</h2>';
+
+
+		echo '<table class="bordered"><tr><td></td>';
+		foreach($possible['cdn'] as $cdn_val => $cdn){
+
+			$checked = ( $cdn_val === $config['cdn'] ) ? 'checked' : '';
+
+
+			echo '<td>';
+			echo '<label class="all_checkbox">';
+			echo '<input type="radio" name="cdn" value="'.$cdn_val.'" '.$checked.'/>';
+			echo '<span>'.$cdn.'</span>';
+			echo '</label> ';
+			echo '</td>';
+		}
+		echo '</tr>';
+
+
+		//display which scripts can be served bythe cdn
+		foreach(\gp\tool\Combine::$scripts as $key => $script_info){
+
+			if( !isset($script_info['cdn']) ){
 				continue;
 			}
 
-			$opts                     = array_keys($script_info['cdn']);
-			$possible[$config_key]    = array_combine($opts, $opts);
-			array_unshift($possible[$config_key],$langmessage['None']);
+			$config_key					= 'cdn_'.$key;
+
+			echo '<tr><td>';
+			echo $langmessage[$key];
+			echo '</td>';
+
+			foreach($possible['cdn'] as $cdn){
+				echo '<td class="text-center">';
+				if( isset($script_info['cdn'][$cdn]) ){
+					echo '<i class="fa fa-check"></i>';
+				}
+				echo '</td>';
+			}
+
+			echo '</tr>';
 		}
 
-		gpSettingsOverride('configuration',$possible);
 
-		return $possible;
+		echo '</table>';
+		$this->SaveButtons();
+		echo '</form>';
 	}
 
 }

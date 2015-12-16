@@ -18,20 +18,7 @@ class admin_display extends display{
 
 		$this->requested	= str_replace(' ','_',$title);
 		$scripts			= admin_tools::AdminScripts();
-
-		$pos = strpos($title,'/');
-		if( $pos > 0 ){
-			$title = substr($title,0,$pos);
-		}
-		$this->title		= $title;
-
-
-		if( isset($scripts[$title]) && isset($scripts[$title]['label']) ){
-			$this->label = $scripts[$title]['label'];
-		}else{
-			//$this->label = str_replace('_',' ',$title);
-			$this->label = $langmessage['administration'];
-		}
+		$this->label		= $langmessage['administration'];
 
 		$this->head .= "\n".'<meta name="robots" content="noindex,nofollow" />';
 		@header( 'X-Frame-Options: SAMEORIGIN' );
@@ -125,10 +112,31 @@ class admin_display extends display{
 		echo common::Link('Admin',$langmessage['administration']);
 
 
-		if( !empty($this->title) && !empty($this->label) && $this->label != $langmessage['administration'] ){
+
+		$parts			= explode('/',$this->requested);
+		$scripts		= admin_tools::AdminScripts();
+		$crumbs			= array();
+		do{
+			$crumb_part	= implode('/',$parts);
+			if( isset($scripts[$crumb_part]) ){
+				$crumbs[$crumb_part] = $scripts[$crumb_part]['label'];
+			}
+		}while(array_pop($parts));
+
+
+		//page label
+		$this->label = implode('  &#171; ', $crumbs);
+
+
+		//add to breadcrumbs
+		$crumbs = array_reverse($crumbs);
+		foreach($crumbs as $slug => $label){
 			echo ' &#187; ';
-			echo common::Link($this->title,$this->label);
+			echo common::Link($slug,$label);
 		}
+
+
+
 		echo '</div>';
 	}
 

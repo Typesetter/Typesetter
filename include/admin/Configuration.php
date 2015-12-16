@@ -9,7 +9,7 @@ includeFile('tool/email_mailer.php');
 
 class Configuration{
 
-	private $variables;
+	protected $variables;
 
 	public function __construct(){
 		global $langmessage,$page;
@@ -60,14 +60,6 @@ class Configuration{
 						'etag_headers'			=> 'boolean',
 						'resize_images'			=> 'boolean',
 						'space_char'			=> array('_'=>'Undersorce "_"','-'=>'Dash "-"'),
-
-						'CDN'					=> false,
-						'cdn_jquery'			=> null,
-						'cdn_ui-core'			=> null,
-						'cdn_ui-theme'			=> null,
-						'cdn_fontawesome'		=> null,
-
-
 
 
 						/* Contact Configuration */
@@ -184,7 +176,7 @@ class Configuration{
 	 * Get possible configuration values
 	 *
 	 */
-	private function getPossible(){
+	protected function getPossible(){
 		global $dataDir,$langmessage;
 
 		$possible = $this->variables;
@@ -288,13 +280,12 @@ class Configuration{
 	 *
 	 */
 	protected function showForm(){
-		global $langmessage;
-		$possible_values = $this->getPossible();
+		global $langmessage, $page;
 
+		$possible_values	= $this->getPossible();
+		$array				= $this->getValues();
 
-		$array = $this->getValues();
-
-		echo '<form action="'.\common::GetUrl('Admin_Configuration').'" method="post">';
+		echo '<form action="'.\common::GetUrl($page->requested).'" method="post">';
 
 
 

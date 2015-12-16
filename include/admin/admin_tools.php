@@ -179,6 +179,10 @@ class admin_tools{
 		$scripts['Admin/Configuration']['label'] = $langmessage['configuration'];
 		$scripts['Admin/Configuration']['group'] = 'settings';
 
+		$scripts['Admin/Configuration/CDN']['class'] = '\gp\admin\Configuration\CDN';
+		$scripts['Admin/Configuration/CDN']['label'] = 'CDN';
+		$scripts['Admin/Configuration/CDN']['group'] = 'settings';
+
 
 		$scripts['Admin_Users']['script'] = '/include/admin/admin_users.php';
 		$scripts['Admin_Users']['class'] = 'admin_users';

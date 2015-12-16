@@ -178,7 +178,6 @@ class admin_tools{
 		$scripts['Admin_Configuration']['class'] = '\gp\admin\Configuration';
 		$scripts['Admin_Configuration']['label'] = $langmessage['configuration'];
 		$scripts['Admin_Configuration']['group'] = 'settings';
-		//$scripts['Admin_Configuration']['popup'] = true;
 
 
 		$scripts['Admin_Users']['script'] = '/include/admin/admin_users.php';

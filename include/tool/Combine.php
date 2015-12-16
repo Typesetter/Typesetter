@@ -37,7 +37,7 @@ class Combine{
 				'jquery'	=> array(	'file'			=> '/include/thirdparty/js/jquery.js',
 										'package'		=> 'jquery',
 										'cdn'			=> array(
-															'BootstrapCDN'	=> '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
+															'Google'		=> '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
 															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js',
 															),
 
@@ -57,7 +57,7 @@ class Combine{
 				'ui-core'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/core.js',
 										'package'		=> 'jquery_ui',
 										'cdn'			=> array(
-															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/i18n/jquery-ui-i18n.min.js',
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js',
 															'Google'		=> '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js',
 															),
 										),

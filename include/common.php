@@ -1473,7 +1473,6 @@ class common{
 				'auto_redir'		=> 90,			//2.5
 				'history_limit'		=> min(gp_backup_limit,30),
 				'resize_images'		=> true,		//3.5
-				'jquery'			=> 'local',
 				'addons'			=> array(),
 				'themes'			=> array(),
 				'gadgets'			=> array(),
@@ -1481,6 +1480,20 @@ class common{
 				'hooks'				=> array(),
 				'space_char'		=> '_',			//4.6
 				);
+
+
+		//cdn settings
+		if( isset($config['jquery']) ){
+			if( $config['jquery'] == 'jquery_ui' ){
+				$config['cdn_jquery']   = 'Google';
+				$config['cdn_ui-core']  = 'Google';
+				$config['cdn_ui-theme']  = 'Google';
+			}elseif( $config['jquery'] = 'jquery' ){
+				$config['cdn_jquery']   = 'Google';
+			}
+			unset($config['jquery']);
+		}
+
 
 		//shahash deprecated 4.0
 		if( isset($config['shahash']) && !$config['shahash'] ){

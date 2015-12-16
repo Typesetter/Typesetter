@@ -2214,36 +2214,16 @@ class gpOutput{
 	static function GetHead_JS($scripts){
 		global $page, $config;
 
-		$placeholder = '<!-- jquery_placeholder '.gp_random.' -->';
+		$combine		= $config['combinejs'] && !common::loggedIn() && ($page->pagetype !== 'admin_display');
+		$scripts		= self::GetHead_CDN('js',$scripts);
 
-		$keys_before = array_keys($scripts);
-		$combine = $config['combinejs'] && !common::loggedIn() && ($page->pagetype !== 'admin_display');
 
-		//just jQuery
-		if( !count($page->head_js) && count($scripts) < 2 ){
-			echo $placeholder;
+		//just local jquery
+		if( !count($page->head_js) && count($scripts) === 1 && isset($scripts['jquery']) ){
+			echo '<!-- jquery_placeholder '.gp_random.' -->';
 			return;
 		}
 
-		//remote jquery
-		if( $config['jquery'] != 'local' ){
-			echo $placeholder;
-			unset($scripts['jquery']);
-		}
-
-		//jquery ui
-		if( $config['jquery'] == 'jquery_ui' ){
-			$has_jquery_ui = false;
-			foreach($scripts as $key => $script){
-				if( isset($script['package']) && $script['package'] == 'jquery_ui' ){
-					$has_jquery_ui = true;
-					unset($scripts[$key]);
-				}
-			}
-			if( $has_jquery_ui ){
-				echo "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js\"></script>";
-			}
-		}
 
 		if( !$combine || $page->head_force_inline ){
 			echo "\n<script type=\"text/javascript\">";
@@ -2268,11 +2248,8 @@ class gpOutput{
 	static function GetHead_CSS($scripts){
 		global $page, $config, $dataDir;
 
-		//remote jquery ui
-		if( $config['jquery'] == 'jquery_ui' && isset($scripts['ui-theme']) ){
-			echo "\n<link rel=\"stylesheet\" type=\"text/css\" href=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css\" />";
-			unset($scripts['ui-theme']);
-		}
+		$scripts = self::GetHead_CDN('css',$scripts);
+
 
 		if( isset($page->css_user) && is_array($page->css_user) ){
 			$scripts = array_merge($scripts,$page->css_user);
@@ -2309,6 +2286,40 @@ class gpOutput{
 		}
 
 		gpOutput::CombineFiles($scripts,'css',$config['combinecss']);
+	}
+
+
+	/**
+	 * Add CDN hosted resources to the page
+	 *
+	 */
+	static function GetHead_CDN($type,$scripts){
+		global $config;
+
+		foreach($scripts as $key => $script_info){
+
+			if( !isset($script_info['cdn']) ){
+				continue;
+			}
+
+			$config_key					= 'cdn_'.$key;
+			if( empty($config[$config_key]) ){
+				continue;
+			}
+
+			$config_val					= $config[$config_key];
+			$cdn_url					= $script_info['cdn'][$config_val];
+
+			unset($scripts[$key]);
+
+			if( $type == 'css' ){
+				echo "\n".'<link rel="stylesheet" type="text/css" href="'.$cdn_url.'" />';
+			}else{
+				echo "\n".'<script type="text/javascript" src="'.$cdn_url.'"></script>';
+			}
+		}
+
+		return $scripts;
 	}
 
 
@@ -2479,11 +2490,7 @@ class gpOutput{
 		$placeholder = '<!-- jquery_placeholder '.gp_random.' -->';
 		$replacement = '';
 		if( strpos($gp_head_content,'<script') !== false || strpos($buffer,'<script') !== false ){
-			if( $config['jquery'] != 'local' ){
-				$replacement = "\n<script type=\"text/javascript\" src=\"//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>";
-			}else{
-				$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/js/jquery.js')."\"></script>";
-			}
+			$replacement = "\n<script type=\"text/javascript\" src=\"".common::GetDir('/include/thirdparty/js/jquery.js')."\"></script>";
 		}
 
 		$replacements[$placeholder]	= $replacement;

@@ -598,6 +598,13 @@ class gpsession{
 			$html_doc = false;
 		}
 
+
+		//add $gp_admin_html to the document
+		$pos_body = strpos($buffer,'</body');
+		if( $html_doc && $pos_body ){
+			$buffer = substr_replace($buffer,"\n<div id=\"gp_admin_html\">".$gp_admin_html.gpOutput::$editlinks."</div><div id=\"gp_admin_fixed\"></div>\n",$pos_body,0);
+		}
+
 		// Add a generic admin nonce field to each post form
 		// Admin nonces are also added with javascript if needed
 		$count = preg_match_all('#<form[^<>]*method=[\'"]post[\'"][^<>]*>#i',$buffer,$matches);
@@ -621,12 +628,6 @@ class gpsession{
 			}
 		}
 
-
-		//add $gp_admin_html to the document
-		$pos_body = strpos($buffer,'</body');
-		if( $html_doc && $pos_body ){
-			$buffer = substr_replace($buffer,"\n<div id=\"gp_admin_html\">".$gp_admin_html.gpOutput::$editlinks."</div><div id=\"gp_admin_fixed\"></div>\n",$pos_body,0);
-		}
 
 		return $buffer;
 	}

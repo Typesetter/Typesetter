@@ -128,11 +128,8 @@ class admin_preferences extends admin_users{
 		echo '<h2>'.$langmessage['Preferences'].'</h2>';
 
 		echo '<form action="'.common::GetUrl('Admin_Preferences').'" method="post">';
-		echo '<div class="collapsible">';
-
-		echo '<h4 class="head"><a data-cmd="collapsible">'.$langmessage['general_settings'].'</a></h4>';
-		echo '<div>';
-		echo '<table class="bordered configuration">';
+		echo '<table class="bordered full_width">';
+		echo '<tr><th colspan="2">'.$langmessage['general_settings'].'</th></tr>';
 
 
 		//email
@@ -150,40 +147,36 @@ class admin_preferences extends admin_users{
 		echo '</td></tr>';
 
 
-		echo '</table>';
-		echo '</div>';
 
+		echo '<tr><th colspan="2">'.$langmessage['change_password'].'</th></tr>';
 
-		echo '<h4 class="head"><a data-cmd="collapsible">'.$langmessage['change_password'].'</a></h4>';
+		echo '<tr><td>';
+		echo $langmessage['old_password'];
+		echo '</td><td>';
+		echo '<input type="password" name="oldpassword" value="" class="gpinput"/>';
+		echo '</td></tr>';
 
-		echo '<div>';
-		echo '<table class="bordered configuration">';
 		echo '<tr><td>';
-			echo $langmessage['old_password'];
-			echo '</td><td>';
-			echo '<input type="password" name="oldpassword" value="" class="gpinput"/>';
-			echo '</td></tr>';
+		echo $langmessage['new_password'];
+		echo '</td><td>';
+		echo '<input type="password" name="password" value="" class="gpinput"/>';
+		echo '</td></tr>';
+
 		echo '<tr><td>';
-			echo $langmessage['new_password'];
-			echo '</td><td>';
-			echo '<input type="password" name="password" value="" class="gpinput"/>';
-			echo '</td></tr>';
-		echo '<tr><td>';
-			echo $langmessage['repeat_password'];
-			echo '</td><td>';
-			echo '<input type="password" name="password1" value="" class="gpinput"/>';
-			echo '</td></tr>';
+		echo $langmessage['repeat_password'];
+		echo '</td><td>';
+		echo '<input type="password" name="password1" value="" class="gpinput"/>';
+		echo '</td></tr>';
 
 		$this->AlgoSelect();
 
 		echo '</table>';
-		echo '</div>';
 
-		echo '<p>';
+		echo '<div style="margin:1em 0">';
 		echo '<input type="hidden" name="cmd" value="changeprefs" />';
 		echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit"/>';
 		echo ' <input type="button" name="" value="'.$langmessage['cancel'].'" class="gpcancel"/>';
-		echo '</p>';
+		echo '</div>';
 
 		echo '<p class="admin_note">';
 		echo '<b>';

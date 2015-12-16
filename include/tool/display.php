@@ -53,10 +53,6 @@ class display{
 	public $css_user			= array();
 	public $css_admin			= array();
 
-
-	public $editable_content	= true;
-	public $editable_details	= true;
-
 	public function __construct($title, $type){
 		$this->title = $title;
 	}

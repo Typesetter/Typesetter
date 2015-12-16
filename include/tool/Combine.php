@@ -49,8 +49,8 @@ class Combine{
 										'type'			=> 'css',
 										'package'		=> 'jquery_ui',
 										'cdn'			=> array(
-															//'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/i18n/jquery-ui-i18n.min.js',
-															'Google'		=> '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css',
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/css/jquery-ui.min.css',
+															'Google'		=> '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.min.css',
 															),
 										),
 

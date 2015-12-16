@@ -1828,7 +1828,7 @@ class common{
 
 		if( $lower_title === 'admin' ){
 			return 'admin';
-		}elseif( strpos($lower_title,'admin_') === 0 ){
+		}elseif( strpos($lower_title,'admin_') === 0 || strpos($lower_title,'admin/') === 0 ){
 			return 'admin';
 		}
 

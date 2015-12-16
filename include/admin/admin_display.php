@@ -4,17 +4,15 @@ defined('is_running') or die('Not an entry point...');
 includeFile('admin/admin_tools.php');
 
 class admin_display extends display{
-	var $pagetype = 'admin_display';
-	var $requested = false;
 
-	var $editable_content = false;
-	var $editable_details = false;
+	public $pagetype				= 'admin_display';
+	public $requested				= false;
 
-	var $show_admin_content = true;
-	var $non_admin_content = '';
-	var $admin_html = '';
+	public $show_admin_content		= true;
+	public $non_admin_content		= '';
+	public $admin_html				= '';
 
-	function __construct($title){
+	public function __construct($title){
 		global $langmessage;
 
 
@@ -40,7 +38,7 @@ class admin_display extends display{
 	}
 
 
-	function RunScript(){
+	public function RunScript(){
 
 		ob_start();
 		$this->RunAdminScript();
@@ -55,7 +53,7 @@ class admin_display extends display{
 	}
 
 	//display admin area in full window
-	function FullDisplay(){
+	private function FullDisplay(){
 
 		if( common::RequestType() == 'template'
 			&& $this->show_admin_content
@@ -68,7 +66,7 @@ class admin_display extends display{
 
 
 	//called by templates
-	function GetContent(){
+	public function GetContent(){
 
 		$this->GetGpxContent();
 
@@ -85,7 +83,7 @@ class admin_display extends display{
 		echo '</div>';
 	}
 
-	function GetGpxContent($ajax = false){
+	public function GetGpxContent($ajax = false){
 		global $gp_admin_html;
 
 		if( empty($this->show_admin_content) ){
@@ -117,7 +115,7 @@ class admin_display extends display{
 		echo $admin_content;
 	}
 
-	function BreadCrumbs(){
+	private function BreadCrumbs(){
 		global $langmessage;
 
 		echo '<div id="admin_breadcrumbs" class="cf">';
@@ -139,7 +137,7 @@ class admin_display extends display{
 	 * Output toolbar for admin window
 	 *
 	 */
-	function AdminContentPanel(){
+	private function AdminContentPanel(){
 		global $langmessage;
 
 		echo '<div id="admincontent_panel" class="toolbar cf">';
@@ -161,40 +159,36 @@ class admin_display extends display{
 	 * Find the requested admin script and execute it if the user has permissions to view it
 	 *
 	 */
-	function RunAdminScript(){
+	private function RunAdminScript(){
 		global $dataDir,$langmessage;
 
+
+		if( strtolower($this->requested) == 'admin' ){
+			$this->AdminPanel();
+			return;
+		}
+
+
 		//resolve request for /Admin_Theme_Content if the request is for /Admin_Theme_Conent/1234
-		$parts = explode('/',$this->requested);
+		$parts			= explode('/',$this->requested);
+		$scripts		= admin_tools::AdminScripts();
+
 		do{
 
-			$request_string = implode('/',$parts);
-			$scriptinfo = false;
-			$scripts = admin_tools::AdminScripts();
+			$request_string	= implode('/',$parts);
 			if( isset($scripts[$request_string]) ){
 				$scriptinfo = $scripts[$request_string];
 				if( admin_tools::HasPermission($request_string) ){
 
-					admin_display::OrganizeFrequentScripts($request_string);
+					$this->OrganizeFrequentScripts($request_string);
 					gpOutput::ExecInfo($scriptinfo);
 
 					return;
-				}else{
-					message($langmessage['not_permitted']);
-					$parts = array();
 				}
-			}elseif( count($scripts) > 0 ){
 
-				//check case
-				$case_check = array_keys($scripts);
-				$case_check = array_combine($case_check, $case_check);
-				$case_check = array_change_key_case( $case_check, CASE_LOWER );
+				message($langmessage['not_permitted']);
+				break;
 
-				$lower = strtolower($request_string);
-				if( isset($case_check[$lower]) ){
-					$location = common::GetUrl($case_check[$lower],http_build_query($_GET),false);
-					common::Redirect($location);
-				}
 			}
 
 
@@ -226,9 +220,38 @@ class admin_display extends display{
 
 			}
 			array_pop($parts);
+
 		}while( count($parts) );
 
-		$this->AdminPanel();
+		$this->Redirect();
+	}
+
+
+	/**
+	 * Redirect admin request to the most similar page
+	 *
+	 */
+	function Redirect(){
+
+
+		//find similar
+		$scripts			= admin_tools::AdminScripts();
+		$scripts['Admin']	= array();
+		$similar			= array();
+		$lower_req			= strtolower($this->requested);
+
+		foreach($scripts as $key => $script_info){
+			$lower_key	= strtolower($key);
+
+			similar_text($lower_req,$lower_key,$percent);
+			$similar[$key] = $percent;
+		}
+
+		arsort($similar);
+
+		$redir_key		= key($similar);
+		$location		= common::GetUrl($redir_key,http_build_query($_GET),false);
+		common::Redirect($location);
 	}
 
 
@@ -236,7 +259,7 @@ class admin_display extends display{
 	 * Show the default admin page
 	 *
 	 */
-	function AdminPanel(){
+	private function AdminPanel(){
 		global $langmessage;
 
 		$cmd = common::GetCommand();
@@ -262,7 +285,11 @@ class admin_display extends display{
 	}
 
 
-	static function OrganizeFrequentScripts($page){
+	/**
+	 * Increment freq_scripts for $page and sort by counts
+	 *
+	 */
+	private function OrganizeFrequentScripts($page){
 		global $gpAdmin;
 
 		if( !isset($gpAdmin['freq_scripts']) ){
@@ -273,14 +300,19 @@ class admin_display extends display{
 		}else{
 			$gpAdmin['freq_scripts'][$page]++;
 			if( $gpAdmin['freq_scripts'][$page] >= 10 ){
-				admin_display::CleanFrequentScripts();
+				$this->CleanFrequentScripts();
 			}
 		}
 
 		arsort($gpAdmin['freq_scripts']);
 	}
 
-	static function CleanFrequentScripts(){
+
+	/**
+	 * Reduce the number of scripts in freq_scripts
+	 *
+	 */
+	private function CleanFrequentScripts(){
 		global $gpAdmin;
 
 		//reduce to length of 5;

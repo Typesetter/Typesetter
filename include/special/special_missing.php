@@ -220,7 +220,6 @@ class special_missing{
 		global $gp_index, $gp_titles;
 
 		$similar			= array();
-		$percent_similar	= array();
 		$lower				= str_replace(' ','_',strtolower($title));
 		$admin				= common::LoggedIn();
 

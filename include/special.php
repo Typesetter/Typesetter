@@ -6,9 +6,6 @@ class special_display extends display{
 	public $pagetype = 'special_display';
 	public $requested = false;
 
-	public $editable_content = false;
-	public $editable_details = false; //true; //could be true
-
 	public function __construct($title){
 
 		$this->requested	= $title;

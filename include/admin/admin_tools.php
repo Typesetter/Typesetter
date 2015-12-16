@@ -126,10 +126,7 @@ class admin_tools{
 		$scripts = array();
 
 
-		/**
-		 * Content
-		 *
-		 */
+		// Content
 		$scripts['Admin_Menu']['script'] = '/include/admin/admin_menu_new.php';
 		$scripts['Admin_Menu']['class'] = 'admin_menu_new';
 		$scripts['Admin_Menu']['label'] = $langmessage['file_manager'];
@@ -160,10 +157,8 @@ class admin_tools{
 		$scripts['Admin_Trash']['group'] = 'content';
 
 
-		/**
-		 * Appearance
-		 *
-		 */
+
+		// Appearance
 		$scripts['Admin_Theme_Content']['script'] = '/include/admin/admin_theme_content.php';
 		$scripts['Admin_Theme_Content']['class'] = 'admin_theme_content';
 		$scripts['Admin_Theme_Content']['label'] = $langmessage['Appearance'];
@@ -171,10 +166,7 @@ class admin_tools{
 
 
 
-		/**
-		 * Settings
-		 *
-		 */
+		// Settings
 		$scripts['Admin/Configuration']['class'] = '\gp\admin\Configuration';
 		$scripts['Admin/Configuration']['label'] = $langmessage['configuration'];
 		$scripts['Admin/Configuration']['group'] = 'settings';
@@ -219,38 +211,39 @@ class admin_tools{
 			$scripts += $config['admin_links'];
 		}
 
+
+
+
+
+		// Tools
 		$scripts['Admin_Port']['script'] = '/include/admin/admin_port.php';
 		$scripts['Admin_Port']['class'] = 'admin_port';
-		//$scripts['Admin_Port']['label'] = $langmessage['Import/Export'];
 		$scripts['Admin_Port']['label'] = $langmessage['Export'];
-		$scripts['Admin_Port']['group'] = 'settings';
+		$scripts['Admin_Port']['group'] = 'tools';
 		$scripts['Admin_Port']['method'] = 'RunScript';
-
 
 
 		$scripts['Admin_Status']['script'] = '/include/admin/admin_rm.php';
 		$scripts['Admin_Status']['class'] = 'admin_status';
 		$scripts['Admin_Status']['label'] = $langmessage['Site Status'];
-		$scripts['Admin_Status']['group'] = 'settings';
+		$scripts['Admin_Status']['group'] = 'tools';
 
-
-		$scripts['Admin_Cache']['script'] = '/include/admin/admin_cache.php';
-		$scripts['Admin_Cache']['class'] = 'admin_cache';
-		$scripts['Admin_Cache']['label'] = $langmessage['Resource Cache'];
-		$scripts['Admin_Cache']['group'] = 'settings';
 
 
 		$scripts['Admin_Uninstall']['script'] = '/include/admin/admin_rm.php';
 		$scripts['Admin_Uninstall']['class'] = 'admin_rm';
 		$scripts['Admin_Uninstall']['label'] = $langmessage['uninstall_prep'];
-		$scripts['Admin_Uninstall']['group'] = 'settings';
+		$scripts['Admin_Uninstall']['group'] = 'tools';
+
+
+		$scripts['Admin_Cache']['script'] = '/include/admin/admin_cache.php';
+		$scripts['Admin_Cache']['class'] = 'admin_cache';
+		$scripts['Admin_Cache']['label'] = $langmessage['Resource Cache'];
+		$scripts['Admin_Cache']['group'] = 'tools';
 
 
 
-		/*
-		 * 	Unlisted
-		 */
-
+		// Unlisted
 
 		$scripts['Admin_Addons']['script'] = '/include/admin/admin_addons.php';
 		$scripts['Admin_Addons']['class'] = 'admin_addons';
@@ -555,6 +548,18 @@ class admin_tools{
 			self::PanelHeading($in_panel, $langmessage['Settings'], 'icon_edapp', 'set' );
 			echo '<ul class="submenu">';
 			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Settings'].'</a></li>';
+			echo $links;
+			echo '</ul>';
+			echo '</div>';
+			echo '</div>';
+		}
+
+		//tools
+		if( $links = admin_tools::GetAdminGroup('tools') ){
+			echo '<div class="panelgroup" id="panelgroup_settings'.$id_piece.'">';
+			self::PanelHeading($in_panel, $langmessage['Tools'], 'icon_edapp', 'tool' );
+			echo '<ul class="submenu">';
+			echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Tools'].'</a></li>';
 			echo $links;
 			echo '</ul>';
 			echo '</div>';

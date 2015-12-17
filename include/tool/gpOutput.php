@@ -2300,16 +2300,25 @@ class gpOutput{
 			return $scripts;
 		}
 
-		$cdn = $config['cdn'];
+		$cdn		= $config['cdn'];
+		$packages	= array();
 
 		foreach($scripts as $key => $script_info){
 
-			if( !isset($script_info['cdn']) ){
+			if( !isset($script_info['cdn']) || !isset($script_info['cdn'][$cdn]) ){
 				continue;
 			}
 
 			$cdn_url					= $script_info['cdn'][$cdn];
 
+			//remove packages
+			if( isset($script_info['package']) ){
+				foreach($scripts as $_key => $_info){
+					if( isset($_info['package']) && $_info['package'] == $script_info['package'] ){
+						unset($scripts[$_key]);
+					}
+				}
+			}
 			unset($scripts[$key]);
 
 			if( $type == 'css' ){

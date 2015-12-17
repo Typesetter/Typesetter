@@ -24,18 +24,11 @@ class Combine{
 										'type'			=> 'css'),
 
 
-				//colorbox
-				'colorbox'	=> array(	'file'			=> '/include/thirdparty/colorbox139/colorbox/jquery.colorbox.js',
-										'requires'		=> 'gp-main,colorbox-css'),
-
-
-				'colorbox-css' => array('file'			=> '/include/thirdparty/colorbox139/$config[colorbox_style]/colorbox.css',
-										'type'			=> 'css'),
-
 
 				//jquery
 				'jquery'	=> array(	'file'			=> '/include/thirdparty/js/jquery.js',
 										'package'		=> 'jquery',
+										'label'			=> 'jQuery',
 										'cdn'			=> array(
 															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js',
 															'Google'		=> '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
@@ -56,6 +49,7 @@ class Combine{
 
 				'ui-core'	=> array(	'file'			=> '/include/thirdparty/jquery_ui/core.js',
 										'package'		=> 'jquery_ui',
+										'label'			=> 'jQuery UI',
 										'cdn'			=> array(
 															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js',
 															'Google'		=> '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js',
@@ -356,10 +350,25 @@ class Combine{
 				//fontawesome
 				'fontawesome'			=> array(
 										'file'			=> '/include/thirdparty/fontawesome/css/font-awesome.min.css',
+										'label'			=> 'Font Awesome',
 										'cdn'			=> array(
 															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css',
 															),
 										),
+
+				//colorbox
+				'colorbox'	=> array(	'file'			=> '/include/thirdparty/colorbox139/colorbox/jquery.colorbox.js',
+										'requires'		=> 'gp-main,colorbox-css',
+										'label'			=> 'Colorbox JS',
+										'cdn'			=> array(
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jquery.colorbox/1.6.3/jquery.colorbox-min.js',
+															),
+										),
+
+
+				'colorbox-css' => array('file'			=> '/include/thirdparty/colorbox139/$config[colorbox_style]/colorbox.css',
+										'type'			=> 'css'),
+
 
 		);
 

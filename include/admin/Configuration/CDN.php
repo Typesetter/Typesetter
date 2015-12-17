@@ -8,12 +8,6 @@ defined('is_running') or die('Not an entry point...');
 class CDN extends \gp\admin\Configuration{
 
 	public function __construct(){
-		global $langmessage;
-
-		$langmessage['jquery']						= 'jQuery';
-		$langmessage['ui-core']						= 'jQuery UI';
-		$langmessage['ui-theme']					= 'jQuery UI CSS';
-		$langmessage['fontawesome']					= 'Font Awesome';
 
 		$this->variables = array(
 						'CDN'					=> false,
@@ -65,7 +59,7 @@ class CDN extends \gp\admin\Configuration{
 	 *
 	 */
 	protected function ShowForm(){
-		global $page, $langmessage, $config;
+		global $page, $config;
 
 		$possible	= $this->getPossible();
 
@@ -92,14 +86,15 @@ class CDN extends \gp\admin\Configuration{
 		//display which scripts can be served bythe cdn
 		foreach(\gp\tool\Combine::$scripts as $key => $script_info){
 
-			if( !isset($script_info['cdn']) ){
+			if( !isset($script_info['cdn']) || !isset($script_info['label']) ){
 				continue;
 			}
 
 			$config_key					= 'cdn_'.$key;
+			$code						= '\common::LoadComponents(\''.$key.'\');';
 
-			echo '<tr><td>';
-			echo $langmessage[$key];
+			echo '<tr><td title="'.htmlspecialchars($code).'">';
+			echo $script_info['label'];
 			echo '</td>';
 
 			foreach($possible['cdn'] as $cdn){
@@ -110,7 +105,7 @@ class CDN extends \gp\admin\Configuration{
 				echo '</td>';
 			}
 
-			echo '</tr>';
+			echo '</div></td></tr>';
 		}
 
 

@@ -451,6 +451,9 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 			$arcs['extract']['application/x-bzip2'] = array( 'function'=>'PhpExtract', 'ext'=> 'tbz' );
 		}
 
+		$this->archivers = $arcs;
+		return;
+
 		if (!function_exists('exec')) {
 			$this->archivers = $arcs;
 			// $this->options['archivers'] = $this->options['archive'] = array();
@@ -670,7 +673,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 	}
 
 	/**
-	 * Extract files from an archive using pclzip.lib.php or Archive_Tar.php
+	 * Extract files from an archive using php
 	 *
 	 * @param string  $path  archive path
 	 * @param array $archiver
@@ -678,61 +681,24 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 	 */
 	protected function PhpExtract( $path, $archiver ){
 
+
 		// create archive object
-		@ini_set('memory_limit', '256M');
 		switch( $archiver['ext'] ){
 			case 'zip':
-				include('pclzip.lib.php');
-				$archive = new PclZip($path);
-			break;
-
 			case 'tbz':
 			case 'tgz':
 			case 'tar':
-				include('Archive_Tar.php');
-				$archive = new Archive_Tar( $path );
+				include('Archive.php');
+				$archive	= new Archive($path);
 			break;
+
 			default:
 			return $this->setError('Unknown archive type');
 		}
 
-		$list = $archive->listContent();
-		if( !count($list) ){
-			return $this->setError('Empty Archive');
-		}
+		$dest = $this->ArchiveDestination( $path );
 
-		// destination path .. determine if we need to create a folder for the files in the archive
-		$root_names = $this->ArchiveRoots($list);
-		$extract_args = array();
-		$remove_path = '';
-		if( count($root_names) > 1 ){
-			$dest = $this->ArchiveDestination( $path );
-		}elseif( count($list) == 1 ){
-			//$dest = dirname($path);
-			$dest = $this->ArchiveDestination( $path );//not ideal, but the listing is updated this way
-		}else{
-			$name = array_shift($root_names);
-			$remove_path = $name;
-			$dest = $this->IncrementName( dirname($path), $name );
-		}
-
-
-		// extract
-		switch( $archiver['ext'] ){
-			case 'zip':
-				if( !$archive->extract( $dest, $remove_path ) ){
-					return $this->setError('Extract Failed');
-				}
-			break;
-
-			case 'tbz':
-			case 'tgz':
-			case 'tar':
-				if( !$archive->extractModify( $dest, $remove_path ) ){
-					return $this->setError('Extract Failed');
-				}
-			break;
-		}
+		$archive->extractTo($dest);
 
 		return $dest;
 	}
@@ -762,6 +728,9 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 	protected function ArchiveDestination( $path ){
 
 		$name = basename($path);
+
+		debug($name);
+
 		$parts = explode('.',$name);
 		$extension = array_pop($parts);
 		$name = implode('.',$parts);
@@ -805,41 +774,22 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 	 * @return string|bool
 	 */
 	protected function PhpCompress($dir, $files, $name, $archiver ){
+		include('Archive.php');
 
-		@ini_set('memory_limit', '256M');
-		$path = $this->_joinPath( $dir, $name );
+		$path		= $this->_joinPath( $dir, $name );
+		$archive	= new Archive($path);
 
-		//format the list
-		$list = array();
+		//add files
 		foreach($files as $file){
-			$list[] = $this->_joinPath( $dir, $file );
+			$add_path	= $this->_joinPath( $dir, $file );
+			$archive->Add($add_path, $file);
 		}
 
-		// create archive object
-		switch( $archiver['ext'] ){
-			case 'zip':
-				include('pclzip.lib.php');
-				$archive = new PclZip($path);
-				if( !$archive->Create($list,'',$dir) ){
-					return $this->SetError('errArchive');
-				}
-			break;
-
-			case 'tgz':
-			case 'tbz':
-			case 'tar':
-				include('Archive_Tar.php');
-				$archive = new Archive_Tar( $path );
-				if( !$archive->createModify($list, '', $dir) ){
-					return $this->SetError('errArchive');
-				}
-			break;
-		}
-
+		$archive->compress();
 
 		return $path;
-
 	}
+
 
 	/**
 	 * Create archive and return its path

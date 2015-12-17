@@ -29,10 +29,10 @@ class gpAjax{
 
 		$content		= str_replace('\\','\\\\',$content);
 
-		static $search	= array('<script','</script>');
-		static $repl	= array('<"+"script','<"+"/script>');
+		static $search	= array("\n","\r","\t",'<script','</script>');
+		static $repl	= array('\n','\r','\t','<"+"script','<"+"/script>');
 
-		$content		= preg_replace("!([\b\t\n\r\f\"\\'])!", "\\\\$1", $content);
+		$content		= preg_replace("!([\b\f\"\\'])!", "\\\\$1", $content);
 
 		return '"'.str_replace($search,$repl,$content).'"';
 	}

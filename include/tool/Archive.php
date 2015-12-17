@@ -218,4 +218,42 @@ class Archive{
 		return $archive_root;
 	}
 
+
+	/**
+	 * Add Files to the archive
+	 *
+	 */
+	public function AddDir( $dir, $localname = null){
+
+		if( !file_exists($dir) ){
+			return;
+		}
+
+		if( is_null($localname) ){
+			$localname = $dir;
+		}
+
+		$files = scandir($dir);
+		foreach($files as $file){
+			if( $file === '.' || $file === '..' ){
+				continue;
+			}
+			$full_path		= $dir.'/'.$file;
+			$_localname		= $localname.'/'.$file;
+
+			if( is_link($full_path) ){
+				continue;
+			}
+
+			if( is_dir($full_path) ){
+				$this->AddDir( $full_path, $_localname);
+				continue;
+			}
+
+
+			$this->php_object->AddFile($full_path, $_localname);
+		}
+	}
+
+
 }

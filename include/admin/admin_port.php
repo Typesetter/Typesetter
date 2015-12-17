@@ -228,7 +228,8 @@ class admin_port{
 		// buildFromDirectory with regular expression
 		$tar_object = new \gp\tool\Archive($this->archive_path);
 		foreach($add_dirs as $dir){
-			$this->AddFiles($tar_object, $dir);
+			$localname = '/gpexport'.substr($dir, strlen($dataDir));
+			$tar_object->AddDir($dir,$localname);
 		}
 
 
@@ -238,41 +239,6 @@ class admin_port{
 		$tar_object->compress();
 
 		return true;
-	}
-
-
-	/**
-	 * Add directory
-	 *
-	 */
-	public function AddFiles($tar_object, $dir){
-		global $dataDir;
-
-		if( !file_exists($dir) ){
-			return;
-		}
-
-		$files = scandir($dir);
-		foreach($files as $file){
-			if( $file === '.' || $file === '..' ){
-				continue;
-			}
-			$full_path = $dir.'/'.$file;
-
-			if( is_link($full_path) ){
-				continue;
-			}
-
-			if( is_dir($full_path) ){
-				$this->AddFiles($tar_object, $full_path);
-				continue;
-			}
-
-
-
-			$localname = '/gpexport'.substr($full_path, strlen($dataDir));
-			$tar_object->AddFile($full_path, $localname);
-		}
 	}
 
 

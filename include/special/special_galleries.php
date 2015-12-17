@@ -13,9 +13,12 @@ class special_galleries{
 	}
 
 
-	//page is hidden or deleted
+	/**
+	 * Determine if the gallery page is hidden or deleted
+	 *
+	 */
 	public function GalleryVisible( $title, $info ){
-		global $gp_index, $gp_menu;
+		global $gp_index, $gp_menu, $gp_titles;
 
 		if( !isset($gp_index[$title]) ){
 			unset($this->galleries[$title]);
@@ -23,14 +26,15 @@ class special_galleries{
 			return false;
 		}
 
-		$visibility =& $info['visibility'];
+		$index			= $gp_index[$title];
+		$title_info		= $gp_titles[$index];
 
-		if( $visibility == 'show' ){
-			return true;
+		if( $info['visibility'] == 'hide' || isset($title_info['vis']) ){
+			$this->not_visible[$title] = $info;
+			return false;
 		}
-		$this->not_visible[$title] = $info;
 
-		return false;
+		return true;
 	}
 
 	// save the galleries index file

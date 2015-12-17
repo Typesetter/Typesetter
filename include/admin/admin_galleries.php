@@ -5,7 +5,7 @@ includeFile('special/special_galleries.php');
 
 class admin_galleries extends special_galleries{
 
-	function __construct(){
+	public function __construct(){
 		$this->galleries = special_galleries::GetData();
 
 
@@ -20,7 +20,7 @@ class admin_galleries extends special_galleries{
 		$this->EditGalleries();
 	}
 
-	function EditGalleries(){
+	public function EditGalleries(){
 		global $page, $langmessage;
 
 		$page->head_js[] = '/include/js/special_galleries.js';
@@ -43,7 +43,7 @@ class admin_galleries extends special_galleries{
 
 
 
-	function EditableArea(){
+	public function EditableArea(){
 		global $gp_titles, $gp_index, $langmessage;
 
 
@@ -89,7 +89,7 @@ class admin_galleries extends special_galleries{
 	}
 
 
-	function GalleryEditBox( $title, $info ){
+	public function GalleryEditBox( $title, $info ){
 		if( is_array($info) ){
 			$icon = $info['icon'];
 		}else{
@@ -115,8 +115,8 @@ class admin_galleries extends special_galleries{
 	}
 
 
-	function NewDrag(){
-		global $page, $langmessage;
+	public function NewDrag(){
+		global $page, $langmessage, $gp_index, $gp_titles;
 		$page->ajaxReplace = array();
 
 		//get the title of the gallery that was moved
@@ -126,12 +126,15 @@ class admin_galleries extends special_galleries{
 			return false;
 		}
 
-		$info = $this->galleries[$dragging];
+		$index	= $gp_index[$dragging];
+		$info	= $this->galleries[$dragging];
 		unset($this->galleries[$dragging]);
+
 
 		//set visibility
 		if( isset($_POST['active']) ){
 			$info['visibility'] = 'show';
+			unset($gp_titles[$index]['vis']);
 		}else{
 			$info['visibility'] = 'hide';
 		}
@@ -160,6 +163,13 @@ class admin_galleries extends special_galleries{
 			message($langmessage['OOPS'].' (Not Saved)');
 			return false;
 		}
+
+		if( !admin_tools::SavePagesPHP() ){
+			message($langmessage['OOPS'].' (Not Saved)');
+			return false;
+		}
+
+
 
 	}
 

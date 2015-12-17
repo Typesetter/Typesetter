@@ -2,18 +2,19 @@
 defined('is_running') or die('Not an entry point...');
 
 class special_galleries{
-	var $galleries = array();
-	var $title_removed = false;
-	var $not_visible = array();
 
-	function __construct(){
+	public $galleries = array();
+	public $title_removed = false;
+	public $not_visible = array();
+
+	public function __construct(){
 		$this->galleries = special_galleries::GetData();
 		$this->GenerateOutput();
 	}
 
 
 	//page is hidden or deleted
-	function GalleryVisible( $title, $info ){
+	public function GalleryVisible( $title, $info ){
 		global $gp_index, $gp_menu;
 
 		if( !isset($gp_index[$title]) ){
@@ -33,7 +34,7 @@ class special_galleries{
 	}
 
 	// save the galleries index file
-	function PostSave(){
+	public function PostSave(){
 		if( !$this->title_removed ){
 			return;
 		}
@@ -47,7 +48,7 @@ class special_galleries{
 	 *
 	 * @static
 	 */
-	static function GetData(){
+	public static function GetData(){
 
 		$galleries = gpFiles::Get('_site/galleries');
 		if( !$galleries ){
@@ -65,7 +66,7 @@ class special_galleries{
 	 * Add visibility settings according to old method for handling gallery visibility
 	 * @static
 	 */
-	static function UpdateData(&$galleries){
+	public static function UpdateData(&$galleries){
 		global $gp_index, $gp_menu;
 
 		foreach($galleries as $title => $info){
@@ -85,7 +86,7 @@ class special_galleries{
 	}
 
 
-	function GenerateOutput(){
+	public function GenerateOutput(){
 		global $langmessage,$page;
 
 		common::ShowingGallery();
@@ -189,7 +190,7 @@ class special_galleries{
 
 	///data/_uploaded/image/thumbnails/image/gpeasy/admin_pages/01login.png.jpg
 	///data/_uploaded/image/gpeasy/xamppsetup/01.png
-	static function UpdateGalleryInfo($title,$file_sections){
+	public static function UpdateGalleryInfo($title,$file_sections){
 
 		$content = '';
 		$has_gallery = false;
@@ -245,7 +246,7 @@ class special_galleries{
 	 * Handle the removal of a gallery page for admin_menu_tools.php
 	 *
 	 */
-	static function RemovedGallery($title){
+	public static function RemovedGallery($title){
 
 		$galleries = special_galleries::GetData();
 		if( !isset($galleries[$title]) ){
@@ -263,7 +264,7 @@ class special_galleries{
 	 * @static
 	 *
 	 */
-	static function RenamedGallery($old_title,$new_title){
+	public static function RenamedGallery($old_title,$new_title){
 
 		$galleries = special_galleries::GetData();
 		if( !isset($galleries[$old_title]) ){
@@ -275,7 +276,7 @@ class special_galleries{
 		}
 	}
 
-	static function SaveIndex($galleries){
+	public static function SaveIndex($galleries){
 		global $dataDir;
 
 		includeFile('admin/admin_tools.php');

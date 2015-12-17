@@ -39,16 +39,12 @@
 	/* background:none; */
 	}
 #gp_admin_html *{
-	font-size:inherit;
-	font-family:inherit;
-	line-height:inherit;
+
 	text-shadow:none;
 	.box-sizing( content-box );
 	/* background: none; prevents other backgrounds from showing. "inherit" wouldn't make sense */
+	/* font-family:inherit; font-size:inherit; line-height:inherit; -- conflicts with fontawesome */
 	}
-#gp_admin_html .fa{
-	font-family: FontAwesome;
-}
 
 #gp_admin_html hr{
 	border:0 none;
@@ -305,6 +301,7 @@
 	list-style:none;
 	color: @gp_nav_link_color !important;
 	}
+
 #admincontent_panel a,
 #admincontent_panel b{
 	padding: @gp_nav_link_padding_y @gp_nav_link_padding_x;
@@ -312,6 +309,9 @@
 
 #admincontent_panel a:hover{
 	color: @gp_nav_link_color_hover !important;
+	}
+#admincontent_panel a > .fa{
+	margin-right:4px;
 	}
 
 #admincontent_panel ul ul{

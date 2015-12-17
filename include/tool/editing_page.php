@@ -209,8 +209,8 @@ class editing_page extends display{
 		//draft status
 		if( $this->permission_edit ){
 			if( $this->draft_exists	){
-				$admin_links[] = common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq', 'class'=>'msg_publish_draft'));
-				$admin_links[] = common::Link($this->title,$langmessage['Discard Draft'],'cmd=DiscardDraft',array('data-cmd'=>'creq', 'class'=>'msg_discard_draft'));
+				$admin_links[] = common::Link($this->title,'<i class="fa fa-check"></i> '.$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq', 'class'=>'msg_publish_draft'));
+				$admin_links[] = common::Link($this->title,'<i class="fa fa-trash"></i> '.$langmessage['Discard Draft'],'cmd=DiscardDraft',array('data-cmd'=>'creq', 'class'=>'msg_discard_draft'));
 			}
 			$admin_links[] = common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 		}

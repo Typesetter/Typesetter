@@ -212,7 +212,7 @@ class admin_addons extends admin_addon_install{
 		}
 
 		$link = $this->GadgetLink($gadget);
-		$page->ajaxReplace[] = array('replace','.gadget_link_'.$gadget,$link);
+		$page->ajaxReplace[] = array('replace','.gadget_link_'.md5($gadget),$link);
 	}
 
 	function GadgetLink($name){
@@ -223,9 +223,9 @@ class admin_addons extends admin_addon_install{
 		}
 
 		if( isset($info['disabled']) ){
-			return common::Link('Admin_Addons',str_replace('_',' ',$name).' ('.$langmessage['disabled'].')','cmd=enable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.$name.'"');
+			return common::Link('Admin_Addons',str_replace('_',' ',$name).' ('.$langmessage['disabled'].')','cmd=enable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.md5($name).'"');
 		}else{
-			return common::Link('Admin_Addons',str_replace('_',' ',$name) .' ('.$langmessage['enabled'].')','cmd=disable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.$name.'"');
+			return common::Link('Admin_Addons',str_replace('_',' ',$name) .' ('.$langmessage['enabled'].')','cmd=disable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.md5($name).'"');
 		}
 
 	}

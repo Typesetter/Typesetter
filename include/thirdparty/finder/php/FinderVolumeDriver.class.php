@@ -3399,13 +3399,9 @@ abstract class FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _joinPath($dir, $name){
-		$dir	= $this->_separator($dir);
-		$name	= $this->_separator($name);
-		$name 	= ltrim($name,$this->separator);
-		if( !empty($name) ){
-			return $dir . $this->separator . $name;
-		}
-		return $dir;
+		$dir = $this->_separator($dir);
+		$name = $this->_separator($name);
+		return $dir . $this->separator . ltrim($name,$this->separator);
 	}
 
 

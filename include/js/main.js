@@ -375,10 +375,12 @@ $(function(){
 
 		//get the location of the error
 		if( thrownError.hasOwnProperty('lineNumber') ){
+			var num					= thrownError.lineNumber;
 			var lines				= XMLHttpRequest.responseText.split('\n');
-			debug_info.line0		= lines[thrownError.lineNumber-2];
-			debug_info.line1		= lines[thrownError.lineNumber-1];
-			debug_info.line2		= lines[thrownError.lineNumber];
+
+			debug_info['Line-'+(num-1)]	= lines[num-2];
+			debug_info['Line-'+num]		= lines[num-1];
+			debug_info['Line-'+(num+1)]	= lines[num];
 		}
 
 		debug_info.responseStatus	= XMLHttpRequest.status;

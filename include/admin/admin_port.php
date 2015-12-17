@@ -229,7 +229,7 @@ class admin_port{
 		$tar_object = new \gp\tool\Archive($this->archive_path);
 		foreach($add_dirs as $dir){
 			$localname = '/gpexport'.substr($dir, strlen($dataDir));
-			$tar_object->AddDir($dir,$localname);
+			$tar_object->Add($dir,$localname);
 		}
 
 

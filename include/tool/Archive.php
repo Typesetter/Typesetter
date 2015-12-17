@@ -165,7 +165,7 @@ class Archive{
 	 * Get Archive Root
 	 *
 	 */
-	public function GetRoot($search_file = '/Addon.ini'){
+	public function GetRoot($search_file = 'Addon.ini'){
 
 		$archive_files	= $this->ListFiles();
 		$archive_root	= null;
@@ -177,6 +177,10 @@ class Archive{
 			}
 
 			$root = \common::DirName($file['name']);
+
+			if( $root == '.' ){
+				$root = '';
+			}
 
 			if( is_null($archive_root) || ( strlen($root) < strlen($archive_root) ) ){
 				$archive_root = $root;

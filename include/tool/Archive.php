@@ -220,38 +220,38 @@ class Archive{
 
 
 	/**
-	 * Add Files to the archive
+	 * Recursively add files to the archive
 	 *
 	 */
-	public function AddDir( $dir, $localname = null){
+	public function Add( $path, $localname = null){
 
-		if( !file_exists($dir) ){
-			return;
+		if( !file_exists($path) ){
+			return false;
 		}
 
 		if( is_null($localname) ){
-			$localname = $dir;
+			$localname = $path;
 		}
 
-		$files = scandir($dir);
+		if( is_link($path) ){
+			return true;
+		}
+
+
+		if( !is_dir($path) ){
+			return $this->php_object->AddFile($path, $localname);
+		}
+
+
+		$files = scandir($path);
 		foreach($files as $file){
 			if( $file === '.' || $file === '..' ){
 				continue;
 			}
-			$full_path		= $dir.'/'.$file;
+			$full_path		= $path.'/'.$file;
 			$_localname		= $localname.'/'.$file;
 
-			if( is_link($full_path) ){
-				continue;
-			}
-
-			if( is_dir($full_path) ){
-				$this->AddDir( $full_path, $_localname);
-				continue;
-			}
-
-
-			$this->php_object->AddFile($full_path, $_localname);
+			$this->Add( $full_path, $_localname);
 		}
 	}
 

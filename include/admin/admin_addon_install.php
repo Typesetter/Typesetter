@@ -14,25 +14,26 @@ includeFile('admin/admin_addons_tool.php');
 
 class admin_addon_install extends admin_addons_tool{
 
-	var $scriptUrl			= 'Admin_Addons';
-	var $avail_addons		= array();
+	public $scriptUrl			= 'Admin_Addons';
+	public $avail_addons		= array();
+	public $avail_count			= 0;
 
 
 	//remote browsing
-	var $config_index		= 'addons';
-	var $path_remote		= 'Admin_Addons/Remote';
-	var $code_folder_name	= '_addoncode';
-	var $can_install_links	= true;
+	public $config_index		= 'addons';
+	public $path_remote			= 'Admin_Addons/Remote';
+	public $code_folder_name	= '_addoncode';
+	public $can_install_links	= true;
 
 
 	//searching
-	var $searchUrl			= '';
-	var $searchPage			= 0;
-	var $searchMax			= 0;
-	var $searchPerPage		= 20;
-	var $searchOrder		= '';
-	var $searchQuery 		= '';
-	var $searchOrderOptions = array();
+	public $searchUrl			= '';
+	public $searchPage			= 0;
+	public $searchMax			= 0;
+	public $searchPerPage		= 20;
+	public $searchOrder			= '';
+	public $searchQuery 		= '';
+	public $searchOrderOptions	= array();
 
 
 	function __construct(){
@@ -52,7 +53,11 @@ class admin_addon_install extends admin_addons_tool{
 
 		//build links
 		$header_paths[$this->scriptUrl]					= $langmessage['manage'];
-		$header_paths[$this->scriptUrl.'/Available']	= $langmessage['Available'].' ('.count($this->avail_addons).')';
+		$header_paths[$this->scriptUrl.'/Available']	= $langmessage['Available'];
+
+		if( $this->avail_count > 0 ){
+			$header_paths[$this->scriptUrl.'/Available']	= $langmessage['Available'].' ('.$this->avail_count.')';
+		}
 
 
 

@@ -1599,6 +1599,7 @@ class admin_theme_content extends admin_addon_install{
 			uksort($this->avail_addons,'strnatcasecmp');
 		}
 
+		$this->avail_count = count($this->avail_addons);
 	}
 
 

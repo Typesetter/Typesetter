@@ -27,8 +27,6 @@ includeFile('admin/admin_addon_install.php');
 class admin_addons extends admin_addon_install{
 
 	public $dataFile;
-	public $avail_addons;
-	public $avail_count = 0;
 
 
 	function __construct(){

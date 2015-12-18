@@ -26,8 +26,9 @@ includeFile('admin/admin_addon_install.php');
 
 class admin_addons extends admin_addon_install{
 
-	var $dataFile;
-	var $avail_addons;
+	public $dataFile;
+	public $avail_addons;
+	public $avail_count = 0;
 
 
 	function __construct(){
@@ -392,27 +393,39 @@ class admin_addons extends admin_addon_install{
 			$info['upgrade_key']	= admin_addons_tool::UpgradePath($info);
 			$avail[$value]			= $info;
 
-
 			if( isset($info['Addon_Version']) && isset($info['Addon_Unique_ID']) ){
+
 				$id = $info['Addon_Unique_ID'];
-				$version = $info['Addon_Version'];
 				if( !isset($versions[$id]) ){
-					$versions[$id] = $version;
+					$versions[$id] = $info['Addon_Version'];
+				}elseif( version_compare($versions[$id],$info['Addon_Version'],'<') ){
+					$versions[$id] = $info['Addon_Version'];
 					continue;
 				}
-				if( version_compare($versions[$id],$version,'<') ){
-					$versions[$id] = $version;
-				}
+			}
+
+
+			if( !$info['upgrade_key'] ){
+				$this->avail_count++;
 			}
 		}
 
-		if( !gp_unique_addons ){
-			return $avail;
+		if( gp_unique_addons ){
+			$avail = self::FilterUnique($avail, $versions);
 		}
 
-		//show only the most recent versions
+		return $avail;
+	}
+
+
+	/**
+	 * Filter the list of addons so we only have a list of the most recent versions
+	 *
+	 */
+	protected function FilterUnique($addons, $versions){
+
 		$temp = array();
-		foreach($avail as $key => $info){
+		foreach($addons as $key => $info){
 
 			if( !isset($info['Addon_Version']) || !isset($info['Addon_Unique_ID']) ){
 				$temp[$key] = $info;
@@ -428,7 +441,6 @@ class admin_addons extends admin_addon_install{
 
 			$temp[$key] = $info;
 		}
-
 
 		return $temp;
 	}
@@ -460,7 +472,7 @@ class admin_addons extends admin_addon_install{
 		if( count($this->avail_addons) == 0 ){
 			//echo ' -empty- ';
 		}else{
-			echo '<table class="bordered" style="min-width:700px">';
+			echo '<table class="bordered full_width">';
 			echo '<tr><th>';
 			echo $langmessage['name'];
 			echo '</th><th>';
@@ -597,7 +609,6 @@ class admin_addons extends admin_addon_install{
 				echo '<div class="gp_notice">';
 				$label = $langmessage['new_version'].' &nbsp; '.$addon_config['upgrade_version'];
 				echo '<a href="?cmd=LocalInstall&source='.rawurlencode($addon_config['upgrade_from']).'" data-cmd="creq">'.$label.'</a>';
-				//echo common::Link('Admin_Addons',$label,'cmd=LocalInstall&source='.$addon_config['upgrade_from'],array('data-cmd'=>'creq'));
 				echo '</div>';
 			}
 		}
@@ -633,7 +644,6 @@ class admin_addons extends admin_addon_install{
 
 			//upgrade link
 			if( isset($addon_config['upgrade_from']) ){
-				//$list[] = common::Link('Admin_Addons',$langmessage['upgrade'],'cmd=LocalInstall&source='.$addon_config['upgrade_from'],array('data-cmd'=>'creq'));
 				$list[] = '<a href="?cmd=LocalInstall&source='.rawurlencode($addon_config['upgrade_from']).'" data-cmd="creq">'.$langmessage['upgrade'].'</a>';
 			}
 

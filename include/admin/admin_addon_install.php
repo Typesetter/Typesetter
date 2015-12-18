@@ -52,7 +52,11 @@ class admin_addon_install extends admin_addons_tool{
 
 		//build links
 		$header_paths[$this->scriptUrl]					= $langmessage['manage'];
-		$header_paths[$this->scriptUrl.'/Available']	= $langmessage['Available'].' ('.count($this->avail_addons).')';
+		$header_paths[$this->scriptUrl.'/Available']	= $langmessage['Available'];
+
+		if( $this->avail_count > 0 ){
+			$header_paths[$this->scriptUrl.'/Available']	= $langmessage['Available'].' ('.$this->avail_count.')';
+		}
 
 
 

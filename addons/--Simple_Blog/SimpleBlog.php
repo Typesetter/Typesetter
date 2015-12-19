@@ -151,14 +151,26 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Display a blog page with multiple blog posts
 	 *
 	 */
-	function ShowPage(){
+	public function ShowPage(){
+		global $page;
 
-		$per_page = SimpleBlogCommon::$data['per_page'];
-		$page = 0;
+		$per_page		= SimpleBlogCommon::$data['per_page'];
+		$page_num		= 0;
+		$expected_q		= '';
 		if( isset($_GET['page']) && is_numeric($_GET['page']) ){
-			$page = (int)$_GET['page'];
+			$page_num		= (int)$_GET['page'];
+			$expected_q		= 'page='.$page_num;
 		}
-		$start				= $page * $per_page;
+
+
+		//redirect if the request isn't correct
+		if( $page->requested != SimpleBlogCommon::$root_url ){
+			$expected_url = common::GetUrl( SimpleBlogCommon::$root_url, $expected_q, false );
+			common::Redirect($expected_url);
+		}
+
+
+		$start				= $page_num * $per_page;
 		$include_drafts		= common::LoggedIn();
 		$show_posts			= SimpleBlogCommon::WhichPosts($start,$per_page,$include_drafts);
 
@@ -167,27 +179,21 @@ class SimpleBlog extends SimpleBlogCommon{
 		//pagination links
 		echo '<p class="blog_nav_links">';
 
-		if( $page > 0 ){
+		if( $page_num > 0 ){
 
 			$html = common::Link('Special_Blog','%s');
 			echo gpOutput::GetAddonText('Blog Home',$html);
 			echo '&nbsp;';
 
-			$html = common::Link('Special_Blog','%s','page='.($page-1),'class="blog_newer"');
+			$html = common::Link('Special_Blog','%s','page='.($page_num-1),'class="blog_newer"');
 			echo gpOutput::GetAddonText('Newer Entries',$html);
 			echo '&nbsp;';
 
 		}
 
-		if( ( ($page+1) * $per_page) < SimpleBlogCommon::$data['post_count'] ){
-			$html = common::Link('Special_Blog','%s','page='.($page+1),'class="blog_older"');
+		if( ( ($page_num+1) * $per_page) < SimpleBlogCommon::$data['post_count'] ){
+			$html = common::Link('Special_Blog','%s','page='.($page_num+1),'class="blog_older"');
 			echo gpOutput::GetAddonText('Older Entries',$html);
-		}
-
-
-		if( common::LoggedIn() ){
-			echo '&nbsp;';
-			echo common::Link('Special_Blog','New Post','cmd=new_form');
 		}
 
 		echo '</p>';

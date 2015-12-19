@@ -182,7 +182,7 @@ class SimpleBlogPage{
 		echo gpOutput::GetAddonText('Comments');
 		echo '</h3>';
 
-		$this->GetCommentHtml($data,true);
+		$this->GetCommentHtml($data);
 
 	}
 
@@ -313,6 +313,10 @@ class SimpleBlogPage{
 		}
 	}
 
+	/**
+	 * Output single comment
+	 *
+	 */
 	private function OutputComment($key,$comment){
 		global $langmessage;
 

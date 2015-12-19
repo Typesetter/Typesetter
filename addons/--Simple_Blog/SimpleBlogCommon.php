@@ -338,6 +338,7 @@ class SimpleBlogCommon{
 						'email_comments'		=> '',
 						'abbrev_image'			=> true,
 						'abbrev_cat'			=> true,
+						'next_regen'			=> time(),
 						);
 
 	}

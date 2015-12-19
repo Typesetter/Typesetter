@@ -5,12 +5,12 @@ defined('is_running') or die('Not an entry point...');
 
 class SimpleBlogPage{
 
-	var $post_id;
-	var $post;
-	var $comment_saved		= false;
-	var $comments_closed;
+	public $post_id;
+	public $post;
+	public $comment_saved		= false;
+	public $comments_closed;
 
-	function __construct($post_id){
+	public function __construct($post_id){
 		$this->post_id			= $post_id;
 		$this->post				= SimpleBlogCommon::GetPostContent($this->post_id);
 		$this->comments_closed	= SimpleBlogCommon::AStrValue('comments_closed',$this->post_id);
@@ -21,7 +21,7 @@ class SimpleBlogPage{
 	 * Display the blog post
 	 *
 	 */
-	function ShowPost(){
+	public function ShowPost(){
 
 		if( $this->post === false ){
 			$this->Error_404();
@@ -38,7 +38,7 @@ class SimpleBlogPage{
 		$this->_ShowPost();
 	}
 
-	function _ShowPost(){
+	public function _ShowPost(){
 		global $page;
 
 		$page->label = SimpleBlogCommon::Underscores( $this->post['title'] );
@@ -88,7 +88,7 @@ class SimpleBlogPage{
 	 * Run commands
 	 *
 	 */
-	function PostCommands(){
+	public function PostCommands(){
 		global $page;
 
 		$cmd = common::GetCommand();
@@ -118,7 +118,7 @@ class SimpleBlogPage{
 	 * Ouptut blog categories
 	 *
 	 */
-	function Categories(){
+	public function Categories(){
 
 		//blog categories
 		if( empty($this->post['categories']) ){
@@ -152,7 +152,7 @@ class SimpleBlogPage{
 	 * Output blog comments
 	 *
 	 */
-	function Comments(){
+	public function Comments(){
 
 		//comments
 		if( !SimpleBlogCommon::$data['allow_comments'] ){
@@ -171,7 +171,7 @@ class SimpleBlogPage{
 	 * Show the comments for a single blog post
 	 *
 	 */
-	function ShowComments(){
+	public function ShowComments(){
 
 		$data = SimpleBlogCommon::GetCommentData($this->post_id);
 		if( empty($data) ){
@@ -192,7 +192,7 @@ class SimpleBlogPage{
 	 * Add a comment to the comment data for a post
 	 *
 	 */
-	function AddComment(){
+	public function AddComment(){
 		global $langmessage;
 
 		if( $this->comments_closed ){
@@ -281,7 +281,7 @@ class SimpleBlogPage{
 	 * Output the html for a blog post's comments
 	 *
 	 */
-	function GetCommentHtml( $data ){
+	public function GetCommentHtml( $data ){
 		global $langmessage;
 
 		if( !is_array($data) ){
@@ -324,7 +324,7 @@ class SimpleBlogPage{
 	 * Display the visitor form for adding comments
 	 *
 	 */
-	function CommentForm(){
+	public function CommentForm(){
 
 		if( $this->comments_closed ){
 			echo '<div class="comments_closed">';
@@ -406,7 +406,7 @@ class SimpleBlogPage{
 	 * todo: better 404 page
 	 *
 	 */
-	function Error_404(){
+	public function Error_404(){
 		global $langmessage;
 
 		message($langmessage['OOPS']);
@@ -417,7 +417,7 @@ class SimpleBlogPage{
 	 * Display the links at the bottom of a post
 	 *
 	 */
-	function PostLinks(){
+	public function PostLinks(){
 
 		$post_key = SimpleBlogCommon::AStrKey('str_index',$this->post_id);
 

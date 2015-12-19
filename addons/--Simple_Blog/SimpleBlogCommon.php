@@ -29,7 +29,7 @@ class SimpleBlogCommon{
 	 * When SimpleBlogCommon is created as an object, it will regenerate the static files
 	 *
 	 */
-	function __construct(){
+	public function __construct(){
 		self::Init();
 		self::GenStaticContent();
 	}
@@ -38,7 +38,7 @@ class SimpleBlogCommon{
 	 * Set variables for blog display
 	 *
 	 */
-	static function Init(){
+	public static function Init(){
 		global $addonPathData;
 
 		if( self::$data ){
@@ -70,7 +70,7 @@ class SimpleBlogCommon{
 		}
 	}
 
-	static function GenStaticContent(){
+	public static function GenStaticContent(){
 		gpPlugin_incl('Admin/StaticGenerator.php');
 		StaticGenerator::Generate();
 
@@ -80,7 +80,7 @@ class SimpleBlogCommon{
 	 * Get next static gen time
 	 *
 	 */
-	static function NextGenTime(){
+	public static function NextGenTime(){
 
 		$post_times			= SimpleBlogCommon::AStrToArray('post_times');
 		arsort($post_times);
@@ -104,7 +104,7 @@ class SimpleBlogCommon{
 	 * Add css and some js to the page
 	 *
 	 */
-	static function AddCSS(){
+	public static function AddCSS(){
 		global $addonFolderName,$page;
 
 		static $added			= false;
@@ -121,7 +121,7 @@ class SimpleBlogCommon{
 	 * Get the user configuration and information about the current blog
 	 *
 	 */
-	function GetBlogData(){
+	public function GetBlogData(){
 
 		$blogData = array();
 		if( file_exists(self::$index_file) ){
@@ -150,7 +150,7 @@ class SimpleBlogCommon{
 	 *
 	 * As of 2.0, Uses " and > instead , and :
 	 */
-	static function GenIndexStr(){
+	public static function GenIndexStr(){
 
 		if( !empty(SimpleBlogCommon::$data['str_index']) ){
 			if( SimpleBlogCommon::$data['str_index'][0] == ',' ){
@@ -170,7 +170,7 @@ class SimpleBlogCommon{
 	 * Serialize comment counts
 	 *
 	 */
-	static function DataUpdate20(){
+	public static function DataUpdate20(){
 
 		$comment_counts	= array();
 		$comments_closed = array();
@@ -275,7 +275,7 @@ class SimpleBlogCommon{
 	 * Get a list of post indeces
 	 *
 	 */
-	static function WhichPosts($start, $len, $include_drafts = false){
+	public static function WhichPosts($start, $len, $include_drafts = false){
 
 		$posts		= array();
 		$end		= $start+$len;
@@ -348,7 +348,7 @@ class SimpleBlogCommon{
 	 * Save the blog configuration and details about the blog
 	 *
 	 */
-	static function SaveIndex(){
+	public static function SaveIndex(){
 
 		SimpleBlogCommon::$data['str_index'] = '"'.trim(SimpleBlogCommon::$data['str_index'],'"').'"';
 		SimpleBlogCommon::$data['post_count'] = substr_count(SimpleBlogCommon::$data['str_index'],'>');
@@ -364,7 +364,7 @@ class SimpleBlogCommon{
 	 * @deprecated 3.0
 	 *
 	 */
-	static function GetPostFile($post_index,&$post_file){
+	public static function GetPostFile($post_index,&$post_file){
 
 		if( !is_numeric($post_index) ){
 			return false;
@@ -390,7 +390,7 @@ class SimpleBlogCommon{
 	 * Get the content from a single post
 	 *
 	 */
-	static function GetPostContent($post_index){
+	public static function GetPostContent($post_index){
 
 		$file		= self::PostFilePath($post_index);
 		if( file_exists($file) ){
@@ -415,7 +415,7 @@ class SimpleBlogCommon{
 	 * @since 3.0
 	 *
 	 */
-	static function PostFilePath($post_index){
+	public static function PostFilePath($post_index){
 		return self::$data_dir.'/posts/'.$post_index.'.php'; //3.0+
 	}
 
@@ -425,7 +425,7 @@ class SimpleBlogCommon{
 	 * @return bool
 	 *
 	 */
-	static function Delete(){
+	public static function Delete(){
 		global $langmessage;
 
 		$post_id		= $_POST['del_id'];
@@ -507,7 +507,7 @@ class SimpleBlogCommon{
 	 * Recursively turn relative links into absolute links
 	 * @static
 	 */
-	function FixLinks(&$content,$server,$offset){
+	public function FixLinks(&$content,$server,$offset){
 
 		$pos = mb_strpos($content,'href="',$offset);
 		if( $pos <= 0 ){
@@ -559,7 +559,7 @@ class SimpleBlogCommon{
 	 * However, this would make it more difficult for theme developers to design for the blog plugin
 	 *
 	 */
-	static function BlogHead($header,$post_index,$post,$cacheable=false){
+	public static function BlogHead($header,$post_index,$post,$cacheable=false){
 
 
 		//subtitle
@@ -622,7 +622,7 @@ class SimpleBlogCommon{
 	 * @deprecated 2.0
 	 *
 	 */
-	static function load_blog_categories(){
+	public static function load_blog_categories(){
 		global $addonPathData;
 		$categories_file = $addonPathData.'/categories.php';
 
@@ -638,7 +638,7 @@ class SimpleBlogCommon{
 	 * Remove a blog entry from a category
 	 *
 	 */
-	static function DeletePostFromCategories( $post_id ){
+	public static function DeletePostFromCategories( $post_id ){
 
 		$categories = SimpleBlogCommon::AStrToArray( 'categories' );
 		foreach($categories as $catindex => $catname){
@@ -654,7 +654,7 @@ class SimpleBlogCommon{
 		return str_replace('_', ' ', $str);
 	}
 
-	static function FileData($file){
+	public static function FileData($file){
 
 		if( !file_exists($file) ){
 			return false;
@@ -672,7 +672,7 @@ class SimpleBlogCommon{
 	 * Get the comment data for a single post
 	 *
 	 */
-	static function GetCommentData($post_id){
+	public static function GetCommentData($post_id){
 
 		// pre 1.7.4
 		$file = self::$data_dir.'/comments_data_'.$post_id.'.txt';
@@ -698,7 +698,7 @@ class SimpleBlogCommon{
 	 * Save the comment data for a blog post
 	 *
 	 */
-	static function SaveCommentData($post_index,$data){
+	public static function SaveCommentData($post_index,$data){
 		global $langmessage;
 
 
@@ -734,23 +734,23 @@ class SimpleBlogCommon{
 	 * Delete the comments cache
 	 *
 	 */
-	static function ClearCommentCache(){
+	public static function ClearCommentCache(){
 		$cache_file = self::$data_dir.'/comments/cache.txt';
 		if( file_exists($cache_file) ){
 			unlink($cache_file);
 		}
 	}
 
-	static function PostLink($post,$label,$query='',$attr=''){
+	public static function PostLink($post,$label,$query='',$attr=''){
 		return '<a href="'.SimpleBlogCommon::PostUrl($post,$query,true).'" '.$attr.'>'.common::Ampersands($label).'</a>';
 	}
 
-	static function PostUrl( $post = false, $query='' ){
+	public static function PostUrl( $post = false, $query='' ){
 		SimpleBlogCommon::UrlQuery( $post, $url, $query );
 		return common::GetUrl( $url, $query );
 	}
 
-	static function UrlQuery( $post_id = false, &$url, &$query ){
+	public static function UrlQuery( $post_id = false, &$url, &$query ){
 
 		$url = SimpleBlogCommon::$root_url;
 
@@ -780,7 +780,7 @@ class SimpleBlogCommon{
 		}
 	}
 
-	static function CategoryLink( $catindex, $cattitle, $label, $query = '', $attr = '' ){
+	public static function CategoryLink( $catindex, $cattitle, $label, $query = '', $attr = '' ){
 
 		$url = 'Special_Blog_Categories';
 		switch( SimpleBlogCommon::$data['urls'] ){
@@ -818,7 +818,7 @@ class SimpleBlogCommon{
 	 * Serialize a simple array into a string
 	 *
 	 */
-	static function AStrFromArray($array){
+	public static function AStrFromArray($array){
 		$str = '';
 		foreach($array as $key => $value){
 			$key = str_replace(array('"','>'),'',$key);
@@ -835,7 +835,7 @@ class SimpleBlogCommon{
 	 * @param int|string $key
 	 * @param mixed $new_value
 	 */
-	static function AStrValue( $data_string, $key, $new_value = false ){
+	public static function AStrValue( $data_string, $key, $new_value = false ){
 
 		//get string
 		$string =& SimpleBlogCommon::$data[$data_string];
@@ -876,7 +876,7 @@ class SimpleBlogCommon{
 	 * Should be changed to allow for non-numeric keys
 	 *
 	 */
-	static function AStrKey( $data_string, $value, $url_search = false ){
+	public static function AStrKey( $data_string, $value, $url_search = false ){
 		static $integers = '0123456789';
 
 		if( !isset(SimpleBlogCommon::$data[$data_string]) ){
@@ -908,14 +908,14 @@ class SimpleBlogCommon{
 	 * Remove a key-value
 	 *
 	 */
-	static function AStrRm( $data_string, $key ){
+	public static function AStrRm( $data_string, $key ){
 
 		$string =& SimpleBlogCommon::$data[$data_string];
 		$string = preg_replace('#"'.$key.'>[^">]*\"#', '"', $string);
 	}
 
 
-	static function AStrRmValue( $data_string, $value ){
+	public static function AStrRmValue( $data_string, $value ){
 
 		$string =& SimpleBlogCommon::$data[$data_string];
 		$string = preg_replace('#"[^">]*>'.$value.'\"#', '"', $string);
@@ -927,7 +927,7 @@ class SimpleBlogCommon{
 	 * Convert an AStr to an array
 	 *
 	 */
-	static function AStrToArray( $data_string ){
+	public static function AStrToArray( $data_string ){
 
 		$string =& SimpleBlogCommon::$data[$data_string];
 

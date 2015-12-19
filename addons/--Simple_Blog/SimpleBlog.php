@@ -10,9 +10,9 @@ gpPlugin_incl('SimpleBlogCommon.php');
 
 class SimpleBlog extends SimpleBlogCommon{
 
-	var $showing_category = false;
+	public $showing_category = false;
 
-	function __construct(){
+	public function __construct(){
 		global $page, $langmessage;
 
 		SimpleBlogCommon::Init();
@@ -132,7 +132,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Output the html for a single blog post
 	 * Handle comment actions
 	 */
-	function ShowPost(){
+	public function ShowPost(){
 
 
 		if( common::LoggedIn() ){
@@ -205,7 +205,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Output the blog posts in the array $post_list
 	 *
 	 */
-	function ShowPosts($post_list){
+	public function ShowPosts($post_list){
 
 		$posts = array();
 		foreach($post_list as $post_index){
@@ -218,7 +218,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Display the html for a single blog post
 	 *
 	 */
-	function ShowPostContent( $post_index ){
+	public function ShowPostContent( $post_index ){
 
 		if( !common::LoggedIn() && SimpleBlogCommon::AStrValue('drafts',$post_index) ){
 			return false;
@@ -295,7 +295,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Get the fist image from the blog post
 	 *
 	 */
-	function GetImageFromPost($item){
+	public function GetImageFromPost($item){
 
 		$img_pos = strpos($item,'<img');
 		if( $img_pos === false ){
@@ -337,7 +337,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Get the edit links for the post
 	 *
 	 */
-	static function EditLinks($post_index, &$class, &$id){
+	public static function EditLinks($post_index, &$class, &$id){
 		global $langmessage;
 
 		$query		= 'du'; //dummy parameter
@@ -377,7 +377,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Abbreviate $content if a $limit greater than zero is given
 	 *
 	 */
-	function AbbrevContent( $content, $post_index, $limit = 0 ){
+	public function AbbrevContent( $content, $post_index, $limit = 0 ){
 
 		if( !is_numeric($limit) || $limit == 0 ){
 			return $content;

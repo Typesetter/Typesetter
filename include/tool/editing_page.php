@@ -203,7 +203,7 @@ class editing_page extends display{
 		global $langmessage;
 
 
-		$admin_links[] = common::Link($this->title,$langmessage['Manage Sections'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+		$admin_links[] = common::Link($this->title,'<i class="fa fa-th"></i> '.$langmessage['Manage Sections'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
 
 
 		//draft status
@@ -212,7 +212,7 @@ class editing_page extends display{
 				$admin_links[] = common::Link($this->title,'<i class="fa fa-check"></i> '.$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq', 'class'=>'msg_publish_draft'));
 				$admin_links[] = common::Link($this->title,'<i class="fa fa-trash"></i> '.$langmessage['Discard Draft'],'cmd=DiscardDraft',array('data-cmd'=>'creq', 'class'=>'msg_discard_draft'));
 			}
-			$admin_links[] = common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+			$admin_links[] = common::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 		}
 
 
@@ -221,9 +221,9 @@ class editing_page extends display{
 
 			//visibility
 			$q							= 'cmd=ToggleVisibility';
-			$label						= $langmessage['Visibility'].': '.$langmessage['Private'];
+			$label						= '<i class="fa fa-eye-slash"></i> '.$langmessage['Visibility'].': '.$langmessage['Private'];
 			if( !$this->visibility ){
-				$label					= $langmessage['Visibility'].': '.$langmessage['Public'];
+				$label					= '<i class="fa fa-eye"></i> '.$langmessage['Visibility'].': '.$langmessage['Public'];
 				$q						.= '&visibility=private';
 			}
 			$attrs						= array('title'=>$label,'data-cmd'=>'creq');

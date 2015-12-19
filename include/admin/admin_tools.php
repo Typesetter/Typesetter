@@ -437,7 +437,7 @@ class admin_tools{
 
 
 		//editable areaas
-		echo '<li><a data-cmd="editable_list">'.$langmessage['Editable Areas'].'</a></li>';
+		echo '<li><a data-cmd="editable_list"><i class="fa fa-edit"></i> '.$langmessage['Editable Areas'].'</a></li>';
 
 		//admin_link
 		self::FormatAdminLinks($links);

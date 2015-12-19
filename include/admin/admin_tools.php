@@ -468,7 +468,7 @@ class admin_tools{
 				echo '</span>';
 
 			}elseif( is_array($link) ){
-				echo '<a data-cmd="expand">'.$label.'</a>';
+				echo '<a data-cmd="expand"><i class="fa fa-caret-down"></i> '.$label.'</a>';
 				echo '<ul>';
 				self::FormatAdminLinks($link);
 				echo '</ul>';

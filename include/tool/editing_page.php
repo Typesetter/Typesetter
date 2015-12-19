@@ -6,15 +6,15 @@ includeFile('tool/SectionContent.php');
 
 class editing_page extends display{
 
-	public $draft_file;
-	public $draft_exists		= false;
-	public $draft_stats			= array();
-	public $draft_meta			= array();
+	protected $draft_file;
+	protected $draft_exists			= false;
+	protected $draft_stats			= array();
+	protected $draft_meta			= array();
 
-	public $permission_edit;
-	public $permission_menu;
+	protected $permission_edit;
+	protected $permission_menu;
 
-	private $cmds				= array();
+	private $cmds					= array();
 
 	public function __construct($title,$type){
 		parent::__construct($title,$type);
@@ -1017,10 +1017,56 @@ class editing_page extends display{
 	 * Display the contents of a past revision
 	 *
 	 */
-	public function ViewRevision(){
+	protected function ViewRevision(){
 		global $langmessage;
 
-		$time		= $_REQUEST['time'];
+		$time			=& $_REQUEST['time'];
+		$file_sections	= $this->GetRevision($time);
+
+		if( $file_sections === false ){
+			return false;
+		}
+
+		$this->contentBuffer = section_content::Render($file_sections,$this->title,gpFiles::$last_stats);
+
+
+		$date		= common::date($langmessage['strftime_datetime'],$time);
+		$message	= sprintf($langmessage['viewing_revision'],$date);
+
+
+		$message	.= ' <span class="msg_buttons">';
+		$message	.= common::Link($this->title,$langmessage['Restore this revision'],'cmd=UseRevision&time='.$time,array('data-cmd'=>'cnreq'));
+		$message	.= '</span>';
+
+		msg( $message );
+	}
+
+
+	/**
+	 * Revert the file data to a previous revision
+	 *
+	 */
+	protected function UseRevision(){
+		global $langmessage;
+
+		$time			=& $_REQUEST['time'];
+		$file_sections	= $this->GetRevision($time);
+
+		if( $file_sections === false ){
+			return false;
+		}
+
+		$this->file_sections = $file_sections;
+		$this->SaveThis();
+	}
+
+
+	/**
+	 * Get the contents of a revision
+	 *
+	 */
+	protected function GetRevision($time){
+
 		$full_path	= $this->BackupFile($time);
 
 		if( is_null($full_path) ){
@@ -1047,52 +1093,7 @@ class editing_page extends display{
 			$file_sections	= gpFiles::Get($full_path,'file_sections');
 		}
 
-
-		$this->contentBuffer = section_content::Render($file_sections,$this->title,gpFiles::$last_stats);
-
-
-		$date		= common::date($langmessage['strftime_datetime'],$time);
-		$message	= sprintf($langmessage['viewing_revision'],$date);
-
-
-		$message	.= ' <span class="msg_buttons">';
-		$message	.= common::Link($this->title,$langmessage['Restore this revision'],'cmd=UseRevision&time='.$time,array('data-cmd'=>'cnreq'));
-		$message	.= '</span>';
-
-		msg( $message );
-	}
-
-
-	/**
-	 * Revert the file data to a previous revision
-	 *
-	 */
-	public function UseRevision(){
-		global $langmessage;
-
-		$time		= $_REQUEST['time'];
-		$full_path	= $this->BackupFile($time);
-
-		if( is_null($full_path) ){
-			return false;
-		}
-		if( strpos($full_path,'.gze') !== false ){
-			ob_start();
-			readgzfile($full_path);
-			$contents = ob_get_clean();
-		}else{
-			$contents = file_get_contents($full_path);
-		}
-
-		$this->SaveBackup();
-		if( !gpFiles::Save( $this->draft_file, $contents ) ){ //restore to the draft file
-			msg($langmessage['OOPS'].' (Draft not saved)');
-			return false;
-		}
-		$this->draft_exists = true;
-		$this->GetFile();
-		$this->SaveThis(false); //save again to update the mod time and username
-		msg($langmessage['SAVED']);
+		return $file_sections;
 	}
 
 

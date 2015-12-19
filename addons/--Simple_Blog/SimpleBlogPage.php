@@ -303,41 +303,46 @@ class SimpleBlogPage{
 	 *
 	 */
 	public function GetCommentHtml( $data ){
-		global $langmessage;
 
 		if( !is_array($data) ){
 			return;
 		}
 
 		foreach($data as $key => $comment){
-			echo '<div class="comment_area">';
-			echo '<p class="name">';
-			if( (SimpleBlogCommon::$data['commenter_website'] == 'nofollow') && !empty($comment['website']) ){
-				echo '<b><a href="'.$comment['website'].'" rel="nofollow">'.$comment['name'].'</a></b>';
-			}elseif( (SimpleBlogCommon::$data['commenter_website'] == 'link') && !empty($comment['website']) ){
-				echo '<b><a href="'.$comment['website'].'">'.$comment['name'].'</a></b>';
-			}else{
-				echo '<b>'.$comment['name'].'</b>';
-			}
-			echo ' &nbsp; ';
-			echo '<span>';
-			echo strftime(SimpleBlogCommon::$data['strftime_format'],$comment['time']);
-			echo '</span>';
-
-
-			if( common::LoggedIn() ){
-				echo ' &nbsp; ';
-				$attr = 'class="delete gpconfirm" title="'.$langmessage['delete_confirm'].'" name="postlink" data-nonce= "'.common::new_nonce('post',true).'"';
-				echo SimpleBlogCommon::PostLink($this->post_id,$langmessage['delete'],'cmd=delete_comment&comment_index='.$key,$attr);
-			}
-
-
-			echo '</p>';
-			echo '<p class="comment">';
-			echo $comment['comment'];
-			echo '</p>';
-			echo '</div>';
+			$this->OutputComment($key,$comment);
 		}
+	}
+
+	private function OutputComment($key,$comment){
+		global $langmessage;
+
+		echo '<div class="comment_area">';
+		echo '<p class="name">';
+		if( (SimpleBlogCommon::$data['commenter_website'] == 'nofollow') && !empty($comment['website']) ){
+			echo '<b><a href="'.$comment['website'].'" rel="nofollow">'.$comment['name'].'</a></b>';
+		}elseif( (SimpleBlogCommon::$data['commenter_website'] == 'link') && !empty($comment['website']) ){
+			echo '<b><a href="'.$comment['website'].'">'.$comment['name'].'</a></b>';
+		}else{
+			echo '<b>'.$comment['name'].'</b>';
+		}
+		echo ' &nbsp; ';
+		echo '<span>';
+		echo strftime(SimpleBlogCommon::$data['strftime_format'],$comment['time']);
+		echo '</span>';
+
+
+		if( common::LoggedIn() ){
+			echo ' &nbsp; ';
+			$attr = 'class="delete gpconfirm" title="'.$langmessage['delete_confirm'].'" name="postlink" data-nonce= "'.common::new_nonce('post',true).'"';
+			echo SimpleBlogCommon::PostLink($this->post_id,$langmessage['delete'],'cmd=delete_comment&comment_index='.$key,$attr);
+		}
+
+
+		echo '</p>';
+		echo '<p class="comment">';
+		echo $comment['comment'];
+		echo '</p>';
+		echo '</div>';
 	}
 
 

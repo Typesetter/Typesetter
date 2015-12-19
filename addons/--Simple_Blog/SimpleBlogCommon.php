@@ -431,7 +431,7 @@ class SimpleBlogCommon{
 	 * @return bool
 	 *
 	 */
-	public static function Delete(){
+	protected static function Delete(){
 		global $langmessage;
 
 		$post_id		= $_POST['del_id'];

@@ -7,7 +7,7 @@ gpPlugin_incl('Admin/Admin.php');
 
 class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 
-	function __construct(){
+	public function __construct(){
 		global $langmessage, $page;
 		parent::__construct();
 

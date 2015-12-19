@@ -103,6 +103,8 @@ class admin_port{
 			if( function_exists('bzopen') ){
 				$this->avail_compress['tbz'] = 'bzip';
 			}
+
+			$this->avail_compress['tar'] = $langmessage['None'];
 		}
 
 	}
@@ -957,7 +959,6 @@ class admin_port{
 		foreach($this->avail_compress as $ext => $disp){
 			echo '<option value="'.$ext.'">'.$disp.'</option>';
 		}
-		echo '<option value="">'.$langmessage['None'].'</option>';
 		echo '</select>';
 
 

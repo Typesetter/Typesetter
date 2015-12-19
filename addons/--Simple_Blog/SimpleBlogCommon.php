@@ -288,19 +288,19 @@ class SimpleBlogCommon{
 		for($i = $start; $i < $end; $i++){
 
 			//get post id
-			$post_id = SimpleBlogCommon::AStrValue('str_index',$i);
+			$post_id = SimpleBlogCommon::AStrGet('str_index',$i);
 			if( !$post_id ){
 				continue;
 			}
 
 			if( !$include_drafts ){
 				//exclude drafts
-				if( SimpleBlogCommon::AStrValue('drafts',$post_id) ){
+				if( SimpleBlogCommon::AStrGet('drafts',$post_id) ){
 					continue;
 				}
 
 				//exclude future posts
-				$time = SimpleBlogCommon::AStrValue('post_times',$post_id);
+				$time = SimpleBlogCommon::AStrGet('post_times',$post_id);
 				if( $time > time() ){
 					continue;
 				}
@@ -531,7 +531,7 @@ class SimpleBlogCommon{
 
 		//blog comments
 		$blog_comments = '{empty_blog_piece}';
-		$count = SimpleBlogCommon::AStrValue('comment_counts',$post_index);
+		$count = SimpleBlogCommon::AStrGet('comment_counts',$post_index);
 		if( $count > 0 ){
 			$blog_comments = '<span class="simple_blog_comments">';
 			if( $cacheable ){
@@ -674,7 +674,7 @@ class SimpleBlogCommon{
 			unlink($commentDataFile);
 		}
 
-		SimpleBlogCommon::AStrValue('comment_counts',$post_index,count($data));
+		SimpleBlogCommon::AStrSet('comment_counts',$post_index,count($data));
 
 		SimpleBlogCommon::SaveIndex();
 
@@ -711,7 +711,7 @@ class SimpleBlogCommon{
 			switch( SimpleBlogCommon::$data['urls'] ){
 
 				case 'Full':
-					$title = SimpleBlogCommon::AStrValue('titles',$post_id);
+					$title = SimpleBlogCommon::AStrGet('titles',$post_id);
 					$title = str_replace(array('?',' '),array('','_'),$title);
 					$url .= '/'.$post_id.'_'.$title;
 				break;
@@ -721,7 +721,7 @@ class SimpleBlogCommon{
 				break;
 
 				case 'Title':
-					$title = SimpleBlogCommon::AStrValue('titles',$post_id);
+					$title = SimpleBlogCommon::AStrGet('titles',$post_id);
 					$title = str_replace(array('?',' '),array('','_'),$title);
 					$url .= '/'.$title;
 				break;
@@ -787,37 +787,63 @@ class SimpleBlogCommon{
 	 * @param string $data_string
 	 * @param int|string $key
 	 * @param mixed $new_value
+	 * @deprecated 3.0.1
 	 */
 	public static function AStrValue( $data_string, $key, $new_value = false ){
 
-		//get string
-		$string =& SimpleBlogCommon::$data[$data_string];
+		if( $new_value === false ){
+			return self::AStrGet($data_string, $key);
+		}
+
+		return self::AStrSet($data_string, $key);
+	}
+
+
+	/**
+	 * Get the value from a serialized string
+	 * @param string $data_string
+	 * @param int|string $key
+	 */
+	public static function AStrGet( $data_string, $key){
+
+		//get position of current value
+		$prev_key_str	= '"'.$key.'>';
+		$offset			= strpos(SimpleBlogCommon::$data[$data_string],$prev_key_str);
+
+		if( $offset !== false ){
+			$offset		+= strlen($prev_key_str);
+			$length		= strpos(SimpleBlogCommon::$data[$data_string],'"',$offset) - $offset;
+			return substr(SimpleBlogCommon::$data[$data_string],$offset,$length);
+		}
+
+		return false;
+	}
+
+
+	/**
+	 * Set the value from a serialized string
+	 * @param string $data_string
+	 * @param int|string $key
+	 * @param string $new_value
+	 */
+	public static function AStrSet( $data_string, $key, $new_value){
 
 
 		//get position of current value
-		$prev_key_str = '"'.$key.'>';
-		$offset = strpos($string,$prev_key_str);
-		if( $offset !== false ){
-			$offset += strlen($prev_key_str);
-			$length = strpos($string,'"',$offset) - $offset;
-			if( $new_value === false ){
-				return substr($string,$offset,$length);
-			}
-
-		}elseif( $new_value === false ){
-			return false;
-		}
-
+		$prev_key_str	= '"'.$key.'>';
+		$offset			= strpos(SimpleBlogCommon::$data[$data_string],$prev_key_str);
 
 		//setting values
 		if( $offset === false ){
-			if( empty($string) ){
-				$string = '"';
+			if( empty(SimpleBlogCommon::$data[$data_string]) ){
+				SimpleBlogCommon::$data[$data_string]	= '"';
 			}
-			$key = str_replace(array('"','>'),'',$key);
-			$string .= $key.'>'.$new_value.'"';
+			$key										= str_replace(array('"','>'),'',$key);
+			SimpleBlogCommon::$data[$data_string]		.= $key.'>'.$new_value.'"';
 		}else{
-			$string = substr_replace($string,$new_value,$offset,$length);
+			$offset										+= strlen($prev_key_str);
+			$length										= strpos(SimpleBlogCommon::$data[$data_string],'"',$offset) - $offset;
+			SimpleBlogCommon::$data[$data_string]		= substr_replace(SimpleBlogCommon::$data[$data_string],$new_value,$offset,$length);
 		}
 
 		return true;

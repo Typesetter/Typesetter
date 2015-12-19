@@ -13,7 +13,7 @@ class SimpleBlogPage{
 	public function __construct($post_id){
 		$this->post_id			= $post_id;
 		$this->post				= SimpleBlogCommon::GetPostContent($this->post_id);
-		$this->comments_closed	= SimpleBlogCommon::AStrValue('comments_closed',$this->post_id);
+		$this->comments_closed	= SimpleBlogCommon::AStrGet('comments_closed',$this->post_id);
 	}
 
 
@@ -28,7 +28,7 @@ class SimpleBlogPage{
 			return;
 		}
 
-		if( !common::LoggedIn() && SimpleBlogCommon::AStrValue('drafts',$this->post_id) ){
+		if( !common::LoggedIn() && SimpleBlogCommon::AStrGet('drafts',$this->post_id) ){
 			$this->Error_404();
 			return;
 		}
@@ -52,7 +52,7 @@ class SimpleBlogPage{
 
 		//heading
 		$header			= '<h2 id="blog_post_'.$this->post_id.'">';
-		if( SimpleBlogCommon::AStrValue('drafts',$this->post_id) ){
+		if( SimpleBlogCommon::AStrGet('drafts',$this->post_id) ){
 			$header		.= '<span style="opacity:0.3;">';
 			$header		.= gpOutput::SelectText('Draft');
 			$header		.= '</span> ';
@@ -127,11 +127,11 @@ class SimpleBlogPage{
 
 		$temp = array();
 		foreach($this->post['categories'] as $catindex){
-			$title = SimpleBlogCommon::AStrValue( 'categories', $catindex );
+			$title = SimpleBlogCommon::AStrGet( 'categories', $catindex );
 			if( !$title ){
 				continue;
 			}
-			if( SimpleBlogCommon::AStrValue('categories_hidden',$catindex) ){
+			if( SimpleBlogCommon::AStrGet('categories_hidden',$catindex) ){
 				continue;
 			}
 			$temp[] = SimpleBlogCommon::CategoryLink($catindex, $title, $title);
@@ -467,9 +467,9 @@ class SimpleBlogPage{
 			$i = 0;
 			do {
 				$i++;
-				$next_index = SimpleBlogCommon::AStrValue('str_index',$post_key-$i);
+				$next_index = SimpleBlogCommon::AStrGet('str_index',$post_key-$i);
 				if( !common::loggedIn() ){
-					$isDraft = SimpleBlogCommon::AStrValue('drafts',$next_index);
+					$isDraft = SimpleBlogCommon::AStrGet('drafts',$next_index);
 				}
 			}while( $isDraft );
 
@@ -486,14 +486,14 @@ class SimpleBlogPage{
 		$isDraft = false;
 		do{
 			$i++;
-			$prev_index = SimpleBlogCommon::AStrValue('str_index',$post_key+$i);
+			$prev_index = SimpleBlogCommon::AStrGet('str_index',$post_key+$i);
 
 			if( $prev_index === false ){
 				break;
 			}
 
 			if( !common::loggedIn() ){
-				$isDraft = SimpleBlogCommon::AStrValue('drafts',$prev_index);
+				$isDraft = SimpleBlogCommon::AStrGet('drafts',$prev_index);
 			}
 
 			if( !$isDraft ){

@@ -220,7 +220,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 */
 	public function ShowPostContent( $post_index ){
 
-		if( !common::LoggedIn() && SimpleBlogCommon::AStrValue('drafts',$post_index) ){
+		if( !common::LoggedIn() && SimpleBlogCommon::AStrGet('drafts',$post_index) ){
 			return false;
 		}
 
@@ -235,7 +235,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		echo '<div class="blog_post post_list_item'.$class.'" '.$id.'>';
 
 		$header = '<h2 id="blog_post_'.$post_index.'">';
-		if( SimpleBlogCommon::AStrValue('drafts',$post_index) ){
+		if( SimpleBlogCommon::AStrGet('drafts',$post_index) ){
 			$header .= '<span style="opacity:0.3;">';
 			$header .= gpOutput::SelectText('Draft');
 			$header .= '</span> ';
@@ -267,11 +267,11 @@ class SimpleBlog extends SimpleBlogCommon{
 		if( SimpleBlogCommon::$data['abbrev_cat'] && isset($post['categories']) && count($post['categories']) ){
 			$temp = array();
 			foreach($post['categories'] as $catindex){
-				$title = SimpleBlogCommon::AStrValue( 'categories', $catindex );
+				$title = SimpleBlogCommon::AStrGet( 'categories', $catindex );
 				if( !$title ){
 					continue;
 				}
-				if( SimpleBlogCommon::AStrValue('categories_hidden',$catindex) ){
+				if( SimpleBlogCommon::AStrGet('categories_hidden',$catindex) ){
 					continue;
 				}
 				$temp[] = SimpleBlogCommon::CategoryLink($catindex, $title, $title);
@@ -358,7 +358,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		if( SimpleBlogCommon::$data['allow_comments'] ){
 
-			$comments_closed = SimpleBlogCommon::AStrValue('comments_closed',$post_index);
+			$comments_closed = SimpleBlogCommon::AStrGet('comments_closed',$post_index);
 			if( $comments_closed ){
 				$label = gpOutput::SelectText('Open Comments');
 				echo SimpleBlogCommon::PostLink($post_index,$label,'cmd=opencomments','name="cnreq" style="display:none"');

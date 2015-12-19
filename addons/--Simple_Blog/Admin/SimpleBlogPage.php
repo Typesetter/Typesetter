@@ -52,7 +52,7 @@ class AdminSimpleBlogPage extends SimpleBlogPage{
 		global $langmessage;
 
 		if( $closed ){
-			SimpleBlogCommon::AStrValue('comments_closed',$post_id,1);
+			SimpleBlogCommon::AStrSet('comments_closed',$post_id,1);
 		}else{
 			SimpleBlogCommon::AStrRm('comments_closed',$post_id);
 		}

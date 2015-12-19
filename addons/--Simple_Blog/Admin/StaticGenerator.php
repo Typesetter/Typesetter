@@ -179,7 +179,7 @@ class StaticGenerator{
 		foreach($categories as $catindex => $catname){
 
 			//skip hidden categories
-			if( SimpleBlogCommon::AStrValue('categories_hidden',$catindex) ){
+			if( SimpleBlogCommon::AStrGet('categories_hidden',$catindex) ){
 				continue;
 			}
 
@@ -193,7 +193,7 @@ class StaticGenerator{
 			echo '<a class="blog_gadget_link">'.$catname.' ('.$sum.')</a>';
 			echo '<ul class="nodisplay">';
 			foreach($posts as $post_id){
-				$post_title = SimpleBlogCommon::AStrValue('titles',$post_id);
+				$post_title = SimpleBlogCommon::AStrGet('titles',$post_id);
 				echo '<li>';
 				echo SimpleBlogCommon::PostLink( $post_id, $post_title );
 				echo '</li>';
@@ -252,7 +252,7 @@ class StaticGenerator{
 			echo '<li><a class="blog_gadget_link">'.self::$months[$m-1].' ('.$sum.')</a>';
 			echo '<ul class="simple_blog_category_posts nodisplay">';
 			foreach($posts as $post_id ){
-				$post_title = SimpleBlogCommon::AStrValue('titles',$post_id);
+				$post_title = SimpleBlogCommon::AStrGet('titles',$post_id);
 				echo '<li>';
 				echo SimpleBlogCommon::PostLink($post_id, $post_title );
 				echo '</li>';

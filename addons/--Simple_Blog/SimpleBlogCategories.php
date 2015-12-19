@@ -19,7 +19,7 @@ class BlogCategories extends SimpleBlog{
 
 		$this->catindex = $this->CatIndex($page->requested);
 
-		if( $this->catindex && isset($this->categories[$this->catindex]) && !SimpleBlogCommon::AStrValue('categories_hidden',$this->catindex) ){
+		if( $this->catindex && isset($this->categories[$this->catindex]) && !SimpleBlogCommon::AStrGet('categories_hidden',$this->catindex) ){
 			$this->ShowCategory();
 		}else{
 			$this->ShowCategories();
@@ -102,11 +102,11 @@ class BlogCategories extends SimpleBlog{
 		$show_posts = array();
 		if( !$include_drafts ){
 			foreach($cat_posts as $post_id){
-				if( SimpleBlogCommon::AStrValue('drafts',$post_id) ){
+				if( SimpleBlogCommon::AStrGet('drafts',$post_id) ){
 					continue;
 				}
 
-				$time = SimpleBlogCommon::AStrValue('post_times',$post_id);
+				$time = SimpleBlogCommon::AStrGet('post_times',$post_id);
 				if( $time > time() ){
 					continue;
 				}
@@ -133,7 +133,7 @@ class BlogCategories extends SimpleBlog{
 		foreach($this->categories as $catindex => $catname){
 
 			//skip hidden categories
-			if( SimpleBlogCommon::AStrValue('categories_hidden',$catindex) ){
+			if( SimpleBlogCommon::AStrGet('categories_hidden',$catindex) ){
 				continue;
 			}
 

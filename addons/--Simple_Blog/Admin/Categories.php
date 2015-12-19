@@ -58,7 +58,7 @@ class AdminSimpleBlogCategories extends SimipleBlogAdmin{
 			echo '</td><td>';
 
 			$checked = '';
-			if( !SimpleBlogCommon::AStrValue('categories_hidden',$catindex) ){
+			if( !SimpleBlogCommon::AStrGet('categories_hidden',$catindex) ){
 				$checked = ' checked="checked"';
 			}
 

@@ -60,6 +60,9 @@ class SimpleBlog extends SimpleBlogCommon{
 			echo '<p>You\'ll probably want to get started by '.common::Link('Special_Blog','creating a blog post','cmd=new_form').'.</p>';
 		}
 
+
+		//self::GenStaticContent();
+
 	}
 
 

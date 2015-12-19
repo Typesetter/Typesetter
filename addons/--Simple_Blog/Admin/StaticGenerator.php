@@ -80,7 +80,7 @@ class StaticGenerator{
 
 
 			//href
-			SimpleBlogCommon::FixLinks($content,$server,0);
+			self::FixLinks($content,$server,0);
 
 			echo '<summary type="html"><![CDATA['.$content.']]></summary>'."\n";
 			echo '</entry>'."\n";
@@ -279,5 +279,57 @@ class StaticGenerator{
 				.'-'. mb_substr($chars,20,12);
 		return $uuid;
 	}
+
+
+
+	/**
+	 * Recursively turn relative links into absolute links
+	 * @static
+	 */
+	public function FixLinks(&$content,$server,$offset){
+
+		$pos = mb_strpos($content,'href="',$offset);
+		if( $pos <= 0 ){
+			return;
+		}
+		$pos = $pos+6;
+
+		$pos2 = mb_strpos($content,'"',$pos);
+
+		if( $pos2 <= 0 ){
+			return;
+		}
+
+		//well formed link
+		$check = mb_strpos($content,'>',$pos);
+		if( ($check !== false) && ($check < $pos2) ){
+			self::FixLinks($content,$server,$pos2);
+			return;
+		}
+
+		$title = mb_substr($content,$pos,$pos2-$pos);
+
+		//internal link
+		if( mb_strpos($title,'mailto:') !== false ){
+			self::FixLinks($content,$server,$pos2);
+			return;
+		}
+		if( mb_strpos($title,'://') !== false ){
+			self::FixLinks($content,$server,$pos2);
+			return;
+		}
+
+		if( mb_strpos($title,'/') === 0 ){
+			$replacement = $server.$title;
+		}else{
+			$replacement = $server.common::GetUrl($title);
+		}
+
+		$content = mb_substr_replace($content,$replacement,$pos,$pos2-$pos);
+
+		self::FixLinks($content,$server,$pos2);
+	}
+
+
 
 }

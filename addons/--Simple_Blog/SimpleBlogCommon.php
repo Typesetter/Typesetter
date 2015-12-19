@@ -60,7 +60,8 @@ class SimpleBlogCommon{
 
 
 		//regenerate if there are pending posts that need to be published
-		if( SimpleBlogCommon::$data['next_regen'] < time()  ){
+		if( !is_null(SimpleBlogCommon::$data['next_regen']) && SimpleBlogCommon::$data['next_regen'] < time()  ){
+			msg( pre(SimpleBlogCommon::$data['next_regen']) );
 			if( @gpFiles::WriteLock() ){
 				self::GenStaticContent();
 				SimpleBlogCommon::NextGenTime();
@@ -70,11 +71,15 @@ class SimpleBlogCommon{
 		}
 	}
 
+	/**
+	 * Regenerate feed and gadgets
+	 *
+	 */
 	public static function GenStaticContent(){
 		gpPlugin_incl('Admin/StaticGenerator.php');
 		StaticGenerator::Generate();
-
 	}
+
 
 	/**
 	 * Get next static gen time
@@ -87,7 +92,7 @@ class SimpleBlogCommon{
 
 
 		asort($post_times);
-		$next_regen = false;
+		$next_regen = null;
 		foreach($post_times as $time){
 			if( $time > time() ){
 				$next_regen = $time;
@@ -499,59 +504,6 @@ class SimpleBlogCommon{
 
 		return true;
 	}
-
-
-
-
-	/**
-	 * Recursively turn relative links into absolute links
-	 * @static
-	 */
-	public function FixLinks(&$content,$server,$offset){
-
-		$pos = mb_strpos($content,'href="',$offset);
-		if( $pos <= 0 ){
-			return;
-		}
-		$pos = $pos+6;
-
-		$pos2 = mb_strpos($content,'"',$pos);
-
-		if( $pos2 <= 0 ){
-			return;
-		}
-
-		//well formed link
-		$check = mb_strpos($content,'>',$pos);
-		if( ($check !== false) && ($check < $pos2) ){
-			SimpleBlogCommon::FixLinks($content,$server,$pos2);
-			return;
-		}
-
-		$title = mb_substr($content,$pos,$pos2-$pos);
-
-		//internal link
-		if( mb_strpos($title,'mailto:') !== false ){
-			SimpleBlogCommon::FixLinks($content,$server,$pos2);
-			return;
-		}
-		if( mb_strpos($title,'://') !== false ){
-			SimpleBlogCommon::FixLinks($content,$server,$pos2);
-			return;
-		}
-
-		if( mb_strpos($title,'/') === 0 ){
-			$replacement = $server.$title;
-		}else{
-			$replacement = $server.common::GetUrl($title);
-		}
-
-		$content = mb_substr_replace($content,$replacement,$pos,$pos2-$pos);
-
-		SimpleBlogCommon::FixLinks($content,$server,$pos2);
-	}
-
-
 
 
 	/**

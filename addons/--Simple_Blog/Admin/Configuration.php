@@ -370,9 +370,9 @@ class AdminSimpleBlogConfig extends SimipleBlogAdmin{
 			echo '<div><label>';
 			$checked = '';
 			if( $current == $value){
-				$checked = ' checked="checked"';
+				$checked = ' checked';
 			}
-			echo '<input type="radio" name="'.$name.'" value="'.$value.'"'.$checked.'" /> ';
+			echo '<input type="radio" name="'.$name.'" value="'.$value.'" '.$checked.' /> ';
 			echo $label;
 			echo '</label></div>';
 		}

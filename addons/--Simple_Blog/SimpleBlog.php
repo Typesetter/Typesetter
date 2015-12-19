@@ -19,7 +19,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		//get the post id
 		if( $page->pagetype == 'special_display' ){
-			$this->post_id	= self::PostID($page->requested);
+			$this->post_id	= $this->PostID($page->requested);
 		}
 
 
@@ -67,25 +67,60 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Get the post id from the requested url
 	 *
 	 */
-	static function PostID($requested){
+	public function PostID($requested){
+
 
 		if( isset($_REQUEST['id']) && ctype_digit($_REQUEST['id']) ){
 			return $_REQUEST['id'];
 		}
 
 		if( strpos($requested,'/') === false ){
-			return false;
+			return;
 		}
 
 		$parts	= explode('/',$requested);
-		$ints	= strspn($parts[1],'0123456789');
 
-		if( $ints ){
-			return substr($parts[1],0,$ints);
+		if( SimpleBlogCommon::$data['urls'] != 'Title' ){
+			$ints	= strspn($parts[1],'0123456789');
+			if( $ints ){
+				return substr($parts[1],0,$ints);
+			}
 		}
 
-		return SimpleBlogCommon::AStrKey('titles',$parts[1], true);
+		$id = SimpleBlogCommon::AStrKey('titles',$parts[1], true);
+		if( $id !== false ){
+			return $id;
+		}
+
+		return $this->SimilarPost($parts[1]);
 	}
+
+
+	/**
+	 * Get a id for the post that is most similar to the requested title
+	 *
+	 */
+	public function SimilarPost($title){
+
+		$titles				= SimpleBlogCommon::AStrToArray('titles');
+		$post_times			= SimpleBlogCommon::AStrToArray('post_times');
+		$similar			= array();
+		$lower				= str_replace(' ','_',strtolower($title));
+
+		foreach($titles as $post_id => $title){
+
+			if( $post_times[$post_id] > time() ){
+				continue;
+			}
+
+			similar_text($lower,strtolower($title),$percent);
+			$similar[$percent] = $post_id; //if similarity is the same for two posts, the newer post will take precedence
+		}
+
+		krsort($similar);
+		return current($similar);
+	}
+
 
 
 	/**

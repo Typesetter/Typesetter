@@ -10,6 +10,7 @@ class editing_page extends display{
 	protected $draft_exists			= false;
 	protected $draft_stats			= array();
 	protected $draft_meta			= array();
+	protected $revision;
 
 	protected $permission_edit;
 	protected $permission_menu;
@@ -203,11 +204,15 @@ class editing_page extends display{
 		global $langmessage;
 
 
-		$admin_links[] = common::Link($this->title,'<i class="fa fa-th"></i> '.$langmessage['Manage Sections'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+		//viewing revision
+		if( isset($this->revision) ){
+			return $this->RevisionLinks();
+		}
 
 
-		//draft status
+		//editing
 		if( $this->permission_edit ){
+			$admin_links[] = common::Link($this->title,'<i class="fa fa-th"></i> '.$langmessage['Manage Sections'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
 			if( $this->draft_exists	){
 				$admin_links[] = common::Link($this->title,'<i class="fa fa-check"></i> '.$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq', 'class'=>'msg_publish_draft'));
 				$admin_links[] = common::Link($this->title,'<i class="fa fa-trash"></i> '.$langmessage['Discard Draft'],'cmd=DiscardDraft',array('data-cmd'=>'creq', 'class'=>'msg_discard_draft'));
@@ -256,6 +261,47 @@ class editing_page extends display{
 		}
 
 		return array_merge($admin_links, $this->admin_links);
+	}
+
+
+	/**
+	 * Return admin links when a revision is being displayed
+	 *
+	 */
+	protected function RevisionLinks(){
+		global $langmessage;
+
+		$date		= common::date($langmessage['strftime_datetime'],$this->revision);
+		$message	= sprintf($langmessage['viewing_revision'],$date);
+
+		//$admin_links[] = '<span>'.sprintf($langmessage['viewing_revision'],$date).'</span>';
+		$admin_links[] = common::Link($this->title,'<i class="fa fa-save"></i> '.$langmessage['Restore this revision'].' ('.$date.')','cmd=UseRevision&time='.$this->revision,array('data-cmd'=>'cnreq','class'=>'msg_publish_draft'));
+
+
+		//previous && next revision
+		$files			= $this->BackupFiles();
+		$times			= array_keys($files);
+		$key_current	= array_search($this->revision, $times);
+
+		if( $key_current !== false ){
+			if( isset($times[$key_current-1]) ){
+				$admin_links[]		= common::Link($this->title,'<i class="fa fa-backward"></i> '.$langmessage['Previous'],'cmd=ViewRevision&time='.$times[$key_current-1],array('data-cmd'=>'cnreq'));
+			}
+
+			if( isset($times[$key_current+1]) ){
+				$admin_links[]		= common::Link($this->title,'<i class="fa fa-forward"></i> '.$langmessage['Next'],'cmd=ViewRevision&time='.$times[$key_current+1],array('data-cmd'=>'cnreq'));
+			}
+		}
+
+		$admin_links[] = common::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+
+		//msg(pre($key_current));
+		//msg($this->fileModTime);
+		//msg($files);
+
+
+		return $admin_links;
+
 	}
 
 
@@ -1027,18 +1073,8 @@ class editing_page extends display{
 			return false;
 		}
 
-		$this->contentBuffer = section_content::Render($file_sections,$this->title,gpFiles::$last_stats);
-
-
-		$date		= common::date($langmessage['strftime_datetime'],$time);
-		$message	= sprintf($langmessage['viewing_revision'],$date);
-
-
-		$message	.= ' <span class="msg_buttons">';
-		$message	.= common::Link($this->title,$langmessage['Restore this revision'],'cmd=UseRevision&time='.$time,array('data-cmd'=>'cnreq'));
-		$message	.= '</span>';
-
-		msg( $message );
+		$this->contentBuffer	= section_content::Render($file_sections,$this->title,gpFiles::$last_stats);
+		$this->revision			= $time;
 	}
 
 

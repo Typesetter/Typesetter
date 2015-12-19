@@ -199,8 +199,6 @@ class SimpleBlogPage{
 			return;
 		}
 
-		$data = SimpleBlogCommon::GetCommentData($this->post_id);
-
 		//need a captcha?
 		if( SimpleBlogCommon::$data['comment_captcha'] && gp_recaptcha::isActive() ){
 
@@ -212,6 +210,33 @@ class SimpleBlogPage{
 
 			}
 		}
+
+		$comment = $this->GetPostedComment();
+		if( $comment === false ){
+			return false;
+		}
+
+		$data		= SimpleBlogCommon::GetCommentData($this->post_id);
+		$data[]		= $comment;
+
+		if( !SimpleBlogCommon::SaveCommentData($this->post_id,$data) ){
+			message($langmessage['OOPS']);
+			return false;
+		}
+
+		message($langmessage['SAVED']);
+
+		$this->EmailComment($comment);
+		$this->comment_saved = true;
+		return true;
+	}
+
+	/**
+	 * Get Posted Comment
+	 *
+	 */
+	protected function GetPostedComment(){
+		global $langmessage;
 
 		if( empty($_POST['name']) ){
 			$field = gpOutput::SelectText('Name');
@@ -226,10 +251,10 @@ class SimpleBlogPage{
 		}
 
 
-		$temp = array();
-		$temp['name'] = htmlspecialchars($_POST['name']);
-		$temp['comment'] = nl2br(strip_tags($_POST['comment']));
-		$temp['time'] = time();
+		$comment				= array();
+		$comment['name']		= htmlspecialchars($_POST['name']);
+		$comment['comment']		= nl2br(strip_tags($_POST['comment']));
+		$comment['time']		= time();
 
 		if( !empty($_POST['website']) && ($_POST['website'] !== 'http://') ){
 			$website = $_POST['website'];
@@ -237,43 +262,39 @@ class SimpleBlogPage{
 				$website = false;
 			}
 			if( $website ){
-				$temp['website'] = $website;
+				$comment['website'] = $website;
 			}
 		}
 
-		$data[] = $temp;
+		return $comment;
+	}
 
-		if( !SimpleBlogCommon::SaveCommentData($this->post_id,$data) ){
-			message($langmessage['OOPS']);
-			return false;
+
+	/**
+	 * Email new comments
+	 *
+	 */
+	protected function EmailComment($comment){
+		global $gp_mailer;
+
+		if( empty(SimpleBlogCommon::$data['email_comments']) ){
+			return;
 		}
 
-		message($langmessage['SAVED']);
+		includeFile('tool/email_mailer.php');
 
 
-		//email new comments
-		if( !empty(SimpleBlogCommon::$data['email_comments']) ){
-
-
-
-			$subject = 'New Comment';
-			$body = '';
-			if( !empty($temp['name']) ){
-				$body .= '<p>From: '.$temp['name'].'</p>';
-			}
-			if( !empty($temp['website']) ){
-				$body .= '<p>Website: '.$temp['name'].'</p>';
-			}
-			$body .= '<p>'.$temp['comment'].'</p>';
-
-			global $gp_mailer;
-			includeFile('tool/email_mailer.php');
-			$gp_mailer->SendEmail(SimpleBlogCommon::$data['email_comments'], $subject, $body);
+		$body		= '';
+		if( !empty($comment['name']) ){
+			$body .= '<p>From: '.$comment['name'].'</p>';
 		}
+		if( !empty($comment['website']) ){
+			$body .= '<p>Website: '.$comment['name'].'</p>';
+		}
+		$body .= '<p>'.$comment['comment'].'</p>';
 
+		$gp_mailer->SendEmail(SimpleBlogCommon::$data['email_comments'], 'New Comment', $body);
 
-		$this->comment_saved = true;
-		return true;
 	}
 
 

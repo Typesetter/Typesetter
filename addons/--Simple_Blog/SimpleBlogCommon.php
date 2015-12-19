@@ -14,7 +14,7 @@ includeFile('tool/recaptcha.php');
 class SimpleBlogCommon{
 
 	public static $index_file;
-	public static $data			= null;
+	public static $data;
 	public static $root_url		= 'Special_Blog';
 
 	public $new_install			= false;
@@ -41,7 +41,7 @@ class SimpleBlogCommon{
 	public static function Init(){
 		global $addonPathData;
 
-		if( self::$data ){
+		if( isset(self::$data) ){
 			return;
 		}
 

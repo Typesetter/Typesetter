@@ -7,7 +7,7 @@ gpPlugin_incl('Admin/Admin.php');
 
 class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 
-	function __construct(){
+	public function __construct(){
 		global $langmessage, $page;
 		parent::__construct();
 
@@ -140,7 +140,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 
 
 			if( SimpleBlogCommon::$data['allow_comments'] ){
-				$comments_closed	= SimpleBlogCommon::AStrValue('comments_closed',$post_id);
+				$comments_closed	= SimpleBlogCommon::AStrGet('comments_closed',$post_id);
 				$open				= gpOutput::SelectText('Open');
 				$close				= gpOutput::SelectText('Close');
 
@@ -254,7 +254,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 
 		$array 				+= array('title'=>'', 'content'=>'', 'subtitle'=>'', 'isDraft'=>false, 'categories'=>array(), 'time'=>time() );
 		if( $post_id ){
-			$array				+= array('isDraft'=>SimpleBlogCommon::AStrValue('drafts',$post_id));
+			$array				+= array('isDraft'=>SimpleBlogCommon::AStrGet('drafts',$post_id));
 		}
 		$array['title']		= SimpleBlogCommon::Underscores( $array['title'] );
 
@@ -467,7 +467,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 
 		//different time
 		//organize posts based on publish time
-		SimpleBlogCommon::AStrValue('post_times',$post_id,$_POST['time']);
+		SimpleBlogCommon::AStrSet('post_times',$post_id,$_POST['time']);
 		$post_times			= SimpleBlogCommon::AStrToArray('post_times');
 		arsort($post_times);
 
@@ -496,14 +496,14 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 
 		//draft
 		if( $_POST['isDraft'] === 'on' ){
-			SimpleBlogCommon::AStrValue('drafts',$post_id,1);
+			SimpleBlogCommon::AStrSet('drafts',$post_id,1);
 		}else{
 			SimpleBlogCommon::AStrRm('drafts',$post_id);
 		}
 
 
 
-		SimpleBlogCommon::AStrValue('titles',$post_id,$title);
+		SimpleBlogCommon::AStrSet('titles',$post_id,$title);
 		self::UpdatePostCategories($post_id);	//find and update the edited post in categories and archives
 
 		if( !SimpleBlogCommon::SaveIndex() ){
@@ -557,7 +557,7 @@ class AdminSimpleBlogPosts extends SimipleBlogAdmin{
 				$selected = 'selected="selected"';
 			}
 
-			if( SimpleBlogCommon::AStrValue('categories_hidden', $catindex) ){
+			if( SimpleBlogCommon::AStrGet('categories_hidden', $catindex) ){
 				$label .= ' (Hidden)';
 			}
 

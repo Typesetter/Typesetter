@@ -80,7 +80,7 @@ class StaticGenerator{
 
 
 			//href
-			SimpleBlogCommon::FixLinks($content,$server,0);
+			self::FixLinks($content,$server,0);
 
 			echo '<summary type="html"><![CDATA['.$content.']]></summary>'."\n";
 			echo '</entry>'."\n";
@@ -179,7 +179,7 @@ class StaticGenerator{
 		foreach($categories as $catindex => $catname){
 
 			//skip hidden categories
-			if( SimpleBlogCommon::AStrValue('categories_hidden',$catindex) ){
+			if( SimpleBlogCommon::AStrGet('categories_hidden',$catindex) ){
 				continue;
 			}
 
@@ -193,7 +193,7 @@ class StaticGenerator{
 			echo '<a class="blog_gadget_link">'.$catname.' ('.$sum.')</a>';
 			echo '<ul class="nodisplay">';
 			foreach($posts as $post_id){
-				$post_title = SimpleBlogCommon::AStrValue('titles',$post_id);
+				$post_title = SimpleBlogCommon::AStrGet('titles',$post_id);
 				echo '<li>';
 				echo SimpleBlogCommon::PostLink( $post_id, $post_title );
 				echo '</li>';
@@ -252,7 +252,7 @@ class StaticGenerator{
 			echo '<li><a class="blog_gadget_link">'.self::$months[$m-1].' ('.$sum.')</a>';
 			echo '<ul class="simple_blog_category_posts nodisplay">';
 			foreach($posts as $post_id ){
-				$post_title = SimpleBlogCommon::AStrValue('titles',$post_id);
+				$post_title = SimpleBlogCommon::AStrGet('titles',$post_id);
 				echo '<li>';
 				echo SimpleBlogCommon::PostLink($post_id, $post_title );
 				echo '</li>';
@@ -279,5 +279,46 @@ class StaticGenerator{
 				.'-'. mb_substr($chars,20,12);
 		return $uuid;
 	}
+
+
+
+	/**
+	 * Change relative links to absolute links
+	 *
+	 */
+	public static function FixLinks(&$content,$server,$offset){
+
+		preg_match_all('#href="([^<>"]+)"#i',$content,$matches,PREG_SET_ORDER);
+		foreach($matches as $match){
+			self::FixLink($content,$server,$match);
+		}
+
+	}
+
+
+	/**
+	 * Change relative link to absolute link
+	 *
+	 */
+	public static function FixLink(&$content,$server,$match){
+
+		if( strpos($match[1],'mailto:') !== false ){
+			return;
+		}
+		if( strpos($match[1],'://') !== false ){
+			return;
+		}
+
+		if( mb_strpos($match[1],'/') === 0 ){
+			$replacement = $server.$match[1];
+		}else{
+			$replacement = $server.common::GetUrl($match[1]);
+		}
+
+		$replacement = str_replace($match[1],$replacement,$match[0]);
+
+		$content = str_replace($match[0],$replacement,$content);
+	}
+
 
 }

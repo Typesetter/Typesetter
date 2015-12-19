@@ -5,15 +5,15 @@ defined('is_running') or die('Not an entry point...');
 
 class SimpleBlogPage{
 
-	var $post_id;
-	var $post;
-	var $comment_saved		= false;
-	var $comments_closed;
+	public $post_id;
+	public $post;
+	public $comment_saved		= false;
+	public $comments_closed;
 
-	function __construct($post_id){
+	public function __construct($post_id){
 		$this->post_id			= $post_id;
 		$this->post				= SimpleBlogCommon::GetPostContent($this->post_id);
-		$this->comments_closed	= SimpleBlogCommon::AStrValue('comments_closed',$this->post_id);
+		$this->comments_closed	= SimpleBlogCommon::AStrGet('comments_closed',$this->post_id);
 	}
 
 
@@ -21,14 +21,14 @@ class SimpleBlogPage{
 	 * Display the blog post
 	 *
 	 */
-	function ShowPost(){
+	public function ShowPost(){
 
 		if( $this->post === false ){
 			$this->Error_404();
 			return;
 		}
 
-		if( !common::LoggedIn() && SimpleBlogCommon::AStrValue('drafts',$this->post_id) ){
+		if( !common::LoggedIn() && SimpleBlogCommon::AStrGet('drafts',$this->post_id) ){
 			$this->Error_404();
 			return;
 		}
@@ -38,7 +38,7 @@ class SimpleBlogPage{
 		$this->_ShowPost();
 	}
 
-	function _ShowPost(){
+	public function _ShowPost(){
 		global $page;
 
 		$page->label = SimpleBlogCommon::Underscores( $this->post['title'] );
@@ -52,7 +52,7 @@ class SimpleBlogPage{
 
 		//heading
 		$header			= '<h2 id="blog_post_'.$this->post_id.'">';
-		if( SimpleBlogCommon::AStrValue('drafts',$this->post_id) ){
+		if( SimpleBlogCommon::AStrGet('drafts',$this->post_id) ){
 			$header		.= '<span style="opacity:0.3;">';
 			$header		.= gpOutput::SelectText('Draft');
 			$header		.= '</span> ';
@@ -88,7 +88,7 @@ class SimpleBlogPage{
 	 * Run commands
 	 *
 	 */
-	function PostCommands(){
+	public function PostCommands(){
 		global $page;
 
 		$cmd = common::GetCommand();
@@ -118,7 +118,7 @@ class SimpleBlogPage{
 	 * Ouptut blog categories
 	 *
 	 */
-	function Categories(){
+	public function Categories(){
 
 		//blog categories
 		if( empty($this->post['categories']) ){
@@ -127,11 +127,11 @@ class SimpleBlogPage{
 
 		$temp = array();
 		foreach($this->post['categories'] as $catindex){
-			$title = SimpleBlogCommon::AStrValue( 'categories', $catindex );
+			$title = SimpleBlogCommon::AStrGet( 'categories', $catindex );
 			if( !$title ){
 				continue;
 			}
-			if( SimpleBlogCommon::AStrValue('categories_hidden',$catindex) ){
+			if( SimpleBlogCommon::AStrGet('categories_hidden',$catindex) ){
 				continue;
 			}
 			$temp[] = SimpleBlogCommon::CategoryLink($catindex, $title, $title);
@@ -152,7 +152,7 @@ class SimpleBlogPage{
 	 * Output blog comments
 	 *
 	 */
-	function Comments(){
+	public function Comments(){
 
 		//comments
 		if( !SimpleBlogCommon::$data['allow_comments'] ){
@@ -171,7 +171,7 @@ class SimpleBlogPage{
 	 * Show the comments for a single blog post
 	 *
 	 */
-	function ShowComments(){
+	public function ShowComments(){
 
 		$data = SimpleBlogCommon::GetCommentData($this->post_id);
 		if( empty($data) ){
@@ -182,7 +182,7 @@ class SimpleBlogPage{
 		echo gpOutput::GetAddonText('Comments');
 		echo '</h3>';
 
-		$this->GetCommentHtml($data,true);
+		$this->GetCommentHtml($data);
 
 	}
 
@@ -192,14 +192,12 @@ class SimpleBlogPage{
 	 * Add a comment to the comment data for a post
 	 *
 	 */
-	function AddComment(){
+	public function AddComment(){
 		global $langmessage;
 
 		if( $this->comments_closed ){
 			return;
 		}
-
-		$data = SimpleBlogCommon::GetCommentData($this->post_id);
 
 		//need a captcha?
 		if( SimpleBlogCommon::$data['comment_captcha'] && gp_recaptcha::isActive() ){
@@ -212,6 +210,33 @@ class SimpleBlogPage{
 
 			}
 		}
+
+		$comment = $this->GetPostedComment();
+		if( $comment === false ){
+			return false;
+		}
+
+		$data		= SimpleBlogCommon::GetCommentData($this->post_id);
+		$data[]		= $comment;
+
+		if( !SimpleBlogCommon::SaveCommentData($this->post_id,$data) ){
+			message($langmessage['OOPS']);
+			return false;
+		}
+
+		message($langmessage['SAVED']);
+
+		$this->EmailComment($comment);
+		$this->comment_saved = true;
+		return true;
+	}
+
+	/**
+	 * Get Posted Comment
+	 *
+	 */
+	protected function GetPostedComment(){
+		global $langmessage;
 
 		if( empty($_POST['name']) ){
 			$field = gpOutput::SelectText('Name');
@@ -226,10 +251,10 @@ class SimpleBlogPage{
 		}
 
 
-		$temp = array();
-		$temp['name'] = htmlspecialchars($_POST['name']);
-		$temp['comment'] = nl2br(strip_tags($_POST['comment']));
-		$temp['time'] = time();
+		$comment				= array();
+		$comment['name']		= htmlspecialchars($_POST['name']);
+		$comment['comment']		= nl2br(strip_tags($_POST['comment']));
+		$comment['time']		= time();
 
 		if( !empty($_POST['website']) && ($_POST['website'] !== 'http://') ){
 			$website = $_POST['website'];
@@ -237,43 +262,39 @@ class SimpleBlogPage{
 				$website = false;
 			}
 			if( $website ){
-				$temp['website'] = $website;
+				$comment['website'] = $website;
 			}
 		}
 
-		$data[] = $temp;
+		return $comment;
+	}
 
-		if( !SimpleBlogCommon::SaveCommentData($this->post_id,$data) ){
-			message($langmessage['OOPS']);
-			return false;
+
+	/**
+	 * Email new comments
+	 *
+	 */
+	protected function EmailComment($comment){
+		global $gp_mailer;
+
+		if( empty(SimpleBlogCommon::$data['email_comments']) ){
+			return;
 		}
 
-		message($langmessage['SAVED']);
+		includeFile('tool/email_mailer.php');
 
 
-		//email new comments
-		if( !empty(SimpleBlogCommon::$data['email_comments']) ){
-
-
-
-			$subject = 'New Comment';
-			$body = '';
-			if( !empty($temp['name']) ){
-				$body .= '<p>From: '.$temp['name'].'</p>';
-			}
-			if( !empty($temp['website']) ){
-				$body .= '<p>Website: '.$temp['name'].'</p>';
-			}
-			$body .= '<p>'.$temp['comment'].'</p>';
-
-			global $gp_mailer;
-			includeFile('tool/email_mailer.php');
-			$gp_mailer->SendEmail(SimpleBlogCommon::$data['email_comments'], $subject, $body);
+		$body		= '';
+		if( !empty($comment['name']) ){
+			$body .= '<p>From: '.$comment['name'].'</p>';
 		}
+		if( !empty($comment['website']) ){
+			$body .= '<p>Website: '.$comment['name'].'</p>';
+		}
+		$body .= '<p>'.$comment['comment'].'</p>';
 
+		$gp_mailer->SendEmail(SimpleBlogCommon::$data['email_comments'], 'New Comment', $body);
 
-		$this->comment_saved = true;
-		return true;
 	}
 
 
@@ -281,42 +302,51 @@ class SimpleBlogPage{
 	 * Output the html for a blog post's comments
 	 *
 	 */
-	function GetCommentHtml( $data ){
-		global $langmessage;
+	public function GetCommentHtml( $data ){
 
 		if( !is_array($data) ){
 			return;
 		}
 
 		foreach($data as $key => $comment){
-			echo '<div class="comment_area">';
-			echo '<p class="name">';
-			if( (SimpleBlogCommon::$data['commenter_website'] == 'nofollow') && !empty($comment['website']) ){
-				echo '<b><a href="'.$comment['website'].'" rel="nofollow">'.$comment['name'].'</a></b>';
-			}elseif( (SimpleBlogCommon::$data['commenter_website'] == 'link') && !empty($comment['website']) ){
-				echo '<b><a href="'.$comment['website'].'">'.$comment['name'].'</a></b>';
-			}else{
-				echo '<b>'.$comment['name'].'</b>';
-			}
-			echo ' &nbsp; ';
-			echo '<span>';
-			echo strftime(SimpleBlogCommon::$data['strftime_format'],$comment['time']);
-			echo '</span>';
-
-
-			if( common::LoggedIn() ){
-				echo ' &nbsp; ';
-				$attr = 'class="delete gpconfirm" title="'.$langmessage['delete_confirm'].'" name="postlink" data-nonce= "'.common::new_nonce('post',true).'"';
-				echo SimpleBlogCommon::PostLink($this->post_id,$langmessage['delete'],'cmd=delete_comment&comment_index='.$key,$attr);
-			}
-
-
-			echo '</p>';
-			echo '<p class="comment">';
-			echo $comment['comment'];
-			echo '</p>';
-			echo '</div>';
+			$this->OutputComment($key,$comment);
 		}
+	}
+
+	/**
+	 * Output single comment
+	 *
+	 */
+	private function OutputComment($key,$comment){
+		global $langmessage;
+
+		echo '<div class="comment_area">';
+		echo '<p class="name">';
+		if( (SimpleBlogCommon::$data['commenter_website'] == 'nofollow') && !empty($comment['website']) ){
+			echo '<b><a href="'.$comment['website'].'" rel="nofollow">'.$comment['name'].'</a></b>';
+		}elseif( (SimpleBlogCommon::$data['commenter_website'] == 'link') && !empty($comment['website']) ){
+			echo '<b><a href="'.$comment['website'].'">'.$comment['name'].'</a></b>';
+		}else{
+			echo '<b>'.$comment['name'].'</b>';
+		}
+		echo ' &nbsp; ';
+		echo '<span>';
+		echo strftime(SimpleBlogCommon::$data['strftime_format'],$comment['time']);
+		echo '</span>';
+
+
+		if( common::LoggedIn() ){
+			echo ' &nbsp; ';
+			$attr = 'class="delete gpconfirm" title="'.$langmessage['delete_confirm'].'" name="postlink" data-nonce= "'.common::new_nonce('post',true).'"';
+			echo SimpleBlogCommon::PostLink($this->post_id,$langmessage['delete'],'cmd=delete_comment&comment_index='.$key,$attr);
+		}
+
+
+		echo '</p>';
+		echo '<p class="comment">';
+		echo $comment['comment'];
+		echo '</p>';
+		echo '</div>';
 	}
 
 
@@ -324,7 +354,7 @@ class SimpleBlogPage{
 	 * Display the visitor form for adding comments
 	 *
 	 */
-	function CommentForm(){
+	public function CommentForm(){
 
 		if( $this->comments_closed ){
 			echo '<div class="comments_closed">';
@@ -406,7 +436,7 @@ class SimpleBlogPage{
 	 * todo: better 404 page
 	 *
 	 */
-	function Error_404(){
+	public function Error_404(){
 		global $langmessage;
 
 		message($langmessage['OOPS']);
@@ -417,7 +447,7 @@ class SimpleBlogPage{
 	 * Display the links at the bottom of a post
 	 *
 	 */
-	function PostLinks(){
+	public function PostLinks(){
 
 		$post_key = SimpleBlogCommon::AStrKey('str_index',$this->post_id);
 
@@ -437,9 +467,9 @@ class SimpleBlogPage{
 			$i = 0;
 			do {
 				$i++;
-				$next_index = SimpleBlogCommon::AStrValue('str_index',$post_key-$i);
+				$next_index = SimpleBlogCommon::AStrGet('str_index',$post_key-$i);
 				if( !common::loggedIn() ){
-					$isDraft = SimpleBlogCommon::AStrValue('drafts',$next_index);
+					$isDraft = SimpleBlogCommon::AStrGet('drafts',$next_index);
 				}
 			}while( $isDraft );
 
@@ -456,14 +486,14 @@ class SimpleBlogPage{
 		$isDraft = false;
 		do{
 			$i++;
-			$prev_index = SimpleBlogCommon::AStrValue('str_index',$post_key+$i);
+			$prev_index = SimpleBlogCommon::AStrGet('str_index',$post_key+$i);
 
 			if( $prev_index === false ){
 				break;
 			}
 
 			if( !common::loggedIn() ){
-				$isDraft = SimpleBlogCommon::AStrValue('drafts',$prev_index);
+				$isDraft = SimpleBlogCommon::AStrGet('drafts',$prev_index);
 			}
 
 			if( !$isDraft ){

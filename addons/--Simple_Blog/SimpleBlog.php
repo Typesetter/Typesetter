@@ -10,16 +10,16 @@ gpPlugin_incl('SimpleBlogCommon.php');
 
 class SimpleBlog extends SimpleBlogCommon{
 
-	var $showing_category = false;
+	public $showing_category = false;
 
-	function __construct(){
+	public function __construct(){
 		global $page, $langmessage;
 
 		SimpleBlogCommon::Init();
 
 		//get the post id
 		if( $page->pagetype == 'special_display' ){
-			$this->post_id	= self::PostID($page->requested);
+			$this->post_id	= $this->PostID($page->requested);
 		}
 
 
@@ -67,32 +67,72 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Get the post id from the requested url
 	 *
 	 */
-	static function PostID($requested){
+	public function PostID($requested){
+
 
 		if( isset($_REQUEST['id']) && ctype_digit($_REQUEST['id']) ){
 			return $_REQUEST['id'];
 		}
 
 		if( strpos($requested,'/') === false ){
-			return false;
+			return;
 		}
 
 		$parts	= explode('/',$requested);
-		$ints	= strspn($parts[1],'0123456789');
 
-		if( $ints ){
-			return substr($parts[1],0,$ints);
+		if( SimpleBlogCommon::$data['urls'] != 'Title' ){
+			$ints	= strspn($parts[1],'0123456789');
+			if( $ints ){
+				return substr($parts[1],0,$ints);
+			}
 		}
 
-		return SimpleBlogCommon::AStrKey('titles',$parts[1], true);
+		$id = SimpleBlogCommon::AStrKey('titles',$parts[1], true);
+		if( $id !== false ){
+			return $id;
+		}
+
+		return $this->SimilarPost($parts[1]);
 	}
+
+
+	/**
+	 * Get a id for the post that is most similar to the requested title
+	 *
+	 */
+	public function SimilarPost($title){
+		global $config;
+
+		$titles				= SimpleBlogCommon::AStrToArray('titles');
+		$post_times			= SimpleBlogCommon::AStrToArray('post_times');
+		$similar			= array();
+		$lower				= str_replace(' ','_',strtolower($title));
+
+		foreach($titles as $post_id => $title){
+
+			if( $post_times[$post_id] > time() ){
+				continue;
+			}
+
+			similar_text($lower,strtolower($title),$percent);
+			$similar[$percent] = $post_id; //if similarity is the same for two posts, the newer post will take precedence
+		}
+
+		krsort($similar);
+
+		$similarity = key($similar);
+		if( $config['auto_redir'] > 0 && $similarity >= $config['auto_redir'] ){
+			return current($similar);
+		}
+	}
+
 
 
 	/**
 	 * Output the html for a single blog post
 	 * Handle comment actions
 	 */
-	function ShowPost(){
+	public function ShowPost(){
 
 
 		if( common::LoggedIn() ){
@@ -111,14 +151,26 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Display a blog page with multiple blog posts
 	 *
 	 */
-	function ShowPage(){
+	public function ShowPage(){
+		global $page;
 
-		$per_page = SimpleBlogCommon::$data['per_page'];
-		$page = 0;
+		$per_page		= SimpleBlogCommon::$data['per_page'];
+		$page_num		= 0;
+		$expected_q		= '';
 		if( isset($_GET['page']) && is_numeric($_GET['page']) ){
-			$page = (int)$_GET['page'];
+			$page_num		= (int)$_GET['page'];
+			$expected_q		= 'page='.$page_num;
 		}
-		$start				= $page * $per_page;
+
+
+		//redirect if the request isn't correct
+		if( $page->requested != SimpleBlogCommon::$root_url ){
+			$expected_url = common::GetUrl( SimpleBlogCommon::$root_url, $expected_q, false );
+			common::Redirect($expected_url);
+		}
+
+
+		$start				= $page_num * $per_page;
 		$include_drafts		= common::LoggedIn();
 		$show_posts			= SimpleBlogCommon::WhichPosts($start,$per_page,$include_drafts);
 
@@ -127,27 +179,21 @@ class SimpleBlog extends SimpleBlogCommon{
 		//pagination links
 		echo '<p class="blog_nav_links">';
 
-		if( $page > 0 ){
+		if( $page_num > 0 ){
 
 			$html = common::Link('Special_Blog','%s');
 			echo gpOutput::GetAddonText('Blog Home',$html);
 			echo '&nbsp;';
 
-			$html = common::Link('Special_Blog','%s','page='.($page-1),'class="blog_newer"');
+			$html = common::Link('Special_Blog','%s','page='.($page_num-1),'class="blog_newer"');
 			echo gpOutput::GetAddonText('Newer Entries',$html);
 			echo '&nbsp;';
 
 		}
 
-		if( ( ($page+1) * $per_page) < SimpleBlogCommon::$data['post_count'] ){
-			$html = common::Link('Special_Blog','%s','page='.($page+1),'class="blog_older"');
+		if( ( ($page_num+1) * $per_page) < SimpleBlogCommon::$data['post_count'] ){
+			$html = common::Link('Special_Blog','%s','page='.($page_num+1),'class="blog_older"');
 			echo gpOutput::GetAddonText('Older Entries',$html);
-		}
-
-
-		if( common::LoggedIn() ){
-			echo '&nbsp;';
-			echo common::Link('Special_Blog','New Post','cmd=new_form');
 		}
 
 		echo '</p>';
@@ -159,7 +205,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Output the blog posts in the array $post_list
 	 *
 	 */
-	function ShowPosts($post_list){
+	public function ShowPosts($post_list){
 
 		$posts = array();
 		foreach($post_list as $post_index){
@@ -172,9 +218,9 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Display the html for a single blog post
 	 *
 	 */
-	function ShowPostContent( $post_index ){
+	public function ShowPostContent( $post_index ){
 
-		if( !common::LoggedIn() && SimpleBlogCommon::AStrValue('drafts',$post_index) ){
+		if( !common::LoggedIn() && SimpleBlogCommon::AStrGet('drafts',$post_index) ){
 			return false;
 		}
 
@@ -189,7 +235,7 @@ class SimpleBlog extends SimpleBlogCommon{
 		echo '<div class="blog_post post_list_item'.$class.'" '.$id.'>';
 
 		$header = '<h2 id="blog_post_'.$post_index.'">';
-		if( SimpleBlogCommon::AStrValue('drafts',$post_index) ){
+		if( SimpleBlogCommon::AStrGet('drafts',$post_index) ){
 			$header .= '<span style="opacity:0.3;">';
 			$header .= gpOutput::SelectText('Draft');
 			$header .= '</span> ';
@@ -221,11 +267,11 @@ class SimpleBlog extends SimpleBlogCommon{
 		if( SimpleBlogCommon::$data['abbrev_cat'] && isset($post['categories']) && count($post['categories']) ){
 			$temp = array();
 			foreach($post['categories'] as $catindex){
-				$title = SimpleBlogCommon::AStrValue( 'categories', $catindex );
+				$title = SimpleBlogCommon::AStrGet( 'categories', $catindex );
 				if( !$title ){
 					continue;
 				}
-				if( SimpleBlogCommon::AStrValue('categories_hidden',$catindex) ){
+				if( SimpleBlogCommon::AStrGet('categories_hidden',$catindex) ){
 					continue;
 				}
 				$temp[] = SimpleBlogCommon::CategoryLink($catindex, $title, $title);
@@ -249,7 +295,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Get the fist image from the blog post
 	 *
 	 */
-	function GetImageFromPost($item){
+	public function GetImageFromPost($item){
 
 		$img_pos = strpos($item,'<img');
 		if( $img_pos === false ){
@@ -291,7 +337,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Get the edit links for the post
 	 *
 	 */
-	static function EditLinks($post_index, &$class, &$id){
+	public static function EditLinks($post_index, &$class, &$id){
 		global $langmessage;
 
 		$query		= 'du'; //dummy parameter
@@ -312,7 +358,7 @@ class SimpleBlog extends SimpleBlogCommon{
 
 		if( SimpleBlogCommon::$data['allow_comments'] ){
 
-			$comments_closed = SimpleBlogCommon::AStrValue('comments_closed',$post_index);
+			$comments_closed = SimpleBlogCommon::AStrGet('comments_closed',$post_index);
 			if( $comments_closed ){
 				$label = gpOutput::SelectText('Open Comments');
 				echo SimpleBlogCommon::PostLink($post_index,$label,'cmd=opencomments','name="cnreq" style="display:none"');
@@ -331,7 +377,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 * Abbreviate $content if a $limit greater than zero is given
 	 *
 	 */
-	function AbbrevContent( $content, $post_index, $limit = 0 ){
+	public function AbbrevContent( $content, $post_index, $limit = 0 ){
 
 		if( !is_numeric($limit) || $limit == 0 ){
 			return $content;

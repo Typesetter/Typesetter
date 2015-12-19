@@ -61,7 +61,6 @@ class SimpleBlogCommon{
 
 		//regenerate if there are pending posts that need to be published
 		if( !is_null(SimpleBlogCommon::$data['next_regen']) && SimpleBlogCommon::$data['next_regen'] < time()  ){
-			msg( pre(SimpleBlogCommon::$data['next_regen']) );
 			if( @gpFiles::WriteLock() ){
 				self::GenStaticContent();
 				SimpleBlogCommon::NextGenTime();
@@ -69,7 +68,9 @@ class SimpleBlogCommon{
 				gpFiles::Unlock('write',gp_random);
 			}
 		}
+
 	}
+
 
 	/**
 	 * Regenerate feed and gadgets

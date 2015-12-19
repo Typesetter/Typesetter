@@ -283,53 +283,42 @@ class StaticGenerator{
 
 
 	/**
-	 * Recursively turn relative links into absolute links
-	 * @static
+	 * Change relative links to absolute links
+	 *
 	 */
-	public function FixLinks(&$content,$server,$offset){
+	public static function FixLinks(&$content,$server,$offset){
 
-		$pos = mb_strpos($content,'href="',$offset);
-		if( $pos <= 0 ){
-			return;
-		}
-		$pos = $pos+6;
-
-		$pos2 = mb_strpos($content,'"',$pos);
-
-		if( $pos2 <= 0 ){
-			return;
+		preg_match_all('#href="([^<>"]+)"#i',$content,$matches,PREG_SET_ORDER);
+		foreach($matches as $match){
+			self::FixLink($content,$server,$match);
 		}
 
-		//well formed link
-		$check = mb_strpos($content,'>',$pos);
-		if( ($check !== false) && ($check < $pos2) ){
-			self::FixLinks($content,$server,$pos2);
-			return;
-		}
-
-		$title = mb_substr($content,$pos,$pos2-$pos);
-
-		//internal link
-		if( mb_strpos($title,'mailto:') !== false ){
-			self::FixLinks($content,$server,$pos2);
-			return;
-		}
-		if( mb_strpos($title,'://') !== false ){
-			self::FixLinks($content,$server,$pos2);
-			return;
-		}
-
-		if( mb_strpos($title,'/') === 0 ){
-			$replacement = $server.$title;
-		}else{
-			$replacement = $server.common::GetUrl($title);
-		}
-
-		$content = mb_substr_replace($content,$replacement,$pos,$pos2-$pos);
-
-		self::FixLinks($content,$server,$pos2);
 	}
 
+
+	/**
+	 * Change relative link to absolute link
+	 *
+	 */
+	public static function FixLink(&$content,$server,$match){
+
+		if( strpos($match[1],'mailto:') !== false ){
+			return;
+		}
+		if( strpos($match[1],'://') !== false ){
+			return;
+		}
+
+		if( mb_strpos($match[1],'/') === 0 ){
+			$replacement = $server.$match[1];
+		}else{
+			$replacement = $server.common::GetUrl($match[1]);
+		}
+
+		$replacement = str_replace($match[1],$replacement,$match[0]);
+
+		$content = str_replace($match[0],$replacement,$content);
+	}
 
 
 }

@@ -101,6 +101,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	 *
 	 */
 	public function SimilarPost($title){
+		global $config;
 
 		$titles				= SimpleBlogCommon::AStrToArray('titles');
 		$post_times			= SimpleBlogCommon::AStrToArray('post_times');
@@ -118,7 +119,11 @@ class SimpleBlog extends SimpleBlogCommon{
 		}
 
 		krsort($similar);
-		return current($similar);
+
+		$similarity = key($similar);
+		if( $config['auto_redir'] > 0 && $similarity >= $config['auto_redir'] ){
+			return current($similar);
+		}
 	}
 
 

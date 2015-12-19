@@ -161,6 +161,7 @@ body #admin_menu li.ui-sortable-helper{
 	width:16px;
 	display:block;
 	border:0 none;
+	text-align:center;
 	}
 
 #admin_menu_tools .icon_page{
@@ -198,12 +199,6 @@ body #admin_menu li.ui-sortable-helper{
 	}
 #admin_menu_div .icon_user{
 	background:url('../imgs/admin_icons.png') no-repeat 50% -201px;
-	}
-#admin_menu_div .icon_vis{
-	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -128px;
-	}
-#admin_menu_div .icon_history{
-	background:url('../imgs/admin_icons.png') no-repeat 50% -616px;
 	}
 
 

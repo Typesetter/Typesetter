@@ -847,7 +847,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&index=[key]',$attrs);
 
 
-		$img	= '<span class="menu_icon icon_vis"></span>';
+		$img	= '<i class="fa fa-eye menu_icon"></i>';
 		$q		= 'cmd=ToggleVisibility&index=[key]';
 		$label	= $langmessage['Visibility'].': '.$langmessage['Private'];
 		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax','class'=>'vis_private');
@@ -859,8 +859,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo $this->Link('Admin_Menu',$img.$label,$q,$attrs);
 
 
-		$img	= '<span class="menu_icon icon_history"></span>';
-		echo '<a href="[url]?cmd=ViewHistory" class="view_edit_link not_multiple not_special" data-cmd="gpabox">'.$img.htmlspecialchars($langmessage['Revision History']).'</a>';
+		echo '<a href="[url]?cmd=ViewHistory" class="view_edit_link not_multiple not_special" data-cmd="gpabox"><i class="fa fa-history menu_icon"></i>'.htmlspecialchars($langmessage['Revision History']).'</a>';
 
 
 		$img	= '<span class="menu_icon copy_icon"></span>';
@@ -1128,7 +1127,6 @@ class admin_menu_new extends admin_menu_tools{
 		echo $this->Link('Admin_Menu',$label,$q,$attrs);
 
 		if( $is_special === false ){
-			$img	= '<span class="menu_icon icon_history"></span>';
 			echo common::Link($title,$langmessage['Revision History'],'cmd=ViewHistory','class="view_edit_link not_multiple" data-cmd="gpabox"');
 		}
 

@@ -70,21 +70,23 @@ class Layout extends \admin_addon_install{
 
 		$this->GetPossible();
 
-		//layout requests
-		if( strpos($page->requested,'/') ){
-			$parts = explode('/',$page->requested);
-			$layout_part = $parts[1];
-
-			if( gp_remote_themes && strtolower($layout_part) == 'remote' ){
-				$this->RemoteBrowse();
-				return;
-			}
-		}
 	}
 
 
 	public function RunScript(){
-		global $config, $gpLayouts, $langmessage;
+		global $config, $gpLayouts, $langmessage, $page;
+
+
+		//remote requests
+		if( strpos($page->requested,'/') ){
+			$parts = explode('/',$page->requested);
+
+			if( gp_remote_themes && strtolower($parts[1]) == 'remote' ){
+				$this->RemoteBrowse();
+				return;
+			}
+		}
+
 
 		$cmd = \common::GetCommand();
 
@@ -358,7 +360,6 @@ class Layout extends \admin_addon_install{
 		echo '<li>';
 		if( $handlers_count ){
 			echo $this->LayoutLink( $layout, $langmessage['restore_defaults'], 'cmd=restore', array('data-cmd'=>'creq') );
-			//echo $this->LayoutLink( $layout, $langmessage['content_arrangement'].': '.$langmessage['restore_defaults'], 'cmd=restore', array('data-cmd'=>'creq') );
 		}else{
 			echo '<span>'.$langmessage['content_arrangement'].': '.$langmessage['default'].'</span>';
 		}
@@ -1120,9 +1121,6 @@ class Layout extends \admin_addon_install{
 	}
 
 
-
-
-
 	/**
 	 * Display layout label and options
 	 *
@@ -1395,8 +1393,6 @@ class Layout extends \admin_addon_install{
 	}
 
 
-
-
 	public function GetAllHandlers($layout=false){
 		global $page,$gpLayouts, $config;
 
@@ -1604,13 +1600,10 @@ class Layout extends \admin_addon_install{
 	public function AddonTextFields($array){
 		global $langmessage,$config;
 		echo '<table class="bordered">';
-			echo '<tr>';
-			echo '<th>';
-			echo $langmessage['default'];
-			echo '</th>';
-			echo '<th>';
-			echo '</th>';
-			echo '</tr>';
+		echo '<tr><th>';
+		echo $langmessage['default'];
+		echo '</th><th>';
+		echo '</th></tr>';
 
 		$key =& $_GET['key'];
 		foreach($array as $text){
@@ -1628,21 +1621,15 @@ class Layout extends \admin_addon_install{
 				$style = ' style="background-color:#f5f5f5"';
 			}
 
-			echo '<tr'.$style.'>';
-			echo '<td>';
+			echo '<tr'.$style.'><td>';
 			echo $text;
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo '<input type="text" name="values['.htmlspecialchars($text).']" value="'.$value.'" class="gpinput"/>'; //value has already been escaped with htmlspecialchars()
-			echo '</td>';
-			echo '</tr>';
+			echo '</td></tr>';
 
 		}
 		echo '</table>';
 	}
-
-
-
 
 
 	public function EditText(){

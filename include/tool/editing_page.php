@@ -271,11 +271,16 @@ class editing_page extends display{
 	protected function RevisionLinks(){
 		global $langmessage;
 
-		$date		= common::date($langmessage['strftime_datetime'],$this->revision);
-		$message	= sprintf($langmessage['viewing_revision'],$date);
 
-		//$admin_links[] = '<span>'.sprintf($langmessage['viewing_revision'],$date).'</span>';
+		if( $this->revision == $this->fileModTime ){
+			$date	= $langmessage['Current Page'];
+		}else{
+			$date	= common::date($langmessage['strftime_datetime'],$this->revision);
+		}
+
 		$admin_links[] = common::Link($this->title,'<i class="fa fa-save"></i> '.$langmessage['Restore this revision'].' ('.$date.')','cmd=UseRevision&time='.$this->revision,array('data-cmd'=>'cnreq','class'=>'msg_publish_draft'));
+
+
 
 
 		//previous && next revision
@@ -968,20 +973,10 @@ class editing_page extends display{
 
 		//working draft
 		if( $this->draft_exists ){
-			ob_start();
+
 			$size = filesize($this->draft_file);
-			$date = common::date($langmessage['strftime_datetime'],$this->draft_stats['modified']);
-			echo '<tr><td title="'.htmlspecialchars($date).'">';
-			echo '<b>'.$langmessage['Working Draft'].'</b><br/>';
-			$elapsed = admin_tools::Elapsed(time() - $this->draft_stats['modified']);
-			echo sprintf($langmessage['_ago'],$elapsed);
-			echo '</td><td>';
-			echo admin_tools::FormatBytes($size);
-			echo '</td><td>'.$this->draft_stats['username'].'</td><td>';
-			echo common::Link($this->title,$langmessage['View']);
-			echo ' &nbsp; '.common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'cnreq'));
-			echo '</td></tr>';
-			$rows[$this->draft_stats['modified']] = ob_get_clean();
+			$time = $this->draft_stats['modified'];
+			$rows[$time] = $this->HistoryRow($time, $size, $this->draft_stats['username'],'draft');
 		}
 
 
@@ -997,50 +992,19 @@ class editing_page extends display{
 			$time		= array_shift($parts);
 			$size		= array_shift($parts);
 			$username	= false;
-			$date		= common::date($langmessage['strftime_datetime'],$time);
 			if( count($parts) ){
 				$username = array_shift($parts);
 			}
 
-			//output row
-			ob_start();
-			echo '<tr><td title="'.htmlspecialchars($date).'">';
-			$elapsed = admin_tools::Elapsed(time() - $time);
-			echo sprintf($langmessage['_ago'],$elapsed);
-			echo '</td><td>';
-			if( $size && is_numeric($size) ){
-				echo admin_tools::FormatBytes($size);
-			}
-			echo '</td><td>';
-			echo $username;
-			echo '</td><td>';
-			echo common::Link($this->title,$langmessage['View'],'cmd=ViewRevision&time='.$time,array('data-cmd'=>'cnreq'));
-			echo ' &nbsp; ';
-			echo common::Link($this->title,$langmessage['delete'],'cmd=DeleteRevision&time='.$time,array('data-cmd'=>'gpabox','class'=>'gpconfirm'));
-			echo '</td></tr>';
-			$rows[$time] = ob_get_clean();
+			$rows[$time] = $this->HistoryRow($time, $size, $username);
 		}
+
 
 
 		// current page
-		// this will likely overwrite one of the history entries
-		ob_start();
-		$size = filesize($this->file);
-		$date = common::date($langmessage['strftime_datetime'],$this->fileModTime);
-		echo '<tr><td title="'.htmlspecialchars($date).'">';
-		echo '<b>'.$langmessage['Current Page'].'</b><br/>';
-		$elapsed = admin_tools::Elapsed(time() - $this->fileModTime);
-		echo sprintf($langmessage['_ago'],$elapsed);
-		echo '</td><td>';
-		echo admin_tools::FormatBytes($size);
-		echo '</td><td>';
-		if( isset($this->file_stats['username']) ){
-			echo $this->file_stats['username'];
-		}
-		echo '</td><td>';
-		echo common::Link($this->title,$langmessage['View'],'cmd=ViewCurrent');
-		echo '</td></tr>';
-		$rows[$this->fileModTime] = ob_get_clean();
+		// this will overwrite one of the history entries if there is a draft
+		$rows[$this->fileModTime] = $this->HistoryRow($this->fileModTime, filesize($this->file), $this->file_stats['username'],'current');
+
 
 
 		ob_start();
@@ -1058,6 +1022,62 @@ class editing_page extends display{
 
 		$this->contentBuffer = ob_get_clean();
 	}
+
+
+	/**
+	 * Return content for history row
+	 *
+	 */
+	protected function HistoryRow($time, $size, $username, $which = 'history' ){
+		global $langmessage;
+
+		ob_start();
+		$date = common::date($langmessage['strftime_datetime'],$time);
+		echo '<tr><td title="'.htmlspecialchars($date).'">';
+		switch($which){
+			case 'current':
+			echo '<b>'.$langmessage['Current Page'].'</b><br/>';
+			break;
+
+			case 'draft':
+			echo '<b>'.$langmessage['Working Draft'].'</b><br/>';
+			break;
+		}
+
+		$elapsed = admin_tools::Elapsed(time() - $time);
+		echo sprintf($langmessage['_ago'],$elapsed);
+		echo '</td><td>';
+		if( $size && is_numeric($size) ){
+			echo admin_tools::FormatBytes($size);
+		}
+		echo '</td><td>';
+		if( !empty($username) ){
+			echo $username;
+		}
+		echo '</td><td>';
+
+
+		switch($which){
+			case 'current':
+			echo common::Link($this->title,$langmessage['View'],'cmd=ViewCurrent');
+			break;
+
+			case 'draft':
+			echo common::Link($this->title,$langmessage['View']);
+			echo ' &nbsp; '.common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'cnreq'));
+			break;
+
+			case 'history':
+			echo common::Link($this->title,$langmessage['View'],'cmd=ViewRevision&time='.$time,array('data-cmd'=>'cnreq'));
+			echo ' &nbsp; ';
+			echo common::Link($this->title,$langmessage['delete'],'cmd=DeleteRevision&time='.$time,array('data-cmd'=>'gpabox','class'=>'gpconfirm'));
+			break;
+		}
+
+		echo '</td></tr>';
+		return ob_get_clean();
+	}
+
 
 	/**
 	 * Display the contents of a past revision
@@ -1185,6 +1205,7 @@ class editing_page extends display{
 		ksort($files);
 		return $files;
 	}
+
 
 	/**
 	 * Return the full path of the saved revision if it exists

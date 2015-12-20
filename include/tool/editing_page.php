@@ -462,7 +462,7 @@ class editing_page extends display{
 	 *
 	 */
 	public function SaveSections(){
-		global $langmessage, $dirPrefix;
+		global $langmessage;
 
 		$this->ajaxReplace		= array();
 		$original_sections		= $this->file_sections;
@@ -506,26 +506,7 @@ class editing_page extends display{
 			}
 
 			// attributes
-			if( isset($_POST['attributes'][$i]) && is_array($_POST['attributes'][$i]) ){
-				foreach($_POST['attributes'][$i] as $attr_name => $attr_value){
-
-					$attr_name		= strtolower($attr_name);
-					$attr_name		= trim($attr_name);
-					$attr_value		= trim($attr_value);
-
-					if( empty($attr_name) || empty($attr_value) || $attr_name == 'id' || substr($attr_name,0,7) == 'data-gp' ){
-						continue;
-					}
-
-
-					//strip $dirPrefix
-					if( $attr_name == 'src' && !empty($dirPrefix) && strpos($attr_value,$dirPrefix) === 0 ){
-						$attr_value = substr($attr_value,strlen($dirPrefix));
-					}
-
-					$new_section['attributes'][$attr_name] = $attr_value;
-				}
-			}
+			$this->PostedAttributes($new_section,$i);
 
 
 			// wrapper section 'contains_sections'
@@ -579,6 +560,36 @@ class editing_page extends display{
 			}
 		}
 
+	}
+
+
+	/**
+	 * Get the posted attributes for a section
+	 *
+	 */
+	protected function PostedAttributes(&$section, $i){
+		global $dirPrefix;
+
+		if( isset($_POST['attributes'][$i]) && is_array($_POST['attributes'][$i]) ){
+			foreach($_POST['attributes'][$i] as $attr_name => $attr_value){
+
+				$attr_name		= strtolower($attr_name);
+				$attr_name		= trim($attr_name);
+				$attr_value		= trim($attr_value);
+
+				if( empty($attr_name) || empty($attr_value) || $attr_name == 'id' || substr($attr_name,0,7) == 'data-gp' ){
+					continue;
+				}
+
+
+				//strip $dirPrefix
+				if( $attr_name == 'src' && !empty($dirPrefix) && strpos($attr_value,$dirPrefix) === 0 ){
+					$attr_value = substr($attr_value,strlen($dirPrefix));
+				}
+
+				$section['attributes'][$attr_name] = $attr_value;
+			}
+		}
 	}
 
 

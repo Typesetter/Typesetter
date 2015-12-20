@@ -165,7 +165,6 @@ class admin_tools{
 
 		$scripts['Admin_Theme_Content']['class'] = '\gp\admin\LayoutEdit';
 		$scripts['Admin_Theme_Content']['label'] = $langmessage['Appearance'];
-		$scripts['Admin_Theme_Content']['list'] = false;
 
 
 
@@ -251,21 +250,12 @@ class admin_tools{
 		$scripts['Admin_Addons']['script'] = '/include/admin/admin_addons.php';
 		$scripts['Admin_Addons']['class'] = 'admin_addons';
 		$scripts['Admin_Addons']['label'] = $langmessage['plugins'];
-		$scripts['Admin_Addons']['list'] = false;
 
 
 		$scripts['Admin_Errors']['script'] = '/include/admin/admin_errors.php';
 		$scripts['Admin_Errors']['class'] = 'admin_errors';
 		$scripts['Admin_Errors']['label'] = 'Errors';
-		$scripts['Admin_Errors']['group'] = false;
 
-
-/*
-		$scripts['Admin_Addon_Themes']['script'] = '/include/admin/admin_addon_themes.php';
-		$scripts['Admin_Addon_Themes']['class'] = 'admin_addon_themes';
-		$scripts['Admin_Addon_Themes']['label'] = $langmessage['addon_themes'];
-		$scripts['Admin_Addon_Themes']['list'] = false;
-*/
 
 
 		gpSettingsOverride('admin_scripts',$scripts);
@@ -905,11 +895,8 @@ class admin_tools{
 
 		ob_start();
 		foreach($scripts as $script => $info){
-			if( isset($info['list']) && ($info['list'] === false) ){
-				continue;
-			}
 
-			if( !isset($info['group']) || (strpos($info['group'],$grouping) === false) ){
+			if( !isset($info['group']) || $info['group'] !== $grouping ){
 				continue;
 			}
 

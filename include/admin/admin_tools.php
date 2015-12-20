@@ -163,8 +163,8 @@ class admin_tools{
 		$scripts['Admin_Theme_Content']['label'] = $langmessage['Appearance'];
 		$scripts['Admin_Theme_Content']['group'] = 'appearance';
 
-		$scripts['Admin_Theme_Content']['class'] = '\gp\admin\LayoutEdit';
-		$scripts['Admin_Theme_Content']['label'] = $langmessage['Appearance'];
+		$scripts['Admin_Theme_Content/Edit']['class'] = '\gp\admin\LayoutEdit';
+		$scripts['Admin_Theme_Content/Edit']['label'] = $langmessage['Appearance'];
 
 
 
@@ -947,7 +947,7 @@ class admin_tools{
 
 		if( !empty($page->gpLayout) ){
 			echo '<li>';
-			echo common::Link('Admin_Theme_Content/'.urlencode($page->gpLayout),$langmessage['edit_this_layout']);
+			echo common::Link('Admin_Theme_Content/Edit/'.urlencode($page->gpLayout),$langmessage['edit_this_layout']);
 			echo '</li>';
 		}
 		echo '<li>';
@@ -988,7 +988,7 @@ class admin_tools{
 			}
 
 			$display = '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span>&nbsp; '.$info['label'];
-			echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$display);
+			echo common::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),$display);
 			echo '</li>';
 		}
 		echo '</ul>';

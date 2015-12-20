@@ -1199,7 +1199,7 @@ class gp_edit{
 		echo '<div id="gp_source_options" class="inline_edit_area" style="display:none" title="'.$langmessage['Select Image'].'">';
 
 		if( $layout ){
-			echo common::Link('Admin_Theme_Content/'.rawurlencode($layout),$langmessage['Theme Images'].'..','cmd=theme_images',' data-cmd="gpajax" class="ckeditor_control half_width" ');
+			echo common::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),$langmessage['Theme Images'].'..','cmd=theme_images',' data-cmd="gpajax" class="ckeditor_control half_width" ');
 			echo '<a class="ckeditor_control half_width" data-cmd="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
 		}
 

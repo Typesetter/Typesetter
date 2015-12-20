@@ -388,7 +388,7 @@ class gpOutput{
 			$class .= ' gp_output_area';
 
 			echo '<div class="gp_inner_links nodisplay">';
-			echo common::Link('Admin_Theme_Content/'.$page->gpLayout,$param,'cmd=drag_area&dragging='.urlencode($param).'&to=%s',array('data-cmd'=>'creq','class'=>'dragdroplink nodisplay')); //drag-drop link
+			echo common::Link('Admin_Theme_Content/Edit/'.$page->gpLayout,$param,'cmd=drag_area&dragging='.urlencode($param).'&to=%s',array('data-cmd'=>'creq','class'=>'dragdroplink nodisplay')); //drag-drop link
 			if( !$empty_container ){
 				echo '<div class="output_area_label">';
 				echo ' '.gpOutput::GpOutLabel($info['gpOutCmd']);
@@ -396,9 +396,9 @@ class gpOutput{
 			}
 			echo '<div class="output_area_link">';
 			if( !$empty_container ){
-				echo ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['remove'],'cmd=rm_area&param='.$param,array('data-cmd'=>'creq'));
+				echo ' '.common::Link('Admin_Theme_Content/Edit/'.$page->gpLayout,$langmessage['remove'],'cmd=rm_area&param='.$param,array('data-cmd'=>'creq'));
 			}
-			echo ' '.common::Link('Admin_Theme_Content/'.$page->gpLayout,$langmessage['insert'],'cmd=insert&param='.$param,array('data-cmd'=>'gpabox'));
+			echo ' '.common::Link('Admin_Theme_Content/Edit/'.$page->gpLayout,$langmessage['insert'],'cmd=insert&param='.$param,array('data-cmd'=>'gpabox'));
 			echo '</div></div>';
 
 		}
@@ -1299,7 +1299,7 @@ class gpOutput{
 		//edit options
 		$editable = gpOutput::ShowEditLink('Admin_Theme_Content');
 		if( $editable ){
-			$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content/'.$page->gpLayout,$langmessage['edit'],'file='.rawurlencode($img_rel).'&container='.$container_id.'&time='.time(),'title="Edit Image" data-cmd="inline_edit_generic"');
+			$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content/Edit/'.$page->gpLayout,$langmessage['edit'],'file='.rawurlencode($img_rel).'&container='.$container_id.'&time='.time(),'title="Edit Image" data-cmd="inline_edit_generic"');
 			gpOutput::$editlinks .= '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">'.$edit_link.'</span>';
 			$attributes['class'] .= ' editable_area';
 			$attributes['id'] = 'ExtraEditArea'.$edit_index;

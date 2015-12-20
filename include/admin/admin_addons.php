@@ -678,7 +678,7 @@ class admin_addons extends admin_addon_install{
 			$item = '<span><span class="layout_color_id" style="background:'.$layout_info['color'].'"></span> ';
 			$item .= common::Link('Admin_Theme_Content',$layout_info['label']);
 			$item .= ' ( ';
-			$item .= common::Link('Admin_Theme_Content/'.$layout_id,$langmessage['edit']);
+			$item .= common::Link('Admin_Theme_Content/Edit/'.$layout_id,$langmessage['edit']);
 			$item .= ' )</span>';
 
 			$list[] = $item;

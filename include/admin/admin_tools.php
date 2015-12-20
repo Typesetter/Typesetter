@@ -160,6 +160,7 @@ class admin_tools{
 
 		// Appearance
 		$scripts['Admin_Theme_Content']['class'] = '\gp\admin\Layout';
+		$scripts['Admin_Theme_Content']['method'] = 'RunScript';
 		$scripts['Admin_Theme_Content']['label'] = $langmessage['Appearance'];
 		$scripts['Admin_Theme_Content']['group'] = 'appearance';
 

@@ -295,18 +295,15 @@ class editing_page extends display{
 
 			if( isset($times[$key_current+1]) ){
 				$admin_links[]		= common::Link($this->title,'<i class="fa fa-forward"></i> '.$langmessage['Next'],'cmd=ViewRevision&time='.$times[$key_current+1],array('data-cmd'=>'cnreq'));
+			}else{
+				$admin_links[]		= common::Link($this->title,'<i class="fa fa-forward"></i> '.$langmessage['Working Draft']);
 			}
+
 		}
 
 		$admin_links[] = common::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 
-		//msg(pre($key_current));
-		//msg($this->fileModTime);
-		//msg($files);
-
-
 		return $admin_links;
-
 	}
 
 
@@ -1059,7 +1056,11 @@ class editing_page extends display{
 
 		switch($which){
 			case 'current':
-			echo common::Link($this->title,$langmessage['View'],'cmd=ViewCurrent');
+			if( $this->draft_exists ){
+				echo common::Link($this->title,$langmessage['View'],'cmd=ViewCurrent',array('data-cmd'=>'cnreq'));
+			}else{
+				echo common::Link($this->title,$langmessage['View']);
+			}
 			break;
 
 			case 'draft':
@@ -1160,6 +1161,7 @@ class editing_page extends display{
 	public function ViewCurrent(){
 		$file_sections			= gpFiles::Get($this->file,'file_sections');
 		$this->contentBuffer	= section_content::Render($file_sections,$this->title,$this->file_stats);
+		$this->revision			= $this->fileModTime;
 	}
 
 

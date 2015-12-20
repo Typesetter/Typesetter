@@ -164,8 +164,16 @@ class admin_tools{
 		$scripts['Admin_Theme_Content']['label'] = $langmessage['Appearance'];
 		$scripts['Admin_Theme_Content']['group'] = 'appearance';
 
-		$scripts['Admin_Theme_Content/Edit']['class'] = '\gp\admin\LayoutEdit';
-		$scripts['Admin_Theme_Content/Edit']['label'] = $langmessage['Appearance'];
+
+		$scripts['Admin_Theme_Content/Edit']		= array(	'class'		=> '\gp\admin\Layout\Edit',
+																'label'		=> $langmessage['Appearance'],
+																);
+
+
+		$scripts['Admin_Theme_Content/Available']	 = array(	'class'		=> '\gp\admin\Layout\Available',
+																'method'	=> 'ShowAvailable',
+																'label' 	=> $langmessage['Available'],
+																);
 
 
 

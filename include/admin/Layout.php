@@ -79,11 +79,6 @@ class Layout extends \admin_addon_install{
 				$this->RemoteBrowse();
 				return;
 			}
-
-			if( strtolower($layout_part) == 'available' ){
-				$this->ShowAvailable();
-				return;
-			}
 		}
 	}
 
@@ -125,13 +120,6 @@ class Layout extends \admin_addon_install{
 			break;
 
 
-			//adminlayout
-			case 'adminlayout':
-				$this->AdminLayout();
-			return;
-
-
-
 
 			//theme ratings
 			case 'Update Review';
@@ -144,16 +132,7 @@ class Layout extends \admin_addon_install{
 			break;
 
 
-			//new layouts
-			case 'preview':
-			case 'preview_iframe':
-			case 'newlayout':
-			case 'addlayout':
-				if( $this->NewLayout($cmd) ){
-					return;
-				}
-			break;
-			case 'updatetheme':
+			case 'UpdateTheme':
 				$this->UpdateTheme($_REQUEST['source']);
 			break;
 
@@ -161,10 +140,10 @@ class Layout extends \admin_addon_install{
 
 
 			//copy
-			case 'copy':
+			case 'CopyLayoutPrompt':
 				$this->CopyLayoutPrompt();
 			return;
-			case 'copylayout';
+			case 'CopyLayout';
 				$this->CopyLayout();
 			break;
 
@@ -214,7 +193,7 @@ class Layout extends \admin_addon_install{
 				$this->Restore();
 			break;
 
-			case 'css_preferences':
+			case 'CSSPreferences':
 				$this->CSSPreferences();
 			break;
 
@@ -222,11 +201,11 @@ class Layout extends \admin_addon_install{
 				$this->MakeDefault();
 			break;
 
-			case 'layout_label':
+			case 'LayoutLabel':
 				$this->LayoutLabel();
 			return true;
 
-			case 'rmgadget':
+			case 'RmGadget':
 				$this->RmGadget();
 			break;
 			case 'gadgets':
@@ -239,25 +218,6 @@ class Layout extends \admin_addon_install{
 		}
 
 		return false;
-	}
-
-
-	public function AdminLayout(){
-		global $langmessage;
-
-		echo '<div class="inline_box">';
-		echo '<form action="'.\common::GetUrl('Admin_Theme_Content').'" method="post">';
-
-		$admin_layout = $langmessage['default'];
-		echo '<h2>'.'Admin Layout'.'</h2>';
-
-		echo '<select name="">';
-			echo '<option value="">'.$langmessage['default'].'</option>';
-		echo '</select>';
-		echo ' <input type="submit" name="" value="'.$langmessage['continue'].'" />';
-
-		echo '</form>';
-		echo '</div>';
 	}
 
 
@@ -325,7 +285,7 @@ class Layout extends \admin_addon_install{
 				echo str_replace('_',' ',$gadget);
 				echo '</td><td>';
 				if( isset($gadget_info[$gadget]) ){
-					echo $this->LayoutLink( $this->curr_layout, $langmessage['remove'], 'cmd=rmgadget&gadget='.urlencode($gadget), array('data-cmd'=>'cnreq') );
+					echo $this->LayoutLink( $this->curr_layout, $langmessage['remove'], 'cmd=RmGadget&gadget='.urlencode($gadget), array('data-cmd'=>'cnreq') );
 				}else{
 					echo $langmessage['disabled'];
 				}
@@ -407,7 +367,7 @@ class Layout extends \admin_addon_install{
 
 		//copy
 		echo '<li>';
-		$query = 'cmd=copy&layout='.$layout;
+		$query = 'cmd=CopyLayoutPrompt&layout='.$layout;
 		echo \common::Link('Admin_Theme_Content',$langmessage['Copy'],$query,'data-cmd="gpabox"');
 		echo '</li>';
 
@@ -419,71 +379,6 @@ class Layout extends \admin_addon_install{
 			echo '</li>';
 		}
 	}
-
-
-	/**
-	 * Display links for selecting style variations of a theme
-	 *
-	 */
-	public function StyleOptions($layout, $layout_info){
-		global $langmessage;
-
-		$theme_colors = $this->GetThemeColors($layout_info['dir']);
-		if( !count($theme_colors) ){
-			return;
-		}
-
-		echo $langmessage['style'];
-		echo '<select name="color">';
-		foreach($theme_colors as $color){
-			$color_label = str_replace('_',' ',$color);
-			if( $color == $layout_info['theme_color'] ){
-				echo '<option value="'.htmlspecialchars($color).'" selected="selected">';
-			}else{
-				echo '<option value="'.htmlspecialchars($color).'">';
-			}
-			echo htmlspecialchars($color_label);
-			echo '</option>';
-		}
-		echo '</select>';
-	}
-
-
-	/**
-	 * Display all the layouts available in a <select>
-	 *
-	 */
-	public function LayoutSelect($curr_layout=false,$curr_info=false){
-		global $gpLayouts, $langmessage, $config;
-
-		$display = $langmessage['available_layouts'];
-		if( $curr_layout ){
-			$display = '<span class="layout_color_id" style="background-color:'.$curr_info['color'].';"></span> &nbsp; '
-					. $curr_info['label'];
-		}
-
-		echo '<div><div class="dd_menu">';
-		echo '<a data-cmd="dd_menu">'.$display.'</a>';
-
-		echo '<div class="dd_list"><ul>';
-		foreach($gpLayouts as $layout => $info){
-			$attr = '';
-			if( $layout == $curr_layout){
-				$attr = ' class="selected"';
-			}
-			echo '<li'.$attr.'>';
-
-			$display = '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span> &nbsp; '. $info['label'];
-			if( $config['gpLayout'] == $layout ){
-				$display .= ' <span class="layout_default"> ('.$langmessage['default'].')</span>';
-			}
-			echo \common::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),$display);
-			echo '</li>';
-		}
-		echo '</ul></div>';
-		echo '</div></div>';
-	}
-
 
 
 	/**
@@ -528,6 +423,7 @@ class Layout extends \admin_addon_install{
 			\gpFiles::RmDir($dir);
 		}
 	}
+
 
 	/**
 	 * Save changes to the css settings for a layout
@@ -626,210 +522,6 @@ class Layout extends \admin_addon_install{
 
 
 	/**
-	 * Manage adding new layouts
-	 *
-	 */
-	public function NewLayout($cmd){
-		global $langmessage;
-
-		//check the requested theme
-		$theme =& $_REQUEST['theme'];
-		$theme_info = $this->ThemeInfo($theme);
-		if( $theme_info === false ){
-			message($langmessage['OOPS'].' (Invalid Theme)');
-			return false;
-		}
-
-
-		// three steps of installation
-		switch($cmd){
-
-			case 'preview':
-				if( $this->PreviewTheme($theme, $theme_info) ){
-					return true;
-				}
-			break;
-
-			case 'preview_iframe':
-				$this->PreviewThemeIframe($theme,$theme_info);
-			return true;
-
-			case 'newlayout':
-				$this->NewLayoutPrompt($theme, $theme_info);
-			return true;
-
-			case 'addlayout':
-				$this->AddLayout($theme_info);
-			break;
-		}
-		return false;
-	}
-
-
-
-	/**
-	 * Preview a theme and give users the option of creating a new layout
-	 *
-	 */
-	public function PreviewTheme($theme, $theme_info){
-		global $langmessage,$config,$page;
-
-		$theme_id = dirname($theme);
-		$color = $theme_info['color'];
-
-
-		$_REQUEST += array('gpreq' => 'body'); //force showing only the body as a complete html document
-		$page->get_theme_css = false;
-		$page->show_admin_content = false;
-		$page->get_theme_css = false;
-
-		$page->head_js[] = '/include/js/auto_width.js';
-
-
-		ob_start();
-
-		//new
-		echo '<div id="theme_editor">';
-		echo '<div class="gp_scroll_area">';
-
-
-		echo '<div>';
-		echo \common::Link('Admin_Theme_Content/Available','&#171; '.$langmessage['available_themes']);
-		echo \common::Link('Admin_Theme_Content',$langmessage['use_this_theme'],'cmd=newlayout&theme='.rawurlencode($theme),'data-cmd="gpabox" class="add_layout"');
-		echo '</div>';
-
-
-		echo '<div class="separator"></div>';
-
-
-		$this->searchUrl = 'Admin_Theme_Content/Available';
-		$this->AvailableList( false );
-
-		//search options
-		$this->searchQuery .= '&cmd=preview&theme='.rawurlencode($theme);
-		$this->SearchOptions( false );
-
-		echo '</div>';
-
-
-		//show site in iframe
-		echo '<div id="gp_iframe_wrap">';
-		$url = \common::GetUrl('Admin_Theme_Content','cmd=preview_iframe&theme='.rawurlencode($theme));
-		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';
-		echo '</div>';
-
-		echo '</div>';
-		$page->admin_html = ob_get_clean();
-		return true;
-	}
-
-	public function PreviewThemeIframe($theme, $theme_info){
-		global $langmessage,$config,$page;
-
-		\admin_tools::$show_toolbar = false;
-
-		$theme_id = dirname($theme);
-		$template = $theme_info['folder'];
-		$color = $theme_info['color'];
-		$display = htmlspecialchars($theme_info['name'].' / '.$theme_info['color']);
-		$display = str_replace('_',' ',$display);
-		$this->LoremIpsum();
-		$page->gpLayout = false;
-		$page->theme_name = $template;
-		$page->theme_color = $color;
-		$page->theme_dir = $theme_info['full_dir'];
-		$page->theme_rel = $theme_info['rel'].'/'.$color;
-
-		if( isset($theme_info['id']) ){
-			$page->theme_addon_id = $theme_info['id'];
-		}
-
-		$page->theme_path = \common::GetDir($theme_info['rel'].'/'.$color);
-
-		$page->show_admin_content = false;
-	}
-
-
-
-	/**
-	 * Give users a few options before creating the new layout
-	 *
-	 */
-	public function NewLayoutPrompt($theme, $theme_info ){
-		global $langmessage;
-
-
-		$label = substr($theme_info['name'].'/'.$theme_info['color'],0,25);
-
-		echo '<h2>'.$langmessage['new_layout'].'</h2>';
-		echo '<form action="'.\common::GetUrl('Admin_Theme_Content').'" method="post">';
-		echo '<table class="bordered full_width">';
-
-		echo '<tr><th colspan="2">';
-		echo $langmessage['options'];
-		echo '</th></tr>';
-
-		echo '<tr><td>';
-		echo $langmessage['label'];
-		echo '</td><td>';
-		echo '<input type="text" name="label" value="'.htmlspecialchars($label).'" class="gpinput" />';
-		echo '</td></tr>';
-
-		echo '<tr><td>';
-		echo $langmessage['make_default'];
-		echo '</td><td>';
-		echo '<input type="checkbox" name="default" value="default" />';
-		echo '</td></tr>';
-
-		echo '</table>';
-
-		echo '<p>';
-		echo ' <input type="hidden" name="theme" value="'.htmlspecialchars($theme).'" />';
-		echo ' <input type="hidden" name="cmd" value="addlayout" />';
-		echo ' <input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit"/>';
-		echo ' <input type="button" name="" value="Cancel" class="admin_box_close gpcancel"/>';
-		echo '</p>';
-		echo '</form>';
-	}
-
-
-	/**
-	 * Add a new layout to the installation
-	 *
-	 */
-	public function AddLayout($theme_info){
-		global $gpLayouts, $langmessage, $config, $page;
-
-		$new_layout = array();
-		$new_layout['theme'] = $theme_info['folder'].'/'.$theme_info['color'];
-		$new_layout['color'] = self::GetRandColor();
-		$new_layout['label'] = htmlspecialchars($_POST['label']);
-		if( $theme_info['is_addon'] ){
-			$new_layout['is_addon'] = true;
-		}
-
-
-		includeFile('admin/admin_addon_installer.php');
-		$installer = new admin_addon_installer();
-		$installer->addon_folder_rel = dirname($theme_info['rel']);
-		$installer->code_folder_name = '_themes';
-		$installer->source = $theme_info['full_dir'];
-		$installer->new_layout = $new_layout;
-		if( !empty($_POST['default']) && $_POST['default'] != 'false' ){
-			$installer->default_layout = true;
-		}
-
-		$success = $installer->Install();
-		$installer->OutputMessages();
-
-		if( $success && $installer->default_layout ){
-			$page->SetTheme();
-			$this->SetLayoutArray();
-		}
-	}
-
-
-	/**
 	 * Update theme hooks and references in any related layouts
 	 *
 	 *
@@ -847,7 +539,7 @@ class Layout extends \admin_addon_install{
 
 		//install addon
 		includeFile('admin/admin_addon_installer.php');
-		$installer = new admin_addon_installer();
+		$installer = new \admin_addon_installer();
 		$installer->addon_folder_rel = dirname($theme_info['rel']);
 		$installer->code_folder_name = '_themes';
 		$installer->source = $theme_info['full_dir'];
@@ -964,8 +656,7 @@ class Layout extends \admin_addon_install{
 
 		echo '<p>';
 		echo ' <input type="hidden" name="layout" value="'.htmlspecialchars($layout).'" />';
-		echo ' <input type="hidden" name="cmd" value="copylayout" />';
-		echo ' <input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit"/>';
+		echo ' <button type="submit" name="cmd" value="CopyLayout" class="gpsubmit">'.$langmessage['save'].'</button>';
 		echo ' <input type="button" name="" value="Cancel" class="admin_box_close gpcancel"/>';
 		echo '</p>';
 		echo '</form>';
@@ -1398,7 +1089,7 @@ class Layout extends \admin_addon_install{
 		}
 		echo '<input type="hidden" name="layout" value="" />';
 		echo '<input type="hidden" name="color" value="" />';
-		echo '<input type="hidden" name="cmd" value="layout_label" />';
+		echo '<input type="hidden" name="cmd" value="LayoutLabel" />';
 
 		echo '<table>';
 
@@ -1429,277 +1120,7 @@ class Layout extends \admin_addon_install{
 	}
 
 
-	/**
-	 * Show available themes and style variations
-	 *
-	 */
-	public function ShowAvailable(){
-		global $langmessage, $config, $page;
 
-
-		$cmd = \common::GetCommand();
-
-		switch($cmd){
-			case 'preview':
-			case 'preview_iframe':
-			case 'newlayout':
-			case 'addlayout':
-				if( $this->NewLayout($cmd) ){
-					return;
-				}
-			break;
-		}
-
-
-		$page->head_js[] = '/include/js/auto_width.js';
-		$this->GetAddonData();
-
-		$this->ShowHeader();
-		$this->searchUrl = 'Admin_Theme_Content/Available';
-
-		$this->AvailableList();
-
-		$this->InvalidFolders();
-	}
-
-
-	public function AvailableList( $show_options = true ){
-		global $langmessage, $config;
-
-		//search settings
-		$this->searchPerPage = 10;
-		$this->searchOrderOptions = array();
-		$this->searchOrderOptions['modified']		= $langmessage['Recently Updated'];
-		$this->searchOrderOptions['rating_score']	= $langmessage['Highest Rated'];
-		$this->searchOrderOptions['downloads']		= $langmessage['Most Downloaded'];
-
-		$this->SearchOrder();
-
-
-		// get addon information for ordering
-		\admin_tools::VersionData($version_data);
-		$version_data = $version_data['packages'];
-
-		// combine remote addon information
-		foreach($this->avail_addons as $theme_id => $info){
-
-			if( isset($info['id']) ){
-				$id = $info['id'];
-
-				if( isset($version_data[$id]) ){
-					$info = array_merge($info,$version_data[$id]);
-					$info['rt'] *= 5;
-				}
-
-				//use local rating
-				if( isset($this->addonReviews[$id]) ){
-					$info['rt'] = $this->addonReviews[$id]['rating'];
-				}
-			}else{
-				$info['rt'] = 6; //give local themes a high rating to make them appear first, rating won't actually display
-			}
-
-			$info += array( 'dn'=>0, 'rt'=>0 );
-
-			//modified time
-			if( !isset($info['tm']) ){
-				$info['tm'] = self::ModifiedTime( $info['full_dir'] );
-			}
-
-
-			$this->avail_addons[$theme_id] = $info;
-		}
-
-
-		// sort by
-		uasort( $this->avail_addons, array('admin_theme_content','SortUpdated') );
-		switch($this->searchOrder){
-
-			case 'downloads':
-				uasort( $this->avail_addons, array('admin_theme_content','SortDownloads') );
-			break;
-
-			case 'modified':
-				uasort( $this->avail_addons, array('admin_theme_content','SortRating') );
-				uasort( $this->avail_addons, array('admin_theme_content','SortUpdated') );
-			break;
-
-			case 'rating_score':
-			default:
-				uasort( $this->avail_addons, array('admin_theme_content','SortRating') );
-			break;
-		}
-
-		// pagination
-		$this->searchMax = count($this->avail_addons);
-		if( isset($_REQUEST['page']) && ctype_digit($_REQUEST['page']) ){
-			$this->searchPage = $_REQUEST['page'];
-		}
-
-		$start = $this->searchPage * $this->searchPerPage;
-		$possible = array_slice( $this->avail_addons, $start, $this->searchPerPage, true);
-
-
-		if( $show_options ){
-			$this->SearchOptions();
-		}
-
-
-		// show themes
-		echo '<div id="gp_avail_themes">';
-		foreach($possible as $theme_id => $info){
-			$theme_label = str_replace('_',' ',$info['name']);
-			$version = '';
-			$id = false;
-			if( isset($info['version']) ){
-				$version = $info['version'];
-			}
-			if( isset($info['id']) && is_numeric($info['id']) ){
-				$id = $info['id'];
-			}
-
-			$has_screenshot = file_exists($info['full_dir'].'/screenshot.png');
-
-			//screenshot
-			if( $has_screenshot ){
-				echo '<div class="expand_child_click">';
-				echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';
-				echo '<div style="background-image:url(\''.\common::GetDir($info['rel'].'/screenshot.png').'\')">';
-			}else{
-				echo '<div>';
-				echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';
-				echo '<div>';
-			}
-
-			//options
-			echo '<div class="gp_theme_options">';
-
-				//colors
-				echo '<b>'.$langmessage['preview'].'</b>';
-				echo '<ul>';
-				foreach($info['colors'] as $color){
-					echo '<li>';
-					$q = 'cmd=preview&theme='.rawurlencode($theme_id.'/'.$color).$this->searchQuery;
-					if( $this->searchPage ){
-						$q .= '&page='.$this->searchPage;
-					}
-					echo \common::Link('Admin_Theme_Content/Available',str_replace('_','&nbsp;',$color),$q);
-					echo '</li>';
-				}
-				echo '</ul>';
-
-
-
-				ob_start();
-				if( $id ){
-
-					//more info
-					echo '<li>'.$this->DetailLink('theme', $id,'More Info...').'</li>';
-
-
-					//support
-					$forum_id = 1000 + $id;
-					echo '<li><a href="'.addon_browse_path.'/Forum?show=f'.$forum_id.'" target="_blank">'.$langmessage['Support'].'</a></li>';
-
-					//rating
-					$rating = 0;
-					if( $info['rt'] > 0 ){
-						$rating = $info['rt'];
-					}
-					echo '<li><span class="nowrap">'.$langmessage['rate'].' '.$this->ShowRating($info['rel'],$rating).'</span></li>';
-
-
-					//downloads
-					if( $info['dn'] > 0 ){
-						echo '<li><span class="nowrap">Downloads: '.number_format($info['dn']).'</span></li>';
-					}
-				}
-
-				//last updated
-				if( $info['tm'] > 0 ){
-					echo '<li><span class="nowrap">'.$langmessage['Modified'].': ';
-					echo \common::date($langmessage['strftime_datetime'],$info['tm']);
-					echo '</span></li>';
-				}
-
-
-
-				if( $info['is_addon'] ){
-
-					//delete
-					$folder = $info['folder'];
-					$title = sprintf($langmessage['generic_delete_confirm'], $theme_label );
-					$attr = array( 'data-cmd'=>'cnreq','class'=>'gpconfirm','title'=> $title );
-					echo '<li>'.\common::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletetheme&folder='.rawurlencode($folder),$attr).'</li>';
-
-					//order
-					if( isset($config['themes'][$folder]['order']) ){
-						echo '<li>Order: '.$config['themes'][$folder]['order'].'</li>';
-					}
-				}
-
-
-				$options = ob_get_clean();
-
-				if( !empty($options) ){
-					echo '<b>'.$langmessage['options'].'</b>';
-					echo '<ul>';
-					echo $options;
-					echo '</ul>';
-				}
-
-			echo '</div></div>';
-
-			//remote upgrade
-			if( gp_remote_themes && $id && isset(\admin_tools::$new_versions[$id]) && version_compare(\admin_tools::$new_versions[$id]['version'], $version ,'>') ){
-				$version_info = \admin_tools::$new_versions[$id];
-				echo \common::Link('Admin_Theme_Content',$langmessage['new_version'],'cmd=remote_install&id='.$id.'&name='.rawurlencode($version_info['name']));
-			}
-
-
-			echo '</div>';
-		}
-		echo '</div>';
-
-
- 		if( $show_options ){
-			$this->SearchNavLinks();
-		}
-
-	}
-
-	public static function ModifiedTime($directory){
-
-		$files = scandir( $directory );
-		$time = filemtime( $directory );
-		foreach($files as $file){
-			if( $file == '..' || $file == '.' ){
-				continue;
-			}
-
-			$full_path = $directory.'/'.$file;
-
-			if( is_dir($full_path) ){
-				$time = max( $time, self::ModifiedTime( $full_path ) );
-			}else{
-				$time = max( $time, filemtime( $full_path ) );
-			}
-		}
-		return $time;
-	}
-
-	public static function SortDownloads($a,$b){
-		return $b['dn'] > $a['dn'];
-	}
-	public static function SortRating($a,$b){
-		return $b['rt'] > $a['rt'];
-	}
-	public static function SortUpdated($a,$b){
-		return $b['tm'] > $a['tm'];
-	}
-	public static function SortName($a,$b){
-		return strnatcasecmp($a['name'],$b['name']);
-	}
 
 
 	/**
@@ -1770,7 +1191,7 @@ class Layout extends \admin_addon_install{
 		}else{
 			$source = $layout_info['theme_name'].'(local)/'.$layout_info['theme_color'];
 		}
-		echo \common::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=updatetheme&source='.rawurlencode($source),array('data-cmd'=>'creq'));
+		echo \common::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=UpdateTheme&source='.rawurlencode($source),array('data-cmd'=>'creq'));
 		echo '</li>';
 
 
@@ -1797,7 +1218,7 @@ class Layout extends \admin_addon_install{
 				$label = $langmessage['upgrade'].' &nbsp; '.$version_info['version'];
 				$source = $version_info['index'].'/'.$layout_info['theme_color']; //could be different folder
 				echo '<div class="gp_notice">';
-				echo \common::Link('Admin_Theme_Content',$label,'cmd=updatetheme&source='.$source,array('data-cmd'=>'creq'));
+				echo \common::Link('Admin_Theme_Content',$label,'cmd=UpdateTheme&source='.$source,array('data-cmd'=>'creq'));
 				echo '</div>';
 
 
@@ -1861,7 +1282,7 @@ class Layout extends \admin_addon_install{
 		echo '<li>';
 		echo '<form action="'.\common::GetUrl('Admin_Theme_Content').'" method="post">';
 		echo '<input type="hidden" name="layout" value="'.$layout.'" />';
-		echo '<input type="hidden" name="cmd" value="css_preferences" />';
+		echo '<input type="hidden" name="cmd" value="CSSPreferences" />';
 		$checked = '';
 		$value = 'on';
 		if( !isset($layout_info['menu_css_ordered']) ){
@@ -1880,7 +1301,7 @@ class Layout extends \admin_addon_install{
 		echo '<li>';
 		echo '<form action="'.\common::GetUrl('Admin_Theme_Content').'" method="post">';
 		echo '<input type="hidden" name="layout" value="'.$layout.'" />';
-		echo '<input type="hidden" name="cmd" value="css_preferences" />';
+		echo '<input type="hidden" name="cmd" value="CSSPreferences" />';
 		$checked = '';
 		$value = 'on';
 		if( !isset($layout_info['menu_css_indexed']) ){
@@ -1974,37 +1395,6 @@ class Layout extends \admin_addon_install{
 	}
 
 
-	public function ParseHandlerInfo($str,&$info){
-		global $config,$gpOutConf;
-
-		if( substr_count($str,'|') !== 1 ){
-			return false;
-		}
-
-
-		list($container,$fullKey) = explode('|',$str);
-
-		$arg = '';
-		$pos = strpos($fullKey,':');
-		$key = $fullKey;
-		if( $pos > 0 ){
-			$arg = substr($fullKey,$pos+1);
-			$key = substr($fullKey,0,$pos);
-		}
-
-		if( !isset($gpOutConf[$key]) && !isset($config['gadgets'][$key]) ){
-			return false;
-		}
-
-		$info = array();
-		$info['gpOutCmd'] = trim($fullKey,':');
-		$info['container'] = $container;
-		$info['key'] = $key;
-		$info['arg'] = $arg;
-
-		return true;
-
-	}
 
 
 	public function GetAllHandlers($layout=false){
@@ -2072,295 +1462,6 @@ class Layout extends \admin_addon_install{
 			}
 		}
 		return $result;
-	}
-
-	public function GetValues($a,&$container,&$gpOutCmd){
-		if( substr_count($a,'|') !== 1 ){
-			return false;
-		}
-
-		list($container,$gpOutCmd) = explode('|',$a);
-		return true;
-	}
-
-	public function AddToContainer(&$container,$to_gpOutCmd,$new_gpOutCmd,$replace=true,$offset=0){
-		global $langmessage;
-
-		//unchanged?
-		if( $replace && ($to_gpOutCmd == $new_gpOutCmd) ){
-			return true;
-		}
-
-
-		//add to to_container in front of $to_gpOutCmd
-		if( !isset($container) || !is_array($container) ){
-			message($langmessage['OOPS'].' (a1)');
-			return false;
-		}
-
-		//can't have two identical outputs in the same container
-		$check = array_search($new_gpOutCmd,$container);
-		if( ($check !== null) && ($check !== false) ){
-			message($langmessage['OOPS']. ' (Area already in container)');
-			return false;
-		}
-
-		//if empty, just add
-		if( count($container) === 0 ){
-			$container[] = $new_gpOutCmd;
-			return true;
-		}
-
-		$length = 1;
-		if( $replace === false ){
-			$length = 0;
-		}
-
-		//insert
-		$where = array_search($to_gpOutCmd,$container);
-		if( ($where === null) || ($where === false) ){
-			message($langmessage['OOPS']. ' (Destination Container Not Found)');
-			return false;
-		}
-		$where += $offset;
-
-		array_splice($container,$where,$length,$new_gpOutCmd);
-
-		return true;
-	}
-
-
-
-	public function NewCustomMenu(){
-
-		$upper_bound =& $_POST['upper_bound'];
-		$lower_bound =& $_POST['lower_bound'];
-		$expand_bound =& $_POST['expand_bound'];
-		$expand_all =& $_POST['expand_all'];
-		$source_menu =& $_POST['source_menu'];
-
-		$this->CleanBounds($upper_bound,$lower_bound,$expand_bound,$expand_all,$source_menu);
-
-		$arg = $upper_bound.','.$lower_bound.','.$expand_bound.','.$expand_all.','.$source_menu;
-		return 'CustomMenu:'.$arg;
-	}
-
-	public function NewPresetMenu(){
-		global $gpOutConf;
-
-		$new_gpOutCmd =& $_POST['new_handle'];
-		if( !isset($gpOutConf[$new_gpOutCmd]) || !isset($gpOutConf[$new_gpOutCmd]['link']) ){
-			return false;
-		}
-
-		return rtrim($new_gpOutCmd.':'.$this->CleanMenu($_POST['source_menu']),':');
-	}
-
-	public function CleanBounds(&$upper_bound,&$lower_bound,&$expand_bound,&$expand_all,&$source_menu){
-
-		$upper_bound = (int)$upper_bound;
-		$upper_bound = max(0,$upper_bound);
-		$upper_bound = min(4,$upper_bound);
-
-		$lower_bound = (int)$lower_bound;
-		$lower_bound = max(-1,$lower_bound);
-		$lower_bound = min(4,$lower_bound);
-
-		$expand_bound = (int)$expand_bound;
-		$expand_bound = max(-1,$expand_bound);
-		$expand_bound = min(4,$expand_bound);
-
-		if( $expand_all ){
-			$expand_all = 1;
-		}else{
-			$expand_all = 0;
-		}
-
-		$source_menu = $this->CleanMenu($source_menu);
-	}
-	public function CleanMenu($menu){
-		global $config;
-
-		if( empty($menu) ){
-			return '';
-		}
-		if( !isset($config['menus'][$menu]) ){
-			return '';
-		}
-		return $menu;
-	}
-
-	public function PresetMenuForm($args = array()){
-		global $gpOutConf,$langmessage;
-
-		$current_function =& $args['current_function'];
-		$current_menu =& $args['source_menu'];
-
-		$this->MenuSelect($current_menu);
-
-
-		echo '<tr><th colspan="2">';
-			echo $langmessage['Menu Output'];
-		echo '</th></tr>';
-
-
-		$i = 0;
-		foreach($gpOutConf as $outKey => $info){
-
-			if( !isset($info['link']) ){
-				continue;
-			}
-			echo '<tr>';
-			echo '<td>';
-			echo '<label for="new_handle_'.$i.'">';
-			if( isset($langmessage[$info['link']]) ){
-				echo str_replace(' ','&nbsp;',$langmessage[$info['link']]);
-			}else{
-				echo str_replace(' ','&nbsp;',$info['link']);
-			}
-			echo '</label>';
-			echo '</td>';
-			echo '<td class="add">';
-
-			if( $current_function == $outKey ){
-				echo '<input id="new_handle_'.$i.'" type="radio" name="new_handle" value="'.$outKey.'" checked="checked"/>';
-			}else{
-				echo '<input id="new_handle_'.$i.'" type="radio" name="new_handle" value="'.$outKey.'" />';
-			}
-			echo '</td>';
-			echo '</tr>';
-			$i++;
-		}
-	}
-
-
-	public function MenuArgs($curr_info){
-
-		$menu_args = array();
-
-		if( $curr_info['key'] == 'CustomMenu' ){
-			$showCustom = true;
-
-			$args = explode(',',$curr_info['arg']);
-			$args += array( 0=>0, 1=>-1, 2=>-1, 3=>0, 4=>'' ); //defaults
-			list($upper_bound,$lower_bound,$expand_bound,$expand_all,$source_menu) = $args;
-
-			$this->CleanBounds($upper_bound,$lower_bound,$expand_bound,$expand_all,$source_menu);
-
-
-			$menu_args['upper_bound'] = $upper_bound;
-			$menu_args['lower_bound'] = $lower_bound;
-			$menu_args['expand_bound'] = $expand_bound;
-			$menu_args['expand_all'] = $expand_all;
-			$menu_args['source_menu'] = $source_menu;
-
-
-		}else{
-
-			$menu_args['current_function'] = $curr_info['key'];
-			$menu_args['source_menu'] = $this->CleanMenu($curr_info['arg']);
-		}
-
-
-		return $menu_args;
-
-	}
-
-
-	/**
-	 * Output form elements for setting custom menu settings
-	 *
-	 * @param string $arg
-	 * @param array $menu_args
-	 */
-	public function CustomMenuForm($arg = '',$menu_args = array()){
-		global $langmessage;
-
-
-		$upper_bound	=& $menu_args['upper_bound'];
-		$lower_bound	=& $menu_args['lower_bound'];
-		$expand_bound	=& $menu_args['expand_bound'];
-		$expand_all		=& $menu_args['expand_all'];
-		$source_menu	=& $menu_args['source_menu'];
-
-
-		echo '<table class="bordered">';
-
-		$this->MenuSelect($source_menu);
-
-		echo '<tr><th colspan="2">';
-		echo $langmessage['Show Titles...'];
-		echo '</th></tr>';
-
-		$this->CustomMenuSection($langmessage['... Below Level'], 'upper_bound', $upper_bound);
-		$this->CustomMenuSection($langmessage['... At And Above Level'], 'lower_bound', $lower_bound);
-
-
-		echo '<tr><th colspan="2">';
-		echo $langmessage['Expand Menu...'];
-		echo '</th></tr>';
-
-		$this->CustomMenuSection($langmessage['... Below Level'], 'expand_bound', $expand_bound);
-
-
-		echo '<tr><td>';
-		echo $langmessage['... Expand All'];
-		echo '</td><td class="add">';
-		$attr = $expand_all ? 'checked' : '';
-		echo '<input type="checkbox" name="expand_all" '.$attr.'>';
-		echo '</td></tr>';
-
-	}
-
-
-	/**
-	 * Output section for custom menu form
-	 *
-	 * @param string $label
-	 * @param string $name
-	 * @param int $value
-	 */
-	public function CustomMenuSection($label, $name, $value){
-		echo '<tr><td>';
-		echo $label;
-		echo '</td><td class="add">';
-		echo '<select name="'.$name.'" class="gpselect">';
-		for($i=0;$i<=4;$i++){
-
-			$label		= ($i === 0) ? '' : $i;
-			$selected	= ($i === $value) ? 'selected' : '';
-
-			echo '<option value="'.$i.'" '.$selected.'>'.$label.'</option>';
-		}
-
-		echo '</select>';
-		echo '</td></tr>';
-	}
-
-
-	public function MenuSelect($source_menu){
-		global $config, $langmessage;
-
-		echo '<tr><th colspan="2">';
-			echo $langmessage['Source Menu'];
-		echo '</th>';
-		echo '</tr>';
-		echo '<tr><td>';
-		echo $langmessage['Menu'];
-		echo '</td><td class="add">';
-		echo '<select name="source_menu" class="gpselect">';
-		echo '<option value="">'.$langmessage['Main Menu'].'</option>';
-		if( isset($config['menus']) && count($config['menus']) > 0 ){
-			foreach($config['menus'] as $id => $menu ){
-				$attr = '';
-				if( $source_menu == $id ){
-					$attr = ' selected="selected"';
-				}
-				echo '<option value="'.htmlspecialchars($id).'" '.$attr.'>'.htmlspecialchars($menu).'</option>';
-			}
-		}
-		echo '</select>';
-		echo '</td></tr>';
 	}
 
 
@@ -2569,26 +1670,20 @@ class Layout extends \admin_addon_install{
 		echo '<input type="hidden" name="return" value="" />'; //will be populated by javascript
 
 		echo '<table class="bordered">';
-			echo '<tr>';
-			echo '<th>';
-			echo $langmessage['default'];
-			echo '</th>';
-			echo '<th>';
-			echo '</th>';
-			echo '</tr>';
-			echo '<tr>';
-			echo '<td>';
-			echo $default;
-			echo '</td>';
-			echo '<td>';
-			//$value is already escaped using htmlspecialchars()
-			echo '<input type="text" name="value" value="'.$value.'" class="gpinput"/>';
-			echo '<p>';
-			echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit"/>';
-			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
-			echo '</p>';
-			echo '</td>';
-			echo '</tr>';
+		echo '<tr><th>';
+		echo $langmessage['default'];
+		echo '</th><th>';
+		echo '</th></tr>';
+		echo '<tr><td>';
+		echo $default;
+		echo '</td><td>';
+		//$value is already escaped using htmlspecialchars()
+		echo '<input type="text" name="value" value="'.$value.'" class="gpinput"/>';
+		echo '<p>';
+		echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit"/>';
+		echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
+		echo '</p>';
+		echo '</td></tr>';
 		echo '</table>';
 
 		echo '</form>';
@@ -2749,7 +1844,7 @@ class Layout extends \admin_addon_install{
 		if( $rm_addon ){
 
 			includeFile('admin/admin_addon_installer.php');
-			$installer = new admin_addon_installer();
+			$installer = new \admin_addon_installer();
 			if( !$installer->Uninstall($rm_addon) ){
 				$gpLayouts = $gpLayoutsBefore;
 			}
@@ -2837,7 +1932,7 @@ class Layout extends \admin_addon_install{
 		//delete and save
 		if( $rm_addon ){
 			includeFile('admin/admin_addon_installer.php');
-			$installer = new admin_addon_installer();
+			$installer = new \admin_addon_installer();
 			$installer->rm_folders = false;
 			if( !$installer->Uninstall($rm_addon) ){
 				$gpLayouts = $gpLayoutsBefore;

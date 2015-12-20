@@ -1,16 +1,16 @@
 <?php
 
-namespace gp\admin;
+namespace gp\admin\Layout;
 
 defined('is_running') or die('Not an entry point...');
 
-class LayoutEdit extends Layout{
+class Edit extends \gp\admin\Layout{
 
 	protected $layout_request = true;
 	protected $layout_slug;
 
 	public function __construct(){
-		global $page, $gpLayouts;
+		global $page, $gpLayouts, $config;
 
 		parent::__construct();
 
@@ -24,7 +24,7 @@ class LayoutEdit extends Layout{
 
 		//default layout
 		if( empty($parts[2]) ){
-			$this->EditLayout($this->curr_layout);
+			$this->EditLayout($config['gpLayout']);
 			return;
 		}
 
@@ -231,11 +231,6 @@ class LayoutEdit extends Layout{
 		echo '<div class="separator"></div>';
 
 
-		//style options
-		//echo '<div>';
-		//$this->StyleOptions($layout, $layout_info);
-		//echo '</div>';
-
 		echo '</td></tr><tr><td class="full_height"><div class="full_height">';
 
 
@@ -279,6 +274,44 @@ class LayoutEdit extends Layout{
 		echo '</div>'; //#theme_editor
 
 	}
+
+
+
+	/**
+	 * Display all the layouts available in a <select>
+	 *
+	 */
+	public function LayoutSelect($curr_layout=false,$curr_info=false){
+		global $gpLayouts, $langmessage, $config;
+
+		$display = $langmessage['available_layouts'];
+		if( $curr_layout ){
+			$display = '<span class="layout_color_id" style="background-color:'.$curr_info['color'].';"></span> &nbsp; '
+					. $curr_info['label'];
+		}
+
+		echo '<div><div class="dd_menu">';
+		echo '<a data-cmd="dd_menu">'.$display.'</a>';
+
+		echo '<div class="dd_list"><ul>';
+		foreach($gpLayouts as $layout => $info){
+			$attr = '';
+			if( $layout == $curr_layout){
+				$attr = ' class="selected"';
+			}
+			echo '<li'.$attr.'>';
+
+			$display = '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span> &nbsp; '. $info['label'];
+			if( $config['gpLayout'] == $layout ){
+				$display .= ' <span class="layout_default"> ('.$langmessage['default'].')</span>';
+			}
+			echo \common::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),$display);
+			echo '</li>';
+		}
+		echo '</ul></div>';
+		echo '</div></div>';
+	}
+
 
 
 	/**
@@ -1152,5 +1185,334 @@ class LayoutEdit extends Layout{
 		$this->ReturnHeader();
 	}
 
+
+	public function ParseHandlerInfo($str,&$info){
+		global $config,$gpOutConf;
+
+		if( substr_count($str,'|') !== 1 ){
+			return false;
+		}
+
+
+		list($container,$fullKey) = explode('|',$str);
+
+		$arg = '';
+		$pos = strpos($fullKey,':');
+		$key = $fullKey;
+		if( $pos > 0 ){
+			$arg = substr($fullKey,$pos+1);
+			$key = substr($fullKey,0,$pos);
+		}
+
+		if( !isset($gpOutConf[$key]) && !isset($config['gadgets'][$key]) ){
+			return false;
+		}
+
+		$info = array();
+		$info['gpOutCmd'] = trim($fullKey,':');
+		$info['container'] = $container;
+		$info['key'] = $key;
+		$info['arg'] = $arg;
+
+		return true;
+
+	}
+
+
+	public function GetValues($a,&$container,&$gpOutCmd){
+		if( substr_count($a,'|') !== 1 ){
+			return false;
+		}
+
+		list($container,$gpOutCmd) = explode('|',$a);
+		return true;
+	}
+
+
+	public function AddToContainer(&$container,$to_gpOutCmd,$new_gpOutCmd,$replace=true,$offset=0){
+		global $langmessage;
+
+		//unchanged?
+		if( $replace && ($to_gpOutCmd == $new_gpOutCmd) ){
+			return true;
+		}
+
+
+		//add to to_container in front of $to_gpOutCmd
+		if( !isset($container) || !is_array($container) ){
+			message($langmessage['OOPS'].' (a1)');
+			return false;
+		}
+
+		//can't have two identical outputs in the same container
+		$check = array_search($new_gpOutCmd,$container);
+		if( ($check !== null) && ($check !== false) ){
+			message($langmessage['OOPS']. ' (Area already in container)');
+			return false;
+		}
+
+		//if empty, just add
+		if( count($container) === 0 ){
+			$container[] = $new_gpOutCmd;
+			return true;
+		}
+
+		$length = 1;
+		if( $replace === false ){
+			$length = 0;
+		}
+
+		//insert
+		$where = array_search($to_gpOutCmd,$container);
+		if( ($where === null) || ($where === false) ){
+			message($langmessage['OOPS']. ' (Destination Container Not Found)');
+			return false;
+		}
+		$where += $offset;
+
+		array_splice($container,$where,$length,$new_gpOutCmd);
+
+		return true;
+	}
+
+
+	public function NewCustomMenu(){
+
+		$upper_bound =& $_POST['upper_bound'];
+		$lower_bound =& $_POST['lower_bound'];
+		$expand_bound =& $_POST['expand_bound'];
+		$expand_all =& $_POST['expand_all'];
+		$source_menu =& $_POST['source_menu'];
+
+		$this->CleanBounds($upper_bound,$lower_bound,$expand_bound,$expand_all,$source_menu);
+
+		$arg = $upper_bound.','.$lower_bound.','.$expand_bound.','.$expand_all.','.$source_menu;
+		return 'CustomMenu:'.$arg;
+	}
+
+
+	public function NewPresetMenu(){
+		global $gpOutConf;
+
+		$new_gpOutCmd =& $_POST['new_handle'];
+		if( !isset($gpOutConf[$new_gpOutCmd]) || !isset($gpOutConf[$new_gpOutCmd]['link']) ){
+			return false;
+		}
+
+		return rtrim($new_gpOutCmd.':'.$this->CleanMenu($_POST['source_menu']),':');
+	}
+
+
+	public function PresetMenuForm($args = array()){
+		global $gpOutConf,$langmessage;
+
+		$current_function =& $args['current_function'];
+		$current_menu =& $args['source_menu'];
+
+		$this->MenuSelect($current_menu);
+
+
+		echo '<tr><th colspan="2">';
+			echo $langmessage['Menu Output'];
+		echo '</th></tr>';
+
+
+		$i = 0;
+		foreach($gpOutConf as $outKey => $info){
+
+			if( !isset($info['link']) ){
+				continue;
+			}
+			echo '<tr>';
+			echo '<td>';
+			echo '<label for="new_handle_'.$i.'">';
+			if( isset($langmessage[$info['link']]) ){
+				echo str_replace(' ','&nbsp;',$langmessage[$info['link']]);
+			}else{
+				echo str_replace(' ','&nbsp;',$info['link']);
+			}
+			echo '</label>';
+			echo '</td>';
+			echo '<td class="add">';
+
+			if( $current_function == $outKey ){
+				echo '<input id="new_handle_'.$i.'" type="radio" name="new_handle" value="'.$outKey.'" checked="checked"/>';
+			}else{
+				echo '<input id="new_handle_'.$i.'" type="radio" name="new_handle" value="'.$outKey.'" />';
+			}
+			echo '</td>';
+			echo '</tr>';
+			$i++;
+		}
+	}
+
+
+	public function MenuArgs($curr_info){
+
+		$menu_args = array();
+
+		if( $curr_info['key'] == 'CustomMenu' ){
+			$showCustom = true;
+
+			$args = explode(',',$curr_info['arg']);
+			$args += array( 0=>0, 1=>-1, 2=>-1, 3=>0, 4=>'' ); //defaults
+			list($upper_bound,$lower_bound,$expand_bound,$expand_all,$source_menu) = $args;
+
+			$this->CleanBounds($upper_bound,$lower_bound,$expand_bound,$expand_all,$source_menu);
+
+
+			$menu_args['upper_bound'] = $upper_bound;
+			$menu_args['lower_bound'] = $lower_bound;
+			$menu_args['expand_bound'] = $expand_bound;
+			$menu_args['expand_all'] = $expand_all;
+			$menu_args['source_menu'] = $source_menu;
+
+
+		}else{
+
+			$menu_args['current_function'] = $curr_info['key'];
+			$menu_args['source_menu'] = $this->CleanMenu($curr_info['arg']);
+		}
+
+
+		return $menu_args;
+
+	}
+
+
+
+	/**
+	 * Output form elements for setting custom menu settings
+	 *
+	 * @param string $arg
+	 * @param array $menu_args
+	 */
+	public function CustomMenuForm($arg = '',$menu_args = array()){
+		global $langmessage;
+
+
+		$upper_bound	=& $menu_args['upper_bound'];
+		$lower_bound	=& $menu_args['lower_bound'];
+		$expand_bound	=& $menu_args['expand_bound'];
+		$expand_all		=& $menu_args['expand_all'];
+		$source_menu	=& $menu_args['source_menu'];
+
+
+		echo '<table class="bordered">';
+
+		$this->MenuSelect($source_menu);
+
+		echo '<tr><th colspan="2">';
+		echo $langmessage['Show Titles...'];
+		echo '</th></tr>';
+
+		$this->CustomMenuSection($langmessage['... Below Level'], 'upper_bound', $upper_bound);
+		$this->CustomMenuSection($langmessage['... At And Above Level'], 'lower_bound', $lower_bound);
+
+
+		echo '<tr><th colspan="2">';
+		echo $langmessage['Expand Menu...'];
+		echo '</th></tr>';
+
+		$this->CustomMenuSection($langmessage['... Below Level'], 'expand_bound', $expand_bound);
+
+
+		echo '<tr><td>';
+		echo $langmessage['... Expand All'];
+		echo '</td><td class="add">';
+		$attr = $expand_all ? 'checked' : '';
+		echo '<input type="checkbox" name="expand_all" '.$attr.'>';
+		echo '</td></tr>';
+
+	}
+
+
+
+
+	public function CleanBounds(&$upper_bound,&$lower_bound,&$expand_bound,&$expand_all,&$source_menu){
+
+		$upper_bound = (int)$upper_bound;
+		$upper_bound = max(0,$upper_bound);
+		$upper_bound = min(4,$upper_bound);
+
+		$lower_bound = (int)$lower_bound;
+		$lower_bound = max(-1,$lower_bound);
+		$lower_bound = min(4,$lower_bound);
+
+		$expand_bound = (int)$expand_bound;
+		$expand_bound = max(-1,$expand_bound);
+		$expand_bound = min(4,$expand_bound);
+
+		if( $expand_all ){
+			$expand_all = 1;
+		}else{
+			$expand_all = 0;
+		}
+
+		$source_menu = $this->CleanMenu($source_menu);
+	}
+
+	public function CleanMenu($menu){
+		global $config;
+
+		if( empty($menu) ){
+			return '';
+		}
+		if( !isset($config['menus'][$menu]) ){
+			return '';
+		}
+		return $menu;
+	}
+
+
+	/**
+	 * Output section for custom menu form
+	 *
+	 * @param string $label
+	 * @param string $name
+	 * @param int $value
+	 */
+	public function CustomMenuSection($label, $name, $value){
+		echo '<tr><td>';
+		echo $label;
+		echo '</td><td class="add">';
+		echo '<select name="'.$name.'" class="gpselect">';
+		for($i=0;$i<=4;$i++){
+
+			$label		= ($i === 0) ? '' : $i;
+			$selected	= ($i === $value) ? 'selected' : '';
+
+			echo '<option value="'.$i.'" '.$selected.'>'.$label.'</option>';
+		}
+
+		echo '</select>';
+		echo '</td></tr>';
+	}
+
+
+	public function MenuSelect($source_menu){
+		global $config, $langmessage;
+
+		echo '<tr><th colspan="2">';
+			echo $langmessage['Source Menu'];
+		echo '</th>';
+		echo '</tr>';
+		echo '<tr><td>';
+		echo $langmessage['Menu'];
+		echo '</td><td class="add">';
+		echo '<select name="source_menu" class="gpselect">';
+		echo '<option value="">'.$langmessage['Main Menu'].'</option>';
+		if( isset($config['menus']) && count($config['menus']) > 0 ){
+			foreach($config['menus'] as $id => $menu ){
+				$attr = '';
+				if( $source_menu == $id ){
+					$attr = ' selected="selected"';
+				}
+				echo '<option value="'.htmlspecialchars($id).'" '.$attr.'>'.htmlspecialchars($menu).'</option>';
+			}
+		}
+		echo '</select>';
+		echo '</td></tr>';
+	}
 
 }

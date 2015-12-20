@@ -81,30 +81,40 @@ class special_display extends display{
 		global $langmessage;
 
 		$admin_links			= $this->admin_links;
-		$this->admin_links		= array();
+
 		$menu_permissions		= admin_tools::HasPermission('Admin_Menu');
 
 
 		if( $menu_permissions ){
-			$this->admin_links[]		= common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
-			$this->admin_links[]		= common::Link('Admin_Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
-
+			//visibility
 			$q							= 'cmd=ToggleVisibility';
-			$label						= $langmessage['Visibility'].': '.$langmessage['Private'];
+			$label						= '<i class="fa fa-eye-slash"></i> '.$langmessage['Visibility'].': '.$langmessage['Private'];
 			if( !$this->visibility ){
-				$label					= $langmessage['Visibility'].': '.$langmessage['Public'];
+				$label					= '<i class="fa fa-eye"></i> '.$langmessage['Visibility'].': '.$langmessage['Public'];
 				$q						.= '&visibility=private';
 			}
 			$attrs						= array('title'=>$label,'data-cmd'=>'creq');
-			$this->admin_links[]		= common::Link($this->title,$label,$q,$attrs);
+			$admin_links[]		= common::Link($this->title,$label,$q,$attrs);
 		}
+
+
+		// page options: less frequently used links that don't have to do with editing the content of the page
+		$option_links		= array();
+		if( $menu_permissions ){
+			$option_links[] = common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
+			$option_links[] = common::Link('Admin_Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
+		}
+
 		if( admin_tools::HasPermission('Admin_User') ){
-			$this->admin_links[] = common::Link('Admin_Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
+			$option_links[] = common::Link('Admin_Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
 		}
 
-		$this->admin_links				= array_merge($this->admin_links, $admin_links);
+		if( !empty($option_links) ){
+			$admin_links[$langmessage['options']] = $option_links;
+		}
 
-		return $this->admin_links;
+
+		return $admin_links;
 	}
 
 

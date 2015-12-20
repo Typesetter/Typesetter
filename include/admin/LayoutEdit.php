@@ -112,6 +112,15 @@ class LayoutEdit extends Layout{
 				$this->LayoutMenuSave();
 			return;
 
+			//css
+			case 'SaveCSS':
+				$this->SaveCSS();
+			break;
+			case 'PreviewCSS':
+				$this->PreviewCSS();
+			break;
+
+
 
 		}
 
@@ -124,8 +133,8 @@ class LayoutEdit extends Layout{
 		switch( $cmd ){
 
 			//show the layout (displayed within an iframe)
-			case 'save_css':
-			case 'preview_css':
+			case 'SaveCSS':
+			case 'PreviewCSS':
 			case 'addcontent':
 			case 'rm_area':
 			case 'drag_area':
@@ -157,6 +166,234 @@ class LayoutEdit extends Layout{
 		ob_start();
 		$this->LayoutEditor($layout, $layout_info );
 		$page->admin_html = ob_get_clean();
+	}
+
+
+	/**
+	 * Prepare the page for css editing
+	 *
+	 */
+	public function ShowInIframe($cmd){
+		global $page,$dirPrefix;
+
+		$page->show_admin_content = false;
+		\admin_tools::$show_toolbar = false;
+
+		// <head>
+		$page->head .= '<script type="text/javascript">parent.$gp.iframeloaded();</script>';
+		if( $cmd != 'PreviewCSS' ){
+			$page->head .= '<script type="text/javascript">var gpLayouts=true;</script>';
+		}
+	}
+
+
+	/**
+	 * Display the toolbar for layout editing
+	 *
+	 */
+	public function LayoutEditor($layout, $layout_info ){
+		global $page,$langmessage,$config;
+		$page->show_admin_content = false;
+
+		$page->head_js[] = '/include/thirdparty/codemirror/lib/codemirror.js';
+		$page->head_js[] = '/include/thirdparty/codemirror/mode/less/less.js';
+		$page->css_user[] = '/include/thirdparty/codemirror/lib/codemirror.css';
+
+
+
+		echo '<div id="theme_editor">';
+		echo '<form action="'.\common::GetUrl('Admin_Theme_Content/Edit/'.$this->curr_layout,'cmd=in_iframe').'" method="post" class="full_height" target="gp_layout_iframe">';
+		echo '<table border="0">';
+		echo '<tr><td>';
+
+
+
+		echo '<div>';
+		echo \common::Link('Admin_Theme_Content','&#171; '.$langmessage['layouts']);
+		echo '<div class="layout_select">';
+		$this->LayoutSelect($layout,$layout_info);
+		echo '</div>';
+
+
+		//options
+		echo '<div><div class="dd_menu">';
+		echo '<a data-cmd="dd_menu">'.$langmessage['Layout Options'].'</a>';
+		echo '<div class="dd_list">';
+		echo '<ul>';
+		$this->LayoutOptions($layout,$layout_info);
+		echo '</ul>';
+		echo '</div>';
+		echo '</div></div>';
+
+
+		//css textarea
+		echo '</div>';
+		echo '<div class="separator"></div>';
+
+
+		//style options
+		//echo '<div>';
+		//$this->StyleOptions($layout, $layout_info);
+		//echo '</div>';
+
+		echo '</td></tr><tr><td class="full_height"><div class="full_height">';
+
+
+		//custom css
+		$css = $this->layoutCSS($this->curr_layout);
+		if( empty($css) ){
+			$var_file = $layout_info['dir'].'/'.$layout_info['theme_color'].'/variables.less';
+			if( file_exists($var_file) ){
+				$css = file_get_contents($var_file);
+			}
+		}
+
+		echo '<textarea name="css" id="gp_layout_css" class="gptextarea" placeholder="'.htmlspecialchars($langmessage['Add your LESS and CSS here']).'" wrap="off">';
+		echo htmlspecialchars($css);
+		echo '</textarea>';
+
+
+		//save button
+		echo '</div></td></tr><tr><td><div>';
+
+		echo ' <button name="cmd" type="submit" value="PreviewCSS" class="gpsubmit" data-cmd="preview_css" />'.$langmessage['preview'].'</button>';
+		echo ' <button name="cmd" type="submit" value="SaveCSS" class="gpsubmit" data-cmd="reset_css" />'.$langmessage['save'].'</button>';
+		//echo ' <input type="reset" class="gpsubmit" data-cmd="reset_css" />';
+
+
+		echo '</div></td></tr>';
+		echo '</table>';
+		echo '</form>';
+
+
+		//show site in iframe
+		echo '<div id="gp_iframe_wrap">';
+		$url = \common::GetUrl('Admin_Theme_Content/Edit/'.rawurlencode($layout),'cmd=in_iframe');
+		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';
+
+		echo '<div id="gp_loading_img"><img src="'.\common::GetDir('/include/imgs/loader64.gif').'" /></div>';
+		echo '</div>';
+
+
+
+		echo '</div>'; //#theme_editor
+
+	}
+
+
+	/**
+	 * Save edits to the layout css
+	 *
+	 */
+	public function SaveCSS(){
+		global $langmessage, $dataDir, $gpLayouts, $page;
+
+		$layout_info = \common::LayoutInfo($this->curr_layout,false);
+		$color = $layout_info['theme_color'];
+		$theme_colors = $this->GetThemeColors($layout_info['dir']);
+		$path = $dataDir.'/data/_layouts/'.$this->curr_layout.'/custom.css';
+		$css =& $_POST['css'];
+
+		//check theme color
+		if( array_key_exists('color',$_REQUEST) ){
+
+			if( !isset($theme_colors[$color]) ){
+				message($langmessage['OOPS'].' (Invalid Color)');
+				return false;
+			}
+			$color = $_REQUEST['color'];
+		}
+
+		$old_info = $new_info = $gpLayouts[$this->curr_layout];
+		$theme_name = dirname($new_info['theme']);
+		$new_info['theme'] = $theme_name.'/'.$color;
+		$gpLayouts[$this->curr_layout] = $new_info;
+
+
+		//delete css file if empty
+		if( empty($css) ){
+			unset($gpLayouts[$this->curr_layout]['css']);
+			$this->RemoveCSS($this->curr_layout);
+
+		//save if not empty
+		}elseif( !\gpFiles::Save($path,$css) ){
+			message($langmessage['OOPS'].' (CSS not saved)');
+			return false;
+		}
+
+
+		$gpLayouts[$this->curr_layout]['css'] = true;
+		if( !\admin_tools::SavePagesPHP() ){
+			$gpLayouts[$this->curr_layout] = $old_info;
+			message($langmessage['OOPS'].' (Data not saved)');
+			return false;
+		}
+
+		message($langmessage['SAVED']);
+		$page->SetTheme($this->curr_layout);
+
+	}
+
+
+	/**
+	 * Preview changes to the custom css/less
+	 *
+	 */
+	public function PreviewCSS(){
+		global $page, $langmessage;
+
+		$layout_info = \common::LayoutInfo($this->curr_layout,false);
+		$theme_colors = $this->GetThemeColors($layout_info['dir']);
+		$color = $layout_info['theme_color'];
+
+		// which color option
+		if( array_key_exists('color',$_REQUEST) ){
+
+			if( !isset($theme_colors[$color]) ){
+				message($langmessage['OOPS'].' (Invalid Color)');
+				return false;
+			}
+			$color = $_REQUEST['color'];
+		}
+
+		$page->theme_color = $color;
+		$page->theme_rel = dirname($page->theme_rel).'/'.$color;
+		$page->theme_path = dirname($page->theme_path).'/'.$color;
+
+
+
+		// which css files
+		$less = array();
+		if( file_exists($page->theme_dir . '/' . $page->theme_color . '/style.css') ){
+			$page->css_user[] = rawurldecode($page->theme_path).'/style.css';
+		}else{
+			$less[] = $page->theme_dir . '/' . $page->theme_color . '/style.less';
+		}
+
+		// variables.less
+		$var_file = $page->theme_dir . '/' . $page->theme_color . '/variables.less';
+		if( file_exists($var_file) ){
+			$less[] = $var_file;
+		}
+
+
+		$temp = trim($_REQUEST['css']);
+		if( !empty($temp) ){
+			$less[] = $_REQUEST['css']. "\n"; //make sure this is seen as code and not a filename
+		}
+
+
+		if( count($less) ){
+			$compiled = \gpOutput::ParseLess( $less );
+			if( !$compiled ){
+				message($langmessage['OOPS'].' (Invalid LESS)');
+				return false;
+			}
+
+			$page->head .= '<style>'.$compiled.'</style>';
+		}
+
+		$page->get_theme_css = false;
 	}
 
 

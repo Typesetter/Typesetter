@@ -7,7 +7,7 @@ class admin_addons_tool{
 	var $rate_testing		= false; //for testing on local server
 
 	var $ShowRatingText		= true;
-	var $scriptUrl			= 'Admin_Addons';
+	protected $scriptUrl			= 'Admin_Addons';
 	var $addonHistory		= array();
 	var $addonReviews		= array();
 

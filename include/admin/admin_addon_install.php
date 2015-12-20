@@ -14,7 +14,7 @@ includeFile('admin/admin_addons_tool.php');
 
 class admin_addon_install extends admin_addons_tool{
 
-	public $scriptUrl			= 'Admin_Addons';
+	protected $scriptUrl		= 'Admin_Addons';
 	public $avail_addons		= array();
 	public $avail_count			= 0;
 

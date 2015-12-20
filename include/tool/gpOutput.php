@@ -1,7 +1,6 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-//for output handlers, see admin_theme_content.php for more info
 global $GP_ARRANGE, $gpOutConf;
 
 $GP_ARRANGE = true;

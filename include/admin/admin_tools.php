@@ -159,10 +159,13 @@ class admin_tools{
 
 
 		// Appearance
-		$scripts['Admin_Theme_Content']['script'] = '/include/admin/admin_theme_content.php';
-		$scripts['Admin_Theme_Content']['class'] = 'admin_theme_content';
+		$scripts['Admin_Theme_Content']['class'] = '\gp\admin\Layout';
 		$scripts['Admin_Theme_Content']['label'] = $langmessage['Appearance'];
 		$scripts['Admin_Theme_Content']['group'] = 'appearance';
+
+		$scripts['Admin_Theme_Content']['class'] = '\gp\admin\LayoutEdit';
+		$scripts['Admin_Theme_Content']['label'] = $langmessage['Appearance'];
+		$scripts['Admin_Theme_Content']['list'] = false;
 
 
 

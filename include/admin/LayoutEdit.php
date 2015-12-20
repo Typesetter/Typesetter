@@ -7,6 +7,7 @@ defined('is_running') or die('Not an entry point...');
 class LayoutEdit extends Layout{
 
 	protected $layout_request = true;
+	protected $layout_slug;
 
 	public function __construct(){
 		global $page, $gpLayouts;
@@ -49,6 +50,7 @@ class LayoutEdit extends Layout{
 		$GLOBALS['GP_ARRANGE_CONTENT']	= true;
 		$page->head_js[]				= '/include/js/inline_edit/inline_editing.js';
 		$this->curr_layout				= $layout;
+		$this->layout_slug				= 'Admin_Theme_Content/Edit/'.rawurlencode($layout);
 
 		$this->SetLayoutArray();
 		$page->SetTheme($layout);
@@ -101,6 +103,15 @@ class LayoutEdit extends Layout{
 			case 'rm_area':
 				$this->RemoveArea();
 			break;
+
+			//links
+			case 'LayoutMenu':
+				$this->LayoutMenu();
+			return;
+			case 'LayoutMenuSave':
+				$this->LayoutMenuSave();
+			return;
+
 
 		}
 
@@ -325,7 +336,7 @@ class LayoutEdit extends Layout{
 		echo '<div class="gp_edit_select_options">';
 
 		foreach($this->avail_addons as $theme_id => $info){
-			echo \common::Link('Admin_Theme_Content/Edit/'.rawurlencode($this->curr_layout),'<span class="folder"></span>'.$info['name'],'cmd=theme_images&theme='.rawurlencode($theme_id),' data-cmd="gpajax" class="gp_gallery_folder" ');
+			echo \common::Link($this->layout_slug,'<span class="folder"></span>'.$info['name'],'cmd=theme_images&theme='.rawurlencode($theme_id),' data-cmd="gpajax" class="gp_gallery_folder" ');
 		}
 		echo '</div>';
 		echo '</div>';
@@ -509,7 +520,6 @@ class LayoutEdit extends Layout{
 		global $dataDir, $langmessage, $config;
 
 
-		$slug = 'Admin_Theme_Content/Edit/'.rawurlencode($this->curr_layout);
 		$addQuery = 'cmd=addcontent&where='.rawurlencode($param);
 		echo '<div id="area_lists">';
 
@@ -527,14 +537,14 @@ class LayoutEdit extends Layout{
 					echo '<tr><td>';
 					echo str_replace('_',' ',$extraName);
 					echo '</td><td class="add">';
-					echo \common::Link($slug,$langmessage['add'],$addQuery.'&insert=Extra:'.$extraName,array('data-cmd'=>'creq'));
+					echo \common::Link($this->layout_slug,$langmessage['add'],$addQuery.'&insert=Extra:'.$extraName,array('data-cmd'=>'creq'));
 					echo '</td></tr>';
 				}
 
 
 				//new extra area
 				echo '<tr><td>';
-				echo '<form action="'.\common::GetUrl($slug).'" method="post">';
+				echo '<form action="'.\common::GetUrl($this->layout_slug).'" method="post">';
 				echo '<input type="hidden" name="cmd" value="addcontent" />';
 				echo '<input type="hidden" name="addtype" value="new_extra" />';
 				echo '<input type="hidden" name="where" value="'.htmlspecialchars($param).'" />';
@@ -550,7 +560,7 @@ class LayoutEdit extends Layout{
 				echo ' <input type="submit" name="" value="'.$langmessage['Add New Area'].'" class="gpbutton"/>';
 				echo '</form>';
 				echo '</td><td colspan="2" class="add">';
-				echo '<form action="'.\common::GetUrl($slug).'" method="post">';
+				echo '<form action="'.\common::GetUrl($this->layout_slug).'" method="post">';
 				echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
 				echo '</form>';
 				echo '</td></tr>';
@@ -571,7 +581,7 @@ class LayoutEdit extends Layout{
 							echo str_replace('_',' ',$gadget);
 							echo '</td>';
 							echo '<td class="add">';
-							echo \common::Link($slug,$langmessage['add'],$addQuery.'&insert='.$gadget,array('data-cmd'=>'creq'));
+							echo \common::Link($this->layout_slug,$langmessage['add'],$addQuery.'&insert='.$gadget,array('data-cmd'=>'creq'));
 							echo '</td>';
 							echo '</tr>';
 					}
@@ -588,7 +598,7 @@ class LayoutEdit extends Layout{
 			echo '<div id="layout_menus" class="nodisplay">';
 
 
-				echo '<form action="'.\common::GetUrl($slug).'" method="post">';
+				echo '<form action="'.\common::GetUrl($this->layout_slug).'" method="post">';
 				echo '<input type="hidden" name="cmd" value="addcontent" />';
 				echo '<input type="hidden" name="addtype" value="preset_menu" />';
 				echo '<input type="hidden" name="where" value="'.htmlspecialchars($param).'" />';
@@ -611,7 +621,7 @@ class LayoutEdit extends Layout{
 			echo '<div id="layout_custom" class="nodisplay">';
 
 				//custom area
-				echo '<form action="'.\common::GetUrl($slug).'" method="post">';
+				echo '<form action="'.\common::GetUrl($this->layout_slug).'" method="post">';
 				echo '<input type="hidden" name="cmd" value="addcontent" />';
 				echo '<input type="hidden" name="addtype" value="custom_menu" />';
 				echo '<input type="hidden" name="where" value="'.htmlspecialchars($param).'" />';
@@ -764,5 +774,146 @@ class LayoutEdit extends Layout{
 		$this->SaveHandlersNew($handlers);
 
 	}
+
+
+	/**
+	 * Display popup dialog for editing layout menus
+	 *
+	 */
+	public function LayoutMenu(){
+		global $langmessage, $gpLayouts;
+
+		if( !$this->ParseHandlerInfo($_GET['handle'],$curr_info) ){
+			message($langmessage['00PS']);
+			return;
+		}
+
+
+		$showCustom			= false;
+		$current_function	= false;
+		$menu_args			= $this->MenuArgs($curr_info);
+
+		if( $curr_info['key'] == 'CustomMenu' ){
+			$showCustom = true;
+		}else{
+			$current_function = $curr_info['key'];
+		}
+
+
+
+		echo '<div class="inline_box" style="width:30em">';
+
+		echo '<div class="layout_links">';
+		if( $showCustom ){
+			echo ' <a href="#layout_menus" data-cmd="tabs">'. $langmessage['Link_Menus'] .'</a>';
+			echo ' <a href="#layout_custom" data-cmd="tabs" class="selected">'. $langmessage['Custom Menu'] .'</a>';
+		}else{
+			echo ' <a href="#layout_menus" data-cmd="tabs" class="selected">'. $langmessage['Link_Menus'] .'</a>';
+			echo ' <a href="#layout_custom" data-cmd="tabs">'. $langmessage['Custom Menu'] .'</a>';
+		}
+		echo '</div>';
+
+		echo '<br/>';
+		echo '<div id="area_lists">';
+
+		//preset menus
+			$style = '';
+			if( $showCustom ){
+				$style = ' class="nodisplay"';
+			}
+			echo '<div id="layout_menus" '.$style.'>';
+			echo '<form action="'.\common::GetUrl($this->layout_slug).'" method="post">';
+			echo '<input type="hidden" name="handle" value="'.htmlspecialchars($_GET['handle']).'" />';
+			echo '<input type="hidden" name="return" value="" />';
+
+			echo '<table class="bordered">';
+			$this->PresetMenuForm($menu_args);
+
+			echo '<tr><td class="add" colspan="2">';
+			echo '<button type="submit" name="cmd" value="LayoutMenuSave" class="gpsubmit">'.$langmessage['save'].'</button>';
+			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
+			echo '</td></tr>';
+			echo '</table>';
+			echo '</form>';
+
+			echo '</div>';
+
+		//custom menus
+			$style = ' class="nodisplay"';
+			if( $showCustom ){
+				$style = '';
+			}
+			echo '<div id="layout_custom" '.$style.'>';
+			echo '<form action="'.\common::GetUrl($this->layout_slug).'" method="post">';
+			echo '<input type="hidden" name="handle" value="'.htmlspecialchars($_GET['handle']).'" />';
+			echo '<input type="hidden" name="return" value="" />';
+
+			$this->CustomMenuForm($curr_info['arg'],$menu_args);
+
+			echo '<tr><td class="add" colspan="2">';
+			echo '<button type="submit" name="cmd" value="LayoutMenuSave" class="gpsubmit">'.$langmessage['save'].'</button>';
+			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
+			echo '</td></tr>';
+			echo '</table>';
+			echo '</form>';
+
+			echo '</div>';
+
+			echo '<p class="admin_note">';
+			echo $langmessage['see_also'];
+			echo ' ';
+			echo \common::Link('Admin_Menu',$langmessage['file_manager']);
+			echo ', ';
+			echo \common::Link('Admin_Theme_Content',$langmessage['content_arrangement']);
+			echo '</p>';
+
+		echo '</div>';
+		echo '</div>';
+
+	}
+
+	/**
+	 * Save the posted layout menu settings
+	 *
+	 */
+	public function LayoutMenuSave(){
+		global $config, $langmessage, $gpLayouts;
+
+		if( !$this->ParseHandlerInfo($_POST['handle'],$curr_info) ){
+			message($langmessage['OOPS'].' (0)');
+			return;
+		}
+
+
+
+		if( isset($_POST['new_handle']) ){
+			$new_gpOutCmd = $this->NewPresetMenu();
+		}else{
+			$new_gpOutCmd = $this->NewCustomMenu();
+		}
+
+		if( !$new_gpOutCmd ){
+			message($langmessage['OOPS'].' (1)');
+			return false;
+		}
+
+
+		//prep
+		$handlers = $this->GetAllHandlers($this->curr_layout);
+		$container =& $curr_info['container'];
+		$this->PrepContainerHandlers($handlers,$container,$curr_info['gpOutCmd']);
+
+
+		if( !$this->AddToContainer($handlers[$container],$curr_info['gpOutCmd'],$new_gpOutCmd,true) ){
+			return;
+		}
+
+		$this->SaveHandlersNew($handlers,$this->curr_layout);
+
+
+		//message('not forwarding');
+		$this->ReturnHeader();
+	}
+
 
 }

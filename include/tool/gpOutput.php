@@ -408,7 +408,7 @@ class gpOutput{
 			if( isset($info['link']) ){
 				$label = $langmessage[$info['link']];
 
-				$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=editlinks&layout='.urlencode($page->gpLayout).'&handle='.$param,' data-cmd="gpabox" title="'.$label.'" ');
+				$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content/Edit/'.urlencode($page->gpLayout),$langmessage['edit'],'cmd=LayoutMenu&handle='.$param,' data-cmd="gpabox" title="'.$label.'" ');
 				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 				echo $edit_link;
 				echo common::Link('Admin_Menu',$langmessage['file_manager'],'',' class="nodisplay"');
@@ -418,7 +418,7 @@ class gpOutput{
 
 			}elseif( isset($info['key']) && ($info['key'] == 'CustomMenu') ){
 
-				$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=editcustom&layout='.urlencode($page->gpLayout).'&handle='.$param,' data-cmd="gpabox" title="'.$langmessage['Links'].'" ');
+				$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content/Edit/'.urlencode($page->gpLayout),$langmessage['edit'],'cmd=LayoutMenu&handle='.$param,' data-cmd="gpabox" title="'.$langmessage['Links'].'" ');
 				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 				echo $edit_link;
 				echo common::Link('Admin_Menu',$langmessage['file_manager'],'',' class="nodisplay"');

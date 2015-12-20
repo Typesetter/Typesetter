@@ -13,7 +13,7 @@ class SimpleBlog extends SimpleBlogCommon{
 	public $showing_category = false;
 
 	public function __construct(){
-		global $page, $langmessage;
+		global $page, $langmessage, $addonFolderName;
 
 		SimpleBlogCommon::Init();
 
@@ -28,7 +28,7 @@ class SimpleBlog extends SimpleBlogCommon{
 			$page->admin_links[]		= array('Special_Blog','Blog Home');
 			$page->admin_links[]		= array('Admin_Blog','New Blog Post','cmd=new_form');
 			$page->admin_links[]		= array('Admin_Blog','Configuration');
-			$page->admin_links[]		= array('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode(self::$data_dir),' name="gpabox" ');
+			$page->admin_links[]		= array('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addonFolderName),' name="gpabox" ');
 			$label						= 'Number of Posts: '. SimpleBlogCommon::$data['post_count'];
 			$page->admin_links[$label]	= '';
 			$cmd						= common::GetCommand();

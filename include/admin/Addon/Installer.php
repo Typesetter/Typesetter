@@ -12,44 +12,44 @@ defined('is_running') or die('Not an entry point...');
 class Installer extends \gp\admin\Addon\Tools{
 
 	//configuration options
-	var $source = '';
-	var $can_install_links = true;
-	var $config_index = 'addons';
-	var $code_folder_name = '_addoncode';
+	public $source = '';
+	public $can_install_links = true;
+	public $config_index = 'addons';
+	public $code_folder_name = '_addoncode';
 
-	var $new_layout = array();
-	var $default_layout = false;
+	public $new_layout = array();
+	public $default_layout = false;
 
 
 	//remote install
-	var $remote_install = false;
-	var $type;
-	var $id;
-	var $order;
+	public $remote_install = false;
+	public $type;
+	public $id;
+	public $order;
 
 
 	//uninstall
-	var $rm_folders = true;
+	public $rm_folders = true;
 
 
 	//used internally
-	var $addon_folder;
-	var $addon_folder_rel = false;
-	var $dest = '';
-	var $dest_name;
-	var $trash_path;
-	var $config_cache;
-	var $layouts_cache;
-	var $ini_contents;
-	var $ini_text = '';
-	var $upgrade_key = false;
-	var $has_hooks = false;
-	var $display_name = '';
+	public $addon_folder;
+	public $addon_folder_rel = false;
+	public $dest = '';
+	public $dest_name;
+	public $trash_path;
+	public $config_cache;
+	public $layouts_cache;
+	public $ini_contents;
+	public $ini_text = '';
+	public $upgrade_key = false;
+	public $has_hooks = false;
+	public $display_name = '';
 
-	var $messages = array();
+	public $messages = array();
 
 
-	function __construct(){}
+	public function __construct(){}
 
 
 	/**
@@ -57,7 +57,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * $this->source should already be set
 	 *
 	 */
-	function Install(){
+	public function Install(){
 		global $langmessage;
 
 		$success = $this->InstallSteps();
@@ -87,7 +87,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * @param int $order Purchase order id
 	 *
 	 */
-	function InstallRemote( $type, $id, $order = false ){
+	public function InstallRemote( $type, $id, $order = false ){
 
 		$this->remote_install = true;
 		$this->type = $type;
@@ -97,7 +97,7 @@ class Installer extends \gp\admin\Addon\Tools{
 		return $this->Install();
 	}
 
-	function OutputMessages(){
+	public function OutputMessages(){
 		foreach($this->messages as $msg){
 			msg($msg);
 		}
@@ -109,7 +109,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Delete code folders if needed
 	 *
 	 */
-	function Uninstall( $addon ){
+	public function Uninstall( $addon ){
 		global $config, $langmessage, $gp_titles, $gp_menu, $gp_index;
 
 		$this->GetAddonData();
@@ -218,7 +218,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Run through the installation process
 	 *
 	 */
-	function InstallSteps(){
+	public function InstallSteps(){
 		global $dataDir;
 
 		$this->GetAddonData();			// addonHistory
@@ -321,7 +321,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Prepare $this->config and make sure $this->addon_folder exists
 	 *
 	 */
-	function Init_PT(){
+	public function Init_PT(){
 		global $config, $dataDir, $gpLayouts;
 
 		if( !isset($config[$this->config_index]) ){
@@ -350,7 +350,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Prepare the configuration array for installation
 	 *
 	 */
-	function PrepConfig(){
+	public function PrepConfig(){
 
 		if( !$this->has_hooks ){
 			return true;
@@ -374,7 +374,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * @return bool
 	 *
 	 */
-	function GetINI($ini_dir,&$error){
+	public function GetINI($ini_dir,&$error){
 		global $langmessage;
 
 		$error		= false;
@@ -423,7 +423,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Does it have addon hooks?
 	 *
 	 */
-	function HasHooks(){
+	public function HasHooks(){
 
 		foreach($this->ini_contents as $key => $value){
 			if( is_array($value) ){
@@ -441,7 +441,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Parse the ini a second time with variables
 	 *
 	 */
-	function IniContents(){
+	public function IniContents(){
 		global $dataDir, $dirPrefix;
 		$folder = basename($this->dest);
 
@@ -462,7 +462,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Add hooks to configuration
 	 *
 	 */
-	function Hooks(){
+	public function Hooks(){
 		global $langmessage, $config;
 
 		if( !$this->has_hooks ){
@@ -516,7 +516,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Create a layout
 	 *
 	 */
-	function Layout(){
+	public function Layout(){
 		global $gpLayouts, $langmessage, $config, $page;
 
 		if( empty($this->new_layout) ){
@@ -555,7 +555,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Rename the temp folder to the dest folder
 	 *
 	 */
-	function FinalizeFolder(){
+	public function FinalizeFolder(){
 
 		if( !$this->remote_install ){
 			return true;
@@ -584,7 +584,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 *
 	 *
 	 */
-	function FinalizeConfig(){
+	public function FinalizeConfig(){
 		global $langmessage, $config;
 
 		if( !$this->has_hooks ){
@@ -639,7 +639,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 *
 	 *
 	 */
-	function UpdateHistory(){
+	public function UpdateHistory(){
 
 		if( !$this->has_hooks ){
 			return;
@@ -665,7 +665,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * @return bool
 	 *
 	 */
-	function CheckFile(){
+	public function CheckFile(){
 		$check_file = $this->source.'/Install_Check.php';
 		if( !file_exists($check_file) ){
 			return true;
@@ -691,7 +691,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Make sure the name won't conflict with names of addons or layouts
 	 *
 	 */
-	function TempFile(){
+	public function TempFile(){
 		global $config, $gpLayouts, $dataDir;
 
 		do{
@@ -717,7 +717,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Recursive copy folder
 	 *
 	 */
-	function CopyAddonDir($fromDir,$toDir){
+	public function CopyAddonDir($fromDir,$toDir){
 
 		if( !\gpFiles::CheckDir($toDir) ){
 			return 'Copy failed: '.$fromDir.' to '.$toDir;
@@ -763,7 +763,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Undo changes
 	 *
 	 */
-	function Failed(){
+	public function Failed(){
 		global $config;
 
 		if( isset($this->config_cache) ){
@@ -776,7 +776,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 	}
 
-	function message($message){
+	public function message($message){
 		$this->messages[] = $message;
 	}
 
@@ -785,7 +785,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * @param int addon id
 	 *
 	 */
-	function GetOrder($id){
+	public function GetOrder($id){
 		if( !is_numeric($id) ){
 			return;
 		}
@@ -805,7 +805,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Get the remote package
 	 *
 	 */
-	function GetRemote(){
+	public function GetRemote(){
 		global $langmessage, $dataDir;
 		includeFile('tool/RemoteGet.php');
 
@@ -944,7 +944,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Set config value based on ini setting
 	 *
 	 */
-	function UpdateConfigInfo($ini_var,$config_var){
+	public function UpdateConfigInfo($ini_var,$config_var){
 
 		if( isset($this->ini_contents[$ini_var]) ){
 			$this->config[$this->config_key][$config_var] = $this->ini_contents[$ini_var];
@@ -959,7 +959,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Add an addon's special links to the configuration
 	 *
 	 */
-	function AddToConfig_Special($Special_Links){
+	public function AddToConfig_Special($Special_Links){
 		global $gp_index, $gp_titles, $gp_menu, $langmessage;
 
 		$lower_links = array_change_key_case($Special_Links,CASE_LOWER);
@@ -1043,7 +1043,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 
 
-	function AddHooks(){
+	public function AddHooks(){
 
 		$installed = array();
 		foreach($this->ini_contents as $hook => $hook_args){
@@ -1066,7 +1066,7 @@ class Installer extends \gp\admin\Addon\Tools{
 		$this->CleanHooks($this->config_key,$installed);
 	}
 
-	function AddHook($hook,$hook_args){
+	public function AddHook($hook,$hook_args){
 		global $config;
 
 		$add = array();
@@ -1078,7 +1078,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 
 	//extract the configuration type (extractArg) from $Install
-	function ExtractFromInstall(&$Install,$extractArg){
+	public function ExtractFromInstall(&$Install,$extractArg){
 		if( !is_array($Install) || (count($Install) <= 0) ){
 			return array();
 		}
@@ -1106,7 +1106,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * 	Don't add elements already defined by gpEasy or other addons
 	 *
 	 */
-	function AddToConfig(&$AddTo,$New_Config){
+	public function AddToConfig(&$AddTo,$New_Config){
 		global $langmessage;
 
 		if( !is_array($New_Config) || (count($New_Config) <= 0) ){
@@ -1146,7 +1146,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 
 
-	function UpdateLinkInfo(&$link_array,$new_info){
+	public function UpdateLinkInfo(&$link_array,$new_info){
 
 		unset($link_array['script'], $link_array['data'], $link_array['class'], $link_array['method'], $link_array['value'], $link_array['class_admin']);
 
@@ -1184,7 +1184,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Purge Links from $purgeFrom that were once defined for $this->config_key
 	 *
 	 */
-	function PurgeExisting(&$purgeFrom,$NewLinks){
+	public function PurgeExisting(&$purgeFrom,$NewLinks){
 
 		if( $this->config_key === false || !is_array($purgeFrom) ){
 			return;
@@ -1212,7 +1212,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Make sure the extracted links are valid
 	 *
 	 */
-	function CleanLinks($links,$prefix,$linkType=false){
+	public function CleanLinks($links,$prefix,$linkType=false){
 
 		if( !is_array($links) ){
 			return array();
@@ -1244,7 +1244,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * similar to CleanLinks()
 	 *
 	 */
-	function CleanGadgets($gadgets){
+	public function CleanGadgets($gadgets){
 		global $gpOutConf, $langmessage, $config;
 
 		if( !is_array($gadgets) ){
@@ -1281,7 +1281,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Check the info to make sure it has a label and some way of executing code
 	 *
 	 */
-	function ValidInfo($info, $require_label = true ){
+	public function ValidInfo($info, $require_label = true ){
 
 		if( $require_label && empty($info['label']) ){
 			return false;
@@ -1303,7 +1303,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Add gadgets to gpLayouts
 	 *
 	 */
-	function AddToHandlers($gadgets){
+	public function AddToHandlers($gadgets){
 		global $gpLayouts;
 
 		if( !is_array($gpLayouts) || !is_array($gadgets) ){
@@ -1326,7 +1326,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	}
 
 
-	function CheckName($name){
+	public function CheckName($name){
 
 		$test = str_replace(array('.','_',' '),array(''),$name );
 		if( empty($test) || !ctype_alnum($test) ){
@@ -1341,7 +1341,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Remove unused code folders created by incomplete addon installations
 	 *
 	 */
-	function CleanInstallFolder(){
+	public function CleanInstallFolder(){
 
 		if( !$this->remote_install ){
 			return;
@@ -1357,7 +1357,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	}
 
 
-	function RemoveFromConfig(&$configFrom,$addon){
+	public function RemoveFromConfig(&$configFrom,$addon){
 
 		if( !is_array($configFrom) ){
 			return;

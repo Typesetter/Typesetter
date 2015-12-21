@@ -7,21 +7,22 @@ defined('is_running') or die('Not an entry point...');
 
 
 class Tools{
-	var $rate_testing		= false; //for testing on local server
 
-	var $ShowRatingText		= true;
-	protected $scriptUrl			= 'Admin_Addons';
-	var $addonHistory		= array();
-	var $addonReviews		= array();
+	public $rate_testing		= false; //for testing on local server
+
+	public $ShowRatingText		= true;
+	protected $scriptUrl		= 'Admin_Addons';
+	public $addonHistory		= array();
+	public $addonReviews		= array();
 
 
-	var $type;
-	var $CanRate			= true;
-	var $messages			= array();
-	var $addon_info			= array();
-	var $dataFile;
+	public $type;
+	public $CanRate				= true;
+	public $messages			= array();
+	public $addon_info			= array();
+	public $dataFile;
 
-	var $invalid_folders	= array();
+	public $invalid_folders		= array();
 
 
 
@@ -29,7 +30,7 @@ class Tools{
 	// Rating
 	//
 
-	function InitRating(){
+	public function InitRating(){
 		global $page;
 
 		$page->head_js[] = '/include/js/rate.js';
@@ -42,7 +43,7 @@ class Tools{
 	 * Get addon history and review data
 	 *
 	 */
-	function GetAddonData(){
+	public function GetAddonData(){
 		global $dataDir;
 
 		$this->dataFile = $dataDir.'/data/_site/addonData.php';
@@ -55,7 +56,7 @@ class Tools{
 
 	}
 
-	function SaveAddonData(){
+	public function SaveAddonData(){
 
 		if( !isset($this->dataFile) ){
 			trigger_error('dataFile not set');
@@ -79,7 +80,7 @@ class Tools{
 	 * $arg is the addon id for plugins, folder for themes
 	 *
 	 */
-	function ShowRating($arg,$rating){
+	public function ShowRating($arg,$rating){
 
 		ob_start();
 		echo '<span class="rating">';
@@ -103,7 +104,7 @@ class Tools{
 	 * Return ini info if the addon is installable
 	 *
 	 */
-	function GetAvailInstall($dir){
+	public function GetAvailInstall($dir){
 		global $langmessage;
 
 		$iniFile	= $dir.'/Addon.ini';
@@ -140,7 +141,7 @@ class Tools{
 	 * Manage addon ratings
 	 *
 	 */
-	function admin_addon_rating($type,$url){
+	public function admin_addon_rating($type,$url){
 		global $page;
 
 		$this->type = $type;
@@ -180,7 +181,7 @@ class Tools{
 	}
 
 
-	function RateForm(){
+	public function RateForm(){
 		global $config, $dirPrefix,$langmessage;
 
 
@@ -269,7 +270,7 @@ class Tools{
 		return true;
 	}
 
-	function CanRate(){
+	public function CanRate(){
 
 		/*
 		if( $this->rate_testing ){
@@ -296,7 +297,7 @@ class Tools{
 	}
 
 
-	function GetAddonRateInfoTheme($dir){
+	public function GetAddonRateInfoTheme($dir){
 		global $dataDir, $langmessage;
 
 		$dir = str_replace('\\','/',$dir);
@@ -330,7 +331,7 @@ class Tools{
 	}
 
 
-	function GetAddonRateInfoPlugin($arg){
+	public function GetAddonRateInfoPlugin($arg){
 		global $config;
 
 		if( isset($config['addons'][$arg]) && isset($config['addons'][$arg]['id']) ){
@@ -381,7 +382,7 @@ class Tools{
 	 * Send the addon rating to gpEasy.com
 	 *
 	 */
-	function SendRating(){
+	public function SendRating(){
 		global $langmessage, $config, $dirPrefix, $page;
 		$page->ajaxReplace = array();
 		$data = array();
@@ -437,7 +438,7 @@ class Tools{
 		return true;
 	}
 
-	function PingRating($data){
+	public function PingRating($data){
 
 		$path = 'http://gpeasy.loc/glacier/index.php/Special_Addons';
 		$path = 'http://gpeasy.com/index.php/Special_Addons';
@@ -447,7 +448,7 @@ class Tools{
 		return $this->RatingResponse($contents);
 	}
 
-	function RatingResponse($contents){
+	public function RatingResponse($contents){
 		global $langmessage;
 		if( empty($contents) ){
 			message($langmessage['OOPS'].' (empty rating)');
@@ -481,7 +482,7 @@ class Tools{
 	 * Get a list of installed addons
 	 *
 	 */
-	function GetInstalledComponents($from,$addon){
+	public function GetInstalledComponents($from,$addon){
 		$result = array();
 		if( !is_array($from) ){
 			return $result;
@@ -503,7 +504,7 @@ class Tools{
 
 
 	//remove gadgets from $gpLayouts
-	function RemoveFromHandlers($gadgets){
+	public function RemoveFromHandlers($gadgets){
 		global $gpLayouts;
 
 		if( !is_array($gpLayouts) || !is_array($gadgets) ){
@@ -542,7 +543,7 @@ class Tools{
 
 
 
-	function CleanHooks($addon,$keep_hooks = array()){
+	public function CleanHooks($addon,$keep_hooks = array()){
 		global $config, $gp_hooks;
 
 		if( !isset($config['hooks']) ){
@@ -583,7 +584,7 @@ class Tools{
 	 *
 	 * @return mixed
 	 */
-	function UpgradePath($ini_info,$config_key='addons'){
+	public function UpgradePath($ini_info,$config_key='addons'){
 		global $config;
 
 		if( !isset($config[$config_key]) ){
@@ -617,7 +618,7 @@ class Tools{
 
 
 
-	function AddonPanelGroup($addon_key, $show_hooks = true, $format = false ){
+	public function AddonPanelGroup($addon_key, $show_hooks = true, $format = false ){
 
 		$this->AddonPanel_Special($addon_key,$format);
 		$this->AddonPanel_Admin($addon_key,$format);
@@ -628,7 +629,7 @@ class Tools{
 		}
 	}
 
-	function AdminLinkList($links, $label, $format){
+	public function AdminLinkList($links, $label, $format){
 		$_links = array();
 		foreach($links as $linkName => $linkInfo){
 			$_links[] = \common::Link($linkName,$linkInfo['label']);
@@ -636,7 +637,7 @@ class Tools{
 		$this->FormatList($_links,$label,$format);
 	}
 
-	function FormatList($links, $label, $format = false){
+	public function FormatList($links, $label, $format = false){
 		if( empty($links) ){
 			return;
 		}
@@ -658,13 +659,13 @@ class Tools{
 	}
 
 	//show Special Links
-	function AddonPanel_Special($addon_key, $format){
+	public function AddonPanel_Special($addon_key, $format){
 		$sublinks = \admin_tools::GetAddonTitles( $addon_key );
 		$this->AdminLinkList($sublinks,'Special Links',$format);
 	}
 
 	//show Admin Links
-	function AddonPanel_Admin($addon_key,$format){
+	public function AddonPanel_Admin($addon_key,$format){
 		global $langmessage, $config;
 
 		$sublinks = \admin_tools::GetAddonComponents($config['admin_links'],$addon_key);
@@ -672,7 +673,7 @@ class Tools{
 	}
 
 	//show Gadgets
-	function AddonPanel_Gadget($addon_key, $format){
+	public function AddonPanel_Gadget($addon_key, $format){
 		global $langmessage, $config;
 
 		$gadgets	= \admin_tools::GetAddonComponents($config['gadgets'],$addon_key);
@@ -684,7 +685,7 @@ class Tools{
 	}
 
 	//hooks
-	function AddonPanel_Hooks($addon_key, $format){
+	public function AddonPanel_Hooks($addon_key, $format){
 
 		$hooks = self::AddonHooks($addon_key);
 		$links = array();
@@ -698,9 +699,9 @@ class Tools{
 
 	/**
 	 * Return array of hooks associated with the addon
-	 * @static
+	 *
 	 */
-	static function AddonHooks($addon_key){
+	public static function AddonHooks($addon_key){
 		global $config;
 		$hooks = array();
 

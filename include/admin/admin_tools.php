@@ -3,9 +3,9 @@ defined('is_running') or die('Not an entry point...');
 
 class admin_tools{
 
-	static $new_versions = array();
-	static $update_status = 'checklater';
-	static $show_toolbar = true;
+	public static $new_versions = array();
+	public static $update_status = 'checklater';
+	public static $show_toolbar = true;
 
 
 	/**

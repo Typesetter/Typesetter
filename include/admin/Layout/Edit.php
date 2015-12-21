@@ -266,7 +266,6 @@ class Edit extends \gp\admin\Layout{
 		$url = \common::GetUrl('Admin_Theme_Content/Edit/'.rawurlencode($layout),'cmd=in_iframe');
 		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';
 
-		echo '<div id="gp_loading_img"><img src="'.\common::GetDir('/include/imgs/loader64.gif').'" /></div>';
 		echo '</div>';
 
 

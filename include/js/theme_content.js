@@ -172,7 +172,7 @@ $(function(){
 
 		// preview button
 		$gp.inputs.preview_css = function(evt){
-			$('#gp_loading_img').show(); //show loading image
+			$gp.loading();
 		};
 
 		// if save or reset are clicked, remove the edited class
@@ -180,7 +180,7 @@ $(function(){
 			$textarea.removeClass('edited');
 			prev_value = $textarea.val();
 
-			$('#gp_loading_img').show(); //show loading image
+			$gp.loading();
 		};
 
 
@@ -276,7 +276,7 @@ $(function(){
 	 *
 	 */
 	$gp.iframeloaded = function(){
-		$('#gp_loading_img').hide();
+		$gp.loaded();
 	}
 
 

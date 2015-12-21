@@ -256,8 +256,7 @@ class admin_tools{
 
 		// Unlisted
 
-		$scripts['Admin_Addons']['script'] = '/include/admin/admin_addons.php';
-		$scripts['Admin_Addons']['class'] = 'admin_addons';
+		$scripts['Admin_Addons']['class'] = '\gp\admin\Addons';
 		$scripts['Admin_Addons']['label'] = $langmessage['plugins'];
 
 

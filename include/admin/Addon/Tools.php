@@ -3,7 +3,7 @@
 namespace gp\admin\Addon;
 
 defined('is_running') or die('Not an entry point...');
-includeFile('tool/parse_ini.php');
+
 
 
 class Tools{
@@ -120,7 +120,7 @@ class Tools{
 			return false;
 		}
 
-		$array = \gp_ini::ParseFile($iniFile);
+		$array = \gp\tool\Ini::ParseFile($iniFile);
 		if( $array === false ){
 			$this->invalid_folders[$dirname]	= $langmessage['Ini_Error'];
 			return false;

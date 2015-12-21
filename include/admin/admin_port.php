@@ -312,7 +312,6 @@ class admin_port{
 		}
 
 		$archive =& $_REQUEST['archive'];
-		includeFile('tool/parse_ini.php');
 
 
 		if( !$this->ArchiveToObject($archive) ){
@@ -785,7 +784,7 @@ class admin_port{
 		if( empty($ini_contents) ){
 			return false;
 		}
-		return gp_ini::ParseString($ini_contents);
+		return \gp\tool\Ini::ParseString($ini_contents);
 	}
 
 	public function SetExported(){

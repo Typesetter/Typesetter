@@ -922,7 +922,7 @@ class Layout extends \gp\admin\Addon\Install{
 			return array();
 		}
 
-		$array = \gp_ini::ParseFile($iniFile);
+		$array = \gp\tool\Ini::ParseFile($iniFile);
 		if( $array === false ){
 			return array();
 		}

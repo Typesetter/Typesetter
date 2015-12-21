@@ -1,5 +1,8 @@
 <?php
-defined("is_running") or die("Not an entry point...");
+
+namespace gp\tool;
+
+defined('is_running') or die('Not an entry point...');
 
 /*
  * Parse ini files and strings
@@ -10,7 +13,7 @@ defined("is_running") or die("Not an entry point...");
  * 		- php's functions don't handle escaped quotes as expected
  */
 
-class gp_ini{
+class Ini{
 
 	static function ParseFile($file,$variables=array()){
 
@@ -19,7 +22,7 @@ class gp_ini{
 			return array();
 		}
 
-		return gp_ini::ParseString( $contents, $variables );
+		return self::ParseString( $contents, $variables );
 	}
 
 	static function ParseString( $string, $variables=array() ){
@@ -45,7 +48,7 @@ class gp_ini{
 
 			//sections
 			if( $line{0} == '[' ){
-				$line = gp_ini::GetQuotedText($line,']');
+				$line = self::GetQuotedText($line,']');
 				if( $line == false ){
 					return false;
 				}
@@ -53,7 +56,7 @@ class gp_ini{
 				continue;
 			}
 
-			gp_ini::GetAssignment($line,$key,$value);
+			self::GetAssignment($line,$key,$value);
 			if( $key !== false && $value !== false ){
 				$a[$key] = $value;
 			}
@@ -90,9 +93,9 @@ class gp_ini{
 
 		//get the value
 		if( $line{0} == '"' ){
-			$value = gp_ini::GetQuotedText($line,'"');
+			$value = self::GetQuotedText($line,'"');
 		}elseif( $line{0} == "'" ){
-			$value = gp_ini::GetQuotedText($line,"'");
+			$value = self::GetQuotedText($line,"'");
 		}else{
 			$pos = strpos($line,';');
 			if( $pos > 0 ){
@@ -102,7 +105,7 @@ class gp_ini{
 				$value = $line;
 			}
 			if( !empty($value) ){
-				$value = gp_ini::Value($value);
+				$value = self::Value($value);
 			}
 		}
 

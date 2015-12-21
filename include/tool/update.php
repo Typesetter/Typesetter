@@ -257,7 +257,6 @@ class update_class{
 		$path = common::IdUrl();
 
 		//add any locally available themes with addon ids
-		includeFile('tool/parse_ini.php');
 
 		$dir = $dataDir.'/themes';
 		$themes = scandir($dir);
@@ -276,7 +275,7 @@ class update_class{
 
 			$ini_info = array();
 			if( file_exists($ini_file) ){
-				$ini_info = gp_ini::ParseFile($ini_file);
+				$ini_info = \gp\tool\Ini::ParseFile($ini_file);
 			}
 
 			if( isset($ini_info['Addon_Unique_ID']) ){

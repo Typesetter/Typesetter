@@ -1,4 +1,7 @@
 <?php
+
+namespace gp\admin;
+
 defined('is_running') or die('Not an entry point...');
 
 
@@ -21,7 +24,7 @@ defined('is_running') or die('Not an entry point...');
  */
 
 
-class admin_addons extends \gp\admin\Addon\Install{
+class Addons extends \gp\admin\Addon\Install{
 
 	public $dataFile;
 
@@ -39,7 +42,7 @@ class admin_addons extends \gp\admin\Addon\Install{
 
 
 
-		$cmd = common::GetCommand();
+		$cmd = \common::GetCommand();
 		switch($cmd){
 
 			case 'LocalInstall':
@@ -128,7 +131,7 @@ class admin_addons extends \gp\admin\Addon\Install{
 		//check against folders used by addons
 		$addons = $config['addons'];
 		foreach($addons as $addon_key => $info){
-			$addon_config = gpPlugin::GetAddonConfig($addon_key);
+			$addon_config = \gpPlugin::GetAddonConfig($addon_key);
 			if( array_key_exists($addon_config['code_folder_part'],$code_folders) ){
 				$code_folders[$addon_config['code_folder_part']] = false;
 			}
@@ -140,7 +143,7 @@ class admin_addons extends \gp\admin\Addon\Install{
 		//remove unused folders
 		$folders = array_filter($code_folders) + array_filter($data_folders);
 		foreach($folders as $folder => $full_path){
-			gpFiles::RmAll($full_path);
+			\gpFiles::RmAll($full_path);
 		}
 
 	}
@@ -202,7 +205,7 @@ class admin_addons extends \gp\admin\Addon\Install{
 
 		}
 
-		if( !admin_tools::SaveConfig() ){
+		if( !\admin_tools::SaveConfig() ){
 			message($langmessage['OOPS'].' (Not Saved)');
 			return;
 		}
@@ -219,9 +222,9 @@ class admin_addons extends \gp\admin\Addon\Install{
 		}
 
 		if( isset($info['disabled']) ){
-			return common::Link('Admin_Addons',str_replace('_',' ',$name).' ('.$langmessage['disabled'].')','cmd=enable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.md5($name).'"');
+			return \common::Link('Admin_Addons',str_replace('_',' ',$name).' ('.$langmessage['disabled'].')','cmd=enable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.md5($name).'"');
 		}else{
-			return common::Link('Admin_Addons',str_replace('_',' ',$name) .' ('.$langmessage['enabled'].')','cmd=disable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.md5($name).'"');
+			return \common::Link('Admin_Addons',str_replace('_',' ',$name) .' ('.$langmessage['enabled'].')','cmd=disable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.md5($name).'"');
 		}
 
 	}
@@ -268,7 +271,7 @@ class admin_addons extends \gp\admin\Addon\Install{
 
 		echo '<div class="inline_box">';
 		echo '<h3>'.$langmessage['uninstall'].'</h3>';
-		echo '<form action="'.common::GetUrl('Admin_Addons').'" method="post">';
+		echo '<form action="'.\common::GetUrl('Admin_Addons').'" method="post">';
 
 		$addon =& $_REQUEST['addon'];
 		if( !isset($config['addons'][$addon]) ){
@@ -311,7 +314,7 @@ class admin_addons extends \gp\admin\Addon\Install{
 	function ShowAddon($encoded_key){
 		global $config, $langmessage;
 
-		$addon_key	= admin_tools::decode64($encoded_key);
+		$addon_key	= \admin_tools::decode64($encoded_key);
 
 		if( !isset($config['addons'][$addon_key]) ){
 			message($langmessage['OOPS'].'(Addon Not Found)');
@@ -373,7 +376,7 @@ class admin_addons extends \gp\admin\Addon\Install{
 
 
 		$installed_path		= $dataDir.'/data/_addoncode';
-		$folders			= gpFiles::ReadDir($addonPath,1);
+		$folders			= \gpFiles::ReadDir($addonPath,1);
 		$versions			= array();
 		$avail				= array();
 
@@ -492,7 +495,7 @@ class admin_addons extends \gp\admin\Addon\Install{
 				echo '</td><td>';
 				echo $info['Addon_Version'];
 				echo '</td><td>';
-				echo common::Link('Admin_Addons',$langmessage['Install'],'cmd=LocalInstall&source='.$folder, array('data-cmd'=>'creq'));
+				echo \common::Link('Admin_Addons',$langmessage['Install'],'cmd=LocalInstall&source='.$folder, array('data-cmd'=>'creq'));
 				echo '</td><td>';
 				echo $info['About'];
 				if( isset($info['Addon_Unique_ID']) && is_numeric($info['Addon_Unique_ID']) ){
@@ -567,14 +570,14 @@ class admin_addons extends \gp\admin\Addon\Install{
 	function PluginPanelGroup($addon_key,$info){
 		global $langmessage, $gpLayouts;
 
-		$addon_config = gpPlugin::GetAddonConfig($addon_key);
+		$addon_config = \gpPlugin::GetAddonConfig($addon_key);
 
 		$addon_config += $info; //merge the upgrade info
 
 		echo '<div class="panelgroup" id="panelgroup_'.md5($addon_key).'">';
 
 		echo '<h3>';
-		echo common::Link('Admin_Addons/'.admin_tools::encode64($addon_key),$addon_config['name']);
+		echo \common::Link('Admin_Addons/'.\admin_tools::encode64($addon_key),$addon_config['name']);
 		echo '</h3>';
 
 		echo '<div class="panelgroup2">';
@@ -608,8 +611,8 @@ class admin_addons extends \gp\admin\Addon\Install{
 		}
 
 		//upgrade gpeasy.com
-		if( isset($addon_config['id']) && isset(admin_tools::$new_versions[$addon_config['id']]) ){
-			$version_info = admin_tools::$new_versions[$addon_config['id']];
+		if( isset($addon_config['id']) && isset(\admin_tools::$new_versions[$addon_config['id']]) ){
+			$version_info = \admin_tools::$new_versions[$addon_config['id']];
 			echo '<div class="gp_notice">';
 			echo '<a href="'.addon_browse_path.'/Plugins?id='.$addon_config['id'].'" data-cmd="remote">';
 			echo $langmessage['new_version'];
@@ -632,8 +635,8 @@ class admin_addons extends \gp\admin\Addon\Install{
 		if( !isset($addon_config['is_theme']) || !$addon_config['is_theme'] ){
 
 			//editable text
-			if( isset($addon_config['editable_text']) && admin_tools::HasPermission('Admin_Theme_Content') ){
-				$list[] = common::Link('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addon_key),array('title'=>urlencode($langmessage['editable_text']),'data-cmd'=>'gpabox'));
+			if( isset($addon_config['editable_text']) && \admin_tools::HasPermission('Admin_Theme_Content') ){
+				$list[] = \common::Link('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addon_key),array('title'=>urlencode($langmessage['editable_text']),'data-cmd'=>'gpabox'));
 			}
 
 			//upgrade link
@@ -642,7 +645,7 @@ class admin_addons extends \gp\admin\Addon\Install{
 			}
 
 			//uninstall
-			$list[] = common::Link('Admin_Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.rawurlencode($addon_key),'data-cmd="gpabox"');
+			$list[] = \common::Link('Admin_Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.rawurlencode($addon_key),'data-cmd="gpabox"');
 
 
 			//version
@@ -673,9 +676,9 @@ class admin_addons extends \gp\admin\Addon\Install{
 			}
 
 			$item = '<span><span class="layout_color_id" style="background:'.$layout_info['color'].'"></span> ';
-			$item .= common::Link('Admin_Theme_Content',$layout_info['label']);
+			$item .= \common::Link('Admin_Theme_Content',$layout_info['label']);
 			$item .= ' ( ';
-			$item .= common::Link('Admin_Theme_Content/Edit/'.$layout_id,$langmessage['edit']);
+			$item .= \common::Link('Admin_Theme_Content/Edit/'.$layout_id,$langmessage['edit']);
 			$item .= ' )</span>';
 
 			$list[] = $item;

@@ -11,7 +11,7 @@ class gp_edit{
 	 * ckeditor uses style height/width
 	 *
 	 */
-	static function ResizeImages(&$html_content,&$img_list){
+	public static function ResizeImages(&$html_content,&$img_list){
 
 		includeFile('tool/HTML_Output.php');
 		includeFile('image.php');
@@ -61,7 +61,7 @@ class gp_edit{
 	 * Attempt to create a resized image
 	 *
 	 */
-	static function ResizedImage($attributes){
+	public static function ResizedImage($attributes){
 		global $dataDir, $dirPrefix;
 
 
@@ -122,7 +122,7 @@ class gp_edit{
 	 * Create a resized image of the file at $src_relative
 	 *
 	 */
-	static function CreateImage($src_relative,$width,$height){
+	public static function CreateImage($src_relative,$width,$height){
 		global $dataDir;
 
 		$src_path = $dataDir.'/data/_uploaded'.$src_relative;
@@ -186,7 +186,7 @@ class gp_edit{
 	 * ... no guarantee the reduced image won't be copy & pasted into other pages.. page copies would need to track the data as well
 	 *
 	 */
-	static function ResizedImageUse($list_before,$list_after){
+	public static function ResizedImageUse($list_before,$list_after){
 		global $dataDir;
 
 		//subtract uses no longer
@@ -279,7 +279,7 @@ class gp_edit{
 	 * Replace resized images with their originals
 	 *
 	 */
-	static function RestoreImages($html_content,$img_list){
+	public static function RestoreImages($html_content,$img_list){
 		global $dirPrefix;
 
 		includeFile('tool/HTML_Output.php');
@@ -330,7 +330,7 @@ class gp_edit{
 	 * Comare the sizes of two images
 	 *
 	 */
-	static function SizeCompare($size1, $size2){
+	public static function SizeCompare($size1, $size2){
 		list($w1,$h1) = explode('x',$size1);
 		list($w2,$h2) = explode('x',$size2);
 		return ($w1*$h1) > ($w2*$h2);
@@ -344,7 +344,7 @@ class gp_edit{
 	 * @param string $path The string to be cleansed
 	 * @return string The cleansed string
 	 */
-	static function CleanArg($path){
+	public static function CleanArg($path){
 
 		//all forward slashes
 		$path = str_replace('\\','/',$path);
@@ -373,7 +373,7 @@ class gp_edit{
 	 * @param string $spaces The string spaces will be replaced with
 	 * @return string The cleansed string
 	 */
-	static function CleanTitle($title,$spaces = '_'){
+	public static function CleanTitle($title,$spaces = '_'){
 
 		if( empty($title) ){
 			return $title;
@@ -403,7 +403,7 @@ class gp_edit{
 	 *
 	 * @param string $text The html content to be checked. Passed by reference
 	 */
-	static function tidyFix(&$text,$ignore_config = false){
+	public static function tidyFix(&$text,$ignore_config = false){
 		global $config;
 
 		if( !$ignore_config ){
@@ -426,54 +426,27 @@ class gp_edit{
 		//$options['anchor-as-name'] = true;		//default is true, but not alwasy availabel. When true, adds an id attribute to anchor; when false, removes the name attribute... poorly designed, but we need it to be true
 
 
-		//
-		//	php4
-		//
-		if( function_exists('tidy_setopt') ){
-			$options['char-encoding'] = 'utf8';
-			gp_edit::tidyOptions($options);
-			$tidy = tidy_parse_string($text);
-			tidy_clean_repair();
+		$tidy = tidy_parse_string($text,$options,'utf8');
+		tidy_clean_repair($tidy);
 
-			if( tidy_get_status() === 2){
-				// 2 is magic number for fatal error
-				// http://www.php.net/manual/en/function.tidy-get-status.php
-				$tidyErrors[] = 'Tidy found serious XHTML errors: <br/>'.nl2br(htmlspecialchars( tidy_get_error_buffer($tidy)));
-				return false;
-			}
-			$text = tidy_get_output();
-
-		//
-		//	php5
-		//
-		}else{
-			$tidy = tidy_parse_string($text,$options,'utf8');
-			tidy_clean_repair($tidy);
-
-			if( tidy_get_status($tidy) === 2){
-				// 2 is magic number for fatal error
-				// http://www.php.net/manual/en/function.tidy-get-status.php
-				$tidyErrors[] = 'Tidy found serious XHTML errors: <br/>'.nl2br(htmlspecialchars( tidy_get_error_buffer($tidy)));
-				return false;
-			}
-			$text = tidy_get_output($tidy);
+		if( tidy_get_status($tidy) === 2){
+			// 2 is magic number for fatal error
+			// http://www.php.net/manual/en/function.tidy-get-status.php
+			$tidyErrors[] = 'Tidy found serious XHTML errors: <br/>'.nl2br(htmlspecialchars( tidy_get_error_buffer($tidy)));
+			return false;
 		}
+		$text = tidy_get_output($tidy);
+
 		return true;
 	}
 
-	//for php4
-	static function tidyOptions($options){
-		foreach($options as $key => $value){
-			tidy_setopt($key,$value);
-		}
-	}
 
 
 	/**
 	 * Return javascript code to be used with autocomplete (jquery ui)
 	 *
 	 */
-	static function AutoCompleteValues($GetUrl=true,$options = array()){
+	public static function AutoCompleteValues($GetUrl=true,$options = array()){
 		global $gp_index;
 
 		$options += array(	'admin_vals' => true,
@@ -516,7 +489,7 @@ class gp_edit{
 	}
 
 
-	static function PrepAutoComplete(){
+	public static function PrepAutoComplete(){
 		global $page;
 
 		common::LoadComponents('autocomplete');
@@ -530,7 +503,7 @@ class gp_edit{
 	 *	configuration options
 	 * 	- http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html
 	 */
-	static function UseCK($contents,$name='gpcontent',$options=array()){
+	public static function UseCK($contents,$name='gpcontent',$options=array()){
 		global $page, $dataDir;
 
 		$options += array('rows'=>'20','cols'=>'50');
@@ -567,7 +540,7 @@ class gp_edit{
 
 	}
 
-	static function CKAdminConfig(){
+	public static function CKAdminConfig(){
 		static $cke_config;
 
 		//get ckeditor configuration set by users
@@ -591,7 +564,7 @@ class gp_edit{
 	 * Configuration precedence: (1) User (2) Addon (3) $options (4) gpEasy
 	 *
 	 */
-	static function CKConfig( $options = array(), $config_name = 'config', &$plugins = array() ){
+	public static function CKConfig( $options = array(), $config_name = 'config', &$plugins = array() ){
 		global $config;
 
 		$plugins = array();
@@ -696,7 +669,7 @@ class gp_edit{
 	 * @since 3.6
 	 *
 	 */
-	static function DefaultContent($type='text', $heading = 'Lorem Ipsum' ){
+	public static function DefaultContent($type='text', $heading = 'Lorem Ipsum' ){
 		global $langmessage;
 
 		$section			= array();
@@ -825,7 +798,7 @@ class gp_edit{
 	 * Return an array
 	 *
 	 */
-	static function SectionFromPost( &$existing_section, $section_num, $title, $file_stats ){
+	public static function SectionFromPost( &$existing_section, $section_num, $title, $file_stats ){
 		global $page, $gpAdmin;
 
 		$section_before		= $existing_section;
@@ -878,7 +851,7 @@ class gp_edit{
 	 * Get the posted content for an image area
 	 *
 	 */
-	static function SectionFromPost_Imagme( &$section ){
+	public static function SectionFromPost_Imagme( &$section ){
 		global $page, $dataDir, $dirPrefix, $langmessage;
 		includeFile('tool/editing.php');
 		$page->ajaxReplace = array();
@@ -983,7 +956,7 @@ class gp_edit{
 	 * Get the posted content for a text area
 	 *
 	 */
-	static function SectionFromPost_Text( &$section ){
+	public static function SectionFromPost_Text( &$section ){
 		global $config;
 		$content =& $_POST['gpcontent'];
 		gpFiles::cleanText($content);
@@ -1000,7 +973,7 @@ class gp_edit{
 	 * Save Gallery Content
 	 *
 	 */
-	static function SectionFromPost_Gallery( &$section ){
+	public static function SectionFromPost_Gallery( &$section ){
 		if( empty($_POST['images']) ){
 			$section['content'] = '<ul class="gp_gallery"><li class="gp_to_remove"></li></ul>';
 			return;
@@ -1034,7 +1007,7 @@ class gp_edit{
 	 *
 	 *
 	 */
-	static function SectionFromPost_Include( &$existing_section, $section_num, $title, $file_stats ){
+	public static function SectionFromPost_Include( &$existing_section, $section_num, $title, $file_stats ){
 		global $page, $langmessage, $gp_index, $config;
 
 		unset($existing_section['index']);
@@ -1101,7 +1074,7 @@ class gp_edit{
 	 * Display a form for creating a new directory
 	 *
 	 */
-	static function NewDirForm(){
+	public static function NewDirForm(){
 		global $langmessage, $page;
 		includeFile('admin/admin_uploaded.php');
 
@@ -1135,7 +1108,7 @@ class gp_edit{
 	 * @return bool true if $section should be saved
 	 *
 	 */
-	static function SectionEdit( $cmd, &$section, $section_num, $title, $file_stats ){
+	public static function SectionEdit( $cmd, &$section, $section_num, $title, $file_stats ){
 		global $langmessage;
 
 		switch($cmd){
@@ -1171,7 +1144,7 @@ class gp_edit{
 	 * Output content for use with the inline image editor
 	 *
 	 */
-	static function ImageEditor( $layout = false ){
+	public static function ImageEditor( $layout = false ){
 		global $page, $langmessage;
 		$page->ajaxReplace = array();
 

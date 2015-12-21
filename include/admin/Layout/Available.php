@@ -53,72 +53,19 @@ class Available extends \gp\admin\Layout{
 	}
 
 
+
 	public function AvailableList( $show_options = true ){
 		global $langmessage, $config;
 
 		//search settings
-		$this->searchPerPage = 10;
-		$this->searchOrderOptions = array();
+		$this->searchPerPage						= 10;
+		$this->searchOrderOptions					= array();
 		$this->searchOrderOptions['modified']		= $langmessage['Recently Updated'];
 		$this->searchOrderOptions['rating_score']	= $langmessage['Highest Rated'];
 		$this->searchOrderOptions['downloads']		= $langmessage['Most Downloaded'];
 
 		$this->SearchOrder();
-
-
-		// get addon information for ordering
-		\admin_tools::VersionData($version_data);
-		$version_data = $version_data['packages'];
-
-		// combine remote addon information
-		foreach($this->avail_addons as $theme_id => $info){
-
-			if( isset($info['id']) ){
-				$id = $info['id'];
-
-				if( isset($version_data[$id]) ){
-					$info = array_merge($info,$version_data[$id]);
-					$info['rt'] *= 5;
-				}
-
-				//use local rating
-				if( isset($this->addonReviews[$id]) ){
-					$info['rt'] = $this->addonReviews[$id]['rating'];
-				}
-			}else{
-				$info['rt'] = 6; //give local themes a high rating to make them appear first, rating won't actually display
-			}
-
-			$info += array( 'dn'=>0, 'rt'=>0 );
-
-			//modified time
-			if( !isset($info['tm']) ){
-				$info['tm'] = self::ModifiedTime( $info['full_dir'] );
-			}
-
-
-			$this->avail_addons[$theme_id] = $info;
-		}
-
-
-		// sort by
-		uasort( $this->avail_addons, array($this,'SortUpdated') );
-		switch($this->searchOrder){
-
-			case 'downloads':
-				uasort( $this->avail_addons, array($this,'SortDownloads') );
-			break;
-
-			case 'modified':
-				uasort( $this->avail_addons, array($this,'SortRating') );
-				uasort( $this->avail_addons, array($this,'SortUpdated') );
-			break;
-
-			case 'rating_score':
-			default:
-				uasort( $this->avail_addons, array($this,'SortRating') );
-			break;
-		}
+		$this->SortAvailable();
 
 		// pagination
 		$this->searchMax = count($this->avail_addons);
@@ -259,6 +206,67 @@ class Available extends \gp\admin\Layout{
 	}
 
 
+	/**
+	 * Sort the list available addons
+	 *
+	 */
+	private function SortAvailable(){
+
+		// get addon information for ordering
+		\admin_tools::VersionData($version_data);
+		$version_data = $version_data['packages'];
+
+		// combine remote addon information
+		foreach($this->avail_addons as $theme_id => $info){
+
+			if( isset($info['id']) ){
+				$id = $info['id'];
+
+				if( isset($version_data[$id]) ){
+					$info = array_merge($info,$version_data[$id]);
+					$info['rt'] *= 5;
+				}
+
+				//use local rating
+				if( isset($this->addonReviews[$id]) ){
+					$info['rt'] = $this->addonReviews[$id]['rating'];
+				}
+			}else{
+				$info['rt'] = 6; //give local themes a high rating to make them appear first, rating won't actually display
+			}
+
+			$info += array( 'dn'=>0, 'rt'=>0 );
+
+			//modified time
+			if( !isset($info['tm']) ){
+				$info['tm'] = self::ModifiedTime( $info['full_dir'] );
+			}
+
+
+			$this->avail_addons[$theme_id] = $info;
+		}
+
+
+		// sort by
+		uasort( $this->avail_addons, array($this,'SortUpdated') );
+		switch($this->searchOrder){
+
+			case 'downloads':
+				uasort( $this->avail_addons, array($this,'SortDownloads') );
+			break;
+
+			case 'modified':
+				uasort( $this->avail_addons, array($this,'SortRating') );
+				uasort( $this->avail_addons, array($this,'SortUpdated') );
+			break;
+
+			case 'rating_score':
+			default:
+				uasort( $this->avail_addons, array($this,'SortRating') );
+			break;
+		}
+	}
+
 	public static function ModifiedTime($directory){
 
 		$files = scandir( $directory );
@@ -282,9 +290,11 @@ class Available extends \gp\admin\Layout{
 	public function SortDownloads($a,$b){
 		return $b['dn'] > $a['dn'];
 	}
+
 	public function SortRating($a,$b){
 		return $b['rt'] > $a['rt'];
 	}
+
 	public function SortUpdated($a,$b){
 		return $b['tm'] > $a['tm'];
 	}

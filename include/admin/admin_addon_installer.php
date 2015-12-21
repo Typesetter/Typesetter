@@ -374,23 +374,21 @@ class admin_addon_installer extends admin_addons_tool{
 	function GetINI($ini_dir,&$error){
 		global $langmessage;
 
-		$error = false;
-
-		$ini_file = $ini_dir.'/Addon.ini';
+		$error		= false;
+		$ini_file	= $ini_dir.'/Addon.ini';
 
 		if( !file_exists($ini_file) ){
 			$error = sprintf($langmessage['File_Not_Found'],' <em>'.$ini_file.'</em>');
 			return false;
 		}
 
-		msg($ini_file);
 
-
-		$this->ini_text = file_get_contents($ini_file);
-		$this->ini_contents = gp_ini::ParseString($this->ini_text);
+		$this->ini_text			= file_get_contents($ini_file);
+		$this->ini_contents		= gp_ini::ParseString($this->ini_text);
 
 		if( !$this->ini_contents ){
 			$error = $langmessage['Ini_Error'].' '.$langmessage['Ini_Submit_Bug'];
+			$error = preg_replace('#href="[^"]+"#','href="http://www.gpeasy.com/Docs/Addon.ini"',$error);
 			return false;
 		}
 

@@ -805,105 +805,15 @@ class Layout extends \admin_addon_install{
 	public function GetPossible(){
 		global $dataDir,$dirPrefix;
 
-		$themes = array();
 		$this->versions = array();
 
-		//local themes
-		$dir = $dataDir.'/themes';
-		$layouts = \gpFiles::readDir($dir,1);
-		foreach($layouts as $name){
 
-			$full_dir	= $dir.'/'.$name;
-			$index		= $name.'(local)';
-			$addon_id	= false;
-			$version	= false;
-			$ini_info	= $this->GetAvailInstall($full_dir);
+		$this->AvailableThemes('/themes',false);			//local themes
+		$this->AvailableThemes('/data/_themes',true);		//downloaded themes
 
-			if( $ini_info === false ){
-				continue;
-			}
-
-			//check version
-			if( isset($ini_info['Addon_Version']) && isset($ini_info['Addon_Unique_ID']) ){
-				$addon_id = $ini_info['Addon_Unique_ID'];
-				$version = $ini_info['Addon_Version'];
-
-				if( !isset($this->versions[$addon_id]) ){
-					$this->versions[$addon_id] = array('version'=>$version,'index'=>$index);
-				}elseif( version_compare($this->versions[$addon_id]['version'],$version,'<') ){
-					$this->versions[$addon_id] = array('version'=>$version,'index'=>$index);
-				}
-
-			}
-
-
-			$themes[$index]['name']			= $name;
-			$themes[$index]['folder']		= $name;
-			$themes[$index]['colors']		= $this->GetThemeColors($full_dir);
-			$themes[$index]['is_addon']		= false;
-			$themes[$index]['full_dir']		= $full_dir;
-			$themes[$index]['rel']			= '/themes/'.$name;
-
-			if( isset($ini_info['Addon_Name']) ){
-				$themes[$index]['name']		= $ini_info['Addon_Name'];
-			}
-			if( $version ){
-				$themes[$index]['version']	= $ini_info['Addon_Version'];
-			}
-			if( $addon_id ){
-				$themes[$index]['id']		= $ini_info['Addon_Unique_ID'];
-			}
-		}
-
-
-		//downloaded themes
-		$dir = $dataDir.'/data/_themes';
-		$layouts = \gpFiles::readDir($dir,1);
-		asort($layouts);
-		foreach($layouts as $folder){
-
-			$full_dir	= $dir.'/'.$folder;
-			$addon_id	= false;
-			$version	= false;
-			$ini_info	= $this->GetAvailInstall($full_dir);
-
-			if( $ini_info === false ){
-				continue;
-			}
-
-			$index		= $ini_info['Addon_Name'].'(remote)';
-
-			//check version
-			if( isset($ini_info['Addon_Version']) && isset($ini_info['Addon_Unique_ID']) ){
-				$addon_id = $ini_info['Addon_Unique_ID'];
-				$version = $ini_info['Addon_Version'];
-
-				if( !isset($this->versions[$addon_id]) ){
-					$this->versions[$addon_id] = array('version'=>$version,'index'=>$index);
-				}elseif( version_compare($this->versions[$addon_id]['version'],$version,'<') ){
-					$this->versions[$addon_id] = array('version'=>$version,'index'=>$index);
-				}
-			}
-
-
-			$themes[$index]['name']			= $ini_info['Addon_Name'];
-			$themes[$index]['colors']		= $this->GetThemeColors($full_dir);
-			$themes[$index]['folder']		= $folder;
-			$themes[$index]['is_addon']		= true;
-			$themes[$index]['full_dir']		= $full_dir;
-			$themes[$index]['id']			= $ini_info['Addon_Unique_ID'];
-			$themes[$index]['rel']			= '/data/_themes/'.$folder;
-			if( isset($ini_info['Addon_Version']) ){
-				$themes[$index]['version'] = $ini_info['Addon_Version'];
-			}
-		}
-
-
-		if( !gp_unique_addons ){
-			$this->avail_addons = $themes;
-
-		}else{
-
+		if( gp_unique_addons ){
+			$themes = $this->avail_addons;
+			$this->avail_addons = array();
 
 			//remove older versions
 			$this->avail_addons = array();
@@ -925,6 +835,74 @@ class Layout extends \admin_addon_install{
 		}
 
 		$this->avail_count = count($this->avail_addons);
+	}
+
+
+	/**
+	 * Scan the directory for available themes
+	 *
+	 */
+	private function AvailableThemes( $dir_rel, $is_addon ){
+		global $dataDir;
+
+
+		$dir		= $dataDir.$dir_rel;
+		$folders	= \gpFiles::readDir($dir,1);
+
+		foreach($folders as $folder){
+
+			$full_dir	= $dir.'/'.$folder;
+			$ini_info	= $this->GetAvailInstall($full_dir);
+
+			if( $ini_info === false ){
+				continue;
+			}
+
+			if( $is_addon ){
+				$index		= $ini_info['Addon_Name'].'(remote)';
+			}else{
+				$index		= $folder.'(local)';
+			}
+			$this->AddVersionInfo($ini_info, $index);
+
+			$this->avail_addons[$index]['name']			= $folder;
+			$this->avail_addons[$index]['folder']		= $folder;
+			$this->avail_addons[$index]['colors']		= $this->GetThemeColors($full_dir);
+			$this->avail_addons[$index]['is_addon']		= $is_addon;
+			$this->avail_addons[$index]['full_dir']		= $full_dir;
+			$this->avail_addons[$index]['rel']			= $dir_rel.'/'.$folder;
+
+			if( isset($ini_info['Addon_Name']) ){
+				$this->avail_addons[$index]['name']		= $ini_info['Addon_Name'];
+			}
+			if( isset($ini_info['Addon_Version']) ){
+				$this->avail_addons[$index]['version']	= $ini_info['Addon_Version'];
+			}
+			if( isset($ini_info['Addon_Unique_ID']) ){
+				$this->avail_addons[$index]['id']		= $ini_info['Addon_Unique_ID'];
+			}
+		}
+
+	}
+
+
+	/**
+	 * Keep track of theme versions
+	 *
+	 */
+	private function AddVersionInfo($ini_info,$index){
+
+		if( isset($ini_info['Addon_Version']) && isset($ini_info['Addon_Unique_ID']) ){
+
+			$addon_id	= $ini_info['Addon_Unique_ID'];
+			$version	= $ini_info['Addon_Version'];
+
+			if( !isset($this->versions[$addon_id]) ){
+				$this->versions[$addon_id] = array('version'=>$version,'index'=>$index);
+			}elseif( version_compare($this->versions[$addon_id]['version'],$version,'<') ){
+				$this->versions[$addon_id] = array('version'=>$version,'index'=>$index);
+			}
+		}
 	}
 
 
@@ -959,6 +937,7 @@ class Layout extends \admin_addon_install{
 		}
 
 		$array += array('Addon_Version'=>'');
+
 		return $array;
 	}
 

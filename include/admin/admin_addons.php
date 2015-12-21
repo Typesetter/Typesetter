@@ -300,8 +300,7 @@ class admin_addons extends admin_addon_install{
 
 		$addon =& $_POST['addon'];
 
-		includeFile('admin/admin_addon_installer.php');
-		$installer = new admin_addon_installer();
+		$installer = new \gp\admin\Addon\Installer();
 		$installer->Uninstall($addon);
 		$installer->OutputMessages();
 	}
@@ -695,8 +694,6 @@ class admin_addons extends admin_addon_install{
 	function LocalInstall(){
 		global $dataDir;
 
-		includeFile('admin/admin_addon_installer.php');
-
 		$_REQUEST				+= array('source'=>'');
 
 		if( (strpos($_REQUEST['source'],'/') !== false ) || (strpos($_REQUEST['source'],'\\') !== false) ){
@@ -705,7 +702,7 @@ class admin_addons extends admin_addon_install{
 		}
 
 
-		$installer				= new admin_addon_installer();
+		$installer				= new \gp\admin\Addon\Installer();
 		$installer->source		= $dataDir.'/addons/'.$_REQUEST['source'];
 
 		$installer->Install();

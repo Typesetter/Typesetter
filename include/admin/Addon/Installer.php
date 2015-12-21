@@ -1,4 +1,7 @@
 <?php
+
+namespace gp\admin\Addon;
+
 defined('is_running') or die('Not an entry point...');
 
 /**
@@ -6,7 +9,7 @@ defined('is_running') or die('Not an entry point...');
  *	- Install_CheckIni() (warning about installing a lesser version)
  *
  */
-class admin_addon_installer extends admin_addons_tool{
+class Installer extends \admin_addons_tool{
 
 	//configuration options
 	var $source = '';
@@ -111,7 +114,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 		$this->GetAddonData();
 
-		$addon_config = gpPlugin::GetAddonConfig($addon);
+		$addon_config = \gpPlugin::GetAddonConfig($addon);
 		if( !$addon_config ){
 			$this->message($langmessage['OOPS'].' (Already uninstalled)');
 			return;
@@ -131,7 +134,7 @@ class admin_addon_installer extends admin_addons_tool{
 			if( isset($gp_menu[$index]) ){
 				unset($gp_menu[$index]);
 			}
-			$title = common::IndexToTitle($index);
+			$title = \common::IndexToTitle($index);
 			if( $title ){
 				unset($gp_index[$title]);
 			}
@@ -142,7 +145,7 @@ class admin_addon_installer extends admin_addons_tool{
 		$this->RemoveFromConfig($gp_titles,$addon);
 		$this->CleanHooks($addon);
 
-		if( !admin_tools::SaveAllConfig() ){
+		if( !\admin_tools::SaveAllConfig() ){
 			$this->message($langmessage['OOPS']);
 			return false;
 		}
@@ -155,8 +158,8 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 		if( $addon_config['order'] ){
-			$img_path = common::IdUrl('ci');
-			common::IdReq($img_path);
+			$img_path = \common::IdUrl('ci');
+			\common::IdReq($img_path);
 		}
 
 
@@ -180,14 +183,14 @@ class admin_addon_installer extends admin_addons_tool{
 
 			$installFolder = $addon_config['code_folder_full'];
 			if( file_exists($installFolder) ){
-				gpFiles::RmAll($installFolder);
+				\gpFiles::RmAll($installFolder);
 			}
 
 		}
 
 		$dataFolder = $addon_config['data_folder_full'];
 		if( file_exists($dataFolder) ){
-			gpFiles::RmAll($dataFolder);
+			\gpFiles::RmAll($dataFolder);
 		}
 	}
 
@@ -240,7 +243,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 		// upgrade/destination
-		$this->upgrade_key = $this->config_key = admin_addons_tool::UpgradePath($this->ini_contents,$this->config_index);
+		$this->upgrade_key = $this->config_key = \admin_addons_tool::UpgradePath($this->ini_contents,$this->config_index);
 		if( $this->remote_install ){
 			if( $this->config_key ){
 				$this->dest = $this->addon_folder.'/'.$this->config_key;
@@ -297,14 +300,14 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 		// Save
-		if( !admin_tools::SaveAllConfig() ){
+		if( !\admin_tools::SaveAllConfig() ){
 			$this->message($langmessage['OOPS'].' (Configuration not saved)');
 			return false;
 		}
 
 		if( $this->order ){
-			$img_path = common::IdUrl('ci');
-			common::IdReq($img_path);
+			$img_path = \common::IdUrl('ci');
+			\common::IdReq($img_path);
 		}
 
 		$this->UpdateHistory();
@@ -339,7 +342,7 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 		$this->addon_folder = $dataDir.$this->addon_folder_rel;
 
-		gpFiles::CheckDir($this->addon_folder);
+		\gpFiles::CheckDir($this->addon_folder);
 	}
 
 
@@ -384,7 +387,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 		$this->ini_text			= file_get_contents($ini_file);
-		$this->ini_contents		= gp_ini::ParseString($this->ini_text);
+		$this->ini_contents		= \gp_ini::ParseString($this->ini_text);
 
 		if( !$this->ini_contents ){
 			$error = $langmessage['Ini_Error'].' '.$langmessage['Ini_Submit_Bug'];
@@ -447,11 +450,11 @@ class admin_addon_installer extends admin_addons_tool{
 					'{$plugin}'				=> $folder,
 					'{$dataDir}'			=> $dataDir,
 					'{$dirPrefix}'			=> $dirPrefix,
-					'{$addonRelativeData}'	=> common::GetDir('/data/_addondata/'.$this->data_folder),
-					'{$addonRelativeCode}'	=> common::GetDir($this->addon_folder_rel.'/'.$folder),
+					'{$addonRelativeData}'	=> \common::GetDir('/data/_addondata/'.$this->data_folder),
+					'{$addonRelativeCode}'	=> \common::GetDir($this->addon_folder_rel.'/'.$folder),
 					);
 
-		$this->ini_contents = gp_ini::ParseString($this->ini_text,$variables);
+		$this->ini_contents = \gp_ini::ParseString($this->ini_text,$variables);
 	}
 
 
@@ -692,7 +695,7 @@ class admin_addon_installer extends admin_addons_tool{
 		global $config, $gpLayouts, $dataDir;
 
 		do{
-			$file = common::RandomString(7,false);
+			$file = \common::RandomString(7,false);
 			$full_dest = $this->addon_folder.'/'.$file;
 			$data_dest = $dataDir.'/data/_addondata/'.$file;
 
@@ -716,7 +719,7 @@ class admin_addon_installer extends admin_addons_tool{
 	 */
 	function CopyAddonDir($fromDir,$toDir){
 
-		if( !gpFiles::CheckDir($toDir) ){
+		if( !\gpFiles::CheckDir($toDir) ){
 			return 'Copy failed: '.$fromDir.' to '.$toDir;
 		}
 
@@ -839,7 +842,7 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 
 		// able to remote install?
-		if( !admin_tools::CanRemoteInstall() ){
+		if( !\admin_tools::CanRemoteInstall() ){
 			$this->message($langmessage['OOPS'].' (Can\'t remote install)');
 			return false;
 		}
@@ -865,7 +868,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 
 		// get package from remote
-		$full_result = gpRemoteGet::Get($download_link);
+		$full_result = \gpRemoteGet::Get($download_link);
 		if( (int)$full_result['response']['code'] < 200 && (int)$full_result['response']['code'] >= 300 ){
 			$this->message( $langmessage['download_failed'] .' (1)');
 			return false;
@@ -890,7 +893,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 		//save contents
 		$tempfile = $dataDir.\gp\tool\FileSystem::TempFile('/data/_temp/addon','.zip');
-		if( !gpFiles::Save($tempfile,$result) ){
+		if( !\gpFiles::Save($tempfile,$result) ){
 			$this->message( $langmessage['download_failed'].' (Package not saved)' );
 			return false;
 		}
@@ -928,7 +931,7 @@ class admin_addon_installer extends admin_addons_tool{
 
 		//rename to source folder
 		$rename_from = $extract_temp.'/'.ltrim($archive_root,'/');
-		if( !gpFiles::Replace($rename_from, $this->source) ){
+		if( !\gpFiles::Replace($rename_from, $this->source) ){
 			$this->message( $langmessage['download_failed'].' (Not replaced)' );
 			return false;
 		}
@@ -995,7 +998,7 @@ class admin_addon_installer extends admin_addons_tool{
 		foreach($Special_Links as $new_title => $linkInfo){
 
 			$index = strtolower($new_title);
-			$title = common::IndexToTitle($index);
+			$title = \common::IndexToTitle($index);
 
 			//if the title already exists, see if we need to update it
 			if( $title ){
@@ -1345,11 +1348,11 @@ class admin_addon_installer extends admin_addons_tool{
 		}
 
 		if( file_exists($this->source) ){
-			gpFiles::RmAll($this->source);
+			\gpFiles::RmAll($this->source);
 		}
 
 		if( file_exists($this->trash_path) ){
-			gpFiles::RmAll($this->trash_path);
+			\gpFiles::RmAll($this->trash_path);
 		}
 	}
 

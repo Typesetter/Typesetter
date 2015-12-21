@@ -532,8 +532,7 @@ class Layout extends \admin_addon_install{
 
 
 		//install addon
-		includeFile('admin/admin_addon_installer.php');
-		$installer						= new \admin_addon_installer();
+		$installer						= new \gp\admin\Addon\Installer();
 		$installer->addon_folder_rel	= dirname($theme_info['rel']);
 		$installer->code_folder_name	= '_themes';
 		$installer->source				= $theme_info['full_dir'];
@@ -1804,8 +1803,7 @@ class Layout extends \admin_addon_install{
 
 		//delete and save
 		if( $rm_addon ){
-			includeFile('admin/admin_addon_installer.php');
-			$installer = new \admin_addon_installer();
+			$installer = new \gp\admin\Addon\Installer();
 			$installer->rm_folders = false;
 			if( !$installer->Uninstall($rm_addon) ){
 				$gpLayouts = $gpLayoutsBefore;

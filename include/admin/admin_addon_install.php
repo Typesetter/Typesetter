@@ -136,13 +136,12 @@ class admin_addon_install extends admin_addons_tool{
 
 		$_POST += array('order'=>'');
 
-		includeFile('admin/admin_addon_installer.php');
 
-		$installer = new admin_addon_installer();
+		$installer = new \gp\admin\Addon\Installer();
 
-		$installer->code_folder_name = $this->code_folder_name;
-		$installer->config_index = $this->config_index;
-		$installer->can_install_links = $this->can_install_links;
+		$installer->code_folder_name	= $this->code_folder_name;
+		$installer->config_index		= $this->config_index;
+		$installer->can_install_links	= $this->can_install_links;
 
 		$installer->InstallRemote( $type, $_POST['id'], $_POST['order'] );
 		$installer->OutputMessages();

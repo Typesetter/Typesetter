@@ -482,8 +482,7 @@ class Available extends \gp\admin\Layout{
 		}
 
 
-		includeFile('admin/admin_addon_installer.php');
-		$installer = new \admin_addon_installer();
+		$installer = new \gp\admin\Addon\Installer();
 		$installer->addon_folder_rel = dirname($theme_info['rel']);
 		$installer->code_folder_name = '_themes';
 		$installer->source = $theme_info['full_dir'];
@@ -558,8 +557,7 @@ class Available extends \gp\admin\Layout{
 
 		if( $rm_addon ){
 
-			includeFile('admin/admin_addon_installer.php');
-			$installer = new \admin_addon_installer();
+			$installer = new \gp\admin\Addon\Installer();
 			if( !$installer->Uninstall($rm_addon) ){
 				$gpLayouts = $gpLayoutsBefore;
 			}
@@ -583,7 +581,7 @@ class Available extends \gp\admin\Layout{
 		}
 
 
-		//delete the folder if it hasn't already been deleted by admin_addon_installer
+		//delete the folder if it hasn't already been deleted by addon installer
 		$dir = $dataDir.'/data/_themes/'.$theme_folder_name;
 		if( file_exists($dir) ){
 			\gpFiles::RmAll($dir);

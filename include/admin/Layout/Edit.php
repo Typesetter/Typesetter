@@ -451,10 +451,12 @@ class Edit extends \gp\admin\Layout{
 	}
 
 
-
+	/**
+	 *
+	 *
+	 */
 	public function SaveHeaderImage(){
 		global $page, $dataDir, $dirPrefix, $langmessage;
-		includeFile('tool/Images.php');
 		$page->ajaxReplace = array();
 
 
@@ -473,7 +475,7 @@ class Edit extends \gp\admin\Layout{
 			message($langmessage['OOPS'].' (Source file not found)');
 			return;
 		}
-		$src_img = \thumbnail::getSrcImg($source_file_full);
+		$src_img = \gp\tool\Image::getSrcImg($source_file_full);
 		if( !$src_img ){
 			message($langmessage['OOPS'].' (Couldn\'t create image [1])');
 			return;
@@ -533,7 +535,7 @@ class Edit extends \gp\admin\Layout{
 			return false;
 		}
 
-		if( !\thumbnail::createImg($src_img, $dest_img_full, $posx, $posy, 0, 0, $orig_w, $orig_h, $orig_w, $orig_h, $width, $height) ){
+		if( !\gp\tool\Image::createImg($src_img, $dest_img_full, $posx, $posy, 0, 0, $orig_w, $orig_h, $orig_w, $orig_h, $width, $height) ){
 			message($langmessage['OOPS'].' (Couldn\'t create image [2])');
 			return;
 		}
@@ -615,7 +617,6 @@ class Edit extends \gp\admin\Layout{
 
 
 		//images in theme
-		includeFile('tool/Images.php');
 		$images = array();
 		self::GetAvailThemeImages( $current_dir, $current_url, $images );
 		ob_start();

@@ -131,8 +131,7 @@ class gp_edit{
 		}
 
 		//compare to actual size
-		includeFile('tool/Images.php');
-		$src_img = thumbnail::getSrcImg($src_path);
+		$src_img = \gp\tool\Image::getSrcImg($src_path);
 		if( !$src_img ){
 			return false;
 		}
@@ -163,7 +162,7 @@ class gp_edit{
 		}
 
 		//create new resized image
-		if( !thumbnail::createImg($src_img, $dest_path, 0, 0, 0, 0, $width, $height, $actual_w, $actual_h) ){
+		if( !\gp\tool\Image::createImg($src_img, $dest_path, 0, 0, 0, 0, $width, $height, $actual_w, $actual_h) ){
 			return false;
 		}
 
@@ -881,7 +880,6 @@ class gp_edit{
 	 */
 	static function SectionFromPost_Imagme( &$section ){
 		global $page, $dataDir, $dirPrefix, $langmessage;
-		includeFile('tool/Images.php');
 		includeFile('tool/editing.php');
 		$page->ajaxReplace = array();
 
@@ -901,7 +899,7 @@ class gp_edit{
 			msg($langmessage['OOPS'].' (Source file not found)');
 			return;
 		}
-		$src_img = thumbnail::getSrcImg($source_file_full);
+		$src_img = \gp\tool\Image::getSrcImg($source_file_full);
 		if( !$src_img ){
 			msg($langmessage['OOPS'].' (Couldn\'t create image [1])');
 			return;
@@ -963,7 +961,7 @@ class gp_edit{
 			return false;
 		}
 
-		if( !thumbnail::createImg($src_img, $dest_img_full, $posx, $posy, 0, 0, $orig_w, $orig_h, $orig_w, $orig_h, $width, $height) ){
+		if( !\gp\tool\Image::createImg($src_img, $dest_img_full, $posx, $posy, 0, 0, $orig_w, $orig_h, $orig_w, $orig_h, $width, $height) ){
 			msg($langmessage['OOPS'].' (Couldn\'t create image [2])');
 			return false;
 		}

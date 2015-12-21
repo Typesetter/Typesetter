@@ -2,7 +2,6 @@
 defined('is_running') or die('Not an entry point...');
 
 
-includeFile('tool/Images.php');
 includeFile('image.php');
 
 class admin_uploaded{
@@ -195,7 +194,7 @@ class admin_uploaded{
 		if( empty($value) ){
 			return;
 		}
-		$max = thumbnail::getByteValue($value);
+		$max = \gp\tool\Image::getByteValue($value);
 		if( $max !== false ){
 			echo '<input type="hidden" name="MAX_FILE_SIZE" value="'.$max.'" />';
 		}
@@ -509,7 +508,7 @@ class admin_uploaded{
 		if( isset($this->imgTypes[$file_type]) && function_exists('imagetypes') ){
 
 			//check the image size
-			thumbnail::CheckArea($to,$config['maximgarea']);
+			\gp\tool\Image::CheckArea($to,$config['maximgarea']);
 
 			self::CreateThumbnail($to);
 		}
@@ -541,7 +540,7 @@ class admin_uploaded{
 		$thumb_dir = common::DirName($thumb_path);
 		$thumb_path = $thumb_dir.'/'.basename($thumb_path).'.jpg';
 		gpFiles::CheckDir($thumb_dir);
-		thumbnail::createSquare($original,$thumb_path,$config['maxthumbsize']);
+		\gp\tool\Image::createSquare($original,$thumb_path,$config['maxthumbsize']);
 	}
 
 
@@ -895,7 +894,7 @@ class admin_uploaded{
 	function MaxSize($added){
 		global $config;
 		foreach($added as $file){
-			thumbnail::CheckArea($file['realpath'],$config['maximgarea']);
+			\gp\tool\Image::CheckArea($file['realpath'],$config['maximgarea']);
 		}
 	}
 

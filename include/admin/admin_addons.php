@@ -386,7 +386,7 @@ class admin_addons extends admin_addon_install{
 			if( !$info ){
 				continue;
 			}
-			$info['upgrade_key']	= admin_addons_tool::UpgradePath($info);
+			$info['upgrade_key']	= \gp\admin\Addon\Tools::UpgradePath($info);
 			$avail[$value]			= $info;
 
 			if( isset($info['Addon_Version']) && isset($info['Addon_Unique_ID']) ){

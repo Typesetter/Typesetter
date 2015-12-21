@@ -9,7 +9,7 @@ defined('is_running') or die('Not an entry point...');
  *	- Install_CheckIni() (warning about installing a lesser version)
  *
  */
-class Installer extends \admin_addons_tool{
+class Installer extends \gp\admin\Addon\Tools{
 
 	//configuration options
 	var $source = '';
@@ -243,7 +243,7 @@ class Installer extends \admin_addons_tool{
 
 
 		// upgrade/destination
-		$this->upgrade_key = $this->config_key = \admin_addons_tool::UpgradePath($this->ini_contents,$this->config_index);
+		$this->upgrade_key = $this->config_key = \gp\admin\Addon\Tools::UpgradePath($this->ini_contents,$this->config_index);
 		if( $this->remote_install ){
 			if( $this->config_key ){
 				$this->dest = $this->addon_folder.'/'.$this->config_key;

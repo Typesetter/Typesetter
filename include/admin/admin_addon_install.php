@@ -9,10 +9,8 @@ $langmessage['Sorry, nothing matched'] = 'Sorry, nothing met your search criteri
 $langmessage['Sorry, data not fetched'] = 'Sorry, the addon data could not be fetched from gpEasy.com.';
 
 
-includeFile('admin/admin_addons_tool.php');
 
-
-class admin_addon_install extends admin_addons_tool{
+class admin_addon_install extends \gp\admin\Addon\Tools{
 
 	protected $scriptUrl		= 'Admin_Addons';
 	public $avail_addons		= array();

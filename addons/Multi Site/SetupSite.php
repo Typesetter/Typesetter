@@ -32,12 +32,12 @@ includeFile('tool/RemoteGet.php');
 
 class SetupSite{
 
-	var $siteData = array();
-	var $dataFile;
-	var $checksum;
-	var $site_uniq_id;
+	public $siteData = array();
+	public $dataFile;
+	public $checksum;
+	public $site_uniq_id;
 
-	function SetupSite(){
+	public function __construct(){
 		global $dataDir, $page, $addonFolderName,$langmessage;
 
 		if( defined('multi_site_unique') ){
@@ -156,7 +156,7 @@ class SetupSite{
 	}
 
 
-	function Options($cmd = ''){
+	public function Options($cmd = ''){
 		global $langmessage;
 
 		$site =& $_REQUEST['site'];
@@ -222,7 +222,7 @@ class SetupSite{
 		echo '</div>';
 	}
 
-	function Options_Save($site){
+	public function Options_Save($site){
 		global $langmessage;
 		$save = $this->Options_SiteUrl($site);
 		$save = $save && $this->Options_htaccess($site);
@@ -233,7 +233,7 @@ class SetupSite{
 		}
 	}
 
-	function Options_htaccess($site){
+	public function Options_htaccess($site){
 		global $langmessage;
 		includeFile('admin/admin_permalinks.php');
 
@@ -294,7 +294,7 @@ class SetupSite{
 		return true;
 	}
 
-	function Options_SiteUrl($site){
+	public function Options_SiteUrl($site){
 		global $langmessage;
 
 		if( empty($_POST['url']) ){
@@ -329,7 +329,7 @@ class SetupSite{
 		return true;
 	}
 
-	function FrontPage(){
+	public function FrontPage(){
 		global $langmessage;
 
 		$this->Heading();
@@ -356,7 +356,7 @@ class SetupSite{
 	 * About this plugin
 	 *
 	 */
-	function About($full){
+	public function About($full){
 		global $langmessage;
 
 		$this->Heading($langmessage['about']);
@@ -391,7 +391,7 @@ class SetupSite{
 
 
 
-	function SaveSettings(){
+	public function SaveSettings(){
 		global $langmessage;
 
 		$UpdateIndexFiles = false;
@@ -444,7 +444,7 @@ class SetupSite{
 
 	}
 
-	function UpdateProviderID(){
+	public function UpdateProviderID(){
 		foreach($this->siteData['sites'] as $path => $info){
 			if( !isset($info['unique']) ){
 				$info['unique'] = $this->NewId();
@@ -455,7 +455,7 @@ class SetupSite{
 	}
 
 
-	function SettingsForm($values=array()){
+	public function SettingsForm($values=array()){
 		global $langmessage,$config;
 
 		$values += array('service_provider_id'=>'','service_provider_name'=>'');
@@ -533,7 +533,7 @@ class SetupSite{
 		echo '</form>';
 	}
 
-	function ShowSimple(){
+	public function ShowSimple(){
 		global $langmessage;
 
 		if( !isset($this->siteData['sites']) || (count($this->siteData['sites']) == 0) ){
@@ -574,7 +574,7 @@ class SetupSite{
 
 	}
 
-	function ShowRow(&$site,&$data){
+	public function ShowRow(&$site,&$data){
 		global $langmessage;
 
 		echo '<tr>';
@@ -610,7 +610,7 @@ class SetupSite{
 	}
 
 
-	function ShowSites(){
+	public function ShowSites(){
 		global $langmessage;
 
 		$limit = 20; //20
@@ -686,7 +686,7 @@ class SetupSite{
 
 	}
 
-	function Search(&$array){
+	public function Search(&$array){
 		$result = array();
 		$key = $_GET['q'];
 		foreach($array as $path => $info){
@@ -699,7 +699,7 @@ class SetupSite{
 		return $result;
 	}
 
-	function SearchRow(){
+	public function SearchRow(){
 		$_GET += array('q'=>'');
 
 		echo '<tr>';
@@ -718,7 +718,7 @@ class SetupSite{
 	 * Remove the files and folders of an installation as determined by the post request
 	 *
 	 */
-	function UninstallSite(){
+	public function UninstallSite(){
 		global $langmessage, $config;
 
 		$site =& $_POST['site'];
@@ -745,7 +745,7 @@ class SetupSite{
 	 * Remove the files and folders of an installation
 	 *
 	 */
-	function RmSite($site){
+	public function RmSite($site){
 		global $config;
 
 		if( !$this->EmptyDir($site) ){
@@ -759,7 +759,7 @@ class SetupSite{
 	 * Remove a folder that was created by the multi-site manager
 	 *
 	 */
-	function RmDir($dir){
+	public function RmDir($dir){
 		global $config;
 
 		if( @rmdir($dir) ){
@@ -790,7 +790,7 @@ class SetupSite{
 	 * Remove all the contents of a directory
 	 *
 	 */
-	function EmptyDir($dir){
+	public function EmptyDir($dir){
 
 		if( !file_exists($dir) ){
 			return true;
@@ -853,7 +853,7 @@ class SetupSite{
 
 
 
-	function GetSiteData(){
+	public function GetSiteData(){
 		global $addonPathData;
 
 		$this->dataFile = $addonPathData.'/data.php';
@@ -869,7 +869,7 @@ class SetupSite{
 		$this->siteData += array('sites'=>array());
 	}
 
-	function SaveSiteData(){
+	public function SaveSiteData(){
 		$check = $this->CheckSum($this->siteData);
 		if( $check === $this->checksum ){
 			return true;
@@ -881,12 +881,12 @@ class SetupSite{
 		return gpFiles::SaveArray($this->dataFile,'siteData',$this->siteData);
 	}
 
-	function CheckSum($array){
+	public function CheckSum($array){
 		return crc32( serialize($array) );
 	}
 
 
-	function CreatePlugins($destination,$args = false){
+	public function CreatePlugins($destination,$args = false){
 		global $rootDir;
 
 		if( $args === false ){
@@ -917,7 +917,7 @@ class SetupSite{
 
 
 	//Don't create symlink for /themes, users may want to add to their collection of themes
-	function CopyThemes($destination,$args=false){
+	public function CopyThemes($destination,$args=false){
 		global $rootDir;
 
 		if( $args === false ){
@@ -950,7 +950,7 @@ class SetupSite{
 	}
 
 	//create the index.php file
-	function CreateIndex($destination,$unique){
+	public function CreateIndex($destination,$unique){
 
 		$path = $destination.'/index.php';
 
@@ -975,7 +975,7 @@ class SetupSite{
 		return true;
 	}
 
-	function NewId(){
+	public function NewId(){
 
 		do{
 			$unique = common::RandomString(20);
@@ -991,7 +991,7 @@ class SetupSite{
 	}
 
 	//create a symbolic link and test for $test_file
-	function Create_Symlink($target,$path,$test_file = false ){
+	public function Create_Symlink($target,$path,$test_file = false ){
 
 		echo '<li>Create Symlink: <em>'.$path.'</em></li>';
 		if( !symlink($target,$path) ){
@@ -1012,7 +1012,7 @@ class SetupSite{
 	 * Save the ftp connection information if a connection can be made
 	 *
 	 */
-	function SaveFTPInformation(){
+	public function SaveFTPInformation(){
 		global $config, $langmessage;
 
 		$_POST += array('ftp_server'=>'','ftp_user'=>'','ftp_pass'=>'');
@@ -1062,7 +1062,7 @@ class SetupSite{
 	 */
 
 
-	function InstallStatus($cmd){
+	public function InstallStatus($cmd){
 		global $rootDir;
 
 		$default_theme = explode('/',gp_default_theme);
@@ -1117,7 +1117,7 @@ class SetupSite{
 		echo '</div>';
 	}
 
-	function InstallStatus_Steps(&$cmd){
+	public function InstallStatus_Steps(&$cmd){
 		echo '<hr/>';
 		echo '<div id="install_status">';
 
@@ -1153,7 +1153,7 @@ class SetupSite{
 	 * Show an installation step and it's status
 	 *
 	 */
-	function InstallStatus_Step(&$cmd,$ready,$label,$step_cmd,$step_key,$step_key2=false){
+	public function InstallStatus_Step(&$cmd,$ready,$label,$step_cmd,$step_key,$step_key2=false){
 
 		$class = 'ready';
 
@@ -1198,7 +1198,7 @@ class SetupSite{
 	 * Make sure the install folder is writable before continuing with the installation process
 	 *
 	 */
-	function CheckFolder(){
+	public function CheckFolder(){
 		global $config;
 
 		if( empty($_REQUEST['install']['folder']) ){
@@ -1241,7 +1241,7 @@ class SetupSite{
 	 * Display message to user about not being able to write to the installation folder
 	 *
 	 */
-	function FolderNotWritable($reason = ''){
+	public function FolderNotWritable($reason = ''){
 		global $langmessage;
 
 		$message = '<p>Sorry, the selected folder could not be written to.</p> ';
@@ -1265,7 +1265,7 @@ class SetupSite{
 		message($message);
 	}
 
-	function NewInstall(){
+	public function NewInstall(){
 		includeFile('tool/install.php');
 
 		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="post">';
@@ -1281,7 +1281,7 @@ class SetupSite{
 	}
 
 
-	function NewDestination(){
+	public function NewDestination(){
 		global $rootDir,$config;
 
 		if( empty($this->siteData['last_folder']) ){
@@ -1298,7 +1298,7 @@ class SetupSite{
 	 * Display form for selecting which themes should be included
 	 *
 	 */
-	function NewThemes($values=array()){
+	public function NewThemes($values=array()){
 		global $rootDir;
 
 		if( !isset($values['themes']) ){
@@ -1390,7 +1390,7 @@ class SetupSite{
 		echo '</form>';
 	}
 
-	function NewPlugins($values = array()){
+	public function NewPlugins($values = array()){
 		global $rootDir;
 
 		$values += array('plugins'=>array());
@@ -1439,11 +1439,11 @@ class SetupSite{
 
 
 
-	function InstallLink($label,$query_array=array(),$attr=''){
+	public function InstallLink($label,$query_array=array(),$attr=''){
 		return '<a href="'.$this->InstallUrl($query_array).'" '.$attr.'>'.common::Ampersands($label).'</a>';
 	}
 
-	function InstallUrl($query_array=array()){
+	public function InstallUrl($query_array=array()){
 		$query_array += array('install'=>array());
 		$query_array['install'] = $query_array['install'] + $_REQUEST['install'];
 		$query = http_build_query($query_array);
@@ -1451,7 +1451,7 @@ class SetupSite{
 		return common::GetUrl('Admin_Site_Setup',$query);
 	}
 
-	function InstallFields($array,$key=''){
+	public function InstallFields($array,$key=''){
 		foreach($array as $k => $v){
 
 			if((!empty($key)) || ($key === 0)) $k = $key.'['.urlencode($k).']';
@@ -1469,7 +1469,7 @@ class SetupSite{
 	 * Display window for selecting where to install
 	 *
 	 */
-	function InstallFolder($destination){
+	public function InstallFolder($destination){
 
 		echo '<table>';
 		echo '<tr><th>';
@@ -1517,7 +1517,7 @@ class SetupSite{
 	}
 
 
-	function InstallFolders($dir){
+	public function InstallFolders($dir){
 
 		if( !is_readable($dir) ){
 			echo '<p>';
@@ -1556,7 +1556,7 @@ class SetupSite{
 		echo '</ul>';
 	}
 
-	function GetSubdirs($dir){
+	public function GetSubdirs($dir){
 		global $config;
 
 		if( is_readable($dir) ){
@@ -1566,7 +1566,7 @@ class SetupSite{
 		return false;
 	}
 
-	function FolderLink($base,$full,$class){
+	public function FolderLink($base,$full,$class){
 		echo '<span class="expand_child '.$class.'">';
 
 		$this->InstallLinks($full);
@@ -1581,7 +1581,7 @@ class SetupSite{
 	/*
 	 * Check for /addons, /data, /include, /themes and /index.php
 	 */
-	function InstallLinks($dir){
+	public function InstallLinks($dir){
 		global $config;
 
 		$check_short = array('addons','data','include','themes','index.php');
@@ -1616,7 +1616,7 @@ class SetupSite{
 	 * Show the contents of folder
 	 *
 	 */
-	function ExpandFolder(){
+	public function ExpandFolder(){
 		global $page, $langmessage,$config;
 
 		$_REQUEST += array('install'=>array());
@@ -1636,7 +1636,7 @@ class SetupSite{
 	 * Go to a user supplied sub directory in the browser
 	 *
 	 */
-	function SubFolder(){
+	public function SubFolder(){
 		global $langmessage;
 
 		$folder =& $_REQUEST['folder'];
@@ -1652,7 +1652,7 @@ class SetupSite{
 	}
 
 
-	function LoadFolder($folder){
+	public function LoadFolder($folder){
 		global $page;
 
 		ob_start();
@@ -1674,7 +1674,7 @@ class SetupSite{
 	 * Create a new folder
 	 *
 	 */
-	function NewFolder(){
+	public function NewFolder(){
 		global $page, $langmessage;
 
 		$page->ajaxReplace = array();
@@ -1709,7 +1709,7 @@ class SetupSite{
 		$this->ExpandFolder();
 	}
 
-	function RemoveDirPrompt(){
+	public function RemoveDirPrompt(){
 		global $page, $langmessage;
 
 		$page->ajaxReplace = array();
@@ -1745,7 +1745,7 @@ class SetupSite{
 		$page->ajaxReplace[] = array('admin_box_data','',$content);
 	}
 
-	function RemoveDir(){
+	public function RemoveDir(){
 		global $page, $langmessage;
 
 		$page->ajaxReplace = array();
@@ -1766,7 +1766,7 @@ class SetupSite{
 		$this->LoadFolder($parent);
 	}
 
-	function RemoveDirCheck($dir){
+	public function RemoveDirCheck($dir){
 		global $langmessage;
 
 		if( empty($dir) || !file_exists($dir) || !is_dir($dir) ){
@@ -1794,7 +1794,7 @@ class SetupSite{
 		return true;
 	}
 
-	function MakeDir($parent,$new_name){
+	public function MakeDir($parent,$new_name){
 		global $config, $langmessage;
 
 
@@ -1844,7 +1844,7 @@ class SetupSite{
 	}
 
 
-	function NewCreate(){
+	public function NewCreate(){
 		global $rootDir,$config,$checkFileIndex;
 		global $dataDir; //for SaveTitle(), SaveConfig()
 
@@ -1936,7 +1936,7 @@ class SetupSite{
 		return true;
 	}
 
-	function Install_Aborted($destination){
+	public function Install_Aborted($destination){
 
 		echo '<li><b>Installation Aborted</b></li>';
 		echo '</ul>';
@@ -1945,7 +1945,7 @@ class SetupSite{
 		}
 	}
 
-	function Install_Success(){
+	public function Install_Success(){
 		echo '</ul>';
 		echo '<p></p>';
 		echo '<b>Installation was completed successfully.</b> ';
@@ -1960,7 +1960,7 @@ class SetupSite{
 	 * Return true if FTP can be used
 	 *
 	 */
-	function HasFTP(){
+	public function HasFTP(){
 		global $config;
 
 		if( empty($config['ftp_server']) || !function_exists('ftp_connect') ){
@@ -1975,7 +1975,7 @@ class SetupSite{
 	 * Multi Site Heading
 	 *
 	 */
-	function Heading($sub_heading=false){
+	public function Heading($sub_heading=false){
 		echo '<h1>';
 		echo common::Link('Admin_Site_Setup','Multi-Site');
 

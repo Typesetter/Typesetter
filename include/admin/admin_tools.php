@@ -227,8 +227,7 @@ class admin_tools{
 
 
 		// Tools
-		$scripts['Admin_Port']['script'] = '/include/admin/admin_port.php';
-		$scripts['Admin_Port']['class'] = 'admin_port';
+		$scripts['Admin_Port']['class'] = '\gp\admin\Tool\Port';
 		$scripts['Admin_Port']['label'] = $langmessage['Export'];
 		$scripts['Admin_Port']['group'] = 'tools';
 		$scripts['Admin_Port']['method'] = 'RunScript';

@@ -240,8 +240,7 @@ class admin_tools{
 
 
 
-		$scripts['Admin_Uninstall']['script'] = '/include/admin/admin_rm.php';
-		$scripts['Admin_Uninstall']['class'] = 'admin_rm';
+		$scripts['Admin_Uninstall']['class'] = '\gp\admin\Tool\Uninstall';
 		$scripts['Admin_Uninstall']['label'] = $langmessage['uninstall_prep'];
 		$scripts['Admin_Uninstall']['group'] = 'tools';
 

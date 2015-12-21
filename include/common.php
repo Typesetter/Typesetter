@@ -398,7 +398,7 @@ function GetMessages( $wrap = true ){
 
 	if( common::loggedIn() && count($gp_not_writable) > 0 ){
 		$files = '<ul><li>'.implode('</li><li>',$gp_not_writable).'</li></ul>';
-		$message = sprintf($langmessage['not_writable'],common::GetUrl('Admin_Status')).$files;
+		$message = sprintf($langmessage['not_writable'],common::GetUrl('Admin/Status')).$files;
 		message($message);
 		$gp_not_writable = array();
 	}

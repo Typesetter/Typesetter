@@ -227,28 +227,29 @@ class admin_tools{
 
 
 		// Tools
-		$scripts['Admin_Port']['class'] = '\gp\admin\Tool\Port';
-		$scripts['Admin_Port']['label'] = $langmessage['Export'];
-		$scripts['Admin_Port']['group'] = 'tools';
-		$scripts['Admin_Port']['method'] = 'RunScript';
+		$scripts['Admin/Port']		= array(	'class'		=> '\gp\admin\Tool\Port',
+												'label'		=> $langmessage['Export'],
+												'group'		=> 'tools',
+												'method'	=> 'RunScript'
+											);
 
 
-		$scripts['Admin_Status']['script'] = '/include/admin/admin_rm.php';
-		$scripts['Admin_Status']['class'] = 'admin_status';
-		$scripts['Admin_Status']['label'] = $langmessage['Site Status'];
-		$scripts['Admin_Status']['group'] = 'tools';
+		$scripts['Admin/Status']	= array(	'class'		=> '\gp\admin\Tool\Status',
+												'label'		=> $langmessage['Site Status'],
+												'group'		=> 'tools'
+											);
 
 
+		$scripts['Admin/Uninstall']	= array(	'class'		=> '\gp\admin\Tool\Uninstall',
+												'label'		=> $langmessage['uninstall_prep'],
+												'group'		=> 'tools'
+											);
 
-		$scripts['Admin_Uninstall']['class'] = '\gp\admin\Tool\Uninstall';
-		$scripts['Admin_Uninstall']['label'] = $langmessage['uninstall_prep'];
-		$scripts['Admin_Uninstall']['group'] = 'tools';
 
-
-		$scripts['Admin_Cache']['script'] = '/include/admin/admin_cache.php';
-		$scripts['Admin_Cache']['class'] = 'admin_cache';
-		$scripts['Admin_Cache']['label'] = $langmessage['Resource Cache'];
-		$scripts['Admin_Cache']['group'] = 'tools';
+		$scripts['Admin/Cache']		= array(	'class'		=> '\gp\admin\Tool\Cache',
+												'label'		=> $langmessage['Resource Cache'],
+												'group'		=> 'tools'
+											);
 
 
 

@@ -21,9 +21,7 @@ defined('is_running') or die('Not an entry point...');
  */
 
 
-includeFile('admin/admin_addon_install.php');
-
-class admin_addons extends admin_addon_install{
+class admin_addons extends \gp\admin\Addon\Install{
 
 	public $dataFile;
 

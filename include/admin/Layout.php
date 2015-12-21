@@ -38,10 +38,9 @@ $gpOutConf = array() of output functions/classes.. to use with the theme content
 */
 
 //includeFile('admin/admin_menu_tools.php');
-includeFile('admin/admin_addon_install.php');
 
 
-class Layout extends \admin_addon_install{
+class Layout extends \gp\admin\Addon\Install{
 
 	protected $layout_request		= false;
 	protected $curr_layout			= false;

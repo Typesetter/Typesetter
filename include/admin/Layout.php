@@ -526,19 +526,19 @@ class Layout extends \admin_addon_install{
 		$theme_info = $this->ThemeInfo($theme);
 
 		if( !$theme_info ){
-			message($langmessage['OOPS'].'(Invalid Source)');
+			message($langmessage['OOPS'].' (Invalid Source)');
 			return false;
 		}
 
 
 		//install addon
 		includeFile('admin/admin_addon_installer.php');
-		$installer = new \admin_addon_installer();
-		$installer->addon_folder_rel = dirname($theme_info['rel']);
-		$installer->code_folder_name = '_themes';
-		$installer->source = $theme_info['full_dir'];
+		$installer						= new \admin_addon_installer();
+		$installer->addon_folder_rel	= dirname($theme_info['rel']);
+		$installer->code_folder_name	= '_themes';
+		$installer->source				= $theme_info['full_dir'];
+		$success						= $installer->Install();
 
-		$success = $installer->Install();
 		$installer->OutputMessages();
 
 		if( !$success ){
@@ -1155,14 +1155,16 @@ class Layout extends \admin_addon_install{
 		}
 
 		//upgrade
-		echo '<li>';
-		if( $layout_info['is_addon'] ){
-			$source = $layout_info['name'].'(remote)/'.$layout_info['theme_color'];
-		}else{
-			$source = $layout_info['theme_name'].'(local)/'.$layout_info['theme_color'];
+		if( $addon_config ){
+			echo '<li>';
+			if( $layout_info['is_addon'] ){
+				$source = $layout_info['name'].'(remote)/'.$layout_info['theme_color'];
+			}else{
+				$source = $layout_info['theme_name'].'(local)/'.$layout_info['theme_color'];
+			}
+			echo \common::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=UpdateTheme&source='.rawurlencode($source),array('data-cmd'=>'creq'));
+			echo '</li>';
 		}
-		echo \common::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=UpdateTheme&source='.rawurlencode($source),array('data-cmd'=>'creq'));
-		echo '</li>';
 
 
 		$options = ob_get_clean();

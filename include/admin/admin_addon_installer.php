@@ -383,6 +383,8 @@ class admin_addon_installer extends admin_addons_tool{
 			return false;
 		}
 
+		msg($ini_file);
+
 
 		$this->ini_text = file_get_contents($ini_file);
 		$this->ini_contents = gp_ini::ParseString($this->ini_text);

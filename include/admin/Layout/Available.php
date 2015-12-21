@@ -34,6 +34,12 @@ class Available extends \gp\admin\Layout{
 					return;
 				}
 			break;
+
+			case 'DeleteTheme':
+				$this->DeleteTheme();
+				$this->GetPossible();
+			break;
+
 		}
 
 
@@ -214,7 +220,7 @@ class Available extends \gp\admin\Layout{
 					$folder = $info['folder'];
 					$title = sprintf($langmessage['generic_delete_confirm'], $theme_label );
 					$attr = array( 'data-cmd'=>'cnreq','class'=>'gpconfirm','title'=> $title );
-					echo '<li>'.\common::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletetheme&folder='.rawurlencode($folder),$attr).'</li>';
+					echo '<li>'.\common::Link('Admin_Theme_Content/Available',$langmessage['delete'],'cmd=DeleteTheme&folder='.rawurlencode($folder),$attr).'</li>';
 
 					//order
 					if( isset($config['themes'][$folder]['order']) ){
@@ -484,5 +490,117 @@ class Available extends \gp\admin\Layout{
 			$this->SetLayoutArray();
 		}
 	}
+
+
+
+
+	/**
+	 * Delete a remote theme
+	 *
+	 */
+	public function DeleteTheme(){
+		global $langmessage, $dataDir, $gpLayouts, $config;
+
+		$config_before		= $config;
+		$gpLayoutsBefore	= $gpLayouts;
+		$theme_folder_name	=& $_POST['folder'];
+		$theme_folder		= $dataDir.'/data/_themes/'.$theme_folder_name;
+
+		if( empty($theme_folder_name) || !ctype_alnum($theme_folder_name) ){
+			message($langmessage['OOPS'].' (Invalid Request)');
+			return false;
+		}
+
+		$order = false;
+		if( isset($config['themes'][$theme_folder_name]['order']) ){
+			$order = $config['themes'][$theme_folder_name]['order'];
+		}
+
+		if( !$this->CanDeleteTheme($theme_folder_name,$message) ){
+			message($message);
+			return false;
+		}
+
+		//remove layouts
+		$rm_addon = false;
+		foreach($gpLayouts as $layout_id => $layout_info){
+
+			if( !isset($layout_info['is_addon']) || !$layout_info['is_addon'] ){
+				continue;
+			}
+
+			$layout_folder = dirname($layout_info['theme']);
+			if( $layout_folder != $theme_folder_name ){
+				continue;
+			}
+
+			if( array_key_exists('addon_key',$layout_info) ){
+				$rm_addon = $layout_info['addon_key'];
+			}
+
+			$this->RmLayoutPrep($layout_id);
+			unset($gpLayouts[$layout_id]);
+		}
+
+
+		//remove from settings
+		unset($config['themes'][$theme_folder_name]);
+
+		if( $rm_addon ){
+
+			includeFile('admin/admin_addon_installer.php');
+			$installer = new \admin_addon_installer();
+			if( !$installer->Uninstall($rm_addon) ){
+				$gpLayouts = $gpLayoutsBefore;
+			}
+			$installer->OutputMessages();
+
+		}else{
+
+			if( !\admin_tools::SaveAllConfig() ){
+				$config = $config_before;
+				$gpLayouts = $gpLayoutsBefore;
+				message($langmessage['OOPS'].' (s1)');
+				return false;
+			}
+
+			message($langmessage['SAVED']);
+			if( $order ){
+				$img_path = \common::IdUrl('ci');
+				\common::IdReq($img_path);
+			}
+
+		}
+
+
+		//delete the folder if it hasn't already been deleted by admin_addon_installer
+		$dir = $dataDir.'/data/_themes/'.$theme_folder_name;
+		if( file_exists($dir) ){
+			\gpFiles::RmAll($dir);
+		}
+
+	}
+
+
+
+	public function CanDeleteTheme($folder,&$message){
+		global $gpLayouts, $config, $langmessage;
+
+		foreach($gpLayouts as $layout_id => $layout){
+
+			if( !isset($layout['is_addon']) || !$layout['is_addon'] ){
+				continue;
+			}
+			$layout_folder = dirname($layout['theme']);
+			if( $layout_folder == $folder ){
+				if( $config['gpLayout'] == $layout_id ){
+					$message = $langmessage['delete_default_layout'];
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 
 }

@@ -1,6 +1,7 @@
 <?php
 
 defined('is_running') or die('Not an entry point...');
+defined('gp_max_menu_level') or define('gp_max_menu_level',6);
 
 includeFile('admin/admin_menu_tools.php');
 includeFile('tool/SectionContent.php');

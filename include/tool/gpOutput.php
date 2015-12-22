@@ -2957,7 +2957,7 @@ class gpOutput{
 				}
 
 				// handle relative and absolute paths
-				if( strpos($less,$dataDir) === false ){
+				if( !empty($dataDir) && strpos($less,$dataDir) === false ){
 					$relative = $less;
 					$less = $dataDir.'/'.ltrim($less,'/');
 				}else{

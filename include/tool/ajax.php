@@ -279,7 +279,7 @@ class gpAjax{
 
 			//absolute paths don't need $dataDir
 			$full_path = $script;
-			if( strpos($script,$dataDir) !== 0 ){
+			if( !empty($dataDir) && strpos($script,$dataDir) !== 0 ){
 
 				//fix addon paths that use $addonRelativeCode
 				if( !empty($dirPrefix) && strpos($script,$dirPrefix) === 0 ){

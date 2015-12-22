@@ -1,8 +1,6 @@
 <?php
+
 defined('is_running') or die('Not an entry point...');
-
-
-defined('gp_max_menu_level') OR define('gp_max_menu_level',6);
 
 includeFile('admin/admin_menu_tools.php');
 includeFile('tool/SectionContent.php');
@@ -11,25 +9,25 @@ common::LoadComponents('sortable');
 
 class admin_menu_new extends admin_menu_tools{
 
-	var $cookie_settings		= array();
-	var $hidden_levels			= array();
-	var $search_page			= 0;
-	var $search_max_per_page	= 20;
-	var $query_string;
+	public $cookie_settings		= array();
+	public $hidden_levels			= array();
+	public $search_page			= 0;
+	public $search_max_per_page	= 20;
+	public $query_string;
 
-	var $avail_menus			= array();
-	var $curr_menu_id;
-	var $curr_menu_array		= false;
-	var $is_alt_menu			= false;
-	var $max_level_index		= 3;
+	public $avail_menus			= array();
+	public $curr_menu_id;
+	public $curr_menu_array		= false;
+	public $is_alt_menu			= false;
+	public $max_level_index		= 3;
 
-	var $main_menu_count;
-	var $list_displays			= array('search'=>true, 'all'=>true, 'hidden'=>true, 'nomenus'=>true );
+	public $main_menu_count;
+	public $list_displays			= array('search'=>true, 'all'=>true, 'hidden'=>true, 'nomenus'=>true );
 
-	var $section_types;
+	public $section_types;
 
 
-	function __construct(){
+	public function __construct(){
 		global $langmessage,$page,$config;
 
 
@@ -201,17 +199,17 @@ class admin_menu_new extends admin_menu_tools{
 
 	}
 
-	function Link($href,$label,$query='',$attr='',$nonce_action=false){
+	public function Link($href,$label,$query='',$attr='',$nonce_action=false){
 		$query = $this->MenuQuery($query);
 		return common::Link($href,$label,$query,$attr,$nonce_action);
 	}
 
-	function GetUrl($href,$query='',$ampersands=true){
+	public function GetUrl($href,$query='',$ampersands=true){
 		$query = $this->MenuQuery($query);
 		return common::GetUrl($href,$query,$ampersands);
 	}
 
-	function MenuQuery($query=''){
+	public function MenuQuery($query=''){
 		if( !empty($query) ){
 			$query .= '&';
 		}
@@ -230,7 +228,7 @@ class admin_menu_new extends admin_menu_tools{
 		return $query;
 	}
 
-	function SetQueryInfo(){
+	public function SetQueryInfo(){
 
 		//search page
 		if( isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ){
@@ -241,7 +239,7 @@ class admin_menu_new extends admin_menu_tools{
 		$this->query_string = $this->MenuQuery();
 	}
 
-	function SetCollapseSettings(){
+	public function SetCollapseSettings(){
 		$gp_menu_collapse =& $_COOKIE['gp_menu_hide'];
 
 		$search = '#'.$this->curr_menu_id.'=[';
@@ -264,7 +262,7 @@ class admin_menu_new extends admin_menu_tools{
 
 
 	//which menu, not the same order as used for $_REQUEST
-	function SetMenuID(){
+	public function SetMenuID(){
 
 		if( isset($this->curr_menu_id) ){
 			return;
@@ -284,7 +282,7 @@ class admin_menu_new extends admin_menu_tools{
 
 	}
 
-	function SetMenuArray(){
+	public function SetMenuArray(){
 		global $gp_menu;
 
 		if( isset($this->list_displays[$this->curr_menu_id]) ){
@@ -303,7 +301,7 @@ class admin_menu_new extends admin_menu_tools{
 	}
 
 
-	function SaveMenu($menu_and_pages=false){
+	public function SaveMenu($menu_and_pages=false){
 		global $dataDir;
 
 		if( $this->is_main_menu ){
@@ -330,7 +328,7 @@ class admin_menu_new extends admin_menu_tools{
 	 *
 	 *
 	 */
-	function ShowForm(){
+	public function ShowForm(){
 		global $langmessage, $page, $config;
 
 
@@ -490,7 +488,7 @@ class admin_menu_new extends admin_menu_tools{
 
 	}
 
-	function GetAvailMenus($get_type='menu'){
+	public function GetAvailMenus($get_type='menu'){
 
 		$result = array();
 		foreach($this->avail_menus as $menu_id => $menu_label){
@@ -509,7 +507,7 @@ class admin_menu_new extends admin_menu_tools{
 
 
 	//we do the json here because we're replacing more than just the content
-	function GetMenus(){
+	public function GetMenus(){
 		global $page;
 		ob_start();
 		gpOutput::GetMenu();
@@ -519,7 +517,7 @@ class admin_menu_new extends admin_menu_tools{
 
 
 
-	function OutputMenu(){
+	public function OutputMenu(){
 		global $langmessage, $gp_titles, $gpLayouts, $config;
 		$menu_adjustments_made = false;
 
@@ -668,7 +666,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Get the css class representing the current page's visibility
 	 *
 	 */
-	function VisibilityClass($class, $index){
+	public function VisibilityClass($class, $index){
 		global $gp_menu, $gp_titles;
 
 		if( isset($gp_titles[$index]['vis']) ){
@@ -689,7 +687,7 @@ class admin_menu_new extends admin_menu_tools{
 
 
 
-	function ShowLevel($menu_key,$menu_value,$prev_layout){
+	public function ShowLevel($menu_key,$menu_value,$prev_layout){
 		global $gp_titles, $gpLayouts;
 
 		$layout			= admin_menu_tools::CurrentLayout($menu_key);
@@ -719,7 +717,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Show a menu entry if it's an external link
 	 *
 	 */
-	function ShowLevel_External($menu_key,$menu_value){
+	public function ShowLevel_External($menu_key,$menu_value){
 
 		$data = array(
 				'key'		=>	$menu_key
@@ -737,7 +735,7 @@ class admin_menu_new extends admin_menu_tools{
 		echo '</a>';
 	}
 
-	function MenuSkeletonExtern(){
+	public function MenuSkeletonExtern(){
 		global $langmessage;
 
 		echo '<b>'.$langmessage['Target URL'].'</b>';
@@ -765,7 +763,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Show a menu entry if it's an internal page
 	 *
 	 */
-	function ShowLevel_Title($menu_key,$menu_value,$layout_info){
+	public function ShowLevel_Title($menu_key,$menu_value,$layout_info){
 		global $langmessage, $gp_titles;
 
 
@@ -818,7 +816,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Output Sortable Menu Link and data about the title or external link
 	 *
 	 */
-	function MenuLink($data, $class = ''){
+	public function MenuLink($data, $class = ''){
 
 		$class	= 'gp_label sort '.$class;
 		$json	= common::JsonEncode($data);
@@ -831,7 +829,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Output html for the menu editing options displayed for selected titles
 	 *
 	 */
-	function MenuSkeleton(){
+	public function MenuSkeleton(){
 		global $langmessage;
 
 		//page options
@@ -929,7 +927,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Output Insert links displayed with page options
 	 *
 	 */
-	function InsertLinks(){
+	public function InsertLinks(){
 		global $langmessage;
 
 		echo '<div class="not_multiple">';
@@ -957,7 +955,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Get a list of titles matching the search criteria
 	 *
 	 */
-	function GetSearchList(){
+	public function GetSearchList(){
 		global $gp_index;
 
 
@@ -985,7 +983,7 @@ class admin_menu_new extends admin_menu_tools{
 		return $show_list;
 	}
 
-	function SearchDisplay(){
+	public function SearchDisplay(){
 		global $langmessage, $gpLayouts, $gp_index, $gp_menu;
 
 		$Inherit_Info = admin_menu_tools::Inheritance_Info();
@@ -1084,7 +1082,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Display row
 	 *
 	 */
-	function SearchDisplayRow($title){
+	public function SearchDisplayRow($title){
 		global $langmessage, $gpLayouts, $gp_index, $gp_menu, $gp_titles;
 
 		$title_index		= $gp_index[$title];
@@ -1183,7 +1181,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * List section types
 	 *
 	 */
-	function TitleTypes($title_index){
+	public function TitleTypes($title_index){
 		global $gp_titles;
 
 		$types		= explode(',',$gp_titles[$title_index]['type']);
@@ -1204,7 +1202,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Get an array of titles that is not represented in any of the menus
 	 *
 	 */
-	function GetNoMenus(){
+	public function GetNoMenus(){
 		global $gp_index;
 
 
@@ -1268,7 +1266,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Save changes to the current menu array after a drag event occurs
 	 * @return bool
 	 */
-	function SaveDrag(){
+	public function SaveDrag(){
 		global $langmessage;
 
 		$this->CacheSettings();
@@ -1326,7 +1324,7 @@ class admin_menu_new extends admin_menu_tools{
 	/*
 	 * Get portion of menu that was moved
 	 */
-	function RmMoved($key){
+	public function RmMoved($key){
 		if( !isset($this->curr_menu_array[$key]) ){
 			return false;
 		}
@@ -1370,7 +1368,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Hide special pages
 	 *
 	 */
-	function MoveToTrash($cmd){
+	public function MoveToTrash($cmd){
 		global $gp_titles, $gp_index, $langmessage, $gp_menu, $config, $dataDir;
 
 		includeFile('admin/admin_trash.php');
@@ -2137,7 +2135,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Insert titles into the current menu if needed
 	 *
 	 */
-	function MenuInsert($titles,$neighbor,$insert_how){
+	public function MenuInsert($titles,$neighbor,$insert_how){
 		switch($insert_how){
 			case 'insert_before':
 			return $this->MenuInsert_Before($titles,$neighbor);
@@ -2539,7 +2537,7 @@ class admin_menu_new extends admin_menu_tools{
 	 *
 	 *
 	 */
-	function ExternalForm($cmd,$submit,$args){
+	public function ExternalForm($cmd,$submit,$args){
 		global $langmessage;
 
 		//these aren't all required for each usage of ExternalForm()
@@ -2615,7 +2613,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Edit an external link entry in the current menu
 	 *
 	 */
-	function EditExternal(){
+	public function EditExternal(){
 		global $langmessage;
 
 		$key =& $_GET['key'];
@@ -2641,7 +2639,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Save changes to an external link entry in the current menu
 	 *
 	 */
-	function SaveExternal(){
+	public function SaveExternal(){
 		global $langmessage;
 
 		$key =& $_POST['key'];
@@ -2675,7 +2673,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Save a new external link in the current menu
 	 *
 	 */
-	function NewExternal(){
+	public function NewExternal(){
 		global $langmessage;
 
 		$this->CacheSettings();
@@ -2700,7 +2698,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Check the values of a post with external link values
 	 *
 	 */
-	function ExternalPost(){
+	public function ExternalPost(){
 
 		$array = array();
 		if( empty($_POST['url']) || $_POST['url'] == 'http://' ){
@@ -2720,7 +2718,7 @@ class admin_menu_new extends admin_menu_tools{
 		return $array;
 	}
 
-	function NewExternalKey(){
+	public function NewExternalKey(){
 
 		$num_index = 0;
 		do{
@@ -2735,7 +2733,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Display a form for copying a page
 	 *
 	 */
-	function CopyForm(){
+	public function CopyForm(){
 		global $langmessage, $gp_index, $page;
 
 
@@ -2790,7 +2788,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Perform a page copy
 	 *
 	 */
-	function CopyPage(){
+	public function CopyPage(){
 		global $gp_index, $gp_titles, $page, $langmessage;
 
 		$this->CacheSettings();
@@ -2907,7 +2905,7 @@ class admin_menu_new extends admin_menu_tools{
 	 * Save the posted page as the homepage
 	 *
 	 */
-	function HomepageSave(){
+	public function HomepageSave(){
 		global $langmessage, $config, $gp_index, $gp_titles, $page;
 
 		$homepage = $_POST['homepage'];

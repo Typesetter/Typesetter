@@ -125,10 +125,6 @@ class editing_page extends display{
 	}
 
 
-	public function PageMsg($message = ''){
-		msg($message);
-	}
-
 	/**
 	 * Get the data file, get draft file if it exists
 	 *

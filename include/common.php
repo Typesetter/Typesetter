@@ -2323,7 +2323,7 @@ class common{
 
 		$debug['trace']			= array_intersect_key($backtrace[0], array('file'=>'','line'=>'','function'=>'','class'=>''));
 
-		if( !empty($debug['trace']['file']) && strpos($debug['trace']['file'],$dataDir) === 0 ){
+		if( !empty($debug['trace']['file']) && !empty($dataDir) && strpos($debug['trace']['file'],$dataDir) === 0 ){
 			$debug['trace']['file'] = substr($debug['trace']['file'], strlen($dataDir) );
 		}
 

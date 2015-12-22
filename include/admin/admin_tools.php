@@ -128,8 +128,13 @@ class admin_tools{
 
 		// Content
 		$scripts['Admin/Menu']						= array(	'class'		=> '\gp\admin\Menu',
+																'method'	=> 'RunScript',
 																'label'		=> $langmessage['file_manager'],
 																'group'		=> 'content',
+																);
+
+		$scripts['Admin/Menu/Menus']				= array(	'class'		=> '\gp\admin\Menu\Menus',
+																'method'	=> 'RunScript',
 																);
 
 
@@ -795,7 +800,7 @@ class admin_tools{
 			$add_one = true;
 			if( isset($gpAdmin['freq_scripts']) ){
 				foreach($gpAdmin['freq_scripts'] as $link => $hits ){
-					if( isset($scripts[$link]) ){
+					if( isset($scripts[$link]) && isset($scripts[$link]['label']) ){
 						echo '<li>';
 						echo common::Link($link,$scripts[$link]['label']);
 						echo '</li>';

@@ -55,6 +55,12 @@ class Edit extends \gp\admin\Layout{
 		$this->SetLayoutArray();
 		$page->SetTheme($layout);
 
+		if( !$page->gpLayout ){
+			message($langmessage['OOPS'].' (Theme Not Found)');
+			parent::RunScript();
+			return false;
+		}
+
 		$this->LoremIpsum();
 
 		\gpOutput::TemplateSettings();

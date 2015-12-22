@@ -175,6 +175,13 @@ class admin_tools{
 																'label' 	=> $langmessage['Available'],
 																);
 
+		if( gp_remote_themes ){
+			$scripts['Admin_Theme_Content/Remote']	 = array(	'class'		=> '\gp\admin\Layout',
+																'method'	=> 'RemoteBrowse',
+																'label' 	=> $langmessage['Search'],
+																);
+		}
+
 
 
 		// Settings

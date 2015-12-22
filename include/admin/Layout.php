@@ -75,18 +75,6 @@ class Layout extends \gp\admin\Addon\Install{
 	public function RunScript(){
 		global $config, $gpLayouts, $langmessage, $page;
 
-
-		//remote requests
-		if( strpos($page->requested,'/') ){
-			$parts = explode('/',$page->requested);
-
-			if( gp_remote_themes && strtolower($parts[1]) == 'remote' ){
-				$this->RemoteBrowse();
-				return;
-			}
-		}
-
-
 		$cmd = \common::GetCommand();
 
 		//set current layout

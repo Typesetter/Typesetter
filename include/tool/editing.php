@@ -820,7 +820,7 @@ class gp_edit{
 			break;
 
 			case 'image':
-				$save_this = self::SectionFromPost_Imagme( $existing_section );
+				$save_this = self::SectionFromPost_Image( $existing_section );
 			break;
 		}
 
@@ -851,13 +851,15 @@ class gp_edit{
 	 * Get the posted content for an image area
 	 *
 	 */
-	public static function SectionFromPost_Imagme( &$section ){
+	public static function SectionFromPost_Image( &$section, $dest_dir = '/data/_resized/img_type/' ){
 		global $page, $dataDir, $dirPrefix, $langmessage;
-		includeFile('tool/editing.php');
+
 		$page->ajaxReplace = array();
 
 		//source file
-		//$source_file_rel = $_REQUEST['file'];
+		if( !empty($_REQUEST['file']) ){
+			$source_file_rel = $_REQUEST['file'];
+		}
 		if( !empty($_REQUEST['src']) ){
 			$source_file_rel = rawurldecode($_REQUEST['src']);
 			if( !empty($dirPrefix) ){
@@ -870,12 +872,12 @@ class gp_edit{
 
 		if( !file_exists($source_file_full) ){
 			msg($langmessage['OOPS'].' (Source file not found)');
-			return;
+			return false;
 		}
 		$src_img = \gp\tool\Image::getSrcImg($source_file_full);
 		if( !$src_img ){
 			msg($langmessage['OOPS'].' (Couldn\'t create image [1])');
-			return;
+			return false;
 		}
 
 
@@ -925,7 +927,10 @@ class gp_edit{
 
 		$name				= implode('.',$parts);
 		$time				= time();
-		$dest_img_rel		= '/data/_resized/img_type/'.$name.'.'.$time.'.png';
+		if( isset($_REQUEST['time']) && ctype_digit($_REQUEST['time']) ){
+			$time			= $_REQUEST['time'];
+		}
+		$dest_img_rel		= $dest_dir.$name.'.'.$time.'.png';
 		$dest_img_full		= $dataDir.$dest_img_rel;
 
 		//make sure the folder exists

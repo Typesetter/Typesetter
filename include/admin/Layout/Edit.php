@@ -451,113 +451,29 @@ class Edit extends \gp\admin\Layout{
 
 
 	/**
-	 *
+	 * Save a theme image
+	 * Resize image if necessary
 	 *
 	 */
 	public function SaveHeaderImage(){
-		global $page, $dataDir, $dirPrefix, $langmessage;
+		global $gpLayouts,$langmessage,$page;
+
 		$page->ajaxReplace = array();
 
 
-		//source file
-		$source_file_rel = $_REQUEST['file'];
-		if( !empty($_REQUEST['src']) ){
-			$source_file_rel = rawurldecode($_REQUEST['src']);
-			if( !empty($dirPrefix) ){
-				$len = strlen($dirPrefix);
-				$source_file_rel = substr($source_file_rel,$len);
-			}
-		}
-		$source_file_rel = '/'.ltrim($source_file_rel,'/');
-		$source_file_full = $dataDir.$source_file_rel;
-		if( !file_exists($source_file_full) ){
-			message($langmessage['OOPS'].' (Source file not found)');
-			return;
-		}
-		$src_img = \gp\tool\Image::getSrcImg($source_file_full);
-		if( !$src_img ){
-			message($langmessage['OOPS'].' (Couldn\'t create image [1])');
-			return;
-		}
-
-
-		//size and position variables
-		$orig_w = $width = imagesx($src_img);
-		$orig_h = $height = imagesy($src_img);
-		$posx = $posy = 0;
-		if( isset($_REQUEST['posx']) && is_numeric($_REQUEST['posx']) ){
-			$posx = $_REQUEST['posx'];
-		}
-		if( isset($_REQUEST['posy']) && is_numeric($_REQUEST['posy']) ){
-			$posy = $_REQUEST['posy'];
-		}
-		if( isset($_REQUEST['width']) && is_numeric($_REQUEST['width']) ){
-			$width = $_REQUEST['width'];
-		}
-		if( isset($_REQUEST['height']) && is_numeric($_REQUEST['height']) ){
-			$height = $_REQUEST['height'];
-		}
-
-
-		//check to see if the image needs to be resized
-		if( $posx == 0
-			&& $posy == 0
-			&& $width == $orig_w
-			&& $height == $orig_h
-			){
-				$this->SetImage($source_file_rel,$width,$height);
-				return;
-		}
-
-		//destination file
-		$name = basename($source_file_rel);
-		$parts = explode('.',$name);
-		$type = array_pop($parts);
-		if( count($parts) > 1 ){
-			$time_part = array_pop($parts);
-			if( !ctype_digit($time_part) ){
-				$parts[] = $time_part;
-			}
-		}
-		$name = implode('.',$parts);
-		$time = time();
-		if( isset($_REQUEST['time']) && ctype_digit($_REQUEST['time']) ){
-			$time = $_REQUEST['time'];
-		}
-		//$dest_img_rel = '/data/_uploaded/headers/'.$name.'.'.$time.'.'.$type;
-		$dest_img_rel = '/data/_uploaded/headers/'.$name.'.'.$time.'.png';
-		$dest_img_full = $dataDir.$dest_img_rel;
-
-		//make sure the folder exists
-		if( !\gpFiles::CheckDir( dirname($dest_img_full) ) ){
-			message($langmessage['OOPS'].' (Couldn\'t create directory)');
+		includeFile('tool/editing.php');
+		$section = array();
+		if( !\gp_edit::SectionFromPost_Image($section, '/data/_uploaded/headers/') ){
 			return false;
 		}
 
-		if( !\gp\tool\Image::createImg($src_img, $dest_img_full, $posx, $posy, 0, 0, $orig_w, $orig_h, $orig_w, $orig_h, $width, $height) ){
-			message($langmessage['OOPS'].' (Couldn\'t create image [2])');
-			return;
-		}
-
-		if( $this->SetImage($dest_img_rel,$width,$height) ){
-			includeFile('admin/admin_uploaded.php');
-			\admin_uploaded::CreateThumbnail($dest_img_full);
-		}
-
-	}
-
-
-	public function SetImage($img_rel,$width,$height){
-		global $gpLayouts,$langmessage,$page;
-
 
 		$save_info = array();
-		$save_info['img_rel'] = $img_rel;
-		$save_info['width'] = $width;
-		$save_info['height'] = $height;
+		$save_info['img_rel']	= $section['attributes']['src'];
+		$save_info['width']		= $section['attributes']['width'];
+		$save_info['height']	= $section['attributes']['height'];
 
 		$container = $_REQUEST['container'];
-		//$gpLayouts[$this->curr_layout]['images'] = array(); //prevents shuffle - REMOVED to allow images per container to be saved.
 		$gpLayouts[$this->curr_layout]['images'][$container] = array(); //prevents shuffle
 		$gpLayouts[$this->curr_layout]['images'][$container][] = $save_info;
 

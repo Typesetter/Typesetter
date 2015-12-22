@@ -11,7 +11,7 @@ class Tools{
 	public $rate_testing		= false; //for testing on local server
 
 	public $ShowRatingText		= true;
-	protected $scriptUrl		= 'Admin_Addons';
+	protected $scriptUrl		= 'Admin/Addons';
 	public $addonHistory		= array();
 	public $addonReviews		= array();
 

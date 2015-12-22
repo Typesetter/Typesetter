@@ -261,9 +261,23 @@ class admin_tools{
 
 
 		// Unlisted
+		$scripts['Admin/Addons']				= array(	'class'		=> '\gp\admin\Addons',
+															'method'	=> 'RunScript',
+															'label' 	=> $langmessage['plugins'],
+												);
 
-		$scripts['Admin_Addons']['class'] = '\gp\admin\Addons';
-		$scripts['Admin_Addons']['label'] = $langmessage['plugins'];
+		$scripts['Admin/Addons/Available']		= array(	'class'		=> '\gp\admin\Addons',
+															'method'	=> 'ShowAvailable',
+															'label' 	=> $langmessage['Available'],
+												);
+
+		if( gp_remote_plugins ){
+			$scripts['Admin/Addons/Remote']		= array(	'class'		=> '\gp\admin\Addons',
+															'method'	=> 'RemoteBrowse',
+															'label' 	=> $langmessage['Search'],
+												);
+		}
+
 
 
 		$scripts['Admin_Errors']['script'] = '/include/admin/admin_errors.php';
@@ -663,7 +677,7 @@ class admin_tools{
 			self::PanelHeading($in_panel, $langmessage['resources'], 'icon_page_gear', 'res' );
 			echo '<ul class="submenu">';
 			if( gp_remote_plugins && admin_tools::HasPermission('Admin_Addons') ){
-				echo '<li>'.common::Link('Admin_Addons/Remote',$langmessage['Download Plugins']).'</li>';
+				echo '<li>'.common::Link('Admin/Addons/Remote',$langmessage['Download Plugins']).'</li>';
 			}
 			if( gp_remote_themes && admin_tools::HasPermission('Admin_Theme_Content') ){
 				echo '<li>'.common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']).'</li>';
@@ -1317,11 +1331,11 @@ class admin_tools{
 
 		if( $addon_permissions ){
 			echo '<li>';
-			echo common::Link('Admin_Addons',$langmessage['manage']);
+			echo common::Link('Admin/Addons',$langmessage['manage']);
 			echo '</li>';
 			if( gp_remote_plugins ){
 				echo '<li class="separator">';
-				echo common::Link('Admin_Addons/Remote',$langmessage['Download Plugins']);
+				echo common::Link('Admin/Addons/Remote',$langmessage['Download Plugins']);
 				echo '</li>';
 			}
 		}
@@ -1355,7 +1369,7 @@ class admin_tools{
 				}
 
 				if( $addon_permissions ){
-					echo common::Link('Admin_Addons/'.self::encode64($addon),$addonName);
+					echo common::Link('Admin/Addons/'.self::encode64($addon),$addonName);
 				}else{
 					echo '<a>'.$addonName.'</a>';
 				}

@@ -1022,6 +1022,7 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 		echo '</div>';
 
+		echo '<hr/>';
 		echo '<p class="admin_note">';
 		echo $langmessage['see_also'].' '.\common::Link('Admin_Menu',$langmessage['file_manager']);
 		echo '</p>';
@@ -1125,7 +1126,7 @@ class Layout extends \gp\admin\Addon\Install{
 			$addon_key = $layout_info['addon_key'];
 			$addon_config = \gpPlugin::GetAddonConfig($addon_key);
 			echo '<li>';
-			echo \common::link('Admin_Addons/'.\admin_tools::encode64($addon_key),'<span class="gpicon_plug"></span> '.$addon_config['name']);
+			echo \common::link('Admin/Addons/'.\admin_tools::encode64($addon_key),'<span class="gpicon_plug"></span> '.$addon_config['name']);
 			echo '</li>';
 
 			//hooks

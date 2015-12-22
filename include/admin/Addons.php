@@ -40,7 +40,10 @@ class Addons extends \gp\admin\Addon\Install{
 		$page->head_js[]		= '/include/js/auto_width.js';
 		$this->avail_addons		= $this->GetAvailAddons();
 
+	}
 
+	function RunScript(){
+		global $page;
 
 		$cmd = \common::GetCommand();
 		switch($cmd){
@@ -87,24 +90,10 @@ class Addons extends \gp\admin\Addon\Install{
 
 
 		//single addon
-		if( strpos($page->requested,'/') ){
-			$request_parts = explode('/',$page->requested);
-			switch(strtolower($request_parts[1])){
-				case 'remote':
-					if( gp_remote_plugins ){
-						$this->RemoteBrowse();
-					}
-				return;
-
-				case 'available':
-					$this->ShowAvailable();
-				return;
-
-				default:
-					$this->ShowAddon($request_parts[1]);
-				return;
-
-			}
+		$request_parts = explode('/',$page->requested);
+		if( count($request_parts) > 2 ){
+			$this->ShowAddon($request_parts[2]);
+			return;
 		}
 
 
@@ -222,9 +211,9 @@ class Addons extends \gp\admin\Addon\Install{
 		}
 
 		if( isset($info['disabled']) ){
-			return \common::Link('Admin_Addons',str_replace('_',' ',$name).' ('.$langmessage['disabled'].')','cmd=enable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.md5($name).'"');
+			return \common::Link('Admin/Addons',str_replace('_',' ',$name).' ('.$langmessage['disabled'].')','cmd=enable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.md5($name).'"');
 		}else{
-			return \common::Link('Admin_Addons',str_replace('_',' ',$name) .' ('.$langmessage['enabled'].')','cmd=disable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.md5($name).'"');
+			return \common::Link('Admin/Addons',str_replace('_',' ',$name) .' ('.$langmessage['enabled'].')','cmd=disable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.md5($name).'"');
 		}
 
 	}
@@ -271,7 +260,7 @@ class Addons extends \gp\admin\Addon\Install{
 
 		echo '<div class="inline_box">';
 		echo '<h3>'.$langmessage['uninstall'].'</h3>';
-		echo '<form action="'.\common::GetUrl('Admin_Addons').'" method="post">';
+		echo '<form action="'.\common::GetUrl('Admin/Addons').'" method="post">';
 
 		$addon =& $_REQUEST['addon'];
 		if( !isset($config['addons'][$addon]) ){
@@ -495,7 +484,7 @@ class Addons extends \gp\admin\Addon\Install{
 				echo '</td><td>';
 				echo $info['Addon_Version'];
 				echo '</td><td>';
-				echo \common::Link('Admin_Addons',$langmessage['Install'],'cmd=LocalInstall&source='.$folder, array('data-cmd'=>'creq'));
+				echo \common::Link('Admin/Addons',$langmessage['Install'],'cmd=LocalInstall&source='.$folder, array('data-cmd'=>'creq'));
 				echo '</td><td>';
 				echo $info['About'];
 				if( isset($info['Addon_Unique_ID']) && is_numeric($info['Addon_Unique_ID']) ){
@@ -577,7 +566,7 @@ class Addons extends \gp\admin\Addon\Install{
 		echo '<div class="panelgroup" id="panelgroup_'.md5($addon_key).'">';
 
 		echo '<h3>';
-		echo \common::Link('Admin_Addons/'.\admin_tools::encode64($addon_key),$addon_config['name']);
+		echo \common::Link('Admin/Addons/'.\admin_tools::encode64($addon_key),$addon_config['name']);
 		echo '</h3>';
 
 		echo '<div class="panelgroup2">';
@@ -645,7 +634,7 @@ class Addons extends \gp\admin\Addon\Install{
 			}
 
 			//uninstall
-			$list[] = \common::Link('Admin_Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.rawurlencode($addon_key),'data-cmd="gpabox"');
+			$list[] = \common::Link('Admin/Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.rawurlencode($addon_key),'data-cmd="gpabox"');
 
 
 			//version

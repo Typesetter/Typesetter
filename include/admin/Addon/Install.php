@@ -15,14 +15,14 @@ $langmessage['Sorry, data not fetched'] = 'Sorry, the addon data could not be fe
 
 class Install extends \gp\admin\Addon\Tools{
 
-	protected $scriptUrl		= 'Admin_Addons';
+	protected $scriptUrl		= 'Admin/Addons';
 	public $avail_addons		= array();
 	public $avail_count			= 0;
 
 
 	//remote browsing
 	public $config_index		= 'addons';
-	public $path_remote			= 'Admin_Addons/Remote';
+	public $path_remote			= 'Admin/Addons/Remote';
 	public $code_folder_name	= '_addoncode';
 	public $can_install_links	= true;
 
@@ -438,7 +438,7 @@ class Install extends \gp\admin\Addon\Tools{
 		if( $row['type'] == 'theme' ){
 			$url = 'Admin_Theme_Content';
 		}else{
-			$url = 'Admin_Addons';
+			$url = 'Admin/Addons';
 		}
 
 		$link = 'cmd=remote_install';

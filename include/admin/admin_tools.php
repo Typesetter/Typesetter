@@ -127,10 +127,11 @@ class admin_tools{
 
 
 		// Content
-		$scripts['Admin_Menu']['script'] = '/include/admin/admin_menu_new.php';
-		$scripts['Admin_Menu']['class'] = 'admin_menu_new';
-		$scripts['Admin_Menu']['label'] = $langmessage['file_manager'];
-		$scripts['Admin_Menu']['group'] = 'content';
+		$scripts['Admin/Menu']						= array(	'class'		=> '\gp\admin\Menu',
+																'label'		=> $langmessage['file_manager'],
+																'group'		=> 'content',
+																);
+
 
 
 		$scripts['Admin_Uploaded']['script'] = '/include/admin/admin_uploaded.php';

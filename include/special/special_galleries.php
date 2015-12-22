@@ -247,7 +247,7 @@ class special_galleries{
 
 
 	/**
-	 * Handle the removal of a gallery page for admin_menu_tools.php
+	 * Handle the removal of a gallery page for \gp\admin\Menu\Tools.php
 	 *
 	 */
 	public static function RemovedGallery($title){
@@ -263,7 +263,7 @@ class special_galleries{
 
 
 	/**
-	 * Handle the renaming of galleries for admin_menu_tools.php
+	 * Handle the renaming of galleries for \gp\admin\Menu\Tools.php
 	 *
 	 * @static
 	 *

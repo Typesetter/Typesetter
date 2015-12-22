@@ -1,7 +1,6 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-includeFile('admin/admin_menu_tools.php');
 
 class page_layout{
 
@@ -139,11 +138,12 @@ class page_layout{
 			echo $langmessage['OOPS'];
 			return;
 		}
+
 		$this->title = $title;
 
-		$Inherit_Info = admin_menu_tools::Inheritance_Info();
-		$curr_layout = admin_menu_tools::CurrentLayout($index);
-		$curr_info = $gpLayouts[$curr_layout];
+		$Inherit_Info	= \gp\admin\Menu\Tools::Inheritance_Info();
+		$curr_layout	= \gp\admin\Menu\Tools::CurrentLayout($index);
+		$curr_info		= $gpLayouts[$curr_layout];
 
 
 		echo '<div class="inline_box">';

@@ -37,8 +37,6 @@ $gpOutConf = array() of output functions/classes.. to use with the theme content
 
 */
 
-//includeFile('admin/admin_menu_tools.php');
-
 
 class Layout extends \gp\admin\Addon\Install{
 

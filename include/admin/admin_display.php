@@ -12,12 +12,16 @@ class admin_display extends display{
 	public $non_admin_content		= '';
 	public $admin_html				= '';
 
+	private	$scripts				= array();
+
+
 	public function __construct($title){
 		global $langmessage;
 
 
 		$this->requested	= str_replace(' ','_',$title);
 		$this->label		= $langmessage['administration'];
+		$this->scripts		= admin_tools::AdminScripts();
 
 		$this->head .= "\n".'<meta name="robots" content="noindex,nofollow" />';
 		@header( 'X-Frame-Options: SAMEORIGIN' );
@@ -113,12 +117,11 @@ class admin_display extends display{
 
 
 		$parts			= explode('/',$this->requested);
-		$scripts		= admin_tools::AdminScripts();
 		$crumbs			= array();
 		do{
 			$crumb_part	= implode('/',$parts);
-			if( isset($scripts[$crumb_part]) && isset($scripts[$crumb_part]['label']) ){
-				$crumbs[$crumb_part] = $scripts[$crumb_part]['label'];
+			if( isset($this->scripts[$crumb_part]) && isset($this->scripts[$crumb_part]['label']) ){
+				$crumbs[$crumb_part] = $this->scripts[$crumb_part]['label'];
 			}
 		}while(array_pop($parts));
 
@@ -177,14 +180,15 @@ class admin_display extends display{
 
 
 		//resolve request for /Admin_Theme_Content if the request is for /Admin_Theme_Conent/1234
-		$parts			= explode('/',$this->requested);
-		$scripts		= admin_tools::AdminScripts();
+		$request_string		= str_replace('_','/',$this->requested);
+		$parts				= explode('/',$request_string);
 
 		do{
 
-			$request_string	= implode('/',$parts);
-			if( isset($scripts[$request_string]) ){
-				$scriptinfo = $scripts[$request_string];
+			$request_string		= implode('/',$parts);
+			$scriptinfo			= $this->GetScriptInfo($request_string);
+			if( $scriptinfo ){
+
 				if( admin_tools::HasPermission($request_string) ){
 
 					$this->OrganizeFrequentScripts($request_string);
@@ -230,7 +234,27 @@ class admin_display extends display{
 
 		}while( count($parts) );
 
-		$this->Redirect();
+		//$this->Redirect();
+	}
+
+
+	/**
+	 * Get admin script info if the request slug uses underscores or slashes
+	 *
+	 */
+	private function GetScriptInfo($request_string){
+
+		if( isset($this->scripts[$request_string]) ){
+			return $this->scripts[$request_string];
+		}
+
+		$request_string	= str_replace('/','_',$request_string);
+
+		if( isset($this->scripts[$request_string]) ){
+			return $this->scripts[$request_string];
+		}
+
+		return false;
 	}
 
 
@@ -238,11 +262,11 @@ class admin_display extends display{
 	 * Redirect admin request to the most similar page
 	 *
 	 */
-	function Redirect(){
+	private function Redirect(){
 
 
 		//find similar
-		$scripts			= admin_tools::AdminScripts();
+		$scripts			= $this->scripts;
 		$scripts['Admin']	= array();
 		$similar			= array();
 		$lower_req			= strtolower($this->requested);

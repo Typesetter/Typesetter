@@ -301,7 +301,6 @@ class admin_tools{
 		global $gpAdmin;
 		if( is_array($gpAdmin) ){
 			$gpAdmin += array('granted'=>'');
-			$script = str_replace
 			return admin_tools::CheckPermission($gpAdmin['granted'],$script);
 		}
 		return false;

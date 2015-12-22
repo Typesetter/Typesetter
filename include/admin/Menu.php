@@ -176,7 +176,7 @@ class Menu extends \gp\admin\Menu\Tools{
 			case 'uselayout':
 			case 'restorelayout':
 				includeFile('tool/Page_Layout.php');
-				$page_layout = new page_layout($cmd,'Admin_Menu',$this->query_string);
+				$page_layout = new page_layout($cmd,'Admin/Menu',$this->query_string);
 				if( $page_layout->result() ){
 					return;
 				}
@@ -361,7 +361,7 @@ class Menu extends \gp\admin\Menu\Tools{
 
 
 		// search form
-		echo '<form action="'.\common::GetUrl('Admin_Menu').'" method="post" id="page_search">';
+		echo '<form action="'.\common::GetUrl('Admin/Menu').'" method="post" id="page_search">';
 		$_REQUEST += array('q'=>'');
 		echo '<input type="text" name="q" size="15" value="'.htmlspecialchars($_REQUEST['q']).'" class="gptext gpinput title-autocomplete" /> ';
 		echo '<input type="submit" name="cmd" value="'.$langmessage['search pages'].'" class="gpbutton" />';
@@ -374,7 +374,7 @@ class Menu extends \gp\admin\Menu\Tools{
 
 
 		//heading
-		echo '<form action="'.\common::GetUrl('Admin_Menu').'" method="post" id="gp_menu_select_form">';
+		echo '<form action="'.\common::GetUrl('Admin/Menu').'" method="post" id="gp_menu_select_form">';
 		echo '<input type="hidden" name="curr_menu" id="gp_curr_menu" value="'.$this->curr_menu_id.'" />';
 
 		echo '<h2 class="first-child">';
@@ -452,11 +452,11 @@ class Menu extends \gp\admin\Menu\Tools{
 			if( $menu_id == $this->curr_menu_id ){
 				echo '<span>'.$menu_label.'</span>';
 			}else{
-				echo '<span>'.\common::Link('Admin_Menu',$menu_label,'menu='.$menu_id, array('data-cmd'=>'cnreq')).'</span>';
+				echo '<span>'.\common::Link('Admin/Menu',$menu_label,'menu='.$menu_id, array('data-cmd'=>'cnreq')).'</span>';
 			}
 
 		}
-		echo '<span>'.\common::Link('Admin_Menu','+ '.$langmessage['Add New Menu'],'cmd=newmenu','data-cmd="gpabox"').'</span>';
+		echo '<span>'.\common::Link('Admin/Menu','+ '.$langmessage['Add New Menu'],'cmd=newmenu','data-cmd="gpabox"').'</span>';
 		echo '</div>';
 
 		echo '<div>';
@@ -465,7 +465,7 @@ class Menu extends \gp\admin\Menu\Tools{
 			if( $menu_id == $this->curr_menu_id ){
 			}else{
 			}
-			echo '<span>'.\common::Link('Admin_Menu',$menu_label,'menu='.$menu_id,array('data-cmd'=>'creq')).'</span>';
+			echo '<span>'.\common::Link('Admin/Menu',$menu_label,'menu='.$menu_id,array('data-cmd'=>'creq')).'</span>';
 		}
 		echo '</div>';
 
@@ -475,9 +475,9 @@ class Menu extends \gp\admin\Menu\Tools{
 			echo '<div>';
 			$label = $menus[$this->curr_menu_id];
 			echo '<b>'.$label.'</b>';
-			echo '<span>'.\common::Link('Admin_Menu',$langmessage['rename'],'cmd=rename_menu_prompt&id='.$this->curr_menu_id,'data-cmd="gpabox"').'</span>';
+			echo '<span>'.\common::Link('Admin/Menu',$langmessage['rename'],'cmd=rename_menu_prompt&id='.$this->curr_menu_id,'data-cmd="gpabox"').'</span>';
 			$title_attr = sprintf($langmessage['generic_delete_confirm'],'&quot;'.$label.'&quot;');
-			echo '<span>'.\common::Link('Admin_Menu',$langmessage['delete'],'cmd=rm_menu&id='.$this->curr_menu_id,array('data-cmd'=>'creq','class'=>'gpconfirm','title'=>$title_attr)).'</span>';
+			echo '<span>'.\common::Link('Admin/Menu',$langmessage['delete'],'cmd=rm_menu&id='.$this->curr_menu_id,array('data-cmd'=>'creq','class'=>'gpconfirm','title'=>$title_attr)).'</span>';
 
 			echo '</div>';
 		}
@@ -750,10 +750,10 @@ class Menu extends \gp\admin\Menu\Tools{
 		echo '<span>';
 
 		$img = '<span class="menu_icon page_edit_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$langmessage['edit'],'cmd=edit_external&key=[key]',array('title'=>$langmessage['edit'],'data-cmd'=>'gpabox'));
+		echo $this->Link('Admin/Menu',$img.$langmessage['edit'],'cmd=edit_external&key=[key]',array('title'=>$langmessage['edit'],'data-cmd'=>'gpabox'));
 
 		$img = '<span class="menu_icon cut_list_icon"></span>';
-		echo $this->Link('Admin_Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&index=[key]',array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
+		echo $this->Link('Admin/Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&index=[key]',array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
 
 		echo '</span>';
 
@@ -844,19 +844,19 @@ class Menu extends \gp\admin\Menu\Tools{
 
 		$img	= '<span class="menu_icon page_edit_icon"></span>';
 		$attrs	= array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax','class'=>'not_multiple');
-		echo $this->Link('Admin_Menu',$img.$langmessage['rename/details'],'cmd=renameform&index=[key]',$attrs);
+		echo $this->Link('Admin/Menu',$img.$langmessage['rename/details'],'cmd=renameform&index=[key]',$attrs);
 
 
 		$img	= '<i class="fa fa-eye menu_icon"></i>';
 		$q		= 'cmd=ToggleVisibility&index=[key]';
 		$label	= $langmessage['Visibility'].': '.$langmessage['Private'];
 		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax','class'=>'vis_private');
-		echo $this->Link('Admin_Menu',$img.$label,$q,$attrs);
+		echo $this->Link('Admin/Menu',$img.$label,$q,$attrs);
 
 		$label	= $langmessage['Visibility'].': '.$langmessage['Public'];
 		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax','class'=>'vis_public not_multiple');
 		$q		.= '&visibility=private';
-		echo $this->Link('Admin_Menu',$img.$label,$q,$attrs);
+		echo $this->Link('Admin/Menu',$img.$label,$q,$attrs);
 
 
 		echo '<a href="[url]?cmd=ViewHistory" class="view_edit_link not_multiple not_special" data-cmd="gpabox"><i class="fa fa-history menu_icon"></i>'.htmlspecialchars($langmessage['Revision History']).'</a>';
@@ -864,7 +864,7 @@ class Menu extends \gp\admin\Menu\Tools{
 
 		$img	= '<span class="menu_icon copy_icon"></span>';
 		$attrs	= array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox','class'=>'not_multiple');
-		echo $this->Link('Admin_Menu',$img.$langmessage['Copy'],'cmd=copypage&index=[key]',$attrs);
+		echo $this->Link('Admin/Menu',$img.$langmessage['Copy'],'cmd=copypage&index=[key]',$attrs);
 
 
 		if( \admin_tools::HasPermission('Admin_User') ){
@@ -875,11 +875,11 @@ class Menu extends \gp\admin\Menu\Tools{
 
 		$img	= '<span class="menu_icon cut_list_icon"></span>';
 		$attrs	= array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'postlink','class'=>'gpconfirm');
-		echo $this->Link('Admin_Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&index=[key]',$attrs);
+		echo $this->Link('Admin/Menu',$img.$langmessage['rm_from_menu'],'cmd=hide&index=[key]',$attrs);
 
 		$img	= '<span class="menu_icon bin_icon"></span>';
 		$attrs	= array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm not_special');
-		echo $this->Link('Admin_Menu',$img.$langmessage['delete'],'cmd=trash&index=[key]',$attrs);
+		echo $this->Link('Admin/Menu',$img.$langmessage['delete'],'cmd=trash&index=[key]',$attrs);
 
 		echo '[opts]'; //replaced with the contents of \gpPlugin::Action('MenuPageOptions',array($title,$menu_key,$menu_value,$layout_info));
 
@@ -894,14 +894,14 @@ class Menu extends \gp\admin\Menu\Tools{
 
 			//has_layout
 			$img = '<span class="layout_icon"></span>';
-			echo $this->Link('Admin_Menu',$img.'[layout_label]','cmd=layout&index=[key]',' title="'.$langmessage['layout'].'" data-cmd="gpabox" class="has_layout"');
+			echo $this->Link('Admin/Menu',$img.'[layout_label]','cmd=layout&index=[key]',' title="'.$langmessage['layout'].'" data-cmd="gpabox" class="has_layout"');
 
 			$img = '<span class="menu_icon undo_icon"></span>';
-			echo $this->Link('Admin_Menu',$img.$langmessage['restore'],'cmd=restorelayout&index=[key]',array('data-cmd'=>'postlink','title'=>$langmessage['restore'],'class'=>'has_layout'),'restore');
+			echo $this->Link('Admin/Menu',$img.$langmessage['restore'],'cmd=restorelayout&index=[key]',array('data-cmd'=>'postlink','title'=>$langmessage['restore'],'class'=>'has_layout'),'restore');
 
 			//no_layout
 			$img = '<span class="layout_icon"></span>';
-			echo $this->Link('Admin_Menu',$img.'[layout_label]','cmd=layout&index=[key]',' title="'.$langmessage['layout'].'" data-cmd="gpabox" class="no_layout"');
+			echo $this->Link('Admin/Menu',$img.'[layout_label]','cmd=layout&index=[key]',' title="'.$langmessage['layout'].'" data-cmd="gpabox" class="no_layout"');
 			echo '</span>';
 			echo '</div>';
 		}
@@ -938,17 +938,17 @@ class Menu extends \gp\admin\Menu\Tools{
 
 		$img = '<span class="menu_icon insert_before_icon"></span>';
 		$query = 'cmd=insert_before&insert_where=[key]';
-		echo $this->Link('Admin_Menu',$img.$langmessage['insert_before'],$query,array('title'=>$langmessage['insert_before'],'data-cmd'=>'gpabox'));
+		echo $this->Link('Admin/Menu',$img.$langmessage['insert_before'],$query,array('title'=>$langmessage['insert_before'],'data-cmd'=>'gpabox'));
 
 
 		$img = '<span class="menu_icon insert_after_icon"></span>';
 		$query = 'cmd=insert_after&insert_where=[key]';
-		echo $this->Link('Admin_Menu',$img.$langmessage['insert_after'],$query,array('title'=>$langmessage['insert_after'],'data-cmd'=>'gpabox'));
+		echo $this->Link('Admin/Menu',$img.$langmessage['insert_after'],$query,array('title'=>$langmessage['insert_after'],'data-cmd'=>'gpabox'));
 
 
 		$img = '<span class="menu_icon insert_after_icon"></span>';
 		$query = 'cmd=insert_child&insert_where=[key]';
-		echo $this->Link('Admin_Menu',$img.$langmessage['insert_child'],$query,array('title'=>$langmessage['insert_child'],'data-cmd'=>'gpabox','class'=>'insert_child'));
+		echo $this->Link('Admin/Menu',$img.$langmessage['insert_child'],$query,array('title'=>$langmessage['insert_child'],'data-cmd'=>'gpabox','class'=>'insert_child'));
 		echo '</span>';
 		echo '</div>';
 	}
@@ -1030,11 +1030,11 @@ class Menu extends \gp\admin\Menu\Tools{
 				if( $i == $this->search_page ){
 					$class = ' class="current"';
 				}
-				echo $this->Link('Admin_Menu',($i+1),'page='.$i,'data-cmd="gpajax"'.$class);
+				echo $this->Link('Admin/Menu',($i+1),'page='.$i,'data-cmd="gpajax"'.$class);
 			}
 		}
 
-		echo $this->Link('Admin_Menu',$langmessage['create_new_file'],'cmd=add_hidden',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpabox'));
+		echo $this->Link('Admin/Menu',$langmessage['create_new_file'],'cmd=add_hidden',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpabox'));
 		echo '</span>';
 		echo '</div>';
 		$links = ob_get_clean();
@@ -1112,7 +1112,7 @@ class Menu extends \gp\admin\Menu\Tools{
 		//area only display on mouseover
 		echo '<div><div>';//style="position:absolute;bottom:0;left:10px;right:10px;"
 
-		echo $this->Link('Admin_Menu',$langmessage['rename/details'],'cmd=renameform&index='.urlencode($title_index),array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
+		echo $this->Link('Admin/Menu',$langmessage['rename/details'],'cmd=renameform&index='.urlencode($title_index),array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
 
 
 		$q		= 'cmd=ToggleVisibility&index='.urlencode($title_index);
@@ -1124,21 +1124,21 @@ class Menu extends \gp\admin\Menu\Tools{
 		}
 
 		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax');
-		echo $this->Link('Admin_Menu',$label,$q,$attrs);
+		echo $this->Link('Admin/Menu',$label,$q,$attrs);
 
 		if( $is_special === false ){
 			echo \common::Link($title,$langmessage['Revision History'],'cmd=ViewHistory','class="view_edit_link not_multiple" data-cmd="gpabox"');
 		}
 
-		echo $this->Link('Admin_Menu',$langmessage['Copy'],'cmd=copypage&index='.urlencode($title_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
+		echo $this->Link('Admin/Menu',$langmessage['Copy'],'cmd=copypage&index='.urlencode($title_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 
 		echo '<span>';
 		echo $langmessage['layout'].': ';
-		echo $this->Link('Admin_Menu',$layout_info['label'],'cmd=layout&index='.urlencode($title_index),array('title'=>$langmessage['layout'],'data-cmd'=>'gpabox'));
+		echo $this->Link('Admin/Menu',$layout_info['label'],'cmd=layout&index='.urlencode($title_index),array('title'=>$langmessage['layout'],'data-cmd'=>'gpabox'));
 		echo '</span>';
 
 		if( $is_special === false ){
-			echo $this->Link('Admin_Menu',$langmessage['delete'],'cmd=trash&index='.urlencode($title_index),array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
+			echo $this->Link('Admin/Menu',$langmessage['delete'],'cmd=trash&index='.urlencode($title_index),array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
 		}
 
 		\gpPlugin::Action('MenuPageOptions',array($title,$title_index,false,$layout_info));
@@ -1525,7 +1525,7 @@ class Menu extends \gp\admin\Menu\Tools{
 
 		//prepare variables
 		$title =& $_REQUEST['index'];
-		$action = $this->GetUrl('Admin_Menu');
+		$action = $this->GetUrl('Admin/Menu');
 		\gp_rename::RenameForm( $_REQUEST['index'], $action );
 	}
 
@@ -1635,7 +1635,7 @@ class Menu extends \gp\admin\Menu\Tools{
 		echo '<h3>'.$langmessage['new_file'].'</h3>';
 
 
-		echo '<form action="'.$this->GetUrl('Admin_Menu').'" method="post">';
+		echo '<form action="'.$this->GetUrl('Admin/Menu').'" method="post">';
 		if( isset($_GET['redir']) ){
 			echo '<input type="hidden" name="redir" value="redir" />';
 		}
@@ -1726,7 +1726,7 @@ class Menu extends \gp\admin\Menu\Tools{
 		//create format of each tab
 		ob_start();
 		echo '<div id="%s" class="%s">';
-		echo '<form action="'.\common::GetUrl('Admin_Menu').'" method="post">';
+		echo '<form action="'.\common::GetUrl('Admin/Menu').'" method="post">';
 		echo '<input type="hidden" name="insert_where" value="'.htmlspecialchars($_GET['insert_where']).'" />';
 		echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($cmd).'" />';
 		echo '<table class="bordered full_width">';
@@ -2362,7 +2362,7 @@ class Menu extends \gp\admin\Menu\Tools{
 		$menu_name = $this->avail_menus[$menu_id];
 
 		echo '<div class="inline_box">';
-		echo '<form action="'.\common::GetUrl('Admin_Menu').'" method="post">';
+		echo '<form action="'.\common::GetUrl('Admin/Menu').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="alt_menu_rename" />';
 		echo '<input type="hidden" name="id" value="'.htmlspecialchars($menu_id).'" />';
 
@@ -2395,7 +2395,7 @@ class Menu extends \gp\admin\Menu\Tools{
 		global $langmessage;
 
 		echo '<div class="inline_box">';
-		echo '<form action="'.\common::GetUrl('Admin_Menu').'" method="post">';
+		echo '<form action="'.\common::GetUrl('Admin/Menu').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="altmenu_create" />';
 
 		echo '<h3>';
@@ -2553,7 +2553,7 @@ class Menu extends \gp\admin\Menu\Tools{
 					);
 
 
-		echo '<form action="'.$this->GetUrl('Admin_Menu').'" method="post">';
+		echo '<form action="'.$this->GetUrl('Admin/Menu').'" method="post">';
 		echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($args['insert_how']).'" />';
 		echo '<input type="hidden" name="insert_where" value="'.htmlspecialchars($args['insert_where']).'" />';
 		echo '<input type="hidden" name="key" value="'.htmlspecialchars($args['key']).'" />';
@@ -2751,7 +2751,7 @@ class Menu extends \gp\admin\Menu\Tools{
 		$from_label = \common::LabelSpecialChars($from_label);
 
 		echo '<div class="inline_box">';
-		echo '<form method="post" action="'.\common::GetUrl('Admin_Menu').'">';
+		echo '<form method="post" action="'.\common::GetUrl('Admin/Menu').'">';
 		if( isset($_REQUEST['redir']) ){
 			echo '<input type="hidden" name="redir" value="redir"/> ';
 		}
@@ -2865,7 +2865,7 @@ class Menu extends \gp\admin\Menu\Tools{
 		global $langmessage;
 
 		echo '<div class="inline_box">';
-		echo '<form action="'.\common::GetUrl('Admin_Menu').'" method="post">';
+		echo '<form action="'.\common::GetUrl('Admin/Menu').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="homepage_save" />';
 
 		echo '<h3><i class="gpicon_home"></i>';
@@ -2899,7 +2899,7 @@ class Menu extends \gp\admin\Menu\Tools{
 
 		echo '<span class="gpicon_home"></span>';
 		echo $langmessage['Homepage'].': ';
-		echo \common::Link('Admin_Menu',$label,'cmd=homepage_select','data-cmd="gpabox"');
+		echo \common::Link('Admin/Menu',$label,'cmd=homepage_select','data-cmd="gpabox"');
 	}
 
 

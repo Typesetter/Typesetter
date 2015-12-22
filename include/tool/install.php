@@ -318,7 +318,7 @@ class Install_Tools{
 		</ol>
 		<h3>More Options</h3>
 		<ul>
-		<li>Adding, renaming, deleting and organising your pages can all be done in the '.Install_Tools::Install_Link_Content('Admin_Menu','Page Manager').'.</li>
+		<li>Adding, renaming, deleting and organising your pages can all be done in the '.Install_Tools::Install_Link_Content('Admin/Menu','Page Manager').'.</li>
 		<li>Choose from a '.Install_Tools::Install_Link_Content('Admin_Theme_Content','variety of themes').' to give your site a custom look.</li>
 		<li>Then, you can '.Install_Tools::Install_Link_Content('Admin_Theme_Content/Edit','add, remove and rearrange').' the content of your site without editing the html.</li>
 		<li>Take a look at the Administrator Toolbar to access all the features of gpEasy.</li>
@@ -359,7 +359,7 @@ class Install_Tools{
 
 
 		// Child Page
-		$content = '<h1>A Child Page</h1><p>This was created as a subpage of your <em>Help Videos</em> . You can easily change the arrangement of all your pages using the '.Install_Tools::Install_Link_Content('Admin_Menu','Page Manager').'.</p>';
+		$content = '<h1>A Child Page</h1><p>This was created as a subpage of your <em>Help Videos</em> . You can easily change the arrangement of all your pages using the '.Install_Tools::Install_Link_Content('Admin/Menu','Page Manager').'.</p>';
 		self::NewTitle( $destination, 'Child_Page',$content, $config, $new_index);
 
 		// More

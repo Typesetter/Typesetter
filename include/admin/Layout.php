@@ -1022,7 +1022,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 		echo '<hr/>';
 		echo '<p class="admin_note">';
-		echo $langmessage['see_also'].' '.\common::Link('Admin_Menu',$langmessage['file_manager']);
+		echo $langmessage['see_also'].' '.\common::Link('Admin/Menu',$langmessage['file_manager']);
 		echo '</p>';
 
 

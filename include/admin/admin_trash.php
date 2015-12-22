@@ -287,7 +287,7 @@ class admin_trash{
 		}
 		$title_string = implode(', ',$show_titles);
 
-		$link		= common::GetUrl('Admin_Menu');
+		$link		= common::GetUrl('Admin/Menu');
 		$message	= sprintf($langmessage['file_restored'],$title_string,$link);
 
 		message($message);

@@ -326,7 +326,7 @@
 				newval,
 				$admin_menu_div = $('#admin_menu'),
 				cookie_options = {
-					path: gpBLink+'/Admin_Menu', //ie8 does not like the trailing forward slash:  /Admin_Menu/
+					path: gpBLink+'/Admin/Menu', //ie8 does not like the trailing forward slash:  /Admin_Menu/
 					expires: 100
 					};
 

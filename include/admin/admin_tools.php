@@ -799,7 +799,7 @@ class admin_tools{
 						echo '<li>';
 						echo common::Link($link,$scripts[$link]['label']);
 						echo '</li>';
-						if( $link === 'Admin_Menu' ){
+						if( $link === 'Admin/Menu' ){
 							$add_one = false;
 						}
 					}
@@ -810,7 +810,7 @@ class admin_tools{
 			}
 			if( $add_one ){
 				echo '<li>';
-				echo common::Link('Admin_Menu',$scripts['Admin_Menu']['label']);
+				echo common::Link('Admin/Menu',$scripts['Admin/Menu']['label']);
 				echo '</li>';
 			}
 			echo '</ul>';
@@ -946,9 +946,9 @@ class admin_tools{
 			echo '</li>';
 
 			switch($script){
-				case 'Admin_Menu':
+				case 'Admin/Menu':
 					echo '<li>';
-					echo common::Link('Admin_Menu','+ '.$langmessage['create_new_file'],'cmd=add_hidden&redir=redir',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpabox'));
+					echo common::Link('Admin/Menu','+ '.$langmessage['create_new_file'],'cmd=add_hidden&redir=redir',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpabox'));
 					echo '</li>';
 				break;
 			}

@@ -411,7 +411,7 @@ class gpOutput{
 				$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content/Edit/'.urlencode($page->gpLayout),$langmessage['edit'],'cmd=LayoutMenu&handle='.$param,' data-cmd="gpabox" title="'.$label.'" ');
 				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 				echo $edit_link;
-				echo common::Link('Admin_Menu',$langmessage['file_manager'],'',' class="nodisplay"');
+				echo common::Link('Admin/Menu',$langmessage['file_manager'],'',' class="nodisplay"');
 				echo '</span>';
 
 				self::$edit_area_id = 'ExtraEditArea'.$edit_index;
@@ -421,7 +421,7 @@ class gpOutput{
 				$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content/Edit/'.urlencode($page->gpLayout),$langmessage['edit'],'cmd=LayoutMenu&handle='.$param,' data-cmd="gpabox" title="'.$langmessage['Links'].'" ');
 				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 				echo $edit_link;
-				echo common::Link('Admin_Menu',$langmessage['file_manager'],'',' class="nodisplay"');
+				echo common::Link('Admin/Menu',$langmessage['file_manager'],'',' class="nodisplay"');
 				echo '</span>';
 
 				self::$edit_area_id = 'ExtraEditArea'.$edit_index;

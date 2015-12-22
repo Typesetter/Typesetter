@@ -1054,7 +1054,7 @@ class Edit extends \gp\admin\Layout{
 			echo '<p class="admin_note">';
 			echo $langmessage['see_also'];
 			echo ' ';
-			echo \common::Link('Admin_Menu',$langmessage['file_manager']);
+			echo \common::Link('Admin/Menu',$langmessage['file_manager']);
 			echo ', ';
 			echo \common::Link('Admin_Theme_Content',$langmessage['content_arrangement']);
 			echo '</p>';

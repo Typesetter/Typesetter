@@ -21,7 +21,6 @@ class gpFiles{
 	 *
 	 */
 	public static function Get( $file, $var_name=null ){
-		global $dataDir;
 
 		self::$last_modified	= null;
 		self::$last_version		= null;
@@ -36,9 +35,7 @@ class gpFiles{
 			$var_name	= basename($file);
 		}
 
-		if( strpos($file,$dataDir) !== 0 ){
-			$file = $dataDir.'/data/'.ltrim($file,'/').'.php';
-		}
+		$file = self::FilePath($file);
 
 		//json
 		if( gp_data_type === '.json' ){
@@ -82,8 +79,6 @@ class gpFiles{
 	 */
 	private static function Get_Json($file,$var_name){
 
-		$file		= substr($file,0,-4).'.gpjson';
-
 		if( !file_exists($file) ){
 			return array();
 		}
@@ -112,32 +107,20 @@ class gpFiles{
 	 *
 	 */
 	public static function GetRaw($file){
-		global $dataDir;
 
-		if( strpos($file,$dataDir) !== 0 ){
-			$file = $dataDir.'/data/'.ltrim($file,'/').'.php';
-		}
-
-		if( gp_data_type === '.json' ){
-			$file		= substr($file,0,-4).'.gpjson';
-		}
+		$file = self::FilePath($file);
 
 		return file_get_contents($file);
 	}
 
 	public static function Exists($file){
-		global $dataDir;
 
-		if( strpos($file,$dataDir) !== 0 ){
-			$file = $dataDir.'/data/'.ltrim($file,'/').'.php';
-		}
-
-		if( gp_data_type === '.json' ){
-			$file		= substr($file,0,-4).'.gpjson';
-		}
+		$file = self::FilePath($file);
 
 		return file_exists($file);
 	}
+
+
 
 
 	/**
@@ -712,16 +695,10 @@ class gpFiles{
 	 *
 	 */
 	public static function SaveData($file, $varname, $array, $meta = array() ){
-		global $dataDir;
 
-		if( strpos($file,$dataDir) !== 0 ){
-			$file = $dataDir.'/data/'.ltrim($file,'/').'.php';
-		}
-
+		$file = self::FilePath($file);
 
 		if( gp_data_type === '.json' ){
-
-			$file				= substr($file,0,-4).'.gpjson';
 
 			$json				= self::FileStart_Json($file);
 			$json[$varname]		= $array;
@@ -938,6 +915,28 @@ class gpFiles{
 			return gpFiles::RmDir($path);
 		}
 		return false;
+	}
+
+
+	/**
+	 * Get the correct path for the data file
+	 * Two valid methods to get a data file path:
+	 * 		Full path:	/var/www/html/site/data/_site/config.php
+	 * 		Relative:	_site/config
+	 *
+	 */
+	public static function FilePath($path){
+		global $dataDir;
+
+		if( substr($path,-4) !== '.php' ){
+			$path = $dataDir.'/data/'.ltrim($path,'/').'.php';
+		}
+
+		if( gp_data_type === '.json' ){
+			$path		= substr($path,0,-4).'.gpjson';
+		}
+
+		return $path;
 	}
 
 

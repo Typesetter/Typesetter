@@ -17,7 +17,6 @@ class admin_display extends display{
 
 
 		$this->requested	= str_replace(' ','_',$title);
-		$scripts			= admin_tools::AdminScripts();
 		$this->label		= $langmessage['administration'];
 
 		$this->head .= "\n".'<meta name="robots" content="noindex,nofollow" />';
@@ -118,7 +117,7 @@ class admin_display extends display{
 		$crumbs			= array();
 		do{
 			$crumb_part	= implode('/',$parts);
-			if( isset($scripts[$crumb_part]) ){
+			if( isset($scripts[$crumb_part]) && isset($scripts[$crumb_part]['label']) ){
 				$crumbs[$crumb_part] = $scripts[$crumb_part]['label'];
 			}
 		}while(array_pop($parts));

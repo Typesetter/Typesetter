@@ -647,9 +647,9 @@ class gp_edit{
 
 		//browser paths
 		if( $options['browser'] ){
-			$options['filebrowserBrowseUrl'] = common::GetUrl('Admin_Browser').'?type=all';
-			$options['filebrowserImageBrowseUrl'] = common::GetUrl('Admin_Browser').'?dir=%2Fimage';
-			$options['filebrowserFlashBrowseUrl'] = common::GetUrl('Admin_Browser').'?dir=%2Fflash';
+			$options['filebrowserBrowseUrl'] = common::GetUrl('Admin/Browser').'?type=all';
+			$options['filebrowserImageBrowseUrl'] = common::GetUrl('Admin/Browser').'?dir=%2Fimage';
+			$options['filebrowserFlashBrowseUrl'] = common::GetUrl('Admin/Browser').'?dir=%2Fflash';
 			unset($options['browser']);
 		}
 

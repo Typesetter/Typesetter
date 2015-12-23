@@ -46,7 +46,7 @@ $(function(){
 
 	/**
 	 * Helper function to get parameters from the query string.
-	 *  Used by admin_browser/ckeditor
+	 *  Used by admin/browser & ckeditor
 	 *
 	 */
 	function getUrlParam(paramName) {

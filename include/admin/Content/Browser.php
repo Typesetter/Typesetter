@@ -1,9 +1,12 @@
 <?php
+
+namespace gp\admin\Content;
+
 defined('is_running') or die('Not an entry point...');
 
 includeFile('admin/admin_uploaded.php');
 
-class admin_browser extends admin_uploaded{
+class Browser extends \admin_uploaded{
 
 	function __construct(){
 		global $page;
@@ -20,7 +23,7 @@ class admin_browser extends admin_uploaded{
 	}
 
 	function FinderPrep(){
-		$this->finder_opts['url']				= common::GetUrl('Admin_Finder');
+		$this->finder_opts['url']				= \common::GetUrl('Admin_Finder');
 		$this->finder_opts['getFileCallback']	= true;
 		$this->finder_opts['resizable'] 		= false;
 	}

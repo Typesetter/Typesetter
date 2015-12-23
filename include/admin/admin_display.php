@@ -209,10 +209,6 @@ class admin_display extends display{
 
 			//these are here because they should be available to everyone
 			switch($request_string){
-				case 'Admin_Browser':
-					includeFile('admin/admin_browser.php');
-					new admin_browser();
-				return;
 
 				case 'Admin_Preferences':
 					$this->label = $langmessage['Preferences'];

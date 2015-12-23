@@ -296,6 +296,10 @@ class admin_tools{
 															'label' 	=> 'About gpEasy',
 												);
 
+		$scripts['Admin/Browser']				= array(	'class'		=> '\gp\admin\Content\Browser',
+												);
+
+
 		gpSettingsOverride('admin_scripts',$scripts);
 
 		return $scripts;

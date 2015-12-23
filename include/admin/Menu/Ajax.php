@@ -8,12 +8,11 @@ class Ajax extends \gp\admin\Menu{
 
 	public function RunScript(){
 
-		$cmd = $this->MenuCommand();
-		if( $cmd === 'return' ){
+		if( $this->cmd === 'return' ){
 			return;
 		}
 
-		switch($cmd){
+		switch($this->cmd){
 
 			//adding new files
 			case 'AddHidden':
@@ -37,7 +36,7 @@ class Ajax extends \gp\admin\Menu{
 			case 'insert_before':
 			case 'insert_after':
 			case 'insert_child':
-				$this->InsertDialog($cmd);
+				$this->InsertDialog();
 			return;
 
 			case 'NewFile':
@@ -72,7 +71,7 @@ class Ajax extends \gp\admin\Menu{
 				$this->Hide();
 			break;
 			case 'MoveToTrash':
-				$this->MoveToTrash($cmd);
+				$this->MoveToTrash();
 			break;
 
 
@@ -96,10 +95,9 @@ class Ajax extends \gp\admin\Menu{
 			case 'HomepageSave':
 				$this->HomepageSave();
 			return;
-
-
 		}
-		$this->ShowForm();
+
+		$this->RunScript();
 	}
 
 
@@ -354,7 +352,7 @@ class Ajax extends \gp\admin\Menu{
 	 * Display the dialog for inserting pages into a menu
 	 *
 	 */
-	public function InsertDialog($cmd){
+	public function InsertDialog(){
 		global $langmessage, $page, $gp_index;
 
 		includeFile('admin/admin_trash.php');
@@ -364,7 +362,7 @@ class Ajax extends \gp\admin\Menu{
 		echo '<div id="%s" class="%s">';
 		echo '<form action="'.\common::GetUrl('Admin/Menu/Ajax').'" method="post">';
 		echo '<input type="hidden" name="insert_where" value="'.htmlspecialchars($_GET['insert_where']).'" />';
-		echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($cmd).'" />';
+		echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($this->cmd).'" />';
 		echo '<table class="bordered full_width">';
 		echo '<thead><tr><th>&nbsp;</th></tr></thead>';
 		echo '</table>';
@@ -472,7 +470,7 @@ class Ajax extends \gp\admin\Menu{
 
 			//Insert External
 			echo '<div id="gp_Insert_External" class="nodisplay">';
-			$args['insert_how']		= $cmd;
+			$args['insert_how']		= $this->cmd;
 			$args['insert_where']	= $_GET['insert_where'];
 			$this->ExternalForm('NewExternal',$langmessage['insert_into_menu'],$args);
 			echo '</div>';
@@ -602,7 +600,7 @@ class Ajax extends \gp\admin\Menu{
 	 * Form for adding external link
 	 *
 	 */
-	public function ExternalForm($cmd,$submit,$args){
+	public function ExternalForm($submit,$args){
 		global $langmessage;
 
 		//these aren't all required for each usage of ExternalForm()
@@ -658,7 +656,7 @@ class Ajax extends \gp\admin\Menu{
 		echo '</table>';
 
 		echo '<p>';
-		echo '<input type="hidden" name="cmd" value="'.htmlspecialchars($cmd).'" />';
+		echo '<input type="hidden" name="cmd" value="'.htmlspecialchars($this->cmd).'" />';
 		echo '<input type="submit" name="" value="'.$submit.'" class="gpsubmit" data-cmd="gppost"/> ';
 		echo '<input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
 		echo '</p>';
@@ -893,7 +891,7 @@ class Ajax extends \gp\admin\Menu{
 	 * Hide special pages
 	 *
 	 */
-	public function MoveToTrash($cmd){
+	public function MoveToTrash(){
 		global $gp_titles, $gp_index, $langmessage, $gp_menu, $config, $dataDir;
 
 		includeFile('admin/admin_trash.php');

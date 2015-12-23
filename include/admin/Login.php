@@ -1,12 +1,16 @@
 <?php
+
+namespace gp\admin;
+
 defined('is_running') or die('Not an entry point...');
 
-class admin_login extends display{
-	var $pagetype = 'admin_display';
+class Login extends \display{
 
-	function __construct($title){
+	public $pagetype = 'admin_display';
 
-		common::LoadComponents('gp-admin-css');
+	public function __construct($title){
+
+		\common::LoadComponents('gp-admin-css');
 
 		$this->requested		= str_replace(' ','_',$title);
 		$this->title			= $title;
@@ -17,9 +21,9 @@ class admin_login extends display{
 		@header( 'X-Frame-Options: SAMEORIGIN' );
 	}
 
-	function RunScript(){}
+	public function RunScript(){}
 
-	function GetGpxContent(){
+	public function GetGpxContent(){
 
 
 		$this->head .= "\n<script type=\"text/javascript\">var IE_LT_8 = false;</script><!--[if lt IE 8]>\n<script type=\"text/javascript\">IE_LT_8=true;</script>\n<![endif]-->";
@@ -32,7 +36,7 @@ class admin_login extends display{
 
 		$this->admin_js = true;
 		includeFile('tool/sessions.php');
-		gpsession::cookie('g',2);
+		\gpsession::cookie('g',2);
 
 
 
@@ -42,7 +46,7 @@ class admin_login extends display{
 		echo '<div class="req_script nodisplay" id="login_container">';
 		echo '<table><tr><td>';
 
-		$cmd = common::GetCommand();
+		$cmd = \common::GetCommand();
 		switch($cmd){
 			case 'send_password';
 				if( $this->SendPassword() ){
@@ -65,7 +69,7 @@ class admin_login extends display{
 	}
 
 
-	function FogottenPassword(){
+	public function FogottenPassword(){
 		global $langmessage;
 
 		$_POST += array('username'=>'');
@@ -73,7 +77,7 @@ class admin_login extends display{
 
 
 		echo '<div id="loginform">';
-		echo '<form class="loginform" action="'.common::GetUrl('Admin').'" method="post">';
+		echo '<form class="loginform" action="'.\common::GetUrl('Admin').'" method="post">';
 
 		echo '<p class="login_text">';
 		echo '<input type="text" name="username" value="'.htmlspecialchars($_POST['username']).'" placeholder="'.htmlspecialchars($langmessage['username']).'"/>';
@@ -81,14 +85,14 @@ class admin_login extends display{
 
 		echo '<input type="hidden" name="cmd" value="send_password" />';
 		echo '<input type="submit" name="aa" value="'.$langmessage['send_password'].'" class="login_submit" />';
-		echo ' &nbsp; <label>'. common::Link('Admin',$langmessage['back']).'</label>';
+		echo ' &nbsp; <label>'. \common::Link('Admin',$langmessage['back']).'</label>';
 
 		echo '</form>';
 		echo '</div>';
 
 	}
 
-	function LoginForm(){
+	public function LoginForm(){
 		global $langmessage;
 
 
@@ -97,14 +101,14 @@ class admin_login extends display{
 
 
 		echo '<div id="loginform">';
-			echo '<div id="login_timeout" class="nodisplay">Log in Timeout: '.common::Link('Admin','Reload to continue...').'</div>';
+			echo '<div id="login_timeout" class="nodisplay">Log in Timeout: '.\common::Link('Admin','Reload to continue...').'</div>';
 
-			echo '<form action="'.common::GetUrl('Admin').'" method="post" id="login_form">';
+			echo '<form action="'.\common::GetUrl('Admin').'" method="post" id="login_form">';
 			echo '<input type="hidden" name="file" value="'.htmlspecialchars($_REQUEST['file']).'">';	//for redirection
 
 			echo '<div>';
 			echo '<input type="hidden" name="cmd" value="login" />';
-			echo '<input type="hidden" name="login_nonce" value="'.htmlspecialchars(common::new_nonce('login_nonce',true,300)).'" />';
+			echo '<input type="hidden" name="login_nonce" value="'.htmlspecialchars(\common::new_nonce('login_nonce',true,300)).'" />';
 			echo '</div>';
 
 			echo '<p class="login_text">';
@@ -122,7 +126,7 @@ class admin_login extends display{
 			echo '<p>';
 			echo '<input type="submit" class="login_submit" value="'.$langmessage['login'].'" />';
 			echo ' &nbsp; ';
-			echo common::Link('',$langmessage['cancel']);
+			echo \common::Link('',$langmessage['cancel']);
 			echo '</p>';
 
 			echo '<p>';
@@ -139,7 +143,7 @@ class admin_login extends display{
 
 			echo '<div>';
 			echo '<label>';
-			$url = common::GetUrl('Admin','cmd=forgotten');
+			$url = \common::GetUrl('Admin','cmd=forgotten');
 			echo sprintf($langmessage['forgotten_password'],$url);
 			echo '</label>';
 			echo '</div>';
@@ -149,7 +153,7 @@ class admin_login extends display{
 		echo '</div>';
 	}
 
-	function BrowserWarning(){
+	public function BrowserWarning(){
 		global $langmessage;
 
 		echo '<div id="browser_warning" class="nodisplay">';
@@ -167,7 +171,7 @@ class admin_login extends display{
 		echo'</div>';
 	}
 
-	function JavascriptWarning(){
+	public function JavascriptWarning(){
 		global $langmessage;
 
 		echo '<div class="without_script" id="javascript_warning">';
@@ -181,7 +185,7 @@ class admin_login extends display{
 	}
 
 
-	function Checked($name){
+	public function Checked($name){
 
 		if( strtoupper($_SERVER['REQUEST_METHOD']) !== 'POST' )
 			return ' checked="checked" ';
@@ -193,11 +197,11 @@ class admin_login extends display{
 	}
 
 
-	function SendPassword(){
+	public function SendPassword(){
 		global $langmessage, $gp_mailer, $config;
 
 		includeFile('tool/email_mailer.php');
-		$users		= gpFiles::Get('_site/users');
+		$users		= \gpFiles::Get('_site/users');
 		$username	= $_POST['username'];
 
 		if( !isset($users[$username]) ){
@@ -217,10 +221,10 @@ class admin_login extends display{
 		$passwordChars	= str_repeat('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',3);
 		$newpass		= str_shuffle($passwordChars);
 		$newpass		= substr($newpass,0,8);
-		$pass_hash		= gpsession::PassAlgo($userinfo);
+		$pass_hash		= \gpsession::PassAlgo($userinfo);
 
-		$users[$username]['newpass'] = common::hash($newpass,$pass_hash);
-		if( !gpFiles::SaveData('_site/users','users',$users) ){
+		$users[$username]['newpass'] = \common::hash($newpass,$pass_hash);
+		if( !\gpFiles::SaveData('_site/users','users',$users) ){
 			message($langmessage['OOPS']);
 			return false;
 		}
@@ -231,8 +235,8 @@ class admin_login extends display{
 			$server = $_SERVER['SERVER_NAME'];
 		}
 
-		$link = common::AbsoluteLink('Admin',$langmessage['login']);
-		$message = sprintf($langmessage['passwordremindertext'],$server,$link,$username,$newpass);
+		$link		= \common::AbsoluteLink('Admin',$langmessage['login']);
+		$message	= sprintf($langmessage['passwordremindertext'],$server,$link,$username,$newpass);
 
 		if( $gp_mailer->SendEmail($userinfo['email'], $langmessage['new_password'], $message) ){
 			list($namepart,$sitepart) = explode('@',$userinfo['email']);

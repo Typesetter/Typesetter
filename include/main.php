@@ -30,8 +30,7 @@ switch($type){
 			includeFile('admin/admin_display.php');
 			$page = new admin_display($title,$type);
 		}else{
-			includeFile('admin/admin_login.php');
-			$page = new admin_login($title,$type);
+			$page = new \gp\admin\Login($title,$type);
 		}
 	break;
 

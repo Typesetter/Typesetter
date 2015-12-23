@@ -1120,8 +1120,7 @@ class gpsession{
 	 */
 	static function EnableComponent(){
 
-		includeFile('admin/admin_errors.php');
-		admin_errors::ClearError($_REQUEST['hash']);
+		\gp\admin\Tool\Errors::ClearError($_REQUEST['hash']);
 		$title = common::WhichPage();
 		common::Redirect(common::GetUrl($title,'',false));
 	}
@@ -1138,7 +1137,7 @@ class gpsession{
 			return;
 		}
 
-		if( is_object($page) && property_exists($page,'title') && strpos($page->title,'Admin_Errors') !== false ){
+		if( is_object($page) && property_exists($page,'title') && strpos($page->title,'Admin/Errors') !== false ){
 			return;
 		}
 
@@ -1163,7 +1162,7 @@ class gpsession{
 		}
 
 		$msg = 'Warning: One or more components have caused fatal errors and have been disabled. '
-				.common::Link('Admin_Errors','More Information');
+				.common::Link('Admin/Errors','More Information');
 		msg($msg);
 	}
 

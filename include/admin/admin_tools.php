@@ -289,10 +289,9 @@ class admin_tools{
 		}
 
 
-
-		$scripts['Admin_Errors']['script'] = '/include/admin/admin_errors.php';
-		$scripts['Admin_Errors']['class'] = 'admin_errors';
-		$scripts['Admin_Errors']['label'] = 'Errors';
+		$scripts['Admin/Errors']				= array(	'class'		=> '\gp\admin\Tool\Errors',
+															'label' 	=> 'Errors',
+												);
 
 
 		$scripts['Admin/About']					= array(	'class'		=> '\gp\admin\About',

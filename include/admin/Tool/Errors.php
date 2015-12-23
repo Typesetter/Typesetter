@@ -1,7 +1,10 @@
 <?php
+
+namespace gp\admin\Tool;
+
 defined('is_running') or die('Not an entry point...');
 
-class admin_errors{
+class Errors{
 
 	private $readable_log = false;
 
@@ -26,10 +29,10 @@ class admin_errors{
 	function __construct(){
 		global $page;
 
-		$sub_page = '';
-		if( strpos($page->requested,'/') ){
-			$parts = explode('/',$page->requested,2);
-			$sub_page = $parts[1];
+		$sub_page	= '';
+		$parts		= explode('/',$page->requested);
+		if( count($parts) > 2 ){
+			$sub_page = $parts[2];
 		}
 		switch($sub_page){
 			case 'Log':
@@ -51,13 +54,13 @@ class admin_errors{
 
 		echo '<h2 class="hmargin">';
 		echo 'Fatal Errors';
-		echo ' <span> | </span>';
-		echo common::Link('Admin_Errors/Log','Error Log');
+		echo ' <span> | </span> ';
+		echo \common::Link('Admin/Errors/Log','Error Log');
 		echo '</h2>';
 
 
 		//actions
-		$cmd = common::GetCommand();
+		$cmd = \common::GetCommand();
 		switch($cmd){
 			case 'clear_error':
 			self::ClearError($_REQUEST['hash']);
@@ -103,11 +106,11 @@ class admin_errors{
 
 		//modified time
 		echo '<p>';
-		$filemtime = filemtime($error_file);
-		$elapsed = admin_tools::Elapsed( time() - $filemtime );
+		$filemtime	= filemtime($error_file);
+		$elapsed	= \admin_tools::Elapsed( time() - $filemtime );
 		echo sprintf($langmessage['_ago'],$elapsed);
 		echo ' - ';
-		echo common::Link('Admin_Errors','Clear Error','cmd=clear_error&hash='.$hash,array('data-cmd'=>'postlink'));
+		echo \common::Link('Admin/Errors','Clear Error','cmd=clear_error&hash='.$hash,array('data-cmd'=>'postlink'));
 		echo '</p>';
 
 
@@ -155,11 +158,12 @@ class admin_errors{
 	 *
 	 */
 	function ErrorLog(){
+		global $langmessage;
 
 		$error_log = ini_get('error_log');
 
 		echo '<h2 class="hmargin">';
-		echo common::Link('Admin_Errors','Fatal Errors');
+		echo \common::Link('Admin/Errors','Fatal Errors');
 		echo ' <span> | </span>';
 		echo ' Error Log';
 		echo '</h2>';
@@ -194,7 +198,7 @@ class admin_errors{
 						echo '</pre>';
 					}
 					echo '<p>';
-					$elapsed = admin_tools::Elapsed( time() - $new_time );
+					$elapsed = \admin_tools::Elapsed( time() - $new_time );
 					echo sprintf($langmessage['_ago'],$elapsed);
 					echo ' ('.$date.')';
 

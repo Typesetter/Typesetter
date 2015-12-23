@@ -789,7 +789,9 @@ class common{
 		//gp namespace
 		if( $part_0 === 'gp' ){
 			$path	= implode('/',$parts).'.php';
-			require_once( $dataDir.'/include/'.$path );
+			if( file_exists($dataDir.'/include/'.$path) ){
+				require_once( $dataDir.'/include/'.$path );
+			}
 			return;
 		}
 

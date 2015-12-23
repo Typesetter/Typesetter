@@ -1215,10 +1215,10 @@ class gpOutput{
 		if( $wrap ){
 
 			ob_start();
-			$edit_link = gpOutput::EditAreaLink($edit_index,'Admin_Extra',$langmessage['edit'],'cmd=edit&file='.$name,array('title'=>$name,'data-cmd'=>'inline_edit_generic'));
+			$edit_link = gpOutput::EditAreaLink($edit_index,'Admin/Extra',$langmessage['edit'],'cmd=edit&file='.$name,array('title'=>$name,'data-cmd'=>'inline_edit_generic'));
 			echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 			echo $edit_link;
-			echo common::Link('Admin_Extra',$langmessage['theme_content'],'',' class="nodisplay"');
+			echo common::Link('Admin/Extra',$langmessage['theme_content'],'',' class="nodisplay"');
 			echo '</span>';
 			gpOutput::$editlinks .= ob_get_clean();
 

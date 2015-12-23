@@ -150,10 +150,11 @@ class admin_tools{
 		$scripts['Admin_Uploaded']['group'] = 'content';
 
 
-		$scripts['Admin_Extra']['script'] = '/include/admin/admin_extra.php';
-		$scripts['Admin_Extra']['class'] = 'admin_extra';
-		$scripts['Admin_Extra']['label'] = $langmessage['theme_content'];
-		$scripts['Admin_Extra']['group'] = 'content';
+		$scripts['Admin/Extra']						= array(	'class'		=> '\gp\admin\Content\Extra',
+																'label'		=> $langmessage['theme_content'],
+																'group'		=> 'content',
+																);
+
 
 		$scripts['Admin_Galleries']['script'] = '/include/admin/admin_galleries.php';
 		$scripts['Admin_Galleries']['class'] = 'admin_galleries';

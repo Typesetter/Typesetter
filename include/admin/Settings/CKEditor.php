@@ -1,7 +1,10 @@
 <?php
+
+namespace gp\admin\Settings;
+
 defined('is_running') or die('Not an entry point...');
 
-class admin_ckeditor{
+class CKEditor{
 
 	var $config_file;
 	var $cke_config			= array();
@@ -36,7 +39,7 @@ class admin_ckeditor{
 
 
 		// commands
-		$cmd = common::GetCommand();
+		$cmd = \common::GetCommand();
 		switch($cmd){
 
 			case 'save_custom_config':
@@ -90,7 +93,7 @@ class admin_ckeditor{
 			if( $slug == $this->current_subpage ){
 				echo $label;
 			}else{
-				echo common::Link( rtrim('Admin_CKEditor/'.$slug,'/'), $label );
+				echo \common::Link( rtrim('Admin/CKEditor/'.$slug,'/'), $label );
 			}
 			$separator = ' <span>|</span> ';
 		}
@@ -106,18 +109,18 @@ class admin_ckeditor{
 	function PluginForm(){
 		global $langmessage, $page;
 
-		echo '<form method="post" action="'.common::GetUrl($page->requested).'" enctype="multipart/form-data">';
+		echo '<form method="post" action="'.\common::GetUrl($page->requested).'" enctype="multipart/form-data">';
 		echo '<table class="bordered"><tr><th>'.$langmessage['name'].'</th><th>'.$langmessage['Modified'].'</th><th>'.$langmessage['options'].'</th></tr>';
 		if( count($this->cke_config['plugins']) ){
 			foreach($this->cke_config['plugins'] as $plugin_name => $plugin_info){
 				echo '<tr><td>';
 				echo $plugin_name;
 				echo '</td><td>';
-				echo common::date($langmessage['strftime_datetime'],$plugin_info['updated']);
+				echo \common::date($langmessage['strftime_datetime'],$plugin_info['updated']);
 				echo '</td><td>';
 
 				$attr = array('data-cmd'=>'postlink', 'class'=>'gpconfirm','title'=>sprintf($langmessage['generic_delete_confirm'],$plugin_name));
-				echo common::Link($page->requested,$langmessage['delete'],'cmd=rmplugin&plugin='.rawurlencode($plugin_name), $attr );
+				echo \common::Link($page->requested,$langmessage['delete'],'cmd=rmplugin&plugin='.rawurlencode($plugin_name), $attr );
 				echo '</td></tr>';
 
 			}
@@ -196,7 +199,7 @@ class admin_ckeditor{
 			}
 
 			//check extension
-			if( !admin_uploaded::AllowedExtension($file['name'], false) ){
+			if( !\admin_uploaded::AllowedExtension($file['name'], false) ){
 				msg($langmessage['OOPS'].' (File type not allowed:'.htmlspecialchars($file['name']).')');
 				return false;
 			}
@@ -228,7 +231,7 @@ class admin_ckeditor{
 		//extract to temporary location
 		$extract_temp = $dataDir.\gp\tool\FileSystem::TempFile('/data/_temp/'.$plugin_name);
 		if( !$archive->extractTo($extract_temp) ){
-			gpFiles::RmAll($extract_temp);
+			\gpFiles::RmAll($extract_temp);
 			msg($langmessage['OOPS'].' (Couldn\'t extract to temp location)');
 			return false;
 		}
@@ -237,7 +240,7 @@ class admin_ckeditor{
 		//move to _ckeditor folder
 		$destination = $dataDir.'/data/_ckeditor/'.$plugin_name;
 		$rename_from = $extract_temp.'/'.ltrim($remove_path,'/');
-		if( !gpFiles::Replace($rename_from, $destination) ){
+		if( !\gpFiles::Replace($rename_from, $destination) ){
 			msg($langmessage['OOPS'].' (Not replaced)');
 			return false;
 		}
@@ -275,7 +278,7 @@ class admin_ckeditor{
 		}
 
 		//rename tmp file to have zip extenstion
-		if( !gpFiles::Rename($plugin_file['tmp_name'], $plugin_file['tmp_name'].'.zip') ){
+		if( !\gpFiles::Rename($plugin_file['tmp_name'], $plugin_file['tmp_name'].'.zip') ){
 			msg($langmessage['OOPS'].' (Not renamed)');
 			return;
 		}
@@ -359,7 +362,7 @@ class admin_ckeditor{
 
 
 		$path = $dataDir.'/data/_ckeditor/'.$plugin;
-		gpFiles::RmAll( $path );
+		\gpFiles::RmAll( $path );
 	}
 
 
@@ -369,7 +372,7 @@ class admin_ckeditor{
 	 */
 	function CustomConfigForm(){
 		global $page;
-		echo '<form method="post" action="'.common::GetUrl($page->requested).'">';
+		echo '<form method="post" action="'.\common::GetUrl($page->requested).'">';
 
 		$placeholder = '{  "example_key":   "example_value"  }';
 		echo '<textarea name="custom_config" class="custom_config" placeholder="'.htmlspecialchars($placeholder).'">';
@@ -423,12 +426,8 @@ class admin_ckeditor{
 	 */
 	function Example(){
 
-		//echo '<table style="width:100%"><tr><td style="width:300px">';
 		$content = '<h3>Lorem Ipsum</h3> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor lectus id lectus laoreet scelerisque.</p><p>Vestibulum suscipit, lectus a feugiat facilisis, enim arcu fringilla nisi, et scelerisque nibh sapien in quam. Vivamus sit amet elementum nibh. Donec id ipsum nibh. Aliquam ligula nulla, condimentum sit amet consectetur eu, sagittis id ligula. In felis justo, feugiat et luctus sit amet, feugiat eget odio. Nullam suscipit mollis ipsum nec ultrices. Praesent ut lacus lorem. Fusce adipiscing arcu vitae dui ullamcorper a imperdiet felis dignissim. Maecenas eget tortor mi.</p>';
-		gp_edit::UseCK($content);
-		//echo '</td><td>';
-		//echo '<div id="available_icons"></div>';
-		//echo '</td></table>';
+		\gp_edit::UseCK($content);
 	}
 
 
@@ -438,7 +437,7 @@ class admin_ckeditor{
 	 */
 	function DisplayCurrent(){
 		includeFile('tool/editing.php');
-		$default_config = gp_edit::CKConfig(array(),'array');
+		$default_config = \gp_edit::CKConfig(array(),'array');
 		echo '<pre class="json">';
 		echo self::ReadableJson($default_config);
 		echo '</pre>';
@@ -450,7 +449,7 @@ class admin_ckeditor{
 	 *
 	 */
 	function SaveConfig(){
-		return gpFiles::SaveData($this->config_file,'cke_config',$this->cke_config);
+		return \gpFiles::SaveData($this->config_file,'cke_config',$this->cke_config);
 	}
 
 
@@ -461,7 +460,7 @@ class admin_ckeditor{
 	function Init(){
 
 		$this->config_file		= '_ckeditor/config';
-		$this->cke_config		= gpFiles::Get($this->config_file,'cke_config');
+		$this->cke_config		= \gpFiles::Get($this->config_file,'cke_config');
 
 		//$this->cke_config 	+= array('custom_config'=>array());
 		$this->cke_config		+= array('plugins'=>array());

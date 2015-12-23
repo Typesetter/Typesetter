@@ -211,11 +211,10 @@ class admin_tools{
 		$scripts['Admin_Users']['group'] = 'settings';
 
 
-		$scripts['Admin_CKEditor']['script'] = '/include/admin/admin_ckeditor.php';
-		$scripts['Admin_CKEditor']['class'] = 'admin_ckeditor';
-		$scripts['Admin_CKEditor']['label'] = 'CKEditor';
-		$scripts['Admin_CKEditor']['group'] = 'settings';
-
+		$scripts['Admin/CKEditor']		= array(	'class'		=> 'gp\admin\Settings\CKEditor',
+												'label'		=> 'CKEditor',
+												'group'		=> 'settings',
+											);
 
 		$scripts['Admin_Classes']['script'] = '/include/admin/admin_classes.php';
 		$scripts['Admin_Classes']['class'] = 'admin_classes';

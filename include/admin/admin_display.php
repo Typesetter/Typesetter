@@ -13,6 +13,7 @@ class admin_display extends display{
 	public $admin_html				= '';
 
 	private	$scripts				= array();
+	private $script_keys			= array();
 
 
 	public function __construct($title){
@@ -22,6 +23,9 @@ class admin_display extends display{
 		$this->requested	= str_replace(' ','_',$title);
 		$this->label		= $langmessage['administration'];
 		$this->scripts		= admin_tools::AdminScripts();
+		$this->script_keys	= array_keys($this->scripts);
+		$this->script_keys	= array_combine( str_replace('/','_',$this->script_keys), $this->script_keys);
+
 
 		$this->head .= "\n".'<meta name="robots" content="noindex,nofollow" />';
 		@header( 'X-Frame-Options: SAMEORIGIN' );
@@ -185,7 +189,7 @@ class admin_display extends display{
 
 		do{
 
-			$request_string		= implode('/',$parts);
+			$request_string		= implode('_',$parts);
 			$scriptinfo			= $this->GetScriptInfo($request_string);
 			if( $scriptinfo ){
 
@@ -238,14 +242,9 @@ class admin_display extends display{
 	 */
 	private function GetScriptInfo($request_string){
 
-		if( isset($this->scripts[$request_string]) ){
-			return $this->scripts[$request_string];
-		}
-
-		$request_string	= str_replace('/','_',$request_string);
-
-		if( isset($this->scripts[$request_string]) ){
-			return $this->scripts[$request_string];
+		if( isset($this->script_keys[$request_string]) ){
+			$key = $this->script_keys[$request_string];
+			return $this->scripts[$key];
 		}
 
 		return false;

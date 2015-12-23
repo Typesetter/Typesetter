@@ -216,10 +216,10 @@ class admin_tools{
 																'group'		=> 'settings',
 															);
 
-		$scripts['Admin_Classes']['script'] = '/include/admin/admin_classes.php';
-		$scripts['Admin_Classes']['class'] = 'admin_classes';
-		$scripts['Admin_Classes']['label'] = 'Classes';
-		$scripts['Admin_Classes']['group'] = 'settings';
+		$scripts['Admin/Classes']					= array(	'class'		=> 'gp\admin\Settings\Classes',
+																'label'		=> 'Classes',
+																'group'		=> 'settings',
+															);
 
 
 		$scripts['Admin_Permalinks']['script'] = '/include/admin/admin_permalinks.php';

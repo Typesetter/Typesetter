@@ -1,15 +1,18 @@
 <?php
+
+namespace gp\admin\Settings;
+
 defined('is_running') or die('Not an entry point...');
 
-class admin_classes{
+class Classes{
 
 	var $admin_link;
 
 	function __construct(){
 
-		$this->admin_link = common::GetUrl('Admin_Classes');
+		$this->admin_link = \common::GetUrl('Admin_Classes');
 
-		$cmd = common::GetCommand();
+		$cmd = \common::GetCommand();
 		switch($cmd){
 			case 'SaveClasses':
 				$this->SaveClasses();
@@ -24,7 +27,7 @@ class admin_classes{
 	 */
 	static function GetClasses(){
 
-		$classes		= gpFiles::Get('_config/classes');
+		$classes		= \gpFiles::Get('_config/classes');
 		if( $classes ){
 			return $classes;
 		}
@@ -132,7 +135,7 @@ class admin_classes{
 
 		echo '<h2 class="hmargin">Manage Classes</h2>';
 
-		$cmd = common::GetCommand();
+		$cmd = \common::GetCommand();
 		switch($cmd){
 			case 'LoadDefault':
 				$classes = self::Defaults();
@@ -157,7 +160,7 @@ class admin_classes{
 
 		foreach( $classes as $key => $classArray ){
 			echo '<tr><td>';
-			echo '<img alt="" src="'.common::GetDir('/include/imgs/drag_handle.gif').'" /> &nbsp; ';
+			echo '<img alt="" src="'.\common::GetDir('/include/imgs/drag_handle.gif').'" /> &nbsp; ';
 			echo '<input size="16" class="gpinput" type="text" name="class_names[]" value="' . $classArray['names'] . '"/>';
 			echo '</td><td>';
 			echo '<input size="64" class="gpinput" type="text" name="class_desc[]" value="' . $classArray['desc'] . '"/> ';
@@ -222,7 +225,7 @@ class admin_classes{
 		}
 
 
-		if( gpFiles::SaveData('_config/classes','classes',$classes) ){
+		if( \gpFiles::SaveData('_config/classes','classes',$classes) ){
 			msg($langmessage['SAVED']);
 		}else{
 			msg($langmessage['OOPS'].' (Not Saved)');

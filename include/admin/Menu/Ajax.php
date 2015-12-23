@@ -19,10 +19,6 @@ class Ajax extends \gp\admin\Menu{
 				$this->AddHidden();
 			return;
 
-			case 'NewHiddenFile':
-				$this->NewHiddenFile();
-			break;
-
 			case 'CopyForm':
 				$this->CopyForm();
 			return;
@@ -97,7 +93,7 @@ class Ajax extends \gp\admin\Menu{
 			return;
 		}
 
-		$this->RunScript();
+		parent::RunScript();
 	}
 
 
@@ -167,7 +163,7 @@ class Ajax extends \gp\admin\Menu{
 		\editing_page::NewSections(true);
 		echo '</div>';
 
-		echo sprintf($format_bottom,'NewHiddenFile',$langmessage['create_new_file']);
+		echo sprintf($format_bottom,'NewFile',$langmessage['create_new_file']);
 		echo '</form>';
 		echo '</div>';
 	}
@@ -490,6 +486,7 @@ class Ajax extends \gp\admin\Menu{
 		$this->CacheSettings();
 
 
+		/*
 		if( $this->curr_menu_array === false ){
 			msg($langmessage['OOPS'].'(0)');
 			return false;
@@ -499,6 +496,7 @@ class Ajax extends \gp\admin\Menu{
 			msg($langmessage['OOPS'].'(1)');
 			return false;
 		}
+		*/
 
 
 		$new_index = \gp\admin\Menu\Tools::CreateNew();
@@ -600,7 +598,7 @@ class Ajax extends \gp\admin\Menu{
 	 * Form for adding external link
 	 *
 	 */
-	public function ExternalForm($submit,$args){
+	public function ExternalForm($cmd,$submit,$args){
 		global $langmessage;
 
 		//these aren't all required for each usage of ExternalForm()
@@ -656,7 +654,7 @@ class Ajax extends \gp\admin\Menu{
 		echo '</table>';
 
 		echo '<p>';
-		echo '<input type="hidden" name="cmd" value="'.htmlspecialchars($this->cmd).'" />';
+		echo '<input type="hidden" name="cmd" value="'.htmlspecialchars($cmd).'" />';
 		echo '<input type="submit" name="" value="'.$submit.'" class="gpsubmit" data-cmd="gppost"/> ';
 		echo '<input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
 		echo '</p>';

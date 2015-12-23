@@ -26,7 +26,6 @@ class CKEditor{
 			''				=> $langmessage['Manage Plugins'],
 			'Config'		=> $langmessage['configuration'],
 			'Example'		=> 'Example',
-			'Current'		=> $langmessage['Current Configuration'],
 			);
 
 
@@ -63,14 +62,12 @@ class CKEditor{
 
 
 		switch($this->current_subpage){
-			case 'Current':
-				$this->DisplayCurrent();
-			break;
 			case 'Example':
 				$this->Example();
 			break;
 			case 'Config':
 				$this->CustomConfigForm();
+				$this->DisplayCurrent();
 			break;
 			default:
 				$this->PluginForm();
@@ -437,6 +434,10 @@ class CKEditor{
 	 *
 	 */
 	function DisplayCurrent(){
+		global $langmessage;
+
+		echo '<h3>'.$langmessage['Current Configuration'].'</h3>';
+
 		includeFile('tool/editing.php');
 		$default_config = \gp_edit::CKConfig(array(),'array');
 		echo '<pre class="json">';

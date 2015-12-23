@@ -30,11 +30,10 @@ class CKEditor{
 			);
 
 
-		if( strpos($page->requested,'/') ){
-			$parts = explode('/',$page->requested);
-			if( array_key_exists( $parts[1], $this->subpages ) ){
-				$this->current_subpage = $parts[1];
-			}
+		$parts = explode('/',$page->requested);
+
+		if( count($parts) > 2 && array_key_exists( $parts[2], $this->subpages ) ){
+			$this->current_subpage = $parts[2];
 		}
 
 
@@ -375,19 +374,21 @@ class CKEditor{
 		echo '<form method="post" action="'.\common::GetUrl($page->requested).'">';
 
 		$placeholder = '{  "example_key":   "example_value"  }';
-		echo '<textarea name="custom_config" class="custom_config" placeholder="'.htmlspecialchars($placeholder).'">';
+		echo '<p>';
+		echo '<textarea name="custom_config" class="custom_config full_width" placeholder="'.htmlspecialchars($placeholder).'">';
 		if( isset($_POST['custom_config']) ){
 			echo htmlspecialchars($_POST['custom_config']);
 		}elseif( !empty($this->cke_config['custom_config']) ){
 			echo htmlspecialchars(self::ReadableJson($this->cke_config['custom_config']));
 		}
 		echo '</textarea>';
+		echo '</p>';
 
 
-		echo '<div>';
-		echo '<input type="hidden" name="cmd" value="save_custom_config" />';
-		echo '<input type="submit" value="Save" data-cmd="gpajax" />';
-		echo '</div>';
+		echo '<p>';
+		echo '<input type="hidden" name="cmd" value="save_custom_config"/>';
+		echo '<input type="submit" value="Save" data-cmd="gpajax"  class="gpsubmit" />';
+		echo '</p>';
 
 		echo '</form>';
 	}

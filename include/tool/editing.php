@@ -472,6 +472,9 @@ class gp_edit{
 		if( $options['admin_vals'] && class_exists('admin_tools') ){
 			$scripts = admin_tools::AdminScripts();
 			foreach($scripts as $url => $info){
+				if( !isset($info['label']) ){
+					continue;
+				}
 				if( $GetUrl ){
 					$url = common::GetUrl($url,'',false);
 					$url = rawurldecode($url);

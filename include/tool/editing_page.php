@@ -321,8 +321,7 @@ class editing_page extends display{
 		echo 'var section_types = '.json_encode(ob_get_clean()).';';
 
 		//selectable classes
-		includeFile('admin/admin_classes.php');
-		$avail_classes = admin_classes::GetClasses();
+		$avail_classes = \gp\admin\Settings\Classes::GetClasses();
 		echo 'var gp_avail_classes = '.json_encode($avail_classes).';';
 
 

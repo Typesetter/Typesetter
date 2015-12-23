@@ -10,7 +10,7 @@ class Classes{
 
 	function __construct(){
 
-		$this->admin_link = \common::GetUrl('Admin_Classes');
+		$this->admin_link = \common::GetUrl('Admin/Classes');
 
 		$cmd = \common::GetCommand();
 		switch($cmd){

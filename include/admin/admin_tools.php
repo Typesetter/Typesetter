@@ -162,12 +162,10 @@ class admin_tools{
 		$scripts['Admin_Galleries']['group'] = 'content';
 
 
-
-		$scripts['Admin_Trash']['script'] = '/include/admin/admin_trash.php';
-		$scripts['Admin_Trash']['class'] = 'admin_trash';
-		$scripts['Admin_Trash']['label'] = $langmessage['trash'];
-		$scripts['Admin_Trash']['group'] = 'content';
-
+		$scripts['Admin/Trash']						= array(	'class'		=> '\gp\admin\Content\Trash',
+																'label'		=> $langmessage['trash'],
+																'group'		=> 'content',
+																);
 
 
 		// Appearance

@@ -337,7 +337,6 @@ class Ajax extends \gp\admin\Menu{
 
 		$_REQUEST['gpx_content'] = 'gpabox';
 
-		includeFile('admin/admin_trash.php');
 
 		//create format of each tab
 		ob_start();
@@ -424,7 +423,7 @@ class Ajax extends \gp\admin\Menu{
 
 
 			// Insert Deleted / Restore from trash
-			$trashtitles = \admin_trash::TrashFiles();
+			$trashtitles = \gp\admin\Content\Trash::TrashFiles();
 			if( $trashtitles ){
 				echo sprintf($format_top,'gp_Insert_Deleted','nodisplay');
 
@@ -543,11 +542,10 @@ class Ajax extends \gp\admin\Menu{
 		}
 
 		$this->CacheSettings();
-		includeFile('admin/admin_trash.php');
 
 		$titles_lower	= array_change_key_case($gp_index,CASE_LOWER);
 		$titles			= array();
-		$menu			= \admin_trash::RestoreTitles($_POST['titles']);
+		$menu			= \gp\admin\Content\Trash::RestoreTitles($_POST['titles']);
 
 
 		if( !$menu ){
@@ -562,7 +560,7 @@ class Ajax extends \gp\admin\Menu{
 			return false;
 		}
 
-		\admin_trash::ModTrashData(null,$titles);
+		\gp\admin\Content\Trash::ModTrashData(null,$titles);
 	}
 
 
@@ -864,7 +862,6 @@ class Ajax extends \gp\admin\Menu{
 	public function MoveToTrash(){
 		global $gp_titles, $gp_index, $langmessage, $gp_menu, $config, $dataDir;
 
-		includeFile('admin/admin_trash.php');
 		$this->CacheSettings();
 
 		$_POST			+= array('index'=>'');
@@ -879,7 +876,7 @@ class Ajax extends \gp\admin\Menu{
 
 			// Create file in trash
 			if( $title ){
-				if( !\admin_trash::MoveToTrash_File($title,$index,$trash_data) ){
+				if( !\gp\admin\Content\Trash::MoveToTrash_File($title,$index,$trash_data) ){
 					msg($langmessage['OOPS'].' (Not Moved)');
 					$this->RestoreSettings();
 					return false;
@@ -914,7 +911,7 @@ class Ajax extends \gp\admin\Menu{
 			return false;
 		}
 
-		$link = \common::GetUrl('Admin_Trash');
+		$link = \common::GetUrl('Admin/Trash');
 		msg(sprintf($langmessage['MOVED_TO_TRASH'],$link));
 
 

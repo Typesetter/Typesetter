@@ -181,7 +181,7 @@ class special_galleries{
 			... edited:					UpdateGalleryInfo()
 			... added:					do nothing, there won't be any images yet, wait till edited
 			... deleted:				RemovedGallery()
-			... restored from trash:	UpdateGalleryInfo() via RestoreFile() in admin_trash.php
+			... restored from trash:	UpdateGalleryInfo() via RestoreFile() in gp\admin\Content\Trash
 	*/
 
 

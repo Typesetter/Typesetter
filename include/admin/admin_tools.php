@@ -137,6 +137,11 @@ class admin_tools{
 																'method'	=> 'RunScript',
 																);
 
+		$scripts['Admin/Menu/Ajax']					= array(	'class'		=> '\gp\admin\Menu\Ajax',
+																'method'	=> 'RunScript',
+																);
+
+
 
 
 		$scripts['Admin_Uploaded']['script'] = '/include/admin/admin_uploaded.php';
@@ -953,7 +958,7 @@ class admin_tools{
 			switch($script){
 				case 'Admin/Menu':
 					echo '<li>';
-					echo common::Link('Admin/Menu','+ '.$langmessage['create_new_file'],'cmd=add_hidden&redir=redir',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpabox'));
+					echo common::Link('Admin/Menu/Ajax','+ '.$langmessage['create_new_file'],'cmd=AddHidden&redir=redir',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpabox'));
 					echo '</li>';
 				break;
 			}

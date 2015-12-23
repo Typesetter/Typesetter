@@ -41,7 +41,7 @@ class Menus extends \gp\admin\Menu{
 			break;
 		}
 
-		$this->ShowForm($cmd);
+		$this->ShowForm();
 	}
 
 	function Redirect(){

@@ -4,7 +4,7 @@ namespace gp\admin\Menu;
 
 defined('is_running') or die('Not an entry point...');
 
-class Search extends Tools{
+class Search{
 
 
 	public function SearchDisplay(){
@@ -56,7 +56,7 @@ class Search extends Tools{
 			}
 		}
 
-		echo $this->Link('Admin/Menu',$langmessage['create_new_file'],'cmd=add_hidden',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpabox'));
+		echo $this->Link('Admin/Menu/Ajax',$langmessage['create_new_file'],'cmd=AddHidden',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpabox'));
 		echo '</span>';
 		echo '</div>';
 		$links = ob_get_clean();
@@ -198,7 +198,7 @@ class Search extends Tools{
 		//area only display on mouseover
 		echo '<div><div>';//style="position:absolute;bottom:0;left:10px;right:10px;"
 
-		echo $this->Link('Admin/Menu',$langmessage['rename/details'],'cmd=renameform&index='.urlencode($title_index),array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
+		echo $this->Link('Admin/Menu/Ajax',$langmessage['rename/details'],'cmd=renameform&index='.urlencode($title_index),array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
 
 
 		$q		= 'cmd=ToggleVisibility&index='.urlencode($title_index);
@@ -210,13 +210,13 @@ class Search extends Tools{
 		}
 
 		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax');
-		echo $this->Link('Admin/Menu',$label,$q,$attrs);
+		echo $this->Link('Admin/Menu/Ajax',$label,$q,$attrs);
 
 		if( $is_special === false ){
 			echo \common::Link($title,$langmessage['Revision History'],'cmd=ViewHistory','class="view_edit_link not_multiple" data-cmd="gpabox"');
 		}
 
-		echo $this->Link('Admin/Menu',$langmessage['Copy'],'cmd=copypage&index='.urlencode($title_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
+		echo $this->Link('Admin/Menu/Ajax',$langmessage['Copy'],'cmd=CopyForm&index='.urlencode($title_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 
 		echo '<span>';
 		echo $langmessage['layout'].': ';
@@ -224,7 +224,7 @@ class Search extends Tools{
 		echo '</span>';
 
 		if( $is_special === false ){
-			echo $this->Link('Admin/Menu',$langmessage['delete'],'cmd=trash&index='.urlencode($title_index),array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
+			echo $this->Link('Admin/Menu/Ajax',$langmessage['delete'],'cmd=MoveToTrash&index='.urlencode($title_index),array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
 		}
 
 		\gpPlugin::Action('MenuPageOptions',array($title,$title_index,false,$layout_info));
@@ -264,4 +264,25 @@ class Search extends Tools{
 		echo '</td></tr>';
 	}
 
+
+
+	/**
+	 * List section types
+	 *
+	 */
+	public function TitleTypes($title_index){
+		global $gp_titles;
+
+		$types		= explode(',',$gp_titles[$title_index]['type']);
+		$types		= array_filter($types);
+		$types		= array_unique($types);
+
+		foreach($types as $i => $type){
+			if( isset($this->section_types[$type]) && isset($this->section_types[$type]['label']) ){
+				$types[$i] = $this->section_types[$type]['label'];
+			}
+		}
+
+		echo implode(', ',$types);
+	}
 }

@@ -6,45 +6,6 @@ defined('is_running') or die('Not an entry point...');
 
 class Tools{
 
-	var $settings_cache		= array();
-	var $is_main_menu		= false;
-
-
-	function CacheSettings(){
-		global $gp_index, $gp_titles, $gp_menu;
-
-		$this->settings_cache['gp_index'] = $gp_index;
-		$this->settings_cache['gp_titles'] = $gp_titles;
-		$this->settings_cache['gp_menu'] = $gp_menu;
-
-		if( !$this->is_main_menu ){
-			$this->settings_cache['curr_menu_array'] = $this->curr_menu_array;
-		}
-	}
-
-	function RestoreSettings(){
-		global $gp_index, $gp_titles, $gp_menu;
-
-
-		if( isset($this->settings_cache['gp_titles']) ){
-			$gp_titles = $this->settings_cache['gp_titles'];
-		}
-
-		if( isset($this->settings_cache['gp_menu']) ){
-			$gp_menu = $this->settings_cache['gp_menu'];
-		}
-
-		if( isset($this->settings_cache['gp_index']) ){
-			$gp_index = $this->settings_cache['gp_index'];
-		}
-
-		if( isset($this->settings_cache['curr_menu_array']) ){
-			$this->curr_menu_array = $this->settings_cache['curr_menu_array'];
-		}
-	}
-
-
-
 
 	/**
 	 * Get a list of pages that are not in the main menu

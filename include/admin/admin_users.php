@@ -18,6 +18,10 @@ class admin_users{
 		//set possible_permissions
 		$scripts = admin_tools::AdminScripts();
 		foreach($scripts as $script => $info){
+			if( !isset($info['label']) ){
+				continue;
+			}
+			$script = str_replace('/','_',$script);
 			$this->possible_permissions[$script] = $info['label'];
 		}
 

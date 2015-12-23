@@ -23,10 +23,10 @@ class CKEditor{
 
 		// subpage
 		$this->subpages = array(
-			''	=> $langmessage['configuration']
-			,'Plugins'		=> $langmessage['Manage Plugins']
-			,'Example'		=> 'Example'
-			,'Current'		=> $langmessage['Current Configuration']
+			''				=> $langmessage['Manage Plugins'],
+			'Config'		=> $langmessage['configuration'],
+			'Example'		=> 'Example',
+			'Current'		=> $langmessage['Current Configuration'],
 			);
 
 
@@ -64,17 +64,17 @@ class CKEditor{
 
 
 		switch($this->current_subpage){
-			case 'Plugins':
-				$this->PluginForm();
-			break;
 			case 'Current':
 				$this->DisplayCurrent();
 			break;
 			case 'Example':
 				$this->Example();
 			break;
-			default:
+			case 'Config':
 				$this->CustomConfigForm();
+			break;
+			default:
+				$this->PluginForm();
 			break;
 		}
 

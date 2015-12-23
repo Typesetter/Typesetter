@@ -296,6 +296,9 @@ class admin_tools{
 		$scripts['Admin_Errors']['label'] = 'Errors';
 
 
+		$scripts['Admin/About']					= array(	'class'		=> '\gp\admin\About',
+															'label' 	=> 'About gpEasy',
+												);
 
 		gpSettingsOverride('admin_scripts',$scripts);
 
@@ -662,7 +665,7 @@ class admin_tools{
 			echo '</li>';
 
 			echo '<li>';
-			echo common::Link('Admin_About','About gpEasy');
+			echo common::Link('Admin/About','About gpEasy');
 			echo '</li>';
 			echo '</ul>';
 			echo '</div>';

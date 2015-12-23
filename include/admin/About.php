@@ -1,7 +1,10 @@
 <?php
+
+namespace gp\admin;
+
 defined('is_running') or die('Not an entry point...');
 
-class admin_about{
+class About{
 
 	function __construct(){
 

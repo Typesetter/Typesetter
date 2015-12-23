@@ -216,7 +216,7 @@ class admin_display extends display{
 					new admin_preferences();
 				return;
 
-				case 'Admin_About':
+				case 'Admin/About':
 					$this->label = 'About gpEasy';
 					includeFile('admin/admin_about.php');
 					new admin_about();

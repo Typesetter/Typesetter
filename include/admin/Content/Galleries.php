@@ -1,15 +1,18 @@
 <?php
+
+namespace gp\admin\Content;
+
 defined('is_running') or die('Not an entry point...');
 
 includeFile('special/special_galleries.php');
 
-class admin_galleries extends special_galleries{
+class Galleries extends \special_galleries{
 
 	public function __construct(){
-		$this->galleries = special_galleries::GetData();
+		$this->galleries = self::GetData();
 
 
-		$cmd = common::GetCommand();
+		$cmd = \common::GetCommand();
 		switch($cmd){
 
 			case 'newdrag':
@@ -29,7 +32,7 @@ class admin_galleries extends special_galleries{
 
 
 		echo '<h2>';
-		echo common::Link('Special_Galleries',gpOutput::ReturnText('galleries'));
+		echo \common::Link('Special_Galleries',\gpOutput::ReturnText('galleries'));
 		echo ' &#187; '.$langmessage['administration'];
 		echo '</h2>';
 
@@ -97,14 +100,14 @@ class admin_galleries extends special_galleries{
 		}
 
 		if( empty($icon) ){
-			$thumbPath = common::GetDir('/include/imgs/blank.gif');
+			$thumbPath = \common::GetDir('/include/imgs/blank.gif');
 		}elseif( strpos($icon,'/thumbnails/') === false ){
-			$thumbPath = common::GetDir('/data/_uploaded/image/thumbnails'.$icon.'.jpg');
+			$thumbPath = \common::GetDir('/data/_uploaded/image/thumbnails'.$icon.'.jpg');
 		}else{
-			$thumbPath = common::GetDir('/data/_uploaded'.$icon);
+			$thumbPath = \common::GetDir('/data/_uploaded'.$icon);
 		}
 		echo '<div class="draggable">';
-		echo common::Link('Special_Galleries',htmlspecialchars($title),'cmd=drag&to=%s&title='.urlencode($title),'data-cmd="gpajax" class="dragdroplink nodisplay" ');
+		echo \common::Link('Special_Galleries',htmlspecialchars($title),'cmd=drag&to=%s&title='.urlencode($title),'data-cmd="gpajax" class="dragdroplink nodisplay" ');
 		echo '<input type="hidden" name="title" value="'.htmlspecialchars($title).'" class="title" />';
 
 		echo ' <img src="'.$thumbPath.'" alt="" class="icon"/>';
@@ -148,7 +151,7 @@ class admin_galleries extends special_galleries{
 				return false;
 			}
 
-			if( !gpFiles::ArrayInsert($next,$dragging,$info,$this->galleries) ){
+			if( !\gpFiles::ArrayInsert($next,$dragging,$info,$this->galleries) ){
 				message($langmessage['OOPS'].' (Insert Failed)');
 				return false;
 			}
@@ -159,12 +162,12 @@ class admin_galleries extends special_galleries{
 		}
 
 		//save it
-		if( !special_galleries::SaveIndex($this->galleries) ){
+		if( !self::SaveIndex($this->galleries) ){
 			message($langmessage['OOPS'].' (Not Saved)');
 			return false;
 		}
 
-		if( !admin_tools::SavePagesPHP() ){
+		if( !\admin_tools::SavePagesPHP() ){
 			message($langmessage['OOPS'].' (Not Saved)');
 			return false;
 		}

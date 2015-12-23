@@ -156,10 +156,10 @@ class admin_tools{
 																);
 
 
-		$scripts['Admin_Galleries']['script'] = '/include/admin/admin_galleries.php';
-		$scripts['Admin_Galleries']['class'] = 'admin_galleries';
-		$scripts['Admin_Galleries']['label'] = $langmessage['galleries'];
-		$scripts['Admin_Galleries']['group'] = 'content';
+		$scripts['Admin/Galleries']					= array(	'class'		=> '\gp\admin\Content\Galleries',
+																'label'		=> $langmessage['galleries'],
+																'group'		=> 'content',
+																);
 
 
 		$scripts['Admin/Trash']						= array(	'class'		=> '\gp\admin\Content\Trash',

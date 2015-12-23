@@ -225,12 +225,10 @@ class admin_tools{
 																'group'		=> 'settings',
 															);
 
-
-		$scripts['Admin_Missing']['script'] = '/include/admin/admin_missing.php';
-		$scripts['Admin_Missing']['class'] = 'admin_missing';
-		$scripts['Admin_Missing']['label'] = $langmessage['Link Errors'];
-		$scripts['Admin_Missing']['group'] = 'settings';
-
+		$scripts['Admin/Missing']					= array(	'class'		=> 'gp\admin\Settings\Missing',
+																'label'		=> $langmessage['Link Errors'],
+																'group'		=> 'settings',
+															);
 
 
 		if( isset($config['admin_links']) && is_array($config['admin_links']) ){
@@ -238,30 +236,27 @@ class admin_tools{
 		}
 
 
-
-
-
 		// Tools
-		$scripts['Admin/Port']		= array(	'class'		=> '\gp\admin\Tool\Port',
+		$scripts['Admin/Port']		= array(	'class'		=> '\gp\admin\Tools\Port',
 												'label'		=> $langmessage['Export'],
 												'group'		=> 'tools',
 												'method'	=> 'RunScript'
 											);
 
 
-		$scripts['Admin/Status']	= array(	'class'		=> '\gp\admin\Tool\Status',
+		$scripts['Admin/Status']	= array(	'class'		=> '\gp\admin\Tools\Status',
 												'label'		=> $langmessage['Site Status'],
 												'group'		=> 'tools'
 											);
 
 
-		$scripts['Admin/Uninstall']	= array(	'class'		=> '\gp\admin\Tool\Uninstall',
+		$scripts['Admin/Uninstall']	= array(	'class'		=> '\gp\admin\Tools\Uninstall',
 												'label'		=> $langmessage['uninstall_prep'],
 												'group'		=> 'tools'
 											);
 
 
-		$scripts['Admin/Cache']		= array(	'class'		=> '\gp\admin\Tool\Cache',
+		$scripts['Admin/Cache']		= array(	'class'		=> '\gp\admin\Tools\Cache',
 												'label'		=> $langmessage['Resource Cache'],
 												'group'		=> 'tools'
 											);
@@ -287,7 +282,7 @@ class admin_tools{
 		}
 
 
-		$scripts['Admin/Errors']				= array(	'class'		=> '\gp\admin\Tool\Errors',
+		$scripts['Admin/Errors']				= array(	'class'		=> '\gp\admin\Tools\Errors',
 															'label' 	=> 'Errors',
 												);
 

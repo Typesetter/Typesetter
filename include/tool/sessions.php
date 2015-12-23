@@ -1120,7 +1120,7 @@ class gpsession{
 	 */
 	static function EnableComponent(){
 
-		\gp\admin\Tool\Errors::ClearError($_REQUEST['hash']);
+		\gp\admin\Tools\Errors::ClearError($_REQUEST['hash']);
 		$title = common::WhichPage();
 		common::Redirect(common::GetUrl($title,'',false));
 	}

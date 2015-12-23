@@ -164,9 +164,9 @@ class special_missing{
 		}
 
 		//Contents of 404 page
-		$wrap = gpOutput::ShowEditLink('Admin_Missing');
+		$wrap = gpOutput::ShowEditLink('Admin/Missing');
 		if( $wrap ){
-			echo gpOutput::EditAreaLink($edit_index,'Admin_Missing',$langmessage['edit'],'cmd=edit404',' title="'.$langmessage['404_Page'].'" ');
+			echo gpOutput::EditAreaLink($edit_index,'Admin/Missing',$langmessage['edit'],'cmd=edit404',' title="'.$langmessage['404_Page'].'" ');
 			echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
 		}
 

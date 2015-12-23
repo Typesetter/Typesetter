@@ -60,7 +60,7 @@ class display{
 
 	/**
 	 * Get page content or do redirect for non-existant titles
-	 * see special_missing.php and admin_missing.php
+	 * see special_missing.php and /Admin/Settings/Missing
 	 */
 	function Error_404($requested){
 		includeFile('special/special_missing.php');

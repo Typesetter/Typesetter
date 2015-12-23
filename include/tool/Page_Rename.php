@@ -362,8 +362,7 @@ class gp_rename{
 
 		//create a 301 redirect
 		if( isset($_POST['add_redirect']) && $_POST['add_redirect'] == 'add' ){
-			includeFile('admin/admin_missing.php');
-			admin_missing::AddRedirect($title,$new_title);
+			\gp\admin\Settings\Missing::AddRedirect($title,$new_title);
 		}
 
 

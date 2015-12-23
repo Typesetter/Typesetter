@@ -546,7 +546,6 @@ class Install_Tools{
 	static function InstallHtaccess($destination,$config){
 		global $install_ftp_connection, $dirPrefix;
 
-		includeFile('admin/admin_permalinks.php');
 
 		//only proceed with save if we can test the results
 		if( !gpRemoteGet::Test() ){
@@ -561,7 +560,7 @@ class Install_Tools{
 			$original_contents = file_get_contents($file);
 		}
 
-		$contents = admin_permalinks::Rewrite_Rules(true, $dirPrefix, $original_contents );
+		$contents = \gp\admin\Settings\Permalinks::Rewrite_Rules(true, $dirPrefix, $original_contents );
 
 		if( !isset($config['useftp']) ){
 			//echo 'not using ftp';
@@ -575,7 +574,7 @@ class Install_Tools{
 			@chmod($file,0666);
 
 			//return .htaccess to original state
-			if( !admin_permalinks::TestResponse() ){
+			if( !\gp\admin\Settings\Permalinks::TestResponse() ){
 				if( $original_contents === false ){
 					unlink($file);
 				}else{
@@ -605,7 +604,7 @@ class Install_Tools{
 
 
 		//return .htaccess to original state
-		if( !admin_permalinks::TestResponse() ){
+		if( !\gp\admin\Settings\Permalinks::TestResponse() ){
 			if( $original_contents === false ){
 				@ftp_delete($install_ftp_connection, $file);
 			}else{

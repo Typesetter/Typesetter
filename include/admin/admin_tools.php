@@ -220,11 +220,10 @@ class admin_tools{
 																'group'		=> 'settings',
 															);
 
-
-		$scripts['Admin_Permalinks']['script'] = '/include/admin/admin_permalinks.php';
-		$scripts['Admin_Permalinks']['class'] = 'admin_permalinks';
-		$scripts['Admin_Permalinks']['label'] = $langmessage['permalinks'];
-		$scripts['Admin_Permalinks']['group'] = 'settings';
+		$scripts['Admin/Permalinks']				= array(	'class'		=> 'gp\admin\Settings\Permalinks',
+																'label'		=> $langmessage['permalinks'],
+																'group'		=> 'settings',
+															);
 
 
 		$scripts['Admin_Missing']['script'] = '/include/admin/admin_missing.php';

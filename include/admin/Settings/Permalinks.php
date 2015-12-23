@@ -1,9 +1,12 @@
 <?php
+
+namespace gp\admin\Settings;
+
 defined('is_running') or die('Not an entry point...');
 
 includeFile('tool/RemoteGet.php');
 
-class admin_permalinks{
+class Permalinks{
 
 	public $rule_file_name		= '';
 	public $rule_file			= '';
@@ -22,7 +25,7 @@ class admin_permalinks{
 		global $langmessage,$dataDir;
 
 
-		$this->server_name = gpsession::ServerName();
+		$this->server_name = \gpsession::ServerName();
 
 		//get current rules
 		$this->rule_file_name	= self::IIS() ? 'web.config' : '.htaccess';
@@ -38,7 +41,7 @@ class admin_permalinks{
 		echo '<h2>'.$langmessage['permalink_settings'].'</h2>';
 
 
-		$cmd = common::GetCommand();
+		$cmd = \common::GetCommand();
 		switch($cmd){
 			case 'continue':
 				if( !$this->SaveHtaccess() ){
@@ -111,7 +114,7 @@ class admin_permalinks{
 			$host = 'www.'.$this->server_name;
 		}
 
-		return $schema.$host.common::GetUrl($slug,'',false);
+		return $schema.$host.\common::GetUrl($slug,'',false);
 	}
 
 
@@ -122,7 +125,7 @@ class admin_permalinks{
 	public static function ConfirmGet($url, $check_redirect = true ){
 		global $config;
 
-		$result			= gpRemoteGet::Get_Successful($url);
+		$result			= \gpRemoteGet::Get_Successful($url);
 
 		if( isset($config['gpuniq']) ){
 			$mdu_check		= substr(md5($config['gpuniq']),0,20);
@@ -133,8 +136,8 @@ class admin_permalinks{
 		}
 
 		//if redirected, make sure it's on the same host
-		if( $check_redirect && gpRemoteGet::$redirected ){
-			$redirect_a		= parse_url(gpRemoteGet::$redirected);
+		if( $check_redirect && \gpRemoteGet::$redirected ){
+			$redirect_a		= parse_url(\gpRemoteGet::$redirected);
 			$req_a			= parse_url($url);
 			if( $redirect_a['host'] !== $req_a['host'] ){
 				return false;
@@ -170,7 +173,7 @@ class admin_permalinks{
 		}
 
 		echo '<br/>';
-		echo '<form method="post" action="'.common::GetUrl('Admin_Permalinks').'">';
+		echo '<form method="post" action="'.\common::GetUrl('Admin/Permalinks').'">';
 		echo '<table class="bordered middle">';
 
 		echo '<tr><th colspan="2">index.php</th></tr>';
@@ -323,7 +326,7 @@ class admin_permalinks{
 		}
 
 
-		$this->new_rules	= admin_permalinks::Rewrite_Rules( $this->hide_index, $dirPrefix, $this->orig_rules, $www );
+		$this->new_rules	= self::Rewrite_Rules( $this->hide_index, $dirPrefix, $this->orig_rules, $www );
 
 
 		// only proceed with hide if we can test the results
@@ -334,7 +337,7 @@ class admin_permalinks{
 
 
 		if( !$this->SaveRules() ){
-			$this->FileSystem->CompleteForm($_POST,'Admin_Permalinks');
+			$this->FileSystem->CompleteForm($_POST,'Admin/Permalinks');
 			$this->ManualMethod();
 			return false;
 		}
@@ -343,9 +346,9 @@ class admin_permalinks{
 
 		//redirect to new permalink structure
 		$_SERVER['gp_rewrite'] = $this->hide_index;
-		common::SetLinkPrefix();
-		$redir = common::GetUrl('Admin_Permalinks');
-		common::Redirect($redir,302);
+		\common::SetLinkPrefix();
+		$redir = \common::GetUrl('Admin/Permalinks');
+		\common::Redirect($redir,302);
 
 		return false;
 	}
@@ -357,12 +360,12 @@ class admin_permalinks{
 	 */
 	public function CanTestRules(){
 
-		if( !gpRemoteGet::Test() ){
+		if( !\gpRemoteGet::Test() ){
 			return false;
 		}
 
 
-		if( !$this->FileSystem || !$this->FileSystem->ConnectOrPrompt('Admin_Permalinks') ){
+		if( !$this->FileSystem || !$this->FileSystem->ConnectOrPrompt('Admin/Permalinks') ){
 			return false;
 		}
 
@@ -393,7 +396,7 @@ class admin_permalinks{
 		echo '<textarea cols="'.$len.'" rows="'.(count($lines)+1).'" readonly="readonly" onClick="this.focus();this.select();" class="gptextarea">';
 		echo htmlspecialchars($this->new_rules);
 		echo '</textarea>';
-		echo '<form action="'.common::GetUrl('Admin_Permalinks').'" method="get">';
+		echo '<form action="'.\common::GetUrl('Admin/Permalinks').'" method="get">';
 		echo '<input type="submit" value="'.$langmessage['continue'].'" class="gpsubmit"/>';
 		echo '</form>';
 
@@ -444,7 +447,7 @@ class admin_permalinks{
 		}
 
 
-		if( !admin_permalinks::TestResponse($this->hide_index) ){
+		if( !self::TestResponse($this->hide_index) ){
 
 			if( $this->orig_rules === false ){
 				$this->FileSystem->unlink($filesystem_path);
@@ -473,12 +476,12 @@ class admin_permalinks{
 		//get url, force gp_rewrite to $new_gp_rewrite
 		$rewrite_before				= $_SERVER['gp_rewrite'];
 		$_SERVER['gp_rewrite']		= $new_rewrite;
-		common::SetLinkPrefix();
+		\common::SetLinkPrefix();
 
 
-		$abs_url					= common::AbsoluteUrl('Site_Map','',true,false); //can't be special_site_map, otherwise common::IndexToTitle() will be called during install
+		$abs_url					= \common::AbsoluteUrl('Site_Map','',true,false); //can't be special_site_map, otherwise common::IndexToTitle() will be called during install
 		$_SERVER['gp_rewrite']		= $rewrite_before;
-		common::SetLinkPrefix();
+		\common::SetLinkPrefix();
 
 
 		return self::ConfirmGet($abs_url, false);
@@ -541,7 +544,7 @@ class admin_permalinks{
 	public static function Rewrite_RulesApache( $hide_index, $home_root, $contents, $www ){
 
 		// Apache
-		admin_permalinks::StripRules($contents);
+		self::StripRules($contents);
 
 		if( !$hide_index && is_null($www) ){
 			return $contents;
@@ -549,7 +552,7 @@ class admin_permalinks{
 
 		$home_root			= rtrim($home_root,'/').'/';
 		$new_lines			= array();
-		$server_name		= gpsession::ServerName();
+		$server_name		= \gpsession::ServerName();
 
 
 		// with www

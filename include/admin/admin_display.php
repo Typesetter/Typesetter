@@ -216,12 +216,6 @@ class admin_display extends display{
 					new admin_preferences();
 				return;
 
-				case 'Admin/About':
-					$this->label = 'About gpEasy';
-					includeFile('admin/admin_about.php');
-					new admin_about();
-				return;
-
 				case 'Admin_Finder':
 					if( admin_tools::HasPermission('Admin_Uploaded') ){
 						includeFile('thirdparty/finder/connector.php');

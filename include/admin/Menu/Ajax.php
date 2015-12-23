@@ -131,7 +131,7 @@ class Ajax extends \gp\admin\Menu{
 
 
 		echo '<form action="'.$this->GetUrl('Admin/Menu/Ajax').'" method="post">';
-		if( isset($_GET['redir']) ){
+		if( isset($_REQUEST['redir']) ){
 			echo '<input type="hidden" name="redir" value="redir" />';
 		}
 
@@ -166,32 +166,6 @@ class Ajax extends \gp\admin\Menu{
 		echo sprintf($format_bottom,'NewFile',$langmessage['create_new_file']);
 		echo '</form>';
 		echo '</div>';
-	}
-
-	/**
-	 * Create a new hidden
-	 *
-	 */
-	public function NewHiddenFile(){
-		global $langmessage;
-
-		$this->CacheSettings();
-
-		$new_index = \gp\admin\Menu\Tools::CreateNew();
-		if( $new_index === false ){
-			return false;
-		}
-
-
-		if( !\admin_tools::SavePagesPHP() ){
-			msg($langmessage['OOPS']);
-			$this->RestoreSettings();
-			return false;
-		}
-
-		$this->HiddenSaved($new_index);
-
-		return $new_index;
 	}
 
 
@@ -282,8 +256,14 @@ class Ajax extends \gp\admin\Menu{
 		$this->CacheSettings();
 
 		if( !isset($_POST['from_title']) ){
-			$this->AddHidden();
 			msg($langmessage['OOPS'].' (Copy from not selected)');
+
+			if( isset($_POST['insert_how']) ){
+				$this->InsertDialog($_POST['insert_how']);
+			}else{
+				$this->AddHidden();
+			}
+
 			return false;
 		}
 
@@ -348,8 +328,14 @@ class Ajax extends \gp\admin\Menu{
 	 * Display the dialog for inserting pages into a menu
 	 *
 	 */
-	public function InsertDialog(){
+	public function InsertDialog($cmd = null){
 		global $langmessage, $page, $gp_index;
+
+		if( is_null($cmd) ){
+			$cmd = $this->cmd;
+		}
+
+		$_REQUEST['gpx_content'] = 'gpabox';
 
 		includeFile('admin/admin_trash.php');
 
@@ -357,8 +343,8 @@ class Ajax extends \gp\admin\Menu{
 		ob_start();
 		echo '<div id="%s" class="%s">';
 		echo '<form action="'.\common::GetUrl('Admin/Menu/Ajax').'" method="post">';
-		echo '<input type="hidden" name="insert_where" value="'.htmlspecialchars($_GET['insert_where']).'" />';
-		echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($this->cmd).'" />';
+		echo '<input type="hidden" name="insert_where" value="'.htmlspecialchars($_REQUEST['insert_where']).'" />';
+		echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($cmd).'" />';
 		echo '<table class="bordered full_width">';
 		echo '<thead><tr><th>&nbsp;</th></tr></thead>';
 		echo '</table>';
@@ -466,8 +452,8 @@ class Ajax extends \gp\admin\Menu{
 
 			//Insert External
 			echo '<div id="gp_Insert_External" class="nodisplay">';
-			$args['insert_how']		= $this->cmd;
-			$args['insert_where']	= $_GET['insert_where'];
+			$args['insert_how']		= $cmd;
+			$args['insert_where']	= $_REQUEST['insert_where'];
 			$this->ExternalForm('NewExternal',$langmessage['insert_into_menu'],$args);
 			echo '</div>';
 
@@ -484,20 +470,6 @@ class Ajax extends \gp\admin\Menu{
 	public function NewFile(){
 		global $langmessage;
 		$this->CacheSettings();
-
-
-		/*
-		if( $this->curr_menu_array === false ){
-			msg($langmessage['OOPS'].'(0)');
-			return false;
-		}
-
-		if( !isset($this->curr_menu_array[$_POST['insert_where']]) ){
-			msg($langmessage['OOPS'].'(1)');
-			return false;
-		}
-		*/
-
 
 		$new_index = \gp\admin\Menu\Tools::CreateNew();
 		if( $new_index === false ){
@@ -695,7 +667,7 @@ class Ajax extends \gp\admin\Menu{
 	public function EditExternal(){
 		global $langmessage;
 
-		$key =& $_GET['key'];
+		$key =& $_REQUEST['key'];
 		if( !isset($this->curr_menu_array[$key]) ){
 			msg($langmessage['OOPS'].' (Current menu not set)');
 			return false;

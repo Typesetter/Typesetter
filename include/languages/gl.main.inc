@@ -13,6 +13,7 @@ $langmessage = array (
 	'Appearance'                     => 'Aparencia',
 	'Content'                        => 'contido',
 	'Settings'                       => 'Axustes',
+	'Tools'                          => 'Tools',
 	'administration'                 => 'Administración',
 	'save'                           => 'Gardar',
 	'save_changes'                   => 'Gardar os cambios',

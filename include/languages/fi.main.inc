@@ -13,6 +13,7 @@ $langmessage = array (
 	'Appearance'                     => 'Ulkoasu',
 	'Content'                        => 'Sisältö',
 	'Settings'                       => 'Asetukset',
+	'Tools'                          => 'Tools',
 	'administration'                 => 'Ylläpito',
 	'save'                           => 'Tallenna',
 	'save_changes'                   => 'Tallenna muutokset',

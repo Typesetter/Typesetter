@@ -12,8 +12,7 @@ class phpunit_Export extends gptest_bootstrap{
 
 		$this->SessionStart();
 
-		includeFile('admin/admin_port.php');
-		$admin_port = new admin_port();
+		$admin_port = new \gp\admin\Tools\Port();
 
 
 		//create an export

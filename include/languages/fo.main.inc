@@ -13,6 +13,7 @@ $langmessage = array (
 	'Appearance'                     => 'Útsjónd',
 	'Content'                        => 'innihald',
 	'Settings'                       => 'Stillingar',
+	'Tools'                          => 'Tools',
 	'administration'                 => 'Umsiting',
 	'save'                           => 'Goym',
 	'save_changes'                   => 'Goym broytingar',

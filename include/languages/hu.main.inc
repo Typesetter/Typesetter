@@ -13,6 +13,7 @@ $langmessage = array (
 	'Appearance'                     => 'Megjelenés',
 	'Content'                        => 'Tartalom',
 	'Settings'                       => 'Beállítások',
+	'Tools'                          => 'Tools',
 	'administration'                 => 'Adminisztrálás',
 	'save'                           => 'Mentés',
 	'save_changes'                   => 'Változások mentése',

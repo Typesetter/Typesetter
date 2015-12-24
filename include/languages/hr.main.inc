@@ -13,6 +13,7 @@ $langmessage = array (
 	'Appearance'                     => 'Izgled',
 	'Content'                        => 'Sadržaj',
 	'Settings'                       => 'Postavke',
+	'Tools'                          => 'Tools',
 	'administration'                 => 'Administracija',
 	'save'                           => 'Pohrani',
 	'save_changes'                   => 'Spremi promjene',

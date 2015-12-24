@@ -13,6 +13,7 @@ $langmessage = array (
 	'Appearance'                     => 'Išvaizda',
 	'Content'                        => 'Turinys',
 	'Settings'                       => 'Parinktys',
+	'Tools'                          => 'Tools',
 	'administration'                 => 'Administravimas',
 	'save'                           => 'Saugoti',
 	'save_changes'                   => 'Saugoti pakeitimus',

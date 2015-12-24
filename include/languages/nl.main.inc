@@ -13,6 +13,7 @@ $langmessage = array (
 	'Appearance'                     => 'Uiterlijk',
 	'Content'                        => 'Inhoud',
 	'Settings'                       => 'Instellingen',
+	'Tools'                          => 'Tools',
 	'administration'                 => 'Administratie',
 	'save'                           => 'Bewaar',
 	'save_changes'                   => 'Wijzigingen opslaan',

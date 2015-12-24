@@ -13,6 +13,7 @@ $langmessage = array (
 	'Appearance'                     => 'Vzhled',
 	'Content'                        => 'Obsah',
 	'Settings'                       => 'Nastavení',
+	'Tools'                          => 'Tools',
 	'administration'                 => 'Administrace',
 	'save'                           => 'Uložit',
 	'save_changes'                   => 'Uložit změny',

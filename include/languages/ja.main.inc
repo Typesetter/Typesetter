@@ -13,6 +13,7 @@ $langmessage = array (
 	'Appearance'                     => 'デザイン',
 	'Content'                        => '内容',
 	'Settings'                       => '設定',
+	'Tools'                          => 'Tools',
 	'administration'                 => '管理',
 	'save'                           => '保存',
 	'save_changes'                   => '変更を保存',

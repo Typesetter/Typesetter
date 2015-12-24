@@ -13,6 +13,7 @@ $langmessage = array (
 	'Appearance'                     => 'Εμφάνιση',
 	'Content'                        => 'Περιεχόμενο',
 	'Settings'                       => 'Ρυθμίσεις',
+	'Tools'                          => 'Tools',
 	'administration'                 => 'Διαχείριση',
 	'save'                           => 'Αποθήκευση',
 	'save_changes'                   => 'Αποθήκευση Αλλαγών',

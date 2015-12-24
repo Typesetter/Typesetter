@@ -36,7 +36,7 @@ class gp_recaptcha{
 	 * @static
 	 * @return string
 	 */
-	static function GetForm($theme='dark'){
+	static function GetForm($theme='light'){
 		global $config;
 
 		$html = '';
@@ -54,7 +54,7 @@ class gp_recaptcha{
 	 * @static
 	 *
 	 */
-	static function Form($theme='dark'){
+	static function Form($theme='light'){
 		echo gp_recaptcha::GetForm($theme);
 	}
 

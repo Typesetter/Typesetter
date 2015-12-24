@@ -119,6 +119,7 @@ class admin_display extends display{
 		echo common::Link('Admin',$langmessage['administration']);
 
 
+		//$crumbs				= array();
 		$request_string		= str_replace('_','/',$this->requested);
 		$parts				= explode('/',$request_string);
 

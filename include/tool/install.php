@@ -2,6 +2,7 @@
 defined('is_running') or die('Not an entry point...');
 
 includeFile('tool/gpOutput.php');
+includeFile('tool/RemoteGet.php');
 
 
 class Install_Tools{

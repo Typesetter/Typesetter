@@ -24,7 +24,7 @@ class admin_display extends display{
 		$this->label		= $langmessage['administration'];
 		$this->scripts		= admin_tools::AdminScripts();
 		$this->script_keys	= array_keys($this->scripts);
-		$this->script_keys	= array_combine( str_replace('/','_',$this->script_keys), $this->script_keys);
+		$this->script_keys	= array_combine( str_replace('_','/',$this->script_keys), $this->script_keys);
 
 
 		$this->head .= "\n".'<meta name="robots" content="noindex,nofollow" />';
@@ -119,13 +119,16 @@ class admin_display extends display{
 		echo common::Link('Admin',$langmessage['administration']);
 
 
+		$request_string		= str_replace('_','/',$this->requested);
+		$parts				= explode('/',$request_string);
 
-		$parts			= explode('/',$this->requested);
-		$crumbs			= array();
 		do{
-			$crumb_part	= implode('/',$parts);
-			if( isset($this->scripts[$crumb_part]) && isset($this->scripts[$crumb_part]['label']) ){
-				$crumbs[$crumb_part] = $this->scripts[$crumb_part]['label'];
+
+			$request_string		= implode('/',$parts);
+			$scriptinfo			= $this->GetScriptInfo($request_string);
+
+			if( is_array($scriptinfo) && isset($scriptinfo['label']) ){
+				$crumbs[$request_string] = $scriptinfo['label'];
 			}
 		}while(array_pop($parts));
 
@@ -189,9 +192,9 @@ class admin_display extends display{
 
 		do{
 
-			$request_string		= implode('_',$parts);
+			$request_string		= implode('/',$parts);
 			$scriptinfo			= $this->GetScriptInfo($request_string);
-			if( $scriptinfo ){
+			if( is_array($scriptinfo) ){
 
 				if( admin_tools::HasPermission($request_string) ){
 
@@ -209,7 +212,7 @@ class admin_display extends display{
 
 			//these are here because they should be available to everyone
 			switch($request_string){
-				case 'Admin_Finder':
+				case 'Admin/Finder':
 					if( admin_tools::HasPermission('Admin_Uploaded') ){
 						includeFile('thirdparty/finder/connector.php');
 						return;
@@ -221,7 +224,7 @@ class admin_display extends display{
 
 		}while( count($parts) );
 
-		//$this->Redirect();
+		$this->Redirect();
 	}
 
 

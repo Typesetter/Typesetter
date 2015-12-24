@@ -204,11 +204,11 @@ class admin_tools{
 		$scripts['Admin/Configuration/CDN']['group'] = 'settings';
 
 
-		$scripts['Admin_Users']['script'] = '/include/admin/admin_users.php';
-		$scripts['Admin_Users']['class'] = 'admin_users';
-		$scripts['Admin_Users']['label'] = $langmessage['user_permissions'];
-		$scripts['Admin_Users']['group'] = 'settings';
 
+		$scripts['Admin/Users']						= array(	'class'		=> 'gp\admin\Settings\Users',
+																'label'		=> $langmessage['user_permissions'],
+																'group'		=> 'settings',
+															);
 
 		$scripts['Admin/CKEditor']					= array(	'class'		=> 'gp\admin\Settings\CKEditor',
 																'label'		=> 'CKEditor',
@@ -292,6 +292,11 @@ class admin_tools{
 												);
 
 		$scripts['Admin/Browser']				= array(	'class'		=> '\gp\admin\Content\Browser',
+												);
+
+
+		$scripts['Admin/Preferences']			= array(	'class'		=> '\gp\admin\Settings\Preferences',
+															'label' 	=> $langmessage['Preferences'],
 												);
 
 
@@ -652,7 +657,7 @@ class admin_tools{
 			admin_tools::GetFrequentlyUsed($in_panel);
 
 			echo '<li>';
-			echo common::Link('Admin_Preferences',$langmessage['Preferences']);
+			echo common::Link('Admin/Preferences',$langmessage['Preferences']);
 			echo '</li>';
 
 			echo '<li>';

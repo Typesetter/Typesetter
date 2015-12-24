@@ -209,13 +209,6 @@ class admin_display extends display{
 
 			//these are here because they should be available to everyone
 			switch($request_string){
-
-				case 'Admin_Preferences':
-					$this->label = $langmessage['Preferences'];
-					includeFile('admin/admin_preferences.php');
-					new admin_preferences();
-				return;
-
 				case 'Admin_Finder':
 					if( admin_tools::HasPermission('Admin_Uploaded') ){
 						includeFile('thirdparty/finder/connector.php');

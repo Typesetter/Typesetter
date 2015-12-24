@@ -750,7 +750,7 @@ class Menu{
 		if( \admin_tools::HasPermission('Admin_User') ){
 			$img	= '<span class="menu_icon icon_user"></span>';
 			$attrs	= array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox');
-			echo $this->Link('Admin_Users',$img.$langmessage['permissions'],'cmd=file_permissions&index=[key]',$attrs);
+			echo $this->Link('Admin/Users',$img.$langmessage['permissions'],'cmd=file_permissions&index=[key]',$attrs);
 		}
 
 		$img	= '<span class="menu_icon cut_list_icon"></span>';

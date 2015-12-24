@@ -12,6 +12,7 @@ defined('gp_unit_testing') or define('gp_unit_testing',true);
 global $dataDir;
 $dataDir = $_SERVER['PWD'];
 include('include/common.php');
+spl_autoload_register( array('common','Autoload') );
 
 common::SetLinkPrefix();
 
@@ -24,7 +25,6 @@ includeFile('tool/sessions.php');
 
 gpsession::init();
 
-spl_autoload_register( array('common','Autoload') );
 
 
 class gptest_bootstrap extends PHPUnit_Framework_TestCase{

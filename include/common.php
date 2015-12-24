@@ -749,6 +749,8 @@ class common{
 
 
 		common::SetGlobalPaths($level,$expecting);
+		spl_autoload_register( array('common','Autoload') );
+
 		includeFile('tool/display.php');
 		includeFile('tool/Files.php');
 		includeFile('tool/gpOutput.php');
@@ -767,8 +769,6 @@ class common{
 		if( $sessions ){
 			common::sessions();
 		}
-
-		spl_autoload_register( array('common','Autoload') );
 	}
 
 

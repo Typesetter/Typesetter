@@ -1358,8 +1358,7 @@ class editing_page extends display{
 		$this->meta_data['gallery_dir'] = $dir_piece;
 		$this->SaveThis(false);
 
-		includeFile('admin/admin_uploaded.php');
-		admin_uploaded::InlineList($dir_piece);
+		\gp\admin\Content\Uploaded::InlineList($dir_piece);
 	}
 
 

@@ -3,7 +3,6 @@
 defined('is_running') or die('Not an entry point...');
 global $dataDir;
 
-includeFile('admin/admin_uploaded.php');
 includeFile('thirdparty/finder/php/Finder.class.php');
 
 
@@ -47,7 +46,7 @@ function upload_check( $event, $args, $finder ){
 	}
 
 	foreach( $files['name'] as $i => $name ){
-		if( !admin_uploaded::AllowedExtension($name) ){
+		if( !\gp\admin\Content\Uploaded::AllowedExtension($name) ){
 			return false;
 		}
 		$files['name'][$i] = $name;
@@ -59,7 +58,7 @@ function upload_check( $event, $args, $finder ){
 function rename_check( $event, $args, $finder ){
 
 	$name = $args['name'];
-	if( gp_restrict_uploads && !admin_uploaded::AllowedExtension($name) ){
+	if( gp_restrict_uploads && !\gp\admin\Content\Uploaded::AllowedExtension($name) ){
 		return false;
 	}
 	$args['name'] = $name;
@@ -106,7 +105,7 @@ $opts = array(
 		),
 	),
 	'bind' => array(
-		'duplicate upload rename rm paste resize' => array('admin_uploaded','FinderChange'),//drag+drop = cut+paste
+		'duplicate upload rename rm paste resize' => array('\gp\admin\Content\Uploaded','FinderChange'),//drag+drop = cut+paste
 		'upload-before' => 'upload_check',
 		'rename-before' => 'rename_check',
 	)

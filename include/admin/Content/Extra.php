@@ -297,8 +297,7 @@ class Extra{
 		//remember browse directory
 		$this->meta_data['gallery_dir'] = $dir_piece;
 
-		includeFile('admin/admin_uploaded.php');
-		\admin_uploaded::InlineList($dir_piece);
+		\gp\admin\Content\Uploaded::InlineList($dir_piece);
 	}
 
 

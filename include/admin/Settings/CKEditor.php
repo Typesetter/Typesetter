@@ -173,8 +173,6 @@ class CKEditor{
 	function UploadPlugin(){
 		global $langmessage, $dataDir;
 
-		includeFile('admin/admin_uploaded.php');
-
 		$archive = $this->UploadedArchive();
 		if( !$archive ){
 			return false;
@@ -195,7 +193,7 @@ class CKEditor{
 			}
 
 			//check extension
-			if( !\admin_uploaded::AllowedExtension($file['name'], false) ){
+			if( !\gp\admin\Content\Uploaded::AllowedExtension($file['name'], false) ){
 				msg($langmessage['OOPS'].' (File type not allowed:'.htmlspecialchars($file['name']).')');
 				return false;
 			}

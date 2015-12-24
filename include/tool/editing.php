@@ -954,8 +954,7 @@ class gp_edit{
 		$section['posx']						= $posx;
 		$section['posy']						= $posy;
 
-		includeFile('admin/admin_uploaded.php');
-		admin_uploaded::CreateThumbnail($dest_img_full);
+		\gp\admin\Content\Uploaded::CreateThumbnail($dest_img_full);
 		return true;
 	}
 
@@ -1084,7 +1083,6 @@ class gp_edit{
 	 */
 	public static function NewDirForm(){
 		global $langmessage, $page;
-		includeFile('admin/admin_uploaded.php');
 
 		ob_start();
 

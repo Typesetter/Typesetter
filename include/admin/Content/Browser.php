@@ -4,9 +4,7 @@ namespace gp\admin\Content;
 
 defined('is_running') or die('Not an entry point...');
 
-includeFile('admin/admin_uploaded.php');
-
-class Browser extends \admin_uploaded{
+class Browser extends \gp\admin\Content\Uploaded{
 
 	function __construct(){
 		global $page;

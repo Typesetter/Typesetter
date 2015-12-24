@@ -451,8 +451,7 @@ class Edit extends \gp\admin\Layout{
 
 	public function GalleryImages(){
 		$_GET += array('dir'=>'/headers');
-		includeFile('admin/admin_uploaded.php');
-		\admin_uploaded::InlineList($_GET['dir']);
+		\gp\admin\Content\Uploaded::InlineList($_GET['dir']);
 	}
 
 

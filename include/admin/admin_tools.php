@@ -142,12 +142,10 @@ class admin_tools{
 																);
 
 
-
-
-		$scripts['Admin_Uploaded']['script'] = '/include/admin/admin_uploaded.php';
-		$scripts['Admin_Uploaded']['class'] = 'admin_uploaded';
-		$scripts['Admin_Uploaded']['label'] = $langmessage['uploaded_files'];
-		$scripts['Admin_Uploaded']['group'] = 'content';
+		$scripts['Admin/Uploaded']					= array(	'class'		=> '\gp\admin\Content\Uploaded',
+																'label'		=> $langmessage['uploaded_files'],
+																'group'		=> 'content',
+																);
 
 
 		$scripts['Admin/Extra']						= array(	'class'		=> '\gp\admin\Content\Extra',

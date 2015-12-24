@@ -76,7 +76,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 
 		// if no thumbnails url - try detect it
 		if ($root['read'] && !$this->tmbURL && $this->URL) {
-			if (strpos($this->tmbPath, $this->root) === 0) {
+			if( $this->inRoot($this->tmbPath) ){
 				$temp = substr($this->tmbPath, strlen($this->root)+1);
 				$this->tmbURL = $this->URL . str_replace($this->separator, '/', $temp );
 				if (preg_match("|[^/?&=]$|", $this->tmbURL)) {
@@ -132,7 +132,7 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 			return $stat;
 		}
 
-		if ($path != $this->root && is_link($path)) {
+		if( !$this->isRoot($path) && is_link($path)) {
 			if (($target = $this->readlink($path)) == false
 			|| $target == $path) {
 				$stat['mime']  = 'symlink-broken';

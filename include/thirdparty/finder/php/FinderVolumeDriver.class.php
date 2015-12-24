@@ -591,10 +591,10 @@ abstract class FinderVolumeDriver {
 			return $this->setError('Path undefined.');;
 		}
 
-		$this->options = array_merge($this->options, $opts);
-		$this->separator = isset($this->options['separator']) ? $this->options['separator'] : DIRECTORY_SEPARATOR;
-		$this->id = $this->driverId.(!empty($this->options['id']) ? $this->options['id'] : Finder::$volumesCnt++).'_';
-		$this->root = $this->_normpath($this->options['path']);
+		$this->options		= array_merge($this->options, $opts);
+		$this->separator	= isset($this->options['separator']) ? $this->options['separator'] : DIRECTORY_SEPARATOR;
+		$this->id			= $this->driverId.(!empty($this->options['id']) ? $this->options['id'] : Finder::$volumesCnt++).'_';
+		$this->root			= $this->_normpath($this->options['path']);
 
 		// default file attribute
 		$this->defaults = array(
@@ -794,7 +794,7 @@ abstract class FinderVolumeDriver {
 			&& $start['mime'] == 'directory'
 			&& $start['read']
 			&& empty($start['hidden'])
-			&& $this->_inpath($this->options['startPath'], $this->root)) {
+			&& $this->inRoot($this->options['startPath']) ){
 				$this->startPath = $this->options['startPath'];
 				if (substr($this->startPath, -1, 1) == $this->options['separator']) {
 					$this->startPath = substr($this->startPath, 0, -1);
@@ -1076,7 +1076,7 @@ abstract class FinderVolumeDriver {
 		$path = $this->decode($hash);
 		$tree = array();
 
-		while( $path && $path != $this->root ){
+		while( $path && $this->inRoot($path) ){
 			$path = $this->_dirname($path);
 			$stat = $this->stat($path);
 			if (!empty($stat['hidden']) || empty($stat['read']) || !$stat['read']) {
@@ -1084,7 +1084,7 @@ abstract class FinderVolumeDriver {
 			}
 
 			array_unshift($tree, $stat);
-			if ($path != $this->root) {
+			if( $this->isRoot($path) ){
 				foreach( $this->gettree($path, 0) as $dir ){
 					if( !in_array($dir, $tree) ){
 						$tree[] = $dir;
@@ -2029,11 +2029,10 @@ abstract class FinderVolumeDriver {
 			return $this->cache[$path] = array();
 		}
 
-		$stat['hash'] = $this->encode($path);
+		$stat['hash']	= $this->encode($path);
+		$root			= $this->isRoot($path);
 
-		$root = $path == $this->root;
-
-		if ($root) {
+		if( $root ){
 			$stat['volumeid'] = $this->id;
 			if ($this->rootName) {
 				$stat['name'] = $this->rootName;
@@ -3399,8 +3398,11 @@ abstract class FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _joinPath($dir, $name){
-		$dir = $this->_separator($dir);
-		$name = $this->_separator($name);
+		$dir	= $this->_separator($dir);
+		$name	= $this->_separator($name);
+		if( empty($name) ){
+			return $dir;
+		}
 		return $dir . $this->separator . ltrim($name,$this->separator);
 	}
 
@@ -3459,7 +3461,8 @@ abstract class FinderVolumeDriver {
 	 **/
 	protected function _relpath($path){
 		$path = $this->_separator( $path );
-		if( $path == $this->root ){
+
+		if( $this->isRoot($path) ){
 			return '';
 		}
 		if( $this->root == $this->separator ){
@@ -3478,7 +3481,12 @@ abstract class FinderVolumeDriver {
 	 **/
 	protected function _abspath($path) {
 		$path = $this->_separator( $path );
-		return $path == $this->separator ? $this->root : $this->_joinPath($this->root,$path);
+
+		if( $path == $this->separator ){
+			return $this->root;
+		}
+
+		return $this->_joinPath($this->root,$path);
 	}
 
 
@@ -3491,7 +3499,7 @@ abstract class FinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _path($path) {
-		if( $path == $this->root ){
+		if( $this->isRoot($path) ){
 			return $this->rootName;
 		}
 		return $this->_joinPath( $this->rootName, $this->_relpath($path) );
@@ -3520,6 +3528,32 @@ abstract class FinderVolumeDriver {
 	protected function _separator($path){
 		$path = str_replace( array('/','\\'), $this->separator, $path);
 		return rtrim($path,$this->separator);
+	}
+
+
+	/**
+	 * Return true if $path is the root
+	 * @param  string  $path    path to check
+	 * @return bool
+	 */
+	protected function isRoot($path){
+
+		$path = $this->_separator( $path );
+
+		if( $path == rtrim($this->root,'/') ){
+			return true;
+		}
+		return false;
+	}
+
+
+	/**
+	 * Return true if the $path is within the root
+	 * @param  string  $path    path to check
+	 * @return bool
+	 */
+	protected function inRoot($path){
+		return $this->_inPath($path, $this->root);
 	}
 
 

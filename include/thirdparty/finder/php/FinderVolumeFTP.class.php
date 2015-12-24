@@ -186,8 +186,7 @@ class FinderVolumeFTP extends FinderVolumeDriver {
 		ftp_pasv($this->connect, $this->options['mode'] == 'passive');
 
 		// enter root folder
-		if (!ftp_chdir($this->connect, $this->root)
-		|| $this->root != ftp_pwd($this->connect)) {
+		if( !ftp_chdir($this->connect, $this->root) || !$this->isRoot(ftp_pwd($this->connect)) ){
 			$this->umount();
 			return $this->setError('Unable to open root folder.');
 		}

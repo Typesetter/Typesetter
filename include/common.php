@@ -751,6 +751,7 @@ class common{
 		common::SetGlobalPaths($level,$expecting);
 		spl_autoload_register( array('common','Autoload') );
 
+
 		includeFile('tool/display.php');
 		includeFile('tool/Files.php');
 		includeFile('tool/gpOutput.php');
@@ -769,6 +770,7 @@ class common{
 		if( $sessions ){
 			common::sessions();
 		}
+
 	}
 
 
@@ -782,6 +784,7 @@ class common{
 		$parts		= explode('\\',$class);
 		$part_0		= array_shift($parts);
 
+
 		if( !$parts ){
 			return;
 		}
@@ -790,7 +793,7 @@ class common{
 		if( $part_0 === 'gp' ){
 			$path	= implode('/',$parts).'.php';
 			if( file_exists($dataDir.'/include/'.$path) ){
-				require_once( $dataDir.'/include/'.$path );
+				include_once( $dataDir.'/include/'.$path );
 			}
 			return;
 		}
@@ -807,17 +810,22 @@ class common{
 				if( isset($addon['Namespace']) && $addon['Namespace'] == $namespace ){
 
 					gpPlugin::SetDataFolder($addon_key);
-					$file			= gpPlugin::$current['code_folder_full'].'/'.implode('/',$parts).'.php';
+					$path			= gpPlugin::$current['code_folder_full'].'/'.implode('/',$parts).'.php';
 
-					if( file_exists($file) ){
-						include($file);
-					}else{
-						trigger_error('Script not found in namespaced autoloader for '.$class);
+					if( file_exists($path) ){
+						include_once($path);
 					}
 
 					gpPlugin::ClearDataFolder();
 				}
 			}
+			return;
+		}
+
+		//thirdparty
+		$path = $dataDir.'/include/thirdparty/'.str_replace('\\','/',$class).'.php';
+		if( file_exists($path) ){
+			include_once($path);
 		}
 	}
 

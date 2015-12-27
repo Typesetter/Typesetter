@@ -2857,7 +2857,7 @@ class gpOutput{
 		}
 
 		$less_files = (array)$less_files;
-		$compiled = gpOutput::ParseLess( $less_files, $files_hash );
+		$compiled = gpOutput::ParseLess( $less_files );
 		if( !$compiled ){
 			return false;
 		}
@@ -2894,12 +2894,8 @@ class gpOutput{
 	 * @return mixed Compiled css string or false
 	 *
 	 */
-	static function ParseLess( &$less_files, $files_hash = false ){
+	static function ParseLess( &$less_files ){
 		global $dataDir;
-
-		if( !$files_hash ){
-			$files_hash = common::ArrayHash($less_files);
-		}
 
 		$compiled = false;
 
@@ -2924,16 +2920,6 @@ class gpOutput{
 
 		//compiler options
 		$options = array();
-		//$options['compress']			= true;
-
-		/*
-		$source_map_file = '/data/_cache/'.$files_hash.'.map';
-		$options['sourceMap']			= true;
-		$options['sourceMapBasepath']	= $dataDir;
-		$options['sourceMapWriteTo']	= $dataDir.$source_map_file;
-		$options['sourceMapURL']		= common::GetDir($source_map_file);
-		*/
-
 
 		//prepare the compiler
 		includeFile('thirdparty/less.php/Less.php');

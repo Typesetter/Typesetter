@@ -1,0 +1,112 @@
+<?php
+
+namespace gp\tool;
+
+class Scss extends \Leafo\ScssPhp\Compiler{
+
+
+	/**
+	 * Convert a .scss file to .css and include it in the page
+	 * @param mixed $scss_files A strin or array of scss filesThe absolute or relative path of the .scss file
+	 *
+	 */
+	function Cache( $scss_files ){
+		global $dataDir;
+
+
+		//generage the name of the css file from the modified times and content length of each imported scss file
+		$scss_files = (array)$scss_files;
+		$files_hash	= \common::ArrayHash($scss_files);
+ 		$list_file	= $dataDir.'/data/_cache/scss/'.$files_hash.'.list';
+
+ 		if( file_exists($list_file) ){
+
+			$list = explode("\n",file_get_contents($list_file));
+
+			//pop the etag
+			$etag = array_pop($list);
+
+			// generate an etag if needed or if logged in
+			if( \common::LoggedIn() ){
+				$etag = \common::FilesEtag( $list );
+			}
+
+			$compiled_name = 'scss/'.$files_hash.'_'.$etag.'.css';
+			$compiled_file = '/data/_cache/'.$compiled_name;
+
+			if( file_exists($dataDir.$compiled_file) ){
+				return $compiled_file;
+			}
+
+		}
+
+
+		$compiled = $this->CompileFiles( $scss_files );
+		if( !$compiled ){
+			return false;
+		}
+
+
+		// generate the file name
+		$etag			= \common::FilesEtag( $this->importedFiles );
+		$compiled_name	= 'scss/'.$files_hash.'_'.$etag.'.css';
+		$compiled_file	= '/data/_cache/'.$compiled_name;
+
+
+		// save the cache
+		// use the last line for the etag
+		$list			= $this->importedFiles;
+		$list[]			= $etag;
+		$cache			= implode("\n",$list);
+		if( !\gpFiles::Save( $list_file, $cache ) ){
+			return false;
+		}
+
+
+		//save the css
+		if( file_put_contents( $dataDir.$compiled_file, $compiled ) ){
+			return $compiled_file;
+		}
+
+		return false;
+	}
+
+
+	public function CompileFiles( $scss_files ){
+		global $dataDir;
+
+		$compiled	= false;
+		$combined	= array();
+
+ 		try{
+			foreach($scss_files as $file){
+
+				//treat as scss markup if there are newline characters
+				if( strpos($file,"\n") !== false ){
+					$combined[] = $file;
+					continue;
+				}
+
+
+				// handle relative and absolute paths
+				if( !empty($dataDir) && strpos($file,$dataDir) === false ){
+					$file		= $dataDir.'/'.ltrim($file,'/');
+				}
+
+				$combined[]	= '@import "'.$file.'";';
+			}
+
+			$compiled = $this->compile(implode("\n",$combined));
+
+		}catch( \Exception $e){
+			if( \common::LoggedIn() ){
+				msg('SCSS Compile Failed: '.$e->getMessage());
+			}
+			return false;
+		}
+
+		return $compiled;
+	}
+
+}
+

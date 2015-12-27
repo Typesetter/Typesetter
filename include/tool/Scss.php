@@ -64,7 +64,7 @@ class Scss extends \Leafo\ScssPhp\Compiler{
 
 
 		//save the css
-		if( file_put_contents( $dataDir.$compiled_file, $compiled ) ){
+		if( \gpFiles::Save( $dataDir.$compiled_file, $compiled ) ){
 			return $compiled_file;
 		}
 

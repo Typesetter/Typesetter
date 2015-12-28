@@ -117,14 +117,5 @@ class Scss extends \Leafo\ScssPhp\Compiler{
 	}
 
 
-	/**
-	 * Fix relative urls
-	 *
-	 */
-	public function RelativeUrls($css){
-
-
-	}
-
 }
 

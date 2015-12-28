@@ -498,7 +498,7 @@ class Install_Tools{
 
 		if( $base_install ){
 			Install_Tools::InstallHtaccess($destination,$config);
-			Install_Tools::PrepareLess();
+			Install_Tools::PrepareCss();
 		}
 
 		gpFiles::Unlock('write',gp_random);
@@ -618,10 +618,12 @@ class Install_Tools{
 		}
 	}
 
-	static function PrepareLess(){
+	static function PrepareCss(){
 		global $dataDir;
-		$less_files = $dataDir.'/include/css/admin.less';
-		gpOutput::CacheLess($less_files);
+
+		$admin_scss		= $dataDir.'/include/css/admin.scss';
+		$scss			= new \gp\tool\Scss();
+		$scss->Cache($admin_scss);
 	}
 
 

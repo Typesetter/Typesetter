@@ -2266,7 +2266,7 @@ class gpOutput{
 		}
 
 
-		//convert .less files to .css
+		//convert .scss & .less files to .css
 		foreach($scripts as $key => $script){
 
 			if( is_array($script) ){
@@ -2276,12 +2276,17 @@ class gpOutput{
 			}
 
 
-			//if it's not a less file
-			if( substr($file,-5) !== '.less' ){
-				continue;
+			//less
+			$ext = substr($file,-5);
+			if( $ext == '.less' ){
+				$scripts[$key] = gpOutput::CacheLess($dataDir.$file);
+
+			//scss
+			}elseif( $ext == '.scss' ){
+				$scss			= new \gp\tool\Scss();
+				$scripts[$key] = $scss->Cache($dataDir.$file);
 			}
 
-			$scripts[$key] = gpOutput::CacheLess($dataDir.$file);
 		}
 
 		gpOutput::CombineFiles($scripts,'css',$config['combinecss']);

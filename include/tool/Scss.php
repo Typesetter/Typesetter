@@ -17,7 +17,7 @@ class Scss extends \Leafo\ScssPhp\Compiler{
 		//generage the name of the css file from the modified times and content length of each imported scss file
 		$scss_files = (array)$scss_files;
 		$files_hash	= \common::ArrayHash($scss_files);
- 		$list_file	= $dataDir.'/data/_cache/scss/'.$files_hash.'.list';
+ 		$list_file	= $dataDir.'/data/_cache/scss_list_'.$files_hash.'.list';
 
  		if( file_exists($list_file) ){
 
@@ -31,11 +31,11 @@ class Scss extends \Leafo\ScssPhp\Compiler{
 				$etag = \common::FilesEtag( $list );
 			}
 
-			$compiled_name = 'scss/'.$files_hash.'_'.$etag.'.css';
+			$compiled_name = 'scss_'.$files_hash.'_'.$etag.'.css';
 			$compiled_file = '/data/_cache/'.$compiled_name;
 
 			if( file_exists($dataDir.$compiled_file) ){
-				return $compiled_file;
+				//return $compiled_file;
 			}
 
 		}
@@ -49,7 +49,7 @@ class Scss extends \Leafo\ScssPhp\Compiler{
 
 		// generate the file name
 		$etag			= \common::FilesEtag( $this->importedFiles );
-		$compiled_name	= 'scss/'.$files_hash.'_'.$etag.'.css';
+		$compiled_name	= 'scss_'.$files_hash.'_'.$etag.'.css';
 		$compiled_file	= '/data/_cache/'.$compiled_name;
 
 
@@ -71,12 +71,20 @@ class Scss extends \Leafo\ScssPhp\Compiler{
 		return false;
 	}
 
-
+	/**
+	 * Create a css file from one or more scss files
+	 *
+	 */
 	public function CompileFiles( $scss_files ){
 		global $dataDir;
 
 		$compiled	= false;
 		$combined	= array();
+
+
+		//add variables for url paths
+		$combined[] = '$icon-font-path: "../../include/thirdparty/Bootstrap3/fonts/";';
+
 
  		try{
 			foreach($scss_files as $file){
@@ -106,6 +114,16 @@ class Scss extends \Leafo\ScssPhp\Compiler{
 		}
 
 		return $compiled;
+	}
+
+
+	/**
+	 * Fix relative urls
+	 *
+	 */
+	public function RelativeUrls($css){
+
+
 	}
 
 }

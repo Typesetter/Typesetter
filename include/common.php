@@ -770,11 +770,6 @@ class common{
 		if( $sessions ){
 			common::sessions();
 		}
-
-
-		//$scss			= new \gp\tool\Scss();
-		//$cached_file	= $scss->Cache('/var/www/html/gpeasy/include/css/admin.scss');
-		//msg($cached_file);
 	}
 
 

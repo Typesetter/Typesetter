@@ -16,7 +16,7 @@ class Combine{
 				'gp-admin'	=> array(	'file'			=> '/include/js/admin.js',
 										'requires'		=> 'gp-main'),
 
-				'gp-admin-css'=> array(	'file'			=> '/include/css/admin.less',
+				'gp-admin-css'=> array(	'file'			=> '/include/css/admin.scss',
 										'type'			=> 'css',
 										'requires'		=> 'ui-theme'),
 

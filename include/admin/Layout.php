@@ -61,7 +61,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 		$page->head_js[] = '/include/js/theme_content.js';
 		$page->head_js[] = '/include/js/dragdrop.js';
-		$page->css_admin[] = '/include/css/theme_content.less';
+		$page->css_admin[] = '/include/css/theme_content.scss';
 		\common::LoadComponents('resizable');
 
 

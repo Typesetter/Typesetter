@@ -59,9 +59,14 @@ class gpPlugin{
 
 
 		//less file
-		if( substr($file,-5) === '.less' ){
+		$ext = substr($file,-5);
+		if( $ext === '.less' ){
 			$full_path			= self::$current['code_folder_full'].'/'.ltrim($file,'/');
-			$path				= gpOutput::CacheLess($full_path);
+			$path				= \gp\tool\Less::Cache($full_path);
+		}elseif( $ext === '.scss' ){
+			$full_path			= self::$current['code_folder_full'].'/'.ltrim($file,'/');
+			$scss				= new \gp\tool\Scss();
+			$path				= $scss->Cache($full_path);
 		}else{
 			$path				= self::$current['code_folder_part'].'/'.ltrim($file,'/');
 		}

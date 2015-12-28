@@ -422,7 +422,7 @@ class Edit extends \gp\admin\Layout{
 
 
 		if( count($less) ){
-			$compiled = \gpOutput::ParseLess( $less );
+			$compiled = \gp\tool\Less::Parse( $less );
 			if( !$compiled ){
 				message($langmessage['OOPS'].' (Invalid LESS)');
 				return false;

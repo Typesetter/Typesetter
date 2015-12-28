@@ -406,10 +406,10 @@
 	background-color:#fff;
 
 	//subset of bootstrap components
-	@import 'include/thirdparty/Bootstrap3/scss/_bootstrap.scss';
-	//@import 'include/thirdparty/Bootstrap3/scss/bootstrap/scaffolding.scss';
-	//@import 'include/thirdparty/Bootstrap3/scss/bootstrap/type.scss';
-	//@import 'include/thirdparty/Bootstrap3/scss/bootstrap/grid.scss';
+	//@import 'include/thirdparty/Bootstrap3/scss/_bootstrap.scss';
+	@import 'include/thirdparty/Bootstrap3/scss/bootstrap/scaffolding.scss';
+	@import 'include/thirdparty/Bootstrap3/scss/bootstrap/type.scss';
+	@import 'include/thirdparty/Bootstrap3/scss/bootstrap/grid.scss';
 }
 
 #admincontent_inner #finder,

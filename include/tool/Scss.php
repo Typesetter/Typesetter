@@ -41,7 +41,7 @@ class Scss extends \Leafo\ScssPhp\Compiler{
 		}
 
 
-		$compiled = $this->CompileFiles( $scss_files );
+		$compiled = $this->Parse( $scss_files );
 		if( !$compiled ){
 			return false;
 		}
@@ -75,7 +75,7 @@ class Scss extends \Leafo\ScssPhp\Compiler{
 	 * Create a css file from one or more scss files
 	 *
 	 */
-	public function CompileFiles( $scss_files ){
+	public function Parse( $scss_files ){
 		global $dataDir;
 
 		$compiled	= false;

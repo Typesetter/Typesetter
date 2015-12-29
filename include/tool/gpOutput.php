@@ -2309,9 +2309,11 @@ class gpOutput{
 		$files			= array();
 		$dir			= $page->theme_dir . '/' . $page->theme_color;
 		$style_type		= self::StyleType($dir);
+		$custom_file	= $dataDir.'/data/_layouts/'.$page->gpLayout.'/custom.css';
 
-
-		$custom_file = $dataDir.'/data/_layouts/'.$page->gpLayout.'/custom.css';
+		if( $style_type == 'scss' ){
+			$custom_file	= $dataDir.'/data/_layouts/'.$page->gpLayout.'/custom.scss';
+		}
 
 		//css file
 		if( $style_type == 'css' ){
@@ -2327,21 +2329,25 @@ class gpOutput{
 
 
 		//less or scss file
-		$var_file	= $dir . '/variables.'.$style_type;
+		$var_file	= $dir.'/variables.'.$style_type;
 		if( file_exists($var_file) ){
 			$files[] = $var_file;
 		}
 
-		$files[]	= $dir . '/style.'.$style_type;
 
 		if( $page->gpLayout && file_exists($custom_file) ){
 			$files[] = $custom_file;
 		}
 
+
 		if( $style_type == 'scss' ){
+
+			$files[]		= $dir . '/style.scss';
 			$scss			= new \gp\tool\Scss();
 			return array( $scss->Cache($files) );
 		}
+
+		array_unshift($files, $dir.'/style.less');
 
 		return array( \gp\tool\Less::Cache($files) );
 	}

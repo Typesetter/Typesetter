@@ -243,7 +243,9 @@ class Edit extends \gp\admin\Layout{
 		//custom css
 		$css = $this->layoutCSS($this->curr_layout);
 		if( empty($css) ){
-			$var_file = $layout_info['dir'].'/'.$layout_info['theme_color'].'/variables.less';
+			$dir				= $layout_info['dir'].'/'.$layout_info['theme_color'];
+			$style_type			= \gpOutput::StyleType($dir);
+			$var_file 			= $dir.'/variables.'.$style_type;
 			if( file_exists($var_file) ){
 				$css = file_get_contents($var_file);
 			}
@@ -326,11 +328,16 @@ class Edit extends \gp\admin\Layout{
 	public function SaveCSS(){
 		global $langmessage, $dataDir, $gpLayouts, $page;
 
-		$layout_info = \common::LayoutInfo($this->curr_layout,false);
-		$color = $layout_info['theme_color'];
-		$theme_colors = $this->GetThemeColors($layout_info['dir']);
-		$path = $dataDir.'/data/_layouts/'.$this->curr_layout.'/custom.css';
-		$css =& $_POST['css'];
+		$css			=& $_POST['css'];
+		$layout_info	= \common::LayoutInfo($this->curr_layout,false);
+		$color			= $layout_info['theme_color'];
+		$theme_colors	= $this->GetThemeColors($layout_info['dir']);
+		$style_type		= \gpOutput::StyleType($layout_info['dir'].'/'.$layout_info['theme_color']);
+		$path			= $dataDir.'/data/_layouts/'.$this->curr_layout.'/custom.css';
+
+		if( $style_type === 'scss' ){
+			$path			= $dataDir.'/data/_layouts/'.$this->curr_layout.'/custom.scss';
+		}
 
 		//check theme color
 		if( array_key_exists('color',$_REQUEST) ){
@@ -343,7 +350,7 @@ class Edit extends \gp\admin\Layout{
 		}
 
 		$old_info = $new_info = $gpLayouts[$this->curr_layout];
-		$theme_name = dirname($new_info['theme']);
+		$theme_name	= dirname($new_info['theme']);
 		$new_info['theme'] = $theme_name.'/'.$color;
 		$gpLayouts[$this->curr_layout] = $new_info;
 
@@ -394,29 +401,32 @@ class Edit extends \gp\admin\Layout{
 			$color = $_REQUEST['color'];
 		}
 
-		$page->theme_color	= $color;
-		$page->theme_rel	= dirname($page->theme_rel).'/'.$color;
-		$page->theme_path	= dirname($page->theme_path).'/'.$color;
-		$style_type			= $this->StyleType($page->theme_path);
-		$style_files		= array();
 
+		$page->theme_color		= $color;
+		$page->theme_rel		= dirname($page->theme_rel).'/'.$color;
+		$page->theme_path		= dirname($page->theme_path).'/'.$color;
+		$dir					= $page->theme_dir.'/'.$page->theme_color;
+		$style_type				= \gpOutput::StyleType($dir);
+		$style_files			= array();
+
+		if( $style_type == 'scss' ){
+			$this->PreviewScss($dir);
+			return;
+		}
 
 		// which css files
 		if( $style_type == 'css' ){
 			$page->css_user[]	= rawurldecode($page->theme_path).'/style.css';
-		}elseif( $style_type == 'less' ){
-			$style_files[]		= $page->theme_dir . '/' . $page->theme_color . '/style.less';
-		}elseif( $style_type == 'scss' ){
-			$style_files[]		= $page->theme_dir . '/' . $page->theme_color . '/style.scss';
+		}else{
+			$style_files[]		= $dir.'/style.less';
 		}
 
+
 		// variables.less
-		$var_file = $page->theme_dir . '/' . $page->theme_color . '/variables.less';
+		$var_file = $dir . '/variables.less';
 		if( file_exists($var_file) ){
 			$style_files[] = $var_file;
 		}
-
-
 
 
 		$temp = trim($_REQUEST['css']);
@@ -427,23 +437,56 @@ class Edit extends \gp\admin\Layout{
 
 		if( count($style_files) ){
 
-			if( $style_type == 'less' ){
-				$compiled = \gp\tool\Less::Parse( $style_files );
-			}elseif( $style_type == 'scss' ){
-				$compiled = \gp\tool\Scss::Parse( $style_files );
-			}
+			$compiled		= \gp\tool\Less::Parse( $style_files );
 
 			if( !$compiled ){
-				message($langmessage['OOPS'].' (Invalid '.$style_type.')');
+				message($langmessage['OOPS'].' (Invalid LESS)');
 				return false;
 			}
 
 			$page->head .= '<style>'.$compiled.'</style>';
 		}
 
-		$page->get_theme_css = false;
+		$page->get_theme_css	= false;
 	}
 
+
+	/**
+	 * Order of files for SCSS
+	 *  Variables.scss
+	 *  custom.scss
+	 *  Bootstrap.scss
+	 */
+	protected function PreviewScss($dir){
+		global $page, $langmessage;
+
+		$style_files			= array();
+
+		// variables.scss
+		$var_file = $dir . '/variables.scss';
+		if( file_exists($var_file) ){
+			$style_files[] = $var_file;
+		}
+
+
+		$temp = trim($_REQUEST['css']);
+		if( !empty($temp) ){
+			$style_files[] = $_REQUEST['css']. "\n"; //make sure this is seen as code and not a filename
+		}
+
+		$style_files[]		= $dir.'/style.scss';
+
+		$scss				= new \gp\tool\Scss();
+		$compiled			= $scss->Parse($style_files);
+
+		if( !$compiled ){
+			message($langmessage['OOPS'].' (Invalid '.$style_type.')');
+			return false;
+		}
+
+		$page->head .= '<style>'.$compiled.'</style>';
+		$page->get_theme_css	= false;
+	}
 
 
 	/**

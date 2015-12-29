@@ -240,7 +240,6 @@ var $gp = {
 	 */
 	loading : function(){
 
-		console.log('loading');
 		var $loading = $('#loading1');
 		if( $loading.length == 0 ){
 			$loading = $('<div id="loading1"><i class="fa fa-spinner fa-pulse fa-3x"></i></div>').appendTo('body');

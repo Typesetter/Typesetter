@@ -2339,7 +2339,6 @@ class gpOutput{
 		}
 
 		if( $style_type == 'scss' ){
-			msg($files);
 			$scss			= new \gp\tool\Scss();
 			return array( $scss->Cache($files) );
 		}

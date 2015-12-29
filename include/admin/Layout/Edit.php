@@ -401,8 +401,6 @@ class Edit extends \gp\admin\Layout{
 		$style_files		= array();
 
 
-		die('type: '.$style_type);
-
 		// which css files
 		if( $style_type == 'css' ){
 			$page->css_user[]	= rawurldecode($page->theme_path).'/style.css';

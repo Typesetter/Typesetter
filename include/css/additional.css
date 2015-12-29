@@ -249,3 +249,12 @@ div.GPAREA{
  */
 ul.search_nav_bottom { list-style:none; }
 ul.search_nav_bottom li { display:inline; margin-right:0.5em; }
+
+
+/**
+ * Fixed Position Adjustment when admin toolbar is displayed
+ *
+ */
+.gpAdmin:not(.edit_layout) .gp-fixed-adjust{
+	margin-top:29px;
+	}

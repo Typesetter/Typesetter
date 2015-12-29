@@ -404,8 +404,8 @@ class Configuration{
 	public function formTextarea($name,$value){
 		global $langmessage;
 		$count_label = sprintf($langmessage['_characters'],'<span>'.strlen($value).'</span>');
-		echo '<span class="show_character_count">';
-		echo '<textarea id="'.$name.'" name="'.$name.'" cols="40" rows="2" class="gptextarea">'.htmlspecialchars($value).'</textarea>';
+		echo '<span class="show_character_count gptextarea">';
+		echo '<textarea id="'.$name.'" name="'.$name.'" cols="40" rows="2">'.htmlspecialchars($value).'</textarea>';
 		echo '<span class="character_count">'.$count_label.'</span>';
 		echo '</span>';
 	}

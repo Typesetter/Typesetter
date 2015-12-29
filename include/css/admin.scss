@@ -261,6 +261,27 @@
     display:inline-block;
 }
 
+#gp_admin_html .show_character_count{
+	position:relative;
+	display:inline-block;
+	padding:0;
+	}
+#gp_admin_html .show_character_count textarea{
+	padding-bottom:27px;
+	border:0 none;
+	border-radius:4px;
+	}
+#gp_admin_html .character_count{
+	display:block;
+	border-top:1px solid #eee;
+	height:22px;
+	line-height:22px;
+	font-size:11px;
+	padding:0 6px;
+	color:#888;
+	text-align:right;
+	}
+
 /**
  * Admin container
  *

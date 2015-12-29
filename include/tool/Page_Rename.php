@@ -135,8 +135,8 @@ class gp_rename{
 		echo '</td><td>';
 
 		$count_label = sprintf($langmessage['_characters'],'<span>'.strlen($description).'</span>');
-		echo '<span class="show_character_count">';
-		echo '<textarea class="gptextarea" rows="2" cols="50" name="description">'.$description.'</textarea>';
+		echo '<span class="show_character_count gptextarea">';
+		echo '<textarea rows="2" cols="50" name="description">'.$description.'</textarea>';
 		echo '<span class="character_count">'.$count_label.'</span>';
 		echo '</span>';
 

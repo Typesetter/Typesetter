@@ -231,11 +231,11 @@ class admin extends \display{
 	 * Get admin script info if the request slug uses underscores or slashes
 	 *
 	 */
-	private function GetScriptInfo($request_string){
+	private function GetScriptInfo(&$request_string){
 
 		if( isset($this->script_keys[$request_string]) ){
-			$key = $this->script_keys[$request_string];
-			return $this->scripts[$key];
+			$request_string = $this->script_keys[$request_string];
+			return $this->scripts[$request_string];
 		}
 
 		return false;

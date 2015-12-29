@@ -380,9 +380,9 @@ class Edit extends \gp\admin\Layout{
 	public function PreviewCSS(){
 		global $page, $langmessage;
 
-		$layout_info = \common::LayoutInfo($this->curr_layout,false);
-		$theme_colors = $this->GetThemeColors($layout_info['dir']);
-		$color = $layout_info['theme_color'];
+		$layout_info	= \common::LayoutInfo($this->curr_layout,false);
+		$theme_colors	= $this->GetThemeColors($layout_info['dir']);
+		$color			= $layout_info['theme_color'];
 
 		// which color option
 		if( array_key_exists('color',$_REQUEST) ){
@@ -394,37 +394,49 @@ class Edit extends \gp\admin\Layout{
 			$color = $_REQUEST['color'];
 		}
 
-		$page->theme_color = $color;
-		$page->theme_rel = dirname($page->theme_rel).'/'.$color;
-		$page->theme_path = dirname($page->theme_path).'/'.$color;
+		$page->theme_color	= $color;
+		$page->theme_rel	= dirname($page->theme_rel).'/'.$color;
+		$page->theme_path	= dirname($page->theme_path).'/'.$color;
+		$style_type			= $this->StyleType($page->theme_path);
+		$style_files		= array();
 
 
+		die('type: '.$style_type);
 
 		// which css files
-		$less = array();
-		if( file_exists($page->theme_dir . '/' . $page->theme_color . '/style.css') ){
-			$page->css_user[] = rawurldecode($page->theme_path).'/style.css';
-		}else{
-			$less[] = $page->theme_dir . '/' . $page->theme_color . '/style.less';
+		if( $style_type == 'css' ){
+			$page->css_user[]	= rawurldecode($page->theme_path).'/style.css';
+		}elseif( $style_type == 'less' ){
+			$style_files[]		= $page->theme_dir . '/' . $page->theme_color . '/style.less';
+		}elseif( $style_type == 'scss' ){
+			$style_files[]		= $page->theme_dir . '/' . $page->theme_color . '/style.scss';
 		}
 
 		// variables.less
 		$var_file = $page->theme_dir . '/' . $page->theme_color . '/variables.less';
 		if( file_exists($var_file) ){
-			$less[] = $var_file;
+			$style_files[] = $var_file;
 		}
+
+
 
 
 		$temp = trim($_REQUEST['css']);
 		if( !empty($temp) ){
-			$less[] = $_REQUEST['css']. "\n"; //make sure this is seen as code and not a filename
+			$style_files[] = $_REQUEST['css']. "\n"; //make sure this is seen as code and not a filename
 		}
 
 
-		if( count($less) ){
-			$compiled = \gp\tool\Less::Parse( $less );
+		if( count($style_files) ){
+
+			if( $style_type == 'less' ){
+				$compiled = \gp\tool\Less::Parse( $style_files );
+			}elseif( $style_type == 'scss' ){
+				$compiled = \gp\tool\Scss::Parse( $style_files );
+			}
+
 			if( !$compiled ){
-				message($langmessage['OOPS'].' (Invalid LESS)');
+				message($langmessage['OOPS'].' (Invalid '.$style_type.')');
 				return false;
 			}
 

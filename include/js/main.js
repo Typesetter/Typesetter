@@ -1,6 +1,6 @@
 //"use strict";
 
-
+var gplinks={},gpinputs={},gpresponse={};
 
 /**
  * $gp object

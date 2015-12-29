@@ -2302,15 +2302,19 @@ class gpOutput{
 	 * Return a list of css files used by the current layout
 	 *
 	 */
-	static function LayoutStyleFiles(){
+	public static function LayoutStyleFiles(){
 		global $page, $dataDir;
 
-		$files = array();
+
+		$files			= array();
+		$dir			= $page->theme_dir . '/' . $page->theme_color;
+		$style_type		= self::StyleType($dir);
+
 
 		$custom_file = $dataDir.'/data/_layouts/'.$page->gpLayout.'/custom.css';
 
 		//css file
-		if( file_exists($page->theme_dir . '/' . $page->theme_color . '/style.css') ){
+		if( $style_type == 'css' ){
 
 			$files[] = rawurldecode($page->theme_path).'/style.css';
 
@@ -2321,23 +2325,49 @@ class gpOutput{
 			return $files;
 		}
 
-		//less file
-		$files[] = $page->theme_dir . '/' . $page->theme_color . '/style.less';
 
-
-		//variables.less
-		$var_file = $page->theme_dir . '/' . $page->theme_color . '/variables.less';
+		//less or scss file
+		$var_file	= $dir . '/variables.'.$style_type;
 		if( file_exists($var_file) ){
 			$files[] = $var_file;
 		}
+
+		$files[]	= $dir . '/style.'.$style_type;
 
 		if( $page->gpLayout && file_exists($custom_file) ){
 			$files[] = $custom_file;
 		}
 
-		$files = array( \gp\tool\Less::Cache($files) );
+		if( $style_type == 'scss' ){
+			msg($files);
+			$scss			= new \gp\tool\Scss();
+			return array( $scss->Cache($files) );
+		}
 
-		return $files;
+		return array( \gp\tool\Less::Cache($files) );
+	}
+
+
+	/**
+	 * Get the filetype of the style.* file
+	 *
+	 */
+	public static function StyleType($dir){
+		$css_path	= $dir.'/style.css';
+		$less_path	= $dir.'/style.less';
+		$scss_path	= $dir.'/style.scss';
+
+		if( file_exists($css_path) ){
+			return 'css';
+		}
+
+		if( file_exists($less_path) ){
+			return 'less';
+		}
+
+		if( file_exists($scss_path) ){
+			return 'scss';
+		}
 	}
 
 

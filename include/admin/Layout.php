@@ -928,9 +928,8 @@ class Layout extends \gp\admin\Addon\Install{
 		$colors = array();
 		asort($subdirs);
 		foreach($subdirs as $subdir){
-			$css_path = $dir.'/'.$subdir.'/style.css';
-			$less_path = $dir.'/'.$subdir.'/style.less';
-			if( file_exists($css_path) || file_exists($less_path) ){
+
+			if( \gpOutput::StyleType($dir.'/'.$subdir) ){
 				$colors[$subdir] = $subdir;
 			}
 

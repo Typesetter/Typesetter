@@ -2816,8 +2816,12 @@ class gpOutput{
 	 */
 	static function GetComponents($names = ''){
 		$scripts = \gp\tool\Combine::ScriptInfo( $names );
-		gpOutput::CombineFiles($scripts['css'], 'css', false );
-		gpOutput::CombineFiles($scripts['js'], 'js', false );
+
+		$scripts['css'] = self::GetHead_CDN('css',$scripts['css']);
+		self::CombineFiles($scripts['css'], 'css', false );
+
+		$scripts['js'] = self::GetHead_CDN('js',$scripts['js']);
+		self::CombineFiles($scripts['js'], 'js', false );
 	}
 
 }

@@ -2182,7 +2182,7 @@ class common{
 
 		//default gpEasy Variables
 		gpOutput::$inline_vars['isadmin']			= false;
-		gpOutput::$inline_vars['gpBase']			= rtrim(common::GetDir(''));
+		gpOutput::$inline_vars['gpBase']			= rtrim(common::GetDir(''),'/');
 		gpOutput::$inline_vars['post_nonce']		= '';
 		gpOutput::$inline_vars['req_type']			= strtolower(htmlspecialchars($_SERVER['REQUEST_METHOD']));
 

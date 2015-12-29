@@ -481,7 +481,22 @@ class Tools{
 		self::FormatAdminLinks($links);
 
 		echo '</ul>';
+
+		self::ToolbarSearch();
+
 		echo '</div>';
+	}
+
+	public static function ToolbarSearch(){
+		echo '<form method="get" action="'.\common::GetUrl('special_gpsearch').'" id="panel_search" class="cf">';
+
+		echo '<span>';
+		echo '<input type="text" value="" name="q"> ';
+		echo '<i class="fa fa-search"></i>';
+		echo '</span>';
+
+		echo '<button class="gpabox" type="submit"></button> ';
+		echo '</form>';
 	}
 
 	public static function FormatAdminLinks($links){

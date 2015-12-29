@@ -165,10 +165,7 @@ class admin extends \display{
 		echo '</div>';
 
 
-		echo '<form method="get" action="'.\common::GetUrl('special_gpsearch').'" id="panel_search" class="cf">';
-		echo '<input type="text" value="" name="q">';
-		echo '<button class="gpabox" type="submit"></button>';
-		echo '</form>';
+		\gp\admin\Tools::ToolbarSearch();
 
 		echo '</div>';
 	}

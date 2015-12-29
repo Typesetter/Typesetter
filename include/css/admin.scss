@@ -278,7 +278,10 @@
 	background: $gp_panel_bg;
 	font-size: $gp_nav_font_size;
 	line-height: $gp_nav_font_size;
-	box-sizing:border-box;
+	}
+#admincontent_panel,
+#admincontent_panel *{
+	@include box-sizing( border-box );
 	}
 
 #admincontent_panel .GPAREA{
@@ -329,24 +332,48 @@
 #panel_search{
 	float:right;
 }
+
+#panel_search span{
+	position:relative;
+	display:inline-block;
+	height:$gp_nav_height;
+	}
+
 #panel_search input{
 	border:0 none;
 	border-radius:3px;
-	width:140px;
+	width:160px;
 	color: $gp_nav_link_color_hover;
 	font-size: $gp_nav_font_size;
-	padding: ($gp_nav_link_padding_y - 4px) 4px ($gp_nav_link_padding_y - 4px) 26px;
+	height:$gp_nav_height - 8px;
+	padding: ($gp_nav_link_padding_y - 4px) 4px ($gp_nav_link_padding_y - 4px) 25px;
 	margin:4px 0;
-	@include gpimg( 'page_white_magnify.png', 5px, 50% );
-	background-color: overlay($gp_panel_bg,#fff);
+	background-color: lighten($gp_panel_bg, 10%);
 	@include transition( all .2s ease-out);
 	}
+
+#panel_search span > i{
+	position: absolute;
+	top: 0;
+	left: 0px;
+	width: 25px;
+	text-align: center;
+	color: lighten($gp_panel_bg,30%);
+	height: $gp_nav_height;
+	line-height: $gp_nav_height;
+	}
+
 #panel_search input:focus{
 	background-color: #f1f1f1;
 	color: #333;
 	}
+
 #panel_search button{
 	display:none;
+	}
+
+#panel_search .tslogo{
+	vertical-align:top;
 	}
 
 /**

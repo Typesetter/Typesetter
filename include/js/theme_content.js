@@ -206,11 +206,11 @@ $(function(){
 	 */
 	function LayoutSetup(){
 
+		$('body').addClass('edit_layout'); //for .gp-fixed-adjust
+
 		if( typeof(gpLayouts) == 'undefined' ){
 			return;
 		}
-
-		$('body').addClass('edit_layout');
 
 
 		//disable editable areas, there could be conflicts with the layout toolbar and content toolbars

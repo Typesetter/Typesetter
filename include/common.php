@@ -2179,14 +2179,41 @@ class common{
 	 *
 	 */
 	static function JsStart(){
+		global $linkPrefix;
 
 		//default gpEasy Variables
-		echo 'var gplinks={},gpinputs={},gpresponse={}'
-				.',isadmin=false'
-				.',gpBase="'.rtrim(common::GetDir(''),'/').'"'
-				.',post_nonce=""'
-				.',req_type="'.strtolower(htmlspecialchars($_SERVER['REQUEST_METHOD'])).'";'
-				."\n";
+		gpOutput::$inline_vars['isadmin']		= false;
+		gpOutput::$inline_vars['gpBase']		= rtrim(common::GetDir(''));
+		gpOutput::$inline_vars['post_nonce']	= '';
+		gpOutput::$inline_vars['req_type']		= strtolower(htmlspecialchars($_SERVER['REQUEST_METHOD']));
+
+
+		if( gpdebugjs ){
+			if( is_string(gpdebugjs) ){
+				gpOutput::$inline_vars['debugjs'] = 'send';
+			}else{
+				gpOutput::$inline_vars['debugjs'] = true;
+			}
+		}
+
+		if( common::LoggedIn() ){
+			gpOutput::$inline_vars += array(
+				'isadmin'		=> true,
+				'gpBLink'		=> common::HrefEncode($linkPrefix,false),
+				'post_nonce'	=> common::new_nonce('post',true),
+				);
+
+			gpsession::GPUIVars();
+		}
+
+		if( gpOutput::$inline_vars ){
+			echo 'var gplinks={},gpinputs={},gpresponse={}';
+			foreach(gpOutput::$inline_vars as $key => $value){
+				echo ','.$key.'='.json_encode($value);
+			}
+			echo ';';
+		}
+
 	}
 
 

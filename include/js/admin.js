@@ -587,7 +587,7 @@ $(function(){
 	 * Update character counts
 	 *
 	 */
-	$gp.$doc.on('keyup keypress paste change', '.show_character_count', function(){
+	$gp.$doc.on('keyup keypress paste change', '.show_character_count textarea', function(){
 		$(this).parent().find('.character_count span').html( this.value.length );
 	});
 

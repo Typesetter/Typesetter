@@ -2129,44 +2129,6 @@ class gpOutput{
 		global $page, $linkPrefix;
 
 		ob_start();
-
-		if( gpdebugjs ){
-			if( is_string(gpdebugjs) ){
-				gpOutput::$inline_vars['debugjs'] = 'send';
-			}else{
-				gpOutput::$inline_vars['debugjs'] = true;
-			}
-		}
-
-		if( common::LoggedIn() ){
-			gpOutput::$inline_vars += array(
-				'isadmin'		=> true,
-				'gpBLink'		=> common::HrefEncode($linkPrefix,false),
-				'post_nonce'	=> common::new_nonce('post',true),
-				);
-
-			gpsession::GPUIVars();
-		}
-
-		if( gpOutput::$inline_vars ){
-			echo 'var ';
-			$comma = '';
-			foreach(gpOutput::$inline_vars as $key => $value){
-				echo $comma.$key.'='.json_encode($value);
-				$comma = ',';
-			}
-			echo ';';
-		}
-
-		$inline = ob_get_clean();
-
-		if( !empty($inline) ){
-			echo "\n<script>\n".$inline."\n</script>";
-		}
-
-
-
-		ob_start();
 		echo $page->head_script;
 
 		if( !empty($page->jQueryCode) ){

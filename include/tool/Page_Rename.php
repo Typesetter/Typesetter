@@ -133,10 +133,12 @@ class gp_rename{
 		echo '<td class="formlabel">';
 		echo $langmessage['description'];
 		echo '</td><td>';
-		echo '<textarea class="gptextarea show_character_count" rows="2" cols="50" name="description">'.$description.'</textarea>';
 
 		$count_label = sprintf($langmessage['_characters'],'<span>'.strlen($description).'</span>');
-		echo '<div class="character_count">'.$count_label.'</div>';
+		echo '<span class="show_character_count">';
+		echo '<textarea class="gptextarea" rows="2" cols="50" name="description">'.$description.'</textarea>';
+		echo '<span class="character_count">'.$count_label.'</span>';
+		echo '</span>';
 
 		echo '</td></tr>';
 

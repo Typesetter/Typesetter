@@ -1357,6 +1357,7 @@ class Compiler
             $path = $this->compileStringContent($rawPath);
 
             if ($path = $this->findImport($path)) {
+
                 if (! $once || ! in_array($path, $this->importedFiles)) {
                     $this->importFile($path, $out);
                     $this->importedFiles[] = $path;

@@ -35,7 +35,7 @@ class Scss extends \Leafo\ScssPhp\Compiler{
 			$compiled_file = '/data/_cache/'.$compiled_name;
 
 			if( file_exists($dataDir.$compiled_file) ){
-				return $compiled_file;
+				//return $compiled_file;
 			}
 
 		}
@@ -103,6 +103,8 @@ class Scss extends \Leafo\ScssPhp\Compiler{
 
 				$combined[]	= '@import "'.$file.'";';
 			}
+
+			$this->addImportPath($dataDir);
 
 			$compiled = $this->compile(implode("\n",$combined));
 

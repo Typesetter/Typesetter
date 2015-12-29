@@ -14,8 +14,10 @@ class Less{
 
 
 		//generage the name of the css file from the modified times and content length of each imported less file
+		$less_files = (array)$less_files;
 		$files_hash	= \common::ArrayHash($less_files);
  		$list_file	= $dataDir.'/data/_cache/less_'.$files_hash.'.list';
+
  		if( file_exists($list_file) ){
 
 			$list = explode("\n",file_get_contents($list_file));
@@ -36,15 +38,12 @@ class Less{
 			$compiled_name = 'less_'.$files_hash.'_'.$etag.'.css';
 			$compiled_file = '/data/_cache/'.$compiled_name;
 
-
 			if( file_exists($dataDir.$compiled_file) ){
-				//msg('not using cache');
 				return $compiled_file;
 			}
 
 		}
 
-		$less_files = (array)$less_files;
 		$compiled = self::Parse( $less_files );
 		if( !$compiled ){
 			return false;

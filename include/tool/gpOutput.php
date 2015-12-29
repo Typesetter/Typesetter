@@ -130,7 +130,7 @@ class gpOutput{
 	static function BodyAsHTML(){
 		global $page;
 
-		$page->head_script .= 'var gp_bodyashtml = true;';
+		gpOutput::$inline_vars['gp_bodyashtml']	= true;
 
 		gpOutput::TemplateSettings();
 
@@ -154,7 +154,7 @@ class gpOutput{
 	static function AdminHtml(){
 		global $page;
 
-		$page->head_script .= 'var gp_bodyashtml = true;';
+		//gpOutput::$inline_vars['gp_bodyashtml']	= true;
 
 		self::StandardHeaders();
 
@@ -2187,9 +2187,9 @@ class gpOutput{
 
 
 		if( !$combine || $page->head_force_inline ){
-			echo "\n<script type=\"text/javascript\">";
+			echo "\n<script type=\"text/javascript\">\n";
 			common::jsStart();
-			echo '</script>';
+			echo "\n</script>";
 		}
 
 		if( is_array($page->head_js) ){

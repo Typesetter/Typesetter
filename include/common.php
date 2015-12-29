@@ -1437,7 +1437,7 @@ class common{
 	 *
 	 */
 	static function AddColorBox(){
-		global $page, $config, $langmessage;
+		global $langmessage;
 		static $init = false;
 
 		if( $init ){
@@ -1445,8 +1445,7 @@ class common{
 		}
 		$init = true;
 
-		$list = array('previous'=>$langmessage['Previous'],'next'=>$langmessage['Next'],'close'=>$langmessage['Close'],'caption'=>$langmessage['caption'],'current'=>sprintf($langmessage['Image_of'],'{current}','{total}')); //'Start Slideshow'=>'slideshowStart','Stop Slideshow'=>'slideshowStop'
-		$page->head_script .= "\nvar colorbox_lang = ".common::JsonEncode($list).';';
+		gpOutput::$inline_vars['colorbox_lang'] = array('previous'=>$langmessage['Previous'],'next'=>$langmessage['Next'],'close'=>$langmessage['Close'],'caption'=>$langmessage['caption'],'current'=>sprintf($langmessage['Image_of'],'{current}','{total}')); //'Start Slideshow'=>'slideshowStart','Stop Slideshow'=>'slideshowStop'
 
 		common::LoadComponents( 'colorbox' );
 	}
@@ -2182,38 +2181,34 @@ class common{
 		global $linkPrefix;
 
 		//default gpEasy Variables
-		gpOutput::$inline_vars['isadmin']		= false;
-		gpOutput::$inline_vars['gpBase']		= rtrim(common::GetDir(''));
-		gpOutput::$inline_vars['post_nonce']	= '';
-		gpOutput::$inline_vars['req_type']		= strtolower(htmlspecialchars($_SERVER['REQUEST_METHOD']));
+		gpOutput::$inline_vars['isadmin']			= false;
+		gpOutput::$inline_vars['gpBase']			= rtrim(common::GetDir(''));
+		gpOutput::$inline_vars['post_nonce']		= '';
+		gpOutput::$inline_vars['req_type']			= strtolower(htmlspecialchars($_SERVER['REQUEST_METHOD']));
 
 
 		if( gpdebugjs ){
 			if( is_string(gpdebugjs) ){
-				gpOutput::$inline_vars['debugjs'] = 'send';
+				gpOutput::$inline_vars['debugjs']	= 'send';
 			}else{
-				gpOutput::$inline_vars['debugjs'] = true;
+				gpOutput::$inline_vars['debugjs']	= true;
 			}
 		}
 
 		if( common::LoggedIn() ){
-			gpOutput::$inline_vars += array(
-				'isadmin'		=> true,
-				'gpBLink'		=> common::HrefEncode($linkPrefix,false),
-				'post_nonce'	=> common::new_nonce('post',true),
-				);
+
+			gpOutput::$inline_vars['isadmin']		= true;
+			gpOutput::$inline_vars['gpBLink']		= common::HrefEncode($linkPrefix,false);
+			gpOutput::$inline_vars['post_nonce']	= common::new_nonce('post',true);
 
 			gpsession::GPUIVars();
 		}
 
-		if( gpOutput::$inline_vars ){
-			echo 'var gplinks={},gpinputs={},gpresponse={}';
-			foreach(gpOutput::$inline_vars as $key => $value){
-				echo ','.$key.'='.json_encode($value);
-			}
-			echo ';';
+		echo 'var gplinks={},gpinputs={},gpresponse={}';
+		foreach(gpOutput::$inline_vars as $key => $value){
+			echo ','.$key.'='.json_encode($value);
 		}
-
+		echo ';';
 	}
 
 

@@ -508,8 +508,9 @@ class Combine{
 		$file = \gpFiles::NoNull($file);
 
 		//require .js or .css
-		$test = strtolower($file);
-		if( substr($test, -3) != '.js' && substr($test, -4) != '.css' && substr($test,-5) != '.less' ){
+		$test	= strtolower($file);
+		$ext	= pathinfo($file, PATHINFO_EXTENSION);
+		if( $ext !== 'js' && $ext !== 'css' && $ext !== 'less' && $ext !== 'scss' ){
 			echo  "\n{$comment_start} File Not CSS, LESS or JS {$file} {$comment_end}\n";
 			return false;
 		}

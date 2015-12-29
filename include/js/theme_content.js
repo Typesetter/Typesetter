@@ -156,7 +156,8 @@ $(function(){
 		}
 
 		var codeMirrorConfig = {
-				mode:'less',
+		        mode: 'text/x-less',
+				//mode: 'text/x-scss'
 				lineWrapping:false
 			};
 

@@ -22,11 +22,6 @@ class Configuration{
 		$langmessage['about_config']['showgplink']		= 'Showing the "powered by" link on your site is a great way to support gpEasy CMS.';
 		$langmessage['about_config']['history_limit']	= 'Max: '.gp_backup_limit;
 
-		$langmessage['cdn_jquery']						= 'jQuery';
-		$langmessage['cdn_ui-core']						= 'jQuery UI';
-		$langmessage['cdn_ui-theme']					= 'jQuery UI CSS';
-		$langmessage['cdn_fontawesome']					= 'Font Awesome';
-
 
 		$this->variables = array(
 
@@ -374,7 +369,6 @@ class Configuration{
 		}else{
 			echo '<input value="'.$langmessage['save'].'" type="submit" name="aaa" accesskey="s" class="gpsubmit"/>';
 		}
-		echo ' <input type="button" class="admin_box_close gpcancel" name="" value="'.$langmessage['cancel'].'" />';
 
  		echo '</div>';
 

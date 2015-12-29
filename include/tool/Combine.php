@@ -200,12 +200,27 @@ class Combine{
 
 
 				//html5shiv
-				'html5shiv' => array(	'file'			=> '/include/thirdparty/js/shiv/html5shiv.js' ),
-				'printshiv' => array(	'file'			=> '/include/thirdparty/js/shiv/html5shiv-printshiv.js' ),
+				'html5shiv' => array(	'file'			=> '/include/thirdparty/js/shiv/html5shiv.js',
+										'label'			=> 'Html5Shiv',
+										'cdn'			=> array(
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js',
+															),
+										),
 
+				'printshiv' => array(	'file'			=> '/include/thirdparty/js/shiv/html5shiv-printshiv.js',
+										'label'			=> 'PrintShiv',
+										'cdn'			=> array(
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js',
+															),
+										),
 
 				//respond.js
-				'respondjs' => array(	'file'			=> '/include/thirdparty/js/respond.min.js' ),
+				'respondjs' => array(	'file'			=> '/include/thirdparty/js/respond.min.js',
+										'label'			=> 'Respond.js',
+										'cdn'			=> array(
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js',
+															),
+										),
 
 
 				//bootstrap 2.3.2 css (deprecated)

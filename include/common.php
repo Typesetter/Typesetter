@@ -36,7 +36,7 @@ gp_defined('gp_default_theme','Three_point_5/Shore'); 	//Bootswatch_Flatly/4_Sti
 
 //gp_defined('CMS_DOMAIN',			'http://gpeasy.loc');
 gp_defined('CMS_DOMAIN',			'http://www.gpeasy.com');
-gp_defined('CMS_READABLE_DOMAIN',	'gpeasy.com');
+gp_defined('CMS_READABLE_DOMAIN',	'gpEasy.com');
 gp_defined('CMS_NAME',				'gpEasy');
 gp_defined('addon_browse_path',		CMS_DOMAIN.'/index.php');
 gp_defined('debug_path',			CMS_DOMAIN.'/index.php/Debug');

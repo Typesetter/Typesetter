@@ -325,7 +325,7 @@ class Install_Tools{
 		<li>Take a look at the Administrator Toolbar to access all the features of gpEasy.</li>
 		</ul>
 		<h3>Online Resources</h3>
-		<p>gpEasy.com has a number of resources to help you do even more with gpEasy.</p>
+		<p>'.CMS_READABLE_DOMAIN.' has a number of resources to help you do even more.</p>
 		<ul>
 		<li>Find more community developed <a href="http://gpeasy.com/Themes" title="gpEasy CMS Themes">themes</a> and <a href="http://gpeasy.com/Plugins" title="gpEasy CMS Plugin">plugins</a> to enhance your site.</li>
 		<li>Get help in the <a href="http://gpeasy.com/Forum" title="gpEasy CMS Forum">gpEasy forum</a>.</li>

@@ -34,9 +34,12 @@ gp_defined('gp_data_type','.php');
 gp_defined('gp_default_theme','Three_point_5/Shore'); 	//Bootswatch_Flatly/4_Sticky_Footer
 
 
-//gp_defined('addon_browse_path','http://gpeasy.loc/index.php');
-gp_defined('addon_browse_path','http://www.gpeasy.com/index.php');
-gp_defined('debug_path','http://www.gpeasy.com/index.php/Debug');
+//gp_defined('CMS_DOMAIN',			'http://gpeasy.loc');
+gp_defined('CMS_DOMAIN',			'http://www.gpeasy.com');
+gp_defined('CMS_READABLE_DOMAIN',	'gpeasy.com');
+gp_defined('CMS_NAME',				'gpEasy');
+gp_defined('addon_browse_path',		CMS_DOMAIN.'/index.php');
+gp_defined('debug_path',			CMS_DOMAIN.'/index.php/Debug');
 
 gp_defined('gpversion','4.6rc2');
 gp_defined('gp_random',common::RandomString());
@@ -1549,7 +1552,7 @@ class common{
 
 		die('<p>Notice: The site configuration did not load properly.</p>'
 			.'<p>If you are the site administrator, you can troubleshoot the problem turning debugging "on" or bypass it by enabling gpEasy safe mode.</p>'
-			.'<p>More information is available in the <a href="http://docs.gpeasy.com/Main/Troubleshooting">gpEasy documentation</a>.</p>'
+			.'<p>More information is available in the <a href="'.CMS_DOMAIN.'/Docs/Main/Troubleshooting">gpEasy documentation</a>.</p>'
 			.common::ErrorBuffer(true,false)
 			);
 	}

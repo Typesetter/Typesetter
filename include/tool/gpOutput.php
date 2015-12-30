@@ -2519,7 +2519,7 @@ class gpOutput{
 			}else{
 				$message .= '<p>If you are the site administrator, you can troubleshoot the problem by changing php\'s display_errors setting to 1 in the gpconfig.php file.</p>'
 						.'<p>If the problem is being caused by an addon, you may also be able to bypass the error by enabling gpEasy\'s safe mode in the gpconfig.php file.</p>'
-						.'<p>More information is available in the <a href="http://docs.gpeasy.com/Main/Troubleshooting">gpEasy documentation</a>.</p>'
+						.'<p>More information is available in the <a href="'.CMS_DOMAIN.'/Docs/Main/Troubleshooting">gpEasy documentation</a>.</p>'
 						.'<p><a href="">Reload this page to continue</a>.</p>';
 			}
 
@@ -2682,9 +2682,11 @@ class gpOutput{
 
 
 		if( !isset($config['showgplink']) || $config['showgplink'] ){
-			echo ' <span id="powered_by_link">';
-			echo 'Powered by <a href="http://www.gpEasy.com" target="_blank">gp|Easy CMS</a>';
-			echo '</span>';
+			if( self::is_front_page() ){
+				echo ' <span id="powered_by_link">';
+				echo 'Powered by <a href="'.CMS_DOMAIN.'" target="_blank">'.CMS_NAME.'</a>';
+				echo '</span>';
+			}
 		}
 
 

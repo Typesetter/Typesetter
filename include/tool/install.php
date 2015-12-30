@@ -19,7 +19,7 @@ class Install_Tools{
 	static function Form_UserDetails(){
 		global $langmessage;
 
-		$_POST += array('username'=>'','site_title'=>'My gpEasy CMS','email'=>'');
+		$_POST += array('username'=>'','site_title'=>'My '.CMS_NAME,'email'=>'');
 
 		echo '<tr><th colspan="2">'.$langmessage['configuration'].'</th></tr>';
 		echo '<tr><td>'.$langmessage['Website_Title'].'</td><td><input type="text" class="text" name="site_title" value="'.htmlspecialchars($_POST['site_title']).'" required /></td></tr>';
@@ -111,7 +111,7 @@ class Install_Tools{
 
 		echo "\ngpInstall_Check\n";
 
-		$_POST += array('username'=>'','site_title'=>'My gpEasy CMS','email'=>'');
+		$_POST += array('username'=>'','site_title'=>'My '.CMS_NAME,'email'=>'');
 
 		$passed = array();
 		$failed = array();
@@ -157,12 +157,12 @@ class Install_Tools{
 	}
 
 	static function Install_Title(){
-		$_POST += array( 'site_title' => 'My gpEasy CMS' );
+		$_POST += array( 'site_title' => '');
 		$title = $_POST['site_title'];
 		$title = htmlspecialchars($title);
 		$title = trim($title);
 		if( empty($title) ){
-			return 'My gpEasy CMS';
+			return 'My '.CMS_NAME;
 		}
 		return $title;
 	}
@@ -200,8 +200,8 @@ class Install_Tools{
 		$_config['toemail']			= $_POST['email'];
 		$_config['gpLayout']		= 'default';
 		$_config['title']			= Install_Tools::Install_Title();
-		$_config['keywords']		= 'gpEasy CMS, Easy CMS, Content Management, PHP, Free CMS, Website builder, Open Source';
-		$_config['desc']			= 'A new gpEasy CMS installation. You can change your site\'s description in the configuration.';
+		$_config['keywords']		= CMS_NAME.' , Easy CMS, Content Management, PHP, Free CMS, Website builder, Open Source';
+		$_config['desc']			= 'A new '.CMS_NAME.' installation. You can change your site\'s description in the configuration.';
 		$_config['timeoffset']		= '0';
 		$_config['langeditor']		= 'inherit';
 		$_config['dateformat']		= '%m/%d/%y - %I:%M %p';
@@ -308,7 +308,7 @@ class Install_Tools{
 
 		// Home
 		$content = '<h2>Welcome!</h2>
-		<p>Welcome to your new gpEasy powered website. Now that gpEasy is installed, you can start editing the content and customizing your site.</p>
+		<p>Welcome to your new '.CMS_NAME.' powered website. Now that '.CMS_NAME.' is installed, you can start editing the content and customizing your site.</p>
 		<h3>Getting Started</h3>
 		<p>You are currently viewing the default home page of your website. Here\'s a quick description of how to edit this page.</p>
 		<ol>
@@ -321,14 +321,14 @@ class Install_Tools{
 		<li>Adding, renaming, deleting and organising your pages can all be done in the '.Install_Tools::Install_Link_Content('Admin_Menu','Page Manager').'.</li>
 		<li>Choose from a '.Install_Tools::Install_Link_Content('Admin_Theme_Content','variety of themes').' to give your site a custom look.</li>
 		<li>Then, you can '.Install_Tools::Install_Link_Content('Admin_Theme_Content','add, remove and rearrange','cmd=editlayout').' the content of your site without editing the html.</li>
-		<li>Take a look at the Administrator Toolbar to access all the features of gpEasy.</li>
+		<li>Take a look at the Administrator Toolbar to access all the features of '.CMS_NAME.'.</li>
 		</ul>
 		<h3>Online Resources</h3>
 		<p>'.CMS_READABLE_DOMAIN.' has a number of resources to help you do even more.</p>
 		<ul>
-		<li>Find more community developed <a href="http://gpeasy.com/Themes" title="gpEasy CMS Themes">themes</a> and <a href="http://gpeasy.com/Plugins" title="gpEasy CMS Plugin">plugins</a> to enhance your site.</li>
-		<li>Get help in the <a href="http://gpeasy.com/Forum" title="gpEasy CMS Forum">gpEasy forum</a>.</li>
-		<li>Show off your <a href="http://gpeasy.com/Powered_by" title="Sites Using gpEasy CMS">gpEasy powered site</a> or list your <a href="http://gpeasy.com/Service_Provider" title="Businesses Using gpEasy CMS">gpEasy related business</a>.</li>
+		<li>Find more community developed <a href="'.CMS_DOMAIN.'/Themes" title="'.CMS_NAME.' Themes">themes</a> and <a href="'.CMS_DOMAIN.'/Plugins" title="'.CMS_NAME.' Plugin">plugins</a> to enhance your site.</li>
+		<li>Get help in the <a href="'.CMS_DOMAIN.'/Forum" title="'.CMS_NAME.' Forum">'.CMS_NAME.' forum</a>.</li>
+		<li>Show off your <a href="'.CMS_DOMAIN.'/Powered_by" title="Sites Using '.CMS_NAME.'">'.CMS_NAME.' powered site</a> or list your <a href="'.CMS_DOMAIN.'/Service_Provider" title="Businesses Using '.CMS_NAME.'">'.CMS_NAME.' related business</a>.</li>
 		</ul>';
 		self::NewTitle( $destination, 'Home', $content, $config, $new_index);
 
@@ -345,7 +345,7 @@ class Install_Tools{
 		$content = '<h1>Help Videos</h1>
 		<p>Video tutorials are often a fast and easy way to learn new things quickly.
 		We now have an English version and Deutsch (German) available below.
-		If you make a video tutorial for gpEasy, <a href="http://gpeasy.com/Contact">let us know</a>, and we\'ll make sure it\'s included in our list.
+		If you make a video tutorial for '.CMS_NAME.', <a href="'.CMS_DOMAIN.'/Contact">let us know</a>, and we\'ll make sure it\'s included in our list.
 		</p>
 		<p>And as always, to edit this page, just click the "Edit" button while logged in.</p>
 
@@ -353,7 +353,7 @@ class Install_Tools{
 		<p><iframe width="640" height="360" src="http://www.youtube.com/embed/KCnGpUzYTbQ" frameborder="0" allowfullscreen></iframe></p>
 
 		<h2>Deutsch</h2>
-		<p>Created by <a href="http://gpeasy.com/Service_Provider?id=57" title="IT Ricther on gpEasy.com">IT Richter</a></p>
+		<p>Created by <a href="'.CMS_DOMAIN.'/Service_Provider?id=57" title="IT Ricther on '.CMS_READABLE_DOMAIN.'">IT Richter</a></p>
 		<p><iframe width="640" height="360" src="http://www.youtube.com/embed/04cNgR1EiFY" frameborder="0" allowfullscreen></iframe></p>';
 		self::NewTitle( $destination, 'Help_Videos',$content, $config, $new_index);
 
@@ -370,15 +370,15 @@ class Install_Tools{
 		self::NewTitle( $destination, 'More',$content, $config, $new_index);
 
 
-		// About gpEasy CMS
-		$content = '<h1>About gpEasy CMS</h1><p><a href="http://gpEasy.com" title="gpEasy.com">gp|Easy</a> is a complete Content Management System (CMS) that can help you create rich and flexible web sites with a simple and easy to use interface.</p>
-		<h2>gpEasy CMS How To</h2>
-		<p>Learn how to <a href="http://docs.gpeasy.com/Main/Admin" title="gpEasy File Management">manage your files</a>,
-		<a href="http://docs.gpeasy.com/Main/Creating%20Galleries" title="Creating Galleries in gpEasy CMS">create galleries</a> and more in the
-		<a href="http://docs.gpeasy.org/index.php/" title="gpEasy CMS Documentation">gpEasy Documentation</a>.
+		// About
+		$content = '<h1>About '.CMS_NAME.'</h1><p><a href="'.CMS_DOMAIN.'" title="'.CMS_READABLE_DOMAIN.'">'.CMS_NAME.'</a> is a complete Content Management System (CMS) that can help you create rich and flexible web sites with a simple and easy to use interface.</p>
+		<h2>'.CMS_NAME.' How To</h2>
+		<p>Learn how to <a href="'.CMS_DOMAIN.'/Docs/Main/Admin" title="'.CMS_NAME.' File Management">manage your files</a>,
+		<a href="'.CMS_DOMAIN.'/Docs/Main/Creating%20Galleries" title="Creating Galleries in '.CMS_NAME.'">create galleries</a> and more in the
+		<a href="'.CMS_DOMAIN.'/Docs/index.php/" title="'.CMS_NAME.' Documentation">'.CMS_NAME.' Documentation</a>.
 		</p>
 
-		<h2>gpEasy CMS Features</h2>
+		<h2>'.CMS_NAME.' Features</h2>
 		<ul>
 		<li>True WYSIWYG (Using CKEditor)</li>
 		<li>Galleries (Using ColorBox)</li>
@@ -399,14 +399,14 @@ class Install_Tools{
 
 		//Side_Menu
 		$file		= $destination.'/data/_extra/Side_Menu.php';
-		$content	= '<h3>Join the gpEasy Community</h3>
-		<p>Visit gpEasy.com to access the many <a href="http://gpeasy.com/Resources" title="gpEasy Community Resources">available resources</a> to help you get the most out of our CMS.</p>
+		$content	= '<h3>Join the '.CMS_NAME.' Community</h3>
+		<p>Visit '.CMS_READABLE_DOMAIN.' to access the many <a href="'.CMS_DOMAIN.'/Resources" title="'.CMS_NAME.' Community Resources">available resources</a> to help you get the most out of our CMS.</p>
 		<ul>
-		<li><a href="http://gpeasy.com/Themes" title="gpEasy CMS Themes">Download Themes</a></li>
-		<li><a href="http://gpeasy.com/Plugins" title="gpEasy CMS Plugin">Download Plugins</a></li>
-		<li><a href="http://gpeasy.com/Forum" title="gpEasy CMS Forum">Get Help in the Forum</a></li>
-		<li><a href="http://gpeasy.com/Powered_by" title="Sites using gpEasy CMS">Show off Your Site</a></li>
-		<li><a href="http://gpeasy.com/Resources" title="gpEasy Community Resources">And Much More...</a></li>
+		<li><a href="'.CMS_DOMAIN.'/Themes" title="'.CMS_NAME.' Themes">Download Themes</a></li>
+		<li><a href="'.CMS_DOMAIN.'/Plugins" title="'.CMS_NAME.' Plugin">Download Plugins</a></li>
+		<li><a href="'.CMS_DOMAIN.'/Forum" title="'.CMS_NAME.' Forum">Get Help in the Forum</a></li>
+		<li><a href="'.CMS_DOMAIN.'/Powered_by" title="Sites using '.CMS_NAME.'">Show off Your Site</a></li>
+		<li><a href="'.CMS_DOMAIN.'/Resources" title="'.CMS_NAME.' Community Resources">And Much More...</a></li>
 		</ul>
 		<p class="sm">(Edit this content by clicking &quot;Edit&quot;, it&#39;s that easy!)</p>';
 		self::NewExtra($file,$content);
@@ -419,12 +419,12 @@ class Install_Tools{
 
 		//Footer
 		$file		= $destination.'/data/_extra/Footer.php';
-		$content	= '<h3><a href="http://gpeasy.com/Our_CMS" title="Features of Our CMS">gpEasy CMS Features</a></h3>
+		$content	= '<h3><a href="'.CMS_DOMAIN.'/Our_CMS" title="Features of Our CMS">'.CMS_NAME.' Features</a></h3>
 		<p>Easy to use True WYSIWYG Editing.</p>
 		<p>Flat-file data storage and advanced resource management for fast websites.</p>
 		<p>Community driven development</p>
-		<p><a href="http://gpeasy.com/Our_CMS" title="Features of Our CMS">And More...</a></p>
-		<p>If you like gpEasy, then you might also like
+		<p><a href="'.CMS_DOMAIN.'/Our_CMS" title="Features of Our CMS">And More...</a></p>
+		<p>If you like '.CMS_NAME.', then you might also like
 		<a href="http://lessphp.gpeasy.com" title="A Less to CSS compiler based on the official lesscss project">Less.php</a>,
 		<a href="http://whatcms.org" title="What CMS? Find out what CMS a site is using">WhatCMS.org</a> and
 		<a href="http://whichcms.org" title="Which CMS? Find out which CMS has the features you\'re looking for.">WhichCMS.org</a>.

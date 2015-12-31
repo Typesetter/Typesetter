@@ -534,7 +534,7 @@ class admin_tools{
 			ob_start();
 			if( gp_remote_update && isset(self::$new_versions['core']) ){
 				echo '<li>';
-				echo '<a href="'.common::GetDir('/include/install/update.php').'">gpEasy '.self::$new_versions['core'].'</a>';
+				echo '<a href="'.common::GetDir('/include/install/update.php').'">'.CMS_NAME.' '.self::$new_versions['core'].'</a>';
 				echo '</li>';
 			}
 
@@ -589,7 +589,7 @@ class admin_tools{
 			echo '</li>';
 
 			echo '<li>';
-			echo common::Link('Admin_About','About gpEasy');
+			echo common::Link('Admin_About','About '.CMS_NAME);
 			echo '</li>';
 			echo '</ul>';
 			echo '</div>';
@@ -622,9 +622,9 @@ class admin_tools{
 			if( gp_remote_themes && admin_tools::HasPermission('Admin_Theme_Content') ){
 				echo '<li>'.common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']).'</li>';
 			}
-			echo '<li><a href="http://gpeasy.com/Forum">Support Forum</a></li>';
-			echo '<li><a href="http://gpeasy.com/Services">Service Providers</a></li>';
-			echo '<li><a href="http://gpeasy.com">Official gpEasy Site</a></li>';
+			echo '<li><a href="'.CMS_DOMAIN.'/Forum">Support Forum</a></li>';
+			echo '<li><a href="'.CMS_DOMAIN.'/Services">Service Providers</a></li>';
+			echo '<li><a href="'.CMS_DOMAIN.'">Official gpEasy Site</a></li>';
 			echo '<li><a href="https://github.com/Typesetter/Typesetter/issues">Report A Bug</a></li>';
 			echo '</ul>';
 			echo '</div>';
@@ -632,7 +632,7 @@ class admin_tools{
 
 			if( $in_panel ){
 				echo '<div class="gpversion">';
-				echo 'gpEasy '.gpversion;
+				echo CMS_NAME.' '.gpversion;
 				echo '</div>';
 			}
 

@@ -16,7 +16,7 @@ class About{
 
 
 		echo '<p>You\'re currently using version '.gpversion.' of our free, open source and easy to use content management system.';
-		echo ' Our code is <a href="https://github.com/oyejorge/gpEasy-CMS">hosted on github</a> ';
+		echo ' Our code is <a href="https://github.com/Typesetter/Typesetter">hosted on github</a> ';
 		echo 'and licensed under version 2 of the <a href="http://www.gnu.org/licenses/gpl-2.0.html">GNU General Public License</a>. ';
 		echo '</p>';
 
@@ -35,7 +35,7 @@ class About{
 
 		echo '<i>Does '.CMS_NAME.' Work?</i>';
 		echo '<p>Obviously the first step is to get '.CMS_NAME.' working correctly.';
-		echo ' If it\'s not working for you and you think it\'s because of a bug, you can <a href="https://github.com/oyejorge/gpEasy-CMS/issues">report it</a> and we\'ll work on fixing it.';
+		echo ' If it\'s not working for you and you think it\'s because of a bug, you can <a href="https://github.com/Typesetter/Typesetter/issues">report it</a> and we\'ll work on fixing it.';
 		echo '</p>';
 
 		echo '<i>Does '.CMS_NAME.' Work Well?</i>';
@@ -43,7 +43,7 @@ class About{
 		echo ' There are multiple ways to give us feedback. The following services allow you to rate and comment on '.CMS_NAME.'. ';
 		echo '</p>';
 		echo '<ul>';
-		echo '<li><a href="https://github.com/oyejorge/gpEasy-CMS" target="_blank">Fork on Github</a></li>';
+		echo '<li><a href="https://github.com/Typesetter/Typesetter" target="_blank">Fork on Github</a></li>';
 		echo '<li><a href="http://php.opensourcecms.com/scripts/details.php?scriptid=360&amp;name=gpEasy%20CMS" target="_blank">OpensourceCMS.com</a></li>';
 		echo '</ul>';
 

@@ -1047,7 +1047,7 @@ class gp_install{
 
 		echo '</select>';
 		echo '<div class="sm">';
-		echo '<a href="https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages" target="_blank">Help translate gpEasy</a>';
+		echo '<a href="https://github.com/Typesetter/Typesetter/tree/master/include/languages" target="_blank">Help translate gpEasy</a>';
 		echo '</div>';
 
 		echo '</form>';

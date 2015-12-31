@@ -110,7 +110,7 @@ class Install_Tools{
 	static function gpInstall_Check(){
 		global $langmessage;
 
-		echo "\ngpInstall_Check\n";
+		echo "\nInstall Check\n";
 
 		$_POST += array('username'=>'','site_title'=>'My '.CMS_NAME,'email'=>'');
 

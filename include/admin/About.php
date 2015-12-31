@@ -10,7 +10,7 @@ class About{
 
 		echo '<div style="min-width:600px;width:75%;">';
 
-		echo '<h2>gpEasy CMS</h2>';
+		echo '<h2>'.CMS_NAME.' CMS</h2>';
 
 		echo '<hr/>';
 
@@ -24,7 +24,7 @@ class About{
 
 
 
-		echo '<h3>Thanks For Using gpEasy</h3>';
+		echo '<h3>Thanks For Using '.CMS_NAME.'</h3>';
 		echo '<hr/>';
 
 		echo '<p>';
@@ -33,14 +33,14 @@ class About{
 		echo ' We want to know what you think. Here\'s how:';
 		echo '</p>';
 
-		echo '<i>Does gpEasy Work?</i>';
-		echo '<p>Obviously the first step is to get gpEasy working correctly.';
+		echo '<i>Does '.CMS_NAME.' Work?</i>';
+		echo '<p>Obviously the first step is to get '.CMS_NAME.' working correctly.';
 		echo ' If it\'s not working for you and you think it\'s because of a bug, you can <a href="https://github.com/oyejorge/gpEasy-CMS/issues">report it</a> and we\'ll work on fixing it.';
 		echo '</p>';
 
-		echo '<i>Does gpEasy Work Well?</i>';
+		echo '<i>Does '.CMS_NAME.' Work Well?</i>';
 		echo '<p>This one is a bit more subjective, but just as important.';
-		echo ' There are multiple ways to give us feedback. The following services allow you to rate and comment on gpEasy. ';
+		echo ' There are multiple ways to give us feedback. The following services allow you to rate and comment on '.CMS_NAME.'. ';
 		echo '</p>';
 		echo '<ul>';
 		echo '<li><a href="https://github.com/oyejorge/gpEasy-CMS" target="_blank">Fork on Github</a></li>';
@@ -60,7 +60,7 @@ class About{
 		echo '<br/>';
 		echo '<h3>Our Thanks</h3>';
 		echo '<hr/>';
-		echo '<p>gpEasy would not have been possible if it wasn\'t for the prosperous open source community and rich selection of successful open source projects. ';
+		echo '<p>'.CMS_NAME.' would not have been possible if it wasn\'t for the prosperous open source community and rich selection of successful open source projects. ';
 		echo ' We have benefited tremendously from the community and have borrowed ideas as well as integrated other freely available code. ';
 		echo ' Here are some of the projects we have benefited the most from. ';
 		echo '</p>';

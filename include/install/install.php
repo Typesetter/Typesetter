@@ -15,7 +15,7 @@ includeFile('tool/ftp.php');
 <!DOCTYPE html>
 <html>
 <head>
-<title>gpEasy Installation</title>
+<title>Typesetter Installation</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="robots" content="noindex,nofollow"/>
 <script type="text/javascript">
@@ -951,7 +951,7 @@ class gp_install{
 		echo '<ol>';
 		echo '<li>Make "'.$dataDir.'" writable</li>';
 		echo '<li>Delete "'.$dataDir.'/data"</li>';
-		echo '<li>Run gpEasy Installer by refreshing this page</li>';
+		echo '<li>Run '.CMS_NAME.' Installer by refreshing this page</li>';
 		echo '<li>Restore the permissions of "'.$dataDir.'"</li>';
 		echo '</ol>';
 
@@ -1047,7 +1047,7 @@ class gp_install{
 
 		echo '</select>';
 		echo '<div class="sm">';
-		echo '<a href="https://github.com/Typesetter/Typesetter/tree/master/include/languages" target="_blank">Help translate gpEasy</a>';
+		echo '<a href="https://github.com/Typesetter/Typesetter/tree/master/include/languages" target="_blank">Help translate '.CMS_NAME.'</a>';
 		echo '</div>';
 
 		echo '</form>';

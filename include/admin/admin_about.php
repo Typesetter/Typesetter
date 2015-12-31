@@ -7,7 +7,7 @@ class admin_about{
 
 		echo '<div style="min-width:600px;width:75%;">';
 
-		echo '<h2>'.CMS_DOMAIN.' CMS</h2>';
+		echo '<h2>'.CMS_NAME.' CMS</h2>';
 
 		echo '<hr/>';
 
@@ -21,7 +21,7 @@ class admin_about{
 
 
 
-		echo '<h3>Thanks For Using '.CMS_DOMAIN.'</h3>';
+		echo '<h3>Thanks For Using '.CMS_NAME.'</h3>';
 		echo '<hr/>';
 
 		echo '<p>';
@@ -30,14 +30,14 @@ class admin_about{
 		echo ' We want to know what you think. Here\'s how:';
 		echo '</p>';
 
-		echo '<i>Does '.CMS_DOMAIN.' Work?</i>';
-		echo '<p>Obviously the first step is to get '.CMS_DOMAIN.' working correctly.';
+		echo '<i>Does '.CMS_NAME.' Work?</i>';
+		echo '<p>Obviously the first step is to get '.CMS_NAME.' working correctly.';
 		echo ' If it\'s not working for you and you think it\'s because of a bug, you can <a href="https://github.com/oyejorge/gpEasy-CMS/issues">report it</a> and we\'ll work on fixing it.';
 		echo '</p>';
 
-		echo '<i>Does '.CMS_DOMAIN.' Work Well?</i>';
+		echo '<i>Does '.CMS_NAME.' Work Well?</i>';
 		echo '<p>This one is a bit more subjective, but just as important.';
-		echo ' There are multiple ways to give us feedback. The following services allow you to rate and comment on '.CMS_DOMAIN.'. ';
+		echo ' There are multiple ways to give us feedback. The following services allow you to rate and comment on '.CMS_NAME.'. ';
 		echo '</p>';
 		echo '<ul>';
 		echo '<li><a href="https://github.com/oyejorge/gpEasy-CMS" target="_blank">Fork on Github</a></li>';
@@ -57,7 +57,7 @@ class admin_about{
 		echo '<br/>';
 		echo '<h3>Our Thanks</h3>';
 		echo '<hr/>';
-		echo '<p>'.CMS_DOMAIN.' would not have been possible if it wasn\'t for the prosperous open source community and rich selection of successful open source projects. ';
+		echo '<p>'.CMS_NAME.' would not have been possible if it wasn\'t for the prosperous open source community and rich selection of successful open source projects. ';
 		echo ' We have benefited tremendously from the community and have borrowed ideas as well as integrated other freely available code. ';
 		echo ' Here are some of the projects we have benefited the most from. ';
 		echo '</p>';

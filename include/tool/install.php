@@ -547,8 +547,6 @@ class Install_Tools{
 	static function InstallHtaccess($destination,$config){
 		global $install_ftp_connection, $dirPrefix;
 
-		includeFile('admin/admin_permalinks.php');
-
 		//only proceed with save if we can test the results
 		if( !gpRemoteGet::Test() ){
 			return;

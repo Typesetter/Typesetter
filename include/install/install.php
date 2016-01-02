@@ -406,13 +406,15 @@ class gp_install{
 
 			}else{
 				$byte_value = common::getByteValue($checkValue);
+				$mb_16		= common::getByteValue('16M');
 				if( $byte_value > 100663296 ){
 					echo '<td class="passed">'.$langmessage['Passed'].'</td>';
 					echo '<td class="passed">';
 					echo $checkValue;
 					echo '</td>';
 
-				}elseif( $byte_value > 67108864 ){
+				}elseif( $byte_value > $mb_16 ){
+					//approx 13M needed for less to compile admin.less
 					echo '<td class="passed_orange">'.$langmessage['Passed'].'</td>';
 					echo '<td class="passed_orange">';
 					echo $checkValue;
@@ -424,7 +426,7 @@ class gp_install{
 					$ok = false;
 				}
 			}
-			echo '<td> 96M+ or Adjustable</td>';
+			echo '<td> 16M+ or Adjustable</td>';
 			echo '</tr>';
 
 

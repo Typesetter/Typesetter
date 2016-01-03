@@ -627,6 +627,11 @@ class gp_combine{
 			if( empty($script['file']) ){
 				continue;
 			}
+
+			if( gpdebug && !empty($script['dev']) ){
+				$script['file'] = $script['dev'];
+			}
+
 			if( empty($script['type']) ){
 				$script['type'] = pathinfo($script['file'], PATHINFO_EXTENSION);
 			}

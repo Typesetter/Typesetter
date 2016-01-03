@@ -316,6 +316,10 @@ class gpsession{
 			$domain = '';
 		}
 
+		if( strpos($domain,':') !== -1 ){
+			$domain = substr($domain, 0, strrpos($domain, ':'));
+		}
+
 		// expire if value is empty
 		// cookies are set with either www removed from the domain or with an empty string
 		if( empty($value) ){

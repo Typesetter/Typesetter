@@ -174,8 +174,8 @@
 
 #section_sorting .wrapper_collapsed>ul,
 #section_sorting .wrapper_collapsed>ul:empty {
-	min-height:8px !important;
-	line-height:8px;
+	min-height:16px !important;
+	line-height:16px;
 	height:auto;
 	padding:3px 3px 0 3px;
 	overflow:hidden;
@@ -206,6 +206,17 @@
 
 #section_sorting .ui-sortable-helper *{
 	display:none !important;
+	}
+
+#section_sorting .ui-sortable-placeholder{
+	border:1px dotted #ddd !important;
+	visibility:visible !important;
+	background: #fff !important;
+	background: repeating-linear-gradient( 135deg, #fff, #fff 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px) !important;
+	margin:4px 0;
+	}
+#section_sorting .ui-sortable-placeholder *{
+	visibility:hidden;
 	}
 
 /**

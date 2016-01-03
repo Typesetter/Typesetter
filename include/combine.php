@@ -13,12 +13,19 @@ class gp_combine{
 				'gp-admin'	=> array(	'file'			=> '/include/js/admin.js',
 										'requires'		=> 'gp-main'),
 
-				'gp-admin-css'=> array(	'file'			=> '/include/css/admin.less',
+				'gp-admin-css'=> array(	'file'			=> '/include/css/admin.css',
+										'dev'			=> '/include/css/admin.less',
 										'type'			=> 'css',
 										'requires'		=> 'ui-theme'),
 
 				'gp-additional'=> array('file'			=> '/include/css/additional.css',
 										'type'			=> 'css'),
+
+
+				'gp-theme-css'=> array(	'file'			=> '/include/css/theme_content.css',
+										'dev'			=> '/include/css/theme_content.less',
+										'type'			=> 'css',
+										'requires'		=> 'ui-theme'),
 
 
 				//colorbox

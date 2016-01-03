@@ -2018,8 +2018,6 @@ class gpOutput{
 		includeFile('combine.php');
 		$scripts = gp_combine::ScriptInfo( gpOutput::$components );
 
-		msg($scripts);
-
 		//check for bootstrap theme
 		if( strpos(gpOutput::$components,'bootstrap') ){
 			//this would only find bootstrap themes that include css

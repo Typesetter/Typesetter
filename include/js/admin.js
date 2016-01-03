@@ -58,6 +58,8 @@ $gp.links.inline_edit_generic = function(evt,rel){
 	$gp.LoadStyle('/include/css/inline_edit.css');
 
 	var script	= strip_from(this.href,'#');
+	script += '&gpreq=json';
+
 	if( rel == 'manage_sections' ){
 		$gp.LoadStyle('/include/css/manage_sections.css');
 	}else{

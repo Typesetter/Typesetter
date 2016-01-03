@@ -2913,6 +2913,7 @@ class gpOutput{
 
 		//compiler options
 		$options = array();
+		$options['relativeUrls']		= false;
 		//$options['compress']			= true;
 
 		/*

@@ -70,16 +70,13 @@ class gpAjax{
 			die();
 		}
 
-		if( !isset($_REQUEST['jsoncallback']) ){
-			die('Invalid Request: jsoncallback not set');
-		}
 
 		//gadgets may be using gpajax/json request/responses
 		gpOutput::TemplateSettings();
 		gpOutput::PrepGadgetContent();
 
 
-		echo gpAjax::Callback($_REQUEST['jsoncallback']);
+		echo gpAjax::Callback();
 		echo '([';
 
 		//output content
@@ -111,15 +108,23 @@ class gpAjax{
 		}
 
 		//always send messages
+		self::Messages();
+		echo ']);';
+		die();
+	}
+
+	/**
+	 * Add the messages to the response
+	 *
+	 */
+	static function Messages(){
+
 		ob_start();
 		echo GetMessages(false);
 		$content = ob_get_clean();
 		if( !empty($content) ){
 			gpAjax::JsonDo('messages','',$content);
 		}
-
-		echo ']);';
-		die();
 	}
 
 
@@ -128,11 +133,25 @@ class gpAjax{
 	 * Check the callback parameter, die with an alert if the test fails
 	 *
 	 */
-	static function Callback($callback){
-		if( !preg_match('#^[a-zA-Z0-9_]+$#',$callback) ){
-			die('alert("Invalid Callback");');
+	static function Callback(){
+
+		if( !isset($_REQUEST['jsoncallback']) ){
+			self::InvalidCallback();
 		}
-		return $callback;
+
+		if( !preg_match('#^[a-zA-Z0-9_]+$#',$_REQUEST['jsoncallback']) ){
+			self::InvalidCallback();
+		}
+		return $_REQUEST['jsoncallback'];
+	}
+
+	static function InvalidCallback(){
+
+		echo '$gp.Response([';
+		self::Messages();
+		echo ']);';
+		die();
+
 	}
 
 

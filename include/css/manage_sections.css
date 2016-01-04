@@ -1,4 +1,8 @@
 
+#ckeditor_top{
+	margin-bottom:5px;
+	}
+
 #section_sorting,
 #section_sorting li,
 #section_sorting ul{
@@ -172,9 +176,7 @@
 	content:"\25b6";
 }
 
-#section_sorting .wrapper_collapsed>ul,
-#section_sorting .wrapper_collapsed>ul:empty {
-	overflow:hidden;
+#section_sorting .wrapper_collapsed>ul{
 	border-color:transparent;
 }
 

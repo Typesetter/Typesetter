@@ -186,11 +186,8 @@
 				}
 
 				//color
-				var color	= $this.data('gp_color');
+				var color	= $this.data('gp_color') || '#aabbcc';
 				var style	= '';
-				if( color ){
-					style	= 'style="border-left-color:'+color+'"';
-				}
 
 				//collapsed
 				style	+= ' class="'+$this.data('gp_collapse')+'"';
@@ -202,7 +199,7 @@
 
 
 				html += '<li data-area-id="'+this.id+'" '+style+' title="'+classes+'">';
-				html += '<div><a class="color_handle" data-cmd="SectionColor" ></a>';
+				html += '<div><a class="color_handle" data-cmd="SectionColor" style="background-color:'+color+'"></a>';
 				html += '<span class="options">';
 				html += '<a class="gpicon_edapp" data-cmd="SectionOptions" title="Options"></a>';
 				html += '<a class="copy_icon" data-cmd="CopySection" title="Copy"></a>';
@@ -486,7 +483,7 @@
 		$li.children('div').hide();
 		var $colors	= $(html+'</span>').prependTo($li);
 
-		$li.mouseleave(function(){
+		$(document).one('click',function(){
 			$colors.remove();
 			$li.children().show();
 		});
@@ -503,7 +500,7 @@
 		var $area		= gp_editor.GetArea( $li );
 		var newColor 	= $this.attr('data-color');
 
-		$li.css('border-left-color', newColor);
+		$li.find('.color_handle:first').css('background-color',newColor);
 		$area.attr('data-gp_color',newColor).data('gp_color',newColor);
 		$li.find('.secsort_color_swatches').remove();
 		$li.children().show();

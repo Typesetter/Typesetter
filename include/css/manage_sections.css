@@ -1,6 +1,9 @@
 
 #ckeditor_top{
 	margin-bottom:5px;
+	border:1px solid #ddd;
+	background:#fff;
+	border-radius:3px;
 	}
 
 #section_sorting,
@@ -13,31 +16,36 @@
 	}
 
 #section_sorting{
-	border:1px solid #ddd;
-	background:#fff;
-	border-radius:3px;
-	padding: 3px 3px 20px;
-	margin-bottom:5px;
+	padding: 3px 0 20px 3px;
 	}
+
+#section_sorting ul{
+    clear: both;
+    margin: 0 0 3px 3px;
+    padding-left:3px;
+    transition: all 0.7s ease 0s;
+	-webkit-transition:all 0.7s;
+	-moz-transition:all 0.7s;
+	-ms-transition:all 0.7s;
+	transition:all 0.7s;
+	min-height:25px;
+	}
+
 #section_sorting li{
-	border-bottom:1px solid #f1f1f1;
-	background: #fff url('../imgs/drag_handle.gif') no-repeat 5px 5px;
+	background: transparent url('../imgs/drag_handle.gif') no-repeat 7px 5px;
 	position:relative;
-	border-left:#aabbcc 4px solid;
-	padding:1px 1px 1px 3px;
+	border:1px solid #f1f1f1;
+	margin:5px 0;
 	}
 
 #section_sorting .color_handle{
 	position:absolute;
-	top:0;
-	left:-4px;
-	bottom:0;
+	top:-1px;
+	left:-1px;
+	bottom:-1px;
 	width:4px;
 	cursor:pointer;
-	}
-
-#section_sorting ul li:last-child{
-	border-bottom:none;
+	background-color:#aabbcc;
 	}
 
 #section_sorting > li:only-child > div .RemoveSection{
@@ -47,26 +55,10 @@
 	}
 
 #section_sorting div{
-	padding:4px 0 2px 12px;
+	padding:4px 0 2px 17px;
 	cursor:pointer;
 	white-space:nowrap;
 	overflow:hidden;
-	}
-
-#section_sorting ul{
-    border-top: 1px solid #f1f1f1;
-    clear: both;
-    margin: 0 0 3px 3px;
-
-    transition: all 0.7s ease 0s;
-	-webkit-transition:all 0.7s;
-	-moz-transition:all 0.7s;
-	-ms-transition:all 0.7s;
-	transition:all 0.7s;
-	}
-
-#section_sorting ul{
-	min-height:25px;
 	}
 
 .section-highlight,
@@ -138,7 +130,6 @@
  */
 
 #section_sorting li span.secsort_color_swatches {
-	margin-left:-3px;
 	display:block;
 	text-align:center;
 	background:#fff;
@@ -193,8 +184,12 @@
 	cursor:pointer;
 	}
 
-#section_sorting .wrapper_collapsed > ul > li > *{
+#section_sorting .wrapper_collapsed > ul > li *{
 	display:none !important;
+}
+#section_sorting .wrapper_collapsed > ul > li div,
+#section_sorting .wrapper_collapsed > ul > li .color_handle{
+	display:block !important;
 }
 
 /**
@@ -202,15 +197,18 @@
  *
  */
 
-#section_sorting .ui-sortable-helper{
-	border-left-width:22px !important;
-	width:0 !important;
-	height:22px !important;
-	border-bottom: 0 none !important;
-	}
-
 #section_sorting .ui-sortable-helper *{
 	display:none !important;
+	}
+
+#section_sorting .ui-sortable-helper,
+#section_sorting .ui-sortable-helper > div,
+#section_sorting .ui-sortable-helper .color_handle{
+	display:block !important;
+	width:22px !important;
+	height:22px !important;
+	border: 0 none !important;
+	padding: 0 !important;
 	}
 
 /**
@@ -224,7 +222,7 @@
 	background: repeating-linear-gradient( 135deg, #fff, #fff 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px) !important;
 	margin:4px 0;
 	width:100% !important; /* sortable will use the width:0 for elements within a wrapper_collapsed */
-	height:22px !important;
+	height:12px !important;
 	}
 
 #section_sorting .wrapper_collapsed .ui-sortable-placeholder{

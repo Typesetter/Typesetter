@@ -418,7 +418,7 @@ function GetMessages( $wrap = true ){
 			$wbMessageBuffer = array_unique($wbMessageBuffer);
 		}
 
-		$result .= '<div class="messages"><div>';
+		$result .= '<div class="messages gp-fixed-adjust"><div>';
 		$result .= '<a style="" href="#" class="req_script close_message" data-cmd="close_message"></a>';
 		$result .= '<ul>';
 		$result .= implode('',$wbMessageBuffer);

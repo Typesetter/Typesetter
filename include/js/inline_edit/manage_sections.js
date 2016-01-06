@@ -149,7 +149,7 @@
 			$list.html(html);
 
 			$('.section_drag_area').sortable({
-				//tolerance:				'pointer',
+				tolerance:				'pointer', /** otherwise sorting elements into collapsed area causes problems */
 				stop:					gp_editor.DragStop,
 				connectWith:			'.section_drag_area',
 				cursorAt:				{ left: 7, top: 7 }
@@ -202,7 +202,7 @@
 
 
 				html += '<li data-area-id="'+this.id+'" '+style+' title="'+classes+'">';
-				html += '<div><a class="color_handle" data-cmd="SectionColor"></a>';
+				html += '<div><a class="color_handle" data-cmd="SectionColor" ></a>';
 				html += '<span class="options">';
 				html += '<a class="gpicon_edapp" data-cmd="SectionOptions" title="Options"></a>';
 				html += '<a class="copy_icon" data-cmd="CopySection" title="Copy"></a>';

@@ -24,6 +24,20 @@ class Combine{
 										'type'			=> 'css'),
 
 
+				'gp-theme-css'=> array(	'file'			=> '/include/css/theme_content.css',
+										'dev'			=> '/include/css/theme_content.less',
+										'type'			=> 'css',
+										'requires'		=> 'ui-theme'),
+
+
+				//colorbox
+				'colorbox'	=> array(	'file'			=> '/include/thirdparty/colorbox139/colorbox/jquery.colorbox.js',
+										'requires'		=> 'gp-main,colorbox-css'),
+
+
+				'colorbox-css' => array('file'			=> '/include/thirdparty/colorbox139/$config[colorbox_style]/colorbox.css',
+										'type'			=> 'css'),
+
 
 				//jquery
 				'jquery'	=> array(	'file'			=> '/include/thirdparty/js/jquery.js',
@@ -674,6 +688,11 @@ class Combine{
 			if( empty($script['file']) ){
 				continue;
 			}
+
+			if( gpdebug && !empty($script['dev']) ){
+				$script['file'] = $script['dev'];
+			}
+
 			if( empty($script['type']) ){
 				$script['type'] = pathinfo($script['file'], PATHINFO_EXTENSION);
 			}

@@ -316,6 +316,10 @@ class gpsession{
 			$domain = '';
 		}
 
+		if( strpos($domain,':') !== false ){
+			$domain = substr($domain, 0, strrpos($domain, ':'));
+		}
+
 		// expire if value is empty
 		// cookies are set with either www removed from the domain or with an empty string
 		if( empty($value) ){
@@ -535,6 +539,7 @@ class gpsession{
 			if( !gpFiles::Lock('admin',sha1(sha1($session_id)),$expires) ){
 				msg( $langmessage['site_locked'].' '.sprintf($langmessage['lock_expires_in'],ceil($expires/60)) );
 				$locked_message = true;
+				$GLOBALS['gpAdmin']['locked'] = true;
 			}else{
 				unset($GLOBALS['gpAdmin']['locked']);
 			}

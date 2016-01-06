@@ -8,7 +8,6 @@
 
 @import 'admin_toolbar.scss';
 
-
 /*
  * Reset CSS
  * There are two admin content containers where we attempt to reset the css
@@ -239,7 +238,7 @@
 	background:#f1f1f1;
 	}
 #gp_admin_html .gpsearch{
-	background: #fff url('../imgs/page_white_magnify.png') no-repeat 98% 50%;
+	background: #fff url('../../include/imgs/page_white_magnify.png') no-repeat 98% 50%;
 	padding-right:22px;
 	}
 
@@ -960,7 +959,7 @@ table.tablesorter th.gp_header_desc:before{
 	padding-left:8px;
 	padding-right:5px;
 	margin-left:-3px; /* for IE */
-	background-image: url('../imgs/blank.gif'); /* for IE */
+	background-image: url('../../include/imgs/blank.gif'); /* for IE */
 	}
 
 #simplepanel.compact .panelgroup:hover .panelgroup2{
@@ -1643,7 +1642,7 @@ body #addon_about{
 	border:1px solid #7d7d7d;
 	border-radius:3px;
 	cursor:pointer;
-	background: #7d7d7d url('../imgs/dock.gif') no-repeat 50% 2px;
+	background: #7d7d7d url('../../include/imgs/dock.gif') no-repeat 50% 2px;
 	}
 .docked .docklink{
 	@include gpimg( 'dock.gif', 50%, -12px );

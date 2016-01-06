@@ -413,8 +413,7 @@ class gp_install{
 					echo $checkValue;
 					echo '</td>';
 
-				}elseif( $byte_value > $mb_16 ){
-					//approx 13M needed for less to compile admin.less
+				}elseif( $byte_value >= $mb_16 ){
 					echo '<td class="passed_orange">'.$langmessage['Passed'].'</td>';
 					echo '<td class="passed_orange">';
 					echo $checkValue;

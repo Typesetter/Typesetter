@@ -779,14 +779,14 @@ class gp_edit{
 		echo '<div class="gp_inlude_edit">';
 		echo '<span class="label">';
 		echo $langmessage['File Include'];
-		echo '</span>';
+		echo '</span> ';
 		echo '<input type="text" size="" id="gp_file_include" name="file_include" class="title-autocomplete" value="'.htmlspecialchars($file_content).'" />';
 		echo '</div>';
 
 		echo '<div class="gp_inlude_edit">';
 		echo '<span class="label">';
 		echo $langmessage['gadgets'];
-		echo '</span>';
+		echo '</span> ';
 		echo '<input type="text" size="" id="gp_gadget_include" name="gadget_include" class="title-autocomplete" value="'.htmlspecialchars($gadget_content).'" />';
 		echo '</div>';
 

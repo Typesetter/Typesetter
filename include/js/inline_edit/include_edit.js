@@ -81,7 +81,7 @@
 					source		: source,
 					delay		: 100, /* since we're using local data */
 					minLength	: 0,
-					appendTo	: '#gp_admin_fixed',
+					appendTo	: '#ckeditor_wrap',
 					open		: function(event,ui){},
 					select		: function(event,ui){
 

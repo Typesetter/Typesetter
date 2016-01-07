@@ -1520,40 +1520,43 @@ body #addon_about{
 	}
 
 /* jquery ui autocomplete */
-.ui-autocomplete{
-	z-index:12000;
+#gp_admin_html{
 
-	/* for auto-complete scrolling */
-	max-height: 250px;
-	overflow-y: auto;
-	}
-.ui-autocomplete .ui-menu-item{
-	min-width:200px !important;
-	padding-right:30px !important;
+	.ui-autocomplete{
+		z-index:12000;
+
+		/* for auto-complete scrolling */
+		max-height: 250px;
+		overflow-y: auto;
+		}
+
+	.ui-autocomplete .ui-menu-item{
+		min-width:200px !important;
+		padding-right:30px !important;
+		}
+
+	.ui-menu .ui-menu-item{
+		font-size:14px;
+		line-height:14px !important;
+		padding: .3em .4em !important;
+		margin: .1em 0 !important;
+		border:1px solid transparent;
+		white-space:nowrap;
+		overflow:hidden;
+		}
+	.ui-menu-item a{
+		color:#333;
+		}
+
+	.ui-menu-item span{
+		font-size:11px;
+		padding-top:1px;
+		line-height:11px;
+		display:block;
+		color:#777;
+		}
 	}
 
-.ui-menu .ui-menu-item{
-	font-size:14px;
-	line-height:14px !important;
-	padding: .3em .4em !important;
-	margin: .1em 0 !important;
-	border:1px solid transparent;
-	white-space:nowrap;
-	overflow:hidden;
-	}
-
-.ui-menu-item span{
-	font-size:11px;
-	padding-top:1px;
-	line-height:11px;
-	display:block;
-	color:#777;
-	}
-
-/* IE 6 doesn't support max-height */
-* html .ui-autocomplete {
-	height: 200px;
-}
 
 
 

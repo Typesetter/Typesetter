@@ -7,9 +7,6 @@ $(function(){
 		var gptitles	= false;
 		var that		= this;
 
-		console.log('autocomplete');
-
-
 		/**
 		 * Load the titles dynamically
 		 *

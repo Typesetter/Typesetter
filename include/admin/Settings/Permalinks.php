@@ -127,6 +127,10 @@ class Permalinks{
 
 		$result			= \gpRemoteGet::Get_Successful($url);
 
+		if( !$result ){
+			return false;
+		}
+
 		if( isset($config['gpuniq']) ){
 			$mdu_check		= substr(md5($config['gpuniq']),0,20);
 

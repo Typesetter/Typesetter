@@ -437,7 +437,7 @@ class Edit extends \gp\admin\Layout{
 
 		if( count($style_files) ){
 
-			$compiled		= \gp\tool\Less::Parse( $style_files );
+			$compiled		= \gp\tool\Output\Less::Parse( $style_files );
 
 			if( !$compiled ){
 				message($langmessage['OOPS'].' (Invalid LESS)');

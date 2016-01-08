@@ -1,6 +1,6 @@
 <?php
 
-namespace gp\tool;
+namespace gp\tool\Output;
 
 class Scss extends \Leafo\ScssPhp\Compiler{
 

@@ -36,10 +36,9 @@ switch($type){
 
 	default:
 		if( common::LoggedIn() ){
-			includeFile('tool/editing_page.php');
-			$page = new editing_page($title,$type);
+			$page = new \gp\Page\Edit($title,$type);
 		}else{
-			$page = new display($title,$type);
+			$page = new \gp\Page($title,$type);
 		}
 	break;
 }

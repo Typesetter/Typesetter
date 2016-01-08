@@ -1,10 +1,13 @@
 <?php
+
+namespace gp\Page;
+
 defined('is_running') or die('Not an entry point...');
 
 includeFile('tool/editing.php');
 includeFile('tool/SectionContent.php');
 
-class editing_page extends \gp\Page{
+class Edit extends \gp\Page{
 
 	protected $draft_file;
 	protected $draft_exists			= false;
@@ -23,7 +26,7 @@ class editing_page extends \gp\Page{
 
 	public function RunScript(){
 		global $langmessage;
-		$cmd = common::GetCommand();
+		$cmd = \common::GetCommand();
 
 
 		if( !$this->SetVars() ){
@@ -34,7 +37,7 @@ class editing_page extends \gp\Page{
 
 
 		//allow addons to effect page actions and how a page is displayed
-		$cmd_after = gpPlugin::Filter('PageRunScript',array($cmd));
+		$cmd_after = \gpPlugin::Filter('PageRunScript',array($cmd));
 		if( $cmd !== $cmd_after ){
 			$cmd = $cmd_after;
 			if( $cmd === 'return' ){
@@ -66,7 +69,7 @@ class editing_page extends \gp\Page{
 				return;
 
 				case 'new_dir':
-					$this->contentBuffer = gp_edit::NewDirForm();
+					$this->contentBuffer = \gp_edit::NewDirForm();
 				return;
 
 				/* inline editing */
@@ -79,7 +82,7 @@ class editing_page extends \gp\Page{
 				return;
 
 				case 'image_editor':
-					gp_edit::ImageEditor();
+					\gp_edit::ImageEditor();
 				return;
 
 				case 'NewNestedSection':
@@ -137,9 +140,9 @@ class editing_page extends \gp\Page{
 			return;
 		}
 
-		$this->file_sections	= gpFiles::Get($this->draft_file,'file_sections');
-		$this->draft_meta		= gpFiles::$last_meta;
-		$this->draft_stats		= gpFiles::$last_stats;
+		$this->file_sections	= \gpFiles::Get($this->draft_file,'file_sections');
+		$this->draft_meta		= \gpFiles::$last_meta;
+		$this->draft_stats		= \gpFiles::$last_stats;
 	}
 
 
@@ -154,8 +157,8 @@ class editing_page extends \gp\Page{
 			return false;
 		}
 
-		$this->permission_edit	= admin_tools::CanEdit($this->gp_index);
-		$this->permission_menu	= admin_tools::HasPermission('Admin_Menu');
+		$this->permission_edit	= \admin_tools::CanEdit($this->gp_index);
+		$this->permission_menu	= \admin_tools::HasPermission('Admin_Menu');
 		$this->draft_file		= dirname($this->file).'/draft.php';
 
 
@@ -181,7 +184,7 @@ class editing_page extends \gp\Page{
 		}
 
 
-		if( !gpFiles::Exists($this->draft_file) ){
+		if( !\gpFiles::Exists($this->draft_file) ){
 			return true;
 		}
 
@@ -208,12 +211,12 @@ class editing_page extends \gp\Page{
 
 		//editing
 		if( $this->permission_edit ){
-			$admin_links[] = common::Link($this->title,'<i class="fa fa-th"></i> '.$langmessage['Manage Sections'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+			$admin_links[] = \common::Link($this->title,'<i class="fa fa-th"></i> '.$langmessage['Manage Sections'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
 			if( $this->draft_exists	){
-				$admin_links[] = common::Link($this->title,'<i class="fa fa-check"></i> '.$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq', 'class'=>'msg_publish_draft'));
-				$admin_links[] = common::Link($this->title,'<i class="fa fa-trash"></i> '.$langmessage['Discard Draft'],'cmd=DiscardDraft',array('data-cmd'=>'creq', 'class'=>'msg_discard_draft'));
+				$admin_links[] = \common::Link($this->title,'<i class="fa fa-check"></i> '.$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq', 'class'=>'msg_publish_draft'));
+				$admin_links[] = \common::Link($this->title,'<i class="fa fa-trash"></i> '.$langmessage['Discard Draft'],'cmd=DiscardDraft',array('data-cmd'=>'creq', 'class'=>'msg_discard_draft'));
 			}
-			$admin_links[] = common::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+			$admin_links[] = \common::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 		}
 
 
@@ -228,7 +231,7 @@ class editing_page extends \gp\Page{
 				$q						.= '&visibility=private';
 			}
 			$attrs						= array('title'=>$label,'data-cmd'=>'creq');
-			$admin_links[]		= common::Link($this->title,$label,$q,$attrs);
+			$admin_links[]		= \common::Link($this->title,$label,$q,$attrs);
 		}
 
 
@@ -237,19 +240,19 @@ class editing_page extends \gp\Page{
 		// page options: less frequently used links that don't have to do with editing the content of the page
 		$option_links		= array();
 		if( $this->permission_menu ){
-			$option_links[] = common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
+			$option_links[] = \common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
 
-			$option_links[] = common::Link('Admin/Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
+			$option_links[] = \common::Link('Admin/Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
 
-			$option_links[] = common::Link('Admin/Menu/Ajax',$langmessage['Copy'],'cmd=CopyForm&redir=redir&index='.urlencode($this->gp_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
+			$option_links[] = \common::Link('Admin/Menu/Ajax',$langmessage['Copy'],'cmd=CopyForm&redir=redir&index='.urlencode($this->gp_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 		}
 
-		if( admin_tools::HasPermission('Admin_User') ){
-			$option_links[] = common::Link('Admin/Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
+		if( \admin_tools::HasPermission('Admin_User') ){
+			$option_links[] = \common::Link('Admin/Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
 		}
 
 		if( $this->permission_menu ){
-			$option_links[] = common::Link('Admin/Menu/Ajax',$langmessage['delete_file'],'cmd=MoveToTrash&index='.urlencode($this->gp_index),array('data-cmd'=>'postlink','title'=>$langmessage['delete_page'],'class'=>'gpconfirm'));
+			$option_links[] = \common::Link('Admin/Menu/Ajax',$langmessage['delete_file'],'cmd=MoveToTrash&index='.urlencode($this->gp_index),array('data-cmd'=>'postlink','title'=>$langmessage['delete_page'],'class'=>'gpconfirm'));
 		}
 
 		if( !empty($option_links) ){
@@ -271,10 +274,10 @@ class editing_page extends \gp\Page{
 		if( $this->revision == $this->fileModTime ){
 			$date	= $langmessage['Current Page'];
 		}else{
-			$date	= common::date($langmessage['strftime_datetime'],$this->revision);
+			$date	= \common::date($langmessage['strftime_datetime'],$this->revision);
 		}
 
-		$admin_links[] = common::Link($this->title,'<i class="fa fa-save"></i> '.$langmessage['Restore this revision'].' ('.$date.')','cmd=UseRevision&time='.$this->revision,array('data-cmd'=>'cnreq','class'=>'msg_publish_draft'));
+		$admin_links[] = \common::Link($this->title,'<i class="fa fa-save"></i> '.$langmessage['Restore this revision'].' ('.$date.')','cmd=UseRevision&time='.$this->revision,array('data-cmd'=>'cnreq','class'=>'msg_publish_draft'));
 
 
 
@@ -286,18 +289,18 @@ class editing_page extends \gp\Page{
 
 		if( $key_current !== false ){
 			if( isset($times[$key_current-1]) ){
-				$admin_links[]		= common::Link($this->title,'<i class="fa fa-backward"></i> '.$langmessage['Previous'],'cmd=ViewRevision&time='.$times[$key_current-1],array('data-cmd'=>'cnreq'));
+				$admin_links[]		= \common::Link($this->title,'<i class="fa fa-backward"></i> '.$langmessage['Previous'],'cmd=ViewRevision&time='.$times[$key_current-1],array('data-cmd'=>'cnreq'));
 			}
 
 			if( isset($times[$key_current+1]) ){
-				$admin_links[]		= common::Link($this->title,'<i class="fa fa-forward"></i> '.$langmessage['Next'],'cmd=ViewRevision&time='.$times[$key_current+1],array('data-cmd'=>'cnreq'));
+				$admin_links[]		= \common::Link($this->title,'<i class="fa fa-forward"></i> '.$langmessage['Next'],'cmd=ViewRevision&time='.$times[$key_current+1],array('data-cmd'=>'cnreq'));
 			}else{
-				$admin_links[]		= common::Link($this->title,'<i class="fa fa-forward"></i> '.$langmessage['Working Draft']);
+				$admin_links[]		= \common::Link($this->title,'<i class="fa fa-forward"></i> '.$langmessage['Working Draft']);
 			}
 
 		}
 
-		$admin_links[] = common::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+		$admin_links[] = \common::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 
 		return $admin_links;
 	}
@@ -365,7 +368,7 @@ class editing_page extends \gp\Page{
 
 		$request			+= array('wrapper_class'=>'gpRow');
 		$wrapper_class		= $request['wrapper_class'];
-		$new_section		= gp_edit::DefaultContent('wrapper_section');
+		$new_section		= \gp_edit::DefaultContent('wrapper_section');
 
 
 		$new_section['attributes']['class']		.= ' '.$wrapper_class;
@@ -410,8 +413,8 @@ class editing_page extends \gp\Page{
 		}
 
 		$num++;
-		$new_section	= gp_edit::DefaultContent($type);
-		$content		= section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);
+		$new_section	= \gp_edit::DefaultContent($type);
+		$content		= \section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);
 
 		$new_section['attributes']['class']		.= ' '.$class;
 		$orig_attrs								= $new_section['attributes'];
@@ -430,11 +433,11 @@ class editing_page extends \gp\Page{
 
 		//if image type, make sure the src is a complete path
 		if( $section['type'] == 'image' ){
-			$orig_attrs['src'] = common::GetDir($orig_attrs['src']);
+			$orig_attrs['src'] = \common::GetDir($orig_attrs['src']);
 		}
 
 		$orig_attrs			= json_encode($orig_attrs);
-		$attributes			= section_content::SectionAttributes($section['attributes'],$section['type']);
+		$attributes			= \section_content::SectionAttributes($section['attributes'],$section['type']);
 		$attributes			.= ' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'';
 
 		$section_attrs		= array('gp_label','gp_color','gp_collapse');
@@ -463,7 +466,7 @@ class editing_page extends \gp\Page{
 		$original_sections		= $this->file_sections;
 		$unused_sections		= $this->file_sections;				//keep track of sections that aren't used
 		$new_sections			= array();
-		$section_types			= section_content::GetTypes();
+		$section_types			= \section_content::GetTypes();
 
 		$section_attrs			= array('gp_label','gp_color','gp_collapse');
 
@@ -497,7 +500,7 @@ class editing_page extends \gp\Page{
 					msg($langmessage['OOPS'].' (Unknown Type: '.$arg.')');
 					return false;
 				}
-				$new_section	= gp_edit::DefaultContent($arg);
+				$new_section	= \gp_edit::DefaultContent($arg);
 			}
 
 			// attributes
@@ -550,8 +553,8 @@ class editing_page extends \gp\Page{
 		foreach($unused_sections as $section_data){
 			if( isset($section_data['resized_imgs']) ){
 				includeFile('image.php');
-				gp_resized::SetIndex();
-				gp_edit::ResizedImageUse($section_data['resized_imgs'],array());
+				\gp_resized::SetIndex();
+				\gp_edit::ResizedImageUse($section_data['resized_imgs'],array());
 			}
 		}
 
@@ -605,7 +608,7 @@ class editing_page extends \gp\Page{
 		$check_before = serialize($this);
 		$check_before = sha1( $check_before ) . md5( $check_before );
 
-		if( !gp_edit::SectionEdit( $cmd, $this->file_sections[$section_num], $section_num, $this->title, $this->file_stats ) ){
+		if( !\gp_edit::SectionEdit( $cmd, $this->file_sections[$section_num], $section_num, $this->title, $this->file_stats ) ){
 			return;
 		}
 
@@ -681,7 +684,7 @@ class editing_page extends \gp\Page{
 		}
 
 		$gp_titles[$this->gp_index]['type'] = $new_types;
-		admin_tools::SavePagesPHP();
+		\admin_tools::SavePagesPHP();
 	}
 
 	public function RenameFile(){
@@ -692,7 +695,7 @@ class editing_page extends \gp\Page{
 	public function RenameForm(){
 		global $gp_index;
 
-		$action = common::GetUrl($this->title);
+		$action = \common::GetUrl($this->title);
 		\gp\Page\Rename::RenameForm( $this->gp_index, $action );
 	}
 
@@ -716,20 +719,20 @@ class editing_page extends \gp\Page{
 
 		$types_with_imgs	= array('text','image','gallery');
 
-		$section_types		= section_content::GetTypes();
+		$section_types		= \section_content::GetTypes();
 		$links				= array();
 		foreach($section_types as $type => $type_info){
 			$img			= '';
 			if( in_array($type,$types_with_imgs) ){
-				$img		= common::GetDir('/include/imgs/section-'.$type.'.png');
+				$img		= \common::GetDir('/include/imgs/section-'.$type.'.png');
 			}
 			$links[]		= array( $type, $img );
 		}
 
-		$links[]			= array( array('text.gpCol-6','image.gpCol-6'),common::GetDir('/include/imgs/section-combo-text-image.png') );
-		$links[]			= array( array('text.gpCol-6','gallery.gpCol-6'),common::GetDir('/include/imgs/section-combo-text-gallery.png') );	//section combo: text & gallery
+		$links[]			= array( array('text.gpCol-6','image.gpCol-6'),\common::GetDir('/include/imgs/section-combo-text-image.png') );
+		$links[]			= array( array('text.gpCol-6','gallery.gpCol-6'),\common::GetDir('/include/imgs/section-combo-text-gallery.png') );	//section combo: text & gallery
 
-		$links				= gpPlugin::Filter('NewSections',array($links));
+		$links				= \gpPlugin::Filter('NewSections',array($links));
 
 		foreach($links as $link){
 			$link += array('','','gpRow');
@@ -747,7 +750,7 @@ class editing_page extends \gp\Page{
 		static $fi = 0;
 
 		$types			= (array)$types;
-		$section_types	= section_content::GetTypes();
+		$section_types	= \section_content::GetTypes();
 		$text_label		= array();
 
 		foreach($types as $type){
@@ -826,7 +829,7 @@ class editing_page extends \gp\Page{
 
 		//file count
 		if( !isset($this->meta_data['file_number']) ){
-			$this->meta_data['file_number'] = gpFiles::NewFileNumber();
+			$this->meta_data['file_number'] = \gpFiles::NewFileNumber();
 		}
 
 		if( $backup ){
@@ -834,7 +837,7 @@ class editing_page extends \gp\Page{
 		}
 
 
-		if( !gpFiles::SaveData($this->draft_file,'file_sections',$this->file_sections,$this->meta_data) ){
+		if( !\gpFiles::SaveData($this->draft_file,'file_sections',$this->file_sections,$this->meta_data) ){
 			return false;
 		}
 
@@ -854,10 +857,10 @@ class editing_page extends \gp\Page{
 
 
 		if( $this->draft_exists ){
-			$contents	= gpFiles::GetRaw($this->draft_file);
+			$contents	= \gpFiles::GetRaw($this->draft_file);
 			$time		= $this->draft_stats['modified'];
 		}else{
-			$contents	= gpFiles::GetRaw($this->file);
+			$contents	= \gpFiles::GetRaw($this->file);
 			$time		= $this->file_stats['modified'];
 		}
 
@@ -875,7 +878,7 @@ class editing_page extends \gp\Page{
 			$contents = gzencode($contents,9);
 		}
 
-		if( !gpFiles::Save( $backup_file, $contents ) ){
+		if( !\gpFiles::Save( $backup_file, $contents ) ){
 			return false;
 		}
 
@@ -918,7 +921,7 @@ class editing_page extends \gp\Page{
 			return false;
 		}
 
-		if( !gpFiles::SaveData($this->file,'file_sections',$this->file_sections,$this->draft_meta) ){
+		if( !\gpFiles::SaveData($this->file,'file_sections',$this->file_sections,$this->draft_meta) ){
 			msg($langmessage['OOPS'].' (Draft not published)');
 			return false;
 		}
@@ -1033,7 +1036,7 @@ class editing_page extends \gp\Page{
 		global $langmessage;
 
 		ob_start();
-		$date = common::date($langmessage['strftime_datetime'],$time);
+		$date = \common::date($langmessage['strftime_datetime'],$time);
 		echo '<tr><td title="'.htmlspecialchars($date).'">';
 		switch($which){
 			case 'current':
@@ -1045,11 +1048,11 @@ class editing_page extends \gp\Page{
 			break;
 		}
 
-		$elapsed = admin_tools::Elapsed(time() - $time);
+		$elapsed = \admin_tools::Elapsed(time() - $time);
 		echo sprintf($langmessage['_ago'],$elapsed);
 		echo '</td><td>';
 		if( $size && is_numeric($size) ){
-			echo admin_tools::FormatBytes($size);
+			echo \admin_tools::FormatBytes($size);
 		}
 		echo '</td><td>';
 		if( !empty($username) ){
@@ -1061,21 +1064,21 @@ class editing_page extends \gp\Page{
 		switch($which){
 			case 'current':
 			if( $this->draft_exists ){
-				echo common::Link($this->title,$langmessage['View'],'cmd=ViewCurrent',array('data-cmd'=>'cnreq'));
+				echo \common::Link($this->title,$langmessage['View'],'cmd=ViewCurrent',array('data-cmd'=>'cnreq'));
 			}else{
-				echo common::Link($this->title,$langmessage['View']);
+				echo \common::Link($this->title,$langmessage['View']);
 			}
 			break;
 
 			case 'draft':
-			echo common::Link($this->title,$langmessage['View']);
+			echo \common::Link($this->title,$langmessage['View']);
 			echo ' &nbsp; '.common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'cnreq'));
 			break;
 
 			case 'history':
-			echo common::Link($this->title,$langmessage['View'],'cmd=ViewRevision&time='.$time,array('data-cmd'=>'cnreq'));
+			echo \common::Link($this->title,$langmessage['View'],'cmd=ViewRevision&time='.$time,array('data-cmd'=>'cnreq'));
 			echo ' &nbsp; ';
-			echo common::Link($this->title,$langmessage['delete'],'cmd=DeleteRevision&time='.$time,array('data-cmd'=>'gpabox','class'=>'gpconfirm'));
+			echo \common::Link($this->title,$langmessage['delete'],'cmd=DeleteRevision&time='.$time,array('data-cmd'=>'gpabox','class'=>'gpconfirm'));
 			break;
 		}
 
@@ -1098,7 +1101,7 @@ class editing_page extends \gp\Page{
 			return false;
 		}
 
-		$this->contentBuffer	= section_content::Render($file_sections,$this->title,gpFiles::$last_stats);
+		$this->contentBuffer	= \section_content::Render($file_sections,$this->title,\gpFiles::$last_stats);
 		$this->revision			= $time;
 	}
 
@@ -1141,17 +1144,17 @@ class editing_page extends \gp\Page{
 			readgzfile($full_path);
 			$contents	= ob_get_clean();
 
-			$dir		= common::DirName($full_path);
+			$dir		= \common::DirName($full_path);
 			$full_path	= tempnam($dir,'backup');
 
-			gpFiles::Save( $full_path, $contents );
+			\gpFiles::Save( $full_path, $contents );
 
-			$file_sections	= gpFiles::Get($full_path,'file_sections');
+			$file_sections	= \gpFiles::Get($full_path,'file_sections');
 
 			unlink($full_path);
 
 		}else{
-			$file_sections	= gpFiles::Get($full_path,'file_sections');
+			$file_sections	= \gpFiles::Get($full_path,'file_sections');
 		}
 
 		return $file_sections;
@@ -1163,8 +1166,8 @@ class editing_page extends \gp\Page{
 	 *
 	 */
 	public function ViewCurrent(){
-		$file_sections			= gpFiles::Get($this->file,'file_sections');
-		$this->contentBuffer	= section_content::Render($file_sections,$this->title,$this->file_stats);
+		$file_sections			= \gpFiles::Get($this->file,'file_sections');
+		$this->contentBuffer	= \section_content::Render($file_sections,$this->title,$this->file_stats);
 		$this->revision			= $this->fileModTime;
 	}
 
@@ -1234,14 +1237,14 @@ class editing_page extends \gp\Page{
 	 */
 	public function GalleryEdited(){
 		includeFile('special/special_galleries.php');
-		special_galleries::UpdateGalleryInfo($this->title,$this->file_sections);
+		\special_galleries::UpdateGalleryInfo($this->title,$this->file_sections);
 	}
 
 	public function GenerateContent_Admin(){
 
 		//add to all pages in case a user adds a gallery
-		gpPlugin::Action('GenerateContent_Admin');
-		common::ShowingGallery();
+		\gpPlugin::Action('GenerateContent_Admin');
+		\common::ShowingGallery();
 
 		$content				= '';
 		$sections_count			= count($this->file_sections);
@@ -1284,10 +1287,10 @@ class editing_page extends \gp\Page{
 		$section_data['attributes']						+= array('class' => '' );
 		$orig_attrs										= $section_data['attributes'];
 		$section_data['attributes']['data-gp-section']	= $curr_section_num;
-		$section_types									= section_content::GetTypes();
+		$section_types									= \section_content::GetTypes();
 
 
-		if( gpOutput::ShowEditLink() && admin_tools::CanEdit($this->gp_index) ){
+		if( \gpOutput::ShowEditLink() && \admin_tools::CanEdit($this->gp_index) ){
 
 
 			if( isset($section_types[$section_data['type']]) ){
@@ -1297,7 +1300,7 @@ class editing_page extends \gp\Page{
 			}
 
 			$attrs			= array('title'=>$title_attr,'data-cmd'=>'inline_edit_generic','data-arg'=>$section_data['type'].'_inline_edit');
-			$link			= gpOutput::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$curr_section_num.'&amp;revision='.$this->fileModTime,$attrs);
+			$link			= \gpOutput::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$curr_section_num.'&amp;revision='.$this->fileModTime,$attrs);
 
 
 			//section control links
@@ -1305,12 +1308,12 @@ class editing_page extends \gp\Page{
 				ob_start();
 				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 				echo $link;
-				echo common::Link($this->title,$langmessage['Manage Sections'],'cmd=ManageSections',array('class'=>'manage_sections','data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+				echo \common::Link($this->title,$langmessage['Manage Sections'],'cmd=ManageSections',array('class'=>'manage_sections','data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
 				echo '<hr/>';
-				echo common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
-				echo common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox'));
+				echo \common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
+				echo \common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox'));
 				echo '</span>';
-				gpOutput::$editlinks .= ob_get_clean();
+				\gpOutput::$editlinks .= ob_get_clean();
 			}
 
 			$section_data['attributes']['id']				= 'ExtraEditArea'.$edit_index;
@@ -1327,16 +1330,16 @@ class editing_page extends \gp\Page{
 			}
 
 		}else{
-			gpOutput::$nested_edit		= true;
-			$content			.= section_content::RenderSection($section_data,$curr_section_num,$this->title,$this->file_stats);
-			gpOutput::$nested_edit		= false;
+			\gpOutput::$nested_edit		= true;
+			$content			.= \section_content::RenderSection($section_data,$curr_section_num,$this->title,$this->file_stats);
+			\gpOutput::$nested_edit		= false;
 		}
 
 		if( !isset($section_data['nodeName']) ){
 			$content			.= '<div class="gpclear"></div>';
 			$content			.= '</div>';
 		}else{
-			$content			.= section_content::EndTag($section_data['nodeName']);
+			$content			.= \section_content::EndTag($section_data['nodeName']);
 		}
 
 		return $content;
@@ -1368,11 +1371,11 @@ class editing_page extends \gp\Page{
 	public function SaveSection_Text($section){
 		global $config;
 		$content =& $_POST['gpcontent'];
-		gpFiles::cleanText($content);
+		\gpFiles::cleanText($content);
 		$this->file_sections[$section]['content'] = $content;
 
 		if( $config['resize_images'] ){
-			gp_edit::ResizeImages($this->file_sections[$section]['content'],$this->file_sections[$section]['resized_imgs']);
+			\gp_edit::ResizeImages($this->file_sections[$section]['content'],$this->file_sections[$section]['resized_imgs']);
 		}
 
 		return true;

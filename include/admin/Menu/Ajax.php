@@ -104,7 +104,6 @@ class Ajax extends \gp\admin\Menu{
 	public function AddHidden(){
 		global $langmessage, $page, $gp_index;
 
-		includeFile('tool/editing_page.php');
 		$_REQUEST += array('title'=>'');
 		$_REQUEST['gpx_content'] = 'gpabox';
 
@@ -160,7 +159,7 @@ class Ajax extends \gp\admin\Menu{
 		echo str_replace(' ','&nbsp;',$langmessage['Content Type']);
 		echo '</td><td>';
 		echo '<div id="new_section_links">';
-		\editing_page::NewSections(true);
+		\gp\Page\Edit::NewSections(true);
 		echo '</div>';
 
 		echo sprintf($format_bottom,'NewFile',$langmessage['create_new_file']);
@@ -401,9 +400,8 @@ class Ajax extends \gp\admin\Menu{
 			echo '<tr><td>';
 			echo $langmessage['Content Type'];
 			echo '</td><td>';
-			includeFile('tool/editing_page.php');
 			echo '<div id="new_section_links">';
-			\editing_page::NewSections(true);
+			\gp\Page\Edit::NewSections(true);
 			echo '</div>';
 			echo '</td></tr>';
 			echo '</table>';

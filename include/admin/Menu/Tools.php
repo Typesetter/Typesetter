@@ -208,7 +208,6 @@ class Tools{
 	 */
 	public static function CreateNew(){
 		global $gp_index, $gp_titles, $langmessage, $gpAdmin;
-		includeFile('tool/editing_page.php');
 		includeFile('tool/editing.php');
 
 

@@ -1,14 +1,17 @@
 <?php
+
+namespace gp\tool\Page;
+
 defined('is_running') or die('Not an entry point...');
 
 
-class page_layout{
+class Layout{
 
-	var $from_page = false;
-	var $show_popup = false;
-	var $title = false;
+	public $from_page = false;
+	public $show_popup = false;
+	public $title = false;
 
-	function __construct($cmd,$url,$query_string=''){
+	public function __construct($cmd,$url,$query_string=''){
 		global $gp_index;
 
 		//if the request is made from the page, we want to remember that and send an appropriate response
@@ -33,12 +36,12 @@ class page_layout{
 		}
 	}
 
-	function Result(){
+	public function Result(){
 		global $page;
 
 		if( $this->from_page && $this->title){
 			if( !$this->show_popup ){
-				$url = common::AbsoluteUrl($this->title,'',true,false);
+				$url = \common::AbsoluteUrl($this->title,'',true,false);
 				$page->ajaxReplace[] = array('location',$url,0);
 			}
 			return true;
@@ -52,11 +55,11 @@ class page_layout{
 	 * The page will revert to inheriting the layout setting from the site configuration or a parent page
 	 *
 	 */
-	function RestoreLayout(){
+	public function RestoreLayout(){
 		global $gp_titles,$gp_index,$langmessage;
 
 		$index = $_POST['index'];
-		$title = common::IndexToTitle($index);
+		$title = \common::IndexToTitle($index);
 
 		if( !$title ){
 			msg($langmessage['OOPS']);
@@ -64,14 +67,14 @@ class page_layout{
 		}
 		$this->title = $title;
 
-		if( !common::verify_nonce('restore') ){
+		if( !\common::verify_nonce('restore') ){
 			msg($langmessage['OOPS']);
 			return;
 		}
 
 
 		unset($gp_titles[$index]['gpLayout']);
-		if( !admin_tools::SavePagesPHP() ){
+		if( !\admin_tools::SavePagesPHP() ){
 			msg($langmessage['OOPS']);
 			return false;
 		}
@@ -85,11 +88,11 @@ class page_layout{
 	 * Assign a layout to the $title. Child pages without a layout assigned will inherit this setting
 	 * @param string $title
 	 */
-	function SetLayout(){
+	public function SetLayout(){
 		global $gp_index, $gp_titles, $langmessage, $gpLayouts;
 
 		$index = $_POST['index'];
-		$title = common::IndexToTitle($index);
+		$title = \common::IndexToTitle($index);
 
 		if( !$title ){
 			msg($langmessage['OOPS']);
@@ -103,7 +106,7 @@ class page_layout{
 			return;
 		}
 
-		if( !common::verify_nonce('use_'.$layout) ){
+		if( !\common::verify_nonce('use_'.$layout) ){
 			msg($langmessage['OOPS']);
 			return;
 		}
@@ -111,12 +114,12 @@ class page_layout{
 
 		//unset, then reset if needed
 		unset($gp_titles[$index]['gpLayout']);
-		$currentLayout = display::OrConfig($index,'gpLayout');
+		$currentLayout = \display::OrConfig($index,'gpLayout');
 		if( $currentLayout != $layout ){
 			$gp_titles[$index]['gpLayout'] = $layout;
 		}
 
-		if( !admin_tools::SavePagesPHP() ){
+		if( !\admin_tools::SavePagesPHP() ){
 			msg($langmessage['OOPS'].'(3)');
 			return false;
 		}
@@ -129,11 +132,11 @@ class page_layout{
 	 * Display current layout, list of available layouts and list of titles affected by the layout setting for $title
 	 *
 	 */
-	function SelectLayout($url,$query_string){
+	public function SelectLayout($url,$query_string){
 		global $gp_titles, $gpLayouts, $langmessage, $config, $gp_index;
 
 		$index = $_REQUEST['index'];
-		$title = common::IndexToTitle($index);
+		$title = \common::IndexToTitle($index);
 		if( !$title ){
 			echo $langmessage['OOPS'];
 			return;
@@ -166,29 +169,25 @@ class page_layout{
 
 			echo $langmessage['restore'].': ';
 			$span = '<span class="layout_color_id" style="background-color:'.$parent_info['color'].';" title="'.$parent_info['color'].'"></span> ';
-			echo common::Link($url,$span.$parent_info['label'],$query_string.'cmd=restorelayout&index='.urlencode($index),array('data-cmd'=>'postlink','title'=>$langmessage['restore']),'restore');
+			echo \common::Link($url,$span.$parent_info['label'],$query_string.'cmd=restorelayout&index='.urlencode($index),array('data-cmd'=>'postlink','title'=>$langmessage['restore']),'restore');
 			echo '</p>';
 		}
 
 
 		echo '<table class="bordered full_width">';
 
-		echo '<tr>';
-			echo '<th>';
-
-			echo $langmessage['available_layouts'];
-			echo '</th>';
-			echo '<th>';
-			echo $langmessage['theme'];
-			echo '</th>';
-			echo '</tr>';
+		echo '<tr><th>';
+		echo $langmessage['available_layouts'];
+		echo '</th><th>';
+		echo $langmessage['theme'];
+		echo '</th></tr>';
 
 		if( count($gpLayouts) < 2 ){
 			echo '<tr><td colspan="2">';
 			echo $langmessage['Empty'];
 			echo '</td></tr>';
 			echo '</table>';
-			echo common::Link('Admin_Theme_Content',$langmessage['new_layout']);
+			echo \common::Link('Admin_Theme_Content',$langmessage['new_layout']);
 			echo '</div>';
 			return;
 		}
@@ -197,26 +196,23 @@ class page_layout{
 			if( $layout == $curr_layout ){
 				continue;
 			}
-			echo '<tr>';
-			echo '<td>';
+			echo '<tr><td>';
 			echo '<span class="layout_color_id" style="background-color:'.$info['color'].';" title="'.$info['color'].'">';
 			echo '</span> ';
 			if( $layout != $curr_layout ){
-				echo common::Link($url,$info['label'],$query_string.'cmd=uselayout&index='.urlencode($index).'&layout='.urlencode($layout),array('data-cmd'=>'postlink'),'use_'.$layout);
+				echo \common::Link($url,$info['label'],$query_string.'cmd=uselayout&index='.urlencode($index).'&layout='.urlencode($layout),array('data-cmd'=>'postlink'),'use_'.$layout);
 
 			}
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo $info['theme'];
-			echo '</td>';
-			echo '</tr>';
+			echo '</td></tr>';
 
 		}
 		echo '</table>';
 
 
 		//show affected pages
-		$affected = page_layout::GetAffectedFiles($index);
+		$affected = self::GetAffectedFiles($index);
 
 		echo '<br/>';
 
@@ -226,8 +222,8 @@ class page_layout{
 		echo '<p class="sm">'.$langmessage['about_layout_change'].'</p>';
 		echo '<p class="admin_note" style="width:35em">';
 
-		$label = common::GetLabelIndex($index,false);
-		echo common::LabelSpecialChars($label);
+		$label = \common::GetLabelIndex($index,false);
+		echo \common::LabelSpecialChars($label);
 
 		$i = 0;
 		foreach($affected as $affected_label){
@@ -242,7 +238,7 @@ class page_layout{
 
 		echo '<p class="admin_note">';
 		echo '<b>'.$langmessage['see_also'].'</b> ';
-		echo common::Link('Admin_Theme_Content',$langmessage['layouts']);
+		echo \common::Link('Admin_Theme_Content',$langmessage['layouts']);
 		echo '</p>';
 
 		echo '</div>';
@@ -253,7 +249,7 @@ class page_layout{
 	 * @param string $index
 	 *
 	 */
-	function GetAffectedFiles($index){
+	public function GetAffectedFiles($index){
 		global $gp_titles, $gp_menu;
 
 		$temp = $gp_menu;
@@ -271,14 +267,14 @@ class page_layout{
 
 			unset($temp[$menu_key]);
 			if( $index === $menu_key ){
-				page_layout::InheritingLayout($level+1,$temp,$result);
+				self::InheritingLayout($level+1,$temp,$result);
 			}
 			$i++;
 		}while( (count($temp) > 0) );
 		return $result;
 	}
 
-	function InheritingLayout($searchLevel,&$menu,&$result){
+	public function InheritingLayout($searchLevel,&$menu,&$result){
 		global $gp_titles;
 
 		$children = true;
@@ -295,7 +291,7 @@ class page_layout{
 			}
 			if( $level > $searchLevel ){
 				if( $children ){
-					page_layout::InheritingLayout($level,$menu,$result);
+					self::InheritingLayout($level,$menu,$result);
 				}else{
 					unset($menu[$menu_key]);
 				}
@@ -314,8 +310,8 @@ class page_layout{
 				continue;
 			}
 
-			$label = common::GetLabelIndex($menu_key,false);
-			$result[] = common::LabelSpecialChars($label);
+			$label = \common::GetLabelIndex($menu_key,false);
+			$result[] = \common::LabelSpecialChars($label);
 		}while( count($menu) > 0 );
 
 	}

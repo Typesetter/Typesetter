@@ -97,8 +97,7 @@ class Menu{
 			case 'layout':
 			case 'uselayout':
 			case 'restorelayout':
-				includeFile('tool/Page_Layout.php');
-				$page_layout = new \page_layout($this->cmd,'Admin/Menu',$this->query_string);
+				$page_layout = new \gp\tool\Page\Layout($this->cmd,'Admin/Menu',$this->query_string);
 				if( $page_layout->result() ){
 					return;
 				}

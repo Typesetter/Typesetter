@@ -2238,14 +2238,11 @@ class gpOutput{
 			}
 
 
-			//less
-			$ext = substr($file,-5);
-			if( $ext == '.less' ){
-				$scripts[$key] = \gp\tool\Output\Css::Cache($dataDir.$file,'less');
+			$ext = \common::Ext($file);
 
-			//scss
-			}elseif( $ext == '.scss' ){
-				$scripts[$key] = \gp\tool\Output\Css::Cache($dataDir.$file);
+			//less and scss
+			if( $ext == 'less' || $ext == 'scss' ){
+				$scripts[$key] = \gp\tool\Output\Css::Cache($dataDir.$file,$ext);
 			}
 
 		}
@@ -2422,9 +2419,7 @@ class gpOutput{
 			foreach($files as $file_key => $file){
 
 				$html = "\n".'<script type="text/javascript" src="%s"></script>';
-				if( strpos($file,'.less') !== false ){
-					$html = "\n".'<link type="text/css" href="%s" rel="stylesheet/less" />';
-				}elseif( $type == 'css' ){
+				if( $type == 'css' ){
 					$html = "\n".'<link type="text/css" href="%s" rel="stylesheet"/>';
 				}
 

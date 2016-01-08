@@ -2614,6 +2614,17 @@ class common{
 		return $num;
 	}
 
+
+	/**
+	 * Get the extension of the $file
+	 *
+	 */
+	static function Ext($file){
+		$ext = pathinfo($file, PATHINFO_EXTENSION);
+		return strtolower($ext);
+	}
+
+
 	/**
 	 * @deprecated 3.0
 	 * use gp_edit::UseCK();

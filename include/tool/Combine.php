@@ -536,8 +536,7 @@ class Combine{
 		$file = \gpFiles::NoNull($file);
 
 		//require .js or .css
-		$test	= strtolower($file);
-		$ext	= pathinfo($file, PATHINFO_EXTENSION);
+		$ext	= \common::Ext($file);
 		if( $ext !== 'js' && $ext !== 'css' && $ext !== 'less' && $ext !== 'scss' ){
 			echo  "\n{$comment_start} File Not CSS, LESS or JS {$file} {$comment_end}\n";
 			return false;
@@ -693,9 +692,9 @@ class Combine{
 			}
 
 			if( empty($script['type']) ){
-				$script['type'] = pathinfo($script['file'], PATHINFO_EXTENSION);
+				$script['type'] = \common::Ext($script['file']);
 			}
-			if( $script['type'] == 'less' ){
+			if( $script['type'] == 'less' || $script['type'] == 'scss' ){
 				$script['type'] = 'css';
 			}
 			$return[$script['type']][$key] = $script;

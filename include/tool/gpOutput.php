@@ -2241,12 +2241,11 @@ class gpOutput{
 			//less
 			$ext = substr($file,-5);
 			if( $ext == '.less' ){
-				$scripts[$key] = \gp\tool\Output\Less::Cache($dataDir.$file);
+				$scripts[$key] = \gp\tool\Output\Css::Cache($dataDir.$file,'less');
 
 			//scss
 			}elseif( $ext == '.scss' ){
-				$scss			= new \gp\tool\Output\Scss();
-				$scripts[$key] = $scss->Cache($dataDir.$file);
+				$scripts[$key] = \gp\tool\Output\Css::Cache($dataDir.$file);
 			}
 
 		}
@@ -2321,7 +2320,7 @@ class gpOutput{
 			$files[] = rawurldecode($page->theme_path).'/style.css';
 
 			if( $page->gpLayout && file_exists($custom_file) ){
-				$files[] = \gp\tool\Output\Less::Cache( $custom_file );
+				$files[] = \gp\tool\Output\Css::Cache( $custom_file, 'less' );
 			}
 
 			return $files;
@@ -2343,13 +2342,12 @@ class gpOutput{
 		if( $style_type == 'scss' ){
 
 			$files[]		= $dir . '/style.scss';
-			$scss			= new \gp\tool\Scss();
-			return array( $scss->Cache($files) );
+			return array( \gp\tool\Output\Css::Cache($files) );
 		}
 
 		array_unshift($files, $dir.'/style.less');
 
-		return array( \gp\tool\Output\Less::Cache($files) );
+		return array( \gp\tool\Output\Css::Cache($files,'less') );
 	}
 
 

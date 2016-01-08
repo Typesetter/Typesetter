@@ -152,6 +152,16 @@ class Compiler
         $this->sourceNames = array();
     }
 
+
+    /**
+     * Get array of all parsed files
+     *
+     */
+    public function allParsedFiles(){
+		return $this->parsedFiles;
+	}
+
+
     /**
      * Compile scss
      *

@@ -437,7 +437,7 @@ class Edit extends \gp\admin\Layout{
 
 		if( count($style_files) ){
 
-			$compiled		= \gp\tool\Output\Less::Parse( $style_files );
+			$compiled		= \gp\tool\Output\Css::ParseLess( $style_files );
 
 			if( !$compiled ){
 				message($langmessage['OOPS'].' (Invalid LESS)');
@@ -476,8 +476,7 @@ class Edit extends \gp\admin\Layout{
 
 		$style_files[]		= $dir.'/style.scss';
 
-		$scss				= new \gp\tool\Scss();
-		$compiled			= $scss->Parse($style_files);
+		$compiled			= \gp\tool\Output\Css::ParseScss($style_files);
 
 		if( !$compiled ){
 			message($langmessage['OOPS'].' (Invalid '.$style_type.')');

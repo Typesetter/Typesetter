@@ -35,27 +35,28 @@ class Scss extends \Leafo\ScssPhp\Compiler{
 			$compiled_file = '/data/_cache/'.$compiled_name;
 
 			if( file_exists($dataDir.$compiled_file) ){
-				return $compiled_file;
+				//return $compiled_file;
+				msg($compiled_file);
 			}
 
 		}
 
 
-		$compiled = $this->Parse( $scss_files );
+		$compiled = self::ParseScss( $scss_files );
 		if( !$compiled ){
 			return false;
 		}
 
 
 		// generate the file name
-		$etag			= \common::FilesEtag( $this->importedFiles );
+		$etag			= \common::FilesEtag( $scss_files );
 		$compiled_name	= 'scss_'.$files_hash.'_'.$etag.'.css';
 		$compiled_file	= '/data/_cache/'.$compiled_name;
 
 
 		// save the cache
 		// use the last line for the etag
-		$list			= $this->importedFiles;
+		$list			= $scss_files;
 		$list[]			= $etag;
 		$cache			= implode("\n",$list);
 		if( !\gpFiles::Save( $list_file, $cache ) ){
@@ -75,11 +76,13 @@ class Scss extends \Leafo\ScssPhp\Compiler{
 	 * Create a css file from one or more scss files
 	 *
 	 */
-	public function Parse( $scss_files ){
+	public static function ParseScss( &$scss_files ){
 		global $dataDir;
 
+		$compiler	= new \Leafo\ScssPhp\Compiler();
 		$compiled	= false;
 		$combined	= array();
+
 
 
 		//add variables for url paths
@@ -104,9 +107,9 @@ class Scss extends \Leafo\ScssPhp\Compiler{
 				$combined[]	= '@import "'.$file.'";';
 			}
 
-			$this->addImportPath($dataDir);
+			$compiler->addImportPath($dataDir);
 
-			$compiled = $this->compile(implode("\n",$combined));
+			$compiled = $compiler->compile(implode("\n",$combined));
 
 		}catch( \Exception $e){
 			if( \common::LoggedIn() ){
@@ -115,8 +118,12 @@ class Scss extends \Leafo\ScssPhp\Compiler{
 			return false;
 		}
 
+		$scss_files = $compiler->allParsedFiles();
+
 		return $compiled;
 	}
+
+
 
 
 }

@@ -4,7 +4,7 @@ defined('is_running') or die('Not an entry point...');
 includeFile('tool/editing.php');
 includeFile('tool/SectionContent.php');
 
-class editing_page extends display{
+class editing_page extends \gp\Page{
 
 	protected $draft_file;
 	protected $draft_exists			= false;

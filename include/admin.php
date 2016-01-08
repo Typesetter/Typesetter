@@ -4,7 +4,7 @@ namespace gp;
 
 defined('is_running') or die('Not an entry point...');
 
-class admin extends \display{
+class admin extends \gp\Page{
 
 	public $pagetype				= 'admin_display';
 	public $requested				= false;

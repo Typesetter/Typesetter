@@ -2,7 +2,7 @@
 defined('is_running') or die('Not an entry point...');
 
 
-class special_display extends display{
+class special_display extends \gp\Page{
 	public $pagetype = 'special_display';
 	public $requested = false;
 

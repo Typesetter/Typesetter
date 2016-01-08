@@ -755,7 +755,6 @@ class common{
 		spl_autoload_register( array('common','Autoload') );
 
 
-		includeFile('tool/display.php');
 		includeFile('tool/Files.php');
 		includeFile('tool/gpOutput.php');
 		includeFile('tool/functions.php');

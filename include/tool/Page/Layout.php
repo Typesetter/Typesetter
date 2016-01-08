@@ -114,7 +114,7 @@ class Layout{
 
 		//unset, then reset if needed
 		unset($gp_titles[$index]['gpLayout']);
-		$currentLayout = \display::OrConfig($index,'gpLayout');
+		$currentLayout = \gp\Page::OrConfig($index,'gpLayout');
 		if( $currentLayout != $layout ){
 			$gp_titles[$index]['gpLayout'] = $layout;
 		}

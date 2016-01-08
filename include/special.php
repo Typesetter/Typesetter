@@ -122,11 +122,11 @@ class special_display extends \gp\Page{
 		global $gp_index;
 
 		$action = common::GetUrl($this->title);
-		\gp\tool\Page\Rename::RenameForm( $this->gp_index, $action );
+		\gp\Page\Rename::RenameForm( $this->gp_index, $action );
 	}
 
 	public function RenameFile(){
-		return \gp\tool\Page\Rename::RenamePage($this);
+		return \gp\Page\Rename::RenamePage($this);
 	}
 
 
@@ -136,7 +136,7 @@ class special_display extends \gp\Page{
 	 */
 	public function ToggleVisibility(){
 		$_REQUEST += array('visibility'=>'');
-		\gp\tool\Page\Visibility::TogglePage($this, $_REQUEST['visibility']);
+		\gp\Page\Visibility::TogglePage($this, $_REQUEST['visibility']);
 	}
 
 

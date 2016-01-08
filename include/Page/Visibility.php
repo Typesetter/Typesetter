@@ -1,5 +1,5 @@
 <?php
-namespace gp\tool\Page;
+namespace gp\Page;
 
 defined('is_running') or die('Not an entry point...');
 

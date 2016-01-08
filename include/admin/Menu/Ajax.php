@@ -931,7 +931,7 @@ class Ajax extends \gp\admin\Menu{
 		//prepare variables
 		$title =& $_REQUEST['index'];
 		$action = $this->GetUrl('Admin/Menu/Ajax');
-		\gp\tool\Page\Rename::RenameForm( $_REQUEST['index'], $action );
+		\gp\Page\Rename::RenameForm( $_REQUEST['index'], $action );
 	}
 
 	public function RenameFile(){
@@ -944,7 +944,7 @@ class Ajax extends \gp\admin\Menu{
 			return false;
 		}
 
-		\gp\tool\Page\Rename::RenameFile($title);
+		\gp\Page\Rename::RenameFile($title);
 	}
 
 
@@ -954,7 +954,7 @@ class Ajax extends \gp\admin\Menu{
 	 */
 	public function ToggleVisibility(){
 		$_REQUEST += array('index'=>'','visibility'=>'');
-		\gp\tool\Page\Visibility::Toggle($_REQUEST['index'], $_REQUEST['visibility']);
+		\gp\Page\Visibility::Toggle($_REQUEST['index'], $_REQUEST['visibility']);
 	}
 
 

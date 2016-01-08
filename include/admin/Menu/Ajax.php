@@ -928,19 +928,14 @@ class Ajax extends \gp\admin\Menu{
 	public function RenameForm(){
 		global $langmessage, $gp_index;
 
-		includeFile('tool/Page_Rename.php');
-
 		//prepare variables
 		$title =& $_REQUEST['index'];
 		$action = $this->GetUrl('Admin/Menu/Ajax');
-		\gp_rename::RenameForm( $_REQUEST['index'], $action );
+		\gp\tool\Page\Rename::RenameForm( $_REQUEST['index'], $action );
 	}
 
 	public function RenameFile(){
 		global $langmessage, $gp_index;
-
-		includeFile('tool/Page_Rename.php');
-
 
 		//prepare variables
 		$title =& $_REQUEST['title'];
@@ -949,7 +944,7 @@ class Ajax extends \gp\admin\Menu{
 			return false;
 		}
 
-		\gp_rename::RenameFile($title);
+		\gp\tool\Page\Rename::RenameFile($title);
 	}
 
 

@@ -121,14 +121,12 @@ class special_display extends display{
 	public function RenameForm(){
 		global $gp_index;
 
-		includeFile('tool/Page_Rename.php');
 		$action = common::GetUrl($this->title);
-		gp_rename::RenameForm( $this->gp_index, $action );
+		\gp\tool\Page\Rename::RenameForm( $this->gp_index, $action );
 	}
 
 	public function RenameFile(){
-		includeFile('tool/Page_Rename.php');
-		return gp_rename::RenamePage($this);
+		return \gp\tool\Page\Rename::RenamePage($this);
 	}
 
 

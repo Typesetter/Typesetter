@@ -497,7 +497,7 @@ class Edit extends \gp\admin\Layout{
 		$section = array();
 		$section['type'] = 'image';
 		includeFile('tool/ajax.php');
-		\gpAjax::InlineEdit($section);
+		\gp\tool\Output\Ajax::InlineEdit($section);
 		die();
 	}
 

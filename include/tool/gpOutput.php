@@ -2762,7 +2762,7 @@ class gpOutput{
 			case 'json':
 				common::CheckTheme();
 				includeFile('tool/ajax.php');
-				gpAjax::Response();
+				\gp\tool\Output\Ajax::Response();
 			break;
 
 			case 'content':

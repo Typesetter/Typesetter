@@ -332,7 +332,7 @@ class editing_page extends display{
 		$scripts[]	= '/include/js/inline_edit/inline_editing.js';
 		$scripts[]	= '/include/js/inline_edit/manage_sections.js';
 
-		gpAjax::SendScripts($scripts);
+		\gp\tool\Output\Ajax::SendScripts($scripts);
 		die();
 	}
 

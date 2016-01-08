@@ -879,7 +879,7 @@ class gpsession{
 		includeFile('tool/ajax.php');
 
 		//send response so an error is not thrown
-		echo gpAjax::Callback($_REQUEST['jsoncallback']).'([]);';
+		echo \gp\tool\Output\Ajax::Callback($_REQUEST['jsoncallback']).'([]);';
 		die();
 
 		//for debugging

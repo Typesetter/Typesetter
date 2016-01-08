@@ -1,5 +1,5 @@
 <?php
-namespace gp\tool;
+namespace gp\tool\Page;
 
 defined('is_running') or die('Not an entry point...');
 
@@ -40,7 +40,7 @@ class Visibility{
 		global $gp_titles;
 
 
-		\gp\tool\Visibility::Toggle($page->gp_index, $visibility);
+		self::Toggle($page->gp_index, $visibility);
 
 		$page->visibility = null;
 		if( isset($gp_titles[$page->gp_index]['vis']) ){

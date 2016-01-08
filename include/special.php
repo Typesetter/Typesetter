@@ -138,7 +138,7 @@ class special_display extends display{
 	 */
 	public function ToggleVisibility(){
 		$_REQUEST += array('visibility'=>'');
-		\gp\tool\Visibility::TogglePage($this, $_REQUEST['visibility']);
+		\gp\tool\Page\Visibility::TogglePage($this, $_REQUEST['visibility']);
 	}
 
 

@@ -959,7 +959,7 @@ class Ajax extends \gp\admin\Menu{
 	 */
 	public function ToggleVisibility(){
 		$_REQUEST += array('index'=>'','visibility'=>'');
-		\gp\tool\Visibility::Toggle($_REQUEST['index'], $_REQUEST['visibility']);
+		\gp\tool\Page\Visibility::Toggle($_REQUEST['index'], $_REQUEST['visibility']);
 	}
 
 

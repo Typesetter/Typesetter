@@ -2014,7 +2014,7 @@ class gpOutput{
 		common::LoadComponents('jquery,gp-additional,fontawesome');
 
 		//get css and js info
-		$scripts = \gp\tool\Combine::ScriptInfo( gpOutput::$components );
+		$scripts = \gp\tool\Output\Combine::ScriptInfo( gpOutput::$components );
 
 		//check for bootstrap theme
 		if( strpos(gpOutput::$components,'bootstrap') ){
@@ -2400,7 +2400,7 @@ class gpOutput{
 				echo '<script type="text/javascript">';
 			}
 			foreach($files as $file_key => $file){
-				$full_path = \gp\tool\Combine::CheckFile($file);
+				$full_path = \gp\tool\Output\Combine::CheckFile($file);
 				if( !$full_path ) continue;
 				readfile($full_path);
 				echo ";\n";
@@ -2423,7 +2423,7 @@ class gpOutput{
 					$html = "\n".'<link type="text/css" href="%s" rel="stylesheet"/>';
 				}
 
-				\gp\tool\Combine::CheckFile($file);
+				\gp\tool\Output\Combine::CheckFile($file);
 				if( common::LoggedIn() ){
 					$file .= '?v='.rawurlencode(gpversion);
 				}
@@ -2439,7 +2439,7 @@ class gpOutput{
 		}
 
 		//create combine request
-		$combined_file = \gp\tool\Combine::GenerateFile($files,$type);
+		$combined_file = \gp\tool\Output\Combine::GenerateFile($files,$type);
 		echo sprintf($html,common::GetDir($combined_file,true));
 	}
 
@@ -2807,7 +2807,7 @@ class gpOutput{
 	 *
 	 */
 	static function GetComponents($names = ''){
-		$scripts = \gp\tool\Combine::ScriptInfo( $names );
+		$scripts = \gp\tool\Output\Combine::ScriptInfo( $names );
 
 		$scripts['css'] = self::GetHead_CDN('css',$scripts['css']);
 		self::CombineFiles($scripts['css'], 'css', false );

@@ -224,7 +224,7 @@ class Configuration{
 											'smtpauth'  => 'SMTPAuth' );
 
 		//CDN
-		foreach(\gp\tool\Combine::$scripts as $key => $script_info){
+		foreach(\gp\tool\Output\Combine::$scripts as $key => $script_info){
 			if( !isset($script_info['cdn']) ){
 				continue;
 			}

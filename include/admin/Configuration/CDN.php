@@ -37,7 +37,7 @@ class CDN extends \gp\admin\Configuration{
 		$possible			= array();
 		$possible['cdn']	= array();
 
-		foreach(\gp\tool\Combine::$scripts as $key => $script_info){
+		foreach(\gp\tool\Output\Combine::$scripts as $key => $script_info){
 
 			if( !isset($script_info['cdn']) ){
 				continue;
@@ -84,7 +84,7 @@ class CDN extends \gp\admin\Configuration{
 
 
 		//display which scripts can be served bythe cdn
-		foreach(\gp\tool\Combine::$scripts as $key => $script_info){
+		foreach(\gp\tool\Output\Combine::$scripts as $key => $script_info){
 
 			if( !isset($script_info['cdn']) || !isset($script_info['label']) ){
 				continue;

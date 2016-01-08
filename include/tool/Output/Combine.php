@@ -1,6 +1,6 @@
 <?php
 
-namespace gp\tool;
+namespace gp\tool\Output;
 
 defined('is_running') or die('Not an entry point...');
 
@@ -472,7 +472,7 @@ class Combine{
 			$imports = $combined_content = '';
 			$new_imported = array();
 			foreach($full_paths as $file => $full_path){
-				$temp = new \gp\tool\CombineCSS($file);
+				$temp = new \gp\tool\Output\CombineCss($file);
 
 				$combined_content .= "\n/* ".$file." */\n";
 				$combined_content .= $temp->content;

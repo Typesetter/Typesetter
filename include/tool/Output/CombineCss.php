@@ -1,6 +1,6 @@
 <?php
 
-namespace gp\tool;
+namespace gp\tool\Output;
 
 defined('is_running') or die('Not an entry point...');
 
@@ -115,7 +115,7 @@ class CombineCSS{
 
 		if( file_exists($full_path) ){
 
-			$temp = new \gp\tool\CombineCSS($import);
+			$temp = new \gp\tool\Output\CombineCss($import);
 			$this->content = substr_replace($this->content,$temp->content,$replace_start,$replace_end-$replace_start+1);
 			$this->imported[] = $full_path;
 			$this->imported = array_merge($this->imported,$temp->imported);

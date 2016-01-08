@@ -24,8 +24,7 @@ class Combine{
 										'type'			=> 'css'),
 
 
-				'gp-theme-css'=> array(	'file'			=> '/include/css/theme_content.css',
-										'dev'			=> '/include/css/theme_content.less',
+				'gp-theme-css'=> array(	'file'			=> '/include/css/theme_content.scss',
 										'type'			=> 'css',
 										'requires'		=> 'ui-theme'),
 

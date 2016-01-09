@@ -149,8 +149,7 @@ class Page extends \gp\Page{
 	public static function GetScriptInfo(&$requested,$redirect=true){
 		global $dataDir,$gp_index,$gp_titles;
 
-		$scripts['special_site_map']['script'] = '/include/special/special_map.php';
-		$scripts['special_site_map']['class'] = 'special_map';
+		$scripts['special_site_map']['class'] = '\\gp\\special\\Map';
 
 		$scripts['special_galleries']['class'] = '\\gp\\special\\Galleries';
 

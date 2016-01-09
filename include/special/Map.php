@@ -1,8 +1,10 @@
 <?php
+
+namespace gp\special;
+
 defined('is_running') or die('Not an entry point...');
 
-
-class special_map{
+class Map{
 
 	function __construct(){
 		global $page,$langmessage,$config;
@@ -21,14 +23,14 @@ class special_map{
 		$this->MultiSiteData();
 
 		echo '<div class="sitemap_xml">';
-		echo common::Link('Special_Site_Map','XML','xml');
+		echo \common::Link('Special_Site_Map','XML','xml');
 		echo '</div>';
 		echo '<h2>';
-		echo gpOutput::ReturnText('site_map');
+		echo \gpOutput::ReturnText('site_map');
 		echo '</h2>';
 
 
-		gpOutput::GetFullMenu();
+		\gpOutput::GetFullMenu();
 
 	}
 
@@ -64,13 +66,13 @@ class special_map{
 
 		foreach($gp_menu as $key => $info){
 
-			$title = common::IndexToTitle($key);
+			$title = \common::IndexToTitle($key);
 
 			if( isset($info['level']) ){
 				echo "\n";
 				echo '<url>';
 				echo '<loc>';
-				echo isset($info['url']) ? $info['url'] : 'http://' . $_SERVER['SERVER_NAME'] . common::GetUrl($title);
+				echo isset($info['url']) ? $info['url'] : 'http://' . $_SERVER['SERVER_NAME'] . \common::GetUrl($title);
 				echo '</loc>';
 				echo '</url>';
 			}

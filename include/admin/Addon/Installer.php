@@ -807,8 +807,6 @@ class Installer extends \gp\admin\Addon\Tools{
 	 */
 	public function GetRemote(){
 		global $langmessage, $dataDir;
-		includeFile('tool/RemoteGet.php');
-
 
 		// check values
 		if( empty($this->type)
@@ -868,7 +866,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 
 		// get package from remote
-		$full_result = \gpRemoteGet::Get($download_link);
+		$full_result = \gp\tool\RemoteGet::Get($download_link);
 		if( (int)$full_result['response']['code'] < 200 && (int)$full_result['response']['code'] >= 300 ){
 			$this->message( $langmessage['download_failed'] .' (1)');
 			return false;

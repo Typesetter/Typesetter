@@ -4,8 +4,6 @@ namespace gp\admin\Settings;
 
 defined('is_running') or die('Not an entry point...');
 
-includeFile('tool/RemoteGet.php');
-
 class Permalinks{
 
 	public $rule_file_name		= '';
@@ -125,7 +123,7 @@ class Permalinks{
 	public static function ConfirmGet($url, $check_redirect = true ){
 		global $config;
 
-		$result			= \gpRemoteGet::Get_Successful($url);
+		$result			= \gp\tool\RemoteGet::Get_Successful($url);
 
 		if( !$result ){
 			return false;
@@ -140,8 +138,8 @@ class Permalinks{
 		}
 
 		//if redirected, make sure it's on the same host
-		if( $check_redirect && \gpRemoteGet::$redirected ){
-			$redirect_a		= parse_url(\gpRemoteGet::$redirected);
+		if( $check_redirect && \gp\tool\RemoteGet::$redirected ){
+			$redirect_a		= parse_url(\gp\tool\RemoteGet::$redirected);
 			$req_a			= parse_url($url);
 			if( $redirect_a['host'] !== $req_a['host'] ){
 				return false;
@@ -364,7 +362,7 @@ class Permalinks{
 	 */
 	public function CanTestRules(){
 
-		if( !\gpRemoteGet::Test() ){
+		if( !\gp\tool\RemoteGet::Test() ){
 			return false;
 		}
 

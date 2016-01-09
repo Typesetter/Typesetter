@@ -59,7 +59,6 @@ class Update extends \gp\Page{
 
 	function __construct($process='page'){
 
-		includeFile('tool/RemoteGet.php');
 		$this->GetData();
 
 
@@ -155,7 +154,7 @@ class Update extends \gp\Page{
 		echo '<tr><td>';
 			echo 'RemoteGet';
 			echo '</td><td>';
-			if( \gpRemoteGet::Test() ){
+			if( \gp\tool\RemoteGet::Test() ){
 				echo '<span class="passed">'.$langmessage['True'].'</span>';
 			}else{
 				$passed = false;
@@ -282,9 +281,9 @@ class Update extends \gp\Page{
 
 
 		//get data from gpEasy
-		$result = \gpRemoteGet::Get_Successful($path);
+		$result = \gp\tool\RemoteGet::Get_Successful($path);
 		if( !$result ){
-			$this->msg(\gpRemoteGet::Debug('Sorry, data not fetched'));
+			$this->msg(\gp\tool\RemoteGet::Debug('Sorry, data not fetched'));
 			return false;
 		}
 
@@ -306,7 +305,7 @@ class Update extends \gp\Page{
 			$debug['Type']				= gettype($array);
 			$debug['json_last_error']	= json_last_error();
 			$debug['Two']				= substr($result,0,20);
-			$this->msg(\gpRemoteGet::Debug('Sorry, data not fetched',$debug));
+			$this->msg(\gp\tool\RemoteGet::Debug('Sorry, data not fetched',$debug));
 			return false;
 		}
 
@@ -314,7 +313,7 @@ class Update extends \gp\Page{
 			$debug				= array();
 			$debug['Count']		= count($array);
 			$debug['Two']		= substr($result,0,20);
-			$this->msg(\gpRemoteGet::Debug('Sorry, data not fetched',$debug));
+			$this->msg(\gp\tool\RemoteGet::Debug('Sorry, data not fetched',$debug));
 			return false;
 		}
 
@@ -829,7 +828,7 @@ class Update extends \gp\Page{
 
 
 		$download 		= addon_browse_path.'/Special_gpEasy?cmd=download';
-		$contents		= \gpRemoteGet::Get_Successful($download);
+		$contents		= \gp\tool\RemoteGet::Get_Successful($download);
 
 		if( !$contents || empty($contents) ){
 			$this->msg($langmessage['download_failed'].'(1)');

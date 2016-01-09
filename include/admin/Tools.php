@@ -53,8 +53,7 @@ class Tools{
 		}
 
 		//determin check in type
-		includeFile('tool/RemoteGet.php');
-		if( !\gpRemoteGet::Test() ){
+		if( !\gp\tool\RemoteGet::Test() ){
 			self::VersionData($version_data);
 			self::$update_status = 'checkincompat';
 			return;
@@ -1431,8 +1430,7 @@ class Tools{
 			return $bit = 0;
 		}
 
-		includeFile('tool/RemoteGet.php');
-		if( !\gpRemoteGet::Test() ){
+		if( !\gp\tool\RemoteGet::Test() ){
 			return $bit = 0;
 		}
 

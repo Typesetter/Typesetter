@@ -211,8 +211,6 @@ class Install extends \gp\admin\Addon\Tools{
 			}
 		}
 
-		includeFile('tool/RemoteGet.php');
-
 		//search settings
 		$this->searchUrl = $this->path_remote;
 		$this->searchOrderOptions['rating_score']	= $langmessage['Highest Rated'];
@@ -252,13 +250,13 @@ class Install extends \gp\admin\Addon\Tools{
 			$result = file_get_contents($cache_file);
 			$use_cache = true;
 		}else{
-			$result = \gpRemoteGet::Get_Successful($src);
+			$result = \gp\tool\RemoteGet::Get_Successful($src);
 		}
 
 		//no response
 		if( !$result ){
 			if( $use_cache ) unlink($cache_file);
-			echo '<p>'.\gpRemoteGet::Debug('Sorry, data not fetched').'</p>';
+			echo '<p>'.\gp\tool\RemoteGet::Debug('Sorry, data not fetched').'</p>';
 			return;
 		}
 
@@ -274,7 +272,7 @@ class Install extends \gp\admin\Addon\Tools{
 			$debug				= array();
 			$debug['Two']		= substr($result,0,2);
 			$debug['Twotr']		= substr(trim($result),0,2);
-			echo '<p>'.\gpRemoteGet::Debug('Sorry, data not fetched',$debug).'</p>';
+			echo '<p>'.\gp\tool\RemoteGet::Debug('Sorry, data not fetched',$debug).'</p>';
 			return;
 		}
 

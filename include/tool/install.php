@@ -2,8 +2,6 @@
 defined('is_running') or die('Not an entry point...');
 
 includeFile('tool/gpOutput.php');
-includeFile('tool/RemoteGet.php');
-
 
 class Install_Tools{
 
@@ -546,7 +544,7 @@ class Install_Tools{
 		global $install_ftp_connection, $dirPrefix;
 
 		//only proceed with save if we can test the results
-		if( !gpRemoteGet::Test() ){
+		if( !\gp\tool\RemoteGet::Test() ){
 			return;
 		}
 

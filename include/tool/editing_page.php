@@ -1045,7 +1045,7 @@ class editing_page extends display{
 			$contents	= ob_get_clean();
 
 			$dir		= common::DirName($full_path);
-			$full_path	= tempnam($dir,'backup');
+			$full_path	= tempnam($dir,'backup').'.php';
 
 			gpFiles::Save( $full_path, $contents );
 

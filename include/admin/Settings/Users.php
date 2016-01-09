@@ -95,7 +95,6 @@ class Users{
 
 		//this needs to happen before SaveUserFile();
 		//update the /_session file
-		includeFile('tool/sessions.php');
 		$userinfo =& $this->users[$username];
 		$userinfo = \gp\tool\Session::SetSessionFileName($userinfo,$username); //make sure $userinfo['file_name'] is set
 

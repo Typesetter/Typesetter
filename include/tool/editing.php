@@ -1041,7 +1041,7 @@ class gp_edit{
 
 
 		//send replacement content
-		$content = section_content::RenderSection( $existing_section, $section_num, $title, $file_stats );
+		$content = \gp\tool\Output\Sections::RenderSection( $existing_section, $section_num, $title, $file_stats );
 		$page->ajaxReplace[] = array('gp_include_content','',$content);
 		return true;
 	}
@@ -1068,7 +1068,7 @@ class gp_edit{
 					$data['content'] = $_POST['file_include'];
 				}
 
-				$content = section_content::RenderSection( $data, $section_num, $title, $file_stats );
+				$content = \gp\tool\Output\Sections::RenderSection( $data, $section_num, $title, $file_stats );
 				$page->ajaxReplace[] = array('gp_include_content','',$content);
 			return;
 		}

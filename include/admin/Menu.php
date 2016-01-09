@@ -38,7 +38,7 @@ class Menu{
 		global $langmessage,$page,$config;
 
 
-		$this->section_types			= \section_content::GetTypes();
+		$this->section_types			= \gp\tool\Output\Sections::GetTypes();
 
 		$page->ajaxReplace				= array();
 

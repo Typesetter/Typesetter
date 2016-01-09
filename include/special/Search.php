@@ -360,7 +360,7 @@ class Search{
 			return;
 		}
 
-		$content			= \section_content::Render($file_sections,$title,\gpFiles::$last_stats);
+		$content			= \gp\tool\Output\Sections::Render($file_sections,$title,\gpFiles::$last_stats);
 		$label				= \common::GetLabel($title);
 
 		$this->FindString($content, $label, $title);

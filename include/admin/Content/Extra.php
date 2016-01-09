@@ -144,7 +144,7 @@ class Extra{
 	public function ShowExtras(){
 		global $langmessage;
 
-		$types = \section_content::GetTypes();
+		$types = \gp\tool\Output\Sections::GetTypes();
 
 		echo '<h2>'.$langmessage['theme_content'].'</h2>';
 		echo '<table class="bordered full_width">';

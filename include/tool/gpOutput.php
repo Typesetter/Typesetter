@@ -1224,10 +1224,10 @@ class gpOutput{
 
 			//echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'" data-gp-editarea="'.$edit_index.'">'; // class="edit_area" added by javascript
 			echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'">';
-			echo section_content::RenderSection($extra_content,0,'',$file_stats);
+			echo \gp\tool\Output\Sections::RenderSection($extra_content,0,'',$file_stats);
 			echo '</div>';
 		}else{
-			echo section_content::RenderSection($extra_content,0,'',$file_stats);
+			echo \gp\tool\Output\Sections::RenderSection($extra_content,0,'',$file_stats);
 		}
 
 	}

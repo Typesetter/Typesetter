@@ -414,7 +414,7 @@ class Edit extends \gp\Page{
 
 		$num++;
 		$new_section	= \gp_edit::DefaultContent($type);
-		$content		= \section_content::RenderSection($new_section,$num,$this->title,$this->file_stats);
+		$content		= \gp\tool\Output\Sections::RenderSection($new_section,$num,$this->title,$this->file_stats);
 
 		$new_section['attributes']['class']		.= ' '.$class;
 		$orig_attrs								= $new_section['attributes'];
@@ -426,7 +426,7 @@ class Edit extends \gp\Page{
 			return $this->SectionNode($new_section, $orig_attrs).$content.'</div>';
 		}
 
-		return $this->SectionNode($new_section, $orig_attrs).$content.\section_content::EndTag($new_section['nodeName']);
+		return $this->SectionNode($new_section, $orig_attrs).$content.\gp\tool\Output\Sections::EndTag($new_section['nodeName']);
 	}
 
 	public function SectionNode($section,$orig_attrs){
@@ -437,7 +437,7 @@ class Edit extends \gp\Page{
 		}
 
 		$orig_attrs			= json_encode($orig_attrs);
-		$attributes			= \section_content::SectionAttributes($section['attributes'],$section['type']);
+		$attributes			= \gp\tool\Output\Sections::SectionAttributes($section['attributes'],$section['type']);
 		$attributes			.= ' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'';
 
 		$section_attrs		= array('gp_label','gp_color','gp_collapse');
@@ -466,7 +466,7 @@ class Edit extends \gp\Page{
 		$original_sections		= $this->file_sections;
 		$unused_sections		= $this->file_sections;				//keep track of sections that aren't used
 		$new_sections			= array();
-		$section_types			= \section_content::GetTypes();
+		$section_types			= \gp\tool\Output\Sections::GetTypes();
 
 		$section_attrs			= array('gp_label','gp_color','gp_collapse');
 
@@ -719,7 +719,7 @@ class Edit extends \gp\Page{
 
 		$types_with_imgs	= array('text','image','gallery');
 
-		$section_types		= \section_content::GetTypes();
+		$section_types		= \gp\tool\Output\Sections::GetTypes();
 		$links				= array();
 		foreach($section_types as $type => $type_info){
 			$img			= '';
@@ -750,7 +750,7 @@ class Edit extends \gp\Page{
 		static $fi = 0;
 
 		$types			= (array)$types;
-		$section_types	= \section_content::GetTypes();
+		$section_types	= \gp\tool\Output\Sections::GetTypes();
 		$text_label		= array();
 
 		foreach($types as $type){
@@ -1101,7 +1101,7 @@ class Edit extends \gp\Page{
 			return false;
 		}
 
-		$this->contentBuffer	= \section_content::Render($file_sections,$this->title,\gpFiles::$last_stats);
+		$this->contentBuffer	= \gp\tool\Output\Sections::Render($file_sections,$this->title,\gpFiles::$last_stats);
 		$this->revision			= $time;
 	}
 
@@ -1167,7 +1167,7 @@ class Edit extends \gp\Page{
 	 */
 	public function ViewCurrent(){
 		$file_sections			= \gpFiles::Get($this->file,'file_sections');
-		$this->contentBuffer	= \section_content::Render($file_sections,$this->title,$this->file_stats);
+		$this->contentBuffer	= \gp\tool\Output\Sections::Render($file_sections,$this->title,$this->file_stats);
 		$this->revision			= $this->fileModTime;
 	}
 
@@ -1286,7 +1286,7 @@ class Edit extends \gp\Page{
 		$section_data['attributes']						+= array('class' => '' );
 		$orig_attrs										= $section_data['attributes'];
 		$section_data['attributes']['data-gp-section']	= $curr_section_num;
-		$section_types									= \section_content::GetTypes();
+		$section_types									= \gp\tool\Output\Sections::GetTypes();
 
 
 		if( \gpOutput::ShowEditLink() && \admin_tools::CanEdit($this->gp_index) ){
@@ -1330,7 +1330,7 @@ class Edit extends \gp\Page{
 
 		}else{
 			\gpOutput::$nested_edit		= true;
-			$content			.= \section_content::RenderSection($section_data,$curr_section_num,$this->title,$this->file_stats);
+			$content			.= \gp\tool\Output\Sections::RenderSection($section_data,$curr_section_num,$this->title,$this->file_stats);
 			\gpOutput::$nested_edit		= false;
 		}
 
@@ -1338,7 +1338,7 @@ class Edit extends \gp\Page{
 			$content			.= '<div class="gpclear"></div>';
 			$content			.= '</div>';
 		}else{
-			$content			.= \section_content::EndTag($section_data['nodeName']);
+			$content			.= \gp\tool\Output\Sections::EndTag($section_data['nodeName']);
 		}
 
 		return $content;

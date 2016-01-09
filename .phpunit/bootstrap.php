@@ -21,7 +21,6 @@ includeFile('tool/Files.php');
 includeFile('tool/gpOutput.php');
 includeFile('tool/functions.php');
 includeFile('tool/Plugins.php');
-includeFile('tool/sessions.php');
 
 \gp\tool\Session::init();
 

@@ -793,8 +793,7 @@ class Edit extends \gp\admin\Layout{
 				echo '<input type="hidden" name="where" value="'.htmlspecialchars($param).'" />';
 
 				echo '<input type="text" name="extra_area" value="" size="15" class="gpinput"/>';
-				includeFile('tool/SectionContent.php');
-				$types = \section_content::GetTypes();
+				$types = \gp\tool\Output\Sections::GetTypes();
 				echo '<select name="type" class="gpselect">';
 				foreach($types as $type => $info){
 					echo '<option value="'.$type.'">'.$info['label'].'</option>';

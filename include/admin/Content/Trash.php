@@ -432,7 +432,7 @@ class Trash{
 	public function Trash(){
 		global $dataDir,$langmessage;
 
-		$this->section_types			= \section_content::GetTypes();
+		$this->section_types			= \gp\tool\Output\Sections::GetTypes();
 
 		echo '<h2>'.$langmessage['trash'].'</h2>';
 
@@ -632,7 +632,7 @@ class Trash{
 		$file_sections		= \gpFiles::Get($title_info['page_file'],'file_sections');
 
 		if( $file_sections ){
-			echo \section_content::Render($file_sections,$title_info['title']);
+			echo \gp\tool\Output\Sections::Render($file_sections,$title_info['title']);
 		}else{
 			echo '<p>This page no longer has any content</p>';
 		}

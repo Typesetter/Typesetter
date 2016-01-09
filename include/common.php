@@ -1997,8 +1997,7 @@ class common{
 			return;
 		}
 
-		includeFile('tool/sessions.php');
-		gpsession::Init();
+		\gp\tool\Session::Init();
 	}
 
 
@@ -2201,7 +2200,7 @@ class common{
 			gpOutput::$inline_vars['gpBLink']		= common::HrefEncode($linkPrefix,false);
 			gpOutput::$inline_vars['post_nonce']	= common::new_nonce('post',true);
 
-			gpsession::GPUIVars();
+			\gp\tool\Session::GPUIVars();
 		}
 
 		echo 'var gplinks={},gpinputs={},gpresponse={}';

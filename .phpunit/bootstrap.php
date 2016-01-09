@@ -23,7 +23,7 @@ includeFile('tool/functions.php');
 includeFile('tool/Plugins.php');
 includeFile('tool/sessions.php');
 
-gpsession::init();
+\gp\tool\Session::init();
 
 
 
@@ -41,8 +41,8 @@ class gptest_bootstrap extends PHPUnit_Framework_TestCase{
 		$users			= gpFiles::Get('_site/users');
 		$userinfo		= $users[$username];
 
-		$session_id		= gpsession::create($userinfo, $username, $sessions);
-		$logged_in		= gpsession::start($session_id,$sessions);
+		$session_id		= \gp\tool\Session::create($userinfo, $username, $sessions);
+		$logged_in		= \gp\tool\Session::start($session_id,$sessions);
 
 		self::AssertTrue($logged_in,'Not Logged In');
 

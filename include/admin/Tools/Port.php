@@ -476,7 +476,7 @@ class Port{
 		// get user info
 		include($dataDir.'/data/_site/users.php');
 		$userinfo =& $users[$username];
-		$session_id = \gpsession::create($userinfo, $username, $sessions);
+		$session_id = \gp\tool\Session::create($userinfo, $username, $sessions);
 
 		if( !$session_id ){
 			return;
@@ -485,7 +485,7 @@ class Port{
 		//set the cookie for the new data
 		$config = \gpFiles::Get('_site/config');
 		$session_cookie = 'gpEasy_'.substr(sha1($config['gpuniq']),12,12);
-		\gpsession::cookie($session_cookie,$session_id);
+		\gp\tool\Session::cookie($session_cookie,$session_id);
 
 
 		//set the update gpuniq value for the post_nonce

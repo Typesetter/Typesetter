@@ -1064,13 +1064,12 @@ class Tools{
 	 *
 	 */
 	public static function PostedLabel($string){
-		includeFile('tool/strings.php');
 
 		// Remove control characters
 		$string = preg_replace( '#[[:cntrl:]]#u', '', $string ) ; //[\x00-\x1F\x7F]
 
 		//change known entities to their character equivalent
-		$string = \gp_strings::entity_unescape($string);
+		$string = \gp\tool\Strings::entity_unescape($string);
 
 		return self::LabelHtml($string);
 	}
@@ -1095,8 +1094,6 @@ class Tools{
 	public static function PostedSlug($string, $from_label = false){
 		global $config;
 
-		includeFile('tool/strings.php');
-
 		$orig_string = $string;
 
 		// Remove control characters
@@ -1106,7 +1103,7 @@ class Tools{
 		$string = str_replace( array('?','*',':','|'), array('','','',''), $string);
 
 		//change known entities to their character equivalent
-		$string = \gp_strings::entity_unescape($string);
+		$string = \gp\tool\Strings::entity_unescape($string);
 
 
 		//if it's from a label, remove any html

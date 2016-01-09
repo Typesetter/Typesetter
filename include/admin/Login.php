@@ -35,8 +35,7 @@ class Login extends \display{
 		$_POST += array('username'=>'');
 
 		$this->admin_js = true;
-		includeFile('tool/sessions.php');
-		\gpsession::cookie('g',2);
+		\gp\tool\Session::cookie('g',2);
 
 
 
@@ -221,7 +220,7 @@ class Login extends \display{
 		$passwordChars	= str_repeat('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',3);
 		$newpass		= str_shuffle($passwordChars);
 		$newpass		= substr($newpass,0,8);
-		$pass_hash		= \gpsession::PassAlgo($userinfo);
+		$pass_hash		= \gp\tool\Session::PassAlgo($userinfo);
 
 		$users[$username]['newpass'] = \common::hash($newpass,$pass_hash);
 		if( !\gpFiles::SaveData('_site/users','users',$users) ){

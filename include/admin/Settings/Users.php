@@ -97,7 +97,7 @@ class Users{
 		//update the /_session file
 		includeFile('tool/sessions.php');
 		$userinfo =& $this->users[$username];
-		$userinfo = \gpsession::SetSessionFileName($userinfo,$username); //make sure $userinfo['file_name'] is set
+		$userinfo = \gp\tool\Session::SetSessionFileName($userinfo,$username); //make sure $userinfo['file_name'] is set
 
 
 		if( !$this->SaveUserFile() ){
@@ -461,7 +461,7 @@ class Users{
 	 */
 	public function PassAlgo($userinfo){
 
-		$algo = \gpsession::PassAlgo($userinfo);
+		$algo = \gp\tool\Session::PassAlgo($userinfo);
 		switch($algo){
 			case 'md5':
 			case 'sha1':

@@ -1,8 +1,11 @@
 <?php
+
+namespace gp\tool;
+
 defined('is_running') or die('Not an entry point...');
 
 
-class gp_strings{
+class Strings{
 
 	/**
 	 * Return an array of character entities and their corresponding iso (numeric) code
@@ -42,7 +45,7 @@ class gp_strings{
 	 * @since 2.4b5
 	 */
 	static function all_entities(){
-		return gp_strings::iso_entities() + gp_strings::html_entities();
+		return self::iso_entities() + self::html_entities();
 	}
 
 	/**
@@ -53,7 +56,7 @@ class gp_strings{
 		//change &#0039; to &#39;
 		$string = preg_replace('/&#[0]+([1-9]+);/','&#$1;',$string);
 
-		$all_entities = gp_strings::all_entities();
+		$all_entities = self::all_entities();
 		return str_replace(array_keys($all_entities),array_values($all_entities),$string);
 	}
 
@@ -62,7 +65,7 @@ class gp_strings{
 	 * @since 2.5b1
 	 */
 	static function entity_escape($string){
-		$all_entities = gp_strings::all_entities();
+		$all_entities = self::all_entities();
 		return str_replace(array_keys($all_entities),array_values($all_entities),$string);
 	}
 

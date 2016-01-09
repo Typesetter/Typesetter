@@ -47,7 +47,7 @@ class Preferences extends \gp\admin\Settings\Users{
 		$this->ChangeEmail();
 		$this->ChangePass();
 
-		\gpsession::SetGPUI();
+		\gp\tool\Session::SetGPUI();
 
 		$this->SaveUserFile();
 	}
@@ -102,7 +102,7 @@ class Preferences extends \gp\admin\Settings\Users{
 
 
 		//check the old password
-		$pass_hash		= \gpsession::PassAlgo($this->user_info);
+		$pass_hash		= \gp\tool\Session::PassAlgo($this->user_info);
 		$oldpass		= \common::hash($_POST['oldpassword'],$pass_hash);
 
 		if( $this->user_info['password'] != $oldpass ){

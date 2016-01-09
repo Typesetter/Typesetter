@@ -1,8 +1,11 @@
 <?php
+
+namespace gp\tool;
+
 defined('is_running') or die('Not an entry point...');
 
 
-class gpupgrade{
+class Upgrade{
 
 	function __construct(){
 		global $config;
@@ -43,7 +46,7 @@ class gpupgrade{
 		foreach($gp_index as $title => $index){
 
 			$info = $gp_titles[$index];
-			$type = common::SpecialOrAdmin($title);
+			$type = \common::SpecialOrAdmin($title);
 			if( $type === 'special' ){
 				$special_indexes[$index] = strtolower($title);
 				$index = strtolower($title);
@@ -59,22 +62,22 @@ class gpupgrade{
 		$gp_menu = $this->FixMenu($gp_menu,$special_indexes);
 
 		//save pages
-		if( !admin_tools::SavePagesPHP() ){
+		if( !\admin_tools::SavePagesPHP() ){
 			return;
 		}
 
 		$config['gpversion'] = '2.3.4';
-		admin_tools::SaveConfig();
+		\admin_tools::SaveConfig();
 
 
 		//update alt menus
 		if( isset($config['menus']) && is_array($config['menus']) ){
 			foreach($config['menus'] as $key => $value){
 				$menu_file = $dataDir.'/data/_menus/'.$key.'.php';
-				if( gpFiles::Exists($menu_file) ){
-					$menu = gpOutput::GetMenuArray($key);
+				if( \gpFiles::Exists($menu_file) ){
+					$menu = \gpOutput::GetMenuArray($key);
 					$menu = $this->FixMenu($menu,$special_indexes);
-					gpFiles::SaveData($menu_file,'menu',$menu);
+					\gpFiles::SaveData($menu_file,'menu',$menu);
 				}
 			}
 		}

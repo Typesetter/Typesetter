@@ -1525,8 +1525,7 @@ class common{
 
 		//upgrade?
 		if( version_compare($config['gpversion'],'2.3.4','<') ){
-			includeFile('tool/upgrade.php');
-			new gpupgrade();
+			new \gp\tool\Upgrade();
 		}
 	}
 

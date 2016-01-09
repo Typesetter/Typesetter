@@ -1,20 +1,23 @@
 <?php
+
+namespace gp\special;
+
 defined('is_running') or die('Not an entry point...');
 
-class special_gpsearch{
+class Search{
 
-	var $config_file;
-	var $search_config;
-	var $results = array();
+	public $config_file;
+	public $search_config;
+	public $results = array();
 
-	var $search_pattern = '';
-	var $search_hidden = false;
-	var $search_count = 0;
-	var $show_stats = false;
-	var $gpabox = false;
+	public $search_pattern = '';
+	public $search_hidden = false;
+	public $search_count = 0;
+	public $show_stats = false;
+	public $gpabox = false;
 
 
-	function __construct(){
+	public function __construct(){
 		global $page, $langmessage, $dataDir;
 
 		$this->config_file = $dataDir.'/data/_site/config_search.php';
@@ -26,14 +29,14 @@ class special_gpsearch{
 
 		//admin popup or visitor
 		$_REQUEST += array('q'=>'');
-		if( common::LoggedIn() && isset($_REQUEST['gpx_content']) && $_REQUEST['gpx_content'] == 'gpabox' ){
+		if( \common::LoggedIn() && isset($_REQUEST['gpx_content']) && $_REQUEST['gpx_content'] == 'gpabox' ){
 			$this->AdminSearch();
 		}else{
 			$this->Search();
 		}
 	}
 
-	function AdminSearch(){
+	public function AdminSearch(){
 		global $langmessage;
 
 		$this->gpabox = true;
@@ -41,7 +44,7 @@ class special_gpsearch{
 		$this->search_hidden = true;
 
 		echo '<div id="admin_search">';
-		echo '<form action="'.common::GetUrl('special_gpsearch').'" method="get">';
+		echo '<form action="'.\common::GetUrl('special_gpsearch').'" method="get">';
 		echo '<h3>'.$langmessage['Search'].'</h3>';
 		echo '<input name="q" type="text" class="gpinput" value="'.htmlspecialchars($_REQUEST['q']).'" required />';
 		echo '<input type="submit" name="" value="'.$langmessage['Search'].'" class="gpabox gpsubmit gpvalidate" />';
@@ -61,35 +64,35 @@ class special_gpsearch{
 
 	}
 
-	function Search(){
+	public function Search(){
 
 		echo '<div class="search_results">';
-		echo '<form action="'.common::GetUrl('special_gpsearch').'" method="get">';
+		echo '<form action="'.\common::GetUrl('special_gpsearch').'" method="get">';
 
 		echo '<h2>';
-		echo gpOutput::GetAddonText('Search');
+		echo \gpOutput::GetAddonText('Search');
 		echo ' &nbsp; ';
 		echo '<input name="q" type="text" class="text" value="'.htmlspecialchars($_REQUEST['q']).'"/>';
 		$html = '<input type="submit" name="" class="submit" value="%s" />';
-		echo gpOutput::GetAddonText('Search',$html);
+		echo \gpOutput::GetAddonText('Search',$html);
 		echo '</h2>';
 		echo '</form>';
 
-		if( common::LoggedIn() ){
+		if( \common::LoggedIn() ){
 			$this->search_hidden = true;
 		}else{
 			$this->search_hidden = $this->search_config['search_hidden'];
 		}
 		$this->RunQuery();
 
-		if( common::LoggedIn() ){
-			echo common::Link('special_gpsearch','Configuration','cmd=config','data-cmd="gpabox"');
+		if( \common::LoggedIn() ){
+			echo \common::Link('special_gpsearch','Configuration','cmd=config','data-cmd="gpabox"');
 		}
 
 		echo '</div>';
 	}
 
-	function Gadget(){
+	public function Gadget(){
 
 		$query = '';
 		if( isset($_GET['q']) ){
@@ -97,15 +100,15 @@ class special_gpsearch{
 		}
 
 		echo '<h3>';
-		echo gpOutput::GetAddonText('Search');
+		echo \gpOutput::GetAddonText('Search');
 		echo '</h3>';
-		echo '<form action="'.common::GetUrl('special_gpsearch').'" method="get">';
+		echo '<form action="'.\common::GetUrl('special_gpsearch').'" method="get">';
 		echo '<div>';
 		echo '<input name="q" type="text" class="text" value="'.htmlspecialchars($query).'"/>';
 		echo '<input type="hidden" name="src" value="gadget" />';
 
 		$html = '<input type="submit" class="submit" name="" value="%s" />';
-		echo gpOutput::GetAddonText('Search',$html);
+		echo \gpOutput::GetAddonText('Search',$html);
 
 		echo '</div>';
 		echo '</form>';
@@ -113,23 +116,23 @@ class special_gpsearch{
 	}
 
 
-	function RunQuery(){
+	public function RunQuery(){
 
 		if( !empty($_REQUEST['q']) ){
 			$this->SearchPattern();
 			$this->SearchPages();
-			gpPlugin::Action('Search',array($this));
+			\gpPlugin::Action('Search',array($this));
 		}
 
 		$this->ShowResults();
 	}
 
-	function ShowResults(){
+	public function ShowResults(){
 		global $langmessage;
 
 		if( !count($this->results) ){
 			echo '<p>';
-			echo gpOutput::GetAddonText($langmessage['search_no_results']);
+			echo \gpOutput::GetAddonText($langmessage['search_no_results']);
 			echo '</p>';
 			return;
 		}
@@ -139,8 +142,8 @@ class special_gpsearch{
 		// remove duplicates
 		$links = array();
 		foreach($this->results as $key => $result){
-			//$link = common::GetUrl( $result['slug'], $result['query'] );
-			$link =  isset($result['url']) ? $result['url'] : common::GetUrl( $result['slug'], $result['query'] );
+			//$link = \common::GetUrl( $result['slug'], $result['query'] );
+			$link =  isset($result['url']) ? $result['url'] : \common::GetUrl( $result['slug'], $result['query'] );
 			$link = mb_strtolower($link);
 			if( in_array($link,$links) ){
 				unset($this->results[$key]);
@@ -173,8 +176,8 @@ class special_gpsearch{
 		echo '<div class="result_list">';
 		foreach($this->results as $result){
 			echo '<div><h4>';
-			//echo common::Link($result['slug'],$result['label'],$result['query']);
-			echo isset($result['link']) ? $result['link'] : common::Link($result['slug'],$result['label'],$result['query']);
+			//echo \common::Link($result['slug'],$result['label'],$result['query']);
+			echo isset($result['link']) ? $result['link'] : \common::Link($result['slug'],$result['label'],$result['query']);
 			echo '</h4>';
 
 			echo $result['content'];
@@ -203,17 +206,17 @@ class special_gpsearch{
 				if( $this->gpabox ){
 					$attr = 'data-cmd="gpabox"';
 				}
-				echo '<li>'.common::Link('special_gpsearch',($i+1),$query,$attr).'</li>';
+				echo '<li>'.\common::Link('special_gpsearch',($i+1),$query,$attr).'</li>';
 			}
 			echo '</ul>';
 		}
 	}
 
-	function Sort($resulta,$resultb){
+	public function Sort($resulta,$resultb){
 		return $resulta['strength'] < $resultb['strength'];
 	}
 
-	function SearchPattern(){
+	public function SearchPattern(){
 		$query = mb_strtolower($_REQUEST['q']);
 		// Search for the exact query when it is doubled quoted
 		if (substr($query, 0, 1) == '"' && substr($query, -1) == '"') {
@@ -233,14 +236,14 @@ class special_gpsearch{
 		$this->search_pattern = '#(?:('.implode('|',$sub_pattern1).')|('.implode('|',$sub_pattern2).'))#Si';
 	}
 
-	function Admin(){
+	public function Admin(){
 		global $page;
 
-		if( !common::LoggedIn() ){
+		if( !\common::LoggedIn() ){
 			return false;
 		}
 		$page->admin_links[] = array('special_gpsearch','Configuration','cmd=config','data-cmd="gpabox"');
-		$cmd = common::GetCommand();
+		$cmd = \common::GetCommand();
 
 		switch($cmd){
 			case 'save_config':
@@ -259,12 +262,12 @@ class special_gpsearch{
 	 * Get the search configuration
 	 *
 	 */
-	function GetConfig(){
-		$this->search_config 	= gpFiles::Get($this->config_file,'search_config');
+	public function GetConfig(){
+		$this->search_config 	= \gpFiles::Get($this->config_file,'search_config');
 		$this->search_config	+= array('search_hidden'=>false);
 	}
 
-	function SaveConfig(){
+	public function SaveConfig(){
 		global $langmessage;
 
 		if( isset($_POST['search_hidden']) ){
@@ -273,7 +276,7 @@ class special_gpsearch{
 			$search_config['search_hidden'] = false;
 		}
 
-		if( gpFiles::SaveData($this->config_file,'search_config',$search_config) ){
+		if( \gpFiles::SaveData($this->config_file,'search_config',$search_config) ){
 			msg($langmessage['SAVED']);
 			$this->search_config = $search_config;
 			return true;
@@ -286,13 +289,13 @@ class special_gpsearch{
 	}
 
 
-	function Config($array=array()){
+	public function Config($array=array()){
 		global $langmessage, $addonFolderName, $gp_index;
 
 
 		echo '<h2>Search Configuration</h2>';
 
-		echo '<form class="renameform" action="'.common::GetUrl('special_gpsearch').'" method="post">';
+		echo '<form class="renameform" action="'.\common::GetUrl('special_gpsearch').'" method="post">';
 		echo '<table style="width:100%" class="bordered">';
 		echo '<tr><th>'.$langmessage['options'].'</th><th>'.$langmessage['Value'].'</th><th>'.$langmessage['default'].'</th></tr>';
 
@@ -319,13 +322,13 @@ class special_gpsearch{
 	}
 
 
-	function SearchPages(){
+	public function SearchPages(){
 		global $gp_index;
 		includeFile('tool/SectionContent.php');
 
 		ob_start();
 		foreach($gp_index as $title => $index){
-			if( common::SpecialOrAdmin($title) === false ){
+			if( \common::SpecialOrAdmin($title) === false ){
 				$this->SearchPage($title,$index);
 			}
 		}
@@ -333,7 +336,7 @@ class special_gpsearch{
 	}
 
 
-	function SearchPage($title,$index){
+	public function SearchPage($title,$index){
 		global $gp_menu, $gp_titles;
 
 		//search hidden?
@@ -342,7 +345,7 @@ class special_gpsearch{
 		}
 
 		//private pages
-		if( !common::LoggedIn() ){
+		if( !\common::LoggedIn() ){
 
 			if( isset($gp_titles[$index]['vis']) ){
 				return;
@@ -350,15 +353,15 @@ class special_gpsearch{
 		}
 
 
-		$full_path			= gpFiles::PageFile($title);
-		$file_sections		= gpFiles::Get($full_path,'file_sections');
+		$full_path			= \gpFiles::PageFile($title);
+		$file_sections		= \gpFiles::Get($full_path,'file_sections');
 
 		if( !$file_sections ){
 			return;
 		}
 
-		$content			= section_content::Render($file_sections,$title,gpFiles::$last_stats);
-		$label				= common::GetLabel($title);
+		$content			= \section_content::Render($file_sections,$title,\gpFiles::$last_stats);
+		$label				= \common::GetLabel($title);
 
 		$this->FindString($content, $label, $title);
 	}

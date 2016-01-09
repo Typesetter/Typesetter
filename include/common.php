@@ -1507,10 +1507,9 @@ class common{
 
 
 		// default gadgets
-		$config['gadgets'] += array(
-								'Contact' 		=> array('class'=>'\\gp\\special\\ContactGadget'),
-								'Search'		=> array('script'=>'/include/special/special_search.php','method'=>array('special_gpsearch','gadget')), //3.5
-								);
+		$config['gadgets']['Contact'] = array('class'=>'\\gp\\special\\ContactGadget');
+		$config['gadgets']['Search'] = array('method'=>array('\\gp\\special\\Search','gadget'));
+
 
 		foreach($config['hooks'] as $hook => $hook_info){
 			if( isset($gp_hooks[$hook]) ){

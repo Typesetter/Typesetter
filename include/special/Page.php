@@ -157,8 +157,7 @@ class Page extends \gp\Page{
 
 		$scripts['special_missing']['class'] = '\\gp\\special\\Missing';
 
-		$scripts['special_gpsearch']['script'] = '/include/special/special_search.php';
-		$scripts['special_gpsearch']['class'] = 'special_gpsearch';
+		$scripts['special_gpsearch']['class'] = '\\gp\\special\\Search';
 
 		//check for use of a index instead of a page title
 		$translated = \common::SpecialHref($requested);

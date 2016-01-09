@@ -75,7 +75,7 @@ class Menu{
 		$this->SetQueryInfo();
 
 		$cmd		= \common::GetCommand();
-		$this->cmd	= \gpPlugin::Filter('MenuCommand',array($cmd));
+		$this->cmd	= \gp\tool\Plugins::Filter('MenuCommand',array($cmd));
 
 	}
 
@@ -694,7 +694,7 @@ class Menu{
 		}
 
 		ob_start();
-		\gpPlugin::Action('MenuPageOptions',array($title,$menu_key,$menu_value,$layout_info));
+		\gp\tool\Plugins::Action('MenuPageOptions',array($title,$menu_key,$menu_value,$layout_info));
 		$menu_options = ob_get_clean();
 		if( $menu_options ){
 			$data['opts'] = $menu_options;
@@ -760,7 +760,7 @@ class Menu{
 		$attrs	= array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm not_special');
 		echo $this->Link('Admin/Menu/Ajax',$img.$langmessage['delete'],'cmd=MoveToTrash&index=[key]',$attrs);
 
-		echo '[opts]'; //replaced with the contents of \gpPlugin::Action('MenuPageOptions',array($title,$menu_key,$menu_value,$layout_info));
+		echo '[opts]'; //replaced with the contents of \gp\tool\Plugins::Action('MenuPageOptions',array($title,$menu_key,$menu_value,$layout_info));
 
 		echo '</span>';
 
@@ -1055,7 +1055,7 @@ class Menu{
 			echo $this->Link('Admin/Menu/Ajax',$langmessage['delete'],'cmd=MoveToTrash&index='.urlencode($title_index),array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
 		}
 
-		\gpPlugin::Action('MenuPageOptions',array($title,$title_index,false,$layout_info));
+		\gp\tool\Plugins::Action('MenuPageOptions',array($title,$title_index,false,$layout_info));
 
 		//stats
 		if( gpdebug ){

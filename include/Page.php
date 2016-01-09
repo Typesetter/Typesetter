@@ -88,7 +88,7 @@ class Page{
 			return false;
 		}
 
-		\gpPlugin::Action('PageSetVars');
+		\gp\tool\Plugins::Action('PageSetVars');
 
 		return true;
 	}
@@ -120,7 +120,7 @@ class Page{
 
 		//allow addons to effect page actions and how a page is displayed
 		$cmd = \common::GetCommand();
-		$cmd_after = \gpPlugin::Filter('PageRunScript',array($cmd));
+		$cmd_after = \gp\tool\Plugins::Filter('PageRunScript',array($cmd));
 		if( $cmd !== $cmd_after ){
 			$cmd = $cmd_after;
 			if( $cmd === 'return' ){
@@ -279,7 +279,7 @@ class Page{
 
 		echo '<div id="gpAfterContent">';
 		\gpOutput::Get('AfterContent');
-		\gpPlugin::Action('GetContent_After');
+		\gp\tool\Plugins::Action('GetContent_After');
 		echo '</div>';
 	}
 

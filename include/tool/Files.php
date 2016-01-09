@@ -250,7 +250,7 @@ class gpFiles{
 		gp_edit::tidyFix($text);
 		gpFiles::rmPHP($text);
 		gpFiles::FixTags($text);
-		$text = gpPlugin::Filter('CleanText',array($text));
+		$text = \gp\tool\Plugins::Filter('CleanText',array($text));
 	}
 
 	/**

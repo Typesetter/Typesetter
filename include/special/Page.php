@@ -42,7 +42,7 @@ class Page extends \gp\Page{
 
 		//allow addons to affect page actions and how a page is displayed
 		$cmd			= \common::GetCommand();
-		$cmd_after		= \gpPlugin::Filter('PageRunScript',array($cmd));
+		$cmd_after		= \gp\tool\Plugins::Filter('PageRunScript',array($cmd));
 		if( $cmd !== $cmd_after ){
 			$cmd = $cmd_after;
 			if( $cmd === 'return' ){

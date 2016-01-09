@@ -120,7 +120,7 @@ class Addons extends \gp\admin\Addon\Install{
 		//check against folders used by addons
 		$addons = $config['addons'];
 		foreach($addons as $addon_key => $info){
-			$addon_config = \gpPlugin::GetAddonConfig($addon_key);
+			$addon_config = \gp\tool\Plugins::GetAddonConfig($addon_key);
 			if( array_key_exists($addon_config['code_folder_part'],$code_folders) ){
 				$code_folders[$addon_config['code_folder_part']] = false;
 			}
@@ -559,7 +559,7 @@ class Addons extends \gp\admin\Addon\Install{
 	function PluginPanelGroup($addon_key,$info){
 		global $langmessage, $gpLayouts;
 
-		$addon_config = \gpPlugin::GetAddonConfig($addon_key);
+		$addon_config = \gp\tool\Plugins::GetAddonConfig($addon_key);
 
 		$addon_config += $info; //merge the upgrade info
 

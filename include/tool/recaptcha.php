@@ -1,5 +1,7 @@
 <?php
 
+defined('is_running') or die('Not an entry point...');
+
 class gp_recaptcha{
 
 	/**
@@ -7,12 +9,12 @@ class gp_recaptcha{
 	 * @static
 	 * @return bool True if plugin-hooks or recaptcha is enabled
 	 */
-	static function isActive(){
+	public static function isActive(){
 
-		if( gpPlugin::HasHook('AntiSpam_Form') && gpPlugin::HasHook('AntiSpam_Check') ){
+		if( \gp\tool\Plugins::HasHook('AntiSpam_Form') && \gp\tool\Plugins::HasHook('AntiSpam_Check') ){
 			return true;
 		}
-		return gp_recaptcha::hasRecaptcha();
+		return self::hasRecaptcha();
 	}
 
 	/**
@@ -20,7 +22,7 @@ class gp_recaptcha{
 	 * @static
 	 * @return bool True if recaptcha_public and recaptcha_private are set
 	 */
-	static function hasRecaptcha(){
+	public static function hasRecaptcha(){
 		global $config;
 
 		if( !empty($config['recaptcha_public']) && !empty($config['recaptcha_private']) ){
@@ -36,17 +38,17 @@ class gp_recaptcha{
 	 * @static
 	 * @return string
 	 */
-	static function GetForm($theme='light'){
+	public static function GetForm($theme='light'){
 		global $config;
 
 		$html = '';
-		if( gp_recaptcha::hasRecaptcha() ){
+		if( self::hasRecaptcha() ){
 			includeFile('thirdparty/recaptcha/autoload.php');
 			$html = '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
     		$html .= '<div class="g-recaptcha" data-theme="'.$theme.'" data-sitekey="'.$config['recaptcha_public'].'"></div>'; //data-size="compact"
 		}
 
-		return gpPlugin::Filter('AntiSpam_Form',array($html));
+		return \gp\tool\Plugins::Filter('AntiSpam_Form',array($html));
 	}
 
 	/**
@@ -54,8 +56,8 @@ class gp_recaptcha{
 	 * @static
 	 *
 	 */
-	static function Form($theme='light'){
-		echo gp_recaptcha::GetForm($theme);
+	public static function Form($theme='light'){
+		echo self::GetForm($theme);
 	}
 
 	/**
@@ -63,14 +65,14 @@ class gp_recaptcha{
 	 * @static
 	 *
 	 */
-	static function Check(){
+	public static function Check(){
 		global $page,$langmessage,$config,$dataDir;
 
 		// if hooks return false, stop
-		if( !gpPlugin::Filter('AntiSpam_Check',array(true)) ) return false;
+		if( !\gp\tool\Plugins::Filter('AntiSpam_Check',array(true)) ) return false;
 
 		// if recaptcha inactive, stop
-		if( !gp_recaptcha::hasRecaptcha() ) return true;
+		if( !self::hasRecaptcha() ) return true;
 
 		if( empty($_POST['g-recaptcha-response']) ){
 			return false;
@@ -106,6 +108,5 @@ class gp_recaptcha{
 	}
 }
 
-class gp_antispam extends gp_recaptcha{}
 
 

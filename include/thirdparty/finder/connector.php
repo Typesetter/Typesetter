@@ -111,7 +111,7 @@ $opts = array(
 	)
 );
 
-$opts = gpPlugin::Filter('FinderOptionsServer',array($opts));
+$opts = \gp\tool\Plugins::Filter('FinderOptionsServer',array($opts));
 gpSettingsOverride('finder_options_server',$opts);
 
 

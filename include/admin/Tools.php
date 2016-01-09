@@ -1122,7 +1122,7 @@ class Tools{
 
 		$string = str_replace(' ',$config['space_char'],$string);
 
-		return \gpPlugin::Filter('PostedSlug',array($string, $orig_string, $from_label));
+		return \gp\tool\Plugins::Filter('PostedSlug',array($string, $orig_string, $from_label));
 	}
 
 	/**

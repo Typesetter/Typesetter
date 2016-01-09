@@ -71,7 +71,7 @@ class gp_html_output extends gp_html_parse{
 	function __construct($text){
 		parent::__construct($text);
 
-		$this->dom_array = gpPlugin::Filter('Html_Output',array($this->dom_array));
+		$this->dom_array = \gp\tool\Plugins::Filter('Html_Output',array($this->dom_array));
 
 		$this->Clean();
 

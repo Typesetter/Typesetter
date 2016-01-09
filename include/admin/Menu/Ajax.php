@@ -913,7 +913,7 @@ class Ajax extends \gp\admin\Menu{
 		msg(sprintf($langmessage['MOVED_TO_TRASH'],$link));
 
 
-		\gpPlugin::Action('MenuPageTrashed',array($indexes));
+		\gp\tool\Plugins::Action('MenuPageTrashed',array($indexes));
 
 		return true;
 	}

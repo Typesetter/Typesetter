@@ -74,7 +74,7 @@ class Page extends \gp\Page{
 
 		echo '<div id="gpAfterContent">';
 		\gpOutput::Get('AfterContent');
-		\gpPlugin::Action('GetContent_After');
+		\gp\tool\Plugins::Action('GetContent_After');
 		echo '</div>';
 	}
 

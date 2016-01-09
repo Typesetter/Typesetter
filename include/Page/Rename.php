@@ -370,7 +370,7 @@ class Rename{
 		}
 
 
-		\gpPlugin::Action('RenameFileDone',array($file_index, $title, $new_title));
+		\gp\tool\Plugins::Action('RenameFileDone',array($file_index, $title, $new_title));
 
 		return $new_title;
 	}

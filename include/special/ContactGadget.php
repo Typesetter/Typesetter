@@ -74,7 +74,7 @@ class ContactGadget{
 			return;
 		}
 
-		if( !\gpPlugin::Filter('contact_form_check',array(true)) ){
+		if( !\gp\tool\Plugins::Filter('contact_form_check',array(true)) ){
 			return;
 		}
 
@@ -199,7 +199,7 @@ class ContactGadget{
 			echo htmlspecialchars($_POST['message']);
 			echo '</textarea>';
 
-		\gpPlugin::Action('contact_form_pre_captcha');
+		\gp\tool\Plugins::Action('contact_form_pre_captcha');
 
 		if( !$this->sent && \gp_recaptcha::isActive() ){
 			echo '<div class="captchaForm">';

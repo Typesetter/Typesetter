@@ -1121,7 +1121,7 @@ class Layout extends \gp\admin\Addon\Install{
 		$addon_config = false;
 		if( isset($layout_info['addon_key']) ){
 			$addon_key = $layout_info['addon_key'];
-			$addon_config = \gpPlugin::GetAddonConfig($addon_key);
+			$addon_config = \gp\tool\Plugins::GetAddonConfig($addon_key);
 			echo '<li>';
 			echo \common::link('Admin/Addons/'.\admin_tools::encode64($addon_key),'<span class="gpicon_plug"></span> '.$addon_config['name']);
 			echo '</li>';
@@ -1439,7 +1439,7 @@ class Layout extends \gp\admin\Addon\Install{
 		global $langmessage,$config;
 
 
-		$addon_config = \gpPlugin::GetAddonConfig($addon);
+		$addon_config = \gp\tool\Plugins::GetAddonConfig($addon);
 		$addonDir = $addon_config['code_folder_full'];
 		if( !is_dir($addonDir) ){
 			return false;
@@ -1518,11 +1518,11 @@ class Layout extends \gp\admin\Addon\Install{
 			return;
 		}
 
-		\gpPlugin::SetDataFolder($addon);
+		\gp\tool\Plugins::SetDataFolder($addon);
 
 		OnTextChange();
 
-		\gpPlugin::ClearDataFolder();
+		\gp\tool\Plugins::ClearDataFolder();
 	}
 
 	public function AddonText(){

@@ -37,7 +37,7 @@ class Edit extends \gp\Page{
 
 
 		//allow addons to effect page actions and how a page is displayed
-		$cmd_after = \gpPlugin::Filter('PageRunScript',array($cmd));
+		$cmd_after = \gp\tool\Plugins::Filter('PageRunScript',array($cmd));
 		if( $cmd !== $cmd_after ){
 			$cmd = $cmd_after;
 			if( $cmd === 'return' ){
@@ -732,7 +732,7 @@ class Edit extends \gp\Page{
 		$links[]			= array( array('text.gpCol-6','image.gpCol-6'),\common::GetDir('/include/imgs/section-combo-text-image.png') );
 		$links[]			= array( array('text.gpCol-6','gallery.gpCol-6'),\common::GetDir('/include/imgs/section-combo-text-gallery.png') );	//section combo: text & gallery
 
-		$links				= \gpPlugin::Filter('NewSections',array($links));
+		$links				= \gp\tool\Plugins::Filter('NewSections',array($links));
 
 		foreach($links as $link){
 			$link += array('','','gpRow');
@@ -1242,7 +1242,7 @@ class Edit extends \gp\Page{
 	public function GenerateContent_Admin(){
 
 		//add to all pages in case a user adds a gallery
-		\gpPlugin::Action('GenerateContent_Admin');
+		\gp\tool\Plugins::Action('GenerateContent_Admin');
 		\common::ShowingGallery();
 
 		$content				= '';

@@ -114,7 +114,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 		$this->GetAddonData();
 
-		$addon_config = \gpPlugin::GetAddonConfig($addon);
+		$addon_config = \gp\tool\Plugins::GetAddonConfig($addon);
 		if( !$addon_config ){
 			$this->message($langmessage['OOPS'].' (Already uninstalled)');
 			return;

@@ -65,7 +65,7 @@ class Edit extends \gp\admin\Layout{
 
 		\gpOutput::TemplateSettings();
 
-		\gpPlugin::Action('edit_layout_cmd',array($layout));
+		\gp\tool\Plugins::Action('edit_layout_cmd',array($layout));
 
 		switch($cmd){
 

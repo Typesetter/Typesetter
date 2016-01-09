@@ -626,8 +626,8 @@ class gp_edit{
 
 
 		// (2) Addon settings
-		$options = gpPlugin::Filter('CKEditorConfig',array($options));	// $options['config_key'] = 'config_value';
-		$plugins = gpPlugin::Filter('CKEditorPlugins',array($plugins)); // $plugins['plugin_name'] = 'path_to_plugin_folder';
+		$options = \gp\tool\Plugins::Filter('CKEditorConfig',array($options));	// $options['config_key'] = 'config_value';
+		$plugins = \gp\tool\Plugins::Filter('CKEditorPlugins',array($plugins)); // $plugins['plugin_name'] = 'path_to_plugin_folder';
 
 
 		// (1) User
@@ -710,7 +710,7 @@ class gp_edit{
 			break;
 		}
 
-		$content = gpPlugin::Filter('GetDefaultContent',array($section['content'],$type));
+		$content = \gp\tool\Plugins::Filter('GetDefaultContent',array($section['content'],$type));
 		if( is_array($content) ){
 			$section = $content + $section;
 		}else{
@@ -837,7 +837,7 @@ class gp_edit{
 
 		// Hack: SaveSection used $page->file_sections
 		$page->file_sections[$section_num]	= $existing_section;
-		$save_this							= gpPlugin::Filter( 'SaveSection', array( $save_this, $section_num, $type) );
+		$save_this							= \gp\tool\Plugins::Filter( 'SaveSection', array( $save_this, $section_num, $type) );
 		$existing_section					= $page->file_sections[$section_num];
 
 		if( !$save_this ){

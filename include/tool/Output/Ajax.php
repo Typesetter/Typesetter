@@ -259,7 +259,7 @@ class Ajax{
 			break;
 		}
 
-		$scripts = \gpPlugin::Filter('InlineEdit_Scripts',array($scripts,$type));
+		$scripts = \gp\tool\Plugins::Filter('InlineEdit_Scripts',array($scripts,$type));
 
 		self::SendScripts($scripts);
 

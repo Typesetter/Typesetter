@@ -102,7 +102,7 @@ class Uploaded{
 
 		$this->FinderPrep();
 
-		$this->finder_opts = \gpPlugin::Filter('FinderOptionsClient',array($this->finder_opts));
+		$this->finder_opts = \gp\tool\Plugins::Filter('FinderOptionsClient',array($this->finder_opts));
 		gpSettingsOverride('finder_options_client',$this->finder_opts);
 
 		$page->head_script .= "\n".'var finder_opts = '.json_encode($this->finder_opts).';';
@@ -222,7 +222,7 @@ class Uploaded{
 			reset($this->errorMessages);
 			$this->InlineResponse('failed',current($this->errorMessages));
 		}
-		\gpPlugin::Action('FileUploaded',$uploaded);
+		\gp\tool\Plugins::Action('FileUploaded',$uploaded);
 
 		$output =& $_POST['output'];
 		switch($output){
@@ -644,7 +644,7 @@ class Uploaded{
 			}
 		}
 
-		$allowed_types = \gpPlugin::Filter('AllowedTypes',array($allowed_types));
+		$allowed_types = \gp\tool\Plugins::Filter('AllowedTypes',array($allowed_types));
 
 
 		//make sure the extension is allowed
@@ -839,7 +839,7 @@ class Uploaded{
 		if( isset($result['removed']) && count($result['removed']) > 0 ){
 			foreach($result['removed'] as $removed){
 				$removed_path = $removed['realpath'];
-				\gpPlugin::Action('FileDeleted',$removed_path);
+				\gp\tool\Plugins::Action('FileDeleted',$removed_path);
 
 				$thumb_path = str_replace($base_dir,$thumb_dir,$removed_path);
 				if( file_exists($thumb_path) ){
@@ -862,7 +862,7 @@ class Uploaded{
 		//addded files
 		if( isset($result['added']) && count($result['added']) > 0 ){
 			foreach($result['added'] as $added){
-				\gpPlugin::Action('FileUploaded',$added['realpath']);
+				\gp\tool\Plugins::Action('FileUploaded',$added['realpath']);
 				self::CreateThumbnail($added['realpath']);
 			}
 		}
@@ -870,7 +870,7 @@ class Uploaded{
 		//changed files (resized)
 		if( isset($result['changed']) && count($result['changed']) > 0 ){
 			foreach($result['changed'] as $changed){
-				\gpPlugin::Action('FileChanged',$changed['realpath']);
+				\gp\tool\Plugins::Action('FileChanged',$changed['realpath']);
 				self::CreateThumbnail($changed['realpath']);
 			}
 		}

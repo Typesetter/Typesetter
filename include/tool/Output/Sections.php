@@ -127,7 +127,7 @@ class Sections{
 			$types['include']['label']			= $langmessage['File Include'];
 			$types['wrapper_section']['label']	= $langmessage['Section Wrapper'];
 
-			$types = \gpPlugin::Filter('SectionTypes',array($types));
+			$types = \gp\tool\Plugins::Filter('SectionTypes',array($types));
 		}
 
 		return $types;
@@ -152,7 +152,7 @@ class Sections{
 	 */
 	static function SectionToContent($section_data,$section_num){
 
-		$section_data = \gpPlugin::Filter('SectionToContent',array($section_data,$section_num));
+		$section_data = \gp\tool\Plugins::Filter('SectionToContent',array($section_data,$section_num));
 
 		switch($section_data['type']){
 			case 'text':

@@ -758,7 +758,6 @@ class common{
 		includeFile('tool/Files.php');
 		includeFile('tool/gpOutput.php');
 		includeFile('tool/functions.php');
-		includeFile('tool/Plugins.php');
 		if( $sessions ){
 			ob_start(array('gpOutput','BufferOut'));
 		}elseif( !$ob_gzhandler ){
@@ -810,14 +809,14 @@ class common{
 			foreach($config['addons'] as $addon_key => $addon){
 				if( isset($addon['Namespace']) && $addon['Namespace'] == $namespace ){
 
-					gpPlugin::SetDataFolder($addon_key);
-					$path			= gpPlugin::$current['code_folder_full'].'/'.implode('/',$parts).'.php';
+					\gp\tool\Plugins::SetDataFolder($addon_key);
+					$path			= \gp\tool\Plugins::$current['code_folder_full'].'/'.implode('/',$parts).'.php';
 
 					if( file_exists($path) ){
 						include_once($path);
 					}
 
-					gpPlugin::ClearDataFolder();
+					\gp\tool\Plugins::ClearDataFolder();
 				}
 			}
 			return;
@@ -1167,7 +1166,7 @@ class common{
 	static function GetUrl($href='',$query='',$ampersands=true,$nonce_action=false){
 		global $linkPrefix, $config;
 
-		$filtered = gpPlugin::Filter('GetUrl',array(array($href,$query)));
+		$filtered = \gp\tool\Plugins::Filter('GetUrl',array(array($href,$query)));
 		if( is_array($filtered) ){
 			list($href,$query) = $filtered;
 		}
@@ -1426,7 +1425,7 @@ class common{
 		$showing = true;
 
 		common::AddColorBox();
-		$css = gpPlugin::OneFilter('Gallery_Style');
+		$css = \gp\tool\Plugins::OneFilter('Gallery_Style');
 		if( $css === false  ){
 			$page->css_user[] = '/include/css/default_gallery.css';
 			return;
@@ -1875,7 +1874,7 @@ class common{
 			$path = mb_substr($path,0,$pos);
 		}
 
-		$path = gpPlugin::Filter('WhichPage',array($path));
+		$path = \gp\tool\Plugins::Filter('WhichPage',array($path));
 
 		//redirect if an "external link" is the first entry of the main menu
 		if( empty($path) && isset($gp_menu[$config['homepath_key']]) ){
@@ -2013,7 +2012,7 @@ class common{
 			$loggedin = true;
 		}
 
-		return gpPlugin::Filter('LoggedIn',array($loggedin));
+		return \gp\tool\Plugins::Filter('LoggedIn',array($loggedin));
 	}
 
 	static function new_nonce($action = 'none', $anon = false, $factor = 43200 ){

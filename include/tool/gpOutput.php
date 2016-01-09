@@ -197,7 +197,7 @@ class gpOutput{
 		if( $return === false ){
 			gpOutput::BodyAsHtml();
 		}
-		gpPlugin::ClearDataFolder();
+		\gp\tool\Plugins::ClearDataFolder();
 
 		gpOutput::HeadContent();
 	}
@@ -468,15 +468,15 @@ class gpOutput{
 		//addonDir is deprecated as of 2.0b3
 		if( isset($info['addonDir']) ){
 			if( gp_safe_mode ) return;
-			gpPlugin::SetDataFolder($info['addonDir']);
+			\gp\tool\Plugins::SetDataFolder($info['addonDir']);
 		}elseif( isset($info['addon']) ){
 			if( gp_safe_mode ) return;
-			gpPlugin::SetDataFolder($info['addon']);
+			\gp\tool\Plugins::SetDataFolder($info['addon']);
 		}
 
 		//if addon was just installed
 		if( $installed_addon && $installed_addon === $addonFolderName){
-			gpPlugin::ClearDataFolder();
+			\gp\tool\Plugins::ClearDataFolder();
 			return $args;
 		}
 
@@ -487,7 +487,7 @@ class gpOutput{
 
 		$args = self::_ExecInfo($info,$args);
 
-		gpPlugin::ClearDataFolder();
+		\gp\tool\Plugins::ClearDataFolder();
 
 		gpOutput::PopCatchable();
 
@@ -914,7 +914,7 @@ class gpOutput{
 
 		$menu_file = $dataDir.'/data/_menus/'.$id.'.php';
 		if( empty($id) || !gpFiles::Exists($menu_file) ){
-			return gpPlugin::Filter('GetMenuArray',array($gp_menu));
+			return \gp\tool\Plugins::Filter('GetMenuArray',array($gp_menu));
 		}
 
 
@@ -924,7 +924,7 @@ class gpOutput{
 			$menu = gpOutput::FixMenu($menu);
 		}
 
-		return gpPlugin::Filter('GetMenuArray',array($menu));
+		return \gp\tool\Plugins::Filter('GetMenuArray',array($menu));
 	}
 
 	/**
@@ -1987,7 +1987,7 @@ class gpOutput{
 	 *
 	 */
 	static function GetHead(){
-		gpPlugin::Action('GetHead');
+		\gp\tool\Plugins::Action('GetHead');
 		gpOutput::PrepGadgetContent();
 		echo '<!-- get_head_placeholder '.gp_random.' -->';
 	}
@@ -1996,7 +1996,7 @@ class gpOutput{
 		global $config, $page, $gp_head_content, $wbMessageBuffer;
 
 		//before ob_start() so plugins can get buffer content
-		gpPlugin::Action('HeadContent');
+		\gp\tool\Plugins::Action('HeadContent');
 
 		ob_start();
 
@@ -2699,7 +2699,7 @@ class gpOutput{
 		}
 
 
-		gpPlugin::Action('GetAdminLink');
+		\gp\tool\Plugins::Action('GetAdminLink');
 
 
 		echo GetMessages();

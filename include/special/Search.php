@@ -121,7 +121,7 @@ class Search{
 		if( !empty($_REQUEST['q']) ){
 			$this->SearchPattern();
 			$this->SearchPages();
-			\gpPlugin::Action('Search',array($this));
+			\gp\tool\Plugins::Action('Search',array($this));
 		}
 
 		$this->ShowResults();

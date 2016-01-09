@@ -8,10 +8,6 @@ class FileSystemFtp extends FileSystem{
 	public $ftp_root		= null;
 	public $method			= 'gp_filesystem_ftp';
 
-	public function __construct(){
-		includeFile('tool/ftp.php');
-	}
-
 	public function get_base_dir(){
 		global $dataDir;
 

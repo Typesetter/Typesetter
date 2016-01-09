@@ -7,7 +7,6 @@ ob_start();
 
 includeFile('tool/install.php');
 includeFile('admin/admin_tools.php');
-includeFile('tool/ftp.php');
 
 
 ?>

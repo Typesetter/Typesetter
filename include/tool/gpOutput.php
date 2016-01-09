@@ -2115,7 +2115,7 @@ class gpOutput{
 			echo "\n<meta name=\"description\" content=\"".$description."\" />";
 		}
 		if( !isset($config['showgplink']) || $config['showgplink'] ){
-			echo "\n<meta name=\"generator\" content=\"gpEasy CMS\" />";
+			echo "\n<meta name=\"generator\" content=\"Typesetter CMS\" />";
 		}
 
 	}

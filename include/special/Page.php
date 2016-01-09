@@ -1,11 +1,11 @@
 <?php
 
-namespace gp\Page;
+namespace gp\special;
 
 defined('is_running') or die('Not an entry point...');
 
 
-class Special extends \gp\Page{
+class Page extends \gp\Page{
 	public $pagetype = 'special_display';
 	public $requested = false;
 
@@ -155,8 +155,7 @@ class Special extends \gp\Page{
 		$scripts['special_galleries']['script'] = '/include/special/special_galleries.php';
 		$scripts['special_galleries']['class'] = 'special_galleries';
 
-		$scripts['special_contact']['script'] = '/include/special/special_contact.php';
-		$scripts['special_contact']['class'] = 'special_contact';
+		$scripts['special_contact']['class'] = '\\gp\\special\\Contact';
 
 		$scripts['special_missing']['script'] = '/include/special/special_missing.php';
 		$scripts['special_missing']['class'] = 'special_missing';

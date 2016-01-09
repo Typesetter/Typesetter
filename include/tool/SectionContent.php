@@ -355,13 +355,13 @@ class section_content{
 	static function IncludeSpecial($requested){
 		global $langmessage;
 
-		$scriptinfo = \gp\Page\Special::GetScriptInfo( $requested, false );
+		$scriptinfo = \gp\special\Page::GetScriptInfo( $requested, false );
 
 		if( $scriptinfo === false ){
 			return '<p>'.$langmessage['File Include'].'</p>';
 		}
 
-		return \gp\Page\Special::ExecInfo($scriptinfo);
+		return \gp\special\Page::ExecInfo($scriptinfo);
 	}
 
 

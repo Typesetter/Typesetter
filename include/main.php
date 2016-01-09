@@ -21,7 +21,7 @@ $type = common::SpecialOrAdmin($title);
 switch($type){
 
 	case 'special':
-		$page = new \gp\Page\Special($title,$type);
+		$page = new \gp\special\Page($title,$type);
 	break;
 
 	case 'admin':

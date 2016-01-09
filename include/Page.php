@@ -130,7 +130,6 @@ class Page{
 
 		$this->GetFile();
 
-		includeFile('tool/SectionContent.php');
 		$this->contentBuffer = \gp\tool\Output\Sections::Render($this->file_sections,$this->title,$this->file_stats);
 	}
 

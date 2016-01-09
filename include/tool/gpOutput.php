@@ -1207,7 +1207,6 @@ class gpOutput{
 	static function GetExtra($name='Side_Menu',$info=array()){
 		global $dataDir,$langmessage;
 
-		includeFile('tool/SectionContent.php');
 		$name = str_replace(' ','_',$name);
 		$extra_content = self::ExtraContent( $name, $file_stats );
 
@@ -2761,7 +2760,6 @@ class gpOutput{
 			// <input data-cmd="gpabox">
 			case 'json':
 				common::CheckTheme();
-				includeFile('tool/ajax.php');
 				\gp\tool\Output\Ajax::Response();
 			break;
 

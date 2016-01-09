@@ -324,7 +324,6 @@ class Search{
 
 	public function SearchPages(){
 		global $gp_index;
-		includeFile('tool/SectionContent.php');
 
 		ob_start();
 		foreach($gp_index as $title => $index){

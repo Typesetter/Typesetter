@@ -4,8 +4,6 @@ namespace gp\admin\Content;
 
 defined('is_running') or die('Not an entry point...');
 
-includeFile('tool/SectionContent.php');
-
 class Trash{
 
 	public $trash_files = array();

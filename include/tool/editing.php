@@ -1131,7 +1131,6 @@ class gp_edit{
 
 
 			case 'inlineedit':
-			includeFile('tool/ajax.php');
 			\gp\tool\Output\Ajax::InlineEdit( $section );
 			die();
 

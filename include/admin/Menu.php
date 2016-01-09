@@ -5,7 +5,6 @@ namespace gp\admin;
 defined('is_running') or die('Not an entry point...');
 defined('gp_max_menu_level') or define('gp_max_menu_level',6);
 
-includeFile('tool/SectionContent.php');
 \common::LoadComponents('sortable');
 
 

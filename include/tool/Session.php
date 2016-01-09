@@ -879,7 +879,6 @@ class Session{
 		global $gpAdmin;
 
 		self::SetGPUI();
-		includeFile('tool/ajax.php');
 
 		//send response so an error is not thrown
 		echo \gp\tool\Output\Ajax::Callback($_REQUEST['jsoncallback']).'([]);';

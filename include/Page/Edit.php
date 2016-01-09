@@ -5,7 +5,6 @@ namespace gp\Page;
 defined('is_running') or die('Not an entry point...');
 
 includeFile('tool/editing.php');
-includeFile('tool/SectionContent.php');
 
 class Edit extends \gp\Page{
 
@@ -312,8 +311,6 @@ class Edit extends \gp\Page{
 	 */
 	public function ManageSections(){
 		global $langmessage;
-
-		includeFile('tool/ajax.php');
 
 
 		//output links

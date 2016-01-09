@@ -26,8 +26,7 @@ switch($type){
 
 	case 'admin':
 		if( common::LoggedIn() ){
-			includeFile('admin/admin_display.php');
-			$page = new admin_display($title,$type);
+			$page = new \gp\admin\Page($title,$type);
 		}else{
 			$page = new \gp\admin\Login($title,$type);
 		}

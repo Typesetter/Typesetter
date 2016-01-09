@@ -1,10 +1,10 @@
 <?php
 
-namespace gp;
+namespace gp\admin;
 
 defined('is_running') or die('Not an entry point...');
 
-class admin extends \gp\Page{
+class Page extends \gp\Page{
 
 	public $pagetype				= 'admin_display';
 	public $requested				= false;

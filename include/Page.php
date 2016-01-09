@@ -66,9 +66,8 @@ class Page{
 	 * see special_missing.php and /Admin/Settings/Missing
 	 */
 	function Error_404($requested){
-		includeFile('special/special_missing.php');
 		ob_start();
-		new \special_missing($requested);
+		new \gp\special\Missing($requested);
 		$this->contentBuffer = ob_get_clean();
 	}
 

@@ -155,8 +155,7 @@ class Page extends \gp\Page{
 
 		$scripts['special_contact']['class'] = '\\gp\\special\\Contact';
 
-		$scripts['special_missing']['script'] = '/include/special/special_missing.php';
-		$scripts['special_missing']['class'] = 'special_missing';
+		$scripts['special_missing']['class'] = '\\gp\\special\\Missing';
 
 		$scripts['special_gpsearch']['script'] = '/include/special/special_search.php';
 		$scripts['special_gpsearch']['class'] = 'special_gpsearch';

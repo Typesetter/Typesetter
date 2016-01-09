@@ -1,26 +1,29 @@
 <?php
+
+namespace gp\special;
+
 defined('is_running') or die('Not an entry point...');
 
 
-class special_missing{
+class Missing{
 
-	var $datafile;
-	var $error_data = array();
-	var $requested = false;
+	public $datafile;
+	public $error_data = array();
+	public $requested = false;
 
 
-	function Init(){
+	public function Init(){
 
 		$this->datafile		= '_site/error_data';
-		$this->error_data	= gpFiles::Get($this->datafile,'error_data');
+		$this->error_data	= \gpFiles::Get($this->datafile,'error_data');
 
 	}
 
-	function SaveData(){
-		return gpFiles::SaveData($this->datafile,'error_data',$this->error_data);
+	public function SaveData(){
+		return \gpFiles::SaveData($this->datafile,'error_data',$this->error_data);
 	}
 
-	function __construct($requested=false){
+	public function __construct($requested=false){
 		global $langmessage;
 
 		$this->Init();
@@ -38,7 +41,7 @@ class special_missing{
 	 * Redirect the request if a redirection entry matches the requested page
 	 *
 	 */
-	function CheckRedirect(){
+	public function CheckRedirect(){
 
 		if( $this->requested === false ){
 			return;
@@ -55,7 +58,7 @@ class special_missing{
 		}
 
 		$code = $this->error_data['redirects'][$this->requested]['code'];
-		common::Redirect($target,$code);
+		\common::Redirect($target,$code);
 	}
 
 	/**
@@ -63,7 +66,7 @@ class special_missing{
 	 * If it's just a difference of case, then the similarity will be 100%
 	 *
 	 */
-	function CheckSimilar(){
+	public function CheckSimilar(){
 		global $config;
 
 		$requested			= trim($this->requested,'/');
@@ -72,8 +75,8 @@ class special_missing{
 		$first_percent		= current($similar);
 
 		if( $config['auto_redir'] > 0 && $first_percent >= $config['auto_redir'] ){
-			$redirect = common::GetUrl($first_title,http_build_query($_GET),false);
-			common::Redirect($redirect);
+			$redirect = \common::GetUrl($first_title,http_build_query($_GET),false);
+			\common::Redirect($redirect);
 		}
 	}
 
@@ -86,12 +89,12 @@ class special_missing{
 	 * @param boolean $get_final If true, GetTarget() will check for additional redirection and $target existence before returning the url. Maximum of 10 redirects.
 	 * @return string|false
 	 */
-	function GetTarget($target,$get_final = true){
+	public function GetTarget($target,$get_final = true){
 		global $gp_index;
 		static $redirects = 0;
 
 		if( empty($target) ){
-			return common::GetUrl('');
+			return \common::GetUrl('');
 		}
 
 		if( !$this->isGPLink($target) ){
@@ -99,7 +102,7 @@ class special_missing{
 		}
 
 		if( !$get_final ){
-			return common::GetUrl($target);
+			return \common::GetUrl($target);
 		}
 
 
@@ -117,19 +120,19 @@ class special_missing{
 
 		//check for target existence
 		if( isset($gp_index[$target]) ){
-			return common::GetUrl($target);
+			return \common::GetUrl($target);
 		}
 
 		includeFile('admin/admin_tools.php');
-		$scripts = admin_tools::AdminScripts();
+		$scripts = \admin_tools::AdminScripts();
 		if( isset($scripts[$target]) ){
-			return common::GetUrl($target);
+			return \common::GetUrl($target);
 		}
 
 		return false;
 	}
 
-	function isGPLink($target){
+	public function isGPLink($target){
 		//has a url scheme (aka protocol)
 		$reg = '#^[a-zA-Z][a-zA-Z0-9\+\.\-]+:#';
 		if( preg_match($reg,$target,$matches) ){
@@ -147,30 +150,30 @@ class special_missing{
 
 
 
-	function Get404(){
+	public function Get404(){
 		global $langmessage,$page;
 
-		gpOutput::AddHeader('Not Found',true,404);
+		\gpOutput::AddHeader('Not Found',true,404);
 		$page->head .= '<meta name="robots" content="noindex,nofollow" />'; //this isn't getting to the template because $page isn't available yet
 
 		//message for admins
-		if( common::LoggedIn() ){
-			if( $this->requested && common::SpecialOrAdmin($this->requested) === false ){
+		if( \common::LoggedIn() ){
+			if( $this->requested && \common::SpecialOrAdmin($this->requested) === false ){
 				$with_spaces = htmlspecialchars($this->requested);
-				$link = common::GetUrl('Admin/Menu/Ajax','cmd=AddHidden&redir=redir&title='.rawurlencode($this->requested)).'" title="'.$langmessage['create_new_file'].'" data-cmd="gpabox';
+				$link = \common::GetUrl('Admin/Menu/Ajax','cmd=AddHidden&redir=redir&title='.rawurlencode($this->requested)).'" title="'.$langmessage['create_new_file'].'" data-cmd="gpabox';
 				$message = sprintf($langmessage['DOESNT_EXIST'],$with_spaces,$link);
 				msg($message);
 			}
 		}
 
 		//Contents of 404 page
-		$wrap = gpOutput::ShowEditLink('Admin/Missing');
+		$wrap = \gpOutput::ShowEditLink('Admin/Missing');
 		if( $wrap ){
-			echo gpOutput::EditAreaLink($edit_index,'Admin/Missing',$langmessage['edit'],'cmd=edit404',' title="'.$langmessage['404_Page'].'" ');
+			echo \gpOutput::EditAreaLink($edit_index,'Admin/Missing',$langmessage['edit'],'cmd=edit404',' title="'.$langmessage['404_Page'].'" ');
 			echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
 		}
 
-		echo special_missing::Get404Output();
+		echo self::Get404Output();
 
 		if( $wrap ){
 			echo '</div>';
@@ -182,12 +185,12 @@ class special_missing{
 	 * Return the custom 404 page content if it exists, otherwise return the default content
 	 *
 	 */
-	function Get404Output(){
+	public function Get404Output(){
 
 		if( isset($this->error_data['404_TEXT']) ){
 			$text = $this->error_data['404_TEXT'];
 		}else{
-			$text = special_missing::DefaultContent();
+			$text = self::DefaultContent();
 		}
 
 		return str_replace('{{Similar_Titles}}',$this->SimilarTitles(),$text);
@@ -198,14 +201,14 @@ class special_missing{
 	 * @return string
 	 *
 	 */
-	function SimilarTitles(){
+	public function SimilarTitles(){
 
 		$similar	= $this->SimilarTitleArray($this->requested);
 		$similar	= array_slice($similar,0,7,true);
 		$result		= '';
 
 		foreach($similar as $title => $percent_similar){
-			$result .= common::Link_Page($title).', ';
+			$result .= \common::Link_Page($title).', ';
 		}
 
 		return rtrim($result,', ');
@@ -216,12 +219,12 @@ class special_missing{
 	 * @return array
 	 *
 	 */
-	function SimilarTitleArray($title){
+	public function SimilarTitleArray($title){
 		global $gp_index, $gp_titles;
 
 		$similar			= array();
 		$lower				= str_replace(' ','_',strtolower($title));
-		$admin				= common::LoggedIn();
+		$admin				= \common::LoggedIn();
 
 		foreach($gp_index as $title => $index){
 
@@ -247,7 +250,7 @@ class special_missing{
 	 * Returnt the default content of the 404 page
 	 *
 	 */
-	function DefaultContent(){
+	public function DefaultContent(){
 		global $langmessage;
 		$text = '<h2>'.$langmessage['Not Found'].'</h2>';
 		$text .= '<p>';

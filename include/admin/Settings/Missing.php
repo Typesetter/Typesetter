@@ -11,9 +11,7 @@ defined('is_running') or die('Not an entry point...');
  *
  */
 
-includeFile('special/special_missing.php');
-
-class Missing extends \special_missing{
+class Missing extends \gp\special\Missing{
 
 	function __construct(){
 		global $langmessage;

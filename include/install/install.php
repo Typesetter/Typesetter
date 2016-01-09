@@ -892,7 +892,7 @@ class gp_install{
 		//Get FTP Root
 		echo '<li>';
 		if( $login_result ){
-			$this->ftp_root = gpftp::GetFTPRoot($install_ftp_connection,$dataDir);
+			$this->ftp_root = \gp\tool\FileSystemFtp::GetFTPRoot($install_ftp_connection,$dataDir);
 		}
 		if( !$this->ftp_root ){
 			echo '<span class="failed">';
@@ -1002,7 +1002,7 @@ class gp_install{
 	function Form_FTPDetails(){
 		global $langmessage;
 
-		$_POST += array('ftp_server'=>gpftp::GetFTPServer(),'ftp_user'=>'');
+		$_POST += array('ftp_server'=>\gp\tool\FileSystemFtp::GetFTPServer(),'ftp_user'=>'');
 
 		echo '<form action="'.common::GetUrl('').'" method="post">';
 		echo '<table class="padded_table">';

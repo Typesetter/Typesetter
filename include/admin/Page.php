@@ -280,8 +280,7 @@ class Page extends \gp\Page{
 		$cmd = \common::GetCommand();
 		switch($cmd){
 			case 'embededcheck':
-				includeFile('tool/update.php');
-				new update_class('embededcheck');
+				new \gp\admin\Update('embededcheck');
 			return;
 
 			case 'autocomplete-titles':

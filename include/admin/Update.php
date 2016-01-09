@@ -1,18 +1,12 @@
 <?php
+
+namespace gp\admin;
+
 defined('is_running') or die('Not an entry point...');
-
-
-/*
-See also
-wordpress/wp-admin/update.php
-wordpress/wp-admin/includes/class-wp-upgrader.php
-wordpress/wp-admin/includes/class-wp-filesystem-ftpext.php
-*/
 
 includeFile('admin/admin_tools.php');
 
-
-class update_class{
+class Update extends \gp\Page{
 
 	//page variables
 	public $pagetype			= 'update';
@@ -92,7 +86,7 @@ class update_class{
 			return;
 		}
 
-		$cmd = common::GetCommand();
+		$cmd = \common::GetCommand();
 
 		$show = true;
 		switch($cmd){
@@ -132,7 +126,7 @@ class update_class{
 	 */
 	function GetData(){
 
-		$this->data_timestamp	= admin_tools::VersionData($update_data);
+		$this->data_timestamp	= \admin_tools::VersionData($update_data);
 		$this->update_data		= $update_data;
 
 
@@ -161,7 +155,7 @@ class update_class{
 		echo '<tr><td>';
 			echo 'RemoteGet';
 			echo '</td><td>';
-			if( gpRemoteGet::Test() ){
+			if( \gpRemoteGet::Test() ){
 				echo '<span class="passed">'.$langmessage['True'].'</span>';
 			}else{
 				$passed = false;
@@ -211,7 +205,7 @@ class update_class{
 
 		if( $this->data_timestamp > 0 ){
 			echo '<p>';
-			echo sprintf($langmessage['Software_updates_checked'],common::date($langmessage['strftime_datetime'],$this->data_timestamp));
+			echo sprintf($langmessage['Software_updates_checked'],\common::date($langmessage['strftime_datetime'],$this->data_timestamp));
 			echo '</p>';
 		}
 
@@ -241,7 +235,7 @@ class update_class{
 			$this->data_timestamp = time();
 		}
 
-		admin_tools::VersionData($this->update_data);
+		\admin_tools::VersionData($this->update_data);
 
 	}
 
@@ -253,7 +247,7 @@ class update_class{
 	function DoRemoteCheck2(){
 		global $config, $dataDir;
 
-		$path = common::IdUrl();
+		$path = \common::IdUrl();
 
 		//add any locally available themes with addon ids
 
@@ -288,9 +282,9 @@ class update_class{
 
 
 		//get data from gpEasy
-		$result = gpRemoteGet::Get_Successful($path);
+		$result = \gpRemoteGet::Get_Successful($path);
 		if( !$result ){
-			$this->msg(gpRemoteGet::Debug('Sorry, data not fetched'));
+			$this->msg(\gpRemoteGet::Debug('Sorry, data not fetched'));
 			return false;
 		}
 
@@ -312,7 +306,7 @@ class update_class{
 			$debug['Type']				= gettype($array);
 			$debug['json_last_error']	= json_last_error();
 			$debug['Two']				= substr($result,0,20);
-			$this->msg(gpRemoteGet::Debug('Sorry, data not fetched',$debug));
+			$this->msg(\gpRemoteGet::Debug('Sorry, data not fetched',$debug));
 			return false;
 		}
 
@@ -320,7 +314,7 @@ class update_class{
 			$debug				= array();
 			$debug['Count']		= count($array);
 			$debug['Two']		= substr($result,0,20);
-			$this->msg(gpRemoteGet::Debug('Sorry, data not fetched',$debug));
+			$this->msg(\gpRemoteGet::Debug('Sorry, data not fetched',$debug));
 			return false;
 		}
 
@@ -392,7 +386,7 @@ class update_class{
 			echo '  '.gpversion;
 			echo '</div>';
 			echo '<div>';
-			echo common::link('',$langmessage['return_to_your_site']);
+			echo \common::link('',$langmessage['return_to_your_site']);
 			echo '</div>';
 
 			$this->RemoveUpdateMessage();
@@ -490,7 +484,7 @@ class update_class{
 		if( $this->FileSystem ){
 			$this->FileSystem->destruct();
 		}
-		admin_tools::VersionData($this->update_data); //save any changes made by the steps
+		\admin_tools::VersionData($this->update_data); //save any changes made by the steps
 
 		if( !$done ){
 			if( $passed ){
@@ -568,7 +562,7 @@ class update_class{
 			$this->msg($langmessage['settings_restored']);
 
 			echo '<h3>';
-			echo common::link('',$langmessage['return_to_your_site']);
+			echo \common::link('',$langmessage['return_to_your_site']);
 			echo ' &nbsp; &nbsp; ';
 			echo '<a href="?cmd=update">'.$langmessage['try_again'].'</a>';
 			echo '</h3>';
@@ -586,7 +580,7 @@ class update_class{
 
 
 		echo '<h3>';
-		echo common::link('','&#187; '.$langmessage['return_to_your_site']);
+		echo \common::link('','&#187; '.$langmessage['return_to_your_site']);
 		echo '</h3>';
 
 
@@ -631,7 +625,7 @@ class update_class{
 		}
 
 		unset($config['updating_message']);
-		if( !admin_tools::SaveConfig() ){
+		if( !\admin_tools::SaveConfig() ){
 			msg($langmessage['error_updating_settings']);
 			return false;
 		}
@@ -661,7 +655,7 @@ class update_class{
 		$this->msg('Files Sorted');
 
 		$config['updating_message'] = $langmessage['sorry_currently_updating'];
-		if( !admin_tools::SaveConfig() ){
+		if( !\admin_tools::SaveConfig() ){
 			$this->msg($langmessage['error_updating_settings']);
 			return false;
 		}
@@ -835,7 +829,7 @@ class update_class{
 
 
 		$download 		= addon_browse_path.'/Special_gpEasy?cmd=download';
-		$contents		= gpRemoteGet::Get_Successful($download);
+		$contents		= \gpRemoteGet::Get_Successful($download);
 
 		if( !$contents || empty($contents) ){
 			$this->msg($langmessage['download_failed'].'(1)');
@@ -855,7 +849,7 @@ class update_class{
 
 		//save contents
 		$temp_file	= $dataDir.\gp\tool\FileSystem::TempFile('/data/_temp/update','.zip');
-		if( !gpFiles::Save($temp_file,$contents) ){
+		if( !\gpFiles::Save($temp_file,$contents) ){
 			$this->msg($langmessage['download_failed'].' (2)');
 			return false;
 		}

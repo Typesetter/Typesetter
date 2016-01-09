@@ -40,8 +40,7 @@ class phpunit_Update extends gptest_bootstrap{
 		global $page;
 
 		ob_start();
-		includeFile('tool/update.php');
-		$page = new update_class();
+		$page = new \gp\admin\Update();
 		gpOutput::HeadContent();
 		includeFile('install/template.php');
 		ob_get_clean();

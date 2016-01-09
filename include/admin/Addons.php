@@ -484,7 +484,7 @@ class Addons extends \gp\admin\Addon\Install{
 				echo '</td><td>';
 				echo $info['Addon_Version'];
 				echo '</td><td>';
-				echo \common::Link('Admin/Addons',$langmessage['Install'],'cmd=LocalInstall&source='.$folder, array('data-cmd'=>'creq'));
+				echo \common::Link('Admin/Addons',$langmessage['Install'],'cmd=LocalInstall&source='.$folder, array('data-cmd'=>'cnreq'));
 				echo '</td><td>';
 				echo $info['About'];
 				if( isset($info['Addon_Unique_ID']) && is_numeric($info['Addon_Unique_ID']) ){
@@ -594,7 +594,7 @@ class Addons extends \gp\admin\Addon\Install{
 			if(version_compare($addon_config['upgrade_version'],$addon_config['version'] ,'>') ){
 				echo '<div class="gp_notice">';
 				$label = $langmessage['new_version'].' &nbsp; '.$addon_config['upgrade_version'];
-				echo '<a href="?cmd=LocalInstall&source='.rawurlencode($addon_config['upgrade_from']).'" data-cmd="creq">'.$label.'</a>';
+				echo '<a href="?cmd=LocalInstall&source='.rawurlencode($addon_config['upgrade_from']).'" data-cmd="cnreq">'.$label.'</a>';
 				echo '</div>';
 			}
 		}
@@ -630,7 +630,7 @@ class Addons extends \gp\admin\Addon\Install{
 
 			//upgrade link
 			if( isset($addon_config['upgrade_from']) ){
-				$list[] = '<a href="?cmd=LocalInstall&source='.rawurlencode($addon_config['upgrade_from']).'" data-cmd="creq">'.$langmessage['upgrade'].'</a>';
+				$list[] = '<a href="?cmd=LocalInstall&source='.rawurlencode($addon_config['upgrade_from']).'" data-cmd="cnreq">'.$langmessage['upgrade'].'</a>';
 			}
 
 			//uninstall

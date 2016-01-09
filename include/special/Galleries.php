@@ -1,14 +1,17 @@
 <?php
+
+namespace gp\special;
+
 defined('is_running') or die('Not an entry point...');
 
-class special_galleries{
+class Galleries{
 
 	public $galleries = array();
 	public $title_removed = false;
 	public $not_visible = array();
 
 	public function __construct(){
-		$this->galleries = special_galleries::GetData();
+		$this->galleries = self::GetData();
 		$this->GenerateOutput();
 	}
 
@@ -42,7 +45,7 @@ class special_galleries{
 		if( !$this->title_removed ){
 			return;
 		}
-		special_galleries::SaveIndex($this->galleries);
+		self::SaveIndex($this->galleries);
 	}
 
 
@@ -54,13 +57,13 @@ class special_galleries{
 	 */
 	public static function GetData(){
 
-		$galleries = gpFiles::Get('_site/galleries');
+		$galleries = \gpFiles::Get('_site/galleries');
 		if( !$galleries ){
 			return array();
 		}
 
-		if( version_compare(gpFiles::$last_version,'2.2','<=') ){
-			special_galleries::UpdateData($galleries);
+		if( version_compare(\gpFiles::$last_version,'2.2','<=') ){
+			self::UpdateData($galleries);
 		}
 
 		return $galleries;
@@ -93,22 +96,22 @@ class special_galleries{
 	public function GenerateOutput(){
 		global $langmessage,$page;
 
-		common::ShowingGallery();
+		\common::ShowingGallery();
 
 		echo '<h2>';
-		echo gpOutput::ReturnText('galleries');
+		echo \gpOutput::ReturnText('galleries');
 		echo '</h2>';
 
 		includeFile('admin/admin_tools.php');
-		$wrap = admin_tools::CanEdit($page->gp_index);
+		$wrap = \admin_tools::CanEdit($page->gp_index);
 		if( $wrap ){
-			echo gpOutput::EditAreaLink($edit_index,'Admin/Galleries',$langmessage['edit']);
+			echo \gpOutput::EditAreaLink($edit_index,'Admin/Galleries',$langmessage['edit']);
 			echo '<div class="editable_area cf" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
 		}
 
 
-		$image_text = gpOutput::ReturnText('image');
-		$images_text = gpOutput::ReturnText('images');
+		$image_text = \gpOutput::ReturnText('image');
+		$images_text = \gpOutput::ReturnText('images');
 
 		$list = '';
 		$shown = 0;
@@ -124,9 +127,9 @@ class special_galleries{
 			if( is_array($info) ){
 				$icon = $info['icon'];
 				if( $info['count'] == 1 ){
-					$count = $info['count'].' '.gpOutput::ReturnText('image');
+					$count = $info['count'].' '.\gpOutput::ReturnText('image');
 				}elseif( $info['count'] > 1 ){
-					$count = $info['count'].' '.gpOutput::ReturnText('images');
+					$count = $info['count'].' '.\gpOutput::ReturnText('images');
 				}
 			}else{
 				$icon = $info;
@@ -139,19 +142,19 @@ class special_galleries{
 
 			$icon = rawurldecode($icon); //prevent double encoding
 			if( strpos($icon,'/thumbnails/') === false ){
-				$thumbPath = common::GetDir('/data/_uploaded/image/thumbnails'.$icon.'.jpg');
+				$thumbPath = \common::GetDir('/data/_uploaded/image/thumbnails'.$icon.'.jpg');
 			}else{
-				$thumbPath = common::GetDir('/data/_uploaded'.$icon);
+				$thumbPath = \common::GetDir('/data/_uploaded'.$icon);
 			}
 
-			$label = common::GetLabel($title);
-			$title_attr = ' title="'.common::GetBrowserTitle($title).'"';
+			$label = \common::GetLabel($title);
+			$title_attr = ' title="'.\common::GetBrowserTitle($title).'"';
 			$label_img = ' <img src="'.$thumbPath.'" alt=""/>';
 
 			$list .= '<li>'
-					. common::Link($title,$label_img,'',$title_attr)
+					. \common::Link($title,$label_img,'',$title_attr)
 					. '<div>'
-					. common::Link($title, $label,'',$title_attr)
+					. \common::Link($title, $label,'',$title_attr)
 					. '<p>'
 					.$count
 					.'</p>'
@@ -206,7 +209,7 @@ class special_galleries{
 		}
 
 		if( !$has_gallery ){
-			special_galleries::RemovedGallery($title);
+			self::RemovedGallery($title);
 			return;
 		}
 
@@ -225,7 +228,7 @@ class special_galleries{
 		}
 
 
-		$galleries = special_galleries::GetData();
+		$galleries = self::GetData();
 
 		$orig_icon = $orig_count = false;
 		$orig_info = array();
@@ -242,7 +245,7 @@ class special_galleries{
 		$orig_info['icon'] = $new_icon;
 		$orig_info['count'] = $new_count;
 		$galleries[$title] = $orig_info;
-		special_galleries::SaveIndex($galleries);
+		self::SaveIndex($galleries);
 	}
 
 
@@ -252,13 +255,13 @@ class special_galleries{
 	 */
 	public static function RemovedGallery($title){
 
-		$galleries = special_galleries::GetData();
+		$galleries = self::GetData();
 		if( !isset($galleries[$title]) ){
 			return;
 		}
 
 		unset($galleries[$title]);
-		special_galleries::SaveIndex($galleries);
+		self::SaveIndex($galleries);
 	}
 
 
@@ -270,13 +273,13 @@ class special_galleries{
 	 */
 	public static function RenamedGallery($old_title,$new_title){
 
-		$galleries = special_galleries::GetData();
+		$galleries = self::GetData();
 		if( !isset($galleries[$old_title]) ){
 			return;
 		}
 
-		if( gpFiles::ArrayInsert($old_title,$new_title,$galleries[$old_title],$galleries,0,1) ){
-			special_galleries::SaveIndex($galleries);
+		if( \gpFiles::ArrayInsert($old_title,$new_title,$galleries[$old_title],$galleries,0,1) ){
+			self::SaveIndex($galleries);
 		}
 	}
 
@@ -286,7 +289,7 @@ class special_galleries{
 		includeFile('admin/admin_tools.php');
 
 		$file = $dataDir.'/data/_site/galleries.php';
-		return gpFiles::SaveData($file,'galleries',$galleries);
+		return \gpFiles::SaveData($file,'galleries',$galleries);
 	}
 
 

@@ -360,8 +360,7 @@ class Rename{
 			}
 
 			//gallery rename
-			includeFile('special/special_galleries.php');
-			\special_galleries::RenamedGallery($title,$new_title);
+			\gp\special\Galleries::RenamedGallery($title,$new_title);
 		}
 
 

@@ -366,7 +366,7 @@ class Trash{
 	/**
 	 * Get the content of the file in the trash so we can restore file information
 	 *  - resized images
-	 *  - special_galleries::UpdateGalleryInfo($title,$content)
+	 *  - \gp\special\Galleries::UpdateGalleryInfo($title,$content)
 	 *
 	 */
 	public static function RestoreFile($title,$file,$title_info){
@@ -401,8 +401,7 @@ class Trash{
 
 		// Restore Galleries
 		if( strpos($title_info['type'],'gallery') !== false ){
-			includeFile('special/special_galleries.php');
-			\special_galleries::UpdateGalleryInfo($title,$file_sections);
+			\gp\special\Galleries::UpdateGalleryInfo($title,$file_sections);
 		}
 	}
 

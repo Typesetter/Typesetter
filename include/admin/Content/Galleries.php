@@ -4,9 +4,7 @@ namespace gp\admin\Content;
 
 defined('is_running') or die('Not an entry point...');
 
-includeFile('special/special_galleries.php');
-
-class Galleries extends \special_galleries{
+class Galleries extends \gp\special\Galleries{
 
 	public function __construct(){
 		$this->galleries = self::GetData();

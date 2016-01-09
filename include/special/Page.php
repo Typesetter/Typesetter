@@ -152,8 +152,7 @@ class Page extends \gp\Page{
 		$scripts['special_site_map']['script'] = '/include/special/special_map.php';
 		$scripts['special_site_map']['class'] = 'special_map';
 
-		$scripts['special_galleries']['script'] = '/include/special/special_galleries.php';
-		$scripts['special_galleries']['class'] = 'special_galleries';
+		$scripts['special_galleries']['class'] = '\\gp\\special\\Galleries';
 
 		$scripts['special_contact']['class'] = '\\gp\\special\\Contact';
 

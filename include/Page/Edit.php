@@ -1236,8 +1236,7 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public function GalleryEdited(){
-		includeFile('special/special_galleries.php');
-		\special_galleries::UpdateGalleryInfo($this->title,$this->file_sections);
+		\gp\special\Galleries::UpdateGalleryInfo($this->title,$this->file_sections);
 	}
 
 	public function GenerateContent_Admin(){

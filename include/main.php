@@ -21,8 +21,7 @@ $type = common::SpecialOrAdmin($title);
 switch($type){
 
 	case 'special':
-		includeFile('special.php');
-		$page = new special_display($title,$type);
+		$page = new \gp\Page\Special($title,$type);
 	break;
 
 	case 'admin':

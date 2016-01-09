@@ -354,15 +354,14 @@ class section_content{
 	 */
 	static function IncludeSpecial($requested){
 		global $langmessage;
-		includeFile('special.php');
 
-		$scriptinfo = special_display::GetScriptInfo( $requested, false );
+		$scriptinfo = \gp\Page\Special::GetScriptInfo( $requested, false );
 
 		if( $scriptinfo === false ){
 			return '<p>'.$langmessage['File Include'].'</p>';
 		}
 
-		return special_display::ExecInfo($scriptinfo);
+		return \gp\Page\Special::ExecInfo($scriptinfo);
 	}
 
 

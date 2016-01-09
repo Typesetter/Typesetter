@@ -426,7 +426,7 @@ class Edit extends \gp\Page{
 			return $this->SectionNode($new_section, $orig_attrs).$content.'</div>';
 		}
 
-		return $this->SectionNode($new_section, $orig_attrs).$content.section_content::EndTag($new_section['nodeName']);
+		return $this->SectionNode($new_section, $orig_attrs).$content.\section_content::EndTag($new_section['nodeName']);
 	}
 
 	public function SectionNode($section,$orig_attrs){
@@ -812,7 +812,7 @@ class Edit extends \gp\Page{
 			$q = array('cmd'=> 'NewSectionContent','type' => $type );
 		}
 
-		return '<div>'.common::Link($page->title,$label,http_build_query($q,'','&amp;'),array('data-cmd'=>'AddSection','class'=>'preview_section')).'</div>';
+		return '<div>'.\common::Link($page->title,$label,http_build_query($q,'','&amp;'),array('data-cmd'=>'AddSection','class'=>'preview_section')).'</div>';
 	}
 
 
@@ -1072,7 +1072,7 @@ class Edit extends \gp\Page{
 
 			case 'draft':
 			echo \common::Link($this->title,$langmessage['View']);
-			echo ' &nbsp; '.common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'cnreq'));
+			echo ' &nbsp; '.\common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'cnreq'));
 			break;
 
 			case 'history':

@@ -1,8 +1,11 @@
 <?php
+
+namespace gp\Page;
+
 defined('is_running') or die('Not an entry point...');
 
 
-class special_display extends \gp\Page{
+class Special extends \gp\Page{
 	public $pagetype = 'special_display';
 	public $requested = false;
 
@@ -15,7 +18,7 @@ class special_display extends \gp\Page{
 	public function RunScript(){
 		global $gp_index, $langmessage;
 
-		$scriptinfo = special_display::GetScriptInfo($this->title);
+		$scriptinfo = self::GetScriptInfo($this->title);
 		if( $scriptinfo === false ){
 
 			switch($this->title){
@@ -38,8 +41,8 @@ class special_display extends \gp\Page{
 		}
 
 		//allow addons to affect page actions and how a page is displayed
-		$cmd			= common::GetCommand();
-		$cmd_after		= gpPlugin::Filter('PageRunScript',array($cmd));
+		$cmd			= \common::GetCommand();
+		$cmd_after		= \gpPlugin::Filter('PageRunScript',array($cmd));
 		if( $cmd !== $cmd_after ){
 			$cmd = $cmd_after;
 			if( $cmd === 'return' ){
@@ -47,8 +50,8 @@ class special_display extends \gp\Page{
 			}
 		}
 
-		if( common::LoggedIn() ){
-			$menu_permissions = admin_tools::HasPermission('Admin_Menu');
+		if( \common::LoggedIn() ){
+			$menu_permissions = \admin_tools::HasPermission('Admin_Menu');
 			if( $menu_permissions ){
 				switch($cmd){
 					// rename & details
@@ -69,7 +72,7 @@ class special_display extends \gp\Page{
 		}
 
 
-		$this->contentBuffer = special_display::ExecInfo($scriptinfo);
+		$this->contentBuffer = self::ExecInfo($scriptinfo);
 	}
 
 
@@ -82,7 +85,7 @@ class special_display extends \gp\Page{
 
 		$admin_links			= $this->admin_links;
 
-		$menu_permissions		= admin_tools::HasPermission('Admin_Menu');
+		$menu_permissions		= \admin_tools::HasPermission('Admin_Menu');
 
 
 		if( $menu_permissions ){
@@ -94,19 +97,19 @@ class special_display extends \gp\Page{
 				$q						.= '&visibility=private';
 			}
 			$attrs						= array('title'=>$label,'data-cmd'=>'creq');
-			$admin_links[]		= common::Link($this->title,$label,$q,$attrs);
+			$admin_links[]		= \common::Link($this->title,$label,$q,$attrs);
 		}
 
 
 		// page options: less frequently used links that don't have to do with editing the content of the page
 		$option_links		= array();
 		if( $menu_permissions ){
-			$option_links[] = common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
-			$option_links[] = common::Link('Admin/Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
+			$option_links[] = \common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
+			$option_links[] = \common::Link('Admin/Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
 		}
 
-		if( admin_tools::HasPermission('Admin_User') ){
-			$option_links[] = common::Link('Admin/Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
+		if( \admin_tools::HasPermission('Admin_User') ){
+			$option_links[] = \common::Link('Admin/Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
 		}
 
 		if( !empty($option_links) ){
@@ -121,7 +124,7 @@ class special_display extends \gp\Page{
 	public function RenameForm(){
 		global $gp_index;
 
-		$action = common::GetUrl($this->title);
+		$action = \common::GetUrl($this->title);
 		\gp\Page\Rename::RenameForm( $this->gp_index, $action );
 	}
 
@@ -162,12 +165,12 @@ class special_display extends \gp\Page{
 		$scripts['special_gpsearch']['class'] = 'special_gpsearch';
 
 		//check for use of a index instead of a page title
-		$translated = common::SpecialHref($requested);
+		$translated = \common::SpecialHref($requested);
 		if( $translated != $requested ){
 			$requested = $translated;
 			if( $redirect ){
-				$title = common::GetUrl($requested,http_build_query($_GET),false);
-				common::Redirect($title);
+				$title = \common::GetUrl($requested,http_build_query($_GET),false);
+				\common::Redirect($title);
 			}
 		}
 
@@ -202,7 +205,7 @@ class special_display extends \gp\Page{
 		global $dataDir;
 
 		ob_start();
-		gpOutput::ExecInfo($scriptinfo);
+		\gpOutput::ExecInfo($scriptinfo);
 		return ob_get_clean();
 	}
 
@@ -222,16 +225,16 @@ class special_display extends \gp\Page{
 				case 'autocomplete2':
 					$options['admin_vals'] = false;
 					$options['var_name'] = 'gp_include_titles';
-					echo gp_edit::AutoCompleteValues(false,$options);
+					echo \gp_edit::AutoCompleteValues(false,$options);
 				break;
 
 				case 'autocomplete':
-					echo gp_edit::AutoCompleteValues(true);
+					echo \gp_edit::AutoCompleteValues(true);
 				break;
 
 				case 'gp_ckconfig':
 					$options = array();
-					echo gp_edit::CKConfig($options,'gp_ckconfig');
+					echo \gp_edit::CKConfig($options,'gp_ckconfig');
 				break;
 			}
 		}

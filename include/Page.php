@@ -68,7 +68,7 @@ class Page{
 	function Error_404($requested){
 		includeFile('special/special_missing.php');
 		ob_start();
-		new special_missing($requested);
+		new \special_missing($requested);
 		$this->contentBuffer = ob_get_clean();
 	}
 

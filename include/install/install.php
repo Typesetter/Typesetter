@@ -213,13 +213,13 @@ echo '</body></html>';
 //Install Class
 class gp_install{
 
-	var $can_write_data		= true;
-	var $ftp_root			= false;
-	var $root_mode;
+	public $can_write_data		= true;
+	public $ftp_root			= false;
+	public $root_mode;
 
 
 
-	function __construct(){
+	public function __construct(){
 		global $languages,$install_language,$langmessage;
 
 		//language preferences
@@ -263,7 +263,7 @@ class gp_install{
 
 	}
 
-	function CheckFolders(){
+	public function CheckFolders(){
 		global $ok,$langmessage;
 
 		$ok = true;
@@ -466,7 +466,7 @@ class gp_install{
 
 	}
 
-	function StatusRow($value_ok,$label_true,$label_false){
+	public function StatusRow($value_ok,$label_true,$label_false){
 		global $langmessage;
 
 		if( $value_ok ){
@@ -480,7 +480,7 @@ class gp_install{
 	}
 
 
-	function CheckDataFolder(){
+	public function CheckDataFolder(){
 		global $ok,$dataDir,$langmessage;
 
 		echo '<tr><td class="nowrap">';
@@ -531,7 +531,7 @@ class gp_install{
 
 
 	//very unlikely, cannot have two ".php/" in path: see SetGlobalPaths()
-	function CheckPath(){
+	public function CheckPath(){
 		global $langmessage;
 
 		$path = __FILE__;
@@ -568,7 +568,7 @@ class gp_install{
 		return false;
 	}
 
-	function CheckIndexHtml(){
+	public function CheckIndexHtml(){
 		global $langmessage,$dataDir;
 
 		$index = $dataDir.'/index.html';
@@ -595,7 +595,7 @@ class gp_install{
 	}
 
 
-	function CheckImages(){
+	public function CheckImages(){
 		global $langmessage;
 
 		$passed = false;
@@ -650,7 +650,7 @@ class gp_install{
 	 * Change the permissions of the data directory
 	 *
 	 */
-	function FTP_Prepare(){
+	public function FTP_Prepare(){
 		global $langmessage;
 
 		echo '<h2>'.$langmessage['Using_FTP'].'...</h2>';
@@ -661,7 +661,7 @@ class gp_install{
 	}
 
 
-	function _FTP_Prepare(){
+	public function _FTP_Prepare(){
 
 		if( !$this->FTPConnection() ){
 			return;
@@ -679,7 +679,7 @@ class gp_install{
 	 * Attempt to change the mode of the folder directly
 	 *
 	 */
-	function FTP_DataMode(){
+	public function FTP_DataMode(){
 		global $langmessage, $install_ftp_connection, $dataDir;
 
 		//Change Mode of /data
@@ -714,7 +714,7 @@ class gp_install{
 	 * 4) restore parent directory
 	 *
 	 */
-	function FTP_DataFolder(){
+	public function FTP_DataFolder(){
 		global $dataDir, $install_ftp_connection, $langmessage;
 
 		$this->root_mode = fileperms($dataDir);
@@ -790,7 +790,7 @@ class gp_install{
 	 * Copy files from the "deleted" data folder to the new data folder
 	 *
 	 */
-	function CopyData($from_dir, $to_dir){
+	public function CopyData($from_dir, $to_dir){
 
 		$files = scandir($from_dir);
 		foreach($files as $file){
@@ -816,7 +816,7 @@ class gp_install{
 	 * Restore the mode of the root directory to it's original mode
 	 *
 	 */
-	function FTP_RestoreMode(){
+	public function FTP_RestoreMode(){
 		global $install_ftp_connection, $langmessage;
 
 		if( !$this->root_mode || !$install_ftp_connection ){
@@ -841,7 +841,7 @@ class gp_install{
 	 * Establish an FTP connection to be used by the installer
 	 * todo: remove $install_ftp_connection globabl
 	 */
-	function FTPConnection(){
+	public function FTPConnection(){
 		global $dataDir, $langmessage, $install_ftp_connection;
 
 
@@ -908,7 +908,7 @@ class gp_install{
 	}
 
 
-	function Form_Permissions(){
+	public function Form_Permissions(){
 		global $langmessage,$dataDir;
 
 		echo '<div>';
@@ -980,7 +980,7 @@ class gp_install{
 	 * Attempt to get the owner of php
 	 *
 	 */
-	function GetPHPOwner(){
+	public function GetPHPOwner(){
 		global $dataDir;
 
 		if( !function_exists('fileowner') ){
@@ -997,7 +997,7 @@ class gp_install{
 	}
 
 
-	function Form_FTPDetails(){
+	public function Form_FTPDetails(){
 		global $langmessage;
 
 		$_POST += array('ftp_server'=>\gp\tool\FileSystemFtp::GetFTPServer(),'ftp_user'=>'');
@@ -1027,7 +1027,7 @@ class gp_install{
 
 
 
-	function LanguageForm(){
+	public function LanguageForm(){
 		global $languages, $install_language;
 
 		echo '<div class="lang_select">';
@@ -1054,7 +1054,7 @@ class gp_install{
 	}
 
 
-	function Installed(){
+	public function Installed(){
 		global $langmessage;
 		echo '<h4>'.$langmessage['Installation_Was_Successfull'].'</h4>';
 
@@ -1070,7 +1070,7 @@ class gp_install{
 	}
 
 
-	function Form_Entry(){
+	public function Form_Entry(){
 		global $langmessage;
 
 		//echo '<h3>'.$langmessage['configuration'].'</h3>';
@@ -1088,7 +1088,7 @@ class gp_install{
 	}
 
 
-	function Install_Normal(){
+	public function Install_Normal(){
 		global $langmessage,$install_language;
 
 		echo '<h2>'.$langmessage['Installing'].'</h2>';

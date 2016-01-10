@@ -1909,6 +1909,9 @@ body #addon_about{
 .cke_dialog_ui_input_text .ui-helper-hidden-accessible{
 	display: none;
 	}
+#admincontent_inner .cke_reset *{
+	@include box-sizing( content-box );
+	}
 
 
 

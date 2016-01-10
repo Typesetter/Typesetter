@@ -127,6 +127,7 @@ class CSS{
 		}
 
 		$scss_files = $compiler->allParsedFiles();
+		$scss_files = array_keys($scss_files);
 
 		return $compiled;
 	}

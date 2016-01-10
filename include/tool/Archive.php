@@ -193,33 +193,6 @@ class Archive{
 
 
 	/**
-	 * Find $archive_root by finding Addon.ini
-	 *
-	 */
-	public function ArchiveRoot( $archive ){
-
-		$archive_files	= $archive->ListFiles();
-		$archive_root	= null;
-
-		foreach( $archive_files as $file ){
-
-			if( strpos($file['name'],'/Addon.ini') === false ){
-				continue;
-			}
-
-			$root = \gp\tool::DirName($file['name']);
-
-			if( is_null($archive_root) || ( strlen($root) < strlen($archive_root) ) ){
-				$archive_root = $root;
-			}
-
-		}
-
-		return $archive_root;
-	}
-
-
-	/**
 	 * Recursively add files to the archive
 	 *
 	 */

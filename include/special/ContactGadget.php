@@ -70,7 +70,7 @@ class ContactGadget{
 
 
 		//captcha
-		if( !\gp_recaptcha::Check() ){
+		if( !\gp\tool\Recaptcha::Check() ){
 			return;
 		}
 
@@ -201,10 +201,10 @@ class ContactGadget{
 
 		\gp\tool\Plugins::Action('contact_form_pre_captcha');
 
-		if( !$this->sent && \gp_recaptcha::isActive() ){
+		if( !$this->sent && \gp\tool\Recaptcha::isActive() ){
 			echo '<div class="captchaForm">';
 			echo \gpOutput::ReturnText('captcha');
-			\gp_recaptcha::Form();
+			\gp\tool\Recaptcha::Form();
 			echo '</div>';
 		}
 

@@ -448,6 +448,10 @@ function includeFile( $file ){
 		case 'tool/SectionContent.php':
 		$file = 'tool/Output/Sections.php';
 		break;
+
+		case 'tool/recaptcha.php':
+		$file = 'tool/Recaptcha.php';
+		break;
 	}
 
 	require_once( $dataDir.'/include/'.$file );

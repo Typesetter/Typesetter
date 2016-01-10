@@ -183,14 +183,14 @@ class Installer extends \gp\admin\Addon\Tools{
 
 			$installFolder = $addon_config['code_folder_full'];
 			if( file_exists($installFolder) ){
-				\gpFiles::RmAll($installFolder);
+				\gp\tool\Files::RmAll($installFolder);
 			}
 
 		}
 
 		$dataFolder = $addon_config['data_folder_full'];
 		if( file_exists($dataFolder) ){
-			\gpFiles::RmAll($dataFolder);
+			\gp\tool\Files::RmAll($dataFolder);
 		}
 	}
 
@@ -342,7 +342,7 @@ class Installer extends \gp\admin\Addon\Tools{
 		}
 		$this->addon_folder = $dataDir.$this->addon_folder_rel;
 
-		\gpFiles::CheckDir($this->addon_folder);
+		\gp\tool\Files::CheckDir($this->addon_folder);
 	}
 
 
@@ -719,7 +719,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 */
 	public function CopyAddonDir($fromDir,$toDir){
 
-		if( !\gpFiles::CheckDir($toDir) ){
+		if( !\gp\tool\Files::CheckDir($toDir) ){
 			return 'Copy failed: '.$fromDir.' to '.$toDir;
 		}
 
@@ -891,7 +891,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 		//save contents
 		$tempfile = $dataDir.\gp\tool\FileSystem::TempFile('/data/_temp/addon','.zip');
-		if( !\gpFiles::Save($tempfile,$result) ){
+		if( !\gp\tool\Files::Save($tempfile,$result) ){
 			$this->message( $langmessage['download_failed'].' (Package not saved)' );
 			return false;
 		}
@@ -929,7 +929,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 		//rename to source folder
 		$rename_from = $extract_temp.'/'.ltrim($archive_root,'/');
-		if( !\gpFiles::Replace($rename_from, $this->source) ){
+		if( !\gp\tool\Files::Replace($rename_from, $this->source) ){
 			$this->message( $langmessage['download_failed'].' (Not replaced)' );
 			return false;
 		}
@@ -1346,11 +1346,11 @@ class Installer extends \gp\admin\Addon\Tools{
 		}
 
 		if( file_exists($this->source) ){
-			\gpFiles::RmAll($this->source);
+			\gp\tool\Files::RmAll($this->source);
 		}
 
 		if( file_exists($this->trash_path) ){
-			\gpFiles::RmAll($this->trash_path);
+			\gp\tool\Files::RmAll($this->trash_path);
 		}
 	}
 

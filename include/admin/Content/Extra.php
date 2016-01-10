@@ -72,7 +72,7 @@ class Extra{
 	}
 
 	public function Getdata(){
-		$this->areas = \gpFiles::ReadDir($this->folder);
+		$this->areas = \gp\tool\Files::ReadDir($this->folder);
 		asort($this->areas);
 	}
 
@@ -256,7 +256,7 @@ class Extra{
 		$data['created'] = time();
 		$data['created_by'] = $gpAdmin['username'];
 
-		if( !\gpFiles::SaveData($file,'extra_content',$data) ){
+		if( !\gp\tool\Files::SaveData($file,'extra_content',$data) ){
 			message($langmessage['OOPS']);
 			$this->EditExtra();
 			return false;
@@ -323,7 +323,7 @@ class Extra{
 
 		//save the new content
 		$file_full = $this->folder.'/'.$file.'.php';
-		if( !\gpFiles::SaveData( $file_full, 'extra_content', $data ) ){
+		if( !\gp\tool\Files::SaveData( $file_full, 'extra_content', $data ) ){
 			message($langmessage['OOPS']);
 			$this->EditExtra();
 			return false;

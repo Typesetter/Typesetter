@@ -137,9 +137,9 @@ class Edit extends \gp\Page{
 			return;
 		}
 
-		$this->file_sections	= \gpFiles::Get($this->draft_file,'file_sections');
-		$this->draft_meta		= \gpFiles::$last_meta;
-		$this->draft_stats		= \gpFiles::$last_stats;
+		$this->file_sections	= \gp\tool\Files::Get($this->draft_file,'file_sections');
+		$this->draft_meta		= \gp\tool\Files::$last_meta;
+		$this->draft_stats		= \gp\tool\Files::$last_stats;
 	}
 
 
@@ -181,7 +181,7 @@ class Edit extends \gp\Page{
 		}
 
 
-		if( !\gpFiles::Exists($this->draft_file) ){
+		if( !\gp\tool\Files::Exists($this->draft_file) ){
 			return true;
 		}
 
@@ -824,7 +824,7 @@ class Edit extends \gp\Page{
 
 		//file count
 		if( !isset($this->meta_data['file_number']) ){
-			$this->meta_data['file_number'] = \gpFiles::NewFileNumber();
+			$this->meta_data['file_number'] = \gp\tool\Files::NewFileNumber();
 		}
 
 		if( $backup ){
@@ -832,7 +832,7 @@ class Edit extends \gp\Page{
 		}
 
 
-		if( !\gpFiles::SaveData($this->draft_file,'file_sections',$this->file_sections,$this->meta_data) ){
+		if( !\gp\tool\Files::SaveData($this->draft_file,'file_sections',$this->file_sections,$this->meta_data) ){
 			return false;
 		}
 
@@ -852,10 +852,10 @@ class Edit extends \gp\Page{
 
 
 		if( $this->draft_exists ){
-			$contents	= \gpFiles::GetRaw($this->draft_file);
+			$contents	= \gp\tool\Files::GetRaw($this->draft_file);
 			$time		= $this->draft_stats['modified'];
 		}else{
-			$contents	= \gpFiles::GetRaw($this->file);
+			$contents	= \gp\tool\Files::GetRaw($this->file);
 			$time		= $this->file_stats['modified'];
 		}
 
@@ -873,7 +873,7 @@ class Edit extends \gp\Page{
 			$contents = gzencode($contents,9);
 		}
 
-		if( !\gpFiles::Save( $backup_file, $contents ) ){
+		if( !\gp\tool\Files::Save( $backup_file, $contents ) ){
 			return false;
 		}
 
@@ -916,7 +916,7 @@ class Edit extends \gp\Page{
 			return false;
 		}
 
-		if( !\gpFiles::SaveData($this->file,'file_sections',$this->file_sections,$this->draft_meta) ){
+		if( !\gp\tool\Files::SaveData($this->file,'file_sections',$this->file_sections,$this->draft_meta) ){
 			msg($langmessage['OOPS'].' (Draft not published)');
 			return false;
 		}
@@ -1096,7 +1096,7 @@ class Edit extends \gp\Page{
 			return false;
 		}
 
-		$this->contentBuffer	= \gp\tool\Output\Sections::Render($file_sections,$this->title,\gpFiles::$last_stats);
+		$this->contentBuffer	= \gp\tool\Output\Sections::Render($file_sections,$this->title,\gp\tool\Files::$last_stats);
 		$this->revision			= $time;
 	}
 
@@ -1142,14 +1142,14 @@ class Edit extends \gp\Page{
 			$dir		= \common::DirName($full_path);
 			$full_path	= tempnam($dir,'backup').'.php';
 
-			\gpFiles::Save( $full_path, $contents );
+			\gp\tool\Files::Save( $full_path, $contents );
 
-			$file_sections	= \gpFiles::Get($full_path,'file_sections');
+			$file_sections	= \gp\tool\Files::Get($full_path,'file_sections');
 
 			unlink($full_path);
 
 		}else{
-			$file_sections	= \gpFiles::Get($full_path,'file_sections');
+			$file_sections	= \gp\tool\Files::Get($full_path,'file_sections');
 		}
 
 		return $file_sections;
@@ -1161,7 +1161,7 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public function ViewCurrent(){
-		$file_sections			= \gpFiles::Get($this->file,'file_sections');
+		$file_sections			= \gp\tool\Files::Get($this->file,'file_sections');
 		$this->contentBuffer	= \gp\tool\Output\Sections::Render($file_sections,$this->title,$this->file_stats);
 		$this->revision			= $this->fileModTime;
 	}
@@ -1365,7 +1365,7 @@ class Edit extends \gp\Page{
 	public function SaveSection_Text($section){
 		global $config;
 		$content =& $_POST['gpcontent'];
-		\gpFiles::cleanText($content);
+		\gp\tool\Files::cleanText($content);
 		$this->file_sections[$section]['content'] = $content;
 
 		if( $config['resize_images'] ){

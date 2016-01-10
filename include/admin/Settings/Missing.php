@@ -66,7 +66,7 @@ class Missing extends \gp\special\Missing{
 
 
 		$datafile		= $dataDir.'/data/_site/error_data.php';
-		$error_data		= \gpFiles::Get('_site/error_data');
+		$error_data		= \gp\tool\Files::Get('_site/error_data');
 		if( !$error_data ){
 			$error_data = array();
 		}
@@ -88,7 +88,7 @@ class Missing extends \gp\special\Missing{
 
 
 		if( $changed ){
-			\gpFiles::SaveData($datafile,'error_data',$error_data);
+			\gp\tool\Files::SaveData($datafile,'error_data',$error_data);
 		}
 	}
 
@@ -149,7 +149,7 @@ class Missing extends \gp\special\Missing{
 	function Save404(){
 
 		$text =& $_POST['gpcontent'];
-		\gpFiles::cleanText($text);
+		\gp\tool\Files::cleanText($text);
 		$this->error_data['404_TEXT'] = $text;
 		if( $this->SaveData_Message() ){
 			return true;
@@ -421,7 +421,7 @@ class Missing extends \gp\special\Missing{
 		$data['code']			= $_POST['code'];
 		$data['raw_source']		= $_POST['source'];
 
-		if( !\gpFiles::ArrayReplace($orig_source,$source,$data,$this->error_data['redirects']) ){
+		if( !\gp\tool\Files::ArrayReplace($orig_source,$source,$data,$this->error_data['redirects']) ){
 			message($langmessage['OOPS']);
 			return false;
 		}

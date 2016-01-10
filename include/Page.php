@@ -82,7 +82,7 @@ namespace gp{
 			$this->gp_index		= $gp_index[$this->title];
 			$this->TitleInfo	=& $gp_titles[$this->gp_index]; //so changes made by rename are seen
 			$this->label		= \common::GetLabel($this->title);
-			$this->file			= \gpFiles::PageFile($this->title);
+			$this->file			= \gp\tool\Files::PageFile($this->title);
 
 			if( !$this->CheckVisibility() ){
 				return false;
@@ -139,10 +139,10 @@ namespace gp{
 		 */
 		function GetFile(){
 
-			$this->file_sections	= \gpFiles::Get($this->file,'file_sections');
-			$this->meta_data		= \gpFiles::$last_meta;
-			$this->fileModTime		= \gpFiles::$last_modified;
-			$this->file_stats		= \gpFiles::$last_stats;
+			$this->file_sections	= \gp\tool\Files::Get($this->file,'file_sections');
+			$this->meta_data		= \gp\tool\Files::$last_meta;
+			$this->fileModTime		= \gp\tool\Files::$last_modified;
+			$this->file_stats		= \gp\tool\Files::$last_stats;
 
 			if( count($this->file_sections) == 0 ){
 				$this->file_sections[0] = array(

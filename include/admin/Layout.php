@@ -399,7 +399,7 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 		if( file_exists($dir) ){
-			\gpFiles::RmDir($dir);
+			\gp\tool\Files::RmDir($dir);
 		}
 	}
 
@@ -672,7 +672,7 @@ class Layout extends \gp\admin\Addon\Install{
 		$gpLayoutsBefore = $gpLayouts;
 		$gpLayouts[$layout_id] = $newLayout;
 
-		if( !\gpFiles::ArrayInsert($copy_id,$layout_id,$newLayout,$gpLayouts,1) ){
+		if( !\gp\tool\Files::ArrayInsert($copy_id,$layout_id,$newLayout,$gpLayouts,1) ){
 			message($langmessage['OOPS'].'(Not Inserted)');
 			return;
 		}
@@ -682,7 +682,7 @@ class Layout extends \gp\admin\Addon\Install{
 		$css = $this->layoutCSS($copy_id);
 		if( !empty($css) ){
 			$path = $dataDir.'/data/_layouts/'.$layout_id.'/custom.css';
-			if( !\gpFiles::Save($path,$css) ){
+			if( !\gp\tool\Files::Save($path,$css) ){
 				message($langmessage['OOPS'].' (CSS not saved)');
 				return false;
 			}
@@ -824,7 +824,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 		$dir		= $dataDir.$dir_rel;
-		$folders	= \gpFiles::readDir($dir,1);
+		$folders	= \gp\tool\Files::readDir($dir,1);
 
 		foreach($folders as $folder){
 
@@ -924,7 +924,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function GetThemeColors($dir){
-		$subdirs = \gpFiles::readDir($dir,1);
+		$subdirs = \gp\tool\Files::readDir($dir,1);
 		$colors = array();
 		asort($subdirs);
 		foreach($subdirs as $subdir){

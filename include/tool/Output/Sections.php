@@ -257,8 +257,8 @@ namespace gp\tool\Output{
 			}
 
 
-			$file			= \gpFiles::PageFile($title);
-			$file_sections	= \gpFiles::Get($file,'file_sections');
+			$file			= \gp\tool\Files::PageFile($title);
+			$file_sections	= \gp\tool\Files::Get($file,'file_sections');
 
 			if( !$file_sections ){
 				self::ReplaceContent($content,$pos2);
@@ -381,8 +381,8 @@ namespace gp\tool\Output{
 				return '{{'.htmlspecialchars($requested).'}}';
 			}
 
-			$file			= \gpFiles::PageFile($requested);
-			$file_sections	= \gpFiles::Get($file,'file_sections');
+			$file			= \gp\tool\Files::PageFile($requested);
+			$file_sections	= \gp\tool\Files::Get($file,'file_sections');
 
 			if( !$file_sections ){
 				return '{{'.htmlspecialchars($requested).'}}';

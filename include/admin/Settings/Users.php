@@ -122,7 +122,7 @@ class Users{
 		if( $is_curr_user ){
 			global $gpAdmin;
 		}else{
-			$gpAdmin = \gpFiles::Get($user_file,'gpAdmin');
+			$gpAdmin = \gp\tool\Files::Get($user_file,'gpAdmin');
 		}
 
 		if( !$gpAdmin ){
@@ -131,7 +131,7 @@ class Users{
 
 		$gpAdmin['granted'] = $user_info['granted'];
 		$gpAdmin['editing'] = $user_info['editing'];
-		\gpFiles::SaveData($user_file,'gpAdmin',$gpAdmin);
+		\gp\tool\Files::SaveData($user_file,'gpAdmin',$gpAdmin);
 	}
 
 	/**
@@ -330,7 +330,7 @@ class Users{
 	public function SaveUserFile($refresh = true ){
 		global $langmessage;
 
-		if( !\gpFiles::SaveData('_site/users','users',$this->users) ){
+		if( !\gp\tool\Files::SaveData('_site/users','users',$this->users) ){
 			message($langmessage['OOPS']);
 			return false;
 		}
@@ -739,7 +739,7 @@ class Users{
 
 	public function GetUsers(){
 
-		$this->users		= \gpFiles::Get('_site/users');
+		$this->users		= \gp\tool\Files::Get('_site/users');
 
 		//fix the editing value
 		foreach($this->users as $username => $userinfo){

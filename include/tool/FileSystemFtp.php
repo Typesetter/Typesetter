@@ -69,7 +69,7 @@ class FileSystemFtp extends FileSystem{
 
 
 		$save_values						= false;
-		$connect_args						= \gpFiles::Get('_updates/connect','connect_args');
+		$connect_args						= \gp\tool\Files::Get('_updates/connect','connect_args');
 
 		if( !$connect_args || !isset($connect_args['ftp_user']) ){
 			if( isset($config['ftp_user']) ){
@@ -113,7 +113,7 @@ class FileSystemFtp extends FileSystem{
 		}
 
 		$connection_file	= $dataDir.'/data/_updates/connect.php';
-		if( !\gpFiles::SaveData($connection_file,'connect_args',$connect_args) ){
+		if( !\gp\tool\Files::SaveData($connection_file,'connect_args',$connect_args) ){
 			return $connected;
 		}
 

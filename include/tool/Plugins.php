@@ -369,7 +369,7 @@ namespace gp\tool{
 		public static function GetConfig(){
 
 			$file = self::$current['data_folder_full'].'/_config.php';
-			return \gpFiles::Get($file,'config');
+			return \gp\tool\Files::Get($file,'config');
 		}
 
 
@@ -382,7 +382,7 @@ namespace gp\tool{
 
 			$file = self::$current['data_folder_full'].'/_config.php';
 
-			if( \gpFiles::SaveData($file,'config',$config) ){
+			if( \gp\tool\Files::SaveData($file,'config',$config) ){
 				return true;
 			}
 			return false;

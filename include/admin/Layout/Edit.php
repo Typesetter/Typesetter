@@ -360,7 +360,7 @@ class Edit extends \gp\admin\Layout{
 			$this->RemoveCSS($this->curr_layout);
 
 		//save if not empty
-		}elseif( !\gpFiles::Save($path,$css) ){
+		}elseif( !\gp\tool\Files::Save($path,$css) ){
 			message($langmessage['OOPS'].' (CSS not saved)');
 			return false;
 		}
@@ -770,7 +770,7 @@ class Edit extends \gp\admin\Layout{
 				echo '<tr><th colspan="2">&nbsp;</th></tr>';
 
 				$extrasFolder = $dataDir.'/data/_extra';
-				$files = \gpFiles::ReadDir($extrasFolder);
+				$files = \gp\tool\Files::ReadDir($extrasFolder);
 				asort($files);
 				foreach($files as $file){
 					$extraName = $file;
@@ -968,11 +968,11 @@ class Edit extends \gp\admin\Layout{
 		$data = \gp\tool\Editing::DefaultContent($_POST['type']);
 		$file = $dataDir.'/data/_extra/'.$title.'.php';
 
-		if( \gpFiles::Exists($file) ){
+		if( \gp\tool\Files::Exists($file) ){
 			return $title;
 		}
 
-		if( !\gpFiles::SaveData($file,'extra_content',$data) ){
+		if( !\gp\tool\Files::SaveData($file,'extra_content',$data) ){
 			message($langmessage['OOPS']);
 			return false;
 		}

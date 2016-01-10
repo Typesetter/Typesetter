@@ -108,7 +108,7 @@ class Menus extends \gp\admin\Menu{
 		$id = 'm'.$index;
 
 		$menu_file = $dataDir.'/data/_menus/'.$id.'.php';
-		if( !\gpFiles::SaveData($menu_file,'menu',$new_menu) ){
+		if( !\gp\tool\Files::SaveData($menu_file,'menu',$new_menu) ){
 			msg($langmessage['OOPS'].' (Menu Not Saved)');
 			return false;
 		}
@@ -245,7 +245,7 @@ class Menus extends \gp\admin\Menu{
 
 		//delete menu file
 		$menu_file = $dataDir.'/data/_menus/'.$menu_id.'.php';
-		if( \gpFiles::Exists($menu_file) ){
+		if( \gp\tool\Files::Exists($menu_file) ){
 			unlink($menu_file);
 		}
 	}

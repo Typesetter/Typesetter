@@ -846,7 +846,7 @@ class Update extends \gp\Page{
 
 		//save contents
 		$temp_file	= $dataDir.\gp\tool\FileSystem::TempFile('/data/_temp/update','.zip');
-		if( !\gpFiles::Save($temp_file,$contents) ){
+		if( !\gp\tool\Files::Save($temp_file,$contents) ){
 			$this->msg($langmessage['download_failed'].' (2)');
 			return false;
 		}

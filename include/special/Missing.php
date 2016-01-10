@@ -15,12 +15,12 @@ class Missing{
 	public function Init(){
 
 		$this->datafile		= '_site/error_data';
-		$this->error_data	= \gpFiles::Get($this->datafile,'error_data');
+		$this->error_data	= \gp\tool\Files::Get($this->datafile,'error_data');
 
 	}
 
 	public function SaveData(){
-		return \gpFiles::SaveData($this->datafile,'error_data',$this->error_data);
+		return \gp\tool\Files::SaveData($this->datafile,'error_data',$this->error_data);
 	}
 
 	public function __construct($requested=false){

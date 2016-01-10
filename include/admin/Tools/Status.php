@@ -82,14 +82,14 @@ class Status{
 		global $dataDir,$gp_index;
 
 		$pages_dir = $dataDir.'/data/_pages';
-		$all_files = \gpFiles::ReadDir($pages_dir,'php');
+		$all_files = \gp\tool\Files::ReadDir($pages_dir,'php');
 		foreach($all_files as $key => $file){
 			$all_files[$key] = $pages_dir.'/'.$file.'.php';
 		}
 
 		$page_files = array();
 		foreach($gp_index as $slug => $index){
-			$page_files[] = \gpFiles::PageFile($slug);
+			$page_files[] = \gp\tool\Files::PageFile($slug);
 		}
 
 		$diff = array_diff($all_files,$page_files);

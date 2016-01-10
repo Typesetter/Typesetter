@@ -57,12 +57,12 @@ class Galleries{
 	 */
 	public static function GetData(){
 
-		$galleries = \gpFiles::Get('_site/galleries');
+		$galleries = \gp\tool\Files::Get('_site/galleries');
 		if( !$galleries ){
 			return array();
 		}
 
-		if( version_compare(\gpFiles::$last_version,'2.2','<=') ){
+		if( version_compare(\gp\tool\Files::$last_version,'2.2','<=') ){
 			self::UpdateData($galleries);
 		}
 
@@ -277,7 +277,7 @@ class Galleries{
 			return;
 		}
 
-		if( \gpFiles::ArrayInsert($old_title,$new_title,$galleries[$old_title],$galleries,0,1) ){
+		if( \gp\tool\Files::ArrayInsert($old_title,$new_title,$galleries[$old_title],$galleries,0,1) ){
 			self::SaveIndex($galleries);
 		}
 	}
@@ -286,7 +286,7 @@ class Galleries{
 		global $dataDir;
 
 		$file = $dataDir.'/data/_site/galleries.php';
-		return \gpFiles::SaveData($file,'galleries',$galleries);
+		return \gp\tool\Files::SaveData($file,'galleries',$galleries);
 	}
 
 

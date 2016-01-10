@@ -337,7 +337,7 @@ namespace gp\Page{
 			$old_gp_index = $gp_index;
 
 			//re-index: make the new title point to the same data index
-			$old_file = \gpFiles::PageFile($title);
+			$old_file = \gp\tool\Files::PageFile($title);
 			$file_index = $gp_index[$title];
 			unset($gp_index[$title]);
 			$gp_index[$new_title] = $file_index;
@@ -345,13 +345,13 @@ namespace gp\Page{
 
 			//rename the php file
 			if( !$special_file ){
-				$new_file = \gpFiles::PageFile($new_title);
+				$new_file = \gp\tool\Files::PageFile($new_title);
 
 				//if the file being renamed doesn't use the index naming convention, then we'll still need to rename it
 				if( $new_file != $old_file ){
 					$new_dir = dirname($new_file);
 					$old_dir = dirname($old_file);
-					if( !\gpFiles::Rename($old_dir,$new_dir) ){
+					if( !\gp\tool\Files::Rename($old_dir,$new_dir) ){
 						msg($langmessage['OOPS'].' (N3)');
 						$gp_index = $old_gp_index;
 						return false;

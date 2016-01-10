@@ -74,14 +74,14 @@ namespace gp\admin{
 
 			//set
 			if( !is_null($update_data) ){
-				return \gpFiles::SaveData($file,'update_data',$update_data);
+				return \gp\tool\Files::SaveData($file,'update_data',$update_data);
 			}
 
 
-			$update_data	= \gpFiles::Get('_updates/updates','update_data');
+			$update_data	= \gp\tool\Files::Get('_updates/updates','update_data');
 			$update_data	+= array('packages'=>array());
 
-			return \gpFiles::$last_modified;
+			return \gp\tool\Files::$last_modified;
 		}
 
 
@@ -891,7 +891,7 @@ namespace gp\admin{
 
 				//if old ( > 14 days ), delete it
 				if( $diff > 1209600 ){
-					\gpFiles::RmAll($full_path);
+					\gp\tool\Files::RmAll($full_path);
 					continue;
 				}
 				$times[$file] = $time;
@@ -902,7 +902,7 @@ namespace gp\admin{
 			$times = array_keys($times);
 			while( count($times) > 200 ){
 				$full_path = $dir.'/'.array_pop($times);
-				\gpFiles::RmAll($full_path);
+				\gp\tool\Files::RmAll($full_path);
 			}
 		}
 
@@ -1306,7 +1306,7 @@ namespace gp\admin{
 			$pages['gp_titles'] = $gp_titles;
 			$pages['gpLayouts'] = $gpLayouts;
 
-			if( !\gpFiles::SaveData($dataDir.'/data/_site/pages.php','pages',$pages) ){
+			if( !\gp\tool\Files::SaveData($dataDir.'/data/_site/pages.php','pages',$pages) ){
 				return false;
 			}
 			return true;
@@ -1325,7 +1325,7 @@ namespace gp\admin{
 
 			if( !isset($config['gpuniq']) ) $config['gpuniq'] = \common::RandomString(20);
 
-			return \gpFiles::SaveData('_site/config','config',$config);
+			return \gp\tool\Files::SaveData('_site/config','config',$config);
 		}
 
 

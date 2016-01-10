@@ -158,7 +158,7 @@ namespace gp\tool{
 			$exists_before = file_exists($dest_path);
 
 			//make sure the folder exists
-			if( !\gpFiles::CheckDir( \common::DirName($dest_path) ) ){
+			if( !\gp\tool\Files::CheckDir( \common::DirName($dest_path) ) ){
 				return false;
 			}
 
@@ -549,7 +549,7 @@ namespace gp\tool{
 			//get ckeditor configuration set by users
 			if( !is_array($cke_config) ){
 
-				$cke_config = \gpFiles::Get('_ckeditor/config','cke_config');
+				$cke_config = \gp\tool\Files::Get('_ckeditor/config','cke_config');
 				if( !$cke_config ){
 					$cke_config = array();
 				}
@@ -937,7 +937,7 @@ namespace gp\tool{
 			$dest_img_full		= $dataDir.$dest_img_rel;
 
 			//make sure the folder exists
-			if( !\gpFiles::CheckDir( dirname($dest_img_full) ) ){
+			if( !\gp\tool\Files::CheckDir( dirname($dest_img_full) ) ){
 				msg($langmessage['OOPS'].' (Couldn\'t create directory)');
 				return false;
 			}
@@ -966,7 +966,7 @@ namespace gp\tool{
 		public static function SectionFromPost_Text( &$section ){
 			global $config;
 			$content =& $_POST['gpcontent'];
-			\gpFiles::cleanText($content);
+			\gp\tool\Files::cleanText($content);
 			$section['content'] = $content;
 
 			if( $config['resize_images'] ){
@@ -994,7 +994,7 @@ namespace gp\tool{
 
 				$thumb_path = \common::ThumbnailPath($image);
 				$caption = $_POST['captions'][$i];
-				\gpFiles::cleanText($caption);
+				\gp\tool\Files::cleanText($caption);
 
 				echo '<li>';
 				echo '<a class="gallery_gallery" title="'.htmlspecialchars($caption).'" data-arg="gallery_gallery" href="'.$image.'" data-cmd="gallery">';

@@ -15,9 +15,9 @@ if( !defined('is_running' ) ){
 
 class gp_resized{
 
-	var $img;
-	var $height;
-	var $width;
+	public $img;
+	public $height;
+	public $width;
 	public static $index = false;
 	private static $index_checksum = false;
 	private static $last_index = '9';
@@ -44,7 +44,7 @@ class gp_resized{
 			//dies
 		}
 
-		$img = gpFiles::NoNull($img);
+		$img = \gp\tool\Files::NoNull($img);
 
 		//check file path
 		if( strpos($img,'./') !== false || strpos($img,'%2f') !== false || strpos($img,'%2F') !== false ){
@@ -204,15 +204,15 @@ class gp_resized{
 		}
 
 		$index_file		= $dataDir.'/data/_site/image_index.php';
-		self::$index	= gpFiles::Get($index_file,'image_index');
+		self::$index	= \gp\tool\Files::Get($index_file,'image_index');
 
 		if( self::$index ){
 			self::$index_checksum	= self::checksum(self::$index);
 
-			if( isset(gpFiles::$last_meta['last_index']) ){
-				self::$last_index		= gpFiles::$last_meta['last_index'];
-			}elseif( isset(gpFiles::$last_stats['last_index']) ){			//pre 4.3.6
-				self::$last_index		= gpFiles::$last_stats['last_index'];
+			if( isset(\gp\tool\Files::$last_meta['last_index']) ){
+				self::$last_index		= \gp\tool\Files::$last_meta['last_index'];
+			}elseif( isset(\gp\tool\Files::$last_stats['last_index']) ){			//pre 4.3.6
+				self::$last_index		= \gp\tool\Files::$last_stats['last_index'];
 			}
 
 		}
@@ -233,7 +233,7 @@ class gp_resized{
 		$meta = array('last_index'=>self::$last_index);
 
 		$index_file = $dataDir.'/data/_site/image_index.php';
-		return gpFiles::SaveData($index_file,'image_index',self::$index,'meta_data',$meta);
+		return \gp\tool\Files::SaveData($index_file,'image_index',self::$index,'meta_data',$meta);
 	}
 
 	/**
@@ -249,7 +249,7 @@ class gp_resized{
 	 *
 	 */
 	static function GetUsage($index){
-		return gpFiles::Get('_resized/'.$index.'/data','usage');
+		return \gp\tool\Files::Get('_resized/'.$index.'/data','usage');
 	}
 
 	/**
@@ -259,7 +259,7 @@ class gp_resized{
 	static function SaveUsage($index,$data){
 		global $dataDir;
 		$data_file = $dataDir.'/data/_resized/'.$index.'/data.php';
-		return gpFiles::SaveData($data_file,'usage',$data);
+		return \gp\tool\Files::SaveData($data_file,'usage',$data);
 	}
 
 

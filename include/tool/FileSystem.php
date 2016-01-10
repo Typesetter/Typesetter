@@ -344,7 +344,7 @@ class FileSystem{
 	}
 
 	public function put_contents($file, $contents, $type = '' ){
-		if( !\gpFiles::Save($file,$contents) ){
+		if( !\gp\tool\Files::Save($file,$contents) ){
 			return false;
 		}
 		//the gpEasy core does not need to be world writable

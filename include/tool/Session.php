@@ -60,7 +60,7 @@ namespace gp\tool{
 			}
 
 
-			$users		= \gpFiles::Get('_site/users');
+			$users		= \gp\tool\Files::Get('_site/users');
 			$username	= self::GetLoginUser( $users, $nonce );
 
 			if( $username === false ){
@@ -271,7 +271,7 @@ namespace gp\tool{
 			do{
 				$new_file_name	= 'gpsess_'.\common::RandomString(40).'.php';
 				$new_file		= $dataDir.'/data/_sessions/'.$new_file_name;
-			}while( \gpFiles::Exists($new_file) );
+			}while( \gp\tool\Files::Exists($new_file) );
 
 			$userinfo['file_name']	= $new_file_name;
 
@@ -287,7 +287,7 @@ namespace gp\tool{
 
 			$session_id = $_COOKIE[gp_session_cookie];
 
-			\gpFiles::Unlock('admin',sha1(sha1($session_id)));
+			\gp\tool\Files::Unlock('admin',sha1(sha1($session_id)));
 			self::cookie(gp_session_cookie);
 			self::CleanSession($session_id);
 			msg($langmessage['LOGGED_OUT']);
@@ -380,7 +380,7 @@ namespace gp\tool{
 				$users[$username]['attempts']++;
 			}
 			$users[$username]['lastattempt'] = time();
-			\gpFiles::SaveData('_site/users','users',$users);
+			\gp\tool\Files::SaveData('_site/users','users',$users);
 		}
 
 
@@ -443,7 +443,7 @@ namespace gp\tool{
 			}
 
 
-			\gpFiles::SaveData($user_file,'gpAdmin',$new_data);
+			\gp\tool\Files::SaveData($user_file,'gpAdmin',$new_data);
 			return $session_id;
 		}
 
@@ -454,7 +454,7 @@ namespace gp\tool{
 		 * @return array array of all sessions
 		 */
 		static function GetSessionIds(){
-			return \gpFiles::Get('_site/session_ids','sessions');
+			return \gp\tool\Files::Get('_site/session_ids','sessions');
 		}
 
 		/**
@@ -478,7 +478,7 @@ namespace gp\tool{
 			}
 
 			//clean
-			return \gpFiles::SaveData('_site/session_ids','sessions',$sessions);
+			return \gp\tool\Files::SaveData('_site/session_ids','sessions',$sessions);
 		}
 
 		/**
@@ -517,7 +517,7 @@ namespace gp\tool{
 
 
 			$session_file = $dataDir.'/data/_sessions/'.$sess_info['file_name'];
-			if( ($session_file === false) || !\gpFiles::Exists($session_file) ){
+			if( ($session_file === false) || !\gp\tool\Files::Exists($session_file) ){
 				self::cookie(gp_session_cookie); //make sure the cookie is deleted
 				msg($langmessage['Session Expired'].' (invalid)');
 				return false;
@@ -537,7 +537,7 @@ namespace gp\tool{
 			//lock to prevent conflicting edits
 			if( gp_lock_time > 0 && ( !empty($GLOBALS['gpAdmin']['editing']) || !empty($GLOBALS['gpAdmin']['granted']) ) ){
 				$expires = gp_lock_time;
-				if( !\gpFiles::Lock('admin',sha1(sha1($session_id)),$expires) ){
+				if( !\gp\tool\Files::Lock('admin',sha1(sha1($session_id)),$expires) ){
 					msg( $langmessage['site_locked'].' '.sprintf($langmessage['lock_expires_in'],ceil($expires/60)) );
 					$locked_message = true;
 					$GLOBALS['gpAdmin']['locked'] = true;
@@ -646,7 +646,7 @@ namespace gp\tool{
 		 */
 		static function SessionData($session_file,&$checksum){
 
-			$gpAdmin	= \gpFiles::Get($session_file,'gpAdmin');
+			$gpAdmin	= \gp\tool\Files::Get($session_file,'gpAdmin');
 
 			$checksum	= '';
 
@@ -732,7 +732,7 @@ namespace gp\tool{
 			}
 
 			$gpAdmin['checksum'] = $checksum; //store the new checksum
-			\gpFiles::SaveData($file,'gpAdmin',$gpAdmin);
+			\gp\tool\Files::SaveData($file,'gpAdmin',$gpAdmin);
 
 		}
 
@@ -818,8 +818,8 @@ namespace gp\tool{
 		 */
 		static function Cron(){
 
-			$cron_info	= \gpFiles::Get('_site/cron_info');
-			$file_stats	= \gpFiles::$last_stats;
+			$cron_info	= \gp\tool\Files::Get('_site/cron_info');
+			$file_stats	= \gp\tool\Files::$last_stats;
 
 			$file_stats += array('modified' => 0);
 			if( (time() - $file_stats['modified']) < 3600 ){
@@ -827,7 +827,7 @@ namespace gp\tool{
 			}
 
 			self::CleanTemp();
-			\gpFiles::SaveData('_site/cron_info','cron_info',$cron_info);
+			\gp\tool\Files::SaveData('_site/cron_info','cron_info',$cron_info);
 		}
 
 		/**
@@ -838,14 +838,14 @@ namespace gp\tool{
 		static function CleanTemp(){
 			global $dataDir;
 			$temp_folder = $dataDir.'/data/_temp';
-			$files = \gpFiles::ReadDir($temp_folder,false);
+			$files = \gp\tool\Files::ReadDir($temp_folder,false);
 			foreach($files as $file){
 				if( $file == 'index.html') continue;
 				$full_path = $temp_folder.'/'.$file;
 				$mtime = (int)filemtime($full_path);
 				$diff = time() - $mtime;
 				if( $diff < 129600 ) continue;
-				\gpFiles::RmAll($full_path);
+				\gp\tool\Files::RmAll($full_path);
 			}
 		}
 

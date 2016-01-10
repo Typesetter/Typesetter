@@ -199,7 +199,7 @@ class Login extends \display{
 	public function SendPassword(){
 		global $langmessage, $config;
 
-		$users		= \gpFiles::Get('_site/users');
+		$users		= \gp\tool\Files::Get('_site/users');
 		$username	= $_POST['username'];
 
 		if( !isset($users[$username]) ){
@@ -222,7 +222,7 @@ class Login extends \display{
 		$pass_hash		= \gp\tool\Session::PassAlgo($userinfo);
 
 		$users[$username]['newpass'] = \common::hash($newpass,$pass_hash);
-		if( !\gpFiles::SaveData('_site/users','users',$users) ){
+		if( !\gp\tool\Files::SaveData('_site/users','users',$users) ){
 			message($langmessage['OOPS']);
 			return false;
 		}

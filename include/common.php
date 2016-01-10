@@ -803,7 +803,6 @@ class common{
 		spl_autoload_register( array('common','Autoload') );
 
 
-		includeFile('tool/Files.php');
 		includeFile('tool/gpOutput.php');
 		includeFile('tool/functions.php');
 		if( $sessions ){
@@ -1387,7 +1386,7 @@ class common{
 
 		}else{
 			$return = common::IndexToTitle($index);
-			$return = gpFiles::CleanLabel($return);
+			$return = \gp\tool\Files::CleanLabel($return);
 		}
 		if( $amp ){
 			return str_replace('&','&amp;',$return);
@@ -1418,7 +1417,7 @@ class common{
 		}
 
 		if( $return === false ){
-			$return = gpFiles::CleanLabel($title);
+			$return = \gp\tool\Files::CleanLabel($title);
 		}
 
 		return $return;
@@ -1507,7 +1506,7 @@ class common{
 		global $config, $gp_hooks;
 
 
-		$config = gpFiles::Get('_site/config');
+		$config = \gp\tool\Files::Get('_site/config');
 
 		if( !is_array($config) || !array_key_exists('gpversion',$config) ){
 			common::stop();
@@ -1585,7 +1584,7 @@ class common{
 	static function stop(){
 		global $dataDir;
 
-		if( !gpFiles::Exists($dataDir.'/data/_site/config.php') ){
+		if( !\gp\tool\Files::Exists($dataDir.'/data/_site/config.php') ){
 
 			if( file_exists($dataDir.'/include/install/install.php') ){
 				common::SetLinkPrefix();
@@ -1611,7 +1610,7 @@ class common{
 		$gp_index = array();
 
 
-		$pages		= gpFiles::Get('_site/pages');
+		$pages		= \gp\tool\Files::Get('_site/pages');
 
 
 		//update for < 2.0a3
@@ -1651,7 +1650,7 @@ class common{
 		}
 
 		//fix the gpmenu
-		if( version_compare(gpFiles::$last_version,'3.0b1','<') ){
+		if( version_compare(\gp\tool\Files::$last_version,'3.0b1','<') ){
 			$gp_menu = gpOutput::FixMenu($gp_menu);
 
 			// fix gp_titles for gpEasy 3.0+

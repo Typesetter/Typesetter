@@ -218,11 +218,11 @@ class Tools{
 		$config 					+= $_config;
 
 		//directories
-		\gpFiles::CheckDir($destination.'/data/_uploaded/image');
-		\gpFiles::CheckDir($destination.'/data/_uploaded/media');
-		\gpFiles::CheckDir($destination.'/data/_uploaded/file');
-		\gpFiles::CheckDir($destination.'/data/_uploaded/flash');
-		\gpFiles::CheckDir($destination.'/data/_sessions');
+		\gp\tool\Files::CheckDir($destination.'/data/_uploaded/image');
+		\gp\tool\Files::CheckDir($destination.'/data/_uploaded/media');
+		\gp\tool\Files::CheckDir($destination.'/data/_uploaded/file');
+		\gp\tool\Files::CheckDir($destination.'/data/_uploaded/flash');
+		\gp\tool\Files::CheckDir($destination.'/data/_sessions');
 
 
 		// gp_index
@@ -292,7 +292,7 @@ class Tools{
 		$pages['gpLayouts'] = $gpLayouts;
 
 		echo '<li>';
-		if( !\gpFiles::SaveData($destination.'/data/_site/pages.php','pages',$pages) ){
+		if( !\gp\tool\Files::SaveData($destination.'/data/_site/pages.php','pages',$pages) ){
 			echo '<span class="failed">';
 			//echo 'Could not save pages.php';
 			echo sprintf($langmessage['COULD_NOT_SAVE'],'pages.php');
@@ -465,7 +465,7 @@ class Tools{
 		}
 		$users[$username] = $user_info;
 
-		if( !\gpFiles::SaveData($destination.'/data/_site/users.php','users',$users) ){
+		if( !\gp\tool\Files::SaveData($destination.'/data/_site/users.php','users',$users) ){
 			echo '<span class="failed">';
 			echo sprintf($langmessage['COULD_NOT_SAVE'],'users.php');
 			echo '</span>';
@@ -483,7 +483,7 @@ class Tools{
 		//not using SaveConfig() because $config is not global here
 		echo '<li>';
 		$config['file_count'] = self::$file_count;
-		if( !\gpFiles::SaveData($destination.'/data/_site/config.php','config',$config) ){
+		if( !\gp\tool\Files::SaveData($destination.'/data/_site/config.php','config',$config) ){
 			echo '<span class="failed">';
 			echo sprintf($langmessage['COULD_NOT_SAVE'],'config.php');
 			echo '</span>';
@@ -500,7 +500,7 @@ class Tools{
 			self::InstallHtaccess($destination,$config);
 		}
 
-		\gpFiles::Unlock('write',gp_random);
+		\gp\tool\Files::Unlock('write',gp_random);
 
 		return true;
 	}
@@ -522,12 +522,12 @@ class Tools{
 			'file_type' => 'text',
 			);
 
-		return \gpFiles::SaveData($file,'file_sections',$file_sections,$meta_data);
+		return \gp\tool\Files::SaveData($file,'file_sections',$file_sections,$meta_data);
 	}
 
 	static function NewExtra($file, $content){
 		$extra_content = array('type'=>'text','content'=>$content);
-		return \gpFiles::SaveData($file,'extra_content',$extra_content);
+		return \gp\tool\Files::SaveData($file,'extra_content',$extra_content);
 	}
 
 

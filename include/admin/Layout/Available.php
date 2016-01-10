@@ -584,7 +584,7 @@ class Available extends \gp\admin\Layout{
 		//delete the folder if it hasn't already been deleted by addon installer
 		$dir = $dataDir.'/data/_themes/'.$theme_folder_name;
 		if( file_exists($dir) ){
-			\gpFiles::RmAll($dir);
+			\gp\tool\Files::RmAll($dir);
 		}
 
 	}

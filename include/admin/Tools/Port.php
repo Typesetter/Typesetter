@@ -251,7 +251,7 @@ class Port{
 	 */
 	public function NewFile($which_exported,$extension){
 
-		if( !\gpFiles::CheckDir($this->export_dir) ){
+		if( !\gp\tool\Files::CheckDir($this->export_dir) ){
 			message($langmessage['OOPS'].'(Export Dir)');
 			return false;
 		}
@@ -483,7 +483,7 @@ class Port{
 		}
 
 		//set the cookie for the new data
-		$config = \gpFiles::Get('_site/config');
+		$config = \gp\tool\Files::Get('_site/config');
 		$session_cookie = 'gpEasy_'.substr(sha1($config['gpuniq']),12,12);
 		\gp\tool\Session::cookie($session_cookie,$session_id);
 
@@ -577,7 +577,7 @@ class Port{
 	public function CopyDir( $source, $dest ){
 		global $dataDir, $langmessage;
 
-		$data_files = \gpFiles::ReadDir($source,false);
+		$data_files = \gp\tool\Files::ReadDir($source,false);
 
 		foreach($data_files as $file){
 			if( $file == '.' || $file == '..' ){
@@ -598,7 +598,7 @@ class Port{
 			}
 
 			$contents = file_get_contents($source_full);
-			if( !\gpFiles::Save($dest_full,$contents) ){
+			if( !\gp\tool\Files::Save($dest_full,$contents) ){
 				message($langmessage['OOPS'].' Session file not copied (0)');
 				return false;
 			}
@@ -646,7 +646,7 @@ class Port{
 			//create directories
 			if( $flag === 5 ){
 				if( $full ){
-					if( !\gpFiles::CheckDir($full,false) ){
+					if( !\gp\tool\Files::CheckDir($full,false) ){
 						message($langmessage['revert_failed'].' Directory not created (1)');
 						return false;
 					}
@@ -664,7 +664,7 @@ class Port{
 				$contents = $this->GetImportContents( $path );
 
 				if( $full ){
-					if( !\gpFiles::Save($full,$contents) ){
+					if( !\gp\tool\Files::Save($full,$contents) ){
 						message($langmessage['revert_failed'].' File not created (1)');
 						return false;
 					}
@@ -789,7 +789,7 @@ class Port{
 	}
 
 	public function SetExported(){
-		$this->exported = \gpFiles::ReadDir($this->export_dir,$this->all_extenstions);
+		$this->exported = \gp\tool\Files::ReadDir($this->export_dir,$this->all_extenstions);
 		arsort($this->exported);
 	}
 

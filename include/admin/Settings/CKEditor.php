@@ -225,7 +225,7 @@ class CKEditor{
 		//extract to temporary location
 		$extract_temp = $dataDir.\gp\tool\FileSystem::TempFile('/data/_temp/'.$plugin_name);
 		if( !$archive->extractTo($extract_temp) ){
-			\gpFiles::RmAll($extract_temp);
+			\gp\tool\Files::RmAll($extract_temp);
 			msg($langmessage['OOPS'].' (Couldn\'t extract to temp location)');
 			return false;
 		}
@@ -234,7 +234,7 @@ class CKEditor{
 		//move to _ckeditor folder
 		$destination = $dataDir.'/data/_ckeditor/'.$plugin_name;
 		$rename_from = $extract_temp.'/'.ltrim($remove_path,'/');
-		if( !\gpFiles::Replace($rename_from, $destination) ){
+		if( !\gp\tool\Files::Replace($rename_from, $destination) ){
 			msg($langmessage['OOPS'].' (Not replaced)');
 			return false;
 		}
@@ -272,7 +272,7 @@ class CKEditor{
 		}
 
 		//rename tmp file to have zip extenstion
-		if( !\gpFiles::Rename($plugin_file['tmp_name'], $plugin_file['tmp_name'].'.zip') ){
+		if( !\gp\tool\Files::Rename($plugin_file['tmp_name'], $plugin_file['tmp_name'].'.zip') ){
 			msg($langmessage['OOPS'].' (Not renamed)');
 			return;
 		}
@@ -356,7 +356,7 @@ class CKEditor{
 
 
 		$path = $dataDir.'/data/_ckeditor/'.$plugin;
-		\gpFiles::RmAll( $path );
+		\gp\tool\Files::RmAll( $path );
 	}
 
 
@@ -448,7 +448,7 @@ class CKEditor{
 	 *
 	 */
 	function SaveConfig(){
-		return \gpFiles::SaveData($this->config_file,'cke_config',$this->cke_config);
+		return \gp\tool\Files::SaveData($this->config_file,'cke_config',$this->cke_config);
 	}
 
 
@@ -459,7 +459,7 @@ class CKEditor{
 	function Init(){
 
 		$this->config_file		= '_ckeditor/config';
-		$this->cke_config		= \gpFiles::Get($this->config_file,'cke_config');
+		$this->cke_config		= \gp\tool\Files::Get($this->config_file,'cke_config');
 
 		//$this->cke_config 	+= array('custom_config'=>array());
 		$this->cke_config		+= array('plugins'=>array());

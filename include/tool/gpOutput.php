@@ -913,14 +913,14 @@ class gpOutput{
 
 
 		$menu_file = $dataDir.'/data/_menus/'.$id.'.php';
-		if( empty($id) || !gpFiles::Exists($menu_file) ){
+		if( empty($id) || !\gp\tool\Files::Exists($menu_file) ){
 			return \gp\tool\Plugins::Filter('GetMenuArray',array($gp_menu));
 		}
 
 
-		$menu = gpFiles::Get('_menus/'.$id,'menu');
+		$menu = \gp\tool\Files::Get('_menus/'.$id,'menu');
 
-		if( gpFiles::$last_version && version_compare(gpFiles::$last_version,'3.0b1','<') ){
+		if( \gp\tool\Files::$last_version && version_compare(\gp\tool\Files::$last_version,'3.0b1','<') ){
 			$menu = gpOutput::FixMenu($menu);
 		}
 
@@ -1241,10 +1241,10 @@ class gpOutput{
 		$file = '_extra/'.$title;
 
 		$extra_content = array();
-		if( gpFiles::Exists($file) ){
+		if( \gp\tool\Files::Exists($file) ){
 
 			ob_start();
-			$extra_content = gpFiles::Get($file,'extra_content');
+			$extra_content = \gp\tool\Files::Get($file,'extra_content');
 			$extra_content_string = ob_get_clean();
 
 			if( !count($extra_content) ){
@@ -2466,7 +2466,7 @@ class gpOutput{
 
 		//remove lock
 		if( defined('gp_has_lock') && gp_has_lock ){
-			gpFiles::Unlock('write',gp_random);
+			\gp\tool\Files::Unlock('write',gp_random);
 		}
 
 
@@ -2608,7 +2608,7 @@ class gpOutput{
 		foreach($temp as $error_hash => $info){
 
 			$file = $dataDir.'/data/_site/fatal_'.$error_hash;
-			gpFiles::Save($file,$content);
+			\gp\tool\Files::Save($file,$content);
 
 			if( $info['catchable_type'] == 'exec' ){
 				break;

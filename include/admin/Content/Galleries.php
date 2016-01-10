@@ -149,7 +149,7 @@ class Galleries extends \gp\special\Galleries{
 				return false;
 			}
 
-			if( !\gpFiles::ArrayInsert($next,$dragging,$info,$this->galleries) ){
+			if( !\gp\tool\Files::ArrayInsert($next,$dragging,$info,$this->galleries) ){
 				message($langmessage['OOPS'].' (Insert Failed)');
 				return false;
 			}

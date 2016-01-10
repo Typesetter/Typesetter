@@ -285,16 +285,16 @@ class Ajax extends \gp\admin\Menu{
 		}
 
 		//get the existing content
-		$from_file		= \gpFiles::PageFile($from_title);
+		$from_file		= \gp\tool\Files::PageFile($from_title);
 		$contents		= file_get_contents($from_file);
 
 
 		//add to $gp_index first!
 		$index				= \common::NewFileIndex();
 		$gp_index[$title]	= $index;
-		$file = \gpFiles::PageFile($title);
+		$file				= \gp\tool\Files::PageFile($title);
 
-		if( !\gpFiles::Save($file,$contents) ){
+		if( !\gp\tool\Files::Save($file,$contents) ){
 			msg($langmessage['OOPS'].' (File not saved)');
 			return false;
 		}

@@ -132,7 +132,7 @@ class Addons extends \gp\admin\Addon\Install{
 		//remove unused folders
 		$folders = array_filter($code_folders) + array_filter($data_folders);
 		foreach($folders as $folder => $full_path){
-			\gpFiles::RmAll($full_path);
+			\gp\tool\Files::RmAll($full_path);
 		}
 
 	}
@@ -365,7 +365,7 @@ class Addons extends \gp\admin\Addon\Install{
 
 
 		$installed_path		= $dataDir.'/data/_addoncode';
-		$folders			= \gpFiles::ReadDir($addonPath,1);
+		$folders			= \gp\tool\Files::ReadDir($addonPath,1);
 		$versions			= array();
 		$avail				= array();
 

@@ -263,7 +263,7 @@ class Search{
 	 *
 	 */
 	public function GetConfig(){
-		$this->search_config 	= \gpFiles::Get($this->config_file,'search_config');
+		$this->search_config 	= \gp\tool\Files::Get($this->config_file,'search_config');
 		$this->search_config	+= array('search_hidden'=>false);
 	}
 
@@ -276,7 +276,7 @@ class Search{
 			$search_config['search_hidden'] = false;
 		}
 
-		if( \gpFiles::SaveData($this->config_file,'search_config',$search_config) ){
+		if( \gp\tool\Files::SaveData($this->config_file,'search_config',$search_config) ){
 			msg($langmessage['SAVED']);
 			$this->search_config = $search_config;
 			return true;
@@ -352,14 +352,14 @@ class Search{
 		}
 
 
-		$full_path			= \gpFiles::PageFile($title);
-		$file_sections		= \gpFiles::Get($full_path,'file_sections');
+		$full_path			= \gp\tool\Files::PageFile($title);
+		$file_sections		= \gp\tool\Files::Get($full_path,'file_sections');
 
 		if( !$file_sections ){
 			return;
 		}
 
-		$content			= \gp\tool\Output\Sections::Render($file_sections,$title,\gpFiles::$last_stats);
+		$content			= \gp\tool\Output\Sections::Render($file_sections,$title,\gp\tool\Files::$last_stats);
 		$label				= \common::GetLabel($title);
 
 		$this->FindString($content, $label, $title);

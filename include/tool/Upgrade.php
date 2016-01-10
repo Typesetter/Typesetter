@@ -72,10 +72,10 @@ class Upgrade{
 		if( isset($config['menus']) && is_array($config['menus']) ){
 			foreach($config['menus'] as $key => $value){
 				$menu_file = $dataDir.'/data/_menus/'.$key.'.php';
-				if( \gpFiles::Exists($menu_file) ){
+				if( \gp\tool\Files::Exists($menu_file) ){
 					$menu = \gpOutput::GetMenuArray($key);
 					$menu = $this->FixMenu($menu,$special_indexes);
-					\gpFiles::SaveData($menu_file,'menu',$menu);
+					\gp\tool\Files::SaveData($menu_file,'menu',$menu);
 				}
 			}
 		}

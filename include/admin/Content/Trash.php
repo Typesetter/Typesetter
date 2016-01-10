@@ -56,7 +56,7 @@ class Trash{
 
 			//only delete the files if they're in the trash directory
 			if( strpos($info['rm_path'],'/data/_trash') !== false ){
-				\gpFiles::RmAll($info['rm_path']);
+				\gp\tool\Files::RmAll($info['rm_path']);
 			}
 		}
 
@@ -76,8 +76,8 @@ class Trash{
 
 		// pre 4.6, deleted page info was stored
 		$trash_file = $dataDir.'/data/_site/trash.php';
-		if( \gpFiles::Exists($trash_file) ){
-			$trash_titles = \gpFiles::Get($trash_file,'trash_titles');
+		if( \gp\tool\Files::Exists($trash_file) ){
+			$trash_titles = \gp\tool\Files::Get($trash_file,'trash_titles');
 		}
 
 
@@ -92,7 +92,7 @@ class Trash{
 			}
 
 
-			$file = \gpFiles::PageFile($title);
+			$file = \gp\tool\Files::PageFile($title);
 			$file = substr($file,$pages_dir_len);
 
 			if( strpos($file,'/') ){
@@ -115,8 +115,8 @@ class Trash{
 
 			$info						= array();
 			$info_file					= $dataDir.'/data/_pages/'.$file.'/deleted.php';
-			if( \gpFiles::Exists($info_file) ){
-				$info					= \gpFiles::Get($info_file,'deleted');
+			if( \gp\tool\Files::Exists($info_file) ){
+				$info					= \gp\tool\Files::Get($info_file,'deleted');
 				$info['page_file']		= $dataDir.'/data/_pages/'.$file.'/page.php';
 			}else{
 				$info['page_file']		= $dataDir.'/data/_pages/'.$file;
@@ -158,7 +158,7 @@ class Trash{
 	public static function SaveTrashTitles($trash_titles){
 		global $dataDir;
 		$index_file = $dataDir.'/data/_site/trash.php';
-		return \gpFiles::SaveData($index_file,'trash_titles',$trash_titles);
+		return \gp\tool\Files::SaveData($index_file,'trash_titles',$trash_titles);
 	}
 
 
@@ -221,10 +221,10 @@ class Trash{
 
 
 		//get the file data
-		$source_file			= \gpFiles::PageFile($title);
+		$source_file			= \gp\tool\Files::PageFile($title);
 		$source_dir				= dirname($source_file);
 		$trash_file				= $source_dir.'/deleted.php';
-		$file_sections			= \gpFiles::Get($source_file,'file_sections');
+		$file_sections			= \gp\tool\Files::Get($source_file,'file_sections');
 
 
 		//create trash info file
@@ -232,7 +232,7 @@ class Trash{
 		$trash_info['title']	= $title;
 		$trash_info['time']		= time();
 
-		if( !\gpFiles::SaveData($trash_file,'deleted',$trash_info) ){
+		if( !\gp\tool\Files::SaveData($trash_file,'deleted',$trash_info) ){
 			return false;
 		}
 
@@ -320,7 +320,7 @@ class Trash{
 
 
 			//make sure the page_file exists
-			if( !\gpFiles::Exists($title_info['page_file']) ){
+			if( !\gp\tool\Files::Exists($title_info['page_file']) ){
 				continue;
 			}
 
@@ -336,9 +336,9 @@ class Trash{
 
 
 			// move the trash file to the /_pages directory if needed
-			$new_file = \gpFiles::PageFile($new_title);
-			if( !\gpFiles::Exists($new_file) ){
-				if( !\gpFiles::Rename($title_info['page_file'],$new_file) ){
+			$new_file = \gp\tool\Files::PageFile($new_title);
+			if( !\gp\tool\Files::Exists($new_file) ){
+				if( !\gp\tool\Files::Rename($title_info['page_file'],$new_file) ){
 					unset($gp_index[$new_title]);
 					continue;
 				}
@@ -369,7 +369,7 @@ class Trash{
 	 */
 	public static function RestoreFile($title,$file,$title_info){
 
-		$file_sections = \gpFiles::Get($file,'file_sections');
+		$file_sections = \gp\tool\Files::Get($file,'file_sections');
 
 		// Restore resized images
 		if( count($file_sections) ){
@@ -413,7 +413,7 @@ class Trash{
 	public static function GetTypes($file){
 
 		$types			= array();
-		$file_sections	= \gpFiles::Get($file,'file_sections');
+		$file_sections	= \gp\tool\Files::Get($file,'file_sections');
 
 		foreach($file_sections as $section){
 			$types[] = $section['type'];
@@ -589,7 +589,7 @@ class Trash{
 
 		//remove the data
 		foreach($titles as $trash_index => $info){
-			\gpFiles::RmAll($info['rm_path']);
+			\gp\tool\Files::RmAll($info['rm_path']);
 			unset($this->trash_files[$trash_index]);
 		}
 
@@ -627,7 +627,7 @@ class Trash{
 
 
 		//get file sections
-		$file_sections		= \gpFiles::Get($title_info['page_file'],'file_sections');
+		$file_sections		= \gp\tool\Files::Get($title_info['page_file'],'file_sections');
 
 		if( $file_sections ){
 			echo \gp\tool\Output\Sections::Render($file_sections,$title_info['title']);

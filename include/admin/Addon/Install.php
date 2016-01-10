@@ -286,7 +286,7 @@ class Install extends \gp\admin\Addon\Tools{
 
 		//save the cache
 		if( !$use_cache ){
-			\gpFiles::Save($cache_file,$result);
+			\gp\tool\Files::Save($cache_file,$result);
 		}
 
 

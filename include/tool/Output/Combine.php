@@ -488,11 +488,11 @@ class Combine{
 				if( count($new_imported) ){
 					$import_data = $new_imported + $import_data;
 				}
-				\gpFiles::SaveData($imported_file,'import_data',$import_data);
+				\gp\tool\Files::SaveData($imported_file,'import_data',$import_data);
 			}
 		}
 
-		if( !\gpFiles::Save($cache_file,$combined_content) ){
+		if( !\gp\tool\Files::Save($cache_file,$combined_content) ){
 			return false;
 		}
 
@@ -532,7 +532,7 @@ class Combine{
 
 
 		//remove null charachters
-		$file = \gpFiles::NoNull($file);
+		$file = \gp\tool\Files::NoNull($file);
 
 		//require .js or .css
 		$ext	= \common::Ext($file);

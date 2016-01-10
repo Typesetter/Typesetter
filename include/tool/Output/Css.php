@@ -67,13 +67,13 @@ class CSS{
 		$list			= $file_array;
 		$list[]			= $etag;
 		$cache			= implode("\n",$list);
-		if( !\gpFiles::Save( $list_file, $cache ) ){
+		if( !\gp\tool\Files::Save( $list_file, $cache ) ){
 			return false;
 		}
 
 
 		//save the css
-		if( \gpFiles::Save( $dataDir.$compiled_file, $compiled ) ){
+		if( \gp\tool\Files::Save( $dataDir.$compiled_file, $compiled ) ){
 			return $compiled_file;
 		}
 

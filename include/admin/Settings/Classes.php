@@ -27,7 +27,7 @@ class Classes{
 	 */
 	static function GetClasses(){
 
-		$classes		= \gpFiles::Get('_config/classes');
+		$classes		= \gp\tool\Files::Get('_config/classes');
 		if( $classes ){
 			return $classes;
 		}
@@ -225,7 +225,7 @@ class Classes{
 		}
 
 
-		if( \gpFiles::SaveData('_config/classes','classes',$classes) ){
+		if( \gp\tool\Files::SaveData('_config/classes','classes',$classes) ){
 			msg($langmessage['SAVED']);
 		}else{
 			msg($langmessage['OOPS'].' (Not Saved)');

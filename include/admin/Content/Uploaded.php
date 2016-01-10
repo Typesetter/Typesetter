@@ -166,7 +166,7 @@ namespace gp\admin\Content{
 
 			//prompt to create the requested subdirectory
 			if( !file_exists($this->currentDir) ){
-				\gpFiles::CheckDir($this->currentDir);
+				\gp\tool\Files::CheckDir($this->currentDir);
 			}
 
 
@@ -271,7 +271,7 @@ namespace gp\admin\Content{
 				$dir_piece = $prev_piece;
 				$dir = $dataDir.'/data/_uploaded'.$prev_piece;
 
-				if( !\gpFiles::CheckDir($dir) ){
+				if( !\gp\tool\Files::CheckDir($dir) ){
 					message($langmessage['OOPS']);
 					$dir = \common::DirName($dir);
 					$dir_piece = \common::DirName($prev_piece);
@@ -281,7 +281,7 @@ namespace gp\admin\Content{
 
 			//folder information
 			$folders = $files = array();
-			$allFiles = \gpFiles::ReadFolderAndFiles($dir);
+			$allFiles = \gp\tool\Files::ReadFolderAndFiles($dir);
 			list($folders,$files) = $allFiles;
 
 
@@ -539,7 +539,7 @@ namespace gp\admin\Content{
 
 			$thumb_dir = \common::DirName($thumb_path);
 			$thumb_path = $thumb_dir.'/'.basename($thumb_path).'.jpg';
-			\gpFiles::CheckDir($thumb_dir);
+			\gp\tool\Files::CheckDir($thumb_dir);
 			\gp\tool\Image::createSquare($original,$thumb_path,$config['maxthumbsize']);
 		}
 
@@ -604,7 +604,7 @@ namespace gp\admin\Content{
 			global $upload_extensions_allow, $upload_extensions_deny;
 			static $allowed_types = false;
 
-			$file = \gpFiles::NoNull($file);
+			$file = \gp\tool\Files::NoNull($file);
 
 			if( !gp_restrict_uploads ){
 				return true;
@@ -723,7 +723,7 @@ namespace gp\admin\Content{
 			$full_path = $this->currentDir.'/'.$file;
 			$rel_path = '/data/_uploaded'.$this->subdir.'/'.$file;
 
-			if( !\gpFiles::RmAll($full_path) ){
+			if( !\gp\tool\Files::RmAll($full_path) ){
 				message($langmessage['OOPS']);
 				return;
 			}
@@ -844,7 +844,7 @@ namespace gp\admin\Content{
 					$thumb_path = str_replace($base_dir,$thumb_dir,$removed_path);
 					if( file_exists($thumb_path) ){
 						if( is_dir($thumb_path) ){
-							\gpFiles::RmAll($thumb_path);
+							\gp\tool\Files::RmAll($thumb_path);
 						}else{
 							unlink($thumb_path);
 						}
@@ -947,7 +947,7 @@ namespace gp\admin\Content{
 				unset(\gp_resized::$index[$index]);
 				$folder = $dataDir.'/data/_resized/'.$index;
 				if( file_exists($folder) ){
-					\gpFiles::RmAll($folder);
+					\gp\tool\Files::RmAll($folder);
 				}
 			}
 		}

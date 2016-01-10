@@ -229,7 +229,7 @@ class Menu{
 		}
 
 		$menu_file = $dataDir.'/data/_menus/'.$this->curr_menu_id.'.php';
-		return \gpFiles::SaveData($menu_file,'menu',$this->curr_menu_array);
+		return \gp\tool\Files::SaveData($menu_file,'menu',$this->curr_menu_array);
 	}
 
 
@@ -682,7 +682,7 @@ class Menu{
 
 
 		if( $isSpecialLink === false ){
-			$file = \gpFiles::PageFile($title);
+			$file = \gp\tool\Files::PageFile($title);
 			$stats = @stat($file);
 			if( $stats ){
 				$data += array(
@@ -1002,7 +1002,7 @@ class Menu{
 
 		$title_index		= $gp_index[$title];
 		$is_special			= \common::SpecialOrAdmin($title);
-		$file				= \gpFiles::PageFile($title);
+		$file				= \gp\tool\Files::PageFile($title);
 		$stats				= @stat($file);
 		$mtime				= false;
 		$size				= false;

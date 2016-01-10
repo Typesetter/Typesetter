@@ -263,7 +263,7 @@ class Tools{
 		$index							= \common::NewFileIndex();
 		$gp_index[$title]				= $index;
 
-		if( !\gpFiles::NewTitle($title,$content,$type) ){
+		if( !\gp\tool\Files::NewTitle($title,$content,$type) ){
 			msg($langmessage['OOPS'].' (cn1)');
 			unset($gp_index[$title]);
 			return false;
@@ -281,9 +281,9 @@ class Tools{
 			$gpAdmin['editing'] = rtrim($gpAdmin['editing'],',').','.$index.',';
 
 
-			$users		= \gpFiles::Get('_site/users');
+			$users		= \gp\tool\Files::Get('_site/users');
 			$users[$gpAdmin['username']]['editing'] = $gpAdmin['editing'];
-			\gpFiles::SaveData('_site/users','users',$users);
+			\gp\tool\Files::SaveData('_site/users','users',$users);
 
 		}
 

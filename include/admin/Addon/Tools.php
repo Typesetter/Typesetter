@@ -47,7 +47,7 @@ class Tools{
 		global $dataDir;
 
 		$this->dataFile = $dataDir.'/data/_site/addonData.php';
-		$addonData		= \gpFiles::Get('_site/addonData');
+		$addonData		= \gp\tool\Files::Get('_site/addonData');
 
 		if( $addonData ){
 			$this->addonHistory = $addonData['history'];
@@ -71,7 +71,7 @@ class Tools{
 
 		$addonData['history'] = $this->addonHistory;
 		$addonData['reviews'] = $this->addonReviews;
-		return \gpFiles::SaveData($this->dataFile,'addonData',$addonData);
+		return \gp\tool\Files::SaveData($this->dataFile,'addonData',$addonData);
 	}
 
 

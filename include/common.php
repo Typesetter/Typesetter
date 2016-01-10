@@ -440,6 +440,9 @@ function includeFile( $file ){
 		case 'tool/ajax.php':
 		$file = 'tool/Output/Ajax.php';
 		break;
+		case 'tool/sessions.php';
+		$file = 'tool/Session.php';
+		break;
 	}
 
 	require_once( $dataDir.'/include/'.$file );

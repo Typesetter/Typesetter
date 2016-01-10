@@ -456,6 +456,10 @@ function includeFile( $file ){
 		case 'tool/Page_Rename.php':
 		$file = 'Page/Rename.php';
 		break;
+
+		case 'admin/admin_browser.php':
+		$file = 'admin/Content/Browser.php';
+		break;
 	}
 
 	require_once( $dataDir.'/include/'.$file );

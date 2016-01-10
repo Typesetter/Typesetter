@@ -6,7 +6,6 @@ namespace gp\tool{
 
 
 	gp_defined('gp_lock_time',900); // = 15 minutes
-	includeFile('admin/admin_tools.php');
 	includeFile('tool/editing.php');
 
 	class Session{

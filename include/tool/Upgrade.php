@@ -10,8 +10,6 @@ class Upgrade{
 	function __construct(){
 		global $config;
 
-		includeFile('admin/admin_tools.php');
-
 
 		if( version_compare($config['gpversion'],'1.6','<') ){
 			die('Please upgrade to version 1.6, then 1.7 before upgrading to this version. You current version is '.$config['gpversion']);

@@ -385,8 +385,6 @@ class gpFiles{
 	public static function NewFileNumber(){
 		global $config;
 
-		includeFile('admin/admin_tools.php');
-
 		if( !isset($config['file_count']) ){
 			$config['file_count'] = 0;
 		}

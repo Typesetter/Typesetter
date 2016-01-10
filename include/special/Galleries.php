@@ -285,8 +285,6 @@ class Galleries{
 	public static function SaveIndex($galleries){
 		global $dataDir;
 
-		includeFile('admin/admin_tools.php');
-
 		$file = $dataDir.'/data/_site/galleries.php';
 		return \gpFiles::SaveData($file,'galleries',$galleries);
 	}

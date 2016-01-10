@@ -4,8 +4,6 @@ namespace gp\admin;
 
 defined('is_running') or die('Not an entry point...');
 
-includeFile('admin/admin_tools.php');
-
 class Update extends \gp\Page{
 
 	//page variables

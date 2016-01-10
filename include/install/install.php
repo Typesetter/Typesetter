@@ -5,8 +5,6 @@ global $langmessage, $install_ftp_connection;
 $install_ftp_connection = false;
 ob_start();
 
-includeFile('admin/admin_tools.php');
-
 
 ?>
 

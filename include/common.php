@@ -468,6 +468,10 @@ function includeFile( $file ){
 		case 'admin/admin_uploaded.php':
 		$file = 'admin/Content/Uploaded.php';
 		break;
+
+		case 'admin/admin_tools.php':
+		$file = 'admin/Tools.php';
+		break;
 	}
 
 	require_once( $dataDir.'/include/'.$file );

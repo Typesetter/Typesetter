@@ -728,9 +728,6 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 	protected function ArchiveDestination( $path ){
 
 		$name = basename($path);
-
-		debug($name);
-
 		$parts = explode('.',$name);
 		$extension = array_pop($parts);
 		$name = implode('.',$parts);

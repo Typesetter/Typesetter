@@ -4,8 +4,6 @@ namespace gp\special;
 
 defined('is_running') or die('Not an entry point...');
 
-includeFile('tool/recaptcha.php');
-
 class ContactGadget{
 
 	public $sent = false;

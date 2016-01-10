@@ -15,7 +15,6 @@ namespace gp\tool{
 		 */
 		public static function ResizeImages(&$html_content,&$img_list){
 
-			includeFile('tool/HTML_Output.php');
 			includeFile('image.php');
 			\gp_resized::SetIndex();
 
@@ -27,7 +26,7 @@ namespace gp\tool{
 			$img_list = array();
 
 			//resize images
-			$gp_html_output = new \gp_html_output($html_content);
+			$gp_html_output = new \gp\tool\Editing\HTML($html_content);
 			foreach($gp_html_output->dom_array as $key => $node){
 
 				if( !is_array($node) || !array_key_exists('tag',$node) ){
@@ -284,7 +283,6 @@ namespace gp\tool{
 		public static function RestoreImages($html_content,$img_list){
 			global $dirPrefix;
 
-			includeFile('tool/HTML_Output.php');
 			includeFile('image.php');
 			\gp_resized::SetIndex();
 
@@ -304,7 +302,7 @@ namespace gp\tool{
 			}
 
 			//resize images
-			$gp_html_output = new \gp_html_output($html_content);
+			$gp_html_output = new \gp\tool\Editing\HTML($html_content);
 			foreach($gp_html_output->dom_array as $key => $node){
 
 				if( !is_array($node) || !array_key_exists('tag',$node) ){

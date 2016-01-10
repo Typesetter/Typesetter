@@ -259,8 +259,7 @@ class gpFiles{
 	 * @param string $text The html content to be checked. Passed by reference
 	 */
 	public static function FixTags(&$text){
-		includeFile('tool/HTML_Output.php');
-		$gp_html_output = new gp_html_output($text);
+		$gp_html_output = new \gp\tool\Editing\HTML($text);
 		$text = $gp_html_output->result;
 	}
 

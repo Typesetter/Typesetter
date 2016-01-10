@@ -1,28 +1,29 @@
 <?php
+
+namespace gp\tool\Editing;
+
 defined('is_running') or die('Not an entry point...');
 
 
+class HTMLParse{
 
+	public $doc = '';
+	public $dom_array = array();
+	public $errors = array();
 
-class gp_html_parse{
+	public $random;
+	public $mark_double_slash;
+	public $mark_escaped_single;
+	public $mark_escaped_double;
 
-	var $doc = '';
-	var $dom_array = array();
-	var $errors = array();
-
-	var $random;
-	var $mark_double_slash;
-	var $mark_escaped_single;
-	var $mark_escaped_double;
-
-	function __construct($text){
+	public function __construct($text){
 		$this->doc = $text;
 		$this->Init_Parse();
 		$this->Parse();
 	}
 
 
-	function Parse(){
+	public function Parse(){
 
 		$offset = 0;
 
@@ -97,7 +98,7 @@ class gp_html_parse{
 
 	}
 
-	function TagName($pos,&$name_len){
+	public function TagName($pos,&$name_len){
 		$tag_name = false;
 		$name_len = strspn($this->doc,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890/!:--',$pos);
 		if( $name_len > 0 ){
@@ -107,7 +108,7 @@ class gp_html_parse{
 	}
 
 
-	function GetAttributes(&$offset){
+	public function GetAttributes(&$offset){
 
 		//match name="value", name=value or name
 		// accounts for name="value ' value"
@@ -153,7 +154,7 @@ class gp_html_parse{
 
 	//support simple comments <!-- comments go here -->
 	// does not support full sgml comments <!------> second comment -->
-	function CommentContent(&$offset){
+	public function CommentContent(&$offset){
 
 		$this->doc = substr($this->doc,$offset);
 		$offset = 0;
@@ -171,7 +172,7 @@ class gp_html_parse{
 		$this->dom_array[] = $new_element;
 	}
 
-	function NonHtmlContent(&$offset,$untill){
+	public function NonHtmlContent(&$offset,$untill){
 
 		$this->doc = substr($this->doc,$offset);
 		$offset = 0;
@@ -239,7 +240,7 @@ class gp_html_parse{
 	}
 
 
-	function strpos_min($needle,$offset,$length){
+	public function strpos_min($needle,$offset,$length){
 		$pos = strpos($this->doc,$needle,$offset);
 		if( $pos === false ){
 			return $length;
@@ -248,7 +249,7 @@ class gp_html_parse{
 	}
 
 
-	function EscapeQuotes($string){
+	public function EscapeQuotes($string){
 
 		$search = array('\\\\','\\\'','\\"');
 		$replace = array( $this->mark_double_slash, $this->mark_escaped_single, $this->mark_escaped_double);
@@ -256,7 +257,7 @@ class gp_html_parse{
 		return str_replace($search, $replace, $string);
 	}
 
-	function UnescapeQuotes($string){
+	public function UnescapeQuotes($string){
 		$search = array( $this->mark_double_slash, $this->mark_escaped_single, $this->mark_escaped_double);
 		$replace = array('\\\\','\\\'','\\"');
 		return str_replace($search, $replace, $string);
@@ -266,7 +267,7 @@ class gp_html_parse{
 	 * Init
 	 *
 	 */
-	function Init_Parse(){
+	public function Init_Parse(){
 		$this->GetRandom();
 		$this->mark_double_slash = $this->GetMarker();
 		$this->mark_escaped_single = $this->GetMarker();
@@ -274,13 +275,13 @@ class gp_html_parse{
 	}
 
 
-	function GetRandom(){
+	public function GetRandom(){
 		do{
 			$this->random = dechex(mt_rand(0, 0x7fffff));
 		}while(strpos($this->doc,$this->random) !== false);
 	}
 
-	function GetMarker(){
+	public function GetMarker(){
 		static $n = 0;
 		return $this->random . sprintf('%08X', $n++);
 	}

@@ -1,4 +1,7 @@
 <?php
+
+namespace gp\tool\Editing;
+
 defined('is_running') or die('Not an entry point...');
 
 /*
@@ -25,11 +28,7 @@ defined('is_running') or die('Not an entry point...');
  */
 
 
-
-
-includeFile('tool/HTML_Parse.php');
-
-class gp_html_output extends gp_html_parse{
+class HTML extends \gp\tool\Editing\HTMLParse{
 
 	public $result = '';
 
@@ -68,7 +67,7 @@ class gp_html_output extends gp_html_parse{
 								'textarea'=>	array('cols'=>'','rows'=>'')
 								);
 
-	function __construct($text){
+	public function __construct($text){
 		parent::__construct($text);
 
 		$this->dom_array = \gp\tool\Plugins::Filter('Html_Output',array($this->dom_array));
@@ -88,7 +87,7 @@ class gp_html_output extends gp_html_parse{
 		a.find('.gp_nosave').remove();
 	 *
 	 */
-	function Clean(){
+	public function Clean(){
 
 		$no_save_level = 0;
 		$no_save_levels = array();
@@ -163,7 +162,7 @@ class gp_html_output extends gp_html_parse{
 		}
 	}
 
-	function Rebuild(){
+	public function Rebuild(){
 
 		$this->result = '';
 
@@ -214,7 +213,7 @@ class gp_html_output extends gp_html_parse{
 		}
 	}
 
-	function htmlspecialchars($text){
+	public function htmlspecialchars($text){
 		return htmlspecialchars($text,ENT_COMPAT,'UTF-8',false);
 	}
 }

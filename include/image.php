@@ -8,7 +8,7 @@ if( !defined('is_running' ) ){
 	//define('gp_dev_combine',false); //prevents cache and 304 header when set to true
 
 	require_once('common.php');
-	\gp\tool:EntryPoint(1,'image.php',false);
+	\gp\tool::EntryPoint(1,'image.php',false);
 	new gp_resized();
 }
 

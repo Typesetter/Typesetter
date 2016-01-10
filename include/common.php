@@ -460,6 +460,10 @@ function includeFile( $file ){
 		case 'admin/admin_browser.php':
 		$file = 'admin/Content/Browser.php';
 		break;
+
+		case 'admin/admin_preferences.php':
+		$file = 'admin/Settings/Preferences.php';
+		break;
 	}
 
 	require_once( $dataDir.'/include/'.$file );

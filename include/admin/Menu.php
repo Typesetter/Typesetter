@@ -217,14 +217,14 @@ class Menu{
 		global $dataDir;
 
 		if( $this->is_main_menu ){
-			return \admin_tools::SavePagesPHP();
+			return \gp\admin\Tools::SavePagesPHP();
 		}
 
 		if( $this->curr_menu_array === false ){
 			return false;
 		}
 
-		if( $menu_and_pages && !\admin_tools::SavePagesPHP() ){
+		if( $menu_and_pages && !\gp\admin\Tools::SavePagesPHP() ){
 			return false;
 		}
 
@@ -686,7 +686,7 @@ class Menu{
 			$stats = @stat($file);
 			if( $stats ){
 				$data += array(
-						'size'		=>	\admin_tools::FormatBytes($stats['size'])
+						'size'		=>	\gp\admin\Tools::FormatBytes($stats['size'])
 						,'mtime'	=>	\common::date($langmessage['strftime_datetime'],$stats['mtime'])
 						);
 			}
@@ -745,7 +745,7 @@ class Menu{
 		echo $this->Link('Admin/Menu/Ajax',$img.$langmessage['Copy'],'cmd=CopyForm&index=[key]',$attrs);
 
 
-		if( \admin_tools::HasPermission('Admin_User') ){
+		if( \gp\admin\Tools::HasPermission('Admin_User') ){
 			$img	= '<span class="menu_icon icon_user"></span>';
 			$attrs	= array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox');
 			echo $this->Link('Admin/Users',$img.$langmessage['permissions'],'cmd=file_permissions&index=[key]',$attrs);
@@ -1079,7 +1079,7 @@ class Menu{
 		//size
 		echo '</td><td>';
 		if( $size ){
-			echo \admin_tools::FormatBytes($size);
+			echo \gp\admin\Tools::FormatBytes($size);
 		}
 
 		//modified

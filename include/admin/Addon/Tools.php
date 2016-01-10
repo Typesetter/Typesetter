@@ -660,7 +660,7 @@ class Tools{
 
 	//show Special Links
 	public function AddonPanel_Special($addon_key, $format){
-		$sublinks = \admin_tools::GetAddonTitles( $addon_key );
+		$sublinks = \gp\admin\Tools::GetAddonTitles( $addon_key );
 		$this->AdminLinkList($sublinks,'Special Links',$format);
 	}
 
@@ -668,7 +668,7 @@ class Tools{
 	public function AddonPanel_Admin($addon_key,$format){
 		global $langmessage, $config;
 
-		$sublinks = \admin_tools::GetAddonComponents($config['admin_links'],$addon_key);
+		$sublinks = \gp\admin\Tools::GetAddonComponents($config['admin_links'],$addon_key);
 		$this->AdminLinkList($sublinks,'Admin Links',$format);
 	}
 
@@ -676,7 +676,7 @@ class Tools{
 	public function AddonPanel_Gadget($addon_key, $format){
 		global $langmessage, $config;
 
-		$gadgets	= \admin_tools::GetAddonComponents($config['gadgets'],$addon_key);
+		$gadgets	= \gp\admin\Tools::GetAddonComponents($config['gadgets'],$addon_key);
 		$links		= array();
 		foreach($gadgets as $name => $value){
 			$links[] = $this->GadgetLink($name);

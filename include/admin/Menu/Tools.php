@@ -213,7 +213,7 @@ class Tools{
 
 		//check title
 		$title		= $_POST['title'];
-		$title		= \admin_tools::CheckPostedNewPage($title,$message);
+		$title		= \gp\admin\Tools::CheckPostedNewPage($title,$message);
 		if( $title === false ){
 			msg($message);
 			return false;
@@ -272,7 +272,7 @@ class Tools{
 
 		//add to gp_titles
 		$new_titles						= array();
-		$new_titles[$index]['label']	= \admin_tools::PostedLabel($_POST['title']);
+		$new_titles[$index]['label']	= \gp\admin\Tools::PostedLabel($_POST['title']);
 		$new_titles[$index]['type']		= $type;
 		$gp_titles						+= $new_titles;
 

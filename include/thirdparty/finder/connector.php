@@ -70,7 +70,7 @@ function rename_check( $event, $args, $finder ){
 function SaveFinderData($data){
 	global $config;
 	$config['finder_data'] = $data;
-	admin_tools::SaveConfig();
+	\gp\admin\Tools::SaveConfig();
 }
 
 function ReturnFinderData(){

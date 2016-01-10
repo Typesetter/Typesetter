@@ -392,7 +392,7 @@ class gpFiles{
 		}
 		$config['file_count']++;
 
-		admin_tools::SaveConfig();
+		\gp\admin\Tools::SaveConfig();
 
 		return $config['file_count'];
 

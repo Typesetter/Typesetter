@@ -114,7 +114,7 @@ class Menus extends \gp\admin\Menu{
 		}
 
 		$config['menus'][$id] = $menu_name;
-		if( !\admin_tools::SaveConfig() ){
+		if( !\gp\admin\Tools::SaveConfig() ){
 			msg($langmessage['OOPS'].' (Config Not Saved)');
 		}else{
 			$url = \common::GetUrl('Admin/Menu','menu='.$id,false);
@@ -211,7 +211,7 @@ class Menus extends \gp\admin\Menu{
 		}
 
 		$config['menus'][$menu_id] = $menu_name;
-		if( !\admin_tools::SaveConfig() ){
+		if( !\gp\admin\Tools::SaveConfig() ){
 			msg($langmessage['OOPS']);
 		}else{
 			$this->avail_menus[$menu_id] = $menu_name;
@@ -237,7 +237,7 @@ class Menus extends \gp\admin\Menu{
 
 		unset($config['menus'][$menu_id]);
 		unset($this->avail_menus[$menu_id]);
-		if( !\admin_tools::SaveConfig() ){
+		if( !\gp\admin\Tools::SaveConfig() ){
 			msg($langmessage['OOPS']);
 		}
 

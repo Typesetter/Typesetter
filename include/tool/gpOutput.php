@@ -685,7 +685,7 @@ class gpOutput{
 	static function ShowEditLink($permission=false){
 
 		if( $permission ){
-			return !gpOutput::$nested_edit && common::LoggedIn() && admin_tools::HasPermission($permission);
+			return !gpOutput::$nested_edit && common::LoggedIn() && \gp\admin\Tools::HasPermission($permission);
 		}
 		return !gpOutput::$nested_edit && common::LoggedIn();
 	}
@@ -2628,8 +2628,8 @@ class gpOutput{
 		$stats = array();
 
 		if( function_exists('memory_get_peak_usage') ){
-			$stats['<span gpeasy-memory-usage>?</span>']	= admin_tools::FormatBytes(memory_get_usage());
-			$stats['<span gpeasy-memory-max>?</span>']		= admin_tools::FormatBytes(memory_get_peak_usage());
+			$stats['<span gpeasy-memory-usage>?</span>']	= \gp\admin\Tools::FormatBytes(memory_get_usage());
+			$stats['<span gpeasy-memory-max>?</span>']		= \gp\admin\Tools::FormatBytes(memory_get_peak_usage());
 		}
 
 		if( isset($_SERVER['REQUEST_TIME_FLOAT']) ){
@@ -2777,7 +2777,7 @@ class gpOutput{
 
 		//if logged in, prepare the admin content and don't send 304 response
 		if( common::LoggedIn() ){
-			admin_tools::AdminHtml();
+			\gp\admin\Tools::AdminHtml();
 
 			//empty edit links if there isn't a layout
 			if( !$page->gpLayout ){

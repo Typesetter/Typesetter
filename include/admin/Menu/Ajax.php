@@ -278,7 +278,7 @@ class Ajax extends \gp\admin\Menu{
 
 		//check the new title
 		$title			= $_POST['title'];
-		$title			= \admin_tools::CheckPostedNewPage($title,$message);
+		$title			= \gp\admin\Tools::CheckPostedNewPage($title,$message);
 		if( $title === false ){
 			msg($message);
 			return false;
@@ -301,7 +301,7 @@ class Ajax extends \gp\admin\Menu{
 
 		//add to gp_titles
 		$new_titles						= array();
-		$new_titles[$index]['label']	= \admin_tools::PostedLabel($_POST['title']);
+		$new_titles[$index]['label']	= \gp\admin\Tools::PostedLabel($_POST['title']);
 		$new_titles[$index]['type']		= $info['type'];
 		$gp_titles						+= $new_titles;
 
@@ -729,7 +729,7 @@ class Ajax extends \gp\admin\Menu{
 		$array['url'] = htmlspecialchars($_POST['url']);
 
 		if( !empty($_POST['label']) ){
-			$array['label'] = \admin_tools::PostedLabel($_POST['label']);
+			$array['label'] = \gp\admin\Tools::PostedLabel($_POST['label']);
 		}
 		if( !empty($_POST['title_attr']) ){
 			$array['title_attr'] = htmlspecialchars($_POST['title_attr']);
@@ -778,7 +778,7 @@ class Ajax extends \gp\admin\Menu{
 		}
 
 
-		if( !\admin_tools::SavePagesPHP() ){
+		if( !\gp\admin\Tools::SavePagesPHP() ){
 			msg($langmessage['OOPS'].' (Page index not saved)');
 			return false;
 		}
@@ -904,7 +904,7 @@ class Ajax extends \gp\admin\Menu{
 		\gp\admin\Menu\Tools::ResetHomepage();
 
 
-		if( !\admin_tools::SaveAllConfig() ){
+		if( !\gp\admin\Tools::SaveAllConfig() ){
 			$this->RestoreSettings();
 			return false;
 		}
@@ -1014,7 +1014,7 @@ class Ajax extends \gp\admin\Menu{
 
 		$config['homepath_key'] = $homepage_key;
 		$config['homepath']		= \common::IndexToTitle($config['homepath_key']);
-		if( !\admin_tools::SaveConfig() ){
+		if( !\gp\admin\Tools::SaveConfig() ){
 			msg($langmessage['OOPS']);
 			return;
 		}

@@ -58,7 +58,7 @@ namespace gp\Page{
 			$attr		= '';
 			$class		= 'new_title';
 
-			if( $title == \admin_tools::LabelToSlug($label) ){
+			if( $title == \gp\admin\Tools::LabelToSlug($label) ){
 				$attr = 'disabled="disabled" ';
 				$class .= ' sync_label';
 			}
@@ -246,7 +246,7 @@ namespace gp\Page{
 			$title_info = &$gp_titles[$id];
 
 			//change the label
-			$title_info['label'] = \admin_tools::PostedLabel($_POST['new_label']);
+			$title_info['label'] = \gp\admin\Tools::PostedLabel($_POST['new_label']);
 			if( isset($title_info['lang_index']) ){
 				unset($title_info['lang_index']);
 			}
@@ -298,7 +298,7 @@ namespace gp\Page{
 			if( empty($title_info['rel']) ) unset($title_info['rel']);
 
 
-			if( !\admin_tools::SavePagesPHP() ){
+			if( !\gp\admin\Tools::SavePagesPHP() ){
 				msg($langmessage['OOPS'].' (R1)');
 				return false;
 			}
@@ -314,9 +314,9 @@ namespace gp\Page{
 
 			//use new_label or new_title
 			if( isset($_POST['new_title']) ){
-				$new_title = \admin_tools::PostedSlug($_POST['new_title']);
+				$new_title = \gp\admin\Tools::PostedSlug($_POST['new_title']);
 			}else{
-				$new_title = \admin_tools::LabelToSlug($_POST['new_label']);
+				$new_title = \gp\admin\Tools::LabelToSlug($_POST['new_label']);
 			}
 
 			//title unchanged
@@ -329,7 +329,7 @@ namespace gp\Page{
 				$special_file = true;
 			}
 
-			if( !\admin_tools::CheckTitle($new_title,$message) ){
+			if( !\gp\admin\Tools::CheckTitle($new_title,$message) ){
 				msg($message);
 				return false;
 			}

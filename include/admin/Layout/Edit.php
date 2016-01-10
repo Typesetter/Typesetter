@@ -183,7 +183,7 @@ class Edit extends \gp\admin\Layout{
 		global $page,$dirPrefix;
 
 		$page->show_admin_content = false;
-		\admin_tools::$show_toolbar = false;
+		\gp\admin\Tools::$show_toolbar = false;
 
 		// <head>
 		$page->head .= '<script type="text/javascript">parent.$gp.iframeloaded();</script>';
@@ -368,7 +368,7 @@ class Edit extends \gp\admin\Layout{
 
 
 		$gpLayouts[$this->curr_layout]['css'] = true;
-		if( !\admin_tools::SavePagesPHP() ){
+		if( !\gp\admin\Tools::SavePagesPHP() ){
 			$gpLayouts[$this->curr_layout] = $old_info;
 			message($langmessage['OOPS'].' (Data not saved)');
 			return false;
@@ -533,7 +533,7 @@ class Edit extends \gp\admin\Layout{
 		$gpLayouts[$this->curr_layout]['images'][$container] = array(); //prevents shuffle
 		$gpLayouts[$this->curr_layout]['images'][$container][] = $save_info;
 
-		if( !\admin_tools::SavePagesPHP() ){
+		if( !\gp\admin\Tools::SavePagesPHP() ){
 			message($langmessage['OOPS'].' (Data not saved)');
 			return false;
 		}

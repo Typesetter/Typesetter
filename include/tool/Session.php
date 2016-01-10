@@ -435,7 +435,7 @@ namespace gp\tool{
 			if( isset($user_info['editing']) ){
 				$new_data['editing'] = $user_info['editing'];
 			}
-			\admin_tools::EditingValue($new_data);
+			\gp\admin\Tools::EditingValue($new_data);
 
 			// may needt to extend the cookie life later
 			if( isset($_POST['remember']) ){
@@ -567,11 +567,11 @@ namespace gp\tool{
 
 			\gpOutput::$lang_values += array('cancel'=>'ca','update'=>'up','caption'=>'cp','Width'=>'Width','Height'=>'Height');
 			\common::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css');
-			\admin_tools::VersionsAndCheckTime();
+			\gp\admin\Tools::VersionsAndCheckTime();
 
 
 			\gpOutput::$inline_vars += array(
-				'gpRem' => \admin_tools::CanRemoteInstall(),
+				'gpRem' => \gp\admin\Tools::CanRemoteInstall(),
 			);
 
 
@@ -788,7 +788,7 @@ namespace gp\tool{
 
 			//save
 			$layout_info['template_mod'] = $template_mod;
-			\admin_tools::SavePagesPHP();
+			\gp\admin\Tools::SavePagesPHP();
 		}
 
 
@@ -1140,7 +1140,7 @@ namespace gp\tool{
 		static function FatalNotices(){
 			global $dataDir, $page;
 
-			if( !\admin_tools::HasPermission('Admin_Errors') ){
+			if( !\gp\admin\Tools::HasPermission('Admin_Errors') ){
 				return;
 			}
 

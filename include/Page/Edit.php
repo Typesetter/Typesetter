@@ -156,8 +156,8 @@ class Edit extends \gp\Page{
 			return false;
 		}
 
-		$this->permission_edit	= \admin_tools::CanEdit($this->gp_index);
-		$this->permission_menu	= \admin_tools::HasPermission('Admin_Menu');
+		$this->permission_edit	= \gp\admin\Tools::CanEdit($this->gp_index);
+		$this->permission_menu	= \gp\admin\Tools::HasPermission('Admin_Menu');
 		$this->draft_file		= dirname($this->file).'/draft.php';
 
 
@@ -246,7 +246,7 @@ class Edit extends \gp\Page{
 			$option_links[] = \common::Link('Admin/Menu/Ajax',$langmessage['Copy'],'cmd=CopyForm&redir=redir&index='.urlencode($this->gp_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 		}
 
-		if( \admin_tools::HasPermission('Admin_User') ){
+		if( \gp\admin\Tools::HasPermission('Admin_User') ){
 			$option_links[] = \common::Link('Admin/Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
 		}
 
@@ -681,7 +681,7 @@ class Edit extends \gp\Page{
 		}
 
 		$gp_titles[$this->gp_index]['type'] = $new_types;
-		\admin_tools::SavePagesPHP();
+		\gp\admin\Tools::SavePagesPHP();
 	}
 
 	public function RenameFile(){
@@ -1045,11 +1045,11 @@ class Edit extends \gp\Page{
 			break;
 		}
 
-		$elapsed = \admin_tools::Elapsed(time() - $time);
+		$elapsed = \gp\admin\Tools::Elapsed(time() - $time);
 		echo sprintf($langmessage['_ago'],$elapsed);
 		echo '</td><td>';
 		if( $size && is_numeric($size) ){
-			echo \admin_tools::FormatBytes($size);
+			echo \gp\admin\Tools::FormatBytes($size);
 		}
 		echo '</td><td>';
 		if( !empty($username) ){
@@ -1286,7 +1286,7 @@ class Edit extends \gp\Page{
 		$section_types									= \gp\tool\Output\Sections::GetTypes();
 
 
-		if( \gpOutput::ShowEditLink() && \admin_tools::CanEdit($this->gp_index) ){
+		if( \gpOutput::ShowEditLink() && \gp\admin\Tools::CanEdit($this->gp_index) ){
 
 
 			if( isset($section_types[$section_data['type']]) ){

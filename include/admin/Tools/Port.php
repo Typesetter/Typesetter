@@ -881,7 +881,7 @@ class Port{
 			echo implode(', ',$info['exported']);
 			echo '</td><td>';
 			$size = filesize($full_path);
-			echo \admin_tools::FormatBytes($size);
+			echo \gp\admin\Tools::FormatBytes($size);
 			echo ' ';
 			echo $info['ext'];
 			echo '</td><td>';
@@ -908,7 +908,7 @@ class Port{
 		echo ': ';
 		echo $total_count;
 		echo '</th><th>&nbsp;</th><th>';
-		echo \admin_tools::FormatBytes($total_size);
+		echo \gp\admin\Tools::FormatBytes($total_size);
 		echo '</th><th>&nbsp;</th></tr>';
 
 		echo '</table>';

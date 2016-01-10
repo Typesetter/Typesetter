@@ -188,8 +188,8 @@ class Available extends \gp\admin\Layout{
 			echo '</div></div>';
 
 			//remote upgrade
-			if( gp_remote_themes && $id && isset(\admin_tools::$new_versions[$id]) && version_compare(\admin_tools::$new_versions[$id]['version'], $version ,'>') ){
-				$version_info = \admin_tools::$new_versions[$id];
+			if( gp_remote_themes && $id && isset(\gp\admin\Tools::$new_versions[$id]) && version_compare(\gp\admin\Tools::$new_versions[$id]['version'], $version ,'>') ){
+				$version_info = \gp\admin\Tools::$new_versions[$id];
 				echo \common::Link('Admin_Theme_Content',$langmessage['new_version'],'cmd=remote_install&id='.$id.'&name='.rawurlencode($version_info['name']));
 			}
 
@@ -213,7 +213,7 @@ class Available extends \gp\admin\Layout{
 	private function SortAvailable(){
 
 		// get addon information for ordering
-		\admin_tools::VersionData($version_data);
+		\gp\admin\Tools::VersionData($version_data);
 		$version_data = $version_data['packages'];
 
 		// combine remote addon information
@@ -401,7 +401,7 @@ class Available extends \gp\admin\Layout{
 	public function PreviewThemeIframe($theme, $theme_info){
 		global $langmessage,$config,$page;
 
-		\admin_tools::$show_toolbar = false;
+		\gp\admin\Tools::$show_toolbar = false;
 
 		$theme_id = dirname($theme);
 		$template = $theme_info['folder'];
@@ -565,7 +565,7 @@ class Available extends \gp\admin\Layout{
 
 		}else{
 
-			if( !\admin_tools::SaveAllConfig() ){
+			if( !\gp\admin\Tools::SaveAllConfig() ){
 				$config = $config_before;
 				$gpLayouts = $gpLayoutsBefore;
 				message($langmessage['OOPS'].' (s1)');

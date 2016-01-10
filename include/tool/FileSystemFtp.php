@@ -125,7 +125,7 @@ class FileSystemFtp extends FileSystem{
 			unset($config['ftp_server']);
 			unset($config['ftp_pass']);
 			unset($config['ftp_root']);
-			\admin_tools::SaveConfig();
+			\gp\admin\Tools::SaveConfig();
 		}
 
 		return $connected;

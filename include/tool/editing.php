@@ -470,7 +470,7 @@ class gp_edit{
 
 
 		if( $options['admin_vals'] && class_exists('admin_tools') ){
-			$scripts = admin_tools::AdminScripts();
+			$scripts = \gp\admin\Tools::AdminScripts();
 			foreach($scripts as $url => $info){
 				if( !isset($info['label']) ){
 					continue;

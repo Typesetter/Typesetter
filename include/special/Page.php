@@ -51,7 +51,7 @@ class Page extends \gp\Page{
 		}
 
 		if( \common::LoggedIn() ){
-			$menu_permissions = \admin_tools::HasPermission('Admin_Menu');
+			$menu_permissions = \gp\admin\Tools::HasPermission('Admin_Menu');
 			if( $menu_permissions ){
 				switch($cmd){
 					// rename & details
@@ -85,7 +85,7 @@ class Page extends \gp\Page{
 
 		$admin_links			= $this->admin_links;
 
-		$menu_permissions		= \admin_tools::HasPermission('Admin_Menu');
+		$menu_permissions		= \gp\admin\Tools::HasPermission('Admin_Menu');
 
 
 		if( $menu_permissions ){
@@ -108,7 +108,7 @@ class Page extends \gp\Page{
 			$option_links[] = \common::Link('Admin/Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
 		}
 
-		if( \admin_tools::HasPermission('Admin_User') ){
+		if( \gp\admin\Tools::HasPermission('Admin_User') ){
 			$option_links[] = \common::Link('Admin/Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
 		}
 

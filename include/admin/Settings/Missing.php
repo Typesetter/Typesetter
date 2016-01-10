@@ -239,7 +239,7 @@ class Missing extends \gp\special\Missing{
 
 		echo '<tbody>';
 		$has_invalid_target = false;
-		$admin_urls = \admin_tools::AdminScripts();
+		$admin_urls = \gp\admin\Tools::AdminScripts();
 
 		foreach($this->error_data['redirects'] as $source => $data){
 			echo '<tr><td>';
@@ -384,7 +384,7 @@ class Missing extends \gp\special\Missing{
 			return false;
 		}
 
-		if( \admin_tools::PostedSlug($_POST['source']) == \admin_tools::PostedSlug($_POST['target']) ){
+		if( \gp\admin\Tools::PostedSlug($_POST['source']) == \gp\admin\Tools::PostedSlug($_POST['target']) ){
 			message($langmessage['OOPS'].' (Infinite Loop)');
 			return false;
 		}
@@ -409,7 +409,7 @@ class Missing extends \gp\special\Missing{
 		}
 
 		$orig_source	= $_POST['orig_source'];
-		$source			= \admin_tools::PostedSlug( $orig_source );
+		$source			= \gp\admin\Tools::PostedSlug( $orig_source );
 
 		if( !isset($this->error_data['redirects'][$orig_source]) ){
 			message($langmessage['OOPS'].' (Entry not found)');
@@ -435,7 +435,7 @@ class Missing extends \gp\special\Missing{
 	 */
 	function EditRedir(){
 
-		$source = \admin_tools::PostedSlug( $_REQUEST['source'] );
+		$source = \gp\admin\Tools::PostedSlug( $_REQUEST['source'] );
 		if( !isset($this->error_data['redirects'][$source]) ){
 			message($langmessage['OOPS'].' (Invalid Redirect)');
 			return false;
@@ -459,7 +459,7 @@ class Missing extends \gp\special\Missing{
 			return false;
 		}
 
-		$source = \admin_tools::PostedSlug( $_POST['source'] );
+		$source = \gp\admin\Tools::PostedSlug( $_POST['source'] );
 
 		if( isset($this->error_data['redirects'][$source]) ){
 			message($langmessage['OOPS'].' (Redirect Already Set)');

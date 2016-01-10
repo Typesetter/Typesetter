@@ -122,7 +122,7 @@ class Configuration{
 
 		$config['history_limit'] = min($config['history_limit'],gp_backup_limit);
 
-		if( !\admin_tools::SaveConfig() ){
+		if( !\gp\admin\Tools::SaveConfig() ){
 			message($langmessage['OOPS']);
 			return false;
 		}

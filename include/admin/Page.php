@@ -23,7 +23,7 @@ class Page extends \gp\Page{
 
 		$this->requested	= str_replace(' ','_',$title);
 		$this->label		= $langmessage['administration'];
-		$this->scripts		= \admin_tools::AdminScripts();
+		$this->scripts		= \gp\admin\Tools::AdminScripts();
 		$this->script_keys	= array_keys($this->scripts);
 		$this->script_keys	= array_combine( str_replace('_','/',$this->script_keys), $this->script_keys);
 
@@ -195,7 +195,7 @@ class Page extends \gp\Page{
 			$scriptinfo			= $this->GetScriptInfo($request_string);
 			if( is_array($scriptinfo) ){
 
-				if( \admin_tools::HasPermission($request_string) ){
+				if( \gp\admin\Tools::HasPermission($request_string) ){
 
 					$this->OrganizeFrequentScripts($request_string);
 					\gpOutput::ExecInfo($scriptinfo);
@@ -212,7 +212,7 @@ class Page extends \gp\Page{
 			//these are here because they should be available to everyone
 			switch($request_string){
 				case 'Admin/Finder':
-					if( \admin_tools::HasPermission('Admin_Uploaded') ){
+					if( \gp\admin\Tools::HasPermission('Admin_Uploaded') ){
 						includeFile('thirdparty/finder/connector.php');
 						return;
 					}
@@ -294,7 +294,7 @@ class Page extends \gp\Page{
 		echo '<h2>'.$langmessage['administration'].'</h2>';
 
 		echo '<div id="adminlinks2">';
-		\admin_tools::AdminPanelLinks(false);
+		\gp\admin\Tools::AdminPanelLinks(false);
 		echo '</div>';
 	}
 

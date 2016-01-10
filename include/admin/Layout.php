@@ -431,7 +431,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 		$gpLayouts[$this->curr_layout] = $new_info;
 
-		if( !\admin_tools::SavePagesPHP() ){
+		if( !\gp\admin\Tools::SavePagesPHP() ){
 			$gpLayouts[$this->curr_layout] = $old_info;
 			message($langmessage['OOPS'].' (Not Saved)');
 			return;
@@ -588,7 +588,7 @@ class Layout extends \gp\admin\Addon\Install{
 			$gpLayouts[$layout] = $layout_info;
 		}
 
-		if( !\admin_tools::SavePagesPHP() ){
+		if( !\gp\admin\Tools::SavePagesPHP() ){
 			message($langmessage['OOPS'].'(Layout Info Not Saved)');
 		}
 	}
@@ -689,7 +689,7 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 
-		if( \admin_tools::SavePagesPHP() ){
+		if( \gp\admin\Tools::SavePagesPHP() ){
 			message($langmessage['SAVED']);
 		}else{
 			$gpLayouts = $gpLayoutsBefore;
@@ -950,7 +950,7 @@ class Layout extends \gp\admin\Addon\Install{
 		$oldConfig = $config;
 		$config['gpLayout'] = $this->curr_layout;
 
-		if( \admin_tools::SaveConfig() ){
+		if( \gp\admin\Tools::SaveConfig() ){
 
 			$page->SetTheme();
 			$this->SetLayoutArray();
@@ -986,7 +986,7 @@ class Layout extends \gp\admin\Addon\Install{
 		$gpLayouts[$layout]['label'] = htmlspecialchars($_POST['layout_label']);
 
 
-		if( !\admin_tools::SavePagesPHP() ){
+		if( !\gp\admin\Tools::SavePagesPHP() ){
 			$gpLayouts = $gpLayoutsBefore;
 			message($langmessage['OOPS'].' (s1)');
 			return;
@@ -1123,7 +1123,7 @@ class Layout extends \gp\admin\Addon\Install{
 			$addon_key = $layout_info['addon_key'];
 			$addon_config = \gp\tool\Plugins::GetAddonConfig($addon_key);
 			echo '<li>';
-			echo \common::link('Admin/Addons/'.\admin_tools::encode64($addon_key),'<span class="gpicon_plug"></span> '.$addon_config['name']);
+			echo \common::link('Admin/Addons/'.\gp\admin\Tools::encode64($addon_key),'<span class="gpicon_plug"></span> '.$addon_config['name']);
 			echo '</li>';
 
 			//hooks
@@ -1179,8 +1179,8 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 			//remote version
-			}elseif( gp_remote_themes && isset(\admin_tools::$new_versions[$addon_id]) && version_compare(\admin_tools::$new_versions[$addon_id]['version'],$version,'>') ){
-				$version_info = \admin_tools::$new_versions[$addon_id];
+			}elseif( gp_remote_themes && isset(\gp\admin\Tools::$new_versions[$addon_id]) && version_compare(\gp\admin\Tools::$new_versions[$addon_id]['version'],$version,'>') ){
+				$version_info = \gp\admin\Tools::$new_versions[$addon_id];
 				$label = $langmessage['new_version'].' &nbsp; '.$version_info['version'].' &nbsp; (gpEasy.com)';
 				echo '<div class="gp_notice">';
 				echo \common::Link('Admin_Theme_Content',$label,'cmd=remote_install&id='.$addon_id.'&name='.rawurlencode($version_info['name']).'&layout='.$layout);
@@ -1340,7 +1340,7 @@ class Layout extends \gp\admin\Addon\Install{
 			$gpLayouts[$layout]['handlers'] = $handlers;
 		}
 
-		if( \admin_tools::SavePagesPHP() ){
+		if( \gp\admin\Tools::SavePagesPHP() ){
 
 			message($langmessage['SAVED']);
 
@@ -1498,7 +1498,7 @@ class Layout extends \gp\admin\Addon\Install{
 			}
 		}
 
-		if( !\admin_tools::SaveConfig() ){
+		if( !\gp\admin\Tools::SaveConfig() ){
 			//these two lines are fairly useless when the ReturnHeader() is used
 			$config = $configBefore;
 			message($langmessage['OOPS'].' (1)');
@@ -1659,7 +1659,7 @@ class Layout extends \gp\admin\Addon\Install{
 			unset($config['customlang'][$key]);
 		}
 
-		if( \admin_tools::SaveConfig() ){
+		if( \gp\admin\Tools::SaveConfig() ){
 			message($langmessage['SAVED']);
 		}else{
 			message($langmessage['OOPS'].' (s1)');
@@ -1795,7 +1795,7 @@ class Layout extends \gp\admin\Addon\Install{
 			}
 			$installer->OutputMessages();
 
-		}elseif( !\admin_tools::SavePagesPHP() ){
+		}elseif( !\gp\admin\Tools::SavePagesPHP() ){
 			$gpLayouts = $gpLayoutsBefore;
 			message($langmessage['OOPS'].' (s1)');
 			return false;

@@ -198,7 +198,7 @@ class Trash{
 
 		//make sure we have a label
 		if( empty($title_info['label']) ){
-			$title_info['label']	= \admin_tools::LabelToSlug($trash_index);
+			$title_info['label']	= \gp\admin\Tools::LabelToSlug($trash_index);
 		}
 
 		//make sure we have a file_type
@@ -272,7 +272,7 @@ class Trash{
 			return false;
 		}
 
-		if( !\admin_tools::SavePagesPHP() ){
+		if( !\gp\admin\Tools::SavePagesPHP() ){
 			message($langmessage['OOPS'].' (R4)');
 			return false;
 		}
@@ -313,7 +313,7 @@ class Trash{
 				continue;
 			}
 
-			$new_title = \admin_tools::CheckPostedNewPage($title_info['title'],$message);
+			$new_title = \gp\admin\Tools::CheckPostedNewPage($title_info['title'],$message);
 			if( !$new_title ){
 				continue;
 			}
@@ -515,7 +515,7 @@ class Trash{
 		echo '</td><td>';
 
 		if( !empty($info['time']) ){
-			$elapsed = \admin_tools::Elapsed(time() - $info['time']);
+			$elapsed = \gp\admin\Tools::Elapsed(time() - $info['time']);
 			echo sprintf($langmessage['_ago'],$elapsed);
 		}
 
@@ -526,7 +526,7 @@ class Trash{
 
 		echo '</td><td>';
 
-		if( \admin_tools::CheckPostedNewPage($info['title'], $msg) ){
+		if( \gp\admin\Tools::CheckPostedNewPage($info['title'], $msg) ){
 			echo \common::Link('Admin/Trash',$langmessage['restore'],'cmd=RestoreDeleted&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'postlink'));
 		}else{
 			echo '<span>'.$langmessage['restore'].'</span>';

@@ -497,8 +497,7 @@ class Combine{
 		}
 
 
-		includeFile('admin/admin_tools.php');
-		\admin_tools::CleanCache();
+		\gp\admin\Tools::CleanCache();
 
 		return $cache_relative;
 	}

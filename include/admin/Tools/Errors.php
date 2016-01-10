@@ -107,7 +107,7 @@ class Errors{
 		//modified time
 		echo '<p>';
 		$filemtime	= filemtime($error_file);
-		$elapsed	= \admin_tools::Elapsed( time() - $filemtime );
+		$elapsed	= \gp\admin\Tools::Elapsed( time() - $filemtime );
 		echo sprintf($langmessage['_ago'],$elapsed);
 		echo ' - ';
 		echo \common::Link('Admin/Errors','Clear Error','cmd=clear_error&hash='.$hash,array('data-cmd'=>'postlink'));
@@ -198,7 +198,7 @@ class Errors{
 						echo '</pre>';
 					}
 					echo '<p>';
-					$elapsed = \admin_tools::Elapsed( time() - $new_time );
+					$elapsed = \gp\admin\Tools::Elapsed( time() - $new_time );
 					echo sprintf($langmessage['_ago'],$elapsed);
 					echo ' ('.$date.')';
 

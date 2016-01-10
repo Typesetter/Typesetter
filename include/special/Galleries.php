@@ -102,8 +102,7 @@ class Galleries{
 		echo \gpOutput::ReturnText('galleries');
 		echo '</h2>';
 
-		includeFile('admin/admin_tools.php');
-		$wrap = \admin_tools::CanEdit($page->gp_index);
+		$wrap = \gp\admin\Tools::CanEdit($page->gp_index);
 		if( $wrap ){
 			echo \gpOutput::EditAreaLink($edit_index,'Admin/Galleries',$langmessage['edit']);
 			echo '<div class="editable_area cf" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript

@@ -17,7 +17,7 @@ class Users{
 		$page->head_js[] = '/include/js/admin_users.js';
 
 		//set possible_permissions
-		$scripts = \admin_tools::AdminScripts();
+		$scripts = \gp\admin\Tools::AdminScripts();
 		foreach($scripts as $script => $info){
 			if( !isset($info['label']) ){
 				continue;
@@ -744,7 +744,7 @@ class Users{
 		//fix the editing value
 		foreach($this->users as $username => $userinfo){
 			$userinfo += array('granted'=>'');
-			\admin_tools::EditingValue($userinfo);
+			\gp\admin\Tools::EditingValue($userinfo);
 			$this->users[$username] = $userinfo;
 		}
 	}

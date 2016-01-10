@@ -62,12 +62,12 @@ class Upgrade{
 		$gp_menu = $this->FixMenu($gp_menu,$special_indexes);
 
 		//save pages
-		if( !\admin_tools::SavePagesPHP() ){
+		if( !\gp\admin\Tools::SavePagesPHP() ){
 			return;
 		}
 
 		$config['gpversion'] = '2.3.4';
-		\admin_tools::SaveConfig();
+		\gp\admin\Tools::SaveConfig();
 
 
 		//update alt menus

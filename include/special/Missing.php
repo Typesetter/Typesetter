@@ -123,8 +123,7 @@ class Missing{
 			return \common::GetUrl($target);
 		}
 
-		includeFile('admin/admin_tools.php');
-		$scripts = \admin_tools::AdminScripts();
+		$scripts = \gp\admin\Tools::AdminScripts();
 		if( isset($scripts[$target]) ){
 			return \common::GetUrl($target);
 		}

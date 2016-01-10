@@ -197,7 +197,7 @@ class Install extends \gp\admin\Addon\Tools{
 					$save = false;
 				break;
 			}
-			if( $save )	\admin_tools::SaveConfig();
+			if( $save )	\gp\admin\Tools::SaveConfig();
 		}
 
 

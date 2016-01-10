@@ -125,7 +125,7 @@ class Update extends \gp\Page{
 	 */
 	function GetData(){
 
-		$this->data_timestamp	= \admin_tools::VersionData($update_data);
+		$this->data_timestamp	= \gp\admin\Tools::VersionData($update_data);
 		$this->update_data		= $update_data;
 
 
@@ -234,7 +234,7 @@ class Update extends \gp\Page{
 			$this->data_timestamp = time();
 		}
 
-		\admin_tools::VersionData($this->update_data);
+		\gp\admin\Tools::VersionData($this->update_data);
 
 	}
 
@@ -483,7 +483,7 @@ class Update extends \gp\Page{
 		if( $this->FileSystem ){
 			$this->FileSystem->destruct();
 		}
-		\admin_tools::VersionData($this->update_data); //save any changes made by the steps
+		\gp\admin\Tools::VersionData($this->update_data); //save any changes made by the steps
 
 		if( !$done ){
 			if( $passed ){
@@ -624,7 +624,7 @@ class Update extends \gp\Page{
 		}
 
 		unset($config['updating_message']);
-		if( !\admin_tools::SaveConfig() ){
+		if( !\gp\admin\Tools::SaveConfig() ){
 			msg($langmessage['error_updating_settings']);
 			return false;
 		}
@@ -654,7 +654,7 @@ class Update extends \gp\Page{
 		$this->msg('Files Sorted');
 
 		$config['updating_message'] = $langmessage['sorry_currently_updating'];
-		if( !\admin_tools::SaveConfig() ){
+		if( !\gp\admin\Tools::SaveConfig() ){
 			$this->msg($langmessage['error_updating_settings']);
 			return false;
 		}

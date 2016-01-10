@@ -145,7 +145,7 @@ class Installer extends \gp\admin\Addon\Tools{
 		$this->RemoveFromConfig($gp_titles,$addon);
 		$this->CleanHooks($addon);
 
-		if( !\admin_tools::SaveAllConfig() ){
+		if( !\gp\admin\Tools::SaveAllConfig() ){
 			$this->message($langmessage['OOPS']);
 			return false;
 		}
@@ -300,7 +300,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 
 		// Save
-		if( !\admin_tools::SaveAllConfig() ){
+		if( !\gp\admin\Tools::SaveAllConfig() ){
 			$this->message($langmessage['OOPS'].' (Configuration not saved)');
 			return false;
 		}
@@ -840,7 +840,7 @@ class Installer extends \gp\admin\Addon\Tools{
 		}
 
 		// able to remote install?
-		if( !\admin_tools::CanRemoteInstall() ){
+		if( !\gp\admin\Tools::CanRemoteInstall() ){
 			$this->message($langmessage['OOPS'].' (Can\'t remote install)');
 			return false;
 		}

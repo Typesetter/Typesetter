@@ -90,11 +90,11 @@ class Cache{
 			echo '</td><td>';
 			$size = filesize($full);
 			echo '<span style="display:none">'.$size.'</span>';
-			echo \admin_tools::FormatBytes($size);
+			echo \gp\admin\Tools::FormatBytes($size);
 			$total_size += $size;
 
 			echo '</td><td>';
-			$elapsed = \admin_tools::Elapsed( time() - filemtime($full) );
+			$elapsed = \gp\admin\Tools::Elapsed( time() - filemtime($full) );
 			echo sprintf($langmessage['_ago'],$elapsed);
 			echo '</td><td>';
 
@@ -108,7 +108,7 @@ class Cache{
 		echo '<tr><td>';
 		echo number_format(count($this->all_files)).' Files';
 		echo '</td><td>';
-		echo \admin_tools::FormatBytes($total_size);
+		echo \gp\admin\Tools::FormatBytes($total_size);
 
 		echo '</td><td>';
 		echo '</tr>';

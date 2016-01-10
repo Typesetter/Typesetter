@@ -194,7 +194,7 @@ class Addons extends \gp\admin\Addon\Install{
 
 		}
 
-		if( !\admin_tools::SaveConfig() ){
+		if( !\gp\admin\Tools::SaveConfig() ){
 			message($langmessage['OOPS'].' (Not Saved)');
 			return;
 		}
@@ -303,7 +303,7 @@ class Addons extends \gp\admin\Addon\Install{
 	function ShowAddon($encoded_key){
 		global $config, $langmessage;
 
-		$addon_key	= \admin_tools::decode64($encoded_key);
+		$addon_key	= \gp\admin\Tools::decode64($encoded_key);
 
 		if( !isset($config['addons'][$addon_key]) ){
 			message($langmessage['OOPS'].'(Addon Not Found)');
@@ -566,7 +566,7 @@ class Addons extends \gp\admin\Addon\Install{
 		echo '<div class="panelgroup" id="panelgroup_'.md5($addon_key).'">';
 
 		echo '<h3>';
-		echo \common::Link('Admin/Addons/'.\admin_tools::encode64($addon_key),$addon_config['name']);
+		echo \common::Link('Admin/Addons/'.\gp\admin\Tools::encode64($addon_key),$addon_config['name']);
 		echo '</h3>';
 
 		echo '<div class="panelgroup2">';
@@ -600,8 +600,8 @@ class Addons extends \gp\admin\Addon\Install{
 		}
 
 		//upgrade gpeasy.com
-		if( isset($addon_config['id']) && isset(\admin_tools::$new_versions[$addon_config['id']]) ){
-			$version_info = \admin_tools::$new_versions[$addon_config['id']];
+		if( isset($addon_config['id']) && isset(\gp\admin\Tools::$new_versions[$addon_config['id']]) ){
+			$version_info = \gp\admin\Tools::$new_versions[$addon_config['id']];
 			echo '<div class="gp_notice">';
 			echo '<a href="'.addon_browse_path.'/Plugins?id='.$addon_config['id'].'" data-cmd="remote">';
 			echo $langmessage['new_version'];
@@ -624,7 +624,7 @@ class Addons extends \gp\admin\Addon\Install{
 		if( !isset($addon_config['is_theme']) || !$addon_config['is_theme'] ){
 
 			//editable text
-			if( isset($addon_config['editable_text']) && \admin_tools::HasPermission('Admin_Theme_Content') ){
+			if( isset($addon_config['editable_text']) && \gp\admin\Tools::HasPermission('Admin_Theme_Content') ){
 				$list[] = \common::Link('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addon_key),array('title'=>urlencode($langmessage['editable_text']),'data-cmd'=>'gpabox'));
 			}
 

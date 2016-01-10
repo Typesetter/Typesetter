@@ -440,8 +440,13 @@ function includeFile( $file ){
 		case 'tool/ajax.php':
 		$file = 'tool/Output/Ajax.php';
 		break;
+
 		case 'tool/sessions.php';
 		$file = 'tool/Session.php';
+		break;
+
+		case 'tool/SectionContent.php':
+		$file = 'tool/Output/Sections.php';
 		break;
 	}
 

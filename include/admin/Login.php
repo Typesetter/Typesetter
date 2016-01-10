@@ -197,9 +197,8 @@ class Login extends \display{
 
 
 	public function SendPassword(){
-		global $langmessage, $gp_mailer, $config;
+		global $langmessage, $config;
 
-		includeFile('tool/email_mailer.php');
 		$users		= \gpFiles::Get('_site/users');
 		$username	= $_POST['username'];
 
@@ -237,7 +236,11 @@ class Login extends \display{
 		$link		= \common::AbsoluteLink('Admin',$langmessage['login']);
 		$message	= sprintf($langmessage['passwordremindertext'],$server,$link,$username,$newpass);
 
-		if( $gp_mailer->SendEmail($userinfo['email'], $langmessage['new_password'], $message) ){
+
+		//send email
+		$mailer = new \gp\tool\Emailer();
+
+		if( $mailer->SendEmail($userinfo['email'], $langmessage['new_password'], $message) ){
 			list($namepart,$sitepart) = explode('@',$userinfo['email']);
 			$showemail = substr($namepart,0,3).'...@'.$sitepart;
 			message(sprintf($langmessage['password_sent'],$username,$showemail));

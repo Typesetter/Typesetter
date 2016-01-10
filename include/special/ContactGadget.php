@@ -45,9 +45,7 @@ class ContactGadget{
 
 
 	public function SendMessage(){
-		global $langmessage, $config, $gp_mailer;
-
-		includeFile('tool/email_mailer.php');
+		global $langmessage, $config;
 
 
 		$headers = array();
@@ -78,6 +76,8 @@ class ContactGadget{
 			return;
 		}
 
+		$mailer = new \gp\tool\Emailer();
+
 		//subject
 		$_POST['subject'] = strip_tags($_POST['subject']);
 
@@ -99,10 +99,10 @@ class ContactGadget{
 			$replyName = strip_tags($replyName);
 			$replyName = htmlspecialchars($replyName);
 
-			$gp_mailer->AddReplyTo($_POST['email'],$replyName);
+			$mailer->AddReplyTo($_POST['email'],$replyName);
 
 			if( \common::ConfigValue('from_use_user',false) ){
-				$gp_mailer->SetFrom($_POST['email'],$replyName);
+				$mailer->SetFrom($_POST['email'],$replyName);
 			}
 		}
 
@@ -132,7 +132,7 @@ class ContactGadget{
 
 
 
-		if( $gp_mailer->SendEmail($config['toemail'], $_POST['subject'], $message) ){
+		if( $mailer->SendEmail($config['toemail'], $_POST['subject'], $message) ){
 			msg($langmessage['message_sent']);
 			return true;
 		}

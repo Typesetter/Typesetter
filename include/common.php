@@ -302,11 +302,8 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	if( gpdebug === true ){
 		message($mess);
 	}elseif( $report_error ){
-		global $gp_mailer;
-		includeFile('tool/email_mailer.php');
-		if( is_object($gp_mailer) ){
-			$gp_mailer->SendEmail(gpdebug, 'debug ', $mess);
-		}
+		$mailer = new \gp\tool\Emailer();
+		$mailer->SendEmail(gpdebug, 'debug ', $mess);
 	}
 	return false;
 }
@@ -443,6 +440,10 @@ function includeFile( $file ){
 
 		case 'tool/editing.php':
 		$file = 'tool/Editing.php';
+		break;
+
+		case 'tool/email_mailer.php':
+		$file = 'tool/Emailer.php';
 		break;
 
 		case 'tool/sessions.php';

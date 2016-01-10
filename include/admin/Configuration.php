@@ -4,9 +4,6 @@ namespace gp\admin;
 
 defined('is_running') or die('Not an entry point...');
 
-includeFile('tool/email_mailer.php');
-
-
 class Configuration{
 
 	protected $variables;
@@ -137,7 +134,9 @@ class Configuration{
 
 
 	private function getValues(){
-		global $config, $gp_mailer;
+		global $config;
+
+		$mailer = new \gp\tool\Emailer();
 
 		if( $_SERVER['REQUEST_METHOD'] != 'POST'){
 			$show = $config;
@@ -149,18 +148,18 @@ class Configuration{
 		}
 
 		if( empty($show['from_address']) ){
-			$show['from_address'] = $gp_mailer->From_Address();
+			$show['from_address'] = $mailer->From_Address();
 		}
 		if( empty($show['from_name']) ){
-			$show['from_name'] = $gp_mailer->From_Name();
+			$show['from_name'] = $mailer->From_Name();
 		}
 		if( empty($show['mail_method']) ){
-			$show['mail_method'] = $gp_mailer->Mail_Method();
+			$show['mail_method'] = $mailer->Mail_Method();
 		}
 
 		//suhosin will stop the script if a POST value contains a real path like /usr/sbin/sendmail
 		//if( empty($show['sendmail_path']) ){
-		//	$show['sendmail_path'] = $gp_mailer->Sendmail_Path();
+		//	$show['sendmail_path'] = $mailer->Sendmail_Path();
 		//}
 
 		return $show;

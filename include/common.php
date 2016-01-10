@@ -452,6 +452,10 @@ function includeFile( $file ){
 		case 'tool/recaptcha.php':
 		$file = 'tool/Recaptcha.php';
 		break;
+
+		case 'tool/Page_Rename.php':
+		$file = 'Page/Rename.php';
+		break;
 	}
 
 	require_once( $dataDir.'/include/'.$file );

@@ -130,7 +130,7 @@ class Menus extends \gp\admin\Menu{
 	public function AltMenu_NewName(){
 		global $langmessage;
 
-		$menu_name = \gp_edit::CleanTitle($_POST['menu_name'],' ');
+		$menu_name = \gp\tool\Editing::CleanTitle($_POST['menu_name'],' ');
 		if( empty($menu_name) ){
 			msg($langmessage['OOPS'].' (Empty Name)');
 			return false;

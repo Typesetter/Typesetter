@@ -423,7 +423,7 @@ class CKEditor{
 	function Example(){
 
 		$content = '<h3>Lorem Ipsum</h3> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor lectus id lectus laoreet scelerisque.</p><p>Vestibulum suscipit, lectus a feugiat facilisis, enim arcu fringilla nisi, et scelerisque nibh sapien in quam. Vivamus sit amet elementum nibh. Donec id ipsum nibh. Aliquam ligula nulla, condimentum sit amet consectetur eu, sagittis id ligula. In felis justo, feugiat et luctus sit amet, feugiat eget odio. Nullam suscipit mollis ipsum nec ultrices. Praesent ut lacus lorem. Fusce adipiscing arcu vitae dui ullamcorper a imperdiet felis dignissim. Maecenas eget tortor mi.</p>';
-		\gp_edit::UseCK($content);
+		\gp\tool\Editing::UseCK($content);
 	}
 
 
@@ -436,8 +436,7 @@ class CKEditor{
 
 		echo '<h3>'.$langmessage['Current Configuration'].'</h3>';
 
-		includeFile('tool/editing.php');
-		$default_config = \gp_edit::CKConfig(array(),'array');
+		$default_config = \gp\tool\Editing::CKConfig(array(),'array');
 		echo '<pre class="json">';
 		echo self::ReadableJson($default_config);
 		echo '</pre>';

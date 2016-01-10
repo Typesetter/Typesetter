@@ -151,10 +151,10 @@ namespace gp\admin\Content{
 			array_shift($parts);
 			if( count($parts) > 0 ){
 				$this->subdir = '/'.implode('/',$parts);
-				$this->subdir = \gp_edit::CleanArg($this->subdir);
+				$this->subdir = \gp\tool\Editing::CleanArg($this->subdir);
 			}
 			if( !empty($_REQUEST['dir']) ){
-				$this->subdir .= \gp_edit::CleanArg($_REQUEST['dir']);
+				$this->subdir .= \gp\tool\Editing::CleanArg($_REQUEST['dir']);
 			}
 			$this->subdir = str_replace( array('\\','//'),array('/','/'),$this->subdir);
 
@@ -267,7 +267,7 @@ namespace gp\admin\Content{
 
 			//new directory?
 			if( $prev_piece ){
-				$prev_piece = \gp_edit::CleanArg($prev_piece);
+				$prev_piece = \gp\tool\Editing::CleanArg($prev_piece);
 				$dir_piece = $prev_piece;
 				$dir = $dataDir.'/data/_uploaded'.$prev_piece;
 

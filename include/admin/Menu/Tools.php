@@ -208,7 +208,6 @@ class Tools{
 	 */
 	public static function CreateNew(){
 		global $gp_index, $gp_titles, $langmessage, $gpAdmin;
-		includeFile('tool/editing.php');
 
 
 		//check title
@@ -230,7 +229,7 @@ class Tools{
 				$content							= array();
 
 				//wrapper section
-				$section							= \gp_edit::DefaultContent('wrapper_section');
+				$section							= \gp\tool\Editing::DefaultContent('wrapper_section');
 				$section['contains_sections']		= count($types['types']);
 				$section['attributes']['class']		= $types['wrapper_class'];
 				$content[]							= $section;
@@ -245,7 +244,7 @@ class Tools{
 						$class						= '';
 					}
 
-					$section						= \gp_edit::DefaultContent($type);
+					$section						= \gp\tool\Editing::DefaultContent($type);
 					$section['attributes']['class']	.= ' '.$class;
 					$content[]						= $section;
 				}
@@ -253,7 +252,7 @@ class Tools{
 
 		//single section type
 		}else{
-			$content	= \gp_edit::DefaultContent($type, $_POST['title']);
+			$content	= \gp\tool\Editing::DefaultContent($type, $_POST['title']);
 			if( $content['content'] === false ){
 				return false;
 			}

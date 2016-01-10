@@ -4,8 +4,6 @@ namespace gp\admin\Content;
 
 defined('is_running') or die('Not an entry point...');
 
-includeFile('tool/editing.php');
-
 class Extra{
 
 	public $folder;
@@ -54,7 +52,7 @@ class Extra{
 			return;
 
 			case 'new_dir':
-				\gp_edit::NewDirForm();
+				\gp\tool\Editing::NewDirForm();
 			return;
 
 			/* inline editing */
@@ -93,7 +91,7 @@ class Extra{
 		$page->ajaxReplace = array();
 
 
-		$title = \gp_edit::CleanTitle($_REQUEST['file']);
+		$title = \gp\tool\Editing::CleanTitle($_REQUEST['file']);
 		if( empty($title) ){
 			message($langmessage['OOPS']);
 			return false;
@@ -215,7 +213,7 @@ class Extra{
 	public function EditExtra(){
 		global $langmessage;
 
-		$title = \gp_edit::CleanTitle($_REQUEST['file']);
+		$title = \gp\tool\Editing::CleanTitle($_REQUEST['file']);
 		if( empty($title) ){
 			message($langmessage['OOPS']);
 			return false;
@@ -230,7 +228,7 @@ class Extra{
 		echo '<form action="'.\common::GetUrl('Admin/Extra','file='.$title).'" method="post">';
 		echo '<input type="hidden" name="cmd" value="save_inline" />';
 
-		\gp_edit::UseCK( $data['content'] );
+		\gp\tool\Editing::UseCK( $data['content'] );
 
 		echo '<input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit" />';
 		echo '<input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="gpcancel"/>';
@@ -246,13 +244,13 @@ class Extra{
 	public function NewSection(){
 		global $langmessage, $gpAdmin;
 
-		$title = \gp_edit::CleanTitle($_REQUEST['file']);
+		$title = \gp\tool\Editing::CleanTitle($_REQUEST['file']);
 		if( empty($title) ){
 			message($langmessage['OOPS']);
 			return false;
 		}
 
-		$data = \gp_edit::DefaultContent($_POST['type']);
+		$data = \gp\tool\Editing::DefaultContent($_POST['type']);
 		$file = $this->folder.'/'.$title.'.php';
 
 		$data['created'] = time();
@@ -274,7 +272,7 @@ class Extra{
 	 */
 	public function PreviewText(){
 		global $langmessage;
-		$file = \gp_edit::CleanTitle($_REQUEST['file']);
+		$file = \gp\tool\Editing::CleanTitle($_REQUEST['file']);
 
 		echo '<h2>';
 		echo \common::Link('Admin/Extra',$langmessage['theme_content']);
@@ -314,12 +312,12 @@ class Extra{
 
 		$page->ajaxReplace = array();
 
-		$file = \gp_edit::CleanTitle($_REQUEST['file']);
+		$file = \gp\tool\Editing::CleanTitle($_REQUEST['file']);
 		$data = \gpOutput::ExtraContent( $file, $file_stats );
 
 		$page->file_sections = array( $data ); //hack so the SaveSection filter works
 		$page->file_stats = $file_stats;
-		if( !\gp_edit::SectionEdit( $cmd, $data, 0, '', $file_stats ) ){
+		if( !\gp\tool\Editing::SectionEdit( $cmd, $data, 0, '', $file_stats ) ){
 			return;
 		}
 

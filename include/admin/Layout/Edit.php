@@ -81,8 +81,7 @@ class Edit extends \gp\admin\Layout{
 				$this->GalleryImages();
 			return;
 			case 'image_editor':
-				includeFile('tool/editing.php');
-				\gp_edit::ImageEditor($this->curr_layout);
+				\gp\tool\Editing::ImageEditor($this->curr_layout);
 			return;
 			case 'save_inline':
 				$this->SaveHeaderImage();
@@ -517,9 +516,8 @@ class Edit extends \gp\admin\Layout{
 		$page->ajaxReplace = array();
 
 
-		includeFile('tool/editing.php');
 		$section = array();
-		if( !\gp_edit::SectionFromPost_Image($section, '/data/_uploaded/headers/') ){
+		if( !\gp\tool\Editing::SectionFromPost_Image($section, '/data/_uploaded/headers/') ){
 			return false;
 		}
 
@@ -961,13 +959,13 @@ class Edit extends \gp\admin\Layout{
 	public function NewExtraArea(){
 		global $langmessage, $dataDir;
 
-		$title = \gp_edit::CleanTitle($_REQUEST['extra_area']);
+		$title = \gp\tool\Editing::CleanTitle($_REQUEST['extra_area']);
 		if( empty($title) ){
 			message($langmessage['OOPS']);
 			return false;
 		}
 
-		$data = \gp_edit::DefaultContent($_POST['type']);
+		$data = \gp\tool\Editing::DefaultContent($_POST['type']);
 		$file = $dataDir.'/data/_extra/'.$title.'.php';
 
 		if( \gpFiles::Exists($file) ){

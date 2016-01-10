@@ -207,7 +207,6 @@ class Page extends \gp\Page{
 
 	public function ExtraJS(){
 		header('Content-type: application/javascript');
-		includeFile('tool/editing.php');
 
 		trigger_error('Deprecated: special_extrajs');
 
@@ -220,16 +219,16 @@ class Page extends \gp\Page{
 				case 'autocomplete2':
 					$options['admin_vals'] = false;
 					$options['var_name'] = 'gp_include_titles';
-					echo \gp_edit::AutoCompleteValues(false,$options);
+					echo \gp\tool\Editing::AutoCompleteValues(false,$options);
 				break;
 
 				case 'autocomplete':
-					echo \gp_edit::AutoCompleteValues(true);
+					echo \gp\tool\Editing::AutoCompleteValues(true);
 				break;
 
 				case 'gp_ckconfig':
 					$options = array();
-					echo \gp_edit::CKConfig($options,'gp_ckconfig');
+					echo \gp\tool\Editing::CKConfig($options,'gp_ckconfig');
 				break;
 			}
 		}

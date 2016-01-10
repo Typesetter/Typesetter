@@ -1469,7 +1469,7 @@ class Layout extends \gp\admin\Addon\Install{
 	public function SaveAddonText(){
 		global $langmessage,$config;
 
-		$addon = \gp_edit::CleanArg($_REQUEST['addon']);
+		$addon = \gp\tool\Editing::CleanArg($_REQUEST['addon']);
 		$texts = $this->GetAddonTexts($addon);
 		//not set up correctly
 		if( $texts === false ){
@@ -1528,7 +1528,7 @@ class Layout extends \gp\admin\Addon\Install{
 	public function AddonText(){
 		global $langmessage,$config;
 
-		$addon = \gp_edit::CleanArg($_REQUEST['addon']);
+		$addon = \gp\tool\Editing::CleanArg($_REQUEST['addon']);
 		$texts = $this->GetAddonTexts($addon);
 
 		//not set up correctly

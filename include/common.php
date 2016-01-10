@@ -441,6 +441,10 @@ function includeFile( $file ){
 		$file = 'tool/Output/Ajax.php';
 		break;
 
+		case 'tool/editing.php':
+		$file = 'tool/Editing.php';
+		break;
+
 		case 'tool/sessions.php';
 		$file = 'tool/Session.php';
 		break;
@@ -2665,22 +2669,20 @@ class common{
 
 	/**
 	 * @deprecated 3.0
-	 * use gp_edit::UseCK();
+	 * use \gp\tool\Editing::UseCK();
 	 */
 	static function UseFCK($contents,$name='gpcontent'){
 		trigger_error('Deprecated Function');
-		includeFile('tool/editing.php');
-		gp_edit::UseCK($contents,$name);
+		\gp\tool\Editing::UseCK($contents,$name);
 	}
 
 	/**
 	 * @deprecated 3.0
-	 * Use gp_edit::UseCK();
+	 * Use \gp\tool\Editing::UseCK();
 	 */
 	static function UseCK($contents,$name='gpcontent',$options=array()){
 		trigger_error('Deprecated Function');
-		includeFile('tool/editing.php');
-		gp_edit::UseCK($contents,$name,$options);
+		\gp\tool\Editing::UseCK($contents,$name,$options);
 	}
 
 }

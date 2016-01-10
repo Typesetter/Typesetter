@@ -285,7 +285,7 @@ class Page extends \gp\Page{
 
 			case 'autocomplete-titles':
 			$opts = array('var_name'=>false);
-			echo \gp_edit::AutoCompleteValues(false,$opts);
+			echo \gp\tool\Editing::AutoCompleteValues(false,$opts);
 			die();
 		}
 

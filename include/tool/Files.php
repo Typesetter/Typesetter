@@ -246,8 +246,8 @@ class gpFiles{
 	 * @param string $text The string to be cleansed. Passed by reference
 	 */
 	public static function CleanText(&$text){
-		includeFile('tool/editing.php');
-		gp_edit::tidyFix($text);
+
+		\gp\tool\Editing::tidyFix($text);
 		gpFiles::rmPHP($text);
 		gpFiles::FixTags($text);
 		$text = \gp\tool\Plugins::Filter('CleanText',array($text));
@@ -1002,13 +1002,12 @@ class gpFiles{
 
 	/**
 	 * @deprecated 3.0
-	 * Use gp_edit::CleanTitle() instead
+	 * Use \gp\tool\Editing::CleanTitle() instead
 	 * Used by Simple_Blog1
 	 */
 	public static function CleanTitle($title,$spaces = '_'){
 		trigger_error('Deprecated Function');
-		includeFile('tool/editing.php');
-		return gp_edit::CleanTitle($title,$spaces);
+		return \gp\tool\Editing::CleanTitle($title,$spaces);
 	}
 
 }

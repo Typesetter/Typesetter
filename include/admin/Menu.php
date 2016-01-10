@@ -321,7 +321,7 @@ class Menu{
 		echo '<div class="homepage_setting">';
 		$this->HomepageDisplay();
 		echo '</div>';
-		\gp_edit::PrepAutoComplete();
+		\gp\tool\Editing::PrepAutoComplete();
 
 
 

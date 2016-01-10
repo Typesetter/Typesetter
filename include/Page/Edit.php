@@ -4,8 +4,6 @@ namespace gp\Page;
 
 defined('is_running') or die('Not an entry point...');
 
-includeFile('tool/editing.php');
-
 class Edit extends \gp\Page{
 
 	protected $draft_file;
@@ -68,7 +66,7 @@ class Edit extends \gp\Page{
 				return;
 
 				case 'new_dir':
-					$this->contentBuffer = \gp_edit::NewDirForm();
+					$this->contentBuffer = \gp\tool\Editing::NewDirForm();
 				return;
 
 				/* inline editing */
@@ -81,7 +79,7 @@ class Edit extends \gp\Page{
 				return;
 
 				case 'image_editor':
-					\gp_edit::ImageEditor();
+					\gp\tool\Editing::ImageEditor();
 				return;
 
 				case 'NewNestedSection':
@@ -365,7 +363,7 @@ class Edit extends \gp\Page{
 
 		$request			+= array('wrapper_class'=>'gpRow');
 		$wrapper_class		= $request['wrapper_class'];
-		$new_section		= \gp_edit::DefaultContent('wrapper_section');
+		$new_section		= \gp\tool\Editing::DefaultContent('wrapper_section');
 
 
 		$new_section['attributes']['class']		.= ' '.$wrapper_class;
@@ -410,7 +408,7 @@ class Edit extends \gp\Page{
 		}
 
 		$num++;
-		$new_section	= \gp_edit::DefaultContent($type);
+		$new_section	= \gp\tool\Editing::DefaultContent($type);
 		$content		= \gp\tool\Output\Sections::RenderSection($new_section,$num,$this->title,$this->file_stats);
 
 		$new_section['attributes']['class']		.= ' '.$class;
@@ -497,7 +495,7 @@ class Edit extends \gp\Page{
 					msg($langmessage['OOPS'].' (Unknown Type: '.$arg.')');
 					return false;
 				}
-				$new_section	= \gp_edit::DefaultContent($arg);
+				$new_section	= \gp\tool\Editing::DefaultContent($arg);
 			}
 
 			// attributes
@@ -551,7 +549,7 @@ class Edit extends \gp\Page{
 			if( isset($section_data['resized_imgs']) ){
 				includeFile('image.php');
 				\gp_resized::SetIndex();
-				\gp_edit::ResizedImageUse($section_data['resized_imgs'],array());
+				\gp\tool\Editing::ResizedImageUse($section_data['resized_imgs'],array());
 			}
 		}
 
@@ -605,7 +603,7 @@ class Edit extends \gp\Page{
 		$check_before = serialize($this);
 		$check_before = sha1( $check_before ) . md5( $check_before );
 
-		if( !\gp_edit::SectionEdit( $cmd, $this->file_sections[$section_num], $section_num, $this->title, $this->file_stats ) ){
+		if( !\gp\tool\Editing::SectionEdit( $cmd, $this->file_sections[$section_num], $section_num, $this->title, $this->file_stats ) ){
 			return;
 		}
 
@@ -1371,7 +1369,7 @@ class Edit extends \gp\Page{
 		$this->file_sections[$section]['content'] = $content;
 
 		if( $config['resize_images'] ){
-			\gp_edit::ResizeImages($this->file_sections[$section]['content'],$this->file_sections[$section]['resized_imgs']);
+			\gp\tool\Editing::ResizeImages($this->file_sections[$section]['content'],$this->file_sections[$section]['resized_imgs']);
 		}
 
 		return true;

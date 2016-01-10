@@ -243,7 +243,7 @@ class Trash{
 			\gp_resized::SetIndex();
 			foreach($file_sections as $section_data){
 				if( isset($section_data['resized_imgs']) ){
-					\gp_edit::ResizedImageUse($section_data['resized_imgs'],array());
+					\gp\tool\Editing::ResizedImageUse($section_data['resized_imgs'],array());
 				}
 			}
 		}
@@ -388,10 +388,10 @@ class Trash{
 					$img = \gp_resized::$index[$image_index];
 					foreach($sizes as $size){
 						list($width,$height) = explode('x',$size);
-						\gp_edit::CreateImage($img,$width,$height);
+						\gp\tool\Editing::CreateImage($img,$width,$height);
 					}
 				}
-				\gp_edit::ResizedImageUse(array(),$section_data['resized_imgs']);
+				\gp\tool\Editing::ResizedImageUse(array(),$section_data['resized_imgs']);
 			}
 			\gp_resized::SaveIndex();
 		}

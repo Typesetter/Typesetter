@@ -266,8 +266,7 @@ namespace gp\tool\Output{
 
 			//replace resized images with their originals
 			if( isset($section_data['resized_imgs']) && is_array($section_data['resized_imgs']) && count($section_data['resized_imgs']) ){
-				includeFile('tool/editing.php');
-				$section_data['content'] = \gp_edit::RestoreImages($section_data['content'],$section_data['resized_imgs']);
+				$section_data['content'] = \gp\tool\Editing::RestoreImages($section_data['content'],$section_data['resized_imgs']);
 			}
 
 			//create the section object that will be passed to gp_init_inline_edit
@@ -325,10 +324,9 @@ namespace gp\tool\Output{
 		}
 
 		static function InlineEdit_Text($scripts){
-			includeFile('tool/editing.php');
 
 			// autocomplete
-			echo \gp_edit::AutoCompleteValues(true);
+			echo \gp\tool\Editing::AutoCompleteValues(true);
 
 
 			// ckeditor basepath and configuration
@@ -339,7 +337,7 @@ namespace gp\tool\Output{
 
 			$ckeditor_basepath = \common::GetDir('/include/thirdparty/ckeditor_34/');
 			echo 'CKEDITOR_BASEPATH = '.self::quote($ckeditor_basepath).';';
-			echo 'var gp_ckconfig = '.\gp_edit::CKConfig( $options, 'json', $plugins ).';';
+			echo 'var gp_ckconfig = '.\gp\tool\Editing::CKConfig( $options, 'json', $plugins ).';';
 
 
 			// extra plugins

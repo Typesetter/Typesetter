@@ -17,7 +17,7 @@ class Missing extends \gp\special\Missing{
 		global $langmessage;
 
 		$this->Init();
-		\gp_edit::PrepAutoComplete();
+		\gp\tool\Editing::PrepAutoComplete();
 
 
 		$cmd = \common::GetCommand();
@@ -175,7 +175,7 @@ class Missing extends \gp\special\Missing{
 		echo '<form action="'.\common::GetUrl('Admin/Missing').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="save404" />';
 
-		\gp_edit::UseCK($text);
+		\gp\tool\Editing::UseCK($text);
 
 		echo '<input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit"/>';
 		echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="gpcancel"/>';

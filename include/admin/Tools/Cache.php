@@ -19,7 +19,7 @@ class Cache{
 		echo '<h2>'.$langmessage['Resource Cache'].'</h2>';
 
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 			case 'ViewFile';
 				$this->ViewFile();
@@ -62,7 +62,7 @@ class Cache{
 
 
 		echo '<p>';
-		echo \common::Link('Admin/Cache','Empty Cache','cmd=EmptyResourceCache',array('data-cmd'=>'cnreq','class'=>'gpconfirm','title'=>'Empty the resource cache?'));
+		echo \gp\tool::Link('Admin/Cache','Empty Cache','cmd=EmptyResourceCache',array('data-cmd'=>'cnreq','class'=>'gpconfirm','title'=>'Empty the resource cache?'));
 		echo '</p>';
 
 		echo '<table class="bordered tablesorter full_width">';
@@ -98,7 +98,7 @@ class Cache{
 			echo sprintf($langmessage['_ago'],$elapsed);
 			echo '</td><td>';
 
-			echo \common::Link('Admin/Cache',$langmessage['delete'],'cmd=DeleteFile&amp;file='.rawurlencode($file),array('data-cmd'=>'cnreq','class'=>'gpconfirm','title'=>$langmessage['delete_confirm']));
+			echo \gp\tool::Link('Admin/Cache',$langmessage['delete'],'cmd=DeleteFile&amp;file='.rawurlencode($file),array('data-cmd'=>'cnreq','class'=>'gpconfirm','title'=>$langmessage['delete_confirm']));
 
 			echo '</tr>';
 		}

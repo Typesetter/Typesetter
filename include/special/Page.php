@@ -41,7 +41,7 @@ class Page extends \gp\Page{
 		}
 
 		//allow addons to affect page actions and how a page is displayed
-		$cmd			= \common::GetCommand();
+		$cmd			= \gp\tool::GetCommand();
 		$cmd_after		= \gp\tool\Plugins::Filter('PageRunScript',array($cmd));
 		if( $cmd !== $cmd_after ){
 			$cmd = $cmd_after;
@@ -50,7 +50,7 @@ class Page extends \gp\Page{
 			}
 		}
 
-		if( \common::LoggedIn() ){
+		if( \gp\tool::LoggedIn() ){
 			$menu_permissions = \gp\admin\Tools::HasPermission('Admin_Menu');
 			if( $menu_permissions ){
 				switch($cmd){
@@ -97,19 +97,19 @@ class Page extends \gp\Page{
 				$q						.= '&visibility=private';
 			}
 			$attrs						= array('title'=>$label,'data-cmd'=>'creq');
-			$admin_links[]		= \common::Link($this->title,$label,$q,$attrs);
+			$admin_links[]				= \gp\tool::Link($this->title,$label,$q,$attrs);
 		}
 
 
 		// page options: less frequently used links that don't have to do with editing the content of the page
 		$option_links		= array();
 		if( $menu_permissions ){
-			$option_links[] = \common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
-			$option_links[] = \common::Link('Admin/Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
+			$option_links[] = \gp\tool::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
+			$option_links[] = \gp\tool::Link('Admin/Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
 		}
 
 		if( \gp\admin\Tools::HasPermission('Admin_User') ){
-			$option_links[] = \common::Link('Admin/Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
+			$option_links[] = \gp\tool::Link('Admin/Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
 		}
 
 		if( !empty($option_links) ){
@@ -124,7 +124,7 @@ class Page extends \gp\Page{
 	public function RenameForm(){
 		global $gp_index;
 
-		$action = \common::GetUrl($this->title);
+		$action = \gp\tool::GetUrl($this->title);
 		\gp\Page\Rename::RenameForm( $this->gp_index, $action );
 	}
 
@@ -160,12 +160,12 @@ class Page extends \gp\Page{
 		$scripts['special_gpsearch']['class'] = '\\gp\\special\\Search';
 
 		//check for use of a index instead of a page title
-		$translated = \common::SpecialHref($requested);
+		$translated = \gp\tool::SpecialHref($requested);
 		if( $translated != $requested ){
 			$requested = $translated;
 			if( $redirect ){
-				$title = \common::GetUrl($requested,http_build_query($_GET),false);
-				\common::Redirect($title);
+				$title = \gp\tool::GetUrl($requested,http_build_query($_GET),false);
+				\gp\tool::Redirect($title);
 			}
 		}
 
@@ -200,7 +200,7 @@ class Page extends \gp\Page{
 		global $dataDir;
 
 		ob_start();
-		\gpOutput::ExecInfo($scriptinfo);
+		\gp\tool\Output::ExecInfo($scriptinfo);
 		return ob_get_clean();
 	}
 

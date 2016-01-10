@@ -9,7 +9,7 @@ namespace gp\special{
 		public function ShowForm(){
 			global $page,$langmessage,$config;
 
-			echo \gpOutput::GetExtra('Contact');
+			echo \gp\tool\Output::GetExtra('Contact');
 			parent::ShowForm();
 		}
 

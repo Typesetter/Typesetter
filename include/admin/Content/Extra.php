@@ -15,7 +15,7 @@ class Extra{
 		$this->folder = $dataDir.'/data/_extra';
 		$this->Getdata();
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 
 		$show = true;
 		switch($cmd){
@@ -97,7 +97,7 @@ class Extra{
 			return false;
 		}
 
-		$data = \gpOutput::ExtraContent($title);
+		$data = \gp\tool\Output::ExtraContent($title);
 		$page->ajaxReplace[] = array('rawcontent','',$data['content']);
 	}
 
@@ -156,7 +156,7 @@ class Extra{
 		$i = 0;
 		foreach($this->areas as $file){
 			$extraName = $file;
-			$data = \gpOutput::ExtraContent($file);
+			$data = \gp\tool\Output::ExtraContent($file);
 
 
 			if( $i%2 == 0 ){
@@ -179,15 +179,15 @@ class Extra{
 			echo '</span>..."</td><td style="white-space:nowrap">';
 
 			if( $data['type'] == 'text' ){
-				echo \common::Link('Admin/Extra',$langmessage['edit'],'cmd=edit&file='.$file);
+				echo \gp\tool::Link('Admin/Extra',$langmessage['edit'],'cmd=edit&file='.$file);
 				echo ' &nbsp; ';
 			}
 
-			echo \common::Link('Admin/Extra',$langmessage['preview'],'cmd=view&file='.$file);
+			echo \gp\tool::Link('Admin/Extra',$langmessage['preview'],'cmd=view&file='.$file);
 			echo ' &nbsp; ';
 
 			$title = sprintf($langmessage['generic_delete_confirm'],htmlspecialchars($file));
-			echo \common::Link('Admin/Extra',$langmessage['delete'],'cmd=delete&file='.$file,array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
+			echo \gp\tool::Link('Admin/Extra',$langmessage['delete'],'cmd=delete&file='.$file,array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
 			echo '</td></tr>';
 			$i++;
 		}
@@ -195,7 +195,7 @@ class Extra{
 		echo '</table>';
 
 		echo '<p>';
-		echo '<form action="'.\common::GetUrl('Admin/Extra').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Extra').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="new_section" />';
 		echo '<input type="text" name="file" value="" size="15" class="gpinput"/> ';
 		echo '<select name="type" class="gpselect">';
@@ -219,13 +219,13 @@ class Extra{
 			return false;
 		}
 
-		$data = \gpOutput::ExtraContent($title);
+		$data = \gp\tool\Output::ExtraContent($title);
 
 		echo '<h2>';
-		echo \common::Link('Admin/Extra',$langmessage['theme_content']);
+		echo \gp\tool::Link('Admin/Extra',$langmessage['theme_content']);
 		echo ' &#187; '.str_replace('_',' ',$title).'</h2>';
 
-		echo '<form action="'.\common::GetUrl('Admin/Extra','file='.$title).'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Extra','file='.$title).'" method="post">';
 		echo '<input type="hidden" name="cmd" value="save_inline" />';
 
 		\gp\tool\Editing::UseCK( $data['content'] );
@@ -275,11 +275,11 @@ class Extra{
 		$file = \gp\tool\Editing::CleanTitle($_REQUEST['file']);
 
 		echo '<h2>';
-		echo \common::Link('Admin/Extra',$langmessage['theme_content']);
+		echo \gp\tool::Link('Admin/Extra',$langmessage['theme_content']);
 		echo ' &#187; '.str_replace('_',' ',$file).'</h2>';
 		echo '</h2>';
 
-		\gpOutput::GetExtra($file);
+		\gp\tool\Output::GetExtra($file);
 	}
 
 	public function GalleryImages(){
@@ -313,7 +313,7 @@ class Extra{
 		$page->ajaxReplace = array();
 
 		$file = \gp\tool\Editing::CleanTitle($_REQUEST['file']);
-		$data = \gpOutput::ExtraContent( $file, $file_stats );
+		$data = \gp\tool\Output::ExtraContent( $file, $file_stats );
 
 		$page->file_sections = array( $data ); //hack so the SaveSection filter works
 		$page->file_stats = $file_stats;

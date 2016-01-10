@@ -81,7 +81,7 @@ namespace gp{
 
 			$this->gp_index		= $gp_index[$this->title];
 			$this->TitleInfo	=& $gp_titles[$this->gp_index]; //so changes made by rename are seen
-			$this->label		= \common::GetLabel($this->title);
+			$this->label		= \gp\tool::GetLabel($this->title);
 			$this->file			= \gp\tool\Files::PageFile($this->title);
 
 			if( !$this->CheckVisibility() ){
@@ -103,7 +103,7 @@ namespace gp{
 			if( isset($gp_titles[$this->gp_index]['vis']) ){
 				$this->visibility = $gp_titles[$this->gp_index]['vis'];
 			}
-			if( !\common::LoggedIn() && $this->visibility ){
+			if( !\gp\tool::LoggedIn() && $this->visibility ){
 				$this->Error_404($this->title);
 				return false;
 			}
@@ -119,7 +119,7 @@ namespace gp{
 			}
 
 			//allow addons to effect page actions and how a page is displayed
-			$cmd = \common::GetCommand();
+			$cmd = \gp\tool::GetCommand();
 			$cmd_after = \gp\tool\Plugins::Filter('PageRunScript',array($cmd));
 			if( $cmd !== $cmd_after ){
 				$cmd = $cmd_after;
@@ -165,7 +165,7 @@ namespace gp{
 				$layout = self::OrConfig($this->gp_index,'gpLayout');
 			}
 
-			$layout_info = \common::LayoutInfo($layout);
+			$layout_info = \gp\tool::LayoutInfo($layout);
 
 
 			if( !$layout_info ){
@@ -197,7 +197,7 @@ namespace gp{
 				}
 			}
 
-			$this->theme_path = \common::GetDir($this->theme_rel);
+			$this->theme_path = \gp\tool::GetDir($this->theme_rel);
 
 		}
 
@@ -239,7 +239,7 @@ namespace gp{
 		static function ParentConfig($checkId,$var,&$value){
 			global $gp_titles,$gp_menu;
 
-			$parents = \common::Parents($checkId,$gp_menu);
+			$parents = \gp\tool::Parents($checkId,$gp_menu);
 			foreach($parents as $parent_index){
 				if( !empty($gp_titles[$parent_index][$var]) ){
 					$value = $gp_titles[$parent_index][$var];
@@ -266,7 +266,7 @@ namespace gp{
 		}
 		function GetSiteLabelLink(){
 			global $config;
-			echo \common::Link('',$config['title']);
+			echo \gp\tool::Link('',$config['title']);
 		}
 		function GetPageLabel(){
 			echo $this->label;
@@ -277,7 +277,7 @@ namespace gp{
 			$this->GetGpxContent();
 
 			echo '<div id="gpAfterContent">';
-			\gpOutput::Get('AfterContent');
+			\gp\tool\Output::Get('AfterContent');
 			\gp\tool\Plugins::Action('GetContent_After');
 			echo '</div>';
 		}
@@ -300,27 +300,27 @@ namespace gp{
 		 */
 		function GetHead(){
 			trigger_error('deprecated functions');
-			\gpOutput::GetHead();
+			\gp\tool\Output::GetHead();
 		}
 		function GetExtra($area,$info=array()){
 			trigger_error('deprecated functions');
-			\gpOutput::GetExtra($area,$info);
+			\gp\tool\Output::GetExtra($area,$info);
 		}
 		function GetMenu(){
 			trigger_error('deprecated functions');
-			\gpOutput::GetMenu();
+			\gp\tool\Output::GetMenu();
 		}
 		function GetFullMenu(){
 			trigger_error('deprecated functions');
-			\gpOutput::GetFullMenu();
+			\gp\tool\Output::GetFullMenu();
 		}
 		function GetAllGadgets(){
 			trigger_error('deprecated functions');
-			\gpOutput::GetAllGadgets();
+			\gp\tool\Output::GetAllGadgets();
 		}
 		function GetAdminLink(){
 			trigger_error('deprecated functions');
-			\gpOutput::GetAdminLink();
+			\gp\tool\Output::GetAdminLink();
 		}
 
 

@@ -23,7 +23,7 @@ class Available extends \gp\admin\Layout{
 	 */
 	public function ShowAvailable(){
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 
 		switch($cmd){
 			case 'preview':
@@ -101,7 +101,7 @@ class Available extends \gp\admin\Layout{
 			if( $has_screenshot ){
 				echo '<div class="expand_child_click">';
 				echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';
-				echo '<div style="background-image:url(\''.\common::GetDir($info['rel'].'/screenshot.png').'\')">';
+				echo '<div style="background-image:url(\''.\gp\tool::GetDir($info['rel'].'/screenshot.png').'\')">';
 			}else{
 				echo '<div>';
 				echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';
@@ -120,7 +120,7 @@ class Available extends \gp\admin\Layout{
 					if( $this->searchPage ){
 						$q .= '&page='.$this->searchPage;
 					}
-					echo \common::Link('Admin_Theme_Content/Available',str_replace('_','&nbsp;',$color),$q);
+					echo \gp\tool::Link('Admin_Theme_Content/Available',str_replace('_','&nbsp;',$color),$q);
 					echo '</li>';
 				}
 				echo '</ul>';
@@ -155,7 +155,7 @@ class Available extends \gp\admin\Layout{
 				//last updated
 				if( $info['tm'] > 0 ){
 					echo '<li><span class="nowrap">'.$langmessage['Modified'].': ';
-					echo \common::date($langmessage['strftime_datetime'],$info['tm']);
+					echo \gp\tool::date($langmessage['strftime_datetime'],$info['tm']);
 					echo '</span></li>';
 				}
 
@@ -167,7 +167,7 @@ class Available extends \gp\admin\Layout{
 					$folder = $info['folder'];
 					$title = sprintf($langmessage['generic_delete_confirm'], $theme_label );
 					$attr = array( 'data-cmd'=>'cnreq','class'=>'gpconfirm','title'=> $title );
-					echo '<li>'.\common::Link('Admin_Theme_Content/Available',$langmessage['delete'],'cmd=DeleteTheme&folder='.rawurlencode($folder),$attr).'</li>';
+					echo '<li>'.\gp\tool::Link('Admin_Theme_Content/Available',$langmessage['delete'],'cmd=DeleteTheme&folder='.rawurlencode($folder),$attr).'</li>';
 
 					//order
 					if( isset($config['themes'][$folder]['order']) ){
@@ -190,7 +190,7 @@ class Available extends \gp\admin\Layout{
 			//remote upgrade
 			if( gp_remote_themes && $id && isset(\gp\admin\Tools::$new_versions[$id]) && version_compare(\gp\admin\Tools::$new_versions[$id]['version'], $version ,'>') ){
 				$version_info = \gp\admin\Tools::$new_versions[$id];
-				echo \common::Link('Admin_Theme_Content',$langmessage['new_version'],'cmd=remote_install&id='.$id.'&name='.rawurlencode($version_info['name']));
+				echo \gp\tool::Link('Admin_Theme_Content',$langmessage['new_version'],'cmd=remote_install&id='.$id.'&name='.rawurlencode($version_info['name']));
 			}
 
 
@@ -368,8 +368,8 @@ class Available extends \gp\admin\Layout{
 
 
 		echo '<div>';
-		echo \common::Link('Admin_Theme_Content/Available','&#171; '.$langmessage['available_themes']);
-		echo \common::Link('Admin_Theme_Content/Available',$langmessage['use_this_theme'],'cmd=newlayout&theme='.rawurlencode($theme),'data-cmd="gpabox" class="add_layout"');
+		echo \gp\tool::Link('Admin_Theme_Content/Available','&#171; '.$langmessage['available_themes']);
+		echo \gp\tool::Link('Admin_Theme_Content/Available',$langmessage['use_this_theme'],'cmd=newlayout&theme='.rawurlencode($theme),'data-cmd="gpabox" class="add_layout"');
 		echo '</div>';
 
 
@@ -388,7 +388,7 @@ class Available extends \gp\admin\Layout{
 
 		//show site in iframe
 		echo '<div id="gp_iframe_wrap">';
-		$url = \common::GetUrl('Admin_Theme_Content/Available','cmd=preview_iframe&theme='.rawurlencode($theme));
+		$url = \gp\tool::GetUrl('Admin_Theme_Content/Available','cmd=preview_iframe&theme='.rawurlencode($theme));
 		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';
 		echo '</div>';
 
@@ -419,7 +419,7 @@ class Available extends \gp\admin\Layout{
 			$page->theme_addon_id = $theme_info['id'];
 		}
 
-		$page->theme_path = \common::GetDir($theme_info['rel'].'/'.$color);
+		$page->theme_path = \gp\tool::GetDir($theme_info['rel'].'/'.$color);
 
 		$page->show_admin_content = false;
 	}
@@ -436,7 +436,7 @@ class Available extends \gp\admin\Layout{
 		$label = substr($theme_info['name'].'/'.$theme_info['color'],0,25);
 
 		echo '<h2>'.$langmessage['new_layout'].'</h2>';
-		echo '<form action="'.\common::GetUrl('Admin_Theme_Content/Available').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Available').'" method="post">';
 		echo '<table class="bordered full_width">';
 
 		echo '<tr><th colspan="2">';
@@ -574,8 +574,8 @@ class Available extends \gp\admin\Layout{
 
 			message($langmessage['SAVED']);
 			if( $order ){
-				$img_path = \common::IdUrl('ci');
-				\common::IdReq($img_path);
+				$img_path = \gp\tool::IdUrl('ci');
+				\gp\tool::IdReq($img_path);
 			}
 
 		}

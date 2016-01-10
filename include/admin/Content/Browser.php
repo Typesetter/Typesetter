@@ -21,7 +21,7 @@ namespace gp\admin\Content{
 		}
 
 		function FinderPrep(){
-			$this->finder_opts['url']				= \common::GetUrl('Admin_Finder');
+			$this->finder_opts['url']				= \gp\tool::GetUrl('Admin_Finder');
 			$this->finder_opts['getFileCallback']	= true;
 			$this->finder_opts['resizable'] 		= false;
 		}

@@ -4,8 +4,6 @@ namespace gp\install;
 
 defined('is_running') or die('Not an entry point...');
 
-includeFile('tool/gpOutput.php');
-
 class Tools{
 
 	static $file_count = 0;
@@ -189,7 +187,7 @@ class Tools{
 		$gpLayouts['default']['label'] = 'Bootswatch_Flatly/4_Sticky_Footer';
 		if( @ini_set('memory_limit','96M') === false ){
 			$limit = ini_get('memory_limit');
-			$limit = \common::getByteValue($limit);
+			$limit = \gp\tool::getByteValue($limit);
 			if( $limit < 100663296 ){
 				$gpLayouts['default']['theme'] = 'Three_point_5/Shore';
 				$gpLayouts['default']['label'] = 'Three_point_5/Shore';
@@ -209,7 +207,7 @@ class Tools{
 		$_config['dateformat']		= '%m/%d/%y - %I:%M %p';
 		$_config['gpversion']		= gpversion;
 		$_config['passhash']		= 'sha512';
-		$_config['gpuniq']			= \common::RandomString(20);
+		$_config['gpuniq']			= \gp\tool::RandomString(20);
 		$_config['combinecss']		= self::BooleanValue('combinecss',true);
 		$_config['combinejs']		= self::BooleanValue('combinejs',true);
 		$_config['etag_headers'] 	= self::BooleanValue('etag_headers',true);
@@ -449,7 +447,7 @@ class Tools{
 		//users
 		echo '<li>';
 		$user_info = array();
-		$user_info['password']		= \common::hash($_POST['password'],'sha512');
+		$user_info['password']		= \gp\tool::hash($_POST['password'],'sha512');
 		$user_info['passhash']		= 'sha512';
 		$user_info['granted']		= 'all';
 		$user_info['editing']		= 'all';

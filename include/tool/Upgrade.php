@@ -36,7 +36,6 @@ class Upgrade{
 	 */
 	function Upgrade_234(){
 		global $gp_index, $gp_titles, $gp_menu, $config, $dataDir;
-		includeFile('tool/gpOutput.php');
 
 		$special_indexes = array();
 		$new_index = array();
@@ -44,7 +43,7 @@ class Upgrade{
 		foreach($gp_index as $title => $index){
 
 			$info = $gp_titles[$index];
-			$type = \common::SpecialOrAdmin($title);
+			$type = \gp\tool::SpecialOrAdmin($title);
 			if( $type === 'special' ){
 				$special_indexes[$index] = strtolower($title);
 				$index = strtolower($title);
@@ -73,7 +72,7 @@ class Upgrade{
 			foreach($config['menus'] as $key => $value){
 				$menu_file = $dataDir.'/data/_menus/'.$key.'.php';
 				if( \gp\tool\Files::Exists($menu_file) ){
-					$menu = \gpOutput::GetMenuArray($key);
+					$menu = \gp\tool\Output::GetMenuArray($key);
 					$menu = $this->FixMenu($menu,$special_indexes);
 					\gp\tool\Files::SaveData($menu_file,'menu',$menu);
 				}

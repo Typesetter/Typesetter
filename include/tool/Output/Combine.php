@@ -443,7 +443,7 @@ class Combine{
 		}
 
 		//check to see if file exists
-		$etag = \common::GenEtag( json_encode($files), $modified, $content_length );
+		$etag = \gp\tool::GenEtag( json_encode($files), $modified, $content_length );
 		$cache_relative = '/data/_cache/combined_'.$etag.'.'.$type;
 		$cache_file = $dataDir.$cache_relative;
 		if( file_exists($cache_file) ){
@@ -459,7 +459,7 @@ class Combine{
 		//create file
 		if( $type == 'js' ){
 			ob_start();
-			\common::jsStart();
+			\gp\tool::jsStart();
 
 			foreach($full_paths as $full_path){
 				readfile($full_path);
@@ -535,7 +535,7 @@ class Combine{
 		$file = \gp\tool\Files::NoNull($file);
 
 		//require .js or .css
-		$ext	= \common::Ext($file);
+		$ext	= \gp\tool::Ext($file);
 		if( $ext !== 'js' && $ext !== 'css' && $ext !== 'less' && $ext !== 'scss' ){
 			echo  "\n{$comment_start} File Not CSS, LESS or JS {$file} {$comment_end}\n";
 			return false;
@@ -691,7 +691,7 @@ class Combine{
 			}
 
 			if( empty($script['type']) ){
-				$script['type'] = \common::Ext($script['file']);
+				$script['type'] = \gp\tool::Ext($script['file']);
 			}
 			if( $script['type'] == 'less' || $script['type'] == 'scss' ){
 				$script['type'] = 'css';

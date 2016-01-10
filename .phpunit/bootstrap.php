@@ -12,11 +12,10 @@ defined('gp_unit_testing') or define('gp_unit_testing',true);
 global $dataDir;
 $dataDir = $_SERVER['PWD'];
 include('include/common.php');
-spl_autoload_register( array('common','Autoload') );
+spl_autoload_register( array('\\gp\\tool','Autoload') );
 
-common::SetLinkPrefix();
+\gp\tool::SetLinkPrefix();
 
-includeFile('tool/gpOutput.php');
 includeFile('tool/functions.php');
 
 \gp\tool\Session::init();
@@ -26,12 +25,12 @@ includeFile('tool/functions.php');
 class gptest_bootstrap extends PHPUnit_Framework_TestCase{
 
 	function setUP(){
-		common::GetLangFile();
+		\gp\tool::GetLangFile();
 	}
 
 	public function SessionStart(){
 
-		common::GetConfig();
+		\gp\tool::GetConfig();
 
 		$username		= 'phpunit-username';
 		$users			= gpFiles::Get('_site/users');

@@ -59,7 +59,7 @@ class FileSystem{
 	public static function get_filesystem_method($context){
 
 		while( !file_exists($context) ){
-			$context = \common::DirName($context);
+			$context = \gp\tool::DirName($context);
 		}
 
 		if( gp_is_writable($context) ){

@@ -96,7 +96,7 @@ class CombineCSS{
 		//if a media type is set, keep the @import
 		$media = trim($media);
 		if( !empty($media) ){
-			$import = \common::GetDir(dirname($this->file).'/'.$import);
+			$import = \gp\tool::GetDir(dirname($this->file).'/'.$import);
 			$import = $this->ReduceUrl($import);
 			$this->imports .= '@import url("'.$import.'") '.$media.';';
 			$this->content = substr_replace( $this->content, '', $replace_start, $replace_len);
@@ -168,7 +168,7 @@ class CombineCSS{
 
 
 		//use a relative path so sub.domain.com and domain.com/sub both work
-		$replacement = \common::GetDir(dirname($this->file).'/'.$url);
+		$replacement = \gp\tool::GetDir(dirname($this->file).'/'.$url);
 		$replacement = $this->ReduceUrl($replacement);
 
 

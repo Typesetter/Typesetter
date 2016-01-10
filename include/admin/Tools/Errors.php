@@ -55,12 +55,12 @@ class Errors{
 		echo '<h2 class="hmargin">';
 		echo 'Fatal Errors';
 		echo ' <span> | </span> ';
-		echo \common::Link('Admin/Errors/Log','Error Log');
+		echo \gp\tool::Link('Admin/Errors/Log','Error Log');
 		echo '</h2>';
 
 
 		//actions
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 			case 'clear_error':
 			self::ClearError($_REQUEST['hash']);
@@ -110,7 +110,7 @@ class Errors{
 		$elapsed	= \gp\admin\Tools::Elapsed( time() - $filemtime );
 		echo sprintf($langmessage['_ago'],$elapsed);
 		echo ' - ';
-		echo \common::Link('Admin/Errors','Clear Error','cmd=clear_error&hash='.$hash,array('data-cmd'=>'postlink'));
+		echo \gp\tool::Link('Admin/Errors','Clear Error','cmd=clear_error&hash='.$hash,array('data-cmd'=>'postlink'));
 		echo '</p>';
 
 
@@ -163,7 +163,7 @@ class Errors{
 		$error_log = ini_get('error_log');
 
 		echo '<h2 class="hmargin">';
-		echo \common::Link('Admin/Errors','Fatal Errors');
+		echo \gp\tool::Link('Admin/Errors','Fatal Errors');
 		echo ' <span> | </span>';
 		echo ' Error Log';
 		echo '</h2>';

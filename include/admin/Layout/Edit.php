@@ -29,8 +29,8 @@ class Edit extends \gp\admin\Layout{
 		}
 
 		//redirect
-		$url = \common::GetUrl('Admin_Theme_Content','',false);
-		\common::Redirect($url,302);
+		$url = \gp\tool::GetUrl('Admin_Theme_Content','',false);
+		\gp\tool::Redirect($url,302);
 	}
 
 
@@ -45,7 +45,7 @@ class Edit extends \gp\admin\Layout{
 	public function EditLayout($layout){
 		global $page,$gpLayouts,$langmessage,$config;
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 
 		$GLOBALS['GP_ARRANGE_CONTENT']	= true;
 		$page->head_js[]				= '/include/js/inline_edit/inline_editing.js';
@@ -63,7 +63,7 @@ class Edit extends \gp\admin\Layout{
 
 		$this->LoremIpsum();
 
-		\gpOutput::TemplateSettings();
+		\gp\tool\Output::TemplateSettings();
 
 		\gp\tool\Plugins::Action('edit_layout_cmd',array($layout));
 
@@ -150,7 +150,7 @@ class Edit extends \gp\admin\Layout{
 
 
 
-		$layout_info = \common::LayoutInfo($layout,false);
+		$layout_info = \gp\tool::LayoutInfo($layout,false);
 		$handlers_count = 0;
 		if( isset($layout_info['handlers']) && is_array($layout_info['handlers']) ){
 			foreach($layout_info['handlers'] as $val){
@@ -207,14 +207,14 @@ class Edit extends \gp\admin\Layout{
 
 
 		echo '<div id="theme_editor">';
-		echo '<form action="'.\common::GetUrl('Admin_Theme_Content/Edit/'.$this->curr_layout,'cmd=in_iframe').'" method="post" class="full_height" target="gp_layout_iframe">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Edit/'.$this->curr_layout,'cmd=in_iframe').'" method="post" class="full_height" target="gp_layout_iframe">';
 		echo '<table border="0">';
 		echo '<tr><td>';
 
 
 
 		echo '<div>';
-		echo \common::Link('Admin_Theme_Content','&#171; '.$langmessage['layouts']);
+		echo \gp\tool::Link('Admin_Theme_Content','&#171; '.$langmessage['layouts']);
 		echo '<div class="layout_select">';
 		$this->LayoutSelect($layout,$layout_info);
 		echo '</div>';
@@ -243,7 +243,7 @@ class Edit extends \gp\admin\Layout{
 		$css = $this->layoutCSS($this->curr_layout);
 		if( empty($css) ){
 			$dir				= $layout_info['dir'].'/'.$layout_info['theme_color'];
-			$style_type			= \gpOutput::StyleType($dir);
+			$style_type			= \gp\tool\Output::StyleType($dir);
 			$var_file 			= $dir.'/variables.'.$style_type;
 			if( file_exists($var_file) ){
 				$css = file_get_contents($var_file);
@@ -270,7 +270,7 @@ class Edit extends \gp\admin\Layout{
 
 		//show site in iframe
 		echo '<div id="gp_iframe_wrap">';
-		$url = \common::GetUrl('Admin_Theme_Content/Edit/'.rawurlencode($layout),'cmd=in_iframe');
+		$url = \gp\tool::GetUrl('Admin_Theme_Content/Edit/'.rawurlencode($layout),'cmd=in_iframe');
 		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';
 
 		echo '</div>';
@@ -311,7 +311,7 @@ class Edit extends \gp\admin\Layout{
 			if( $config['gpLayout'] == $layout ){
 				$display .= ' <span class="layout_default"> ('.$langmessage['default'].')</span>';
 			}
-			echo \common::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),$display);
+			echo \gp\tool::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),$display);
 			echo '</li>';
 		}
 		echo '</ul></div>';
@@ -328,10 +328,10 @@ class Edit extends \gp\admin\Layout{
 		global $langmessage, $dataDir, $gpLayouts, $page;
 
 		$css			=& $_POST['css'];
-		$layout_info	= \common::LayoutInfo($this->curr_layout,false);
+		$layout_info	= \gp\tool::LayoutInfo($this->curr_layout,false);
 		$color			= $layout_info['theme_color'];
 		$theme_colors	= $this->GetThemeColors($layout_info['dir']);
-		$style_type		= \gpOutput::StyleType($layout_info['dir'].'/'.$layout_info['theme_color']);
+		$style_type		= \gp\tool\Output::StyleType($layout_info['dir'].'/'.$layout_info['theme_color']);
 		$path			= $dataDir.'/data/_layouts/'.$this->curr_layout.'/custom.css';
 
 		if( $style_type === 'scss' ){
@@ -386,7 +386,7 @@ class Edit extends \gp\admin\Layout{
 	public function PreviewCSS(){
 		global $page, $langmessage;
 
-		$layout_info	= \common::LayoutInfo($this->curr_layout,false);
+		$layout_info	= \gp\tool::LayoutInfo($this->curr_layout,false);
 		$theme_colors	= $this->GetThemeColors($layout_info['dir']);
 		$color			= $layout_info['theme_color'];
 
@@ -405,7 +405,7 @@ class Edit extends \gp\admin\Layout{
 		$page->theme_rel		= dirname($page->theme_rel).'/'.$color;
 		$page->theme_path		= dirname($page->theme_path).'/'.$color;
 		$dir					= $page->theme_dir.'/'.$page->theme_color;
-		$style_type				= \gpOutput::StyleType($dir);
+		$style_type				= \gp\tool\Output::StyleType($dir);
 		$style_files			= array();
 
 		if( $style_type == 'scss' ){
@@ -556,14 +556,14 @@ class Edit extends \gp\admin\Layout{
 			$current_info = $this->avail_addons[$current_theme];
 			$current_label = $current_info['name'];
 			$current_dir = $current_info['full_dir'];
-			$current_url = \common::GetDir($current_info['rel']);
+			$current_url = \gp\tool::GetDir($current_info['rel']);
 
 		//current layout
 		}else{
-			$layout_info = \common::LayoutInfo($this->curr_layout,false);
+			$layout_info = \gp\tool::LayoutInfo($this->curr_layout,false);
 			$current_label = $layout_info['theme_name'];
 			$current_dir = $layout_info['dir'];
-			$current_url = \common::GetDir(dirname($layout_info['path']));
+			$current_url = \gp\tool::GetDir(dirname($layout_info['path']));
 		}
 
 
@@ -577,7 +577,7 @@ class Edit extends \gp\admin\Layout{
 		echo '<div class="gp_edit_select_options">';
 
 		foreach($this->avail_addons as $theme_id => $info){
-			echo \common::Link($this->layout_slug,'<span class="folder"></span>'.$info['name'],'cmd=theme_images&theme='.rawurlencode($theme_id),' data-cmd="gpajax" class="gp_gallery_folder" ');
+			echo \gp\tool::Link($this->layout_slug,'<span class="folder"></span>'.$info['name'],'cmd=theme_images&theme='.rawurlencode($theme_id),' data-cmd="gpajax" class="gp_gallery_folder" ');
 		}
 		echo '</div>';
 		echo '</div>';
@@ -777,14 +777,14 @@ class Edit extends \gp\admin\Layout{
 					echo '<tr><td>';
 					echo str_replace('_',' ',$extraName);
 					echo '</td><td class="add">';
-					echo \common::Link($this->layout_slug,$langmessage['add'],$addQuery.'&insert=Extra:'.$extraName,array('data-cmd'=>'creq'));
+					echo \gp\tool::Link($this->layout_slug,$langmessage['add'],$addQuery.'&insert=Extra:'.$extraName,array('data-cmd'=>'creq'));
 					echo '</td></tr>';
 				}
 
 
 				//new extra area
 				echo '<tr><td>';
-				echo '<form action="'.\common::GetUrl($this->layout_slug).'" method="post">';
+				echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post">';
 				echo '<input type="hidden" name="cmd" value="addcontent" />';
 				echo '<input type="hidden" name="addtype" value="new_extra" />';
 				echo '<input type="hidden" name="where" value="'.htmlspecialchars($param).'" />';
@@ -799,7 +799,7 @@ class Edit extends \gp\admin\Layout{
 				echo ' <input type="submit" name="" value="'.$langmessage['Add New Area'].'" class="gpbutton"/>';
 				echo '</form>';
 				echo '</td><td colspan="2" class="add">';
-				echo '<form action="'.\common::GetUrl($this->layout_slug).'" method="post">';
+				echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post">';
 				echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
 				echo '</form>';
 				echo '</td></tr>';
@@ -820,7 +820,7 @@ class Edit extends \gp\admin\Layout{
 							echo str_replace('_',' ',$gadget);
 							echo '</td>';
 							echo '<td class="add">';
-							echo \common::Link($this->layout_slug,$langmessage['add'],$addQuery.'&insert='.$gadget,array('data-cmd'=>'creq'));
+							echo \gp\tool::Link($this->layout_slug,$langmessage['add'],$addQuery.'&insert='.$gadget,array('data-cmd'=>'creq'));
 							echo '</td>';
 							echo '</tr>';
 					}
@@ -837,7 +837,7 @@ class Edit extends \gp\admin\Layout{
 			echo '<div id="layout_menus" class="nodisplay">';
 
 
-				echo '<form action="'.\common::GetUrl($this->layout_slug).'" method="post">';
+				echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post">';
 				echo '<input type="hidden" name="cmd" value="addcontent" />';
 				echo '<input type="hidden" name="addtype" value="preset_menu" />';
 				echo '<input type="hidden" name="where" value="'.htmlspecialchars($param).'" />';
@@ -860,7 +860,7 @@ class Edit extends \gp\admin\Layout{
 			echo '<div id="layout_custom" class="nodisplay">';
 
 				//custom area
-				echo '<form action="'.\common::GetUrl($this->layout_slug).'" method="post">';
+				echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post">';
 				echo '<input type="hidden" name="cmd" value="addcontent" />';
 				echo '<input type="hidden" name="addtype" value="custom_menu" />';
 				echo '<input type="hidden" name="where" value="'.htmlspecialchars($param).'" />';
@@ -936,7 +936,7 @@ class Edit extends \gp\admin\Layout{
 		}
 
 		//new info
-		$new_gpOutInfo = \gpOutput::GetgpOutInfo($insert);
+		$new_gpOutInfo = \gp\tool\Output::GetgpOutInfo($insert);
 		if( !$new_gpOutInfo ){
 			message($langmessage['OOPS'].' (Nothing to insert)');
 			return false;
@@ -1061,7 +1061,7 @@ class Edit extends \gp\admin\Layout{
 				$style = ' class="nodisplay"';
 			}
 			echo '<div id="layout_menus" '.$style.'>';
-			echo '<form action="'.\common::GetUrl($this->layout_slug).'" method="post">';
+			echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post">';
 			echo '<input type="hidden" name="handle" value="'.htmlspecialchars($_GET['handle']).'" />';
 			echo '<input type="hidden" name="return" value="" />';
 
@@ -1083,7 +1083,7 @@ class Edit extends \gp\admin\Layout{
 				$style = '';
 			}
 			echo '<div id="layout_custom" '.$style.'>';
-			echo '<form action="'.\common::GetUrl($this->layout_slug).'" method="post">';
+			echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post">';
 			echo '<input type="hidden" name="handle" value="'.htmlspecialchars($_GET['handle']).'" />';
 			echo '<input type="hidden" name="return" value="" />';
 
@@ -1101,9 +1101,9 @@ class Edit extends \gp\admin\Layout{
 			echo '<p class="admin_note">';
 			echo $langmessage['see_also'];
 			echo ' ';
-			echo \common::Link('Admin/Menu',$langmessage['file_manager']);
+			echo \gp\tool::Link('Admin/Menu',$langmessage['file_manager']);
 			echo ', ';
-			echo \common::Link('Admin_Theme_Content',$langmessage['content_arrangement']);
+			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['content_arrangement']);
 			echo '</p>';
 
 		echo '</div>';

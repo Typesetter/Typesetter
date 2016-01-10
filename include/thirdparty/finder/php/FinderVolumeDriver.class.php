@@ -3201,7 +3201,7 @@ abstract class FinderVolumeDriver {
 		// eval() is a language construct
 		if( $function == 'eval' ){
 			// does not check suhosin.executor.eval.whitelist (or blacklist)
-			if( extension_loaded('suhosin') && common::IniGet('suhosin.executor.disable_eval') ){
+			if( extension_loaded('suhosin') && \gp\tool::IniGet('suhosin.executor.disable_eval') ){
 				return false;
 			}
 			return true;

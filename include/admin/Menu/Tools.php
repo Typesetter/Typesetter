@@ -123,7 +123,7 @@ class Tools{
 			return $class;
 		}
 
-		$parents = \common::Parents($index,$gp_menu);
+		$parents = \gp\tool::Parents($index,$gp_menu);
 		foreach($parents as $parent_index){
 			if( isset($gp_titles[$parent_index]['vis']) ){
 				$class .= ' private-inherited';
@@ -142,7 +142,7 @@ class Tools{
 	public static function MenuLink($data, $class = ''){
 
 		$class	= 'gp_label sort '.$class;
-		$json	= \common::JsonEncode($data);
+		$json	= \gp\tool::JsonEncode($data);
 
 		echo '<a class="'.$class.'" data-cmd="menu_info" data-arg="'.str_replace('&','&amp;',$data['key']).'" data-json=\''.htmlspecialchars($json,ENT_QUOTES & ~ENT_COMPAT).'\'>';
 	}
@@ -157,7 +157,7 @@ class Tools{
 
 		if( !isset($gp_titles[$config['homepath_key']]) ){
 			$config['homepath_key'] = key($gp_menu);
-			$config['homepath']		= \common::IndexToTitle($config['homepath_key']);
+			$config['homepath']		= \gp\tool::IndexToTitle($config['homepath_key']);
 		}
 	}
 
@@ -183,8 +183,8 @@ class Tools{
 				echo '<input type="'.$type.'" name="'.$name.'" value="'.htmlspecialchars($title).'" />';
 			}
 			echo '<span>';
-			$label = \common::GetLabel($title);
-			echo \common::LabelSpecialChars($label);
+			$label = \gp\tool::GetLabel($title);
+			echo \gp\tool::LabelSpecialChars($label);
 			echo '<span class="slug">';
 			echo '/'.$title;
 			echo '</span>';
@@ -260,7 +260,7 @@ class Tools{
 
 
 		//add to $gp_index first!
-		$index							= \common::NewFileIndex();
+		$index							= \gp\tool::NewFileIndex();
 		$gp_index[$title]				= $index;
 
 		if( !\gp\tool\Files::NewTitle($title,$content,$type) ){

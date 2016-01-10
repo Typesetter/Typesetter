@@ -5,7 +5,7 @@ namespace gp\admin;
 defined('is_running') or die('Not an entry point...');
 defined('gp_max_menu_level') or define('gp_max_menu_level',6);
 
-\common::LoadComponents('sortable');
+\gp\tool::LoadComponents('sortable');
 
 
 class Menu{
@@ -73,7 +73,7 @@ class Menu{
 		$this->SetCollapseSettings();
 		$this->SetQueryInfo();
 
-		$cmd		= \common::GetCommand();
+		$cmd		= \gp\tool::GetCommand();
 		$this->cmd	= \gp\tool\Plugins::Filter('MenuCommand',array($cmd));
 
 	}
@@ -109,12 +109,12 @@ class Menu{
 
 	public function Link($href,$label,$query='',$attr='',$nonce_action=false){
 		$query = $this->MenuQuery($query);
-		return \common::Link($href,$label,$query,$attr,$nonce_action);
+		return \gp\tool::Link($href,$label,$query,$attr,$nonce_action);
 	}
 
 	public function GetUrl($href,$query='',$ampersands=true){
 		$query = $this->MenuQuery($query);
-		return \common::GetUrl($href,$query,$ampersands);
+		return \gp\tool::GetUrl($href,$query,$ampersands);
 	}
 
 	public function MenuQuery($query=''){
@@ -208,7 +208,7 @@ class Menu{
 			return;
 		}
 
-		$this->curr_menu_array = \gpOutput::GetMenuArray($this->curr_menu_id);
+		$this->curr_menu_array = \gp\tool\Output::GetMenuArray($this->curr_menu_id);
 		$this->is_alt_menu = true;
 	}
 
@@ -268,7 +268,7 @@ class Menu{
 
 
 		// search form
-		echo '<form action="'.\common::GetUrl('Admin/Menu').'" method="post" id="page_search">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Menu').'" method="post" id="page_search">';
 		$_REQUEST += array('q'=>'');
 		echo '<input type="text" name="q" size="15" value="'.htmlspecialchars($_REQUEST['q']).'" class="gptext gpinput title-autocomplete" /> ';
 		echo '<input type="submit" name="cmd" value="'.$langmessage['search pages'].'" class="gpbutton" />';
@@ -281,7 +281,7 @@ class Menu{
 
 
 		//heading
-		echo '<form action="'.\common::GetUrl('Admin/Menu').'" method="post" id="gp_menu_select_form">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Menu').'" method="post" id="gp_menu_select_form">';
 		echo '<input type="hidden" name="curr_menu" id="gp_curr_menu" value="'.$this->curr_menu_id.'" />';
 
 		echo '<h2 class="first-child">';
@@ -359,11 +359,11 @@ class Menu{
 			if( $menu_id == $this->curr_menu_id ){
 				echo '<span>'.$menu_label.'</span>';
 			}else{
-				echo '<span>'.\common::Link('Admin/Menu',$menu_label,'menu='.$menu_id, array('data-cmd'=>'cnreq')).'</span>';
+				echo '<span>'.\gp\tool::Link('Admin/Menu',$menu_label,'menu='.$menu_id, array('data-cmd'=>'cnreq')).'</span>';
 			}
 
 		}
-		echo '<span>'.\common::Link('Admin/Menu/Menus','+ '.$langmessage['Add New Menu'],'cmd=NewMenuPrompt','data-cmd="gpabox"').'</span>';
+		echo '<span>'.\gp\tool::Link('Admin/Menu/Menus','+ '.$langmessage['Add New Menu'],'cmd=NewMenuPrompt','data-cmd="gpabox"').'</span>';
 		echo '</div>';
 
 		echo '<div>';
@@ -372,7 +372,7 @@ class Menu{
 			if( $menu_id == $this->curr_menu_id ){
 			}else{
 			}
-			echo '<span>'.\common::Link('Admin/Menu',$menu_label,'menu='.$menu_id,array('data-cmd'=>'creq')).'</span>';
+			echo '<span>'.\gp\tool::Link('Admin/Menu',$menu_label,'menu='.$menu_id,array('data-cmd'=>'creq')).'</span>';
 		}
 		echo '</div>';
 
@@ -382,9 +382,9 @@ class Menu{
 			echo '<div>';
 			$label = $menus[$this->curr_menu_id];
 			echo '<b>'.$label.'</b>';
-			echo '<span>'.\common::Link('Admin/Menu/Menus',$langmessage['rename'],'cmd=RenameMenuPrompt&id='.$this->curr_menu_id,'data-cmd="gpabox"').'</span>';
+			echo '<span>'.\gp\tool::Link('Admin/Menu/Menus',$langmessage['rename'],'cmd=RenameMenuPrompt&id='.$this->curr_menu_id,'data-cmd="gpabox"').'</span>';
 			$title_attr = sprintf($langmessage['generic_delete_confirm'],'&quot;'.$label.'&quot;');
-			echo '<span>'.\common::Link('Admin/Menu/Menus',$langmessage['delete'],'cmd=MenuRemove&id='.$this->curr_menu_id,array('data-cmd'=>'cnreq','class'=>'gpconfirm','title'=>$title_attr)).'</span>';
+			echo '<span>'.\gp\tool::Link('Admin/Menu/Menus',$langmessage['delete'],'cmd=MenuRemove&id='.$this->curr_menu_id,array('data-cmd'=>'cnreq','class'=>'gpconfirm','title'=>$title_attr)).'</span>';
 
 			echo '</div>';
 		}
@@ -428,7 +428,7 @@ class Menu{
 		$page->ajaxReplace[] = array('gp_menu_refresh','','');
 
 		ob_start();
-		\gpOutput::GetMenu();
+		\gp\tool\Output::GetMenu();
 		$content = ob_get_clean();
 		$page->ajaxReplace[] = array('inner','#admin_menu_wrap',$content);
 	}
@@ -624,7 +624,7 @@ class Menu{
 		}
 
 		\gp\admin\Menu\Tools::MenuLink($data,'external');
-		echo \common::LabelSpecialChars($menu_value['label']);
+		echo \gp\tool::LabelSpecialChars($menu_value['label']);
 		echo '</a>';
 	}
 
@@ -660,16 +660,16 @@ class Menu{
 		global $langmessage, $gp_titles;
 
 
-		$title						= \common::IndexToTitle($menu_key);
-		$label						= \common::GetLabel($title);
-		$isSpecialLink				= \common::SpecialOrAdmin($title);
+		$title						= \gp\tool::IndexToTitle($menu_key);
+		$label						= \gp\tool::GetLabel($title);
+		$isSpecialLink				= \gp\tool::SpecialOrAdmin($title);
 
 
 
 		//get the data for this title
 		$data = array(
 					'key'			=>	$menu_key
-					,'url'			=>	\common::GetUrl($title)
+					,'url'			=>	\gp\tool::GetUrl($title)
 					,'level'		=>	$menu_value['level']
 					,'title'		=>	$title
 					,'special'		=>	$isSpecialLink
@@ -687,7 +687,7 @@ class Menu{
 			if( $stats ){
 				$data += array(
 						'size'		=>	\gp\admin\Tools::FormatBytes($stats['size'])
-						,'mtime'	=>	\common::date($langmessage['strftime_datetime'],$stats['mtime'])
+						,'mtime'	=>	\gp\tool::date($langmessage['strftime_datetime'],$stats['mtime'])
 						);
 			}
 		}
@@ -700,7 +700,7 @@ class Menu{
 		}
 
 		\gp\admin\Menu\Tools::MenuLink($data);
-		echo \common::LabelSpecialChars($label);
+		echo \gp\tool::LabelSpecialChars($label);
 		echo '</a>';
 	}
 
@@ -953,7 +953,7 @@ class Menu{
 				continue;
 			}
 
-			$label = \common::GetLabelIndex($index);
+			$label = \gp\tool::GetLabelIndex($index);
 			if( strpos(strtolower($label),$key) !== false ){
 				$show_list[$index] = $title;
 				continue;
@@ -976,7 +976,7 @@ class Menu{
 		$menus = $this->GetAvailMenus('menu');
 		$all_keys = array();
 		foreach($menus as $menu_id => $label){
-			$menu_array = \gpOutput::GetMenuArray($menu_id);
+			$menu_array = \gp\tool\Output::GetMenuArray($menu_id);
 			$keys = array_keys($menu_array);
 			$all_keys = array_merge($all_keys,$keys);
 		}
@@ -1001,7 +1001,7 @@ class Menu{
 		global $langmessage, $gpLayouts, $gp_index, $gp_menu, $gp_titles;
 
 		$title_index		= $gp_index[$title];
-		$is_special			= \common::SpecialOrAdmin($title);
+		$is_special			= \gp\tool::SpecialOrAdmin($title);
 		$file				= \gp\tool\Files::PageFile($title);
 		$stats				= @stat($file);
 		$mtime				= false;
@@ -1018,8 +1018,8 @@ class Menu{
 
 		echo '<tr><td>';
 
-		$label = \common::GetLabel($title);
-		echo \common::Link($title,\common::LabelSpecialChars($label));
+		$label = \gp\tool::GetLabel($title);
+		echo \gp\tool::Link($title,\gp\tool::LabelSpecialChars($label));
 
 
 		//area only display on mouseover
@@ -1040,7 +1040,7 @@ class Menu{
 		echo $this->Link('Admin/Menu/Ajax',$label,$q,$attrs);
 
 		if( $is_special === false ){
-			echo \common::Link($title,$langmessage['Revision History'],'cmd=ViewHistory','class="view_edit_link not_multiple" data-cmd="gpabox"');
+			echo \gp\tool::Link($title,$langmessage['Revision History'],'cmd=ViewHistory','class="view_edit_link not_multiple" data-cmd="gpabox"');
 		}
 
 		echo $this->Link('Admin/Menu/Ajax',$langmessage['Copy'],'cmd=CopyForm&index='.urlencode($title_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
@@ -1085,7 +1085,7 @@ class Menu{
 		//modified
 		echo '</td><td>';
 		if( $mtime ){
-			echo \common::date($langmessage['strftime_datetime'],$mtime);
+			echo \gp\tool::date($langmessage['strftime_datetime'],$mtime);
 		}
 
 		echo '</td></tr>';
@@ -1186,7 +1186,7 @@ class Menu{
 
 		if( !$this->SaveMenu(false) ){
 			$this->RestoreSettings();
-			\common::AjaxWarning();
+			\gp\tool::AjaxWarning();
 			return false;
 		}
 
@@ -1450,11 +1450,11 @@ class Menu{
 	public function HomepageDisplay(){
 		global $langmessage, $config;
 
-		$label = \common::GetLabelIndex($config['homepath_key']);
+		$label = \gp\tool::GetLabelIndex($config['homepath_key']);
 
 		echo '<span class="gpicon_home"></span>';
 		echo $langmessage['Homepage'].': ';
-		echo \common::Link('Admin/Menu/Ajax',$label,'cmd=HomepageSelect','data-cmd="gpabox"');
+		echo \gp\tool::Link('Admin/Menu/Ajax',$label,'cmd=HomepageSelect','data-cmd="gpabox"');
 	}
 
 

@@ -90,7 +90,7 @@ class Tools{
 			if( $i > $rating ){
 				$class = ' class="unset"';
 			}
-			echo \common::Link($this->scriptUrl,'','cmd=rate&rating='.$i.'&arg='.rawurlencode($arg),' data-rating="'.$i.'" data-cmd="gpabox" '.$class);
+			echo \gp\tool::Link($this->scriptUrl,'','cmd=rate&rating='.$i.'&arg='.rawurlencode($arg),' data-rating="'.$i.'" data-cmd="gpabox" '.$class);
 		}
 
 		echo '<input type="hidden" name="rating" value="'.htmlspecialchars($rating).'" readonly="readonly"/>';
@@ -165,7 +165,7 @@ class Tools{
 			return;
 		}
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 			case 'Update Review';
 			case 'Send Review':
@@ -209,12 +209,12 @@ class Tools{
 		echo '</h2>';
 
 		if( isset($this->addonReviews[$id]) ){
-			echo 'You posted the following review on '.\common::date($langmessage['strftime_date'],$this->addonReviews[$id]['time']);
+			echo 'You posted the following review on '.\gp\tool::date($langmessage['strftime_date'],$this->addonReviews[$id]['time']);
 		}
 
 
-		//echo '<form action="'.\common::GetUrl($this->scriptUrl,'cmd=rate&arg='.$this->addon_info['pass_arg']).'" method="post">';
-		echo '<form action="'.\common::GetUrl($this->scriptUrl).'" method="post">';
+		//echo '<form action="'.\gp\tool::GetUrl($this->scriptUrl,'cmd=rate&arg='.$this->addon_info['pass_arg']).'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl($this->scriptUrl).'" method="post">';
 		echo '<input type="hidden" name="arg" value="'.$this->addon_info['pass_arg'].'"/>';
 		echo '<input type="hidden" name="cmd" value="rate" />';
 
@@ -280,7 +280,7 @@ class Tools{
 		}
 		*/
 
-		if( !\common::IniGet('allow_url_fopen') ){
+		if( !\gp\tool::IniGet('allow_url_fopen') ){
 			$this->messages[] = 'Your installation of PHP does not support url fopen wrappers.';
 		}
 
@@ -632,7 +632,7 @@ class Tools{
 	public function AdminLinkList($links, $label, $format){
 		$_links = array();
 		foreach($links as $linkName => $linkInfo){
-			$_links[] = \common::Link($linkName,$linkInfo['label']);
+			$_links[] = \gp\tool::Link($linkName,$linkInfo['label']);
 		}
 		$this->FormatList($_links,$label,$format);
 	}

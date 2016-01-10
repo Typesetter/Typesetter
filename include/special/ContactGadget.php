@@ -17,8 +17,8 @@ class ContactGadget{
 
 		if( empty($config['toemail']) ){
 
-			if( \common::LoggedIn() ){
-				$url = \common::GetUrl('Admin_Configuration');
+			if( \gp\tool::LoggedIn() ){
+				$url = \gp\tool::GetUrl('Admin_Configuration');
 				msg($langmessage['enable_contact'],$url);
 			}
 
@@ -26,7 +26,7 @@ class ContactGadget{
 			return;
 		}
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 			case 'gp_send_message':
 				if( !$message_send_attempt  ){
@@ -57,7 +57,7 @@ class ContactGadget{
 		}
 
 		//check nonce
-		if( !\common::verify_nonce('contact_post',$_POST['contact_nonce'],true) ){
+		if( !\gp\tool::verify_nonce('contact_post',$_POST['contact_nonce'],true) ){
 			msg($langmessage['OOPS'].'(Invalid Nonce)');
 			return;
 		}
@@ -101,7 +101,7 @@ class ContactGadget{
 
 			$mailer->AddReplyTo($_POST['email'],$replyName);
 
-			if( \common::ConfigValue('from_use_user',false) ){
+			if( \gp\tool::ConfigValue('from_use_user',false) ){
 				$mailer->SetFrom($_POST['email'],$replyName);
 			}
 		}
@@ -111,7 +111,7 @@ class ContactGadget{
 		$require_email =& $config['require_email'];
 		if( strpos($require_email,'email') !== false ){
 			if( empty($_POST['email']) ){
-				$field = \gpOutput::SelectText('your_email');
+				$field = \gp\tool\Output::SelectText('your_email');
 				msg($langmessage['OOPS_REQUIRED'],$field);
 				return false;
 			}
@@ -119,12 +119,12 @@ class ContactGadget{
 		if( strpos($require_email,'none') === false ){
 
 			if( empty($_POST['subject']) ){
-				$field = \gpOutput::SelectText('subject');
+				$field = \gp\tool\Output::SelectText('subject');
 				msg($langmessage['OOPS_REQUIRED'],$field);
 				return false;
 			}
 			if( empty($message) ){
-				$field = \gpOutput::SelectText('message');
+				$field = \gp\tool\Output::SelectText('message');
 				msg($langmessage['OOPS_REQUIRED'],$field);
 				return false;
 			}
@@ -158,23 +158,23 @@ class ContactGadget{
 
 		$require_email =& $config['require_email'];
 
-		echo '<form class="contactform" action="'.\common::GetUrl($page->title).'" method="post">';
+		echo '<form class="contactform" action="'.\gp\tool::GetUrl($page->title).'" method="post">';
 
 		//nonce fields
 		echo '<div style="display:none !important">';
-		echo '<input type="hidden" name="contact_nonce" value="'.htmlspecialchars(\common::new_nonce('contact_post',true)).'" />';
+		echo '<input type="hidden" name="contact_nonce" value="'.htmlspecialchars(\gp\tool::new_nonce('contact_post',true)).'" />';
 		echo '<input type="text" name="contact_void" value="" />';
 		echo '</div>';
 
 
 
 			echo '<label for="contact_name"><span class="title">';
-			echo \gpOutput::ReturnText('your_name');
+			echo \gp\tool\Output::ReturnText('your_name');
 			echo '</span><input id="contact_name" class="input text" type="text" name="name" value="'.htmlspecialchars($_POST['name']).'" '.$attr.' />';
 			echo '</label>';
 
 			echo '<label for="contact_email"><span class="title">';
-			echo \gpOutput::ReturnText('your_email');
+			echo \gp\tool\Output::ReturnText('your_email');
 			if( strpos($require_email,'email') !== false ){
 				echo '*';
 			}
@@ -182,7 +182,7 @@ class ContactGadget{
 			echo '</label>';
 
 			echo '<label for="contact_subject"><span class="title">';
-			echo \gpOutput::ReturnText('subject');
+			echo \gp\tool\Output::ReturnText('subject');
 			if( strpos($require_email,'none') === false ){
 				echo '*';
 			}
@@ -190,7 +190,7 @@ class ContactGadget{
 			echo '</label>';
 
 			echo '<label for="contact_message">';
-			echo \gpOutput::ReturnText('message');
+			echo \gp\tool\Output::ReturnText('message');
 			if( strpos($require_email,'none') === false ){
 				echo '*';
 			}
@@ -203,22 +203,22 @@ class ContactGadget{
 
 		if( !$this->sent && \gp\tool\Recaptcha::isActive() ){
 			echo '<div class="captchaForm">';
-			echo \gpOutput::ReturnText('captcha');
+			echo \gp\tool\Output::ReturnText('captcha');
 			\gp\tool\Recaptcha::Form();
 			echo '</div>';
 		}
 
 			if( $this->sent ){
-				echo \gpOutput::ReturnText('message_sent','%s','message_sent');
+				echo \gp\tool\Output::ReturnText('message_sent','%s','message_sent');
 			}else{
 				echo '<input type="hidden" name="cmd" value="gp_send_message" />';
 
 				$key = 'send_message';
-				$text = \gpOutput::SelectText($key);
+				$text = \gp\tool\Output::SelectText($key);
 
-				if( \gpOutput::ShowEditLink('Admin_Theme_Content') ){
+				if( \gp\tool\Output::ShowEditLink('Admin_Theme_Content') ){
 					$query = 'cmd=edittext&key='.urlencode($key);
-					echo \gpOutput::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],$query,' title="'.$key.'" data-cmd="gpabox" ');
+					echo \gp\tool\Output::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],$query,' title="'.$key.'" data-cmd="gpabox" ');
 					echo '<input type="submit" class="submit editable_area" id="ExtraEditArea'.$edit_index.'" name="aaa" value="'.$text.'" />';
 				}else{
 					echo '<input type="submit" class="submit" name="aaa" value="'.$text.'" />';

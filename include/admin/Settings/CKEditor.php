@@ -37,7 +37,7 @@ class CKEditor{
 
 
 		// commands
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 
 			case 'save_custom_config':
@@ -89,7 +89,7 @@ class CKEditor{
 			if( $slug == $this->current_subpage ){
 				echo $label;
 			}else{
-				echo \common::Link( rtrim('Admin/CKEditor/'.$slug,'/'), $label );
+				echo \gp\tool::Link( rtrim('Admin/CKEditor/'.$slug,'/'), $label );
 			}
 			$separator = ' <span>|</span> ';
 		}
@@ -105,18 +105,18 @@ class CKEditor{
 	function PluginForm(){
 		global $langmessage, $page;
 
-		echo '<form method="post" action="'.\common::GetUrl($page->requested).'" enctype="multipart/form-data">';
+		echo '<form method="post" action="'.\gp\tool::GetUrl($page->requested).'" enctype="multipart/form-data">';
 		echo '<table class="bordered"><tr><th>'.$langmessage['name'].'</th><th>'.$langmessage['Modified'].'</th><th>'.$langmessage['options'].'</th></tr>';
 		if( count($this->cke_config['plugins']) ){
 			foreach($this->cke_config['plugins'] as $plugin_name => $plugin_info){
 				echo '<tr><td>';
 				echo $plugin_name;
 				echo '</td><td>';
-				echo \common::date($langmessage['strftime_datetime'],$plugin_info['updated']);
+				echo \gp\tool::date($langmessage['strftime_datetime'],$plugin_info['updated']);
 				echo '</td><td>';
 
 				$attr = array('data-cmd'=>'postlink', 'class'=>'gpconfirm','title'=>sprintf($langmessage['generic_delete_confirm'],$plugin_name));
-				echo \common::Link($page->requested,$langmessage['delete'],'cmd=rmplugin&plugin='.rawurlencode($plugin_name), $attr );
+				echo \gp\tool::Link($page->requested,$langmessage['delete'],'cmd=rmplugin&plugin='.rawurlencode($plugin_name), $attr );
 				echo '</td></tr>';
 
 			}
@@ -366,7 +366,7 @@ class CKEditor{
 	 */
 	function CustomConfigForm(){
 		global $page;
-		echo '<form method="post" action="'.\common::GetUrl($page->requested).'">';
+		echo '<form method="post" action="'.\gp\tool::GetUrl($page->requested).'">';
 
 		$placeholder = '{  "example_key":   "example_value"  }';
 		echo '<p>';

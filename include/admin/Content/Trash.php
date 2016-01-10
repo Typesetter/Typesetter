@@ -14,7 +14,7 @@ class Trash{
 		$page->head_js[]	= '/include/js/admin/trash.js';
 		$this->trash_files	= self::TrashFiles();
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 
 			case 'RestoreDeleted':
@@ -87,7 +87,7 @@ class Trash{
 		$existing		= array();
 		foreach($gp_index as $title => $index){
 
-			if( \common::SpecialOrAdmin($title) !== false ){
+			if( \gp\tool::SpecialOrAdmin($title) !== false ){
 				continue;
 			}
 
@@ -281,12 +281,12 @@ class Trash{
 
 		$show_titles = array();
 		foreach($titles as $trash_index => $info){
-			$show_titles[] = \common::Link($info['title'],$info['title']);
+			$show_titles[] = \gp\tool::Link($info['title'],$info['title']);
 			unset($this->trash_files[$trash_index]);
 		}
 		$title_string = implode(', ',$show_titles);
 
-		$link		= \common::GetUrl('Admin/Menu');
+		$link		= \gp\tool::GetUrl('Admin/Menu');
 		$message	= sprintf($langmessage['file_restored'],$title_string,$link);
 
 		message($message);
@@ -330,7 +330,7 @@ class Trash{
 				$index					= $title_info['index'];
 				$gp_index[$new_title]	= $index;
 			}else{
-				$index					= \common::NewFileIndex();
+				$index					= \gp\tool::NewFileIndex();
 				$gp_index[$new_title]	= $index;
 			}
 
@@ -440,7 +440,7 @@ class Trash{
 			return false;
 		}
 
-		echo '<form action="'.\common::GetUrl('Admin/Trash').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Trash').'" method="post">';
 		echo '<table class="bordered striped full_width">';
 
 		ob_start();
@@ -474,7 +474,7 @@ class Trash{
 			$q = array();
 			$q['titles'] = array_keys($orphaned);
 			$q = 'cmd=DeleteFromTrash&'.http_build_query($q);
-			echo \common::Link('Admin/Trash',$langmessage['delete'],$q,array('data-cmd'=>'postlink'));
+			echo \gp\tool::Link('Admin/Trash',$langmessage['delete'],$q,array('data-cmd'=>'postlink'));
 			echo '</td></tr>';
 
 			foreach($orphaned as $trash_index => $info){
@@ -508,7 +508,7 @@ class Trash{
 			echo '(Orphaned) &nbsp; ';
 		}
 
-		echo \common::Link('Admin/Trash/'.$trash_index,str_replace('_',' ',$info['title']));
+		echo \gp\tool::Link('Admin/Trash/'.$trash_index,str_replace('_',' ',$info['title']));
 		echo '</label>';
 
 		//time
@@ -527,12 +527,12 @@ class Trash{
 		echo '</td><td>';
 
 		if( \gp\admin\Tools::CheckPostedNewPage($info['title'], $msg) ){
-			echo \common::Link('Admin/Trash',$langmessage['restore'],'cmd=RestoreDeleted&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'postlink'));
+			echo \gp\tool::Link('Admin/Trash',$langmessage['restore'],'cmd=RestoreDeleted&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'postlink'));
 		}else{
 			echo '<span>'.$langmessage['restore'].'</span>';
 		}
 		echo ' &nbsp; ';
-		echo \common::Link('Admin/Trash',$langmessage['delete'],'cmd=DeleteFromTrash&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'postlink'));
+		echo \gp\tool::Link('Admin/Trash',$langmessage['delete'],'cmd=DeleteFromTrash&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'postlink'));
 
 		echo '</td></tr>';
 	}
@@ -612,14 +612,14 @@ class Trash{
 
 		//delete / restore links
 		echo '<div class="pull-right">';
-		echo \common::Link('Admin/Trash',$langmessage['restore'],'cmd=RestoreDeleted&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'cnreq','class'=>'gpsubmit'));
+		echo \gp\tool::Link('Admin/Trash',$langmessage['restore'],'cmd=RestoreDeleted&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'cnreq','class'=>'gpsubmit'));
 		echo ' &nbsp; ';
-		echo \common::Link('Admin/Trash',$langmessage['delete'],'cmd=DeleteFromTrash&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'cnreq','class'=>'gpsubmit'));
+		echo \gp\tool::Link('Admin/Trash',$langmessage['delete'],'cmd=DeleteFromTrash&titles[]='.rawurlencode($trash_index),array('data-cmd'=>'cnreq','class'=>'gpsubmit'));
 		echo '</div>';
 
 
 		echo '<h2 class="hmargin">';
-		echo \common::Link('Admin/Trash',$langmessage['trash']);
+		echo \gp\tool::Link('Admin/Trash',$langmessage['trash']);
 		echo ' &#187; ';
 		echo htmlspecialchars($title_info['title']);
 		echo '</h2>';

@@ -8,7 +8,7 @@ if( !defined('is_running' ) ){
 	//define('gp_dev_combine',false); //prevents cache and 304 header when set to true
 
 	require_once('common.php');
-	common::EntryPoint(1,'image.php',false);
+	\gp\tool:EntryPoint(1,'image.php',false);
 	new gp_resized();
 }
 
@@ -61,8 +61,8 @@ class gp_resized{
 		//if the image has been renamed, redirect to the new name
 		$index_img = self::$index[$index];
 		if( $index_img != $img ){
-			$path = common::GetDir('/include/image.php',false).'?i='.$index.'&w='.$width.'&h='.$height.'&img='.rawurlencode($index_img);
-			common::Redirect($path);
+			$path = \gp\tool::GetDir('/include/image.php',false).'?i='.$index.'&w='.$width.'&h='.$height.'&img='.rawurlencode($index_img);
+			\gp\tool::Redirect($path);
 		}
 
 
@@ -77,7 +77,7 @@ class gp_resized{
 			//attempt to send 304
 			$stats = lstat($full_path);
 			if( $stats ){
-				common::Send304( common::GenEtag( $stats['mtime'], $stats['size'] ) );
+				\gp\tool::Send304( \gp\tool::GenEtag( $stats['mtime'], $stats['size'] ) );
 			}
 
 			header('Content-Transfer-Encoding: binary');
@@ -97,15 +97,15 @@ class gp_resized{
 			if( ($use_width >= $width && $use_height > $height)
 				|| ($use_width > $width && $use_height >= $height)
 				){
-					$path = common::GetDir('/include/image.php',false).'?i='.$index.'&w='.$use_width.'&h='.$use_height.'&img='.rawurlencode($img);
-					common::Redirect($path);
+					$path = \gp\tool::GetDir('/include/image.php',false).'?i='.$index.'&w='.$use_width.'&h='.$use_height.'&img='.rawurlencode($img);
+					\gp\tool::Redirect($path);
 					//dies
 			}
 		}
 
 		//redirect to full size image
-		$original = common::GetDir('/data/_uploaded'.$img,false);
-		common::Redirect($original);
+		$original = \gp\tool::GetDir('/data/_uploaded'.$img,false);
+		\gp\tool::Redirect($original);
 		//dies
 	}
 
@@ -114,7 +114,7 @@ class gp_resized{
 	 * Send a 404 Not Found header to the client
 	 */
 	static function Send404(){
-		common::status_header(404,'404 Not Found');
+		\gp\tool::status_header(404,'404 Not Found');
 		die();
 	}
 
@@ -270,7 +270,7 @@ class gp_resized{
 	static function Folder($img){
 		global $dataDir;
 		$name = basename($img);
-		return $dataDir.'/data/_resized'.common::DirName($img).'/'.gp_resized::EncodePath($name);
+		return $dataDir.'/data/_resized'.\gp\tool::DirName($img).'/'.gp_resized::EncodePath($name);
 	}
 
 	/**

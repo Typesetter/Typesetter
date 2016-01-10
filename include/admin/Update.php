@@ -83,7 +83,7 @@ class Update extends \gp\Page{
 			return;
 		}
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 
 		$show = true;
 		switch($cmd){
@@ -202,7 +202,7 @@ class Update extends \gp\Page{
 
 		if( $this->data_timestamp > 0 ){
 			echo '<p>';
-			echo sprintf($langmessage['Software_updates_checked'],\common::date($langmessage['strftime_datetime'],$this->data_timestamp));
+			echo sprintf($langmessage['Software_updates_checked'],\gp\tool::date($langmessage['strftime_datetime'],$this->data_timestamp));
 			echo '</p>';
 		}
 
@@ -244,7 +244,7 @@ class Update extends \gp\Page{
 	function DoRemoteCheck2(){
 		global $config, $dataDir;
 
-		$path = \common::IdUrl();
+		$path = \gp\tool::IdUrl();
 
 		//add any locally available themes with addon ids
 
@@ -383,7 +383,7 @@ class Update extends \gp\Page{
 			echo '  '.gpversion;
 			echo '</div>';
 			echo '<div>';
-			echo \common::link('',$langmessage['return_to_your_site']);
+			echo \gp\tool::link('',$langmessage['return_to_your_site']);
 			echo '</div>';
 
 			$this->RemoveUpdateMessage();
@@ -559,7 +559,7 @@ class Update extends \gp\Page{
 			$this->msg($langmessage['settings_restored']);
 
 			echo '<h3>';
-			echo \common::link('',$langmessage['return_to_your_site']);
+			echo \gp\tool::link('',$langmessage['return_to_your_site']);
 			echo ' &nbsp; &nbsp; ';
 			echo '<a href="?cmd=update">'.$langmessage['try_again'].'</a>';
 			echo '</h3>';
@@ -577,7 +577,7 @@ class Update extends \gp\Page{
 
 
 		echo '<h3>';
-		echo \common::link('','&#187; '.$langmessage['return_to_your_site']);
+		echo \gp\tool::link('','&#187; '.$langmessage['return_to_your_site']);
 		echo '</h3>';
 
 

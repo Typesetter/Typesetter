@@ -181,7 +181,7 @@ class Image{
 	 * @deprecated 4.3
 	 */
 	static function getByteValue($value){
-		return \common::getByteValue($value);
+		return \gp\tool::getByteValue($value);
 	}
 
 

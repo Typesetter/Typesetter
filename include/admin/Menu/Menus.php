@@ -8,7 +8,7 @@ class Menus extends \gp\admin\Menu{
 
 	public function RunScript(){
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 
 		switch($cmd){
 
@@ -45,8 +45,8 @@ class Menus extends \gp\admin\Menu{
 	}
 
 	function Redirect(){
-		$url = \common::GetUrl('Admin/Menu','',false);
-		\common::Redirect($url);
+		$url = \gp\tool::GetUrl('Admin/Menu','',false);
+		\gp\tool::Redirect($url);
 	}
 
 
@@ -58,7 +58,7 @@ class Menus extends \gp\admin\Menu{
 		global $langmessage;
 
 		echo '<div class="inline_box">';
-		echo '<form action="'.\common::GetUrl('Admin/Menu/Menus').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Menu/Menus').'" method="post">';
 
 		echo '<h3>';
 		echo $langmessage['Add New Menu'];
@@ -117,8 +117,8 @@ class Menus extends \gp\admin\Menu{
 		if( !\gp\admin\Tools::SaveConfig() ){
 			msg($langmessage['OOPS'].' (Config Not Saved)');
 		}else{
-			$url = \common::GetUrl('Admin/Menu','menu='.$id,false);
-			\common::Redirect($url);
+			$url = \gp\tool::GetUrl('Admin/Menu','menu='.$id,false);
+			\gp\tool::Redirect($url);
 		}
 	}
 
@@ -164,7 +164,7 @@ class Menus extends \gp\admin\Menu{
 		$menu_name = $this->avail_menus[$menu_id];
 
 		echo '<div class="inline_box">';
-		echo '<form action="'.\common::GetUrl('Admin/Menu/Menus').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Menu/Menus').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="MenuRename" />';
 		echo '<input type="hidden" name="id" value="'.htmlspecialchars($menu_id).'" />';
 

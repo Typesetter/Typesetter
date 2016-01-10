@@ -5,7 +5,7 @@ define('gp_start_time',microtime(true));
 
 defined('is_running') or define('is_running',true);
 require_once('common.php');
-common::EntryPoint(0);
+\gp\tool::EntryPoint(0);
 
 /*
  *	Flow Control
@@ -16,8 +16,8 @@ if( !empty($GLOBALS['config']['updating_message']) ){
 }
 
 
-$title = common::WhichPage();
-$type = common::SpecialOrAdmin($title);
+$title = \gp\tool::WhichPage();
+$type = \gp\tool::SpecialOrAdmin($title);
 switch($type){
 
 	case 'special':
@@ -25,7 +25,7 @@ switch($type){
 	break;
 
 	case 'admin':
-		if( common::LoggedIn() ){
+		if( \gp\tool::LoggedIn() ){
 			$page = new \gp\admin\Page($title,$type);
 		}else{
 			$page = new \gp\admin\Login($title,$type);
@@ -33,7 +33,7 @@ switch($type){
 	break;
 
 	default:
-		if( common::LoggedIn() ){
+		if( \gp\tool::LoggedIn() ){
 			$page = new \gp\Page\Edit($title,$type);
 		}else{
 			$page = new \gp\Page($title,$type);
@@ -41,7 +41,7 @@ switch($type){
 	break;
 }
 
-gpOutput::RunOut();
+\gp\tool\Output::RunOut();
 
 
 

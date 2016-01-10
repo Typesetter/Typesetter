@@ -10,9 +10,9 @@ class Classes{
 
 	function __construct(){
 
-		$this->admin_link = \common::GetUrl('Admin/Classes');
+		$this->admin_link = \gp\tool::GetUrl('Admin/Classes');
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 			case 'SaveClasses':
 				$this->SaveClasses();
@@ -135,7 +135,7 @@ class Classes{
 
 		echo '<h2 class="hmargin">Manage Classes</h2>';
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 			case 'LoadDefault':
 				$classes = self::Defaults();
@@ -160,7 +160,7 @@ class Classes{
 
 		foreach( $classes as $key => $classArray ){
 			echo '<tr><td>';
-			echo '<img alt="" src="'.\common::GetDir('/include/imgs/drag_handle.gif').'" /> &nbsp; ';
+			echo '<img alt="" src="'.\gp\tool::GetDir('/include/imgs/drag_handle.gif').'" /> &nbsp; ';
 			echo '<input size="16" class="gpinput" type="text" name="class_names[]" value="' . $classArray['names'] . '"/>';
 			echo '</td><td>';
 			echo '<input size="64" class="gpinput" type="text" name="class_desc[]" value="' . $classArray['desc'] . '"/> ';

@@ -203,7 +203,7 @@ ul.install_status .failed{
 <?php
 
 new gp_install();
-echo common::ErrorBuffer(false);
+echo \gp\tool::ErrorBuffer(false);
 echo '</div>';
 echo '</body></html>';
 
@@ -231,7 +231,7 @@ class gp_install{
 			}
 			setcookie('lang',$install_language);
 
-			common::GetLangFile('main.inc',$install_language);
+			\gp\tool::GetLangFile('main.inc',$install_language);
 
 
 		echo '<h1>';
@@ -240,7 +240,7 @@ class gp_install{
 		echo '</h1>';
 
 		$installed = false;
-		$cmd = common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 
 			case 'Continue':
@@ -312,13 +312,13 @@ class gp_install{
 			echo 'SCRIPT_NAME or PHP_SELF';
 			echo '</a>';
 			echo '</td>';
-			$checkValue = common::GetEnv('SCRIPT_NAME','index.php') || common::GetEnv('PHP_SELF','index.php');
+			$checkValue = \gp\tool::GetEnv('SCRIPT_NAME','index.php') || \gp\tool::GetEnv('PHP_SELF','index.php');
 			$ok = $ok && $checkValue;
 			$this->StatusRow($checkValue,$langmessage['Set'],$langmessage['Not_Set']);
 			echo '</tr>';
 
 		//Check Safe Mode
-		$checkValue = common::IniGet('safe_mode');
+		$checkValue = \gp\tool::IniGet('safe_mode');
 		echo '<tr>';
 			echo '<td>';
 			echo '<a href="http://php.net/manual/features.safe-mode.php" target="_blank">';
@@ -337,7 +337,7 @@ class gp_install{
 			echo '</tr>';
 
 		//Check register_globals
-		$checkValue = common::IniGet('register_globals');
+		$checkValue = \gp\tool::IniGet('register_globals');
 		echo '<tr>';
 			echo '<td>';
 			echo '<a href="http://php.net/manual/security.globals.php" target="_blank">';
@@ -354,8 +354,8 @@ class gp_install{
 			echo '<td>'.$langmessage['Off'].'</td>';
 			echo '</tr>';
 
-		//Check common::IniGet( 'magic_quotes_sybase' )
-		$checkValue = !common::IniGet('magic_quotes_sybase');
+		//Check \gp\tool::IniGet( 'magic_quotes_sybase' )
+		$checkValue = !\gp\tool::IniGet('magic_quotes_sybase');
 		$ok = $ok && $checkValue;
 		echo '<tr>';
 			echo '<td>';
@@ -367,7 +367,7 @@ class gp_install{
 			echo '</tr>';
 
 		//magic_quotes_runtime
-		$checkValue = !common::IniGet('magic_quotes_runtime');
+		$checkValue = !\gp\tool::IniGet('magic_quotes_runtime');
 		$ok = $ok && $checkValue;
 		echo '<tr>';
 			echo '<td>';
@@ -401,8 +401,8 @@ class gp_install{
 				echo '</td>';
 
 			}else{
-				$byte_value = common::getByteValue($checkValue);
-				$mb_16		= common::getByteValue('16M');
+				$byte_value = \gp\tool::getByteValue($checkValue);
+				$mb_16		= \gp\tool::getByteValue('16M');
 				if( $byte_value > 100663296 ){
 					echo '<td class="passed">'.$langmessage['Passed'].'</td>';
 					echo '<td class="passed">';
@@ -441,7 +441,7 @@ class gp_install{
 		echo '</table>';
 		echo '<p>';
 
-		echo common::Link('',$langmessage['Refresh']);
+		echo \gp\tool::Link('',$langmessage['Refresh']);
 		echo '</p>';
 		echo '<br/>';
 
@@ -1000,7 +1000,7 @@ class gp_install{
 
 		$_POST += array('ftp_server'=>\gp\tool\FileSystemFtp::GetFTPServer(),'ftp_user'=>'');
 
-		echo '<form action="'.common::GetUrl('').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('').'" method="post">';
 		echo '<table class="padded_table">';
 		echo '<tr><td align="left">'.$langmessage['FTP_Server'].' </td><td>';
 		echo '<input type="text" class="text" size="20" name="ftp_server" value="'. htmlspecialchars($_POST['ftp_server']) .'" required />';
@@ -1029,7 +1029,7 @@ class gp_install{
 		global $languages, $install_language;
 
 		echo '<div class="lang_select">';
-		echo '<form action="'.common::GetUrl('').'" method="get">';
+		echo '<form action="'.\gp\tool::GetUrl('').'" method="get">';
 		echo '<select name="lang" onchange="this.form.submit()">';
 		foreach($languages as $lang => $label){
 			if( $lang === $install_language ){
@@ -1057,7 +1057,7 @@ class gp_install{
 		echo '<h4>'.$langmessage['Installation_Was_Successfull'].'</h4>';
 
 		echo '<h2>';
-		echo common::Link('',$langmessage['View_your_web_site']);
+		echo \gp\tool::Link('',$langmessage['View_your_web_site']);
 		echo '</h2>';
 
 		echo '</ul>';
@@ -1073,7 +1073,7 @@ class gp_install{
 
 		//echo '<h3>'.$langmessage['configuration'].'</h3>';
 		//echo '<h3>'.$langmessage['User Details'].'</h3>';
-		echo '<form action="'.common::GetUrl('').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('').'" method="post">';
 		echo '<table class="styledtable">';
 		\gp\install\Tools::Form_UserDetails();
 		\gp\install\Tools::Form_Configuration();

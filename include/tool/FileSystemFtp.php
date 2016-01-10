@@ -158,7 +158,7 @@ class FileSystemFtp extends FileSystem{
 		if( $action === false ){
 			echo '<form method="post" action="">';
 		}else{
-			echo '<form method="post" action="'.\common::GetUrl($action).'">';
+			echo '<form method="post" action="'.\gp\tool::GetUrl($action).'">';
 		}
 
 		//include the current request's query so that we continue the same action after the login form is submitted
@@ -346,7 +346,7 @@ class FileSystemFtp extends FileSystem{
 	 */
 	public function CheckDir($file){
 
-		$dir = \common::DirName($file);
+		$dir = \gp\tool::DirName($file);
 		if( $this->file_exists($dir) ){
 			return true;
 		}

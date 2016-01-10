@@ -19,7 +19,7 @@ class CSS{
 		//generage the name of the css file from the modified times and content length of each imported file
 		$file_array		= (array)$file_array;
 		$type			= strtolower($type);
-		$files_hash		= \common::ArrayHash($file_array);
+		$files_hash		= \gp\tool::ArrayHash($file_array);
  		$list_file		= $dataDir.'/data/_cache/'.$type.'_'.$files_hash.'.list';
 
 
@@ -31,8 +31,8 @@ class CSS{
 			$etag = array_pop($list);
 
 			// generate an etag if needed or if logged in
-			if( \common::LoggedIn() ){
-				$etag = \common::FilesEtag( $list );
+			if( \gp\tool::LoggedIn() ){
+				$etag = \gp\tool::FilesEtag( $list );
 			}
 
 			$compiled_name = $type.'_'.$files_hash.'_'.$etag.'.css';
@@ -57,7 +57,7 @@ class CSS{
 
 
 		// generate the file name
-		$etag			= \common::FilesEtag( $file_array );
+		$etag			= \gp\tool::FilesEtag( $file_array );
 		$compiled_name	= $type.'_'.$files_hash.'_'.$etag.'.css';
 		$compiled_file	= '/data/_cache/'.$compiled_name;
 
@@ -120,7 +120,7 @@ class CSS{
 			$compiled = $compiler->compile(implode("\n",$combined));
 
 		}catch( \Exception $e){
-			if( \common::LoggedIn() ){
+			if( \gp\tool::LoggedIn() ){
 				msg('SCSS Compile Failed: '.$e->getMessage());
 			}
 			return false;
@@ -148,11 +148,11 @@ class CSS{
 		// don't use less if the memory limit is less than 64M
 		$limit = @ini_get('memory_limit');
 		if( $limit ){
-			$limit = \common::getByteValue( $limit );
+			$limit = \gp\tool::getByteValue( $limit );
 
 			//if less than 64M, disable less compiler if we can't increase
 			if( $limit < 67108864 && @ini_set('memory_limit','96M') === false ){
-				if( \common::LoggedIn() ){
+				if( \gp\tool::LoggedIn() ){
 					msg('LESS compilation disabled. Please increase php\'s memory_limit');
 				}
 				return false;
@@ -170,7 +170,7 @@ class CSS{
 		//prepare the compiler
 		includeFile('thirdparty/less.php/Less.php');
 		$parser = new \Less_Parser($options);
-		$import_dirs[$dataDir] = \common::GetDir('/');
+		$import_dirs[$dataDir] = \gp\tool::GetDir('/');
 		$parser->SetImportDirs($import_dirs);
 
 
@@ -196,13 +196,13 @@ class CSS{
 					$relative = substr($less,strlen($dataDir));
 				}
 
-				$parser->ParseFile( $less, \common::GetDir(dirname($relative)) );
+				$parser->ParseFile( $less, \gp\tool::GetDir(dirname($relative)) );
 			}
 
 			$compiled = $parser->getCss();
 
 		}catch(Exception $e){
-			if( \common::LoggedIn() ){
+			if( \gp\tool::LoggedIn() ){
 				msg('LESS Compile Failed: '.$e->getMessage());
 			}
 			return false;

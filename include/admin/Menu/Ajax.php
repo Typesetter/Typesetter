@@ -178,9 +178,9 @@ class Ajax extends \gp\admin\Menu{
 		$this->search_page = 0; //take user back to first page where the new page will be displayed
 
 		if( isset($_REQUEST['redir']) ){
-			$title	= \common::IndexToTitle($new_index);
-			$url	= \common::AbsoluteUrl($title,'',true,false);
-			msg(sprintf($langmessage['will_redirect'],\common::Link_Page($title)));
+			$title	= \gp\tool::IndexToTitle($new_index);
+			$url	= \gp\tool::AbsoluteUrl($title,'',true,false);
+			msg(sprintf($langmessage['will_redirect'],\gp\tool::Link_Page($title)));
 			$page->ajaxReplace[] = array('location',$url,15000);
 		}else{
 			msg($langmessage['SAVED']);
@@ -198,18 +198,18 @@ class Ajax extends \gp\admin\Menu{
 
 
 		$index = $_REQUEST['index'];
-		$from_title = \common::IndexToTitle($index);
+		$from_title = \gp\tool::IndexToTitle($index);
 
 		if( !$from_title ){
 			msg($langmessage['OOPS_TITLE']);
 			return false;
 		}
 
-		$from_label = \common::GetLabel($from_title);
-		$from_label = \common::LabelSpecialChars($from_label);
+		$from_label = \gp\tool::GetLabel($from_title);
+		$from_label = \gp\tool::LabelSpecialChars($from_label);
 
 		echo '<div class="inline_box">';
-		echo '<form method="post" action="'.\common::GetUrl('Admin/Menu/Ajax').'">';
+		echo '<form method="post" action="'.\gp\tool::GetUrl('Admin/Menu/Ajax').'">';
 		if( isset($_REQUEST['redir']) ){
 			echo '<input type="hidden" name="redir" value="redir"/> ';
 		}
@@ -290,7 +290,7 @@ class Ajax extends \gp\admin\Menu{
 
 
 		//add to $gp_index first!
-		$index				= \common::NewFileIndex();
+		$index				= \gp\tool::NewFileIndex();
 		$gp_index[$title]	= $index;
 		$file				= \gp\tool\Files::PageFile($title);
 
@@ -340,7 +340,7 @@ class Ajax extends \gp\admin\Menu{
 		//create format of each tab
 		ob_start();
 		echo '<div id="%s" class="%s">';
-		echo '<form action="'.\common::GetUrl('Admin/Menu/Ajax').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Menu/Ajax').'" method="post">';
 		echo '<input type="hidden" name="insert_where" value="'.htmlspecialchars($_REQUEST['insert_where']).'" />';
 		echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($cmd).'" />';
 		echo '<table class="bordered full_width">';
@@ -501,7 +501,7 @@ class Ajax extends \gp\admin\Menu{
 		$titles = array();
 		if( isset($_POST['keys']) ){
 			foreach($_POST['keys'] as $index){
-				if( $title = \common::IndexToTitle($index) ){
+				if( $title = \gp\tool::IndexToTitle($index) ){
 					$titles[$index]['level'] = 0;
 				}
 			}
@@ -601,7 +601,7 @@ class Ajax extends \gp\admin\Menu{
 		echo '<tr><td>';
 		echo $langmessage['label'];
 		echo '</td><td>';
-		echo '<input type="text" name="label" value="'.\common::LabelSpecialChars($args['label']).'" class="gpinput"/>';
+		echo '<input type="text" name="label" value="'.\gp\tool::LabelSpecialChars($args['label']).'" class="gpinput"/>';
 		echo '</td></tr>';
 
 		echo '<tr><td>';
@@ -870,7 +870,7 @@ class Ajax extends \gp\admin\Menu{
 
 		foreach($indexes as $index){
 
-			$title	= \common::IndexToTitle($index);
+			$title	= \gp\tool::IndexToTitle($index);
 
 			// Create file in trash
 			if( $title ){
@@ -909,7 +909,7 @@ class Ajax extends \gp\admin\Menu{
 			return false;
 		}
 
-		$link = \common::GetUrl('Admin/Trash');
+		$link = \gp\tool::GetUrl('Admin/Trash');
 		msg(sprintf($langmessage['MOVED_TO_TRASH'],$link));
 
 
@@ -964,7 +964,7 @@ class Ajax extends \gp\admin\Menu{
 		global $langmessage;
 
 		echo '<div class="inline_box">';
-		echo '<form action="'.\common::GetUrl('Admin/Menu/Ajax').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Menu/Ajax').'" method="post">';
 
 		echo '<h3><i class="gpicon_home"></i>';
 		echo $langmessage['Homepage'];
@@ -1013,7 +1013,7 @@ class Ajax extends \gp\admin\Menu{
 		}
 
 		$config['homepath_key'] = $homepage_key;
-		$config['homepath']		= \common::IndexToTitle($config['homepath_key']);
+		$config['homepath']		= \gp\tool::IndexToTitle($config['homepath_key']);
 		if( !\gp\admin\Tools::SaveConfig() ){
 			msg($langmessage['OOPS']);
 			return;

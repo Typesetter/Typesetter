@@ -10,7 +10,7 @@ class Galleries extends \gp\special\Galleries{
 		$this->galleries = self::GetData();
 
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 
 			case 'newdrag':
@@ -30,7 +30,7 @@ class Galleries extends \gp\special\Galleries{
 
 
 		echo '<h2>';
-		echo \common::Link('Special_Galleries',\gpOutput::ReturnText('galleries'));
+		echo \gp\tool::Link('Special_Galleries',\gp\tool\Output::ReturnText('galleries'));
 		echo ' &#187; '.$langmessage['administration'];
 		echo '</h2>';
 
@@ -98,14 +98,14 @@ class Galleries extends \gp\special\Galleries{
 		}
 
 		if( empty($icon) ){
-			$thumbPath = \common::GetDir('/include/imgs/blank.gif');
+			$thumbPath = \gp\tool::GetDir('/include/imgs/blank.gif');
 		}elseif( strpos($icon,'/thumbnails/') === false ){
-			$thumbPath = \common::GetDir('/data/_uploaded/image/thumbnails'.$icon.'.jpg');
+			$thumbPath = \gp\tool::GetDir('/data/_uploaded/image/thumbnails'.$icon.'.jpg');
 		}else{
-			$thumbPath = \common::GetDir('/data/_uploaded'.$icon);
+			$thumbPath = \gp\tool::GetDir('/data/_uploaded'.$icon);
 		}
 		echo '<div class="draggable">';
-		echo \common::Link('Special_Galleries',htmlspecialchars($title),'cmd=drag&to=%s&title='.urlencode($title),'data-cmd="gpajax" class="dragdroplink nodisplay" ');
+		echo \gp\tool::Link('Special_Galleries',htmlspecialchars($title),'cmd=drag&to=%s&title='.urlencode($title),'data-cmd="gpajax" class="dragdroplink nodisplay" ');
 		echo '<input type="hidden" name="title" value="'.htmlspecialchars($title).'" class="title" />';
 
 		echo ' <img src="'.$thumbPath.'" alt="" class="icon"/>';

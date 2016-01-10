@@ -23,14 +23,14 @@ class Map{
 		$this->MultiSiteData();
 
 		echo '<div class="sitemap_xml">';
-		echo \common::Link('Special_Site_Map','XML','xml');
+		echo \gp\tool::Link('Special_Site_Map','XML','xml');
 		echo '</div>';
 		echo '<h2>';
-		echo \gpOutput::ReturnText('site_map');
+		echo \gp\tool\Output::ReturnText('site_map');
 		echo '</h2>';
 
 
-		\gpOutput::GetFullMenu();
+		\gp\tool\Output::GetFullMenu();
 
 	}
 
@@ -66,13 +66,13 @@ class Map{
 
 		foreach($gp_menu as $key => $info){
 
-			$title = \common::IndexToTitle($key);
+			$title = \gp\tool::IndexToTitle($key);
 
 			if( isset($info['level']) ){
 				echo "\n";
 				echo '<url>';
 				echo '<loc>';
-				echo isset($info['url']) ? $info['url'] : 'http://' . $_SERVER['SERVER_NAME'] . \common::GetUrl($title);
+				echo isset($info['url']) ? $info['url'] : 'http://' . $_SERVER['SERVER_NAME'] . \gp\tool::GetUrl($title);
 				echo '</loc>';
 				echo '</url>';
 			}

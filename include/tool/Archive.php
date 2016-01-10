@@ -176,7 +176,7 @@ class Archive{
 				continue;
 			}
 
-			$root = \common::DirName($file['name']);
+			$root = \gp\tool::DirName($file['name']);
 
 			if( $root == '.' ){
 				$root = '';
@@ -207,7 +207,7 @@ class Archive{
 				continue;
 			}
 
-			$root = common::DirName($file['name']);
+			$root = \gp\tool::DirName($file['name']);
 
 			if( is_null($archive_root) || ( strlen($root) < strlen($archive_root) ) ){
 				$archive_root = $root;

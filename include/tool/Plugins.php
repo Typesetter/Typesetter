@@ -40,7 +40,7 @@ namespace gp\tool{
 		public static function css($file, $combine = true){
 			global $page;
 
-			$file 					= \common::WinPath( $file );
+			$file 					= \gp\tool::WinPath( $file );
 
 			if( $combine ){
 				$page->css_admin[] 	= self::$current['code_folder_part'].'/'.ltrim($file,'/');
@@ -49,7 +49,7 @@ namespace gp\tool{
 
 
 			//less file
-			$ext = \common::Ext($script['file']);
+			$ext = \gp\tool::Ext($script['file']);
 			if( $ext === 'less' || $ext === 'scss' ){
 				$full_path			= self::$current['code_folder_full'].'/'.ltrim($file,'/');
 				$path				= \gp\tool\Output\CSS::Cache($full_path,$ext);
@@ -57,7 +57,7 @@ namespace gp\tool{
 				$path				= self::$current['code_folder_part'].'/'.ltrim($file,'/');
 			}
 
-			$page->head			.= "\n".'<link rel="stylesheet" type="text/css" href="'.\common::GetDir($path).'"/>';
+			$page->head			.= "\n".'<link rel="stylesheet" type="text/css" href="'.\gp\tool::GetDir($path).'"/>';
 
 			return $path;
 		}
@@ -72,7 +72,7 @@ namespace gp\tool{
 		public static function js($file, $combine = true ){
 			global $page;
 
-			$file = \common::WinPath( $file );
+			$file = \gp\tool::WinPath( $file );
 
 			if( $combine ){
 				$page->head_js[] = self::$current['code_folder_part'].'/'.ltrim($file,'/');
@@ -84,7 +84,7 @@ namespace gp\tool{
 
 		public static function GetDir($path='',$ampersands = false){
 			$path = self::$current['code_folder_part'].'/'.ltrim($path,'/');
-			return \common::GetDir($path, $ampersands);
+			return \gp\tool::GetDir($path, $ampersands);
 		}
 
 		/**
@@ -232,7 +232,7 @@ namespace gp\tool{
 				$args[0] = $info['value'];
 			}
 
-			$args = \gpOutput::ExecInfo($info,$args);
+			$args = \gp\tool\Output::ExecInfo($info,$args);
 
 			array_pop( $gp_current_hook );
 			if( isset($args[0]) ){
@@ -290,13 +290,13 @@ namespace gp\tool{
 			//data folder
 			$addon_config['data_folder_part'] = '/data/_addondata/'.$addon_config['data_folder'];
 			$addon_config['data_folder_full'] = $dataDir.$addon_config['data_folder_part'];
-			$addon_config['data_folder_rel'] = \common::GetDir($addon_config['data_folder_part']);
+			$addon_config['data_folder_rel'] = \gp\tool::GetDir($addon_config['data_folder_part']);
 
 
 			// Code folder
 			//$addon_config['code_folder_part'] = $addon_config['code_folder'].'/'.$addon_key;
 			$addon_config['code_folder_full'] = $dataDir.$addon_config['code_folder_part'];
-			$addon_config['code_folder_rel'] = \common::GetDir($addon_config['code_folder_part']);
+			$addon_config['code_folder_rel'] = \gp\tool::GetDir($addon_config['code_folder_part']);
 
 			return $addon_config;
 		}

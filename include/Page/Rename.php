@@ -14,12 +14,12 @@ namespace gp\Page{
 			global $langmessage, $page, $gp_index, $gp_titles, $config;
 
 
-			$label			= \common::GetLabelIndex($index);
-			$title			= \common::IndexToTitle($index);
+			$label			= \gp\tool::GetLabelIndex($index);
+			$title			= \gp\tool::IndexToTitle($index);
 			$title_info		= $gp_titles[$index];
 
 			if( empty($_REQUEST['new_title']) ){
-				$new_title = \common::LabelSpecialChars($label);
+				$new_title = \gp\tool::LabelSpecialChars($label);
 			}else{
 				$new_title = htmlspecialchars($_REQUEST['new_title']);
 			}
@@ -325,7 +325,7 @@ namespace gp\Page{
 			}
 
 			$special_file = false;
-			if( \common::SpecialOrAdmin($title) !== false ){
+			if( \gp\tool::SpecialOrAdmin($title) !== false ){
 				$special_file = true;
 			}
 
@@ -383,10 +383,10 @@ namespace gp\Page{
 
 			$new_title = self::RenameFile($page->title);
 			if( ($new_title !== false) && $new_title != $page->title ){
-				msg(sprintf($langmessage['will_redirect'],\common::Link_Page($new_title)));
+				msg(sprintf($langmessage['will_redirect'],\gp\tool::Link_Page($new_title)));
 
-				$page->head				.= '<meta http-equiv="refresh" content="15;url='.\common::GetUrl($new_title).'">';
-				$page->ajaxReplace[]	= array('location',\common::GetUrl($new_title),15000);
+				$page->head				.= '<meta http-equiv="refresh" content="15;url='.\gp\tool::GetUrl($new_title).'">';
+				$page->ajaxReplace[]	= array('location',\gp\tool::GetUrl($new_title),15000);
 				return true;
 			}
 			return false;

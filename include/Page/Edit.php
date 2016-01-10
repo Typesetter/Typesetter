@@ -23,7 +23,7 @@ class Edit extends \gp\Page{
 
 	public function RunScript(){
 		global $langmessage;
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 
 
 		if( !$this->SetVars() ){
@@ -208,12 +208,12 @@ class Edit extends \gp\Page{
 
 		//editing
 		if( $this->permission_edit ){
-			$admin_links[] = \common::Link($this->title,'<i class="fa fa-th"></i> '.$langmessage['Manage Sections'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+			$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-th"></i> '.$langmessage['Manage Sections'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
 			if( $this->draft_exists	){
-				$admin_links[] = \common::Link($this->title,'<i class="fa fa-check"></i> '.$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq', 'class'=>'msg_publish_draft'));
-				$admin_links[] = \common::Link($this->title,'<i class="fa fa-trash"></i> '.$langmessage['Discard Draft'],'cmd=DiscardDraft',array('data-cmd'=>'creq', 'class'=>'msg_discard_draft'));
+				$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-check"></i> '.$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq', 'class'=>'msg_publish_draft'));
+				$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-trash"></i> '.$langmessage['Discard Draft'],'cmd=DiscardDraft',array('data-cmd'=>'creq', 'class'=>'msg_discard_draft'));
 			}
-			$admin_links[] = \common::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+			$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 		}
 
 
@@ -228,7 +228,7 @@ class Edit extends \gp\Page{
 				$q						.= '&visibility=private';
 			}
 			$attrs						= array('title'=>$label,'data-cmd'=>'creq');
-			$admin_links[]		= \common::Link($this->title,$label,$q,$attrs);
+			$admin_links[]		= \gp\tool::Link($this->title,$label,$q,$attrs);
 		}
 
 
@@ -237,19 +237,19 @@ class Edit extends \gp\Page{
 		// page options: less frequently used links that don't have to do with editing the content of the page
 		$option_links		= array();
 		if( $this->permission_menu ){
-			$option_links[] = \common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
+			$option_links[] = \gp\tool::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
 
-			$option_links[] = \common::Link('Admin/Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
+			$option_links[] = \gp\tool::Link('Admin/Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
 
-			$option_links[] = \common::Link('Admin/Menu/Ajax',$langmessage['Copy'],'cmd=CopyForm&redir=redir&index='.urlencode($this->gp_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
+			$option_links[] = \gp\tool::Link('Admin/Menu/Ajax',$langmessage['Copy'],'cmd=CopyForm&redir=redir&index='.urlencode($this->gp_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 		}
 
 		if( \gp\admin\Tools::HasPermission('Admin_User') ){
-			$option_links[] = \common::Link('Admin/Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
+			$option_links[] = \gp\tool::Link('Admin/Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
 		}
 
 		if( $this->permission_menu ){
-			$option_links[] = \common::Link('Admin/Menu/Ajax',$langmessage['delete_file'],'cmd=MoveToTrash&index='.urlencode($this->gp_index),array('data-cmd'=>'postlink','title'=>$langmessage['delete_page'],'class'=>'gpconfirm'));
+			$option_links[] = \gp\tool::Link('Admin/Menu/Ajax',$langmessage['delete_file'],'cmd=MoveToTrash&index='.urlencode($this->gp_index),array('data-cmd'=>'postlink','title'=>$langmessage['delete_page'],'class'=>'gpconfirm'));
 		}
 
 		if( !empty($option_links) ){
@@ -271,10 +271,10 @@ class Edit extends \gp\Page{
 		if( $this->revision == $this->fileModTime ){
 			$date	= $langmessage['Current Page'];
 		}else{
-			$date	= \common::date($langmessage['strftime_datetime'],$this->revision);
+			$date	= \gp\tool::date($langmessage['strftime_datetime'],$this->revision);
 		}
 
-		$admin_links[] = \common::Link($this->title,'<i class="fa fa-save"></i> '.$langmessage['Restore this revision'].' ('.$date.')','cmd=UseRevision&time='.$this->revision,array('data-cmd'=>'cnreq','class'=>'msg_publish_draft'));
+		$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-save"></i> '.$langmessage['Restore this revision'].' ('.$date.')','cmd=UseRevision&time='.$this->revision,array('data-cmd'=>'cnreq','class'=>'msg_publish_draft'));
 
 
 
@@ -286,18 +286,18 @@ class Edit extends \gp\Page{
 
 		if( $key_current !== false ){
 			if( isset($times[$key_current-1]) ){
-				$admin_links[]		= \common::Link($this->title,'<i class="fa fa-backward"></i> '.$langmessage['Previous'],'cmd=ViewRevision&time='.$times[$key_current-1],array('data-cmd'=>'cnreq'));
+				$admin_links[]		= \gp\tool::Link($this->title,'<i class="fa fa-backward"></i> '.$langmessage['Previous'],'cmd=ViewRevision&time='.$times[$key_current-1],array('data-cmd'=>'cnreq'));
 			}
 
 			if( isset($times[$key_current+1]) ){
-				$admin_links[]		= \common::Link($this->title,'<i class="fa fa-forward"></i> '.$langmessage['Next'],'cmd=ViewRevision&time='.$times[$key_current+1],array('data-cmd'=>'cnreq'));
+				$admin_links[]		= \gp\tool::Link($this->title,'<i class="fa fa-forward"></i> '.$langmessage['Next'],'cmd=ViewRevision&time='.$times[$key_current+1],array('data-cmd'=>'cnreq'));
 			}else{
-				$admin_links[]		= \common::Link($this->title,'<i class="fa fa-forward"></i> '.$langmessage['Working Draft']);
+				$admin_links[]		= \gp\tool::Link($this->title,'<i class="fa fa-forward"></i> '.$langmessage['Working Draft']);
 			}
 
 		}
 
-		$admin_links[] = \common::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+		$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 
 		return $admin_links;
 	}
@@ -428,7 +428,7 @@ class Edit extends \gp\Page{
 
 		//if image type, make sure the src is a complete path
 		if( $section['type'] == 'image' ){
-			$orig_attrs['src'] = \common::GetDir($orig_attrs['src']);
+			$orig_attrs['src'] = \gp\tool::GetDir($orig_attrs['src']);
 		}
 
 		$orig_attrs			= json_encode($orig_attrs);
@@ -690,7 +690,7 @@ class Edit extends \gp\Page{
 	public function RenameForm(){
 		global $gp_index;
 
-		$action = \common::GetUrl($this->title);
+		$action = \gp\tool::GetUrl($this->title);
 		\gp\Page\Rename::RenameForm( $this->gp_index, $action );
 	}
 
@@ -719,13 +719,13 @@ class Edit extends \gp\Page{
 		foreach($section_types as $type => $type_info){
 			$img			= '';
 			if( in_array($type,$types_with_imgs) ){
-				$img		= \common::GetDir('/include/imgs/section-'.$type.'.png');
+				$img		= \gp\tool::GetDir('/include/imgs/section-'.$type.'.png');
 			}
 			$links[]		= array( $type, $img );
 		}
 
-		$links[]			= array( array('text.gpCol-6','image.gpCol-6'),\common::GetDir('/include/imgs/section-combo-text-image.png') );
-		$links[]			= array( array('text.gpCol-6','gallery.gpCol-6'),\common::GetDir('/include/imgs/section-combo-text-gallery.png') );	//section combo: text & gallery
+		$links[]			= array( array('text.gpCol-6','image.gpCol-6'),\gp\tool::GetDir('/include/imgs/section-combo-text-image.png') );
+		$links[]			= array( array('text.gpCol-6','gallery.gpCol-6'),\gp\tool::GetDir('/include/imgs/section-combo-text-gallery.png') );	//section combo: text & gallery
 
 		$links				= \gp\tool\Plugins::Filter('NewSections',array($links));
 
@@ -807,7 +807,7 @@ class Edit extends \gp\Page{
 			$q = array('cmd'=> 'NewSectionContent','type' => $type );
 		}
 
-		return '<div>'.\common::Link($page->title,$label,http_build_query($q,'','&amp;'),array('data-cmd'=>'AddSection','class'=>'preview_section')).'</div>';
+		return '<div>'.\gp\tool::Link($page->title,$label,http_build_query($q,'','&amp;'),array('data-cmd'=>'AddSection','class'=>'preview_section')).'</div>';
 	}
 
 
@@ -1031,7 +1031,7 @@ class Edit extends \gp\Page{
 		global $langmessage;
 
 		ob_start();
-		$date = \common::date($langmessage['strftime_datetime'],$time);
+		$date = \gp\tool::date($langmessage['strftime_datetime'],$time);
 		echo '<tr><td title="'.htmlspecialchars($date).'">';
 		switch($which){
 			case 'current':
@@ -1059,21 +1059,21 @@ class Edit extends \gp\Page{
 		switch($which){
 			case 'current':
 			if( $this->draft_exists ){
-				echo \common::Link($this->title,$langmessage['View'],'cmd=ViewCurrent',array('data-cmd'=>'cnreq'));
+				echo \gp\tool::Link($this->title,$langmessage['View'],'cmd=ViewCurrent',array('data-cmd'=>'cnreq'));
 			}else{
-				echo \common::Link($this->title,$langmessage['View']);
+				echo \gp\tool::Link($this->title,$langmessage['View']);
 			}
 			break;
 
 			case 'draft':
-			echo \common::Link($this->title,$langmessage['View']);
-			echo ' &nbsp; '.\common::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'cnreq'));
+			echo \gp\tool::Link($this->title,$langmessage['View']);
+			echo ' &nbsp; '.\gp\tool::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'cnreq'));
 			break;
 
 			case 'history':
-			echo \common::Link($this->title,$langmessage['View'],'cmd=ViewRevision&time='.$time,array('data-cmd'=>'cnreq'));
+			echo \gp\tool::Link($this->title,$langmessage['View'],'cmd=ViewRevision&time='.$time,array('data-cmd'=>'cnreq'));
 			echo ' &nbsp; ';
-			echo \common::Link($this->title,$langmessage['delete'],'cmd=DeleteRevision&time='.$time,array('data-cmd'=>'gpabox','class'=>'gpconfirm'));
+			echo \gp\tool::Link($this->title,$langmessage['delete'],'cmd=DeleteRevision&time='.$time,array('data-cmd'=>'gpabox','class'=>'gpconfirm'));
 			break;
 		}
 
@@ -1139,7 +1139,7 @@ class Edit extends \gp\Page{
 			readgzfile($full_path);
 			$contents	= ob_get_clean();
 
-			$dir		= \common::DirName($full_path);
+			$dir		= \gp\tool::DirName($full_path);
 			$full_path	= tempnam($dir,'backup').'.php';
 
 			\gp\tool\Files::Save( $full_path, $contents );
@@ -1238,7 +1238,7 @@ class Edit extends \gp\Page{
 
 		//add to all pages in case a user adds a gallery
 		\gp\tool\Plugins::Action('GenerateContent_Admin');
-		\common::ShowingGallery();
+		\gp\tool::ShowingGallery();
 
 		$content				= '';
 		$sections_count			= count($this->file_sections);
@@ -1284,7 +1284,7 @@ class Edit extends \gp\Page{
 		$section_types									= \gp\tool\Output\Sections::GetTypes();
 
 
-		if( \gpOutput::ShowEditLink() && \gp\admin\Tools::CanEdit($this->gp_index) ){
+		if( \gp\tool\Output::ShowEditLink() && \gp\admin\Tools::CanEdit($this->gp_index) ){
 
 
 			if( isset($section_types[$section_data['type']]) ){
@@ -1294,7 +1294,7 @@ class Edit extends \gp\Page{
 			}
 
 			$attrs			= array('title'=>$title_attr,'data-cmd'=>'inline_edit_generic','data-arg'=>$section_data['type'].'_inline_edit');
-			$link			= \gpOutput::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$curr_section_num.'&amp;revision='.$this->fileModTime,$attrs);
+			$link			= \gp\tool\Output::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$curr_section_num.'&amp;revision='.$this->fileModTime,$attrs);
 
 
 			//section control links
@@ -1302,12 +1302,12 @@ class Edit extends \gp\Page{
 				ob_start();
 				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 				echo $link;
-				echo \common::Link($this->title,$langmessage['Manage Sections'],'cmd=ManageSections',array('class'=>'manage_sections','data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+				echo \gp\tool::Link($this->title,$langmessage['Manage Sections'],'cmd=ManageSections',array('class'=>'manage_sections','data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
 				echo '<hr/>';
-				echo \common::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
-				echo \common::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox'));
+				echo \gp\tool::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
+				echo \gp\tool::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox'));
 				echo '</span>';
-				\gpOutput::$editlinks .= ob_get_clean();
+				\gp\tool\Output::$editlinks .= ob_get_clean();
 			}
 
 			$section_data['attributes']['id']				= 'ExtraEditArea'.$edit_index;
@@ -1324,9 +1324,9 @@ class Edit extends \gp\Page{
 			}
 
 		}else{
-			\gpOutput::$nested_edit		= true;
+			\gp\tool\Output::$nested_edit		= true;
 			$content			.= \gp\tool\Output\Sections::RenderSection($section_data,$curr_section_num,$this->title,$this->file_stats);
-			\gpOutput::$nested_edit		= false;
+			\gp\tool\Output::$nested_edit		= false;
 		}
 
 		if( !isset($section_data['nodeName']) ){

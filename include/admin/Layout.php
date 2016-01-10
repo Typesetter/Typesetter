@@ -62,7 +62,7 @@ class Layout extends \gp\admin\Addon\Install{
 		$page->head_js[] = '/include/js/theme_content.js';
 		$page->head_js[] = '/include/js/dragdrop.js';
 		$page->css_admin[] = '/include/css/theme_content.scss';
-		\common::LoadComponents('resizable');
+		\gp\tool::LoadComponents('resizable');
 
 
 		$this->GetPossible();
@@ -73,7 +73,7 @@ class Layout extends \gp\admin\Addon\Install{
 	public function RunScript(){
 		global $config, $gpLayouts, $langmessage, $page;
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 
 		//set current layout
 		$this->curr_layout = $config['gpLayout'];
@@ -222,15 +222,15 @@ class Layout extends \gp\admin\Addon\Install{
 			foreach( $this->LayoutArray as $index => $layout_comparison ){
 				if( $this->curr_layout == $layout_comparison ){
 
-					$title = \common::IndexToTitle($index);
+					$title = \gp\tool::IndexToTitle($index);
 					if( empty($title) ){
 						continue; //may be external link
 					}
 
 					echo "\n<li>";
-					$label = \common::GetLabel($title);
-					$label = \common::LabelSpecialChars($label);
-					echo \common::Link($title,$label);
+					$label = \gp\tool::GetLabel($title);
+					$label = \gp\tool::LabelSpecialChars($label);
+					echo \gp\tool::Link($title,$label);
 					echo '</li>';
 				}
 			}
@@ -249,7 +249,7 @@ class Layout extends \gp\admin\Addon\Install{
 	public function ShowGadgets(){
 		global $langmessage, $config;
 
-		$gadget_info = \gpOutput::WhichGadgets($this->curr_layout);
+		$gadget_info = \gp\tool\Output::WhichGadgets($this->curr_layout);
 
 		echo '<h2>'.$langmessage['gadgets'].'</h2>';
 		echo '<table class="bordered full_width">';
@@ -310,7 +310,7 @@ class Layout extends \gp\admin\Addon\Install{
 		if( $config['gpLayout'] == $layout ){
 			echo '<span><b>'.$langmessage['default'].'</b></span>';
 		}else{
-			echo \common::Link('Admin_Theme_Content',$langmessage['make_default'],'cmd=makedefault&layout='.rawurlencode($layout),array('data-cmd'=>'creq','title'=>$langmessage['make_default']));
+			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['make_default'],'cmd=makedefault&layout='.rawurlencode($layout),array('data-cmd'=>'creq','title'=>$langmessage['make_default']));
 		}
 		echo '</li>';
 
@@ -347,14 +347,14 @@ class Layout extends \gp\admin\Addon\Install{
 		//copy
 		echo '<li>';
 		$query = 'cmd=CopyLayoutPrompt&layout='.$layout;
-		echo \common::Link('Admin_Theme_Content',$langmessage['Copy'],$query,'data-cmd="gpabox"');
+		echo \gp\tool::Link('Admin_Theme_Content',$langmessage['Copy'],$query,'data-cmd="gpabox"');
 		echo '</li>';
 
 		//delete
 		if( $config['gpLayout'] != $layout ){
 			echo '<li>';
 			$attr = array( 'data-cmd'=>'creq','class'=>'gpconfirm','title'=>sprintf($langmessage['generic_delete_confirm'],$info['label']) );
-			echo \common::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletelayout&layout='.$layout,$attr);
+			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletelayout&layout='.$layout,$attr);
 			echo '</li>';
 		}
 	}
@@ -611,7 +611,7 @@ class Layout extends \gp\admin\Addon\Install{
 		$label = self::NewLabel($gpLayouts[$layout]['label']);
 
 		echo '<h2>'.$langmessage['new_layout'].'</h2>';
-		echo '<form action="'.\common::GetUrl('Admin_Theme_Content').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content').'" method="post">';
 		echo '<table class="bordered full_width">';
 
 		echo '<tr><th colspan="2">';
@@ -929,7 +929,7 @@ class Layout extends \gp\admin\Addon\Install{
 		asort($subdirs);
 		foreach($subdirs as $subdir){
 
-			if( \gpOutput::StyleType($dir.'/'.$subdir) ){
+			if( \gp\tool\Output::StyleType($dir.'/'.$subdir) ){
 				$colors[$subdir] = $subdir;
 			}
 
@@ -993,7 +993,7 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 		//send new label
-		$layout_info = \common::LayoutInfo($layout,false);
+		$layout_info = \gp\tool::LayoutInfo($layout,false);
 		$replace = $this->GetLayoutLabel($layout, $layout_info);
 		$page->ajaxReplace[] = array( 'replace', '.layout_label_'.$layout, $replace);
 	}
@@ -1021,7 +1021,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 		echo '<hr/>';
 		echo '<p class="admin_note">';
-		echo $langmessage['see_also'].' '.\common::Link('Admin/Menu',$langmessage['file_manager']);
+		echo $langmessage['see_also'].' '.\gp\tool::Link('Admin/Menu',$langmessage['file_manager']);
 		echo '</p>';
 
 
@@ -1040,9 +1040,9 @@ class Layout extends \gp\admin\Addon\Install{
 		echo '<div>';
 
 		if( $layout ){
-			echo '<form action="'.\common::GetUrl('Admin_Theme_Content/Edit/'.$layout).'" method="post">';
+			echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Edit/'.$layout).'" method="post">';
 		}else{
-			echo '<form action="'.\common::GetUrl('Admin_Theme_Content').'" method="post">';
+			echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content').'" method="post">';
 		}
 		echo '<input type="hidden" name="layout" value="" />';
 		echo '<input type="hidden" name="color" value="" />';
@@ -1084,7 +1084,7 @@ class Layout extends \gp\admin\Addon\Install{
 	public function LayoutDiv($layout,$info){
 		global $page, $langmessage;
 
-		$layout_info = \common::LayoutInfo($layout,false);
+		$layout_info = \gp\tool::LayoutInfo($layout,false);
 
 
 		echo '<div class="panelgroup" id="panelgroup_'.md5($layout).'">';
@@ -1095,7 +1095,7 @@ class Layout extends \gp\admin\Addon\Install{
 		echo '<ul class="submenu">';
 
 		echo '<li>';
-		echo \common::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),$langmessage['edit_this_layout'],'',' title="'.htmlspecialchars($langmessage['Arrange Content']).'" ');
+		echo \gp\tool::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),$langmessage['edit_this_layout'],'',' title="'.htmlspecialchars($langmessage['Arrange Content']).'" ');
 		echo '</li>';
 
 
@@ -1123,7 +1123,7 @@ class Layout extends \gp\admin\Addon\Install{
 			$addon_key = $layout_info['addon_key'];
 			$addon_config = \gp\tool\Plugins::GetAddonConfig($addon_key);
 			echo '<li>';
-			echo \common::link('Admin/Addons/'.\gp\admin\Tools::encode64($addon_key),'<span class="gpicon_plug"></span> '.$addon_config['name']);
+			echo \gp\tool::link('Admin/Addons/'.\gp\admin\Tools::encode64($addon_key),'<span class="gpicon_plug"></span> '.$addon_config['name']);
 			echo '</li>';
 
 			//hooks
@@ -1146,7 +1146,7 @@ class Layout extends \gp\admin\Addon\Install{
 			}else{
 				$source = $layout_info['theme_name'].'(local)/'.$layout_info['theme_color'];
 			}
-			echo \common::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=UpdateTheme&source='.rawurlencode($source),array('data-cmd'=>'creq'));
+			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=UpdateTheme&source='.rawurlencode($source),array('data-cmd'=>'creq'));
 			echo '</li>';
 		}
 
@@ -1174,7 +1174,7 @@ class Layout extends \gp\admin\Addon\Install{
 				$label = $langmessage['upgrade'].' &nbsp; '.$version_info['version'];
 				$source = $version_info['index'].'/'.$layout_info['theme_color']; //could be different folder
 				echo '<div class="gp_notice">';
-				echo \common::Link('Admin_Theme_Content',$label,'cmd=UpdateTheme&source='.$source,array('data-cmd'=>'creq'));
+				echo \gp\tool::Link('Admin_Theme_Content',$label,'cmd=UpdateTheme&source='.$source,array('data-cmd'=>'creq'));
 				echo '</div>';
 
 
@@ -1183,7 +1183,7 @@ class Layout extends \gp\admin\Addon\Install{
 				$version_info = \gp\admin\Tools::$new_versions[$addon_id];
 				$label = $langmessage['new_version'].' &nbsp; '.$version_info['version'].' &nbsp; (gpEasy.com)';
 				echo '<div class="gp_notice">';
-				echo \common::Link('Admin_Theme_Content',$label,'cmd=remote_install&id='.$addon_id.'&name='.rawurlencode($version_info['name']).'&layout='.$layout);
+				echo \gp\tool::Link('Admin_Theme_Content',$label,'cmd=remote_install&id='.$addon_id.'&name='.rawurlencode($version_info['name']).'&layout='.$layout);
 				echo '</div>';
 			}
 
@@ -1236,7 +1236,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 		// name based menu classes
 		echo '<li>';
-		echo '<form action="'.\common::GetUrl('Admin_Theme_Content').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content').'" method="post">';
 		echo '<input type="hidden" name="layout" value="'.$layout.'" />';
 		echo '<input type="hidden" name="cmd" value="CSSPreferences" />';
 		$checked = '';
@@ -1255,7 +1255,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 		//ordered menu classes
 		echo '<li>';
-		echo '<form action="'.\common::GetUrl('Admin_Theme_Content').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content').'" method="post">';
 		echo '<input type="hidden" name="layout" value="'.$layout.'" />';
 		echo '<input type="hidden" name="cmd" value="CSSPreferences" />';
 		$checked = '';
@@ -1399,7 +1399,7 @@ class Layout extends \gp\admin\Addon\Install{
 		if( $container !== 'GetAllGadgets' ){
 
 			//Just a container that doesn't have content by default
-			// ex: 		gpOutput::Get('AfterContent');
+			// ex: 		\gp\tool\Output::Get('AfterContent');
 			if( empty($gpOutCmd) ){
 				return array();
 			}
@@ -1428,9 +1428,9 @@ class Layout extends \gp\admin\Addon\Install{
 
 		$return = trim($_POST['return']);
 		if( strpos($return,'http') !== 0 ){
-			$return = \common::GetUrl($return,'',false);
+			$return = \gp\tool::GetUrl($return,'',false);
 		}
-		\common::Redirect($return,302);
+		\gp\tool::Redirect($return,302);
 	}
 
 
@@ -1539,7 +1539,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 		echo '<div class="inline_box" style="text-align:right">';
-		echo '<form action="'.\common::GetUrl('Admin_Theme_Content').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="saveaddontext" />';
 		echo '<input type="hidden" name="return" value="" />'; //will be populated by javascript
 		echo '<input type="hidden" name="addon" value="'.htmlspecialchars($addon).'" />'; //will be populated by javascript
@@ -1609,7 +1609,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 		echo '<div class="inline_box">';
-		echo '<form action="'.\common::GetUrl('Admin_Theme_Content').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="savetext" />';
 		echo '<input type="hidden" name="key" value="'.htmlspecialchars($key).'" />';
 		echo '<input type="hidden" name="return" value="" />'; //will be populated by javascript
@@ -1838,7 +1838,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 	public function LayoutLink($layout,$label,$query,$attr){
 		$url = $this->LayoutUrl($layout,$query);
-		return \common::Link($url,$label,$query,$attr);
+		return \gp\tool::Link($url,$label,$query,$attr);
 	}
 
 }

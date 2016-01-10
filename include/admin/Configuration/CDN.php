@@ -16,7 +16,7 @@ class CDN extends \gp\admin\Configuration{
 
 
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 			case 'save_config':
 				$this->SaveConfig();
@@ -63,7 +63,7 @@ class CDN extends \gp\admin\Configuration{
 
 		$possible	= $this->getPossible();
 
-		echo '<form action="'.\common::GetUrl($page->requested).'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl($page->requested).'" method="post">';
 		echo '<h2>CDN</h2>';
 
 
@@ -91,7 +91,7 @@ class CDN extends \gp\admin\Configuration{
 			}
 
 			$config_key					= 'cdn_'.$key;
-			$code						= '\common::LoadComponents(\''.$key.'\');';
+			$code						= '\\gp\\tool::LoadComponents(\''.$key.'\');';
 
 			echo '<tr><td title="'.htmlspecialchars($code).'">';
 			echo $script_info['label'];

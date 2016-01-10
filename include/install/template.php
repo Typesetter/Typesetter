@@ -160,7 +160,7 @@ input.text{
 
 </style>
 
-<?php gpOutput::getHead(); ?>
+<?php \gp\tool\Output::getHead(); ?>
 
 </head>
 <body>

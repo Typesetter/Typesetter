@@ -43,7 +43,7 @@ namespace gp\tool{
 				if( $resized_data !== false ){
 					$img = $resized_data['img'];
 					$index = $resized_data['index'];
-					$resized_src = \common::GetDir('/include/image.php',true).'?i='.$index.'&amp;w='.$resized_data['w'].'&amp;h='.$resized_data['h'].'&amp;img='.rawurlencode($img);
+					$resized_src = \gp\tool::GetDir('/include/image.php',true).'?i='.$index.'&amp;w='.$resized_data['w'].'&amp;h='.$resized_data['h'].'&amp;img='.rawurlencode($img);
 					$gp_html_output->dom_array[$key]['attributes']['src'] = $resized_src;
 					$img_list[$index][] = $resized_data['w'].'x'.$resized_data['h'];
 					$img_list[$index] = array_unique($img_list[$index]);
@@ -158,7 +158,7 @@ namespace gp\tool{
 			$exists_before = file_exists($dest_path);
 
 			//make sure the folder exists
-			if( !\gp\tool\Files::CheckDir( \common::DirName($dest_path) ) ){
+			if( !\gp\tool\Files::CheckDir( \gp\tool::DirName($dest_path) ) ){
 				return false;
 			}
 
@@ -296,7 +296,7 @@ namespace gp\tool{
 				$original_path = $dirPrefix.'/data/_uploaded'.$img;
 				foreach($sizes as $size){
 					list($width,$height) = explode('x',$size);
-					$resized_path = \common::GetDir('/include/image.php',true).'?i='.$index.'&amp;w='.$width.'&amp;h='.$height; //not searching for the whole path in case the image was renamed
+					$resized_path = \gp\tool::GetDir('/include/image.php',true).'?i='.$index.'&amp;w='.$width.'&amp;h='.$height; //not searching for the whole path in case the image was renamed
 					$images[$resized_path] = $original_path;
 				}
 			}
@@ -458,11 +458,11 @@ namespace gp\tool{
 			$array = array();
 			foreach($gp_index as $slug => $id){
 
-				$label = \common::GetLabel($slug);
+				$label = \gp\tool::GetLabel($slug);
 				$label = str_replace( array('&lt;','&gt;','&quot;','&#39;','&amp;'), array('<','>','"',"'",'&')  , $label);
 
 				if( $GetUrl ){
-					$slug = \common::GetUrl($slug,'',false);
+					$slug = \gp\tool::GetUrl($slug,'',false);
 					$slug = rawurldecode($slug);
 				}
 				$array[] = array($label,$slug);
@@ -476,7 +476,7 @@ namespace gp\tool{
 						continue;
 					}
 					if( $GetUrl ){
-						$url = \common::GetUrl($url,'',false);
+						$url = \gp\tool::GetUrl($url,'',false);
 						$url = rawurldecode($url);
 					}
 					$array[] = array($info['label'],$url);
@@ -495,7 +495,7 @@ namespace gp\tool{
 		public static function PrepAutoComplete(){
 			global $page;
 
-			\common::LoadComponents('autocomplete');
+			\gp\tool::LoadComponents('autocomplete');
 			$page->head_js[] = '/include/js/autocomplete.js';
 		}
 
@@ -518,10 +518,10 @@ namespace gp\tool{
 			echo '</textarea><br/>';
 
 
-			$page->head .= "\n".'<script type="text/javascript" src="'.\common::GetDir('/include/thirdparty/ckeditor_34/ckeditor.js').'?'.rawurlencode(gpversion).'"></script>';
-			$page->head .= "\n".'<script type="text/javascript" src="'.\common::GetDir('/include/js/ckeditor_config.js').'?'.rawurlencode(gpversion).'"></script>';
+			$page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/ckeditor_34/ckeditor.js').'?'.rawurlencode(gpversion).'"></script>';
+			$page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/js/ckeditor_config.js').'?'.rawurlencode(gpversion).'"></script>';
 
-			\common::LoadComponents('autocomplete');
+			\gp\tool::LoadComponents('autocomplete');
 			$page->head_script .= self::AutoCompleteValues(true);
 
 			ob_start();
@@ -574,12 +574,12 @@ namespace gp\tool{
 
 			// (4) gpeasy defaults
 			$defaults = array(
-							//'customConfig'				=> \common::GetDir('/include/js/ckeditor_config.js'),
+							//'customConfig'				=> \gp\tool::GetDir('/include/js/ckeditor_config.js'),
 							'skin'						=> 'kama',
 							'browser'					=> true, //not actually a ckeditor configuration value, but we're keeping it now for reverse compat
-							'smiley_path'				=> \common::GetDir('/include/thirdparty/ckeditor_34/plugins/smiley/images/'),
+							'smiley_path'				=> \gp\tool::GetDir('/include/thirdparty/ckeditor_34/plugins/smiley/images/'),
 							'height'					=> 300,
-							'contentsCss'				=> \common::GetDir('/include/css/ckeditor_contents.css'),
+							'contentsCss'				=> \gp\tool::GetDir('/include/css/ckeditor_contents.css'),
 							'fontSize_sizes'			=> 'Smaller/smaller;Normal/;Larger/larger;8/8px;9/9px;10/10px;11/11px;12/12px;14/14px;16/16px;18/18px;20/20px;22/22px;24/24px;26/26px;28/28px;36/36px;48/48px;72/72px',
 							'ignoreEmptyParagraph'		=> true,
 							'entities_latin'			=> false,
@@ -633,7 +633,7 @@ namespace gp\tool{
 			// (1) User
 			$admin_config = self::CKAdminConfig();
 			foreach($admin_config['plugins'] as $plugin => $plugin_info){
-				$plugins[$plugin] = \common::GetDir('/data/_ckeditor/'.$plugin.'/');
+				$plugins[$plugin] = \gp\tool::GetDir('/data/_ckeditor/'.$plugin.'/');
 			}
 
 			// extra plugins
@@ -647,9 +647,9 @@ namespace gp\tool{
 
 			//browser paths
 			if( $options['browser'] ){
-				$options['filebrowserBrowseUrl'] = \common::GetUrl('Admin/Browser').'?type=all';
-				$options['filebrowserImageBrowseUrl'] = \common::GetUrl('Admin/Browser').'?dir=%2Fimage';
-				$options['filebrowserFlashBrowseUrl'] = \common::GetUrl('Admin/Browser').'?dir=%2Fflash';
+				$options['filebrowserBrowseUrl'] = \gp\tool::GetUrl('Admin/Browser').'?type=all';
+				$options['filebrowserImageBrowseUrl'] = \gp\tool::GetUrl('Admin/Browser').'?dir=%2Fimage';
+				$options['filebrowserFlashBrowseUrl'] = \gp\tool::GetUrl('Admin/Browser').'?dir=%2Fflash';
 				unset($options['browser']);
 			}
 
@@ -685,8 +685,8 @@ namespace gp\tool{
 
 				case 'gallery':
 					$section['content']		= '<ul class="gp_gallery"><li class="gp_to_remove">'
-											.'<a class="gallery_gallery" data-cmd="gallery" href="'.\common::GetDir('/include/imgs/default_image.jpg').'" data-arg="gallery_gallery">'
-											.'<img alt="" src="'.\common::GetDir('/include/imgs/default_thumb.jpg').'" />'
+											.'<a class="gallery_gallery" data-cmd="gallery" href="'.\gp\tool::GetDir('/include/imgs/default_image.jpg').'" data-arg="gallery_gallery">'
+											.'<img alt="" src="'.\gp\tool::GetDir('/include/imgs/default_thumb.jpg').'" />'
 											.'</a>'
 											.'<div class="caption">Image caption</div>'
 											.'</li></ul>';
@@ -992,7 +992,7 @@ namespace gp\tool{
 
 			foreach($_POST['images'] as $i => $image ){
 
-				$thumb_path = \common::ThumbnailPath($image);
+				$thumb_path = \gp\tool::ThumbnailPath($image);
 				$caption = $_POST['captions'][$i];
 				\gp\tool\Files::cleanText($caption);
 
@@ -1034,7 +1034,7 @@ namespace gp\tool{
 					msg($langmessage['OOPS_TITLE']);
 					return false;
 				}
-				$existing_section['include_type'] = \common::SpecialOrAdmin($include_title);
+				$existing_section['include_type'] = \gp\tool::SpecialOrAdmin($include_title);
 				$existing_section['index'] = $gp_index[$include_title];
 				$existing_section['content'] = $include_title;
 			}
@@ -1087,9 +1087,9 @@ namespace gp\tool{
 			ob_start();
 
 			echo '<div class="inline_box">';
-			$img = '<img src="'.\common::GetDir('/include/imgs/folder.png').'" height="16" width="16" alt=""/> ';
+			$img = '<img src="'.\gp\tool::GetDir('/include/imgs/folder.png').'" height="16" width="16" alt=""/> ';
 			echo '<h2>'.$img.$langmessage['create_dir'].'</h2>';
-			echo '<form action="'.\common::GetUrl($page->title).'" method="post" >';
+			echo '<form action="'.\gp\tool::GetUrl($page->title).'" method="post" >';
 			echo '<p>';
 			echo htmlspecialchars($_GET['dir']).'/';
 			echo ' <input type="text" class="gpinput" name="newdir" size="30" />';
@@ -1175,7 +1175,7 @@ namespace gp\tool{
 			echo '<div id="gp_source_options" class="inline_edit_area" style="display:none" title="'.$langmessage['Select Image'].'">';
 
 			if( $layout ){
-				echo \common::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),$langmessage['Theme Images'].'..','cmd=theme_images',' data-cmd="gpajax" class="ckeditor_control half_width" ');
+				echo \gp\tool::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),$langmessage['Theme Images'].'..','cmd=theme_images',' data-cmd="gpajax" class="ckeditor_control half_width" ');
 				echo '<a class="ckeditor_control half_width" data-cmd="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
 			}
 

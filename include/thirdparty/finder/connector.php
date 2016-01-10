@@ -90,11 +90,11 @@ $opts = array(
 		array(
 			'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
 			'path'          => $dataDir.'/data/_uploaded/',
-			'URL'           => common::GetDir('data/_uploaded'),
+			'URL'           => \gp\tool::GetDir('data/_uploaded'),
 			'accessControl' => 'access',
 			//'uploadMaxSize' => '1G',
 			'tmbPath'		=> $dataDir.'/data/_elthumbs',
-			'tmbURL'		=> common::GetDir('data/_elthumbs'),
+			'tmbURL'		=> \gp\tool::GetDir('data/_elthumbs'),
 			'separator'		=> '/',
 			'tmbBgColor'	=> 'transparent',
 			'copyOverwrite'	=> false,

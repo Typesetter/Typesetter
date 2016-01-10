@@ -41,7 +41,7 @@ class Layout{
 
 		if( $this->from_page && $this->title){
 			if( !$this->show_popup ){
-				$url = \common::AbsoluteUrl($this->title,'',true,false);
+				$url = \gp\tool::AbsoluteUrl($this->title,'',true,false);
 				$page->ajaxReplace[] = array('location',$url,0);
 			}
 			return true;
@@ -59,7 +59,7 @@ class Layout{
 		global $gp_titles,$gp_index,$langmessage;
 
 		$index = $_POST['index'];
-		$title = \common::IndexToTitle($index);
+		$title = \gp\tool::IndexToTitle($index);
 
 		if( !$title ){
 			msg($langmessage['OOPS']);
@@ -67,7 +67,7 @@ class Layout{
 		}
 		$this->title = $title;
 
-		if( !\common::verify_nonce('restore') ){
+		if( !\gp\tool::verify_nonce('restore') ){
 			msg($langmessage['OOPS']);
 			return;
 		}
@@ -92,7 +92,7 @@ class Layout{
 		global $gp_index, $gp_titles, $langmessage, $gpLayouts;
 
 		$index = $_POST['index'];
-		$title = \common::IndexToTitle($index);
+		$title = \gp\tool::IndexToTitle($index);
 
 		if( !$title ){
 			msg($langmessage['OOPS']);
@@ -106,7 +106,7 @@ class Layout{
 			return;
 		}
 
-		if( !\common::verify_nonce('use_'.$layout) ){
+		if( !\gp\tool::verify_nonce('use_'.$layout) ){
 			msg($langmessage['OOPS']);
 			return;
 		}
@@ -136,7 +136,7 @@ class Layout{
 		global $gp_titles, $gpLayouts, $langmessage, $config, $gp_index;
 
 		$index = $_REQUEST['index'];
-		$title = \common::IndexToTitle($index);
+		$title = \gp\tool::IndexToTitle($index);
 		if( !$title ){
 			echo $langmessage['OOPS'];
 			return;
@@ -169,7 +169,7 @@ class Layout{
 
 			echo $langmessage['restore'].': ';
 			$span = '<span class="layout_color_id" style="background-color:'.$parent_info['color'].';" title="'.$parent_info['color'].'"></span> ';
-			echo \common::Link($url,$span.$parent_info['label'],$query_string.'cmd=restorelayout&index='.urlencode($index),array('data-cmd'=>'postlink','title'=>$langmessage['restore']),'restore');
+			echo \gp\tool::Link($url,$span.$parent_info['label'],$query_string.'cmd=restorelayout&index='.urlencode($index),array('data-cmd'=>'postlink','title'=>$langmessage['restore']),'restore');
 			echo '</p>';
 		}
 
@@ -187,7 +187,7 @@ class Layout{
 			echo $langmessage['Empty'];
 			echo '</td></tr>';
 			echo '</table>';
-			echo \common::Link('Admin_Theme_Content',$langmessage['new_layout']);
+			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['new_layout']);
 			echo '</div>';
 			return;
 		}
@@ -200,7 +200,7 @@ class Layout{
 			echo '<span class="layout_color_id" style="background-color:'.$info['color'].';" title="'.$info['color'].'">';
 			echo '</span> ';
 			if( $layout != $curr_layout ){
-				echo \common::Link($url,$info['label'],$query_string.'cmd=uselayout&index='.urlencode($index).'&layout='.urlencode($layout),array('data-cmd'=>'postlink'),'use_'.$layout);
+				echo \gp\tool::Link($url,$info['label'],$query_string.'cmd=uselayout&index='.urlencode($index).'&layout='.urlencode($layout),array('data-cmd'=>'postlink'),'use_'.$layout);
 
 			}
 			echo '</td><td>';
@@ -222,8 +222,8 @@ class Layout{
 		echo '<p class="sm">'.$langmessage['about_layout_change'].'</p>';
 		echo '<p class="admin_note" style="width:35em">';
 
-		$label = \common::GetLabelIndex($index,false);
-		echo \common::LabelSpecialChars($label);
+		$label = \gp\tool::GetLabelIndex($index,false);
+		echo \gp\tool::LabelSpecialChars($label);
 
 		$i = 0;
 		foreach($affected as $affected_label){
@@ -238,7 +238,7 @@ class Layout{
 
 		echo '<p class="admin_note">';
 		echo '<b>'.$langmessage['see_also'].'</b> ';
-		echo \common::Link('Admin_Theme_Content',$langmessage['layouts']);
+		echo \gp\tool::Link('Admin_Theme_Content',$langmessage['layouts']);
 		echo '</p>';
 
 		echo '</div>';
@@ -310,8 +310,8 @@ class Layout{
 				continue;
 			}
 
-			$label = \common::GetLabelIndex($menu_key,false);
-			$result[] = \common::LabelSpecialChars($label);
+			$label = \gp\tool::GetLabelIndex($menu_key,false);
+			$result[] = \gp\tool::LabelSpecialChars($label);
 		}while( count($menu) > 0 );
 
 	}

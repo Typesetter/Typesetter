@@ -399,7 +399,7 @@ namespace gp\admin{
 				return;
 			}
 
-			$reqtype = \common::RequestType();
+			$reqtype = \gp\tool::RequestType();
 			if( $reqtype != 'template' && $reqtype != 'admin' ){
 				return;
 			}
@@ -407,7 +407,7 @@ namespace gp\admin{
 			$class = '';
 			$position = '';
 
-			if( \common::RequestType() != 'admin' ){
+			if( \gp\tool::RequestType() != 'admin' ){
 				$position = ' style="top:'.max(-10,$gpAdmin['gpui_ty']).'px;left:'.max(-10,$gpAdmin['gpui_tx']).'px"';
 				if( isset($gpAdmin['gpui_cmpct']) && $gpAdmin['gpui_cmpct'] ){
 					$class = ' compact';
@@ -428,9 +428,9 @@ namespace gp\admin{
 				//toolbar
 				echo '<div class="toolbar">';
 					echo '<a class="toggle_panel" data-cmd="toggle_panel"></a>';
-					echo \common::Link('','<i class="gpicon_home"></i>');
-					echo \common::Link('Admin','<i class="gpicon_admin"></i>');
-					echo \common::Link('special_gpsearch','<i class="gpicon_search"></i>','',array('data-cmd'=>'gpabox'));
+					echo \gp\tool::Link('','<i class="gpicon_home"></i>');
+					echo \gp\tool::Link('Admin','<i class="gpicon_admin"></i>');
+					echo \gp\tool::Link('special_gpsearch','<i class="gpicon_search"></i>','',array('data-cmd'=>'gpabox'));
 					echo '<a class="extra admin_arrow_out"></a>';
 				echo '</div>';
 
@@ -487,7 +487,7 @@ namespace gp\admin{
 		}
 
 		public static function ToolbarSearch(){
-			echo '<form method="get" action="'.\common::GetUrl('special_gpsearch').'" id="panel_search" class="cf">';
+			echo '<form method="get" action="'.\gp\tool::GetUrl('special_gpsearch').'" id="panel_search" class="cf">';
 
 			echo '<span>';
 			echo '<input type="text" value="" name="q"> ';
@@ -505,7 +505,7 @@ namespace gp\admin{
 				if( is_numeric($label) ){
 
 					if( is_array($link) ){
-						echo call_user_func_array(array('common','Link'),$link); /* preferred */
+						echo call_user_func_array(array('\\gp\\tool','Link'),$link); /* preferred */
 					}else{
 						echo $link; //just a text label
 					}
@@ -625,7 +625,7 @@ namespace gp\admin{
 				ob_start();
 				if( gp_remote_update && isset(self::$new_versions['core']) ){
 					echo '<li>';
-					echo '<a href="'.\common::GetDir('/include/install/update.php').'">gpEasy '.self::$new_versions['core'].'</a>';
+					echo '<a href="'.\gp\tool::GetDir('/include/install/update.php').'">gpEasy '.self::$new_versions['core'].'</a>';
 					echo '</li>';
 				}
 
@@ -672,15 +672,15 @@ namespace gp\admin{
 				self::GetFrequentlyUsed($in_panel);
 
 				echo '<li>';
-				echo \common::Link('Admin/Preferences',$langmessage['Preferences']);
+				echo \gp\tool::Link('Admin/Preferences',$langmessage['Preferences']);
 				echo '</li>';
 
 				echo '<li>';
-				echo \common::Link($page->title,$langmessage['logout'],'cmd=logout',array('data-cmd'=>'creq'));
+				echo \gp\tool::Link($page->title,$langmessage['logout'],'cmd=logout',array('data-cmd'=>'creq'));
 				echo '</li>';
 
 				echo '<li>';
-				echo \common::Link('Admin/About','About gpEasy');
+				echo \gp\tool::Link('Admin/About','About gpEasy');
 				echo '</li>';
 				echo '</ul>';
 				echo '</div>';
@@ -708,10 +708,10 @@ namespace gp\admin{
 				self::PanelHeading($in_panel, $langmessage['resources'], 'icon_page_gear', 'res' );
 				echo '<ul class="submenu">';
 				if( gp_remote_plugins && self::HasPermission('Admin_Addons') ){
-					echo '<li>'.\common::Link('Admin/Addons/Remote',$langmessage['Download Plugins']).'</li>';
+					echo '<li>'.\gp\tool::Link('Admin/Addons/Remote',$langmessage['Download Plugins']).'</li>';
 				}
 				if( gp_remote_themes && self::HasPermission('Admin_Theme_Content') ){
-					echo '<li>'.\common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']).'</li>';
+					echo '<li>'.\gp\tool::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']).'</li>';
 				}
 				echo '<li><a href="http://gpeasy.com/Forum">Support Forum</a></li>';
 				echo '<li><a href="http://gpeasy.com/Services">Service Providers</a></li>';
@@ -825,7 +825,7 @@ namespace gp\admin{
 					foreach($gpAdmin['freq_scripts'] as $link => $hits ){
 						if( isset($scripts[$link]) && isset($scripts[$link]['label']) ){
 							echo '<li>';
-							echo \common::Link($link,$scripts[$link]['label']);
+							echo \gp\tool::Link($link,$scripts[$link]['label']);
 							echo '</li>';
 							if( $link === 'Admin/Menu' ){
 								$add_one = false;
@@ -838,7 +838,7 @@ namespace gp\admin{
 				}
 				if( $add_one ){
 					echo '<li>';
-					echo \common::Link('Admin/Menu',$scripts['Admin/Menu']['label']);
+					echo \gp\tool::Link('Admin/Menu',$scripts['Admin/Menu']['label']);
 					echo '</li>';
 				}
 				echo '</ul>';
@@ -934,12 +934,12 @@ namespace gp\admin{
 
 			switch(self::$update_status){
 				case 'embedcheck':
-					$img_path = \common::GetUrl('Admin','cmd=embededcheck');
-					\common::IdReq($img_path);
+					$img_path = \gp\tool::GetUrl('Admin','cmd=embededcheck');
+					\gp\tool::IdReq($img_path);
 				break;
 				case 'checkincompat':
-					$img_path = \common::IdUrl('ci'); //check in
-					\common::IdReq($img_path);
+					$img_path = \gp\tool::IdUrl('ci'); //check in
+					\gp\tool::IdReq($img_path);
 				break;
 			}
 		}
@@ -964,9 +964,9 @@ namespace gp\admin{
 				echo '<li>';
 
 				if( isset($info['popup']) && $info['popup'] == true ){
-					echo \common::Link($script,$info['label'],'',array('data-cmd'=>'gpabox'));
+					echo \gp\tool::Link($script,$info['label'],'',array('data-cmd'=>'gpabox'));
 				}else{
-					echo \common::Link($script,$info['label']);
+					echo \gp\tool::Link($script,$info['label']);
 				}
 
 
@@ -975,7 +975,7 @@ namespace gp\admin{
 				switch($script){
 					case 'Admin/Menu':
 						echo '<li>';
-						echo \common::Link('Admin/Menu/Ajax','+ '.$langmessage['create_new_file'],'cmd=AddHidden&redir=redir',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpabox'));
+						echo \gp\tool::Link('Admin/Menu/Ajax','+ '.$langmessage['create_new_file'],'cmd=AddHidden&redir=redir',array('title'=>$langmessage['create_new_file'],'data-cmd'=>'gpabox'));
 						echo '</li>';
 					break;
 				}
@@ -1000,20 +1000,20 @@ namespace gp\admin{
 			ob_start();
 
 			echo '<li>';
-			echo \common::Link('Admin_Theme_Content',$langmessage['manage']);
+			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['manage']);
 			echo '</li>';
 
 			if( !empty($page->gpLayout) ){
 				echo '<li>';
-				echo \common::Link('Admin_Theme_Content/Edit/'.urlencode($page->gpLayout),$langmessage['edit_this_layout']);
+				echo \gp\tool::Link('Admin_Theme_Content/Edit/'.urlencode($page->gpLayout),$langmessage['edit_this_layout']);
 				echo '</li>';
 			}
 			echo '<li>';
-			echo \common::Link('Admin_Theme_Content/Available',$langmessage['available_themes']);
+			echo \gp\tool::Link('Admin_Theme_Content/Available',$langmessage['available_themes']);
 			echo '</li>';
 			if( gp_remote_themes ){
 				echo '<li>';
-				echo \common::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']);
+				echo \gp\tool::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']);
 				echo '</li>';
 			}
 
@@ -1046,7 +1046,7 @@ namespace gp\admin{
 				}
 
 				$display = '<span class="layout_color_id" style="background-color:'.$info['color'].';"></span>&nbsp; '.$info['label'];
-				echo \common::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),$display);
+				echo \gp\tool::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),$display);
 				echo '</li>';
 			}
 			echo '</ul>';
@@ -1152,7 +1152,7 @@ namespace gp\admin{
 				if( $i%2 ){
 					$string .= $pieces[$i];
 				}else{
-					$string .= \common::LabelSpecialChars($pieces[$i]);
+					$string .= \gp\tool::LabelSpecialChars($pieces[$i]);
 				}
 			}
 
@@ -1231,7 +1231,7 @@ namespace gp\admin{
 				return false;
 			}
 
-			$type = \common::SpecialOrAdmin($title);
+			$type = \gp\tool::SpecialOrAdmin($title);
 			if( $type !== false ){
 				$message = $langmessage['TITLE_RESERVED'];
 				return false;
@@ -1323,7 +1323,7 @@ namespace gp\admin{
 
 			if( !is_array($config) ) return false;
 
-			if( !isset($config['gpuniq']) ) $config['gpuniq'] = \common::RandomString(20);
+			if( !isset($config['gpuniq']) ) $config['gpuniq'] = \gp\tool::RandomString(20);
 
 			return \gp\tool\Files::SaveData('_site/config','config',$config);
 		}
@@ -1358,11 +1358,11 @@ namespace gp\admin{
 
 			if( $addon_permissions ){
 				echo '<li>';
-				echo \common::Link('Admin/Addons',$langmessage['manage']);
+				echo \gp\tool::Link('Admin/Addons',$langmessage['manage']);
 				echo '</li>';
 				if( gp_remote_plugins ){
 					echo '<li class="separator">';
-					echo \common::Link('Admin/Addons/Remote',$langmessage['Download Plugins']);
+					echo \gp\tool::Link('Admin/Addons/Remote',$langmessage['Download Plugins']);
 					echo '</li>';
 				}
 			}
@@ -1396,7 +1396,7 @@ namespace gp\admin{
 					}
 
 					if( $addon_permissions ){
-						echo \common::Link('Admin/Addons/'.self::encode64($addon),$addonName);
+						echo \gp\tool::Link('Admin/Addons/'.self::encode64($addon),$addonName);
 					}else{
 						echo '<a>'.$addonName.'</a>';
 					}
@@ -1460,14 +1460,14 @@ namespace gp\admin{
 			$result = '';
 			foreach($special_links as $linkName => $linkInfo){
 				$result .= '<li>';
-				$result .= \common::Link($linkName,$linkInfo['label']);
+				$result .= \gp\tool::Link($linkName,$linkInfo['label']);
 				$result .= '</li>';
 			}
 
 			foreach($admin_links as $linkName => $linkInfo){
 				if( self::HasPermission($linkName) ){
 					$result .= '<li>';
-					$result .= \common::Link($linkName,$linkInfo['label']);
+					$result .= \gp\tool::Link($linkName,$linkInfo['label']);
 					$result .= '</li>';
 				}
 			}

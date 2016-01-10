@@ -96,21 +96,21 @@ class Galleries{
 	public function GenerateOutput(){
 		global $langmessage,$page;
 
-		\common::ShowingGallery();
+		\gp\tool::ShowingGallery();
 
 		echo '<h2>';
-		echo \gpOutput::ReturnText('galleries');
+		echo \gp\tool\Output::ReturnText('galleries');
 		echo '</h2>';
 
 		$wrap = \gp\admin\Tools::CanEdit($page->gp_index);
 		if( $wrap ){
-			echo \gpOutput::EditAreaLink($edit_index,'Admin/Galleries',$langmessage['edit']);
+			echo \gp\tool\Output::EditAreaLink($edit_index,'Admin/Galleries',$langmessage['edit']);
 			echo '<div class="editable_area cf" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
 		}
 
 
-		$image_text = \gpOutput::ReturnText('image');
-		$images_text = \gpOutput::ReturnText('images');
+		$image_text = \gp\tool\Output::ReturnText('image');
+		$images_text = \gp\tool\Output::ReturnText('images');
 
 		$list = '';
 		$shown = 0;
@@ -126,9 +126,9 @@ class Galleries{
 			if( is_array($info) ){
 				$icon = $info['icon'];
 				if( $info['count'] == 1 ){
-					$count = $info['count'].' '.\gpOutput::ReturnText('image');
+					$count = $info['count'].' '.\gp\tool\Output::ReturnText('image');
 				}elseif( $info['count'] > 1 ){
-					$count = $info['count'].' '.\gpOutput::ReturnText('images');
+					$count = $info['count'].' '.\gp\tool\Output::ReturnText('images');
 				}
 			}else{
 				$icon = $info;
@@ -141,19 +141,19 @@ class Galleries{
 
 			$icon = rawurldecode($icon); //prevent double encoding
 			if( strpos($icon,'/thumbnails/') === false ){
-				$thumbPath = \common::GetDir('/data/_uploaded/image/thumbnails'.$icon.'.jpg');
+				$thumbPath = \gp\tool::GetDir('/data/_uploaded/image/thumbnails'.$icon.'.jpg');
 			}else{
-				$thumbPath = \common::GetDir('/data/_uploaded'.$icon);
+				$thumbPath = \gp\tool::GetDir('/data/_uploaded'.$icon);
 			}
 
-			$label = \common::GetLabel($title);
-			$title_attr = ' title="'.\common::GetBrowserTitle($title).'"';
+			$label = \gp\tool::GetLabel($title);
+			$title_attr = ' title="'.\gp\tool::GetBrowserTitle($title).'"';
 			$label_img = ' <img src="'.$thumbPath.'" alt=""/>';
 
 			$list .= '<li>'
-					. \common::Link($title,$label_img,'',$title_attr)
+					. \gp\tool::Link($title,$label_img,'',$title_attr)
 					. '<div>'
-					. \common::Link($title, $label,'',$title_attr)
+					. \gp\tool::Link($title, $label,'',$title_attr)
 					. '<p>'
 					.$count
 					.'</p>'

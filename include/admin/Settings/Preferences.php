@@ -24,7 +24,7 @@ namespace gp\admin\Settings{
 			}
 
 			$this->user_info		=  $this->users[$this->username];
-			$cmd					= \common::GetCommand();
+			$cmd					= \gp\tool::GetCommand();
 
 
 			$this->variables			= array(
@@ -103,7 +103,7 @@ namespace gp\admin\Settings{
 
 			//check the old password
 			$pass_hash		= \gp\tool\Session::PassAlgo($this->user_info);
-			$oldpass		= \common::hash($_POST['oldpassword'],$pass_hash);
+			$oldpass		= \gp\tool::hash($_POST['oldpassword'],$pass_hash);
 
 			if( $this->user_info['password'] != $oldpass ){
 				msg($langmessage['couldnt_reset_pass']);
@@ -128,7 +128,7 @@ namespace gp\admin\Settings{
 
 			echo '<h2>'.$langmessage['Preferences'].'</h2>';
 
-			echo '<form action="'.\common::GetUrl('Admin/Preferences').'" method="post">';
+			echo '<form action="'.\gp\tool::GetUrl('Admin/Preferences').'" method="post">';
 			echo '<table class="bordered full_width">';
 			echo '<tr><th colspan="2">'.$langmessage['general_settings'].'</th></tr>';
 
@@ -183,7 +183,7 @@ namespace gp\admin\Settings{
 			echo '<b>';
 			echo $langmessage['see_also'];
 			echo '</b> ';
-			echo \common::Link('Admin_Configuration',$langmessage['configuration'],'','data-cmd="gpabox"');
+			echo \gp\tool::Link('Admin_Configuration',$langmessage['configuration'],'','data-cmd="gpabox"');
 			echo '</p>';
 
 			echo '</div>';

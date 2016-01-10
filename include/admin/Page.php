@@ -50,7 +50,7 @@ class Page extends \gp\Page{
 	//display admin area in full window
 	private function FullDisplay(){
 
-		if( \common::RequestType() == 'template'
+		if( \gp\tool::RequestType() == 'template'
 			&& $this->show_admin_content
 			){
 				return true;
@@ -73,7 +73,7 @@ class Page extends \gp\Page{
 		}
 
 		echo '<div id="gpAfterContent">';
-		\gpOutput::Get('AfterContent');
+		\gp\tool\Output::Get('AfterContent');
 		\gp\tool\Plugins::Action('GetContent_After');
 		echo '</div>';
 	}
@@ -85,7 +85,7 @@ class Page extends \gp\Page{
 			return;
 		}
 
-		$request_type = \common::RequestType();
+		$request_type = \gp\tool::RequestType();
 		if( $request_type == 'body' ){
 			echo $this->contentBuffer;
 			return;
@@ -115,9 +115,9 @@ class Page extends \gp\Page{
 
 		echo '<div id="admin_breadcrumbs" class="cf">';
 
-		echo \common::Link('',$langmessage['Homepage']);
+		echo \gp\tool::Link('',$langmessage['Homepage']);
 		echo ' &#187; ';
-		echo \common::Link('Admin',$langmessage['administration']);
+		echo \gp\tool::Link('Admin',$langmessage['administration']);
 
 
 		$crumbs				= array();
@@ -143,7 +143,7 @@ class Page extends \gp\Page{
 		$crumbs = array_reverse($crumbs);
 		foreach($crumbs as $slug => $label){
 			echo ' &#187; ';
-			echo \common::Link($slug,$label);
+			echo \gp\tool::Link($slug,$label);
 		}
 
 
@@ -161,7 +161,7 @@ class Page extends \gp\Page{
 
 		echo '<div id="admincontent_panel" class="toolbar cf">';
 		echo '<div id="admin_menu_wrap">';
-		\gpOutput::GetMenu();
+		\gp\tool\Output::GetMenu();
 		echo '</div>';
 
 
@@ -198,7 +198,7 @@ class Page extends \gp\Page{
 				if( \gp\admin\Tools::HasPermission($request_string) ){
 
 					$this->OrganizeFrequentScripts($request_string);
-					\gpOutput::ExecInfo($scriptinfo);
+					\gp\tool\Output::ExecInfo($scriptinfo);
 
 					return;
 				}
@@ -265,8 +265,8 @@ class Page extends \gp\Page{
 		arsort($similar);
 
 		$redir_key		= key($similar);
-		$location		= \common::GetUrl($redir_key,http_build_query($_GET),false);
-		\common::Redirect($location);
+		$location		= \gp\tool::GetUrl($redir_key,http_build_query($_GET),false);
+		\gp\tool::Redirect($location);
 	}
 
 
@@ -277,7 +277,7 @@ class Page extends \gp\Page{
 	private function AdminPanel(){
 		global $langmessage;
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 			case 'embededcheck':
 				new \gp\admin\Update('embededcheck');

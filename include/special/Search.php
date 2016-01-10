@@ -29,7 +29,7 @@ class Search{
 
 		//admin popup or visitor
 		$_REQUEST += array('q'=>'');
-		if( \common::LoggedIn() && isset($_REQUEST['gpx_content']) && $_REQUEST['gpx_content'] == 'gpabox' ){
+		if( \gp\tool::LoggedIn() && isset($_REQUEST['gpx_content']) && $_REQUEST['gpx_content'] == 'gpabox' ){
 			$this->AdminSearch();
 		}else{
 			$this->Search();
@@ -44,7 +44,7 @@ class Search{
 		$this->search_hidden = true;
 
 		echo '<div id="admin_search">';
-		echo '<form action="'.\common::GetUrl('special_gpsearch').'" method="get">';
+		echo '<form action="'.\gp\tool::GetUrl('special_gpsearch').'" method="get">';
 		echo '<h3>'.$langmessage['Search'].'</h3>';
 		echo '<input name="q" type="text" class="gpinput" value="'.htmlspecialchars($_REQUEST['q']).'" required />';
 		echo '<input type="submit" name="" value="'.$langmessage['Search'].'" class="gpabox gpsubmit gpvalidate" />';
@@ -67,26 +67,26 @@ class Search{
 	public function Search(){
 
 		echo '<div class="search_results">';
-		echo '<form action="'.\common::GetUrl('special_gpsearch').'" method="get">';
+		echo '<form action="'.\gp\tool::GetUrl('special_gpsearch').'" method="get">';
 
 		echo '<h2>';
-		echo \gpOutput::GetAddonText('Search');
+		echo \gp\tool\Output::GetAddonText('Search');
 		echo ' &nbsp; ';
 		echo '<input name="q" type="text" class="text" value="'.htmlspecialchars($_REQUEST['q']).'"/>';
 		$html = '<input type="submit" name="" class="submit" value="%s" />';
-		echo \gpOutput::GetAddonText('Search',$html);
+		echo \gp\tool\Output::GetAddonText('Search',$html);
 		echo '</h2>';
 		echo '</form>';
 
-		if( \common::LoggedIn() ){
+		if( \gp\tool::LoggedIn() ){
 			$this->search_hidden = true;
 		}else{
 			$this->search_hidden = $this->search_config['search_hidden'];
 		}
 		$this->RunQuery();
 
-		if( \common::LoggedIn() ){
-			echo \common::Link('special_gpsearch','Configuration','cmd=config','data-cmd="gpabox"');
+		if( \gp\tool::LoggedIn() ){
+			echo \gp\tool::Link('special_gpsearch','Configuration','cmd=config','data-cmd="gpabox"');
 		}
 
 		echo '</div>';
@@ -100,15 +100,15 @@ class Search{
 		}
 
 		echo '<h3>';
-		echo \gpOutput::GetAddonText('Search');
+		echo \gp\tool\Output::GetAddonText('Search');
 		echo '</h3>';
-		echo '<form action="'.\common::GetUrl('special_gpsearch').'" method="get">';
+		echo '<form action="'.\gp\tool::GetUrl('special_gpsearch').'" method="get">';
 		echo '<div>';
 		echo '<input name="q" type="text" class="text" value="'.htmlspecialchars($query).'"/>';
 		echo '<input type="hidden" name="src" value="gadget" />';
 
 		$html = '<input type="submit" class="submit" name="" value="%s" />';
-		echo \gpOutput::GetAddonText('Search',$html);
+		echo \gp\tool\Output::GetAddonText('Search',$html);
 
 		echo '</div>';
 		echo '</form>';
@@ -132,7 +132,7 @@ class Search{
 
 		if( !count($this->results) ){
 			echo '<p>';
-			echo \gpOutput::GetAddonText($langmessage['search_no_results']);
+			echo \gp\tool\Output::GetAddonText($langmessage['search_no_results']);
 			echo '</p>';
 			return;
 		}
@@ -142,8 +142,8 @@ class Search{
 		// remove duplicates
 		$links = array();
 		foreach($this->results as $key => $result){
-			//$link = \common::GetUrl( $result['slug'], $result['query'] );
-			$link =  isset($result['url']) ? $result['url'] : \common::GetUrl( $result['slug'], $result['query'] );
+			//$link = \gp\tool::GetUrl( $result['slug'], $result['query'] );
+			$link =  isset($result['url']) ? $result['url'] : \gp\tool::GetUrl( $result['slug'], $result['query'] );
 			$link = mb_strtolower($link);
 			if( in_array($link,$links) ){
 				unset($this->results[$key]);
@@ -176,8 +176,8 @@ class Search{
 		echo '<div class="result_list">';
 		foreach($this->results as $result){
 			echo '<div><h4>';
-			//echo \common::Link($result['slug'],$result['label'],$result['query']);
-			echo isset($result['link']) ? $result['link'] : \common::Link($result['slug'],$result['label'],$result['query']);
+			//echo \gp\tool::Link($result['slug'],$result['label'],$result['query']);
+			echo isset($result['link']) ? $result['link'] : \gp\tool::Link($result['slug'],$result['label'],$result['query']);
 			echo '</h4>';
 
 			echo $result['content'];
@@ -206,7 +206,7 @@ class Search{
 				if( $this->gpabox ){
 					$attr = 'data-cmd="gpabox"';
 				}
-				echo '<li>'.\common::Link('special_gpsearch',($i+1),$query,$attr).'</li>';
+				echo '<li>'.\gp\tool::Link('special_gpsearch',($i+1),$query,$attr).'</li>';
 			}
 			echo '</ul>';
 		}
@@ -239,11 +239,11 @@ class Search{
 	public function Admin(){
 		global $page;
 
-		if( !\common::LoggedIn() ){
+		if( !\gp\tool::LoggedIn() ){
 			return false;
 		}
 		$page->admin_links[] = array('special_gpsearch','Configuration','cmd=config','data-cmd="gpabox"');
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 
 		switch($cmd){
 			case 'save_config':
@@ -295,7 +295,7 @@ class Search{
 
 		echo '<h2>Search Configuration</h2>';
 
-		echo '<form class="renameform" action="'.\common::GetUrl('special_gpsearch').'" method="post">';
+		echo '<form class="renameform" action="'.\gp\tool::GetUrl('special_gpsearch').'" method="post">';
 		echo '<table style="width:100%" class="bordered">';
 		echo '<tr><th>'.$langmessage['options'].'</th><th>'.$langmessage['Value'].'</th><th>'.$langmessage['default'].'</th></tr>';
 
@@ -327,7 +327,7 @@ class Search{
 
 		ob_start();
 		foreach($gp_index as $title => $index){
-			if( \common::SpecialOrAdmin($title) === false ){
+			if( \gp\tool::SpecialOrAdmin($title) === false ){
 				$this->SearchPage($title,$index);
 			}
 		}
@@ -344,7 +344,7 @@ class Search{
 		}
 
 		//private pages
-		if( !\common::LoggedIn() ){
+		if( !\gp\tool::LoggedIn() ){
 
 			if( isset($gp_titles[$index]['vis']) ){
 				return;
@@ -360,7 +360,7 @@ class Search{
 		}
 
 		$content			= \gp\tool\Output\Sections::Render($file_sections,$title,\gp\tool\Files::$last_stats);
-		$label				= \common::GetLabel($title);
+		$label				= \gp\tool::GetLabel($title);
 
 		$this->FindString($content, $label, $title);
 	}

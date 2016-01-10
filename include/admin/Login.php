@@ -10,7 +10,7 @@ class Login extends \display{
 
 	public function __construct($title){
 
-		\common::LoadComponents('gp-admin-css');
+		\gp\tool::LoadComponents('gp-admin-css');
 
 		$this->requested		= str_replace(' ','_',$title);
 		$this->title			= $title;
@@ -45,7 +45,7 @@ class Login extends \display{
 		echo '<div class="req_script nodisplay" id="login_container">';
 		echo '<table><tr><td>';
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 			case 'send_password';
 				if( $this->SendPassword() ){
@@ -76,7 +76,7 @@ class Login extends \display{
 
 
 		echo '<div id="loginform">';
-		echo '<form class="loginform" action="'.\common::GetUrl('Admin').'" method="post">';
+		echo '<form class="loginform" action="'.\gp\tool::GetUrl('Admin').'" method="post">';
 
 		echo '<p class="login_text">';
 		echo '<input type="text" name="username" value="'.htmlspecialchars($_POST['username']).'" placeholder="'.htmlspecialchars($langmessage['username']).'"/>';
@@ -84,7 +84,7 @@ class Login extends \display{
 
 		echo '<input type="hidden" name="cmd" value="send_password" />';
 		echo '<input type="submit" name="aa" value="'.$langmessage['send_password'].'" class="login_submit" />';
-		echo ' &nbsp; <label>'. \common::Link('Admin',$langmessage['back']).'</label>';
+		echo ' &nbsp; <label>'. \gp\tool::Link('Admin',$langmessage['back']).'</label>';
 
 		echo '</form>';
 		echo '</div>';
@@ -100,14 +100,14 @@ class Login extends \display{
 
 
 		echo '<div id="loginform">';
-			echo '<div id="login_timeout" class="nodisplay">Log in Timeout: '.\common::Link('Admin','Reload to continue...').'</div>';
+			echo '<div id="login_timeout" class="nodisplay">Log in Timeout: '.\gp\tool::Link('Admin','Reload to continue...').'</div>';
 
-			echo '<form action="'.\common::GetUrl('Admin').'" method="post" id="login_form">';
+			echo '<form action="'.\gp\tool::GetUrl('Admin').'" method="post" id="login_form">';
 			echo '<input type="hidden" name="file" value="'.htmlspecialchars($_REQUEST['file']).'">';	//for redirection
 
 			echo '<div>';
 			echo '<input type="hidden" name="cmd" value="login" />';
-			echo '<input type="hidden" name="login_nonce" value="'.htmlspecialchars(\common::new_nonce('login_nonce',true,300)).'" />';
+			echo '<input type="hidden" name="login_nonce" value="'.htmlspecialchars(\gp\tool::new_nonce('login_nonce',true,300)).'" />';
 			echo '</div>';
 
 			echo '<p class="login_text">';
@@ -125,7 +125,7 @@ class Login extends \display{
 			echo '<p>';
 			echo '<input type="submit" class="login_submit" value="'.$langmessage['login'].'" />';
 			echo ' &nbsp; ';
-			echo \common::Link('',$langmessage['cancel']);
+			echo \gp\tool::Link('',$langmessage['cancel']);
 			echo '</p>';
 
 			echo '<p>';
@@ -142,7 +142,7 @@ class Login extends \display{
 
 			echo '<div>';
 			echo '<label>';
-			$url = \common::GetUrl('Admin','cmd=forgotten');
+			$url = \gp\tool::GetUrl('Admin','cmd=forgotten');
 			echo sprintf($langmessage['forgotten_password'],$url);
 			echo '</label>';
 			echo '</div>';
@@ -221,7 +221,7 @@ class Login extends \display{
 		$newpass		= substr($newpass,0,8);
 		$pass_hash		= \gp\tool\Session::PassAlgo($userinfo);
 
-		$users[$username]['newpass'] = \common::hash($newpass,$pass_hash);
+		$users[$username]['newpass'] = \gp\tool::hash($newpass,$pass_hash);
 		if( !\gp\tool\Files::SaveData('_site/users','users',$users) ){
 			message($langmessage['OOPS']);
 			return false;
@@ -233,7 +233,7 @@ class Login extends \display{
 			$server = $_SERVER['SERVER_NAME'];
 		}
 
-		$link		= \common::AbsoluteLink('Admin',$langmessage['login']);
+		$link		= \gp\tool::AbsoluteLink('Admin',$langmessage['login']);
 		$message	= sprintf($langmessage['passwordremindertext'],$server,$link,$username,$newpass);
 
 

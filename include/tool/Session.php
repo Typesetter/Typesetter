@@ -15,7 +15,7 @@ namespace gp\tool{
 
 			gp_defined('gp_session_cookie',self::SessionCookie($config['gpuniq']));
 
-			$cmd = \common::GetCommand();
+			$cmd = \gp\tool::GetCommand();
 			switch( $cmd ){
 				case 'logout':
 					self::LogOut();
@@ -44,7 +44,7 @@ namespace gp\tool{
 			// check nonce
 			// expire the nonce after 10 minutes
 			$nonce = $_POST['login_nonce'];
-			if( !\common::verify_nonce( 'login_nonce', $nonce, true, 300 ) ){
+			if( !\gp\tool::verify_nonce( 'login_nonce', $nonce, true, 300 ) ){
 				msg($langmessage['OOPS'].' (Expired Nonce)');
 				return;
 			}
@@ -123,8 +123,8 @@ namespace gp\tool{
 				if( isset($_REQUEST['file']) && isset($gp_index[$_REQUEST['file']]) ){
 					$redirect = $_REQUEST['file'];
 				}
-				$url = \common::GetUrl($redirect,'',false);
-				\common::Redirect($url);
+				$url = \gp\tool::GetUrl($redirect,'',false);
+				\gp\tool::Redirect($url);
 			}
 
 		}
@@ -175,7 +175,7 @@ namespace gp\tool{
 			if( !empty($_POST['password']) ){
 				$_POST['pass_md5']		= sha1($nonce.md5($_POST['password']));
 				$_POST['pass_sha']		= sha1($nonce.sha1($_POST['password']));
-				$_POST['pass_sha512']	= \common::hash($_POST['password'],'sha512',50);
+				$_POST['pass_sha512']	= \gp\tool::hash($_POST['password'],'sha512',50);
 			}
 
 			$pass_algo = self::PassAlgo($userinfo);
@@ -232,7 +232,7 @@ namespace gp\tool{
 
 				case 'sha512':
 					//javascript only loops through sha512 50 times
-					$posted_pass = \common::hash($_POST['pass_sha512'],'sha512',950);
+					$posted_pass = \gp\tool::hash($_POST['pass_sha512'],'sha512',950);
 				break;
 
 				case 'password_hash':
@@ -251,7 +251,7 @@ namespace gp\tool{
 		static function IncorrectLogin($i){
 			global $langmessage;
 			msg($langmessage['incorrect_login'].' ('.$i.')');
-			$url = \common::GetUrl('Admin','cmd=forgotten');
+			$url = \gp\tool::GetUrl('Admin','cmd=forgotten');
 			msg($langmessage['forgotten_password'],$url);
 		}
 
@@ -269,7 +269,7 @@ namespace gp\tool{
 			}
 
 			do{
-				$new_file_name	= 'gpsess_'.\common::RandomString(40).'.php';
+				$new_file_name	= 'gpsess_'.\gp\tool::RandomString(40).'.php';
 				$new_file		= $dataDir.'/data/_sessions/'.$new_file_name;
 			}while( \gp\tool\Files::Exists($new_file) );
 
@@ -309,7 +309,7 @@ namespace gp\tool{
 			global $dirPrefix;
 
 			$cookiePath		= empty($dirPrefix) ? '/' : $dirPrefix;
-			$cookiePath		= \common::HrefEncode($cookiePath,false);
+			$cookiePath		= \gp\tool::HrefEncode($cookiePath,false);
 			$secure			= (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' );
 			$domain			= self::ServerName();
 
@@ -409,7 +409,7 @@ namespace gp\tool{
 			//create a unique session id if needed
 			if( $session_id === false ){
 				do{
-					$session_id = \common::RandomString(40);
+					$session_id = \gp\tool::RandomString(40);
 				}while( isset($sessions[$session_id]) );
 			}
 
@@ -563,12 +563,12 @@ namespace gp\tool{
 			//make sure forms have admin nonce
 			ob_start(array('\\gp\\tool\\Session','AdminBuffer'));
 
-			\gpOutput::$lang_values += array('cancel'=>'ca','update'=>'up','caption'=>'cp','Width'=>'Width','Height'=>'Height');
-			\common::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css');
+			\gp\tool\Output::$lang_values += array('cancel'=>'ca','update'=>'up','caption'=>'cp','Width'=>'Width','Height'=>'Height');
+			\gp\tool::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css');
 			\gp\admin\Tools::VersionsAndCheckTime();
 
 
-			\gpOutput::$inline_vars += array(
+			\gp\tool\Output::$inline_vars += array(
 				'gpRem' => \gp\admin\Tools::CanRemoteInstall(),
 			);
 
@@ -591,7 +591,7 @@ namespace gp\tool{
 
 		/**
 		 * Perform admin only changes to the content buffer
-		 * This will happen before gpOutput::BufferOut()
+		 * This will happen before \gp\tool\Output::BufferOut()
 		 *
 		 */
 		static function AdminBuffer($buffer){
@@ -608,14 +608,14 @@ namespace gp\tool{
 			//add $gp_admin_html to the document
 			$pos_body = strpos($buffer,'</body');
 			if( $html_doc && $pos_body ){
-				$buffer = substr_replace($buffer,"\n<div id=\"gp_admin_html\">".$gp_admin_html.\gpOutput::$editlinks."</div><div id=\"gp_admin_fixed\"></div>\n",$pos_body,0);
+				$buffer = substr_replace($buffer,"\n<div id=\"gp_admin_html\">".$gp_admin_html.\gp\tool\Output::$editlinks."</div><div id=\"gp_admin_fixed\"></div>\n",$pos_body,0);
 			}
 
 			// Add a generic admin nonce field to each post form
 			// Admin nonces are also added with javascript if needed
 			$count = preg_match_all('#<form[^<>]*method=[\'"]post[\'"][^<>]*>#i',$buffer,$matches);
 			if( $count ){
-				$nonce = \common::new_nonce('post',true);
+				$nonce = \gp\tool::new_nonce('post',true);
 				$matches[0] = array_unique($matches[0]);
 				foreach($matches[0] as $match){
 
@@ -686,7 +686,7 @@ namespace gp\tool{
 			}
 
 
-			if( !\common::verify_nonce('post',$_POST['verified'],true) ){
+			if( !\gp\tool::verify_nonce('post',$_POST['verified'],true) ){
 				self::StripPost('XSS Verification Parameter Mismatch');
 				return;
 			}
@@ -720,7 +720,7 @@ namespace gp\tool{
 			self::LayoutInfo();
 
 			unset($gpAdmin['checksum']);
-			$checksum = \common::ArrayHash($gpAdmin);
+			$checksum = \gp\tool::ArrayHash($gpAdmin);
 
 			//nothing changes
 			if( $checksum === $checksum_read ){
@@ -745,11 +745,11 @@ namespace gp\tool{
 			global $page, $gpLayouts, $get_all_gadgets_called;
 
 
-			if( !\gpOutput::$template_included ){
+			if( !\gp\tool\Output::$template_included ){
 				return;
 			}
 
-			if( \common::RequestType() != 'template' ){
+			if( \gp\tool::RequestType() != 'template' ){
 				return;
 			}
 
@@ -857,7 +857,7 @@ namespace gp\tool{
 		static function SaveSetting(){
 			global $gpAdmin;
 
-			$cmd = \common::GetCommand('do');
+			$cmd = \gp\tool::GetCommand('do');
 			if( empty($cmd) ){
 				return;
 			}
@@ -1126,8 +1126,8 @@ namespace gp\tool{
 		static function EnableComponent(){
 
 			\gp\admin\Tools\Errors::ClearError($_REQUEST['hash']);
-			$title = \common::WhichPage();
-			\common::Redirect(\common::GetUrl($title,'',false));
+			$title = \gp\tool::WhichPage();
+			\gp\tool::Redirect(\gp\tool::GetUrl($title,'',false));
 		}
 
 
@@ -1155,7 +1155,7 @@ namespace gp\tool{
 				}
 				$full_path = $dir.'/'.$file;
 				$info_hash = md5_file($full_path);
-				if( isset(\gpOutput::$fatal_notices[$info_hash]) ){
+				if( isset(\gp\tool\Output::$fatal_notices[$info_hash]) ){
 					continue;
 				}
 				$has_fatal = true;
@@ -1167,7 +1167,7 @@ namespace gp\tool{
 			}
 
 			$msg = 'Warning: One or more components have caused fatal errors and have been disabled. '
-					.\common::Link('Admin/Errors','More Information');
+					.\gp\tool::Link('Admin/Errors','More Information');
 			msg($msg);
 		}
 

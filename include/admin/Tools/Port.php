@@ -114,7 +114,7 @@ class Port{
 	public function RunScript(){
 		global $langmessage;
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 
 			case 'do_export':
@@ -208,7 +208,7 @@ class Port{
 
 		//iframe for download
 		if( $success ){
-			$this->iframe = '<iframe src="'.\common::GetDir('/data/_exports/'.$this->archive_name).'" height="0" width="0" style="visibility:hidden;height:0;width:0;"></iframe>';
+			$this->iframe = '<iframe src="'.\gp\tool::GetDir('/data/_exports/'.$this->archive_name).'" height="0" width="0" style="visibility:hidden;height:0;width:0;"></iframe>';
 		}
 
 		return true;
@@ -364,7 +364,7 @@ class Port{
 		}
 
 
-		echo '<form action="'.\common::GetUrl('Admin/Port').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Port').'" method="post">';
 		echo '<input type="hidden" name="archive" value="'.htmlspecialchars($archive).'" />';
 		echo '<input type="hidden" name="cmd" value="revert_confirmed" />';
 		echo '<input type="submit" name="" value="'.htmlspecialchars($langmessage['Revert_to_Archive']).'" class="gpsubmit" />';
@@ -506,7 +506,7 @@ class Port{
 		echo $langmessage['old_folders_created'];
 		echo '</p>';
 
-		echo '<form action="'.\common::GetUrl('Admin/Port').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Port').'" method="post">';
 		echo '<ul>';
 
 		$dirs = array_merge( array_values($this->replace_dirs), array_values($this->extra_dirs));
@@ -825,7 +825,7 @@ class Port{
 
 		if( count($temp) >= 3 && is_numeric($temp[0]) && is_numeric($temp[1]) ){
 			list($time,$exported,$rand) = $temp;
-			$info['time'] = \common::date($langmessage['strftime_datetime'],$time);
+			$info['time'] = \gp\tool::date($langmessage['strftime_datetime'],$time);
 			$info['bits'] = $exported;
 
 			foreach($this->export_fields as $export_field){
@@ -885,17 +885,17 @@ class Port{
 			echo ' ';
 			echo $info['ext'];
 			echo '</td><td>';
-			echo '<a href="'.\common::GetDir('/data/_exports/'.$file).'">'.$langmessage['Download'].'</a>';
+			echo '<a href="'.\gp\tool::GetDir('/data/_exports/'.$file).'">'.$langmessage['Download'].'</a>';
 
 			echo '&nbsp;&nbsp;';
 			if( $this->CanRevert($info['bits']) ){
-				echo \common::Link('Admin/Port',$langmessage['Revert'],'cmd=revert&archive='.rawurlencode($file),'',$file);
+				echo \gp\tool::Link('Admin/Port',$langmessage['Revert'],'cmd=revert&archive='.rawurlencode($file),'',$file);
 			}else{
 				echo $langmessage['Revert'];
 			}
 
 			echo '&nbsp;&nbsp;';
-			echo \common::Link('Admin/Port',$langmessage['delete'],'cmd=delete&file='.rawurlencode($file),array('data-cmd'=>'postlink','title'=>$langmessage['delete_confirm'],'class'=>'gpconfirm'),$file);
+			echo \gp\tool::Link('Admin/Port',$langmessage['delete'],'cmd=delete&file='.rawurlencode($file),array('data-cmd'=>'postlink','title'=>$langmessage['delete_confirm'],'class'=>'gpconfirm'),$file);
 			echo '</td></tr>';
 
 			$total_count++;
@@ -938,7 +938,7 @@ class Port{
 	public function ExportForm(){
 		global $langmessage;
 
-		echo '<form action="'.\common::GetUrl('Admin/Port').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Port').'" method="post">';
 
 		echo '<p>';
 		foreach($this->export_fields as $info){

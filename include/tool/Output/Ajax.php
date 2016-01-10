@@ -75,8 +75,8 @@ namespace gp\tool\Output{
 
 
 			//gadgets may be using gpajax/json request/responses
-			\gpOutput::TemplateSettings();
-			\gpOutput::PrepGadgetContent();
+			\gp\tool\Output::TemplateSettings();
+			\gp\tool\Output::PrepGadgetContent();
 
 
 			echo self::Callback();
@@ -252,7 +252,7 @@ namespace gp\tool\Output{
 				break;
 
 				case 'image';
-					echo 'var gp_blank_img = '.self::quote(\common::GetDir('/include/imgs/blank.gif')).';';
+					echo 'var gp_blank_img = '.self::quote(\gp\tool::GetDir('/include/imgs/blank.gif')).';';
 					$scripts[] = '/include/js/jquery.auto_upload.js';
 					$scripts[] = '/include/js/inline_edit/image_common.js';
 					$scripts[] = '/include/js/inline_edit/image_edit.js';
@@ -270,7 +270,7 @@ namespace gp\tool\Output{
 			}
 
 			//create the section object that will be passed to gp_init_inline_edit
-			$section_object = \common::JsonEncode($section_data);
+			$section_object = \gp\tool::JsonEncode($section_data);
 
 
 			//send call to gp_init_inline_edit()
@@ -310,7 +310,7 @@ namespace gp\tool\Output{
 				}
 
 				if( !file_exists($full_path) ){
-					if( \common::LoggedIn() ){
+					if( \gp\tool::LoggedIn() ){
 						$msg = 'Admin Notice: The following file could not be found: \n\n'.$full_path;
 						echo 'if(isadmin){alert('.json_encode($msg).');}';
 					}
@@ -335,7 +335,7 @@ namespace gp\tool\Output{
 							'sharedSpaces' => array( 'top' => 'ckeditor_top', 'bottom' =>' ckeditor_bottom' )
 							);
 
-			$ckeditor_basepath = \common::GetDir('/include/thirdparty/ckeditor_34/');
+			$ckeditor_basepath = \gp\tool::GetDir('/include/thirdparty/ckeditor_34/');
 			echo 'CKEDITOR_BASEPATH = '.self::quote($ckeditor_basepath).';';
 			echo 'var gp_ckconfig = '.\gp\tool\Editing::CKConfig( $options, 'json', $plugins ).';';
 

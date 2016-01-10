@@ -39,7 +39,7 @@ class Permalinks{
 		echo '<h2>'.$langmessage['permalink_settings'].'</h2>';
 
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 			case 'continue':
 				if( !$this->SaveHtaccess() ){
@@ -112,7 +112,7 @@ class Permalinks{
 			$host = 'www.'.$this->server_name;
 		}
 
-		return $schema.$host.\common::GetUrl($slug,'',false);
+		return $schema.$host.\gp\tool::GetUrl($slug,'',false);
 	}
 
 
@@ -175,7 +175,7 @@ class Permalinks{
 		}
 
 		echo '<br/>';
-		echo '<form method="post" action="'.\common::GetUrl('Admin/Permalinks').'">';
+		echo '<form method="post" action="'.\gp\tool::GetUrl('Admin/Permalinks').'">';
 		echo '<table class="bordered middle">';
 
 		echo '<tr><th colspan="2">index.php</th></tr>';
@@ -348,9 +348,9 @@ class Permalinks{
 
 		//redirect to new permalink structure
 		$_SERVER['gp_rewrite'] = $this->hide_index;
-		\common::SetLinkPrefix();
-		$redir = \common::GetUrl('Admin/Permalinks');
-		\common::Redirect($redir,302);
+		\gp\tool::SetLinkPrefix();
+		$redir = \gp\tool::GetUrl('Admin/Permalinks');
+		\gp\tool::Redirect($redir,302);
 
 		return false;
 	}
@@ -398,7 +398,7 @@ class Permalinks{
 		echo '<textarea cols="'.$len.'" rows="'.(count($lines)+1).'" readonly="readonly" onClick="this.focus();this.select();" class="gptextarea">';
 		echo htmlspecialchars($this->new_rules);
 		echo '</textarea>';
-		echo '<form action="'.\common::GetUrl('Admin/Permalinks').'" method="get">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Permalinks').'" method="get">';
 		echo '<input type="submit" value="'.$langmessage['continue'].'" class="gpsubmit"/>';
 		echo '</form>';
 
@@ -478,12 +478,12 @@ class Permalinks{
 		//get url, force gp_rewrite to $new_gp_rewrite
 		$rewrite_before				= $_SERVER['gp_rewrite'];
 		$_SERVER['gp_rewrite']		= $new_rewrite;
-		\common::SetLinkPrefix();
+		\gp\tool::SetLinkPrefix();
 
 
-		$abs_url					= \common::AbsoluteUrl('Site_Map','',true,false); //can't be special_site_map, otherwise common::IndexToTitle() will be called during install
+		$abs_url					= \gp\tool::AbsoluteUrl('Site_Map','',true,false); //can't be special_site_map, otherwise \gp\tool::IndexToTitle() will be called during install
 		$_SERVER['gp_rewrite']		= $rewrite_before;
-		\common::SetLinkPrefix();
+		\gp\tool::SetLinkPrefix();
 
 
 		return self::ConfirmGet($abs_url, false);

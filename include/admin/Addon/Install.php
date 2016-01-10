@@ -90,7 +90,7 @@ class Install extends \gp\admin\Addon\Tools{
 			if( $page->requested == $slug ){
 				$list[] = '<span>'.$label.'</span>';
 			}else{
-				$list[] = \common::Link($slug,$label);
+				$list[] = \gp\tool::Link($slug,$label);
 			}
 		}
 
@@ -123,7 +123,7 @@ class Install extends \gp\admin\Addon\Tools{
 
 		$_REQUEST += array('order'=>'');
 
-		echo '<form action="'.\common::GetUrl($page->requested).'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl($page->requested).'" method="post">';
 		echo '<input type="hidden" name="cmd" value="remote_install_confirmed" />';
 		echo '<input type="hidden" name="id" value="'.htmlspecialchars($_REQUEST['id']).'" />';
 		echo '<input type="hidden" name="order" value="'.htmlspecialchars($_REQUEST['order']).'" />';
@@ -342,10 +342,10 @@ class Install extends \gp\admin\Addon\Tools{
 
 		if( $search_version ){
 			echo '<b>'.$langmessage['On'].'</b> &nbsp; ';
-			echo \common::Link($this->searchUrl,$langmessage['Off'],$this->searchQuery.'&search_option=noversion',' data-cmd="gpajax"');
+			echo \gp\tool::Link($this->searchUrl,$langmessage['Off'],$this->searchQuery.'&search_option=noversion',' data-cmd="gpajax"');
 
 		}else{
-			echo \common::Link($this->searchUrl,$langmessage['On'],$this->searchQuery.'&search_option=version',' data-cmd="gpajax"');
+			echo \gp\tool::Link($this->searchUrl,$langmessage['On'],$this->searchQuery.'&search_option=version',' data-cmd="gpajax"');
 			echo ' &nbsp;  <b>'.$langmessage['Off'].'</b>';
 		}
 		echo '</li>';
@@ -376,7 +376,7 @@ class Install extends \gp\admin\Addon\Tools{
 			if( $key === $this->searchOrder ){
 				echo '<span>'.$label.'</span>';
 			}else{
-				echo \common::Link($this->searchUrl,$label,$this->searchQuery.'&order='.$key);
+				echo \gp\tool::Link($this->searchUrl,$label,$this->searchQuery.'&order='.$key);
 			}
 		}
 		echo '</div>';
@@ -409,7 +409,7 @@ class Install extends \gp\admin\Addon\Tools{
 		$_GET += array('q'=>'');
 
 		echo '<div class="gp_find_form">';
-		echo '<form action="'.\common::GetUrl($this->path_remote).'" method="get">';
+		echo '<form action="'.\gp\tool::GetUrl($this->path_remote).'" method="get">';
 		echo '<input type="text" name="q" value="'.htmlspecialchars($_GET['q']).'" size="15" class="gpinput" /> ';
 		echo '<input type="submit" name="" value="'.$langmessage['Search'].'" class="gpbutton" />';
 		echo '</form>';
@@ -444,7 +444,7 @@ class Install extends \gp\admin\Addon\Tools{
 		$link .= '&type='.rawurlencode($row['type']);
 		$link .= '&id='.rawurlencode($row['id']);
 
-		echo \common::Link($url,$label,$link);
+		echo \gp\tool::Link($url,$label,$link);
 	}
 
 	function SearchNavLinks(){
@@ -454,9 +454,9 @@ class Install extends \gp\admin\Addon\Tools{
 		if( $this->searchPage > 0 ){
 			//previous
 			if( $this->searchPage > 1 ){
-				echo \common::Link($this->searchUrl,$langmessage['Previous'],$this->searchQuery.'&page='.($this->searchPage-1));
+				echo \gp\tool::Link($this->searchUrl,$langmessage['Previous'],$this->searchQuery.'&page='.($this->searchPage-1));
 			}else{
-				echo \common::Link($this->searchUrl,$langmessage['Previous'],$this->searchQuery);
+				echo \gp\tool::Link($this->searchUrl,$langmessage['Previous'],$this->searchQuery);
 			}
 		}else{
 			echo '<span>'.$langmessage['Previous'].'</span>';
@@ -466,7 +466,7 @@ class Install extends \gp\admin\Addon\Tools{
 		//always show link for first page
 		$start_page = max(0,$this->searchPage-5);
 		if( $start_page > 0 ){
-			echo \common::Link($this->searchUrl,'1',$this->searchQuery); //.'&offset=0');
+			echo \gp\tool::Link($this->searchUrl,'1',$this->searchQuery); //.'&offset=0');
 			if( $start_page > 1 ){
 				echo '<span>...</span>';
 			}
@@ -481,9 +481,9 @@ class Install extends \gp\admin\Addon\Tools{
 				echo '<span>'.($j+1).'</span>';
 			}else{
 				if( $j == 0 ){
-					echo \common::Link($this->searchUrl,($j+1),$this->searchQuery);
+					echo \gp\tool::Link($this->searchUrl,($j+1),$this->searchQuery);
 				}else{
-					echo \common::Link($this->searchUrl,($j+1),$this->searchQuery.'&page='.($j));
+					echo \gp\tool::Link($this->searchUrl,($j+1),$this->searchQuery.'&page='.($j));
 				}
 			}
 		}
@@ -493,12 +493,12 @@ class Install extends \gp\admin\Addon\Tools{
 			if( ($max_page+1) < $pages ){
 				echo '<span>...</span>';
 			}
-			echo \common::Link($this->searchUrl,($pages),$this->searchQuery.'&page='.($pages-1));
+			echo \gp\tool::Link($this->searchUrl,($pages),$this->searchQuery.'&page='.($pages-1));
 		}
 
 
 		if( $this->searchPage < $pages ){
-			echo \common::Link($this->searchUrl,$langmessage['Next'],$this->searchQuery.'&page='.($this->searchPage+1));
+			echo \gp\tool::Link($this->searchUrl,$langmessage['Next'],$this->searchQuery.'&page='.($this->searchPage+1));
 		}else{
 			echo '<span>'.$langmessage['Next'].'</span>';
 		}

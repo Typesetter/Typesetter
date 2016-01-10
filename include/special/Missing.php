@@ -58,7 +58,7 @@ class Missing{
 		}
 
 		$code = $this->error_data['redirects'][$this->requested]['code'];
-		\common::Redirect($target,$code);
+		\gp\tool::Redirect($target,$code);
 	}
 
 	/**
@@ -75,8 +75,8 @@ class Missing{
 		$first_percent		= current($similar);
 
 		if( $config['auto_redir'] > 0 && $first_percent >= $config['auto_redir'] ){
-			$redirect = \common::GetUrl($first_title,http_build_query($_GET),false);
-			\common::Redirect($redirect);
+			$redirect = \gp\tool::GetUrl($first_title,http_build_query($_GET),false);
+			\gp\tool::Redirect($redirect);
 		}
 	}
 
@@ -94,7 +94,7 @@ class Missing{
 		static $redirects = 0;
 
 		if( empty($target) ){
-			return \common::GetUrl('');
+			return \gp\tool::GetUrl('');
 		}
 
 		if( !$this->isGPLink($target) ){
@@ -102,7 +102,7 @@ class Missing{
 		}
 
 		if( !$get_final ){
-			return \common::GetUrl($target);
+			return \gp\tool::GetUrl($target);
 		}
 
 
@@ -120,12 +120,12 @@ class Missing{
 
 		//check for target existence
 		if( isset($gp_index[$target]) ){
-			return \common::GetUrl($target);
+			return \gp\tool::GetUrl($target);
 		}
 
 		$scripts = \gp\admin\Tools::AdminScripts();
 		if( isset($scripts[$target]) ){
-			return \common::GetUrl($target);
+			return \gp\tool::GetUrl($target);
 		}
 
 		return false;
@@ -152,23 +152,23 @@ class Missing{
 	public function Get404(){
 		global $langmessage,$page;
 
-		\gpOutput::AddHeader('Not Found',true,404);
+		\gp\tool\Output::AddHeader('Not Found',true,404);
 		$page->head .= '<meta name="robots" content="noindex,nofollow" />'; //this isn't getting to the template because $page isn't available yet
 
 		//message for admins
-		if( \common::LoggedIn() ){
-			if( $this->requested && \common::SpecialOrAdmin($this->requested) === false ){
+		if( \gp\tool::LoggedIn() ){
+			if( $this->requested && \gp\tool::SpecialOrAdmin($this->requested) === false ){
 				$with_spaces = htmlspecialchars($this->requested);
-				$link = \common::GetUrl('Admin/Menu/Ajax','cmd=AddHidden&redir=redir&title='.rawurlencode($this->requested)).'" title="'.$langmessage['create_new_file'].'" data-cmd="gpabox';
+				$link = \gp\tool::GetUrl('Admin/Menu/Ajax','cmd=AddHidden&redir=redir&title='.rawurlencode($this->requested)).'" title="'.$langmessage['create_new_file'].'" data-cmd="gpabox';
 				$message = sprintf($langmessage['DOESNT_EXIST'],$with_spaces,$link);
 				msg($message);
 			}
 		}
 
 		//Contents of 404 page
-		$wrap = \gpOutput::ShowEditLink('Admin/Missing');
+		$wrap = \gp\tool\Output::ShowEditLink('Admin/Missing');
 		if( $wrap ){
-			echo \gpOutput::EditAreaLink($edit_index,'Admin/Missing',$langmessage['edit'],'cmd=edit404',' title="'.$langmessage['404_Page'].'" ');
+			echo \gp\tool\Output::EditAreaLink($edit_index,'Admin/Missing',$langmessage['edit'],'cmd=edit404',' title="'.$langmessage['404_Page'].'" ');
 			echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
 		}
 
@@ -207,7 +207,7 @@ class Missing{
 		$result		= '';
 
 		foreach($similar as $title => $percent_similar){
-			$result .= \common::Link_Page($title).', ';
+			$result .= \gp\tool::Link_Page($title).', ';
 		}
 
 		return rtrim($result,', ');
@@ -223,7 +223,7 @@ class Missing{
 
 		$similar			= array();
 		$lower				= str_replace(' ','_',strtolower($title));
-		$admin				= \common::LoggedIn();
+		$admin				= \gp\tool::LoggedIn();
 
 		foreach($gp_index as $title => $index){
 

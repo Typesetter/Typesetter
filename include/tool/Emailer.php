@@ -31,11 +31,11 @@ namespace gp\tool{
 				//smtp & smtpauth
 				case 'smtpauth':
 					$this->SMTPAuth = true;
-					$this->Username = \common::ConfigValue('smtp_user','');
-					$this->Password = \common::ConfigValue('smtp_pass','');
+					$this->Username = \gp\tool::ConfigValue('smtp_user','');
+					$this->Password = \gp\tool::ConfigValue('smtp_pass','');
 				case 'smtp';
 					$this->IsSMTP();
-					$this->Host = \common::ConfigValue('smtp_hosts','');
+					$this->Host = \gp\tool::ConfigValue('smtp_hosts','');
 				break;
 
 				//sendmail
@@ -186,11 +186,11 @@ namespace gp\tool{
 		}
 
 		function From_Name(){
-			return \common::ConfigValue('from_name','Automated Sender');
+			return \gp\tool::ConfigValue('from_name','Automated Sender');
 		}
 
 		function Mail_Method(){
-			return \common::ConfigValue('mail_method','mail');
+			return \gp\tool::ConfigValue('mail_method','mail');
 		}
 
 		function Sendmail_Path(){
@@ -204,7 +204,7 @@ namespace gp\tool{
 			if( empty($default) ){
 				$default = '/usr/sbin/sendmail';
 			}
-			return \common::ConfigValue('sendmail_path',$default);
+			return \gp\tool::ConfigValue('sendmail_path',$default);
 		}
 
 

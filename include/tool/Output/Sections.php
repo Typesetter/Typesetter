@@ -137,7 +137,7 @@ namespace gp\tool\Output{
 
 		static function SetVars($title,$meta){
 			self::$title = $title;
-			self::$label = \common::GetLabel($title);
+			self::$label = \gp\tool::GetLabel($title);
 			self::$meta = array();
 			if( is_array($meta) ){
 				self::$meta = $meta;
@@ -162,7 +162,7 @@ namespace gp\tool\Output{
 				return self::IncludeContent($section_data);
 
 				case 'gallery':
-					\common::ShowingGallery();
+					\gp\tool::ShowingGallery();
 				return $section_data['content'];
 			}
 			return $section_data['content'];
@@ -179,7 +179,7 @@ namespace gp\tool\Output{
 			//variables
 			$vars = array(
 				'dirPrefix' => $GLOBALS['dirPrefix'],
-				'linkPrefix' => \common::HrefEncode($GLOBALS['linkPrefix']),
+				'linkPrefix' => \gp\tool::HrefEncode($GLOBALS['linkPrefix']),
 				'fileModTime' => self::$meta['modified'],
 				'title' => self::$title,
 				'label' => self::$label,
@@ -296,7 +296,7 @@ namespace gp\tool\Output{
 			global $langmessage, $gp_index;
 
 			if( isset($data['index']) ){
-				$requested = \common::IndexToTitle($data['index']);
+				$requested = \gp\tool::IndexToTitle($data['index']);
 			}else{
 				$requested = $data['content'];
 			}
@@ -306,7 +306,7 @@ namespace gp\tool\Output{
 			}
 
 			if( self::$title == $requested ){
-				if( \common::LoggedIn() ){
+				if( \gp\tool::LoggedIn() ){
 					msg('Infinite loop detected: '.htmlspecialchars($requested) );
 				}
 				return;
@@ -315,7 +315,7 @@ namespace gp\tool\Output{
 			if( isset($data['include_type']) ){
 				$type = $data['include_type'];
 			}else{
-				$type = \common::SpecialOrAdmin($requested);
+				$type = \gp\tool::SpecialOrAdmin($requested);
 			}
 
 			switch($type){
@@ -344,7 +344,7 @@ namespace gp\tool\Output{
 			}
 
 			ob_start();
-			\gpOutput::GetGadget($requested);
+			\gp\tool\Output::GetGadget($requested);
 			return ob_get_clean();
 		}
 
@@ -400,7 +400,7 @@ namespace gp\tool\Output{
 
 			switch($type){
 				case 'image':
-					$attrs['src'] = \common::GetDir($attrs['src']);
+					$attrs['src'] = \gp\tool::GetDir($attrs['src']);
 				break;
 			}
 

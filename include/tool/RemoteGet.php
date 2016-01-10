@@ -43,11 +43,11 @@ namespace gp\tool{
 		 */
 		public static function Supported($method){
 
-			if( \common::IniGet('safe_mode') ){
+			if( \gp\tool::IniGet('safe_mode') ){
 				return false;
 			}
 
-			$url_fopen = \common::IniGet('allow_url_fopen');
+			$url_fopen = \gp\tool::IniGet('allow_url_fopen');
 			$php5 = version_compare(phpversion(), '5.0', '>=');
 
 			switch($method){
@@ -544,7 +544,7 @@ namespace gp\tool{
 
 			$debug	= array_merge(self::$debug,$debug);
 
-			return \common::Debug($lang_key, $debug);
+			return \gp\tool::Debug($lang_key, $debug);
 		}
 
 

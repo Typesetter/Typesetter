@@ -7,13 +7,13 @@ class phpunit_Languages extends gptest_bootstrap{
 		global $langmessage, $languages;
 
 		//get en language
-		common::GetLangFile('main.inc','en');
+		\gp\tool::GetLangFile('main.inc','en');
 		$keys_en = array_keys($langmessage);
 
 		//compare keys in other languages
 		foreach($languages as $code => $lang){
 			$langmessage = array();
-			common::GetLangFile('main.inc',$code);
+			\gp\tool::GetLangFile('main.inc',$code);
 			$keys = array_keys($langmessage);
 
 			self::AssertEquals( $keys_en, $keys, 'Keys in language file don\'t match for '.$lang.' ('.$code.')');

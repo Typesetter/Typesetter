@@ -28,7 +28,7 @@ class Users{
 
 
 		$this->GetUsers();
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 
 			case 'save_file_permissions':
@@ -149,7 +149,7 @@ class Users{
 
 		$userinfo = $this->users[$username];
 
-		echo '<form action="'.\common::GetUrl('Admin/Users').'" method="post" id="permission_form">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Users').'" method="post" id="permission_form">';
 		echo '<input type="hidden" name="cmd" value="SaveChanges" />';
 		echo '<input type="hidden" name="username" value="'.htmlspecialchars($username).'" />';
 
@@ -259,12 +259,12 @@ class Users{
 	public static function SetUserPass( &$user_info, $password ){
 
 		if( function_exists('password_hash') && $_REQUEST['algo'] == 'password_hash' ){
-			$temp					= \common::hash($_POST['password'],'sha512',50);
+			$temp					= \gp\tool::hash($_POST['password'],'sha512',50);
 			$user_info['password']	= password_hash($temp,PASSWORD_DEFAULT);
 			$user_info['passhash']	= 'password_hash';
 
 		}else{
-			$user_info['password']	= \common::hash($_POST['password'],'sha512');
+			$user_info['password']	= \gp\tool::hash($_POST['password'],'sha512');
 			$user_info['passhash']	= 'sha512';
 		}
 
@@ -426,18 +426,18 @@ class Users{
 
 			//options
 			echo '<td>';
-			echo \common::Link('Admin/Users',$langmessage['details'],'cmd=details&username='.$username);
+			echo \gp\tool::Link('Admin/Users',$langmessage['details'],'cmd=details&username='.$username);
 			echo ' &nbsp; ';
-			echo \common::Link('Admin/Users',$langmessage['password'],'cmd=changepass&username='.$username);
+			echo \gp\tool::Link('Admin/Users',$langmessage['password'],'cmd=changepass&username='.$username);
 			echo ' &nbsp; ';
 
 			$title = sprintf($langmessage['generic_delete_confirm'],htmlspecialchars($username));
-			echo \common::Link('Admin/Users',$langmessage['delete'],'cmd=rm&username='.$username,array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
+			echo \gp\tool::Link('Admin/Users',$langmessage['delete'],'cmd=rm&username='.$username,array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
 			echo '</td>';
 			echo '</tr>';
 		}
 		echo '<tr><th colspan="5">';
-		echo \common::Link('Admin/Users',$langmessage['new_user'],'cmd=newuserform');
+		echo \gp\tool::Link('Admin/Users',$langmessage['new_user'],'cmd=newuserform');
 		echo '</th>';
 
 		echo '</table>';
@@ -481,7 +481,7 @@ class Users{
 
 		$_POST += array('username'=>'','email'=>'','grant'=>array(),'grant_all'=>'all','editing_all'=>'all');
 
-		echo '<form action="'.\common::GetUrl('Admin/Users').'" method="post" id="permission_form">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Users').'" method="post" id="permission_form">';
 		echo '<table class="bordered" style="width:95%">';
 		echo '<tr><th colspan="2">';
 			echo $langmessage['new_user'];
@@ -629,7 +629,7 @@ class Users{
 
 		$ordered = array();
 		foreach($gp_titles as $index => $info){
-			$ordered[$index] = strip_tags(\common::GetLabelIndex($index));
+			$ordered[$index] = strip_tags(\gp\tool::GetLabelIndex($index));
 		}
 
 		uasort($ordered,'strnatcasecmp');
@@ -667,7 +667,7 @@ class Users{
 		}
 
 
-		echo '<form action="'.\common::GetUrl('Admin/Users').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Users').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="resetpass" />';
 		echo '<input type="hidden" name="username" value="'.htmlspecialchars($username).'" />';
 
@@ -768,17 +768,17 @@ class Users{
 
 
 		echo '<div class="inline_box">';
-		echo '<form action="'.\common::GetUrl('Admin/Users').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Users').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="save_file_permissions">';
 		echo '<input type="hidden" name="index" value="'.htmlspecialchars($_REQUEST['index']).'">';
 
 
 		//heading
-		echo '<h2>'.\common::Link('Admin/Users',$langmessage['user_permissions']).' &#187; <i>';
+		echo '<h2>'.\gp\tool::Link('Admin/Users',$langmessage['user_permissions']).' &#187; <i>';
 		if( $count > 1 ){
 			echo sprintf($langmessage['%s Pages'],$count);
 		}else{
-			echo strip_tags(\common::GetLabelIndex($indexes[0]));
+			echo strip_tags(\gp\tool::GetLabelIndex($indexes[0]));
 		}
 		echo '</i></h2>';
 
@@ -787,7 +787,7 @@ class Users{
 		if( $count > 1 ){
 			$labels = array();
 			foreach( $indexes as $index ){
-				$labels[] = strip_tags(\common::GetLabelIndex($index));
+				$labels[] = strip_tags(\gp\tool::GetLabelIndex($index));
 			}
 			echo '<p>';
 			echo implode(', ',$labels);

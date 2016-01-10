@@ -20,7 +20,7 @@ class Missing extends \gp\special\Missing{
 		\gp\tool\Editing::PrepAutoComplete();
 
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		$show = true;
 		switch($cmd){
 
@@ -131,9 +131,9 @@ class Missing extends \gp\special\Missing{
 		echo '<div id="Page_404">';
 		echo '<p>'.$langmessage['About_404_Page'].'</p>';
 		echo '<p>';
-		echo \common::Link('Special_Missing',$langmessage['preview']);
+		echo \gp\tool::Link('Special_Missing',$langmessage['preview']);
 		echo ' - ';
-		echo \common::Link('Admin/Missing',$langmessage['edit'],'cmd=edit404');
+		echo \gp\tool::Link('Admin/Missing',$langmessage['edit'],'cmd=edit404');
 		echo '</p>';
 		echo '</div>';
 
@@ -172,7 +172,7 @@ class Missing extends \gp\special\Missing{
 		echo '<h2>'.$langmessage['Link Errors'].' &#187; '.$langmessage['404_Page'].'</h2>';
 
 
-		echo '<form action="'.\common::GetUrl('Admin/Missing').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Missing').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="save404" />';
 
 		\gp\tool\Editing::UseCK($text);
@@ -215,7 +215,7 @@ class Missing extends \gp\special\Missing{
 
 
 		echo '<p>'.$langmessage['About_Redirection'].'</p>';
-		echo \common::Link('Admin/Missing',$langmessage['New Redirection'],'cmd=newform',array('data-cmd'=>'gpabox'));
+		echo \gp\tool::Link('Admin/Missing',$langmessage['New Redirection'],'cmd=newform',array('data-cmd'=>'gpabox'));
 
 
 		if( empty($this->error_data['redirects']) ){
@@ -262,7 +262,7 @@ class Missing extends \gp\special\Missing{
 			if( !empty($data['target']) && $is_gplink ){
 				if( !isset($gp_index[$data['target']]) && !isset($admin_urls[$data['target']]) ){
 					$has_invalid_target = true;
-					echo ' <img src="'.\common::GetDir('/include/imgs/error.png').'" alt="" height="16" width="16" style="vertical-align:middle" title="'.$langmessage['Target URL Invalid'].'"/> ';
+					echo ' <img src="'.\gp\tool::GetDir('/include/imgs/error.png').'" alt="" height="16" width="16" style="vertical-align:middle" title="'.$langmessage['Target URL Invalid'].'"/> ';
 				}
 			}
 
@@ -285,14 +285,14 @@ class Missing extends \gp\special\Missing{
 			echo $this->GetCodeLanguage($data['code']);
 			echo '</td><td>';
 
-			echo \common::Link('Admin/Missing',$langmessage['edit'],'cmd=editredir&source='.urlencode($source),array('data-cmd'=>'gpabox'));
+			echo \gp\tool::Link('Admin/Missing',$langmessage['edit'],'cmd=editredir&source='.urlencode($source),array('data-cmd'=>'gpabox'));
 
 			echo ' &nbsp; ';
-			echo \common::Link($source,$langmessage['Test']);
+			echo \gp\tool::Link($source,$langmessage['Test']);
 
 			echo ' &nbsp; ';
 			$title = sprintf($langmessage['generic_delete_confirm'],$source);
-			echo \common::Link('Admin/Missing',$langmessage['delete'],'cmd=rmredir&link='.urlencode($source),array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
+			echo \gp\tool::Link('Admin/Missing',$langmessage['delete'],'cmd=rmredir&link='.urlencode($source),array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
 
 			echo '</td></tr>';
 		}
@@ -300,13 +300,13 @@ class Missing extends \gp\special\Missing{
 		echo '</table>';
 
 		echo '<p>';
-		echo \common::Link('Admin/Missing',$langmessage['New Redirection'],'cmd=newform',array('data-cmd'=>'gpabox'));
+		echo \gp\tool::Link('Admin/Missing',$langmessage['New Redirection'],'cmd=newform',array('data-cmd'=>'gpabox'));
 		echo '</p>';
 
 
 		if( $has_invalid_target ){
 			echo '<p>';
-			echo ' <img src="'.\common::GetDir('/include/imgs/error.png').'" alt="" height="16" width="16" style="vertical-align:middle" title="'.$langmessage['Target URL Invalid'].'"/> ';
+			echo ' <img src="'.\gp\tool::GetDir('/include/imgs/error.png').'" alt="" height="16" width="16" style="vertical-align:middle" title="'.$langmessage['Target URL Invalid'].'"/> ';
 			echo $langmessage['Target URL Invalid'];
 			echo '</p>';
 		}
@@ -323,7 +323,7 @@ class Missing extends \gp\special\Missing{
 
 		echo '<div class="inline_box" id="gp_redir">';
 		echo '<h2>'.$langmessage['New Redirection'].'</h2>';
-		echo '<form method="post" action="'.\common::GetUrl('Admin/Missing').'">';
+		echo '<form method="post" action="'.\gp\tool::GetUrl('Admin/Missing').'">';
 		echo '<input type="hidden" name="cmd" value="'.htmlspecialchars($values['cmd']).'"/>';
 		echo '<input type="hidden" name="orig_source" value="'.htmlspecialchars($values['orig_source']).'"/>';
 
@@ -334,7 +334,7 @@ class Missing extends \gp\special\Missing{
 		echo '<tr><td>';
 		echo $langmessage['Source URL'];
 		echo '</td><td>';
-		echo \common::GetUrl('');
+		echo \gp\tool::GetUrl('');
 		echo '<input type="text" name="source" value="'.htmlspecialchars($values['source']).'" size="20" class="gpinput"/>';
 		echo '</td></tr>';
 

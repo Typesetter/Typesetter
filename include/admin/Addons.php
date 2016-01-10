@@ -45,7 +45,7 @@ class Addons extends \gp\admin\Addon\Install{
 	function RunScript(){
 		global $page;
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 
 			case 'LocalInstall':
@@ -211,9 +211,9 @@ class Addons extends \gp\admin\Addon\Install{
 		}
 
 		if( isset($info['disabled']) ){
-			return \common::Link('Admin/Addons',str_replace('_',' ',$name).' ('.$langmessage['disabled'].')','cmd=enable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.md5($name).'"');
+			return \gp\tool::Link('Admin/Addons',str_replace('_',' ',$name).' ('.$langmessage['disabled'].')','cmd=enable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.md5($name).'"');
 		}else{
-			return \common::Link('Admin/Addons',str_replace('_',' ',$name) .' ('.$langmessage['enabled'].')','cmd=disable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.md5($name).'"');
+			return \gp\tool::Link('Admin/Addons',str_replace('_',' ',$name) .' ('.$langmessage['enabled'].')','cmd=disable&addon='.rawurlencode($info['addon']).'&gadget='.rawurlencode($name),'data-cmd="gpajax" class="gadget_link_'.md5($name).'"');
 		}
 
 	}
@@ -260,7 +260,7 @@ class Addons extends \gp\admin\Addon\Install{
 
 		echo '<div class="inline_box">';
 		echo '<h3>'.$langmessage['uninstall'].'</h3>';
-		echo '<form action="'.\common::GetUrl('Admin/Addons').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin/Addons').'" method="post">';
 
 		$addon =& $_REQUEST['addon'];
 		if( !isset($config['addons'][$addon]) ){
@@ -484,7 +484,7 @@ class Addons extends \gp\admin\Addon\Install{
 				echo '</td><td>';
 				echo $info['Addon_Version'];
 				echo '</td><td>';
-				echo \common::Link('Admin/Addons',$langmessage['Install'],'cmd=LocalInstall&source='.$folder, array('data-cmd'=>'cnreq'));
+				echo \gp\tool::Link('Admin/Addons',$langmessage['Install'],'cmd=LocalInstall&source='.$folder, array('data-cmd'=>'cnreq'));
 				echo '</td><td>';
 				echo $info['About'];
 				if( isset($info['Addon_Unique_ID']) && is_numeric($info['Addon_Unique_ID']) ){
@@ -566,7 +566,7 @@ class Addons extends \gp\admin\Addon\Install{
 		echo '<div class="panelgroup" id="panelgroup_'.md5($addon_key).'">';
 
 		echo '<h3>';
-		echo \common::Link('Admin/Addons/'.\gp\admin\Tools::encode64($addon_key),$addon_config['name']);
+		echo \gp\tool::Link('Admin/Addons/'.\gp\admin\Tools::encode64($addon_key),$addon_config['name']);
 		echo '</h3>';
 
 		echo '<div class="panelgroup2">';
@@ -625,7 +625,7 @@ class Addons extends \gp\admin\Addon\Install{
 
 			//editable text
 			if( isset($addon_config['editable_text']) && \gp\admin\Tools::HasPermission('Admin_Theme_Content') ){
-				$list[] = \common::Link('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addon_key),array('title'=>urlencode($langmessage['editable_text']),'data-cmd'=>'gpabox'));
+				$list[] = \gp\tool::Link('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addon_key),array('title'=>urlencode($langmessage['editable_text']),'data-cmd'=>'gpabox'));
 			}
 
 			//upgrade link
@@ -634,7 +634,7 @@ class Addons extends \gp\admin\Addon\Install{
 			}
 
 			//uninstall
-			$list[] = \common::Link('Admin/Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.rawurlencode($addon_key),'data-cmd="gpabox"');
+			$list[] = \gp\tool::Link('Admin/Addons',$langmessage['uninstall'],'cmd=uninstall&addon='.rawurlencode($addon_key),'data-cmd="gpabox"');
 
 
 			//version
@@ -665,9 +665,9 @@ class Addons extends \gp\admin\Addon\Install{
 			}
 
 			$item = '<span><span class="layout_color_id" style="background:'.$layout_info['color'].'"></span> ';
-			$item .= \common::Link('Admin_Theme_Content',$layout_info['label']);
+			$item .= \gp\tool::Link('Admin_Theme_Content',$layout_info['label']);
 			$item .= ' ( ';
-			$item .= \common::Link('Admin_Theme_Content/Edit/'.$layout_id,$langmessage['edit']);
+			$item .= \gp\tool::Link('Admin_Theme_Content/Edit/'.$layout_id,$langmessage['edit']);
 			$item .= ' )</span>';
 
 			$list[] = $item;

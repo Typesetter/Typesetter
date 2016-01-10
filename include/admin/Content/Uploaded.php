@@ -19,7 +19,7 @@ namespace gp\admin\Content{
 
 		public function __construct(){
 
-			$file_cmd = \common::GetCommand('file_cmd');
+			$file_cmd = \gp\tool::GetCommand('file_cmd');
 			if( !empty($file_cmd) || (isset($_REQUEST['show']) && $_REQUEST['show'] == 'inline') ){
 				$this->do_admin_uploaded($file_cmd);
 			}else{
@@ -30,16 +30,16 @@ namespace gp\admin\Content{
 		public function Finder(){
 			global $page, $config, $dataDir;
 
-			$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.\common::GetDir('/include/thirdparty/finder/css/finder.css').'">';
-			$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.\common::GetDir('/include/thirdparty/finder/style.css').'">';
+			$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.\gp\tool::GetDir('/include/thirdparty/finder/css/finder.css').'">';
+			$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.\gp\tool::GetDir('/include/thirdparty/finder/style.css').'">';
 
-			$page->head .= "\n".'<script type="text/javascript" src="'.\common::GetDir('/include/thirdparty/finder/js/finder.js').'"></script>';
-			$page->head .= "\n".'<script type="text/javascript" src="'.\common::GetDir('/include/thirdparty/finder/config.js').'"></script>';
+			$page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/finder/js/finder.js').'"></script>';
+			$page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/finder/config.js').'"></script>';
 
 
 			echo '<div id="finder"></div>';
 
-			\common::LoadComponents('selectable,draggable,droppable,resizable,dialog,slider,button');
+			\gp\tool::LoadComponents('selectable,draggable,droppable,resizable,dialog,slider,button');
 
 
 
@@ -51,12 +51,12 @@ namespace gp\admin\Content{
 			$lang_file = '/include/thirdparty/finder/js/i18n/'.$language.'.js';
 			$lang_full = $dataDir.$lang_file;
 			if( file_exists($lang_full) ){
-				$page->head .= "\n".'<script type="text/javascript" src="'.\common::GetDir($lang_file).'"></script>';
+				$page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir($lang_file).'"></script>';
 			}else{
 				$language = 'en';
 			}
 			$this->finder_opts['lang'] = $language;
-			$this->finder_opts['customData']['verified'] = \common::new_nonce('post',true);
+			$this->finder_opts['customData']['verified'] = \gp\tool::new_nonce('post',true);
 
 
 			$this->finder_opts['uiOptions'] = array(
@@ -109,7 +109,7 @@ namespace gp\admin\Content{
 		}
 
 		public function FinderPrep(){
-			$this->finder_opts['url']			= \common::GetUrl('Admin_Finder');
+			$this->finder_opts['url']			= \gp\tool::GetUrl('Admin_Finder');
 			$this->finder_opts['height']		= '100%';
 			$this->finder_opts['resizable'] 	= false;
 		}
@@ -254,15 +254,15 @@ namespace gp\admin\Content{
 			$page->ajaxReplace = array();
 
 
-			$dir_piece = \common::WinPath($dir_piece);
+			$dir_piece = \gp\tool::WinPath($dir_piece);
 			$dir = $dataDir.'/data/_uploaded'.$dir_piece;
 
 			$prev_piece = false;
 
 			while( ($dir_piece != '/') && !file_exists($dir) ){
 				$prev_piece = $dir_piece;
-				$dir = \common::DirName($dir);
-				$dir_piece = \common::DirName($dir_piece);
+				$dir = \gp\tool::DirName($dir);
+				$dir_piece = \gp\tool::DirName($dir_piece);
 			}
 
 			//new directory?
@@ -273,8 +273,8 @@ namespace gp\admin\Content{
 
 				if( !\gp\tool\Files::CheckDir($dir) ){
 					message($langmessage['OOPS']);
-					$dir = \common::DirName($dir);
-					$dir_piece = \common::DirName($prev_piece);
+					$dir = \gp\tool::DirName($dir);
+					$dir_piece = \gp\tool::DirName($prev_piece);
 				}
 			}
 
@@ -299,7 +299,7 @@ namespace gp\admin\Content{
 
 			echo '<div class="gp_edit_select_options">';
 			if( $dir_piece != '/' ){
-				$temp = \common::DirName($dir_piece);
+				$temp = \gp\tool::DirName($dir_piece);
 				echo '<a href="?cmd=new_dir&dir='.rawurlencode($dir_piece).'" class="gp_gallery_folder" data-cmd="gpabox"><span class="add"></span>'.$langmessage['create_dir'].'</a>';
 				echo '<a class="gp_gallery_folder" data-cmd="gp_gallery_folder" data-arg="'.htmlspecialchars($temp).'"><span class="folder"></span>../</a>';
 			}
@@ -350,7 +350,7 @@ namespace gp\admin\Content{
 
 			if( $dir_piece != '/' ){
 
-				echo '<form action="'.\common::GetUrl('Admin/Uploaded').'" method="post"  enctype="multipart/form-data" class="gp_upload_form" id="gp_upload_form">';
+				echo '<form action="'.\gp\tool::GetUrl('Admin/Uploaded').'" method="post"  enctype="multipart/form-data" class="gp_upload_form" id="gp_upload_form">';
 				self::Max_File_Size();
 				echo '<a class="ckeditor_control half_width">'.$langmessage['upload_files'].'</a>';
 				echo '<div class="gp_object_wrapper">';
@@ -367,7 +367,7 @@ namespace gp\admin\Content{
 
 
 			//send content according to request
-			$cmd = \common::GetCommand();
+			$cmd = \gp\tool::GetCommand();
 			switch($cmd){
 				case 'gallery_folder':
 					$page->ajaxReplace[] = array('inner','#gp_option_area',$gp_option_area);
@@ -400,11 +400,11 @@ namespace gp\admin\Content{
 			//for gallery editing
 			$rel_path = '/data/_uploaded'.$dir_piece.'/'.$file;
 			$id = self::ImageId($rel_path);
-			$file_url = \common::GetDir($rel_path);
+			$file_url = \gp\tool::GetDir($rel_path);
 			$full_path = $dataDir.$rel_path;
 
 			//thumbnail
-			$thumb_url = \common::ThumbnailPath($file_url);
+			$thumb_url = \gp\tool::ThumbnailPath($file_url);
 			$thumb = ' <img src="'.$thumb_url.'" alt="" />';
 
 			//get size
@@ -420,7 +420,7 @@ namespace gp\admin\Content{
 					. '<a href="'.$file_url.'" data-cmd="gp_gallery_add" '.$size.'>'
 					. $thumb
 					. '</a>'
-					. \common::Link('Admin/Uploaded'.$dir_piece,'',$query_string,array('class'=>'delete gpconfirm','data-cmd'=>'gpajax','title'=>$langmessage['delete_confirm']),'delete')
+					. \gp\tool::Link('Admin/Uploaded'.$dir_piece,'',$query_string,array('class'=>'delete gpconfirm','data-cmd'=>'gpajax','title'=>$langmessage['delete_confirm']),'delete')
 					. '</span>';
 		}
 
@@ -537,7 +537,7 @@ namespace gp\admin\Content{
 			$thumb_path = substr($original,$len);
 			$thumb_path = $thumb_prefix.$thumb_path;
 
-			$thumb_dir = \common::DirName($thumb_path);
+			$thumb_dir = \gp\tool::DirName($thumb_path);
 			$thumb_path = $thumb_dir.'/'.basename($thumb_path).'.jpg';
 			\gp\tool\Files::CheckDir($thumb_dir);
 			\gp\tool\Image::createSquare($original,$thumb_path,$config['maxthumbsize']);
@@ -711,7 +711,7 @@ namespace gp\admin\Content{
 				return false;
 			}
 
-			if( !\common::verify_nonce('delete') ){
+			if( !\gp\tool::verify_nonce('delete') ){
 				message($langmessage['OOPS'].' (Invalid Nonce)');
 				return;
 			}

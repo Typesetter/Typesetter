@@ -465,7 +465,7 @@ namespace gp\tool{
 
 			//make sure directory exists
 			if( !$exists ){
-				$dir = \common::DirName($file);
+				$dir = \gp\tool::DirName($file);
 				if( !file_exists($dir) ){
 					self::CheckDir($dir);
 				}
@@ -502,7 +502,7 @@ namespace gp\tool{
 
 
 			//make sure directory exists
-			$dir = \common::DirName($to);
+			$dir = \gp\tool::DirName($to);
 			if( !file_exists($dir) && !self::CheckDir($dir) ){
 				return false;
 			}
@@ -731,7 +731,7 @@ namespace gp\tool{
 			$file_stats['modified']		= $time;
 			$file_stats['username']		= false;
 
-			if( \common::loggedIn() ){
+			if( \gp\tool::loggedIn() ){
 				$file_stats['username'] = $gpAdmin['username'];
 			}
 
@@ -757,7 +757,7 @@ namespace gp\tool{
 			$file_stats['gpversion'] = gpversion;
 			$file_stats['modified'] = $time;
 
-			if( \common::loggedIn() ){
+			if( \gp\tool::loggedIn() ){
 				$file_stats['username'] = $gpAdmin['username'];
 			}else{
 				$file_stats['username'] = false;
@@ -828,7 +828,7 @@ namespace gp\tool{
 			global $config;
 
 			if( !file_exists($dir) ){
-				$parent = \common::DirName($dir);
+				$parent = \gp\tool::DirName($dir);
 				self::CheckDir($parent,$index);
 
 

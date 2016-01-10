@@ -134,7 +134,7 @@ class Installer extends \gp\admin\Addon\Tools{
 			if( isset($gp_menu[$index]) ){
 				unset($gp_menu[$index]);
 			}
-			$title = \common::IndexToTitle($index);
+			$title = \gp\tool::IndexToTitle($index);
 			if( $title ){
 				unset($gp_index[$title]);
 			}
@@ -158,8 +158,8 @@ class Installer extends \gp\admin\Addon\Tools{
 
 
 		if( $addon_config['order'] ){
-			$img_path = \common::IdUrl('ci');
-			\common::IdReq($img_path);
+			$img_path = \gp\tool::IdUrl('ci');
+			\gp\tool::IdReq($img_path);
 		}
 
 
@@ -306,8 +306,8 @@ class Installer extends \gp\admin\Addon\Tools{
 		}
 
 		if( $this->order ){
-			$img_path = \common::IdUrl('ci');
-			\common::IdReq($img_path);
+			$img_path = \gp\tool::IdUrl('ci');
+			\gp\tool::IdReq($img_path);
 		}
 
 		$this->UpdateHistory();
@@ -450,8 +450,8 @@ class Installer extends \gp\admin\Addon\Tools{
 					'{$plugin}'				=> $folder,
 					'{$dataDir}'			=> $dataDir,
 					'{$dirPrefix}'			=> $dirPrefix,
-					'{$addonRelativeData}'	=> \common::GetDir('/data/_addondata/'.$this->data_folder),
-					'{$addonRelativeCode}'	=> \common::GetDir($this->addon_folder_rel.'/'.$folder),
+					'{$addonRelativeData}'	=> \gp\tool::GetDir('/data/_addondata/'.$this->data_folder),
+					'{$addonRelativeCode}'	=> \gp\tool::GetDir($this->addon_folder_rel.'/'.$folder),
 					);
 
 		$this->ini_contents = \gp\tool\Ini::ParseString($this->ini_text,$variables);
@@ -695,7 +695,7 @@ class Installer extends \gp\admin\Addon\Tools{
 		global $config, $gpLayouts, $dataDir;
 
 		do{
-			$file = \common::RandomString(7,false);
+			$file = \gp\tool::RandomString(7,false);
 			$full_dest = $this->addon_folder.'/'.$file;
 			$data_dest = $dataDir.'/data/_addondata/'.$file;
 
@@ -996,7 +996,7 @@ class Installer extends \gp\admin\Addon\Tools{
 		foreach($Special_Links as $new_title => $linkInfo){
 
 			$index = strtolower($new_title);
-			$title = \common::IndexToTitle($index);
+			$title = \gp\tool::IndexToTitle($index);
 
 			//if the title already exists, see if we need to update it
 			if( $title ){

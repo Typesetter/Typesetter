@@ -76,7 +76,7 @@ class Configuration{
 						'recaptcha_language'	=> '',
 						);
 
-		$cmd = \common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 			case 'save_config':
 				$this->SaveConfig();
@@ -279,7 +279,7 @@ class Configuration{
 		$possible_values	= $this->getPossible();
 		$array				= $this->getValues();
 
-		echo '<form action="'.\common::GetUrl($page->requested).'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl($page->requested).'" method="post">';
 
 
 
@@ -375,7 +375,7 @@ class Configuration{
 		echo '<b>';
 		echo $langmessage['see_also'];
 		echo '</b> ';
-		echo \common::Link('Admin/Preferences',$langmessage['Preferences'],'','data-cmd="gpabox"');
+		echo \gp\tool::Link('Admin/Preferences',$langmessage['Preferences'],'','data-cmd="gpabox"');
 		echo '</p>';
 
 	}

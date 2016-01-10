@@ -457,6 +457,10 @@ function includeFile( $file ){
 		$file = 'Page/Rename.php';
 		break;
 
+		case 'special/special_contact.php':
+		$file = 'special/Contact.php';
+		break;
+
 		case 'admin/admin_browser.php':
 		$file = 'admin/Content/Browser.php';
 		break;

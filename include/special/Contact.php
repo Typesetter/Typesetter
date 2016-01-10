@@ -1,16 +1,22 @@
 <?php
 
-namespace gp\special;
+namespace gp\special{
 
-defined('is_running') or die('Not an entry point...');
+	defined('is_running') or die('Not an entry point...');
 
-class Contact extends ContactGadget{
+	class Contact extends ContactGadget{
 
-	public function ShowForm(){
-		global $page,$langmessage,$config;
+		public function ShowForm(){
+			global $page,$langmessage,$config;
 
-		echo \gpOutput::GetExtra('Contact');
-		parent::ShowForm();
+			echo \gpOutput::GetExtra('Contact');
+			parent::ShowForm();
+		}
+
 	}
+}
 
+namespace{
+	class special_contact extends \gp\special\Contact{}
+	class special_contact_gadget extends \gp\special\ContactGadget{}
 }

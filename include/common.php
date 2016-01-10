@@ -435,6 +435,13 @@ function GetMessages( $wrap = true ){
  */
 function includeFile( $file ){
 	global $dataDir;
+
+	switch($file){
+		case 'tool/ajax.php':
+		$file = 'tool/Output/Ajax.php';
+		break;
+	}
+
 	require_once( $dataDir.'/include/'.$file );
 }
 

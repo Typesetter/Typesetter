@@ -12,9 +12,7 @@ class Status{
 	protected $show_failed_max = 50;
 
 	public function __construct(){
-		global $dataDir,$langmessage;
-
-		includeFile('tool/install.php');
+		global $dataDir, $langmessage;
 
 		echo '<h2>'.$langmessage['Site Status'].'</h2>';
 
@@ -148,21 +146,21 @@ class Status{
 		$current = '?';
 		$expected = '777';
 		$euid = '?';
-		if( \FileSystem::HasFunctions() ){
+		if( \gp\install\FilePermissions::HasFunctions() ){
 			$current = @substr(decoct( @fileperms($path)), -3);
 
 			if( $type == 'file' ){
-				$expected = \FileSystem::getExpectedPerms_file($path);
+				$expected = \gp\install\FilePermissions::getExpectedPerms_file($path);
 			}else{
-				$expected = \FileSystem::getExpectedPerms($path);
+				$expected = \gp\install\FilePermissions::getExpectedPerms($path);
 			}
 
-			if( \FileSystem::perm_compare($expected,$current) ){
+			if( \gp\install\FilePermissions::perm_compare($expected,$current) ){
 				$this->passed_count++;
 				return;
 			}
 
-			$euid = \FileSystem::file_uid($path);
+			$euid = \gp\install\FilePermissions::file_uid($path);
 
 		}elseif( gp_is_writable($path) ){
 			$this->passed_count++;

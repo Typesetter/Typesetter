@@ -5,7 +5,6 @@ global $langmessage, $install_ftp_connection;
 $install_ftp_connection = false;
 ob_start();
 
-includeFile('tool/install.php');
 includeFile('admin/admin_tools.php');
 
 
@@ -1078,8 +1077,8 @@ class gp_install{
 		//echo '<h3>'.$langmessage['User Details'].'</h3>';
 		echo '<form action="'.common::GetUrl('').'" method="post">';
 		echo '<table class="styledtable">';
-		Install_Tools::Form_UserDetails();
-		Install_Tools::Form_Configuration();
+		\gp\install\Tools::Form_UserDetails();
+		\gp\install\Tools::Form_Configuration();
 		echo '</table>';
 		echo '<p>';
 		echo '<input type="hidden" name="cmd" value="Install" />';
@@ -1099,8 +1098,8 @@ class gp_install{
 		$config['language'] = $install_language;
 
 		$success = false;
-		if( Install_Tools::gpInstall_Check() ){
-			$success = Install_Tools::Install_DataFiles_New(false, $config);
+		if( \gp\install\Tools::gpInstall_Check() ){
+			$success = \gp\install\Tools::Install_DataFiles_New(false, $config);
 		}
 		echo '</ul>';
 

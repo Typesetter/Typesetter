@@ -16,11 +16,9 @@ spl_autoload_register( array('common','Autoload') );
 
 common::SetLinkPrefix();
 
-includeFile('tool/display.php');
 includeFile('tool/Files.php');
 includeFile('tool/gpOutput.php');
 includeFile('tool/functions.php');
-includeFile('tool/Plugins.php');
 
 \gp\tool\Session::init();
 

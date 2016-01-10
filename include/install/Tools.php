@@ -1,9 +1,12 @@
 <?php
+
+namespace gp\install;
+
 defined('is_running') or die('Not an entry point...');
 
 includeFile('tool/gpOutput.php');
 
-class Install_Tools{
+class Tools{
 
 	static $file_count = 0;
 
@@ -48,7 +51,7 @@ class Install_Tools{
 		echo '<tr><td>';
 		echo $langmessage['combinejs'];
 		echo '</td><td>';
-		Install_Tools::BooleanForm('combinejs',true);
+		self::BooleanForm('combinejs',true);
 		echo '</td></tr>';
 
 
@@ -56,14 +59,14 @@ class Install_Tools{
 		echo '<tr><td>';
 		echo $langmessage['combinecss'];
 		echo '</td><td>';
-		Install_Tools::BooleanForm('combinecss',true);
+		self::BooleanForm('combinecss',true);
 		echo '</td></tr>';
 
 		//combinejs
 		echo '<tr><td>';
 		echo $langmessage['etag_headers'];
 		echo '</td><td>';
-		Install_Tools::BooleanForm('etag_headers',true);
+		self::BooleanForm('etag_headers',true);
 		echo '</td></tr>';
 
 		echo '</tbody>';
@@ -79,7 +82,7 @@ class Install_Tools{
 	 */
 	static function BooleanForm($key,$default=true){
 		$checked = '';
-		if( Install_Tools::BooleanValue($key,$default) ){
+		if( self::BooleanValue($key,$default) ){
 			$checked = 'checked="checked"';
 		}
 		echo '<input type="hidden" name="'.$key.'" value="false" />';
@@ -186,7 +189,7 @@ class Install_Tools{
 		$gpLayouts['default']['label'] = 'Bootswatch_Flatly/4_Sticky_Footer';
 		if( @ini_set('memory_limit','96M') === false ){
 			$limit = ini_get('memory_limit');
-			$limit = common::getByteValue($limit);
+			$limit = \common::getByteValue($limit);
 			if( $limit < 100663296 ){
 				$gpLayouts['default']['theme'] = 'Three_point_5/Shore';
 				$gpLayouts['default']['label'] = 'Three_point_5/Shore';
@@ -198,7 +201,7 @@ class Install_Tools{
 
 		$_config['toemail']			= $_POST['email'];
 		$_config['gpLayout']		= 'default';
-		$_config['title']			= Install_Tools::Install_Title();
+		$_config['title']			= self::Install_Title();
 		$_config['keywords']		= CMS_NAME.' , Easy CMS, Content Management, PHP, Free CMS, Website builder, Open Source';
 		$_config['desc']			= 'A new '.CMS_NAME.' installation. You can change your site\'s description in the configuration.';
 		$_config['timeoffset']		= '0';
@@ -206,20 +209,20 @@ class Install_Tools{
 		$_config['dateformat']		= '%m/%d/%y - %I:%M %p';
 		$_config['gpversion']		= gpversion;
 		$_config['passhash']		= 'sha512';
-		$_config['gpuniq']			= common::RandomString(20);
-		$_config['combinecss']		= Install_Tools::BooleanValue('combinecss',true);
-		$_config['combinejs']		= Install_Tools::BooleanValue('combinejs',true);
-		$_config['etag_headers'] 	= Install_Tools::BooleanValue('etag_headers',true);
+		$_config['gpuniq']			= \common::RandomString(20);
+		$_config['combinecss']		= self::BooleanValue('combinecss',true);
+		$_config['combinejs']		= self::BooleanValue('combinejs',true);
+		$_config['etag_headers'] 	= self::BooleanValue('etag_headers',true);
 		$_config['language']		= 'en';
 
 		$config 					+= $_config;
 
 		//directories
-		gpFiles::CheckDir($destination.'/data/_uploaded/image');
-		gpFiles::CheckDir($destination.'/data/_uploaded/media');
-		gpFiles::CheckDir($destination.'/data/_uploaded/file');
-		gpFiles::CheckDir($destination.'/data/_uploaded/flash');
-		gpFiles::CheckDir($destination.'/data/_sessions');
+		\gpFiles::CheckDir($destination.'/data/_uploaded/image');
+		\gpFiles::CheckDir($destination.'/data/_uploaded/media');
+		\gpFiles::CheckDir($destination.'/data/_uploaded/file');
+		\gpFiles::CheckDir($destination.'/data/_uploaded/flash');
+		\gpFiles::CheckDir($destination.'/data/_sessions');
 
 
 		// gp_index
@@ -289,7 +292,7 @@ class Install_Tools{
 		$pages['gpLayouts'] = $gpLayouts;
 
 		echo '<li>';
-		if( !gpFiles::SaveData($destination.'/data/_site/pages.php','pages',$pages) ){
+		if( !\gpFiles::SaveData($destination.'/data/_site/pages.php','pages',$pages) ){
 			echo '<span class="failed">';
 			//echo 'Could not save pages.php';
 			echo sprintf($langmessage['COULD_NOT_SAVE'],'pages.php');
@@ -311,15 +314,15 @@ class Install_Tools{
 		<h3>Getting Started</h3>
 		<p>You are currently viewing the default home page of your website. Here\'s a quick description of how to edit this page.</p>
 		<ol>
-		<li>First make sure you&#39;re '.Install_Tools::Install_Link_Content('Admin','logged in','file=Home').'.</li>
+		<li>First make sure you&#39;re '.self::Install_Link_Content('Admin','logged in','file=Home').'.</li>
 		<li>Then, to edit this page, click the &quot;Edit&quot; link that appears when you move your mouse over the content.</li>
 		<li>Make your edits, click &quot;Save&quot; and you&#39;re done!</li>
 		</ol>
 		<h3>More Options</h3>
 		<ul>
-		<li>Adding, renaming, deleting and organising your pages can all be done in the '.Install_Tools::Install_Link_Content('Admin/Menu','Page Manager').'.</li>
-		<li>Choose from a '.Install_Tools::Install_Link_Content('Admin_Theme_Content','variety of themes').' to give your site a custom look.</li>
-		<li>Then, you can '.Install_Tools::Install_Link_Content('Admin_Theme_Content/Edit','add, remove and rearrange').' the content of your site without editing the html.</li>
+		<li>Adding, renaming, deleting and organising your pages can all be done in the '.self::Install_Link_Content('Admin/Menu','Page Manager').'.</li>
+		<li>Choose from a '.self::Install_Link_Content('Admin_Theme_Content','variety of themes').' to give your site a custom look.</li>
+		<li>Then, you can '.self::Install_Link_Content('Admin_Theme_Content/Edit','add, remove and rearrange').' the content of your site without editing the html.</li>
 		<li>Take a look at the Administrator Toolbar to access all the features of '.CMS_NAME.'.</li>
 		</ul>
 		<h3>Online Resources</h3>
@@ -334,8 +337,8 @@ class Install_Tools{
 
 		// Heading Page
 		$content = '<h1>A Heading Page</h1>
-		<ul><li>'.Install_Tools::Install_Link_Content('Help_Videos','Help Videos').'</li>
-		<li>'.Install_Tools::Install_Link_Content('Child_Page','Child Page').'</li>
+		<ul><li>'.self::Install_Link_Content('Help_Videos','Help Videos').'</li>
+		<li>'.self::Install_Link_Content('Child_Page','Child Page').'</li>
 		</ul>';
 		self::NewTitle( $destination, 'Heading_Page',$content, $config, $new_index);
 
@@ -358,13 +361,13 @@ class Install_Tools{
 
 
 		// Child Page
-		$content = '<h1>A Child Page</h1><p>This was created as a subpage of your <em>Help Videos</em> . You can easily change the arrangement of all your pages using the '.Install_Tools::Install_Link_Content('Admin/Menu','Page Manager').'.</p>';
+		$content = '<h1>A Child Page</h1><p>This was created as a subpage of your <em>Help Videos</em> . You can easily change the arrangement of all your pages using the '.self::Install_Link_Content('Admin/Menu','Page Manager').'.</p>';
 		self::NewTitle( $destination, 'Child_Page',$content, $config, $new_index);
 
 		// More
 		$content = '<h1>More</h1>
-		<ul><li>'.Install_Tools::Install_Link_Content('About','About').'</li>
-		<li>'.Install_Tools::Install_Link_Content('Contact','Contact').'</li>
+		<ul><li>'.self::Install_Link_Content('About','About').'</li>
+		<li>'.self::Install_Link_Content('Contact','Contact').'</li>
 		</ul>';
 		self::NewTitle( $destination, 'More',$content, $config, $new_index);
 
@@ -446,7 +449,7 @@ class Install_Tools{
 		//users
 		echo '<li>';
 		$user_info = array();
-		$user_info['password']		= common::hash($_POST['password'],'sha512');
+		$user_info['password']		= \common::hash($_POST['password'],'sha512');
 		$user_info['passhash']		= 'sha512';
 		$user_info['granted']		= 'all';
 		$user_info['editing']		= 'all';
@@ -462,7 +465,7 @@ class Install_Tools{
 		}
 		$users[$username] = $user_info;
 
-		if( !gpFiles::SaveData($destination.'/data/_site/users.php','users',$users) ){
+		if( !\gpFiles::SaveData($destination.'/data/_site/users.php','users',$users) ){
 			echo '<span class="failed">';
 			echo sprintf($langmessage['COULD_NOT_SAVE'],'users.php');
 			echo '</span>';
@@ -480,7 +483,7 @@ class Install_Tools{
 		//not using SaveConfig() because $config is not global here
 		echo '<li>';
 		$config['file_count'] = self::$file_count;
-		if( !gpFiles::SaveData($destination.'/data/_site/config.php','config',$config) ){
+		if( !\gpFiles::SaveData($destination.'/data/_site/config.php','config',$config) ){
 			echo '<span class="failed">';
 			echo sprintf($langmessage['COULD_NOT_SAVE'],'config.php');
 			echo '</span>';
@@ -494,10 +497,10 @@ class Install_Tools{
 
 
 		if( $base_install ){
-			Install_Tools::InstallHtaccess($destination,$config);
+			self::InstallHtaccess($destination,$config);
 		}
 
-		gpFiles::Unlock('write',gp_random);
+		\gpFiles::Unlock('write',gp_random);
 
 		return true;
 	}
@@ -519,12 +522,12 @@ class Install_Tools{
 			'file_type' => 'text',
 			);
 
-		return gpFiles::SaveData($file,'file_sections',$file_sections,$meta_data);
+		return \gpFiles::SaveData($file,'file_sections',$file_sections,$meta_data);
 	}
 
 	static function NewExtra($file, $content){
 		$extra_content = array('type'=>'text','content'=>$content);
-		return gpFiles::SaveData($file,'extra_content',$extra_content);
+		return \gpFiles::SaveData($file,'extra_content',$extra_content);
 	}
 
 
@@ -637,211 +640,3 @@ class Install_Tools{
 }
 
 
-
-
-
-
-
-
-/*
- * Functions from skybluecanvas
- *
- *
- */
-
-class FileSystem{
-
-	static function GetExpectedPerms($file){
-
-		if( !FileSystem::HasFunctions() ){
-			return '777';
-		}
-
-		//if user id's match
-		$puid = posix_geteuid();
-		$suid = FileSystem::file_uid($file);
-		if( ($suid !== false) && ($puid == $suid) ){
-			return '755';
-		}
-
-		//if group id's match
-		$pgid = posix_getegid();
-		$sgid = FileSystem::file_group($file);
-		if( ($sgid !== false) && ($pgid == $sgid) ){
-			return '775';
-		}
-
-		//if user is a member of group
-		$snam = FileSystem::file_owner($file);
-		$pmem = FileSystem::process_members();
-		if (in_array($suid, $pmem) || in_array($snam, $pmem)) {
-			return '775';
-		}
-
-		return '777';
-	}
-
-	static function GetExpectedPerms_file($file){
-
-		if( !FileSystem::HasFunctions() ){
-			return '666';
-		}
-
-		//if user id's match
-		$puid = posix_geteuid();
-		$suid = FileSystem::file_uid($file);
-		if( ($suid !== false) && ($puid == $suid) ){
-			return '644';
-		}
-
-		//if group id's match
-		$pgid = posix_getegid();
-		$sgid = FileSystem::file_group($file);
-		if( ($sgid !== false) && ($pgid == $sgid) ){
-			return '664';
-		}
-
-		//if user is a member of group
-		$snam = FileSystem::file_owner($file);
-		$pmem = FileSystem::process_members();
-		if (in_array($suid, $pmem) || in_array($snam, $pmem)) {
-			return '664';
-		}
-
-		return '666';
-	}
-
-	static function HasFunctions(){
-
-		return function_exists('posix_getpwuid')
-			&& function_exists('posix_geteuid')
-			&& function_exists('fileowner')
-			&& function_exists('posix_getegid')
-			&& function_exists('posix_getgrgid')
-			&& function_exists('posix_getgrgid');
-	}
-
-
-	/*
-	 * Compare Permissions
-	 */
-	static function perm_compare($perm1, $perm2) {
-
-		if( !FileSystem::ValidPermission($perm1) ){
-			return false;
-		}
-		if( !FileSystem::ValidPermission($perm2) ){
-			return false;
-		}
-
-/*
-		if (strlen($perm1) != 3) return false;
-		if (strlen($perm2) != 3) return false;
-*/
-
-		if (intval($perm1{0}) > intval($perm2{0})) {
-			return false;
-		}
-		if (intval($perm1{1}) > intval($perm2{1})) {
-			return false;
-		}
-		if (intval($perm1{2}) > intval($perm2{2})) {
-			return false;
-		}
-		return true;
-	}
-
-	static function ValidPermission(&$permission){
-		if( strlen($permission) == 3 ){
-			return true;
-		}
-		if( strlen($permission) == 4 ){
-			if( intval($permission{0}) === 0 ){
-				$permission = substr($permission,1);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/*
-	* @description   Gets name of the file owner
-	* @return string The name of the file owner
-	*/
-
-	static function file_owner($file) {
-		$info = FileSystem::file_info($file);
-
-		if (is_array($info)) {
-			if (isset($info['name'])) {
-				return $info['name'];
-			}
-			else if (isset($info['uid'])) {
-				return $info['uid'];
-			}
-		}
-		return false;
-	}
-
-
-	/*
-	* @description  Gets Groups members of the PHP Engine
-	* @return array The Group members of the PHP Engine
-	*/
-
-	static function process_members() {
-		$info = FileSystem::process_info();
-		if (isset($info['members'])) {
-			return $info['members'];
-		}
-		return array();
-	}
-
-
-	/*
-	* @description Gets User ID of the file owner
-	* @return int  The user ID of the file owner
-	*/
-
-	static function file_uid($file) {
-		$info = FileSystem::file_info($file);
-		if (is_array($info)) {
-			if (isset($info['uid'])) {
-				return $info['uid'];
-			}
-		}
-		return false;
-	}
-
-	/*
-	* @description Gets Group ID of the file owner
-	* @return int  The user Group of the file owner
-	*/
-
-	static function file_group($file) {
-		$info = FileSystem::file_info($file);
-		if (is_array($info) && isset($info['gid'])) {
-			return $info['gid'];
-		}
-		return false;
-	}
-
-	/*
-	* @description  Gets Info array of the file owner
-	* @return array The Info array of the file owner
-	*/
-
-	static function file_info($file) {
-		return posix_getpwuid(@fileowner($file));
-	}
-
-	/*
-	* @description  Gets Group Info of the PHP Engine
-	* @return array The Group Info of the PHP Engine
-	*/
-
-	static function process_info() {
-		return posix_getgrgid(posix_getegid());
-	}
-
-}

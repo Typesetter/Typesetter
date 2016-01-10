@@ -25,8 +25,7 @@ class phpunit_Install extends gptest_bootstrap{
 
 		//attempt to install
 		ob_start();
-		includeFile('tool/install.php');
-		$success = Install_Tools::Install_DataFiles_New();
+		$success = \gp\install\Tools::Install_DataFiles_New();
 		ob_get_clean();
 		self::AssertTrue($success,'Installation Failed');
 

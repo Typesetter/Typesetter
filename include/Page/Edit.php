@@ -177,7 +177,6 @@ class Edit extends \gp\Page{
 			$this->cmds['viewcurrent']			= 'return';
 			$this->cmds['deleterevision']		= 'viewhistory';
 			$this->cmds['publishdraft']			= '';
-			$this->cmds['discarddraft']			= '';
 		}
 
 
@@ -211,7 +210,6 @@ class Edit extends \gp\Page{
 			$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-th"></i> '.$langmessage['Manage Sections'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
 			if( $this->draft_exists	){
 				$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-check"></i> '.$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq', 'class'=>'msg_publish_draft'));
-				$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-trash"></i> '.$langmessage['Discard Draft'],'cmd=DiscardDraft',array('data-cmd'=>'creq', 'class'=>'msg_discard_draft'));
 			}
 			$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 		}
@@ -924,38 +922,6 @@ class Edit extends \gp\Page{
 		unlink($this->draft_file);
 		$this->ResetFileTypes();
 		$this->draft_exists = false;
-	}
-
-
-	/**
-	 * Remove the draft file so that the user can continue editing the current version
-	 *
-	 */
-	public function DiscardDraft(){
-		global $langmessage;
-
-		if( !$this->draft_exists ){
-			msg($langmessage['OOPS'].' (Not a draft)');
-			return false;
-		}
-
-
-		if( !$this->SaveBackup() ){ //create backup of draft
-			msg($langmessage['OOPS'].' (Backup not created)');
-			return false;
-		}
-
-		if( !unlink($this->draft_file) ){
-			msg($langmessage['OOPS'].' (Backup not deleted)');
-			return false;
-		}
-
-		$this->draft_exists = false;
-		$this->GetFile();
-
-		msg($langmessage['SAVED']);
-
-		return true;
 	}
 
 

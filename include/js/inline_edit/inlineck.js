@@ -5,8 +5,6 @@
 
 function gp_init_inline_edit(area_id,section_object){
 
-	console.log('gp_init_inline_edit');
-
 	// add external plugins
 	if( typeof(gp_add_plugins) == 'object' ){
 		$.each(gp_add_plugins,function(name,path){
@@ -41,20 +39,4 @@ function gp_init_inline_edit(area_id,section_object){
 		return 'gpcontent='+encodeURIComponent(data);
 	}
 	$gp.loaded();
-
-
-	//replace resized image paths
-	/*
-	if( section_object.resized_imgs ){
-		$.each(section_object.resized_imgs,function(resized_path,original_path){
-			edit_div.find('img').each(function(){
-				alert(this.src +"\n vs \n"+resized_path);
-				if( this.src == resized_path ){
-					this.src = original_path;
-					alert('found');
-				}
-			});
-		});
-	}
-	*/
 }

@@ -354,8 +354,10 @@ namespace gp\tool\Output{
 		static function InlineEdit_Text($scripts){
 
 			// autocomplete
-			echo \gp\tool\Editing::AutoCompleteValues(true);
-
+			$scripts[]		= array(
+								'code'		=> \gp\tool\Editing::AutoCompleteValues(true),
+								'object'	=> 'gptitles',
+								);
 
 			// ckeditor basepath and configuration
 			$options = array(
@@ -380,9 +382,17 @@ namespace gp\tool\Output{
 								);
 
 
-			// scripts
-			$scripts[] = '/include/thirdparty/ckeditor_34/ckeditor.js';
-			$scripts[] = '/include/js/ckeditor_config.js';
+			// CKEDITOR
+			$scripts[]		= array(
+								'file'		=> '/include/thirdparty/ckeditor_34/ckeditor.js',
+								'object'	=> 'CKEDITOR',
+								);
+
+			$scripts[]		= array(
+								'file'		=> '/include/js/ckeditor_config.js',
+								'object'	=> 'CKEDITOR',
+								);
+
 			$scripts[] = '/include/js/inline_edit/inlineck.js';
 
 			return $scripts;

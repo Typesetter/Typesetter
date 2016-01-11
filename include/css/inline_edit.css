@@ -170,7 +170,7 @@
 	position:fixed;
 	bottom:0;
 	right:0;
-	top:30px;
+	top:29px;
 	z-index:10000; /* to be above full screen editing of ckeditor */
 	background:rgba(213, 213, 213, 0.9);
 	padding:10px;

@@ -5,6 +5,8 @@
 
 function gp_init_inline_edit(area_id,section_object){
 
+	console.log('gp_init_inline_edit');
+
 	// add external plugins
 	if( typeof(gp_add_plugins) == 'object' ){
 		$.each(gp_add_plugins,function(name,path){
@@ -13,9 +15,15 @@ function gp_init_inline_edit(area_id,section_object){
 	}
 
 	//get area
-	var save_path = gp_editing.get_path(area_id);
 	var edit_div = gp_editing.get_edit_area(area_id);
-	if( edit_div == false || save_path == false ){
+	if( edit_div == false ){
+		console.log('no edit div',area_id,edit_div);
+		return;
+	}
+
+	var save_path = gp_editing.get_path(area_id);
+	if( save_path == false ){
+		console.log('no save_path',area_id,save_path);
 		return;
 	}
 

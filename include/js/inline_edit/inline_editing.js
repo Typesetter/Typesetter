@@ -2,11 +2,13 @@
 
 var gp_editing = {
 
-	interface: [], //storage for editing interfaces
+	interface: [],	//storage for editing interfaces
+	editors:[],		//storage for editing objects
 
 	get_path:function(id_num){
 		var lnk = $('a#ExtraEditLink'+id_num);
 		if( lnk.length == 0 ){
+			console.log('get_path() link not found',id_num,lnk.length);
 			return false;
 		}
 		return lnk.attr('href');
@@ -16,15 +18,11 @@ var gp_editing = {
 
 		var content = $('#ExtraEditArea'+id_num);
 		if( content.length == 0 ){
+			console.log('no content found for get_edit_area()',id_num);
 			return false;
 		}
 
 		$('#edit_area_overlay_top').hide();
-
-		//prevent editing other areas
-		$('.ExtraEditLink').remove();
-		$('.editable_area').unbind('.gp');
-
 
 		//use the div with the twysiwygr class for True WYSIWYG Replacement if it's found
 		var replace_content = content.find('.twysiwygr:first');
@@ -172,6 +170,7 @@ var gp_editing = {
 
 		var $interface						= $('#ckeditor_area').detach();
 		this.interface[$gp.last_edit_id]	= $interface;
+		this.editors[$gp.last_edit_id]		= gp_editor;
 
 		$('#ckeditor_wrap').html( html );
 	},
@@ -182,14 +181,16 @@ var gp_editing = {
 	 */
 	RestoreCached: function(id){
 
-		if( typeof(this.interface[id]) == 'object' ){
-			$('#ckeditor_wrap').html('').append(this.interface[id]);
-			console.log('restore',id);
-			return true;
+		if( typeof(this.interface[id]) != 'object' ){
+			console.log('not restoring',id);
+			return false;
 		}
 
-		console.log('not restoring',id);
-		return false;
+		$('#ckeditor_wrap').html('').append(this.interface[id]);
+		gp_editor	= this.editors[id];
+
+		console.log('restore',id);
+		return true;
 	}
 
 }

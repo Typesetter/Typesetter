@@ -46,6 +46,8 @@ $gp.links.inline_edit_generic = function(evt,rel){
 	//	return;
 	//}
 
+	console.log('-----------------------------------------------------------New inline_edit_generic()')
+
 	var $this		= $(this);
 	var id			= $this.data('area-id') || 0;
 

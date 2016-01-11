@@ -481,7 +481,12 @@ namespace gp\admin{
 
 			echo '</ul>';
 
-			self::ToolbarSearch();
+
+			if( $page->pagetype == 'display' && \gp\admin\Tools::CanEdit($page->gp_index) ){
+				echo \gp\tool::Link($page->title,'<i class="fa fa-th"></i> '.$langmessage['Manage Sections'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections','style'=>'float:right'));
+			}
+
+			//self::ToolbarSearch();
 
 			echo '</div>';
 		}

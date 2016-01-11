@@ -207,7 +207,7 @@ class Edit extends \gp\Page{
 
 		//editing
 		if( $this->permission_edit ){
-			$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-th"></i> '.$langmessage['Manage Sections'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+			//$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-th"></i> '.$langmessage['Manage Sections'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
 			if( $this->draft_exists	){
 				$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-check"></i> '.$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq', 'class'=>'msg_publish_draft'));
 			}

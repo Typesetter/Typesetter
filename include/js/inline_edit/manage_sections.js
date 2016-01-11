@@ -12,8 +12,8 @@
 		destroy:function(){},
 
 		checkDirty:function(){
-			var curr_data	= gp_editor.gp_saveData();
-			if( gp_editor.saved_data != curr_data ){
+			var curr_data	= this.gp_saveData();
+			if( this.saved_data != curr_data ){
 				return true;
 			}
 			return false;
@@ -25,6 +25,7 @@
 		 */
 		gp_saveData:function(){
 
+			var mgr_object				= this;
 			var args					= {};
 			args.section_order			= [];
 			args.attributes				= [];
@@ -39,7 +40,7 @@
 
 				//new section order and new sections
 				var $this	= $(this);
-				var type	= gp_editor.TypeFromClass(this);
+				var type	= mgr_object.TypeFromClass(this);
 				var value	= $this.data('gp-section');
 
 				if( !type ){
@@ -85,7 +86,7 @@
 				$(this).data('gp-section',i).attr('data-gp-section',i).removeClass('new_section');
 			});
 
-			gp_editor.saved_data	= gp_editor.gp_saveData();
+			this.saved_data	= this.gp_saveData();
 		},
 
 		updateElement:function(){},
@@ -99,14 +100,14 @@
 			$('#ckeditor_top').append('<ul id="section_sorting" class="section_drag_area inline_edit_area" style="overflow:auto" title="Organize">');
 
 
-			gp_editor.resetDirty();
-			gp_editor.InitSorting();
-			gp_editor.InitNewSection();
+			this.resetDirty();
+			this.InitSorting();
+			this.InitNewSection();
 
 
-			$gp.$win.on('resize', gp_editor.MaxHeight ).resize();
+			$gp.$win.on('resize', this.MaxHeight ).resize();
 
-			$('#ckeditor_area').on('dragstop',gp_editor.MaxHeight);
+			$('#ckeditor_area').on('dragstop',this.MaxHeight);
 
 			$('#ckeditor_bottom').hide();
 
@@ -143,21 +144,24 @@
 		 */
 		InitSorting: function(){
 
-			var $list	= $('#section_sorting').html('');
-			var html	= gp_editor.BuildSortHtml( $('#gpx_content') );
+			var mgr_object	= this;
+			var $list		= $('#section_sorting').html('');
+			var html		= this.BuildSortHtml( $('#gpx_content') );
 
 			$list.html(html);
 
 			$('.section_drag_area').sortable({
 				tolerance:				'pointer', /** otherwise sorting elements into collapsed area causes problems */
-				stop:					gp_editor.DragStop,
+				stop:					function(evt, ui){
+											mgr_object.DragStop(evt, ui);
+										},
 				connectWith:			'.section_drag_area',
 				cursorAt:				{ left: 7, top: 7 }
 
 			}).disableSelection();
 
 
-			gp_editor.HoverListener($list);
+			this.HoverListener($list);
 		},
 
 		/**
@@ -167,22 +171,23 @@
 		BuildSortHtml: function( $container ){
 
 			var html = '';
+			var mgr_object	= this;
 
 			$container.children('.editable_area').each( function(i){
 
 				var $this = $(this);
 
 				if( !this.id ){
-					this.id = gp_editor.GenerateId();
+					this.id = mgr_object.GenerateId();
 				}
 
 
-				var type	= gp_editor.TypeFromClass(this);
+				var type	= mgr_object.TypeFromClass(this);
 
 				//label
 				var label	= $this.data('gp_label');
 				if( !label ){
-					label	= (i+1)+' '+gp_editor.ucfirst(type);
+					label	= (i+1)+' '+mgr_object.ucfirst(type);
 				}
 
 				//color
@@ -218,7 +223,7 @@
 
 				if( $this.hasClass('filetype-wrapper_section') ){
 					html += '<ul class="section_drag_area">';
-					html += gp_editor.BuildSortHtml( $this );
+					html += mgr_object.BuildSortHtml( $this );
 					html += '</ul>';
 				}
 
@@ -247,8 +252,8 @@
 		 */
 		DragStop: function(event, ui){
 
-			var area		= gp_editor.GetArea( ui.item );
-			var prev_area	= gp_editor.GetArea( ui.item.prev() );
+			var area		= this.GetArea( ui.item );
+			var prev_area	= this.GetArea( ui.item.prev() );
 
 			//moved after another section
 			if( prev_area.length ){
@@ -265,7 +270,7 @@
 
 
 			//moved to beginning of wrapper
-			gp_editor.GetArea( $ul.parent() ).prepend(area);
+			this.GetArea( $ul.parent() ).prepend(area);
 
 		},
 
@@ -286,6 +291,8 @@
 		 */
 		HoverListener: function($list){
 
+			var mgr_object = this;
+
 			$list.find('div').hover(function(){
 
 				var $this = $(this).parent();
@@ -294,11 +301,11 @@
 				$this.addClass('section-item-hover');
 
 				$('.section-highlight').removeClass('section-highlight');
-				gp_editor.GetArea( $this ).addClass('section-highlight');
+				mgr_object.GetArea( $this ).addClass('section-highlight');
 
 			},function(){
 				var $this = $(this).parent()
-				gp_editor.GetArea( $this ).removeClass('section-highlight');
+				mgr_object.GetArea( $this ).removeClass('section-highlight');
 				$this.removeClass('section-item-hover');
 
 			});

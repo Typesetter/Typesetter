@@ -18,6 +18,7 @@ function gp_init_inline_edit(area_id,section_object){
 	if( edit_div == false || save_path == false ){
 		return;
 	}
+
 	gp_editing.editor_tools();
 	edit_div.prop('contenteditable',true);
 	var inner = edit_div.get(0);

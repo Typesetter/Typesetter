@@ -38,13 +38,27 @@ $gp.div = function(id){
  * Dynamically load inline editing
  *
  */
+$gp.last_edit_id = null;
 $gp.links.inline_edit_generic = function(evt,rel){
 
 	evt.preventDefault();
+	//if( typeof(gp_editing) !== 'undefined' ){
+	//	return;
+	//}
+
+	var $this		= $(this);
+	var id			= $this.data('area-id') || 0;
+
+	//set the current editing interface aside so the new one can be created
 	if( typeof(gp_editing) !== 'undefined' ){
-		return;
+		gp_editing.CacheInterface();
+		if( gp_editing.RestoreCached(id) ){
+			return;
+		}
 	}
 
+	$gp.last_edit_id = id;
+	$gp.DefinedObjects();
 	$gp.loading();
 
 
@@ -57,13 +71,14 @@ $gp.links.inline_edit_generic = function(evt,rel){
 
 	$gp.LoadStyle('/include/css/inline_edit.css');
 
+
 	var script	= strip_from(this.href,'#');
-	script += '&gpreq=json';
+	script += '&gpreq=json&defined_objects='+$gp.DefinedObjects();
 
 	if( rel == 'manage_sections' ){
 		$gp.LoadStyle('/include/css/manage_sections.css');
 	}else{
-		var id			= $(this).data('area-id');
+		var id			= $this.data('area-id');
 		script			+= '&cmd=inlineedit&area_id='+id;
 	}
 
@@ -74,6 +89,39 @@ $gp.links.inline_edit_generic = function(evt,rel){
 		}
 	});
 };
+
+
+/**
+ * Send to the server which javascript objects are already defined
+ *
+ */
+$gp.defined_objects = [];
+$gp.DefinedObjects = function(){
+
+	//get all objects the first time
+	if( typeof(gp_editing) == 'undefined' ){
+		for( var i in window ) {
+			if( typeof(window[i]) != 'object' ){
+				continue;
+			}
+			$gp.defined_objects.push(i);
+		}
+	}
+
+	//compare with $gp.defined_objects
+	var objects = [];
+	for( var i in window ) {
+		if( typeof(window[i]) != 'object' ){
+			continue;
+		}
+		if( $gp.defined_objects.indexOf(i) != -1 ){
+			continue;
+		}
+		objects.push(i);
+	}
+
+	return objects.join(',');
+}
 
 
 /**
@@ -776,9 +824,9 @@ $(function(){
 				return;
 			}
 
-			if( edit_area.hasClass('gp_editing') ){
-				return;
-			}
+			//if( edit_area.hasClass('gp_editing') ){
+			//	return;
+			//}
 			edit_area.removeClass('gp_no_overlay');
 		}
 
@@ -831,9 +879,9 @@ $(function(){
 		function AreaOverlay(edit_area){
 			var id,loc,width;
 
-			if( typeof(gp_editing) !== 'undefined' ){
-				return;
-			}
+			//if( typeof(gp_editing) !== 'undefined' ){
+			//	return;
+			//}
 
 			//don't show overlay
 			//	- for an area that is being edited
@@ -951,7 +999,7 @@ $(function(){
 				left -= diff;
 			}
 
-			lnk_span.stop(true,true).css({'top':top,'left':left,'right':'auto','position':'fixed'});
+			lnk_span.stop(true,true).css({'top':top,'left':left,'right':'auto','position':'fixed','displayl':'block'});
 		}
 
 
@@ -961,7 +1009,7 @@ $(function(){
 		 */
 		function ShowableMenu(evt){
 
-			if( evt.ctrlKey || evt.altKey || evt.shiftKey || gp_editor ) return;
+			if( evt.ctrlKey || evt.altKey || evt.shiftKey ) return; // || gp_editor
 
 			if( !edit_area || edit_area.hasClass('gp_no_overlay') || !lnk_span ){
 				return;
@@ -1329,7 +1377,6 @@ $gp.response.renameprep = function(){
 	}
 
 };
-
 
 
 

@@ -1,25 +1,8 @@
 
-/* need a more object oriented approach
- * http://www.webreference.com/js/column79/4.html
- *
- */
+
 var gp_editing = {
 
-	/*
-	 * Get the id associated with the edit link
-	 */
-	id:function(a){
-		return $(a).data('area-id');
-	},
-
-	/*
-	 * Returns the area being edited or false
-	 * First Checks for existing editor and checks for unsaved changes
-	 */
-	new_edit_area:function(a){
-		var id = gp_editing.id(a);
-		return gp_editing.get_edit_area(id);
-	},
+	interface: [], //storage for editing interfaces
 
 	get_path:function(id_num){
 		var lnk = $('a#ExtraEditLink'+id_num);
@@ -109,20 +92,8 @@ var gp_editing = {
 
 		$('#ckeditor_top').html('');
 		$('#ckeditor_bottom').html('');
-
-		SimpleDrag('#ckeditor_area .toolbar','#ckeditor_area','fixed',function(pos){
-			gpui.ckx = pos.left;
-			gpui.cky = pos.top;
-
-			if( gpui.ckd ){
-				gpui.ckd = false;
-				gp_editing.setdock(true);
-			}
-			$gp.SaveGPUI();
-		});
-
-		//this needs to happen after SimpleDrag() setup for keep_viewable settings
-		gp_editing.setdock(false);
+		$('#ckeditor_wrap').show();
+		$('#ckeditor_area').show();
 	},
 
 
@@ -131,44 +102,7 @@ var gp_editing = {
 	 *
 	 */
 	setdock:function(change_dock){
-		var editor_wrap = $('#ckeditor_wrap').show();
-		var editor_area = $('#ckeditor_area').show();
-		var $body = $('body');
 
-		if( change_dock ){
-			$gp.SaveGPUI();
-		}
-
-		if( gpui.ckd ){
-			editor_area.addClass('docked').removeClass('keep_viewable');
-			$body.css({'margin-top':'+=30px'});
-
-			editor_wrap.css({'height':30});
-
-			editor_area
-			.css({'top':'auto','left':0,'bottom':0})
-			.bind('mouseenter.gpdock',function(){
-				editor_wrap.stop(true,true,true).animate({'height':editor_area.height()},100);
-			})
-			.bind('mouseleave.gpdock',function(){
-				editor_wrap.stop(true,true,true).delay(500).animate({'height':30});
-			});
-
-		}else{
-
-			editor_area.removeClass('docked').addClass('keep_viewable');
-			if( change_dock ){
-				$('body').css({'margin-top':'-=30px'});
-			}
-			editor_wrap.css({'height':0});
-			editor_area
-			.css({'top':gpui.cky,'left':gpui.ckx,'bottom':'auto'})
-			.unbind('.gpdock');
-
-			$gp.$win.resize();
-		}
-
-		//return editor_area;
 	},
 
 	/**
@@ -222,9 +156,41 @@ var gp_editing = {
 			$('#cktabs .ckeditor_control[data-arg="#'+id+'"]').click();
 
 		}
+	},
 
+
+	/**
+	 * Cache Interface
+	 *
+	 */
+	CacheInterface: function(){
+
+		console.log('cacheInterface',$gp.last_edit_id);
+
+		var $wrap 				= $('#ckeditor_wrap');
+		var html				= $wrap.html();
+
+		var $interface						= $('#ckeditor_area').detach();
+		this.interface[$gp.last_edit_id]	= $interface;
+
+		$('#ckeditor_wrap').html( html );
+	},
+
+	/**
+	 * Restore Cached
+	 *
+	 */
+	RestoreCached: function(id){
+
+		if( typeof(this.interface[id]) == 'object' ){
+			$('#ckeditor_wrap').html('').append(this.interface[id]);
+			console.log('restore',id);
+			return true;
+		}
+
+		console.log('not restoring',id);
+		return false;
 	}
-
 
 }
 

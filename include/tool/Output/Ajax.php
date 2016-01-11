@@ -230,7 +230,8 @@ namespace gp\tool\Output{
 
 
 			$scripts = array();
-			$scripts[] = '/include/js/inline_edit/inline_editing.js';
+			$scripts[]				= array('object'=>'gp_editing','file'=>'/include/js/inline_edit/inline_editing.js');
+
 
 
 			$type = 'text';
@@ -292,11 +293,33 @@ namespace gp\tool\Output{
 			self::Header();
 			Header('Vary: Accept,Accept-Encoding');// for proxies
 
+			$sent				= array();
+			$defined_objects	= explode(',',$_REQUEST['defined_objects']);
 
-			$scripts = array_unique($scripts);
 
 			//send all scripts
 			foreach($scripts as $script){
+
+
+				if( is_array($script) ){
+
+					if( !empty($script['object']) && in_array($script['object'], $defined_objects) ){
+						echo "\n\n/** Object Already Defined: ".$script['object']." **/\n\n";
+						continue;
+					}
+
+					if( !empty($script['code']) ){
+						echo "\n\n/** Code **/\n\n";
+						echo $script['code'];
+					}
+
+					if( empty($script['file']) ){
+						continue;
+					}
+					$script = $script['file'];
+				}
+
+
 
 				//absolute paths don't need $dataDir
 				$full_path = $script;
@@ -309,6 +332,12 @@ namespace gp\tool\Output{
 					$full_path = $dataDir.$script;
 				}
 
+				//only send each script once
+				if( isset($sent[$full_path]) ){
+					continue;
+				}
+				$sent[$full_path] = true;
+
 				if( !file_exists($full_path) ){
 					if( \gp\tool::LoggedIn() ){
 						$msg = 'Admin Notice: The following file could not be found: \n\n'.$full_path;
@@ -317,8 +346,7 @@ namespace gp\tool\Output{
 					continue;
 				}
 
-				echo ';';
-				//echo "\n/**\n* $script\n*\n*/\n";
+				echo "\n\n/** $script **/\n\n";
 				readfile($full_path);
 			}
 		}
@@ -337,11 +365,19 @@ namespace gp\tool\Output{
 
 			$ckeditor_basepath = \gp\tool::GetDir('/include/thirdparty/ckeditor_34/');
 			echo 'CKEDITOR_BASEPATH = '.self::quote($ckeditor_basepath).';';
-			echo 'var gp_ckconfig = '.\gp\tool\Editing::CKConfig( $options, 'json', $plugins ).';';
+
+			// config
+			$scripts[]		= array(
+								'code'		=> 'var gp_ckconfig = '.\gp\tool\Editing::CKConfig( $options, 'json', $plugins ).';',
+								'object'	=> 'gp_ckconfig',
+								);
 
 
 			// extra plugins
-			echo 'var gp_add_plugins = '.json_encode( $plugins ).';';
+			$scripts[]		= array(
+								'code'		=> 'var gp_add_plugins = '.json_encode( $plugins ).';',
+								'object'	=> 'gp_add_plugins',
+								);
 
 
 			// scripts

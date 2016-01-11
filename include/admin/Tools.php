@@ -772,14 +772,8 @@ namespace gp\admin{
 
 			//inline editor html
 			echo '<div id="ckeditor_wrap" class="nodisplay">';
-			echo '<div id="ckeditor_area" class="gp_floating_area">';
+			echo '<div id="ckeditor_area">';
 			echo '<div class="cf">';
-				echo '<div class="toolbar">';
-					echo '<div class="gp_right">';
-					echo '<span class="admin_arrow_out"></span>';
-					echo '<a class="docklink" data-cmd="ck_docklink"></a>';
-					echo '</div>';
-				echo '</div>';
 
 				echo '<div class="tools">';
 

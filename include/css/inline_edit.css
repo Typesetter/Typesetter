@@ -7,7 +7,6 @@
  */
 
 #ckeditor_area{
-	position:absolute;
 	width:207px;
 	font-family:Arial,sans-serif !important;
 	}
@@ -170,72 +169,13 @@
 	display:none;
 	position:fixed;
 	bottom:0;
-	left:0;
 	right:0;
-	top:0;
-	height:30px;
+	top:30px;
 	z-index:10000; /* to be above full screen editing of ckeditor */
+	background:rgba(213, 213, 213, 0.9);
+	padding:10px;
 	}
 
-/**
- *
- * Docked CSS
- *
- */
-#ckeditor_area.docked{
-	width:100%;
-	position:absolute;
-	left:0;
-	right:0;
-	bottom:0;
-	border-top:none;
-	border-left:left:none;
-	border-right:none;
-	border-radius: 0;
-
-	box-shadow: 0 1px 0 rgba(0,0,0,0.2);
-	-moz-box-shadow: 0 1px 0 rgba(0,0,0,0.2);
-	-webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.2);
-	-o-box-shadow: 0 1px 0 rgba(0,0,0,0.2);
-	-icab-box-shadow: 0 1px 0 rgba(0,0,0,0.2);
-	-khtml-box-shadow: 0 1px 0 rgba(0,0,0,0.2);
-	}
-
-#ckeditor_area.docked > div{
-	border-top:none;
-	border-left:none;
-	border-right:none;
-	border-bottom:1px solid #f1f1f1;
-	border-radius: 0;
-	padding:7px;
-	}
-
-#ckeditor_area.docked .toolbar{
-	float:right;
-	clear:none;
-	width:20px;
-	padding:0;
-	}
-#ckeditor_area.docked .tools{
-	clear:none;
-	margin-right:30px; /* room for the toolbar */
-	}
-#ckeditor_area.docked .cke_toolgroup{
-	margin-right:5px;
-	}
-#ckeditor_area.docked #ckeditor_bottom{display:block;float:left;}
-#ckeditor_area.docked #ckeditor_controls{display:block;float:left;}
-
-#ckeditor_area.docked #ckeditor_top .cke_skin_kama .cke_toolgroup{width:auto;}
-#ckeditor_area.docked #ckeditor_top .cke_toolbox{clear:none;}
-#ckeditor_area.docked #ckeditor_top .cke_editor{display:inline;}
-
-
-#ckeditor_area.docked #gp_option_area{
-	float:left;
-	width:200px;
-	margin-right:5px;
-	}
 
 /**
  * Tabs
@@ -254,15 +194,9 @@
 	}
 
 /**
- * ckeditor area tabs
- *
+ * Save
  */
-#ckeditor_area.docked .inline_edit_area{
-	display:inline-block !important;
-	vertical-align:top;
-	min-width:200px;
-	margin-right:10px;
-	}
-#ckeditor_area.docked #cktabs{
-	display:none;
+#ckeditor_save{
+	position:absolute;
+	bottom:0;
 	}

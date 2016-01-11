@@ -358,36 +358,6 @@ body #gp_current_image td{
 	display:inline-block;
 	}
 
-#ckeditor_area.docked #ckeditor_controls{
-	display:inline-block;
-	float:none;
-	vertical-align:top;
-	width:260px;
-	}
-
-#ckeditor_area.docked #gp_option_area{
-	display:inline-block;
-	width:auto;
-	}
-#ckeditor_area.docked .gp_edit_select_options{
-	display:block !important;
-	height: 101px !important;
-	}
-
-#ckeditor_area.docked #gp_gallery_avail_imgs,
-#ckeditor_area.docked #gp_current_image{
-	height:117px !important;
-	margin-right:5px;
-	}
-
-#ckeditor_area.docked #gp_current_image img{
-	max-height:60px;
-	}
-
-#ckeditor_area.docked #gp_image_area{
-	width:520px;
-	}
-
 
 /**
  * Multiple images

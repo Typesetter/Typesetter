@@ -308,25 +308,31 @@ class Edit extends \gp\Page{
 	public function ManageSections(){
 		global $langmessage;
 
+		//$defined = explode(',',$_REQUEST['defined_objects']);
+		//if( in_array('gp_editor',$defined) ){
+		//	die('already set');
+		//}
+
+		$scripts				= array();
 
 		//output links
+
 		ob_start();
 		echo '<div id="new_section_links" style="display:none" class="inline_edit_area" title="Add">';
 		self::NewSections();
 		echo '</div>';
-		echo 'var section_types = '.json_encode(ob_get_clean()).';';
+		$scripts[]				= array('code'=>'var section_types = '.json_encode(ob_get_clean()).';');
+
 
 		//selectable classes
-		$avail_classes = \gp\admin\Settings\Classes::GetClasses();
-		echo 'var gp_avail_classes = '.json_encode($avail_classes).';';
+		$avail_classes			= \gp\admin\Settings\Classes::GetClasses();
+		$scripts[]				= array('code'=>'var gp_avail_classes = '.json_encode($avail_classes).';');
 
 
 
-
-		$scripts	= array();
-		$scripts[]	= '/include/thirdparty/js/nestedSortable.js';
-		$scripts[]	= '/include/js/inline_edit/inline_editing.js';
-		$scripts[]	= '/include/js/inline_edit/manage_sections.js';
+		//$scripts[]			= '/include/thirdparty/js/nestedSortable.js';
+		$scripts[]				= array('object'=>'gp_editing','file'=>'/include/js/inline_edit/inline_editing.js');
+		$scripts[]				= array('file'=>'/include/js/inline_edit/manage_sections.js');
 
 		\gp\tool\Output\Ajax::SendScripts($scripts);
 		die();

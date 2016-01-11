@@ -401,7 +401,7 @@ $(function(){
 		}
 
 		// send to gpeasy bug tracker
-		if( debugjs === 'send' ){
+		if( typeof(debugjs) !== 'undefined' && debugjs === 'send' ){
 
 			if( ajaxOptions.data ){
 				debug_info.data = ajaxOptions.data;

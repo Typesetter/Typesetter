@@ -851,11 +851,12 @@ class Edit extends \gp\Page{
 
 		if( $this->draft_exists ){
 			$contents	= \gp\tool\Files::GetRaw($this->draft_file);
-			$time		= $this->draft_stats['modified'];
 		}else{
 			$contents	= \gp\tool\Files::GetRaw($this->file);
-			$time		= $this->file_stats['modified'];
 		}
+
+		//use the request time
+		$time = $_REQUEST['req_time'];
 
 		//backup file name
 		$len			= strlen($contents);
@@ -869,6 +870,10 @@ class Edit extends \gp\Page{
 		if( function_exists('gzencode') && function_exists('readgzfile') ){
 			$backup_file .= '.gze';
 			$contents = gzencode($contents,9);
+		}
+
+		if( file_exists($backup_file) ){
+			return true;
 		}
 
 		if( !\gp\tool\Files::Save( $backup_file, $contents ) ){

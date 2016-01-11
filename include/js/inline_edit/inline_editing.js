@@ -83,7 +83,7 @@ var gp_editing = {
 		if( path.indexOf('?') > 0 ){
 			query = strip_to(path,'?')+'&';
 		}
-		query += 'cmd=save_inline&';
+		query += 'cmd=save_inline&req_time='+req_time+'&';
 		query += gp_editor.gp_saveData();
 
 		//the saved function

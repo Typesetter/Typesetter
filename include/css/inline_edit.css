@@ -131,8 +131,10 @@
 	}
 
 .gp_editing{
-	outline:1px solid #ccc !important;
 	z-index:9000;
+	}
+.gp_edit_current{
+	outline:1px solid #ccc !important;
 	}
 
 #ckeditor_area .label{
@@ -196,7 +198,4 @@
 /**
  * Save
  */
-#ckeditor_save{
-	position:absolute;
-	bottom:0;
-	}
+#ckeditor_save{}

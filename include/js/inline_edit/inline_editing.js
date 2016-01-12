@@ -2,8 +2,9 @@
 
 var gp_editing = {
 
-	interface: [],	//storage for editing interfaces
-	editors:[],		//storage for editing objects
+	interface:		[],		// storage for editing interfaces
+	editors:		[],		// storage for editing objects
+
 
 	get_path:function(id_num){
 		var lnk = $('a#ExtraEditLink'+id_num);
@@ -30,14 +31,16 @@ var gp_editing = {
 			content = replace_content;
 		}
 
-		content.addClass('gp_editing');
+		content.addClass('gp_editing gp_edit_current');
 
 		return content;
 	},
 
-	/*
+
+	/**
 	 * Close the editor instance
 	 * Fired when the Close button is clicked
+	 *
 	 */
 	close_editor:function(evt){
 		evt.preventDefault();
@@ -46,9 +49,11 @@ var gp_editing = {
 		$gp.Reload();
 	},
 
-	/*
+
+	/**
 	 * Save Changes
 	 * Close after the save if 'Save & Close' was clicked
+	 *
 	 */
 	save_changes:function(evt,arg){
 		evt.preventDefault();
@@ -57,15 +62,18 @@ var gp_editing = {
 
 		$gp.loading();
 
-		var path = gp_editor.save_path;
-		path = strip_from(path,'#');
 
-		var query = '';
+		var edit_div	= gp_editing.CurrentDiv();
+		var path		= strip_from(gp_editor.save_path,'#');
+		var query		= '';
+
 		if( path.indexOf('?') > 0 ){
 			query = strip_to(path,'?')+'&';
 		}
-		query += 'cmd=save_inline&req_time='+req_time+'&';
-		query += gp_editor.gp_saveData();
+
+		query			+= 'cmd=save_inline&section='+edit_div.data('gp-section')+'&';
+		query			+= gp_editor.gp_saveData();
+
 
 		//the saved function
 		gpresponse.ck_saved = function(){
@@ -82,9 +90,10 @@ var gp_editing = {
 	},
 
 
-	/*
+	/**
 	 * Get the Editor Tools area
 	 * Initiate dragging
+	 *
 	 */
 	editor_tools:function(){
 
@@ -103,13 +112,16 @@ var gp_editing = {
 
 	},
 
+
 	/**
 	 * Make sure certain gpEasy elements aren't copied into the html of pages
 	 * @deprecated
+	 *
 	 */
 	strip_special:function(data){
 		return data;
 	},
+
 
 	/**
 	 * Set up tabs
@@ -135,6 +147,7 @@ var gp_editing = {
 		});
 
 	},
+
 
 	/**
 	 * Add Tab
@@ -163,7 +176,7 @@ var gp_editing = {
 	 */
 	CacheInterface: function(){
 
-		console.log('cacheInterface',$gp.last_edit_id);
+		gp_editing.CurrentDiv().removeClass('gp_edit_current');
 
 		var $wrap 				= $('#ckeditor_wrap');
 		var html				= $wrap.html();
@@ -175,6 +188,7 @@ var gp_editing = {
 		$('#ckeditor_wrap').html( html );
 	},
 
+
 	/**
 	 * Restore Cached
 	 *
@@ -182,15 +196,25 @@ var gp_editing = {
 	RestoreCached: function(id){
 
 		if( typeof(this.interface[id]) != 'object' ){
-			console.log('not restoring',id);
 			return false;
 		}
 
 		$('#ckeditor_wrap').html('').append(this.interface[id]);
-		gp_editor	= this.editors[id];
+		gp_editor			= this.editors[id];
+		$gp.last_edit_id	= id;
 
-		console.log('restore',id);
+		gp_editing.CurrentDiv().addClass('gp_edit_current');
+
 		return true;
+	},
+
+
+	/**
+	 * Get the current
+	 *
+	 */
+	CurrentDiv: function(){
+		return $('#ExtraEditArea'+$gp.last_edit_id);
 	}
 
 }
@@ -244,6 +268,17 @@ $gp.links.ck_save = gp_editing.save_changes;
 			return 'Unsaved changes will be lost.';
 		}
 		return;
+	});
+
+
+	/**
+	 * Switch between edit areas
+	 *
+	 */
+	$gp.$doc.on('click','.gp_editing:not(.gp_edit_current)',function(){
+		var area_id = $(this).data('gp-area-id');
+		gp_editing.CacheInterface();
+		gp_editing.RestoreCached(area_id);
 	});
 
 

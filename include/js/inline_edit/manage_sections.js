@@ -68,7 +68,7 @@
 				args.gp_color[i]		= $this.data('gp_color');
 
 				//collapse
-				args.gp_collapse[i]	= $this.data('gp_collapse');
+				args.gp_collapse[i]		= $this.data('gp_collapse');
 
 
 			});
@@ -203,7 +203,7 @@
 
 
 
-				html += '<li data-area-id="'+this.id+'" '+style+' title="'+classes+'">';
+				html += '<li data-gp-area-id="'+this.id+'" '+style+' title="'+classes+'">';
 				html += '<div><a class="color_handle" data-cmd="SectionColor" style="background-color:'+color+'"></a>';
 				html += '<span class="options">';
 				html += '<a class="gpicon_edapp" data-cmd="SectionOptions" title="Options"></a>';
@@ -317,7 +317,7 @@
 		 *
 		 */
 		GetArea: function($li){
-			var id 		= $li.data('area-id');
+			var id 		= $li.data('gp-area-id');
 			return $('#'+id);
 		},
 
@@ -542,13 +542,13 @@
 	$gp.links.SectionOptions = function(evt){
 
 		var $li					= $(this).closest('li');
-		var id					= $li.data('area-id')
+		var id					= $li.data('gp-area-id')
 		var attrs				= gp_editor.GetArea( $li ).data('gp-attrs');
 		var current_classes		= '';
 
 
 		//popup
-		html = '<div class="inline_box"><form id="section_attributes_form" data-area-id="'+id+'">';
+		html = '<div class="inline_box"><form id="section_attributes_form" data-gp-area-id="'+id+'">';
 		html += '<h2>Section Attributes</h2>';
 		html += '<table class="bordered full_width">';
 		html += '<thead><tr><th>Attribute</th><th>Value</th></tr></thead><tbody>';
@@ -795,7 +795,7 @@
 
 
 		//update title of <li> in section manager
-		var $li		= $('#section_sorting li[data-area-id='+$area.attr('id'));
+		var $li		= $('#section_sorting li[data-gp-area-id='+$area.attr('id'));
 		if( classes == '' ){
 			classes = $li.find('> div .section_label').text();
 		}

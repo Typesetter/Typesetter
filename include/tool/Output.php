@@ -698,9 +698,9 @@ namespace gp\tool{
 			$count++;
 			$index = $count; //since &$index is passed by reference
 			if( is_array($attr) ){
-				$attr += array('class'=>'ExtraEditLink nodisplay','id'=>'ExtraEditLink'.$index,'data-area-id'=>$index);
+				$attr += array('class'=>'ExtraEditLink nodisplay','id'=>'ExtraEditLink'.$index,'data-gp-area-id'=>$index);
 			}else{
-				$attr .= ' class="ExtraEditLink nodisplay" id="ExtraEditLink'.$index.'" data-area-id="'.$index.'"';
+				$attr .= ' class="ExtraEditLink nodisplay" id="ExtraEditLink'.$index.'" data-gp-area-id="'.$index.'"';
 			}
 			return \gp\tool::Link($href,$label,$query,$attr);
 		}

@@ -46,10 +46,8 @@ $gp.links.inline_edit_generic = function(evt,rel){
 	//	return;
 	//}
 
-	console.log('-----------------------------------------------------------New inline_edit_generic()')
-
 	var $this		= $(this);
-	var id			= $this.data('area-id') || 0;
+	var id			= $this.data('gp-area-id') || 0;
 
 	//set the current editing interface aside so the new one can be created
 	if( typeof(gp_editing) !== 'undefined' ){
@@ -80,7 +78,7 @@ $gp.links.inline_edit_generic = function(evt,rel){
 	if( rel == 'manage_sections' ){
 		$gp.LoadStyle('/include/css/manage_sections.css');
 	}else{
-		var id			= $this.data('area-id');
+		var id			= $this.data('gp-area-id');
 		script			+= '&cmd=inlineedit&area_id='+id;
 	}
 
@@ -692,7 +690,7 @@ $(function(){
 			.each(function(){
 
 				var $b			= $(this);
-				var id_number	= $b.data('area-id');
+				var id_number	= $b.data('gp-area-id');
 				var area		= $('#ExtraEditArea'+id_number);
 
 				if( area.hasClass('gp_no_overlay') || area.length === 0 ){
@@ -863,7 +861,6 @@ $(function(){
 		}
 
 		function HideOverlay(){
-			edit_area = false;
 
 			//hide links
 			overlay.find('span').stop(true,true).hide(500);
@@ -1001,7 +998,7 @@ $(function(){
 				left -= diff;
 			}
 
-			lnk_span.stop(true,true).css({'top':top,'left':left,'right':'auto','position':'fixed','displayl':'block'});
+			lnk_span.show().stop(true,true).css({'top':top,'left':left,'right':'auto','position':'fixed'});
 		}
 
 
@@ -1013,7 +1010,7 @@ $(function(){
 
 			if( evt.ctrlKey || evt.altKey || evt.shiftKey ) return; // || gp_editor
 
-			if( !edit_area || edit_area.hasClass('gp_no_overlay') || !lnk_span ){
+			if( !edit_area || edit_area.hasClass('gp_editing') || edit_area.hasClass('gp_no_overlay') || !lnk_span ){
 				return;
 			}
 

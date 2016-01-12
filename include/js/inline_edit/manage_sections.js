@@ -460,12 +460,31 @@
 	/**
 	 * Copy selected section
 	 *
-	 */
 	$gp.links.CopySection = function(evt){
 		var from_area	= gp_editor.GetArea( $(this).closest('li') );
 		var new_area	= from_area.clone();
 		var id			= 'Copied_'+Math.floor((Math.random() * 100000) + 1)+'_'+new_area.attr('id');
 		new_area.attr('id',id).addClass('new_section');
+		from_area.after(new_area);
+		gp_editor.InitSorting();
+	}
+	 */
+
+	$gp.links.CopySection = function(evt){
+		var from_area	= gp_editor.GetArea( $(this).closest('li') );
+		var new_area	= from_area.clone();
+
+		//get new id
+		var area_id		= parseInt(new_area.data('gp-area-id'));
+		var new_id;
+		do{
+
+			area_id++;
+			new_id = 'ExtraEditArea'+area_id;
+		}while( document.getElementById(new_id) );
+
+
+		new_area.attr('id',new_id).addClass('new_section').data('gp-area-id',area_id);
 		from_area.after(new_area);
 		gp_editor.InitSorting();
 	}

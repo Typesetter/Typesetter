@@ -773,9 +773,8 @@ namespace gp\admin{
 			//inline editor html
 			echo '<div id="ckeditor_wrap" class="nodisplay">';
 			echo '<div id="cktabs">';
-			echo \gp\tool::Link($page->title,'Organize','cmd=ManageSections',array('class'=>'ckeditor_control','data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
-			echo \gp\tool::Link($page->title,'Add','cmd=ManageSections',array('class'=>'ckeditor_control','data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
-			echo '<a class="ckeditor_control">Edit</a>';
+			echo \gp\tool::Link($page->title,'Organize','cmd=ManageSections',array('class'=>'ckeditor_control','data-cmd'=>'SwitchEditArea','data-arg'=>'#section_sorting'));
+			echo \gp\tool::Link($page->title,'Add','cmd=ManageSections',array('class'=>'ckeditor_control','data-cmd'=>'SwitchEditArea','data-arg'=>'#new_section_links'));
 			echo '</div>';
 
 			echo '<div id="ck_area_wrap">';

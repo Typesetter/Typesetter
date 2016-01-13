@@ -41,7 +41,7 @@ $gp.div = function(id){
  * Dynamically load inline editing
  *
  */
-$gp.links.inline_edit_generic = function(evt,rel){
+$gp.links.inline_edit_generic = function(evt,arg){
 
 	evt.preventDefault();
 
@@ -67,8 +67,8 @@ $gp.links.inline_edit_generic = function(evt,rel){
 
 		//legacy inline editing support
 		//can also be used for development/troubleshooting
-		if( typeof(gplinks[rel]) === 'function' ){
-			gplinks[rel].call(this,rel,evt);
+		if( typeof(gplinks[arg]) === 'function' ){
+			gplinks[arg].call(this,arg,evt);
 			return;
 		}
 
@@ -78,7 +78,7 @@ $gp.links.inline_edit_generic = function(evt,rel){
 		var script		= strip_from($this.attr('href'),'#');
 		script			+= '&gpreq=json&defined_objects='+$gp.DefinedObjects();
 
-		if( rel == 'manage_sections' ){
+		if( arg == 'manage_sections' ){
 			$gp.LoadStyle('/include/css/manage_sections.css');
 		}else{
 			script		+= '&cmd=inlineedit&area_id='+area_id+'&section='+$edit_div.data('gp-section');

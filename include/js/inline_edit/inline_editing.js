@@ -275,13 +275,15 @@ var gp_editing = {
 	 * Control which editing area is displayed
 	 *
 	 */
-	$gp.links.SwitchEditArea = function(){
+	$gp.links.SwitchEditArea = function(evt,arg){
+
+		$gp.links.inline_edit_generic.call(this,evt,'manage_sections');
+
 		var $this = $(this);
 
 		$('.ckeditor_control.selected').removeClass('selected');
 		$this.addClass('selected');
 
-		$('.manage_section_area').hide();
 
 		$('.inline_edit_area').hide();
 

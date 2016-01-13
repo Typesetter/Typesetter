@@ -2,7 +2,7 @@
 defined('is_running') or die('Not an entry point...');
 
 includeFile('tool/email_mailer.php');
-
+includeFile('tool/Images.php');
 
 class admin_configuration{
 
@@ -20,7 +20,8 @@ class admin_configuration{
 		$langmessage['about_config']['showgplink']		= 'Showing the "powered by" link on your site is a great way to support gpEasy CMS.';
 		$langmessage['about_config']['history_limit']	= 'Max: '.gp_backup_limit;
 		$langmessage['jquery']							= 'Google CDN';
-
+		$langmessage['recreate']						= 'Recreate thumbnails with new size?(save it first)';
+		
 
 		$this->variables = array(
 
@@ -46,6 +47,7 @@ class admin_configuration{
 						'jquery'				=> '',
 						'maximgarea'			=> 'integer',
 						'maxthumbsize'			=> 'integer',
+						'recreate'				=> 'recreate',
 						'auto_redir'			=> 'integer',
 						'history_limit'			=> 'integer',
 						'HTML_Tidy'				=> '',
@@ -84,6 +86,10 @@ class admin_configuration{
 			case 'save_config':
 				$this->SaveConfig();
 			break;
+			case 'recreate_thumbs':
+				$this->RecreateThumbs("");
+			break;
+			
 		}
 
 		echo '<h2>'.$langmessage['configuration'].'</h2>';
@@ -218,6 +224,8 @@ class admin_configuration{
 											'smtp'=>'smtp',
 											'smtpauth'=>'SMTPAuth');
 
+	
+		
 		gpSettingsOverride('configuration',$possible);
 
 
@@ -316,6 +324,9 @@ class admin_configuration{
 					case 'textarea':
 						$this->formTextarea($key,$value);
 					break;
+					case 'recreate':
+						$this->formButtonRecreate($key,$value);
+					break;
 					default:
 						$this->formInput($key,$value,$possible_value);
 					break;
@@ -360,6 +371,13 @@ class admin_configuration{
 	 *	Form Functions
 	 *
 	 */
+	 function formButtonRecreate($name,$value,$type='text'){
+		echo "\n<div>";
+		echo ' <a class="gpbutton" href = '.common::GetUrl('Admin_Configuration').'?cmd=recreate_thumbs >Recreate</a> ';
+		echo '</div>';
+	}
+
+	 
 	function formCheckbox($key,$value){
 		$checked = '';
 		if( $value && $value !== 'false' ){
@@ -420,4 +438,52 @@ class admin_configuration{
 
 	}
 
+
+	function RecreateThumbs($dir)
+	{
+ 
+	  $filefolder=dirname($_SERVER['SCRIPT_FILENAME'])."/data/_uploaded/".$dir;
+	  
+	  $handle = openDir($filefolder);
+	  
+	  while ($dat = readDir($handle))
+	  {
+		
+		if(is_dir($filefolder.$dat))
+		{
+			if($dat!="." && $dat!=".." &&$dat!="thumbnails")
+			{
+				$this->RecreateThumbs($dir."/".$dat."/");
+			}
+		}
+		else
+		{
+			if($dat!="index.html")
+			{
+				$this->MakeThumb($dir.$dat);
+			}
+		}
+	   }
+	  closeDir($handle);
+	  return true;
+	}
+
+
+function MakeThumb($file)
+{
+	if(file_exists("./data/_uploaded/".$file))
+	{
+		 echo "<br> ./data/_uploaded/".$file;
+		
+			 if(file_exists("./data/_uploaded/image/thumbnails/".$file.".jpg"))
+			   {
+				unlink ("./data/_uploaded/image/thumbnails/".$file.".jpg");   
+				}
+		
+	if(thumbnail::createSquare("data/_uploaded/".$file,"data/_uploaded/image/thumbnails/".$file.".jpg",$GLOBALS['config']['maxthumbsize']) &&file_exists("data/_uploaded/image/thumbnails/".$file.".jpg"))echo " new thumbnail created!";
+		return true;
+	}
+}
+	
+	
 }

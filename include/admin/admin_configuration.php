@@ -473,14 +473,14 @@ function MakeThumb($file)
 {
 	if(file_exists("./data/_uploaded/".$file))
 	{
-		 echo "<br> ./data/_uploaded/".$file;
+		 $msg = "<br> ./data/_uploaded/".$file;
 		
 			 if(file_exists("./data/_uploaded/image/thumbnails/".$file.".jpg"))
 			   {
 				unlink ("./data/_uploaded/image/thumbnails/".$file.".jpg");   
 				}
 		
-	if(thumbnail::createSquare("data/_uploaded/".$file,"data/_uploaded/image/thumbnails/".$file.".jpg",$GLOBALS['config']['maxthumbsize']) &&file_exists("data/_uploaded/image/thumbnails/".$file.".jpg"))echo " new thumbnail created!";
+if(thumbnail::createSquare("data/_uploaded/".$file,"data/_uploaded/image/thumbnails/".$file.".jpg",$GLOBALS['config']['maxthumbsize']) &&file_exists("data/_uploaded/image/thumbnails/".$file.".jpg")) msg( $msg." new thumbnail created!");
 		return true;
 	}
 }

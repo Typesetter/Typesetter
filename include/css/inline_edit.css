@@ -47,6 +47,7 @@
 	width: 30px;
 	}
 
+#ckeditor_area .ck_saving,
 #ckeditor_area .ck_saved,
 #ckeditor_area .ckeditor_control{
 	font-size:12px !important;
@@ -130,21 +131,6 @@
 
 
 /**
- * Save indications
- *
- */
-#ckeditor_wrap.not_saved .ck_save,
-#ckeditor_wrap .ck_saved{
-	display:inline-block;
-	}
-
-#ckeditor_wrap .ck_save,
-#ckeditor_wrap.not_saved .ck_saved{
-	display:none;
-	}
-
-
-/**
  * border around area being editing
  */
 .editable_area,
@@ -220,4 +206,26 @@
 /**
  * Save
  */
-#ckeditor_save{}
+#ckeditor_save{
+	text-align:right;
+	}
+
+#ckeditor_wrap .ck_save,
+#ckeditor_wrap .ck_saving,
+#ckeditor_wrap.not_saved .ck_saved{
+	display:none;
+	}
+
+#ckeditor_wrap.not_saved .ck_save,
+#ckeditor_wrap .ck_saved{
+	display:inline-block;
+	}
+
+#ckeditor_wrap.ck_saving .ck_save,
+#ckeditor_wrap.ck_saving .ck_saved{
+	display:none;
+	}
+
+#ckeditor_wrap.ck_saving .ck_saving{
+	display:inline-block;
+}

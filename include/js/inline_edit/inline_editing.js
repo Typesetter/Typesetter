@@ -58,11 +58,9 @@ var gp_editing = {
 	 */
 	save_changes:function(callback){
 
-		console.log('save changes');
-
 		if( !gp_editor ) return;
 
-		$gp.loading();
+		$('#ckeditor_wrap').addClass('ck_saving');
 
 
 		var edit_div	= gp_editing.CurrentDiv();
@@ -79,12 +77,13 @@ var gp_editing = {
 
 		//the saved function
 		gpresponse.ck_saved = function(){
-			console.log('saved');
+
 			if( !gp_editor ) return;
 
 			gp_editor.updateElement();
 			gp_editor.resetDirty();
-			console.log('resetDirty');
+			$('#ckeditor_wrap').removeClass('ck_saving');
+
 
 			if( typeof(callback) == 'function' ){
 				callback.call();
@@ -251,12 +250,10 @@ var gp_editing = {
 		gp_editing.is_dirty = true;
 
 		if( typeof(gp_editor.checkDirty) == 'undefined' ){
-			console.log('no checkDirty');
 			return true;
 		}
 
 		if( gp_editor.checkDirty() ){
-			console.log('checkdirty returns true');
 			return true;
 		}
 

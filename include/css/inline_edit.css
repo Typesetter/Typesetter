@@ -47,9 +47,9 @@
 	width: 30px;
 	}
 
-#ckeditor_area .ck_saving,
-#ckeditor_area .ck_saved,
-#ckeditor_area .ckeditor_control{
+#ckeditor_wrap .ck_saving,
+#ckeditor_wrap .ck_saved,
+#ckeditor_wrap .ckeditor_control{
 	font-size:12px !important;
 	text-decoration:none !important;
 	display:inline-block;
@@ -69,7 +69,7 @@
 	box-sizing: border-box;
 	}
 
-#ckeditor_area .ckeditor_control{
+#ckeditor_wrap .ckeditor_control{
 
 
 	border:1px solid #fafafa;
@@ -87,19 +87,19 @@
 	text-shadow:1px 1px 0 #fff;
 	}
 
-#ckeditor_area .ckeditor_control.nodisplay{
+#ckeditor_wrap .ckeditor_control.nodisplay{
 	display:none;
 	}
 
-#ckeditor_area .ckeditor_control.selected{
+#ckeditor_wrap .ckeditor_control.selected{
 	background: rgba(0,0,0,0.01);
 	border-color: #eee #f5f5f5 #f5f5f5 #eee !important;
 	font-weight:bold;
 }
 
 
-#ckeditor_area .full_width,
-#ckeditor_area .half_width{
+#ckeditor_wrap .full_width,
+#ckeditor_wrap .half_width{
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -111,21 +111,21 @@
 	}
 
 
-#ckeditor_area .full_width,
-#ckeditor_area .full_width:hover,
-#ckeditor_area .full_width:active{
+#ckeditor_wrap .full_width,
+#ckeditor_wrap .full_width:hover,
+#ckeditor_wrap .full_width:active{
 	width:195px;
 	}
 
-#ckeditor_area .half_width,
-#ckeditor_area .half_width:hover,
-#ckeditor_area .half_width:active{
+#ckeditor_wrap .half_width,
+#ckeditor_wrap .half_width:hover,
+#ckeditor_wrap .half_width:active{
 	width:123px;
 	}
-#ckeditor_area input.half_width,
-#ckeditor_area input.full_width,
-#ckeditor_area a.half_width,
-#ckeditor_area a.full_width{
+#ckeditor_wrap input.half_width,
+#ckeditor_wrap input.full_width,
+#ckeditor_wrap a.half_width,
+#ckeditor_wrap a.full_width{
 	text-align:center;
 	}
 
@@ -191,15 +191,15 @@
  * Tabs
  *
  */
-#ckeditor_area #cktabs .ckeditor_control{
+#cktabs .ckeditor_control{
 	margin-right:-1px !important;
 	margin-left:0 !important;
 	border-radius:0;
 	}
-#ckeditor_area #cktabs .ckeditor_control:first-child{
+#cktabs .ckeditor_control:first-child{
 	border-radius:5px 0 0 5px;
 	}
-#ckeditor_area #cktabs .ckeditor_control:last-child{
+#cktabs .ckeditor_control:last-child{
 	border-radius:0 5px 5px 0;
 	}
 

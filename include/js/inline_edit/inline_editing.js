@@ -59,9 +59,12 @@ var gp_editing = {
 		if( !gp_editor ) return;
 
 		if( !gp_editing.IsDirty() ){
-			callback.call();
+			if( typeof(callback) == 'function' ){
+				callback.call();
+			}
 			return;
 		}
+
 
 		$('#ckeditor_wrap').addClass('ck_saving');
 
@@ -189,7 +192,9 @@ var gp_editing = {
 			return false;
 		}
 
-		$('#ckeditor_wrap').html('').append($gp.interface[id]);
+		$('#ck_area_wrap').html('').append($gp.interface[id]);
+		//$('#ckeditor_area').html('').replaceWith( $gp.interface[id] );
+
 		gp_editor			= $gp.editors[id];
 		$gp.curr_edit_id	= id;
 

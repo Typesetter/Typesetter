@@ -58,7 +58,9 @@ $gp.links.inline_edit_generic = function(evt,rel){
 			}
 		}
 
-		$gp.curr_edit_id = area_id;
+		$gp.curr_edit_id	= area_id;
+		var $edit_div		= $gp.CurrentDiv();
+
 		$gp.DefinedObjects();
 		$gp.loading();
 
@@ -73,13 +75,13 @@ $gp.links.inline_edit_generic = function(evt,rel){
 		$gp.LoadStyle('/include/css/inline_edit.css');
 
 
-		var script	= strip_from($this.attr('href'),'#');
-		script += '&gpreq=json&defined_objects='+$gp.DefinedObjects();
+		var script		= strip_from($this.attr('href'),'#');
+		script			+= '&gpreq=json&defined_objects='+$gp.DefinedObjects();
 
 		if( rel == 'manage_sections' ){
 			$gp.LoadStyle('/include/css/manage_sections.css');
 		}else{
-			script			+= '&cmd=inlineedit&area_id='+area_id;
+			script		+= '&cmd=inlineedit&area_id='+area_id+'&section='+$edit_div.data('gp-section');
 		}
 
 
@@ -111,9 +113,6 @@ $gp.CacheInterface = function(callback){
 
 	$gp.CurrentDiv().removeClass('gp_edit_current');
 
-	var $wrap 				= $('#ckeditor_wrap');
-	var html				= $wrap.html();
-
 
 	//if gp_editing is not defined then we don't have anything to cache yet
 	if( typeof(gp_editing) == 'undefined' ){
@@ -125,11 +124,15 @@ $gp.CacheInterface = function(callback){
 	//only continue if we can save
 	gp_editing.save_changes(function(){
 
+		var html							= $('#ck_area_wrap').html();
 		var $interface						= $('#ckeditor_area').detach();
+
+
 		$gp.interface[$gp.curr_edit_id]		= $interface;
 		$gp.editors[$gp.curr_edit_id]		= gp_editor;
 
-		$('#ckeditor_wrap').html( html );
+		$('#ck_area_wrap').html( html );
+
 
 		callback.call();
 	});

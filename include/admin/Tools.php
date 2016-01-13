@@ -768,30 +768,33 @@ namespace gp\admin{
 		 * @static
 		 */
 		public static function InlineEditArea(){
-			global $langmessage;
+			global $langmessage, $page;
 
 			//inline editor html
 			echo '<div id="ckeditor_wrap" class="nodisplay">';
+			echo '<div id="cktabs">';
+			echo \gp\tool::Link($page->title,'Organize','cmd=ManageSections',array('class'=>'ckeditor_control','data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+			echo \gp\tool::Link($page->title,'Add','cmd=ManageSections',array('class'=>'ckeditor_control','data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+			echo '<a class="ckeditor_control">Edit</a>';
+			echo '</div>';
+
+			echo '<div id="ck_area_wrap">';
 			echo '<div id="ckeditor_area">';
-			echo '<div class="cf">';
-
 				echo '<div class="tools">';
-
 				echo '<div id="ckeditor_top"></div>';
-
-				echo '<div id="ckeditor_controls"><div id="ckeditor_save">';
-				echo '<a data-cmd="ck_save" class="ckeditor_control ck_save">'.$langmessage['save'].'</a>';
-				echo '<span class="ck_saved">'.$langmessage['Saved'].'</span>';
-				echo '<span class="ck_saving">'.$langmessage['Saving'].'</span>';
-				echo '<a data-cmd="ck_close" class="ckeditor_control">'.$langmessage['Close'].'</a>';
-				echo '</div></div>';
-
+				echo '<div id="ckeditor_controls"></div>';
 				echo '<div id="ckeditor_bottom"></div>';
-
 				echo '</div>';
+			echo '</div>';
+			echo '</div>';
 
+			echo '<div id="ckeditor_save">';
+			echo '<a data-cmd="ck_save" class="ckeditor_control ck_save">'.$langmessage['save'].'</a>';
+			echo '<span class="ck_saved">'.$langmessage['Saved'].'</span>';
+			echo '<span class="ck_saving">'.$langmessage['Saving'].'</span>';
+			echo '<a data-cmd="ck_close" class="ckeditor_control">'.$langmessage['Close'].'</a>';
 			echo '</div>';
-			echo '</div>';
+
 			echo '</div>';
 
 

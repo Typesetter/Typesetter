@@ -2,7 +2,11 @@
 /*jshint forin:true, noarg:true, noempty:true, eqeqeq:true, bitwise:true, strict:true, undef:true, unused:true, curly:true, browser:true, jquery:true, indent:4, maxerr:100, newcap:false, white:false*/
 //"use strict";
 
-var gp_editor = false;
+var gp_editor		= false;
+
+$gp.curr_edit_id	= null;
+$gp.interface		= [];		// storage for editing interfaces
+$gp.editors			= [];		// storage for editing objects
 
 
 /**
@@ -33,62 +37,103 @@ $gp.div = function(id){
 };
 
 
-
 /**
  * Dynamically load inline editing
  *
  */
-$gp.last_edit_id = null;
 $gp.links.inline_edit_generic = function(evt,rel){
 
 	evt.preventDefault();
-	//if( typeof(gp_editing) !== 'undefined' ){
-	//	return;
-	//}
 
 	var $this		= $(this);
-	var id			= $this.data('gp-area-id') || 0;
+	var area_id		= $this.data('gp-area-id');
 
-	//set the current editing interface aside so the new one can be created
-	if( typeof(gp_editing) !== 'undefined' ){
-		gp_editing.CacheInterface();
-		if( gp_editing.RestoreCached(id) ){
+
+	$gp.CacheInterface(function(){
+
+		//set the current editing interface aside so the new one can be created
+		if( typeof(gp_editing) !== 'undefined' ){
+			if( gp_editing.RestoreCached(area_id) ){
+				return;
+			}
+		}
+
+		$gp.curr_edit_id = area_id;
+		$gp.DefinedObjects();
+		$gp.loading();
+
+
+		//legacy inline editing support
+		//can also be used for development/troubleshooting
+		if( typeof(gplinks[rel]) === 'function' ){
+			gplinks[rel].call(this,rel,evt);
 			return;
 		}
-	}
 
-	$gp.last_edit_id = id;
-	$gp.DefinedObjects();
-	$gp.loading();
+		$gp.LoadStyle('/include/css/inline_edit.css');
 
 
-	//legacy inline editing support
-	//can also be used for development/troubleshooting
-	if( typeof(gplinks[rel]) === 'function' ){
-		gplinks[rel].call(this,rel,evt);
+		var script	= strip_from($this.attr('href'),'#');
+		script += '&gpreq=json&defined_objects='+$gp.DefinedObjects();
+
+		if( rel == 'manage_sections' ){
+			$gp.LoadStyle('/include/css/manage_sections.css');
+		}else{
+			script			+= '&cmd=inlineedit&area_id='+area_id;
+		}
+
+
+		$.getScript( script,function(data){
+			if( data === 'false' ){
+				alert($gp.error);
+				$gp.loaded();
+			}
+		});
+
+	});
+};
+
+
+/**
+ * Get the current editing div
+ *
+ */
+$gp.CurrentDiv = function(){
+	return $('#ExtraEditArea'+$gp.curr_edit_id);
+}
+
+
+/**
+ * Cache the current editing interface
+ *
+ */
+$gp.CacheInterface = function(callback){
+
+	$gp.CurrentDiv().removeClass('gp_edit_current');
+
+	var $wrap 				= $('#ckeditor_wrap');
+	var html				= $wrap.html();
+
+
+	//if gp_editing is not defined then we don't have anything to cache yet
+	if( typeof(gp_editing) == 'undefined' ){
+		callback.call();
 		return;
 	}
 
-	$gp.LoadStyle('/include/css/inline_edit.css');
 
+	//only continue if we can save
+	gp_editing.save_changes(function(){
 
-	var script	= strip_from(this.href,'#');
-	script += '&gpreq=json&defined_objects='+$gp.DefinedObjects();
+		var $interface						= $('#ckeditor_area').detach();
+		$gp.interface[$gp.curr_edit_id]		= $interface;
+		$gp.editors[$gp.curr_edit_id]		= gp_editor;
 
-	if( rel == 'manage_sections' ){
-		$gp.LoadStyle('/include/css/manage_sections.css');
-	}else{
-		var id			= $this.data('gp-area-id');
-		script			+= '&cmd=inlineedit&area_id='+id;
-	}
+		$('#ckeditor_wrap').html( html );
 
-	$.getScript( script,function(data){
-		if( data === 'false' ){
-			alert($gp.error);
-			$gp.loaded();
-		}
+		callback.call();
 	});
-};
+}
 
 
 /**

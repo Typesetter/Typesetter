@@ -2,8 +2,6 @@
 
 var gp_editing = {
 
-	interface:		[],		// storage for editing interfaces
-	editors:		[],		// storage for editing objects
 	is_dirty:		false,	// true if we know gp_editor has been edited
 
 
@@ -60,10 +58,15 @@ var gp_editing = {
 
 		if( !gp_editor ) return;
 
+		if( !gp_editing.IsDirty() ){
+			callback.call();
+			return;
+		}
+
 		$('#ckeditor_wrap').addClass('ck_saving');
 
 
-		var edit_div	= gp_editing.CurrentDiv();
+		var edit_div	= $gp.CurrentDiv();
 		var path		= strip_from(gp_editor.save_path,'#');
 		var query		= '';
 
@@ -71,7 +74,7 @@ var gp_editing = {
 			query = strip_to(path,'?')+'&';
 		}
 
-		query			+= 'cmd=save_inline&section='+edit_div.data('gp-section')+'&';
+		query			+= 'cmd=save_inline&section='+edit_div.data('gp-section')+'&req_time='+req_time+'&';
 		query			+= gp_editor.gp_saveData();
 
 
@@ -81,6 +84,9 @@ var gp_editing = {
 			if( !gp_editor ) return;
 
 			gp_editor.resetDirty();
+			gp_editing.is_dirty = false;
+			gp_editing.DisplayDirty();
+
 			$('#ckeditor_wrap').removeClass('ck_saving');
 
 
@@ -174,69 +180,22 @@ var gp_editing = {
 
 
 	/**
-	 * Cache Interface
-	 *
-	 */
-	CacheInterface: function(){
-
-		gp_editing.CurrentDiv().removeClass('gp_edit_current');
-
-		var $wrap 				= $('#ckeditor_wrap');
-		var html				= $wrap.html();
-
-		var $interface						= $('#ckeditor_area').detach();
-		this.interface[$gp.last_edit_id]	= $interface;
-		this.editors[$gp.last_edit_id]		= gp_editor;
-
-		$('#ckeditor_wrap').html( html );
-	},
-
-
-	/**
 	 * Restore Cached
 	 *
 	 */
 	RestoreCached: function(id){
 
-		if( typeof(this.interface[id]) != 'object' ){
+		if( typeof($gp.interface[id]) != 'object' ){
 			return false;
 		}
 
-		$('#ckeditor_wrap').html('').append(this.interface[id]);
-		gp_editor			= this.editors[id];
-		$gp.last_edit_id	= id;
+		$('#ckeditor_wrap').html('').append($gp.interface[id]);
+		gp_editor			= $gp.editors[id];
+		$gp.curr_edit_id	= id;
 
-		gp_editing.CurrentDiv().addClass('gp_edit_current');
+		$gp.CurrentDiv().addClass('gp_edit_current');
 
 		return true;
-	},
-
-
-	/**
-	 * Get the current
-	 *
-	 */
-	CurrentDiv: function(){
-		return $('#ExtraEditArea'+$gp.last_edit_id);
-	},
-
-
-	/**
-	 * Saved
-	 *
-	 */
-	AutoSave: function(){
-
-		if( !gp_editing.IsDirty() ){
-			gp_editing.DisplayDirty();
-			return;
-		}
-
-		//mark as saved
-		gp_editing.save_changes(function(){
-			gp_editing.is_dirty = false;
-			gp_editing.DisplayDirty();
-		});
 	},
 
 
@@ -276,17 +235,25 @@ var gp_editing = {
 
 }
 
-$gp.links.ck_close = gp_editing.close_editor;
-$gp.links.ck_save = function(evt,arg){
-	evt.preventDefault();
+	/**
+	 * Close button
+	 *
+	 */
+	$gp.links.ck_close = gp_editing.close_editor;
 
-	gp_editing.save_changes(function(){
-		if( arg && arg == 'ck_close' ){
-			gp_editing.close_editor(evt);
-		}
-	});
+	/**
+	 * Save button clicks
+	 *
+	 */
+	$gp.links.ck_save = function(evt,arg){
+		evt.preventDefault();
 
-}
+		gp_editing.save_changes(function(){
+			if( arg && arg == 'ck_close' ){
+				gp_editing.close_editor(evt);
+			}
+		});
+	}
 
 
 	/**
@@ -343,13 +310,14 @@ $gp.links.ck_save = function(evt,arg){
 	 */
 	$gp.$doc.on('click','.gp_editing:not(.gp_edit_current)',function(){
 		var area_id = $(this).data('gp-area-id');
-		gp_editing.CacheInterface();
-		gp_editing.RestoreCached(area_id);
+		$gp.CacheInterface(function(){
+			gp_editing.RestoreCached(area_id);
+		});
 	});
 
 
 	// auto save
-	window.setInterval(gp_editing.AutoSave,5000);
+	window.setInterval(gp_editing.save_changes,5000);
 
 
 	// check dirty

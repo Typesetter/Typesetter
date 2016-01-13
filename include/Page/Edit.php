@@ -860,7 +860,7 @@ class Edit extends \gp\Page{
 		}
 
 		//use the request time
-		$time = $_REQUEST['revision']; //the last-modified time of the page when the load is generated
+		$time = $_REQUEST['req_time'];
 
 
 		//backup file name
@@ -1270,7 +1270,7 @@ class Edit extends \gp\Page{
 			}
 
 			$attrs			= array('title'=>$title_attr,'data-cmd'=>'inline_edit_generic','data-arg'=>$section_data['type'].'_inline_edit');
-			$link			= \gp\tool\Output::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$curr_section_num.'&amp;revision='.$this->fileModTime,$attrs);
+			$link			= \gp\tool\Output::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$curr_section_num,$attrs);
 
 			$section_data['attributes']['data-gp-area-id']		= $edit_index;
 

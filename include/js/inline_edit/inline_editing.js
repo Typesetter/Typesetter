@@ -147,7 +147,7 @@ var gp_editing = {
 		}
 
 		var c = 'selected'
-		var h = '<div id="cktabs">';
+		var h = '<div id="cktabs" class="cktabs">';
 		$areas.each(function(){
 			h += '<a class="ckeditor_control '+c+'" data-cmd="SwitchEditArea" data-arg="#'+this.id+'">'+this.title+'</a>';
 			c = '';
@@ -277,7 +277,9 @@ var gp_editing = {
 	 */
 	$gp.links.SwitchEditArea = function(evt,arg){
 
-		$gp.links.inline_edit_generic.call(this,evt,'manage_sections');
+		if( this.href ){
+			$gp.links.inline_edit_generic.call(this,evt,'manage_sections');
+		}
 
 		var $this = $(this);
 
@@ -328,5 +330,7 @@ var gp_editing = {
 
 
 	// check dirty
-	$gp.$doc.on('keyup click',gp_editing.DisplayDirty);
+	$gp.$doc.on('keyup mouseup',function(){
+		window.setTimeout(gp_editing.DisplayDirty,100);
+	});
 

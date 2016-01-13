@@ -345,19 +345,6 @@ body #gp_current_image td{
 	position:relative;
 	}
 
-/**
- * Docked styles
- *
- */
-#ckeditor_top,
-#gp_image_area,
-#gp_edit_select,
-#ckeditor_save,
-#gp_source_options,
-#gp_option_area{
-	display:inline-block;
-	}
-
 
 /**
  * Multiple images

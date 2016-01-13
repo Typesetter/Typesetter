@@ -191,15 +191,15 @@
  * Tabs
  *
  */
-#cktabs .ckeditor_control{
+#ckeditor_wrap .cktabs .ckeditor_control{
 	margin-right:-1px !important;
 	margin-left:0 !important;
 	border-radius:0;
 	}
-#cktabs .ckeditor_control:first-child{
+#ckeditor_wrap .cktabs .ckeditor_control:first-child{
 	border-radius:5px 0 0 5px;
 	}
-#cktabs .ckeditor_control:last-child{
+#ckeditor_wrap .cktabs .ckeditor_control:last-child{
 	border-radius:0 5px 5px 0;
 	}
 

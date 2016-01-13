@@ -772,13 +772,14 @@ namespace gp\admin{
 
 			//inline editor html
 			echo '<div id="ckeditor_wrap" class="nodisplay">';
-			echo '<div id="cktabs">';
+			echo '<div class="cktabs">';
 			echo \gp\tool::Link($page->title,'Organize','cmd=ManageSections',array('class'=>'ckeditor_control','data-cmd'=>'SwitchEditArea','data-arg'=>'#section_sorting'));
 			echo \gp\tool::Link($page->title,'Add','cmd=ManageSections',array('class'=>'ckeditor_control','data-cmd'=>'SwitchEditArea','data-arg'=>'#new_section_links'));
 			echo '</div>';
 
 			echo '<div id="ck_area_wrap">';
 			echo '<div id="ckeditor_area">';
+				echo '<div class="toolbar"></div>';
 				echo '<div class="tools">';
 				echo '<div id="ckeditor_top"></div>';
 				echo '<div id="ckeditor_controls"></div>';

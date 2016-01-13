@@ -316,12 +316,19 @@ var gp_editing = {
 	/**
 	 * Switch between edit areas
 	 *
-	 */
 	$gp.$doc.on('click','.gp_editing:not(.gp_edit_current)',function(){
 		var area_id = $(this).data('gp-area-id');
 		$gp.CacheInterface(function(){
 			gp_editing.RestoreCached(area_id);
 		});
+	});
+	 */
+
+	$gp.$doc.on('click','.editable_area',function(evt){
+
+		// index.php/test?section=0&gpreq=json&defined_objects=&cmd=inlineedit&area_id=1&section=0
+		// need to get the edit link
+		//$gp.links.inline_edit_generic.call(this,evt);
 	});
 
 

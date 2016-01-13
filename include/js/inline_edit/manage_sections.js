@@ -81,7 +81,7 @@
 		resetDirty:function(){
 
 			$('#gpx_content').find('.editable_area').each( function(i){
-				$(this).data('gp-section',i).attr('data-gp-section',i).removeClass('new_section');
+				$(this).data('gp-section',i).attr('data-gp-section',i);
 			});
 
 			this.saved_data	= this.gp_saveData();
@@ -322,9 +322,26 @@
 		 */
 		ucfirst: function( str ){
 			return str.charAt(0).toUpperCase() + str.slice(1);
-		}
+		},
 
+		/**
+		 * Assign a new id to a section
+		 *
+		 */
+		NewSectionId: function(new_area){
+
+			var area_id		= 1;
+			var new_id;
+			do{
+				area_id++;
+				new_id = 'ExtraEditArea'+area_id;
+
+			}while( document.getElementById(new_id) || document.getElementById('ExtraEditLink'+area_id) );
+
+			new_area.attr('id',new_id).data('gp-area-id',area_id);
+		}
 	}
+
 
 	/**
 	 * Preview new section
@@ -398,9 +415,17 @@
 		$this.data('response',false);
 
 
-		var section = $this.data('preview-section');
-		$(section).addClass('editable_area').removeClass('temporary-section')
-				.find('.temporary-section').addClass('editable_area').removeClass('temporary-section');
+		var section		= $this.data('preview-section');
+		var $section	= $(section).addClass('editable_area').removeClass('temporary-section');
+		gp_editor.NewSectionId($section);
+
+
+		//child sections
+		$section.find('.temporary-section').each(function(){
+			var $child = $(this).addClass('editable_area').removeClass('temporary-section');
+			gp_editor.NewSectionId($child);
+		});
+
 
 		gp_editor.InitSorting();
 		$this.removeClass('previewing').trigger('mouseenter');
@@ -455,31 +480,12 @@
 	/**
 	 * Copy selected section
 	 *
-	$gp.links.CopySection = function(evt){
-		var from_area	= gp_editor.GetArea( $(this).closest('li') );
-		var new_area	= from_area.clone();
-		var id			= 'Copied_'+Math.floor((Math.random() * 100000) + 1)+'_'+new_area.attr('id');
-		new_area.attr('id',id).addClass('new_section');
-		from_area.after(new_area);
-		gp_editor.InitSorting();
-	}
 	 */
-
 	$gp.links.CopySection = function(evt){
 		var from_area	= gp_editor.GetArea( $(this).closest('li') );
 		var new_area	= from_area.clone();
 
-		//get new id
-		var area_id		= parseInt(new_area.data('gp-area-id'));
-		var new_id;
-		do{
-
-			area_id++;
-			new_id = 'ExtraEditArea'+area_id;
-		}while( document.getElementById(new_id) );
-
-
-		new_area.attr('id',new_id).addClass('new_section').data('gp-area-id',area_id);
+		gp_editor.NewSectionId(new_area);
 		from_area.after(new_area);
 		gp_editor.InitSorting();
 	}

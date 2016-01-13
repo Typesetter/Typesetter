@@ -780,9 +780,9 @@ namespace gp\admin{
 				echo '<div id="ckeditor_top"></div>';
 
 				echo '<div id="ckeditor_controls"><div id="ckeditor_save">';
-				echo '<a data-cmd="ck_save" class="ckeditor_control">'.$langmessage['save'].'</a>';
+				echo '<a data-cmd="ck_save" class="ckeditor_control ck_save">'.$langmessage['save'].'</a>';
+				echo '<span class="ck_saved">'.$langmessage['saved'].'</span>';
 				echo '<a data-cmd="ck_close" class="ckeditor_control">'.$langmessage['Close'].'</a>';
-				echo '<a data-cmd="ck_save" data-arg="ck_close" class="ckeditor_control">'.$langmessage['Save & Close'].'</a>';
 				echo '</div></div>';
 
 				echo '<div id="ckeditor_bottom"></div>';

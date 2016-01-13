@@ -47,27 +47,12 @@
 	width: 30px;
 	}
 
-
+#ckeditor_area .ck_saved,
 #ckeditor_area .ckeditor_control{
-
 	font-size:12px !important;
 	text-decoration:none !important;
-
-	border:1px solid #fafafa;
-	border-color: #fafafa  #fafafa  #dad9d9 #dad9d9 !important;
-
-	background-color:#fafafa;
-	background: -moz-linear-gradient(top, #fff, #f7f7f7);
-	background: -webkit-linear-gradient(top, #fff, #f7f7f7);
-	background: -o-linear-gradient(top, #fff, #f7f7f7);
-	background: -ms-linear-gradient(top, #fff, #f7f7f7);
-	background: linear-gradient(top, #fff, #f7f7f7);
-
 	display:inline-block;
-	border-radius:5px;
 	margin: 0 3px 4px 0 !important;
-	color:#444 !important;
-	text-shadow:1px 1px 0 #fff;
 
 	white-space:nowrap;
 	text-overflow:ellipsis;
@@ -81,6 +66,28 @@
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+	}
+
+#ckeditor_area .ckeditor_control{
+
+
+	border:1px solid #fafafa;
+	border-color: #fafafa  #fafafa  #dad9d9 #dad9d9 !important;
+
+	background-color:#fafafa;
+	background: -moz-linear-gradient(top, #fff, #f7f7f7);
+	background: -webkit-linear-gradient(top, #fff, #f7f7f7);
+	background: -o-linear-gradient(top, #fff, #f7f7f7);
+	background: -ms-linear-gradient(top, #fff, #f7f7f7);
+	background: linear-gradient(top, #fff, #f7f7f7);
+
+	border-radius:5px;
+	color:#444 !important;
+	text-shadow:1px 1px 0 #fff;
+	}
+
+#ckeditor_area .ckeditor_control.nodisplay{
+	display:none;
 	}
 
 #ckeditor_area .ckeditor_control.selected{
@@ -119,6 +126,21 @@
 #ckeditor_area a.half_width,
 #ckeditor_area a.full_width{
 	text-align:center;
+	}
+
+
+/**
+ * Save indications
+ *
+ */
+#ckeditor_wrap.not_saved .ck_save,
+#ckeditor_wrap .ck_saved{
+	display:inline-block;
+	}
+
+#ckeditor_wrap .ck_save,
+#ckeditor_wrap.not_saved .ck_saved{
+	display:none;
 	}
 
 

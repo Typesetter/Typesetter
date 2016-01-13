@@ -4,6 +4,7 @@ var gp_editing = {
 
 	interface:		[],		// storage for editing interfaces
 	editors:		[],		// storage for editing objects
+	is_dirty:		false,	// true if we know gp_editor has been edited
 
 
 	get_path:function(id_num){
@@ -55,8 +56,9 @@ var gp_editing = {
 	 * Close after the save if 'Save & Close' was clicked
 	 *
 	 */
-	save_changes:function(evt,arg){
-		evt.preventDefault();
+	save_changes:function(callback){
+
+		console.log('save changes');
 
 		if( !gp_editor ) return;
 
@@ -77,12 +79,15 @@ var gp_editing = {
 
 		//the saved function
 		gpresponse.ck_saved = function(){
+			console.log('saved');
 			if( !gp_editor ) return;
 
 			gp_editor.updateElement();
 			gp_editor.resetDirty();
-			if( arg == 'ck_close' ){
-				gp_editing.close_editor(evt);
+			console.log('resetDirty');
+
+			if( typeof(callback) == 'function' ){
+				callback.call();
 			}
 		}
 
@@ -215,12 +220,77 @@ var gp_editing = {
 	 */
 	CurrentDiv: function(){
 		return $('#ExtraEditArea'+$gp.last_edit_id);
+	},
+
+
+	/**
+	 * Saved
+	 *
+	 */
+	AutoSave: function(){
+
+		if( !gp_editing.IsDirty() ){
+			gp_editing.DisplayDirty();
+			return;
+		}
+
+		//mark as saved
+		gp_editing.save_changes(function(){
+			gp_editing.is_dirty = false;
+			gp_editing.DisplayDirty();
+		});
+	},
+
+
+	/**
+	 * Return true if the editor has been edited
+	 *
+	 */
+	IsDirty: function(){
+
+		gp_editing.is_dirty = true;
+
+		if( typeof(gp_editor.checkDirty) == 'undefined' ){
+			console.log('no checkDirty');
+			return true;
+		}
+
+		if( gp_editor.checkDirty() ){
+			console.log('checkdirty returns true');
+			return true;
+		}
+
+		gp_editing.is_dirty = false;
+		return false;
+	},
+
+
+	/**
+	 * Hide the "Saved" indicator if the
+	 *
+	 */
+	DisplayDirty: function(){
+
+		if( gp_editing.is_dirty || gp_editing.IsDirty() ){
+			$('#ckeditor_wrap').addClass('not_saved');
+		}else{
+			$('#ckeditor_wrap').removeClass('not_saved');
+		}
 	}
 
 }
 
 $gp.links.ck_close = gp_editing.close_editor;
-$gp.links.ck_save = gp_editing.save_changes;
+$gp.links.ck_save = function(evt,arg){
+	evt.preventDefault();
+
+	gp_editing.save_changes(function(){
+		if( arg && arg == 'ck_close' ){
+			gp_editing.close_editor(evt);
+		}
+	});
+
+}
 
 
 	/**
@@ -281,4 +351,11 @@ $gp.links.ck_save = gp_editing.save_changes;
 		gp_editing.RestoreCached(area_id);
 	});
 
+
+	// auto save
+	window.setInterval(gp_editing.AutoSave,5000);
+
+
+	// check dirty
+	$gp.$doc.on('keyup click',gp_editing.DisplayDirty);
 

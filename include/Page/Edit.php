@@ -541,7 +541,6 @@ class Edit extends \gp\Page{
 		}
 
 		$this->ajaxReplace[] = array('ck_saved','','');
-		msg($langmessage['SAVED']);
 
 
 		//update gallery info
@@ -620,7 +619,6 @@ class Edit extends \gp\Page{
 		}
 
 		$this->ajaxReplace[] = array('ck_saved','','');
-		msg($langmessage['SAVED']);
 
 
 		//update gallery information

@@ -80,7 +80,6 @@ var gp_editing = {
 
 			if( !gp_editor ) return;
 
-			gp_editor.updateElement();
 			gp_editor.resetDirty();
 			$('#ckeditor_wrap').removeClass('ck_saving');
 

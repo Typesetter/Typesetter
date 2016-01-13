@@ -9,8 +9,6 @@
 
 		saved_data: '',
 
-		destroy:function(){},
-
 		checkDirty:function(){
 			var curr_data	= this.gp_saveData();
 			if( this.saved_data != curr_data ){
@@ -88,8 +86,6 @@
 
 			this.saved_data	= this.gp_saveData();
 		},
-
-		updateElement:function(){},
 
 		/**
 		 * Init Editor

@@ -9,7 +9,6 @@
 
 	function gp_init_inline_edit(area_id,section_object){
 
-		var current_content = false;
 		var cache_value = '';
 		var save_path = gp_editing.get_path(area_id);
 		var edit_div = gp_editing.get_edit_area(area_id);
@@ -21,9 +20,6 @@
 		gp_editor = {
 			save_path: save_path,
 
-			destroy:function(){
-				edit_div.html(current_content);
-			},
 			checkDirty:function(){
 				var curr_val = gp_editor.gp_saveData();
 				if( curr_val != cache_value ){
@@ -37,9 +33,6 @@
 			},
 			resetDirty:function(){
 				cache_value = gp_editor.gp_saveData();
-			},
-			updateElement:function(){
-				current_content = edit_div.html();
 			}
 		}
 

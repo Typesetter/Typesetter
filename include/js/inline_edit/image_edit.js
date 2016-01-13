@@ -70,8 +70,7 @@
 			},
 			resetDirty:function(){
 				gp_editor.saved_data	= gp_editor.gp_saveData();
-			},
-			updateElement:function(){}
+			}
 		}
 
 		LoadImageOptions();

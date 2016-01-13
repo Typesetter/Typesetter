@@ -117,8 +117,6 @@
 			data.find('.gp_nosave').remove();
 			data = data.html();
 			return $.param(args)+'&'+options+'&gpcontent='+encodeURIComponent(data);
-		},
-		updateElement:function(){
 		}
 	};
 
@@ -149,13 +147,6 @@
 		}
 
 		gp_editor.save_path = save_path;
-
-		gp_editor.destroy = function(){
-			sortable_area.filter(':ui-sortable').sortable('destroy');
-			edit_div.html(content_cache.html());
-			sortable_area.children('li').unbind('mouseenter.gp_edit, mouseleave.gp_edit, mousedown.gp_edit');
-			edit_links.remove();
-		};
 
 		gp_editor.checkDirty = function(){
 

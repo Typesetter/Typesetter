@@ -429,8 +429,6 @@
 		var $this = $(this);
 		evt.preventDefault();
 
-		console.log('add section');
-
 		//change the previewed section to an editable area
 		if( !$this.hasClass('previewing') ){
 			console.log('not previewing');
@@ -450,7 +448,7 @@
 
 
 		gp_editor.InitSorting();
-		$this.removeClass('previewing').trigger('mouseenter');
+		$this.removeClass('previewing').trigger('mousemove');
 	}
 
 

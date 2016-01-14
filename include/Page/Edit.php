@@ -356,7 +356,7 @@ class Edit extends \gp\Page{
 	 * Send multiple sections to the client
 	 *
 	 */
-	public function NewNestedSection($request){
+	public function NewNestedSection($request, $return = false){
 		global $langmessage;
 		$this->ajaxReplace				= array();
 
@@ -384,8 +384,7 @@ class Edit extends \gp\Page{
 				$new_request = array();
 				$new_request['types'] = $type[0];
 				$new_request['wrapper_class'] = isset($type[1]) ? $type[1] : '';
-				$new_request['recursion'] = true;
-				$output .= $this->NewNestedSection($new_request);
+				$output .= $this->NewNestedSection($new_request, true);
 			}else{
 				$class = '';
 				if( strpos($type,'.') ){
@@ -397,11 +396,11 @@ class Edit extends \gp\Page{
 		}
 		$output .= '</div>';
 
-		if( !isset($request['recursion']) ){
-			$this->ajaxReplace[] 	= array('PreviewSection','',$output);
-		}else{
+		if( $return ){
 			return $output;
 		}
+
+		$this->ajaxReplace[] 	= array('PreviewSection','',$output);
 	}
 
 	public function GetNewSection($type, $class = ''){
@@ -804,12 +803,17 @@ class Edit extends \gp\Page{
 
 		//links used for new sections
 		if( count($types) > 1 ){
-			$q = array('cmd'=> 'NewNestedSection','types' => $types,'wrapper_class'=>$wrapper_class);
+			$q					= array('cmd'=> 'NewNestedSection','types' => $types,'wrapper_class'=>$wrapper_class);
+			$preview_content	= $page->NewNestedSection($q, true);
 		}else{
-			$q = array('cmd'=> 'NewSectionContent','type' => $type );
+			$q					= array('cmd'=> 'NewSectionContent','type' => $type );
+			$preview_content	= $page->GetNewSection($type);
 		}
 
-		return '<div>'.\gp\tool::Link($page->title,$label,http_build_query($q,'','&amp;'),array('data-cmd'=>'AddSection','class'=>'preview_section')).'</div>';
+
+		$attrs					= array('data-cmd'=>'AddSection','class'=>'preview_section','data-response'=>$preview_content);
+
+		return '<div>'.\gp\tool::Link($page->title,$label,http_build_query($q,'','&amp;'),$attrs).'</div>';
 	}
 
 

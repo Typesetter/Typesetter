@@ -9,6 +9,8 @@
 
 		saved_data: '',
 
+		preview_timeout: null,
+
 		checkDirty:function(){
 			var curr_data	= this.gp_saveData();
 			if( this.saved_data != curr_data ){
@@ -343,7 +345,32 @@
 			//add edit link (need to initiate editing and get the save path)
 			$('<a href="?" class="nodisplay" data-cmd="inline_edit_generic" data-gp-area-id="'+area_id+'" id="ExtraEditLink'+area_id+'">').appendTo('#gp_admin_html');
 
+		},
+
+		/**
+		 * Display a preview section
+		 *
+		 */
+		PreviewSection: function(content){
+
+			var $new_content	= $(content);
+
+			$new_content
+				.find('.editable_area')
+				.addClass('temporary-section')
+				.removeClass('editable_area');
+
+			$new_content
+				.addClass('temporary-section')
+				.removeClass('editable_area')
+				.appendTo('#gpx_content')
+				.hide()
+				.delay(300).slideDown();
+
+			var node = $new_content.get(0);
+			$this.data('preview-section',node);
 		}
+
 	}
 
 
@@ -351,16 +378,26 @@
 	 * Preview new section
 	 *
 	 */
-	$(document).on('mouseenter','.preview_section',function(){
+	$(document).on('mousemove','.preview_section',function(){
 		var $this = $(this);
 
-		if( !$this.hasClass('previewing') ){
+		if( gp_editor.preview_timeout ){
+			clearTimeout(gp_editor.preview_timeout);
+		}
 
-			//remove other preview
-			$('.previewing').removeClass('previewing');
-			$('.temporary-section').stop().slideUp(function(){
-				$(this).remove();
-			});
+		if( $this.hasClass('previewing') ){
+			return;
+		}
+
+
+		//remove other preview
+		$('.previewing').removeClass('previewing');
+		$('.temporary-section').stop().slideUp(function(){
+			$(this).remove();
+		});
+
+
+		gp_editor.preview_timeout = setTimeout(function(){
 
 			//scroll the page
 			var $last	= $('#gpx_content .editable_area:last');
@@ -371,26 +408,16 @@
 			//begin new preview
 			$this.addClass('previewing');
 
-			var that	= this;
-			var href	= this.href + '&preview='+new Date().getTime();
-			href		= $gp.jPrep(href);
+			gp_editor.PreviewSection($this.data('response'));
+
+		},200);
 
 
-			//cached response
-			var cached	= $this.data('response');
-			if( cached ){
-				$gp.Response.call(that,cached);
-				return;
-			}
-
-			//get a new response and cache it
-			$.getJSON(href,function(data,textStatus,jqXHR){
-				$this.data('response',data);
-				$gp.Response.call(that,data,textStatus,jqXHR);
-			});
-
-		}
 	}).on('mouseleave','.preview_section',function(){
+
+		if( gp_editor.preview_timeout ){
+			clearTimeout(gp_editor.preview_timeout);
+		}
 
 		$(this).removeClass('previewing');
 
@@ -415,10 +442,6 @@
 			return;
 		}
 
-		//clear the cache
-		$this.data('response',false);
-
-
 		var section		= $this.data('preview-section');
 		var $section	= $(section).addClass('editable_area').removeClass('temporary-section');
 		gp_editor.NewSectionId($section);
@@ -433,37 +456,6 @@
 
 		gp_editor.InitSorting();
 		$this.removeClass('previewing').trigger('mouseenter');
-	}
-
-
-	/**
-	 * Handle preview section response from server
-	 *
-	 */
-	$gp.response.PreviewSection = function(data){
-
-		var $this = $(this);
-		if( !$this.hasClass('previewing') ){
-			return;
-		}
-
-
-		var $new_content	= $(data.CONTENT);
-
-		$new_content
-			.find('.editable_area')
-			.addClass('temporary-section')
-			.removeClass('editable_area');
-
-		$new_content
-			.addClass('temporary-section')
-			.removeClass('editable_area')
-			.appendTo('#gpx_content')
-			.hide()
-			.delay(300).slideDown();
-
-		var node = $new_content.get(0);
-		$this.data('preview-section',node);
 	}
 
 

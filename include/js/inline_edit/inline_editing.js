@@ -65,8 +65,13 @@ var gp_editing = {
 			return;
 		}
 
+		var $wrap = $('#ckeditor_wrap');
 
-		$('#ckeditor_wrap').addClass('ck_saving');
+		if( $wrap.hasClass('ck_saving') ){
+			return;
+		}
+
+		$wrap.addClass('ck_saving');
 
 
 		var edit_div	= $gp.CurrentDiv();
@@ -75,6 +80,7 @@ var gp_editing = {
 
 		if( path.indexOf('?') > 0 ){
 			query = strip_to(path,'?')+'&';
+			path = strip_from(path,'?');
 		}
 
 		query			+= 'cmd=save_inline&section='+edit_div.data('gp-section')+'&req_time='+req_time+'&';
@@ -90,7 +96,7 @@ var gp_editing = {
 			gp_editing.is_dirty = false;
 			gp_editing.DisplayDirty();
 
-			$('#ckeditor_wrap').removeClass('ck_saving');
+			$wrap.removeClass('ck_saving');
 
 
 			if( typeof(callback) == 'function' ){
@@ -98,7 +104,21 @@ var gp_editing = {
 			}
 		}
 
-		$gp.postC( path, query);
+
+		query += '&verified='+encodeURIComponent(post_nonce);
+		query += '&gpreq=json&jsoncallback=?';
+
+		$.ajax({
+			type: 'POST',
+			url: path,
+			data: query,
+			success: $gp.Response,
+			dataType: 'json',
+			complete: function( jqXHR, textStatus ){
+				$wrap.removeClass('ck_saving');
+			},
+		});
+
 	},
 
 
@@ -108,10 +128,10 @@ var gp_editing = {
 	 *
 	 */
 	editor_tools:function(){
-
+		$('#ckeditor_area .toolbar').html('');
 		$('#ckeditor_top').html('');
 		$('#ckeditor_bottom').html('');
-		$('#ckeditor_wrap').show().addClass('show_editor');
+		$('#ckeditor_wrap').addClass('show_editor');
 	},
 
 

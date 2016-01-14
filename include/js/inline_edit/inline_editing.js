@@ -77,6 +77,7 @@ var gp_editing = {
 		var edit_div	= $gp.CurrentDiv();
 		var path		= strip_from(gp_editor.save_path,'#');
 		var query		= '';
+		var save_data	= gp_editor.gp_saveData();
 
 		if( path.indexOf('?') > 0 ){
 			query = strip_to(path,'?')+'&';
@@ -84,7 +85,10 @@ var gp_editing = {
 		}
 
 		query			+= 'cmd=save_inline&section='+edit_div.data('gp-section')+'&req_time='+req_time+'&';
-		query			+= gp_editor.gp_saveData();
+		query			+= save_data;
+		query			+= '&verified='+encodeURIComponent(post_nonce);
+		query			+= '&gpreq=json&jsoncallback=?';
+
 
 
 		//the saved function
@@ -92,21 +96,18 @@ var gp_editing = {
 
 			if( !gp_editor ) return;
 
-			gp_editor.resetDirty();
-			gp_editing.is_dirty = false;
-			gp_editing.DisplayDirty();
-
-			$wrap.removeClass('ck_saving');
-
+			//if nothing has changed since saving
+			if( gp_editor.gp_saveData() == save_data ){
+				gp_editor.resetDirty();
+				gp_editing.is_dirty = false;
+				gp_editing.DisplayDirty();
+			}
 
 			if( typeof(callback) == 'function' ){
 				callback.call();
 			}
 		}
 
-
-		query += '&verified='+encodeURIComponent(post_nonce);
-		query += '&gpreq=json&jsoncallback=?';
 
 		$.ajax({
 			type: 'POST',

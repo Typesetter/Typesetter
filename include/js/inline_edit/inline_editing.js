@@ -384,7 +384,7 @@ var gp_editing = {
 	 */
 	$gp.links.ToggleEditor = function(){
 		$('#ckeditor_wrap').toggleClass('show_editor');
-	}
+	};
 
 
 

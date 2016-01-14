@@ -1,14 +1,5 @@
 
 
-#ckeditor_area{
-	width:260px;
-	}
-
-#ckeditor_bottom{
-	display:none !important;
-	}
-
-
 #ckeditor_area .ck_reset_size{
 	border: 1px solid #CCCCCC !important;
 	font-size: 18px !important;
@@ -20,7 +11,6 @@
 
 /* the position is left leaning to allow for a scrollbar */
 #gp_gallery_avail_imgs{
-	width:240px;
 	height:220px;
 	overflow:auto;
 	overflow-x:hidden;
@@ -58,10 +48,12 @@
 	-khtml-box-shadow: 1px 1px 4px #777;
 	border-color: #bbb;
 	}
+
 #gp_gallery_avail_imgs span.expand:nth-child(4n+1){
 	margin-right:-19px;
 	margin-left:-2px;
 	}
+
 #gp_gallery_avail_imgs span.expand:nth-child(4n+4){
 	margin-left:-19px;
 	margin-right:-2px;
@@ -99,9 +91,6 @@
 
 #gp_folder_options{
 	display:inline-block;
-	/* float:left;
-	width:252px;
-	*/
 	}
 .gp_upload_form{
 	display:inline-block;
@@ -200,10 +189,10 @@
  */
 #ckeditor_area .gp_edit_select{
 	padding: 0 !important;
+	margin-right:0 !important;
 	position: relative;
-	width: 250px;
 	height:auto;
-
+	display:block;
 	}
 
 .gp_edit_select_options{
@@ -276,7 +265,6 @@
  *
  */
 #gp_current_image{
-	width:240px;
 	overflow:auto;
 	overflow-x:hidden;
 	margin:0 5px 5px 0;
@@ -284,13 +272,10 @@
 	background-color:#fafafa;
 	border:1px solid #fff;
 	border-radius: 5px;
-	float:left;
 	}
 #gp_image_wrap{
-	width:237px;
 	text-align:center;
 	display:block;
-	float:left;
 	}
 #gp_current_image img{
 	max-width:237px;
@@ -303,41 +288,33 @@
 	}
 #ckeditor_area .ck_input,
 #gp_current_image .ck_input{
-	width:40px;
+	width:35px;
 	border:1px solid #ccc;
 	padding:2px 3px;
 	border-radius: 3px;
 	text-align:right;
+	font-size:13px;
 	line-height:17px;
 	height:auto;
 	margin:0;
 	}
-#gp_size_options,
-#gp_current_image table{
-	float:left;
-	}
+
 #gp_size_options{
 	margin-bottom:5px;
 	}
+
 body #gp_size_options td,
 body #gp_current_image td{
 	text-align:right;
 	vertical-align:middle;
-	width:59px;
+	padding:5px 3px;
+	font-size:11px;
+	color:#666;
 	}
 #gp_size_options td:nth-child(2n),
 #gp_current_image td:nth-child(2n){
 	text-align:left;
 	}
-#ckeditor_area b{
-	display:block;
-	margin-top:5px;
-    display: block;
-    padding: 4px 0;
-    width: 120px;
-    }
-
-
 
 .gp_image_edit{
 	background-repeat:no-repeat;

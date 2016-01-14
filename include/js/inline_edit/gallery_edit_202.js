@@ -200,7 +200,7 @@
 
 			LoadImages(false,gp_editor);
 
-			var option_area = $('<div id="gp_gallery_options">').prependTo('#ckeditor_save');
+			var option_area = $('<div id="gp_gallery_options">').appendTo('#ckeditor_area');
 
 
 			/**

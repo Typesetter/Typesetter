@@ -84,8 +84,6 @@ $gp.links.inline_edit_generic = function(evt,arg){
 			script		+= '&cmd=inlineedit&area_id='+area_id+'&section='+$edit_div.data('gp-section');
 		}
 
-		console.log(script);
-
 
 		$.getScript( script,function(data){
 			if( data === 'false' ){
@@ -134,6 +132,7 @@ $gp.CacheInterface = function(callback){
 		$gp.editors[$gp.curr_edit_id]		= gp_editor;
 
 		$('#ck_area_wrap').html( html );
+		$('.cktabs .ckeditor_control.selected').removeClass('selected');
 
 
 		callback.call();

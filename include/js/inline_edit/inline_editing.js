@@ -108,7 +108,6 @@ var gp_editing = {
 	 *
 	 */
 	editor_tools:function(){
-
 		$('#ckeditor_top').html('');
 		$('#ckeditor_bottom').html('');
 		$('#ckeditor_wrap').show();
@@ -283,12 +282,11 @@ var gp_editing = {
 
 		var $this = $(this);
 
-		$('.ckeditor_control.selected').removeClass('selected');
+		$('.cktabs .ckeditor_control.selected').removeClass('selected');
 		$this.addClass('selected');
 
 
 		$('.inline_edit_area').hide();
-
 		$( $this.data('arg') ).show();
 	}
 

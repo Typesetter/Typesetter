@@ -316,20 +316,16 @@ var gp_editing = {
 	/**
 	 * Switch between edit areas
 	 *
-	$gp.$doc.on('click','.gp_editing:not(.gp_edit_current)',function(){
-		var area_id = $(this).data('gp-area-id');
-		$gp.CacheInterface(function(){
-			gp_editing.RestoreCached(area_id);
-		});
-	});
 	 */
-
 	$gp.$doc.on('click','.editable_area',function(evt){
 
 		//get the edit link
 		var area_id		= $(this).data('gp-area-id');
 		var edit_link	= $('#ExtraEditLink'+area_id);
 
+		if( !edit_link.length ){
+			edit_link = $('<a href="?" data-cmd="inline_edit_generic" data-gp-area-id="'+area_id+'">');
+		}
 
 		// index.php/test?section=0&gpreq=json&defined_objects=&cmd=inlineedit&area_id=1&section=0
 		// need to get the edit link

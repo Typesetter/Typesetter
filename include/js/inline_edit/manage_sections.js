@@ -339,6 +339,10 @@
 			}while( document.getElementById(new_id) || document.getElementById('ExtraEditLink'+area_id) );
 
 			new_area.attr('id',new_id).data('gp-area-id',area_id);
+
+			//add edit link (need to initiate editing and get the save path)
+			$('<a href="?" class="nodisplay" data-cmd="inline_edit_generic" data-gp-area-id="'+area_id+'" id="ExtraEditLink'+area_id+'">').appendTo('#gp_admin_html');
+
 		}
 	}
 

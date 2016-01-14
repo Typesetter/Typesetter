@@ -771,10 +771,11 @@ namespace gp\admin{
 			global $langmessage, $page;
 
 			//inline editor html
-			echo '<div id="ckeditor_wrap">';
-			echo '<div class="cktabs">';
-			echo \gp\tool::Link($page->title,'Organize','cmd=ManageSections',array('class'=>'ckeditor_control','data-cmd'=>'SwitchEditArea','data-arg'=>'#section_sorting'));
-			echo \gp\tool::Link($page->title,'Add','cmd=ManageSections',array('class'=>'ckeditor_control','data-cmd'=>'SwitchEditArea','data-arg'=>'#new_section_links'));
+			echo '<div id="ckeditor_wrap" class="nodisplay">';
+			echo '<a id="ckeditor_toggle" data-cmd="ToggleEditor"><i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-right"></i></a>';
+			echo '<div id="ckeditor_tabs" class="cktabs">';
+			echo \gp\tool::Link($page->title,'Organize','cmd=ManageSections',array('data-cmd'=>'SwitchEditArea','data-arg'=>'#section_sorting'));
+			echo \gp\tool::Link($page->title,'Add','cmd=ManageSections',array('data-cmd'=>'SwitchEditArea','data-arg'=>'#new_section_links'));
 			echo '</div>';
 
 			echo '<div id="ck_area_wrap">';

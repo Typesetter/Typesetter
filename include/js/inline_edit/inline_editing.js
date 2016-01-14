@@ -111,7 +111,7 @@ var gp_editing = {
 
 		$('#ckeditor_top').html('');
 		$('#ckeditor_bottom').html('');
-		$('#ckeditor_wrap').addClass('show_editor');
+		$('#ckeditor_wrap').show().addClass('show_editor');
 	},
 
 
@@ -189,6 +189,14 @@ var gp_editing = {
 
 		if( typeof($gp.interface[id]) != 'object' ){
 			return false;
+		}
+
+		if( $gp.curr_edit_id == id ){
+			return true;
+		}
+
+		if( id != 0 ){
+			$('#ckeditor_wrap').addClass('show_editor');
 		}
 
 		$('#ck_area_wrap').html('').append($gp.interface[id]);
@@ -282,7 +290,7 @@ var gp_editing = {
 
 		var $this = $(this);
 
-		$('.cktabs .ckeditor_control.selected').removeClass('selected');
+		$('.cktabs .selected').removeClass('selected');
 		$this.addClass('selected');
 
 
@@ -335,7 +343,7 @@ var gp_editing = {
 			return;
 		}
 
-		$gp.LoadEditor('?', 0, 'manage_sections');
+		$gp.LoadEditor('?cmd=ManageSections', 0, 'manage_sections');
 	});
 
 
@@ -347,4 +355,15 @@ var gp_editing = {
 	$gp.$doc.on('keyup mouseup',function(){
 		window.setTimeout(gp_editing.DisplayDirty,100);
 	});
+
+
+	/**
+	 * Show/Hide the editor
+	 *
+	 */
+	$gp.links.ToggleEditor = function(){
+		$('#ckeditor_wrap').toggleClass('show_editor');
+	}
+
+
 

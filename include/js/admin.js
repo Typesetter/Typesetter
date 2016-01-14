@@ -54,6 +54,7 @@ $gp.LoadEditor = function(href, area_id, arg){
 
 	area_id = area_id || 0;
 
+
 	$gp.CacheInterface(function(){
 
 		//set the current editing interface aside so the new one can be created
@@ -62,6 +63,8 @@ $gp.LoadEditor = function(href, area_id, arg){
 				return;
 			}
 		}
+
+		$('#ckeditor_wrap').addClass('show_editor');
 
 		$gp.curr_edit_id	= area_id;
 		var $edit_div		= $gp.CurrentDiv();

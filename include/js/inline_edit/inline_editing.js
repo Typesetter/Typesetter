@@ -319,14 +319,9 @@ var gp_editing = {
 
 		//get the edit link
 		var area_id		= $(this).data('gp-area-id');
-		var edit_link	= $('#ExtraEditLink'+area_id);
+		var href		= $('#ExtraEditLink'+area_id).attr('href') || '?';
 
-		if( !edit_link.length ){
-			edit_link = $('<a href="?" data-cmd="inline_edit_generic" data-gp-area-id="'+area_id+'">');
-		}
-
-		// need to get the edit link
-		$gp.links.inline_edit_generic.call(edit_link,evt);
+		$gp.LoadEditor(href, area_id);
 	});
 
 
@@ -340,7 +335,7 @@ var gp_editing = {
 			return;
 		}
 
-		$gp.links.inline_edit_generic.call(this,evt,'manage_sections');
+		$gp.LoadEditor('?', 0, 'manage_sections');
 	});
 
 

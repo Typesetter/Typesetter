@@ -45,9 +45,14 @@ $gp.links.inline_edit_generic = function(evt,arg){
 
 	evt.preventDefault();
 
-	var $this		= $(this);
-	var area_id		= $this.data('gp-area-id');
+	var area_id		= $(this).data('gp-area-id')
 
+	$gp.LoadEditor(this.href, area_id, arg);
+}
+
+$gp.LoadEditor = function(href, area_id, arg){
+
+	area_id = area_id || 0;
 
 	$gp.CacheInterface(function(){
 
@@ -75,7 +80,7 @@ $gp.links.inline_edit_generic = function(evt,arg){
 		$gp.LoadStyle('/include/css/inline_edit.css');
 
 
-		var script		= strip_from($this.attr('href'),'#');
+		var script		= strip_from(href,'#');
 		script			+= '&gpreq=json&defined_objects='+$gp.DefinedObjects();
 
 		if( arg == 'manage_sections' ){

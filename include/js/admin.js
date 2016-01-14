@@ -48,6 +48,7 @@ $gp.links.inline_edit_generic = function(evt,arg){
 	var area_id		= $(this).data('gp-area-id')
 
 	$gp.LoadEditor(this.href, area_id, arg);
+	$('#ckeditor_wrap').addClass('show_editor');
 }
 
 $gp.LoadEditor = function(href, area_id, arg){
@@ -62,9 +63,10 @@ $gp.LoadEditor = function(href, area_id, arg){
 			if( gp_editing.RestoreCached(area_id) ){
 				return;
 			}
+		}else{
+			$gp.LoadStyle('/include/css/inline_edit.css');
+			$gp.LoadStyle('/include/css/manage_sections.css');
 		}
-
-		$('#ckeditor_wrap').addClass('show_editor');
 
 		$gp.curr_edit_id	= area_id;
 		var $edit_div		= $gp.CurrentDiv();
@@ -80,15 +82,10 @@ $gp.LoadEditor = function(href, area_id, arg){
 			return;
 		}
 
-		$gp.LoadStyle('/include/css/inline_edit.css');
-
-
 		var script		= strip_from(href,'#');
 		script			+= '&gpreq=json&defined_objects='+$gp.DefinedObjects();
 
-		if( arg == 'manage_sections' ){
-			$gp.LoadStyle('/include/css/manage_sections.css');
-		}else{
+		if( arg != 'manage_sections' ){
 			script		+= '&cmd=inlineedit&area_id='+area_id+'&section='+$edit_div.data('gp-section');
 		}
 

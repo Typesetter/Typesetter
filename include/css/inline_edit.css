@@ -28,7 +28,7 @@
 
 
 #ckeditor_tabs a,
-#ckeditor_toggle{
+#cktoggle{
 	height:29px;
 	line-height:29px;
 	color:#fff !important;
@@ -36,7 +36,7 @@
 	outline:none;
 	}
 
-#ckeditor_toggle{
+#cktoggle{
 	display:block;
 	position:absolute;
 	top:0;
@@ -57,10 +57,11 @@
 	display:table-cell;
 	width:50%;
 	text-align:center;
+	color:#888 !important;
 	}
 
 #ckeditor_tabs a.selected{
-	color:#888 !important;
+	color:#fff !important;
 	}
 
 /**

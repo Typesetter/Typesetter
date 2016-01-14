@@ -345,30 +345,6 @@
 			//add edit link (need to initiate editing and get the save path)
 			$('<a href="?" class="nodisplay" data-cmd="inline_edit_generic" data-gp-area-id="'+area_id+'" id="ExtraEditLink'+area_id+'">').appendTo('#gp_admin_html');
 
-		},
-
-		/**
-		 * Display a preview section
-		 *
-		 */
-		PreviewSection: function(content){
-
-			var $new_content	= $(content);
-
-			$new_content
-				.find('.editable_area')
-				.addClass('temporary-section')
-				.removeClass('editable_area');
-
-			$new_content
-				.addClass('temporary-section')
-				.removeClass('editable_area')
-				.appendTo('#gpx_content')
-				.hide()
-				.delay(300).slideDown();
-
-			var node = $new_content.get(0);
-			$this.data('preview-section',node);
 		}
 
 	}
@@ -408,7 +384,23 @@
 			//begin new preview
 			$this.addClass('previewing');
 
-			gp_editor.PreviewSection($this.data('response'));
+
+			var $new_content	= $($this.data('response'));
+
+			$new_content
+				.find('.editable_area')
+				.addClass('temporary-section')
+				.removeClass('editable_area');
+
+			$new_content
+				.addClass('temporary-section')
+				.removeClass('editable_area')
+				.appendTo('#gpx_content')
+				.hide()
+				.delay(300).slideDown();
+
+			var node = $new_content.get(0);
+			$this.data('preview-section',node);
 
 		},200);
 
@@ -437,8 +429,11 @@
 		var $this = $(this);
 		evt.preventDefault();
 
+		console.log('add section');
+
 		//change the previewed section to an editable area
 		if( !$this.hasClass('previewing') ){
+			console.log('not previewing');
 			return;
 		}
 

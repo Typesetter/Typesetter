@@ -1,14 +1,27 @@
 
 
+#ckeditor_wrap{
+	display:block;
+	visibility:hidden;
+	position:fixed;
+	bottom:0;
+	right:-210px;
+	width:210px;
+	top:0;
+	z-index:10000; /* to be above full screen editing of ckeditor */
+	/* background:rgba(213, 213, 213, 0.9); */
+	background:#eee;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+	padding:10px;	font-family:Arial,sans-serif !important;
 
-/**
- * ckeditor... and other inline editing toolbars
- *
- */
+	-webkit-transition: right 1s;
+	-moz-transition: right 1s;
+	transition: right 1s;
+	}
 
-#ckeditor_area{
-	width:207px;
-	font-family:Arial,sans-serif !important;
+#ckeditor_wrap.show_editor{
+	right:0;
+	visibility:visible;
 	}
 
 #ckeditor_bottom{
@@ -30,10 +43,28 @@
 #ckeditor_area .tools{
 	clear:both;
 	}
+
+#ckeditor_area .cke_top{
+	border-top:1px solid #ddd;
+	margin-top:6px;
+	}
+#ckeditor_area .cke_toolbar{
+	width:100%;
+	border-bottom:1px solid #ddd;
+	border-top:1px solid #fff;
+	padding:4px 0 !important;
+	margin:0;
+	}
 #ckeditor_area .cke_toolgroup{
 	margin-right:0;
 	text-align:justify;
-	width:193px;
+	width:100%;
+	background:none;
+	border-radius:0;
+	}
+
+#ckeditor_area	a.cke_combo_button{
+	background:none;
 	}
 
 /* format/font/font-size menus */
@@ -173,20 +204,6 @@
 	}
 
 
-
-/* testing docked ckeditor_area */
-#ckeditor_wrap{
-	display:none;
-	position:fixed;
-	bottom:0;
-	right:0;
-	top:29px;
-	z-index:10000; /* to be above full screen editing of ckeditor */
-	background:rgba(213, 213, 213, 0.9);
-	padding:10px;
-	}
-
-
 /**
  * Tabs
  *
@@ -228,4 +245,5 @@
 
 #ckeditor_wrap.ck_saving .ck_saving{
 	display:inline-block;
+}
 }

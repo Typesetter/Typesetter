@@ -771,7 +771,7 @@ namespace gp\admin{
 			global $langmessage, $page;
 
 			//inline editor html
-			echo '<div id="ckeditor_wrap" class="nodisplay">';
+			echo '<div id="ckeditor_wrap">';
 			echo '<div class="cktabs">';
 			echo \gp\tool::Link($page->title,'Organize','cmd=ManageSections',array('class'=>'ckeditor_control','data-cmd'=>'SwitchEditArea','data-arg'=>'#section_sorting'));
 			echo \gp\tool::Link($page->title,'Add','cmd=ManageSections',array('class'=>'ckeditor_control','data-cmd'=>'SwitchEditArea','data-arg'=>'#new_section_links'));

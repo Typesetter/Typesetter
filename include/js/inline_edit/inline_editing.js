@@ -108,10 +108,10 @@ var gp_editing = {
 	 *
 	 */
 	editor_tools:function(){
+
 		$('#ckeditor_top').html('');
 		$('#ckeditor_bottom').html('');
-		$('#ckeditor_wrap').show();
-		$('#ckeditor_area').show();
+		$('#ckeditor_wrap').addClass('show_editor');
 	},
 
 

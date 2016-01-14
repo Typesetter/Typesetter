@@ -1,8 +1,6 @@
 
 #ckeditor_top{
 	margin-bottom:5px;
-	border:1px solid #ddd;
-	background:#fff;
 	border-radius:3px;
 	}
 
@@ -32,7 +30,7 @@
 	}
 
 #section_sorting li{
-	background: transparent url('../imgs/drag_handle.gif') no-repeat 7px 5px;
+	background: #fff url('../imgs/drag_handle.gif') no-repeat 7px 5px;
 	position:relative;
 	border:1px solid #f1f1f1;
 	margin:5px 0;

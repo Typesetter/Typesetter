@@ -315,7 +315,7 @@ var gp_editing = {
 	 * Switch between edit areas
 	 *
 	 */
-	$gp.$doc.on('click','.editable_area',function(evt){
+	$gp.$doc.on('click','.editable_area:not(.filetype-wrapper_section)',function(evt){
 
 		//get the edit link
 		var area_id		= $(this).data('gp-area-id');
@@ -325,9 +325,22 @@ var gp_editing = {
 			edit_link = $('<a href="?" data-cmd="inline_edit_generic" data-gp-area-id="'+area_id+'">');
 		}
 
-		// index.php/test?section=0&gpreq=json&defined_objects=&cmd=inlineedit&area_id=1&section=0
 		// need to get the edit link
 		$gp.links.inline_edit_generic.call(edit_link,evt);
+	});
+
+
+	/**
+	 * Switch back to section manager
+	 *
+	 */
+	$gp.$doc.on('click',function(evt){
+
+		if( $(evt.target).closest('.editable_area, #ckeditor_wrap, a, input').length ){
+			return;
+		}
+
+		$gp.links.inline_edit_generic.call(this,evt,'manage_sections');
 	});
 
 

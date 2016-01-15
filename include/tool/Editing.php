@@ -932,7 +932,10 @@ namespace gp\tool{
 			$time				= time();
 			if( isset($_REQUEST['time']) && ctype_digit($_REQUEST['time']) ){
 				$time			= $_REQUEST['time'];
+			}elseif( isset($_REQUEST['req_time']) && ctype_digit($_REQUEST['req_time']) ){
+				$time			= $_REQUEST['req_time'];
 			}
+
 			$dest_img_rel		= $dest_dir.$name.'.'.$time.'.png';
 			$dest_img_full		= $dataDir.$dest_img_rel;
 

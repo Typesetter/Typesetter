@@ -55,6 +55,10 @@ $gp.LoadEditor = function(href, area_id, arg){
 
 	area_id = area_id || 0;
 
+	if( area_id === $gp.curr_edit_id ){
+		return;
+	}
+
 
 	$gp.CacheInterface(function(){
 
@@ -90,10 +94,16 @@ $gp.LoadEditor = function(href, area_id, arg){
 		}
 
 
+		//get the new editor
 		$.getScript( script,function(data){
 			if( data === 'false' ){
 				alert($gp.error);
 				$gp.loaded();
+				return;
+			}
+
+			if( typeof(gp_editor.wake) == 'function' ){
+				gp_editor.wake();
 			}
 		});
 
@@ -132,6 +142,9 @@ $gp.CacheInterface = function(callback){
 		var html							= $('#ck_area_wrap').html();
 		var $interface						= $('#ckeditor_area').detach();
 
+		if( typeof(gp_editor.sleep) == 'function' ){
+			gp_editor.sleep();
+		}
 
 		$gp.interface[$gp.curr_edit_id]		= $interface;
 		$gp.editors[$gp.curr_edit_id]		= gp_editor;

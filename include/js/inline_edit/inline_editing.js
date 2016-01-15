@@ -221,10 +221,13 @@ var gp_editing = {
 		}
 
 		$('#ck_area_wrap').html('').append($gp.interface[id]);
-		//$('#ckeditor_area').html('').replaceWith( $gp.interface[id] );
 
 		gp_editor			= $gp.editors[id];
 		$gp.curr_edit_id	= id;
+
+		if( typeof(gp_editor.wake) == 'function' ){
+			gp_editor.wake();
+		}
 
 		$gp.CurrentDiv().addClass('gp_edit_current');
 

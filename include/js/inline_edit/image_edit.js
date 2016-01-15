@@ -1,77 +1,149 @@
 
+	//create gp_editor object
+	gp_editor = {
+
+		edit_img:		null,
+		save_obj:		null,
+		saved_data:		'',
+
+		field_w:		null,
+		field_h:		null,
+		field_x:		null,
+		field_y:		null,
+
+		anim_values:	{
+			posx		: 0,
+			posy		: 0,
+			height		: 0,
+			width		: 0
+			},
+
+		timeout:		null,
+
+		/**
+		 * Return serialized data to be used with the save POST
+		 *
+		 */
+		gp_saveData:function(){
+
+			gp_editor.save_obj.posx		= gp_editor.field_x.value;
+			gp_editor.save_obj.posy		= gp_editor.field_y.value;
+
+			gp_editor.save_obj.width	= gp_editor.field_w.value;
+			gp_editor.save_obj.height	= gp_editor.field_h.value;
+
+			return jQuery.param( gp_editor.save_obj )+'&cmd=save_inline';
+		},
+
+
+		/**
+		 * Check to see if there is unsaved data
+		 *
+		 */
+		checkDirty:function(){
+			var curr_data	= gp_editor.gp_saveData();
+			if( gp_editor.saved_data != curr_data ){
+				return true;
+			}
+			return false;
+		},
+
+		/**
+		 * Resets the "dirty state" of the editor so subsequent calls to checkDirty will return false
+		 *
+		 */
+		resetDirty:function(){
+			gp_editor.saved_data	= gp_editor.gp_saveData();
+		},
+
+		/**
+		 * Wake up this editor object
+		 *
+		 *
+		 */
+		wake: function(){
+			gp_editor.timeout = window.setInterval( gp_editor.Animate ,100); //con
+		},
+
+		sleep: function(){
+			window.clearInterval(gp_editor.timeout);
+		},
+
+
+		/**
+		 * Animate dimension changes
+		 *
+		 */
+		Animate: function(){
+
+			console.log('animate');
+
+			//height/width
+			gp_editor.anim_values.width		= gp_editor.AnimValue( gp_editor.field_w.value, gp_editor.anim_values.width );
+			gp_editor.anim_values.height	= gp_editor.AnimValue( gp_editor.field_h.value, gp_editor.anim_values.height );
+
+			gp_editor.edit_img.stop(true,true).animate({'width':gp_editor.anim_values.width,'height':gp_editor.anim_values.height},100);
+
+
+			//position
+			gp_editor.anim_values.posx		= gp_editor.AnimValue( gp_editor.field_x.value, gp_editor.anim_values.posx );
+			gp_editor.anim_values.posy		= gp_editor.AnimValue( gp_editor.field_y.value, gp_editor.anim_values.posy );
+			gp_editor.edit_img.css({'background-position':gp_editor.anim_values.posx+'px '+gp_editor.anim_values.posy+'px'});
+		},
+
+
+		/**
+		 * Get amount we should animate by
+		 *
+		 */
+		AnimValue: function(desired, current){
+			desired = parseInt(desired);
+			current = parseInt(current);
+
+			if( desired == current ){
+				return desired;
+			}
+
+			if( desired > current ){
+				return current + Math.min(20,desired-current);
+			}
+
+			return current - Math.min(20,current-desired);
+		},
+
+	};
+
+
 
 	function gp_init_inline_edit(area_id,section_object,options){
 
 		//show edit window
 		$gp.LoadStyle('/include/css/inline_image.css');
 
-		var save_path	= gp_editing.get_path(area_id);
-		var edit_img	= gp_editing.get_edit_area(area_id);
+		gp_editor.save_path		= gp_editing.get_path(area_id);
+		gp_editor.edit_img		= gp_editing.get_edit_area(area_id);
 
-		edit_img.addClass('gp_image_edit');
+		gp_editor.edit_img.addClass('gp_image_edit');
 
-		var save_obj	= {
-			src			: edit_img.attr('src')
+		gp_editor.save_obj	= {
+			src			: gp_editor.edit_img.attr('src')
 			};
 
 
 		// gpEasy 4.6a2+
 		// use the original image
 		if( section_object.orig_src ){
-			save_obj.src		= section_object.orig_src;
-			save_obj.posx		= section_object.posx;
-			save_obj.posy		= section_object.posy;
-			save_obj.width		= section_object.attributes.width;
-			save_obj.height 	= section_object.attributes.height;
+			gp_editor.save_obj.src		= section_object.orig_src;
+			gp_editor.save_obj.posx		= section_object.posx;
+			gp_editor.save_obj.posy		= section_object.posy;
+			gp_editor.save_obj.width		= section_object.attributes.width;
+			gp_editor.save_obj.height 	= section_object.attributes.height;
 		}
 
-
-		var anim_values = {
-			posx		: 0,
-			posy		: 0,
-			height		: 0,
-			width		: 0
-			};
-
-
-		var field_w, field_h, field_x, field_y;
 
 
 		$gp.loaded();
 		gp_editing.editor_tools();
-
-
-		//create gp_editor object
-		gp_editor = {
-			save_path: save_path,
-
-			saved_data: '',
-
-			/**
-			 * Check to see if there is unsaved data
-			 *
-			 */
-			checkDirty:function(){
-				var curr_data	= gp_editor.gp_saveData();
-				if( gp_editor.saved_data != curr_data ){
-					return true;
-				}
-				return false;
-			},
-			gp_saveData:function(){
-
-				save_obj.posx	= field_x.value;
-				save_obj.posy	= field_y.value;
-
-				save_obj.width	= field_w.value;
-				save_obj.height = field_h.value;
-
-				return jQuery.param( save_obj )+'&cmd=save_inline';
-			},
-			resetDirty:function(){
-				gp_editor.saved_data	= gp_editor.gp_saveData();
-			}
-		}
 
 		LoadImageOptions();
 
@@ -81,7 +153,7 @@
 		 *
 		 */
 		function LoadImageOptions(){
-			var path = strip_from(save_path,'?') + '?cmd=image_editor';
+			var path = strip_from(gp_editor.save_path,'?') + '?cmd=image_editor';
 			$gp.jGoTo(path);
 		}
 
@@ -92,10 +164,10 @@
 		 */
 		gpresponse.image_options_loaded = function(){
 
-			field_w			= input('width');
-			field_h			= input('height');
-			field_x			= input('left');
-			field_y			= input('top');
+			gp_editor.field_w			= input('width');
+			gp_editor.field_h			= input('height');
+			gp_editor.field_x			= input('left');
+			gp_editor.field_y			= input('top');
 
 
 
@@ -104,13 +176,13 @@
 
 
 			//change src to blank and set as background image
-			anim_values.width	= edit_img.width();
-			anim_values.height	= edit_img.height();
+			gp_editor.anim_values.width		= gp_editor.edit_img.width();
+			gp_editor.anim_values.height	= gp_editor.edit_img.height();
 
-			SetCurrentImage( save_obj.src, anim_values.width, anim_values.height );
+			SetCurrentImage( gp_editor.save_obj.src, gp_editor.anim_values.width, gp_editor.anim_values.height );
 			SetupDrag();
 
-			edit_img.attr('src',gp_blank_img); //after getting size
+			gp_editor.edit_img.attr('src',gp_blank_img); //after getting size
 
 			gp_editor.saved_data = gp_editor.gp_saveData();
 
@@ -129,46 +201,6 @@
 			});
 		}
 
-		/**
-		 * Continuous animation
-		 *
-		 */
-		window.setInterval(function(){
-
-			//height/width
-			anim_values.width	= AnimValue( field_w.value, anim_values.width );
-			anim_values.height	= AnimValue( field_h.value, anim_values.height );
-			edit_img.stop(true,true).animate({'width':anim_values.width,'height':anim_values.height},100);
-
-
-			//position
-			anim_values.posx	= AnimValue( field_x.value, anim_values.posx );
-			anim_values.posy	= AnimValue( field_y.value, anim_values.posy );
-			edit_img.css({'background-position':anim_values.posx+'px '+anim_values.posy+'px'});
-
-		},100);
-
-
-		/**
-		 * Get amount we should animate by
-		 *
-		 */
-		function AnimValue(desired, current){
-			desired = parseInt(desired);
-			current = parseInt(current);
-
-			if( desired == current ){
-				return desired;
-			}
-
-			if( desired > current ){
-				return current + Math.min(20,desired-current);
-			}
-
-			return current - Math.min(20,current-desired);
-		}
-
-
 		function input(name){
 			return $('#gp_current_image input[name='+name+']').get(0);
 		}
@@ -183,13 +215,13 @@
 			var posx = posy = mouse_startx = mouse_starty = pos_startx = pos_starty = 0;
 			var mousedown = false;
 
-			edit_img.disableSelection();
-			edit_img.mousedown(function(evt){
+			gp_editor.edit_img.disableSelection();
+			gp_editor.edit_img.mousedown(function(evt){
 				evt.preventDefault();
 				mousedown = true;
 
-				pos_startx = posx = parseInt(field_x.value || 0);
-				pos_starty = posy = parseInt(field_y.value || 0);
+				pos_startx = posx = parseInt(gp_editor.field_x.value || 0);
+				pos_starty = posy = parseInt(gp_editor.field_y.value || 0);
 
 
 				mouse_startx = evt.pageX;
@@ -227,8 +259,8 @@
 		}
 
 		function SetPosition(posx,posy){
-			field_x.value = posx;
-			field_y.value = posy;
+			gp_editor.field_x.value = posx;
+			gp_editor.field_y.value = posy;
 		}
 
 
@@ -237,17 +269,17 @@
 		 *
 		 */
 		function SetCurrentImage( src, width, height){
-			delete save_obj.src;
-			if( src !== save_obj.src ){
-				save_obj.src = src;
+			delete gp_editor.save_obj.src;
+			if( src !== gp_editor.save_obj.src ){
+				gp_editor.save_obj.src = src;
 			}
-			edit_img.css({'background-image':'url("'+src+'")'});
+			gp_editor.edit_img.css({'background-image':'url("'+src+'")'});
 			$('#gp_current_image img').attr('src', src );
 
 			if( width > 0 && height > 0 ){
 
-				field_w.value	= width;
-				field_h.value	= height;
+				gp_editor.field_w.value	= width;
+				gp_editor.field_h.value	= height;
 			}
 		}
 
@@ -263,10 +295,11 @@
 		$gp.links.deafult_sizes = function(){
 
 			//get original image size
-			var img = $('<img>').css({'height':'auto','width':'auto','padding':0}).attr('src',save_obj.src).appendTo('body');
+			var img = $('<img>').css({'height':'auto','width':'auto','padding':0}).attr('src',gp_editor.save_obj.src).appendTo('body');
 
-			field_w.value 		= img.width();
-			field_h.value		= img.height();
+			gp_editor.field_w.value 		= img.width();
+			gp_editor.field_h.value		= img.height();
+
 			SetPosition(0,0);
 
 			img.remove();

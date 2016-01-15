@@ -322,6 +322,9 @@ body #gp_current_image td{
 	position:relative;
 	}
 
+.gp_object_wrapper{
+	overflow:hidden;
+	}
 
 /**
  * Multiple images

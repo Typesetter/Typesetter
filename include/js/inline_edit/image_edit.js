@@ -4,7 +4,6 @@
 
 		var edit_img		= null;
 		var $edit_img		= null;
-		var save_obj		= null;
 		var saved_data		= '';
 
 		var field_w			= null;
@@ -35,8 +34,12 @@
 
 		$edit_img.addClass('gp_image_edit');
 
-		save_obj	= {
-			src			: $edit_img.attr('src')
+		var save_obj	= {
+			src			: $edit_img.attr('src'),
+			posx		: 0,
+			posy		: 0,
+			width		: 0,
+			height		: 0
 			};
 
 
@@ -176,6 +179,12 @@
 			field_h			= input('height');
 			field_x			= input('left');
 			field_y			= input('top');
+
+
+			field_x.value		= save_obj.posx;
+			field_y.value		= save_obj.posy;
+			field_w.value		= save_obj.width;
+			field_h.value		= save_obj.height;
 
 
 

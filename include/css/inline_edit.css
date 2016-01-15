@@ -215,6 +215,7 @@
 .editable_area,
 .gp_editing{
 	position:relative;
+	outline:none;
 	}
 
 .gp_editing{

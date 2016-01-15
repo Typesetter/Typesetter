@@ -3,6 +3,7 @@
 	function ImageEditor(area_id, section_object){
 
 		var edit_img		= null;
+		var $edit_img		= null;
 		var save_obj		= null;
 		var saved_data		= '';
 
@@ -18,7 +19,9 @@
 			width		: 0
 			};
 
-		var timeout		= null;
+		var anim_freq		= 100;
+
+		var timeout			= null;
 
 
 		/**
@@ -26,12 +29,14 @@
 		 *
 		 */
 		this.save_path		= gp_editing.get_path(area_id);
-		edit_img			= gp_editing.get_edit_area(area_id);
+		$edit_img			= gp_editing.get_edit_area(area_id);
+		edit_img			= $edit_img.get(0);
 
-		edit_img.addClass('gp_image_edit');
+
+		$edit_img.addClass('gp_image_edit');
 
 		save_obj	= {
-			src			: edit_img.attr('src')
+			src			: $edit_img.attr('src')
 			};
 
 
@@ -96,7 +101,7 @@
 		 *
 		 */
 		this.wake = function(){
-			timeout = window.setInterval( Animate ,100); //constant animation
+			timeout = window.setInterval( Animate ,anim_freq); //constant animation
 
 			gpresponse.image_options_loaded		= ImagesLoaded;
 			gpresponse.gp_gallery_images		= MultipleFileHandler;
@@ -121,16 +126,23 @@
 		 */
 		function Animate(){
 
+			var cssText				= 'background-image:url("'+save_obj.src+'");';
+
+
 			//height/width
 			anim_values.width		= AnimValue( field_w.value, anim_values.width );
 			anim_values.height		= AnimValue( field_h.value, anim_values.height );
-			edit_img.stop(true,true).animate({'width':anim_values.width,'height':anim_values.height},100);
+
+			cssText					+= 'width: '+anim_values.width+'px !important; height:'+anim_values.height+'px !important;';
 
 
 			//position
 			anim_values.posx		= AnimValue( field_x.value, anim_values.posx );
 			anim_values.posy		= AnimValue( field_y.value, anim_values.posy );
-			edit_img.css({'background-position':anim_values.posx+'px '+anim_values.posy+'px'});
+			cssText					+= 'background-position: '+anim_values.posx+'px '+anim_values.posy+'px';
+
+
+			edit_img.style.cssText = cssText;
 		}
 
 
@@ -172,13 +184,13 @@
 
 
 			//change src to blank and set as background image
-			anim_values.width			= edit_img.width();
-			anim_values.height			= edit_img.height();
+			anim_values.width			= $edit_img.width();
+			anim_values.height			= $edit_img.height();
 
 			SetCurrentImage( save_obj.src, anim_values.width, anim_values.height );
 			SetupDrag();
 
-			edit_img.attr('src',gp_blank_img); //after getting size
+			$edit_img.attr('src',gp_blank_img); //after getting size
 
 			saved_data					= SaveData();
 
@@ -215,8 +227,8 @@
 			var posx = posy = mouse_startx = mouse_starty = pos_startx = pos_starty = 0;
 			var mousedown = false;
 
-			edit_img.disableSelection();
-			edit_img.mousedown(function(evt){
+			$edit_img.disableSelection();
+			$edit_img.mousedown(function(evt){
 				evt.preventDefault();
 				mousedown = true;
 
@@ -248,12 +260,10 @@
 		function SetCurrentImage( src, width, height){
 			delete save_obj.src;
 
-			if( src !== save_obj.src ){
-				save_obj.src = src;
-			}
+			save_obj.src = src;
 
-			edit_img.css({'background-image':'url("'+src+'")'});
-			$('#gp_current_image img').attr('src', src );
+			$edit_img.css({'background-image':'url("'+save_obj.src+'")'});
+			$('#gp_current_image img').attr('src', save_obj.src );
 
 			if( width > 0 && height > 0 ){
 

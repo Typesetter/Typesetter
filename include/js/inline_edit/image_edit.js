@@ -129,7 +129,7 @@
 		 */
 		function Animate(){
 
-			var cssText				= 'background-image:url("'+save_obj.src+'");';
+			var cssText				= 'background-image:url("'+$gp.htmlchars(save_obj.src)+'");';
 
 
 			//height/width
@@ -271,7 +271,7 @@
 
 			save_obj.src = src;
 
-			$edit_img.css({'background-image':'url("'+save_obj.src+'")'});
+			$edit_img.css({'background-image':'url("'+$gp.htmlchars(save_obj.src)+'")'});
 			$('#gp_current_image img').attr('src', save_obj.src );
 
 			if( width > 0 && height > 0 ){

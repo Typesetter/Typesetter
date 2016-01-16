@@ -143,26 +143,7 @@ namespace gp\admin\Content{
 
 			$this->imgTypes		= array('bmp'=>1,'png'=>1,'jpg'=>1,'jpeg'=>1,'gif'=>1,'tiff'=>1,'tif'=>1);
 
-
-			//get the current path
-			$parts = str_replace( array('\\','//'),array('/','/'),$page->requested);
-			$parts = trim($parts,'/');
-			$parts = explode('/',$parts);
-			array_shift($parts);
-			if( count($parts) > 0 ){
-				$this->subdir = '/'.implode('/',$parts);
-				$this->subdir = \gp\tool\Editing::CleanArg($this->subdir);
-			}
-			if( !empty($_REQUEST['dir']) ){
-				$this->subdir .= \gp\tool\Editing::CleanArg($_REQUEST['dir']);
-			}
-			$this->subdir = str_replace( array('\\','//'),array('/','/'),$this->subdir);
-
-			if( $this->subdir == '/' ){
-				$this->subdir = false;
-			}else{
-				$this->currentDir .= $this->subdir;
-			}
+			$this->SetDirectory();
 
 			//prompt to create the requested subdirectory
 			if( !file_exists($this->currentDir) ){
@@ -175,6 +156,47 @@ namespace gp\admin\Content{
 				$this->isThumbDir = true;
 			}
 			$this->currentDir_Thumb = $this->thumbFolder.$this->subdir;
+
+		}
+
+		/**
+		 * Set the upload directory
+		 *
+		 */
+		public function SetDirectory(){
+
+			//get the current path
+			$path = str_replace( array('\\','//'),array('/','/'),$page->requested);
+
+			//@since 5.0
+			if( strpos($path,'Admin/Uploaded') ){
+				$path = substr($path,13,0);
+				$path = trim($path,'/');
+
+
+			//backwards compat
+			}else{
+				$parts = trim($parts,'/');
+				$parts = explode('/',$parts);
+				array_shift($parts);
+			}
+
+			if( count($parts) > 0 ){
+				$this->subdir = '/'.implode('/',$parts);
+				$this->subdir = \gp\tool\Editing::CleanArg($this->subdir);
+			}
+
+
+			if( !empty($_REQUEST['dir']) ){
+				$this->subdir .= \gp\tool\Editing::CleanArg($_REQUEST['dir']);
+			}
+			$this->subdir = str_replace( array('\\','//'),array('/','/'),$this->subdir);
+
+			if( $this->subdir == '/' ){
+				$this->subdir = false;
+			}else{
+				$this->currentDir .= $this->subdir;
+			}
 
 		}
 

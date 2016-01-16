@@ -226,7 +226,6 @@ class TwitterCarousel{
 			common::LoadComponents( 'bootstrap-carousel' );
 		}
 
-		//$page->admin_js = true; //loads main.js
 		$page->head_js[] = '/data/_addoncode/'.$addonFolderName.'/jquery.mobile.custom.js';
 		$page->head_js[] = '/data/_addoncode/'.$addonFolderName.'/carousel.js';
 		$page->css_user[] = '/data/_addoncode/'.$addonFolderName.'/carousel.css';
@@ -246,7 +245,7 @@ class TwitterCarousel{
 			return $scripts;
 		}
 
-		$scripts[] = '/include/js/inline_edit/inline_editing.js';
+		//$scripts[] = '/include/js/inline_edit/inline_editing.js';
 		$scripts[] = '/include/js/inline_edit/image_common.js';
 		$scripts[] = '/include/js/inline_edit/gallery_edit_202.js';
 		$scripts[] = $addonRelativeCode.'/gallery_options.js';

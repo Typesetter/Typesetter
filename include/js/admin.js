@@ -228,15 +228,21 @@ $gp.links.remote = function(evt){
  * @param bool already_prefixed
  */
 $gp.LoadStyle = function(file, already_prefixed){
-    var d=new Date(),
-        t=d.getTime();
 
-    file = already_prefixed ? file : gpBase+file;
+	var time	= req_time || new Date().getTime();
+	file		= already_prefixed ? file : gpBase+file;
+	file		= file+'?t='+time;
 
-    //href set after appending to head so that it works properly in IE
-    $('<link rel="stylesheet" type="text/css" />')
-        .appendTo('head')
-        .attr({'href':file+'?t='+t});
+
+	//already loaded?
+	if( $('link[href="'+file+'"]').length ){
+		return;
+	}
+
+	//href set after appending to head so that it works properly in IE
+	$('<link rel="stylesheet" type="text/css" />')
+		.appendTo('head')
+		.attr({'href':file});
 };
 
 /**

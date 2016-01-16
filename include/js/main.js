@@ -601,7 +601,7 @@ function strip_from(a,b){
 		return a;
 	}
 	var p = a.indexOf(b);
-	if( p > 0 ){
+	if( p > -1 ){
 		a = a.substr(0,p);
 	}
 	return a;

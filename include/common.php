@@ -453,6 +453,10 @@ function includeFile( $file ){
 		$file = 'tool/Output.php';
 		break;
 
+		case 'tool/Images.php':
+		$file = 'tool/Image.php';
+		break;
+
 		case 'tool/sessions.php';
 		$file = 'tool/Session.php';
 		break;

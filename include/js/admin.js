@@ -751,7 +751,11 @@ $gp.AreaId = function( $node ){
 
 	//ExtraEditArea6
 	//ExtraEditLink6
-	return $node.attr('id').substr(13);
+	var area_id = $node.attr('id');
+	if( typeof(area_id) != 'undefined' ){
+		return $node.attr('id').substr(13);
+	}
+
 }
 
 

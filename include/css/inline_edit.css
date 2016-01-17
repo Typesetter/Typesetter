@@ -221,7 +221,13 @@
 .gp_editing{
 	z-index:9000;
 	}
-.gp_edit_current{
+
+.editable_area:hover{
+	outline:1px dotted #ccc !important;
+	}
+
+.gp_edit_current,
+.gp_edit_current:hover{
 	outline:1px solid #ccc !important;
 	}
 

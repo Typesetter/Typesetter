@@ -225,6 +225,11 @@ var gp_editing = {
 		gp_editor			= $gp.editors[id];
 		$gp.curr_edit_id	= id;
 
+
+		$gp.RestoreObjects($gp.links, $gp.interface_links[id]);
+
+
+
 		if( typeof(gp_editor.wake) == 'function' ){
 			gp_editor.wake();
 		}

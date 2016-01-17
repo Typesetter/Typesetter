@@ -120,6 +120,8 @@
 		}
 	};
 
+
+
 	function gp_init_inline_edit(area_id,section_object){
 
 		$gp.LoadStyle('/include/css/inline_image.css');
@@ -413,30 +415,16 @@
 			img.attr({'data-cmd':gp_editor.img_name,'data-arg':gp_editor.img_rel,'title':'','class':gp_editor.img_rel})
 			var li = $('<li>').append(img).append('<div class="caption"></div>');
 			if( holder ){
+				console.log('replace holder');
 				holder.replaceWith(li);
 			}else{
+				console.log('append to sortable_area');
 				sortable_area.append(li);
 			}
 
 			li.trigger('gp_gallery_add');
 			gp_editor.addedImage(li);
 		}
-
-
-		/**
-		 * Check to see if a deleted file is in the current gallery
-		 */
-		//gpresponse.img_deleted = function(data){
-			//var img = edit_div.find('a[href="'+data.CONTENT+'"] img');
-			//if( img.length > 0 ){
-				//var path = img.attr('src')+'?';
-				//img.attr('src','');
-				//window.setTimeout(function(){
-					//img.attr('src',path);
-				//},500);
-			//}
-		//}
-
 
 
 		/**

@@ -6,6 +6,8 @@ var gp_editor		= false;
 
 $gp.curr_edit_id	= null;
 $gp.interface		= [];		// storage for editing interfaces
+$gp.interface_links	= [];
+$gp.cache_links		= [];
 $gp.editors			= [];		// storage for editing objects
 
 
@@ -59,6 +61,10 @@ $gp.LoadEditor = function(href, area_id, arg){
 		return;
 	}
 
+	//first time editing, get $gp.links
+	if( typeof(gp_editing) == 'undefined' ){
+		$gp.cache_links = $gp.Properties($gp.links);
+	}
 
 	$gp.CacheInterface(function(){
 
@@ -110,6 +116,20 @@ $gp.LoadEditor = function(href, area_id, arg){
 	});
 };
 
+/**
+ * Get object properties
+ *
+ */
+$gp.Properties = function(obj){
+	var properties = [];
+	for( var i in obj ){
+		if( obj.hasOwnProperty(i) ){
+			properties.push(i);
+		}
+	}
+	return properties;
+}
+
 
 /**
  * Get the current editing div
@@ -149,12 +169,53 @@ $gp.CacheInterface = function(callback){
 		$gp.interface[$gp.curr_edit_id]		= $interface;
 		$gp.editors[$gp.curr_edit_id]		= gp_editor;
 
+
+		//cache $gp.links that were defined by the current gp_editor
+		$gp.interface_links[$gp.curr_edit_id]		= {};
+		$gp.CacheObjects( $gp.interface_links[$gp.curr_edit_id], $gp.links, $gp.cache_links);
+
+
+
 		$('#ck_area_wrap').html( html );
 		$('.cktabs .ckeditor_control.selected').removeClass('selected');
 
 
 		callback.call();
 	});
+}
+
+
+/**
+ * Cache $gp.links, $gp.inputs and $gp.Response
+ * ?? gpresponse, gplinks, gpinputs ??
+ */
+$gp.CacheObjects = function(cache_loc, from, defaults){
+
+	for( var i in from ){
+		if( !from.hasOwnProperty(i) ){
+			continue;
+		}
+
+		if( defaults.indexOf(i) > -1 ){
+			continue;
+		}
+		cache_loc[i] = from[i];
+	}
+}
+
+
+/**
+ * Restore $gp.links, $gp.inputs and $gp.Response
+ * ?? gpresponse, gplinks, gpinputs ??
+ */
+$gp.RestoreObjects = function(target, from){
+
+	for( var i in from ){
+		if( !from.hasOwnProperty(i) ){
+			continue;
+		}
+		target[i] = from[i];
+	}
 }
 
 

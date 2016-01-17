@@ -6,8 +6,8 @@ var gp_editor		= false;
 
 $gp.curr_edit_id	= null;
 $gp.interface		= [];		// storage for editing interfaces
-$gp.interface_links	= [];
-$gp.cache_links		= [];
+$gp.cached			= {};
+$gp.defaults		= {};
 $gp.editors			= [];		// storage for editing objects
 
 
@@ -61,9 +61,11 @@ $gp.LoadEditor = function(href, area_id, arg){
 		return;
 	}
 
-	//first time editing, get $gp.links
+	//first time editing, get default $gp.links, $gp.inputs, $gp.response
 	if( typeof(gp_editing) == 'undefined' ){
-		$gp.cache_links = $gp.Properties($gp.links);
+		$gp.defaults['links'] = $gp.Properties($gp.links);
+		$gp.defaults['inputs'] = $gp.Properties($gp.inputs);
+		$gp.defaults['response'] = $gp.Properties($gp.response);
 	}
 
 	$gp.CacheInterface(function(){
@@ -171,8 +173,10 @@ $gp.CacheInterface = function(callback){
 
 
 		//cache $gp.links that were defined by the current gp_editor
-		$gp.interface_links[$gp.curr_edit_id]		= {};
-		$gp.CacheObjects( $gp.interface_links[$gp.curr_edit_id], $gp.links, $gp.cache_links);
+		$gp.cached[$gp.curr_edit_id]		= {};
+		$gp.CacheObjects( 'links' );
+		$gp.CacheObjects( 'inputs' );
+		$gp.CacheObjects( 'response' );
 
 
 
@@ -189,17 +193,20 @@ $gp.CacheInterface = function(callback){
  * Cache $gp.links, $gp.inputs and $gp.Response
  * ?? gpresponse, gplinks, gpinputs ??
  */
-$gp.CacheObjects = function(cache_loc, from, defaults){
+$gp.CacheObjects = function(type, cache_loc){
+
+	var from								= $gp[type];
+	$gp.cached[$gp.curr_edit_id][type]		= {};
 
 	for( var i in from ){
 		if( !from.hasOwnProperty(i) ){
 			continue;
 		}
 
-		if( defaults.indexOf(i) > -1 ){
+		if( $gp.defaults[type].indexOf(i) > -1 ){
 			continue;
 		}
-		cache_loc[i] = from[i];
+		$gp.cached[$gp.curr_edit_id][type][i] = from[i];
 	}
 }
 
@@ -208,13 +215,15 @@ $gp.CacheObjects = function(cache_loc, from, defaults){
  * Restore $gp.links, $gp.inputs and $gp.Response
  * ?? gpresponse, gplinks, gpinputs ??
  */
-$gp.RestoreObjects = function(target, from){
+$gp.RestoreObjects = function(type, id){
+
+	var from = $gp.cached[id][type];
 
 	for( var i in from ){
 		if( !from.hasOwnProperty(i) ){
 			continue;
 		}
-		target[i] = from[i];
+		$gp[type][i] = from[i];
 	}
 }
 

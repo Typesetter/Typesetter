@@ -225,8 +225,9 @@ var gp_editing = {
 		gp_editor			= $gp.editors[id];
 		$gp.curr_edit_id	= id;
 
-
-		$gp.RestoreObjects($gp.links, $gp.interface_links[id]);
+		$gp.RestoreObjects( 'links', id);
+		$gp.RestoreObjects( 'inputs', id);
+		$gp.RestoreObjects( 'response', id);
 
 
 

@@ -415,10 +415,8 @@
 			img.attr({'data-cmd':gp_editor.img_name,'data-arg':gp_editor.img_rel,'title':'','class':gp_editor.img_rel})
 			var li = $('<li>').append(img).append('<div class="caption"></div>');
 			if( holder ){
-				console.log('replace holder');
 				holder.replaceWith(li);
 			}else{
-				console.log('append to sortable_area');
 				sortable_area.append(li);
 			}
 

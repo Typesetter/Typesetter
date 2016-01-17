@@ -52,19 +52,19 @@ $.extend(gp_editor,{
 	 * Reset data-slide-to
 	 */
 	removeImage : function(current_image){
-		var index = $(current_image).index();
-		var $indicator_area = $('.gp_editing .carousel-indicators');
+
+		var index				= $(current_image).index();
+		var $indicator_area		= $('.gp_editing .carousel-indicators');
 
 		//remove indicator
 		$indicator_area.children().eq(index).remove();
+
+		$('.gp_editing').carousel('next');
 
 		//reorder indicatorss
 		$indicator_area.children().each(function(i){
 			$(this).attr('data-slide-to',i).data('slide-to',i);
 		});
-	},
-	removedImage : function(edit_div){
-		edit_div.find('.carousel-control.right').click();
 	},
 
 
@@ -109,8 +109,10 @@ $.extend(gp_editor,{
 		$curr.html(prev_html);
 
 		//move to previous image
-		$('.gp_editing .carousel-control.left').click();
+		$('.gp_editing').carousel('prev');
+
 	},
+
 	moveForward : function(){
 
 		var $curr = $('.gp_editing .carousel-inner .active');
@@ -133,7 +135,7 @@ $.extend(gp_editor,{
 		$next.html(curr_html);
 		$curr.html(next_html);
 
-		$('.gp_editing .carousel-control.right').click();
+		$('.gp_editing').carousel('next');
 	}
 
 });

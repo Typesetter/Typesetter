@@ -361,7 +361,7 @@
 			 * Update an image's caption with data supplied by user from gplinks.gp_gallery_caption()
 			 *
 			 */
-			gpinputs.gp_gallery_update = function(evt){
+			$gp.inputs.gp_gallery_update = function(evt){
 
 				evt.preventDefault();
 				var text = $(this.form).find('textarea').val();
@@ -429,7 +429,7 @@
 		 * Add file upload handlers after the form is loaded
 		 *
 		 */
-		gpresponse.gp_gallery_images = function(data){
+		$gp.response.gp_gallery_images = function(data){
 			MultipleFileHandler($('#gp_upload_form'));
 		}
 

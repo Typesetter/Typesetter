@@ -10,6 +10,7 @@ class Edit extends \gp\Page{
 	protected $draft_exists			= false;
 	protected $draft_stats			= array();
 	protected $draft_meta			= array();
+	protected $sections_before		= array();
 	protected $revision;
 
 	protected $permission_edit;
@@ -133,13 +134,13 @@ class Edit extends \gp\Page{
 
 		parent::GetFile();
 
-		if( !$this->draft_exists ){
-			return;
+		if( $this->draft_exists ){
+			$this->file_sections	= \gp\tool\Files::Get($this->draft_file,'file_sections');
+			$this->draft_meta		= \gp\tool\Files::$last_meta;
+			$this->draft_stats		= \gp\tool\Files::$last_stats;
 		}
 
-		$this->file_sections	= \gp\tool\Files::Get($this->draft_file,'file_sections');
-		$this->draft_meta		= \gp\tool\Files::$last_meta;
-		$this->draft_stats		= \gp\tool\Files::$last_stats;
+		$this->sections_before		= $this->file_sections;
 	}
 
 
@@ -307,11 +308,6 @@ class Edit extends \gp\Page{
 	 */
 	public function ManageSections(){
 		global $langmessage;
-
-		//$defined = explode(',',$_REQUEST['defined_objects']);
-		//if( in_array('gp_editor',$defined) ){
-		//	die('already set');
-		//}
 
 		$scripts				= array();
 
@@ -827,6 +823,12 @@ class Edit extends \gp\Page{
 		if( !is_array($this->meta_data) || !is_array($this->file_sections) ){
 			return false;
 		}
+
+		//return true if nothing has changed
+		if( $this->sections_before == $this->file_sections ){
+			return true;
+		}
+
 
 		//file count
 		if( !isset($this->meta_data['file_number']) ){

@@ -356,7 +356,7 @@ var gp_editing = {
 	$gp.$doc.on('click','.editable_area:not(.filetype-wrapper_section)',function(evt){
 
 		//get the edit link
-		var area_id		= $(this).data('gp-area-id');
+		var area_id		= $gp.AreaId( $(this) );
 		var href		= $('#ExtraEditLink'+area_id).attr('href') || '?';
 
 		$gp.LoadEditor(href, area_id);

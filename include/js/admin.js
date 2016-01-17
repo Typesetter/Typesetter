@@ -47,7 +47,7 @@ $gp.links.inline_edit_generic = function(evt,arg){
 
 	evt.preventDefault();
 
-	var area_id		= $(this).data('gp-area-id')
+	var area_id		= $gp.AreaId( $(this) );
 
 	$gp.LoadEditor(this.href, area_id, arg);
 	$('#ckeditor_wrap').addClass('show_editor');
@@ -737,6 +737,24 @@ $gp.response.location = function(obj){
 };
 
 
+/**
+ * Get the edit area id
+ *
+ */
+$gp.AreaId = function( $node ){
+
+	var area_id	= $node.data('gp-area-id');
+
+	if( typeof(area_id) != 'undefined' ){
+		return area_id;
+	}
+
+	//ExtraEditArea6
+	//ExtraEditLink6
+	return $node.attr('id').substr(13);
+}
+
+
 
 /**
  * Onload
@@ -833,7 +851,7 @@ $(function(){
 			.each(function(){
 
 				var $b			= $(this);
-				var id_number	= $b.data('gp-area-id');
+				var id_number	= $gp.AreaId( $b );
 				var area		= $('#ExtraEditArea'+id_number);
 
 				if( area.hasClass('gp_no_overlay') || area.length === 0 ){
@@ -1028,7 +1046,7 @@ $(function(){
 			//don't show overlay
 			//	- for an area that is being edited
 			//	- if we've already shown it
-			if( edit_area.hasClass('gp_no_overlay') ){
+			if( edit_area.hasClass('gp_no_overlay') || edit_area.hasClass('gp_editing') ){
 				return;
 			}
 

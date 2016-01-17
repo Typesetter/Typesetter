@@ -7,6 +7,14 @@ namespace gp\tool\Output{
 
 	class Ajax{
 
+		static $script_objects	= array(
+									'/include/js/inline_edit/inline_editing.js'		=> 'gp_editing',
+									'/include/thirdparty/ckeditor_34/ckeditor.js'	=> 'CKEDITOR',
+									'/include/js/ckeditor_config.js'				=> 'CKEDITOR',
+
+
+									);
+
 		static function ReplaceContent($id,$content){
 			self::JavascriptCall('WBx.response','replace',$id,$content);
 		}
@@ -226,10 +234,8 @@ namespace gp\tool\Output{
 
 		static function InlineEdit($section_data){
 
-			$section_data += array('type'=>'','content'=>'');
-
-
-			$scripts = array();
+			$section_data			+= array('type'=>'','content'=>'');
+			$scripts				= array();
 			$scripts[]				= array('object'=>'gp_editing','file'=>'/include/js/inline_edit/inline_editing.js');
 
 
@@ -294,19 +300,13 @@ namespace gp\tool\Output{
 			Header('Vary: Accept,Accept-Encoding');// for proxies
 
 			$sent				= array();
-			$defined_objects	= explode(',',$_REQUEST['defined_objects']);
+			$scripts			= self::RemoveSent($scripts);
 
 
 			//send all scripts
 			foreach($scripts as $script){
 
-
 				if( is_array($script) ){
-
-					if( !empty($script['object']) && in_array($script['object'], $defined_objects) ){
-						echo "\n\n/** Object Already Defined: ".$script['object']." **/\n\n";
-						continue;
-					}
 
 					if( !empty($script['code']) ){
 						echo "\n\n/** Code **/\n\n";
@@ -351,6 +351,45 @@ namespace gp\tool\Output{
 			}
 		}
 
+
+		/**
+		 * Remove scripts that have already been sent to the server
+		 *
+		 */
+		static function RemoveSent($scripts){
+
+			$cleansed			= array();
+			$defined_objects	= explode(',',$_REQUEST['defined_objects']);
+
+			foreach($scripts as $script){
+
+				$object = false;
+
+				if( is_array($script) && !empty($script['object']) ){
+					$object = $script['object'];
+
+				}elseif( is_string($script) && isset(self::$script_objects[$script]) ){
+					$object = self::$script_objects[$script];
+
+				}
+
+				if( $object !== false && in_array($object, $defined_objects) ){
+					echo "\n\n/** Object Already Defined: ".$object." **/\n\n";
+					continue;
+				}
+
+
+				$cleansed[] = $script;
+			}
+
+			return $cleansed;
+		}
+
+
+		/**
+		 * Get scripts for editing inline text using ckeditor
+		 *
+		 */
 		static function InlineEdit_Text($scripts){
 
 			// autocomplete

@@ -81,6 +81,8 @@ namespace gp\tool\Output{
 				die();
 			}
 
+			//admin toolbar
+			self::AdminToolbar();
 
 			//gadgets may be using gpajax/json request/responses
 			\gp\tool\Output::TemplateSettings();
@@ -118,11 +120,35 @@ namespace gp\tool\Output{
 				}
 			}
 
+
 			//always send messages
 			self::Messages();
 			echo ']);';
 			die();
 		}
+
+
+		/**
+		 * Add the admin toolbar content to the ajax response
+		 *
+		 */
+		static function AdminToolbar(){
+			global $page;
+
+			if( !isset($_REQUEST['gpreq_toolbar']) ){
+				return;
+			}
+
+			ob_start();
+			\gp\admin\Tools::AdminToolbar();
+			$toolbar = ob_get_clean();
+			if( empty($toolbar) ){
+				return;
+			}
+
+			$page->ajaxReplace[] = array('replace','#admincontent_panel',$toolbar);
+		}
+
 
 		/**
 		 * Add the messages to the response

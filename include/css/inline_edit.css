@@ -69,7 +69,9 @@
  *
  */
 #ckeditor_area{
-	padding:10px;
+	padding:10px 10px 0 10px;
+	overflow:auto;
+	box-sizing:border-box;
 	}
 
 
@@ -279,7 +281,8 @@
  */
 #ckeditor_save{
 	text-align:right;
-	padding:0 10px;
+	padding:10px 10px 0 10px;
+	box-sizing:border-box;
 	}
 
 #ckeditor_wrap .ck_save,

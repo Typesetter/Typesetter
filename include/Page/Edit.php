@@ -206,13 +206,12 @@ class Edit extends \gp\Page{
 		}
 
 
-		//editing
-		if( $this->permission_edit ){
-			if( $this->draft_exists	){
-				$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-check"></i> '.$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq', 'class'=>'msg_publish_draft'));
-			}
-			$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
-		}
+		//history
+		$backup_files		= $this->BackupFiles();
+		$times				= array_keys($backup_files);
+		$admin_links[]		= \gp\tool::Link($this->title,'<i class="fa fa-backward"></i> '.$langmessage['Previous'],'cmd=ViewRevision&time='.array_pop($times),array('data-cmd'=>'cnreq'));
+
+		$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 
 
 
@@ -228,8 +227,6 @@ class Edit extends \gp\Page{
 			$attrs						= array('title'=>$label,'data-cmd'=>'creq');
 			$admin_links[]		= \gp\tool::Link($this->title,$label,$q,$attrs);
 		}
-
-
 
 
 		// page options: less frequently used links that don't have to do with editing the content of the page
@@ -254,6 +251,14 @@ class Edit extends \gp\Page{
 			$admin_links[$langmessage['options']] = $option_links;
 		}
 
+
+		//publish draft
+		if( $this->permission_edit && $this->draft_exists	){
+			$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-check"></i> '.$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq', 'class'=>'msg_publish_draft'));
+		}
+
+
+
 		return array_merge($admin_links, $this->admin_links);
 	}
 
@@ -264,17 +269,6 @@ class Edit extends \gp\Page{
 	 */
 	protected function RevisionLinks(){
 		global $langmessage;
-
-
-		if( $this->revision == $this->fileModTime ){
-			$date	= $langmessage['Current Page'];
-		}else{
-			$date	= \gp\tool::date($langmessage['strftime_datetime'],$this->revision);
-		}
-
-		$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-save"></i> '.$langmessage['Restore this revision'].' ('.$date.')','cmd=UseRevision&time='.$this->revision,array('data-cmd'=>'cnreq','class'=>'msg_publish_draft'));
-
-
 
 
 		//previous && next revision
@@ -296,6 +290,18 @@ class Edit extends \gp\Page{
 		}
 
 		$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+
+
+		// restore this version
+		if( $this->revision == $this->fileModTime ){
+			$date	= $langmessage['Current Page'];
+		}else{
+			$date	= \gp\tool::date($langmessage['strftime_datetime'],$this->revision);
+		}
+
+		$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-save"></i> '.$langmessage['Restore this revision'].' ('.$date.')','cmd=UseRevision&time='.$this->revision,array('data-cmd'=>'cnreq','class'=>'msg_publish_draft'));
+
+
 
 		return $admin_links;
 	}

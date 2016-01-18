@@ -469,9 +469,6 @@ namespace gp\admin{
 			echo '<div id="admincontent_panel" class="fixed toolbar">';
 			echo '<ul>';
 
-			//current page
-			echo '<li><b>'.$langmessage['Current Page'].':</b></li>';
-
 			//admin_link
 			self::FormatAdminLinks($links);
 
@@ -480,10 +477,10 @@ namespace gp\admin{
 
 			// 'Editable Areas'
 			if( \gp\admin\Tools::CanEdit($page->gp_index) ){
-				echo \gp\tool::Link($page->title,'<i class="fa fa-pencil-square-o"></i> '.$langmessage['Editable Areas'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections','style'=>'float:right'));
+				echo '<div style="float:right">';
+				echo \gp\tool::Link($page->title,'<i class="fa fa-pencil-square-o"></i> '.$langmessage['Editable Areas'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+				echo '</div>';
 			}
-
-			//self::ToolbarSearch();
 
 			echo '</div>';
 		}

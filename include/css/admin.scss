@@ -316,6 +316,7 @@
 	}
 #admincontent_panel ul,
 #admincontent_panel li,
+#admincontent_panel span,
 #admincontent_panel a{
 	display: inline-block;
 	margin: 0;
@@ -326,6 +327,7 @@
 	white-space: nowrap;
 	}
 
+#admincontent_panel span,
 #admincontent_panel a,
 #admincontent_panel b{
 	padding: $gp_nav_link_padding_y $gp_nav_link_padding_x;
@@ -334,6 +336,7 @@
 #admincontent_panel a:hover{
 	color: $gp_nav_link_color_hover !important;
 	}
+#admincontent_panel span > .fa,
 #admincontent_panel a > .fa{
 	margin-right: 4px;
 	}

@@ -91,6 +91,11 @@ gp_editing = {
 		query			+= '&gpreq=json&jsoncallback=?';
 
 
+		// saving to same page as the current url
+		if( gp_editing.SamePath(path) ){
+			query += '&gpreq_toolbar=1';
+		}
+
 
 		//the saved function
 		gpresponse.ck_saved = function(){
@@ -121,6 +126,20 @@ gp_editing = {
 			},
 		});
 
+	},
+
+
+	/**
+	 * Return true if the request path is the same as the path for the current url
+	 *
+	 */
+	SamePath: function(path){
+		var a = $('<a>').attr('href',path).get(0);
+
+		if( a.pathname == window.location.pathname ){
+			return true;
+		}
+		return false;
 	},
 
 
@@ -382,6 +401,23 @@ gp_editing = {
 	$gp.links.ToggleEditor = function(){
 		$('#ckeditor_wrap').toggleClass('show_editor');
 	};
+
+
+	/**
+	 * Max height of #ckeditor_area
+	 *
+	 */
+	$gp.$win.resize(function(){
+		var $ckeditor_area		= $('#ckeditor_area');
+		var maxHeight			= $gp.$win.height();
+		maxHeight				-= $ckeditor_area.position().top;
+		maxHeight				-= $('#ckeditor_save').outerHeight();
+
+		$('#ckeditor_area').css({'max-height':maxHeight});
+
+	}).resize();
+
+
 
 
 })();

@@ -283,6 +283,17 @@
 
 
 /**
- * Tabs
+ * Layout Content
  *
  */
+#ck_editable_areas a{
+	display:block;
+	padding:4px 0;
+	color:#333;
+}
+
+#ck_editable_areas a i{
+	margin-right:3px;
+	}
+
+

@@ -55,7 +55,7 @@
 
 #ckeditor_tabs a{
 	display:table-cell;
-	width:50%;
+	padding:0 10px;
 	text-align:center;
 	color:#888 !important;
 	}

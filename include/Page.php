@@ -288,6 +288,10 @@ namespace gp{
 				$class = 'filenum-'.$this->meta_data['file_number'];
 			}
 
+			if( $this->pagetype == 'display' ){
+				$class .= ' gp_page_display';
+			}
+
 			echo '<div id="gpx_content" class="'.$class.' cf">';
 
 			echo $this->contentBuffer;

@@ -66,6 +66,9 @@ class Page extends \gp\Page{
 					case 'ToggleVisibility':
 						$this->ToggleVisibility();
 					break;
+					case 'ManageSections':
+						\gp\Page\Edit::ManageSections(false);
+					break;
 				}
 			}
 
@@ -74,6 +77,7 @@ class Page extends \gp\Page{
 
 		$this->contentBuffer = self::ExecInfo($scriptinfo);
 	}
+
 
 
 	/**

@@ -126,6 +126,7 @@ $langmessage = array (
 	'preview'                        => 'Preview',
 	'layout'                         => 'Layout',
 	'Layout Options'                 => 'Layout Options',
+	'Layout Content'                 => 'Layout Content',
 	'color'                          => 'Color',
 	'style'                          => 'Style',
 	'Links'                          => 'Links',

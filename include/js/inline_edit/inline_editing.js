@@ -396,4 +396,94 @@ var gp_editing = {
 	};
 
 
+	/**
+	 * Show additional editable areas
+	 *
+	 */
+
+
+	function AddEditableLinks(list){
+
+		var box		= $gp.div('gp_edit_box'); //the overlay box
+
+		$('a.ExtraEditLink')
+			.clone(false)
+			.attr('class','')
+			.css('display','block')
+			.show()
+			.each(function(){
+
+				var $b			= $(this);
+				var id_number	= $gp.AreaId( $b );
+				var area		= $('#ExtraEditArea'+id_number);
+
+				if( area.hasClass('gp_no_overlay') || area.length === 0 ){
+					return true;
+				}
+
+
+				//not page sections
+				if( typeof(area.data('gp-section')) != 'undefined' ){
+					return true;
+				}
+
+
+				var loc			= $gp.Coords(area);
+				var title		= this.title.replace(/_/g,' ');
+				title			= decodeURIComponent(title);
+
+				if( title.length > 15 ){
+					title = title.substr(0,14);
+				}
+
+
+				$b
+					//add to list
+					.attr('id','editable_mark'+id_number)
+					.text(title)
+
+					//add handlers
+					.on('mouseenter touchstart',function(){
+
+						//the red edit box
+						var loc = $gp.Coords(area);
+						box	.stop(true,true)
+							.css({'top':(loc.top-3),'left':(loc.left-2),'width':(loc.w+4),'height':(loc.h+5)})
+							.fadeIn();
+
+						//scroll to show edit area
+						if( $gp.$win.scrollTop() > loc.top || ( $gp.$win.scrollTop() + $gp.$win.height() ) < loc.top ){
+							$('html,body').stop(true,true).animate({scrollTop: Math.max(0,loc.top-100)},'slow');
+						}
+					}).on('mouseleave touchend',function(){
+						box.stop(true,true).fadeOut();
+					}).click(function(){
+						$(this).unbind('mouseenter touchstart');
+						window.setTimeout(function(){
+							$(this).remove();
+							box.hide();
+						},100);
+					});
+
+
+				//add to list
+				$('<li>')
+					.append($b)
+					.data('top',loc.top)
+					.appendTo(list);
+
+
+			});
+
+
+			// sort by position on page
+			list.find('li').sort(function(a, b){
+				var contentA = $(a).data('top');
+				var contentB = $(b).data('top');
+				return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+			}).appendTo(list);
+
+	}
+
+
 

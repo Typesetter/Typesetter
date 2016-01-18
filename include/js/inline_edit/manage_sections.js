@@ -107,7 +107,15 @@
 
 			$('#ckeditor_area').on('dragstop',this.MaxHeight);
 
-			$('#ckeditor_bottom').hide();
+			//$('#ckeditor_bottom').hide();
+
+
+			// ckeditor_wrap
+			var list = $('#ck_editable_areas');
+
+			console.log('init editor',list.length);
+			AddEditableLinks(list);
+
 
 			$(document).trigger("section_sorting:loaded");
 		},
@@ -143,7 +151,7 @@
 
 			var mgr_object	= this;
 			var $list		= $('#section_sorting').html('');
-			var html		= this.BuildSortHtml( $('#gpx_content') );
+			var html		= this.BuildSortHtml( $('#gpx_content.gp_page_display') );
 
 			$list.html(html);
 

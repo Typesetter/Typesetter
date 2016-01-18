@@ -208,7 +208,6 @@ class Edit extends \gp\Page{
 
 		//editing
 		if( $this->permission_edit ){
-			//$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-th"></i> '.$langmessage['Manage Sections'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
 			if( $this->draft_exists	){
 				$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-check"></i> '.$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq', 'class'=>'msg_publish_draft'));
 			}
@@ -306,16 +305,22 @@ class Edit extends \gp\Page{
 	 * Send js to client for managing content sections
 	 *
 	 */
-	public function ManageSections(){
+	public static function ManageSections($organize = true){
 		global $langmessage;
 
 		$scripts				= array();
 
 		//output links
-
 		ob_start();
-		echo '<div id="new_section_links" style="display:none" class="inline_edit_area" title="Add">';
-		self::NewSections();
+		if( $organize ){
+			echo '<div id="new_section_links" style="display:none" class="inline_edit_area" title="Add">';
+			self::NewSections();
+			echo '</div>';
+		}
+
+		echo '<div>';
+		echo '<b>'.$langmessage['Layout Content'].'</b>';
+		echo '<ul id="ck_editable_areas"></ul>';
 		echo '</div>';
 		$scripts[]				= array('code'=>'var section_types = '.json_encode(ob_get_clean()).';');
 

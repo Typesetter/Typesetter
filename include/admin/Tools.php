@@ -474,7 +474,7 @@ namespace gp\admin{
 
 
 			//editable areaas
-			echo '<li><a data-cmd="editable_list"><i class="fa fa-edit"></i> '.$langmessage['Editable Areas'].'</a></li>';
+			//echo '<li><a data-cmd="editable_list"><i class="fa fa-edit"></i> '.$langmessage['Editable Areas'].'</a></li>';
 
 			//admin_link
 			self::FormatAdminLinks($links);
@@ -482,7 +482,7 @@ namespace gp\admin{
 			echo '</ul>';
 
 
-			if( $page->pagetype == 'display' && \gp\admin\Tools::CanEdit($page->gp_index) ){
+			if( \gp\admin\Tools::CanEdit($page->gp_index) ){ //$page->pagetype == 'display' &&
 				echo \gp\tool::Link($page->title,'<i class="fa fa-th"></i> '.$langmessage['Manage Sections'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections','style'=>'float:right'));
 			}
 
@@ -796,10 +796,16 @@ namespace gp\admin{
 			echo '<a data-cmd="ck_close" class="ckeditor_control">'.$langmessage['Close'].'</a>';
 			echo '</div>';
 
+
+			//other editable areas
+			//echo '<div>';
+			//echo '<b>'.$langmessage['Editable Areas'].'</b>';
+			//echo '<ul id="ck_editable_areas"></ul>';
+			//echo '</div>';
+
 			echo '</div>';
-
-
 		}
+
 
 		/**
 		 * Get the links for the Frequently Used section of the admin toolbar

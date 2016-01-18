@@ -913,7 +913,7 @@
 						if( $gp.$win.scrollTop() > loc.top || ( $gp.$win.scrollTop() + $gp.$win.height() ) < loc.top ){
 							$('html,body').stop(true,true).animate({scrollTop: Math.max(0,loc.top-100)},'slow');
 						}
-					}).on('mouseleave touchend',function(){
+					}).on('mouseleave touchend click',function(){
 						box.stop(true,true).fadeOut();
 					});
 

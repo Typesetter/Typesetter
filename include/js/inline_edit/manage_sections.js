@@ -37,7 +37,7 @@
 			args.gp_collapse			= [];
 			args.cmd					= 'SaveSections';
 
-			$('#gpx_content').find('.editable_area').each( function(i) {
+			$('#gpx_content.gp_page_display').find('.editable_area').each( function(i) {
 
 
 				//new section order and new sections
@@ -84,7 +84,7 @@
 		 */
 		resetDirty:function(){
 
-			$('#gpx_content').find('.editable_area').each( function(i){
+			$('#gpx_content.gp_page_display').find('.editable_area').each( function(i){
 				$(this).data('gp-section',i).attr('data-gp-section',i);
 			});
 

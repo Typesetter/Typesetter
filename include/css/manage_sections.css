@@ -286,7 +286,8 @@
  * Layout Content
  *
  */
-#ck_editable_areas a{
+#ck_editable_areas a,
+#ck_editable_areas a:visited{
 	display:block;
 	padding:4px 0;
 	color:#333;

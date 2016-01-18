@@ -472,18 +472,15 @@ namespace gp\admin{
 			//current page
 			echo '<li><b>'.$langmessage['Current Page'].':</b></li>';
 
-
-			//editable areaas
-			//echo '<li><a data-cmd="editable_list"><i class="fa fa-edit"></i> '.$langmessage['Editable Areas'].'</a></li>';
-
 			//admin_link
 			self::FormatAdminLinks($links);
 
 			echo '</ul>';
 
 
-			if( \gp\admin\Tools::CanEdit($page->gp_index) ){ //$page->pagetype == 'display' &&
-				echo \gp\tool::Link($page->title,'<i class="fa fa-th"></i> '.$langmessage['Manage Sections'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections','style'=>'float:right'));
+			// 'Editable Areas'
+			if( \gp\admin\Tools::CanEdit($page->gp_index) ){
+				echo \gp\tool::Link($page->title,'<i class="fa fa-pencil-square-o"></i> '.$langmessage['Editable Areas'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections','style'=>'float:right'));
 			}
 
 			//self::ToolbarSearch();

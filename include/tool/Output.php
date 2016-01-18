@@ -82,6 +82,7 @@ namespace gp\tool{
 		public static $inline_vars			= array();
 		public static $nested_edit			= false;
 
+		private static $edit_index			= 0;
 
 
 		/*
@@ -694,9 +695,9 @@ namespace gp\tool{
 		}
 
 		static function EditAreaLink(&$index,$href,$label,$query='',$attr=''){
-			static $count = 0;
-			$count++;
-			$index = $count; //since &$index is passed by reference
+			self::$edit_index++;
+			$index = self::$edit_index; //since &$index is passed by reference
+
 			if( is_array($attr) ){
 				$attr += array('class'=>'ExtraEditLink nodisplay','id'=>'ExtraEditLink'.$index,'data-gp-area-id'=>$index);
 			}else{

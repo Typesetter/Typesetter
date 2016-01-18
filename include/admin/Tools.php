@@ -777,7 +777,7 @@ namespace gp\admin{
 			if( $page->pagetype == 'display' ){
 				echo \gp\tool::Link($page->title,$langmessage['Page'],'cmd=ManageSections',array('data-cmd'=>'SwitchEditArea','data-arg'=>'#section_sorting_wrap'));
 			}
-			echo \gp\tool::Link($page->title,$langmessage['Layout Content'],'cmd=ManageSections',array('data-cmd'=>'SwitchEditArea','data-arg'=>'#ck_editable_areas'));
+			echo \gp\tool::Link($page->title,$langmessage['theme_content'],'cmd=ManageSections',array('data-cmd'=>'SwitchEditArea','data-arg'=>'#ck_editable_areas'));
 
 			echo '</div>';
 

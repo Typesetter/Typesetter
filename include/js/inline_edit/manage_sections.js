@@ -97,9 +97,6 @@
 		 */
 		InitEditor: function(){
 
-			//$('#ckeditor_top').append('<div id="section_sorting" class="inline_edit_area"><ul class="section_drag_area inline_edit_area" style="overflow:auto" title="Organize"></ul></div>');
-
-
 			$('#ckeditor_top').append(section_types);
 			this.InitSorting();
 			this.resetDirty();
@@ -109,13 +106,10 @@
 
 			$('#ckeditor_area').on('dragstop',this.MaxHeight);
 
-			//$('#ckeditor_bottom').hide();
-
 
 			// ckeditor_wrap
 			var list = $('#ck_editable_areas');
 
-			console.log('init editor',list.length);
 			AddEditableLinks(list);
 
 
@@ -956,6 +950,7 @@
 	 */
 	gp_editing.editor_tools();
 	gp_editor.InitEditor();
+	gp_editing.ResetTabs();
 	loaded();
 
 

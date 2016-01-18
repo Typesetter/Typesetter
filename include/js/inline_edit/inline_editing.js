@@ -1,6 +1,7 @@
 
+(function(){
 
-var gp_editing = {
+gp_editing = {
 
 	is_dirty:		false,	// true if we know gp_editor has been edited
 
@@ -133,6 +134,7 @@ var gp_editing = {
 		$('#ckeditor_top').html('');
 		$('#ckeditor_bottom').html('');
 		$('#ckeditor_wrap').addClass('show_editor');
+		gp_editing.ResetTabs();
 	},
 
 
@@ -199,6 +201,22 @@ var gp_editing = {
 			$('#cktabs .ckeditor_control[data-arg="#'+id+'"]').click();
 
 		}
+	},
+
+
+	/**
+	 * Indicate which tab is selected
+	 *
+	 */
+	ResetTabs: function(){
+		$('.cktabs .selected').removeClass('selected');
+		$('.cktabs a').each(function(){
+			var $this = $(this);
+			var $area = $( $this.data('arg') );
+			if( $area.is(':visible') ){
+				$this.addClass('selected');
+			}
+		});
 	},
 
 
@@ -320,14 +338,11 @@ var gp_editing = {
 
 		var $this = $(this);
 
-		$('.cktabs .selected').removeClass('selected');
-		$this.addClass('selected');
-
-
 		$('.inline_edit_area').hide();
 		$( $this.data('arg') ).show();
-	}
 
+		gp_editing.ResetTabs();
+	}
 
 
 	/**
@@ -360,6 +375,7 @@ var gp_editing = {
 		var href		= $('#ExtraEditLink'+area_id).attr('href') || '?';
 
 		$gp.LoadEditor(href, area_id);
+		gp_editing.ResetTabs();
 	});
 
 
@@ -374,6 +390,7 @@ var gp_editing = {
 		}
 
 		$gp.LoadEditor('?cmd=ManageSections', 0, 'manage_sections');
+		gp_editing.ResetTabs();
 	});
 
 
@@ -396,3 +413,4 @@ var gp_editing = {
 	};
 
 
+})();

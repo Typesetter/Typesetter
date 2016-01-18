@@ -95,12 +95,12 @@
 		 */
 		InitEditor: function(){
 
-			$('#ckeditor_top').append('<ul id="section_sorting" class="section_drag_area inline_edit_area" style="overflow:auto" title="Organize">');
+			//$('#ckeditor_top').append('<div id="section_sorting" class="inline_edit_area"><ul class="section_drag_area inline_edit_area" style="overflow:auto" title="Organize"></ul></div>');
 
 
-			this.resetDirty();
+			$('#ckeditor_top').append(section_types);
 			this.InitSorting();
-			this.InitNewSection();
+			this.resetDirty();
 
 
 			$gp.$win.on('resize', this.MaxHeight ).resize();
@@ -134,13 +134,6 @@
 			$section_area.css( 'max-height', listMaxHeight );
 		},
 
-		/**
-		 * Create selection for new section
-		 *
-		 */
-		InitNewSection: function(){
-			$('#ckeditor_top').append(section_types);
-		},
 
 		/**
 		 * Initialize section sorting
@@ -252,7 +245,7 @@
 
 
 		/**
-		 * Move the content area after it has been moved in the edit popup
+		 * Move the content area after it has been moved in the editor
 		 *
 		 */
 		DragStop: function(event, ui){

@@ -774,7 +774,7 @@ namespace gp\admin{
 			echo '<div id="ckeditor_wrap" class="nodisplay">';
 			echo '<a id="cktoggle" data-cmd="ToggleEditor"><i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-right"></i></a>';
 			echo '<div id="ckeditor_tabs" class="cktabs">';
-			echo \gp\tool::Link($page->title,'Organize','cmd=ManageSections',array('data-cmd'=>'SwitchEditArea','data-arg'=>'#section_sorting'));
+			echo \gp\tool::Link($page->title,'Organize','cmd=ManageSections',array('data-cmd'=>'SwitchEditArea','data-arg'=>'#section_sorting_wrap'));
 			echo \gp\tool::Link($page->title,'Add','cmd=ManageSections',array('data-cmd'=>'SwitchEditArea','data-arg'=>'#new_section_links'));
 			echo '</div>';
 
@@ -796,12 +796,6 @@ namespace gp\admin{
 			echo '<a data-cmd="ck_close" class="ckeditor_control">'.$langmessage['Close'].'</a>';
 			echo '</div>';
 
-
-			//other editable areas
-			//echo '<div>';
-			//echo '<b>'.$langmessage['Editable Areas'].'</b>';
-			//echo '<ul id="ck_editable_areas"></ul>';
-			//echo '</div>';
 
 			echo '</div>';
 		}

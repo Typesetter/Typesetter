@@ -312,16 +312,22 @@ class Edit extends \gp\Page{
 
 		//output links
 		ob_start();
+		echo '<div id="section_sorting_wrap" class="inline_edit_area">';
+		echo '<ul id="section_sorting" class="section_drag_area" title="Organize"></ul>';
+
+		echo '<div>';
+		echo '<b>'.$langmessage['Layout Content'].'</b>';
+		echo '<ul id="ck_editable_areas"></ul>';
+		echo '</div>';
+
+		echo '</div>';
+
 		if( $organize ){
 			echo '<div id="new_section_links" style="display:none" class="inline_edit_area" title="Add">';
 			self::NewSections();
 			echo '</div>';
 		}
 
-		echo '<div>';
-		echo '<b>'.$langmessage['Layout Content'].'</b>';
-		echo '<ul id="ck_editable_areas"></ul>';
-		echo '</div>';
 		$scripts[]				= array('code'=>'var section_types = '.json_encode(ob_get_clean()).';');
 
 

@@ -139,25 +139,6 @@ gp_editing = {
 
 
 	/**
-	 * Dock/Undock the floating inline editor
-	 *
-	 */
-	setdock:function(change_dock){
-
-	},
-
-
-	/**
-	 * Make sure certain gpEasy elements aren't copied into the html of pages
-	 * @deprecated
-	 *
-	 */
-	strip_special:function(data){
-		return data;
-	},
-
-
-	/**
 	 * Set up tabs
 	 *
 	 */
@@ -313,16 +294,6 @@ gp_editing = {
 				gp_editing.close_editor(evt);
 			}
 		});
-	}
-
-
-	/**
-	 * Change docking of inline editor
-	 *
-	 */
-	$gp.links.ck_docklink = function(){
-		gpui.ckd = !gpui.ckd;
-		gp_editing.setdock(true);
 	}
 
 

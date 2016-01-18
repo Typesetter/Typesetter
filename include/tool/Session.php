@@ -664,7 +664,6 @@ namespace gp\tool{
 							'gpui_ty'		=> 10,
 							'gpui_ckx'		=> 20,
 							'gpui_cky'		=> 240,
-							'gpui_ckd'		=> false,
 							'gpui_vis'		=> 'cur',
 							);
 		}
@@ -904,7 +903,6 @@ namespace gp\tool{
 			$possible['gpui_ty']	= 'integer';
 			$possible['gpui_ckx']	= 'integer';
 			$possible['gpui_cky']	= 'integer';
-			$possible['gpui_ckd']	= 'boolean';
 
 			$possible['gpui_ctx']	= array('enabled'=>'enabled','disabled'=>'disabled');
 
@@ -966,7 +964,6 @@ namespace gp\tool{
 			//#ckeditor_area
 			echo ',ckx:'. max(5,$gpAdmin['gpui_ckx']);
 			echo ',cky:'. max(0,$gpAdmin['gpui_cky']);
-			echo ',ckd:'.( !isset($gpAdmin['gpui_ckd']) || !$gpAdmin['gpui_ckd'] ? 'false' : 'true' ); //docked
 
 			//default layout (admin layout)
 			if( $page->gpLayout && $page->gpLayout == $config['gpLayout'] ){

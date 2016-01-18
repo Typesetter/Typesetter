@@ -915,12 +915,6 @@
 						}
 					}).on('mouseleave touchend',function(){
 						box.stop(true,true).fadeOut();
-					}).click(function(){
-						$(this).unbind('mouseenter touchstart');
-						window.setTimeout(function(){
-							$(this).remove();
-							box.hide();
-						},100);
 					});
 
 

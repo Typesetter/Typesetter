@@ -136,7 +136,7 @@ gp_editing = {
 	SamePath: function(path){
 		var a = $('<a>').attr('href',path).get(0);
 
-		if( a.pathname == window.location.pathname ){
+		if( a.pathname.replace(/^\/index.php/,'') == window.location.pathname.replace(/^\/index.php/,'') ){
 			return true;
 		}
 		return false;

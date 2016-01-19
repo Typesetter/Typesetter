@@ -8,7 +8,7 @@ namespace gp\tool{
 
 
 	/**
-	 * An extension of phpmailer for usage with gpeasy
+	 * An extension of phpmailer
 	 *
 	 * @since 1.7
 	 *

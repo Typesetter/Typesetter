@@ -6,7 +6,7 @@ namespace gp{
 
 
 	/**
-	 *	Objects of this class handle the display of standard gpEasy pages
+	 *	Objects of this class handle the display of standard CMS pages
 	 *  The classes for admin pages and special pages extend the display class
 	 *
 	 */

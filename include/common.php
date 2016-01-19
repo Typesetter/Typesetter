@@ -499,7 +499,7 @@ function includeFile( $file ){
 
 /**
  * Include a script, unless it has caused a fatal error.
- * Using this function allows gpEasy to handle fatal errors that are thrown by the included php scripts
+ * Using this function allows handling fatal errors that are thrown by the included php scripts
  *
  * @param string $file The full path of the php file to include
  * @param string $include_variation Which variation or adaptation of php's include() function to use (include,include_once,include_if, include_once_if, require ...)

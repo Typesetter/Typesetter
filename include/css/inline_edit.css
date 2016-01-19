@@ -223,7 +223,7 @@
 	z-index:9000;
 	}
 
-.editable_area:hover{
+.editable_area:not(.filetype-wrapper_section):hover{
 	outline:1px dotted #ccc !important;
 	}
 

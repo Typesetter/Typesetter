@@ -230,7 +230,7 @@ gp_editing = {
 			return false;
 		}
 
-		if( $gp.curr_edit_id == id ){
+		if( $gp.curr_edit_id === id ){
 			return true;
 		}
 

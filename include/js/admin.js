@@ -61,6 +61,7 @@ $gp.LoadEditor = function(href, area_id, arg){
 		return;
 	}
 
+
 	//first time editing, get default $gp.links, $gp.inputs, $gp.response
 	if( typeof(gp_editing) == 'undefined' ){
 		$gp.defaults['links'] = $gp.Properties($gp.links);
@@ -147,6 +148,7 @@ $gp.CurrentDiv = function(){
  *
  */
 $gp.CacheInterface = function(callback){
+
 
 	$gp.CurrentDiv().removeClass('gp_edit_current');
 
@@ -746,14 +748,14 @@ $gp.AreaId = function( $node ){
 	var area_id	= $node.data('gp-area-id');
 
 	if( typeof(area_id) != 'undefined' ){
-		return area_id;
+		return parseInt(area_id);
 	}
 
 	//ExtraEditArea6
 	//ExtraEditLink6
 	var area_id = $node.attr('id');
 	if( typeof(area_id) != 'undefined' ){
-		return $node.attr('id').substr(13);
+		return parseInt($node.attr('id').substr(13));
 	}
 
 }

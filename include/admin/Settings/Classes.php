@@ -40,11 +40,11 @@ class Classes{
 		return array(
 			array(
 				'names'		=> 'gpRow',
-				'desc'		=> 'gpEasy Grid Row - for wrapper sections',
+				'desc'		=> CMS_NAME.' Grid Row - for wrapper sections',
 			),
 			array(
 				'names'		=> 'gpCol-1 gpCol-2 gpCol-3 gpCol-4 gpCol-5 gpCol-6 gpCol-7 gpCol-8 gpCol-9 gpCol-10 gpCol-11 gpCol-12',
-				'desc'		=> 'gpEasy Grid Columns - for content sections',
+				'desc'		=> CMS_NAME.' Grid Columns - for content sections',
 			),
 		);
 	}

@@ -12,7 +12,7 @@ namespace gp\admin{
 
 
 		/**
-		 * Check available versions of gpEasy and addons
+		 * Check available versions of cms and addons
 		 * @static
 		 *
 		 */
@@ -64,7 +64,7 @@ namespace gp\admin{
 
 
 		/**
-		 * Get or cache data about available versions of gpEasy and addons
+		 * Get or cache data about available versions of cms and addons
 		 *
 		 */
 		public static function VersionData(&$update_data){
@@ -288,7 +288,7 @@ namespace gp\admin{
 
 
 			$scripts['Admin/About']					= array(	'class'		=> '\gp\admin\About',
-																'label' 	=> 'About gpEasy',
+																'label' 	=> 'About '.CMS_NAME,
 													);
 
 			$scripts['Admin/Browser']				= array(	'class'		=> '\gp\admin\Content\Browser',
@@ -624,7 +624,7 @@ namespace gp\admin{
 				ob_start();
 				if( gp_remote_update && isset(self::$new_versions['core']) ){
 					echo '<li>';
-					echo '<a href="'.\gp\tool::GetDir('/include/install/update.php').'">gpEasy '.self::$new_versions['core'].'</a>';
+					echo '<a href="'.\gp\tool::GetDir('/include/install/update.php').'">'.CMS_NAME.' '.self::$new_versions['core'].'</a>';
 					echo '</li>';
 				}
 
@@ -679,7 +679,7 @@ namespace gp\admin{
 				echo '</li>';
 
 				echo '<li>';
-				echo \gp\tool::Link('Admin/About','About gpEasy');
+				echo \gp\tool::Link('Admin/About','About '.CMS_NAME);
 				echo '</li>';
 				echo '</ul>';
 				echo '</div>';
@@ -687,15 +687,15 @@ namespace gp\admin{
 
 
 
-			//gpEasy stats
+			// stats
 			echo '<div class="panelgroup" id="panelgroup_gpeasy'.$id_piece.'">';
 				self::PanelHeading($in_panel, $langmessage['Performance'], 'icon_chart', 'gpe' );
 				echo '<ul class="submenu">';
 				echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Performance'].'</a></li>';
-				echo '<li><span><span gpeasy-memory-usage>?</span> Memory</span></li>';
-				echo '<li><span><span gpeasy-memory-max>?</span> Max Memory</span></li>';
-				echo '<li><span><span gpeasy-seconds>?</span> Seconds</span></li>';
-				echo '<li><span><span gpeasy-ms>?</span> Milliseconds</span></li>';
+				echo '<li><span><span cms-memory-usage>?</span> Memory</span></li>';
+				echo '<li><span><span cms-memory-max>?</span> Max Memory</span></li>';
+				echo '<li><span><span cms-seconds>?</span> Seconds</span></li>';
+				echo '<li><span><span cms-ms>?</span> Milliseconds</span></li>';
 				echo '<li><span>0 DB Queries</span></li>';
 				echo '</ul>';
 			echo '</div>';
@@ -712,17 +712,17 @@ namespace gp\admin{
 				if( gp_remote_themes && self::HasPermission('Admin_Theme_Content') ){
 					echo '<li>'.\gp\tool::Link('Admin_Theme_Content/Remote',$langmessage['Download Themes']).'</li>';
 				}
-				echo '<li><a href="http://gpeasy.com/Forum">Support Forum</a></li>';
-				echo '<li><a href="http://gpeasy.com/Services">Service Providers</a></li>';
-				echo '<li><a href="http://gpeasy.com">Official gpEasy Site</a></li>';
-				echo '<li><a href="https://github.com/oyejorge/gpEasy-CMS/issues">Report A Bug</a></li>';
+				echo '<li><a href="'.CMS_DOMAIN.'/Forum">Support Forum</a></li>';
+				echo '<li><a href="'.CMS_DOMAIN.'/Services">Service Providers</a></li>';
+				echo '<li><a href="'.CMS_DOMAIN.'">Official '.CMS_NAME.' Site</a></li>';
+				echo '<li><a href="https://github.com/Typesetter/Typesetter/issues">Report A Bug</a></li>';
 				echo '</ul>';
 				echo '</div>';
 				echo '</div>';
 
 				if( $in_panel ){
 					echo '<div class="gpversion">';
-					echo 'gpEasy '.gpversion;
+					echo CMS_NAME.' '.gpversion;
 					echo '</div>';
 				}
 
@@ -1290,7 +1290,7 @@ namespace gp\admin{
 		}
 
 		/**
-		 * Save the gpEasy configuration
+		 * Save CMS page info
 		 * @return bool
 		 *
 		 */
@@ -1315,7 +1315,7 @@ namespace gp\admin{
 		}
 
 		/**
-		 * Save the gpEasy configuration
+		 * Save the CMS configuration
 		 * @return bool
 		 *
 		 */

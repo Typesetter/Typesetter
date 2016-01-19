@@ -2632,8 +2632,8 @@ namespace gp\tool{
 			$stats = array();
 
 			if( function_exists('memory_get_peak_usage') ){
-				$stats['<span gpeasy-memory-usage>?</span>']	= \gp\admin\Tools::FormatBytes(memory_get_usage());
-				$stats['<span gpeasy-memory-max>?</span>']		= \gp\admin\Tools::FormatBytes(memory_get_peak_usage());
+				$stats['<span cms-memory-usage>?</span>']	= \gp\admin\Tools::FormatBytes(memory_get_usage());
+				$stats['<span cms-memory-max>?</span>']		= \gp\admin\Tools::FormatBytes(memory_get_peak_usage());
 			}
 
 			if( isset($_SERVER['REQUEST_TIME_FLOAT']) ){
@@ -2642,8 +2642,8 @@ namespace gp\tool{
 				$time	= microtime(true) - gp_start_time;
 			}
 
-			$stats['<span gpeasy-seconds>?</span>']		= round($time,3);
-			$stats['<span gpeasy-ms>?</span>']			= round($time*1000);
+			$stats['<span cms-seconds>?</span>']		= round($time,3);
+			$stats['<span cms-ms>?</span>']			= round($time*1000);
 
 
 			return $stats;

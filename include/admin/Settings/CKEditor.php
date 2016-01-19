@@ -75,7 +75,7 @@ class CKEditor{
 		}
 
 		echo '<br/><p>';
-		echo '<a href="http://ckeditor.com" target="_blank">CKEditor</a> is gpEasy\'s text editor of choice because it is a powerful tool with <a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html" target="_blank">many configuration options</a> and a growing <a href="http://ckeditor.com/addons/plugins" target="_blank">list of plugins</a>. ';
+		echo '<a href="http://ckeditor.com" target="_blank">CKEditor</a> is '.CMS_NAME.'\'s text editor of choice because it is a powerful tool with <a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html" target="_blank">many configuration options</a> and a growing <a href="http://ckeditor.com/addons/plugins" target="_blank">list of plugins</a>. ';
 		echo '</p>';
 	}
 

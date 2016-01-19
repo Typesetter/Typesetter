@@ -491,7 +491,7 @@ class Permalinks{
 
 
 	/**
-	 * Strip rules enclosed by gpEasy comments
+	 * Strip rules enclosed by comments
 	 *
 	 * @access public
 	 * @static
@@ -501,7 +501,7 @@ class Permalinks{
 	 */
 	public static function StripRules(&$contents){
 
-		//strip gpEasy code
+		//strip code
 		$pos = strpos($contents,'# BEGIN gpEasy');
 		if( $pos === false ){
 			return;
@@ -521,7 +521,7 @@ class Permalinks{
 
 	/**
 	 * Return the .htaccess code that can be used to hide index.php
-	 * add/remove gpEasy rules from $original_contents to get new $contents
+	 * add/remove cms rules from $original_contents to get new $contents
 	 *
 	 */
 	public static function Rewrite_Rules( $hide_index = true, $home_root, $existing_contents = '', $www = null ){
@@ -615,7 +615,7 @@ class Permalinks{
 			$new_lines[]	= '';
 
 			$new_lines[]	= '# Send all other requests to index.php';
-			$new_lines[]	= '# Append the gp_rewrite argument to tell gpEasy not to use index.php and to prevent multiple rewrites';
+			$new_lines[]	= '# Append the gp_rewrite argument to tell cms not to use index.php and to prevent multiple rewrites';
 			$new_lines[]	= 'RewriteRule /?(.*) "'.$home_root.'index.php?gp_rewrite=$1" [qsa,L]';
 			$new_lines[]	= '';
 		}
@@ -636,7 +636,7 @@ class Permalinks{
 
 
 	/**
-	 * Optimally, generating rules for IIS would involve parsing the xml and integrating gpEasy rules
+	 * Optimally, generating rules for IIS would involve parsing the xml and integrating cms rules
 	 *
 	 */
 	public function Rewrite_RulesIIS( $hide_index = true, $existing_contents ){
@@ -689,7 +689,7 @@ class Permalinks{
 
 
 	/**
-	 * Determine if gpEasy installed on an IIS Server
+	 * Determine if installed on an IIS Server
 	 *
 	 */
 	public static function IIS(){

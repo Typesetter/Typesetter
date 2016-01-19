@@ -34,7 +34,7 @@ gp_defined('gp_remote_themes',gp_remote_addons);
 gp_defined('gp_remote_update',gp_remote_addons);
 gp_defined('gp_unique_addons',false);
 gp_defined('gp_data_type','.php');
-gp_defined('gp_default_theme','Three_point_5/Shore'); 	//Bootswatch_Flatly/4_Sticky_Footer
+gp_defined('gp_default_theme','Bootswatch_Scss/Sandstone');
 
 
 //gp_defined('CMS_DOMAIN',			'http://gpeasy.loc');

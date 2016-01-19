@@ -183,17 +183,8 @@ class Tools{
 
 
 		//use bootswatch theme if server has enough memory
-		$gpLayouts['default']['theme'] = 'Bootswatch_Flatly/4_Sticky_Footer';
-		$gpLayouts['default']['label'] = 'Bootswatch_Flatly/4_Sticky_Footer';
-		if( @ini_set('memory_limit','96M') === false ){
-			$limit = ini_get('memory_limit');
-			$limit = \gp\tool::getByteValue($limit);
-			if( $limit < 100663296 ){
-				$gpLayouts['default']['theme'] = 'Three_point_5/Shore';
-				$gpLayouts['default']['label'] = 'Three_point_5/Shore';
-			}
-		}
-
+		$gpLayouts['default']['theme'] = 'Bootswatch_Scss/Sandstone';
+		$gpLayouts['default']['label'] = 'Bootswatch_Scss/Sandstone';
 		$gpLayouts['default']['color'] = '#93c47d';
 
 

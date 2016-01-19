@@ -125,7 +125,7 @@ namespace gp\tool{
 				'timeout'			=> 5,
 				'redirection'		=> 5,
 				'httpversion'		=> '1.0',
-				'user-agent'		=> 'Mozilla/5.0 (gpEasy RemoteGet) ',
+				'user-agent'		=> 'Mozilla/5.0 (Typesetter RemoteGet) ',
 				//'user-agent'		=> 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0',
 
 				//could be added

@@ -169,7 +169,7 @@ namespace gp\tool\Output{
 		}
 
 		/**
-		 * Replace gpEasy content variables in $content
+		 * Replace content variables in $content
 		 *
 		 */
 		static function TextContent(&$content){
@@ -178,11 +178,11 @@ namespace gp\tool\Output{
 
 			//variables
 			$vars = array(
-				'dirPrefix' => $GLOBALS['dirPrefix'],
-				'linkPrefix' => \gp\tool::HrefEncode($GLOBALS['linkPrefix']),
-				'fileModTime' => self::$meta['modified'],
-				'title' => self::$title,
-				'label' => self::$label,
+				'dirPrefix'		=> $GLOBALS['dirPrefix'],
+				'linkPrefix'	=> \gp\tool::HrefEncode($GLOBALS['linkPrefix']),
+				'fileModTime'	=> self::$meta['modified'],
+				'title'			=> self::$title,
+				'label'			=> self::$label,
 				);
 
 			$offset = 0;

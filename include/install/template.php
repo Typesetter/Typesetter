@@ -167,7 +167,7 @@ input.text{
 
 <div class="wrapper">
 
-<h1>gpEasy Updater</h1>
+<h1>Typesetter Updater</h1>
 
 
 <?php $page->GetContent(); ?>

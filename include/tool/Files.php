@@ -11,7 +11,7 @@ namespace gp\tool{
 	class Files{
 
 		public static $last_modified; 						//the modified time of the last file retrieved with gp\tool\Files::Get();
-		public static $last_version; 						//the gpEasy version of the last file retrieved with gp\tool\Files::Get();
+		public static $last_version; 						//the version of the last file retrieved with gp\tool\Files::Get();
 		public static $last_stats			= array(); 		//the stats of the last file retrieved with gp\tool\Files::Get();
 		public static $last_meta			= array(); 		//the meta data of the last file retrieved with gp\tool\Files::Get();
 
@@ -55,7 +55,7 @@ namespace gp\tool{
 			}
 
 
-			// For data files older than gpEasy 3.0
+			// For data files older than 3.0
 			if( !isset($file_stats['modified']) ){
 				$file_stats['modified'] = $fileModTime;
 			}
@@ -257,7 +257,7 @@ namespace gp\tool{
 		}
 
 		/**
-		 * Use gpEasy's html parser to check the validity of $text
+		 * Use html parser to check the validity of $text
 		 *
 		 * @param string $text The html content to be checked. Passed by reference
 		 */
@@ -564,7 +564,7 @@ namespace gp\tool{
 
 
 
-			trigger_error('gpEasy write lock could not be obtained.');
+			trigger_error('CMS write lock could not be obtained.');
 			define('gp_has_lock',false);
 			return false;
 		}

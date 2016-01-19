@@ -518,7 +518,7 @@ namespace gp\tool{
 				}
 
 				if( !file_exists($full_path) ){
-					self::ExecError('gpEasy Error: Addon hook script doesn\'t exist.',$info,'script');
+					self::ExecError(CMS_NAME.' Error: Addon hook script doesn\'t exist.',$info,'script');
 					return $args;
 				}
 
@@ -538,7 +538,7 @@ namespace gp\tool{
 
 			if( $exec_class ){
 				if( !class_exists($exec_class) ){
-					self::ExecError('gpEasy Error: Addon class doesn\'t exist.',$info,'class');
+					self::ExecError(CMS_NAME.' Error: Addon class doesn\'t exist.',$info,'class');
 					return $args;
 				}
 
@@ -548,7 +548,7 @@ namespace gp\tool{
 					if( method_exists($object, $info['method']) ){
 						$args[0] = call_user_func_array(array($object, $info['method']), $args );
 					}elseif( $has_script ){
-						self::ExecError('gpEasy Error: Addon hook method doesn\'t exist (1).',$info,'method');
+						self::ExecError(CMS_NAME.' Error: Addon hook method doesn\'t exist (1).',$info,'method');
 					}
 				}
 				return $args;
@@ -560,7 +560,7 @@ namespace gp\tool{
 
 				$callback = $info['method'];
 
-				//object callbacks since gpEasy 3.0
+				//object callbacks since 3.0
 				if( is_string($callback) && strpos($callback,'->') !== false ){
 					$has_script = true;
 					list($object,$method) = explode('->',$callback);
@@ -573,7 +573,7 @@ namespace gp\tool{
 					$args[0] = call_user_func_array($callback,$args);
 
 				}elseif( $has_script ){
-					self::ExecError('gpEasy Error: Addon hook method doesn\'t exist (2).',$info,'method');
+					self::ExecError(CMS_NAME.' Error: Addon hook method doesn\'t exist (2).',$info,'method');
 				}
 			}
 
@@ -932,7 +932,7 @@ namespace gp\tool{
 		}
 
 		/**
-		 * Update menu entries to gpEasy 3.0 state
+		 * Update menu entries to 3.0 state
 		 * .. htmlspecialchars label for external links
 		 * @since 3.0b1
 		 */
@@ -2530,8 +2530,8 @@ namespace gp\tool{
 					$message .= 'Reloading... <script type="text/javascript">window.setTimeout(function(){window.location.href = window.location.href},1000);</script>';
 				}else{
 					$message .= '<p>If you are the site administrator, you can troubleshoot the problem by changing php\'s display_errors setting to 1 in the gpconfig.php file.</p>'
-							.'<p>If the problem is being caused by an addon, you may also be able to bypass the error by enabling gpEasy\'s safe mode in the gpconfig.php file.</p>'
-							.'<p>More information is available in the <a href="'.CMS_DOMAIN.'/Docs/Main/Troubleshooting">gpEasy documentation</a>.</p>'
+							.'<p>If the problem is being caused by an addon, you may also be able to bypass the error by enabling '.CMS_NAME.'\'s safe mode in the gpconfig.php file.</p>'
+							.'<p>More information is available in the <a href="'.CMS_DOMAIN.'/Docs/Main/Troubleshooting">Documentation</a>.</p>'
 							.'<p><a href="">Reload this page to continue</a>.</p>';
 				}
 

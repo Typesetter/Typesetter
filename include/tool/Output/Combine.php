@@ -10,7 +10,7 @@ class Combine{
 
 	public static $scripts = array(
 
-				//gpeasy
+				//cms
 				'gp-main'	=> array(	'file' 			=> '/include/js/main.js'),
 
 				'gp-admin'	=> array(	'file'			=> '/include/js/admin.js',

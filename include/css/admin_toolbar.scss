@@ -1,9 +1,4 @@
 
-html{
-	margin-top:$gp_nav_height;
-	}
-
-
 
 body.gpAdmin #admincontent_panel.fixed{
 	position:fixed;
@@ -23,3 +18,16 @@ body.gpAdmin #admincontent_panel.fixed{
 	background-position: 2px -23px;
 	background-color:#c83131;
 	}
+
+
+/**
+ * Fixed Position Adjustment when admin toolbar is displayed
+ *
+ */
+html:not(.edit_layout){
+	margin-top:$gp_nav_height;
+
+	.gp-fixed-adjust{
+		margin-top:29px;
+	}
+}

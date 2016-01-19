@@ -211,7 +211,7 @@ $(function(){
 	 */
 	function LayoutSetup(){
 
-		$('body').addClass('edit_layout'); //for .gp-fixed-adjust
+		$('html').addClass('edit_layout'); //for .gp-fixed-adjust
 
 		if( typeof(gpLayouts) == 'undefined' ){
 			return;

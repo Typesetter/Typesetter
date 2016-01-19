@@ -364,7 +364,7 @@ $gp.AdminBoxC = function(data,options){
 	$('.messages').detach();
 
 	//close on escape key
-	$gp.$doc.on('keypress.abox',function(e) {
+	$gp.$doc.on('keyup.abox',function(e) {
 		if( e.keyCode == 27 ){
 			$gp.CloseAdminBox();
 		}
@@ -383,7 +383,7 @@ $gp.CloseAdminBox = function(evt){
 		evt.preventDefault();
 	}
 
-	$gp.$doc.off('keypress.abox');
+	$gp.$doc.off('keyup.abox');
 
 	$('#gp_admin_box1').fadeOut();
 	$('#gp_admin_box').fadeOut(300,function(){

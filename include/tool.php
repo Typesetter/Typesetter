@@ -839,7 +839,7 @@ namespace gp{
 		 *
 		 * @static
 		 * @since 2.0b1
-		 * @param string $names A comma separated list of ui components to include. Avail since gpEasy 3.5.
+		 * @param string $names A comma separated list of ui components to include. Avail since 3.5.
 		 */
 		static function LoadComponents( $names = ''){
 			\gp\tool\Output::$components .= ','.$names.',';
@@ -963,8 +963,8 @@ namespace gp{
 
 
 		/**
-		 * Stop loading gpEasy
-		 * Check to see if gpEasy has already been installed
+		 * Stop loading
+		 * Check to see if the cms has already been installed
 		 *
 		 */
 		static function stop(){
@@ -980,8 +980,8 @@ namespace gp{
 			}
 
 			die('<p>Notice: The site configuration did not load properly.</p>'
-				.'<p>If you are the site administrator, you can troubleshoot the problem turning debugging "on" or bypass it by enabling gpEasy safe mode.</p>'
-				.'<p>More information is available in the <a href="'.CMS_DOMAIN.'/Docs/Main/Troubleshooting">gpEasy documentation</a>.</p>'
+				.'<p>If you are the site administrator, you can troubleshoot the problem turning debugging "on" or bypass it by enabling '.CMS_NAME.' safe mode.</p>'
+				.'<p>More information is available in the <a href="'.CMS_DOMAIN.'/Docs/Main/Troubleshooting">Documentation</a>.</p>'
 				.self::ErrorBuffer(true,false)
 				);
 		}
@@ -1039,7 +1039,7 @@ namespace gp{
 			if( version_compare(\gp\tool\Files::$last_version,'3.0b1','<') ){
 				$gp_menu = \gp\tool\Output::FixMenu($gp_menu);
 
-				// fix gp_titles for gpEasy 3.0+
+				// fix gp_titles for 3.0+
 				// just make sure any ampersands in the label are escaped
 				foreach($gp_titles as $key => $value){
 					if( isset($gp_titles[$key]['label']) ){
@@ -1161,7 +1161,7 @@ namespace gp{
 		 * Traverse the $menu and gather all the descendants of a title given by it's $index
 		 * @param string $index The data index of the child title
 		 * @param array $menu The menu to use to check for descendants
-		 * @param bool $children_only Option to return a list of children instead of all descendants. Since gpEasy 4.3
+		 * @param bool $children_only Option to return a list of children instead of all descendants. Since 4.3
 		 * @return array
 		 */
 		static function Descendants( $index, $menu, $children_only = false){
@@ -1611,7 +1611,7 @@ namespace gp{
 		static function JsStart(){
 			global $linkPrefix;
 
-			//default gpEasy Variables
+			//default Variables
 			\gp\tool\Output::$inline_vars['isadmin']			= false;
 			\gp\tool\Output::$inline_vars['gpBase']				= rtrim(self::GetDir(''),'/');
 			\gp\tool\Output::$inline_vars['post_nonce']			= '';
@@ -1799,7 +1799,7 @@ namespace gp{
 			}
 
 
-			//add php and gpeasy info
+			//add php and cms info
 			$debug['lang_key']		= $lang_key;
 			$debug['phpversion']	= phpversion();
 			$debug['gpversion']		= gpversion;
@@ -1898,13 +1898,14 @@ namespace gp{
 		}
 
 		/**
-		 * A more functional JSON Encode function for gpEasy than php's json_encode
+		 * A more functional JSON Encode function
 		 * @param mixed $data
 		 *
 		 */
 		static function JsonEncode($data){
-			static $search = array('\\','"',"\n","\r","\t",'<script','</script>');
-			static $repl = array('\\\\','\"','\n','\r','\t','<"+"script','<"+"/script>');
+
+			$search		= array("\n","\r","\t",'<script','</script>');
+			$repl		= array('\n','\r','\t','<"+"script','<"+"/script>');
 
 			$type = gettype($data);
 			switch( $type ){
@@ -1920,6 +1921,8 @@ namespace gp{
 				return $data;
 
 				case 'string':
+				$data		= str_replace('\\','\\\\',$data);
+				$data		= preg_replace("!([\b\f\"\\'])!", "\\\\$1", $data);
 				return '"'.str_replace($search,$repl,$data).'"';
 
 				case 'object':

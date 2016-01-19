@@ -442,11 +442,17 @@ a.add_layout{
 		padding:1px 5px 1px 0;
 	}
 
-
 	div.ui-resizable-e{
-		position:absolute!important;
+		position:absolute !important;
 		background: url('../../include/imgs/drag_handle.gif')  50% 50% no-repeat;
-		right:-8px;
+		padding:0;
+		right:0;
+		width:10px;
+		}
+
+	.ui-resizable-resizing div.ui-resizable-e{
+		right:-100px;
+		padding:0 100px;
 	}
 }
 

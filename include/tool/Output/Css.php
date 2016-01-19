@@ -2,7 +2,7 @@
 
 namespace gp\tool\Output;
 
-class CSS{
+class Css{
 
 
 	/**

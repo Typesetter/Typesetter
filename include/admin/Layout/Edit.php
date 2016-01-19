@@ -48,7 +48,7 @@ class Edit extends \gp\admin\Layout{
 		$cmd = \gp\tool::GetCommand();
 
 		$GLOBALS['GP_ARRANGE_CONTENT']	= true;
-		$page->head_js[]				= '/include/js/inline_edit/inline_editing.js';
+		//$page->head_js[]				= '/include/js/inline_edit/inline_editing.js';
 		$this->curr_layout				= $layout;
 		$this->layout_slug				= 'Admin_Theme_Content/Edit/'.rawurlencode($layout);
 
@@ -438,7 +438,7 @@ class Edit extends \gp\admin\Layout{
 
 		if( count($style_files) ){
 
-			$compiled		= \gp\tool\Output\CSS::ParseLess( $style_files );
+			$compiled		= \gp\tool\Output\Css::ParseLess( $style_files );
 
 			if( !$compiled ){
 				message($langmessage['OOPS'].' (Invalid LESS)');
@@ -477,7 +477,7 @@ class Edit extends \gp\admin\Layout{
 
 		$style_files[]		= $dir.'/style.scss';
 
-		$compiled			= \gp\tool\Output\CSS::ParseScss($style_files);
+		$compiled			= \gp\tool\Output\Css::ParseScss($style_files);
 
 		if( !$compiled ){
 			message($langmessage['OOPS'].' (Invalid '.$style_type.')');

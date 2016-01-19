@@ -52,7 +52,7 @@ namespace gp\tool{
 			$ext = \gp\tool::Ext($script['file']);
 			if( $ext === 'less' || $ext === 'scss' ){
 				$full_path			= self::$current['code_folder_full'].'/'.ltrim($file,'/');
-				$path				= \gp\tool\Output\CSS::Cache($full_path,$ext);
+				$path				= \gp\tool\Output\Css::Cache($full_path,$ext);
 			}else{
 				$path				= self::$current['code_folder_part'].'/'.ltrim($file,'/');
 			}

@@ -4,7 +4,7 @@ namespace gp\admin;
 
 defined('is_running') or die('Not an entry point...');
 
-class Login extends \display{
+class Login extends \gp\Page{
 
 	public $pagetype = 'admin_display';
 

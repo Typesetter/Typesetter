@@ -95,13 +95,16 @@ class Available extends \gp\admin\Layout{
 				$id = $info['id'];
 			}
 
-			$has_screenshot = file_exists($info['full_dir'].'/screenshot.png');
 
 			//screenshot
-			if( $has_screenshot ){
+			if( file_exists($info['full_dir'].'/screenshot.png') ){
 				echo '<div class="expand_child_click">';
 				echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';
 				echo '<div style="background-image:url(\''.\gp\tool::GetDir($info['rel'].'/screenshot.png').'\')">';
+			}elseif( file_exists($info['full_dir'].'/screenshot.jpg') ){
+				echo '<div class="expand_child_click">';
+				echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';
+				echo '<div style="background-image:url(\''.\gp\tool::GetDir($info['rel'].'/screenshot.jpg').'\')">';
 			}else{
 				echo '<div>';
 				echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';

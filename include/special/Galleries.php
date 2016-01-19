@@ -32,7 +32,7 @@ class Galleries{
 		$index			= $gp_index[$title];
 		$title_info		= $gp_titles[$index];
 
-		if( $info['visibility'] == 'hide' || isset($title_info['vis']) ){
+		if( (isset($info['visibility']) && $info['visibility'] == 'hide') || isset($title_info['vis']) ){
 			$this->not_visible[$title] = $info;
 			return false;
 		}

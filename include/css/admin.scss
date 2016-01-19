@@ -297,12 +297,12 @@
 	padding: 0 40px 0 (40px - $gp_nav_link_padding_x);
 	font-weight: normal;
 	background: $gp_panel_bg;
-	font-size: $gp_nav_font_size;
-	line-height: $gp_nav_font_size;
 	}
 #admincontent_panel,
 #admincontent_panel *{
 	@include box-sizing( border-box );
+	font-size: $gp_nav_font_size;
+	line-height: $gp_nav_font_size;
 	}
 
 #admincontent_panel .GPAREA{

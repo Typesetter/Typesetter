@@ -44,7 +44,7 @@ class About{
 		echo '</p>';
 		echo '<ul>';
 		echo '<li><a href="https://github.com/Typesetter/Typesetter" target="_blank">Fork on Github</a></li>';
-		echo '<li><a href="http://php.opensourcecms.com/scripts/details.php?scriptid=360&amp;name=gpEasy%20CMS" target="_blank">OpensourceCMS.com</a></li>';
+		echo '<li><a href="http://www.opensourcecms.com/scripts/details.php?scriptid=360" target="_blank">OpensourceCMS.com</a></li>';
 		echo '</ul>';
 
 

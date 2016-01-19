@@ -8,7 +8,7 @@ class Update extends \gp\Page{
 
 	//page variables
 	public $pagetype			= 'update';
-	public $label				= CMS_NAME.' Updater';
+	public $label				= 'Updater';
 	public $head				= '';
 	public $admin_css			= '';
 	public $contentBuffer		= '';

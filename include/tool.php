@@ -362,7 +362,7 @@ namespace gp{
 
 			$linkPrefix = $dirPrefix;
 
-			// gp_rewrite = 'On' and gp_rewrite = 'gpuniq' are deprecated as of gpEasy 4.1
+			// gp_rewrite = 'On' and gp_rewrite = 'gpuniq' are deprecated since 4.1
 			// gp_rewrite = bool will still be used internally
 			if( isset($_SERVER['gp_rewrite']) ){
 				if( $_SERVER['gp_rewrite'] === true || $_SERVER['gp_rewrite'] == 'On' ){
@@ -374,7 +374,7 @@ namespace gp{
 			}elseif( isset($_REQUEST['gp_rewrite']) ){
 				$_SERVER['gp_rewrite'] = true;
 
-			// gp_indexphp is deprecated as of gpEasy 4.1
+			// gp_indexphp is deprecated since 4.1
 			}elseif( defined('gp_indexphp') ){
 
 				if( gp_indexphp === false ){

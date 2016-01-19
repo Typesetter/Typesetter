@@ -176,7 +176,7 @@ namespace gp\admin\Settings{
 			echo '<div style="margin:1em 0">';
 			echo '<input type="hidden" name="cmd" value="changeprefs" />';
 			echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit"/>';
-			echo ' <input type="button" name="" value="'.$langmessage['cancel'].'" class="gpcancel"/>';
+			echo ' <input type="button" name="" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel"/>';
 			echo '</div>';
 
 			echo '<p class="admin_note">';

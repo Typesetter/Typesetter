@@ -8,7 +8,7 @@ class Update extends \gp\Page{
 
 	//page variables
 	public $pagetype			= 'update';
-	public $label				= 'gpEasy Updater';
+	public $label				= CMS_NAME.' Updater';
 	public $head				= '';
 	public $admin_css			= '';
 	public $contentBuffer		= '';
@@ -238,7 +238,7 @@ class Update extends \gp\Page{
 
 
 	/**
-	 * Update available package information from gpEasy.com
+	 * Update available package information
 	 *
 	 */
 	function DoRemoteCheck2(){
@@ -278,7 +278,7 @@ class Update extends \gp\Page{
 		}
 
 
-		//get data from gpEasy
+		//get data
 		$result = \gp\tool\RemoteGet::Get_Successful($path);
 		if( !$result ){
 			$this->msg(\gp\tool\RemoteGet::Debug('Sorry, data not fetched'));
@@ -286,7 +286,7 @@ class Update extends \gp\Page{
 		}
 
 
-		//zipped data possible as of gpEasy 4.1
+		//zipped data possible since 4.1
 		/*
 		if( function_exists('gzinflate') ){
 			$temp = gzinflate($result);
@@ -297,7 +297,7 @@ class Update extends \gp\Page{
 		*/
 
 		$result = trim($result);
-		$array	= json_decode($result, true); //json as of gpEasy 4.1
+		$array	= json_decode($result, true); //json since 4.1
 		if( !is_array($array) ){
 			$debug						= array();
 			$debug['Type']				= gettype($array);
@@ -611,7 +611,7 @@ class Update extends \gp\Page{
 
 
 	/**
-	 * Remove configuration setting that indicates gpEasy is being updated
+	 * Remove configuration setting that indicates the CMS is being updated
 	 *
 	 */
 	function RemoveUpdateMessage(){
@@ -811,16 +811,15 @@ class Update extends \gp\Page{
 
 
 	/**
-	 * Download the source code from gpeasy
+	 * Download the source code
 	 *
 	 */
 	function DownloadSource(){
 		global $langmessage, $dataDir;
 
-		$this->msg('Downloading version '.$this->core_package['version'].' from gpEasy.com.');
+		$this->msg('Downloading version '.$this->core_package['version'].' from '.CMS_READABLE_DOMAIN.'.');
 
 		/* for testing
-		 * $download = 'http://test.gpeasy.com/gpEasy_test.zip';
 		 * $download = 'http://gpeasy.loc/x_gpEasy.zip';
 		 */
 

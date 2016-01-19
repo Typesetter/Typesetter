@@ -46,7 +46,7 @@ class Errors{
 	}
 
 	/**
-	 * Display a list of fatal errors caught by gpeasy
+	 * Display a list of fatal errors
 	 *
 	 */
 	function FatalErrors(){
@@ -174,7 +174,7 @@ class Errors{
 			return;
 		}
 
-		echo '<p><b>Please Note:</b> The following errors are not limited to your installation of gpEasy.';
+		echo '<p><b>Please Note:</b> The following errors are not limited to your installation of '.CMS_NAME.'.';
 		echo '</p>';
 
 		$lines = file($error_log);

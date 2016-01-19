@@ -1181,7 +1181,7 @@ class Layout extends \gp\admin\Addon\Install{
 			//remote version
 			}elseif( gp_remote_themes && isset(\gp\admin\Tools::$new_versions[$addon_id]) && version_compare(\gp\admin\Tools::$new_versions[$addon_id]['version'],$version,'>') ){
 				$version_info = \gp\admin\Tools::$new_versions[$addon_id];
-				$label = $langmessage['new_version'].' &nbsp; '.$version_info['version'].' &nbsp; (gpEasy.com)';
+				$label = $langmessage['new_version'].' &nbsp; '.$version_info['version'].' &nbsp; ('.CMS_READABLE_DOMAIN.')';
 				echo '<div class="gp_notice">';
 				echo \gp\tool::Link('Admin_Theme_Content',$label,'cmd=remote_install&id='.$addon_id.'&name='.rawurlencode($version_info['name']).'&layout='.$layout);
 				echo '</div>';

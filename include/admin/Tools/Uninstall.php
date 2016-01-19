@@ -25,9 +25,9 @@ class Uninstall{
 		echo '<h2>Uninstall Preparation</h2>';
 		echo '<form class="renameform" action="'.\gp\tool::GetUrl('Admin/Uninstall').'" method="post">';
 		echo '<p>';
-		echo 'For some installations, you won\'t be able to delete gpEasy\'s data files from your server untill the access permissions have been changed. ';
+		echo 'For some installations, you won\'t be able to delete '.CMS_NAME.'\'s data files from your server untill the access permissions have been changed. ';
 		echo ' This script will change file permissions for files and folders in the /data directory to 0777.';
-		echo ' <br/><em>You should not continue unless you plan on deleting all gpEasy files from your server.</em>';
+		echo ' <br/><em>You should not continue unless you plan on deleting all '.CMS_NAME.' files from your server.</em>';
 		echo '<input type="hidden" name="cmd" value="continue" />';
 		echo ' <input type="submit" name="aaa" value="'.$langmessage['continue'].'" class="gpsubmit"/>';
 		//echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" />';

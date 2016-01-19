@@ -96,26 +96,31 @@ CKEDITOR.on( 'dialogDefinition', function( ev ){
 			return function() {
 				original.call(this);
 
-				var url = this.getContentElement('info', 'url').getInputElement().$;
-				var protocol = this.getContentElement('info', 'protocol').getInputElement().$;
+				var url			= this.getContentElement('info', 'url').getInputElement().$;
+				var protocol	= this.getContentElement('info', 'protocol').getInputElement().$;
+				var $url		= $(url);
 
 				//position and zIndex are needed because of bugs with the jquery ui
-				$(url).css({'position':'relative',zIndex: 12000 }).autocomplete({
-					source:gptitles,
-					delay: 100, // since we're using local data
-					minLength: 0,
-					select: function(event,ui){
-						if( ui.item ){
-							url.value = encodeURI(ui.item[1]);
-							protocol.value = '';
+				$url.autocomplete({
+					open		: function(){
+									$(this).autocomplete('widget').css('z-index', 10100);
+									return false;
+								},
+					source		: gptitles,
+					delay		: 100, // since we're using local data
+					minLength	: 0,
+					select		: function(event,ui){
+									if( ui.item ){
+									url.value = encodeURI(ui.item[1]);
+									protocol.value = '';
 
-							//enter key?
-							if( event.which == 13 ){
-								auto_complete_used = true;
-							}
-							event.stopPropagation();
-							return false;
-						}
+									//enter key?
+									if( event.which == 13 ){
+										auto_complete_used = true;
+									}
+									event.stopPropagation();
+									return false;
+								}
 					}
 
 				}).data( "ui-autocomplete" )._renderItem = function( ul, item ) {

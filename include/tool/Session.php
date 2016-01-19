@@ -896,7 +896,7 @@ namespace gp\tool{
 			$possible = array();
 
 			$possible['gpui_cmpct']	= 'integer';
-			$possible['gpui_vis']	= array('con'=>'con','cur'=>'cur','app'=>'app','add'=>'add','set'=>'set','upd'=>'upd','use'=>'use','gpe'=>'gpe','res'=>'res','tool'=>'tool','false'=>false);
+			$possible['gpui_vis']	= array('con'=>'con','cur'=>'cur','app'=>'app','add'=>'add','set'=>'set','upd'=>'upd','use'=>'use','cms'=>'cms','res'=>'res','tool'=>'tool','false'=>false);
 
 
 			$possible['gpui_tx']	= 'integer';

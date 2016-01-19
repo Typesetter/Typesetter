@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'Lataa sovelluksia vain luottamistasi lähteistä. Pahantahtoiset sovellukset voivat aiheuttaa vahinkoa asennuksellesi, mm. hävittämällä tietoja. ',
 	'Selected_Install'               => 'Olet valinnut kohteen %s asentamisen lähteestä %s.',
 	'File_Not_Found'                 => 'Tiedostoa ei löytynyt: %s',
-	'addon_key_defined'              => 'Kohdetta %s ei voitu asentaa. Se on jo määritelty gpEasyn tai toisen liitännäisen toimesta.',
+	'addon_key_defined'              => 'Kohdetta %s ei voitu asentaa. Se on jo määritelty Typesettern tai toisen liitännäisen toimesta.',
 	'Ini_Error'                      => 'Tämän liitännäisen Addon.ini-tiedoston jäsentämisessä tapahtui virhe.',
 	'Ini_No_Name'                    => 'Muuttuja <i>Addon_Name</i> puuttuu tämän liitännäisen Addon.ini-tiedostosta.',
-	'Ini_Submit_Bug'                 => 'Lähetä tieto virheestä kehittäjälle tai tutustu <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank">Addon.ini-tiedostojen</a> ohjeeseen.',
-	'min_version'                    => 'Asentaaksesi tämän liitännäisen tarvitset gpEasystä vähintään version %s. ',
-	'min_version_upgrade'            => 'Tuoreimman version löydät viralliselta <a href="http://gpeasy.com/Download" target="_blank">gpEasyn verkkosivulta</a>.',
+	'Ini_Submit_Bug'                 => 'Lähetä tieto virheestä kehittäjälle tai tutustu <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank">Addon.ini-tiedostojen</a> ohjeeseen.',
+	'min_version'                    => 'Asentaaksesi tämän liitännäisen tarvitset Typesetterstä vähintään version %s. ',
+	'min_version_upgrade'            => 'Tuoreimman version löydät viralliselta <a href="http://www.typesettercms.com/Download" target="_blank">Typesettern verkkosivulta</a>.',
 	'downgrade'                      => 'Asennettu versio tästä liitännäisestä on uudempi kuin versio jota olet asentamassa.',
 	'error_unpacking'                => 'Paketin käsittelyssä tapahtui virhe.',
 	'layouts'                        => 'Asettelut',
@@ -393,9 +393,9 @@ $langmessage = array (
 	'Install'                        => 'Asenna',
 	'Installing'                     => 'Asennetaan',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => 'Juurihakemistossasi on tiedosto index.html, joka saattaa estää näyttämästä gpEasyä.',
+	'index.html exists'              => 'Juurihakemistossasi on tiedosto index.html, joka saattaa estää näyttämästä Typesetterä.',
 	'Notes'                          => 'Huomautukset',
-	'Install_Conflict'               => 'gpEasyä ei voi asentaa palvelimellesi nykyisillä asetuksilla. ',
+	'Install_Conflict'               => 'Typesetterä ei voi asentaa palvelimellesi nykyisillä asetuksilla. ',
 	'Install_Fix'                    => 'Jatkaaksesi asennusta korjaa asetukset huomautusten mukaisesti ja <a href="%s">päivitä sivu</a>.',
 	'Website_Title'                  => 'Sivuston otsikko',
 	'Installation_Was_Successfull'   => 'Asennus onnistui!',
@@ -441,7 +441,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'Päivitykset tarkastettiin viimeksi %s',
 	'Server_isnt_supported'          => 'Palvelimesi ei voi suorittaa automaattista päivitystä',
 	'UP_TO_DATE'                     => 'Asennuksesi on ajan tasalla',
-	'New_version_available'          => 'Uudempi versio gpEasysta on saatavilla',
+	'New_version_available'          => 'Uudempi versio Typesettersta on saatavilla',
 	'Your_version'                   => 'Sinun versiosi:',
 	'New_version'                    => 'Uusi versio:',
 	'Update_Now'                     => 'Päivitä nyt',
@@ -455,7 +455,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'Asennus on valmis päivitettäväksi.',
 	'download_failed'                => 'Pakkauksen lataaminen epäonnistui. Yritä uudelleen myöhemmin.',
 	'download_failed_md5'            => 'Ladattua pakettia ei voitu todentaa. Yritä uudelleen myöhemmin.',
-	'download_failed_xerror'         => 'Jos sinun täytyy vielä ostaa tämä liitännäinen tai kirjautua sisään gpEasy.com-sivustolle todistaaksesi ostaneesi sen, voit <a %s>tehdä sen nyt</a>.',
+	'download_failed_xerror'         => 'Jos sinun täytyy vielä ostaa tämä liitännäinen tai kirjautua sisään TypesetterCMS.com-sivustolle todistaaksesi ostaneesi sen, voit <a %s>tehdä sen nyt</a>.',
 	'package_downloaded'             => 'Pakkaus on ladattu.',
 	'download_verified'              => 'Ladattu paketti on tarkistettu ja todennettu.',
 	'package_unpacked'               => 'Uudet tiedostot purettu',
@@ -465,7 +465,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'Palaa sivustolle',
 	'error_updating_settings'        => 'Sivuston asetuksia ei voitu päivittää',
 	'delete_incomplete'              => 'Valitettavasti joitakin tiedostoista ei voitu poistaa.',
-	'revert_ver_notice'              => 'Arkistojen, jotka on luotu eri gpEasy-versiolla, palauttamisella voi olla ei-toivottuja seurauksia. Käytät parhaillaan gpEasy-versiota %s ja valittu arkisto luotiin käyttäen versiota %s.',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Arkistojen, jotka on luotu eri Typesetter-versiolla, palauttamisella voi olla ei-toivottuja seurauksia. Käytät parhaillaan Typesetter-versiota %s ja valittu arkisto luotiin käyttäen versiota %s.',
 	'archive_contains'               => 'Valittu arkisto luotiin %s ja se sisältää %s tiedostoa.',
 	'Revert'                         => 'Palauta',
 	'Revert_to_Archive'              => 'Palauta arkistoitu tila',

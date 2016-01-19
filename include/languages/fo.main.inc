@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'Heinta bert forrit frá álítandi keldum. Illgrunarlig forrit kunnu skaða tína installatión íroknað men ikki avmarkað til at missa dátur. ',
 	'Selected_Install'               => 'Tú hevur valt at installera %s frá %s.',
 	'File_Not_Found'                 => 'Kundi ikki finna fíluna: %s',
-	'addon_key_defined'              => 'Kundi ikki installera %s. Tað er longu greinað við gpEasy ella onkra aðra Virkan.',
+	'addon_key_defined'              => 'Kundi ikki installera %s. Tað er longu greinað við Typesetter ella onkra aðra Virkan.',
 	'Ini_Error'                      => 'Ein feilur er funni við greinan av Addon.ini fíluna til hesa Virkanina.',
 	'Ini_No_Name'                    => 'Variabulin <i>Addon_Name</i> finst ikki í Addon.ini fíluni til hesa Virkanina.',
-	'Ini_Submit_Bug'                 => 'Vinarliga send feilin til framleiðaran ella sí frágreiðingarskjal um <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank"> Addon.ini filer</a>.',
-	'min_version'                    => 'Í minsta lagi gpEasy versión %s krevst fyri at kunna installera hesa Virkanina. ',
-	'min_version_upgrade'            => 'Tú fært nýggjastu versión frá almennu <a href="http://gpeasy.com/Download" target="_blank"> gpEasy heimasíðuna </a>.',
+	'Ini_Submit_Bug'                 => 'Vinarliga send feilin til framleiðaran ella sí frágreiðingarskjal um <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank"> Addon.ini filer</a>.',
+	'min_version'                    => 'Í minsta lagi Typesetter versión %s krevst fyri at kunna installera hesa Virkanina. ',
+	'min_version_upgrade'            => 'Tú fært nýggjastu versión frá almennu <a href="http://www.typesettercms.com/Download" target="_blank"> Typesetter heimasíðuna </a>.',
 	'downgrade'                      => 'Tú hevur longu eina nýggjari versión av Virkanina, enn hana, tú ert við at installera.',
 	'error_unpacking'                => 'Hey, feilur var í viðgerðini av heintaða pakkanum.',
 	'layouts'                        => 'Layout',
@@ -393,9 +393,9 @@ $langmessage = array (
 	'Install'                        => 'Installera',
 	'Installing'                     => 'Installatión',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => 'Tað finst ein index.html fíla í rótmappuni ið kann forða fyri, at gpEasy verður víst.',
+	'index.html exists'              => 'Tað finst ein index.html fíla í rótmappuni ið kann forða fyri, at Typesetter verður víst.',
 	'Notes'                          => 'Notur',
-	'Install_Conflict'               => 'gpEasy kann ikki installerast á tín servara við verandi stillingum. ',
+	'Install_Conflict'               => 'Typesetter kann ikki installerast á tín servara við verandi stillingum. ',
 	'Install_Fix'                    => 'Um tú vilt halda áfram við installationini, mást tú rætta stillingarnar í samband við upplýsingar omanfyri, so <a href="%s"> dagførir hesa síðu </a>.',
 	'Website_Title'                  => 'Heimasíðu Heiti',
 	'Installation_Was_Successfull'   => 'Installatiónin er liðug!',
@@ -441,7 +441,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'Forrits dagføringar vórðu seinast kannaðar %s.',
 	'Server_isnt_supported'          => 'Servarin kann ikki gera auto-dagføringshendingina.',
 	'UP_TO_DATE'                     => 'Installatiónin er up-to-date.',
-	'New_version_available'          => 'Ein nýggj versión av gpEasy finst.',
+	'New_version_available'          => 'Ein nýggj versión av Typesetter finst.',
 	'Your_version'                   => 'Tín Versión:',
 	'New_version'                    => 'Nýggj Versión:',
 	'Update_Now'                     => 'Dagfør Nú',
@@ -455,7 +455,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'Installatiónin er klát til at verða uppstigað.',
 	'download_failed'                => 'Hey, pakkaheintingin miseydnaåist. Vinarliga royn aftur seinni.',
 	'download_failed_md5'            => 'Hey, heintaði pakkin kundi ikki góðkennast. Vinarliga royn aftur seinni.',
-	'download_failed_xerror'         => 'Um tær enn nýtist at keypa hesa eykavirkanina ella innrita til gpEasy.com fyri at heinta eina keypsváttan <a %s>so ger tað beint nú</a>.',
+	'download_failed_xerror'         => 'Um tær enn nýtist at keypa hesa eykavirkanina ella innrita til TypesetterCMS.com fyri at heinta eina keypsváttan <a %s>so ger tað beint nú</a>.',
 	'package_downloaded'             => 'Pakki heintaður og er í lagi.',
 	'download_verified'              => 'Heinatði pakkin varð kannaður og góðkendur.',
 	'package_unpacked'               => 'Nýggjar fílur Útpakkaðar',
@@ -465,7 +465,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'Far aftur til heimasíðuna',
 	'error_updating_settings'        => 'Kundi ikki dagføra stillingarnar á heimasíðuni',
 	'delete_incomplete'              => 'Tíverri var ikki møguligt at strika nakrar av fílunum.',
-	'revert_ver_notice'              => 'Afturvendan til arkiv í ymsum  gpEasy versiónum kunnu fáa óynskt úrslit. Tú brúkar í løtuni gpEasy%s og valda arkivið varð eksporterað við versión%s',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Afturvendan til arkiv í ymsum  Typesetter versiónum kunnu fáa óynskt úrslit. Tú brúkar í løtuni Typesetter%s og valda arkivið varð eksporterað við versión%s',
 	'archive_contains'               => 'Valda arkivið varð stovnað %s og hevur %s filer.',
 	'Revert'                         => 'Vend aftur',
 	'Revert_to_Archive'              => 'Vend aftur til arkivið',

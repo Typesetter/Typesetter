@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -310,12 +310,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'Sa peaksid alla laadima tarkvara ainult usaldatud autoritelt.  Õelvara võib kahjustada muuhulgas sinu paigalduse, mitte ainult andmete kaotamist.  ',
 	'Selected_Install'               => 'Oled valinud paigaldada %s asukohast %s.',
 	'File_Not_Found'                 => 'Faili ei leitud: %s',
-	'addon_key_defined'              => 'Ei saa paigaldada %s. See on juba määratletud gpEasy või mõne muu lisandmooduli poolt.',
+	'addon_key_defined'              => 'Ei saa paigaldada %s. See on juba määratletud Typesetter või mõne muu lisandmooduli poolt.',
 	'Ini_Error'                      => 'Avastati viga Addon.ini faili parsimisel selle lisandmooduli tarvis.',
 	'Ini_No_Name'                    => 'Muutuja <i>Addon_Name</i> puudub Addon.ini failis selle lisandmooduli jaoks.',
-	'Ini_Submit_Bug'                 => 'Palun esita viga arendajale või uuri dokumentatsiooni <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank">Addon.ini faili</a> kohta.',
-	'min_version'                    => 'Selleks, et paigaldada see lisandmoodul, pead sa paigaldama gpEasy alates versioonist %s.  ',
-	'min_version_upgrade'            => 'Sa saad uusima versiooni ametlikult <a href="http://gpeasy.com/Download" target="_blank">gpEasy veebilehelt</a>.',
+	'Ini_Submit_Bug'                 => 'Palun esita viga arendajale või uuri dokumentatsiooni <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank">Addon.ini faili</a> kohta.',
+	'min_version'                    => 'Selleks, et paigaldada see lisandmoodul, pead sa paigaldama Typesetter alates versioonist %s.  ',
+	'min_version_upgrade'            => 'Sa saad uusima versiooni ametlikult <a href="http://www.typesettercms.com/Download" target="_blank">Typesetter veebilehelt</a>.',
 	'downgrade'                      => 'Hetkel paigaldatud lisandmooduli versioon on uuem, kui see, mida paigaldama hakad.',
 	'error_unpacking'                => 'Oih, tekkis viga, kui püüti töödelda allalaaditud paketti.',
 	'layouts'                        => 'Kujundused',
@@ -394,9 +394,9 @@ $langmessage = array (
 	'Install'                        => 'Paigalda',
 	'Installing'                     => 'Paigaldamine',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => 'Sinu juurkaustas on index.html fail ja see võib takistada gpEasy kuvamist.',
+	'index.html exists'              => 'Sinu juurkaustas on index.html fail ja see võib takistada Typesetter kuvamist.',
 	'Notes'                          => 'Märkused',
-	'Install_Conflict'               => 'gpEasy-t ei saa paigaldada sinu serverisse praeguste seadetega.  ',
+	'Install_Conflict'               => 'Typesetter-t ei saa paigaldada sinu serverisse praeguste seadetega.  ',
 	'Install_Fix'                    => 'Et jätkata paigaldamist, palun paranda ülaltoodud teadetega seotud seaded, seejärel <a href="%s">värskenda see leht</a>.',
 	'Website_Title'                  => 'Kodulehe pealkiri',
 	'Installation_Was_Successfull'   => 'Paigaldamine oli edukas!',
@@ -442,7 +442,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'Tarkvara uuendusi on viimati kontrollitud %s.',
 	'Server_isnt_supported'          => 'Sinu server ei suuda käivitada automaatset uuenduse protsessi.',
 	'UP_TO_DATE'                     => 'Sinu paigaldus on ajakohane.',
-	'New_version_available'          => 'gpEasy uus versioon on saadaval.',
+	'New_version_available'          => 'Typesetter uus versioon on saadaval.',
 	'Your_version'                   => 'Sinu versioon:',
 	'New_version'                    => 'Uus versioon:',
 	'Update_Now'                     => 'Uuenda nüüd',
@@ -456,7 +456,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'Sinu paigaldus on valmis uuendamiseks.',
 	'download_failed'                => 'Oih, paketi allalaadimine nurjus. Palun proovi hiljem uuesti.',
 	'download_failed_md5'            => 'Oih, allalaetud paketi kinnitus nurjus. Palun proovi hiljem uuesti.',
-	'download_failed_xerror'         => 'Kui sul on ikka vaja osta see lisandmoodul, või gpEasy.com peal ostu tõendamiseks sisse logida, siis <a %s>saad seda teha just nüüd</a>.',
+	'download_failed_xerror'         => 'Kui sul on ikka vaja osta see lisandmoodul, või TypesetterCMS.com peal ostu tõendamiseks sisse logida, siis <a %s>saad seda teha just nüüd</a>.',
 	'package_downloaded'             => 'Pakett tiriti edukalt alla.',
 	'download_verified'              => 'Allalaaditud pakett kontrolliti ja sai kinnitatud.',
 	'package_unpacked'               => 'Uued failid lahti pakitud',
@@ -466,7 +466,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'Tagasi kodulehele',
 	'error_updating_settings'        => 'Ei saa sinu kodulehe seadistusi uuendada',
 	'delete_incomplete'              => 'Vabandust, mõnda faili ei saanud kustutada.',
-	'revert_ver_notice'              => 'Taastamisel arhiividesse erinevatest gpEasy versioonidest võivad olla soovimatute tulemustega. Sa kasutad praegu gpEasy %s ning valitud arhiiv eksporditi versiooni %s ajal',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Taastamisel arhiividesse erinevatest Typesetter versioonidest võivad olla soovimatute tulemustega. Sa kasutad praegu Typesetter %s ning valitud arhiiv eksporditi versiooni %s ajal',
 	'archive_contains'               => 'Valitud arhiiv loodi %s ja sisaldab %s faili.',
 	'Revert'                         => 'Taasta',
 	'Revert_to_Archive'              => 'Taasta arhiivi',

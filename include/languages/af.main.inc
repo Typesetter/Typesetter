@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'Jy moet net sagteware aflaai van skrywers wat jy vertrou. Kwaadwillige sagteware kan skade aan jou installasie veroorsaak, insluitend , maar nie beperk tot die verlies van data. ',
 	'Selected_Install'               => 'Jy het %s gekies om te installeer van %s.',
 	'File_Not_Found'                 => 'Kon nie lêer vind nie:%s',
-	'addon_key_defined'              => 'Kon nie %s installeer. Dit is reeds gedefinieer deur gpEasy of ander byvoeging.',
+	'addon_key_defined'              => 'Kon nie %s installeer. Dit is reeds gedefinieer deur Typesetter of ander byvoeging.',
 	'Ini_Error'                      => '\'n Fout is ontdek tydens die ontleding van die Addon.ini lêer vir hierdie byvoeging.',
 	'Ini_No_Name'                    => 'Die veranderlike <i> Addon_Name </i> ontbreek in die Addon.ini lêer vir hierdie byvoeging.',
-	'Ini_Submit_Bug'                 => 'Stuur asseblief die fout aan die ontwikkelaar of bekyk die dokumentasie oor <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank"> Addon.ini lêers </a>.',
-	'min_version'                    => 'Om die byvoeging te installeer , moet jy \'n minimum van gpEasy weergawe %s installeer. ',
-	'min_version_upgrade'            => 'Jy kan die nuutste weergawe kry van die amptelike <a href="http://gpeasy.com/Download" target="_blank"> gpEasy webwerf </a>.',
+	'Ini_Submit_Bug'                 => 'Stuur asseblief die fout aan die ontwikkelaar of bekyk die dokumentasie oor <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank"> Addon.ini lêers </a>.',
+	'min_version'                    => 'Om die byvoeging te installeer , moet jy \'n minimum van Typesetter weergawe %s installeer. ',
+	'min_version_upgrade'            => 'Jy kan die nuutste weergawe kry van die amptelike <a href="http://www.typesettercms.com/Download" target="_blank"> Typesetter webwerf </a>.',
 	'downgrade'                      => 'Die weergawe van hierdie byvoegsel wat jy tans geïnstalleer het is nuuter as die weergawe wat jy op punt staan om te installeer.',
 	'error_unpacking'                => 'Oeps, daar was \'n fout tydens verwerking van die afgelaaide pakket.',
 	'layouts'                        => 'Uitlegte',
@@ -393,9 +393,9 @@ $langmessage = array (
 	'Install'                        => 'Installeer',
 	'Installing'                     => 'Installeer',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => 'Daar is \'n lêer index.html in jou stamgids en kan verhoed dat gpEasy vertoon.',
+	'index.html exists'              => 'Daar is \'n lêer index.html in jou stamgids en kan verhoed dat Typesetter vertoon.',
 	'Notes'                          => 'Notas',
-	'Install_Conflict'               => 'gpEasy kan nie geïnstalleer word op jou bediener met die huidige instellings. ',
+	'Install_Conflict'               => 'Typesetter kan nie geïnstalleer word op jou bediener met die huidige instellings. ',
 	'Install_Fix'                    => 'Om voort te gaan met die installasie, kan jy asseblief die instellings korrigeer wat verband hou met die kennisgewings van bogenoemde. <a href="%s"> Verfris hierdie bladsy </a>.',
 	'Website_Title'                  => 'Webwerf Titel',
 	'Installation_Was_Successfull'   => 'Installasie Suksesvolle!',
@@ -441,7 +441,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'Sagteware opgraderings is laas nagegaan %s.',
 	'Server_isnt_supported'          => 'Jou bediener is nie in staat om outomaties updateering uit te voer nie.',
 	'UP_TO_DATE'                     => 'Jou installasie is op datum.',
-	'New_version_available'          => 'ŉ Nuwe weergawe van gpEasy is beskikbaar.',
+	'New_version_available'          => 'ŉ Nuwe weergawe van Typesetter is beskikbaar.',
 	'Your_version'                   => 'Jou weergawe:',
 	'New_version'                    => 'Nuwe weergawe:',
 	'Update_Now'                     => 'Opdateer nou',
@@ -455,7 +455,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'Jou installasie is gereed om opgegradeer te word.',
 	'download_failed'                => 'Oeps, die pakket aflaai het misluk. Probeer asseblief weer later.',
 	'download_failed_md5'            => 'Oeps, kon nie die afgelaaide pakket bevestig nie. Probeer asseblief weer later.',
-	'download_failed_xerror'         => 'As jy nog steeds nodig het om hierdie byvoegsel te koop of inteken by gpEasy.com vir bewys van aankoop. <a %s> Kan jy nou so maak </a>.',
+	'download_failed_xerror'         => 'As jy nog steeds nodig het om hierdie byvoegsel te koop of inteken by TypesetterCMS.com vir bewys van aankoop. <a %s> Kan jy nou so maak </a>.',
 	'package_downloaded'             => 'Pakket suksesvol afgelaai.',
 	'download_verified'              => 'Die afgelaai pakket is nagegaan en geverifieer.',
 	'package_unpacked'               => 'Nuwe lêers uitgepak ',
@@ -465,7 +465,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'Keer terug na jou werf',
 	'error_updating_settings'        => 'Kon nie jou werf-instellings opdateer nie',
 	'delete_incomplete'              => 'Jammer, \'n paar van die lêers kon nie geskrap word nie.',
-	'revert_ver_notice'              => 'Om terug te keer na argiewe van verskillende gpEasy weergawes mag ongewenste resultate lewer. Jy gebruik tans gpEasy %s en die geselekteerde argief is uitgevoer met behulp van weergawe %s',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Om terug te keer na argiewe van verskillende Typesetter weergawes mag ongewenste resultate lewer. Jy gebruik tans Typesetter %s en die geselekteerde argief is uitgevoer met behulp van weergawe %s',
 	'archive_contains'               => 'Die geselekteerde argief was geskep %s en %s bevat lêers.',
 	'Revert'                         => 'Keer terug',
 	'Revert_to_Archive'              => 'Keer terug na Argief',

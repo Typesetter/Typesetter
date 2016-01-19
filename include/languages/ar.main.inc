@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'You should only download software from authors you trust. Malicious software can cause damage to your installation including but not limited to the loss of data. ',
 	'Selected_Install'               => 'You have chosen to install %s from %s.',
 	'File_Not_Found'                 => 'Could not find file: %s',
-	'addon_key_defined'              => 'Could not install %s. It is already defined by gpEasy or another add-on.',
+	'addon_key_defined'              => 'Could not install %s. It is already defined by Typesetter or another add-on.',
 	'Ini_Error'                      => 'An error has been detected while parsing the Addon.ini file for this add-on.',
 	'Ini_No_Name'                    => 'The variable <i>Addon_Name</i> is missing in the Addon.ini file for this add-on.',
-	'Ini_Submit_Bug'                 => 'Please submit the bug to the developer or check the documentation about <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank">Addon.ini files</a>.',
-	'min_version'                    => 'In order to install this add-on, you need to install a minimum of gpEasy version %s. ',
-	'min_version_upgrade'            => 'You can get the latest version from the official <a href="http://gpeasy.com/Download" target="_blank">gpEasy web site</a>.',
+	'Ini_Submit_Bug'                 => 'Please submit the bug to the developer or check the documentation about <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank">Addon.ini files</a>.',
+	'min_version'                    => 'In order to install this add-on, you need to install a minimum of Typesetter version %s. ',
+	'min_version_upgrade'            => 'You can get the latest version from the official <a href="http://www.typesettercms.com/Download" target="_blank">Typesetter web site</a>.',
 	'downgrade'                      => 'The version of this addon you currently have installed is newer than the version you are about to install.',
 	'error_unpacking'                => 'عذراً،حدث خطأ أثناء عملية معالجة الجزم التي تم تنزيلها.',
 	'layouts'                        => 'التخطيطات',
@@ -393,9 +393,9 @@ $langmessage = array (
 	'Install'                        => 'التثبيت',
 	'Installing'                     => 'تثبيت',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => 'There is an index.html file in your root directory and may prevent gpEasy from displaying.',
+	'index.html exists'              => 'There is an index.html file in your root directory and may prevent Typesetter from displaying.',
 	'Notes'                          => 'ملاحظات',
-	'Install_Conflict'               => 'gpEasy cannot be installed on your server with the current settings. ',
+	'Install_Conflict'               => 'Typesetter cannot be installed on your server with the current settings. ',
 	'Install_Fix'                    => 'To continue with the installation, please fix the settings associated with the notices above, then <a href="%s">refresh this page</a>.',
 	'Website_Title'                  => 'Website Title',
 	'Installation_Was_Successfull'   => 'تم التثبيت بنجاح',
@@ -442,7 +442,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'تم فحص أخر تحديثات البرمجية %s.',
 	'Server_isnt_supported'          => 'خادمك غير قادر على تحديث التحديث التلقائي .',
 	'UP_TO_DATE'                     => 'تثبيتك الأن هو الإصدار الأحدث',
-	'New_version_available'          => 'نسخة جديدة من gpEasy متاحة الأن.',
+	'New_version_available'          => 'نسخة جديدة من Typesetter متاحة الأن.',
 	'Your_version'                   => 'إصدارك',
 	'New_version'                    => 'الاصدار الجديد',
 	'Update_Now'                     => 'قم بالتحديث الان',
@@ -456,7 +456,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'تنزيلك جاهز للترقية',
 	'download_failed'                => 'عذراً ، فشلت عملية تنزيل الحزم ،الرجاء المحاولة مرة أخرى.',
 	'download_failed_md5'            => 'عذراً، عير قادر على التحقق من الحزم التي تم تنزيلها. الرجاء المجاولة مرة أخرى,',
-	'download_failed_xerror'         => 'If you still need to purchase this addon or login to gpEasy.com for proof of purchase <a %s>you can do it right now</a>.',
+	'download_failed_xerror'         => 'If you still need to purchase this addon or login to TypesetterCMS.com for proof of purchase <a %s>you can do it right now</a>.',
 	'package_downloaded'             => 'تم تنزيل الحزم بنجاح.',
 	'download_verified'              => 'تم التحقق من الجزم التي تم تنزيلها بنجاح.',
 	'package_unpacked'               => 'الملفات الجديدة المفتوحة',
@@ -466,7 +466,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'العودة إلى الموقع',
 	'error_updating_settings'        => 'غير قادر على تحديث إعداداتك.',
 	'delete_incomplete'              => 'Sorry, some of the files could not be deleted.',
-	'revert_ver_notice'              => 'Reverting to archives from different gpEasy versions may have unwanted results. You are currently using gpEasy %s and the selected archive was exported using version %s',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Reverting to archives from different Typesetter versions may have unwanted results. You are currently using Typesetter %s and the selected archive was exported using version %s',
 	'archive_contains'               => 'The selected archive was created %s and contains %s files.',
 	'Revert'                         => 'Revert',
 	'Revert_to_Archive'              => 'Revert to Archive',

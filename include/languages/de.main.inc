@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -97,7 +97,7 @@ $langmessage = array (
 	'upload_error_size'              => 'Die hochgeladenen Dateien müssen kleiner als %s sein. Bitte versuchen Sie es noch einmal.',
 	'UPLOAD_ERROR_PARTIAL'           => 'Upps, <em>%s</em> wurde nur teilweise hochgeladen. Bitte versuchen Sie es noch einmal.',
 	'UPLOAD_ERROR'                   => 'Upps, <em>%s</em> konnte nicht hochgeladen werden. Bitte versuchen Sie es noch einmal.',
-	'uninstall_prep'                 => 'gpEasy deinstallieren',
+	'uninstall_prep'                 => 'Typesetter deinstallieren',
 	'Site Status'                    => 'Seitenstatus',
 	'Resource Cache'                 => 'Resource Cache',
 	'File Owner'                     => 'Datei-Besitzer',
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'Sie sollten nur Software von vertrauenswürdigen Autoren herunterladen. Schadsoftware kann Ihrer Installation Schaden zufügen, der über Datenverlust hinausgehen kann. ',
 	'Selected_Install'               => 'Sie haben %s von %s zur Installation ausgewählt.',
 	'File_Not_Found'                 => 'Kann folgende Datei nicht finden: %s',
-	'addon_key_defined'              => 'Konnte %s nicht installieren. Es ist bereits durch gpEasy oder ein anderes Plugin definiert.',
+	'addon_key_defined'              => 'Konnte %s nicht installieren. Es ist bereits durch Typesetter oder ein anderes Plugin definiert.',
 	'Ini_Error'                      => 'Beim Verarbeiten der Datei „Addon.ini“ dieses Addons ist ein Fehler aufgetreten.',
 	'Ini_No_Name'                    => 'Die Variable <i>Addon_Name</i> fehlt in der „Addon.ini“ Datei des Addons.',
-	'Ini_Submit_Bug'                 => 'Bitte übermitteln Sie den Fehler an den Entwickler oder schauen in die Dokumentation zum Thema <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank">Addon.ini Dateien</a>.',
-	'min_version'                    => 'Um dieses Addon installieren zu können, wird mindestens gpEasy Version %s benötigt. ',
-	'min_version_upgrade'            => 'Sie können sich die neueste Version von der offiziellen <a href="http://gpeasy.com/Download" target="_blank">gpEasy Webseite</a> herunterladen.',
+	'Ini_Submit_Bug'                 => 'Bitte übermitteln Sie den Fehler an den Entwickler oder schauen in die Dokumentation zum Thema <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank">Addon.ini Dateien</a>.',
+	'min_version'                    => 'Um dieses Addon installieren zu können, wird mindestens Typesetter Version %s benötigt. ',
+	'min_version_upgrade'            => 'Sie können sich die neueste Version von der offiziellen <a href="http://www.typesettercms.com/Download" target="_blank">Typesetter Webseite</a> herunterladen.',
 	'downgrade'                      => 'Die aktuelle Addonversion, welche Sie installiert haben ist aktueller als jene, welche Sie installieren möchten.',
 	'error_unpacking'                => 'Upps, beim Versuch, das heruntergeladene Archiv zu verarbeiten, ist ein Fehler aufgetreten.',
 	'layouts'                        => 'Layouts',
@@ -393,9 +393,9 @@ $langmessage = array (
 	'Install'                        => 'Installieren',
 	'Installing'                     => 'Installiere',
 	'Installed'                      => 'Installiert',
-	'index.html exists'              => 'In Ihrem Wurzelverzeichnis gibt es eine Datei index.html, die verhindert, dass gpEasy angezeigt wird. Bitte löschen Sie diese!',
+	'index.html exists'              => 'In Ihrem Wurzelverzeichnis gibt es eine Datei index.html, die verhindert, dass Typesetter angezeigt wird. Bitte löschen Sie diese!',
 	'Notes'                          => 'Anmerkungen',
-	'Install_Conflict'               => 'gpEasy kann mit den aktuellen Einstellungen nicht auf Ihrem Server installiert werden. ',
+	'Install_Conflict'               => 'Typesetter kann mit den aktuellen Einstellungen nicht auf Ihrem Server installiert werden. ',
 	'Install_Fix'                    => 'Um die Installation fortzusetzen, müssen Sie die in obigen Hinweisen benannten Einstellungen korrigieren, und anschließend <a href="%s">diese Seite neu laden</a>.',
 	'Website_Title'                  => 'Titel der Webseite',
 	'Installation_Was_Successfull'   => 'Die Installation war erfolgreich!',
@@ -441,7 +441,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'Die Aktualisierungsprüfung wurde das letzte Mal am %s durchgeführt.',
 	'Server_isnt_supported'          => 'Ihr Server ist nicht in der Lage, den Prozess zur automatischen Aktualisierung zu starten.',
 	'UP_TO_DATE'                     => 'Ihr System ist auf dem neuesten Stand',
-	'New_version_available'          => 'Es ist eine neue Version von gpEasy verfügbar.',
+	'New_version_available'          => 'Es ist eine neue Version von Typesetter verfügbar.',
 	'Your_version'                   => 'Ihre Version:',
 	'New_version'                    => 'Neue Version:',
 	'Update_Now'                     => 'Jetzt aktualisieren',
@@ -455,7 +455,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'Ihre Installation ist zur Aktualisierung bereit.',
 	'download_failed'                => 'Upps, das Herunterladen des Archivs ist fehlgeschlagen. Bitte versuchen Sie es später noch einmal.',
 	'download_failed_md5'            => 'Upps, das heruntergeladene Archiv konnte nicht geprüft werden. Bitte versuchen Sie es später noch einmal.',
-	'download_failed_xerror'         => 'Wenn Sie dieses Addon noch kaufen möchten, oder auf gpEasy.com einloggen, um den Kauf zu bestätigen, <a %s>können Sie das jetzt tun</a>.',
+	'download_failed_xerror'         => 'Wenn Sie dieses Addon noch kaufen möchten, oder auf TypesetterCMS.com einloggen, um den Kauf zu bestätigen, <a %s>können Sie das jetzt tun</a>.',
 	'package_downloaded'             => 'Das Archiv wurde erfolgreich heruntergeladen.',
 	'download_verified'              => 'Das heruntergeladene Archiv wurde überprüft.',
 	'package_unpacked'               => 'Die neuen Dateien entpacken',
@@ -465,7 +465,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'Zu Ihrer Webseite zurück',
 	'error_updating_settings'        => 'Ihre Seiteneinstellungen konnten nicht aktualisiert werden',
 	'delete_incomplete'              => 'Entschuldigung. Einige Dateien konnten nicht gelöscht werden.',
-	'revert_ver_notice'              => 'Das Wiederherstellen von Archiven unterschiedlicher gpEasy Versionen kann zu unerwarteten Resultaten führen. Die derzeit eingesetzte, akutelle gpEasy Version ist %s und das ausgewählte exportierte Archiv hat die Versionsnummer %s.',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Das Wiederherstellen von Archiven unterschiedlicher Typesetter Versionen kann zu unerwarteten Resultaten führen. Die derzeit eingesetzte, akutelle Typesetter Version ist %s und das ausgewählte exportierte Archiv hat die Versionsnummer %s.',
 	'archive_contains'               => 'Das ausgewählte Archiv wurde erstellt am %s und enthält %s Dateien.',
 	'Revert'                         => 'Wiederherstellen',
 	'Revert_to_Archive'              => 'Wiederherstellen des Archivs',

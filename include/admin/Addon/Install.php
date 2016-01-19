@@ -5,14 +5,6 @@ namespace gp\admin\Addon;
 defined('is_running') or die('Not an entry point...');
 
 
-
-
-global $langmessage;
-$langmessage['Sorry, nothing matched'] = 'Sorry, nothing met your search criteria.';
-$langmessage['Sorry, data not fetched'] = 'Sorry, the addon data could not be fetched from gpEasy.com.';
-
-
-
 class Install extends \gp\admin\Addon\Tools{
 
 	protected $scriptUrl		= 'Admin/Addons';

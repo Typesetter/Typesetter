@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'Du bør kun hente software fra ophavsmænd du stoler på. Ondsindet software kan skade din installation inklusiv men ikke begrænset til tab af data. ',
 	'Selected_Install'               => 'Du har valgt at installere %s fra %s.',
 	'File_Not_Found'                 => '	Kunne ikke finde filen: %s',
-	'addon_key_defined'              => 'Kunne ikke installere %s. Det er allerede defineret ved gpEasy eller et andet add-on.',
+	'addon_key_defined'              => 'Kunne ikke installere %s. Det er allerede defineret ved Typesetter eller et andet add-on.',
 	'Ini_Error'                      => 'En fejl er blevet opdaget under tolkning af Addon.ini filen for denne tilføjelse.',
 	'Ini_No_Name'                    => 'Variablen <i>Addon_Name</i> mangler i Addon.ini filen for denne tilføjelse.',
-	'Ini_Submit_Bug'                 => 'Send venligst fejlen til udvikleren eller se dokumentation om <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank"> Addon.ini filer</a>.',
-	'min_version'                    => 'For at installere denne tilføjelse, skal du installere en minimum gpEasy version %s. ',
-	'min_version_upgrade'            => 'Du kan få den nyeste version fra den officielle <a href="http://gpeasy.com/Download" target="_blank"> gpEasy hjemmeside </a>.',
+	'Ini_Submit_Bug'                 => 'Send venligst fejlen til udvikleren eller se dokumentation om <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank"> Addon.ini filer</a>.',
+	'min_version'                    => 'For at installere denne tilføjelse, skal du installere en minimum Typesetter version %s. ',
+	'min_version_upgrade'            => 'Du kan få den nyeste version fra den officielle <a href="http://www.typesettercms.com/Download" target="_blank"> Typesetter hjemmeside </a>.',
 	'downgrade'                      => 'Versionen af denne addon du i øjeblikket har installeret er nyere end den version, du er ved at installere.',
 	'error_unpacking'                => 'Ups, der var en fejl under forsøg på at behandle den downloadede pakke.',
 	'layouts'                        => 'Layout',
@@ -393,9 +393,9 @@ $langmessage = array (
 	'Install'                        => 'Installer',
 	'Installing'                     => 'Installation',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => 'Der er en index.html fil i din rodmappe som kan forhindre gpEasy bliver vist.',
+	'index.html exists'              => 'Der er en index.html fil i din rodmappe som kan forhindre Typesetter bliver vist.',
 	'Notes'                          => 'Notater',
-	'Install_Conflict'               => 'gpEasy kan ikke installeres på din server med de aktuelle indstillinger. ',
+	'Install_Conflict'               => 'Typesetter kan ikke installeres på din server med de aktuelle indstillinger. ',
 	'Install_Fix'                    => 'Hvis du vil fortsætte med installationen, bedes du rette indstillingerne i forbindelse med meddelelserne ovenfor, så <a href="%s"> opdatere denne side </a>.',
 	'Website_Title'                  => 'Websted Titel',
 	'Installation_Was_Successfull'   => 'Installationen er fuldført!',
@@ -442,7 +442,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'Software opdateringer blev sidst kontrolleret %s.',
 	'Server_isnt_supported'          => 'Din server kan ikke køre auto-opdatering processen.',
 	'UP_TO_DATE'                     => 'Din installation er up-to-date.',
-	'New_version_available'          => 'En ny version af gpEasy er tilgængelig.',
+	'New_version_available'          => 'En ny version af Typesetter er tilgængelig.',
 	'Your_version'                   => 'Din Version:',
 	'New_version'                    => 'Ny Version:',
 	'Update_Now'                     => 'Opdater Nu',
@@ -456,7 +456,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'Din installation er klar til at blive opgraderet.',
 	'download_failed'                => 'Ups, pakkehentningen mislykkedes. Prøv venligst igen senere.',
 	'download_failed_md5'            => 'Ups, den hentede pakke kunne ikke verificeres. Prøv venligst igen senere.',
-	'download_failed_xerror'         => '	If you still need to purchase this addon or login to gpEasy.com for proof of purchase <a %s>you can do it right now</a>.',
+	'download_failed_xerror'         => '	If you still need to purchase this addon or login to TypesetterCMS.com for proof of purchase <a %s>you can do it right now</a>.',
 	'package_downloaded'             => 'Pakke hentet med succes.',
 	'download_verified'              => 'Den hentede pakke blev kontrolleret og godkendt.',
 	'package_unpacked'               => 'Nye filer Udpakket',
@@ -466,7 +466,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'Gå tilbage til din hjemmeside',
 	'error_updating_settings'        => 'Kunne ikke opdatere dit websteds indstillinger',
 	'delete_incomplete'              => 'Desværre kunne nogle af filerne ikke slettes.',
-	'revert_ver_notice'              => 'Tilbagevenden til arkiver i forskellige gpEasy versioner kan have uønskede resultater. Du bruger i øjeblikket gpEasy%s og det valgte arkiv blev eksporteret med version%s',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Tilbagevenden til arkiver i forskellige Typesetter versioner kan have uønskede resultater. Du bruger i øjeblikket Typesetter%s og det valgte arkiv blev eksporteret med version%s',
 	'archive_contains'               => 'Den valgte arkiv blev oprettet %s og indeholder %s filer.',
 	'Revert'                         => 'Vend tilbage',
 	'Revert_to_Archive'              => 'Vend tilbage til arkivet',

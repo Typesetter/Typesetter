@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => '您應該只從您信任的發行商下載軟體。 惡意軟體會造成您系統的損害，包括遺失資料及其它損失。 ',
 	'Selected_Install'               => '您已選擇安裝 %s 自 %s。',
 	'File_Not_Found'                 => '找不到檔案：%s',
-	'addon_key_defined'              => '無法安裝 %s。它已定義在 gpEasy 或另一個附加模組。',
+	'addon_key_defined'              => '無法安裝 %s。它已定義在 Typesetter 或另一個附加模組。',
 	'Ini_Error'                      => '解析此附加模組的 Addon.ini 檔時發生錯誤。',
 	'Ini_No_Name'                    => '此附加模組的 Addon.ini 缺少 <i>Addon_Name</i> 變數。',
-	'Ini_Submit_Bug'                 => '請將此錯誤送交給開發者或查閱關於 <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank">Addon.ini files</a> 檔的文件。',
-	'min_version'                    => '若要安裝此附加模組，您至少須安裝 gpEasy %s 版。 ',
-	'min_version_upgrade'            => '您可以從官方 <a href="http://gpeasy.com/Download" target="_blank">gpEasy 網站</a>取得最新版本。',
+	'Ini_Submit_Bug'                 => '請將此錯誤送交給開發者或查閱關於 <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank">Addon.ini files</a> 檔的文件。',
+	'min_version'                    => '若要安裝此附加模組，您至少須安裝 Typesetter %s 版。 ',
+	'min_version_upgrade'            => '您可以從官方 <a href="http://www.typesettercms.com/Download" target="_blank">Typesetter 網站</a>取得最新版本。',
 	'downgrade'                      => '此增效模組目前安裝的版本已經比您打算要安裝的還新了。',
 	'error_unpacking'                => '糟糕！嘗試處理已下載的套件時發生錯誤。',
 	'layouts'                        => '佈局',
@@ -393,9 +393,9 @@ $langmessage = array (
 	'Install'                        => '安裝',
 	'Installing'                     => '安裝',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => '您的根目錄裡有個 index.html 且可能會導致 gpEasy 無法正常顯示。',
+	'index.html exists'              => '您的根目錄裡有個 index.html 且可能會導致 Typesetter 無法正常顯示。',
 	'Notes'                          => '備註',
-	'Install_Conflict'               => 'gpEasy 無法以目前的設定安裝在您的伺服器上。 ',
+	'Install_Conflict'               => 'Typesetter 無法以目前的設定安裝在您的伺服器上。 ',
 	'Install_Fix'                    => '請先修正與上述注意事項相關的設定，然後 <a href="%s">重新整理本頁面</a>，方可繼續安裝。',
 	'Website_Title'                  => '網站標題',
 	'Installation_Was_Successfull'   => '安裝成功！',
@@ -441,7 +441,7 @@ $langmessage = array (
 	'Software_updates_checked'       => '軟體更新最後檢查於 %s。',
 	'Server_isnt_supported'          => '您的伺服器無法執行自動更新程序。',
 	'UP_TO_DATE'                     => '您的安裝已是最新版本。',
-	'New_version_available'          => '有新版的 gpEasy 可用。',
+	'New_version_available'          => '有新版的 Typesetter 可用。',
 	'Your_version'                   => '您的版本：',
 	'New_version'                    => '新版本：',
 	'Update_Now'                     => '立即更新',
@@ -455,7 +455,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => '您的安裝已可進行升級。',
 	'download_failed'                => '糟糕！套件下載失敗。請稍後再試一次。',
 	'download_failed_md5'            => '糟糕！已下載的套件無法通過驗證。請稍後再試一次。',
-	'download_failed_xerror'         => '如果您仍須購買這個插件，或登入 gpEasy.com 取得購買證明，<a %s>您可以立即實行</a>。',
+	'download_failed_xerror'         => '如果您仍須購買這個插件，或登入 TypesetterCMS.com 取得購買證明，<a %s>您可以立即實行</a>。',
 	'package_downloaded'             => '套件下載成功。',
 	'download_verified'              => '下載的套件已通過檢查及驗證。',
 	'package_unpacked'               => '已解壓縮的新檔案',
@@ -465,7 +465,9 @@ $langmessage = array (
 	'return_to_your_site'            => '回到您的站台',
 	'error_updating_settings'        => '無法更新您的站台設定',
 	'delete_incomplete'              => '抱歉！有些檔案無法刪除。',
-	'revert_ver_notice'              => '回復至不同版本 gpEasy 的備份檔可能導致不可預期的後果。您目前使用 gpEasy %s 版，但備份檔卻是 %s 版匯出的',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => '回復至不同版本 Typesetter 的備份檔可能導致不可預期的後果。您目前使用 Typesetter %s 版，但備份檔卻是 %s 版匯出的',
 	'archive_contains'               => '所選的備份檔已創建 %s 且包含 %s 個檔案。',
 	'Revert'                         => '回復',
 	'Revert_to_Archive'              => '回復至備份檔',

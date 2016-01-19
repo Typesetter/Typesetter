@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'Você só deve baixar o software a partir de autores que você confia. Software mal-intencionado pode causar danos à sua instalação, incluindo mas não limitado à perda de dados. ',
 	'Selected_Install'               => 'Escolheu instalar %s de %s',
 	'File_Not_Found'                 => 'Não foi possível encontrar o arquivo:%s',
-	'addon_key_defined'              => 'Não foi possível instalar %s. Ele já está definido pela gpEasy ou outro Extra',
+	'addon_key_defined'              => 'Não foi possível instalar %s. Ele já está definido pela Typesetter ou outro Extra',
 	'Ini_Error'                      => 'Um erro foi detectado durante a análise do arquivo Addon.ini para este Extra',
 	'Ini_No_Name'                    => 'A variável <i>Addon_Name</i> está em falta no ficheiro Addon.ini para este Extra.',
-	'Ini_Submit_Bug'                 => 'Por favor envie o bug para o colaborador ou verifique a documentação sobre <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank">Addon.ini files</a>.',
-	'min_version'                    => 'A fim de instalar este Extra, você precisa instalar como mínimo a verão de gpEasy %s. ',
-	'min_version_upgrade'            => 'Você pode obter a última versão oficial<a href="http://gpeasy.com/Download" target="_blank">gpEasy web site</a>.',
+	'Ini_Submit_Bug'                 => 'Por favor envie o bug para o colaborador ou verifique a documentação sobre <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank">Addon.ini files</a>.',
+	'min_version'                    => 'A fim de instalar este Extra, você precisa instalar como mínimo a verão de Typesetter %s. ',
+	'min_version_upgrade'            => 'Você pode obter a última versão oficial<a href="http://www.typesettercms.com/Download" target="_blank">Typesetter web site</a>.',
 	'downgrade'                      => 'The version of this addon you currently have installed is newer than the version you are about to install.',
 	'error_unpacking'                => 'Houve um erro ao tentar processar o pacote baixado.',
 	'layouts'                        => 'Templates',
@@ -393,9 +393,9 @@ $langmessage = array (
 	'Install'                        => 'Instalar',
 	'Installing'                     => 'Instalando',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => 'Há um arquivo index.html no directório raiz e pode impedir a exibição do gpEasy.',
+	'index.html exists'              => 'Há um arquivo index.html no directório raiz e pode impedir a exibição do Typesetter.',
 	'Notes'                          => 'Notas',
-	'Install_Conflict'               => 'gpEasy não pode ser instalado em seu servidor com as definições actuais. ',
+	'Install_Conflict'               => 'Typesetter não pode ser instalado em seu servidor com as definições actuais. ',
 	'Install_Fix'                    => 'Para continuar com a instalação, por favor corrija as configurações associadas com a nota acima, então <a href="%s">actualize esta página</a>.',
 	'Website_Title'                  => 'Título do Web Site',
 	'Installation_Was_Successfull'   => 'Instalado com sucesso!',
@@ -441,7 +441,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'As actualizações do software foram verificadas em %s.',
 	'Server_isnt_supported'          => 'O servidor não é capaz de executar a actualização automática do processo.',
 	'UP_TO_DATE'                     => 'A sua instalação está actualizada.',
-	'New_version_available'          => 'Uma nova versão do gpEasy está disponível.',
+	'New_version_available'          => 'Uma nova versão do Typesetter está disponível.',
 	'Your_version'                   => 'A sua versão',
 	'New_version'                    => 'Nova versão',
 	'Update_Now'                     => 'Actualizar agora',
@@ -455,7 +455,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'A sua instalação está pronta para ser actualizada.',
 	'download_failed'                => 'O download do pacote falhou. Por favor, tente novamente mais tarde.',
 	'download_failed_md5'            => 'O pacote baixado não pôde ser verificado. Por favor, tente novamente mais tarde.',
-	'download_failed_xerror'         => 'If you still need to purchase this addon or login to gpEasy.com for proof of purchase <a %s>you can do it right now</a>.',
+	'download_failed_xerror'         => 'If you still need to purchase this addon or login to TypesetterCMS.com for proof of purchase <a %s>you can do it right now</a>.',
 	'package_downloaded'             => 'Pacote baixado com sucesso.',
 	'download_verified'              => 'O pacote baixado foi verificada com sucesso.',
 	'package_unpacked'               => 'Descompactado novos arquivos',
@@ -465,7 +465,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'Retornar ao seu site',
 	'error_updating_settings'        => 'Não foi possível actualizar as configurações do seu site',
 	'delete_incomplete'              => 'Sorry, some of the files could not be deleted.',
-	'revert_ver_notice'              => 'Reverting to archives from different gpEasy versions may have unwanted results. You are currently using gpEasy %s and the selected archive was exported using version %s',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Reverting to archives from different Typesetter versions may have unwanted results. You are currently using Typesetter %s and the selected archive was exported using version %s',
 	'archive_contains'               => 'The selected archive was created %s and contains %s files.',
 	'Revert'                         => 'Revert',
 	'Revert_to_Archive'              => 'Revert to Archive',

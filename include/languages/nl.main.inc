@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'Download alleen software met een vertrouwde herkomst. Schadelijke software kan leiden tot schade aan uw installatie met inbegrip van maar niet beperkt tot het verlies van gegevens. ',
 	'Selected_Install'               => 'Je hebt ervoor gekozen om %s van %s te installeren.',
 	'File_Not_Found'                 => 'Kan bestand niet vinden: %s',
-	'addon_key_defined'              => 'Kan %s niet installeren. Het is reeds gedefinieerd door gpEasy of andere add-on.',
+	'addon_key_defined'              => 'Kan %s niet installeren. Het is reeds gedefinieerd door Typesetter of andere add-on.',
 	'Ini_Error'                      => 'Er is een fout is ontdekt tijdens het ontleden van het Addon.ini bestand voor deze add-on.',
 	'Ini_No_Name'                    => 'De variabele <i>Addon_Name</i> ontbreekt in het Addon.ini bestand voor deze add-on.',
-	'Ini_Submit_Bug'                 => 'Gelieve de bug aan de ontwikkelaar door te geven of de documentatie over <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank">Addon.ini bestanden</a> te lezen.',
-	'min_version'                    => 'Om deze add-on te installeren is minimaal gpEasy versie %s nodig. ',
-	'min_version_upgrade'            => 'U kunt de laatste versie downloaden van de <a href="http://gpeasy.com/Download" target="_blank">officiële gpEasy website</a>.',
+	'Ini_Submit_Bug'                 => 'Gelieve de bug aan de ontwikkelaar door te geven of de documentatie over <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank">Addon.ini bestanden</a> te lezen.',
+	'min_version'                    => 'Om deze add-on te installeren is minimaal Typesetter versie %s nodig. ',
+	'min_version_upgrade'            => 'U kunt de laatste versie downloaden van de <a href="http://www.typesettercms.com/Download" target="_blank">officiële Typesetter website</a>.',
 	'downgrade'                      => 'De versie van de huidig geinstalleerde addon is nieuwer dan de versie die u gaat installeren.',
 	'error_unpacking'                => 'Oops, er is een fout opgetreden tijdens de verwerking van het opgehaalde pakket.',
 	'layouts'                        => 'Indelingen',
@@ -395,7 +395,7 @@ $langmessage = array (
 	'Installed'                      => 'Geinstalleerd',
 	'index.html exists'              => 'Er is een index.html bestand in uw hoofd map, dit kan dit cms hinderen.',
 	'Notes'                          => 'Opmerkingen',
-	'Install_Conflict'               => 'gpEasy kan niet worden geïnstalleerd op uw server met de huidige instellingen. ',
+	'Install_Conflict'               => 'Typesetter kan niet worden geïnstalleerd op uw server met de huidige instellingen. ',
 	'Install_Fix'                    => 'Om door te gaan met de installatie, bevestig de instellingen die bij de berichten hierboven, en <a href="%s">ververs deze pagina</a>.',
 	'Website_Title'                  => 'Website Titel',
 	'Installation_Was_Successfull'   => 'Installatie voltooid!',
@@ -441,7 +441,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'Software updates zijn laatst gecontroleerd %s.',
 	'Server_isnt_supported'          => 'Uw server is niet in staat om het automatische update proces uit te voeren.',
 	'UP_TO_DATE'                     => 'Uw installatie is up-to-date.',
-	'New_version_available'          => 'Een nieuwe versie van gpEasy is beschikbaar.',
+	'New_version_available'          => 'Een nieuwe versie van Typesetter is beschikbaar.',
 	'Your_version'                   => 'Uw versie:',
 	'New_version'                    => 'Nieuwe versie:',
 	'Update_Now'                     => 'Werk nu bij',
@@ -465,7 +465,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'Terug naar uw site.',
 	'error_updating_settings'        => 'Kan uw site instellingen niet bijwerken.',
 	'delete_incomplete'              => 'Excuus, niet alle bestanden konden verwijderd worden.',
-	'revert_ver_notice'              => 'Terugdraaien naar archieven in verschillende gpEasy-versies kunnen ongewenste resultaten hebben. Je gebruikt nu gpEasy %s en het geselecteerde archief werd geëxporteerd met versie %s.',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Terugdraaien naar archieven in verschillende Typesetter-versies kunnen ongewenste resultaten hebben. Je gebruikt nu Typesetter %s en het geselecteerde archief werd geëxporteerd met versie %s.',
 	'archive_contains'               => 'Het geselecteerde archief werd aangemaakt %s en bevat %s bestanden.',
 	'Revert'                         => 'Terugzetten',
 	'Revert_to_Archive'              => 'Terugkeren naar Archief',

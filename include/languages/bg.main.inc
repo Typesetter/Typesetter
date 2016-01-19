@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'Сваляйте софутер само от автори, на които имате доверие. Зловредния софтуер може да наврети на сайта ви, но може да доведе и доведе до загуба на дата. ',
 	'Selected_Install'               => 'Избрахте да инсталирате от %s от%s. ',
 	'File_Not_Found'                 => 'Не можа да намери файл: %s',
-	'addon_key_defined'              => 'Не можа да инсталира %s. Вече е дефинирано от gpEasy или от друг експанжън.',
+	'addon_key_defined'              => 'Не можа да инсталира %s. Вече е дефинирано от Typesetter или от друг експанжън.',
 	'Ini_Error'                      => 'Грешка бе засечена докато се разглеждаше Addon.ini за този add-on.',
 	'Ini_No_Name'                    => 'Вариацията <i>Addon_Name</i> липсва от Addon.ini за този експанжън. ',
-	'Ini_Submit_Bug'                 => 'Моля изпрати грешката към създателя или провери документацията за <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank">Addon.ini files</a>.',
+	'Ini_Submit_Bug'                 => 'Моля изпрати грешката към създателя или провери документацията за <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank">Addon.ini files</a>.',
 	'min_version'                    => 'Експанжънът изисква инсталирана версия %s.  ',
-	'min_version_upgrade'            => 'Можеш да свалиш последната официална версия от <a href="http://gpeasy.com/Download" target="_blank">gpEasy web site</a>.',
+	'min_version_upgrade'            => 'Можеш да свалиш последната официална версия от <a href="http://www.typesettercms.com/Download" target="_blank">Typesetter web site</a>.',
 	'downgrade'                      => 'The version of this addon you currently have installed is newer than the version you are about to install.',
 	'error_unpacking'                => 'Упс, случи се грешки при обработката на пакета.',
 	'layouts'                        => 'Layouts',
@@ -393,9 +393,9 @@ $langmessage = array (
 	'Install'                        => 'Инсталирай',
 	'Installing'                     => 'Инсталиране',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => 'Това е index.html файл във root папката и може да попречи на стартирането на gpEasy',
+	'index.html exists'              => 'Това е index.html файл във root папката и може да попречи на стартирането на Typesetter',
 	'Notes'                          => 'Бележки',
-	'Install_Conflict'               => 'gpEasy cannot be installed on your server with the current settings. ',
+	'Install_Conflict'               => 'Typesetter cannot be installed on your server with the current settings. ',
 	'Install_Fix'                    => 'To continue with the installation, please fix the settings associated with the notices above, then <a href="%s">refresh this page</a>.',
 	'Website_Title'                  => 'Website Title',
 	'Installation_Was_Successfull'   => 'Инсталирането бе успешно!',
@@ -441,7 +441,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'Софтуерните обновления бяха последно проверени %s. ',
 	'Server_isnt_supported'          => 'Сървърът не може да пусне авто-обновление. ',
 	'UP_TO_DATE'                     => 'Инсталацията ви е последна версия.',
-	'New_version_available'          => 'Има нова версия на gpEasy.',
+	'New_version_available'          => 'Има нова версия на Typesetter.',
 	'Your_version'                   => 'Вашата версия:',
 	'New_version'                    => 'Нова версия:',
 	'Update_Now'                     => 'Обновете сега',
@@ -455,7 +455,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'Инсталацията е готова за обновление.',
 	'download_failed'                => 'Упс, свалянето на пакета бе неуспешно. Опитайте отново по-късно.',
 	'download_failed_md5'            => 'Упс, сваленият пакет не може да бъде заверен. Опитайте отново по-късно.',
-	'download_failed_xerror'         => 'If you still need to purchase this addon or login to gpEasy.com for proof of purchase <a %s>you can do it right now</a>.',
+	'download_failed_xerror'         => 'If you still need to purchase this addon or login to TypesetterCMS.com for proof of purchase <a %s>you can do it right now</a>.',
 	'package_downloaded'             => 'Пакетът бе свален успешно. ',
 	'download_verified'              => 'Сваленият пакет бе проверен и заверен.',
 	'package_unpacked'               => 'Разархивирани нови файлове.',
@@ -465,7 +465,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'Върнете се към сайта си. ',
 	'error_updating_settings'        => 'Не можа да обнови настройките на сайта ви.',
 	'delete_incomplete'              => 'Sorry, some of the files could not be deleted.',
-	'revert_ver_notice'              => 'Reverting to archives from different gpEasy versions may have unwanted results. You are currently using gpEasy %s and the selected archive was exported using version %s',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Reverting to archives from different Typesetter versions may have unwanted results. You are currently using Typesetter %s and the selected archive was exported using version %s',
 	'archive_contains'               => 'The selected archive was created %s and contains %s files.',
 	'Revert'                         => 'Revert',
 	'Revert_to_Archive'              => 'Revert to Archive',

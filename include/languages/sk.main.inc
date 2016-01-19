@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'Mal(a) by si sofvér sťahovať iba od autorov, ktorým dôveruješ. Škodlivý softvér môže spôsobiť poškodenie v tvojej inštalácii, ba nieje vylúčená ani strata dát. ',
 	'Selected_Install'               => 'Vybral si inštaláciu %s z %s.',
 	'File_Not_Found'                 => 'Nepodarilo sa nájsť súbor: %s',
-	'addon_key_defined'              => 'Nedalo sa nainštalovať %s Už je definový v gpEasy alebo inom doplnku.',
+	'addon_key_defined'              => 'Nedalo sa nainštalovať %s Už je definový v Typesetter alebo inom doplnku.',
 	'Ini_Error'                      => 'Počas parsovania súboru Addon.ini pre tento doplnok bola zistená chyba.',
 	'Ini_No_Name'                    => 'V súbore Addon.ini pre tento doplnok chýba premenná <i>Addon_Name</i>.',
-	'Ini_Submit_Bug'                 => 'Prosím odošli chybu vývojárovi alebo skontroluj dokumentáciu pre <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank">Addon.ini súbory</a>.',
-	'min_version'                    => 'Ak chceš nainštalovať tento doplnok, potrebuješ nainštalovanú minimálnu gpEasy verziu %s. ',
-	'min_version_upgrade'            => 'Môžeš získať najnovšiu verziu na oficiálnych <a href="http://gpeasy.com/Download" target="_blank">web stránkach gpEasy</a>.',
+	'Ini_Submit_Bug'                 => 'Prosím odošli chybu vývojárovi alebo skontroluj dokumentáciu pre <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank">Addon.ini súbory</a>.',
+	'min_version'                    => 'Ak chceš nainštalovať tento doplnok, potrebuješ nainštalovanú minimálnu Typesetter verziu %s. ',
+	'min_version_upgrade'            => 'Môžeš získať najnovšiu verziu na oficiálnych <a href="http://www.typesettercms.com/Download" target="_blank">web stránkach Typesetter</a>.',
 	'downgrade'                      => 'Verzia tohto doplnku ktorý máš práve nainštalovaný je novšia než verzia, ktorú ideš nainštalovať.',
 	'error_unpacking'                => 'Ó, nastala chyba pri pokuse spracovať stiahnutý balíček.',
 	'layouts'                        => 'Rozmiestnenia',
@@ -393,9 +393,9 @@ $langmessage = array (
 	'Install'                        => 'Nainštalovať',
 	'Installing'                     => 'Inštaluje sa',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => 'V tvojom koreňovom adresári je súbor index.html a môže brániť zobrazovaniu gpEasy.',
+	'index.html exists'              => 'V tvojom koreňovom adresári je súbor index.html a môže brániť zobrazovaniu Typesetter.',
 	'Notes'                          => 'Poznámky',
-	'Install_Conflict'               => 'gpEasy nemôže byť nainštalované na tvojom servri s terajšími nastaveniami. ',
+	'Install_Conflict'               => 'Typesetter nemôže byť nainštalované na tvojom servri s terajšími nastaveniami. ',
 	'Install_Fix'                    => 'Pre pokračovanie v inštalácii, prosím ošetrite vyššie uvedené nastavenia, potom <a href="%s">obnovte túto stránku</a>.',
 	'Website_Title'                  => 'Titulok webovej stránky',
 	'Installation_Was_Successfull'   => 'Inštalácia bola úspešná!',
@@ -441,7 +441,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'Softwarové aktualizácie boli naposledy skontrolované %s.',
 	'Server_isnt_supported'          => 'Váš server nedokáže spustiť proces automatickej aktualizácie.',
 	'UP_TO_DATE'                     => 'Tvoja inštalácia je aktuálna.',
-	'New_version_available'          => 'Nová verzia gpEasy je dostupná.',
+	'New_version_available'          => 'Nová verzia Typesetter je dostupná.',
 	'Your_version'                   => 'Tvoja verzia:',
 	'New_version'                    => 'Nová verzia:',
 	'Update_Now'                     => 'Aktualizovať teraz',
@@ -455,7 +455,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'Tvoja inštalácia je pripravená na aktualizáciu.',
 	'download_failed'                => 'Žiaľ, sťahovanie balíčka zlyhalo. Prosím skúste to opäť neskôr.',
 	'download_failed_md5'            => 'Žiaľ, stiahnutý balíček nemohol byť overený. Prosím skús to opäť neskôr.',
-	'download_failed_xerror'         => 'Ak si potrebuješ zakúpiť tento doplnok alebo prihlásiť sa na gpEasy.com pre potvrdenie o zakúpení, <a %s>môžeš to urobiť práve teraz</a>.',
+	'download_failed_xerror'         => 'Ak si potrebuješ zakúpiť tento doplnok alebo prihlásiť sa na TypesetterCMS.com pre potvrdenie o zakúpení, <a %s>môžeš to urobiť práve teraz</a>.',
 	'package_downloaded'             => 'Balíček bol úspešne stiahnutý.',
 	'download_verified'              => 'Stiahnutý balíček bol skontrolovaný a overený.',
 	'package_unpacked'               => 'Rozbalené nové súbory',
@@ -465,7 +465,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'Vráťte sa na vašu stránku',
 	'error_updating_settings'        => 'Nepodarilo sa aktualizovať nastavenia tvojej stránky',
 	'delete_incomplete'              => 'Prepáčte, niektoré súbory nemohli byť vymazané.',
-	'revert_ver_notice'              => 'Navrátenie archívov z odlišných gpEasy verzií môže mať nežiadúce výsledky. Momentálne používaš gpEasy %s a zvolený archív bol exportovaný s použitím verzie %s',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Navrátenie archívov z odlišných Typesetter verzií môže mať nežiadúce výsledky. Momentálne používaš Typesetter %s a zvolený archív bol exportovaný s použitím verzie %s',
 	'archive_contains'               => 'Vybraný archív bol vytvorený %s a obsahuje %s súborov.',
 	'Revert'                         => 'Navrátiť',
 	'Revert_to_Archive'              => 'Navrátiť ku archívu',

@@ -688,8 +688,8 @@ namespace gp\admin{
 
 
 			// stats
-			echo '<div class="panelgroup" id="panelgroup_gpeasy'.$id_piece.'">';
-				self::PanelHeading($in_panel, $langmessage['Performance'], 'icon_chart', 'gpe' );
+			echo '<div class="panelgroup" id="panelgroup_cms'.$id_piece.'">';
+				self::PanelHeading($in_panel, $langmessage['Performance'], 'icon_chart', 'cms' );
 				echo '<ul class="submenu">';
 				echo '<li class="submenu_top"><a class="submenu_top">'.$langmessage['Performance'].'</a></li>';
 				echo '<li><span><span cms-memory-usage>?</span> Memory</span></li>';

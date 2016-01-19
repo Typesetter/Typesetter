@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'Prenašaj datoteke avtorjev, katerim zaupaš. Okužene datoteke lahko povzročijo škodo vaši namestitvi. ',
 	'Selected_Install'               => 'Izbral si namestitev %s od %s.',
 	'File_Not_Found'                 => 'Ne morem najti datoteke: %s',
-	'addon_key_defined'              => 'Ni mogoče namestiti %s, ker je že prednameščeno z gpEasy ali drugim dodatkom.',
+	'addon_key_defined'              => 'Ni mogoče namestiti %s, ker je že prednameščeno z Typesetter ali drugim dodatkom.',
 	'Ini_Error'                      => 'Napaka med razčlenitvijo Addon.ini datoteke tega dodatka.',
 	'Ini_No_Name'                    => 'Vrednost <i>Addon_Name</i> je pogrešana v Addon.ini datoteki tega dodatka.',
-	'Ini_Submit_Bug'                 => 'Za vse hrošče prosimo, da to sporočite izdajalcu ali si preberete dokumentacijo <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank">Addon.ini datoteke</a>.',
-	'min_version'                    => 'Za delovanje tega dodatka moraš imeti nameščeno gpEasy verzijo %s. ',
-	'min_version_upgrade'            => 'Najnovejšo verzijo lahko dobiš na <a href="http://gpeasy.com/Download" target="_blank">gpEasy strani</a>.',
+	'Ini_Submit_Bug'                 => 'Za vse hrošče prosimo, da to sporočite izdajalcu ali si preberete dokumentacijo <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank">Addon.ini datoteke</a>.',
+	'min_version'                    => 'Za delovanje tega dodatka moraš imeti nameščeno Typesetter verzijo %s. ',
+	'min_version_upgrade'            => 'Najnovejšo verzijo lahko dobiš na <a href="http://www.typesettercms.com/Download" target="_blank">Typesetter strani</a>.',
 	'downgrade'                      => 'Trenutno nameščena verzija tega dodatka je novejša od te, ki jo nameravaš namestiti.',
 	'error_unpacking'                => 'Ups, napaka pri prenosu paketa.',
 	'layouts'                        => 'Teme',
@@ -393,9 +393,9 @@ $langmessage = array (
 	'Install'                        => 'Namesti',
 	'Installing'                     => 'Nameščam',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => 'Datoteka index.html je v korenski poti in lahko prepreči prikazovanje gpEasy.',
+	'index.html exists'              => 'Datoteka index.html je v korenski poti in lahko prepreči prikazovanje Typesetter.',
 	'Notes'                          => 'Zapiski',
-	'Install_Conflict'               => 'gpEasy ne more biti nameščen na ta server s trenutnimi nastavitvami. ',
+	'Install_Conflict'               => 'Typesetter ne more biti nameščen na ta server s trenutnimi nastavitvami. ',
 	'Install_Fix'                    => 'Za nadaljevanje preverite nastavitve, nato pa <a href="%s">osvežite to stran</a>.',
 	'Website_Title'                  => 'Naslov strani',
 	'Installation_Was_Successfull'   => 'Namestitev je bila uspešna',
@@ -441,7 +441,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'Nadgradnje so bile nazadnje preverjene %s.',
 	'Server_isnt_supported'          => 'Avtomatska posodobitev ni možna.',
 	'UP_TO_DATE'                     => 'Imate najnovejšo različico.',
-	'New_version_available'          => 'Nova verzija gpEasy je na voljo.',
+	'New_version_available'          => 'Nova verzija Typesetter je na voljo.',
 	'Your_version'                   => 'Tvoja verzija:',
 	'New_version'                    => 'Nova verzija:',
 	'Update_Now'                     => 'Posodobi zdaj',
@@ -455,7 +455,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'Tvoja namestitev je pripravljena na nadgradnjo.',
 	'download_failed'                => 'Ups, prenos paketa je spodletel. Prosimo, poskusite kasneje.',
 	'download_failed_md5'            => 'Ups, prenešen paket ni preverjen. Prosimo, poskusite kasneje.',
-	'download_failed_xerror'         => 'Če še vedno želiš kupiti ta dodatek ali se prijaviti na stran gpEasy.com za dokazilo o nakupu, <a %s>lahko to storiš sedaj</a>.',
+	'download_failed_xerror'         => 'Če še vedno želiš kupiti ta dodatek ali se prijaviti na stran TypesetterCMS.com za dokazilo o nakupu, <a %s>lahko to storiš sedaj</a>.',
 	'package_downloaded'             => 'Paket uspešno prenesen.',
 	'download_verified'              => 'Prenešen paket je bil uspešno preverjen.',
 	'package_unpacked'               => 'Razpakirane nove datoteke',
@@ -465,7 +465,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'Vrni se na svojo stran',
 	'error_updating_settings'        => 'Ne morem posodobiti nastavitev tvoje strani',
 	'delete_incomplete'              => 'Žal, nekaterih datotek ni možno odstraniti.',
-	'revert_ver_notice'              => 'Obnovitve iz arhivov različnih verzij gpEasy lahko pripelje do neželenih rezultatov. Trenutno je v uporabi gpEasy verzija %s, a izbrani arhiv je bil izvožen v verziji %s',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Obnovitve iz arhivov različnih verzij Typesetter lahko pripelje do neželenih rezultatov. Trenutno je v uporabi Typesetter verzija %s, a izbrani arhiv je bil izvožen v verziji %s',
 	'archive_contains'               => 'Izbrani arhiv je bil ustvarjen %s in vsebuje %s datotek.',
 	'Revert'                         => 'Povrni',
 	'Revert_to_Archive'              => 'Povrni na Arhiv',

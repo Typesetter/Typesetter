@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -311,12 +311,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => '信頼できる作者によるソフトウェアのみをダウンロードするようにしてください。 悪意のあるソフトウェアによって、データが失われたり、その他の障害が引き起こされる場合があります。 ',
 	'Selected_Install'               => '%s を %s からインストールしようとしています。',
 	'File_Not_Found'                 => '%s ファイルが見付かりません。',
-	'addon_key_defined'              => '%s をインストールできませんでした。使用キーが gpEasy あるいは別のアドオンと重複しています。',
+	'addon_key_defined'              => '%s をインストールできませんでした。使用キーが Typesetter あるいは別のアドオンと重複しています。',
 	'Ini_Error'                      => 'このアドオンの Addon.ini ファイルの解析中にエラーがありました。',
 	'Ini_No_Name'                    => 'このアドオンの Addon.ini ファイルに <i>Addon_Name</i> 変数が定義されていません。',
-	'Ini_Submit_Bug'                 => '問題を開発者に報告するか、<a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank">Addon.ini files</a> に関するドキュメントを確認して下さい。',
-	'min_version'                    => 'このアドオンのインストールには gpEasy version %s 以上が必要です。 ',
-	'min_version_upgrade'            => '最新のバージョンは <a href="http://gpeasy.com/Download" target="_blank">gpEasy 公式サイト</a> から入手できます。',
+	'Ini_Submit_Bug'                 => '問題を開発者に報告するか、<a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank">Addon.ini files</a> に関するドキュメントを確認して下さい。',
+	'min_version'                    => 'このアドオンのインストールには Typesetter version %s 以上が必要です。 ',
+	'min_version_upgrade'            => '最新のバージョンは <a href="http://www.typesettercms.com/Download" target="_blank">Typesetter 公式サイト</a> から入手できます。',
 	'downgrade'                      => 'The version of this addon you currently have installed is newer than the version you are about to install.',
 	'error_unpacking'                => 'ダウンロードしたファイルの処理中にエラーが生じました。',
 	'layouts'                        => 'レイアウト',
@@ -395,9 +395,9 @@ $langmessage = array (
 	'Install'                        => 'インストール',
 	'Installing'                     => 'インストールしています',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => 'ルートディレクトリに index.html が存在するため、gpEasy が正しく表示されない可能性があります。',
+	'index.html exists'              => 'ルートディレクトリに index.html が存在するため、Typesetter が正しく表示されない可能性があります。',
 	'Notes'                          => '内容',
-	'Install_Conflict'               => '現在のサーバの設定では gpEasy をインストールできません。 ',
+	'Install_Conflict'               => '現在のサーバの設定では Typesetter をインストールできません。 ',
 	'Install_Fix'                    => 'インストールを続行するためには、上に表示されたメッセージを参考にサーバの設定を変更し、その後このページを <a href="%s">再読込</a> してください。',
 	'Website_Title'                  => 'サイト名',
 	'Installation_Was_Successfull'   => 'インストールは成功しました。',
@@ -443,7 +443,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'ソフトウェアの更新情報は %s に取得されました。',
 	'Server_isnt_supported'          => 'このサーバーでは自動アップデートは動作しません。',
 	'UP_TO_DATE'                     => 'このインストールのバージョンは最新です。',
-	'New_version_available'          => 'gpEasy のより新しいバージョンが存在します。',
+	'New_version_available'          => 'Typesetter のより新しいバージョンが存在します。',
 	'Your_version'                   => '現在のバージョン:',
 	'New_version'                    => '新しいバージョン:',
 	'Update_Now'                     => 'アップデートする',
@@ -457,7 +457,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'このインストールをアップデートする準備ができました。',
 	'download_failed'                => 'パッケージのダウンロードに失敗しました。しばらくしてから再試行してください。',
 	'download_failed_md5'            => '\'ダウンロードしたパッケージの内容が照合確認できませんでした。しばらくしてから再試行してください。',
-	'download_failed_xerror'         => 'If you still need to purchase this addon or login to gpEasy.com for proof of purchase <a %s>you can do it right now</a>.',
+	'download_failed_xerror'         => 'If you still need to purchase this addon or login to TypesetterCMS.com for proof of purchase <a %s>you can do it right now</a>.',
 	'package_downloaded'             => 'パッケージのダウンロードが完了しました。',
 	'download_verified'              => 'ダウンロードしたパッケージの内容の照合確認が完了しました。',
 	'package_unpacked'               => '新しいファイルを解凍しました。',
@@ -467,7 +467,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'ウェブサイトにもどる',
 	'error_updating_settings'        => 'サイト設定を更新できませんでした。',
 	'delete_incomplete'              => 'Sorry, some of the files could not be deleted.',
-	'revert_ver_notice'              => 'Reverting to archives from different gpEasy versions may have unwanted results. You are currently using gpEasy %s and the selected archive was exported using version %s',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Reverting to archives from different Typesetter versions may have unwanted results. You are currently using Typesetter %s and the selected archive was exported using version %s',
 	'archive_contains'               => 'The selected archive was created %s and contains %s files.',
 	'Revert'                         => 'Revert',
 	'Revert_to_Archive'              => 'Revert to Archive',

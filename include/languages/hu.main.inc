@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'Kizárólag az Ön által megbízhatónak ítélt szerzőtől származó szoftvert töltsön le. Rosszindulatú szoftver tönkreteheti a telepett rendszert beleértve, de nem korlátozva az adatok elvesztését. ',
 	'Selected_Install'               => 'Kiválasztotta telepítésre %s a következőből %s.',
 	'File_Not_Found'                 => 'Nem található a következő állomány: %s',
-	'addon_key_defined'              => 'A %s nem telepíthető, mivel már korábban megadta a gpEasy vagy egy másik kiegészítő.',
+	'addon_key_defined'              => 'A %s nem telepíthető, mivel már korábban megadta a Typesetter vagy egy másik kiegészítő.',
 	'Ini_Error'                      => 'Hiba történt a kiegészítő Addon.ini állományának feldolgozásakor.',
 	'Ini_No_Name'                    => 'Az <i>Addon_Name</i> változó nem található a kiegészítő Addon.ini állományában.',
-	'Ini_Submit_Bug'                 => 'Kérjük küldje el a hibát a fejlesztőnek, vagy tekintse meg a dokumentáció <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank">Addon.ini</a> állományokra vonatkozó részét.',
-	'min_version'                    => 'A kiegészítő telepítéséhez legalább a gpEasy %s verziójára van szükség. ',
-	'min_version_upgrade'            => 'Letöltheti a legújabb verziót a <a href="http://gpeasy.com/Download" target="_blank">gpEasy hivatalos weboldaláról</a>',
+	'Ini_Submit_Bug'                 => 'Kérjük küldje el a hibát a fejlesztőnek, vagy tekintse meg a dokumentáció <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank">Addon.ini</a> állományokra vonatkozó részét.',
+	'min_version'                    => 'A kiegészítő telepítéséhez legalább a Typesetter %s verziójára van szükség. ',
+	'min_version_upgrade'            => 'Letöltheti a legújabb verziót a <a href="http://www.typesettercms.com/Download" target="_blank">Typesetter hivatalos weboldaláról</a>',
 	'downgrade'                      => 'A telepíteni kívánt kiegészítő régebbi mint a már korábban telepített.',
 	'error_unpacking'                => 'HOPPÁ, hiba történt a csomag letöltésekor.',
 	'layouts'                        => 'Elrendezések',
@@ -393,9 +393,9 @@ $langmessage = array (
 	'Install'                        => 'Telepítés',
 	'Installing'                     => 'Telepítés',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => 'A gyökérkönyvtárban található egy index.html állomány, amely megelőzheti a gpEasy megjelenését.',
+	'index.html exists'              => 'A gyökérkönyvtárban található egy index.html állomány, amely megelőzheti a Typesetter megjelenését.',
 	'Notes'                          => 'Megjegyzések',
-	'Install_Conflict'               => 'A gpEasy nem telepíthető a kiszolgáló aktuális beállításai mellett. ',
+	'Install_Conflict'               => 'A Typesetter nem telepíthető a kiszolgáló aktuális beállításai mellett. ',
 	'Install_Fix'                    => 'A telepítés folytatásához javítsa a beállításokat a megjegyzéseknek megfelelően, majd <a href="%s">frissítse az oldalt</a>.',
 	'Website_Title'                  => 'Weboldal címe',
 	'Installation_Was_Successfull'   => 'Telepítés sikeresen befejeződött!',
@@ -441,7 +441,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'Programfrissítések utolsó ellenőrzése %s',
 	'Server_isnt_supported'          => 'A kiszolgáló nem képes futtatni az automatikus frissítő eljárást. ',
 	'UP_TO_DATE'                     => 'A szoftver naprakész.',
-	'New_version_available'          => 'Új verzió érhető el a gpEasy programból.',
+	'New_version_available'          => 'Új verzió érhető el a Typesetter programból.',
 	'Your_version'                   => 'Jelenlegi verzió:',
 	'New_version'                    => 'Új verzió:',
 	'Update_Now'                     => 'Frissítés most',
@@ -455,7 +455,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'Az oldal felkészült a frissítésre',
 	'download_failed'                => 'HOPPÁ, a csomag letöltése nem sikerült. Kérem próbálja később.',
 	'download_failed_md5'            => 'HOPPÁ, a letöltött csomagokat nem lehet ellenőrizni. Kérem próbálja később.',
-	'download_failed_xerror'         => 'Amennyiben a beépülőt meg kell vásárolni, vagy be kell lépni a gpEasy.com oldalra a vásárlás igazolásához azt <a %s>ezen a hivatkozáson teheti meg</a>.',
+	'download_failed_xerror'         => 'Amennyiben a beépülőt meg kell vásárolni, vagy be kell lépni a TypesetterCMS.com oldalra a vásárlás igazolásához azt <a %s>ezen a hivatkozáson teheti meg</a>.',
 	'package_downloaded'             => 'Csomagok letöltése sikeresen befejeződött.',
 	'download_verified'              => 'A letöltött csomagok ellenőrzése megtörtént.',
 	'package_unpacked'               => 'Kicsomagolt új állományok',
@@ -465,7 +465,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'Visszalépés az oldalhoz',
 	'error_updating_settings'        => 'Nem lehet frissíteni az oldal beállításait',
 	'delete_incomplete'              => 'Sajnáljuk, néhány állományt nem sikerült törölni.',
-	'revert_ver_notice'              => 'Archívumok visszaállítása különböző gpEasy verziók között nem várt eredményhez vezethet. Jelenleg a gpEasy %s verziója fut a kiválasztott archívum a %s verzió alatt készült.',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Archívumok visszaállítása különböző Typesetter verziók között nem várt eredményhez vezethet. Jelenleg a Typesetter %s verziója fut a kiválasztott archívum a %s verzió alatt készült.',
 	'archive_contains'               => 'A kiválasztott archívum %s létrejött és %s állományt tartalmaz.',
 	'Revert'                         => 'Visszaállítás',
 	'Revert_to_Archive'              => 'Visszaállás az arcívumra',

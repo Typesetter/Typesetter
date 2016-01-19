@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'Só debe descargar software de cuxa autoría confía. O software malicioso pode causar danos á súa instalación incluíndo non só a perda de datos. ',
 	'Selected_Install'               => 'Escolleu instalar %s desde %s',
 	'File_Not_Found'                 => 'Non se pode atopar o ficheiro: %s',
-	'addon_key_defined'              => 'Non se pode instalar %s. Xa está definido por gpEasy ou outro engadido.',
+	'addon_key_defined'              => 'Non se pode instalar %s. Xa está definido por Typesetter ou outro engadido.',
 	'Ini_Error'                      => 'Detectouse un erro mentras se procesaba o ficheiro Addon.ini para este engadido.',
 	'Ini_No_Name'                    => 'A variable <i>Addon_Name</i> deste engadido non se atopa no ficheiro Addon.ini.',
-	'Ini_Submit_Bug'                 => 'Envíe este erro ao equipo de desenvolvemento ou comprobe a documentación sobre <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank">ficheiros Addon.ini</a>.',
-	'min_version'                    => 'Para instalar este engadido, precisa instalar unha versión de gpEasy superior á %s. ',
-	'min_version_upgrade'            => 'Pode obter a última versión da <a href="http://gpeasy.com/Download" target="_blank">web oficial de gpEasy</a>.',
+	'Ini_Submit_Bug'                 => 'Envíe este erro ao equipo de desenvolvemento ou comprobe a documentación sobre <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank">ficheiros Addon.ini</a>.',
+	'min_version'                    => 'Para instalar este engadido, precisa instalar unha versión de Typesetter superior á %s. ',
+	'min_version_upgrade'            => 'Pode obter a última versión da <a href="http://www.typesettercms.com/Download" target="_blank">web oficial de Typesetter</a>.',
 	'downgrade'                      => 'A versión do engadido que ten actualmente instalado é máis nova que a versión que quere instalar.',
 	'error_unpacking'                => 'Houbo un erro tentando procesar o paquete descargado.',
 	'layouts'                        => 'Deseños',
@@ -393,9 +393,9 @@ $langmessage = array (
 	'Install'                        => 'Instalar',
 	'Installing'                     => 'Instalando',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => 'Hai un ficheiro index.html no seu directorio raiz que pode evitar que se amose gpEasy.',
+	'index.html exists'              => 'Hai un ficheiro index.html no seu directorio raiz que pode evitar que se amose Typesetter.',
 	'Notes'                          => 'Notas',
-	'Install_Conflict'               => 'gpEasy non se pode instalar no seu servidor cos parámetros actuais. ',
+	'Install_Conflict'               => 'Typesetter non se pode instalar no seu servidor cos parámetros actuais. ',
 	'Install_Fix'                    => 'Para continuar coa instalación, corrixa a configuración relacionada cos avisos anteriores e logo <a href="%s">recargue esta páxina</a>.',
 	'Website_Title'                  => 'Título da web',
 	'Installation_Was_Successfull'   => 'A instalación foi correcta!',
@@ -441,7 +441,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'A última verificación da actualización do software foi %s.',
 	'Server_isnt_supported'          => 'O seu servidor non pode executar actualizacións automáticas.',
 	'UP_TO_DATE'                     => 'A súa instalación está ao día.',
-	'New_version_available'          => 'Hai unha nova versión de gpEasy dispoñible.',
+	'New_version_available'          => 'Hai unha nova versión de Typesetter dispoñible.',
 	'Your_version'                   => 'A súa versión:',
 	'New_version'                    => 'Nova versión:',
 	'Update_Now'                     => 'Actualizar agora',
@@ -455,7 +455,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'A súa instalación está lista para actualizar.',
 	'download_failed'                => 'Fallou a descarga do paquete. Inténteo de novo máis tarde.',
 	'download_failed_md5'            => 'Non se puido verificar a descarga do paquete. Inténteo de novo máis tarde.',
-	'download_failed_xerror'         => 'Se aínda precisa mercar este engadido ou iniciar sesión en gpEasy.com para confirmar a súa compra <a %s>pode facelo agora</a>',
+	'download_failed_xerror'         => 'Se aínda precisa mercar este engadido ou iniciar sesión en TypesetterCMS.com para confirmar a súa compra <a %s>pode facelo agora</a>',
 	'package_downloaded'             => 'O paquete descargouse correctamente.',
 	'download_verified'              => 'Comprobouse e verificouse o paquete descargado.',
 	'package_unpacked'               => 'Desempaquetados novos ficheiros',
@@ -465,7 +465,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'Volver á súa web',
 	'error_updating_settings'        => 'Non se puideron actualizar as configuracións da súa web',
 	'delete_incomplete'              => 'Sentímolo, algúns dos ficheiros non puideron ser eliminados.',
-	'revert_ver_notice'              => 'Recuperar arquivos de diferentes versións de gpEasy pode ofrecer resultados inesperados. Agora está usando gpEasy %s e o arquivo seleccionado exportouse usando a versión %s',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Recuperar arquivos de diferentes versións de Typesetter pode ofrecer resultados inesperados. Agora está usando Typesetter %s e o arquivo seleccionado exportouse usando a versión %s',
 	'archive_contains'               => 'O arquivo seleccionado foi creado o %s e contén %s ficheiros.',
 	'Revert'                         => 'Recuperar',
 	'Revert_to_Archive'              => 'Recuperar o archivo',

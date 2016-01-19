@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'Programinę įrangą turėtumėte siųstis tik iš žinomų autorių. Kenkėjiška programinė įranga gali sugadinti Jūsų sistemą įskaitant ir duomenų praradimą. ',
 	'Selected_Install'               => 'Jūs pasirinkote įdiegti %s iš %s.',
 	'File_Not_Found'                 => 'Negaliu rasti bylos: %s',
-	'addon_key_defined'              => 'Negaliu įdiegti %s. Jis jau nustatytas gpEasy sistemos kitame priede.',
+	'addon_key_defined'              => 'Negaliu įdiegti %s. Jis jau nustatytas Typesetter sistemos kitame priede.',
 	'Ini_Error'                      => 'Įvyko klaida bandant nuskaityti Addon.ini bylą šiam priedui.',
 	'Ini_No_Name'                    => 'Trūkstama <i>Addon_Name</i> reikšmė Addon.ini byloje šiam priedui.',
-	'Ini_Submit_Bug'                 => 'Prašau nusiųsti klaidą kūrėjui arba patikrink dokumentaciją apie <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank">Addon.ini bylas</a>.',
-	'min_version'                    => 'Minimali gpEasy versija %s reikalinga šiam priedui įdiegti. ',
-	'min_version_upgrade'            => 'Jūs galite parsisiųsti naujausia versiją iš oficialaus <a href="http://gpeasy.com/Download" target="_blank">gpEasy tinklapio</a>.',
+	'Ini_Submit_Bug'                 => 'Prašau nusiųsti klaidą kūrėjui arba patikrink dokumentaciją apie <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank">Addon.ini bylas</a>.',
+	'min_version'                    => 'Minimali Typesetter versija %s reikalinga šiam priedui įdiegti. ',
+	'min_version_upgrade'            => 'Jūs galite parsisiųsti naujausia versiją iš oficialaus <a href="http://www.typesettercms.com/Download" target="_blank">Typesetter tinklapio</a>.',
 	'downgrade'                      => 'Šio priedo dabar įdiegta versija yra naujesnė už tą kurią norite įdiegti.',
 	'error_unpacking'                => 'Įvyko klaida bandant panaudoti parsiųstą paketą.',
 	'layouts'                        => 'Maketai',
@@ -393,9 +393,9 @@ $langmessage = array (
 	'Install'                        => 'Diegti',
 	'Installing'                     => 'Diegama',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => 'Šakniniame kataloge yra index.html byla kuri gali užkirsti kelią gpEasy rodymui.',
+	'index.html exists'              => 'Šakniniame kataloge yra index.html byla kuri gali užkirsti kelią Typesetter rodymui.',
 	'Notes'                          => 'Žymos',
-	'Install_Conflict'               => 'gpEasy negalima įdiegti šiame serveryje su esančiais nustatymais. ',
+	'Install_Conflict'               => 'Typesetter negalima įdiegti šiame serveryje su esančiais nustatymais. ',
 	'Install_Fix'                    => 'Norint pratęsti įdiegimą, prašome pakoreguoti nustatymus, susijusius su aukščiau esančiomis pastabomis. Po to <a href="%s">atnaujinkite šį puslapį</a>.',
 	'Website_Title'                  => 'Tinklalapio antraštė',
 	'Installation_Was_Successfull'   => 'Diegimas sėkmingas!',
@@ -441,7 +441,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'Programinės įrangos atnaujinimmai paskutinį karta tikrinti %s.',
 	'Server_isnt_supported'          => 'Jūsų serveris negali vykdyti automatinio atnaujinimo proceso.',
 	'UP_TO_DATE'                     => 'Jūsų versija vėliausia.',
-	'New_version_available'          => 'Yra nauja gpEasy versija.',
+	'New_version_available'          => 'Yra nauja Typesetter versija.',
 	'Your_version'                   => 'Jūsų versija:',
 	'New_version'                    => 'Nauja versija:',
 	'Update_Now'                     => 'Atnaujinti dabar',
@@ -455,7 +455,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'Jūsų diegimas paruoštas atnaujinimui.',
 	'download_failed'                => 'Paketo siuntimas nepavyko. Bandykite vėliau.',
 	'download_failed_md5'            => 'Negaliu patikrinti parsiųsto paketo. Bandykite vėliau.',
-	'download_failed_xerror'         => 'Jei Jums vis dar reikia įsigyti šį priedą, arba prisijungti prie gpEasy.com pirkimo patvirtinimui, <a %s>galite tai padaryti dabar</a>.',
+	'download_failed_xerror'         => 'Jei Jums vis dar reikia įsigyti šį priedą, arba prisijungti prie TypesetterCMS.com pirkimo patvirtinimui, <a %s>galite tai padaryti dabar</a>.',
 	'package_downloaded'             => 'Paketas parsiųstas sėkmingai.',
 	'download_verified'              => 'Parsiųstas paketas patikrintas ir patvirtintas.',
 	'package_unpacked'               => 'Išpakuotos naujos bylos',
@@ -465,7 +465,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'Grįžti į Jūsų svetainę',
 	'error_updating_settings'        => 'Nepavyko atnaujinti svetainės nustatymų',
 	'delete_incomplete'              => 'Sorry, some of the files could not be deleted.',
-	'revert_ver_notice'              => 'Atstatant archyvus iš skirtingų gpEasy versijų, galite sulaukti nepageidaujamų rezultatų. Šiuo metu naudojatės gpEasy %s, o pasirinktas archyvas buvo sukurtas naudojantis gpEasy %s.',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Atstatant archyvus iš skirtingų Typesetter versijų, galite sulaukti nepageidaujamų rezultatų. Šiuo metu naudojatės Typesetter %s, o pasirinktas archyvas buvo sukurtas naudojantis Typesetter %s.',
 	'archive_contains'               => 'Pasirinkti archyvai buvo sukurti %s. Juose yra %s bylos.',
 	'Revert'                         => 'Atsatyti',
 	'Revert_to_Archive'              => 'Atstatyti iš archyvo',

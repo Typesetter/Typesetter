@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'Θα πρέπει να κατεβάζετε μόνο λογισμικό από τους παρόχους που εμπιστεύεστε. Κακόβουλο λογισμικό μπορεί να προκαλέσει βλάβη στην εγκατάστασή σας αλλά  και στην απώλεια των δεδομένων σας. ',
 	'Selected_Install'               => 'Έχετε επιλέξει να εγκαταστήσετε %s από %s.',
 	'File_Not_Found'                 => 'Δεν μπορεί να βρεθεί Αρχείο: %s',
-	'addon_key_defined'              => 'Δεν είναι δυνατή η εγκατάσταση του %s. Είναι ήδη καθορισμένο από το gpEasy ή άλλο Πρόσθετο.',
+	'addon_key_defined'              => 'Δεν είναι δυνατή η εγκατάσταση του %s. Είναι ήδη καθορισμένο από το Typesetter ή άλλο Πρόσθετο.',
 	'Ini_Error'                      => 'Ένα λάθος έχει εντοπιστεί κατά την ανάλυση του Aρχείου Addon.ini για αυτό το Πρόσθετο.',
 	'Ini_No_Name'                    => 'Η μεταβλητή <i>Addon_Name</i> λείπει από το αρχείο Addon.ini για αυτό το πρόσθετο.',
-	'Ini_Submit_Bug'                 => 'Παρακαλούμε υποβάλλετε το σφάλμα στο Προγραμματιστή του έργου ή να ελέγξετε την τεκμηρίωση σχετικά με <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank">Addon.ini Αρχεία</a> .',
-	'min_version'                    => 'Για να εγκαταστήσετε το Πρόσθετο, θα πρέπει να εγκαταστήσετε μια ελάχιστη έκδοση %s του gpEasy. ',
-	'min_version_upgrade'            => 'Μπορείτε να λάβετε την τελευταία έκδοση από την επίσημο <a href="http://gpeasy.com/Download" target="_blank">gpEasy Ιστότοπο</a> .',
+	'Ini_Submit_Bug'                 => 'Παρακαλούμε υποβάλλετε το σφάλμα στο Προγραμματιστή του έργου ή να ελέγξετε την τεκμηρίωση σχετικά με <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank">Addon.ini Αρχεία</a> .',
+	'min_version'                    => 'Για να εγκαταστήσετε το Πρόσθετο, θα πρέπει να εγκαταστήσετε μια ελάχιστη έκδοση %s του Typesetter. ',
+	'min_version_upgrade'            => 'Μπορείτε να λάβετε την τελευταία έκδοση από την επίσημο <a href="http://www.typesettercms.com/Download" target="_blank">Typesetter Ιστότοπο</a> .',
 	'downgrade'                      => 'Η έκδοση του προσθέτου που έχετε εγκατεστημένο είναι νεότερη από αυτού που θέλετε να εγκαταστήσετε.',
 	'error_unpacking'                => 'Ούπς, παρουσιάστηκε σφάλμα κατά την προσπάθεια να κατεβεί το πακέτο.',
 	'layouts'                        => 'Layouts',
@@ -393,9 +393,9 @@ $langmessage = array (
 	'Install'                        => 'Εγκατάσταση',
 	'Installing'                     => 'Εγκαθίσταται',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => 'Υπάρχει ένα αρχείο index.html στο Κεντρικό Φάκελό σας και μπορεί να αποτρέψει την εμφάνιση από το gpEasy.',
+	'index.html exists'              => 'Υπάρχει ένα αρχείο index.html στο Κεντρικό Φάκελό σας και μπορεί να αποτρέψει την εμφάνιση από το Typesetter.',
 	'Notes'                          => 'Σημειώσεις',
-	'Install_Conflict'               => 'Το gpEasy δεν μπορεί να εγκατασταθεί στον server σας με τις τρέχουσες ρυθμίσεις. ',
+	'Install_Conflict'               => 'Το Typesetter δεν μπορεί να εγκατασταθεί στον server σας με τις τρέχουσες ρυθμίσεις. ',
 	'Install_Fix'                    => 'Για να συνεχίσετε με την εγκατάσταση, παρακαλούμε να καθορίσετε τις ρυθμίσεις που σχετίζονται με τις προκηρύξεις παραπάνω, τότε <a href="%s">ανανεώστε αυτή τη σελίδα</a> .',
 	'Website_Title'                  => 'Τίτλος Ιστότοπου',
 	'Installation_Was_Successfull'   => 'Η Εγκατάσταση ήταν Επιτυχής!',
@@ -441,7 +441,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'Οι ενημερώσεις λογισμικού ελέγχθηκαν τελευταία %s.',
 	'Server_isnt_supported'          => 'Ο server σας δεν είναι σε θέση να τρέξει την αυτόματη διαδικασία ενημέρωσης.',
 	'UP_TO_DATE'                     => 'Η εγκατάσταση σας είναι η πιο πρόσφατη.',
-	'New_version_available'          => 'Μια νέα έκδοση του gpEasy είναι διαθέσιμη.',
+	'New_version_available'          => 'Μια νέα έκδοση του Typesetter είναι διαθέσιμη.',
 	'Your_version'                   => 'Η Έκδοση σας:',
 	'New_version'                    => 'Νέα Έκδοση:',
 	'Update_Now'                     => 'Αναβαθμίστε Τώρα!',
@@ -455,7 +455,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'Η εγκατάσταση είναι έτοιμη να αναβαθμιστεί.',
 	'download_failed'                => 'Ούπς, το πακέτο λήψης απέτυχε. Παρακαλώ δοκιμάστε αργότερα.',
 	'download_failed_md5'            => 'Ούπς, το πακέτο λήψης δεν μπορεί να επαληθευτεί. Παρακαλώ δοκιμάστε αργότερα.',
-	'download_failed_xerror'         => 'Αν θέλετε να αγοράσετε αυτό το πρόσθετο ή να εισέλθετε στο gpEasy.com για απόδειξη αγοράς <a %s>μπορείτε να το κάνετε τώρα</a>.',
+	'download_failed_xerror'         => 'Αν θέλετε να αγοράσετε αυτό το πρόσθετο ή να εισέλθετε στο TypesetterCMS.com για απόδειξη αγοράς <a %s>μπορείτε να το κάνετε τώρα</a>.',
 	'package_downloaded'             => 'Το Πακέτο κατέβηκε με επιτυχία.',
 	'download_verified'              => 'Το κατεβασμένο Πακέτο έχει ελεγχθεί και εξακριβωθεί.',
 	'package_unpacked'               => 'Ανοίξτε τα νέα Αρχεία',
@@ -465,7 +465,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'Επιστροφή στον ιστότοπό σας',
 	'error_updating_settings'        => 'Δεν μπορούν να ενημερωθούν οι ρυθμίσεις του site σας',
 	'delete_incomplete'              => 'Sorry, some of the files could not be deleted.',
-	'revert_ver_notice'              => 'Η Επαναφορά σε αρχεία από διαφορετικές εκδόσεις του gpEasy μπορεί να έχει ανεπιθύμητα αποτελέσματα. Χρησιμοποιείτε την έκδοση %s και τα επιλεγμένα αρχεία εξήχθησαν από την %s',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Η Επαναφορά σε αρχεία από διαφορετικές εκδόσεις του Typesetter μπορεί να έχει ανεπιθύμητα αποτελέσματα. Χρησιμοποιείτε την έκδοση %s και τα επιλεγμένα αρχεία εξήχθησαν από την %s',
 	'archive_contains'               => 'Το τρέχον αρχείο δημιουργήθηκε %s και περιέχει %s αρχεία.',
 	'Revert'                         => 'Επαναφορά',
 	'Revert_to_Archive'              => 'Επαναφορά από Αρχείο',

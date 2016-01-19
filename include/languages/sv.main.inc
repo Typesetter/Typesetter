@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Want to help translate gpEasy? See https://github.com/oyejorge/gpEasy-CMS/tree/master/include/languages
+ * Want to help translate Typesetter? See https://github.com/Typesetter/Typesetter/tree/master/include/languages
  *
  *
  */
@@ -309,12 +309,12 @@ $langmessage = array (
 	'Addon_Install_Warning'          => 'Du borde bara ladda ner mjukvara från programmerare du litar på Skadlig mjukvara kan orsaka skador på installationen inklusive förlust av all data ',
 	'Selected_Install'               => 'Du har valt att installera %s från %s',
 	'File_Not_Found'                 => 'Kunde inte hitta fil: %s',
-	'addon_key_defined'              => 'Kunde inte installera %s. Den är redan definierad av gpEasy eller ett annat tillägg',
+	'addon_key_defined'              => 'Kunde inte installera %s. Den är redan definierad av Typesetter eller ett annat tillägg',
 	'Ini_Error'                      => 'Ett fel har upptäckts när addon.ini filen skulle läggas in i detta tillägg',
 	'Ini_No_Name'                    => 'Variabeln <i>Addon_Name</i> saknas i addon.ini filen för detta tillägg',
-	'Ini_Submit_Bug'                 => 'Vänligen delge buggen till utvecklaren eller kontrollera dokumentationen om <a href="http://docs.gpeasy.org/index.php/Main/Addon.ini" target="_blank">Addon.ini filer</a>.',
-	'min_version'                    => 'För att kunna installera detta tillägg, måste gpEasy\'s minsta version installeras %s. ',
-	'min_version_upgrade'            => 'Du får tag på den senaste versionen hos <a href="http://gpeasy.com/Download" target="_blank">gpEasy officiella hemsida</a>.',
+	'Ini_Submit_Bug'                 => 'Vänligen delge buggen till utvecklaren eller kontrollera dokumentationen om <a href="http://www.typesettercms.com/Docs/Addon.ini" target="_blank">Addon.ini filer</a>.',
+	'min_version'                    => 'För att kunna installera detta tillägg, måste Typesetter\'s minsta version installeras %s. ',
+	'min_version_upgrade'            => 'Du får tag på den senaste versionen hos <a href="http://www.typesettercms.com/Download" target="_blank">Typesetter officiella hemsida</a>.',
 	'downgrade'                      => 'Versionen av tillägget du förnärvarande har installerat är nyare än den version som du är på gång att installera',
 	'error_unpacking'                => 'Oj, ett fel inträffade när den försökte bearbeta hämtade paketet.',
 	'layouts'                        => 'Skiss',
@@ -393,9 +393,9 @@ $langmessage = array (
 	'Install'                        => 'Installera',
 	'Installing'                     => 'Installera',
 	'Installed'                      => 'Installed',
-	'index.html exists'              => 'Det finns en index.html fil i din root katalog vilket kanske kommer hindra gpEasy från att visas',
+	'index.html exists'              => 'Det finns en index.html fil i din root katalog vilket kanske kommer hindra Typesetter från att visas',
 	'Notes'                          => 'Noteringar',
-	'Install_Conflict'               => 'gpEasy kan inte installeras på din server med gällande inställningar ',
+	'Install_Conflict'               => 'Typesetter kan inte installeras på din server med gällande inställningar ',
 	'Install_Fix'                    => 'För att fortsätta med installationen, vänligen fixa inställningarna associerade enligt anmärkningen ovan, därefter <a href="%s">ladda om sidan</a>.',
 	'Website_Title'                  => 'Hemsidans titel',
 	'Installation_Was_Successfull'   => 'Installationen lyckades!',
@@ -441,7 +441,7 @@ $langmessage = array (
 	'Software_updates_checked'       => 'Programuppdateringar kontrollerades senast %s.',
 	'Server_isnt_supported'          => 'Din server kan inte köra auto-uppdateringen.',
 	'UP_TO_DATE'                     => 'Din installation är den senaste.',
-	'New_version_available'          => 'En ny version av gpEasy är tillgänglig.',
+	'New_version_available'          => 'En ny version av Typesetter är tillgänglig.',
 	'Your_version'                   => 'Din version:',
 	'New_version'                    => 'Ny version:',
 	'Update_Now'                     => 'Uppdatera nu',
@@ -455,7 +455,7 @@ $langmessage = array (
 	'ready_for_upgrade'              => 'Din installation är färdig att uppgraderas',
 	'download_failed'                => 'Oj, packet nerladdningen misslyckades, försök igen.',
 	'download_failed_md5'            => 'Oj, kan det nedladdade paketet inte verifieras. Försök igen',
-	'download_failed_xerror'         => 'Om du fortfarande behöver köpa detta tillägg, logga då in hos gpEasy.com för verifiering av köpet <a %s>som du kan göra nu</a>',
+	'download_failed_xerror'         => 'Om du fortfarande behöver köpa detta tillägg, logga då in hos TypesetterCMS.com för verifiering av köpet <a %s>som du kan göra nu</a>',
 	'package_downloaded'             => 'Packetet hämtades.',
 	'download_verified'              => 'De hämtade paket kontrolleras och verifieras.',
 	'package_unpacked'               => 'Packade upp nya filer',
@@ -465,7 +465,9 @@ $langmessage = array (
 	'return_to_your_site'            => 'Gå tillbaka till din webbplats',
 	'error_updating_settings'        => 'Kunde inte uppdatera dina webbplatsinställningar',
 	'delete_incomplete'              => 'Ursäkta, en del av filerna kunde inte raderas',
-	'revert_ver_notice'              => 'Genom att återgå till en annan version av gpEasy kan oväntade resultat uppkomma. Du använder för tillfället gpEasy %s och det valda arkivet som exporterades är version %s',
+	'Sorry, nothing matched'         => 'Sorry, nothing met your search criteria.',
+	'Sorry, data not fetched'        => 'Sorry, the addon data could not be fetched from TypesetterCMS.com.',
+	'revert_ver_notice'              => 'Genom att återgå till en annan version av Typesetter kan oväntade resultat uppkomma. Du använder för tillfället Typesetter %s och det valda arkivet som exporterades är version %s',
 	'archive_contains'               => 'Det valda arkivet skapades %s och innehåller %s filer',
 	'Revert'                         => 'Återgå',
 	'Revert_to_Archive'              => 'Återgå till arkivet',

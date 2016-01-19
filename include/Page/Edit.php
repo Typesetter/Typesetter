@@ -885,7 +885,11 @@ class Edit extends \gp\Page{
 		}
 
 		//use the request time
-		$time = $_REQUEST['req_time'];
+		if( isset($_REQUEST['req_time']) && ctype_digit($_REQUEST['req_time']) ){
+			$time = $_REQUEST['req_time'];
+		}else{
+			$time = time();
+		}
 
 
 		//backup file name

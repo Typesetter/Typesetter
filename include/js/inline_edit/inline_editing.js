@@ -358,7 +358,7 @@ gp_editing = {
 	 * Switch between edit areas
 	 *
 	 */
-	$gp.$doc.on('click','.editable_area:not(.filetype-wrapper_section)',function(evt){
+	$gp.$doc.on('mousedown','.editable_area:not(.filetype-wrapper_section)',function(evt){
 
 		//get the edit link
 		var area_id		= $gp.AreaId( $(this) );

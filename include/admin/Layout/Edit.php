@@ -240,17 +240,19 @@ class Edit extends \gp\admin\Layout{
 
 
 		//custom css
-		$css = $this->layoutCSS($this->curr_layout);
+		$css			= $this->layoutCSS($this->curr_layout);
+		$dir			= $layout_info['dir'].'/'.$layout_info['theme_color'];
+		$style_type		= \gp\tool\Output::StyleType($dir);
+
 		if( empty($css) ){
-			$dir				= $layout_info['dir'].'/'.$layout_info['theme_color'];
-			$style_type			= \gp\tool\Output::StyleType($dir);
 			$var_file 			= $dir.'/variables.'.$style_type;
 			if( file_exists($var_file) ){
 				$css = file_get_contents($var_file);
 			}
 		}
 
-		echo '<textarea name="css" id="gp_layout_css" class="gptextarea" placeholder="'.htmlspecialchars($langmessage['Add your LESS and CSS here']).'" wrap="off">';
+		//editor mode
+		echo '<textarea name="css" id="gp_layout_css" class="gptextarea" placeholder="'.htmlspecialchars($langmessage['Add your LESS and CSS here']).'" wrap="off" data-mode="'.htmlspecialchars($style_type).'">';
 		echo htmlspecialchars($css);
 		echo '</textarea>';
 

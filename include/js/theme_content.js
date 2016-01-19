@@ -157,9 +157,14 @@ $(function(){
 
 		var codeMirrorConfig = {
 		        mode: 'text/x-less',
-				//mode: 'text/x-scss'
 				lineWrapping:false
 			};
+
+		var mode = $textarea.data('mode');
+		if( mode == 'scss' ){
+			codeMirrorConfig.mode = 'text/x-scss';
+		}
+
 
 		var editor = CodeMirror.fromTextArea($textarea.get(0),codeMirrorConfig);
 

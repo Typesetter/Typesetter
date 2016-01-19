@@ -33,7 +33,7 @@ namespace gp\tool{
 
 		/**
 		 * Add a css file to the page
-		 * @since gpEasy 4.0
+		 * @since 4.0
 		 * @param string $file The path of the css file relative to the addon folder
 		 * @param bool $combine Set to false to keep the file from being combined with other css files
 		 */
@@ -65,7 +65,7 @@ namespace gp\tool{
 
 		/**
 		 * Add a js file to the page
-		 * @since gpEasy 4.0
+		 * @since 4.0
 		 * @param string $file The path of the js file relative to the addon folder
 		 * @param bool $combine Set to false to keep the file from being combined with other js files
 		 */
@@ -89,7 +89,7 @@ namespace gp\tool{
 
 		/**
 		 * Similar to php's register_shutdown_function()
-		 * This gpEasy specific version will keep track of the active plugin and make sure global path variables are set properly before callting $function
+		 * Will keep track of the active plugin and make sure global path variables are set properly before callting $function
 		 * Example: \gp\tool\Plugins::RegisterShutdown(array('class_name','method_name'));  or  \gp\tool\Plugins::RegisterShutdown(array('class_name','method_name'),'argument1'....);
 		 *
 		 */

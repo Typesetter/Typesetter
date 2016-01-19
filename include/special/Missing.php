@@ -138,7 +138,7 @@ class Missing{
 			return false;
 		}
 
-		//strings beginning with / could be gplinks, they could also links to non-gpEasy managed pages
+		//strings beginning with / could be gplinks, they could also links to non-cms managed pages
 		// we could do additional testing, but we could never be certain what the user intent is
 		if( strpos($target,'/') === 0 ){
 			return false;

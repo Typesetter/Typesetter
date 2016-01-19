@@ -434,7 +434,7 @@ class Addons extends \gp\admin\Addon\Install{
 
 	function Instructions(){
 		echo '<hr/>';
-		echo '<a href="http://gpeasy.org/Docs/Plugins">Plugin Documentation</a>';
+		echo '<a href="'.CMS_DOMAIN.'/Docs/Plugins">Plugin Documentation</a>';
 	}
 
 
@@ -599,13 +599,13 @@ class Addons extends \gp\admin\Addon\Install{
 			}
 		}
 
-		//upgrade gpeasy.com
+		//upgrade cms
 		if( isset($addon_config['id']) && isset(\gp\admin\Tools::$new_versions[$addon_config['id']]) ){
 			$version_info = \gp\admin\Tools::$new_versions[$addon_config['id']];
 			echo '<div class="gp_notice">';
 			echo '<a href="'.addon_browse_path.'/Plugins?id='.$addon_config['id'].'" data-cmd="remote">';
 			echo $langmessage['new_version'];
-			echo ' &nbsp; '.$version_info['version'].' (gpEasy.com)</a>';
+			echo ' &nbsp; '.$version_info['version'].' ('.CMS_READABLE_DOMAIN.')</a>';
 			echo '</div>';
 		}
 

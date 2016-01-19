@@ -391,7 +391,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 		if( !$this->ini_contents ){
 			$error = $langmessage['Ini_Error'].' '.$langmessage['Ini_Submit_Bug'];
-			$error = preg_replace('#href="[^"]+"#','href="http://www.gpeasy.com/Docs/Addon.ini"',$error);
+			$error = preg_replace('#href="[^"]+"#','href="'.CMS_DOMAIN.'/Docs/Addon.ini"',$error);
 			return false;
 		}
 
@@ -1101,7 +1101,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 	/*
 	 * Add to $AddTo
-	 * 	Don't add elements already defined by gpEasy or other addons
+	 * 	Don't add elements already defined by the cms or other addons
 	 *
 	 */
 	public function AddToConfig(&$AddTo,$New_Config){

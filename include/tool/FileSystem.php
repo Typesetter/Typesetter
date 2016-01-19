@@ -347,7 +347,7 @@ class FileSystem{
 		if( !\gp\tool\Files::Save($file,$contents) ){
 			return false;
 		}
-		//the gpEasy core does not need to be world writable
+		//the core does not need to be world writable
 		@chmod($file,FS_CHMOD_FILE);
 		return true;
 	}

@@ -790,7 +790,7 @@ namespace gp\tool{
 
 
 		/**
-		 * Determine if gpEasy needs to add a <meta charset> tag
+		 * Determine if CMS needs to add a <meta charset> tag
 		 * Look at the beginning of the document to see what kind of doctype the current template is using
 		 * See http://www.w3schools.com/tags/tag_doctype.asp for description of different doctypes
 		 *

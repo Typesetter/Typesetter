@@ -248,7 +248,7 @@ class Tools{
 		$host = $_SERVER['HTTP_HOST'].$dirPrefix;
 		echo '<input type="text" name="host"  size="50" value="'.htmlspecialchars($host).'" readonly="readonly" class="gpinput gpreadonly" />';
 		echo '<br/>';
-		echo '<input type="checkbox" name="show_site" value="hidden" /> Click to hide your site information on gpEasy.com.';
+		echo '<input type="checkbox" name="show_site" value="hidden" /> Click to hide your site information on '.CMS_READABLE_DOMAIN.'.';
 		echo '</td></tr>';
 
 		echo '<tr><td></td><td>';
@@ -271,14 +271,6 @@ class Tools{
 	}
 
 	public function CanRate(){
-
-		/*
-		if( $this->rate_testing ){
-			message('rate_testing is enabled');
-		}elseif( strpos($_SERVER['SERVER_ADDR'],'127') === 0 ){
-			$this->messages[] = 'This installation of gpEasy is on a local server and is not accessible via the internet.';
-		}
-		*/
 
 		if( !\gp\tool::IniGet('allow_url_fopen') ){
 			$this->messages[] = 'Your installation of PHP does not support url fopen wrappers.';
@@ -379,7 +371,7 @@ class Tools{
 
 
 	/**
-	 * Send the addon rating to gpEasy.com
+	 * Send the addon rating to server
 	 *
 	 */
 	public function SendRating(){
@@ -440,8 +432,7 @@ class Tools{
 
 	public function PingRating($data){
 
-		$path = 'http://gpeasy.loc/glacier/index.php/Special_Addons';
-		$path = 'http://gpeasy.com/index.php/Special_Addons';
+		$path = CMS_DOMAIN.'/index.php/Special_Addons';
 		$path .= '?'.http_build_query($data,'','&');
 		$contents = file_get_contents($path);
 
@@ -691,7 +682,7 @@ class Tools{
 		$links = array();
 
 		foreach($hooks as $name => $hook_info){
-			$links[] = '<a href="http://www.gpeasy.com/Plugin_Hooks?hook='.$name.'" target="_blank">'.str_replace('_',' ',$name).'</a>';
+			$links[] = '<a href="'.CMS_DOMAIN.'/Plugin_Hooks?hook='.$name.'" target="_blank">'.str_replace('_',' ',$name).'</a>';
 		}
 		$this->FormatList($links,'Hooks',$format);
 	}

@@ -79,7 +79,7 @@ class HTML extends \gp\tool\Editing\HTMLParse{
 
 
 	/*
-	 * Make sure certain gpEasy elements aren't copied into the html of pages
+	 * Make sure certain cms elements aren't copied into the html of pages
 	 *
 	 * 	a.find('.editable_area').removeAttr('class').removeAttr('id');
 		a.find('.ExtraEditLink').removeAttr('class').removeAttr('id');
@@ -122,18 +122,18 @@ class HTML extends \gp\tool\Editing\HTMLParse{
 
 			if( isset($dom_element['attributes']) && is_array($dom_element['attributes']) ){
 
-				//remove classes used by gpeasy
+				//remove classes used by cms
 				if( isset($dom_element['attributes']['class']) ){
 					$class = ' '.$dom_element['attributes']['class'].' ';
-					$gpeasy_element = false;
+					$cms_element = false;
 					if( strpos($class,' editable_area ') !== false ){
-						$gpeasy_element = true;
+						$cms_element = true;
 					}elseif( strpos($class,' ExtraEditLink ') !== false ){
-						$gpeasy_element = true;
+						$cms_element = true;
 					}elseif( strpos($class,' ExtraEditLnks ') !== false ){
-						$gpeasy_element = true;
+						$cms_element = true;
 					}
-					if( $gpeasy_element ){
+					if( $cms_element ){
 						unset($this->dom_array[$key]['attributes']['class']);
 						unset($this->dom_array[$key]['attributes']['id']);
 					}

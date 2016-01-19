@@ -111,7 +111,7 @@ class Install extends \gp\admin\Addon\Tools{
 
 		$name = '<em>'.htmlspecialchars($_REQUEST['name']).'</em>';
 		echo '<p class="gp_notice">'.$langmessage['Addon_Install_Warning'].'</p>';
-		echo '<p>'.sprintf($langmessage['Selected_Install'],$name,'gpEasy.com').'</p>';
+		echo '<p>'.sprintf($langmessage['Selected_Install'],$name,CMS_READABLE_DOMAIN).'</p>';
 
 		$_REQUEST += array('order'=>'');
 
@@ -168,7 +168,7 @@ class Install extends \gp\admin\Addon\Tools{
 
 
 	/**
-	 * Get addon data from gpEasy.com and display to user
+	 * Get remote addon data and display to user
 	 *
 	 */
 	function RemoteBrowse(){
@@ -330,7 +330,7 @@ class Install extends \gp\admin\Addon\Tools{
 
 		echo '<h3>Search Options</h3>';
 		echo '<ul>';
-		echo '<li>Limit results to addons that are compatible with your version of gpEasy ('.gpversion.') &nbsp; ';
+		echo '<li>Limit results to addons that are compatible with your version of '.CMS_NAME.' ('.gpversion.') &nbsp; ';
 
 		if( $search_version ){
 			echo '<b>'.$langmessage['On'].'</b> &nbsp; ';

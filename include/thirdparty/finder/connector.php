@@ -16,7 +16,7 @@ includeFile('thirdparty/finder/php/Finder.class.php');
  **/
 function access($attr, $path, $data, $volume) {
 
-	//gpEasy thumbnails
+	// thumbnails
 	if( strpos($path,'/image/thumbnails/') === false ){
 		return null;
 	}

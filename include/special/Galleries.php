@@ -193,9 +193,6 @@ class Galleries{
 	 *
 	 * @static
 	 */
-
-	///data/_uploaded/image/thumbnails/image/gpeasy/admin_pages/01login.png.jpg
-	///data/_uploaded/image/gpeasy/xamppsetup/01.png
 	public static function UpdateGalleryInfo($title,$file_sections){
 
 		$content = '';

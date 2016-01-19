@@ -564,7 +564,7 @@ namespace gp\tool{
 		/**
 		 * CKEditor configuration settings
 		 * Any settings here take precedence over settings in configuration files defined by the customConfig setting
-		 * Configuration precedence: (1) User (2) Addon (3) $options (4) gpEasy
+		 * Configuration precedence: (1) User (2) Addon (3) $options (4) CMS
 		 *
 		 */
 		public static function CKConfig( $options = array(), $config_name = 'config', &$plugins = array() ){
@@ -572,7 +572,7 @@ namespace gp\tool{
 
 			$plugins = array();
 
-			// (4) gpeasy defaults
+			// (4) CMS defaults
 			$defaults = array(
 							//'customConfig'				=> \gp\tool::GetDir('/include/js/ckeditor_config.js'),
 							'skin'						=> 'kama',

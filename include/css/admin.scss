@@ -838,14 +838,14 @@ table.tablesorter th.gp_header_desc:before{
 	}
 
 #simplepanel .toolbar .toggle_panel{
-	@include gpimg( 'admin_icons.png', 50%, -32px );
+	@include gpimg( 'icons.png', 50%, -32px );
 	}
 #simplepanel.compact > div{
 	width: 32px;
 	min-width: 0;
 	}
 #simplepanel.compact .toolbar .toggle_panel{
-	@include gpimg( 'admin_icons.png', 50%, -352px );
+	@include gpimg( 'icons.png', 50%, -64px );
 	}
 #simplepanel.minb:hover > div{
 	margin: 0 0 200px 0; /* prevent the menu from disappearing if changing the display makes the user mouseout */
@@ -854,7 +854,7 @@ table.tablesorter th.gp_header_desc:before{
 	margin: 0 !important; /* don't add margin at bottom if the display was just changed */
 	}
 #simplepanel.minb .toolbar .toggle_panel{
-	@include gpimg( 'admin_icons.png', 50%, 0 );
+	@include gpimg( 'icons.png', 50%, 0 );
 	}
 
 #simplepanel .toolbar .extra{

@@ -55,33 +55,36 @@ body #admin_menu li.ui-sortable-helper{
 
 #admin_menu li div a.expand_img{
 	float:left;
-	height:12px;
-	width:12px;
-	padding:0;
 	margin:4px 5px;
 	background:url('../imgs/blank.gif') 3px 3px no-repeat;
 	}
 
-#admin_menu li.haschildren > div > a.expand_img{
-	background:url('../imgs/admin_menu_icons.png') -2px -2px no-repeat;
+#admin_menu li div a.expand_img:before{
+	content:'';
+	font-family:FontAwesome;
+	height:12px;
+	width:12px;
+	display:block;
+	float:left;
+	font-size:10px;
+	line-height:12px;
+	color:#333;
+	text-align:center;
 	}
 
-#admin_menu li.hidechildren > div > a.expand_img{
-	background:url('../imgs/admin_menu_icons.png') -2px -18px no-repeat;
+#admin_menu li.haschildren > div > a.expand_img:before{
+	content:"\f068";
 	}
+#admin_menu li.hidechildren > div > a.expand_img:before{
+	content:"\f067";
+	}
+
 
 #admin_menu li div a.haslayout{
 	border-radius: 3px;
 	vertical-align:middle;
 	}
 
-
-
-/*
-#admin_menu li div.haschildren .expand_img{
-	background-image:url('../imgs/shrink.gif');
-	}
-*/
 
 #admin_menu li div a.gp_label,
 #admin_menu li div a.gp_label:hover,
@@ -171,11 +174,11 @@ body #admin_menu li.ui-sortable-helper{
 	}
 
 #admin_menu_div .insert_before_icon{
-	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -48px;
+	background:url('../imgs/icons.png') no-repeat 50% -104px;
 	}
 
 #admin_menu_div .insert_after_icon{
-	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -64px;
+	background:url('../imgs/icons.png') no-repeat 50% -136px;
 	}
 
 

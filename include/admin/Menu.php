@@ -717,7 +717,7 @@ class Menu{
 
 		echo '<span>';
 
-		$img	= '<span class="menu_icon icon_page"></span>';
+		$img	= '<i class="menu_icon fa fa-edit"></i>';
 		echo '<a href="[url]" class="view_edit_link not_multiple">'.$img.htmlspecialchars($langmessage['view/edit_page']).'</a>';
 
 		$img	= '<span class="menu_icon page_edit_icon"></span>';
@@ -746,7 +746,7 @@ class Menu{
 
 
 		if( \gp\admin\Tools::HasPermission('Admin_User') ){
-			$img	= '<span class="menu_icon icon_user"></span>';
+			$img	= '<i class="menu_icon fa fa-user"></i>';
 			$attrs	= array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox');
 			echo $this->Link('Admin/Users',$img.$langmessage['permissions'],'cmd=file_permissions&index=[key]',$attrs);
 		}
@@ -774,7 +774,7 @@ class Menu{
 			$img = '<span class="layout_icon"></span>';
 			echo $this->Link('Admin/Menu',$img.'[layout_label]','cmd=layout&index=[key]',' title="'.$langmessage['layout'].'" data-cmd="gpabox" class="has_layout"');
 
-			$img = '<span class="menu_icon undo_icon"></span>';
+			$img = '<i class="menu_icon fa fa-undo"></i>';
 			echo $this->Link('Admin/Menu',$img.$langmessage['restore'],'cmd=restorelayout&index=[key]',array('data-cmd'=>'postlink','title'=>$langmessage['restore'],'class'=>'has_layout'),'restore');
 
 			//no_layout

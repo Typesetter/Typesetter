@@ -164,10 +164,6 @@ body #admin_menu li.ui-sortable-helper{
 	text-align:center;
 	}
 
-#admin_menu_tools .icon_page{
-	background:url('../imgs/admin_icons.png') no-repeat -8px -232px;
-	}
-
 #admin_menu_div .layout_icon{
 	border-radius: 5px;
     display: inline-block;
@@ -176,9 +172,6 @@ body #admin_menu li.ui-sortable-helper{
     width: 16px;
 	}
 
-#admin_menu_div .undo_icon{
-	background:url('../imgs/admin_icons.png') no-repeat -8px -328px;
-	}
 #admin_menu_div .page_edit_icon{
 	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -32px;
 	}
@@ -196,9 +189,6 @@ body #admin_menu li.ui-sortable-helper{
 	}
 #admin_menu_div .copy_icon{
 	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -112px;
-	}
-#admin_menu_div .icon_user{
-	background:url('../imgs/admin_icons.png') no-repeat 50% -201px;
 	}
 
 
@@ -361,9 +351,3 @@ body #gp_menu_select *{
 	font-weight:normal !important;
 	color:#990000 !important;
 	}
-
-.homepage_setting .icon_admin_home{
-	display:inline-block;
-	background:url('../imgs/admin_icons.png') no-repeat 50% -455px;
-	margin:0 7px -2px 0;
-}

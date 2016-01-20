@@ -640,10 +640,10 @@ class Menu{
 		echo '<b>'.$langmessage['options'].'</b>';
 		echo '<span>';
 
-		$img = '<span class="menu_icon page_edit_icon"></span>';
+		$img = '<i class="menu_icon fa fa-gears"></i>';
 		echo $this->Link('Admin/Menu/Ajax',$img.$langmessage['edit'],'cmd=EditExternal&key=[key]',array('title'=>$langmessage['edit'],'data-cmd'=>'gpabox'));
 
-		$img = '<span class="menu_icon cut_list_icon"></span>';
+		$img = '<i class="menu_icon fa fa-scissors"></i>';
 		echo $this->Link('Admin/Menu/Ajax',$img.$langmessage['rm_from_menu'],'cmd=hide&index=[key]',array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
 
 		echo '</span>';
@@ -720,17 +720,18 @@ class Menu{
 		$img	= '<i class="menu_icon fa fa-edit"></i>';
 		echo '<a href="[url]" class="view_edit_link not_multiple">'.$img.htmlspecialchars($langmessage['view/edit_page']).'</a>';
 
-		$img	= '<span class="menu_icon page_edit_icon"></span>';
+		$img	= '<i class="menu_icon fa fa-gears"></i>';
 		$attrs	= array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax','class'=>'not_multiple');
 		echo $this->Link('Admin/Menu/Ajax',$img.$langmessage['rename/details'],'cmd=renameform&index=[key]',$attrs);
 
 
-		$img	= '<i class="fa fa-eye menu_icon"></i>';
+		$img	= '<i class="fa fa-eye-slash menu_icon"></i>';
 		$q		= 'cmd=ToggleVisibility&index=[key]';
 		$label	= $langmessage['Visibility'].': '.$langmessage['Private'];
 		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax','class'=>'vis_private');
 		echo $this->Link('Admin/Menu/Ajax',$img.$label,$q,$attrs);
 
+		$img	= '<i class="fa fa-eye menu_icon"></i>';
 		$label	= $langmessage['Visibility'].': '.$langmessage['Public'];
 		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax','class'=>'vis_public not_multiple');
 		$q		.= '&visibility=private';
@@ -740,7 +741,7 @@ class Menu{
 		echo '<a href="[url]?cmd=ViewHistory" class="view_edit_link not_multiple not_special" data-cmd="gpabox"><i class="fa fa-history menu_icon"></i>'.htmlspecialchars($langmessage['Revision History']).'</a>';
 
 
-		$img	= '<span class="menu_icon copy_icon"></span>';
+		$img	= '<i class="menu_icon fa fa-files-o"></i>';
 		$attrs	= array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox','class'=>'not_multiple');
 		echo $this->Link('Admin/Menu/Ajax',$img.$langmessage['Copy'],'cmd=CopyForm&index=[key]',$attrs);
 
@@ -751,11 +752,11 @@ class Menu{
 			echo $this->Link('Admin/Users',$img.$langmessage['permissions'],'cmd=file_permissions&index=[key]',$attrs);
 		}
 
-		$img	= '<span class="menu_icon cut_list_icon"></span>';
+		$img	= '<i class="menu_icon fa fa-scissors"></i>';
 		$attrs	= array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'postlink','class'=>'gpconfirm');
 		echo $this->Link('Admin/Menu/Ajax',$img.$langmessage['rm_from_menu'],'cmd=hide&index=[key]',$attrs);
 
-		$img	= '<span class="menu_icon bin_icon"></span>';
+		$img	= '<i class="menu_icon fa fa-trash"></i>';
 		$attrs	= array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm not_special');
 		echo $this->Link('Admin/Menu/Ajax',$img.$langmessage['delete'],'cmd=MoveToTrash&index=[key]',$attrs);
 

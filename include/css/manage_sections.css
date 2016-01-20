@@ -78,6 +78,8 @@
 	display:inline-block;
 	vertical-align:top;
 	margin:0 5px 0;
+	color:#333;
+	font-size:14px;
 	}
 
 #section_sorting li.section-item-hover{
@@ -109,15 +111,6 @@
 	font-style:normal;
 	height:18px;
 }
-
-
-
-#section_sorting .bin_icon{
-	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -96px;
-	}
-#section_sorting .copy_icon{
-	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -112px;
-	}
 
 
 /**

@@ -1611,19 +1611,6 @@ body #addon_about{
 	visibility: hidden;
 	}
 
-.docklink{
-	width: 15px;
-	height: 15px;
-	border: 1px solid #7d7d7d;
-	border-radius: 3px;
-	cursor: pointer;
-	background: #7d7d7d url('../../include/imgs/dock.gif') no-repeat 50% 2px;
-	}
-.docked .docklink{
-	@include gpimg( 'dock.gif', 50%, -12px );
-	}
-
-
 /**
  * drop down menus
  *

@@ -93,9 +93,6 @@ body #admin_menu li.ui-sortable-helper{
 	overflow:hidden;
 	padding:2px;
 	}
-#admin_menu li div.haschildren a{
-	/* background-image:url('../imgs/cancel.png'); */
-	}
 
 
 
@@ -162,6 +159,7 @@ body #admin_menu li.ui-sortable-helper{
 	display:block;
 	border:0 none;
 	text-align:center;
+	font-size:14px;
 	}
 
 #admin_menu_div .layout_icon{
@@ -172,23 +170,12 @@ body #admin_menu li.ui-sortable-helper{
     width: 16px;
 	}
 
-#admin_menu_div .page_edit_icon{
-	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -32px;
-	}
 #admin_menu_div .insert_before_icon{
 	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -48px;
 	}
+
 #admin_menu_div .insert_after_icon{
 	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -64px;
-	}
-#admin_menu_div .cut_list_icon{
-	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -80px;
-	}
-#admin_menu_div .bin_icon{
-	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -96px;
-	}
-#admin_menu_div .copy_icon{
-	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -112px;
 	}
 
 

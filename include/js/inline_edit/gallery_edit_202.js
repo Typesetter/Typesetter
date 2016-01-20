@@ -271,8 +271,8 @@
 			 * Image options (move, caption, delete)
 			 *
 			 */
-			function AddLink(div,name,img){
-				div.append('<a data-cmd="'+name+'"><img src="'+gpBase+'/include/imgs/blank.gif" height="16" width="16" class="'+img+'"/></a>');
+			function AddLink(div,name,faclass){
+				div.append('<a data-cmd="'+name+'" class="'+faclass+'"></a>');
 			}
 			edit_links = $('<span class="gp_gallery_edit gp_floating_area"></span>').appendTo('body').hide();
 
@@ -301,8 +301,8 @@
 			 * Caption & delete links
 			 *
 			 */
-			AddLink(edit_links,'gp_gallery_caption','page_edit');
-			AddLink(edit_links,'gp_gallery_rm','delete');
+			AddLink(edit_links,'gp_gallery_caption','fa fa-edit');
+			AddLink(edit_links,'gp_gallery_rm','fa fa-remove');
 
 
 			/**

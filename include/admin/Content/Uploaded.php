@@ -442,7 +442,7 @@ namespace gp\admin\Content{
 					. '<a href="'.$file_url.'" data-cmd="gp_gallery_add" '.$size.'>'
 					. $thumb
 					. '</a>'
-					. \gp\tool::Link('Admin/Uploaded'.$dir_piece,'',$query_string,array('class'=>'delete gpconfirm','data-cmd'=>'gpajax','title'=>$langmessage['delete_confirm']),'delete')
+					. \gp\tool::Link('Admin/Uploaded'.$dir_piece,'',$query_string,array('class'=>'delete fa fa-minus-circle gpconfirm','data-cmd'=>'gpajax','title'=>$langmessage['delete_confirm']),'delete')
 					. '</span>';
 		}
 

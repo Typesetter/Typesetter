@@ -224,21 +224,17 @@
 }
 
 
-#ckeditor_area a.gp_selected_folder .folder,
-#ckeditor_area a.gp_gallery_folder .folder,
-#ckeditor_area a.gp_gallery_folder .add{
+#ckeditor_area a.gp_selected_folder .fa,
+#ckeditor_area a.gp_gallery_folder .fa{
 	display:inline-block;
 	height:16px;
 	width:16px;
-	float:left;
-	background-position: 50% 50%;
-	background-repeat: no-repeat;
+	line-height:16px;
 	margin-right:5px;
-	background-image:url('../imgs/folder.png');
+	text-align:center;
 	}
-#ckeditor_area a.gp_gallery_folder .add{
-	background-image:url('../imgs/add.png');
-	}
+
+
 #ckeditor_area a.gp_selected_folder:after{
 	position:absolute;
 	right:10px;

@@ -1090,8 +1090,7 @@ namespace gp\tool{
 			ob_start();
 
 			echo '<div class="inline_box">';
-			$img = '<img src="'.\gp\tool::GetDir('/include/imgs/folder.png').'" height="16" width="16" alt=""/> ';
-			echo '<h2>'.$img.$langmessage['create_dir'].'</h2>';
+			echo '<h2><i class="fa fa-folder-o"></i> '.$langmessage['create_dir'].'</h2>';
 			echo '<form action="'.\gp\tool::GetUrl($page->title).'" method="post" >';
 			echo '<p>';
 			echo htmlspecialchars($_GET['dir']).'/';

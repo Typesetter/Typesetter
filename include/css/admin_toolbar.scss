@@ -24,7 +24,7 @@ body.gpAdmin #admincontent_panel.fixed{
  * Fixed Position Adjustment when admin toolbar is displayed
  *
  */
-html:not(.edit_layout){
+html:not(.edit_layout):not(.admin_body){
 	margin-top:$gp_nav_height;
 
 	.gp-fixed-adjust{

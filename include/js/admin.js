@@ -998,7 +998,7 @@ $(function(){
 			fixed_pos = false;
 			lnk_span
 				.css({'left':'auto','top':0,'right':0,'position':'absolute'})
-				.html('<a class="gp_overlay_expand"></a>')
+				.html('<a class="gp_overlay_expand fa fa-edit"></a>')
 				.append(edit_links)
 				.unbind('mouseenter touchstart')
 				.one('mouseenter touchstart',function(){

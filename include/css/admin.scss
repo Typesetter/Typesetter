@@ -41,7 +41,7 @@
 	text-shadow: none;
 	@include box-sizing( content-box );
 	/* background: none; prevents other backgrounds from showing. "inherit" wouldn't make sense */
-	/* font-family:inherit; font-size:inherit; line-height:inherit; -- conflicts with fontawesome */
+	font-family:inherit; font-size:inherit; line-height:inherit; // conflicts with fontawesome
 	}
 
 #gp_admin_html hr{
@@ -237,10 +237,6 @@
 
 #gp_admin_html .sync_label{
 	background: #f1f1f1;
-	}
-#gp_admin_html .gpsearch{
-	background: #fff url('../../include/imgs/page_white_magnify.png') no-repeat 98% 50%;
-	padding-right: 22px;
 	}
 
 #gp_admin_html .padded_table td{
@@ -873,51 +869,6 @@ table.tablesorter th.gp_header_desc:before{
 	}
 
 
-/* icons */
-.gpicon_admin,
-.gpicon_app,
-.gpicon_arrow_out,
-.gpicon_chart,
-.gpicon_edapp,
-.gpicon_home,
-.gpicon_page_gear,
-.gpicon_page,
-.gpicon_plug,
-.gpicon_rfrsh,
-.gpicon_search,
-.gpicon_user{
-	height: 16px;
-	width: 16px;
-	display: inline-block;
-	vertical-align: top;
-	margin-right: 8px;
-	@include gpimg( 'admin_icons.png', 50%, -72px );
-	}
-
-.gpicon_admin{		background-position: 50% -136px }
-.gpicon_app{		background-position: 50% -72px }
-.gpicon_arrow_out{	background-position: 50% -289px }
-.gpicon_chart{		background-position: 50% -584px }
-.gpicon_edapp{		background-position: 50% -552px }
-.gpicon_home{		background-position: 50% -456px }
-.gpicon_page_gear{	background-position: 50% -264px }
-.gpicon_page{		background-position: 50% -232px }
-.gpicon_plug{		background-position: 50% -105px }
-.gpicon_rfrsh{		background-position: 50% -168px }
-.gpicon_user{		background-position: 50% -200px }
-
-.gpicon_search{
-	@include gpimg( 'page_white_magnify.png', 50%, 50% );
-	}
-
-.admin_arrow_out{
-	display: inline-block;
-	height: 32px;
-	width: 32px;
-	@include gpimg( 'admin_icons.png', 50%, -289px );
-	}
-
-
 /* panelgroup */
 #simplepanel .panelgroup{
 	position: relative;
@@ -933,6 +884,20 @@ table.tablesorter th.gp_header_desc:before{
 	margin: 0;
 	height: 16px;
 	padding: 8px;
+	}
+
+#simplepanel .fa{
+	height: 16px;
+	width: 16px;
+	line-height:16px;
+	text-align:center;
+	display: inline-block;
+	vertical-align: top;
+	margin-right: 8px;
+	}
+
+#simplepanel .toolbar .fa{
+	font-size:16px;
 	}
 #simplepanel .gpversion{
 	color: #888 !important;
@@ -954,6 +919,8 @@ table.tablesorter th.gp_header_desc:before{
 #simplepanel.compact .toplink span{
 	display: none;
 	}
+
+
 
 /* panelgroup2 */
 #simplepanel.compact .panelgroup .panelgroup2{
@@ -1135,7 +1102,7 @@ table.tablesorter th.gp_header_desc:before{
 
 	}
 
-#gp_edit_overlay span *{
+#gp_edit_overlay span > *{
 	display: none !important;
 	}
 #gp_edit_overlay span a{
@@ -1170,15 +1137,20 @@ table.tablesorter th.gp_header_desc:before{
 	padding: 1px !important;
 	height: 17px;
 	width: 17px;
+	line-height:17px;
+	text-align:right;
 	margin: 0;
-	@include gpimg( 'admin_icons.png', -6px, -230px );
+	font-size:16px !important;
 	}
+
 #gp_edit_overlay span.gp_hover a.gp_overlay_expand{
 	float: right;
 	z-index: 9001;
-	@include gpimg( 'cancel.png', 50%, 50%);
+	text-align:center;
 	}
-
+#gp_edit_overlay span.gp_hover a.gp_overlay_expand:before{
+	content:'\f00d';
+	}
 
 /* adminlinks */
 #adminlinks2{
@@ -1634,12 +1606,6 @@ body #addon_about{
 	margin: 0 0 0 8px;
 	}
 
-.gp_floating_area .admin_arrow_out{
-	height: 16px;
-	width: 16px;
-	@include gpimg( 'admin_icons.png', 50%, -296px );
-	}
-
 .unavail{
 	visibility: hidden;
 	}
@@ -1902,8 +1868,7 @@ body #addon_about{
 			z-index: -1;
 			}
 
-		.toggle_panel,
-		.admin_arrow_out{
+		.toggle_panel{
 			display: none;
 		}
 
@@ -2055,3 +2020,11 @@ body #addon_about{
 	border-color: #ddd;
 	background-color: #eee;
 	}
+
+/**
+ * Fontawesome
+ *
+ */
+#gp_admin_html .fa{
+	font-family:FontAwesome;
+}

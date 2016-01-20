@@ -72,6 +72,13 @@
 	float:right;
 	height:18px;
 	}
+#section_sorting div > .options a{
+	height:16px;
+	width:16px;
+	display:inline-block;
+	vertical-align:top;
+	margin:0 5px 0;
+	}
 
 #section_sorting li.section-item-hover{
 	background-color:#f5f5f5;
@@ -93,7 +100,7 @@
 	box-sizing:border-box;
 	}
 
-#section_sorting i{
+#section_sorting .section_label_wrap{
 	display:block;
 	white-space: nowrap;
 	overflow: hidden;
@@ -104,15 +111,6 @@
 }
 
 
-
-#section_sorting .gpicon_edapp,
-#section_sorting .bin_icon,
-#section_sorting .copy_icon{
-	height:16px;
-	width:16px;
-	display:inline-block;
-	margin:0 5px 0;
-	}
 
 #section_sorting .bin_icon{
 	background:url('../imgs/admin_menu_icons.png') no-repeat 0 -96px;

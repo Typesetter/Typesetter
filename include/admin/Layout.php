@@ -1123,7 +1123,7 @@ class Layout extends \gp\admin\Addon\Install{
 			$addon_key = $layout_info['addon_key'];
 			$addon_config = \gp\tool\Plugins::GetAddonConfig($addon_key);
 			echo '<li>';
-			echo \gp\tool::link('Admin/Addons/'.\gp\admin\Tools::encode64($addon_key),'<span class="gpicon_plug"></span> '.$addon_config['name']);
+			echo \gp\tool::link('Admin/Addons/'.\gp\admin\Tools::encode64($addon_key),'<i class="fa fa-plug"></i> '.$addon_config['name']);
 			echo '</li>';
 
 			//hooks

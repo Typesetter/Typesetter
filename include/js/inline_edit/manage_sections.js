@@ -200,7 +200,7 @@
 				html += '<li data-gp-area-id="'+this.id+'" '+style+' title="'+classes+'">';
 				html += '<div><a class="color_handle" data-cmd="SectionColor" style="background-color:'+color+'"></a>';
 				html += '<span class="options">';
-				html += '<a class="gpicon_edapp" data-cmd="SectionOptions" title="Options"></a>';
+				html += '<a data-cmd="SectionOptions" title="Options"><i class="fa fa-sliders"></i></a>';
 				html += '<a class="copy_icon" data-cmd="CopySection" title="Copy"></a>';
 				html += '<a class="bin_icon RemoveSection" data-cmd="RemoveSection" title="Remove"></a>';
 				html += '</span>';

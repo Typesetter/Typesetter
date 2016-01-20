@@ -966,7 +966,7 @@ class Ajax extends \gp\admin\Menu{
 		echo '<div class="inline_box">';
 		echo '<form action="'.\gp\tool::GetUrl('Admin/Menu/Ajax').'" method="post">';
 
-		echo '<h3><i class="gpicon_home"></i>';
+		echo '<h3><i class="fa fa-home"></i> ';
 		echo $langmessage['Homepage'];
 		echo '</h3>';
 

@@ -1452,7 +1452,7 @@ class Menu{
 
 		$label = \gp\tool::GetLabelIndex($config['homepath_key']);
 
-		echo '<span class="gpicon_home"></span>';
+		echo '<span class="fa fa-home"></span> ';
 		echo $langmessage['Homepage'].': ';
 		echo \gp\tool::Link('Admin/Menu/Ajax',$label,'cmd=HomepageSelect','data-cmd="gpabox"');
 	}

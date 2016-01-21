@@ -138,7 +138,7 @@ class update_class{
 
 
 		if( isset($this->update_data['packages']['core']) ){
-			$this->core_package = $this->update_data['packages']['core'];
+			$this->core_package =& $this->update_data['packages']['core'];
 		}
 	}
 

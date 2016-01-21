@@ -3,14 +3,14 @@ defined('is_running') or die('Not an entry point...');
 global $page;
 
 ?><!DOCTYPE html>
-<html>
+<html class="admin_body">
 <head>
 <meta name="robots" content="noindex,nofollow"/>
 
 <style type="text/css">
 
 body{
-	margin:1em 5em;
+	margin:5em !important;
 	font-family: "Lucida Grande",Verdana,"Bitstream Vera Sans",Arial,sans-serif;
 	background:#444;
 }

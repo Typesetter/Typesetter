@@ -183,8 +183,8 @@ class Tools{
 
 
 		//use bootswatch theme if server has enough memory
-		$gpLayouts['default']['theme'] = 'Bootswatch_Scss/Sandstone';
-		$gpLayouts['default']['label'] = 'Bootswatch_Scss/Sandstone';
+		$gpLayouts['default']['theme'] = 'Bootswatch_Scss/Flatly';
+		$gpLayouts['default']['label'] = 'Bootswatch_Scss/Flatly';
 		$gpLayouts['default']['color'] = '#93c47d';
 
 

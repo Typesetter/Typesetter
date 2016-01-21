@@ -128,7 +128,7 @@ class Update extends \gp\Page{
 
 
 		if( isset($this->update_data['packages']['core']) ){
-			$this->core_package = $this->update_data['packages']['core'];
+			$this->core_package =& $this->update_data['packages']['core'];
 		}
 	}
 

@@ -18,7 +18,7 @@ if( !isset($gpAdmin['granted']) || ($gpAdmin['granted'] !== 'all') ){
 
 \gp\tool::GetLangFile();
 
-$page = new \gp\Admin\Update();
+$page = new \gp\admin\Update();
 
 \gp\tool\Output::HeadContent();
 includeFile('install/template.php');

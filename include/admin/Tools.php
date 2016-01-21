@@ -52,7 +52,7 @@ namespace gp\admin{
 				return;
 			}
 
-			//determin check in type
+			//determine check in type
 			if( !\gp\tool\RemoteGet::Test() ){
 				self::VersionData($version_data);
 				self::$update_status = 'checkincompat';

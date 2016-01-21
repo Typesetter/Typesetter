@@ -477,7 +477,7 @@ namespace gp\admin{
 			// 'Editable Areas'
 			if( \gp\admin\Tools::CanEdit($page->gp_index) ){
 				echo '<div style="float:right">';
-				echo \gp\tool::Link($page->title,'<i class="fa fa-pencil-square-o"></i> '.$langmessage['Editable Areas'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+				echo \gp\tool::Link($page->title,'<i class="fa fa-pencil"></i> '.$langmessage['Editable Areas'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
 				echo '</div>';
 			}
 

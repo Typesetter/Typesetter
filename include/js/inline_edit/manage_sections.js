@@ -898,7 +898,7 @@
 				$b
 					//add to list
 					.attr('id','editable_mark'+id_number)
-					.html('<i class="fa fa-pencil-square-o"></i> '+title)
+					.html('<i class="fa fa-pencil"></i> '+title)
 
 					//add handlers
 					.on('mouseenter touchstart',function(){

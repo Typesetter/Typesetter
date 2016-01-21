@@ -717,7 +717,7 @@ class Menu{
 
 		echo '<span>';
 
-		$img	= '<i class="menu_icon fa fa-edit"></i>';
+		$img	= '<i class="menu_icon fa fa-pencil"></i>';
 		echo '<a href="[url]" class="view_edit_link not_multiple">'.$img.htmlspecialchars($langmessage['view/edit_page']).'</a>';
 
 		$img	= '<i class="menu_icon fa fa-gears"></i>';

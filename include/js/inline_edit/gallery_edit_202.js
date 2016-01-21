@@ -301,7 +301,7 @@
 			 * Caption & delete links
 			 *
 			 */
-			AddLink(edit_links,'gp_gallery_caption','fa fa-edit');
+			AddLink(edit_links,'gp_gallery_caption','fa fa-pencil');
 			AddLink(edit_links,'gp_gallery_rm','fa fa-remove');
 
 

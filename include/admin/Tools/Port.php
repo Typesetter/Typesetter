@@ -391,6 +391,7 @@ class Port{
 		//extract to temp location
 		$temp_file		= $dataDir.\gp\tool\FileSystem::TempFile('/data/_temp/revert');
 		$temp_name		= basename($temp_file);
+		$replace_dirs	= array();
 
 
 		try{
@@ -405,21 +406,19 @@ class Port{
 
 
 		if( $this->import_info['Export_Which'] & $this->bit_themes ){
-			if( !$this->AddReplaceDir('themes',$temp_name) ){
-				return false;
-			}
+			$replace_dirs['themes'] = false;
 		}
 
 		if( $this->import_info['Export_Which'] & $this->bit_addons ){
-			if( !$this->AddReplaceDir('addons',$temp_name) ){
-				return false;
-			}
+			$replace_dirs['addons'] = false;
 		}
 
-		if( ($this->import_info['Export_Which'] & $this->bit_pages)
-			|| ($this->import_info['Export_Which'] & $this->bit_media)
-			){
-			if( !$this->AddReplaceDir('data',$temp_name, true) ){
+		if( ($this->import_info['Export_Which'] & $this->bit_pages) || ($this->import_info['Export_Which'] & $this->bit_media) ){
+			$replace_dirs['data'] = true;
+		}
+
+		foreach($replace_dirs as $dir => $merge){
+			if( !$this->AddReplaceDir($dir,$temp_name, $merge) ){
 				return false;
 			}
 		}

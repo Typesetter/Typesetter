@@ -365,19 +365,28 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function LayoutCSS($layout){
-		global $dataDir, $gpLayouts;
 
-		$layout_info = $gpLayouts[$layout];
-		if( !isset($layout_info['css']) || !$layout_info['css'] ){
-			return '';
-		}
+		$custom_file		= $this->LayoutCSSFile($layout);
 
-		$path = $dataDir.'/data/_layouts/'.$layout.'/custom.css';
-		if( file_exists($path) ){
-			return file_get_contents($path);
+		if( file_exists($custom_file) ){
+			return file_get_contents($custom_file);
 		}
 
 		return '';
+	}
+
+
+	/**
+	 * Get the path of the custom css file
+	 *
+	 */
+	public function LayoutCSSFile($layout){
+
+		$layout_info		= \gp\tool::LayoutInfo($layout,false);
+		$dir				= $layout_info['dir'].'/'.$layout_info['theme_color'];
+		$style_type			= \gp\tool\Output::StyleType($dir);
+
+		return \gp\tool\Output::CustomStyleFile($layout, $style_type);
 	}
 
 
@@ -386,9 +395,8 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function RemoveCSS($layout){
-		global $dataDir;
-		$dir = $dataDir.'/data/_layouts/'.$layout;
-		$path = $dir.'/custom.css';
+
+		$path = $this->LayoutCSSFile($layout);
 		if( file_exists($path) ){
 			unlink($path);
 		}
@@ -506,7 +514,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function UpdateTheme($theme){
-		global $langmessage, $dataDir, $gpLayouts;
+		global $langmessage, $gpLayouts;
 
 		$theme_info = $this->ThemeInfo($theme);
 
@@ -646,7 +654,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function CopyLayout(){
-		global $gpLayouts,$langmessage,$config,$page,$dataDir;
+		global $gpLayouts, $langmessage;
 
 		$copy_id =& $_REQUEST['layout'];
 
@@ -659,9 +667,9 @@ class Layout extends \gp\admin\Addon\Install{
 			return;
 		}
 
-		$newLayout = $gpLayouts[$copy_id];
-		$newLayout['color'] = self::GetRandColor();
-		$newLayout['label'] = htmlspecialchars($_POST['label']);
+		$newLayout				= $gpLayouts[$copy_id];
+		$newLayout['color']		= self::GetRandColor();
+		$newLayout['label']		= htmlspecialchars($_POST['label']);
 
 		//get new unique layout id
 		do{
@@ -669,8 +677,8 @@ class Layout extends \gp\admin\Addon\Install{
 		}while( isset($gpLayouts[$layout_id]) );
 
 
-		$gpLayoutsBefore = $gpLayouts;
-		$gpLayouts[$layout_id] = $newLayout;
+		$gpLayoutsBefore		= $gpLayouts;
+		$gpLayouts[$layout_id]	= $newLayout;
 
 		if( !\gp\tool\Files::ArrayInsert($copy_id,$layout_id,$newLayout,$gpLayouts,1) ){
 			message($langmessage['OOPS'].'(Not Inserted)');
@@ -681,7 +689,7 @@ class Layout extends \gp\admin\Addon\Install{
 		//copy any css
 		$css = $this->layoutCSS($copy_id);
 		if( !empty($css) ){
-			$path = $dataDir.'/data/_layouts/'.$layout_id.'/custom.css';
+			$path = $this->LayoutCSSFile($layout_id);
 			if( !\gp\tool\Files::Save($path,$css) ){
 				message($langmessage['OOPS'].' (CSS not saved)');
 				return false;

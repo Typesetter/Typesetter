@@ -334,11 +334,8 @@ class Edit extends \gp\admin\Layout{
 		$color			= $layout_info['theme_color'];
 		$theme_colors	= $this->GetThemeColors($layout_info['dir']);
 		$style_type		= \gp\tool\Output::StyleType($layout_info['dir'].'/'.$layout_info['theme_color']);
-		$path			= $dataDir.'/data/_layouts/'.$this->curr_layout.'/custom.css';
+		$custom_file	= \gp\tool\Output::CustomStyleFile($this->curr_layout, $style_type);
 
-		if( $style_type === 'scss' ){
-			$path			= $dataDir.'/data/_layouts/'.$this->curr_layout.'/custom.scss';
-		}
 
 		//check theme color
 		if( array_key_exists('color',$_REQUEST) ){
@@ -362,7 +359,7 @@ class Edit extends \gp\admin\Layout{
 			$this->RemoveCSS($this->curr_layout);
 
 		//save if not empty
-		}elseif( !\gp\tool\Files::Save($path,$css) ){
+		}elseif( !\gp\tool\Files::Save($custom_file,$css) ){
 			message($langmessage['OOPS'].' (CSS not saved)');
 			return false;
 		}

@@ -2308,11 +2308,7 @@ namespace gp\tool{
 			$files			= array();
 			$dir			= $page->theme_dir . '/' . $page->theme_color;
 			$style_type		= self::StyleType($dir);
-			$custom_file	= $dataDir.'/data/_layouts/'.$page->gpLayout.'/custom.css';
-
-			if( $style_type == 'scss' ){
-				$custom_file	= $dataDir.'/data/_layouts/'.$page->gpLayout.'/custom.scss';
-			}
+			$custom_file	= self::CustomStyleFile($page->gpLayout, $style_type);
 
 			//css file
 			if( $style_type == 'css' ){
@@ -2348,6 +2344,21 @@ namespace gp\tool{
 			array_unshift($files, $dir.'/style.less');
 
 			return array( \gp\tool\Output\Css::Cache($files,'less') );
+		}
+
+
+		/**
+		 * Get the path for the custom css/scss/less file
+		 *
+		 */
+		public static function CustomStyleFile($layout, $style_type){
+			global $dataDir;
+
+			if( $style_type == 'scss' ){
+				return $dataDir.'/data/_layouts/'.$layout.'/custom.scss';
+			}
+
+			return $dataDir.'/data/_layouts/'.$layout.'/custom.css';
 		}
 
 

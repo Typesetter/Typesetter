@@ -92,6 +92,8 @@ class Archive{
 	/**
 	 * Call method on the archive object
 	 *
+	 * @method bool extractTo()
+	 *
 	 */
 	public function __call( $name , $arguments ){
 		return call_user_func_array( array($this->php_object,$name), $arguments);

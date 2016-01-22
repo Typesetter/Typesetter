@@ -43,6 +43,14 @@ class Port{
 	public $iframe = '';
 
 
+	private $bit_pages	= 1;
+	private $bit_config	= 2;
+	private $bit_media	= 4;
+	private $bit_themes	= 8;
+	private $bit_addons	= 16;
+	private $bit_trash	= 32;
+
+
 	public function __construct(){
 		global $dataDir;
 
@@ -57,14 +65,6 @@ class Port{
 
 	public function Init(){
 		global $langmessage;
-
-		$this->bit_pages = 1;
-		$this->bit_config = 2;
-		$this->bit_media = 4;
-		$this->bit_themes = 8;
-		$this->bit_addons = 16;
-		$this->bit_trash = 32;
-
 
 		//pages, configuration and addons
 		$this->export_fields['pca']['name'] = 'pca';
@@ -142,7 +142,6 @@ class Port{
 		}
 
 
-		//echo '<h2>'.$langmessage['Import/Export'].'</h2>';
 		echo '<h2>'.$langmessage['Export'].'</h2>';
 		echo $langmessage['Export About'];
 		echo $this->iframe;
@@ -228,18 +227,23 @@ class Port{
 			return false;
 		}
 
-		// buildFromDirectory with regular expression
-		$tar_object = new \gp\tool\Archive($this->archive_path);
-		foreach($add_dirs as $dir){
-			$localname = '/gpexport'.substr($dir, strlen($dataDir));
-			$tar_object->Add($dir,$localname);
+		try{
+
+			$tar_object = new \gp\tool\Archive($this->archive_path);
+			foreach($add_dirs as $dir){
+				$localname = '/gpexport'.substr($dir, strlen($dataDir));
+				$tar_object->Add($dir,$localname);
+			}
+
+			//add ini file
+			$this->Export_Ini($tar_object,$which_exported);
+
+			$tar_object->compress();
+
+		}catch( \Exception $e){
+			message($langmessage['OOPS'].' (Archive couldn\'t be created)');
+			return false;
 		}
-
-
-		//add ini file
-		$this->Export_Ini($tar_object,$which_exported);
-
-		$tar_object->compress();
 
 		return true;
 	}
@@ -250,6 +254,7 @@ class Port{
 	 *
 	 */
 	public function NewFile($which_exported,$extension){
+		global $langmessage;
 
 		if( !\gp\tool\Files::CheckDir($this->export_dir) ){
 			message($langmessage['OOPS'].'(Export Dir)');
@@ -284,14 +289,13 @@ class Port{
 	 *
 	 */
 	public function GetUsers($which_exported){
-		global $dataDir;
+
 
 		if( ($this->min_import_bits & $which_exported) != $this->min_import_bits ){
 			return;
 		}
 
-		$users = array();
-		include($dataDir.'/data/_site/users.php');
+		$users		= \gp\tool\Files::Get('_site/users');
 		$user_array = array_keys($users);
 
 		return 'Export_Users = '.implode(',',$user_array);
@@ -320,7 +324,7 @@ class Port{
 		}
 
 
-		$this->import_info = $this->ExtractIni($archive);
+		$this->import_info = $this->ExtractIni();
 		if( $this->import_info === false ){
 			message($langmessage['OOPS'].' (No import info)');
 			return false;
@@ -387,7 +391,17 @@ class Port{
 		//extract to temp location
 		$temp_file		= $dataDir.\gp\tool\FileSystem::TempFile('/data/_temp/revert');
 		$temp_name		= basename($temp_file);
-		$this->import_object->extractTo($temp_file);
+
+
+		try{
+
+			$this->import_object->extractTo($temp_file);
+
+		}catch( \Exception $e){
+			message($langmessage['OOPS'].' (Archive couldn\'t be extracted)');
+			return false;
+		}
+
 
 
 		if( $this->import_info['Export_Which'] & $this->bit_themes ){
@@ -469,13 +483,13 @@ class Port{
 	 *
 	 */
 	public function TransferSession(){
-		global $gpAdmin,$dataDir;
+		global $gpAdmin;
 
 		$username = $gpAdmin['username'];
 
 		// get user info
-		include($dataDir.'/data/_site/users.php');
-		$userinfo =& $users[$username];
+		$users		= \gp\tool\Files::Get('_site/users');
+		$userinfo	=& $users[$username];
 		$session_id = \gp\tool\Session::create($userinfo, $username, $sessions);
 
 		if( !$session_id ){
@@ -545,7 +559,6 @@ class Port{
 			return false;
 		}
 
-		//$this->FileSystem = \gp\tool\FileSystem('gp_filesystem_ftp');
 
 		if( !$this->FileSystem->connect() ){
 			return false;
@@ -761,7 +774,7 @@ class Port{
 
 			$this->import_object = new \gp\tool\Archive($full_path);
 
-		}catch( Exception $e){
+		}catch( \Exception $e){
 			message($langmessage['OOPS'].' (Archive couldn\'t be opened)');
 			return false;
 		}
@@ -774,11 +787,7 @@ class Port{
 	 * Get the export.ini contents
 	 *
 	 */
-	public function ExtractIni($archive){
-
-		//$full_path			= $this->export_dir.'/'.$archive;
-		//$ini_path			= 'phar://'.$full_path.'/gpexport/Export.ini';
-		//$ini_contents		= file_get_contents($ini_path);
+	public function ExtractIni(){
 
 		$ini_contents		= $this->import_object->getFromName('/gpexport/Export.ini');
 
@@ -824,7 +833,7 @@ class Port{
 		$info['bits'] = '';
 
 		if( count($temp) >= 3 && is_numeric($temp[0]) && is_numeric($temp[1]) ){
-			list($time,$exported,$rand) = $temp;
+			list($time,$exported) = $temp;
 			$info['time'] = \gp\tool::date($langmessage['strftime_datetime'],$time);
 			$info['bits'] = $exported;
 

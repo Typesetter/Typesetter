@@ -186,7 +186,7 @@ class FileSystem{
 		return true;
 	}
 
-	public function ConnectOrPrompt(){
+	public function ConnectOrPrompt($action=''){
 		return true;
 	}
 	public function connect(){

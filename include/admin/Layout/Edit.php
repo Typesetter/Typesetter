@@ -454,8 +454,8 @@ class Edit extends \gp\admin\Layout{
 
 	/**
 	 * Order of files for SCSS
-	 *  custom.scss
 	 *  Variables.scss
+	 *  custom.scss
 	 *  Bootstrap.scss
 	 */
 	protected function PreviewScss($dir){

@@ -32,6 +32,7 @@ $(function(){
 					source: gptitles,
 					delay: 100, /* since we're using local data */
 					minLength: 0,
+					appendTo	: '#gp_admin_html',
 					select: function(event,ui){
 						if( ui.item ){
 							this.value = ui.item[1];

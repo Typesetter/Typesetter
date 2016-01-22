@@ -2454,6 +2454,11 @@ namespace gp\tool{
 
 			//create combine request
 			$combined_file = \gp\tool\Output\Combine::GenerateFile($files,$type);
+			if( $combined_file === false ){
+				return;
+			}
+
+
 			echo sprintf($html,\gp\tool::GetDir($combined_file,true));
 		}
 

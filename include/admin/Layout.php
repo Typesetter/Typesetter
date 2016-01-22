@@ -401,7 +401,9 @@ class Layout extends \gp\admin\Addon\Install{
 			unlink($path);
 		}
 
-		$path = $dir.'/index.html';
+		$dir	= dirname($path);
+		$path	= $dir.'/index.html';
+
 		if( file_exists($path) ){
 			unlink($path);
 		}

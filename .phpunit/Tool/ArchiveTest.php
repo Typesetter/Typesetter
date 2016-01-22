@@ -13,8 +13,10 @@ class phpunit_Archive extends gptest_bootstrap{
 							'foo/text.txt'					=> 'lorem ipsum',
 							'foo/index.html'				=> '<html><body></body></html>',
 							'/foo/bar'						=> 'foo bar',
-							'foo/unicode/Kødpålæg.tst'		=> 'Die style.css hatte ich an dieser Stelle zuvor nicht überarbeitet.',
 							'foo/unicode/index.html' 		=> '<html><body></body></html>',
+
+							// unicode isn't supported by pharData until php 5.4.29/5.5.13/5.6.0
+							//'foo/unicode/Kødpålæg.tst'		=> 'Die style.css hatte ich an dieser Stelle zuvor nicht überarbeitet.',
 							);
 
 	/**
@@ -46,9 +48,9 @@ class phpunit_Archive extends gptest_bootstrap{
 	function testCreate(){
 
 		foreach($this->types as $type){
-			//$archive = $this->FromFiles($type);
-			//$list = $archive->ListFiles();
-			//self::AssertEquals( count($this->files), $archive->Count() );
+			$archive = $this->FromFiles($type);
+			$list = $archive->ListFiles();
+			self::AssertEquals( count($this->files), $archive->Count() );
 		}
 
 	}
@@ -120,7 +122,7 @@ class phpunit_Archive extends gptest_bootstrap{
 		try{
 			$archive	= new \gp\tool\Archive($path);
 			foreach($this->files as $name => $content){
-				$added		= $archive->addFromString($name, $content);
+				$archive->addFromString($name, $content);
 			}
 		}catch( Exception $e){
 			self::AssertTrue( false, 'FromString('.$type.') Failed with message: '.$e->getMessage() );

@@ -153,6 +153,7 @@ gp_editing = {
 		$('#ckeditor_top').html('');
 		$('#ckeditor_bottom').html('');
 		$('#ckeditor_wrap').addClass('show_editor');
+		AdjustForEditor();
 		gp_editing.ResetTabs();
 	},
 
@@ -234,10 +235,6 @@ gp_editing = {
 			return true;
 		}
 
-		if( id != 0 ){
-			$('#ckeditor_wrap').addClass('show_editor');
-		}
-
 		$('#ck_area_wrap').html('').append($gp.interface[id]);
 
 		gp_editor			= $gp.editors[id];
@@ -248,6 +245,10 @@ gp_editing = {
 		$gp.RestoreObjects( 'response', id);
 
 
+		if( id != 0 ){
+			$('#ckeditor_wrap').addClass('show_editor');
+		}
+		AdjustForEditor();
 
 		if( typeof(gp_editor.wake) == 'function' ){
 			gp_editor.wake();
@@ -399,8 +400,45 @@ gp_editing = {
 	 *
 	 */
 	$gp.links.ToggleEditor = function(){
-		$('#ckeditor_wrap').toggleClass('show_editor');
+		if( $('#ckeditor_wrap').hasClass('show_editor') ){
+			$('html').css({'margin-left':0});
+			$('#ckeditor_wrap').removeClass('show_editor');
+		}else{
+			$('#ckeditor_wrap').addClass('show_editor');
+			AdjustForEditor();
+		}
 	};
+
+	function AdjustForEditor(){
+
+		$('html').css({'margin-left':0});
+
+		var $edit_div	= $gp.CurrentDiv();
+		if( !$edit_div.length ){
+			return;
+		}
+
+		//get max adjustment
+		var left 		= $edit_div.offset().left;
+		var max_adjust	= (left*2) - 10;
+		if( max_adjust < 0 ){
+			return;
+		}
+
+
+		//get min adjustment (how much the edit div will overlap the editor)
+		var max_right	= $gp.$win.width() - $('#ckeditor_wrap').outerWidth(true);
+		var min_adjust	= (left + $edit_div.outerWidth()) - max_right;
+		min_adjust		= (2 * min_adjust) + 20;
+
+		if( min_adjust < 0 ){
+			return;
+		}
+
+		var adjust		= Math.min(min_adjust, max_adjust);
+
+		$('html').css({'margin-left':-adjust});
+	}
 
 
 	/**

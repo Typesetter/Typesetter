@@ -1,4 +1,9 @@
 
+html{
+	-webkit-transition: margin 1s;
+	-moz-transition: margin 1s;
+	transition: margin 1s;
+	}
 
 #ckeditor_wrap{
 	display:block;

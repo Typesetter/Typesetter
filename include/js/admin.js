@@ -50,7 +50,6 @@ $gp.links.inline_edit_generic = function(evt,arg){
 	var area_id		= $gp.AreaId( $(this) );
 
 	$gp.LoadEditor(this.href, area_id, arg);
-	$('#ckeditor_wrap').addClass('show_editor');
 }
 
 $gp.LoadEditor = function(href, area_id, arg){

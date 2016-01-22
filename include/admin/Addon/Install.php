@@ -172,7 +172,7 @@ class Install extends \gp\admin\Addon\Tools{
 	 *
 	 */
 	function RemoteBrowse(){
-		global $langmessage, $config, $dataDir;
+		global $langmessage, $config;
 
 
 		//search options
@@ -235,52 +235,10 @@ class Install extends \gp\admin\Addon\Tools{
 		}
 		$src = addon_browse_path.'/'.$slug.'?cmd=remote&format=json&'.$this->searchQuery.'&page='.$this->searchPage; // format=json added 4.6b3
 
-		//check cache
-		$cache_file = $dataDir.'/data/_remote/'.sha1($src).'.txt';
-		$use_cache = false;
-		if( file_exists($cache_file) && (filemtime($cache_file)+ 26100) > time() ){
-			$result = file_get_contents($cache_file);
-			$use_cache = true;
-		}else{
-			$result = \gp\tool\RemoteGet::Get_Successful($src);
-		}
-
-		//no response
-		if( !$result ){
-			if( $use_cache ) unlink($cache_file);
-			echo '<p>'.\gp\tool\RemoteGet::Debug('Sorry, data not fetched').'</p>';
+		$data = $this->RemoteBrowseResponse($src);
+		if( $data === false ){
 			return;
 		}
-
-		//serialized or json (serialized data may be cached)
-		if( strpos($result,'a:') === 0 ){
-			$data = unserialize($result);
-
-		}elseif( strpos($result,'{') === 0 ){
-			$data = json_decode($result,true);
-
-		}else{
-			if( $use_cache ) unlink($cache_file);
-			$debug				= array();
-			$debug['Two']		= substr($result,0,2);
-			$debug['Twotr']		= substr(trim($result),0,2);
-			echo '<p>'.\gp\tool\RemoteGet::Debug('Sorry, data not fetched',$debug).'</p>';
-			return;
-		}
-
-
-		//not unserialized?
-		if( !is_array($data) || count($data) == 0 ){
-			if( $use_cache ) unlink($cache_file);
-			echo '<p>'.$langmessage['Sorry, data not fetched'].' (F3)</p>';
-			return;
-		}
-
-		//save the cache
-		if( !$use_cache ){
-			\gp\tool\Files::Save($cache_file,$result);
-		}
-
 
 		$this->searchMax = $data['max'];
 		if( isset($data['per_page']) && $data['per_page'] ){
@@ -342,6 +300,63 @@ class Install extends \gp\admin\Addon\Tools{
 		}
 		echo '</li>';
 		echo '</ul>';
+	}
+
+
+	/**
+	 * Get cached data or fetch new response from server and cache it
+	 *
+	 */
+	function RemoteBrowseResponse($src){
+		global $dataDir, $langmessage;
+
+		//check cache
+		$cache_file = $dataDir.'/data/_remote/'.sha1($src).'.txt';
+		$use_cache = false;
+		if( file_exists($cache_file) && (filemtime($cache_file)+ 26100) > time() ){
+			$result = file_get_contents($cache_file);
+			$use_cache = true;
+		}else{
+			$result = \gp\tool\RemoteGet::Get_Successful($src);
+		}
+
+		//no response
+		if( !$result ){
+			if( $use_cache ) unlink($cache_file);
+			echo '<p>'.\gp\tool\RemoteGet::Debug('Sorry, data not fetched').'</p>';
+			return false;
+		}
+
+		//serialized or json (serialized data may be cached)
+		if( strpos($result,'a:') === 0 ){
+			$data = unserialize($result);
+
+		}elseif( strpos($result,'{') === 0 ){
+			$data = json_decode($result,true);
+
+		}else{
+			if( $use_cache ) unlink($cache_file);
+			$debug				= array();
+			$debug['Two']		= substr($result,0,2);
+			$debug['Twotr']		= substr(trim($result),0,2);
+			echo '<p>'.\gp\tool\RemoteGet::Debug('Sorry, data not fetched',$debug).'</p>';
+			return false;
+		}
+
+
+		//not unserialized?
+		if( !is_array($data) || count($data) == 0 ){
+			if( $use_cache ) unlink($cache_file);
+			echo '<p>'.$langmessage['Sorry, data not fetched'].' (F3)</p>';
+			return false;
+		}
+
+		//save the cache
+		if( !$use_cache ){
+			\gp\tool\Files::Save($cache_file,$result);
+		}
+
+		return $data;
 	}
 
 	function SearchOrder(){

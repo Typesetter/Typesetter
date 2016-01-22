@@ -115,7 +115,7 @@ class phpunit_Archive extends gptest_bootstrap{
 				$added		= $archive->addFromString($name, $content);
 			}
 		}catch( Exception $e){
-			self::AssertTrue( false );
+			self::AssertTrue( false, 'FromString() Failed with message: '.$e->getMessage() );
 			return;
 		}
 
@@ -142,7 +142,7 @@ class phpunit_Archive extends gptest_bootstrap{
 			$archive->Add($this->dir);
 
 		}catch( Exception $e){
-			self::AssertTrue( false );
+			self::AssertTrue( false, 'FromFiles() Failed with message: '.$e->getMessage() );
 			return;
 		}
 

@@ -742,7 +742,7 @@ class Menu{
 
 
 		$img	= '<i class="menu_icon fa fa-files-o"></i>';
-		$attrs	= array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox','class'=>'not_multiple');
+		$attrs	= array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox','class'=>'not_multiple not_special');
 		echo $this->Link('Admin/Menu/Ajax',$img.$langmessage['Copy'],'cmd=CopyForm&index=[key]',$attrs);
 
 
@@ -1042,9 +1042,9 @@ class Menu{
 
 		if( $is_special === false ){
 			echo \gp\tool::Link($title,$langmessage['Revision History'],'cmd=ViewHistory','class="view_edit_link not_multiple" data-cmd="gpabox"');
+			echo $this->Link('Admin/Menu/Ajax',$langmessage['Copy'],'cmd=CopyForm&index='.urlencode($title_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 		}
 
-		echo $this->Link('Admin/Menu/Ajax',$langmessage['Copy'],'cmd=CopyForm&index='.urlencode($title_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 
 		echo '<span>';
 		echo $langmessage['layout'].': ';

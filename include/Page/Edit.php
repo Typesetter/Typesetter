@@ -479,9 +479,7 @@ class Edit extends \gp\Page{
 		$original_sections		= $this->file_sections;
 		$unused_sections		= $this->file_sections;				//keep track of sections that aren't used
 		$new_sections			= array();
-		$section_types			= \gp\tool\Output\Sections::GetTypes();
 
-		$section_attrs			= array('gp_label','gp_color','gp_collapse');
 
 		//make sure section_order isn't empty
 		if( empty($_POST['section_order']) ){
@@ -491,48 +489,10 @@ class Edit extends \gp\Page{
 
 
 		foreach($_POST['section_order'] as $i => $arg ){
-
-
-			// moved / copied sections
-			if( ctype_digit($arg) ){
-				$arg = (int)$arg;
-
-				if( !isset($this->file_sections[$arg]) ){
-					msg($langmessage['OOPS'].' (Invalid Section Number)');
-					return false;
-				}
-
-				unset($unused_sections[$arg]);
-				$new_section				= $this->file_sections[$arg];
-				$new_section['attributes']	= array();
-
-			// otherwise, new sections
-			}else{
-
-				if( !isset($section_types[$arg]) ){
-					msg($langmessage['OOPS'].' (Unknown Type: '.$arg.')');
-					return false;
-				}
-				$new_section	= \gp\tool\Editing::DefaultContent($arg);
+			$new_section 		= $this->SaveSection($i,$arg, $unused_sections);
+			if( $new_section === false ){
+				return false;
 			}
-
-			// attributes
-			$this->PostedAttributes($new_section,$i);
-
-
-			// wrapper section 'contains_sections'
-			if( $new_section['type'] == 'wrapper_section' ){
-				$new_section['contains_sections'] = isset($_POST['contains_sections']) ? $_POST['contains_sections'][$i] : '0';
-			}
-
-			// section attributes
-			foreach($section_attrs as $attr){
-				unset($new_section[$attr]);
-				if( !empty($_POST[$attr][$i]) ){
-					$new_section[$attr]		= $_POST[$attr][$i];
-				}
-			}
-
 			$new_sections[$i] = $new_section;
 		}
 
@@ -570,6 +530,56 @@ class Edit extends \gp\Page{
 			}
 		}
 
+	}
+
+
+	protected function SaveSection($i,$arg, &$unused_sections ){
+		global $langmessage;
+
+		$section_types			= \gp\tool\Output\Sections::GetTypes();
+		$section_attrs			= array('gp_label','gp_color','gp_collapse');
+
+		// moved / copied sections
+		if( ctype_digit($arg) ){
+			$arg = (int)$arg;
+
+			if( !isset($this->file_sections[$arg]) ){
+				msg($langmessage['OOPS'].' (Invalid Section Number)');
+				return false;
+			}
+
+			unset($unused_sections[$arg]);
+			$new_section				= $this->file_sections[$arg];
+			$new_section['attributes']	= array();
+
+		// otherwise, new sections
+		}else{
+
+			if( !isset($section_types[$arg]) ){
+				msg($langmessage['OOPS'].' (Unknown Type: '.$arg.')');
+				return false;
+			}
+			$new_section	= \gp\tool\Editing::DefaultContent($arg);
+		}
+
+		// attributes
+		$this->PostedAttributes($new_section,$i);
+
+
+		// wrapper section 'contains_sections'
+		if( $new_section['type'] == 'wrapper_section' ){
+			$new_section['contains_sections'] = isset($_POST['contains_sections']) ? $_POST['contains_sections'][$i] : '0';
+		}
+
+		// section attributes
+		foreach($section_attrs as $attr){
+			unset($new_section[$attr]);
+			if( !empty($_POST[$attr][$i]) ){
+				$new_section[$attr]		= $_POST[$attr][$i];
+			}
+		}
+
+		return $new_section;
 	}
 
 

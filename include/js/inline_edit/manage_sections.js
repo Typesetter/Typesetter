@@ -78,18 +78,39 @@
 			return $.param(args);
 		},
 
+
 		/**
 		 * Called when saved
 		 *
 		 */
 		resetDirty:function(){
-
-			$('#gpx_content.gp_page_display').find('.editable_area').each( function(i){
-				$(this).data('gp-section',i).attr('data-gp-section',i);
-			});
-
+			gp_editor.SectionNumbers();
 			this.saved_data	= this.gp_saveData();
 		},
+
+
+		/**
+		 * Update Section #s
+		 *
+		 */
+		SectionNumbers:function(){
+
+			$('#gpx_content.gp_page_display').find('.editable_area').each( function(i){
+				var $this		= $(this);
+
+				$this.data('gp-section',i).attr('data-gp-section',i);
+
+				var area_id		= $gp.AreaId( $this );
+				var href		= $('#ExtraEditLink'+area_id).attr('href') || '';
+
+				href = href.replace(/section\=[0-9]+/,'');
+				href = $gp.jPrep(href,'section='+i);
+
+				$('#ExtraEditLink'+area_id).attr('href',href);
+			});
+
+		},
+
 
 		/**
 		 * Init Editor
@@ -341,7 +362,6 @@
 
 			//add edit link (need to initiate editing and get the save path)
 			$('<a href="?" class="nodisplay" data-cmd="inline_edit_generic" data-gp-area-id="'+area_id+'" id="ExtraEditLink'+area_id+'">').appendTo('#gp_admin_html');
-
 		}
 
 	}

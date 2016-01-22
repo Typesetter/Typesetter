@@ -163,9 +163,15 @@ var $gp = {
 	 *
 	 */
 	jPrep : function(query,args){
-		args = typeof(args) === 'undefined' ? 'gpreq=json&jsoncallback=?' : args;
-		query = strip_from(query,'#');
-		query += ( query.indexOf('?') === -1 ) ? '?' : '&';
+		args	= typeof(args) === 'undefined' ? 'gpreq=json&jsoncallback=?' : args;
+		query	= strip_from(query,'#');
+
+		if( query.indexOf('?') === -1 ){
+			query += '?';
+		}else if( query.indexOf('?') !== (query.length -1) ){
+			query += '&';
+		}
+
 		return query + args;
 	},
 

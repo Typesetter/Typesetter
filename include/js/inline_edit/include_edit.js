@@ -49,7 +49,6 @@
 			$('#ckeditor_top').html(data.CONTENT);
 
 			gp_editor.resetDirty();
-			gp_editor.updateElement();
 		}
 
 

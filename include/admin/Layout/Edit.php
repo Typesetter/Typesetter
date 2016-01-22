@@ -454,8 +454,8 @@ class Edit extends \gp\admin\Layout{
 
 	/**
 	 * Order of files for SCSS
-	 *  Variables.scss
 	 *  custom.scss
+	 *  Variables.scss
 	 *  Bootstrap.scss
 	 */
 	protected function PreviewScss($dir){
@@ -469,7 +469,7 @@ class Edit extends \gp\admin\Layout{
 			$style_files[] = $var_file;
 		}
 
-
+		//custom
 		$temp = trim($_REQUEST['css']);
 		if( !empty($temp) ){
 			$style_files[] = $_REQUEST['css']. "\n"; //make sure this is seen as code and not a filename

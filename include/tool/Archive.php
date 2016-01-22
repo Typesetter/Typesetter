@@ -119,6 +119,11 @@ class Archive{
 	 */
 	public function Compress(){
 
+		if( $this->php_class === 'ZipArchive' ){
+			$this->php_object->close();
+		}
+
+
 		switch($this->extension){
 			case 'tbz':
 				$this->php_object->compress(\Phar::BZ2,'tbz');
@@ -147,16 +152,42 @@ class Archive{
 
 	/**
 	 * List the files in the archive
-	 * ToDo: ListFiles() for pharData
 	 *
 	 */
 	public function ListFiles(){
-
 		$list	= array();
-		$count	= $this->Count();
-		for( $i = 0; $i < $count; $i++ ){
-			$list[] = $this->php_object->statIndex( $i );
+
+		if( method_exists($this->php_object,'statIndex') ){
+			$count	= $this->Count();
+			for( $i = 0; $i < $count; $i++ ){
+				$list[] = $this->php_object->statIndex( $i );
+			}
+			return $list;
 		}
+
+
+		return $this->GenList($list);
+	}
+
+	public function GenList($list, $dir = ''){
+
+		$path = 'phar://'.$this->path.'/'.$dir;
+		$_list = scandir($path);
+		foreach($_list as $file){
+
+			$full		= ltrim($dir.'/'.$file,'/');
+			$path		= 'phar://'.$this->path.'/'.$full;
+
+
+			if( is_dir($path) ){
+				$list = $this->GenList($list, $full);
+			}else{
+				$stat		= stat($path);
+				$stat['name'] = $full;
+				$list[]		= array_intersect_key($stat,array('name'=>'','mtime'=>'','size'=>''));
+			}
+		}
+
 		return $list;
 	}
 

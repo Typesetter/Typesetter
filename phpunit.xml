@@ -10,6 +10,7 @@
 
     <testsuites>
         <testsuite name="gpEasy Test Suite">
+            <directory>.phpunit/Tool</directory>
             <directory>.phpunit/Install</directory>
             <directory>.phpunit/Include</directory>
             <directory>.phpunit/Admin</directory>

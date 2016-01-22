@@ -645,7 +645,12 @@ class Update extends \gp\Page{
 			return false;
 		}
 
-		if( !$this->UnpackAndSort($this->core_package['file']) ){
+		try{
+			if( !$this->UnpackAndSort($this->core_package['file']) ){
+				return false;
+			}
+		}catch( \Exception $e){
+			$this->msg($langmessage['error_unpacking'].' (no root)');
 			return false;
 		}
 

@@ -409,10 +409,17 @@ gp_editing = {
 		}
 	};
 
+
+	/**
+	 * Move the page to the left to keep the editor off of the editable area if needed
+	 *
+	 */
 	function AdjustForEditor(){
 
-		$('html').css({'margin-left':0});
 
+		$('html').css({'margin-left':0,'width':'auto'});
+
+		var win_width	= $gp.$win.width();
 		var $edit_div	= $gp.CurrentDiv();
 		if( !$edit_div.length ){
 			return;
@@ -420,16 +427,16 @@ gp_editing = {
 
 		//get max adjustment
 		var left 		= $edit_div.offset().left;
-		var max_adjust	= (left*2) - 10;
+		var max_adjust	= left - 10;
 		if( max_adjust < 0 ){
 			return;
 		}
 
 
 		//get min adjustment (how much the edit div will overlap the editor)
-		var max_right	= $gp.$win.width() - $('#ckeditor_wrap').outerWidth(true);
+		var max_right	= win_width - $('#ckeditor_wrap').outerWidth(true);
 		var min_adjust	= (left + $edit_div.outerWidth()) - max_right;
-		min_adjust		= (2 * min_adjust) + 20;
+		min_adjust		+= 10;
 
 		if( min_adjust < 0 ){
 			return;
@@ -437,7 +444,7 @@ gp_editing = {
 
 		var adjust		= Math.min(min_adjust, max_adjust);
 
-		$('html').css({'margin-left':-adjust});
+		$('html').css({'margin-left':-adjust,'width':win_width});
 	}
 
 
@@ -452,6 +459,8 @@ gp_editing = {
 		maxHeight				-= $('#ckeditor_save').outerHeight();
 
 		$('#ckeditor_area').css({'max-height':maxHeight});
+
+		AdjustForEditor();
 
 	}).resize();
 

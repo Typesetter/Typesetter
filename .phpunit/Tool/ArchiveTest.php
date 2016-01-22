@@ -23,6 +23,14 @@ class phpunit_Archive extends gptest_bootstrap{
 	 */
 	function __construct(){
 
+
+		// HHVM doesn't support writing with PHAR
+		// https://github.com/facebook/hhvm/issues/4899
+		if( defined('HHVM_VERSION') ){
+			$this->types = array('zip');
+		}
+
+
 		$this->dir		= sys_get_temp_dir().'/test-'.rand(1,10000000);
 
 		foreach($this->files as $name => $content){

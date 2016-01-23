@@ -30,7 +30,10 @@ class Update extends \gp\Page{
 	public $update_data			= array();
 	public $data_timestamp		= 0;
 	public $curr_step			= 1;
-	public $steps				= array();
+	private $steps				= array();
+	private $passed				= false;
+	private $done				= false;
+
 	public $core_package;
 	public $update_msgs			= array();
 	private $FileSystem;
@@ -94,7 +97,7 @@ class Update extends \gp\Page{
 
 
 			case 'update';
-				if( gp_remote_update && $this->Update() ){
+				if( gp_remote_update && $this->UpdateCMS() ){
 					$show = false;
 				}
 			break;
@@ -142,46 +145,47 @@ class Update extends \gp\Page{
 		echo '<table class="styledtable">';
 
 		echo '<tr><th>';
-			echo $langmessage['Test'];
-			echo '</th><th>';
-			echo $langmessage['Value'];
-			echo '</th><th>';
-			echo $langmessage['Expected'];
-			echo '</th></tr>';
+		echo $langmessage['Test'];
+		echo '</th><th>';
+		echo $langmessage['Value'];
+		echo '</th><th>';
+		echo $langmessage['Expected'];
+		echo '</th></tr>';
 
+		// RemoteGet
 		echo '<tr><td>';
-			echo 'RemoteGet';
-			echo '</td><td>';
-			if( \gp\tool\RemoteGet::Test() ){
-				echo '<span class="passed">'.$langmessage['True'].'</span>';
+		echo 'RemoteGet';
+		echo '</td><td>';
+		if( \gp\tool\RemoteGet::Test() ){
+			echo '<span class="passed">'.$langmessage['True'].'</span>';
+		}else{
+			$passed = false;
+			echo '<span class="failed">'.$langmessage['False'].'</span>';
+		}
+
+		echo '</td><td>';
+		echo $langmessage['True'];
+		echo '</td></tr>';
+
+		//root installation
+		echo '<tr><td>';
+		echo 'Root Installation';
+		echo '</td><td>';
+		if( !defined('multi_site_unique') ){
+			echo '<span class="passed">'.$langmessage['True'].'</span>';
+		}else{
+			echo '<span class="failed">'.$langmessage['False'].'</span>';
+			if( gpdebug ){
+				msg('This feature is not normally available in a multi-site installation.
+						It is currently accessible because gpdebug is set to true.
+						Continuing is not recommended.');
 			}else{
 				$passed = false;
-				echo '<span class="failed">'.$langmessage['False'].'</span>';
 			}
-
-			echo '</td><td>';
-			echo $langmessage['True'];
-			echo '</td></tr>';
-
-		echo '<tr><td>';
-			echo 'Root Installation';
-			echo '</td><td>';
-			if( !defined('multi_site_unique') ){
-				echo '<span class="passed">'.$langmessage['True'].'</span>';
-			}else{
-				echo '<span class="failed">'.$langmessage['False'].'</span>';
-				if( gpdebug ){
-					msg('This feature is not normally available in a multi-site installation.
-							It is currently accessible because gpdebug is set to true.
-							Continuing is not recommended.');
-				}else{
-					$passed = false;
-				}
-			}
-
-			echo '</td><td>';
-			echo $langmessage['True'];
-			echo '</td></tr>';
+		}
+		echo '</td><td>';
+		echo $langmessage['True'];
+		echo '</td></tr>';
 
 		echo '</table>';
 
@@ -393,7 +397,7 @@ class Update extends \gp\Page{
 	}
 
 
-	function Update(){
+	function UpdateCMS(){
 		global $langmessage;
 
 
@@ -420,7 +424,54 @@ class Update extends \gp\Page{
 			return false;
 		}
 
+		$this->Steps();
 
+
+		echo '<form method="post" action="?cmd=update">';
+		if( $filesystem_method ){
+			echo '<input type="hidden" name="filesystem_method" value="'.htmlspecialchars($filesystem_method).'" />';
+		}
+
+
+		$step_content = $this->RunStep();
+
+		$this->OutputMessages();
+
+		echo $step_content;
+
+
+		if( $this->FileSystem ){
+			$this->FileSystem->destruct();
+		}
+		\gp\admin\Tools::VersionData($this->update_data); //save any changes made by the steps
+
+		if( !$this->done ){
+			if( $this->passed ){
+				echo '<input type="hidden" name="step" value="'.min(count($this->steps),$this->curr_step+1).'"/>';
+				echo '<input type="submit" class="submit" name="" value="'.htmlspecialchars($langmessage['next_step']).'" />';
+			}elseif( $this->curr_step < 3 ){
+				echo '<input type="hidden" name="step" value="'.min(count($this->steps),$this->curr_step).'"/>';
+				echo '<input type="submit" class="submit" name="" value="'.htmlspecialchars($langmessage['continue']).'" />';
+			}else{
+				echo '<input type="hidden" name="failed_install" value="failed_install"/>';
+				echo '<input type="hidden" name="step" value="4"/>';
+				echo '<input type="submit" class="submit" name="" value="'.htmlspecialchars($langmessage['step:clean']).'..." />';
+			}
+		}
+
+		echo '</form>';
+
+
+		return true;
+	}
+
+
+	/**
+	 * Display the update steps and current
+	 *
+	 */
+	protected function Steps(){
+		global $langmessage;
 
 		$this->steps[1] = $langmessage['step:prepare'];
 		$this->steps[2] = $langmessage['step:download'];
@@ -444,63 +495,33 @@ class Update extends \gp\Page{
 		echo '</ol>';
 
 		echo '<h3>'.$curr_step_label.'</h3>';
+	}
 
 
-		echo '<form method="post" action="?cmd=update">';
-		if( $filesystem_method ){
-			echo '<input type="hidden" name="filesystem_method" value="'.htmlspecialchars($filesystem_method).'" />';
-		}
-
-		$done		= false;
-		$passed		= false;
-
+	/**
+	 * Run the current step
+	 *
+	 */
+	protected function RunStep(){
 
 		ob_start();
 		switch($this->curr_step){
 			case 4:
-				$done = $this->CleanUp();
+				$this->done = $this->CleanUp();
 			break;
 			case 3:
-				$passed = $this->UnpackAndReplace();
+				$this->passed = $this->UnpackAndReplace();
 				$this->OldFolders();
 			break;
 			case 2:
-				$passed = $this->DownloadSource();
+				$this->passed = $this->DownloadSource();
 			break;
 			case 1:
-				$passed = $this->GetServerInfo();
+				$this->passed = $this->GetServerInfo();
 			break;
 		}
-		$step_content = ob_get_clean();
 
-
-		$this->OutputMessages();
-		echo $step_content;
-
-
-		if( $this->FileSystem ){
-			$this->FileSystem->destruct();
-		}
-		\gp\admin\Tools::VersionData($this->update_data); //save any changes made by the steps
-
-		if( !$done ){
-			if( $passed ){
-				echo '<input type="hidden" name="step" value="'.min(count($this->steps),$this->curr_step+1).'"/>';
-				echo '<input type="submit" class="submit" name="" value="'.htmlspecialchars($langmessage['next_step']).'" />';
-			}elseif( $this->curr_step < 3 ){
-				echo '<input type="hidden" name="step" value="'.min(count($this->steps),$this->curr_step).'"/>';
-				echo '<input type="submit" class="submit" name="" value="'.htmlspecialchars($langmessage['continue']).'" />';
-			}else{
-				echo '<input type="hidden" name="failed_install" value="failed_install"/>';
-				echo '<input type="hidden" name="step" value="4"/>';
-				echo '<input type="submit" class="submit" name="" value="'.htmlspecialchars($langmessage['step:clean']).'..." />';
-			}
-		}
-
-		echo '</form>';
-
-
-		return true;
+		return ob_get_clean();
 	}
 
 

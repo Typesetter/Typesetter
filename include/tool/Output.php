@@ -14,42 +14,76 @@ namespace gp\tool{
 	//	custom menu format: $top_level,$bottom_level,$expand_level
 
 	//custom menu: 0,0,0,0
-	$gpOutConf['FullMenu']['method']		= array('\\gp\\tool\\Output\\Menu','GetFullMenu');
-	$gpOutConf['FullMenu']['link']			= 'all_links';
+	$gpOutConf['FullMenu'] = array(
+								'class'			=> '\\gp\\tool\\Output\\Menu',
+								'method'		=> 'GetFullMenu',
+								'link'			=> 'all_links',
+								);
+
 
 	//custom menu: 0,0,1,1
-	$gpOutConf['ExpandMenu']['method']		= array('\\gp\\tool\\Output\\Menu','GetExpandMenu');
-	$gpOutConf['ExpandMenu']['link']		= 'expanding_links';
+	$gpOutConf['ExpandMenu'] = array(
+								'class'			=> '\\gp\\tool\\Output\\Menu',
+								'method'		=> 'GetExpandMenu',
+								'link'			=> 'expanding_links',
+								);
+
 
 	//custom menu: 0,0,2,1
-	$gpOutConf['ExpandLastMenu']['method']	= array('\\gp\\tool\\Output\\Menu','GetExpandLastMenu');
-	$gpOutConf['ExpandLastMenu']['link']	= 'expanding_bottom_links';
+	$gpOutConf['ExpandLastMenu'] = array(
+								'class'			=> '\\gp\\tool\\Output\\Menu',
+								'method'		=> 'GetExpandLastMenu',
+								'link'			=> 'expanding_bottom_links',
+								);
 
 	//custom menu: 0,1,0,0
-	$gpOutConf['Menu']['method']			= array('\\gp\\tool\\Output\\Menu','GetMenu');
-	$gpOutConf['Menu']['link']				= 'top_level_links';
+	$gpOutConf['Menu'] = array(
+								'class'			=> '\\gp\\tool\\Output\\Menu',
+								'method'		=> 'GetMenu',
+								'link'			=> 'top_level_links',
+								);
 
 	//custom menu: 1,0,0,0
-	$gpOutConf['SubMenu']['method']			= array('\\gp\\tool\\Output\\Menu','GetSubMenu');
-	$gpOutConf['SubMenu']['link']			= 'subgroup_links';
+	$gpOutConf['SubMenu'] = array(
+								'class'			=> '\\gp\\tool\\Output\\Menu',
+								'method'		=> 'GetSubMenu',
+								'link'			=> 'subgroup_links',
+								);
 
 	//custom menu: 0,2,0,0
-	$gpOutConf['TopTwoMenu']['method']		= array('\\gp\\tool\\Output\\Menu','GetTopTwoMenu');
-	$gpOutConf['TopTwoMenu']['link']		= 'top_two_links';
+	$gpOutConf['TopTwoMenu'] = array(
+								'class'			=> '\\gp\\tool\\Output\\Menu',
+								'method'		=> 'GetTopTwoMenu',
+								'link'			=> 'top_two_links',
+								);
 
 	//custom menu: does not translate, this pays no attention to grouping
-	$gpOutConf['BottomTwoMenu']['method']	= array('\\gp\\tool\\Output\\Menu','GetBottomTwoMenu');
-	$gpOutConf['BottomTwoMenu']['link']		= 'bottom_two_links';
+	$gpOutConf['BottomTwoMenu'] = array(
+								'class'			=> '\\gp\\tool\\Output\\Menu',
+								'method'		=> 'GetBottomTwoMenu',
+								'link'			=> 'bottom_two_links',
+								);
 
 	//custom menu: 1,2,0,0
-	$gpOutConf['MiddleSubMenu']['method']	= array('\\gp\\tool\\Output\\Menu','GetSecondSubMenu');
-	$gpOutConf['MiddleSubMenu']['link']		= 'second_sub_links';
+	$gpOutConf['MiddleSubMenu'] = array(
+								'class'			=> '\\gp\\tool\\Output\\Menu',
+								'method'		=> 'GetSecondSubMenu',
+								'link'			=> 'second_sub_links',
+								);
 
 	//custom menu: 2,3,0,0
-	$gpOutConf['BottomSubMenu']['method']	= array('\\gp\\tool\\Output\\Menu','GetThirdSubMenu');
-	$gpOutConf['BottomSubMenu']['link']		= 'third_sub_links';
+	$gpOutConf['BottomSubMenu'] = array(
+								'class'			=> '\\gp\\tool\\Output\\Menu',
+								'method'		=> 'GetThirdSubMenu',
+								'link'			=> 'third_sub_links',
+								);
 
-	$gpOutConf['CustomMenu']['method']		= array('\\gp\\tool\\Output\\Menu','CustomMenu');
+	//custom menu
+	$gpOutConf['CustomMenu'] = array(
+								'class'			=> '\\gp\\tool\\Output\\Menu',
+								'method'		=> 'CustomMenu',
+								);
+
 
 	$gpOutConf['Extra']['method']			= array('\\gp\\tool\\Output','GetExtra');
 	//$gpOutConf['Text']['method']			= array('\\gp\\tool\\Output','GetText'); //use Area() and GetArea() instead
@@ -89,8 +123,10 @@ namespace gp\tool{
 		 *
 		 */
 		public static function __callStatic($name,$args){
+
 			if( method_exists('\\gp\\tool\\Output\\Menu',$name) ){
-				call_user_func_array( array('\\gp\\tool\\Output\\Menu',$name), $args);
+				$menu = new \gp\tool\Output\Menu();
+				call_user_func_array( array($menu,$name), $args);
 				return;
 			}
 

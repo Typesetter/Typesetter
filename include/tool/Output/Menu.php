@@ -8,14 +8,14 @@ class Menu{
 
 
 
-	public static function GetFullMenu($arg=''){
-		$source_menu_array = self::GetMenuArray($arg);
-		self::OutputMenu($source_menu_array,0,$source_menu_array);
+	public function GetFullMenu($arg=''){
+		$source_menu_array = $this->GetMenuArray($arg);
+		$this->OutputMenu($source_menu_array,0,$source_menu_array);
 	}
 
-	public static function GetExpandLastMenu($arg=''){
+	public function GetExpandLastMenu($arg=''){
 		global $page;
-		$source_menu_array = self::GetMenuArray($arg);
+		$source_menu_array = $this->GetMenuArray($arg);
 
 		$menu = array();
 		$submenu = array();
@@ -43,11 +43,11 @@ class Menu{
 			}
 		}
 
-		self::OutputMenu($menu,0,$source_menu_array);
+		$this->OutputMenu($menu,0,$source_menu_array);
 	}
 
-	public static function GetMenu($arg=''){
-		$source_menu_array = self::GetMenuArray($arg);
+	public function GetMenu($arg=''){
+		$source_menu_array = $this->GetMenuArray($arg);
 
 		$sendMenu = array();
 		foreach($source_menu_array as $key => $info){
@@ -57,12 +57,12 @@ class Menu{
 			$sendMenu[$key] = true;
 		}
 
-		self::OutputMenu($sendMenu,0,$source_menu_array);
+		$this->OutputMenu($sendMenu,0,$source_menu_array);
 	}
 
-	public static function GetSubMenu($arg='',$info=false,$search_level=false){
+	public function GetSubMenu($arg='',$info=false,$search_level=false){
 		global $page;
-		$source_menu_array = self::GetMenuArray($arg);
+		$source_menu_array = $this->GetMenuArray($arg);
 
 		$reset_level = 0;
 		if( !empty($search_level) ){
@@ -102,14 +102,15 @@ class Menu{
 		}
 
 		if( !$foundGroup ){
-			self::OutputMenu(array(),$reset_level+1,$source_menu_array);
+			$this->OutputMenu(array(),$reset_level+1,$source_menu_array);
 		}else{
-			self::OutputMenu($menu,$reset_level+1,$source_menu_array);
+			$this->OutputMenu($menu,$reset_level+1,$source_menu_array);
 		}
 	}
 
-	public static function GetTopTwoMenu($arg=''){
-		$source_menu_array = self::GetMenuArray($arg);
+	public function GetTopTwoMenu($arg=''){
+
+		$source_menu_array = $this->GetMenuArray($arg);
 
 		$sendMenu = array();
 		foreach($source_menu_array as $key => $titleInfo){
@@ -118,12 +119,12 @@ class Menu{
 			}
 			$sendMenu[$key] = true;
 		}
-		self::OutputMenu($sendMenu,0,$source_menu_array);
+		$this->OutputMenu($sendMenu,0,$source_menu_array);
 	}
 
 
-	public static function GetBottomTwoMenu($arg=''){
-		$source_menu_array = self::GetMenuArray($arg);
+	public function GetBottomTwoMenu($arg=''){
+		$source_menu_array = $this->GetMenuArray($arg);
 
 		$sendMenu = array();
 		foreach($source_menu_array as $key => $titleInfo){
@@ -133,21 +134,21 @@ class Menu{
 				$sendMenu[$key] = true;
 			}
 		}
-		self::OutputMenu($sendMenu,1,$source_menu_array);
+		$this->OutputMenu($sendMenu,1,$source_menu_array);
 	}
 
 
-	public static function GetSecondSubMenu($arg,$info){
-		self::GetSubMenu($arg,$info,1);
+	public function GetSecondSubMenu($arg,$info){
+		$this->GetSubMenu($arg,$info,1);
 	}
-	public static function GetThirdSubMenu($arg,$info){
-		self::GetSubMenu($arg,$info,2);
+	public function GetThirdSubMenu($arg,$info){
+		$this->GetSubMenu($arg,$info,2);
 	}
 
 
-	public static function GetExpandMenu($arg=''){
+	public function GetExpandMenu($arg=''){
 		global $page;
-		$source_menu_array = self::GetMenuArray($arg);
+		$source_menu_array = $this->GetMenuArray($arg);
 
 		$menu = array();
 		$submenu = array();
@@ -174,7 +175,7 @@ class Menu{
 			}
 
 		}
-		self::OutputMenu($menu,0,$source_menu_array);
+		$this->OutputMenu($menu,0,$source_menu_array);
 	}
 
 
@@ -183,7 +184,7 @@ class Menu{
 	 * @param string $id String identifying the requested menu
 	 * @return array menu data
 	 */
-	public static function GetMenuArray($id){
+	public function GetMenuArray($id){
 		global $dataDir, $gp_menu;
 
 
@@ -196,7 +197,7 @@ class Menu{
 		$menu = \gp\tool\Files::Get('_menus/'.$id,'menu');
 
 		if( \gp\tool\Files::$last_version && version_compare(\gp\tool\Files::$last_version,'3.0b1','<') ){
-			$menu = self::FixMenu($menu);
+			$menu = $this->FixMenu($menu);
 		}
 
 		return \gp\tool\Plugins::Filter('GetMenuArray',array($menu));
@@ -209,7 +210,7 @@ class Menu{
 	 * .. htmlspecialchars label for external links
 	 * @since 3.0b1
 	 */
-	public static function FixMenu($menu){
+	public function FixMenu($menu){
 
 		//fix external links, prior to 3.0, escaping was done when the menu was output
 		foreach($menu as $key => $value){
@@ -236,7 +237,7 @@ class Menu{
 	}
 
 
-	public static function MenuReduce_ExpandAll($menu,$expand_level,$curr_title_key,$top_level){
+	public function MenuReduce_ExpandAll($menu,$expand_level,$curr_title_key,$top_level){
 
 		$result_menu = array();
 		$submenu = array();
@@ -268,7 +269,7 @@ class Menu{
 
 
 	//Reduce titles deeper than $expand_level || $current_level
-	public static function MenuReduce_Expand($menu,$expand_level,$curr_title_key,$top_level){
+	public function MenuReduce_Expand($menu,$expand_level,$curr_title_key,$top_level){
 		$result_menu = array();
 		$submenu = array();
 
@@ -316,7 +317,7 @@ class Menu{
 
 
 			//reduce the menu to the current group
-			$submenu = self::MenuReduce_Group($menu,$curr_title_key,$expand_level,$curr_level);
+			$submenu = $this->MenuReduce_Group($menu,$curr_title_key,$expand_level,$curr_level);
 
 
 			// titles even-with selected title within group
@@ -349,8 +350,8 @@ class Menu{
 
 
 			// titles above selected title, deeper than $expand_level, and within the group
-			self::MenuReduce_Sub($good_titles,$submenu,$curr_title_key,$expand_level,$curr_level);
-			self::MenuReduce_Sub($good_titles,array_reverse($submenu),$curr_title_key,$expand_level,$curr_level);
+			$this->MenuReduce_Sub($good_titles,$submenu,$curr_title_key,$expand_level,$curr_level);
+			$this->MenuReduce_Sub($good_titles,array_reverse($submenu),$curr_title_key,$expand_level,$curr_level);
 		}
 
 
@@ -370,7 +371,7 @@ class Menu{
 
 
 	// reduce the menu to the group
-	public static function MenuReduce_Group($menu,$curr_title_key,$expand_level,$curr_level){
+	public function MenuReduce_Group($menu,$curr_title_key,$expand_level,$curr_level){
 		$result = array();
 		$group_temp = array();
 		$found_title = false;
@@ -402,7 +403,7 @@ class Menu{
 	}
 
 	// titles above selected title, deeper than $expand_level, and within the group
-	public static function MenuReduce_Sub(&$good_titles,$menu,$curr_title_key,$expand_level,$curr_level){
+	public function MenuReduce_Sub(&$good_titles,$menu,$curr_title_key,$expand_level,$curr_level){
 		$found_title = false;
 		$test_level = $curr_level;
 		foreach($menu as $title_key => $level){
@@ -428,7 +429,7 @@ class Menu{
 	}
 
 	//Reduce the menu to titles deeper than ($show_level-1)
-	public static function MenuReduce_Top($menu,$show_level,$curr_title_key){
+	public function MenuReduce_Top($menu,$show_level,$curr_title_key){
 		$result_menu = array();
 		$foundGroup = false;
 
@@ -471,7 +472,7 @@ class Menu{
 
 
 	//Reduce the menu to titles above $bottom_level value
-	public static function MenuReduce_Bottom($menu,$bottom_level){
+	public function MenuReduce_Bottom($menu,$bottom_level){
 		$result_menu = array();
 
 		foreach($menu as $title => $level){
@@ -492,7 +493,7 @@ class Menu{
 	 * 		$source_menu (string)	Which menu to use
 	 *
 	 */
-	public static function CustomMenu($arg,$title=false){
+	public function CustomMenu($arg,$title=false){
 		global $page, $gp_index;
 
 		//from output functions
@@ -511,7 +512,7 @@ class Menu{
 
 
 		//get menu array
-		$source_menu_array = self::GetMenuArray($source_menu);
+		$source_menu_array = $this->GetMenuArray($source_menu);
 
 
 
@@ -528,9 +529,9 @@ class Menu{
 		//first reduction
 		if( (int)$expand_level >= 1 ){
 			if( $expand_all ){
-				$menu = self::MenuReduce_ExpandAll($menu,$expand_level,$title_index,$top_level);
+				$menu = $this->MenuReduce_ExpandAll($menu,$expand_level,$title_index,$top_level);
 			}else{
-				$menu = self::MenuReduce_Expand($menu,$expand_level,$title_index,$top_level);
+				$menu = $this->MenuReduce_Expand($menu,$expand_level,$title_index,$top_level);
 			}
 		}
 
@@ -538,7 +539,7 @@ class Menu{
 		//Reduce if $top_level >= 0
 		//second reduction
 		if( (int)$top_level > 0 ){
-			$menu = self::MenuReduce_Top($menu,$top_level,$title_index);
+			$menu = $this->MenuReduce_Top($menu,$top_level,$title_index);
 		}else{
 			$top_level = 0;
 		}
@@ -546,17 +547,17 @@ class Menu{
 		//Reduce by trimming off titles below $bottom_level
 		// last reduction : in case the selected link is below $bottom_level
 		if( $bottom_level > 0 ){
-			$menu = self::MenuReduce_Bottom($menu,$bottom_level);
+			$menu = $this->MenuReduce_Bottom($menu,$bottom_level);
 		}
 
-		self::OutputMenu($menu,$top_level,$source_menu_array);
+		$this->OutputMenu($menu,$top_level,$source_menu_array);
 	}
 
 	/**
 	 * Output a navigation menu
 	 * @static
 	 */
-	public static function OutputMenu( $menu, $start_level, $source_menu=false ){
+	public function OutputMenu( $menu, $start_level, $source_menu=false ){
 		global $page, $gp_menu, $gp_titles, $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES;
 
 		//source menu
@@ -564,7 +565,7 @@ class Menu{
 			$source_menu =& $gp_menu;
 		}
 
-		self::PrepMenuOutput();
+		$this->PrepMenuOutput();
 		$clean_attributes		= array( 'attr'=>'', 'class'=>array(), 'id'=>'' );
 
 
@@ -582,7 +583,7 @@ class Menu{
 		// An empty <ul> is not valid
 		if( !count($menu) ){
 			$attributes_ul['class']['empty_menu'] = 'empty_menu';
-			self::FormatMenuElement('div',$attributes_ul);
+			$this->FormatMenuElement('div',$attributes_ul);
 			echo '</div>';
 			return;
 		}
@@ -596,7 +597,7 @@ class Menu{
 
 
 		//output
-		self::FormatMenuElement('ul',$attributes_ul);
+		$this->FormatMenuElement('ul',$attributes_ul);
 
 
 		$menu			= array_keys($menu);
@@ -632,7 +633,7 @@ class Menu{
 				$next_info		= $source_menu[$next_index];
 			}
 
-			$attributes_a		= self::MenuAttributesA($menu_key, $menu_info);
+			$attributes_a		= $this->MenuAttributesA($menu_key, $menu_info);
 			$attributes_li		= $clean_attributes;
 			$attributes_ul		= $clean_attributes;
 
@@ -682,7 +683,7 @@ class Menu{
 			if( $this_level > $prev_level ){
 
 				if( $menu_ii === 0 ){ //only needed if the menu starts below the start_level
-					self::FormatMenuElement('li',$attributes_li);
+					$this->FormatMenuElement('li',$attributes_li);
 				}
 
 				if( !empty($GP_MENU_CLASSES['child_ul']) ){
@@ -693,7 +694,7 @@ class Menu{
 					$open_loops = $this_level - $prev_level;
 
 					for($i = 0; $i<$open_loops; $i++){
-						self::FormatMenuElement('ul',$attributes_ul);
+						$this->FormatMenuElement('ul',$attributes_ul);
 						if( $i < $open_loops-1 ){
 							echo '<li>';
 						}
@@ -705,7 +706,7 @@ class Menu{
 			//current is higher than the previous
 			}elseif( $this_level <= $prev_level ){
 
-				self::OutputMenu_CloseLevel($this_level, $prev_level);
+				$this->OutputMenu_CloseLevel($this_level, $prev_level);
 
 				if( $open ){
 					echo '</li>';
@@ -713,15 +714,15 @@ class Menu{
 			}
 
 
-			self::FormatMenuElement('li',$attributes_li);
-			self::FormatMenuElement('a',$attributes_a);
+			$this->FormatMenuElement('li',$attributes_li);
+			$this->FormatMenuElement('a',$attributes_a);
 
 
 			$prev_level		= $this_level;
 			$open			= true;
 		}
 
-		self::OutputMenu_CloseLevel( $start_level, $prev_level);
+		$this->OutputMenu_CloseLevel( $start_level, $prev_level);
 	}
 
 
@@ -729,10 +730,10 @@ class Menu{
 	 * Output breadcrumb nav
 	 *
 	 */
-	public static function BreadcrumbNav($arg=''){
+	public function BreadcrumbNav($arg=''){
 		global $page, $gp_index, $GP_MENU_CLASSES;
 
-		$source_menu_array	= self::GetMenuArray($arg);
+		$source_menu_array	= $this->GetMenuArray($arg);
 		$output				= array();
 		$thisLevel			= -1;
 		$last_index			= '';
@@ -770,7 +771,7 @@ class Menu{
 
 
 
-		self::PrepMenuOutput();
+		$this->PrepMenuOutput();
 		$clean_attributes = array( 'attr'=>'', 'class'=>array(), 'id'=>'' );
 
 
@@ -781,7 +782,7 @@ class Menu{
 			$attributes_ul['id'] = \gp\tool\Output::$edit_area_id;
 			$attributes_ul['class']['editable_area'] = 'editable_area';
 		}
-		self::FormatMenuElement('ul',$attributes_ul);
+		$this->FormatMenuElement('ul',$attributes_ul);
 
 
 		//
@@ -791,7 +792,7 @@ class Menu{
 			$index					= $output[$i];
 			$title					= \gp\tool::IndexToTitle($index);
 			$attributes_li			= $clean_attributes;
-			$attributes_a			= self::MenuAttributesA($index);
+			$attributes_a			= $this->MenuAttributesA($index);
 
 			if( $title == $page->title ){
 				$attributes_a['class']['selected']		= $GP_MENU_CLASSES['selected'];
@@ -799,12 +800,12 @@ class Menu{
 			}
 
 
-			self::FormatMenuElement('li',$attributes_li);
+			$this->FormatMenuElement('li',$attributes_li);
 
 			if( $i < $len-1 ){
-				self::FormatMenuElement('a',$attributes_a);
+				$this->FormatMenuElement('a',$attributes_a);
 			}else{
-				self::FormatMenuElement('a',$attributes_a);
+				$this->FormatMenuElement('a',$attributes_a);
 			}
 			echo '</li>';
 		}
@@ -869,7 +870,7 @@ class Menu{
 
 
 
-	public static function FormatMenuElement( $node, $attributes){
+	public function FormatMenuElement( $node, $attributes){
 		global $GP_MENU_LINKS, $GP_MENU_ELEMENTS;
 
 
@@ -906,7 +907,7 @@ class Menu{
 		}
 	}
 
-	public static function PrepMenuOutput(){
+	public function PrepMenuOutput(){
 		global $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES;
 
 		//menu classes

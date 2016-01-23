@@ -710,7 +710,7 @@ namespace gp\admin\Content{
 				return false;
 			}
 
-			if( !\gp\tool::verify_nonce('delete') ){
+			if( \gp\tool::verify_nonce('delete') === false ){
 				message($langmessage['OOPS'].' (Invalid Nonce)');
 				return;
 			}
@@ -858,21 +858,11 @@ namespace gp\admin\Content{
 			}
 
 
-			//addded files
-			if( isset($result['added']) && count($result['added']) > 0 ){
-				foreach($result['added'] as $added){
-					\gp\tool\Plugins::Action('FileUploaded',$added['realpath']);
-					self::CreateThumbnail($added['realpath']);
-				}
-			}
+			//added files
+			self::FinderActions($result, 'added', 'FileUploaded');
 
 			//changed files (resized)
-			if( isset($result['changed']) && count($result['changed']) > 0 ){
-				foreach($result['changed'] as $changed){
-					\gp\tool\Plugins::Action('FileChanged',$changed['realpath']);
-					self::CreateThumbnail($changed['realpath']);
-				}
-			}
+			self::FinderActions($result, 'changed', 'FileChanged');
 
 			\gp_resized::SaveIndex();
 
@@ -884,6 +874,20 @@ namespace gp\admin\Content{
 			$fp = fopen($log_file,'a');
 			fwrite($fp,$content);
 			*/
+		}
+
+		/**
+		 * Call Actions on the finder result
+		 *
+		 */
+		protected static function FinderActions($result, $key, $action){
+
+			if( isset($result[$key]) && count($result[$key]) > 0 ){
+				foreach($result[$key] as $changed){
+					\gp\tool\Plugins::Action($action,$changed['realpath']);
+					self::CreateThumbnail($changed['realpath']);
+				}
+			}
 		}
 
 		/**

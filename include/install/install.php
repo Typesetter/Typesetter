@@ -302,7 +302,7 @@ class gp_install{
 		echo '<tbody>';
 		$this->CheckIndexHtml();
 		$this->CheckImages();
-		$this->passed = $this->passed && $this->passed->CheckPath();
+		$this->CheckPath();
 		echo '</tbody>';
 
 
@@ -567,43 +567,38 @@ class gp_install{
 
 	}
 
-	//very unlikely, cannot have two ".php/" in path: see SetGlobalPaths()
+	/**
+	 * Very unlikely, ".php" cannot be in the directory name. see SetGlobalPaths()
+	 *
+	 */
 	public function CheckPath(){
 		global $langmessage;
 
-		$path = __FILE__;
+		$dir	= dirname(__FILE__);
 
-		$test = $path;
-		$pos = strpos($test,'.php');
-		if( $pos === false ){
-			return true;
-		}
-		$test = substr($test,$pos+4);
-		$pos = strpos($test,'.php');
-		if( $pos === false ){
-			return true;
+		if( strpos($dir,'.php') === false ){
+			return;
 		}
 
-		echo '<tr>';
-			echo '<td class="nowrap">';
-			if( strlen($path) > 30 ){
-				echo '...'.substr($path,-27);
-			}else{
-				echo $path;
-			}
-			echo '</td>';
-			echo '<td class="failed">'.$langmessage['Failed'].': '.$langmessage['See_Below'].'</td>';
-			echo '<td class="failed" colspan="2">';
-			echo str_replace('.php','<b>.php</b>',$path);
-			echo '<br/>';
-			echo 'The file structure contains multiple cases of ".php".';
-			echo ' To Continue, rename your file structure so that directories do not use ".php".';
-			echo '</td>';
-			echo '</tr>';
+		echo '<tr><td class="nowrap">';
+		if( strlen($dir) > 30 ){
+			echo '...'.substr($dir,-27);
+		}else{
+			echo $dir;
+		}
+		echo '</td>';
+		echo '<td class="failed">'.$langmessage['Failed'].'</td>';
+		echo '<td class="failed" colspan="2">';
+		echo str_replace('.php','<b>.php</b>',$dir);
+		echo '<br/>';
+		echo 'Your installation directory contains the string ".php".';
+		echo ' To Continue, rename your file structure so that directories do not use ".php".';
+		echo '</td></tr>';
 
 
-		return false;
+		$this->passed = false;
 	}
+
 
 	/**
 	 * Warn user if there's an index.html file

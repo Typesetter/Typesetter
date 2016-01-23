@@ -8,6 +8,38 @@ class Menu{
 
 	protected $clean_attributes		= array( 'attr'=>'', 'class'=>array(), 'id'=>'' );
 
+	private $prev_level;
+
+
+	public function __construct(){
+		global $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES;
+
+		//menu classes
+		if( !is_array($GP_MENU_CLASSES) ){
+			$GP_MENU_CLASSES = array();
+		}
+		if( empty($GP_MENU_CLASS) ){
+			$GP_MENU_CLASS = 'menu_top';
+		}
+		$GP_MENU_CLASSES += array(
+							'menu_top'			=> $GP_MENU_CLASS,
+							'selected'			=> 'selected',
+							'selected_li'		=> 'selected_li',
+							'childselected'		=> 'childselected',
+							'childselected_li'	=> 'childselected_li',
+							'li_'				=> 'li_',
+							'li_title'			=> 'li_title',
+							'haschildren'		=> 'haschildren',
+							'haschildren_li'	=> '',
+							'child_ul'			=> '',
+							);
+
+		if( empty($GP_MENU_LINKS) ){
+			$GP_MENU_LINKS = '<a href="{$href_text}" title="{$title}"{$attr}>{$label}</a>';
+		}
+
+	}
+
 
 	public function GetFullMenu($arg=''){
 		$source_menu_array = $this->GetMenuArray($arg);
@@ -566,10 +598,6 @@ class Menu{
 			$source_menu =& $gp_menu;
 		}
 
-		$this->PrepMenuOutput();
-
-
-
 
 		// opening ul
 		$attributes_ul = $this->clean_attributes;
@@ -589,7 +617,7 @@ class Menu{
 		}
 
 
-		$prev_level				= $start_level;
+		$this->prev_level		= $start_level;
 		$page_title_full		= \gp\tool::GetUrl($page->title);
 		$open					= false;
 		$li_count				= array();
@@ -640,7 +668,7 @@ class Menu{
 
 			//ordered or "indexed" classes
 			if( $page->menu_css_ordered ){
-				for($i = $prev_level;$i > $this_level; $i--){
+				for($i = $this->prev_level;$i > $this_level; $i--){
 					unset($li_count[$i]);
 				}
 				if( !isset($li_count[$this_level]) ){
@@ -680,7 +708,7 @@ class Menu{
 
 
 			//current is a child of the previous
-			if( $this_level > $prev_level ){
+			if( $this_level > $this->prev_level ){
 
 				if( $menu_ii === 0 ){ //only needed if the menu starts below the start_level
 					$this->FormatMenuElement('li',$attributes_li);
@@ -690,23 +718,23 @@ class Menu{
 					$attributes_ul['class'][] = $GP_MENU_CLASSES['child_ul'];
 				}
 
-				if( $this_level > $prev_level ){
-					$open_loops = $this_level - $prev_level;
+				if( $this_level > $this->prev_level ){
+					$open_loops = $this_level - $this->prev_level;
 
 					for($i = 0; $i<$open_loops; $i++){
 						$this->FormatMenuElement('ul',$attributes_ul);
 						if( $i < $open_loops-1 ){
 							echo '<li>';
 						}
-						$prev_level++;
+						$this->prev_level++;
 						$attributes_ul = $this->clean_attributes;
 					}
 				}
 
 			//current is higher than the previous
-			}elseif( $this_level <= $prev_level ){
+			}elseif( $this_level <= $this->prev_level ){
 
-				$this->OutputMenu_CloseLevel($this_level, $prev_level);
+				$this->OutputMenu_CloseLevel($this_level);
 
 				if( $open ){
 					echo '</li>';
@@ -718,11 +746,11 @@ class Menu{
 			$this->FormatMenuElement('a',$attributes_a);
 
 
-			$prev_level		= $this_level;
-			$open			= true;
+			$this->prev_level	= $this_level;
+			$open				= true;
 		}
 
-		$this->OutputMenu_CloseLevel( $start_level, $prev_level);
+		$this->OutputMenu_CloseLevel( $start_level);
 	}
 
 
@@ -771,8 +799,6 @@ class Menu{
 
 
 
-		$this->PrepMenuOutput();
-
 
 		// opening ul
 		$attributes_ul = $this->clean_attributes;
@@ -814,14 +840,14 @@ class Menu{
 
 
 	/**
-	 * Add list item closing tags till $prev_level == $this_level
+	 * Add list item closing tags till $this->prev_level == $this_level
 	 *
 	 */
-	protected static function OutputMenu_CloseLevel( $this_level, &$prev_level){
-		while( $this_level < $prev_level){
+	protected  function OutputMenu_CloseLevel( $this_level){
+		while( $this_level < $this->prev_level){
 			echo '</li></ul>';
 
-			$prev_level--;
+			$this->prev_level--;
 		}
 	}
 
@@ -830,7 +856,7 @@ class Menu{
 	 * Start the link attributes array
 	 *
 	 */
-	protected static function MenuAttributesA($menu_key, $menu_info = array() ){
+	protected function MenuAttributesA($menu_key, $menu_info = array() ){
 		global $gp_titles;
 
 		$attributes = array('href' => '', 'attr' => '', 'value' => '', 'title' => '', 'class' =>array() );
@@ -906,33 +932,7 @@ class Menu{
 		}
 	}
 
-	public function PrepMenuOutput(){
-		global $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES;
+	public function PrepMenuOutput(){}
 
-		//menu classes
-		if( !is_array($GP_MENU_CLASSES) ){
-			$GP_MENU_CLASSES = array();
-		}
-		if( empty($GP_MENU_CLASS) ){
-			$GP_MENU_CLASS = 'menu_top';
-		}
-		$GP_MENU_CLASSES += array(
-							'menu_top'			=> $GP_MENU_CLASS,
-							'selected'			=> 'selected',
-							'selected_li'		=> 'selected_li',
-							'childselected'		=> 'childselected',
-							'childselected_li'	=> 'childselected_li',
-							'li_'				=> 'li_',
-							'li_title'			=> 'li_title',
-							'haschildren'		=> 'haschildren',
-							'haschildren_li'	=> '',
-							'child_ul'			=> '',
-							);
-
-		if( empty($GP_MENU_LINKS) ){
-			$GP_MENU_LINKS = '<a href="{$href_text}" title="{$title}"{$attr}>{$label}</a>';
-		}
-
-	}
 
 }

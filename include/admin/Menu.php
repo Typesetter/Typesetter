@@ -990,6 +990,7 @@ class Menu{
 		$all_keys = array_unique($all_keys);
 
 		//then check $gp_index agains $all_keys
+		$avail = array();
 		foreach( $gp_index as $title => $index ){
 			if( in_array($index, $all_keys) ){
 				continue;
@@ -1132,6 +1133,7 @@ class Menu{
 			return \gp\admin\Menu\Tools::GetAvailable();
 		}
 
+		$avail = array();
 		foreach( $gp_index as $title => $index ){
 			if( !isset($this->curr_menu_array[$index]) ){
 				$avail[$index] = $title;
@@ -1169,7 +1171,6 @@ class Menu{
 
 
 		// if prev (sibling) set
-		$inserted = true;
 		if( !empty($_POST['prev']) ){
 
 			$inserted = $this->MenuInsert_After( $moved, $_POST['prev']);
@@ -1262,9 +1263,6 @@ class Menu{
 			return false;
 		}
 
-		$curr_info = $values[$insert_key];
-		$curr_level = $curr_info['level'];
-
 		unset($keys[$insert_key]);
 		$keys = array_values($keys);
 
@@ -1277,7 +1275,7 @@ class Menu{
 		if( isset($values[$insert_key-1]) ){
 			$prev_level = $values[$insert_key-1]['level'];
 		}
-		$moved_one = true;
+
 		do{
 			$moved_one = false;
 			if( isset($values[$insert_key]) ){

@@ -18,8 +18,8 @@ class Menu{
 
 	public $avail_menus				= array();
 	public $curr_menu_id;
-	public $curr_menu_array			= false;
-	protected $is_alt_menu				= false;
+	public $curr_menu_array;
+	protected $is_alt_menu			= false;
 	public $is_main_menu			= false;
 	public $max_level_index			= 3;
 	protected $settings_cache		= array();
@@ -220,7 +220,7 @@ class Menu{
 			return \gp\admin\Tools::SavePagesPHP();
 		}
 
-		if( $this->curr_menu_array === false ){
+		if( is_null($this->curr_menu_array) ){
 			return false;
 		}
 
@@ -438,7 +438,7 @@ class Menu{
 	public function OutputMenu(){
 		global $langmessage, $gp_titles, $gpLayouts, $config;
 
-		if( $this->curr_menu_array === false ){
+		if( is_null($this->curr_menu_array) ){
 			msg($langmessage['OOPS'].' (Current menu not set)');
 			return;
 		}
@@ -1161,7 +1161,7 @@ class Menu{
 		global $langmessage;
 
 		$this->CacheSettings();
-		if( $this->curr_menu_array === false ){
+		if( is_null($this->curr_menu_array) ){
 			msg($langmessage['OOPS'].'(1)');
 			return false;
 		}

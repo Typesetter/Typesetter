@@ -511,7 +511,7 @@ class Ajax extends \gp\admin\Menu{
 	public function InsertFromHidden(){
 		global $langmessage, $gp_index;
 
-		if( $this->curr_menu_array === false ){
+		if( is_null($this->curr_menu_array) ){
 			msg($langmessage['OOPS'].' (Menu not set)');
 			return false;
 		}
@@ -550,7 +550,7 @@ class Ajax extends \gp\admin\Menu{
 		global $langmessage, $gp_index;
 
 
-		if( $this->curr_menu_array === false ){
+		if( is_null($this->curr_menu_array) ){
 			msg($langmessage['OOPS']);
 			return false;
 		}
@@ -835,7 +835,7 @@ class Ajax extends \gp\admin\Menu{
 	public function Hide(){
 		global $langmessage;
 
-		if( $this->curr_menu_array === false ){
+		if( is_null($this->curr_menu_array) ){
 			msg($langmessage['OOPS'].'(1)');
 			return false;
 		}

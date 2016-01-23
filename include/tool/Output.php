@@ -1759,6 +1759,7 @@ namespace gp\tool{
 		 *
 		 */
 		protected static function MenuAttributesA($menu_key, $menu_info = array() ){
+			global $gp_titles;
 
 			$attributes = array('href' => '', 'attr' => '', 'value' => '', 'title' => '', 'class' =>array() );
 

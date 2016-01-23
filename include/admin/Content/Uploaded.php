@@ -180,7 +180,7 @@ namespace gp\admin\Content{
 
 			//backwards compat
 			}else{
-				$parts = trim($path,'/');
+				$path = trim($path,'/');
 				$parts = explode('/',$path);
 				array_shift($parts);
 			}

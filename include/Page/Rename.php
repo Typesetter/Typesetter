@@ -65,15 +65,7 @@ namespace gp\Page{
 			echo '<tr><td class="formlabel">'.$langmessage['Slug/URL'];
 			echo '</td><td>';
 			echo '<input type="text" class="'.$class.' gpinput" name="new_title" maxlength="100" size="50" value="'.htmlspecialchars($title).'" '.$attr.'/>';
-			echo ' <div class="label_synchronize">';
-			if( empty( $attr ) ){
-				echo '<a data-cmd="ToggleSync">'.$langmessage['sync_with_label'].'</a>';
-				echo '<a data-cmd="ToggleSync" class="slug_edit nodisplay">'.$langmessage['edit'].'</a>';
-			}else{
-				echo '<a data-cmd="ToggleSync" class="nodisplay">'.$langmessage['sync_with_label'].'</a>';
-				echo '<a data-cmd="ToggleSync" class="slug_edit">'.$langmessage['edit'].'</a>';
-			}
-			echo '</div>';
+			self::ToggleSync($attr);
 			echo '</td></tr>';
 
 
@@ -95,15 +87,7 @@ namespace gp\Page{
 			echo $langmessage['browser_title'];
 			echo '</td><td>';
 			echo '<input type="text" class="'.$class.' gpinput" size="50" name="browser_title" value="'.$browser_title.'" '.$attr.'/>';
-			echo ' <div class="label_synchronize">';
-			if( empty( $attr ) ){
-				echo '<a data-cmd="ToggleSync">'.$langmessage['sync_with_label'].'</a>';
-				echo '<a data-cmd="ToggleSync" class="slug_edit nodisplay">'.$langmessage['edit'].'</a>';
-			}else{
-				echo '<a data-cmd="ToggleSync" class="nodisplay">'.$langmessage['sync_with_label'].'</a>';
-				echo '<a data-cmd="ToggleSync" class="slug_edit">'.$langmessage['edit'].'</a>';
-			}
-			echo '</div>';
+			self::ToggleSync($attr);
 			echo '</td></tr>';
 
 
@@ -216,9 +200,27 @@ namespace gp\Page{
 			$array[1] = '';
 			$array[2] = '';
 			$page->ajaxReplace[] = $array;
-
-
 		}
+
+
+		/**
+		 * Display Sync Toggle
+		 *
+		 */
+		protected static function ToggleSync($attr){
+			global $langmessage;
+
+			echo ' <div class="label_synchronize">';
+			if( empty( $attr ) ){
+				echo '<a data-cmd="ToggleSync">'.$langmessage['sync_with_label'].'</a>';
+				echo '<a data-cmd="ToggleSync" class="slug_edit nodisplay">'.$langmessage['edit'].'</a>';
+			}else{
+				echo '<a data-cmd="ToggleSync" class="nodisplay">'.$langmessage['sync_with_label'].'</a>';
+				echo '<a data-cmd="ToggleSync" class="slug_edit">'.$langmessage['edit'].'</a>';
+			}
+			echo '</div>';
+		}
+
 
 		/**
 		 * Handle renaming a page based on POSTed data

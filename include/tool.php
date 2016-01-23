@@ -504,13 +504,6 @@ namespace gp{
 		 */
 		static function LabelSpecialChars($string){
 			return str_replace( array('<','>','"',"'"), array('&lt;','&gt;','&quot;','&#39;') , $string);
-
-			/*return str_replace(
-					array('<','>','"',"'",'&','&amp;lt;','&amp;gt;','&amp;quot;','&amp;#39;','&amp;amp;')
-					, array('&lt;','&gt;','&quot;','&#39;','&amp;','&lt;','&gt;','&quot;','&#39;','&amp;')
-					, $str);
-			*/
-
 		}
 
 

@@ -23,6 +23,7 @@ class Menu{
 	public $is_main_menu			= false;
 	public $max_level_index			= 3;
 	protected $settings_cache		= array();
+	protected $inherit_info;
 
 
 	public $main_menu_count;
@@ -107,6 +108,14 @@ class Menu{
 
 	}
 
+	/**
+	 * @param string $href
+	 * @param string $label
+	 * @param string $query
+	 * @param string|array $attr
+	 * @param mixed $nonce_action
+	 *
+	 */
 	public function Link($href,$label,$query='',$attr='',$nonce_action=false){
 		$query = $this->MenuQuery($query);
 		return \gp\tool::Link($href,$label,$query,$attr,$nonce_action);
@@ -632,7 +641,6 @@ class Menu{
 
 		echo '<b>'.$langmessage['Target URL'].'</b>';
 		echo '<span>';
-		$img = '<img alt="" />';
 		echo '<a href="[url]" target="_blank">[title]</a>';
 		echo '</span>';
 
@@ -837,14 +845,11 @@ class Menu{
 	public function SearchDisplay(){
 		global $langmessage, $gpLayouts, $gp_index, $gp_menu;
 
-		$Inherit_Info = \gp\admin\Menu\Tools::Inheritance_Info();
+		$this->inherit_info = \gp\admin\Menu\Tools::Inheritance_Info();
 
 		switch($this->curr_menu_id){
 			case 'search':
 				$show_list = $this->GetSearchList();
-			break;
-			case 'all':
-				$show_list = array_keys($gp_index);
 			break;
 			case 'hidden':
 				$show_list = \gp\admin\Menu\Tools::GetAvailable();
@@ -852,7 +857,9 @@ class Menu{
 			case 'nomenus':
 				$show_list = $this->GetNoMenus();
 			break;
-
+			default:
+				$show_list = array_keys($gp_index);
+			break;
 		}
 
 		$show_list = array_values($show_list); //to reset the keys
@@ -1068,8 +1075,8 @@ class Menu{
 
 		//children
 		echo '</td><td>';
-		if( isset($Inherit_Info[$title_index]) && isset($Inherit_Info[$title_index]['children']) ){
-			echo $Inherit_Info[$title_index]['children'];
+		if( isset($this->inherit_info[$title_index]) && isset($this->inherit_info[$title_index]['children']) ){
+			echo $this->inherit_info[$title_index]['children'];
 		}elseif( isset($gp_menu[$title_index]) ){
 			echo '0';
 		}else{

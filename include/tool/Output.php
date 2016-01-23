@@ -76,7 +76,6 @@ namespace gp\tool{
 		public static $edit_area_id			= '';
 
 		private static $catchable			= array();
-		public static $fatal_notices		= array();
 
 		public static $lang_values			= array();
 		public static $inline_vars			= array();
@@ -2589,20 +2588,9 @@ namespace gp\tool{
 				$last_error['file_size'] = filesize($last_error['file']);
 			}
 
+			$content	= json_encode($last_error);
+			$temp		= array_reverse(self::$catchable);
 
-			//error text, check for existing fatal notice
-			if( count(self::$fatal_notices) ){
-				$content = end(self::$fatal_notices);
-				reset(self::$fatal_notices);
-				if( $content[0] == '{' && $temp = json_decode($content,true) ){
-					$last_error = $temp;
-				}
-			}
-
-
-			$content = json_encode($last_error);
-
-			$temp = array_reverse(self::$catchable);
 			foreach($temp as $error_hash => $info){
 
 				$file = $dataDir.'/data/_site/fatal_'.$error_hash;

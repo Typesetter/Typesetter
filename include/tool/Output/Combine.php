@@ -663,10 +663,20 @@ class Combine{
 
 		$all_scripts = $first_scripts + $all_scripts;
 
+		$all_scripts = self::RemoveExcludes($all_scripts);
 
-		//remove any excludes
+		return self::OrganizeByType($all_scripts);
+	}
+
+
+	/**
+	 * Remove Excludes
+	 *
+	 */
+	public static function RemoveExcludes($scripts){
+
 		$excludes = array();
-		foreach($all_scripts as $key => $script){
+		foreach($scripts as $key => $script){
 			if( empty($script['exclude']) ){
 				continue;
 			}
@@ -676,12 +686,20 @@ class Combine{
 			$excludes = array_merge($excludes,$script['exclude']);
 		}
 
-		$all_scripts = array_diff_key($all_scripts,array_flip($excludes));
+		return array_diff_key($scripts,array_flip($excludes));
+	}
 
 
-		//return an organized array for the root call
+
+	/**
+	 * Organize $scripts by type
+	 *
+	 */
+	public static function OrganizeByType($scripts){
+
 		$return = array('js'=>array(),'css'=>array() );
-		foreach($all_scripts as $key => $script){
+
+		foreach($scripts as $key => $script){
 			if( empty($script['file']) ){
 				continue;
 			}

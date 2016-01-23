@@ -79,7 +79,7 @@ class Menu{
 	}
 
 
-	function RunScript(){
+	public function RunScript(){
 
 		if( $this->cmd === 'return' ){
 			return;
@@ -243,8 +243,6 @@ class Menu{
 	public function ShowForm(){
 		global $langmessage, $page, $config;
 
-
-		$replace_id = '';
 		$menu_output = false;
 		ob_start();
 
@@ -355,25 +353,13 @@ class Menu{
 
 		echo '<div>';
 		echo '<b>'.$langmessage['Menus'].'</b>';
-		foreach($menus as $menu_id => $menu_label){
-			if( $menu_id == $this->curr_menu_id ){
-				echo '<span>'.$menu_label.'</span>';
-			}else{
-				echo '<span>'.\gp\tool::Link('Admin/Menu',$menu_label,'menu='.$menu_id, array('data-cmd'=>'cnreq')).'</span>';
-			}
-
-		}
+		$this->MenuList($menus);
 		echo '<span>'.\gp\tool::Link('Admin/Menu/Menus','+ '.$langmessage['Add New Menu'],'cmd=NewMenuPrompt','data-cmd="gpabox"').'</span>';
 		echo '</div>';
 
 		echo '<div>';
 		echo '<b>'.$langmessage['Lists'].'</b>';
-		foreach($lists as $menu_id => $menu_label){
-			if( $menu_id == $this->curr_menu_id ){
-			}else{
-			}
-			echo '<span>'.\gp\tool::Link('Admin/Menu',$menu_label,'menu='.$menu_id,array('data-cmd'=>'creq')).'</span>';
-		}
+		$this->MenuList($lists);
 		echo '</div>';
 
 
@@ -393,9 +379,23 @@ class Menu{
 		echo '</div>';
 
 		echo '<div class="gpclear"></div>';
-
-
 	}
+
+
+	/**
+	 * Generate link list for available menus
+	 *
+	 */
+	public function MenuList($menus){
+		foreach($menus as $menu_id => $menu_label){
+			if( $menu_id == $this->curr_menu_id ){
+				echo '<span>'.$menu_label.'</span>';
+			}else{
+				echo '<span>'.\gp\tool::Link('Admin/Menu',$menu_label,'menu='.$menu_id, array('data-cmd'=>'cnreq')).'</span>';
+			}
+		}
+	}
+
 
 	public function GetAvailMenus($get_type='menu'){
 
@@ -1458,7 +1458,7 @@ class Menu{
 	}
 
 
-	function CacheSettings(){
+	public function CacheSettings(){
 		global $gp_index, $gp_titles, $gp_menu;
 
 		$this->settings_cache['gp_index'] = $gp_index;
@@ -1470,7 +1470,7 @@ class Menu{
 		}
 	}
 
-	function RestoreSettings(){
+	public function RestoreSettings(){
 		global $gp_index, $gp_titles, $gp_menu;
 
 

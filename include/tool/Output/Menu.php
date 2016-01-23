@@ -6,6 +6,7 @@ defined('is_running') or die('Not an entry point...');
 
 class Menu{
 
+	protected $clean_attributes		= array( 'attr'=>'', 'class'=>array(), 'id'=>'' );
 
 
 	public function GetFullMenu($arg=''){
@@ -271,7 +272,6 @@ class Menu{
 	//Reduce titles deeper than $expand_level || $current_level
 	public function MenuReduce_Expand($menu,$expand_level,$curr_title_key,$top_level){
 		$result_menu = array();
-		$submenu = array();
 
 
 		//if $top_level is set, we need to take it into consideration
@@ -553,9 +553,10 @@ class Menu{
 		$this->OutputMenu($menu,$top_level,$source_menu_array);
 	}
 
+
 	/**
 	 * Output a navigation menu
-	 * @static
+	 *
 	 */
 	public function OutputMenu( $menu, $start_level, $source_menu=false ){
 		global $page, $gp_menu, $gp_titles, $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES;
@@ -566,13 +567,12 @@ class Menu{
 		}
 
 		$this->PrepMenuOutput();
-		$clean_attributes		= array( 'attr'=>'', 'class'=>array(), 'id'=>'' );
 
 
 
 
 		// opening ul
-		$attributes_ul = $clean_attributes;
+		$attributes_ul = $this->clean_attributes;
 		$attributes_ul['class']['menu_top'] = $GP_MENU_CLASSES['menu_top'];
 		if( \gp\tool\Output::$edit_area_id ){
 			$attributes_ul['id'] = \gp\tool\Output::$edit_area_id;
@@ -634,8 +634,8 @@ class Menu{
 			}
 
 			$attributes_a		= $this->MenuAttributesA($menu_key, $menu_info);
-			$attributes_li		= $clean_attributes;
-			$attributes_ul		= $clean_attributes;
+			$attributes_li		= $this->clean_attributes;
+			$attributes_ul		= $this->clean_attributes;
 
 
 			//ordered or "indexed" classes
@@ -699,7 +699,7 @@ class Menu{
 							echo '<li>';
 						}
 						$prev_level++;
-						$attributes_ul = $clean_attributes;
+						$attributes_ul = $this->clean_attributes;
 					}
 				}
 
@@ -772,11 +772,10 @@ class Menu{
 
 
 		$this->PrepMenuOutput();
-		$clean_attributes = array( 'attr'=>'', 'class'=>array(), 'id'=>'' );
 
 
 		// opening ul
-		$attributes_ul = $clean_attributes;
+		$attributes_ul = $this->clean_attributes;
 		$attributes_ul['class']['menu_top'] = $GP_MENU_CLASSES['menu_top'];
 		if( \gp\tool\Output::$edit_area_id ){
 			$attributes_ul['id'] = \gp\tool\Output::$edit_area_id;
@@ -791,7 +790,7 @@ class Menu{
 
 			$index					= $output[$i];
 			$title					= \gp\tool::IndexToTitle($index);
-			$attributes_li			= $clean_attributes;
+			$attributes_li			= $this->clean_attributes;
 			$attributes_a			= $this->MenuAttributesA($index);
 
 			if( $title == $page->title ){

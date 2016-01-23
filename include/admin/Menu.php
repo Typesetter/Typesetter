@@ -436,7 +436,7 @@ class Menu{
 
 
 	public function OutputMenu(){
-		global $langmessage, $gp_titles, $gpLayouts, $config;
+		global $langmessage, $gp_titles, $gpLayouts;
 
 		if( is_null($this->curr_menu_array) ){
 			msg($langmessage['OOPS'].' (Current menu not set)');
@@ -448,11 +448,8 @@ class Menu{
 		$menu_keys		= array_keys($array);
 		$menu_values	= array_values($array);
 
-		$prev_layout = false;
-		$curr_key = 0;
-
-		$curr_level = $menu_values[$curr_key]['level'];
-		$prev_level = 0;
+		$curr_level		= $menu_values[0]['level'];
+		$prev_level		= 0;
 
 
 		//for sites that don't start with level 0
@@ -465,25 +462,23 @@ class Menu{
 		}
 
 
-
-		do{
+		foreach($menu_keys as $curr_key => $menu_key){
 
 			echo "\n";
 
-			$class = '';
-			$menu_value = $menu_values[$curr_key];
-			$menu_key = $menu_keys[$curr_key];
-			$curr_level = $menu_value['level'];
+			$class			= '';
+			$menu_value		= $menu_values[$curr_key];
+			$curr_level		= $menu_value['level'];
 
 
 			$next_level = 0;
 			if( isset($menu_values[$curr_key+1]) ){
 				$next_level = $menu_values[$curr_key+1]['level'];
+				if( $next_level > $curr_level ){
+					$class = 'haschildren';
+				}
 			}
 
-			if( $next_level > $curr_level ){
-				$class = 'haschildren';
-			}
 			if( isset($this->hidden_levels[$menu_key]) ){
 				$class .= ' hidechildren';
 			}
@@ -497,28 +492,16 @@ class Menu{
 			//layout
 			$style = '';
 			if( $this->is_main_menu ){
-				if( isset($gp_titles[$menu_key]['gpLayout'])
-					&& isset($gpLayouts[$gp_titles[$menu_key]['gpLayout']]) ){
-						$color = $gpLayouts[$gp_titles[$menu_key]['gpLayout']]['color'];
-						$style = 'background-color:'.$color.';';
-				}elseif( $curr_level == 0 ){
-					//$color = $gpLayouts[$config['gpLayout']]['color'];
-					//$style = 'border-color:'.$color;
+				if( isset($gp_titles[$menu_key]['gpLayout']) && isset($gpLayouts[$gp_titles[$menu_key]['gpLayout']]) ){
+					$color = $gpLayouts[$gp_titles[$menu_key]['gpLayout']]['color'];
+					$style = 'background-color:'.$color.';';
 				}
 			}
 
 
 			echo '<li class="'.$class.'" style="'.$style.'">';
 
-			if( $curr_level == 0 ){
-				$prev_layout = false;
-			}
-
-			$this->ShowLevel($menu_key,$menu_value,$prev_layout);
-
-			if( !empty($gp_titles[$menu_key]['gpLayout']) ){
-				$prev_layout = $gp_titles[$menu_key]['gpLayout'];
-			}
+			$this->ShowLevel($menu_key,$menu_value);
 
 			if( $next_level > $curr_level ){
 
@@ -534,23 +517,21 @@ class Menu{
 							.'</div><ul>';
 				}
 
-			}elseif( $next_level < $curr_level ){
+			}elseif( $next_level <= $curr_level ){
 
 				while( $next_level < $curr_level ){
 					echo '</li></ul>';
 					$curr_level--;
 				}
 				echo '</li>';
-			}elseif( $next_level == $curr_level ){
-				echo '</li>';
 			}
 
 			$prev_level = $curr_level;
 
-		}while( ++$curr_key && ($curr_key < count($menu_keys) ) );
-
+		}
 
 	}
+
 
 	/**
 	 * Check the curr_menu_array
@@ -598,7 +579,7 @@ class Menu{
 	 * Output a piece of the editable menu
 	 *
 	 */
-	public function ShowLevel($menu_key,$menu_value,$prev_layout){
+	public function ShowLevel($menu_key,$menu_value){
 		global $gp_titles, $gpLayouts;
 
 		$layout			= \gp\admin\Menu\Tools::CurrentLayout($menu_key);

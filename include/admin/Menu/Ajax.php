@@ -428,6 +428,9 @@ class Ajax extends \gp\admin\Menu{
 				echo '<div class="gpui-scrolllist">';
 				echo '<input type="text" name="search" value="" class="gpsearch" placeholder="'.$langmessage['Search'].'" autocomplete="off" />';
 				foreach($trashtitles as $title => $info){
+					if( empty($info['label']) ){
+						continue;
+					}
 					echo '<label>';
 					echo '<input type="checkbox" name="titles[]" value="'.htmlspecialchars($title).'" />';
 					echo '<span>';

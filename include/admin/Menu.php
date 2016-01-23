@@ -437,41 +437,16 @@ class Menu{
 
 	public function OutputMenu(){
 		global $langmessage, $gp_titles, $gpLayouts, $config;
-		$menu_adjustments_made = false;
 
 		if( $this->curr_menu_array === false ){
 			msg($langmessage['OOPS'].' (Current menu not set)');
 			return;
 		}
 
-		//get array of titles and levels
-		$menu_keys = array();
-		$menu_values = array();
-		foreach($this->curr_menu_array as $key => $info){
-			if( !isset($info['level']) ){
-				break;
-			}
 
-			//remove deleted titles
-			if( !isset($gp_titles[$key]) && !isset($info['url']) ){
-				unset($this->curr_menu_array[$key]);
-				$menu_adjustments_made = true;
-				continue;
-			}
-
-
-			$menu_keys[] = $key;
-			$menu_values[] = $info;
-		}
-
-		//if the menu is empty (because all the files in it were deleted elsewhere), recreate it with the home page
-		if( count($menu_values) == 0 ){
-			$this->curr_menu_array = \gp\admin\Menu\Tools::AltMenu_New();
-			$menu_keys[] = key($this->curr_menu_array);
-			$menu_values[] = current($this->curr_menu_array);
-			$menu_adjustments_made = true;
-		}
-
+		$array			= $this->CurrMenuArray();
+		$menu_keys		= array_keys($array);
+		$menu_values	= array_values($array);
 
 		$prev_layout = false;
 		$curr_key = 0;
@@ -574,12 +549,55 @@ class Menu{
 
 		}while( ++$curr_key && ($curr_key < count($menu_keys) ) );
 
-		if( $menu_adjustments_made ){
+
+	}
+
+	/**
+	 * Check the curr_menu_array
+	 * 	Remove missing titles
+	 *	Fill with new array if empty
+	 *
+	 */
+	private function CurrMenuArray(){
+		global $gp_titles;
+
+		$menu_adjustments	= false;
+		$array				= array();
+
+		//get array of titles and levels
+		foreach($this->curr_menu_array as $key => $info){
+			if( !isset($info['level']) ){
+				break;
+			}
+
+			//remove deleted titles
+			if( !isset($gp_titles[$key]) && !isset($info['url']) ){
+				$menu_adjustments = true;
+				continue;
+			}
+
+			$array[$key] = $info;
+		}
+
+		//if the menu is empty (because all the files in it were deleted elsewhere), recreate it with the home page
+		if( count($array) == 0 ){
+			$array				= \gp\admin\Menu\Tools::AltMenu_New();
+			$menu_adjustments	= true;
+		}
+
+		if( $menu_adjustments ){
+			$this->curr_menu_array	= $array;
 			$this->SaveMenu(false);
 		}
+
+		return $array;
 	}
 
 
+	/**
+	 * Output a piece of the editable menu
+	 *
+	 */
 	public function ShowLevel($menu_key,$menu_value,$prev_layout){
 		global $gp_titles, $gpLayouts;
 

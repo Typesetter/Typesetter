@@ -85,11 +85,16 @@ class Errors{
 			$errors[$md5] = $full_path;
 		}
 
+		echo '<p>';
 		if( count($errors) ){
-			echo '<p>Found '.count($errors).' Unique Error(s)</p>';
+			echo 'Found '.count($errors).' Unique Error(s) - ';
+			echo \gp\tool::Link('Admin/Errors','Clear All Errors','cmd=ClearAll','data-cmd="cnreq"','ClearErrors');
+
 		}else{
-			echo '<p>Hooray! No fatal errors found</p>';
+			echo 'Hooray! No fatal errors found';
 		}
+		echo '</p>';
+		echo '<hr/>';
 
 		//display errors
 		foreach($errors as $md5 => $error_file){

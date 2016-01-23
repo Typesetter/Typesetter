@@ -29,7 +29,7 @@ class Install extends \gp\admin\Addon\Tools{
 	public $searchOrderOptions	= array();
 
 
-	function __construct(){
+	public function __construct(){
 		global $page;
 
 		// css and js
@@ -41,7 +41,7 @@ class Install extends \gp\admin\Addon\Tools{
 	 * Output addon heading
 	 *
 	 */
-	function ShowHeader( $addon_name = false ){
+	public function ShowHeader( $addon_name = false ){
 		global $page, $langmessage;
 
 		//build links
@@ -104,7 +104,7 @@ class Install extends \gp\admin\Addon\Tools{
 	 * Remote Install Functions
 	 *
 	 */
-	function RemoteInstall(){
+	public function RemoteInstall(){
 		global $langmessage, $page;
 
 		echo '<h2>'.$langmessage['Installation'].'</h2>';
@@ -125,7 +125,7 @@ class Install extends \gp\admin\Addon\Tools{
 		echo '</form>';
 	}
 
-	function RemoteInstallConfirmed($type = 'plugin'){
+	public function RemoteInstallConfirmed($type = 'plugin'){
 
 		$_POST += array('order'=>'');
 
@@ -148,7 +148,7 @@ class Install extends \gp\admin\Addon\Tools{
 	 * @return bool
 	 *
 	 */
-	function Install_CheckIni(){
+	public function Install_CheckIni(){
 		global $langmessage;
 
 		//warn if attempting to install lesser version of same addon
@@ -171,7 +171,7 @@ class Install extends \gp\admin\Addon\Tools{
 	 * Get remote addon data and display to user
 	 *
 	 */
-	function RemoteBrowse(){
+	public function RemoteBrowse(){
 		global $langmessage, $config;
 
 
@@ -307,7 +307,7 @@ class Install extends \gp\admin\Addon\Tools{
 	 * Get cached data or fetch new response from server and cache it
 	 *
 	 */
-	function RemoteBrowseResponse($src){
+	public function RemoteBrowseResponse($src){
 		global $dataDir, $langmessage;
 
 		//check cache
@@ -359,7 +359,7 @@ class Install extends \gp\admin\Addon\Tools{
 		return $data;
 	}
 
-	function SearchOrder(){
+	public function SearchOrder(){
 
 		if( isset($_REQUEST['order']) && isset($this->searchOrderOptions[$_REQUEST['order']]) ){
 			$this->searchOrder = $_REQUEST['order'];
@@ -371,7 +371,11 @@ class Install extends \gp\admin\Addon\Tools{
 
 	}
 
-	function SearchOptions( $nav_on_top = true ){
+	/**
+	 * Display available search options
+	 *
+	 */
+	public function SearchOptions( $nav_on_top = true ){
 		echo '<div class="gp_search_options">';
 
 		if( $nav_on_top ){
@@ -395,11 +399,11 @@ class Install extends \gp\admin\Addon\Tools{
 		echo '</div>';
 	}
 
-	function DetailLink( $type, $id, $label = 'Details', $q = '', $attr='' ){
+	public function DetailLink( $type, $id, $label = 'Details', $q = '', $attr='' ){
 		return '<a href="'.$this->DetailUrl($type,$id,$q).'" data-cmd="remote" '.$attr.'>'.$label.'</a>';
 	}
 
-	function DetailUrl($type,$id,$q=''){
+	public function DetailUrl($type,$id,$q=''){
 		$url = 'Themes';
 		if( $type == 'plugin' ){
 			$url = 'Plugins';
@@ -410,7 +414,7 @@ class Install extends \gp\admin\Addon\Tools{
 		return addon_browse_path.'/'.$url.'/'.$id.$q;
 	}
 
-	function FindForm(){
+	public function FindForm(){
 		global $langmessage;
 
 		$_GET += array('q'=>'');
@@ -423,7 +427,7 @@ class Install extends \gp\admin\Addon\Tools{
 		echo '</div>';
 	}
 
-	function InstallLink($row){
+	public function InstallLink($row){
 		global $config,$langmessage;
 
 		$installed = in_array($row['id'],$this->installed_ids);
@@ -454,7 +458,7 @@ class Install extends \gp\admin\Addon\Tools{
 		echo \gp\tool::Link($url,$label,$link);
 	}
 
-	function SearchNavLinks(){
+	public function SearchNavLinks(){
 		global $langmessage;
 
 		echo '<div class="search_pages">';
@@ -512,7 +516,7 @@ class Install extends \gp\admin\Addon\Tools{
 		echo '</div>';
 	}
 
-	function CurrentRating($rating){
+	public function CurrentRating($rating){
 
 		$width = 16*5;
 		$pos = min($width,ceil($width*$rating));
@@ -529,7 +533,7 @@ class Install extends \gp\admin\Addon\Tools{
 	 * Show folders in /addons that didn't make it into the available list
 	 *
 	 */
-	function InvalidFolders(){
+	public function InvalidFolders(){
 		global $langmessage;
 
 		if( !$this->invalid_folders ){

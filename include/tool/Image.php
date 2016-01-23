@@ -180,9 +180,7 @@ namespace gp\tool{
 		/**
 		 * @deprecated 4.3
 		 */
-		static function getByteValue($value){
-			return \gp\tool::getByteValue($value);
-		}
+		static function getByteValue($value){}
 
 
 		/**

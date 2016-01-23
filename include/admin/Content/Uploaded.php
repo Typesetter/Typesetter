@@ -9,12 +9,14 @@ namespace gp\admin\Content{
 	class Uploaded{
 
 		public $baseDir;
-		public $subdir			= false;
+		public $subdir			= '';
 		public $thumbFolder;
 		public $isThumbDir		= false;
 		public $imgTypes;
 		public $errorMessages	= array();
 		public $finder_opts		= array();
+		public $currentDir;
+		public $currentDir_Thumb;
 
 
 		public function __construct(){
@@ -164,20 +166,22 @@ namespace gp\admin\Content{
 		 *
 		 */
 		public function SetDirectory(){
+			global $page;
 
 			//get the current path
 			$path = str_replace( array('\\','//'),array('/','/'),$page->requested);
 
 			//@since 5.0
-			if( strpos($path,'Admin/Uploaded') ){
-				$path = substr($path,13,0);
-				$path = trim($path,'/');
+			if( strpos($path,'Admin/Uploaded') === 0 ){
+				$path	= substr($path,14);
+				$path	= trim($path,'/');
+				$parts	= explode('/',$path);
 
 
 			//backwards compat
 			}else{
-				$parts = trim($parts,'/');
-				$parts = explode('/',$parts);
+				$parts = trim($path,'/');
+				$parts = explode('/',$path);
 				array_shift($parts);
 			}
 
@@ -193,7 +197,7 @@ namespace gp\admin\Content{
 			$this->subdir = str_replace( array('\\','//'),array('/','/'),$this->subdir);
 
 			if( $this->subdir == '/' ){
-				$this->subdir = false;
+				$this->subdir = '';
 			}else{
 				$this->currentDir .= $this->subdir;
 			}
@@ -216,7 +220,7 @@ namespace gp\admin\Content{
 			if( empty($value) ){
 				return;
 			}
-			$max = \gp\tool\Image::getByteValue($value);
+			$max = \gp\tool::getByteValue($value);
 			if( $max !== false ){
 				echo '<input type="hidden" name="MAX_FILE_SIZE" value="'.$max.'" />';
 			}
@@ -239,30 +243,18 @@ namespace gp\admin\Content{
 			}
 
 			$uploaded = $this->UploadFile(0);
-			$this->CleanTemporary();
 			if( $uploaded === false ){
 				reset($this->errorMessages);
 				$this->InlineResponse('failed',current($this->errorMessages));
 			}
 			\gp\tool\Plugins::Action('FileUploaded',$uploaded);
 
-			$output =& $_POST['output'];
-			switch($output){
-				case 'gallery';
-					$return_content = self::ShowFile_Gallery($this->subdir,$uploaded);
-				break;
+			$return_content = self::ShowFile_Gallery($this->subdir,$uploaded);
 
-				default:
-					$this->InlineResponse('deprecated','deprecated');
-				break;
-			}
-
-
-
-			if( $return_content === false ){
-				$this->InlineResponse('notimage','');
-			}else{
+			if( is_string($return_content) ){
 				$this->InlineResponse('success',$return_content);
+			}else{
+				$this->InlineResponse('notimage','');
 			}
 
 		}
@@ -311,7 +303,7 @@ namespace gp\admin\Content{
 			$image_count = 0;
 			foreach($files as $file){
 				$img = self::ShowFile_Gallery($dir_piece,$file);
-				if( $img ){
+				if( is_string($img) ){
 					echo $img;
 					$image_count++;
 				}
@@ -431,7 +423,7 @@ namespace gp\admin\Content{
 			global $langmessage, $dataDir;
 
 			if( !self::IsImg($file) ){
-				return false;
+				return;
 			}
 
 			//for gallery editing
@@ -447,7 +439,7 @@ namespace gp\admin\Content{
 			//get size
 			$size = '';
 			$size_a = getimagesize($full_path);
-			if( $size_a ){
+			if( is_array($size_a) ){
 				$size = ' data-width="'.$size_a[0].'" data-height="'.$size_a[1].'"';
 			}
 
@@ -485,7 +477,8 @@ namespace gp\admin\Content{
 
 			$fName = $_FILES['userfiles']['name'][$key];
 
-			switch( (int)$_FILES['userfiles']['error'][$key]){
+			$code = (int)$_FILES['userfiles']['error'][$key];
+			switch( $code ){
 
 				case UPLOAD_ERR_OK:
 				break;
@@ -500,19 +493,10 @@ namespace gp\admin\Content{
 					$this->errorMessages[] = sprintf($langmessage['UPLOAD_ERROR_PARTIAL'], $fName);
 				return false;
 
-				case UPLOAD_ERR_NO_TMP_DIR:
-					$this->errorMessages[] = sprintf($langmessage['UPLOAD_ERROR'].' (1)', $fName);
-					//trigger_error('Missing a temporary folder for file uploads.');
-				return false;
-
 				case UPLOAD_ERR_CANT_WRITE:
-					$this->errorMessages[] = sprintf($langmessage['UPLOAD_ERROR'].' (2)', $fName);
-					//trigger_error('PHP couldn\'t write to the temporary directory: '.$fName);
-				return false;
-
+				case UPLOAD_ERR_NO_TMP_DIR:
 				case UPLOAD_ERR_EXTENSION:
-					$this->errorMessages[] = sprintf($langmessage['UPLOAD_ERROR'].' (3)', $fName);
-					//trigger_error('File upload stopped by extension: '.$fName);
+					$this->errorMessages[] = sprintf($langmessage['UPLOAD_ERROR'].' ('.$code.')', $fName);
 				return false;
 			}
 
@@ -696,28 +680,6 @@ namespace gp\admin\Content{
 				return implode('.',$parts).'.'.$file_type;
 			}
 		}
-
-
-		/**
-		 * Clean up temporary file and folder if they exist
-		 * Should be called after every instance of UploadFile()
-		 */
-		public function CleanTemporary(){
-
-			if( empty($this->temp_folder) || !file_exists($this->temp_folder) ){
-				return;
-			}
-
-			if( count($this->temp_files) > 0 ){
-				foreach($this->temp_files as $file){
-					if( file_exists($file) ){
-						unlink($file);
-					}
-				}
-			}
-			rmdir($this->temp_folder);
-		}
-
 
 
 		/**

@@ -85,119 +85,7 @@ class Available extends \gp\admin\Layout{
 		// show themes
 		echo '<div id="gp_avail_themes">';
 		foreach($possible as $theme_id => $info){
-			$theme_label = str_replace('_',' ',$info['name']);
-			$version = '';
-			$id = false;
-			if( isset($info['version']) ){
-				$version = $info['version'];
-			}
-			if( isset($info['id']) && is_numeric($info['id']) ){
-				$id = $info['id'];
-			}
-
-
-			//screenshot
-			if( file_exists($info['full_dir'].'/screenshot.png') ){
-				echo '<div class="expand_child_click">';
-				echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';
-				echo '<div style="background-image:url(\''.\gp\tool::GetDir($info['rel'].'/screenshot.png').'\')">';
-			}elseif( file_exists($info['full_dir'].'/screenshot.jpg') ){
-				echo '<div class="expand_child_click">';
-				echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';
-				echo '<div style="background-image:url(\''.\gp\tool::GetDir($info['rel'].'/screenshot.jpg').'\')">';
-			}else{
-				echo '<div>';
-				echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';
-				echo '<div>';
-			}
-
-			//options
-			echo '<div class="gp_theme_options">';
-
-				//colors
-				echo '<b>'.$langmessage['preview'].'</b>';
-				echo '<ul>';
-				foreach($info['colors'] as $color){
-					echo '<li>';
-					$q = 'cmd=preview&theme='.rawurlencode($theme_id.'/'.$color).$this->searchQuery;
-					if( $this->searchPage ){
-						$q .= '&page='.$this->searchPage;
-					}
-					echo \gp\tool::Link('Admin_Theme_Content/Available',str_replace('_','&nbsp;',$color),$q);
-					echo '</li>';
-				}
-				echo '</ul>';
-
-
-
-				ob_start();
-				if( $id ){
-
-					//more info
-					echo '<li>'.$this->DetailLink('theme', $id,'More Info...').'</li>';
-
-
-					//support
-					$forum_id = 1000 + $id;
-					echo '<li><a href="'.addon_browse_path.'/Forum?show=f'.$forum_id.'" target="_blank">'.$langmessage['Support'].'</a></li>';
-
-					//rating
-					$rating = 0;
-					if( $info['rt'] > 0 ){
-						$rating = $info['rt'];
-					}
-					echo '<li><span class="nowrap">'.$langmessage['rate'].' '.$this->ShowRating($info['rel'],$rating).'</span></li>';
-
-
-					//downloads
-					if( $info['dn'] > 0 ){
-						echo '<li><span class="nowrap">Downloads: '.number_format($info['dn']).'</span></li>';
-					}
-				}
-
-				//last updated
-				if( $info['tm'] > 0 ){
-					echo '<li><span class="nowrap">'.$langmessage['Modified'].': ';
-					echo \gp\tool::date($langmessage['strftime_datetime'],$info['tm']);
-					echo '</span></li>';
-				}
-
-
-
-				if( $info['is_addon'] ){
-
-					//delete
-					$folder = $info['folder'];
-					$title = sprintf($langmessage['generic_delete_confirm'], $theme_label );
-					$attr = array( 'data-cmd'=>'cnreq','class'=>'gpconfirm','title'=> $title );
-					echo '<li>'.\gp\tool::Link('Admin_Theme_Content/Available',$langmessage['delete'],'cmd=DeleteTheme&folder='.rawurlencode($folder),$attr).'</li>';
-
-					//order
-					if( isset($config['themes'][$folder]['order']) ){
-						echo '<li>Order: '.$config['themes'][$folder]['order'].'</li>';
-					}
-				}
-
-
-				$options = ob_get_clean();
-
-				if( !empty($options) ){
-					echo '<b>'.$langmessage['options'].'</b>';
-					echo '<ul>';
-					echo $options;
-					echo '</ul>';
-				}
-
-			echo '</div></div>';
-
-			//remote upgrade
-			if( gp_remote_themes && $id && isset(\gp\admin\Tools::$new_versions[$id]) && version_compare(\gp\admin\Tools::$new_versions[$id]['version'], $version ,'>') ){
-				$version_info = \gp\admin\Tools::$new_versions[$id];
-				echo \gp\tool::Link('Admin_Theme_Content',$langmessage['new_version'],'cmd=remote_install&id='.$id.'&name='.rawurlencode($version_info['name']));
-			}
-
-
-			echo '</div>';
+			$this->AvailableTheme($theme_id, $info);
 		}
 		echo '</div>';
 
@@ -205,7 +93,128 @@ class Available extends \gp\admin\Layout{
  		if( $show_options ){
 			$this->SearchNavLinks();
 		}
+	}
 
+
+	protected function AvailableTheme($theme_id, $info){
+		global $langmessage, $config;
+
+		$theme_label = str_replace('_',' ',$info['name']);
+		$version = '';
+		$id = false;
+		if( isset($info['version']) ){
+			$version = $info['version'];
+		}
+		if( isset($info['id']) && is_numeric($info['id']) ){
+			$id = $info['id'];
+		}
+
+
+		//screenshot
+		if( file_exists($info['full_dir'].'/screenshot.png') ){
+			echo '<div class="expand_child_click">';
+			echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';
+			echo '<div style="background-image:url(\''.\gp\tool::GetDir($info['rel'].'/screenshot.png').'\')">';
+		}elseif( file_exists($info['full_dir'].'/screenshot.jpg') ){
+			echo '<div class="expand_child_click">';
+			echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';
+			echo '<div style="background-image:url(\''.\gp\tool::GetDir($info['rel'].'/screenshot.jpg').'\')">';
+		}else{
+			echo '<div>';
+			echo '<b class="gp_theme_head">'.$theme_label.' '.$version.'</b>';
+			echo '<div>';
+		}
+
+		//options
+		echo '<div class="gp_theme_options">';
+
+			//colors
+			echo '<b>'.$langmessage['preview'].'</b>';
+			echo '<ul>';
+			foreach($info['colors'] as $color){
+				echo '<li>';
+				$q = 'cmd=preview&theme='.rawurlencode($theme_id.'/'.$color).$this->searchQuery;
+				if( $this->searchPage ){
+					$q .= '&page='.$this->searchPage;
+				}
+				echo \gp\tool::Link('Admin_Theme_Content/Available',str_replace('_','&nbsp;',$color),$q);
+				echo '</li>';
+			}
+			echo '</ul>';
+
+			$options = $this->AvailableThemeOptions($id, $info, $theme_label);
+
+			if( !empty($options) ){
+				echo '<b>'.$langmessage['options'].'</b>';
+				echo '<ul>';
+				echo $options;
+				echo '</ul>';
+			}
+
+		echo '</div></div>';
+
+		//remote upgrade
+		if( gp_remote_themes && $id && isset(\gp\admin\Tools::$new_versions[$id]) && version_compare(\gp\admin\Tools::$new_versions[$id]['version'], $version ,'>') ){
+			$version_info = \gp\admin\Tools::$new_versions[$id];
+			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['new_version'],'cmd=remote_install&id='.$id.'&name='.rawurlencode($version_info['name']));
+		}
+
+
+		echo '</div>';
+	}
+
+	protected function AvailableThemeOptions($id, $info, $theme_label){
+		global $langmessage, $config;
+
+		ob_start();
+		if( $id ){
+
+			//more info
+			echo '<li>'.$this->DetailLink('theme', $id,'More Info...').'</li>';
+
+
+			//support
+			$forum_id = 1000 + $id;
+			echo '<li><a href="'.addon_browse_path.'/Forum?show=f'.$forum_id.'" target="_blank">'.$langmessage['Support'].'</a></li>';
+
+			//rating
+			$rating = 0;
+			if( $info['rt'] > 0 ){
+				$rating = $info['rt'];
+			}
+			echo '<li><span class="nowrap">'.$langmessage['rate'].' '.$this->ShowRating($info['rel'],$rating).'</span></li>';
+
+
+			//downloads
+			if( $info['dn'] > 0 ){
+				echo '<li><span class="nowrap">Downloads: '.number_format($info['dn']).'</span></li>';
+			}
+		}
+
+		//last updated
+		if( $info['tm'] > 0 ){
+			echo '<li><span class="nowrap">'.$langmessage['Modified'].': ';
+			echo \gp\tool::date($langmessage['strftime_datetime'],$info['tm']);
+			echo '</span></li>';
+		}
+
+
+
+		if( $info['is_addon'] ){
+
+			//delete
+			$folder = $info['folder'];
+			$title = sprintf($langmessage['generic_delete_confirm'], $theme_label );
+			$attr = array( 'data-cmd'=>'cnreq','class'=>'gpconfirm','title'=> $title );
+			echo '<li>'.\gp\tool::Link('Admin_Theme_Content/Available',$langmessage['delete'],'cmd=DeleteTheme&folder='.rawurlencode($folder),$attr).'</li>';
+
+			//order
+			if( isset($config['themes'][$folder]['order']) ){
+				echo '<li>Order: '.$config['themes'][$folder]['order'].'</li>';
+			}
+		}
+
+		return ob_get_clean();
 	}
 
 

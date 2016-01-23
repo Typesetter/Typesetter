@@ -1222,7 +1222,6 @@ namespace gp\tool{
 			$page_title = '';
 			if( !empty($page->TitleInfo['browser_title']) ){
 				$page_title = $page->TitleInfo['browser_title'];
-				$keywords[] = $page->TitleInfo['browser_title'];
 			}elseif( !empty($page->label) ){
 				$page_title = strip_tags($page->label);
 			}elseif( isset($page->title) ){

@@ -306,10 +306,53 @@ namespace gp\admin\Content{
 			$allFiles = \gp\tool\Files::ReadFolderAndFiles($dir);
 			list($folders,$files) = $allFiles;
 
-
-			//folder select
+			//available images
 			ob_start();
+			$image_count = 0;
+			foreach($files as $file){
+				$img = self::ShowFile_Gallery($dir_piece,$file);
+				if( $img ){
+					echo $img;
+					$image_count++;
+				}
+			}
+			$gp_gallery_avail_imgs = ob_get_clean();
 
+
+			$gp_option_area	= self::InlineList_Options($dir_piece, $folders);
+			$folder_options = self::InlineList_Folder($image_count, $dir_piece);
+
+
+
+			//send content according to request
+			$cmd = \gp\tool::GetCommand();
+			switch($cmd){
+				case 'gallery_folder':
+					$page->ajaxReplace[] = array('inner','#gp_option_area',$gp_option_area);
+					$page->ajaxReplace[] = array('inner','#gp_gallery_avail_imgs',$gp_gallery_avail_imgs);
+				break;
+				default:
+					$content = '<div id="gp_option_area">'.$gp_option_area.'</div>'
+								.'<div id="gp_gallery_avail_imgs">'.$gp_gallery_avail_imgs.'</div>';
+					$page->ajaxReplace[] = array('inner','#gp_image_area',$content);
+				break;
+			}
+
+
+
+			$page->ajaxReplace[] = array('inner','#gp_folder_options',$folder_options);
+			$page->ajaxReplace[] = array('gp_gallery_images','',''); //tell the script the images have been loaded
+		}
+
+
+		/**
+		 * Return folder options for the InlineList
+		 *
+		 */
+		function InlineList_Options($dir_piece, $folders){
+			global $langmessage, $dataDir;
+
+			ob_start();
 			echo '<div class="gp_edit_select ckeditor_control">';
 			echo '<a class="gp_selected_folder"><i class="fa fa-folder-o"></i> ';
 			if( strlen($dir_piece) > 23 ){
@@ -345,25 +388,17 @@ namespace gp\admin\Content{
 			echo '</div>';
 			echo '</div>';
 
-			$gp_option_area = ob_get_clean();
+			return ob_get_clean();
+		}
 
 
-			//available images
-			ob_start();
-			$image_count = 0;
-			foreach($files as $file){
-				$img = self::ShowFile_Gallery($dir_piece,$file);
-				if( $img ){
-					echo $img;
-					$image_count++;
-				}
-			}
-			$gp_gallery_avail_imgs = ob_get_clean();
+		/**
+		 * Return folder options for the InlineList
+		 *
+		 */
+		public static function InlineList_Folder($image_count, $dir_piece){
+			global $langmessage;
 
-
-
-
-			// Folder controls
 			ob_start();
 
 			if( $image_count > 0 ){
@@ -385,27 +420,7 @@ namespace gp\admin\Content{
 				echo '</form>';
 			}
 
-			$folder_options = ob_get_clean();
-
-
-			//send content according to request
-			$cmd = \gp\tool::GetCommand();
-			switch($cmd){
-				case 'gallery_folder':
-					$page->ajaxReplace[] = array('inner','#gp_option_area',$gp_option_area);
-					$page->ajaxReplace[] = array('inner','#gp_gallery_avail_imgs',$gp_gallery_avail_imgs);
-				break;
-				default:
-					$content = '<div id="gp_option_area">'.$gp_option_area.'</div>'
-								.'<div id="gp_gallery_avail_imgs">'.$gp_gallery_avail_imgs.'</div>';
-					$page->ajaxReplace[] = array('inner','#gp_image_area',$content);
-				break;
-			}
-
-
-
-			$page->ajaxReplace[] = array('inner','#gp_folder_options',$folder_options);
-			$page->ajaxReplace[] = array('gp_gallery_images','',''); //tell the script the images have been loaded
+			return ob_get_clean();
 		}
 
 

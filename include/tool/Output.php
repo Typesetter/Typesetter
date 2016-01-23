@@ -2688,12 +2688,6 @@ namespace gp\tool{
 
 
 			echo GetMessages();
-
-
-			//global $gpLayouts;
-			//echo pre($gpLayouts);
-			//$included = get_included_files();
-			//echo pre($included);
 		}
 
 

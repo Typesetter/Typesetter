@@ -175,23 +175,7 @@ class Install extends \gp\admin\Addon\Tools{
 		global $langmessage, $config;
 
 
-		//search options
-		if( isset($_GET['search_option']) ){
-			$save = true;
-			switch($_GET['search_option']){
-				case 'version':
-					unset($config['search_version']);
-				break;
-				case 'noversion':
-					$config['search_version'] = false;
-				break;
-				default:
-					$save = false;
-				break;
-			}
-			if( $save )	\gp\admin\Tools::SaveConfig();
-		}
-
+		$this->SearchOptionSave();
 
 		//make a list of installed addon id's
 		$this->installed_ids = array();
@@ -300,6 +284,34 @@ class Install extends \gp\admin\Addon\Tools{
 		}
 		echo '</li>';
 		echo '</ul>';
+	}
+
+
+	/**
+	 * Save the search option
+	 *
+	 */
+	private function SearchOptionSave(){
+		global $config;
+
+		if( !isset($_GET['search_option']) ){
+			return;
+		}
+
+		switch($_GET['search_option']){
+			case 'version':
+				unset($config['search_version']);
+			break;
+			case 'noversion':
+				$config['search_version'] = false;
+			break;
+
+			default:
+			return;
+		}
+
+		\gp\admin\Tools::SaveConfig();
+
 	}
 
 

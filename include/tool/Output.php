@@ -578,57 +578,74 @@ namespace gp\tool{
 
 
 			//class & method execution
-			$exec_class = false;
 			if( !empty($info['class_admin']) && \gp\tool::LoggedIn() ){
-				$exec_class = $info['class_admin'];
+				return self::ExecClass($has_script, $info['class_admin'], $info, $args);
+
 			}elseif( !empty($info['class']) ){
-				$exec_class = $info['class'];
-			}
+				return self::ExecClass($has_script, $info['class'], $info, $args);
 
-			if( $exec_class ){
-				if( !class_exists($exec_class) ){
-					self::ExecError(CMS_NAME.' Error: Addon class doesn\'t exist.',$info,'class');
-					return $args;
-				}
-
-				$object = new $exec_class($args);
-
-				if( !empty($info['method']) ){
-					if( method_exists($object, $info['method']) ){
-						$args[0] = call_user_func_array(array($object, $info['method']), $args );
-					}elseif( $has_script ){
-						self::ExecError(CMS_NAME.' Error: Addon hook method doesn\'t exist (1).',$info,'method');
-					}
-				}
-				return $args;
 			}
 
 
 			//method execution
 			if( !empty($info['method']) ){
-
-				$callback = $info['method'];
-
-				//object callbacks since 3.0
-				if( is_string($callback) && strpos($callback,'->') !== false ){
-					$has_script = true;
-					list($object,$method) = explode('->',$callback);
-					if( isset($GLOBALS[$object]) && is_object($GLOBALS[$object]) && method_exists($GLOBALS[$object],$method) ){
-						$callback = array($GLOBALS[$object],$method);
-					}
-				}
-
-				if( is_callable($callback) ){
-					$args[0] = call_user_func_array($callback,$args);
-
-				}elseif( $has_script ){
-					self::ExecError(CMS_NAME.' Error: Addon hook method doesn\'t exist (2).',$info,'method');
-				}
+				return self::ExecMethod($has_script, $info, $args);
 			}
-
 
 			return $args;
 		}
+
+
+		/**
+		 * Execute hooks that have a ['class'] defined
+		 *
+		 */
+		private static function ExecClass($has_script, $exec_class, $info, $args){
+
+			if( !class_exists($exec_class) ){
+				self::ExecError(CMS_NAME.' Error: Addon class doesn\'t exist.',$info,'class');
+				return $args;
+			}
+
+			$object = new $exec_class($args);
+
+			if( !empty($info['method']) ){
+				if( method_exists($object, $info['method']) ){
+					$args[0] = call_user_func_array(array($object, $info['method']), $args );
+				}elseif( $has_script ){
+					self::ExecError(CMS_NAME.' Error: Addon hook method doesn\'t exist (1).',$info,'method');
+				}
+			}
+			return $args;
+		}
+
+		/**
+		 * Execute hooks that have a ['method'] defined
+		 *
+		 */
+		private static function ExecMethod($has_script, $info, $args){
+
+			$callback = $info['method'];
+
+			//object callbacks since 3.0
+			if( is_string($callback) && strpos($callback,'->') !== false ){
+				$has_script = true;
+				list($object,$method) = explode('->',$callback);
+				if( isset($GLOBALS[$object]) && is_object($GLOBALS[$object]) && method_exists($GLOBALS[$object],$method) ){
+					$callback = array($GLOBALS[$object],$method);
+				}
+			}
+
+			if( is_callable($callback) ){
+				$args[0] = call_user_func_array($callback,$args);
+
+			}elseif( $has_script ){
+				self::ExecError(CMS_NAME.' Error: Addon hook method doesn\'t exist (2).',$info,'method');
+			}
+
+			return $args;
+		}
+
 
 		/**
 		 * Trigger an error

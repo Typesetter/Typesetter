@@ -1177,15 +1177,30 @@ namespace gp\tool{
 			}
 
 
-			//start keywords;
-			$keywords = array();
-			if( count($page->meta_keywords) ){
-				$keywords = $page->meta_keywords;
-			}elseif( !empty($page->TitleInfo['keywords']) ){
-				$keywords = explode(',',$page->TitleInfo['keywords']);
+			//title, keyords & description
+			$page_title = self::MetaTitle();
+			self::MetaKeywords($page_title);
+			self::MetaDescription($page_title);
+
+			if( !empty($page->TitleInfo['rel']) ){
+				echo "\n".'<meta name="robots" content="'.$page->TitleInfo['rel'].'" />';
 			}
 
-			//title
+			if( !isset($config['showgplink']) || $config['showgplink'] ){
+				echo "\n<meta name=\"generator\" content=\"Typesetter CMS\" />";
+			}
+
+		}
+
+
+		/**
+		 * Add the <title> tag to the page
+		 * return the value
+		 *
+		 */
+		public static function MetaTitle(){
+			global $page, $config;
+
 			echo "\n<title>";
 			$page_title = '';
 			if( !empty($page->TitleInfo['browser_title']) ){
@@ -1202,21 +1217,41 @@ namespace gp\tool{
 			}
 			echo $config['title'].'</title>';
 
-			if( !empty($page->TitleInfo['rel']) ){
-				echo "\n".'<meta name="robots" content="'.$page->TitleInfo['rel'].'" />';
+			return $page_title;
+		}
+
+
+		/**
+		 * Add the <meta name="keywords"> tag to the page
+		 *
+		 */
+		public static function MetaKeywords($page_title){
+			global $page, $config;
+
+			if( count($page->meta_keywords) ){
+				$keywords = $page->meta_keywords;
+			}elseif( !empty($page->TitleInfo['keywords']) ){
+				$keywords = explode(',',$page->TitleInfo['keywords']);
 			}
 
+			$keywords[]		= strip_tags($page_title);
+			$keywords[]		= strip_tags($page->label);
 
-			//keywords
-			$keywords[] = strip_tags($page->label);
-			$site_keywords = explode(',',$config['keywords']);
-			$keywords = array_merge($keywords,$site_keywords);
-			$keywords = array_unique($keywords);
-			$keywords = array_diff($keywords,array(''));
+			$site_keywords	= explode(',',$config['keywords']);
+			$keywords		= array_merge($keywords,$site_keywords);
+			$keywords		= array_unique($keywords);
+			$keywords		= array_filter($keywords);
+
 			echo "\n<meta name=\"keywords\" content=\"".implode(', ',$keywords)."\" />";
+		}
 
+		/**
+		 * Add the <meta name="dscription"> tag to the page
+		 *
+		 */
+		public static function MetaDescription($page_title){
+			global $page, $config;
 
-			//description
 			$description = '';
 			if( !empty($page->meta_description) ){
 				$description .= $page->meta_description;
@@ -1231,13 +1266,10 @@ namespace gp\tool{
 				$description .= htmlspecialchars($config['desc']);
 			}
 			$description = trim($description);
+
 			if( !empty($description) ){
 				echo "\n<meta name=\"description\" content=\"".$description."\" />";
 			}
-			if( !isset($config['showgplink']) || $config['showgplink'] ){
-				echo "\n<meta name=\"generator\" content=\"Typesetter CMS\" />";
-			}
-
 		}
 
 

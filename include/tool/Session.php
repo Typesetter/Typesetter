@@ -10,7 +10,7 @@ namespace gp\tool{
 	class Session{
 
 
-		static function Init(){
+		public static function Init(){
 			global $config;
 
 			gp_defined('gp_session_cookie',self::SessionCookie($config['gpuniq']));
@@ -23,8 +23,8 @@ namespace gp\tool{
 				case 'login':
 					self::LogIn();
 				return;
-				case 'enable_component':
-					self::EnableComponent();
+				case 'ClearErrors':
+					self::ClearErrors();
 				break;
 
 			}
@@ -37,7 +37,7 @@ namespace gp\tool{
 		}
 
 
-		static function LogIn(){
+		public static function LogIn(){
 			global $langmessage, $config, $gp_index;
 
 
@@ -133,7 +133,7 @@ namespace gp\tool{
 		 * Return the username for the login request
 		 *
 		 */
-		static function GetLoginUser( $users, $nonce ){
+		public static function GetLoginUser( $users, $nonce ){
 
 			$_POST += array('user_sha'=>'','username'=>'','login_nonce'=>'');
 
@@ -165,7 +165,7 @@ namespace gp\tool{
 		 * Check against reset password if set
 		 *
 		 */
-		static function PasswordPassed( &$userinfo, $nonce ){
+		public static function PasswordPassed( &$userinfo, $nonce ){
 
 			if( gp_require_encrypt && !empty($_POST['password']) ){
 				return false;
@@ -198,7 +198,7 @@ namespace gp\tool{
 		 * Return the algorithm used by the user for passwords
 		 *
 		 */
-		static function PassAlgo($userinfo){
+		public static function PassAlgo($userinfo){
 			global $config;
 
 			if( isset($userinfo['passhash']) ){
@@ -214,7 +214,7 @@ namespace gp\tool{
 		 * @param string $pass_algo Password hashing algorithm
 		 *
 		 */
-		static function CheckPassword( $user_pass, $nonce, $pass_algo ){
+		public static function CheckPassword( $user_pass, $nonce, $pass_algo ){
 			global $config;
 
 			$posted_pass = false;
@@ -248,7 +248,7 @@ namespace gp\tool{
 		}
 
 
-		static function IncorrectLogin($i){
+		public static function IncorrectLogin($i){
 			global $langmessage;
 			msg($langmessage['incorrect_login'].' ('.$i.')');
 			$url = \gp\tool::GetUrl('Admin','cmd=forgotten');
@@ -260,7 +260,7 @@ namespace gp\tool{
 		 * Set the value of $userinfo['file_name']
 		 *
 		 */
-		static function SetSessionFileName($userinfo,$username){
+		public static function SetSessionFileName($userinfo,$username){
 			global $dataDir;
 
 
@@ -278,7 +278,7 @@ namespace gp\tool{
 			return $userinfo;
 		}
 
-		static function LogOut(){
+		public static function LogOut(){
 			global $langmessage;
 
 			if( !isset($_COOKIE[gp_session_cookie]) ){
@@ -293,7 +293,7 @@ namespace gp\tool{
 			msg($langmessage['LOGGED_OUT']);
 		}
 
-		static function CleanSession($session_id){
+		public static function CleanSession($session_id){
 			//remove the session_id from session_ids.php
 			$sessions = self::GetSessionIds();
 			unset($sessions[$session_id]);
@@ -305,7 +305,7 @@ namespace gp\tool{
 		 * Attempt to use httponly if available
 		 *
 		 */
-		static function cookie($name,$value='',$expires = false){
+		public static function cookie($name,$value='',$expires = false){
 			global $dirPrefix;
 
 			$cookiePath		= empty($dirPrefix) ? '/' : $dirPrefix;
@@ -350,7 +350,7 @@ namespace gp\tool{
 		 * Return the non-www server name
 		 *
 		 */
-		static function ServerName(){
+		public static function ServerName(){
 
 			if( isset($_SERVER['HTTP_HOST']) ){
 				$server_name = $_SERVER['HTTP_HOST'];
@@ -372,7 +372,7 @@ namespace gp\tool{
 		 * Update the number of login attempts and the time of the last attempt for a $username
 		 *
 		 */
-		static function UpdateAttempts($users,$username,$reset = false){
+		public static function UpdateAttempts($users,$username,$reset = false){
 
 			if( $reset ){
 				$users[$username]['attempts'] = 0;
@@ -386,7 +386,7 @@ namespace gp\tool{
 
 
 		//called when a user logs in
-		static function create( &$user_info, $username, &$sessions ){
+		public static function create( &$user_info, $username, &$sessions ){
 			global $dataDir, $langmessage;
 
 			//update the session files to .php files
@@ -453,7 +453,7 @@ namespace gp\tool{
 		 * Return the contents of the session_ids.php data file
 		 * @return array array of all sessions
 		 */
-		static function GetSessionIds(){
+		public static function GetSessionIds(){
 			return \gp\tool\Files::Get('_site/session_ids','sessions');
 		}
 
@@ -462,7 +462,7 @@ namespace gp\tool{
 		 * @param $sessions array array of all sessions
 		 * @return bool
 		 */
-		static function SaveSessionIds($sessions){
+		public static function SaveSessionIds($sessions){
 
 			while( $current = current($sessions) ){
 				$key = key($sessions);
@@ -485,7 +485,7 @@ namespace gp\tool{
 		 * Determine if $session_id represents a valid session and if so start the session
 		 *
 		 */
-		static function start($session_id, $sessions = false ){
+		public static function start($session_id, $sessions = false ){
 			global $langmessage, $dataDir, $wbMessageBuffer;
 			static $locked_message = false;
 
@@ -594,7 +594,7 @@ namespace gp\tool{
 		 * This will happen before \gp\tool\Output::BufferOut()
 		 *
 		 */
-		static function AdminBuffer($buffer){
+		public static function AdminBuffer($buffer){
 			global $wbErrorBuffer, $gp_admin_html;
 
 
@@ -644,7 +644,7 @@ namespace gp\tool{
 		 * @param string $checksum
 		 * @return array The user's session data
 		 */
-		static function SessionData($session_file,&$checksum){
+		public static function SessionData($session_file,&$checksum){
 
 			$gpAdmin	= \gp\tool\Files::Get($session_file,'gpAdmin');
 
@@ -657,7 +657,7 @@ namespace gp\tool{
 			return $gpAdmin + self::gpui_defaults();
 		}
 
-		static function gpui_defaults(){
+		public static function gpui_defaults(){
 
 			return array(	'gpui_cmpct'	=> 0,
 							'gpui_tx'		=> 6,
@@ -673,7 +673,7 @@ namespace gp\tool{
 		 * Prevent XSS attacks for logged in users by making sure the request contains a valid nonce
 		 *
 		 */
-		static function CheckPosts(){
+		public static function CheckPosts(){
 
 			if( count($_POST) == 0 ){
 				return;
@@ -695,7 +695,7 @@ namespace gp\tool{
 		 * Unset all $_POST values
 		 *
 		 */
-		static function StripPost($message){
+		public static function StripPost($message){
 			global $langmessage, $post_quarantine;
 			msg($langmessage['OOPS'].' ('.$message.')');
 			$post_quarantine = $_POST;
@@ -711,7 +711,7 @@ namespace gp\tool{
 		 * @param string $checksum_read The original checksum of the $gpAdmin array
 		 *
 		 */
-		static function close($file,$checksum_read){
+		public static function close($file,$checksum_read){
 			global $gpAdmin;
 
 			self::FatalNotices();
@@ -740,7 +740,7 @@ namespace gp\tool{
 		 * Update layout information if needed
 		 *
 		 */
-		static function LayoutInfo(){
+		public static function LayoutInfo(){
 			global $page, $gpLayouts, $get_all_gadgets_called;
 
 
@@ -795,7 +795,7 @@ namespace gp\tool{
 		 * See http://www.w3schools.com/tags/tag_doctype.asp for description of different doctypes
 		 *
 		 */
-		static function DoctypeMeta($doc_start){
+		public static function DoctypeMeta($doc_start){
 
 			//charset already set
 			if( stripos($doc_start,'charset=') !== false ){
@@ -815,7 +815,7 @@ namespace gp\tool{
 		 * Once an hour only when admin is logged in
 		 *
 		 */
-		static function Cron(){
+		public static function Cron(){
 
 			$cron_info	= \gp\tool\Files::Get('_site/cron_info');
 			$file_stats	= \gp\tool\Files::$last_stats;
@@ -834,7 +834,7 @@ namespace gp\tool{
 		 * Delete after 36 hours (129600 seconds)
 		 *
 		 */
-		static function CleanTemp(){
+		public static function CleanTemp(){
 			global $dataDir;
 			$temp_folder = $dataDir.'/data/_temp';
 			$files = \gp\tool\Files::ReadDir($temp_folder,false);
@@ -853,7 +853,7 @@ namespace gp\tool{
 		 * Save user settings
 		 *
 		 */
-		static function SaveSetting(){
+		public static function SaveSetting(){
 			global $gpAdmin;
 
 			$cmd = \gp\tool::GetCommand('do');
@@ -872,7 +872,7 @@ namespace gp\tool{
 		 * Save UI values for the current user
 		 *
 		 */
-		static function SaveGPUI(){
+		public static function SaveGPUI(){
 			global $gpAdmin;
 
 			self::SetGPUI();
@@ -890,7 +890,7 @@ namespace gp\tool{
 		 * Set UI values from posted data for the current user
 		 *
 		 */
-		static function SetGPUI(){
+		public static function SetGPUI(){
 			global $gpAdmin;
 
 			$possible = array();
@@ -947,7 +947,7 @@ namespace gp\tool{
 		 * Output the UI variables as a Javascript Object
 		 *
 		 */
-		static function GPUIVars(){
+		public static function GPUIVars(){
 			global $gpAdmin, $page, $config;
 
 
@@ -994,7 +994,7 @@ namespace gp\tool{
 		 *
 		 * @return  string  a MD5 sum of various browser headers
 		 */
-		static function auth_browseruid($legacy = false){
+		public static function auth_browseruid($legacy = false){
 
 			$uid = '';
 			if( isset($_SERVER['HTTP_USER_AGENT']) ){
@@ -1048,7 +1048,7 @@ namespace gp\tool{
 		 * @author Andreas Gohr <andi@splitbrain.org>
 		 *
 		 */
-		static function clientIP($single=false){
+		public static function clientIP($single=false){
 			$ip = array();
 
 			if( isset($_SERVER['REMOTE_ADDR']) ){
@@ -1120,9 +1120,9 @@ namespace gp\tool{
 		 * Re-enable components that were disabled because of fatal errors
 		 *
 		 */
-		static function EnableComponent(){
+		public static function ClearErrors(){
 
-			\gp\admin\Tools\Errors::ClearError($_REQUEST['hash']);
+			\gp\admin\Tools\Errors::ClearAll();
 			$title = \gp\tool::WhichPage();
 			\gp\tool::Redirect(\gp\tool::GetUrl($title,'',false));
 		}
@@ -1132,31 +1132,26 @@ namespace gp\tool{
 		 * Notify the admin if there have been any fatal errors
 		 *
 		 */
-		static function FatalNotices(){
+		public static function FatalNotices(){
 			global $dataDir, $page;
 
 			if( !\gp\admin\Tools::HasPermission('Admin_Errors') ){
 				return;
 			}
 
-			if( is_object($page) && property_exists($page,'title') && strpos($page->title,'Admin/Errors') !== false ){
+			if( is_object($page) && property_exists($page,'requested') && strpos($page->requested,'Admin/Errors') !== false ){
 				return;
 			}
 
-			$dir = $dataDir.'/data/_site';
-			$files = scandir($dir);
-			$has_fatal = false;
+			$dir		= $dataDir.'/data/_site';
+			$files		= scandir($dir);
+			$has_fatal	= false;
+
 			foreach($files as $file){
 				if( strpos($file,'fatal_') === false ){
 					continue;
 				}
-				$full_path = $dir.'/'.$file;
-				$info_hash = md5_file($full_path);
-				if( isset(\gp\tool\Output::$fatal_notices[$info_hash]) ){
-					continue;
-				}
 				$has_fatal = true;
-				break;
 			}
 
 			if( !$has_fatal ){
@@ -1164,11 +1159,13 @@ namespace gp\tool{
 			}
 
 			$msg = 'Warning: One or more components have caused fatal errors and have been disabled. '
-					.\gp\tool::Link('Admin/Errors','More Information');
+					.\gp\tool::Link('Admin/Errors','More Information','','style="white-space:nowrap"')
+					.' &nbsp; '
+					.\gp\tool::Link($page->title,'Clear All Errors','cmd=ClearErrors'); //cannot be creq
 			msg($msg);
 		}
 
-		static function SessionCookie($uniq){
+		public static function SessionCookie($uniq){
 			return 'gpEasy_'.substr(sha1($uniq),12,12);
 		}
 

@@ -62,8 +62,11 @@ class Errors{
 		//actions
 		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
-			case 'clear_error':
+			case 'ClearError':
 			self::ClearError($_REQUEST['hash']);
+			break;
+			case 'ClearAll':
+			self::ClearAll();
 			break;
 		}
 
@@ -99,7 +102,7 @@ class Errors{
 	 * Display details about a single fatal error
 	 *
 	 */
-	static function DisplayFatalError($error_file){
+	public static function DisplayFatalError($error_file){
 		global $langmessage;
 
 		$hash = substr(basename($error_file),6);
@@ -110,7 +113,7 @@ class Errors{
 		$elapsed	= \gp\admin\Tools::Elapsed( time() - $filemtime );
 		echo sprintf($langmessage['_ago'],$elapsed);
 		echo ' - ';
-		echo \gp\tool::Link('Admin/Errors','Clear Error','cmd=clear_error&hash='.$hash,array('data-cmd'=>'postlink'));
+		echo \gp\tool::Link('Admin/Errors','Clear Error','cmd=ClearError&hash='.$hash,array('data-cmd'=>'postlink'));
 		echo '</p>';
 
 
@@ -227,7 +230,7 @@ class Errors{
 	 * Clear an error
 	 *
 	 */
-	static function ClearError($hash){
+	public static function ClearError($hash){
 		global $dataDir;
 
 		if( !preg_match('#^[a-zA-Z0-9_]+$#',$hash) ){
@@ -260,9 +263,30 @@ class Errors{
 
 	}
 
+	/**
+	 * Clear all fatal errors
+	 *
+	 */
+	public static function ClearAll(){
+		global $dataDir;
+
+		$dir = $dataDir.'/data/_site';
+
+		//remove matching errors
+		$files = scandir($dir);
+		foreach($files as $file){
+
+			if( strpos($file,'fatal_') !== 0 ){
+				continue;
+			}
+
+			$full_path = $dir.'/'.$file;
+			unlink($full_path);
+		}
+	}
 
 
-	static function ReadableLog(){
+	public static function ReadableLog(){
 		$error_log = ini_get('error_log');
 
 		if( empty($error_log) || !file_exists($error_log) ){

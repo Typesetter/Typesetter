@@ -613,10 +613,11 @@ namespace gp\tool{
 		 */
 		public static function FatalNotice( $type, $info ){
 			global $dataDir, $page;
-			static $notified = array();
+			static $notified = false;
 
 			$info = (array)$info;
 			$info['catchable_type'] = $type;
+
 			$hash = $type.'_'.\gp\tool::ArrayHash($info);
 			self::$catchable[$hash] = $info;
 
@@ -628,12 +629,10 @@ namespace gp\tool{
 
 
 			$error_info = $error_text = file_get_contents($file);
-			$info_hash = md5($error_text);
 
 			// if the file that caused the fatal error has been modified, treat as fixed
 			if( $error_text[0] == '{' && $error_info = json_decode($error_text,true) ){
 
-				$error_text = $error_info;
 
 				if( !empty($error_info['file']) && file_exists($error_info['file']) ){
 
@@ -652,31 +651,12 @@ namespace gp\tool{
 				}
 			}
 
-
-			//notify admin
-			$message = 'Warning: A component of this page has been disabled because it caused fatal errors:';
-			if( !count(self::$fatal_notices) ){
-				error_log( $message );
-			}
-			if( \gp\tool::LoggedIn() ){
-
-				if( !isset(self::$fatal_notices[$info_hash]) ){
-					$message .= ' <br/> '.\gp\tool::Link($page->title,'Enable Component','cmd=enable_component&hash='.$hash) //cannot be creq
-								.' &nbsp; <a href="javascript:void(0)" onclick="var st = this.nextSibling.style; if( st.display==\'block\'){ st.display=\'none\' }else{st.display=\'block\'};return false;">Show Backtrace</a>'
-								.'<div class="nodisplay">'
-								.pre($error_text)
-								.'</div>';
-
-					msg( $message );
-
-					self::$fatal_notices[$info_hash] = $error_text;
-				}
+			if( !$notified ){
+				error_log( 'Warning: A component of this page has been disabled because it caused fatal errors' );
+				$notified = true;
 			}
 
 			self::PopCatchable();
-
-			//echo pre($info);
-			//die();
 
 			return true;
 		}
@@ -2412,7 +2392,7 @@ namespace gp\tool{
 				}
 				foreach($files as $file_key => $file){
 					$full_path = \gp\tool\Output\Combine::CheckFile($file);
-					if( !$full_path ) continue;
+					if( $full_path === false ) continue;
 					readfile($full_path);
 					echo ";\n";
 				}
@@ -2539,7 +2519,7 @@ namespace gp\tool{
 			if( !\gp\tool::LoggedIn() ){
 
 				//reload non-logged in users automatically if there were catchable errors
-				if( self::$catchable ){
+				if( !empty(self::$catchable) ){
 					$message .= 'Reloading... <script type="text/javascript">window.setTimeout(function(){window.location.href = window.location.href},1000);</script>';
 				}else{
 					$message .= '<p>If you are the site administrator, you can troubleshoot the problem by changing php\'s display_errors setting to 1 in the gpconfig.php file.</p>'
@@ -2598,7 +2578,7 @@ namespace gp\tool{
 			$last_error['file'] = realpath($last_error['file']);//may be redundant
 			showError($last_error['type'], $last_error['message'],  $last_error['file'],  $last_error['line'], false); //send error to logger
 
-			if( !self::$catchable ){
+			if( empty(self::$catchable) ){
 				return;
 			}
 
@@ -2609,6 +2589,7 @@ namespace gp\tool{
 				$last_error['file_size'] = filesize($last_error['file']);
 			}
 
+
 			//error text, check for existing fatal notice
 			if( count(self::$fatal_notices) ){
 				$content = end(self::$fatal_notices);
@@ -2616,10 +2597,10 @@ namespace gp\tool{
 				if( $content[0] == '{' && $temp = json_decode($content,true) ){
 					$last_error = $temp;
 				}
-			}else{
-				$content = json_encode($last_error);
 			}
 
+
+			$content = json_encode($last_error);
 
 			$temp = array_reverse(self::$catchable);
 			foreach($temp as $error_hash => $info){

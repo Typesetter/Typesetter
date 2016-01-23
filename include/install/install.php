@@ -214,6 +214,7 @@ class gp_install{
 	public $can_write_data		= true;
 	public $ftp_root			= false;
 	public $root_mode;
+	private $passed				= true;
 
 
 
@@ -261,10 +262,12 @@ class gp_install{
 
 	}
 
+	/**
+	 * Installation checks
+	 *
+	 */
 	public function CheckFolders(){
-		global $ok,$langmessage;
-
-		$ok = true;
+		global $langmessage;
 
 		echo '<h2>'.$langmessage['Checking_server'].'...</h2>';
 		echo '<table class="styledtable fullwidth">';
@@ -280,29 +283,8 @@ class gp_install{
 		echo '<tbody>';
 
 		$this->CheckDataFolder();
+		$this->CheckPHPVersion();
 
-		//Check PHP Version
-		echo '<tr>';
-			echo '<td>';
-			echo $langmessage['PHP_Version'];
-			echo '</td>';
-			if( !function_exists('version_compare') ){
-				echo '<td class="failed">'.$langmessage['Failed'].'</td>';
-				echo '<td class="failed">???</td>';
-				$ok = false;
-
-			}elseif( version_compare(phpversion(),'5.3','>=') ){
-				echo '<td class="passed">'.$langmessage['Passed'].'</td>';
-				echo '<td class="passed">'.phpversion().'</td>';
-
-			}else{
-				echo '<td class="failed">'.$langmessage['Failed'].'</td>';
-				echo '<td class="failed">'.phpversion().'</td>';
-				$ok = false;
-
-			}
-			echo '<td>5.3+</td>';
-			echo '</tr>';
 
 
 		//make sure $_SERVER['SCRIPT_NAME'] is set
@@ -313,7 +295,7 @@ class gp_install{
 			echo '</a>';
 			echo '</td>';
 			$checkValue = \gp\tool::GetEnv('SCRIPT_NAME','index.php') || \gp\tool::GetEnv('PHP_SELF','index.php');
-			$ok = $ok && $checkValue;
+			$this->passed = $this->passed && $checkValue;
 			$this->StatusRow($checkValue,$langmessage['Set'],$langmessage['Not_Set']);
 			echo '</tr>';
 
@@ -328,7 +310,7 @@ class gp_install{
 			if( $checkValue ){
 				echo '<td class="failed">'.$langmessage['Failed'].': '.$langmessage['See_Below'].'</td>';
 				echo '<td class="failed">'.$langmessage['On'].'</td>';
-				$ok = false;
+				$this->passed = false;
 			}else{
 				echo '<td class="passed">'.$langmessage['Passed'].'</td>';
 				echo '<td class="passed">'.$langmessage['Off'].'</td>';
@@ -356,7 +338,7 @@ class gp_install{
 
 		//Check \gp\tool::IniGet( 'magic_quotes_sybase' )
 		$checkValue = !\gp\tool::IniGet('magic_quotes_sybase');
-		$ok = $ok && $checkValue;
+		$this->passed = $this->passed && $checkValue;
 		echo '<tr>';
 			echo '<td>';
 			echo '<a href="http://php.net/manual/security.magicquotes.disabling.php" target="_blank">';
@@ -368,7 +350,7 @@ class gp_install{
 
 		//magic_quotes_runtime
 		$checkValue = !\gp\tool::IniGet('magic_quotes_runtime');
-		$ok = $ok && $checkValue;
+		$this->passed = $this->passed && $checkValue;
 		echo '<tr>';
 			echo '<td>';
 			echo '<a href="http://php.net/manual/security.magicquotes.disabling.php" target="_blank">';
@@ -418,7 +400,7 @@ class gp_install{
 				}else{
 					echo '<td class="failed">'.$langmessage['Failed'].'</td>';
 					echo '<td class="failed">'.$checkValue.'</td>';
-					$ok = false;
+					$this->passed = false;
 				}
 			}
 			echo '<td> 16M+ or Adjustable</td>';
@@ -434,7 +416,7 @@ class gp_install{
 		echo '<tbody>';
 		$this->CheckIndexHtml();
 		$this->CheckImages();
-		$ok = $ok && $this->CheckPath();
+		$this->passed = $this->passed && $this->passed->CheckPath();
 		echo '</tbody>';
 
 
@@ -445,7 +427,7 @@ class gp_install{
 		echo '</p>';
 		echo '<br/>';
 
-		if( $ok ){
+		if( $this->passed ){
 			$this->Form_Entry();
 			return;
 		}
@@ -477,9 +459,12 @@ class gp_install{
 		echo '<td>'.$label_true.'</td>';
 	}
 
-
+	/**
+	 * Check the data folder to see if it's writable
+	 *
+	 */
 	public function CheckDataFolder(){
-		global $ok,$dataDir,$langmessage;
+		global $dataDir,$langmessage;
 
 		echo '<tr><td class="nowrap">';
 		$folder = $dataDir.'/data';
@@ -495,7 +480,7 @@ class gp_install{
 		if( !is_dir($folder)){
 			if(!@mkdir($folder, 0777)) {
 				echo '<td class="passed_orange">'.$langmessage['See_Below'].' (0)</td>';
-				$this->can_write_data = $ok = false;
+				$this->can_write_data = $this->passed = false;
 			}else{
 				echo '<td class="passed">'.$langmessage['Passed'].'</td>';
 			}
@@ -503,7 +488,7 @@ class gp_install{
 			echo '<td class="passed">'.$langmessage['Passed'].'</td>';
 		}else{
 			echo '<td class="passed_orange">'.$langmessage['See_Below'].' (1)</td>';
-			$this->can_write_data = $ok = false;
+			$this->can_write_data = $this->passed = false;
 		}
 
 		if( $this->can_write_data ){
@@ -520,12 +505,34 @@ class gp_install{
 	}
 
 
-
-	/*
-	 *
-	 * Check Functions
+	/**
+	 * Check the php version
 	 *
 	 */
+	private function CheckPHPVersion(){
+		global $langmessage;
+
+		echo '<tr><td>';
+		echo $langmessage['PHP_Version'];
+		echo '</td>';
+		if( !function_exists('version_compare') ){
+			echo '<td class="failed">'.$langmessage['Failed'].'</td>';
+			echo '<td class="failed">???</td>';
+			$this->passed = false;
+
+		}elseif( version_compare(phpversion(),'5.3','>=') ){
+			echo '<td class="passed">'.$langmessage['Passed'].'</td>';
+			echo '<td class="passed">'.phpversion().'</td>';
+
+		}else{
+			echo '<td class="failed">'.$langmessage['Failed'].'</td>';
+			echo '<td class="failed">'.phpversion().'</td>';
+			$this->passed = false;
+
+		}
+		echo '<td>5.3+</td></tr>';
+	}
+
 
 
 	//very unlikely, cannot have two ".php/" in path: see SetGlobalPaths()
@@ -566,29 +573,33 @@ class gp_install{
 		return false;
 	}
 
+	/**
+	 * Warn user if there's an index.html file
+	 *
+	 */
 	public function CheckIndexHtml(){
-		global $langmessage,$dataDir;
+		global $langmessage, $dataDir;
 
 		$index = $dataDir.'/index.html';
 
 
-		echo '<tr>';
-			echo '<td>';
-			if( strlen($index) > 30 ){
-				echo '...'.substr($index,-27);
-			}else{
-				echo $index;
-			}
-			echo '</td>';
+		echo '<tr><td>';
 
-			if( !file_exists($index) ){
-				echo '<td class="passed">'.$langmessage['Passed'].'</td>';
-				echo '<td class="passed" colspan="2"></td>';
-			}else{
-				echo '<td class="passed_orange">'.$langmessage['Passed'].'</td>';
-				echo '<td class="passed_orange" colspan="2">'.$langmessage['index.html exists'].'</td>';
-			}
-			echo '</tr>';
+		if( strlen($index) > 30 ){
+			echo '...'.substr($index,-27);
+		}else{
+			echo $index;
+		}
+		echo '</td>';
+
+		if( !file_exists($index) ){
+			echo '<td class="passed">'.$langmessage['Passed'].'</td>';
+			echo '<td class="passed" colspan="2"></td>';
+		}else{
+			echo '<td class="passed_orange">'.$langmessage['Passed'].'</td>';
+			echo '<td class="passed_orange" colspan="2">'.$langmessage['index.html exists'].'</td>';
+		}
+		echo '</tr>';
 
 	}
 

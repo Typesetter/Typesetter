@@ -231,44 +231,12 @@ class Installer extends \gp\admin\Addon\Tools{
 		}
 
 		//check ini contents
-		$this->display_name = basename($this->source);
-		if( !$this->GetINI($this->source,$error) ){
-
-			//local themes don't need addon.ini files
-			if( empty($this->new_layout) ){
-				$this->message( $error );
-				return false;
-			}
+		if( !$this->CheckIni() ){
+			return false;
 		}
 
-
-		// upgrade/destination
-		$this->upgrade_key = $this->config_key = \gp\admin\Addon\Tools::UpgradePath($this->ini_contents,$this->config_index);
-		if( $this->remote_install ){
-			if( $this->config_key ){
-				$this->dest = $this->addon_folder.'/'.$this->config_key;
-			}else{
-				$this->dest = $this->TempFile();
-			}
-		}else{
-			$this->dest = $this->source;
-		}
-		$this->dest_name = basename($this->dest);
-
-		if( !$this->config_key ){
-			$this->config_key = $this->dest_name;
-		}
-
-
-		//the data folder will not always be the same as the addon folder
-		if( isset($this->config[$this->config_key]['data_folder']) ){
-			$this->data_folder = $this->config[$this->config_key]['data_folder'];
-		}elseif( $this->upgrade_key && file_exists( $dataDir.'/data/_addondata/'.$this->upgrade_key) ){
-			$this->data_folder = $this->upgrade_key;
-		}else{
-			$this->data_folder = $this->dest_name;
-		}
-
+		$this->SetDestination();
+		$this->DataFolder();
 		$this->IniContents();
 
 		if( !$this->PrepConfig() ){
@@ -343,6 +311,69 @@ class Installer extends \gp\admin\Addon\Tools{
 		$this->addon_folder = $dataDir.$this->addon_folder_rel;
 
 		\gp\tool\Files::CheckDir($this->addon_folder);
+	}
+
+
+	/**
+	 * Check the Ini contents
+	 *
+	 */
+	protected function CheckIni(){
+
+		$this->display_name = basename($this->source);
+		if( !$this->GetINI($this->source,$error) ){
+
+			//local themes don't need addon.ini files
+			if( empty($this->new_layout) ){
+				$this->message( $error );
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * Set the install destination
+	 *
+	 */
+	protected function SetDestination(){
+
+		$this->config_key	= \gp\admin\Addon\Tools::UpgradePath($this->ini_contents,$this->config_index);
+		$this->upgrade_key	= $this->config_key;
+
+		if( $this->remote_install ){
+			if( $this->config_key ){
+				$this->dest = $this->addon_folder.'/'.$this->config_key;
+			}else{
+				$this->dest = $this->TempFile();
+			}
+		}else{
+			$this->dest = $this->source;
+		}
+		$this->dest_name = basename($this->dest);
+
+		if( !$this->config_key ){
+			$this->config_key = $this->dest_name;
+		}
+	}
+
+
+	/**
+	 * The data folder will not always be the same as the addon folder
+	 *
+	 */
+	protected function DataFolder(){
+		global $dataDir;
+
+		if( isset($this->config[$this->config_key]['data_folder']) ){
+			$this->data_folder = $this->config[$this->config_key]['data_folder'];
+		}elseif( $this->upgrade_key && file_exists( $dataDir.'/data/_addondata/'.$this->upgrade_key) ){
+			$this->data_folder = $this->upgrade_key;
+		}else{
+			$this->data_folder = $this->dest_name;
+		}
 	}
 
 

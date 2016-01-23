@@ -235,52 +235,18 @@ namespace gp\Page{
 				unset($title_info['lang_index']);
 			}
 
+			//browser_title, keywords, description
+			self::SetInfo($title_info, 'browser_title');
+			self::SetInfo($title_info, 'keywords');
+			self::SetInfo($title_info, 'description');
+			self::SetRobots($title_info);
 
-			//change the browser title
+
+			//same as auto-generated?
 			$auto_browser_title = strip_tags($title_info['label']);
-			$custom_browser_title = false;
-			if( isset($_POST['browser_title']) ){
-				$browser_title = $_POST['browser_title'];
-				$browser_title = htmlspecialchars($browser_title);
-
-				if( $browser_title != $auto_browser_title ){
-					$title_info['browser_title'] = trim($browser_title);
-					$custom_browser_title = true;
-				}
-			}
-			if( !$custom_browser_title ){
+			if( isset($title_info['browser_title']) && $title_info['browser_title'] == $auto_browser_title ){
 				unset($title_info['browser_title']);
 			}
-
-			//keywords
-			if( isset($_POST['keywords']) ){
-				$title_info['keywords'] = htmlspecialchars($_POST['keywords']);
-				if( empty($title_info['keywords']) ){
-					unset($title_info['keywords']);
-				}
-			}
-
-
-			//description
-			if( isset($_POST['description']) ){
-				$title_info['description'] = htmlspecialchars($_POST['description']);
-				if( empty($title_info['description']) ){
-					unset($title_info['description']);
-				}
-			}
-
-
-			//robots
-			$title_info['rel'] = '';
-			if( isset($_POST['nofollow']) ){
-				$title_info['rel'] = 'nofollow';
-			}
-			if( isset($_POST['noindex']) ){
-				$title_info['rel'] .= ',noindex';
-			}
-			$title_info['rel'] = trim($title_info['rel'],',');
-			if( empty($title_info['rel']) ) unset($title_info['rel']);
-
 
 			if( !\gp\admin\Tools::SavePagesPHP() ){
 				msg($langmessage['OOPS'].' (R1)');
@@ -291,7 +257,42 @@ namespace gp\Page{
 			return $title;
 		}
 
-		private static function
+
+		/**
+		 * Set the title_info value if not emptpy
+		 * Otherwise, unset the key
+		 *
+		 */
+		private static function SetInfo( &$title_info, $key){
+
+			if( isset($_POST[$key]) ){
+				$title_info[$key] = htmlspecialchars($_POST[$key]);
+				if( empty($title_info[$key]) ){
+					unset($title_info[$key]);
+				}
+			}
+		}
+
+		/**
+		 * Set the robot visibility
+		 *
+		 */
+		private static function SetRobots(&$title_info){
+
+			$title_info['rel'] = '';
+			if( isset($_POST['nofollow']) ){
+				$title_info['rel'] = 'nofollow';
+			}
+
+			if( isset($_POST['noindex']) ){
+				$title_info['rel'] .= ',noindex';
+			}
+
+			$title_info['rel'] = trim($title_info['rel'],',');
+			if( empty($title_info['rel']) ){
+				unset($title_info['rel']);
+			}
+		}
 
 
 		private static function RenameFileWorker($title){

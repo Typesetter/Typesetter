@@ -38,7 +38,7 @@ namespace gp\tool{
 					continue;
 				}
 
-				$original_src = $node['attributes']['src'];
+
 				$resized_data = self::ResizedImage($node['attributes']);
 				if( $resized_data !== false ){
 					$img = $resized_data['img'];
@@ -67,7 +67,9 @@ namespace gp\tool{
 
 
 			//height and width from style
-			$css_w = $css_h = false;
+			$css_w	= null;
+			$css_h	= null;
+
 			if( !empty($attributes['style']) ){
 				$css_args = explode(';',$attributes['style']);
 				foreach($css_args as $css_arg){
@@ -175,6 +177,7 @@ namespace gp\tool{
 				return false;
 			}
 
+			$data			= array();
 			$data['index']	= $dest_index;
 			$data['w']		= $width;
 			$data['h']		= $height;
@@ -191,20 +194,11 @@ namespace gp\tool{
 			global $dataDir;
 
 			//subtract uses no longer
-			$subtract_use = $list_before;
-			foreach($list_before as $index => $sizes){
-				if( isset($list_after[$index]) ){
-					$subtract_use[$index] = array_diff($list_before[$index],$list_after[$index]);
-				}
-			}
+			$subtract_use = self::UseDiff($list_before, $list_after);
 
 			//add uses
-			$add_use = $list_after;
-			foreach($add_use as $index => $sizes){
-				if( isset($list_before[$index]) ){
-					$add_use[$index] = array_diff($list_after[$index],$list_before[$index]);
-				}
-			}
+			$add_use = self::UseDiff($list_after, $list_before);
+
 
 			//save info for each image
 			$all_imgs = array_keys($subtract_use + $add_use);
@@ -228,7 +222,6 @@ namespace gp\tool{
 				}
 
 				//remove uses
-				$set_to_zero = array();
 				if( isset($subtract_use[$index]) && is_array($subtract_use[$index]) ){
 					$edited = true;
 					foreach($subtract_use[$index] as $size){
@@ -240,32 +233,12 @@ namespace gp\tool{
 						}
 						$usage[$size]['uses'] = max($usage[$size]['uses'],0);
 						if( $usage[$size]['uses'] == 0 ){
-							$set_to_zero[] = $size;
+							self::DeleteUnused($index, $size);
 						}
 						$usage[$size]['touched'] = time();
 					}
 				}
 
-
-
-				//if uses < 1, delete the file, but not the record
-				foreach($set_to_zero as $size){
-					list($width,$height) = explode('x',$size);
-
-					//make sure the image still exists
-					if( !isset(\gp_resized::$index[$index]) ){
-						continue;
-					}
-					$img = \gp_resized::$index[$index];
-					$info = \gp_resized::ImageInfo($img,$width,$height);
-					if( !$info ){
-						continue;
-					}
-					$full_path = $dataDir.'/data/_resized/'.$index.'/'.$info['name'];
-					if( file_exists($full_path) ){
-						@unlink($full_path);
-					}
-				}
 
 				//order usage by sizes: small to large
 				uksort($usage,array('\\gp\\tool\\Editing', 'SizeCompare'));
@@ -275,6 +248,52 @@ namespace gp\tool{
 				}
 			}
 		}
+
+
+		/**
+		 * Delete unused images
+		 * if uses < 1, delete the file, but not the record
+		 *
+		 */
+		private static function DeleteUnused($index, $size){
+			global $dataDir;
+
+
+			list($width,$height) = explode('x',$size);
+
+			//make sure the image still exists
+			if( !isset(\gp_resized::$index[$index]) ){
+				continue;
+			}
+			$img = \gp_resized::$index[$index];
+			$info = \gp_resized::ImageInfo($img,$width,$height);
+			if( !$info ){
+				continue;
+			}
+			$full_path = $dataDir.'/data/_resized/'.$index.'/'.$info['name'];
+			if( file_exists($full_path) ){
+				@unlink($full_path);
+			}
+
+		}
+
+
+		/**
+		 * Get the use difference
+		 *
+		 */
+		private static function UseDiff( $a, $b){
+
+			$diff = $a;
+			foreach($a as $index => $sizes){
+				if( isset($b[$index]) ){
+					$diff[$index] = array_diff($a[$index],$b[$index]);
+				}
+			}
+
+			return $diff;
+		}
+
 
 		/**
 		 * Replace resized images with their originals

@@ -148,15 +148,14 @@ namespace gp\tool{
 
 		/**
 		 * Attempt to increase php's memory limit using the current memory used and the post_max_size value
+		 * Generally speaking, memory_limit should be larger than post_max_size http://php.net/manual/en/ini.core.php
 		 * @static
 		 */
 		static function AdjustMemoryLimit(){
-			//Generally speaking, memory_limit should be larger than post_max_size http://php.net/manual/en/ini.core.php
-
 
 			//get memory limit in bytes
 			$limit = @ini_get('memory_limit') or '8M';
-			$limit = self::getByteValue($limit);
+			$limit = \gp\tool::getByteValue($limit);
 
 
 			//get memory usage or use a default value
@@ -169,7 +168,7 @@ namespace gp\tool{
 			//since imageHeight and imageWidth aren't always available
 			//use post_max_size to figure maximum memory limit
 			$max_post = @ini_get('post_max_size') or '8M'; //defaults to 8M
-			$max_post = self::getByteValue($max_post);
+			$max_post = \gp\tool::getByteValue($max_post);
 
 			$needed = $max_post + $memoryUsed;
 			if( $limit < $needed ){

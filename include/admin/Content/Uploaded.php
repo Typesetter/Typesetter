@@ -344,21 +344,21 @@ namespace gp\admin\Content{
 		function InlineList_Options($dir_piece, $folders){
 			global $langmessage, $dataDir;
 
-			ob_start();
-			echo '<div class="gp_edit_select ckeditor_control">';
-			echo '<a class="gp_selected_folder"><i class="fa fa-folder-o"></i> ';
+			$return		= '';
+			$return		.= '<div class="gp_edit_select ckeditor_control">';
+			$return		.= '<a class="gp_selected_folder"><i class="fa fa-folder-o"></i> ';
 			if( strlen($dir_piece) > 23 ){
-				echo '...'.substr($dir_piece,-20);
+				$return		.= '...'.substr($dir_piece,-20);
 			}else{
-				echo $dir_piece;
+				$return		.= $dir_piece;
 			}
-			echo '</a>';
+			$return		.= '</a>';
 
-			echo '<div class="gp_edit_select_options">';
+			$return		.= '<div class="gp_edit_select_options">';
 			if( $dir_piece != '/' ){
 				$temp = \gp\tool::DirName($dir_piece);
-				echo '<a href="?cmd=new_dir&dir='.rawurlencode($dir_piece).'" class="gp_gallery_folder" data-cmd="gpabox"><i class="fa fa-plus"></i> '.$langmessage['create_dir'].'</a>';
-				echo '<a class="gp_gallery_folder" data-cmd="gp_gallery_folder" data-arg="'.htmlspecialchars($temp).'"><i class="fa fa-folder-o"></i> .../</a>';
+				$return		.= '<a href="?cmd=new_dir&dir='.rawurlencode($dir_piece).'" class="gp_gallery_folder" data-cmd="gpabox"><i class="fa fa-plus"></i> '.$langmessage['create_dir'].'</a>';
+				$return		.= '<a class="gp_gallery_folder" data-cmd="gp_gallery_folder" data-arg="'.htmlspecialchars($temp).'"><i class="fa fa-folder-o"></i> .../</a>';
 			}
 
 			foreach($folders as $folder){
@@ -375,12 +375,11 @@ namespace gp\admin\Content{
 						$count++;
 					}
 				}
-				echo '<a class="gp_gallery_folder" data-cmd="gp_gallery_folder" data-arg="'.htmlspecialchars($sub_dir).'"><i class="fa fa-folder-o"></i> <span class="gp_count">'.$count.'</span>'.$folder.'</a>';
+				$return		.= '<a class="gp_gallery_folder" data-cmd="gp_gallery_folder" data-arg="'.htmlspecialchars($sub_dir).'"><i class="fa fa-folder-o"></i> <span class="gp_count">'.$count.'</span>'.$folder.'</a>';
 			}
-			echo '</div>';
-			echo '</div>';
+			$return		.= '</div></div>';
 
-			return ob_get_clean();
+			return $return;
 		}
 
 

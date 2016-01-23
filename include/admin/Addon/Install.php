@@ -165,8 +165,6 @@ class Install extends \gp\admin\Addon\Tools{
 	}
 
 
-
-
 	/**
 	 * Get remote addon data and display to user
 	 *
@@ -178,17 +176,11 @@ class Install extends \gp\admin\Addon\Tools{
 		$this->SearchOptionSave();
 
 		//make a list of installed addon id's
-		$this->installed_ids = array();
-		if( isset($config['addons']) && is_array($config['addons']) ){
-			foreach($config['addons'] as $addon_info){
-				if( isset($addon_info['id']) ){
-					$this->installed_ids[] = $addon_info['id'];
-				}
-			}
-		}
+		$this->installed_ids						= self::InstalledIds();
+
 
 		//search settings
-		$this->searchUrl = $this->path_remote;
+		$this->searchUrl							= $this->path_remote;
 		$this->searchOrderOptions['rating_score']	= $langmessage['Highest Rated'];
 		$this->searchOrderOptions['downloads']		= $langmessage['Most Downloaded'];
 		$this->searchOrderOptions['modified']		= $langmessage['Recently Updated'];
@@ -232,47 +224,13 @@ class Install extends \gp\admin\Addon\Tools{
 		}
 
 		$this->ShowHeader();
-		$this->SearchOptions();
 
-		echo '<table class="bordered full_width">';
-		echo '<tr><th></th><th>'.$langmessage['name'].'</th><th>'.$langmessage['version'].'</th><th>'.$langmessage['Statistics'].'</th><th>'.$langmessage['description'].'</th></tr>';
+		$this->RemoteBrowseRows($data);
 
-		$i = 0;
-		if( count($data['rows']) ){
-			foreach($data['rows'] as $row){
-				echo '<tr class="'.($i % 2 ? 'even' : '').'">';
-				echo '<td>';
-				echo $this->DetailLink($row['type'], $row['id'], '<img src="'.$row['icon'].'" height="100" width="100" alt=""/>','',' class="shot"');
-				echo '</td>';
-				echo '<td class="nowrap">';
-				echo '<b>'.$row['name'].'</b>';
-				echo '<br/>';
-				echo $this->DetailLink($row['type'], $row['id'] );
-				echo ' | ';
-				$this->InstallLink($row);
-				echo '</td><td>';
-				echo $row['version'];
-				echo '</td><td class="nowrap">';
-				echo sprintf($langmessage['_downloads'],number_format($row['downloads']));
-				echo '<br/>';
-				$this->CurrentRating($row['rating_weighted']);
-				echo '<br/>';
-				echo $row['rating_count'].' ratings';
-				echo '</td><td>';
-				echo $row['short_description'];
-				echo '</td></tr>';
-				$i++;
-			}
-			echo '</table>';
-			$this->SearchNavLinks();
-		}else{
-			echo '</table>';
-			echo '<p>'.$langmessage['Sorry, nothing matched'].'</p>';
-		}
 
-		echo '<h3>Search Options</h3>';
-		echo '<ul>';
-		echo '<li>Limit results to addons that are compatible with your version of '.CMS_NAME.' ('.gpversion.') &nbsp; ';
+		echo '<h3>'.$langmessage['options'].'</h3>';
+		echo '<p>';
+		echo 'Limit results to addons that are compatible with your version of '.CMS_NAME.' ('.gpversion.') &nbsp; ';
 
 		if( $search_version ){
 			echo '<b>'.$langmessage['On'].'</b> &nbsp; ';
@@ -282,8 +240,72 @@ class Install extends \gp\admin\Addon\Tools{
 			echo \gp\tool::Link($this->searchUrl,$langmessage['On'],$this->searchQuery.'&search_option=version',' data-cmd="gpajax"');
 			echo ' &nbsp;  <b>'.$langmessage['Off'].'</b>';
 		}
-		echo '</li>';
-		echo '</ul>';
+		echo '</p>';
+	}
+
+
+	/**
+	 * Output the rows found by a RemoteBrowse search
+	 *
+	 */
+	public function RemoteBrowseRows($data){
+		global $langmessage;
+
+		if( count($data['rows']) == 0 ){
+			echo '<hr/>';
+			echo '<h2>'.$langmessage['Sorry, nothing matched'].'</h2>';
+			echo '<hr/>';
+			return;
+		}
+
+		$this->SearchOptions();
+
+		echo '<table class="bordered full_width">';
+		echo '<tr><th></th><th>'.$langmessage['name'].'</th><th>'.$langmessage['version'].'</th><th>'.$langmessage['Statistics'].'</th><th>'.$langmessage['description'].'</th></tr>';
+
+		foreach($data['rows'] as $row){
+			echo '<tr><td>';
+			echo $this->DetailLink($row['type'], $row['id'], '<img src="'.$row['icon'].'" height="100" width="100" alt=""/>','',' class="shot"');
+			echo '</td>';
+			echo '<td class="nowrap">';
+			echo '<b>'.$row['name'].'</b>';
+			echo '<br/>';
+			echo $this->DetailLink($row['type'], $row['id'] );
+			echo ' | ';
+			$this->InstallLink($row);
+			echo '</td><td>';
+			echo $row['version'];
+			echo '</td><td class="nowrap">';
+			echo sprintf($langmessage['_downloads'],number_format($row['downloads']));
+			echo '<br/>';
+			$this->CurrentRating($row['rating_weighted']);
+			echo '<br/>';
+			echo $row['rating_count'].' ratings';
+			echo '</td><td>';
+			echo $row['short_description'];
+			echo '</td></tr>';
+		}
+		echo '</table>';
+		$this->SearchNavLinks();
+	}
+
+
+	/**
+	 * Return the list of installed addon ids
+	 *
+	 */
+	public static function InstalledIds(){
+
+		$ids = array();
+
+		if( isset($config['addons']) && is_array($config['addons']) ){
+			foreach($config['addons'] as $addon_info){
+				if( isset($addon_info['id']) ){
+					$ids[] = $addon_info['id'];
+				}
+			}
+		}
+		return $ids;
 	}
 
 

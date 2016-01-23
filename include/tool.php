@@ -522,6 +522,11 @@ namespace gp{
 			return '<a href="'.self::GetUrl($href,$query,true,$nonce_action).'" '.self::LinkAttr($attr,$label).'>'.self::Ampersands($label).'</a>';
 		}
 
+
+		/**
+		 * @param string|array $attr
+		 * @param string $label
+		 */
 		static function LinkAttr($attr='',$label=''){
 			$string = '';
 			$has_title = false;
@@ -776,7 +781,7 @@ namespace gp{
 		/**
 		 * Get the label for a page from it's title
 		 * @param string $title
-		 * @param bool $amp Whether or not to escape ampersand characters
+		 *
 		 */
 		static function GetLabel($title=false){
 			global $gp_titles, $gp_index, $langmessage;

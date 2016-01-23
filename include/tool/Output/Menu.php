@@ -604,18 +604,18 @@ class Menu{
 
 
 		// opening ul
-		$attributes_ul = $this->clean_attributes;
-		$attributes_ul['class']['menu_top'] = $GP_MENU_CLASSES['menu_top'];
+		$attr_ul = $this->clean_attributes;
+		$attr_ul['class']['menu_top'] = $GP_MENU_CLASSES['menu_top'];
 		if( \gp\tool\Output::$edit_area_id ){
-			$attributes_ul['id'] = \gp\tool\Output::$edit_area_id;
-			$attributes_ul['class']['editable_area'] = 'editable_area';
+			$attr_ul['id'] = \gp\tool\Output::$edit_area_id;
+			$attr_ul['class']['editable_area'] = 'editable_area';
 		}
 
 		// Without any output the menu wouldn't be editable
 		// An empty <ul> is not valid
 		if( !count($menu) ){
-			$attributes_ul['class']['empty_menu'] = 'empty_menu';
-			$this->FormatMenuElement('div',$attributes_ul);
+			$attr_ul['class']['empty_menu'] = 'empty_menu';
+			$this->FormatMenuElement('div',$attr_ul);
 			echo '</div>';
 			return;
 		}
@@ -629,7 +629,7 @@ class Menu{
 
 
 		//output
-		$this->FormatMenuElement('ul',$attributes_ul);
+		$this->FormatMenuElement('ul',$attr_ul);
 
 
 		$menu			= array_keys($menu);
@@ -646,9 +646,9 @@ class Menu{
 			}
 
 
-			$attributes_a		= $this->MenuAttributesA();
-			$attributes_li		= $this->clean_attributes;
-			$attributes_ul		= $this->clean_attributes;
+			$attr_a			= $this->MenuAttributesA();
+			$attr_li		= $this->clean_attributes;
+			$attr_ul		= $this->clean_attributes;
 
 
 			//ordered or "indexed" classes
@@ -662,12 +662,12 @@ class Menu{
 					$li_count[$this->curr_level]++;
 				}
 				if( !empty($GP_MENU_CLASSES['li_']) ){
-					$attributes_li['class']['li_'] = $GP_MENU_CLASSES['li_'].$li_count[$this->curr_level];
+					$attr_li['class']['li_'] = $GP_MENU_CLASSES['li_'].$li_count[$this->curr_level];
 				}
 			}
 
 			if( $page->menu_css_indexed && !empty($GP_MENU_CLASSES['li_title_']) ){
-				$attributes_li['class']['li_title_'] = $GP_MENU_CLASSES['li_title_'].$this->curr_key;
+				$attr_li['class']['li_title_'] = $GP_MENU_CLASSES['li_title_'].$this->curr_key;
 			}
 
 
@@ -676,68 +676,35 @@ class Menu{
 			if( array_key_exists($next_index,$menu) ){
 				$next_index		= $menu[$next_index];
 				if( $this->curr_level < $source_menu[$next_index]['level'] ){
-					$attributes_a['class']['haschildren']			= $GP_MENU_CLASSES['haschildren'];
-					$attributes_li['class']['haschildren_li']		= $GP_MENU_CLASSES['haschildren_li'];
+					$attr_a['class']['haschildren']			= $GP_MENU_CLASSES['haschildren'];
+					$attr_li['class']['haschildren_li']		= $GP_MENU_CLASSES['haschildren_li'];
 				}
 			}
 
 			if( isset($this->curr_info['url']) && ($this->curr_info['url'] == $page->title || $this->curr_info['url'] == $page_title_full) ){
-				$attributes_a['class']['selected']				= $GP_MENU_CLASSES['selected'];
-				$attributes_li['class']['selected_li']			= $GP_MENU_CLASSES['selected_li'];
+				$attr_a['class']['selected']				= $GP_MENU_CLASSES['selected'];
+				$attr_li['class']['selected_li']			= $GP_MENU_CLASSES['selected_li'];
 
 			}elseif( $this->curr_key == $page->gp_index ){
-				$attributes_a['class']['selected']				= $GP_MENU_CLASSES['selected'];
-				$attributes_li['class']['selected_li']			= $GP_MENU_CLASSES['selected_li'];
+				$attr_a['class']['selected']				= $GP_MENU_CLASSES['selected'];
+				$attr_li['class']['selected_li']			= $GP_MENU_CLASSES['selected_li'];
 
 			}elseif( in_array($this->curr_key,$parents) ){
-				$attributes_a['class']['childselected']			= $GP_MENU_CLASSES['childselected'];
-				$attributes_li['class']['childselected_li']		= $GP_MENU_CLASSES['childselected_li'];
+				$attr_a['class']['childselected']			= $GP_MENU_CLASSES['childselected'];
+				$attr_li['class']['childselected_li']		= $GP_MENU_CLASSES['childselected_li'];
 
 			}
 
-
-			//current is a child of the previous
-			if( $this->curr_level > $this->prev_level ){
-
-				if( $menu_ii === 0 ){ //only needed if the menu starts below the start_level
-					$this->FormatMenuElement('li',$attributes_li);
-				}
-
-				if( !empty($GP_MENU_CLASSES['child_ul']) ){
-					$attributes_ul['class'][] = $GP_MENU_CLASSES['child_ul'];
-				}
-
-				$open_loops = $this->curr_level - $this->prev_level;
-
-				for($i = 0; $i<$open_loops; $i++){
-					$this->FormatMenuElement('ul',$attributes_ul);
-					if( $i < $open_loops-1 ){
-						echo '<li>';
-					}
-					$this->prev_level++;
-					$attributes_ul = $this->clean_attributes;
-				}
-
-			//current is higher than the previous
-			}elseif( $this->curr_level <= $this->prev_level ){
-
-				$this->OutputMenu_CloseLevel($this->curr_level);
-
-				if( $open ){
-					echo '</li>';
-				}
-			}
-
-
-			$this->FormatMenuElement('li',$attributes_li);
-			$this->FormatMenuElement('a',$attributes_a);
+			$this->FormatStart($menu_ii, $attr_li, $attr_ul, $open);
+			$this->FormatMenuElement('li',$attr_li);
+			$this->FormatMenuElement('a',$attr_a);
 
 
 			$this->prev_level	= $this->curr_level;
 			$open				= true;
 		}
 
-		$this->OutputMenu_CloseLevel( $start_level);
+		$this->CloseLevel( $start_level);
 	}
 
 
@@ -788,13 +755,13 @@ class Menu{
 
 
 		// opening ul
-		$attributes_ul = $this->clean_attributes;
-		$attributes_ul['class']['menu_top'] = $GP_MENU_CLASSES['menu_top'];
+		$attr_ul = $this->clean_attributes;
+		$attr_ul['class']['menu_top'] = $GP_MENU_CLASSES['menu_top'];
 		if( \gp\tool\Output::$edit_area_id ){
-			$attributes_ul['id'] = \gp\tool\Output::$edit_area_id;
-			$attributes_ul['class']['editable_area'] = 'editable_area';
+			$attr_ul['id'] = \gp\tool\Output::$edit_area_id;
+			$attr_ul['class']['editable_area'] = 'editable_area';
 		}
-		$this->FormatMenuElement('ul',$attributes_ul);
+		$this->FormatMenuElement('ul',$attr_ul);
 
 
 		//
@@ -804,19 +771,19 @@ class Menu{
 			$this->curr_level	= $this->curr_info['level'];
 
 
-			$title					= \gp\tool::IndexToTitle($this->curr_key);
-			$attributes_li			= $this->clean_attributes;
-			$attributes_a			= $this->MenuAttributesA();
+			$title				= \gp\tool::IndexToTitle($this->curr_key);
+			$attr_li			= $this->clean_attributes;
+			$attr_a				= $this->MenuAttributesA();
 
 
 			if( $title == $page->title ){
-				$attributes_a['class']['selected']		= $GP_MENU_CLASSES['selected'];
-				$attributes_li['class']['selected_li']	= $GP_MENU_CLASSES['selected_li'];
+				$attr_a['class']['selected']		= $GP_MENU_CLASSES['selected'];
+				$attr_li['class']['selected_li']	= $GP_MENU_CLASSES['selected_li'];
 			}
 
 
-			$this->FormatMenuElement('li',$attributes_li);
-			$this->FormatMenuElement('a',$attributes_a);
+			$this->FormatMenuElement('li',$attr_li);
+			$this->FormatMenuElement('a',$attr_a);
 			echo '</li>';
 		}
 
@@ -850,10 +817,51 @@ class Menu{
 
 
 	/**
+	 * Format the start of a menu level
+	 *
+	 */
+	protected function FormatStart($menu_ii, $attr_li, $attr_ul, $open){
+		global $GP_MENU_CLASSES;
+
+		//current is a child of the previous
+		if( $this->curr_level > $this->prev_level ){
+
+			if( $menu_ii === 0 ){ //only needed if the menu starts below the start_level
+				$this->FormatMenuElement('li',$attr_li);
+			}
+
+			if( !empty($GP_MENU_CLASSES['child_ul']) ){
+				$attr_ul['class'][] = $GP_MENU_CLASSES['child_ul'];
+			}
+
+			$open_loops = $this->curr_level - $this->prev_level;
+
+			for($i = 0; $i<$open_loops; $i++){
+				$this->FormatMenuElement('ul',$attr_ul);
+				if( $i < $open_loops-1 ){
+					echo '<li>';
+				}
+				$this->prev_level++;
+				$attr_ul = $this->clean_attributes;
+			}
+
+			return;
+		}
+
+		//current is higher than the previous
+		$this->CloseLevel($this->curr_level);
+
+		if( $open ){
+			echo '</li>';
+		}
+	}
+
+
+	/**
 	 * Add list item closing tags till $this->prev_level == $level
 	 *
 	 */
-	protected  function OutputMenu_CloseLevel( $level){
+	protected  function CloseLevel( $level){
 		while( $level < $this->prev_level){
 			echo '</li></ul>';
 

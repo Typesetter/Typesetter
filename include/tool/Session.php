@@ -23,15 +23,16 @@ namespace gp\tool{
 				case 'login':
 					self::LogIn();
 				return;
-				case 'ClearErrors':
-					self::ClearErrors();
-				break;
-
 			}
 
 			if( isset($_COOKIE[gp_session_cookie]) ){
 				self::CheckPosts();
 				self::start($_COOKIE[gp_session_cookie]);
+			}
+
+
+			if( $cmd === 'ClearErrors' ){
+				self::ClearErrors();
 			}
 
 		}
@@ -1121,7 +1122,6 @@ namespace gp\tool{
 		 *
 		 */
 		public static function ClearErrors(){
-
 			\gp\admin\Tools\Errors::ClearAll();
 			$title = \gp\tool::WhichPage();
 			\gp\tool::Redirect(\gp\tool::GetUrl($title,'',false));
@@ -1161,7 +1161,7 @@ namespace gp\tool{
 			$msg = 'Warning: One or more components have caused fatal errors and have been disabled. '
 					.\gp\tool::Link('Admin/Errors','More Information','','style="white-space:nowrap"')
 					.' &nbsp; '
-					.\gp\tool::Link($page->title,'Clear All Errors','cmd=ClearErrors'); //cannot be creq
+					.\gp\tool::Link($page->title,'Clear All Errors','cmd=ClearErrors','','ClearErrors'); //cannot be creq
 			msg($msg);
 		}
 

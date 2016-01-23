@@ -270,6 +270,12 @@ class Errors{
 	public static function ClearAll(){
 		global $dataDir;
 
+
+		if( !\gp\tool::verify_nonce( 'ClearErrors' ) ){
+			return;
+		}
+
+
 		$dir = $dataDir.'/data/_site';
 
 		//remove matching errors

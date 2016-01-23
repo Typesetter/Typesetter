@@ -284,127 +284,13 @@ class gp_install{
 
 		$this->CheckDataFolder();
 		$this->CheckPHPVersion();
+		$this->CheckEnv();
+		$this->CheckSafeMode();
+		$this->CheckGlobals();
+		$this->CheckMagic();
+		$this->CheckMemory();
 
 
-
-		//make sure $_SERVER['SCRIPT_NAME'] is set
-		echo '<tr>';
-			echo '<td>';
-			echo '<a href="http://www.php.net/manual/reserved.variables.server.php" target="_blank">';
-			echo 'SCRIPT_NAME or PHP_SELF';
-			echo '</a>';
-			echo '</td>';
-			$checkValue = \gp\tool::GetEnv('SCRIPT_NAME','index.php') || \gp\tool::GetEnv('PHP_SELF','index.php');
-			$this->passed = $this->passed && $checkValue;
-			$this->StatusRow($checkValue,$langmessage['Set'],$langmessage['Not_Set']);
-			echo '</tr>';
-
-		//Check Safe Mode
-		$checkValue = \gp\tool::IniGet('safe_mode');
-		echo '<tr>';
-			echo '<td>';
-			echo '<a href="http://php.net/manual/features.safe-mode.php" target="_blank">';
-			echo 'Safe Mode';
-			echo '</a>';
-			echo '</td>';
-			if( $checkValue ){
-				echo '<td class="failed">'.$langmessage['Failed'].': '.$langmessage['See_Below'].'</td>';
-				echo '<td class="failed">'.$langmessage['On'].'</td>';
-				$this->passed = false;
-			}else{
-				echo '<td class="passed">'.$langmessage['Passed'].'</td>';
-				echo '<td class="passed">'.$langmessage['Off'].'</td>';
-			}
-			echo '<td>'.$langmessage['Off'].'</td>';
-			echo '</tr>';
-
-		//Check register_globals
-		$checkValue = \gp\tool::IniGet('register_globals');
-		echo '<tr>';
-			echo '<td>';
-			echo '<a href="http://php.net/manual/security.globals.php" target="_blank">';
-			echo 'Register Globals';
-			echo '</a>';
-			echo '</td>';
-			if( $checkValue ){
-				echo '<td class="passed_orange">'.$langmessage['Passed'].'</td>';
-				echo '<td class="passed_orange">'.$langmessage['On'].'</td>';
-			}else{
-				echo '<td class="passed">'.$langmessage['Passed'].'</td>';
-				echo '<td class="passed">'.$langmessage['Off'].'</td>';
-			}
-			echo '<td>'.$langmessage['Off'].'</td>';
-			echo '</tr>';
-
-		//Check \gp\tool::IniGet( 'magic_quotes_sybase' )
-		$checkValue = !\gp\tool::IniGet('magic_quotes_sybase');
-		$this->passed = $this->passed && $checkValue;
-		echo '<tr>';
-			echo '<td>';
-			echo '<a href="http://php.net/manual/security.magicquotes.disabling.php" target="_blank">';
-			echo 'Magic Quotes Sybase';
-			echo '</a>';
-			echo '</td>';
-			$this->StatusRow($checkValue,$langmessage['Off'],$langmessage['On']);
-			echo '</tr>';
-
-		//magic_quotes_runtime
-		$checkValue = !\gp\tool::IniGet('magic_quotes_runtime');
-		$this->passed = $this->passed && $checkValue;
-		echo '<tr>';
-			echo '<td>';
-			echo '<a href="http://php.net/manual/security.magicquotes.disabling.php" target="_blank">';
-			echo 'Magic Quotes Runtime';
-			echo '</a>';
-			echo '</td>';
-			$this->StatusRow($checkValue,$langmessage['Off'],$langmessage['On']);
-			echo '</tr>';
-
-
-		// memory_limit
-		// LESS compiling uses a fair amount of memory
-		$checkValue = ini_get('memory_limit');
-		echo '<tr>';
-			echo '<td>';
-			echo '<a href="http://php.net/manual/ini.core.php#ini.memory-limit" target="_blank">';
-			echo 'Memory Limit';
-			echo '</a>';
-			echo '</td>';
-
-			//can't get memory_limit value
-			if( @ini_set('memory_limit','96M') !== false ){
-				echo '<td class="passed">'.$langmessage['Passed'].'</td>';
-				echo '<td class="passed">Adjustable</td>';
-
-			}elseif( !$checkValue ){
-				echo '<td class="passed_orange">'.$langmessage['Passed'].'</td>';
-				echo '<td class="passed_orange">';
-				echo '???';
-				echo '</td>';
-
-			}else{
-				$byte_value = \gp\tool::getByteValue($checkValue);
-				$mb_16		= \gp\tool::getByteValue('16M');
-				if( $byte_value > 100663296 ){
-					echo '<td class="passed">'.$langmessage['Passed'].'</td>';
-					echo '<td class="passed">';
-					echo $checkValue;
-					echo '</td>';
-
-				}elseif( $byte_value >= $mb_16 ){
-					echo '<td class="passed_orange">'.$langmessage['Passed'].'</td>';
-					echo '<td class="passed_orange">';
-					echo $checkValue;
-					echo '</td>';
-
-				}else{
-					echo '<td class="failed">'.$langmessage['Failed'].'</td>';
-					echo '<td class="failed">'.$checkValue.'</td>';
-					$this->passed = false;
-				}
-			}
-			echo '<td> 16M+ or Adjustable</td>';
-			echo '</tr>';
 
 
 		echo '<tr>';
@@ -446,18 +332,44 @@ class gp_install{
 
 	}
 
-	public function StatusRow($value_ok,$label_true,$label_false){
+	/**
+	 * Output a status row
+	 *
+	 */
+	public function StatusRow($value_ok, $label_true, $label_false){
 		global $langmessage;
 
 		if( $value_ok ){
-			echo '<td class="passed">'.$langmessage['Passed'].'</td>';
-			echo '<td class="passed">'.$label_true.'</td>';
+			$this->StatusRowFormat('passed',$label_true, $label_true);
 		}else{
-			echo '<td class="failed">'.$langmessage['Failed'].'</td>';
-			echo '<td class="failed">'.$label_true.'</td>';
+			$this->StatusRowFormat('failed',$label_false, $label_true);
+			$this->passed = false;
 		}
-		echo '<td>'.$label_true.'</td>';
+
 	}
+
+	private function StatusRowFormat($class, $curr, $expected, $status = null){
+		global $langmessage;
+
+		if( is_null($status) ){
+			switch($class){
+				case 'failed':
+				$status = $langmessage['Failed'];
+				break;
+
+				case 'passed_orange':
+				case 'passed':
+				$status = $langmessage['Passed'];
+				break;
+			}
+		}
+
+		echo '<td class="'.$class.'">'.$status.'</td>';
+		echo '<td class="'.$class.'">'.$curr.'</td>';
+		echo '<td>'.$expected.'</td>';
+		echo '</tr>';
+	}
+
 
 	/**
 	 * Check the data folder to see if it's writable
@@ -476,32 +388,32 @@ class gp_install{
 		echo $show;
 		echo ' &nbsp; </td>';
 
+		$status = null;
+		$class = 'passed';
+
 
 		if( !is_dir($folder)){
-			if(!@mkdir($folder, 0777)) {
-				echo '<td class="passed_orange">'.$langmessage['See_Below'].' (0)</td>';
-				$this->can_write_data = $this->passed = false;
-			}else{
-				echo '<td class="passed">'.$langmessage['Passed'].'</td>';
+			if( !@mkdir($folder, 0777) ){
+				$class	= 'passed_orange';
+				$status	= $langmessage['See_Below'].' (0)';
+				$this->can_write_data = false;
+				$this->passed = false;
 			}
-		}elseif( gp_is_writable($folder) ){
-			echo '<td class="passed">'.$langmessage['Passed'].'</td>';
-		}else{
-			echo '<td class="passed_orange">'.$langmessage['See_Below'].' (1)</td>';
-			$this->can_write_data = $this->passed = false;
+		}elseif( !gp_is_writable($folder) ){
+			$class		= 'passed_orange';
+			$status		= $langmessage['See_Below'].' (1)';
+			$this->can_write_data = false;
+			$this->passed = false;
 		}
 
 		if( $this->can_write_data ){
-			echo '<td class="passed">';
-			echo $langmessage['Writable'];
+			$current = $langmessage['Writable'];
 		}else{
-			echo '<td class="passed_orange">';
-			echo $langmessage['Not Writable'];
+			$current = $langmessage['Not Writable'];
 		}
 
-		echo '</td><td>';
-		echo $langmessage['Writable'];
-		echo '</td></tr>';
+
+		$this->StatusRowFormat($class,$current,$langmessage['Writable'], $status);
 	}
 
 
@@ -512,28 +424,148 @@ class gp_install{
 	private function CheckPHPVersion(){
 		global $langmessage;
 
+		$version = phpversion();
+		$class = 'passed';
+
 		echo '<tr><td>';
 		echo $langmessage['PHP_Version'];
 		echo '</td>';
-		if( !function_exists('version_compare') ){
-			echo '<td class="failed">'.$langmessage['Failed'].'</td>';
-			echo '<td class="failed">???</td>';
+
+		if( version_compare($version,'5.3','<') ){
+			$class = 'failed';
 			$this->passed = false;
-
-		}elseif( version_compare(phpversion(),'5.3','>=') ){
-			echo '<td class="passed">'.$langmessage['Passed'].'</td>';
-			echo '<td class="passed">'.phpversion().'</td>';
-
-		}else{
-			echo '<td class="failed">'.$langmessage['Failed'].'</td>';
-			echo '<td class="failed">'.phpversion().'</td>';
-			$this->passed = false;
-
 		}
-		echo '<td>5.3+</td></tr>';
+
+		$this->StatusRowFormat($class,$version,'5.3+');
 	}
 
 
+	/**
+	 * Check the env for server variables
+	 *
+	 */
+	private function CheckEnv(){
+		global $langmessage;
+
+		//make sure $_SERVER['SCRIPT_NAME'] is set
+		echo '<tr><td>';
+		echo '<a href="http://www.php.net/manual/reserved.variables.server.php" target="_blank">';
+		echo 'SCRIPT_NAME or PHP_SELF';
+		echo '</a>';
+		echo '</td>';
+		$checkValue = \gp\tool::GetEnv('SCRIPT_NAME','index.php') || \gp\tool::GetEnv('PHP_SELF','index.php');
+		$this->StatusRow($checkValue,$langmessage['Set'],$langmessage['Not_Set']);
+	}
+
+
+	/**
+	 * Check php's safe mode setting
+	 *
+	 */
+	private function CheckSafeMode(){
+		global $langmessage;
+
+		$checkValue = !\gp\tool::IniGet('safe_mode');
+		echo '<tr><td>';
+		echo '<a href="http://php.net/manual/features.safe-mode.php" target="_blank">';
+		echo 'Safe Mode';
+		echo '</a>';
+		echo '</td>';
+
+		$this->StatusRow($checkValue, $langmessage['Off'], $langmessage['On']);
+	}
+
+
+	/**
+	 * Check the register globals setting
+	 *
+	 */
+	private function CheckGlobals(){
+		global $langmessage;
+
+		$checkValue = \gp\tool::IniGet('register_globals');
+		echo '<tr><td>';
+		echo '<a href="http://php.net/manual/security.globals.php" target="_blank">';
+		echo 'Register Globals';
+		echo '</a>';
+		echo '</td>';
+		if( $checkValue ){
+			$this->StatusRowFormat('passed_orange',$langmessage['On'],$langmessage['Off']);
+		}else{
+			$this->StatusRowFormat('passed',$langmessage['Off'],$langmessage['Off']);
+		}
+	}
+
+
+	/**
+	 * Check magic_quotes_sybase and magic_quotes_runtime
+	 *
+	 */
+	private function CheckMagic(){
+		global $langmessage;
+
+		// magic_quotes_sybase
+		$checkValue = !\gp\tool::IniGet('magic_quotes_sybase');
+		echo '<tr><td>';
+		echo '<a href="http://php.net/manual/security.magicquotes.disabling.php" target="_blank">';
+		echo 'Magic Quotes Sybase';
+		echo '</a>';
+		echo '</td>';
+		$this->StatusRow($checkValue,$langmessage['Off'],$langmessage['On']);
+
+		//magic_quotes_runtime
+		$checkValue = !\gp\tool::IniGet('magic_quotes_runtime');
+		echo '<tr><td>';
+		echo '<a href="http://php.net/manual/security.magicquotes.disabling.php" target="_blank">';
+		echo 'Magic Quotes Runtime';
+		echo '</a>';
+		echo '</td>';
+		$this->StatusRow($checkValue,$langmessage['Off'],$langmessage['On']);
+	}
+
+	/**
+	 * Check php's memory limit
+	 * LESS compilation uses a fair amount of memory
+	 */
+	private function CheckMemory(){
+
+		$checkValue = ini_get('memory_limit');
+		$expected	= '16M+ or Adjustable';
+		echo '<tr><td>';
+		echo '<a href="http://php.net/manual/ini.core.php#ini.memory-limit" target="_blank">';
+		echo 'Memory Limit';
+		echo '</a>';
+		echo '</td>';
+
+		// adjustable
+		if( @ini_set('memory_limit','96M') !== false ){
+			$this->StatusRow('passed','Adjustable',$expected);
+			return;
+		}
+
+		// cant check memory
+		if( !$checkValue ){
+			$this->StatusRow('passed_orange','???',$expected);
+			return;
+		}
+
+
+		$byte_value = \gp\tool::getByteValue($checkValue);
+		$mb_16		= \gp\tool::getByteValue('16M');
+
+
+		if( $byte_value > 100663296 ){
+			$this->StatusRow('passed',$checkValue,$expected);
+
+		}elseif( $byte_value >= $mb_16 ){
+			$this->StatusRow('passed_orange',$checkValue,$expected);
+
+		}else{
+			$this->StatusRow('failed',$checkValue,$expected);
+			$this->passed = false;
+		}
+
+	}
 
 	//very unlikely, cannot have two ".php/" in path: see SetGlobalPaths()
 	public function CheckPath(){
@@ -593,24 +625,22 @@ class gp_install{
 		echo '</td>';
 
 		if( !file_exists($index) ){
-			echo '<td class="passed">'.$langmessage['Passed'].'</td>';
-			echo '<td class="passed" colspan="2"></td>';
+			$this->StatusRowFormat('passed','','');
 		}else{
-			echo '<td class="passed_orange">'.$langmessage['Passed'].'</td>';
-			echo '<td class="passed_orange" colspan="2">'.$langmessage['index.html exists'].'</td>';
+			$this->StatusRowFormat('passed_orange',$langmessage['index.html exists'],'');
 		}
-		echo '</tr>';
-
 	}
 
-
+	/**
+	 * Check for image manipulation functions
+	 *
+	 */
 	public function CheckImages(){
 		global $langmessage;
 
-		$passed = false;
 		$supported = array();
 		if( function_exists('imagetypes') ){
-			$passed = true;
+
 			$supported_types = imagetypes();
 			if( $supported_types & IMG_JPG ){
 				$supported[] = 'jpg';
@@ -628,29 +658,22 @@ class gp_install{
 
 
 
-		echo '<tr>';
-			echo '<td>';
-			echo '<a href="http://www.php.net/manual/en/book.image.php" target="_blank">';
-			echo $langmessage['image_functions'];
-			echo '</a>';
-			echo '</td>';
-			if( $passed ){
+		echo '<tr><td>';
+		echo '<a href="http://www.php.net/manual/en/book.image.php" target="_blank">';
+		echo $langmessage['image_functions'];
+		echo '</a>';
+		echo '</td>';
+		if( count($supported) > 0 ){
 
-				if( count($supported) == 4 ){
-					echo '<td class="passed">'.$langmessage['Passed'].'</td>';
-					echo '<td class="passed" colspan="2">'.implode(', ',$supported).'</td>';
-				}else{
-					echo '<td class="passed_orange">'.$langmessage['partially_available'].'</td>';
-					echo '<td class="passed_orange" colspan="2">'.implode(', ',$supported).'</td>';
-				}
-
+			if( count($supported) == 4 ){
+				$this->StatusRowFormat('passed',implode(', ',$supported),'');
 			}else{
-				echo '<td class="passed_orange">'.$langmessage['Passed'].'</td>';
-				echo '<td class="passed_orange" colspan="2">'.$langmessage['unavailable'].'</td>';
+				$this->StatusRowFormat('passed_orange',implode(', ',$supported),'',$langmessage['partially_available'] );
 			}
-			echo '</tr>';
 
-
+		}else{
+			$this->StatusRowFormat('passed_orange',$langmessage['unavailable'],'');
+		}
 	}
 
 
@@ -1048,7 +1071,6 @@ class gp_install{
 			}else{
 				echo '<option value="'.$lang.'">';
 			}
-			//echo $lang.' - '.$label;
 			echo '&nbsp; '.$label.' &nbsp; ('.$lang.')';
 			echo '</option>';
 		}
@@ -1082,8 +1104,6 @@ class gp_install{
 	public function Form_Entry(){
 		global $langmessage;
 
-		//echo '<h3>'.$langmessage['configuration'].'</h3>';
-		//echo '<h3>'.$langmessage['User Details'].'</h3>';
 		echo '<form action="'.\gp\tool::GetUrl('').'" method="post">';
 		echo '<table class="styledtable">';
 		\gp\install\Tools::Form_UserDetails();

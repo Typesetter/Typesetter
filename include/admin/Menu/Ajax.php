@@ -411,7 +411,7 @@ class Ajax extends \gp\admin\Menu{
 			// Insert Hidden
 			$avail = $this->GetAvail_Current();
 
-			if( $avail ){
+			if( !empty($avail) ){
 				echo sprintf($format_top,'gp_Insert_Hidden','nodisplay');
 				$avail = array_flip($avail);
 				\gp\admin\Menu\Tools::ScrollList($avail,'keys[]','checkbox',true);
@@ -421,37 +421,17 @@ class Ajax extends \gp\admin\Menu{
 
 
 			// Insert Deleted / Restore from trash
-			$trashtitles = \gp\admin\Content\Trash::TrashFiles();
-			if( $trashtitles ){
+			$scroll_list = $this->TrashScrolllist();
+			if( !empty($scroll_list) ){
 				echo sprintf($format_top,'gp_Insert_Deleted','nodisplay');
-
-				echo '<div class="gpui-scrolllist">';
-				echo '<input type="text" name="search" value="" class="gpsearch" placeholder="'.$langmessage['Search'].'" autocomplete="off" />';
-				foreach($trashtitles as $title => $info){
-					if( empty($info['label']) ){
-						continue;
-					}
-					echo '<label>';
-					echo '<input type="checkbox" name="titles[]" value="'.htmlspecialchars($title).'" />';
-					echo '<span>';
-					echo $info['label'];
-					echo '<span class="slug">';
-					if( isset($info['title']) ){
-						echo '/'.$info['title'];
-					}else{
-						echo '/'.$title;
-					}
-					echo '</span>';
-					echo '</span>';
-					echo '</label>';
-				}
-				echo '</div>';
+				echo $scroll_list;
 				echo sprintf($format_bottom,'RestoreFromTrash',$langmessage['restore_from_trash']);
 			}
 
 
 			//Insert External
 			echo '<div id="gp_Insert_External" class="nodisplay">';
+			$args					= array();
 			$args['insert_how']		= $cmd;
 			$args['insert_where']	= $_REQUEST['insert_where'];
 			$this->ExternalForm('NewExternal',$langmessage['insert_into_menu'],$args);
@@ -460,6 +440,44 @@ class Ajax extends \gp\admin\Menu{
 
 		echo '</div>';
 
+	}
+
+	/**
+	 * Generate a scroll list selector for trash titles
+	 *
+	 */
+	function TrashScrolllist(){
+		global $langmessage;
+
+		$trashtitles = \gp\admin\Content\Trash::TrashFiles();
+		if( empty($trashtitles) ){
+			return '';
+		}
+
+		ob_start();
+		echo '<div class="gpui-scrolllist">';
+		echo '<input type="text" name="search" value="" class="gpsearch" placeholder="'.$langmessage['Search'].'" autocomplete="off" />';
+		foreach($trashtitles as $title => $info){
+			if( empty($info['label']) ){
+				continue;
+			}
+			echo '<label>';
+			echo '<input type="checkbox" name="titles[]" value="'.htmlspecialchars($title).'" />';
+			echo '<span>';
+			echo $info['label'];
+			echo '<span class="slug">';
+			if( isset($info['title']) ){
+				echo '/'.$info['title'];
+			}else{
+				echo '/'.$title;
+			}
+			echo '</span>';
+			echo '</span>';
+			echo '</label>';
+		}
+		echo '</div>';
+
+		return ob_get_clean();
 	}
 
 
@@ -504,7 +522,7 @@ class Ajax extends \gp\admin\Menu{
 		$titles = array();
 		if( isset($_POST['keys']) ){
 			foreach($_POST['keys'] as $index){
-				if( $title = \gp\tool::IndexToTitle($index) ){
+				if( \gp\tool::IndexToTitle($index) !== false ){
 					$titles[$index]['level'] = 0;
 				}
 			}
@@ -544,12 +562,11 @@ class Ajax extends \gp\admin\Menu{
 
 		$this->CacheSettings();
 
-		$titles_lower	= array_change_key_case($gp_index,CASE_LOWER);
 		$titles			= array();
 		$menu			= \gp\admin\Content\Trash::RestoreTitles($_POST['titles']);
 
 
-		if( !$menu ){
+		if( empty($menu) ){
 			msg($langmessage['OOPS']);
 			$this->RestoreSettings();
 			return false;
@@ -650,6 +667,7 @@ class Ajax extends \gp\admin\Menu{
 		}
 
 		$key			= $this->NewExternalKey();
+		$insert			= array();
 		$insert[$key]	= $array;
 
 		if( !$this->SaveNew($insert) ){
@@ -868,7 +886,6 @@ class Ajax extends \gp\admin\Menu{
 		$_POST			+= array('index'=>'');
 		$indexes		= explode(',',$_POST['index']);
 		$trash_data		= array();
-		$delete_files	= array();
 
 
 		foreach($indexes as $index){

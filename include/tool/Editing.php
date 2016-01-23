@@ -372,7 +372,6 @@ namespace gp\tool{
 			$path = str_replace(array('../','./','..'),array('','',''),$path);
 
 			//change other characters to underscore
-			//$pattern = '#\\.|\\||\\:|\\?|\\*|"|<|>|[[:cntrl:]]#';
 			$pattern = '#\\||\\:|\\?|\\*|"|<|>|[[:cntrl:]]#u';
 			$path = preg_replace( $pattern, '_', $path ) ;
 
@@ -409,8 +408,7 @@ namespace gp\tool{
 
 			$title = trim($title);
 			if( $spaces ){
-				//$title = preg_replace( '#[[:space:]]#', $spaces, $title );
-				$title = str_replace(' ',$spaces,$title);
+				$title = preg_replace( '#[[:space:]]#', $spaces, $title );
 			}
 
 			return $title;
@@ -442,7 +440,6 @@ namespace gp\tool{
 			$options['output-xhtml'] = true;			//need this so that <br> will be <br/> .. etc
 			$options['show-body-only'] = true;
 			$options['hide-comments'] = false;
-			//$options['anchor-as-name'] = true;		//default is true, but not alwasy availabel. When true, adds an id attribute to anchor; when false, removes the name attribute... poorly designed, but we need it to be true
 
 
 			$tidy = tidy_parse_string($text,$options,'utf8');
@@ -451,7 +448,6 @@ namespace gp\tool{
 			if( tidy_get_status($tidy) === 2){
 				// 2 is magic number for fatal error
 				// http://www.php.net/manual/en/function.tidy-get-status.php
-				$tidyErrors[] = 'Tidy found serious XHTML errors: <br/>'.nl2br(htmlspecialchars( tidy_get_error_buffer($tidy)));
 				return false;
 			}
 			$text = tidy_get_output($tidy);
@@ -591,7 +587,7 @@ namespace gp\tool{
 
 			$plugins = array();
 
-			// (4) CMS defaults
+			// 4) CMS defaults
 			$defaults = array(
 							//'customConfig'				=> \gp\tool::GetDir('/include/js/ckeditor_config.js'),
 							'skin'						=> 'kama',
@@ -607,30 +603,17 @@ namespace gp\tool{
 							'disableNativeSpellChecker'	=> false,
 							'FillEmptyBlocks'			=> false,
 							'autoParagraph'				=> false,
-							//'removePlugins'				=> 'about',
 							'extraAllowedContent'		=> 'iframe[align,frameborder,height,longdesc,marginheight,marginwidth,name,sandbox,scrolling,seamless,src,srcdoc,width];script[async,charset,defer,src,type,xml]; *[accesskey,contenteditable,contextmenu,dir,draggable,dropzone,hidden,id,lang,spellcheck,style,tabindex,title,translate](*)',
 
 							'toolbar'					=> array(
 																array('Sourcedialog','Source','Templates','ShowBlocks','Undo','Redo','RemoveFormat'), //,'Maximize' does not work well
 																array('Cut','Copy','Paste','PasteText','PasteFromWord','SelectAll','Find','Replace'),
 																array('HorizontalRule','Smiley','SpecialChar','PageBreak','TextColor','BGColor'),
-																array('Link','Unlink','Anchor','Image','Flash','Table'), //'CreatePlaceholder'
+																array('Link','Unlink','Anchor','Image','Flash','Table'),
 																array('Format','Font','FontSize'),
 																array('JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','NumberedList','BulletedList','Outdent','Indent'),
 																array('Bold','Italic','Underline','Strike','Blockquote','Subscript','Superscript','About')
 															),
-							/*
-							'toolbar'					=> array(
-																array( 'items' => array('Source','Templates','ShowBlocks','Undo','Redo','RemoveFormat') ), //,'Maximize' does not work well
-																array( 'items' => array('Cut','Copy','Paste','PasteText','PasteFromWord','SelectAll','Find','Replace') ),
-																array( 'items' => array('HorizontalRule','Smiley','SpecialChar','PageBreak','TextColor','BGColor') ),
-																array( 'items' => array('Link','Unlink','Anchor','Image','Flash','Table') ), //'CreatePlaceholder'
-																array( 'items' => array('Format','Font','FontSize') ),
-																array( 'items' => array('JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','NumberedList','BulletedList','Outdent','Indent') ),
-																array( 'items' => array('Bold','Italic','Underline','Strike','Blockquote','Subscript','Superscript') )
-															),
-															*/
-
 
 						);
 
@@ -640,16 +623,16 @@ namespace gp\tool{
 				$defaults['language'] = $config['langeditor'];
 			}
 
-			// (3) $options
+			// 3) $options
 			$options += $defaults;
 
 
-			// (2) Addon settings
+			// 2) Addon settings
 			$options = \gp\tool\Plugins::Filter('CKEditorConfig',array($options));	// $options['config_key'] = 'config_value';
 			$plugins = \gp\tool\Plugins::Filter('CKEditorPlugins',array($plugins)); // $plugins['plugin_name'] = 'path_to_plugin_folder';
 
 
-			// (1) User
+			// 1) User
 			$admin_config = self::CKAdminConfig();
 			foreach($admin_config['plugins'] as $plugin => $plugin_info){
 				$plugins[$plugin] = \gp\tool::GetDir('/data/_ckeditor/'.$plugin.'/');
@@ -748,7 +731,7 @@ namespace gp\tool{
 		 * Include Editing
 		 *
 		 */
-		function IncludeDialog( $section ){
+		public static function IncludeDialog( $section ){
 			global $page,$langmessage,$config;
 
 			$page->ajaxReplace = array();
@@ -796,10 +779,11 @@ namespace gp\tool{
 
 
 			//file include autocomplete
-			$options['admin_vals'] = false;
-			$options['var_name'] = 'source';
-			$file_includes = self::AutoCompleteValues(false,$options);
-			$page->ajaxReplace[] = array('gp_autocomplete_include','file',$file_includes);
+			$options				= array();
+			$options['admin_vals']	= false;
+			$options['var_name']	= 'source';
+			$file_includes			= self::AutoCompleteValues(false,$options);
+			$page->ajaxReplace[]	= array('gp_autocomplete_include','file',$file_includes);
 
 
 			//gadget include autocomplete
@@ -904,21 +888,14 @@ namespace gp\tool{
 
 
 			//size and position variables
-			$orig_w = $width = imagesx($src_img);
-			$orig_h = $height = imagesy($src_img);
-			$posx = $posy = 0;
-			if( isset($_REQUEST['posx']) && is_numeric($_REQUEST['posx']) ){
-				$posx = $_REQUEST['posx'];
-			}
-			if( isset($_REQUEST['posy']) && is_numeric($_REQUEST['posy']) ){
-				$posy = $_REQUEST['posy'];
-			}
-			if( isset($_REQUEST['width']) && is_numeric($_REQUEST['width']) ){
-				$width = $_REQUEST['width'];
-			}
-			if( isset($_REQUEST['height']) && is_numeric($_REQUEST['height']) ){
-				$height = $_REQUEST['height'];
-			}
+			$orig_w		= imagesx($src_img);
+			$orig_h		= imagesy($src_img);
+
+			$posx		= self::ReqNumeric('posx',0);
+			$posy		= self::ReqNumeric('posy',0);
+
+			$width		= self::ReqNumeric('width',$orig_w);
+			$height		= self::ReqNumeric('height',$orig_h);
 
 
 			//check to see if the image needs to be resized
@@ -936,7 +913,7 @@ namespace gp\tool{
 			//destination file
 			$name	= basename($source_file_rel);
 			$parts	= explode('.',$name);
-			$type	= array_pop($parts);
+
 
 			//remove the time portion of the filename
 			if( count($parts) > 1 ){
@@ -948,12 +925,8 @@ namespace gp\tool{
 			}
 
 			$name				= implode('.',$parts);
-			$time				= time();
-			if( isset($_REQUEST['time']) && ctype_digit($_REQUEST['time']) ){
-				$time			= $_REQUEST['time'];
-			}elseif( isset($_REQUEST['req_time']) && ctype_digit($_REQUEST['req_time']) ){
-				$time			= $_REQUEST['req_time'];
-			}
+			$time				= self::ReqTime();
+			msg($time);
 
 			$dest_img_rel		= $dest_dir.$name.'.'.$time.'.png';
 			$dest_img_full		= $dataDir.$dest_img_rel;
@@ -978,6 +951,36 @@ namespace gp\tool{
 
 			\gp\admin\Content\Uploaded::CreateThumbnail($dest_img_full);
 			return true;
+		}
+
+
+		/**
+		 * Return the value in the request if it's a numeric value
+		 *
+		 */
+		public static function ReqNumeric($key, $value){
+
+			if( isset($_REQUEST[$key]) && is_numeric($_REQUEST[$key]) ){
+				$value = $_REQUEST[$key];
+			}
+			return $value;
+		}
+
+		/**
+		 * Get the timestamp used by the current request
+		 *
+		 */
+		public static function ReqTime(){
+
+			if( isset($_REQUEST['time']) && ctype_digit($_REQUEST['time']) ){
+				return $_REQUEST['time'];
+			}
+
+			if( isset($_REQUEST['req_time']) && ctype_digit($_REQUEST['req_time']) ){
+				return $_REQUEST['req_time'];
+			}
+
+			return time();
 		}
 
 
@@ -1074,7 +1077,7 @@ namespace gp\tool{
 		 * Preview an include section
 		 *
 		 */
-		function PreviewSection( $section, $section_num, $title, $file_stats ){
+		public static function PreviewSection( $section, $section_num, $title, $file_stats ){
 			global $page, $langmessage;
 
 			$page->ajaxReplace = array();

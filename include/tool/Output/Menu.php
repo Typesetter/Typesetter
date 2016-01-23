@@ -8,6 +8,9 @@ class Menu{
 
 	protected $clean_attributes		= array( 'attr'=>'', 'class'=>array(), 'id'=>'' );
 
+	private $page_title;
+	private $parents				= array();
+
 	private $curr_key;
 	private $curr_level;
 	private $curr_info;
@@ -16,7 +19,10 @@ class Menu{
 
 
 	public function __construct(){
-		global $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES;
+		global $page, $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES;
+
+		$this->page_title		= \gp\tool::GetUrl($page->title);
+
 
 		//menu classes
 		if( !is_array($GP_MENU_CLASSES) ){
@@ -622,10 +628,9 @@ class Menu{
 
 
 		$this->prev_level		= $start_level;
-		$page_title_full		= \gp\tool::GetUrl($page->title);
 		$open					= false;
 		$li_count				= array();
-		$parents				= \gp\tool::Parents($page->gp_index,$source_menu);
+		$this->parents			= \gp\tool::Parents($page->gp_index,$source_menu);
 
 
 		//output
@@ -652,18 +657,18 @@ class Menu{
 
 
 			//ordered or "indexed" classes
-			if( $page->menu_css_ordered ){
+			if( $page->menu_css_ordered && !empty($GP_MENU_CLASSES['li_']) ){
 				for($i = $this->prev_level;$i > $this->curr_level; $i--){
 					unset($li_count[$i]);
 				}
+
 				if( !isset($li_count[$this->curr_level]) ){
 					$li_count[$this->curr_level] = 0;
 				}else{
 					$li_count[$this->curr_level]++;
 				}
-				if( !empty($GP_MENU_CLASSES['li_']) ){
-					$attr_li['class']['li_'] = $GP_MENU_CLASSES['li_'].$li_count[$this->curr_level];
-				}
+
+				$attr_li['class']['li_'] = $GP_MENU_CLASSES['li_'].$li_count[$this->curr_level];
 			}
 
 			if( $page->menu_css_indexed && !empty($GP_MENU_CLASSES['li_title_']) ){
@@ -681,20 +686,8 @@ class Menu{
 				}
 			}
 
-			if( isset($this->curr_info['url']) && ($this->curr_info['url'] == $page->title || $this->curr_info['url'] == $page_title_full) ){
-				$attr_a['class']['selected']				= $GP_MENU_CLASSES['selected'];
-				$attr_li['class']['selected_li']			= $GP_MENU_CLASSES['selected_li'];
 
-			}elseif( $this->curr_key == $page->gp_index ){
-				$attr_a['class']['selected']				= $GP_MENU_CLASSES['selected'];
-				$attr_li['class']['selected_li']			= $GP_MENU_CLASSES['selected_li'];
-
-			}elseif( in_array($this->curr_key,$parents) ){
-				$attr_a['class']['childselected']			= $GP_MENU_CLASSES['childselected'];
-				$attr_li['class']['childselected_li']		= $GP_MENU_CLASSES['childselected_li'];
-
-			}
-
+			$this->Attrs($attr_a, $attr_li);
 			$this->FormatStart($menu_ii, $attr_li, $attr_ul, $open);
 			$this->FormatMenuElement('li',$attr_li);
 			$this->FormatMenuElement('a',$attr_a);
@@ -706,6 +699,7 @@ class Menu{
 
 		$this->CloseLevel( $start_level);
 	}
+
 
 
 	/**
@@ -775,19 +769,35 @@ class Menu{
 			$attr_li			= $this->clean_attributes;
 			$attr_a				= $this->MenuAttributesA();
 
-
-			if( $title == $page->title ){
-				$attr_a['class']['selected']		= $GP_MENU_CLASSES['selected'];
-				$attr_li['class']['selected_li']	= $GP_MENU_CLASSES['selected_li'];
-			}
-
-
+			$this->Attrs($attr_a, $attr_li);
 			$this->FormatMenuElement('li',$attr_li);
 			$this->FormatMenuElement('a',$attr_a);
 			echo '</li>';
 		}
 
 		echo '</ul>';
+	}
+
+	/**
+	 * Set menu element attributes
+	 *
+	 */
+	protected function Attrs( &$attr_a, &$attr_li){
+		global $page, $GP_MENU_CLASSES;
+
+		if( isset($this->curr_info['url']) && ($this->curr_info['url'] == $page->title || $this->curr_info['url'] == $this->page_title) ){
+			$attr_a['class']['selected']				= $GP_MENU_CLASSES['selected'];
+			$attr_li['class']['selected_li']			= $GP_MENU_CLASSES['selected_li'];
+
+		}elseif( $this->curr_key == $page->gp_index ){
+			$attr_a['class']['selected']				= $GP_MENU_CLASSES['selected'];
+			$attr_li['class']['selected_li']			= $GP_MENU_CLASSES['selected_li'];
+
+		}elseif( in_array($this->curr_key,$this->parents) ){
+			$attr_a['class']['childselected']			= $GP_MENU_CLASSES['childselected'];
+			$attr_li['class']['childselected_li']		= $GP_MENU_CLASSES['childselected_li'];
+
+		}
 	}
 
 

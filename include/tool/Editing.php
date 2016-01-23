@@ -926,7 +926,7 @@ namespace gp\tool{
 
 			$name				= implode('.',$parts);
 			$time				= self::ReqTime();
-			msg($time);
+
 
 			$dest_img_rel		= $dest_dir.$name.'.'.$time.'.png';
 			$dest_img_full		= $dataDir.$dest_img_rel;

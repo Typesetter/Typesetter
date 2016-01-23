@@ -6,6 +6,8 @@ namespace gp\Page{
 
 	class Rename{
 
+		static $hidden_rows = false;
+
 		/**
 		 * Display form in popup for renaming page given by $index
 		 *
@@ -18,6 +20,13 @@ namespace gp\Page{
 			$title			= \gp\tool::IndexToTitle($index);
 			$title_info		= $gp_titles[$index];
 
+			$title_info		+= array(
+								'browser_title'	=> '',
+								'keywords'		=> '',
+								'description'	=> '',
+								'rel'			=> '',
+								);
+
 			if( empty($_REQUEST['new_title']) ){
 				$new_title = \gp\tool::LabelSpecialChars($label);
 			}else{
@@ -25,9 +34,6 @@ namespace gp\Page{
 			}
 			$new_title = str_replace('_',' ',$new_title);
 
-
-			//show more options?
-			$hidden_rows = false;
 
 			ob_start();
 			echo '<div class="inline_box">';
@@ -46,11 +52,11 @@ namespace gp\Page{
 			echo $langmessage['options'];
 			echo '</th></tr>';
 			echo '</thead>';
+			echo '<tbody>';
 
 			//label
-			echo '<tbody>';
-			echo '<tr><td class="formlabel">'.$langmessage['label'].'</td>';
-			echo '<td><input type="text" class="title_label gpinput" name="new_label" maxlength="100" size="50" value="'.$new_title.'" />';
+			self::FormLabel('label');
+			echo '<input type="text" class="title_label gpinput" name="new_label" maxlength="100" size="50" value="'.$new_title.'" />';
 			echo '</td></tr>';
 
 
@@ -62,8 +68,7 @@ namespace gp\Page{
 				$attr = 'disabled="disabled" ';
 				$class .= ' sync_label';
 			}
-			echo '<tr><td class="formlabel">'.$langmessage['Slug/URL'];
-			echo '</td><td>';
+			self::FormLabel('Slug/URL');
 			echo '<input type="text" class="'.$class.' gpinput" name="new_title" maxlength="100" size="50" value="'.htmlspecialchars($title).'" '.$attr.'/>';
 			self::ToggleSync($attr);
 			echo '</td></tr>';
@@ -71,85 +76,48 @@ namespace gp\Page{
 
 
 			//browser title defaults to label
-			$attr		= '';
-			$class		= 'browser_title';
-			if( isset($title_info['browser_title']) ){
-				echo '<tr>';
-				$browser_title = $title_info['browser_title'];
-			}else{
-				echo '<tr class="nodisplay">';
-				$hidden_rows = true;
-				$browser_title = $label;
+			$attr			= '';
+			$class			= 'browser_title';
+			$browser_title	= $title_info['browser_title'];
+			self::FormLabel('browser_title',$title_info['browser_title']);
+
+			if( empty($title_info['browser_title']) ){
+				$browser_title = htmlspecialchars($label);
 				$attr = 'disabled="disabled" ';
 				$class .= ' sync_label';
 			}
-			echo '<td class="formlabel">';
-			echo $langmessage['browser_title'];
-			echo '</td><td>';
+
 			echo '<input type="text" class="'.$class.' gpinput" size="50" name="browser_title" value="'.$browser_title.'" '.$attr.'/>';
 			self::ToggleSync($attr);
 			echo '</td></tr>';
 
 
 			//meta keywords
-			$keywords = '';
-			if( isset($title_info['keywords']) ){
-				echo '<tr>';
-				$keywords = $title_info['keywords'];
-			}else{
-				echo '<tr class="nodisplay">';
-				$hidden_rows = true;
-			}
-			echo '<td class="formlabel">';
-			echo $langmessage['keywords'];
-			echo '</td><td>';
-			echo '<input type="text" class="gpinput" size="50" name="keywords" value="'.$keywords.'" />';
+			self::FormLabel('keywords',$title_info['keywords']);
+			echo '<input type="text" class="gpinput" size="50" name="keywords" value="'.$title_info['keywords'].'" />';
 			echo '</td></tr>';
 
 
 			//meta description
-			$description = '';
-			if( isset($title_info['description']) ){
-				echo '<tr>';
-				$description = $title_info['description'];
-			}else{
-				echo '<tr class="nodisplay">';
-				$hidden_rows = true;
-			}
-			echo '<td class="formlabel">';
-			echo $langmessage['description'];
-			echo '</td><td>';
-
-			$count_label = sprintf($langmessage['_characters'],'<span>'.strlen($description).'</span>');
+			self::FormLabel('description',$title_info['description']);
+			$count_label = sprintf($langmessage['_characters'],'<span>'.strlen($title_info['description']).'</span>');
 			echo '<span class="show_character_count gptextarea">';
-			echo '<textarea rows="2" cols="50" name="description">'.$description.'</textarea>';
+			echo '<textarea rows="2" cols="50" name="description">'.$title_info['description'].'</textarea>';
 			echo '<span class="character_count">'.$count_label.'</span>';
 			echo '</span>';
-
 			echo '</td></tr>';
 
 
 			//robots
-			$rel = '';
-			if( isset($title_info['rel']) ){
-				echo '<tr>';
-				$rel = $title_info['rel'];
-			}else{
-				echo '<tr class="nodisplay">';
-				$hidden_rows = true;
-			}
-			echo '<td class="formlabel">';
-			echo $langmessage['robots'];
-			echo '</td><td>';
-
+			self::FormLabel('robots',$title_info['rel']);
 			echo '<label>';
-			$checked = (strpos($rel,'nofollow') !== false) ? 'checked="checked"' : '';
+			$checked = (strpos($title_info['rel'],'nofollow') !== false) ? 'checked="checked"' : '';
 			echo '<input type="checkbox" name="nofollow" value="nofollow" '.$checked.'/> ';
 			echo '  Nofollow ';
 			echo '</label>';
 
 			echo '<label>';
-			$checked = (strpos($rel,'noindex') !== false) ? 'checked="checked"' : '';
+			$checked = (strpos($title_info['rel'],'noindex') !== false) ? 'checked="checked"' : '';
 			echo '<input type="checkbox" name="noindex" value="noindex" '.$checked.'/> ';
 			echo ' Noindex';
 			echo '</label>';
@@ -169,7 +137,7 @@ namespace gp\Page{
 			echo '</p>';
 
 			echo '<p>';
-			if( $hidden_rows )  echo ' &nbsp; <a data-cmd="showmore" >+ '.$langmessage['more_options'].'</a>';
+			if( self::$hidden_rows )  echo ' &nbsp; <a data-cmd="showmore" >+ '.$langmessage['more_options'].'</a>';
 			echo '</p>';
 
 			echo '<p>';
@@ -200,6 +168,20 @@ namespace gp\Page{
 			$array[1] = '';
 			$array[2] = '';
 			$page->ajaxReplace[] = $array;
+		}
+
+		protected static function FormLabel($lang_key, $hidden_if_empty = 'not-empty' ){
+			global $langmessage;
+
+			if( empty($hidden_if_empty) ){
+				echo '<tr class="nodisplay">';
+				self::$hidden_rows = true;
+			}else{
+				echo '<tr>';
+			}
+			echo '<td class="formlabel">';
+			echo $langmessage[$lang_key];
+			echo '</td><td>';
 		}
 
 
@@ -244,8 +226,8 @@ namespace gp\Page{
 				return false;
 			}
 
-			$id = $gp_index[$title];
-			$title_info = &$gp_titles[$id];
+			$id				= $gp_index[$title];
+			$title_info		= &$gp_titles[$id];
 
 			//change the label
 			$title_info['label'] = \gp\admin\Tools::PostedLabel($_POST['new_label']);
@@ -309,6 +291,7 @@ namespace gp\Page{
 			return $title;
 		}
 
+		private static function
 
 
 		private static function RenameFileWorker($title){

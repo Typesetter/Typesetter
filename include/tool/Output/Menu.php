@@ -765,7 +765,6 @@ class Menu{
 			$this->curr_level	= $this->curr_info['level'];
 
 
-			$title				= \gp\tool::IndexToTitle($this->curr_key);
 			$attr_li			= $this->clean_attributes;
 			$attr_a				= $this->MenuAttributesA();
 

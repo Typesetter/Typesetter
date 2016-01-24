@@ -10,13 +10,13 @@ class Edit extends \gp\Page{
 	protected $draft_exists			= false;
 	protected $draft_stats			= array();
 	protected $draft_meta			= array();
-	protected $sections_before		= array();
 	protected $revision;
 
 	protected $permission_edit;
 	protected $permission_menu;
 
 	private $cmds					= array();
+	private $checksum;
 
 	public function __construct($title,$type){
 		parent::__construct($title,$type);
@@ -133,7 +133,7 @@ class Edit extends \gp\Page{
 			$this->draft_stats		= \gp\tool\Files::$last_stats;
 		}
 
-		$this->sections_before		= $this->file_sections;
+		$this->checksum				= $this->Checksum();
 	}
 
 
@@ -594,17 +594,13 @@ class Edit extends \gp\Page{
 		}
 
 		$this->ajaxReplace = array();
-		$check_before = serialize($this);
-		$check_before = sha1( $check_before ) . md5( $check_before );
 
 		if( !\gp\tool\Editing::SectionEdit( $cmd, $this->file_sections[$section_num], $section_num, $this->title, $this->file_stats ) ){
 			return;
 		}
 
 		//save if the file was changed
-		$check_after = serialize($this);
-		$check_after = sha1( $check_after ) . md5( $check_after );
-		if( $check_before != $check_after && !$this->SaveThis() ){
+		if( !$this->SaveThis() ){
 			msg($langmessage['OOPS'].'(3)');
 			return false;
 		}
@@ -656,8 +652,6 @@ class Edit extends \gp\Page{
 
 
 	public function RenameForm(){
-		global $gp_index;
-
 		$action = \gp\tool::GetUrl($this->title);
 		\gp\Page\Rename::RenameForm( $this->gp_index, $action );
 	}
@@ -803,10 +797,9 @@ class Edit extends \gp\Page{
 		}
 
 		//return true if nothing has changed
-		if( $this->sections_before == $this->file_sections ){
+		if( $this->checksum === $this->Checksum() ){
 			return true;
 		}
-
 
 		//file count
 		if( !isset($this->meta_data['file_number']) ){
@@ -824,6 +817,21 @@ class Edit extends \gp\Page{
 
 		$this->draft_exists = true;
 		return true;
+	}
+
+
+	/**
+	 * Generate a checksum for this page, used to determine if the page content has been edited
+	 *
+	 */
+	public function Checksum(){
+		$temp = array();
+		foreach($this->file_sections as $section){
+			unset($section['modified'], $section['modified_by']);
+			$temp[] = $section;
+		}
+		$checksum = serialize($temp);
+		return sha1($checksum) . md5($checksum);
 	}
 
 

@@ -59,12 +59,13 @@ gp_editing = {
 
 		if( !gp_editor ) return;
 
-		if( !gp_editing.IsDirty() ){
+		/*if( !gp_editing.IsDirty() ){
 			if( typeof(callback) == 'function' ){
 				callback.call();
 			}
 			return;
 		}
+		*/
 
 		var $wrap = $('#ckeditor_wrap');
 

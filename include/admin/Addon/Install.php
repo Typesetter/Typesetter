@@ -17,6 +17,7 @@ class Install extends \gp\admin\Addon\Tools{
 	public $path_remote			= 'Admin/Addons/Remote';
 	public $code_folder_name	= '_addoncode';
 	public $can_install_links	= true;
+	private $installed_ids		= array();
 
 
 	//searching
@@ -295,6 +296,7 @@ class Install extends \gp\admin\Addon\Tools{
 	 *
 	 */
 	public static function InstalledIds(){
+		global $config;
 
 		$ids = array();
 

@@ -395,11 +395,7 @@ class Edit extends \gp\Page{
 				$new_request['wrapper_class'] = isset($type[1]) ? $type[1] : '';
 				$output .= $this->NewNestedSection($new_request, true);
 			}else{
-				$class = '';
-				if( strpos($type,'.') ){
-					list($type,$class) = explode('.',$type,2);
-				}
-				$output .= $this->GetNewSection($type, $class);
+				$output .= $this->GetNewSection($type);
 			}
 
 		}
@@ -412,8 +408,10 @@ class Edit extends \gp\Page{
 		$this->ajaxReplace[] 	= array('PreviewSection','',$output);
 	}
 
-	public function GetNewSection($type, $class = ''){
+	public function GetNewSection($type){
 		static $num 	= null;
+
+		$class = self::TypeClass($type);
 
 		if( !$num ){
 			$num		= time().rand(0,10000);
@@ -770,11 +768,7 @@ class Edit extends \gp\Page{
 
 		foreach($types as $type){
 
-			if( strpos($type,'.') ){
-				list($type,$class) = explode('.',$type,2);
-			}else{
-				$class = '';
-			}
+			self::TypeClass($type);
 
 			if( isset($section_types[$type]) ){
 				$text_label[] = $section_types[$type]['label'];
@@ -797,7 +791,7 @@ class Edit extends \gp\Page{
 				$q		= array('types' => $types,'wrapper_class'=>$wrapper_class);
 				$q		= json_encode($q);
 			}else{
-				$q		= $type;
+				$q		= $types[0];
 			}
 
 
@@ -825,14 +819,30 @@ class Edit extends \gp\Page{
 			$q					= array('cmd'=> 'NewNestedSection','types' => $types,'wrapper_class'=>$wrapper_class);
 			$preview_content	= $page->NewNestedSection($q, true);
 		}else{
-			$q					= array('cmd'=> 'NewSectionContent','type' => $type );
-			$preview_content	= $page->GetNewSection($type);
+			$q					= array('cmd'=> 'NewSectionContent','type' => $types[0] );
+			$preview_content	= $page->GetNewSection($types[0]);
 		}
 
 
 		$attrs					= array('data-cmd'=>'AddSection','class'=>'preview_section','data-response'=>$preview_content);
 
 		return '<div>'.\gp\tool::Link($page->title,$label,http_build_query($q,'','&amp;'),$attrs).'</div>';
+	}
+
+
+	/**
+	 * Split the type and class from $type = div.classname into $type = div, $class = classname
+	 *
+	 */
+	public static function TypeClass( &$type ){
+
+		$class = '';
+
+		if( strpos($type,'.') ){
+			list($type,$class) = explode('.',$type,2);
+		}
+
+		return $class;
 	}
 
 

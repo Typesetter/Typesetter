@@ -22,6 +22,7 @@ class Edit extends \gp\Page{
 		parent::__construct($title,$type);
 	}
 
+
 	public function RunScript(){
 		global $langmessage;
 		$cmd = \gp\tool::GetCommand();
@@ -35,12 +36,9 @@ class Edit extends \gp\Page{
 
 
 		//allow addons to effect page actions and how a page is displayed
-		$cmd_after = \gp\tool\Plugins::Filter('PageRunScript',array($cmd));
-		if( $cmd !== $cmd_after ){
-			$cmd = $cmd_after;
-			if( $cmd === 'return' ){
-				return;
-			}
+		$cmd = \gp\tool\Plugins::Filter('PageRunScript',array($cmd));
+		if( $cmd === 'return' ){
+			return;
 		}
 
 
@@ -48,12 +46,6 @@ class Edit extends \gp\Page{
 		if( $this->permission_edit ){
 
 			switch($cmd){
-
-				/* gallery/image editing */
-				case 'gallery_folder':
-				case 'gallery_images':
-					$this->GalleryImages();
-				return;
 
 				case 'new_dir':
 					$this->contentBuffer = \gp\tool\Editing::NewDirForm();
@@ -95,14 +87,16 @@ class Edit extends \gp\Page{
 
 		$cmd = strtolower($cmd);
 
-		if( isset($this->cmds[$cmd]) ){
-			$this->$cmd();
-			$this->RunCommands($this->cmds[$cmd]);
+		if( !isset($this->cmds[$cmd]) ){
+			$this->DefaultDisplay();
 			return;
 		}
 
+		if( method_exists($this,$cmd) ){
+			$this->$cmd();
+		}
 
-		$this->DefaultDisplay();
+		$this->RunCommands($this->cmds[$cmd]);
 	}
 
 
@@ -158,6 +152,13 @@ class Edit extends \gp\Page{
 
 
 		if( $this->permission_edit ){
+
+			/* gallery/image editing */
+			$this->cmds['gallery_folder']		= 'GalleryImages';
+			$this->cmds['gallery_images']		= 'GalleryImages';
+			$this->cmds['galleryimages']		= 'return';
+
+
 			$this->cmds['rawcontent']			= 'return';
 			$this->cmds['managesections']		= 'newsectioncontent';
 			$this->cmds['newsectioncontent']	= 'return';

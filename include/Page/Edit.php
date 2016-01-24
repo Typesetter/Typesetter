@@ -205,6 +205,8 @@ class Edit extends \gp\Page{
 			return $this->RevisionLinks();
 		}
 
+		$admin_links		= array();
+
 
 		//history
 		$backup_files		= $this->BackupFiles();
@@ -269,6 +271,8 @@ class Edit extends \gp\Page{
 	 */
 	protected function RevisionLinks(){
 		global $langmessage;
+
+		$admin_links		= array();
 
 
 		//previous && next revision

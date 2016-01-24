@@ -663,39 +663,53 @@ class Menu{
 	 * Show a menu entry if it's an internal page
 	 *
 	 */
-	public function ShowLevel_Title($menu_key,$menu_value,$layout_info){
+	public function ShowLevel_Title($menu_key, $menu_value, $layout_info){
+
+		$title		= \gp\tool::IndexToTitle($menu_key);
+		$data		= $this->GetReplaceData($title, $layout_info, $menu_key, $menu_value);
+		$label		= \gp\tool::GetLabel($title);
+
+		\gp\admin\Menu\Tools::MenuLink($data);
+		echo \gp\tool::LabelSpecialChars($label);
+		echo '</a>';
+	}
+
+
+	/**
+	 * Get the output formatting data for
+	 *
+	 */
+	public function GetReplaceData($title, $layout_info, $menu_key, $menu_value=array() ){
 		global $langmessage, $gp_titles;
 
-
-		$title						= \gp\tool::IndexToTitle($menu_key);
-		$label						= \gp\tool::GetLabel($title);
 		$isSpecialLink				= \gp\tool::SpecialOrAdmin($title);
-
-
 
 		//get the data for this title
 		$data = array(
-					'key'			=>	$menu_key
-					,'url'			=>	\gp\tool::GetUrl($title)
-					,'level'		=>	$menu_value['level']
-					,'title'		=>	$title
-					,'special'		=>	$isSpecialLink
-					,'has_layout'	=>	!empty($gp_titles[$menu_key]['gpLayout'])
-					,'layout_color'	=>	$layout_info['color']
-					,'layout_label'	=>	$layout_info['label']
-					,'types'		=>	$gp_titles[$menu_key]['type']
-					,'opts'			=> ''
+					'key'			=>	$menu_key,
+					'url'			=>	\gp\tool::GetUrl($title),
+					'title'			=>	$title,
+					'special'		=>	$isSpecialLink,
+					'has_layout'	=>	!empty($gp_titles[$menu_key]['gpLayout']),
+					'layout_color'	=>	$layout_info['color'],
+					'layout_label'	=>	$layout_info['label'],
+					'types'			=>	$gp_titles[$menu_key]['type'],
+					'opts'			=>	'',
+					'size'			=>	'',
+					'mtime'			=> '',
 					);
 
 
+		if( isset($menu_value['level']) ){
+			$data['level'] = $menu_value['level'];
+		}
+
 		if( $isSpecialLink === false ){
-			$file = \gp\tool\Files::PageFile($title);
-			$stats = @stat($file);
+			$file	= \gp\tool\Files::PageFile($title);
+			$stats	= @stat($file);
 			if( $stats ){
-				$data += array(
-						'size'		=>	\gp\admin\Tools::FormatBytes($stats['size'])
-						,'mtime'	=>	\gp\tool::date($langmessage['strftime_datetime'],$stats['mtime'])
-						);
+				$data['size']	= \gp\admin\Tools::FormatBytes($stats['size']);
+				$data['time']	= \gp\tool::date($langmessage['strftime_datetime'],$stats['mtime']);
 			}
 		}
 
@@ -706,9 +720,7 @@ class Menu{
 			$data['opts'] = $menu_options;
 		}
 
-		\gp\admin\Menu\Tools::MenuLink($data);
-		echo \gp\tool::LabelSpecialChars($label);
-		echo '</a>';
+		return $data;
 	}
 
 
@@ -1008,94 +1020,75 @@ class Menu{
 	public function SearchDisplayRow($title){
 		global $langmessage, $gpLayouts, $gp_index, $gp_menu, $gp_titles;
 
-		$title_index		= $gp_index[$title];
-		$is_special			= \gp\tool::SpecialOrAdmin($title);
-		$file				= \gp\tool\Files::PageFile($title);
-		$stats				= @stat($file);
-		$mtime				= false;
-		$size				= false;
-		$layout				= \gp\admin\Menu\Tools::CurrentLayout($title_index);
+		$menu_key			= $gp_index[$title];
+		$layout				= \gp\admin\Menu\Tools::CurrentLayout($menu_key);
 		$layout_info		= $gpLayouts[$layout];
+		$label				= \gp\tool::GetLabel($title);
+		$data				= $this->GetReplaceData($title, $layout_info, $menu_key);
 
-
-		if( $stats ){
-			$mtime = $stats['mtime'];
-			$size = $stats['size'];
-		}
 
 
 		echo '<tr><td>';
-
-		$label = \gp\tool::GetLabel($title);
 		echo \gp\tool::Link($title,\gp\tool::LabelSpecialChars($label));
 
 
 		//area only display on mouseover
-		echo '<div><div>';//style="position:absolute;bottom:0;left:10px;right:10px;"
+		echo '<div><div>';
 
-		echo $this->Link('Admin/Menu/Ajax',$langmessage['rename/details'],'cmd=renameform&index='.urlencode($title_index),array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
+		echo $this->Link('Admin/Menu/Ajax',$langmessage['rename/details'],'cmd=renameform&index='.urlencode($menu_key),array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax'));
 
 
-		$q		= 'cmd=ToggleVisibility&index='.urlencode($title_index);
-		if( isset($gp_titles[$title_index]['vis']) ){
-			$label	= $langmessage['Visibility'].': '.$langmessage['Private'];
-		}else{
+		$label	= $langmessage['Visibility'].': '.$langmessage['Private'];
+		$q		= 'cmd=ToggleVisibility&index='.urlencode($menu_key);
+		if( !isset($gp_titles[$menu_key]['vis']) ){
 			$label	= $langmessage['Visibility'].': '.$langmessage['Public'];
 			$q		.= '&visibility=private';
 		}
 
-		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax');
-		echo $this->Link('Admin/Menu/Ajax',$label,$q,$attrs);
+		echo $this->Link('Admin/Menu/Ajax',$label,$q,'data-cmd="gpajax"');
 
-		if( $is_special === false ){
+		if( $data['special'] === false ){
 			echo \gp\tool::Link($title,$langmessage['Revision History'],'cmd=ViewHistory','class="view_edit_link not_multiple" data-cmd="gpabox"');
-			echo $this->Link('Admin/Menu/Ajax',$langmessage['Copy'],'cmd=CopyForm&index='.urlencode($title_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
+			echo $this->Link('Admin/Menu/Ajax',$langmessage['Copy'],'cmd=CopyForm&index='.urlencode($menu_key),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
 		}
 
 
 		echo '<span>';
 		echo $langmessage['layout'].': ';
-		echo $this->Link('Admin/Menu',$layout_info['label'],'cmd=layout&index='.urlencode($title_index),array('title'=>$langmessage['layout'],'data-cmd'=>'gpabox'));
+		echo $this->Link('Admin/Menu',$layout_info['label'],'cmd=layout&index='.urlencode($menu_key),array('title'=>$langmessage['layout'],'data-cmd'=>'gpabox'));
 		echo '</span>';
 
-		if( $is_special === false ){
-			echo $this->Link('Admin/Menu/Ajax',$langmessage['delete'],'cmd=MoveToTrash&index='.urlencode($title_index),array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
+		if( $data['special'] === false ){
+			echo $this->Link('Admin/Menu/Ajax',$langmessage['delete'],'cmd=MoveToTrash&index='.urlencode($menu_key),array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
 		}
 
-		\gp\tool\Plugins::Action('MenuPageOptions',array($title,$title_index,false,$layout_info));
+		echo $data['opts'];
 
 		//stats
 		if( gpdebug ){
-			echo '<span>Data Index: '.$title_index.'</span>';
+			echo '<span>Data Index: '.$menu_key.'</span>';
 		}
 		echo '</div>&nbsp;</div>';
 
 		//types
 		echo '</td><td>';
-		$this->TitleTypes($title_index);
+		$this->TitleTypes($menu_key);
 
 		//children
 		echo '</td><td>';
-		if( isset($this->inherit_info[$title_index]) && isset($this->inherit_info[$title_index]['children']) ){
-			echo $this->inherit_info[$title_index]['children'];
-		}elseif( isset($gp_menu[$title_index]) ){
+		if( isset($this->inherit_info[$menu_key]) && isset($this->inherit_info[$menu_key]['children']) ){
+			echo $this->inherit_info[$menu_key]['children'];
+		}elseif( isset($gp_menu[$menu_key]) ){
 			echo '0';
 		}else{
 			echo $langmessage['Not In Main Menu'];
 		}
 
-		//size
+		//size, modified
 		echo '</td><td>';
-		if( $size ){
-			echo \gp\admin\Tools::FormatBytes($size);
-		}
-
-		//modified
+		echo $data['size'];
 		echo '</td><td>';
-		if( $mtime ){
-			echo \gp\tool::date($langmessage['strftime_datetime'],$mtime);
-		}
-
+		echo $data['mtime'];
 		echo '</td></tr>';
 	}
 

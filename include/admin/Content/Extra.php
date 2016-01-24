@@ -40,10 +40,6 @@ class Extra{
 				}
 			break;
 
-			case 'rawcontent':
-				$this->RawContent();
-			break;
-
 
 			/* gallery editing */
 			case 'gallery_folder':
@@ -76,30 +72,6 @@ class Extra{
 		asort($this->areas);
 	}
 
-
-	/**
-	 * Send the content of the extra area to the client in a json response
-	 * @deprecated 3.6
-	 *
-	 */
-	public function RawContent(){
-		global $page,$langmessage;
-
-		trigger_error('RawContent() is a deprecated function');
-
-		//for ajax responses
-		$page->ajaxReplace = array();
-
-
-		$title = \gp\tool\Editing::CleanTitle($_REQUEST['file']);
-		if( empty($title) ){
-			message($langmessage['OOPS']);
-			return false;
-		}
-
-		$data = \gp\tool\Output::ExtraContent($title);
-		$page->ajaxReplace[] = array('rawcontent','',$data['content']);
-	}
 
 	/**
 	 * Delete an extra content area

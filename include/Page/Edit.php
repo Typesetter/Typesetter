@@ -154,7 +154,6 @@ class Edit extends \gp\Page{
 			$this->cmds['galleryimages']		= 'return';
 
 
-			$this->cmds['rawcontent']			= 'return';
 			$this->cmds['managesections']		= 'return';
 			$this->cmds['savesections']			= 'return';
 			$this->cmds['viewrevision']			= 'return';
@@ -348,7 +347,6 @@ class Edit extends \gp\Page{
 	 */
 	public function NewNestedSection($types, $wrapper_class ){
 		global $langmessage;
-		$this->ajaxReplace				= array();
 
 		$new_section		= \gp\tool\Editing::DefaultContent('wrapper_section');
 
@@ -376,15 +374,9 @@ class Edit extends \gp\Page{
 	}
 
 	public function GetNewSection($type){
-		static $num 	= null;
 
-		$class = self::TypeClass($type);
-
-		if( !$num ){
-			$num		= time().rand(0,10000);
-		}
-
-		$num++;
+		$class			= self::TypeClass($type);
+		$num			= time().rand(0,10000);
 		$new_section	= \gp\tool\Editing::DefaultContent($type);
 		$content		= \gp\tool\Output\Sections::RenderSection($new_section,$num,$this->title,$this->file_stats);
 
@@ -614,31 +606,6 @@ class Edit extends \gp\Page{
 	}
 
 
-	/*
-	 * Send the raw content of the section to the gpResponse handler
-	 *
-	 */
-	public function RawContent(){
-		global $langmessage;
-
-		//for ajax responses
-		$this->ajaxReplace = array();
-
-		$section = $_REQUEST['section'];
-		if( !is_numeric($section) ){
-			msg($langmessage['OOPS'].'(1)');
-			return false;
-		}
-
-		if( !isset($this->file_sections[$section]) ){
-			msg($langmessage['OOPS'].'(1)');
-			return false;
-		}
-
-		$this->ajaxReplace[] = array('rawcontent','',$this->file_sections[$section]['content']);
-	}
-
-
 	/**
 	 * Recalculate the file_type string for this file
 	 * Updates $this->meta_data and $gp_titles
@@ -692,7 +659,7 @@ class Edit extends \gp\Page{
 
 	/**
 	 * Return a list of section types
-	 * @static
+	 *
 	 */
 	public static function NewSections($checkboxes = false){
 
@@ -779,18 +746,15 @@ class Edit extends \gp\Page{
 			return;
 		}
 
-
 		//links used for new sections
+		$attrs					= array('data-cmd'=>'AddSection','class'=>'preview_section');
 		if( count($types) > 1 ){
-			$preview_content	= $page->NewNestedSection($types, $wrapper_class);
+			$attrs['data-response']	= $page->NewNestedSection($types, $wrapper_class);
 		}else{
-			$preview_content	= $page->GetNewSection($types[0]);
+			$attrs['data-response']	= $page->GetNewSection($types[0]);
 		}
 
-
-		$attrs					= array('data-cmd'=>'AddSection','class'=>'preview_section','data-response'=>$preview_content);
-
-		return '<div>'.\gp\tool::Link($page->title,$label,'',$attrs).'</div>';
+		return '<div><a '.\gp\tool::LinkAttr($attrs,$label).'>'.$label.'</a></div>';
 	}
 
 

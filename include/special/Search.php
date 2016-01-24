@@ -137,20 +137,8 @@ class Search{
 			return;
 		}
 
-		usort( $this->results, array('special_gpsearch', 'sort') );
-
-		// remove duplicates
-		$links = array();
-		foreach($this->results as $key => $result){
-			//$link = \gp\tool::GetUrl( $result['slug'], $result['query'] );
-			$link =  isset($result['url']) ? $result['url'] : \gp\tool::GetUrl( $result['slug'], $result['query'] );
-			$link = mb_strtolower($link);
-			if( in_array($link,$links) ){
-				unset($this->results[$key]);
-			}else{
-				$links[] = $link;
-			}
-		}
+		$this->RemoveDups();
+		usort( $this->results, array($this, 'sort') );
 
 
 		$total = count($this->results);
@@ -176,7 +164,6 @@ class Search{
 		echo '<div class="result_list">';
 		foreach($this->results as $result){
 			echo '<div><h4>';
-			//echo \gp\tool::Link($result['slug'],$result['label'],$result['query']);
 			echo isset($result['link']) ? $result['link'] : \gp\tool::Link($result['slug'],$result['label'],$result['query']);
 			echo '</h4>';
 
@@ -191,26 +178,88 @@ class Search{
 		}
 		echo '</div>';
 
-		if( $total_pages > 1 ){
-			echo '<ul class="search_nav search_nav_bottom pagination">';
-			for($i=0;$i<$total_pages;$i++){
-				if( $i == $current_page ){
-					echo '<li><span>'.($i+1).'</span></li> ';
-					continue;
-				}
-				$query = 'q='.rawurlencode($_REQUEST['q']);
-				if( $i > 0 ){
-					$query .= '&pg='.$i;
-				}
-				$attr = '';
-				if( $this->gpabox ){
-					$attr = 'data-cmd="gpabox"';
-				}
-				echo '<li>'.\gp\tool::Link('special_gpsearch',($i+1),$query,$attr).'</li>';
+
+		$attr = '';
+		if( $this->gpabox ){
+			$attr = 'data-cmd="gpabox"';
+		}
+
+		$query = 'q='.rawurlencode($_REQUEST['q']);
+		self::PaginationLinks($current_page, $total_pages, 'special_gpsearch', $query, 'pg', $attr);
+	}
+
+
+	/**
+	 * Pagination links
+	 *
+	 */
+	public static function PaginationLinks($current_page, $total_pages, $slug, $query, $page_key = 'pg', $attr=''){
+		global $langmessage;
+
+		if( $total_pages < 1 ){
+			return;
+		}
+		echo '<ul class="search_nav search_nav_bottom pagination">';
+
+		//previous
+		echo '<li>';
+		if( $current_page > 0 ){
+			self::PaginationLink($slug, '&laquo;', $query, $page_key, $attr, ($current_page-1));
+		}else{
+			echo '<li class="disabled"><span>&laquo;</span></li>';
+		}
+
+		// i
+		$min_page	= max(0, $current_page-3);
+		$max_page	= min($min_page+6, $total_pages);
+		for($i=$min_page;$i<$max_page;$i++){
+
+			if( $i == $current_page ){
+				echo '<li class="active"><span>'.($i+1).'</span></li> ';
+				continue;
 			}
-			echo '</ul>';
+			self::PaginationLink($slug, ($i+1), $query, $page_key, $attr, $i);
+		}
+
+		// next
+		if( ($current_page+1) < $total_pages ){
+			self::PaginationLink($slug, '&raquo;', $query, $page_key, $attr, $current_page+1);
+		}else{
+			echo '<li class="disabled"><span>&raquo;</span></li>';
+		}
+
+		echo '</ul>';
+	}
+
+	public static function PaginationLink($slug, $label, $query, $page_key, $attr, $page){
+
+		if( $page > 0){
+			$query .= '&'.$page_key.'='.$page;
+		}
+
+		echo '<li>'.\gp\tool::Link($slug,$label,$query,$attr).'</li>';
+	}
+
+
+	/**
+	 * Remove duplicate matches
+	 *
+	 */
+	public function RemoveDups(){
+		$links = array();
+		foreach($this->results as $key => $result){
+
+			$link	= isset($result['url']) ? $result['url'] : \gp\tool::GetUrl( $result['slug'], $result['query'] );
+			$link	= mb_strtolower($link);
+
+			if( in_array($link,$links) ){
+				unset($this->results[$key]);
+			}else{
+				$links[] = $link;
+			}
 		}
 	}
+
 
 	public function Sort($resulta,$resultb){
 		return $resulta['strength'] < $resultb['strength'];

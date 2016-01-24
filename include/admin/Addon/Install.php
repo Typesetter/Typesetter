@@ -493,60 +493,11 @@ class Install extends \gp\admin\Addon\Tools{
 	}
 
 	public function SearchNavLinks(){
-		global $langmessage;
-
-		echo '<div class="search_pages">';
-		if( $this->searchPage > 0 ){
-			//previous
-			if( $this->searchPage > 1 ){
-				echo \gp\tool::Link($this->searchUrl,$langmessage['Previous'],$this->searchQuery.'&page='.($this->searchPage-1));
-			}else{
-				echo \gp\tool::Link($this->searchUrl,$langmessage['Previous'],$this->searchQuery);
-			}
-		}else{
-			echo '<span>'.$langmessage['Previous'].'</span>';
-		}
-
-
-		//always show link for first page
-		$start_page = max(0,$this->searchPage-5);
-		if( $start_page > 0 ){
-			echo \gp\tool::Link($this->searchUrl,'1',$this->searchQuery); //.'&offset=0');
-			if( $start_page > 1 ){
-				echo '<span>...</span>';
-			}
-		}
 
 		$pages = ceil($this->searchMax/$this->searchPerPage);
-		$max_page = min($start_page + 9,$pages);
 
-		for($j=$start_page;$j<$max_page;$j++){
-			$new_offset = ($j*$this->searchPerPage);
-			if( $this->searchPage == $j ){
-				echo '<span>'.($j+1).'</span>';
-			}else{
-				if( $j == 0 ){
-					echo \gp\tool::Link($this->searchUrl,($j+1),$this->searchQuery);
-				}else{
-					echo \gp\tool::Link($this->searchUrl,($j+1),$this->searchQuery.'&page='.($j));
-				}
-			}
-		}
-
-		//always show link to last page
-		if( $max_page < $pages ){
-			if( ($max_page+1) < $pages ){
-				echo '<span>...</span>';
-			}
-			echo \gp\tool::Link($this->searchUrl,($pages),$this->searchQuery.'&page='.($pages-1));
-		}
-
-
-		if( $this->searchPage < $pages ){
-			echo \gp\tool::Link($this->searchUrl,$langmessage['Next'],$this->searchQuery.'&page='.($this->searchPage+1));
-		}else{
-			echo '<span>'.$langmessage['Next'].'</span>';
-		}
+		echo '<div class="search_pages">';
+		\gp\special\Search::PaginationLinks( $this->searchPage, $pages, $this->searchUrl, $this->searchQuery, 'page');
 		echo '</div>';
 	}
 

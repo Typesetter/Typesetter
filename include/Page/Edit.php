@@ -63,11 +63,6 @@ class Edit extends \gp\Page{
 				case 'image_editor':
 					\gp\tool\Editing::ImageEditor();
 				return;
-
-				case 'NewNestedSection':
-					$this->NewNestedSection($_REQUEST);
-				return;
-
 			}
 		}
 
@@ -160,8 +155,7 @@ class Edit extends \gp\Page{
 
 
 			$this->cmds['rawcontent']			= 'return';
-			$this->cmds['managesections']		= 'newsectioncontent';
-			$this->cmds['newsectioncontent']	= 'return';
+			$this->cmds['managesections']		= 'return';
 			$this->cmds['savesections']			= 'return';
 			$this->cmds['viewrevision']			= 'return';
 			$this->cmds['userevision']			= '';
@@ -349,51 +343,28 @@ class Edit extends \gp\Page{
 
 
 	/**
-	 * Send new section content to the client
-	 *
-	 */
-	public function NewSectionContent(){
-
-		$this->ajaxReplace		= array();
-		$content				= $this->GetNewSection($_REQUEST['type']);
-
-		$this->ajaxReplace[] 	= array('PreviewSection','',$content);
-	}
-
-
-	/**
 	 * Send multiple sections to the client
 	 *
 	 */
-	public function NewNestedSection($request, $return = false){
+	public function NewNestedSection($types, $wrapper_class ){
 		global $langmessage;
 		$this->ajaxReplace				= array();
 
-		if( empty($request['types']) || !is_array($request['types']) ){
-			msg($langmessage['OOPS'].' (Invalid Types)');
-			return;
-		}
-
-		$request			+= array('wrapper_class'=>'gpRow');
-		$wrapper_class		= $request['wrapper_class'];
 		$new_section		= \gp\tool\Editing::DefaultContent('wrapper_section');
 
 
 		$new_section['attributes']['class']		.= ' '.$wrapper_class;
 		$orig_attrs								= $new_section['attributes'];
 
-		$new_section['attributes']['id']		= 'rand-'.time().rand(0,10000);
 		$new_section['attributes']['class']		.= ' editable_area new_section';
 
 
 
 		$output = $this->SectionNode($new_section, $orig_attrs);
-		foreach($request['types'] as $type){
-			if ( is_array($type) ){
-				$new_request = array();
-				$new_request['types'] = $type[0];
-				$new_request['wrapper_class'] = isset($type[1]) ? $type[1] : '';
-				$output .= $this->NewNestedSection($new_request, true);
+		foreach($types as $type){
+			if( is_array($type) ){
+				$_wrapper_class = isset($type[1]) ? $type[1] : '';
+				$output .= $this->NewNestedSection($type[0], $_wrapper_class);
 			}else{
 				$output .= $this->GetNewSection($type);
 			}
@@ -401,11 +372,7 @@ class Edit extends \gp\Page{
 		}
 		$output .= '</div>';
 
-		if( $return ){
-			return $output;
-		}
-
-		$this->ajaxReplace[] 	= array('PreviewSection','',$output);
+		return $output;
 	}
 
 	public function GetNewSection($type){
@@ -424,7 +391,6 @@ class Edit extends \gp\Page{
 		$new_section['attributes']['class']		.= ' '.$class;
 		$orig_attrs								= $new_section['attributes'];
 
-		$new_section['attributes']['id']		= 'rand-'.time().rand(0,10000);
 		$new_section['attributes']['class']		.= ' editable_area new_section';
 
 		if( !isset($new_section['nodeName']) ){
@@ -816,17 +782,15 @@ class Edit extends \gp\Page{
 
 		//links used for new sections
 		if( count($types) > 1 ){
-			$q					= array('cmd'=> 'NewNestedSection','types' => $types,'wrapper_class'=>$wrapper_class);
-			$preview_content	= $page->NewNestedSection($q, true);
+			$preview_content	= $page->NewNestedSection($types, $wrapper_class);
 		}else{
-			$q					= array('cmd'=> 'NewSectionContent','type' => $types[0] );
 			$preview_content	= $page->GetNewSection($types[0]);
 		}
 
 
 		$attrs					= array('data-cmd'=>'AddSection','class'=>'preview_section','data-response'=>$preview_content);
 
-		return '<div>'.\gp\tool::Link($page->title,$label,http_build_query($q,'','&amp;'),$attrs).'</div>';
+		return '<div>'.\gp\tool::Link($page->title,$label,'',$attrs).'</div>';
 	}
 
 

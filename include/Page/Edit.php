@@ -43,17 +43,6 @@ class Edit extends \gp\Page{
 			}
 		}
 
-		//admin actions
-		if( $this->permission_menu ){
-			switch($cmd){
-				case 'renameit':
-					if( $this->RenameFile() ){
-						return;
-					}
-				break;
-			}
-		}
-
 
 		//file editing actions
 		if( $this->permission_edit ){
@@ -163,6 +152,7 @@ class Edit extends \gp\Page{
 		//admin actions
 		if( $this->permission_menu ){
 			$this->cmds['renameform']			= 'return';
+			$this->cmds['renamefile']			= 'return';
 			$this->cmds['togglevisibility']		= '';
 		}
 
@@ -349,7 +339,6 @@ class Edit extends \gp\Page{
 
 
 
-		//$scripts[]			= '/include/thirdparty/js/nestedSortable.js';
 		$scripts[]				= array('object'=>'gp_editing','file'=>'/include/js/inline_edit/inline_editing.js');
 		$scripts[]				= array('file'=>'/include/js/inline_edit/manage_sections.js');
 

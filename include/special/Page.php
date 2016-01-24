@@ -58,7 +58,7 @@ class Page extends \gp\Page{
 					case 'renameform':
 						$this->RenameForm();
 					return;
-					case 'renameit':
+					case 'RenameFile':
 						if( $this->RenameFile() ){
 							return;
 						}

@@ -75,7 +75,7 @@ class Ajax extends \gp\admin\Menu{
 			case 'renameform':
 				$this->RenameForm(); //will die()
 			return;
-			case 'renameit':
+			case 'RenameFile':
 				$this->RenameFile();
 			break;
 

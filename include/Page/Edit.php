@@ -354,9 +354,6 @@ class Edit extends \gp\Page{
 		$new_section['attributes']['class']		.= ' '.$wrapper_class;
 		$orig_attrs								= $new_section['attributes'];
 
-		$new_section['attributes']['class']		.= ' editable_area new_section';
-
-
 
 		$output = $this->SectionNode($new_section, $orig_attrs);
 		foreach($types as $type){
@@ -383,7 +380,6 @@ class Edit extends \gp\Page{
 		$new_section['attributes']['class']		.= ' '.$class;
 		$orig_attrs								= $new_section['attributes'];
 
-		$new_section['attributes']['class']		.= ' editable_area new_section';
 
 		if( !isset($new_section['nodeName']) ){
 			return $this->SectionNode($new_section, $orig_attrs).$content.'</div>';
@@ -400,15 +396,21 @@ class Edit extends \gp\Page{
 		}
 
 		$orig_attrs			= json_encode($orig_attrs);
-		$attributes			= \gp\tool\Output\Sections::SectionAttributes($section['attributes'],$section['type']);
-		$attributes			.= ' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'';
+
+		if( \gp\tool\Output::ShowEditLink() && \gp\admin\Tools::CanEdit($this->gp_index) ){
+			$section['attributes']['class']			.= ' editable_area';
+		}
 
 		$section_attrs		= array('gp_label','gp_color','gp_collapse');
 		foreach($section_attrs as $attr){
 			if( !empty($section[$attr]) ){
-				$attributes		.= ' data-'.$attr.'="'.htmlspecialchars($section[$attr]).'" ';
+				$section['attributes']['data-'.$attr] = $section[$attr];
 			}
 		}
+
+		$attributes			= \gp\tool\Output\Sections::SectionAttributes($section['attributes'],$section['type']);
+		$attributes			.= ' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'';
+
 
 		if( !isset($section['nodeName']) ){
 			return '<div'.$attributes.'>';
@@ -1256,7 +1258,6 @@ class Edit extends \gp\Page{
 			}
 
 			$section_data['attributes']['id']				= 'ExtraEditArea'.$edit_index;
-			$section_data['attributes']['class']			.= ' editable_area'; // class="edit_area" added by javascript
 		}
 
 
@@ -1308,16 +1309,8 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public function SaveSection_Text($section){
-		global $config;
-		$content =& $_POST['gpcontent'];
-		\gp\tool\Files::cleanText($content);
-		$this->file_sections[$section]['content'] = $content;
-
-		if( $config['resize_images'] ){
-			\gp\tool\Editing::ResizeImages($this->file_sections[$section]['content'],$this->file_sections[$section]['resized_imgs']);
-		}
-
-		return true;
+		return \gp\tool\Editing::SectionFromPost_Text( $this->file_sections[$section] );
 	}
+
 
 }

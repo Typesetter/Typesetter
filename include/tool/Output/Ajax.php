@@ -11,8 +11,6 @@ namespace gp\tool\Output{
 									'/include/js/inline_edit/inline_editing.js'		=> 'gp_editing',
 									'/include/thirdparty/ckeditor_34/ckeditor.js'	=> 'CKEDITOR',
 									'/include/js/ckeditor_config.js'				=> 'CKEDITOR',
-
-
 									);
 
 		static function ReplaceContent($id,$content){

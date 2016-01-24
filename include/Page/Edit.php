@@ -100,7 +100,22 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public function DefaultDisplay(){
-		$this->contentBuffer = $this->GenerateContent_Admin();
+
+		//add to all pages in case a user adds a gallery
+		\gp\tool\Plugins::Action('GenerateContent_Admin');
+		\gp\tool::ShowingGallery();
+
+		$content				= '';
+		$sections_count			= count($this->file_sections);
+		$this->file_sections	= array_values($this->file_sections);
+		$section_num			= 0;
+
+
+		while( $section_num < $sections_count ){
+			$content .= $this->GetSection( $section_num );
+		}
+
+		$this->contentBuffer = $content;
 	}
 
 
@@ -1177,25 +1192,6 @@ class Edit extends \gp\Page{
 	 */
 	public function GalleryEdited(){
 		\gp\special\Galleries::UpdateGalleryInfo($this->title,$this->file_sections);
-	}
-
-	public function GenerateContent_Admin(){
-
-		//add to all pages in case a user adds a gallery
-		\gp\tool\Plugins::Action('GenerateContent_Admin');
-		\gp\tool::ShowingGallery();
-
-		$content				= '';
-		$sections_count			= count($this->file_sections);
-		$this->file_sections	= array_values($this->file_sections);
-		$section_num			= 0;
-
-
-		while( $section_num < $sections_count ){
-			$content .= $this->GetSection( $section_num );
-		}
-
-		return $content;
 	}
 
 	public function GetSection(&$section_num){

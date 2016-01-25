@@ -53,11 +53,11 @@ class Page extends \gp\Page{
 		if( \gp\tool::LoggedIn() ){
 			$menu_permissions = \gp\admin\Tools::HasPermission('Admin_Menu');
 			if( $menu_permissions ){
+
+				$this->cmds['renameform']			= '\\gp\\Page\\Rename::RenameForm';
+
+
 				switch($cmd){
-					// rename & details
-					case 'renameform':
-						$this->RenameForm();
-					return;
 					case 'RenameFile':
 						if( $this->RenameFile() ){
 							return;
@@ -71,11 +71,15 @@ class Page extends \gp\Page{
 					break;
 				}
 			}
-
 		}
 
+		$this->RunCommands($cmd);
+	}
 
-		$this->contentBuffer = self::ExecInfo($scriptinfo);
+	public function DefaultDisplay(){
+		ob_start();
+		\gp\tool\Output::ExecInfo($this->TitleInfo);
+		$this->contentBuffer = ob_get_clean();
 	}
 
 
@@ -108,7 +112,7 @@ class Page extends \gp\Page{
 		// page options: less frequently used links that don't have to do with editing the content of the page
 		$option_links		= array();
 		if( $menu_permissions ){
-			$option_links[] = \gp\tool::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
+			$option_links[] = \gp\tool::Link($this->title,$langmessage['rename/details'],'cmd=renameform&index='.urlencode($this->gp_index),'data-cmd="gpajax"');
 			$option_links[] = \gp\tool::Link('Admin/Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
 		}
 
@@ -125,12 +129,7 @@ class Page extends \gp\Page{
 	}
 
 
-	public function RenameForm(){
-		global $gp_index;
-
-		$action = \gp\tool::GetUrl($this->title);
-		\gp\Page\Rename::RenameForm( $this->gp_index, $action );
-	}
+	public function RenameForm(){\gp\Page\Rename::RenameForm();}
 
 	public function RenameFile(){
 		return \gp\Page\Rename::RenamePage($this);
@@ -197,15 +196,6 @@ class Page extends \gp\Page{
 		}while( count($parts) );
 
 		return false;
-	}
-
-
-	public static function ExecInfo($scriptinfo){
-		global $dataDir;
-
-		ob_start();
-		\gp\tool\Output::ExecInfo($scriptinfo);
-		return ob_get_clean();
 	}
 
 

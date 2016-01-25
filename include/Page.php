@@ -56,8 +56,44 @@ namespace gp{
 		public $css_user			= array();
 		public $css_admin			= array();
 
+
+		//executable commands
+		protected $cmds				= array();
+
+
 		public function __construct($title, $type){
 			$this->title = $title;
+		}
+
+
+		/**
+		 * Run Commands
+		 *
+		 */
+		protected function RunCommands($cmd){
+
+			$cmd = strtolower($cmd);
+
+			if( !isset($this->cmds[$cmd]) ){
+				$this->DefaultDisplay();
+				return;
+			}
+
+			do{
+
+				if( method_exists($this,$cmd) ){
+					$this->$cmd();
+				}elseif( is_callable($cmd) ){
+					call_user_func($cmd);
+				}
+
+				if( isset($this->cmds[$cmd]) ){
+					$cmd = $this->cmds[$cmd]; // !! not strtolower() to support namespaces
+				}else{
+					return;
+				}
+
+			}while( $cmd != 'return' );
 		}
 
 

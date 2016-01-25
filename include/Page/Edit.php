@@ -15,7 +15,6 @@ class Edit extends \gp\Page{
 	protected $permission_edit;
 	protected $permission_menu;
 
-	private $cmds					= array();
 	private $checksum;
 
 	public function __construct($title,$type){
@@ -67,31 +66,6 @@ class Edit extends \gp\Page{
 		}
 
 		$this->RunCommands($cmd);
-	}
-
-
-	/**
-	 * Run Commands
-	 *
-	 */
-	public function RunCommands($cmd){
-
-		if( $cmd == 'return' ){
-			return;
-		}
-
-		$cmd = strtolower($cmd);
-
-		if( !isset($this->cmds[$cmd]) ){
-			$this->DefaultDisplay();
-			return;
-		}
-
-		if( method_exists($this,$cmd) ){
-			$this->$cmd();
-		}
-
-		$this->RunCommands($this->cmds[$cmd]);
 	}
 
 
@@ -155,7 +129,7 @@ class Edit extends \gp\Page{
 
 		//admin actions
 		if( $this->permission_menu ){
-			$this->cmds['renameform']			= 'return';
+			$this->cmds['renameform']			= '\\gp\\Page\\Rename::RenameForm';
 			$this->cmds['renamefile']			= 'return';
 			$this->cmds['togglevisibility']		= '';
 		}
@@ -233,7 +207,7 @@ class Edit extends \gp\Page{
 		// page options: less frequently used links that don't have to do with editing the content of the page
 		$option_links		= array();
 		if( $this->permission_menu ){
-			$option_links[] = \gp\tool::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
+			$option_links[] = \gp\tool::Link($this->title,$langmessage['rename/details'],'cmd=renameform&index='.urlencode($this->gp_index),'data-cmd="gpajax"');
 
 			$option_links[] = \gp\tool::Link('Admin/Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
 
@@ -651,12 +625,6 @@ class Edit extends \gp\Page{
 	}
 
 
-	public function RenameForm(){
-		$action = \gp\tool::GetUrl($this->title);
-		\gp\Page\Rename::RenameForm( $this->gp_index, $action );
-	}
-
-
 	/**
 	 * Toggle the visibility of the current page
 	 *
@@ -1026,11 +994,7 @@ class Edit extends \gp\Page{
 
 		switch($which){
 			case 'current':
-			if( $this->draft_exists ){
-				echo \gp\tool::Link($this->title,$langmessage['View'],'cmd=ViewCurrent',array('data-cmd'=>'cnreq'));
-			}else{
-				echo \gp\tool::Link($this->title,$langmessage['View']);
-			}
+			echo \gp\tool::Link($this->title,$langmessage['View'],'cmd=ViewCurrent',array('data-cmd'=>'cnreq'));
 			break;
 
 			case 'draft':
@@ -1255,7 +1219,7 @@ class Edit extends \gp\Page{
 				echo $link;
 				echo \gp\tool::Link($this->title,$langmessage['Manage Sections'],'cmd=ManageSections',array('class'=>'manage_sections','data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
 				echo '<hr/>';
-				echo \gp\tool::Link($this->title,$langmessage['rename/details'],'cmd=renameform','data-cmd="gpajax"');
+				echo \gp\tool::Link($this->title,$langmessage['rename/details'],'cmd=renameform&index='.urlencode($this->gp_index),'data-cmd="gpajax"');
 				echo \gp\tool::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox'));
 				echo '</span>';
 				\gp\tool\Output::$editlinks .= ob_get_clean();

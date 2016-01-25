@@ -41,7 +41,7 @@ $gpOutConf = array() of output functions/classes.. to use with the theme content
 class Layout extends \gp\admin\Addon\Install{
 
 	protected $layout_request		= false;
-	protected $curr_layout			= false;
+	protected $curr_layout;
 	protected $LayoutArray;
 	protected $scriptUrl			= 'Admin_Theme_Content';
 	protected $versions				= array();

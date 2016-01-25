@@ -325,16 +325,12 @@ class Edit extends \gp\admin\Layout{
 		$style_type		= \gp\tool\Output::StyleType($layout_info['dir'].'/'.$layout_info['theme_color']);
 		$custom_file	= \gp\tool\Output::CustomStyleFile($this->curr_layout, $style_type);
 
-
-		//check theme color
-		if( array_key_exists('color',$_REQUEST) ){
-
-			if( !isset($theme_colors[$color]) ){
-				message($langmessage['OOPS'].' (Invalid Color)');
-				return false;
-			}
-			$color = $_REQUEST['color'];
+		// which color option
+		$color = $this->ReqColor();
+		if( is_null($color) ){
+			return false;
 		}
+
 
 		$old_info = $new_info = $gpLayouts[$this->curr_layout];
 		$theme_name	= dirname($new_info['theme']);
@@ -368,6 +364,24 @@ class Edit extends \gp\admin\Layout{
 
 
 	/**
+	 * Return the theme color
+	 *
+	 */
+	public function ReqColor(){
+		global $langmessage;
+
+		if( array_key_exists('color',$_REQUEST) ){
+
+			if( !isset($theme_colors[$color]) ){
+				message($langmessage['OOPS'].' (Invalid Color)');
+				return;
+			}
+			return $_REQUEST['color'];
+		}
+	}
+
+
+	/**
 	 * Preview changes to the custom css/less
 	 *
 	 */
@@ -379,13 +393,9 @@ class Edit extends \gp\admin\Layout{
 		$color			= $layout_info['theme_color'];
 
 		// which color option
-		if( array_key_exists('color',$_REQUEST) ){
-
-			if( !isset($theme_colors[$color]) ){
-				message($langmessage['OOPS'].' (Invalid Color)');
-				return false;
-			}
-			$color = $_REQUEST['color'];
+		$color = $this->ReqColor();
+		if( is_null($color) ){
+			return;
 		}
 
 

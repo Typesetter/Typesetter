@@ -10,7 +10,7 @@ namespace gp{
 	 *  The classes for admin pages and special pages extend the display class
 	 *
 	 */
-	class Page{
+	class Page extends Base{
 		public $pagetype			= 'display';
 		public $gp_index;
 		public $requested;
@@ -58,41 +58,10 @@ namespace gp{
 		public $css_admin			= array();
 
 
-		//executable commands
-		protected $cmds				= array();
-
 
 		public function __construct($title, $type){
 			$this->requested	= $title;
 			$this->title		= $title;
-		}
-
-
-		/**
-		 * Run Commands
-		 *
-		 */
-		protected function RunCommands($cmd){
-
-			$this->cmds	= array_change_key_case($this->cmds, CASE_LOWER);
-			$cmd		= strtolower($cmd);
-
-			if( !isset($this->cmds[$cmd]) ){
-				$this->DefaultDisplay();
-				return;
-			}
-
-			$cmds = (array)$this->cmds[$cmd];
-			array_unshift($cmds, $cmd);
-
-			foreach($cmds as $cmd){
-				if( method_exists($this,$cmd) ){
-					$this->$cmd();
-				}elseif( is_callable($cmd) ){
-					call_user_func($cmd, $this);
-				}
-			}
-
 		}
 
 

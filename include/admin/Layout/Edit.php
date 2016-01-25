@@ -134,25 +134,26 @@ class Edit extends \gp\admin\Layout{
 		}
 
 
-		//control what is displayed
-		switch( $cmd ){
+		//show the layout (displayed within an iframe)
+		$this->cmds['SaveCSS']			= 'ShowInIframe';
+		$this->cmds['PreviewCSS']		= 'ShowInIframe';
+		$this->cmds['addcontent']		= 'ShowInIframe';
+		$this->cmds['rm_area']			= 'ShowInIframe';
+		$this->cmds['drag_area']		= 'ShowInIframe';
+		$this->cmds['in_iframe']		= 'ShowInIframe';
 
-			//show the layout (displayed within an iframe)
-			case 'SaveCSS':
-			case 'PreviewCSS':
-			case 'addcontent':
-			case 'rm_area':
-			case 'drag_area':
-			case 'in_iframe':
-				$this->ShowInIframe($cmd);
-			return;
-		}
+		$this->RunCommands($cmd);
+	}
 
-		$layout_info = \gp\tool::LayoutInfo($layout,false);
+
+	public function DefaultDisplay(){
+		global $langmessage, $page;
+
+		$layout_info = \gp\tool::LayoutInfo($this->curr_layout,false);
 		$page->label = $langmessage['layouts'] . ' » '.$layout_info['label'];
 
 		ob_start();
-		$this->LayoutEditor($layout, $layout_info );
+		$this->LayoutEditor($this->curr_layout, $layout_info );
 		$page->admin_html = ob_get_clean();
 	}
 
@@ -161,8 +162,10 @@ class Edit extends \gp\admin\Layout{
 	 * Prepare the page for css editing
 	 *
 	 */
-	public function ShowInIframe($cmd){
+	public function ShowInIframe(){
 		global $page;
+
+		$cmd = \gp\tool::GetCommand();
 
 		$page->show_admin_content		= false;
 		\gp\admin\Tools::$show_toolbar	= false;

@@ -6,7 +6,7 @@ defined('is_running') or die('Not an entry point...');
 
 
 
-class Tools{
+class Tools extends \gp\Base{
 
 	public $rate_testing		= false; //for testing on local server
 

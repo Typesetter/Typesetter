@@ -24,15 +24,27 @@ class Edit extends \gp\Page{
 
 	public function RunScript(){
 		global $langmessage;
-		$cmd = \gp\tool::GetCommand();
 
 
 		if( !$this->SetVars() ){
 			return;
 		}
 
-		$this->GetFile();
+		ob_start();
 
+		$this->GetFile();
+		$cmd = \gp\tool::GetCommand();
+		$this->RunCommands($cmd);
+
+		$this->contentBuffer = ob_get_clean();
+	}
+
+
+	/**
+	 * Run Commands
+	 *
+	 */
+	protected function RunCommands($cmd){
 
 		//allow addons to effect page actions and how a page is displayed
 		$cmd = \gp\tool\Plugins::Filter('PageRunScript',array($cmd));
@@ -47,67 +59,12 @@ class Edit extends \gp\Page{
 			switch($cmd){
 
 				case 'new_dir':
-					$this->contentBuffer = \gp\tool\Editing::NewDirForm();
-				return;
-
-				/* inline editing */
-				case 'save':
-				case 'save_inline':
-				case 'preview':
-				case 'inlineedit':
-				case 'include_dialog':
-					$this->SectionEdit($cmd);
-				return;
-
-				case 'image_editor':
-					\gp\tool\Editing::ImageEditor();
+					echo \gp\tool\Editing::NewDirForm();
 				return;
 			}
 		}
 
-		$this->RunCommands($cmd);
-	}
-
-
-	/**
-	 * Display after commands have been executed
-	 *
-	 */
-	public function DefaultDisplay(){
-
-		//add to all pages in case a user adds a gallery
-		\gp\tool\Plugins::Action('GenerateContent_Admin');
-		\gp\tool::ShowingGallery();
-
-		$content				= '';
-		$sections_count			= count($this->file_sections);
-		$this->file_sections	= array_values($this->file_sections);
-		$section_num			= 0;
-
-
-		while( $section_num < $sections_count ){
-			$content .= $this->GetSection( $section_num );
-		}
-
-		$this->contentBuffer = $content;
-	}
-
-
-	/**
-	 * Get the data file, get draft file if it exists
-	 *
-	 */
-	public function GetFile(){
-
-		parent::GetFile();
-
-		if( $this->draft_exists ){
-			$this->file_sections	= \gp\tool\Files::Get($this->draft_file,'file_sections');
-			$this->draft_meta		= \gp\tool\Files::$last_meta;
-			$this->draft_stats		= \gp\tool\Files::$last_stats;
-		}
-
-		$this->checksum				= $this->Checksum();
+		parent::RunCommands($cmd);
 	}
 
 
@@ -150,6 +107,15 @@ class Edit extends \gp\Page{
 			$this->cmds['viewcurrent']			= '';
 			$this->cmds['deleterevision']		= 'ViewHistory';
 			$this->cmds['publishdraft']			= 'DefaultDisplay';
+
+
+			/* inline editing */
+			$this->cmds['save']					= 'SectionEdit';
+			$this->cmds['save_inline']			= 'SectionEdit';
+			$this->cmds['preview']				= 'SectionEdit';
+			$this->cmds['include_dialog']		= 'SectionEdit';
+
+			$this->cmds['image_editor']			= '\\gp\\tool\\Editing::ImageEditor';
 		}
 
 
@@ -161,6 +127,46 @@ class Edit extends \gp\Page{
 
 
 		return true;
+	}
+
+
+	/**
+	 * Display after commands have been executed
+	 *
+	 */
+	public function DefaultDisplay(){
+
+		//add to all pages in case a user adds a gallery
+		\gp\tool\Plugins::Action('GenerateContent_Admin');
+		\gp\tool::ShowingGallery();
+
+		$content				= '';
+		$sections_count			= count($this->file_sections);
+		$this->file_sections	= array_values($this->file_sections);
+		$section_num			= 0;
+
+
+		while( $section_num < $sections_count ){
+			echo $this->GetSection( $section_num );
+		}
+	}
+
+
+	/**
+	 * Get the data file, get draft file if it exists
+	 *
+	 */
+	public function GetFile(){
+
+		parent::GetFile();
+
+		if( $this->draft_exists ){
+			$this->file_sections	= \gp\tool\Files::Get($this->draft_file,'file_sections');
+			$this->draft_meta		= \gp\tool\Files::$last_meta;
+			$this->draft_stats		= \gp\tool\Files::$last_stats;
+		}
+
+		$this->checksum				= $this->Checksum();
 	}
 
 
@@ -557,7 +563,7 @@ class Edit extends \gp\Page{
 	 * Perform various section editing commands
 	 *
 	 */
-	public function SectionEdit($cmd){
+	public function SectionEdit(){
 		global $langmessage;
 
 		$section_num = $_REQUEST['section'];
@@ -567,6 +573,8 @@ class Edit extends \gp\Page{
 		}
 
 		$this->ajaxReplace = array();
+
+		$cmd = \gp\tool::GetCommand();
 
 		if( !\gp\tool\Editing::SectionEdit( $cmd, $this->file_sections[$section_num], $section_num, $this->title, $this->file_stats ) ){
 			return;
@@ -926,7 +934,6 @@ class Edit extends \gp\Page{
 
 
 
-		ob_start();
 		echo '<h2>'.$langmessage['Revision History'].'</h2>';
 		echo '<table class="bordered full_width striped"><tr><th>'.$langmessage['Modified'].'</th><th>'.$langmessage['File Size'].'</th><th>'.$langmessage['username'].'</th><th>&nbsp;</th></tr>';
 		echo '<tbody>';
@@ -938,8 +945,6 @@ class Edit extends \gp\Page{
 		echo '</table>';
 
 		echo '<p>'.$langmessage['history_limit'].': '.$config['history_limit'].'</p>';
-
-		$this->contentBuffer = ob_get_clean();
 	}
 
 
@@ -1012,8 +1017,8 @@ class Edit extends \gp\Page{
 			return false;
 		}
 
-		$this->contentBuffer	= \gp\tool\Output\Sections::Render($file_sections,$this->title,\gp\tool\Files::$last_stats);
 		$this->revision			= $time;
+		echo \gp\tool\Output\Sections::Render($file_sections,$this->title,\gp\tool\Files::$last_stats);
 	}
 
 
@@ -1078,8 +1083,8 @@ class Edit extends \gp\Page{
 	 */
 	public function ViewCurrent(){
 		$file_sections			= \gp\tool\Files::Get($this->file,'file_sections');
-		$this->contentBuffer	= \gp\tool\Output\Sections::Render($file_sections,$this->title,$this->file_stats);
 		$this->revision			= $this->fileModTime;
+		echo \gp\tool\Output\Sections::Render($file_sections,$this->title,$this->file_stats);
 	}
 
 

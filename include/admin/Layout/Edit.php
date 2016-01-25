@@ -1159,7 +1159,7 @@ class Edit extends \gp\admin\Layout{
 
 
 		//add to to_container in front of $to_gpOutCmd
-		if( !isset($container_info) || !is_array($container_info) ){
+		if( !is_array($container_info) ){
 			message($langmessage['OOPS'].' (a1)');
 			return false;
 		}
@@ -1303,7 +1303,6 @@ class Edit extends \gp\admin\Layout{
 	/**
 	 * Output form elements for setting custom menu settings
 	 *
-	 * @param string $arg
 	 * @param array $menu_args
 	 */
 	public function CustomMenuForm($menu_args = array()){

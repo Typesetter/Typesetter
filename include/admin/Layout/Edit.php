@@ -1084,7 +1084,7 @@ class Edit extends \gp\admin\Layout{
 
 		if( $new_gpOutCmd === false ){
 			message($langmessage['OOPS'].' (1)');
-			return false;
+			return;
 		}
 
 
@@ -1093,6 +1093,11 @@ class Edit extends \gp\admin\Layout{
 		$container =& $curr_info['container'];
 		$this->PrepContainerHandlers($handlers,$container,$curr_info['gpOutCmd']);
 
+
+		//unchanged?
+		if( $curr_info['gpOutCmd'] == $new_gpOutCmd ){
+			return;
+		}
 
 		if( !$this->AddToContainer($handlers[$container],$curr_info['gpOutCmd'],$new_gpOutCmd,true) ){
 			return;
@@ -1151,11 +1156,6 @@ class Edit extends \gp\admin\Layout{
 
 	public function AddToContainer(&$container_info,$to_gpOutCmd,$new_gpOutCmd,$replace=true,$offset=0){
 		global $langmessage;
-
-		//unchanged?
-		if( $replace && ($to_gpOutCmd == $new_gpOutCmd) ){
-			return true;
-		}
 
 
 		//add to to_container in front of $to_gpOutCmd

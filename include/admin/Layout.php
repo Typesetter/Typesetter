@@ -285,24 +285,10 @@ class Layout extends \gp\admin\Addon\Install{
 		global $langmessage, $config;
 
 
-		//get handler count
-		$handlers_count = 0;
-		if( isset($info['handlers']) && is_array($info['handlers']) ){
-			foreach($info['handlers'] as $val){
-				$int = count($val);
-				if( $int === 0){
-					$handlers_count++;
-				}
-				$handlers_count += $int;
-			}
-		}
-
 		//theme name
 		echo '<li>';
 		echo '<span>'.$langmessage['theme'].': '.$this->ThemeLabel($info['theme_name']).'</span>';
 		echo '</li>';
-
-
 
 
 		//default
@@ -335,6 +321,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 		//content arrangement
+		$handlers_count = $this->HandlersCount($info);
 		echo '<li>';
 		if( $handlers_count ){
 			echo $this->LayoutLink( $layout, $langmessage['restore_defaults'], 'cmd=restore', array('data-cmd'=>'creq') );
@@ -357,6 +344,27 @@ class Layout extends \gp\admin\Addon\Install{
 			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletelayout&layout='.$layout,$attr);
 			echo '</li>';
 		}
+	}
+
+
+	/**
+	 * Get number of handlers
+	 *
+	 */
+	public function HandlersCount($layout_info){
+
+		$handlers_count = 0;
+		if( isset($layout_info['handlers']) && is_array($layout_info['handlers']) ){
+			foreach($layout_info['handlers'] as $val){
+				$int = count($val);
+				if( $int === 0){
+					$handlers_count++;
+				}
+				$handlers_count += $int;
+			}
+		}
+
+		return $handlers_count;
 	}
 
 

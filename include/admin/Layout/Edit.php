@@ -10,10 +10,11 @@ class Edit extends \gp\admin\Layout{
 	protected $layout_slug;
 
 	public function __construct(){
-		global $page, $gpLayouts, $config;
-
 		parent::__construct();
+	}
 
+	public function RunScript(){
+		global $page, $gpLayouts, $config;
 
 		//layout request
 		$parts = explode('/',$page->requested);
@@ -43,12 +44,11 @@ class Edit extends \gp\admin\Layout{
 	 *
 	 */
 	public function EditLayout($layout){
-		global $page,$gpLayouts,$langmessage,$config;
+		global $page, $gpLayouts, $langmessage, $config;
 
 		$cmd = \gp\tool::GetCommand();
 
 		$GLOBALS['GP_ARRANGE_CONTENT']	= true;
-		//$page->head_js[]				= '/include/js/inline_edit/inline_editing.js';
 		$this->curr_layout				= $layout;
 		$this->layout_slug				= 'Admin_Theme_Content/Edit/'.rawurlencode($layout);
 
@@ -151,17 +151,6 @@ class Edit extends \gp\admin\Layout{
 
 
 		$layout_info = \gp\tool::LayoutInfo($layout,false);
-		$handlers_count = 0;
-		if( isset($layout_info['handlers']) && is_array($layout_info['handlers']) ){
-			foreach($layout_info['handlers'] as $val){
-				$int = count($val);
-				if( $int === 0){
-					$handlers_count++;
-				}
-				$handlers_count += $int;
-			}
-		}
-
 		$page->label = $langmessage['layouts'] . ' » '.$layout_info['label'];
 
 		$_REQUEST += array('gpreq' => 'body'); //force showing only the body as a complete html document

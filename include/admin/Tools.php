@@ -169,13 +169,16 @@ namespace gp\admin{
 
 
 			// Appearance
-			$scripts['Admin_Theme_Content']['class'] = '\gp\admin\Layout';
-			$scripts['Admin_Theme_Content']['method'] = 'RunScript';
-			$scripts['Admin_Theme_Content']['label'] = $langmessage['Appearance'];
-			$scripts['Admin_Theme_Content']['group'] = 'appearance';
+			$scripts['Admin_Theme_Content']				= array(
+																	'class'		=> '\gp\admin\Layout',
+																	'method'	=> 'RunScript',
+																	'label'		=> $langmessage['Appearance'],
+																	'group'		=> 'appearance',
+																	);
 
 
 			$scripts['Admin_Theme_Content/Edit']		= array(	'class'		=> '\gp\admin\Layout\Edit',
+																	'method'	=> 'RunScript',
 																	'label'		=> $langmessage['Appearance'],
 																	);
 

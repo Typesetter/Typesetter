@@ -54,14 +54,12 @@ class Page extends \gp\Page{
 			$menu_permissions = \gp\admin\Tools::HasPermission('Admin_Menu');
 			if( $menu_permissions ){
 
-				$this->cmds['renameform']			= '\\gp\\Page\\Rename::RenameForm';
-				$this->cmds['renamefile']			= '\\gp\\Page\\Rename::RenamePage';
+				$this->cmds['RenameForm']			= '\\gp\\Page\\Rename::RenameForm';
+				$this->cmds['RenameFile']			= '\\gp\\Page\\Rename::RenamePage';
+				$this->cmds['ToggleVisibility']		= array('\\gp\\Page\\Visibility::TogglePage','DefaultDisplay');
 
 
 				switch($cmd){
-					case 'ToggleVisibility':
-						$this->ToggleVisibility();
-					break;
 					case 'ManageSections':
 						\gp\Page\Edit::ManageSections(false);
 					break;
@@ -122,16 +120,6 @@ class Page extends \gp\Page{
 
 
 		return $admin_links;
-	}
-
-
-	/**
-	 * Toggle the visibility of the current page
-	 *
-	 */
-	public function ToggleVisibility(){
-		$_REQUEST += array('visibility'=>'');
-		\gp\Page\Visibility::TogglePage($this, $_REQUEST['visibility']);
 	}
 
 

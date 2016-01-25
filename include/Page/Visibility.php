@@ -36,11 +36,12 @@ class Visibility{
 	 * Toggle the visibility of a page given by the $page object
 	 *
 	 */
-	static function TogglePage( $page, $visibility ){
+	static function TogglePage( $page ){
 		global $gp_titles;
 
+		$_REQUEST += array('visibility'=>'');
 
-		self::Toggle($page->gp_index, $visibility);
+		self::Toggle($page->gp_index, $_REQUEST['visibility']);
 
 		$page->visibility = null;
 		if( isset($gp_titles[$page->gp_index]['vis']) ){

@@ -129,28 +129,27 @@ class Edit extends \gp\Page{
 
 		//admin actions
 		if( $this->permission_menu ){
-			$this->cmds['renameform']			= '\\gp\\Page\\Rename::RenameForm';
-			$this->cmds['renamefile']			= '\\gp\\Page\\Rename::RenamePage';
-			$this->cmds['togglevisibility']		= '';
+			$this->cmds['RenameForm']			= '\\gp\\Page\\Rename::RenameForm';
+			$this->cmds['RenameFile']			= '\\gp\\Page\\Rename::RenamePage';
+			$this->cmds['ToggleVisibility']		= array('\\gp\\Page\\Visibility::TogglePage','DefaultDisplay');
 		}
 
 
 		if( $this->permission_edit ){
 
 			/* gallery/image editing */
-			$this->cmds['gallery_folder']		= 'GalleryImages';
-			$this->cmds['gallery_images']		= 'GalleryImages';
-			$this->cmds['galleryimages']		= 'return';
+			$this->cmds['gallery_folder']		= array('GalleryImages','return');
+			$this->cmds['gallery_images']		= array('GalleryImages','return');
 
 
-			$this->cmds['managesections']		= 'return';
-			$this->cmds['savesections']			= 'return';
-			$this->cmds['viewrevision']			= 'return';
-			$this->cmds['userevision']			= '';
-			$this->cmds['viewhistory']			= 'return';
-			$this->cmds['viewcurrent']			= 'return';
-			$this->cmds['deleterevision']		= 'viewhistory';
-			$this->cmds['publishdraft']			= '';
+			$this->cmds['managesections']		= '';
+			$this->cmds['savesections']			= '';
+			$this->cmds['viewrevision']			= '';
+			$this->cmds['userevision']			= 'DefaultDisplay';
+			$this->cmds['viewhistory']			= '';
+			$this->cmds['viewcurrent']			= '';
+			$this->cmds['deleterevision']		= 'ViewHistory';
+			$this->cmds['publishdraft']			= 'DefaultDisplay';
 		}
 
 
@@ -619,17 +618,6 @@ class Edit extends \gp\Page{
 		$gp_titles[$this->gp_index]['type'] = $new_types;
 		\gp\admin\Tools::SavePagesPHP();
 	}
-
-
-	/**
-	 * Toggle the visibility of the current page
-	 *
-	 */
-	public function ToggleVisibility(){
-		$_REQUEST += array('visibility'=>'');
-		\gp\Page\Visibility::TogglePage($this, $_REQUEST['visibility']);
-	}
-
 
 
 	/**

@@ -74,28 +74,25 @@ namespace gp{
 		 */
 		protected function RunCommands($cmd){
 
-			$cmd = strtolower($cmd);
+			$this->cmds	= array_change_key_case($this->cmds, CASE_LOWER);
+			$cmd		= strtolower($cmd);
 
 			if( !isset($this->cmds[$cmd]) ){
 				$this->DefaultDisplay();
 				return;
 			}
 
-			do{
+			$cmds = (array)$this->cmds[$cmd];
+			array_unshift($cmds, $cmd);
 
+			foreach($cmds as $cmd){
 				if( method_exists($this,$cmd) ){
 					$this->$cmd();
 				}elseif( is_callable($cmd) ){
 					call_user_func($cmd, $this);
 				}
+			}
 
-				if( isset($this->cmds[$cmd]) ){
-					$cmd = $this->cmds[$cmd]; // !! not strtolower() to support namespaces
-				}else{
-					return;
-				}
-
-			}while( $cmd != 'return' );
 		}
 
 

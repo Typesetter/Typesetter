@@ -48,7 +48,7 @@ class Extra{
 			return;
 
 			case 'new_dir':
-				\gp\tool\Editing::NewDirForm();
+				echo \gp\tool\Editing::NewDirForm();
 			return;
 
 			/* inline editing */

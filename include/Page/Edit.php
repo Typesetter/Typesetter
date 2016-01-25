@@ -52,18 +52,6 @@ class Edit extends \gp\Page{
 			return;
 		}
 
-
-		//file editing actions
-		if( $this->permission_edit ){
-
-			switch($cmd){
-
-				case 'new_dir':
-					echo \gp\tool\Editing::NewDirForm();
-				return;
-			}
-		}
-
 		parent::RunCommands($cmd);
 	}
 
@@ -97,6 +85,8 @@ class Edit extends \gp\Page{
 			/* gallery/image editing */
 			$this->cmds['gallery_folder']		= array('GalleryImages','return');
 			$this->cmds['gallery_images']		= array('GalleryImages','return');
+			$this->cmds['image_editor']			= '\\gp\\tool\\Editing::ImageEditor';
+			$this->cmds['new_dir']				= '\\gp\\tool\\Editing::NewDirForm';
 
 
 			$this->cmds['managesections']		= '';
@@ -115,7 +105,6 @@ class Edit extends \gp\Page{
 			$this->cmds['preview']				= 'SectionEdit';
 			$this->cmds['include_dialog']		= 'SectionEdit';
 
-			$this->cmds['image_editor']			= '\\gp\\tool\\Editing::ImageEditor';
 		}
 
 
@@ -293,15 +282,15 @@ class Edit extends \gp\Page{
 	 * Send js to client for managing content sections
 	 *
 	 */
-	public static function ManageSections($organize = true){
-		global $langmessage;
+	public static function ManageSections(){
+		global $langmessage, $page;
 
 		$scripts				= array();
 
 		//output links
 		ob_start();
 		$style = '';
-		if( $organize ){
+		if( $page->pagetype == 'display' ){
 			$style = 'display:none';
 			echo '<div id="section_sorting_wrap" class="inline_edit_area">';
 			echo '<ul id="section_sorting" class="section_drag_area" title="Organize"></ul>';

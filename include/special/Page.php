@@ -50,21 +50,11 @@ class Page extends \gp\Page{
 			}
 		}
 
-		if( \gp\tool::LoggedIn() ){
-			$menu_permissions = \gp\admin\Tools::HasPermission('Admin_Menu');
-			if( $menu_permissions ){
-
-				$this->cmds['RenameForm']			= '\\gp\\Page\\Rename::RenameForm';
-				$this->cmds['RenameFile']			= '\\gp\\Page\\Rename::RenamePage';
-				$this->cmds['ToggleVisibility']		= array('\\gp\\Page\\Visibility::TogglePage','DefaultDisplay');
-
-
-				switch($cmd){
-					case 'ManageSections':
-						\gp\Page\Edit::ManageSections(false);
-					break;
-				}
-			}
+		if( \gp\tool::LoggedIn() && \gp\admin\Tools::HasPermission('Admin_Menu') ){
+			$this->cmds['RenameForm']			= '\\gp\\Page\\Rename::RenameForm';
+			$this->cmds['RenameFile']			= '\\gp\\Page\\Rename::RenamePage';
+			$this->cmds['ToggleVisibility']		= array('\\gp\\Page\\Visibility::TogglePage','DefaultDisplay');
+			$this->cmds['ManageSections']		= '\gp\Page\Edit::ManageSections';
 		}
 
 		$this->RunCommands($cmd);

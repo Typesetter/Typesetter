@@ -148,14 +148,8 @@ class Edit extends \gp\admin\Layout{
 			return;
 		}
 
-
-
 		$layout_info = \gp\tool::LayoutInfo($layout,false);
 		$page->label = $langmessage['layouts'] . ' » '.$layout_info['label'];
-
-		$_REQUEST += array('gpreq' => 'body'); //force showing only the body as a complete html document
-		$page->get_theme_css = false;
-
 
 		ob_start();
 		$this->LayoutEditor($layout, $layout_info );
@@ -168,10 +162,10 @@ class Edit extends \gp\admin\Layout{
 	 *
 	 */
 	public function ShowInIframe($cmd){
-		global $page,$dirPrefix;
+		global $page;
 
-		$page->show_admin_content = false;
-		\gp\admin\Tools::$show_toolbar = false;
+		$page->show_admin_content		= false;
+		\gp\admin\Tools::$show_toolbar	= false;
 
 		// <head>
 		$page->head .= '<script type="text/javascript">parent.$gp.iframeloaded();</script>';
@@ -187,11 +181,15 @@ class Edit extends \gp\admin\Layout{
 	 */
 	public function LayoutEditor($layout, $layout_info ){
 		global $page,$langmessage,$config;
-		$page->show_admin_content = false;
 
-		$page->css_user[] = '/include/thirdparty/codemirror/lib/codemirror.css';
-		$page->head_js[] = '/include/thirdparty/codemirror/lib/codemirror.js';
-		$page->head_js[] = '/include/thirdparty/codemirror/mode/css/css.js';
+
+		$_REQUEST					+= array('gpreq' => 'body'); //force showing only the body as a complete html document
+		$page->show_admin_content	= false;
+		$page->get_theme_css		= false;
+
+		$page->css_user[]	= '/include/thirdparty/codemirror/lib/codemirror.css';
+		$page->head_js[]	= '/include/thirdparty/codemirror/lib/codemirror.js';
+		$page->head_js[]	= '/include/thirdparty/codemirror/mode/css/css.js';
 
 
 
@@ -265,13 +263,8 @@ class Edit extends \gp\admin\Layout{
 		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';
 
 		echo '</div>';
-
-
-
 		echo '</div>'; //#theme_editor
-
 	}
-
 
 
 	/**
@@ -490,7 +483,8 @@ class Edit extends \gp\admin\Layout{
 	 *
 	 */
 	public function ShowThemeImages(){
-		global $page,$langmessage,$dirPrefix;
+		global $page, $langmessage;
+
 		$page->ajaxReplace = array();
 		$current_theme = false;
 
@@ -1170,6 +1164,7 @@ class Edit extends \gp\admin\Layout{
 			return false;
 		}
 
+
 		//can't have two identical outputs in the same container
 		$check = $this->ContainerWhere($new_gpOutCmd, $container_info, false);
 		if( $check !== false ){
@@ -1183,17 +1178,17 @@ class Edit extends \gp\admin\Layout{
 			return true;
 		}
 
-		$length = 1;
-		if( $replace === false ){
-			$length = 0;
-		}
-
 		//insert
 		$where	= $this->ContainerWhere($to_gpOutCmd, $container_info);
 		if( $where === false ){
 			return false;
 		}
-		$where += $offset;
+
+		$length = 1;
+		if( $replace === false ){
+			$length	= 0;
+			$where	+= $offset;
+		}
 
 		array_splice($container_info,$where,$length,$new_gpOutCmd);
 

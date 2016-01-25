@@ -12,8 +12,8 @@ namespace gp\Page{
 		 * Display form in popup for renaming page given by $index
 		 *
 		 */
-		public static function RenameForm( $index = null ){
-			global $langmessage, $page, $gp_index, $gp_titles, $config;
+		public static function RenameForm( $page ){
+			global $langmessage, $gp_index, $gp_titles, $config;
 
 			$index			= $_REQUEST['index'];
 			if( !isset($gp_titles[$index]) ){
@@ -371,8 +371,8 @@ namespace gp\Page{
 		 * Rename a page
 		 *
 		 */
-		public static function RenamePage($page){
-			global $langmessage, $gp_index;
+		public static function RenamePage(){
+			global $langmessage, $gp_index, $page;
 
 			$new_title = self::RenameFile($page->title);
 			if( ($new_title !== false) && $new_title != $page->title ){

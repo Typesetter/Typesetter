@@ -943,7 +943,9 @@ class Ajax extends \gp\admin\Menu{
 	 * Rename
 	 *
 	 */
-	public function RenameForm(){\gp\Page\Rename::RenameForm();}
+	public function RenameForm(){
+		\gp\Page\Rename::RenameForm();
+	}
 
 	public function RenameFile(){
 		global $langmessage, $gp_index;

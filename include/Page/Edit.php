@@ -130,7 +130,7 @@ class Edit extends \gp\Page{
 		//admin actions
 		if( $this->permission_menu ){
 			$this->cmds['renameform']			= '\\gp\\Page\\Rename::RenameForm';
-			$this->cmds['renamefile']			= 'return';
+			$this->cmds['renamefile']			= '\\gp\\Page\\Rename::RenamePage';
 			$this->cmds['togglevisibility']		= '';
 		}
 
@@ -618,10 +618,6 @@ class Edit extends \gp\Page{
 
 		$gp_titles[$this->gp_index]['type'] = $new_types;
 		\gp\admin\Tools::SavePagesPHP();
-	}
-
-	public function RenameFile(){
-		return \gp\Page\Rename::RenamePage($this);
 	}
 
 

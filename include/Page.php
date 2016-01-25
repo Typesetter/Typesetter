@@ -84,7 +84,7 @@ namespace gp{
 				if( method_exists($this,$cmd) ){
 					$this->$cmd();
 				}elseif( is_callable($cmd) ){
-					call_user_func($cmd);
+					call_user_func($cmd, $this);
 				}
 
 				if( isset($this->cmds[$cmd]) ){

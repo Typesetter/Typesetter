@@ -55,14 +55,10 @@ class Page extends \gp\Page{
 			if( $menu_permissions ){
 
 				$this->cmds['renameform']			= '\\gp\\Page\\Rename::RenameForm';
+				$this->cmds['renamefile']			= '\\gp\\Page\\Rename::RenamePage';
 
 
 				switch($cmd){
-					case 'RenameFile':
-						if( $this->RenameFile() ){
-							return;
-						}
-					break;
 					case 'ToggleVisibility':
 						$this->ToggleVisibility();
 					break;
@@ -126,13 +122,6 @@ class Page extends \gp\Page{
 
 
 		return $admin_links;
-	}
-
-
-	public function RenameForm(){\gp\Page\Rename::RenameForm();}
-
-	public function RenameFile(){
-		return \gp\Page\Rename::RenamePage($this);
 	}
 
 

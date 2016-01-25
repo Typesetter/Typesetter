@@ -129,7 +129,7 @@ class Edit extends \gp\Page{
 		\gp\tool\Plugins::Action('GenerateContent_Admin');
 		\gp\tool::ShowingGallery();
 
-		$content				= '';
+
 		$sections_count			= count($this->file_sections);
 		$this->file_sections	= array_values($this->file_sections);
 		$section_num			= 0;

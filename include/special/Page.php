@@ -61,9 +61,13 @@ class Page extends \gp\Page{
 	}
 
 	public function DefaultDisplay(){
+		$this->contentBuffer = self::ExecInfo($this->TitleInfo);
+	}
+
+	public static function ExecInfo($scriptinfo){
 		ob_start();
-		\gp\tool\Output::ExecInfo($this->TitleInfo);
-		$this->contentBuffer = ob_get_clean();
+		\gp\tool\Output::ExecInfo($scriptinfo);
+		return ob_get_clean();
 	}
 
 

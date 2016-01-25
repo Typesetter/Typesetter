@@ -318,66 +318,21 @@ class Edit extends \gp\admin\Layout{
 	public function SaveCSS(){
 		global $langmessage, $dataDir, $gpLayouts, $page;
 
-		$css			=& $_POST['css'];
-		$layout_info	= \gp\tool::LayoutInfo($this->curr_layout,false);
-		$color			= $layout_info['theme_color'];
-		$theme_colors	= $this->GetThemeColors($layout_info['dir']);
-		$style_type		= \gp\tool\Output::StyleType($layout_info['dir'].'/'.$layout_info['theme_color']);
-		$custom_file	= \gp\tool\Output::CustomStyleFile($this->curr_layout, $style_type);
+		$css				=& $_POST['css'];
 
-		// which color option
-		$color = $this->ReqColor();
-		if( is_null($color) ){
-			return false;
-		}
-
-
-		$old_info = $new_info = $gpLayouts[$this->curr_layout];
-		$theme_name	= dirname($new_info['theme']);
-		$new_info['theme'] = $theme_name.'/'.$color;
-		$gpLayouts[$this->curr_layout] = $new_info;
-
-
-		//delete css file if empty
-		if( empty($css) ){
-			unset($gpLayouts[$this->curr_layout]['css']);
-			$this->RemoveCSS($this->curr_layout);
-
-		//save if not empty
-		}elseif( !\gp\tool\Files::Save($custom_file,$css) ){
-			message($langmessage['OOPS'].' (CSS not saved)');
+		if( !$this->SaveCustom($this->curr_layout, $css) ){
 			return false;
 		}
 
 
 		$gpLayouts[$this->curr_layout]['css'] = true;
 		if( !\gp\admin\Tools::SavePagesPHP() ){
-			$gpLayouts[$this->curr_layout] = $old_info;
 			message($langmessage['OOPS'].' (Data not saved)');
 			return false;
 		}
 
 		message($langmessage['SAVED']);
 		$page->SetTheme($this->curr_layout);
-
-	}
-
-
-	/**
-	 * Return the theme color
-	 *
-	 */
-	public function ReqColor(){
-		global $langmessage;
-
-		if( array_key_exists('color',$_REQUEST) ){
-
-			if( !isset($theme_colors[$color]) ){
-				message($langmessage['OOPS'].' (Invalid Color)');
-				return;
-			}
-			return $_REQUEST['color'];
-		}
 	}
 
 
@@ -388,20 +343,11 @@ class Edit extends \gp\admin\Layout{
 	public function PreviewCSS(){
 		global $page, $langmessage;
 
-		$layout_info	= \gp\tool::LayoutInfo($this->curr_layout,false);
-		$theme_colors	= $this->GetThemeColors($layout_info['dir']);
-		$color			= $layout_info['theme_color'];
+		$layout_info			= \gp\tool::LayoutInfo($this->curr_layout,false);
 
-		// which color option
-		$color = $this->ReqColor();
-		if( is_null($color) ){
-			return;
-		}
-
-
-		$page->theme_color		= $color;
-		$page->theme_rel		= dirname($page->theme_rel).'/'.$color;
-		$page->theme_path		= dirname($page->theme_path).'/'.$color;
+		$page->theme_color		= $layout_info['theme_color'];
+		$page->theme_rel		= dirname($page->theme_rel).'/'.$page->theme_color;
+		$page->theme_path		= dirname($page->theme_path).'/'.$page->theme_color;
 		$dir					= $page->theme_dir.'/'.$page->theme_color;
 		$style_type				= \gp\tool\Output::StyleType($dir);
 		$style_files			= array();

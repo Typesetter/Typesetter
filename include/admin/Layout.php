@@ -385,6 +385,29 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 	/**
+	 * Save the custom.css or custom.scss file
+	 *
+	 */
+	public function SaveCustom($layout, $css){
+
+		//delete css file if empty
+		if( empty($css) ){
+			return $this->RemoveCSS($layout);
+		}
+
+		//save if not empt
+		$custom_file		= $this->LayoutCSSFile($layout);
+
+		if( !\gp\tool\Files::Save($custom_file,$css) ){
+			message($langmessage['OOPS'].' (CSS not saved)');
+			return false;
+		}
+
+		return true;
+	}
+
+
+	/**
 	 * Get the path of the custom css file
 	 *
 	 */
@@ -403,6 +426,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function RemoveCSS($layout){
+		global $gpLayouts;
 
 		$path = $this->LayoutCSSFile($layout);
 		if( file_exists($path) ){
@@ -419,6 +443,12 @@ class Layout extends \gp\admin\Addon\Install{
 		if( file_exists($dir) ){
 			\gp\tool\Files::RmDir($dir);
 		}
+
+		if( isset($gpLayouts[$layout]['css']) ){
+			unset($gpLayouts[$layout]['css']);
+		}
+
+		return true;
 	}
 
 
@@ -698,12 +728,8 @@ class Layout extends \gp\admin\Addon\Install{
 
 		//copy any css
 		$css = $this->layoutCSS($copy_id);
-		if( !empty($css) ){
-			$path = $this->LayoutCSSFile($layout_id);
-			if( !\gp\tool\Files::Save($path,$css) ){
-				message($langmessage['OOPS'].' (CSS not saved)');
-				return false;
-			}
+		if( !$this->SaveCustom($layout_id, $css) ){
+			return false;
 		}
 
 

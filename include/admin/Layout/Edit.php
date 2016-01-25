@@ -91,23 +91,10 @@ class Edit extends \gp\admin\Layout{
 				$this->ShowThemeImages();
 			return;
 
-			case 'drag_area':
-				$this->Drag();
-			break;
-
 			//insert
 			case 'insert':
 				$this->SelectContent();
 			return;
-
-			case 'addcontent':
-				$this->AddContent();
-			break;
-
-			//remove
-			case 'rm_area':
-				$this->RemoveArea();
-			break;
 
 			//links
 			case 'LayoutMenu':
@@ -116,17 +103,6 @@ class Edit extends \gp\admin\Layout{
 			case 'LayoutMenuSave':
 				$this->LayoutMenuSave();
 			return;
-
-			//css
-			case 'SaveCSS':
-				$this->SaveCSS();
-			break;
-			case 'PreviewCSS':
-				$this->PreviewCSS();
-			break;
-
-
-
 		}
 
 		if( $this->LayoutCommands($cmd) ){
@@ -138,8 +114,8 @@ class Edit extends \gp\admin\Layout{
 		$this->cmds['SaveCSS']			= 'ShowInIframe';
 		$this->cmds['PreviewCSS']		= 'ShowInIframe';
 		$this->cmds['addcontent']		= 'ShowInIframe';
-		$this->cmds['rm_area']			= 'ShowInIframe';
-		$this->cmds['drag_area']		= 'ShowInIframe';
+		$this->cmds['RemoveArea']		= 'ShowInIframe';
+		$this->cmds['DragArea']			= 'ShowInIframe';
 		$this->cmds['in_iframe']		= 'ShowInIframe';
 
 		$this->RunCommands($cmd);
@@ -601,7 +577,7 @@ class Edit extends \gp\admin\Layout{
 	}
 
 
-	public function Drag(){
+	public function DragArea(){
 		global $page,$langmessage;
 
 		if( !$this->GetValues($_GET['dragging'],$from_container,$from_gpOutCmd) ){

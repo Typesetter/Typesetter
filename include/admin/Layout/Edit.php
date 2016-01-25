@@ -1044,7 +1044,7 @@ class Edit extends \gp\admin\Layout{
 			echo '<input type="hidden" name="handle" value="'.htmlspecialchars($_GET['handle']).'" />';
 			echo '<input type="hidden" name="return" value="" />';
 
-			$this->CustomMenuForm($curr_info['arg'],$menu_args);
+			$this->CustomMenuForm($menu_args);
 
 			echo '<tr><td class="add" colspan="2">';
 			echo '<button type="submit" name="cmd" value="LayoutMenuSave" class="gpsubmit">'.$langmessage['save'].'</button>';
@@ -1088,7 +1088,7 @@ class Edit extends \gp\admin\Layout{
 			$new_gpOutCmd = $this->NewCustomMenu();
 		}
 
-		if( !$new_gpOutCmd ){
+		if( $new_gpOutCmd === false ){
 			message($langmessage['OOPS'].' (1)');
 			return false;
 		}
@@ -1277,7 +1277,6 @@ class Edit extends \gp\admin\Layout{
 		$menu_args = array();
 
 		if( $curr_info['key'] == 'CustomMenu' ){
-			$showCustom = true;
 
 			$args = explode(',',$curr_info['arg']);
 			$args += array( 0=>0, 1=>-1, 2=>-1, 3=>0, 4=>'' ); //defaults
@@ -1312,7 +1311,7 @@ class Edit extends \gp\admin\Layout{
 	 * @param string $arg
 	 * @param array $menu_args
 	 */
-	public function CustomMenuForm($arg = '',$menu_args = array()){
+	public function CustomMenuForm($menu_args = array()){
 		global $langmessage;
 
 

@@ -7,7 +7,6 @@ defined('is_running') or die('Not an entry point...');
 class Page extends \gp\Page{
 
 	public $pagetype				= 'admin_display';
-	public $requested				= false;
 
 	public $show_admin_content		= true;
 	public $non_admin_content		= '';

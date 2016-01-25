@@ -13,6 +13,7 @@ namespace gp{
 	class Page{
 		public $pagetype			= 'display';
 		public $gp_index;
+		public $requested;
 		public $title;
 		public $label;
 		public $file;
@@ -62,7 +63,8 @@ namespace gp{
 
 
 		public function __construct($title, $type){
-			$this->title = $title;
+			$this->requested	= $title;
+			$this->title		= $title;
 		}
 
 

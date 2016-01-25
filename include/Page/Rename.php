@@ -12,8 +12,8 @@ namespace gp\Page{
 		 * Display form in popup for renaming page given by $index
 		 *
 		 */
-		public static function RenameForm( $page ){
-			global $langmessage, $gp_index, $gp_titles, $config;
+		public static function RenameForm(){
+			global $langmessage, $page, $gp_index, $gp_titles, $config;
 
 			$index			= $_REQUEST['index'];
 			if( !isset($gp_titles[$index]) ){
@@ -21,8 +21,7 @@ namespace gp\Page{
 				return;
 			}
 
-
-			$action			= \gp\tool::GetUrl($page->title);
+			$action			= \gp\tool::GetUrl($page->requested);
 			$label			= \gp\tool::GetLabelIndex($index);
 			$title			= \gp\tool::IndexToTitle($index);
 			$title_info		= $gp_titles[$index];

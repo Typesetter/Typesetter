@@ -389,6 +389,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function SaveCustom($layout, $css){
+		global $langmessage;
 
 		//delete css file if empty
 		if( empty($css) ){

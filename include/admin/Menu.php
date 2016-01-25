@@ -458,11 +458,11 @@ class Menu{
 		$menu_values	= array_values($array);
 
 		$curr_level		= $menu_values[0]['level'];
-		$prev_level		= 0;
 
 
 		//for sites that don't start with level 0
-		if( $curr_level > $prev_level ){
+		$prev_level		= 0;
+		if( $curr_level > 0 ){
 			$piece = '<li><div>&nbsp;</div><ul>';
 			while( $curr_level > $prev_level ){
 				echo $piece;
@@ -512,33 +512,44 @@ class Menu{
 
 			$this->ShowLevel($menu_key,$menu_value);
 
-			if( $next_level > $curr_level ){
-
-				$piece = '<ul>';
-				while( $next_level > $curr_level ){
-					echo $piece;
-					$curr_level++;
-					$piece = '<li class="missing_title"><div>'
-							.'<a href="#" class="gp_label" data-cmd="menu_info">'
-							.$langmessage['page_deleted']
-							.'</a>'
-							.'<p><b>'.$langmessage['page_deleted'].'</b></p>'
-							.'</div><ul>';
-				}
-
-			}elseif( $next_level <= $curr_level ){
-
-				while( $next_level < $curr_level ){
-					echo '</li></ul>';
-					$curr_level--;
-				}
-				echo '</li>';
-			}
-
-			$prev_level = $curr_level;
-
+			$this->EqualizeLevels($curr_level, $next_level);
 		}
 
+	}
+
+
+	/**
+	 *
+	 * @param int $curr_level
+	 * @param int $next_level
+	 */
+	protected function EqualizeLevels($curr_level, $next_level){
+		global $langmessage;
+
+		if( $next_level > $curr_level ){
+
+			$piece = '<ul>';
+			while( $next_level > $curr_level ){
+				echo $piece;
+				$curr_level++;
+				$piece = '<li class="missing_title"><div>'
+						.'<a href="#" class="gp_label" data-cmd="menu_info">'
+						.$langmessage['page_deleted']
+						.'</a>'
+						.'<p><b>'.$langmessage['page_deleted'].'</b></p>'
+						.'</div><ul>';
+			}
+
+		}elseif( $next_level <= $curr_level ){
+
+			while( $next_level < $curr_level ){
+				echo '</li></ul>';
+				$curr_level--;
+			}
+			echo '</li>';
+		}
+
+		return $curr_level;
 	}
 
 

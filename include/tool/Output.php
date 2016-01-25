@@ -740,6 +740,15 @@ namespace gp\tool{
 			return !self::$nested_edit && \gp\tool::LoggedIn();
 		}
 
+
+		/**
+		 * @param int $index
+		 * @param string $href
+		 * @param string $label
+		 * @param string $query
+		 * @param string|array $attr
+		 *
+		 */
 		public static function EditAreaLink(&$index,$href,$label,$query='',$attr=''){
 			self::$edit_index++;
 			$index = self::$edit_index; //since &$index is passed by reference

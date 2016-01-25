@@ -382,7 +382,7 @@ class Edit extends \gp\admin\Layout{
 
 			$compiled		= \gp\tool\Output\Css::ParseLess( $style_files );
 
-			if( !$compiled ){
+			if( $compiled === false ){
 				message($langmessage['OOPS'].' (Invalid LESS)');
 				return false;
 			}
@@ -421,8 +421,8 @@ class Edit extends \gp\admin\Layout{
 
 		$compiled			= \gp\tool\Output\Css::ParseScss($style_files);
 
-		if( !$compiled ){
-			message($langmessage['OOPS'].' (Invalid '.$style_type.')');
+		if( $compiled === false ){
+			message($langmessage['OOPS'].' (Invalid SCSS)');
 			return false;
 		}
 
@@ -630,16 +630,15 @@ class Edit extends \gp\admin\Layout{
 		}
 
 
-		$where = array_search($from_gpOutCmd,$handlers[$from_container]);
-		$to = array_search($to_gpOutCmd,$handlers[$from_container]);
+		$where	= $this->ContainerWhere($from_gpOutCmd, $handlers[$from_container]);
+		$to		= $this->ContainerWhere($to_gpOutCmd, $handlers[$from_container],false);
 
-		if( ($where === null) || ($where === false) ){
-			message($langmessage['OOPS']. '(3)');
+		if( $where === false ){
 			return;
 		}
 
-
 		array_splice($handlers[$from_container],$where,1);
+
 
 		/**
 		 * for moving down
@@ -650,7 +649,6 @@ class Edit extends \gp\admin\Layout{
 		 */
 		$offset = 0;
 		if( ($from_container == $to_container)
-			&& ($to !== null)
 			&& ($to !== false)
 			&& $to > $where ){
 				$offset = 1;
@@ -946,16 +944,34 @@ class Edit extends \gp\admin\Layout{
 
 
 		//remove from $handlers[$container]
-		$where = array_search($gpOutCmd,$handlers[$container]);
-
-		if( ($where === null) || ($where === false) ){
-			message($langmessage['OOPS'].' (2)');
+		$where = $this->ContainerWhere($gpOutCmd, $handlers[$container]);
+		if( $where === false ){
 			return;
 		}
 
 		array_splice($handlers[$container],$where,1);
-		$this->SaveHandlersNew($handlers);
 
+		$this->SaveHandlersNew($handlers);
+	}
+
+
+	/**
+	 * Get the position of $gpOutCmd in $container_info
+	 *
+	 */
+	public function ContainerWhere( $gpOutCmd, &$container_info, $warn = true){
+		global $langmessage;
+
+		$where = array_search($gpOutCmd,$container_info);
+
+		if( ($where === null) || ($where === false) ){
+			if( $warn ){
+				message($langmessage['OOPS'].' (Not found in container)');
+			}
+			return false;
+		}
+
+		return $where;
 	}
 
 
@@ -1142,7 +1158,7 @@ class Edit extends \gp\admin\Layout{
 	}
 
 
-	public function AddToContainer(&$container,$to_gpOutCmd,$new_gpOutCmd,$replace=true,$offset=0){
+	public function AddToContainer(&$container_info,$to_gpOutCmd,$new_gpOutCmd,$replace=true,$offset=0){
 		global $langmessage;
 
 		//unchanged?
@@ -1152,21 +1168,21 @@ class Edit extends \gp\admin\Layout{
 
 
 		//add to to_container in front of $to_gpOutCmd
-		if( !isset($container) || !is_array($container) ){
+		if( !isset($container_info) || !is_array($container_info) ){
 			message($langmessage['OOPS'].' (a1)');
 			return false;
 		}
 
 		//can't have two identical outputs in the same container
-		$check = array_search($new_gpOutCmd,$container);
-		if( ($check !== null) && ($check !== false) ){
+		$check = $this->ContainerWhere($new_gpOutCmd, $container_info, false);
+		if( $check !== false ){
 			message($langmessage['OOPS']. ' (Area already in container)');
 			return false;
 		}
 
 		//if empty, just add
-		if( count($container) === 0 ){
-			$container[] = $new_gpOutCmd;
+		if( count($container_info) === 0 ){
+			$container_info[] = $new_gpOutCmd;
 			return true;
 		}
 
@@ -1176,14 +1192,13 @@ class Edit extends \gp\admin\Layout{
 		}
 
 		//insert
-		$where = array_search($to_gpOutCmd,$container);
-		if( ($where === null) || ($where === false) ){
-			message($langmessage['OOPS']. ' (Destination Container Not Found)');
+		$where	= $this->ContainerWhere($to_gpOutCmd, $container_info);
+		if( $where === false ){
 			return false;
 		}
 		$where += $offset;
 
-		array_splice($container,$where,$length,$new_gpOutCmd);
+		array_splice($container_info,$where,$length,$new_gpOutCmd);
 
 		return true;
 	}

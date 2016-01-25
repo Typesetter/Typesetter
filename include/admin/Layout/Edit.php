@@ -989,13 +989,10 @@ class Edit extends \gp\admin\Layout{
 
 
 		$showCustom			= false;
-		$current_function	= false;
 		$menu_args			= $this->MenuArgs($curr_info);
 
 		if( $curr_info['key'] == 'CustomMenu' ){
 			$showCustom = true;
-		}else{
-			$current_function = $curr_info['key'];
 		}
 
 

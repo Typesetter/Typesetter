@@ -237,7 +237,12 @@ namespace gp\tool{
 				break;
 
 				case 'password_hash':
+					if( !function_exists('password_verify') ){
+						msg('This version of PHP does not have password_verify(). To fix, reset your password at /Admin_Preferences and select "sha512" for the "Password Algorithm"');
+						return false;
+					}
 				return password_verify($_POST['pass_sha512'],$user_pass);
+
 
 			}
 

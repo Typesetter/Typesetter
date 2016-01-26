@@ -254,12 +254,10 @@ namespace gp\Page{
 				unset($title_info['browser_title']);
 			}
 
-			if( !\gp\admin\Tools::SavePagesPHP() ){
-				msg($langmessage['OOPS'].' (R1)');
+			if( !\gp\admin\Tools::SavePagesPHP(true,true) ){
 				return false;
 			}
 
-			msg($langmessage['SAVED']);
 			return $title;
 		}
 

@@ -74,13 +74,7 @@ class Layout{
 
 
 		unset($gp_titles[$index]['gpLayout']);
-		if( !\gp\admin\Tools::SavePagesPHP() ){
-			msg($langmessage['OOPS']);
-			return false;
-		}
-
-		//reset the layout array
-		msg($langmessage['SAVED']);
+		return \gp\admin\Tools::SavePagesPHP(true, true);
 	}
 
 
@@ -119,12 +113,7 @@ class Layout{
 			$gp_titles[$index]['gpLayout'] = $layout;
 		}
 
-		if( !\gp\admin\Tools::SavePagesPHP() ){
-			msg($langmessage['OOPS'].'(3)');
-			return false;
-		}
-
-		msg($langmessage['SAVED']);
+		return \gp\admin\Tools::SavePagesPHP(true, true);
 	}
 
 

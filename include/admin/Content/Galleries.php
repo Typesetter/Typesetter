@@ -165,8 +165,7 @@ class Galleries extends \gp\special\Galleries{
 			return false;
 		}
 
-		if( !\gp\admin\Tools::SavePagesPHP() ){
-			message($langmessage['OOPS'].' (Not Saved)');
+		if( !\gp\admin\Tools::SavePagesPHP(true) ){
 			return false;
 		}
 

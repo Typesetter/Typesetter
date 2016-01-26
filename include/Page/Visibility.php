@@ -24,12 +24,7 @@ class Visibility{
 			unset($gp_titles[$index]['vis']);
 		}
 
-		if( !\gp\admin\Tools::SavePagesPHP() ){
-			msg($langmessage['OOPS'].' (VT1)');
-			return false;
-		}
-
-		return true;
+		return \gp\admin\Tools::SavePagesPHP(true);
 	}
 
 	/**

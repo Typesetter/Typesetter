@@ -1256,25 +1256,32 @@ namespace gp\admin{
 		 * @return bool
 		 *
 		 */
-		public static function SavePagesPHP(){
-			global $gp_index, $gp_titles, $gp_menu, $gpLayouts, $dataDir;
+		public static function SavePagesPHP($notify_fail = false, $notify_save = false){
+			global $gp_index, $gp_titles, $gp_menu, $gpLayouts, $dataDir, $langmessage;
 
-			if( !is_array($gp_menu) || !is_array($gp_index) || !is_array($gp_titles) || !is_array($gpLayouts) ){
-				return false;
+			if( is_array($gp_menu) && is_array($gp_index) && is_array($gp_titles) && is_array($gpLayouts) ){
+
+				$pages					= array();
+				$pages['gp_menu']		= $gp_menu;
+				$pages['gp_index']		= $gp_index;
+				$pages['gp_titles']		= $gp_titles;
+				$pages['gpLayouts']		= $gpLayouts;
+
+				if( \gp\tool\Files::SaveData($dataDir.'/data/_site/pages.php','pages',$pages) ){
+					if( $notify_save ){
+						message($langmessage['SAVED']);
+					}
+					return true;
+				}
 			}
 
-			$pages = array();
-			$pages['gp_menu'] = $gp_menu;
-			$pages['gp_index'] = $gp_index;
-			$pages['gp_titles'] = $gp_titles;
-			$pages['gpLayouts'] = $gpLayouts;
-
-			if( !\gp\tool\Files::SaveData($dataDir.'/data/_site/pages.php','pages',$pages) ){
-				return false;
+			if( $notify_fail ){
+				message($langmessage['OOPS'].'(Page info not saved)');
 			}
-			return true;
 
+			return false;
 		}
+
 
 		/**
 		 * Save the CMS configuration

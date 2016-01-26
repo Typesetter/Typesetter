@@ -799,8 +799,7 @@ class Ajax extends \gp\admin\Menu{
 		}
 
 
-		if( !\gp\admin\Tools::SavePagesPHP() ){
-			msg($langmessage['OOPS'].' (Page index not saved)');
+		if( !\gp\admin\Tools::SavePagesPHP(true) ){
 			return false;
 		}
 

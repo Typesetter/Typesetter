@@ -272,8 +272,7 @@ class Trash{
 			return false;
 		}
 
-		if( !\gp\admin\Tools::SavePagesPHP() ){
-			message($langmessage['OOPS'].' (R4)');
+		if( !\gp\admin\Tools::SavePagesPHP(true) ){
 			return false;
 		}
 

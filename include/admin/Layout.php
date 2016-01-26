@@ -719,17 +719,13 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	protected function SaveLayouts($notify_user = true){
-		global $langmessage, $gpLayouts;
+		global $gpLayouts;
 
-		if( \gp\admin\Tools::SavePagesPHP() ){
-			if( $notify_user ){
-				message($langmessage['SAVED']);
-			}
+		if( \gp\admin\Tools::SavePagesPHP($notify_user, $notify_user) ){
 			return true;
 		}
 
 		$gpLayouts = $this->gpLayouts_before;
-		message($langmessage['OOPS'].'(Not Saved)');
 		return false;
 	}
 

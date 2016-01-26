@@ -52,18 +52,17 @@ class Addons extends \gp\admin\Addon\Install{
 				$this->LocalInstall();
 			break;
 
-			case 'remote_install':
+			case 'RemoteInstall':
 				$this->RemoteInstall();
 			return;
-			case 'remote_install_confirmed':
+			case 'RemoteInstallConfirmed':
 				$this->RemoteInstallConfirmed();
 			break;
 
 
-			case 'Update Review';
-			case 'Send Review':
-			case 'rate':
-				$this->admin_addon_rating('plugin','Admin_Addons');
+			case 'SendAddonReview':
+			case 'ReviewAddonForm':
+				$this->AdminAddonRating();
 				if( $this->ShowRatingText ){
 					return;
 				}
@@ -489,7 +488,7 @@ class Addons extends \gp\admin\Addon\Install{
 				echo $info['About'];
 				if( isset($info['Addon_Unique_ID']) && is_numeric($info['Addon_Unique_ID']) ){
 					echo '<br/>';
-					echo $this->DetailLink('plugin', $info['Addon_Unique_ID'],'More Info...');
+					echo $this->DetailLink('plugins', $info['Addon_Unique_ID'],'More Info...');
 				}
 				echo '</td></tr>';
 				$i++;

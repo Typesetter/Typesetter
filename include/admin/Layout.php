@@ -87,75 +87,31 @@ class Layout extends \gp\admin\Addon\Install{
 
 		$this->SetLayoutArray();
 
-		switch($cmd){
+
+		//Installation
+		$this->cmds['RemoteInstall']			= '';
+		$this->cmds['RemoteInstallConfirmed']	= '';
+		$this->cmds['UpgradeTheme']				= 'DefaultDisplay';
+
+		//Copy, Delete
+		$this->cmds['CopyLayoutPrompt']			= '';
+		$this->cmds['CopyLayout']				= 'DefaultDisplay';
+		$this->cmds['DeleteLayout']				= 'DefaultDisplay';
+
+		//text
+		$this->cmds['EditText']					= '';
+		$this->cmds['SaveText']					= 'ReturnHeader';
+
+		$this->cmds['AddonText']				= '';
+		$this->cmds['SaveAddonText']			= 'ReturnHeader';
+
+		//Reviews
+		$this->cmds['SendAddonReview']			= '';
+		$this->cmds['ReviewAddonForm']			= '';
 
 
-			//remote themes
-			case 'remote_install':
-				$this->RemoteInstall();
-			return;
-			case 'remote_install_confirmed':
-				$installer = $this->RemoteInstallConfirmed('theme');
-				$this->GetPossible();
-				$this->UpdateLayouts( $installer );
-			break;
-
-
-			//theme ratings
-			case 'Update Review';
-			case 'Send Review':
-			case 'rate':
-				$this->admin_addon_rating('theme','Admin_Theme_Content');
-				if( $this->ShowRatingText ){
-					return;
-				}
-			break;
-
-
-			case 'UpdateTheme':
-				$this->UpdateTheme($_REQUEST['source']);
-			break;
-
-
-
-
-			//copy
-			case 'CopyLayoutPrompt':
-				$this->CopyLayoutPrompt();
-			return;
-			case 'CopyLayout';
-				$this->CopyLayout();
-			break;
-
-			//layout options
-			case 'deletelayout':
-				$this->DeleteLayoutConfirmed();
-			break;
-
-			//text
-			case 'edittext':
-				$this->EditText();
-			return;
-			case 'savetext':
-				$this->SaveText();
-			break;
-
-
-			case 'saveaddontext':
-				$this->SaveAddonText();
-			break;
-			case 'addontext':
-				$this->AddonText();
-			return;
-
-		}
-
-		if( $this->LayoutCommands($cmd) ){
-			return;
-		}
-
-
-		$this->ShowLayouts();
+		$this->LayoutCommands();
+		$this->RunCommands($cmd);
 	}
 
 
@@ -163,43 +119,48 @@ class Layout extends \gp\admin\Addon\Install{
 	 * Perform various layout commands
 	 *
 	 */
-	public function LayoutCommands($cmd){
+	public function LayoutCommands(){
 
-		switch($cmd){
+		$this->cmds['ShowTitles']		= '';
+		$this->cmds['ShowGadgets']		= '';
+		$this->cmds['LayoutLabel']		= '';
+		$this->cmds['MakeDefault']		= 'DefaultDisplay';
+		$this->cmds['CSSPreferences']	= '';
+		$this->cmds['RestoreLayout']	= 'DefaultDisplay';
+		$this->cmds['RmGadget']			= 'DefaultDisplay';
 
-
-			// CSS editing
-			case 'restore':
-				$this->Restore();
-			break;
-
-			case 'CSSPreferences':
-				$this->CSSPreferences();
-			break;
-
-			case 'makedefault':
-				$this->MakeDefault();
-			break;
-
-			case 'LayoutLabel':
-				$this->LayoutLabel();
-			return true;
-
-			case 'RmGadget':
-				$this->RmGadget();
-			break;
-			case 'gadgets':
-				$this->ShowGadgets();
-			return true;
-
-			case 'titles':
-				$this->ShowTitles();
-			return true;
-		}
-
-		return false;
 	}
 
+
+	/**
+	 * Show all layouts and themes
+	 *
+	 */
+	public function DefaultDisplay(){
+		global $config, $page, $langmessage, $gpLayouts;
+
+		$page->head_js[] = '/include/js/auto_width.js';
+
+		$this->ShowHeader();
+
+		$default_layout = $config['gpLayout'];
+
+		echo '<div id="adminlinks2">';
+
+		//all other layouts
+		foreach($gpLayouts as $layout => $info){
+			$this->LayoutDiv($layout,$info);
+		}
+		echo '</div>';
+
+		echo '<hr/>';
+		echo '<p class="admin_note">';
+		echo $langmessage['see_also'].' '.\gp\tool::Link('Admin/Menu',$langmessage['file_manager']);
+		echo '</p>';
+
+
+		$this->ColorSelector();
+	}
 
 
 	/**
@@ -296,14 +257,14 @@ class Layout extends \gp\admin\Addon\Install{
 		if( $config['gpLayout'] == $layout ){
 			echo '<span><b>'.$langmessage['default'].'</b></span>';
 		}else{
-			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['make_default'],'cmd=makedefault&layout='.rawurlencode($layout),array('data-cmd'=>'creq','title'=>$langmessage['make_default']));
+			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['make_default'],'cmd=MakeDefault&layout='.rawurlencode($layout),array('data-cmd'=>'creq','title'=>$langmessage['make_default']));
 		}
 		echo '</li>';
 
 
 		//gadgets
 		echo '<li>';
-		echo $this->LayoutLink( $layout, $langmessage['gadgets'], 'cmd=gadgets', 'data-cmd="gpabox"' );
+		echo $this->LayoutLink( $layout, $langmessage['gadgets'], 'cmd=ShowGadgets', 'data-cmd="gpabox"' );
 		echo '</li>';
 
 
@@ -313,7 +274,7 @@ class Layout extends \gp\admin\Addon\Install{
 		$label = sprintf($langmessage['%s Pages'],$titles_count);
 		if( $titles_count ){
 			//$label = $langmessage['titles_using_layout'].': '.$label;
-			echo $this->LayoutLink( $layout, $label, 'cmd=titles', 'data-cmd="gpabox"' );
+			echo $this->LayoutLink( $layout, $label, 'cmd=ShowTitles', 'data-cmd="gpabox"' );
 		}else{
 			echo '<span>'.$label.'</span>';
 		}
@@ -324,7 +285,7 @@ class Layout extends \gp\admin\Addon\Install{
 		$handlers_count = $this->HandlersCount($info);
 		echo '<li>';
 		if( $handlers_count ){
-			echo $this->LayoutLink( $layout, $langmessage['restore_defaults'], 'cmd=restore', array('data-cmd'=>'creq') );
+			echo $this->LayoutLink( $layout, $langmessage['restore_defaults'], 'cmd=RestoreLayout', array('data-cmd'=>'creq') );
 		}else{
 			echo '<span>'.$langmessage['content_arrangement'].': '.$langmessage['default'].'</span>';
 		}
@@ -554,10 +515,11 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 *
 	 */
-	public function UpdateTheme($theme){
+	public function UpgradeTheme(){
 		global $langmessage, $gpLayouts;
 
-		$theme_info = $this->ThemeInfo($theme);
+		$theme			=& $_REQUEST['source'];
+		$theme_info		= $this->ThemeInfo($theme);
 
 		if( !$theme_info ){
 			message($langmessage['OOPS'].' (Invalid Source)');
@@ -640,6 +602,15 @@ class Layout extends \gp\admin\Addon\Install{
 		if( !\gp\admin\Tools::SavePagesPHP() ){
 			message($langmessage['OOPS'].'(Layout Info Not Saved)');
 		}
+	}
+
+	/**
+	 *
+	 */
+	public function RemoteInstallConfirmed(){
+		$installer = parent::RemoteInstallConfirmed('themes');
+		$this->GetPossible();
+		$this->UpdateLayouts( $installer );
 	}
 
 
@@ -1043,35 +1014,6 @@ class Layout extends \gp\admin\Addon\Install{
 		$page->ajaxReplace[] = array( 'replace', '.layout_label_'.$layout, $replace);
 	}
 
-	/**
-	 * Show all layouts and themes
-	 *
-	 */
-	public function ShowLayouts(){
-		global $config, $page, $langmessage, $gpLayouts;
-
-		$page->head_js[] = '/include/js/auto_width.js';
-
-		$this->ShowHeader();
-
-		$default_layout = $config['gpLayout'];
-
-		echo '<div id="adminlinks2">';
-
-		//all other layouts
-		foreach($gpLayouts as $layout => $info){
-			$this->LayoutDiv($layout,$info);
-		}
-		echo '</div>';
-
-		echo '<hr/>';
-		echo '<p class="admin_note">';
-		echo $langmessage['see_also'].' '.\gp\tool::Link('Admin/Menu',$langmessage['file_manager']);
-		echo '</p>';
-
-
-		$this->ColorSelector();
-	}
 
 	/**
 	 * Display the color selector for
@@ -1191,7 +1133,7 @@ class Layout extends \gp\admin\Addon\Install{
 			}else{
 				$source = $layout_info['theme_name'].'(local)/'.$layout_info['theme_color'];
 			}
-			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=UpdateTheme&source='.rawurlencode($source),array('data-cmd'=>'creq'));
+			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=UpgradeTheme&source='.rawurlencode($source),array('data-cmd'=>'creq'));
 			echo '</li>';
 		}
 
@@ -1219,7 +1161,7 @@ class Layout extends \gp\admin\Addon\Install{
 				$label = $langmessage['upgrade'].' &nbsp; '.$version_info['version'];
 				$source = $version_info['index'].'/'.$layout_info['theme_color']; //could be different folder
 				echo '<div class="gp_notice">';
-				echo \gp\tool::Link('Admin_Theme_Content',$label,'cmd=UpdateTheme&source='.$source,array('data-cmd'=>'creq'));
+				echo \gp\tool::Link('Admin_Theme_Content',$label,'cmd=UpgradeTheme&source='.$source,array('data-cmd'=>'creq'));
 				echo '</div>';
 
 
@@ -1228,7 +1170,7 @@ class Layout extends \gp\admin\Addon\Install{
 				$version_info = \gp\admin\Tools::$new_versions[$addon_id];
 				$label = $langmessage['new_version'].' &nbsp; '.$version_info['version'].' &nbsp; ('.CMS_READABLE_DOMAIN.')';
 				echo '<div class="gp_notice">';
-				echo \gp\tool::Link('Admin_Theme_Content',$label,'cmd=remote_install&id='.$addon_id.'&name='.rawurlencode($version_info['name']).'&layout='.$layout);
+				echo \gp\tool::Link('Admin_Theme_Content',$label,'cmd=RemoteInstall&id='.$addon_id.'&name='.rawurlencode($version_info['name']).'&layout='.$layout);
 				echo '</div>';
 			}
 
@@ -1355,7 +1297,7 @@ class Layout extends \gp\admin\Addon\Install{
 	/**
 	 * Restore a layout to it's default content arrangement
 	 */
-	public function Restore(){
+	public function RestoreLayout(){
 		$this->SaveHandlersNew(array(),$this->curr_layout);
 	}
 
@@ -1554,8 +1496,6 @@ class Layout extends \gp\admin\Addon\Install{
 			message($langmessage['SAVED']);
 
 		}
-
-		$this->ReturnHeader();
 	}
 
 	public function UpdateAddon($addon){
@@ -1709,8 +1649,6 @@ class Layout extends \gp\admin\Addon\Install{
 		}else{
 			message($langmessage['OOPS'].' (s1)');
 		}
-		$this->ReturnHeader();
-
 	}
 
 	public function SetLayoutArray(){
@@ -1784,7 +1722,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 * Remote a layout
 	 *
 	 */
-	public function DeleteLayoutConfirmed(){
+	public function DeleteLayout(){
 		global $gpLayouts, $langmessage, $gp_titles;
 
 		$layout =& $_POST['layout'];

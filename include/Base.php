@@ -46,7 +46,9 @@ abstract class Base{
 
 	}
 
+
 	/**
+	 * The method to execute if RunCommands()
 	 *
 	 */
 	public function DefaultDisplay(){

@@ -105,10 +105,6 @@ class Edit extends \gp\admin\Layout{
 			return;
 		}
 
-		if( $this->LayoutCommands($cmd) ){
-			return;
-		}
-
 
 		//show the layout (displayed within an iframe)
 		$this->cmds['SaveCSS']			= 'ShowInIframe';
@@ -118,6 +114,7 @@ class Edit extends \gp\admin\Layout{
 		$this->cmds['DragArea']			= 'ShowInIframe';
 		$this->cmds['in_iframe']		= 'ShowInIframe';
 
+		$this->LayoutCommands($cmd);
 		$this->RunCommands($cmd);
 	}
 

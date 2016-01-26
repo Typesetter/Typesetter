@@ -156,7 +156,7 @@ class Available extends \gp\admin\Layout{
 		//remote upgrade
 		if( gp_remote_themes && $id && isset(\gp\admin\Tools::$new_versions[$id]) && version_compare(\gp\admin\Tools::$new_versions[$id]['version'], $version ,'>') ){
 			$version_info = \gp\admin\Tools::$new_versions[$id];
-			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['new_version'],'cmd=remote_install&id='.$id.'&name='.rawurlencode($version_info['name']));
+			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['new_version'],'cmd=RemoteInstall&id='.$id.'&name='.rawurlencode($version_info['name']));
 		}
 
 

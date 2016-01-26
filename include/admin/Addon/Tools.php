@@ -16,8 +16,6 @@ class Tools extends \gp\Base{
 	public $addonReviews		= array();
 
 
-	public $type;
-	public $CanRate				= true;
 	public $messages			= array();
 	public $addon_info			= array();
 	public $dataFile;
@@ -90,7 +88,7 @@ class Tools extends \gp\Base{
 			if( $i > $rating ){
 				$class = ' class="unset"';
 			}
-			echo \gp\tool::Link($this->scriptUrl,'','cmd=rate&rating='.$i.'&arg='.rawurlencode($arg),' data-rating="'.$i.'" data-cmd="gpabox" '.$class);
+			echo \gp\tool::Link($this->scriptUrl,'','cmd=ReviewAddonForm&rating='.$i.'&arg='.rawurlencode($arg),' data-rating="'.$i.'" data-cmd="gpabox" '.$class);
 		}
 
 		echo '<input type="hidden" name="rating" value="'.htmlspecialchars($rating).'" readonly="readonly"/>';
@@ -141,48 +139,28 @@ class Tools extends \gp\Base{
 	 * Manage addon ratings
 	 *
 	 */
-	public function admin_addon_rating($type,$url){
-		global $page;
-
-		$this->type = $type;
-		$this->scriptUrl = $url;
-		$page->head_js[] = '/include/js/rate.js';
-		$this->GetAddonData();
-
-
-		$arg =& $_REQUEST['arg'];
-
-		switch($this->type){
-			case 'theme':
-				$this->GetAddonRateInfoTheme($arg);
-			break;
-			case 'plugin':
-				$this->GetAddonRateInfoPlugin($arg);
-			break;
-		}
-
-		if( !$this->CanRate($arg) ){
-			return;
-		}
+	public function AdminAddonRating(){
 
 		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
-			case 'Update Review';
-			case 'Send Review':
-			if( $this->SendRating() ){
+			case 'SendAddonReview';
+			if( $this->SendAddonReview() ){
 				return;
 			}
-
-			case 'rate':
-			return $this->RateForm();
 		}
 
-		return;
+		$this->ReviewAddonForm();
 	}
 
 
-	public function RateForm(){
-		global $config, $dirPrefix,$langmessage;
+	public function ReviewAddonForm(){
+		global $config, $dirPrefix, $langmessage, $page;
+
+		if( !$this->CanRate() ){
+			return;
+		}
+
+		$page->head_js[]	= '/include/js/rate.js';
 
 
 		//get appropriate variables
@@ -216,7 +194,6 @@ class Tools extends \gp\Base{
 		//echo '<form action="'.\gp\tool::GetUrl($this->scriptUrl,'cmd=rate&arg='.$this->addon_info['pass_arg']).'" method="post">';
 		echo '<form action="'.\gp\tool::GetUrl($this->scriptUrl).'" method="post">';
 		echo '<input type="hidden" name="arg" value="'.$this->addon_info['pass_arg'].'"/>';
-		echo '<input type="hidden" name="cmd" value="rate" />';
 
 
 		echo '<table class="rating_table">';
@@ -254,9 +231,9 @@ class Tools extends \gp\Base{
 		echo '<tr><td></td><td>';
 
 		if( isset($this->addonReviews[$id]) ){
-			echo '<input type="submit" name="cmd" value="Update Review" class="gppost gpsubmit"/>';
+			echo '<button type="submit" name="cmd" value="SendAddonReview" class="gppost gpsubmit">Update Review</button>';
 		}else{
-			echo '<input type="submit" name="cmd" value="Send Review" class="gppost gpsubmit"/>';
+			echo '<button type="submit" name="cmd" value="SendAddonReview" class="gppost gpsubmit">Send Review</button>';
 		}
 
 		echo ' ';
@@ -270,7 +247,29 @@ class Tools extends \gp\Base{
 		return true;
 	}
 
+
+	/**
+	 * Get Addon info for rating
+	 * Return true if it can be rated
+	 *
+	 */
 	public function CanRate(){
+
+		$this->GetAddonData();
+
+		$arg =& $_REQUEST['arg'];
+
+		switch($this->config_index){
+			case 'themes':
+				$this->GetAddonRateInfoTheme($arg);
+			break;
+			case 'addons':
+				$this->GetAddonRateInfoPlugin($arg);
+			break;
+			default:
+			return false;
+		}
+
 
 		if( !\gp\tool::IniGet('allow_url_fopen') ){
 			$this->messages[] = 'Your installation of PHP does not support url fopen wrappers.';
@@ -296,7 +295,6 @@ class Tools extends \gp\Base{
 		$dir = str_replace('../','./',$dir);
 		$full_dir = $dataDir.$dir;
 		if( !file_exists($full_dir) ){
-			$this->CanRate = false;
 			$this->messages[] = $langmessage['OOPS'].' (directory doesn\'t exist)';
 			return false;
 		}
@@ -304,13 +302,11 @@ class Tools extends \gp\Base{
 		$ini = $this->GetAvailInstall($full_dir);
 
 		if( $ini === false ){
-			$this->CanRate = false;
 			$this->messages[] = 'This add-on does not have an ID assigned to it. The developer must update the install configuration.';
 			return false;
 		}
 
 		if( !isset($ini['Addon_Unique_ID']) ){
-			$this->CanRate = false;
 			$this->messages[] = 'This add-on does not have an ID assigned to it. The developer must update the install configuration.';
 			return false;
 		}
@@ -337,7 +333,6 @@ class Tools extends \gp\Base{
 		}
 
 		if( !is_numeric($arg) ){
-			$this->CanRate = false;
 			$this->messages[] = 'This add-on does not have an ID assigned to it. The developer must update the install configuration.';
 			return false;
 		}
@@ -363,8 +358,6 @@ class Tools extends \gp\Base{
 				return true;
 			}
 		}
-
-		$this->CanRate = false;
 		$this->messages[] = 'The supplied add-on ID is not in your add-on history.';
 		return false;
 	}
@@ -374,10 +367,14 @@ class Tools extends \gp\Base{
 	 * Send the addon rating to server
 	 *
 	 */
-	public function SendRating(){
+	public function SendAddonReview(){
 		global $langmessage, $config, $dirPrefix, $page;
 		$page->ajaxReplace = array();
 		$data = array();
+
+		if( !$this->CanRate() ){
+			return;
+		}
 
 		if( !is_numeric($_POST['rating']) || ($_POST['rating'] < 1) || ($_POST['rating'] > 5 ) ){
 			message($langmessage['OOPS'].' (Invalid Rating)');

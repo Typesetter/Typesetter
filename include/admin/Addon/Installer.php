@@ -840,25 +840,22 @@ class Installer extends \gp\admin\Addon\Tools{
 		global $langmessage, $dataDir;
 
 		// check values
-		if( empty($this->type)
-			|| empty($this->id)
-			|| !is_numeric($this->id)
-			){
-				$this->message($langmessage['OOPS'].' (Invalid Request)');
-				return false;
+		if( empty($this->type) || empty($this->id) || !is_numeric($this->id) ){
+			$this->message($langmessage['OOPS'].' (Invalid Request)');
+			return false;
 		}
 
 		// allowed to remote install?
 		switch($this->type){
 
-			case 'plugin':
+			case 'plugins':
 				if( !gp_remote_plugins ){
 					$this->message($langmessage['OOPS'].' (Can\'t remote install plugins)');
 					return false;
 				}
 			break;
 
-			case 'theme':
+			case 'themes':
 				if( !gp_remote_themes ){
 					$this->message($langmessage['OOPS'].' (Can\'t remote install themes)');
 					return false;

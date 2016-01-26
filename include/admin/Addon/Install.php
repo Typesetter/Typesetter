@@ -117,7 +117,7 @@ class Install extends \gp\admin\Addon\Tools{
 		$_REQUEST += array('order'=>'');
 
 		echo '<form action="'.\gp\tool::GetUrl($page->requested).'" method="post">';
-		echo '<input type="hidden" name="cmd" value="remote_install_confirmed" />';
+		echo '<input type="hidden" name="cmd" value="RemoteInstallConfirmed" />';
 		echo '<input type="hidden" name="id" value="'.htmlspecialchars($_REQUEST['id']).'" />';
 		echo '<input type="hidden" name="order" value="'.htmlspecialchars($_REQUEST['order']).'" />';
 		echo '<input type="hidden" name="name" value="'.htmlspecialchars($_REQUEST['name']).'" />';
@@ -441,7 +441,7 @@ class Install extends \gp\admin\Addon\Tools{
 
 	public function DetailUrl($type,$id,$q=''){
 		$url = 'Themes';
-		if( $type == 'plugin' ){
+		if( $type == 'plugins' ){
 			$url = 'Plugins';
 		}
 		if( !empty($q) ){
@@ -486,7 +486,7 @@ class Install extends \gp\admin\Addon\Tools{
 			$url = 'Admin/Addons';
 		}
 
-		$link = 'cmd=remote_install';
+		$link = 'cmd=RemoteInstall';
 		$link .= '&name='.rawurlencode($row['name']);
 		$link .= '&type='.rawurlencode($row['type']);
 		$link .= '&id='.rawurlencode($row['id']);

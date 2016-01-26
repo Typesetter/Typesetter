@@ -575,14 +575,12 @@ class Edit extends \gp\admin\Layout{
 
 
 	public function DragArea(){
-		global $page,$langmessage;
+		global $page, $langmessage;
 
 		if( !$this->GetValues($_GET['dragging'],$from_container,$from_gpOutCmd) ){
-			message($langmessage['OOPS'].' (0)');
 			return;
 		}
 		if( !$this->GetValues($_GET['to'],$to_container,$to_gpOutCmd) ){
-			message($langmessage['OOPS'].'(1)');
 			return;
 		}
 
@@ -808,7 +806,6 @@ class Edit extends \gp\admin\Layout{
 
 		//prep destination
 		if( !$this->GetValues($_REQUEST['where'],$to_container,$to_gpOutCmd) ){
-			message($langmessage['OOPS'].' (Insert location not found)');
 			return false;
 		}
 		$handlers = $this->GetAllHandlers();
@@ -1120,12 +1117,19 @@ class Edit extends \gp\admin\Layout{
 	}
 
 
-	public function GetValues($a,&$container,&$gpOutCmd){
-		if( substr_count($a,'|') !== 1 ){
+	/**
+	 * Get the container and gpOutCmd from the $arg
+	 *
+	 */
+	public function GetValues($arg,&$container,&$gpOutCmd){
+		global $langmessage;
+
+		if( substr_count($arg,'|') !== 1 ){
+			message($langmessage['OOPS'].' (Invalid argument)');
 			return false;
 		}
 
-		list($container,$gpOutCmd) = explode('|',$a);
+		list($container,$gpOutCmd) = explode('|',$arg);
 		return true;
 	}
 

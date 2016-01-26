@@ -53,6 +53,8 @@ class Layout extends \gp\admin\Addon\Install{
 	public $path_remote				= 'Admin_Theme_Content/Remote';
 	public $can_install_links		= false;
 
+	private $gpLayouts_before;
+
 
 	public function __construct(){
 		global $page;
@@ -86,6 +88,8 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 		$this->SetLayoutArray();
+
+		$this->gpLayouts_before					= $gpLayouts;
 
 
 		//Installation
@@ -420,7 +424,7 @@ class Layout extends \gp\admin\Addon\Install{
 	public function CSSPreferences(){
 		global $langmessage, $gpLayouts, $page;
 
-		$old_info = $new_info = $gpLayouts[$this->curr_layout];
+		$new_info = $gpLayouts[$this->curr_layout];
 
 		if( isset($_POST['menu_css_ordered']) ){
 			if( $_POST['menu_css_ordered'] === 'off' ){
@@ -440,9 +444,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 		$gpLayouts[$this->curr_layout] = $new_info;
 
-		if( !\gp\admin\Tools::SavePagesPHP() ){
-			$gpLayouts[$this->curr_layout] = $old_info;
-			message($langmessage['OOPS'].' (Not Saved)');
+		if( !$this->SaveLayouts(false) ){
 			return;
 		}
 
@@ -548,7 +550,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function UpdateLayouts( $installer ){
-		global $gpLayouts, $langmessage['OOPS'];
+		global $gpLayouts, $langmessage;
 
 		$ini_contents = $installer->ini_contents;
 
@@ -598,9 +600,7 @@ class Layout extends \gp\admin\Addon\Install{
 			$gpLayouts[$layout] = $layout_info;
 		}
 
-		if( !\gp\admin\Tools::SavePagesPHP() ){
-			message($langmessage['OOPS'].'(Layout Info Not Saved)');
-		}
+		$this->SaveLayouts();
 	}
 
 	/**
@@ -686,7 +686,6 @@ class Layout extends \gp\admin\Addon\Install{
 		}while( isset($gpLayouts[$layout_id]) );
 
 
-		$gpLayoutsBefore		= $gpLayouts;
 		$gpLayouts[$layout_id]	= $newLayout;
 
 		if( !\gp\tool\Files::ArrayInsert($copy_id,$layout_id,$newLayout,$gpLayouts,1) ){
@@ -701,14 +700,27 @@ class Layout extends \gp\admin\Addon\Install{
 			return false;
 		}
 
+		$this->SaveLayouts();
+	}
+
+
+	/**
+	 * Save the gpLayouts data
+	 *
+	 */
+	protected function SaveLayouts($notify_user = true){
+		global $langmessage, $gpLayouts;
 
 		if( \gp\admin\Tools::SavePagesPHP() ){
-			message($langmessage['SAVED']);
-		}else{
-			$gpLayouts = $gpLayoutsBefore;
-			message($langmessage['OOPS'].'(Not Saved)');
+			if( $notify_user ){
+				message($langmessage['SAVED']);
+			}
+			return true;
 		}
 
+		$gpLayouts = $this->gpLayouts_before;
+		message($langmessage['OOPS'].'(Not Saved)');
+		return false;
 	}
 
 
@@ -984,7 +996,6 @@ class Layout extends \gp\admin\Addon\Install{
 		global $gpLayouts, $langmessage, $page;
 
 		$page->ajaxReplace	= array();
-		$gpLayoutsBefore	= $gpLayouts;
 
 		$layout = $this->ReqLayout();
 		if( $layout === false ){
@@ -998,16 +1009,14 @@ class Layout extends \gp\admin\Addon\Install{
 		$gpLayouts[$layout]['label'] = htmlspecialchars($_POST['layout_label']);
 
 
-		if( !\gp\admin\Tools::SavePagesPHP() ){
-			$gpLayouts = $gpLayoutsBefore;
-			message($langmessage['OOPS'].' (s1)');
+		if( !$this->SaveLayouts(false) ){
 			return;
 		}
 
 		//send new label
-		$layout_info = \gp\tool::LayoutInfo($layout,false);
-		$replace = $this->GetLayoutLabel($layout, $layout_info);
-		$page->ajaxReplace[] = array( 'replace', '.layout_label_'.$layout, $replace);
+		$layout_info			= \gp\tool::LayoutInfo($layout,false);
+		$replace				= $this->GetLayoutLabel($layout, $layout_info);
+		$page->ajaxReplace[]	= array( 'replace', '.layout_label_'.$layout, $replace);
 	}
 
 
@@ -1316,21 +1325,13 @@ class Layout extends \gp\admin\Addon\Install{
 			return false;
 		}
 
-		$gpLayoutsBefore = $gpLayouts;
 		if( count($handlers) === 0 ){
 			unset($gpLayouts[$layout]['handlers']);
 		}else{
 			$gpLayouts[$layout]['handlers'] = $handlers;
 		}
 
-		if( \gp\admin\Tools::SavePagesPHP() ){
-
-			message($langmessage['SAVED']);
-
-		}else{
-			$gpLayouts = $gpLayoutsBefore;
-			message($langmessage['OOPS'].' (s1)');
-		}
+		$this->SaveLayouts();
 	}
 
 
@@ -1738,8 +1739,6 @@ class Layout extends \gp\admin\Addon\Install{
 	public function RmLayout($layout){
 		global $gp_titles, $gpLayouts, $langmessage;
 
-		$gpLayoutsBefore = $gpLayouts;
-
 		$this->RmLayoutPrep($layout);
 
 
@@ -1770,13 +1769,11 @@ class Layout extends \gp\admin\Addon\Install{
 			$installer = new \gp\admin\Addon\Installer();
 			$installer->rm_folders = false;
 			if( !$installer->Uninstall($rm_addon) ){
-				$gpLayouts = $gpLayoutsBefore;
+				$gpLayouts = $this->gpLayouts_before;
 			}
 			$installer->OutputMessages();
 
-		}elseif( !\gp\admin\Tools::SavePagesPHP() ){
-			$gpLayouts = $gpLayoutsBefore;
-			message($langmessage['OOPS'].' (s1)');
+		}elseif( !$this->SaveLayouts() ){
 			return false;
 		}else{
 			message($langmessage['SAVED']);
@@ -1834,5 +1831,6 @@ class Layout extends \gp\admin\Addon\Install{
 
 		return $layout;
 	}
+
 }
 

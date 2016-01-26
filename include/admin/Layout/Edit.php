@@ -272,12 +272,9 @@ class Edit extends \gp\admin\Layout{
 
 
 		$gpLayouts[$this->curr_layout]['css'] = true;
-		if( !\gp\admin\Tools::SavePagesPHP() ){
-			message($langmessage['OOPS'].' (Data not saved)');
+		if( !$this->SaveLayouts() ){
 			return false;
 		}
-
-		message($langmessage['SAVED']);
 		$page->SetTheme($this->curr_layout);
 	}
 
@@ -421,8 +418,8 @@ class Edit extends \gp\admin\Layout{
 		$gpLayouts[$this->curr_layout]['images'][$container] = array(); //prevents shuffle
 		$gpLayouts[$this->curr_layout]['images'][$container][] = $save_info;
 
-		if( !\gp\admin\Tools::SavePagesPHP() ){
-			message($langmessage['OOPS'].' (Data not saved)');
+
+		if( !$this->SaveLayouts() ){
 			return false;
 		}
 		$page->ajaxReplace[] = array('ck_saved','','');

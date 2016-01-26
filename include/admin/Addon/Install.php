@@ -13,7 +13,6 @@ class Install extends \gp\admin\Addon\Tools{
 
 
 	//remote browsing
-	public $config_index		= 'addons';
 	public $path_remote			= 'Admin/Addons/Remote';
 	public $code_folder_name	= '_addoncode';
 	public $can_install_links	= true;

@@ -11,6 +11,7 @@ class Tools extends \gp\Base{
 	public $rate_testing		= false; //for testing on local server
 
 	public $ShowRatingText		= true;
+	public $config_index		= 'addons';
 	protected $scriptUrl		= 'Admin/Addons';
 	public $addonHistory		= array();
 	public $addonReviews		= array();

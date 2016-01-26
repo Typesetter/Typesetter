@@ -1900,7 +1900,7 @@ class Layout extends \gp\admin\Addon\Install{
 			return;
 		}
 
-		return $layout;
+		return $_REQUEST['layout'];
 	}
 
 }

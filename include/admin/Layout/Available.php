@@ -83,6 +83,7 @@ class Available extends \gp\admin\Layout{
 
 
 		// show themes
+		echo '<hr/>';
 		echo '<div id="gp_avail_themes">';
 		foreach($possible as $theme_id => $info){
 			$this->AvailableTheme($theme_id, $info);

@@ -149,8 +149,6 @@ class Layout extends \gp\admin\Addon\Install{
 
 		$this->ShowHeader();
 
-		$default_layout = $config['gpLayout'];
-
 		echo '<div id="adminlinks2">';
 
 		//all other layouts
@@ -554,12 +552,11 @@ class Layout extends \gp\admin\Addon\Install{
 	public function UpdateLayouts( $installer ){
 		global $gpLayouts, $langmessage;
 
-		$ini_contents = $installer->ini_contents;
+		$ini_contents		= $installer->ini_contents;
+		$theme_folder		= basename($installer->dest);
+		$new_layout_info	= $this->IniExtract($ini_contents);
 
-		$theme_folder = basename($installer->dest);
 
-
-		$new_layout_info = array();
 		if( strpos($installer->dest,'/data/_themes') !== false ){
 			$new_layout_info['is_addon'] = true;
 		}else{
@@ -570,17 +567,6 @@ class Layout extends \gp\admin\Addon\Install{
 			$new_layout_info['addon_key'] = $installer->config_key;
 		}
 
-		if( isset($ini_contents['Addon_Unique_ID']) ){
-			$new_layout_info['addon_id'] = $ini_contents['Addon_Unique_ID'];
-		}
-
-		if( isset($ini_contents['Addon_Version']) ){
-			$new_layout_info['version'] = $ini_contents['Addon_Version'];
-		}
-
-		if( isset($ini_contents['Addon_Name']) ){
-			$new_layout_info['name'] = $ini_contents['Addon_Name'];
-		}
 
 		// update each layout
 		foreach($gpLayouts as $layout => $layout_info){
@@ -595,11 +581,9 @@ class Layout extends \gp\admin\Addon\Install{
 
 			unset( $layout_info['is_addon'], $layout_info['addon_id'], $layout_info['version'], $layout_info['name'], $layout_info['addon_key'] );
 
-			$layout_info += $new_layout_info;
-
-			$layout_info['theme'] = $theme_folder.'/'.basename($layout_info['theme']);;
-
-			$gpLayouts[$layout] = $layout_info;
+			$layout_info			+= $new_layout_info;
+			$layout_info['theme']	= $theme_folder.'/'.basename($layout_info['theme']);;
+			$gpLayouts[$layout]		= $layout_info;
 		}
 
 		$this->SaveLayouts();
@@ -887,24 +871,47 @@ class Layout extends \gp\admin\Addon\Install{
 			}
 			$this->AddVersionInfo($ini_info, $index);
 
-			$this->avail_addons[$index]['name']			= $folder;
-			$this->avail_addons[$index]['folder']		= $folder;
-			$this->avail_addons[$index]['colors']		= $this->GetThemeColors($full_dir);
-			$this->avail_addons[$index]['is_addon']		= $is_addon;
-			$this->avail_addons[$index]['full_dir']		= $full_dir;
-			$this->avail_addons[$index]['rel']			= $dir_rel.'/'.$folder;
 
-			if( isset($ini_info['Addon_Name']) ){
-				$this->avail_addons[$index]['name']		= $ini_info['Addon_Name'];
+			$addon					= $this->IniExtract($ini_info);
+
+			if( empty($addon['name']) ){
+				$addon['name']		= $folder;
 			}
-			if( isset($ini_info['Addon_Version']) ){
-				$this->avail_addons[$index]['version']	= $ini_info['Addon_Version'];
-			}
-			if( isset($ini_info['Addon_Unique_ID']) ){
-				$this->avail_addons[$index]['id']		= $ini_info['Addon_Unique_ID'];
-			}
+
+			$addon['folder']		= $folder;
+			$addon['colors']		= $this->GetThemeColors($full_dir);
+			$addon['is_addon']		= $is_addon;
+			$addon['full_dir']		= $full_dir;
+			$addon['rel']			= $dir_rel.'/'.$folder;
+
+
+			$this->avail_addons[$index] = $addon;
 		}
 
+	}
+
+
+	/**
+	 * Extract addon information from ini content
+	 *
+	 */
+	public function IniExtract($ini_info){
+
+		$extracted = array();
+
+		if( isset($ini_info['Addon_Unique_ID']) ){
+			$extracted['addon_id'] = $ini_info['Addon_Unique_ID'];
+		}
+
+		if( isset($ini_info['Addon_Version']) ){
+			$extracted['version'] = $ini_info['Addon_Version'];
+		}
+
+		if( isset($ini_info['Addon_Name']) ){
+			$extracted['name'] = $ini_info['Addon_Name'];
+		}
+
+		return $extracted;
 	}
 
 
@@ -1043,10 +1050,10 @@ class Layout extends \gp\admin\Addon\Install{
 		echo '<div id="layout_ident" class="gp_floating_area">';
 		echo '<div>';
 
-		if( $layout ){
-			echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Edit/'.$layout).'" method="post">';
-		}else{
+		if( $layout === false ){
 			echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content').'" method="post">';
+		}else{
+			echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Edit/'.$layout).'" method="post">';
 		}
 		echo '<input type="hidden" name="layout" value="" />';
 		echo '<input type="hidden" name="color" value="" />';
@@ -1328,7 +1335,7 @@ class Layout extends \gp\admin\Addon\Install{
 			}
 		}
 
-		if( $layout == false ){
+		if( $layout === false ){
 			$layout = $this->curr_layout;
 		}
 
@@ -1454,7 +1461,7 @@ class Layout extends \gp\admin\Addon\Install{
 		$texts = array();
 		include($file);
 
-		if( !$texts ){
+		if( empty($texts) ){
 			return false;
 		}
 
@@ -1554,9 +1561,9 @@ class Layout extends \gp\admin\Addon\Install{
 		$key =& $_GET['key'];
 		foreach($array as $text){
 
-			$default = $value = $text;
+			$value = $text;
 			if( isset($langmessage[$text]) ){
-				$default = $value = $langmessage[$text];
+				$value = $langmessage[$text];
 			}
 			if( isset($config['customlang'][$text]) ){
 				$value = $config['customlang'][$text];
@@ -1655,10 +1662,9 @@ class Layout extends \gp\admin\Addon\Install{
 		global $gp_menu, $gp_titles, $gp_index, $config;
 
 
-		$titleThemes = array();
-		$customThemes = array();
-		$customThemeLevel = 0;
-		$max_level = 5;
+		$titleThemes	= array();
+		$customThemes	= array();
+		$max_level		= 5;
 
 
 		foreach($gp_menu as $id => $info){

@@ -1288,14 +1288,21 @@ namespace gp\admin{
 		 * @return bool
 		 *
 		 */
-		public static function SaveConfig(){
-			global $config;
+		public static function SaveConfig($notify_fail = false, $notify_save = false){
+			global $config, $langmessage;
 
-			if( !is_array($config) ) return false;
+			if( is_array($config) && \gp\tool\Files::SaveData('_site/config','config',$config) ){
+				if( $notify_save ){
+						message($langmessage['SAVED']);
+				}
+				return true;
+			}
 
-			if( !isset($config['gpuniq']) ) $config['gpuniq'] = \gp\tool::RandomString(20);
+			if( $notify_fail ){
+				message($langmessage['OOPS'].' (Config not saved)');
+			}
 
-			return \gp\tool\Files::SaveData('_site/config','config',$config);
+			return false;
 		}
 
 

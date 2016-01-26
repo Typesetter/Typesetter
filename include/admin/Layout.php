@@ -735,16 +735,13 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	protected function SaveConfig(){
-		global $config, $langmessage;
+		global $config;
 
-
-		if( \gp\admin\Tools::SaveConfig() ){
-			message($langmessage['SAVED']);
+		if( \gp\admin\Tools::SaveConfig(true, true) ){
 			return true;
 		}
 
 		$config = $this->config_before;
-		message($langmessage['OOPS'].' (Config not saved)');
 		return false;
 	}
 

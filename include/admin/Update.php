@@ -643,8 +643,7 @@ class Update extends \gp\Page{
 		}
 
 		unset($config['updating_message']);
-		if( !\gp\admin\Tools::SaveConfig() ){
-			msg($langmessage['error_updating_settings']);
+		if( !\gp\admin\Tools::SaveConfig(true) ){
 			return false;
 		}
 

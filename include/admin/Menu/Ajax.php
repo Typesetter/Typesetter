@@ -1028,8 +1028,7 @@ class Ajax extends \gp\admin\Menu{
 
 		$config['homepath_key'] = $homepage_key;
 		$config['homepath']		= \gp\tool::IndexToTitle($config['homepath_key']);
-		if( !\gp\admin\Tools::SaveConfig() ){
-			msg($langmessage['OOPS']);
+		if( !\gp\admin\Tools::SaveConfig(true) ){
 			return;
 		}
 

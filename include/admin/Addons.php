@@ -193,8 +193,7 @@ class Addons extends \gp\admin\Addon\Install{
 
 		}
 
-		if( !\gp\admin\Tools::SaveConfig() ){
-			message($langmessage['OOPS'].' (Not Saved)');
+		if( !\gp\admin\Tools::SaveConfig(true) ){
 			return;
 		}
 

@@ -96,7 +96,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 		//Installation
 		$this->cmds['RemoteInstall']			= '';
-		$this->cmds['RemoteInstallConfirmed']	= '';
+		$this->cmds['RemoteInstallConfirmed']	= 'DefaultDisplay';
 		$this->cmds['UpgradeTheme']				= 'DefaultDisplay';
 
 		//Copy, Delete
@@ -554,13 +554,11 @@ class Layout extends \gp\admin\Addon\Install{
 
 		$ini_contents		= $installer->ini_contents;
 		$theme_folder		= basename($installer->dest);
-		$new_layout_info	= $this->IniExtract($ini_contents);
-
 
 		if( strpos($installer->dest,'/data/_themes') !== false ){
-			$new_layout_info['is_addon'] = true;
+			$new_layout_info = $this->AvailableTheme('/data/_themes',true, $theme_folder);
 		}else{
-			$new_layout_info['is_addon'] = false;
+			$new_layout_info = $this->AvailableTheme('/themes',false, $theme_folder);
 		}
 
 		if( $installer->has_hooks ){
@@ -571,7 +569,7 @@ class Layout extends \gp\admin\Addon\Install{
 		// update each layout
 		foreach($gpLayouts as $layout => $layout_info){
 
-			if( !$this->SameTheme( $layout_info, $new_layout_info, $installer->dest) ){
+			if( !$this->SameTheme( $layout_info, $new_layout_info ) ){
 				continue;
 			}
 
@@ -590,17 +588,26 @@ class Layout extends \gp\admin\Addon\Install{
 	 * Return true if two layouts use the same theme
 	 *
 	 */
-	public function SameTheme($layout_info, $new_layout_info, $new_layout_dir ){
+	public function SameTheme($layout_info, $new_layout_info ){
 
+		//if we have addon ids
 		if( isset($new_layout_info['addon_id']) && isset($layout_info['addon_id']) && $layout_info['addon_id'] == $new_layout_info['addon_id'] ){
 			return true;
 		}
 
-		if( !isset($layout_info['is_addon']) || !$layout_info['is_addon'] ){
-			$layout_dir = '/themes/'.dirname($layout_info['theme']);
-			if( strpos($new_layout_dir,$layout_dir) !== false ){
-				return true;
-			}
+
+		if( $layout_info['is_addon'] ){
+			$layout_info['rel']	= '/data/_themes/'.dirname($layout_info['theme']);
+		}else{
+			$layout_info['rel']	= '/themes/'.dirname($layout_info['theme']);
+		}
+
+
+		$keys	= array('is_addon'=>'','rel'=>'');
+		$testa	= array_intersect_key($layout_info,$keys);
+		$testb	= array_intersect_key($new_layout_info,$keys);
+		if( $testa === $testb ){
+			return true;
 		}
 
 		return false;
@@ -869,43 +876,58 @@ class Layout extends \gp\admin\Addon\Install{
 	private function AvailableThemes( $dir_rel, $is_addon ){
 		global $dataDir;
 
-
 		$dir		= $dataDir.$dir_rel;
 		$folders	= \gp\tool\Files::readDir($dir,1);
 
 		foreach($folders as $folder){
 
-			$full_dir	= $dir.'/'.$folder;
-			$ini_info	= $this->GetAvailInstall($full_dir);
-
-			if( $ini_info === false ){
+			$addon = $this->AvailableTheme($dir_rel, $is_addon, $folder);
+			if( $addon === false ){
 				continue;
 			}
 
-			if( $is_addon ){
-				$index		= $ini_info['Addon_Name'].'(remote)';
-			}else{
-				$index		= $folder.'(local)';
-			}
-			$this->AddVersionInfo($ini_info, $index);
-
-
-			$addon					= $this->IniExtract($ini_info);
-
-			if( empty($addon['name']) ){
-				$addon['name']		= $folder;
-			}
-
-			$addon['folder']		= $folder;
-			$addon['colors']		= $this->GetThemeColors($full_dir);
-			$addon['is_addon']		= $is_addon;
-			$addon['full_dir']		= $full_dir;
-			$addon['rel']			= $dir_rel.'/'.$folder;
-
-
+			$index						= $addon['index'];
 			$this->avail_addons[$index] = $addon;
 		}
+	}
 
+
+	/**
+	 * Get info about one theme
+	 *
+	 */
+	private function AvailableTheme($dir_rel, $is_addon, $folder){
+		global $dataDir;
+
+		$full_dir	= $dataDir.'/'.$dir_rel.'/'.$folder;
+		$ini_info	= $this->GetAvailInstall($full_dir);
+
+		if( $ini_info === false ){
+			return false;
+		}
+
+		if( $is_addon ){
+			$index		= $ini_info['Addon_Name'].'(remote)';
+		}else{
+			$index		= $folder.'(local)';
+		}
+		$this->AddVersionInfo($ini_info, $index);
+
+
+		$addon					= $this->IniExtract($ini_info);
+
+		if( empty($addon['name']) ){
+			$addon['name']		= $folder;
+		}
+
+		$addon['folder']		= $folder;
+		$addon['colors']		= $this->GetThemeColors($full_dir);
+		$addon['is_addon']		= $is_addon;
+		$addon['full_dir']		= $full_dir;
+		$addon['rel']			= $dir_rel.'/'.$folder;
+		$addon['index']			= $index;
+
+		return $addon;
 	}
 
 
@@ -1779,24 +1801,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 		//determine if code in /data/_theme should be removed
-		$layout_info = $gpLayouts[$layout];
-		$rm_addon = false;
-		if( isset($layout_info['addon_key']) ){
-			$rm_addon = $gpLayouts[$layout]['addon_key'];
-
-			//don't remove if there are other layouts using the same code
-			foreach($gpLayouts as $layout_id => $info){
-				if( $layout_id == $layout ){
-					continue;
-				}
-				if( !array_key_exists('addon_key',$info) ){
-					continue;
-				}
-				if( $info['addon_key'] == $rm_addon ){
-					$rm_addon = false;
-				}
-			}
-		}
+		$rm_addon = $this->RemoveAddonCode($layout);
 
 		unset($gpLayouts[$layout]);
 
@@ -1808,14 +1813,47 @@ class Layout extends \gp\admin\Addon\Install{
 				$gpLayouts = $this->gpLayouts_before;
 			}
 			$installer->OutputMessages();
+		}
 
-		}elseif( !$this->SaveLayouts() ){
+		if( !$this->SaveLayouts() ){
 			return false;
 		}
 
 		//remove custom css
 		$this->RemoveCSS($layout);
 	}
+
+
+	/**
+	 * Determine if the code in /data/_theme should be removed
+	 *
+	 */
+	public function RemoveAddonCode($layout){
+		global $gpLayouts;
+
+
+		if( !isset($gpLayouts[$layout]['addon_key']) ){
+			return false;
+		}
+
+		$rm_addon = $gpLayouts[$layout]['addon_key'];
+
+		//don't remove if there are other layouts using the same code
+		foreach($gpLayouts as $layout_id => $info){
+			if( $layout_id == $layout ){
+				continue;
+			}
+			if( !array_key_exists('addon_key',$info) ){
+				continue;
+			}
+			if( $info['addon_key'] == $rm_addon ){
+				$rm_addon = false;
+			}
+		}
+
+		return $rm_addon;
+	}
+
 
 	public function RmLayoutPrep($layout){
 		global $gp_titles;

@@ -1126,53 +1126,7 @@ class Layout extends \gp\admin\Addon\Install{
 		echo $this->CSSPreferenceForm($layout,$layout_info);
 		echo '</li>';
 
-
-		// layouts with hooks
-		ob_start();
-		$addon_config = false;
-		if( isset($layout_info['addon_key']) ){
-			$addon_key = $layout_info['addon_key'];
-			$addon_config = \gp\tool\Plugins::GetAddonConfig($addon_key);
-			echo '<li>';
-			echo \gp\tool::link('Admin/Addons/'.\gp\admin\Tools::encode64($addon_key),'<i class="fa fa-plug"></i> '.$addon_config['name']);
-			echo '</li>';
-
-			//hooks
-			$this->AddonPanelGroup($addon_key, false );
-		}
-
-
-		//version
-		if( !empty($layout_info['version']) ){
-			echo '<li><a>'.$langmessage['Your_version'].' '.$layout_info['version']. '</a></li>';
-		}elseif( $addon_config && !empty($addon_config['version']) ){
-			echo '<li><a>'.$langmessage['Your_version'].' '.$addon_config['version']. '</a></li>';
-		}
-
-		//upgrade
-		if( $addon_config ){
-			echo '<li>';
-			if( $layout_info['is_addon'] ){
-				$source = $layout_info['name'].'(remote)/'.$layout_info['theme_color'];
-			}else{
-				$source = $layout_info['theme_name'].'(local)/'.$layout_info['theme_color'];
-			}
-			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=UpgradeTheme&source='.rawurlencode($source),array('data-cmd'=>'creq'));
-			echo '</li>';
-		}
-
-
-		$options = ob_get_clean();
-
-		if( !empty($options) ){
-			echo '<li class="expand_child_click">';
-			echo '<a>'.$langmessage['options'].'</a>';
-			echo '<ul>';
-
-			echo $options;
-
-			echo '</ul></li>';
-		}
+		$this->LayoutDivAddon($layout_info);
 
 		//new versions
 		if( isset($layout_info['addon_id']) ){
@@ -1205,6 +1159,62 @@ class Layout extends \gp\admin\Addon\Install{
 
 		echo '</div>';
 		echo '</div>';
+	}
+
+
+	/**
+	 * Output addon information about a layout
+	 *
+	 */
+	public function LayoutDivAddon($layout_info){
+		global $langmessage;
+
+		// layouts with hooks
+		ob_start();
+		$addon_config = false;
+		if( isset($layout_info['addon_key']) ){
+			$addon_key = $layout_info['addon_key'];
+			$addon_config = \gp\tool\Plugins::GetAddonConfig($addon_key);
+			echo '<li>';
+			echo \gp\tool::link('Admin/Addons/'.\gp\admin\Tools::encode64($addon_key),'<i class="fa fa-plug"></i> '.$addon_config['name']);
+			echo '</li>';
+
+			//hooks
+			$this->AddonPanelGroup($addon_key, false );
+		}
+
+
+		//version
+		if( !empty($layout_info['version']) ){
+			echo '<li><a>'.$langmessage['Your_version'].' '.$layout_info['version']. '</a></li>';
+		}elseif( $addon_config && !empty($addon_config['version']) ){
+			echo '<li><a>'.$langmessage['Your_version'].' '.$addon_config['version']. '</a></li>';
+		}
+
+		//upgrade
+		if( $addon_config !== false ){
+			echo '<li>';
+			if( $layout_info['is_addon'] ){
+				$source = $layout_info['name'].'(remote)/'.$layout_info['theme_color'];
+			}else{
+				$source = $layout_info['theme_name'].'(local)/'.$layout_info['theme_color'];
+			}
+			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=UpgradeTheme&source='.rawurlencode($source),array('data-cmd'=>'creq'));
+			echo '</li>';
+		}
+
+
+		$options = ob_get_clean();
+
+		if( !empty($options) ){
+			echo '<li class="expand_child_click">';
+			echo '<a>'.$langmessage['options'].'</a>';
+			echo '<ul>';
+
+			echo $options;
+
+			echo '</ul></li>';
+		}
 	}
 
 

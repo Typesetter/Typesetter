@@ -1259,6 +1259,7 @@ namespace gp\admin{
 		public static function SavePagesPHP($notify_fail = false, $notify_save = false){
 			global $gp_index, $gp_titles, $gp_menu, $gpLayouts, $dataDir, $langmessage;
 
+			$saved = false;
 			if( is_array($gp_menu) && is_array($gp_index) && is_array($gp_titles) && is_array($gpLayouts) ){
 
 				$pages					= array();
@@ -1267,19 +1268,10 @@ namespace gp\admin{
 				$pages['gp_titles']		= $gp_titles;
 				$pages['gpLayouts']		= $gpLayouts;
 
-				if( \gp\tool\Files::SaveData($dataDir.'/data/_site/pages.php','pages',$pages) ){
-					if( $notify_save ){
-						message($langmessage['SAVED']);
-					}
-					return true;
-				}
+				$saved = \gp\tool\Files::SaveData($dataDir.'/data/_site/pages.php','pages',$pages);
 			}
 
-			if( $notify_fail ){
-				message($langmessage['OOPS'].'(Page info not saved)');
-			}
-
-			return false;
+			return self::SaveNotify($result, $notify_fail, $notify_save, ' (Page info not saved)');
 		}
 
 
@@ -1291,18 +1283,30 @@ namespace gp\admin{
 		public static function SaveConfig($notify_fail = false, $notify_save = false){
 			global $config, $langmessage;
 
-			if( is_array($config) && \gp\tool\Files::SaveData('_site/config','config',$config) ){
-				if( $notify_save ){
-						message($langmessage['SAVED']);
-				}
-				return true;
+			$result = is_array($config) && \gp\tool\Files::SaveData('_site/config','config',$config);
+
+			return self::SaveNotify($result, $notify_fail, $notify_save, ' (Config not saved)');
+		}
+
+		/**
+		 * Return the save result and notify the user if needed
+		 *
+		 * @param bool $result
+		 * @param bool $notify_fail
+		 * @param bool $noltify_save
+		 * @param string $append
+		 */
+		public static function SaveNotify($result, $notify_fail, $notify_save, $append = '' ){
+			global $langmessage;
+
+			if( $result && $notify_save ){
+				msg($langmessage['SAVED']);
+
+			}elseif( !$result && $notify_fail ){
+				msg($langmessage['OOPS'].' '.$append);
 			}
 
-			if( $notify_fail ){
-				message($langmessage['OOPS'].' (Config not saved)');
-			}
-
-			return false;
+			return $result;
 		}
 
 

@@ -552,7 +552,6 @@ class Layout extends \gp\admin\Addon\Install{
 	public function UpdateLayouts( $installer ){
 		global $gpLayouts, $langmessage;
 
-		$ini_contents		= $installer->ini_contents;
 		$theme_folder		= basename($installer->dest);
 
 		if( strpos($installer->dest,'/data/_themes') !== false ){

@@ -34,7 +34,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 	//used internally
 	public $addon_folder;
-	public $addon_folder_rel = false;
+	public $addon_folder_rel;
 	public $dest = '';
 	public $dest_name;
 	public $trash_path;

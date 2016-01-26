@@ -270,10 +270,9 @@ class Layout extends \gp\admin\Addon\Install{
 
 		//titles using layout
 		echo '<li>';
-		$titles_count = $this->TitlesCount($layout);
-		$label = sprintf($langmessage['%s Pages'],$titles_count);
+		$titles_count	= $this->TitlesCount($layout);
+		$label			= sprintf($langmessage['%s Pages'],$titles_count);
 		if( $titles_count ){
-			//$label = $langmessage['titles_using_layout'].': '.$label;
 			echo $this->LayoutLink( $layout, $label, 'cmd=ShowTitles', 'data-cmd="gpabox"' );
 		}else{
 			echo '<span>'.$label.'</span>';
@@ -549,7 +548,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function UpdateLayouts( $installer ){
-		global $gpLayouts;
+		global $gpLayouts, $langmessage['OOPS'];
 
 		$ini_contents = $installer->ini_contents;
 
@@ -622,9 +621,8 @@ class Layout extends \gp\admin\Addon\Install{
 	public function CopyLayoutPrompt(){
 		global $langmessage, $gpLayouts;
 
-		$layout = $_REQUEST['layout'];
-		if( empty($layout) || !isset($gpLayouts[$layout]) ){
-			message($langmessage['OOPS'].'(Invalid Request)');
+		$layout = $this->ReqLayout();
+		if( $layout === false ){
 			return;
 		}
 
@@ -668,12 +666,11 @@ class Layout extends \gp\admin\Addon\Install{
 	public function CopyLayout(){
 		global $gpLayouts, $langmessage;
 
-		$copy_id =& $_REQUEST['layout'];
-
-		if( empty($copy_id) || !isset($gpLayouts[$copy_id]) ){
-			message($langmessage['OOPS'].'(Invalid Request)');
+		$copy_id = $this->ReqLayout();
+		if( $copy_id === false ){
 			return;
 		}
+
 		if( empty($_POST['label']) ){
 			message($langmessage['OOPS'].'(Empty Label)');
 			return;
@@ -985,14 +982,13 @@ class Layout extends \gp\admin\Addon\Install{
 	 */
 	public function LayoutLabel(){
 		global $gpLayouts, $langmessage, $page;
-		$page->ajaxReplace = array();
 
-		$gpLayoutsBefore = $gpLayouts;
+		$page->ajaxReplace	= array();
+		$gpLayoutsBefore	= $gpLayouts;
 
-		$layout =& $_POST['layout'];
-		if( !isset( $gpLayouts[$layout]) ){
-			message($langmessage['OOPS']);
-			return false;
+		$layout = $this->ReqLayout();
+		if( $layout === false ){
+			return;
 		}
 
 		if( !empty($_POST['color']) && (strlen($_POST['color']) == 7) && $_POST['color']{0} == '#' ){
@@ -1717,7 +1713,6 @@ class Layout extends \gp\admin\Addon\Install{
 	}
 
 
-
 	/**
 	 * Remote a layout
 	 *
@@ -1734,6 +1729,7 @@ class Layout extends \gp\admin\Addon\Install{
 		//remove from $gp_titles
 		$this->RmLayout($layout);
 	}
+
 
 	/**
 	 * Remove a layout from $gp_titles and $gpLayouts
@@ -1824,5 +1820,19 @@ class Layout extends \gp\admin\Addon\Install{
 		return \gp\tool::Link($url,$label,$query,$attr);
 	}
 
+	/**
+	 * Get the requested layout
+	 *
+	 */
+	public function ReqLayout(){
+		global $langmessage, $gpLayouts;
+
+		if( !isset($_REQUEST['layout']) || !isset($gpLayouts[$_REQUEST['layout']]) ){
+			message($langmessage['OOPS'].'(Invalid layout)');
+			return;
+		}
+
+		return $layout;
+	}
 }
 

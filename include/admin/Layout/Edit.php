@@ -67,43 +67,20 @@ class Edit extends \gp\admin\Layout{
 
 		\gp\tool\Plugins::Action('edit_layout_cmd',array($layout));
 
-		switch($cmd){
 
-			/**
-			 * Inline image editing
-			 *
-			 */
-			case 'inlineedit':
-				$this->InlineEdit();
-			return;
-			case 'gallery_folder':
-			case 'gallery_images':
-				$this->GalleryImages();
-			return;
-			case 'image_editor':
-				\gp\tool\Editing::ImageEditor($this->curr_layout);
-			return;
-			case 'save_inline':
-				$this->SaveHeaderImage();
-			return;
+		// inline editing images
+		$this->cmds['InlineEdit']		= '';
+		$this->cmds['gallery_folder']	= array('GalleryImages','return');
+		$this->cmds['gallery_images']	= array('GalleryImages','return');
+		$this->cmds['save_inline']		= 'SaveHeaderImage';
+		$this->cmds['image_editor']		= '\\gp\\tool\\Editing::ImageEditor';
 
-			case 'theme_images':
-				$this->ShowThemeImages();
-			return;
 
-			//insert
-			case 'insert':
-				$this->SelectContent();
-			return;
+		$this->cmds['ShowThemeImages']	= '';
+		$this->cmds['SelectContent']	= '';
 
-			//links
-			case 'LayoutMenu':
-				$this->LayoutMenu();
-			return;
-			case 'LayoutMenuSave':
-				$this->LayoutMenuSave();
-			return;
-		}
+		$this->cmds['LayoutMenu']		= '';
+		$this->cmds['LayoutMenuSave']	= 'ReturnHeader';
 
 
 		//show the layout (displayed within an iframe)
@@ -491,7 +468,7 @@ class Edit extends \gp\admin\Layout{
 		echo '<div class="gp_edit_select_options">';
 
 		foreach($this->avail_addons as $theme_id => $info){
-			echo \gp\tool::Link($this->layout_slug,'<span class="folder"></span>'.$info['name'],'cmd=theme_images&theme='.rawurlencode($theme_id),' data-cmd="gpajax" class="gp_gallery_folder" ');
+			echo \gp\tool::Link($this->layout_slug,'<span class="folder"></span>'.$info['name'],'cmd=ShowThemeImages&theme='.rawurlencode($theme_id),' data-cmd="gpajax" class="gp_gallery_folder" ');
 		}
 		echo '</div>';
 		echo '</div>';
@@ -949,6 +926,7 @@ class Edit extends \gp\admin\Layout{
 	public function LayoutMenu(){
 		global $langmessage, $gpLayouts;
 
+
 		if( !$this->ParseHandlerInfo($_GET['handle'],$curr_info) ){
 			message($langmessage['00PS']);
 			return;
@@ -1077,10 +1055,6 @@ class Edit extends \gp\admin\Layout{
 		}
 
 		$this->SaveHandlersNew($handlers,$this->curr_layout);
-
-
-		//message('not forwarding');
-		$this->ReturnHeader();
 	}
 
 

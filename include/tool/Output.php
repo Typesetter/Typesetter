@@ -451,7 +451,7 @@ namespace gp\tool{
 				if( !$empty_container ){
 					echo ' '.\gp\tool::Link('Admin_Theme_Content/Edit/'.$page->gpLayout,$langmessage['remove'],'cmd=RemoveArea&param='.$param,array('data-cmd'=>'creq'));
 				}
-				echo ' '.\gp\tool::Link('Admin_Theme_Content/Edit/'.$page->gpLayout,$langmessage['insert'],'cmd=insert&param='.$param,array('data-cmd'=>'gpabox'));
+				echo ' '.\gp\tool::Link('Admin_Theme_Content/Edit/'.$page->gpLayout,$langmessage['insert'],'cmd=SelectContent&param='.$param,array('data-cmd'=>'gpabox'));
 				echo '</div></div>';
 
 			}

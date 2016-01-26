@@ -1173,9 +1173,9 @@ namespace gp\tool{
 		 * Output content for use with the inline image editor
 		 *
 		 */
-		public static function ImageEditor( $layout = false ){
-			global $page, $langmessage;
-			$page->ajaxReplace = array();
+		public static function ImageEditor( $obj ){
+			global $langmessage, $page;
+
 
 			//image options
 			ob_start();
@@ -1198,8 +1198,8 @@ namespace gp\tool{
 			//select image
 			echo '<div id="gp_source_options" class="inline_edit_area" style="display:none" title="'.$langmessage['Select Image'].'">';
 
-			if( $layout ){
-				echo \gp\tool::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),$langmessage['Theme Images'].'..','cmd=theme_images',' data-cmd="gpajax" class="ckeditor_control half_width" ');
+			if( property_exists($obj,'curr_layout') ){
+				echo \gp\tool::Link('Admin_Theme_Content/Edit/'.rawurlencode($obj->curr_layout),$langmessage['Theme Images'].'..','cmd=ShowThemeImages',' data-cmd="gpajax" class="ckeditor_control half_width" ');
 				echo '<a class="ckeditor_control half_width" data-cmd="show_uploaded_images">'.$langmessage['uploaded_files'].'</a>';
 			}
 
@@ -1209,8 +1209,10 @@ namespace gp\tool{
 			echo '</div>';
 			$content = ob_get_clean();
 
-			$page->ajaxReplace[] = array('inner','#ckeditor_top',$content);
-			$page->ajaxReplace[] = array('image_options_loaded','',''); //tell the script the images have been loaded
+
+			$page->ajaxReplace		= array();
+			$page->ajaxReplace[]	= array('inner','#ckeditor_top',$content);
+			$page->ajaxReplace[]	= array('image_options_loaded','',''); //tell the script the images have been loaded
 		}
 
 	}

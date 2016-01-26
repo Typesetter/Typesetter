@@ -1275,7 +1275,7 @@ namespace gp\admin{
 				$saved = \gp\tool\Files::SaveData($dataDir.'/data/_site/pages.php','pages',$pages);
 			}
 
-			return self::SaveNotify($result, $notify_fail, $notify_save, ' (Page info not saved)');
+			return self::SaveNotify($saved, $notify_fail, $notify_save, ' (Page info not saved)');
 		}
 
 
@@ -1287,9 +1287,9 @@ namespace gp\admin{
 		public static function SaveConfig($notify_fail = false, $notify_save = false){
 			global $config, $langmessage;
 
-			$result = is_array($config) && \gp\tool\Files::SaveData('_site/config','config',$config);
+			$saved = is_array($config) && \gp\tool\Files::SaveData('_site/config','config',$config);
 
-			return self::SaveNotify($result, $notify_fail, $notify_save, ' (Config not saved)');
+			return self::SaveNotify($saved, $notify_fail, $notify_save, ' (Config not saved)');
 		}
 
 		/**

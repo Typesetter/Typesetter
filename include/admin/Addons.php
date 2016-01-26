@@ -623,7 +623,7 @@ class Addons extends \gp\admin\Addon\Install{
 
 			//editable text
 			if( isset($addon_config['editable_text']) && \gp\admin\Tools::HasPermission('Admin_Theme_Content') ){
-				$list[] = \gp\tool::Link('Admin_Theme_Content',$langmessage['editable_text'],'cmd=addontext&addon='.urlencode($addon_key),array('title'=>urlencode($langmessage['editable_text']),'data-cmd'=>'gpabox'));
+				$list[] = \gp\tool::Link('Admin_Theme_Content/Text',$langmessage['editable_text'],'cmd=AddonTextForm&addon='.urlencode($addon_key),array('title'=>urlencode($langmessage['editable_text']),'data-cmd'=>'gpabox'));
 			}
 
 			//upgrade link

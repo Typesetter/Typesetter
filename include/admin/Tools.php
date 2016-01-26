@@ -188,6 +188,10 @@ namespace gp\admin{
 																	'label' 	=> $langmessage['Available'],
 																	);
 
+			$scripts['Admin_Theme_Content/Text']		 = array(	'class'		=> '\gp\admin\Layout\Text',
+																	'method'	=> 'RunScript',
+																	);
+
 			if( gp_remote_themes ){
 				$scripts['Admin_Theme_Content/Remote']	 = array(	'class'		=> '\gp\admin\Layout',
 																	'method'	=> 'RemoteBrowse',

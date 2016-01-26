@@ -215,7 +215,7 @@ class ContactGadget{
 				$text = \gp\tool\Output::SelectText($key);
 
 				if( \gp\tool\Output::ShowEditLink('Admin_Theme_Content') ){
-					$query = 'cmd=edittext&key='.urlencode($key);
+					$query = 'cmd=EditText&key='.urlencode($key);
 					echo \gp\tool\Output::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],$query,' title="'.$key.'" data-cmd="gpabox" ');
 					echo '<input type="submit" class="submit editable_area" id="ExtraEditArea'.$edit_index.'" name="aaa" value="'.$text.'" />';
 				}else{

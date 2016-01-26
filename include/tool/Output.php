@@ -1039,7 +1039,7 @@ namespace gp\tool{
 
 			$wrap = self::ShowEditLink('Admin_Theme_Content');
 			if( $wrap ){
-				self::$editlinks .= self::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],'cmd=edittext&key='.urlencode($text).'&return='.urlencode($page->title),' title="'.htmlspecialchars($text).'" data-cmd="gpabox" ');
+				self::$editlinks .= self::EditAreaLink($edit_index,'Admin_Theme_Content/Text',$langmessage['edit'],'cmd=EditText&key='.urlencode($text).'&return='.urlencode($page->title),' title="'.htmlspecialchars($text).'" data-cmd="gpabox" ');
 				echo '<div class="editable_area inner_size" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript
 			}
 
@@ -1072,12 +1072,12 @@ namespace gp\tool{
 				return self::ReturnText($key, $html, $wrapper_class);
 			}
 
-			$query = 'cmd=addontext&addon='.urlencode($addonFolderName).'&key='.urlencode($key);
+			$query = 'cmd=AddonTextForm&addon='.urlencode($addonFolderName).'&key='.urlencode($key);
 			return self::ReturnTextWorker($key,$html,$query, $wrapper_class);
 		}
 
 		public static function ReturnText($key,$html='%s', $wrapper_class = ''){
-			$query = 'cmd=edittext&key='.urlencode($key);
+			$query = 'cmd=EditText&key='.urlencode($key);
 			return self::ReturnTextWorker($key,$html,$query, $wrapper_class);
 		}
 
@@ -1096,7 +1096,7 @@ namespace gp\tool{
 					$title = substr($title,0,20).'...'; //javscript may shorten it as well
 				}
 
-				self::$editlinks .= self::EditAreaLink($edit_index,'Admin_Theme_Content',$langmessage['edit'],$query,' title="'.$title.'" data-cmd="gpabox" ');
+				self::$editlinks .= self::EditAreaLink($edit_index,'Admin_Theme_Content/Text',$langmessage['edit'],$query,' title="'.$title.'" data-cmd="gpabox" ');
 				return '<span class="editable_area '.$wrapper_class.'" id="ExtraEditArea'.$edit_index.'">'.$result.'</span>';
 			}
 

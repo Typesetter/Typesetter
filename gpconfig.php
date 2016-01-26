@@ -38,6 +38,13 @@ define('gp_browser_auth',false);
  */
 define('gp_require_encrypt',false);
 
+/**
+ * gp_nonce_algo
+ * Which hash algorithm to use for nonces
+ *
+ */
+define('gp_nonce_algo','sha512');
+
 
 /**
  * gp_index_filenames

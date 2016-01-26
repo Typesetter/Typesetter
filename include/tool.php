@@ -1501,6 +1501,7 @@ namespace gp{
 			return false;
 		}
 
+
 		/**
 		 * Generate a nonce hash
 		 *
@@ -1511,9 +1512,19 @@ namespace gp{
 		 */
 		public static function nonce_hash( $nonce, $tick_offset=0, $factor = 43200 ){
 			global $config;
-			$nonce_tick = ceil( time() / $factor ) - $tick_offset;
-			return substr( md5($nonce.$config['gpuniq'].$nonce_tick), -12, 10);
+
+			$nonce_tick		= ceil( time() / $factor ) - $tick_offset;
+			$nonce			= $nonce.$config['gpuniq'].$nonce_tick;
+
+
+			//nonces before version 5.0
+			if( gp_nonce_algo === 'legacy' ){
+				return substr( md5($nonce), -12, 10);
+			}
+
+			return \gp\tool::hash($nonce,gp_nonce_algo,2);
 		}
+
 
 		/**
 		 * Return the command sent by the user
@@ -1669,11 +1680,11 @@ namespace gp{
 			//sha512: looped with dynamic salt
 			for( $i=0; $i<$loops; $i++ ){
 
-				$ints = preg_replace('#[a-f]#','',$arg);
-				$salt_start = (int)substr($ints,0,1);
-				$salt_len = (int)substr($ints,2,1);
-				$salt = substr($arg,$salt_start,$salt_len);
-				$arg = hash($algo,$arg.$salt);
+				$ints			= preg_replace('#[a-f]#','',$arg);
+				$salt_start		= (int)substr($ints,0,1);
+				$salt_len		= (int)substr($ints,2,1);
+				$salt			= substr($arg,$salt_start,$salt_len);
+				$arg			= hash($algo,$arg.$salt);
 			}
 
 			return $arg;

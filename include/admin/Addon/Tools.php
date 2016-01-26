@@ -102,6 +102,7 @@ class Tools extends \gp\Base{
 	/**
 	 * Return ini info if the addon is installable
 	 *
+	 * @return false|array
 	 */
 	public function GetAvailInstall($dir){
 		global $langmessage;

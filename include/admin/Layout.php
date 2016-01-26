@@ -54,6 +54,7 @@ class Layout extends \gp\admin\Addon\Install{
 	public $can_install_links		= false;
 
 	private $gpLayouts_before;
+	private $config_before;
 
 
 	public function __construct(){
@@ -90,6 +91,7 @@ class Layout extends \gp\admin\Addon\Install{
 		$this->SetLayoutArray();
 
 		$this->gpLayouts_before					= $gpLayouts;
+		$this->config_before					= $config;
 
 
 		//Installation
@@ -725,6 +727,25 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 	/**
+	 * Save the config setting
+	 *
+	 */
+	protected function SaveConfig(){
+		global $config, $langmessage;
+
+
+		if( \gp\admin\Tools::SaveConfig() ){
+			message($langmessage['SAVED']);
+			return true;
+		}
+
+		$config = $this->config_before;
+		message($langmessage['OOPS'].' (Config not saved)');
+		return false;
+	}
+
+
+	/**
 	 * Create a new unique layout label
 	 * @static
 	 */
@@ -741,7 +762,6 @@ class Layout extends \gp\admin\Addon\Install{
 			$label = substr($label,0,$len-2);
 		}
 		if( substr($label,$len-2,1) === '_' && is_numeric(substr($label,$len-1,1)) ){
-			$int = substr($label,$len-1,1);
 			$label = substr($label,0,$len-2);
 		}
 
@@ -911,6 +931,7 @@ class Layout extends \gp\admin\Addon\Install{
 	/**
 	 * Return ini info if the addon is installable
 	 *
+	 * @return false|array
 	 */
 	public function GetAvailInstall($dir){
 		global $langmessage;
@@ -954,7 +975,7 @@ class Layout extends \gp\admin\Addon\Install{
 		asort($subdirs);
 		foreach($subdirs as $subdir){
 
-			if( \gp\tool\Output::StyleType($dir.'/'.$subdir) ){
+			if( \gp\tool\Output::StyleType($dir.'/'.$subdir) !== false ){
 				$colors[$subdir] = $subdir;
 			}
 
@@ -965,25 +986,16 @@ class Layout extends \gp\admin\Addon\Install{
 
 	/**
 	 * Save $layout as the default layout for the site
-	 * @param string $layout
 	 *
 	 */
 	public function MakeDefault(){
-		global $config,$langmessage,$page;
+		global $config, $page;
 
-
-		$oldConfig = $config;
 		$config['gpLayout'] = $this->curr_layout;
 
-		if( \gp\admin\Tools::SaveConfig() ){
-
+		if( $this->SaveConfig() ){
 			$page->SetTheme();
 			$this->SetLayoutArray();
-
-			message($langmessage['SAVED']);
-		}else{
-			$config = $oldConfig;
-			message($langmessage['OOPS']);
 		}
 	}
 
@@ -1482,17 +1494,11 @@ class Layout extends \gp\admin\Addon\Install{
 			}
 		}
 
-		if( !\gp\admin\Tools::SaveConfig() ){
-			//these two lines are fairly useless when the ReturnHeader() is used
-			$config = $configBefore;
-			message($langmessage['OOPS'].' (1)');
-		}else{
 
+		if( $this->SaveConfig() ){
 			$this->UpdateAddon($addon);
-
-			message($langmessage['SAVED']);
-
 		}
+
 	}
 
 	public function UpdateAddon($addon){
@@ -1641,11 +1647,8 @@ class Layout extends \gp\admin\Addon\Install{
 			unset($config['customlang'][$key]);
 		}
 
-		if( \gp\admin\Tools::SaveConfig() ){
-			message($langmessage['SAVED']);
-		}else{
-			message($langmessage['OOPS'].' (s1)');
-		}
+
+		$this->SaveConfig();
 	}
 
 	public function SetLayoutArray(){

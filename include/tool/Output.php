@@ -1539,6 +1539,7 @@ namespace gp\tool{
 		/**
 		 * Get the filetype of the style.* file
 		 *
+		 * @return string|false
 		 */
 		public static function StyleType($dir){
 			$css_path	= $dir.'/style.css';
@@ -1556,6 +1557,8 @@ namespace gp\tool{
 			if( file_exists($scss_path) ){
 				return 'scss';
 			}
+
+			return false;
 		}
 
 

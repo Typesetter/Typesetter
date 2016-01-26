@@ -419,6 +419,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 		$this->ini_text			= file_get_contents($ini_file);
 		$this->ini_contents		= \gp\tool\Ini::ParseString($this->ini_text);
+		$this->HasHooks();
 
 		if( !$this->ini_contents ){
 			$error = $langmessage['Ini_Error'].' '.$langmessage['Ini_Submit_Bug'];
@@ -443,7 +444,6 @@ class Installer extends \gp\admin\Addon\Tools{
 		}
 
 
-		$this->HasHooks();
 		$this->display_name = $this->ini_contents['Addon_Name'];
 
 		return true;
@@ -462,10 +462,8 @@ class Installer extends \gp\admin\Addon\Tools{
 				return;
 			}
 		}
+
 	}
-
-
-
 
 
 	/**

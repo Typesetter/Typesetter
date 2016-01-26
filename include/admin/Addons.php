@@ -616,7 +616,7 @@ class Addons extends \gp\admin\Addon\Install{
 	 *
 	 */
 	function OptionLinks($addon_key, $addon_config, $format = false){
-		global $langmessage;
+		global $langmessage, $gpLayouts;
 
 		$list	= array();
 

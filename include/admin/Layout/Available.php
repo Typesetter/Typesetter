@@ -495,11 +495,12 @@ class Available extends \gp\admin\Layout{
 		}
 
 
-		$installer = new \gp\admin\Addon\Installer();
-		$installer->addon_folder_rel = dirname($theme_info['rel']);
-		$installer->code_folder_name = '_themes';
-		$installer->source = $theme_info['full_dir'];
-		$installer->new_layout = $new_layout;
+		$installer						= new \gp\admin\Addon\Installer();
+		$installer->addon_folder_rel	= dirname($theme_info['rel']);
+		$installer->code_folder_name	= '_themes';
+		$installer->source				= $theme_info['full_dir'];
+		$installer->new_layout			= $new_layout;
+
 		if( !empty($_POST['default']) && $_POST['default'] != 'false' ){
 			$installer->default_layout = true;
 		}

@@ -571,23 +571,41 @@ class Layout extends \gp\admin\Addon\Install{
 		// update each layout
 		foreach($gpLayouts as $layout => $layout_info){
 
-			if( isset($ini_contents['Addon_Unique_ID']) && isset($layout_info['addon_id']) && $layout_info['addon_id'] == $ini_contents['Addon_Unique_ID'] ){
-				//update
-			}elseif( ( !isset($layout_info['is_addon']) || !$layout_info['is_addon']) && strpos($installer->dest,'/themes/'.dirname($layout_info['theme'])) !== false ){
-				//update
-			}else{
+			if( !$this->SameTheme( $layout_info, $new_layout_info, $installer->dest) ){
 				continue;
 			}
 
 			unset( $layout_info['is_addon'], $layout_info['addon_id'], $layout_info['version'], $layout_info['name'], $layout_info['addon_key'] );
 
 			$layout_info			+= $new_layout_info;
-			$layout_info['theme']	= $theme_folder.'/'.basename($layout_info['theme']);;
+			$layout_info['theme']	= $theme_folder.'/'.basename($layout_info['theme']);
 			$gpLayouts[$layout]		= $layout_info;
 		}
 
 		$this->SaveLayouts();
 	}
+
+
+	/**
+	 * Return true if two layouts use the same theme
+	 *
+	 */
+	public function SameTheme($layout_info, $new_layout_info, $new_layout_dir ){
+
+		if( isset($new_layout_info['addon_id']) && isset($layout_info['addon_id']) && $layout_info['addon_id'] == $new_layout_info['addon_id'] ){
+			return true;
+		}
+
+		if( !isset($layout_info['is_addon']) || !$layout_info['is_addon'] ){
+			$layout_dir = '/themes/'.dirname($layout_info['theme']);
+			if( strpos($new_layout_dir,$layout_dir) !== false ){
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 
 	/**
 	 *
@@ -1490,7 +1508,6 @@ class Layout extends \gp\admin\Addon\Install{
 			return;
 		}
 
-		$configBefore = $config;
 		foreach($texts as $text){
 			if( !isset($_POST['values'][$text]) ){
 				continue;
@@ -1794,8 +1811,6 @@ class Layout extends \gp\admin\Addon\Install{
 
 		}elseif( !$this->SaveLayouts() ){
 			return false;
-		}else{
-			message($langmessage['SAVED']);
 		}
 
 		//remove custom css

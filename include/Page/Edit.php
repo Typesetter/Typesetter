@@ -104,6 +104,7 @@ class Edit extends \gp\Page{
 			$this->cmds['save_inline']			= 'SectionEdit';
 			$this->cmds['preview']				= 'SectionEdit';
 			$this->cmds['include_dialog']		= 'SectionEdit';
+			$this->cmds['InlineEdit']			= 'SectionEdit';
 
 		}
 

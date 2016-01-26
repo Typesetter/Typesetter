@@ -46,4 +46,12 @@ abstract class Base{
 
 	}
 
+	/**
+	 *
+	 */
+	public function DefaultDisplay(){
+
+
+	}
+
 }

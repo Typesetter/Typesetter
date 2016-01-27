@@ -167,10 +167,9 @@ class Install extends \gp\admin\Addon\Tools{
 		$this->searchOrderOptions['modified']		= $langmessage['Recently Updated'];
 		$this->searchOrderOptions['created']		= $langmessage['Newest'];
 
-		$_GET += array('q'=>'');
-		if( isset($_REQUEST['page']) && ctype_digit($_REQUEST['page']) ){
-			$this->searchPage = $_REQUEST['page'];
-		}
+
+		$_GET				+= array('q'=>'');
+		$this->searchPage 	= \gp\special\Search::ReqPage('page');
 
 
 		//version specific search

@@ -144,7 +144,7 @@ class Search{
 		$total			= count($this->results);
 		$len			= 20;
 		$total_pages	= ceil($total/$len);
-		$current_page	= self::ReqPage('pg', ($total_pages-1) );
+		$current_page	= self::ReqPage('pg', $total_pages );
 
 		$start			= $current_page*$len;
 		$end			= min($start+$len,$total);
@@ -187,12 +187,15 @@ class Search{
 	 * Get the requested page number
 	 *
 	 */
-	public static function ReqPage($key = 'pg',$max){
+	public static function ReqPage($key = 'pg', $total_pages = null){
 
 		if( isset($_REQUEST[$key]) ){
 
 			$pg = (int)$_REQUEST[$key];
-			$pg	= min($pg, $max);
+
+			if( !is_null($total_pages) && $total_pages > 0 ){
+				$pg	= min($pg, $total_pages-1 );
+			}
 
 			return max(0,$pg);
 		}

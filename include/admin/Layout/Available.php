@@ -68,13 +68,11 @@ class Available extends \gp\admin\Layout{
 		$this->SortAvailable();
 
 		// pagination
-		$this->searchMax = count($this->avail_addons);
-		if( isset($_REQUEST['page']) && ctype_digit($_REQUEST['page']) ){
-			$this->searchPage = $_REQUEST['page'];
-		}
+		$this->searchMax	= count($this->avail_addons);
+		$this->searchPage	= self::ReqPage('page', $this->searchMax );
 
-		$start = $this->searchPage * $this->searchPerPage;
-		$possible = array_slice( $this->avail_addons, $start, $this->searchPerPage, true);
+		$start				= $this->searchPage * $this->searchPerPage;
+		$possible			= array_slice( $this->avail_addons, $start, $this->searchPerPage, true);
 
 
 		if( $show_options ){

@@ -339,25 +339,14 @@ class Install extends \gp\admin\Addon\Tools{
 			$result			= file_get_contents($cache_file);
 			$cache_used 	= true;
 		}else{
-			$result = \gp\tool\RemoteGet::Get_Successful($src);
-		}
-
-		//no response
-		if( !$result ){
-			echo '<p>'.\gp\tool\RemoteGet::Debug('Sorry, data not fetched').'</p>';
-			return false;
+			$result			= \gp\tool\RemoteGet::Get_Successful($src);
 		}
 
 		$data = $this->ParseResponse($result);
 
-		if( !is_array($data) ){
-			$debug				= array();
-			$debug['Two']		= substr($result,0,2);
-			$debug['Twotr']		= substr(trim($result),0,2);
-			echo '<p>'.\gp\tool\RemoteGet::Debug('Sorry, data not fetched',$debug).'</p>';
+		if( $data === false ){
 			return false;
 		}
-
 
 		//not unserialized?
 		if( count($data) == 0 ){
@@ -382,14 +371,28 @@ class Install extends \gp\admin\Addon\Tools{
 	 */
 	protected function ParseResponse($result){
 
-		if( strpos($result,'a:') === 0 ){
-			return unserialize($result);
-
-		}elseif( strpos($result,'{') === 0 ){
-			return json_decode($result,true);
+		//no response
+		if( !$result ){
+			echo '<p>'.\gp\tool\RemoteGet::Debug('Sorry, data not fetched').'</p>';
+			return false;
 		}
 
-		return false;
+		$data = false;
+		if( strpos($result,'a:') === 0 ){
+			$data = unserialize($result);
+
+		}elseif( strpos($result,'{') === 0 ){
+			$data = json_decode($result,true);
+		}
+
+		if( !is_array($data) ){
+			$debug				= array();
+			$debug['Two']		= substr($result,0,2);
+			$debug['Twotr']		= substr(trim($result),0,2);
+			echo '<p>'.\gp\tool\RemoteGet::Debug('Sorry, data not fetched',$debug).'</p>';
+		}
+
+		return $data;
 	}
 
 	public function SearchOrder(){

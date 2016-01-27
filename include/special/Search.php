@@ -186,6 +186,8 @@ class Search{
 	/**
 	 * Get the requested page number
 	 *
+	 * @param string $key
+	 * @param int $total_pages
 	 */
 	public static function ReqPage($key = 'pg', $total_pages = null){
 

@@ -325,32 +325,26 @@ class Install extends \gp\admin\Addon\Tools{
 	public function RemoteBrowseResponse($src){
 		global $dataDir, $langmessage;
 
+		$cache_file		= $dataDir.'/data/_remote/'.sha1($src).'.txt';
+		$cache_used		= false;
+
 		//check cache
-		$cache_file = $dataDir.'/data/_remote/'.sha1($src).'.txt';
-		$use_cache = false;
 		if( file_exists($cache_file) && (filemtime($cache_file)+ 26100) > time() ){
-			$result = file_get_contents($cache_file);
-			$use_cache = true;
+			$result			= file_get_contents($cache_file);
+			$cache_used 	= true;
 		}else{
 			$result = \gp\tool\RemoteGet::Get_Successful($src);
 		}
 
 		//no response
 		if( !$result ){
-			if( $use_cache ) unlink($cache_file);
 			echo '<p>'.\gp\tool\RemoteGet::Debug('Sorry, data not fetched').'</p>';
 			return false;
 		}
 
-		//serialized or json (serialized data may be cached)
-		if( strpos($result,'a:') === 0 ){
-			$data = unserialize($result);
+		$data = $this->ParseResponse($result);
 
-		}elseif( strpos($result,'{') === 0 ){
-			$data = json_decode($result,true);
-
-		}else{
-			if( $use_cache ) unlink($cache_file);
+		if( !is_array($data) ){
 			$debug				= array();
 			$debug['Two']		= substr($result,0,2);
 			$debug['Twotr']		= substr(trim($result),0,2);
@@ -360,18 +354,36 @@ class Install extends \gp\admin\Addon\Tools{
 
 
 		//not unserialized?
-		if( !is_array($data) || count($data) == 0 ){
-			if( $use_cache ) unlink($cache_file);
-			echo '<p>'.$langmessage['Sorry, data not fetched'].' (F3)</p>';
+		if( count($data) == 0 ){
+			echo '<p>';
+			echo $langmessage['search_no_results'];
+			echo '</p>';
 			return false;
 		}
 
 		//save the cache
-		if( !$use_cache ){
+		if( !$cache_used ){
 			\gp\tool\Files::Save($cache_file,$result);
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Convert the response string to an array
+	 * Serialized or json (serialized data may be cached)
+	 *
+	 */
+	protected function ParseResponse($result){
+
+		if( strpos($result,'a:') === 0 ){
+			return unserialize($result);
+
+		}elseif( strpos($result,'{') === 0 ){
+			return json_decode($result,true);
+		}
+
+		return false;
 	}
 
 	public function SearchOrder(){
@@ -502,7 +514,7 @@ class Install extends \gp\admin\Addon\Tools{
 	public function InvalidFolders(){
 		global $langmessage;
 
-		if( !$this->invalid_folders ){
+		if( empty($this->invalid_folders) ){
 			return;
 		}
 

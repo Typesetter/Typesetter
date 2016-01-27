@@ -296,9 +296,9 @@ class Installer extends \gp\admin\Addon\Tools{
 			$config[$this->config_index] = array();
 		}
 
-		$this->config =& $config[$this->config_index];
-		$this->config_cache = $config;
-		$this->layouts_cache = $gpLayouts;
+		$this->config			=& $config[$this->config_index];
+		$this->config_cache		= $config;
+		$this->layouts_cache	= $gpLayouts;
 
 
 		if( !$this->addon_folder_rel ){
@@ -843,27 +843,26 @@ class Installer extends \gp\admin\Addon\Tools{
 			return false;
 		}
 
+		// download url
+		$download_url = $this->RemoteUrl( $this->type );
+
 		// allowed to remote install?
-		switch($this->type){
-
-			case 'plugins':
-				if( !gp_remote_plugins ){
-					$this->message($langmessage['OOPS'].' (Can\'t remote install plugins)');
-					return false;
-				}
-			break;
-
-			case 'themes':
-				if( !gp_remote_themes ){
-					$this->message($langmessage['OOPS'].' (Can\'t remote install themes)');
-					return false;
-				}
-			break;
-
-			default:
-			$this->message($langmessage['OOPS'].' (Invalid Type)');
+		if( $download_url === false ){
+			$this->message($langmessage['OOPS'].' (Can\'t remote install '.$this->type.')');
 			return false;
 		}
+
+		$download_url .= '?cmd=install&id='.rawurlencode($this->id);
+
+		// purchase order id
+		if( !$this->order ){
+			$this->order = $this->GetOrder($this->id);
+		}
+
+		if( $this->order ){
+			$download_url .= '&order='.rawurlencode($this->order);
+		}
+
 
 		// able to remote install?
 		if( !\gp\admin\Tools::CanRemoteInstall() ){
@@ -872,27 +871,8 @@ class Installer extends \gp\admin\Addon\Tools{
 		}
 
 
-		// download
-		$download_link = addon_browse_path;
-		if( $this->type == 'theme' ){
-			$download_link .= '/Themes';
-		}else{
-			$download_link .= '/Plugins';
-		}
-		$download_link .= '?cmd=install&id='.rawurlencode($this->id);
-
-
-		// purchase order id
-		if( !$this->order ){
-			$this->order = $this->GetOrder($this->id);
-		}
-		if( $this->order ){
-			$download_link .= '&order='.rawurlencode($this->order);
-		}
-
-
 		// get package from remote
-		$full_result = \gp\tool\RemoteGet::Get($download_link);
+		$full_result = \gp\tool\RemoteGet::Get($download_url);
 		if( (int)$full_result['response']['code'] < 200 && (int)$full_result['response']['code'] >= 300 ){
 			$this->message( $langmessage['download_failed'] .' (1)');
 			return false;

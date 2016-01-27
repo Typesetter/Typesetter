@@ -592,16 +592,15 @@ namespace gp\admin{
 				}
 
 				foreach(self::$new_versions as $addon_id => $new_addon_info){
+
 					if( !is_numeric($addon_id) ){
 						continue;
 					}
 
-					$label = $new_addon_info['name'].':  '.$new_addon_info['version'];
-					if( $new_addon_info['type'] == 'theme' && gp_remote_themes ){
-						$url = 'Themes';
-					}elseif( $new_addon_info['type'] == 'plugin' && gp_remote_plugins ){
-						$url = 'Plugins';
-					}else{
+					$label		= $new_addon_info['name'].':  '.$new_addon_info['version'];
+					$url		= $this->RemoteUrl( $new_addon_info['type'] );
+
+					if( $url === false ){
 						continue;
 					}
 
@@ -673,6 +672,29 @@ namespace gp\admin{
 
 			}
 		}
+
+
+		/**
+		 * Get the appropriate remote browse url if available
+		 *
+		 */
+		public function RemoteUrl($type){
+
+			if( $type == 'theme' || $type == 'themes' ){
+				if( gp_remote_themes ){
+					return addon_browse_path.'/Themes';
+				}
+			}
+
+			if( $type == 'plugin' || $type == 'plugins' ){
+				if( gp_remote_plugins ){
+					return addon_browse_path.'/Plugins';
+				}
+			}
+
+			return false;
+		}
+
 
 		/**
 		 * Helper function for outputing link groups in AdminPanelLinks()

@@ -1001,14 +1001,8 @@ class Installer extends \gp\admin\Addon\Tools{
 
 			//if the title already exists, see if we need to update it
 			if( $title ){
-				$addlink = true;
-				$curr_info = $gp_titles[$index];
 
-				if( !isset($curr_info['addon']) || $this->config_key === false ){
-					$addlink = false;
-				}elseif( $curr_info['addon'] != $this->config_key ){
-					$addlink = false;
-				}
+				$add_link = $this->CanAddLink( $gp_titles[$index] );
 
 				if( !$addlink ){
 					$this->message( sprintf($langmessage['addon_key_defined'],' <em>Special_Link: '.$new_title.'</em>') );
@@ -1119,13 +1113,8 @@ class Installer extends \gp\admin\Addon\Tools{
 			$lower_key = strtolower($Config_Key);
 
 			if( isset($lower_add_to[$lower_key]) ){
-				$addlink = true;
 
-				if( !isset($lower_add_to[$lower_key]['addon']) || $this->config_key === false ){
-					$addlink = false;
-				}elseif( $lower_add_to[$lower_key]['addon'] != $this->config_key ){
-					$addlink = false;
-				}
+				$add_link = $this->CanAddLink( $lower_add_to[$lower_key] );
 
 				if( !$addlink ){
 					$this->message( sprintf($langmessage['addon_key_defined'],' <em>'.$Config_Key.'</em>') );
@@ -1143,6 +1132,17 @@ class Installer extends \gp\admin\Addon\Tools{
 		}
 	}
 
+	public function CanAddLink( $info ){
+
+		if( !isset($info['addon']) || $this->config_key === false ){
+			return false;
+		}
+
+		if( $info['addon'] != $this->config_key ){
+			return false;
+		}
+		return true;
+	}
 
 
 	public function UpdateLinkInfo(&$link_array,$new_info){

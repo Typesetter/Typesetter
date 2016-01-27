@@ -141,19 +141,13 @@ class Search{
 		usort( $this->results, array($this, 'sort') );
 
 
-		$total = count($this->results);
-		$len = 20;
-		$total_pages = ceil($total/$len);
-		$current_page = 0;
-		if( isset($_REQUEST['pg']) && is_numeric($_REQUEST['pg']) ){
-			if( $_REQUEST['pg'] <= $total_pages ){
-				$current_page = $_REQUEST['pg'];
-			}else{
-				$current_page = ($total_pages-1);
-			}
-		}
-		$start = $current_page*$len;
-		$end = min($start+$len,$total);
+		$total			= count($this->results);
+		$len			= 20;
+		$total_pages	= ceil($total/$len);
+		$current_page	= self::ReqPage('pg', ($total_pages-1) );
+
+		$start			= $current_page*$len;
+		$end			= min($start+$len,$total);
 
 		$this->results = array_slice($this->results,$start,$len,true);
 		echo '<p class="search_nav search_nav_top">';
@@ -187,6 +181,25 @@ class Search{
 		$query = 'q='.rawurlencode($_REQUEST['q']);
 		self::PaginationLinks($current_page, $total_pages, 'special_gpsearch', $query, 'pg', $attr);
 	}
+
+
+	/**
+	 * Get the requested page number
+	 *
+	 */
+	public static function ReqPage($key = 'pg',$max){
+
+		if( isset($_REQUEST[$key]) ){
+
+			$pg = (int)$_REQUEST[$key];
+			$pg	= min($pg, $max);
+
+			return max(0,$pg);
+		}
+
+		return 0;
+	}
+
 
 
 	/**

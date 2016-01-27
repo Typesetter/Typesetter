@@ -387,7 +387,13 @@ gp_editing = {
 
 
 	// auto save
-	window.setInterval(gp_editing.save_changes,5000);
+	window.setInterval(function(){
+
+		if( typeof(gp_editor.CanAutoSave) == 'function' && !gp_editor.CanAutoSave() ){
+			return;
+		}
+		gp_editing.save_changes();
+	},5000);
 
 
 	// check dirty

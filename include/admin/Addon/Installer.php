@@ -844,7 +844,7 @@ class Installer extends \gp\admin\Addon\Tools{
 		}
 
 		// download url
-		$download_url = $this->RemoteUrl( $this->type );
+		$download_url = \gp\admin\Tools::RemoteUrl( $this->type );
 
 		// allowed to remote install?
 		if( $download_url === false ){

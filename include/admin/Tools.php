@@ -598,7 +598,7 @@ namespace gp\admin{
 					}
 
 					$label		= $new_addon_info['name'].':  '.$new_addon_info['version'];
-					$url		= $this->RemoteUrl( $new_addon_info['type'] );
+					$url		= self::RemoteUrl( $new_addon_info['type'] );
 
 					if( $url === false ){
 						continue;
@@ -678,7 +678,7 @@ namespace gp\admin{
 		 * Get the appropriate remote browse url if available
 		 *
 		 */
-		public function RemoteUrl($type){
+		public static function RemoteUrl($type){
 
 			if( $type == 'theme' || $type == 'themes' ){
 				if( gp_remote_themes ){

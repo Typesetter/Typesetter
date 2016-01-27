@@ -69,7 +69,7 @@ class Available extends \gp\admin\Layout{
 
 		// pagination
 		$this->searchMax	= count($this->avail_addons);
-		$this->searchPage	= self::ReqPage('page', $this->searchMax );
+		$this->searchPage	= \gp\special\Search::ReqPage('page', $this->searchMax );
 
 		$start				= $this->searchPage * $this->searchPerPage;
 		$possible			= array_slice( $this->avail_addons, $start, $this->searchPerPage, true);

@@ -173,10 +173,8 @@ class Install extends \gp\admin\Addon\Tools{
 
 
 		//version specific search
-		$search_version = false;
 		if( !isset($config['search_version']) || $config['search_version'] ){
 			$this->searchQuery .= '&ug='.rawurlencode(gpversion);
-			$search_version = true;
 		}
 
 		if( !empty($_GET['q']) ){
@@ -207,12 +205,22 @@ class Install extends \gp\admin\Addon\Tools{
 
 		$this->RemoteBrowseRows($data);
 
+		$this->VersionOption();
+	}
+
+
+	/**
+	 * Display option to limit search results to addons that are compat with the current cms version
+	 *
+	 */
+	public function VersionOption(){
+		global $langmessage, $config;
 
 		echo '<h3>'.$langmessage['options'].'</h3>';
 		echo '<p>';
 		echo 'Limit results to addons that are compatible with your version of '.CMS_NAME.' ('.gpversion.') &nbsp; ';
 
-		if( $search_version ){
+		if( !isset($config['search_version']) || $config['search_version'] ){
 			echo '<b>'.$langmessage['On'].'</b> &nbsp; ';
 			echo \gp\tool::Link($this->searchUrl,$langmessage['Off'],$this->searchQuery.'&search_option=noversion',' data-cmd="gpajax"');
 

@@ -169,7 +169,7 @@ class Available extends \gp\admin\Layout{
 		if( $id ){
 
 			//more info
-			echo '<li>'.$this->DetailLink('theme', $id,'More Info...').'</li>';
+			echo '<li>'.self::DetailLink('theme', $id,'More Info...').'</li>';
 
 
 			//support

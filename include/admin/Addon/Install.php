@@ -251,12 +251,12 @@ class Install extends \gp\admin\Addon\Tools{
 
 		foreach($data['rows'] as $row){
 			echo '<tr><td>';
-			echo $this->DetailLink($row['type'], $row['id'], '<img src="'.$row['icon'].'" height="100" width="100" alt=""/>','',' class="shot"');
+			echo self::DetailLink($row['type'], $row['id'], '<img src="'.$row['icon'].'" height="100" width="100" alt=""/>','',' class="shot"');
 			echo '</td>';
 			echo '<td class="nowrap">';
 			echo '<b>'.$row['name'].'</b>';
 			echo '<br/>';
-			echo $this->DetailLink($row['type'], $row['id'] );
+			echo self::DetailLink($row['type'], $row['id'] );
 			echo ' | ';
 			$this->InstallLink($row);
 			echo '</td><td>';
@@ -435,20 +435,6 @@ class Install extends \gp\admin\Addon\Tools{
 		echo '</div>';
 	}
 
-	public function DetailLink( $type, $id, $label = 'Details', $q = '', $attr='' ){
-		return '<a href="'.$this->DetailUrl($type,$id,$q).'" data-cmd="remote" '.$attr.'>'.$label.'</a>';
-	}
-
-	public function DetailUrl($type,$id,$q=''){
-		$url = 'Themes';
-		if( $type == 'plugins' ){
-			$url = 'Plugins';
-		}
-		if( !empty($q) ){
-			$q = '?'.$q;
-		}
-		return addon_browse_path.'/'.$url.'/'.$id.$q;
-	}
 
 	public function FindForm(){
 		global $langmessage;
@@ -470,7 +456,7 @@ class Install extends \gp\admin\Addon\Tools{
 
 		if( !$installed && ($row['price_unit'] > 0) ){
 			$label = ' Install For $'.$row['price_unit'];
-			echo $this->DetailLink($row['type'], $row['id'], $label, '&amp;cmd=install_info');
+			echo self::DetailLink($row['type'], $row['id'], $label, '&amp;cmd=install_info');
 			return;
 		}
 

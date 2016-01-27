@@ -34,6 +34,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	//used internally
 	public $addon_folder;
 	public $addon_folder_rel;
+	public $data_folder;
 	public $dest = '';
 	public $dest_name;
 	public $trash_path;
@@ -420,13 +421,14 @@ class Installer extends \gp\admin\Addon\Tools{
 
 		$this->ini_text			= file_get_contents($ini_file);
 		$this->ini_contents		= \gp\tool\Ini::ParseString($this->ini_text);
-		$this->HasHooks();
 
 		if( !$this->ini_contents ){
 			$error = $langmessage['Ini_Error'].' '.$langmessage['Ini_Submit_Bug'];
 			$error = preg_replace('#href="[^"]+"#','href="'.CMS_DOMAIN.'/Docs/Addon.ini"',$error);
 			return false;
 		}
+
+		$this->HasHooks();
 
 		if( !isset($this->ini_contents['Addon_Name']) ){
 			$error = $langmessage['Ini_No_Name'].' '.$langmessage['Ini_Submit_Bug'];
@@ -1209,7 +1211,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Make sure the extracted links are valid
 	 *
 	 */
-	public function CleanLinks($links,$prefix,$linkType=false){
+	public function CleanLinks($links,$prefix,$linkType=null){
 
 		if( !is_array($links) ){
 			return array();
@@ -1228,7 +1230,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 			$result[$linkName] = $linkInfo;
 
-			if( $linkType ){
+			if( is_string($linkType) ){
 				$result[$linkName]['type'] = $linkType;
 			}
 		}

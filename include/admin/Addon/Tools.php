@@ -705,6 +705,21 @@ class Tools extends \gp\Base{
 		}
 		return $hooks;
 	}
+
+	public static function DetailLink( $type, $id, $label = 'Details', $q = '', $attr='' ){
+		return '<a href="'.self::DetailUrl($type,$id,$q).'" data-cmd="remote" '.$attr.'>'.$label.'</a>';
+	}
+
+	public static function DetailUrl($type,$id,$q=''){
+		$url = 'Themes';
+		if( $type == 'plugins' ){
+			$url = 'Plugins';
+		}
+		if( !empty($q) ){
+			$q = '?'.$q;
+		}
+		return addon_browse_path.'/'.$url.'/'.$id.$q;
+	}
 }
 
 

@@ -1,8 +1,8 @@
 
 html{
-	-webkit-transition: margin 1s;
-	-moz-transition: margin 1s;
-	transition: margin 1s;
+	-webkit-transition: margin 0.5s;
+	-moz-transition: margin 0.5s;
+	transition: margin 0.5s;
 	}
 
 #ckeditor_wrap{
@@ -16,9 +16,9 @@ html{
 	background:#eee;
 	font-family:Arial,sans-serif !important;
 
-	-webkit-transition: right 1s;
-	-moz-transition: right 1s;
-	transition: right 1s;
+	-webkit-transition: right 0.5s;
+	-moz-transition: right 0.5s;
+	transition: right 0.5s;
 	}
 
 #ckeditor_wrap.show_editor{

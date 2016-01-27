@@ -183,12 +183,17 @@ namespace gp\admin{
 																	);
 
 
+
 			$scripts['Admin_Theme_Content/Available']	 = array(	'class'		=> '\gp\admin\Layout\Available',
 																	'method'	=> 'ShowAvailable',
 																	'label' 	=> $langmessage['Available'],
 																	);
 
 			$scripts['Admin_Theme_Content/Text']		 = array(	'class'		=> '\gp\admin\Layout\Text',
+																	'method'	=> 'RunScript',
+																	);
+
+			$scripts['Admin_Theme_Content/Image']		= array(	'class'		=> '\gp\admin\Layout\Image',
 																	'method'	=> 'RunScript',
 																	);
 

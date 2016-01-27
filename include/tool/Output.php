@@ -987,7 +987,7 @@ namespace gp\tool{
 			//edit options
 			$editable = self::ShowEditLink('Admin_Theme_Content');
 			if( $editable ){
-				$edit_link = self::EditAreaLink($edit_index,'Admin_Theme_Content/Edit/'.$page->gpLayout,$langmessage['edit'],'file='.rawurlencode($img_rel).'&container='.$container_id.'&time='.time(),'title="Edit Image" data-cmd="inline_edit_generic"');
+				$edit_link = self::EditAreaLink($edit_index,'Admin_Theme_Content/Image/'.$page->gpLayout,$langmessage['edit'],'file='.rawurlencode($img_rel).'&container='.$container_id.'&time='.time(),'title="Edit Image" data-cmd="inline_edit_generic"');
 				self::$editlinks .= '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">'.$edit_link.'</span>';
 				$attributes['class'] .= ' editable_area';
 				$attributes['id'] = 'ExtraEditArea'.$edit_index;

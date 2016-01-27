@@ -17,15 +17,17 @@ class Edit extends \gp\admin\Layout{
 		global $page, $gpLayouts, $config;
 
 		//layout request
-		$parts = explode('/',$page->requested);
-		if( isset($parts[2]) && isset($gpLayouts[$parts[2]]) ){
-			$this->EditLayout($parts[2]);
-			return;
-		}
+		$parts		= explode('/',$page->requested);
+		if( !empty($parts[2]) ){
+
+			if( $this->SetCurrLayout($parts[2]) ){
+				$this->EditLayout();
+				return;
+			}
 
 		//default layout
-		if( empty($parts[2]) ){
-			$this->EditLayout($config['gpLayout']);
+		}elseif( $this->SetCurrLayout($config['gpLayout']) ){
+			$this->EditLayout();
 			return;
 		}
 
@@ -34,24 +36,18 @@ class Edit extends \gp\admin\Layout{
 		\gp\tool::Redirect($url,302);
 	}
 
-
-
 	/**
-	 * Edit layout properties
-	 * 		Layout Identification
-	 * 		Content Arrangement
-	 * 		Gadget Visibility
+	 * Set the current layout
 	 *
 	 */
-	public function EditLayout($layout){
-		global $page, $gpLayouts, $langmessage, $config;
+	protected function SetCurrLayout($layout){
+		global $page, $langmessage, $gpLayouts;
 
-		$cmd = \gp\tool::GetCommand();
+		if( !isset($gpLayouts[$layout]) ){
+			return false;
+		}
 
-		$GLOBALS['GP_ARRANGE_CONTENT']	= true;
-		$this->curr_layout				= $layout;
-		$this->layout_slug				= 'Admin_Theme_Content/Edit/'.rawurlencode($layout);
-
+		$this->curr_layout = $layout;
 		$this->SetLayoutArray();
 		$page->SetTheme($layout);
 
@@ -61,11 +57,23 @@ class Edit extends \gp\admin\Layout{
 			return false;
 		}
 
-		$this->LoremIpsum();
-
 		\gp\tool\Output::TemplateSettings();
 
-		\gp\tool\Plugins::Action('edit_layout_cmd',array($layout));
+		return true;
+	}
+
+
+	/**
+	 * Edit layout properties
+	 * 		Layout Identification
+	 * 		Content Arrangement
+	 * 		Gadget Visibility
+	 *
+	 */
+	public function EditLayout(){
+
+		$GLOBALS['GP_ARRANGE_CONTENT']	= true;
+		$this->layout_slug				= 'Admin_Theme_Content/Edit/'.rawurlencode($this->curr_layout);
 
 
 		$this->cmds['ShowThemeImages']	= '';
@@ -82,6 +90,11 @@ class Edit extends \gp\admin\Layout{
 		$this->cmds['RemoveArea']		= 'ShowInIframe';
 		$this->cmds['DragArea']			= 'ShowInIframe';
 		$this->cmds['in_iframe']		= 'ShowInIframe';
+
+
+		\gp\tool\Plugins::Action('edit_layout_cmd',array($this->curr_layout));
+
+		$cmd = \gp\tool::GetCommand();
 
 		$this->LayoutCommands($cmd);
 		$this->RunCommands($cmd);
@@ -107,6 +120,8 @@ class Edit extends \gp\admin\Layout{
 	public function ShowInIframe(){
 		global $page;
 
+		$this->LoremIpsum();
+
 		$cmd = \gp\tool::GetCommand();
 
 		$page->show_admin_content		= false;
@@ -125,7 +140,7 @@ class Edit extends \gp\admin\Layout{
 	 *
 	 */
 	public function LayoutEditor($layout, $layout_info ){
-		global $page,$langmessage,$config;
+		global $page,$langmessage;
 
 
 		$_REQUEST					+= array('gpreq' => 'body'); //force showing only the body as a complete html document
@@ -833,7 +848,7 @@ class Edit extends \gp\admin\Layout{
 	 *
 	 */
 	public function LayoutMenuSave(){
-		global $config, $langmessage, $gpLayouts;
+		global $langmessage, $gpLayouts;
 
 		if( !$this->ParseHandlerInfo($_POST['handle'],$curr_info) ){
 			message($langmessage['OOPS'].' (0)');

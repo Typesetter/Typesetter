@@ -10,6 +10,9 @@ defined('is_running') or die('Not an entry point...');
  * 	- file_get_contents('phar://...') doesn't work for zip archives
  *  - writing archives when phar.readonly = 1 does not work in hhvm: https://github.com/facebook/hhvm/issues/6647
  *
+ *
+ * @method bool extractTo()
+ *
  */
 class Archive{
 
@@ -91,8 +94,6 @@ class Archive{
 
 	/**
 	 * Call method on the archive object
-	 *
-	 * @method bool extractTo()
 	 *
 	 */
 	public function __call( $name , $arguments ){

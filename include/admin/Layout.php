@@ -57,13 +57,18 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 	public function __construct(){
-		global $page;
+		global $page, $gpLayouts, $config;
 
 		parent::__construct();
 
-		$page->head_js[] = '/include/js/theme_content.js';
-		$page->head_js[] = '/include/js/dragdrop.js';
-		$page->css_admin[] = '/include/css/theme_content.scss';
+		$this->gpLayouts_before		= $gpLayouts;
+		$this->config_before		= $config;
+
+		$page->head_js[]			= '/include/js/theme_content.js';
+		$page->head_js[]			= '/include/js/dragdrop.js';
+		$page->css_admin[]			= '/include/css/theme_content.scss';
+
+
 		\gp\tool::LoadComponents('resizable');
 
 
@@ -88,9 +93,6 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 		$this->SetLayoutArray();
-
-		$this->gpLayouts_before					= $gpLayouts;
-		$this->config_before					= $config;
 
 
 		//Installation
@@ -716,7 +718,9 @@ class Layout extends \gp\admin\Addon\Install{
 			return true;
 		}
 
-		$gpLayouts = $this->gpLayouts_before;
+		if( is_array($this->gpLayouts_before) ){
+			$gpLayouts = $this->gpLayouts_before;
+		}
 		return false;
 	}
 
@@ -732,7 +736,9 @@ class Layout extends \gp\admin\Addon\Install{
 			return true;
 		}
 
-		$config = $this->config_before;
+		if( is_array($this->config_before) ){
+			$config = $this->config_before;
+		}
 		return false;
 	}
 

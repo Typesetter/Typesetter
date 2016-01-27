@@ -1004,7 +1004,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 				$add_link = $this->CanAddLink( $gp_titles[$index] );
 
-				if( !$addlink ){
+				if( !$add_link ){
 					$this->message( sprintf($langmessage['addon_key_defined'],' <em>Special_Link: '.$new_title.'</em>') );
 					continue;
 				}
@@ -1116,7 +1116,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 				$add_link = $this->CanAddLink( $lower_add_to[$lower_key] );
 
-				if( !$addlink ){
+				if( !$add_link ){
 					$this->message( sprintf($langmessage['addon_key_defined'],' <em>'.$Config_Key.'</em>') );
 					continue;
 				}

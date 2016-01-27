@@ -15,7 +15,6 @@ class Install extends \gp\admin\Addon\Tools{
 	//remote browsing
 	public $path_remote			= 'Admin/Addons/Remote';
 	public $code_folder_name	= '_addoncode';
-	public $can_install_links	= true;
 	private $installed_ids		= array();
 	public $config;
 
@@ -136,7 +135,6 @@ class Install extends \gp\admin\Addon\Tools{
 
 		$installer->code_folder_name	= $this->code_folder_name;
 		$installer->config_index		= $this->config_index;
-		$installer->can_install_links	= $this->can_install_links;
 
 		$installer->InstallRemote( $type, $_POST['id'], $_POST['order'] );
 		$installer->OutputMessages();

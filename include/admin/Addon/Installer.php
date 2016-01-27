@@ -13,7 +13,6 @@ class Installer extends \gp\admin\Addon\Tools{
 
 	//configuration options
 	public $source = '';
-	public $can_install_links = true;
 	public $config_index = 'addons';
 	public $code_folder_name = '_addoncode';
 
@@ -39,10 +38,12 @@ class Installer extends \gp\admin\Addon\Tools{
 	public $dest_name;
 	public $trash_path;
 	public $config_cache;
+	public $config;
 	public $layouts_cache;
 	public $ini_contents;
 	public $ini_text = '';
-	public $upgrade_key = false;
+	public $upgrade_key;
+	public $config_key;
 	public $has_hooks = false;
 	public $display_name = '';
 
@@ -87,12 +88,12 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * @param int $order Purchase order id
 	 *
 	 */
-	public function InstallRemote( $type, $id, $order = false ){
+	public function InstallRemote( $type, $id, $order = null ){
 
-		$this->remote_install = true;
-		$this->type = $type;
-		$this->id = $id;
-		$this->order = $order;
+		$this->remote_install	= true;
+		$this->type				= $type;
+		$this->id				= $id;
+		$this->order			= $order;
 
 		return $this->Install();
 	}
@@ -219,7 +220,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 *
 	 */
 	public function InstallSteps(){
-		global $dataDir;
+		global $dataDir, $langmessage;
 
 		$this->GetAddonData();			// addonHistory
 		$this->Init_PT();				// $this->config
@@ -273,7 +274,7 @@ class Installer extends \gp\admin\Addon\Tools{
 			return false;
 		}
 
-		if( $this->order ){
+		if( !is_null($this->order) ){
 			$img_path = \gp\tool::IdUrl('ci');
 			\gp\tool::IdReq($img_path);
 		}
@@ -369,7 +370,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 		if( isset($this->config[$this->config_key]['data_folder']) ){
 			$this->data_folder = $this->config[$this->config_key]['data_folder'];
-		}elseif( $this->upgrade_key && file_exists( $dataDir.'/data/_addondata/'.$this->upgrade_key) ){
+		}elseif( !is_null($this->upgrade_key) && file_exists( $dataDir.'/data/_addondata/'.$this->upgrade_key) ){
 			$this->data_folder = $this->upgrade_key;
 		}else{
 			$this->data_folder = $this->dest_name;
@@ -498,10 +499,6 @@ class Installer extends \gp\admin\Addon\Tools{
 			return true;
 		}
 
-		if( !$this->can_install_links && !$this->upgrade_key ){
-			return true;
-		}
-
 		//needs to be before other gadget functions
 		$installedGadgets = $this->GetInstalledComponents($config['gadgets'],$this->config_key);
 
@@ -567,9 +564,9 @@ class Installer extends \gp\admin\Addon\Tools{
 		}
 
 
-		$temp = $this->TempFile();
-		$layout_id = basename($temp);
-		$gpLayouts[$layout_id] = $this->new_layout;
+		$temp					= $this->TempFile();
+		$layout_id				= basename($temp);
+		$gpLayouts[$layout_id]	= $this->new_layout;
 
 		if( $this->default_layout ){
 			$config['gpLayout'] = $layout_id;
@@ -648,17 +645,12 @@ class Installer extends \gp\admin\Addon\Tools{
 		if( isset($this->ini_contents['Proof of Purchase']) && isset($this->ini_contents['Proof of Purchase']['order']) ){
 			$this->order = $this->ini_contents['Proof of Purchase']['order'];
 			$this->config[$this->config_key]['order'] = $this->order;
-		}else{
-			// don't delete any purchase id's
-			// unset($this->config[$this->config_key]['order']);
 		}
 
 
-		if( $this->can_install_links ){
-			$this->UpdateConfigInfo('editable_text','editable_text');
-			$this->UpdateConfigInfo('About','About');
-			$this->UpdateConfigInfo('html_head','html_head');
-		}
+		$this->UpdateConfigInfo('editable_text','editable_text');
+		$this->UpdateConfigInfo('About','About');
+		$this->UpdateConfigInfo('html_head','html_head');
 
 		return true;
 	}
@@ -793,10 +785,11 @@ class Installer extends \gp\admin\Addon\Tools{
 	 *
 	 */
 	public function Failed(){
-		global $config;
+		global $config, $gpLayouts;
 
-		if( isset($this->config_cache) ){
-			$config = $this->config_cache;
+		if( is_array($this->config_cache) ){
+			$config		= $this->config_cache;
+			$gpLayouts	= $this->layouts_cache;
 		}
 
 		if( isset($this->trash_path) && file_exists($this->trash_path) ){
@@ -855,11 +848,11 @@ class Installer extends \gp\admin\Addon\Tools{
 		$download_url .= '?cmd=install&id='.rawurlencode($this->id);
 
 		// purchase order id
-		if( !$this->order ){
+		if( is_null($this->order) ){
 			$this->order = $this->GetOrder($this->id);
 		}
 
-		if( $this->order ){
+		if( !is_null($this->order) ){
 			$download_url .= '&order='.rawurlencode($this->order);
 		}
 

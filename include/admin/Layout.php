@@ -51,7 +51,6 @@ class Layout extends \gp\admin\Addon\Install{
 	public $config_index			= 'themes';
 	public $code_folder_name		= '_themes';
 	public $path_remote				= 'Admin_Theme_Content/Remote';
-	public $can_install_links		= false;
 
 	private $gpLayouts_before;
 	private $config_before;
@@ -587,8 +586,7 @@ class Layout extends \gp\admin\Addon\Install{
 			return true;
 		}
 
-
-		if( $layout_info['is_addon'] ){
+		if( isset($layout_info['is_addon']) && $layout_info['is_addon'] ){
 			$layout_info['rel']	= '/data/_themes/'.dirname($layout_info['theme']);
 		}else{
 			$layout_info['rel']	= '/themes/'.dirname($layout_info['theme']);

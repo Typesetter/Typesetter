@@ -17,6 +17,7 @@ class Install extends \gp\admin\Addon\Tools{
 	public $code_folder_name	= '_addoncode';
 	public $can_install_links	= true;
 	private $installed_ids		= array();
+	public $config;
 
 
 	//searching
@@ -45,6 +46,7 @@ class Install extends \gp\admin\Addon\Tools{
 		global $page, $langmessage;
 
 		//build links
+		$header_paths									= array();
 		$header_paths[$this->scriptUrl]					= $langmessage['manage'];
 		$header_paths[$this->scriptUrl.'/Available']	= $langmessage['Available'];
 
@@ -61,7 +63,7 @@ class Install extends \gp\admin\Addon\Tools{
 				$header_paths[$this->scriptUrl.'/Remote'] = $langmessage['Search'];
 			}
 
-		}elseif( $this->config_index == 'addons' ){
+		}else{
 			$root_label = $langmessage['plugins'];
 			if( gp_remote_plugins ){
 				$this->FindForm();
@@ -142,27 +144,6 @@ class Install extends \gp\admin\Addon\Tools{
 		return $installer;
 	}
 
-
-	/**
-	 * Check the ini values of the addon being installed
-	 * @return bool
-	 *
-	 */
-	public function Install_CheckIni(){
-		global $langmessage;
-
-		//warn if attempting to install lesser version of same addon
-		if( !empty($this->upgrade_key) ){
-			$info = $this->config[$this->upgrade_key];
-			if( !empty($info['version']) ){
-				if( empty($this->ini_contents['Addon_Version']) ){
-					echo '<p class="gp_warning">'.sprintf($langmessage['downgrade']).'</p>';
-				}elseif( version_compare($this->ini_contents['Addon_Version'], $info['version'],'<') ){
-					echo '<p class="gp_warning">'.sprintf($langmessage['downgrade']).'</p>';
-				}
-			}
-		}
-	}
 
 
 	/**

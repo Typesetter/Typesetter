@@ -128,10 +128,7 @@
 			$('#ckeditor_area').on('dragstop',this.MaxHeight);
 
 
-			// ckeditor_wrap
-			var list = $('#ck_editable_areas');
-
-			AddEditableLinks(list);
+			AddEditableLinks();
 
 
 			$(document).trigger("section_sorting:loaded");
@@ -880,8 +877,9 @@
 	 * Show additional editable areas
 	 *
 	 */
-	function AddEditableLinks(list){
+	function AddEditableLinks(){
 
+		var list	= $('#ck_editable_areas');
 		var box		= $gp.div('gp_edit_box'); //the overlay box
 
 		$('a.ExtraEditLink')

@@ -389,6 +389,12 @@ gp_editing = {
 	// auto save
 	window.setInterval(function(){
 
+		var area		= $gp.CurrentDiv();
+		if( typeof(area.data('gp-section')) == 'undefined' ){
+			return;
+		}
+
+
 		if( typeof(gp_editor.CanAutoSave) == 'function' && !gp_editor.CanAutoSave() ){
 			return;
 		}
@@ -472,6 +478,7 @@ gp_editing = {
 	}).resize();
 
 
-
+	$('.editable_area').off('.gp');
+	$gp.$doc.off('click.gp');
 
 })();

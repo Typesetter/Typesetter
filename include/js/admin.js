@@ -857,7 +857,7 @@ $(function(){
 
 		//show the edit link when hovering over an editable area
 		//	using mouseenter to show link an area filled with an iframe
-		$('.editable_area').bind('mousemove.gp mouseenter.gp touchstart.gp',function(e){
+		$('.editable_area').on('mousemove.gp mouseenter.gp touchstart.gp',function(e){
 			if( timeout ){
 				window.clearTimeout(timeout);
 			}
@@ -887,7 +887,7 @@ $(function(){
 
 			AreaOverlay(edit_area);
 
-		}).bind('mouseleave touchend',function(){
+		}).on('mouseleave touchend',function(){
 			StartOverlayHide();
 			rmNoOverlay(edit_area);
 		});
@@ -1043,7 +1043,7 @@ $(function(){
 		 * Clicking on links still works
 		 *
 		 */
-		$gp.$doc.on('click','.editable_area, #gp_edit_overlay',function(evt){
+		$gp.$doc.on('click.gp','.editable_area, #gp_edit_overlay',function(evt){
 			if( ShowableMenu(evt) ){
 				MenuPos(evt);
 			}

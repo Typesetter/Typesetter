@@ -152,9 +152,8 @@ class Edit extends \gp\admin\Layout{
 		$page->head_js[]	= '/include/thirdparty/codemirror/mode/css/css.js';
 
 
-
 		echo '<div id="theme_editor">';
-		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Edit/'.$this->curr_layout,'cmd=in_iframe').'" method="post" class="full_height" target="gp_layout_iframe" style="width:'.$gpAdmin['gpui_thw'].'px">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Edit/'.$this->curr_layout,'cmd=in_iframe').'" method="post" class="full_height" target="gp_layout_iframe">';
 		echo '<table border="0">';
 		echo '<tr><td>';
 
@@ -218,7 +217,7 @@ class Edit extends \gp\admin\Layout{
 
 
 		//show site in iframe
-		echo '<div id="gp_iframe_wrap" style="left:'.$gpAdmin['gpui_thw'].'px">';
+		echo '<div id="gp_iframe_wrap">';
 		$url = \gp\tool::GetUrl('Admin_Theme_Content/Edit/'.rawurlencode($layout),'cmd=in_iframe');
 		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';
 

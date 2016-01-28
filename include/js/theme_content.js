@@ -4,15 +4,20 @@ $(function(){
 	CssSetup();
 
 
+	var width		= Math.min(gpui.thw, $gp.$win.width() - 50);
+	console.log('width',width);
+	$('#gp_iframe_wrap').css( 'left', width );
+	$('#theme_editor form').css( 'width', width );
+
 	/**
 	 * Resizeable editor
 	 *
 	 */
-	$("#theme_editor form").resizable({
-		handles : "e",
+	$('#theme_editor form').resizable({
+		handles : 'e',
 		minWidth : 172,
 		resize : function(event, ui) {
-			$("#gp_iframe_wrap").css( "left", ui.size.width );
+			$('#gp_iframe_wrap').css( 'left', ui.size.width );
 
 			gpui.thw = ui.size.width;
 			$gp.SaveGPUI();

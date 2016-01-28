@@ -364,9 +364,8 @@ gp_editing = {
 
 		//get the edit link
 		var area_id		= $gp.AreaId( $(this) );
-		var href		= $('#ExtraEditLink'+area_id).attr('href') || '?';
+		$('#ExtraEditLink'+area_id).click();
 
-		$gp.LoadEditor(href, area_id);
 		gp_editing.ResetTabs();
 	});
 

@@ -203,17 +203,19 @@ var $gp = {
 			}
 
 			if( typeof(gpresponse[obj.DO]) === 'function' ){
+				console.log('gpresponse is deprecated as of 3.6');
 				gpresponse[obj.DO].call(this_context,obj,textStatus,jqXHR);
 				return;
 			}
 
+
 			switch(obj.DO){
 				case 'replace':
-					$(obj.SELECTOR).replaceWith(obj.CONTENT);
+					CallFunc( obj.SELECTOR, 'replaceWith', obj.CONTENT);
 				break;
 
 				case 'inner':
-					$(obj.SELECTOR).html(obj.CONTENT);
+					CallFunc( obj.SELECTOR, 'html', obj.CONTENT);
 				break;
 
 				case 'admin_box_data':
@@ -226,15 +228,22 @@ var $gp = {
 
 				//standard functions
 				default:
-					var $selected = $(obj.SELECTOR);
-					if( typeof($selected[obj.DO]) == 'function' ){
-						$selected[obj.DO](obj.CONTENT);
-					}
+					CallFunc( obj.SELECTOR, obj.DO, obj.CONTENT);
 				break;
 			}
-
-
 		});
+
+		function CallFunc( sel, func, arg){
+
+			if( sel == 'window' ){
+				sel = window;
+			}
+
+			var $selected = $(sel);
+			if( typeof($selected[func]) == 'function' ){
+				$selected[func](arg);
+			}
+		}
 
 		$gp.loaded();
 	},
@@ -486,6 +495,7 @@ $(function(){
 		}
 
 		if( typeof(gpinputs[cmd]) === 'function' ){
+			console.log('gpinputs is deprecated as of 3.6');
 			return gpinputs[cmd].call(this,evt,evt);//evt twice so the same function can be used for gplinks and gpinputs
 		}
 
@@ -543,6 +553,7 @@ $(function(){
 
 		// @deprecated 3.6
 		if( typeof(gplinks[cmd]) === 'function' ){
+			console.log('gpinputs is deprecated as of 3.6');
 			return gplinks[cmd].call(this,arg,evt);
 		}
 

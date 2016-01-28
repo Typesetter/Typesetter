@@ -106,8 +106,8 @@
 		this.wake = function(){
 			timeout = window.setInterval( Animate ,anim_freq); //constant animation
 
-			gpresponse.image_options_loaded		= ImagesLoaded;
-			gpresponse.gp_gallery_images		= MultipleFileHandler;
+			$gp.response.image_options_loaded		= ImagesLoaded;
+			$gp.response.gp_gallery_images			= MultipleFileHandler;
 
 			$gp.links.show_uploaded_images = function(){
 				LoadImages(false);
@@ -116,6 +116,7 @@
 			$gp.links.gp_gallery_add	= UseImage;
 			$gp.links.deafult_sizes		= ShowImages;
 
+			$gp.$win.resize();
 		}
 
 		this.sleep = function(){

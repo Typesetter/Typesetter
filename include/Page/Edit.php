@@ -83,8 +83,8 @@ class Edit extends \gp\Page{
 		if( $this->permission_edit ){
 
 			/* gallery/image editing */
-			$this->cmds['gallery_folder']		= array('GalleryImages','return');
-			$this->cmds['gallery_images']		= array('GalleryImages','return');
+			$this->cmds['gallery_folder']		= 'GalleryImages';
+			$this->cmds['gallery_images']		= 'GalleryImages';
 			$this->cmds['image_editor']			= '\\gp\\tool\\Editing::ImageEditor';
 			$this->cmds['new_dir']				= '\\gp\\tool\\Editing::NewDirForm';
 

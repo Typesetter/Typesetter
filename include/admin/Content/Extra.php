@@ -4,69 +4,48 @@ namespace gp\admin\Content;
 
 defined('is_running') or die('Not an entry point...');
 
-class Extra{
+class Extra extends \gp\Base{
 
 	public $folder;
 	public $areas = array();
 
 	public function __construct(){
-		global $langmessage, $dataDir;
+		global $dataDir;
 
 		$this->folder = $dataDir.'/data/_extra';
 		$this->Getdata();
-
-		$cmd = \gp\tool::GetCommand();
-
-		$show = true;
-		switch($cmd){
-
-
-			case 'delete';
-				$this->DeleteArea();
-			break;
-
-			case 'new_section':
-				$this->NewSection();
-			break;
-
-			case 'view':
-				$this->PreviewText();
-				$show = false;
-			break;
-
-			case 'edit':
-				if( $this->EditExtra() ){
-					$show = false;
-				}
-			break;
-
-
-			/* gallery editing */
-			case 'gallery_folder':
-			case 'gallery_images':
-				$this->GalleryImages();
-			return;
-
-			case 'new_dir':
-				echo \gp\tool\Editing::NewDirForm();
-			return;
-
-			/* inline editing */
-			case 'save':
-			case 'save_inline':
-			case 'inlineedit':
-			case 'include_dialog':
-			case 'preview':
-				$this->SectionEdit($cmd);
-			return;
-
-		}
-
-		if( $show ){
-			$this->ShowExtras();
-		}
 	}
 
+	public function RunScript(){
+
+
+		$this->cmds['DeleteArea']			= 'DefaultDisplay';
+		$this->cmds['NewSection']			= 'DefaultDisplay';
+		$this->cmds['PreviewText']			= '';
+		$this->cmds['EditExtra']			= '';
+
+
+		$this->cmds['gallery_folder']		= 'GalleryImages';
+		$this->cmds['gallery_images']		= 'GalleryImages';
+		$this->cmds['new_dir']				= '\\gp\\tool\\Editing::NewDirForm';
+
+		/* inline editing */
+		$this->cmds['save']					= 'SectionEdit';
+		$this->cmds['save_inline']			= 'SectionEdit';
+		$this->cmds['preview']				= 'SectionEdit';
+		$this->cmds['include_dialog']		= 'SectionEdit';
+		$this->cmds['InlineEdit']			= 'SectionEdit';
+
+
+		$cmd	= \gp\tool::GetCommand();
+		$this->RunCommands($cmd);
+	}
+
+
+	/**
+	 * Get a list of all extra edit areas
+	 *
+	 */
 	public function Getdata(){
 		$this->areas = \gp\tool\Files::ReadDir($this->folder);
 		asort($this->areas);
@@ -80,15 +59,15 @@ class Extra{
 	public function DeleteArea(){
 		global $langmessage;
 
-		$title =& $_POST['file'];
-		$file = $this->ExtraExists($title);
-		if( !$file ){
+		$title	=& $_POST['file'];
+		$file	= $this->ExtraExists($title);
+
+		if( $file === false ){
 			message($langmessage['OOPS']);
 			return;
 		}
 
 		if( unlink($file) ){
-			message($langmessage['SAVED']);
 			unset($this->areas[$title]);
 		}else{
 			message($langmessage['OOPS']);
@@ -110,7 +89,11 @@ class Extra{
 	}
 
 
-	public function ShowExtras(){
+	/**
+	 * Show all available extra content areas
+	 *
+	 */
+	public function DefaultDisplay(){
 		global $langmessage;
 
 		$types = \gp\tool\Output\Sections::GetTypes();
@@ -151,34 +134,45 @@ class Extra{
 			echo '</span>..."</td><td style="white-space:nowrap">';
 
 			if( $data['type'] == 'text' ){
-				echo \gp\tool::Link('Admin/Extra',$langmessage['edit'],'cmd=edit&file='.$file);
+				echo \gp\tool::Link('Admin/Extra',$langmessage['edit'],'cmd=EditExtra&file='.$file);
 				echo ' &nbsp; ';
 			}
 
-			echo \gp\tool::Link('Admin/Extra',$langmessage['preview'],'cmd=view&file='.$file);
+			echo \gp\tool::Link('Admin/Extra',$langmessage['preview'],'cmd=PreviewText&file='.$file);
 			echo ' &nbsp; ';
 
 			$title = sprintf($langmessage['generic_delete_confirm'],htmlspecialchars($file));
-			echo \gp\tool::Link('Admin/Extra',$langmessage['delete'],'cmd=delete&file='.$file,array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
+			echo \gp\tool::Link('Admin/Extra',$langmessage['delete'],'cmd=DeleteArea&file='.$file,array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
 			echo '</td></tr>';
 			$i++;
 		}
 
 		echo '</table>';
 
+		$this->NewExtraForm();
+	}
+
+
+	/**
+	 * Display form for defining a new extra edit area
+	 *
+	 */
+	public function NewExtraForm(){
+		global $langmessage;
+
+		$types = \gp\tool\Output\Sections::GetTypes();
 		echo '<p>';
 		echo '<form action="'.\gp\tool::GetUrl('Admin/Extra').'" method="post">';
-		echo '<input type="hidden" name="cmd" value="new_section" />';
-		echo '<input type="text" name="file" value="" size="15" class="gpinput"/> ';
+		echo '<input type="hidden" name="cmd" value="NewSection" />';
+		echo '<input type="text" name="file" value="" size="15" class="gpinput" required/> ';
 		echo '<select name="type" class="gpselect">';
 		foreach($types as $type => $info){
 			echo '<option value="'.$type.'">'.$info['label'].'</option>';
 		}
 		echo '</select> ';
-		echo '<input type="submit" name="" value="'.$langmessage['Add New Area'].'" class="gppost gpsubmit"/>';
+		echo '<input type="submit" name="" value="'.$langmessage['Add New Area'].'" class="gpsubmit gpvalidate" data-cmd="gppost"/>';
 		echo '</form>';
 		echo '</p>';
-
 	}
 
 
@@ -222,17 +216,16 @@ class Extra{
 			return false;
 		}
 
-		$data = \gp\tool\Editing::DefaultContent($_POST['type']);
 		$file = $this->folder.'/'.$title.'.php';
 
-		$data['created'] = time();
+		$data				= \gp\tool\Editing::DefaultContent($_POST['type']);
+		$data['created']	= time();
 		$data['created_by'] = $gpAdmin['username'];
 
-		if( !\gp\tool\Files::SaveData($file,'extra_content',$data) ){
-			message($langmessage['OOPS']);
-			$this->EditExtra();
+		if( !$this->SaveExtra( $file, $data ) ){
 			return false;
 		}
+
 		message($langmessage['SAVED']);
 		$this->Getdata();
 	}
@@ -250,8 +243,10 @@ class Extra{
 		echo \gp\tool::Link('Admin/Extra',$langmessage['theme_content']);
 		echo ' &#187; '.str_replace('_',' ',$file).'</h2>';
 		echo '</h2>';
+		echo '<hr/>';
 
 		\gp\tool\Output::GetExtra($file);
+		echo '<hr/>';
 	}
 
 	public function GalleryImages(){
@@ -264,7 +259,7 @@ class Extra{
 			$dir_piece = '/image';
 		}
 		//remember browse directory
-		$this->meta_data['gallery_dir'] = $dir_piece;
+		//$this->meta_data['gallery_dir'] = $dir_piece;
 
 		\gp\admin\Content\Uploaded::InlineList($dir_piece);
 	}
@@ -274,7 +269,7 @@ class Extra{
 	 * Perform various section editing commands
 	 *
 	 */
-	public function SectionEdit($cmd){
+	public function SectionEdit(){
 		global $page, $langmessage;
 
 		if( empty($_REQUEST['file']) ){
@@ -284,8 +279,9 @@ class Extra{
 
 		$page->ajaxReplace = array();
 
-		$file = \gp\tool\Editing::CleanTitle($_REQUEST['file']);
-		$data = \gp\tool\Output::ExtraContent( $file, $file_stats );
+		$cmd	= \gp\tool::GetCommand();
+		$file	= \gp\tool\Editing::CleanTitle($_REQUEST['file']);
+		$data	= \gp\tool\Output::ExtraContent( $file, $file_stats );
 
 		$page->file_sections = array( $data ); //hack so the SaveSection filter works
 		$page->file_stats = $file_stats;
@@ -295,8 +291,7 @@ class Extra{
 
 		//save the new content
 		$file_full = $this->folder.'/'.$file.'.php';
-		if( !\gp\tool\Files::SaveData( $file_full, 'extra_content', $data ) ){
-			message($langmessage['OOPS']);
+		if( !$this->SaveExtra( $file_full, $data ) ){
 			$this->EditExtra();
 			return false;
 		}
@@ -307,7 +302,18 @@ class Extra{
 		$this->areas[$file] = $file;
 		$this->EditExtra();
 		return true;
+	}
 
+
+	public function SaveExtra( $file_full, $data){
+		global $langmessage;
+
+		if( !\gp\tool\Files::SaveData( $file_full, 'extra_content', $data ) ){
+			message($langmessage['OOPS']);
+			return false;
+		}
+
+		return true;
 	}
 
 }

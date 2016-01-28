@@ -151,6 +151,7 @@ namespace gp\admin{
 
 
 			$scripts['Admin/Extra']						= array(	'class'		=> '\gp\admin\Content\Extra',
+																	'method'	=> 'RunScript',
 																	'label'		=> $langmessage['theme_content'],
 																	'group'		=> 'content',
 																	);

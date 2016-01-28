@@ -896,8 +896,8 @@ namespace gp\tool{
 		public static function GetExtra($name='Side_Menu',$info=array()){
 			global $dataDir,$langmessage;
 
-			$name = str_replace(' ','_',$name);
-			$extra_content = self::ExtraContent( $name, $file_stats );
+			$name			= str_replace(' ','_',$name);
+			$extra_content	= self::ExtraContent( $name, $file_stats );
 
 			$wrap = self::ShowEditLink('Admin_Extra');
 			if( $wrap ){
@@ -910,7 +910,6 @@ namespace gp\tool{
 				echo '</span>';
 				self::$editlinks .= ob_get_clean();
 
-				//echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'" data-gp-editarea="'.$edit_index.'">'; // class="edit_area" added by javascript
 				echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'">';
 				echo \gp\tool\Output\Sections::RenderSection($extra_content,0,'',$file_stats);
 				echo '</div>';

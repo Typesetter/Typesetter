@@ -12,8 +12,8 @@ class Image extends \gp\admin\Layout\Edit{
 
 		// inline editing images
 		$this->cmds['InlineEdit']		= '';	//added to in js
-		$this->cmds['gallery_folder']	= array('GalleryImages','return');
-		$this->cmds['gallery_images']	= array('GalleryImages','return');
+		$this->cmds['gallery_folder']	= 'GalleryImages';
+		$this->cmds['gallery_images']	= 'GalleryImages';
 		$this->cmds['save_inline']		= 'SaveHeaderImage';
 		$this->cmds['image_editor']		= '\\gp\\tool\\Editing::ImageEditor';
 	}

@@ -342,17 +342,19 @@ gp_editing = {
 	 *
 	 */
 	$(window).on('beforeunload',function(){
-		if( !gp_editor ){
-			return;
-		}
-		if( typeof(gp_editor.checkDirty) === 'undefined' ){
-			return;
+
+		//check cached editors
+		for(i in $gp.editors){
+			if( typeof($gp.editors[i].checkDirty) !== 'undefined' && $gp.editors[i].checkDirty() ){
+				return 'Unsaved changes will be lost.';
+			}
 		}
 
-		if( gp_editor.checkDirty() ){
+		//check current editor
+		if( typeof(gp_editor.checkDirty) !== 'undefined' && gp_editor.checkDirty() ){
 			return 'Unsaved changes will be lost.';
 		}
-		return;
+
 	});
 
 
@@ -388,10 +390,10 @@ gp_editing = {
 	// auto save
 	window.setInterval(function(){
 
-		var area		= $gp.CurrentDiv();
-		if( typeof(area.data('gp-section')) == 'undefined' ){
-			return;
-		}
+		//var area		= $gp.CurrentDiv();
+		//if( typeof(area.data('gp-section')) == 'undefined' ){
+		//	return;
+		//}
 
 
 		if( typeof(gp_editor.CanAutoSave) == 'function' && !gp_editor.CanAutoSave() ){

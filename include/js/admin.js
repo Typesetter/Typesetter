@@ -1074,7 +1074,6 @@ $(function(){
 		 *
 		 */
 		function ShowableMenu(evt){
-			console.log('showable menu?');
 
 			if( evt.ctrlKey || evt.altKey || evt.shiftKey ){
 				return;

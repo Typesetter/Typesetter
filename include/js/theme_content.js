@@ -3,6 +3,7 @@ $(function(){
 	LayoutSetup();
 	CssSetup();
 
+
 	/**
 	 * Resizeable editor
 	 *
@@ -12,6 +13,9 @@ $(function(){
 		minWidth : 172,
 		resize : function(event, ui) {
 			$("#gp_iframe_wrap").css( "left", ui.size.width );
+
+			gpui.thw = ui.size.width;
+			$gp.SaveGPUI();
 		}
 	});
 

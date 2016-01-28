@@ -671,6 +671,7 @@ namespace gp\tool{
 							'gpui_ckx'		=> 20,
 							'gpui_cky'		=> 240,
 							'gpui_vis'		=> 'cur',
+							'gpui_thw'		=> 250,
 							);
 		}
 
@@ -909,8 +910,7 @@ namespace gp\tool{
 			$possible['gpui_ty']	= 'integer';
 			$possible['gpui_ckx']	= 'integer';
 			$possible['gpui_cky']	= 'integer';
-
-			$possible['gpui_ctx']	= array('enabled'=>'enabled','disabled'=>'disabled');
+			$possible['gpui_thw']	= 'integer';
 
 			foreach($possible as $key => $key_possible){
 
@@ -936,6 +936,7 @@ namespace gp\tool{
 				$gpAdmin[$key] = $value;
 			}
 
+
 			//remove gpui_ settings no longer in $possible
 			unset($gpAdmin['gpui_pdock']);
 			unset($gpAdmin['gpui_con']);
@@ -947,6 +948,7 @@ namespace gp\tool{
 			unset($gpAdmin['gpui_use']);
 			unset($gpAdmin['gpui_edb']);
 			unset($gpAdmin['gpui_brdis']);//3.5
+			unset($gpAdmin['gpui_ctx']);//5.0
 		}
 
 		/**
@@ -956,32 +958,27 @@ namespace gp\tool{
 		public static function GPUIVars(){
 			global $gpAdmin, $page, $config;
 
+			$defaults	= self::gpui_defaults();
+			$js			= array();
 
-			echo 'var gpui={';
-			echo 'cmpct:'.(int)$gpAdmin['gpui_cmpct'];
+			foreach($defaults as $key => $value){
+				if( isset($gpAdmin[$key]) ){
+					$value = $gpAdmin[$key];
+				}
+				$renamed_key		= substr($key,5);
+				$js[$renamed_key]	= $value;
+			}
 
-			//the following control which admin toolbar areas are expanded
-			echo ',vis:"'.$gpAdmin['gpui_vis'].'"';
-
-			//toolbar location
-			echo ',tx:'. $gpAdmin['gpui_tx']; //20
-			echo ',ty:'. $gpAdmin['gpui_ty']; //10
-
-			//#ckeditor_area
-			echo ',ckx:'. max(5,$gpAdmin['gpui_ckx']);
-			echo ',cky:'. max(0,$gpAdmin['gpui_cky']);
 
 			//default layout (admin layout)
 			if( $page->gpLayout && $page->gpLayout == $config['gpLayout'] ){
-				echo ',dlayout:true';
+				$js['dlayout'] = true;
 			}else{
-				echo ',dlayout:false';
+				$js['dlayout'] = false;
 			}
 
-			//context menu
-			echo ',ctx:'.( isset($gpAdmin['gpui_ctx']) && $gpAdmin['gpui_ctx'] == 'disabled' ? 'false' : 'true' ); // disabled browser context menu
 
-			echo '};';
+			echo 'var gpui='.json_encode($js).';';
 		}
 
 

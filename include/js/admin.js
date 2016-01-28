@@ -1051,21 +1051,6 @@ $(function(){
 
 
 		/**
-		 * Right Click to show menu
-		 *
-		 */
-		$gp.$doc.on('contextmenu','.editable_area, #gp_edit_overlay',function(evt){
-
-			if( ShowableMenu(evt) && !gpui.ctx ){
-					evt.preventDefault();
-					ShowMenu();
-					MenuPos(evt);
-			}
-
-		});
-
-
-		/**
 		 * Position link at cursor
 		 *
 		 */

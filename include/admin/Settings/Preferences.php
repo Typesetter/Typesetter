@@ -7,10 +7,9 @@ namespace gp\admin\Settings{
 	class Preferences extends \gp\admin\Settings\Users{
 
 		public $username;
-		public $variables;
 
 		public function __construct(){
-			global $gpAdmin,$langmessage,$page;
+			global $gpAdmin, $langmessage, $page;
 
 			//only need to return messages if it's ajax request
 			$page->ajaxReplace = array();
@@ -27,10 +26,6 @@ namespace gp\admin\Settings{
 			$cmd					= \gp\tool::GetCommand();
 
 
-			$this->variables			= array(
-				'gpui_ctx'			=> array('enabled'=>$langmessage['enabled'],'disabled'=>$langmessage['disabled'])
-			);
-
 			switch($cmd){
 				case 'changeprefs':
 					$this->DoChange();
@@ -46,8 +41,6 @@ namespace gp\admin\Settings{
 
 			$this->ChangeEmail();
 			$this->ChangePass();
-
-			\gp\tool\Session::SetGPUI();
 
 			$this->SaveUserFile();
 		}
@@ -121,8 +114,6 @@ namespace gp\admin\Settings{
 				$array = $_POST;
 			}else{
 				$array = $this->user_info + $gpAdmin;
-				$array += array('gpui_ctx' => 'enabled' );
-
 			}
 			$array += array('email'=>'');
 
@@ -138,13 +129,6 @@ namespace gp\admin\Settings{
 			echo $langmessage['email_address'];
 			echo '</td><td>';
 			echo '<input type="text" name="email" value="'.htmlspecialchars($array['email']).'" class="gpinput"/>';
-			echo '</td></tr>';
-
-			//context menu
-			echo '<tr><td>';
-			echo $langmessage['context menu'];
-			echo '</td><td>';
-			\gp\admin\Configuration::formSelect('gpui_ctx',$this->variables['gpui_ctx'],$array['gpui_ctx']);
 			echo '</td></tr>';
 
 

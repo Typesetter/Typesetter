@@ -863,15 +863,25 @@ $(function(){
 			}
 
 			var new_area = $(this);
+
+			// don't show overlay
+			//	- for an area that is being edited
+			//	- if we've already shown it
+			if( new_area.hasClass('gp_no_overlay') || new_area.hasClass('gp_editing') ){
+				return;
+			}
+
 			if( new_area.parent().closest('.editable_area').length > 0 ){
 				e.stopPropagation();
 			}
 
+			//area han't changed, so just show the span
 			if( edit_area && new_area.attr('id') === edit_area.attr('id') ){
+				lnk_span.show();
 				return;
-			}else if( edit_area ){
-				rmNoOverlay(edit_area);
 			}
+
+			rmNoOverlay(edit_area);
 
 			edit_area = new_area;
 
@@ -892,10 +902,6 @@ $(function(){
 			if( !edit_area ){
 				return;
 			}
-
-			//if( edit_area.hasClass('gp_editing') ){
-			//	return;
-			//}
 			edit_area.removeClass('gp_no_overlay');
 		}
 
@@ -932,7 +938,14 @@ $(function(){
 		function HideOverlay(){
 
 			//hide links
-			overlay.find('span').stop(true,true).hide(500);
+			lnk_span
+				.stop(true,true)
+				.hide(500,function(){
+					ResetMenu();
+				});
+
+			fixed_pos = false;
+
 
 			//hide the box
 			var box = overlay.find('div');
@@ -946,17 +959,6 @@ $(function(){
 		 */
 		function AreaOverlay(edit_area){
 			var id,loc,width;
-
-			//if( typeof(gp_editing) !== 'undefined' ){
-			//	return;
-			//}
-
-			//don't show overlay
-			//	- for an area that is being edited
-			//	- if we've already shown it
-			if( edit_area.hasClass('gp_no_overlay') || edit_area.hasClass('gp_editing') ){
-				return;
-			}
 
 			id = edit_area.attr('id');
 			if( !id ){
@@ -994,11 +996,23 @@ $(function(){
 			edit_links = edit_links.clone(true)
 				.removeClass('ExtraEditLink');
 
+			//
+			lnk_span.html('<a class="gp_overlay_expand fa fa-pencil"></a>')
+				.append(edit_links);
+
+
+			ResetMenu();
+		}
+
+		/**
+		 * Reset Context Menu
+		 *
+		 */
+		function ResetMenu(){
 			fixed_pos = false;
 			lnk_span
 				.css({'left':'auto','top':0,'right':0,'position':'absolute'})
-				.html('<a class="gp_overlay_expand fa fa-pencil"></a>')
-				.append(edit_links)
+				.removeClass('gp_hover')
 				.unbind('mouseenter touchstart')
 				.one('mouseenter touchstart',function(){
 					if( edit_area.hasClass('gp_no_overlay') ){
@@ -1006,7 +1020,6 @@ $(function(){
 					}
 					ShowMenu();
 				});
-
 		}
 
 		/**
@@ -1076,8 +1089,11 @@ $(function(){
 		 *
 		 */
 		function ShowableMenu(evt){
+			console.log('showable menu?');
 
-			if( evt.ctrlKey || evt.altKey || evt.shiftKey ) return; // || gp_editor
+			if( evt.ctrlKey || evt.altKey || evt.shiftKey ){
+				return;
+			}
 
 			if( !edit_area || edit_area.hasClass('gp_editing') || edit_area.hasClass('gp_no_overlay') || !lnk_span ){
 				return;

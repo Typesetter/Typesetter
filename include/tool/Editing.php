@@ -1163,7 +1163,7 @@ namespace gp\tool{
 
 			}
 
-			msg($langmessage['OOPS'].'(Uknown Command)');
+			msg($langmessage['OOPS'].' (Unknown Command)');
 			return false;
 		}
 

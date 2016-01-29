@@ -554,7 +554,7 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public function SectionEdit(){
-		global $langmessage;
+		global $langmessage, $page;
 
 		$section_num = $_REQUEST['section'];
 		if( !is_numeric($section_num) || !isset($this->file_sections[$section_num])){
@@ -562,7 +562,7 @@ class Edit extends \gp\Page{
 			return false;
 		}
 
-		$this->ajaxReplace = array();
+		$page->ajaxReplace = array();
 
 		$cmd = \gp\tool::GetCommand();
 
@@ -572,11 +572,11 @@ class Edit extends \gp\Page{
 
 		//save if the file was changed
 		if( !$this->SaveThis() ){
-			msg($langmessage['OOPS'].'(3)');
+			msg($langmessage['OOPS'].' (SE3)');
 			return false;
 		}
 
-		$this->ajaxReplace[] = array('ck_saved','','');
+		$page->ajaxReplace[] = array('ck_saved','','');
 
 
 		//update gallery information
@@ -759,7 +759,6 @@ class Edit extends \gp\Page{
 		if( $backup ){
 			$this->SaveBackup(); //make a backup of the page file
 		}
-
 
 		if( !\gp\tool\Files::SaveData($this->draft_file,'file_sections',$this->file_sections,$this->meta_data) ){
 			return false;

@@ -911,10 +911,12 @@ namespace gp\tool{
 				self::$editlinks .= ob_get_clean();
 
 				echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'">';
-				echo \gp\tool\Output\Sections::RenderSection($extra_content,0,'',$file_stats);
+				echo \gp\tool\Output\Sections::RenderSection($extra_content[0],0,'',$file_stats);
 				echo '</div>';
 			}else{
-				echo \gp\tool\Output\Sections::RenderSection($extra_content,0,'',$file_stats);
+				echo '<div>';
+				echo \gp\tool\Output\Sections::RenderSection($extra_content[0],0,'',$file_stats);
+				echo '</div>';
 			}
 
 		}
@@ -926,21 +928,33 @@ namespace gp\tool{
 		 */
 		public static function ExtraContent( $title, &$file_stats = array() ){
 
-			$file = '_extra/'.$title;
+			//draft?
+			$draft_file = '_extra/'.$title.'/draft';
+			if( \gp\tool::LoggedIn() && \gp\tool\Files::Exists($draft_file) ){
+				return \gp\tool\Files::Get($draft_file,'file_sections');
+			}
 
-			$extra_content = array();
+			//new location
+			$file = '_extra/'.$title.'/page';
+			if( \gp\tool\Files::Exists($file) ){
+				return \gp\tool\Files::Get($file,'file_sections');
+			}
+
+			$file = '_extra/'.$title;
+			$extra_section = array();
 			if( \gp\tool\Files::Exists($file) ){
 
 				ob_start();
-				$extra_content = \gp\tool\Files::Get($file,'extra_content');
-				$extra_content_string = ob_get_clean();
+				$extra_section = \gp\tool\Files::Get($file,'extra_content');
+				$extra_section_string = ob_get_clean();
 
-				if( !count($extra_content) ){
-					$extra_content['content'] = $extra_content_string;
+				if( !count($extra_section) ){
+					$extra_section['content'] = $extra_section_string;
 				}
 			}
 
-			return $extra_content + array('type'=>'text','content'=>'');
+			$extra_section 	+= array('type'=>'text','content'=>'');
+			return array($extra_section);
 		}
 
 		public static function GetImage($src,$attributes = array()){

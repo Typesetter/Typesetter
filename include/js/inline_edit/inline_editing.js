@@ -233,10 +233,11 @@ gp_editing = {
 
 
 		//tabs
-		var $edit_area	= $gp.CurrentDiv();
-		var $tabs		= $('#ckeditor_tabs').html('');
+		var $edit_area		= $gp.CurrentDiv();
+		var $tabs			= $('#ckeditor_tabs').html('');
+		var extra_mode		= gp_editing.IsExtraMode();
 
-		if( gp_editing.IsExtraMode() ){
+		if( extra_mode ){
 			$('#ckeditor_wrap').addClass('edit_mode_extra');
 			$tabs.append('<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" data-arg="manage_sections">'+gplang.Extra+'</a>');
 		}else{
@@ -248,7 +249,11 @@ gp_editing = {
 		if( $edit_area.length != 0 ){
 			var label		= gp_editing.SectionLabel($edit_area);
 			$('<a>').text(label).appendTo( $tabs );
+			$('#ckeditor_save').show();
+		}else if( extra_mode ){
+			$('#ckeditor_save').hide();
 		}
+
 	},
 
 

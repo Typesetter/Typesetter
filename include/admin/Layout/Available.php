@@ -368,7 +368,8 @@ class Available extends \gp\admin\Layout{
 		$page->show_admin_content = false;
 		$page->get_theme_css = false;
 
-		$page->head_js[] = '/include/js/auto_width.js';
+		$page->head_js[]	= '/include/js/auto_width.js';
+		$page->head_js[]	= '/include/js/theme_content_outer.js';
 
 
 		ob_start();

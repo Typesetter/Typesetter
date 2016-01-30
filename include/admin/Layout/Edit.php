@@ -107,9 +107,9 @@ class Edit extends \gp\admin\Layout{
 		$layout_info = \gp\tool::LayoutInfo($this->curr_layout,false);
 		$page->label = $langmessage['layouts'] . ' » '.$layout_info['label'];
 
-		ob_start();
+		//ob_start();
 		$this->LayoutEditor($this->curr_layout, $layout_info );
-		$page->admin_html = ob_get_clean();
+		//$page->admin_html = ob_get_clean();
 	}
 
 
@@ -144,23 +144,31 @@ class Edit extends \gp\admin\Layout{
 
 
 		$_REQUEST					+= array('gpreq' => 'body'); //force showing only the body as a complete html document
-		$page->show_admin_content	= false;
+		//$page->show_admin_content	= false;
 		$page->get_theme_css		= false;
 
 		$page->css_user[]	= '/include/thirdparty/codemirror/lib/codemirror.css';
 		$page->head_js[]	= '/include/thirdparty/codemirror/lib/codemirror.js';
 		$page->head_js[]	= '/include/thirdparty/codemirror/mode/css/css.js';
 
+		$page->css_admin[]	= '/include/css/theme_content_outer.scss';
+		$page->head_js[]	= '/include/js/theme_content_outer.js';
 
+
+		echo '<div id="gp_iframe_wrap">';
+		$url = \gp\tool::GetUrl('Admin_Theme_Content/Edit/'.rawurlencode($layout),'cmd=in_iframe');
+		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe" scrolling="no"></iframe>';
+		echo '</div>';
+
+		ob_start();
 		echo '<div id="theme_editor">';
-		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Edit/'.$this->curr_layout,'cmd=in_iframe').'" method="post" class="full_height" target="gp_layout_iframe">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Edit/'.$this->curr_layout,'cmd=in_iframe').'" method="post" class="gp_scroll_area" target="gp_layout_iframe">';
 		echo '<table border="0">';
 		echo '<tr><td>';
 
 
 
 		echo '<div>';
-		echo \gp\tool::Link('Admin_Theme_Content','&#171; '.$langmessage['layouts']);
 		echo '<div class="layout_select">';
 		$this->LayoutSelect($layout,$layout_info);
 		echo '</div>';
@@ -204,11 +212,14 @@ class Edit extends \gp\admin\Layout{
 
 
 		//save button
-		echo '</div></td></tr><tr><td><div>';
+		echo '</div></td></tr><tr><td><div style="text-align:right">';
+
 
 		echo ' <button name="cmd" type="submit" value="PreviewCSS" class="gpsubmit" data-cmd="preview_css" />'.$langmessage['preview'].'</button>';
 		echo ' <button name="cmd" type="submit" value="SaveCSS" class="gpsubmit" data-cmd="reset_css" />'.$langmessage['save'].'</button>';
 		//echo ' <input type="reset" class="gpsubmit" data-cmd="reset_css" />';
+		echo \gp\tool::Link('Admin_Theme_Content',$langmessage['cancel'],'','class="gpsubmit"');
+
 
 
 		echo '</div></td></tr>';
@@ -217,12 +228,10 @@ class Edit extends \gp\admin\Layout{
 
 
 		//show site in iframe
-		echo '<div id="gp_iframe_wrap">';
-		$url = \gp\tool::GetUrl('Admin_Theme_Content/Edit/'.rawurlencode($layout),'cmd=in_iframe');
-		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';
 
-		echo '</div>';
 		echo '</div>'; //#theme_editor
+
+		$page->admin_html = ob_get_clean();
 	}
 
 

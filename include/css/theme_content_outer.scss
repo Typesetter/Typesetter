@@ -1,0 +1,176 @@
+@import 'mixins.scss';
+@import 'include/thirdparty/Bootstrap3/scss/bootstrap/_mixins.scss';
+
+body{
+	padding:0;
+	margin:0;
+	}
+
+#gp_layout_iframe{
+	height:100%;
+	width:100%;
+	border:0 none;
+	overflow:hidden;
+	}
+
+
+/**
+ * Layout Editor
+ *
+ */
+#theme_editor{
+
+	position:fixed;
+	top:0;
+	right:0;
+	bottom:0;
+	width:250px;
+	@include gradient-vertical(#fafafa, #ededed);
+	border-left:1px solid #aaa;
+	background:#eee;
+
+
+	.gp_scroll_area{
+		overflow:visible;
+		}
+
+	.gp_scroll_area > div{
+		padding:10px;
+		}
+
+
+	table{
+		table-layout:fixed;
+		border-collapse:collapse;
+		padding:0;
+		margin:0;
+		border:0 none;
+		height:100%;
+		width:100%;
+	}
+	td{
+		padding:0;
+		height:0;
+		background:0 none;
+		width:100%;
+	}
+
+	form > div,
+	td > div{
+		padding:8px 10px 6px 10px;
+		position:relative;
+	}
+
+	.separator{
+		margin:0;
+		padding:0 !important;
+		border-bottom:1px solid #fff;
+		}
+
+	.separator:after{
+		content:"";
+		border-top:1px solid #ddd;
+		display:block;
+		position:relative;
+		bottom:0;
+		left:0;
+		right:0;
+		}
+
+	#gp_layout_css{
+		width:100% !important;
+		height:100%;
+		resize:none;
+		@include box-sizing(border-box);
+	}
+
+	#gp_layout_css.edited{
+		border-color:orange;
+	}
+
+	/*
+	#gp_iframe_wrap{
+		position:absolute;
+		top:0;
+		left:0;
+		bottom:0;
+		right:250px;
+		background:#fff;
+		z-index:-1;
+	}
+	*/
+
+
+	.dd_menu{
+		width:100%;
+		}
+
+	select{
+		width:228px;
+
+		background:#fff;
+		border-radius: 6px;
+		border:1px solid #ccc;
+		color:#333;
+		padding:4px 6px;
+		height:auto;
+		@include box-shadow( inset 0 0 1px rgba(0,0,0,0.2) );
+		@include box-sizing( border-box );
+		}
+
+	#gp_avail_themes{
+		margin:0;
+		}
+	#gp_avail_themes > div{
+		padding: 20px 0;
+		width:auto;
+		display:block;
+		}
+
+
+	.search_pages{
+		float:none;
+		}
+
+	.gp_search_options{
+		padding:10px 0;
+	}
+
+	.search_pages{
+		padding:10px 0;
+	}
+
+	.search_pages a,
+	.search_pages span{
+		padding:1px 5px 1px 0;
+	}
+
+	div.ui-resizable-w{
+		position:absolute !important;
+		background: url('../../include/imgs/drag_handle.gif')  50% 50% no-repeat;
+		padding:0;
+		left:0;
+		width:10px;
+		}
+
+	.ui-resizable-resizing div.ui-resizable-w{
+		left:-500px;
+		padding:0 500px;
+	}
+}
+
+
+#gp_admin_html .CodeMirror{
+
+	border:1px solid #ccc;
+	border-radius: 3px;
+	width:auto!important;
+
+	pre{
+		background:none;
+		border:0 none;
+		padding:0 4px;
+		margin:0;
+		white-space:pre;
+	}
+}

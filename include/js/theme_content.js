@@ -4,25 +4,6 @@ $(function(){
 	CssSetup();
 
 
-	var width		= Math.min(gpui.thw, $gp.$win.width() - 50);
-	console.log('width',width);
-	$('#gp_iframe_wrap').css( 'left', width );
-	$('#theme_editor form').css( 'width', width );
-
-	/**
-	 * Resizeable editor
-	 *
-	 */
-	$('#theme_editor form').resizable({
-		handles : 'e',
-		minWidth : 172,
-		resize : function(event, ui) {
-			$('#gp_iframe_wrap').css( 'left', ui.size.width );
-
-			gpui.thw = ui.size.width;
-			$gp.SaveGPUI();
-		}
-	});
 
 
 	/**
@@ -226,6 +207,11 @@ $(function(){
 			return;
 		}
 
+		window.setInterval(function(){
+
+
+		},200);
+
 
 		//disable editable areas, there could be conflicts with the layout toolbar and content toolbars
 		$('a.ExtraEditLink').detach();
@@ -257,7 +243,7 @@ $(function(){
 				.appendTo(drag_area)
 				.append(lnks) //.output_area_link
 				.fadeTo('fast',.5)
-				.height(loc.h-3).width(loc.w-3)
+				.height(loc.h-3).width(loc.w-6)
 				.on('gp_position',function(){
 
 					var loc = $gp.Coords($this);

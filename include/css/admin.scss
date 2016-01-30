@@ -290,10 +290,15 @@
 
 #admincontent_panel{
 	display: block;
-	padding: 0 40px 0 (40px - $gp_nav_link_padding_x);
+	padding: 0;
 	font-weight: normal;
 	background: $gp_panel_bg;
 	}
+
+.gpbody #admincontent_panel{
+	padding: 0 40px 0 (40px - $gp_nav_link_padding_x);
+	}
+
 #admincontent_panel,
 #admincontent_panel *{
 	@include box-sizing( border-box );
@@ -324,15 +329,18 @@
 	white-space: nowrap;
 	}
 
+
+/* #admincontent_panel b, */
 #admincontent_panel span,
-#admincontent_panel a,
-#admincontent_panel b{
+#admincontent_panel a{
 	padding: $gp_nav_link_padding_y $gp_nav_link_padding_x;
 	}
 
 #admincontent_panel a:hover{
 	color: $gp_nav_link_color_hover !important;
+	background: lighten($gp_panel_bg,10%);
 	}
+
 #admincontent_panel span > .fa,
 #admincontent_panel a > .fa{
 	margin-right: 4px;
@@ -349,6 +357,19 @@
 	display: block;
 	}
 
+#admincontent_panel .panel_tab_label{
+	padding-right:8px;
+	}
+#admincontent_panel .panel_tabs a{
+	border-right:1px solid lighten($gp_panel_bg,10%);
+	border-left:1px solid lighten($gp_panel_bg,10%);;
+	font-weight:normal;
+	}
+
+/**
+ * Search
+ *
+ */
 #panel_search{
 	float: right;
 }

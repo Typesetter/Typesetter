@@ -6,7 +6,6 @@ $(function(){
 	 *
 	 */
 	var iframe	= document.getElementById('gp_layout_iframe');
-	console.log('iframe height',iframe.contentWindow.document.body.offsetHeight);
 	if( iframe ){
 		var $wrap	= $('#gp_iframe_wrap');
 		window.setInterval(function(){

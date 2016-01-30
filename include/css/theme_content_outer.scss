@@ -29,6 +29,10 @@ body{
 	border-left:1px solid #aaa;
 	background:#eee;
 
+	.full_height{
+		height:100%;
+		@include box-sizing(border-box);
+		}
 
 	.gp_scroll_area{
 		overflow:visible;
@@ -153,7 +157,7 @@ body{
 		width:10px;
 		}
 
-	.ui-resizable-resizing div.ui-resizable-w{
+	&.ui-resizable-resizing div.ui-resizable-w{
 		left:-500px;
 		padding:0 500px;
 	}

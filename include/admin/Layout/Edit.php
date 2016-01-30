@@ -155,14 +155,17 @@ class Edit extends \gp\admin\Layout{
 		$page->head_js[]	= '/include/js/theme_content_outer.js';
 
 
+		//Iframe
 		echo '<div id="gp_iframe_wrap">';
 		$url = \gp\tool::GetUrl('Admin_Theme_Content/Edit/'.rawurlencode($layout),'cmd=in_iframe');
 		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe" scrolling="no"></iframe>';
 		echo '</div>';
 
+
+		//CSS Editing
 		ob_start();
 		echo '<div id="theme_editor">';
-		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Edit/'.$this->curr_layout,'cmd=in_iframe').'" method="post" class="gp_scroll_area" target="gp_layout_iframe">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Edit/'.$this->curr_layout,'cmd=in_iframe').'" method="post" class="gp_scroll_area full_height" target="gp_layout_iframe">';
 		echo '<table border="0">';
 		echo '<tr><td>';
 
@@ -218,7 +221,14 @@ class Edit extends \gp\admin\Layout{
 		echo ' <button name="cmd" type="submit" value="PreviewCSS" class="gpsubmit" data-cmd="preview_css" />'.$langmessage['preview'].'</button>';
 		echo ' <button name="cmd" type="submit" value="SaveCSS" class="gpsubmit" data-cmd="reset_css" />'.$langmessage['save'].'</button>';
 		//echo ' <input type="reset" class="gpsubmit" data-cmd="reset_css" />';
-		echo \gp\tool::Link('Admin_Theme_Content',$langmessage['cancel'],'','class="gpsubmit"');
+
+
+		//cancel
+		if( !empty($_REQUEST['redir']) ){
+			echo \gp\tool::Link($_REQUEST['redir'],$langmessage['cancel'],'','class="gpsubmit"');
+		}else{
+			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['cancel'],'','class="gpsubmit"');
+		}
 
 
 

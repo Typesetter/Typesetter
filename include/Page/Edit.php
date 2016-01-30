@@ -83,27 +83,27 @@ class Edit extends \gp\Page{
 		if( $this->permission_edit ){
 
 			/* gallery/image editing */
-			$this->cmds['gallery_folder']		= 'GalleryImages';
-			$this->cmds['gallery_images']		= 'GalleryImages';
-			$this->cmds['image_editor']			= '\\gp\\tool\\Editing::ImageEditor';
-			$this->cmds['new_dir']				= '\\gp\\tool\\Editing::NewDirForm';
+			$this->cmds['Gallery_Folder']		= 'GalleryImages';
+			$this->cmds['Gallery_Images']		= 'GalleryImages';
+			$this->cmds['Image_Editor']			= '\\gp\\tool\\Editing::ImageEditor';
+			$this->cmds['New_Dir']				= '\\gp\\tool\\Editing::NewDirForm';
 
 
-			$this->cmds['managesections']		= '';
-			$this->cmds['savesections']			= '';
-			$this->cmds['viewrevision']			= '';
-			$this->cmds['userevision']			= 'DefaultDisplay';
-			$this->cmds['viewhistory']			= '';
-			$this->cmds['viewcurrent']			= '';
-			$this->cmds['deleterevision']		= 'ViewHistory';
-			$this->cmds['publishdraft']			= 'DefaultDisplay';
+			$this->cmds['ManageSections']		= '';
+			$this->cmds['SaveSections']			= '';
+			$this->cmds['ViewRevision']			= '';
+			$this->cmds['UseRevision']			= 'DefaultDisplay';
+			$this->cmds['ViewHistory']			= '';
+			$this->cmds['ViewCurrent']			= '';
+			$this->cmds['DeleteRevision']		= 'ViewHistory';
+			$this->cmds['PublishDraft']			= 'DefaultDisplay';
 
 
 			/* inline editing */
-			$this->cmds['save']					= 'SectionEdit';
-			$this->cmds['save_inline']			= 'SectionEdit';
-			$this->cmds['preview']				= 'SectionEdit';
-			$this->cmds['include_dialog']		= 'SectionEdit';
+			$this->cmds['Save']					= 'SectionEdit';
+			$this->cmds['Save_Inline']			= 'SectionEdit';
+			$this->cmds['Preview']				= 'SectionEdit';
+			$this->cmds['Include_Dialog']		= 'SectionEdit';
 			$this->cmds['InlineEdit']			= 'SectionEdit';
 
 		}
@@ -290,9 +290,7 @@ class Edit extends \gp\Page{
 
 		//output links
 		ob_start();
-		$style = '';
-		if( $page->pagetype == 'display' ){
-			$style = 'display:none';
+		if( empty($_REQUEST['mode']) ){
 			echo '<div id="section_sorting_wrap" class="inline_edit_area">';
 			echo '<ul id="section_sorting" class="section_drag_area" title="Organize"></ul>';
 			echo '<div>'.$langmessage['add'].'</div>';
@@ -300,10 +298,9 @@ class Edit extends \gp\Page{
 			self::NewSections();
 			echo '</div>';
 			echo '</div>';
+		}else{
+			echo '<div id="ck_editable_areas" class="inline_edit_area">';
 		}
-
-
-		echo '<div id="ck_editable_areas" class="inline_edit_area" style="'.$style.'">';
 		echo '<ul></ul>';
 		echo '</div>';
 
@@ -318,6 +315,12 @@ class Edit extends \gp\Page{
 
 
 		$scripts[]				= array('object'=>'gp_editing','file'=>'/include/js/inline_edit/inline_editing.js');
+
+
+		if( empty($_REQUEST['mode']) ){
+			$scripts[]			= array('object'=>'gp_editing','code'=>'gp_editing.is_extra_mode = false;');
+		}
+
 		$scripts[]				= array('file'=>'/include/js/inline_edit/manage_sections.js');
 
 		\gp\tool\Output\Ajax::SendScripts($scripts);

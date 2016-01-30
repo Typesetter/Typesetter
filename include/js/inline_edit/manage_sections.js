@@ -118,6 +118,8 @@
 		 */
 		InitEditor: function(){
 
+			//$mode =
+
 			$('#ckeditor_top').append(section_types);
 			this.InitSorting();
 			this.resetDirty();

@@ -496,7 +496,7 @@ namespace gp\admin{
 				echo '<b class="panel_tabs">';
 				echo \gp\tool::Link($page->title,$langmessage['Page'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
 				echo \gp\tool::Link('Admin_Theme_Content/Edit/'.urlencode($page->gpLayout),$langmessage['layout'],'redir='.rawurlencode($page->requested));
-				echo \gp\tool::Link($page->title,$langmessage['theme_content'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+				echo \gp\tool::Link($page->title,$langmessage['theme_content'],'cmd=ManageSections&mode=extra',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
 				echo '</div>';
 				echo '</b>';
 			}
@@ -758,48 +758,6 @@ namespace gp\admin{
 
 		}
 
-		/**
-		 * Output the html used for inline editor toolbars
-		 * @static
-		 */
-		public static function InlineEditArea(){
-			global $langmessage, $page;
-
-			//inline editor html
-			echo '<div id="ckeditor_wrap" class="nodisplay">';
-			echo '<a id="cktoggle" data-cmd="ToggleEditor"><i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-right"></i></a>';
-
-			echo '<div id="ckeditor_tabs">';
-			echo \gp\tool::Link($page->title,$langmessage['Page'],'cmd=ManageSections',array('data-cmd'=>'SwitchEditArea','data-arg'=>'#section_sorting_wrap'));
-			//if( $page->pagetype == 'display' ){
-			//	echo \gp\tool::Link($page->title,$langmessage['theme_content'],'cmd=ManageSections',array('data-cmd'=>'SwitchEditArea','data-arg'=>'#ck_editable_areas'));
-			//}
-
-			//echo '&nbsp;';
-			echo '</div>';
-
-			echo '<div id="ck_area_wrap">';
-			echo '<div id="ckeditor_area">';
-				echo '<div class="toolbar"></div>';
-				echo '<div class="tools">';
-				echo '<div id="ckeditor_top"></div>';
-				echo '<div id="ckeditor_controls"></div>';
-				echo '<div id="ckeditor_bottom"></div>';
-				echo '</div>';
-			echo '</div>';
-			echo '</div>';
-
-			echo '<div id="ckeditor_save">';
-			echo '<a data-cmd="ck_save" class="ckeditor_control ck_save">'.$langmessage['save'].'</a>';
-			echo '<span class="ck_saved">'.$langmessage['Saved'].'</span>';
-			echo '<span class="ck_saving">'.$langmessage['Saving'].'</span>';
-			echo '<a data-cmd="ck_close" class="ckeditor_control">'.$langmessage['Close'].'</a>';
-			echo '</div>';
-
-
-			echo '</div>';
-		}
-
 
 		/**
 		 * Get the links for the Frequently Used section of the admin toolbar
@@ -915,9 +873,6 @@ namespace gp\admin{
 			global $page, $gp_admin_html;
 
 			ob_start();
-
-
-			self::InlineEditArea();
 
 			echo '<div class="nodisplay" id="gp_hidden"></div>';
 

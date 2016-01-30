@@ -30,10 +30,11 @@ $gp.Coords = function(area){
  * Create a <div> in the #gp_admin_html space
  *
  */
-$gp.div = function(id){
+$gp.div = function(id,div_class){
 	var div = $('#'+id);
+	div_class = div_class || '';
 	if( div.length === 0 ){
-		div = $('<div id="'+id+'"></div>').appendTo('#gp_admin_html');
+		div = $('<div id="'+id+'" class="'+div_class+'"></div>').appendTo('#gp_admin_html');
 	}
 	return div;
 };
@@ -162,8 +163,7 @@ $gp.CacheInterface = function(callback){
 	//only continue if we can save
 	gp_editing.save_changes(function(){
 
-		var html							= $('#ck_area_wrap').html();
-		var $interface						= $('#ckeditor_area').detach();
+		var $interface						= $('#ck_area_wrap').children().detach();
 
 		if( typeof(gp_editor.sleep) == 'function' ){
 			gp_editor.sleep();
@@ -180,10 +180,7 @@ $gp.CacheInterface = function(callback){
 		$gp.CacheObjects( 'response' );
 
 
-
-		$('#ck_area_wrap').html( html );
 		$('.cktabs .ckeditor_control.selected').removeClass('selected');
-
 
 		callback.call();
 	});

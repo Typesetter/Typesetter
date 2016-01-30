@@ -3,6 +3,8 @@
 
 gp_editing = {
 
+	is_extra_mode:	null,
+
 	is_dirty:		false,	// true if we know gp_editor has been edited
 
 
@@ -150,10 +152,88 @@ gp_editing = {
 	 *
 	 */
 	editor_tools:function(){
-		$('#ckeditor_area .toolbar').html('');
-		$('#ckeditor_top').html('');
-		$('#ckeditor_bottom').html('');
+
+		var $ck_area_wrap = $('#ck_area_wrap');
+
+		//inline editor html
+		if( !$ck_area_wrap.length ){
+			var html = '<div id="ckeditor_wrap" class="nodisplay">';
+
+			html += '<a id="cktoggle" data-cmd="ToggleEditor"><i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-right"></i></a>';
+
+			html += '<div id="ckeditor_tabs">';
+
+			//which
+			if( gp_editing.IsExtraMode() ){
+				html += '<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" data-arg="manage_sections">'+gplang.Extra+'</a>';
+			}else{
+				html += '<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" data-arg="manage_sections">'+gplang.Page+'</a>';
+			}
+
+			//if( $page->pagetype == 'display' ){
+			//	echo \gp\tool::Link($page->title,$langmessage['theme_content'],'cmd=ManageSections',array('data-cmd'=>'SwitchEditArea','data-arg'=>'#ck_editable_areas'));
+			//}
+
+			html += '</div>';
+
+			html += '<div id="ck_area_wrap">';
+			html += '</div>';
+
+			html += '<div id="ckeditor_save">';
+			html += '<a data-cmd="ck_save" class="ckeditor_control ck_save">'+gplang.save+'</a>';
+			html += '<span class="ck_saved">'+gplang.Saved+'</span>';
+			html += '<span class="ck_saving">'+gplang.Saving+'</span>';
+			html += '<a data-cmd="ck_close" class="ckeditor_control">'+gplang.Close+'</a>';
+			html += '</div>';
+
+			html += '</div>';
+
+			console.log(html);
+
+			$('#gp_admin_html').append(html);
+
+			$ck_area_wrap = $('#ck_area_wrap');
+		}
+
+
+		//ck_area_wrap
+		var html = '<div id="ckeditor_area">';
+		html += '<div class="toolbar"></div>';
+		html += '<div class="tools">';
+		html += '<div id="ckeditor_top"></div>';
+		html += '<div id="ckeditor_controls"></div>';
+		html += '<div id="ckeditor_bottom"></div>';
+		html += '</div>';
+		html += '</div>';
+		$ck_area_wrap.html(html);
+
+
 		gp_editing.ShowEditor();
+	},
+
+
+	/**
+	 * Which edit mode? Page or Extra Content
+	 *
+	 */
+	IsExtraMode: function(){
+
+		if( gp_editing.is_extra_mode === null ){
+			gp_editing.is_extra_mode = gp_editing._IsExtraMode();
+		}
+
+		return gp_editing.is_extra_mode;
+	},
+
+	_IsExtraMode: function(){
+
+		var $edit_area = $gp.CurrentDiv();
+		if( typeof($edit_area.data('gp-section')) == 'undefined' ){
+
+			return true;
+		}
+
+		return false;
 	},
 
 
@@ -498,13 +578,15 @@ gp_editing = {
 	 */
 	$gp.$win.resize(function(){
 		var $ckeditor_area		= $('#ckeditor_area');
-		var maxHeight			= $gp.$win.height();
-		maxHeight				-= $ckeditor_area.position().top;
-		maxHeight				-= $('#ckeditor_save').outerHeight();
+		if( $ckeditor_area.length ){
+			var maxHeight			= $gp.$win.height();
+			maxHeight				-= $ckeditor_area.position().top;
+			maxHeight				-= $('#ckeditor_save').outerHeight();
 
-		$('#ckeditor_area').css({'max-height':maxHeight});
+			$('#ckeditor_area').css({'max-height':maxHeight});
 
-		AdjustForEditor();
+			AdjustForEditor();
+		}
 
 	}).resize();
 

@@ -32,7 +32,7 @@ html{
 	}
 
 
-#ckeditor_tabs a,
+#ck_label,
 #cktoggle{
 	height:29px;
 	line-height:29px;
@@ -54,20 +54,8 @@ html{
 	overflow:hidden;
 	}
 
-#ckeditor_tabs{
-	display:table;
-	width:100%;
-	}
-
-#ckeditor_tabs a{
-	display:table-cell;
-	padding:0 10px;
+#ck_label{
 	text-align:center;
-	color:#888 !important;
-	}
-
-#ckeditor_tabs a.selected{
-	color:#fff !important;
 	}
 
 /**

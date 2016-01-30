@@ -42,7 +42,7 @@
 
 				//new section order and new sections
 				var $this	= $(this);
-				var type	= mgr_object.TypeFromClass(this);
+				var type	= gp_editing.TypeFromClass(this);
 				var value	= $this.data('gp-section');
 
 				if( !type ){
@@ -185,29 +185,25 @@
 			var html = '';
 			var mgr_object	= this;
 
-			$container.children('.editable_area').each( function(i){
+			$container.children('.editable_area').each( function(){
 
-				var $this = $(this);
+				var $this	= $(this);
 
 				if( !this.id ){
 					this.id = mgr_object.GenerateId();
 				}
 
 
-				var type	= mgr_object.TypeFromClass(this);
+				var type	= gp_editing.TypeFromClass(this);
 
 				//label
-				var label	= $this.data('gp_label');
-				if( !label ){
-					label	= (i+1)+' '+mgr_object.ucfirst(type);
-				}
+				var label	= gp_editing.SectionLabel($this);
 
 				//color
 				var color	= $this.data('gp_color') || '#aabbcc';
-				var style	= '';
 
 				//collapsed
-				style	+= ' class="'+$this.data('gp_collapse')+'"';
+				var style	= ' class="'+$this.data('gp_collapse')+'"';
 
 
 				//classes
@@ -288,16 +284,6 @@
 
 
 		/**
-		 * Get the content type from the class name
-		 * todo: use regexp to find filetype-.*
-		 */
-		TypeFromClass: function(div){
-			var type = $(div).prop('class').substring(16);
-			return type.substring(0, type.indexOf(' '));
-		},
-
-
-		/**
 		 * Setup Hover Listenter
 		 *
 		 */
@@ -333,13 +319,6 @@
 			return $('#'+id);
 		},
 
-		/**
-		 * Capitalize the first letter of a string
-		 *
-		 */
-		ucfirst: function( str ){
-			return str.charAt(0).toUpperCase() + str.slice(1);
-		},
 
 		/**
 		 * Assign a new id to a section

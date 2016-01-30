@@ -153,10 +153,63 @@ gp_editing = {
 		$('#ckeditor_area .toolbar').html('');
 		$('#ckeditor_top').html('');
 		$('#ckeditor_bottom').html('');
-		$('#ckeditor_wrap').addClass('show_editor');
-		AdjustForEditor();
+		gp_editing.ShowEditor();
 		gp_editing.ResetTabs();
 	},
+
+
+	/**
+	 * Display the editing window and update the editor heading
+	 *
+	 */
+	ShowEditor: function(){
+		$('#ckeditor_wrap').addClass('show_editor');
+		AdjustForEditor();
+
+		var $edit_area	= $gp.CurrentDiv();
+		var label		= gp_editing.SectionLabel($edit_area);
+		$('#ck_label').text( label );
+	},
+
+
+	/**
+	 * Get a section label
+	 *
+	 */
+	SectionLabel: function($section){
+
+		if( $section.length == 0 ){
+			return 'Manage Sections';
+		}
+
+		var label	= $section.data('gp_label');
+		if( !label ){
+			var type	= gp_editing.TypeFromClass($section);
+			label	= gp_editing.ucfirst(type);
+		}
+
+		return label;
+	},
+
+
+	/**
+	 * Get the content type from the class name
+	 * todo: use regexp to find filetype-.*
+	 */
+	TypeFromClass: function(div){
+		var type = $(div).prop('class').substring(16);
+		return type.substring(0, type.indexOf(' '));
+	},
+
+
+	/**
+	 * Capitalize the first letter of a string
+	 *
+	 */
+	ucfirst: function( str ){
+		return str.charAt(0).toUpperCase() + str.slice(1);
+	},
+
 
 
 	/**
@@ -246,10 +299,7 @@ gp_editing = {
 		$gp.RestoreObjects( 'response', id);
 
 
-		if( id != 0 ){
-			$('#ckeditor_wrap').addClass('show_editor');
-		}
-		AdjustForEditor();
+		gp_editing.ShowEditor();
 
 		if( typeof(gp_editor.wake) == 'function' ){
 			gp_editor.wake();
@@ -418,8 +468,7 @@ gp_editing = {
 			$('html').css({'margin-left':0});
 			$('#ckeditor_wrap').removeClass('show_editor');
 		}else{
-			$('#ckeditor_wrap').addClass('show_editor');
-			AdjustForEditor();
+			gp_editing.ShowEditor();
 		}
 	};
 

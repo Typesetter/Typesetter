@@ -290,7 +290,7 @@ class Edit extends \gp\Page{
 
 		//output links
 		ob_start();
-		if( empty($_REQUEST['mode']) ){
+		if( $page->pagetype == 'display' ){
 			echo '<div id="section_sorting_wrap" class="inline_edit_area">';
 			echo '<ul id="section_sorting" class="section_drag_area" title="Organize"></ul>';
 			echo '<div>'.$langmessage['add'].'</div>';
@@ -298,9 +298,9 @@ class Edit extends \gp\Page{
 			self::NewSections();
 			echo '</div>';
 			echo '</div>';
-		}else{
-			echo '<div id="ck_editable_areas" class="inline_edit_area">';
 		}
+
+		echo '<div id="ck_editable_areas" class="inline_edit_area">';
 		echo '<ul></ul>';
 		echo '</div>';
 
@@ -316,9 +316,10 @@ class Edit extends \gp\Page{
 
 		$scripts[]				= array('object'=>'gp_editing','file'=>'/include/js/inline_edit/inline_editing.js');
 
-
 		if( empty($_REQUEST['mode']) ){
-			$scripts[]			= array('object'=>'gp_editing','code'=>'gp_editing.is_extra_mode = false;');
+			$scripts[]				= array('object'=>'gp_editing','code'=>'gp_editing.is_extra_mode = false;');
+		}else{
+			$scripts[]				= array('object'=>'gp_editing','code'=>'gp_editing.is_extra_mode = true;');
 		}
 
 		$scripts[]				= array('file'=>'/include/js/inline_edit/manage_sections.js');

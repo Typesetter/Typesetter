@@ -72,6 +72,24 @@ html{
 	}
 
 /**
+ * Edit mode
+ *
+ */
+
+#ck_editable_areas{
+	display:none;
+	}
+
+#ckeditor_wrap.edit_mode_extra #ck_editable_areas{
+	display:block;
+	}
+#ckeditor_wrap.edit_mode_extra #section_sorting_wrap{
+	display:none;
+	}
+
+
+
+/**
  * #ckeditor_area
  *
  */

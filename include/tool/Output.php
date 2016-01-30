@@ -896,21 +896,23 @@ namespace gp\tool{
 		public static function GetExtra($name='Side_Menu',$info=array()){
 			global $dataDir,$langmessage;
 
-			$name			= str_replace(' ','_',$name);
-			$extra_content	= self::ExtraContent( $name, $file_stats );
+
+			$name			= str_replace('_',' ',$name);
+			$_name			= str_replace(' ','_',$name);
+			$extra_content	= self::ExtraContent( $_name, $file_stats );
 
 			$wrap = self::ShowEditLink('Admin_Extra');
 			if( $wrap ){
 
 				ob_start();
-				$edit_link = self::EditAreaLink($edit_index,'Admin/Extra',$langmessage['edit'],'cmd=edit&file='.$name,array('title'=>$name,'data-cmd'=>'inline_edit_generic'));
+				$edit_link = self::EditAreaLink($edit_index,'Admin/Extra',$langmessage['edit'],'cmd=edit&file='.$_name,array('title'=>$_name,'data-cmd'=>'inline_edit_generic'));
 				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 				echo $edit_link;
 				echo \gp\tool::Link('Admin/Extra',$langmessage['theme_content'],'',' class="nodisplay"');
 				echo '</span>';
 				self::$editlinks .= ob_get_clean();
 
-				echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'">';
+				echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'" data-gp_label="'.htmlspecialchars($name).'">';
 				echo \gp\tool\Output\Sections::RenderSection($extra_content[0],0,'',$file_stats);
 				echo '</div>';
 			}else{

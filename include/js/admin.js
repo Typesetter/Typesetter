@@ -935,11 +935,13 @@ $(function(){
 		function HideOverlay(){
 
 			//hide links
-			lnk_span
-				.stop(true,true)
-				.hide(500,function(){
-					ResetMenu();
-				});
+			if( lnk_span ){
+				lnk_span
+					.stop(true,true)
+					.hide(500,function(){
+						ResetMenu();
+					});
+			}
 
 			fixed_pos = false;
 

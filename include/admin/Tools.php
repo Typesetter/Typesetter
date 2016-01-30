@@ -492,8 +492,6 @@ namespace gp\admin{
 				echo '<div style="float:right">';
 				echo '<span class="panel_tab_label">';
 				echo ' <i class="fa fa-pencil"></i>';
-				//echo $langmessage['edit'];
-				//echo ' <i class="fa fa-angle-double-right"></i>';
 				echo '</span>';
 				echo '<b class="panel_tabs">';
 				echo \gp\tool::Link($page->title,$langmessage['Page'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
@@ -771,14 +769,11 @@ namespace gp\admin{
 			echo '<div id="ckeditor_wrap" class="nodisplay">';
 			echo '<a id="cktoggle" data-cmd="ToggleEditor"><i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-right"></i></a>';
 
-			echo '<div id="ck_label">';
-
-			/*
-			if( $page->pagetype == 'display' ){
-				echo \gp\tool::Link($page->title,$langmessage['Page'],'cmd=ManageSections',array('data-cmd'=>'SwitchEditArea','data-arg'=>'#section_sorting_wrap'));
-			}
-			echo \gp\tool::Link($page->title,$langmessage['theme_content'],'cmd=ManageSections',array('data-cmd'=>'SwitchEditArea','data-arg'=>'#ck_editable_areas'));
-			*/
+			echo '<div id="ckeditor_tabs">';
+			echo \gp\tool::Link($page->title,$langmessage['Page'],'cmd=ManageSections',array('data-cmd'=>'SwitchEditArea','data-arg'=>'#section_sorting_wrap'));
+			//if( $page->pagetype == 'display' ){
+			//	echo \gp\tool::Link($page->title,$langmessage['theme_content'],'cmd=ManageSections',array('data-cmd'=>'SwitchEditArea','data-arg'=>'#ck_editable_areas'));
+			//}
 
 			//echo '&nbsp;';
 			echo '</div>';

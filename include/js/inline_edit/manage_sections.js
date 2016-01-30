@@ -941,7 +941,6 @@
 	 */
 	gp_editing.editor_tools();
 	gp_editor.InitEditor();
-	gp_editing.ResetTabs();
 	loaded();
 
 

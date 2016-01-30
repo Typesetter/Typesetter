@@ -154,7 +154,6 @@ gp_editing = {
 		$('#ckeditor_top').html('');
 		$('#ckeditor_bottom').html('');
 		gp_editing.ShowEditor();
-		gp_editing.ResetTabs();
 	},
 
 
@@ -167,8 +166,14 @@ gp_editing = {
 		AdjustForEditor();
 
 		var $edit_area	= $gp.CurrentDiv();
-		var label		= gp_editing.SectionLabel($edit_area);
-		$('#ck_label').text( label );
+		var $tabs		= $('#ckeditor_tabs');
+
+		$tabs.children().filter(':not(:first)').remove();
+
+		if( $edit_area.length != 0 ){
+			var label		= gp_editing.SectionLabel($edit_area);
+			$('<a>').text(label).appendTo( $tabs );
+		}
 	},
 
 
@@ -177,10 +182,6 @@ gp_editing = {
 	 *
 	 */
 	SectionLabel: function($section){
-
-		if( $section.length == 0 ){
-			return 'Manage Sections';
-		}
 
 		var label	= $section.data('gp_label');
 		if( !label ){
@@ -256,22 +257,6 @@ gp_editing = {
 			$('#cktabs .ckeditor_control[data-arg="#'+id+'"]').click();
 
 		}
-	},
-
-
-	/**
-	 * Indicate which tab is selected
-	 *
-	 */
-	ResetTabs: function(){
-		$('.cktabs .selected').removeClass('selected');
-		$('.cktabs a').each(function(){
-			var $this = $(this);
-			var $area = $( $this.data('arg') );
-			if( $area.is(':visible') ){
-				$this.addClass('selected');
-			}
-		});
 	},
 
 
@@ -382,8 +367,6 @@ gp_editing = {
 
 		$('.inline_edit_area').hide();
 		$( $this.data('arg') ).show();
-
-		gp_editing.ResetTabs();
 	}
 
 
@@ -418,7 +401,6 @@ gp_editing = {
 		var area_id		= $gp.AreaId( $(this) );
 		$('#ExtraEditLink'+area_id).click();
 
-		gp_editing.ResetTabs();
 	});
 
 
@@ -433,7 +415,6 @@ gp_editing = {
 		}
 
 		$gp.LoadEditor('?cmd=ManageSections', 0, 'manage_sections');
-		gp_editing.ResetTabs();
 	});
 
 

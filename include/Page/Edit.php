@@ -877,6 +877,8 @@ class Edit extends \gp\Page{
 		unlink($this->draft_file);
 		$this->ResetFileTypes();
 		$this->draft_exists = false;
+
+		return true;
 	}
 
 

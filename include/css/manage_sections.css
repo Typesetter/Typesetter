@@ -277,15 +277,35 @@
  * Layout Content
  *
  */
+#ck_editable_areas ul{
+	margin:0;
+	padding:0;
+	border-top:1px solid #ddd;
+	border-bottom:1px solid #fff;
+	}
+
+#ck_editable_areas li{
+	display:block;
+	padding:9px 0;
+	border-top:1px solid #fff;
+	border-bottom:1px solid #ddd;
+	box-sizing:border-box;
+	}
 #ck_editable_areas a,
 #ck_editable_areas a:visited{
-	display:block;
-	padding:4px 0;
 	color:#333;
 }
 
 #ck_editable_areas a i{
 	margin-right:3px;
 	}
+
+#ck_editable_areas a.draft{
+	background: #38ab90;
+	border-radius:3px;
+	color:#fff;
+	padding:2px 5px;
+	float:right;
+}
 
 

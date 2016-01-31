@@ -897,30 +897,43 @@ namespace gp\tool{
 			global $dataDir,$langmessage;
 
 
-			$name			= str_replace('_',' ',$name);
-			$_name			= str_replace(' ','_',$name);
-			$extra_content	= self::ExtraContent( $_name, $file_stats );
+			$name			= str_replace(' ','_',$name);
+			$file_stats		= array();
+			$is_draft		= false;
+			$extra_content	= self::ExtraContent( $name, $file_stats, $is_draft );
+			$wrap			= self::ShowEditLink('Admin_Extra');
 
-			$wrap = self::ShowEditLink('Admin_Extra');
-			if( $wrap ){
-
-				ob_start();
-				$edit_link = self::EditAreaLink($edit_index,'Admin/Extra',$langmessage['edit'],'cmd=edit&file='.$_name,array('title'=>$_name,'data-cmd'=>'inline_edit_generic'));
-				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
-				echo $edit_link;
-				echo \gp\tool::Link('Admin/Extra',$langmessage['theme_content'],'',' class="nodisplay"');
-				echo '</span>';
-				self::$editlinks .= ob_get_clean();
-
-				echo '<div class="editable_area" id="ExtraEditArea'.$edit_index.'" data-gp_label="'.htmlspecialchars($name).'">';
-				echo \gp\tool\Output\Sections::RenderSection($extra_content[0],0,'',$file_stats);
-				echo '</div>';
-			}else{
+			if( !$wrap ){
 				echo '<div>';
 				echo \gp\tool\Output\Sections::RenderSection($extra_content[0],0,'',$file_stats);
 				echo '</div>';
+				return;
 			}
 
+
+			ob_start();
+			$edit_link = self::EditAreaLink($edit_index,'Admin/Extra',$langmessage['edit'],'cmd=edit&file='.$name,array('title'=>$name,'data-cmd'=>'inline_edit_generic'));
+			echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
+			echo $edit_link;
+			echo \gp\tool::Link('Admin/Extra',$langmessage['theme_content'],'',' class="nodisplay"');
+			echo '</span>';
+			self::$editlinks .= ob_get_clean();
+
+
+			$attrs						= array();
+			$attrs['data-gp_label']		= str_replace('_',' ',$name);
+			$attrs['class']				= 'editable_area';
+			$attrs['id']				= 'ExtraEditArea'.$edit_index;
+
+			if( $is_draft ){
+				$attrs['data-draft']	= 1;
+			}else{
+				$attrs['data-draft']	= 0;
+			}
+
+			echo '<div'.\gp\tool\Output\Sections::SectionAttributes($attrs,$extra_content[0]['type']).'>';
+			echo \gp\tool\Output\Sections::RenderSection($extra_content[0],0,'',$file_stats);
+			echo '</div>';
 		}
 
 
@@ -928,11 +941,12 @@ namespace gp\tool{
 		 * Get and return the extra content specified by $title
 		 *
 		 */
-		public static function ExtraContent( $title, &$file_stats = array() ){
+		public static function ExtraContent( $title, &$file_stats = array(), &$is_draft = false ){
 
 			//draft?
 			$draft_file = '_extra/'.$title.'/draft';
 			if( \gp\tool::LoggedIn() && \gp\tool\Files::Exists($draft_file) ){
+				$is_draft = true;
 				return \gp\tool\Files::Get($draft_file,'file_sections');
 			}
 

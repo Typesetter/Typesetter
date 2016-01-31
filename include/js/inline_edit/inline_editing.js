@@ -78,7 +78,7 @@ gp_editing = {
 		$wrap.addClass('ck_saving');
 
 
-		var edit_div	= $gp.CurrentDiv();
+		var $edit_div	= $gp.CurrentDiv();
 		var path		= strip_from(gp_editor.save_path,'#');
 		var query		= '';
 		var save_data	= gp_editor.gp_saveData();
@@ -88,7 +88,7 @@ gp_editing = {
 			path = strip_from(path,'?');
 		}
 
-		query			+= 'cmd=save_inline&section='+edit_div.data('gp-section')+'&req_time='+req_time+'&';
+		query			+= 'cmd=save_inline&section='+$edit_div.data('gp-section')+'&req_time='+req_time+'&';
 		query			+= save_data;
 		query			+= '&verified='+encodeURIComponent(post_nonce);
 		query			+= '&gpreq=json&jsoncallback=?';
@@ -101,9 +101,13 @@ gp_editing = {
 
 
 		//the saved function
-		gpresponse.ck_saved = function(){
+		$gp.response.ck_saved = function(){
+
+			//mark as draft
+			gp_editing.DraftStatus( $edit_div, 1);
 
 			if( !gp_editor ) return;
+
 
 			//if nothing has changed since saving
 			if( gp_editor.gp_saveData() == save_data ){
@@ -129,6 +133,20 @@ gp_editing = {
 			},
 		});
 
+	},
+
+
+	/**
+	 * Set the draft status for an edit area
+	 *
+	 */
+	DraftStatus: function($area, status){
+
+		if( $area.data('draft') == undefined ){
+			return;
+		}
+
+		$area.data('draft',status).attr('data-draft',status);
 	},
 
 
@@ -246,10 +264,11 @@ gp_editing = {
 		}
 
 
+		$('#ckeditor_save').show(); // gp_editor.ShowSaveButtons()
+
 		if( $edit_area.length != 0 ){
 			var label		= gp_editing.SectionLabel($edit_area);
 			$('<a>').text(label).appendTo( $tabs );
-			$('#ckeditor_save').show();
 		}else if( extra_mode ){
 			$('#ckeditor_save').hide();
 		}
@@ -501,12 +520,6 @@ gp_editing = {
 	// auto save
 	window.setInterval(function(){
 
-		//var area		= $gp.CurrentDiv();
-		//if( typeof(area.data('gp-section')) == 'undefined' ){
-		//	return;
-		//}
-
-
 		if( typeof(gp_editor.CanAutoSave) == 'function' && !gp_editor.CanAutoSave() ){
 			return;
 		}
@@ -589,6 +602,19 @@ gp_editing = {
 		}
 
 	}).resize();
+
+
+	/**
+	 * Response when an area
+	 *
+	 */
+	$gp.response.DraftPublished = function(){
+		var id_number	= $gp.AreaId( $(this) );
+		var $area		= $('#ExtraEditArea'+id_number);
+
+		gp_editing.DraftStatus( $area, 0);
+		gp_editor.wake();
+	}
 
 
 	$('.editable_area').off('.gp');

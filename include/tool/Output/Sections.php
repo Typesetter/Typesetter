@@ -49,7 +49,7 @@ namespace gp\tool\Output{
 				trigger_error('$section_data is '.$type.'. Array expected');
 				return;
 			}
-			$section_data		+= array('attributes' => array() );
+			$section_data		+= array('\utes' => array() );
 
 
 			if( $section_data['type'] == 'wrapper_section' ){

@@ -118,8 +118,6 @@
 		 */
 		InitEditor: function(){
 
-			//$mode =
-
 			$('#ckeditor_top').append(section_types);
 			this.InitSorting();
 			this.resetDirty();
@@ -129,18 +127,21 @@
 
 			$('#ckeditor_area').on('dragstop',this.MaxHeight);
 
-
-			AddEditableLinks();
-
-
 			$(document).trigger("section_sorting:loaded");
 		},
 
 
 		/**
-		 * Set maximum height of editor
+		 * Wake up the editor
 		 *
 		 */
+		wake: function(){
+			AddEditableLinks();
+		},
+
+		/**
+		 * Set maximum height of editor
+		 *
 		MaxHeight: function(){
 			var $ckeditor_area	= $('#ckeditor_area');
 			var $section_area	= $('#ckeditor_top').css('overflow','hidden'); //attempt to get rid of the scroll bar
@@ -148,7 +149,9 @@
 
 			$section_area.css('overflow','auto');
 			$section_area.css( 'max-height', listMaxHeight );
+			console.log('max height',listMaxHeight);
 		},
+		 */
 
 
 		/**
@@ -860,32 +863,31 @@
 	 */
 	function AddEditableLinks(){
 
-		var list	= $('#ck_editable_areas');
+		var list	= $('#ck_editable_areas ul').html('');
 		var box		= $gp.div('gp_edit_box'); //the overlay box
 
 		$('a.ExtraEditLink')
 			.clone(false)
 			.attr('class','')
-			.css('display','block')
 			.show()
 			.each(function(){
 
 				var $b			= $(this);
 				var id_number	= $gp.AreaId( $b );
-				var area		= $('#ExtraEditArea'+id_number);
+				var $area		= $('#ExtraEditArea'+id_number);
 
-				if( area.hasClass('gp_no_overlay') || area.length === 0 ){
+				if( $area.hasClass('gp_no_overlay') || $area.length === 0 ){
 					return true;
 				}
 
 
 				//not page sections
-				if( typeof(area.data('gp-section')) != 'undefined' ){
+				if( typeof($area.data('gp-section')) != 'undefined' ){
 					return true;
 				}
 
 
-				var loc			= $gp.Coords(area);
+				var loc			= $gp.Coords($area);
 				var title		= this.title.replace(/_/g,' ');
 				title			= decodeURIComponent(title);
 
@@ -903,7 +905,7 @@
 					.on('mouseenter touchstart',function(){
 
 						//the red edit box
-						var loc = $gp.Coords(area);
+						var loc = $gp.Coords($area);
 						box	.stop(true,true)
 							.css({'top':(loc.top-3),'left':(loc.left-2),'width':(loc.w+4),'height':(loc.h+5)})
 							.fadeIn();
@@ -918,12 +920,16 @@
 
 
 				//add to list
-				$('<li>')
-					.append($b)
-					.data('top',loc.top)
-					.appendTo(list);
+				var $li = $('<li>')
+							.append($b)
+							.data('top',loc.top)
+							.appendTo(list);
 
-
+				//publish draft link
+				if( $area.data('draft') ){
+					var href = $gp.jPrep(this.href,'cmd=PublishAjax');
+					$('<a class="draft" data-cmd="gpajax" data-gp-area-id="'+id_number+'">'+gplang.Draft+'</a>').attr('href',href).appendTo($li);
+				}
 			});
 
 

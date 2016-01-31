@@ -24,6 +24,7 @@ class Extra extends \gp\Page\Edit{
 			$this->cmds['DeleteArea']			= 'DefaultDisplay';
 			$this->cmds['EditExtra']			= '';
 			$this->cmds['PublishDraft']			= 'DefaultDisplay';
+			$this->cmds['PublishAjax']			= '';
 			$this->cmds['PreviewText']			= '';
 			$this->cmds['SaveText']				= 'EditExtra';
 
@@ -336,6 +337,24 @@ class Extra extends \gp\Page\Edit{
 		message($langmessage['SAVED']);
 
 		$this->areas[$title] = $title;
+	}
+
+
+	/**
+	 * Publish draft of extra content area
+	 *
+	 */
+	public function PublishAjax(){
+		global $page;
+
+		$page->ajaxReplace = array();
+
+		if( !$this->PublishDraft() ){
+			return;
+		}
+
+		$page->ajaxReplace[] = array('DraftPublished');
+		msg('published');
 	}
 
 

@@ -51,6 +51,18 @@ $gp.links.inline_edit_generic = function(evt,arg){
 	var area_id		= $gp.AreaId( $(this) );
 
 	$gp.LoadEditor(this.href, area_id, arg);
+
+
+	//show editor when a edit link is clicked in the
+	var $target = $(evt.target);
+	if( $target.closest('.panel_tabs').length && typeof(gp_editing) != 'undefined' ){
+		if( $target.data('mode') == 'extra' ){
+			gp_editing.is_extra_mode = true;
+		}else{
+			gp_editing.is_extra_mode = false;
+		}
+		gp_editing.ShowEditor();
+	}
 }
 
 $gp.LoadEditor = function(href, area_id, arg){

@@ -105,6 +105,8 @@ gp_editing = {
 
 			//mark as draft
 			gp_editing.DraftStatus( $edit_div, 1);
+			gp_editing.PublishButton( $edit_div );
+
 
 			if( !gp_editor ) return;
 
@@ -115,6 +117,7 @@ gp_editing = {
 				gp_editing.is_dirty = false;
 				gp_editing.DisplayDirty();
 			}
+
 
 			if( typeof(callback) == 'function' ){
 				callback.call();
@@ -137,12 +140,26 @@ gp_editing = {
 
 
 	/**
+	 * Display the publish button if
+	 *
+	 */
+	PublishButton: function($area){
+
+		if( !$area || $area.data('draft') == undefined ){
+			return;
+		}
+
+		$('.ck_publish').show();
+	},
+
+
+	/**
 	 * Set the draft status for an edit area
 	 *
 	 */
 	DraftStatus: function($area, status){
 
-		if( $area.data('draft') == undefined ){
+		if( !$area || $area.data('draft') == undefined ){
 			return;
 		}
 
@@ -189,6 +206,7 @@ gp_editing = {
 			html += '<div id="ckeditor_save">';
 			html += '<a data-cmd="ck_save" class="ckeditor_control ck_save">'+gplang.Save+'</a>';
 			html += '<span class="ck_saved">'+gplang.Saved+'</span>';
+			html += '<a data-cmd="Publish" class="ckeditor_control ck_publish">'+gplang.Publish+'</>';
 			html += '<span class="ck_saving">'+gplang.Saving+'</span>';
 			html += '<a data-cmd="ck_close" class="ckeditor_control">'+gplang.Close+'</a>';
 			html += '</div>';
@@ -246,7 +264,7 @@ gp_editing = {
 	 */
 	ShowEditor: function(){
 
-		$('#ckeditor_wrap').addClass('show_editor');
+		var $ckeditor_wrap = $('#ckeditor_wrap').addClass('show_editor');
 		AdjustForEditor();
 
 
@@ -256,22 +274,26 @@ gp_editing = {
 		var extra_mode		= gp_editing.IsExtraMode();
 
 		if( extra_mode ){
-			$('#ckeditor_wrap').addClass('edit_mode_extra');
+			$ckeditor_wrap.addClass('edit_mode_extra');
 			$tabs.append('<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" data-arg="manage_sections">'+gplang.Extra+'</a>');
 		}else{
-			$('#ckeditor_wrap').removeClass('edit_mode_extra');
+			$ckeditor_wrap.removeClass('edit_mode_extra');
 			$tabs.append('<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" data-arg="manage_sections">'+gplang.Page+'</a>');
 		}
-
-
-		$('#ckeditor_save').show(); // gp_editor.ShowSaveButtons()
 
 		if( $edit_area.length != 0 ){
 			var label		= gp_editing.SectionLabel($edit_area);
 			$('<a>').text(label).appendTo( $tabs );
-		}else if( extra_mode ){
-			$('#ckeditor_save').hide();
 		}
+
+
+		// Hide save buttons for extra content list
+		if( $edit_area.length == 0 && extra_mode ){
+			$('#ckeditor_save').hide();
+		}else{
+			$('#ckeditor_save').show();
+		}
+
 
 	},
 
@@ -523,7 +545,9 @@ gp_editing = {
 		if( typeof(gp_editor.CanAutoSave) == 'function' && !gp_editor.CanAutoSave() ){
 			return;
 		}
+
 		gp_editing.save_changes();
+
 	},5000);
 
 
@@ -602,6 +626,21 @@ gp_editing = {
 		}
 
 	}).resize();
+
+
+	/**
+	 * Publish the current draft
+	 *
+	 */
+	$gp.links.Publish = function(){
+
+		var $edit_area		= $gp.CurrentDiv();
+		var id_num			= $gp.AreaId( $edit_area );
+		var href			= gp_editing.get_path( id_num );
+		href				= $gp.jPrep(href,'cmd=PublishDraft');
+
+		$gp.jGoTo(href,this);
+	}
 
 
 	/**

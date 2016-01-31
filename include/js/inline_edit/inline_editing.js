@@ -609,11 +609,11 @@ gp_editing = {
 	 *
 	 */
 	$gp.response.DraftPublished = function(){
-		var id_number	= $gp.AreaId( $(this) );
+		var $this		= $(this).hide();
+		var id_number	= $gp.AreaId( $this );
 		var $area		= $('#ExtraEditArea'+id_number);
 
 		gp_editing.DraftStatus( $area, 0);
-		gp_editor.wake();
 	}
 
 

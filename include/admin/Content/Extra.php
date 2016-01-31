@@ -341,24 +341,6 @@ class Extra extends \gp\Page\Edit{
 
 
 	/**
-	 * Publish draft of extra content area
-	 *
-	 */
-	public function PublishAjax(){
-		global $page;
-
-		$page->ajaxReplace = array();
-
-		if( !$this->PublishDraft() ){
-			return;
-		}
-
-		$page->ajaxReplace[] = array('DraftPublished');
-		msg('published');
-	}
-
-
-	/**
 	 * Perform various section editing commands
 	 *
 	 */

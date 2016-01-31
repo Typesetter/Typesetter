@@ -862,7 +862,7 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public function PublishDraft(){
-		global $langmessage;
+		global $langmessage, $page;
 
 		if( !$this->draft_exists ){
 			msg($langmessage['OOPS'].' (Not a draft)');
@@ -877,6 +877,9 @@ class Edit extends \gp\Page{
 		unlink($this->draft_file);
 		$this->ResetFileTypes();
 		$this->draft_exists = false;
+
+		$page->ajaxReplace		= array();
+		$page->ajaxReplace[]	= array('DraftPublished');
 
 		return true;
 	}

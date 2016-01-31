@@ -927,7 +927,7 @@
 
 				//publish draft link
 				if( $area.data('draft') ){
-					var href = $gp.jPrep(this.href,'cmd=PublishAjax');
+					var href = $gp.jPrep(this.href,'cmd=PublishDraft');
 					$('<a class="draft" data-cmd="gpajax" data-gp-area-id="'+id_number+'">'+gplang.Draft+'</a>').attr('href',href).appendTo($li);
 				}
 			});

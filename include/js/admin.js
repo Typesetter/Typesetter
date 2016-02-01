@@ -876,7 +876,7 @@ $(function(){
 			// don't show overlay
 			//	- for an area that is being edited
 			//	- if we've already shown it
-			if( new_area.hasClass('gp_no_overlay') || new_area.hasClass('gp_editing') ){
+			if( !lnk_span || new_area.hasClass('gp_no_overlay') || new_area.hasClass('gp_editing') ){
 				return;
 			}
 

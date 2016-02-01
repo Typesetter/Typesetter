@@ -359,18 +359,25 @@ class Available extends \gp\admin\Layout{
 	public function PreviewTheme($theme, $theme_info){
 		global $langmessage,$config,$page;
 
-		$theme_id = dirname($theme);
-		$color = $theme_info['color'];
+		$theme_id	= dirname($theme);
+		$color		= $theme_info['color'];
 
 
 		$_REQUEST += array('gpreq' => 'body'); //force showing only the body as a complete html document
 		$page->get_theme_css = false;
-		$page->show_admin_content = false;
+		//$page->show_admin_content = false;
 		$page->get_theme_css = false;
 
 		$page->head_js[]	= '/include/js/auto_width.js';
 		$page->head_js[]	= '/include/js/theme_content_outer.js';
+		$page->css_admin[]	= '/include/css/theme_content_outer.scss';
 
+
+		//show site in iframe
+		echo '<div id="gp_iframe_wrap">';
+		$url = \gp\tool::GetUrl('Admin_Theme_Content/Available','cmd=preview_iframe&theme='.rawurlencode($theme));
+		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';
+		echo '</div>';
 
 		ob_start();
 
@@ -395,13 +402,6 @@ class Available extends \gp\admin\Layout{
 		$this->searchQuery .= '&cmd=preview&theme='.rawurlencode($theme);
 		$this->SearchOptions( false );
 
-		echo '</div>';
-
-
-		//show site in iframe
-		echo '<div id="gp_iframe_wrap">';
-		$url = \gp\tool::GetUrl('Admin_Theme_Content/Available','cmd=preview_iframe&theme='.rawurlencode($theme));
-		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';
 		echo '</div>';
 
 		echo '</div>';

@@ -10,9 +10,14 @@ $(function(){
 		var $wrap	= $('#gp_iframe_wrap');
 		window.setInterval(function(){
 
-			var iframe	= document.getElementById('gp_layout_iframe');
-			height		= Math.max( iframe.contentWindow.document.body.offsetHeight, $gp.$win.height() );
+			var iframe		= document.getElementById('gp_layout_iframe');
+			var body		= iframe.contentWindow.document.body;
+			var html		= iframe.contentWindow.document.documentElement;
+			height			= Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+
 			$wrap.height( height );
+
+
 
 		},300);
 	}

@@ -284,8 +284,12 @@ $(function(){
 });
 
 
-
-
+// from http://stackoverflow.com/questions/1145850/get-height-of-entire-document-with-javascript
+function getDocHeight(){
+    var body	= document.body;
+    var html	= document.documentElement;
+    return Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+}
 
 
 

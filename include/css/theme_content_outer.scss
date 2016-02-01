@@ -35,7 +35,8 @@ body{
 		}
 
 	.gp_scroll_area{
-		overflow:visible;
+		overflow:auto;
+		height:100%;
 		}
 
 	.gp_scroll_area > div{

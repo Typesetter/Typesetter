@@ -42,7 +42,11 @@ body{
 	.gp_scroll_area > div{
 		padding:10px;
 		}
-
+	#available_wrap{
+		position:relative;
+		overflow:auto;
+		box-sizing:border-box;
+		}
 
 	table{
 		table-layout:fixed;

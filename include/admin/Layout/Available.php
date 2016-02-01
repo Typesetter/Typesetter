@@ -47,6 +47,8 @@ class Available extends \gp\admin\Layout{
 
 		$this->ShowHeader();
 
+		echo '<hr/>';
+
 		$this->AvailableList();
 
 		$this->InvalidFolders();
@@ -81,10 +83,9 @@ class Available extends \gp\admin\Layout{
 
 
 		// show themes
-		echo '<hr/>';
 		echo '<div id="gp_avail_themes">';
 		foreach($possible as $theme_id => $info){
-			$this->AvailableTheme($theme_id, $info);
+			$this->AvailableTheme($theme_id, $info, $show_options);
 		}
 		echo '</div>';
 
@@ -95,7 +96,7 @@ class Available extends \gp\admin\Layout{
 	}
 
 
-	protected function AvailableTheme($theme_id, $info){
+	protected function AvailableTheme($theme_id, $info, $show_options ){
 		global $langmessage, $config;
 
 		$theme_label = str_replace('_',' ',$info['name']);
@@ -132,11 +133,20 @@ class Available extends \gp\admin\Layout{
 			echo '<ul>';
 			foreach($info['colors'] as $color){
 				echo '<li>';
-				$q = 'cmd=preview&theme='.rawurlencode($theme_id.'/'.$color).$this->searchQuery;
-				if( $this->searchPage ){
-					$q .= '&page='.$this->searchPage;
+
+				$theme = $theme_id.'/'.$color;
+
+				if( $show_options ){
+					$q = 'cmd=preview&theme='.rawurlencode($theme).$this->searchQuery;
+					if( $this->searchPage ){
+						$q .= '&page='.$this->searchPage;
+					}
+					echo \gp\tool::Link('Admin_Theme_Content/Available',str_replace('_','&nbsp;',$color),$q);
+				}else{
+					$q = 'cmd=preview_iframe&theme='.rawurlencode($theme).$this->searchQuery;
+					echo \gp\tool::Link('Admin_Theme_Content/Available',str_replace('_','&nbsp;',$color),$q,' target="gp_layout_iframe" data-cmd="SetPreviewTheme" data-arg="'.htmlspecialchars($theme).'"');
 				}
-				echo \gp\tool::Link('Admin_Theme_Content/Available',str_replace('_','&nbsp;',$color),$q);
+
 				echo '</li>';
 			}
 			echo '</ul>';
@@ -393,6 +403,7 @@ class Available extends \gp\admin\Layout{
 
 
 		echo '<div class="separator"></div>';
+		echo '<div id="available_wrap"><div>';
 
 
 		$this->searchUrl = 'Admin_Theme_Content/Available';
@@ -402,6 +413,7 @@ class Available extends \gp\admin\Layout{
 		$this->searchQuery .= '&cmd=preview&theme='.rawurlencode($theme);
 		$this->SearchOptions( false );
 
+		echo '</div></div>';
 		echo '</div>';
 
 		echo '</div>';
@@ -415,23 +427,19 @@ class Available extends \gp\admin\Layout{
 
 		\gp\admin\Tools::$show_toolbar = false;
 
-		$theme_id = dirname($theme);
-		$template = $theme_info['folder'];
-		$color = $theme_info['color'];
-		$display = htmlspecialchars($theme_info['name'].' / '.$theme_info['color']);
-		$display = str_replace('_',' ',$display);
+		$page->gpLayout		= false;
+		$page->theme_name	= $theme_info['folder'];
+		$page->theme_color	= $theme_info['color'];
+		$page->theme_dir	= $theme_info['full_dir'];
+		$page->theme_rel	= $theme_info['rel'].'/'.$theme_info['color'];
+
 		$this->LoremIpsum();
-		$page->gpLayout = false;
-		$page->theme_name = $template;
-		$page->theme_color = $color;
-		$page->theme_dir = $theme_info['full_dir'];
-		$page->theme_rel = $theme_info['rel'].'/'.$color;
 
 		if( isset($theme_info['id']) ){
 			$page->theme_addon_id = $theme_info['id'];
 		}
 
-		$page->theme_path = \gp\tool::GetDir($theme_info['rel'].'/'.$color);
+		$page->theme_path = \gp\tool::GetDir($page->theme_rel);
 
 		$page->show_admin_content = false;
 	}

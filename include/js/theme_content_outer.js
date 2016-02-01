@@ -12,11 +12,17 @@ $(function(){
 
 			var iframe		= document.getElementById('gp_layout_iframe');
 			var body		= iframe.contentWindow.document.body;
-			var html		= iframe.contentWindow.document.documentElement;
-			height			= Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+			if( body ){
 
-			$wrap.height( height );
+				//shrink down to body size
+				var html		= iframe.contentWindow.document.documentElement;
+				height			= Math.max( body.scrollHeight, body.offsetHeight );
+				$wrap.height( height );
 
+				//increase back up if needed
+				height			= Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+				$wrap.height( height );
+			}
 
 
 		},300);
@@ -41,6 +47,31 @@ $(function(){
 			$gp.SaveGPUI();
 		}
 	});
+
+
+	/**
+	 * Update New Layout button
+	 *
+	 */
+	$gp.links.SetPreviewTheme = function(){
+		var href = this.href+'&cmd=newlayout';
+		$('.add_layout').attr('href',href);
+	}
+
+	/**
+	 *
+	 */
+	var $available_wrap = $('#available_wrap');
+	if( $available_wrap.length ){
+
+		$gp.$win.resize(function(){
+			var top		= $available_wrap.offset().top;
+			var win_h	= $gp.$win.height();
+			$available_wrap.css('max-height', win_h -top);
+			console.log(top,win_h,win_h-top);
+		}).resize();
+
+	}
 
 });
 

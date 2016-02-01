@@ -776,6 +776,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 	public function LoremIpsum(){
 		global $page, $langmessage, $gp_titles, $gp_menu;
+
 		ob_start();
 		echo '<h2>Lorem Ipsum H2</h2>';
 		echo '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,

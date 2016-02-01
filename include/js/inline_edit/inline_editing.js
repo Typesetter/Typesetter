@@ -145,11 +145,15 @@ gp_editing = {
 	 */
 	PublishButton: function($area){
 
+		$('.ck_publish').hide();
+
 		if( !$area || $area.data('draft') == undefined ){
 			return;
 		}
 
-		$('.ck_publish').show();
+		if( $area.data('draft') == 1 ){
+			$('.ck_publish').show();
+		}
 	},
 
 
@@ -264,12 +268,12 @@ gp_editing = {
 	 */
 	ShowEditor: function(){
 
-		var $ckeditor_wrap = $('#ckeditor_wrap').addClass('show_editor');
+		var $edit_area		= $gp.CurrentDiv();
+		var $ckeditor_wrap	= $('#ckeditor_wrap').addClass('show_editor');
 		AdjustForEditor();
 
 
 		//tabs
-		var $edit_area		= $gp.CurrentDiv();
 		var $tabs			= $('#ckeditor_tabs').html('');
 		var extra_mode		= gp_editing.IsExtraMode();
 
@@ -294,6 +298,9 @@ gp_editing = {
 			$('#ckeditor_save').show();
 		}
 
+
+
+		gp_editing.PublishButton( $edit_area );
 
 	},
 
@@ -411,7 +418,8 @@ gp_editing = {
 			gp_editor.wake();
 		}
 
-		$gp.CurrentDiv().addClass('gp_edit_current');
+		var $edit_div = $gp.CurrentDiv().addClass('gp_edit_current');
+
 
 		return true;
 	},
@@ -638,6 +646,8 @@ gp_editing = {
 		var id_num			= $gp.AreaId( $edit_area );
 		var href			= gp_editing.get_path( id_num );
 		href				= $gp.jPrep(href,'cmd=PublishDraft');
+
+		$(this).data('gp-area-id',id_num);
 
 		$gp.jGoTo(href,this);
 	}

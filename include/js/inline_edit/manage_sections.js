@@ -139,6 +139,7 @@
 			AddEditableLinks();
 		},
 
+
 		/**
 		 * Set maximum height of editor
 		 *

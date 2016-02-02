@@ -555,7 +555,7 @@ class Edit extends \gp\Page{
 
 	/**
 	 * Perform various section editing commands
-	 *
+	 * @return bool
 	 */
 	public function SectionEdit(){
 		global $langmessage, $page;
@@ -571,7 +571,7 @@ class Edit extends \gp\Page{
 		$cmd = \gp\tool::GetCommand();
 
 		if( !\gp\tool\Editing::SectionEdit( $cmd, $this->file_sections[$section_num], $section_num, $this->title, $this->file_stats ) ){
-			return;
+			return false;
 		}
 
 		//save if the file was changed

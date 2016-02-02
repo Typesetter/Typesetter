@@ -173,7 +173,7 @@ class Extra extends \gp\Page\Edit{
 		echo '</thead><tbody>';
 
 		foreach($this->areas as $file){
-			$this->ExtraRow($file);
+			$this->ExtraRow($file, $types);
 		}
 
 		echo '</tbody>';
@@ -187,7 +187,7 @@ class Extra extends \gp\Page\Edit{
 	 *
 	 *
 	 */
-	public function ExtraRow($title){
+	public function ExtraRow($title, $types){
 		global $langmessage;
 
 		$file			= $this->ExtraExists($title);

@@ -47,7 +47,6 @@ class Available extends \gp\admin\Layout{
 
 		$this->ShowHeader();
 
-		echo '<hr/>';
 
 		$this->AvailableList();
 
@@ -79,6 +78,7 @@ class Available extends \gp\admin\Layout{
 
 		if( $show_options ){
 			$this->SearchOptions();
+			echo '<hr/>';
 		}
 
 

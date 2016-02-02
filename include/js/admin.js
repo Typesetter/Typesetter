@@ -876,7 +876,7 @@ $(function(){
 			// don't show overlay
 			//	- for an area that is being edited
 			//	- if we've already shown it
-			if( !lnk_span || new_area.hasClass('gp_no_overlay') || new_area.hasClass('gp_editing') ){
+			if( new_area.hasClass('gp_no_overlay') || new_area.hasClass('gp_editing') ){
 				return;
 			}
 
@@ -885,7 +885,7 @@ $(function(){
 			}
 
 			//area han't changed, so just show the span
-			if( edit_area && new_area.attr('id') === edit_area.attr('id') ){
+			if( lnk_span && edit_area && new_area.attr('id') === edit_area.attr('id') ){
 				lnk_span.show();
 				return;
 			}

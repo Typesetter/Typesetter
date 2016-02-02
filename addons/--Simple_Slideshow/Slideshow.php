@@ -140,8 +140,6 @@ class SimpleSlideshow{
 	//gpEasy 4.0rc3
 	static function FromPost(){
 
-		msg($_POST);
-
 		//each image
 		$indicators = $first_image = '';
 		foreach($_POST['images'] as $i => $img){

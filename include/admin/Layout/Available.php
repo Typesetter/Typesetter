@@ -129,24 +129,23 @@ class Available extends \gp\admin\Layout{
 		echo '<div class="gp_theme_options">';
 
 			//colors
+			if( $show_options ){
+				$color_q	= 'cmd=preview'.$this->searchQuery;
+				$color_a	= '';
+			}else{
+				$color_q	= 'cmd=preview_iframe';
+				$color_a	= ' target="gp_layout_iframe" data-cmd="SetPreviewTheme" ';
+			}
+
+
 			echo '<b>'.$langmessage['preview'].'</b>';
 			echo '<ul>';
 			foreach($info['colors'] as $color){
 				echo '<li>';
-
-				$theme = $theme_id.'/'.$color;
-
-				if( $show_options ){
-					$q = 'cmd=preview&theme='.rawurlencode($theme).$this->searchQuery;
-					if( $this->searchPage ){
-						$q .= '&page='.$this->searchPage;
-					}
-					echo \gp\tool::Link('Admin_Theme_Content/Available',str_replace('_','&nbsp;',$color),$q);
-				}else{
-					$q = 'cmd=preview_iframe&theme='.rawurlencode($theme).$this->searchQuery;
-					echo \gp\tool::Link('Admin_Theme_Content/Available',str_replace('_','&nbsp;',$color),$q,' target="gp_layout_iframe" data-cmd="SetPreviewTheme" data-arg="'.htmlspecialchars($theme).'"');
-				}
-
+				$theme	= $theme_id.'/'.$color;
+				$q		= $color_q.'&theme='.rawurlencode($theme);
+				$a		= $color_a.' data-arg="'.htmlspecialchars($theme).'"';
+				echo \gp\tool::Link('Admin_Theme_Content/Available',str_replace('_','&nbsp;',$color),$q,$a);
 				echo '</li>';
 			}
 			echo '</ul>';

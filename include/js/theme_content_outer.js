@@ -20,7 +20,7 @@ $(function(){
 				$wrap.height( height );
 
 				//increase back up if needed
-				height			= Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+				height			= Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight, $gp.$win.height() );
 				$wrap.height( height );
 			}
 

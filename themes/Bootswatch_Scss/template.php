@@ -84,6 +84,7 @@ include_once($path);
 	gpOutput::GetComponents( 'html5shiv' );
 	gpOutput::GetComponents( 'respondjs' );
 	?><![endif]-->
+	</div>
 
   </body>
 </html>

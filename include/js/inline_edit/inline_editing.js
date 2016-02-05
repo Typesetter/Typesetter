@@ -270,7 +270,8 @@ gp_editing = {
 
 		var $edit_area		= $gp.CurrentDiv();
 		var $ckeditor_wrap	= $('#ckeditor_wrap').addClass('show_editor');
-		AdjustForEditor();
+		$gp.$win.resize();
+
 
 
 		//tabs
@@ -573,6 +574,7 @@ gp_editing = {
 		if( $('#ckeditor_wrap').hasClass('show_editor') ){
 			$('html').css({'margin-left':0});
 			$('#ckeditor_wrap').removeClass('show_editor');
+			$gp.$win.resize();
 		}else{
 			gp_editing.ShowEditor();
 		}

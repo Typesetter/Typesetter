@@ -494,7 +494,9 @@ namespace gp\admin{
 				echo ' <i class="fa fa-pencil"></i>';
 				echo '</span>';
 				echo '<b class="panel_tabs">';
-				echo \gp\tool::Link($page->title,$langmessage['Page'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+				if( $page->pagetype == 'display' ){
+					echo \gp\tool::Link($page->title,$langmessage['Page'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+				}
 				echo \gp\tool::Link($page->title,$langmessage['theme_content'],'cmd=ManageSections&mode=extra',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections','data-mode'=>'extra'));
 				echo \gp\tool::Link('Admin_Theme_Content/Edit/'.urlencode($page->gpLayout),$langmessage['layout'],'redir='.rawurlencode($page->requested));
 				echo '</div>';

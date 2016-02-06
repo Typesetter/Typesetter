@@ -1,4 +1,5 @@
 
+
 $(function(){
 
 	/**
@@ -8,11 +9,19 @@ $(function(){
 	if( finder_opts.getFileCallback && finder_opts.getFileCallback === true ){
 
 		finder_opts.getFileCallback = function(file) {
-			var funcNum = getUrlParam('CKEditorFuncNum');
+
 			if( typeof(file) == 'object' ){
 				file = file.url;
 			}
-			window.top.opener.CKEDITOR.tools.callFunction(funcNum, file);
+
+			if( typeof(window.top.opener.gp_editor.FinderSelect) == 'function' ){
+				window.top.opener.gp_editor.FinderSelect( file );
+
+			}else{
+				var funcNum = getUrlParam('CKEditorFuncNum');
+				window.top.opener.CKEDITOR.tools.callFunction(funcNum, file);
+			}
+
 			window.top.close();
 			window.top.opener.focus() ;
 		};

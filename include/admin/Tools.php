@@ -478,7 +478,7 @@ namespace gp\admin{
 				return;
 			}
 
-			echo '<div id="admincontent_panel" class="fixed toolbar">';
+			echo '<div id="admincontent_panel" class="fixed toolbar cf">';
 			echo '<ul>';
 
 			//admin_link

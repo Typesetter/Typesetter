@@ -486,37 +486,47 @@ namespace gp\admin{
 
 			echo '</ul>';
 
-
-			// 'Editable Areas'
-			if( \gp\admin\Tools::CanEdit($page->gp_index) ){
-				echo '<div style="float:right">';
-				echo '<span class="panel_tab_label">';
-				echo ' <i class="fa fa-pencil"></i>';
-				echo '</span>';
-				echo '<b class="panel_tabs">';
-				if( $page->pagetype == 'display' ){
-					echo \gp\tool::Link($page->title,$langmessage['Page'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
-				}
-				echo \gp\tool::Link($page->title,$langmessage['theme_content'],'cmd=ManageSections&mode=extra',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections','data-mode'=>'extra'));
-				echo \gp\tool::Link('Admin_Theme_Content/Edit/'.urlencode($page->gpLayout),$langmessage['layout'],'redir='.rawurlencode($page->requested));
-				echo '</div>';
-				echo '</b>';
-			}
-
+			self::ToolbarEditLinks();
 			echo '</div>';
 		}
 
-		public static function ToolbarSearch(){
-			echo '<form method="get" action="'.\gp\tool::GetUrl('special_gpsearch').'" id="panel_search" class="cf">';
 
-			echo '<span>';
-			echo '<input type="text" value="" name="q"> ';
-			echo '<i class="fa fa-search"></i>';
-			echo '</span>';
+		/**
+		 * Toolbar edit links
+		 *
+		 */
+		public static function ToolbarEditLinks(){
+			global $page, $langmessage;
 
-			echo '<button class="gpabox" type="submit"></button> ';
-			echo '</form>';
+			if( !\gp\admin\Tools::CanEdit($page->gp_index) ){
+				return;
+			}
+
+			echo '<ul  class="panel_tabs" style="float:right">';
+			echo '<li class="panel_tab_label">';
+			echo ' <i class="fa fa-pencil"></i>';
+			echo '</li>';
+
+			//page edit
+			if( $page->pagetype == 'display' ){
+				echo '<li>';
+				echo \gp\tool::Link($page->title,$langmessage['Page'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+				echo '</li>';
+			}
+
+			//extra edut
+			echo '<li>';
+			echo \gp\tool::Link($page->title,$langmessage['theme_content'],'cmd=ManageSections&mode=extra',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections','data-mode'=>'extra'));
+			echo '</li>';
+
+			//layout edit
+			echo '<li>';
+			echo \gp\tool::Link('Admin_Theme_Content/Edit/'.urlencode($page->gpLayout),$langmessage['layout'],'redir='.rawurlencode($page->requested));
+			echo '</li>';
+			echo '</ul>';
+
 		}
+
 
 		public static function FormatAdminLinks($links){
 			foreach($links as $label => $link){

@@ -164,11 +164,23 @@ class Page extends \gp\Page{
 		echo '</div>';
 
 
-		\gp\admin\Tools::ToolbarSearch();
+		self::ToolbarSearch();
 
 		echo '</div>';
 	}
 
+
+	public static function ToolbarSearch(){
+		echo '<form method="get" action="'.\gp\tool::GetUrl('special_gpsearch').'" id="panel_search" class="cf">';
+
+		echo '<span>';
+		echo '<input type="text" value="" name="q"> ';
+		echo '<i class="fa fa-search"></i>';
+		echo '</span>';
+
+		echo '<button class="gpabox" type="submit"></button> ';
+		echo '</form>';
+	}
 
 	/**
 	 * Find the requested admin script and execute it if the user has permissions to view it

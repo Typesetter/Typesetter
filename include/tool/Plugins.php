@@ -405,7 +405,7 @@ namespace{
 			return;
 		}
 
-		IncludeScript($addonPathCode.'/'.$file);
+		return IncludeScript($addonPathCode.'/'.$file);  // return added in 5.0b3
 	}
 
 

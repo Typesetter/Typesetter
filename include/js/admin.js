@@ -769,6 +769,26 @@ $gp.AreaId = function( $node ){
 }
 
 
+/**
+ * Expand sub lists
+ *
+ */
+$gp.links.expand = function(){
+
+	var list	= $(this).siblings('ul');
+
+	if( list.css('display') == 'block' ){
+		return;
+	}
+
+	list.css('display','block');
+
+	$(document).one('click',function(evt){
+		list.css('display','');
+	});
+
+}
+
 
 /**
  * Onload
@@ -809,29 +829,24 @@ $(function(){
 
 
 	/**
+	 * Indicate if there are extra edit area drafts
+	 *
+	 */
+	$('.editable_area').each(function(){
+		if( $(this).data('draft') == 1 ){
+			$('.gp_extra_edit').addClass('msg_publish_draft');
+			return false;
+		}
+	});
+
+
+	/**
 	 * Update character counts
 	 *
 	 */
 	$gp.$doc.on('keyup keypress paste change', '.show_character_count textarea', function(){
 		$(this).parent().find('.character_count span').html( this.value.length );
 	});
-
-
-	$gp.links.expand = function(){
-
-		var list	= $(this).siblings('ul');
-
-		if( list.css('display') == 'block' ){
-			return;
-		}
-
-		list.css('display','block');
-
-		$(document).one('click',function(evt){
-			list.css('display','');
-		});
-
-	}
 
 
 	/**

@@ -516,7 +516,7 @@ namespace gp\admin{
 
 			//extra edut
 			echo '<li>';
-			echo \gp\tool::Link($page->title,$langmessage['theme_content'],'cmd=ManageSections&mode=extra',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections','data-mode'=>'extra'));
+			echo \gp\tool::Link($page->title,$langmessage['theme_content'],'cmd=ManageSections&mode=extra',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections','data-mode'=>'extra','class'=>'gp_extra_edit'));
 			echo '</li>';
 
 			//layout edit

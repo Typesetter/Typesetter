@@ -69,7 +69,7 @@ class Permalinks{
 
 
 		// already has www settings?
-		if( !is_null($this->org_rules) ){
+		if( !is_null($this->orig_rules) ){
 			if( strpos($this->orig_rules,'# with www') !== false ){
 				$this->www_setting	= true;
 				$this->www_avail	= true;

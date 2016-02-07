@@ -60,7 +60,7 @@ class FileSystemFtp extends FileSystem{
 	 * Connection values will not be kept in $config in case they're being used for a system revert which will replace the config.php file
 	 * Also handle moving ftp connection values from $config to a sep
 	 *
-	 * @return bool true if connected, error message otherwise
+	 * @return bool|string true if connected, error message otherwise
 	 */
 	public function connect(){
 		global $config, $dataDir, $langmessage;
@@ -107,12 +107,12 @@ class FileSystemFtp extends FileSystem{
 
 		//save ftp info
 		if( !$save_values ){
-			return $connected;
+			return true;
 		}
 
 		$connection_file	= $dataDir.'/data/_updates/connect.php';
 		if( !\gp\tool\Files::SaveData($connection_file,'connect_args',$connect_args) ){
-			return $connected;
+			return true;
 		}
 
 		/*
@@ -126,8 +126,7 @@ class FileSystemFtp extends FileSystem{
 			\gp\admin\Tools::SaveConfig();
 		}
 
-		return $connected;
-
+		return true;
 	}
 
 	public function ConnectOrPrompt($action=''){

@@ -195,7 +195,7 @@ class Tools{
 		}
 
 		uksort($list_out,'strnatcasecmp');
-		echo '<div class="gpui-scrolllist"><div>';
+		echo '<div class="gp_scrolllist"><div>';
 		echo '<input type="text" name="search" value="" class="gpsearch" placeholder="'.$langmessage['Search'].'" autocomplete="off" />';
 		echo implode('',$list_out);
 		echo '</div></div>';

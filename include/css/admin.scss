@@ -176,7 +176,7 @@
 	}
 
 #gp_admin_html .gptextarea,
-#gp_admin_html .gpui-scrolllist,
+#gp_admin_html .gp_scrolllist,
 #gp_admin_html .gpinput{
 	background: #fff;
 	border-radius: 6px;
@@ -1981,7 +1981,7 @@ body #addon_about{
  * Scroll list
  *
  */
-#gp_admin_html .gpui-scrolllist{
+#gp_admin_html .gp_scrolllist{
 	transform:translateZ(1px);
 	padding-left: 0;
 	padding-right: 0;
@@ -1990,7 +1990,7 @@ body #addon_about{
 	overflow:hidden;
 }
 
-#gp_admin_html .gpui-scrolllist > div{
+#gp_admin_html .gp_scrolllist > div{
 	height: 300px;
 	overflow: auto;
 	overflow-x: hidden;
@@ -1998,7 +1998,7 @@ body #addon_about{
 }
 
 
-.gpui-scrolllist > div > input.gpsearch{
+.gp_scrolllist > div > input.gpsearch{
 	box-sizing: border-box !important;
 	width: 100% !important;
 	display: block;
@@ -2010,8 +2010,8 @@ body #addon_about{
 	top:0;
 	}
 
-.gpui-scrolllist label,
-.gpui-scrolllist span{
+.gp_scrolllist label,
+.gp_scrolllist span{
 	display: block;
 	cursor: pointer;
 	position: relative;
@@ -2021,13 +2021,13 @@ body #addon_about{
 	text-overflow:ellipsis;
 	}
 
-.gpui-scrolllist label input{
+.gp_scrolllist label input{
 	position: absolute;
 	left: -20px;
 	z-index: -1;
 	}
 
-.gpui-scrolllist label > span{
+.gp_scrolllist label > span{
 	border: 1px solid #fff;
 	border-radius: 4px;
 	padding: 3px 5px;
@@ -2035,11 +2035,11 @@ body #addon_about{
 	margin: 3px 6px;
 	}
 
-.gpui-scrolllist label.filtered > span{
+.gp_scrolllist label.filtered > span{
 	display: none;
 	}
 
-.gpui-scrolllist input:checked + span{
+.gp_scrolllist input:checked + span{
 	display: block !important;
 	border-color: #ddd;
 	background-color: #eee;

@@ -1160,7 +1160,7 @@ $(function(){
 	 */
 	$(document).on('keyup','input.gpsearch',function(){
 		var search = this.value.toLowerCase();
-		$(this.form).find('.gpui-scrolllist > div > *').each(function(){
+		$(this.form).find('.gp_scrolllist > div > *').each(function(){
 			var $this = $(this);
 			if( $this.text().toLowerCase().indexOf(search) == -1 ){
 				$this.addClass('filtered');

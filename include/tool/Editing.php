@@ -753,7 +753,7 @@ namespace gp\tool{
 
 			echo '<form id="gp_include_form">';
 
-			echo '<div class="gpui-scrolllist"><div>';
+			echo '<div class="gp_scrolllist"><div>';
 			echo '<input type="text" value="" class="gpsearch" placeholder="'.$langmessage['Search'].'" autocomplete="off" />';
 
 			//gadget include autocomplete

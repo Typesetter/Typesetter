@@ -789,6 +789,22 @@ $gp.links.expand = function(){
 
 }
 
+/**
+ * Indicate if there's an extra area that is a draft
+ *
+ */
+$gp.IndicateDraft = function(){
+
+	$('.gp_extra_edit').removeClass('msg_publish_draft');
+
+	$('.editable_area').each(function(){
+		if( $(this).data('draft') == 1 ){
+			$('.gp_extra_edit').addClass('msg_publish_draft');
+			return false;
+		}
+	});
+}
+
 
 /**
  * Onload
@@ -820,24 +836,12 @@ $(function(){
 
 	$('body').addClass('gpAdmin');
 
-
+	$gp.IndicateDraft();
 
 	window.setTimeout(function(){
 		EditOutlines();
 		UIEffects();
 	},1);
-
-
-	/**
-	 * Indicate if there are extra edit area drafts
-	 *
-	 */
-	$('.editable_area').each(function(){
-		if( $(this).data('draft') == 1 ){
-			$('.gp_extra_edit').addClass('msg_publish_draft');
-			return false;
-		}
-	});
 
 
 	/**

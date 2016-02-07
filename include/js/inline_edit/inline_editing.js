@@ -140,7 +140,7 @@ gp_editing = {
 
 
 	/**
-	 * Display the publish button if
+	 * Display the publish button if the edit extra area is a draft
 	 *
 	 */
 	PublishButton: function($area){
@@ -154,6 +154,8 @@ gp_editing = {
 		if( $area.data('draft') == 1 ){
 			$('.ck_publish').show();
 		}
+
+		$gp.IndicateDraft();
 	},
 
 
@@ -168,6 +170,7 @@ gp_editing = {
 		}
 
 		$area.data('draft',status).attr('data-draft',status);
+		$gp.IndicateDraft();
 	},
 
 

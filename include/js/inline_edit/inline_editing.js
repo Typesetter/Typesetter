@@ -543,7 +543,7 @@ gp_editing = {
 	 */
 	$gp.$doc.on('click',function(evt){
 
-		if( $(evt.target).closest('.editable_area, #ckeditor_wrap, a, input').length ){
+		if( $(evt.target).closest('.editable_area, #gp_admin_html, a, input').length ){
 			return;
 		}
 

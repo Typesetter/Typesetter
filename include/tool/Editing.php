@@ -732,7 +732,7 @@ namespace gp\tool{
 		 *
 		 */
 		public static function IncludeDialog( $section ){
-			global $page,$langmessage,$config;
+			global $page, $langmessage, $config, $gp_index;
 
 			$page->ajaxReplace = array();
 
@@ -753,19 +753,50 @@ namespace gp\tool{
 
 			echo '<form id="gp_include_form">';
 
-			echo '<div class="gp_inlude_edit">';
-			echo '<span class="label">';
-			echo $langmessage['File Include'];
-			echo '</span> ';
-			echo '<input type="text" size="" id="gp_file_include" name="file_include" class="title-autocomplete" value="'.htmlspecialchars($file_content).'" />';
-			echo '</div>';
+			echo '<div class="gpui-scrolllist"><div>';
+			echo '<input type="text" name="search" value="" class="gpsearch" placeholder="'.$langmessage['Search'].'" autocomplete="off" />';
 
-			echo '<div class="gp_inlude_edit">';
-			echo '<span class="label">';
-			echo $langmessage['gadgets'];
-			echo '</span> ';
-			echo '<input type="text" size="" id="gp_gadget_include" name="gadget_include" class="title-autocomplete" value="'.htmlspecialchars($gadget_content).'" />';
-			echo '</div>';
+			//gadget include autocomplete
+			if( isset($config['gadgets']) ){
+				foreach($config['gadgets'] as $uniq => $info){
+					echo '<label>';
+					$checked = '';
+					if( $uniq == $gadget_content ){
+						$checked = 'checked';
+					}
+					echo '<input type="radio" name="gadget_include" value="'.htmlspecialchars($uniq).'" group="gp_include_select" '.$checked.'/> ';
+					echo '<span>';
+					echo $uniq;
+					echo '</span>';
+					echo '</label>';
+				}
+			}
+
+			$array = array();
+			foreach($gp_index as $slug => $id){
+
+				$label		= \gp\tool::GetLabel($slug);
+				$label		= str_replace( array('&lt;','&gt;','&quot;','&#39;','&amp;'), array('<','>','"',"'",'&')  , $label);
+				$array[]	= array($label,$slug);
+
+				$checked = '';
+				if( $slug == $file_content ){
+					$checked = 'checked';
+				}
+
+				echo '<label>';
+				echo '<input type="radio" name="gadget_include" value="'.htmlspecialchars($uniq).'" group="gp_include_select" '.$checked.'/> ';
+				echo '<span>';
+				echo $label;
+				echo '<span class="slug">';
+				echo '/'.$slug;
+				echo '</span>';
+				echo '</span>';
+				echo '</label>';
+			}
+			echo '</div></div>';
+
+			echo '<br/>';
 
 			echo '<div id="gp_option_area">';
 			echo '<a data-cmd="gp_include_preview" class="ckeditor_control full_width">Preview</a>';
@@ -777,28 +808,9 @@ namespace gp\tool{
 			$content = ob_get_clean();
 			$page->ajaxReplace[] = array('gp_include_dialog','',$content);
 
-
-			//file include autocomplete
-			$options				= array();
-			$options['admin_vals']	= false;
-			$options['var_name']	= 'source';
-			$file_includes			= self::AutoCompleteValues(false,$options);
-			$page->ajaxReplace[]	= array('gp_autocomplete_include','file',$file_includes);
-
-
-			//gadget include autocomplete
-			$codea = array();
-			if( isset($config['gadgets']) ){
-				foreach($config['gadgets'] as $uniq => $info){
-					$codea[] = array($uniq,$uniq);
-				}
-			}
-			$code = 'var source='.json_encode($codea);
-
-			$page->ajaxReplace[] = array('gp_autocomplete_include','gadget',$code);
-
 			return false;
 		}
+
 
 		/**
 		 * Return an array

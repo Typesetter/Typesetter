@@ -262,29 +262,6 @@ html{
 	}
 
 
-/* include  editing */
-.gp_inlude_edit{
-	font-size:12px;
-	color:#444;
-	margin:0 0 8px 0;
-	float:left;
-	display:block;
-	}
-
-#gp_admin_html .gp_inlude_edit .label{
-	margin:0;
-	background:none;
-	color:#444;
-	}
-#gp_admin_html .gp_inlude_edit input{
-	border:1px solid #ccc;
-	border-radius: 5px;
-	padding:4px;
-	width:185px;
-	margin-right:4px;
-	}
-
-
 /**
  * Tabs
  *

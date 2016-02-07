@@ -455,7 +455,7 @@ class Ajax extends \gp\admin\Menu{
 		}
 
 		ob_start();
-		echo '<div class="gpui-scrolllist">';
+		echo '<div class="gpui-scrolllist"><div>';
 		echo '<input type="text" name="search" value="" class="gpsearch" placeholder="'.$langmessage['Search'].'" autocomplete="off" />';
 		foreach($trashtitles as $title => $info){
 			if( empty($info['label']) ){
@@ -475,7 +475,7 @@ class Ajax extends \gp\admin\Menu{
 			echo '</span>';
 			echo '</label>';
 		}
-		echo '</div>';
+		echo '</div></div>';
 
 		return ob_get_clean();
 	}

@@ -1982,16 +1982,23 @@ body #addon_about{
  *
  */
 #gp_admin_html .gpui-scrolllist{
+	transform:translateZ(1px);
+	padding-left: 0;
+	padding-right: 0;
+	width: auto;
+	display: block;
+	overflow:hidden;
+}
+
+#gp_admin_html .gpui-scrolllist > div{
 	height: 300px;
 	overflow: auto;
 	overflow-x: hidden;
-	width: auto;
-	display: block;
-	padding-left: 0;
-	padding-right: 0;
+	margin-top:24px;
 }
 
-.gpui-scrolllist > input.gpsearch{
+
+.gpui-scrolllist > div > input.gpsearch{
 	box-sizing: border-box !important;
 	width: 100% !important;
 	display: block;
@@ -1999,6 +2006,8 @@ body #addon_about{
 	border: 0 none;
 	border-bottom: 1px solid #ccc;
 	margin-bottom: 3px;
+	position:fixed;
+	top:0;
 	}
 
 .gpui-scrolllist label,
@@ -2007,6 +2016,7 @@ body #addon_about{
 	cursor: pointer;
 	position: relative;
 	overflow: hidden;
+	margin:0;
 	}
 
 .gpui-scrolllist label input{

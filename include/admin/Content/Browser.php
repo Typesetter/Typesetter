@@ -13,7 +13,7 @@ namespace gp\admin\Content{
 			$page->get_theme_css = false;
 
 			$page->head .= '<style type="text/css">';
-			$page->head .= 'html,body{padding:0;margin:0;background-color:#ededed !important;background-image:none !important;border:0 none !important;}';
+			$page->head .= 'html,body{padding:0;margin:0 !important;background-color:#ededed !important;background-image:none !important;border:0 none !important;}';
 			$page->head .= '#gp_admin_html{padding:5px 0 !important;}';
 			$page->head .= '</style>';
 

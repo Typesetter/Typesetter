@@ -57,7 +57,9 @@ namespace gp\tool{
 				$path				= self::$current['code_folder_part'].'/'.ltrim($file,'/');
 			}
 
-			$page->head			.= "\n".'<link rel="stylesheet" type="text/css" href="'.\gp\tool::GetDir($path).'"/>';
+			if( $path !== false ){
+				$page->head			.= "\n".'<link rel="stylesheet" type="text/css" href="'.\gp\tool::GetDir($path).'"/>';
+			}
 
 			return $path;
 		}

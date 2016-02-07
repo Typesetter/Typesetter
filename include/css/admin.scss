@@ -2017,6 +2017,8 @@ body #addon_about{
 	position: relative;
 	overflow: hidden;
 	margin:0;
+	white-space:nowrap;
+	text-overflow:ellipsis;
 	}
 
 .gpui-scrolllist label input{

@@ -764,7 +764,7 @@ namespace gp\tool{
 					if( $uniq == $gadget_content ){
 						$checked = 'checked';
 					}
-					echo '<input type="radio" name="gadget_include" value="'.htmlspecialchars($uniq).'" group="gp_include_select" '.$checked.'/> ';
+					echo '<input type="radio" name="include" value="gadget:'.htmlspecialchars($uniq).'" group="gp_include_select" '.$checked.' data-cmd="IncludePreview" /> ';
 					echo '<span>';
 					echo $uniq;
 					echo '</span>';
@@ -785,7 +785,7 @@ namespace gp\tool{
 				}
 
 				echo '<label>';
-				echo '<input type="radio" name="gadget_include" value="'.htmlspecialchars($uniq).'" group="gp_include_select" '.$checked.'/> ';
+				echo '<input type="radio" name="include" value="file:'.htmlspecialchars($slug).'" group="gp_include_select" '.$checked.'  data-cmd="IncludePreview" /> ';
 				echo '<span>';
 				echo $label;
 				echo '<span class="slug">';
@@ -795,12 +795,6 @@ namespace gp\tool{
 				echo '</label>';
 			}
 			echo '</div></div>';
-
-			echo '<br/>';
-
-			echo '<div id="gp_option_area">';
-			echo '<a data-cmd="gp_include_preview" class="ckeditor_control full_width">Preview</a>';
-			echo '</div>';
 
 			echo '</form>';
 
@@ -1047,8 +1041,9 @@ namespace gp\tool{
 			$section['captions'] = $_POST['captions'];
 		}
 
+
 		/**
-		 *
+		 * Save an include section
 		 *
 		 */
 		public static function SectionFromPost_Include( &$existing_section, $section_num, $title, $file_stats ){
@@ -1056,24 +1051,29 @@ namespace gp\tool{
 
 			unset($existing_section['index']);
 
-			if( !empty($_POST['gadget_include']) ){
-				$gadget = $_POST['gadget_include'];
+
+			//gadget include
+			if( strpos($_POST['include'],'gadget:') === 0 ){
+				$gadget = substr($_POST['include'],7);
 				if( !isset($config['gadgets'][$gadget]) ){
 					msg($langmessage['OOPS_TITLE']);
 					return false;
 				}
 
-				$existing_section['include_type'] = 'gadget';
-				$existing_section['content'] = $gadget;
-			}else{
-				$include_title = $_POST['file_include'];
+				$existing_section['include_type']	= 'gadget';
+				$existing_section['content']		= $gadget;
+
+			//file include
+			}elseif( strpos($_POST['include'],'file:') === 0 ){
+				$include_title = substr($_POST['include'],5);
+
 				if( !isset($gp_index[$include_title]) ){
 					msg($langmessage['OOPS_TITLE']);
 					return false;
 				}
-				$existing_section['include_type'] = \gp\tool::SpecialOrAdmin($include_title);
-				$existing_section['index'] = $gp_index[$include_title];
-				$existing_section['content'] = $include_title;
+				$existing_section['include_type']	= \gp\tool::SpecialOrAdmin($include_title);
+				$existing_section['index']			= $gp_index[$include_title];
+				$existing_section['content']		= $include_title;
 			}
 
 
@@ -1081,36 +1081,6 @@ namespace gp\tool{
 			$content = \gp\tool\Output\Sections::RenderSection( $existing_section, $section_num, $title, $file_stats );
 			$page->ajaxReplace[] = array('gp_include_content','',$content);
 			return true;
-		}
-
-
-
-		/**
-		 * Preview an include section
-		 *
-		 */
-		public static function PreviewSection( $section, $section_num, $title, $file_stats ){
-			global $page, $langmessage;
-
-			$page->ajaxReplace = array();
-
-			switch($section['type']){
-				case 'include':
-					$data = array();
-					$data['type'] = $section['type'];
-					if( !empty($_POST['gadget_include']) ){
-						$data['include_type'] = 'gadget';
-						$data['content'] = $_POST['gadget_include'];
-					}else{
-						$data['content'] = $_POST['file_include'];
-					}
-
-					$content = \gp\tool\Output\Sections::RenderSection( $data, $section_num, $title, $file_stats );
-					$page->ajaxReplace[] = array('gp_include_content','',$content);
-				return;
-			}
-
-			msg($langmessage['OOPS'].'(2)');
 		}
 
 

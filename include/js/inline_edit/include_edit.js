@@ -20,7 +20,6 @@
 
 			checkDirty:function(){
 				var curr_val = gp_editor.gp_saveData();
-				console.log('cache value',cache_value,'curr_val',curr_val);
 				if( curr_val != cache_value ){
 					return true;
 				}
@@ -45,34 +44,25 @@
 		}
 
 
-		gpresponse.gp_include_dialog = function(data){
+		$gp.response.gp_include_dialog = function(data){
 			$('#ckeditor_top').html(data.CONTENT);
 
 			gp_editor.resetDirty();
 		}
 
 
-		gplinks.gp_include_preview = function(){
-
-			$gp.loading();
-
-			var path = gp_editor.save_path;
-			path = strip_from(path,'#');
-
-			var data = '';
-			if( path.indexOf('?') > 0 ){
-				data = strip_to(path,'?')+'&';
-			}
-			data += gp_editor.gp_saveData();
-			data += '&cmd=preview';
-
-			$gp.postC( path, data);
+		/**
+		 * Preview the include section when selected
+		 *
+		 */
+		$gp.inputs.IncludePreview = function(){
+			gp_editing.save_changes();
 		}
 
 		/**
 		 * Replace the area with the new include data
 		 */
-		gpresponse.gp_include_content = function(obj){
+		$gp.response.gp_include_content = function(obj){
 			edit_div.html(obj.CONTENT);
 		}
 

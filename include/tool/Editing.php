@@ -754,7 +754,7 @@ namespace gp\tool{
 			echo '<form id="gp_include_form">';
 
 			echo '<div class="gpui-scrolllist"><div>';
-			echo '<input type="text" name="search" value="" class="gpsearch" placeholder="'.$langmessage['Search'].'" autocomplete="off" />';
+			echo '<input type="text" value="" class="gpsearch" placeholder="'.$langmessage['Search'].'" autocomplete="off" />';
 
 			//gadget include autocomplete
 			if( isset($config['gadgets']) ){
@@ -764,7 +764,7 @@ namespace gp\tool{
 					if( $uniq == $gadget_content ){
 						$checked = 'checked';
 					}
-					echo '<input type="radio" name="include" value="gadget:'.htmlspecialchars($uniq).'" group="gp_include_select" '.$checked.' data-cmd="IncludePreview" /> ';
+					echo '<input type="radio" name="include" value="gadget:'.htmlspecialchars($uniq).'" '.$checked.' data-cmd="IncludePreview" /> ';
 					echo '<span>';
 					echo $uniq;
 					echo '</span>';
@@ -785,7 +785,7 @@ namespace gp\tool{
 				}
 
 				echo '<label>';
-				echo '<input type="radio" name="include" value="file:'.htmlspecialchars($slug).'" group="gp_include_select" '.$checked.'  data-cmd="IncludePreview" /> ';
+				echo '<input type="radio" name="include" value="file:'.htmlspecialchars($slug).'" '.$checked.'  data-cmd="IncludePreview" /> ';
 				echo '<span>';
 				echo $label;
 				echo '<span class="slug">';

@@ -18,8 +18,17 @@
 		gp_editor = {
 			save_path: save_path,
 
+			CanAutoSave: function(){
+				if( $('#gp_include_form input:checked').length ){
+					return true;
+				}
+
+				return false;
+			},
+
 			checkDirty:function(){
 				var curr_val = gp_editor.gp_saveData();
+
 				if( curr_val != cache_value ){
 					return true;
 				}

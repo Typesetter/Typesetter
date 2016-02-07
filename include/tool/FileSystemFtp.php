@@ -52,8 +52,6 @@ class FileSystemFtp extends FileSystem{
 		}
 
 		@ftp_pasv($this->conn_id, true );
-
-		return true;
 	}
 
 
@@ -87,10 +85,10 @@ class FileSystemFtp extends FileSystem{
 		}
 
 		$connect_args						= $this->get_connect_vars($connect_args);
-		$connected							= $this->connect_handler($connect_args);
+		$connect_msg						= $this->connect_handler($connect_args);
 
-		if( $connected !== true ){
-			return $connected;
+		if( !is_null($connect_msg) ){
+			return $connect_msg;
 		}
 
 		//get the ftp_root

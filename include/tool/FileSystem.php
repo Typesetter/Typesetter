@@ -193,12 +193,8 @@ class FileSystem{
 		return true;
 	}
 
-	/**
-	 * @return mixed
-	 */
-	public function connect_handler($args){
-		return true;
-	}
+	public function connect_handler($args){}
+
 	public function get_base_dir(){
 		global $dataDir;
 		return $dataDir;

@@ -257,11 +257,6 @@ namespace gp\tool{
 			}
 
 			$theHeaders = self::StreamHeaders($handle);
-			if( $theHeaders === false ){
-				//$http_response_header is a PHP reserved variable which is set in the current-scope when using the HTTP Wrapper
-				//see http://php.oregonstate.edu/manual/en/reserved.variables.httpresponseheader.php
-				$theHeaders = $http_response_header;
-			}
 			fclose($handle);
 
 			$processedHeaders = self::processHeaders($theHeaders);
@@ -439,16 +434,11 @@ namespace gp\tool{
 		 */
 		public static function StreamHeaders($handle){
 
-			if( !function_exists('stream_get_meta_data') ){
-				$debug['stream'] = 0;
-				return false;
-			}
-
 			$debug['stream'] = 1;
 
 			$meta = stream_get_meta_data($handle);
 			if( !isset($meta['wrapper_data']) ){
-				return false;
+				return $http_response_header; //$http_response_header is a PHP reserved variable which is set in the current-scope when using the HTTP Wrapper
 			}
 
 			$theHeaders = $meta['wrapper_data'];

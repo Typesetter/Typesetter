@@ -1641,6 +1641,7 @@ namespace gp{
 				\gp\tool\Output::$inline_vars['req_time']		= time();
 				\gp\tool\Output::$inline_vars['gpBLink']		= self::HrefEncode($linkPrefix,false);
 				\gp\tool\Output::$inline_vars['post_nonce']		= self::new_nonce('post',true);
+				\gp\tool\Output::$inline_vars['gpFinderUrl']	= \gp\tool::GetUrl('Admin/Browser');
 
 				\gp\tool\Session::GPUIVars();
 			}

@@ -754,7 +754,7 @@ namespace gp{
 		 * @param string $index
 		 * @param bool $amp Whether or not to escape ampersand characters
 		 */
-		public static function GetLabelIndex($index=false,$amp=false){
+		public static function GetLabelIndex($index=null,$amp=false){
 			global $gp_titles,$langmessage;
 
 			$info = array();
@@ -783,7 +783,7 @@ namespace gp{
 		 * @param string $title
 		 *
 		 */
-		public static function GetLabel($title=false){
+		public static function GetLabel($title=null){
 			global $gp_titles, $gp_index, $langmessage;
 
 			$return = false;

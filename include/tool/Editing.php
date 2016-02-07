@@ -1125,12 +1125,6 @@ namespace gp\tool{
 
 			switch($cmd){
 
-
-				case 'preview':
-				self::PreviewSection( $section, $section_num, $title, $file_stats );
-				return false;
-
-
 				case 'include_dialog':
 				self::IncludeDialog( $section );
 				return false;

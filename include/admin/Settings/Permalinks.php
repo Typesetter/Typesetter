@@ -13,7 +13,7 @@ class Permalinks{
 	public $server_name;
 	public $www_avail			= false;
 	public $www_setting			= null;
-	public $orig_rules			= false;
+	public $orig_rules			= null;
 	public $new_rules			= '';
 	private $FileSystem;
 
@@ -69,15 +69,17 @@ class Permalinks{
 
 
 		// already has www settings?
-		if( strpos($this->orig_rules,'# with www') !== false ){
-			$this->www_setting	= true;
-			$this->www_avail	= true;
-			return;
-		}
-		if( strpos($this->orig_rules,'# without www') !== false ){
-			$this->www_setting	= false;
-			$this->www_avail	= true;
-			return;
+		if( !is_null($this->org_rules) ){
+			if( strpos($this->orig_rules,'# with www') !== false ){
+				$this->www_setting	= true;
+				$this->www_avail	= true;
+				return;
+			}
+			if( strpos($this->orig_rules,'# without www') !== false ){
+				$this->www_setting	= false;
+				$this->www_avail	= true;
+				return;
+			}
 		}
 
 
@@ -451,7 +453,7 @@ class Permalinks{
 
 		if( !self::TestResponse($this->hide_index) ){
 
-			if( $this->orig_rules === false ){
+			if( is_null($this->orig_rules) ){
 				$this->FileSystem->unlink($filesystem_path);
 			}else{
 				$this->FileSystem->put_contents($filesystem_path,$this->orig_rules);
@@ -524,9 +526,9 @@ class Permalinks{
 	 * add/remove cms rules from $original_contents to get new $contents
 	 *
 	 */
-	public static function Rewrite_Rules( $hide_index = true, $home_root, $existing_contents = '', $www = null ){
+	public static function Rewrite_Rules( $hide_index = true, $home_root, $existing_contents = null, $www = null ){
 
-		if( !$existing_contents ){
+		if( is_null($existing_contents) ){
 			$existing_contents = '';
 		}
 

@@ -1451,10 +1451,12 @@ class SetupSite{
 		return common::GetUrl('Admin_Site_Setup',$query);
 	}
 
-	public function InstallFields($array,$key=''){
+	public function InstallFields($array,$key=null){
 		foreach($array as $k => $v){
 
-			if((!empty($key)) || ($key === 0)) $k = $key.'['.urlencode($k).']';
+			if( !empty($key) || ($key === 0) ){
+				$k = $key.'['.urlencode($k).']';
+			}
 
 			if (is_array($v) || is_object($v)) {
 				$this->InstallFields($v,$k);

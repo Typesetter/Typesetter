@@ -543,7 +543,7 @@ class Tools{
 		$GLOBALS['config']['homepath'] = false; //to prevent a warning from absoluteUrl()
 		$file = $destination.'/.htaccess';
 
-		$original_contents = false;
+		$original_contents = null;
 		if( file_exists($file) ){
 			$original_contents = file_get_contents($file);
 		}

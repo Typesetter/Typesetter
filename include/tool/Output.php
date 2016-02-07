@@ -444,14 +444,18 @@ namespace gp\tool{
 				echo \gp\tool::Link('Admin_Theme_Content/Edit/'.$page->gpLayout,$param,'cmd=DragArea&dragging='.urlencode($param).'&to=%s',array('data-cmd'=>'creq','class'=>'dragdroplink nodisplay')); //drag-drop link
 				if( !$empty_container ){
 					echo '<div class="output_area_label">';
-					echo ' '.self::GpOutLabel($info['gpOutCmd']);
+					echo self::GpOutLabel($info['arg']);
+					echo '</div>';
+				}else{
+					echo '<div class="output_area_label">';
+					echo 'Empty Container';
 					echo '</div>';
 				}
 				echo '<div class="output_area_link">';
+				echo ' '.\gp\tool::Link('Admin_Theme_Content/Edit/'.$page->gpLayout,'<i class="fa fa-plus"></i> '.$langmessage['insert'],'cmd=SelectContent&param='.$param,array('data-cmd'=>'gpabox'));
 				if( !$empty_container ){
-					echo ' '.\gp\tool::Link('Admin_Theme_Content/Edit/'.$page->gpLayout,$langmessage['remove'],'cmd=RemoveArea&param='.$param,array('data-cmd'=>'creq'));
+					echo ' '.\gp\tool::Link('Admin_Theme_Content/Edit/'.$page->gpLayout,'<i class="fa fa-times"></i> '.$langmessage['remove'],'cmd=RemoveArea&param='.$param,array('data-cmd'=>'creq'));
 				}
-				echo ' '.\gp\tool::Link('Admin_Theme_Content/Edit/'.$page->gpLayout,$langmessage['insert'],'cmd=SelectContent&param='.$param,array('data-cmd'=>'gpabox'));
 				echo '</div></div>';
 
 			}

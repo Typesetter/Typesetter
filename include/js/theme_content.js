@@ -91,36 +91,12 @@ $(function(){
 	$(document).delegate('.draggable_element',{
 		'mouseenter': function(){
 			var $this = $(this);
-			if( $this.hasClass('target') ){
-				return;
-			}
-
-			$this.addClass('hover');
-
-
-			$this.find('div').stop(true,true).fadeIn();
-			$this.stop(true).fadeTo('200',1);
-
-			//set height
-			var h = $this.height();
-			$this.data('ph',h);
-			var h2 = $this.height('auto').height();
-			if( h2 < h ){
-				$this.height(h);
+			if( !$this.hasClass('target') ){
+				$this.addClass('hover');
 			}
 		},
 		'mouseleave': function(){
-			var $this = $(this)
-						.removeClass('hover')
-						.stop(true)
-						.fadeTo('slow',.5);
-
-			$this.find('div').stop(true,true).fadeOut();
-
-			var h = $this.data('ph');
-			if( parseInt(h) > 0 ){
-				$this.height(h);
-			}
+			var $this = $(this).removeClass('hover');
 		}
 	});
 
@@ -153,51 +129,44 @@ $(function(){
 		}
 
 
-		//show drag-n-drop message
-		var $content = $('.filetype-text');
-		var pos = $content.offset();
-		var w = $content.width();
-
-
 		//prepare the drag area
 		var drag_area = $('<div class="draggable_droparea" id="theme_content_drop"></div>').appendTo('#gp_admin_html');
 
 
 		//create a draggable box for each output_area
 		var $inner_links = $('.gp_inner_links');
-		$('.gp_output_area').each(function(i,b){
-			var loc, lnks, $this = $(b);
+		$('.gp_output_area').each(function(i){
 
-			loc = $gp.Coords($this);
-
-			lnks = $inner_links.eq(i);
+			var $this	= $(this);
+			var lnks	= $inner_links.eq(i)
 
 			if( lnks.length > 0 ){
 
 
-				$('<div class="draggable_element" style="position:absolute;height:5px;width:5px;"></div>')
+				$('<div class="draggable_element" style="position:absolute;min-height:20px;min-width:20px;"></div>')
 				.appendTo(drag_area)
 				.append(lnks) //.output_area_link
-				.fadeTo('fast',.5)
-				.height(loc.h-3).width(loc.w-6)
 				.on('gp_position',function(){
 
 					var loc = $gp.Coords($this);
 
 					//make sure there's at least a small box to work with
 					loc.h = Math.max(20,loc.h);
-					loc.w = Math.max(20,loc.w);
 
 					$(this).css({'top':loc.top,'left':loc.left,'width':loc.w,'height':loc.h})
 				});
 			}
 		});
 
-		var drag_elements = $('.draggable_element');
+		var drag_elements = $('#theme_content_drop .draggable_element');
 		drag_elements.trigger('gp_position');
 		window.setInterval(function(){
 			drag_elements.trigger('gp_position');
 		},2000);
+
+		$gp.$win.resize(function(){
+			drag_elements.trigger('gp_position');
+		});
 	}
 
 

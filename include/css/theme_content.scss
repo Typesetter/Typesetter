@@ -35,15 +35,35 @@
 	width:0;
 
 	.draggable_element{
-		background:#888;
 		z-index:8100; /*  given 8100 z-index by js */
-		border:3px dotted #FFF;
+		border:1px dashed #FFF;
+		padding:10px;
 		border-radius: 3px;
 		box-sizing:border-box;
+		display:table;
+
+
+		//@include transition( background .5s ease-out);
+		background:rgba(136,136,136,0.4);
 	}
 
-	.hover{
+	.draggable_element.hover{
 		z-index:9000;
+		/*
+		background:rgba(0,0,0,0.5);
+
+		background: -moz-radial-gradient(center, ellipse cover, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%);
+		background: -webkit-radial-gradient(center, ellipse cover, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.5) 100%);
+		background: radial-gradient(ellipse at center, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.5) 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#80000000', endColorstr='#80888888',GradientType=1 );
+		*/
+		background: -moz-radial-gradient(center, ellipse cover, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 20%, rgba(136,136,136,0.4) 100%);
+	}
+
+	.draggable_element.hover > .gp_inner_links{
+		display:table-cell;
+		text-align:center;
+		vertical-align:middle;
 	}
 
 	.target{
@@ -54,39 +74,39 @@
 	}
 
 	.output_area_label{
-		font-weight:bold;
+		text-shadow:0 0 10px #fff;
+		color:#333;
+
 		overflow:hidden;
-		padding:3px;
-		font-size:13px;
+		padding:10px;
+		font-size:30px;
+		margin:10px;
 	}
 
 	.output_area_link{
-		/* position:relative;
-		float:right; */
 		font-weight:bold;
 		margin-bottom:7px;
 	}
 
-	.output_area_link a{
-		/* position:relative;
-		float:right; */
-		float:left;
-		border:1px solid #333;
-		background-color:#555;
-		color:#fff !important;
-		font-weight:bold;
-		padding:2px 4px;
 
-		margin:3px;
+	.output_area_link a{
+		border:1px solid #ccc;
+		background-color:#ddd;
+
+		color:#444 !important;
+		font-size:14px;
+		font-weight:normal;
+		text-shadow:1px 1px 0 #eee;
+
+		padding:4px 10px;
+		margin:5px;
 		text-decoration:none;
 
 		border-radius:3px !important;
-		z-index:8300;
 	}
 
 	.output_area_link a:hover{
-		background-color:#444;
-		z-index:8300;
+		background-color:#eee;
 	}
 
 }

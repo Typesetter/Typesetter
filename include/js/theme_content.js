@@ -152,11 +152,6 @@ $(function(){
 			return;
 		}
 
-		window.setInterval(function(){
-
-
-		},200);
-
 
 		//show drag-n-drop message
 		var $content = $('.filetype-text');
@@ -190,16 +185,10 @@ $(function(){
 					var loc = $gp.Coords($this);
 
 					//make sure there's at least a small box to work with
-					if( loc.h < 20 ){
-						$this.height(20);
-						loc.h = 20;
-					}
-					if( loc.w < 20 ){
-						$this.width(20);
-						loc.w = 20;
-					}
+					loc.h = Math.max(20,loc.h);
+					loc.w = Math.max(20,loc.w);
 
-					$(this).css({'top':loc.top,'left':loc.left})
+					$(this).css({'top':loc.top,'left':loc.left,'width':loc.w,'height':loc.h})
 				});
 			}
 		});

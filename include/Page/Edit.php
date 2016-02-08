@@ -1205,7 +1205,7 @@ class Edit extends \gp\Page{
 				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 				echo $link;
 				echo \gp\tool::Link($this->title,$langmessage['Manage Sections'],'cmd=ManageSections',array('class'=>'manage_sections','data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
-				echo '<hr/>';
+				echo '<span class="gp_separator"></span>';
 				echo \gp\tool::Link($this->title,$langmessage['rename/details'],'cmd=renameform&index='.urlencode($this->gp_index),'data-cmd="gpajax"');
 				echo \gp\tool::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox'));
 				echo '</span>';

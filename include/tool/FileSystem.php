@@ -14,6 +14,7 @@ class FileSystem{
 	public $connect_vars	= array();
 	public $temp_file		= null;
 	public $method			= 'gp_filesystem_direct';
+	public $connect_msg		= '';
 
 
 
@@ -193,7 +194,9 @@ class FileSystem{
 		return true;
 	}
 
-	public function connect_handler($args){}
+	public function connect_handler($args){
+		return true;
+	}
 
 	public function get_base_dir(){
 		global $dataDir;

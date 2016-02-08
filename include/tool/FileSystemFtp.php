@@ -22,7 +22,7 @@ class FileSystemFtp extends FileSystem{
 
 	/**
 	 * Connect to ftp using the supplied values
-	 * @return mixed true on success, Error string on failure
+	 * @return bool
 	 */
 	public function connect_handler($args){
 		global $langmessage;
@@ -30,7 +30,8 @@ class FileSystemFtp extends FileSystem{
 		$args += array('ftp_server'=>'','port'=>'','ftp_user'=>'','ftp_pass'=>'');
 
 		if( empty($args['ftp_server']) ){
-			return $langmessage['couldnt_connect'].' (Missing Arguments)';
+			$this->connect_msg = $langmessage['couldnt_connect'].' (Missing Arguments)';
+			return false;
 		}
 		if( empty($args['port']) ){
 			$args['port'] = 21;
@@ -39,7 +40,8 @@ class FileSystemFtp extends FileSystem{
 		$this->conn_id = @ftp_connect($args['ftp_server'],$args['port'],6);
 
 		if( !$this->conn_id ){
-			return $langmessage['couldnt_connect'].' (Server Connection Failed)';
+			$this->connect_msg = $langmessage['couldnt_connect'].' (Server Connection Failed)';
+			return false;
 		}
 
 		//use ob_ to keep error message from displaying
@@ -48,10 +50,13 @@ class FileSystemFtp extends FileSystem{
 		ob_end_clean();
 
 		if( !$connected ){
-			return $langmessage['couldnt_connect'].' (Authentication Failed)';
+			$this->connect_msg = $langmessage['couldnt_connect'].' (Server Connection Failed)';
+			return false;
 		}
 
 		@ftp_pasv($this->conn_id, true );
+
+		return true;
 	}
 
 
@@ -60,7 +65,7 @@ class FileSystemFtp extends FileSystem{
 	 * Connection values will not be kept in $config in case they're being used for a system revert which will replace the config.php file
 	 * Also handle moving ftp connection values from $config to a sep
 	 *
-	 * @return bool|string true if connected, error message otherwise
+	 * @return bool
 	 */
 	public function connect(){
 		global $config, $dataDir, $langmessage;
@@ -85,10 +90,10 @@ class FileSystemFtp extends FileSystem{
 		}
 
 		$connect_args						= $this->get_connect_vars($connect_args);
-		$connect_msg						= $this->connect_handler($connect_args);
+		$connected							= $this->connect_handler($connect_args);
 
-		if( !is_null($connect_msg) ){
-			return $connect_msg;
+		if( !is_null($connected) ){
+			return false;
 		}
 
 		//get the ftp_root
@@ -135,9 +140,12 @@ class FileSystemFtp extends FileSystem{
 
 		if( $connected === true ){
 			return true;
-		}elseif( isset($_POST['connect_values_submitted']) ){
-			msg($connected);
 		}
+
+		if( isset($_POST['connect_values_submitted']) ){
+			msg($this->connect_msg);
+		}
+
 		$this->CompleteForm($_POST, $action);
 
 		return false;

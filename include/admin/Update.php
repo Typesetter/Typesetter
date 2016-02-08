@@ -613,7 +613,7 @@ class Update extends \gp\Page{
 	function CleanUpFolders($folders){
 		global $langmessage;
 
-		if( $this->FileSystem->connect() !== true ){
+		if( !$this->FileSystem->connect() ){
 			$this->msg($langmessage['OOPS'].' (not connected)');
 			return false;
 		}
@@ -660,7 +660,7 @@ class Update extends \gp\Page{
 	function UnpackAndReplace(){
 		global $langmessage, $config, $dataDir;
 
-		if( $this->FileSystem->connect() !== true ){
+		if( !$this->FileSystem->connect() ){
 			$this->msg($langmessage['OOPS'].': (not connected)');
 			return false;
 		}
@@ -887,8 +887,7 @@ class Update extends \gp\Page{
 	function GetServerInfo(){
 		global $langmessage;
 
-		$connect_result = $this->FileSystem->connect();
-		if( $connect_result === true ){
+		if( $this->FileSystem->connect() ){
 
 			$this->DoRemoteCheck2(); //make sure we have the latest information
 			$this->msg($langmessage['ready_for_upgrade']);
@@ -897,7 +896,7 @@ class Update extends \gp\Page{
 		}
 
 		if( isset($_POST['connect_values_submitted']) ){
-			msg($connect_result);
+			msg($this->FileSystem->connect_msg);
 		}
 
 		//not connected, show form

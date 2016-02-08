@@ -298,29 +298,62 @@ class Tools{
 
 
 		// Home
-		$content = '<h2>Welcome!</h2>
-		<p>Welcome to your new '.CMS_NAME.' powered website. Now that '.CMS_NAME.' is installed, you can start editing the content and customizing your site.</p>
+		$content = '<h2>Welcome to Your '.CMS_NAME.' Powered Site!</h2>
+		<p class="lead">Now that '.CMS_NAME.' is installed, you can start editing the content and customizing your site.</p>
+		<div class="row">
+		<div class="col-sm-6">
+
 		<h3>Getting Started</h3>
+		<hr/>
 		<p>You are currently viewing the default home page of your website. Here\'s a quick description of how to edit this page.</p>
 		<ol>
 		<li>First make sure you&#39;re '.self::Install_Link_Content('Admin','logged in','file=Home').'.</li>
-		<li>Then, to edit this page, click the &quot;Edit&quot; link that appears when you move your mouse over the content.</li>
-		<li>Make your edits, click &quot;Save&quot; and you&#39;re done!</li>
+		<li>Then click the &quot;Edit&quot; link that appears when you move your mouse over the content.</li>
+		<li>Your changes will be saved to a draft automatically. Click "Publish Draft" to make them live.</li>
 		</ol>
+
+		</div>
+		<div class="col-sm-6">
+
 		<h3>More Options</h3>
+		<hr/>
 		<ul>
 		<li>Adding, renaming, deleting and organising your pages can all be done in the '.self::Install_Link_Content('Admin/Menu','Page Manager').'.</li>
 		<li>Choose from a '.self::Install_Link_Content('Admin_Theme_Content','variety of themes').' to give your site a custom look.</li>
 		<li>Then, you can '.self::Install_Link_Content('Admin_Theme_Content/Edit','add, remove and rearrange').' the content of your site without editing the html.</li>
 		<li>Take a look at the Administrator Toolbar to access all the features of '.CMS_NAME.'.</li>
 		</ul>
+
+		</div>
+		</div>
+
+		<div class="row">
+		<div class="col-sm-6">
+
 		<h3>Online Resources</h3>
+		<hr/>
 		<p>'.CMS_READABLE_DOMAIN.' has a number of resources to help you do even more.</p>
 		<ul>
 		<li>Find more community developed <a href="'.CMS_DOMAIN.'/Themes" title="'.CMS_NAME.' Themes">themes</a> and <a href="'.CMS_DOMAIN.'/Plugins" title="'.CMS_NAME.' Plugin">plugins</a> to enhance your site.</li>
 		<li>Get help in the <a href="'.CMS_DOMAIN.'/Forum" title="'.CMS_NAME.' Forum">'.CMS_NAME.' forum</a>.</li>
-		<li>Show off your <a href="'.CMS_DOMAIN.'/Powered_by" title="Sites Using '.CMS_NAME.'">'.CMS_NAME.' powered site</a> or list your <a href="'.CMS_DOMAIN.'/Service_Provider" title="Businesses Using '.CMS_NAME.'">'.CMS_NAME.' related business</a>.</li>
-		</ul>';
+		<li>Show off your <a href="'.CMS_DOMAIN.'/Showcase" title="Sites Using '.CMS_NAME.'">'.CMS_NAME.' powered site</a> or list your <a href="'.CMS_DOMAIN.'/Providers" title="Businesses Using '.CMS_NAME.'">'.CMS_NAME.' related business</a>.</li>
+		</ul>
+
+		</div>
+		<div class="col-sm-6">
+
+		<h3>Git Social</h3>
+		<hr/>
+		<p>There are many ways to contribute to our project:</p>
+		<ul>
+		<li>Fork '.CMS_NAME.' on <a href="https://github.com/Typesetter/Typesetter" target="_blank">github</a>.</li>
+		<li>Like us on <a href="https://www.facebook.com/Typesetter.cms" target="_blank">Facebook</a>.</li>
+		<li>Follow us on <a href="https://twitter.com/TypesetterCMS" target="_blank">Twitter</a>.</li>
+		</ul>
+
+		</div>
+		</div>
+		';
 		self::NewTitle( $destination, 'Home', $content, $config, $new_index);
 
 

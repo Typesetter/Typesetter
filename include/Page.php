@@ -62,6 +62,8 @@ namespace gp{
 		public function __construct($title, $type){
 			$this->requested	= $title;
 			$this->title		= $title;
+
+			$this->head			.= '<link rel="canonical" href="'.\gp\tool::GetUrl($title).'" />'."\n";
 		}
 
 

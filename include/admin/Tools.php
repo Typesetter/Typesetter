@@ -725,14 +725,9 @@ namespace gp\admin{
 				return;
 			}
 
-			$attr = '';
-			if( !$in_panel ){
-				$id_piece = '_click';
-			}
-
 			$label = isset($langmessage[$lang_key]) ? $langmessage[$lang_key] : $lang_key;
 
-			echo '<div class="panelgroup">'; //id="panelgroup_content'.$id_piece.'"
+			echo '<div class="panelgroup">';
 			self::PanelHeading($in_panel, $label, $icon_class, $panel_arg );
 			echo '<ul class="submenu">';
 			echo '<li class="submenu_top"><a class="submenu_top">'.$label.'</a></li>';

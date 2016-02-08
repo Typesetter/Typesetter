@@ -697,7 +697,10 @@ class Menu{
 			$open				= true;
 		}
 
-		$this->CloseLevel( $start_level);
+		$this->CloseLevel( $start_level );
+		if( $open ){
+			echo '</li></ul>';
+		}
 	}
 
 

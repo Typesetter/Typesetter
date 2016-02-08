@@ -117,6 +117,9 @@ namespace gp\tool{
 
 		private static $edit_index			= 0;
 
+		private static $head_content		= '';
+		private static $head_js				= '';
+
 
 		/**
 		 * Backwards compat for functions moved to \gp\tool\Output\Menu
@@ -1172,7 +1175,7 @@ namespace gp\tool{
 		}
 
 		public static function HeadContent(){
-			global $config, $page, $gp_head_content, $wbMessageBuffer;
+			global $config, $page, $wbMessageBuffer;
 
 			//before ob_start() so plugins can get buffer content
 			\gp\tool\Plugins::Action('HeadContent');
@@ -1195,13 +1198,12 @@ namespace gp\tool{
 			//get css and js info
 			$scripts = \gp\tool\Output\Combine::ScriptInfo( self::$components );
 
-			//check for bootstrap theme
-			if( strpos(self::$components,'bootstrap') ){
-				//this would only find bootstrap themes that include css
-			}
-
 			self::GetHead_TKD();
 			self::GetHead_CSS($scripts['css']); //css before js so it's available to scripts
+
+			self::$head_content = ob_get_clean();
+
+			ob_start();
 			self::GetHead_Lang();
 			self::GetHead_JS($scripts['js']);
 			self::GetHead_InlineJS();
@@ -1219,9 +1221,9 @@ namespace gp\tool{
 			if( !empty($page->head) ){
 				echo $page->head;
 			}
-
-			$gp_head_content .= ob_get_clean();
+			self::$head_js = ob_get_clean();
 		}
+
 
 		/**
 		 * Output the title, keywords, description and other meta for the current html document
@@ -1681,7 +1683,7 @@ namespace gp\tool{
 		 * @return string finalized response
 		 */
 		public static function BufferOut($buffer){
-			global $config,	$gp_head_content;
+			global $config;
 
 
 			//add error notice if there was a fatal error
@@ -1706,8 +1708,11 @@ namespace gp\tool{
 				return $buffer;
 			}
 
-			$replacements			= array();
+			//add js to bottom of <body>
+			$buffer = self::AddToBody($buffer, self::$head_js );
 
+
+			$replacements			= array();
 
 			//performace stats
 			if( class_exists('admin_tools') ){
@@ -1715,13 +1720,13 @@ namespace gp\tool{
 			}
 
 			//head content
-			$replacements[$placeholder]	= $gp_head_content;
+			$replacements[$placeholder]	= self::$head_content;
 
 
 			//add jquery if needed
 			$placeholder = '<!-- jquery_placeholder '.gp_random.' -->';
 			$replacement = '';
-			if( strpos($gp_head_content,'<script') !== false || strpos($buffer,'<script') !== false ){
+			if( !empty(self::$head_js) || strpos($buffer,'<script') !== false ){
 				$replacement = "\n<script type=\"text/javascript\" src=\"".\gp\tool::GetDir('/include/thirdparty/js/jquery.js')."\"></script>";
 			}
 
@@ -1738,6 +1743,25 @@ namespace gp\tool{
 
 
 			return str_replace( array_keys($replacements), array_values($replacements), $buffer);
+		}
+
+
+		/**
+		 * Add content to the html document before the </body> tag
+		 *
+		 */
+		public static function AddToBody($buffer, $add_string){
+
+			if( empty($add_string) ){
+				return $buffer;
+			}
+
+			$pos_body = strpos($buffer,'</body');
+			if( $pos_body ){
+				return substr_replace($buffer,$add_string,$pos_body,0);
+			}
+
+			return $buffer;
 		}
 
 
@@ -2003,10 +2027,10 @@ namespace gp\tool{
 
 			/* attempt to send 304 response  */
 			if( $page->fileModTime > 0 ){
-				global $wbMessageBuffer, $gp_head_content;
-				$len = strlen($gp_head_content) + ob_get_length();
+				global $wbMessageBuffer;
+				$len = strlen(self::$head_content) + strlen(self::$head_js) + ob_get_length();
 				if( count($wbMessageBuffer) ){
-					$len += strlen( serialize($wbMessageBuffer) );
+					$len += strlen( json_encode($wbMessageBuffer) );
 				}
 				\gp\tool::Send304( \gp\tool::GenEtag( $page->fileModTime, $len ) );
 			}

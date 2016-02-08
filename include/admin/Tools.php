@@ -575,35 +575,28 @@ namespace gp\admin{
 		public static function AdminPanelLinks($in_panel=true){
 			global $langmessage, $page, $gpAdmin;
 
-			$expand_class = 'expand_child';
-			$id_piece = '';
-			if( !$in_panel ){
-				$expand_class = 'expand_child_click';
-				$id_piece = '_click';
-			}
-
 			//content
 			$links = self::GetAdminGroup('content');
-			self::_AdminPanelLinks($in_panel, $id_piece, $links, 'Content', 'fa fa-file-text-o', 'con');
+			self::_AdminPanelLinks($in_panel, $links, 'Content', 'fa fa-file-text-o', 'con');
 
 
 			//appearance
 			$links = self::GetAppearanceGroup($in_panel);
-			self::_AdminPanelLinks($in_panel, $id_piece, $links, 'Appearance', 'fa fa-th', 'app');
+			self::_AdminPanelLinks($in_panel, $links, 'Appearance', 'fa fa-th', 'app');
 
 
 			//add-ons
 			$links = self::GetAddonLinks($in_panel);
-			self::_AdminPanelLinks($in_panel, $id_piece, $links, 'plugins', 'fa fa-plug', 'add');
+			self::_AdminPanelLinks($in_panel, $links, 'plugins', 'fa fa-plug', 'add');
 
 
 			//settings
 			$links = self::GetAdminGroup('settings');
-			self::_AdminPanelLinks($in_panel, $id_piece, $links, 'Settings', 'fa fa-sliders', 'set');
+			self::_AdminPanelLinks($in_panel, $links, 'Settings', 'fa fa-sliders', 'set');
 
 			//tools
 			$links = self::GetAdminGroup('tools');
-			self::_AdminPanelLinks($in_panel, $id_piece, $links, 'Tools', 'fa fa-wrench', 'tool');
+			self::_AdminPanelLinks($in_panel, $links, 'Tools', 'fa fa-wrench', 'tool');
 
 
 			//updates
@@ -635,7 +628,7 @@ namespace gp\admin{
 
 				$links = ob_get_clean();
 
-				self::_AdminPanelLinks($in_panel, $id_piece, $links, 'updates', 'fa fa-refresh', 'upd');
+				self::_AdminPanelLinks($in_panel, $links, 'updates', 'fa fa-refresh', 'upd');
 			}
 
 
@@ -655,7 +648,7 @@ namespace gp\admin{
 			echo \gp\tool::Link('Admin/About','About '.CMS_NAME);
 			echo '</li>';
 			$links = ob_get_clean();
-			self::_AdminPanelLinks($in_panel, $id_piece, $links, $gpAdmin['useralias'], 'fa fa-user', 'use');
+			self::_AdminPanelLinks($in_panel, $links, $gpAdmin['useralias'], 'fa fa-user', 'use');
 
 
 
@@ -667,7 +660,7 @@ namespace gp\admin{
 			echo '<li><span><span cms-ms>?</span> Milliseconds</span></li>';
 			echo '<li><span>0 DB Queries</span></li>';
 			$links = ob_get_clean();
-			self::_AdminPanelLinks($in_panel, $id_piece, $links, 'Performance', 'fa fa-bar-chart', 'cms');
+			self::_AdminPanelLinks($in_panel, $links, 'Performance', 'fa fa-bar-chart', 'cms');
 
 
 
@@ -686,7 +679,7 @@ namespace gp\admin{
 				echo '<li><a href="https://github.com/Typesetter/Typesetter/issues">Report A Bug</a></li>';
 
 				$links = ob_get_clean();
-				self::_AdminPanelLinks($in_panel, $id_piece, $links, 'resources', 'fa fa-globe', 'res');
+				self::_AdminPanelLinks($in_panel, $links, 'resources', 'fa fa-globe', 'res');
 
 
 				if( $in_panel ){
@@ -725,16 +718,21 @@ namespace gp\admin{
 		 * Helper function for outputing link groups in AdminPanelLinks()
 		 *
 		 */
-		private function _AdminPanelLinks($in_panel, $id_piece, $links, $lang_key, $icon_class, $panel_arg){
+		private function _AdminPanelLinks($in_panel, $links, $lang_key, $icon_class, $panel_arg){
 			global $langmessage;
 
 			if( empty($links) ){
 				return;
 			}
 
+			$attr = '';
+			if( !$in_panel ){
+				$id_piece = '_click';
+			}
+
 			$label = isset($langmessage[$lang_key]) ? $langmessage[$lang_key] : $lang_key;
 
-			echo '<div class="panelgroup" id="panelgroup_content'.$id_piece.'">';
+			echo '<div class="panelgroup">'; //id="panelgroup_content'.$id_piece.'"
 			self::PanelHeading($in_panel, $label, $icon_class, $panel_arg );
 			echo '<ul class="submenu">';
 			echo '<li class="submenu_top"><a class="submenu_top">'.$label.'</a></li>';

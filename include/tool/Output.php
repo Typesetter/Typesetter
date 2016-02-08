@@ -1182,7 +1182,6 @@ namespace gp\tool{
 
 			ob_start();
 
-
 			if( \gp\tool::LoggedIn() ){
 				\gp\tool::AddColorBox();
 			}
@@ -1203,10 +1202,12 @@ namespace gp\tool{
 
 			self::$head_content = ob_get_clean();
 
+			//javascript
 			ob_start();
 			self::GetHead_Lang();
 			self::GetHead_JS($scripts['js']);
 			self::GetHead_InlineJS();
+			self::$head_js = ob_get_clean();
 
 			//gadget info
 			if( !empty($config['addons']) ){
@@ -1221,7 +1222,6 @@ namespace gp\tool{
 			if( !empty($page->head) ){
 				echo $page->head;
 			}
-			self::$head_js = ob_get_clean();
 		}
 
 
@@ -1757,7 +1757,7 @@ namespace gp\tool{
 			}
 
 			$pos_body = strpos($buffer,'</body');
-			if( $pos_body ){
+			if( $pos_body !== false ){
 				return substr_replace($buffer,$add_string,$pos_body,0);
 			}
 

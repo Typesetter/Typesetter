@@ -608,18 +608,9 @@ namespace gp\tool{
 		public static function AdminBuffer($buffer){
 			global $wbErrorBuffer, $gp_admin_html;
 
-
-			//check for html document
-			$html_doc = true;
-			if( strpos($buffer,'<!-- get_head_placeholder '.gp_random.' -->') === false ){
-				$html_doc = false;
-			}
-
-
 			//add $gp_admin_html to the document
-			$pos_body = strpos($buffer,'</body');
-			if( $html_doc && $pos_body ){
-				$buffer = substr_replace($buffer,"\n<div id=\"gp_admin_html\">".$gp_admin_html.\gp\tool\Output::$editlinks."</div><div id=\"gp_admin_fixed\"></div>\n",$pos_body,0);
+			if( strpos($buffer,'<!-- get_head_placeholder '.gp_random.' -->') !== false ){
+				$buffer = \gp\tool\Output::AddToBody($buffer, "\n<div id=\"gp_admin_html\">".$gp_admin_html.\gp\tool\Output::$editlinks."</div><div id=\"gp_admin_fixed\"></div>\n" );
 			}
 
 			// Add a generic admin nonce field to each post form

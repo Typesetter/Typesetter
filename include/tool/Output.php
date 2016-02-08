@@ -1209,19 +1209,36 @@ namespace gp\tool{
 			self::GetHead_InlineJS();
 			self::$head_js = ob_get_clean();
 
+
+
 			//gadget info
-			if( !empty($config['addons']) ){
-				foreach($config['addons'] as $addon_info){
-					if( !empty($addon_info['html_head']) ){
-						echo "\n";
-						echo $addon_info['html_head'];
-					}
+			foreach($config['addons'] as $addon_info){
+				if( !empty($addon_info['html_head']) ){
+					self::MoveScript($addon_info['html_head']);
 				}
 			}
 
 			if( !empty($page->head) ){
-				echo $page->head;
+				self::MoveScript($page->head);
 			}
+		}
+
+
+		/**
+		 * Move <script>..</script> to self::$head_js
+		 *
+		 */
+		public static function MoveScript($string){
+
+			if( preg_match_all('#<script.*?</script>#i',$string,$matches) ){
+				foreach($matches[0] as $match){
+					$string = str_replace($match, '', $string);
+					self::$head_js .= "\n".$match;
+				}
+			}
+
+			//add the rest to the head_content
+			self::$head_content .= "\n".$string;
 		}
 
 
@@ -1726,7 +1743,7 @@ namespace gp\tool{
 			//add jquery if needed
 			$placeholder = '<!-- jquery_placeholder '.gp_random.' -->';
 			$replacement = '';
-			if( !empty(self::$head_js) || strpos($buffer,'<script') !== false ){
+			if( !empty(self::$head_js) || stripos($buffer,'<script') !== false ){
 				$replacement = "\n<script type=\"text/javascript\" src=\"".\gp\tool::GetDir('/include/thirdparty/js/jquery.js')."\"></script>";
 			}
 
@@ -1756,7 +1773,7 @@ namespace gp\tool{
 				return $buffer;
 			}
 
-			$pos_body = strpos($buffer,'</body');
+			$pos_body = stripos($buffer,'</body');
 			if( $pos_body !== false ){
 				return substr_replace($buffer,"\n".$add_string."\n",$pos_body,0);
 			}

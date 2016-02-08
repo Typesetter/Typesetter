@@ -1758,7 +1758,7 @@ namespace gp\tool{
 
 			$pos_body = strpos($buffer,'</body');
 			if( $pos_body !== false ){
-				return substr_replace($buffer,$add_string,$pos_body,0);
+				return substr_replace($buffer,"\n".$add_string."\n",$pos_body,0);
 			}
 
 			return $buffer;

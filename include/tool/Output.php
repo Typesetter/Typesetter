@@ -1212,9 +1212,11 @@ namespace gp\tool{
 
 
 			//gadget info
-			foreach($config['addons'] as $addon_info){
-				if( !empty($addon_info['html_head']) ){
-					self::MoveScript($addon_info['html_head']);
+			if( isset($config['addons']) ){
+				foreach($config['addons'] as $addon_info){
+					if( !empty($addon_info['html_head']) ){
+						self::MoveScript($addon_info['html_head']);
+					}
 				}
 			}
 

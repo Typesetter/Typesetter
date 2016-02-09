@@ -524,18 +524,22 @@ namespace gp\tool{
 		public static function ExecInfo($info,$args=array()){
 			global $addonFolderName, $installed_addon, $page;
 
-			if( !isset($args['page']) ){
-				$args['page'] = $page;
-			}
+			$args += array('page' => $page);
 
 
 			//addonDir is deprecated as of 2.0b3
+			$addon = false;
 			if( isset($info['addonDir']) ){
-				if( gp_safe_mode ) return;
-				\gp\tool\Plugins::SetDataFolder($info['addonDir']);
+				$addon = $info['addonDir'];
 			}elseif( isset($info['addon']) ){
-				if( gp_safe_mode ) return;
-				\gp\tool\Plugins::SetDataFolder($info['addon']);
+				$addon = $info['addon'];
+			}
+
+			if( $addon !== false ){
+				if( gp_safe_mode ){
+					return $args;
+				}
+				\gp\tool\Plugins::SetDataFolder($addon);
 			}
 
 			//if addon was just installed
@@ -551,7 +555,9 @@ namespace gp\tool{
 
 			$args = self::_ExecInfo($info,$args);
 
-			\gp\tool\Plugins::ClearDataFolder();
+			if( $addon !== false ){
+				\gp\tool\Plugins::ClearDataFolder();
+			}
 
 			self::PopCatchable();
 

@@ -1220,6 +1220,8 @@ class Edit extends \gp\Page{
 				echo '<span class="gp_separator"></span>';
 				echo \gp\tool::Link($this->title,$langmessage['rename/details'],'cmd=renameform&index='.urlencode($this->gp_index),'data-cmd="gpajax"');
 				echo \gp\tool::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox'));
+				echo '<span class="gp_separator"></span>';
+				echo \gp\tool::Link('Admin/Menu',$langmessage['file_manager']);
 				echo '</span>';
 				\gp\tool\Output::$editlinks .= ob_get_clean();
 			}

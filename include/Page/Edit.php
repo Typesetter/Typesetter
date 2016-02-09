@@ -661,25 +661,13 @@ class Edit extends \gp\Page{
 		static $fi = 0;
 
 		$types			= (array)$types;
-		$section_types	= \gp\tool\Output\Sections::GetTypes();
-		$text_label		= array();
-
-		foreach($types as $type){
-
-			self::TypeClass($type);
-
-			if( isset($section_types[$type]) ){
-				$text_label[] = $section_types[$type]['label'];
-			}elseif( !is_array($type) ){
-				$text_label[] = $type;
-			}
-		}
+		$text_label		= self::SectionLabel($types);
 
 		$label			= '';
 		if( !empty($img) ){
 			$label		= '<img src="'.$img.'"/>';
 		}
-		$label			.= '<span>'.implode(' &amp; ',$text_label).'</span>';
+		$label			.= '<span>'.$text_label.'</span>';
 
 		//checkbox used for new pages
 		if( $checkbox ){
@@ -722,6 +710,30 @@ class Edit extends \gp\Page{
 		return '<div><a '.\gp\tool::LinkAttr($attrs,$label).'>'.$label.'</a></div>';
 	}
 
+	/**
+	 * Return a readable label for the section
+	 *
+	 */
+	public static function SectionLabel($types){
+		$section_types	= \gp\tool\Output\Sections::GetTypes();
+		$text_label		= array();
+
+		foreach($types as $type){
+
+			if( is_array($type) ){
+				continue;
+			}
+			self::TypeClass($type);
+
+			if( isset($section_types[$type]) ){
+				$text_label[] = $section_types[$type]['label'];
+			}else{
+				$text_label[] = $type;
+			}
+		}
+
+		return implode(' &amp; ',$text_label);
+	}
 
 	/**
 	 * Split the type and class from $type = div.classname into $type = div, $class = classname
@@ -731,7 +743,7 @@ class Edit extends \gp\Page{
 
 		$class = '';
 
-		if( !is_array($type) && strpos($type,'.') ){
+		if( strpos($type,'.') ){
 			list($type,$class) = explode('.',$type,2);
 		}
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace gp\admin;
+namespace gp\special;
 
 defined('is_running') or die('Not an entry point...');
 

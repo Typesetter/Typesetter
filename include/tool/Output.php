@@ -522,7 +522,11 @@ namespace gp\tool{
 		 *
 		 */
 		public static function ExecInfo($info,$args=array()){
-			global $addonFolderName, $installed_addon;
+			global $addonFolderName, $installed_addon, $page;
+
+			if( !isset($args['page']) ){
+				$args['page'] = $page;
+			}
 
 
 			//addonDir is deprecated as of 2.0b3

@@ -64,7 +64,7 @@ class Page extends \gp\Page{
 		$this->contentBuffer = self::ExecInfo($this->TitleInfo);
 	}
 
-	public static function ExecInfo($scriptinfo){
+	public static function ExecInfo($scriptinfo ){
 		ob_start();
 		\gp\tool\Output::ExecInfo($scriptinfo);
 		return ob_get_clean();

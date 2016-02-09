@@ -4,7 +4,7 @@ namespace gp\special;
 
 defined('is_running') or die('Not an entry point...');
 
-class Search{
+class Search extends \gp\special\Base{
 
 	public $config_file;
 	public $search_config;
@@ -17,8 +17,10 @@ class Search{
 	public $gpabox = false;
 
 
-	public function __construct(){
-		global $page, $langmessage, $dataDir;
+	public function __construct($args){
+		global $langmessage, $dataDir;
+
+		parent::__construct($args);
 
 		$this->config_file = $dataDir.'/data/_site/config_search.php';
 		$this->GetConfig();
@@ -304,12 +306,11 @@ class Search{
 	}
 
 	public function Admin(){
-		global $page;
 
 		if( !\gp\tool::LoggedIn() ){
 			return false;
 		}
-		$page->admin_links[] = array('special_gpsearch','Configuration','cmd=config','data-cmd="gpabox"');
+		$this->page->admin_links[] = array('special_gpsearch','Configuration','cmd=config','data-cmd="gpabox"');
 		$cmd = \gp\tool::GetCommand();
 
 		switch($cmd){

@@ -4,11 +4,12 @@ namespace gp\special;
 
 defined('is_running') or die('Not an entry point...');
 
-class Map{
+class Map extends \gp\special\Base{
 
-	function __construct(){
-		global $page,$langmessage,$config;
+	function __construct($args){
+		global $langmessage, $config;
 
+		parent::__construct($args);
 
 		/*
 		An xml site map will not show any of the pages from dynamic add-ons
@@ -35,15 +36,15 @@ class Map{
 	}
 
 	function MultiSiteData(){
-		global $page, $config;
+		global $config;
 
-		$page->head .= '<meta name="mdu" content="'.substr(md5($config['gpuniq']),0,20).'" />';
+		$this->page->head .= '<meta name="mdu" content="'.substr(md5($config['gpuniq']),0,20).'" />';
 
 		if( defined('multi_site_unique') ){
-			$page->head .= '<meta name="multi_site_unique" content="'.multi_site_unique.'" />';
+			$this->page->head .= '<meta name="multi_site_unique" content="'.multi_site_unique.'" />';
 		}
 		if( defined('service_provider_id') && is_numeric(service_provider_id) ){
-			$page->head .= '<meta name="service_provider_id" content="'.service_provider_id.'" />';
+			$this->page->head .= '<meta name="service_provider_id" content="'.service_provider_id.'" />';
 		}
 	}
 

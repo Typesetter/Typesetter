@@ -4,13 +4,14 @@ namespace gp\special;
 
 defined('is_running') or die('Not an entry point...');
 
-class ContactGadget{
+class ContactGadget extends \gp\special\Base{
 
 	public $sent = false;
 
-	public function __construct(){
-		global $page,$langmessage,$config,$contact_message_sent,$message_send_attempt;
+	public function __construct($args){
+		global $langmessage, $config, $contact_message_sent, $message_send_attempt;
 
+		parent::__construct($args);
 		$this->sent = $contact_message_sent;
 
 		if( empty($config['toemail']) ){
@@ -144,7 +145,7 @@ class ContactGadget{
 	}
 
 	public function ShowForm(){
-		global $page,$langmessage,$config;
+		global $langmessage,$config;
 
 		$attr = '';
 		if( $this->sent ){
@@ -156,7 +157,7 @@ class ContactGadget{
 
 		$require_email =& $config['require_email'];
 
-		echo '<form class="contactform" action="'.\gp\tool::GetUrl($page->title).'" method="post">';
+		echo '<form class="contactform" action="'.\gp\tool::GetUrl($this->page->title).'" method="post">';
 
 		//nonce fields
 		echo '<div style="display:none !important">';

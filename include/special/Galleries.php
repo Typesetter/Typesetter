@@ -4,13 +4,16 @@ namespace gp\special;
 
 defined('is_running') or die('Not an entry point...');
 
-class Galleries{
+class Galleries extends \gp\special\Base{
 
 	public $galleries = array();
 	public $title_removed = false;
 	public $not_visible = array();
 
-	public function __construct(){
+	public function __construct($args){
+
+		parent::__construct($args);
+
 		$this->galleries = self::GetData();
 		$this->GenerateOutput();
 	}
@@ -94,7 +97,7 @@ class Galleries{
 
 
 	public function GenerateOutput(){
-		global $langmessage,$page;
+		global $langmessage;
 
 		\gp\tool::ShowingGallery();
 
@@ -102,7 +105,7 @@ class Galleries{
 		echo \gp\tool\Output::ReturnText('galleries');
 		echo '</h2>';
 
-		$wrap = \gp\admin\Tools::CanEdit($page->gp_index);
+		$wrap = \gp\admin\Tools::CanEdit($this->page->gp_index);
 		if( $wrap ){
 			echo \gp\tool\Output::EditAreaLink($edit_index,'Admin/Galleries',$langmessage['edit']);
 			echo '<div class="editable_area cf" id="ExtraEditArea'.$edit_index.'">'; // class="edit_area" added by javascript

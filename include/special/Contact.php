@@ -7,8 +7,6 @@ namespace gp\special{
 	class Contact extends ContactGadget{
 
 		public function ShowForm(){
-			global $page,$langmessage,$config;
-
 			echo \gp\tool\Output::GetExtra('Contact');
 			parent::ShowForm();
 		}

@@ -26,7 +26,7 @@ class Login extends \gp\Page{
 	public function GetGpxContent(){
 
 
-		$this->head		.= "\n<script type=\"text/javascript\">var IE_LT_8 = false;</script><!--[if lt IE 8]>\n<script type=\"text/javascript\">IE_LT_8=true;</script>\n<![endif]-->";
+		$this->head		.= "\n<script type=\"text/javascript\">var IE_LT_10 = false;</script><!--[if lt IE 10]>\n<script type=\"text/javascript\">IE_LT_10=true;</script>\n<![endif]-->";
 		$this->head_js[] = '/include/js/login.js';
 		$this->head_js[] = '/include/js/md5_sha.js';
 		$this->head_js[] = '/include/thirdparty/js/jsSHA.js';

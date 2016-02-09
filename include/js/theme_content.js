@@ -87,19 +87,6 @@ $(function(){
 
 	};
 
-	//this has to be 'live'
-	$(document).delegate('.draggable_element',{
-		'mouseenter': function(){
-			var $this = $(this);
-			if( !$this.hasClass('target') ){
-				$this.addClass('hover');
-			}
-		},
-		'mouseleave': function(){
-			var $this = $(this).removeClass('hover');
-		}
-	});
-
 
 	//layout and theme select
 	$('.theme_select select').change(function(){

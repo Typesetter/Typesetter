@@ -443,22 +443,24 @@ namespace gp\tool{
 				$empty_container = empty($info['gpOutCmd']); //empty containers can't be removed and don't have labels
 				$class .= ' gp_output_area';
 
-				echo '<div class="gp_inner_links nodisplay">';
+				echo '<div class="gp_inner_links nodisplay"><div>';
 				echo \gp\tool::Link('Admin_Theme_Content/Edit/'.$page->gpLayout,$param,'cmd=DragArea&dragging='.urlencode($param).'&to=%s',array('data-cmd'=>'creq','class'=>'dragdroplink nodisplay')); //drag-drop link
+
+				echo '<div class="output_area_label">';
 				if( !$empty_container ){
-					echo '<div class="output_area_label">';
 					echo self::GpOutLabel($info['arg']);
-					echo '</div>';
 				}else{
-					echo '<div class="output_area_label">';
 					echo 'Empty Container';
-					echo '</div>';
 				}
+				echo '</div>';
+
 				echo '<div class="output_area_link">';
 				echo ' '.\gp\tool::Link('Admin_Theme_Content/Edit/'.$page->gpLayout,'<i class="fa fa-plus"></i> '.$langmessage['insert'],'cmd=SelectContent&param='.$param,array('data-cmd'=>'gpabox'));
 				if( !$empty_container ){
 					echo ' '.\gp\tool::Link('Admin_Theme_Content/Edit/'.$page->gpLayout,'<i class="fa fa-times"></i> '.$langmessage['remove'],'cmd=RemoveArea&param='.$param,array('data-cmd'=>'creq'));
 				}
+				echo '</div>';
+
 				echo '</div></div>';
 
 			}

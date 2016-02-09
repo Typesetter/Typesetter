@@ -44,7 +44,7 @@
 		background:rgba(136,136,136,0.4);
 	}
 
-	.draggable_element.hover{
+	.draggable_element:hover{
 		z-index:9000;
 		background:rgba(0,0,0,0.5);
 
@@ -54,11 +54,24 @@
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6ffffff', endColorstr='#66888888',GradientType=1 );
 	}
 
-	.draggable_element.hover > .gp_inner_links{
+	.draggable_element > .gp_inner_links{
 		display:table-cell;
 		text-align:center;
 		vertical-align:middle;
 	}
+
+	.draggable_element > .gp_inner_links > div{
+		display:block;
+		max-height:0;
+		opacity:0;
+		@include transition( all .3s ease-out);
+		overflow:hidden;
+		}
+	.draggable_element:hover > .gp_inner_links > div{
+		max-height:100px;
+		opacity:1;
+		}
+
 
 	.target{
 		background:#FFAAAA;

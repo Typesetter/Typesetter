@@ -1230,6 +1230,19 @@ namespace gp\tool{
 		 */
 		public static function MoveScript($string){
 
+			//conditional comments with script tags
+			$patt = '#'.preg_quote('<!--[if','#').'.*?'.preg_quote('<![endif]-->','#').'#s';
+			if( preg_match_all($patt,$string, $matches) ){
+				foreach($matches[0] as $match){
+					if( strpos($match,'<script') !== false ){
+						$string = str_replace($match, '', $string);
+						self::$head_js .= "\n".$match;
+					}
+				}
+			}
+
+
+			//script tags
 			if( preg_match_all('#<script.*?</script>#i',$string,$matches) ){
 				foreach($matches[0] as $match){
 					$string = str_replace($match, '', $string);

@@ -317,20 +317,20 @@ namespace gp\admin\Content{
 			$cmd = \gp\tool::GetCommand();
 			switch($cmd){
 				case 'gallery_folder':
-					$this->page->ajaxReplace[] = array('inner','#gp_option_area',$gp_option_area);
-					$this->page->ajaxReplace[] = array('inner','#gp_gallery_avail_imgs',$gp_gallery_avail_imgs);
+					$page->ajaxReplace[] = array('inner','#gp_option_area',$gp_option_area);
+					$page->ajaxReplace[] = array('inner','#gp_gallery_avail_imgs',$gp_gallery_avail_imgs);
 				break;
 				default:
 					$content = '<div id="gp_option_area">'.$gp_option_area.'</div>'
 								.'<div id="gp_gallery_avail_imgs">'.$gp_gallery_avail_imgs.'</div>';
-					$this->page->ajaxReplace[] = array('inner','#gp_image_area',$content);
+					$page->ajaxReplace[] = array('inner','#gp_image_area',$content);
 				break;
 			}
 
 
 
-			$this->page->ajaxReplace[] = array('inner','#gp_folder_options',$folder_options);
-			$this->page->ajaxReplace[] = array('gp_gallery_images','',''); //tell the script the images have been loaded
+			$page->ajaxReplace[] = array('inner','#gp_folder_options',$folder_options);
+			$page->ajaxReplace[] = array('gp_gallery_images','',''); //tell the script the images have been loaded
 		}
 
 

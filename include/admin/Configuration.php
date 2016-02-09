@@ -433,7 +433,7 @@ class Configuration extends \gp\admin\Base{
 		foreach($array as $key => $value){
 			if( is_array($value) ){
 				echo '<optgroup label="'.$value.'">';
-				$this->formOptions($value,$current_value);
+				self::formOptions($value,$current_value);
 				echo '</optgroup>';
 				continue;
 			}

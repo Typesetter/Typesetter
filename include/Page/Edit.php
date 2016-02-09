@@ -670,7 +670,7 @@ class Edit extends \gp\Page{
 
 			if( isset($section_types[$type]) ){
 				$text_label[] = $section_types[$type]['label'];
-			}else{
+			}elseif( !is_array($type) ){
 				$text_label[] = $type;
 			}
 		}
@@ -731,7 +731,7 @@ class Edit extends \gp\Page{
 
 		$class = '';
 
-		if( strpos($type,'.') ){
+		if( !is_array($type) && strpos($type,'.') ){
 			list($type,$class) = explode('.',$type,2);
 		}
 

@@ -4,7 +4,7 @@ namespace gp\admin\Settings;
 
 defined('is_running') or die('Not an entry point...');
 
-class Classes extends \gp\admin\Base{
+class Classes extends \gp\special\Base{
 
 	var $admin_link;
 

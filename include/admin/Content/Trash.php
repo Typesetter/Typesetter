@@ -4,7 +4,7 @@ namespace gp\admin\Content;
 
 defined('is_running') or die('Not an entry point...');
 
-class Trash extends \gp\admin\Base{
+class Trash extends \gp\special\Base{
 
 	public $trash_files = array();
 

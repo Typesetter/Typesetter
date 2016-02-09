@@ -6,7 +6,7 @@ namespace gp\admin\Content{
 
 	includeFile('image.php');
 
-	class Uploaded extends \gp\admin\Base{
+	class Uploaded extends \gp\special\Base{
 
 		public $baseDir;
 		public $subdir			= '';

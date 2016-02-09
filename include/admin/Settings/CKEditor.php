@@ -4,7 +4,7 @@ namespace gp\admin\Settings;
 
 defined('is_running') or die('Not an entry point...');
 
-class CKEditor extends \gp\admin\Base{
+class CKEditor extends \gp\special\Base{
 
 	var $config_file;
 	var $cke_config			= array();

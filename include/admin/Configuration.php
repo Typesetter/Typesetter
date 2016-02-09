@@ -4,7 +4,7 @@ namespace gp\admin;
 
 defined('is_running') or die('Not an entry point...');
 
-class Configuration extends \gp\admin\Base{
+class Configuration extends \gp\special\Base{
 
 	protected $variables;
 

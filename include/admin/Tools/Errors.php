@@ -4,7 +4,7 @@ namespace gp\admin\Tools;
 
 defined('is_running') or die('Not an entry point...');
 
-class Errors extends \gp\admin\Base{
+class Errors extends \gp\special\Base{
 
 	private $readable_log = false;
 

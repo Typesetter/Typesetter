@@ -4,7 +4,7 @@ namespace gp\admin\Settings;
 
 defined('is_running') or die('Not an entry point...');
 
-class Users extends \gp\admin\Base{
+class Users extends \gp\special\Base{
 
 	public $users;
 	public $possible_permissions	= array();

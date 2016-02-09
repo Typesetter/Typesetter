@@ -4,7 +4,7 @@ namespace gp\admin\Tools;
 
 defined('is_running') or die('Not an entry point...');
 
-class Cache extends \gp\admin\Base{
+class Cache extends \gp\special\Base{
 
 	private $cache_dir;
 	private $all_files;

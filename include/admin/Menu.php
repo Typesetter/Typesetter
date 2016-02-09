@@ -8,7 +8,7 @@ defined('gp_max_menu_level') or define('gp_max_menu_level',6);
 \gp\tool::LoadComponents('sortable');
 
 
-class Menu extends \gp\admin\Base{
+class Menu extends \gp\special\Base{
 
 	public $cookie_settings			= array();
 	public $hidden_levels			= array();

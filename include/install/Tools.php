@@ -203,6 +203,7 @@ class Tools{
 		$_config['combinejs']		= self::BooleanValue('combinejs',true);
 		$_config['etag_headers'] 	= self::BooleanValue('etag_headers',true);
 		$_config['language']		= 'en';
+		$_config['addons']			= array();
 
 		$config 					+= $_config;
 

@@ -6,7 +6,7 @@ defined('is_running') or die('Not an entry point...');
 
 
 
-class Tools extends \gp\Base{
+class Tools extends \gp\admin\Base{
 
 	public $rate_testing		= false; //for testing on local server
 
@@ -30,9 +30,8 @@ class Tools extends \gp\Base{
 	//
 
 	public function InitRating(){
-		global $page;
 
-		$page->head_js[] = '/include/js/rate.js';
+		$this->page->head_js[] = '/include/js/rate.js';
 
 		//clear the data file ...
 		$this->GetAddonData();
@@ -156,13 +155,13 @@ class Tools extends \gp\Base{
 
 
 	public function ReviewAddonForm(){
-		global $config, $dirPrefix, $langmessage, $page;
+		global $config, $dirPrefix, $langmessage;
 
 		if( !$this->CanRate() ){
 			return;
 		}
 
-		$page->head_js[]	= '/include/js/rate.js';
+		$this->page->head_js[]	= '/include/js/rate.js';
 
 
 		//get appropriate variables
@@ -370,8 +369,8 @@ class Tools extends \gp\Base{
 	 *
 	 */
 	public function SendAddonReview(){
-		global $langmessage, $config, $dirPrefix, $page;
-		$page->ajaxReplace = array();
+		global $langmessage, $config, $dirPrefix;
+		$this->page->ajaxReplace = array();
 		$data = array();
 
 		if( !$this->CanRate() ){

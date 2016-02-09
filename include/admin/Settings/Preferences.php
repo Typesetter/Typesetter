@@ -8,11 +8,13 @@ namespace gp\admin\Settings{
 
 		public $username;
 
-		public function __construct(){
-			global $gpAdmin, $langmessage, $page;
+		public function __construct($args){
+			global $gpAdmin, $langmessage;
+
+			parent::__construct($args);
 
 			//only need to return messages if it's ajax request
-			$page->ajaxReplace = array();
+			$this->page->ajaxReplace = array();
 
 
 			$this->GetUsers();

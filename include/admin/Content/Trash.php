@@ -4,15 +4,17 @@ namespace gp\admin\Content;
 
 defined('is_running') or die('Not an entry point...');
 
-class Trash{
+class Trash extends \gp\admin\Base{
 
 	public $trash_files = array();
 
-	public function __construct(){
-		global $langmessage, $page;
+	public function __construct($args){
+		global $langmessage;
 
-		$page->head_js[]	= '/include/js/admin/trash.js';
-		$this->trash_files	= self::TrashFiles();
+		parent::__construct($args);
+
+		$this->page->head_js[]	= '/include/js/admin/trash.js';
+		$this->trash_files		= self::TrashFiles();
 
 		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
@@ -27,7 +29,7 @@ class Trash{
 		}
 
 		//view a trash file
-		$parts = explode('/',$page->requested);
+		$parts = explode('/',$this->page->requested);
 		if( count($parts) > 2 ){
 			$title = $parts[2];
 			if( isset($this->trash_files[$title]) ){

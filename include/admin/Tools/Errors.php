@@ -4,7 +4,7 @@ namespace gp\admin\Tools;
 
 defined('is_running') or die('Not an entry point...');
 
-class Errors{
+class Errors extends \gp\admin\Base{
 
 	private $readable_log = false;
 
@@ -26,11 +26,12 @@ class Errors{
 				E_USER_DEPRECATED	=> 'User Deprecated',
 			 );
 
-	function __construct(){
-		global $page;
+	function __construct($args){
+
+		parent::__construct($args);
 
 		$sub_page	= '';
-		$parts		= explode('/',$page->requested);
+		$parts		= explode('/',$this->page->requested);
 		if( count($parts) > 2 ){
 			$sub_page = $parts[2];
 		}

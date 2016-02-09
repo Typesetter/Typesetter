@@ -4,14 +4,16 @@ namespace gp\admin;
 
 defined('is_running') or die('Not an entry point...');
 
-class Configuration{
+class Configuration extends \gp\admin\Base{
 
 	protected $variables;
 
-	public function __construct(){
-		global $langmessage,$page;
+	public function __construct($args){
+		global $langmessage;
 
-		$page->ajaxReplace = array();
+		parent::__construct($args);
+
+		$this->page->ajaxReplace = array();
 
 
 		//add examples to smtp_hosts
@@ -75,6 +77,10 @@ class Configuration{
 						'recaptcha_private'		=> '',
 						'recaptcha_language'	=> '',
 						);
+
+	}
+
+	public function RunScript(){
 
 		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
@@ -273,12 +279,12 @@ class Configuration{
 	 *
 	 */
 	protected function showForm(){
-		global $langmessage, $page;
+		global $langmessage;
 
 		$possible_values	= $this->getPossible();
 		$array				= $this->getValues();
 
-		echo '<form action="'.\gp\tool::GetUrl($page->requested).'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl($this->page->requested).'" method="post">';
 
 
 

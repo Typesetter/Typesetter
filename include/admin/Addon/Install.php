@@ -29,12 +29,13 @@ class Install extends \gp\admin\Addon\Tools{
 	public $searchOrderOptions	= array();
 
 
-	public function __construct(){
-		global $page;
+	public function __construct($args){
+
+		parent::__construct($args);
 
 		// css and js
-		$page->css_admin[]	= '/include/css/addons.css';
-		$page->head_js[]	= '/include/js/rate.js';
+		$this->page->css_admin[]	= '/include/css/addons.css';
+		$this->page->head_js[]	= '/include/js/rate.js';
 	}
 
 	/**
@@ -42,7 +43,7 @@ class Install extends \gp\admin\Addon\Tools{
 	 *
 	 */
 	public function ShowHeader( $addon_name = false ){
-		global $page, $langmessage;
+		global $langmessage;
 
 		//build links
 		$header_paths									= array();
@@ -73,14 +74,14 @@ class Install extends \gp\admin\Addon\Tools{
 		if( $addon_name ){
 			$header_paths = array();
 			$header_paths[$this->scriptUrl]					= $langmessage['manage'];
-			$header_paths[$page->requested]					= $addon_name;
+			$header_paths[$this->page->requested]			= $addon_name;
 		}
 
 
 		$list = array();
 		foreach($header_paths as $slug => $label){
 
-			if( $page->requested == $slug ){
+			if( $this->page->requested == $slug ){
 				$list[] = '<span>'.$label.'</span>';
 			}else{
 				$list[] = \gp\tool::Link($slug,$label);
@@ -106,7 +107,7 @@ class Install extends \gp\admin\Addon\Tools{
 	 *
 	 */
 	public function RemoteInstall(){
-		global $langmessage, $page;
+		global $langmessage;
 
 		echo '<h2>'.$langmessage['Installation'].'</h2>';
 
@@ -116,7 +117,7 @@ class Install extends \gp\admin\Addon\Tools{
 
 		$_REQUEST += array('order'=>'');
 
-		echo '<form action="'.\gp\tool::GetUrl($page->requested).'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl($this->page->requested).'" method="post">';
 		echo '<input type="hidden" name="cmd" value="RemoteInstallConfirmed" />';
 		echo '<input type="hidden" name="id" value="'.htmlspecialchars($_REQUEST['id']).'" />';
 		echo '<input type="hidden" name="order" value="'.htmlspecialchars($_REQUEST['order']).'" />';

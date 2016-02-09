@@ -6,7 +6,7 @@ namespace gp\admin\Content{
 
 	includeFile('image.php');
 
-	class Uploaded{
+	class Uploaded extends \gp\admin\Base{
 
 		public $baseDir;
 		public $subdir			= '';
@@ -19,8 +19,7 @@ namespace gp\admin\Content{
 		public $currentDir_Thumb;
 
 
-		public function __construct(){
-
+		public function RunScript(){
 			$file_cmd = \gp\tool::GetCommand('file_cmd');
 			if( !empty($file_cmd) || (isset($_REQUEST['show']) && $_REQUEST['show'] == 'inline') ){
 				$this->do_admin_uploaded($file_cmd);
@@ -30,13 +29,13 @@ namespace gp\admin\Content{
 		}
 
 		public function Finder(){
-			global $page, $config, $dataDir;
+			global $config, $dataDir;
 
-			$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.\gp\tool::GetDir('/include/thirdparty/finder/css/finder.css').'">';
-			$page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.\gp\tool::GetDir('/include/thirdparty/finder/style.css').'">';
+			$this->page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.\gp\tool::GetDir('/include/thirdparty/finder/css/finder.css').'">';
+			$this->page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.\gp\tool::GetDir('/include/thirdparty/finder/style.css').'">';
 
-			$page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/finder/js/finder.js').'"></script>';
-			$page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/finder/config.js').'"></script>';
+			$this->page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/finder/js/finder.js').'"></script>';
+			$this->page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/finder/config.js').'"></script>';
 
 
 			echo '<div id="finder"></div>';
@@ -53,7 +52,7 @@ namespace gp\admin\Content{
 			$lang_file = '/include/thirdparty/finder/js/i18n/'.$language.'.js';
 			$lang_full = $dataDir.$lang_file;
 			if( file_exists($lang_full) ){
-				$page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir($lang_file).'"></script>';
+				$this->page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir($lang_file).'"></script>';
 			}else{
 				$language = 'en';
 			}
@@ -107,7 +106,7 @@ namespace gp\admin\Content{
 			$this->finder_opts = \gp\tool\Plugins::Filter('FinderOptionsClient',array($this->finder_opts));
 			gpSettingsOverride('finder_options_client',$this->finder_opts);
 
-			$page->head_script .= "\n".'var finder_opts = '.json_encode($this->finder_opts).';';
+			$this->page->head_script .= "\n".'var finder_opts = '.json_encode($this->finder_opts).';';
 		}
 
 		public function FinderPrep(){
@@ -118,11 +117,9 @@ namespace gp\admin\Content{
 
 
 		public function do_admin_uploaded($file_cmd){
-			global $page;
-
 
 			$this->Init();
-			$page->ajaxReplace = array();
+			$this->page->ajaxReplace = array();
 
 			switch($file_cmd){
 				case 'delete':
@@ -136,12 +133,12 @@ namespace gp\admin\Content{
 		}
 
 		public function Init(){
-			global $langmessage, $dataDir,$page;
+			global $langmessage, $dataDir;
 
 			$this->baseDir		= $dataDir.'/data/_uploaded';
 			$this->thumbFolder	= $dataDir.'/data/_uploaded/image/thumbnails';
 			$this->currentDir	= $this->baseDir;
-			$page->label		= $langmessage['uploaded_files'];
+			$this->page->label	= $langmessage['uploaded_files'];
 
 			$this->imgTypes		= array('bmp'=>1,'png'=>1,'jpg'=>1,'jpeg'=>1,'gif'=>1,'tiff'=>1,'tif'=>1);
 
@@ -166,10 +163,9 @@ namespace gp\admin\Content{
 		 *
 		 */
 		public function SetDirectory(){
-			global $page;
 
 			//get the current path
-			$path = str_replace( array('\\','//'),array('/','/'),$page->requested);
+			$path = str_replace( array('\\','//'),array('/','/'),$this->page->requested);
 
 			//@since 5.0
 			if( strpos($path,'Admin/Uploaded') === 0 ){
@@ -264,8 +260,9 @@ namespace gp\admin\Content{
 		 * @static
 		 */
 		public static function InlineList($dir_piece){
-			global $page,$langmessage,$dataDir;
-			$page->ajaxReplace = array();
+			global $langmessage, $dataDir;
+
+			$this->page->ajaxReplace = array();
 
 
 			$dir_piece = \gp\tool::WinPath($dir_piece);
@@ -320,20 +317,20 @@ namespace gp\admin\Content{
 			$cmd = \gp\tool::GetCommand();
 			switch($cmd){
 				case 'gallery_folder':
-					$page->ajaxReplace[] = array('inner','#gp_option_area',$gp_option_area);
-					$page->ajaxReplace[] = array('inner','#gp_gallery_avail_imgs',$gp_gallery_avail_imgs);
+					$this->page->ajaxReplace[] = array('inner','#gp_option_area',$gp_option_area);
+					$this->page->ajaxReplace[] = array('inner','#gp_gallery_avail_imgs',$gp_gallery_avail_imgs);
 				break;
 				default:
 					$content = '<div id="gp_option_area">'.$gp_option_area.'</div>'
 								.'<div id="gp_gallery_avail_imgs">'.$gp_gallery_avail_imgs.'</div>';
-					$page->ajaxReplace[] = array('inner','#gp_image_area',$content);
+					$this->page->ajaxReplace[] = array('inner','#gp_image_area',$content);
 				break;
 			}
 
 
 
-			$page->ajaxReplace[] = array('inner','#gp_folder_options',$folder_options);
-			$page->ajaxReplace[] = array('gp_gallery_images','',''); //tell the script the images have been loaded
+			$this->page->ajaxReplace[] = array('inner','#gp_folder_options',$folder_options);
+			$this->page->ajaxReplace[] = array('gp_gallery_images','',''); //tell the script the images have been loaded
 		}
 
 
@@ -703,7 +700,7 @@ namespace gp\admin\Content{
 		 *
 		 */
 		public function DeleteConfirmed(){
-			global $langmessage,$page;
+			global $langmessage;
 
 			if( $this->isThumbDir ){
 				return false;
@@ -726,8 +723,8 @@ namespace gp\admin\Content{
 				return;
 			}
 
-			$page->ajaxReplace[] = array('img_deleted','',$rel_path);
-			$page->ajaxReplace[] = array('img_deleted_id','',self::ImageId($rel_path));
+			$this->page->ajaxReplace[] = array('img_deleted','',$rel_path);
+			$this->page->ajaxReplace[] = array('img_deleted_id','',self::ImageId($rel_path));
 		}
 
 		/**

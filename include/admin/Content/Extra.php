@@ -8,9 +8,12 @@ class Extra extends \gp\Page\Edit{
 
 	public $folder;
 	public $areas = array();
+	protected $page;
 
-	public function __construct(){
+	public function __construct($args){
 		global $dataDir;
+
+		$this->page = $args['page'];
 
 		$this->folder = $dataDir.'/data/_extra';
 		$this->SetVars();
@@ -345,9 +348,9 @@ class Extra extends \gp\Page\Edit{
 	 *
 	 */
 	public function SectionEdit(){
-		global $page, $langmessage;
+		global $langmessage;
 
-		$page->file_sections	=& $this->file_sections; //hack so the SaveSection filter works
+		$this->page->file_sections	=& $this->file_sections; //hack so the SaveSection filter works
 		$_REQUEST['section']	= 0;
 
 		if( !parent::SectionEdit() ){

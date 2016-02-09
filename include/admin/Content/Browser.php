@@ -6,16 +6,17 @@ namespace gp\admin\Content{
 
 	class Browser extends \gp\admin\Content\Uploaded{
 
-		function __construct(){
-			global $page;
+		function __construct($args){
+
+			parent::__construct($args);
 
 			$_REQUEST += array('gpreq' => 'body'); //force showing only the body as a complete html document
-			$page->get_theme_css = false;
+			$this->page->get_theme_css = false;
 
-			$page->head .= '<style type="text/css">';
-			$page->head .= 'html,body{padding:0;margin:0 !important;background-color:#ededed !important;background-image:none !important;border:0 none !important;}';
-			$page->head .= '#gp_admin_html{padding:5px 0 !important;}';
-			$page->head .= '</style>';
+			$this->page->head .= '<style type="text/css">';
+			$this->page->head .= 'html,body{padding:0;margin:0 !important;background-color:#ededed !important;background-image:none !important;border:0 none !important;}';
+			$this->page->head .= '#gp_admin_html{padding:5px 0 !important;}';
+			$this->page->head .= '</style>';
 
 			$this->Finder();
 		}

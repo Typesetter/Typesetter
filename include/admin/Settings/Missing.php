@@ -13,8 +13,12 @@ defined('is_running') or die('Not an entry point...');
 
 class Missing extends \gp\special\Missing{
 
-	function __construct(){
+	protected $page;
+
+	function __construct($args){
 		global $langmessage;
+
+		$this->page = $args['page'];
 
 		$this->Init();
 		\gp\tool\Editing::PrepAutoComplete();
@@ -208,10 +212,10 @@ class Missing extends \gp\special\Missing{
 	 */
 
 	function ShowRedirection(){
-		global $langmessage,$page, $gp_index, $config;
+		global $langmessage, $gp_index, $config;
 
-		$page->head_js[] = '/include/thirdparty/tablesorter/tablesorter.js';
-		$page->jQueryCode .= '$("table.tablesorter").tablesorter({cssHeader:"gp_header",cssAsc:"gp_header_asc",cssDesc:"gp_header_desc"});';
+		$this->page->head_js[] = '/include/thirdparty/tablesorter/tablesorter.js';
+		$this->page->jQueryCode .= '$("table.tablesorter").tablesorter({cssHeader:"gp_header",cssAsc:"gp_header_asc",cssDesc:"gp_header_desc"});';
 
 
 		echo '<p>'.$langmessage['About_Redirection'].'</p>';
@@ -315,7 +319,7 @@ class Missing extends \gp\special\Missing{
 
 	//using inline_box for this one for autocomplete init
 	function RedirForm($values=array()){
-		global $langmessage,$page;
+		global $langmessage;
 
 		$values += array('cmd'=>'saveredir','source'=>'','target'=>'','code'=>'','orig_source'=>'');
 

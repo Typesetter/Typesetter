@@ -29,21 +29,20 @@ class Addons extends \gp\admin\Addon\Install{
 	public $dataFile;
 
 
-	function __construct(){
-		global $langmessage,$page;
+	function __construct( $args ){
+		global $langmessage;
 
+		parent::__construct($args);
 
-		parent::__construct();
 		$this->InitRating();
 		$this->GetData();
 
-		$page->head_js[]		= '/include/js/auto_width.js';
+		$this->page->head_js[]		= '/include/js/auto_width.js';
 		$this->avail_addons		= $this->GetAvailAddons();
 
 	}
 
 	function RunScript(){
-		global $page;
 
 		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
@@ -89,7 +88,7 @@ class Addons extends \gp\admin\Addon\Install{
 
 
 		//single addon
-		$request_parts = explode('/',$page->requested);
+		$request_parts = explode('/',$this->page->requested);
 		if( count($request_parts) > 2 ){
 			$this->ShowAddon($request_parts[2]);
 			return;
@@ -171,9 +170,9 @@ class Addons extends \gp\admin\Addon\Install{
 
 
 	function GadgetVisibility($cmd){
-		global $config, $langmessage, $page;
+		global $config, $langmessage;
 
-		$page->ajaxReplace = array();
+		$this->page->ajaxReplace = array();
 		$gadget = $_GET['gadget'];
 
 		if( !isset($config['gadgets']) || !is_array($config['gadgets']) || !isset($config['gadgets'][$gadget]) ){
@@ -198,7 +197,7 @@ class Addons extends \gp\admin\Addon\Install{
 		}
 
 		$link = $this->GadgetLink($gadget);
-		$page->ajaxReplace[] = array('replace','.gadget_link_'.md5($gadget),$link);
+		$this->page->ajaxReplace[] = array('replace','.gadget_link_'.md5($gadget),$link);
 	}
 
 	function GadgetLink($name){

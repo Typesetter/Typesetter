@@ -7,14 +7,18 @@ defined('is_running') or die('Not an entry point...');
 
 class CDN extends \gp\admin\Configuration{
 
-	public function __construct(){
+	public function __construct($args){
+
+		parent::__construct($args);
 
 		$this->variables = array(
 						'CDN'					=> false,
 						'cdn'
 						);
 
+	}
 
+	public function RunScript(){
 
 		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
@@ -59,11 +63,11 @@ class CDN extends \gp\admin\Configuration{
 	 *
 	 */
 	protected function ShowForm(){
-		global $page, $config;
+		global $config;
 
 		$possible	= $this->getPossible();
 
-		echo '<form action="'.\gp\tool::GetUrl($page->requested).'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl($this->page->requested).'" method="post">';
 		echo '<h2>CDN</h2>';
 
 

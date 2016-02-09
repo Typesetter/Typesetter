@@ -145,6 +145,7 @@ namespace gp\admin{
 
 
 			$scripts['Admin/Uploaded']					= array(	'class'		=> '\gp\admin\Content\Uploaded',
+																	'method'	=> 'RunScript',
 																	'label'		=> $langmessage['uploaded_files'],
 																	'group'		=> 'content',
 																	);
@@ -190,7 +191,7 @@ namespace gp\admin{
 																	'label' 	=> $langmessage['Available'],
 																	);
 
-			$scripts['Admin_Theme_Content/Text']		 = array(	'class'		=> '\gp\admin\Layout\Text',
+			$scripts['Admin_Theme_Content/Text']		= array(	'class'		=> '\gp\admin\Layout\Text',
 																	'method'	=> 'RunScript',
 																	);
 
@@ -199,7 +200,7 @@ namespace gp\admin{
 																	);
 
 			if( gp_remote_themes ){
-				$scripts['Admin_Theme_Content/Remote']	 = array(	'class'		=> '\gp\admin\Layout',
+				$scripts['Admin_Theme_Content/Remote']	= array(	'class'		=> '\gp\admin\Layout',
 																	'method'	=> 'RemoteBrowse',
 																	'label' 	=> $langmessage['Search'],
 																	);
@@ -208,15 +209,17 @@ namespace gp\admin{
 
 
 			// Settings
-			$scripts['Admin/Configuration']['class'] = '\gp\admin\Configuration';
-			$scripts['Admin/Configuration']['label'] = $langmessage['configuration'];
-			$scripts['Admin/Configuration']['group'] = 'settings';
+			$scripts['Admin/Configuration']				= array(	'class'		=> '\gp\admin\Configuration',
+																	'method'	=> 'RunScript',
+																	'label'		=> $langmessage['configuration'],
+																	'group'		=> 'settings',
+																);
 
-			$scripts['Admin/Configuration/CDN']['class'] = '\gp\admin\Configuration\CDN';
-			$scripts['Admin/Configuration/CDN']['label'] = 'CDN';
-			$scripts['Admin/Configuration/CDN']['group'] = 'settings';
-
-
+			$scripts['Admin/Configuration/CDN']			= array(	'class'		=> '\gp\admin\Configuration\CDN',
+																	'method'	=> 'RunScript',
+																	'label'		=> 'CDN',
+																	'group'		=> 'settings',
+																);
 
 			$scripts['Admin/Users']						= array(	'class'		=> 'gp\admin\Settings\Users',
 																	'label'		=> $langmessage['user_permissions'],

@@ -8,7 +8,7 @@ defined('gp_max_menu_level') or define('gp_max_menu_level',6);
 \gp\tool::LoadComponents('sortable');
 
 
-class Menu{
+class Menu extends \gp\admin\Base{
 
 	public $cookie_settings			= array();
 	public $hidden_levels			= array();
@@ -34,22 +34,23 @@ class Menu{
 	protected $cmd;
 
 
-	public function __construct(){
-		global $langmessage,$page,$config;
+	public function __construct($args){
+		global $langmessage, $config;
 
+		parent::__construct($args);
 
-		$this->section_types			= \gp\tool\Output\Sections::GetTypes();
+		$this->section_types				= \gp\tool\Output\Sections::GetTypes();
 
-		$page->ajaxReplace				= array();
+		$this->page->ajaxReplace			= array();
 
-		$page->css_admin[]				= '/include/css/admin_menu_new.css';
+		$this->page->css_admin[]			= '/include/css/admin_menu_new.css';
 
-		$page->head_js[]				= '/include/thirdparty/js/nestedSortable.js';
-		$page->head_js[]				= '/include/thirdparty/js/jquery_cookie.js';
-		$page->head_js[]				= '/include/js/admin_menu_new.js';
+		$this->page->head_js[]				= '/include/thirdparty/js/nestedSortable.js';
+		$this->page->head_js[]				= '/include/thirdparty/js/jquery_cookie.js';
+		$this->page->head_js[]				= '/include/js/admin_menu_new.js';
 
-		$this->max_level_index			= max(3,gp_max_menu_level-1);
-		$page->head_script				.= 'var max_level_index = '.$this->max_level_index.';';
+		$this->max_level_index				= max(3,gp_max_menu_level-1);
+		$this->page->head_script			.= 'var max_level_index = '.$this->max_level_index.';';
 
 
 		$this->avail_menus['gpmenu']	= $langmessage['Main Menu'].' / '.$langmessage['site_map'];
@@ -250,7 +251,7 @@ class Menu{
 	 *
 	 */
 	public function ShowForm(){
-		global $langmessage, $page, $config;
+		global $langmessage, $config;
 
 		$menu_output = false;
 		ob_start();
@@ -430,16 +431,15 @@ class Menu{
 	 *
 	 */
 	public function MenuJsonResponse($replace_id, $content){
-		global $page;
 
-		$page->ajaxReplace[] = array('gp_menu_prep','','');
-		$page->ajaxReplace[] = array('inner',$replace_id,$content);
-		$page->ajaxReplace[] = array('gp_menu_refresh','','');
+		$this->page->ajaxReplace[] = array('gp_menu_prep','','');
+		$this->page->ajaxReplace[] = array('inner',$replace_id,$content);
+		$this->page->ajaxReplace[] = array('gp_menu_refresh','','');
 
 		ob_start();
 		\gp\tool\Output::GetMenu();
 		$content = ob_get_clean();
-		$page->ajaxReplace[] = array('inner','#admin_menu_wrap',$content);
+		$this->page->ajaxReplace[] = array('inner','#admin_menu_wrap',$content);
 	}
 
 

@@ -209,7 +209,7 @@ class Page extends \gp\Page{
 				if( \gp\admin\Tools::HasPermission($request_string) ){
 
 					$this->OrganizeFrequentScripts($request_string);
-					\gp\tool\Output::ExecInfo($scriptinfo);
+					\gp\tool\Output::ExecInfo($scriptinfo, array('page'=>$this) );
 
 					return;
 				}

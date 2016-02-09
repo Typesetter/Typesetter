@@ -9,15 +9,12 @@ class Edit extends \gp\admin\Layout{
 	protected $layout_request = true;
 	protected $layout_slug;
 
-	public function __construct(){
-		parent::__construct();
-	}
 
 	public function RunScript(){
-		global $page, $gpLayouts, $config;
+		global $gpLayouts, $config;
 
 		//layout request
-		$parts		= explode('/',$page->requested);
+		$parts		= explode('/',$this->page->requested);
 		if( !empty($parts[2]) ){
 
 			if( $this->SetCurrLayout($parts[2]) ){
@@ -41,7 +38,7 @@ class Edit extends \gp\admin\Layout{
 	 *
 	 */
 	protected function SetCurrLayout($layout){
-		global $page, $langmessage, $gpLayouts;
+		global $langmessage, $gpLayouts;
 
 		if( !isset($gpLayouts[$layout]) ){
 			return false;
@@ -49,9 +46,9 @@ class Edit extends \gp\admin\Layout{
 
 		$this->curr_layout = $layout;
 		$this->SetLayoutArray();
-		$page->SetTheme($layout);
+		$this->page->SetTheme($layout);
 
-		if( !$page->gpLayout ){
+		if( !$this->page->gpLayout ){
 			message($langmessage['OOPS'].' (Theme Not Found)');
 			parent::RunScript();
 			return false;
@@ -102,14 +99,12 @@ class Edit extends \gp\admin\Layout{
 
 
 	public function DefaultDisplay(){
-		global $langmessage, $page;
+		global $langmessage;
 
-		$layout_info = \gp\tool::LayoutInfo($this->curr_layout,false);
-		$page->label = $langmessage['layouts'] . ' » '.$layout_info['label'];
+		$layout_info		= \gp\tool::LayoutInfo($this->curr_layout,false);
+		$this->page->label	= $langmessage['layouts'] . ' » '.$layout_info['label'];
 
-		//ob_start();
 		$this->LayoutEditor($this->curr_layout, $layout_info );
-		//$page->admin_html = ob_get_clean();
 	}
 
 
@@ -118,19 +113,18 @@ class Edit extends \gp\admin\Layout{
 	 *
 	 */
 	public function ShowInIframe(){
-		global $page;
 
 		$this->LoremIpsum();
 
 		$cmd = \gp\tool::GetCommand();
 
-		$page->show_admin_content		= false;
-		\gp\admin\Tools::$show_toolbar	= false;
+		$this->page->show_admin_content		= false;
+		\gp\admin\Tools::$show_toolbar		= false;
 
 		// <head>
-		$page->head .= '<script type="text/javascript">parent.$gp.iframeloaded();</script>';
+		$this->page->head .= '<script type="text/javascript">parent.$gp.iframeloaded();</script>';
 		if( $cmd != 'PreviewCSS' ){
-			$page->head .= '<script type="text/javascript">var gpLayouts=true;</script>';
+			$this->page->head .= '<script type="text/javascript">var gpLayouts=true;</script>';
 		}
 	}
 
@@ -140,19 +134,18 @@ class Edit extends \gp\admin\Layout{
 	 *
 	 */
 	public function LayoutEditor($layout, $layout_info ){
-		global $page, $langmessage, $gpAdmin;
+		global $langmessage, $gpAdmin;
 
 
 		$_REQUEST					+= array('gpreq' => 'body'); //force showing only the body as a complete html document
-		//$page->show_admin_content	= false;
-		$page->get_theme_css		= false;
+		$this->page->get_theme_css		= false;
 
-		$page->css_user[]	= '/include/thirdparty/codemirror/lib/codemirror.css';
-		$page->head_js[]	= '/include/thirdparty/codemirror/lib/codemirror.js';
-		$page->head_js[]	= '/include/thirdparty/codemirror/mode/css/css.js';
+		$this->page->css_user[]		= '/include/thirdparty/codemirror/lib/codemirror.css';
+		$this->page->head_js[]		= '/include/thirdparty/codemirror/lib/codemirror.js';
+		$this->page->head_js[]		= '/include/thirdparty/codemirror/mode/css/css.js';
 
-		$page->css_admin[]	= '/include/css/theme_content_outer.scss';
-		$page->head_js[]	= '/include/js/theme_content_outer.js';
+		$this->page->css_admin[]	= '/include/css/theme_content_outer.scss';
+		$this->page->head_js[]		= '/include/js/theme_content_outer.js';
 
 
 		//Iframe
@@ -241,7 +234,7 @@ class Edit extends \gp\admin\Layout{
 
 		echo '</div>'; //#theme_editor
 
-		$page->admin_html = ob_get_clean();
+		$this->page->admin_html = ob_get_clean();
 	}
 
 
@@ -287,7 +280,7 @@ class Edit extends \gp\admin\Layout{
 	 *
 	 */
 	public function SaveCSS(){
-		global $langmessage, $dataDir, $gpLayouts, $page;
+		global $langmessage, $dataDir, $gpLayouts;
 
 		$css				=& $_POST['css'];
 
@@ -300,7 +293,7 @@ class Edit extends \gp\admin\Layout{
 		if( !$this->SaveLayouts() ){
 			return false;
 		}
-		$page->SetTheme($this->curr_layout);
+		$this->page->SetTheme($this->curr_layout);
 	}
 
 
@@ -309,16 +302,16 @@ class Edit extends \gp\admin\Layout{
 	 *
 	 */
 	public function PreviewCSS(){
-		global $page, $langmessage;
+		global $langmessage;
 
-		$layout_info			= \gp\tool::LayoutInfo($this->curr_layout,false);
+		$layout_info				= \gp\tool::LayoutInfo($this->curr_layout,false);
 
-		$page->theme_color		= $layout_info['theme_color'];
-		$page->theme_rel		= dirname($page->theme_rel).'/'.$page->theme_color;
-		$page->theme_path		= dirname($page->theme_path).'/'.$page->theme_color;
-		$dir					= $page->theme_dir.'/'.$page->theme_color;
-		$style_type				= \gp\tool\Output::StyleType($dir);
-		$style_files			= array();
+		$this->page->theme_color	= $layout_info['theme_color'];
+		$this->page->theme_rel		= dirname($this->page->theme_rel).'/'.$this->page->theme_color;
+		$this->page->theme_path		= dirname($this->page->theme_path).'/'.$this->page->theme_color;
+		$dir						= $this->page->theme_dir.'/'.$this->page->theme_color;
+		$style_type					= \gp\tool\Output::StyleType($dir);
+		$style_files				= array();
 
 		if( $style_type == 'scss' ){
 			$this->PreviewScss($dir);
@@ -327,7 +320,7 @@ class Edit extends \gp\admin\Layout{
 
 		// which css files
 		if( $style_type == 'css' ){
-			$page->css_user[]	= rawurldecode($page->theme_path).'/style.css';
+			$this->page->css_user[]	= rawurldecode($this->page->theme_path).'/style.css';
 		}else{
 			$style_files[]		= $dir.'/style.less';
 		}
@@ -355,10 +348,10 @@ class Edit extends \gp\admin\Layout{
 				return false;
 			}
 
-			$page->head .= '<style>'.$compiled.'</style>';
+			$this->page->head .= '<style>'.$compiled.'</style>';
 		}
 
-		$page->get_theme_css	= false;
+		$this->page->get_theme_css	= false;
 	}
 
 
@@ -369,7 +362,7 @@ class Edit extends \gp\admin\Layout{
 	 *  Bootstrap.scss
 	 */
 	protected function PreviewScss($dir){
-		global $page, $langmessage;
+		global $langmessage;
 
 		$style_files			= array();
 
@@ -394,13 +387,13 @@ class Edit extends \gp\admin\Layout{
 			return false;
 		}
 
-		$page->head .= '<style>'.$compiled.'</style>';
-		$page->get_theme_css	= false;
+		$this->page->head .= '<style>'.$compiled.'</style>';
+		$this->page->get_theme_css	= false;
 	}
 
 
 	public function DragArea(){
-		global $page, $langmessage;
+		global $langmessage;
 
 		if( !$this->GetValues($_GET['dragging'],$from_container,$from_gpOutCmd) ){
 			return;
@@ -619,10 +612,10 @@ class Edit extends \gp\admin\Layout{
 	 *
 	 */
 	public function AddContent(){
-		global $langmessage,$page;
+		global $langmessage;
 
 		//for ajax responses
-		$page->ajaxReplace = array();
+		$this->page->ajaxReplace = array();
 
 		if( !isset($_REQUEST['where']) ){
 			message($langmessage['OOPS']);
@@ -717,10 +710,10 @@ class Edit extends \gp\admin\Layout{
 
 
 	public function RemoveArea(){
-		global $langmessage,$page;
+		global $langmessage;
 
 		//for ajax responses
-		$page->ajaxReplace = array();
+		$this->page->ajaxReplace = array();
 
 		if( !$this->ParseHandlerInfo($_GET['param'],$curr_info) ){
 			message($langmessage['OOPS'].' (0)');

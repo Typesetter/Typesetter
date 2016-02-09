@@ -4,7 +4,7 @@ namespace gp\admin\Settings;
 
 defined('is_running') or die('Not an entry point...');
 
-class CKEditor{
+class CKEditor extends \gp\admin\Base{
 
 	var $config_file;
 	var $cke_config			= array();
@@ -13,11 +13,13 @@ class CKEditor{
 	var $subpages;
 	var $current_subpage = '';
 
-	function __construct(){
-		global $page, $langmessage;
+	function __construct($args){
+		global $langmessage;
 
-		$page->css_admin[] = '/include/css/addons.css';
-		//$page->head_js[] = '/include/js/admin_ckeditor.js';
+		parent::__construct($args);
+
+		$this->page->css_admin[] = '/include/css/addons.css';
+		//$this->page->head_js[] = '/include/js/admin_ckeditor.js';
 
 		$this->Init();
 
@@ -29,7 +31,7 @@ class CKEditor{
 			);
 
 
-		$parts = explode('/',$page->requested);
+		$parts = explode('/',$this->page->requested);
 
 		if( count($parts) > 2 && array_key_exists( $parts[2], $this->subpages ) ){
 			$this->current_subpage = $parts[2];
@@ -103,9 +105,9 @@ class CKEditor{
 	 *
 	 */
 	function PluginForm(){
-		global $langmessage, $page;
+		global $langmessage;
 
-		echo '<form method="post" action="'.\gp\tool::GetUrl($page->requested).'" enctype="multipart/form-data">';
+		echo '<form method="post" action="'.\gp\tool::GetUrl($this->page->requested).'" enctype="multipart/form-data">';
 		echo '<table class="bordered"><tr><th>'.$langmessage['name'].'</th><th>'.$langmessage['Modified'].'</th><th>'.$langmessage['options'].'</th></tr>';
 		if( count($this->cke_config['plugins']) ){
 			foreach($this->cke_config['plugins'] as $plugin_name => $plugin_info){
@@ -116,7 +118,7 @@ class CKEditor{
 				echo '</td><td>';
 
 				$attr = array('data-cmd'=>'postlink', 'class'=>'gpconfirm','title'=>sprintf($langmessage['generic_delete_confirm'],$plugin_name));
-				echo \gp\tool::Link($page->requested,$langmessage['delete'],'cmd=rmplugin&plugin='.rawurlencode($plugin_name), $attr );
+				echo \gp\tool::Link($this->page->requested,$langmessage['delete'],'cmd=rmplugin&plugin='.rawurlencode($plugin_name), $attr );
 				echo '</td></tr>';
 
 			}
@@ -365,8 +367,7 @@ class CKEditor{
 	 *
 	 */
 	function CustomConfigForm(){
-		global $page;
-		echo '<form method="post" action="'.\gp\tool::GetUrl($page->requested).'">';
+		echo '<form method="post" action="'.\gp\tool::GetUrl($this->page->requested).'">';
 
 		$placeholder = '{  "example_key":   "example_value"  }';
 		echo '<p>';

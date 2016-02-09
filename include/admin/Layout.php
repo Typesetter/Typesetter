@@ -56,17 +56,17 @@ class Layout extends \gp\admin\Addon\Install{
 	private $config_before;
 
 
-	public function __construct(){
-		global $page, $gpLayouts, $config;
+	public function __construct($args){
+		global $gpLayouts, $config;
 
-		parent::__construct();
+		parent::__construct($args);
 
 		$this->gpLayouts_before		= $gpLayouts;
 		$this->config_before		= $config;
 
-		$page->head_js[]			= '/include/js/theme_content.js';
-		$page->head_js[]			= '/include/js/dragdrop.js';
-		$page->css_admin[]			= '/include/css/theme_content.scss';
+		$this->page->head_js[]			= '/include/js/theme_content.js';
+		$this->page->head_js[]			= '/include/js/dragdrop.js';
+		$this->page->css_admin[]		= '/include/css/theme_content.scss';
 
 
 		\gp\tool::LoadComponents('resizable');
@@ -78,7 +78,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 	public function RunScript(){
-		global $config, $gpLayouts, $langmessage, $page;
+		global $config, $gpLayouts, $langmessage;
 
 		$cmd = \gp\tool::GetCommand();
 
@@ -137,9 +137,9 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function DefaultDisplay(){
-		global $config, $page, $langmessage, $gpLayouts;
+		global $config, $langmessage, $gpLayouts;
 
-		$page->head_js[] = '/include/js/auto_width.js';
+		$this->page->head_js[] = '/include/js/auto_width.js';
 
 		$this->ShowHeader();
 
@@ -416,7 +416,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function CSSPreferences(){
-		global $langmessage, $gpLayouts, $page;
+		global $langmessage, $gpLayouts;
 
 		$new_info = $gpLayouts[$this->curr_layout];
 
@@ -442,14 +442,14 @@ class Layout extends \gp\admin\Addon\Install{
 			return;
 		}
 
-		if( $this->layout_request || $page->gpLayout == $this->curr_layout ){
-			$page->SetTheme($this->curr_layout);
+		if( $this->layout_request || $this->page->gpLayout == $this->curr_layout ){
+			$this->page->SetTheme($this->curr_layout);
 		}
 
 
 		$content = $this->CSSPreferenceForm($this->curr_layout,$new_info);
-		$page->ajaxReplace = array();
-		$page->ajaxReplace[] = array('replace','#layout_css_ul_'.$this->curr_layout,$content);
+		$this->page->ajaxReplace = array();
+		$this->page->ajaxReplace[] = array('replace','#layout_css_ul_'.$this->curr_layout,$content);
 	}
 
 
@@ -459,7 +459,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function RmGadget(){
-		global $page,$langmessage;
+		global $langmessage;
 
 		$gadget =& $_REQUEST['gadget'];
 
@@ -775,7 +775,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 	public function LoremIpsum(){
-		global $page, $langmessage, $gp_titles, $gp_menu;
+		global $langmessage, $gp_titles, $gp_menu;
 
 		ob_start();
 		echo '<h2>Lorem Ipsum H2</h2>';
@@ -797,7 +797,7 @@ class Layout extends \gp\admin\Addon\Install{
 		echo '</blockquote>';
 
 
-		$page->non_admin_content = ob_get_clean();
+		$this->page->non_admin_content = ob_get_clean();
 	}
 
 
@@ -1026,12 +1026,12 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function MakeDefault(){
-		global $config, $page;
+		global $config;
 
 		$config['gpLayout'] = $this->curr_layout;
 
 		if( $this->SaveConfig() ){
-			$page->SetTheme();
+			$this->page->SetTheme();
 			$this->SetLayoutArray();
 		}
 	}
@@ -1042,9 +1042,9 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function LayoutLabel(){
-		global $gpLayouts, $langmessage, $page;
+		global $gpLayouts, $langmessage;
 
-		$page->ajaxReplace	= array();
+		$this->page->ajaxReplace	= array();
 
 		$layout = $this->ReqLayout();
 		if( $layout === false ){
@@ -1063,9 +1063,9 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 		//send new label
-		$layout_info			= \gp\tool::LayoutInfo($layout,false);
-		$replace				= $this->GetLayoutLabel($layout, $layout_info);
-		$page->ajaxReplace[]	= array( 'replace', '.layout_label_'.$layout, $replace);
+		$layout_info				= \gp\tool::LayoutInfo($layout,false);
+		$replace					= $this->GetLayoutLabel($layout, $layout_info);
+		$this->page->ajaxReplace[]	= array( 'replace', '.layout_label_'.$layout, $replace);
 	}
 
 
@@ -1123,7 +1123,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function LayoutDiv($layout,$info){
-		global $page, $langmessage;
+		global $langmessage;
 
 		$layout_info = \gp\tool::LayoutInfo($layout,false);
 
@@ -1366,7 +1366,7 @@ class Layout extends \gp\admin\Addon\Install{
 	}
 
 	public function SaveHandlersNew($handlers,$layout=false){
-		global $config,$page,$langmessage,$gpLayouts;
+		global $config, $langmessage, $gpLayouts;
 
 		//make sure the keys are sequential
 		foreach($handlers as $container => $container_info){
@@ -1395,7 +1395,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 	public function GetAllHandlers($layout=false){
-		global $page,$gpLayouts, $config;
+		global $gpLayouts, $config;
 
 		if( $layout === false ){
 			$layout = $this->curr_layout;

@@ -4,11 +4,13 @@ namespace gp\admin\Settings;
 
 defined('is_running') or die('Not an entry point...');
 
-class Classes{
+class Classes extends \gp\admin\Base{
 
 	var $admin_link;
 
-	function __construct(){
+	function __construct($args){
+
+		parent::__construct($args);
 
 		$this->admin_link = \gp\tool::GetUrl('Admin/Classes');
 
@@ -131,7 +133,7 @@ class Classes{
 	 *
 	 */
 	function ClassesForm(){
-		global $dataDir, $langmessage, $addonPathCode, $addonRelativeCode, $page;
+		global $dataDir, $langmessage;
 
 		echo '<h2 class="hmargin">Manage Classes</h2>';
 
@@ -150,7 +152,7 @@ class Classes{
 		$classes[] = array('names'=>'','desc'=>'');
 
 
-		$page->jQueryCode .= '$(".sortable_table").sortable({items : "tr",handle: "td"});';
+		$this->page->jQueryCode .= '$(".sortable_table").sortable({items : "tr",handle: "td"});';
 
 		// FORM
 		echo '<form action="' . $this->admin_link . '" method="post">';

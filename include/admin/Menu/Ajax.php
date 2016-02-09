@@ -102,7 +102,7 @@ class Ajax extends \gp\admin\Menu{
 	 *
 	 */
 	public function AddHidden(){
-		global $langmessage, $page, $gp_index;
+		global $langmessage, $gp_index;
 
 		$_REQUEST += array('title'=>'');
 		$_REQUEST['gpx_content'] = 'gpabox';
@@ -173,7 +173,7 @@ class Ajax extends \gp\admin\Menu{
 	 *
 	 */
 	public function HiddenSaved($new_index){
-		global $langmessage, $page;
+		global $langmessage;
 
 		$this->search_page = 0; //take user back to first page where the new page will be displayed
 
@@ -181,7 +181,7 @@ class Ajax extends \gp\admin\Menu{
 			$title	= \gp\tool::IndexToTitle($new_index);
 			$url	= \gp\tool::AbsoluteUrl($title,'',true,false);
 			msg(sprintf($langmessage['will_redirect'],\gp\tool::Link_Page($title)));
-			$page->ajaxReplace[] = array('location',$url,15000);
+			$this->page->ajaxReplace[] = array('location',$url,15000);
 		}else{
 			msg($langmessage['SAVED']);
 		}
@@ -194,7 +194,7 @@ class Ajax extends \gp\admin\Menu{
 	 *
 	 */
 	public function CopyForm(){
-		global $langmessage, $gp_index, $page;
+		global $langmessage, $gp_index;
 
 
 		$index = $_REQUEST['index'];
@@ -250,7 +250,7 @@ class Ajax extends \gp\admin\Menu{
 	 *
 	 */
 	public function CopyPage(){
-		global $gp_index, $gp_titles, $page, $langmessage;
+		global $gp_index, $gp_titles, $langmessage;
 
 		$this->CacheSettings();
 
@@ -328,7 +328,7 @@ class Ajax extends \gp\admin\Menu{
 	 *
 	 */
 	public function InsertDialog($cmd = null){
-		global $langmessage, $page, $gp_index;
+		global $langmessage, $gp_index;
 
 		if( is_null($cmd) ){
 			$cmd = $this->cmd;
@@ -1005,7 +1005,7 @@ class Ajax extends \gp\admin\Menu{
 	 *
 	 */
 	public function HomepageSave(){
-		global $langmessage, $config, $gp_index, $gp_titles, $page;
+		global $langmessage, $config, $gp_index, $gp_titles;
 
 		$homepage = $_POST['homepage'];
 		$homepage_key = false;
@@ -1037,7 +1037,7 @@ class Ajax extends \gp\admin\Menu{
 		$this->HomepageDisplay();
 		$content = ob_get_clean();
 
-		$page->ajaxReplace[] = array('inner','.homepage_setting',$content);
+		$this->page->ajaxReplace[] = array('inner','.homepage_setting',$content);
 	}
 
 

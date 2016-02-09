@@ -4,17 +4,19 @@ namespace gp\admin\Settings;
 
 defined('is_running') or die('Not an entry point...');
 
-class Users{
+class Users extends \gp\admin\Base{
 
 	public $users;
 	public $possible_permissions	= array();
 	public $has_weak_pass			= false;
 
 
-	public function __construct(){
-		global $page,$langmessage;
+	public function __construct($args){
+		global $langmessage;
 
-		$page->head_js[] = '/include/js/admin_users.js';
+		parent::__construct($args);
+
+		$this->page->head_js[] = '/include/js/admin_users.js';
 
 		//set possible_permissions
 		$scripts = \gp\admin\Tools::AdminScripts();

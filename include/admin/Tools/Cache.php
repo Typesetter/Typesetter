@@ -4,13 +4,15 @@ namespace gp\admin\Tools;
 
 defined('is_running') or die('Not an entry point...');
 
-class Cache{
+class Cache extends \gp\admin\Base{
 
 	private $cache_dir;
 	private $all_files;
 
-	public function __construct(){
-		global $page, $langmessage, $dataDir;
+	public function __construct($args){
+		global $langmessage, $dataDir;
+
+		parent::__construct($args);
 
 		$this->cache_dir	= $dataDir.'/data/_cache';
 		$this->AllFiles();
@@ -50,10 +52,10 @@ class Cache{
 	 *
 	 */
 	protected function ShowFiles(){
-		global $page, $langmessage;
+		global $langmessage;
 
-		$page->head_js[] = '/include/thirdparty/tablesorter/tablesorter.js';
-		$page->jQueryCode .= '$("table.tablesorter").tablesorter({cssHeader:"gp_header",cssAsc:"gp_header_asc",cssDesc:"gp_header_desc"});';
+		$this->page->head_js[] = '/include/thirdparty/tablesorter/tablesorter.js';
+		$this->page->jQueryCode .= '$("table.tablesorter").tablesorter({cssHeader:"gp_header",cssAsc:"gp_header_asc",cssDesc:"gp_header_desc"});';
 
 		if( !$this->all_files ){
 			return;
@@ -156,9 +158,9 @@ class Cache{
 	 *
 	 */
 	protected function DeleteFile(){
-		global $page, $langmessage;
+		global $langmessage;
 
-		$page->ajaxReplace = array();
+		$this->page->ajaxReplace = array();
 
 		$file	= $this->RequestedFile();
 		if( !$file ){

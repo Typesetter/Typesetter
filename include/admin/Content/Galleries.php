@@ -6,9 +6,12 @@ defined('is_running') or die('Not an entry point...');
 
 class Galleries extends \gp\special\Galleries{
 
-	public function __construct(){
-		$this->galleries = self::GetData();
+	protected $page;
 
+	public function __construct($args){
+
+		$this->galleries	= self::GetData();
+		$this->page			= $args['page'];
 
 		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
@@ -22,10 +25,10 @@ class Galleries extends \gp\special\Galleries{
 	}
 
 	public function EditGalleries(){
-		global $page, $langmessage;
+		global $langmessage;
 
-		$page->head_js[] = '/include/js/special_galleries.js';
-		$page->css_admin[] = '/include/css/edit_gallery.css';
+		$this->page->head_js[] = '/include/js/special_galleries.js';
+		$this->page->css_admin[] = '/include/css/edit_gallery.css';
 
 
 
@@ -117,8 +120,8 @@ class Galleries extends \gp\special\Galleries{
 
 
 	public function NewDrag(){
-		global $page, $langmessage, $gp_index, $gp_titles;
-		$page->ajaxReplace = array();
+		global $langmessage, $gp_index, $gp_titles;
+		$this->page->ajaxReplace = array();
 
 		//get the title of the gallery that was moved
 		$dragging = $_POST['title'];

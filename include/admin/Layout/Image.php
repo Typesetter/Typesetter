@@ -6,9 +6,9 @@ defined('is_running') or die('Not an entry point...');
 
 class Image extends \gp\admin\Layout\Edit{
 
-	function __construct(){
+	function __construct($args){
 
-		parent::__construct();
+		parent::__construct($args);
 
 		// inline editing images
 		$this->cmds['InlineEdit']		= '';	//added to in js
@@ -44,9 +44,9 @@ class Image extends \gp\admin\Layout\Edit{
 	 *
 	 */
 	public function SaveHeaderImage(){
-		global $gpLayouts,$langmessage,$page;
+		global $gpLayouts,$langmessage;
 
-		$page->ajaxReplace = array();
+		$this->page->ajaxReplace = array();
 
 
 		$section = array();
@@ -68,7 +68,7 @@ class Image extends \gp\admin\Layout\Edit{
 		if( !$this->SaveLayouts() ){
 			return false;
 		}
-		$page->ajaxReplace[] = array('ck_saved','','');
+		$this->page->ajaxReplace[] = array('ck_saved','','');
 		return true;
 	}
 
@@ -78,9 +78,9 @@ class Image extends \gp\admin\Layout\Edit{
 	 *
 	 */
 	public function ShowThemeImages(){
-		global $page, $langmessage;
+		global $langmessage;
 
-		$page->ajaxReplace = array();
+		$this->page->ajaxReplace = array();
 		$current_theme = false;
 
 		//which theme folder
@@ -133,15 +133,15 @@ class Image extends \gp\admin\Layout\Edit{
 
 
 		if( $current_theme ){
-			$page->ajaxReplace[] = array('inner','#gp_option_area',$gp_option_area);
-			$page->ajaxReplace[] = array('inner','#gp_gallery_avail_imgs',$gp_gallery_avail_imgs);
+			$this->page->ajaxReplace[] = array('inner','#gp_option_area',$gp_option_area);
+			$this->page->ajaxReplace[] = array('inner','#gp_gallery_avail_imgs',$gp_gallery_avail_imgs);
 		}else{
 			$content = '<div id="gp_option_area">'.$gp_option_area.'</div>'
 						.'<div id="gp_gallery_avail_imgs">'.$gp_gallery_avail_imgs.'</div>';
-			$page->ajaxReplace[] = array('inner','#gp_image_area',$content);
+			$this->page->ajaxReplace[] = array('inner','#gp_image_area',$content);
 		}
 
-		$page->ajaxReplace[] = array('inner','#gp_folder_options',''); //remove upload button
+		$this->page->ajaxReplace[] = array('inner','#gp_folder_options',''); //remove upload button
 	}
 
 

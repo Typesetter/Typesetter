@@ -9,11 +9,11 @@ class Available extends \gp\admin\Layout{
 	public $searchUrl = 'Admin_Theme_Content/Available';
 
 
-	public function __construct(){
-		global $page;
-		parent::__construct();
+	public function __construct($args){
 
-		$page->head_js[] = '/include/js/auto_width.js';
+		parent::__construct($args);
+
+		$this->page->head_js[] = '/include/js/auto_width.js';
 	}
 
 
@@ -366,20 +366,18 @@ class Available extends \gp\admin\Layout{
 	 *
 	 */
 	public function PreviewTheme($theme, $theme_info){
-		global $langmessage,$config,$page;
+		global $langmessage,$config;
 
 		$theme_id	= dirname($theme);
 		$color		= $theme_info['color'];
 
 
 		$_REQUEST += array('gpreq' => 'body'); //force showing only the body as a complete html document
-		$page->get_theme_css = false;
-		//$page->show_admin_content = false;
-		$page->get_theme_css = false;
 
-		$page->head_js[]	= '/include/js/auto_width.js';
-		$page->head_js[]	= '/include/js/theme_content_outer.js';
-		$page->css_admin[]	= '/include/css/theme_content_outer.scss';
+		$this->page->get_theme_css	= false;
+		$this->page->head_js[]		= '/include/js/auto_width.js';
+		$this->page->head_js[]		= '/include/js/theme_content_outer.js';
+		$this->page->css_admin[]	= '/include/css/theme_content_outer.scss';
 
 
 		//show site in iframe
@@ -416,31 +414,31 @@ class Available extends \gp\admin\Layout{
 		echo '</div>';
 
 		echo '</div>';
-		$page->admin_html = ob_get_clean();
+		$this->page->admin_html = ob_get_clean();
 		return true;
 	}
 
 
 	public function PreviewThemeIframe($theme, $theme_info){
-		global $langmessage,$config,$page;
+		global $langmessage, $config;
 
 		\gp\admin\Tools::$show_toolbar = false;
 
-		$page->gpLayout		= false;
-		$page->theme_name	= $theme_info['folder'];
-		$page->theme_color	= $theme_info['color'];
-		$page->theme_dir	= $theme_info['full_dir'];
-		$page->theme_rel	= $theme_info['rel'].'/'.$theme_info['color'];
+		$this->page->gpLayout		= false;
+		$this->page->theme_name		= $theme_info['folder'];
+		$this->page->theme_color	= $theme_info['color'];
+		$this->page->theme_dir		= $theme_info['full_dir'];
+		$this->page->theme_rel		= $theme_info['rel'].'/'.$theme_info['color'];
 
 		$this->LoremIpsum();
 
 		if( isset($theme_info['id']) ){
-			$page->theme_addon_id = $theme_info['id'];
+			$this->page->theme_addon_id = $theme_info['id'];
 		}
 
-		$page->theme_path = \gp\tool::GetDir($page->theme_rel);
+		$this->page->theme_path = \gp\tool::GetDir($this->page->theme_rel);
 
-		$page->show_admin_content = false;
+		$this->page->show_admin_content = false;
 	}
 
 
@@ -490,7 +488,7 @@ class Available extends \gp\admin\Layout{
 	 *
 	 */
 	public function AddLayout($theme_info){
-		global $gpLayouts, $langmessage, $config, $page;
+		global $gpLayouts, $langmessage, $config;
 
 		$new_layout = array();
 		$new_layout['theme'] = $theme_info['folder'].'/'.$theme_info['color'];
@@ -515,7 +513,7 @@ class Available extends \gp\admin\Layout{
 		$installer->OutputMessages();
 
 		if( $success && $installer->default_layout ){
-			$page->SetTheme();
+			$this->page->SetTheme();
 			$this->SetLayoutArray();
 		}
 	}

@@ -260,9 +260,9 @@ namespace gp\admin\Content{
 		 * @static
 		 */
 		public static function InlineList($dir_piece){
-			global $langmessage, $dataDir;
+			global $langmessage, $dataDir, $page;
 
-			$this->page->ajaxReplace = array();
+			$page->ajaxReplace = array();
 
 
 			$dir_piece = \gp\tool::WinPath($dir_piece);

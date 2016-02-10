@@ -1092,6 +1092,12 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public function ViewCurrent(){
+
+		if( !$this->draft_exists ){
+			$this->DefaultDisplay();
+			return;
+		}
+
 		$file_sections			= \gp\tool\Files::Get($this->file,'file_sections');
 		$this->revision			= $this->fileModTime;
 		echo \gp\tool\Output\Sections::Render($file_sections,$this->title,$this->file_stats);

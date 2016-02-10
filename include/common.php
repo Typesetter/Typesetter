@@ -303,7 +303,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 
 	if( gpdebug === true ){
 		message($mess);
-	}elseif( $report_error ){
+	}elseif( class_exists('\\gp\tool\\Emailer') && $report_error ){
 		$mailer = new \gp\tool\Emailer();
 		$mailer->SendEmail(gpdebug, 'debug ', $mess);
 	}

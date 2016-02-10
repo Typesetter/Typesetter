@@ -224,9 +224,11 @@ namespace gp{
 
 			//gp namespace
 			if( $part_0 === 'gp' ){
-				$path	= implode('/',$parts).'.php';
-				if( file_exists($dataDir.'/include/'.$path) ){
-					include_once( $dataDir.'/include/'.$path );
+				$path	= $dataDir.'/include/'.implode('/',$parts).'.php';
+				if( file_exists($path) ){
+					include_once( $path );
+				}else{
+					trigger_error('Autoload for gp namespace failed. Class: '.$class.' path: '.$path);
 				}
 				return;
 			}

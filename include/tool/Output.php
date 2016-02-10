@@ -1867,7 +1867,7 @@ namespace gp\tool{
 		 * Record fatal errors in /data/_site/ so we can prevent subsequent requests from having the same issue
 		 *
 		 */
-		function RecordFatal($last_error){
+		static function RecordFatal($last_error){
 			global $dataDir, $config, $addon_current_id, $addonFolderName;
 
 			$last_error['request'] = $_SERVER['REQUEST_URI'];

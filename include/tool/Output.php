@@ -2017,6 +2017,12 @@ namespace gp\tool{
 
 			$page->RunScript();
 
+			//prepare the admin content
+			if( \gp\tool::LoggedIn() ){
+				\gp\admin\Tools::AdminHtml();
+			}
+
+
 			//decide how to send the content
 			self::Prep();
 			switch(\gp\tool::RequestType()){
@@ -2057,9 +2063,8 @@ namespace gp\tool{
 
 
 
-			//if logged in, prepare the admin content and don't send 304 response
+			// if logged in, don't send 304 response
 			if( \gp\tool::LoggedIn() ){
-				\gp\admin\Tools::AdminHtml();
 
 				//empty edit links if there isn't a layout
 				if( !$page->gpLayout ){
@@ -2069,7 +2074,7 @@ namespace gp\tool{
 				return;
 			}
 
-			/* attempt to send 304 response  */
+			// attempt to send 304 response
 			if( $page->fileModTime > 0 ){
 				global $wbMessageBuffer;
 				$len = strlen(self::$head_content) + strlen(self::$head_js) + ob_get_length();

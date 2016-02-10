@@ -1776,13 +1776,12 @@ namespace gp{
 		 *
 		 */
 		public static function IdReq($img_path,$jquery = true){
+			global $page;
 
 			//using jquery asynchronously doesn't affect page loading
 			//error function defined to prevent the default error function in main.js from firing
 			if( $jquery ){
-				echo '<script type="text/javascript" style="display:none !important">';
-				echo '$.ajax('.json_encode($img_path).',{error:function(){}, dataType: "jsonp"});';
-				echo '</script>';
+				$page->head_script .= '$.ajax('.json_encode($img_path).',{error:function(){}, dataType: "jsonp"});';
 				return;
 			}
 

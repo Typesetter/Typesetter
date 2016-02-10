@@ -606,7 +606,7 @@ namespace gp\tool{
 							'extraAllowedContent'		=> 'iframe[align,frameborder,height,longdesc,marginheight,marginwidth,name,sandbox,scrolling,seamless,src,srcdoc,width];script[async,charset,defer,src,type,xml]; *[accesskey,contenteditable,contextmenu,dir,draggable,dropzone,hidden,id,lang,spellcheck,style,tabindex,title,translate](*)',
 
 							'toolbar'					=> array(
-																array('Sourcedialog','Source','Templates','ShowBlocks','Undo','Redo','RemoveFormat'), //,'Maximize' does not work well
+																array('Sourcedialog','Templates','ShowBlocks','Undo','Redo','RemoveFormat'), //,'Maximize' does not work well
 																array('Cut','Copy','Paste','PasteText','PasteFromWord','SelectAll','Find','Replace'),
 																array('HorizontalRule','Smiley','SpecialChar','PageBreak','TextColor','BGColor'),
 																array('Link','Unlink','Anchor','Image','Flash','Table'),
@@ -641,7 +641,7 @@ namespace gp\tool{
 			// extra plugins
 			$extra_plugins = array_keys($plugins);
 			if( array_key_exists('extraPlugins',$options) ){
-				$extra_plugins = array_merge( $extra_plugins, explode(',',$options['extraPlugins']), array('sourcedialog') );
+				$extra_plugins = array_merge( $extra_plugins, explode(',',$options['extraPlugins']) );
 			}
 
 			$options = $admin_config['custom_config'] + $options;

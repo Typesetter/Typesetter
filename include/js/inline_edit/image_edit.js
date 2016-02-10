@@ -78,7 +78,7 @@
 			return jQuery.param( save_obj )+'&cmd=save_inline';
 		}
 
-		this.gp_saveData = SaveData;
+		this.SaveData = SaveData;
 
 		/**
 		 * Check to see if there is unsaved data

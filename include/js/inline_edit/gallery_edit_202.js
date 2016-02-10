@@ -167,7 +167,7 @@
 			return false;
 		};
 
-		gp_editor.gp_saveData = function(){
+		gp_editor.SaveData = function(){
 			return gp_editor.getData(edit_div,gp_editor);
 		}
 

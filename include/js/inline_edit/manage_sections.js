@@ -14,7 +14,7 @@
 		preview_timeout: null,
 
 		checkDirty:function(){
-			var curr_data	= this.gp_saveData();
+			var curr_data	= this.SaveData();
 			if( this.saved_data != curr_data ){
 				return true;
 			}
@@ -25,7 +25,7 @@
 		 * Organize the section content to be saved
 		 *
 		 */
-		gp_saveData:function(){
+		SaveData:function(){
 
 			var mgr_object				= this;
 			var args					= {};
@@ -85,7 +85,7 @@
 		 */
 		resetDirty:function(){
 			gp_editor.SectionNumbers();
-			this.saved_data	= this.gp_saveData();
+			this.saved_data	= this.SaveData();
 		},
 
 

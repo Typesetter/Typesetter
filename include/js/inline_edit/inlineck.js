@@ -34,7 +34,7 @@ function gp_init_inline_edit(area_id,section_object){
 	CKEDITOR.disableAutoInline = true;
 	gp_editor = CKEDITOR.inline( inner, gp_ckconfig );
 	gp_editor.save_path = save_path;
-	gp_editor.gp_saveData = function(){
+	gp_editor.SaveData = function(){
 		var data = gp_editor.getData();
 		return 'gpcontent='+encodeURIComponent(data);
 	}

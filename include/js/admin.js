@@ -173,7 +173,7 @@ $gp.CacheInterface = function(callback){
 
 
 	//only continue if we can save
-	gp_editing.save_changes(function(){
+	gp_editing.SaveChanges(function(){
 
 		var $interface						= $('#ck_area_wrap').children().detach();
 

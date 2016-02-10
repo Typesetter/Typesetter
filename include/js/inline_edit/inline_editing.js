@@ -57,7 +57,7 @@ gp_editing = {
 	 * Close after the save if 'Save & Close' was clicked
 	 *
 	 */
-	save_changes:function(callback){
+	SaveChanges:function(callback){
 
 		if( !gp_editor ) return;
 
@@ -81,7 +81,7 @@ gp_editing = {
 		var $edit_div	= $gp.CurrentDiv();
 		var path		= strip_from(gp_editor.save_path,'#');
 		var query		= '';
-		var save_data	= gp_editor.gp_saveData();
+		var save_data	= gp_editing.GetSaveData();
 
 		if( path.indexOf('?') > 0 ){
 			query = strip_to(path,'?')+'&';
@@ -112,7 +112,7 @@ gp_editing = {
 
 
 			//if nothing has changed since saving
-			if( gp_editor.gp_saveData() == save_data ){
+			if( gp_editing.GetSaveData() == save_data ){
 				gp_editor.resetDirty();
 				gp_editing.is_dirty = false;
 				gp_editing.DisplayDirty();
@@ -136,6 +136,20 @@ gp_editing = {
 			},
 		});
 
+	},
+
+	/**
+	 * Get the data to be saved from the gp_editor
+	 * @since 5.0-rc2
+	 *
+	 */
+	GetSaveData: function(){
+
+		if( typeof(gp_editor.SaveData) == 'function' ){
+			return gp_editor.SaveData();
+		}
+
+		return gp_editor.gp_saveData();
 	},
 
 
@@ -461,9 +475,19 @@ gp_editing = {
 		}else{
 			$('#ckeditor_wrap').removeClass('not_saved');
 		}
+	},
+
+
+	/**
+	 * Deprecated methods
+	 */
+	save_changes: function(callback){
+		console.log('Please use gp_editing.SaveChanges() instead of gp_editing.save_changes()');
+		gp_editing.SaveChanges(callback);
 	}
 
 }
+
 
 	/**
 	 * Close button
@@ -478,7 +502,7 @@ gp_editing = {
 	$gp.links.ck_save = function(evt,arg){
 		evt.preventDefault();
 
-		gp_editing.save_changes(function(){
+		gp_editing.SaveChanges(function(){
 			if( arg && arg == 'ck_close' ){
 				gp_editing.close_editor(evt);
 			}
@@ -558,7 +582,7 @@ gp_editing = {
 			return;
 		}
 
-		gp_editing.save_changes();
+		gp_editing.SaveChanges();
 
 	},5000);
 

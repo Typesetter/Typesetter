@@ -140,7 +140,7 @@ gp_editing = {
 
 	/**
 	 * Get the data to be saved from the gp_editor
-	 * @since 5.0-rc2
+	 * @since 5.0
 	 *
 	 */
 	GetSaveData: function(){

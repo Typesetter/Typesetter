@@ -775,6 +775,10 @@ namespace gp\tool{
 			$array = array();
 			foreach($gp_index as $slug => $id){
 
+				if( $page->gp_index == $id ){
+					continue;
+				}
+
 				$label		= \gp\tool::GetLabel($slug);
 				$label		= str_replace( array('&lt;','&gt;','&quot;','&#39;','&amp;'), array('<','>','"',"'",'&')  , $label);
 				$array[]	= array($label,$slug);

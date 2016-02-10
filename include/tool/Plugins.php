@@ -49,7 +49,7 @@ namespace gp\tool{
 
 
 			//less file
-			$ext = \gp\tool::Ext($script['file']);
+			$ext = \gp\tool::Ext($file);
 			if( $ext === 'less' || $ext === 'scss' ){
 				$full_path			= self::$current['code_folder_full'].'/'.ltrim($file,'/');
 				$path				= \gp\tool\Output\Css::Cache($full_path,$ext);

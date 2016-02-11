@@ -62,14 +62,11 @@ gp_editing = {
 		if( !gp_editor ) return;
 
 		if( !gp_editing.IsDirty() ){
-			console.log('not dirty');
 			if( typeof(callback) == 'function' ){
 				callback.call();
 			}
 			return;
 		}
-
-		console.log('dirty!');
 
 
 		var $wrap = $('#ckeditor_wrap');
@@ -576,7 +573,6 @@ gp_editing = {
 		}
 
 		$gp.LoadEditor('?cmd=ManageSections', 0, 'manage_sections');
-
 	});
 
 

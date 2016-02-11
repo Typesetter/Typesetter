@@ -50,6 +50,7 @@ $gp.links.inline_edit_generic = function(evt,arg){
 
 	var area_id		= $gp.AreaId( $(this) );
 
+	console.log('call load editor 2');
 	$gp.LoadEditor(this.href, area_id, arg);
 
 
@@ -65,6 +66,7 @@ $gp.links.inline_edit_generic = function(evt,arg){
 	}
 }
 
+$gp._loadingEditor = false;
 $gp.LoadEditor = function(href, area_id, arg){
 
 	area_id = area_id || 0;
@@ -73,6 +75,12 @@ $gp.LoadEditor = function(href, area_id, arg){
 		return;
 	}
 
+	if( $gp._loadingEditor ){
+		console.log('editor still loading');
+		return;
+	}
+
+	$gp._loadingEditor = true;
 
 	//first time editing, get default $gp.links, $gp.inputs, $gp.response
 	if( typeof(gp_editing) == 'undefined' ){
@@ -81,11 +89,14 @@ $gp.LoadEditor = function(href, area_id, arg){
 		$gp.defaults['response'] = $gp.Properties($gp.response);
 	}
 
+	console.log('load editor');
+
 	$gp.CacheInterface(function(){
 
 		//set the current editing interface aside so the new one can be created
 		if( typeof(gp_editing) !== 'undefined' ){
 			if( gp_editing.RestoreCached(area_id) ){
+				$gp._loadingEditor = false;
 				return;
 			}
 		}else{
@@ -104,6 +115,7 @@ $gp.LoadEditor = function(href, area_id, arg){
 		//can also be used for development/troubleshooting
 		if( typeof(gplinks[arg]) === 'function' ){
 			gplinks[arg].call(this,arg,evt);
+			$gp._loadingEditor = false;
 			return;
 		}
 
@@ -113,19 +125,21 @@ $gp.LoadEditor = function(href, area_id, arg){
 		if( arg != 'manage_sections' ){
 			script		+= '&cmd=inlineedit&area_id='+area_id+'&section='+$edit_div.data('gp-section');
 		}
-
++
 
 		//get the new editor
 		$.getScript( script,function(data){
 			if( data === 'false' ){
 				alert($gp.error);
 				$gp.loaded();
+				$gp._loadingEditor = false;
 				return;
 			}
 
 			if( typeof(gp_editor.wake) == 'function' ){
 				gp_editor.wake();
 			}
+			$gp._loadingEditor = false;
 		});
 
 	});
@@ -180,6 +194,8 @@ $gp.CacheInterface = function(callback){
 		if( typeof(gp_editor.sleep) == 'function' ){
 			gp_editor.sleep();
 		}
+
+		console.log('saved id',$gp.curr_edit_id);
 
 		$gp.interface[$gp.curr_edit_id]		= $interface;
 		$gp.editors[$gp.curr_edit_id]		= gp_editor;

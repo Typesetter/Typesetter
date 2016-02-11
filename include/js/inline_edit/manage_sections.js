@@ -1,6 +1,8 @@
 
 (function(){
 
+	var preview_timeout = null;
+
 	/**
 	 * Set up editor
 	 *
@@ -10,8 +12,6 @@
 		save_path: '?',
 
 		saved_data: '',
-
-		preview_timeout: null,
 
 		checkDirty:function(){
 			var curr_data	= this.SaveData();
@@ -356,8 +356,8 @@
 	$(document).on('mousemove','.preview_section',function(){
 		var $this = $(this);
 
-		if( gp_editor.preview_timeout ){
-			clearTimeout(gp_editor.preview_timeout);
+		if( preview_timeout ){
+			clearTimeout(preview_timeout);
 		}
 
 		if( $this.hasClass('previewing') ){
@@ -372,7 +372,7 @@
 		});
 
 
-		gp_editor.preview_timeout = setTimeout(function(){
+		preview_timeout = setTimeout(function(){
 
 			//scroll the page
 			var $last	= $('#gpx_content .editable_area:last');
@@ -406,8 +406,8 @@
 
 	}).on('mouseleave','.preview_section',function(){
 
-		if( gp_editor.preview_timeout ){
-			clearTimeout(gp_editor.preview_timeout);
+		if( preview_timeout ){
+			clearTimeout(preview_timeout);
 		}
 
 		$(this).removeClass('previewing');

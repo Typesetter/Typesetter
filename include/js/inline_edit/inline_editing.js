@@ -566,7 +566,7 @@ gp_editing = {
 
 	/**
 	 * Switch back to section manager
-	 * Check for .cke_reset_all because dialogs outside of gp_admin_html
+	 * Check for .cke_reset_all because ckeditor creates dialogs outside of gp_admin_html
 	 *
 	 */
 	$gp.$doc.on('click',function(evt){

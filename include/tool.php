@@ -729,17 +729,27 @@ namespace gp{
 			return $schema.$server.self::GetUrl($href,$query,$ampersands);
 		}
 
-		public static function ServerName(){
+		/**
+		 * Return ther server name
+		 *
+		 */
+		public static function ServerName($strip_www = false){
 
 			if( isset($_SERVER['SERVER_NAME']) ){
-				return self::UrlChars($_SERVER['SERVER_NAME']);
+				$server = self::UrlChars($_SERVER['SERVER_NAME']);
+
+			}elseif( isset($_SERVER['HTTP_HOST']) ){
+				$server = self::UrlChars($_SERVER['HTTP_HOST']);
+
+			}else{
+				return false;
 			}
 
-			if( isset($_SERVER['HTTP_HOST']) ){
-				return self::UrlChars($_SERVER['HTTP_HOST']);
+			if( $strip_www && strpos($server,'www.') === 0 ){
+				$server = substr($server,4);
 			}
 
-			return false;
+			return $server;
 		}
 
 		public static function UrlChars($string){

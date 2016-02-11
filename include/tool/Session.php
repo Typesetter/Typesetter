@@ -317,7 +317,7 @@ namespace gp\tool{
 			$cookiePath		= empty($dirPrefix) ? '/' : $dirPrefix;
 			$cookiePath		= \gp\tool::HrefEncode($cookiePath,false);
 			$secure			= (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' );
-			$domain			= self::ServerName();
+			$domain			= \gp\tool::ServerName(true);
 
 			if( !$domain || strpos($domain,'.') === false ){
 				$domain = '';
@@ -349,28 +349,6 @@ namespace gp\tool{
 			}
 
 			setcookie($name, $value, $expires, $cookiePath, $domain, $secure, true);
-		}
-
-
-		/**
-		 * Return the non-www server name
-		 *
-		 */
-		public static function ServerName(){
-
-			if( isset($_SERVER['HTTP_HOST']) ){
-				$server_name = $_SERVER['HTTP_HOST'];
-			}elseif( isset($_SERVER['SERVER_NAME']) ){
-				$server_name = $_SERVER['SERVER_NAME'];
-			}else{
-				return false;
-			}
-
-			if( strpos($server_name,'www.') === 0 ){
-				$server_name = substr($server_name,4);
-			}
-
-			return $server_name;
 		}
 
 

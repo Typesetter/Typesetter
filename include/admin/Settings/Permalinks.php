@@ -23,7 +23,7 @@ class Permalinks{
 		global $langmessage,$dataDir;
 
 
-		$this->server_name = \gp\tool\Session::ServerName();
+		$this->server_name = \gp\tool::ServerName(true);
 
 		//get current rules
 		$this->rule_file_name	= self::IIS() ? 'web.config' : '.htaccess';
@@ -556,7 +556,7 @@ class Permalinks{
 
 		$home_root			= rtrim($home_root,'/').'/';
 		$new_lines			= array();
-		$server_name		= \gp\tool\Session::ServerName();
+		$server_name		= \gp\tool::ServerName(true);
 
 
 		// with www

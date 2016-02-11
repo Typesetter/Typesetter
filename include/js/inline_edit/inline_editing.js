@@ -551,18 +551,31 @@ gp_editing = {
 	/**
 	 * Switch between edit areas
 	 *
+	 * Using $gp.$doc.on('click') so we can stopImmediatePropagation() for other clicks
+	 *
+	 * Not using $('#ExtraEditLink'+area_id).click() to avoid triggering other click handlers
+	 *
 	 */
-	$gp.$doc.on('mousedown','.editable_area:not(.filetype-wrapper_section)',function(evt){
+	$gp.$doc.on('click','.editable_area:not(.filetype-wrapper_section)',function(evt){
+
 
 		//get the edit link
 		var area_id		= $gp.AreaId( $(this) );
-		$('#ExtraEditLink'+area_id).click();
+		if( area_id == $gp.curr_edit_id ){
+			return;
+		}
+
+		evt.stopImmediatePropagation(); //don't check if we need to swith back to the section manager
+
+		var $lnk = $('#ExtraEditLink'+area_id);
+		var arg = $lnk.data('arg');
+		$gp.LoadEditor($lnk.get(0).href, area_id, arg);
 
 	});
 
 
 	/**
-	 * Switch back to section manager
+	 * Switch back to the section manager
 	 * Check for .cke_reset_all because ckeditor creates dialogs outside of gp_admin_html
 	 *
 	 */
@@ -573,6 +586,7 @@ gp_editing = {
 		}
 
 		$gp.LoadEditor('?cmd=ManageSections', 0, 'manage_sections');
+
 	});
 
 

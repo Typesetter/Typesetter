@@ -50,7 +50,6 @@ $gp.links.inline_edit_generic = function(evt,arg){
 
 	var area_id		= $gp.AreaId( $(this) );
 
-	console.log('call load editor 2');
 	$gp.LoadEditor(this.href, area_id, arg);
 
 
@@ -89,7 +88,6 @@ $gp.LoadEditor = function(href, area_id, arg){
 		$gp.defaults['response'] = $gp.Properties($gp.response);
 	}
 
-	console.log('load editor');
 
 	$gp.CacheInterface(function(){
 
@@ -195,7 +193,6 @@ $gp.CacheInterface = function(callback){
 			gp_editor.sleep();
 		}
 
-		console.log('saved id',$gp.curr_edit_id);
 
 		$gp.interface[$gp.curr_edit_id]		= $interface;
 		$gp.editors[$gp.curr_edit_id]		= gp_editor;

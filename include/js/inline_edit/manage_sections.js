@@ -443,6 +443,8 @@
 		});
 
 
+		$section.trigger('SectionAdded');
+
 		gp_editor.InitSorting();
 		$this.removeClass('previewing').trigger('mousemove');
 	}

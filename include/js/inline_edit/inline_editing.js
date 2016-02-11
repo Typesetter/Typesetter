@@ -62,11 +62,14 @@ gp_editing = {
 		if( !gp_editor ) return;
 
 		if( !gp_editing.IsDirty() ){
+			console.log('not dirty');
 			if( typeof(callback) == 'function' ){
 				callback.call();
 			}
 			return;
 		}
+
+		console.log('dirty!');
 
 
 		var $wrap = $('#ckeditor_wrap');
@@ -563,15 +566,17 @@ gp_editing = {
 
 	/**
 	 * Switch back to section manager
+	 * Check for .cke_reset_all because dialogs outside of gp_admin_html
 	 *
 	 */
 	$gp.$doc.on('click',function(evt){
 
-		if( $(evt.target).closest('.editable_area, #gp_admin_html, a, input').length ){
+		if( $(evt.target).closest('.editable_area, #gp_admin_html, .cke_reset_all, a, input').length ){
 			return;
 		}
 
 		$gp.LoadEditor('?cmd=ManageSections', 0, 'manage_sections');
+
 	});
 
 

@@ -738,9 +738,6 @@ namespace gp{
 			if( isset($_SERVER['SERVER_NAME']) ){
 				$server = self::UrlChars($_SERVER['SERVER_NAME']);
 
-			}elseif( isset($_SERVER['HTTP_HOST']) ){
-				$server = self::UrlChars($_SERVER['HTTP_HOST']);
-
 			}else{
 				return false;
 			}

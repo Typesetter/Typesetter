@@ -419,7 +419,6 @@
 	});
 
 
-
 	/**
 	 * Handle new section clicks
 	 *
@@ -428,21 +427,19 @@
 		var $this = $(this);
 		evt.preventDefault();
 
-		//change the previewed section to an editable area
-		if( !$this.hasClass('previewing') ){
-			console.log('not previewing');
-			return;
-		}
+		//remove preview
+		$this.removeClass('previewing');
+		$('.temporary-section').remove();
 
-		var section		= $this.data('preview-section');
-		var $section	= $(section).addClass('editable_area').removeClass('temporary-section');
+
+		//new content
+		var $section	= $($this.data('response')).appendTo('#gpx_content');
+
 		gp_editor.NewSectionId($section);
 
-
 		//child sections
-		$section.find('.temporary-section').each(function(){
-			var $child = $(this).addClass('editable_area').removeClass('temporary-section');
-			gp_editor.NewSectionId($child);
+		$section.find('.editable_area').each(function(){
+			gp_editor.NewSectionId($(this));
 		});
 
 

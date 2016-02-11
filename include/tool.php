@@ -716,11 +716,8 @@ namespace gp{
 
 		public static function AbsoluteUrl($href='',$query='',$with_schema=true,$ampersands=true){
 
-			if( isset($_SERVER['HTTP_HOST']) ){
-				$server = $_SERVER['HTTP_HOST'];
-			}elseif( isset($_SERVER['SERVER_NAME']) ){
-				$server = $_SERVER['SERVER_NAME'];
-			}else{
+			$server = self::ServerName();
+			if( $server === false ){
 				return self::GetUrl($href,$query,$ampersands);
 			}
 
@@ -730,6 +727,24 @@ namespace gp{
 			}
 
 			return $schema.$server.self::GetUrl($href,$query,$ampersands);
+		}
+
+		public static function ServerName(){
+
+			if( isset($_SERVER['SERVER_NAME']) ){
+				return self::UrlChars($_SERVER['SERVER_NAME']);
+			}
+
+			if( isset($_SERVER['HTTP_HOST']) ){
+				return self::UrlChars($_SERVER['HTTP_HOST']);
+			}
+
+			return false;
+		}
+
+		public static function UrlChars($string){
+			$string = str_replace( ' ', '%20', $string );
+			return preg_replace('|[^a-z0-9-~+_.?#=!&;,/:%@$\|*\'()\[\]\\x80-\\xff]|i', '', $string);
 		}
 
 		/**

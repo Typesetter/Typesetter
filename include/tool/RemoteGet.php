@@ -267,7 +267,7 @@ namespace gp\tool{
 		 */
 		public static function FixScheme($url){
 
-			$matched = preg_match('#^[a-z]+:#',$url,$match);
+			preg_match('#^[a-z]+:#',$url,$match);
 
 			if( empty($match) ){
 				return 'http://'.$url;

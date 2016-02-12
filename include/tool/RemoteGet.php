@@ -178,13 +178,8 @@ namespace gp\tool{
 
 		public static function stream_request($url,$r){
 
-			$arrURL = parse_url($url);
-			if( !isset($arrURL['scheme']) ){
-				$arrURL['scheme'] = 'http';
-			}
-			if( ($arrURL['scheme'] != 'http') && ($arrURL['scheme'] != 'https') ){
-				$url = preg_replace('|^' . preg_quote($arrURL['scheme'], '|') . '|', 'http', $url);
-			}
+			$url		= self::FixScheme($url);
+			$arrURL		= parse_url($url);
 
 			//create context
 			$arrContext = array();
@@ -237,15 +232,9 @@ namespace gp\tool{
 
 		public static function fopen_request($url,$r){
 
-			$arrURL = parse_url($url);
-			if( !isset($arrURL['scheme']) ){
-				$arrURL['scheme'] = 'http';
-			}
-			if( ($arrURL['scheme'] != 'http') && ($arrURL['scheme'] != 'https') ){
-				$url = preg_replace('|^' . preg_quote($arrURL['scheme'], '|') . '|', 'http', $url);
-			}
-
-			$handle = @fopen($url, 'r');
+			$url		= self::FixScheme($url);
+			$arrURL		= parse_url($url);
+			$handle		= @fopen($url, 'r');
 
 			if ( !$handle ) return false;
 
@@ -269,6 +258,28 @@ namespace gp\tool{
 			$strResponse = self::chunkTransferDecode($strResponse,$processedHeaders);
 
 			return array('headers' => $processedHeaders['headers'], 'body' => $strResponse, 'response' => $processedHeaders['response'], 'cookies' => $processedHeaders['cookies']);
+		}
+
+
+		/**
+		 * Make sure the url has an http or https scheme
+		 *
+		 */
+		public static function FixScheme($url){
+
+			$matched = preg_match('#^[a-z]+:#',$url,$match);
+
+			if( empty($match) ){
+				return 'http://'.$url;
+			}
+
+			$match[0] = strtolower($match[0]);
+			if( $match[0] !== 'http:' && $match[0] !== 'https:' ){
+				$url = substr($url,strlen($match[0]));
+				$url = 'http://'.ltrim($url,'/');
+			}
+
+			return $url;
 		}
 
 

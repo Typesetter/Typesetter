@@ -100,7 +100,7 @@ class Installer extends \gp\admin\Addon\Tools{
 			return false;
 		}
 
-		$this->id				= $id;
+		$this->id				= (int)$id;
 
 		if( ctype_alnum($order) ){
 			$this->order			= $order;

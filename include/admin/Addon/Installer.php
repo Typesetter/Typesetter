@@ -90,11 +90,21 @@ class Installer extends \gp\admin\Addon\Tools{
 	 *
 	 */
 	public function InstallRemote( $type, $id, $order = null ){
+		global $langmessage;
 
 		$this->remote_install	= true;
 		$this->type				= $type;
+
+		if( !ctype_digit($id) ){
+			$this->message($langmessage['OOPS'].' (Invalid Request)');
+			return false;
+		}
+
 		$this->id				= $id;
-		$this->order			= $order;
+
+		if( ctype_alnum($order) ){
+			$this->order			= $order;
+		}
 
 		return $this->Install();
 	}
@@ -833,7 +843,7 @@ class Installer extends \gp\admin\Addon\Tools{
 		global $langmessage, $dataDir;
 
 		// check values
-		if( empty($this->type) || empty($this->id) || !is_numeric($this->id) ){
+		if( empty($this->type) || empty($this->id) || !ctype_digit($this->id) ){
 			$this->message($langmessage['OOPS'].' (Invalid Request)');
 			return false;
 		}

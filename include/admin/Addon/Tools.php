@@ -331,7 +331,6 @@ class Tools extends \gp\special\Base{
 			$this->pass_arg					= $config['addons'][$arg]['id'];;
 			$this->addon_info['id']			= $config['addons'][$arg]['id'];
 			$this->addon_info['name']		= $config['addons'][$arg]['name'];
-			$this->addon_info['addonDir']	= $arg;
 			return true;
 
 		}
@@ -347,9 +346,8 @@ class Tools extends \gp\special\Base{
 
 				$this->pass_arg					= $arg;
 
-				$this->addon_info['id']			= $arg;
+				$this->addon_info['id']			= $data['id'];
 				$this->addon_info['name']		= $data['name'];
-				$this->addon_info['addonDir']	= $addonDir;
 				return true;
 			}
 		}
@@ -358,7 +356,7 @@ class Tools extends \gp\special\Base{
 			if( isset($data['id']) && ($data['id'] == $arg) ){
 
 				$this->pass_arg					= $arg;
-				$this->addon_info['id']			= $arg;
+				$this->addon_info['id']			= $data['id'];
 				$this->addon_info['name']		= $data['name'];
 				return true;
 			}

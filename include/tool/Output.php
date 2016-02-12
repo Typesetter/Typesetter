@@ -432,9 +432,21 @@ namespace gp\tool{
 				return;
 			}
 
-			$param = $container_id.'|'.$info['gpOutCmd'];
-			$class = 'gpArea_'.str_replace(array(':',','),array('_',''),trim($info['gpOutCmd'],':'));
-			$permission = self::ShowEditLink('Admin_Theme_Content');
+
+			//generate a class based on the area $info
+			if( isset($info['html']) ){
+				$class = $info['key'];
+				$class = preg_replace('#\[.*\]#','',$class);
+			}else{
+				$class = $info['gpOutCmd'];
+			}
+
+			$class			= 'gpArea_'.str_replace(array(':',','),array('_',''),trim($class,':'));
+			$param			= $container_id.'|'.$info['gpOutCmd'];
+			$permission		= self::ShowEditLink('Admin_Theme_Content');
+
+
+
 
 			ob_start();
 

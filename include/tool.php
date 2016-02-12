@@ -1987,6 +1987,7 @@ namespace gp{
 		 *
 		 */
 		public static function Date($format='',$time=null){
+
 			if( empty($format) ){
 				return '';
 			}
@@ -1994,6 +1995,7 @@ namespace gp{
 			if( is_null($time) ){
 				$time = time();
 			}
+			$time = (int)$time;
 
 			$match_count = preg_match_all('#%+[^\s]#',$format,$matches,PREG_OFFSET_CAPTURE);
 			if( $match_count ){

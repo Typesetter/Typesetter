@@ -23,6 +23,8 @@ class Tools extends \gp\special\Base{
 
 	public $invalid_folders		= array();
 
+	private $pass_arg;
+
 
 
 	//
@@ -192,9 +194,8 @@ class Tools extends \gp\special\Base{
 		}
 
 
-		//echo '<form action="'.\gp\tool::GetUrl($this->scriptUrl,'cmd=rate&arg='.$this->addon_info['pass_arg']).'" method="post">';
 		echo '<form action="'.\gp\tool::GetUrl($this->scriptUrl).'" method="post">';
-		echo '<input type="hidden" name="arg" value="'.$this->addon_info['pass_arg'].'"/>';
+		echo '<input type="hidden" name="arg" value="'.htmlspecialchars($this->pass_arg).'"/>';
 
 
 		echo '<table class="rating_table">';
@@ -295,6 +296,7 @@ class Tools extends \gp\special\Base{
 		$dir = str_replace('\\','/',$dir);
 		$dir = str_replace('../','./',$dir);
 		$full_dir = $dataDir.$dir;
+
 		if( !file_exists($full_dir) ){
 			$this->messages[] = $langmessage['OOPS'].' (directory doesn\'t exist)';
 			return false;
@@ -312,9 +314,10 @@ class Tools extends \gp\special\Base{
 			return false;
 		}
 
-		$this->addon_info['pass_arg'] = $dir;
-		$this->addon_info['id'] = $ini['Addon_Unique_ID'];
-		$this->addon_info['name'] = $ini['Addon_Name'];
+
+		$this->pass_arg				= $dir;
+		$this->addon_info['id']		= $ini['Addon_Unique_ID'];
+		$this->addon_info['name']	= $ini['Addon_Name'];
 
 		return true;
 	}
@@ -325,10 +328,10 @@ class Tools extends \gp\special\Base{
 
 		if( isset($config['addons'][$arg]) && isset($config['addons'][$arg]['id']) ){
 
-			$this->addon_info['pass_arg'] = $config['addons'][$arg]['id'];
-			$this->addon_info['id'] = $config['addons'][$arg]['id'];
-			$this->addon_info['name'] = $config['addons'][$arg]['name'];
-			$this->addon_info['addonDir'] = $arg;
+			$this->pass_arg					= $config['addons'][$arg]['id'];;
+			$this->addon_info['id']			= $config['addons'][$arg]['id'];
+			$this->addon_info['name']		= $config['addons'][$arg]['name'];
+			$this->addon_info['addonDir']	= $arg;
 			return true;
 
 		}
@@ -342,10 +345,11 @@ class Tools extends \gp\special\Base{
 		foreach($config['addons'] as $addonDir => $data){
 			if( isset($data['id']) && ($data['id'] == $arg) ){
 
-				$this->addon_info['id'] = $arg;
-				$this->addon_info['pass_arg'] = $arg;
-				$this->addon_info['name'] = $data['name'];
-				$this->addon_info['addonDir'] = $addonDir;
+				$this->pass_arg					= $arg;
+
+				$this->addon_info['id']			= $arg;
+				$this->addon_info['name']		= $data['name'];
+				$this->addon_info['addonDir']	= $addonDir;
 				return true;
 			}
 		}
@@ -353,9 +357,9 @@ class Tools extends \gp\special\Base{
 		foreach($this->addonHistory as $data ){
 			if( isset($data['id']) && ($data['id'] == $arg) ){
 
-				$this->addon_info['id'] = $arg;
-				$this->addon_info['pass_arg'] = $arg;
-				$this->addon_info['name'] = $data['name'];
+				$this->pass_arg					= $arg;
+				$this->addon_info['id']			= $arg;
+				$this->addon_info['name']		= $data['name'];
 				return true;
 			}
 		}

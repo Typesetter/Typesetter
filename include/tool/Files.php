@@ -939,6 +939,9 @@ namespace gp\tool{
 			return $path;
 		}
 
+		public static function CheckPath($path){
+			$path = realpath($path);
+		}
 
 		/* FTP Function */
 

@@ -227,12 +227,7 @@ class Login extends \gp\Page{
 			return false;
 		}
 
-		if( isset($_SERVER['HTTP_HOST']) ){
-			$server = $_SERVER['HTTP_HOST'];
-		}else{
-			$server = $_SERVER['SERVER_NAME'];
-		}
-
+		$server		= \gp\tool::ServerName();
 		$link		= \gp\tool::AbsoluteLink('Admin',$langmessage['login']);
 		$message	= sprintf($langmessage['passwordremindertext'],$server,$link,$username,$newpass);
 

@@ -222,9 +222,10 @@ class Tools extends \gp\special\Base{
 		echo '</td></tr>';
 
 
+		$server		= \gp\tool::ServerName();
+		$host		= $server.$dirPrefix;
 
 		echo '<tr><td>From</td><td>';
-		$host = $_SERVER['HTTP_HOST'].$dirPrefix;
 		echo '<input type="text" name="host"  size="50" value="'.htmlspecialchars($host).'" readonly="readonly" class="gpinput gpreadonly" />';
 		echo '<br/>';
 		echo '<input type="checkbox" name="show_site" value="hidden" /> Click to hide your site information on '.CMS_READABLE_DOMAIN.'.';
@@ -401,13 +402,13 @@ class Tools extends \gp\special\Base{
 
 
 		//send rating
-		$data['addon_id'] = $id;
-		$data['rating'] = $_POST['rating'];
-		$data['review'] = $_POST['review'];
-		$data['cmd'] = 'rate';
-		$data['HTTP_HOST'] =& $_SERVER['HTTP_HOST'];
-		$data['SERVER_ADDR'] =& $_SERVER['SERVER_ADDR'];
-		$data['dirPrefix'] = $dirPrefix;
+		$data['addon_id']		= $id;
+		$data['rating']			= $_POST['rating'];
+		$data['review']			= $_POST['review'];
+		$data['cmd']			= 'rate';
+		$data['HTTP_HOST']		= \gp\tool::ServerName();
+		$data['SERVER_ADDR']	= $_SERVER['SERVER_ADDR'];
+		$data['dirPrefix']		= $dirPrefix;
 		if( isset($_POST['show_site']) && $_POST['show_site'] == 'hidden' ){
 			$data['show_site'] = 'hidden';
 		}

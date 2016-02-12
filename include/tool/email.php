@@ -80,14 +80,12 @@ class gp_email{
 		if( !empty($sendmail_from) ){
 			return $from;
 		}
-		if( isset($_SERVER['HTTP_HOST']) ){
-			$server = $_SERVER['HTTP_HOST'];
-		}else{
-			$server = $_SERVER['SERVER_NAME'];
+
+		$server = \gp\tool::ServerName(true);
+		if( !$server === false ){
+			$server = 'localhost';
 		}
-		if( substr( $server, 0, 4 ) == 'www.' ){
-			$server = substr( $server, 4 );
-		}
+
 		return 'AutomatedSender@'.$server;
 	}
 

@@ -162,11 +162,9 @@ namespace gp\tool{
 			if( !empty($sendmail_from) ){
 				return $from;
 			}
-			if( isset($_SERVER['HTTP_HOST']) ){
-				$server = $_SERVER['HTTP_HOST'];
-			}elseif( isset($_SERVER['SERVER_NAME']) ){
-				$server = $_SERVER['SERVER_NAME'];
-			}else{
+
+			$server = \gp\tool::ServerName(true);
+			if( $server === false ){
 				$server = 'localhost';
 			}
 
@@ -178,10 +176,6 @@ namespace gp\tool{
 				}
 			}
 
-
-			if( substr( $server, 0, 4 ) == 'www.' ){
-				$server = substr( $server, 4 );
-			}
 			return 'AutomatedSender@'.$server;
 		}
 

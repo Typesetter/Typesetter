@@ -405,11 +405,8 @@ class FileSystemFtp extends FileSystem{
 	 */
 	static function GetFTPServer(){
 
-		if( isset($_SERVER['HTTP_HOST']) ){
-			$server = $_SERVER['HTTP_HOST'];
-		}elseif( isset($_SERVER['SERVER_NAME']) ){
-			$server = $_SERVER['SERVER_NAME'];
-		}else{
+		$server = \gp\tool::ServerName(true);
+		if( $server === false ){
 			return '';
 		}
 

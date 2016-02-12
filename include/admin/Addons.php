@@ -374,6 +374,7 @@ class Addons extends \gp\admin\Addon\Install{
 				continue;
 			}
 			$info['upgrade_key']	= \gp\admin\Addon\Tools::UpgradePath($info);
+			$info['source_folder']	= $addonPath .'/'. $value;
 			$avail[$value]			= $info;
 
 			if( isset($info['Addon_Version']) && isset($info['Addon_Unique_ID']) ){
@@ -679,7 +680,7 @@ class Addons extends \gp\admin\Addon\Install{
 	 *
 	 */
 	function LocalInstall(){
-		global $dataDir;
+		global $dataDir, $langmessage;
 
 		$_REQUEST				+= array('source'=>'');
 
@@ -690,7 +691,7 @@ class Addons extends \gp\admin\Addon\Install{
 
 
 		$installer				= new \gp\admin\Addon\Installer();
-		$installer->source		= $dataDir.'/addons/'.$_REQUEST['source'];
+		$installer->source		= $this->avail_addons[$_REQUEST['source']]['source_folder'];
 
 		$installer->Install();
 		$installer->OutputMessages();

@@ -403,7 +403,7 @@ class Tools extends \gp\special\Base{
 
 		//send rating
 		$data['addon_id']		= $id;
-		$data['rating']			= $_POST['rating'];
+		$data['rating']			= (int)$_POST['rating'];
 		$data['review']			= $_POST['review'];
 		$data['cmd']			= 'rate';
 		$data['HTTP_HOST']		= \gp\tool::ServerName();
@@ -419,11 +419,11 @@ class Tools extends \gp\special\Base{
 
 
 		//save review information
-		$this->addonReviews[$id] = array();
-		$this->addonReviews[$id]['rating'] = $_POST['rating'];
-		$this->addonReviews[$id]['review'] = substr($_POST['review'],0,500);
-		$this->addonReviews[$id]['review_id'] = $review_id;
-		$this->addonReviews[$id]['time'] = time();
+		$this->addonReviews[$id]				= array();
+		$this->addonReviews[$id]['rating']		= (int)$_POST['rating'];
+		$this->addonReviews[$id]['review']		= substr($_POST['review'],0,500);
+		$this->addonReviews[$id]['review_id']	= $review_id;
+		$this->addonReviews[$id]['time']		= time();
 		$this->SaveAddonData();
 
 		$this->ShowRatingText = false;

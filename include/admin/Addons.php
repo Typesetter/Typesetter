@@ -38,7 +38,7 @@ class Addons extends \gp\admin\Addon\Install{
 		$this->GetData();
 
 		$this->page->head_js[]		= '/include/js/auto_width.js';
-		$this->avail_addons		= $this->GetAvailAddons();
+		$this->avail_addons			= $this->GetAvailAddons();
 
 	}
 
@@ -683,7 +683,7 @@ class Addons extends \gp\admin\Addon\Install{
 
 		$_REQUEST				+= array('source'=>'');
 
-		if( (strpos($_REQUEST['source'],'/') !== false ) || (strpos($_REQUEST['source'],'\\') !== false) ){
+		if( !isset($this->avail_addons[$_REQUEST['source']]) ){
 			message($langmessage['OOPS'].' (Invalid Request)');
 			return false;
 		}

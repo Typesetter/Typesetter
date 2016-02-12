@@ -433,9 +433,8 @@ class Tools extends \gp\special\Base{
 
 	public function PingRating($data){
 
-		$path = CMS_DOMAIN.'/index.php/Special_Addons';
-		$path .= '?'.http_build_query($data,'','&');
-		$contents = file_get_contents($path);
+		$path		= CMS_DOMAIN.'/index.php/Special_Addons?'.http_build_query($data,'','&');
+		$contents	= \gp\tool\RemoteGet::Get_Successful($path);
 
 		return $this->RatingResponse($contents);
 	}

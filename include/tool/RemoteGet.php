@@ -91,7 +91,7 @@ namespace gp\tool{
 			return self::_get($url,$args);
 		}
 
-		public static function _get($url, $args = array()){
+		protected static function _get($url, $args = array()){
 
 			$url					= rawurldecode($url);
 			$methods				= array('stream','fopen','fsockopen');

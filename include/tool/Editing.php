@@ -365,6 +365,9 @@ namespace gp\tool{
 		 */
 		public static function CleanArg($path){
 
+			$path = \gp\tool\Files::NoNull($path);
+
+
 			//all forward slashes
 			$path = str_replace('\\','/',$path);
 
@@ -393,25 +396,31 @@ namespace gp\tool{
 		 */
 		public static function CleanTitle($title,$spaces = '_'){
 
+			$title = \gp\tool\Files::NoNull($title);
+
 			if( empty($title) ){
-				return $title;
+				return '';
 			}
 
-			// Remove control characters
-			$title = preg_replace( '#[[:cntrl:]]#u', '', $title ) ; // 	[\x00-\x1F\x7F]
+			// Remove control characters [\x00-\x1F\x7F]
+			$clean = '';
+			preg_match_all( '#[^[:cntrl:]]+#u', $clean, $matches);
+			foreach($matches[0] as $match){
+				$clean .= $match;
+			}
 
-			$title = str_replace(array('"',"'",'?','*',':'),array(''),$title); // # needed for entities
+			$clean = str_replace(array('"',"'",'?','*',':'),array(''),$clean); // # needed for entities
 
-			$title = str_replace(array('<','>','|','\\'),array(' ',' ',' ','/'),$title);
-			$title = preg_replace('#\.+([\\\\/])#','$1',$title);
-			$title = trim($title,'/');
+			$clean = str_replace(array('<','>','|','\\'),array(' ',' ',' ','/'),$clean);
+			$clean = preg_replace('#\.+([\\\\/])#','$1',$clean);
+			$clean = trim($clean,'/');
 
-			$title = trim($title);
+			$clean = trim($clean);
 			if( $spaces ){
-				$title = preg_replace( '#[[:space:]]#', $spaces, $title );
+				$clean = preg_replace( '#[[:space:]]#', $spaces, $clean );
 			}
 
-			return $title;
+			return $clean;
 		}
 
 		/**

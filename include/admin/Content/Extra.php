@@ -353,7 +353,9 @@ class Extra extends \gp\Page\Edit{
 	public function NewSection(){
 		global $langmessage, $gpAdmin;
 
-		$title = \gp\tool\Editing::CleanTitle($_REQUEST['new_title']);
+		$title = str_replace( array('\\','/'), '', $_REQUEST['new_title']);
+		$title = \gp\tool\Editing::CleanTitle($title);
+
 		if( empty($title) ){
 			message($langmessage['OOPS'].' (Invalid Title)');
 			return false;

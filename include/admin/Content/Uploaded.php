@@ -165,7 +165,7 @@ namespace gp\admin\Content{
 		public function SetDirectory(){
 
 			//get the current path
-			$path = str_replace( array('\\','//'),array('/','/'),$this->page->requested);
+			$path = str_replace('\\','/',$this->page->requested);
 
 			//@since 5.0
 			if( strpos($path,'Admin/Uploaded') === 0 ){
@@ -182,22 +182,25 @@ namespace gp\admin\Content{
 			}
 
 			if( count($parts) > 0 ){
-				$this->subdir = '/'.implode('/',$parts);
-				$this->subdir = \gp\tool\Editing::CleanArg($this->subdir);
+				$subdir = '/'.implode('/',$parts);
+				$subdir = \gp\tool\Editing::CleanArg($subdir);
 			}
 
 
 			if( !empty($_REQUEST['dir']) ){
-				$this->subdir .= \gp\tool\Editing::CleanArg($_REQUEST['dir']);
-			}
-			$this->subdir = str_replace( array('\\','//'),array('/','/'),$this->subdir);
-
-			if( $this->subdir == '/' ){
-				$this->subdir = '';
-			}else{
-				$this->currentDir .= $this->subdir;
+				$subdir .= \gp\tool\Editing::CleanArg($_REQUEST['dir']);
 			}
 
+			$subdir				= \gp\tool\Files::Canonicalize($subdir);
+			$subdir				= rtrim($subdir,'/');
+			$current_dir		= $this->currentDir . $subdir;
+
+			if( !\gp\tool\Files::CheckPath( $current_dir, $this->currentDir ) ){
+				return;
+			}
+
+			$this->subdir		= $subdir;
+			$this->currentDir	= $current_dir;
 		}
 
 

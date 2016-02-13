@@ -365,7 +365,7 @@ namespace gp\tool{
 		 */
 		public static function CleanArg($path){
 
-			$path = \gp\tool\Files::NoNull($path);
+			$path = self::Sanitize($path);
 
 
 			//all forward slashes
@@ -396,32 +396,46 @@ namespace gp\tool{
 		 */
 		public static function CleanTitle($title,$spaces = '_'){
 
-			$title = \gp\tool\Files::NoNull($title);
+			$title = self::Sanitize($title);
 
 			if( empty($title) ){
 				return '';
 			}
 
+
+			$title = str_replace(array('"',"'",'?','*',':'),array(''),$title); // # needed for entities
+
+			$title = str_replace(array('<','>','|','\\'),array(' ',' ',' ','/'),$title);
+			$title = preg_replace('#\.+([\\\\/])#','$1',$title);
+			$title = trim($title,'/');
+
+			$title = trim($title);
+			if( $spaces ){
+				$title = preg_replace( '#[[:space:]]#', $spaces, $title );
+			}
+
+			return $title;
+		}
+
+
+		/**
+		 * Remove null and control characters from the string
+		 *
+		 */
+		public static function Sanitize($string){
+
+			$string = \gp\tool\Files::NoNull($string);
+
 			// Remove control characters [\x00-\x1F\x7F]
 			$clean = '';
-			preg_match_all( '#[^[:cntrl:]]+#u', $clean, $matches);
+			preg_match_all( '#[^[:cntrl:]]+#u', $string, $matches);
 			foreach($matches[0] as $match){
 				$clean .= $match;
 			}
 
-			$clean = str_replace(array('"',"'",'?','*',':'),array(''),$clean); // # needed for entities
-
-			$clean = str_replace(array('<','>','|','\\'),array(' ',' ',' ','/'),$clean);
-			$clean = preg_replace('#\.+([\\\\/])#','$1',$clean);
-			$clean = trim($clean,'/');
-
-			$clean = trim($clean);
-			if( $spaces ){
-				$clean = preg_replace( '#[[:space:]]#', $spaces, $clean );
-			}
-
 			return $clean;
 		}
+
 
 		/**
 		 * Use HTML Tidy to validate the $text

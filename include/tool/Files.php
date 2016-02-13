@@ -17,6 +17,56 @@ namespace gp\tool{
 
 
 		/**
+		 * Make sure the $path is a subdirectory of $parent
+		 *
+		 * @param string The file path to check
+		 * @param string The parent file path to check, null to check against $dataDir
+		 * @return bool
+		 */
+		public static function CheckPath( $path, $parent = null){
+			global $dataDir;
+
+			if( is_null($parent) ){
+				$parent = $dataDir;
+			}
+
+			$path = self::Canonicalize($path);
+			if( strpos($path, $dataDir) === 0 ){
+				return true;
+			}
+
+			return false;
+		}
+
+
+		/**
+		 * Return Canonicalized absolute pathname
+		 * Similar to http://php.net/manual/en/function.realpath.php but does not check file existence
+		 *
+		 * @param string $path
+		 * @return string
+		 */
+		public static function Canonicalize($path) {
+
+			$path		= \gp\tool\Editing::Sanitize($path);
+			$path		= str_replace( '\\', '/', $path);
+			$parts		= explode('/', $path);
+			$parts		= array_filter($parts);
+			$absolutes	= array();
+
+			foreach( $parts as $part ){
+				if( '.' == $part ) continue;
+				if( '..' == $part ){
+					array_pop($absolutes);
+				}else{
+					$absolutes[] = $part;
+				}
+			}
+			return '/' . implode('/', $absolutes);
+		}
+
+
+		/**
 		 * Get array from data file
 		 * Example:
 		 * $config = gp\tool\Files::Get('_site/config','config'); or $config = gp\tool\Files::Get('_site/config');

@@ -861,9 +861,6 @@ namespace gp\tool{
 			//send response so an error is not thrown
 			echo \gp\tool\Output\Ajax::Callback($_REQUEST['jsoncallback']).'([]);';
 			die();
-
-			//for debugging
-			die('debug: '.pre($_POST).'result: '.pre($gpAdmin));
 		}
 
 

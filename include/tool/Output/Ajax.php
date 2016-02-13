@@ -166,10 +166,10 @@ namespace gp\tool\Output{
 				self::InvalidCallback();
 			}
 
-			if( !preg_match('#^[a-zA-Z0-9_]+$#',$_REQUEST['jsoncallback']) ){
+			if( !preg_match('#^[a-zA-Z0-9_]+$#',$_REQUEST['jsoncallback'], $match) ){
 				self::InvalidCallback();
 			}
-			return $_REQUEST['jsoncallback'];
+			return $match[0];
 		}
 
 		static function InvalidCallback(){

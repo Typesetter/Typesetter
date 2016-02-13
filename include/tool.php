@@ -913,12 +913,6 @@ namespace gp{
 		public static function GetConfig(){
 			global $config, $gp_hooks;
 
-			$str = " some \x00 after";
-			msg($str);
-			$str = \gp\tool\Editing::CleanTitle($str);
-			msg($str);
-
-
 
 			$config = \gp\tool\Files::Get('_site/config');
 

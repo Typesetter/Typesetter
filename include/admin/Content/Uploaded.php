@@ -164,8 +164,8 @@ namespace gp\admin\Content{
 		 */
 		public function SetDirectory(){
 
-			//get the current path
-			$path = str_replace('\\','/',$this->page->requested);
+			$subdir		= '';
+			$path		= str_replace('\\','/',$this->page->requested); //get the current path
 
 			//@since 5.0
 			if( strpos($path,'Admin/Uploaded') === 0 ){

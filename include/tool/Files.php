@@ -31,7 +31,7 @@ namespace gp\tool{
 			}
 
 			$path = self::Canonicalize($path);
-			if( strpos($path, $dataDir) === 0 ){
+			if( strpos($path, $parent) === 0 ){
 				return true;
 			}
 

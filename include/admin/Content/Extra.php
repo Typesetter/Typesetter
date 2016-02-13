@@ -9,6 +9,7 @@ class Extra extends \gp\Page\Edit{
 	public $folder;
 	public $areas = array();
 	protected $page;
+	protected $area_info;
 
 	public function __construct($args){
 		global $dataDir;
@@ -70,15 +71,19 @@ class Extra extends \gp\Page\Edit{
 			return;
 		}
 
-		$this->file				= $this->ExtraExists($_REQUEST['file']);
 
-		if( is_null($this->file) ){
+
+		$area_info				= $this->ExtraExists($_REQUEST['file']);
+
+		if( is_null($area_info) ){
 			message($langmessage['OOPS'].' (Invalid File)');
 			return;
 		}
 
-		$this->title			= \gp\tool\Editing::CleanTitle($_REQUEST['file']);
-		$this->draft_file		= dirname($this->file).'/draft.php';
+		$this->area_info		= $area_info;
+		$this->file				= $area_info['file_path'];
+		$this->title			= \gp\tool\Editing::CleanTitle($area_info['title']);
+		$this->draft_file		= $area_info['draft_path'];
 
 		$this->file_sections	= \gp\tool\Output::ExtraContent($this->title);
 		$this->meta_data		= \gp\tool\Files::$last_meta;
@@ -107,21 +112,36 @@ class Extra extends \gp\Page\Edit{
 				continue;
 			}
 
-			$legacy	= $this->folder.'/'.$file;
-			$new	= $this->folder.'/'.$file.'/page.php';
-
-			if( file_exists($new) ){
-				$this->areas[$file] = $file;
-
-			}elseif( substr($file,-4) === '.php' && file_exists($legacy) ){
-				$file = substr($file,0,-4);
-				$this->areas[$file] = $file;
-
-			}
-
+			$this->AddArea($file);
 		}
 
-		uasort($this->areas,'strnatcasecmp');
+		uksort($this->areas,'strnatcasecmp');
+	}
+
+
+	/**
+	 * Add $file to the list of areas
+	 *
+	 */
+	private function AddArea($title){
+
+		$legacy	= $this->folder.'/'.$title;
+		$new	= $this->folder.'/'.$title.'/page.php';
+
+		if( file_exists($new) ){
+			$legacy = $this->folder.'/'.$title.'.php';
+		}elseif( substr($title,-4) === '.php' && file_exists($legacy) ){
+			$title = substr($title,0,-4);
+		}else{
+			return;
+		}
+
+		$this->areas[$title]					= array();
+		$this->areas[$title]['title']			= $title;
+		$this->areas[$title]['file_path']		= $this->folder.'/'.$title.'/page.php';
+		$this->areas[$title]['draft_path']		= $this->folder.'/'.$title.'/draft.php';
+		$this->areas[$title]['legacy_path']		= $legacy;
+
 	}
 
 
@@ -132,11 +152,29 @@ class Extra extends \gp\Page\Edit{
 	public function DeleteArea(){
 		global $langmessage;
 
-		if( unlink($this->file) ){
-			unset($this->areas[$title]);
+		if( $this->_DeleteArea() ){
+			unset($this->areas[$this->title]);
 		}else{
 			message($langmessage['OOPS']);
 		}
+
+	}
+
+	private function _DeleteArea(){
+
+		//legacy path
+		if( file_exists($this->area_info['legacy_path']) && !unlink($this->area_info['legacy_path']) ){
+			return false;
+		}
+
+		//remove directory
+		$dir = dirname($this->area_info['draft_path']);
+		if( file_exists($dir) && !\gp\tool\Files::RmAll($dir) ){
+			return false;
+		}
+
+
+		return true;
 	}
 
 
@@ -151,7 +189,7 @@ class Extra extends \gp\Page\Edit{
 			return;
 		}
 
-		return $this->folder.'/'.$file.'/page.php';
+		return $this->areas[$file];
 	}
 
 
@@ -175,8 +213,8 @@ class Extra extends \gp\Page\Edit{
 		echo '</th></tr>';
 		echo '</thead><tbody>';
 
-		foreach($this->areas as $file){
-			$this->ExtraRow($file, $types);
+		foreach($this->areas as $file => $info){
+			$this->ExtraRow($info, $types);
 		}
 
 		echo '</tbody>';
@@ -187,20 +225,19 @@ class Extra extends \gp\Page\Edit{
 
 
 	/**
-	 *
+	 * Display extra content row
 	 *
 	 */
-	public function ExtraRow($title, $types){
+	public function ExtraRow($info, $types){
 		global $langmessage;
 
-		$file			= $this->ExtraExists($title);
-		$file_draft		= dirname($file).'/draft.php';
-		$sections		= \gp\tool\Output::ExtraContent($title);
+
+		$sections		= \gp\tool\Output::ExtraContent($info['title']);
 		$section		= $sections[0];
 
 
 		echo '<tr><td style="white-space:nowrap">';
-		echo str_replace('_',' ',$title);
+		echo str_replace('_',' ',$info['title']);
 		echo '</td><td>';
 		$type = $section['type'];
 		if( isset($types[$type]) && isset($types[$type]['label']) ){
@@ -213,13 +250,13 @@ class Extra extends \gp\Page\Edit{
 		echo '</span>..."</td><td style="white-space:nowrap">';
 
 		//preview
-		echo \gp\tool::Link('Admin/Extra',$langmessage['preview'],'cmd=PreviewText&file='.rawurlencode($title));
+		echo \gp\tool::Link('Admin/Extra',$langmessage['preview'],'cmd=PreviewText&file='.rawurlencode($info['title']));
 		echo ' &nbsp; ';
 
 
 		//publish
-		if( file_exists($file_draft) ){
-			echo \gp\tool::Link('Admin/Extra',$langmessage['Publish Draft'],'cmd=PublishDraft&file='.rawurlencode($title),array('data-cmd'=>'creq'));
+		if( file_exists($info['draft_path']) ){
+			echo \gp\tool::Link('Admin/Extra',$langmessage['Publish Draft'],'cmd=PublishDraft&file='.rawurlencode($info['title']),array('data-cmd'=>'creq'));
 		}else{
 			echo '<span class="text-muted">'.$langmessage['Publish Draft'].'</span>';
 		}
@@ -228,15 +265,15 @@ class Extra extends \gp\Page\Edit{
 
 		//edit
 		if( $section['type'] == 'text' ){
-			echo \gp\tool::Link('Admin/Extra',$langmessage['edit'],'cmd=EditExtra&file='.rawurlencode($title));
+			echo \gp\tool::Link('Admin/Extra',$langmessage['edit'],'cmd=EditExtra&file='.rawurlencode($info['title']));
 		}else{
 			echo '<span class="text-muted">'.$langmessage['edit'].'</span>';
 		}
 		echo ' &nbsp; ';
 
 
-		$title = sprintf($langmessage['generic_delete_confirm'],htmlspecialchars($title));
-		echo \gp\tool::Link('Admin/Extra',$langmessage['delete'],'cmd=DeleteArea&file='.rawurlencode($title),array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
+		$title = sprintf($langmessage['generic_delete_confirm'],htmlspecialchars($info['title']));
+		echo \gp\tool::Link('Admin/Extra',$langmessage['delete'],'cmd=DeleteArea&file='.rawurlencode($info['title']),array('data-cmd'=>'postlink','title'=>$info['title'],'class'=>'gpconfirm'));
 		echo '</td></tr>';
 	}
 
@@ -339,7 +376,7 @@ class Extra extends \gp\Page\Edit{
 
 		message($langmessage['SAVED']);
 
-		$this->areas[$title] = $title;
+		$this->AddArea($title);
 	}
 
 

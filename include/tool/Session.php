@@ -553,7 +553,7 @@ namespace gp\tool{
 													);
 
 
-			\gp\tool::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css');
+			\gp\tool::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css,fontawesome');
 			\gp\admin\Tools::VersionsAndCheckTime();
 
 

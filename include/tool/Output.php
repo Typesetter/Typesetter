@@ -1216,7 +1216,7 @@ namespace gp\tool{
 				\gp\tool::LoadComponents('gp-main');
 			}
 			//defaults
-			\gp\tool::LoadComponents('jquery,gp-additional,fontawesome');
+			\gp\tool::LoadComponents('jquery,gp-additional');
 
 			//get css and js info
 			$scripts = \gp\tool\Output\Combine::ScriptInfo( self::$components );

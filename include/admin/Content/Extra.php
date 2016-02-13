@@ -273,7 +273,7 @@ class Extra extends \gp\Page\Edit{
 
 
 		$title = sprintf($langmessage['generic_delete_confirm'],htmlspecialchars($info['title']));
-		echo \gp\tool::Link('Admin/Extra',$langmessage['delete'],'cmd=DeleteArea&file='.rawurlencode($info['title']),array('data-cmd'=>'postlink','title'=>$info['title'],'class'=>'gpconfirm'));
+		echo \gp\tool::Link('Admin/Extra',$langmessage['delete'],'cmd=DeleteArea&file='.rawurlencode($info['title']),array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
 		echo '</td></tr>';
 	}
 

@@ -131,7 +131,7 @@ class Missing extends \gp\special\Missing{
 		echo '<p>'.$langmessage['404_Usage'].'</p>';
 
 		//404 Page
-		echo '<table class="bordered full_width"><tr><th>'.$langmessage['404_Page'].'</th></tr></table>';
+		echo '<h3>'.$langmessage['404_Page'].'</h3>';
 
 		echo '<div id="Page_404">';
 		echo '<p>'.$langmessage['About_404_Page'].'</p>';
@@ -144,7 +144,7 @@ class Missing extends \gp\special\Missing{
 
 
 		//redirection
-		echo '<table class="bordered full_width"><tr><th>'.$langmessage['Redirection'].'</th></tr></table>';
+		echo '<br/><h3>'.$langmessage['Redirection'].'</h3>';
 		echo '<div id="Redirection">';
 		$this->ShowRedirection();
 		echo '</div>';
@@ -174,7 +174,9 @@ class Missing extends \gp\special\Missing{
 			}
 		}
 
-		echo '<h2>'.$langmessage['Link Errors'].' &#187; '.$langmessage['404_Page'].'</h2>';
+		echo '<h2>';
+		echo \gp\tool::Link('Admin/Missing',$langmessage['Link Errors']);
+		echo ' &#187; '.$langmessage['404_Page'].'</h2>';
 
 
 		echo '<form action="'.\gp\tool::GetUrl('Admin/Missing').'" method="post">';
@@ -186,32 +188,28 @@ class Missing extends \gp\special\Missing{
 		echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="gpcancel"/>';
 		echo '</form>';
 
+		echo '<br/>';
+
 		echo '<table class="bordered">';
 		echo '<tr><th>';
 		echo $langmessage['Useful Variables'];
-		echo '</th>';
-		echo '<th>';
-		echo '&nbsp;';
-		echo '</th>';
-		echo '</tr>';
+		echo '</th><th></th></tr>';
 
 
 		echo '<tr><td>';
 		echo '{{Similar_Titles}}';
-		echo '</td>';
-		echo '<td>';
+		echo '</td><td>';
 		echo $langmessage['Similar_Titles'];
 		echo '</td>';
 		echo '</tr></table>';
 
 	}
 
-	/*
-	 *
-	 * Redirection Functions
+
+	/**
+	 * Display current redirection settings
 	 *
 	 */
-
 	protected function ShowRedirection(){
 		global $langmessage, $gp_index, $config;
 
@@ -219,8 +217,9 @@ class Missing extends \gp\special\Missing{
 		$this->page->jQueryCode .= '$("table.tablesorter").tablesorter({cssHeader:"gp_header",cssAsc:"gp_header_asc",cssDesc:"gp_header_desc"});';
 
 
-		echo '<p>'.$langmessage['About_Redirection'].'</p>';
-		echo \gp\tool::Link('Admin/Missing',$langmessage['New Redirection'],'cmd=newform',array('data-cmd'=>'gpabox'));
+		echo '<p class="cf">'.$langmessage['About_Redirection'];
+		echo \gp\tool::Link('Admin/Missing',$langmessage['New Redirection'],'cmd=newform',array('data-cmd'=>'gpabox','class'=>'gpsubmit pull-right'));
+		echo '</p>';
 
 
 		if( empty($this->error_data['redirects']) ){
@@ -261,15 +260,16 @@ class Missing extends \gp\special\Missing{
 			}
 			$full_target = $this->GetTarget($data['target'],false);
 
-			echo '<a href="'.htmlspecialchars($full_target).'">'.str_replace(' ','&nbsp;',htmlspecialchars($target_show)).'</a>';
 
 			$is_gplink = $this->isGPLink($data['target']);
 			if( !empty($data['target']) && $is_gplink ){
 				if( !isset($gp_index[$data['target']]) && !isset($admin_urls[$data['target']]) ){
 					$has_invalid_target = true;
-					echo ' <img src="'.\gp\tool::GetDir('/include/imgs/error.png').'" alt="" height="16" width="16" style="vertical-align:middle" title="'.$langmessage['Target URL Invalid'].'"/> ';
+					echo ' <i class="fa fa-exclamation-triangle" title="'.$langmessage['Target URL Invalid'].'"></i> &nbsp; ';
 				}
 			}
+
+			echo '<a href="'.htmlspecialchars($full_target).'">'.str_replace(' ','&nbsp;',htmlspecialchars($target_show)).'</a>';
 
 			echo '</td><td>';
 			if( $is_gplink ){
@@ -303,17 +303,18 @@ class Missing extends \gp\special\Missing{
 		echo '</tbody>';
 		echo '</table>';
 
+		echo '<br/>';
+
 		echo '<p>';
-		echo \gp\tool::Link('Admin/Missing',$langmessage['New Redirection'],'cmd=newform',array('data-cmd'=>'gpabox'));
-		echo '</p>';
+		echo \gp\tool::Link('Admin/Missing',$langmessage['New Redirection'],'cmd=newform',array('data-cmd'=>'gpabox','class'=>'gpsubmit pull-right'));
 
 
 		if( $has_invalid_target ){
-			echo '<p>';
-			echo ' <img src="'.\gp\tool::GetDir('/include/imgs/error.png').'" alt="" height="16" width="16" style="vertical-align:middle" title="'.$langmessage['Target URL Invalid'].'"/> ';
+			echo ' &nbsp; <span><i class="fa fa-exclamation-triangle"></i> &nbsp; ';
 			echo $langmessage['Target URL Invalid'];
-			echo '</p>';
+			echo '</span>';
 		}
+		echo '</p>';
 
 	}
 

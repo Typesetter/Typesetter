@@ -194,7 +194,7 @@ class Edit extends \gp\Page{
 				$label					= '<i class="fa fa-eye"></i> '.$langmessage['Visibility'].': '.$langmessage['Public'];
 				$q						.= '&visibility=private';
 			}
-			$attrs						= array('title'=>$label,'data-cmd'=>'creq');
+			$attrs						= array('data-cmd'=>'creq');
 			$admin_links[]		= \gp\tool::Link($this->title,$label,$q,$attrs);
 		}
 

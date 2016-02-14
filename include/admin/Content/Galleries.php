@@ -128,8 +128,9 @@ class Galleries extends \gp\special\Galleries{
 			return false;
 		}
 
-		$index	= $gp_index[$dragging];
-		$info	= $this->galleries[$dragging];
+		$index		= $gp_index[$dragging];
+		$dragging	= array_search($index,$gp_index); //for scrutinizer
+		$info		= $this->galleries[$dragging];
 		unset($this->galleries[$dragging]);
 
 

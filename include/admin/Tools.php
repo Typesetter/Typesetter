@@ -1060,10 +1060,9 @@ namespace gp\admin{
 		public static function PostedSlug($string, $from_label = false){
 			global $config;
 
-			$orig_string = $string;
+			$orig_string	= $string;
 
-			// Remove control characters
-			$string = preg_replace( '#[[:cntrl:]]#u', '', $string ) ; // 	[\x00-\x1F\x7F]
+			$string			= \gp\tool\Editing::Sanitize($string);
 
 			//illegal characters
 			$string = str_replace( array('?','*',':','|'), array('','','',''), $string);

@@ -19,10 +19,6 @@ class Missing{
 
 	}
 
-	public function SaveData(){
-		return \gp\tool\Files::SaveData($this->datafile,'error_data',$this->error_data);
-	}
-
 	public function __construct($requested=false){
 		global $langmessage;
 

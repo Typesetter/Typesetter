@@ -69,9 +69,9 @@ class gp_resized{
 		}
 
 
-		$info = self::ImageInfo($img,$width,$height);
-		$folder = $dataDir.'/data/_resized/'.$info['index'];
-		$full_path = $folder.'/'.$info['name'];
+		$info			= self::ImageInfo($img,$width,$height);
+		$folder			= $dataDir.'/data/_resized/'.$info['index'];
+		$full_path		= $folder.'/'.$info['name'];
 
 		//if it exists return true
 		if( file_exists($full_path) ){
@@ -100,7 +100,9 @@ class gp_resized{
 			if( ($use_width >= $width && $use_height > $height)
 				|| ($use_width > $width && $use_height >= $height)
 				){
+
 					$path = \gp\tool::GetDir('/include/image.php',false).'?i='.$index.'&w='.$use_width.'&h='.$use_height.'&img='.rawurlencode($img);
+					die($path);
 					\gp\tool::Redirect($path);
 					//dies
 			}

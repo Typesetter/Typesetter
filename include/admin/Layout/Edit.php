@@ -148,6 +148,13 @@ class Edit extends \gp\admin\Layout{
 		$this->page->head_js[]		= '/include/js/theme_content_outer.js';
 
 
+		//custom css
+		$css			= $this->layoutCSS($this->curr_layout);
+		$dir			= $layout_info['dir'].'/'.$layout_info['theme_color'];
+		$style_type		= \gp\tool\Output::StyleType($dir);
+
+
+
 		//Iframe
 		echo '<div id="gp_iframe_wrap">';
 		$url = \gp\tool::GetUrl('Admin_Theme_Content/Edit/'.rawurlencode($layout),'cmd=in_iframe');
@@ -185,14 +192,23 @@ class Edit extends \gp\admin\Layout{
 		echo '</div>';
 		echo '<div class="separator"></div>';
 
+		//sytax links
+		echo '<div style="text-align:right">';
+		echo 'Syntax: ';
+		if( $style_type == 'scss' ){
+			echo '<a href="http://sass-lang.com/" target="_blank">Scss</a>';
+		}elseif( $style_type == 'less' ){
+			echo '<a href="http://lesscss.org/" target="_blank">Less</a>';
+		}else{
+			echo 'CSS';
+		}
+		echo '</div>';
 
-		echo '</td></tr><tr><td class="full_height"><div class="full_height">';
 
 
-		//custom css
-		$css			= $this->layoutCSS($this->curr_layout);
-		$dir			= $layout_info['dir'].'/'.$layout_info['theme_color'];
-		$style_type		= \gp\tool\Output::StyleType($dir);
+		echo '</td></tr><tr><td class="full_height">';
+
+		echo '<div class="full_height">';
 
 		if( empty($css) ){
 			$var_file 			= $dir.'/variables.'.$style_type;

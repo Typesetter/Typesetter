@@ -1354,7 +1354,7 @@ namespace gp{
 
 		/**
 		 * Redirect the request to $path with http $code
-		 * @static
+		 *
 		 * @param string $path url to redirect to
 		 * @param string $code http redirect code: 301 or 302
 		 *

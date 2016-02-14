@@ -226,6 +226,10 @@ var $gp = {
 					$(obj.CONTENT).appendTo('body').show().css({'top':0});
 				break;
 
+				case 'reload':
+					$gp.Reload();
+				break;
+
 				//standard functions
 				default:
 					CallFunc( obj.SELECTOR, obj.DO, obj.CONTENT);

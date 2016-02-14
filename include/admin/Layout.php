@@ -1463,17 +1463,10 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 	public function ReturnHeader(){
+		global $page;
 
-		if( empty($_POST['return']) ){
-			return;
-		}
-
-
-		$return = trim($_POST['return']);
-		if( strpos($return,'http') !== 0 ){
-			$return = \gp\tool::GetUrl($return,'',false);
-		}
-		\gp\tool::Redirect($return,302);
+		$page->ajaxReplace		= array();
+		$page->ajaxReplace[]	= array('reload');
 	}
 
 

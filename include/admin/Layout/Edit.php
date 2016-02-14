@@ -806,13 +806,13 @@ class Edit extends \gp\admin\Layout{
 			echo '<div id="layout_menus" '.$style.'>';
 			echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post">';
 			echo '<input type="hidden" name="handle" value="'.htmlspecialchars($_GET['handle']).'" />';
-			echo '<input type="hidden" name="return" value="" />';
+
 
 			echo '<table class="bordered">';
 			$this->PresetMenuForm($menu_args);
 
 			echo '<tr><td class="add" colspan="2">';
-			echo '<button type="submit" name="cmd" value="LayoutMenuSave" class="gpsubmit">'.$langmessage['save'].'</button>';
+			echo '<button type="submit" name="cmd" value="LayoutMenuSave" class="gpajax gpsubmit">'.$langmessage['save'].'</button>';
 			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
 			echo '</td></tr>';
 			echo '</table>';
@@ -828,7 +828,6 @@ class Edit extends \gp\admin\Layout{
 			echo '<div id="layout_custom" '.$style.'>';
 			echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post">';
 			echo '<input type="hidden" name="handle" value="'.htmlspecialchars($_GET['handle']).'" />';
-			echo '<input type="hidden" name="return" value="" />';
 
 			$this->CustomMenuForm($menu_args);
 

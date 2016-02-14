@@ -123,7 +123,7 @@ $gp.LoadEditor = function(href, area_id, arg){
 		if( arg != 'manage_sections' ){
 			script		+= '&cmd=inlineedit&area_id='+area_id+'&section='+$edit_div.data('gp-section');
 		}
-+
+
 
 		//get the new editor
 		$.getScript( script,function(data){
@@ -837,6 +837,7 @@ $(function(){
 		}
 
 		if( typeof(this['return']) !== 'undefined' ){
+			console.log('return');
 			this['return'].value = window.location; //set the return path
 		}
 

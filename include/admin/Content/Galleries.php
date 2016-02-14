@@ -51,8 +51,6 @@ class Galleries extends \gp\special\Galleries{
 		global $gp_titles, $gp_index, $langmessage;
 
 
-		$not_visible = array();
-
 		echo '<table id="gp_galleries">';
 
 		echo '<tr><td>';
@@ -124,9 +122,8 @@ class Galleries extends \gp\special\Galleries{
 		$this->page->ajaxReplace = array();
 
 		//get the title of the gallery that was moved
-		$dragging			= $_POST['title'];
-		$gallery_titles		= array_keys($this->galleries);
-		if( !in_array($dragging, $gallery_titles, true) ){
+		$dragging = $_POST['title'];
+		if( !isset($this->galleries[$dragging]) ){
 			message($langmessage['OOPS'].' (Title not in gallery list)');
 			return false;
 		}

@@ -279,16 +279,9 @@ class Missing extends \gp\special\Missing{
 				$lower_source = strtolower($raw_source);
 				$lower_target = strtolower($target_show);
 				similar_text($lower_source,$lower_target,$percent);
-
-				if( $config['auto_redir'] > 0 && $percent >= $config['auto_redir'] ){
-					echo number_format($percent,1).'%';
-				}else{
-					echo number_format($percent,1).'%';
-				}
-			}else{
-				echo '&nbsp;';
+				echo number_format($percent,1).'%';
 			}
-			echo '</td><td>';
+			echo '&nbsp;</td><td>';
 			echo $this->GetCodeLanguage($data['code']);
 			echo '</td><td>';
 

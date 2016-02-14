@@ -166,9 +166,14 @@ class Missing extends \gp\special\Missing{
 		return false;
 	}
 
-	protected function Edit404($text=false){
+	/**
+	 * Display form for editing the 404 page content
+	 *
+	 */
+	protected function Edit404($text=null){
 		global $langmessage;
-		if( $text === false ){
+
+		if( is_null($text) ){
 			if( isset($this->error_data['404_TEXT']) ){
 				$text = $this->error_data['404_TEXT'];
 			}else{
@@ -217,6 +222,7 @@ class Missing extends \gp\special\Missing{
 
 		$this->page->head_js[]		= '/include/thirdparty/tablesorter/tablesorter.js';
 		$this->page->jQueryCode		.= '$("table.tablesorter").tablesorter({cssHeader:"gp_header",cssAsc:"gp_header_asc",cssDesc:"gp_header_desc"});';
+		$has_invalid_target			= false;
 
 
 		echo '<p class="cf">';
@@ -241,8 +247,6 @@ class Missing extends \gp\special\Missing{
 		echo '</thead>';
 
 		echo '<tbody>';
-		$has_invalid_target		= false;
-		$admin_urls				= \gp\admin\Tools::AdminScripts();
 
 		foreach($this->error_data['redirects'] as $source => $data){
 			echo '<tr><td>';
@@ -258,15 +262,14 @@ class Missing extends \gp\special\Missing{
 			if( strlen($target_show) > 40 ){
 				$target_show = substr($target_show,0,15).' ... '.substr($target_show,-15);
 			}
-			$full_target = $this->GetTarget($data['target'],false);
 
+			$full_target	= $this->GetTarget($data['target'],false);
+			$is_gplink		= $this->isGPLink($data['target']);
+			$valid_target	= $this->ValidTarget($data['target']);
 
-			$is_gplink = $this->isGPLink($data['target']);
-			if( !empty($data['target']) && $is_gplink ){
-				if( !isset($gp_index[$data['target']]) && !isset($admin_urls[$data['target']]) ){
-					$has_invalid_target = true;
-					echo ' <i class="fa fa-exclamation-triangle" title="'.$langmessage['Target URL Invalid'].'"></i> &nbsp; ';
-				}
+			if( !$valid_target ){
+				$has_invalid_target = true;
+				echo ' <i class="fa fa-exclamation-triangle" title="'.$langmessage['Target URL Invalid'].'"></i> &nbsp; ';
 			}
 
 			echo '<a href="'.htmlspecialchars($full_target).'">'.str_replace(' ','&nbsp;',htmlspecialchars($target_show)).'</a>';
@@ -308,15 +311,42 @@ class Missing extends \gp\special\Missing{
 
 		echo '<br/>';
 
-		echo '<p>';
-
 		if( $has_invalid_target ){
+			echo '<p>';
 			echo ' &nbsp; <span><i class="fa fa-exclamation-triangle"></i> &nbsp; ';
 			echo $langmessage['Target URL Invalid'];
 			echo '</span>';
+			echo '</p>';
 		}
-		echo '</p>';
 
+	}
+
+	/**
+	 * Return true if the target is a valid url
+	 *
+	 * @return bool
+	 */
+	public function ValidTarget($target){
+		global $gp_index;
+
+		if( empty($target) ){
+			return true;
+		}
+
+		if( !$this->isGPLink($target) ){
+			return true;
+		}
+
+		if( isset($gp_index[$target]) ){
+			return true;
+		}
+
+		$type = \gp\tool::SpecialOrAdmin($target);
+		if( $type == 'admin' ){
+			return true;
+		}
+
+		return false;
 	}
 
 
@@ -357,6 +387,7 @@ class Missing extends \gp\special\Missing{
 	 *
 	 */
 	protected function EditRedir(){
+		global $langmessage;
 
 		$source = \gp\admin\Tools::PostedSlug( $_REQUEST['source'] );
 		if( !isset($this->error_data['redirects'][$source]) ){

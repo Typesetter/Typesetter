@@ -221,27 +221,28 @@ namespace gp\admin{
 																	'group'		=> 'settings',
 																);
 
-			$scripts['Admin/Users']						= array(	'class'		=> 'gp\admin\Settings\Users',
+			$scripts['Admin/Users']						= array(	'class'		=> '\gp\admin\Settings\Users',
 																	'label'		=> $langmessage['user_permissions'],
 																	'group'		=> 'settings',
 																);
 
-			$scripts['Admin/CKEditor']					= array(	'class'		=> 'gp\admin\Settings\CKEditor',
+			$scripts['Admin/CKEditor']					= array(	'class'		=> '\gp\admin\Settings\CKEditor',
 																	'label'		=> 'CKEditor',
 																	'group'		=> 'settings',
 																);
 
-			$scripts['Admin/Classes']					= array(	'class'		=> 'gp\admin\Settings\Classes',
+			$scripts['Admin/Classes']					= array(	'class'		=> '\gp\admin\Settings\Classes',
 																	'label'		=> 'Classes',
 																	'group'		=> 'settings',
 																);
 
-			$scripts['Admin/Permalinks']				= array(	'class'		=> 'gp\admin\Settings\Permalinks',
+			$scripts['Admin/Permalinks']				= array(	'class'		=> '\gp\admin\Settings\Permalinks',
 																	'label'		=> $langmessage['permalinks'],
 																	'group'		=> 'settings',
 																);
 
-			$scripts['Admin/Missing']					= array(	'class'		=> 'gp\admin\Settings\Missing',
+			$scripts['Admin/Missing']					= array(	'class'		=> '\gp\admin\Settings\Missing',
+																	'method'	=> 'RunScript',
 																	'label'		=> $langmessage['Link Errors'],
 																	'group'		=> 'settings',
 																);

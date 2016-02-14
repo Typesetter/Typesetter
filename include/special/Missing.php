@@ -5,11 +5,11 @@ namespace gp\special;
 defined('is_running') or die('Not an entry point...');
 
 
-class Missing{
+class Missing extends \gp\special\Base{
 
 	public $datafile;
 	public $error_data = array();
-	public $requested = false;
+	public $requested;
 
 
 	public function Init(){
@@ -24,17 +24,27 @@ class Missing{
 
 	}
 
-	public function __construct($requested=false){
+	public function __construct($args){
 		global $langmessage;
 
+		parent::__construct($args);
 		$this->Init();
 
-		if( !is_array($requested) ){
-			$this->requested = $requested;
+		$this->requested	= $this->page->requested;
+	}
 
+	public function RunScript(){
+		$cmd = \gp\tool::GetCommand();
+		$this->RunCommands($cmd);
+	}
+
+	public function DefaultDisplay(){
+
+		if( $this->page->gp_index !== 'special_missing' ){
 			$this->CheckRedirect();
 			$this->CheckSimilar();
 		}
+
 		$this->Get404();
 	}
 
@@ -44,7 +54,7 @@ class Missing{
 	 */
 	public function CheckRedirect(){
 
-		if( $this->requested === false ){
+		if( is_null($this->requested) ){
 			return;
 		}
 

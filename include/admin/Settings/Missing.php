@@ -20,46 +20,18 @@ class Missing extends \gp\special\Missing{
 	public function __construct($args){
 		global $langmessage;
 
+		parent::__construct($args);
+
 		$this->page		= $args['page'];
 		$this->codes	= array('301'=>$langmessage['301 Moved Permanently'],'302'=>$langmessage['302 Moved Temporarily']);
-
-		$this->Init();
 		\gp\tool\Editing::PrepAutoComplete();
 
-
-		$cmd = \gp\tool::GetCommand();
-		$show = true;
-		switch($cmd){
-
-			case 'Save404':
-				$show = $this->Save404();
-			break;
-			case 'Edit404':
-				$this->Edit404();
-			return;
-
-
-			//editing
-			case 'EditRedir':
-				$this->EditRedir();
-			return;
-			case 'updateredir':
-				$this->UpdateRedir();
-			break;
-
-			//new redirect
-			case 'SaveRedir';
-				$this->SaveRedir();
-			break;
-
-			case 'RmRedir':
-				$this->RmRedir();
-			break;
-		}
-
-		if( $show ){
-			$this->Show();
-		}
+		$this->cmds['Save404']			= 'Edit404';
+		$this->cmds['Edit404']			= '';
+		$this->cmds['EditRedir']		= '';
+		$this->cmds['UpdateRedir']		= 'DefaultDisplay';
+		$this->cmds['SaveRedir']		= 'DefaultDisplay';
+		$this->cmds['RmRedir']			= 'DefaultDisplay';
 	}
 
 
@@ -126,7 +98,7 @@ class Missing extends \gp\special\Missing{
 	 * Show 404 info and Redirection list
 	 *
 	 */
-	protected function Show(){
+	public function DefaultDisplay(){
 		global $langmessage;
 
 		echo '<h2>'.$langmessage['Link Errors'].'</h2>';
@@ -368,7 +340,7 @@ class Missing extends \gp\special\Missing{
 		$this->CodeSelect($_REQUEST['code']);
 
 		echo '</td><td>';
-		echo '<button type="submit" name="cmd" value="SaveRedir">'.$langmessage['New Redirection'].'</button>';
+		echo '<button type="submit" name="cmd" value="SaveRedir" data-cmd="gpajax">'.$langmessage['New Redirection'].'</button>';
 
 		echo '</td></tr>';
 		echo '</tfoot>';
@@ -446,7 +418,7 @@ class Missing extends \gp\special\Missing{
 		echo '</table>';
 
 		echo '<p>';
-		echo '<input type="submit" name="" value="'.$langmessage['save_changes'].'" class="gpsubmit" />'; //not using gppost because of autocomplete
+		echo '<input type="submit" name="" value="'.$langmessage['save_changes'].'" class="gpsubmit" data-cmd="gppost" />';
 		echo ' <input type="button" name="" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
 		echo '</p>';
 
@@ -576,7 +548,6 @@ class Missing extends \gp\special\Missing{
 		unset($this->error_data['redirects'][$link]);
 		return $this->SaveMissingData();
 	}
-
 
 }
 

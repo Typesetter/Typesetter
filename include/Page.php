@@ -71,9 +71,13 @@ namespace gp{
 		 * Get page content or do redirect for non-existant titles
 		 * see special_missing.php and /Admin/Settings/Missing
 		 */
-		function Error_404($requested){
+		function Error_404(){
 			ob_start();
-			new \gp\special\Missing($requested);
+
+			$args		= array('page'=>$this);
+			$missing	= new \gp\special\Missing($args);
+			$missing->RunScript();
+
 			$this->contentBuffer = ob_get_clean();
 		}
 
@@ -81,7 +85,7 @@ namespace gp{
 			global $gp_index, $gp_titles, $gp_menu;
 
 			if( !isset($gp_index[$this->title]) ){
-				$this->Error_404($this->title);
+				$this->Error_404();
 				return false;
 			}
 
@@ -110,7 +114,7 @@ namespace gp{
 				$this->visibility = $gp_titles[$this->gp_index]['vis'];
 			}
 			if( !\gp\tool::LoggedIn() && $this->visibility ){
-				$this->Error_404($this->title);
+				$this->Error_404();
 				return false;
 			}
 

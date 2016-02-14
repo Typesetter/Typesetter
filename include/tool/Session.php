@@ -39,7 +39,7 @@ namespace gp\tool{
 
 
 		public static function LogIn(){
-			global $langmessage, $config, $gp_index;
+			global $langmessage;
 
 
 			// check nonce
@@ -119,16 +119,35 @@ namespace gp\tool{
 			self::UpdateAttempts($users,$username,true);
 
 			//redirect to prevent resubmission
-			if( $logged_in ){
-				$redirect = 'Admin';
-				if( isset($_REQUEST['file']) && isset($gp_index[$_REQUEST['file']]) ){
-					$redirect = $_REQUEST['file'];
-				}
-				$url = \gp\tool::GetUrl($redirect,'',false);
-				\gp\tool::Redirect($url);
-			}
+			self::Redirect($logged_in);
 
 		}
+
+		/**
+		 * Redirect user after login
+		 *
+		 */
+		public static function Redirect($logged_in){
+			global $gp_index;
+
+			if( !$logged_in ){
+				return;
+			}
+
+			$redirect = false;
+
+			if( isset($_REQUEST['file']) ){
+				$redirect = \gp\tool::ArrayKey($_REQUEST['file'], $gp_index );
+			}
+
+			if( $redirect === false ){
+				$redirect = 'Admin';
+			}
+
+			$url = \gp\tool::GetUrl($redirect,'',false);
+			\gp\tool::Redirect($url);
+		}
+
 
 		/**
 		 * Return the username for the login request

@@ -767,9 +767,15 @@ namespace gp\tool{
 		}
 
 
-		public static function ShowEditLink($permission=false){
+		/**
+		 * Determine if an inline edit link should be shown for the current user
+		 *
+		 * @param string $permission
+		 * @return bool
+		 */
+		public static function ShowEditLink($permission=null){
 
-			if( $permission ){
+			if( !is_null($permission) ){
 				return !self::$nested_edit && \gp\tool::LoggedIn() && \gp\admin\Tools::HasPermission($permission);
 			}
 			return !self::$nested_edit && \gp\tool::LoggedIn();

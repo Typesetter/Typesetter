@@ -64,7 +64,7 @@ class Missing extends \gp\special\Base{
 
 		$target = $this->error_data['redirects'][$this->requested]['target'];
 		$target = $this->GetTarget($target);
-		if( $target == false ){
+		if( $target === false ){
 			return;
 		}
 

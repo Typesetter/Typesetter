@@ -121,15 +121,14 @@ class Galleries extends \gp\special\Galleries{
 		global $langmessage, $gp_index, $gp_titles;
 		$this->page->ajaxReplace = array();
 
+
 		//get the title of the gallery that was moved
-		$dragging = $_POST['title'];
-		if( !isset($this->galleries[$dragging]) ){
-			message($langmessage['OOPS'].' (Title not in gallery list)');
+		$dragging = \gp\tool::ArrayKey( $_POST['title'], $this->galleries, '(Title not in gallery list)' );
+		if( !$dragging ){
 			return false;
 		}
 
 		$index		= $gp_index[$dragging];
-		$dragging	= array_search($index,$gp_index); //for scrutinizer
 		$info		= $this->galleries[$dragging];
 		unset($this->galleries[$dragging]);
 
@@ -145,9 +144,9 @@ class Galleries extends \gp\special\Galleries{
 
 		//place before the element represented by $_POST['next'] if it's set
 		if( isset($_POST['next']) ){
-			$next = $_POST['next'];
-			if( !isset($this->galleries[$next]) ){
-				message($langmessage['OOPS'].' (Next not found)');
+
+			$next = \gp\tool::ArrayKey( $_POST['next'], $this->galleries, '(Next not found)' );
+			if( !$next ){
 				return false;
 			}
 

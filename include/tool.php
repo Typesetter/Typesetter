@@ -2054,6 +2054,31 @@ namespace gp{
 
 
 		/**
+		 * Return the key of an array if found
+		 * Alert if $msg is not null
+		 *
+		 * @param string $key
+		 * @param array $array
+		 * @param string $msg
+		 * @return mixed
+		 */
+		public static function ArrayKey( $key, $array, $msg = null ){
+			global $langmessage;
+
+			if( !isset($array[$key]) ){
+
+				if( !is_null($msg) ){
+					msg($langmessage['OOPS'].' '.$msg);
+				}
+
+				return false;
+			}
+
+			return array_search( $array[$key], $array, true);
+		}
+
+
+		/**
 		 * Convert a string representation of a byte value to an number
 		 * @param string $value
 		 * @return int

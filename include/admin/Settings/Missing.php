@@ -250,6 +250,7 @@ class Missing extends \gp\special\Missing{
 			if( !empty($data['raw_source']) ){
 				$raw_source = $data['raw_source'];
 			}
+			echo \gp\tool::GetUrl('');
 			echo htmlspecialchars($raw_source);
 			echo '</td><td>';
 
@@ -331,6 +332,7 @@ class Missing extends \gp\special\Missing{
 		//source
 		echo '<tfoot>';
 		echo '<tr><td>';
+		echo \gp\tool::GetUrl('');
 		echo '<input type="text" name="source" value="'.htmlspecialchars($_REQUEST['source']).'" size="20" class="gpinput" required />';
 
 		//target

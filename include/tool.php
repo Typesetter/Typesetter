@@ -1321,8 +1321,8 @@ namespace gp{
 		public static function WhichPage(){
 			global $config, $gp_menu;
 
-			$path = self::CleanRequest($_SERVER['REQUEST_URI']);
-			$path = preg_replace('#[[:cntrl:]]#u','', $path);// remove control characters
+			$path	= \gp\tool\Editing::Sanitize($_SERVER['REQUEST_URI']);
+			$path	= self::CleanRequest($path);
 
 			$pos = mb_strpos($path,'?');
 			if( $pos !== false ){
@@ -1343,9 +1343,9 @@ namespace gp{
 				return $config['homepath'];
 			}
 
+			//redirect to / for homepath request
 			if( isset($config['homepath']) && $path == $config['homepath'] ){
-				$args = $_GET;
-				self::Redirect(self::GetUrl('',http_build_query($_GET),false));
+				self::Redirect(self::GetUrl('','',false));
 			}
 
 			return $path;
@@ -1400,8 +1400,6 @@ namespace gp{
 			global $dirPrefix;
 
 			//use dirPrefix to find requested title
-			$path = rawurldecode($path); //%20 ...
-
 			if( !empty($dirPrefix) ){
 				$pos = strpos($path,$dirPrefix);
 				if( $pos !== false ){

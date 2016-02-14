@@ -433,7 +433,7 @@ namespace gp\tool{
 				$clean .= $match;
 			}
 
-			$clean = urldecode($clean);	// remove percent encoded strings like %2e%2e%2f
+			$clean = rawurldecode($clean);	// remove percent encoded strings like %2e%2e%2f
 
 			//recursively sanitize
 			if( strlen($clean) !== strlen($string) ){

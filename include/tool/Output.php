@@ -274,13 +274,17 @@ namespace gp\tool{
 		/**
 		 * Add a Header to the response
 		 * The header will be discarded if it's an ajax request or similar
-		 * @static
+		 *
+		 * @param string $header
+		 * @param bool $replace
+		 * @param int $code
+		 * @return bool
 		 */
-		public static function AddHeader($header, $replace = true, $code = false){
+		public static function AddHeader($header, $replace = true, $code = null){
 			if( !empty($_REQUEST['gpreq']) ){
 				return false;
 			}
-			if( $code ){
+			if( !is_null($code) ){
 				\gp\tool::status_header($code,$header);
 			}else{
 				header($header,$replace);

@@ -14,11 +14,14 @@ defined('is_running') or die('Not an entry point...');
 class Missing extends \gp\special\Missing{
 
 	protected $page;
+	protected $codes;
+
 
 	public function __construct($args){
 		global $langmessage;
 
-		$this->page = $args['page'];
+		$this->page		= $args['page'];
+		$this->codes	= array('301'=>$langmessage['301 Moved Permanently'],'302'=>$langmessage['302 Moved Temporarily']);
 
 		$this->Init();
 		\gp\tool\Editing::PrepAutoComplete();
@@ -28,31 +31,30 @@ class Missing extends \gp\special\Missing{
 		$show = true;
 		switch($cmd){
 
-			case 'save404':
+			case 'Save404':
 				$show = $this->Save404();
 			break;
-			case 'edit404':
+			case 'Edit404':
 				$this->Edit404();
 			return;
 
-			case 'editredir':
+
+			//editing
+			case 'EditRedir':
 				$this->EditRedir();
 			return;
-			case 'saveredir';
-				$this->SaveRedir();
-			break;
 			case 'updateredir':
 				$this->UpdateRedir();
 			break;
 
-			case 'rmredir':
-				$this->RmRedir();
+			//new redirect
+			case 'SaveRedir';
+				$this->SaveRedir();
 			break;
 
-			case 'newform':
-				$this->RedirForm();
-			return;
-
+			case 'RmRedir':
+				$this->RmRedir();
+			break;
 		}
 
 		if( $show ){
@@ -136,9 +138,9 @@ class Missing extends \gp\special\Missing{
 		echo '<div id="Page_404">';
 		echo '<p>'.$langmessage['About_404_Page'].'</p>';
 		echo '<p>';
-		echo \gp\tool::Link('Special_Missing',$langmessage['preview']);
-		echo ' - ';
-		echo \gp\tool::Link('Admin/Missing',$langmessage['edit'],'cmd=edit404');
+		echo \gp\tool::Link('Special_Missing',$langmessage['preview'],'','class="gpsubmit"');
+		echo ' &nbsp; ';
+		echo \gp\tool::Link('Admin/Missing',$langmessage['edit'],'cmd=Edit404','class="gpsubmit"');
 		echo '</p>';
 		echo '</div>';
 
@@ -213,19 +215,16 @@ class Missing extends \gp\special\Missing{
 	protected function ShowRedirection(){
 		global $langmessage, $gp_index, $config;
 
-		$this->page->head_js[] = '/include/thirdparty/tablesorter/tablesorter.js';
-		$this->page->jQueryCode .= '$("table.tablesorter").tablesorter({cssHeader:"gp_header",cssAsc:"gp_header_asc",cssDesc:"gp_header_desc"});';
+		$this->page->head_js[]		= '/include/thirdparty/tablesorter/tablesorter.js';
+		$this->page->jQueryCode		.= '$("table.tablesorter").tablesorter({cssHeader:"gp_header",cssAsc:"gp_header_asc",cssDesc:"gp_header_desc"});';
 
 
-		echo '<p class="cf">'.$langmessage['About_Redirection'];
-		echo \gp\tool::Link('Admin/Missing',$langmessage['New Redirection'],'cmd=newform',array('data-cmd'=>'gpabox','class'=>'gpsubmit pull-right'));
+		echo '<p class="cf">';
+		echo $langmessage['About_Redirection'];
 		echo '</p>';
 
 
-		if( empty($this->error_data['redirects']) ){
-			return;
-		}
-
+		echo '<form method="post" action="'.\gp\tool::GetUrl('Admin/Missing').'">';
 		echo '<table class="bordered tablesorter full_width">';
 		echo '<thead>';
 		echo '<tr><th>';
@@ -242,8 +241,8 @@ class Missing extends \gp\special\Missing{
 		echo '</thead>';
 
 		echo '<tbody>';
-		$has_invalid_target = false;
-		$admin_urls = \gp\admin\Tools::AdminScripts();
+		$has_invalid_target		= false;
+		$admin_urls				= \gp\admin\Tools::AdminScripts();
 
 		foreach($this->error_data['redirects'] as $source => $data){
 			echo '<tr><td>';
@@ -289,25 +288,26 @@ class Missing extends \gp\special\Missing{
 			echo $this->GetCodeLanguage($data['code']);
 			echo '</td><td>';
 
-			echo \gp\tool::Link('Admin/Missing',$langmessage['edit'],'cmd=editredir&source='.urlencode($source),array('data-cmd'=>'gpabox'));
+			echo \gp\tool::Link('Admin/Missing',$langmessage['edit'],'cmd=EditRedir&source='.urlencode($source),array('data-cmd'=>'gpabox'));
 
 			echo ' &nbsp; ';
 			echo \gp\tool::Link($source,$langmessage['Test']);
 
 			echo ' &nbsp; ';
 			$title = sprintf($langmessage['generic_delete_confirm'],$source);
-			echo \gp\tool::Link('Admin/Missing',$langmessage['delete'],'cmd=rmredir&link='.urlencode($source),array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
+			echo \gp\tool::Link('Admin/Missing',$langmessage['delete'],'cmd=RmRedir&link='.urlencode($source),array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
 
 			echo '</td></tr>';
 		}
 		echo '</tbody>';
+
+		$this->AddMissingRow();
 		echo '</table>';
+		echo '</form>';
 
 		echo '<br/>';
 
 		echo '<p>';
-		echo \gp\tool::Link('Admin/Missing',$langmessage['New Redirection'],'cmd=newform',array('data-cmd'=>'gpabox','class'=>'gpsubmit pull-right'));
-
 
 		if( $has_invalid_target ){
 			echo ' &nbsp; <span><i class="fa fa-exclamation-triangle"></i> &nbsp; ';
@@ -320,6 +320,58 @@ class Missing extends \gp\special\Missing{
 
 
 	/**
+	 * Add Redirection form for <tfoot>
+	 *
+	 */
+	protected function AddMissingRow(){
+		global $langmessage;
+
+		$_REQUEST += array('source'=>'','target'=>'','code'=>'','orig_source'=>'');
+
+		//source
+		echo '<tfoot>';
+		echo '<tr><td>';
+		echo '<input type="text" name="source" value="'.htmlspecialchars($_REQUEST['source']).'" size="20" class="gpinput" required />';
+
+		//target
+		echo '</td><td>';
+		echo '<input type="text" name="target" value="'.htmlspecialchars($_REQUEST['target']).'" class="title-autocomplete gpinput" size="40" />';
+
+		//code
+		echo '</td><td>';
+		echo '</td><td>';
+		$this->CodeSelect($_REQUEST['code']);
+
+		echo '</td><td>';
+		echo '<button type="submit" name="cmd" value="SaveRedir">'.$langmessage['New Redirection'].'</button>';
+
+		echo '</td></tr>';
+		echo '</tfoot>';
+	}
+
+
+	/**
+	 * Edit an existing redirection
+	 *
+	 */
+	protected function EditRedir(){
+
+		$source = \gp\admin\Tools::PostedSlug( $_REQUEST['source'] );
+		if( !isset($this->error_data['redirects'][$source]) ){
+			message($langmessage['OOPS'].' (Invalid Redirect)');
+			return false;
+		}
+
+		$args					= $this->error_data['redirects'][$source];
+		$args['cmd']			= 'updateredir';
+		$args['orig_source']	= $source;
+		$args['source']			= $source;
+
+		$this->RedirForm($args);
+	}
+
+
+	/**
 	 * Using inline_box for this one for autocomplete init
 	 *
 	 */
@@ -328,7 +380,6 @@ class Missing extends \gp\special\Missing{
 
 		$values += array('cmd'=>'saveredir','source'=>'','target'=>'','code'=>'','orig_source'=>'');
 
-		$codes = array('301'=>$langmessage['301 Moved Permanently'],'302'=>$langmessage['302 Moved Temporarily']);
 
 		echo '<div class="inline_box" id="gp_redir">';
 		echo '<h2>'.$langmessage['New Redirection'].'</h2>';
@@ -354,15 +405,7 @@ class Missing extends \gp\special\Missing{
 		echo '<tr><td>';
 		echo $langmessage['Method'];
 		echo '</td><td>';
-		echo '<select name="code" class="gpselect">';
-		foreach($codes as $code_key => $code_value){
-			$selected = '';
-			if( $code_key == $values['code'] ){
-				$selected = ' selected="selected"';
-			}
-			echo '<option value="'.$code_key.'"'.$selected.'>'.htmlspecialchars($code_value).'</option>';
-		}
-		echo '</select>';
+		$this->CodeSelect($values['code']);
 		echo '</td></tr>';
 
 
@@ -370,7 +413,7 @@ class Missing extends \gp\special\Missing{
 		echo '<tr><td>';
 		echo $langmessage['Target URL'];
 		echo '</td><td>';
-		\gp\admin\Menu\Tools::ScrollList($gp_index,'target','radio',true);
+		echo '<input type="text" name="target" value="'.htmlspecialchars($values['target']).'" class="title-autocomplete gpinput" size="40" />';
 		echo '</td></tr>';
 
 
@@ -384,7 +427,22 @@ class Missing extends \gp\special\Missing{
 
 		echo '</form>';
 		echo '</div>';
+	}
 
+	/**
+	 * Display select for redirect code
+	 *
+	 */
+	protected function CodeSelect($value){
+		echo '<select name="code" class="gpselect">';
+		foreach($this->codes as $code_key => $code_value){
+			$selected = '';
+			if( $code_key == $value ){
+				$selected = ' selected="selected"';
+			}
+			echo '<option value="'.$code_key.'"'.$selected.'>'.htmlspecialchars($code_value).'</option>';
+		}
+		echo '</select>';
 	}
 
 	protected function CheckRedir(){
@@ -445,24 +503,6 @@ class Missing extends \gp\special\Missing{
 		return $this->SaveMissingData();
 	}
 
-	/**
-	 * Edit an existing redirection
-	 *
-	 */
-	protected function EditRedir(){
-
-		$source = \gp\admin\Tools::PostedSlug( $_REQUEST['source'] );
-		if( !isset($this->error_data['redirects'][$source]) ){
-			message($langmessage['OOPS'].' (Invalid Redirect)');
-			return false;
-		}
-
-		$args = $this->error_data['redirects'][$source];
-		$args['cmd'] = 'updateredir';
-		$args['orig_source'] = $source;
-		$args['source'] = $source;
-		$this->RedirForm($args);
-	}
 
 	/**
 	 * Save a new redirection
@@ -482,14 +522,9 @@ class Missing extends \gp\special\Missing{
 			return false;
 		}
 
-		$title						= \gp\tool::IndexToTitle($_POST['target']);
-		if( $title === false ){
-			message($langmessage['OOPS'].' (Invalid Target)');
-			return false;
-		}
 
 		$redirect = array(
-			'target'		=> $title,
+			'target'		=> $_POST['target'],
 			'code'			=> (int)$_POST['code'],
 			'source'		=> $_POST['source'],
 			);

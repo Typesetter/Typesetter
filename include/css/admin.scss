@@ -616,7 +616,8 @@ body.gpAdmin div.editable_area{
 
 .bordered > tbody > tr > th,
 .bordered > thead > tr > th,
-.bordered > tbody > tr > td{
+.bordered > tbody > tr > td,
+.bordered > tfoot > tr > td{
 	padding: 7px;
 	border-bottom: 1px solid #eee;
 	text-align: left;

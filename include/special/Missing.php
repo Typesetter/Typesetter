@@ -17,6 +17,11 @@ class Missing{
 		$this->datafile		= '_site/error_data';
 		$this->error_data	= \gp\tool\Files::Get($this->datafile,'error_data');
 
+		$this->error_data	+= array(
+			'redirects'			=> array(
+			)
+		);
+
 	}
 
 	public function __construct($requested=false){

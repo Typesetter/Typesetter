@@ -93,7 +93,7 @@ class Edit extends \gp\admin\Layout{
 
 		$cmd = \gp\tool::GetCommand();
 
-		$this->LayoutCommands($cmd);
+		$this->LayoutCommands();
 		$this->RunCommands($cmd);
 	}
 

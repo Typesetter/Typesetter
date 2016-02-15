@@ -845,6 +845,11 @@ namespace gp\admin{
 		public static function CleanCache(){
 			global $dataDir;
 			$dir = $dataDir.'/data/_cache';
+
+			if( !file_exists($dir) ){
+				return;
+			}
+
 			$files = scandir($dir);
 			$times = array();
 			foreach($files as $file){

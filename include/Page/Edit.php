@@ -1084,8 +1084,7 @@ class Edit extends \gp\Page{
 			readgzfile($full_path);
 			$contents	= ob_get_clean();
 
-			$dir		= \gp\tool::DirName($full_path);
-			$full_path	= tempnam($dir,'backup').'.php';
+			$full_path	= substr($full_path,0,-3).'php';
 
 			\gp\tool\Files::Save( $full_path, $contents );
 

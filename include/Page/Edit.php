@@ -178,10 +178,12 @@ class Edit extends \gp\Page{
 
 		//history
 		$backup_files		= $this->BackupFiles();
-		$times				= array_keys($backup_files);
-		$admin_links[]		= \gp\tool::Link($this->title,'<i class="fa fa-backward"></i> '.$langmessage['Previous'],'cmd=ViewRevision&time='.array_pop($times),array('data-cmd'=>'cnreq'));
+		if( count($backup_files) ){
+			$times				= array_keys($backup_files);
+			$admin_links[]		= \gp\tool::Link($this->title,'<i class="fa fa-backward"></i> '.$langmessage['Previous'],'cmd=ViewRevision&time='.array_pop($times),array('data-cmd'=>'cnreq'));
+		}
 
-		$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+		$admin_links[]		= \gp\tool::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 
 
 

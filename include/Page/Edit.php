@@ -774,7 +774,10 @@ class Edit extends \gp\Page{
 			$this->meta_data['file_number'] = \gp\tool\Files::NewFileNumber();
 		}
 
+		msg('save this');
+
 		if( $backup ){
+			msg('save backup');
 			$this->SaveBackup(); //make a backup of the page file
 		}
 
@@ -807,28 +810,28 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public function SaveBackup(){
-		global $dataDir;
+		global $dataDir, $gpAdmin;
 
-		$dir = $dataDir.'/data/_backup/pages/'.$this->gp_index;
+		$dir	= $dataDir.'/data/_backup/pages/'.$this->gp_index;
+		$time	= \gp\tool\Editing::ReqTime();		//use the request time
 
+		//just one backup per edit session (auto-saving would create too many backups otherwise)
+		$previous_backup	= $this->BackupFile( $time );
+		if( !empty($previous_backup) ){
+			return true;
+		}
 
+		// get the raw contents so we can add the size to the backup file name
 		if( $this->draft_exists ){
 			$contents	= \gp\tool\Files::GetRaw($this->draft_file);
 		}else{
 			$contents	= \gp\tool\Files::GetRaw($this->file);
 		}
 
-		//use the request time
-		$time = \gp\tool\Editing::ReqTime();
-
 
 		//backup file name
-		$len			= strlen($contents);
-		$backup_file	= $dir.'/'.$time.'.'.$len;
-
-		if( isset($this->file_stats['username']) && $this->file_stats['username'] ){
-			$backup_file .= '.'.$this->file_stats['username'];
-		}
+		$len				= strlen($contents);
+		$backup_file		= $dir.'/'.$time.'.'.$len.'.'.$gpAdmin['username'];
 
 		//compress
 		if( function_exists('gzencode') && function_exists('readgzfile') ){
@@ -836,13 +839,10 @@ class Edit extends \gp\Page{
 			$contents = gzencode($contents,9);
 		}
 
-		if( file_exists($backup_file) ){
-			return true;
-		}
-
 		if( !\gp\tool\Files::Save( $backup_file, $contents ) ){
 			return false;
 		}
+
 
 		$this->CleanBackupFolder();
 		return true;
@@ -920,22 +920,9 @@ class Edit extends \gp\Page{
 
 
 		foreach($files as $time => $file){
-			//remove .gze
-			if( strpos($file,'.gze') === (strlen($file)-4) ){
-				$file = substr($file,0,-4);
-			}
+			$info = $this->BackupInfo($file);
 
-			//get info from filename
-			$name		= basename($file);
-			$parts		= explode('.',$name,3);
-			$time		= array_shift($parts);
-			$size		= array_shift($parts);
-			$username	= false;
-			if( count($parts) ){
-				$username = array_shift($parts);
-			}
-
-			$rows[$time] = $this->HistoryRow($time, $size, $username);
+			$rows[$time] = $this->HistoryRow($info['time'], $info['size'], $info['username']);
 		}
 
 
@@ -957,6 +944,34 @@ class Edit extends \gp\Page{
 		echo '</table>';
 
 		echo '<p>'.$langmessage['history_limit'].': '.$config['history_limit'].'</p>';
+	}
+
+
+	/**
+	 * Get info about a backup from the filename
+	 *
+	 */
+	public function BackupInfo($file){
+
+		$info = array();
+
+		//remove .gze
+		if( strpos($file,'.gze') === (strlen($file)-4) ){
+			$file = substr($file,0,-4);
+		}
+
+		$name				= basename($file);
+		$parts				= explode('.',$name,3);
+
+		$info['time']		= array_shift($parts);
+		$info['size']		= array_shift($parts);
+		$info['username']	= '';
+
+		if( count($parts) ){
+			$info['username'] = array_shift($parts);
+		}
+
+		return $info;
 	}
 
 
@@ -1156,10 +1171,12 @@ class Edit extends \gp\Page{
 	 */
 	public function BackupFile( $time ){
 		global $dataDir;
+
 		$files = $this->BackupFiles();
 		if( !isset($files[$time]) ){
 			return;
 		}
+
 		return $dataDir.'/data/_backup/pages/'.$this->gp_index.'/'.$files[$time];
 	}
 

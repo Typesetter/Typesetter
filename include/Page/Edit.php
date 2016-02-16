@@ -774,10 +774,7 @@ class Edit extends \gp\Page{
 			$this->meta_data['file_number'] = \gp\tool\Files::NewFileNumber();
 		}
 
-		msg('save this');
-
 		if( $backup ){
-			msg('save backup');
 			$this->SaveBackup(); //make a backup of the page file
 		}
 

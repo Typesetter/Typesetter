@@ -15,15 +15,15 @@
 	height:220px;
 	overflow:auto;
 	overflow-x:hidden;
-	margin: 0 0 10px;
+	margin: 0 0 5px;
 	padding:10px 5px;
 	background-color:#fafafa;
 	border:1px solid #fff;
 	border-radius: 5px;
 	}
 
-#gp_current_images > div,
-#gp_gallery_avail_imgs > div{
+#gp_current_images span,
+#gp_gallery_avail_imgs span{
 	position:relative;
 	display:block;
 	float:left;
@@ -48,65 +48,30 @@
 	box-sizing:border-box;
 	}
 
-#gp_gallery_avail_imgs > div > span{
+
+
+#gp_gallery_avail_imgs a.delete{
 	position:absolute;
 	top:0;
-	bottom:0;
-	left:0;
 	right:0;
+	z-index:102;
+	background: #ddd;
+	text-shadow:0 0 2px #fff;
+	border-radius: 3px;
+	height:22px;
+	width:22px;
+	line-height:22px;
+	text-align:center;
+	font-size:14px;
+	color:#C42;
 	display:none;
-	border-radius:3px;
-	overflow:hidden;
 	}
-
-#gp_gallery_avail_imgs > div.expand > span{
+#gp_gallery_avail_imgs span.expand a.delete{
 	display:block;
 	}
 
-#gp_gallery_avail_imgs span.gp_table{
-	display:table;
-	height:100%;
-	width:100%;
-	}
 
-#gp_gallery_avail_imgs span.gp_table_row{
-	display:table-row;
-	height:50%;
-	}
-
-#gp_gallery_avail_imgs a{
-	background: rgba(220,220,220,0.8);
-	text-align:center;
-	font-size:14px;
-	display:none;
-	display:table-cell;
-	vertical-align:middle;
-	}
-
-#gp_gallery_avail_imgs a:last-child{
-	border-top:1px solid #eee;
-	bottom:0;
-	}
-
-#gp_gallery_avail_imgs a:hover{
-	background:#38ab90;
-	color:#fff;
-	}
-
-#gp_gallery_avail_imgs a.delete{
-	color:#C42;
-	}
-
-#gp_gallery_avail_imgs a.delete:hover{
-	background:#C42;
-	color:#fff;
-	}
-
-
-/**
- * Upload form
- *
- */
+/* upload form */
 
 #gp_folder_options{
 	display:inline-block;

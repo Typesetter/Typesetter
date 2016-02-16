@@ -444,12 +444,18 @@ namespace gp\admin\Content{
 
 			$query_string = 'file_cmd=delete&show=inline&file='.urlencode($file);
 
-			return '<span class="expand_child" id="'.$id.'">'
-					. '<a href="'.$file_url.'" data-cmd="gp_gallery_add" '.$size.'>'
+			return '<div class="expand_child" id="'.$id.'">'
 					. $thumb
-					. '</a>'
-					. \gp\tool::Link('Admin/Uploaded'.$dir_piece,'',$query_string,array('class'=>'delete fa fa-minus-circle gpconfirm','data-cmd'=>'gpajax','title'=>$langmessage['delete_confirm']),'delete')
-					. '</span>';
+					. '<span>'						// 100% height of wrapping div
+					. '<span class="gp_table">'		// table
+					. '<span class="gp_table_row">' // table-row
+					. '<a href="'.$file_url.'" data-cmd="gp_gallery_add" '.$size.'><i class="fa fa-plus"></i> '.$langmessage['add'].'</a>'
+					. '</span><span class="gp_table_row">'
+					. \gp\tool::Link('Admin/Uploaded'.$dir_piece,'',$query_string,array('class'=>'delete gpconfirm fa fa-trash','data-cmd'=>'gpajax','title'=>$langmessage['delete_confirm']),'delete')
+					. '</span>'
+					. '</span>'
+					. '</span>'
+					. '</div>';
 		}
 
 		public static function ImageId($path){

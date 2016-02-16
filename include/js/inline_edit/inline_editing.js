@@ -577,8 +577,8 @@ gp_editing = {
 	/**
 	 * Switch back to the section manager
 	 * Check for .cke_reset_all because ckeditor creates dialogs outside of gp_admin_html
+	 * .. Issues: continually growing list of areas to check for: colorbox gallery
 	 *
-	 */
 	$gp.$doc.on('click',function(evt){
 
 		if( $(evt.target).closest('.editable_area, #gp_admin_html, .cke_reset_all, a, input').length ){
@@ -588,6 +588,7 @@ gp_editing = {
 		$gp.LoadEditor('?cmd=ManageSections', 0, 'manage_sections');
 
 	});
+	 */
 
 
 	// auto save

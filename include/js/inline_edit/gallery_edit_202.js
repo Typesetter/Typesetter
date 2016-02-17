@@ -159,6 +159,9 @@
 		gp_editor.checkDirty = function(){
 			var new_content		= gp_editor.getData( gp_editor.edit_div );
 
+			//console.log('checkdirty orig', orig_content);
+			//console.log('checkdirt new', new_content);
+
 			if( orig_content !== new_content ){
 				return true;
 			}
@@ -365,10 +368,15 @@
 			 *
 			 */
 			$gp.links.gp_gallery_rm = function(){
+
+				//remove the image in the gallery
+				current_image	= GetCurrentImage(this);
 				gp_editor.removeImage(current_image);
 				$(current_image).remove();
-				edit_links.hide(); //so that a new mouseover will happen
 				gp_editor.removedImage(gp_editor.edit_div);
+
+				//remove the image in editor
+				$(this).closest('.expand_child').remove();
 			}
 
 			/**

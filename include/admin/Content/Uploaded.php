@@ -345,7 +345,7 @@ namespace gp\admin\Content{
 			global $langmessage, $dataDir;
 
 			$return		= '';
-			$return		.= '<div class="gp_edit_select ckeditor_control">';
+			$return		.= '<div class="gp_edit_select">';
 			$return		.= '<a class="gp_selected_folder"><i class="fa fa-folder-o"></i> ';
 			if( strlen($dir_piece) > 23 ){
 				$return		.= '...'.substr($dir_piece,-20);

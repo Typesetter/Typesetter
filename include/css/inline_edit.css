@@ -219,7 +219,7 @@ html{
 #ckeditor_wrap .full_width,
 #ckeditor_wrap .full_width:hover,
 #ckeditor_wrap .full_width:active{
-	width:195px;
+	width:100%;
 	}
 
 #ckeditor_wrap .half_width,

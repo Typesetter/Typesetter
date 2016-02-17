@@ -8,119 +8,119 @@
  *
  */
 
+
+	gp_editor = {
+
+		sortable_area_sel:	'.gp_gallery',
+		img_name:			'gallery',
+		img_rel:			'gallery_gallery',
+		edit_links_target:	false,
+		auto_start:			false,
+		make_sortable:		true,
+
+		/**
+		 * Called when a caption is edited
+		 *
+		 */
+		updateCaption:function(current_image,caption){
+		},
+
+		/**
+		 * Called before an image is removed
+		 *
+		 */
+		removeImage:function(image){
+		},
+
+		/**
+		 * Called after an image is removed
+		 *
+		 */
+		removedImage:function(edit_div){
+		},
+
+		/**
+		 * Called when an image is added to the gallery
+		 * @param object $li A jquery object of the new <li> element
+		 *
+		 */
+		addedImage:function($li){
+		},
+
+		/**
+		 * Called when the inline editor has loaded
+		 *
+		 */
+		editorLoaded:function(){
+		},
+
+		/**
+		 * Called when the width setting is changed
+		 *
+		 * widthChanged:function(width){}
+		 *
+		 */
+		widthChanged: false,
+
+		/**
+		 * Called when the height setting is changed
+		 *
+		 * heightChanged:function(height){},
+		 */
+		heightChanged: false,
+
+		/**
+		 * Called when the interval speed setting is changed
+		 *
+		 * intervalSpeed:function(height){},
+		 */
+		intervalSpeed: false,
+
+		/**
+		 * Called when an image is moved backwards
+		 *
+		 * moveBack:function(current_image){},
+		 */
+		moveBack: false,
+		moveForward: false,
+
+
+		checkDirty:function(){
+			return false;
+		},
+		getData:function(edit_div){
+
+			var args = {
+				images: [],
+				captions: []
+			};
+
+
+			//images
+			edit_div.find(gp_editor.sortable_area_sel).find('li > a').each(function(){
+				args.images.push( $(this).attr('href') );
+			});
+
+			//captions
+			edit_div.find(gp_editor.edit_links_target).find('.caption').each(function(){
+				args.captions.push( $(this).html() );
+			});
+
+
+			//options
+			var options = $('#gp_gallery_options').find('input,select').serialize();
+
+			//get content
+			var data = edit_div.clone();
+			data.find('li.holder').remove();
+			data.find('ul').enableSelection().removeClass('ui-sortable').removeAttr('unselectable');
+			data.find('.gp_nosave').remove();
+			data = data.html();
+			return $.param(args)+'&'+options+'&gpcontent='+encodeURIComponent(data);
+		}
+	};
+
 	function gp_init_inline_edit(area_id,section_object){
-
-		gp_editor = {
-
-			sortable_area_sel:	'.gp_gallery',
-			img_name:			'gallery',
-			img_rel:			'gallery_gallery',
-			edit_links_target:	false,
-			auto_start:			false,
-			make_sortable:		true,
-
-			/**
-			 * Called when a caption is edited
-			 *
-			 */
-			updateCaption:function(current_image,caption){
-			},
-
-			/**
-			 * Called before an image is removed
-			 *
-			 */
-			removeImage:function(image){
-			},
-
-			/**
-			 * Called after an image is removed
-			 *
-			 */
-			removedImage:function(edit_div){
-			},
-
-			/**
-			 * Called when an image is added to the gallery
-			 * @param object $li A jquery object of the new <li> element
-			 *
-			 */
-			addedImage:function($li){
-			},
-
-			/**
-			 * Called when the inline editor has loaded
-			 *
-			 */
-			editorLoaded:function(){
-			},
-
-			/**
-			 * Called when the width setting is changed
-			 *
-			 * widthChanged:function(width){}
-			 *
-			 */
-			widthChanged: false,
-
-			/**
-			 * Called when the height setting is changed
-			 *
-			 * heightChanged:function(height){},
-			 */
-			heightChanged: false,
-
-			/**
-			 * Called when the interval speed setting is changed
-			 *
-			 * intervalSpeed:function(height){},
-			 */
-			intervalSpeed: false,
-
-			/**
-			 * Called when an image is moved backwards
-			 *
-			 * moveBack:function(current_image){},
-			 */
-			moveBack: false,
-			moveForward: false,
-
-
-			checkDirty:function(){
-				return false;
-			},
-			getData:function(edit_div){
-
-				var args = {
-					images: [],
-					captions: []
-				};
-
-
-				//images
-				edit_div.find(gp_editor.sortable_area_sel).find('li > a').each(function(){
-					args.images.push( $(this).attr('href') );
-				});
-
-				//captions
-				edit_div.find(gp_editor.edit_links_target).find('.caption').each(function(){
-					args.captions.push( $(this).html() );
-				});
-
-
-				//options
-				var options = $('#gp_gallery_options').find('input,select').serialize();
-
-				//get content
-				var data = edit_div.clone();
-				data.find('li.holder').remove();
-				data.find('ul').enableSelection().removeClass('ui-sortable').removeAttr('unselectable');
-				data.find('.gp_nosave').remove();
-				data = data.html();
-				return $.param(args)+'&'+options+'&gpcontent='+encodeURIComponent(data);
-			}
-		};
-
 
 		$gp.LoadStyle('/include/css/inline_image.css');
 
@@ -134,14 +134,14 @@
 		}
 
 
-		//components that can be removed
-		var edit_links = false,
-			content_cache = false,
-			current_image = false,
-			sortable_area;
+		var sortable_area;
+		var $current_images;
+		var edit_links			= false;
+		var content_cache		= false;
+		var current_image		= false;
+		var save_path			= gp_editing.get_path(area_id);
+		var edit_div			= gp_editing.get_edit_area(area_id);
 
-		var save_path = gp_editing.get_path(area_id);
-		var edit_div = gp_editing.get_edit_area(area_id);
 		if( edit_div == false || save_path == false ){
 			return;
 		}
@@ -184,10 +184,14 @@
 
 
 		function ShowEditor(){
+
+			//Warn if the sortable area isn't found
 			sortable_area = edit_div.find(gp_editor.sortable_area_sel);
-			if( gp_editor.make_sortable ){
-				MakeSortable();
+			if( sortable_area.length == 0 ){
+				console.log('sortable area not found');
+				return;
 			}
+
 			gp_editor.resetDirty();
 
 			var edit_path = strip_from(save_path,'?');
@@ -195,9 +199,19 @@
 			gp_editing.editor_tools();
 
 			//floating editor
-			$('#ckeditor_top').html('<div id="gp_current_images"></div><div id="gp_image_area"></div><div id="gp_upload_queue"></div>');
-			$('#ckeditor_controls').prepend('<div id="gp_folder_options"></div>');
-			$('#ckeditor_wrap').addClass('multiple_images'); //indicate the multiple images can be added
+			var html	= '<h4>Gallery Images</h4>'
+						+ '<div id="gp_current_images"></div>'
+						+ '<a class="ckeditor_control full_width ShowImageSelect" data-cmd="ShowImageSelect"> Add Images</a>'
+						+ '<div id="gp_select_wrap">'
+						+ '<div id="gp_image_area"></div>'
+						+ '<div id="gp_upload_queue"></div>'
+						+ '<div id="gp_folder_options"></div>'
+						+ '</div>';
+
+			$('#ckeditor_top').html(html);
+			$('#ckeditor_wrap').addClass('multiple_images'); //indicate multiple images can be added
+
+			$current_images = $('#gp_current_images');
 
 			ShowCurrentImages();
 			LoadImages(false,gp_editor);
@@ -373,6 +387,16 @@
 				gp_editor.updateCaption(current_image,text);
 			}
 
+			/**
+			 * Show/hide image selection
+			 *
+			 */
+			$gp.links.ShowImageSelect = function(){
+				$(this).toggleClass('gp_display');
+				$('#gp_select_wrap').toggleClass('gp_display');
+
+			}
+
 		}
 
 		/**
@@ -381,31 +405,29 @@
 		 */
 		function ShowCurrentImages(){
 
-			sortable_area.find('img').each(function(){
-				var $a		= $('<img>').attr('src',this.src);
-				var $span	= $('<a>').append($a);
-				var $img	= $('<span class="expand_child">').append( $span ).appendTo('#gp_current_images');
-
-
+			sortable_area.children().each(function(){
+				AddCurrentImage(this);
 			});
 
+
+			$current_images.sortable({
+				tolerance: 'pointer',
+				cursorAt: { left: 25, top: 25 },
+
+				//reorder gallery
+				stop: function(){
+					$current_images.children().each(function(){
+						sortable_area.append( $(this).data('original') );
+					});
+				}
+			}).disableSelection();
 		}
 
-
-		/**
-		 * Make the gallery area sortable
-		 *
-		 */
-		function MakeSortable(){
-			sortable_area.sortable({
-				placeholder: 'gp_drag_box',
-				opacity: 0.6,
-				tolerance: 'pointer',
-				beforeStop: function(event, ui) {
-					ui.item.removeAttr('style').removeAttr('class'); //clean the elements up
-				}
-			});
-			sortable_area.disableSelection();
+		function AddCurrentImage(img){
+			var $img	= $(img).find('img');
+			var $a		= $('<img>').attr('src',$img.attr('src'));
+			var $span	= $('<a>').append($a);
+			var $img	= $('<span class="expand_child">').data('original',img).append( $span ).appendTo( $current_images );
 		}
 
 
@@ -429,11 +451,15 @@
 		}
 
 
-		function AddImage(img,holder){
+		/**
+		 * Add an image to the gallery
+		 *
+		 */
+		function AddImage( $img, holder ){
 
 			edit_div.find('.gp_to_remove').remove();
-			img.attr({'data-cmd':gp_editor.img_name,'data-arg':gp_editor.img_rel,'title':'','class':gp_editor.img_rel})
-			var li = $('<li>').append(img).append('<div class="caption"></div>');
+			$img.attr({'data-cmd':gp_editor.img_name,'data-arg':gp_editor.img_rel,'title':'','class':gp_editor.img_rel})
+			var li = $('<li>').append($img).append('<div class="caption"></div>');
 			if( holder ){
 				holder.replaceWith(li);
 			}else{
@@ -442,6 +468,7 @@
 
 			li.trigger('gp_gallery_add');
 			gp_editor.addedImage(li);
+			AddCurrentImage(li);
 		}
 
 
@@ -521,3 +548,8 @@
 
 	}
 
+jQuery.fn.outerHTML = function(s) {
+    return s
+        ? this.before(s).remove()
+        : jQuery("<p>").append(this.eq(0).clone()).html();
+};

@@ -102,7 +102,7 @@ class Image extends \gp\admin\Layout\Edit{
 
 		//list of themes
 		ob_start();
-		echo '<div class="gp_edit_select ckeditor_control">';
+		echo '<div class="gp_edit_select">';
 		echo '<a class="gp_selected_folder"><span class="folder"></span>';
 		echo $current_label;
 		echo '</a>';

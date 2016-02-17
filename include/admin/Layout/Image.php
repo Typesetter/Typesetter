@@ -124,10 +124,10 @@ class Image extends \gp\admin\Layout\Edit{
 		self::GetAvailThemeImages( $current_dir, $current_url, $images );
 		ob_start();
 		foreach($images as $image ){
-			echo '<span class="expand_child">'
+			echo '<div class="expand_child">'
 				. '<a href="'.$image['url'].'" data-cmd="gp_gallery_add" data-width="'.$image['width'].'" data-height="'.$image['height'].'">'
 				. '<img src="'.$image['url'].'" alt=""/>'
-				. '</a></span>';
+				. '</a></div>';
 		}
 		$gp_gallery_avail_imgs = ob_get_clean();
 

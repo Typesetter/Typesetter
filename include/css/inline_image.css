@@ -23,8 +23,8 @@
 	padding:10px 5px;
 }
 
-#gp_current_images span,
-#gp_gallery_avail_imgs span{
+#gp_current_images div,
+#gp_gallery_avail_imgs div{
 	position:relative;
 	display:inline-block;
 	width:31.332%;
@@ -47,25 +47,34 @@
 	box-sizing:border-box;
 	}
 
-
-
-#gp_gallery_avail_imgs a.delete{
+#gp_current_images span,
+#gp_gallery_avail_imgs span{
 	position:absolute;
 	top:0;
 	right:0;
 	z-index:102;
+	display:none;
 	background: #ddd;
 	text-shadow:0 0 2px #fff;
 	border-radius: 3px;
+	}
+
+#gp_current_images span a,
+#gp_gallery_avail_imgs span a{
 	height:22px;
 	width:22px;
 	line-height:22px;
 	text-align:center;
 	font-size:14px;
-	color:#C42;
-	display:none;
 	}
-#gp_gallery_avail_imgs span.expand a.delete{
+
+#gp_current_images span a.delete,
+#gp_gallery_avail_imgs span a.delete{
+	color:#C42;
+}
+
+#gp_current_images div.expand span,
+#gp_gallery_avail_imgs div.expand span{
 	display:block;
 	}
 

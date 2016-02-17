@@ -444,12 +444,14 @@ namespace gp\admin\Content{
 
 			$query_string = 'file_cmd=delete&show=inline&file='.urlencode($file);
 
-			return '<span class="expand_child" id="'.$id.'">'
+			return '<div class="expand_child" id="'.$id.'">'
 					. '<a href="'.$file_url.'" data-cmd="gp_gallery_add" '.$size.'>'
 					. $thumb
 					. '</a>'
+					. '<span>'
 					. \gp\tool::Link('Admin/Uploaded'.$dir_piece,'',$query_string,array('class'=>'delete fa fa-trash gpconfirm','data-cmd'=>'gpajax','title'=>$langmessage['delete_confirm']),'delete')
-					. '</span>';
+					. '</span>'
+					. '</div>';
 		}
 
 		public static function ImageId($path){

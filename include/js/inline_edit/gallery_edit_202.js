@@ -139,37 +139,49 @@
 		var sortable_area;
 		var $current_images;
 		var edit_links				= false;
-		var content_cache			= false;
 		var current_image			= false;
 		var save_path				= gp_editing.get_path(area_id);
 		gp_editor.edit_div			= gp_editing.get_edit_area(area_id);
+
 
 		if( gp_editor.edit_div == false || save_path == false ){
 			return;
 		}
 
-		gp_editor.save_path = save_path;
+		gp_editor.save_path			= save_path;
+		var orig_content			= gp_editor.getData( gp_editor.edit_div );
 
+
+		/**
+		 * Return true if the gallery has been edited
+		 *
+		 */
 		gp_editor.checkDirty = function(){
+			var new_content		= gp_editor.getData( gp_editor.edit_div );
 
-			//for IE8
-			var orig_content	= content_cache.html().replace(/>[\s]+/g,">");
-			var new_content		= gp_editor.edit_div.html().replace(/>[\s]+/g,">");
-
-			if( orig_content != new_content ){
+			if( orig_content !== new_content ){
 				return true;
 			}
 
 			return false;
 		};
 
+
+		/**
+		 * Return data to be saved
+		 *
+		 */
 		gp_editor.SaveData = function(){
 			return gp_editor.getData( gp_editor.edit_div,gp_editor);
 		}
 
 
+		/**
+		 * Reset the orig_content value
+		 *
+		 */
 		gp_editor.resetDirty = function(){
-			content_cache = gp_editor.edit_div.clone(false);
+			orig_content = gp_editor.getData( gp_editor.edit_div );
 		};
 
 
@@ -185,7 +197,7 @@
 			//Warn if the sortable area isn't found
 			sortable_area = gp_editor.edit_div.find(gp_editor.sortable_area_sel);
 			if( sortable_area.length == 0 ){
-				console.log('sortable area not found');
+				console.log('sortable area not found', gp_editor.sortable_area_sel);
 				return;
 			}
 
@@ -196,7 +208,7 @@
 			gp_editing.editor_tools();
 
 			//floating editor
-			var html	= '<h4>Gallery Images</h4>'
+			var html	= '' //<h4>Gallery Images</h4>'
 						+ '<div id="gp_current_images"></div>'
 						+ '<a class="ckeditor_control full_width ShowImageSelect" data-cmd="ShowImageSelect"> Add Images</a>'
 						+ '<div id="gp_select_wrap">'
@@ -301,14 +313,7 @@
 			 * Show/Hide Edit Links
 			 *
 			 */
-			edit_links.bind('mouseenter.gp_edit',function(){
-				edit_links.show();
-			}).bind('mouseleave.gp_edit',function(){
-				edit_links.hide();
-			});
-
-
-			$(document).delegate(gp_editor.edit_links_target,{
+			$(document).delegate('#gp_current_images span',{
 				'mousemove.gp_edit':function(){
 					var offset = $(this).offset();
 					edit_links.show().css({'left':offset.left,'top':offset.top});
@@ -322,20 +327,37 @@
 				}
 			});
 
+
+			/**
+			 * Return the image currently being edited
+			 *
+			 */
+			function GetCurrentImage(node){
+				var index	= $(node).closest('.expand_child').index();
+				return gp_editor.edit_div.find(gp_editor.edit_links_target).eq(index);
+			}
+
+
+			/**
+			 * Display caption popup
+			 *
+			 */
 			$gp.links.gp_gallery_caption = function(){
-				edit_links.hide();
-				var $li = $(current_image);
-				var caption = $li.find('.caption').html() || $li.find('a:first').attr('title'); //title attr for backwards compat
+
+				current_image	= GetCurrentImage(this);
+				var $li			= $(current_image);
+				var caption		= $li.find('.caption').html() || $li.find('a:first').attr('title'); //title attr for backwards compat
 
 
 				var popup = '<div class="inline_box" id="gp_gallery_caption"><form><h3>'+gplang.cp+'</h3>'
 							+ '<textarea name="caption" cols="50" rows="3">'+$gp.htmlchars(caption)+'</textarea>'
-							+ '<p><input type="submit" name="cmd" value="'+gplang.up+'" class="gpsubmit" data-cmd="gp_gallery_update" /> '
-							+ '<input type="button" name="" value="'+gplang.ca+'" class="gpcancel" data-cmd="admin_box_close" /></p>'
+							+ '<p><button class="gpsubmit" data-cmd="gp_gallery_update">'+gplang.up+'</button>'
+							+ '<button class="gpcancel" data-cmd="admin_box_close">'+gplang.ca+'</button></p>'
 							+ '</form></div>';
 
 				$gp.AdminBoxC(popup);
 			}
+
 
 			/**
 			 * Remove an image from a gallery
@@ -356,10 +378,16 @@
 			$gp.inputs.gp_gallery_update = function(evt){
 
 				evt.preventDefault();
-				var text = $(this.form).find('textarea').val();
-				var caption_div = $(current_image).find('.caption');
+
+				var text			= $(this.form).find('textarea').val();
+				var caption_div		= $(current_image).find('.caption');
+
+				console.log(text);
+				console.log(current_image);
+				console.log(caption_div);
+
 				caption_div.html(text);
-				text = caption_div.html(); //browsers may change the text
+				text = caption_div.html(); //html encoded characters
 
 				$gp.CloseAdminBox();
 				gp_editor.updateCaption(current_image,text);
@@ -406,8 +434,18 @@
 			var $img	= $(img).find('img');
 			var $a		= $('<img>').attr('src',$img.attr('src'));
 			var $span	= $('<a>').append($a);
-			var $img	= $('<span class="expand_child">').data('original',img).append( $span ).appendTo( $current_images );
+			var html	= '<div class="expand_child">'
+						+ '<span>'
+						+ '<a data-cmd="gp_gallery_caption" class="fa fa-pencil"></a>'
+						+ '<a data-cmd="gp_gallery_rm" class="fa fa-remove"></a>'
+						+ '</span>'
+						+ '</div>'
+
+			$(html).data('original',img).append( $span ).appendTo( $current_images );
 		}
+
+
+
 
 
 		/**

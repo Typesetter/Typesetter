@@ -87,6 +87,38 @@ $.extend(gp_editor,{
 
 
 	/**
+	 * Reorder full size images
+	 *
+	 */
+	sortStop: function(){
+
+		var full_wrap	= gp_editor.edit_div.find('.carousel-inner');
+		var full_images = full_wrap.find('.item');
+
+
+		gp_editor.edit_div.find( gp_editor.sortable_area_sel ).children().each(function(i){
+			var $this		= $(this);
+			var slide_to	= $this.data('slide-to');
+
+			full_images.eq(slide_to).attr('data-new-position',i)
+
+			$this.data('slide-to',i).attr('data-slide-to',i);
+
+			var $img = $this;
+		});
+
+
+		//order the full images
+		full_images.sort(function(a,b){
+			return $(a).attr('data-new-position') < $(b).attr('data-new-position');
+		}).each(function(){
+			full_wrap.prepend(this);
+		});
+
+	},
+
+
+	/**
 	 * Move Back/Forward
 	 * @todo Remove, not used since Typesetter 5.0-rc3
 	 *

@@ -17,6 +17,7 @@
 		edit_links_target:	false,
 		auto_start:			false,
 		make_sortable:		true,
+		edit_div:			null,
 
 		/**
 		 * Called when a caption is edited
@@ -98,12 +99,12 @@
 
 
 			//images
-			edit_div.find(gp_editor.sortable_area_sel).find('li > a').each(function(){
+			gp_editor.edit_div.find(gp_editor.sortable_area_sel).find('li > a').each(function(){
 				args.images.push( $(this).attr('href') );
 			});
 
 			//captions
-			edit_div.find(gp_editor.edit_links_target).find('.caption').each(function(){
+			gp_editor.edit_div.find(gp_editor.edit_links_target).find('.caption').each(function(){
 				args.captions.push( $(this).html() );
 			});
 
@@ -112,7 +113,7 @@
 			var options = $('#gp_gallery_options').find('input,select').serialize();
 
 			//get content
-			var data = edit_div.clone();
+			var data = gp_editor.edit_div.clone();
 			data.find('li.holder').remove();
 			data.find('ul').enableSelection().removeClass('ui-sortable').removeAttr('unselectable');
 			data.find('.gp_nosave').remove();
@@ -137,13 +138,13 @@
 
 		var sortable_area;
 		var $current_images;
-		var edit_links			= false;
-		var content_cache		= false;
-		var current_image		= false;
-		var save_path			= gp_editing.get_path(area_id);
-		var edit_div			= gp_editing.get_edit_area(area_id);
+		var edit_links				= false;
+		var content_cache			= false;
+		var current_image			= false;
+		var save_path				= gp_editing.get_path(area_id);
+		gp_editor.edit_div			= gp_editing.get_edit_area(area_id);
 
-		if( edit_div == false || save_path == false ){
+		if( gp_editor.edit_div == false || save_path == false ){
 			return;
 		}
 
@@ -151,34 +152,29 @@
 
 		gp_editor.checkDirty = function(){
 
-			sortable_area.removeClass('ui-sortable');
-
 			//for IE8
-			var orig_content = content_cache.html().replace(/>[\s]+/g,">");
-			var new_content = edit_div.html().replace(/>[\s]+/g,">");
+			var orig_content	= content_cache.html().replace(/>[\s]+/g,">");
+			var new_content		= gp_editor.edit_div.html().replace(/>[\s]+/g,">");
 
 			if( orig_content != new_content ){
-				sortable_area.addClass('ui-sortable');
 				return true;
 			}
 
-			sortable_area.addClass('ui-sortable');
 			return false;
 		};
 
 		gp_editor.SaveData = function(){
-			return gp_editor.getData(edit_div,gp_editor);
+			return gp_editor.getData( gp_editor.edit_div,gp_editor);
 		}
 
 
 		gp_editor.resetDirty = function(){
-			content_cache = edit_div.clone(false);
-			content_cache.find('.ui-sortable').removeClass('ui-sortable');
+			content_cache = gp_editor.edit_div.clone(false);
 		};
 
 
 		//replace with raw content then start ckeditor
-		//edit_div.get(0).innerHTML = section_object.content;
+		//gp_editor.edit_div.get(0).innerHTML = section_object.content;
 
 		ShowEditor();
 		gp_editor.editorLoaded();
@@ -187,7 +183,7 @@
 		function ShowEditor(){
 
 			//Warn if the sortable area isn't found
-			sortable_area = edit_div.find(gp_editor.sortable_area_sel);
+			sortable_area = gp_editor.edit_div.find(gp_editor.sortable_area_sel);
 			if( sortable_area.length == 0 ){
 				console.log('sortable area not found');
 				return;
@@ -350,7 +346,7 @@
 				gp_editor.removeImage(current_image);
 				$(current_image).remove();
 				edit_links.hide(); //so that a new mouseover will happen
-				gp_editor.removedImage(edit_div);
+				gp_editor.removedImage(gp_editor.edit_div);
 			}
 
 			/**
@@ -440,7 +436,7 @@
 		 */
 		function AddImage( $img, holder ){
 
-			edit_div.find('.gp_to_remove').remove();
+			gp_editor.edit_div.find('.gp_to_remove').remove();
 			$img.attr({'data-cmd':gp_editor.img_name,'data-arg':gp_editor.img_rel,'title':'','class':gp_editor.img_rel})
 			var li = $('<li>').append($img).append('<div class="caption"></div>');
 			if( holder ){

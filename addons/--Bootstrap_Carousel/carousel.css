@@ -3,68 +3,68 @@
  *
  */
 .carousel {
-  position: relative;
-  margin-bottom: 20px;
-  line-height: 1;
+	position: relative;
+	margin-bottom: 20px;
+	line-height: 1;
 }
 
 .carousel-inner {
-  position: relative;
-  width: 100%;
-  overflow:hidden;
+	position: relative;
+	width: 100%;
+	overflow:hidden;
 }
 
 .carousel-inner > .item {
-  position: relative;
-  display: none;
-  -webkit-transition: 0.6s ease-in-out left;
-     -moz-transition: 0.6s ease-in-out left;
-       -o-transition: 0.6s ease-in-out left;
-          transition: 0.6s ease-in-out left;
+	position: relative;
+	display: none;
+	-webkit-transition: 0.6s ease-in-out left;
+	 -moz-transition: 0.6s ease-in-out left;
+		 -o-transition: 0.6s ease-in-out left;
+			transition: 0.6s ease-in-out left;
 }
 
 .carousel-inner > .item > img,
 .carousel-inner > .item > a > img {
-  display: block;
-  line-height: 1;
+	display: block;
+	line-height: 1;
 }
 
 .carousel-inner > .active,
 .carousel-inner > .next,
 .carousel-inner > .prev {
-  display: block;
+	display: block;
 }
 
 .carousel-inner > .active {
-  left: 0;
+	left: 0;
 }
 
 .carousel-inner > .next,
 .carousel-inner > .prev {
-  position: absolute;
-  top: 0;
-  width: 100%;
+	position: absolute;
+	top: 0;
+	width: 100%;
 }
 
 .carousel-inner > .next {
-  left: 100%;
+	left: 100%;
 }
 
 .carousel-inner > .prev {
-  left: -100%;
+	left: -100%;
 }
 
 .carousel-inner > .next.left,
 .carousel-inner > .prev.right {
-  left: 0;
+	left: 0;
 }
 
 .carousel-inner > .active.left {
-  left: -100%;
+	left: -100%;
 }
 
 .carousel-inner > .active.right {
-  left: 100%;
+	left: 100%;
 }
 
 .gp_twitter_carousel .carousel-control {
@@ -79,18 +79,18 @@
 
 	background: transparent !important;
 	background: rgba(0,0,0,0) !important;
-    border: 0 none;
-    color: #666;
-    font-size: 100px;
-    height: 80px;
-    margin-top: 0;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
-    z-index: 10;
+	border: 0 none;
+	color: #666;
+	font-size: 100px;
+	height: 80px;
+	margin-top: 0;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+	z-index: 10;
 }
 
 .gp_twitter_carousel .carousel-control.right {
-  right: 15px;
-  left: auto;
+	right: 15px;
+	left: auto;
 }
 
 .gp_twitter_carousel .carousel-control:hover,
@@ -113,19 +113,21 @@
 }
 
 .gp_twitter_carousel .carousel-indicators li {
-  display: block;
-  float: left;
-  width: 10px;
-  height: 10px;
-  margin-left: 5px;
-  text-indent: -999px;
-  background-color: #ccc;
-  background-color: rgba(255, 255, 255, 0.25);
-  border-radius: 5px;
+	display: block;
+	float: left;
+	width: 10px;
+	height: 10px;
+	margin-top: 0;
+	margin-left: 5px;
+	text-indent: -999px;
+	background-color: #ccc;
+	background-color: rgba(255, 255, 255, 0.25);
+	border-radius: 5px;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
 }
 
 .gp_twitter_carousel .carousel-indicators .active {
-  background-color: #fff;
+	background-color: #fff;
 }
 
 .gp_twitter_carousel .carousel-caption {
@@ -147,11 +149,11 @@
 }
 
 .gp_twitter_carousel .carousel-caption h4 {
-  margin: 0 0 5px;
+	margin: 0 0 5px;
 }
 
 .gp_twitter_carousel .carousel-caption p {
-  margin-bottom: 0;
+	margin-bottom: 0;
 }
 
 
@@ -214,26 +216,26 @@
 
 
 @media (max-width: 480px) {
-  .carousel{
-    margin-bottom:36px;
-  }
-  .carousel-caption{
-    position:static;
-    height:16px;
-  }
-  .carousel-caption,
-  .carousel-caption *{
-    font-size: 14px;
-    font-weight:normal;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .carousel-control{
-    display:none;
-  }
-  .carousel-inner {
-    overflow: visible;
-  }
+	.carousel{
+		margin-bottom:36px;
+	}
+	.carousel-caption{
+		position:static;
+		height:16px;
+	}
+	.carousel-caption,
+	.carousel-caption *{
+		font-size: 14px;
+		font-weight:normal;
+		white-space:nowrap;
+		overflow:hidden;
+		text-overflow:ellipsis;
+	}
+	.carousel-control{
+		display:none;
+	}
+	.carousel-inner {
+		overflow: visible;
+	}
 
 }

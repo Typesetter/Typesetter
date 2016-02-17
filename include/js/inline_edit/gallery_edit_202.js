@@ -48,6 +48,13 @@
 		},
 
 		/**
+		 * Called after the images in the gallery have been resorted
+		 *
+		 */
+		sortStop:function(){
+		},
+
+		/**
 		 * Called when the inline editor has loaded
 		 *
 		 */
@@ -76,18 +83,12 @@
 		 */
 		intervalSpeed: false,
 
-		/**
-		 * Called when an image is moved backwards
-		 *
-		 * moveBack:function(current_image){},
-		 */
-		moveBack: false,
-		moveForward: false,
 
 
 		checkDirty:function(){
 			return false;
 		},
+
 		getData:function(edit_div){
 
 			var args = {
@@ -291,25 +292,6 @@
 			edit_links = $('<span class="gp_gallery_edit gp_floating_area"></span>').appendTo('body').hide();
 
 
-			/**
-			 * Move Back/Forward
-			 *
-			 */
-			if( gp_editor.moveBack ){
-				$('<a>&lsaquo;</a>')
-					.appendTo(edit_links)
-					.on('click',function(){
-						gp_editor.moveBack(current_image);
-					});
-			}
-			if( gp_editor.moveForward ){
-				$('<a>&rsaquo;</a>')
-					.appendTo(edit_links)
-					.on('click',function(){
-						gp_editor.moveForward(current_image);
-					});
-			}
-
 
 			/**
 			 * Caption & delete links
@@ -419,6 +401,7 @@
 					$current_images.children().each(function(){
 						sortable_area.append( $(this).data('original') );
 					});
+					gp_editor.sortStop();
 				}
 			}).disableSelection();
 		}
@@ -548,8 +531,3 @@
 
 	}
 
-jQuery.fn.outerHTML = function(s) {
-    return s
-        ? this.before(s).remove()
-        : jQuery("<p>").append(this.eq(0).clone()).html();
-};

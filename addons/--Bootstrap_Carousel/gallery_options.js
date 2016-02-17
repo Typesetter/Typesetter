@@ -16,11 +16,12 @@ $.extend(gp_editor,{
 	 *
 	 */
 	addedImage: function($li){
-		var src = $li.find('a:first').attr('href');
-		var carousel = $li.closest('.gp_twitter_carousel');
-		var $inner = carousel.find('.carousel-inner');
-		var blank = $('.gp_blank_img').data('src') || '';
-		var $item = $('<div class="item"><img src="'+blank+'" style="background-image:url('+src+')"><div class="caption carousel-caption no_caption"></div></div>').appendTo($inner);
+		var src			= $li.find('a:first').attr('href');
+		var carousel	= $li.closest('.gp_twitter_carousel');
+		var $inner		= carousel.find('.carousel-inner');
+		var blank		= $('.gp_blank_img').data('src') || '';
+		var $item		= $('<div class="item"><img src="'+blank+'" style="background-image:url('+src+')"><div class="caption carousel-caption no_caption"></div></div>').appendTo($inner);
+
 		$li.attr('data-target','#'+carousel.attr('id')).attr('data-slide-to',$li.siblings().length);
 
 		if( !$item.siblings().length ){
@@ -84,8 +85,10 @@ $.extend(gp_editor,{
 	intervalSpeed : function(){
 	},
 
+
 	/**
 	 * Move Back/Forward
+	 * @todo Remove, not used since Typesetter 5.0-rc3
 	 *
 	 */
 	moveBack : function(){

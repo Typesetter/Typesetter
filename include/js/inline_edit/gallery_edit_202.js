@@ -149,7 +149,6 @@
 		}
 
 		gp_editor.save_path			= save_path;
-		var orig_content			= gp_editor.getData( gp_editor.edit_div );
 
 
 		/**
@@ -159,8 +158,8 @@
 		gp_editor.checkDirty = function(){
 			var new_content		= gp_editor.getData( gp_editor.edit_div );
 
-			//console.log('checkdirty orig', orig_content);
-			//console.log('checkdirt new', new_content);
+			console.log('checkdirty orig', orig_content);
+			console.log('checkdirt new', new_content);
 
 			if( orig_content !== new_content ){
 				return true;
@@ -192,6 +191,7 @@
 		//gp_editor.edit_div.get(0).innerHTML = section_object.content;
 
 		ShowEditor();
+		var orig_content			= gp_editor.getData( gp_editor.edit_div );
 		gp_editor.editorLoaded();
 
 

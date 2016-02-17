@@ -158,9 +158,6 @@
 		gp_editor.checkDirty = function(){
 			var new_content		= gp_editor.getData( gp_editor.edit_div );
 
-			console.log('checkdirty orig', orig_content);
-			console.log('checkdirt new', new_content);
-
 			if( orig_content !== new_content ){
 				return true;
 			}

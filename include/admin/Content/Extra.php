@@ -127,10 +127,11 @@ class Extra extends \gp\Page\Edit{
 
 		$legacy	= $this->folder.'/'.$title;
 		$new	= $this->folder.'/'.$title.'/page.php';
+		$php	= (substr($title,-4) === '.php');
 
-		if( file_exists($new) ){
+		if( !$php && file_exists($new) ){
 			$legacy = $this->folder.'/'.$title.'.php';
-		}elseif( substr($title,-4) === '.php' && file_exists($legacy) ){
+		}elseif( $php && file_exists($legacy) ){
 			$title = substr($title,0,-4);
 		}else{
 			return;

@@ -557,7 +557,7 @@ $(function(){
 
 		// @deprecated 3.6
 		if( typeof(gplinks[cmd]) === 'function' ){
-			console.log('gpinputs is deprecated as of 3.6');
+			console.log('gplinks is deprecated as of 3.6');
 			return gplinks[cmd].call(this,arg,evt);
 		}
 

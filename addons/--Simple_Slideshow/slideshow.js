@@ -4,13 +4,14 @@ $(function(){
 
 	var gp_slideshow = {};
 	gp_slideshow.ImgSelect = function(a){
-		var container, lnk, file_container, $anchor, href;
+		var container, file_container, $anchor, href;
 
 		if( !a ) return;
 
-		$anchor = $(a);
-		file_container = $anchor.closest('.slideshow_area');
-		container = file_container.find('.slideshow-container');
+		$anchor			= $(a);
+		file_container	= $anchor.closest('.slideshow_area');
+		container		= file_container.find('.slideshow-container');
+
 		container.removeClass('loaded');
 
 		//change the thumbnail current class
@@ -21,7 +22,7 @@ $(function(){
 		NewImg($anchor,true);
 
 		function NewImg(source_link,onload){
-			var new_link, img,hash
+			var img, hash;
 
 			if( !source_link.attr('href') ) return;
 
@@ -33,7 +34,10 @@ $(function(){
 			}
 
 			var lnk = container.find('#'+hash);
-			if( lnk.length > 0 ){
+
+			//link not found, create it
+			if( lnk.length ){
+				lnk.attr('title',source_link.attr('title'));
 				if( onload ){
 					window.setTimeout(function(){
 						loaded(lnk);
@@ -42,26 +46,24 @@ $(function(){
 				return;
 			}
 
-			new_link = $('<a href="#" name="gp_slideshow_next" class="slideshow_slide" id="'+hash+'"/>')
+			lnk = $('<a href="#" name="gp_slideshow_next" class="slideshow_slide" id="'+hash+'"/>')
 						.hide()
 						.appendTo(container)
 						.attr('title',source_link.attr('title'));
-			img = $('<img />').appendTo(new_link);
+			img = $('<img />').appendTo(lnk);
 
 
 			if( onload ){
 				img.load(function(){
 					//allow browser to get image size
 					window.setTimeout(function(){
-						loaded(new_link);
+						loaded(lnk);
 					},100);
 				});
 			}
 
 			//setting the src value needs to be after onload function is added
-			img.attr('src',source_link.attr('href'))
-				.attr('title',source_link.attr('title'));
-
+			img.attr('src',source_link.attr('href'));
 		}
 
 
@@ -102,7 +104,7 @@ $(function(){
 
 
 
-	gplinks.gp_slideshow_next = function(rel,evt){
+	$gp.links.gp_slideshow_next = function(evt){
 		evt.preventDefault();
 		Next( $(this) );
 	}
@@ -123,7 +125,7 @@ $(function(){
 		gp_slideshow.ImgSelect(next_li.children(':first').get(0));
 	}
 
-	gplinks.gp_slideshow_prev = function(rel,evt){
+	$gp.links.gp_slideshow_prev = function(evt){
 		evt.preventDefault();
 		var thumbs = $(this).closest('.slideshow_area').find('.gp_slideshow');
 		if( thumbs.length == 0 ) return;
@@ -139,7 +141,7 @@ $(function(){
 		gp_slideshow.ImgSelect(prev_li.children(':first').get(0));
 	}
 
-	gplinks.gp_slideshow_play = function(rel,evt){
+	$gp.links.gp_slideshow_play = function(evt){
 		evt.preventDefault();
 
 		var interval = false;
@@ -170,7 +172,7 @@ $(function(){
 	}
 
 
-	gplinks.gp_slideshow = function(rel,evt){
+	$gp.links.gp_slideshow = function(evt){
 		evt.preventDefault();
 		gp_slideshow.ImgSelect(this);
 	}
@@ -211,22 +213,5 @@ $(function(){
 		}
 	});
 
-		//// Set Navigation Key Bindings
-		//$(document).bind('keydown.' + prefix, function (e) {
-            //var key = e.keyCode;
-			//if (open && settings.escKey && key === 27) {
-				//e.preventDefault();
-				//publicMethod.close();
-			//}
-			//if (open && settings.arrowKey && $related[1]) {
-				//if (key === 37) {
-					//e.preventDefault();
-					//$prev.click();
-				//} else if (key === 39) {
-					//e.preventDefault();
-					//$next.click();
-				//}
-			//}
-		//});
 
 });

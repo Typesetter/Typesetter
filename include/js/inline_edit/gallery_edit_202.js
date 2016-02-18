@@ -436,8 +436,13 @@
 		}
 
 		function AddCurrentImage(img){
-			var $img	= $(img).find('img');
-			var $a		= $('<img>').attr('src',$img.attr('src'));
+			var src		= $(img).find('img').attr('src');
+
+			if( !src ){
+				return;
+			}
+
+			var $a		= $('<img>').attr('src',src);
 			var $span	= $('<a>').append($a);
 			var html	= '<div class="expand_child">'
 						+ '<span>'

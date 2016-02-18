@@ -524,6 +524,9 @@ gp_editing = {
 
 		$('.inline_edit_area').hide();
 		$( $this.data('arg') ).show();
+
+		$this.siblings().removeClass('selected');
+		$this.addClass('selected');
 	}
 
 

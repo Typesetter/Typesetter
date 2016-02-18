@@ -562,13 +562,14 @@ class Edit extends \gp\Page{
 	public function SectionEdit(){
 		global $langmessage, $page;
 
+		$page->ajaxReplace = array();
+
 		$section_num = $_REQUEST['section'];
 		if( !is_numeric($section_num) || !isset($this->file_sections[$section_num])){
 			echo 'false;';
 			return false;
 		}
 
-		$page->ajaxReplace = array();
 
 		$cmd = \gp\tool::GetCommand();
 

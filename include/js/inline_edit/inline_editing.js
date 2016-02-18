@@ -533,15 +533,6 @@ gp_editing = {
 	 */
 	$(window).on('beforeunload',function(){
 
-		//check cached editors
-		/*
-		for(i in $gp.editors){
-			if( typeof($gp.editors[i].checkDirty) !== 'undefined' && $gp.editors[i].checkDirty() ){
-				return 'Unsaved changes will be lost.';
-			}
-		}
-		*/
-
 		//check current editor
 		if( typeof(gp_editor.checkDirty) !== 'undefined' && gp_editor.checkDirty() ){
 			return 'Unsaved changes will be lost.';

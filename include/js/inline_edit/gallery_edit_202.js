@@ -210,7 +210,7 @@
 			//floating editor
 			var html	= '' //<h4>Gallery Images</h4>'
 						+ '<div id="gp_current_images"></div>'
-						+ '<a class="ckeditor_control full_width ShowImageSelect" data-cmd="ShowImageSelect"> Add Images</a>'
+						+ '<a class="ckeditor_control full_width ShowImageSelect" data-cmd="ShowImageSelect"> '+gplang.SelectImage+'</a>'
 						+ '<div id="gp_select_wrap">'
 						+ '<div id="gp_image_area"></div>'
 						+ '<div id="gp_upload_queue"></div>'

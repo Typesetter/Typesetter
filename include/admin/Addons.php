@@ -374,7 +374,6 @@ class Addons extends \gp\admin\Addon\Install{
 			}
 
 
-			$info['code_folder_part']	= '/addons/'. $value;
 			$info['source_folder']		= $addonPath .'/'. $value;
 			$info['upgrade_key']		= \gp\admin\Addon\Tools::UpgradePath($info);
 			$avail[$value]				= $info;

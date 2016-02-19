@@ -248,6 +248,7 @@ class Installer extends \gp\admin\Addon\Tools{
 		}
 
 		$this->SetDestination();
+
 		$this->DataFolder();
 		$this->IniContents();
 
@@ -429,8 +430,10 @@ class Installer extends \gp\admin\Addon\Tools{
 		}
 
 
-		$this->ini_text			= file_get_contents($ini_file);
-		$this->ini_contents		= \gp\tool\Ini::ParseString($this->ini_text);
+		$this->ini_text							= file_get_contents($ini_file);
+		$this->ini_contents						= \gp\tool\Ini::ParseString($this->ini_text);
+		$this->ini_contents['source_folder']	= dirname($ini_file);
+
 
 		if( !$this->ini_contents ){
 			$error = $langmessage['Ini_Error'].' '.$langmessage['Ini_Submit_Bug'];

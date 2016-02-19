@@ -576,7 +576,7 @@ class Tools extends \gp\special\Base{
 	 * @return mixed
 	 */
 	public function UpgradePath($ini_info,$config_key='addons'){
-		global $config;
+		global $config, $dataDir;
 
 		if( !isset($config[$config_key]) ){
 			return false;
@@ -605,9 +605,14 @@ class Tools extends \gp\special\Base{
 		}
 
 		//by path
-		if( isset($ini_info['code_folder_part']) ){
+		if( isset($ini_info['source_folder']) ){
 			foreach($config[$config_key] as $addon_key => $data){
-				if( isset($data['code_folder_part']) && $data['code_folder_part'] == $ini_info['code_folder_part'] ){
+				if( !isset($data['code_folder_part']) ){
+					continue;
+				}
+				$source_folder = $dataDir.$data['code_folder_part'];
+
+				if( $source_folder === $ini_info['source_folder'] ){
 					return $addon_key;
 				}
 			}

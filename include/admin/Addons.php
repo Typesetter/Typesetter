@@ -361,7 +361,6 @@ class Addons extends \gp\admin\Addon\Install{
 		}
 
 
-		$installed_path		= $dataDir.'/data/_addoncode';
 		$folders			= \gp\tool\Files::ReadDir($addonPath,1);
 		$versions			= array();
 		$avail				= array();
@@ -373,9 +372,12 @@ class Addons extends \gp\admin\Addon\Install{
 			if( !$info ){
 				continue;
 			}
-			$info['upgrade_key']	= \gp\admin\Addon\Tools::UpgradePath($info);
-			$info['source_folder']	= $addonPath .'/'. $value;
-			$avail[$value]			= $info;
+
+
+			$info['code_folder_part']	= '/addons/'. $value;
+			$info['source_folder']		= $addonPath .'/'. $value;
+			$info['upgrade_key']		= \gp\admin\Addon\Tools::UpgradePath($info);
+			$avail[$value]				= $info;
 
 			if( isset($info['Addon_Version']) && isset($info['Addon_Unique_ID']) ){
 

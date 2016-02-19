@@ -604,6 +604,16 @@ class Tools extends \gp\special\Base{
 			}
 		}
 
+		//by path
+		if( isset($ini_info['code_folder_part']) ){
+			foreach($config[$config_key] as $addon_key => $data){
+					msg($data);
+				if( isset($data['code_folder_part']) && $data['code_folder_part'] == $ini_info['code_folder_part'] ){
+					return $addon_key;
+				}
+			}
+		}
+
 		return false;
 	}
 

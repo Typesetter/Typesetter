@@ -244,11 +244,14 @@ namespace gp{
 				foreach($config['addons'] as $addon_key => $addon){
 					if( isset($addon['Namespace']) && $addon['Namespace'] == $namespace ){
 
+
 						\gp\tool\Plugins::SetDataFolder($addon_key);
 						$path			= \gp\tool\Plugins::$current['code_folder_full'].'/'.implode('/',$parts).'.php';
 
 						if( file_exists($path) ){
 							include_once($path);
+						}else{
+							trigger_error('Autoload for addon namespace failed. Class: '.$class.' path: '.$path);
 						}
 
 						\gp\tool\Plugins::ClearDataFolder();

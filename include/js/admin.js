@@ -491,17 +491,20 @@ $gp.links.dd_menu = function(evt){
  *
  */
 $gp.links.tabs = function(evt){
+
 	evt.preventDefault();
 	var $this = $(this);
 	$this.siblings('a').removeClass('selected').each(function(b,c){
 		if( c.hash ){
-			$(c.hash).hide();
+			$(c.hash).hide()
+				.find('input[type=submit],button[type=submit]').prop('disabled',true);
 		}
 	});
 
 	if( this.hash ){
 		$this.addClass('selected');
-		$(this.hash).show();
+		$(this.hash).show()
+			.find('input[type=submit],button[type=submit]').prop('disabled',false);
 	}
 };
 

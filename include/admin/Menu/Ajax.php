@@ -501,6 +501,8 @@ class Ajax extends \gp\admin\Menu{
 			$this->RestoreSettings();
 			return false;
 		}
+
+		$this->HiddenSaved($new_index);
 	}
 
 

@@ -209,7 +209,7 @@
 				var color	= $this.data('gp_color') || '#aabbcc';
 
 				//collapsed
-				var style	= ' class="'+$this.data('gp_collapse')+'"';
+				var style	= ' class="'+($this.data('gp_collapse')||'')+'"';
 
 
 				//classes

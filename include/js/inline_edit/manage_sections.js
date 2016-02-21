@@ -324,28 +324,6 @@
 			var id 		= $li.data('gp-area-id');
 			return $('#'+id);
 		},
-
-
-		/**
-		 * Assign a new id to a section
-		 *
-		 */
-		NewSectionId: function(new_area){
-
-			var area_id		= 1;
-			var new_id;
-			do{
-				area_id++;
-				new_id = 'ExtraEditArea'+area_id;
-
-			}while( document.getElementById(new_id) || document.getElementById('ExtraEditLink'+area_id) );
-
-			new_area.attr('id',new_id).data('gp-area-id',area_id);
-
-			//add edit link (need to initiate editing and get the save path)
-			$('<a href="?" class="nodisplay" data-cmd="inline_edit_generic" data-gp-area-id="'+area_id+'" id="ExtraEditLink'+area_id+'">').appendTo('#gp_admin_html');
-		}
-
 	}
 
 
@@ -435,13 +413,7 @@
 		//new content
 		var $section	= $($this.data('response')).appendTo('#gpx_content');
 
-		gp_editor.NewSectionId($section);
-
-		//child sections
-		$section.find('.editable_area').each(function(){
-			gp_editor.NewSectionId($(this));
-		});
-
+		NewSectionIds($section);
 
 		$section.trigger('SectionAdded');
 
@@ -472,7 +444,7 @@
 		var from_area	= gp_editor.GetArea( $(this).closest('li') );
 		var new_area	= from_area.clone();
 
-		gp_editor.NewSectionId(new_area);
+		NewSectionIds(new_area);
 		from_area.after(new_area);
 		gp_editor.InitSorting();
 	}
@@ -855,6 +827,42 @@
 			});
 
 	});
+
+
+	/**
+	 * Assign new ids to a section and it's children
+	 *
+	 */
+	function NewSectionIds($section){
+
+		NewSectionId($section);
+
+		//child sections
+		$section.find('.editable_area').each(function(){
+			NewSectionId($(this));
+		});
+
+	}
+
+	/**
+	 * Assign a new id to a section
+	 *
+	 */
+	function NewSectionId($section){
+
+		var area_id		= 1;
+		var new_id;
+		do{
+			area_id++;
+			new_id = 'ExtraEditArea'+area_id;
+
+		}while( document.getElementById(new_id) || document.getElementById('ExtraEditLink'+area_id) );
+
+		$section.attr('id',new_id).data('gp-area-id',area_id);
+
+		//add edit link (need to initiate editing and get the save path)
+		$('<a href="?" class="nodisplay" data-cmd="inline_edit_generic" data-gp-area-id="'+area_id+'" id="ExtraEditLink'+area_id+'">').appendTo('#gp_admin_html');
+	}
 
 
 	/**

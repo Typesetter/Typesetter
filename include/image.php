@@ -102,7 +102,6 @@ class gp_resized{
 				){
 
 					$path = \gp\tool::GetDir('/include/image.php',false).'?i='.$index.'&w='.$use_width.'&h='.$use_height.'&img='.rawurlencode($img);
-					die($path);
 					\gp\tool::Redirect($path);
 					//dies
 			}

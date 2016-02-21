@@ -284,9 +284,6 @@ namespace gp\tool\Output{
 
 			$scripts = \gp\tool\Plugins::Filter('InlineEdit_Scripts',array($scripts,$type));
 
-			self::SendScripts($scripts);
-
-
 			//replace resized images with their originals
 			if( isset($section_data['resized_imgs']) && is_array($section_data['resized_imgs']) && count($section_data['resized_imgs']) ){
 				$section_data['content'] = \gp\tool\Editing::RestoreImages($section_data['content'],$section_data['resized_imgs']);
@@ -296,13 +293,17 @@ namespace gp\tool\Output{
 			$section_object = \gp\tool::JsonEncode($section_data);
 
 
-			//send call to gp_init_inline_edit()
+			//send scripts and call gp_init_inline_edit()
+			echo '(function(){';
+			self::SendScripts($scripts);
+
 			echo ';if( typeof(gp_init_inline_edit) == "function" ){';
 			echo 'gp_init_inline_edit(';
 			echo self::quote($_GET['area_id']);
 			echo ','.$section_object;
 			echo ');';
 			echo '}else{alert("gp_init_inline_edit() is not defined");}';
+			echo '})();';
 		}
 
 		/**

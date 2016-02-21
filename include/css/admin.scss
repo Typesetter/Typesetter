@@ -1931,38 +1931,27 @@ body #addon_about{
 	height: 52px;
 	vertical-align: top;
 	overflow: hidden;
-	/* transition: opacity 0.5s; */
 	outline: none;
 	position: relative;
 	cursor: pointer;
 	}
 
-
-#new_section_links img{
-	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
-	z-index: 1;
-	opacity:  1;
-	transition:  opacity .4s ease-in-out;
-	-moz-transition:  opacity .4s ease-in-out;
-	-webkit-transition:  opacity .4s ease-in-out;
-}
-
-
-#new_section_links label:hover img,
-#new_section_links input:checked + label img,
-#new_section_links a:hover img{
-	opacity: 0;
-	}
-#new_section_links input:checked + label,
-#new_section_links a:hover{
-	border-color: #ccc;
-	background-color: #eee;
+#new_section_links a:hover
+#new_section_links input:checked + label{
+	border-color: #999;
 	}
 
+#new_section_links a:hover:after,
+#new_section_links input:checked + label:after{
+	position:absolute;
+	top:1px;
+	left:1px;
+	right:1px;
+	bottom:1px;
+	z-index:1;
+	background:rgba(0,0,0,0.05);
+	content:' ';
+	}
 
 
 #new_section_links span{

@@ -105,9 +105,10 @@ class Available extends \gp\admin\Layout{
 		if( isset($info['version']) ){
 			$version = $info['version'];
 		}
-		if( isset($info['id']) && is_numeric($info['id']) ){
-			$id = $info['id'];
+		if( isset($info['addon_id']) && is_numeric($info['addon_id']) ){
+			$id = $info['addon_id'];
 		}
+
 
 
 		//screenshot

@@ -554,10 +554,13 @@ class Layout extends \gp\admin\Addon\Install{
 			$new_layout_info = $this->AvailableTheme('/themes',false, $theme_folder);
 		}
 
+		if( $new_layout_info === false ){
+			return;
+		}
+
 		if( $installer->has_hooks ){
 			$new_layout_info['addon_key'] = $installer->config_key;
 		}
-
 
 		// update each layout
 		foreach($gpLayouts as $layout => $layout_info){
@@ -582,6 +585,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function SameTheme($layout_info, $new_layout_info ){
+
 
 		//if we have addon ids
 		if( isset($new_layout_info['addon_id']) && isset($layout_info['addon_id']) && $layout_info['addon_id'] == $new_layout_info['addon_id'] ){

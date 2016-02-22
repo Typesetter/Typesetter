@@ -92,14 +92,21 @@ class Installer extends \gp\admin\Addon\Tools{
 	public function InstallRemote( $type, $id, $order = null ){
 		global $langmessage;
 
-		$this->remote_install	= true;
-		$this->type				= $type;
 
-		if( !ctype_digit($id) ){
-			$this->message($langmessage['OOPS'].' (Invalid Request)');
+		// check values
+		if( empty($type) ){
+			$this->message($langmessage['OOPS'].' - Invalid Request (type)');
 			return false;
 		}
 
+		if( empty($id) || !ctype_digit($id) ){
+			$this->message($langmessage['OOPS'].' - Invalid Request (id)');
+			return false;
+		}
+
+
+		$this->remote_install	= true;
+		$this->type				= $type;
 		$this->id				= (int)$id;
 
 		if( !is_null($order) ){
@@ -845,11 +852,6 @@ class Installer extends \gp\admin\Addon\Tools{
 	public function GetRemote(){
 		global $langmessage, $dataDir;
 
-		// check values
-		if( empty($this->type) || empty($this->id) || !ctype_digit($this->id) ){
-			$this->message($langmessage['OOPS'].' (Invalid Request)');
-			return false;
-		}
 
 		// download url
 		$download_url = \gp\admin\Tools::RemoteUrl( $this->type );

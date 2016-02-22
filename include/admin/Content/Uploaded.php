@@ -555,12 +555,9 @@ namespace gp\admin\Content{
 				return;
 			}
 
-			$len = strlen($prefix);
-			$thumb_path = substr($original,$len);
-			$thumb_path = $thumb_prefix.$thumb_path;
+			$thumb_path	= \gp\tool::ThumbnailPath($original);
+			$thumb_dir	= \gp\tool::DirName($thumb_path);
 
-			$thumb_dir = \gp\tool::DirName($thumb_path);
-			$thumb_path = $thumb_dir.'/'.basename($thumb_path).'.jpg';
 			\gp\tool\Files::CheckDir($thumb_dir);
 			\gp\tool\Image::createSquare($original,$thumb_path,$config['maxthumbsize']);
 		}

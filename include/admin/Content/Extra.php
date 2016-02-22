@@ -125,15 +125,9 @@ class Extra extends \gp\Page\Edit{
 	 */
 	private function AddArea($title){
 
-		$legacy	= $this->folder.'/'.$title;
-		$new	= $this->folder.'/'.$title.'/page.php';
-		$php	= (substr($title,-4) === '.php');
+		$title	= self::AreaExists($title);
 
-		if( !$php && file_exists($new) ){
-			$legacy = $this->folder.'/'.$title.'.php';
-		}elseif( $php && file_exists($legacy) ){
-			$title = substr($title,0,-4);
-		}else{
+		if( $title == false ){
 			return;
 		}
 
@@ -141,8 +135,29 @@ class Extra extends \gp\Page\Edit{
 		$this->areas[$title]['title']			= $title;
 		$this->areas[$title]['file_path']		= $this->folder.'/'.$title.'/page.php';
 		$this->areas[$title]['draft_path']		= $this->folder.'/'.$title.'/draft.php';
-		$this->areas[$title]['legacy_path']		= $legacy;
+		$this->areas[$title]['legacy_path']		= $this->folder.'/'.$title.'.php';
+	}
 
+	/**
+	 * Return the area name if valid
+	 *
+	 */
+	public static function AreaExists($title){
+		global $dataDir;
+
+		$legacy	= $dataDir.'/data/_extra/'.$title;
+		$new	= $dataDir.'/data/_extra/'.$title.'/page.php';
+		$php	= (substr($title,-4) === '.php');
+
+		if( !$php && file_exists($new) ){
+			return $title;
+		}
+
+		if( $php && file_exists($legacy) ){
+			return substr($title,0,-4);
+		}
+
+		return false;
 	}
 
 

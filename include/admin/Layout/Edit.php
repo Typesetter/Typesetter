@@ -513,11 +513,16 @@ class Edit extends \gp\admin\Layout{
 
 				echo '<tr><th colspan="2">&nbsp;</th></tr>';
 
-				$extrasFolder = $dataDir.'/data/_extra';
-				$files = \gp\tool\Files::ReadDir($extrasFolder);
+				$extrasFolder	= $dataDir.'/data/_extra';
+				$files			= scandir($extrasFolder);
 				asort($files);
 				foreach($files as $file){
-					$extraName = $file;
+
+					$extraName	= \gp\admin\Content\Extra::AreaExists($file);
+					if( $extraName === false ){
+						continue;
+					}
+
 					echo '<tr><td>';
 					echo str_replace('_',' ',$extraName);
 					echo '</td><td class="add">';
@@ -708,10 +713,11 @@ class Edit extends \gp\admin\Layout{
 			return false;
 		}
 
-		$data = \gp\tool\Editing::DefaultContent($_POST['type']);
-		$file = $dataDir.'/data/_extra/'.$title.'.php';
+		$data	= \gp\tool\Editing::DefaultContent($_POST['type']);
+		$title	= \gp\admin\Content\Extra::AreaExists($title);
+		$file	= $dataDir.'/data/_extra/'.$title.'/page.php';
 
-		if( \gp\tool\Files::Exists($file) ){
+		if( $title !== false ){
 			return $title;
 		}
 

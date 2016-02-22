@@ -423,7 +423,7 @@ class Tools{
 		self::NewTitle( $destination, 'About',$content, $config, $new_index);
 
 		//Side_Menu
-		$file		= $destination.'/data/_extra/Side_Menu.php';
+		$file		= $destination.'/data/_extra/Side_Menu/page.php';
 		$content	= '<h3>Join the '.CMS_NAME.' Community</h3>
 		<p>Visit '.CMS_READABLE_DOMAIN.' to access the many <a href="'.CMS_DOMAIN.'/Resources" title="'.CMS_NAME.' Community Resources">available resources</a> to help you get the most out of our CMS.</p>
 		<ul>
@@ -437,13 +437,13 @@ class Tools{
 		self::NewExtra($file,$content);
 
 		//Header
-		$file		= $destination.'/data/_extra/Header.php';
+		$file		= $destination.'/data/_extra/Header/page.php';
 		$content	= '<h1>'.$config['title'].'</h1>
 		<h4>'.'The Fast and Easy CMS'.'</h4>';
 		self::NewExtra($file,$content);
 
 		//Footer
-		$file		= $destination.'/data/_extra/Footer.php';
+		$file		= $destination.'/data/_extra/Footer/page.php';
 		$content	= '<h3><a href="'.CMS_DOMAIN.'/Our_CMS" title="Features of Our CMS">'.CMS_NAME.' Features</a></h3>
 		<p>Easy to use True WYSIWYG Editing.</p>
 		<p>Flat-file data storage and advanced resource management for fast websites.</p>
@@ -458,14 +458,14 @@ class Tools{
 
 
 		//Another example area
-		$file		= $destination.'/data/_extra/Lorem.php';
+		$file		= $destination.'/data/_extra/Lorem/page.php';
 		$content	= '<h3>Heading</h3>
 		<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>';
 		self::NewExtra($file,$content);
 
 
 		//contact html
-		$file = $destination.'/data/_extra/Contact.php';
+		$file = $destination.'/data/_extra/Contact/page.php';
 		self::NewExtra($file,'<h2>Contact Us</h2><p>Use the form below to contact us, and be sure to enter a valid email address if you want to hear back from us.</p>');
 
 

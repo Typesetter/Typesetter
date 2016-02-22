@@ -1125,7 +1125,6 @@ namespace gp\tool{
 		public static function NewDirForm(){
 			global $langmessage, $page;
 
-			ob_start();
 
 			echo '<div class="inline_box">';
 			echo '<h2><i class="fa fa-folder-o"></i> '.$langmessage['create_dir'].'</h2>';
@@ -1144,7 +1143,6 @@ namespace gp\tool{
 			echo '</form>';
 			echo '</div>';
 
-			return ob_get_clean();
 		}
 
 

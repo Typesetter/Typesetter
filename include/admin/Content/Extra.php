@@ -33,10 +33,6 @@ class Extra extends \gp\Page\Edit{
 			$this->cmds['SaveText']				= 'EditExtra';
 
 
-			$this->cmds['gallery_folder']		= 'GalleryImages';
-			$this->cmds['gallery_images']		= 'GalleryImages';
-			$this->cmds['new_dir']				= '\\gp\\tool\\Editing::NewDirForm';
-
 			/* inline editing */
 			$this->cmds['save']					= 'SectionEdit';
 			$this->cmds['save_inline']			= 'SectionEdit';
@@ -46,6 +42,12 @@ class Extra extends \gp\Page\Edit{
 
 
 		}
+
+
+		$this->cmds['gallery_folder']			= 'GalleryImages';
+		$this->cmds['gallery_images']			= 'GalleryImages';
+		$this->cmds['new_dir']					= '\\gp\\tool\\Editing::NewDirForm';
+
 
 		$this->cmds['NewSection']				= 'DefaultDisplay';
 

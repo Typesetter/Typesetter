@@ -227,7 +227,7 @@ class Menu{
 	 * @param string $id String identifying the requested menu
 	 * @return array menu data
 	 */
-	public function GetMenuArray($id){
+	public static function GetMenuArray($id){
 		global $dataDir, $gp_menu;
 
 

@@ -129,8 +129,7 @@ namespace gp\tool{
 
 			if( method_exists('\\gp\\tool\\Output\\Menu',$name) ){
 				$menu = new \gp\tool\Output\Menu();
-				call_user_func_array( array($menu,$name), $args);
-				return;
+				return call_user_func_array( array($menu,$name), $args);
 			}
 
 			throw new \Exception('Call to undefined method gp\\tool\\Output::'.$name);

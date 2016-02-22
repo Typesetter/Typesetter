@@ -538,14 +538,14 @@ class Edit extends \gp\admin\Layout{
 				echo '<input type="hidden" name="addtype" value="new_extra" />';
 				echo '<input type="hidden" name="where" value="'.htmlspecialchars($param).'" />';
 
-				echo '<input type="text" name="extra_area" value="" size="15" class="gpinput"/>';
+				echo '<input type="text" name="extra_area" value="" size="15" class="gpinput" required placeholder="'.htmlspecialchars($langmessage['name']).'" />';
 				$types = \gp\tool\Output\Sections::GetTypes();
 				echo '<select name="type" class="gpselect">';
 				foreach($types as $type => $info){
 					echo '<option value="'.$type.'">'.$info['label'].'</option>';
 				}
 				echo '</select> ';
-				echo ' <input type="submit" name="" value="'.$langmessage['Add New Area'].'" class="gpbutton"/>';
+				echo ' <input type="submit" name="" value="'.$langmessage['Add New Area'].'" class="gpbutton gpvalidate"/>';
 				echo '</form>';
 				echo '</td><td colspan="2" class="add">';
 				echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post">';

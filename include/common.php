@@ -491,6 +491,10 @@ function includeFile( $file ){
 		case 'admin/admin_tools.php':
 		$file = 'admin/Tools.php';
 		break;
+
+		case 'admin/tool_thumbnails.php';
+		$file = 'tool/Image.php';
+		break;
 	}
 
 	require_once( $dataDir.'/include/'.$file );

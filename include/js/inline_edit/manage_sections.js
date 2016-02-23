@@ -216,10 +216,10 @@
 				var classes		= $this.data('gp-attrs').class || label;
 
 
-
-				html += '<li data-gp-area-id="'+this.id+'" '+style+' title="'+classes+'">';
+				html += '<li data-gp-area-id="'+$gp.AreaId($this)+'" '+style+' title="'+classes+'">';
 				html += '<div><a class="color_handle" data-cmd="SectionColor" style="background-color:'+color+'"></a>';
 				html += '<span class="options">';
+				html += '<a class="fa fa-pencil" data-cmd="SectionEdit" title="Edit"></a>';
 				html += '<a class="fa fa-sliders" data-cmd="SectionOptions" title="Options"></a>';
 				html += '<a class="fa fa-files-o" data-cmd="CopySection" title="Copy"></a>';
 				html += '<a class="fa fa-trash RemoveSection" data-cmd="RemoveSection" title="Remove"></a>';
@@ -321,8 +321,8 @@
 		 *
 		 */
 		GetArea: function($li){
-			var id 		= $li.data('gp-area-id');
-			return $('#'+id);
+			var id		= $gp.AreaId( $li );
+			return $('#ExtraEditArea'+id);
 		},
 	}
 
@@ -510,6 +510,20 @@
 		}
 
 		$area.attr('data-gp_collapse',clss).data('gp_collapse',clss);
+	}
+
+
+	/**
+	 * Initiate editing for a section
+	 *
+	 */
+	$gp.links.SectionEdit = function(evt){
+		var $li				= $(this).closest('li');
+		var area_id			= $gp.AreaId($li);
+		var $lnk			= $('#ExtraEditLink'+area_id);
+		var arg				= $lnk.data('arg');
+
+		$gp.LoadEditor($lnk.get(0).href, area_id, arg);
 	}
 
 
@@ -773,7 +787,8 @@
 
 
 		//update title of <li> in section manager
-		var $li		= $('#section_sorting li[data-gp-area-id='+$area.attr('id'));
+		var id		= $gp.AreaId( $area );
+		var $li		= $('#section_sorting li[data-gp-area-id='+id+']');
 		if( classes == '' ){
 			classes = $li.find('> div .section_label').text();
 		}

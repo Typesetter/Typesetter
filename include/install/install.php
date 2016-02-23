@@ -204,32 +204,9 @@ ul.install_status .failed{
 new gp_install();
 echo \gp\tool::ErrorBuffer(false);
 ?>
+
 </div>
-
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script type="text/javascript">
-	$(function(){
-		var $field_username		= $('#install_field_username');
-		var username_edited		= false;
-
-		$field_username.on('keyup paste change',function(){
-			if( this.value == '' ){
-				username_edited = false;
-			}else{
-				username_edited = true;
-			}
-		});
-
-		$('#install_field_email').on('keyup change paste',function(){
-			if( !username_edited ){
-				$field_username.val(this.value.replace(/@.*/,''));
-			}
-		});
-	});
-
-</script>
 </body></html>
-
 
 <?php
 

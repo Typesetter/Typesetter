@@ -519,11 +519,28 @@
 	 */
 	$gp.links.SectionEdit = function(evt){
 		var $li				= $(this).closest('li');
+		var $area			= gp_editor.GetArea( $li );
 		var area_id			= $gp.AreaId($li);
 		var $lnk			= $('#ExtraEditLink'+area_id);
 		var arg				= $lnk.data('arg');
 
 		$gp.LoadEditor($lnk.get(0).href, area_id, arg);
+
+
+		//scroll the page if needed
+		var el_top			= $area.offset().top;
+		var el_bottom		= el_top + $area.height();
+
+
+		var view_top		= $gp.$win.scrollTop();
+		var view_bottom		= view_top + $gp.$win.height();
+
+
+		if( (el_bottom > view_top) && (el_top < view_bottom) ){
+			return;
+		}
+
+		$('html,body').stop().animate({scrollTop: el_top-200});
 	}
 
 

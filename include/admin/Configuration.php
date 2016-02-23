@@ -22,7 +22,7 @@ class Configuration extends \gp\special\Base{
 		$langmessage['about_config']['smtp_hosts']		.= 'ssl://smtp.gmail.com:465 ; tls://smtp.live.com:587';
 		$langmessage['about_config']['showgplink']		= 'Showing the "powered by" link on your site is a great way to support '.CMS_NAME.' CMS.';
 		$langmessage['about_config']['history_limit']	= 'Max: '.gp_backup_limit;
-		$langmessage['recreate']						= 'Recreate thumbnails with new size?(save new size first)';
+		$langmessage['about_config']['maxthumbsize']	.= ' '.\gp\tool::Link('Admin/Configuration','Recreate All Thumbnails','cmd=recreate_thumbs','class="" data-cmd="creq"');
 
 
 		$this->variables = array(
@@ -48,7 +48,6 @@ class Configuration extends \gp\special\Base{
 						'Performance'			=> false,
 						'maximgarea'			=> 'integer',
 						'maxthumbsize'			=> 'integer',
-						'recreate'				=> 'recreate',
 						'auto_redir'			=> 'integer',
 						'history_limit'			=> 'integer',
 						'HTML_Tidy'				=> '',
@@ -92,7 +91,7 @@ class Configuration extends \gp\special\Base{
 				$this->SaveConfig();
 			break;
 			case 'recreate_thumbs':
-				$this->RecreateThumbs("");
+				$this->RecreateThumbs();
 			break;
 		}
 
@@ -107,8 +106,8 @@ class Configuration extends \gp\special\Base{
 	protected function SaveConfig(){
 		global $config, $langmessage;
 
-
-		$possible = $this->getPossible();
+		$config_before	= $config;
+		$possible		= $this->getPossible();
 
 		foreach($possible as $key => $curr_possible){
 
@@ -136,11 +135,18 @@ class Configuration extends \gp\special\Base{
 			return false;
 		}
 
+
 		if( isset($_GET['gpreq']) && $_GET['gpreq'] == 'json' ){
 			message($langmessage['SAVED'].' '.$langmessage['REFRESH']);
 		}else{
 			message($langmessage['SAVED']);
 		}
+
+		//resize thumbnails
+		if( $config_before['maxthumbsize'] !== $config['maxthumbsize'] ){
+			msg(\gp\tool::Link('Admin/Configuration','Recreate All Thumbnails?','cmd=recreate_thumbs','class="" data-cmd="creq"'));
+		}
+
 
 	}
 
@@ -223,16 +229,16 @@ class Configuration extends \gp\special\Base{
 
 
 		//required email fields
-		$possible['require_email'] = array(	'none'      => 'None',
-											''          => 'Subject &amp; Message',
-											'email'     => 'Subject, Message &amp; Email' );
+		$possible['require_email'] = array(	'none'		=> 'None',
+											''			=> 'Subject &amp; Message',
+											'email'		=> 'Subject, Message &amp; Email' );
 
 
 		//see xoopsmultimailer.php
-		$possible['mail_method'] = array(	'mail'      => 'PHP mail()',
-											'sendmail'  => 'sendmail',
-											'smtp'      => 'smtp',
-											'smtpauth'  => 'SMTPAuth' );
+		$possible['mail_method'] = array(	'mail'		=> 'PHP mail()',
+											'sendmail'	=> 'sendmail',
+											'smtp'		=> 'smtp',
+											'smtpauth'	=> 'SMTPAuth' );
 
 		//CDN
 		foreach(\gp\tool\Output\Combine::$scripts as $key => $script_info){
@@ -240,14 +246,14 @@ class Configuration extends \gp\special\Base{
 				continue;
 			}
 
-			$config_key              = 'cdn_'.$key;
+			$config_key					= 'cdn_'.$key;
 
 			if( !array_key_exists($config_key, $possible) ){
 				continue;
 			}
 
-			$opts                     = array_keys($script_info['cdn']);
-			$possible[$config_key]    = array_combine($opts, $opts);
+			$opts						= array_keys($script_info['cdn']);
+			$possible[$config_key]		= array_combine($opts, $opts);
 			array_unshift($possible[$config_key],$langmessage['None']);
 		}
 
@@ -343,9 +349,6 @@ class Configuration extends \gp\special\Base{
 					case 'textarea':
 						$this->formTextarea($key,$value);
 					break;
-					case 'recreate':
-						$this->formButtonRecreate($key,$value);
-					break;
 					default:
 						$this->formInput($key,$value,$possible_value);
 					break;
@@ -400,12 +403,7 @@ class Configuration extends \gp\special\Base{
 	 *	Form Functions
 	 *
 	 */
-	public function formButtonRecreate($name,$value,$type='text'){
-		echo "\n<div>";
-		echo ' <a class="gpbutton" href = '.\gp\tool::GetUrl('Admin/Configuration').'?cmd=recreate_thumbs >Recreate</a> ';
-		echo '</div>';
-	} 
-	
+
 	public function formCheckbox($key,$value){
 		$checked = '';
 		if( $value && $value !== 'false' ){
@@ -469,51 +467,35 @@ class Configuration extends \gp\special\Base{
 
 	}
 
-	
-	function RecreateThumbs($dir)
-	{
- 
-		  $filefolder=dirname($_SERVER['SCRIPT_FILENAME'])."/data/_uploaded/".$dir;
-		  
-		  $handle = openDir($filefolder);
-		  
-		  while ($dat = readDir($handle))
-		  {
-			
-			if(is_dir($filefolder.$dat))
-			{
-				if($dat!="." && $dat!=".." &&$dat!="thumbnails")
-				{
-					$this->RecreateThumbs($dir."/".$dat."/");
-				}
-			}
-			else
-			{
-				if($dat!="index.html")
-				{
-					$this->MakeThumb($dir.$dat);
-				}
-			}
-		   }
-		  closeDir($handle);
-		  return true;
-	}
+	/**
+	 * Recreate all of the thumbnails according to the size in the configuration
+	 *
+	 */
+	function RecreateThumbs($dir_rel = ''){
+		global $dataDir;
 
+		$dir_full	= $dataDir.'/data/_uploaded'.$dir_rel;
+		$files		= scandir($dir_full);
 
-function MakeThumb($file)
-	{
-		if(file_exists("./data/_uploaded/".$file))
-		{
-			 $msg = "<br> /data/_uploaded".$file;
-			
-				 if(file_exists("./data/_uploaded/image/thumbnails/".$file.".jpg"))
-				   {
-					unlink ("./data/_uploaded/image/thumbnails/".$file.".jpg");   
-					}
-			
-		if(\gp\tool\Image::createSquare("data/_uploaded/".$file,"data/_uploaded/image/thumbnails/".$file.".jpg",$GLOBALS['config']['maxthumbsize']) &&file_exists("data/_uploaded/image/thumbnails/".$file.".jpg")) msg( $msg." new thumbnail created!");
-			return true;
+		foreach($files as $file){
+
+			if( $file == '.' || $file == '..' || $file == 'thumbnails' ){
+				continue;
+			}
+
+			$file_full	= $dir_full.'/'.$file;
+			$file_rel	= $dir_rel.'/'.$file;
+
+			if( is_dir($file_full) ){
+				$this->RecreateThumbs($file_rel);
+				continue;
+			}
+
+			if( \gp\admin\Content\Uploaded::IsImg($file_full) ){
+				\gp\admin\Content\Uploaded::CreateThumbnail($file_full);
+			}
 		}
+
 	}
-	
+
 }

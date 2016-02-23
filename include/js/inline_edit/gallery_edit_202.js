@@ -436,7 +436,8 @@
 		}
 
 		function AddCurrentImage(img){
-			var src		= $(img).find('img').attr('src');
+			var $img	= $(img);
+			var src		= $img.find('img').attr('src');
 
 			if( !src ){
 				return;
@@ -451,7 +452,12 @@
 						+ '</span>'
 						+ '</div>'
 
-			$(html).data('original',img).append( $span ).appendTo( $current_images );
+			var $new	= $(html).data('original',img).append( $span ).appendTo( $current_images );
+
+			if( $img.hasClass('gp_to_remove') ){
+				$new.addClass('gp_to_remove');
+			}
+
 		}
 
 
@@ -485,6 +491,8 @@
 		function AddImage( $img, holder ){
 
 			gp_editor.edit_div.find('.gp_to_remove').remove();
+			$current_images.find('.gp_to_remove').remove();
+
 			$img.attr({'data-cmd':gp_editor.img_name,'data-arg':gp_editor.img_rel,'title':'','class':gp_editor.img_rel})
 			var li = $('<li>').append($img).append('<div class="caption"></div>');
 			if( holder ){

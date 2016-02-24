@@ -240,7 +240,7 @@ class Menu{
 		$menu = \gp\tool\Files::Get('_menus/'.$id,'menu');
 
 		if( \gp\tool\Files::$last_version && version_compare(\gp\tool\Files::$last_version,'3.0b1','<') ){
-			$menu = $this->FixMenu($menu);
+			$menu = self::FixMenu($menu);
 		}
 
 		return \gp\tool\Plugins::Filter('GetMenuArray',array($menu));
@@ -253,7 +253,7 @@ class Menu{
 	 * .. htmlspecialchars label for external links
 	 * @since 3.0b1
 	 */
-	public function FixMenu($menu){
+	public static function FixMenu($menu){
 
 		//fix external links, prior to 3.0, escaping was done when the menu was output
 		foreach($menu as $key => $value){

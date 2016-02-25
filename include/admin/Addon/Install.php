@@ -228,6 +228,15 @@ class Install extends \gp\admin\Addon\Tools{
 			echo ' &nbsp;  <b>'.$langmessage['Off'].'</b>';
 		}
 		echo '</p>';
+
+
+		//view on typesettercms.com
+		$slug = 'Plugins';
+		if( $this->config_index == 'themes' ){
+			$slug = 'Themes';
+		}
+		$url = addon_browse_path.'/'.$slug.'?'.$this->searchQuery.'&page='.$this->searchPage;
+		echo '<p>View search results on <a href="'.$url.'" target="_blank">'.CMS_READABLE_DOMAIN.'</p>';
 	}
 
 

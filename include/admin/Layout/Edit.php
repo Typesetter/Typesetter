@@ -532,7 +532,7 @@ class Edit extends \gp\admin\Layout{
 
 
 				//new extra area
-				echo '<tr><td>';
+				echo '<tr><td colspan="2">';
 				echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post">';
 				echo '<input type="hidden" name="cmd" value="addcontent" />';
 				echo '<input type="hidden" name="addtype" value="new_extra" />';
@@ -547,12 +547,14 @@ class Edit extends \gp\admin\Layout{
 				echo '</select> ';
 				echo ' <input type="submit" name="" value="'.$langmessage['Add New Area'].'" class="gpbutton gpvalidate"/>';
 				echo '</form>';
-				echo '</td><td colspan="2" class="add">';
-				echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post">';
-				echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
-				echo '</form>';
 				echo '</td></tr>';
 				echo '</table>';
+
+				echo '<p>';
+				echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post" style="text-align:right">';
+				echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
+				echo '</form>';
+				echo '</p>';
 
 			echo '</div>';
 
@@ -658,7 +660,7 @@ class Edit extends \gp\admin\Layout{
 			case 'new_extra':
 				$extra_name = $this->NewExtraArea();
 				if( $extra_name === false ){
-					message($langmessage['OOPS'].'(2)');
+					message($langmessage['OOPS'].' (2)');
 					return false;
 				}
 				$insert = 'Extra:'.$extra_name;
@@ -714,14 +716,13 @@ class Edit extends \gp\admin\Layout{
 		}
 
 		$data	= \gp\tool\Editing::DefaultContent($_POST['type']);
-		$title	= \gp\admin\Content\Extra::AreaExists($title);
 		$file	= $dataDir.'/data/_extra/'.$title.'/page.php';
 
-		if( $title !== false ){
+		if( \gp\admin\Content\Extra::AreaExists($title) !== false ){
 			return $title;
 		}
 
-		if( !\gp\tool\Files::SaveData($file,'extra_content',$data) ){
+		if( !\gp\tool\Files::SaveData($file,'file_sections',array($data) ) ){
 			message($langmessage['OOPS']);
 			return false;
 		}

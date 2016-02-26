@@ -147,6 +147,10 @@ class Extra extends \gp\Page\Edit{
 	public static function AreaExists($title){
 		global $dataDir;
 
+		if( $title ==  '.' || $title == '..' ){
+			return false;
+		}
+
 		$legacy	= $dataDir.'/data/_extra/'.$title;
 		$new	= $dataDir.'/data/_extra/'.$title.'/page.php';
 		$php	= (substr($title,-4) === '.php');

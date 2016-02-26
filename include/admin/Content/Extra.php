@@ -109,11 +109,6 @@ class Extra extends \gp\Page\Edit{
 		$files			= scandir($this->folder);
 
 		foreach($files as $file){
-
-			if( $file == '.' || $file == '..' ){
-				continue;
-			}
-
 			$this->AddArea($file);
 		}
 

@@ -722,7 +722,7 @@ namespace gp\admin{
 		 * Helper function for outputing link groups in AdminPanelLinks()
 		 *
 		 */
-		private function _AdminPanelLinks($in_panel, $links, $lang_key, $icon_class, $panel_arg){
+		private static function _AdminPanelLinks($in_panel, $links, $lang_key, $icon_class, $panel_arg){
 			global $langmessage;
 
 			if( empty($links) ){

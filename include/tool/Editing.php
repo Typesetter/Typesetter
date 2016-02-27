@@ -263,12 +263,12 @@ namespace gp\tool{
 
 			//make sure the image still exists
 			if( !isset(\gp_resized::$index[$index]) ){
-				continue;
+				return;
 			}
 			$img = \gp_resized::$index[$index];
 			$info = \gp_resized::ImageInfo($img,$width,$height);
 			if( !$info ){
-				continue;
+				return;
 			}
 			$full_path = $dataDir.'/data/_resized/'.$index.'/'.$info['name'];
 			if( file_exists($full_path) ){

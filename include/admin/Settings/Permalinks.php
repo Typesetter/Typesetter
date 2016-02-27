@@ -364,7 +364,7 @@ class Permalinks{
 	 */
 	public function CanTestRules(){
 
-		if( !\gp\tool\RemoteGet::Test() ){
+		if( \gp\tool\RemoteGet::Test() === false ){
 			return false;
 		}
 

@@ -53,7 +53,7 @@ namespace gp\admin{
 			}
 
 			//determine check in type
-			if( !\gp\tool\RemoteGet::Test() ){
+			if( \gp\tool\RemoteGet::Test() === false ){
 				self::VersionData($version_data);
 				self::$update_status = 'checkincompat';
 				return;
@@ -1420,7 +1420,7 @@ namespace gp\admin{
 				return $bit = 0;
 			}
 
-			if( !\gp\tool\RemoteGet::Test() ){
+			if( \gp\tool\RemoteGet::Test() === false ){
 				return $bit = 0;
 			}
 

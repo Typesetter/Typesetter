@@ -156,7 +156,7 @@ class Update extends \gp\Page{
 		echo '<tr><td>';
 		echo 'RemoteGet';
 		echo '</td><td>';
-		if( \gp\tool\RemoteGet::Test() ){
+		if( \gp\tool\RemoteGet::Test() !== false ){
 			echo '<span class="passed">'.$langmessage['True'].'</span>';
 		}else{
 			$passed = false;

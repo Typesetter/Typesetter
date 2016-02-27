@@ -570,7 +570,7 @@ class Tools{
 		global $install_ftp_connection, $dirPrefix;
 
 		//only proceed with save if we can test the results
-		if( !\gp\tool\RemoteGet::Test() ){
+		if( \gp\tool\RemoteGet::Test() === false ){
 			return;
 		}
 

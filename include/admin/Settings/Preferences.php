@@ -7,6 +7,7 @@ namespace gp\admin\Settings{
 	class Preferences extends \gp\admin\Settings\Users{
 
 		public $username;
+		protected $user_info;
 
 		public function __construct($args){
 			global $gpAdmin, $langmessage;

@@ -530,7 +530,6 @@ class Available extends \gp\admin\Layout{
 		$config_before		= $config;
 		$gpLayoutsBefore	= $gpLayouts;
 		$theme_folder_name	=& $_POST['folder'];
-		$theme_folder		= $dataDir.'/data/_themes/'.$theme_folder_name;
 
 		if( empty($theme_folder_name) || !ctype_alnum($theme_folder_name) ){
 			message($langmessage['OOPS'].' (Invalid Request)');

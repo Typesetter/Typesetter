@@ -79,10 +79,6 @@ class Addons extends \gp\admin\Addon\Install{
 			case 'confirm_uninstall':
 				$this->Confirm_Uninstall();
 			break;
-
-			case 'history':
-				$this->History();
-			return;
 		}
 
 

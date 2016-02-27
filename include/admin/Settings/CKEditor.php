@@ -515,7 +515,6 @@ class CKEditor extends \gp\special\Base{
 	static function ReadableJson($mixed){
 		static $level = 0;
 
-		$type = gettype($mixed);
 		if( gettype($mixed) != 'array' ){
 			return json_encode($mixed);
 		}

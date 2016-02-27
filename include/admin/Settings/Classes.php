@@ -235,20 +235,4 @@ class Classes extends \gp\special\Base{
 	}
 
 
-	/**
-	 * Determine if the current theme is a bootstrap theme
-	 *
-	 */
-	function UsingBootstrap(){
-		global $dataDir, $gpLayouts, $config;
-
-		$defaultTheme		= $gpLayouts[$config['gpLayout']];
-
-		//$isBootswatchTheme	= strpos($defaultTheme,'Bootswatch') >= 0 ? true : false;
-
-
-		//msg("Default Theme: " . pre($defaultTheme));
-		//msg("Default Theme is Bootswatch: " . $isBootswatchTheme );
-	}
-
 }

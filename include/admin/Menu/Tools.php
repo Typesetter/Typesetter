@@ -221,12 +221,12 @@ class Tools{
 
 		//multiple section types
 		$type		= $_POST['content_type'];
+		$content	= array();
 		if( strpos($type,'{') === 0 ){
 			$types = json_decode($type,true);
 			if( $types ){
 
 				$types								+= array('wrapper_class'=>'gpRow');
-				$content							= array();
 
 				//wrapper section
 				$section							= \gp\tool\Editing::DefaultContent('wrapper_section');
@@ -326,7 +326,7 @@ class Tools{
 		if( count($gp_menu) ){
 			reset($gp_menu);
 			$first_index = key($gp_menu);
-		}elseif( count($gp_titles ) ){
+		}else{
 			reset($gp_titles);
 			$first_index = key($gp_titles);
 		}

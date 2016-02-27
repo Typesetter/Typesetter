@@ -48,11 +48,12 @@ namespace gp\tool{
 		 */
 		public static function Canonicalize($path) {
 
-			$path		= \gp\tool\Editing::Sanitize($path);
-			$path		= str_replace( '\\', '/', $path);
-			$parts		= explode('/', $path);
-			$parts		= array_filter($parts);
-			$absolutes	= array();
+			$path			= \gp\tool\Editing::Sanitize($path);
+			$path			= str_replace( '\\', '/', $path);
+			$start_slash	= $path[0] == '/' ? '/' : '';
+			$parts			= explode('/', $path);
+			$parts			= array_filter($parts);
+			$absolutes		= array();
 
 			foreach( $parts as $part ){
 				if( '.' == $part ) continue;
@@ -62,7 +63,7 @@ namespace gp\tool{
 					$absolutes[] = $part;
 				}
 			}
-			return '/' . implode('/', $absolutes);
+			return $start_slash . implode('/', $absolutes);
 		}
 
 

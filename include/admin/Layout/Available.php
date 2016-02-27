@@ -369,8 +369,6 @@ class Available extends \gp\admin\Layout{
 	public function PreviewTheme($theme, $theme_info){
 		global $langmessage,$config;
 
-		$theme_id	= dirname($theme);
-		$color		= $theme_info['color'];
 
 
 		$_REQUEST += array('gpreq' => 'body'); //force showing only the body as a complete html document

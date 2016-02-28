@@ -98,7 +98,12 @@ class Child_Thumbnails{
 		//prevent infinite loops
 		foreach($file_sections as $key=>$val){
 			if($val['type']=='include'){
-				unset($file_sections[$key]);
+			//dummy section instead of include
+			$file_sections[$key] =   array (
+			'type' => 'text',
+			'content' => '<div><p>Lorem ipsum </p></div>',
+			'attributes' => array (), );
+        }
 			}
 		}
 

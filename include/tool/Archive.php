@@ -70,6 +70,10 @@ class Archive{
 	 */
 	protected function InitZip(){
 
+		if( !class_exists('ZipArchive') ){
+			return;
+		}
+
 		$this->php_class	= 'ZipArchive';
 		$this->php_object	= new \ZipArchive();
 

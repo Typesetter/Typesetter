@@ -78,12 +78,6 @@ include_once($path);
 	gpOutput::GetAdminLink();
 	?>
 	</p></footer>
-
-	<!--[if lt IE 9]><?php
-	//<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-	gpOutput::GetComponents( 'html5shiv' );
-	gpOutput::GetComponents( 'respondjs' );
-	?><![endif]-->
 	</div>
 
   </body>

@@ -271,14 +271,14 @@
 
 			//moved after another section
 			if( prev_area.length ){
-				area.insertAfter(prev_area);
+				area.insertAfter(prev_area).trigger('SectionSorted');
 				return;
 			}
 
 			//move to beginning of gpx_content
 			var $ul			= ui.item.parent().closest('ul');
 			if( $ul.attr('id') == 'section_sorting' ){
-				area.prependTo('#gpx_content');
+				area.prependTo('#gpx_content').trigger('SectionSorted');
 				return;
 			}
 
@@ -374,7 +374,8 @@
 				.removeClass('editable_area')
 				.appendTo('#gpx_content')
 				.hide()
-				.delay(300).slideDown();
+				.delay(300).slideDown()
+				.trigger("PreviewAdded");
 
 			var node = $new_content.get(0);
 			$this.data('preview-section',node);
@@ -391,6 +392,7 @@
 		$(this).removeClass('previewing');
 
 		$('.temporary-section').stop().slideUp(function(){
+			$(this).parent().trigger("PreviewRemoved");
 			$(this).remove();
 		});
 
@@ -431,7 +433,9 @@
 		//make sure there's at least one section
 		if( $('#gpx_content').find('.editable_area').length > 1 ){
 			var $li = $(this).closest('li');
-			gp_editor.GetArea( $li ).remove();
+			var area = gp_editor.GetArea( $li );
+			area.parent().trigger("SectionRemoved");
+			area.remove();
 			$li.remove();
 		}
 	}
@@ -446,6 +450,7 @@
 
 		NewSectionIds(new_area);
 		from_area.after(new_area);
+		new_area.trigger("SectionAdded");
 		gp_editor.InitSorting();
 	}
 

@@ -285,6 +285,7 @@
 
 			//moved to beginning of wrapper
 			this.GetArea( $ul.parent() ).prepend(area);
+			area.trigger('SectionSorted');
 
 		},
 

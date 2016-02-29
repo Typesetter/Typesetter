@@ -918,6 +918,8 @@ $(function(){
 
 			if( new_area.parent().closest('.editable_area').length > 0 ){
 				e.stopPropagation();
+				// trigger a substitute event, plugin JS can listen to
+				new_area.trigger("admin:" + e.type);
 			}
 
 			//area han't changed, so just show the span

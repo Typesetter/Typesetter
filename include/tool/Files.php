@@ -156,6 +156,7 @@ namespace gp\tool{
 
 		}
 
+
 		/**
 		 * Get the raw contents of a data file
 		 *
@@ -167,14 +168,17 @@ namespace gp\tool{
 			return file_get_contents($file);
 		}
 
+
+		/**
+		 * Return true if the data file exists
+		 *
+		 */
 		public static function Exists($file){
 
 			$file = self::FilePath($file);
 
 			return file_exists($file);
 		}
-
-
 
 
 		/**

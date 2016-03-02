@@ -150,11 +150,11 @@ class Extra extends \gp\Page\Edit{
 		$new	= $dataDir.'/data/_extra/'.$title.'/page.php';
 		$php	= (substr($title,-4) === '.php');
 
-		if( !$php && file_exists($new) ){
+		if( !$php && is_dir($legacy) && \gp\tool\Files::Exists($new) ){ //is_dir() used to prevent open_basedir notice http://www.typesettercms.com/Forum?show=t2110
 			return $title;
 		}
 
-		if( $php && file_exists($legacy) ){
+		if( $php && \gp\tool\Files::Exists($legacy) ){
 			return substr($title,0,-4);
 		}
 
@@ -180,7 +180,7 @@ class Extra extends \gp\Page\Edit{
 	private function _DeleteArea(){
 
 		//legacy path
-		if( file_exists($this->area_info['legacy_path']) && !unlink($this->area_info['legacy_path']) ){
+		if( \gp\tool\Files::Exists($this->area_info['legacy_path']) && !unlink($this->area_info['legacy_path']) ){
 			return false;
 		}
 
@@ -272,7 +272,7 @@ class Extra extends \gp\Page\Edit{
 
 
 		//publish
-		if( file_exists($info['draft_path']) ){
+		if( \gp\tool\Files::Exists($info['draft_path']) ){
 			echo \gp\tool::Link('Admin/Extra',$langmessage['Publish Draft'],'cmd=PublishDraft&file='.rawurlencode($info['title']),array('data-cmd'=>'creq'));
 		}else{
 			echo '<span class="text-muted">'.$langmessage['Publish Draft'].'</span>';

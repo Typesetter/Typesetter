@@ -227,6 +227,7 @@ class Tools{
 			if( $types ){
 
 				$types								+= array('wrapper_class'=>'gpRow');
+				$types								+= array('label'=>'');
 
 				//wrapper section
 				$section							= \gp\tool\Editing::DefaultContent('wrapper_section');
@@ -244,7 +245,7 @@ class Tools{
 						$class						= '';
 					}
 
-					$section						= \gp\tool\Editing::DefaultContent($type);
+					$section						= \gp\tool\Editing::DefaultContent($type, NULL, $types['label']);
 					$section['attributes']['class']	.= ' '.$class;
 					$content[]						= $section;
 				}

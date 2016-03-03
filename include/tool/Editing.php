@@ -704,7 +704,7 @@ namespace gp\tool{
 		 * @since 3.6
 		 *
 		 */
-		public static function DefaultContent($type='text', $heading = 'Lorem Ipsum' ){
+		public static function DefaultContent($type='text', $heading = 'Lorem Ipsum', $custom_combo_label=false){
 			global $langmessage;
 
 			$section			= array();
@@ -742,7 +742,7 @@ namespace gp\tool{
 				break;
 			}
 
-			$content = \gp\tool\Plugins::Filter('GetDefaultContent',array($section['content'],$type));
+			$content = \gp\tool\Plugins::Filter('GetDefaultContent',array($section['content'],$type, $custom_combo_label));
 			if( is_array($content) ){
 				$section = $content + $section;
 			}else{

@@ -937,6 +937,7 @@ namespace gp\tool{
 			global $dataDir,$langmessage;
 
 
+			$attrs			= array();
 			$name			= str_replace(' ','_',$name);
 			$file_stats		= array();
 			$is_draft		= false;
@@ -944,7 +945,7 @@ namespace gp\tool{
 			$wrap			= self::ShowEditLink('Admin_Extra');
 
 			if( !$wrap ){
-				echo '<div>';
+				echo '<div'.\gp\tool\Output\Sections::SectionAttributes($attrs,$extra_content[0]['type']).'>';
 				echo \gp\tool\Output\Sections::RenderSection($extra_content[0],0,'',$file_stats);
 				echo '</div>';
 				return;
@@ -960,7 +961,6 @@ namespace gp\tool{
 			self::$editlinks .= ob_get_clean();
 
 
-			$attrs						= array();
 			$attrs['data-gp_label']		= str_replace('_',' ',$name);
 			$attrs['class']				= 'editable_area';
 			$attrs['id']				= 'ExtraEditArea'.$edit_index;

@@ -656,6 +656,25 @@ class Edit extends \gp\Page{
 
 
 	/**
+	 * Get nested types by recursion
+	 *
+	 */
+	public static function GetNestedTypes($types){
+		$return = $types;
+		foreach( $types as $key => $type ){
+			$wrapper_class = isset($type[1]) ? $type[1] : '';
+      		$label = isset($type[2]) ? $type[2] : '';
+			if( count($type) > 1 ){
+				$return[$key] = array('types'=>self::GetNestedTypes($type[0]), 'wrapper_class'=>$wrapper_class, 'label'=>$label);
+			}else{
+				$return[$key] = $type;
+			}
+		}
+		return $return;
+	}
+
+
+	/**
 	 * Add link to manage section admin for nested section type
 	 *
 	 */
@@ -677,8 +696,8 @@ class Edit extends \gp\Page{
 
 
 			if( count($types) > 1 ){
-				$q		= array('types' => $types, 'wrapper_class'=>$wrapper_class, 'label'=>$text_label);
-				$q		= json_encode($q);
+				$q = array('types' => self::GetNestedTypes($types), 'wrapper_class'=>$wrapper_class, 'label'=>$text_label);
+				$q = json_encode($q);
 			}else{
 				$q		= $types[0];
 			}

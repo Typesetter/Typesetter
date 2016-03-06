@@ -221,36 +221,23 @@ class Tools{
 
 		//multiple section types
 		$type		= $_POST['content_type'];
-		$content	= array();
+
+		
+		// multiple wrapped sections
 		if( strpos($type,'{') === 0 ){
-			$types = json_decode($type,true);
-			if( $types ){
-
-				$types								+= array('wrapper_class'=>'gpRow');
-				$types								+= array('label'=>'');
-
-				//wrapper section
-				$section							= \gp\tool\Editing::DefaultContent('wrapper_section');
-				$section['contains_sections']		= count($types['types']);
-				$section['attributes']['class']		= $types['wrapper_class'];
-				$content[]							= $section;
-
-
-				//nested sections
-				foreach($types['types'] as $type){
-
-					if( strpos($type,'.') ){
-						list($type,$class)			= explode('.',$type,2);
-					}else{
-						$class						= '';
-					}
-
-					$section						= \gp\tool\Editing::DefaultContent($type, NULL, $types['label']);
-					$section['attributes']['class']	.= ' '.$class;
-					$content[]						= $section;
+			$combo = json_decode($type,true);
+			if( $combo ){
+				$content = self::GetComboContent($combo);
+				$type = '';
+				// borrowed from \gp\Page\Edit::ResetFileTypes()
+				foreach($content as $section){
+					$type[] = $section['type'];
 				}
+				$type = array_unique($type);
+				$type = array_diff($type,array(''));
+				sort($type);
+				$type = implode(',',$type);
 			}
-
 		//single section type
 		}else{
 			$content	= \gp\tool\Editing::DefaultContent($type, $_POST['title']);
@@ -291,6 +278,43 @@ class Tools{
 
 		return $index;
 	}
+
+
+	/**
+	 * Get nested Section Combo content
+	 *
+	 */
+	public static function GetComboContent($combo, $combo_label='', $content=array()){
+		// add wrapper class if none given
+		$combo								+= array('wrapper_class'=>'gpRow');
+		// push the combo label through to all subsections if none (no sub-label) given
+		$combo								+= array('label'=>$combo_label); 
+
+		// create wrapper section
+		$section							= \gp\tool\Editing::DefaultContent('wrapper_section');
+		$section['contains_sections']		= count($combo['types']);
+		$section['attributes']['class']		= $combo['wrapper_class'];
+		$content[]							= $section;
+
+		foreach($combo['types'] as $type){
+			if( is_array($type) ){
+				// go into recursion
+				$content = self::GetComboContent($type, $combo['label'], $content);
+			}else{
+				if( strpos($type,'.') ){
+					// has class(es)
+					list($type,$class)			= explode('.',$type,2);
+				}else{
+					$class						= '';
+				}
+
+				$section						= \gp\tool\Editing::DefaultContent($type, NULL, $combo['label']);
+				$section['attributes']['class']	.= ' '.$class;
+				$content[]						= $section;
+			}
+    	}
+    return $content;
+  }
 
 
 	/**

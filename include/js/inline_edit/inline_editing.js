@@ -344,7 +344,13 @@ gp_editing = {
 	 * todo: use regexp to find filetype-.*
 	 */
 	TypeFromClass: function(div){
-		var type = $(div).prop('class').substring(16);
+		var $section	= $(div);
+		var type		= $section.data('gp_type');
+		if( type ){
+			return type;
+		}
+
+		var type = $section.prop('class').substring(16);
 		return type.substring(0, type.indexOf(' '));
 	},
 

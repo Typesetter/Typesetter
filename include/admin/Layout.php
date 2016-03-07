@@ -109,10 +109,26 @@ class Layout extends \gp\admin\Addon\Install{
 		$this->cmds['SendAddonReview']			= '';
 		$this->cmds['ReviewAddonForm']			= '';
 
+		$this->cmds['addontext']				= 'RedirectText';
+
+
 
 		$this->LayoutCommands();
 		$this->RunCommands($cmd);
 	}
+
+	/**
+	 * Redirect addontext requests to correct path for TS 5.0+
+	 *
+	 */
+	function RedirectText(){
+		$params = $_GET;
+		$params['cmd'] = 'AddonTextForm';
+
+		$url = \gp\tool::GetUrl('Admin_Theme_Content/Text',http_build_query($params,'','&'),false);
+		\gp\tool::Redirect($url);
+	}
+
 
 
 	/**

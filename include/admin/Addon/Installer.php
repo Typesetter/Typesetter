@@ -207,9 +207,12 @@ class Installer extends \gp\admin\Addon\Tools{
 
 		}
 
-		$dataFolder = $addon_config['data_folder_full'];
-		if( file_exists($dataFolder) ){
-			\gp\tool\Files::RmAll($dataFolder);
+		//only delete data if data_folder is not empty
+		if( !empty($addon_config['data_folder']) ){
+			$dataFolder = $addon_config['data_folder_full'];
+			if( file_exists($dataFolder) ){
+				\gp\tool\Files::RmAll($dataFolder);
+			}
 		}
 	}
 
@@ -387,9 +390,9 @@ class Installer extends \gp\admin\Addon\Tools{
 	protected function DataFolder(){
 		global $dataDir;
 
-		if( isset($this->config[$this->config_key]['data_folder']) ){
+		if( !empty($this->config[$this->config_key]['data_folder']) ){
 			$this->data_folder = $this->config[$this->config_key]['data_folder'];
-		}elseif( !is_null($this->upgrade_key) && file_exists( $dataDir.'/data/_addondata/'.$this->upgrade_key) ){
+		}elseif( !empty($this->upgrade_key) && file_exists( $dataDir.'/data/_addondata/'.$this->upgrade_key) ){
 			$this->data_folder = $this->upgrade_key;
 		}else{
 			$this->data_folder = $this->dest_name;

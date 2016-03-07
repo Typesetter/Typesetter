@@ -341,7 +341,7 @@ namespace gp\admin\Content{
 		 * Return folder options for the InlineList
 		 *
 		 */
-		function InlineList_Options($dir_piece, $folders){
+		public static function InlineList_Options($dir_piece, $folders){
 			global $langmessage, $dataDir;
 
 			$return		= '';

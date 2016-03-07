@@ -613,8 +613,8 @@ class Layout extends \gp\admin\Addon\Install{
 	/**
 	 *
 	 */
-	public function RemoteInstallConfirmed(){
-		$installer = parent::RemoteInstallConfirmed('themes');
+	public function RemoteInstallConfirmed($type='themes'){
+		$installer = parent::RemoteInstallConfirmed($type);
 		$this->GetPossible();
 		$this->UpdateLayouts( $installer );
 	}

@@ -121,7 +121,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 * Redirect addontext requests to correct path for TS 5.0+
 	 *
 	 */
-	function RedirectText(){
+	protected function RedirectText(){
 		$params = $_GET;
 		$params['cmd'] = 'AddonTextForm';
 

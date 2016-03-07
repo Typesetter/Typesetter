@@ -496,11 +496,6 @@ class Edit extends \gp\Page{
 
 		// otherwise, new sections
 		}else{
-
-			if( !isset($section_types[$arg]) ){
-				msg($langmessage['OOPS'].' (Unknown Type: '.$arg.')');
-				return false;
-			}
 			$new_section	= \gp\tool\Editing::DefaultContent($arg);
 		}
 

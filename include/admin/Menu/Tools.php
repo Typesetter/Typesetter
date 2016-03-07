@@ -222,12 +222,16 @@ class Tools{
 		//multiple section types
 		$type		= $_POST['content_type'];
 
-		
+
 		// multiple wrapped sections
 		if( strpos($type,'{') === 0 ){
 			$combo = json_decode($type,true);
 			if( $combo ){
-				$content = self::GetComboContent($combo);
+
+				$combo		+= array('wrapper_class'=>'gpRow');
+				$content	= self::GetComboContent($combo['types'],$combo['wrapper_class']);
+
+
 				$type = '';
 				// borrowed from \gp\Page\Edit::ResetFileTypes()
 				foreach($content as $section){
@@ -284,37 +288,33 @@ class Tools{
 	 * Get nested Section Combo content
 	 *
 	 */
-	public static function GetComboContent($combo, $combo_label='', $content=array()){
-		// add wrapper class if none given
-		$combo								+= array('wrapper_class'=>'gpRow');
-		// push the combo label through to all subsections if none (no sub-label) given
-		$combo								+= array('label'=>$combo_label); 
+	public static function GetComboContent($types, $wrapper_class, $content=array()){
+
+		//$combo								+= array('label'=>$combo_label);		// push the combo label through to all subsections if none (no sub-label) given
 
 		// create wrapper section
 		$section							= \gp\tool\Editing::DefaultContent('wrapper_section');
-		$section['contains_sections']		= count($combo['types']);
-		$section['attributes']['class']		= $combo['wrapper_class'];
+		$section['contains_sections']		= count($types);
+		$section['attributes']['class']		= $wrapper_class;
 		$content[]							= $section;
 
-		foreach($combo['types'] as $type){
-			if( is_array($type) ){
-				// go into recursion
-				$content = self::GetComboContent($type, $combo['label'], $content);
-			}else{
-				if( strpos($type,'.') ){
-					// has class(es)
-					list($type,$class)			= explode('.',$type,2);
-				}else{
-					$class						= '';
-				}
 
-				$section						= \gp\tool\Editing::DefaultContent($type, NULL, $combo['label']);
+		foreach($types as $type){
+			if( is_array($type) ){
+				$_wrapper_class = isset($type[1]) ? $type[1] : '';
+				$content = self::GetComboContent($type[0], $_wrapper_class, $content);
+			}else{
+
+				$class							= \gp\Page\Edit::TypeClass($type);
+				$section						= \gp\tool\Editing::DefaultContent($type);
 				$section['attributes']['class']	.= ' '.$class;
 				$content[]						= $section;
 			}
-    	}
-    return $content;
-  }
+
+		}
+
+		return $content;
+	}
 
 
 	/**

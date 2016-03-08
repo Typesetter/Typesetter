@@ -335,7 +335,7 @@ class Edit extends \gp\Page{
 	 * Send multiple sections to the client
 	 *
 	 */
-	public function NewNestedSection($types, $wrapper_class ){
+	public function NewNestedSection($types, $wrapper_class, $custom_combo_label=false){
 		global $langmessage;
 
 		$new_section		= \gp\tool\Editing::DefaultContent('wrapper_section');
@@ -349,9 +349,9 @@ class Edit extends \gp\Page{
 		foreach($types as $type){
 			if( is_array($type) ){
 				$_wrapper_class = isset($type[1]) ? $type[1] : '';
-				$output .= $this->NewNestedSection($type[0], $_wrapper_class);
+				$output .= $this->NewNestedSection($type[0], $_wrapper_class, $custom_combo_label);
 			}else{
-				$output .= $this->GetNewSection($type);
+				$output .= $this->GetNewSection($type, $custom_combo_label);
 			}
 
 		}
@@ -360,11 +360,11 @@ class Edit extends \gp\Page{
 		return $output;
 	}
 
-	public function GetNewSection($type){
+	public function GetNewSection($type, $custom_combo_label=false){
 
 		$class			= self::TypeClass($type);
 		$num			= time().rand(0,10000);
-		$new_section	= \gp\tool\Editing::DefaultContent($type);
+		$new_section	= \gp\tool\Editing::DefaultContent($type, NULL, $custom_combo_label);
 		$content		= \gp\tool\Output\Sections::RenderSection($new_section,$num,$this->title,$this->file_stats);
 
 		$new_section['attributes']['class']		.= ' '.$class;
@@ -645,9 +645,28 @@ class Edit extends \gp\Page{
 		$links				= \gp\tool\Plugins::Filter('NewSections',array($links));
 
 		foreach($links as $link){
-			$link += array('','','gpRow');
-			echo self::NewSectionLink( $link[0], $link[1], $link[2], $checkboxes );
+			$link += array('','','gpRow',false);
+			echo self::NewSectionLink( $link[0], $link[1], $link[2], $link[3], $checkboxes );
 		}
+	}
+
+
+	/**
+	 * Get nested types by recursion
+	 *
+	 */
+	public static function GetNestedTypes($types){
+		$return = $types;
+		foreach( $types as $key => $type ){
+			$wrapper_class = isset($type[1]) ? $type[1] : '';
+      		$label = isset($type[2]) ? $type[2] : '';
+			if( count($type) > 1 ){
+				$return[$key] = array('types'=>self::GetNestedTypes($type[0]), 'wrapper_class'=>$wrapper_class, 'label'=>$label);
+			}else{
+				$return[$key] = $type;
+			}
+		}
+		return $return;
 	}
 
 
@@ -655,12 +674,12 @@ class Edit extends \gp\Page{
 	 * Add link to manage section admin for nested section type
 	 *
 	 */
-	public static function NewSectionLink($types, $img, $wrapper_class = 'gpRow', $checkbox = false ){
+	public static function NewSectionLink($types, $img, $wrapper_class = 'gpRow', $custom_combo_label=false, $checkbox = false ){
 		global $dataDir, $page;
 		static $fi = 0;
 
 		$types			= (array)$types;
-		$text_label		= self::SectionLabel($types);
+		$text_label		= $custom_combo_label ? $custom_combo_label : self::SectionLabel($types);
 
 		$label			= '';
 		if( !empty($img) ){
@@ -673,8 +692,8 @@ class Edit extends \gp\Page{
 
 
 			if( count($types) > 1 ){
-				$q		= array('types' => $types,'wrapper_class'=>$wrapper_class);
-				$q		= json_encode($q);
+				$q = array('types' => self::GetNestedTypes($types), 'wrapper_class'=>$wrapper_class, 'label'=>$text_label);
+				$q = json_encode($q);
 			}else{
 				$q		= $types[0];
 			}
@@ -701,7 +720,7 @@ class Edit extends \gp\Page{
 		//links used for new sections
 		$attrs					= array('data-cmd'=>'AddSection','class'=>'preview_section');
 		if( count($types) > 1 ){
-			$attrs['data-response']	= $page->NewNestedSection($types, $wrapper_class);
+			$attrs['data-response']	= $page->NewNestedSection($types, $wrapper_class, $text_label);
 		}else{
 			$attrs['data-response']	= $page->GetNewSection($types[0]);
 		}

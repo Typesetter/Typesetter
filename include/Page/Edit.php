@@ -36,7 +36,7 @@ class Edit extends \gp\Page{
 		$cmd = \gp\tool::GetCommand();
 		$this->RunCommands($cmd);
 
-		$this->contentBuffer = ob_get_clean();
+		$this->contentBuffer .= ob_get_clean();
 	}
 
 

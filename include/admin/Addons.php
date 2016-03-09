@@ -541,10 +541,18 @@ class Addons extends \gp\admin\Addon\Install{
 			if( !isset($show[$upgrade_key]) ){
 				continue;
 			}
-			$show[$upgrade_key]['upgrade_from'] = $folder;
-			if( isset($info['Addon_Version']) ){
-				$show[$upgrade_key]['upgrade_version'] = $info['Addon_Version'];
+
+
+			if( !isset($info['Addon_Version']) ){
+				$show[$upgrade_key]['upgrade_from'] = $folder;
+				continue;
 			}
+
+			if( !isset($show[$upgrade_key]['upgrade_version']) || version_compare($show[$upgrade_key]['upgrade_version'], $info['Addon_Version'], '<') ){
+				$show[$upgrade_key]['upgrade_from']		= $folder;
+				$show[$upgrade_key]['upgrade_version']	= $info['Addon_Version'];
+			}
+
 		}
 
 		return $show;

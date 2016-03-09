@@ -479,7 +479,6 @@ class Edit extends \gp\Page{
 	protected function SaveSection($i,$arg, &$unused_sections ){
 		global $langmessage;
 
-		$section_types			= \gp\tool\Output\Sections::GetTypes();
 		$section_attrs			= array('gp_label','gp_color','gp_collapse','gp_type');
 
 		// moved / copied sections

@@ -219,7 +219,11 @@
 				html += '<li data-gp-area-id="'+$gp.AreaId($this)+'" '+style+' title="'+classes+'">';
 				html += '<div><a class="color_handle" data-cmd="SectionColor" style="background-color:'+color+'"></a>';
 				html += '<span class="options">';
-				html += '<a class="fa fa-pencil" data-cmd="SectionEdit" title="Edit"></a>';
+
+				if( !$this.hasClass('filetype-wrapper_section') ){
+					html += '<a class="fa fa-pencil" data-cmd="SectionEdit" title="Edit"></a>';
+				}
+
 				html += '<a class="fa fa-sliders" data-cmd="SectionOptions" title="Options"></a>';
 				html += '<a class="fa fa-files-o" data-cmd="CopySection" title="Copy"></a>';
 				html += '<a class="fa fa-trash RemoveSection" data-cmd="RemoveSection" title="Remove"></a>';

@@ -213,7 +213,7 @@ namespace gp{
 		 */
 		public static function Autoload($class){
 			global $config, $dataDir;
-			
+
 			$class		= trim($class,'\\');
 			$parts		= explode('\\',$class);
 			$part_0		= array_shift($parts);

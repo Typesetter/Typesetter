@@ -2100,11 +2100,9 @@ namespace gp\tool{
 			// attempt to send 304 response
 			if( $page->fileModTime > 0 ){
 				global $wbMessageBuffer;
-				$len = strlen(self::$head_content) + strlen(self::$head_js) + ob_get_length();
-				if( count($wbMessageBuffer) ){
-					$len += strlen( json_encode($wbMessageBuffer) );
-				}
-				\gp\tool::Send304( \gp\tool::GenEtag( $page->fileModTime, $len ) );
+				$len	= ob_get_length();
+				$etag	= \gp\tool::GenEtag( $page->fileModTime, $len, json_encode($wbMessageBuffer), self::$head_content, self::$head_js );
+				\gp\tool::Send304( $etag );
 			}
 		}
 

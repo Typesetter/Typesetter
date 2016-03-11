@@ -404,13 +404,15 @@ namespace gp\tool{
 			return $info;
 		}
 
-		/* static */
-		public static function GpOutLabel($key){
+
+		public static function GpOutLabel($info){
 			global $langmessage;
 
-			$info = self::GetgpOutInfo($key);
+			$label = $info['arg'];
+			if( empty($label) ){
+				$label = $info['gpOutCmd'];
+			}
 
-			$label = $key;
 			if( isset($info['link']) && isset($langmessage[$info['link']]) ){
 				$label = $langmessage[$info['link']];
 			}
@@ -462,10 +464,10 @@ namespace gp\tool{
 				echo \gp\tool::Link('Admin_Theme_Content/Edit/'.$page->gpLayout,$param,'cmd=DragArea&dragging='.urlencode($param).'&to=%s',array('data-cmd'=>'creq','class'=>'dragdroplink nodisplay')); //drag-drop link
 
 				echo '<div class="output_area_label">';
-				if( !$empty_container ){
-					echo self::GpOutLabel($info['arg']);
-				}else{
+				if( $empty_container ){
 					echo 'Empty Container';
+				}else{
+					echo self::GpOutLabel($info);
 				}
 				echo '</div>';
 

@@ -617,13 +617,13 @@ class Ajax extends \gp\admin\Menu{
 		echo '<tr><td>';
 		echo $langmessage['Target URL'];
 		echo '</td><td>';
-		echo '<input type="text" name="url" value="'.$args['url'].'" class="gpinput"/>';
+		echo '<input type="text" name="url" value="'.$args['url'].'" class="gpinput" required />';
 		echo '</td></tr>';
 
 		echo '<tr><td>';
 		echo $langmessage['label'];
 		echo '</td><td>';
-		echo '<input type="text" name="label" value="'.\gp\tool::LabelSpecialChars($args['label']).'" class="gpinput"/>';
+		echo '<input type="text" name="label" value="'.\gp\tool::LabelSpecialChars($args['label']).'" class="gpinput" required />';
 		echo '</td></tr>';
 
 		echo '<tr><td>';
@@ -645,7 +645,7 @@ class Ajax extends \gp\admin\Menu{
 
 		echo '<p>';
 		echo '<input type="hidden" name="cmd" value="'.htmlspecialchars($cmd).'" />';
-		echo '<input type="submit" name="" value="'.$submit.'" class="gpsubmit" data-cmd="gppost"/> ';
+		echo '<input type="submit" name="" value="'.$submit.'" class="gpsubmit gpvalidate" data-cmd="gppost"/> ';
 		echo '<input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
 		echo '</p>';
 
@@ -749,11 +749,13 @@ class Ajax extends \gp\admin\Menu{
 		if( empty($_POST['url']) || $_POST['url'] == 'http://' ){
 			return false;
 		}
-		$array['url'] = htmlspecialchars($_POST['url']);
+		$array['url']	= htmlspecialchars($_POST['url']);
+		$array['label'] = \gp\admin\Tools::PostedLabel($_POST['label']);
 
-		if( !empty($_POST['label']) ){
-			$array['label'] = \gp\admin\Tools::PostedLabel($_POST['label']);
+		if( empty($array['label']) ){
+			return false;
 		}
+
 		if( !empty($_POST['title_attr']) ){
 			$array['title_attr'] = htmlspecialchars($_POST['title_attr']);
 		}

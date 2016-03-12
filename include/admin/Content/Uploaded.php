@@ -165,7 +165,8 @@ namespace gp\admin\Content{
 		public function SetDirectory(){
 
 			$subdir		= '';
-			$path		= str_replace('\\','/',$this->page->requested); //get the current path
+			$path		= \gp\tool::WhichPage(); // get the current path, not using $page->requested since space characters will have been changed to underscores
+			$path		= str_replace('\\','/',$path);
 
 			//@since 5.0
 			if( strpos($path,'Admin/Uploaded') === 0 ){

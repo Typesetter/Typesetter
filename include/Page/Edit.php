@@ -756,25 +756,25 @@ class Edit extends \gp\Page{
 	 */
 	public function SaveThis( $backup = true ){
 
-		if( !is_array($this->meta_data) || !is_array($this->file_sections) ){
+		if( !is_array($this->draft_meta) || !is_array($this->file_sections) ){
 			return false;
 		}
 
 		//return true if nothing has changed
-		if( $this->checksum === $this->Checksum() ){
+		if( $backup && $this->checksum === $this->Checksum() ){
 			return true;
 		}
 
 		//file count
-		if( !isset($this->meta_data['file_number']) ){
-			$this->meta_data['file_number'] = \gp\tool\Files::NewFileNumber();
+		if( !isset($this->draft_meta['file_number']) ){
+			$this->draft_meta['file_number'] = \gp\tool\Files::NewFileNumber();
 		}
 
 		if( $backup ){
 			$this->SaveBackup(); //make a backup of the page file
 		}
 
-		if( !\gp\tool\Files::SaveData($this->draft_file,'file_sections',$this->file_sections,$this->meta_data) ){
+		if( !\gp\tool\Files::SaveData($this->draft_file,'file_sections',$this->file_sections,$this->draft_meta) ){
 			return false;
 		}
 
@@ -1276,13 +1276,16 @@ class Edit extends \gp\Page{
 
 		if( isset($_GET['dir']) ){
 			$dir_piece = $_GET['dir'];
+		}elseif( isset($this->draft_meta['gallery_dir']) ){
+			$dir_piece = $this->draft_meta['gallery_dir'];
 		}elseif( isset($this->meta_data['gallery_dir']) ){
 			$dir_piece = $this->meta_data['gallery_dir'];
 		}else{
 			$dir_piece = '/image';
 		}
+
 		//remember browse directory
-		$this->meta_data['gallery_dir'] = $dir_piece;
+		$this->draft_meta['gallery_dir'] = $dir_piece;
 		$this->SaveThis(false);
 
 		\gp\admin\Content\Uploaded::InlineList($dir_piece);

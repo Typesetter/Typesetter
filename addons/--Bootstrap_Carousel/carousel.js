@@ -15,10 +15,15 @@ $(function(){
 				$carousel.carousel('prev');
 			}).swipeleft(function() {
 				$carousel.carousel('next');
-			})
-			.filter('.start_paused')
-			.carousel('pause');
-		
+			});
+
+		//autostart if not editing
+		if( typeof(gp_editing) == 'undefined' ){
+			$carousel
+				.filter('.start_paused')
+				.carousel('pause');
+		}
+
 		if ( $carousel.find(".item").length < 2 ){
       		$carousel.find(".carousel-indicators, .carousel-control").hide();
     	}

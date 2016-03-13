@@ -185,7 +185,9 @@ var $gp = {
 		$('.messages').detach();
 
 		try{
-			$gp.CloseAdminBox();
+			if( typeof(gp_editing) == 'undefined' ){
+				$gp.CloseAdminBox();
+			}
 		}catch(a){}
 
 		try{

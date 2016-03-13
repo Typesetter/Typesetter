@@ -927,7 +927,7 @@ namespace gp{
 
 			//make sure defaults are set
 			$config += array(
-					'maximgarea'		=> '691200',
+					'maximgarea'		=> '',
 					'maxthumbsize'		=> '100',
 					'check_uploads'		=> false,
 					'colorbox_style'	=> 'example1',

@@ -531,7 +531,9 @@ namespace gp\admin\Content{
 			if( isset($this->imgTypes[$file_type]) && function_exists('imagetypes') ){
 
 				//check the image size
-				\gp\tool\Image::CheckArea($to,$config['maximgarea']);
+				if( $config['maximgarea'] > 0 ){
+					\gp\tool\Image::CheckArea($to,$config['maximgarea']);
+				}
 
 				self::CreateThumbnail($to);
 			}
@@ -895,8 +897,11 @@ namespace gp\admin\Content{
 		 */
 		public function MaxSize($added){
 			global $config;
-			foreach($added as $file){
-				\gp\tool\Image::CheckArea($file['realpath'],$config['maximgarea']);
+
+			if( $config['maximgarea'] > 0 ){
+				foreach($added as $file){
+					\gp\tool\Image::CheckArea($file['realpath'],$config['maximgarea']);
+				}
 			}
 		}
 

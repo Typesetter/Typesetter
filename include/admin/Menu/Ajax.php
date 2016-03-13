@@ -382,7 +382,14 @@ class Ajax extends \gp\admin\Menu{
 			echo '<tr><td>';
 			echo $langmessage['Copy'];
 			echo '</td><td>';
-			\gp\admin\Menu\Tools::ScrollList($gp_index);
+			$copy_list = array();
+			foreach($gp_index as $k => $v){
+				if( strpos($v,'special_') === 0 ){
+					continue;
+				}
+				$copy_list[$k] = $v;
+			}
+			\gp\admin\Menu\Tools::ScrollList($copy_list);
 			echo '</td></tr>';
 			echo '</table>';
 			echo sprintf($format_bottom,'CopyPage',$langmessage['Copy']);

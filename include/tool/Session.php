@@ -312,11 +312,20 @@ namespace gp\tool{
 
 			$session_id = $_COOKIE[gp_session_cookie];
 
-			\gp\tool\Files::Unlock('admin',sha1(sha1($session_id)));
+			self::Unlock($session_id);
 			self::cookie(gp_session_cookie);
 			self::CleanSession($session_id);
 			msg($langmessage['LOGGED_OUT']);
 		}
+
+		/**
+		 * Remove the admin session lock
+		 *
+		 */
+		public static function Unlock($session_id){
+			\gp\tool\Files::Unlock('admin',sha1(sha1($session_id)));
+		}
+
 
 		public static function CleanSession($session_id){
 			//remove the session_id from session_ids.php

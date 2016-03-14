@@ -484,6 +484,10 @@ class Port{
 	public function TransferSession(){
 		global $gpAdmin;
 
+		//unlock
+		$session_id = $_COOKIE[gp_session_cookie];
+		\gp\tool\Session::Unlock($session_id);
+
 		$username = $gpAdmin['username'];
 
 		// get user info

@@ -187,14 +187,13 @@ $gp.CacheInterface = function(callback){
 	//only continue if we can save
 	gp_editing.SaveChanges(function(){
 
-		var $interface						= $('#ck_area_wrap').children().detach();
 
 		if( typeof(gp_editor.sleep) == 'function' ){
 			gp_editor.sleep();
 		}
 
 
-		$gp.interface[$gp.curr_edit_id]		= $interface;
+		$gp.interface[$gp.curr_edit_id]		= $('#ck_area_wrap').children().detach();
 		$gp.editors[$gp.curr_edit_id]		= gp_editor;
 
 

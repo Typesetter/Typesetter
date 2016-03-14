@@ -485,8 +485,10 @@ class Port{
 		global $gpAdmin;
 
 		//unlock
-		$session_id = $_COOKIE[gp_session_cookie];
-		\gp\tool\Session::Unlock($session_id);
+		if( isset($_COOKIE[gp_session_cookie]) ){
+			$session_id = $_COOKIE[gp_session_cookie];
+			\gp\tool\Session::Unlock($session_id);
+		}
 
 		$username = $gpAdmin['username'];
 

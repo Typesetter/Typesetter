@@ -8,8 +8,6 @@ class Edit extends \gp\Page{
 
 	protected $draft_file;
 	protected $draft_exists			= false;
-	protected $draft_stats			= array();
-	protected $draft_meta			= array();
 	protected $revision;
 
 	protected $permission_edit;
@@ -152,8 +150,8 @@ class Edit extends \gp\Page{
 
 		if( $this->draft_exists ){
 			$this->file_sections	= \gp\tool\Files::Get($this->draft_file,'file_sections');
-			$this->draft_meta		= \gp\tool\Files::$last_meta;
-			$this->draft_stats		= \gp\tool\Files::$last_stats;
+			$this->meta_data		= \gp\tool\Files::$last_meta;
+			$this->file_stats		= \gp\tool\Files::$last_stats;
 		}
 
 		$this->checksum				= $this->Checksum();
@@ -756,7 +754,7 @@ class Edit extends \gp\Page{
 	 */
 	public function SaveThis( $backup = true ){
 
-		if( !is_array($this->draft_meta) || !is_array($this->file_sections) ){
+		if( !is_array($this->meta_data) || !is_array($this->file_sections) ){
 			return false;
 		}
 
@@ -766,15 +764,15 @@ class Edit extends \gp\Page{
 		}
 
 		//file count
-		if( !isset($this->draft_meta['file_number']) ){
-			$this->draft_meta['file_number'] = \gp\tool\Files::NewFileNumber();
+		if( !isset($this->meta_data['file_number']) ){
+			$this->meta_data['file_number'] = \gp\tool\Files::NewFileNumber();
 		}
 
 		if( $backup ){
 			$this->SaveBackup(); //make a backup of the page file
 		}
 
-		if( !\gp\tool\Files::SaveData($this->draft_file,'file_sections',$this->file_sections,$this->draft_meta) ){
+		if( !\gp\tool\Files::SaveData($this->draft_file,'file_sections',$this->file_sections,$this->meta_data) ){
 			return false;
 		}
 
@@ -876,7 +874,7 @@ class Edit extends \gp\Page{
 			return false;
 		}
 
-		if( !\gp\tool\Files::SaveData($this->file,'file_sections',$this->file_sections,$this->draft_meta) ){
+		if( !\gp\tool\Files::SaveData($this->file,'file_sections',$this->file_sections,$this->meta_data) ){
 			msg($langmessage['OOPS'].' (Draft not published)');
 			return false;
 		}
@@ -907,8 +905,8 @@ class Edit extends \gp\Page{
 		if( $this->draft_exists ){
 
 			$size = filesize($this->draft_file);
-			$time = $this->draft_stats['modified'];
-			$rows[$time] = $this->HistoryRow($time, $size, $this->draft_stats['username'],'draft');
+			$time = $this->file_stats['modified'];
+			$rows[$time] = $this->HistoryRow($time, $size, $this->file_stats['username'],'draft');
 		}
 
 
@@ -1276,8 +1274,6 @@ class Edit extends \gp\Page{
 
 		if( isset($_GET['dir']) ){
 			$dir_piece = $_GET['dir'];
-		}elseif( isset($this->draft_meta['gallery_dir']) ){
-			$dir_piece = $this->draft_meta['gallery_dir'];
 		}elseif( isset($this->meta_data['gallery_dir']) ){
 			$dir_piece = $this->meta_data['gallery_dir'];
 		}else{
@@ -1285,7 +1281,7 @@ class Edit extends \gp\Page{
 		}
 
 		//remember browse directory
-		$this->draft_meta['gallery_dir'] = $dir_piece;
+		$this->meta_data['gallery_dir'] = $dir_piece;
 		$this->SaveThis(false);
 
 		\gp\admin\Content\Uploaded::InlineList($dir_piece);

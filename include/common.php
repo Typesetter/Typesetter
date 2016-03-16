@@ -43,7 +43,7 @@ gp_defined('CMS_NAME',				'Typesetter');
 gp_defined('addon_browse_path',		CMS_DOMAIN.'/index.php');
 gp_defined('debug_path',			CMS_DOMAIN.'/index.php/Debug');
 
-gp_defined('gpversion','5.0-rc4');
+gp_defined('gpversion','5.0');
 gp_defined('gp_random',\gp\tool::RandomString());
 
 

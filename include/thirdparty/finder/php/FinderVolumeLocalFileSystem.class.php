@@ -426,10 +426,14 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 			'extract' => array()
 			);
 
+		$phar_data = class_exists('\PharData');
+
 
 		//.tar
-		$arcs['create']['application/x-tar']  = array( 'function'=>'PhpCompress', 'ext'=> 'tar' );
-		$arcs['extract']['application/x-tar'] = array( 'function'=>'PhpExtract', 'ext'=> 'tar' );
+		if( $phar_data ){
+			$arcs['create']['application/x-tar']  = array( 'function'=>'PhpCompress', 'ext'=> 'tar' );
+			$arcs['extract']['application/x-tar'] = array( 'function'=>'PhpExtract', 'ext'=> 'tar' );
+		}
 
 
 	    if( function_exists('gzopen') ){
@@ -440,19 +444,19 @@ class FinderVolumeLocalFileSystem extends FinderVolumeDriver {
 
 
 			// .tar.gz
-			$arcs['create']['application/x-gzip']  = array( 'function'=>'PhpCompress', 'ext'=>'tgz' );
-			$arcs['extract']['application/x-gzip'] = array( 'function'=>'PhpExtract', 'ext'=> 'tgz' );
+			if( $phar_data ){
+				$arcs['create']['application/x-gzip']  = array( 'function'=>'PhpCompress', 'ext'=>'tgz' );
+				$arcs['extract']['application/x-gzip'] = array( 'function'=>'PhpExtract', 'ext'=> 'tgz' );
+			}
 
 		}
 
 		// .tar.bz
-		if( function_exists('bzopen') ){
+		if( $phar_data && function_exists('bzopen') ){
 			$arcs['create']['application/x-bzip2']  = array( 'function'=>'PhpCompress', 'ext'=>'tbz' );
 			$arcs['extract']['application/x-bzip2'] = array( 'function'=>'PhpExtract', 'ext'=> 'tbz' );
 		}
 
-		$this->archivers = $arcs;
-		return;
 
 		if (!function_exists('exec')) {
 			$this->archivers = $arcs;

@@ -482,6 +482,11 @@
 	@import 'include/thirdparty/Bootstrap3/scss/bootstrap/scaffolding.scss';
 	@import 'include/thirdparty/Bootstrap3/scss/bootstrap/type.scss';
 	@import 'include/thirdparty/Bootstrap3/scss/bootstrap/grid.scss';
+
+	.bg-danger{
+		padding:15px;
+		}
+
 }
 
 #admincontent_inner #finder,

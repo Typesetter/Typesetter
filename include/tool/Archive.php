@@ -40,6 +40,38 @@ class Archive{
 
 	}
 
+	/**
+	 * Return a list of available
+	 *
+	 */
+	public static function Available(){
+
+		$available = array();
+
+		if( class_exists('\ZipArchive') ){
+			$available['zip'] = 'zip';
+		}
+
+		// hhvm does not handle phar.readonly the same way as php
+		// see https://github.com/facebook/hhvm/issues/4899
+		if( class_exists('\PharData') ){
+			if( !defined('HHVM_VERSION') || !ini_get('phar.readonly') ){
+
+				if( function_exists('gzopen') ){
+					$available['tgz'] = 'gzip';
+				}
+
+				if( function_exists('bzopen') ){
+					$available['tbz'] = 'bzip';
+				}
+
+				$available['tar'] = 'tar';
+			}
+		}
+
+		return $available;
+	}
+
 
 	/**
 	 * Initialize tar

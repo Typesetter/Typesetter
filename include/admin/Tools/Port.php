@@ -87,27 +87,7 @@ class Port{
 
 
 		//supported compression types
-		$this->avail_compress = array();
-
-		if( class_exists('ZipArchive') ){
-			$this->avail_compress['zip'] = 'zip';
-		}
-
-		// hhvm does not handle phar.readonly the same way as php
-		// see https://github.com/facebook/hhvm/issues/6647
-		if( !defined('HHVM_VERSION') || !ini_get('phar.readonly') ){
-
-			if( function_exists('gzopen') ){
-				$this->avail_compress['tgz'] = 'gzip';
-			}
-
-			if( function_exists('bzopen') ){
-				$this->avail_compress['tbz'] = 'bzip';
-			}
-
-			$this->avail_compress['tar'] = $langmessage['None'];
-		}
-
+		$this->avail_compress = \gp\tool\Archive::Available();
 	}
 
 
@@ -115,6 +95,11 @@ class Port{
 		global $langmessage;
 
 		$cmd = \gp\tool::GetCommand();
+
+		if( empty($this->avail_compress) ){
+			$cmd = '';
+		}
+
 		switch($cmd){
 
 			case 'do_export':
@@ -144,13 +129,32 @@ class Port{
 
 		echo '<h2>'.$langmessage['Export'].'</h2>';
 		echo $langmessage['Export About'];
-		echo $this->iframe;
 
-		$this->ExportForm();
+		if( empty($this->avail_compress) ){
+			echo '<p class="bg-danger">';
+			echo 'None of PHP\'s archive extensions are enabled. ';
+			echo 'Please enable <a href="http://php.net/manual/en/class.phardata.php">PharData</a> or <a href="http://php.net/manual/en/class.ziparchive.php">ZipArchive</a> in your PHP installation';
+			echo '</p>';
+
+		}else{
+			echo $this->iframe;
+
+			$this->ExportForm();
+		}
 
 		echo '<br/>';
 
 		$this->Exported();
+
+	}
+
+
+	/**
+	 *
+	 *
+	 */
+	protected function Warning(){
+
 
 	}
 

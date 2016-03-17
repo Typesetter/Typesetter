@@ -1939,8 +1939,8 @@ namespace gp{
 		 */
 		public static function JsonEncode($data){
 
-			$search		= array("\n","\r","\t",'<script','</script>');
-			$repl		= array('\n','\r','\t','<"+"script','<"+"/script>');
+			$search		= array('<script','<\/script>');
+			$repl		= array('<"+"script','<"+"\/script>');
 
 			$type = gettype($data);
 			switch( $type ){
@@ -1956,9 +1956,13 @@ namespace gp{
 				return $data;
 
 				case 'string':
-				$data		= str_replace('\\','\\\\',$data);
-				$data		= preg_replace("!([\b\f\"\\'])!", "\\\\$1", $data);
-				return '"'.str_replace($search,$repl,$data).'"';
+				if( gp_php53 ){
+					$data		= htmlspecialchars_decode(htmlspecialchars($data, ENT_IGNORE, 'UTF-8'));
+				}else{
+					$data		= htmlspecialchars_decode(htmlspecialchars($data, ENT_SUBSTITUTE, 'UTF-8'));
+				}
+				$data = json_encode($data);
+				return str_replace($search,$repl,$data);
 
 				case 'object':
 					$data = get_object_vars($data);

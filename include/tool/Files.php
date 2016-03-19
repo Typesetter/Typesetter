@@ -710,7 +710,7 @@ namespace gp\tool{
 		public static function SaveArray(){
 
 			if( gp_data_type === '.json' ){
-				throw new Exception('SaveArray() cannot be used for json data saving');
+				throw new Exception('SaveArray() cannot be used for json data. Use SaveData() instead');
 			}
 
 

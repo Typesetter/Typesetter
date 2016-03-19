@@ -309,6 +309,7 @@ namespace gp\admin{
 													);
 
 			$scripts['Admin/Browser']				= array(	'class'		=> '\\gp\\admin\\Content\\Browser',
+																'permission' => 'Admin_Uploaded',
 													);
 
 
@@ -337,6 +338,7 @@ namespace gp\admin{
 			return false;
 		}
 
+
 		/**
 		 * Determine if a user has permissions for the $script
 		 * @static
@@ -350,8 +352,8 @@ namespace gp\admin{
 			}
 
 			$script		= str_replace('/','_',$script);
+			//$script		= self::WhichPermission($script);
 			$granted	= ','.$granted.',';
-
 			if( strpos($granted,','.$script.',') !== false ){
 				return true;
 			}
@@ -359,6 +361,48 @@ namespace gp\admin{
 			return false;
 
 		}
+
+
+		/**
+		 * Return the permission setting that should be checked against a list of grated permissions
+		 * Admin_Browser -> Admin_Uploaded
+		 * Admin_Theme_Content/Text -> Admin_Theme_Content
+		 *
+		 */
+		public static function WhichPermission($script){
+
+			// prepare list of permissions
+			$scripts	= self::AdminScripts();
+			$possible	= array();
+			foreach($scripts as $pscript => $info){
+				$pscript = str_replace('/','_',$pscript);
+				if( isset($info['permission']) ){
+					$possible[$pscript] = $info['permission'];
+
+				}elseif( isset($info['label']) ){
+					$possible[$pscript] = $pscript;
+				}
+			}
+
+
+			// find the relevant permission in the list of possible permissions
+			$script		= str_replace('/','_',$script);
+			$parts 		= explode('_',$script);
+
+			while($parts){
+
+				$check = implode('_',$parts);
+				if( !isset($possible[$check]) ){
+					array_pop($parts);
+					continue;
+				}
+
+				return $possible[$check];
+			}
+
+			return $script;
+		}
+
 
 		/**
 		 * Determine if a user can edit a specific page

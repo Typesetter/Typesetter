@@ -351,8 +351,7 @@ namespace gp\admin{
 				return true;
 			}
 
-			$script		= str_replace('/','_',$script);
-			//$script		= self::WhichPermission($script);
+			$script		= self::WhichPermission($script);
 			$granted	= ','.$granted.',';
 			if( strpos($granted,','.$script.',') !== false ){
 				return true;

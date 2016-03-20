@@ -19,8 +19,6 @@ defined('is_running') or die('Not an entry point...');
  * 		Fix self closing tags
  * 		Handle use of inline regular expressions in javascript
  *
- * 		(HTML_Output.php does fix some of these)
- *
  * To Do
  * 	Parse Error Handling
  *  	What to do with content after last tag?
@@ -62,7 +60,7 @@ class HTML extends \gp\tool\Editing\HTMLParse{
 								'meta'=>		array('content'=>''),
 								'optgroup'=>	array('label'=>''),
 								'param'=>		array('name'=>''),
-								'script'=>		array('type'=>'text/javascript'),
+								'script'=>		array(),
 								'style'=>		array('type'=>''),
 								'textarea'=>	array('cols'=>'','rows'=>'')
 								);
@@ -247,43 +245,3 @@ class HTML extends \gp\tool\Editing\HTMLParse{
 		return htmlspecialchars($text,ENT_COMPAT,'UTF-8',false);
 	}
 }
-
-
-
-
-/* Test Case
- *
- */
-
-$test = '<H2 class=heading class="not_header" id="head">
-	Always Easy</h2>
-<div class="gp_nosave">
-	<script> </script>
-	<a href="hmm" class="ExtraEditLnks">link</a>
-	div</div>
-<p class="hmm" style="display:block">
-	This is some text</p>
-<script>var a = "</script>";
-var b = "<script>";
-
-
-//this is a quote
-
-</SCript>
-
-< and some text
-
-<!-- this is a-comment ----- another -->
-
-<p>
-	another</p>
-<input checked type="checkbox" name="check">
-<style type="text/css">
-css style</style>
-<div style="display: block; background: url(\'this.jpg\') repeat scroll 0% 0% transparent;">
-	\\\\ slashes</div>
-<p>
-	And this</p>
-<hr style="width: 100px;" />
-content after.. poorly fomatted xml
-';

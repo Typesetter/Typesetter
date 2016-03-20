@@ -38,6 +38,13 @@ class HTMLParse{
 				break;
 			}
 
+			//comment
+			if( substr($this->doc,$pos,4) === '<!--' ){
+				$offset = $pos + 4;
+				$this->CommentContent($offset);
+				continue;
+			}
+
 			//get tag name
 			$tag_name = $this->TagName($pos+1,$name_len);
 			if( !$tag_name ){
@@ -54,13 +61,6 @@ class HTMLParse{
 
 			//advance offset to just after <tag_name
 			$offset = $pos+1+$name_len;
-
-			//comments
-			if( ($tag_name == '!--') || $tag_name == '!' ){
-				$this->CommentContent($offset);
-				continue;
-			}
-
 			$new_element = array();
 			$new_element['tag'] = $tag_name;
 

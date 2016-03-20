@@ -113,47 +113,81 @@ class HTMLParse{
 	}
 
 
+	/**
+	 * Parse html attributes
+	 * match name="value", name=value or name
+	 * accounts for name="value ' value"
+	 *
+	 */
 	public function GetAttributes(&$offset){
 
-		//match name="value", name=value or name
-		// accounts for name="value ' value"
-		$pattern_name = '([^\'"<>=\s/]+)';
-		$pattern_value = '(?:\s*=\s*((?:([\'"])(?U)[^\4]*\4)|(?:[^\'"<>/\s]+)))?';
-		$pattern = '#^\s+('.$pattern_name.$pattern_value.')#';
-
-		$attributes = array();
-		do{
-
-			//get the substr because offset is not avail until php 4.3.3
-			$this->doc = substr($this->doc,$offset);
-
-			//get the substr because offset is not avail until php 4.3.3
-			$continue = false;
-			if( preg_match($pattern, $this->doc, $matches, PREG_OFFSET_CAPTURE) ){
-				$attr_string = $matches[1][0];
-				$offset = $matches[1][1] + strlen($attr_string);
-				$continue = true;
+		$this->doc		= substr($this->doc,$offset);
+		$pattern_name	= '#^\s+([^\'"<>=\s/]+)\s*(=?)\s*#';
+		$attributes		= array();
 
 
-				//
-				$attr_name = $matches[2][0];
-				$attr_value = '';
-				if( isset($matches[3]) ){
-					$attr_value = $matches[3][0];
-					if( !empty($matches[4][0]) ){
-						$attr_value = trim($attr_value,'"');
-					}
-				}
-				if( !isset($attributes[$attr_name]) ){
-					$attributes[$attr_name] = $attr_value;
+		while( preg_match($pattern_name, $this->doc, $matches) ){
+
+			$attr_name	= $matches[1];
+			$attr_value = null;
+			$offset		= strlen($matches[0]);
+
+			//get attribute value
+			if( !empty($matches[2]) ){
+
+				$attr_match			= $this->MatchAttribute($offset);
+				if( $attr_match ){
+					$offset += strlen($attr_match[0]);
+					$attr_value = $attr_match[1];
 				}
 			}
 
-		}while($continue);
+
+			if( !isset($attributes[$attr_name]) ){
+				$attributes[$attr_name] = $attr_value;
+			}
+
+			$this->doc = substr($this->doc,$offset);
+			$offset = 0;
+		}
+
 
 		$offset = 0;
 
 		return $attributes;
+	}
+
+	/**
+	 * Get an html attribute value
+	 *
+	 */
+	protected function MatchAttribute(&$offset){
+
+		$char = $this->doc[$offset];
+
+		//double quote
+		if( $char === '"' ){
+			if( preg_match('#\\G"([^"]+)"#', $this->doc, $matches, 0, $offset) ){
+				return $matches;
+			}
+			return;
+		}
+
+		//single quote
+		if( $char == "'" ){
+			if( preg_match('#\\G\'([^\']+)\'#', $this->doc, $matches, 0, $offset) ){
+				return $matches;
+			}
+			return;
+		}
+
+
+
+		//not quoted
+		if( preg_match('#\\G\s*([^\'"<>=\s/]+)#', $this->doc, $matches, 0, $offset) ){
+			return $matches;
+		}
+
 	}
 
 

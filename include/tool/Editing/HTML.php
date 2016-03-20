@@ -72,8 +72,6 @@ class HTML extends \gp\tool\Editing\HTMLParse{
 
 		$this->dom_array = \gp\tool\Plugins::Filter('Html_Output',array($this->dom_array));
 
-		msg($this->dom_array);
-
 		$this->Clean();
 
 		$this->Rebuild();
@@ -164,9 +162,14 @@ class HTML extends \gp\tool\Editing\HTMLParse{
 		}
 	}
 
+	/**
+	 * Rebuild the html content from the $dom_array
+	 *
+	 */
 	public function Rebuild(){
 
-		$this->result = '';
+		$this->result	= '';
+		$open_tags		= array();
 
 		foreach($this->dom_array as $dom_element){
 
@@ -185,34 +188,59 @@ class HTML extends \gp\tool\Editing\HTMLParse{
 			}
 
 			if( isset($dom_element['tag']) ){
-				$tag = strtolower($dom_element['tag']);
-				$this->result .= '<'.$tag;
-
-				if( isset($dom_element['attributes']) && is_array($dom_element['attributes']) ){
-
-					if( isset($this->required_attr[$tag]) && is_array($this->required_attr[$tag]) ){
-						$dom_element['attributes'] += $this->required_attr[$tag];
-					}
-
-					foreach($dom_element['attributes'] as $attr_name => $attr_value){
-
-						if( empty($attr_value) && isset($this->empty_attributes[$attr_name]) ){
-							$attr_value = $attr_name;
-						}
-
-						$this->result .= ' '.strtolower($attr_name).'="'.$this->htmlspecialchars($attr_value).'"';
-					}
-				}
-
-				if( isset($this->self_closing_tags[$tag]) ){
-					$this->result .= ' />';
-				}elseif( isset($dom_element['self_closing']) && $dom_element['self_closing'] ){
-					$this->result .= ' />';
-				}else{
-					$this->result .= '>';
-				}
+				$this->result .= $this->BuildTag($dom_element);
 			}
 		}
+	}
+
+
+	/**
+	 * Rebuild an html tag
+	 *
+	 */
+	public function BuildTag($dom_element){
+
+		$tag	= strtolower($dom_element['tag']);
+		$result	= '<'.$tag;
+
+		if( isset($dom_element['attributes']) && is_array($dom_element['attributes']) ){
+			$result .= $this->BuildAttributes($tag, $dom_element);
+		}
+
+		if( isset($this->self_closing_tags[$tag]) ){
+			$result .= ' />';
+		}elseif( isset($dom_element['self_closing']) && $dom_element['self_closing'] ){
+			$result .= ' />';
+		}else{
+			$result .= '>';
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Rebuild a list of attributes
+	 *
+	 */
+	public function BuildAttributes($tag, $dom_element){
+
+		$result = '';
+
+		if( isset($this->required_attr[$tag]) && is_array($this->required_attr[$tag]) ){
+			$dom_element['attributes'] += $this->required_attr[$tag];
+		}
+
+		foreach($dom_element['attributes'] as $attr_name => $attr_value){
+
+			if( is_null($attr_value) || isset($this->empty_attributes[$attr_name]) ){
+				$result .= ' '.$attr_name;
+				continue;
+			}
+
+			$result .= ' '.strtolower($attr_name).'="'.$this->htmlspecialchars($attr_value).'"';
+		}
+
+		return $result;
 	}
 
 	public function htmlspecialchars($text){
@@ -259,8 +287,3 @@ css style</style>
 <hr style="width: 100px;" />
 content after.. poorly fomatted xml
 ';
-
-//$gp_html_output = new gp_html_output($test);
-//$text = $gp_html_output->result;
-//msg('<textarea cols="100" rows="10">'.htmlspecialchars($gp_html_output->result).'</textarea>');
-

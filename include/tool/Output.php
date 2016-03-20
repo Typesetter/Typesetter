@@ -1314,10 +1314,7 @@ namespace gp\tool{
 				echo "\n".'<meta name="robots" content="'.$page->TitleInfo['rel'].'" />';
 			}
 
-			if( !isset($config['showgplink']) || $config['showgplink'] ){
-				echo "\n<meta name=\"generator\" content=\"Typesetter CMS\" />";
-			}
-
+			echo "\n<meta name=\"generator\" content=\"Typesetter CMS\" />";
 		}
 
 

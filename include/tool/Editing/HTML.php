@@ -72,6 +72,8 @@ class HTML extends \gp\tool\Editing\HTMLParse{
 
 		$this->dom_array = \gp\tool\Plugins::Filter('Html_Output',array($this->dom_array));
 
+		msg($this->dom_array);
+
 		$this->Clean();
 
 		$this->Rebuild();

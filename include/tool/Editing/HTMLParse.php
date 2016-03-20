@@ -40,6 +40,7 @@ class HTMLParse{
 
 			//comment
 			if( substr($this->doc,$pos,4) === '<!--' ){
+				$this->dom_array[] = substr($this->doc,$offset,$pos-$offset); //get content before comment
 				$offset = $pos + 4;
 				$this->CommentContent($offset);
 				continue;
@@ -54,8 +55,7 @@ class HTMLParse{
 
 			//content
 			if( $pos > $offset ){
-				$content = substr($this->doc,$offset,$pos-$offset);
-				$this->dom_array[] = $content;
+				$this->dom_array[] = substr($this->doc,$offset,$pos-$offset);
 			}
 
 
@@ -98,6 +98,11 @@ class HTMLParse{
 
 	}
 
+
+	/**
+	 * Parse an html tag name
+	 *
+	 */
 	public function TagName($pos,&$name_len){
 		$tag_name = false;
 		$name_len = strspn($this->doc,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890/!:--',$pos);
@@ -152,8 +157,11 @@ class HTMLParse{
 	}
 
 
-	//support simple comments <!-- comments go here -->
-	// does not support full sgml comments <!------> second comment -->
+	/**
+	 * Parse HTML comments <!-- comments go here -->
+	 * Does not support full sgml comments <!------> second comment -->
+	 *
+	 */
 	public function CommentContent(&$offset){
 
 		$this->doc = substr($this->doc,$offset);

@@ -26,24 +26,32 @@ class Scss extends \Leafo\ScssPhp\Compiler{
 			return "$value[1]($arg)";
 		}
 
-		$quote	= '';
-		if( $arg[0] == '"' ){
-			$quote	= '"';
-			$arg	= trim($arg,'"');
-		}elseif( $arg[0] == "'" ){
-			$quote	= "'";
-			$arg	= trim($arg,"'");
-		}
-
-		//fix path if it is relative
-		if( self::isPathRelative($arg) ){
-			$arg = $this->url_root.'/'.$arg;
-			$arg = self::normalizePath($arg);
-		}
-
-		$arg = $quote.$arg.$quote;
+		$arg	= $this->FixRelative($arg);
 
 		return "$value[1]($arg)";
+	}
+
+	/**
+	 * Fix a relative path
+	 *
+	 */
+	public function FixRelative($path){
+
+		$quote	= '';
+		if( $path[0] == '"' ){
+			$quote	= '"';
+			$path	= trim($path,'"');
+		}elseif( $path[0] == "'" ){
+			$quote	= "'";
+			$path	= trim($path,"'");
+		}
+
+		if( self::isPathRelative($path) ){
+			$path = $this->url_root.'/'.$path;
+			$path = self::normalizePath($path);
+		}
+
+		return $quote.$path.$quote;
 	}
 
 	public static function isPathRelative($path){

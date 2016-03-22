@@ -670,7 +670,7 @@ class Edit extends \gp\Page{
 		if( $checkbox ){
 
 
-			if( count($types) > 1 || is_Array($types[0]) ){
+			if( count($types) > 1 || is_array($types[0]) ){
 				$q		= array('types' => $types,'wrapper_class'=>$wrapper_class);
 				$q		= json_encode($q);
 			}else{

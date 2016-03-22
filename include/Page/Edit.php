@@ -739,7 +739,7 @@ class Edit extends \gp\Page{
 
 		$class = '';
 
-		if( strpos($type,'.') ){
+		if( !is_array($type) && strpos($type,'.') ){
 			list($type,$class) = explode('.',$type,2);
 		}
 

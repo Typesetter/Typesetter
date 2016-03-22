@@ -688,7 +688,7 @@ class Edit extends \gp\Page{
 			}
 
 			$id		= 'checkbox_'.md5($q);
-			echo '<div data-type_id="' . $type_id . '">';
+			echo '<div data-type-id="' . $type_id . '">';
 			echo '<input name="content_type" type="radio" value="'.htmlspecialchars($q).'" id="'.$id.'" required '.$checked.' />';
 			echo '<label for="'.$id.'">';
 			echo $label;
@@ -704,7 +704,7 @@ class Edit extends \gp\Page{
 			$attrs['data-response']	= $page->GetNewSection($types[0]);
 		}
 
-		return '<div data-type_id="' . $type_id . '"><a '.\gp\tool::LinkAttr($attrs,$label).'>'.$label.'</a></div>';
+		return '<div data-type-id="' . $type_id . '"><a '.\gp\tool::LinkAttr($attrs,$label).'>'.$label.'</a></div>';
 	}
 
 	/**

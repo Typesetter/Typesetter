@@ -658,6 +658,7 @@ class Edit extends \gp\Page{
 
 		$types			= (array)$types;
 		$text_label		= self::SectionLabel($types);
+		$type_id = substr( base_convert( md5( json_encode( $types ) ), 16, 32 ), 0, 6);
 
 		$label			= '';
 		if( !empty($img) ){
@@ -669,7 +670,7 @@ class Edit extends \gp\Page{
 		if( $checkbox ){
 
 
-			if( count($types) > 1 ){
+			if( count($types) > 1 || is_Array($types[0]) ){
 				$q		= array('types' => $types,'wrapper_class'=>$wrapper_class);
 				$q		= json_encode($q);
 			}else{
@@ -687,7 +688,7 @@ class Edit extends \gp\Page{
 			}
 
 			$id		= 'checkbox_'.md5($q);
-			echo '<div>';
+			echo '<div data-type_id="' . $type_id . '">';
 			echo '<input name="content_type" type="radio" value="'.htmlspecialchars($q).'" id="'.$id.'" required '.$checked.' />';
 			echo '<label for="'.$id.'">';
 			echo $label;
@@ -703,7 +704,7 @@ class Edit extends \gp\Page{
 			$attrs['data-response']	= $page->GetNewSection($types[0]);
 		}
 
-		return '<div><a '.\gp\tool::LinkAttr($attrs,$label).'>'.$label.'</a></div>';
+		return '<div data-type_id="' . $type_id . '"><a '.\gp\tool::LinkAttr($attrs,$label).'>'.$label.'</a></div>';
 	}
 
 	/**

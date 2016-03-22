@@ -698,7 +698,7 @@ class Edit extends \gp\Page{
 
 		//links used for new sections
 		$attrs					= array('data-cmd'=>'AddSection','class'=>'preview_section');
-		if( count($types) > 1 ){
+		if( count($types) > 1 || is_array($types[0]) ){
 			$attrs['data-response']	= $page->NewNestedSection($types, $wrapper_class);
 		}else{
 			$attrs['data-response']	= $page->GetNewSection($types[0]);

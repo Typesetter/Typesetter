@@ -397,7 +397,10 @@ namespace gp\tool\Output{
 		 */
 		static function SectionAttributes($attrs,$type){
 
-
+			if( is_array($type) ){
+				return '';
+			}
+			
 			switch($type){
 				case 'image':
 					$attrs['src'] = \gp\tool::GetDir($attrs['src']);

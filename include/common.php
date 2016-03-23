@@ -303,7 +303,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	$mess .= '</p></fieldset>';
 
 	if( gpdebug === true ){
-		message($mess);
+		msg($mess);
 	}elseif( class_exists('\\gp\tool\\Emailer') && $report_error ){
 		$mailer = new \gp\tool\Emailer();
 		$mailer->SendEmail(gpdebug, 'debug ', $mess);
@@ -402,7 +402,7 @@ function GetMessages( $wrap = true ){
 	if( \gp\tool::loggedIn() && count($gp_not_writable) > 0 ){
 		$files = '<ul><li>'.implode('</li><li>',$gp_not_writable).'</li></ul>';
 		$message = sprintf($langmessage['not_writable'],\gp\tool::GetUrl('Admin/Status')).$files;
-		message($message);
+		msg($message);
 		$gp_not_writable = array();
 	}
 
@@ -555,8 +555,8 @@ function IncludeScript($file, $include_variation = 'include_once', $globals = ar
 
 /**
  * Similar to print_r and var_dump, but it is output buffer handling function safe
- * message( pre(array(array(true))) );
- * message( pre(new tempo()) );
+ * msg( pre(array(array(true))) );
+ * msg( pre(new tempo()) );
  */
 function pre($mixed){
 	static $level = 0;

@@ -167,7 +167,7 @@ class HTMLParse{
 
 		//double quote
 		if( $char === '"' ){
-			if( preg_match('#\\G"([^"]+)"#', $this->doc, $matches, 0, $offset) ){
+			if( preg_match('#\\G"([^"]*)"#', $this->doc, $matches, 0, $offset) ){
 				return $matches;
 			}
 			return;
@@ -175,7 +175,7 @@ class HTMLParse{
 
 		//single quote
 		if( $char == "'" ){
-			if( preg_match('#\\G\'([^\']+)\'#', $this->doc, $matches, 0, $offset) ){
+			if( preg_match('#\\G\'([^\']*)\'#', $this->doc, $matches, 0, $offset) ){
 				return $matches;
 			}
 			return;

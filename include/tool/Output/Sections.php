@@ -412,11 +412,6 @@ namespace gp\tool\Output{
 				$attr_string .= ' '.htmlspecialchars($attr).'="'.htmlspecialchars($value).'"';
 			}
 
-			if( is_array($type) ){
-				trigger_error('SectionAttributes() type is array '. $attr_string);
-			}
-
-
 			return $attr_string;
 		}
 

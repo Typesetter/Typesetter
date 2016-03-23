@@ -194,14 +194,14 @@ class Css{
 
 				// handle relative and absolute paths
 				$relative	= self::GetRelPath($less);
-				$less		= $dataDir.'/'.ltrim($less,'/');
+				$less		= $dataDir.'/'.ltrim($relative,'/');
 
 				$parser->ParseFile( $less, \gp\tool::GetDir(dirname($relative)) );
 			}
 
 			$compiled = $parser->getCss();
 
-		}catch(Exception $e){
+		}catch( \Exception $e){
 			if( \gp\tool::LoggedIn() ){
 				msg('LESS Compile Failed: '.$e->getMessage());
 			}

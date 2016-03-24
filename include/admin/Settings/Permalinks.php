@@ -483,6 +483,12 @@ class Permalinks{
 		\gp\tool::SetLinkPrefix();
 
 
+		//without server name, we can't get a valid absoluteUrl
+		if( \gp\tool::ServerName() === false ){
+			return false;
+		}
+
+
 		$abs_url					= \gp\tool::AbsoluteUrl('Site_Map','',true,false); //can't be special_site_map, otherwise \gp\tool::IndexToTitle() will be called during install
 		$_SERVER['gp_rewrite']		= $rewrite_before;
 		\gp\tool::SetLinkPrefix();

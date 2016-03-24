@@ -10,6 +10,7 @@ namespace gp\tool{
 		public static $redirected;
 		public static $maxlength = -1;	// The maximum bytes to read. eg: stream_get_contents($handle, $maxlength)
 		public static $debug;
+		public static $methods	= array('stream','fopen','fsockopen');
 
 
 
@@ -27,8 +28,7 @@ namespace gp\tool{
 		*/
 		public static function Test(){
 
-			$methods = array('stream','fopen','fsockopen');
-			foreach($methods as $method){
+			foreach(self::$methods as $method){
 				if( self::Supported($method) ){
 					return $method;
 				}
@@ -48,11 +48,10 @@ namespace gp\tool{
 			}
 
 			$url_fopen = \gp\tool::IniGet('allow_url_fopen');
-			$php5 = version_compare(phpversion(), '5.0', '>=');
 
 			switch($method){
 				case 'stream':
-				return $url_fopen && $php5;
+				return $url_fopen;
 
 				case 'fopen':
 				return $url_fopen;
@@ -84,9 +83,11 @@ namespace gp\tool{
 		 */
 		public static function Get($url,$args=array()){
 
-			self::$debug			= array();
-			self::$debug['Redir']	= 0;
-			self::$redirected		= null;
+			self::$debug					= array();
+			self::$debug['Redir']			= 0;
+			self::$debug['FailedMethods']	= '';
+			self::$debug['NotSupported']	= '';
+			self::$redirected				= null;
 
 			return self::_get($url,$args);
 		}
@@ -94,15 +95,17 @@ namespace gp\tool{
 		protected static function _get($url, $args = array()){
 
 			$url					= rawurldecode($url);
-			$methods				= array('stream','fopen','fsockopen');
 
-			foreach($methods as $method){
+			foreach(self::$methods as $method){
+
 				if( !self::Supported($method) ){
+					self::$debug['NotSupported']	.= $method.',';
 					continue;
 				}
 
 				$result = self::GetMethod($method,$url,$args);
 				if( $result === false ){
+					self::$debug['FailedMethods'] .= $method.',';
 					return false;
 				}
 
@@ -162,7 +165,6 @@ namespace gp\tool{
 				return self::fsockopen_request($url,$args);
 
 				default:
-					//message($langmessage['OOPS']);
 				return false;
 
 			}
@@ -205,9 +207,10 @@ namespace gp\tool{
 
 			$context = stream_context_create($arrContext);
 
-			$handle = @fopen($url, 'r', false, $context);
+			$handle = fopen($url, 'r', false, $context);
 
 			if( !$handle ){
+				self::$debug['stream']	= 'no handle';
 				return false;
 			}
 
@@ -234,9 +237,12 @@ namespace gp\tool{
 
 			$url		= self::FixScheme($url);
 			$arrURL		= parse_url($url);
-			$handle		= @fopen($url, 'r');
+			$handle		= fopen($url, 'r');
 
-			if ( !$handle ) return false;
+			if( !$handle ){
+				self::$debug['fopen']	= 'no handle';
+				return false;
+			}
 
 			self::stream_timeout($handle,$r['timeout']);
 
@@ -300,9 +306,10 @@ namespace gp\tool{
 			$iError = null; // Store error number
 			$strError = null; // Store error string
 
-			$handle = @fsockopen( $fsockopen_host, $arrURL['port'], $iError, $strError, $r['timeout'] );
+			$handle = fsockopen( $fsockopen_host, $arrURL['port'], $iError, $strError, $r['timeout'] );
 
 			if( $handle === false ){
+				self::$debug['fsock']	= 'no handle';
 				return false;
 			}
 			self::stream_timeout($handle,$r['timeout']);

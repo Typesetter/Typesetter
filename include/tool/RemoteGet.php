@@ -150,11 +150,6 @@ namespace gp\tool{
 			//decide how to get
 			switch($method){
 
-	/*
-				case 'http_request':
-				return self::http_request($url,$args);
-	*/
-
 				case 'stream':
 				return self::stream_request($url,$args);
 
@@ -172,12 +167,10 @@ namespace gp\tool{
 		}
 
 
-		public static function http_request($url,$r){
-
-
-
-		}
-
+		/**
+		 * Fetch a url using php's stream_get_contents() function
+		 *
+		 */
 		public static function stream_request($url,$r){
 
 			$url		= self::FixScheme($url);
@@ -232,7 +225,10 @@ namespace gp\tool{
 			return array('headers' => $processedHeaders['headers'], 'body' => $strResponse, 'response' => $processedHeaders['response'], 'cookies' => $processedHeaders['cookies']);
 		}
 
-
+		/**
+		 * Fetch a url using php's fopen() function
+		 *
+		 */
 		public static function fopen_request($url,$r){
 
 			$url		= self::FixScheme($url);
@@ -289,6 +285,10 @@ namespace gp\tool{
 		}
 
 
+		/**
+		 * Fetch a url using php's fsockopen() function
+		 *
+		 */
 		public static function fsockopen_request($url,$r){
 
 			$arrURL = parse_url($url);
@@ -347,6 +347,10 @@ namespace gp\tool{
 			return array('headers' => $processedHeaders['headers'], 'body' => $process['body'], 'response' => $processedHeaders['response'], 'cookies' => $processedHeaders['cookies']);
 		}
 
+		/**
+		 * Set the stream timeout
+		 *
+		 */
 		public static function stream_timeout($handle,$time){
 
 			if( !function_exists('stream_set_timeout') ){

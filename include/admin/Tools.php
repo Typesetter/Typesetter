@@ -669,7 +669,7 @@ namespace gp\admin{
 						continue;
 					}
 
-					echo '<li><a href="'.addon_browse_path.'/'.$url.'/'.$addon_id.'" data-cmd="remote">'.$label.'</a></li>';
+					echo '<li><a href="'.$url.'/'.$addon_id.'" data-cmd="remote">'.$label.'</a></li>';
 
 				}
 

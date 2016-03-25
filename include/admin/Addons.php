@@ -51,6 +51,7 @@ class Addons extends \gp\admin\Addon\Install{
 				$this->LocalInstall();
 			break;
 
+			case 'remote_install':
 			case 'RemoteInstall':
 				$this->RemoteInstall();
 			return;
@@ -604,12 +605,17 @@ class Addons extends \gp\admin\Addon\Install{
 
 		//upgrade cms
 		if( isset($addon_config['id']) && isset(\gp\admin\Tools::$new_versions[$addon_config['id']]) ){
-			$version_info = \gp\admin\Tools::$new_versions[$addon_config['id']];
-			echo '<div class="gp_notice">';
-			echo '<a href="'.addon_browse_path.'/Plugins?id='.$addon_config['id'].'" data-cmd="remote">';
-			echo $langmessage['new_version'];
-			echo ' &nbsp; '.$version_info['version'].' ('.CMS_READABLE_DOMAIN.')</a>';
-			echo '</div>';
+
+			$new_version = \gp\admin\Tools::$new_versions[$addon_config['id']];
+
+			if( version_compare($new_version['version'],$addon_config['version'],'>') ){
+
+				echo '<div class="gp_notice">';
+				echo '<a href="'.addon_browse_path.'/Plugins?id='.$addon_config['id'].'" data-cmd="remote">';
+				echo $langmessage['new_version'];
+				echo ' &nbsp; '.$new_version['version'].' ('.CMS_READABLE_DOMAIN.')</a>';
+				echo '</div>';
+			}
 		}
 
 	}

@@ -96,6 +96,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 		//Installation
+		$this->cmds['remote_install']			= 'RemoteInstall';
 		$this->cmds['RemoteInstall']			= '';
 		$this->cmds['RemoteInstallConfirmed']	= 'DefaultDisplay';
 		$this->cmds['UpgradeTheme']				= 'DefaultDisplay';

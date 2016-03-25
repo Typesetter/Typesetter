@@ -229,8 +229,15 @@ class Install extends \gp\admin\Addon\Tools{
 		}
 		echo '</p>';
 
+		$this->ViewOnline();
+	}
 
-		//view on typesettercms.com
+
+	/**
+	 * Link to view search resuls on typesettercms.com
+	 *
+	 */
+	public function ViewOnline(){
 		$slug = 'Plugins';
 		if( $this->config_index == 'themes' ){
 			$slug = 'Themes';
@@ -355,6 +362,7 @@ class Install extends \gp\admin\Addon\Tools{
 		$data = $this->ParseResponse($result);
 
 		if( $data === false ){
+			$this->ViewOnline();
 			return false;
 		}
 
@@ -400,6 +408,7 @@ class Install extends \gp\admin\Addon\Tools{
 			$debug['Two']		= substr($result,0,2);
 			$debug['Twotr']		= substr(trim($result),0,2);
 			echo '<p>'.\gp\tool\RemoteGet::Debug('Sorry, data not fetched',$debug).'</p>';
+			return false;
 		}
 
 		return $data;

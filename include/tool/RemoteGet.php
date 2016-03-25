@@ -53,6 +53,8 @@ namespace gp\tool{
 				return false;
 			}
 
+			return false;
+
 			switch($method){
 
 				case 'fsockopen':

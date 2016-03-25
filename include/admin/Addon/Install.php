@@ -188,6 +188,8 @@ class Install extends \gp\admin\Addon\Tools{
 		}
 		$src = addon_browse_path.'/'.$slug.'?cmd=remote&format=json&'.$this->searchQuery.'&page='.$this->searchPage; // format=json added 4.6b3
 
+		$this->ShowHeader();
+
 		$data = $this->RemoteBrowseResponse($src);
 		if( $data === false ){
 			return;
@@ -200,7 +202,6 @@ class Install extends \gp\admin\Addon\Tools{
 			$this->searchPerPage = count($data['rows']);
 		}
 
-		$this->ShowHeader();
 
 		$this->RemoteBrowseRows($data);
 

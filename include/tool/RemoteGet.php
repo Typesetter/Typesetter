@@ -157,7 +157,6 @@ namespace gp\tool{
 		public function GetMethod($method,$url,$args=array()){
 			global $langmessage;
 
-			msg('method: '.$method);
 
 			//decide how to get
 			switch($method){

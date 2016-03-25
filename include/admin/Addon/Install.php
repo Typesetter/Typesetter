@@ -345,17 +345,13 @@ class Install extends \gp\admin\Addon\Tools{
 		$cache_used		= false;
 
 		//check cache
-		/*
 		if( file_exists($cache_file) && (filemtime($cache_file)+ 26100) > time() ){
 			$result			= file_get_contents($cache_file);
 			$cache_used 	= true;
 		}else{
 			$result			= \gp\tool\RemoteGet::Get_Successful($src);
 		}
-		*/
 
-		msg('testing');
-		$result			= \gp\tool\RemoteGet::Get_Successful($src);
 		$data = $this->ParseResponse($result);
 
 		if( $data === false ){

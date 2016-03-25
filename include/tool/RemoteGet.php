@@ -10,7 +10,7 @@ namespace gp\tool{
 		public static $redirected;
 		public static $maxlength = -1;	// The maximum bytes to read. eg: stream_get_contents($handle, $maxlength)
 		public static $debug;
-		public static $methods	= array('stream','fopen','fsockopen');
+		public static $methods	= array('curl','stream','fopen','fsockopen');
 
 
 
@@ -58,6 +58,10 @@ namespace gp\tool{
 
 				case 'fsockopen':
 				return function_exists('fsockopen');
+
+				case 'curl';
+				return function_exists('curl_init') && function_exists('curl_exec');
+
 			}
 			return false;
 		}
@@ -158,6 +162,9 @@ namespace gp\tool{
 
 				case 'fsockopen':
 				return self::fsockopen_request($url,$args);
+
+				case 'curl':
+				return self::curl_request($url,$args);
 
 				default:
 				return false;
@@ -347,6 +354,63 @@ namespace gp\tool{
 			return array('headers' => $processedHeaders['headers'], 'body' => $process['body'], 'response' => $processedHeaders['response'], 'cookies' => $processedHeaders['cookies']);
 		}
 
+
+		/**
+		 *
+		 */
+		protected static function curl_request($url, $args){
+
+			msg('curl_request');
+
+			$handle = curl_init();
+
+			/*
+			 * CURLOPT_TIMEOUT and CURLOPT_CONNECTTIMEOUT expect integers. Have to use ceil since.
+			 * a value of 0 will allow an unlimited timeout.
+			 */
+			$timeout = (int) ceil( $args['timeout'] );
+			curl_setopt( $handle, CURLOPT_CONNECTTIMEOUT, $timeout );
+			curl_setopt( $handle, CURLOPT_TIMEOUT, $timeout );
+
+			curl_setopt( $handle, CURLOPT_URL, $url);
+			curl_setopt( $handle, CURLOPT_RETURNTRANSFER, true );
+			//curl_setopt( $handle, CURLOPT_SSL_VERIFYHOST, ( $ssl_verify === true ) ? 2 : false );
+			//curl_setopt( $handle, CURLOPT_SSL_VERIFYPEER, $ssl_verify );
+
+			//if ( $ssl_verify ) {
+			//	curl_setopt( $handle, CURLOPT_CAINFO, $args['sslcertificates'] );
+			//}
+
+			curl_setopt( $handle, CURLOPT_USERAGENT, $args['user-agent'] );
+
+			/*
+			 * The option doesn't work with safe mode or when open_basedir is set, and there's
+			 * a bug #17490 with redirected POST requests, so handle redirections outside Curl.
+			 */
+			curl_setopt( $handle, CURLOPT_FOLLOWLOCATION, false );
+			if ( defined( 'CURLOPT_PROTOCOLS' ) ) // PHP 5.2.10 / cURL 7.19.4
+				curl_setopt( $handle, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS );
+
+			curl_setopt( $handle, CURLOPT_CUSTOMREQUEST, $args['method'] );
+			curl_setopt( $handle, CURLOPT_HEADER, 0 );
+
+			if( $args['httpversion'] == '1.0' ){
+				curl_setopt( $handle, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0 );
+			}else{
+				curl_setopt( $handle, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1 );
+			}
+
+			$response = curl_exec( $handle );
+			msg(htmlspecialchars($response));
+
+
+			curl_close( $handle );
+
+
+
+		}
+
+
 		/**
 		 * Set the stream timeout
 		 *
@@ -403,46 +467,64 @@ namespace gp\tool{
 		 * @param string $body Body content
 		 * @return string Chunked decoded body on success or raw body on failure.
 		 */
-		public static function chunkTransferDecode($body,&$headers){
-
-			if( empty($body) ){
-				return $body;
-			}
-			if( !isset( $headers['headers']['transfer-encoding'] ) || 'chunked' != $headers['headers']['transfer-encoding'] ){
-				return $body;
-			}
-
+		public static function chunkTransferDecode($body,$headers){
 
 			$body = str_replace(array("\r\n", "\r"), "\n", $body);
-			// The body is not chunked encoding or is malformed.
-			if ( ! preg_match( '/^[0-9a-f]+(\s|\n)+/mi', trim($body) ) )
-				return $body;
 
-			$parsedBody = '';
-			//$parsedHeaders = array(); Unsupported
+			if( !self::IsChunked($body,$headers) ){
+				return $body;
+			}
+
+			$parsed_body = '';
+
+			// We'll be altering $body, so need a backup in case of error.
+			$body_original = $body;
 
 			while ( true ) {
-				$hasChunk = (bool) preg_match( '/^([0-9a-f]+)(\s|\n)+/mi', $body, $match );
+				$has_chunk = (bool) preg_match( '/^([0-9a-f]+)[^\r\n]*\r\n/i', $body, $match );
+				if ( ! $has_chunk || empty( $match[1] ) )
+					return $body_original;
 
-				if ( $hasChunk ) {
-					if ( empty( $match[1] ) )
-						return $body;
+				$length = hexdec( $match[1] );
+				$chunk_length = strlen( $match[0] );
 
-					$length = hexdec( $match[1] );
-					$chunkLength = strlen( $match[0] );
+				// Parse out the chunk of data.
+				$parsed_body .= substr( $body, $chunk_length, $length );
 
-					$strBody = substr($body, $chunkLength, $length);
-					$parsedBody .= $strBody;
+				// Remove the chunk from the raw data.
+				$body = substr( $body, $length + $chunk_length );
 
-					$body = ltrim(str_replace(array($match[0], $strBody), '', $body), "\n");
-
-					if ( "0" == trim($body) )
-						return $parsedBody; // Ignore footer headers.
-				} else {
-					return $body;
-				}
+				// End of the document.
+				if ( '0' === trim( $body ) )
+					return $parsed_body;
 			}
 		}
+
+
+		/**
+		 * Return true if the response body is chunked
+		 *
+		 */
+		public static function IsChunked($body, $headers){
+
+			$body = trim($body);
+
+			if( empty($body) ){
+				return false;
+			}
+			if( !isset( $headers['headers']['transfer-encoding'] ) || 'chunked' != $headers['headers']['transfer-encoding'] ){
+				return false;
+			}
+
+
+			// The body is not chunked encoded or is malformed.
+			if( ! preg_match( '/^([0-9a-f]+)[^\r\n]*\r\n/i',$body) ){
+				return false;
+			}
+
+			return true;
+		}
+
 
 		/**
 		 * Gets stream headers, return false otherwise

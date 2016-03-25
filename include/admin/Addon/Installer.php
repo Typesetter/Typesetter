@@ -898,11 +898,11 @@ class Installer extends \gp\admin\Addon\Tools{
 			return false;
 		}
 
-		$result = $full_result['body'];
-		$md5 =& $full_result['headers']['x-md5'];
+		$result			= $full_result['body'];
+		$md5			=& $full_result['headers']['x-md5'];
+		$package_md5	= md5($result);
 
 		//check md5
-		$package_md5 = md5($result);
 		if( $package_md5 != $md5 ){
 			$this->message( $langmessage['download_failed_md5'].' <br/> (Package Checksum '.$package_md5.' != Expected Checksum '.$md5.')' );
 			return false;

@@ -155,29 +155,14 @@ namespace gp\tool{
 
 
 		public function GetMethod($method,$url,$args=array()){
-			global $langmessage;
 
+			$func = $method.'_request';
 
-			//decide how to get
-			switch($method){
-
-				case 'stream':
-				return $this->stream_request($url,$args);
-
-				case 'fopen':
-				return $this->fopen_request($url,$args);
-
-				case 'fsockopen':
-				return $this->fsockopen_request($url,$args);
-
-				case 'curl':
-				return $this->curl_request($url,$args);
-
-				default:
-				return false;
-
+			if( method_exists($this,$func) ){
+				return $this->$func( $url, $args );
 			}
 
+			return false;
 		}
 
 
@@ -665,6 +650,47 @@ namespace gp\tool{
 		 * 					Then a numbered array is returned as the value of that header-key.
 		 */
 		public static function processHeaders($headers) {
+
+			$headers		= self::HeadersArray($headers);
+			$response		= array('code' => 0, 'message' => '');
+			$cookies		= array();
+			$newheaders		= array();
+
+			foreach( $headers as $tempheader ){
+
+				if( false === strpos($tempheader, ':') ){
+					$stack = explode(' ', $tempheader, 3);
+					$stack[] = '';
+					list( , $response['code'], $response['message']) = $stack;
+					continue;
+				}
+
+				list($key, $value)	= explode(':', $tempheader, 2);
+				$key				= strtolower( $key );
+				$value				= trim( $value );
+
+				if( isset( $newheaders[$key] ) ){
+					if( !is_array( $newheaders[$key] ) ){
+						$newheaders[$key] = array( $newheaders[$key] );
+					}
+					$newheaders[$key][] = $value;
+				}else{
+					$newheaders[$key] = $value;
+				}
+			}
+
+
+			self::$debug['Headers'] = count($newheaders);
+
+			return array('response' => $response, 'headers' => $newheaders, 'cookies' => $cookies);
+		}
+
+
+		/**
+		 * Split header header string into array if needed
+		 *
+		 */
+		protected static function HeadersArray($headers){
 			// split headers, one per array element
 			if ( is_string($headers) ) {
 				// tolerate line terminator: CRLF = LF (RFC 2616 19.3)
@@ -674,40 +700,10 @@ namespace gp\tool{
 				// create the headers array
 				$headers = explode("\n", $headers);
 			}
+			$headers		= (array)$headers;
+			$headers		= array_filter($headers);
 
-			$response = array('code' => 0, 'message' => '');
-
-			$cookies = array();
-			$newheaders = array();
-			if( is_array($headers) ){
-				foreach ( $headers as $tempheader ) {
-					if ( empty($tempheader) )
-						continue;
-
-					if ( false === strpos($tempheader, ':') ) {
-						list( , $iResponseCode, $strResponseMsg) = explode(' ', $tempheader, 3);
-						$response['code'] = $iResponseCode;
-						$response['message'] = $strResponseMsg;
-						continue;
-					}
-
-					list($key, $value) = explode(':', $tempheader, 2);
-
-					if ( !empty( $value ) ) {
-						$key = strtolower( $key );
-						if ( isset( $newheaders[$key] ) ) {
-							$newheaders[$key] = array( $newheaders[$key], trim( $value ) );
-						} else {
-							$newheaders[$key] = trim( $value );
-						}
-					}
-				}
-			}
-
-
-			self::$debug['Headers'] = count($newheaders);
-
-			return array('response' => $response, 'headers' => $newheaders, 'cookies' => $cookies);
+			return $headers;
 		}
 
 

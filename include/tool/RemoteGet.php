@@ -252,12 +252,9 @@ namespace gp\tool{
 
 			self::stream_timeout($handle,$r['timeout']);
 
-			$strResponse = '';
-			while ( ! feof($handle) ){
-				$strResponse .= fread($handle, 4096);
-			}
+			$strResponse	= $this->ReadHandle($handle);
+			$theHeaders		= self::StreamHeaders($handle);
 
-			$theHeaders = self::StreamHeaders($handle);
 			fclose($handle);
 
 			$processedHeaders = self::processHeaders($theHeaders);
@@ -336,23 +333,12 @@ namespace gp\tool{
 			}
 			self::stream_timeout($handle,$r['timeout']);
 
-			$requestPath = $this->url_array['path'] . ( isset($this->url_array['query']) ? '?' . $this->url_array['query'] : '' );
-			if ( empty($requestPath) )
-				$requestPath .= '/';
 
-			$strHeaders = strtoupper($r['method']) . ' ' . $requestPath . ' HTTP/' . $r['httpversion'] . "\r\n";
-			$strHeaders .= 'Host: ' . $this->url_array['host'] . "\r\n";
-
-			if ( isset($r['user-agent']) )
-				$strHeaders .= 'User-agent: ' . $r['user-agent'] . "\r\n";
-
-			$strHeaders .= "\r\n";
+			$strHeaders = $this->ReqHeader($r);
 
 			fwrite($handle, $strHeaders);
 
-			$strResponse = '';
-			while ( ! feof($handle) )
-				$strResponse .= fread($handle, 4096);
+			$strResponse = $this->ReadHandle($handle);
 
 			fclose($handle);
 
@@ -367,6 +353,42 @@ namespace gp\tool{
 			$strResponse = self::chunkTransferDecode($strResponse,$processedHeaders);
 
 			return array('headers' => $processedHeaders['headers'], 'body' => $process['body'], 'response' => $processedHeaders['response'], 'cookies' => $processedHeaders['cookies']);
+		}
+
+
+		/**
+		 * Return request header string
+		 *
+		 */
+		protected function ReqHeader($r){
+
+			$requestPath = $this->url_array['path'] . ( isset($this->url_array['query']) ? '?' . $this->url_array['query'] : '' );
+			if ( empty($requestPath) )
+				$requestPath .= '/';
+
+			$strHeaders = strtoupper($r['method']) . ' ' . $requestPath . ' HTTP/' . $r['httpversion'] . "\r\n";
+			$strHeaders .= 'Host: ' . $this->url_array['host'] . "\r\n";
+
+			if ( isset($r['user-agent']) )
+				$strHeaders .= 'User-agent: ' . $r['user-agent'] . "\r\n";
+
+			$strHeaders .= "\r\n";
+
+			return $strHeaders;
+		}
+
+
+		/**
+		 * Read all content from the handle
+		 *
+		 */
+		protected function ReadHandle($handle){
+			$response = '';
+			while( !feof($handle) ){
+				$response .= fread($handle, 4096);
+			}
+
+			return $response;
 		}
 
 

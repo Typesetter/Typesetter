@@ -162,6 +162,7 @@ namespace gp\tool{
 		public function GetMethod($method,$url,$args=array()){
 			global $langmessage;
 
+			msg('method: '.$method);
 
 			//decide how to get
 			switch($method){
@@ -536,8 +537,6 @@ namespace gp\tool{
 		 * @return string Chunked decoded body on success or raw body on failure.
 		 */
 		public static function chunkTransferDecode($body,$headers){
-
-			$body = str_replace(array("\r\n", "\r"), "\n", $body);
 
 			if( !self::IsChunked($body,$headers) ){
 				return $body;

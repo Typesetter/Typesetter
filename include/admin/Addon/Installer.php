@@ -885,7 +885,8 @@ class Installer extends \gp\admin\Addon\Tools{
 
 
 		// get package from remote
-		$full_result = \gp\tool\RemoteGet::Get($download_url);
+		$getter			= new \gp\tool\RemoteGet();
+		$full_result 	= $getter->Get($download_url);
 		if( (int)$full_result['response']['code'] < 200 && (int)$full_result['response']['code'] >= 300 ){
 			$this->message( $langmessage['download_failed'] .' (1)');
 			return false;

@@ -53,14 +53,7 @@ namespace gp\tool{
 				return false;
 			}
 
-			$url_fopen = \gp\tool::IniGet('allow_url_fopen');
-
 			switch($method){
-				case 'stream':
-				return $url_fopen;
-
-				case 'fopen':
-				return $url_fopen;
 
 				case 'fsockopen':
 				return function_exists('fsockopen');
@@ -69,7 +62,9 @@ namespace gp\tool{
 				return function_exists('curl_init') && function_exists('curl_exec');
 
 			}
-			return false;
+
+			//stream and fopen
+			return \gp\tool::IniGet('allow_url_fopen');
 		}
 
 

@@ -1459,7 +1459,13 @@ class Menu extends \gp\special\Base{
 	public function HomepageDisplay(){
 		global $langmessage, $config;
 
+
+		if( \gp\admin\Menu\Tools::ResetHomepage() ){
+			\gp\admin\Tools::SaveConfig();
+		}
+
 		$label = \gp\tool::GetLabelIndex($config['homepath_key']);
+
 
 		echo '<span class="fa fa-home"></span> ';
 		echo $langmessage['Homepage'].': ';

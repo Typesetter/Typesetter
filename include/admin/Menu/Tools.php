@@ -158,7 +158,10 @@ class Tools{
 		if( !isset($gp_titles[$config['homepath_key']]) ){
 			$config['homepath_key'] = key($gp_menu);
 			$config['homepath']		= \gp\tool::IndexToTitle($config['homepath_key']);
+			return true;
 		}
+
+		return false;
 	}
 
 

@@ -776,7 +776,7 @@ class SetupSite{
 		}
 
 		$ftp_site = \gp\tool\FileSystemFtp::GetFTPRoot($conn_id,$dir);
-		if( !$ftp_site ){
+		if( $ftp_site === false ){
 			return false;
 		}
 		return ftp_rmdir($conn_id,$ftp_site);
@@ -1226,7 +1226,7 @@ class SetupSite{
 
 
 		$ftp_root	= \gp\tool\FileSystemFtp::GetFTPRoot($conn_id,$folder);
-		if( !$ftp_root ){
+		if( $ftp_root === false ){
 			$this->FolderNotWritable('Root folder not found by FTP');
 			return false;
 		}
@@ -1825,7 +1825,7 @@ class SetupSite{
 
 
 		$ftp_parent = \gp\tool\FileSystemFtp::GetFTPRoot($conn_id,$parent);
-		if( !$ftp_parent ){
+		if( $ftp_parent === false ){
 			msg('Oops, could not find the ftp location of <i>'.$parent.'</i> using the current ftp login.');
 			return false;
 		}

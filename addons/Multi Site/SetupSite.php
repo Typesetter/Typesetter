@@ -45,7 +45,7 @@ class SetupSite{
 			return;
 		}
 
-		gpPlugin::css('multi_site.less',false);
+		gpPlugin::css('multi_site.scss',false);
 
 		//$page->css_user[] = '/data/_addoncode/'.$addonFolderName.'/multi_site.css';
 		//$page->head_js[] = '/data/_addoncode/'.$addonFolderName.'/multi_site.js';

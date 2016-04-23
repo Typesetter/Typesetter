@@ -144,7 +144,7 @@ class Layout extends \gp\admin\Addon\Install{
 		$this->cmds['MakeDefault']		= 'DefaultDisplay';
 		$this->cmds['CSSPreferences']	= '';
 		$this->cmds['RestoreLayout']	= 'DefaultDisplay';
-		$this->cmds['RmGadget']			= 'DefaultDisplay';
+		$this->cmds['RmGadget']			= 'ShowGadgets';
 
 	}
 
@@ -241,7 +241,7 @@ class Layout extends \gp\admin\Addon\Install{
 				echo str_replace('_',' ',$gadget);
 				echo '</td><td>';
 				if( isset($gadget_info[$gadget]) ){
-					echo $this->LayoutLink( $this->curr_layout, $langmessage['remove'], 'cmd=RmGadget&gadget='.urlencode($gadget), array('data-cmd'=>'cnreq') );
+					echo $this->LayoutLink( $this->curr_layout, $langmessage['remove'], 'cmd=RmGadget&gadget='.urlencode($gadget), array('data-cmd'=>'gpabox') );
 				}else{
 					echo $langmessage['disabled'];
 				}
@@ -477,6 +477,8 @@ class Layout extends \gp\admin\Addon\Install{
 	 */
 	public function RmGadget(){
 		global $langmessage;
+
+		//$this->page->ajaxReplace	= array();
 
 		$gadget =& $_REQUEST['gadget'];
 

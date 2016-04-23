@@ -922,7 +922,7 @@ class gp_install{
 		if( $login_result ){
 			$this->ftp_root = \gp\tool\FileSystemFtp::GetFTPRoot($install_ftp_connection,$dataDir);
 		}
-		if( !$this->ftp_root ){
+		if( $this->ftp_root === false ){
 			echo '<span class="failed">';
 			echo $langmessage['ROOT_DIRECTORY_NOT_FOUND'];
 			echo '</span>';

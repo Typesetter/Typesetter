@@ -852,17 +852,10 @@ class SetupSite{
 	public function GetSiteData(){
 		global $addonPathData;
 
-		$this->dataFile = $addonPathData.'/data.php';
-		if( file_exists($this->dataFile) ){
-			require($this->dataFile);
-			if( isset($siteData) ){
-				$this->siteData = $siteData;
-			}
-			$this->checksum = $this->CheckSum($this->siteData);
-		}
-
-
-		$this->siteData += array('sites'=>array());
+		$this->dataFile		= $addonPathData.'/data.php';
+		$this->siteData		= \gp\tool\Files::Get($this->dataFile,'siteData');
+		$this->siteData		+= array('sites'=>array());
+		$this->checksum		= $this->CheckSum($this->siteData);
 	}
 
 	public function SaveSiteData(){
@@ -874,7 +867,7 @@ class SetupSite{
 		unset($this->siteData['destination']); //no longer used
 		unset($this->siteData['useftp']); //no longer used
 
-		return \gp\tool\Files::SaveArray($this->dataFile,'siteData',$this->siteData);
+		return \gp\tool\Files::SaveData( $this->dataFile,'siteData',$this->siteData );
 	}
 
 	public function CheckSum($array){

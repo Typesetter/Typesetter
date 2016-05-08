@@ -260,6 +260,11 @@ class Update extends \gp\Page{
 				continue;
 			}
 			$full_dir		= $dir.'/'.$name;
+
+			if( !is_dir($full_dir) ){
+				continue;
+			}
+
 			$templateFile	= $full_dir.'/template.php';
 			$ini_file		= $full_dir.'/Addon.ini';
 
@@ -800,6 +805,7 @@ class Update extends \gp\Page{
 			}
 
 
+
 			$replace_dir = trim($replace_dir,'/');
 			if( !isset( $this->replace_dirs[$replace_dir] ) ){
 				$this->replace_dirs[$replace_dir] = \gp\tool\FileSystem::TempFile( $replace_dir );
@@ -811,6 +817,7 @@ class Update extends \gp\Page{
 				return false;
 			}
 		}
+		pre($this->replace_dirs);
 
 		return true;
 	}

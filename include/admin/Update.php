@@ -801,7 +801,7 @@ class Update extends \gp\Page{
 
 			$content	= $archive->getFromName($file['name']);
 			if( empty($content) ){
-				return true;
+				continue;
 			}
 
 

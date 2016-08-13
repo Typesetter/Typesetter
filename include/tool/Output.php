@@ -1326,7 +1326,7 @@ namespace gp\tool{
 		public static function MetaTitle(){
 			global $page, $config;
 
-			echo "\n<title>";
+			$meta_title = '';
 			$page_title = '';
 			if( !empty($page->TitleInfo['browser_title']) ){
 				$page_title = $page->TitleInfo['browser_title'];
@@ -1335,12 +1335,15 @@ namespace gp\tool{
 			}elseif( isset($page->title) ){
 				$page_title = \gp\tool::GetBrowserTitle($page->title);
 			}
-			echo $page_title;
+			$meta_title .= $page_title;
 			if( !empty($page_title) && !empty($config['title']) ){
-				echo ' - ';
+				$meta_title .=  ' - ';
 			}
-			echo $config['title'].'</title>';
+			$meta_title .= $config['title'];
 
+			$meta_title = \gp\tool\Plugins::Filter('MetaTitle', array($meta_title) );
+
+			echo "\n" . '<title>' . $meta_title . '</title>';
 			return $page_title;
 		}
 

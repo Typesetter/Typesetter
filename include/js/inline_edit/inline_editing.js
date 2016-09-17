@@ -235,6 +235,8 @@ gp_editing = {
 			html += '</div>';
 
 			$('#gp_admin_html').append(html);
+			
+			$(document).trigger("editor_area:loaded");
 
 			$ck_area_wrap = $('#ck_area_wrap');
 		}

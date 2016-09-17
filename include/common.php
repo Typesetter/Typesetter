@@ -85,6 +85,7 @@ $languages = array(
 	'pl' => 'Polski',			# Polish
 	'pt' => 'Português',
 	'pt-br' => 'Português do Brasil',
+	'ro' => 'Română',			# Romanian
 	'ru' => 'Русский',			# Russian
 	'sk' => 'Slovenčina',		# Slovak
 	'sl' => 'Slovenščina',		# Slovenian

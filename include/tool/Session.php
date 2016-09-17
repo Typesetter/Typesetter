@@ -39,7 +39,7 @@ namespace gp\tool{
 
 
 		public static function LogIn(){
-			global $langmessage, $config, $gp_index;
+			global $langmessage;
 
 
 			// check nonce
@@ -119,16 +119,35 @@ namespace gp\tool{
 			self::UpdateAttempts($users,$username,true);
 
 			//redirect to prevent resubmission
-			if( $logged_in ){
-				$redirect = 'Admin';
-				if( isset($_REQUEST['file']) && isset($gp_index[$_REQUEST['file']]) ){
-					$redirect = $_REQUEST['file'];
-				}
-				$url = \gp\tool::GetUrl($redirect,'',false);
-				\gp\tool::Redirect($url);
-			}
+			self::Redirect($logged_in);
 
 		}
+
+		/**
+		 * Redirect user after login
+		 *
+		 */
+		public static function Redirect($logged_in){
+			global $gp_index;
+
+			if( !$logged_in ){
+				return;
+			}
+
+			$redirect = false;
+
+			if( isset($_REQUEST['file']) ){
+				$redirect = \gp\tool::ArrayKey($_REQUEST['file'], $gp_index );
+			}
+
+			if( $redirect === false ){
+				$redirect = 'Admin';
+			}
+
+			$url = \gp\tool::GetUrl($redirect,'',false);
+			\gp\tool::Redirect($url);
+		}
+
 
 		/**
 		 * Return the username for the login request
@@ -293,11 +312,20 @@ namespace gp\tool{
 
 			$session_id = $_COOKIE[gp_session_cookie];
 
-			\gp\tool\Files::Unlock('admin',sha1(sha1($session_id)));
+			self::Unlock($session_id);
 			self::cookie(gp_session_cookie);
 			self::CleanSession($session_id);
 			msg($langmessage['LOGGED_OUT']);
 		}
+
+		/**
+		 * Remove the admin session lock
+		 *
+		 */
+		public static function Unlock($session_id){
+			\gp\tool\Files::Unlock('admin',sha1(sha1($session_id)));
+		}
+
 
 		public static function CleanSession($session_id){
 			//remove the session_id from session_ids.php
@@ -317,7 +345,7 @@ namespace gp\tool{
 			$cookiePath		= empty($dirPrefix) ? '/' : $dirPrefix;
 			$cookiePath		= \gp\tool::HrefEncode($cookiePath,false);
 			$secure			= (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' );
-			$domain			= self::ServerName();
+			$domain			= \gp\tool::ServerName(true);
 
 			if( !$domain || strpos($domain,'.') === false ){
 				$domain = '';
@@ -349,28 +377,6 @@ namespace gp\tool{
 			}
 
 			setcookie($name, $value, $expires, $cookiePath, $domain, $secure, true);
-		}
-
-
-		/**
-		 * Return the non-www server name
-		 *
-		 */
-		public static function ServerName(){
-
-			if( isset($_SERVER['HTTP_HOST']) ){
-				$server_name = $_SERVER['HTTP_HOST'];
-			}elseif( isset($_SERVER['SERVER_NAME']) ){
-				$server_name = $_SERVER['SERVER_NAME'];
-			}else{
-				return false;
-			}
-
-			if( strpos($server_name,'www.') === 0 ){
-				$server_name = substr($server_name,4);
-			}
-
-			return $server_name;
 		}
 
 
@@ -570,12 +576,11 @@ namespace gp\tool{
 			ob_start(array('\\gp\\tool\\Session','AdminBuffer'));
 
 			\gp\tool\Output::$lang_values += array(	'cancel'=>'ca','update'=>'up','caption'=>'cp','Width'=>'Width','Height'=>'Height','save'=>'Save','Saved'=>'Saved','Saving'=>'Saving',
-													'Close'=>'Close','Page'=>'Page','theme_content'=>'Extra','Publish Draft'=>'Draft','Publish'=>'Publish'
-
+													'Close'=>'Close','Page'=>'Page','theme_content'=>'Extra','Publish Draft'=>'Draft','Publish'=>'Publish','Select Image'=>'SelectImage',
 													);
 
 
-			\gp\tool::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css');
+			\gp\tool::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css,fontawesome');
 			\gp\admin\Tools::VersionsAndCheckTime();
 
 
@@ -662,8 +667,8 @@ namespace gp\tool{
 		public static function gpui_defaults(){
 
 			return array(	'gpui_cmpct'	=> 0,
-							'gpui_tx'		=> 6,
-							'gpui_ty'		=> 10,
+							'gpui_tx'		=> 10,
+							'gpui_ty'		=> 39,
 							'gpui_ckx'		=> 20,
 							'gpui_cky'		=> 240,
 							'gpui_vis'		=> 'cur',
@@ -883,9 +888,6 @@ namespace gp\tool{
 			//send response so an error is not thrown
 			echo \gp\tool\Output\Ajax::Callback($_REQUEST['jsoncallback']).'([]);';
 			die();
-
-			//for debugging
-			die('debug: '.pre($_POST).'result: '.pre($gpAdmin));
 		}
 
 

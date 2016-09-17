@@ -158,7 +158,10 @@ class Tools{
 		if( !isset($gp_titles[$config['homepath_key']]) ){
 			$config['homepath_key'] = key($gp_menu);
 			$config['homepath']		= \gp\tool::IndexToTitle($config['homepath_key']);
+			return true;
 		}
+
+		return false;
 	}
 
 
@@ -221,35 +224,27 @@ class Tools{
 
 		//multiple section types
 		$type		= $_POST['content_type'];
+
+
+		// multiple wrapped sections
 		if( strpos($type,'{') === 0 ){
-			$types = json_decode($type,true);
-			if( $types ){
+			$combo = json_decode($type,true);
+			if( $combo ){
 
-				$types								+= array('wrapper_class'=>'gpRow');
-				$content							= array();
-
-				//wrapper section
-				$section							= \gp\tool\Editing::DefaultContent('wrapper_section');
-				$section['contains_sections']		= count($types['types']);
-				$section['attributes']['class']		= $types['wrapper_class'];
-				$content[]							= $section;
+				$combo		+= array('wrapper_class'=>'gpRow');
+				$content	= self::GetComboContent($combo['types'],$combo['wrapper_class']);
 
 
-				//nested sections
-				foreach($types['types'] as $type){
-
-					if( strpos($type,'.') ){
-						list($type,$class)			= explode('.',$type,2);
-					}else{
-						$class						= '';
-					}
-
-					$section						= \gp\tool\Editing::DefaultContent($type);
-					$section['attributes']['class']	.= ' '.$class;
-					$content[]						= $section;
+				$type = '';
+				// borrowed from \gp\Page\Edit::ResetFileTypes()
+				foreach($content as $section){
+					$type[] = $section['type'];
 				}
+				$type = array_unique($type);
+				$type = array_diff($type,array(''));
+				sort($type);
+				$type = implode(',',$type);
 			}
-
 		//single section type
 		}else{
 			$content	= \gp\tool\Editing::DefaultContent($type, $_POST['title']);
@@ -293,6 +288,39 @@ class Tools{
 
 
 	/**
+	 * Get nested Section Combo content
+	 *
+	 */
+	public static function GetComboContent($types, $wrapper_class, $content=array()){
+
+		//$combo								+= array('label'=>$combo_label);		// push the combo label through to all subsections if none (no sub-label) given
+
+		// create wrapper section
+		$section							= \gp\tool\Editing::DefaultContent('wrapper_section');
+		$section['contains_sections']		= count($types);
+		$section['attributes']['class']		= $wrapper_class;
+		$content[]							= $section;
+
+
+		foreach($types as $type){
+			if( is_array($type) ){
+				$_wrapper_class = isset($type[1]) ? $type[1] : '';
+				$content = self::GetComboContent($type[0], $_wrapper_class, $content);
+			}else{
+
+				$class							= \gp\Page\Edit::TypeClass($type);
+				$section						= \gp\tool\Editing::DefaultContent($type);
+				$section['attributes']['class']	.= ' '.$class;
+				$content[]						= $section;
+			}
+
+		}
+
+		return $content;
+	}
+
+
+	/**
 	 * Get the level of the first page in a menu
 	 *
 	 */
@@ -326,7 +354,7 @@ class Tools{
 		if( count($gp_menu) ){
 			reset($gp_menu);
 			$first_index = key($gp_menu);
-		}elseif( count($gp_titles ) ){
+		}else{
 			reset($gp_titles);
 			$first_index = key($gp_titles);
 		}

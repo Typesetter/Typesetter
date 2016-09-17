@@ -72,7 +72,7 @@ class Upgrade{
 			foreach($config['menus'] as $key => $value){
 				$menu_file = $dataDir.'/data/_menus/'.$key.'.php';
 				if( \gp\tool\Files::Exists($menu_file) ){
-					$menu = \gp\tool\Output::GetMenuArray($key);
+					$menu = \gp\tool\Output\Menu::GetMenuArray($key);
 					$menu = $this->FixMenu($menu,$special_indexes);
 					\gp\tool\Files::SaveData($menu_file,'menu',$menu);
 				}

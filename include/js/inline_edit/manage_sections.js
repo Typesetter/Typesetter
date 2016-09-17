@@ -1,6 +1,8 @@
 
 (function(){
 
+	var preview_timeout = null;
+
 	/**
 	 * Set up editor
 	 *
@@ -11,10 +13,8 @@
 
 		saved_data: '',
 
-		preview_timeout: null,
-
 		checkDirty:function(){
-			var curr_data	= this.gp_saveData();
+			var curr_data	= this.SaveData();
 			if( this.saved_data != curr_data ){
 				return true;
 			}
@@ -25,7 +25,7 @@
 		 * Organize the section content to be saved
 		 *
 		 */
-		gp_saveData:function(){
+		SaveData:function(){
 
 			var mgr_object				= this;
 			var args					= {};
@@ -85,7 +85,7 @@
 		 */
 		resetDirty:function(){
 			gp_editor.SectionNumbers();
-			this.saved_data	= this.gp_saveData();
+			this.saved_data	= this.SaveData();
 		},
 
 
@@ -209,17 +209,21 @@
 				var color	= $this.data('gp_color') || '#aabbcc';
 
 				//collapsed
-				var style	= ' class="'+$this.data('gp_collapse')+'"';
+				var style	= ' class="'+($this.data('gp_collapse')||'')+'"';
 
 
 				//classes
 				var classes		= $this.data('gp-attrs').class || label;
 
 
-
-				html += '<li data-gp-area-id="'+this.id+'" '+style+' title="'+classes+'">';
+				html += '<li data-gp-area-id="'+$gp.AreaId($this)+'" '+style+' title="'+classes+'">';
 				html += '<div><a class="color_handle" data-cmd="SectionColor" style="background-color:'+color+'"></a>';
 				html += '<span class="options">';
+
+				if( !$this.hasClass('filetype-wrapper_section') ){
+					html += '<a class="fa fa-pencil" data-cmd="SectionEdit" title="Edit"></a>';
+				}
+
 				html += '<a class="fa fa-sliders" data-cmd="SectionOptions" title="Options"></a>';
 				html += '<a class="fa fa-files-o" data-cmd="CopySection" title="Copy"></a>';
 				html += '<a class="fa fa-trash RemoveSection" data-cmd="RemoveSection" title="Remove"></a>';
@@ -271,20 +275,21 @@
 
 			//moved after another section
 			if( prev_area.length ){
-				area.insertAfter(prev_area);
+				area.insertAfter(prev_area).trigger('SectionSorted');
 				return;
 			}
 
 			//move to beginning of gpx_content
 			var $ul			= ui.item.parent().closest('ul');
 			if( $ul.attr('id') == 'section_sorting' ){
-				area.prependTo('#gpx_content');
+				area.prependTo('#gpx_content').trigger('SectionSorted');
 				return;
 			}
 
 
 			//moved to beginning of wrapper
 			this.GetArea( $ul.parent() ).prepend(area);
+			area.trigger('SectionSorted');
 
 		},
 
@@ -321,31 +326,9 @@
 		 *
 		 */
 		GetArea: function($li){
-			var id 		= $li.data('gp-area-id');
-			return $('#'+id);
+			var id		= $gp.AreaId( $li );
+			return $('#ExtraEditArea'+id);
 		},
-
-
-		/**
-		 * Assign a new id to a section
-		 *
-		 */
-		NewSectionId: function(new_area){
-
-			var area_id		= 1;
-			var new_id;
-			do{
-				area_id++;
-				new_id = 'ExtraEditArea'+area_id;
-
-			}while( document.getElementById(new_id) || document.getElementById('ExtraEditLink'+area_id) );
-
-			new_area.attr('id',new_id).data('gp-area-id',area_id);
-
-			//add edit link (need to initiate editing and get the save path)
-			$('<a href="?" class="nodisplay" data-cmd="inline_edit_generic" data-gp-area-id="'+area_id+'" id="ExtraEditLink'+area_id+'">').appendTo('#gp_admin_html');
-		}
-
 	}
 
 
@@ -356,8 +339,8 @@
 	$(document).on('mousemove','.preview_section',function(){
 		var $this = $(this);
 
-		if( gp_editor.preview_timeout ){
-			clearTimeout(gp_editor.preview_timeout);
+		if( preview_timeout ){
+			clearTimeout(preview_timeout);
 		}
 
 		if( $this.hasClass('previewing') ){
@@ -372,7 +355,7 @@
 		});
 
 
-		gp_editor.preview_timeout = setTimeout(function(){
+		preview_timeout = setTimeout(function(){
 
 			//scroll the page
 			var $last	= $('#gpx_content .editable_area:last');
@@ -396,7 +379,8 @@
 				.removeClass('editable_area')
 				.appendTo('#gpx_content')
 				.hide()
-				.delay(300).slideDown();
+				.delay(300).slideDown()
+				.trigger("PreviewAdded");
 
 			var node = $new_content.get(0);
 			$this.data('preview-section',node);
@@ -406,18 +390,18 @@
 
 	}).on('mouseleave','.preview_section',function(){
 
-		if( gp_editor.preview_timeout ){
-			clearTimeout(gp_editor.preview_timeout);
+		if( preview_timeout ){
+			clearTimeout(preview_timeout);
 		}
 
 		$(this).removeClass('previewing');
 
 		$('.temporary-section').stop().slideUp(function(){
+			$(this).parent().trigger("PreviewRemoved");
 			$(this).remove();
 		});
 
 	});
-
 
 
 	/**
@@ -428,23 +412,17 @@
 		var $this = $(this);
 		evt.preventDefault();
 
-		//change the previewed section to an editable area
-		if( !$this.hasClass('previewing') ){
-			console.log('not previewing');
-			return;
-		}
-
-		var section		= $this.data('preview-section');
-		var $section	= $(section).addClass('editable_area').removeClass('temporary-section');
-		gp_editor.NewSectionId($section);
+		//remove preview
+		$this.removeClass('previewing');
+		$('.temporary-section').remove();
 
 
-		//child sections
-		$section.find('.temporary-section').each(function(){
-			var $child = $(this).addClass('editable_area').removeClass('temporary-section');
-			gp_editor.NewSectionId($child);
-		});
+		//new content
+		var $section	= $($this.data('response')).appendTo('#gpx_content');
 
+		NewSectionIds($section);
+
+		$section.trigger('SectionAdded');
 
 		gp_editor.InitSorting();
 		$this.removeClass('previewing').trigger('mousemove');
@@ -460,7 +438,9 @@
 		//make sure there's at least one section
 		if( $('#gpx_content').find('.editable_area').length > 1 ){
 			var $li = $(this).closest('li');
-			gp_editor.GetArea( $li ).remove();
+			var area = gp_editor.GetArea( $li );
+			area.parent().trigger("SectionRemoved");
+			area.remove();
 			$li.remove();
 		}
 	}
@@ -473,8 +453,9 @@
 		var from_area	= gp_editor.GetArea( $(this).closest('li') );
 		var new_area	= from_area.clone();
 
-		gp_editor.NewSectionId(new_area);
+		NewSectionIds(new_area);
 		from_area.after(new_area);
+		new_area.trigger("SectionAdded");
 		gp_editor.InitSorting();
 	}
 
@@ -539,6 +520,37 @@
 		}
 
 		$area.attr('data-gp_collapse',clss).data('gp_collapse',clss);
+	}
+
+
+	/**
+	 * Initiate editing for a section
+	 *
+	 */
+	$gp.links.SectionEdit = function(evt){
+		var $li				= $(this).closest('li');
+		var $area			= gp_editor.GetArea( $li );
+		var area_id			= $gp.AreaId($li);
+		var $lnk			= $('#ExtraEditLink'+area_id);
+		var arg				= $lnk.data('arg');
+
+		$gp.LoadEditor($lnk.get(0).href, area_id, arg);
+
+
+		//scroll the page if needed
+		var el_top			= $area.offset().top;
+		var el_bottom		= el_top + $area.height();
+
+
+		var view_top		= $gp.$win.scrollTop();
+		var view_bottom		= view_top + $gp.$win.height();
+
+
+		if( (el_bottom > view_top) && (el_top < view_bottom) ){
+			return;
+		}
+
+		$('html,body').stop().animate({scrollTop: el_top-200});
 	}
 
 
@@ -802,7 +814,8 @@
 
 
 		//update title of <li> in section manager
-		var $li		= $('#section_sorting li[data-gp-area-id='+$area.attr('id'));
+		var id		= $gp.AreaId( $area );
+		var $li		= $('#section_sorting li[data-gp-area-id='+id+']');
 		if( classes == '' ){
 			classes = $li.find('> div .section_label').text();
 		}
@@ -856,6 +869,42 @@
 			});
 
 	});
+
+
+	/**
+	 * Assign new ids to a section and it's children
+	 *
+	 */
+	function NewSectionIds($section){
+
+		NewSectionId($section);
+
+		//child sections
+		$section.find('.editable_area').each(function(){
+			NewSectionId($(this));
+		});
+
+	}
+
+	/**
+	 * Assign a new id to a section
+	 *
+	 */
+	function NewSectionId($section){
+
+		var area_id		= 1;
+		var new_id;
+		do{
+			area_id++;
+			new_id = 'ExtraEditArea'+area_id;
+
+		}while( document.getElementById(new_id) || document.getElementById('ExtraEditLink'+area_id) );
+
+		$section.attr('id',new_id).data('gp-area-id',area_id);
+
+		//add edit link (need to initiate editing and get the save path)
+		$('<a href="?" class="nodisplay" data-cmd="inline_edit_generic" data-gp-area-id="'+area_id+'" id="ExtraEditLink'+area_id+'">').appendTo('#gp_admin_html');
+	}
 
 
 	/**

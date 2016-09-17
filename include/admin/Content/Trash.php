@@ -7,6 +7,7 @@ defined('is_running') or die('Not an entry point...');
 class Trash extends \gp\special\Base{
 
 	public $trash_files = array();
+	public $section_types = array();
 
 	public function __construct($args){
 		global $langmessage;
@@ -183,7 +184,6 @@ class Trash extends \gp\special\Base{
 		}
 
 		$title_info			= $trash_titles[$trash_index];
-		$trash_dir			= $dataDir.'/data/_trash/'.$trash_index;
 
 
 		//make sure we have a file or dir
@@ -315,7 +315,7 @@ class Trash extends \gp\special\Base{
 			}
 
 			$new_title = \gp\admin\Tools::CheckPostedNewPage($title_info['title'],$message);
-			if( !$new_title ){
+			if( empty($new_title) ){
 				continue;
 			}
 

@@ -27,7 +27,7 @@
 			},
 
 			checkDirty:function(){
-				var curr_val = gp_editor.gp_saveData();
+				var curr_val = gp_editor.SaveData();
 
 				if( curr_val != cache_value ){
 					return true;
@@ -35,11 +35,11 @@
 				return false;
 			},
 
-			gp_saveData:function(){
+			SaveData:function(){
 				return $('#gp_include_form').serialize();
 			},
 			resetDirty:function(){
-				cache_value = gp_editor.gp_saveData();
+				cache_value = gp_editor.SaveData();
 			}
 		}
 
@@ -65,7 +65,7 @@
 		 *
 		 */
 		$gp.inputs.IncludePreview = function(){
-			gp_editing.save_changes();
+			gp_editing.SaveChanges();
 		}
 
 		/**

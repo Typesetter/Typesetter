@@ -90,11 +90,28 @@ class Installer extends \gp\admin\Addon\Tools{
 	 *
 	 */
 	public function InstallRemote( $type, $id, $order = null ){
+		global $langmessage;
+
+
+		// check values
+		if( empty($type) ){
+			$this->message($langmessage['OOPS'].' - Invalid Request (type)');
+			return false;
+		}
+
+		if( empty($id) || !ctype_digit($id) ){
+			$this->message($langmessage['OOPS'].' - Invalid Request (id)');
+			return false;
+		}
+
 
 		$this->remote_install	= true;
 		$this->type				= $type;
-		$this->id				= $id;
-		$this->order			= $order;
+		$this->id				= (int)$id;
+
+		if( !is_null($order) ){
+			$this->order			= (int)$order;
+		}
 
 		return $this->Install();
 	}
@@ -190,9 +207,12 @@ class Installer extends \gp\admin\Addon\Tools{
 
 		}
 
-		$dataFolder = $addon_config['data_folder_full'];
-		if( file_exists($dataFolder) ){
-			\gp\tool\Files::RmAll($dataFolder);
+		//only delete data if data_folder is not empty
+		if( !empty($addon_config['data_folder']) ){
+			$dataFolder = $addon_config['data_folder_full'];
+			if( file_exists($dataFolder) ){
+				\gp\tool\Files::RmAll($dataFolder);
+			}
 		}
 	}
 
@@ -238,6 +258,7 @@ class Installer extends \gp\admin\Addon\Tools{
 		}
 
 		$this->SetDestination();
+
 		$this->DataFolder();
 		$this->IniContents();
 
@@ -369,9 +390,9 @@ class Installer extends \gp\admin\Addon\Tools{
 	protected function DataFolder(){
 		global $dataDir;
 
-		if( isset($this->config[$this->config_key]['data_folder']) ){
+		if( !empty($this->config[$this->config_key]['data_folder']) ){
 			$this->data_folder = $this->config[$this->config_key]['data_folder'];
-		}elseif( !is_null($this->upgrade_key) && file_exists( $dataDir.'/data/_addondata/'.$this->upgrade_key) ){
+		}elseif( !empty($this->upgrade_key) && file_exists( $dataDir.'/data/_addondata/'.$this->upgrade_key) ){
 			$this->data_folder = $this->upgrade_key;
 		}else{
 			$this->data_folder = $this->dest_name;
@@ -419,8 +440,10 @@ class Installer extends \gp\admin\Addon\Tools{
 		}
 
 
-		$this->ini_text			= file_get_contents($ini_file);
-		$this->ini_contents		= \gp\tool\Ini::ParseString($this->ini_text);
+		$this->ini_text							= file_get_contents($ini_file);
+		$this->ini_contents						= \gp\tool\Ini::ParseString($this->ini_text);
+		$this->ini_contents['source_folder']	= dirname($ini_file);
+
 
 		if( !$this->ini_contents ){
 			$error = $langmessage['Ini_Error'].' '.$langmessage['Ini_Submit_Bug'];
@@ -832,11 +855,6 @@ class Installer extends \gp\admin\Addon\Tools{
 	public function GetRemote(){
 		global $langmessage, $dataDir;
 
-		// check values
-		if( empty($this->type) || empty($this->id) || !is_numeric($this->id) ){
-			$this->message($langmessage['OOPS'].' (Invalid Request)');
-			return false;
-		}
 
 		// download url
 		$download_url = \gp\admin\Tools::RemoteUrl( $this->type );
@@ -867,7 +885,8 @@ class Installer extends \gp\admin\Addon\Tools{
 
 
 		// get package from remote
-		$full_result = \gp\tool\RemoteGet::Get($download_url);
+		$getter			= new \gp\tool\RemoteGet();
+		$full_result 	= $getter->Get($download_url);
 		if( (int)$full_result['response']['code'] < 200 && (int)$full_result['response']['code'] >= 300 ){
 			$this->message( $langmessage['download_failed'] .' (1)');
 			return false;
@@ -880,11 +899,11 @@ class Installer extends \gp\admin\Addon\Tools{
 			return false;
 		}
 
-		$result = $full_result['body'];
-		$md5 =& $full_result['headers']['x-md5'];
+		$result			= $full_result['body'];
+		$md5			=& $full_result['headers']['x-md5'];
+		$package_md5	= md5($result);
 
 		//check md5
-		$package_md5 = md5($result);
 		if( $package_md5 != $md5 ){
 			$this->message( $langmessage['download_failed_md5'].' <br/> (Package Checksum '.$package_md5.' != Expected Checksum '.$md5.')' );
 			return false;

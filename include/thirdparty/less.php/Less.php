@@ -20,7 +20,7 @@ class Less_Parser{
 		'strictUnits'			=> false,			// whether units need to evaluate correctly
 		'strictMath'			=> false,			// whether math has to be within parenthesis
 		'relativeUrls'			=> true,			// option - whether to adjust URL's to be relative
-		'urlArgs'				=> array(),			// whether to add args into url tokens
+		'urlArgs'				=> '',				// whether to add args into url tokens
 		'numPrecision'			=> 8,
 
 		'import_dirs'			=> array(),
@@ -35,6 +35,8 @@ class Less_Parser{
 		'sourceMapWriteTo'		=> null,
 		'sourceMapURL'			=> null,
 
+		'indentation' 			=> '  ',
+
 		'plugins'				=> array(),
 
 	);
@@ -47,6 +49,7 @@ class Less_Parser{
 	private $pos;					// current index in `input`
 	private $saveStack = array();	// holds state for backtracking
 	private $furthest;
+	private $mb_internal_encoding = ''; // for remember exists value of mbstring.internal_encoding
 
 	/**
 	 * @var Less_Environment
@@ -83,6 +86,14 @@ class Less_Parser{
 			$this->Reset( $env );
 		}
 
+		// mbstring.func_overload > 1 bugfix
+		// The encoding value must be set for each source file,
+		// therefore, to conserve resources and improve the speed of this design is taken here
+		if (ini_get('mbstring.func_overload')) {
+			$this->mb_internal_encoding = ini_get('mbstring.internal_encoding');
+			@ini_set('mbstring.internal_encoding', 'ascii');
+		}
+
 	}
 
 
@@ -98,13 +109,14 @@ class Less_Parser{
 		self::$contentsMap = array();
 
 		$this->env = new Less_Environment($options);
-		$this->env->Init();
 
 		//set new options
 		if( is_array($options) ){
 			$this->SetOptions(Less_Parser::$default_options);
 			$this->SetOptions($options);
 		}
+
+		$this->env->Init();
 	}
 
 	/**
@@ -204,17 +216,26 @@ class Less_Parser{
 			}
 
 		} catch (Exception $exc) {
-        	   // Intentional fall-through so we can reset environment
-        	}
+			// Intentional fall-through so we can reset environment
+		}
 
 		//reset php settings
 		@ini_set('precision',$precision);
 		setlocale(LC_NUMERIC, $locale);
 
+		// If you previously defined $this->mb_internal_encoding
+		// is required to return the encoding as it was before
+		if ($this->mb_internal_encoding != '') {
+			@ini_set("mbstring.internal_encoding", $this->mb_internal_encoding);
+			$this->mb_internal_encoding = '';
+		}
+
 		// Rethrow exception after we handled resetting the environment
 		if (!empty($exc)) {
-            		throw $exc;
-        	}
+			throw $exc;
+		}
+
+
 
 		return $css;
 	}
@@ -466,17 +487,7 @@ class Less_Parser{
 	 * @param string $file_path
 	 */
 	private function _parse( $file_path = null ){
-		if (ini_get("mbstring.func_overload")) {
-			$mb_internal_encoding = ini_get("mbstring.internal_encoding");
-			@ini_set("mbstring.internal_encoding", "ascii");
-		}
-
 		$this->rules = array_merge($this->rules, $this->GetRules( $file_path ));
-
-		//reset php settings
-		if (isset($mb_internal_encoding)) {
-			@ini_set("mbstring.internal_encoding", $mb_internal_encoding);
-		}
 	}
 
 
@@ -790,7 +801,8 @@ class Less_Parser{
 	public function expectChar($tok, $msg = null ){
 		$result = $this->MatchChar($tok);
 		if( !$result ){
-			$this->Error( $msg ? "Expected '" . $tok . "' got '" . $this->input[$this->pos] . "'" : $msg );
+			$msg = $msg ? $msg : "Expected '" . $tok . "' got '" . $this->input[$this->pos] . "'";
+			$this->Error( $msg );
 		}else{
 			return $result;
 		}
@@ -928,7 +940,8 @@ class Less_Parser{
 			$e = true; // Escaped strings
 		}
 
-		if( $this->input[$j] != '"' && $this->input[$j] !== "'" ){
+		$char = $this->input[$j];
+		if( $char !== '"' && $char !== "'" ){
 			return;
 		}
 
@@ -936,15 +949,52 @@ class Less_Parser{
 			$this->MatchChar('~');
 		}
 
-                // Fix for #124: match escaped newlines
-                //$str = $this->MatchReg('/\\G"((?:[^"\\\\\r\n]|\\\\.)*)"|\'((?:[^\'\\\\\r\n]|\\\\.)*)\'/');
-		$str = $this->MatchReg('/\\G"((?:[^"\\\\\r\n]|\\\\.|\\\\\r\n|\\\\[\n\r\f])*)"|\'((?:[^\'\\\\\r\n]|\\\\.|\\\\\r\n|\\\\[\n\r\f])*)\'/');
 
-		if( $str ){
-			$result = $str[0][0] == '"' ? $str[1] : $str[2];
-			return $this->NewObj5('Less_Tree_Quoted',array($str[0], $result, $e, $index, $this->env->currentFileInfo) );
+		$matched = $this->MatchQuoted($char, $j+1);
+		if( $matched === false ){
+			return;
 		}
-		return;
+
+		$quoted = $char.$matched.$char;
+		return $this->NewObj5('Less_Tree_Quoted',array($quoted, $matched, $e, $index, $this->env->currentFileInfo) );
+	}
+
+
+	/**
+	 * When PCRE JIT is enabled in php, regular expressions don't work for matching quoted strings
+	 *
+	 *	$regex	= '/\\G\'((?:[^\'\\\\\r\n]|\\\\.|\\\\\r\n|\\\\[\n\r\f])*)\'/';
+	 *	$regex	= '/\\G"((?:[^"\\\\\r\n]|\\\\.|\\\\\r\n|\\\\[\n\r\f])*)"/';
+	 *
+	 */
+	private function MatchQuoted($quote_char, $i){
+
+		$matched = '';
+		while( $i < $this->input_len ){
+			$c = $this->input[$i];
+
+			//escaped character
+			if( $c === '\\' ){
+				$matched .= $c . $this->input[$i+1];
+				$i += 2;
+				continue;
+			}
+
+			if( $c === $quote_char ){
+				$this->pos = $i+1;
+				$this->skipWhitespace(0);
+				return $matched;
+			}
+
+			if( $c === "\r" || $c === "\n" ){
+				return false;
+			}
+
+			$i++;
+			$matched .= $c;
+		}
+
+		return false;
 	}
 
 
@@ -1121,7 +1171,7 @@ class Less_Parser{
 	}
 
 
-	// A variable entity useing the protective {} e.g. @{var}
+	// A variable entity using the protective {} e.g. @{var}
 	private function parseEntitiesVariableCurly() {
 		$index = $this->pos;
 
@@ -1558,7 +1608,7 @@ class Less_Parser{
 	//
 	// A Rule terminator. Note that we use `peek()` to check for '}',
 	// because the `block` rule will be expecting it, but we still need to make sure
-	// it's there, if ';' was ommitted.
+	// it's there, if ';' was omitted.
 	//
 	private function parseEnd(){
 		return $this->MatchChar(';') || $this->PeekChar('}');
@@ -1981,7 +2031,7 @@ class Less_Parser{
 	}
 
 	private function parseImportOption(){
-		$opt = $this->MatchReg('/\\G(less|css|multiple|once|inline|reference)/');
+		$opt = $this->MatchReg('/\\G(less|css|multiple|once|inline|reference|optional)/');
 		if( $opt ){
 			return $opt[1];
 		}
@@ -2615,8 +2665,6 @@ class Less_Parser{
 	}
 
 }
-
-
  
 
 /**
@@ -2975,7 +3023,7 @@ class Less_Functions{
 	/**
 	 * @param string $op
 	 */
-    public static function operate( $op, $a, $b ){
+	public static function operate( $op, $a, $b ){
 		switch ($op) {
 			case '+': return $a + $b;
 			case '-': return $a - $b;
@@ -3001,7 +3049,7 @@ class Less_Functions{
 		return $value;
 	}
 
-    public static function number($n){
+	public static function number($n){
 
 		if ($n instanceof Less_Tree_Dimension) {
 			return floatval( $n->unit->is('%') ? $n->value / 100 : $n->value);
@@ -3012,7 +3060,7 @@ class Less_Functions{
 		}
 	}
 
-    public static function scaled($n, $size = 255 ){
+	public static function scaled($n, $size = 255 ){
 		if( $n instanceof Less_Tree_Dimension && $n->unit->is('%') ){
 			return (float)$n->value * $size / 100;
 		} else {
@@ -3504,7 +3552,7 @@ class Less_Functions{
 		return new Less_Tree_Quoted( $string->quote , $result, $string->escaped);
 	}
 
-    public function unit( $val, $unit = null) {
+	public function unit( $val, $unit = null) {
 		if( !($val instanceof Less_Tree_Dimension) ){
 			throw new Less_Exception_Compiler('The first argument to unit must be a number' . ($val instanceof Less_Tree_Operation ? '. Have you forgotten parenthesis?' : '.') );
 		}
@@ -3519,7 +3567,7 @@ class Less_Functions{
 			$unit = "";
 		}
 		return new Less_Tree_Dimension($val->value, $unit );
-    }
+	}
 
 	public function convert($val, $unit){
 		return $val->convertTo($unit->value);
@@ -3694,7 +3742,7 @@ class Less_Functions{
 
 	public function argb($color) {
 		if (!$color instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The first argument to argb must be a color' . ($dark instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The first argument to argb must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 
 		return new Less_Tree_Anonymous($color->toARGB());
@@ -3758,7 +3806,12 @@ class Less_Functions{
 	 * @param string $unit
 	 */
 	public function isunit( $n, $unit ){
-		return ($n instanceof Less_Tree_Dimension) && $n->unit->is( ( property_exists($unit,'value') ? $unit->value : $unit) ) ? new Less_Tree_Keyword('true') : new Less_Tree_Keyword('false');
+
+		if( is_object($unit) && property_exists($unit,'value') ){
+			$unit = $unit->value;
+		}
+
+		return ($n instanceof Less_Tree_Dimension) && $n->unit->is($unit) ? new Less_Tree_Keyword('true') : new Less_Tree_Keyword('false');
 	}
 
 	/**
@@ -3768,11 +3821,11 @@ class Less_Functions{
 		return is_a($n, $type) ? new Less_Tree_Keyword('true') : new Less_Tree_Keyword('false');
 	}
 
-	public function tint($color, $amount) {
+	public function tint($color, $amount = null) {
 		return $this->mix( $this->rgb(255,255,255), $color, $amount);
 	}
 
-	public function shade($color, $amount) {
+	public function shade($color, $amount = null) {
 		return $this->mix($this->rgb(0, 0, 0), $color, $amount);
 	}
 
@@ -3989,10 +4042,10 @@ class Less_Functions{
 
 	public function multiply($color1 = null, $color2 = null ){
 		if (!$color1 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The first argument to multiply must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The first argument to multiply must be a color' . ($color1 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 		if (!$color2 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The second argument to multiply must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The second argument to multiply must be a color' . ($color2 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 
 		return $this->colorBlend( array($this,'colorBlendMultiply'),  $color1, $color2 );
@@ -4004,10 +4057,10 @@ class Less_Functions{
 
 	public function screen($color1 = null, $color2 = null ){
 		if (!$color1 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The first argument to screen must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The first argument to screen must be a color' . ($color1 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 		if (!$color2 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The second argument to screen must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The second argument to screen must be a color' . ($color2 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 
 		return $this->colorBlend( array($this,'colorBlendScreen'),  $color1, $color2 );
@@ -4019,10 +4072,10 @@ class Less_Functions{
 
 	public function overlay($color1 = null, $color2 = null){
 		if (!$color1 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The first argument to overlay must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The first argument to overlay must be a color' . ($color1 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 		if (!$color2 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The second argument to overlay must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The second argument to overlay must be a color' . ($color2 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 
 		return $this->colorBlend( array($this,'colorBlendOverlay'),  $color1, $color2 );
@@ -4037,10 +4090,10 @@ class Less_Functions{
 
 	public function softlight($color1 = null, $color2 = null){
 		if (!$color1 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The first argument to softlight must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The first argument to softlight must be a color' . ($color1 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 		if (!$color2 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The second argument to softlight must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The second argument to softlight must be a color' . ($color2 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 
 		return $this->colorBlend( array($this,'colorBlendSoftlight'),  $color1, $color2 );
@@ -4059,10 +4112,10 @@ class Less_Functions{
 
 	public function hardlight($color1 = null, $color2 = null){
 		if (!$color1 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The first argument to hardlight must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The first argument to hardlight must be a color' . ($color1 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 		if (!$color2 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The second argument to hardlight must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The second argument to hardlight must be a color' . ($color2 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 
 		return $this->colorBlend( array($this,'colorBlendHardlight'),  $color1, $color2 );
@@ -4074,10 +4127,10 @@ class Less_Functions{
 
 	public function difference($color1 = null, $color2 = null) {
 		if (!$color1 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The first argument to difference must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The first argument to difference must be a color' . ($color1 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 		if (!$color2 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The second argument to difference must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The second argument to difference must be a color' . ($color2 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 
 		return $this->colorBlend( array($this,'colorBlendDifference'),  $color1, $color2 );
@@ -4089,10 +4142,10 @@ class Less_Functions{
 
 	public function exclusion( $color1 = null, $color2 = null ){
 		if (!$color1 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The first argument to exclusion must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The first argument to exclusion must be a color' . ($color1 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 		if (!$color2 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The second argument to exclusion must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The second argument to exclusion must be a color' . ($color2 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 
 		return $this->colorBlend( array($this,'colorBlendExclusion'),  $color1, $color2 );
@@ -4104,10 +4157,10 @@ class Less_Functions{
 
 	public function average($color1 = null, $color2 = null){
 		if (!$color1 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The first argument to average must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The first argument to average must be a color' . ($color1 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 		if (!$color2 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The second argument to average must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The second argument to average must be a color' . ($color2 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 
 		return $this->colorBlend( array($this,'colorBlendAverage'),  $color1, $color2 );
@@ -4120,10 +4173,10 @@ class Less_Functions{
 
 	public function negation($color1 = null, $color2 = null ){
 		if (!$color1 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The first argument to negation must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The first argument to negation must be a color' . ($color1 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 		if (!$color2 instanceof Less_Tree_Color) {
-			throw new Less_Exception_Compiler('The second argument to negation must be a color' . ($color instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
+			throw new Less_Exception_Compiler('The second argument to negation must be a color' . ($color2 instanceof Less_Tree_Expression ? ' (did you forgot commas?)' : '') );
 		}
 
 		return $this->colorBlend( array($this,'colorBlendNegation'),  $color1, $color2 );
@@ -4228,8 +4281,8 @@ class Less_Tree{
 
 
 		// Non-compressed
-		$tabSetStr = "\n".str_repeat( '  ' , Less_Environment::$tabLevel-1 );
-		$tabRuleStr = $tabSetStr.'  ';
+		$tabSetStr = "\n".str_repeat( Less_Parser::$options['indentation'] , Less_Environment::$tabLevel-1 );
+		$tabRuleStr = $tabSetStr.Less_Parser::$options['indentation'];
 
 		$output->add( " {" );
 		for($i = 0; $i < $ruleCnt; $i++ ){
@@ -4266,7 +4319,8 @@ class Less_Tree{
 		return $obj;
 	}
 
-} 
+}
+ 
 
 /**
  * Parser output
@@ -5353,7 +5407,7 @@ class Less_Tree_Dimension extends Less_Tree{
 				$other = $other->convertTo( $this->unit->usedUnits());
 
 				if( Less_Parser::$options['strictUnits'] && $other->unit->toString() !== $unit->toCSS() ){
-					throw new Less_Exception_Compiler("Incompatible units. Change the units or use the unit function. Bad units: '".$unit->toString() . "' and ".$other->unit->toString()+"'.");
+					throw new Less_Exception_Compiler("Incompatible units. Change the units or use the unit function. Bad units: '" . $unit->toString() . "' and " . $other->unit->toString() . "'.");
 				}
 
 				$value = Less_Functions::operate( $op, $this->value, $other->value);
@@ -5986,6 +6040,11 @@ class Less_Tree_Import extends Less_Tree{
 			return array( $contents );
 		}
 
+		// optional (need to be before "CSS" to support optional CSS imports. CSS should be checked only if empty($this->currentFileInfo))
+		if( isset($this->options['optional']) && $this->options['optional'] && !file_exists($full_path) && (!$evald->css || !empty($this->currentFileInfo))) {
+			return array();
+		}
+
 
 		// css ?
 		if( $evald->css ){
@@ -6036,13 +6095,6 @@ class Less_Tree_Import extends Less_Tree{
 						return array( $full_path, $uri );
 					}
 				}elseif( !empty($rootpath) ){
-
-
-					if( $rooturi ){
-						if( strpos($evald_path,$rooturi) === 0 ){
-							$evald_path = substr( $evald_path, strlen($rooturi) );
-						}
-					}
 
 					$path = rtrim($rootpath,'/\\').'/'.ltrim($evald_path,'/\\');
 
@@ -6108,7 +6160,6 @@ class Less_Tree_Import extends Less_Tree{
 
 	}
 }
-
  
 
 /**
@@ -6381,6 +6432,7 @@ class Less_Tree_NameValue extends Less_Tree{
 	public $index;
 	public $currentFileInfo;
 	public $type = 'NameValue';
+	public $important = '';
 
 	public function __construct($name, $value = null, $index = null, $currentFileInfo = null ){
 		$this->name = $name;
@@ -6395,6 +6447,7 @@ class Less_Tree_NameValue extends Less_Tree{
 			$this->name
 			. Less_Environment::$_outputMap[': ']
 			. $this->value
+			. $this->important
 			. (((Less_Environment::$lastRule && Less_Parser::$options['compress'])) ? "" : ";")
 			, $this->currentFileInfo, $this->index);
 	}
@@ -6402,6 +6455,14 @@ class Less_Tree_NameValue extends Less_Tree{
 	public function compile ($env){
 		return $this;
 	}
+
+	public function makeImportant(){
+		$new = new Less_Tree_NameValue($this->name, $this->value, $this->index, $this->currentFileInfo);
+		$new->important = ' !important';
+		return $new;
+	}
+
+
 }
  
 
@@ -7006,7 +7067,7 @@ class Less_Tree_Ruleset extends Less_Tree{
 
 		$important_rules = array();
 		foreach($this->rules as $rule){
-			if( $rule instanceof Less_Tree_Rule || $rule instanceof Less_Tree_Ruleset ){
+			if( $rule instanceof Less_Tree_Rule || $rule instanceof Less_Tree_Ruleset || $rule instanceof Less_Tree_NameValue ){
 				$important_rules[] = $rule->makeImportant();
 			}else{
 				$important_rules[] = $rule;
@@ -7107,8 +7168,8 @@ class Less_Tree_Ruleset extends Less_Tree{
 		$tabRuleStr = $tabSetStr = '';
 		if( !Less_Parser::$options['compress'] ){
 			if( Less_Environment::$tabLevel ){
-				$tabRuleStr = "\n".str_repeat( '  ' , Less_Environment::$tabLevel );
-				$tabSetStr = "\n".str_repeat( '  ' , Less_Environment::$tabLevel-1 );
+				$tabRuleStr = "\n".str_repeat( Less_Parser::$options['indentation'] , Less_Environment::$tabLevel );
+				$tabSetStr = "\n".str_repeat( Less_Parser::$options['indentation'] , Less_Environment::$tabLevel-1 );
 			}else{
 				$tabSetStr = $tabRuleStr = "\n";
 			}
@@ -7246,8 +7307,8 @@ class Less_Tree_Ruleset extends Less_Tree{
 
 
 		// The paths are [[Selector]]
-		// The first list is a list of comma seperated selectors
-		// The inner list is a list of inheritance seperated selectors
+		// The first list is a list of comma separated selectors
+		// The inner list is a list of inheritance separated selectors
 		// e.g.
 		// .a, .b {
 		//   .c {
@@ -8072,7 +8133,7 @@ class Less_Tree_Mixin_Call extends Less_Tree{
 			} else {
 				$defaultResult = $defTrue;
 				if( ($count[$defTrue] + $count[$defFalse]) > 1 ){
-					throw new Exception( 'Ambiguous use of `default()` found when matching for `'. $this->format($args) + '`' );
+					throw new Exception( 'Ambiguous use of `default()` found when matching for `' . $this->format($args) . '`' );
 				}
 			}
 
@@ -8125,12 +8186,12 @@ class Less_Tree_Mixin_Call extends Less_Tree{
 			foreach($args as $a){
 				$argValue = '';
 				if( $a['name'] ){
-					$argValue += $a['name']+':';
+					$argValue .= $a['name'] . ':';
 				}
 				if( is_object($a['value']) ){
-					$argValue += $a['value']->toCSS();
+					$argValue .= $a['value']->toCSS();
 				}else{
-					$argValue += '???';
+					$argValue .= '???';
 				}
 				$message[] = $argValue;
 			}
@@ -8776,7 +8837,7 @@ class Less_Visitor_processExtends extends Less_Visitor{
 		// a target extend is the one on the ruleset we are looking at copy/edit/pasting in place
 		// e.g. .a:extend(.b) {} and .b:extend(.c) {} then the first extend extends the second one
 		// and the second is the target.
-		// the seperation into two lists allows us to process a subset of chains with a bigger set, as is the
+		// the separation into two lists allows us to process a subset of chains with a bigger set, as is the
 		// case when processing media queries
 		for( $extendIndex = 0, $extendsList_len = count($extendsList); $extendIndex < $extendsList_len; $extendIndex++ ){
 			for( $targetExtendIndex = 0; $targetExtendIndex < count($extendsListTarget); $targetExtendIndex++ ){
@@ -8843,7 +8904,7 @@ class Less_Visitor_processExtends extends Less_Visitor{
 					$selectorTwo = "{unable to calculate}";
 				}
 
-				throw new Less_Exception_Parser("extend circular reference detected. One of the circular extends is currently:"+$selectorOne+":extend(" + $selectorTwo+")");
+				throw new Less_Exception_Parser("extend circular reference detected. One of the circular extends is currently:" . $selectorOne . ":extend(" . $selectorTwo . ")");
 			}
 
 			// now process the new extends on the existing rules so that we can handle a extending b extending c ectending d extending e...
@@ -9736,7 +9797,7 @@ class Less_Exception_Chunk extends Less_Exception_Parser{
 						}
 					}
 					if ($matched) { continue; }
-					return $this->fail("unmatched `" + chr($cc) + "`", $currentChunkStartIndex);
+					return $this->fail("unmatched `" . chr($cc) . "`", $currentChunkStartIndex);
 
 				// /, check for comment
 				case 47:

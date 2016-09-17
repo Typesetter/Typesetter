@@ -263,12 +263,12 @@ namespace gp\tool{
 
 			//make sure the image still exists
 			if( !isset(\gp_resized::$index[$index]) ){
-				continue;
+				return;
 			}
 			$img = \gp_resized::$index[$index];
 			$info = \gp_resized::ImageInfo($img,$width,$height);
 			if( !$info ){
-				continue;
+				return;
 			}
 			$full_path = $dataDir.'/data/_resized/'.$index.'/'.$info['name'];
 			if( file_exists($full_path) ){
@@ -365,6 +365,9 @@ namespace gp\tool{
 		 */
 		public static function CleanArg($path){
 
+			$path = self::Sanitize($path);
+
+
 			//all forward slashes
 			$path = str_replace('\\','/',$path);
 
@@ -393,12 +396,12 @@ namespace gp\tool{
 		 */
 		public static function CleanTitle($title,$spaces = '_'){
 
+			$title = self::Sanitize($title);
+
 			if( empty($title) ){
-				return $title;
+				return '';
 			}
 
-			// Remove control characters
-			$title = preg_replace( '#[[:cntrl:]]#u', '', $title ) ; // 	[\x00-\x1F\x7F]
 
 			$title = str_replace(array('"',"'",'?','*',':'),array(''),$title); // # needed for entities
 
@@ -413,6 +416,33 @@ namespace gp\tool{
 
 			return $title;
 		}
+
+
+		/**
+		 * Remove null and control characters from the string
+		 *
+		 */
+		public static function Sanitize($string){
+
+			$string = \gp\tool\Files::NoNull($string);
+
+			// Remove control characters [\x00-\x1F\x7F]
+			$clean = '';
+			preg_match_all( '#[^[:cntrl:]]+#u', $string, $matches);
+			foreach($matches[0] as $match){
+				$clean .= $match;
+			}
+
+			$clean = rawurldecode($clean);	// remove percent encoded strings like %2e%2e%2f
+
+			//recursively sanitize
+			if( strlen($clean) !== strlen($string) ){
+				$clean = self::Sanitize($clean);
+			}
+
+			return $clean;
+		}
+
 
 		/**
 		 * Use HTML Tidy to validate the $text
@@ -606,7 +636,7 @@ namespace gp\tool{
 							'extraAllowedContent'		=> 'iframe[align,frameborder,height,longdesc,marginheight,marginwidth,name,sandbox,scrolling,seamless,src,srcdoc,width];script[async,charset,defer,src,type,xml]; *[accesskey,contenteditable,contextmenu,dir,draggable,dropzone,hidden,id,lang,spellcheck,style,tabindex,title,translate](*)',
 
 							'toolbar'					=> array(
-																array('Sourcedialog','Source','Templates','ShowBlocks','Undo','Redo','RemoveFormat'), //,'Maximize' does not work well
+																array('Sourcedialog','Templates','ShowBlocks','Undo','Redo','RemoveFormat'), //,'Maximize' does not work well
 																array('Cut','Copy','Paste','PasteText','PasteFromWord','SelectAll','Find','Replace'),
 																array('HorizontalRule','Smiley','SpecialChar','PageBreak','TextColor','BGColor'),
 																array('Link','Unlink','Anchor','Image','Flash','Table'),
@@ -641,7 +671,7 @@ namespace gp\tool{
 			// extra plugins
 			$extra_plugins = array_keys($plugins);
 			if( array_key_exists('extraPlugins',$options) ){
-				$extra_plugins = array_merge( $extra_plugins, explode(',',$options['extraPlugins']), array('sourcedialog') );
+				$extra_plugins = array_merge( $extra_plugins, explode(',',$options['extraPlugins']) );
 			}
 
 			$options = $admin_config['custom_config'] + $options;
@@ -774,6 +804,10 @@ namespace gp\tool{
 
 			$array = array();
 			foreach($gp_index as $slug => $id){
+
+				if( $page->gp_index == $id ){
+					continue;
+				}
 
 				$label		= \gp\tool::GetLabel($slug);
 				$label		= str_replace( array('&lt;','&gt;','&quot;','&#39;','&amp;'), array('<','>','"',"'",'&')  , $label);
@@ -1091,7 +1125,6 @@ namespace gp\tool{
 		public static function NewDirForm(){
 			global $langmessage, $page;
 
-			ob_start();
 
 			echo '<div class="inline_box">';
 			echo '<h2><i class="fa fa-folder-o"></i> '.$langmessage['create_dir'].'</h2>';
@@ -1110,7 +1143,6 @@ namespace gp\tool{
 			echo '</form>';
 			echo '</div>';
 
-			return ob_get_clean();
 		}
 
 

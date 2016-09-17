@@ -105,9 +105,10 @@ class Available extends \gp\admin\Layout{
 		if( isset($info['version']) ){
 			$version = $info['version'];
 		}
-		if( isset($info['id']) && is_numeric($info['id']) ){
-			$id = $info['id'];
+		if( isset($info['addon_id']) && is_numeric($info['addon_id']) ){
+			$id = $info['addon_id'];
 		}
+
 
 
 		//screenshot
@@ -368,8 +369,6 @@ class Available extends \gp\admin\Layout{
 	public function PreviewTheme($theme, $theme_info){
 		global $langmessage,$config;
 
-		$theme_id	= dirname($theme);
-		$color		= $theme_info['color'];
 
 
 		$_REQUEST += array('gpreq' => 'body'); //force showing only the body as a complete html document
@@ -531,7 +530,6 @@ class Available extends \gp\admin\Layout{
 		$config_before		= $config;
 		$gpLayoutsBefore	= $gpLayouts;
 		$theme_folder_name	=& $_POST['folder'];
-		$theme_folder		= $dataDir.'/data/_themes/'.$theme_folder_name;
 
 		if( empty($theme_folder_name) || !ctype_alnum($theme_folder_name) ){
 			message($langmessage['OOPS'].' (Invalid Request)');

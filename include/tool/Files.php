@@ -17,6 +17,57 @@ namespace gp\tool{
 
 
 		/**
+		 * Make sure the $path is a subdirectory of $parent
+		 *
+		 * @param string The file path to check
+		 * @param string The parent file path to check, null to check against $dataDir
+		 * @return bool
+		 */
+		public static function CheckPath( $path, $parent = null){
+			global $dataDir;
+
+			if( is_null($parent) ){
+				$parent = $dataDir;
+			}
+
+			$path = self::Canonicalize($path);
+			if( strpos($path, $parent) === 0 ){
+				return true;
+			}
+
+			return false;
+		}
+
+
+		/**
+		 * Return Canonicalized absolute pathname
+		 * Similar to http://php.net/manual/en/function.realpath.php but does not check file existence
+		 *
+		 * @param string $path
+		 * @return string
+		 */
+		public static function Canonicalize($path) {
+
+			$path			= \gp\tool\Editing::Sanitize($path);
+			$path			= str_replace( '\\', '/', $path);
+			$start_slash	= $path[0] == '/' ? '/' : '';
+			$parts			= explode('/', $path);
+			$parts			= array_filter($parts);
+			$absolutes		= array();
+
+			foreach( $parts as $part ){
+				if( '.' == $part ) continue;
+				if( '..' == $part ){
+					array_pop($absolutes);
+				}else{
+					$absolutes[] = $part;
+				}
+			}
+			return $start_slash . implode('/', $absolutes);
+		}
+
+
+		/**
 		 * Get array from data file
 		 * Example:
 		 * $config = gp\tool\Files::Get('_site/config','config'); or $config = gp\tool\Files::Get('_site/config');
@@ -105,6 +156,7 @@ namespace gp\tool{
 
 		}
 
+
 		/**
 		 * Get the raw contents of a data file
 		 *
@@ -116,14 +168,17 @@ namespace gp\tool{
 			return file_get_contents($file);
 		}
 
+
+		/**
+		 * Return true if the data file exists
+		 *
+		 */
 		public static function Exists($file){
 
 			$file = self::FilePath($file);
 
 			return file_exists($file);
 		}
-
-
 
 
 		/**
@@ -655,7 +710,7 @@ namespace gp\tool{
 		public static function SaveArray(){
 
 			if( gp_data_type === '.json' ){
-				throw new Exception('SaveArray() cannot be used for json data saving');
+				throw new Exception('SaveArray() cannot be used for json data. Use SaveData() instead');
 			}
 
 

@@ -38,7 +38,7 @@ class Addons extends \gp\admin\Addon\Install{
 		$this->GetData();
 
 		$this->page->head_js[]		= '/include/js/auto_width.js';
-		$this->avail_addons		= $this->GetAvailAddons();
+		$this->avail_addons			= $this->GetAvailAddons();
 
 	}
 
@@ -51,6 +51,7 @@ class Addons extends \gp\admin\Addon\Install{
 				$this->LocalInstall();
 			break;
 
+			case 'remote_install':
 			case 'RemoteInstall':
 				$this->RemoteInstall();
 			return;
@@ -79,10 +80,6 @@ class Addons extends \gp\admin\Addon\Install{
 			case 'confirm_uninstall':
 				$this->Confirm_Uninstall();
 			break;
-
-			case 'history':
-				$this->History();
-			return;
 		}
 
 
@@ -361,7 +358,6 @@ class Addons extends \gp\admin\Addon\Install{
 		}
 
 
-		$installed_path		= $dataDir.'/data/_addoncode';
 		$folders			= \gp\tool\Files::ReadDir($addonPath,1);
 		$versions			= array();
 		$avail				= array();
@@ -373,8 +369,11 @@ class Addons extends \gp\admin\Addon\Install{
 			if( !$info ){
 				continue;
 			}
-			$info['upgrade_key']	= \gp\admin\Addon\Tools::UpgradePath($info);
-			$avail[$value]			= $info;
+
+
+			$info['source_folder']		= $addonPath .'/'. $value;
+			$info['upgrade_key']		= \gp\admin\Addon\Tools::UpgradePath($info);
+			$avail[$value]				= $info;
 
 			if( isset($info['Addon_Version']) && isset($info['Addon_Unique_ID']) ){
 
@@ -543,10 +542,18 @@ class Addons extends \gp\admin\Addon\Install{
 			if( !isset($show[$upgrade_key]) ){
 				continue;
 			}
-			$show[$upgrade_key]['upgrade_from'] = $folder;
-			if( isset($info['Addon_Version']) ){
-				$show[$upgrade_key]['upgrade_version'] = $info['Addon_Version'];
+
+
+			if( !isset($info['Addon_Version']) ){
+				$show[$upgrade_key]['upgrade_from'] = $folder;
+				continue;
 			}
+
+			if( !isset($show[$upgrade_key]['upgrade_version']) || version_compare($show[$upgrade_key]['upgrade_version'], $info['Addon_Version'], '<') ){
+				$show[$upgrade_key]['upgrade_from']		= $folder;
+				$show[$upgrade_key]['upgrade_version']	= $info['Addon_Version'];
+			}
+
 		}
 
 		return $show;
@@ -598,12 +605,17 @@ class Addons extends \gp\admin\Addon\Install{
 
 		//upgrade cms
 		if( isset($addon_config['id']) && isset(\gp\admin\Tools::$new_versions[$addon_config['id']]) ){
-			$version_info = \gp\admin\Tools::$new_versions[$addon_config['id']];
-			echo '<div class="gp_notice">';
-			echo '<a href="'.addon_browse_path.'/Plugins?id='.$addon_config['id'].'" data-cmd="remote">';
-			echo $langmessage['new_version'];
-			echo ' &nbsp; '.$version_info['version'].' ('.CMS_READABLE_DOMAIN.')</a>';
-			echo '</div>';
+
+			$new_version = \gp\admin\Tools::$new_versions[$addon_config['id']];
+
+			if( version_compare($new_version['version'],$addon_config['version'],'>') ){
+
+				echo '<div class="gp_notice">';
+				echo '<a href="'.addon_browse_path.'/Plugins?id='.$addon_config['id'].'" data-cmd="remote">';
+				echo $langmessage['new_version'];
+				echo ' &nbsp; '.$new_version['version'].' ('.CMS_READABLE_DOMAIN.')</a>';
+				echo '</div>';
+			}
 		}
 
 	}
@@ -679,18 +691,18 @@ class Addons extends \gp\admin\Addon\Install{
 	 *
 	 */
 	function LocalInstall(){
-		global $dataDir;
+		global $dataDir, $langmessage;
 
 		$_REQUEST				+= array('source'=>'');
 
-		if( (strpos($_REQUEST['source'],'/') !== false ) || (strpos($_REQUEST['source'],'\\') !== false) ){
+		if( !isset($this->avail_addons[$_REQUEST['source']]) ){
 			message($langmessage['OOPS'].' (Invalid Request)');
 			return false;
 		}
 
 
 		$installer				= new \gp\admin\Addon\Installer();
-		$installer->source		= $dataDir.'/addons/'.$_REQUEST['source'];
+		$installer->source		= $this->avail_addons[$_REQUEST['source']]['source_folder'];
 
 		$installer->Install();
 		$installer->OutputMessages();

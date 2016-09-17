@@ -67,65 +67,21 @@
 				xhr.open(method, action, true);
 				xhr.setRequestHeader("Cache-Control", "no-cache");
 				xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-				xhr.setRequestHeader("X-File-Name", filename);
+				//xhr.setRequestHeader("X-File-Name", filename ); // not needed and causes error with unicode filenames
 				xhr.setRequestHeader("X-File-Size", file.fileSize);
 
 
-				// chrome, firefox 4+
+				// chrome, firefox 4+, IE 10+
 				// https://developer.mozilla.org/en/using_xmlhttprequest
-				if (window.FormData) {
-					var f = new FormData();
+				var f = new FormData();
 
-					/* add the form elements */
-					$.each(form_array,function(i,form_input){
-						f.append(form_input.name,form_input.value);
-					});
+				// add the form elements
+				$.each(form_array,function(i,form_input){
+					f.append(form_input.name,form_input.value);
+				});
 
-					f.append(fieldname, file);
-					xhr.send(f);
-
-
-				// ffox 3.6
-				// http://www.openjs.com/articles/ajax_xmlhttp_using_post.php
-				}else if (file.getAsBinary){
-
-					var boundary = '------multipartformboundary' + (new Date).getTime();
-					xhr.setRequestHeader('content-type', 'multipart/form-data; boundary=' + boundary);
-
-					var dashdash = '--';
-					var crlf     = '\r\n';
-
-
-					/* Build RFC2388 string. */
-					/* http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.2 */
-					var builder = '';
-
-					/* add the form elements */
-					$.each(form_array,function(i,form_input){
-						builder += dashdash + boundary + crlf;
-						builder += 'Content-Disposition: form-data; name="'+utf8(form_input.name)+'"';
-						builder += crlf + crlf;
-						builder += utf8(form_input.value);
-						builder += crlf;
-					});
-
-					builder += dashdash + boundary + crlf;
-					builder += 'Content-Disposition: form-data; name="'+fieldname+'"; filename="' + utf8( filename ) + '"';
-					builder += crlf;
-					builder += 'Content-Type: application/octet-stream';
-					builder += crlf + crlf;
-
-					/* Append binary data. */
-					builder += file.getAsBinary();
-					builder += crlf;
-
-					/* Write boundary. */
-					builder += dashdash + boundary + dashdash;
-					builder += crlf;
-
-					xhr.sendAsBinary(builder);
-				}
-
+				f.append(fieldname, file);
+				xhr.send(f);
 			}
 
 		}/* end upload() */

@@ -23,8 +23,8 @@ class Tools{
 
 		echo '<tr><th colspan="2">'.$langmessage['configuration'].'</th></tr>';
 		echo '<tr><td>'.$langmessage['Website_Title'].'</td><td><input type="text" class="text" name="site_title" value="'.htmlspecialchars($_POST['site_title']).'" required /></td></tr>';
-		echo '<tr><td>'.$langmessage['email_address'].'</td><td><input type="email" class="text" name="email" value="'.htmlspecialchars($_POST['email']).'" required /></td></tr>';
-		echo '<tr><td>'.$langmessage['Admin_Username'].'</td><td><input type="text" class="text" name="username" value="'.htmlspecialchars($_POST['username']).'" required /></td></tr>';
+		echo '<tr><td>'.$langmessage['email_address'].'</td><td><input type="email" class="text" name="email" value="'.htmlspecialchars($_POST['email']).'" required id="install_field_email" /></td></tr>';
+		echo '<tr><td>'.$langmessage['Admin_Username'].'</td><td><input type="text" class="text" name="username" value="'.htmlspecialchars($_POST['username']).'" required id="install_field_username" /></td></tr>';
 		echo '<tr><td>'.$langmessage['Admin_Password'].'</td><td><input type="password" class="text" name="password" value="" required /></td></tr>';
 		echo '<tr><td>'.$langmessage['repeat_password'].'</td><td><input type="password" class="text" name="password1" value="" required /></td></tr>';
 	}
@@ -219,7 +219,6 @@ class Tools{
 		$new_index = array();
 		$new_index['Home'] = 'a';
 		$new_index['Heading_Page'] = 'b';
-		$new_index['Help_Videos'] = 'c';
 		$new_index['Child_Page'] = 'd';
 		$new_index['More'] = 'e';
 		$new_index['About'] = 'f';
@@ -247,9 +246,6 @@ class Tools{
 
 		$new_titles['b']['label'] = 'Heading Page';
 		$new_titles['b']['type'] = 'text';
-
-		$new_titles['c']['label'] = 'Help Videos';
-		$new_titles['c']['type'] = 'text';
 
 		$new_titles['d']['label'] = 'Child Page';
 		$new_titles['d']['type'] = 'text';
@@ -335,9 +331,9 @@ class Tools{
 		<hr/>
 		<p>'.CMS_READABLE_DOMAIN.' has a number of resources to help you do even more.</p>
 		<ul>
-		<li>Find more community developed <a href="'.CMS_DOMAIN.'/Themes" title="'.CMS_NAME.' Themes">themes</a> and <a href="'.CMS_DOMAIN.'/Plugins" title="'.CMS_NAME.' Plugin">plugins</a> to enhance your site.</li>
-		<li>Get help in the <a href="'.CMS_DOMAIN.'/Forum" title="'.CMS_NAME.' Forum">'.CMS_NAME.' forum</a>.</li>
-		<li>Show off your <a href="'.CMS_DOMAIN.'/Showcase" title="Sites Using '.CMS_NAME.'">'.CMS_NAME.' powered site</a> or list your <a href="'.CMS_DOMAIN.'/Providers" title="Businesses Using '.CMS_NAME.'">'.CMS_NAME.' related business</a>.</li>
+		<li>Find more community developed <a href="'.CMS_DOMAIN.'/Themes" title="'.CMS_NAME.' Themes" rel="nofollow">themes</a> and <a href="'.CMS_DOMAIN.'/Plugins" title="'.CMS_NAME.' Plugin" rel="nofollow">plugins</a> to enhance your site.</li>
+		<li>Get help in the <a href="'.CMS_DOMAIN.'/Forum" title="'.CMS_NAME.' Forum" rel="nofollow">'.CMS_NAME.' forum</a>.</li>
+		<li>Show off your <a href="'.CMS_DOMAIN.'/Showcase" title="Sites Using '.CMS_NAME.'" rel="nofollow">'.CMS_NAME.' powered site</a> or list your <a href="'.CMS_DOMAIN.'/Providers" title="Businesses Using '.CMS_NAME.'" rel="nofollow">'.CMS_NAME.' related business</a>.</li>
 		</ul>
 
 		</div>
@@ -347,9 +343,9 @@ class Tools{
 		<hr/>
 		<p>There are many ways to contribute to our project:</p>
 		<ul>
-		<li>Fork '.CMS_NAME.' on <a href="https://github.com/Typesetter/Typesetter" target="_blank">github</a>.</li>
-		<li>Like us on <a href="https://www.facebook.com/Typesetter.cms" target="_blank">Facebook</a>.</li>
-		<li>Follow us on <a href="https://twitter.com/TypesetterCMS" target="_blank">Twitter</a>.</li>
+		<li>Fork '.CMS_NAME.' on <a href="https://github.com/Typesetter/Typesetter" target="_blank" rel="nofollow">github</a>.</li>
+		<li>Like us on <a href="https://www.facebook.com/Typesetter.cms" target="_blank" rel="nofollow">Facebook</a>.</li>
+		<li>Follow us on <a href="https://twitter.com/TypesetterCMS" target="_blank" rel="nofollow">Twitter</a>.</li>
 		</ul>
 
 		</div>
@@ -360,31 +356,13 @@ class Tools{
 
 		// Heading Page
 		$content = '<h1>A Heading Page</h1>
-		<ul><li>'.self::Install_Link_Content('Help_Videos','Help Videos').'</li>
 		<li>'.self::Install_Link_Content('Child_Page','Child Page').'</li>
 		</ul>';
 		self::NewTitle( $destination, 'Heading_Page',$content, $config, $new_index);
 
 
-		// Help Videos
-		$content = '<h1>Help Videos</h1>
-		<p>Video tutorials are often a fast and easy way to learn new things quickly.
-		We now have an English version and Deutsch (German) available below.
-		If you make a video tutorial for '.CMS_NAME.', <a href="'.CMS_DOMAIN.'/Contact">let us know</a>, and we\'ll make sure it\'s included in our list.
-		</p>
-		<p>And as always, to edit this page, just click the "Edit" button while logged in.</p>
-
-		<h2>Português</h2>
-		<p><iframe width="640" height="360" src="http://www.youtube.com/embed/KCnGpUzYTbQ" frameborder="0" allowfullscreen></iframe></p>
-
-		<h2>Deutsch</h2>
-		<p>Created by <a href="'.CMS_DOMAIN.'/Service_Provider?id=57" title="IT Ricther on '.CMS_READABLE_DOMAIN.'">IT Richter</a></p>
-		<p><iframe width="640" height="360" src="http://www.youtube.com/embed/04cNgR1EiFY" frameborder="0" allowfullscreen></iframe></p>';
-		self::NewTitle( $destination, 'Help_Videos',$content, $config, $new_index);
-
-
 		// Child Page
-		$content = '<h1>A Child Page</h1><p>This was created as a subpage of your <em>Help Videos</em> . You can easily change the arrangement of all your pages using the '.self::Install_Link_Content('Admin/Menu','Page Manager').'.</p>';
+		$content = '<h1>A Child Page</h1><p>You can easily change the arrangement of all your pages using the '.self::Install_Link_Content('Admin/Menu','Page Manager').'.</p>';
 		self::NewTitle( $destination, 'Child_Page',$content, $config, $new_index);
 
 		// More
@@ -396,11 +374,11 @@ class Tools{
 
 
 		// About
-		$content = '<h1>About '.CMS_NAME.'</h1><p><a href="'.CMS_DOMAIN.'" title="'.CMS_READABLE_DOMAIN.'">'.CMS_NAME.'</a> is a complete Content Management System (CMS) that can help you create rich and flexible web sites with a simple and easy to use interface.</p>
+		$content = '<h1>About '.CMS_NAME.'</h1><p><a href="'.CMS_DOMAIN.'" title="'.CMS_READABLE_DOMAIN.'" rel="nofollow">'.CMS_NAME.'</a> is a complete Content Management System (CMS) that can help you create rich and flexible web sites with a simple and easy to use interface.</p>
 		<h2>'.CMS_NAME.' How To</h2>
-		<p>Learn how to <a href="'.CMS_DOMAIN.'/Docs/Main/Admin" title="'.CMS_NAME.' File Management">manage your files</a>,
-		<a href="'.CMS_DOMAIN.'/Docs/Main/Creating%20Galleries" title="Creating Galleries in '.CMS_NAME.'">create galleries</a> and more in the
-		<a href="'.CMS_DOMAIN.'/Docs/index.php/" title="'.CMS_NAME.' Documentation">'.CMS_NAME.' Documentation</a>.
+		<p>Learn how to <a href="'.CMS_DOMAIN.'/Docs/Main/Admin" title="'.CMS_NAME.' File Management" rel="nofollow">manage your files</a>,
+		<a href="'.CMS_DOMAIN.'/Docs/Main/Creating%20Galleries" title="Creating Galleries in '.CMS_NAME.'" rel="nofollow">create galleries</a> and more in the
+		<a href="'.CMS_DOMAIN.'/Docs/index.php/" title="'.CMS_NAME.' Documentation" rel="nofollow">'.CMS_NAME.' Documentation</a>.
 		</p>
 
 		<h2>'.CMS_NAME.' Features</h2>
@@ -423,49 +401,49 @@ class Tools{
 		self::NewTitle( $destination, 'About',$content, $config, $new_index);
 
 		//Side_Menu
-		$file		= $destination.'/data/_extra/Side_Menu.php';
+		$file		= $destination.'/data/_extra/Side_Menu/page.php';
 		$content	= '<h3>Join the '.CMS_NAME.' Community</h3>
-		<p>Visit '.CMS_READABLE_DOMAIN.' to access the many <a href="'.CMS_DOMAIN.'/Resources" title="'.CMS_NAME.' Community Resources">available resources</a> to help you get the most out of our CMS.</p>
+		<p>Visit '.CMS_READABLE_DOMAIN.' to access the many <a href="'.CMS_DOMAIN.'/Resources" title="'.CMS_NAME.' Community Resources" rel="nofollow">available resources</a> to help you get the most out of our CMS.</p>
 		<ul>
-		<li><a href="'.CMS_DOMAIN.'/Themes" title="'.CMS_NAME.' Themes">Download Themes</a></li>
-		<li><a href="'.CMS_DOMAIN.'/Plugins" title="'.CMS_NAME.' Plugin">Download Plugins</a></li>
-		<li><a href="'.CMS_DOMAIN.'/Forum" title="'.CMS_NAME.' Forum">Get Help in the Forum</a></li>
-		<li><a href="'.CMS_DOMAIN.'/Powered_by" title="Sites using '.CMS_NAME.'">Show off Your Site</a></li>
-		<li><a href="'.CMS_DOMAIN.'/Resources" title="'.CMS_NAME.' Community Resources">And Much More...</a></li>
+		<li><a href="'.CMS_DOMAIN.'/Themes" title="'.CMS_NAME.' Themes" rel="nofollow">Download Themes</a></li>
+		<li><a href="'.CMS_DOMAIN.'/Plugins" title="'.CMS_NAME.' Plugin" rel="nofollow">Download Plugins</a></li>
+		<li><a href="'.CMS_DOMAIN.'/Forum" title="'.CMS_NAME.' Forum" rel="nofollow">Get Help in the Forum</a></li>
+		<li><a href="'.CMS_DOMAIN.'/Powered_by" title="Sites using '.CMS_NAME.'" rel="nofollow">Show off Your Site</a></li>
+		<li><a href="'.CMS_DOMAIN.'/Resources" title="'.CMS_NAME.' Community Resources" rel="nofollow">And Much More...</a></li>
 		</ul>
 		<p class="sm">(Edit this content by clicking &quot;Edit&quot;, it&#39;s that easy!)</p>';
 		self::NewExtra($file,$content);
 
 		//Header
-		$file		= $destination.'/data/_extra/Header.php';
+		$file		= $destination.'/data/_extra/Header/page.php';
 		$content	= '<h1>'.$config['title'].'</h1>
 		<h4>'.'The Fast and Easy CMS'.'</h4>';
 		self::NewExtra($file,$content);
 
 		//Footer
-		$file		= $destination.'/data/_extra/Footer.php';
-		$content	= '<h3><a href="'.CMS_DOMAIN.'/Our_CMS" title="Features of Our CMS">'.CMS_NAME.' Features</a></h3>
+		$file		= $destination.'/data/_extra/Footer/page.php';
+		$content	= '<h3><a href="'.CMS_DOMAIN.'/Our_CMS" title="Features of Our CMS" rel="nofollow">'.CMS_NAME.' Features</a></h3>
 		<p>Easy to use True WYSIWYG Editing.</p>
 		<p>Flat-file data storage and advanced resource management for fast websites.</p>
 		<p>Community driven development</p>
-		<p><a href="'.CMS_DOMAIN.'/Our_CMS" title="Features of Our CMS">And More...</a></p>
+		<p><a href="'.CMS_DOMAIN.'/Our_CMS" title="Features of Our CMS" rel="nofollow">And More...</a></p>
 		<p>If you like '.CMS_NAME.', then you might also like
-		<a href="http://lessphp.typesettercms.com" title="A Less to CSS compiler based on the official lesscss project">Less.php</a>,
-		<a href="http://whatcms.org" title="What CMS? Find out what CMS a site is using">WhatCMS.org</a> and
-		<a href="http://whichcms.org" title="Which CMS? Find out which CMS has the features you\'re looking for.">WhichCMS.org</a>.
+		<a href="http://lessphp.typesettercms.com" title="A Less to CSS compiler based on the official lesscss project" rel="nofollow">Less.php</a>,
+		<a href="http://whatcms.org" title="What CMS? Find out what CMS a site is using" rel="nofollow">WhatCMS.org</a> and
+		<a href="http://whichcms.org" title="Which CMS? Find out which CMS has the features you\'re looking for." rel="nofollow">WhichCMS.org</a>.
 		</p>';
 		self::NewExtra($file,$content);
 
 
 		//Another example area
-		$file		= $destination.'/data/_extra/Lorem.php';
+		$file		= $destination.'/data/_extra/Lorem/page.php';
 		$content	= '<h3>Heading</h3>
 		<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>';
 		self::NewExtra($file,$content);
 
 
 		//contact html
-		$file = $destination.'/data/_extra/Contact.php';
+		$file = $destination.'/data/_extra/Contact/page.php';
 		self::NewExtra($file,'<h2>Contact Us</h2><p>Use the form below to contact us, and be sure to enter a valid email address if you want to hear back from us.</p>');
 
 
@@ -549,8 +527,8 @@ class Tools{
 	}
 
 	static function NewExtra($file, $content){
-		$extra_content = array('type'=>'text','content'=>$content);
-		return \gp\tool\Files::SaveData($file,'extra_content',$extra_content);
+		$extra_content = array(array('type'=>'text','content'=>$content));
+		return \gp\tool\Files::SaveData($file,'file_sections',$extra_content);
 	}
 
 
@@ -570,7 +548,7 @@ class Tools{
 		global $install_ftp_connection, $dirPrefix;
 
 		//only proceed with save if we can test the results
-		if( !\gp\tool\RemoteGet::Test() ){
+		if( \gp\tool\RemoteGet::Test() === false ){
 			return;
 		}
 

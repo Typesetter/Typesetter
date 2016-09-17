@@ -1,6 +1,10 @@
 
-@import 'include/thirdparty/Bootstrap3/less/variables.less';
-@import 'include/css/variables.less';
+@import 'include/thirdparty/Bootstrap3/scss/bootstrap/_variables.scss';
+@import 'include/css/variables.scss';
+
+
+//@import 'include/thirdparty/Bootstrap3/less/variables.less';
+//@import 'include/css/variables.less';
 
 
 
@@ -165,16 +169,16 @@
 	text-overflow:		ellipsis;
 	white-space:		nowrap;
 
-	color:				@btn-warning-color !important;
-	background-color:	@btn-warning-bg;
-	border:				1px solid @btn-warning-border;
+	color:				$btn-warning-color !important;
+	background-color:	$btn-warning-bg;
+	border:				1px solid $btn-warning-border;
 	border-radius:3px;
 	}
 
 #install_status li.ready a{
-	color:				@btn-success-color !important;
-	background-color:	@btn-success-bg;
-	border:				1px solid @btn-success-border;
+	color:				$btn-success-color !important;
+	background-color:	$btn-success-bg;
+	border:				1px solid $btn-success-border;
 }
 
 #install_state{
@@ -201,9 +205,9 @@
 	padding:4px 26px;
 	font-size:15px;
 
-	color:				@btn-success-color;
-	background-color:	@btn-success-bg;
-	border:				1px solid @btn-success-border;
+	color:				$btn-success-color;
+	background-color:	$btn-success-bg;
+	border:				1px solid $btn-success-border;
 	border-radius:5px;
 	}
 

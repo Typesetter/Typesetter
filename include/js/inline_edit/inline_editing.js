@@ -57,7 +57,7 @@ gp_editing = {
 	 * Close after the save if 'Save & Close' was clicked
 	 *
 	 */
-	save_changes:function(callback){
+	SaveChanges:function(callback){
 
 		if( !gp_editor ) return;
 
@@ -81,7 +81,7 @@ gp_editing = {
 		var $edit_div	= $gp.CurrentDiv();
 		var path		= strip_from(gp_editor.save_path,'#');
 		var query		= '';
-		var save_data	= gp_editor.gp_saveData();
+		var save_data	= gp_editing.GetSaveData();
 
 		if( path.indexOf('?') > 0 ){
 			query = strip_to(path,'?')+'&';
@@ -112,7 +112,7 @@ gp_editing = {
 
 
 			//if nothing has changed since saving
-			if( gp_editor.gp_saveData() == save_data ){
+			if( gp_editing.GetSaveData() == save_data ){
 				gp_editor.resetDirty();
 				gp_editing.is_dirty = false;
 				gp_editing.DisplayDirty();
@@ -136,6 +136,20 @@ gp_editing = {
 			},
 		});
 
+	},
+
+	/**
+	 * Get the data to be saved from the gp_editor
+	 * @since 5.0
+	 *
+	 */
+	GetSaveData: function(){
+
+		if( typeof(gp_editor.SaveData) == 'function' ){
+			return gp_editor.SaveData();
+		}
+
+		return gp_editor.gp_saveData();
 	},
 
 
@@ -330,7 +344,13 @@ gp_editing = {
 	 * todo: use regexp to find filetype-.*
 	 */
 	TypeFromClass: function(div){
-		var type = $(div).prop('class').substring(16);
+		var $section	= $(div);
+		var type		= $section.data('gp_type');
+		if( type ){
+			return type;
+		}
+
+		var type = $section.prop('class').substring(16);
 		return type.substring(0, type.indexOf(' '));
 	},
 
@@ -461,9 +481,19 @@ gp_editing = {
 		}else{
 			$('#ckeditor_wrap').removeClass('not_saved');
 		}
+	},
+
+
+	/**
+	 * Deprecated methods
+	 */
+	save_changes: function(callback){
+		console.log('Please use gp_editing.SaveChanges() instead of gp_editing.save_changes()');
+		gp_editing.SaveChanges(callback);
 	}
 
 }
+
 
 	/**
 	 * Close button
@@ -478,7 +508,7 @@ gp_editing = {
 	$gp.links.ck_save = function(evt,arg){
 		evt.preventDefault();
 
-		gp_editing.save_changes(function(){
+		gp_editing.SaveChanges(function(){
 			if( arg && arg == 'ck_close' ){
 				gp_editing.close_editor(evt);
 			}
@@ -500,6 +530,9 @@ gp_editing = {
 
 		$('.inline_edit_area').hide();
 		$( $this.data('arg') ).show();
+
+		$this.siblings().removeClass('selected');
+		$this.addClass('selected');
 	}
 
 
@@ -508,13 +541,6 @@ gp_editing = {
 	 *
 	 */
 	$(window).on('beforeunload',function(){
-
-		//check cached editors
-		for(i in $gp.editors){
-			if( typeof($gp.editors[i].checkDirty) !== 'undefined' && $gp.editors[i].checkDirty() ){
-				return 'Unsaved changes will be lost.';
-			}
-		}
 
 		//check current editor
 		if( typeof(gp_editor.checkDirty) !== 'undefined' && gp_editor.checkDirty() ){
@@ -527,28 +553,44 @@ gp_editing = {
 	/**
 	 * Switch between edit areas
 	 *
+	 * Using $gp.$doc.on('click') so we can stopImmediatePropagation() for other clicks
+	 *
+	 * Not using $('#ExtraEditLink'+area_id).click() to avoid triggering other click handlers
+	 *
 	 */
-	$gp.$doc.on('mousedown','.editable_area:not(.filetype-wrapper_section)',function(evt){
+	$gp.$doc.on('click','.editable_area:not(.filetype-wrapper_section)',function(evt){
+
 
 		//get the edit link
 		var area_id		= $gp.AreaId( $(this) );
-		$('#ExtraEditLink'+area_id).click();
+		if( area_id == $gp.curr_edit_id ){
+			return;
+		}
+
+		evt.stopImmediatePropagation(); //don't check if we need to swith back to the section manager
+
+		var $lnk = $('#ExtraEditLink'+area_id);
+		var arg = $lnk.data('arg');
+		$gp.LoadEditor($lnk.get(0).href, area_id, arg);
 
 	});
 
 
 	/**
-	 * Switch back to section manager
+	 * Switch back to the section manager
+	 * Check for .cke_reset_all because ckeditor creates dialogs outside of gp_admin_html
+	 * .. Issues: continually growing list of areas to check for: colorbox gallery
 	 *
-	 */
 	$gp.$doc.on('click',function(evt){
 
-		if( $(evt.target).closest('.editable_area, #gp_admin_html, a, input').length ){
+		if( $(evt.target).closest('.editable_area, #gp_admin_html, .cke_reset_all, a, input').length ){
 			return;
 		}
 
 		$gp.LoadEditor('?cmd=ManageSections', 0, 'manage_sections');
+
 	});
+	 */
 
 
 	// auto save
@@ -558,7 +600,7 @@ gp_editing = {
 			return;
 		}
 
-		gp_editing.save_changes();
+		gp_editing.SaveChanges();
 
 	},5000);
 

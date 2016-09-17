@@ -216,7 +216,7 @@ div.GPAREA{
   .gpCol-1, .gpCol-2, .gpCol-3,
   .gpCol-4, .gpCol-5, .gpCol-6,
   .gpCol-7, .gpCol-8, .gpCol-9,
-  .gpCol-10 .gpCol-11, .gpCol-12 {
+  .gpCol-10, .gpCol-11, .gpCol-12 {
     float:left;
     min-height:1px;
     padding-left:15px;

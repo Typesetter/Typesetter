@@ -38,6 +38,14 @@ class HTMLParse{
 				break;
 			}
 
+			//comment
+			if( substr($this->doc,$pos,4) === '<!--' ){
+				$this->dom_array[] = substr($this->doc,$offset,$pos-$offset); //get content before comment
+				$offset = $pos + 4;
+				$this->CommentContent($offset);
+				continue;
+			}
+
 			//get tag name
 			$tag_name = $this->TagName($pos+1,$name_len);
 			if( !$tag_name ){
@@ -47,20 +55,12 @@ class HTMLParse{
 
 			//content
 			if( $pos > $offset ){
-				$content = substr($this->doc,$offset,$pos-$offset);
-				$this->dom_array[] = $content;
+				$this->dom_array[] = substr($this->doc,$offset,$pos-$offset);
 			}
 
 
 			//advance offset to just after <tag_name
 			$offset = $pos+1+$name_len;
-
-			//comments
-			if( ($tag_name == '!--') || $tag_name == '!' ){
-				$this->CommentContent($offset);
-				continue;
-			}
-
 			$new_element = array();
 			$new_element['tag'] = $tag_name;
 
@@ -98,6 +98,11 @@ class HTMLParse{
 
 	}
 
+
+	/**
+	 * Parse an html tag name
+	 *
+	 */
 	public function TagName($pos,&$name_len){
 		$tag_name = false;
 		$name_len = strspn($this->doc,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890/!:--',$pos);
@@ -108,52 +113,89 @@ class HTMLParse{
 	}
 
 
+	/**
+	 * Parse html attributes
+	 * match name="value", name=value or name
+	 * accounts for name="value ' value"
+	 *
+	 */
 	public function GetAttributes(&$offset){
 
-		//match name="value", name=value or name
-		// accounts for name="value ' value"
-		$pattern_name = '([^\'"<>=\s/]+)';
-		$pattern_value = '(?:\s*=\s*((?:([\'"])(?U)[^\4]*\4)|(?:[^\'"<>/\s]+)))?';
-		$pattern = '#^\s+('.$pattern_name.$pattern_value.')#';
-
-		$attributes = array();
-		do{
-
-			//get the substr because offset is not avail until php 4.3.3
-			$this->doc = substr($this->doc,$offset);
-
-			//get the substr because offset is not avail until php 4.3.3
-			$continue = false;
-			if( preg_match($pattern, $this->doc, $matches, PREG_OFFSET_CAPTURE) ){
-				$attr_string = $matches[1][0];
-				$offset = $matches[1][1] + strlen($attr_string);
-				$continue = true;
+		$this->doc		= substr($this->doc,$offset);
+		$pattern_name	= '#^\s+([^\'"<>=\s/]+)\s*(=?)\s*#';
+		$attributes		= array();
 
 
-				//
-				$attr_name = $matches[2][0];
-				$attr_value = '';
-				if( isset($matches[3]) ){
-					$attr_value = $matches[3][0];
-					if( !empty($matches[4][0]) ){
-						$attr_value = trim($attr_value,'"');
-					}
-				}
-				if( !isset($attributes[$attr_name]) ){
-					$attributes[$attr_name] = $attr_value;
+		while( preg_match($pattern_name, $this->doc, $matches) ){
+
+			$attr_name	= $matches[1];
+			$attr_value = null;
+			$offset		= strlen($matches[0]);
+
+			//get attribute value
+			if( !empty($matches[2]) ){
+
+				$attr_match			= $this->MatchAttribute($offset);
+				if( $attr_match ){
+					$offset += strlen($attr_match[0]);
+					$attr_value = $attr_match[1];
 				}
 			}
 
-		}while($continue);
+
+			if( !isset($attributes[$attr_name]) ){
+				$attributes[$attr_name] = $attr_value;
+			}
+
+			$this->doc = substr($this->doc,$offset);
+			$offset = 0;
+		}
+
 
 		$offset = 0;
 
 		return $attributes;
 	}
 
+	/**
+	 * Get an html attribute value
+	 *
+	 */
+	protected function MatchAttribute(&$offset){
 
-	//support simple comments <!-- comments go here -->
-	// does not support full sgml comments <!------> second comment -->
+		$char = $this->doc[$offset];
+
+		//double quote
+		if( $char === '"' ){
+			if( preg_match('#\\G"([^"]*)"#', $this->doc, $matches, 0, $offset) ){
+				return $matches;
+			}
+			return;
+		}
+
+		//single quote
+		if( $char == "'" ){
+			if( preg_match('#\\G\'([^\']*)\'#', $this->doc, $matches, 0, $offset) ){
+				return $matches;
+			}
+			return;
+		}
+
+
+
+		//not quoted
+		if( preg_match('#\\G\s*([^\'"<>=\s/]+)#', $this->doc, $matches, 0, $offset) ){
+			return $matches;
+		}
+
+	}
+
+
+	/**
+	 * Parse HTML comments <!-- comments go here -->
+	 * Does not support full sgml comments <!------> second comment -->
+	 *
+	 */
 	public function CommentContent(&$offset){
 
 		$this->doc = substr($this->doc,$offset);

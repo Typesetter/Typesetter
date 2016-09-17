@@ -23,7 +23,7 @@ class Permalinks{
 		global $langmessage,$dataDir;
 
 
-		$this->server_name = \gp\tool\Session::ServerName();
+		$this->server_name = \gp\tool::ServerName(true);
 
 		//get current rules
 		$this->rule_file_name	= self::IIS() ? 'web.config' : '.htaccess';
@@ -364,7 +364,7 @@ class Permalinks{
 	 */
 	public function CanTestRules(){
 
-		if( !\gp\tool\RemoteGet::Test() ){
+		if( \gp\tool\RemoteGet::Test() === false ){
 			return false;
 		}
 
@@ -483,6 +483,12 @@ class Permalinks{
 		\gp\tool::SetLinkPrefix();
 
 
+		//without server name, we can't get a valid absoluteUrl
+		if( \gp\tool::ServerName() === false ){
+			return false;
+		}
+
+
 		$abs_url					= \gp\tool::AbsoluteUrl('Site_Map','',true,false); //can't be special_site_map, otherwise \gp\tool::IndexToTitle() will be called during install
 		$_SERVER['gp_rewrite']		= $rewrite_before;
 		\gp\tool::SetLinkPrefix();
@@ -556,7 +562,7 @@ class Permalinks{
 
 		$home_root			= rtrim($home_root,'/').'/';
 		$new_lines			= array();
-		$server_name		= \gp\tool\Session::ServerName();
+		$server_name		= \gp\tool::ServerName(true);
 
 
 		// with www

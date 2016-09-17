@@ -177,6 +177,7 @@ class Archive{
 
 
 		if( !is_dir($path) ){
+			$localname = ltrim($localname,'\\/'); //so windows can open zip archives
 			return $this->php_object->AddFile($path, $localname);
 		}
 

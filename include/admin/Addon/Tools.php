@@ -23,6 +23,8 @@ class Tools extends \gp\special\Base{
 
 	public $invalid_folders		= array();
 
+	private $pass_arg;
+
 
 
 	//
@@ -192,9 +194,8 @@ class Tools extends \gp\special\Base{
 		}
 
 
-		//echo '<form action="'.\gp\tool::GetUrl($this->scriptUrl,'cmd=rate&arg='.$this->addon_info['pass_arg']).'" method="post">';
 		echo '<form action="'.\gp\tool::GetUrl($this->scriptUrl).'" method="post">';
-		echo '<input type="hidden" name="arg" value="'.$this->addon_info['pass_arg'].'"/>';
+		echo '<input type="hidden" name="arg" value="'.htmlspecialchars($this->pass_arg).'"/>';
 
 
 		echo '<table class="rating_table">';
@@ -221,9 +222,10 @@ class Tools extends \gp\special\Base{
 		echo '</td></tr>';
 
 
+		$server		= \gp\tool::ServerName();
+		$host		= $server.$dirPrefix;
 
 		echo '<tr><td>From</td><td>';
-		$host = $_SERVER['HTTP_HOST'].$dirPrefix;
 		echo '<input type="text" name="host"  size="50" value="'.htmlspecialchars($host).'" readonly="readonly" class="gpinput gpreadonly" />';
 		echo '<br/>';
 		echo '<input type="checkbox" name="show_site" value="hidden" /> Click to hide your site information on '.CMS_READABLE_DOMAIN.'.';
@@ -295,6 +297,7 @@ class Tools extends \gp\special\Base{
 		$dir = str_replace('\\','/',$dir);
 		$dir = str_replace('../','./',$dir);
 		$full_dir = $dataDir.$dir;
+
 		if( !file_exists($full_dir) ){
 			$this->messages[] = $langmessage['OOPS'].' (directory doesn\'t exist)';
 			return false;
@@ -312,9 +315,10 @@ class Tools extends \gp\special\Base{
 			return false;
 		}
 
-		$this->addon_info['pass_arg'] = $dir;
-		$this->addon_info['id'] = $ini['Addon_Unique_ID'];
-		$this->addon_info['name'] = $ini['Addon_Name'];
+
+		$this->pass_arg				= $dir;
+		$this->addon_info['id']		= $ini['Addon_Unique_ID'];
+		$this->addon_info['name']	= $ini['Addon_Name'];
 
 		return true;
 	}
@@ -325,10 +329,9 @@ class Tools extends \gp\special\Base{
 
 		if( isset($config['addons'][$arg]) && isset($config['addons'][$arg]['id']) ){
 
-			$this->addon_info['pass_arg'] = $config['addons'][$arg]['id'];
-			$this->addon_info['id'] = $config['addons'][$arg]['id'];
-			$this->addon_info['name'] = $config['addons'][$arg]['name'];
-			$this->addon_info['addonDir'] = $arg;
+			$this->pass_arg					= $config['addons'][$arg]['id'];;
+			$this->addon_info['id']			= $config['addons'][$arg]['id'];
+			$this->addon_info['name']		= $config['addons'][$arg]['name'];
 			return true;
 
 		}
@@ -342,10 +345,10 @@ class Tools extends \gp\special\Base{
 		foreach($config['addons'] as $addonDir => $data){
 			if( isset($data['id']) && ($data['id'] == $arg) ){
 
-				$this->addon_info['id'] = $arg;
-				$this->addon_info['pass_arg'] = $arg;
-				$this->addon_info['name'] = $data['name'];
-				$this->addon_info['addonDir'] = $addonDir;
+				$this->pass_arg					= $arg;
+
+				$this->addon_info['id']			= $data['id'];
+				$this->addon_info['name']		= $data['name'];
 				return true;
 			}
 		}
@@ -353,9 +356,9 @@ class Tools extends \gp\special\Base{
 		foreach($this->addonHistory as $data ){
 			if( isset($data['id']) && ($data['id'] == $arg) ){
 
-				$this->addon_info['id'] = $arg;
-				$this->addon_info['pass_arg'] = $arg;
-				$this->addon_info['name'] = $data['name'];
+				$this->pass_arg					= $arg;
+				$this->addon_info['id']			= $data['id'];
+				$this->addon_info['name']		= $data['name'];
 				return true;
 			}
 		}
@@ -399,13 +402,13 @@ class Tools extends \gp\special\Base{
 
 
 		//send rating
-		$data['addon_id'] = $id;
-		$data['rating'] = $_POST['rating'];
-		$data['review'] = $_POST['review'];
-		$data['cmd'] = 'rate';
-		$data['HTTP_HOST'] =& $_SERVER['HTTP_HOST'];
-		$data['SERVER_ADDR'] =& $_SERVER['SERVER_ADDR'];
-		$data['dirPrefix'] = $dirPrefix;
+		$data['addon_id']		= $id;
+		$data['rating']			= (int)$_POST['rating'];
+		$data['review']			= $_POST['review'];
+		$data['cmd']			= 'rate';
+		$data['HTTP_HOST']		= \gp\tool::ServerName();
+		$data['SERVER_ADDR']	= $_SERVER['SERVER_ADDR'];
+		$data['dirPrefix']		= $dirPrefix;
 		if( isset($_POST['show_site']) && $_POST['show_site'] == 'hidden' ){
 			$data['show_site'] = 'hidden';
 		}
@@ -416,11 +419,11 @@ class Tools extends \gp\special\Base{
 
 
 		//save review information
-		$this->addonReviews[$id] = array();
-		$this->addonReviews[$id]['rating'] = $_POST['rating'];
-		$this->addonReviews[$id]['review'] = substr($_POST['review'],0,500);
-		$this->addonReviews[$id]['review_id'] = $review_id;
-		$this->addonReviews[$id]['time'] = time();
+		$this->addonReviews[$id]				= array();
+		$this->addonReviews[$id]['rating']		= (int)$_POST['rating'];
+		$this->addonReviews[$id]['review']		= substr($_POST['review'],0,500);
+		$this->addonReviews[$id]['review_id']	= $review_id;
+		$this->addonReviews[$id]['time']		= time();
 		$this->SaveAddonData();
 
 		$this->ShowRatingText = false;
@@ -430,9 +433,8 @@ class Tools extends \gp\special\Base{
 
 	public function PingRating($data){
 
-		$path = CMS_DOMAIN.'/index.php/Special_Addons';
-		$path .= '?'.http_build_query($data,'','&');
-		$contents = file_get_contents($path);
+		$path		= CMS_DOMAIN.'/index.php/Special_Addons?'.http_build_query($data,'','&');
+		$contents	= \gp\tool\RemoteGet::Get_Successful($path);
 
 		return $this->RatingResponse($contents);
 	}
@@ -574,7 +576,7 @@ class Tools extends \gp\special\Base{
 	 * @return mixed
 	 */
 	public function UpgradePath($ini_info,$config_key='addons'){
-		global $config;
+		global $config, $dataDir;
 
 		if( !isset($config[$config_key]) ){
 			return false;
@@ -597,6 +599,20 @@ class Tools extends \gp\special\Base{
 		if( isset($ini_info['Addon_Name']) ){
 			foreach($config[$config_key] as $addon_key => $data){
 				if( isset($data['name']) && $data['name'] == $ini_info['Addon_Name'] ){
+					return $addon_key;
+				}
+			}
+		}
+
+		//by path
+		if( isset($ini_info['source_folder']) ){
+			foreach($config[$config_key] as $addon_key => $data){
+				if( !isset($data['code_folder_part']) ){
+					continue;
+				}
+				$source_folder = $dataDir.$data['code_folder_part'];
+
+				if( $source_folder === $ini_info['source_folder'] ){
 					return $addon_key;
 				}
 			}

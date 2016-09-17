@@ -166,7 +166,7 @@ class Classes extends \gp\special\Base{
 			echo '<input size="16" class="gpinput" type="text" name="class_names[]" value="' . $classArray['names'] . '"/>';
 			echo '</td><td>';
 			echo '<input size="64" class="gpinput" type="text" name="class_desc[]" value="' . $classArray['desc'] . '"/> ';
-			echo '<a class="gpbutton rm_table_row" title="Remove Item" data-cmd="rm_table_row">&times;</a>';
+			echo '<a class="gpbutton rm_table_row" title="Remove Item" data-cmd="rm_table_row"><i class="fa fa-trash"></i></a>';
 			echo '</td></tr>';
 		}
 
@@ -234,21 +234,5 @@ class Classes extends \gp\special\Base{
 		}
 	}
 
-
-	/**
-	 * Determine if the current theme is a bootstrap theme
-	 *
-	 */
-	function UsingBootstrap(){
-		global $dataDir, $gpLayouts, $config;
-
-		$defaultTheme		= $gpLayouts[$config['gpLayout']];
-
-		//$isBootswatchTheme	= strpos($defaultTheme,'Bootswatch') >= 0 ? true : false;
-
-
-		//msg("Default Theme: " . pre($defaultTheme));
-		//msg("Default Theme is Bootswatch: " . $isBootswatchTheme );
-	}
 
 }

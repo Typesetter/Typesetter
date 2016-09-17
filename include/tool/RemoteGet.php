@@ -10,6 +10,13 @@ namespace gp\tool{
 		public static $redirected;
 		public static $maxlength = -1;	// The maximum bytes to read. eg: stream_get_contents($handle, $maxlength)
 		public static $debug;
+		public static $methods	= array('stream','curl','fopen','fsockopen');
+
+
+		protected $url_array = array();
+		protected $body = '';
+		protected $headers = '';
+		protected $bytes_written_total = 0;
 
 
 
@@ -24,11 +31,10 @@ namespace gp\tool{
 		 * also handle redirects.
 		 *
 		 * @return mixed string indicates the method, False indicates it's not compatible
-		*/
+		 */
 		public static function Test(){
 
-			$methods = array('stream','fopen','fsockopen');
-			foreach($methods as $method){
+			foreach(self::$methods as $method){
 				if( self::Supported($method) ){
 					return $method;
 				}
@@ -47,20 +53,18 @@ namespace gp\tool{
 				return false;
 			}
 
-			$url_fopen = \gp\tool::IniGet('allow_url_fopen');
-			$php5 = version_compare(phpversion(), '5.0', '>=');
-
 			switch($method){
-				case 'stream':
-				return $url_fopen && $php5;
-
-				case 'fopen':
-				return $url_fopen;
 
 				case 'fsockopen':
 				return function_exists('fsockopen');
+
+				case 'curl';
+				return function_exists('curl_init') && function_exists('curl_exec');
+
 			}
-			return false;
+
+			//stream and fopen
+			return \gp\tool::IniGet('allow_url_fopen');
 		}
 
 
@@ -69,11 +73,14 @@ namespace gp\tool{
 		 *
 		 */
 		public static function Get_Successful($url,$args=array()){
-			$result = self::Get($url,$args);
+
+			$getter	= new \gp\tool\RemoteGet();
+			$result = $getter->Get($url,$args);
 
 			if( (int)$result['response']['code'] >= 200 && (int)$result['response']['code'] < 300 ){
 				return $result['body'];
 			}
+
 			return false;
 		}
 
@@ -82,41 +89,27 @@ namespace gp\tool{
 		 * Attempt to get the resource at $url
 		 * Loop through all potential methods until successful
 		 */
-		public static function Get($url,$args=array()){
+		public function Get($url,$args=array()){
 
-			self::$debug			= array();
-			self::$debug['Redir']	= 0;
-			self::$redirected		= null;
+			self::$debug					= array();
+			self::$debug['Redir']			= 0;
+			self::$debug['FailedMethods']	= '';
+			self::$debug['NotSupported']	= '';
+			self::$redirected				= null;
 
-			return self::_get($url,$args);
+			return $this->_get($url,$args);
 		}
 
-		public static function _get($url, $args = array()){
+		protected function _get($url, $args = array()){
 
-			$url					= rawurldecode($url);
-			$methods				= array('stream','fopen','fsockopen');
+			$url				= rawurldecode($url);
+			$url				= str_replace(' ','%20',$url); //spaces in the url can make the request fail
+			$url				= self::FixScheme($url);
+			$this->url_array	= self::ParseUrl($url);
 
-			foreach($methods as $method){
-				if( !self::Supported($method) ){
-					continue;
-				}
-
-				$result = self::GetMethod($method,$url,$args);
-				if( $result === false ){
-					return false;
-				}
-
-				self::$debug['Method']	= $method;
-				self::$debug['Len']		= strlen($result['body']);
-
-				return $result;
+			if( $this->url_array === false ){
+				return false;
 			}
-
-			return false;
-		}
-
-		public static function GetMethod($method,$url,$args=array()){
-			global $langmessage;
 
 
 			//arguments
@@ -138,59 +131,52 @@ namespace gp\tool{
 			$args += $defaults;
 
 
-			//check url
-			$url = str_replace(' ','%20',$url); //spaces in the url can make the request fail
-			if( parse_url($url) === false ){
-				return false;
+			foreach(self::$methods as $method){
+
+				if( !self::Supported($method) ){
+					self::$debug['NotSupported']	.= $method.',';
+					continue;
+				}
+
+				$result = self::GetMethod($method,$url,$args);
+				if( $result === false ){
+					self::$debug['FailedMethods'] .= $method.',';
+					return false;
+				}
+
+				self::$debug['Method']	= $method;
+				self::$debug['Len']		= strlen($result['body']);
+
+				return $result;
 			}
 
-			//decide how to get
-			switch($method){
-
-	/*
-				case 'http_request':
-				return self::http_request($url,$args);
-	*/
-
-				case 'stream':
-				return self::stream_request($url,$args);
-
-				case 'fopen':
-				return self::fopen_request($url,$args);
-
-				case 'fsockopen':
-				return self::fsockopen_request($url,$args);
-
-				default:
-					//message($langmessage['OOPS']);
-				return false;
-
-			}
-
+			return false;
 		}
 
 
-		public static function http_request($url,$r){
+		public function GetMethod($method,$url,$args=array()){
 
+			$func = $method.'_request';
 
+			if( method_exists($this,$func) ){
+				return $this->$func( $url, $args );
+			}
 
+			return false;
 		}
 
-		public static function stream_request($url,$r){
 
-			$arrURL = parse_url($url);
-			if( !isset($arrURL['scheme']) ){
-				$arrURL['scheme'] = 'http';
-			}
-			if( ($arrURL['scheme'] != 'http') && ($arrURL['scheme'] != 'https') ){
-				$url = preg_replace('|^' . preg_quote($arrURL['scheme'], '|') . '|', 'http', $url);
-			}
+		/**
+		 * Fetch a url using php's stream_get_contents() function
+		 *
+		 */
+		public function stream_request($url,$r){
 
 			//create context
 			$arrContext = array();
 			$arrContext['http'] = array(
 					'method'			=> 'GET',
-					'user_agent'		=> 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:36.0) Gecko/20100101 Firefox/36.0', //$r['user-agent'],
+					'user_agent'		=> $r['user-agent'],
 					'max_redirects'		=> $r['redirection'],
 					'protocol_version'	=> (float) $r['httpversion'],
 					'timeout'			=> $r['timeout'],
@@ -210,9 +196,10 @@ namespace gp\tool{
 
 			$context = stream_context_create($arrContext);
 
-			$handle = @fopen($url, 'r', false, $context);
+			$handle = fopen($url, 'r', false, $context);
 
 			if( !$handle ){
+				self::$debug['stream']	= 'no handle';
 				return false;
 			}
 
@@ -226,7 +213,7 @@ namespace gp\tool{
 
 			// If location is found, then assume redirect and redirect to location.
 			if( isset($processedHeaders['headers']['location']) ){
-				return self::Redirect($processedHeaders,$r,$arrURL);
+				return $this->Redirect($processedHeaders,$r);
 			}
 
 			$strResponse = self::chunkTransferDecode($strResponse,$processedHeaders);
@@ -234,36 +221,31 @@ namespace gp\tool{
 			return array('headers' => $processedHeaders['headers'], 'body' => $strResponse, 'response' => $processedHeaders['response'], 'cookies' => $processedHeaders['cookies']);
 		}
 
+		/**
+		 * Fetch a url using php's fopen() function
+		 *
+		 */
+		public function fopen_request($url,$r){
 
-		public static function fopen_request($url,$r){
+			$handle		= fopen($url, 'r');
 
-			$arrURL = parse_url($url);
-			if( !isset($arrURL['scheme']) ){
-				$arrURL['scheme'] = 'http';
+			if( !$handle ){
+				self::$debug['fopen']	= 'no handle';
+				return false;
 			}
-			if( ($arrURL['scheme'] != 'http') && ($arrURL['scheme'] != 'https') ){
-				$url = preg_replace('|^' . preg_quote($arrURL['scheme'], '|') . '|', 'http', $url);
-			}
-
-			$handle = @fopen($url, 'r');
-
-			if ( !$handle ) return false;
 
 			self::stream_timeout($handle,$r['timeout']);
 
-			$strResponse = '';
-			while ( ! feof($handle) ){
-				$strResponse .= fread($handle, 4096);
-			}
+			$strResponse	= $this->ReadHandle($handle);
+			$theHeaders		= self::StreamHeaders($handle);
 
-			$theHeaders = self::StreamHeaders($handle);
 			fclose($handle);
 
 			$processedHeaders = self::processHeaders($theHeaders);
 
 			// If location is found, then assume redirect and redirect to location.
 			if( isset($processedHeaders['headers']['location']) ){
-				return self::Redirect($processedHeaders,$r,$arrURL);
+				return $this->Redirect($processedHeaders,$r);
 			}
 
 			$strResponse = self::chunkTransferDecode($strResponse,$processedHeaders);
@@ -272,14 +254,52 @@ namespace gp\tool{
 		}
 
 
-		public static function fsockopen_request($url,$r){
+		/**
+		 *  Parse a URL and return its components
+		 *
+		 */
+		public static function ParseUrl($url){
 
 			$arrURL = parse_url($url);
-			$fsockopen_host = $arrURL['host'];
+
 			if( !isset($arrURL['port']) ){
 				$arrURL['port'] = 80;
 			}
-			$arrURL += array('path'=>''); //prevent notice
+			$arrURL += array('path'=>'');
+
+			return $arrURL;
+		}
+
+
+		/**
+		 * Make sure the url has an http or https scheme
+		 *
+		 */
+		public static function FixScheme($url){
+
+			preg_match('#^[a-z]+:#',$url,$match);
+
+			if( empty($match) ){
+				return 'http://'.$url;
+			}
+
+			$match[0] = strtolower($match[0]);
+			if( $match[0] !== 'http:' && $match[0] !== 'https:' ){
+				$url = substr($url,strlen($match[0]));
+				$url = 'http://'.ltrim($url,'/');
+			}
+
+			return $url;
+		}
+
+
+		/**
+		 * Fetch a url using php's fsockopen() function
+		 *
+		 */
+		public function fsockopen_request($url,$r){
+
+			$fsockopen_host		= $this->url_array['host'];
 
 			//fsockopen has issues with 'localhost' with IPv6 with certain versions of PHP, It attempts to connect to ::1,
 			// which fails when the server is not setup for it. For compatibility, always connect to the IPv4 address.
@@ -289,30 +309,20 @@ namespace gp\tool{
 			$iError = null; // Store error number
 			$strError = null; // Store error string
 
-			$handle = @fsockopen( $fsockopen_host, $arrURL['port'], $iError, $strError, $r['timeout'] );
+			$handle = fsockopen( $fsockopen_host, $this->url_array['port'], $iError, $strError, $r['timeout'] );
 
 			if( $handle === false ){
+				self::$debug['fsock']	= 'no handle';
 				return false;
 			}
 			self::stream_timeout($handle,$r['timeout']);
 
-			$requestPath = $arrURL['path'] . ( isset($arrURL['query']) ? '?' . $arrURL['query'] : '' );
-			if ( empty($requestPath) )
-				$requestPath .= '/';
 
-			$strHeaders = strtoupper($r['method']) . ' ' . $requestPath . ' HTTP/' . $r['httpversion'] . "\r\n";
-			$strHeaders .= 'Host: ' . $arrURL['host'] . "\r\n";
-
-			if ( isset($r['user-agent']) )
-				$strHeaders .= 'User-agent: ' . $r['user-agent'] . "\r\n";
-
-			$strHeaders .= "\r\n";
+			$strHeaders = $this->ReqHeader($r);
 
 			fwrite($handle, $strHeaders);
 
-			$strResponse = '';
-			while ( ! feof($handle) )
-				$strResponse .= fread($handle, 4096);
+			$strResponse = $this->ReadHandle($handle);
 
 			fclose($handle);
 
@@ -321,7 +331,7 @@ namespace gp\tool{
 
 			// If location is found, then assume redirect and redirect to location.
 			if( isset($processedHeaders['headers']['location']) ){
-				return self::Redirect($processedHeaders,$r,$arrURL);
+				return $this->Redirect($processedHeaders,$r);
 			}
 
 			$strResponse = self::chunkTransferDecode($strResponse,$processedHeaders);
@@ -329,6 +339,151 @@ namespace gp\tool{
 			return array('headers' => $processedHeaders['headers'], 'body' => $process['body'], 'response' => $processedHeaders['response'], 'cookies' => $processedHeaders['cookies']);
 		}
 
+
+		/**
+		 * Return request header string
+		 *
+		 */
+		protected function ReqHeader($r){
+
+			$requestPath = $this->url_array['path'] . ( isset($this->url_array['query']) ? '?' . $this->url_array['query'] : '' );
+			if ( empty($requestPath) )
+				$requestPath .= '/';
+
+			$strHeaders = strtoupper($r['method']) . ' ' . $requestPath . ' HTTP/' . $r['httpversion'] . "\r\n";
+			$strHeaders .= 'Host: ' . $this->url_array['host'] . "\r\n";
+
+			if ( isset($r['user-agent']) )
+				$strHeaders .= 'User-agent: ' . $r['user-agent'] . "\r\n";
+
+			$strHeaders .= "\r\n";
+
+			return $strHeaders;
+		}
+
+
+		/**
+		 * Read all content from the handle
+		 *
+		 */
+		protected function ReadHandle($handle){
+			$response = '';
+			while( !feof($handle) ){
+				$response .= fread($handle, 4096);
+			}
+
+			return $response;
+		}
+
+
+		/**
+		 * Fetch a url using php's curl library
+		 *
+		 */
+		protected function curl_request($url, $r){
+
+			$handle = curl_init();
+
+			/*
+			 * CURLOPT_TIMEOUT and CURLOPT_CONNECTTIMEOUT expect integers. Have to use ceil since.
+			 * a value of 0 will allow an unlimited timeout.
+			 */
+			$timeout = (int) ceil( $r['timeout'] );
+			curl_setopt( $handle, CURLOPT_CONNECTTIMEOUT, $timeout );
+			curl_setopt( $handle, CURLOPT_TIMEOUT, $timeout );
+
+			curl_setopt( $handle, CURLOPT_URL, $url);
+			curl_setopt( $handle, CURLOPT_RETURNTRANSFER, true );
+			//curl_setopt( $handle, CURLOPT_SSL_VERIFYHOST, ( $ssl_verify === true ) ? 2 : false );
+			//curl_setopt( $handle, CURLOPT_SSL_VERIFYPEER, $ssl_verify );
+
+			//if ( $ssl_verify ) {
+			//	curl_setopt( $handle, CURLOPT_CAINFO, $r['sslcertificates'] );
+			//}
+
+			curl_setopt( $handle, CURLOPT_USERAGENT, $r['user-agent'] );
+
+			/*
+			 * The option doesn't work with safe mode or when open_basedir is set, and there's
+			 * a bug #17490 with redirected POST requests, so handle redirections outside Curl.
+			 */
+			curl_setopt( $handle, CURLOPT_FOLLOWLOCATION, false );
+			if ( defined( 'CURLOPT_PROTOCOLS' ) ) // PHP 5.2.10 / cURL 7.19.4
+				curl_setopt( $handle, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS );
+
+			curl_setopt( $handle, CURLOPT_CUSTOMREQUEST, $r['method'] );
+			curl_setopt( $handle, CURLOPT_HEADERFUNCTION, array( $this, 'curl_headers' ) );
+			curl_setopt( $handle, CURLOPT_WRITEFUNCTION, array( $this, 'curl_body' ) );
+			curl_setopt( $handle, CURLOPT_HEADER, 0 );
+
+			if( $r['httpversion'] == '1.0' ){
+				curl_setopt( $handle, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0 );
+			}else{
+				curl_setopt( $handle, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1 );
+			}
+
+			curl_exec( $handle );
+
+			if( curl_errno( $handle ) ){
+				self::$debug['curl_error'] = curl_error( $handle );
+				curl_close( $handle );
+				return false;
+			}
+			curl_close( $handle );
+
+
+			$processedHeaders = self::processHeaders($this->headers);
+
+			// If location is found, then assume redirect and redirect to location.
+			if( isset($processedHeaders['headers']['location']) ){
+				return $this->Redirect($processedHeaders,$r);
+			}
+
+			return array('headers' => $processedHeaders['headers'], 'body' => $this->body, 'response' => $processedHeaders['response'], 'cookies' => $processedHeaders['cookies']);
+		}
+
+
+		/**
+		 * Grab the headers of the cURL request
+		 *
+		 * Each header is sent individually to this callback, so we append to the $header property for temporary storage
+		 *
+		 * @since 3.2.0
+		 * @access private
+		 * @return int
+		 */
+		private function curl_headers( $handle, $headers ) {
+			$this->headers .= $headers;
+			return strlen( $headers );
+		}
+
+
+		/**
+		 * Grab the body of the cURL request
+		 *
+		 * The contents of the document are passed in chunks, so we append to the $body property for temporary storage.
+		 * Returning a length shorter than the length of $data passed in will cause cURL to abort the request with CURLE_WRITE_ERROR
+		 *
+		 * @since 3.6.0
+		 * @access private
+		 * @return int
+		 */
+		private function curl_body( $handle, $data ) {
+			$data_length = strlen( $data );
+
+			$this->body .= $data;
+
+			$this->bytes_written_total += $data_length;
+
+			// Upon event of this function returning less than strlen( $data ) curl will error with CURLE_WRITE_ERROR.
+			return $data_length;
+		}
+
+
+		/**
+		 * Set the stream timeout
+		 *
+		 */
 		public static function stream_timeout($handle,$time){
 
 			if( !function_exists('stream_set_timeout') ){
@@ -344,7 +499,8 @@ namespace gp\tool{
 		 * Handle a redirect response
 		 *
 		 */
-		public static function Redirect($headers,$r,$arrURL){
+		public function Redirect($headers,$r){
+
 			if( $r['redirection']-- < 0 ){
 				trigger_error('Too many redirects');
 				return false;
@@ -356,13 +512,13 @@ namespace gp\tool{
 				$location = array_pop($location);
 			}
 			if( $location{0} == '/' ){
-				$location = $arrURL['scheme'].'://'.$arrURL['host'].$location;
+				$location = $this->url_array['scheme'].'://'.$this->url_array['host'].$location;
 			}
 
 			self::$redirected		= $location;
 			self::$debug['Redir']	= 1;
 
-			return self::_get($location, $r);
+			return $this->_get($location, $r);
 		}
 
 
@@ -381,46 +537,62 @@ namespace gp\tool{
 		 * @param string $body Body content
 		 * @return string Chunked decoded body on success or raw body on failure.
 		 */
-		public static function chunkTransferDecode($body,&$headers){
+		public static function chunkTransferDecode($body,$headers){
 
-			if( empty($body) ){
-				return $body;
-			}
-			if( !isset( $headers['headers']['transfer-encoding'] ) || 'chunked' != $headers['headers']['transfer-encoding'] ){
+			if( !self::IsChunked($body,$headers) ){
 				return $body;
 			}
 
+			$parsed_body = '';
 
-			$body = str_replace(array("\r\n", "\r"), "\n", $body);
-			// The body is not chunked encoding or is malformed.
-			if ( ! preg_match( '/^[0-9a-f]+(\s|\n)+/mi', trim($body) ) )
-				return $body;
-
-			$parsedBody = '';
-			//$parsedHeaders = array(); Unsupported
+			// We'll be altering $body, so need a backup in case of error.
+			$body_original = $body;
 
 			while ( true ) {
-				$hasChunk = (bool) preg_match( '/^([0-9a-f]+)(\s|\n)+/mi', $body, $match );
+				$has_chunk = (bool) preg_match( '/^([0-9a-f]+)[^\r\n]*\r\n/i', $body, $match );
+				if ( ! $has_chunk || empty( $match[1] ) )
+					return $body_original;
 
-				if ( $hasChunk ) {
-					if ( empty( $match[1] ) )
-						return $body;
+				$length = hexdec( $match[1] );
+				$chunk_length = strlen( $match[0] );
 
-					$length = hexdec( $match[1] );
-					$chunkLength = strlen( $match[0] );
+				// Parse out the chunk of data.
+				$parsed_body .= substr( $body, $chunk_length, $length );
 
-					$strBody = substr($body, $chunkLength, $length);
-					$parsedBody .= $strBody;
+				// Remove the chunk from the raw data.
+				$body = substr( $body, $length + $chunk_length );
 
-					$body = ltrim(str_replace(array($match[0], $strBody), '', $body), "\n");
-
-					if ( "0" == trim($body) )
-						return $parsedBody; // Ignore footer headers.
-				} else {
-					return $body;
-				}
+				// End of the document.
+				if ( '0' === trim( $body ) )
+					return $parsed_body;
 			}
 		}
+
+
+		/**
+		 * Return true if the response body is chunked
+		 *
+		 */
+		public static function IsChunked($body, $headers){
+
+			$body = trim($body);
+
+			if( empty($body) ){
+				return false;
+			}
+			if( !isset( $headers['headers']['transfer-encoding'] ) || 'chunked' != $headers['headers']['transfer-encoding'] ){
+				return false;
+			}
+
+
+			// The body is not chunked encoded or is malformed.
+			if( ! preg_match( '/^([0-9a-f]+)[^\r\n]*\r\n/i',$body) ){
+				return false;
+			}
+
+			return true;
+		}
+
 
 		/**
 		 * Gets stream headers, return false otherwise
@@ -433,8 +605,6 @@ namespace gp\tool{
 		 * @return array|false Array with unprocessed string headers.
 		 */
 		public static function StreamHeaders($handle){
-
-			$debug['stream'] = 1;
 
 			$meta = stream_get_meta_data($handle);
 			if( !isset($meta['wrapper_data']) ){
@@ -480,6 +650,47 @@ namespace gp\tool{
 		 * 					Then a numbered array is returned as the value of that header-key.
 		 */
 		public static function processHeaders($headers) {
+
+			$headers		= self::HeadersArray($headers);
+			$response		= array('code' => 0, 'message' => '');
+			$cookies		= array();
+			$newheaders		= array();
+
+			foreach( $headers as $tempheader ){
+
+				if( false === strpos($tempheader, ':') ){
+					$stack = explode(' ', $tempheader, 3);
+					$stack[] = '';
+					list( , $response['code'], $response['message']) = $stack;
+					continue;
+				}
+
+				list($key, $value)	= explode(':', $tempheader, 2);
+				$key				= strtolower( $key );
+				$value				= trim( $value );
+
+				if( isset( $newheaders[$key] ) ){
+					if( !is_array( $newheaders[$key] ) ){
+						$newheaders[$key] = array( $newheaders[$key] );
+					}
+					$newheaders[$key][] = $value;
+				}else{
+					$newheaders[$key] = $value;
+				}
+			}
+
+
+			self::$debug['Headers'] = count($newheaders);
+
+			return array('response' => $response, 'headers' => $newheaders, 'cookies' => $cookies);
+		}
+
+
+		/**
+		 * Split header header string into array if needed
+		 *
+		 */
+		protected static function HeadersArray($headers){
 			// split headers, one per array element
 			if ( is_string($headers) ) {
 				// tolerate line terminator: CRLF = LF (RFC 2616 19.3)
@@ -489,40 +700,10 @@ namespace gp\tool{
 				// create the headers array
 				$headers = explode("\n", $headers);
 			}
+			$headers		= (array)$headers;
+			$headers		= array_filter($headers);
 
-			$response = array('code' => 0, 'message' => '');
-
-			$cookies = array();
-			$newheaders = array();
-			if( is_array($headers) ){
-				foreach ( $headers as $tempheader ) {
-					if ( empty($tempheader) )
-						continue;
-
-					if ( false === strpos($tempheader, ':') ) {
-						list( , $iResponseCode, $strResponseMsg) = explode(' ', $tempheader, 3);
-						$response['code'] = $iResponseCode;
-						$response['message'] = $strResponseMsg;
-						continue;
-					}
-
-					list($key, $value) = explode(':', $tempheader, 2);
-
-					if ( !empty( $value ) ) {
-						$key = strtolower( $key );
-						if ( isset( $newheaders[$key] ) ) {
-							$newheaders[$key] = array( $newheaders[$key], trim( $value ) );
-						} else {
-							$newheaders[$key] = trim( $value );
-						}
-					}
-				}
-			}
-
-
-			self::$debug['Headers'] = count($newheaders);
-
-			return array('response' => $response, 'headers' => $newheaders, 'cookies' => $cookies);
+			return $headers;
 		}
 
 

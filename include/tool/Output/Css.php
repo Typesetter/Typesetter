@@ -87,10 +87,14 @@ class Css{
 	public static function ParseScss( &$scss_files ){
 		global $dataDir;
 
-		$compiler	= new \Leafo\ScssPhp\Compiler();
-		$compiled	= false;
-		$combined	= array();
+		$first_file 		= current($scss_files);
+		$relative			= self::GetRelPath($first_file);
 
+
+		$compiler			= new \gp\tool\Output\Scss();
+		$compiler->url_root = \gp\tool::GetDir(dirname($relative));
+		$compiled			= false;
+		$combined			= array();
 
 
 		//add variables for url paths
@@ -189,19 +193,15 @@ class Css{
 				}
 
 				// handle relative and absolute paths
-				if( !empty($dataDir) && strpos($less,$dataDir) === false ){
-					$relative = $less;
-					$less = $dataDir.'/'.ltrim($less,'/');
-				}else{
-					$relative = substr($less,strlen($dataDir));
-				}
+				$relative	= self::GetRelPath($less);
+				$less		= $dataDir.'/'.ltrim($relative,'/');
 
 				$parser->ParseFile( $less, \gp\tool::GetDir(dirname($relative)) );
 			}
 
 			$compiled = $parser->getCss();
 
-		}catch(Exception $e){
+		}catch( \Exception $e){
 			if( \gp\tool::LoggedIn() ){
 				msg('LESS Compile Failed: '.$e->getMessage());
 			}
@@ -219,7 +219,20 @@ class Css{
 		return $compiled;
 	}
 
+	/**
+	 * Return the relative path of a file
+	 *
+	 */
+	public static function GetRelPath($path){
+		global $dataDir;
 
+
+		if( !empty($dataDir) && strpos($path,$dataDir) === 0 ){
+			$path = substr($path,strlen($dataDir));
+		}
+
+		return rtrim($path,'/');
+	}
 
 }
 

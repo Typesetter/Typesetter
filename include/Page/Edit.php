@@ -8,8 +8,6 @@ class Edit extends \gp\Page{
 
 	protected $draft_file;
 	protected $draft_exists			= false;
-	protected $draft_stats			= array();
-	protected $draft_meta			= array();
 	protected $revision;
 
 	protected $permission_edit;
@@ -36,7 +34,7 @@ class Edit extends \gp\Page{
 		$cmd = \gp\tool::GetCommand();
 		$this->RunCommands($cmd);
 
-		$this->contentBuffer = ob_get_clean();
+		$this->contentBuffer .= ob_get_clean();
 	}
 
 
@@ -152,8 +150,8 @@ class Edit extends \gp\Page{
 
 		if( $this->draft_exists ){
 			$this->file_sections	= \gp\tool\Files::Get($this->draft_file,'file_sections');
-			$this->draft_meta		= \gp\tool\Files::$last_meta;
-			$this->draft_stats		= \gp\tool\Files::$last_stats;
+			$this->meta_data		= \gp\tool\Files::$last_meta;
+			$this->file_stats		= \gp\tool\Files::$last_stats;
 		}
 
 		$this->checksum				= $this->Checksum();
@@ -178,10 +176,12 @@ class Edit extends \gp\Page{
 
 		//history
 		$backup_files		= $this->BackupFiles();
-		$times				= array_keys($backup_files);
-		$admin_links[]		= \gp\tool::Link($this->title,'<i class="fa fa-backward"></i> '.$langmessage['Previous'],'cmd=ViewRevision&time='.array_pop($times),array('data-cmd'=>'cnreq'));
+		if( count($backup_files) ){
+			$times				= array_keys($backup_files);
+			$admin_links[]		= \gp\tool::Link($this->title,'<i class="fa fa-backward"></i> '.$langmessage['Previous'],'cmd=ViewRevision&time='.array_pop($times),array('data-cmd'=>'cnreq'));
+		}
 
-		$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+		$admin_links[]		= \gp\tool::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
 
 
 
@@ -194,7 +194,7 @@ class Edit extends \gp\Page{
 				$label					= '<i class="fa fa-eye"></i> '.$langmessage['Visibility'].': '.$langmessage['Public'];
 				$q						.= '&visibility=private';
 			}
-			$attrs						= array('title'=>$label,'data-cmd'=>'creq');
+			$attrs						= array('data-cmd'=>'creq');
 			$admin_links[]		= \gp\tool::Link($this->title,$label,$q,$attrs);
 		}
 
@@ -366,6 +366,7 @@ class Edit extends \gp\Page{
 		$content		= \gp\tool\Output\Sections::RenderSection($new_section,$num,$this->title,$this->file_stats);
 
 		$new_section['attributes']['class']		.= ' '.$class;
+		$new_section['gp_type']					= $type;
 		$orig_attrs								= $new_section['attributes'];
 
 
@@ -389,7 +390,7 @@ class Edit extends \gp\Page{
 			$section['attributes']['class']			.= ' editable_area';
 		}
 
-		$section_attrs		= array('gp_label','gp_color','gp_collapse');
+		$section_attrs		= array('gp_label','gp_color','gp_collapse','gp_type');
 		foreach($section_attrs as $attr){
 			if( !empty($section[$attr]) ){
 				$section['attributes']['data-'.$attr] = $section[$attr];
@@ -476,8 +477,7 @@ class Edit extends \gp\Page{
 	protected function SaveSection($i,$arg, &$unused_sections ){
 		global $langmessage;
 
-		$section_types			= \gp\tool\Output\Sections::GetTypes();
-		$section_attrs			= array('gp_label','gp_color','gp_collapse');
+		$section_attrs			= array('gp_label','gp_color','gp_collapse','gp_type');
 
 		// moved / copied sections
 		if( ctype_digit($arg) ){
@@ -494,11 +494,6 @@ class Edit extends \gp\Page{
 
 		// otherwise, new sections
 		}else{
-
-			if( !isset($section_types[$arg]) ){
-				msg($langmessage['OOPS'].' (Unknown Type: '.$arg.')');
-				return false;
-			}
 			$new_section	= \gp\tool\Editing::DefaultContent($arg);
 		}
 
@@ -560,13 +555,14 @@ class Edit extends \gp\Page{
 	public function SectionEdit(){
 		global $langmessage, $page;
 
+		$page->ajaxReplace = array();
+
 		$section_num = $_REQUEST['section'];
 		if( !is_numeric($section_num) || !isset($this->file_sections[$section_num])){
 			echo 'false;';
 			return false;
 		}
 
-		$page->ajaxReplace = array();
 
 		$cmd = \gp\tool::GetCommand();
 
@@ -662,6 +658,7 @@ class Edit extends \gp\Page{
 
 		$types			= (array)$types;
 		$text_label		= self::SectionLabel($types);
+		$type_id = substr( base_convert( md5( json_encode( $types ) ), 16, 32 ), 0, 6);
 
 		$label			= '';
 		if( !empty($img) ){
@@ -673,7 +670,7 @@ class Edit extends \gp\Page{
 		if( $checkbox ){
 
 
-			if( count($types) > 1 ){
+			if( count($types) > 1 || is_array($types[0]) ){
 				$q		= array('types' => $types,'wrapper_class'=>$wrapper_class);
 				$q		= json_encode($q);
 			}else{
@@ -691,7 +688,7 @@ class Edit extends \gp\Page{
 			}
 
 			$id		= 'checkbox_'.md5($q);
-			echo '<div>';
+			echo '<div data-type-id="' . $type_id . '">';
 			echo '<input name="content_type" type="radio" value="'.htmlspecialchars($q).'" id="'.$id.'" required '.$checked.' />';
 			echo '<label for="'.$id.'">';
 			echo $label;
@@ -701,13 +698,13 @@ class Edit extends \gp\Page{
 
 		//links used for new sections
 		$attrs					= array('data-cmd'=>'AddSection','class'=>'preview_section');
-		if( count($types) > 1 ){
+		if( count($types) > 1 || is_array($types[0]) ){
 			$attrs['data-response']	= $page->NewNestedSection($types, $wrapper_class);
 		}else{
 			$attrs['data-response']	= $page->GetNewSection($types[0]);
 		}
 
-		return '<div><a '.\gp\tool::LinkAttr($attrs,$label).'>'.$label.'</a></div>';
+		return '<div data-type-id="' . $type_id . '"><a '.\gp\tool::LinkAttr($attrs,$label).'>'.$label.'</a></div>';
 	}
 
 	/**
@@ -743,7 +740,7 @@ class Edit extends \gp\Page{
 
 		$class = '';
 
-		if( strpos($type,'.') ){
+		if( !is_array($type) && strpos($type,'.') ){
 			list($type,$class) = explode('.',$type,2);
 		}
 
@@ -763,7 +760,7 @@ class Edit extends \gp\Page{
 		}
 
 		//return true if nothing has changed
-		if( $this->checksum === $this->Checksum() ){
+		if( $backup && $this->checksum === $this->Checksum() ){
 			return true;
 		}
 
@@ -805,28 +802,28 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public function SaveBackup(){
-		global $dataDir;
+		global $dataDir, $gpAdmin;
 
-		$dir = $dataDir.'/data/_backup/pages/'.$this->gp_index;
+		$dir	= $dataDir.'/data/_backup/pages/'.$this->gp_index;
+		$time	= \gp\tool\Editing::ReqTime();		//use the request time
 
+		//just one backup per edit session (auto-saving would create too many backups otherwise)
+		$previous_backup	= $this->BackupFile( $time );
+		if( !empty($previous_backup) ){
+			return true;
+		}
 
+		// get the raw contents so we can add the size to the backup file name
 		if( $this->draft_exists ){
 			$contents	= \gp\tool\Files::GetRaw($this->draft_file);
 		}else{
 			$contents	= \gp\tool\Files::GetRaw($this->file);
 		}
 
-		//use the request time
-		$time = \gp\tool\Editing::ReqTime();
-
 
 		//backup file name
-		$len			= strlen($contents);
-		$backup_file	= $dir.'/'.$time.'.'.$len;
-
-		if( isset($this->file_stats['username']) && $this->file_stats['username'] ){
-			$backup_file .= '.'.$this->file_stats['username'];
-		}
+		$len				= strlen($contents);
+		$backup_file		= $dir.'/'.$time.'.'.$len.'.'.$gpAdmin['username'];
 
 		//compress
 		if( function_exists('gzencode') && function_exists('readgzfile') ){
@@ -834,13 +831,10 @@ class Edit extends \gp\Page{
 			$contents = gzencode($contents,9);
 		}
 
-		if( file_exists($backup_file) ){
-			return true;
-		}
-
 		if( !\gp\tool\Files::Save( $backup_file, $contents ) ){
 			return false;
 		}
+
 
 		$this->CleanBackupFolder();
 		return true;
@@ -881,7 +875,7 @@ class Edit extends \gp\Page{
 			return false;
 		}
 
-		if( !\gp\tool\Files::SaveData($this->file,'file_sections',$this->file_sections,$this->draft_meta) ){
+		if( !\gp\tool\Files::SaveData($this->file,'file_sections',$this->file_sections,$this->meta_data) ){
 			msg($langmessage['OOPS'].' (Draft not published)');
 			return false;
 		}
@@ -912,28 +906,15 @@ class Edit extends \gp\Page{
 		if( $this->draft_exists ){
 
 			$size = filesize($this->draft_file);
-			$time = $this->draft_stats['modified'];
-			$rows[$time] = $this->HistoryRow($time, $size, $this->draft_stats['username'],'draft');
+			$time = $this->file_stats['modified'];
+			$rows[$time] = $this->HistoryRow($time, $size, $this->file_stats['username'],'draft');
 		}
 
 
 		foreach($files as $time => $file){
-			//remove .gze
-			if( strpos($file,'.gze') === (strlen($file)-4) ){
-				$file = substr($file,0,-4);
-			}
+			$info = $this->BackupInfo($file);
 
-			//get info from filename
-			$name		= basename($file);
-			$parts		= explode('.',$name,3);
-			$time		= array_shift($parts);
-			$size		= array_shift($parts);
-			$username	= false;
-			if( count($parts) ){
-				$username = array_shift($parts);
-			}
-
-			$rows[$time] = $this->HistoryRow($time, $size, $username);
+			$rows[$time] = $this->HistoryRow($info['time'], $info['size'], $info['username']);
 		}
 
 
@@ -955,6 +936,34 @@ class Edit extends \gp\Page{
 		echo '</table>';
 
 		echo '<p>'.$langmessage['history_limit'].': '.$config['history_limit'].'</p>';
+	}
+
+
+	/**
+	 * Get info about a backup from the filename
+	 *
+	 */
+	public function BackupInfo($file){
+
+		$info = array();
+
+		//remove .gze
+		if( strpos($file,'.gze') === (strlen($file)-4) ){
+			$file = substr($file,0,-4);
+		}
+
+		$name				= basename($file);
+		$parts				= explode('.',$name,3);
+
+		$info['time']		= array_shift($parts);
+		$info['size']		= array_shift($parts);
+		$info['username']	= '';
+
+		if( count($parts) ){
+			$info['username'] = array_shift($parts);
+		}
+
+		return $info;
 	}
 
 
@@ -1070,8 +1079,7 @@ class Edit extends \gp\Page{
 			readgzfile($full_path);
 			$contents	= ob_get_clean();
 
-			$dir		= \gp\tool::DirName($full_path);
-			$full_path	= tempnam($dir,'backup').'.php';
+			$full_path	= substr($full_path,0,-3).'php';
 
 			\gp\tool\Files::Save( $full_path, $contents );
 
@@ -1092,6 +1100,12 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public function ViewCurrent(){
+
+		if( !$this->draft_exists ){
+			$this->DefaultDisplay();
+			return;
+		}
+
 		$file_sections			= \gp\tool\Files::Get($this->file,'file_sections');
 		$this->revision			= $this->fileModTime;
 		echo \gp\tool\Output\Sections::Render($file_sections,$this->title,$this->file_stats);
@@ -1148,10 +1162,12 @@ class Edit extends \gp\Page{
 	 */
 	public function BackupFile( $time ){
 		global $dataDir;
+
 		$files = $this->BackupFiles();
 		if( !isset($files[$time]) ){
 			return;
 		}
+
 		return $dataDir.'/data/_backup/pages/'.$this->gp_index.'/'.$files[$time];
 	}
 
@@ -1264,6 +1280,7 @@ class Edit extends \gp\Page{
 		}else{
 			$dir_piece = '/image';
 		}
+
 		//remember browse directory
 		$this->meta_data['gallery_dir'] = $dir_piece;
 		$this->SaveThis(false);

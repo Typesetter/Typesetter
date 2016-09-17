@@ -276,7 +276,7 @@ class Page extends \gp\Page{
 		arsort($similar);
 
 		$redir_key		= key($similar);
-		$location		= \gp\tool::GetUrl($redir_key,http_build_query($_GET),false);
+		$location		= \gp\tool::GetUrl($redir_key,'',false);
 		\gp\tool::Redirect($location);
 	}
 

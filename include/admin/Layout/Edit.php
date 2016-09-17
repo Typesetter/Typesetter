@@ -93,7 +93,7 @@ class Edit extends \gp\admin\Layout{
 
 		$cmd = \gp\tool::GetCommand();
 
-		$this->LayoutCommands($cmd);
+		$this->LayoutCommands();
 		$this->RunCommands($cmd);
 	}
 
@@ -148,6 +148,13 @@ class Edit extends \gp\admin\Layout{
 		$this->page->head_js[]		= '/include/js/theme_content_outer.js';
 
 
+		//custom css
+		$css			= $this->layoutCSS($this->curr_layout);
+		$dir			= $layout_info['dir'].'/'.$layout_info['theme_color'];
+		$style_type		= \gp\tool\Output::StyleType($dir);
+
+
+
 		//Iframe
 		echo '<div id="gp_iframe_wrap">';
 		$url = \gp\tool::GetUrl('Admin_Theme_Content/Edit/'.rawurlencode($layout),'cmd=in_iframe');
@@ -185,14 +192,23 @@ class Edit extends \gp\admin\Layout{
 		echo '</div>';
 		echo '<div class="separator"></div>';
 
+		//sytax links
+		echo '<div style="text-align:right">';
+		echo 'Syntax: ';
+		if( $style_type == 'scss' ){
+			echo '<a href="http://sass-lang.com/" target="_blank">Scss</a>';
+		}elseif( $style_type == 'less' ){
+			echo '<a href="http://lesscss.org/" target="_blank">Less</a>';
+		}else{
+			echo 'CSS';
+		}
+		echo '</div>';
 
-		echo '</td></tr><tr><td class="full_height"><div class="full_height">';
 
 
-		//custom css
-		$css			= $this->layoutCSS($this->curr_layout);
-		$dir			= $layout_info['dir'].'/'.$layout_info['theme_color'];
-		$style_type		= \gp\tool\Output::StyleType($dir);
+		echo '</td></tr><tr><td class="full_height">';
+
+		echo '<div class="full_height">';
 
 		if( empty($css) ){
 			$var_file 			= $dir.'/variables.'.$style_type;
@@ -497,11 +513,16 @@ class Edit extends \gp\admin\Layout{
 
 				echo '<tr><th colspan="2">&nbsp;</th></tr>';
 
-				$extrasFolder = $dataDir.'/data/_extra';
-				$files = \gp\tool\Files::ReadDir($extrasFolder);
+				$extrasFolder	= $dataDir.'/data/_extra';
+				$files			= scandir($extrasFolder);
 				asort($files);
 				foreach($files as $file){
-					$extraName = $file;
+
+					$extraName	= \gp\admin\Content\Extra::AreaExists($file);
+					if( $extraName === false ){
+						continue;
+					}
+
 					echo '<tr><td>';
 					echo str_replace('_',' ',$extraName);
 					echo '</td><td class="add">';
@@ -511,27 +532,29 @@ class Edit extends \gp\admin\Layout{
 
 
 				//new extra area
-				echo '<tr><td>';
+				echo '<tr><td colspan="2">';
 				echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post">';
 				echo '<input type="hidden" name="cmd" value="addcontent" />';
 				echo '<input type="hidden" name="addtype" value="new_extra" />';
 				echo '<input type="hidden" name="where" value="'.htmlspecialchars($param).'" />';
 
-				echo '<input type="text" name="extra_area" value="" size="15" class="gpinput"/>';
+				echo '<input type="text" name="extra_area" value="" size="15" class="gpinput" required placeholder="'.htmlspecialchars($langmessage['name']).'" />';
 				$types = \gp\tool\Output\Sections::GetTypes();
 				echo '<select name="type" class="gpselect">';
 				foreach($types as $type => $info){
 					echo '<option value="'.$type.'">'.$info['label'].'</option>';
 				}
 				echo '</select> ';
-				echo ' <input type="submit" name="" value="'.$langmessage['Add New Area'].'" class="gpbutton"/>';
-				echo '</form>';
-				echo '</td><td colspan="2" class="add">';
-				echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post">';
-				echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
+				echo ' <input type="submit" name="" value="'.$langmessage['Add New Area'].'" class="gpbutton gpvalidate"/>';
 				echo '</form>';
 				echo '</td></tr>';
 				echo '</table>';
+
+				echo '<p>';
+				echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post" style="text-align:right">';
+				echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
+				echo '</form>';
+				echo '</p>';
 
 			echo '</div>';
 
@@ -637,7 +660,7 @@ class Edit extends \gp\admin\Layout{
 			case 'new_extra':
 				$extra_name = $this->NewExtraArea();
 				if( $extra_name === false ){
-					message($langmessage['OOPS'].'(2)');
+					message($langmessage['OOPS'].' (2)');
 					return false;
 				}
 				$insert = 'Extra:'.$extra_name;
@@ -692,14 +715,14 @@ class Edit extends \gp\admin\Layout{
 			return false;
 		}
 
-		$data = \gp\tool\Editing::DefaultContent($_POST['type']);
-		$file = $dataDir.'/data/_extra/'.$title.'.php';
+		$data	= \gp\tool\Editing::DefaultContent($_POST['type']);
+		$file	= $dataDir.'/data/_extra/'.$title.'/page.php';
 
-		if( \gp\tool\Files::Exists($file) ){
+		if( \gp\admin\Content\Extra::AreaExists($title) !== false ){
 			return $title;
 		}
 
-		if( !\gp\tool\Files::SaveData($file,'extra_content',$data) ){
+		if( !\gp\tool\Files::SaveData($file,'file_sections',array($data) ) ){
 			message($langmessage['OOPS']);
 			return false;
 		}
@@ -806,13 +829,13 @@ class Edit extends \gp\admin\Layout{
 			echo '<div id="layout_menus" '.$style.'>';
 			echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post">';
 			echo '<input type="hidden" name="handle" value="'.htmlspecialchars($_GET['handle']).'" />';
-			echo '<input type="hidden" name="return" value="" />';
+
 
 			echo '<table class="bordered">';
 			$this->PresetMenuForm($menu_args);
 
 			echo '<tr><td class="add" colspan="2">';
-			echo '<button type="submit" name="cmd" value="LayoutMenuSave" class="gpsubmit">'.$langmessage['save'].'</button>';
+			echo '<button type="submit" name="cmd" value="LayoutMenuSave" class="gpajax gpsubmit">'.$langmessage['save'].'</button>';
 			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
 			echo '</td></tr>';
 			echo '</table>';
@@ -828,7 +851,6 @@ class Edit extends \gp\admin\Layout{
 			echo '<div id="layout_custom" '.$style.'>';
 			echo '<form action="'.\gp\tool::GetUrl($this->layout_slug).'" method="post">';
 			echo '<input type="hidden" name="handle" value="'.htmlspecialchars($_GET['handle']).'" />';
-			echo '<input type="hidden" name="return" value="" />';
 
 			$this->CustomMenuForm($menu_args);
 

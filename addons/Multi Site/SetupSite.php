@@ -27,9 +27,6 @@ $langmessage['new_installation'] = 'Create a New Installation';
 
 
 
-includeFile('tool/ftp.php');
-includeFile('tool/RemoteGet.php');
-
 class SetupSite{
 
 	public $siteData = array();
@@ -41,11 +38,11 @@ class SetupSite{
 		global $dataDir, $page, $addonFolderName,$langmessage;
 
 		if( defined('multi_site_unique') ){
-			message($langmessage['not root install']);
+			msg($langmessage['not root install']);
 			return;
 		}
 
-		gpPlugin::css('multi_site.less',false);
+		gpPlugin::css('multi_site.scss',false);
 
 		//$page->css_user[] = '/data/_addoncode/'.$addonFolderName.'/multi_site.css';
 		//$page->head_js[] = '/data/_addoncode/'.$addonFolderName.'/multi_site.js';
@@ -65,7 +62,7 @@ class SetupSite{
 
 
 		$hide = false;
-		$cmd = common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 
 			case 'about':
@@ -161,7 +158,7 @@ class SetupSite{
 
 		$site =& $_REQUEST['site'];
 		if( !isset($this->siteData['sites'][$site]) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return false;
 		}
 
@@ -174,7 +171,7 @@ class SetupSite{
 		$args = $_POST + $this->siteData['sites'][$site] + array('url'=>'http://');
 
 		echo '<div id="install_step">';
-		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Site_Setup').'" method="post">';
 		echo '<table width="100%">';
 
 		echo '<tr><th colspan="2">';
@@ -192,7 +189,7 @@ class SetupSite{
 		echo $langmessage['hide_index'];
 		echo '</td><td>';
 
-		if( gpRemoteGet::Test() ){
+		if( \gp\tool\RemoteGet::Test() ){
 			if( isset($args['hide_index']) ){
 				echo '<input type="checkbox" name="hide_index" value="hide_index" checked="checked"/>';
 			}else{
@@ -215,7 +212,7 @@ class SetupSite{
 		echo '</div>';
 
 		echo '<p>';
- 		echo common::Link('Admin_Site_Setup',$langmessage['back']);
+ 		echo \gp\tool::Link('Admin_Site_Setup',$langmessage['back']);
  		echo '</p>';
 
 		echo '</form>';
@@ -229,15 +226,14 @@ class SetupSite{
 
 		if( $save ){
 			$this->SaveSiteData();
-			message($langmessage['SAVED']);
+			msg($langmessage['SAVED']);
 		}
 	}
 
 	public function Options_htaccess($site){
 		global $langmessage;
-		includeFile('admin/admin_permalinks.php');
 
-		if( !gpRemoteGet::Test() ){
+		if( !\gp\tool\RemoteGet::Test() ){
 			return;
 		}
 
@@ -260,7 +256,7 @@ class SetupSite{
 		}else{
 
 			if( empty($site_url) ){
-				message('A valid site url is required to hide index.php');
+				msg('A valid site url is required to hide index.php');
 				return false;
 			}
 
@@ -270,20 +266,20 @@ class SetupSite{
 		}
 
 		//add the gpeasy rules
-		admin_permalinks::StripRules($contents);
-		$contents .= admin_permalinks::Rewrite_Rules($to_hide_index,$prefix);
-		if( !gpFiles::Save($file_path,$contents) ){
-			message($langmessage['OOPS'].' (Couldn\'t save .htaccess)');
+		\gp\admin\Settings\Permalinks::StripRules($contents);
+		$contents .= \gp\admin\Settings\Permalinks::Rewrite_Rules($to_hide_index,$prefix);
+		if( !\gp\tool\Files::Save($file_path,$contents) ){
+			msg($langmessage['OOPS'].' (Couldn\'t save .htaccess)');
 			return false;
 		}
 
 		//check for valid response when hiding index.php
 		if( $to_hide_index ){
 			$check_url = $site_url.'/Special_Site_Map';
-			$result = gpRemoteGet::Get_Successful($check_url);
+			$result = \gp\tool\RemoteGet::Get_Successful($check_url);
 			if( !$result ){
-				message('Did not recieve valid response when fetching url without index.php: '.htmlspecialchars($check_url));
-				gpFiles::Save($file_path,$original_contents);
+				msg('Did not recieve valid response when fetching url without index.php: '.htmlspecialchars($check_url));
+				\gp\tool\Files::Save($file_path,$original_contents);
 				return false;
 			}
 
@@ -310,13 +306,13 @@ class SetupSite{
 		}
 
 		if( $site_url == 'http://' ){
-			message($langmessage['OOPS'].' (Invalid URL)');
+			msg($langmessage['OOPS'].' (Invalid URL)');
 			return false;
 		}
 
 		$array = @parse_url($site_url);
 		if( $array === false ){
-			message($langmessage['OOPS'].' Invalid URL');
+			msg($langmessage['OOPS'].' Invalid URL');
 			return false;
 		}
 
@@ -341,11 +337,11 @@ class SetupSite{
 		echo '<hr/>';
 
 		echo '<div id="ms_links">';
-		echo common::Link('Admin_Site_Setup',$langmessage['new_installation'],'cmd=new');
+		echo \gp\tool::Link('Admin_Site_Setup',$langmessage['new_installation'],'cmd=new');
 		echo ' &nbsp; &nbsp; ';
-		echo common::Link('Admin_Site_Setup',$langmessage['Settings'],'cmd=settings');
+		echo \gp\tool::Link('Admin_Site_Setup',$langmessage['Settings'],'cmd=settings');
 		echo ' &nbsp; &nbsp; ';
-		echo common::Link('Admin_Site_Setup',$langmessage['about'],'cmd=about');
+		echo \gp\tool::Link('Admin_Site_Setup',$langmessage['about'],'cmd=about');
 		echo '</div>';
 
 		$this->ShowSimple();
@@ -370,7 +366,7 @@ class SetupSite{
 		echo '<br/>';
 
 		echo '<h2>';
-		echo common::Link('Admin_Site_Setup',$langmessage['Settings'],'cmd=settings');
+		echo \gp\tool::Link('Admin_Site_Setup',$langmessage['Settings'],'cmd=settings');
 		echo '</h3>';
 
 		echo '<dl class="lead">';
@@ -384,7 +380,7 @@ class SetupSite{
 		echo '</dl>';
 
 		echo '<p>';
- 		echo common::Link('Admin_Site_Setup',$langmessage['back']);
+ 		echo \gp\tool::Link('Admin_Site_Setup',$langmessage['back']);
  		echo '</p>';
 
 	}
@@ -411,7 +407,7 @@ class SetupSite{
 
 				$this->siteData['service_provider_id'] = $_POST['service_provider_id'];
 			}else{
-				message('The Service Provider ID must be a number.');
+				msg('The Service Provider ID must be a number.');
 				$ok_to_save = false;
 			}
 		}
@@ -436,10 +432,10 @@ class SetupSite{
 		}
 
 		if( $this->SaveSiteData() ){
-			message($langmessage['SAVED']);
+			msg($langmessage['SAVED']);
 			return true;
 		}
-		message($langmessage['OOPS']);
+		msg($langmessage['OOPS']);
 		return false;
 
 	}
@@ -460,11 +456,11 @@ class SetupSite{
 
 		$values += array('service_provider_id'=>'','service_provider_name'=>'');
 
-		$ftp_vals = $_POST + $config + array('ftp_server'=>gpftp::GetFTPServer(),'ftp_user'=>'');
+		$ftp_vals = $_POST + $config + array('ftp_server'=>\gp\tool\FileSystemFtp::GetFTPServer(),'ftp_user'=>'');
 
 		$this->Heading('Settings');
 
-		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Site_Setup').'" method="post">';
 		echo '<table class="bordered" width="100%">';
 
 		echo '<tr>';
@@ -539,7 +535,7 @@ class SetupSite{
 		if( !isset($this->siteData['sites']) || (count($this->siteData['sites']) == 0) ){
 			return;
 		}
-		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="get">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Site_Setup').'" method="get">';
 		echo '<table class="bordered" style="width:100%">';
 		echo '<tr>';
 		echo '<th>';
@@ -568,7 +564,7 @@ class SetupSite{
 
 		if( count($this->siteData['sites']) > 5 ){
 			echo '<p>';
-			echo common::Link('Admin_Site_Setup','More Installations','cmd=installed');
+			echo \gp\tool::Link('Admin_Site_Setup','More Installations','cmd=installed');
 			echo '</p>';
 		}
 
@@ -598,12 +594,12 @@ class SetupSite{
 
 		echo '</td>';
 		echo '<td>';
-		echo common::Link('Admin_Site_Setup',$langmessage['options'],'cmd=options&site='.urlencode($site));
+		echo \gp\tool::Link('Admin_Site_Setup',$langmessage['options'],'cmd=options&site='.urlencode($site));
 		echo ' &nbsp; ';
-		//echo common::Link('Admin_Site_Setup',$langmessage['uninstall'],'cmd=uninstall&site='.urlencode($site),' name="gpajax"');
+		//echo \gp\tool::Link('Admin_Site_Setup',$langmessage['uninstall'],'cmd=uninstall&site='.urlencode($site),' name="gpajax"');
 
 		$title = sprintf($langmessage['generic_delete_confirm'],' &quot;'.htmlspecialchars($site).'&quot; ');
-		echo common::Link('Admin_Site_Setup',$langmessage['uninstall'],'cmd=uninstall&site='.urlencode($site),array('name'=>'postlink','class'=>'gpconfirm','title'=>$title));
+		echo \gp\tool::Link('Admin_Site_Setup',$langmessage['uninstall'],'cmd=uninstall&site='.urlencode($site),array('name'=>'postlink','class'=>'gpconfirm','title'=>$title));
 
 		echo '</td>';
 		echo '</tr>';
@@ -623,7 +619,7 @@ class SetupSite{
 			return;
 		}
 
-		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="get">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Site_Setup').'" method="get">';
 		echo '<table class="bordered">';
 		echo '<tr>';
 		echo '<th>';
@@ -669,19 +665,19 @@ class SetupSite{
 
 		//navigation links
 		if( $offset > 0 ){
-			echo common::Link('Admin_Site_Setup','Prev','cmd=installed&q='.urlencode($_GET['q']).'&offset='.max(0,$offset-$limit));
+			echo \gp\tool::Link('Admin_Site_Setup','Prev','cmd=installed&q='.urlencode($_GET['q']).'&offset='.max(0,$offset-$limit));
 		}else{
 			echo 'Prev';
 		}
 		echo ' &nbsp; ';
 		if( count($reverse) > $limit ){
-			echo common::Link('Admin_Site_Setup','Next','cmd=installed&q='.urlencode($_GET['q']).'&offset='.($offset+$limit));
+			echo \gp\tool::Link('Admin_Site_Setup','Next','cmd=installed&q='.urlencode($_GET['q']).'&offset='.($offset+$limit));
 		}else{
 			echo 'Next';
 		}
 
 		echo '<p>';
- 		echo common::Link('Admin_Site_Setup',$langmessage['back']);
+ 		echo \gp\tool::Link('Admin_Site_Setup',$langmessage['back']);
  		echo '</p>';
 
 	}
@@ -726,16 +722,16 @@ class SetupSite{
 			return false;
 		}
 		if( !isset($this->siteData['sites'][$site]) ){
-			message($langmessage['OOPS'].' (Invalid Site)');
+			msg($langmessage['OOPS'].' (Invalid Site)');
 			return false;
 		}
 
 		if( !$this->RmSite($site) ){
-			message($langmessage['OOPS'].'(Files not completely removed)');
+			msg($langmessage['OOPS'].'(Files not completely removed)');
 			return false;
 		}
 
-		message($langmessage['SAVED']);
+		msg($langmessage['SAVED']);
 
 		unset($this->siteData['sites'][$site]);
 		$this->SaveSiteData();
@@ -774,13 +770,13 @@ class SetupSite{
 			return false;
 		}
 
-		$conn_id = gpFiles::FTPConnect();
+		$conn_id = \gp\tool\Files::FTPConnect();
 		if( !$conn_id ){
 			return false;
 		}
 
-		$ftp_site = gpftp::GetFTPRoot($conn_id,$dir);
-		if( !$ftp_site ){
+		$ftp_site = \gp\tool\FileSystemFtp::GetFTPRoot($conn_id,$dir);
+		if( $ftp_site === false ){
 			return false;
 		}
 		return ftp_rmdir($conn_id,$ftp_site);
@@ -841,7 +837,7 @@ class SetupSite{
 			if( !$this->EmptyDir($subDir) ){
 				$success = false;
 			}
-			if( !gpFiles::RmDir($subDir) ){
+			if( !\gp\tool\Files::RmDir($subDir) ){
 				$success = false;
 			}
 
@@ -856,17 +852,10 @@ class SetupSite{
 	public function GetSiteData(){
 		global $addonPathData;
 
-		$this->dataFile = $addonPathData.'/data.php';
-		if( file_exists($this->dataFile) ){
-			require($this->dataFile);
-			if( isset($siteData) ){
-				$this->siteData = $siteData;
-			}
-			$this->checksum = $this->CheckSum($this->siteData);
-		}
-
-
-		$this->siteData += array('sites'=>array());
+		$this->dataFile		= $addonPathData.'/data.php';
+		$this->siteData		= \gp\tool\Files::Get($this->dataFile,'siteData');
+		$this->siteData		+= array('sites'=>array());
+		$this->checksum		= $this->CheckSum($this->siteData);
 	}
 
 	public function SaveSiteData(){
@@ -878,7 +867,7 @@ class SetupSite{
 		unset($this->siteData['destination']); //no longer used
 		unset($this->siteData['useftp']); //no longer used
 
-		return gpFiles::SaveArray($this->dataFile,'siteData',$this->siteData);
+		return \gp\tool\Files::SaveData( $this->dataFile,'siteData',$this->siteData );
 	}
 
 	public function CheckSum($array){
@@ -897,8 +886,8 @@ class SetupSite{
 		$args += array('plugins'=>array());
 
 		//selection of themes
-		if( !gpFiles::CheckDir($destination.'/addons') ){
-			message('Failed to create <em>'.$destination.'/addons'.'</em>');
+		if( !\gp\tool\Files::CheckDir($destination.'/addons') ){
+			msg('Failed to create <em>'.$destination.'/addons'.'</em>');
 			return false;
 		}
 
@@ -925,8 +914,8 @@ class SetupSite{
 		}
 
 		//selection of themes
-		if( !gpFiles::CheckDir($destination.'/themes') ){
-			message('Failed to create <em>'.$destination.'/themes'.'</em>');
+		if( !\gp\tool\Files::CheckDir($destination.'/themes') ){
+			msg('Failed to create <em>'.$destination.'/themes'.'</em>');
 			return false;
 		}
 
@@ -942,7 +931,7 @@ class SetupSite{
 			}
 		}
 		if( $count == 0 ){
-			message('Failed to populate <em>'.$destination.'/themes'.'</em>');
+			msg('Failed to populate <em>'.$destination.'/themes'.'</em>');
 			return false;
 		}
 
@@ -966,7 +955,7 @@ class SetupSite{
 		$indexA[] = 'define(\'multi_site_unique\',\''.$unique.'\');';
 		$indexA[] = 'require_once(\'include/main.php\');';
 		$index = implode("\n",$indexA);
-		if( !gpFiles::Save($path,$index) ){
+		if( !\gp\tool\Files::Save($path,$index) ){
 			return false;
 		}
 
@@ -978,7 +967,7 @@ class SetupSite{
 	public function NewId(){
 
 		do{
-			$unique = common::RandomString(20);
+			$unique = \gp\tool::RandomString(20);
 			foreach($this->siteData['sites'] as $array){
 				if( isset($array['unique']) && ($array['unique'] == $unique) ){
 					$unique = false;
@@ -995,12 +984,12 @@ class SetupSite{
 
 		echo '<li>Create Symlink: <em>'.$path.'</em></li>';
 		if( !symlink($target,$path) ){
-			message('Oops, Symlink creation failed (1)');
+			msg('Oops, Symlink creation failed (1)');
 			return false;
 		}
 
 		if( $test_file && !file_exists($path.'/'.$test_file) ){
-			message('Oops, Symlink creation failed (2)');
+			msg('Oops, Symlink creation failed (2)');
 			return false;
 		}
 
@@ -1022,14 +1011,14 @@ class SetupSite{
 
 			$conn_id = @ftp_connect($_POST['ftp_server'],21,6);
 			if( !$conn_id ){
-				message('Oops, could not connect using ftp_connect() for server <i>'.htmlspecialchars($_POST['ftp_server']).'</i>');
+				msg('Oops, could not connect using ftp_connect() for server <i>'.htmlspecialchars($_POST['ftp_server']).'</i>');
 				return false;
 			}
 
 			ob_start();
 			$login_result = @ftp_login($conn_id,$_POST['ftp_user'],$_POST['ftp_pass'] );
 			if( !$login_result ){
-				message('Oops, could not login using ftp_login() for server <i>'.$_POST['ftp_server'].'</i> and user <i>'.$_POST['ftp_user'].'</i>');
+				msg('Oops, could not login using ftp_login() for server <i>'.$_POST['ftp_server'].'</i> and user <i>'.$_POST['ftp_user'].'</i>');
 				@ftp_close($conn_id);
 				ob_end_clean();
 				return false;
@@ -1044,7 +1033,7 @@ class SetupSite{
 		$config['ftp_pass']		= $_POST['ftp_pass'];
 
 		if( !admin_tools::SaveConfig() ){
-			message('Oops, there was an error saving your ftp information.');
+			msg('Oops, there was an error saving your ftp information.');
 			return false;
 		}
 
@@ -1070,7 +1059,7 @@ class SetupSite{
 		//make sure default theme exists
 		$path = $rootDir.'/themes/'.$default_theme[0];
 		if( !file_exists($path) ){
-			message('The default theme for gpEasy "'.$default_theme[0].'" does not exist. Please make sure it exists before continuing.');
+			msg('The default theme for gpEasy "'.$default_theme[0].'" does not exist. Please make sure it exists before continuing.');
 			return;
 		}
 
@@ -1222,15 +1211,15 @@ class SetupSite{
 		}
 
 
-		$conn_id	= gpFiles::FTPConnect();
+		$conn_id	= \gp\tool\Files::FTPConnect();
 		if( !$conn_id ){
 			$this->FolderNotWritable('FTP connection could not be made with the supplied values');
 			return false;
 		}
 
 
-		$ftp_root	= gpftp::GetFTPRoot($conn_id,$folder);
-		if( !$ftp_root ){
+		$ftp_root	= \gp\tool\FileSystemFtp::GetFTPRoot($conn_id,$folder);
+		if( $ftp_root === false ){
 			$this->FolderNotWritable('Root folder not found by FTP');
 			return false;
 		}
@@ -1255,22 +1244,21 @@ class SetupSite{
 		}else{
 			$message .= '<li>Enabling the FTP extension in php and supplying <a href="%s">ftp connection information</a>.</li>';
 		}
-		$message = sprintf($message,common::GetUrl('Admin_Site_Setup','cmd=settings'));
+		$message = sprintf($message,\gp\tool::GetUrl('Admin_Site_Setup','cmd=settings'));
 		$message .= '</ul>';
 
 
 
-		//message($langmessage['not_created'].' (FTP Connection Failed)');
+		//msg($langmessage['not_created'].' (FTP Connection Failed)');
 		unset($_REQUEST['install']['folder']);
-		message($message);
+		msg($message);
 	}
 
 	public function NewInstall(){
-		includeFile('tool/install.php');
 
-		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Site_Setup').'" method="post">';
 		echo '<table style="width:100%">';
-		Install_Tools::Form_UserDetails();
+		\gp\install\Tools::Form_UserDetails();
 		echo '</table>';
 		$this->InstallFields($_REQUEST['install'],'install');
 		echo '<div id="install_continue">';
@@ -1313,7 +1301,7 @@ class SetupSite{
 			$all_themes = true;
 		}
 
-		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Site_Setup').'" method="post">';
 		echo '<table style="width:100%">';
 		echo '<tr>';
 		echo '<th>Select Themes</th>';
@@ -1352,7 +1340,7 @@ class SetupSite{
 			echo ' And ... <br/>';
 			echo '<p>';
 			$dir = $rootDir.'/themes';
-			$layouts = gpFiles::readDir($dir,1);
+			$layouts = \gp\tool\Files::readDir($dir,1);
 			asort($layouts);
 			$i = 1;
 			foreach($layouts as $name){
@@ -1396,7 +1384,7 @@ class SetupSite{
 		$values += array('plugins'=>array());
 
 
-		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Site_Setup').'" method="post">';
 		echo '<table style="width:100%">';
 		echo '<tr>';
 			echo '<th>Select Plugins</th>';
@@ -1409,7 +1397,7 @@ class SetupSite{
 			echo '<br/>';
 
 			$dir = $rootDir.'/addons';
-			$addons = gpFiles::readDir($dir,1);
+			$addons = \gp\tool\Files::readDir($dir,1);
 			$i = 1;
 			foreach($addons as $addon){
 				$checked = '';
@@ -1440,7 +1428,7 @@ class SetupSite{
 
 
 	public function InstallLink($label,$query_array=array(),$attr=''){
-		return '<a href="'.$this->InstallUrl($query_array).'" '.$attr.'>'.common::Ampersands($label).'</a>';
+		return '<a href="'.$this->InstallUrl($query_array).'" '.$attr.'>'.\gp\tool::Ampersands($label).'</a>';
 	}
 
 	public function InstallUrl($query_array=array()){
@@ -1448,7 +1436,7 @@ class SetupSite{
 		$query_array['install'] = $query_array['install'] + $_REQUEST['install'];
 		$query = http_build_query($query_array);
 
-		return common::GetUrl('Admin_Site_Setup',$query);
+		return \gp\tool::GetUrl('Admin_Site_Setup',$query);
 	}
 
 	public function InstallFields($array,$key=null){
@@ -1511,7 +1499,7 @@ class SetupSite{
 		echo '</div>';
 
 		echo '<div id="install_continue">';
-		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="get">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Site_Setup').'" method="get">';
 		echo '<input type="submit" name="" value="Cancel" />';
 		echo '</form>';
 		echo '</div>';
@@ -1528,7 +1516,7 @@ class SetupSite{
 			return;
 		}
 
-		$subdirs = gpFiles::readDir($dir,1);
+		$subdirs = \gp\tool\Files::readDir($dir,1);
 
 		echo '<ul>';
 		$i = 0;
@@ -1546,7 +1534,7 @@ class SetupSite{
 
 
 		echo '<li>';
-		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="post" class="'.$classes[$i%2].'">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Site_Setup').'" method="post" class="'.$classes[$i%2].'">';
 		echo '<input type="submit" name="" value="New Folder" class="gppost" /> ';
 		echo '<input type="text" name="new_folder" value="" class="text"/> ';
 		echo '<input type="hidden" name="folder" value="'.htmlspecialchars($dir).'" /> ';
@@ -1562,7 +1550,7 @@ class SetupSite{
 		global $config;
 
 		if( is_readable($dir) ){
-			return gpFiles::readDir($dir,1);
+			return \gp\tool\Files::readDir($dir,1);
 		}
 
 		return false;
@@ -1627,7 +1615,7 @@ class SetupSite{
 
 		$folder =& $_REQUEST['folder'];
 		if( empty($folder) || !file_exists($folder) || !is_dir($folder) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return;
 		}
 
@@ -1646,7 +1634,7 @@ class SetupSite{
 			$folder .= '/'.$_REQUEST['sub_dir'];
 		}
 		if( empty($folder) || !file_exists($folder) || !is_dir($folder) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return;
 		}
 
@@ -1684,13 +1672,13 @@ class SetupSite{
 
 		$folder =& $_POST['folder'];
 		if( empty($folder) || !file_exists($folder) || !is_dir($folder) ){
-			message($langmessage['OOPS']. ' (Parent Dir)');
+			msg($langmessage['OOPS']. ' (Parent Dir)');
 			return false;
 		}
 
 		$new_name =& $_POST['new_folder'];
 		if( empty($new_name) ){
-			message($langmessage['OOPS']. ' (Empty Name)');
+			msg($langmessage['OOPS']. ' (Empty Name)');
 			return false;
 		}
 
@@ -1700,7 +1688,7 @@ class SetupSite{
 		$new_folder = $folder.'/'.$new_name;
 
 		if( file_exists($new_folder) ){
-			message($langmessage['OOPS']. ' (Already Exists)');
+			msg($langmessage['OOPS']. ' (Already Exists)');
 			return false;
 		}
 
@@ -1726,7 +1714,7 @@ class SetupSite{
 		ob_start();
 
 		echo '<div class="inline_box">';
-		echo '<form action="'.common::GetUrl('Admin_Site_Setup').'" method="post">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Site_Setup').'" method="post">';
 		echo '<input type="hidden" name="dir" value="'.htmlspecialchars($dir).'" />';
 		echo '<input type="hidden" name="cmd" value="new_destination" />';
 		$this->InstallFields($_REQUEST['install'],'install');
@@ -1761,7 +1749,7 @@ class SetupSite{
 		$parent = dirname($dir);
 
 		if( !$this->RmDir($dir) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return;
 		}
 
@@ -1772,13 +1760,13 @@ class SetupSite{
 		global $langmessage;
 
 		if( empty($dir) || !file_exists($dir) || !is_dir($dir) ){
-			message($langmessage['OOPS'].' (Invalid)');
+			msg($langmessage['OOPS'].' (Invalid)');
 			return false;
 		}
 
 		$dh = @opendir($dir);
 		if( !$dh ){
-			message($langmessage['OOPS'].' (Not Readable)');
+			msg($langmessage['OOPS'].' (Not Readable)');
 			return false;
 		}
 
@@ -1788,7 +1776,7 @@ class SetupSite{
 				continue;
 			}
 			closedir($dh);
-			message($langmessage['dir_not_empty']);
+			msg($langmessage['dir_not_empty']);
 			return false;
 		}
 
@@ -1807,7 +1795,7 @@ class SetupSite{
 		$langmessage['not_created'] .= '<li>Supply your server\'s <a href="%s">ftp information</a> to this plugin.</li>';
 		$langmessage['not_created'] .= '</ul>';
 
-		$langmessage['not_created'] = sprintf($langmessage['not_created'],common::GetUrl('Admin_Site_Setup','cmd=settings'));
+		$langmessage['not_created'] = sprintf($langmessage['not_created'],\gp\tool::GetUrl('Admin_Site_Setup','cmd=settings'));
 
 
 		$new_folder = $parent.'/'.$new_name;
@@ -1818,26 +1806,26 @@ class SetupSite{
 		}
 
 		if( $this->HasFTP() ){
-			message($langmessage['not_created']);
+			msg($langmessage['not_created']);
 			return false;
 		}
 
-		$conn_id = gpFiles::FTPConnect();
+		$conn_id = \gp\tool\Files::FTPConnect();
 		if( !$conn_id ){
-			message($langmessage['not_created'].' (FTP Connection Failed)');
+			msg($langmessage['not_created'].' (FTP Connection Failed)');
 			return false;
 		}
 
 
-		$ftp_parent = gpftp::GetFTPRoot($conn_id,$parent);
-		if( !$ftp_parent ){
-			message('Oops, could not find the ftp location of <i>'.$parent.'</i> using the current ftp login.');
+		$ftp_parent = \gp\tool\FileSystemFtp::GetFTPRoot($conn_id,$parent);
+		if( $ftp_parent === false ){
+			msg('Oops, could not find the ftp location of <i>'.$parent.'</i> using the current ftp login.');
 			return false;
 		}
 
 		$ftp_destination = $ftp_parent.'/'.$new_name;
 		if( !ftp_mkdir($conn_id,$ftp_destination) ){
-			message('Oops, could not create the folder using the current ftp login.');
+			msg('Oops, could not create the folder using the current ftp login.');
 			return false;
 		}
 
@@ -1850,8 +1838,6 @@ class SetupSite{
 		global $rootDir,$config,$checkFileIndex;
 		global $dataDir; //for SaveTitle(), SaveConfig()
 
-		includeFile('tool/install.php');
-
 		$_POST					+= array('themes'=>array(),'plugins'=>array());
 		$destination			= $_REQUEST['install']['folder'];
 		$this->site_uniq_id 	= $this->NewId();
@@ -1860,7 +1846,7 @@ class SetupSite{
 
 		//prevent reposting
 		if( isset($this->siteData['sites'][$destination]) ){
-			message('Oops, there\'s already an installation in '.htmlspecialchars($destination));
+			msg('Oops, there\'s already an installation in '.htmlspecialchars($destination));
 			return false;
 		}
 
@@ -1869,7 +1855,7 @@ class SetupSite{
 
 
 		//check user values first
-		if( !Install_Tools::gpInstall_Check() ){
+		if( !\gp\install\Tools::gpInstall_Check() ){
 			$this->Install_Aborted($destination);
 			return false;
 		}
@@ -1916,7 +1902,7 @@ class SetupSite{
 		$config['gpuniq'] = $new_config['gpuniq'] = $this->NewId();
 
 		ob_start();
-		if( !Install_Tools::Install_DataFiles_New( $destination, $new_config, false ) ){
+		if( !\gp\install\Tools::Install_DataFiles_New( $destination, $new_config, false ) ){
 			$this->Install_Aborted($destination);
 			$dataDir = $oldDir;
 			$config['gpuniq'] = $old_unique;
@@ -1979,7 +1965,7 @@ class SetupSite{
 	 */
 	public function Heading($sub_heading=false){
 		echo '<h1>';
-		echo common::Link('Admin_Site_Setup','Multi-Site');
+		echo \gp\tool::Link('Admin_Site_Setup','Multi-Site');
 
 		if( $sub_heading ){
 			echo ' &#187; ';

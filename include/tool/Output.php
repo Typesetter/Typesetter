@@ -129,8 +129,7 @@ namespace gp\tool{
 
 			if( method_exists('\\gp\\tool\\Output\\Menu',$name) ){
 				$menu = new \gp\tool\Output\Menu();
-				call_user_func_array( array($menu,$name), $args);
-				return;
+				return call_user_func_array( array($menu,$name), $args);
 			}
 
 			throw new \Exception('Call to undefined method gp\\tool\\Output::'.$name);
@@ -274,13 +273,17 @@ namespace gp\tool{
 		/**
 		 * Add a Header to the response
 		 * The header will be discarded if it's an ajax request or similar
-		 * @static
+		 *
+		 * @param string $header
+		 * @param bool $replace
+		 * @param int $code
+		 * @return bool
 		 */
-		public static function AddHeader($header, $replace = true, $code = false){
+		public static function AddHeader($header, $replace = true, $code = null){
 			if( !empty($_REQUEST['gpreq']) ){
 				return false;
 			}
-			if( $code ){
+			if( !is_null($code) ){
 				\gp\tool::status_header($code,$header);
 			}else{
 				header($header,$replace);
@@ -401,13 +404,15 @@ namespace gp\tool{
 			return $info;
 		}
 
-		/* static */
-		public static function GpOutLabel($key){
+
+		public static function GpOutLabel($info){
 			global $langmessage;
 
-			$info = self::GetgpOutInfo($key);
+			$label = $info['arg'];
+			if( empty($label) ){
+				$label = $info['gpOutCmd'];
+			}
 
-			$label = $key;
 			if( isset($info['link']) && isset($langmessage[$info['link']]) ){
 				$label = $langmessage[$info['link']];
 			}
@@ -432,9 +437,21 @@ namespace gp\tool{
 				return;
 			}
 
-			$param = $container_id.'|'.$info['gpOutCmd'];
-			$class = 'gpArea_'.str_replace(array(':',','),array('_',''),trim($info['gpOutCmd'],':'));
-			$permission = self::ShowEditLink('Admin_Theme_Content');
+
+			//generate a class based on the area $info
+			if( isset($info['html']) ){
+				$class = $info['key'];
+				$class = preg_replace('#\[.*\]#','',$class);
+			}else{
+				$class = $info['gpOutCmd'];
+			}
+
+			$class			= 'gpArea_'.str_replace(array(':',','),array('_',''),trim($class,':'));
+			$param			= $container_id.'|'.$info['gpOutCmd'];
+			$permission		= self::ShowEditLink('Admin_Theme_Content');
+
+
+
 
 			ob_start();
 
@@ -447,10 +464,10 @@ namespace gp\tool{
 				echo \gp\tool::Link('Admin_Theme_Content/Edit/'.$page->gpLayout,$param,'cmd=DragArea&dragging='.urlencode($param).'&to=%s',array('data-cmd'=>'creq','class'=>'dragdroplink nodisplay')); //drag-drop link
 
 				echo '<div class="output_area_label">';
-				if( !$empty_container ){
-					echo self::GpOutLabel($info['arg']);
-				}else{
+				if( $empty_container ){
 					echo 'Empty Container';
+				}else{
+					echo self::GpOutLabel($info);
 				}
 				echo '</div>';
 
@@ -751,9 +768,15 @@ namespace gp\tool{
 		}
 
 
-		public static function ShowEditLink($permission=false){
+		/**
+		 * Determine if an inline edit link should be shown for the current user
+		 *
+		 * @param string $permission
+		 * @return bool
+		 */
+		public static function ShowEditLink($permission=null){
 
-			if( $permission ){
+			if( !is_null($permission) ){
 				return !self::$nested_edit && \gp\tool::LoggedIn() && \gp\admin\Tools::HasPermission($permission);
 			}
 			return !self::$nested_edit && \gp\tool::LoggedIn();
@@ -916,6 +939,7 @@ namespace gp\tool{
 			global $dataDir,$langmessage;
 
 
+			$attrs			= array();
 			$name			= str_replace(' ','_',$name);
 			$file_stats		= array();
 			$is_draft		= false;
@@ -923,7 +947,7 @@ namespace gp\tool{
 			$wrap			= self::ShowEditLink('Admin_Extra');
 
 			if( !$wrap ){
-				echo '<div>';
+				echo '<div'.\gp\tool\Output\Sections::SectionAttributes($attrs,$extra_content[0]['type']).'>';
 				echo \gp\tool\Output\Sections::RenderSection($extra_content[0],0,'',$file_stats);
 				echo '</div>';
 				return;
@@ -939,7 +963,6 @@ namespace gp\tool{
 			self::$editlinks .= ob_get_clean();
 
 
-			$attrs						= array();
 			$attrs['data-gp_label']		= str_replace('_',' ',$name);
 			$attrs['class']				= 'editable_area';
 			$attrs['id']				= 'ExtraEditArea'.$edit_index;
@@ -1204,7 +1227,7 @@ namespace gp\tool{
 				\gp\tool::LoadComponents('gp-main');
 			}
 			//defaults
-			\gp\tool::LoadComponents('jquery,gp-additional,fontawesome');
+			\gp\tool::LoadComponents('jquery,gp-additional');
 
 			//get css and js info
 			$scripts = \gp\tool\Output\Combine::ScriptInfo( self::$components );
@@ -1291,10 +1314,7 @@ namespace gp\tool{
 				echo "\n".'<meta name="robots" content="'.$page->TitleInfo['rel'].'" />';
 			}
 
-			if( !isset($config['showgplink']) || $config['showgplink'] ){
-				echo "\n<meta name=\"generator\" content=\"Typesetter CMS\" />";
-			}
-
+			echo "\n<meta name=\"generator\" content=\"Typesetter CMS\" />";
 		}
 
 
@@ -1867,7 +1887,7 @@ namespace gp\tool{
 		 * Record fatal errors in /data/_site/ so we can prevent subsequent requests from having the same issue
 		 *
 		 */
-		function RecordFatal($last_error){
+		static function RecordFatal($last_error){
 			global $dataDir, $config, $addon_current_id, $addonFolderName;
 
 			$last_error['request'] = $_SERVER['REQUEST_URI'];
@@ -2017,6 +2037,12 @@ namespace gp\tool{
 
 			$page->RunScript();
 
+			//prepare the admin content
+			if( \gp\tool::LoggedIn() ){
+				\gp\admin\Tools::AdminHtml();
+			}
+
+
 			//decide how to send the content
 			self::Prep();
 			switch(\gp\tool::RequestType()){
@@ -2057,9 +2083,8 @@ namespace gp\tool{
 
 
 
-			//if logged in, prepare the admin content and don't send 304 response
+			// if logged in, don't send 304 response
 			if( \gp\tool::LoggedIn() ){
-				\gp\admin\Tools::AdminHtml();
 
 				//empty edit links if there isn't a layout
 				if( !$page->gpLayout ){
@@ -2069,14 +2094,12 @@ namespace gp\tool{
 				return;
 			}
 
-			/* attempt to send 304 response  */
+			// attempt to send 304 response
 			if( $page->fileModTime > 0 ){
 				global $wbMessageBuffer;
-				$len = strlen(self::$head_content) + strlen(self::$head_js) + ob_get_length();
-				if( count($wbMessageBuffer) ){
-					$len += strlen( json_encode($wbMessageBuffer) );
-				}
-				\gp\tool::Send304( \gp\tool::GenEtag( $page->fileModTime, $len ) );
+				$len	= ob_get_length();
+				$etag	= \gp\tool::GenEtag( $page->fileModTime, $len, json_encode($wbMessageBuffer), self::$head_content, self::$head_js );
+				\gp\tool::Send304( $etag );
 			}
 		}
 

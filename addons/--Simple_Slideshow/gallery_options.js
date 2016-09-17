@@ -1,5 +1,6 @@
 
-var gp_gallery_options = {
+$.extend(gp_editor,{
+
 	sortable_area_sel	: '.gp_slideshow',
 	img_name			: 'gp_slideshow',
 	img_rel				: '',
@@ -9,5 +10,5 @@ var gp_gallery_options = {
 		$(current_image).find('a').attr('title',caption);
 	}
 
-};
+});
 

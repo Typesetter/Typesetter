@@ -94,7 +94,6 @@ class CDN extends \gp\admin\Configuration{
 				continue;
 			}
 
-			$config_key					= 'cdn_'.$key;
 			$code						= '\\gp\\tool::LoadComponents(\''.$key.'\');';
 
 			echo '<tr><td title="'.htmlspecialchars($code).'">';

@@ -53,7 +53,7 @@ namespace gp\admin{
 			}
 
 			//determine check in type
-			if( !\gp\tool\RemoteGet::Test() ){
+			if( \gp\tool\RemoteGet::Test() === false ){
 				self::VersionData($version_data);
 				self::$update_status = 'checkincompat';
 				return;
@@ -129,42 +129,42 @@ namespace gp\admin{
 
 
 			// Content
-			$scripts['Admin/Menu']						= array(	'class'		=> '\gp\admin\Menu',
+			$scripts['Admin/Menu']						= array(	'class'		=> '\\gp\\admin\\Menu',
 																	'method'	=> 'RunScript',
 																	'label'		=> $langmessage['file_manager'],
 																	'group'		=> 'content',
 																	);
 
-			$scripts['Admin/Menu/Menus']				= array(	'class'		=> '\gp\admin\Menu\Menus',
+			$scripts['Admin/Menu/Menus']				= array(	'class'		=> '\\gp\\admin\\Menu\\Menus',
 																	'method'	=> 'RunScript',
 																	);
 
-			$scripts['Admin/Menu/Ajax']					= array(	'class'		=> '\gp\admin\Menu\Ajax',
+			$scripts['Admin/Menu/Ajax']					= array(	'class'		=> '\\gp\\admin\\Menu\\Ajax',
 																	'method'	=> 'RunScript',
 																	);
 
 
-			$scripts['Admin/Uploaded']					= array(	'class'		=> '\gp\admin\Content\Uploaded',
+			$scripts['Admin/Uploaded']					= array(	'class'		=> '\\gp\\admin\\Content\\Uploaded',
 																	'method'	=> 'RunScript',
 																	'label'		=> $langmessage['uploaded_files'],
 																	'group'		=> 'content',
 																	);
 
 
-			$scripts['Admin/Extra']						= array(	'class'		=> '\gp\admin\Content\Extra',
+			$scripts['Admin/Extra']						= array(	'class'		=> '\\gp\\admin\\Content\\Extra',
 																	'method'	=> 'RunScript',
 																	'label'		=> $langmessage['theme_content'],
 																	'group'		=> 'content',
 																	);
 
 
-			$scripts['Admin/Galleries']					= array(	'class'		=> '\gp\admin\Content\Galleries',
+			$scripts['Admin/Galleries']					= array(	'class'		=> '\\gp\\admin\\Content\\Galleries',
 																	'label'		=> $langmessage['galleries'],
 																	'group'		=> 'content',
 																	);
 
 
-			$scripts['Admin/Trash']						= array(	'class'		=> '\gp\admin\Content\Trash',
+			$scripts['Admin/Trash']						= array(	'class'		=> '\\gp\\admin\\Content\\Trash',
 																	'label'		=> $langmessage['trash'],
 																	'group'		=> 'content',
 																	);
@@ -172,35 +172,35 @@ namespace gp\admin{
 
 			// Appearance
 			$scripts['Admin_Theme_Content']				= array(
-																	'class'		=> '\gp\admin\Layout',
+																	'class'		=> '\\gp\\admin\\Layout',
 																	'method'	=> 'RunScript',
 																	'label'		=> $langmessage['Appearance'],
 																	'group'		=> 'appearance',
 																	);
 
 
-			$scripts['Admin_Theme_Content/Edit']		= array(	'class'		=> '\gp\admin\Layout\Edit',
+			$scripts['Admin_Theme_Content/Edit']		= array(	'class'		=> '\\gp\\admin\\Layout\\Edit',
 																	'method'	=> 'RunScript',
 																	'label'		=> $langmessage['Appearance'],
 																	);
 
 
 
-			$scripts['Admin_Theme_Content/Available']	 = array(	'class'		=> '\gp\admin\Layout\Available',
+			$scripts['Admin_Theme_Content/Available']	 = array(	'class'		=> '\\gp\\admin\\Layout\\Available',
 																	'method'	=> 'ShowAvailable',
 																	'label' 	=> $langmessage['Available'],
 																	);
 
-			$scripts['Admin_Theme_Content/Text']		= array(	'class'		=> '\gp\admin\Layout\Text',
+			$scripts['Admin_Theme_Content/Text']		= array(	'class'		=> '\\gp\\admin\\Layout\\Text',
 																	'method'	=> 'RunScript',
 																	);
 
-			$scripts['Admin_Theme_Content/Image']		= array(	'class'		=> '\gp\admin\Layout\Image',
+			$scripts['Admin_Theme_Content/Image']		= array(	'class'		=> '\\gp\\admin\\Layout\\Image',
 																	'method'	=> 'RunScript',
 																	);
 
 			if( gp_remote_themes ){
-				$scripts['Admin_Theme_Content/Remote']	= array(	'class'		=> '\gp\admin\Layout',
+				$scripts['Admin_Theme_Content/Remote']	= array(	'class'		=> '\\gp\\admin\\Layout',
 																	'method'	=> 'RemoteBrowse',
 																	'label' 	=> $langmessage['Search'],
 																	);
@@ -209,39 +209,40 @@ namespace gp\admin{
 
 
 			// Settings
-			$scripts['Admin/Configuration']				= array(	'class'		=> '\gp\admin\Configuration',
+			$scripts['Admin/Configuration']				= array(	'class'		=> '\\gp\\admin\\Configuration',
 																	'method'	=> 'RunScript',
 																	'label'		=> $langmessage['configuration'],
 																	'group'		=> 'settings',
 																);
 
-			$scripts['Admin/Configuration/CDN']			= array(	'class'		=> '\gp\admin\Configuration\CDN',
+			$scripts['Admin/Configuration/CDN']			= array(	'class'		=> '\\gp\\admin\\Configuration\\CDN',
 																	'method'	=> 'RunScript',
 																	'label'		=> 'CDN',
 																	'group'		=> 'settings',
 																);
 
-			$scripts['Admin/Users']						= array(	'class'		=> 'gp\admin\Settings\Users',
+			$scripts['Admin/Users']						= array(	'class'		=> '\\gp\\admin\\Settings\\Users',
 																	'label'		=> $langmessage['user_permissions'],
 																	'group'		=> 'settings',
 																);
 
-			$scripts['Admin/CKEditor']					= array(	'class'		=> 'gp\admin\Settings\CKEditor',
+			$scripts['Admin/CKEditor']					= array(	'class'		=> '\\gp\\admin\\Settings\\CKEditor',
 																	'label'		=> 'CKEditor',
 																	'group'		=> 'settings',
 																);
 
-			$scripts['Admin/Classes']					= array(	'class'		=> 'gp\admin\Settings\Classes',
+			$scripts['Admin/Classes']					= array(	'class'		=> '\\gp\\admin\\Settings\\Classes',
 																	'label'		=> 'Classes',
 																	'group'		=> 'settings',
 																);
 
-			$scripts['Admin/Permalinks']				= array(	'class'		=> 'gp\admin\Settings\Permalinks',
+			$scripts['Admin/Permalinks']				= array(	'class'		=> '\\gp\\admin\\Settings\\Permalinks',
 																	'label'		=> $langmessage['permalinks'],
 																	'group'		=> 'settings',
 																);
 
-			$scripts['Admin/Missing']					= array(	'class'		=> 'gp\admin\Settings\Missing',
+			$scripts['Admin/Missing']					= array(	'class'		=> '\\gp\\admin\\Settings\\Missing',
+																	'method'	=> 'RunScript',
 																	'label'		=> $langmessage['Link Errors'],
 																	'group'		=> 'settings',
 																);
@@ -253,26 +254,26 @@ namespace gp\admin{
 
 
 			// Tools
-			$scripts['Admin/Port']		= array(	'class'		=> '\gp\admin\Tools\Port',
+			$scripts['Admin/Port']		= array(	'class'		=> '\\gp\\admin\\Tools\\Port',
 													'label'		=> $langmessage['Export'],
 													'group'		=> 'tools',
 													'method'	=> 'RunScript'
 												);
 
 
-			$scripts['Admin/Status']	= array(	'class'		=> '\gp\admin\Tools\Status',
+			$scripts['Admin/Status']	= array(	'class'		=> '\\gp\\admin\\Tools\\Status',
 													'label'		=> $langmessage['Site Status'],
 													'group'		=> 'tools'
 												);
 
 
-			$scripts['Admin/Uninstall']	= array(	'class'		=> '\gp\admin\Tools\Uninstall',
+			$scripts['Admin/Uninstall']	= array(	'class'		=> '\\gp\\admin\\Tools\\Uninstall',
 													'label'		=> $langmessage['uninstall_prep'],
 													'group'		=> 'tools'
 												);
 
 
-			$scripts['Admin/Cache']		= array(	'class'		=> '\gp\admin\Tools\Cache',
+			$scripts['Admin/Cache']		= array(	'class'		=> '\\gp\\admin\\Tools\\Cache',
 													'label'		=> $langmessage['Resource Cache'],
 													'group'		=> 'tools'
 												);
@@ -280,38 +281,39 @@ namespace gp\admin{
 
 
 			// Unlisted
-			$scripts['Admin/Addons']				= array(	'class'		=> '\gp\admin\Addons',
+			$scripts['Admin/Addons']				= array(	'class'		=> '\\gp\\admin\\Addons',
 																'method'	=> 'RunScript',
 																'label' 	=> $langmessage['plugins'],
 													);
 
-			$scripts['Admin/Addons/Available']		= array(	'class'		=> '\gp\admin\Addons',
+			$scripts['Admin/Addons/Available']		= array(	'class'		=> '\\gp\\admin\\Addons',
 																'method'	=> 'ShowAvailable',
 																'label' 	=> $langmessage['Available'],
 													);
 
 			if( gp_remote_plugins ){
-				$scripts['Admin/Addons/Remote']		= array(	'class'		=> '\gp\admin\Addons',
+				$scripts['Admin/Addons/Remote']		= array(	'class'		=> '\\gp\\admin\\Addons',
 																'method'	=> 'RemoteBrowse',
 																'label' 	=> $langmessage['Search'],
 													);
 			}
 
 
-			$scripts['Admin/Errors']				= array(	'class'		=> '\gp\admin\Tools\Errors',
+			$scripts['Admin/Errors']				= array(	'class'		=> '\\gp\\admin\\Tools\\Errors',
 																'label' 	=> 'Errors',
 													);
 
 
-			$scripts['Admin/About']					= array(	'class'		=> '\gp\admin\About',
+			$scripts['Admin/About']					= array(	'class'		=> '\\gp\\admin\\About',
 																'label' 	=> 'About '.CMS_NAME,
 													);
 
-			$scripts['Admin/Browser']				= array(	'class'		=> '\gp\admin\Content\Browser',
+			$scripts['Admin/Browser']				= array(	'class'		=> '\\gp\\admin\\Content\\Browser',
+																'permission' => 'Admin_Uploaded',
 													);
 
 
-			$scripts['Admin/Preferences']			= array(	'class'		=> '\gp\admin\Settings\Preferences',
+			$scripts['Admin/Preferences']			= array(	'class'		=> '\\gp\\admin\\Settings\\Preferences',
 																'label' 	=> $langmessage['Preferences'],
 													);
 
@@ -336,6 +338,7 @@ namespace gp\admin{
 			return false;
 		}
 
+
 		/**
 		 * Determine if a user has permissions for the $script
 		 * @static
@@ -348,9 +351,8 @@ namespace gp\admin{
 				return true;
 			}
 
-			$script		= str_replace('/','_',$script);
+			$script		= self::WhichPermission($script);
 			$granted	= ','.$granted.',';
-
 			if( strpos($granted,','.$script.',') !== false ){
 				return true;
 			}
@@ -358,6 +360,48 @@ namespace gp\admin{
 			return false;
 
 		}
+
+
+		/**
+		 * Return the permission setting that should be checked against a list of grated permissions
+		 * Admin_Browser -> Admin_Uploaded
+		 * Admin_Theme_Content/Text -> Admin_Theme_Content
+		 *
+		 */
+		public static function WhichPermission($script){
+
+			// prepare list of permissions
+			$scripts	= self::AdminScripts();
+			$possible	= array();
+			foreach($scripts as $pscript => $info){
+				$pscript = str_replace('/','_',$pscript);
+				if( isset($info['permission']) ){
+					$possible[$pscript] = $info['permission'];
+
+				}elseif( isset($info['label']) ){
+					$possible[$pscript] = $pscript;
+				}
+			}
+
+
+			// find the relevant permission in the list of possible permissions
+			$script		= str_replace('/','_',$script);
+			$parts 		= explode('_',$script);
+
+			while($parts){
+
+				$check = implode('_',$parts);
+				if( !isset($possible[$check]) ){
+					array_pop($parts);
+					continue;
+				}
+
+				return $possible[$check];
+			}
+
+			return $script;
+		}
+
 
 		/**
 		 * Determine if a user can edit a specific page
@@ -625,7 +669,7 @@ namespace gp\admin{
 						continue;
 					}
 
-					echo '<li><a href="'.addon_browse_path.'/'.$url.'/'.$addon_id.'" data-cmd="remote">'.$label.'</a></li>';
+					echo '<li><a href="'.$url.'/'.$addon_id.'" data-cmd="remote">'.$label.'</a></li>';
 
 				}
 
@@ -721,7 +765,7 @@ namespace gp\admin{
 		 * Helper function for outputing link groups in AdminPanelLinks()
 		 *
 		 */
-		private function _AdminPanelLinks($in_panel, $links, $lang_key, $icon_class, $panel_arg){
+		private static function _AdminPanelLinks($in_panel, $links, $lang_key, $icon_class, $panel_arg){
 			global $langmessage;
 
 			if( empty($links) ){
@@ -844,6 +888,11 @@ namespace gp\admin{
 		public static function CleanCache(){
 			global $dataDir;
 			$dir = $dataDir.'/data/_cache';
+
+			if( !file_exists($dir) ){
+				return;
+			}
+
 			$files = scandir($dir);
 			$times = array();
 			foreach($files as $file){
@@ -1060,10 +1109,9 @@ namespace gp\admin{
 		public static function PostedSlug($string, $from_label = false){
 			global $config;
 
-			$orig_string = $string;
+			$orig_string	= $string;
 
-			// Remove control characters
-			$string = preg_replace( '#[[:cntrl:]]#u', '', $string ) ; // 	[\x00-\x1F\x7F]
+			$string			= \gp\tool\Editing::Sanitize($string);
 
 			//illegal characters
 			$string = str_replace( array('?','*',':','|'), array('','','',''), $string);
@@ -1415,7 +1463,7 @@ namespace gp\admin{
 				return $bit = 0;
 			}
 
-			if( !\gp\tool\RemoteGet::Test() ){
+			if( \gp\tool\RemoteGet::Test() === false ){
 				return $bit = 0;
 			}
 

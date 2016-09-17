@@ -65,6 +65,7 @@ $gp.links.inline_edit_generic = function(evt,arg){
 	}
 }
 
+$gp._loadingEditor = false;
 $gp.LoadEditor = function(href, area_id, arg){
 
 	area_id = area_id || 0;
@@ -73,6 +74,12 @@ $gp.LoadEditor = function(href, area_id, arg){
 		return;
 	}
 
+	if( $gp._loadingEditor ){
+		console.log('editor still loading');
+		return;
+	}
+
+	$gp._loadingEditor = true;
 
 	//first time editing, get default $gp.links, $gp.inputs, $gp.response
 	if( typeof(gp_editing) == 'undefined' ){
@@ -81,11 +88,13 @@ $gp.LoadEditor = function(href, area_id, arg){
 		$gp.defaults['response'] = $gp.Properties($gp.response);
 	}
 
+
 	$gp.CacheInterface(function(){
 
 		//set the current editing interface aside so the new one can be created
 		if( typeof(gp_editing) !== 'undefined' ){
 			if( gp_editing.RestoreCached(area_id) ){
+				$gp._loadingEditor = false;
 				return;
 			}
 		}else{
@@ -104,6 +113,7 @@ $gp.LoadEditor = function(href, area_id, arg){
 		//can also be used for development/troubleshooting
 		if( typeof(gplinks[arg]) === 'function' ){
 			gplinks[arg].call(this,arg,evt);
+			$gp._loadingEditor = false;
 			return;
 		}
 
@@ -120,12 +130,14 @@ $gp.LoadEditor = function(href, area_id, arg){
 			if( data === 'false' ){
 				alert($gp.error);
 				$gp.loaded();
+				$gp._loadingEditor = false;
 				return;
 			}
 
 			if( typeof(gp_editor.wake) == 'function' ){
 				gp_editor.wake();
 			}
+			$gp._loadingEditor = false;
 		});
 
 	});
@@ -173,15 +185,15 @@ $gp.CacheInterface = function(callback){
 
 
 	//only continue if we can save
-	gp_editing.save_changes(function(){
+	gp_editing.SaveChanges(function(){
 
-		var $interface						= $('#ck_area_wrap').children().detach();
 
 		if( typeof(gp_editor.sleep) == 'function' ){
 			gp_editor.sleep();
 		}
 
-		$gp.interface[$gp.curr_edit_id]		= $interface;
+
+		$gp.interface[$gp.curr_edit_id]		= $('#ck_area_wrap').children().detach();
 		$gp.editors[$gp.curr_edit_id]		= gp_editor;
 
 
@@ -478,17 +490,20 @@ $gp.links.dd_menu = function(evt){
  *
  */
 $gp.links.tabs = function(evt){
+
 	evt.preventDefault();
 	var $this = $(this);
 	$this.siblings('a').removeClass('selected').each(function(b,c){
 		if( c.hash ){
-			$(c.hash).hide();
+			$(c.hash).hide()
+				.find('input[type=submit],button[type=submit]').prop('disabled',true);
 		}
 	});
 
 	if( this.hash ){
 		$this.addClass('selected');
-		$(this.hash).show();
+		$(this.hash).show()
+			.find('input[type=submit],button[type=submit]').prop('disabled',false);
 	}
 };
 
@@ -824,6 +839,7 @@ $(function(){
 		}
 
 		if( typeof(this['return']) !== 'undefined' ){
+			console.log('return');
 			this['return'].value = window.location; //set the return path
 		}
 
@@ -901,6 +917,8 @@ $(function(){
 
 			if( new_area.parent().closest('.editable_area').length > 0 ){
 				e.stopPropagation();
+				// trigger a substitute event, plugin JS can listen to
+				new_area.trigger("admin:" + e.type);
 			}
 
 			//area han't changed, so just show the span

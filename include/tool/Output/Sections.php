@@ -397,7 +397,6 @@ namespace gp\tool\Output{
 		 */
 		static function SectionAttributes($attrs,$type){
 
-
 			switch($type){
 				case 'image':
 					$attrs['src'] = \gp\tool::GetDir($attrs['src']);
@@ -412,6 +411,7 @@ namespace gp\tool\Output{
 			foreach($attrs as $attr => $value){
 				$attr_string .= ' '.htmlspecialchars($attr).'="'.htmlspecialchars($value).'"';
 			}
+
 			return $attr_string;
 		}
 

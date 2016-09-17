@@ -34,7 +34,7 @@ include_once($path);
 	<nav class="navbar navbar-default navbar-static-top"><!--  navbar-fixed-top gp-fixed-adjust -->
 		<div class="container">
 			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -78,12 +78,6 @@ include_once($path);
 	gpOutput::GetAdminLink();
 	?>
 	</p></footer>
-
-	<!--[if lt IE 9]><?php
-	//<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-	gpOutput::GetComponents( 'html5shiv' );
-	gpOutput::GetComponents( 'respondjs' );
-	?><![endif]-->
 	</div>
 
   </body>

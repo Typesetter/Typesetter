@@ -100,7 +100,7 @@ class FileSystemFtp extends FileSystem{
 		if( empty($connect_args['ftp_root']) || $save_values ){
 
 			$this->ftp_root = $this->get_base_dir();
-			if( !$this->ftp_root ){
+			if( $this->ftp_root === false ){
 				return $langmessage['couldnt_connect'].' (Couldn\'t find root)';
 			}
 			$connect_args['ftp_root'] = $this->ftp_root;
@@ -405,11 +405,8 @@ class FileSystemFtp extends FileSystem{
 	 */
 	static function GetFTPServer(){
 
-		if( isset($_SERVER['HTTP_HOST']) ){
-			$server = $_SERVER['HTTP_HOST'];
-		}elseif( isset($_SERVER['SERVER_NAME']) ){
-			$server = $_SERVER['SERVER_NAME'];
-		}else{
+		$server = \gp\tool::ServerName(true);
+		if( $server === false ){
 			return '';
 		}
 

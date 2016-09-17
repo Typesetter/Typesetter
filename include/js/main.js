@@ -185,7 +185,9 @@ var $gp = {
 		$('.messages').detach();
 
 		try{
-			$gp.CloseAdminBox();
+			if( typeof(gp_editing) == 'undefined' ){
+				$gp.CloseAdminBox();
+			}
 		}catch(a){}
 
 		try{
@@ -224,6 +226,10 @@ var $gp = {
 
 				case 'messages':
 					$(obj.CONTENT).appendTo('body').show().css({'top':0});
+				break;
+
+				case 'reload':
+					$gp.Reload();
 				break;
 
 				//standard functions
@@ -440,7 +446,7 @@ $(function(){
 			_debug		= b64Encode(_debug);
 			_debug		= _debug.replace(/\=/g,'');
 			_debug		= _debug.replace(/\+/g,'-').replace(/\//g,'_');
-			var url		= 'http://www.gpeasy.com/index.php/Debug?data='+_debug;
+			var url		= 'http://www.typesettercms.com/index.php/Debug?data='+_debug;
 			$gp.AdminBoxC('<div class="inline_box"><h3>Error</h3><p>'+$gp.error+'</p><a href="'+url+'" target="_blank">More Info<?a></div>');
 		}else{
 			alert($gp.error);
@@ -553,7 +559,7 @@ $(function(){
 
 		// @deprecated 3.6
 		if( typeof(gplinks[cmd]) === 'function' ){
-			console.log('gpinputs is deprecated as of 3.6');
+			console.log('gplinks is deprecated as of 3.6');
 			return gplinks[cmd].call(this,arg,evt);
 		}
 

@@ -236,25 +236,17 @@ class SimpleSlideshow{
 	 */
 	static function InlineEdit_Scripts($scripts,$type){
 		global $addonRelativeCode;
+
 		if( $type !== 'simple_slide' ){
 			return $scripts;
 		}
 
-		if( defined('gpversion') && version_compare(gpversion,'3.5','>=') ){
-			$scripts[] = $addonRelativeCode.'/gallery_options.js';
-			$scripts[] = '/include/js/inline_edit/inline_editing.js';
-			$scripts[] = '/include/js/inline_edit/image_common.js';
-			$scripts[] = '/include/js/inline_edit/gallery_edit_202.js';
-			$scripts[] = '/include/js/jquery.auto_upload.js';
+		$scripts[] = '/include/js/inline_edit/inline_editing.js';
+		$scripts[] = '/include/js/inline_edit/image_common.js';
+		$scripts[] = '/include/js/inline_edit/gallery_edit_202.js';
+		$scripts[] = $addonRelativeCode.'/gallery_options.js';
+		$scripts[] = '/include/js/jquery.auto_upload.js';
 
-		}else{
-
-			$scripts[] = $addonRelativeCode.'/gallery_options.js';
-			$scripts[] = '/include/js/inline_edit/inline_editing.js';
-			$scripts[] = '/include/thirdparty/jquery_ui/jquery-ui.custom.min.js';
-			$scripts[] = '/include/js/inline_edit/gallery_edit_202.js';
-			$scripts[] = '/include/js/jquery.auto_upload.js';
-		}
 
 		return $scripts;
 	}

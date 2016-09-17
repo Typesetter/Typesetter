@@ -35,16 +35,18 @@ class gp_resized{
 			//dies
 		}
 
-		$img = $_GET['img'];
-		$height = $_GET['h'];
-		$width = $_GET['w'];
-		$index = $_GET['i'];
+		$img		= $_GET['img'];
+		$height		= $_GET['h'];
+		$width		= $_GET['w'];
+
 		if( !is_numeric($height) || !is_numeric($width) ){
 			self::Send404();
 			//dies
 		}
 
-		$img = \gp\tool\Files::NoNull($img);
+		$width		= (int)$width;
+		$height		= (int)$height;
+		$img		= \gp\tool\Files::NoNull($img);
 
 		//check file path
 		if( strpos($img,'./') !== false || strpos($img,'%2f') !== false || strpos($img,'%2F') !== false ){
@@ -53,7 +55,8 @@ class gp_resized{
 
 		//make sure the index is set
 		gp_resized::SetIndex();
-		if( !isset(self::$index[$index]) ){
+		$index		= \gp\tool::ArrayKey($_GET['i'], self::$index );
+		if( !$index ){
 			self::Send404();
 			//dies
 		}
@@ -66,9 +69,9 @@ class gp_resized{
 		}
 
 
-		$info = self::ImageInfo($img,$width,$height);
-		$folder = $dataDir.'/data/_resized/'.$info['index'];
-		$full_path = $folder.'/'.$info['name'];
+		$info			= self::ImageInfo($img,$width,$height);
+		$folder			= $dataDir.'/data/_resized/'.$info['index'];
+		$full_path		= $folder.'/'.$info['name'];
 
 		//if it exists return true
 		if( file_exists($full_path) ){
@@ -97,6 +100,7 @@ class gp_resized{
 			if( ($use_width >= $width && $use_height > $height)
 				|| ($use_width > $width && $use_height >= $height)
 				){
+
 					$path = \gp\tool::GetDir('/include/image.php',false).'?i='.$index.'&w='.$use_width.'&h='.$use_height.'&img='.rawurlencode($img);
 					\gp\tool::Redirect($path);
 					//dies

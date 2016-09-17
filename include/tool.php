@@ -214,6 +214,7 @@ namespace gp{
 		public static function Autoload($class){
 			global $config, $dataDir;
 
+			$class		= trim($class,'\\');
 			$parts		= explode('\\',$class);
 			$part_0		= array_shift($parts);
 
@@ -224,9 +225,11 @@ namespace gp{
 
 			//gp namespace
 			if( $part_0 === 'gp' ){
-				$path	= implode('/',$parts).'.php';
-				if( file_exists($dataDir.'/include/'.$path) ){
-					include_once( $dataDir.'/include/'.$path );
+				$path	= $dataDir.'/include/'.implode('/',$parts).'.php';
+				if( file_exists($path) ){
+					include_once( $path );
+				}else{
+					trigger_error('Autoload for gp namespace failed. Class: '.$class.' path: '.$path);
 				}
 				return;
 			}
@@ -242,11 +245,14 @@ namespace gp{
 				foreach($config['addons'] as $addon_key => $addon){
 					if( isset($addon['Namespace']) && $addon['Namespace'] == $namespace ){
 
+
 						\gp\tool\Plugins::SetDataFolder($addon_key);
 						$path			= \gp\tool\Plugins::$current['code_folder_full'].'/'.implode('/',$parts).'.php';
 
 						if( file_exists($path) ){
 							include_once($path);
+						}else{
+							trigger_error('Autoload for addon namespace failed. Class: '.$class.' path: '.$path);
 						}
 
 						\gp\tool\Plugins::ClearDataFolder();
@@ -714,11 +720,8 @@ namespace gp{
 
 		public static function AbsoluteUrl($href='',$query='',$with_schema=true,$ampersands=true){
 
-			if( isset($_SERVER['HTTP_HOST']) ){
-				$server = $_SERVER['HTTP_HOST'];
-			}elseif( isset($_SERVER['SERVER_NAME']) ){
-				$server = $_SERVER['SERVER_NAME'];
-			}else{
+			$server = self::ServerName();
+			if( $server === false ){
 				return self::GetUrl($href,$query,$ampersands);
 			}
 
@@ -728,6 +731,31 @@ namespace gp{
 			}
 
 			return $schema.$server.self::GetUrl($href,$query,$ampersands);
+		}
+
+		/**
+		 * Return ther server name
+		 *
+		 */
+		public static function ServerName($strip_www = false){
+
+			if( isset($_SERVER['SERVER_NAME']) ){
+				$server = self::UrlChars($_SERVER['SERVER_NAME']);
+
+			}else{
+				return false;
+			}
+
+			if( $strip_www && strpos($server,'www.') === 0 ){
+				$server = substr($server,4);
+			}
+
+			return $server;
+		}
+
+		public static function UrlChars($string){
+			$string = str_replace( ' ', '%20', $string );
+			return preg_replace('|[^a-z0-9-~+_.?#=!&;,/:%@$\|*\'()\[\]\\x80-\\xff]|i', '', $string);
 		}
 
 		/**
@@ -899,7 +927,7 @@ namespace gp{
 
 			//make sure defaults are set
 			$config += array(
-					'maximgarea'		=> '691200',
+					'maximgarea'		=> '',
 					'maxthumbsize'		=> '100',
 					'check_uploads'		=> false,
 					'colorbox_style'	=> 'example1',
@@ -1297,8 +1325,8 @@ namespace gp{
 		public static function WhichPage(){
 			global $config, $gp_menu;
 
-			$path = self::CleanRequest($_SERVER['REQUEST_URI']);
-			$path = preg_replace('#[[:cntrl:]]#u','', $path);// remove control characters
+			$path	= \gp\tool\Editing::Sanitize($_SERVER['REQUEST_URI']);
+			$path	= self::CleanRequest($path);
 
 			$pos = mb_strpos($path,'?');
 			if( $pos !== false ){
@@ -1319,9 +1347,9 @@ namespace gp{
 				return $config['homepath'];
 			}
 
+			//redirect to / for homepath request
 			if( isset($config['homepath']) && $path == $config['homepath'] ){
-				$args = $_GET;
-				self::Redirect(self::GetUrl('',http_build_query($_GET),false));
+				self::Redirect(self::GetUrl('','',false));
 			}
 
 			return $path;
@@ -1330,7 +1358,7 @@ namespace gp{
 
 		/**
 		 * Redirect the request to $path with http $code
-		 * @static
+		 *
 		 * @param string $path url to redirect to
 		 * @param string $code http redirect code: 301 or 302
 		 *
@@ -1376,8 +1404,6 @@ namespace gp{
 			global $dirPrefix;
 
 			//use dirPrefix to find requested title
-			$path = rawurldecode($path); //%20 ...
-
 			if( !empty($dirPrefix) ){
 				$pos = strpos($path,$dirPrefix);
 				if( $pos !== false ){
@@ -1774,13 +1800,12 @@ namespace gp{
 		 *
 		 */
 		public static function IdReq($img_path,$jquery = true){
+			global $page;
 
 			//using jquery asynchronously doesn't affect page loading
 			//error function defined to prevent the default error function in main.js from firing
 			if( $jquery ){
-				echo '<script type="text/javascript" style="display:none !important">';
-				echo '$.ajax('.json_encode($img_path).',{error:function(){}, dataType: "jsonp"});';
-				echo '</script>';
+				$page->head_script .= '$.ajax('.json_encode($img_path).',{error:function(){}, dataType: "jsonp"});';
 				return;
 			}
 
@@ -1914,8 +1939,8 @@ namespace gp{
 		 */
 		public static function JsonEncode($data){
 
-			$search		= array("\n","\r","\t",'<script','</script>');
-			$repl		= array('\n','\r','\t','<"+"script','<"+"/script>');
+			$search		= array('<script','<\/script>');
+			$repl		= array('<"+"script','<"+"\/script>');
 
 			$type = gettype($data);
 			switch( $type ){
@@ -1931,9 +1956,13 @@ namespace gp{
 				return $data;
 
 				case 'string':
-				$data		= str_replace('\\','\\\\',$data);
-				$data		= preg_replace("!([\b\f\"\\'])!", "\\\\$1", $data);
-				return '"'.str_replace($search,$repl,$data).'"';
+				if( gp_php53 ){
+					$data		= htmlspecialchars_decode(htmlspecialchars($data, ENT_IGNORE, 'UTF-8'));
+				}else{
+					$data		= htmlspecialchars_decode(htmlspecialchars($data, ENT_SUBSTITUTE, 'UTF-8'));
+				}
+				$data = json_encode($data);
+				return str_replace($search,$repl,$data);
 
 				case 'object':
 					$data = get_object_vars($data);
@@ -1964,6 +1993,7 @@ namespace gp{
 		 *
 		 */
 		public static function Date($format='',$time=null){
+
 			if( empty($format) ){
 				return '';
 			}
@@ -1971,6 +2001,7 @@ namespace gp{
 			if( is_null($time) ){
 				$time = time();
 			}
+			$time = (int)$time;
 
 			$match_count = preg_match_all('#%+[^\s]#',$format,$matches,PREG_OFFSET_CAPTURE);
 			if( $match_count ){
@@ -2025,6 +2056,31 @@ namespace gp{
 		 */
 		public static function ArrayHash($array){
 			return md5(json_encode($array) );
+		}
+
+
+		/**
+		 * Return the key of an array if found
+		 * Alert if $msg is not null
+		 *
+		 * @param string $key
+		 * @param array $array
+		 * @param string $msg
+		 * @return mixed
+		 */
+		public static function ArrayKey( $key, $array, $msg = null ){
+			global $langmessage;
+
+			if( !isset($array[$key]) ){
+
+				if( !is_null($msg) ){
+					msg($langmessage['OOPS'].' '.$msg);
+				}
+
+				return false;
+			}
+
+			return array_search( $array[$key], $array, true);
 		}
 
 

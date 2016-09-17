@@ -188,6 +188,8 @@ class Install extends \gp\admin\Addon\Tools{
 		}
 		$src = addon_browse_path.'/'.$slug.'?cmd=remote&format=json&'.$this->searchQuery.'&page='.$this->searchPage; // format=json added 4.6b3
 
+		$this->ShowHeader();
+
 		$data = $this->RemoteBrowseResponse($src);
 		if( $data === false ){
 			return;
@@ -200,7 +202,6 @@ class Install extends \gp\admin\Addon\Tools{
 			$this->searchPerPage = count($data['rows']);
 		}
 
-		$this->ShowHeader();
 
 		$this->RemoteBrowseRows($data);
 
@@ -228,6 +229,22 @@ class Install extends \gp\admin\Addon\Tools{
 			echo ' &nbsp;  <b>'.$langmessage['Off'].'</b>';
 		}
 		echo '</p>';
+
+		$this->ViewOnline();
+	}
+
+
+	/**
+	 * Link to view search resuls on typesettercms.com
+	 *
+	 */
+	public function ViewOnline(){
+		$slug = 'Plugins';
+		if( $this->config_index == 'themes' ){
+			$slug = 'Themes';
+		}
+		$url = addon_browse_path.'/'.$slug.'?'.$this->searchQuery.'&page='.$this->searchPage;
+		echo '<p>View search results on <a href="'.$url.'" target="_blank">'.CMS_READABLE_DOMAIN.'</p>';
 	}
 
 
@@ -346,6 +363,7 @@ class Install extends \gp\admin\Addon\Tools{
 		$data = $this->ParseResponse($result);
 
 		if( $data === false ){
+			$this->ViewOnline();
 			return false;
 		}
 
@@ -391,6 +409,7 @@ class Install extends \gp\admin\Addon\Tools{
 			$debug['Two']		= substr($result,0,2);
 			$debug['Twotr']		= substr(trim($result),0,2);
 			echo '<p>'.\gp\tool\RemoteGet::Debug('Sorry, data not fetched',$debug).'</p>';
+			return false;
 		}
 
 		return $data;

@@ -96,6 +96,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 		//Installation
+		$this->cmds['remote_install']			= 'RemoteInstall';
 		$this->cmds['RemoteInstall']			= '';
 		$this->cmds['RemoteInstallConfirmed']	= 'DefaultDisplay';
 		$this->cmds['UpgradeTheme']				= 'DefaultDisplay';
@@ -109,10 +110,26 @@ class Layout extends \gp\admin\Addon\Install{
 		$this->cmds['SendAddonReview']			= '';
 		$this->cmds['ReviewAddonForm']			= '';
 
+		$this->cmds['addontext']				= 'RedirectText';
+
+
 
 		$this->LayoutCommands();
 		$this->RunCommands($cmd);
 	}
+
+	/**
+	 * Redirect addontext requests to correct path for TS 5.0+
+	 *
+	 */
+	protected function RedirectText(){
+		$params = $_GET;
+		$params['cmd'] = 'AddonTextForm';
+
+		$url = \gp\tool::GetUrl('Admin_Theme_Content/Text',http_build_query($params,'','&'),false);
+		\gp\tool::Redirect($url);
+	}
+
 
 
 	/**
@@ -127,7 +144,7 @@ class Layout extends \gp\admin\Addon\Install{
 		$this->cmds['MakeDefault']		= 'DefaultDisplay';
 		$this->cmds['CSSPreferences']	= '';
 		$this->cmds['RestoreLayout']	= 'DefaultDisplay';
-		$this->cmds['RmGadget']			= 'DefaultDisplay';
+		$this->cmds['RmGadget']			= 'ShowGadgets';
 
 	}
 
@@ -224,7 +241,7 @@ class Layout extends \gp\admin\Addon\Install{
 				echo str_replace('_',' ',$gadget);
 				echo '</td><td>';
 				if( isset($gadget_info[$gadget]) ){
-					echo $this->LayoutLink( $this->curr_layout, $langmessage['remove'], 'cmd=RmGadget&gadget='.urlencode($gadget), array('data-cmd'=>'cnreq') );
+					echo $this->LayoutLink( $this->curr_layout, $langmessage['remove'], 'cmd=RmGadget&gadget='.urlencode($gadget), array('data-cmd'=>'gpabox') );
 				}else{
 					echo $langmessage['disabled'];
 				}
@@ -461,6 +478,8 @@ class Layout extends \gp\admin\Addon\Install{
 	public function RmGadget(){
 		global $langmessage;
 
+		//$this->page->ajaxReplace	= array();
+
 		$gadget =& $_REQUEST['gadget'];
 
 		$handlers = $this->GetAllHandlers($this->curr_layout);
@@ -554,10 +573,13 @@ class Layout extends \gp\admin\Addon\Install{
 			$new_layout_info = $this->AvailableTheme('/themes',false, $theme_folder);
 		}
 
+		if( $new_layout_info === false ){
+			return;
+		}
+
 		if( $installer->has_hooks ){
 			$new_layout_info['addon_key'] = $installer->config_key;
 		}
-
 
 		// update each layout
 		foreach($gpLayouts as $layout => $layout_info){
@@ -582,6 +604,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function SameTheme($layout_info, $new_layout_info ){
+
 
 		//if we have addon ids
 		if( isset($new_layout_info['addon_id']) && isset($layout_info['addon_id']) && $layout_info['addon_id'] == $new_layout_info['addon_id'] ){
@@ -609,8 +632,8 @@ class Layout extends \gp\admin\Addon\Install{
 	/**
 	 *
 	 */
-	public function RemoteInstallConfirmed(){
-		$installer = parent::RemoteInstallConfirmed('themes');
+	public function RemoteInstallConfirmed($type='themes'){
+		$installer = parent::RemoteInstallConfirmed($type);
 		$this->GetPossible();
 		$this->UpdateLayouts( $installer );
 	}
@@ -1463,17 +1486,10 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 	public function ReturnHeader(){
+		global $page;
 
-		if( empty($_POST['return']) ){
-			return;
-		}
-
-
-		$return = trim($_POST['return']);
-		if( strpos($return,'http') !== 0 ){
-			$return = \gp\tool::GetUrl($return,'',false);
-		}
-		\gp\tool::Redirect($return,302);
+		$page->ajaxReplace		= array();
+		$page->ajaxReplace[]	= array('reload');
 	}
 
 

@@ -156,7 +156,7 @@ class Update extends \gp\Page{
 		echo '<tr><td>';
 		echo 'RemoteGet';
 		echo '</td><td>';
-		if( \gp\tool\RemoteGet::Test() ){
+		if( \gp\tool\RemoteGet::Test() !== false ){
 			echo '<span class="passed">'.$langmessage['True'].'</span>';
 		}else{
 			$passed = false;
@@ -260,6 +260,11 @@ class Update extends \gp\Page{
 				continue;
 			}
 			$full_dir		= $dir.'/'.$name;
+
+			if( !is_dir($full_dir) ){
+				continue;
+			}
+
 			$templateFile	= $full_dir.'/template.php';
 			$ini_file		= $full_dir.'/Addon.ini';
 
@@ -796,8 +801,9 @@ class Update extends \gp\Page{
 
 			$content	= $archive->getFromName($file['name']);
 			if( empty($content) ){
-				return true;
+				continue;
 			}
+
 
 
 			$replace_dir = trim($replace_dir,'/');
@@ -811,6 +817,7 @@ class Update extends \gp\Page{
 				return false;
 			}
 		}
+		pre($this->replace_dirs);
 
 		return true;
 	}

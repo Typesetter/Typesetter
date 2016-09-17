@@ -229,8 +229,6 @@ class Menus extends \gp\admin\Menu{
 			return;
 		}
 
-		$menu_file = $dataDir.'/data/_menus/'.$menu_id.'.php';
-
 		unset($config['menus'][$menu_id]);
 		unset($this->avail_menus[$menu_id]);
 

@@ -28,7 +28,7 @@ class Page extends \gp\Page{
 			}
 
 
-			$this->Error_404($this->title);
+			$this->Error_404();
 			return;
 		}
 
@@ -129,7 +129,9 @@ class Page extends \gp\Page{
 
 		$scripts['special_contact']['class'] = '\\gp\\special\\Contact';
 
-		$scripts['special_missing']['class'] = '\\gp\\special\\Missing';
+		$scripts['special_missing']		= array(	'class'		=> '\\gp\\special\\Missing',
+													'method'	=> 'RunScript',
+													);
 
 		$scripts['special_gpsearch']['class'] = '\\gp\\special\\Search';
 

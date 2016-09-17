@@ -218,7 +218,7 @@ class Menu extends \gp\special\Base{
 			return;
 		}
 
-		$this->curr_menu_array = \gp\tool\Output::GetMenuArray($this->curr_menu_id);
+		$this->curr_menu_array = \gp\tool\Output\Menu::GetMenuArray($this->curr_menu_id);
 		$this->is_alt_menu = true;
 	}
 
@@ -1006,7 +1006,7 @@ class Menu extends \gp\special\Base{
 		$menus = $this->GetAvailMenus('menu');
 		$all_keys = array();
 		foreach($menus as $menu_id => $label){
-			$menu_array = \gp\tool\Output::GetMenuArray($menu_id);
+			$menu_array = \gp\tool\Output\Menu::GetMenuArray($menu_id);
 			$keys = array_keys($menu_array);
 			$all_keys = array_merge($all_keys,$keys);
 		}
@@ -1459,7 +1459,13 @@ class Menu extends \gp\special\Base{
 	public function HomepageDisplay(){
 		global $langmessage, $config;
 
+
+		if( \gp\admin\Menu\Tools::ResetHomepage() ){
+			\gp\admin\Tools::SaveConfig();
+		}
+
 		$label = \gp\tool::GetLabelIndex($config['homepath_key']);
+
 
 		echo '<span class="fa fa-home"></span> ';
 		echo $langmessage['Homepage'].': ';

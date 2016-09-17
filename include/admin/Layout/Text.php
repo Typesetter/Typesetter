@@ -38,7 +38,6 @@ class Text extends \gp\admin\Layout{
 		echo '<div class="inline_box" style="text-align:right">';
 		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Text').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="SaveAddonText" />';
-		echo '<input type="hidden" name="return" value="" />'; //will be populated by javascript
 		echo '<input type="hidden" name="addon" value="'.htmlspecialchars($addon).'" />'; //will be populated by javascript
 
 
@@ -109,7 +108,6 @@ class Text extends \gp\admin\Layout{
 		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Text').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="savetext" />';
 		echo '<input type="hidden" name="key" value="'.htmlspecialchars($key).'" />';
-		echo '<input type="hidden" name="return" value="" />'; //will be populated by javascript
 
 		echo '<table class="bordered">';
 		echo '<tr><th>';

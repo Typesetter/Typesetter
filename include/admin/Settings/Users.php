@@ -16,17 +16,8 @@ class Users extends \gp\special\Base{
 
 		parent::__construct($args);
 
-		$this->page->head_js[] = '/include/js/admin_users.js';
-
-		//set possible_permissions
-		$scripts = \gp\admin\Tools::AdminScripts();
-		foreach($scripts as $script => $info){
-			if( !isset($info['label']) ){
-				continue;
-			}
-			$script = str_replace('/','_',$script);
-			$this->possible_permissions[$script] = $info['label'];
-		}
+		$this->page->head_js[]			= '/include/js/admin_users.js';
+		$this->possible_permissions		= $this->PossiblePermissions();
 
 
 		$this->GetUsers();
@@ -74,6 +65,32 @@ class Users extends \gp\special\Base{
 
 		$this->ShowForm();
 	}
+
+
+	/**
+	 * Return an array of possible permissions
+	 *
+	 */
+	public static function PossiblePermissions(){
+		$possible	= array();
+		$scripts	= \gp\admin\Tools::AdminScripts();
+
+		foreach($scripts as $script => $info){
+
+			if( isset($info['permission']) ){
+				continue;
+			}
+
+			if( !isset($info['label']) ){
+				continue;
+			}
+			$script = str_replace('/','_',$script);
+			$possible[$script] = $info['label'];
+		}
+
+		return $possible;
+	}
+
 
 	/**
 	 * Save changes made to an existing user's permissions

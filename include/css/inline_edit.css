@@ -65,6 +65,8 @@ html{
 	padding:0 10px;
 	text-align:center;
 	color:#888 !important;
+	white-space:nowrap;
+	overflow:hidden;
 	}
 
 #ckeditor_tabs a:last-child{
@@ -219,7 +221,7 @@ html{
 #ckeditor_wrap .full_width,
 #ckeditor_wrap .full_width:hover,
 #ckeditor_wrap .full_width:active{
-	width:195px;
+	width:100%;
 	}
 
 #ckeditor_wrap .half_width,

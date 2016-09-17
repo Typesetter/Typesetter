@@ -164,8 +164,9 @@ namespace gp\admin\Content{
 		 */
 		public function SetDirectory(){
 
-			//get the current path
-			$path = str_replace( array('\\','//'),array('/','/'),$this->page->requested);
+			$subdir		= '';
+			$path		= \gp\tool::WhichPage(); // get the current path, not using $page->requested since space characters will have been changed to underscores
+			$path		= str_replace('\\','/',$path);
 
 			//@since 5.0
 			if( strpos($path,'Admin/Uploaded') === 0 ){
@@ -182,22 +183,25 @@ namespace gp\admin\Content{
 			}
 
 			if( count($parts) > 0 ){
-				$this->subdir = '/'.implode('/',$parts);
-				$this->subdir = \gp\tool\Editing::CleanArg($this->subdir);
+				$subdir = '/'.implode('/',$parts);
+				$subdir = \gp\tool\Editing::CleanArg($subdir);
 			}
 
 
 			if( !empty($_REQUEST['dir']) ){
-				$this->subdir .= \gp\tool\Editing::CleanArg($_REQUEST['dir']);
-			}
-			$this->subdir = str_replace( array('\\','//'),array('/','/'),$this->subdir);
-
-			if( $this->subdir == '/' ){
-				$this->subdir = '';
-			}else{
-				$this->currentDir .= $this->subdir;
+				$subdir .= \gp\tool\Editing::CleanArg($_REQUEST['dir']);
 			}
 
+			$subdir				= \gp\tool\Files::Canonicalize($subdir);
+			$subdir				= rtrim($subdir,'/');
+			$current_dir		= $this->currentDir . $subdir;
+
+			if( !\gp\tool\Files::CheckPath( $current_dir, $this->currentDir ) ){
+				return;
+			}
+
+			$this->subdir		= $subdir;
+			$this->currentDir	= $current_dir;
 		}
 
 
@@ -338,11 +342,11 @@ namespace gp\admin\Content{
 		 * Return folder options for the InlineList
 		 *
 		 */
-		function InlineList_Options($dir_piece, $folders){
+		public static function InlineList_Options($dir_piece, $folders){
 			global $langmessage, $dataDir;
 
 			$return		= '';
-			$return		.= '<div class="gp_edit_select ckeditor_control">';
+			$return		.= '<div class="gp_edit_select">';
 			$return		.= '<a class="gp_selected_folder"><i class="fa fa-folder-o"></i> ';
 			if( strlen($dir_piece) > 23 ){
 				$return		.= '...'.substr($dir_piece,-20);
@@ -441,12 +445,14 @@ namespace gp\admin\Content{
 
 			$query_string = 'file_cmd=delete&show=inline&file='.urlencode($file);
 
-			return '<span class="expand_child" id="'.$id.'">'
+			return '<div class="expand_child" id="'.$id.'">'
 					. '<a href="'.$file_url.'" data-cmd="gp_gallery_add" '.$size.'>'
 					. $thumb
 					. '</a>'
-					. \gp\tool::Link('Admin/Uploaded'.$dir_piece,'',$query_string,array('class'=>'delete fa fa-minus-circle gpconfirm','data-cmd'=>'gpajax','title'=>$langmessage['delete_confirm']),'delete')
-					. '</span>';
+					. '<span>'
+					. \gp\tool::Link('Admin/Uploaded'.$dir_piece,'',$query_string,array('class'=>'delete fa fa-trash gpconfirm','data-cmd'=>'gpajax','title'=>$langmessage['delete_confirm']),'delete')
+					. '</span>'
+					. '</div>';
 		}
 
 		public static function ImageId($path){
@@ -525,7 +531,9 @@ namespace gp\admin\Content{
 			if( isset($this->imgTypes[$file_type]) && function_exists('imagetypes') ){
 
 				//check the image size
-				\gp\tool\Image::CheckArea($to,$config['maximgarea']);
+				if( $config['maximgarea'] > 0 ){
+					\gp\tool\Image::CheckArea($to,$config['maximgarea']);
+				}
 
 				self::CreateThumbnail($to);
 			}
@@ -550,12 +558,9 @@ namespace gp\admin\Content{
 				return;
 			}
 
-			$len = strlen($prefix);
-			$thumb_path = substr($original,$len);
-			$thumb_path = $thumb_prefix.$thumb_path;
+			$thumb_path	= \gp\tool::ThumbnailPath($original);
+			$thumb_dir	= \gp\tool::DirName($thumb_path);
 
-			$thumb_dir = \gp\tool::DirName($thumb_path);
-			$thumb_path = $thumb_dir.'/'.basename($thumb_path).'.jpg';
 			\gp\tool\Files::CheckDir($thumb_dir);
 			\gp\tool\Image::createSquare($original,$thumb_path,$config['maxthumbsize']);
 		}
@@ -892,8 +897,11 @@ namespace gp\admin\Content{
 		 */
 		public function MaxSize($added){
 			global $config;
-			foreach($added as $file){
-				\gp\tool\Image::CheckArea($file['realpath'],$config['maximgarea']);
+
+			if( $config['maximgarea'] > 0 ){
+				foreach($added as $file){
+					\gp\tool\Image::CheckArea($file['realpath'],$config['maximgarea']);
+				}
 			}
 		}
 

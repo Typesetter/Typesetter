@@ -1341,7 +1341,7 @@ namespace gp\tool{
 			}
 			$meta_title .= $config['title'];
 
-			$meta_title = \gp\tool\Plugins::Filter('MetaTitle', array($meta_title) );
+			$meta_title = \gp\tool\Plugins::Filter('MetaTitle', array($meta_title, $page_title, $config['title']) );
 
 			echo "\n" . '<title>' . $meta_title . '</title>';
 			return $page_title;

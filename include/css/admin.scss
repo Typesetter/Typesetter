@@ -344,6 +344,14 @@
 	background: lighten($gp_panel_bg,10%);
 	}
 
+#admincontent_panel a[href$='ToggleVisibility'] { 
+	background:#C44830; 
+	}
+
+#admincontent_panel a[href$='ToggleVisibility']:hover { 
+	background:#DC5135; 
+	}
+
 #admincontent_panel span > .fa,
 #admincontent_panel a > .fa{
 	margin-right: 4px;

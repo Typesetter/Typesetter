@@ -603,6 +603,7 @@ class Ajax extends \gp\admin\Menu{
 					'url'=>'http://',
 					'label'=>'',
 					'title_attr'=>'',
+					'class_attr'=>'',
 					'insert_how'=>'',
 					'insert_where'=>'',
 					'key'=>''
@@ -637,6 +638,12 @@ class Ajax extends \gp\admin\Menu{
 		echo $langmessage['title attribute'];
 		echo '</td><td>';
 		echo '<input type="text" name="title_attr" value="'.$args['title_attr'].'" class="gpinput"/>';
+		echo '</td></tr>';
+
+		echo '<tr><td>';
+		echo $langmessage['class'];
+		echo '</td><td>';
+		echo '<input type="text" name="class_attr" value="'.$args['class_attr'].'" class="gpinput"/>';
 		echo '</td></tr>';
 
 		echo '<tr><td>';
@@ -765,6 +772,9 @@ class Ajax extends \gp\admin\Menu{
 
 		if( !empty($_POST['title_attr']) ){
 			$array['title_attr'] = htmlspecialchars($_POST['title_attr']);
+		}
+		if( !empty($_POST['class_attr']) ){
+			$array['class_attr'] = htmlspecialchars($_POST['class_attr']);
 		}
 		if( isset($_POST['new_win']) && $_POST['new_win'] == 'new_win' ){
 			$array['new_win'] = true;

@@ -272,11 +272,6 @@ class Menu{
 				$menu[$key]['title_attr'] = htmlspecialchars($menu[$key]['title_attr']);
 			}
 
-			//make sure the class attr is escaped
-			if( !empty($value['class_attr']) ){
-				$menu[$key]['class_attr'] = htmlspecialchars($menu[$key]['class_attr']);
-			}
-
 			//make sure url and label are escape
 			$menu[$key]['url'] = htmlspecialchars($menu[$key]['url']);
 			$menu[$key]['label'] = htmlspecialchars($menu[$key]['label']);
@@ -905,8 +900,6 @@ class Menu{
 			$attributes['href']			= $this->curr_info['url'];
 			$attributes['value']		= $this->curr_info['label'];
 			$attributes['title']		= $this->curr_info['title_attr'];
-			// Add custom classes to the class array
-			array_push($attributes['title'], $this->curr_info['class_attr']);
 
 			if( isset($this->curr_info['new_win']) ){
 				$attributes['target'] = '_blank';
@@ -919,7 +912,6 @@ class Menu{
 			$attributes['href']			= \gp\tool::GetUrl($title);
 			$attributes['value']		= \gp\tool::GetLabel($title);
 			$attributes['title']		= \gp\tool::GetBrowserTitle($title);
-			$attributes['class']		= $this->curr_info['class_attr'];
 
 			//get valid rel attr
 			if( !empty($gp_titles[$this->curr_key]['rel']) ){

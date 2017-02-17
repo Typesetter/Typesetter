@@ -480,8 +480,10 @@ gp_editing = {
 
 		if( gp_editing.is_dirty || gp_editing.IsDirty() ){
 			$('#ckeditor_wrap').addClass('not_saved');
+			$("a.msg_publish_draft").hide();
 		}else{
 			$('#ckeditor_wrap').removeClass('not_saved');
+			$("a.msg_publish_draft").show();
 		}
 	},
 

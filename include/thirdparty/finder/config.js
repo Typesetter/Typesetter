@@ -11,7 +11,11 @@ $(function(){
 		finder_opts.getFileCallback = function(file) {
 
 			if( typeof(file) == 'object' ){
-				file = file.url;
+				if(checkNested(finder_opts, 'commandsOptions', 'getfile', 'multiple') && finder_opts.commandsOptions.getfile.multiple== true) {
+							file = $.map(file, function(f) { return f.url; });
+						} else {
+							file = file.url;
+					}
 			}
 
 			if( typeof(window.top.opener.gp_editor.FinderSelect) == 'function' ){
@@ -66,6 +70,18 @@ $(function(){
 	}
 });
 
+/** check object keys  */
+function checkNested(obj /*, level1, level2, ... levelN*/) {
+  var args = Array.prototype.slice.call(arguments, 1);
+
+  for (var i = 0; i < args.length; i++) {
+    if (!obj || !obj.hasOwnProperty(args[i])) {
+      return false;
+    }
+    obj = obj[args[i]];
+  }
+  return true;
+}
 
 
 /**

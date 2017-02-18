@@ -832,11 +832,13 @@ namespace gp\tool{
 				}
 				echo '<input type="radio" name="include" value="extra:'.htmlspecialchars($extra_area).'" '.$checked.' data-cmd="IncludePreview" /> ';
 				echo '<span>';
-				echo '<i class="fa fa-cube"></i> ' .$extra_area;
-				echo '<span class="slug">Extra Content</span>';
+				echo '<i class="fa fa-cube"></i> ' . $extra_area;
+				echo '<span class="slug">' . $langmessage['theme_content'] . '</span>';
 				echo '</span>';
+				echo '<span style="display:none;"> extra content</span>'; // for autocomplete filtering
 				echo '</label>';
 			}
+
 
 
 			$array = array();
@@ -859,10 +861,9 @@ namespace gp\tool{
 				echo '<input type="radio" name="include" value="file:'.htmlspecialchars($slug).'" '.$checked.'  data-cmd="IncludePreview" /> ';
 				echo '<span>';
 				echo '<i class="fa fa-file-text-o"></i> ' . $label;
-				echo '<span class="slug">';
-				echo 'Page (/' . $slug . ')';
+				echo '<span class="slug">' . $langmessage['Page'] . ' /' . $slug . '</span>';
 				echo '</span>';
-				echo '</span>';
+				echo '<span style="display:none;"> page</span>'; // for autocomplete filtering
 				echo '</label>';
 			}
 			echo '</div></div>';

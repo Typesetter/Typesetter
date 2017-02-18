@@ -325,6 +325,9 @@ namespace gp\tool\Output{
 				case 'special':
 				return self::IncludeSpecial($requested);
 
+				case 'extra':
+				return self::IncludeExtra($requested);
+
 				default:
 				return self::IncludePage($requested);
 			}
@@ -364,6 +367,22 @@ namespace gp\tool\Output{
 			}
 
 			return \gp\special\Page::ExecInfo($scriptinfo);
+		}
+
+
+		/**
+		 * Include the content of an extra content area
+		 * @param string $requested The name of the extra content to include
+		 *
+		 */
+		static function IncludeExtra($requested){
+			if( \gp\admin\Content\Extra::AreaExists($requested) === false && \gp\admin\Content\Extra::AreaExists($requested.'.php') === false ){
+				return '{{Extra Area Not Found: '.htmlspecialchars($requested).'}}';
+			}
+
+			ob_start();
+			\gp\tool\Output::GetExtra($requested);
+			return ob_get_clean();
 		}
 
 

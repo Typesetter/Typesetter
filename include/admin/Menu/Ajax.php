@@ -152,7 +152,7 @@ class Ajax extends \gp\admin\Menu{
 		echo '</td><td>';
 		$gp_index_no_special = array();
 		foreach( $gp_index as $title => $index ){
-			if( !\gp\tool::SpecialOrAdmin($title) ){
+			if( strpos(strtolower($index),'special_') !== 0 ){
 				$gp_index_no_special[$title] = $index;
 			}
 		}

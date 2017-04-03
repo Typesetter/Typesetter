@@ -150,7 +150,13 @@ class Ajax extends \gp\admin\Menu{
 		echo '<tr><td>';
 		echo $langmessage['Copy'];
 		echo '</td><td>';
-		\gp\admin\Menu\Tools::ScrollList($gp_index);
+		$gp_index_no_special = array();
+		foreach( $gp_index as $title => $index ){
+			if( !\gp\tool::SpecialOrAdmin($title) ){
+				$gp_index_no_special[$title] = $index;
+			}
+		}
+		\gp\admin\Menu\Tools::ScrollList($gp_index_no_special);
 		echo sprintf($format_bottom,'CopyPage',$langmessage['create_new_file']);
 
 

@@ -88,7 +88,7 @@ $(function(){
 		}
 
 		var codeMirrorConfig = {
-		        mode: 'text/x-less',
+				mode: 'text/x-less',
 				lineWrapping:false
 			};
 
@@ -97,41 +97,55 @@ $(function(){
 			codeMirrorConfig.mode = 'text/x-scss';
 		}
 
-
 		var editor = CodeMirror.fromTextArea($textarea.get(0),codeMirrorConfig);
+
+		var prev_value = editor.getValue();
+
+		// events may change in future codemirror versions(!)
+		editor.on("change", function(evt){
+			var current_value = evt.getValue();
+			var cm_isDirty = prev_value != current_value;
+			$textarea.toggleClass('edited', cm_isDirty);
+			$('button[data-cmd="preview_css"], button[data-cmd="save_css"], input[type="reset"]')
+				.toggleClass('gpdisabled', !cm_isDirty)
+				.prop("disabled", !cm_isDirty);
+		});
 
 		$(window).resize(function(){
 			var parent = $textarea.parent();
-			editor.setSize(225,100);//shrink the editor so we can get the container size
-			editor.setSize(225,parent.height()-5);
+			editor.setSize(225, 100); //shrink the editor so we can get the container size
+			editor.setSize(225, parent.height()-5);
 		}).resize();
-
-		var prev_value = $textarea.val();
 
 		// preview button
 		$gp.inputs.preview_css = function(evt){
 			$gp.loading();
 		};
 
-		// if save or reset are clicked, remove the edited class
-		$gp.inputs.reset_css = function(evt){
+		// save button
+		$gp.inputs.save_css = function(evt){
 			$textarea.removeClass('edited');
 			prev_value = $textarea.val();
-
+			$('button[data-cmd="preview_css"], button[data-cmd="save_css"], input[type="reset"]')
+				.addeClass('gpdisabled')
+				.prop("disabled", true);
 			$gp.loading();
 		};
 
-
-
-
-		// watch for changes
-		window.setInterval(function(){
-
-			if( $textarea.val() != prev_value ){
-				$textarea.addClass('edited');
+		// reset button
+		$gp.inputs.reset_css = function(evt){
+			editor.setValue(prev_value);
+			editor.clearHistory();
+			if( $textarea.hasClass('edited') ){
+				$gp.inputs.save_css();
 			}
+		}
 
-		},1000);
+		$(window).on("beforeunload", function(evt) {
+			if( $textarea.hasClass('edited') ){
+				return 'Warning: There are unsaved changes. Proceed anyway?';
+			}
+		});
 
 	}
 

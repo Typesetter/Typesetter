@@ -151,7 +151,22 @@ class Edit extends \gp\admin\Layout{
 		//custom css
 		$css			= $this->layoutCSS($this->curr_layout);
 		$dir			= $layout_info['dir'].'/'.$layout_info['theme_color'];
-		$style_type		= \gp\tool\Output::StyleType($dir);
+		$style_type	= \gp\tool\Output::StyleType($dir);
+
+		$style_type_info = array();
+		switch ($style_type) {
+			case 'scss':
+				$style_type_info['name'] = 'Scss';
+				$style_type_info['link'] = 'http://sass-lang.com/';
+				break;
+			case 'less':
+				$style_type_info['name'] = 'Less';
+				$style_type_info['link'] = 'http://lesscss.org/';
+				break;
+			default:
+				$style_type_info['name'] = 'CSS';
+				$style_type_info['link'] = 'https://developer.mozilla.org/docs/Web/CSS';
+		}
 
 
 
@@ -195,13 +210,7 @@ class Edit extends \gp\admin\Layout{
 		//sytax links
 		echo '<div style="text-align:right">';
 		echo 'Syntax: ';
-		if( $style_type == 'scss' ){
-			echo '<a href="http://sass-lang.com/" target="_blank">Scss</a>';
-		}elseif( $style_type == 'less' ){
-			echo '<a href="http://lesscss.org/" target="_blank">Less</a>';
-		}else{
-			echo 'CSS';
-		}
+		echo '<a href="' . $style_type_info['link'] . '" target="_blank">' . $style_type_info['name'] . '</a>';
 		echo '</div>';
 
 
@@ -222,27 +231,26 @@ class Edit extends \gp\admin\Layout{
 		echo htmlspecialchars($css);
 		echo '</textarea>';
 
+		echo '</div></td></tr><tr><td>';
 
-		//save button
-		echo '</div></td></tr><tr><td><div style="text-align:right">';
+		echo '<div class="css_buttons">';
 
+		// preview
+		echo '<button name="cmd" type="submit" value="PreviewCSS" class="gpsubmit gpdisabled" disabled="disabled" data-cmd="preview_css" />'.$langmessage['preview'].'</button>';
 
-		echo ' <button name="cmd" type="submit" value="PreviewCSS" class="gpsubmit" data-cmd="preview_css" />'.$langmessage['preview'].'</button>';
-		echo ' <button name="cmd" type="submit" value="SaveCSS" class="gpsubmit" data-cmd="reset_css" />'.$langmessage['save'].'</button>';
-		//echo ' <input type="reset" class="gpsubmit" data-cmd="reset_css" />';
+		// save
+		echo '<button name="cmd" type="submit" value="SaveCSS" class="gpsubmit gpdisabled" disabled="disabled" data-cmd="save_css" />'.$langmessage['save'].'</button>'; 
 
+		// reset
+		echo '<input type="reset" class="gpcancel gpdisabled" disabled="disabled" data-cmd="reset_css" />';
 
 		//cancel
-		if( !empty($_REQUEST['redir']) ){
-			echo \gp\tool::Link($_REQUEST['redir'],$langmessage['cancel'],'','class="gpsubmit"');
-		}else{
-			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['cancel'],'','class="gpsubmit"');
-		}
+		$cancel_url = !empty($_REQUEST['redir']) ? $_REQUEST['redir'] : 'Admin_Theme_Content';
+		echo \gp\tool::Link($cancel_url, $langmessage['cancel'], '', 'class="gpcancel"');
 
+		echo '</div>'; // /.css_buttons
 
-
-		echo '</div></td></tr>';
-		echo '</table>';
+		echo '</td></tr></table>';
 		echo '</form>';
 
 

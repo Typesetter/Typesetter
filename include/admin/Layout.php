@@ -801,26 +801,203 @@ class Layout extends \gp\admin\Addon\Install{
 		global $langmessage, $gp_titles, $gp_menu;
 
 		ob_start();
-		echo '<h2>Lorem Ipsum H2</h2>';
-		echo '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-		quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-		Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>';
-		echo '<h3>Lorem Ipsum H3</h3>';
-		echo '<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>';
 
+		echo '<h1>H1 Lorem Ipsum Heading</h1>';
 
-		echo '<table>';
-		echo '<tr><th>Lorem Ipsum Table Heading</th></tr>';
-		echo '<tr><td>Lorem Ipsum Table Cell</td></tr>';
-		echo '</table>';
+		echo '<p style="font-size:larger;">Paragraph (larger): Lorem ipsum dolor sit amet, consectetur adipisicing elit, ';
+		echo 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ';
+		echo 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>';
 
-		echo '<h4>Lorem Ipsum H4</h4>';
-		echo '<blockquote>';
-		echo 'Lorem Ipsum Blockquote';
-		echo '</blockquote>';
+		echo '<h2>H2 Lorem Ipsum Heading</h2>';
 
+		echo '<p>Paragraph: Excepteur sint <em>emphazize</em> cupidatat non <strong>strong</strong> proident, sunt in ';
+		echo '<em><strong>emphasized strong</strong></em> culpa qui officia <a href="#">anchor</a> ';
+		echo 'deserunt <u>underline</u> mollit anim id est laborum. Duis aute irure dolor in reprehenderit in voluptate ';
+		echo 'velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint  occaecat cupidatat non proident, sunt in culpa qui ';
+		echo '<abbr title="abbreviation">abbr</abbr> officia deserunt mollit <mark>mark</mark> anim id est <code>code</code> laborum. </p>';
+
+		echo  '<blockquote>Blockquote: Lorem ipsum dolor sit amet, consectetur adipisicing elit.</blockquote>';
+
+		echo '<div class="gpRow">';
+
+		echo '<div class="gpCol-4">';
+		echo   '<h4>Unordered list</h4>';
+		echo   '<ul>';
+		echo     '<li>Lorem Ipsum unordered list item</li>';
+		echo     '<li>Lorem Ipsum unordered list item</li>';
+		echo     '<li>Lorem Ipsum unordered list item</li>';
+		echo     '<li>Lorem Ipsum unordered list item</li>';
+		echo   '</ul>';
+		echo '</div>'; // /.gpCol-4
+
+		echo '<div class="gpCol-4">';
+		echo   '<h4>Ordered list</h4>';
+		echo   '<ol>';
+		echo     '<li>Lorem Ipsum ordered list item</li>';
+		echo     '<li>Lorem Ipsum ordered list item</li>';
+		echo     '<li>Lorem Ipsum ordered list item</li>';
+		echo     '<li>Lorem Ipsum ordered list item</li>';
+		echo   '</ol>';
+		echo '</div>'; // /.gpCol-4
+
+		echo '<div class="gpCol-4">';
+		echo   '<h4>Description list</h4>';
+		echo   '<dl>';
+		echo     '<dt>Lorem Ipsum term</dt><dd>Lorem Ipsum description</dd>';
+		echo     '<dt>Lorem Ipsum term</dt><dd>Lorem Ipsum description</dd>';
+		echo   '</dl>';
+		echo '</div>'; // /.gpCol-4
+
+		echo '</div>'; // /.gpRow
+
+		echo '<hr/>';
+
+		echo '<div class="gpRow">';
+
+		echo '<div class="gpCol-6">';
+		echo   '<h3>H3 Lorem Ipsum Heading</h3>';
+		echo   '<h4>H4 Lorem Ipsum Heading</h4>';
+		echo   '<h5>H5 Lorem Ipsum Heading</h5>';
+		echo   '<h6>H6 Lorem Ipsum Heading</h6>';
+		echo   '<p style="font-size:smaller;">Paragraph (smaller): Excepteur sint cupidatat non proident, sunt in ';
+		echo   'culpa qui officia deserunt mollit anim id est laborum. Duis aute irure dolor in reprehenderit ';
+		echo   'in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat ';
+		echo   'non proident. </p>';
+		echo '</div>'; // /.gpCol-6
+
+		echo '<div class="gpCol-6">';
+		echo   '<table>';
+		echo     '<thead>';
+		echo       '<tr>';
+		echo          '<th colspan="3">Unstyled Table - Heading</th>';
+		echo       '</tr>';
+		echo     '</thead>';
+		echo     '<tbody>';
+		echo       '<tr><td>Row&nbsp;1, Cell&nbsp;1</td><td>Row&nbsp;1, Cell&nbsp;2</td><td>Row&nbsp;1, Cell&nbsp;3</td></tr>';
+		echo       '<tr><td>Row&nbsp;2, Cell&nbsp;1</td><td>Row&nbsp;2, Cell&nbsp;2</td><td>Row&nbsp;2, Cell&nbsp;3</td></tr>';
+		echo       '<tr><td>Row&nbsp;3, Cell&nbsp;1</td><td>Row&nbsp;3, Cell&nbsp;2</td><td>Row&nbsp;3, Cell&nbsp;3</td></tr>';
+		echo       '<tr><td>Row&nbsp;4, Cell&nbsp;1</td><td>Row&nbsp;4, Cell&nbsp;2</td><td>Row&nbsp;4, Cell&nbsp;3</td></tr>';
+		echo       '<tr><td>Row&nbsp;5, Cell&nbsp;1</td><td>Row&nbsp;5, Cell&nbsp;2</td><td>Row&nbsp;5, Cell&nbsp;3</td></tr>';
+		echo     '</tbody>';
+		echo   '</table>';
+		echo '</div>'; // /.gpCol-6
+
+		echo '</div>'; // /.gpRow
 
 		$this->page->non_admin_content = ob_get_clean();
+
+
+		// boostrap content
+		ob_start();
+
+		echo '<h1>H1 Lorem Ipsum Heading <small>+ small</small></h1>';
+
+		echo '<p class="lead">Lead: Lorem ipsum dolor sit amet, consectetur adipisicing elit, ';
+		echo 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ';
+		echo 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>';
+
+		echo '<h2>H2 Lorem Ipsum Heading <small>+ small</small></h2>';
+
+		echo '<p>Default paragraph: Excepteur sint <em>emphazize</em> cupidatat non <strong>strong</strong> proident, sunt in ';
+		echo '<em><strong>emphasized strong</strong></em> culpa qui officia <a href="#">anchor</a> ';
+		echo 'deserunt <u>underline</u> mollit anim id est laborum. Duis aute irure dolor in reprehenderit in voluptate ';
+		echo 'velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint <kbd>kbd</kbd> occaecat cupidatat non proident, sunt in culpa qui ';
+		echo '<abbr title="abbreviation">abbr</abbr> officia deserunt mollit <mark>mark</mark> anim id est <code>code</code> laborum. </p>';
+
+		echo '<p>';
+		echo   '<span class="text-muted">text-muted</span> &nbsp;|&nbsp; ';
+		echo   '<span class="text-primary">text-primary</span> &nbsp;|&nbsp; ';
+		echo   '<span class="text-success">text-success</span> &nbsp;|&nbsp; ';
+		echo   '<span class="text-info">text-info</span> &nbsp;|&nbsp; ';
+		echo   '<span class="text-warning">text-warning</span> &nbsp;|&nbsp; ';
+		echo   '<span class="text-danger">text-danger</span> &nbsp;|&nbsp;  ';
+		echo   '<span class="badge">badge</span></a> &nbsp;|&nbsp; ';
+		echo   '<span class="label label-default">label label-default</span></a>';
+		echo '</p>';
+
+		echo  '<blockquote>Blockquote: Lorem ipsum dolor sit amet, consectetur adipisicing elit.</blockquote>';
+
+		echo '<div class="row">';
+
+		echo '<div class="col-sm-4">';
+		echo   '<h4>Unordered list</h4>';
+		echo   '<ul>';
+		echo     '<li>Lorem Ipsum unordered list item</li>';
+		echo     '<li>Lorem Ipsum unordered list item</li>';
+		echo     '<li>Lorem Ipsum unordered list item</li>';
+		echo     '<li>Lorem Ipsum unordered list item</li>';
+		echo   '</ul>';
+		echo '</div>'; // /.col-sm-4
+
+		echo '<div class="col-sm-4">';
+		echo   '<h4>Ordered list</h4>';
+		echo   '<ol>';
+		echo     '<li>Lorem Ipsum ordered list item</li>';
+		echo     '<li>Lorem Ipsum ordered list item</li>';
+		echo     '<li>Lorem Ipsum ordered list item</li>';
+		echo     '<li>Lorem Ipsum ordered list item</li>';
+		echo   '</ol>';
+		echo '</div>'; // /.col-sm-4
+
+		echo '<div class="col-sm-4">';
+		echo   '<h4>Description list</h4>';
+		echo   '<dl>';
+		echo     '<dt>Lorem Ipsum term</dt><dd>Lorem Ipsum description</dd>';
+		echo     '<dt>Lorem Ipsum term</dt><dd>Lorem Ipsum description</dd>';
+		echo   '</dl>';
+		echo '</div>'; // /.col-sm-4
+
+		echo '</div>'; // /.row
+
+
+		echo '<div class="row">';
+
+		echo '<div class="col-sm-6">';
+		echo   '<h3>H3 Lorem Ipsum Heading <small>+ small</small></h3>';
+		echo   '<h4>H4 Lorem Ipsum Heading <small>+ small</small></h4>';
+		echo   '<h5>H5 Lorem Ipsum Heading <small>+ small</small></h5>';
+		echo   '<h6>H6 Lorem Ipsum Heading <small>+ small</small></h6>';
+		echo   '<p class="small">Small text paragraph: Excepteur sint cupidatat non proident, sunt in ';
+		echo   'culpa qui officia deserunt mollit anim id est laborum. Duis aute irure dolor in reprehenderit ';
+		echo   'in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat ';
+		echo   'non proident. </p>';
+		echo '</div>'; // /.col-sm-6
+
+		echo '<div class="col-sm-6">';
+		echo   '<table class="table table-bordered table-striped table-hover">';
+		echo     '<thead>';
+		echo       '<tr>';
+		echo          '<th>Table Heading</th>';
+		echo          '<th colspan="2"><span class="text-muted" style="font-weight:normal;">';
+		echo             'class=&quot;table table-bordered table-striped table-hover&quot;</span></th>';
+		echo       '</tr>';
+		echo     '</thead>';
+		echo     '<tbody>';
+		echo       '<tr><td>Row&nbsp;1, Cell&nbsp;1</td><td>Row&nbsp;1, Cell&nbsp;2</td><td>Row&nbsp;1, Cell&nbsp;3</td></tr>';
+		echo       '<tr><td>Row&nbsp;2, Cell&nbsp;1</td><td>Row&nbsp;2, Cell&nbsp;2</td><td>Row&nbsp;2, Cell&nbsp;3</td></tr>';
+		echo       '<tr><td>Row&nbsp;3, Cell&nbsp;1</td><td>Row&nbsp;3, Cell&nbsp;2</td><td>Row&nbsp;3, Cell&nbsp;3</td></tr>';
+		echo       '<tr><td>Row&nbsp;4, Cell&nbsp;1</td><td>Row&nbsp;4, Cell&nbsp;2</td><td>Row&nbsp;4, Cell&nbsp;3</td></tr>';
+		echo       '<tr><td>Row&nbsp;5, Cell&nbsp;1</td><td>Row&nbsp;5, Cell&nbsp;2</td><td>Row&nbsp;5, Cell&nbsp;3</td></tr>';
+		echo     '</tbody>';
+		echo   '</table>';
+		echo '</div>'; // /.col-sm-6
+
+		echo '</div>'; // /.row
+
+		echo '<hr/>';
+
+		echo '<p>';
+		echo   '<a href="#" class="btn btn-default">btn btn-default</a> &nbsp;&nbsp; ';
+		echo   '<a href="#" class="btn btn-link">btn btn-link</a> &nbsp;&nbsp; ';
+		echo   '<a href="#" class="btn btn-primary">btn btn-primary</a> &nbsp;&nbsp; ';
+		echo   '<a href="#" class="btn btn-success">btn btn-success</a> &nbsp;&nbsp; ';
+		echo   '<a href="#" class="btn btn-info">btn btn-info</a> &nbsp;&nbsp; ';
+		echo   '<a href="#" class="btn btn-warning">btn btn-warning</a> &nbsp;&nbsp; ';
+		echo   '<a href="#" class="btn btn-danger">btn btn-danger</a>';
+		echo '</p>';
+
+		$this->page->non_admin_content_bootstrap = ob_get_clean();
+
 	}
 
 

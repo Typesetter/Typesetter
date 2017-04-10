@@ -10,6 +10,7 @@ class Page extends \gp\Page{
 
 	public $show_admin_content		= true;
 	public $non_admin_content		= '';
+	public $non_admin_content_boostrap		= '';
 	public $admin_html				= '';
 
 	private	$scripts				= array();
@@ -64,12 +65,7 @@ class Page extends \gp\Page{
 
 		$this->GetGpxContent();
 
-		if( !empty($this->non_admin_content) ){
-			echo '<div class="filetype-text cf">';
-			//echo '<div id="gpx_content" class="filetype-text">'; //id="gpx_content" conflicts with admin content
-			echo $this->non_admin_content;
-			echo '</div>';
-		}
+		/* rendering non_admin_content moved to GetGpxContent() */
 
 		echo '<div id="gpAfterContent">';
 		\gp\tool\Output::Get('AfterContent');
@@ -77,10 +73,15 @@ class Page extends \gp\Page{
 		echo '</div>';
 	}
 
+
 	public function GetGpxContent($ajax = false){
 		global $gp_admin_html;
 
 		if( empty($this->show_admin_content) ){
+			/* non_admin_content inside #gpx_content */
+			echo '<div id="gpx_content">';
+			$this->GetNonAdminContent();
+			echo '</div>';
 			return;
 		}
 
@@ -91,23 +92,42 @@ class Page extends \gp\Page{
 		}
 
 		ob_start();
-		echo '<div id="gpx_content"><div id="admincontent">';
+		echo '<div id="gpx_content">';
+		echo    '<div id="admincontent">';
 		$this->AdminContentPanel();
 		$this->BreadCrumbs();
-		echo '<div id="admincontent_inner">';
+		echo     '<div id="admincontent_inner">';
+		echo     $this->contentBuffer;
+		echo     '</div>';
+		echo   '</div>'; // /#admincontent
 
+		/* non_admin_content is now inside #gpx_content */
+		$this->GetNonAdminContent();
 
-
-		echo $this->contentBuffer;
-		echo '</div></div></div>';
+		echo '</div>'; // /#gpx_content
 		$admin_content = ob_get_clean();
 
 		if( !$ajax ){
-			$gp_admin_html .= '<div id="admincontainer" >'.$admin_content.'</div>';
+			$gp_admin_html .= '<div id="admincontainer">'.$admin_content.'</div>';
 			return;
 		}
-		echo $admin_content;
+		echo $admin_content; 
 	}
+
+
+	public function GetNonAdminContent(){
+		if( !empty($this->non_admin_content) ){
+			echo '<div class="GPAREA filetype-text">';
+			if( strpos(\gp\tool\Output::$components, 'bootstrap') !== false ){
+				echo $this->non_admin_content_bootstrap;
+			}else{
+				echo $this->non_admin_content;
+			}
+			echo '</div>';
+			echo '<div class="gpclear"></div>';
+		}
+	}
+
 
 	private function BreadCrumbs(){
 		global $langmessage;

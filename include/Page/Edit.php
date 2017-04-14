@@ -1226,12 +1226,33 @@ class Edit extends \gp\Page{
 
 			$section_data['attributes']['data-gp-area-id']		= $edit_index;
 
+			//included page target
+			$include_link = '';
+			if( $section_data['type'] == 'include' ){
+				// msg("section_data:" . pre($section_data));
+				switch( $section_data['include_type'] ){
+					case false: // include is a page
+						$include_link = \gp\tool::Link($section_data['content'],$langmessage['view/edit_page']);
+						break;
+					case 'extra':
+						$include_link = \gp\tool::Link(
+							'Admin/Extra',
+							$langmessage['edit']  . ' &raquo; ' . htmlspecialchars($section_data['content']), // $langmessage['theme_content']
+							'cmd=EditExtra&file=' . rawurlencode($section_data['content']) 
+						);
+						break;
+					case 'gadget':
+					default:
+						break;
+				}
+			}
 
 			//section control links
 			if( $section_data['type'] != 'wrapper_section' ){
 				ob_start();
 				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 				echo $link;
+				echo $include_link;
 				echo \gp\tool::Link($this->title,$langmessage['Manage Sections'],'cmd=ManageSections',array('class'=>'manage_sections','data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
 				echo '<span class="gp_separator"></span>';
 				echo \gp\tool::Link($this->title,$langmessage['rename/details'],'cmd=renameform&index='.urlencode($this->gp_index),'data-cmd="gpajax"');

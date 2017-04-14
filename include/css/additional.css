@@ -197,49 +197,61 @@ div.GPAREA{
 
 @media only screen and (min-width:768px) {
 
-  .gpRow {
-  margin-left:-15px;
-  margin-right:-15px;
-  -webkit-box-sizing:border-box;
-  -moz-box-sizing:border-box;
-  box-sizing:border-box;
-  }
+	.gpRow {
+	margin-left: -15px;
+	margin-right: -15px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	}
 
-  .gpRow:before, .gpRow:after {
-    content:" ";
-    display:table;
-    -webkit-box-sizing:border-box;
-    -moz-box-sizing:border-box;
-    box-sizing:border-box;
-  }
+	.gpRow:before, .gpRow:after {
+		content: " ";
+		display: table;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
 
-  .gpCol-1, .gpCol-2, .gpCol-3,
-  .gpCol-4, .gpCol-5, .gpCol-6,
-  .gpCol-7, .gpCol-8, .gpCol-9,
-  .gpCol-10, .gpCol-11, .gpCol-12 {
-    float:left;
-    min-height:1px;
-    padding-left:15px;
-    padding-right:15px;
-    margin-bottom:15px;
-    -webkit-box-sizing:border-box;
-    -moz-box-sizing:border-box;
-    box-sizing:border-box;
-  }
+	.gpCol-1, .gpCol-2, .gpCol-3,
+	.gpCol-4, .gpCol-5, .gpCol-6,
+	.gpCol-7, .gpCol-8, .gpCol-9,
+	.gpCol-10, .gpCol-11, .gpCol-12 {
+		float: left;
+		min-height: 1px;
+		padding-left: 15px;
+		padding-right: 15px;
+		margin-bottom: 15px;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
 
-  .gpCol-1  { width:8.33333333%; }
-  .gpCol-2  { width:16.66666667%; }
-  .gpCol-3  { width:25%; }
-  .gpCol-4  { width:33.33333333%; }
-  .gpCol-5  { width:41.66666667%; }
-  .gpCol-6  { width:50%; }
-  .gpCol-7  { width:58.33333333%; }
-  .gpCol-8  { width:66.66666667%; }
-  .gpCol-9  { width:75%; }
-  .gpCol-10 { width:83.33333333%; }
-  .gpCol-11 { width:91.66666667%; }
-  .gpCol-12 { width:100%; }
+	.gpCol-1  { width: 8.33333333%; }
+	.gpCol-2  { width: 16.66666667%; }
+	.gpCol-3  { width: 25%; }
+	.gpCol-4  { width: 33.33333333%; }
+	.gpCol-5  { width: 41.66666667%; }
+	.gpCol-6  { width: 50%; }
+	.gpCol-7  { width: 58.33333333%; }
+	.gpCol-8  { width: 66.66666667%; }
+	.gpCol-9  { width: 75%; }
+	.gpCol-10 { width: 83.33333333%; }
+	.gpCol-11 { width: 91.66666667%; }
+	.gpCol-12 { width: 100%; }
 
+}
+
+
+/**
+ * Make Bootstrap buttons selectable when editing the section
+ *
+ */
+.gp_editing .btn {
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
 }
 
 

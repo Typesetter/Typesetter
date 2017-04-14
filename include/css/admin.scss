@@ -610,7 +610,7 @@ body.edit_layout .GPAREA{
 	}
 
 body.gpAdmin div.editable_area{
-	min-height: 1em !important;
+	min-height: 1em;
 }
 
 
@@ -679,20 +679,20 @@ body.gpAdmin div.editable_area{
 	}
 
 .collapsible h4 a:before{
-	font-size: 9px;
-	vertical-align: top;
+	display: inline-block;
+	font-family: FontAwesome;
+	content: "\f0d7"; // fa caret-down
 	color: #666;
-	content: "\25BC";
-	padding-right: 5px;
+	width: 1.2em;
+	text-align: center;
 	}
-
 
 .collapsible h4.gp_collapsed a{
 	border-radius: 3px;
 	}
 
 .collapsible h4.gp_collapsed a:before{
-	content: "\25B6";
+	content: "\f0da"; // fa caret-right
 	color: #888 !important;
 	}
 

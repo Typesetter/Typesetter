@@ -380,7 +380,7 @@ class Combine{
 										'file'			=> '/include/thirdparty/fontawesome/css/font-awesome.min.css',
 										'label'			=> 'Font Awesome',
 										'cdn'			=> array(
-															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css',
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
 															),
 										),
 

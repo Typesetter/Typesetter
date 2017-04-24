@@ -646,10 +646,11 @@ namespace gp\admin\Content{
 					$allowed_types = array();
 				}else{
 					$allowed_types = array(
-						/** Images **/		'bmp', 'gif', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'wav', 'wma','svg',
-						/** Media **/		'aiff', 'asf', 'avi', 'fla', 'flv', 'm4v', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ogg','oga','ogv','opus', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'webm', 'wmv',
-						/** Archives **/	'7z', 'bz', 'gz', 'gzip', 'rar', 'sdc', 'sitd', 'tar', 'tgz', 'zip',
-						/** Text/Docs **/	'css', 'csv', 'doc', 'docx', 'htm', 'html', 'js', 'json', 'less', 'md', 'ods', 'odt', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'sxc', 'sxw', 'vsd', 'xls', 'xlsx', 'xml' );
+						/** Images **/		'bmp', 'gif', 'ico', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'svg', 'svgz',
+						/** Media **/		'aiff', 'asf', 'avi', 'fla', 'flac', 'flv', 'm4v', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ogg', 'oga', 'ogv', 'opus', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'wav', 'wma', 'webm', 'wmv', 
+						/** Archives **/	'7z', 'bz', 'gz', 'gzip', 'rar', 'tar', 'tgz', 'zip',
+						/** Text/Docs **/	'css', 'csv', 'doc', 'docx', 'htm', 'html', 'js', 'json', 'less', 'md', 'ods', 'odt', 'pages', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'scss', 'sxc', 'sxw', 'vsd', 'xls', 'xlsx', 'xml', 'xsl', 
+					);
 
 
 				}

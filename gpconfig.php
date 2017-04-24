@@ -1,10 +1,32 @@
 <?php
 
-
 /**
  * $upload_extensions_allow and $upload_extensions_deny
  * Allow or deny the upload of files based on their file extensions
- * The default list of available extenstions is array('7z', 'aiff', 'asf', 'avi', 'bmp', 'bz', 'csv', 'doc', 'fla', 'flv', 'gif', 'gz', 'gzip', 'jpeg', 'jpg', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ods', 'odt', 'pdf', 'png', 'ppt', 'pxd', 'qt', 'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 'sdc', 'sitd', 'swf', 'sxc', 'sxw', 'tar', 'tgz', 'tif', 'tiff', 'txt', 'vsd', 'wav', 'wma', 'wmv', 'xls', 'xml', 'zip');
+ * The default list of allowed extenstions is 
+ * array( '7z',
+ *        'aiff', 'asf', 'avi', 
+ *        'bmp', 'bz', 
+ *        'css', 'csv', 
+ *        'doc', 'docx', 
+ *        'fla', 'flac', 'flv', 
+ *        'gif', 'gz', 'gzip', 
+ *        'htm', 'html', 
+ *        'ico', 
+ *        'jpeg', 'jpg', 'js', 'json', 
+ *        'less', 
+ *        'm4v', 'md, 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 
+ *        'ods', 'odt', 'ogg', 'oga', 'ogv', 'opus', 
+ *        'pages', 'pdf', 'png', 'ppt', 'pptx', 
+ *        'qt', 
+ *        'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 
+ *        'scss', 'svg', 'svgz', 'swf', 'sxc', 'sxw',
+ *        'tar', 'tgz', 'tif', 'tiff', 'txt', 
+ *        'vsd', 
+ *        'wav', 'wma', 'webm', 'wmv', 
+ *        'xls', 'xlsx', 'xml', 'xsl' 
+ *        'zip',
+ * )
  * Note: gp_restrict_uploads has to be set to true for upload_extension settings to have any effect
  */
 define('gp_restrict_uploads',true);

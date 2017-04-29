@@ -502,18 +502,11 @@
 			gp_editor.edit_div.find('.gp_to_remove').remove();
 			$current_images.find('.gp_to_remove').remove();
 
-			/* create alt attribute from file name */
-			var img_src = $img.find("img").attr('src');
-			var img_alt = img_src.substring(img_src.lastIndexOf('/') + 1);
-			img_alt = img_alt.substring(0, img_alt.indexOf('.')).split("_").join(" ");
-
 			$img.attr({
 				'data-cmd' : gp_editor.img_name,
 				'data-arg' : gp_editor.img_rel,
 				'title'    : '',
 				'class'    : gp_editor.img_rel
-			}).find("img").attr({
-				'alt'      : img_alt
 			});
 			var li = $('<li>').append($img).append('<div class="caption"></div>');
 			if( holder ){

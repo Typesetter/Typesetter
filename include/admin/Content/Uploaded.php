@@ -434,7 +434,11 @@ namespace gp\admin\Content{
 
 			//thumbnail
 			$thumb_url = \gp\tool::ThumbnailPath($file_url);
-			$thumb = ' <img src="'.$thumb_url.'" alt="" />';
+
+			// alternate text from file name
+			$img_alt = str_replace('_', ' ', pathinfo($file, PATHINFO_FILENAME) );
+
+			$thumb = ' <img src="'.$thumb_url.'" alt="'.$img_alt.'" />';
 
 			//get size
 			$size = '';
@@ -446,7 +450,7 @@ namespace gp\admin\Content{
 			$query_string = 'file_cmd=delete&show=inline&file='.urlencode($file);
 
 			return '<div class="expand_child" id="'.$id.'">'
-					. '<a href="'.$file_url.'" data-cmd="gp_gallery_add" '.$size.'>'
+					. '<a href="'.$file_url.'" title="'.$file.'" data-cmd="gp_gallery_add" '.$size.'>'
 					. $thumb
 					. '</a>'
 					. '<span>'

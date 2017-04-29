@@ -443,14 +443,23 @@
 				return;
 			}
 
-			var $a		= $('<img>').attr('src',src);
+			/* create alt attribute from file name */
+			var file_name = src.substring(src.lastIndexOf('/') + 1);
+			file_name = file_name.substr(0, file_name.lastIndexOf('.'));
+			var img_alt = file_name.substring(0, file_name.lastIndexOf('.')).split("_").join(" ");
+
+			var $a		= $('<img>').attr({
+				'src' : src, 
+				'title' : file_name, 
+				'alt' : img_alt 
+			});
 			var $span	= $('<a>').append($a);
 			var html	= '<div class="expand_child">'
 						+ '<span>'
 						+ '<a data-cmd="gp_gallery_caption" class="fa fa-pencil"></a>'
 						+ '<a data-cmd="gp_gallery_rm" class="fa fa-remove"></a>'
 						+ '</span>'
-						+ '</div>'
+						+ '</div>';
 
 			var $new	= $(html).data('original',img).append( $span ).appendTo( $current_images );
 
@@ -493,7 +502,19 @@
 			gp_editor.edit_div.find('.gp_to_remove').remove();
 			$current_images.find('.gp_to_remove').remove();
 
-			$img.attr({'data-cmd':gp_editor.img_name,'data-arg':gp_editor.img_rel,'title':'','class':gp_editor.img_rel})
+			/* create alt attribute from file name */
+			var img_src = $img.find("img").attr('src');
+			var img_alt = img_src.substring(img_src.lastIndexOf('/') + 1);
+			img_alt = img_alt.substring(0, img_alt.indexOf('.')).split("_").join(" ");
+
+			$img.attr({
+				'data-cmd' : gp_editor.img_name,
+				'data-arg' : gp_editor.img_rel,
+				'title'    : '',
+				'class'    : gp_editor.img_rel
+			}).find("img").attr({
+				'alt'      : img_alt
+			});
 			var li = $('<li>').append($img).append('<div class="caption"></div>');
 			if( holder ){
 				holder.replaceWith(li);

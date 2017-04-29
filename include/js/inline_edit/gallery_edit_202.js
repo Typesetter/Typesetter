@@ -387,9 +387,9 @@
 				var text			= $(this.form).find('textarea').val();
 				var caption_div		= $(current_image).find('.caption');
 
-				console.log(text);
-				console.log(current_image);
-				console.log(caption_div);
+				//console.log(text);
+				//console.log(current_image);
+				//console.log(caption_div);
 
 				caption_div.html(text);
 				text = caption_div.html(); //html encoded characters

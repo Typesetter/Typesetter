@@ -2046,7 +2046,15 @@ namespace gp{
 				return $img;
 			}
 
-			return substr_replace($img,'/data/_uploaded/image/thumbnails/',$pos, strlen($dir_part) ).'.jpg';
+			// svg or not svg
+			$nameParts = explode('.',$img);
+			$type = array_pop($nameParts);
+			$type = strtolower($type);
+			if( strpos('svgz',$type) !== 0 ){
+				$type = 'jpg';
+			}
+
+			return substr_replace($img,'/data/_uploaded/image/thumbnails/',$pos, strlen($dir_part) ).'.'.$type;
 		}
 
 

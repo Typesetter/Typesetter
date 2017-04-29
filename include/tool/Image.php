@@ -60,6 +60,13 @@ namespace gp\tool{
 		 * @return bool
 		 */
 		static function createSquare($source_path,$dest_path,$size=50,$type_file=false){
+
+			$img_type = self::getType($source_path);
+			if( strpos('svgz', $img_type) === 0 ){
+				// image is SVG
+				return self::createSquareSVG($source_path,$dest_path,$size,$img_type);
+			}
+
 			$new_w = $new_h = $size;
 
 			$src_img = self::getSrcImg($source_path,$type_file);
@@ -134,6 +141,134 @@ namespace gp\tool{
 
 			return self::createImg($src_img, $dest_path, $dst_x, $dst_y, 0, 0, $temp_w, $temp_h, $old_w, $old_h, $new_w, $new_h);
 		}
+
+
+
+		/**
+		 * SVG -- Create a square SVG image at $dest_path from an SVG image at $source_path
+		 *
+		 * @param string $source_path location of the source SVG image
+		 * @param string $dest_path location of the SVG image to be created
+		 * @param int $size the dimension of the SVG image
+		 * @param string $type_file a string representing the type of the source file (svg, svgz)
+		 * @return bool
+		 */
+		static function createSquareSVG($source_path, $dest_path, $size=50, $svg_type){
+
+			$src_svg = @file_get_contents($source_path);
+			if( !$src_svg ){
+				// msg($src_svg . "does not exist!");
+				return false;
+			}
+
+			/*
+			if( substr($src_svg,0,2) === hex2bin('1F8B') ){
+				// gzip encoded svgz, decode it
+				$src_svg = gzdecode($src_svg);
+			}
+			*/
+
+			$internalErrors =  libxml_use_internal_errors(true);
+			$disableEntities = libxml_disable_entity_loader(true);
+			libxml_clear_errors();
+			$doc = new \DOMDocument();
+			$doc->loadXML($src_svg, LIBXML_NONET);
+			libxml_use_internal_errors($internalErrors);
+			libxml_disable_entity_loader($disableEntities);
+			if( $error = libxml_get_last_error() ){
+				libxml_clear_errors();
+				// msg("SVG processing - LibXML Error: " . $error->message );
+				return false;
+			}
+			if( strtolower($doc->documentElement->tagName) !== 'svg'){
+				// msg("SVG processing - Error: data stream is not an svg image");
+				return false;
+			}
+
+			$svg = $doc->documentElement;
+
+			// get size
+			$width = self::getPxVal($svg->getAttribute('width'));
+			$height = self::getPxVal($svg->getAttribute('height'));
+			if( $svg->hasAttribute('viewBox') ){
+				$viewBox = preg_split('/[\s,]+/', $svg->getAttribute('viewBox'));
+				$vb_x = $viewBox[0];
+				$vb_y = $viewBox[1];
+				$vb_w = $viewBox[2];
+				$vb_h = $viewBox[3];
+			}
+			if( (!$width && !$height) && (!$vb_w && !$vb_h) ){
+				// msg("SVG processing - Error: width and height could not be determined");
+				// return false;
+				// no width/height privided -> we assume a 800 x 800px as default size
+				$width = 800;
+				$height = 800;
+			}
+			if( !$svg->hasAttribute('viewBox') ){
+				$svg->setAttribute('viewBox', '0 0 ' . $width . ' ' . $height);
+				$vb_x = 0;
+				$vb_y = 0;
+				$vb_w = $width;
+				$vb_h = $height;
+			}
+
+			$w = $vb_w - $vb_x;
+			$h = $vb_h - $vb_y;
+			// left/top offsets for square
+			if( $w > $h ){
+				$vb_x += ($w - $h) / 2;
+				$vb_w -= ($w - $h);
+			}else{
+				$vb_y += ($h - $w) / 2;
+				$vb_h -= ($h - $w);
+			}
+
+			$svg->setAttribute('viewBox', $vb_x . ' ' . $vb_y . ' ' . $vb_w . ' ' . $vb_h);
+			$svg->setAttribute('width', $size);
+			$svg->setAttribute('height', $size);
+
+			return self::saveSVG($doc, $dest_path);
+		}
+
+
+		/**
+		* Save SVG document to file
+		*/
+		static function saveSVG($doc, $path){
+			global $langmessage;
+			$svg_xml = $doc->saveXML();
+			/*
+			if( $format == 'svgz' ){
+				$svg_xml = gzencode($xml);
+			}
+			*/
+			$result = file_put_contents($path, $svg_xml);
+			if( $result ){
+				@chmod( $path, 0666 );
+				return true;
+			}
+			// msg($langmessage['OOPS'] . ': Unable to save SVG to ' . $path);
+			return false;
+		}
+
+
+		/**
+		* Return pixel value from value+units 
+		*/
+		static function getPxVal($size) {
+			$map = array('px'=>1, 'pt'=>1.3333333, 'mm'=>3.7795276, 'ex'=>8, 'em'=>16, 'pc'=>16, 'cm'=>37.795276, 'in'=>96);
+			$size = trim($size);
+			$value = substr($size, 0, -2);
+			$unit = substr($size, -2);
+			if( isset($map[$unit]) && is_numeric($value) ){
+				$size = $value * $map[$unit];
+			}
+			if( is_numeric($size) ){
+				return (int) round($size);
+			}
+			return 0;
+		}
+
 
 
 		/**

@@ -36,3 +36,10 @@
 	border-radius:2px;
 	}
 
+/* Fix for IE SVG images zero size loading bug in Colorbox */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+	img.cboxPhoto[src$=".svg"]{
+		min-width:75vw; 
+		min-height:75vh; 
+	}
+}

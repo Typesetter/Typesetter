@@ -1098,10 +1098,11 @@ namespace gp\tool{
 				$thumb_path = \gp\tool::ThumbnailPath($image);
 				$caption = $_POST['captions'][$i];
 				\gp\tool\Files::cleanText($caption);
+				$img_alt = str_replace('_', ' ', basename(pathinfo($image, PATHINFO_FILENAME)));
 
 				echo '<li>';
 				echo '<a class="gallery_gallery" title="'.htmlspecialchars($caption).'" data-arg="gallery_gallery" href="'.$image.'" data-cmd="gallery">';
-				echo '<img src="'.$thumb_path.'" alt="" /></a>';
+				echo '<img src="'.$thumb_path.'" alt="'.$img_alt.'" /></a>';
 				echo '<div class="caption">';
 				echo $caption;
 				echo '</div>';
@@ -1111,6 +1112,7 @@ namespace gp\tool{
 			$section['content'] = ob_get_clean();
 			$section['images'] = $_POST['images'];
 			$section['captions'] = $_POST['captions'];
+			$section['attributes']['class'] = $_POST['attributes']['class'];
 		}
 
 

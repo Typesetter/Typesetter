@@ -21,6 +21,9 @@ if( false ){
 	<?php
 }
 
+if (version_compare(phpversion(), '5.3.0', '<') == true) {
+ exit('PHP 5.3+ Required');
+}
 
 /**
  * See gpconfig.php for configuration options

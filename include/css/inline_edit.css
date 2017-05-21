@@ -252,6 +252,7 @@ html{
 
 .gp_edit_current,
 .gp_edit_current:hover{
+	z-index:9000;
 	outline:1px solid #ccc !important;
 	}
 

@@ -246,10 +246,6 @@ html{
 	outline:none;
 	}
 
-.gp_editing{
-	z-index:9000;
-	}
-
 .editable_area:not(.filetype-wrapper_section):hover{
 	outline:1px dotted #ccc !important;
 	}
@@ -307,5 +303,4 @@ html{
 
 #ckeditor_wrap.ck_saving .ck_saving{
 	display:inline-block;
-}
 }

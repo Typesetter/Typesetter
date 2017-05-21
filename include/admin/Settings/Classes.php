@@ -58,7 +58,11 @@ class Classes extends \gp\special\Base{
 				'desc'		=> 'Bootstrap: everything big for calling extra attention to some special content',
 			),
 			array (
-				'names'		=> 'row',
+				'names'		=> 'text-left text-center text-right text-justify',
+				'desc'		=> 'Bootstrap: text alignment',
+			),
+			array (
+				'names'		=> 'row container',
 				'desc'		=> 'Bootstrap Grid: use with Wrapper Sections',
 			),
 			array (

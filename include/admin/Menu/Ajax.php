@@ -256,7 +256,7 @@ class Ajax extends \gp\admin\Menu{
 	 *
 	 */
 	public function CopyPage(){
-		global $gp_index, $gp_titles, $langmessage;
+		global $gp_index, $gp_titles, $langmessage, $users, $gpAdmin, $dataDir;
 
 		$this->CacheSettings();
 
@@ -303,6 +303,22 @@ class Ajax extends \gp\admin\Menu{
 		if( !\gp\tool\Files::Save($file,$contents) ){
 			msg($langmessage['OOPS'].' (File not saved)');
 			return false;
+		}
+
+		//set permissions for copied page
+		// msg('gpAdmin = ' . pre($gpAdmin));
+		$users = \gp\tool\Files::Get('_site/users');
+		$username = $gpAdmin['username'];
+		$user_file = $dataDir . '/data/_sessions/' . $users[$username]['file_name'];
+		$editing_values = $gpAdmin['editing'];
+		if( $editing_values != 'all' && strpos($editing_values, ','.$index.',') === false ){
+			$editing_values .= $index.',';
+			$gpAdmin['editing'] = $editing_values;
+			// save to user session file
+			\gp\tool\Files::SaveData($user_file, 'gpAdmin', $gpAdmin);
+			// save to users.php
+			$users[$username]['editing'] = $editing_values;
+			\gp\tool\Files::SaveData('_site/users', 'users', $users);
 		}
 
 		//add to gp_titles

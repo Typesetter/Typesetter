@@ -333,21 +333,26 @@ class Edit extends \gp\Page{
 	 * Send multiple sections to the client
 	 *
 	 */
-	public function NewNestedSection($types, $wrapper_class ){
+	public function NewNestedSection($types, $wrapper_data){
 		global $langmessage;
 
-		$new_section		= \gp\tool\Editing::DefaultContent('wrapper_section');
+		$new_section = \gp\tool\Editing::DefaultContent('wrapper_section');
 
-
-		$new_section['attributes']['class']		.= ' '.$wrapper_class;
-		$orig_attrs								= $new_section['attributes'];
+		if( is_array($wrapper_data) ){
+			// Typesetter > 5.0.3: $wrapper_data may be defined as array by plugins
+			$new_section = array_merge($new_section, $wrapper_data);
+		}else{
+			// Typesetter <= 5.0.3: $wrapper_data is a string (wrapper class)
+			$new_section['attributes']['class'] .= ' ' . $wrapper_data;
+		}
+		$orig_attrs = $new_section['attributes'];
 
 
 		$output = $this->SectionNode($new_section, $orig_attrs);
 		foreach($types as $type){
 			if( is_array($type) ){
-				$_wrapper_class = isset($type[1]) ? $type[1] : '';
-				$output .= $this->NewNestedSection($type[0], $_wrapper_class);
+				$_wrapper_data = isset($type[1]) ? $type[1] : '';
+				$output .= $this->NewNestedSection($type[0], $_wrapper_data);
 			}else{
 				$output .= $this->GetNewSection($type);
 			}
@@ -357,6 +362,7 @@ class Edit extends \gp\Page{
 
 		return $output;
 	}
+
 
 	public function GetNewSection($type){
 
@@ -624,25 +630,48 @@ class Edit extends \gp\Page{
 	 */
 	public static function NewSections($checkboxes = false){
 
-		$types_with_imgs	= array('text','image','gallery');
+		$types_with_imgs = array('text','image','gallery');
 
-		$section_types		= \gp\tool\Output\Sections::GetTypes();
-		$links				= array();
+		$section_types = \gp\tool\Output\Sections::GetTypes();
+		$links = array();
 		foreach($section_types as $type => $type_info){
-			$img			= '';
-			if( in_array($type,$types_with_imgs) ){
-				$img		= \gp\tool::GetDir('/include/imgs/section-'.$type.'.png');
+			$img = '';
+			if( in_array($type, $types_with_imgs) ){
+				$img = \gp\tool::GetDir('/include/imgs/section-'.$type.'.png');
 			}
-			$links[]		= array( $type, $img );
+			$links[] = array( $type, $img );
 		}
 
-		$links[]			= array( array('text.gpCol-6','image.gpCol-6'),\gp\tool::GetDir('/include/imgs/section-combo-text-image.png') );
-		$links[]			= array( array('text.gpCol-6','gallery.gpCol-6'),\gp\tool::GetDir('/include/imgs/section-combo-text-gallery.png') );	//section combo: text & gallery
+		//section combo: text & image
+		$links[] = array( 
+			array('text.gpCol-6', 'image.gpCol-6'), 
+			\gp\tool::GetDir('/include/imgs/section-combo-text-image.png'),
+			array(
+				// 'gp_label' => 'Text &amp; Image',
+				'gp_color' => '#555',
+				'attributes' => array(
+					'class' => 'gpRow',
+				),
+			),
+		);
 
-		$links				= \gp\tool\Plugins::Filter('NewSections',array($links));
+		//section combo: text & gallery
+		$links[] = array( 
+			array('text.gpCol-6','gallery.gpCol-6'), 
+			\gp\tool::GetDir('/include/imgs/section-combo-text-gallery.png'), 
+			array(
+				// 'gp_label' => 'Text &amp; Gallery', 
+				'gp_color' => '#555',
+				'attributes' => array(
+					'class' => 'gpRow',
+				),
+			),
+		);
+
+		$links = \gp\tool\Plugins::Filter('NewSections', array($links));
 
 		foreach($links as $link){
-			$link += array('','','gpRow');
+			$link += array('', '', false); // $link[2] will be replaced in NewSectionLink() if missing
 			echo self::NewSectionLink( $link[0], $link[1], $link[2], $checkboxes );
 		}
 	}
@@ -652,59 +681,82 @@ class Edit extends \gp\Page{
 	 * Add link to manage section admin for nested section type
 	 *
 	 */
-	public static function NewSectionLink($types, $img, $wrapper_class = 'gpRow', $checkbox = false ){
+	public static function NewSectionLink($types, $img, $wrapper_data = false, $checkbox = false ){
 		global $dataDir, $page;
+
+		$is_wrapper = count($types) > 1 || is_array($types[0]);
+
+		if( $is_wrapper && !$wrapper_data ){
+			// add default wrapper data if undefined
+			$wrapper_data = array(
+				'gp_label' => 'Section Wrapper',
+				'gp_color' => '#555',
+				'attributes' => array(
+					'class' => 'gpRow',
+				),
+			);
+		}
+
 		static $fi = 0;
 
-		$types			= (array)$types;
-		$text_label		= self::SectionLabel($types);
+		$types = (array)$types;
+		$text_label = $is_wrapper && isset($wrapper_data['gp_label']) ? $wrapper_data['gp_label'] : self::SectionLabel($types);
 		$type_id = substr( base_convert( md5( json_encode( $types ) ), 16, 32 ), 0, 6);
 
-		$label			= '';
+		$label = '';
 		if( !empty($img) ){
-			$label		= '<img src="'.$img.'"/>';
+			$label = '<img src="' . $img . '"/>';
 		}
-		$label			.= '<span>'.$text_label.'</span>';
+		$label .= '<span>' . $text_label . '</span>';
 
 		//checkbox used for new pages
 		if( $checkbox ){
 
-
-			if( count($types) > 1 || is_array($types[0]) ){
-				$q		= array('types' => $types,'wrapper_class'=>$wrapper_class);
-				$q		= json_encode($q);
+			if( count($types) > 1 || is_array($types[0]) ){ // == nested sections
+				$q = array('types' => $types, 'wrapper_data' => $wrapper_data);
+				$q = json_encode($q);
 			}else{
-				$q		= $types[0];
+				$q = $types[0];
 			}
-
 
 			//checked
 			$checked = '';
 			if( isset($_REQUEST['content_type']) && $_REQUEST['content_type'] == $q ){
-				$checked = ' checked';
+				$checked = ' checked="checked"';
 			}elseif( empty($_REQUEST['content_type']) && $fi === 0 ){
-				$checked = ' checked';
+				$checked = ' checked="checked"';
 				$fi++;
 			}
 
-			$id		= 'checkbox_'.md5($q);
+			$id = 'checkbox_'.md5($q);
 			echo '<div data-type-id="' . $type_id . '">';
-			echo '<input name="content_type" type="radio" value="'.htmlspecialchars($q).'" id="'.$id.'" required '.$checked.' />';
-			echo '<label for="'.$id.'">';
-			echo $label;
-			echo '</label></div>';
+			echo   '<input name="content_type" type="radio" ';
+			echo     'value="' . htmlspecialchars($q) . '" id="' . $id . '" ';
+			echo     'required="required" ' . $checked . ' />';
+			echo   '<label title="' . $text_label . '" for="' . $id . '">';
+			echo     $label;
+			echo   '</label>';
+			echo '</div>';
 			return;
-		}
+		} // /if $checkboxes
+
 
 		//links used for new sections
-		$attrs					= array('data-cmd'=>'AddSection','class'=>'preview_section');
+		$attrs = array(
+			'data-cmd' => 'AddSection', 
+			'class' => 'preview_section',
+		);
 		if( count($types) > 1 || is_array($types[0]) ){
-			$attrs['data-response']	= $page->NewNestedSection($types, $wrapper_class);
+			$attrs['data-response'] = $page->NewNestedSection($types, $wrapper_data);
 		}else{
-			$attrs['data-response']	= $page->GetNewSection($types[0]);
+			$attrs['data-response'] = $page->GetNewSection($types[0]);
 		}
 
-		return '<div data-type-id="' . $type_id . '"><a '.\gp\tool::LinkAttr($attrs,$label).'>'.$label.'</a></div>';
+		$return =  '<div data-type-id="' . $type_id . '">';
+		$return .=   '<a ' . \gp\tool::LinkAttr($attrs, $label) . '>' . $label . '</a>';
+		$return .= '</div>';
+
+		return $return;
 	}
 
 	/**
@@ -729,7 +781,7 @@ class Edit extends \gp\Page{
 			}
 		}
 
-		return implode(' &amp; ',$text_label);
+		return implode(' &amp; ', $text_label);
 	}
 
 	/**

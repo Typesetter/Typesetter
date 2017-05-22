@@ -726,6 +726,8 @@ namespace gp\tool{
 
 				case 'wrapper_section':
 					$section['content']					= '';
+					$section['gp_label']				= 'Section Wrapper';
+					$section['gp_color']				= '#555';
 					$section['contains_sections']		= 0;
 				break;
 

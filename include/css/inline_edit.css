@@ -314,3 +314,23 @@ textarea.cke_source {
 	font-family:"Consolas", "Menlo", "Andale Mono", "DejaVu Sans Mono", monospace!important;
 	}
 
+/**
+ * Select Gallery Style
+ */
+#ckeditor_wrap select.SelectGalleryStyle{
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	appearance:none;
+	background-color:#fff;
+	box-shadow:inset 0 -4px 4px #f7f7f7;
+	background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAgCAYAAABpRpp6AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAOdJREFUeNrs2O0JwjAQBuBWXMAVXMEVdAQzgh1BR3CFOkIcwRm6gis4QjyhhVLycRe8g8J78ELSH+VpG5KjbQihWVNtmpUVwAADDDDAAItqu7zgnJuGB8qR8qB8Ku59pbwpz9/Ee68DnmFflB3lTDkJ0T3lMo678aHVlsQcG5tLsLH538H3CI6LTuF6TfAt8flL6Nyb7DTBQ2bNptAlrOoalqLNsKV9mIM2xXIOjhLaFMs96QbhPqyGlRzNXLQqVtpLlNDq2JrmJ4U2wdZ2a0u0GTbX/HDR+6kbs6oWf34ABhjgbH0FGACGrUAyUqUWxgAAAABJRU5ErkJggg==');
+	background-position:100% 33%;
+	background-repeat:no-repeat;
+	background-size:22px 16px;
+	padding-right:26px;
+	outline:none!important;
+	}
+
+#ckeditor_wrap select.SelectGalleryStyle::-ms-expand { 
+	display:none; 
+	}

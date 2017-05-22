@@ -887,6 +887,11 @@ namespace gp{
 			$css = \gp\tool\Plugins::OneFilter('Gallery_Style');
 			if( $css === false  ){
 				$page->css_user[] = '/include/css/default_gallery.css';
+
+				self::LoadComponents('dotdotdot');
+				$page->jQueryCode .= "\n".'$(".filetype-gallery .caption").dotdotdot({ watch : "window" });';
+				$page->jQueryCode .= "\n".'$(document).on("editor_area:loaded", function(){ $(".filetype-gallery .caption").trigger("destroy.dot") });';
+
 				return;
 			}
 			$page->head .= "\n".'<link type="text/css" media="screen" rel="stylesheet" href="'.$css.'" />';

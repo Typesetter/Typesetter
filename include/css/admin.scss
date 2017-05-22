@@ -32,7 +32,7 @@
 #gp_admin_html{
 	color: #333;
 	font-size: 13px;
-	font-family: sans-serif;
+	font-family: "Segoe UI", "San Francisco", "Helvetica Neue", "DejaVu Sans", "Arial", sans-serif;
 	line-height: 130%;
 	/* background:none; */
 	}
@@ -841,7 +841,6 @@ table.tablesorter th.gp_header_desc:before{
 #simplepanel a,
 #simplepanel span,
 #simplepanel div{
-	font-family: sans-serif;
 	line-height: 18px;
 	text-decoration: none;
 	color: $gp_panel_link_color !important;
@@ -2061,3 +2060,12 @@ body #addon_about{
 #gp_admin_html .fa{
 	font-family:FontAwesome;
 }
+
+
+/**
+ * Layout Editor/Codemirror
+ *
+ */
+.CodeMirror {
+	font-family:"Consolas", "Andale Mono", "DejaVu Sans Mono", monospace!important;
+	}

@@ -1,7 +1,8 @@
 #login_container{
 	position:relative;
 	height:100%;
-	font:13px sans-serif;
+	font-family: "Segoe UI", "San Francisco", "Helvetica Neue", "DejaVu Sans", "Arial", sans-serif;
+	font-size:13px;
 
 	background: #222;
 	/*

@@ -718,9 +718,9 @@ namespace gp\tool{
 				case 'gallery':
 					$section['content']		= '<ul class="gp_gallery"><li class="gp_to_remove">'
 											.'<a class="gallery_gallery" data-cmd="gallery" href="'.\gp\tool::GetDir('/include/imgs/default_image.jpg').'" data-arg="gallery_gallery">'
-											.'<img alt="" src="'.\gp\tool::GetDir('/include/imgs/default_thumb.jpg').'" />'
+											.'<img alt="default image" src="'.\gp\tool::GetDir('/include/imgs/default_thumb.jpg').'" />'
+											.'<span class="caption">Image caption</span>'
 											.'</a>'
-											.'<div class="caption">Image caption</div>'
 											.'</li></ul>';
 				break;
 
@@ -1103,11 +1103,10 @@ namespace gp\tool{
 				$img_alt = str_replace('_', ' ', basename(pathinfo($image, PATHINFO_FILENAME)));
 
 				echo '<li>';
-				echo '<a class="gallery_gallery" title="'.htmlspecialchars($caption).'" data-arg="gallery_gallery" href="'.$image.'" data-cmd="gallery">';
-				echo '<img src="'.$thumb_path.'" alt="'.$img_alt.'" /></a>';
-				echo '<div class="caption">';
-				echo $caption;
-				echo '</div>';
+				echo '<a class="gallery_gallery" data-arg="gallery_gallery" href="'.$image.'" data-cmd="gallery">'; // title="'.htmlspecialchars($caption).'"
+				echo '<img src="'.$thumb_path.'" alt="'.$img_alt.'" />';
+				echo '<span class="caption">' . $caption . '</span>';
+				echo '</a>';
 				echo '</li>';
 			}
 			echo '</ul>';
@@ -1258,6 +1257,7 @@ namespace gp\tool{
 			echo '<tr><td>'.$langmessage['Left'].'</td><td><input type="text" name="left" class="ck_input" value="0"/></td>';
 			echo '<td>'.$langmessage['Top'].'</td><td><input type="text" name="top" class="ck_input" value="0"/></td>';
 			echo '</tr>';
+			echo '<tr><td colspan="2">Alternative Text</td><td colspan="2"><input type="text" name="alt_text" style="width:70px; text-align:left;" class="ck_input" value=""/></td></tr>';
 			echo '<tr><td><a data-cmd="deafult_sizes" class="ckeditor_control ck_reset_size" title="'.$langmessage['Theme_default_sizes'].'">&#10226;</a></td></tr>';
 			echo '</table>';
 			echo '</div>';

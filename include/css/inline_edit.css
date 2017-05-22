@@ -14,8 +14,7 @@ html{
 	top:0;
 	z-index:10000; /* to be above full screen editing of ckeditor */
 	background:#eee;
-	font-family:Arial,sans-serif !important;
-
+	font-family: "Segoe UI", "San Francisco", "Helvetica Neue", "DejaVu Sans", "Arial", sans-serif!important;
 	-webkit-transition: right 0.5s;
 	-moz-transition: right 0.5s;
 	transition: right 0.5s;
@@ -177,8 +176,6 @@ html{
 	}
 
 #ckeditor_wrap .ckeditor_control{
-
-
 	border:1px solid #fafafa;
 	border-color: #fafafa  #fafafa  #dad9d9 #dad9d9 !important;
 
@@ -305,3 +302,15 @@ html{
 #ckeditor_wrap.ck_saving .ck_saving{
 	display:inline-block;
 }
+
+/**
+ * Override CK Editor internal fonts
+ */
+.cke_reset_all, .cke_reset_all *, .cke_reset_all a, .cke_reset_all textarea {
+	font-family:"Segoe UI", "San Francisco", "Helvetica Neue", "DejaVu Sans", "Arial", sans-serif!important;
+	}
+
+textarea.cke_source {
+	font-family:"Consolas", "Andale Mono", "DejaVu Sans Mono", monospace!important;
+	}
+

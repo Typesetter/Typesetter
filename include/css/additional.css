@@ -44,8 +44,7 @@ body .messages li{
 	padding:0;
 	margin:0;
 	font-size:14px;
-	font-family:Arial, sans-serif;
-	font-family: "Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif;
+	font-family: "Segoe UI", "San Francisco", "Helvetica Neue", "DejaVu Sans", "Arial", sans-serif;
 	line-height:normal;
 	line-height: 24px;
 	text-decoration:none;

@@ -78,6 +78,9 @@
 	display:block;
 	}
 
+#gp_current_images > div > a{
+	cursor:move;
+	}
 
 /**
  * Upload form

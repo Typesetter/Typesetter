@@ -20,28 +20,28 @@
 		edit_div:			null,
 		isDirty: false,
 		gallery_theme: [ 
-			{ label: 'Default Theme',   class_name: 'gallery-theme-default' },
-			{ label: 'Square Tiles',    class_name: 'gallery-theme-tiles' },
-			{ label: 'Circle Grid',     class_name: 'gallery-theme-circle-grid' },
-			{ label: 'Circle List',     class_name: 'gallery-theme-circle-list' }
+			{ label: 'Default Theme',	class_name: 'gallery-theme-default' },
+			{ label: 'Square Tiles',	class_name: 'gallery-theme-tiles' },
+			{ label: 'Circle Grid',		class_name: 'gallery-theme-circle-grid' },
+			{ label: 'Circle List',		class_name: 'gallery-theme-circle-list' }
 		],
 		gallery_size: [ 
-			{ label: 'X-Small',         class_name: 'gallery-size-xs' },
-			{ label: 'Small',           class_name: 'gallery-size-sm' },
-			{ label: 'Default Size',    class_name: 'gallery-size-md' },
-			{ label: 'Large',           class_name: 'gallery-size-lg' },
-			{ label: 'X-Large',         class_name: 'gallery-size-xl' }
+			{ label: 'X-Small',			class_name: 'gallery-size-xs' },
+			{ label: 'Small',			class_name: 'gallery-size-sm' },
+			{ label: 'Default Size',	class_name: 'gallery-size-md' },
+			{ label: 'Large',			class_name: 'gallery-size-lg' },
+			{ label: 'X-Large',			class_name: 'gallery-size-xl' }
 		],
 		gallery_color: [ 
-			{ label: 'Default Color',   class_name: 'gallery-color-default' },
-			{ label: 'Dark',            class_name: 'gallery-color-dark' } /* ,
-			{ label: 'Royal Blue',      class_name: 'gallery-color-royalblue' },
-			{ label: 'Teal',            class_name: 'gallery-color-teal' },
-			{ label: 'Cerulean',        class_name: 'gallery-color-cerulean' },
-			{ label: 'Crimson',         class_name: 'gallery-color-crimson' },
-			{ label: 'Lime',            class_name: 'gallery-color-lime' },
-			{ label: 'Orange',          class_name: 'gallery-color-orange' },
-			{ label: 'Sunflower',       class_name: 'gallery-color-sunflower' },
+			{ label: 'Default Color',		class_name: 'gallery-color-default' },
+			{ label: 'On Dark Backgrounds',	class_name: 'gallery-color-dark' } /* ,
+			{ label: 'Royal Blue',		class_name: 'gallery-color-royalblue' },
+			{ label: 'Teal',			class_name: 'gallery-color-teal' },
+			{ label: 'Cerulean',		class_name: 'gallery-color-cerulean' },
+			{ label: 'Crimson',			class_name: 'gallery-color-crimson' },
+			{ label: 'Lime',			class_name: 'gallery-color-lime' },
+			{ label: 'Orange',			class_name: 'gallery-color-orange' },
+			{ label: 'Sunflower',		class_name: 'gallery-color-sunflower' },
 			*/
 		],
 
@@ -571,9 +571,9 @@
 			var img_alt = file_name.substring(0, file_name.lastIndexOf('.')).split("_").join(" ");
 
 			var $a		= $('<img>').attr({
-				'src' : src, 
-				'title' : file_name, 
-				'alt' : img_alt 
+				'src'	: src, 
+				'title'	: file_name, 
+				'alt'	: img_alt 
 			});
 			var $span	= $('<a>').append($a);
 			var html	= '<div class="expand_child">'
@@ -630,7 +630,14 @@
 				'title'    : '',
 				'class'    : gp_editor.img_rel
 			});
-			var li = $('<li>').append($img).append('<span class="caption"></span>');
+
+			/* auto-create caption from file name */
+			var src = $img.find('img').attr('src') || '';
+			var file_name = src.substring(src.lastIndexOf('/') + 1);
+			file_name = file_name.substr(0, file_name.lastIndexOf('.'));
+			var auto_caption = file_name.substring(0, file_name.lastIndexOf('.')).split("_").join(" ");
+			$img.append('<span class="caption">' + auto_caption + '</span>');
+			var li = $('<li>').append($img);
 			if( holder ){
 				holder.replaceWith(li);
 			}else{

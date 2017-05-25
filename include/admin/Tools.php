@@ -633,8 +633,13 @@ namespace gp\admin{
 
 
 			//add-ons
-			$links = self::GetAddonLinks($in_panel);
-			self::_AdminPanelLinks($in_panel, $links, 'plugins', 'fa fa-plug', 'add');
+			$addon_links = self::GetAddonLinks($in_panel); // now returns array( (string)links, (boolean)permissions )
+			$links = $addon_links[0];
+			$addon_permissions = $addon_links[1];
+			// msg("Any Addon Permisisons? " . pre($addon_permissions) );
+			if( $addon_permissions ){
+				self::_AdminPanelLinks($in_panel, $links, 'plugins', 'fa fa-plug', 'add');
+			}
 
 
 			//settings
@@ -1374,11 +1379,15 @@ namespace gp\admin{
 
 
 		/**
-		 * Return the addon section of the admin panel
-		 *
+		 * Returns an array 
+		 * 	0 => html of the addon section of the admin panel
+		 * 	1 => boolean indicating if the current user has any addon admin permissions or there are special links
+		 * @return array
 		 */
 		public static function GetAddonLinks($in_panel){
 			global $langmessage, $config;
+
+			$any_permissions = false;
 
 			$expand_class = 'expand_child';
 			if( !$in_panel ){
@@ -1390,6 +1399,7 @@ namespace gp\admin{
 			$addon_permissions = self::HasPermission('Admin_Addons');
 
 			if( $addon_permissions ){
+				$any_permissions = true;
 				echo '<li>';
 				echo \gp\tool::Link('Admin/Addons',$langmessage['manage']);
 				echo '</li>';
@@ -1415,32 +1425,36 @@ namespace gp\admin{
 						$addonName = $addon;
 					}
 
-					$sublinks = self::GetAddonSubLinks($addon);
-
-					if( !empty($sublinks) ){
-						echo '<li class="'.$expand_class.'">';
-						if( $in_panel ){
-							$sublinks = '<ul class="in_window">'.$sublinks.'</ul>';
-						}else{
-							$sublinks = '<ul>'.$sublinks.'</ul>';
-						}
-					}else{
-						echo '<li>';
-					}
+					$addon_sublinks = self::GetAddonSubLinks($addon);
+					$sublinks = $addon_sublinks[0];
+					$addon_permissions = $addon_sublinks[1];
+					$any_permissions = $addon_permissions ? true : $any_permissions;
 
 					if( $addon_permissions ){
-						echo \gp\tool::Link('Admin/Addons/'.self::encode64($addon),$addonName);
-					}else{
-						echo '<a>'.$addonName.'</a>';
-					}
-					echo $sublinks;
+						if( !empty($sublinks) ){
+							echo '<li class="'.$expand_class.'">';
+							if( $in_panel ){
+								$sublinks = '<ul class="in_window">'.$sublinks.'</ul>';
+							}else{
+								$sublinks = '<ul>'.$sublinks.'</ul>';
+							}
+						}else{
+							echo '<li>';
+						}
 
-					echo '</li>';
+						echo \gp\tool::Link('Admin/Addons/'.self::encode64($addon),$addonName);
+
+						echo $sublinks;
+
+						echo '</li>';
+					}
 				}
 			}
 
 
-			return ob_get_clean();
+			$links = ob_get_clean();
+			$any_permissions = true;
+			return array($links, $any_permissions);
 
 		}
 
@@ -1480,11 +1494,13 @@ namespace gp\admin{
 
 
 		/**
-		 * Return a formatted list of links associated with $addon
-		 * @return string
+		 * 	0 => formatted list of links associated with $addon
+		 * 	1 => boolean indicating if the current user has addon admin permissions or if special pages exist
+		 * @return array
 		 */
 		public static function GetAddonSubLinks($addon=false){
 			global $config;
+			$any_permissions = false;
 
 			$special_links	= self::GetAddonTitles( $addon);
 			$admin_links	= self::GetAddonComponents( $config['admin_links'], $addon);
@@ -1492,6 +1508,7 @@ namespace gp\admin{
 
 			$result = '';
 			foreach($special_links as $linkName => $linkInfo){
+				$any_permissions = true;
 				$result .= '<li>';
 				$result .= \gp\tool::Link($linkName,$linkInfo['label']);
 				$result .= '</li>';
@@ -1499,12 +1516,13 @@ namespace gp\admin{
 
 			foreach($admin_links as $linkName => $linkInfo){
 				if( self::HasPermission($linkName) ){
+					$any_permissions = true;
 					$result .= '<li>';
 					$result .= \gp\tool::Link($linkName,$linkInfo['label']);
 					$result .= '</li>';
 				}
 			}
-			return $result;
+			return array($result, $any_permissions);
 		}
 
 

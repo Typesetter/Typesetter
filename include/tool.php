@@ -889,8 +889,10 @@ namespace gp{
 				$page->css_user[] = '/include/css/default_gallery.css';
 
 				self::LoadComponents('dotdotdot');
-				$page->jQueryCode .= "\n".'$(".filetype-gallery .caption").dotdotdot({ watch : "window" });';
-				$page->jQueryCode .= "\n".'$(document).on("editor_area:loaded", function(){ $(".filetype-gallery .caption").trigger("destroy.dot") });';
+				$page->jQueryCode .= "\n".'$(".filetype-gallery .caption").dotdotdot({ watch : "window", callback : function(isTruncated,orgContent){ $(this).data("originalContent",orgContent); } });';
+				if( \gp\tool::LoggedIn() ){
+					$page->jQueryCode .= "\n".'$(document).on("editor_area:loaded", function(){ $(".filetype-gallery .caption").trigger("destroy.dot") });';
+				}
 
 				return;
 			}

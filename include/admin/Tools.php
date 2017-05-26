@@ -1494,6 +1494,7 @@ namespace gp\admin{
 
 
 		/**
+		 * Returns an array 
 		 * 	0 => formatted list of links associated with $addon
 		 * 	1 => boolean indicating if the current user has addon admin permissions or if special pages exist
 		 * @return array

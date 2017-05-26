@@ -329,7 +329,19 @@ var $gp = {
 
 			$.colorbox.remove();
 			$(selector).colorbox(
-				$gp.cboxSettings({resize:true,rel:selector})
+				$gp.cboxSettings({
+					resize : true ,
+					rel : selector, 
+					title : function(){
+						var a = $(this);
+						var caption =
+							a.closest('li').find('.caption').data("originalContent") 
+							|| a.closest('li').find('.caption').text() 
+							|| a.attr('title') // backwards compat
+							|| '';
+						return caption;
+					}
+				})
 			);
 
 			$(this).trigger('click.cbox');

@@ -88,6 +88,7 @@ $langmessage = array (
 	'uploaded_files'                 => 'Prenešene datoteke',
 	'Image'                          => 'Slika',
 	'image'                          => 'slika',
+	'Images'                         => 'Slike', // ### NEW 5.1 ###
 	'images'                         => 'slike',
 	'delete_confirm'                 => 'Jesi li siguran da želiš trajno ukloniti datoteku? ',
 	'generic_delete_confirm'         => 'Jesi li siguran da želiš trajno ukloniti %s? ',
@@ -230,6 +231,8 @@ continue using your old password.</p>',
 	'recaptcha_public'               => 'Get a <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> to use CAPTCHA verification on the contact form.',
 	'maximgarea'                     => 'Maksimalni četvorokut piksela za učitanu sliku. 600 x 800 piksela slika ima 480.000 kvadratnih piksela.',
 	'maxthumbsize'                   => 'Veličina Minijatura Galerije, zadano je 100px po 100px.',
+	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
 	'from_use_user'                  => 'If selected, user supplied email addresses will be used for the "From" header instead of the above defaults.',
 	'smtp_hosts'                     => 'Primjer: ',
 	'auto_redir'                     => 'Automatsko preusmjeravanje zahtjeva ako je sličan postojeći stranici unutar tog postotka.',
@@ -241,6 +244,9 @@ continue using your old password.</p>',
 	'langeditor'                     => 'WYSIWYG Jezik',
 	'maximgarea'                     => 'Maksimalno područje slike',
 	'maxthumbsize'                   => 'Veličina Minijatura Galerije',
+	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###
+	'recreate_all_thumbnails'        => 'Recreate All Thumbnails', // ### NEW 5.1 ###
 	'auto_redir'                     => 'Auto Preusmjeravanje Postotak',
 	'restore_defaults'               => 'Vrati zadano',
 	'Add your LESS and CSS here'     => 'Add your LESS and CSS here',

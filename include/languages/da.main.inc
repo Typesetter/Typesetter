@@ -408,8 +408,7 @@ $langmessage = array (
 	'View_your_web_site'             => 'Vis dit websted',
 	'User Details'                   => 'Bruger Detaljer',
 	'Changing_File_Permissions'      => 'Ændring af filtilladelser',
-	'REFRESH_AFTER_CHANGE'           => 'Du kan få brug for at ændre tilladelserne på det bibliotek, som mislykkedes i ovenstående afsnit og så<a href=""> opdatere denne side </a>.
-',
+	'REFRESH_AFTER_CHANGE'           => 'Du kan få brug for at ændre tilladelserne på det bibliotek, som mislykkedes i ovenstående afsnit og så<a href=""> opdatere denne side </a>.',
 	'MOST_FTP_CLIENTS'               => 'De fleste FTP-klienter giver dig mulighed for at ændre rettigheder på filer på din server. I<a href="http://fireftp.mozdev.org/"> FireFTP </a>, kan dette gøres ved at højreklikke på filen, vælge "Egenskaber" i menuen derefter indstille tilladelserne passende.',
 	'FTP_CHMOD'                      => 'Indtast din servers FTP-oplysninger og installationsprogrammet vil håndtere fil tilladelserne for dig.',
 	'Installer'                      => 'Installer',

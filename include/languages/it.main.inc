@@ -381,9 +381,7 @@ $langmessage = array (
 	'Download'                       => 'Scarica',
 	'File Size'                      => 'Dimensione del file',
 	'Total'                          => 'Totale',
-	'Compression'                    => ':
-	
-Compressione',
+	'Compression'                    => 'Compressione',
 	'None'                           => 'Nessuno',
 	'Checking_server'                => 'Controllo il server',
 	'Installation'                   => 'Installazione',

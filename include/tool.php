@@ -739,18 +739,25 @@ namespace gp{
 		 */
 		public static function ServerName($strip_www = false){
 
+			$port = '';
 			if( isset($_SERVER['SERVER_NAME']) ){
 				$server = self::UrlChars($_SERVER['SERVER_NAME']);
-
+				if( isset($_SERVER['SERVER_PORT']) ){
+					$port = $_SERVER['SERVER_PORT'];
+					if( $port != 80 && $port != 443 ){
+						$port = ':' . $port;
+					}
+				}
 			}else{
 				return false;
 			}
+
 
 			if( $strip_www && strpos($server,'www.') === 0 ){
 				$server = substr($server,4);
 			}
 
-			return $server;
+			return $server . $port;
 		}
 
 		public static function UrlChars($string){

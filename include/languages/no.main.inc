@@ -87,8 +87,8 @@ $langmessage = array (
 	'Lists'                          => 'Lists',
 	'uploaded_files'                 => 'Opplastede filer',
 	'Image'                          => 'Bilde',
-	'image'                          => 'bilde', 
-	'Images'                         => 'Bilder', // ### NEW 5.1 ###
+	'Image'                          => 'Bilde', // ### NEW 5.1 ###
+	'images'                         => 'bilder',
 	'images'                         => 'bilder',
 	'delete_confirm'                 => 'Er du sikker på at du ønsker å slette denne filen permanent? ',
 	'generic_delete_confirm'         => 'Are you sure you want to permanently remove %s? ',
@@ -224,6 +224,9 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Hent en <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha-nøkkel</a> for å bruke verifiseringsbilde (CAPTCHA) på kontaktskjemaet.',
 	'maximgarea'                     => 'Maksimum antall kvadratpiksler for opplastede bilder. Et bilde på 600 x 800 piksler har 480,000 kv/piksler.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Gallery Thumbnail size, default is 100px by 100px.',
 	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
@@ -237,6 +240,8 @@ $langmessage = array (
 	'language'                       => 'Språk',
 	'langeditor'                     => 'WYSIWYG-språk',
 	'maximgarea'                     => 'Maksimum bildeareal',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Gallery Thumbnail Size',
 	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###

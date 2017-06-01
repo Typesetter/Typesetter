@@ -224,6 +224,9 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => '取得一個 <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha 金鑰</a>方可在聯絡表單上使用 CAPTCHA 驗證機制。',
 	'maximgarea'                     => '上傳圖片的最大平方像素。一個 600 x 800 像素的圖片有 480,000 平方像素。',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => '圖庫縮圖尺寸，預設為 100 像素乘 100像素。',
 	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
@@ -237,6 +240,8 @@ $langmessage = array (
 	'language'                       => '語言',
 	'langeditor'                     => '所見即所得介面語言',
 	'maximgarea'                     => '最大的圖片區域',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => '圖庫縮圖尺寸',
 	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###

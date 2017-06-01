@@ -224,6 +224,9 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Pobierz <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">klucz reCaptcha </a> aby używać CAPTCHA do weryfikacji wpisów przez formularz kontaktowy.',
 	'maximgarea'                     => 'Maksymalna wielkość wysyłanego obrazka. Obrazek 600x800 pikseli to 480\'000 pikseli kwadratowych.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Rozmiar miniatury w galerii, domyślnie wynosi 100x100px.',
 	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
@@ -238,6 +241,8 @@ $langmessage = array (
 	'language'                       => 'Język',
 	'langeditor'                     => 'Język edytora',
 	'maximgarea'                     => 'Maksymalny obszar obrazka',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Rozmiar miniatury galerii',
 	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###

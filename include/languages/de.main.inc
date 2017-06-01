@@ -224,6 +224,9 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Sie haben noch keinen? <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">Holen Sie sich hier einen reCaptcha-Schüssel</a> für die CAPTCHA-Prüfung.',
 	'maximgarea'                     => 'Maximale Größe für hochgeladene Bilder (in Pixel). Ein Bild mit einer Größe von 600x800 Pixeln hat 480.000 Pixel.',
+	'resize_images'                  => 'Erzeugt optimierte Versionen von verkleinerten Bildern im Seiteninhalt.', // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'Eingebettete <a href="https://de.wikipedia.org/wiki/ICC-Profil" target="_blank">ICC Farbprofile</a> in JPEG Bildern beibehalten.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Eingebettete EXIF/IPTC Metadaten <em>Autor, Copyright, Beschriftung, Titel</em> and <em>Aufnahmedatum</em> in JPEG Bildern beibehalten.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Galeriebildgröße, Standard ist 100px × 100px.',
 	'maxthumbheight'                 => 'Optionale Höhe für Galeriebilder. Bleibt das Feld leer, wird der Wert <em>Galeriebildgröße</em> auch für die Höhe verwendet.', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Seitenverhältnis der Originalbilder für Galeriebilder verwenden.', // ### NEW 5.1 ###
@@ -237,6 +240,8 @@ $langmessage = array (
 	'language'                       => 'Sprache Administration',
 	'langeditor'                     => 'Sprache WYSIWYG-Editor',
 	'maximgarea'                     => 'Maximale Bildgröße',
+	'preserve_icc_profiles'          => 'ICC Profile erhalten', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Metadaten erhalten', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Galeriebildgröße',
 	'maxthumbheight'                 => 'Galeriebildhöhe', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Proporionale Galeriebilder', // ### NEW 5.1 ###

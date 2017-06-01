@@ -150,7 +150,8 @@ $langmessage = array (
 	'details'                        => 'Détails',
 	'site_locked'                    => 'Désolé, ce site est actuellement verrouillé pour modification par un autre utilisateur. Attendez que cet utilisateur se déconnecte ou que le verrouillage prenne fin.',
 	'lock_expires_in'                => 'Le verrouillage prendra fin dans %s minutes.',
-	'passwordremindertext'           => '<p>Une demande de nouveau mot de passe a été effectué pour %1$s (%2$s). Le nouveau mot de passe de l\'utilisateur « %3$s » est : %4$s.</p><p>Si vous n\'êtes pas l\'auteur de cette demande, ou qu\'il ne vous ai plus nécessaire de changer votre mot de passe, ignorer ce message et continuer à utiliser l\'ancien.</p>',
+	'passwordremindertext'           => '<p>Une demande de nouveau mot de passe a été effectué pour %1$s (%2$s). Le nouveau mot de passe de l\'utilisateur « %3$s » est : %4$s.</p>
+<p>Si vous n\'êtes pas l\'auteur de cette demande, ou qu\'il ne vous ai plus nécessaire de changer votre mot de passe, ignorer ce message et continuer à utiliser l\'ancien.</p>',
 	'JAVASCRIPT_REQ'                 => 'L\'administration du site requiert l\'activation de JavaScript.',
 	'INCOMPAT_BROWSER'               => 'Le navigateur que vous utiliser semble incompatible.',
 	'MODERN_BROWSER'                 => 'Vérifier que le JavaScript est activé, que votre navigateur est à jour et qu\'il supporte les technologies web modernes, puis réessayer.',
@@ -224,6 +225,9 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Obtenir une <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">clé reCaptcha</a> pour utiliser Captcha (cryptogramme visuel) dans le formulaire.',
 	'maximgarea'                     => 'Dimension maximum (en pixels) pour les images envoyées. Une image de 600×800 contient 480 000 pixels.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Taille des vignettes de la galerie, valeur par défaut est 100px sur 100px.',
 	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
@@ -237,6 +241,8 @@ $langmessage = array (
 	'language'                       => 'Langue',
 	'langeditor'                     => 'Language de l\'éditeur de pages',
 	'maximgarea'                     => 'Surface maximum de l\'image',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Taille des vignettes de la galerie',
 	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###

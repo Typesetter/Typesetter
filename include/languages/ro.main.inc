@@ -224,6 +224,9 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Obţineţi o <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html"> cheie reCaptcha</a> pentru a folosi verificarea CAPTCHA pe formularul de contact.',
 	'maximgarea'                     => 'Numărul maxim de pixeli pentru imaginile încărcate. O imagine de 600 x 800 pixeli conţine 480.000 de pixeli.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Mărimea miniaturilor în galerie este implicit de 100px pe 100px.',
 	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
@@ -237,6 +240,8 @@ $langmessage = array (
 	'language'                       => 'Limbaj',
 	'langeditor'                     => 'Limbaj WYSIWYG',
 	'maximgarea'                     => 'Suprafaţa maximă a imaginii',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Dimensiuni miniaturi din galerie',
 	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###

@@ -224,6 +224,9 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Pridobite si <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha ključ</a> da boste lahko uporabljali CAPTCHA preverjanje pri uporabi kontakntega obrazca.',
 	'maximgarea'                     => 'Največje število pik za naložene slike. Slika velikosti 600 x 800 pik ima 480,000 sq/pik.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Dimenzije sličic galerije, privzeto je 100px X 100px',
 	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
@@ -237,6 +240,8 @@ $langmessage = array (
 	'language'                       => 'Jezik',
 	'langeditor'                     => 'WYSIWYG Jezik',
 	'maximgarea'                     => 'Največje polje slike',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Velikost sličic galerije',
 	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###

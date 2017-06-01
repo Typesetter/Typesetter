@@ -88,7 +88,7 @@ $langmessage = array (
 	'uploaded_files'                 => 'Files caricati',
 	'Image'                          => 'Immagine',
 	'image'                          => 'immagine',
-	'images'                         => 'Immagini', // ### NEW 5.1 ###
+	'Images'                         => 'Immagini', // ### NEW 5.1 ###
 	'images'                         => 'immagini',
 	'delete_confirm'                 => 'Sei sicuro di voler rimuovere i file in modo permanente? ',
 	'generic_delete_confirm'         => 'Sei sicuro di voler rimuovere in modo permanente %s? ',
@@ -224,6 +224,9 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Prendi <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">la chiave reCaptcha</a> per usare la verifica CAPTCHA sulla pagina dei contatti.',
 	'maximgarea'                     => 'Massima superficie in pixel per il caricamento delle immagini. Una immagine 600x800 pixel ha 480.000 pixel di superficie.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Dimensione Thumbnail, il default è 100px per 100px.',
 	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
@@ -237,6 +240,8 @@ $langmessage = array (
 	'language'                       => 'Lingua',
 	'langeditor'                     => 'Lingua dell\'editor WYSIWYG',
 	'maximgarea'                     => 'Dimensione massima dell\'immagine.',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Dimensione Thumbnail Galleria',
 	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###

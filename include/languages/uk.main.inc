@@ -224,6 +224,9 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Отримайте <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">ключі reCaptcha</a>, щоб використовувати перевірку CAPTCHA в контактній формі.',
 	'maximgarea'                     => 'Максимальна площа квадратних пікселів для завантажених зображень. 600 х 800 пікселів зображення має 480 000 кв/пікселів.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Розмір мініатюр галереї, за замовчанням 100px на 100px.',
 	'maxthumbheight'                 => 'Висота мініатюр галереї (не обов\'язково). Якщо не вказана, буде використовуватися значення з <EM> Розмір мініатюр галереї </ EM>.', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Зберігати оригінальні пропорції зображення при створенні мініатюри.', // ### NEW 5.1 ###
@@ -237,6 +240,8 @@ $langmessage = array (
 	'language'                       => 'Мова',
 	'langeditor'                     => 'Мова візуального редактора',
 	'maximgarea'                     => 'Максимальна площа зображення',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Розмір мініатюри галереї',
 	'maxthumbheight'                 => 'Висота мініатюри галереї', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Зберігати пропорції зображення', // ### NEW 5.1 ###

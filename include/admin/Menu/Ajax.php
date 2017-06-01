@@ -185,7 +185,7 @@ class Ajax extends \gp\admin\Menu{
 
 		if( isset($_REQUEST['redir']) ){
 			$title	= \gp\tool::IndexToTitle($new_index);
-			$url	= \gp\tool::AbsoluteUrl($title,'',true,false);
+			$url	= \gp\tool::AbsoluteUrl($title,'',true,false,true);
 			msg(sprintf($langmessage['will_redirect'],\gp\tool::Link_Page($title)));
 			$this->page->ajaxReplace[] = array('location',$url,15000);
 		}else{

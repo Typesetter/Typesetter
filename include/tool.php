@@ -718,9 +718,9 @@ namespace gp{
 			return '<a href="'.self::AbsoluteUrl($href,$query).'" '.$attr.'>'.self::Ampersands($label).'</a>';
 		}
 
-		public static function AbsoluteUrl($href='',$query='',$with_schema=true,$ampersands=true){
+		public static function AbsoluteUrl($href='',$query='',$with_schema=true,$ampersands=true,$with_port=false){
 
-			$server = self::ServerName();
+			$server = self::ServerName(false, $with_port);
 			if( $server === false ){
 				return self::GetUrl($href,$query,$ampersands);
 			}
@@ -737,12 +737,12 @@ namespace gp{
 		 * Return ther server name
 		 *
 		 */
-		public static function ServerName($strip_www = false, $add_port=false){
+		public static function ServerName($strip_www = false, $with_port=false){
 
 			$port = '';
 			if( isset($_SERVER['SERVER_NAME']) ){
 				$server = self::UrlChars($_SERVER['SERVER_NAME']);
-				if( $add_port && isset($_SERVER['SERVER_PORT']) ){
+				if( $with_port && isset($_SERVER['SERVER_PORT']) ){
 					$port = $_SERVER['SERVER_PORT'];
 					if( $port != 80 && $port != 443 ){
 						$port = ':' . $port;

@@ -737,12 +737,12 @@ namespace gp{
 		 * Return ther server name
 		 *
 		 */
-		public static function ServerName($strip_www = false){
+		public static function ServerName($strip_www = false, $add_port=false){
 
 			$port = '';
 			if( isset($_SERVER['SERVER_NAME']) ){
 				$server = self::UrlChars($_SERVER['SERVER_NAME']);
-				if( isset($_SERVER['SERVER_PORT']) ){
+				if( $add_port && isset($_SERVER['SERVER_PORT']) ){
 					$port = $_SERVER['SERVER_PORT'];
 					if( $port != 80 && $port != 443 ){
 						$port = ':' . $port;

@@ -36,8 +36,8 @@ $upload_extensions_deny = array();
 
 /**
  * gp_default_theme
- * Theme/color to be used when gpEasy is first installed.
- * Also the theme/color that gpEasy will use should the user specified theme become unavailable
+ * Theme/color to be used when Typesetter is first installed.
+ * Also the theme/color that Typesetter will use should the user specified theme become unavailable
  *
  */
 define('gp_default_theme','Three_point_5/Shore');
@@ -105,7 +105,7 @@ define('gp_unique_addons',false);
 
 /**
  * service_provider_id
- * For gpEasy.com/Special_Services
+ * For Typesetter.com/Special_Services
  * Add your service provider id for tracking and to increase service provider activity level
  * Defaults to false
  */
@@ -156,7 +156,7 @@ define('gpdebug',false);
 /**
  * Prevent errors from being displayed to site visitors
  * Should be set to "0" for any production site
- * Set to "1" if gpEasy is unable to display errors with gpdebug set to "true" (see above)
+ * Set to "1" if Typesetter is unable to display errors with gpdebug set to "true" (see above)
  *
  */
 @ini_set('display_errors',0);
@@ -171,7 +171,7 @@ define('gpdebug',false);
 
 
 /**
- * Include clearfloats in gpeasy generated code
+ * Include clearfloats in Typesetter generated code
  * define('clear_floats',false); experimental
  */
 

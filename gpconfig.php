@@ -105,7 +105,7 @@ define('gp_unique_addons',false);
 
 /**
  * service_provider_id
- * For Typesetter.com/Special_Services
+ * For typesettercms.com/Providers
  * Add your service provider id for tracking and to increase service provider activity level
  * Defaults to false
  */

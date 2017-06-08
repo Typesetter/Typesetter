@@ -88,6 +88,7 @@ $langmessage = array (
 	'uploaded_files'                 => 'Uploadede filer',
 	'Image'                          => 'Billed',
 	'image'                          => 'billed',
+	'Images'                         => 'Billeder', // ### NEW 5.1 ###
 	'images'                         => 'billeder',
 	'delete_confirm'                 => 'Er du sikker på at du ønsker at slette denne fil permanent? ',
 	'generic_delete_confirm'         => 'Er du sikker på du permanent vil fjerne %s? ',
@@ -223,7 +224,12 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Få en<a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Nøgle</a> for at bruge CAPTCHA kontrol på kontakt formular.',
 	'maximgarea'                     => 'Største kvadrat pixels for uploadede billeder. Et 600 x 800 pixels billed er på 480.000 kvadrat pixel.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Galleri miniaturestørrelse, Standard er 100px ved 100px.',
+	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
 	'from_use_user'                  => 'Hvis valgt, bruger-leverede e-mail adresser vil blive brugt til "Fra" header i stedet for ovenstående standard.',
 	'smtp_hosts'                     => 'Eksempel: ',
 	'auto_redir'                     => 'Omdiriger automatisk en anmodning, hvis det svarer til en eksisterende side indenfor denne procentsats.',
@@ -234,7 +240,12 @@ $langmessage = array (
 	'language'                       => 'Sprog',
 	'langeditor'                     => 'WYSIWYG Sprog',
 	'maximgarea'                     => 'Maksimum Billede Område',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Galleri miniature størrelse',
+	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###
+	'recreate_all_thumbnails'        => 'Recreate All Thumbnails', // ### NEW 5.1 ###
 	'auto_redir'                     => 'Automatisk omdirigering Procent',
 	'restore_defaults'               => 'Gendan standarder',
 	'Add your LESS and CSS here'     => 'Add your LESS and CSS here',
@@ -402,8 +413,7 @@ $langmessage = array (
 	'View_your_web_site'             => 'Vis dit websted',
 	'User Details'                   => 'Bruger Detaljer',
 	'Changing_File_Permissions'      => 'Ændring af filtilladelser',
-	'REFRESH_AFTER_CHANGE'           => 'Du kan få brug for at ændre tilladelserne på det bibliotek, som mislykkedes i ovenstående afsnit og så<a href=""> opdatere denne side </a>.
-',
+	'REFRESH_AFTER_CHANGE'           => 'Du kan få brug for at ændre tilladelserne på det bibliotek, som mislykkedes i ovenstående afsnit og så<a href=""> opdatere denne side </a>.',
 	'MOST_FTP_CLIENTS'               => 'De fleste FTP-klienter giver dig mulighed for at ændre rettigheder på filer på din server. I<a href="http://fireftp.mozdev.org/"> FireFTP </a>, kan dette gøres ved at højreklikke på filen, vælge "Egenskaber" i menuen derefter indstille tilladelserne passende.',
 	'FTP_CHMOD'                      => 'Indtast din servers FTP-oplysninger og installationsprogrammet vil håndtere fil tilladelserne for dig.',
 	'Installer'                      => 'Installer',
@@ -411,6 +421,7 @@ $langmessage = array (
 	'FTP_Server'                     => 'FTP Server',
 	'FTP_Username'                   => 'FTP brugernavn',
 	'FTP_Password'                   => 'FTP adgangskode',
+	'Using_FTP'                      => 'Brug FTP',
 	'Using_FTP'                      => 'Brug FTP',
 	'Could_Not_'                     => 'Kunne ikke %s',
 	'FTP_PERMISSIONS_CHANGED'        => 'Filtilladelser for %s er ændret.',

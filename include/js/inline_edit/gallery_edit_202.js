@@ -18,6 +18,33 @@
 		auto_start:			false,
 		make_sortable:		true,
 		edit_div:			null,
+		isDirty: false,
+		gallery_theme: [ 
+			{ label: 'Default Theme',	class_name: 'gallery-theme-default' },
+			{ label: 'Square Tiles',	class_name: 'gallery-theme-tiles' },
+			{ label: 'Circle Grid',		class_name: 'gallery-theme-circle-grid' },
+			{ label: 'Circle List',		class_name: 'gallery-theme-circle-list' }
+		],
+		gallery_size: [ 
+			{ label: 'X-Small',			class_name: 'gallery-size-xs' },
+			{ label: 'Small',			class_name: 'gallery-size-sm' },
+			{ label: 'Default Size',	class_name: 'gallery-size-md' },
+			{ label: 'Large',			class_name: 'gallery-size-lg' },
+			{ label: 'X-Large',			class_name: 'gallery-size-xl' }
+		],
+		gallery_color: [ 
+			{ label: 'Default Color',		class_name: 'gallery-color-default' },
+			{ label: 'On Dark Backgrounds',	class_name: 'gallery-color-dark' } /* ,
+			{ label: 'Royal Blue',		class_name: 'gallery-color-royalblue' },
+			{ label: 'Teal',			class_name: 'gallery-color-teal' },
+			{ label: 'Cerulean',		class_name: 'gallery-color-cerulean' },
+			{ label: 'Crimson',			class_name: 'gallery-color-crimson' },
+			{ label: 'Lime',			class_name: 'gallery-color-lime' },
+			{ label: 'Orange',			class_name: 'gallery-color-orange' },
+			{ label: 'Sunflower',		class_name: 'gallery-color-sunflower' },
+			*/
+		],
+
 
 		/**
 		 * Called when a caption is edited
@@ -90,30 +117,35 @@
 			return false;
 		},
 
-		getData:function(edit_div){
+		getData:function(edit_div, section_object){
 
 			var args = {
 				images: [],
-				captions: []
+				captions: [],
+				attributes: []
 			};
 
 
 			//images
-			gp_editor.edit_div.find(gp_editor.sortable_area_sel).find('li > a').each(function(){
+			edit_div.find(gp_editor.sortable_area_sel).find('li > a').each(function(){
 				args.images.push( $(this).attr('href') );
 			});
 
 			//captions
-			gp_editor.edit_div.find(gp_editor.edit_links_target).find('.caption').each(function(){
+			edit_div.find(gp_editor.edit_links_target).find('.caption').each(function(){
 				args.captions.push( $(this).html() );
 			});
-
 
 			//options
 			var options = $('#gp_gallery_options').find('input,select').serialize();
 
+			// attributes
+			args.attributes = { 
+				class : ('class' in section_object.attributes ? section_object.attributes.class : '')
+			};
+
 			//get content
-			var data = gp_editor.edit_div.clone();
+			var data = edit_div.clone();
 			data.find('li.holder').remove();
 			data.find('ul').enableSelection().removeClass('ui-sortable').removeAttr('unselectable');
 			data.find('.gp_nosave').remove();
@@ -125,6 +157,8 @@
 	function gp_init_inline_edit(area_id,section_object){
 
 		$gp.LoadStyle('/include/css/inline_image.css');
+
+		// console.log("section_object = " , section_object );
 
 		//options for inline editing can be set using the global variable gp_gallery_options
 		// @deprecated gp_gallery_options
@@ -143,7 +177,6 @@
 		var save_path				= gp_editing.get_path(area_id);
 		gp_editor.edit_div			= gp_editing.get_edit_area(area_id);
 
-
 		if( gp_editor.edit_div == false || save_path == false ){
 			return;
 		}
@@ -156,9 +189,9 @@
 		 *
 		 */
 		gp_editor.checkDirty = function(){
-			var new_content		= gp_editor.getData( gp_editor.edit_div );
+			var new_content		= gp_editor.getData(gp_editor.edit_div, section_object);
 
-			if( orig_content !== new_content ){
+			if( orig_content !== new_content || gp_editor.isDirty ){
 				return true;
 			}
 
@@ -171,7 +204,8 @@
 		 *
 		 */
 		gp_editor.SaveData = function(){
-			return gp_editor.getData( gp_editor.edit_div,gp_editor);
+			gp_editor.isDirty = false;
+			return gp_editor.getData(gp_editor.edit_div, section_object);
 		}
 
 
@@ -180,15 +214,74 @@
 		 *
 		 */
 		gp_editor.resetDirty = function(){
-			orig_content = gp_editor.getData( gp_editor.edit_div );
+			orig_content = gp_editor.getData(gp_editor.edit_div, section_object);
+			gp_editor.isDirty = false;
 		};
+
+
+		/**
+		 * Get section classes
+		 *
+		 */
+		gp_editor.getSectionClasses = function(){
+			var current_classes = gp_editor.edit_div.attr("class").split(" ");
+			$.each(current_classes, function(i,v){
+				var classname = v.trim();
+				if( classname.indexOf('gallery-theme-') === 0 ){
+					$("select.SelectGalleryTheme").val(classname);
+				}
+				if( classname.indexOf('gallery-size-') === 0 ){
+					$("select.SelectGallerySize").val(classname);
+				}
+				if( classname.indexOf('gallery-color-') === 0 ){
+					$("select.SelectGalleryColor").val(classname);
+				}
+			});
+		};
+
+
+		/**
+		 * Set section classes
+		 * triggered by select.SetGalleryStyles change event
+		 */
+		gp_editor.setSectionClasses = function(evt){
+			var $select = $(evt.target);
+			var options = $select.find("option");
+			var possible_classes = $.map(options, function(option){ return option.value; });
+			var remove_classes = possible_classes.join(" ");
+			var selected_class = $select.val();
+
+			if( !'attributes' in section_object ){
+				section_object.attributes = {};
+			}
+			var current_classes = ( 'class' in section_object.attributes ) ? section_object.attributes.class : '';
+			var tmp_div = $('<div class="">')
+				.addClass(current_classes)
+				.removeClass(remove_classes)
+				.addClass(selected_class);
+			var new_classes = tmp_div.attr("class");
+
+			var gp_attrs = JSON.parse(gp_editor.edit_div.attr("data-gp-attrs"));
+			gp_attrs['class'] = new_classes;
+
+			// apply classes and data
+			gp_editor.edit_div
+				.removeClass(remove_classes)
+				.addClass(selected_class)
+				.attr("data-gp-attrs", JSON.stringify(gp_attrs));
+
+			section_object.attributes.class = new_classes;
+
+			gp_editor.isDirty = true;
+		};
+
 
 
 		//replace with raw content then start ckeditor
 		//gp_editor.edit_div.get(0).innerHTML = section_object.content;
 
 		ShowEditor();
-		var orig_content			= gp_editor.getData( gp_editor.edit_div );
+		var orig_content			= gp_editor.getData(gp_editor.edit_div, section_object);
 		gp_editor.editorLoaded();
 
 
@@ -208,8 +301,30 @@
 			gp_editing.editor_tools();
 
 			//floating editor
-			var html	= '' //<h4>Gallery Images</h4>'
-						+ '<div id="gp_current_images"></div>'
+			var html	= ''; //<h4>Gallery Images</h4>'
+
+			html += '<select class="ckeditor_control full_width SelectGalleryStyle SelectGalleryTheme">';
+			$.each(gp_editor.gallery_theme, function(i,v){
+				var selected = v.class_name.indexOf('-theme-default') !== -1 ? ' selected="selected"' : ''; 
+				html += '<option value="' + v.class_name + '"' + selected + '>' + v.label + '</option>';
+			});
+			html += '</select>';
+
+			html += '<select class="ckeditor_control full_width SelectGalleryStyle SelectGallerySize">';
+			$.each(gp_editor.gallery_size, function(i,v){
+				var selected = v.class_name.indexOf('-size-md') !== -1 ? ' selected="selected"' : ''; 
+				html += '<option value="' + v.class_name + '"' + selected + '>' + v.label + '</option>';
+			});
+			html += '</select>';
+
+			html += '<select class="ckeditor_control full_width SelectGalleryStyle SelectGalleryColor">';
+			$.each(gp_editor.gallery_color, function(i,v){
+				var selected = v.class_name.indexOf('-color-default') !== -1 ? ' selected="selected"' : ''; 
+				html += '<option value="' + v.class_name + '"' + selected + '>' + v.label + '</option>';
+			});
+			html += '</select>';
+
+			html += '<div id="gp_current_images"></div>'
 						+ '<a class="ckeditor_control full_width ShowImageSelect" data-cmd="ShowImageSelect"> '+gplang.SelectImage+'</a>'
 						+ '<div id="gp_select_wrap">'
 						+ '<div id="gp_image_area"></div>'
@@ -217,7 +332,11 @@
 						+ '<div id="gp_folder_options"></div>'
 						+ '</div>';
 
-			$('#ckeditor_top').html(html);
+			$('#ckeditor_top')
+				.html(html)
+				.find("select.SelectGalleryStyle")
+					.on("change", gp_editor.setSectionClasses );
+
 			$('#ckeditor_wrap').addClass('multiple_images'); //indicate multiple images can be added
 
 			$current_images = $('#gp_current_images');
@@ -227,6 +346,7 @@
 
 			var option_area = $('<div id="gp_gallery_options">').appendTo('#ckeditor_area');
 
+			gp_editor.getSectionClasses();
 
 			/**
 			 * Height Option
@@ -285,7 +405,7 @@
 					.appendTo(option_area)
 					.find('input')
 					.val(section_object.interval_speed)
-					.on('keyup paste change',gp_editor.intervalSpeed)
+					.on('keyup paste change input',gp_editor.intervalSpeed)
 					;
 			}
 
@@ -333,7 +453,7 @@
 			 *
 			 */
 			function GetCurrentImage(node){
-				var index	= $(node).closest('.expand_child').index();
+				var index = $(node).closest('.expand_child').index();
 				return gp_editor.edit_div.find(gp_editor.edit_links_target).eq(index);
 			}
 
@@ -385,18 +505,20 @@
 				evt.preventDefault();
 
 				var text			= $(this.form).find('textarea').val();
-				var caption_div		= $(current_image).find('.caption');
+				var caption_container		= $(current_image).find('.caption');
 
-				console.log(text);
-				console.log(current_image);
-				console.log(caption_div);
+				//console.log(text);
+				//console.log(current_image);
+				//console.log(caption_container);
 
-				caption_div.html(text);
-				text = caption_div.html(); //html encoded characters
+				caption_container.html(text);
+				text = caption_container.html(); //html encoded characters
 
 				$gp.CloseAdminBox();
 				gp_editor.updateCaption(current_image,text);
 			}
+
+
 
 			/**
 			 * Show/hide image selection
@@ -443,14 +565,23 @@
 				return;
 			}
 
-			var $a		= $('<img>').attr('src',src);
+			/* create alt attribute from file name */
+			var file_name = src.substring(src.lastIndexOf('/') + 1);
+			file_name = file_name.substr(0, file_name.lastIndexOf('.'));
+			var img_alt = file_name.substring(0, file_name.lastIndexOf('.')).split("_").join(" ");
+
+			var $a		= $('<img>').attr({
+				'src'	: src, 
+				'title'	: file_name, 
+				'alt'	: img_alt 
+			});
 			var $span	= $('<a>').append($a);
 			var html	= '<div class="expand_child">'
 						+ '<span>'
 						+ '<a data-cmd="gp_gallery_caption" class="fa fa-pencil"></a>'
 						+ '<a data-cmd="gp_gallery_rm" class="fa fa-remove"></a>'
 						+ '</span>'
-						+ '</div>'
+						+ '</div>';
 
 			var $new	= $(html).data('original',img).append( $span ).appendTo( $current_images );
 
@@ -493,8 +624,20 @@
 			gp_editor.edit_div.find('.gp_to_remove').remove();
 			$current_images.find('.gp_to_remove').remove();
 
-			$img.attr({'data-cmd':gp_editor.img_name,'data-arg':gp_editor.img_rel,'title':'','class':gp_editor.img_rel})
-			var li = $('<li>').append($img).append('<div class="caption"></div>');
+			$img.attr({
+				'data-cmd' : gp_editor.img_name,
+				'data-arg' : gp_editor.img_rel,
+				'title'    : '',
+				'class'    : gp_editor.img_rel
+			});
+
+			/* auto-create caption from file name */
+			var src = $img.find('img').attr('src') || '';
+			var file_name = src.substring(src.lastIndexOf('/') + 1);
+			file_name = file_name.substr(0, file_name.lastIndexOf('.'));
+			var auto_caption = file_name.substring(0, file_name.lastIndexOf('.')).split("_").join(" ");
+			$img.append('<span class="caption">' + auto_caption + '</span>');
+			var li = $('<li>').append($img);
 			if( holder ){
 				holder.replaceWith(li);
 			}else{

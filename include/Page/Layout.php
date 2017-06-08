@@ -41,7 +41,7 @@ class Layout{
 
 		if( $this->from_page && $this->title){
 			if( !$this->show_popup ){
-				$url = \gp\tool::AbsoluteUrl($this->title,'',true,false);
+				$url = \gp\tool::AbsoluteUrl($this->title,'',true,false,true);
 				$page->ajaxReplace[] = array('location',$url,0);
 			}
 			return true;

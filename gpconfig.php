@@ -1,10 +1,32 @@
 <?php
 
-
 /**
  * $upload_extensions_allow and $upload_extensions_deny
  * Allow or deny the upload of files based on their file extensions
- * The default list of available extenstions is array('7z', 'aiff', 'asf', 'avi', 'bmp', 'bz', 'csv', 'doc', 'fla', 'flv', 'gif', 'gz', 'gzip', 'jpeg', 'jpg', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ods', 'odt', 'pdf', 'png', 'ppt', 'pxd', 'qt', 'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 'sdc', 'sitd', 'swf', 'sxc', 'sxw', 'tar', 'tgz', 'tif', 'tiff', 'txt', 'vsd', 'wav', 'wma', 'wmv', 'xls', 'xml', 'zip');
+ * The default list of allowed extenstions is 
+ * array( '7z',
+ *        'aiff', 'asf', 'avi', 
+ *        'bmp', 'bz', 
+ *        'css', 'csv', 
+ *        'doc', 'docx', 
+ *        'fla', 'flac', 'flv', 
+ *        'gif', 'gz', 'gzip', 
+ *        'htm', 'html', 
+ *        'ico', 
+ *        'jpeg', 'jpg', 'js', 'json', 
+ *        'less', 
+ *        'm4v', 'md, 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 
+ *        'ods', 'odt', 'ogg', 'oga', 'ogv', 'opus', 
+ *        'pages', 'pdf', 'png', 'ppt', 'pptx', 
+ *        'qt', 
+ *        'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 
+ *        'scss', 'svg', 'svgz', 'swf', 'sxc', 'sxw',
+ *        'tar', 'tgz', 'tif', 'tiff', 'txt', 
+ *        'vsd', 
+ *        'wav', 'wma', 'webm', 'wmv', 
+ *        'xls', 'xlsx', 'xml', 'xsl' 
+ *        'zip',
+ * )
  * Note: gp_restrict_uploads has to be set to true for upload_extension settings to have any effect
  */
 define('gp_restrict_uploads',true);
@@ -14,8 +36,8 @@ $upload_extensions_deny = array();
 
 /**
  * gp_default_theme
- * Theme/color to be used when gpEasy is first installed.
- * Also the theme/color that gpEasy will use should the user specified theme become unavailable
+ * Theme/color to be used when Typesetter is first installed.
+ * Also the theme/color that Typesetter will use should the user specified theme become unavailable
  *
  */
 define('gp_default_theme','Three_point_5/Shore');
@@ -83,7 +105,7 @@ define('gp_unique_addons',false);
 
 /**
  * service_provider_id
- * For gpEasy.com/Special_Services
+ * For typesettercms.com/Providers
  * Add your service provider id for tracking and to increase service provider activity level
  * Defaults to false
  */
@@ -134,7 +156,7 @@ define('gpdebug',false);
 /**
  * Prevent errors from being displayed to site visitors
  * Should be set to "0" for any production site
- * Set to "1" if gpEasy is unable to display errors with gpdebug set to "true" (see above)
+ * Set to "1" if Typesetter is unable to display errors with gpdebug set to "true" (see above)
  *
  */
 @ini_set('display_errors',0);
@@ -149,7 +171,7 @@ define('gpdebug',false);
 
 
 /**
- * Include clearfloats in gpeasy generated code
+ * Include clearfloats in Typesetter generated code
  * define('clear_floats',false); experimental
  */
 

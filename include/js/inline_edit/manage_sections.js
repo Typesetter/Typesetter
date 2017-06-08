@@ -803,7 +803,7 @@
 		});
 
 
-		//handle class uniquely so that we don't remove classes used by gpEasy
+		//handle class uniquely so that we don't remove classes used by Typesetter
 		var curr_value			= $area.attr('class') || '';
 		$temp_node.attr('class',curr_value);
 		$temp_node.removeClass(old_attrs.class);

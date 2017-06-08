@@ -88,6 +88,7 @@ $langmessage = array (
 	'uploaded_files'                 => 'Загруженные файлы',
 	'Image'                          => 'изображение',
 	'image'                          => 'изображение',
+	'Images'                         => 'изображения', // ### NEW 5.1 ###
 	'images'                         => 'изображения',
 	'delete_confirm'                 => 'Вы уверены, что хотите удалить этот файл? ',
 	'generic_delete_confirm'         => 'Вы уверены, что хотите окончательно удалить %s? ',
@@ -223,7 +224,12 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Получите <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">ключ reCaptcha</a> чтобы использовать CAPTCHA в форме контактов.',
 	'maximgarea'                     => 'Максимальное количесво пикселей для загружаемого изображения. Н/п изображение разрешением 600 х 800 имеет 480,000 пикселей.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Размер эскизов в галерее. По умолчанию 100px на 100px.',
+	'maxthumbheight'                 => 'Высота эскизов в галерее (необязательно). Если пусто, будет использоваться значение из <em>Размер эскизов в галерее</ em>.', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Сохранять пропорции исходного изображения для эскизов.', // ### NEW 5.1 ###
 	'from_use_user'                  => 'Если выбрано, пользовательские e-mail-адреса будут использованы для заполнения поля отправителя вместо адресов по умолчанию',
 	'smtp_hosts'                     => 'Пример: ',
 	'auto_redir'                     => 'Автоматически перенаправлять запрос, если он похож на существующую страницу на столько процентов:',
@@ -234,7 +240,12 @@ $langmessage = array (
 	'language'                       => 'Язык',
 	'langeditor'                     => 'Язык WYSIWYG-редактора',
 	'maximgarea'                     => 'Максимальная площадь изображения',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Размер эскизов в галерее',
+	'maxthumbheight'                 => 'Высота эскизов в галерее', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Сохранять пропорции', // ### NEW 5.1 ###
+	'recreate_all_thumbnails'        => 'Пересоздать все эскизы', // ### NEW 5.1 ###
 	'auto_redir'                     => 'Процент автоматических перенаправлений',
 	'restore_defaults'               => 'Восстановить настройки по умолчанию',
 	'Add your LESS and CSS here'     => 'Добавьте свой LESS и CSS сюда',

@@ -88,6 +88,7 @@ $langmessage = array (
 	'uploaded_files'                 => 'Ge-Uploade Bestanden',
 	'Image'                          => 'Afbeelding',
 	'image'                          => 'afbeelding',
+	'Images'                         => 'Afbeeldingen', // ### NEW 5.1 ###
 	'images'                         => 'afbeeldingen',
 	'delete_confirm'                 => 'Weet u zeker dat het bestand verwijderd moet worden? ',
 	'generic_delete_confirm'         => 'Weet u zeker dat u %s permanent wilt verwijderen? ',
@@ -223,7 +224,12 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Verkrijg een <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> om CAPTCHA verificatie op het contact formulier in te schakelen.',
 	'maximgarea'                     => 'Maximale aantal pixels voor ge-uploade plaatjes is 600 x 800 pixel een plaatje heeft 480,000 sq/pixels.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Album Miniatuurgrootte grootte, standaard is 100px bij 100px.',
+	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
 	'from_use_user'                  => 'Indien geselecteerd, ingevulde e-mail adressen zullen worden gebruikt voor de "From" header in plaats van de bovengenoemde standaardinstellingen.',
 	'smtp_hosts'                     => 'Voorbeeld: ',
 	'auto_redir'                     => 'Verwijs een verzoek automatisch door als het binnen dit percentage lijkt op een bestaande pagina.',
@@ -234,7 +240,12 @@ $langmessage = array (
 	'language'                       => 'Taal',
 	'langeditor'                     => 'WYSIWYG taal',
 	'maximgarea'                     => 'Maximaal gebied plaatje',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Album Miniatuurgrootte',
+	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###
+	'recreate_all_thumbnails'        => 'Recreate All Thumbnails', // ### NEW 5.1 ###
 	'auto_redir'                     => 'Automatisch doorverwijs percentage',
 	'restore_defaults'               => 'Standaard instellingen terugplaatsen',
 	'Add your LESS and CSS here'     => 'Add your LESS and CSS here',

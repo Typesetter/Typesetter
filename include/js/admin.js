@@ -1118,7 +1118,7 @@ $(function(){
 
 
 		/**
-		 * Return true if we can show the gpEasy context menu
+		 * Return true if we can show the Typesetter context menu
 		 *
 		 */
 		function ShowableMenu(evt){
@@ -1193,7 +1193,7 @@ $(function(){
 
 
 /**
- * A simple drag function for use with gpEasy admin areas
+ * A simple drag function for use with Typesetter admin areas
  * Works with absolute and fixed positioned elements
  * Different from other drag script in that the mouse will not trigger any mouseover/mousenter events because the drag box will be under the mouse
  *

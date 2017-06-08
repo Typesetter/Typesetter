@@ -510,12 +510,12 @@ class Permalinks{
 	public static function StripRules(&$contents){
 
 		//strip code
-		$pos = strpos($contents,'# BEGIN gpEasy');
+		$pos = strpos($contents,'# BEGIN Typesetter');
 		if( $pos === false ){
 			return;
 		}
 
-		$end_comment = '# END gpEasy';
+		$end_comment = '# END Typesetter';
 		$pos2 = strpos($contents,$end_comment);
 		if( $pos2 > $pos ){
 			$contents = substr_replace($contents,'',$pos,$pos2-$pos+strlen($end_comment));
@@ -632,13 +632,13 @@ class Permalinks{
 
 		return $contents.'
 
-# BEGIN gpEasy
+# BEGIN Typesetter
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 
 	'.implode("\n\t",$new_lines).'
 </IfModule>
-# END gpEasy';
+# END Typesetter';
 
 	}
 

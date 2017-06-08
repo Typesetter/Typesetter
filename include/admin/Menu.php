@@ -378,7 +378,7 @@ class Menu extends \gp\special\Base{
 			echo '<div>';
 			$label = $menus[$this->curr_menu_id];
 			echo '<b>'.$label.'</b>';
-			echo '<span>'.\gp\tool::Link('Admin/Menu/Menus',$langmessage['rename'],'cmd=RenameMenuPrompt&id='.$this->curr_menu_id,'data-cmd="gpabox"').'</span>';
+			echo '<span>'.\gp\tool::Link('Admin/Menu/Menus',$langmessage['rename'],'cmd=MenuRenamePrompt&id='.$this->curr_menu_id,'data-cmd="gpabox"').'</span>';
 			$title_attr = sprintf($langmessage['generic_delete_confirm'],'&quot;'.$label.'&quot;');
 			echo '<span>'.\gp\tool::Link('Admin/Menu/Menus',$langmessage['delete'],'cmd=MenuRemove&id='.$this->curr_menu_id,array('data-cmd'=>'cnreq','class'=>'gpconfirm','title'=>$title_attr)).'</span>';
 

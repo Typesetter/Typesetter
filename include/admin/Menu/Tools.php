@@ -231,8 +231,8 @@ class Tools{
 			$combo = json_decode($type,true);
 			if( $combo ){
 
-				$combo		+= array('wrapper_class'=>'gpRow');
-				$content	= self::GetComboContent($combo['types'],$combo['wrapper_class']);
+				$combo		+= array('wrapper_data' => false);
+				$content	= self::GetComboContent($combo['types'], $combo['wrapper_data']);
 
 
 				$type = '';
@@ -282,7 +282,6 @@ class Tools{
 
 		}
 
-
 		return $index;
 	}
 
@@ -291,29 +290,30 @@ class Tools{
 	 * Get nested Section Combo content
 	 *
 	 */
-	public static function GetComboContent($types, $wrapper_class, $content=array()){
-
-		//$combo								+= array('label'=>$combo_label);		// push the combo label through to all subsections if none (no sub-label) given
+	public static function GetComboContent($types, $wrapper_data, $content=array()){
 
 		// create wrapper section
 		$section							= \gp\tool\Editing::DefaultContent('wrapper_section');
 		$section['contains_sections']		= count($types);
-		$section['attributes']['class']		= $wrapper_class;
+		if( is_array($wrapper_data) ){
+			// Typesetter > 5.0.3: $wrapper_data may be defined as array by plugins
+			$section = array_merge($section, $wrapper_data);
+		}else{
+			// Typesetter <= 5.0.3: $wrapper_data is a string (wrapper class)
+			$section['attributes']['class'] .= ' ' . $wrapper_data;
+		}
 		$content[]							= $section;
-
 
 		foreach($types as $type){
 			if( is_array($type) ){
-				$_wrapper_class = isset($type[1]) ? $type[1] : '';
-				$content = self::GetComboContent($type[0], $_wrapper_class, $content);
+				$_wrapper_data = isset($type[1]) ? $type[1] : '';
+				$content = self::GetComboContent($type[0], $_wrapper_data, $content);
 			}else{
-
 				$class							= \gp\Page\Edit::TypeClass($type);
 				$section						= \gp\tool\Editing::DefaultContent($type);
-				$section['attributes']['class']	.= ' '.$class;
+				$section['attributes']['class']	.= ' ' . $class;
 				$content[]						= $section;
 			}
-
 		}
 
 		return $content;

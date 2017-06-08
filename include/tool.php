@@ -718,9 +718,9 @@ namespace gp{
 			return '<a href="'.self::AbsoluteUrl($href,$query).'" '.$attr.'>'.self::Ampersands($label).'</a>';
 		}
 
-		public static function AbsoluteUrl($href='',$query='',$with_schema=true,$ampersands=true){
+		public static function AbsoluteUrl($href='',$query='',$with_schema=true,$ampersands=true,$with_port=false){
 
-			$server = self::ServerName();
+			$server = self::ServerName(false, $with_port);
 			if( $server === false ){
 				return self::GetUrl($href,$query,$ampersands);
 			}
@@ -737,20 +737,27 @@ namespace gp{
 		 * Return ther server name
 		 *
 		 */
-		public static function ServerName($strip_www = false){
+		public static function ServerName($strip_www = false, $with_port=false){
 
+			$port = '';
 			if( isset($_SERVER['SERVER_NAME']) ){
 				$server = self::UrlChars($_SERVER['SERVER_NAME']);
-
+				if( $with_port && isset($_SERVER['SERVER_PORT']) ){
+					$port = $_SERVER['SERVER_PORT'];
+					if( $port != 80 && $port != 443 ){
+						$port = ':' . $port;
+					}
+				}
 			}else{
 				return false;
 			}
+
 
 			if( $strip_www && strpos($server,'www.') === 0 ){
 				$server = substr($server,4);
 			}
 
-			return $server;
+			return $server . $port;
 		}
 
 		public static function UrlChars($string){
@@ -887,6 +894,13 @@ namespace gp{
 			$css = \gp\tool\Plugins::OneFilter('Gallery_Style');
 			if( $css === false  ){
 				$page->css_user[] = '/include/css/default_gallery.css';
+
+				self::LoadComponents('dotdotdot');
+				$page->jQueryCode .= "\n".'$(".filetype-gallery .caption").dotdotdot({ watch : "window", callback : function(isTruncated,orgContent){ $(this).data("originalContent",orgContent); } });';
+				if( \gp\tool::LoggedIn() ){
+					$page->jQueryCode .= "\n".'$(document).on("editor_area:loaded", function(){ $(".filetype-gallery .caption").trigger("destroy.dot") });';
+				}
+
 				return;
 			}
 			$page->head .= "\n".'<link type="text/css" media="screen" rel="stylesheet" href="'.$css.'" />';
@@ -2046,7 +2060,15 @@ namespace gp{
 				return $img;
 			}
 
-			return substr_replace($img,'/data/_uploaded/image/thumbnails/',$pos, strlen($dir_part) ).'.jpg';
+			// svg or not svg
+			$nameParts = explode('.',$img);
+			$type = array_pop($nameParts);
+			$type = strtolower($type);
+			if( strpos('svgz',$type) !== 0 ){
+				$type = 'jpg';
+			}
+
+			return substr_replace($img,'/data/_uploaded/image/thumbnails/',$pos, strlen($dir_part) ).'.'.$type;
 		}
 
 

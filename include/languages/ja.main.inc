@@ -88,6 +88,7 @@ $langmessage = array (
 	'uploaded_files'                 => 'ファイル一覧',
 	'Image'                          => '画像',
 	'image'                          => '画像',
+	'Images'                         => '画像', // ### NEW 5.1 ###
 	'images'                         => '画像',
 	'delete_confirm'                 => '本当に完全に削除してもよろしいですか？ ',
 	'generic_delete_confirm'         => '%s を完全に削除してもよろしいですか？ ',
@@ -225,7 +226,12 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'コンタクトフォームで CAPTCHA 認証を行うには、<a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha キー</a> を取得してください。',
 	'maximgarea'                     => 'アップロードする画像の最大面積のピクセル数を設定。例)縦800ピクセルx横600ピクセルの画像ならば、面積は480,000ピクセル。',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'ギャラリーのサムネイルサイズを指定。デフォルトは100ピクセルx100ピクセル。',
+	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
 	'from_use_user'                  => 'チェックを入れたとき、上記のデフォルト設定ではなく、ユーザーが入力したメールアドレスをメールヘッダの From 欄に使用します。',
 	'smtp_hosts'                     => '例: ',
 	'auto_redir'                     => 'この割合の範囲内で似ている既存のページがある場合、リクエストを自動的にリダイレクトします。',
@@ -236,7 +242,12 @@ $langmessage = array (
 	'language'                       => '言語',
 	'langeditor'                     => 'GUIエディタの言語',
 	'maximgarea'                     => '画像の最大面積',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'ギャラリーのサムネイルサイズ',
+	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###
+	'recreate_all_thumbnails'        => 'Recreate All Thumbnails', // ### NEW 5.1 ###
 	'auto_redir'                     => '自動リダイレクト割合（パーセント）',
 	'restore_defaults'               => 'デフォルトを復元',
 	'Add your LESS and CSS here'     => 'LESS, CSS をここに追加します。',

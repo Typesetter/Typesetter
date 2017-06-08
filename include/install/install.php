@@ -31,7 +31,7 @@ function toggleOptions(){
 
 body{
 	margin:1em 5em;
-	font-family: "Lucida Grande",Verdana,"Bitstream Vera Sans",Arial,sans-serif;
+	font-family:"Segoe UI","San Francisco","DejaVu Sans","Helvetica Neue",Arial,sans-serif;
 	background:#f1f1f1;
 	font-size:13px;
 }

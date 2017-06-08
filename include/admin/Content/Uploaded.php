@@ -140,7 +140,7 @@ namespace gp\admin\Content{
 			$this->currentDir	= $this->baseDir;
 			$this->page->label	= $langmessage['uploaded_files'];
 
-			$this->imgTypes		= array('bmp'=>1,'png'=>1,'jpg'=>1,'jpeg'=>1,'gif'=>1,'tiff'=>1,'tif'=>1);
+			$this->imgTypes		= array('bmp'=>1,'png'=>1,'jpg'=>1,'jpeg'=>1,'gif'=>1,'tiff'=>1,'tif'=>1,'svg'=>1,'svgz'=>1);
 
 			$this->SetDirectory();
 
@@ -434,7 +434,11 @@ namespace gp\admin\Content{
 
 			//thumbnail
 			$thumb_url = \gp\tool::ThumbnailPath($file_url);
-			$thumb = ' <img src="'.$thumb_url.'" alt="" />';
+
+			// alternate text from file name
+			$img_alt = str_replace('_', ' ', pathinfo($file, PATHINFO_FILENAME) );
+
+			$thumb = ' <img src="'.$thumb_url.'" alt="'.$img_alt.'" />';
 
 			//get size
 			$size = '';
@@ -446,7 +450,7 @@ namespace gp\admin\Content{
 			$query_string = 'file_cmd=delete&show=inline&file='.urlencode($file);
 
 			return '<div class="expand_child" id="'.$id.'">'
-					. '<a href="'.$file_url.'" data-cmd="gp_gallery_add" '.$size.'>'
+					. '<a href="'.$file_url.'" title="'.$file.'" data-cmd="gp_gallery_add" '.$size.'>'
 					. $thumb
 					. '</a>'
 					. '<span>'
@@ -530,8 +534,8 @@ namespace gp\admin\Content{
 			$file_type = self::GetFileType($fName);
 			if( isset($this->imgTypes[$file_type]) && function_exists('imagetypes') ){
 
-				//check the image size
-				if( $config['maximgarea'] > 0 ){
+				//check the image size if image is not svg/z
+				if( $config['maximgarea'] > 0 && strpos('svgz', $file_type) !== 0 ){
 					\gp\tool\Image::CheckArea($to,$config['maximgarea']);
 				}
 
@@ -562,7 +566,7 @@ namespace gp\admin\Content{
 			$thumb_dir	= \gp\tool::DirName($thumb_path);
 
 			\gp\tool\Files::CheckDir($thumb_dir);
-			\gp\tool\Image::createSquare($original,$thumb_path,$config['maxthumbsize']);
+			return \gp\tool\Image::createSquare($original,$thumb_path,$config['maxthumbsize']);
 		}
 
 
@@ -646,10 +650,11 @@ namespace gp\admin\Content{
 					$allowed_types = array();
 				}else{
 					$allowed_types = array(
-						/** Images **/		'bmp', 'gif', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'wav', 'wma','svg',
-						/** Media **/		'aiff', 'asf', 'avi', 'fla', 'flv', 'm4v', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ogg','oga','ogv','opus', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'webm', 'wmv',
-						/** Archives **/	'7z', 'bz', 'gz', 'gzip', 'rar', 'sdc', 'sitd', 'tar', 'tgz', 'zip',
-						/** Text/Docs **/	'css', 'csv', 'doc', 'docx', 'htm', 'html', 'js', 'json', 'less', 'md', 'ods', 'odt', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'sxc', 'sxw', 'vsd', 'xls', 'xlsx', 'xml' );
+						/** Images **/		'bmp', 'gif', 'ico', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'svg', 'svgz',
+						/** Media **/		'aiff', 'asf', 'avi', 'fla', 'flac', 'flv', 'm4v', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ogg', 'oga', 'ogv', 'opus', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'wav', 'wma', 'webm', 'wmv', 
+						/** Archives **/	'7z', 'bz', 'gz', 'gzip', 'rar', 'tar', 'tgz', 'zip',
+						/** Text/Docs **/	'css', 'csv', 'doc', 'docx', 'htm', 'html', 'js', 'json', 'less', 'md', 'ods', 'odt', 'pages', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'scss', 'sxc', 'sxw', 'vsd', 'xls', 'xlsx', 'xml', 'xsl', 
+					);
 
 
 				}
@@ -789,7 +794,7 @@ namespace gp\admin\Content{
 		 * @return bool
 		 */
 		public static function IsImg($file){
-			$img_types = array('bmp'=>1,'png'=>1,'jpg'=>1,'jpeg'=>1,'gif'=>1,'tiff'=>1,'tif'=>1);
+			$img_types = array('bmp'=>1,'png'=>1,'jpg'=>1,'jpeg'=>1,'gif'=>1,'tiff'=>1,'tif'=>1,'svg'=>1, 'svgz'=>1);
 
 			$type = self::GetFileType($file);
 
@@ -851,7 +856,15 @@ namespace gp\admin\Content{
 						continue;
 					}
 
-					$thumb_path = str_replace($base_dir,$thumb_dir,$removed_path).'.jpg';
+					// svg or not svg
+					$nameParts = explode('.',$removed_path);
+					$type = array_pop($nameParts);
+					$type = strtolower($type);
+					if( strpos('svgz',$type) !== 0 ){
+						$type = 'jpg';
+					}
+
+					$thumb_path = str_replace($base_dir,$thumb_dir,$removed_path).'.'.$type;
 					if( file_exists($thumb_path) ){
 						unlink($thumb_path);
 					}

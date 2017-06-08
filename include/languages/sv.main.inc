@@ -88,6 +88,7 @@ $langmessage = array (
 	'uploaded_files'                 => 'Uppladdade filer',
 	'Image'                          => 'Bild',
 	'image'                          => 'Bild',
+	'Images'                         => 'Bilder', // ### NEW 5.1 ###
 	'images'                         => 'Bilder',
 	'delete_confirm'                 => 'Är du säker på att du vill permanent ta bort den filen? ',
 	'generic_delete_confirm'         => 'Är du säker på att du permanent vill ta bort %s? ',
@@ -223,7 +224,12 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Skaffa en <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha nyckel</a> för att använda CAPTCHA kontroll på kontaktformuläret.',
 	'maximgarea'                     => 'Maximal kvadratiska pixlar för uppladdade bilder. En 600x800 pixel bild har 480.000 kvm/pixlar.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Galleriets tumnagelstorlek, standard är 100px genom 100px',
+	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
 	'from_use_user'                  => 'Om denna är vald, blir användarens angivna epostadress använd i "Från" fältet istället för standard som ovan',
 	'smtp_hosts'                     => 'Exempel: ',
 	'auto_redir'                     => 'Omdirigera automatiskt en förfrågan om den är lik en existerande sida inom det procentuella',
@@ -234,7 +240,12 @@ $langmessage = array (
 	'language'                       => 'Språk',
 	'langeditor'                     => 'WYSIWYG Språk',
 	'maximgarea'                     => 'Maximal bildyta',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Galleriets tumnagelstorlek',
+	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###
+	'recreate_all_thumbnails'        => 'Recreate All Thumbnails', // ### NEW 5.1 ###
 	'auto_redir'                     => 'Procent på automatiska omdirigeringar',
 	'restore_defaults'               => 'Återställ till standard',
 	'Add your LESS and CSS here'     => 'Add your LESS and CSS here',

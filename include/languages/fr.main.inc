@@ -88,6 +88,7 @@ $langmessage = array (
 	'uploaded_files'                 => 'Fichiers envoyés',
 	'Image'                          => 'Image',
 	'image'                          => 'image',
+	'Images'                         => 'Images', // ### NEW 5.1 ###
 	'images'                         => 'images',
 	'delete_confirm'                 => 'Êtes-vous certain de vouloir effacer ce fichier de façon permanente ? ',
 	'generic_delete_confirm'         => 'Etes-vous sûr de vouloir supprimer définitivement « %s » ? ',
@@ -224,7 +225,12 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Obtenir une <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">clé reCaptcha</a> pour utiliser Captcha (cryptogramme visuel) dans le formulaire.',
 	'maximgarea'                     => 'Dimension maximum (en pixels) pour les images envoyées. Une image de 600×800 contient 480 000 pixels.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Taille des vignettes de la galerie, valeur par défaut est 100px sur 100px.',
+	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
 	'from_use_user'                  => 'Si cette option est cochée, les informations fournies par le visiteur seront utilisées pour les entêtes de « Expéditeur ». Ceci en lieu et place des informations par défaut fournies ci-dessus.',
 	'smtp_hosts'                     => 'Exemple: ',
 	'auto_redir'                     => 'Rediriger une requête automatiquement si elle est semblable à une page existante endéans ce pourcentage.',
@@ -235,7 +241,12 @@ $langmessage = array (
 	'language'                       => 'Langue',
 	'langeditor'                     => 'Language de l\'éditeur de pages',
 	'maximgarea'                     => 'Surface maximum de l\'image',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Taille des vignettes de la galerie',
+	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###
+	'recreate_all_thumbnails'        => 'Recreate All Thumbnails', // ### NEW 5.1 ###
 	'auto_redir'                     => 'Pourcentage de redirection automatique',
 	'restore_defaults'               => 'Rétablir les valeurs par défaut',
 	'Add your LESS and CSS here'     => 'Add your LESS and CSS here',

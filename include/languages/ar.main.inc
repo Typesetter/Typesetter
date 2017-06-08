@@ -88,6 +88,7 @@ $langmessage = array (
 	'uploaded_files'                 => 'الملفات المرفوعة',
 	'Image'                          => 'صورة',
 	'image'                          => 'صورة',
+	'Images'                         => 'صور', // ### NEW 5.1 ###
 	'images'                         => 'صور',
 	'delete_confirm'                 => 'هل أنت متأكد من أنك تريد حذف هذا الملف ؟ ',
 	'generic_delete_confirm'         => 'Are you sure you want to permanently remove %s? ',
@@ -223,7 +224,12 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'احصل على <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> لاستخدام صورة التحقق',
 	'maximgarea'                     => 'أقصى مربع بكسل للصور التي تم تحميلها. صورة 600 × 800 بكسل و480،000 مترا مربعا / بكسل.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Gallery Thumbnail size, default is 100px by 100px.',
+	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
 	'from_use_user'                  => 'If selected, user supplied email addresses will be used for the "From" header instead of the above defaults.',
 	'smtp_hosts'                     => 'مثال: ',
 	'auto_redir'                     => 'Automatically redirect a request if it is similar to an existing page within this percentage.',
@@ -234,7 +240,12 @@ $langmessage = array (
 	'language'                       => 'اللغة',
 	'langeditor'                     => 'ترميز اللغة',
 	'maximgarea'                     => 'الحد الأقصى لمنطقة الصور',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Gallery Thumbnail Size',
+	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###
+	'recreate_all_thumbnails'        => 'Recreate All Thumbnails', // ### NEW 5.1 ###
 	'auto_redir'                     => 'Auto Redirect Percent',
 	'restore_defaults'               => 'استرجع الافتراضيات',
 	'Add your LESS and CSS here'     => 'Add your LESS and CSS here',

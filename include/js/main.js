@@ -101,7 +101,7 @@ var $gp = {
 
 
 	/**
-	 * Post content with gpEasy's verified value
+	 * Post content with Typesetter's verified value
 	 * Arguments order is same as jQuery's $.post()
 	 *
 	 */
@@ -329,7 +329,19 @@ var $gp = {
 
 			$.colorbox.remove();
 			$(selector).colorbox(
-				$gp.cboxSettings({resize:true,rel:selector})
+				$gp.cboxSettings({
+					resize : true ,
+					rel : selector, 
+					title : function(){
+						var a = $(this);
+						var caption =
+							a.closest('li').find('.caption').data("originalContent") 
+							|| a.closest('li').find('.caption').text() 
+							|| a.attr('title') // backwards compat
+							|| '';
+						return caption;
+					}
+				})
 			);
 
 			$(this).trigger('click.cbox');
@@ -421,7 +433,7 @@ $(function(){
 			console.log( debug_info );
 		}
 
-		// send to gpeasy bug tracker
+		// send to Typesetter bug tracker
 		if( typeof(debugjs) !== 'undefined' && debugjs === 'send' ){
 
 			if( ajaxOptions.data ){
@@ -431,7 +443,7 @@ $(function(){
 			debug_info.cmd = 'javascript_error';
 			$.ajax({
 				type: 'POST',
-				url: 'http://www.gpeasy.com/Resources',
+				url: 'https://www.typesettercms.com/Resources',
 				data: debug_info,
 				success: function(){},
 				error: function(){}

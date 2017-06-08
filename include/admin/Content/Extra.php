@@ -319,7 +319,7 @@ class Extra extends \gp\Page\Edit{
 
 
 	public function EditExtra(){
-		global $langmessage;
+		global $langmessage, $page;
 
 		echo '<h2>';
 		echo \gp\tool::Link('Admin/Extra',$langmessage['theme_content']);
@@ -330,7 +330,34 @@ class Extra extends \gp\Page\Edit{
 
 		\gp\tool\Editing::UseCK( $this->file_sections[0]['content'] );
 
-		echo '<input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit" />';
+		$page->jQueryCode .= '
+			$(function(){
+				CKEDITOR.instances.gpcontent.on("change", function(){
+					if( CKEDITOR.instances.gpcontent.checkDirty() ){
+						$(".gp_publish_extra").hide();
+						$(".gp_save_extra").show();
+					}else{
+						$(".gp_publish_extra").show();
+						$(".gp_save_extra").hide();
+					}
+				});
+				$(".gp_save_extra").on("click", function(){
+					CKEDITOR.instances.gpcontent.resetDirty();
+				});
+			});
+			$(window).on("beforeunload", function(){
+				if( CKEDITOR.instances.gpcontent.checkDirty() ){
+					return "Content was changed! Proceed anyway?";
+				}
+			});
+		';
+
+		if( $this->draft_exists ){
+			echo '<input style="display:none;" type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit gp_save_extra" />';
+			echo '<button type="submit" name="cmd" class="gpsubmit gp_publish_extra" value="PublishDraft">' . $langmessage['Publish Draft'] . '</button>';
+		}else{
+			echo '<input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit gp_save_extra" />';
+		}
 		echo '<input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="gpcancel"/>';
 		echo '</form>';
 	}

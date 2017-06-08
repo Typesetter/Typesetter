@@ -34,7 +34,7 @@ CKEDITOR.on( 'instanceCreated', function(e){
 
 
 /**
- * Set up autocomplete for gpEasy pages
+ * Set up autocomplete for Typesetter pages
  *
  */
 CKEDITOR.on( 'dialogDefinition', function( ev ){

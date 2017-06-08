@@ -88,6 +88,7 @@ $langmessage = array (
 	'uploaded_files'                 => 'Ladatut tiedostot',
 	'Image'                          => 'Kuva',
 	'image'                          => 'kuva',
+	'Images'                         => 'Kuvat', // ### NEW 5.1 ###
 	'images'                         => 'kuvat',
 	'delete_confirm'                 => 'Oletko varma että haluat poistaa tiedoston? ',
 	'generic_delete_confirm'         => 'Oletko varma että haluat lopullisesti poistaa %s? ',
@@ -223,7 +224,12 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Hae <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> käyttääksesi CAPTCHA kuvavarmennusta yhteydenottolomakkeessa.',
 	'maximgarea'                     => 'Maksimi neliöpikselimäärä lähetettäville kuville. 600 x 800 pixelin kuvassa on 480,000 neliöpikseliä.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Kuvagallerian pienoiskuvien koko, oletus on 100x100 pikseliä.',
+	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
 	'from_use_user'                  => 'Jos tämä on valittu, käyttäjän antamia sähköpostiosoitteita käytetään "Lähettäjä"-kentässä ylläolevien oletusten sijaan.',
 	'smtp_hosts'                     => 'Esimerkki: ',
 	'auto_redir'                     => 'Ohjaa pyyntö automaattisesti uudelleen, jos se on olemassaolevan sivun kaltainen tämän prosenttiarvon rajoissa.',
@@ -234,7 +240,12 @@ $langmessage = array (
 	'language'                       => 'Kieli',
 	'langeditor'                     => 'WYSIWYG kieli',
 	'maximgarea'                     => 'Maksimi kuva-ala',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Kuvagallerian pienoiskuvien koko',
+	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###
+	'recreate_all_thumbnails'        => 'Recreate All Thumbnails', // ### NEW 5.1 ###
 	'auto_redir'                     => 'Automaattisen uudelleenohjauksen prosentti',
 	'restore_defaults'               => 'Palauta oletusasetukset',
 	'Add your LESS and CSS here'     => 'Lisää LESS- ja CSS-tyylisi tähän',

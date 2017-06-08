@@ -88,6 +88,7 @@ $langmessage = array (
 	'uploaded_files'                 => 'Ficheiros Subidos',
 	'Image'                          => 'Imaxe',
 	'image'                          => 'imaxe',
+	'Images'                         => 'Imaxes', // ### NEW 5.1 ###
 	'images'                         => 'imaxes',
 	'delete_confirm'                 => 'Eatás seguro de querer eliminar permanentemente o ficheiro? ',
 	'generic_delete_confirm'         => 'Seguro que quere eliminar definitivamente %s? ',
@@ -223,7 +224,12 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Obter unha <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">clave reCaptcha</a> para empregar a verificación CAPTCHA no teu formulario de contacto.',
 	'maximgarea'                     => 'Cadro máximo de pixels para as imaxes subidas. Unha imaxe de 600 x 800 pixel ten 480,000 sq/pixels.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Tamaño das miniaturas da galería, por defecto 100px por 100px',
+	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
 	'from_use_user'                  => 'Se for seleccionado, o correo que fornece a persoa usuaria será usado para o apartado "De" no canto dos valores por defecto.',
 	'smtp_hosts'                     => 'Exemplo: ',
 	'auto_redir'                     => 'Redirixir automaticamente unha consulta se é similar a unha páxina existente con esta porcentaxe.',
@@ -234,7 +240,12 @@ $langmessage = array (
 	'language'                       => 'Idioma',
 	'langeditor'                     => 'Idioma WYSIWYG',
 	'maximgarea'                     => 'Área de imaxe Máxima',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Tamaño das miniaturas da galería',
+	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###
+	'recreate_all_thumbnails'        => 'Recreate All Thumbnails', // ### NEW 5.1 ###
 	'auto_redir'                     => 'Porcentaxe para o redireccionamento automático',
 	'restore_defaults'               => 'Restaurar por defecto',
 	'Add your LESS and CSS here'     => 'Add your LESS and CSS here',

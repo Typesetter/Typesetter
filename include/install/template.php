@@ -11,7 +11,7 @@ global $page;
 
 body{
 	margin:5em !important;
-	font-family: "Lucida Grande",Verdana,"Bitstream Vera Sans",Arial,sans-serif;
+	font-family:"Segoe UI","San Francisco","DejaVu Sans","Helvetica Neue",Arial,sans-serif;
 	background:#444;
 }
 div,p,td,th{

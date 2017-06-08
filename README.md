@@ -1,4 +1,4 @@
-#Typesetter CMS#
+# Typesetter CMS #
 
 Open source CMS written in PHP focused on ease of use with true WYSIWYG editing and flat-file storage.
 * [Typesetter Home](http://www.typesettercms.com)
@@ -6,11 +6,11 @@ Open source CMS written in PHP focused on ease of use with true WYSIWYG editing 
 * [Typesetter Demo](http://www.typesettercms.com/Demo)
 * [Typesetter Forum](http://www.typesettercms.com/Special_Forum)
 
-##Requirements##
+## Requirements ##
 * PHP 5.3+
 * PHP Safe Mode Off
 
-##Installation##
+## Installation ##
 1. Download the latest stable release of Typesetter from TypesetterCMS.com
 
 2. Upload the extracted contents to your server
@@ -22,7 +22,7 @@ Open source CMS written in PHP focused on ease of use with true WYSIWYG editing 
 You can find more detailed installation information on [TypesetterCMS.com](http://www.typesettercms.com/Docs/Installation)
 
 
-##Contribute##
+## Contribute ##
 Submitting bug fixes and enhancements is easy:
 
 1. Log in to GitHub
@@ -39,7 +39,7 @@ Submitting bug fixes and enhancements is easy:
   * Enter a Message that will go with your commit to be reviewed by core committers
   * Click “Send Pull Request”
 
-###Multiple Pull Requests and Edits###
+### Multiple Pull Requests and Edits ###
 When submitting pull requests, it is extremely helpful to isolate the changes you want included from other unrelated changes you may have made to your fork of Typesetter. The easiest way to accomplish this is to use a different branch for each pull request. There are a number of ways to create branches within your fork, but GitHub makes the process very easy:
 
 1. Start by finding the file you want to edit in Typesetter's code repository at https://github.com/Typesetter/Typesetter.

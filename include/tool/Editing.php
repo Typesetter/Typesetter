@@ -718,14 +718,16 @@ namespace gp\tool{
 				case 'gallery':
 					$section['content']		= '<ul class="gp_gallery"><li class="gp_to_remove">'
 											.'<a class="gallery_gallery" data-cmd="gallery" href="'.\gp\tool::GetDir('/include/imgs/default_image.jpg').'" data-arg="gallery_gallery">'
-											.'<img alt="" src="'.\gp\tool::GetDir('/include/imgs/default_thumb.jpg').'" />'
+											.'<img alt="default image" src="'.\gp\tool::GetDir('/include/imgs/default_thumb.jpg').'" />'
+											.'<span class="caption">Image caption</span>'
 											.'</a>'
-											.'<div class="caption">Image caption</div>'
 											.'</li></ul>';
 				break;
 
 				case 'wrapper_section':
 					$section['content']					= '';
+					$section['gp_label']				= 'Section Wrapper';
+					$section['gp_color']				= '#555';
 					$section['contains_sections']		= 0;
 				break;
 
@@ -762,17 +764,21 @@ namespace gp\tool{
 		 *
 		 */
 		public static function IncludeDialog( $section ){
-			global $page, $langmessage, $config, $gp_index;
+			global $page, $langmessage, $config, $gp_index, $dataDir;
 
 			$page->ajaxReplace = array();
 
 			$include_type =& $section['include_type'];
 
 			$gadget_content = '';
+			$extra_content = '';
 			$file_content = '';
 			switch($include_type){
 				case 'gadget':
 					$gadget_content =& $section['content'];
+				break;
+				case 'extra':
+					$extra_content =& $section['content'];
 				break;
 				default:
 					$file_content =& $section['content'];
@@ -796,11 +802,46 @@ namespace gp\tool{
 					}
 					echo '<input type="radio" name="include" value="gadget:'.htmlspecialchars($uniq).'" '.$checked.' data-cmd="IncludePreview" /> ';
 					echo '<span>';
-					echo $uniq;
+					echo '<i class="fa fa-puzzle-piece"></i> ' . $uniq;
+					echo '<span class="slug">Gadget</span>';
 					echo '</span>';
 					echo '</label>';
 				}
 			}
+
+
+			//extra area include autocomplete
+			$extra_areas = array();
+			$extra_area_files = scandir($dataDir . '/data/_extra');
+			foreach($extra_area_files as $extra_area_file){
+				if( $extra_area_file ==	'index.html' || $extra_area_file == '.' || $extra_area_file == '..' ){
+					continue;
+				}
+				if( is_dir($dataDir . '/data/_extra/' . $extra_area_file) ){
+					// new
+					$extra_areas[] = $extra_area_file;
+				}elseif( substr($extra_area_file, -4) === '.php' ){
+					// legacy
+					$extra_areas[] = substr($extra_area_file, 0, -4);
+				}
+			}
+			$extra_areas = array_unique($extra_areas);
+			foreach($extra_areas as $extra_area){
+				echo '<label>';
+				$checked = '';
+				if( $extra_content == $extra_area ){
+					$checked = 'checked';
+				}
+				echo '<input type="radio" name="include" value="extra:'.htmlspecialchars($extra_area).'" '.$checked.' data-cmd="IncludePreview" /> ';
+				echo '<span>';
+				echo '<i class="fa fa-cube"></i> ' . $extra_area;
+				echo '<span class="slug">' . $langmessage['theme_content'] . '</span>';
+				echo '</span>';
+				echo '<span style="display:none;"> extra content</span>'; // for autocomplete filtering
+				echo '</label>';
+			}
+
+
 
 			$array = array();
 			foreach($gp_index as $slug => $id){
@@ -821,11 +862,10 @@ namespace gp\tool{
 				echo '<label>';
 				echo '<input type="radio" name="include" value="file:'.htmlspecialchars($slug).'" '.$checked.'  data-cmd="IncludePreview" /> ';
 				echo '<span>';
-				echo $label;
-				echo '<span class="slug">';
-				echo '/'.$slug;
+				echo '<i class="fa fa-file-text-o"></i> ' . $label;
+				echo '<span class="slug">' . $langmessage['Page'] . ' /' . $slug . '</span>';
 				echo '</span>';
-				echo '</span>';
+				echo '<span style="display:none;"> page</span>'; // for autocomplete filtering
 				echo '</label>';
 			}
 			echo '</div></div>';
@@ -1060,19 +1100,20 @@ namespace gp\tool{
 				$thumb_path = \gp\tool::ThumbnailPath($image);
 				$caption = $_POST['captions'][$i];
 				\gp\tool\Files::cleanText($caption);
+				$img_alt = str_replace('_', ' ', basename(pathinfo($image, PATHINFO_FILENAME)));
 
 				echo '<li>';
-				echo '<a class="gallery_gallery" title="'.htmlspecialchars($caption).'" data-arg="gallery_gallery" href="'.$image.'" data-cmd="gallery">';
-				echo '<img src="'.$thumb_path.'" alt="" /></a>';
-				echo '<div class="caption">';
-				echo $caption;
-				echo '</div>';
+				echo '<a class="gallery_gallery" data-arg="gallery_gallery" href="'.$image.'" data-cmd="gallery">'; // title="'.htmlspecialchars($caption).'"
+				echo '<img src="'.$thumb_path.'" alt="'.$img_alt.'" />';
+				echo '<span class="caption">' . $caption . '</span>';
+				echo '</a>';
 				echo '</li>';
 			}
 			echo '</ul>';
 			$section['content'] = ob_get_clean();
 			$section['images'] = $_POST['images'];
 			$section['captions'] = $_POST['captions'];
+			$section['attributes']['class'] = $_POST['attributes']['class'];
 		}
 
 
@@ -1096,6 +1137,24 @@ namespace gp\tool{
 
 				$existing_section['include_type']	= 'gadget';
 				$existing_section['content']		= $gadget;
+
+			//extra area include
+			}elseif( strpos($_POST['include'],'extra:') === 0 ){
+				$include_title = substr($_POST['include'],6);
+
+				// msg("AreaExists: " . pre(\gp\admin\Content\Extra::AreaExists($include_title)));
+				if( \gp\admin\Content\Extra::AreaExists($include_title) === false && \gp\admin\Content\Extra::AreaExists($include_title.'.php') === false ){
+					msg($langmessage['OOPS'] .  ' Extra Content Area ' . $include_title . ' does not exist.');
+					return false;
+				}
+				// $existing_section['include_type']	= 'extra';
+				ob_start();
+				\gp\tool\Output::GetExtra($include_title);
+				$content	= ob_get_clean();
+
+				$existing_section['include_type']	= 'extra';
+				$existing_section['content']		= $include_title;
+
 
 			//file include
 			}elseif( strpos($_POST['include'],'file:') === 0 ){
@@ -1198,6 +1257,7 @@ namespace gp\tool{
 			echo '<tr><td>'.$langmessage['Left'].'</td><td><input type="text" name="left" class="ck_input" value="0"/></td>';
 			echo '<td>'.$langmessage['Top'].'</td><td><input type="text" name="top" class="ck_input" value="0"/></td>';
 			echo '</tr>';
+			echo '<tr><td colspan="2">Alternative Text</td><td colspan="2"><input type="text" name="alt_text" style="width:70px; text-align:left;" class="ck_input" value=""/></td></tr>';
 			echo '<tr><td><a data-cmd="deafult_sizes" class="ckeditor_control ck_reset_size" title="'.$langmessage['Theme_default_sizes'].'">&#10226;</a></td></tr>';
 			echo '</table>';
 			echo '</div>';

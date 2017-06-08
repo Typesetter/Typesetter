@@ -150,7 +150,13 @@ class Ajax extends \gp\admin\Menu{
 		echo '<tr><td>';
 		echo $langmessage['Copy'];
 		echo '</td><td>';
-		\gp\admin\Menu\Tools::ScrollList($gp_index);
+		$gp_index_no_special = array();
+		foreach( $gp_index as $title => $index ){
+			if( strpos(strtolower($index),'special_') !== 0 ){
+				$gp_index_no_special[$title] = $index;
+			}
+		}
+		\gp\admin\Menu\Tools::ScrollList($gp_index_no_special);
 		echo sprintf($format_bottom,'CopyPage',$langmessage['create_new_file']);
 
 
@@ -179,7 +185,7 @@ class Ajax extends \gp\admin\Menu{
 
 		if( isset($_REQUEST['redir']) ){
 			$title	= \gp\tool::IndexToTitle($new_index);
-			$url	= \gp\tool::AbsoluteUrl($title,'',true,false);
+			$url	= \gp\tool::AbsoluteUrl($title,'',true,false,true);
 			msg(sprintf($langmessage['will_redirect'],\gp\tool::Link_Page($title)));
 			$this->page->ajaxReplace[] = array('location',$url,15000);
 		}else{
@@ -250,7 +256,7 @@ class Ajax extends \gp\admin\Menu{
 	 *
 	 */
 	public function CopyPage(){
-		global $gp_index, $gp_titles, $langmessage;
+		global $gp_index, $gp_titles, $langmessage, $users, $gpAdmin, $dataDir;
 
 		$this->CacheSettings();
 
@@ -297,6 +303,22 @@ class Ajax extends \gp\admin\Menu{
 		if( !\gp\tool\Files::Save($file,$contents) ){
 			msg($langmessage['OOPS'].' (File not saved)');
 			return false;
+		}
+
+		//set permissions for copied page
+		// msg('gpAdmin = ' . pre($gpAdmin));
+		$users = \gp\tool\Files::Get('_site/users');
+		$username = $gpAdmin['username'];
+		$user_file = $dataDir . '/data/_sessions/' . $users[$username]['file_name'];
+		$editing_values = $gpAdmin['editing'];
+		if( $editing_values != 'all' && strpos($editing_values, ','.$index.',') === false ){
+			$editing_values .= $index.',';
+			$gpAdmin['editing'] = $editing_values;
+			// save to user session file
+			\gp\tool\Files::SaveData($user_file, 'gpAdmin', $gpAdmin);
+			// save to users.php
+			$users[$username]['editing'] = $editing_values;
+			\gp\tool\Files::SaveData('_site/users', 'users', $users);
 		}
 
 		//add to gp_titles

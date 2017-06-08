@@ -78,6 +78,9 @@
 	display:block;
 	}
 
+#gp_current_images > div > a{
+	cursor:move;
+	}
 
 /**
  * Upload form
@@ -100,7 +103,7 @@
 #gp_upload_queue a{
 	display:block;
 	text-decoration:none;
-	font: 11px Verdana, Geneva, sans-serif;
+	font-size: 11px;
 	border:1px solid #fafafa;
 
 	border-radius:5px;

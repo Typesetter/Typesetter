@@ -88,6 +88,7 @@ $langmessage = array (
 	'uploaded_files'                 => 'Opgelaaide lêers',
 	'Image'                          => 'Beeld',
 	'image'                          => 'beeld',
+	'Images'                         => 'Beelde', // ### NEW 5.1 ###
 	'images'                         => 'beelde',
 	'delete_confirm'                 => 'Is jy seker jy wil die lêer permanent verwyder ? ',
 	'generic_delete_confirm'         => 'Is jy seker dat jy permanent %s wil verwyder? ',
@@ -223,7 +224,12 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Kry \'n <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html"> reCAPTCHA Sleutel </a> om CAPTCHA verifikasie te gebruik op die kontak vorm.',
 	'maximgarea'                     => 'Maksimum vierkante pixels vir opgelaaide beelde. ŉ 600 x 800 pixel beeld het 480,000 vk / pixels.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Gallery Duimnaelskets grootte, verstek is 100px by 100px.',
+	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
 	'from_use_user'                  => 'Indien gekies, gebruiker verskafde e-pos adresse sal gebruik word vir die "Van" opskrif in plaas van die bogenoemde verstektes',
 	'smtp_hosts'                     => 'Voorbeeld: ',
 	'auto_redir'                     => 'Outomaties herlei \'n navraag as dit soortgelyk is aan \'n bestaande bladsy binne hierdie persentasie.',
@@ -234,7 +240,12 @@ $langmessage = array (
 	'language'                       => 'Ttaal',
 	'langeditor'                     => 'WYSIWYG Taal',
 	'maximgarea'                     => 'Maksimum Beeld Area',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Gallery Duimnaelskets Grootte',
+	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###
+	'recreate_all_thumbnails'        => 'Recreate All Thumbnails', // ### NEW 5.1 ###
 	'auto_redir'                     => 'Outomaties Herlei persentasie',
 	'restore_defaults'               => 'Herstel Standaard',
 	'Add your LESS and CSS here'     => 'Add your LESS and CSS here',

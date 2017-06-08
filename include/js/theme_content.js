@@ -125,7 +125,7 @@ $(function(){
 		$('.gp_output_area').each(function(i){
 
 			var $this	= $(this);
-			var lnks	= $inner_links.eq(i)
+			var lnks	= $inner_links.eq(i);
 
 			if( lnks.length > 0 ){
 
@@ -133,6 +133,7 @@ $(function(){
 				$('<div class="draggable_element" style="position:absolute;min-height:20px;min-width:20px;"></div>')
 				.appendTo(drag_area)
 				.append(lnks) //.output_area_link
+				.append('<div class="decrease_z_index" title="move behind"><i class="fa fa-minus-square"></i></div>')
 				.on('gp_position',function(){
 
 					var loc = $gp.Coords($this);
@@ -140,8 +141,14 @@ $(function(){
 					//make sure there's at least a small box to work with
 					loc.h = Math.max(20,loc.h);
 
-					$(this).css({'top':loc.top,'left':loc.left,'width':loc.w,'height':loc.h})
-				});
+					$(this).css({'top':loc.top,'left':loc.left,'width':loc.w,'height':loc.h});
+				})
+				.on("hover", function(){ $(this).css("z-index", "+=500"); }, function(){ $(this).css("z-index", "-=500"); })
+				.find(".decrease_z_index")
+					.on("click", function(){
+						$(this).closest(".draggable_element").trigger("mouseleave").css("z-index", "-=1");
+					});
+
 			}
 		});
 

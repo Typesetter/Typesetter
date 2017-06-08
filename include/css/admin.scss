@@ -32,7 +32,7 @@
 #gp_admin_html{
 	color: #333;
 	font-size: 13px;
-	font-family: sans-serif;
+	font-family: "Segoe UI", "San Francisco", "Helvetica Neue", "DejaVu Sans", "Arial", sans-serif;
 	line-height: 130%;
 	/* background:none; */
 	}
@@ -344,6 +344,14 @@
 	background: lighten($gp_panel_bg,10%);
 	}
 
+#admincontent_panel a[href$='ToggleVisibility'] { 
+	background:#C44830; 
+	}
+
+#admincontent_panel a[href$='ToggleVisibility']:hover { 
+	background:#DC5135; 
+	}
+
 #admincontent_panel span > .fa,
 #admincontent_panel a > .fa{
 	margin-right: 4px;
@@ -602,7 +610,7 @@ body.edit_layout .GPAREA{
 	}
 
 body.gpAdmin div.editable_area{
-	min-height: 1em !important;
+	min-height: 1em;
 }
 
 
@@ -671,20 +679,20 @@ body.gpAdmin div.editable_area{
 	}
 
 .collapsible h4 a:before{
-	font-size: 9px;
-	vertical-align: top;
+	display: inline-block;
+	font-family: FontAwesome;
+	content: "\f0d7"; // fa caret-down
 	color: #666;
-	content: "\25BC";
-	padding-right: 5px;
+	width: 1.2em;
+	text-align: center;
 	}
-
 
 .collapsible h4.gp_collapsed a{
 	border-radius: 3px;
 	}
 
 .collapsible h4.gp_collapsed a:before{
-	content: "\25B6";
+	content: "\f0da"; // fa caret-right
 	color: #888 !important;
 	}
 
@@ -833,7 +841,6 @@ table.tablesorter th.gp_header_desc:before{
 #simplepanel a,
 #simplepanel span,
 #simplepanel div{
-	font-family: sans-serif;
 	line-height: 18px;
 	text-decoration: none;
 	color: $gp_panel_link_color !important;
@@ -2040,6 +2047,12 @@ body #addon_about{
 	background-color: #eee;
 	}
 
+.gp_scrolllist label span.slug{
+	color: #aaa;
+	font-size:11px !important;
+	}
+
+
 /**
  * Fontawesome
  *
@@ -2047,3 +2060,12 @@ body #addon_about{
 #gp_admin_html .fa{
 	font-family:FontAwesome;
 }
+
+
+/**
+ * Layout Editor/Codemirror
+ *
+ */
+.CodeMirror {
+	font-family:"Consolas", "Menlo", "Andale Mono", "DejaVu Sans Mono", monospace!important;
+	}

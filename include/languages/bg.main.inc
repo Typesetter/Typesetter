@@ -88,6 +88,7 @@ $langmessage = array (
 	'uploaded_files'                 => 'Качени файлове',
 	'Image'                          => 'изображение',
 	'image'                          => 'изображение',
+	'Images'                         => 'изображения', // ### NEW 5.1 ###
 	'images'                         => 'изображения',
 	'delete_confirm'                 => 'Сигурен ли сте, че искате да изтриете този файл? ',
 	'generic_delete_confirm'         => 'Сигурни ли сте, че искате перманентно да премахнете %s? ',
@@ -223,7 +224,12 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'Трябва ти <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a>, за да ползваш CAPTCHA на формата за контакти.',
 	'maximgarea'                     => 'Maximum square pixels for uploaded images. A 600 x 800 pixel image has 480,000 sq/pixels.',
+	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Gallery Thumbnail size, default is 100px by 100px.',
+	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
 	'from_use_user'                  => 'Ако е избарон, въведения email адрес ще бъде използван за "От" заглавие вместо по-горните стойности. ',
 	'smtp_hosts'                     => 'Example: ',
 	'auto_redir'                     => 'Automatically redirect a request if it is similar to an existing page within this percentage.',
@@ -234,7 +240,12 @@ $langmessage = array (
 	'language'                       => 'Език',
 	'langeditor'                     => 'WYSIWYG Language',
 	'maximgarea'                     => 'Максимален обем на изображението.',
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
+	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
 	'maxthumbsize'                   => 'Gallery Thumbnail Size',
+	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
+	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###
+	'recreate_all_thumbnails'        => 'Recreate All Thumbnails', // ### NEW 5.1 ###
 	'auto_redir'                     => 'Auto Redirect Percent',
 	'restore_defaults'               => 'Възстанови началните настройки',
 	'Add your LESS and CSS here'     => 'Add your LESS and CSS here',

@@ -167,6 +167,23 @@ body{
 		left:-500px;
 		padding:0 500px;
 	}
+
+	.css_buttons {
+	margin: -4px 0 5px -3%;
+	}
+
+	.css_buttons .gpsubmit,
+	.css_buttons .gpcancel{
+		box-sizing: border-box;
+		width: 47%;
+		text-align: center;
+		margin: 4px 0 0 3%;
+		}
+
+	.css_buttons .gpdisabled{
+		color: #999 !important;
+	}
+
 }
 
 

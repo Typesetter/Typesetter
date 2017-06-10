@@ -405,9 +405,17 @@ class Extra extends \gp\Page\Edit{
 			return false;
 		}
 
+		$types = \gp\tool\Output\Sections::GetTypes();
+		$type = htmlspecialchars($_POST['type']);
+
+		if( !array_key_exists($type, $types) ){
+			message($langmessage['OOPS'].' (Invalid Type)');
+			return false;
+		}
+
 		$file					= $this->folder.'/'.$title.'/page.php';
 
-		$section				= \gp\tool\Editing::DefaultContent($_POST['type']);
+		$section				= \gp\tool\Editing::DefaultContent($type);
 		$section['created']		= time();
 		$section['created_by']	= $gpAdmin['username'];
 

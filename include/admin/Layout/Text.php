@@ -87,7 +87,7 @@ class Text extends \gp\admin\Layout{
 
 
 	public function EditText(){
-		global $config, $langmessage,$page;
+		global $config, $langmessage;
 
 		if( !isset($_GET['key']) ){
 			message($langmessage['OOPS'].' (0)');
@@ -97,17 +97,21 @@ class Text extends \gp\admin\Layout{
 		$default = $value = $key = $_GET['key'];
 		if( isset($langmessage[$key]) ){
 			$default = $value = $langmessage[$key];
-
+		}else{
+			$default = $value = htmlspecialchars($key);
 		}
 		if( isset($config['customlang'][$key]) ){
 			$value = $config['customlang'][$key];
+		}else{
+			$value = htmlspecialchars($key);
 		}
+
 
 
 		echo '<div class="inline_box">';
 		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Text').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="savetext" />';
-		echo '<input type="hidden" name="key" value="'.htmlspecialchars($key).'" />';
+		echo '<input type="hidden" name="key" value="'.$value.'" />';
 
 		echo '<table class="bordered">';
 		echo '<tr><th>';
@@ -133,7 +137,7 @@ class Text extends \gp\admin\Layout{
 
 
 	public function SaveText(){
-		global $config, $langmessage,$page;
+		global $config, $langmessage;
 
 		if( !isset($_POST['key']) ){
 			message($langmessage['OOPS'].' (0)');

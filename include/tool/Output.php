@@ -954,10 +954,17 @@ namespace gp\tool{
 			}
 
 
-			ob_start();
 			$edit_link = self::EditAreaLink($edit_index,'Admin/Extra',$langmessage['edit'],'cmd=edit&file='.$name,array('title'=>$name,'data-cmd'=>'inline_edit_generic'));
+
+			$include_link = '';
+			if( $extra_content[0]['type'] == 'include' && $extra_content[0]['include_type'] == false ){
+				$include_link = \gp\tool::Link($extra_content[0]['content'], $langmessage['view/edit_page']);
+			}
+
+			ob_start();
 			echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
 			echo $edit_link;
+			echo $include_link;
 			echo \gp\tool::Link('Admin/Extra',$langmessage['theme_content'],'',' class="nodisplay"');
 			echo '</span>';
 			self::$editlinks .= ob_get_clean();

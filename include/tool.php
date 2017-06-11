@@ -739,13 +739,13 @@ namespace gp{
 		 */
 		public static function ServerName($strip_www = false, $with_port=false){
 
-			$port = '';
+			$add_port = '';
 			if( isset($_SERVER['SERVER_NAME']) ){
 				$server = self::UrlChars($_SERVER['SERVER_NAME']);
 				if( $with_port && isset($_SERVER['SERVER_PORT']) ){
 					$port = $_SERVER['SERVER_PORT'];
 					if( $port != 80 && $port != 443 ){
-						$port = ':' . $port;
+						$add_port = ':' . $port;
 					}
 				}
 			}else{
@@ -757,7 +757,7 @@ namespace gp{
 				$server = substr($server,4);
 			}
 
-			return $server . $port;
+			return $server . $add_port;
 		}
 
 		public static function UrlChars($string){

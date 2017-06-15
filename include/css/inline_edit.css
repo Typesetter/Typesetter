@@ -306,7 +306,10 @@ html{
 /**
  * Override CK Editor internal fonts
  */
-.cke_reset_all, .cke_reset_all *, .cke_reset_all a, .cke_reset_all textarea {
+.cke_reset_all, 
+.cke_reset_all *:not(.fa), 
+.cke_reset_all a, 
+.cke_reset_all textarea {
 	font-family:"Segoe UI", "San Francisco", "Helvetica Neue", "DejaVu Sans", "Arial", sans-serif!important;
 	}
 

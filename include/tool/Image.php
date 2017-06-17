@@ -4,6 +4,9 @@ namespace gp\tool{
 
 	defined('is_running') or die('Not an entry point...');
 
+	includeFile('thirdparty/jpeg-icc/autoload.php');
+	includeFile('tool/ImageMeta.php');
+
 	class Image{
 
 		/**
@@ -15,12 +18,18 @@ namespace gp\tool{
 		 * @param int $max_area Maximum area of the image: 600x800 pixels = 480,000 sq/pixels
 		 * @return bool true if the image doesn't need to be reduced or if a reduction is made
 		 */
+
 		static function CheckArea($img_path,$max_area=1024000){
+			global $config, $dataDir;
 
 			$src_img = self::getSrcImg($img_path); //memory usage before and after this call are small 1093804 vs 1094616
 			if( !$src_img ){
 				return false;
 			}
+
+			$img_type = self::getType($img_path);
+			$preserve_icc_profiles =	($img_type == 'jpg' || $img_type == 'jpeg') && !empty($config['preserve_icc_profiles']);
+			$preserve_image_metadata =	($img_type == 'jpg' || $img_type == 'jpeg') && !empty($config['preserve_image_metadata']);
 
 			//Original Size
 			$old_x = imagesx($src_img);
@@ -45,7 +54,47 @@ namespace gp\tool{
 				return true;
 			}
 
-			return self::createImg($src_img, $img_path, 0, 0, 0, 0, $new_x, $new_y, $old_x, $old_y);
+			if( $preserve_icc_profiles ){
+				$jpeg_icc = new \JPEG_ICC();
+				$jpeg_icc->LoadFromJPEG($img_path);
+			}
+
+			if( $preserve_image_metadata ){
+				$meta = \gp\tool\ImageMeta::getMeta($img_path);
+				/* FOR DEBUGGING - write a text file with acquired metadata and/or possible errors to the same directory */
+				/*
+					$pi = pathinfo($img_path);
+					$debug_metadata_file = $pi['dirname'] . '/' . $pi['filename'] . '_meta.txt';
+					$debug_metadata = 'Metadata for image file "' . basename($img_path) . '"' . "\n\n";
+					foreach( $meta as $mk => $mv ){
+						if( is_array($mv) ){
+							$debug_metadata .= $mk . ' : ' . "\n";
+							foreach( $md as $errk => $errd ){
+								$debug_metadata .= '  ' . $errk . ' : ' . $errv . "\n";
+							}
+						}else{
+							$debug_metadata .= $mk . ' : ' . $mv . "\n";
+						}
+					}
+					\gp\tool\Files::Save($debug_metadata_file, $debug_metadata); 
+				*/
+			}
+
+
+			$result = self::createImg($src_img, $img_path, 0, 0, 0, 0, $new_x, $new_y, $old_x, $old_y);
+
+
+			if( $preserve_image_metadata ){
+				$iptc_embedded = \gp\tool\ImageMeta::saveMeta($img_path, $meta);
+			}
+
+			if( $preserve_icc_profiles ){
+				$jpeg_icc->SaveToJPEG($img_path);
+			}
+
+			@chmod($img_path, gp_chmod_file);
+
+			return $result;
 		}
 
 
@@ -64,7 +113,7 @@ namespace gp\tool{
 			$img_type = self::getType($source_path);
 			if( strpos('svgz', $img_type) === 0 ){
 				// image is SVG
-				return self::createSquareSVG($source_path,$dest_path,$size,$img_type);
+				return self::CreateRectSVG($source_path,$dest_path,$size,$size,false);
 			}
 
 			$new_w = $new_h = $size;
@@ -78,8 +127,6 @@ namespace gp\tool{
 			$old_x = imagesx($src_img);
 			$old_y = imagesy($src_img);
 
-
-			//
 			if( $old_x > $old_y ){
 				$off_w = ($old_x - $old_y) / 2;
 				$off_h = 0;
@@ -109,43 +156,79 @@ namespace gp\tool{
 		 * @param string $dest_path location of the image to be created
 		 * @param int $new_w The width of the new image
 		 * @param int $new_h The height of the new image
-		 * @param string $img_type A string representing the type of the source file (png, jpg)
+		 * @param boolean $keep_aspect_ratio Scale to fit / Crop to cover new size
 		 * @return bool
 		 */
-		static function CreateRect($source_path,$dest_path,$new_w=50,$new_h=50,$img_type=false){
+		static function CreateRect($source_path,$dest_path,$new_w=50,$new_h=50,$keep_aspect_ratio=false){
+
+			$img_type = self::getType($source_path);
+			if( strpos('svgz', $img_type) === 0 ){
+				// image is SVG
+				return self::CreateRectSVG($source_path,$dest_path,$new_w,$new_h,$keep_aspect_ratio);
+			}
+
 
 			$src_img = self::getSrcImg($source_path,$img_type);
 			if( !$src_img ){
 				return false;
 			}
 
-			//Size
+			// Size
 			$old_w = imagesx($src_img);
 			$old_h = imagesy($src_img);
 
-			$dst_x = 0;
-			$dst_y = 0;
+			// Ratios
+			$old_aspect_ratio = $old_w / $old_h;
+			$new_aspect_ratio = $new_w / $new_h;
 
+			$off_w = 0;
+			$off_h = 0;
 
-			$width_ratio = $new_w / $old_w;
-			$height_ratio = $new_h / $old_h;
-
-			if( $width_ratio < $height_ratio ){
-				$temp_h = round($width_ratio * $old_h);
-				$temp_w = $new_w;
-
+			if( $keep_aspect_ratio ){
+				// scale to fit into new width/height
+				if( $old_aspect_ratio > $new_aspect_ratio ){ 
+					// old img is wider than new one
+					$new_h = round($new_h / $old_aspect_ratio * $new_aspect_ratio);
+				}else{ 
+					// old img is narrower than new one
+					$new_w = round($new_w / $new_aspect_ratio * $old_aspect_ratio);
+				}
 			}else{
-				$temp_w = round($height_ratio * $old_w);
-				$temp_h = $new_h;
+				// crop to cover new width/height
+				if( $old_aspect_ratio > $new_aspect_ratio ){
+					// old img is wider than new one
+					$old_w_tmp = round($old_h * $new_aspect_ratio);
+					$off_w = round(($old_w -$old_w_tmp) / 2);
+					$old_w = $old_w_tmp;
+				}else{
+					// old img is narrower than new one
+					$old_h_tmp = round($old_w / $new_aspect_ratio);
+					$off_h = round(($old_h - $old_h_tmp) / 2);
+					$old_h = $old_h_tmp;
+				}
 			}
 
-			return self::createImg($src_img, $dest_path, $dst_x, $dst_y, 0, 0, $temp_w, $temp_h, $old_w, $old_h, $new_w, $new_h);
+			/* DEBUG */
+			/*
+			msg(
+				basename($source_path) . ": <br/>"
+				. "old_w=" . $old_w . " | old_h=" . $old_h . "<br/>"
+				. "off_w=" . $off_w . " | off_h=" . $off_h . "<br/>"
+				. "old_aspect_ratio=" . $old_aspect_ratio . "<br/>"
+				. "new_aspect_ratio=" . $new_aspect_ratio . "<br/>"
+				. "new_w=" . $new_w . " | new_h=" . $new_h . "<br/>"
+				// . "<br/><br/>"
+			);
+			*/
+
+			return self::createImg($src_img, $dest_path, 0, 0, $off_w, $off_h, $new_w, $new_h, $old_w, $old_h);
+
 		}
 
 
 
 		/**
-		 * SVG -- Create a square SVG image at $dest_path from an SVG image at $source_path
+		 * SVG -- Create a rectangular SVG image at $dest_path from an SVG image at $source_path
 		 *
 		 * @param string $source_path location of the source SVG image
 		 * @param string $dest_path location of the SVG image to be created
@@ -153,7 +236,7 @@ namespace gp\tool{
 		 * @param string $type_file a string representing the type of the source file (svg, svgz)
 		 * @return bool
 		 */
-		static function createSquareSVG($source_path, $dest_path, $size=50, $svg_type){
+		static function CreateRectSVG($source_path, $dest_path, $width=50, $height=50, $keep_aspect_ratio){
 
 			$src_svg = @file_get_contents($source_path);
 			if( !$src_svg ){
@@ -188,8 +271,8 @@ namespace gp\tool{
 			$svg = $doc->documentElement;
 
 			// get size
-			$width = self::getPxVal($svg->getAttribute('width'));
-			$height = self::getPxVal($svg->getAttribute('height'));
+			$svg_width =  self::getPxVal($svg->getAttribute('width'));
+			$svg_height = self::getPxVal($svg->getAttribute('height'));
 			if( $svg->hasAttribute('viewBox') ){
 				$viewBox = preg_split('/[\s,]+/', $svg->getAttribute('viewBox'));
 				$vb_x = $viewBox[0];
@@ -197,24 +280,25 @@ namespace gp\tool{
 				$vb_w = $viewBox[2];
 				$vb_h = $viewBox[3];
 			}
-			if( (!$width && !$height) && (!$vb_w && !$vb_h) ){
+			if( (!$svg_width && !$svg_height) && (!$vb_w && !$vb_h) ){
 				// msg("SVG processing - Error: width and height could not be determined");
 				// return false;
-				// no width/height privided -> we assume a 800 x 800px as default size
-				$width = 800;
-				$height = 800;
+				// no width/height provided -> we assume a 800 x 800px as default size
+				$svg_width = 800;
+				$svg_height = 800;
 			}
+			msg("SVG file:" . basename($source_path) .  " -- svg_width=".$svg_width." | svg_height=".$svg_height);
 			if( !$svg->hasAttribute('viewBox') ){
-				$svg->setAttribute('viewBox', '0 0 ' . $width . ' ' . $height);
+				$svg->setAttribute('viewBox', '0 0 ' . $svg_width . ' ' . $svg_height);
 				$vb_x = 0;
 				$vb_y = 0;
-				$vb_w = $width;
-				$vb_h = $height;
+				$vb_w = $svg_width;
+				$vb_h = $svg_height;
 			}
 
 			$w = $vb_w - $vb_x;
 			$h = $vb_h - $vb_y;
-			// left/top offsets for square
+			// left/top offsets ### needs to be changed ###
 			if( $w > $h ){
 				$vb_x += ($w - $h) / 2;
 				$vb_w -= ($w - $h);
@@ -224,12 +308,11 @@ namespace gp\tool{
 			}
 
 			$svg->setAttribute('viewBox', $vb_x . ' ' . $vb_y . ' ' . $vb_w . ' ' . $vb_h);
-			$svg->setAttribute('width', $size);
-			$svg->setAttribute('height', $size);
+			$svg->setAttribute('width', $width);
+			$svg->setAttribute('height', $height);
 
 			return self::saveSVG($doc, $dest_path);
 		}
-
 
 		/**
 		* Save SVG document to file
@@ -237,14 +320,10 @@ namespace gp\tool{
 		static function saveSVG($doc, $path){
 			global $langmessage;
 			$svg_xml = $doc->saveXML();
-			/*
-			if( $format == 'svgz' ){
-				$svg_xml = gzencode($xml);
-			}
-			*/
+
 			$result = file_put_contents($path, $svg_xml);
 			if( $result ){
-				@chmod( $path, 0666 );
+				@chmod($path, gp_chmod_file);
 				return true;
 			}
 			// msg($langmessage['OOPS'] . ': Unable to save SVG to ' . $path);
@@ -372,6 +451,8 @@ namespace gp\tool{
 		 *
 		 */
 		static function createImg($src_img, $dest_path, $dst_x, $dst_y, $off_w, $off_h, $dst_w, $dst_h, $old_x, $old_y, $new_w = false, $new_h = false){
+			global $config;
+
 			if( !$new_w ) $new_w = $dst_w;
 			if( !$new_h ) $new_h = $dst_h;
 
@@ -403,6 +484,7 @@ namespace gp\tool{
 
 			return self::SrcToImage($dst_img,$dest_path,$img_type);
 		}
+
 
 		static function Transparency($image){
 			if( function_exists('imagesavealpha') ){
@@ -444,7 +526,7 @@ namespace gp\tool{
 				return false;
 			}
 
-			@chmod( $path, 0666 );
+			@chmod($path, gp_chmod_file);
 
 			imagedestroy($src);
 			return true;

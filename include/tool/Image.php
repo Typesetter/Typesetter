@@ -109,6 +109,7 @@ namespace gp\tool{
 		 * @return bool
 		 */
 		static function createSquare($source_path,$dest_path,$size=50,$type_file=false){
+			global $config;
 
 			$img_type = self::getType($source_path);
 			if( strpos('svgz', $img_type) === 0 ){
@@ -122,6 +123,9 @@ namespace gp\tool{
 			if( !$src_img ){
 				return false;
 			}
+
+			$preserve_icc_profiles =	($img_type == 'jpg' || $img_type == 'jpeg') && !empty($config['preserve_icc_profiles']);
+			$preserve_image_metadata =	($img_type == 'jpg' || $img_type == 'jpeg') && !empty($config['preserve_image_metadata']);
 
 			//Size
 			$old_x = imagesx($src_img);
@@ -145,7 +149,28 @@ namespace gp\tool{
 				$new_w = $new_h = max($old_x,$old_y);
 			}
 
-			return self::createImg($src_img, $dest_path, 0, 0, $off_w, $off_h, $new_w, $new_h, $old_x, $old_y);
+			if( $preserve_icc_profiles ){
+				$jpeg_icc = new \JPEG_ICC();
+				$jpeg_icc->LoadFromJPEG($source_path);
+			}
+
+			if( $preserve_image_metadata ){
+				$meta = \gp\tool\ImageMeta::getMeta($source_path);
+			}
+
+			$result = self::createImg($src_img, $dest_path, 0, 0, $off_w, $off_h, $new_w, $new_h, $old_x, $old_y);
+
+			if( $preserve_image_metadata ){
+				$iptc_embedded = \gp\tool\ImageMeta::saveMeta($dest_path, $meta);
+			}
+
+			if( $preserve_icc_profiles ){
+				$jpeg_icc->SaveToJPEG($dest_path);
+			}
+
+			@chmod($dest_path, gp_chmod_file);
+
+			return $result;
 		}
 
 
@@ -160,6 +185,7 @@ namespace gp\tool{
 		 * @return bool
 		 */
 		static function CreateRect($source_path,$dest_path,$new_w=50,$new_h=50,$keep_aspect_ratio=false){
+			global $config;
 
 			$img_type = self::getType($source_path);
 			if( strpos('svgz', $img_type) === 0 ){
@@ -167,11 +193,13 @@ namespace gp\tool{
 				return self::CreateRectSVG($source_path,$dest_path,$new_w,$new_h,$keep_aspect_ratio);
 			}
 
-
 			$src_img = self::getSrcImg($source_path,$img_type);
 			if( !$src_img ){
 				return false;
 			}
+
+			$preserve_icc_profiles =	($img_type == 'jpg' || $img_type == 'jpeg') && !empty($config['preserve_icc_profiles']);
+			$preserve_image_metadata =	($img_type == 'jpg' || $img_type == 'jpeg') && !empty($config['preserve_image_metadata']);
 
 			// Size
 			$old_w = imagesx($src_img);
@@ -221,8 +249,28 @@ namespace gp\tool{
 			);
 			*/
 
-			return self::createImg($src_img, $dest_path, 0, 0, $off_w, $off_h, $new_w, $new_h, $old_w, $old_h);
+			if( $preserve_icc_profiles ){
+				$jpeg_icc = new \JPEG_ICC();
+				$jpeg_icc->LoadFromJPEG($source_path);
+			}
 
+			if( $preserve_image_metadata ){
+				$meta = \gp\tool\ImageMeta::getMeta($source_path);
+			}
+
+			$result = self::createImg($src_img, $dest_path, 0, 0, $off_w, $off_h, $new_w, $new_h, $old_w, $old_h);
+
+			if( $preserve_image_metadata ){
+				$iptc_embedded = \gp\tool\ImageMeta::saveMeta($dest_path, $meta);
+			}
+
+			if( $preserve_icc_profiles ){
+				$jpeg_icc->SaveToJPEG($dest_path);
+			}
+
+			@chmod($dest_path, gp_chmod_file);
+
+			return $result;
 		}
 
 

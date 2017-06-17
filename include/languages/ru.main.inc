@@ -227,7 +227,7 @@ $langmessage = array (
 	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
 	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
 	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
-	'maxthumbsize'                   => 'Размер эскизов в галерее. По умолчанию 100px на 100px.',
+	'maxthumbsize'                   => 'Размер эскизов в галерее. По умолчанию 300px на 300px.',
 	'maxthumbheight'                 => 'Высота эскизов в галерее (необязательно). Если пусто, будет использоваться значение из <em>Размер эскизов в галерее</ em>.', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Сохранять пропорции исходного изображения для эскизов.', // ### NEW 5.1 ###
 	'from_use_user'                  => 'Если выбрано, пользовательские e-mail-адреса будут использованы для заполнения поля отправителя вместо адресов по умолчанию',

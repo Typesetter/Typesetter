@@ -230,7 +230,7 @@ continue using your old password.</p>',
 	array (
 	'recaptcha_public'               => 'Get a <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> to use CAPTCHA verification on the contact form.',
 	'maximgarea'                     => 'Maksimalni četvorokut piksela za učitanu sliku. 600 x 800 piksela slika ima 480.000 kvadratnih piksela.',
-	'maxthumbsize'                   => 'Veličina Minijatura Galerije, zadano je 100px po 100px.',
+	'maxthumbsize'                   => 'Veličina Minijatura Galerije, zadano je 300px po 300px.',
 	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
 	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
 	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###

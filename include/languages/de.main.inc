@@ -227,7 +227,7 @@ $langmessage = array (
 	'resize_images'                  => 'Erzeugt optimierte Versionen von verkleinerten Bildern im Seiteninhalt.', // ### NEW 5.1 ###
 	'preserve_icc_profiles'          => 'Eingebettete <a href="https://de.wikipedia.org/wiki/ICC-Profil" target="_blank">ICC Farbprofile</a> in JPEG Bildern beibehalten.', // ### NEW 5.1 ###
 	'preserve_image_metadata'        => 'Eingebettete EXIF/IPTC Metadaten <em>Autor, Copyright, Beschriftung, Titel</em> and <em>Aufnahmedatum</em> in JPEG Bildern beibehalten.', // ### NEW 5.1 ###
-	'maxthumbsize'                   => 'Galeriebildgröße, Standard ist 100px × 100px.',
+	'maxthumbsize'                   => 'Galeriebildgröße, Standard ist 300px × 300px.',
 	'maxthumbheight'                 => 'Optionale Höhe für Galeriebilder. Bleibt das Feld leer, wird der Wert <em>Galeriebildgröße</em> auch für die Höhe verwendet.', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Seitenverhältnis der Originalbilder für Galeriebilder verwenden.', // ### NEW 5.1 ###
 	'from_use_user'                  => 'Ist dies ausgewählt, wird die vom Besucher angegebene E-Mail Adresse für den „Von“-Eintrag in der E-Mail Kopfzeile verwendet (anstatt der oben angegebenen Voreinstellungen).',

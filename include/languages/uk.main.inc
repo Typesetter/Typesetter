@@ -227,7 +227,7 @@ $langmessage = array (
 	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
 	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
 	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
-	'maxthumbsize'                   => 'Розмір мініатюр галереї, за замовчанням 100px на 100px.',
+	'maxthumbsize'                   => 'Розмір мініатюр галереї, за замовчанням 300px на 300px.',
 	'maxthumbheight'                 => 'Висота мініатюр галереї (не обов\'язково). Якщо не вказана, буде використовуватися значення з <EM> Розмір мініатюр галереї </ EM>.', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Зберігати оригінальні пропорції зображення при створенні мініатюри.', // ### NEW 5.1 ###
 	'from_use_user'                  => 'При виборі користувачем адреси електронної пошти буде використовуватися для "From" в заголовку, а не вище значення за замовчуванням.',

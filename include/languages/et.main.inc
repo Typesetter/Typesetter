@@ -228,7 +228,7 @@ $langmessage = array (
 	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
 	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
 	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
-	'maxthumbsize'                   => 'Galerii pisipildi suurus, vaikimisi 100 x 100 px.',
+	'maxthumbsize'                   => 'Galerii pisipildi suurus, vaikimisi 300px x 300px.',
 	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
 	'from_use_user'                  => 'Kui valitud, siis kasutatakse "Saatja" päises kasutaja esitatud e-posti aadresse ülevalpool oleva vaikimisi asemel.',

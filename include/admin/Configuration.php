@@ -22,8 +22,7 @@ class Configuration extends \gp\special\Base{
 		$langmessage['about_config']['smtp_hosts']		.= 'ssl://smtp.gmail.com:465 ; tls://smtp.live.com:587';
 		$langmessage['about_config']['showgplink']		= 'Showing the "powered by" link on your site is a great way to support '.CMS_NAME.' CMS.';
 		$langmessage['about_config']['history_limit']	= 'Max: '.gp_backup_limit;
-		$langmessage['about_config']['maxthumbsize']	.= ' '.\gp\tool::Link('Admin/Configuration','Recreate All Thumbnails','cmd=recreate_thumbs','class="" data-cmd="creq"');
-
+		$langmessage['about_config']['maxthumbsize']	.= ' '.\gp\tool::Link('Admin/Configuration',$langmessage['recreate_all_thumbnails'],'cmd=recreate_thumbs','class="" data-cmd="creq"');
 
 		$this->variables = array(
 
@@ -32,31 +31,37 @@ class Configuration extends \gp\special\Base{
 						//'dateformat'=>'',
 
 						/* General Settings */
-						'general_settings'		=> false,
-						'title'					=> '',
-						'keywords'				=> '',
-						'desc'					=> 'textarea',
+						'general_settings'			=> false,
+						'title'						=> '',
+						'keywords'					=> '',
+						'desc'						=> 'textarea',
 
-						'Interface'				=> false,
-						'colorbox_style'		=> array('example1'=>'Example 1', 'example2'=>'Example 2', 'example3'=>'Example 3', 'example4'=>'Example 4', 'example5'=>'Example 5' ),
-						'language'				=> '',
-						'langeditor'			=> '',
-						'showsitemap'			=> 'boolean',
-						'showlogin'				=> 'boolean',
-						'showgplink'			=> 'boolean',
+						'Interface'					=> false,
+						'colorbox_style'			=> array('example1'=>'Example 1', 'example2'=>'Example 2', 'example3'=>'Example 3', 'example4'=>'Example 4', 'example5'=>'Example 5' ),
+						'language'					=> '',
+						'langeditor'				=> '',
+						'showsitemap'				=> 'boolean',
+						'showlogin'					=> 'boolean',
+						'showgplink'				=> 'boolean',
 
-						'Performance'			=> false,
-						'maximgarea'			=> 'integer',
-						'maxthumbsize'			=> 'integer',
-						'auto_redir'			=> 'integer',
-						'history_limit'			=> 'integer',
-						'HTML_Tidy'				=> '',
-						'Report_Errors'			=> 'boolean',
-						'combinejs'				=> 'boolean',
-						'combinecss'			=> 'boolean',
-						'etag_headers'			=> 'boolean',
-						'resize_images'			=> 'boolean',
-						'space_char'			=> array('_'=>'Undersorce "_"','-'=>'Dash "-"'),
+						'Images'					=> false,
+						'maximgarea'				=> 'integer',
+						'resize_images'				=> 'boolean',
+						'preserve_icc_profiles' 	=> 'boolean',
+						'preserve_image_metadata' 	=> 'boolean',
+						'maxthumbsize'				=> 'integer',
+						'maxthumbheight'			=> 'integer',
+						'thumbskeepaspect'			=> 'boolean',
+
+						'Performance'				=> false,
+						'auto_redir'				=> 'integer',
+						'history_limit'				=> 'integer',
+						'HTML_Tidy'					=> '',
+						'Report_Errors'				=> 'boolean',
+						'combinejs'					=> 'boolean',
+						'combinecss'				=> 'boolean',
+						'etag_headers'				=> 'boolean',
+						'space_char'				=> array('_'=>'Undersorce "_"','-'=>'Dash "-"'),
 
 
 						/* Contact Configuration */
@@ -119,7 +124,7 @@ class Configuration extends \gp\special\Base{
 				}
 
 			}elseif( $curr_possible == 'integer' ){
-				if( isset($_POST[$key]) && is_numeric($_POST[$key]) ){
+				if( isset($_POST[$key]) && ( is_numeric($_POST[$key]) || $_POST[$key] == '' ) ){ // also allow empty values
 					$config[$key] = $_POST[$key];
 				}
 
@@ -143,8 +148,14 @@ class Configuration extends \gp\special\Base{
 		}
 
 		//resize thumbnails
-		if( $config_before['maxthumbsize'] !== $config['maxthumbsize'] ){
-			msg(\gp\tool::Link('Admin/Configuration','Recreate All Thumbnails?','cmd=recreate_thumbs','class="" data-cmd="creq"'));
+		if( 
+			$config_before['preserve_icc_profiles'] !== $config['preserve_icc_profiles'] 
+			|| $config_before['preserve_image_metadata'] !== $config['preserve_image_metadata'] 
+			|| $config_before['maxthumbsize'] !== $config['maxthumbsize'] 
+			|| $config_before['maxthumbheight'] !== $config['maxthumbheight'] 
+			|| $config_before['thumbskeepaspect'] !== $config['thumbskeepaspect'] 
+		){
+			msg(\gp\tool::Link('Admin/Configuration',$langmessage['recreate_all_thumbnails'],'cmd=recreate_thumbs','class="" data-cmd="creq"'));
 		}
 
 
@@ -307,7 +318,9 @@ class Configuration extends \gp\special\Base{
 
 			if( $possible_value === false ){
 				if( $opened ){
-					echo '</table><br/>';
+					echo '</table>';
+					$this->SaveAllButton(false);
+					echo '<br/>';
 				}
 				echo '<h2>';
 				if( isset($langmessage[$key]) ){
@@ -365,7 +378,7 @@ class Configuration extends \gp\special\Base{
 		echo '</table>';
 
 
-		$this->SaveButtons();
+		$this->SaveAllButton(true);
 		echo '</form>';
 	}
 
@@ -397,6 +410,40 @@ class Configuration extends \gp\special\Base{
 		echo '</p>';
 
 	}
+
+
+	/**
+	 * Display Save All buttons
+	 * @param boolean $is_last If true include admin notice and hidden cmd input
+	 */
+	protected function SaveAllButton($is_last=true){
+		global $langmessage;
+
+		echo '<div style="margin:1em 0">';
+
+		if( $is_last ){
+			echo '<input type="hidden" name="cmd" value="save_config" />';
+		}
+
+		if( isset($_GET['gpreq']) && $_GET['gpreq'] == 'json' ){
+			echo '<input value="' . $langmessage['save'] . ' (' . $langmessage['All'] . ')" type="submit" name="aaa" accesskey="s" class="gppost gpsubmit" />';
+		}else{
+			echo '<input value="' . $langmessage['save'] . ' (' . $langmessage['All'] . ')" type="submit" name="aaa" accesskey="s" class="gpsubmit"/>';
+		}
+
+ 		echo '</div>';
+
+		if( $is_last ){
+			echo '<p class="admin_note">';
+			echo '<b>';
+			echo $langmessage['see_also'];
+			echo '</b> ';
+			echo \gp\tool::Link('Admin/Preferences',$langmessage['Preferences'],'','data-cmd="gpabox"');
+			echo '</p>';
+		}
+
+	}
+
 
 
 	/**

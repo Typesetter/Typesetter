@@ -56,7 +56,8 @@ namespace gp\tool{
 
 			if( $preserve_icc_profiles ){
 				$jpeg_icc = new \JPEG_ICC();
-				$jpeg_icc->LoadFromJPEG($img_path);
+				$has_icc = $jpeg_icc->LoadFromJPEG($img_path);
+				// msg("Image " . basename($source_path) . " has ICC profile : " . ($has_icc?"true":"false"));
 			}
 
 			if( $preserve_image_metadata ){
@@ -88,7 +89,7 @@ namespace gp\tool{
 				$iptc_embedded = \gp\tool\ImageMeta::saveMeta($img_path, $meta);
 			}
 
-			if( $preserve_icc_profiles ){
+			if( $preserve_icc_profiles && $has_icc){
 				$jpeg_icc->SaveToJPEG($img_path);
 			}
 
@@ -151,7 +152,8 @@ namespace gp\tool{
 
 			if( $preserve_icc_profiles ){
 				$jpeg_icc = new \JPEG_ICC();
-				$jpeg_icc->LoadFromJPEG($source_path);
+				$has_icc = $jpeg_icc->LoadFromJPEG($source_path);
+				// msg("Image " . basename($source_path) . " has ICC profile : " . ($has_icc?"true":"false"));
 			}
 
 			if( $preserve_image_metadata ){
@@ -164,7 +166,7 @@ namespace gp\tool{
 				$iptc_embedded = \gp\tool\ImageMeta::saveMeta($dest_path, $meta);
 			}
 
-			if( $preserve_icc_profiles ){
+			if( $preserve_icc_profiles && $has_icc){
 				$jpeg_icc->SaveToJPEG($dest_path);
 			}
 
@@ -251,7 +253,8 @@ namespace gp\tool{
 
 			if( $preserve_icc_profiles ){
 				$jpeg_icc = new \JPEG_ICC();
-				$jpeg_icc->LoadFromJPEG($source_path);
+				$has_icc = $jpeg_icc->LoadFromJPEG($source_path);
+				// msg("Image " . basename($source_path) . " has ICC profile : " . ($has_icc?"true":"false"));
 			}
 
 			if( $preserve_image_metadata ){
@@ -264,7 +267,7 @@ namespace gp\tool{
 				$iptc_embedded = \gp\tool\ImageMeta::saveMeta($dest_path, $meta);
 			}
 
-			if( $preserve_icc_profiles ){
+			if( $preserve_icc_profiles && $has_icc){
 				$jpeg_icc->SaveToJPEG($dest_path);
 			}
 
@@ -335,7 +338,7 @@ namespace gp\tool{
 				$svg_width = 800;
 				$svg_height = 800;
 			}
-			msg("SVG file:" . basename($source_path) .  " -- svg_width=".$svg_width." | svg_height=".$svg_height);
+			// msg("SVG file:" . basename($source_path) .  " -- svg_width=".$svg_width." | svg_height=".$svg_height);
 			if( !$svg->hasAttribute('viewBox') ){
 				$svg->setAttribute('viewBox', '0 0 ' . $svg_width . ' ' . $svg_height);
 				$vb_x = 0;

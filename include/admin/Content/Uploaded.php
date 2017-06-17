@@ -454,7 +454,17 @@ namespace gp\admin\Content{
 					. $thumb
 					. '</a>'
 					. '<span>'
-					. \gp\tool::Link('Admin/Uploaded'.$dir_piece,'',$query_string,array('class'=>'delete fa fa-trash gpconfirm','data-cmd'=>'gpajax','title'=>$langmessage['delete_confirm']),'delete')
+					. \gp\tool::Link(
+						'Admin/Uploaded'.$dir_piece,
+						'',
+						$query_string,
+						array(
+							'class'=>'delete fa fa-trash gpconfirm',
+							'data-cmd'=>'gpajax',
+							'title'=>$langmessage['delete_confirm']
+						),
+						'delete'
+					)
 					. '</span>'
 					. '</div>';
 		}
@@ -566,7 +576,14 @@ namespace gp\admin\Content{
 			$thumb_dir	= \gp\tool::DirName($thumb_path);
 
 			\gp\tool\Files::CheckDir($thumb_dir);
-			return \gp\tool\Image::createSquare($original,$thumb_path,$config['maxthumbsize']);
+
+			if( !empty($config['maxthumbheight']) && $config['maxthumbheight'] !== $config['maxthumbsize'] ){
+				// NEW TS 5.1: proportional thumbnails
+				return \gp\tool\Image::CreateRect($original, $thumb_path, $config['maxthumbsize'], $config['maxthumbheight'], $config['thumbskeepaspect']);
+			}else{
+				// return \gp\tool\Image::createSquare($original,$thumb_path,$config['maxthumbsize']);
+				return \gp\tool\Image::CreateRect($original, $thumb_path, $config['maxthumbsize'], $config['maxthumbsize'], $config['thumbskeepaspect']);
+			}
 		}
 
 

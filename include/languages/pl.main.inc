@@ -230,10 +230,10 @@ $langmessage = array (
 	'maxthumbsize'                   => 'Rozmiar miniatury w galerii, domyślnie wynosi 300px x 300px.',
 	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
 	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
-	'from_use_user'                  => 'Jeśli jest zaznaczone, podane adresy e-mail będą wykorzystywane w nagłówku "Od" zamiast domyślnych.
-',
+	'from_use_user'                  => 'Jeśli jest zaznaczone, podane adresy e-mail będą wykorzystywane w nagłówku "Od" zamiast domyślnych.',
 	'smtp_hosts'                     => 'Przykład: ',
 	'auto_redir'                     => 'Automatycznie przekieruj zapytanie jeśli jest podobne do istniejącej strony w tylu procentach.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Opis',
 	'keywords'                       => 'Słowa kluczowe',
@@ -257,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Wydajność',
 	'require_email'                  => 'Wymagane pola',
 	'colorbox_style'                 => 'Styl Colorbox',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Formularz kontaktowy',
 	'contact_advanced'               => 'Kontakt z (Zaawansowane)',
 	'toemail'                        => 'Adresy odbiorców',

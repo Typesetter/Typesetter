@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Om denna är vald, blir användarens angivna epostadress använd i "Från" fältet istället för standard som ovan',
 	'smtp_hosts'                     => 'Exempel: ',
 	'auto_redir'                     => 'Omdirigera automatiskt en förfrågan om den är lik en existerande sida inom det procentuella',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Beskrivning',
 	'keywords'                       => 'Nyckelord',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Prestanda',
 	'require_email'                  => 'Kräv kontaktsfält',
 	'colorbox_style'                 => 'Colorbox stil',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Kontakt formulär',
 	'contact_advanced'               => 'Kontakt formulär (Avancerat)',
 	'toemail'                        => 'Mottagarens adress',

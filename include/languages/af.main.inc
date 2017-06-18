@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Indien gekies, gebruiker verskafde e-pos adresse sal gebruik word vir die "Van" opskrif in plaas van die bogenoemde verstektes',
 	'smtp_hosts'                     => 'Voorbeeld: ',
 	'auto_redir'                     => 'Outomaties herlei \'n navraag as dit soortgelyk is aan \'n bestaande bladsy binne hierdie persentasie.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Beskrywing',
 	'keywords'                       => 'Sleutelwoorde',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Prestasie',
 	'require_email'                  => 'Benodig Kontak Velde',
 	'colorbox_style'                 => 'Kleurboks Styl',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Kontak Vorm',
 	'contact_advanced'               => 'Kontak Vorm (Gevorderde)',
 	'toemail'                        => 'Ontvanger adres *',

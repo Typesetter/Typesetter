@@ -234,6 +234,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Kui valitud, siis kasutatakse "Saatja" päises kasutaja esitatud e-posti aadresse ülevalpool oleva vaikimisi asemel.',
 	'smtp_hosts'                     => 'Näide:  ',
 	'auto_redir'                     => 'Päring suunatakse automaatselt ümber, kui see on antud protsendi ulatuses sarnane olemasoleva lehega.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Kirjeldus',
 	'keywords'                       => 'Märksõnad',
@@ -257,6 +258,7 @@ $langmessage = array (
 	'Performance'                    => 'Kiirus',
 	'require_email'                  => 'Nõutud kontaktandmete väljad',
 	'colorbox_style'                 => 'Värvikasti stiil',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Kontakti vorm',
 	'contact_advanced'               => 'Kontakti vorm (täpsem)',
 	'toemail'                        => 'Saaja aadress *',

@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Ha be van jelölve, akkor a felhasználó által megadott címek lesznek használva a "Feladó" fejlécében a fenti alapértékek helyett.',
 	'smtp_hosts'                     => 'Például: ',
 	'auto_redir'                     => 'Automatikusan átirányít egy kérést, ha az a megadott százalékban hasonlít egy már meglévő oldalhoz.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Leírás',
 	'keywords'                       => 'Kulcsszavak',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Teljesítmény',
 	'require_email'                  => 'Kötelezően kitöltendő kapcsolati mezők',
 	'colorbox_style'                 => 'Színválasztó stílus',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Kapcsolat űrlap',
 	'contact_advanced'               => 'Kapcsolat űrlap (részletek)',
 	'toemail'                        => 'Címzett címe*',

@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Če izbrano, bo uporabnikov email naslov uporabljev v glavi obrazca.',
 	'smtp_hosts'                     => 'Primer: ',
 	'auto_redir'                     => 'Avtomatično preusmeri zahtevo če je podobna obstoječi strani znotraj tega odstotka.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Opis',
 	'keywords'                       => 'Ključne besede.',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Zmogljivost',
 	'require_email'                  => 'Zahtevana polja kontakta',
 	'colorbox_style'                 => 'Stil barvnega kvadrata',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Kontaktni obrazec',
 	'contact_advanced'               => 'Kontaktni obrazec(Napredno)',
 	'toemail'                        => 'Naslov prejemnika *',

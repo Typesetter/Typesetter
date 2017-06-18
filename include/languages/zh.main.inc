@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => '一旦選取，標頭的 "寄件人" 將採使用者提供的電子郵件地址，而非上述的預設值。',
 	'smtp_hosts'                     => '範例： ',
 	'auto_redir'                     => '一旦某個網頁請求與既有頁面的相似度達到這個百分比，就自動將它轉往該頁面。',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => '說明',
 	'keywords'                       => '關鍵字',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => '效能',
 	'require_email'                  => '必填的聯絡資訊欄位',
 	'colorbox_style'                 => '調色盤樣式',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => '聯絡表單',
 	'contact_advanced'               => '聯絡表單（進階）',
 	'toemail'                        => '聯絡人地址 *',

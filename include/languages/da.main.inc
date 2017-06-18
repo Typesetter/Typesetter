@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Hvis valgt, bruger-leverede e-mail adresser vil blive brugt til "Fra" header i stedet for ovenstående standard.',
 	'smtp_hosts'                     => 'Eksempel: ',
 	'auto_redir'                     => 'Omdiriger automatisk en anmodning, hvis det svarer til en eksisterende side indenfor denne procentsats.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Beskrivelse',
 	'keywords'                       => 'Nøgleord',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Ydelse',
 	'require_email'                  => 'Behøver Kontakt felter',
 	'colorbox_style'                 => 'Colorbox stil',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Kontakt formular',
 	'contact_advanced'               => 'Kontakt formular (Avanceret)',
 	'toemail'                        => 'Modtageradresse *',

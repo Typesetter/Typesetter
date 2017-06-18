@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Если выбрано, пользовательские e-mail-адреса будут использованы для заполнения поля отправителя вместо адресов по умолчанию',
 	'smtp_hosts'                     => 'Пример: ',
 	'auto_redir'                     => 'Автоматически перенаправлять запрос, если он похож на существующую страницу на столько процентов:',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Описание',
 	'keywords'                       => 'Ключевые слова',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Производительность',
 	'require_email'                  => 'Требуемые поля контактов',
 	'colorbox_style'                 => 'Стиль Colorbox',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Форма для связи',
 	'contact_advanced'               => 'Расширенная форма связи',
 	'toemail'                        => 'Адрес получателя',

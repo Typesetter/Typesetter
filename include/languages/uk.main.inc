@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'При виборі користувачем адреси електронної пошти буде використовуватися для "From" в заголовку, а не вище значення за замовчуванням.',
 	'smtp_hosts'                     => 'Приклад: ',
 	'auto_redir'                     => 'Автоматично перенаправляти запит якщо він подібний на існуючу сторінку відповідно процентного значення.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Опис',
 	'keywords'                       => 'Ключові слова',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Продуктивність',
 	'require_email'                  => 'Вимагати поля контактів',
 	'colorbox_style'                 => 'Стиль Colorbox',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Контактна форма',
 	'contact_advanced'               => 'Контактна форма(розширена)',
 	'toemail'                        => 'Адреса одержувача *',

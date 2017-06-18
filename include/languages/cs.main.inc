@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Pokud je zvoleno, budou použity uživatelem zadané emailové adresy místo výše uvedeného nastavení.',
 	'smtp_hosts'                     => 'Příklad: ',
 	'auto_redir'                     => 'Automaticky přesměrovat požadavek, když se podobá existující stránce v tomhle procentu.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Popis',
 	'keywords'                       => 'Klíčová slova',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Výkon',
 	'require_email'                  => 'Požadované položky kontaktu',
 	'colorbox_style'                 => 'styl Colorboxu',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Kontaktní formulář',
 	'contact_advanced'               => 'Kontakní formulář (pokročilý)',
 	'toemail'                        => 'Email příjemce *',

@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Dacă este selectat, adresa de email furnizată va fi folosită pentru câmpul "De la" - "From" - în antet, în loc de valorile implicite.',
 	'smtp_hosts'                     => 'Exemplu: ',
 	'auto_redir'                     => 'Refirecţionare automată a unei solicitări dacă este similară unei pagini existente în acest procentaj.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Descriere',
 	'keywords'                       => 'Cuvinte cheie',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Performanţe',
 	'require_email'                  => 'Necesită câmpurile de contact',
 	'colorbox_style'                 => 'Stil Colorbox',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Formular contact',
 	'contact_advanced'               => 'Formular contact (avansat)',
 	'toemail'                        => 'Adresă destinatar *',

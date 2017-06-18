@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'If selected, user supplied email addresses will be used for the "From" header instead of the above defaults.',
 	'smtp_hosts'                     => 'مثال: ',
 	'auto_redir'                     => 'Automatically redirect a request if it is similar to an existing page within this percentage.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'الوصف',
 	'keywords'                       => 'الكلمات الدلالية',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'الأداء',
 	'require_email'                  => 'خانة الإتصال مطلوبة',
 	'colorbox_style'                 => 'أسلوب صندوق الألوان',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'نموذج الإتصال',
 	'contact_advanced'               => 'Contact Form (Advanced)',
 	'toemail'                        => 'عنوان المستلم*',

@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Jei pasirinkta, vartotojo el. pašto adresas bus naudojamas "Nuo" antraštėje vietoj pirmiau nustatytų reikšmių.',
 	'smtp_hosts'                     => 'Pavyzdys: ',
 	'auto_redir'                     => 'Automatiškai nukreipti užklausą į nurodytu procentu panašų puslapį.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Aprašymas',
 	'keywords'                       => 'Raktažodžiai',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Našumas',
 	'require_email'                  => 'Reikalingi laukai',
 	'colorbox_style'                 => 'Colorbox stilius',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Kontaktinė forma',
 	'contact_advanced'               => 'Kontaktinė forma (išplėsta)',
 	'toemail'                        => 'Gavėjo adresas *',

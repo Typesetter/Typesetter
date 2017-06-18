@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Um flugubeinvalt, verða brúkara-innsendar e-mail adressur brúktar til "Frá" header í staðin fyri omanfyristandandi standard.',
 	'smtp_hosts'                     => 'Dømi: ',
 	'auto_redir'                     => 'Flyt sjálvvirkandi eina áheitan, um hon samsvarar til eina verandi síðu innan hetta prosent.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Frágreiðing',
 	'keywords'                       => 'Lyklaorð',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Veiting',
 	'require_email'                  => 'Krevur Samskiftis Feltir',
 	'colorbox_style'                 => 'Colorbox útsjónd',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Samskiftis formur',
 	'contact_advanced'               => 'Samskiftis formur (Framkomin)',
 	'toemail'                        => 'Móttakara adressa *',

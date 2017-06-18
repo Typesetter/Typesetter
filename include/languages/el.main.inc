@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Αν επιλεγεί, ο χρήστης που παρέχει διευθύνσεις email θα χρησιμοποιηθεί για την κεφαλίδα "Από" αντί των  υπάρχουσων προεπιλογών.',
 	'smtp_hosts'                     => 'Παράδειγμα: ',
 	'auto_redir'                     => 'Ανακατευθύνει αυτόματα μια αίτηση αν είναι όμοια με υπάρχουσα σελίδα κατά το ποσοστό αυτό.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Περιγραφή',
 	'keywords'                       => 'Λέξεις Κλειδιά',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Επίδοση',
 	'require_email'                  => 'Υποχρεωτικά Πεδία Επικοινωνίας',
 	'colorbox_style'                 => 'Στυλ Colorbox',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Φόρμα Επικοινωνίας',
 	'contact_advanced'               => 'Φόρμα Επικοινωνίας (Προηγμένη)',
 	'toemail'                        => 'Διεύθυνση Παραλήπτη* ',

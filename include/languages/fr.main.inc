@@ -234,6 +234,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Si cette option est cochée, les informations fournies par le visiteur seront utilisées pour les entêtes de « Expéditeur ». Ceci en lieu et place des informations par défaut fournies ci-dessus.',
 	'smtp_hosts'                     => 'Exemple: ',
 	'auto_redir'                     => 'Rediriger une requête automatiquement si elle est semblable à une page existante endéans ce pourcentage.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Description',
 	'keywords'                       => 'Mots clés',
@@ -257,6 +258,7 @@ $langmessage = array (
 	'Performance'                    => 'Performance',
 	'require_email'                  => 'Champs obligatoire',
 	'colorbox_style'                 => 'Style du visualiseur d\'image',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Formulaire de contact',
 	'contact_advanced'               => 'Formulaire de contact (Avancé)',
 	'toemail'                        => 'Adresse du destinataire *',

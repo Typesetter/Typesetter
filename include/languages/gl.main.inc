@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Se for seleccionado, o correo que fornece a persoa usuaria será usado para o apartado "De" no canto dos valores por defecto.',
 	'smtp_hosts'                     => 'Exemplo: ',
 	'auto_redir'                     => 'Redirixir automaticamente unha consulta se é similar a unha páxina existente con esta porcentaxe.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Descrición',
 	'keywords'                       => 'Palabras clave',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Aplicación',
 	'require_email'                  => 'Esixir Campos de contacto',
 	'colorbox_style'                 => 'Estilo de Colorbox',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'cFormulario de Contacto',
 	'contact_advanced'               => 'Formulario de contacto (Avanzado)',
 	'toemail'                        => 'Enderezos de destino *',

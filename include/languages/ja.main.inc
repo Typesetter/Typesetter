@@ -235,6 +235,7 @@ $langmessage = array (
 	'from_use_user'                  => 'チェックを入れたとき、上記のデフォルト設定ではなく、ユーザーが入力したメールアドレスをメールヘッダの From 欄に使用します。',
 	'smtp_hosts'                     => '例: ',
 	'auto_redir'                     => 'この割合の範囲内で似ている既存のページがある場合、リクエストを自動的にリダイレクトします。',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => '概要',
 	'keywords'                       => 'キーワード',
@@ -258,6 +259,7 @@ $langmessage = array (
 	'Performance'                    => 'パフォーマンス',
 	'require_email'                  => '入力必須にする項目',
 	'colorbox_style'                 => 'Colorbox のスタイル',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'コンタクトフォーム',
 	'contact_advanced'               => 'コンタクトフォーム(詳細設定)',
 	'toemail'                        => '受取用アドレス *',

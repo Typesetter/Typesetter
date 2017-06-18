@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Seleccione para utilizar la dirección email del usuario en el encabezado "De" en lugar de los valores por defecto mostrados.',
 	'smtp_hosts'                     => 'Ejemplo: ',
 	'auto_redir'                     => 'Redireccionar automáticamente una solicitud si es similar a una página ya existente dentro de este porcentaje.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Descripción',
 	'keywords'                       => 'Palabras clave',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Rendimiento',
 	'require_email'                  => 'Necesita campos de contacto',
 	'colorbox_style'                 => 'Estilo Colorbox (caja de color)',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Formulario de contacto',
 	'contact_advanced'               => 'Formulario de Contacto (Avanzado)',
 	'toemail'                        => 'Dirección del destinatario',

@@ -885,20 +885,27 @@ namespace gp{
 		 *
 		 */
 		public static function ShowingGallery(){
-			global $page;
+			global $page, $config;
 			static $showing = false;
 			if( $showing ) return;
 			$showing = true;
 
 			self::AddColorBox();
 			$css = \gp\tool\Plugins::OneFilter('Gallery_Style');
-			if( $css === false  ){
-				$page->css_user[] = '/include/css/default_gallery.css';
+			if( $css === false ){
 
+				if( !empty($config['gallery_legacy_style']) ){
+					$page->css_user[] = '/include/css/legacy_gallery.css';
+					return;
+				}
+
+				$page->css_user[] = '/include/css/default_gallery.css';
 				self::LoadComponents('dotdotdot');
 				$page->jQueryCode .= "\n".'$(".filetype-gallery .caption").dotdotdot({ watch : "window", callback : function(isTruncated,orgContent){ $(this).data("originalContent",orgContent); } });';
+				// $page->head_script .= "\n".'$(window).load( function(){ $(".filetype-gallery .caption").dotdotdot({ watch : "window", callback : function(isTruncated,orgContent){ $(this).data("originalContent",orgContent); } }); });';
 				if( \gp\tool::LoggedIn() ){
-					$page->jQueryCode .= "\n".'$(document).on("editor_area:loaded", function(){ $(".filetype-gallery .caption").trigger("destroy.dot") });';
+					$page->head_script 	.= "\n".'var gallery_editing_options = { legacy_style : false };';
+					$page->jQueryCode 	.= "\n".'$(document).on("editor_area:loaded", function(){ $(".filetype-gallery .caption").trigger("destroy.dot") });';
 				}
 
 				return;
@@ -948,6 +955,7 @@ namespace gp{
 					'maxthumbheight'			=> '',			//5.1
 					'check_uploads'				=> false,
 					'colorbox_style'			=> 'example1',
+					'gallery_legacy_style'		=> false,
 					'combinecss'				=> true,
 					'combinejs'					=> true,
 					'etag_headers'				=> true,

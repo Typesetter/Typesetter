@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Ако е избарон, въведения email адрес ще бъде използван за "От" заглавие вместо по-горните стойности. ',
 	'smtp_hosts'                     => 'Example: ',
 	'auto_redir'                     => 'Automatically redirect a request if it is similar to an existing page within this percentage.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Описание',
 	'keywords'                       => 'Ключови думи',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Performance',
 	'require_email'                  => 'Необходими контакт полета',
 	'colorbox_style'                 => 'Colorbox стил',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Форма за връзка',
 	'contact_advanced'               => 'Contact Form (Advanced)',
 	'toemail'                        => 'Адрес на получателят *',

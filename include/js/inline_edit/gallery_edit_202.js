@@ -21,7 +21,7 @@
 		isDirty: false,
 		gallery_theme: [ 
 			{ label: 'Default Theme',	class_name: 'gallery-theme-default' },
-			{ label: 'Square Tiles',	class_name: 'gallery-theme-tiles' },
+			{ label: 'Masonry',			class_name: 'gallery-theme-tiles' },
 			{ label: 'Circle Grid',		class_name: 'gallery-theme-circle-grid' },
 			{ label: 'Circle List',		class_name: 'gallery-theme-circle-list' }
 		],
@@ -34,15 +34,7 @@
 		],
 		gallery_color: [ 
 			{ label: 'Default Color',		class_name: 'gallery-color-default' },
-			{ label: 'On Dark Backgrounds',	class_name: 'gallery-color-dark' } /* ,
-			{ label: 'Royal Blue',		class_name: 'gallery-color-royalblue' },
-			{ label: 'Teal',			class_name: 'gallery-color-teal' },
-			{ label: 'Cerulean',		class_name: 'gallery-color-cerulean' },
-			{ label: 'Crimson',			class_name: 'gallery-color-crimson' },
-			{ label: 'Lime',			class_name: 'gallery-color-lime' },
-			{ label: 'Orange',			class_name: 'gallery-color-orange' },
-			{ label: 'Sunflower',		class_name: 'gallery-color-sunflower' },
-			*/
+			{ label: 'On Dark Backgrounds',	class_name: 'gallery-color-dark' } 
 		],
 
 
@@ -303,26 +295,28 @@
 			//floating editor
 			var html	= ''; //<h4>Gallery Images</h4>'
 
-			html += '<select class="ckeditor_control full_width SelectGalleryStyle SelectGalleryTheme">';
-			$.each(gp_editor.gallery_theme, function(i,v){
-				var selected = v.class_name.indexOf('-theme-default') !== -1 ? ' selected="selected"' : ''; 
-				html += '<option value="' + v.class_name + '"' + selected + '>' + v.label + '</option>';
-			});
-			html += '</select>';
+			if( typeof(gallery_editing_options) != 'undefined' ){ // TS 5.1+ and 'Use Gallery Legacy Style' disabled
+				html += '<select class="ckeditor_control full_width SelectGalleryStyle SelectGalleryTheme">';
+				$.each(gp_editor.gallery_theme, function(i,v){
+					var selected = v.class_name.indexOf('-theme-default') !== -1 ? ' selected="selected"' : ''; 
+					html += '<option value="' + v.class_name + '"' + selected + '>' + v.label + '</option>';
+				});
+				html += '</select>';
 
-			html += '<select class="ckeditor_control full_width SelectGalleryStyle SelectGallerySize">';
-			$.each(gp_editor.gallery_size, function(i,v){
-				var selected = v.class_name.indexOf('-size-md') !== -1 ? ' selected="selected"' : ''; 
-				html += '<option value="' + v.class_name + '"' + selected + '>' + v.label + '</option>';
-			});
-			html += '</select>';
+				html += '<select class="ckeditor_control full_width SelectGalleryStyle SelectGallerySize">';
+				$.each(gp_editor.gallery_size, function(i,v){
+					var selected = v.class_name.indexOf('-size-md') !== -1 ? ' selected="selected"' : ''; 
+					html += '<option value="' + v.class_name + '"' + selected + '>' + v.label + '</option>';
+				});
+				html += '</select>';
 
-			html += '<select class="ckeditor_control full_width SelectGalleryStyle SelectGalleryColor">';
-			$.each(gp_editor.gallery_color, function(i,v){
-				var selected = v.class_name.indexOf('-color-default') !== -1 ? ' selected="selected"' : ''; 
-				html += '<option value="' + v.class_name + '"' + selected + '>' + v.label + '</option>';
-			});
-			html += '</select>';
+				html += '<select class="ckeditor_control full_width SelectGalleryStyle SelectGalleryColor">';
+				$.each(gp_editor.gallery_color, function(i,v){
+					var selected = v.class_name.indexOf('-color-default') !== -1 ? ' selected="selected"' : ''; 
+					html += '<option value="' + v.class_name + '"' + selected + '>' + v.label + '</option>';
+				});
+				html += '</select>';
+			}
 
 			html += '<div id="gp_current_images"></div>'
 						+ '<a class="ckeditor_control full_width ShowImageSelect" data-cmd="ShowImageSelect"> '+gplang.SelectImage+'</a>'

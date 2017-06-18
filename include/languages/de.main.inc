@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Ist dies ausgewählt, wird die vom Besucher angegebene E-Mail Adresse für den „Von“-Eintrag in der E-Mail Kopfzeile verwendet (anstatt der oben angegebenen Voreinstellungen).',
 	'smtp_hosts'                     => 'Beispiel ',
 	'auto_redir'                     => 'Automatisch weiterleiten, wenn die Ähnlichkeit innerhalb des Prozentbereichs liegt.',
+	'gallery_legacy_style'           => '„Responsive“ Galerie Designs deaktivieren', // ### NEW 5.1 ### 
 	),
 	'desc'                           => 'Beschreibung',
 	'keywords'                       => 'META-Schlüsselwörter',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Performance',
 	'require_email'                  => 'Pflichtfelder',
 	'colorbox_style'                 => 'Style der Colorbox',
+	'gallery_legacy_style'           => 'Altes Galerie Design', // ### NEW 5.1 ###
 	'contact_config'                 => 'Kontakt Seite',
 	'contact_advanced'               => 'Kontaktformular (erweitert)',
 	'toemail'                        => 'Empfänger Adresse',

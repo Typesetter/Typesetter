@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Se selezionato, gli indirizzi e-mail degli utenti saranno utilizzati per l\'intestazione "From" al posto di quello di default.',
 	'smtp_hosts'                     => 'Esempio:  ',
 	'auto_redir'                     => 'Reindirizzare automaticamente una richiesta se è simile a una pagina esistente all\'interno di questa percentuale.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Descrizione',
 	'keywords'                       => 'Parole chiavi',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Performanza',
 	'require_email'                  => 'Campi contatto richiesti',
 	'colorbox_style'                 => 'Stile Colorbox',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Modulo di contatto',
 	'contact_advanced'               => 'Modulo di contatto (Avanzato)',
 	'toemail'                        => 'Indirizzo del destinatario *',

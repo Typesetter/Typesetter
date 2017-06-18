@@ -1,33 +1,3 @@
-/* ##################################################################################### */
-/* ##                                                                                 ## */
-/* ##   This set of gallery styles is rather complex and difficult to override with   ## */
-/* ##   your own custom style in case you want a completely different appearance.     ## */
-/* ##                                                                                 ## */
-/* ##   There is a plugin hook called [Gallery_Style] you can use to prevent loading  ## */
-/* ##   of this entire stylesheet.                                                    ## */
-/* ##                                                                                 ## */
-/* ##   1) Add the following line to you theme's Addon.ini:                           ## */
-/* ##                                                                                 ## */
-/* ##       [Gallery_Style]                                                           ## */
-/* ##       script = 'gallery_style.php'                                              ## */
-/* ##       method = 'gallery_style'                                                  ## */
-/* ##                                                                                 ## */
-/* ##   2) Create your custom stylesheet 'gallery.css' in the theme directory         ## */
-/* ##                                                                                 ## */
-/* ##   3) Create a file 'gallery_style.php' in your theme directory with this code:  ## */
-/* ##                                                                                 ## */
-/* ##       <?php defined('is_running') or die('Not an entry point...');              ## */
-/* ##       function gallery_style(){                                                 ## */
-/* ##         global $addonRelativeCode;                                              ## */
-/* ##         return $addonRelativeCode . '/gallery.css';                             ## */
-/* ##       }                                                                         ## */
-/* ##                                                                                 ## */
-/* ##   4)                                                                            ## */
-/* ##                                                                                 ## */
-/* ##                                                                                 ## */
-/* ##################################################################################### */
-
-
 /* Fix for IE SVG images zero size loading bug in Colorbox */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
 	img.cboxPhoto[src$=".svg"]{
@@ -98,14 +68,40 @@
 	}
 
 
+
 /* ### .gallery-theme-tiles ### */
 
+.gallery-theme-tiles .gp_gallery{
+	text-align:center;
+	margin:-4px;
+	line-height:0;
+	}
+
+.gallery-theme-tiles .gp_gallery:before{
+	content:'';
+	display:block;
+	width:100%;
+	margin-bottom:-1px;
+	}
+
+.gallery-theme-tiles .gp_gallery:after{
+	content:'';
+	display:inline-block;
+	width:100%;
+	}
+
+.gallery-theme-tiles .gp_gallery li{
+	display:inline-block;
+	position:relative;
+	float:none;
+	margin:0;
+	top:1px;
+	padding:4px;
+	}
+
 .gallery-theme-tiles .gp_gallery a.gallery_gallery{
-	position:absolute;
-	top:4px;
-	right:4px;
-	bottom:4px;
-	left:4px;
+	position:relative;
+	height:100%;
 	margin:0;
 	cursor:pointer; /* for iOS Safari hover behavior */
 	}
@@ -119,13 +115,14 @@
 	vertical-align:middle;
 	}
 
-.gallery-theme-tiles .gp_gallery a.gallery_gallery:after{ /* overlay */
+.gallery-theme-tiles .gp_gallery a.gallery_gallery:after{ 
 	content:"";
 	position:absolute;
 	top:0;
 	right:0;
 	bottom:0;
 	left:0;
+	background:rgba(0,0,0,0.75);
 	-webkit-transition:all 0.3s;
 	-moz-transition:all 0.3s;
 	transition:all 0.3s;
@@ -134,23 +131,31 @@
 	}
 
 .gallery-theme-tiles .gp_gallery img{
-	display:block;
-	position:absolute;
+	display:inline-block;
+	position:relative;
 	top:0;
 	left:0;
-	width:100%!important;
+	width:auto!important;
+	height:100%!important;
 	margin:0;
 	z-index:1;
 	}
 
 .gallery-theme-tiles .gp_gallery div,
 .gallery-theme-tiles .gp_gallery span.caption{
-	position:relative;
-	padding:0 8%!important;
-	margin:6% 0!important;
+	display:block;
+	position:absolute;
+/* 	background:rgba(0,0,0,0.75); */
+	padding:0 8px!important;
+	margin:0!important;
 	width:100%!important;
-	height:auto!important;
-	max-height:84%!important;
+	max-height:80%!important;
+	left:0;
+	top:50%;
+	-webkit-transform:translateY(-50%);
+	-moz-transform:translateY(-50%);
+	-ms-transform:translateY(-50%);
+	transform:translateY(-50%);
 	text-align:center;
 	-webkit-transition:all 0.3s;
 	-moz-transition:all 0.3s;
@@ -164,6 +169,7 @@
 .gallery-theme-tiles .gp_gallery li:hover span.caption {
 	opacity:1;
 	}
+
 
 
 /* ### .gallery-theme-circle-grid ### */
@@ -248,7 +254,7 @@
 	.gpCol-8   .gp_gallery li, .gpCol-9   .gp_gallery li,
 	.col-sm-8  .gp_gallery li, .col-sm-9  .gp_gallery li, 
 	.col-md-8  .gp_gallery li, .col-md-9  .gp_gallery li,
-  .col-lg-8  .gp_gallery li, .col-lg-9  .gp_gallery li { width:33.33333%; }
+	.col-lg-8  .gp_gallery li, .col-lg-9  .gp_gallery li { width:33.33333%; }
 	.gpCol-5   .gp_gallery li, .gpCol-6   .gp_gallery li, .gpCol-7   .gp_gallery li, 
 	.col-sm-5  .gp_gallery li, .col-sm-6  .gp_gallery li, .col-sm-7  .gp_gallery li, 
 	.col-lg-5  .gp_gallery li, .col-lg-6  .gp_gallery li, .col-md-7  .gp_gallery li,
@@ -262,11 +268,15 @@
 .gallery-theme-circle-grid .gp_gallery div, 
 .gallery-theme-circle-grid .gp_gallery span.caption{ width:auto; padding:0 14px; margin:14px 0; height:5.2em; /* 4 lines */ }
 
+
+.gallery-theme-tiles .gp_gallery li{ height:150px; width:auto; }
+/*
 .gallery-theme-tiles .gp_gallery li{ width:50%; padding-bottom:50%; }
 @media  (min-width:480px){ .gallery-theme-tiles .gp_gallery li{ width:25%; padding-bottom:25%; } }
 @media  (min-width:768px){ .gallery-theme-tiles .gp_gallery li{ width:25%; padding-bottom:25%; } }
 @media  (min-width:992px){ .gallery-theme-tiles .gp_gallery li{ width:16.66666%; padding-bottom:16.66666%; } }
 @media (min-width:1200px){ .gallery-theme-tiles .gp_gallery li{ width:12.5%; padding-bottom:12.5%; } }
+*/
 
 
 /* ### .gallery-size-xs ### */
@@ -290,12 +300,7 @@
 .gallery-theme-circle-grid.gallery-size-xs .gp_gallery div, 
 .gallery-theme-circle-grid.gallery-size-xs .gp_gallery span.caption{ width:auto; padding:0 10px; margin:10px 0; height:2.6em; /* 2 lines */ }
 
-.gallery-theme-tiles.gallery-size-xs .gp_gallery li{ width:20%; padding-bottom:20%; }
-@media  (min-width:480px){ .gallery-theme-tiles.gallery-size-xs .gp_gallery li{ width:16.66666%; padding-bottom:16.66666%; } }
-@media  (min-width:768px){ .gallery-theme-tiles.gallery-size-xs .gp_gallery li{ width:10%; padding-bottom:10%; } }
-@media  (min-width:992px){ .gallery-theme-tiles.gallery-size-xs .gp_gallery li{ width:8.33333%; padding-bottom:8.33333%; } }
-@media (min-width:1200px){ .gallery-theme-tiles.gallery-size-xs .gp_gallery li{ width:6.25%; padding-bottom:6.25%; } }
-
+.gallery-theme-tiles.gallery-size-xs .gp_gallery li{ height:75px; width:auto; }
 
 /* ### .gallery-size-sm ### */
 
@@ -318,11 +323,7 @@
 .gallery-theme-circle-grid.gallery-size-sm .gp_gallery div, 
 .gallery-theme-circle-grid.gallery-size-sm .gp_gallery span.caption{ width:auto; padding:0 12px; margin:12px 0; height:3.9em; /* 3 lines */ }
 
-.gallery-theme-tiles.gallery-size-sm .gp_gallery li{ width:25%; padding-bottom:25%; }
-@media  (min-width:480px){ .gallery-theme-tiles.gallery-size-sm .gp_gallery li{ width:16.66666%%; padding-bottom:16.66666%%; } }
-@media  (min-width:768px){ .gallery-theme-tiles.gallery-size-sm .gp_gallery li{ width:16.66666%; padding-bottom:16.66666%; } }
-@media  (min-width:992px){ .gallery-theme-tiles.gallery-size-sm .gp_gallery li{ width:11.11111%; padding-bottom:11.11111%; } }
-@media (min-width:1200px){ .gallery-theme-tiles.gallery-size-sm .gp_gallery li{ width:8.33333%; padding-bottom:8.33333%; } }
+.gallery-theme-tiles.gallery-size-sm .gp_gallery li{ height:100px; width:auto; }
 
 
 /* ### .gallery-size-md ### */
@@ -385,11 +386,7 @@
 .gallery-theme-circle-grid.gallery-size-lg .gp_gallery div, 
 .gallery-theme-circle-grid.gallery-size-lg .gp_gallery span.caption{ width:auto; padding:0 16px; margin:16px 0; height:6.5em; /* 5 lines */ }
 
-.gallery-theme-tiles.gallery-size-lg .gp_gallery li{ width:100%; padding-bottom:100%; }
-@media  (min-width:480px){ .gallery-theme-tiles.gallery-size-lg .gp_gallery li{ width:50%; padding-bottom:50%; } }
-@media  (min-width:768px){ .gallery-theme-tiles.gallery-size-lg .gp_gallery li{ width:33.33333%; padding-bottom:33.33333%; } }
-@media  (min-width:992px){ .gallery-theme-tiles.gallery-size-lg .gp_gallery li{ width:25%; padding-bottom:25%; } }
-@media (min-width:1200px){ .gallery-theme-tiles.gallery-size-lg .gp_gallery li{ width:20%; padding-bottom:20%; } }
+.gallery-theme-tiles.gallery-size-lg .gp_gallery li{ height:200px; width:auto; }
 
 
 /* ### .gallery-size-xl ### */
@@ -451,11 +448,7 @@
 .gallery-theme-circle-grid.gallery-size-xl .gp_gallery div, 
 .gallery-theme-circle-grid.gallery-size-xl .gp_gallery span.caption{ width:auto; padding:0 18px; margin:18px 0; height:7.8em; /* 6 lines */ }
 
-.gallery-theme-tiles.gallery-size-xl .gp_gallery li{ width:100%; padding-bottom:100%; }
-@media  (min-width:480px){ .gallery-theme-tiles.gallery-size-xl .gp_gallery li{ width:50%; padding-bottom:50%; } }
-@media  (min-width:768px){ .gallery-theme-tiles.gallery-size-xl .gp_gallery li{ width:50%; padding-bottom:50%; } }
-@media  (min-width:992px){ .gallery-theme-tiles.gallery-size-xl .gp_gallery li{ width:33.33333%; padding-bottom:33.33333%; } }
-@media (min-width:1200px){ .gallery-theme-tiles.gallery-size-xl .gp_gallery li{ width:25%; padding-bottom:25%; } }
+.gallery-theme-tiles.gallery-size-xl .gp_gallery li{ height:300px; width:auto; }
 
 
 
@@ -473,7 +466,7 @@
 
 .gallery-theme-tiles .gp_gallery a.gallery_gallery:after{ background:rgba(0,0,0,0.625); }
 .gallery-theme-tiles .gp_gallery div, 
-.gallery-theme-tiles .gp_gallery span.caption{ color:#888; }
+.gallery-theme-tiles .gp_gallery span.caption{ color:#ccc; }
 
 .gallery-theme-circle-grid .gp_gallery a.gallery_gallery,
 .gallery-theme-circle-list .gp_gallery a.gallery_gallery { background:none transparent; }

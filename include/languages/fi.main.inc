@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Jos tämä on valittu, käyttäjän antamia sähköpostiosoitteita käytetään "Lähettäjä"-kentässä ylläolevien oletusten sijaan.',
 	'smtp_hosts'                     => 'Esimerkki: ',
 	'auto_redir'                     => 'Ohjaa pyyntö automaattisesti uudelleen, jos se on olemassaolevan sivun kaltainen tämän prosenttiarvon rajoissa.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Kuvaus',
 	'keywords'                       => 'Avainsanat',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Suorituskyky',
 	'require_email'                  => 'Pakolliset kentät',
 	'colorbox_style'                 => 'Värilaatikon tyyli',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Yhteystietolomake',
 	'contact_advanced'               => 'Yhteystietolomake (edistynyt)',
 	'toemail'                        => 'Vastaanottajan osoite *',

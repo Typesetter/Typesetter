@@ -233,6 +233,7 @@ $langmessage = array (
 	'from_use_user'                  => 'Indien geselecteerd, ingevulde e-mail adressen zullen worden gebruikt voor de "From" header in plaats van de bovengenoemde standaardinstellingen.',
 	'smtp_hosts'                     => 'Voorbeeld: ',
 	'auto_redir'                     => 'Verwijs een verzoek automatisch door als het binnen dit percentage lijkt op een bestaande pagina.',
+	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
 	),
 	'desc'                           => 'Omschrijving',
 	'keywords'                       => 'Sleutelwoorden',
@@ -256,6 +257,7 @@ $langmessage = array (
 	'Performance'                    => 'Prestaties',
 	'require_email'                  => 'Maak contact velden verplicht',
 	'colorbox_style'                 => 'Colorbox Stijl',
+	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'Contact Formulier',
 	'contact_advanced'               => 'Contact Formulier (Geavanceerd)',
 	'toemail'                        => 'Ontvanger Adres *',

@@ -42,7 +42,6 @@ namespace gp\tool\Output{
 			$section_data		= $sections[$curr_section_num];
 			$section_num++;
 
-
 			//make sure section_data is an array
 			$type				= gettype($section_data);
 			if( $type !== 'array' ){
@@ -50,7 +49,6 @@ namespace gp\tool\Output{
 				return;
 			}
 			$section_data		+= array('attributes' => array() );
-
 
 			if( $section_data['type'] == 'wrapper_section' ){
 				if( isset($section_data['contains_sections']) ){
@@ -62,6 +60,12 @@ namespace gp\tool\Output{
 				$content				.= self::SectionToContent($section_data,$curr_section_num);
 			}
 
+			$is_hidden = 		isset($section_data['gp_hidden']) && $section_data['gp_hidden'] == 'true';
+			$is_hidden = 		\gp\tool\Plugins::Filter('SectionIsHidden', array($is_hidden, $section_data, $curr_section_num));
+
+			if( $is_hidden ){
+				return ''; // this of course could be done a lot smarter
+			}
 
 			if( !isset($section_data['nodeName']) ){
 				$content 			= '<div'.self::SectionAttributes($section_data['attributes'],$section_data['type']).'>'

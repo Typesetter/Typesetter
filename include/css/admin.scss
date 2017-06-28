@@ -604,9 +604,13 @@ input.admin_box_close{
 	@include opacity(.6);
 }
 
-/* For new content areas and empty areas */
+/* For new content areas, empty areas and hidden areas */
 body.edit_layout .GPAREA{
-	min-height: 20px;
+	min-height: 1em;
+	}
+
+body.gpAdmin .GPAREA[data-gp_hidden="true"] { 
+	display: none!important; 
 	}
 
 body.gpAdmin div.editable_area{

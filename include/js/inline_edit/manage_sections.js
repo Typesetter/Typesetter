@@ -35,6 +35,7 @@
 			args.gp_label				= [];
 			args.gp_color				= [];
 			args.gp_collapse			= [];
+			args.gp_hidden				= [];
 			args.cmd					= 'SaveSections';
 
 			$('#gpx_content.gp_page_display').find('.editable_area').each( function(i) {
@@ -72,6 +73,8 @@
 				//collapse
 				args.gp_collapse[i]		= $this.data('gp_collapse');
 
+				//collapse
+				args.gp_hidden[i]		= $this.data('gp_hidden');
 
 			});
 
@@ -205,28 +208,39 @@
 				//label
 				var label	= gp_editing.SectionLabel($this);
 
+				//hidden
+				var is_hidden	= $this.data('gp_hidden');
+
 				//color
 				var color	= $this.data('gp_color') || '#aabbcc';
 
 				//collapsed
-				var style	= ' class="'+($this.data('gp_collapse')||'')+'"';
+				var style	= ' class="' 
+					+ ($this.data('gp_collapse') || '') 
+					+ (is_hidden ? ' gp-section-hidden' : '') 
+					+ '" ';
 
+				//attrs
+				var attrs	= $this.data('gp-attrs');
 
 				//classes
-				var classes		= $this.data('gp-attrs').class || label;
-
+				var classes	= attrs.class || label;
 
 				html += '<li data-gp-area-id="'+$gp.AreaId($this)+'" '+style+' title="'+classes+'">';
 				html += '<div><a class="color_handle" data-cmd="SectionColor" style="background-color:'+color+'"></a>';
 				html += '<span class="options">';
 
 				if( !$this.hasClass('filetype-wrapper_section') ){
-					html += '<a class="fa fa-pencil" data-cmd="SectionEdit" title="Edit"></a>';
+					html += '<a class="fa fa-pencil" data-cmd="SectionEdit" title="' + gplang.edit + '"></a>';
 				}
 
-				html += '<a class="fa fa-sliders" data-cmd="SectionOptions" title="Options"></a>';
-				html += '<a class="fa fa-files-o" data-cmd="CopySection" title="Copy"></a>';
-				html += '<a class="fa fa-trash RemoveSection" data-cmd="RemoveSection" title="Remove"></a>';
+				html += '<a class="fa fa-sliders" data-cmd="SectionOptions" title="' + gplang.options + '"></a>';
+				html += '<a class="fa fa-files-o" data-cmd="CopySection" title="' + gplang.Copy + '"></a>';
+
+				var vis_icon_class = is_hidden ? 'fa-eye' : 'fa-eye-slash';
+				html += '<a class="fa ' + vis_icon_class + ' ShowHideSection" data-cmd="ShowHideSection" title="' + gplang.Visibility + '"></a>';
+
+				html += '<a class="fa fa-trash RemoveSection" data-cmd="ConfirmDeleteSection" title="' + gplang.remove + '"></a>';
 				html += '</span>';
 				html += '<i class="section_label_wrap">';
 
@@ -426,24 +440,100 @@
 
 		gp_editor.InitSorting();
 		$this.removeClass('previewing').trigger('mousemove');
-	}
-
+	};
 
 	/**
-	 * Remove a section
+	 * Set Section Visibility
 	 *
 	 */
-	$gp.links.RemoveSection = function(evt){
+	$gp.links.ShowHideSection = function(evt){
+		var $li = $(this).closest('li');
+		var $area = gp_editor.GetArea($li);
+		var is_hidden = $area.data('gp_hidden');
+		if( is_hidden ){
 
+		$area
+			.attr('data-gp_hidden', false)
+			.data('gp_hidden', false)
+			.hide().slideDown(300);
+
+			$(this)
+				.removeClass("fa-eye")
+				.addClass("fa-eye-slash");
+			$li.removeClass("gp-section-hidden");
+
+		}else{
+
+			$area.slideUp(300, function(){ 
+				$area
+					.attr('data-gp_hidden', true)
+					.data('gp_hidden', true);
+			});
+			$(this)
+				.removeClass("fa-eye-slash")
+				.addClass("fa-eye");
+			$li.addClass("gp-section-hidden");
+
+		}
+	};
+
+	/**
+	 * Confirm to delete a section
+	 *
+	 */
+	$gp.links.ConfirmDeleteSection = function(evt){
+		var $this = $(this);
+		var $li = $this.closest('li');
+		var area_id = $li.attr("data-gp-area-id");
+		var html = '<div class="inline_box">';
+		html += '<h2>' + gplang.del + '</h2>';
+		html += '<p>';
+		html += gplang.generic_delete_confirm.replace(
+			'%s', '<strong>' + gplang.Section.replace('%s','') + $li.find(".section_label").text() + '</strong>' 
+		);
+		html += '<br/><br/></p><p>';
+		html += '<a class="gpsubmit" onClick="$gp.DeleteSection(' + area_id + ')">' + gplang.del + '</a>';
+		html += '<a class="gpcancel" data-cmd="admin_box_close">' + gplang.ca + '</a>';
+		html += '</p>';
+		html += '</div>';
+		$gp.AdminBoxC(html);
+	};
+
+	/**
+	 * Delete a section
+	 *
+	 */
+	$gp.DeleteSection = function(area_id){
 		//make sure there's at least one section
 		if( $('#gpx_content').find('.editable_area').length > 1 ){
-			var $li = $(this).closest('li');
+			var $li = $('li[data-gp-area-id="' + area_id + '"]');
+			if( !$li.length ){
+				return;
+			}
 			var area = gp_editor.GetArea( $li );
 			area.parent().trigger("SectionRemoved");
 			area.remove();
 			$li.remove();
 		}
-	}
+		$gp.CloseAdminBox();
+	};
+
+
+	/**
+	 * Remove a section
+	 * Deletes a section without confirmation, deprecated as of v5.1.0
+	 */
+	$gp.links.RemoveSection = function(evt){
+		//make sure there's at least one section
+		if( $('#gpx_content').find('.editable_area').length > 1 ){
+			var $li = $(this).closest('li');
+			var area = gp_editor.GetArea( $li );
+
+			area.parent().trigger("SectionRemoved");
+			area.remove();
+			$li.remove();
+		}
+	};
 
 	/**
 	 * Copy selected section
@@ -457,7 +547,7 @@
 		from_area.after(new_area);
 		new_area.trigger("SectionAdded");
 		gp_editor.InitSorting();
-	}
+	};
 
 	/**
 	 * Section Color
@@ -483,7 +573,7 @@
 			$colors.remove();
 			$li.children().show();
 		});
-	}
+	};
 
 	/**
 	 * Change section color
@@ -500,7 +590,7 @@
 		$area.attr('data-gp_color',newColor).data('gp_color',newColor);
 		$li.find('.secsort_color_swatches').remove();
 		$li.children().show();
-	}
+	};
 
 	/**
 	 * Toggle wrapper display
@@ -520,7 +610,7 @@
 		}
 
 		$area.attr('data-gp_collapse',clss).data('gp_collapse',clss);
-	}
+	};
 
 
 	/**
@@ -551,7 +641,7 @@
 		}
 
 		$('html,body').stop().animate({scrollTop: el_top-200});
-	}
+	};
 
 
 	/**
@@ -639,7 +729,6 @@
 		html += '</form></div>';
 		var $html = $(html);
 
-		//
 		var selects = $html.find('select').on('change input',function(){
 			var $checkbox = $(this).closest('label').find('.gpcheck');
 			$checkbox.prop('checked',true);
@@ -651,7 +740,8 @@
 		//$('#section_attributes_form input').on('input',function(){UpdateAttrs()});
 
 		$(document).trigger("section_options:loaded");
-	}
+	};
+
 
 	/**
 	 * Create a class select

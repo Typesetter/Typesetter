@@ -77,7 +77,7 @@
 	width:16px;
 	display:inline-block;
 	vertical-align:top;
-	margin:0 5px 0;
+	margin:0 3px 0;
 	color:#333;
 	font-size:14px;
 	}
@@ -111,6 +111,19 @@
 	font-style:normal;
 	height:18px;
 }
+
+#section_sorting li.gp-section-hidden,
+#section_sorting li.gp-section-hidden li {
+	background: -webkit-repeating-linear-gradient(-45deg, #ccc, #ccc 2px, #fff 2px, #fff 4px);
+	background: repeating-linear-gradient(-45deg, #ccc, #ccc 2px, #fff 2px, #fff 4px);
+	}
+
+/* hide edit icon (pencil) on hidden sections, hide visibility icon on all children of hidden wrappers */
+#section_sorting li.gp-section-hidden div > .options a[data-cmd='SectionEdit'], 
+#section_sorting li.gp-section-hidden ul div > .options a[data-cmd='ShowHideSection'] {
+	display: none;
+	pointer-events: none;
+	}
 
 
 /**

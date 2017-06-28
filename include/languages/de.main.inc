@@ -35,7 +35,7 @@ $langmessage = array (
 	'MOVED_TO_TRASH'                 => 'Diese Seite wurde in den <a href="%s">Papierkorb</a> verschoben.',
 	'trash'                          => 'Papierkorb',
 	'TRASH_IS_EMPTY'                 => 'Der Papierkorb ist leer.',
-	'options'                        => 'Aktionen',
+	'options'                        => 'Optionen',
 	'restore'                        => 'Wiederherstellen',
 	'file_restored'                  => 'Die folgende(n) Seite(n) wurde(n) wiederhergestellt: %1$s. Sie können jetzt über die <a href="%2$s">Seitenverwaltung</a> deren Position in der Seitenstruktur festlegen.',
 	'delete'                         => 'Löschen',

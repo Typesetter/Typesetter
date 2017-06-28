@@ -396,7 +396,7 @@ class Edit extends \gp\Page{
 			$section['attributes']['class']			.= ' editable_area';
 		}
 
-		$section_attrs		= array('gp_label','gp_color','gp_collapse','gp_type');
+		$section_attrs		= array('gp_label', 'gp_color', 'gp_collapse', 'gp_type', 'gp_hidden');
 		foreach($section_attrs as $attr){
 			if( !empty($section[$attr]) ){
 				$section['attributes']['data-'.$attr] = $section[$attr];
@@ -480,10 +480,10 @@ class Edit extends \gp\Page{
 	}
 
 
-	protected function SaveSection($i,$arg, &$unused_sections ){
+	protected function SaveSection($i, $arg, &$unused_sections){
 		global $langmessage;
 
-		$section_attrs			= array('gp_label','gp_color','gp_collapse','gp_type');
+		$section_attrs			= array('gp_label', 'gp_color', 'gp_collapse', 'gp_type', 'gp_hidden');
 
 		// moved / copied sections
 		if( ctype_digit($arg) ){

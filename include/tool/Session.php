@@ -575,9 +575,30 @@ namespace gp\tool{
 			//make sure forms have admin nonce
 			ob_start(array('\\gp\\tool\\Session','AdminBuffer'));
 
-			\gp\tool\Output::$lang_values += array(	'cancel'=>'ca','update'=>'up','caption'=>'cp','Width'=>'Width','Height'=>'Height','save'=>'Save','Saved'=>'Saved','Saving'=>'Saving',
-													'Close'=>'Close','Page'=>'Page','theme_content'=>'Extra','Publish Draft'=>'Draft','Publish'=>'Publish','Select Image'=>'SelectImage',
-													);
+			\gp\tool\Output::$lang_values += array(
+				'cancel'					=>	'ca',
+				'update'					=>	'up',
+				'caption'					=>	'cp',
+				'Width'						=>	'Width',
+				'Height'					=>	'Height',
+				'save'						=>	'Save',
+				'Saved'						=>	'Saved',
+				'Saving'					=>	'Saving',
+				'Close'						=>	'Close',
+				'Page'						=>	'Page',
+				'theme_content'				=>	'Extra',
+				'Publish Draft'				=>	'Draft',
+				'Publish'					=>	'Publish',
+				'Select Image'				=>	'SelectImage',
+				'edit'						=>	'edit',
+				'options'					=>	'options',
+				'Copy'						=>	'Copy',
+				'Visibility'				=>	'Visibility',
+				'remove'					=>	'remove',
+				'delete'					=>	'del',
+				'Section %s'				=>	'Section',
+				'generic_delete_confirm'	=>	'generic_delete_confirm',
+			);
 
 
 			\gp\tool::LoadComponents('sortable,autocomplete,gp-admin,gp-admin-css,fontawesome');

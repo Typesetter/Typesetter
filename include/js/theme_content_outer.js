@@ -13,21 +13,20 @@ $(function(){
 			var iframe		= document.getElementById('gp_layout_iframe');
 			var body		= iframe.contentWindow.document.body;
 			if( body ){
-
+				var html	= iframe.contentWindow.document.documentElement;
 				//shrink down to body size
-				var html		= iframe.contentWindow.document.documentElement;
-				height			= Math.max( body.scrollHeight, body.offsetHeight );
-				$wrap.height( height );
+				height	= Math.max( body.scrollHeight, body.offsetHeight );
+				$wrap.height( height + 80); // 80 = grace extra space for near bottom elements
 
 				//increase back up if needed
-				height			= Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight, $gp.$win.height() );
-				$wrap.height( height );
+				window.setTimeout(function(){
+					height	= Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight, $gp.$win.height() );
+					$wrap.height( height );
+				},1000); 
 			}
 
-
-		},300);
+		},2000);
 	}
-
 
 	/**
 	 * Resizeable editor

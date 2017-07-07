@@ -187,7 +187,11 @@ namespace gp\tool\Output{
 				'fileModTime'	=> self::$meta['modified'],
 				'title'			=> self::$title,
 				'label'			=> self::$label,
+				'currentYear'	=> date('Y'),
+				'currentMonths'	=> date('m'),
+				'currentDay'	=> date('d'),
 				);
+			$vars = \gp\tool\Plugins::Filter('ReplaceContentVars', array($vars));
 
 			$offset = 0;
 			$i = 0;

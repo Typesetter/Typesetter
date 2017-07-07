@@ -17,13 +17,13 @@ class Css{
 
 
 		//generage the name of the css file from the modified times and content length of each imported file
-		$file_array		= (array)$file_array;
+		$file_array		= (array)$file_array; 
 		$type			= strtolower($type);
 		$files_hash		= \gp\tool::ArrayHash($file_array);
- 		$list_file		= $dataDir.'/data/_cache/'.$type.'_'.$files_hash.'.list';
+		$list_file		= $dataDir.'/data/_cache/'.$type.'_'.$files_hash.'.list';
 
 
- 		if( file_exists($list_file) ){
+		if( file_exists($list_file) ){
 
 			$list = explode("\n",file_get_contents($list_file));
 

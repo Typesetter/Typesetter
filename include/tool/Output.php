@@ -1517,18 +1517,36 @@ namespace gp\tool{
 			//convert .scss & .less files to .css
 			foreach($scripts as $key => $script){
 
+				// allow arrays of scripts
+				$files = array();
+
 				if( is_array($script) ){
-					$file = $script['file'];
+					// array of scripts 
+					if( isset($script['file']) ){
+						// single script
+						$file = $script['file'];
+						$ext = \gp\tool::Ext($file);
+						$files[$ext] = array($dataDir.$file);
+					}else{
+						// multiple scripts
+						foreach( $script as $file ){
+							$file = is_array($file) ? $file['file'] : $file;
+							$ext = \gp\tool::Ext($file);
+							//$files[$ext] += array();
+							$files[$ext][] = $dataDir.$file;
+						}
+					}
 				}else{
 					$file = $script;
+					$ext = \gp\tool::Ext($file);
+					$files[$ext] = array($dataDir.$file);
 				}
 
-
-				$ext = \gp\tool::Ext($file);
-
-				//less and scss
-				if( $ext == 'less' || $ext == 'scss' ){
-					$scripts[$key] = \gp\tool\Output\Css::Cache($dataDir.$file,$ext);
+				foreach( $files as $ext => $files_same_ext ){
+					//less and scss
+					if( $ext == 'less' || $ext == 'scss' ){ // msg("from GetHead_CSS");
+						$scripts[$key] = \gp\tool\Output\Css::Cache($files_same_ext,$ext);
+					}
 				}
 
 			}
@@ -1682,14 +1700,31 @@ namespace gp\tool{
 		public static function CombineFiles($files,$type,$combine){
 			global $page;
 
+			//msg("files=" . pre($files));
+
+			// allow arrays of scripts
+			$files_flat = array();
+
 			//only need file paths
-			foreach($files as $key => $script){
-				if( is_array($script) ){
-					$files[$key] = $script['file'];
+			foreach($files as $key => $val){
+				if( is_array($val) ){
+					// array of scripts 
+					if( isset($val['file']) ){
+						// single script
+						$files_flat[$key] = $val['file'];
+					}else{
+						// multiple scripts
+						foreach( $val as $subkey => $file ){
+							$files_flat[$key.'-'.$subkey] = is_array($file) ? $file['file'] : $file;
+						}
+					}
+				}else{
+					$files_flat[$key] = $val;
 				}
 			}
-			$files = array_unique($files);
-			$files = array_filter($files);//remove empty elements
+
+			$files_flat = array_unique($files_flat);
+			$files_flat = array_filter($files_flat);//remove empty elements
 
 			// Force resources to be included inline
 			// CheckFile will fix the $file path if needed
@@ -1699,7 +1734,7 @@ namespace gp\tool{
 				}else{
 					echo '<script type="text/javascript">';
 				}
-				foreach($files as $file_key => $file){
+				foreach($files_flat as $file_key => $file){
 					$full_path = \gp\tool\Output\Combine::CheckFile($file);
 					if( $full_path === false ) continue;
 					readfile($full_path);
@@ -1716,7 +1751,7 @@ namespace gp\tool{
 
 			//files not combined except for script components
 			if( !$combine || (isset($_REQUEST['no_combine']) && \gp\tool::LoggedIn()) ){
-				foreach($files as $file_key => $file){
+				foreach($files_flat as $file_key => $file){
 
 					$html = "\n".'<script type="text/javascript" src="%s"></script>';
 					if( $type == 'css' ){
@@ -1739,7 +1774,7 @@ namespace gp\tool{
 			}
 
 			//create combine request
-			$combined_file = \gp\tool\Output\Combine::GenerateFile($files,$type);
+			$combined_file = \gp\tool\Output\Combine::GenerateFile($files_flat,$type);
 			if( $combined_file === false ){
 				return;
 			}

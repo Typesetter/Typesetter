@@ -126,7 +126,7 @@ $(function(){
 			$textarea.removeClass('edited');
 			prev_value = $textarea.val();
 			$('button[data-cmd="preview_css"], button[data-cmd="save_css"], input[type="reset"]')
-				.addeClass('gpdisabled')
+				.addClass('gpdisabled')
 				.prop("disabled", true);
 			$gp.loading();
 		};

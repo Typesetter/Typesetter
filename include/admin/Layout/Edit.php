@@ -246,7 +246,7 @@ class Edit extends \gp\admin\Layout{
 
 		//cancel
 		$cancel_url = !empty($_REQUEST['redir']) ? $_REQUEST['redir'] : 'Admin_Theme_Content';
-		echo \gp\tool::Link($cancel_url, $langmessage['cancel'], '', 'class="gpcancel"');
+		echo \gp\tool::Link($cancel_url, $langmessage['Close'], '', 'class="gpcancel"');
 
 		echo '</div>'; // /.css_buttons
 

@@ -125,9 +125,11 @@ $(function(){
 		$gp.inputs.save_css = function(evt){
 			$textarea.removeClass('edited');
 			prev_value = $textarea.val();
-			$('button[data-cmd="preview_css"], button[data-cmd="save_css"], input[type="reset"]')
-				.addClass('gpdisabled')
-				.prop("disabled", true);
+			setTimeout(function(){
+				$('button[data-cmd="preview_css"], button[data-cmd="save_css"], input[type="reset"]')
+					.addClass('gpdisabled')
+					.prop("disabled", true);
+			},150);
 			$gp.loading();
 		};
 

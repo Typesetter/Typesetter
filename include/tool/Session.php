@@ -593,6 +593,7 @@ namespace gp\tool{
 				'edit'						=>	'edit',
 				'options'					=>	'options',
 				'Copy'						=>	'Copy',
+				'Copy to Clipboard'			=>	'CopyToClipboard',
 				'Visibility'				=>	'Visibility',
 				'remove'					=>	'remove',
 				'delete'					=>	'del',

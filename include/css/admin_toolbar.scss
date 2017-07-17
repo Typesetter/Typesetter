@@ -6,7 +6,7 @@ body.gpAdmin #admincontent_panel.fixed{
 	left:0;
 	right:0;
 	z-index:9001;
-}
+	}
 
 
 #admincontent_panel a.msg_publish_draft{
@@ -14,8 +14,25 @@ body.gpAdmin #admincontent_panel.fixed{
 	}
 
 #admincontent_panel a.msg_publish_draft:hover{
-	background: lighten(#329880,5%);
+	background:lighten(#329880,5%);
 	}
+
+#admincontent_panel a.msg_publish_draft_disabled,
+#admincontent_panel a.msg_publish_draft_disabled:hover{
+	background:darken(#329880,10%);
+	color:rgba(240,240,240,0.667)!important;
+	cursor:not-allowed;
+	display:none;
+	}
+
+#admincontent_panel a.msg_saving_draft,
+#admincontent_panel a.msg_saving_draft:hover{
+	background:lighten($gp_panel_bg,10%);
+	cursor:not-allowed;
+	display:none;
+	}
+
+
 
 
 /**

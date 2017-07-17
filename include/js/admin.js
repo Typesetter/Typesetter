@@ -100,6 +100,7 @@ $gp.LoadEditor = function(href, area_id, arg){
 		}else{
 			$gp.LoadStyle('/include/css/inline_edit.css');
 			$gp.LoadStyle('/include/css/manage_sections.css');
+			// $gp.LoadStyle('/include/css/manage_sections_compact.css'); // alternative compact style
 		}
 
 		$gp.curr_edit_id	= area_id;

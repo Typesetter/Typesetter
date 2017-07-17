@@ -72,37 +72,41 @@ class Edit extends \gp\Page{
 
 		//admin actions
 		if( $this->permission_menu ){
-			$this->cmds['RenameForm']			= '\\gp\\Page\\Rename::RenameForm';
-			$this->cmds['RenameFile']			= '\\gp\\Page\\Rename::RenamePage';
-			$this->cmds['ToggleVisibility']		= array('\\gp\\Page\\Visibility::TogglePage','DefaultDisplay');
+			$this->cmds['RenameForm']				= '\\gp\\Page\\Rename::RenameForm';
+			$this->cmds['RenameFile']				= '\\gp\\Page\\Rename::RenamePage';
+			$this->cmds['ToggleVisibility']			= array('\\gp\\Page\\Visibility::TogglePage','DefaultDisplay');
 		}
 
 
 		if( $this->permission_edit ){
 
 			/* gallery/image editing */
-			$this->cmds['Gallery_Folder']		= 'GalleryImages';
-			$this->cmds['Gallery_Images']		= 'GalleryImages';
-			$this->cmds['Image_Editor']			= '\\gp\\tool\\Editing::ImageEditor';
-			$this->cmds['New_Dir']				= '\\gp\\tool\\Editing::NewDirForm';
+			$this->cmds['Gallery_Folder']			= 'GalleryImages';
+			$this->cmds['Gallery_Images']			= 'GalleryImages';
+			$this->cmds['Image_Editor']				= '\\gp\\tool\\Editing::ImageEditor';
+			$this->cmds['New_Dir']					= '\\gp\\tool\\Editing::NewDirForm';
 
+			$this->cmds['ManageSections']			= '';
+			$this->cmds['SaveSections']				= '';
+			$this->cmds['SaveToClipboard']			= '';
+			$this->cmds['RemoveFromClipboard']		= '';
+			$this->cmds['RelabelClipboardItem']		= '';
+			$this->cmds['ReorderClipboardItems']	= '';
+			$this->cmds['AddFromClipboard']			= '';
 
-			$this->cmds['ManageSections']		= '';
-			$this->cmds['SaveSections']			= '';
-			$this->cmds['ViewRevision']			= '';
-			$this->cmds['UseRevision']			= 'DefaultDisplay';
-			$this->cmds['ViewHistory']			= '';
-			$this->cmds['ViewCurrent']			= '';
-			$this->cmds['DeleteRevision']		= 'ViewHistory';
-			$this->cmds['PublishDraft']			= 'DefaultDisplay';
-
+			$this->cmds['ViewRevision']				= '';
+			$this->cmds['UseRevision']				= 'DefaultDisplay';
+			$this->cmds['ViewHistory']				= '';
+			$this->cmds['ViewCurrent']				= '';
+			$this->cmds['DeleteRevision']			= 'ViewHistory';
+			$this->cmds['PublishDraft']				= 'DefaultDisplay';
 
 			/* inline editing */
-			$this->cmds['Save']					= 'SectionEdit';
-			$this->cmds['Save_Inline']			= 'SectionEdit';
-			$this->cmds['Preview']				= 'SectionEdit';
-			$this->cmds['Include_Dialog']		= 'SectionEdit';
-			$this->cmds['InlineEdit']			= 'SectionEdit';
+			$this->cmds['Save']						= 'SectionEdit';
+			$this->cmds['Save_Inline']				= 'SectionEdit';
+			$this->cmds['Preview']					= 'SectionEdit';
+			$this->cmds['Include_Dialog']			= 'SectionEdit';
+			$this->cmds['InlineEdit']				= 'SectionEdit';
 
 		}
 
@@ -177,57 +181,93 @@ class Edit extends \gp\Page{
 		//history
 		$backup_files		= $this->BackupFiles();
 		if( count($backup_files) ){
-			$times				= array_keys($backup_files);
-			$admin_links[]		= \gp\tool::Link($this->title,'<i class="fa fa-backward"></i> '.$langmessage['Previous'],'cmd=ViewRevision&time='.array_pop($times),array('data-cmd'=>'cnreq'));
+			$times			= array_keys($backup_files);
+			$admin_links[]	= \gp\tool::Link(
+				$this->title,
+				'<i class="fa fa-backward"></i> ' . $langmessage['Previous'],
+				'cmd=ViewRevision&time=' . array_pop($times),
+				array('data-cmd'=>'cnreq')
+			);
 		}
 
-		$admin_links[]		= \gp\tool::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
+		$admin_links[]	= \gp\tool::Link(
+			$this->title,
+			'<i class="fa fa-history"></i> ' . $langmessage['Revision History'],
+			'cmd=ViewHistory',
+			array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox')
+		);
 
 
 
 		if( $this->permission_menu ){
 
 			//visibility
-			$q							= 'cmd=ToggleVisibility';
-			$label						= '<i class="fa fa-eye-slash"></i> '.$langmessage['Visibility'].': '.$langmessage['Private'];
+			$q				= 'cmd=ToggleVisibility';
+			$label			= '<i class="fa fa-eye-slash"></i> '.$langmessage['Visibility'].': '.$langmessage['Private'];
 			if( !$this->visibility ){
-				$label					= '<i class="fa fa-eye"></i> '.$langmessage['Visibility'].': '.$langmessage['Public'];
-				$q						.= '&visibility=private';
+				$label		= '<i class="fa fa-eye"></i> '.$langmessage['Visibility'].': '.$langmessage['Public'];
+				$q			.= '&visibility=private';
 			}
-			$attrs						= array('data-cmd'=>'creq');
-			$admin_links[]		= \gp\tool::Link($this->title,$label,$q,$attrs);
+			$attrs			= array('data-cmd'=>'creq');
+			$admin_links[]	= \gp\tool::Link($this->title, $label, $q, $attrs);
 		}
 
 
 		// page options: less frequently used links that don't have to do with editing the content of the page
 		$option_links		= array();
 		if( $this->permission_menu ){
-			$option_links[] = \gp\tool::Link($this->title,$langmessage['rename/details'],'cmd=renameform&index='.urlencode($this->gp_index),'data-cmd="gpajax"');
-
-			$option_links[] = \gp\tool::Link('Admin/Menu',$langmessage['current_layout'],'cmd=layout&from=page&index='.urlencode($this->gp_index),array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'));
-
-			$option_links[] = \gp\tool::Link('Admin/Menu/Ajax',$langmessage['Copy'],'cmd=CopyForm&redir=redir&index='.urlencode($this->gp_index),array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox'));
+			$option_links[] = \gp\tool::Link(
+				$this->title,
+				$langmessage['rename/details'],
+				'cmd=renameform&index=' . urlencode($this->gp_index),
+				'data-cmd="gpajax"'
+			);
+			$option_links[] = \gp\tool::Link(
+				'Admin/Menu',
+				$langmessage['current_layout'],
+				'cmd=layout&from=page&index=' . urlencode($this->gp_index),
+				array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'))
+			;
+			$option_links[] = \gp\tool::Link(
+				'Admin/Menu/Ajax',
+				$langmessage['Copy'],
+				'cmd=CopyForm&redir=redir&index=' . urlencode($this->gp_index),
+				array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox')
+			);
 		}
 
 		if( \gp\admin\Tools::HasPermission('Admin_User') ){
-			$option_links[] = \gp\tool::Link('Admin/Users',$langmessage['permissions'],'cmd=file_permissions&index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
+			$option_links[] = \gp\tool::Link(
+				'Admin/Users',
+				$langmessage['permissions'],
+				'cmd=file_permissions&index=' . urlencode($this->gp_index),
+				array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox')
+			);
 		}
 
 		if( $this->permission_menu ){
-			$option_links[] = \gp\tool::Link('Admin/Menu/Ajax',$langmessage['delete_file'],'cmd=MoveToTrash&index='.urlencode($this->gp_index),array('data-cmd'=>'postlink','title'=>$langmessage['delete_page'],'class'=>'gpconfirm'));
+			$option_links[] = \gp\tool::Link(
+				'Admin/Menu/Ajax',
+				$langmessage['delete_file'],
+				'cmd=MoveToTrash&index=' . urlencode($this->gp_index),
+				array('data-cmd'=>'postlink','title'=>$langmessage['delete_page'],'class'=>'gpconfirm')
+			);
 		}
 
 		if( !empty($option_links) ){
 			$admin_links[$langmessage['options']] = $option_links;
 		}
 
-
 		//publish draft
-		if( $this->permission_edit && $this->draft_exists	){
-			$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-check"></i> '.$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'creq', 'class'=>'msg_publish_draft'));
+		if( $this->permission_edit && $this->draft_exists ){
+			$admin_links[] = \gp\tool::Link(
+				$this->title,
+				'<i class="fa fa-check"></i> ' . $langmessage['Publish Draft'],
+				'cmd=PublishDraft',
+				array('data-cmd'=>'creq', 'class'=>'msg_publish_draft')
+			) . '<a class="msg_publish_draft_disabled"><i class="fa fa-minus-circle"></i> '.$langmessage['Publish Draft'].'</a>'
+			  . '<a class="msg_saving_draft"><i class="fa fa-spinner fa-pulse"></i> '.$langmessage['Saving'].' &hellip;</a>';
 		}
-
-
 
 		return array_merge($admin_links, $this->admin_links);
 	}
@@ -242,7 +282,6 @@ class Edit extends \gp\Page{
 
 		$admin_links		= array();
 
-
 		//previous && next revision
 		$files			= $this->BackupFiles();
 		$times			= array_keys($files);
@@ -250,19 +289,36 @@ class Edit extends \gp\Page{
 
 		if( $key_current !== false ){
 			if( isset($times[$key_current-1]) ){
-				$admin_links[]		= \gp\tool::Link($this->title,'<i class="fa fa-backward"></i> '.$langmessage['Previous'],'cmd=ViewRevision&time='.$times[$key_current-1],array('data-cmd'=>'cnreq'));
+				$admin_links[]	= \gp\tool::Link(
+					$this->title,
+					'<i class="fa fa-backward"></i> ' . $langmessage['Previous'],
+					'cmd=ViewRevision&time=' . $times[$key_current-1],
+					array('data-cmd'=>'cnreq')
+				);
 			}
 
 			if( isset($times[$key_current+1]) ){
-				$admin_links[]		= \gp\tool::Link($this->title,'<i class="fa fa-forward"></i> '.$langmessage['Next'],'cmd=ViewRevision&time='.$times[$key_current+1],array('data-cmd'=>'cnreq'));
+				$admin_links[]	= \gp\tool::Link(
+					$this->title,
+					'<i class="fa fa-forward"></i> ' . $langmessage['Next'],
+					'cmd=ViewRevision&time=' . $times[$key_current+1],
+					array('data-cmd'=>'cnreq')
+				);
 			}else{
-				$admin_links[]		= \gp\tool::Link($this->title,'<i class="fa fa-forward"></i> '.$langmessage['Working Draft']);
+				$admin_links[]	= \gp\tool::Link(
+					$this->title,
+					'<i class="fa fa-forward"></i> ' . $langmessage['Working Draft']
+				);
 			}
 
 		}
 
-		$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-history"></i> '.$langmessage['Revision History'],'cmd=ViewHistory',array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox'));
-
+		$admin_links[] = \gp\tool::Link(
+			$this->title,
+			'<i class="fa fa-history"></i> ' . $langmessage['Revision History'],
+			'cmd=ViewHistory',
+			array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox')
+		);
 
 		// restore this version
 		if( $this->revision == $this->fileModTime ){
@@ -271,9 +327,12 @@ class Edit extends \gp\Page{
 			$date	= \gp\tool::date($langmessage['strftime_datetime'],$this->revision);
 		}
 
-		$admin_links[] = \gp\tool::Link($this->title,'<i class="fa fa-save"></i> '.$langmessage['Restore this revision'].' ('.$date.')','cmd=UseRevision&time='.$this->revision,array('data-cmd'=>'cnreq','class'=>'msg_publish_draft'));
-
-
+		$admin_links[] = \gp\tool::Link(
+			$this->title,
+			'<i class="fa fa-save"></i> ' . $langmessage['Restore this revision'] . ' (' . $date . ')',
+			'cmd=UseRevision&time=' . $this->revision,
+			array('data-cmd'=>'cnreq','class'=>'msg_publish_draft')
+		);
 
 		return $admin_links;
 	}
@@ -293,7 +352,14 @@ class Edit extends \gp\Page{
 		if( $page->pagetype == 'display' ){
 			echo '<div id="section_sorting_wrap" class="inline_edit_area">';
 			echo '<ul id="section_sorting" class="section_drag_area" title="Organize"></ul>';
-			echo '<div>'.$langmessage['add'].'</div>';
+
+			echo '<div id="section-clipboard">';
+			echo '<ul id="section-clipboard-items">';
+			echo self::SectionClipboardLinks();
+			echo '</ul>';
+			echo '</div>';
+
+			// echo '<div>'.$langmessage['add'].'</div>';
 			echo '<div id="new_section_links">';
 			self::NewSections();
 			echo '</div>';
@@ -304,22 +370,18 @@ class Edit extends \gp\Page{
 		echo '<ul></ul>';
 		echo '</div>';
 
-
 		$scripts[]				= array('code'=>'var section_types = '.json_encode(ob_get_clean()).';');
-
 
 		//selectable classes
 		$avail_classes			= \gp\admin\Settings\Classes::GetClasses();
 		$scripts[]				= array('code'=>'var gp_avail_classes = '.json_encode($avail_classes).';');
 
-
-
 		$scripts[]				= array('object'=>'gp_editing','file'=>'/include/js/inline_edit/inline_editing.js');
 
 		if( empty($_REQUEST['mode']) ){
-			$scripts[]				= array('object'=>'gp_editing','code'=>'gp_editing.is_extra_mode = false;');
+			$scripts[]			= array('object'=>'gp_editing','code'=>'gp_editing.is_extra_mode = false;');
 		}else{
-			$scripts[]				= array('object'=>'gp_editing','code'=>'gp_editing.is_extra_mode = true;');
+			$scripts[]			= array('object'=>'gp_editing','code'=>'gp_editing.is_extra_mode = true;');
 		}
 
 		$scripts[]				= array('file'=>'/include/js/inline_edit/manage_sections.js');
@@ -364,24 +426,27 @@ class Edit extends \gp\Page{
 	}
 
 
+
 	public function GetNewSection($type){
 
 		$class			= self::TypeClass($type);
 		$num			= time().rand(0,10000);
 		$new_section	= \gp\tool\Editing::DefaultContent($type);
-		$content		= \gp\tool\Output\Sections::RenderSection($new_section,$num,$this->title,$this->file_stats);
+		$content		= \gp\tool\Output\Sections::RenderSection($new_section, $num, $this->title, $this->file_stats);
 
-		$new_section['attributes']['class']		.= ' '.$class;
+		$new_section['attributes']['class']		.= ' ' . $class;
 		$new_section['gp_type']					= $type;
 		$orig_attrs								= $new_section['attributes'];
 
 
 		if( !isset($new_section['nodeName']) ){
-			return $this->SectionNode($new_section, $orig_attrs).$content.'</div>';
+			return $this->SectionNode($new_section, $orig_attrs) . $content . '</div>';
 		}
 
-		return $this->SectionNode($new_section, $orig_attrs).$content.\gp\tool\Output\Sections::EndTag($new_section['nodeName']);
+		return $this->SectionNode($new_section, $orig_attrs) . $content . \gp\tool\Output\Sections::EndTag($new_section['nodeName']);
 	}
+
+
 
 	public function SectionNode($section,$orig_attrs){
 
@@ -399,19 +464,19 @@ class Edit extends \gp\Page{
 		$section_attrs		= array('gp_label', 'gp_color', 'gp_collapse', 'gp_type', 'gp_hidden');
 		foreach($section_attrs as $attr){
 			if( !empty($section[$attr]) ){
-				$section['attributes']['data-'.$attr] = $section[$attr];
+				$section['attributes']['data-' . $attr] = $section[$attr];
 			}
 		}
 
-		$attributes			= \gp\tool\Output\Sections::SectionAttributes($section['attributes'],$section['type']);
-		$attributes			.= ' data-gp-attrs=\''.htmlspecialchars($orig_attrs,ENT_QUOTES & ~ENT_COMPAT).'\'';
+		$attributes			= \gp\tool\Output\Sections::SectionAttributes($section['attributes'], $section['type']);
+		$attributes			.= ' data-gp-attrs=\'' . htmlspecialchars($orig_attrs, ENT_QUOTES & ~ENT_COMPAT) . '\'';
 
 
 		if( !isset($section['nodeName']) ){
-			return '<div'.$attributes.'>';
+			return '<div' . $attributes . '>';
 		}
 
-		return '<'.$section['nodeName'].$attributes.'>';
+		return '<' . $section['nodeName'] . $attributes . '>';
 	}
 
 
@@ -424,19 +489,19 @@ class Edit extends \gp\Page{
 
 		$this->ajaxReplace		= array();
 		$original_sections		= $this->file_sections;
-		$unused_sections		= $this->file_sections;				//keep track of sections that aren't used
+		$unused_sections		= $this->file_sections;		//keep track of sections that aren't used
 		$new_sections			= array();
 
 
 		//make sure section_order isn't empty
 		if( empty($_POST['section_order']) ){
-			msg($langmessage['OOPS'].' (Invalid Request)');
+			msg($langmessage['OOPS'] . ' (Invalid Request)');
 			return false;
 		}
 
 
 		foreach($_POST['section_order'] as $i => $arg ){
-			$new_section 		= $this->SaveSection($i,$arg, $unused_sections);
+			$new_section 		= $this->SaveSection($i, $arg, $unused_sections);
 			if( $new_section === false ){
 				return false;
 			}
@@ -446,7 +511,7 @@ class Edit extends \gp\Page{
 
 		//make sure there's at least one section
 		if( empty($new_sections) ){
-			msg($langmessage['OOPS'].' (1 Section Minimum)');
+			msg($langmessage['OOPS'] . ' (1 Section Minimum)');
 			return false;
 		}
 
@@ -457,11 +522,11 @@ class Edit extends \gp\Page{
 		// save a send message to user
 		if( !$this->SaveThis() ){
 			$this->file_sections = $original_sections;
-			msg($langmessage['OOPS'].'(4)');
+			msg($langmessage['OOPS'] . '(4)');
 			return;
 		}
 
-		$this->ajaxReplace[] = array('ck_saved','','');
+		$this->ajaxReplace[] = array('ck_saved', '', '');
 
 
 		//update gallery info
@@ -473,7 +538,7 @@ class Edit extends \gp\Page{
 			if( isset($section_data['resized_imgs']) ){
 				includeFile('image.php');
 				\gp_resized::SetIndex();
-				\gp\tool\Editing::ResizedImageUse($section_data['resized_imgs'],array());
+				\gp\tool\Editing::ResizedImageUse($section_data['resized_imgs'], array());
 			}
 		}
 
@@ -490,7 +555,7 @@ class Edit extends \gp\Page{
 			$arg = (int)$arg;
 
 			if( !isset($this->file_sections[$arg]) ){
-				msg($langmessage['OOPS'].' (Invalid Section Number)');
+				msg($langmessage['OOPS'] . ' (Invalid Section Number)');
 				return false;
 			}
 
@@ -525,6 +590,334 @@ class Edit extends \gp\Page{
 
 
 	/**
+	 * Save a section or wrapper with sections to the Clipboard
+	 *
+	 */
+	protected function SaveToClipboard(){
+		global $langmessage;
+		$this->ajaxReplace		= array();
+
+		if( !isset($_POST['section_number']) || !ctype_digit($_POST['section_number']) ){
+			msg($langmessage['OOPS'] . ' (SaveToClipboard: Invalid Request)');
+			return false;
+		}
+
+		$section_num = $_POST['section_number'];
+		if( !isset($this->file_sections[$section_num]) ){
+			msg($langmessage['OOPS'] . ' (SaveToClipboard: Invalid Section Number (' . $section_num . ')');
+		}
+
+
+		$file_sections = array();
+		$file_sections = self::ExtractSections($file_sections, $section_num);
+		// msg('SaveToClipboard: $file_sections = ' . pre($file_sections) );
+
+		$first_section = $file_sections[0];
+		$new_clipboard_item = array(
+			'type'			=> $first_section['type'],
+			'label'			=> isset($first_section['gp_label'])	? $first_section['gp_label']	:	ucfirst($first_section['type']),
+			'color'			=> isset($first_section['gp_color'])	? $first_section['gp_color']	:	'#aabbcc',
+			'hidden'		=> isset($first_section['gp_hidden'])	? $first_section['gp_hidden']	:	false,
+			'content'		=> $this->GetSectionForClipboard($section_num),
+			'file_sections'	=> $file_sections,
+		);
+
+		$clipboard_data = \gp\tool\Files::GetSectionClipboard();
+		// msg("GetSectionClipboard returns " . pre($clipboard_data));
+		array_unshift($clipboard_data, $new_clipboard_item);
+		if( \gp\tool\Files::SaveSectionClipboard($clipboard_data) ){
+			// msg($langmessage['SAVED']);
+		}else{
+			msg($langmessage['OOPS'] . ' (Section Clipboard: Save data failed)');
+		}
+
+		$clipboard_links = self::SectionClipboardLinks($clipboard_data);
+		$this->ajaxReplace[] = array('inner', '#section-clipboard-items', $clipboard_links);
+		$this->ajaxReplace[] = array('clipboard_init', '', '');
+		$this->ajaxReplace[] = array('loaded', '', '');
+		return true;
+
+	}
+
+
+
+	/**
+	 * Add (append) a Clipboard Item to the page's file sections
+	 *
+	 */
+	protected function AddFromClipboard($item_num=false){
+		global $langmessage;
+		$this->ajaxReplace = array();
+
+		if( !$item_num ){
+			if( !isset($_POST['item_number']) || !ctype_digit($_POST['item_number']) ){
+				msg($langmessage['OOPS'] . ' (Section Clipboard - Add Item: Invalid Request');
+				return false;
+			}
+			$item_num = $_POST['item_number'];
+		}
+
+		$clipboard_data = \gp\tool\Files::GetSectionClipboard();
+
+		if( !isset($clipboard_data[$item_num]) ){
+			msg($langmessage['OOPS'] . ' (Section Clipboard - Add Item: Invalid Item Number (' . $item_num . ')');
+			return false;
+		}
+
+		$clipboard_sections		= $clipboard_data[$item_num]['file_sections'];
+		$this->file_sections	= array_merge($this->file_sections, $clipboard_sections);
+
+		if( !$this->SaveThis() ){
+			msg($langmessage['OOPS'] . ' (Section Clipboard - Add Item: Save Page Failed)');
+			$this->ajaxReplace[] = array('loaded', '', '');
+			return false;
+		}
+
+		// $this->ajaxReplace[] = array('ck_saved', '', '');
+
+		// include updated Admin Toolbar
+		ob_start();
+		\gp\admin\Tools::AdminToolbar();
+		$admin_toolbar = ob_get_clean();
+		if( !empty($admin_toolbar) ){
+			$this->ajaxReplace[] = array('replace', '#admincontent_panel', $admin_toolbar);
+		}
+		$this->ajaxReplace[] = array('loaded', '', '');
+		return;
+	}
+
+
+
+
+	/**
+	 * Remove a Clipboard Item
+	 *
+	 */
+	protected function RemoveFromClipboard($item_num=false){
+		global $langmessage;
+		$this->ajaxReplace = array();
+
+		if( !$item_num ){
+			if( !isset($_POST['item_number']) || !ctype_digit($_POST['item_number']) ){
+				msg($langmessage['OOPS'] . ' (Section Clipboard - Remove Item: Invalid Request');
+				return false;
+			}
+			$item_num = $_POST['item_number'];
+		}
+
+		$clipboard_data = \gp\tool\Files::GetSectionClipboard();
+
+		if( !isset($clipboard_data[$item_num]) ){
+			msg($langmessage['OOPS'] . ' (Section Clipboard - Remove Item: Invalid Item Number (' . $item_num . ')');
+			return false;
+		}
+		unset($clipboard_data[$item_num]);
+		$clipboard_data = array_values($clipboard_data);
+
+		if( \gp\tool\Files::SaveSectionClipboard($clipboard_data) ){
+			// msg($langmessage['SAVED']);
+		}else{
+			msg($langmessage['OOPS'] . ' (Section Clipboard - Remove Item: Save data failed)');
+			return false;
+		}
+
+		$clipboard_links = self::SectionClipboardLinks($clipboard_data);
+		$this->ajaxReplace[] = array('inner', '#section-clipboard-items', $clipboard_links);
+		$this->ajaxReplace[] = array('clipboard_init', '', '');
+		$this->ajaxReplace[] = array('loaded', '', '');
+		return true;
+
+	}
+
+
+	/**
+	 * Change the Clipboard Items' order
+	 *
+	 */
+	protected function ReorderClipboardItems($order=false){
+		global $langmessage;
+		$this->ajaxReplace = array();
+
+		if( !is_array($order) ){
+			if( !is_array($_POST['order']) ){
+				msg($langmessage['OOPS'] . ' (Section Clipboard - Reorder Items: Invalid Request');
+				return false;
+			}
+			$order = $_POST['order'];
+		}
+
+		$clipboard_data = \gp\tool\Files::GetSectionClipboard();
+
+		if( count($order) != count($clipboard_data) ){
+			msg($langmessage['OOPS'] . ' (Section Clipboard - Reorder Items: Item count mismatch');
+			return false;
+		}
+
+		foreach( $order as $key => $index ){
+			$new_clipboard_data[$key] = $clipboard_data[$index];
+		}
+
+		$clipboard_data = $new_clipboard_data;
+		unset($new_clipboard_data);
+
+		if( \gp\tool\Files::SaveSectionClipboard($clipboard_data) ){
+			// msg($langmessage['SAVED']);
+		}else{
+			msg($langmessage['OOPS'] . ' (Section Clipboard - Reorder Items: Save data failed)');
+			return false;
+		}
+
+		$clipboard_links = self::SectionClipboardLinks($clipboard_data);
+		$this->ajaxReplace[] = array('inner', '#section-clipboard-items', $clipboard_links);
+		$this->ajaxReplace[] = array('loaded', '', '');
+		return true;
+
+	}
+
+
+	/**
+	 * Change the label of a Clipboard Item
+	 *
+	 */
+	protected function RelabelClipboardItem($item_num=false,$new_label=false){
+		global $langmessage;
+		$this->ajaxReplace = array();
+
+		if( !$item_num ){
+			if( !isset($_POST['item_number']) || !ctype_digit($_POST['item_number']) ){
+				msg($langmessage['OOPS'] . ' (Section Clipboard - Remove Item: Invalid Request');
+				return false;
+			}
+			$item_num = $_POST['item_number'];
+		}
+
+		if( !$new_label ){
+			if( !isset($_POST['new_label']) ){
+				msg($langmessage['OOPS'] . ' (Section Clipboard - Relabel Item: Invalid Label');
+				return false;
+			}
+			$new_label = htmlspecialchars($_POST['new_label']);
+		}
+
+		$clipboard_data = \gp\tool\Files::GetSectionClipboard();
+
+		if( !isset($clipboard_data[$item_num]) ){
+			msg($langmessage['OOPS'] . ' (Section Clipboard - Relabel Item: Invalid Item Number (' . $item_num . ')');
+			return false;
+		}
+
+		$clipboard_data = array_values($clipboard_data);
+
+		$clipboard_data[$item_num]['label'] = $new_label;
+
+		if( \gp\tool\Files::SaveSectionClipboard($clipboard_data) ){
+			// msg($langmessage['SAVED']);
+		}else{
+			msg($langmessage['OOPS'] . ' (Section Clipboard - Remove Item: Save data failed)');
+			return false;
+		}
+
+		$clipboard_links = self::SectionClipboardLinks($clipboard_data);
+		$this->ajaxReplace[] = array('inner', '#section-clipboard-items', $clipboard_links);
+		$this->ajaxReplace[] = array('loaded', '', '');
+		return true;
+
+	}
+
+
+	/**
+	 * Extract sections from the current page to be stored in the Clipboard
+	 * recursive calls for wrappers
+	 */
+	public function ExtractSections($sections=array(), $section_num){
+		$section_data = $this->file_sections[$section_num];
+		$type = gettype($section_data);
+		if( $type !== 'array' ){
+			trigger_error('$section_data is ' . $type . '. Array expected.');
+			return;
+		}
+
+		// remove possible hidden state
+		$section_data['gp_hidden'] = false;
+
+		$sections[] = $section_data;
+		if( $section_data['type'] == 'wrapper_section' ){
+			if( isset($section_data['contains_sections']) ){
+				for( $cc=1; $cc <= $section_data['contains_sections']; $cc++ ){
+					$sections = self::ExtractSections($sections, $section_num + $cc);
+				}
+			}
+		}
+
+		return $sections;
+	}
+
+
+
+	/**
+	 * Update Section Clipboard links via AJAX
+	 *
+	 */
+	public static function UpdateSectionClipboard(){
+		$clipboard_links = self::SectionClipboardLinks();
+		$this->ajaxReplace = array();
+		$this->ajaxReplace[] = array('inner', '#section-clipboard-items', $clipboard_links);
+		$this->ajaxReplace[] = array('loaded', '', '');
+		return true;
+	}
+
+
+
+	/**
+	 * Get the Section Clipboard links
+	 *
+	 */
+	public static function SectionClipboardLinks($clipboard_data=false){
+		global $langmessage;
+		$clipboard_data = $clipboard_data ? $clipboard_data : \gp\tool\Files::GetSectionClipboard();
+
+		if( empty($clipboard_data) ){
+			return '<li class="clipboard-empty-msg"><i class="fa fa-clipboard"></i> ' . $langmessage['Clipboard'] . '</li>';
+		}
+
+		$clipboard_links = '';
+
+		foreach( $clipboard_data as $key => $clipboard_item ){
+			$icon_class = $clipboard_item['type'] == 'wrapper_section' ? 'fa fa-fw fa-clone' : 'fa fa-fw fa-square-o';
+			// $icon_title = $clipboard_item['label'];
+			// $content = \gp\tool\Output\Sections::GetSection($clipboard_item['file_sections'], 0); // private method :-(
+			$content = $clipboard_item['content'];
+			$response = htmlspecialchars($content);
+
+			$clipboard_links .= '<li style="border-left:4px solid ' . $clipboard_item['color'] . ';" data-item_index="' . $key . '">';
+
+			$clipboard_links .= '<a class="remove-clipboard-item" ';
+			$clipboard_links .= 'title="' . $langmessage['remove'] . '" ';
+			$clipboard_links .= 'data-cmd="RemoveSectionClipboardItem">';
+			$clipboard_links .= '<i class="fa fa-trash"></i>';
+			$clipboard_links .= '</a>';
+
+			$clipboard_links .= '<a class="relabel-clipboard-item" ';
+			$clipboard_links .= 'title="' . $langmessage['label'] . '" ';
+			$clipboard_links .= 'data-cmd="RelabelSectionClipboardItem">';
+			$clipboard_links .= '<i class="fa fa-i-cursor"></i>'; // fa-pencil-square-o
+			$clipboard_links .= '</a>';
+
+			$clipboard_links .= '<a class="preview_section" title="' . $langmessage['add'] . ' (' . count($clipboard_item['file_sections']) . ')" ';
+			$clipboard_links .= 'data-cmd="AddFromClipboard" ';
+			$clipboard_links .= 'data-response="' . $response . '" >';
+			$clipboard_links .= '<i class="clipboard-item-icon ' . $icon_class . '"></i> ';
+			$clipboard_links .= '<i class="clipboard-item-label-wrap"><span class="clipboard-item-label">' . $clipboard_item['label'] . '</span></i>';
+			$clipboard_links .= '</a>';
+
+			$clipboard_links .= '</li>';
+		}
+		return $clipboard_links;
+	}
+
+
+
+	/**
 	 * Get the posted attributes for a section
 	 *
 	 */
@@ -538,14 +931,14 @@ class Edit extends \gp\Page{
 				$attr_name		= trim($attr_name);
 				$attr_value		= trim($attr_value);
 
-				if( empty($attr_name) || empty($attr_value) || $attr_name == 'id' || substr($attr_name,0,7) == 'data-gp' ){
+				if( empty($attr_name) || empty($attr_value) || $attr_name == 'id' || substr($attr_name, 0, 7) == 'data-gp' ){
 					continue;
 				}
 
 
 				//strip $dirPrefix
 				if( $attr_name == 'src' && !empty($dirPrefix) && strpos($attr_value,$dirPrefix) === 0 ){
-					$attr_value = substr($attr_value,strlen($dirPrefix));
+					$attr_value = substr($attr_value, strlen($dirPrefix));
 				}
 
 				$section['attributes'][$attr_name] = $attr_value;
@@ -572,7 +965,7 @@ class Edit extends \gp\Page{
 
 		$cmd = \gp\tool::GetCommand();
 
-		if( !\gp\tool\Editing::SectionEdit( $cmd, $this->file_sections[$section_num], $section_num, $this->title, $this->file_stats ) ){
+		if( !\gp\tool\Editing::SectionEdit($cmd, $this->file_sections[$section_num], $section_num, $this->title, $this->file_stats) ){
 			return false;
 		}
 
@@ -582,7 +975,7 @@ class Edit extends \gp\Page{
 			return false;
 		}
 
-		$page->ajaxReplace[] = array('ck_saved','','');
+		$page->ajaxReplace[] = array('ck_saved', '', '');
 
 
 		//update gallery information
@@ -609,10 +1002,10 @@ class Edit extends \gp\Page{
 			$new_types[] = $section['type'];
 		}
 		$new_types = array_unique($new_types);
-		$new_types = array_diff($new_types,array(''));
+		$new_types = array_diff($new_types, array(''));
 		sort($new_types);
 
-		$new_types = implode(',',$new_types);
+		$new_types = implode(',', $new_types);
 		$this->meta_data['file_type'] = $new_types;
 
 		if( !isset($gp_titles[$this->gp_index]) ){
@@ -637,9 +1030,9 @@ class Edit extends \gp\Page{
 		foreach($section_types as $type => $type_info){
 			$img = '';
 			if( in_array($type, $types_with_imgs) ){
-				$img = \gp\tool::GetDir('/include/imgs/section-'.$type.'.png');
+				$img = \gp\tool::GetDir('/include/imgs/section-' . $type . '.png');
 			}
-			$links[] = array( $type, $img );
+			$links[] = array($type, $img);
 		}
 
 		//section combo: text & image
@@ -657,7 +1050,7 @@ class Edit extends \gp\Page{
 
 		//section combo: text & gallery
 		$links[] = array( 
-			array('text.gpCol-6','gallery.gpCol-6'), 
+			array('text.gpCol-6', 'gallery.gpCol-6'), 
 			\gp\tool::GetDir('/include/imgs/section-combo-text-gallery.png'), 
 			array(
 				// 'gp_label' => 'Text &amp; Gallery', 
@@ -672,7 +1065,7 @@ class Edit extends \gp\Page{
 
 		foreach($links as $link){
 			$link += array('', '', false); // $link[2] will be replaced in NewSectionLink() if missing
-			echo self::NewSectionLink( $link[0], $link[1], $link[2], $checkboxes );
+			echo self::NewSectionLink($link[0], $link[1], $link[2], $checkboxes);
 		}
 	}
 
@@ -681,7 +1074,7 @@ class Edit extends \gp\Page{
 	 * Add link to manage section admin for nested section type
 	 *
 	 */
-	public static function NewSectionLink($types, $img, $wrapper_data = false, $checkbox = false ){
+	public static function NewSectionLink($types, $img, $wrapper_data=false, $checkbox=false ){
 		global $dataDir, $page;
 
 		$is_wrapper = count($types) > 1 || is_array($types[0]);
@@ -788,12 +1181,12 @@ class Edit extends \gp\Page{
 	 * Split the type and class from $type = div.classname into $type = div, $class = classname
 	 *
 	 */
-	public static function TypeClass( &$type ){
+	public static function TypeClass(&$type){
 
 		$class = '';
 
-		if( !is_array($type) && strpos($type,'.') ){
-			list($type,$class) = explode('.',$type,2);
+		if( !is_array($type) && strpos($type, '.') ){
+			list($type,$class) = explode('.', $type, 2);
 		}
 
 		return $class;
@@ -805,7 +1198,7 @@ class Edit extends \gp\Page{
 	 * Save a backup if $backup is true
 	 *
 	 */
-	public function SaveThis( $backup = true ){
+	public function SaveThis($backup=true){
 
 		if( !is_array($this->meta_data) || !is_array($this->file_sections) ){
 			return false;
@@ -825,7 +1218,7 @@ class Edit extends \gp\Page{
 			$this->SaveBackup(); //make a backup of the page file
 		}
 
-		if( !\gp\tool\Files::SaveData($this->draft_file,'file_sections',$this->file_sections,$this->meta_data) ){
+		if( !\gp\tool\Files::SaveData($this->draft_file, 'file_sections', $this->file_sections, $this->meta_data) ){
 			return false;
 		}
 
@@ -860,7 +1253,7 @@ class Edit extends \gp\Page{
 		$time	= \gp\tool\Editing::ReqTime();		//use the request time
 
 		//just one backup per edit session (auto-saving would create too many backups otherwise)
-		$previous_backup	= $this->BackupFile( $time );
+		$previous_backup	= $this->BackupFile($time);
 		if( !empty($previous_backup) ){
 			return true;
 		}
@@ -875,7 +1268,7 @@ class Edit extends \gp\Page{
 
 		//backup file name
 		$len				= strlen($contents);
-		$backup_file		= $dir.'/'.$time.'.'.$len.'.'.$gpAdmin['username'];
+		$backup_file		= $dir . '/' . $time . '.' . $len . '.' . $gpAdmin['username'];
 
 		//compress
 		if( function_exists('gzencode') && function_exists('readgzfile') ){
@@ -883,7 +1276,7 @@ class Edit extends \gp\Page{
 			$contents = gzencode($contents,9);
 		}
 
-		if( !\gp\tool\Files::Save( $backup_file, $contents ) ){
+		if( !\gp\tool\Files::Save($backup_file, $contents) ){
 			return false;
 		}
 
@@ -907,9 +1300,9 @@ class Edit extends \gp\Page{
 			return;
 		}
 		$delete_count = $file_count - $config['history_limit'];
-		$files = array_splice( $files, 0, $delete_count );
+		$files = array_splice($files, 0, $delete_count);
 		foreach($files as $file){
-			$full_path = $dataDir.'/data/_backup/pages/'.$this->gp_index.'/'.$file;
+			$full_path = $dataDir . '/data/_backup/pages/' . $this->gp_index . '/' . $file;
 			unlink($full_path);
 		}
 	}
@@ -923,11 +1316,11 @@ class Edit extends \gp\Page{
 		global $langmessage, $page;
 
 		if( !$this->draft_exists ){
-			msg($langmessage['OOPS'].' (Not a draft)');
+			msg($langmessage['OOPS'] . ' (Not a draft)');
 			return false;
 		}
 
-		if( !\gp\tool\Files::SaveData($this->file,'file_sections',$this->file_sections,$this->meta_data) ){
+		if( !\gp\tool\Files::SaveData($this->file, 'file_sections', $this->file_sections, $this->meta_data) ){
 			msg($langmessage['OOPS'].' (Draft not published)');
 			return false;
 		}
@@ -953,41 +1346,37 @@ class Edit extends \gp\Page{
 		$files		= $this->BackupFiles();
 		$rows		= array();
 
-
 		//working draft
 		if( $this->draft_exists ){
-
 			$size = filesize($this->draft_file);
 			$time = $this->file_stats['modified'];
-			$rows[$time] = $this->HistoryRow($time, $size, $this->file_stats['username'],'draft');
+			$rows[$time] = $this->HistoryRow($time, $size, $this->file_stats['username'], 'draft');
 		}
-
 
 		foreach($files as $time => $file){
 			$info = $this->BackupInfo($file);
-
 			$rows[$time] = $this->HistoryRow($info['time'], $info['size'], $info['username']);
 		}
 
-
-
 		// current page
 		// this will overwrite one of the history entries if there is a draft
-		$rows[$this->fileModTime] = $this->HistoryRow($this->fileModTime, filesize($this->file), $this->file_stats['username'],'current');
+		$rows[$this->fileModTime] = $this->HistoryRow($this->fileModTime, filesize($this->file), $this->file_stats['username'], 'current');
 
-
-
-		echo '<h2>'.$langmessage['Revision History'].'</h2>';
-		echo '<table class="bordered full_width striped"><tr><th>'.$langmessage['Modified'].'</th><th>'.$langmessage['File Size'].'</th><th>'.$langmessage['username'].'</th><th>&nbsp;</th></tr>';
-		echo '<tbody>';
+		echo '<h2>' . $langmessage['Revision History'] . '</h2>';
+		echo '<table class="bordered full_width striped"><tr>';
+		echo '<th>' . $langmessage['Modified'] . '</th>';
+		echo '<th>' . $langmessage['File Size'] . '</th>';
+		echo '<th>' . $langmessage['username'] . '</th>';
+		echo '<th>&nbsp;</th>';
+		echo '</tr><tbody>';
 
 		krsort($rows);
-		echo implode('',$rows);
+		echo implode('', $rows);
 
 		echo '</tbody>';
 		echo '</table>';
 
-		echo '<p>'.$langmessage['history_limit'].': '.$config['history_limit'].'</p>';
+		echo '<p>' . $langmessage['history_limit'] . ': ' . $config['history_limit'] . '</p>';
 	}
 
 
@@ -1001,11 +1390,11 @@ class Edit extends \gp\Page{
 
 		//remove .gze
 		if( strpos($file,'.gze') === (strlen($file)-4) ){
-			$file = substr($file,0,-4);
+			$file = substr($file, 0, -4);
 		}
 
 		$name				= basename($file);
-		$parts				= explode('.',$name,3);
+		$parts				= explode('.', $name, 3);
 
 		$info['time']		= array_shift($parts);
 		$info['size']		= array_shift($parts);
@@ -1023,24 +1412,24 @@ class Edit extends \gp\Page{
 	 * Return content for history row
 	 *
 	 */
-	protected function HistoryRow($time, $size, $username, $which = 'history' ){
+	protected function HistoryRow($time, $size, $username, $which='history'){
 		global $langmessage;
 
 		ob_start();
-		$date = \gp\tool::date($langmessage['strftime_datetime'],$time);
-		echo '<tr><td title="'.htmlspecialchars($date).'">';
+		$date = \gp\tool::date($langmessage['strftime_datetime'], $time);
+		echo '<tr><td title="' . htmlspecialchars($date) . '">';
 		switch($which){
 			case 'current':
-			echo '<b>'.$langmessage['Current Page'].'</b><br/>';
-			break;
+				echo '<b>' . $langmessage['Current Page'] . '</b><br/>';
+				break;
 
 			case 'draft':
-			echo '<b>'.$langmessage['Working Draft'].'</b><br/>';
-			break;
+				echo '<b>' . $langmessage['Working Draft'] . '</b><br/>';
+				break;
 		}
 
 		$elapsed = \gp\admin\Tools::Elapsed(time() - $time);
-		echo sprintf($langmessage['_ago'],$elapsed);
+		echo sprintf($langmessage['_ago'], $elapsed);
 		echo '</td><td>';
 		if( $size && is_numeric($size) ){
 			echo \gp\admin\Tools::FormatBytes($size);
@@ -1054,19 +1443,39 @@ class Edit extends \gp\Page{
 
 		switch($which){
 			case 'current':
-			echo \gp\tool::Link($this->title,$langmessage['View'],'cmd=ViewCurrent',array('data-cmd'=>'cnreq'));
-			break;
+				echo \gp\tool::Link(
+					$this->title, 
+					$langmessage['View'], 
+					'cmd=ViewCurrent', 
+					array('data-cmd'=>'cnreq')
+				);
+				break;
 
 			case 'draft':
-			echo \gp\tool::Link($this->title,$langmessage['View']);
-			echo ' &nbsp; '.\gp\tool::Link($this->title,$langmessage['Publish Draft'],'cmd=PublishDraft',array('data-cmd'=>'cnreq'));
-			break;
+				echo \gp\tool::Link($this->title, $langmessage['View']);
+				echo ' &nbsp; ' . \gp\tool::Link(
+					$this->title,
+					$langmessage['Publish Draft'],
+					'cmd=PublishDraft',
+					array('data-cmd'=>'cnreq')
+				);
+				break;
 
 			case 'history':
-			echo \gp\tool::Link($this->title,$langmessage['View'],'cmd=ViewRevision&time='.$time,array('data-cmd'=>'cnreq'));
-			echo ' &nbsp; ';
-			echo \gp\tool::Link($this->title,$langmessage['delete'],'cmd=DeleteRevision&time='.$time,array('data-cmd'=>'gpabox','class'=>'gpconfirm'));
-			break;
+				echo \gp\tool::Link(
+					$this->title,
+					$langmessage['View'],
+					'cmd=ViewRevision&time=' . $time,
+					array('data-cmd'=>'cnreq')
+				);
+				echo ' &nbsp; ';
+				echo \gp\tool::Link(
+					$this->title,
+					$langmessage['delete'],
+					'cmd=DeleteRevision&time=' . $time,
+					array('data-cmd'=>'gpabox','class'=>'gpconfirm')
+				);
+				break;
 		}
 
 		echo '</td></tr>';
@@ -1089,7 +1498,7 @@ class Edit extends \gp\Page{
 		}
 
 		$this->revision			= $time;
-		echo \gp\tool\Output\Sections::Render($file_sections,$this->title,\gp\tool\Files::$last_stats);
+		echo \gp\tool\Output\Sections::Render($file_sections, $this->title, \gp\tool\Files::$last_stats);
 	}
 
 
@@ -1125,22 +1534,19 @@ class Edit extends \gp\Page{
 		}
 
 		//if it's a compressed file, we need an uncompressed version
-		if( strpos($full_path,'.gze') !== false ){
+		if( strpos($full_path, '.gze') !== false ){
 
 			ob_start();
 			readgzfile($full_path);
-			$contents	= ob_get_clean();
+			$contents		= ob_get_clean();
 
-			$full_path	= substr($full_path,0,-3).'php';
-
-			\gp\tool\Files::Save( $full_path, $contents );
-
-			$file_sections	= \gp\tool\Files::Get($full_path,'file_sections');
-
+			$full_path		= substr($full_path, 0, -3) . 'php';
+			\gp\tool\Files::Save($full_path, $contents);
+			$file_sections	= \gp\tool\Files::Get($full_path, 'file_sections');
 			unlink($full_path);
 
 		}else{
-			$file_sections	= \gp\tool\Files::Get($full_path,'file_sections');
+			$file_sections	= \gp\tool\Files::Get($full_path, 'file_sections');
 		}
 
 		return $file_sections;
@@ -1158,9 +1564,9 @@ class Edit extends \gp\Page{
 			return;
 		}
 
-		$file_sections			= \gp\tool\Files::Get($this->file,'file_sections');
+		$file_sections			= \gp\tool\Files::Get($this->file, 'file_sections');
 		$this->revision			= $this->fileModTime;
-		echo \gp\tool\Output\Sections::Render($file_sections,$this->title,$this->file_stats);
+		echo \gp\tool\Output\Sections::Render($file_sections, $this->title, $this->file_stats);
 	}
 
 
@@ -1185,7 +1591,7 @@ class Edit extends \gp\Page{
 	 */
 	public function BackupFiles(){
 		global $dataDir;
-		$dir = $dataDir.'/data/_backup/pages/'.$this->gp_index;
+		$dir = $dataDir . '/data/_backup/pages/' . $this->gp_index;
 		if( !file_exists($dir) ){
 			return array();
 		}
@@ -1195,7 +1601,7 @@ class Edit extends \gp\Page{
 			if( $file == '.' || $file == '..' ){
 				continue;
 			}
-			$parts = explode('.',$file);
+			$parts = explode('.', $file);
 			$time = array_shift($parts);
 			if( !is_numeric($time) ){
 				continue;
@@ -1220,7 +1626,7 @@ class Edit extends \gp\Page{
 			return;
 		}
 
-		return $dataDir.'/data/_backup/pages/'.$this->gp_index.'/'.$files[$time];
+		return $dataDir . '/data/_backup/pages/' . $this->gp_index . '/' . $files[$time];
 	}
 
 
@@ -1230,12 +1636,11 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public function GalleryEdited(){
-		\gp\special\Galleries::UpdateGalleryInfo($this->title,$this->file_sections);
+		\gp\special\Galleries::UpdateGalleryInfo($this->title, $this->file_sections);
 	}
 
 	public function GetSection(&$section_num){
 		global $langmessage;
-
 
 		if( !isset($this->file_sections[$section_num]) ){
 			trigger_error('invalid section number');
@@ -1245,20 +1650,19 @@ class Edit extends \gp\Page{
 		$curr_section_num								= $section_num;
 		$section_num++;
 
-
 		$content										= '';
 		$section_data									= $this->file_sections[$curr_section_num];
 
 		//make sure section_data is an array
 		$type											= gettype($section_data);
 		if( $type !== 'array' ){
-			trigger_error('$section_data is '.$type.'. Array expected');
+			trigger_error('$section_data is ' . $type . '. Array expected');
 			return;
 		}
 
 
-		$section_data									+= array('attributes' => array(),'type'=>'text' );
-		$section_data['attributes']						+= array('class' => '' );
+		$section_data									+= array('attributes' => array(), 'type'=>'text');
+		$section_data['attributes']						+= array('class' => '');
 		$orig_attrs										= $section_data['attributes'];
 		$section_data['attributes']['data-gp-section']	= $curr_section_num;
 		$section_types									= \gp\tool\Output\Sections::GetTypes();
@@ -1270,11 +1674,20 @@ class Edit extends \gp\Page{
 			if( isset($section_types[$section_data['type']]) ){
 				$title_attr		= $section_types[$section_data['type']]['label'];
 			}else{
-				$title_attr		= sprintf($langmessage['Section %s'],$curr_section_num+1);
+				$title_attr		= sprintf($langmessage['Section %s'], $curr_section_num+1);
 			}
 
-			$attrs			= array('title'=>$title_attr,'data-cmd'=>'inline_edit_generic','data-arg'=>$section_data['type'].'_inline_edit');
-			$link			= \gp\tool\Output::EditAreaLink($edit_index,$this->title,$langmessage['edit'],'section='.$curr_section_num,$attrs);
+			$attrs	= array(
+							'title'=>$title_attr, 
+							'data-cmd' => 'inline_edit_generic', 
+							'data-arg' => $section_data['type'] . '_inline_edit'
+						);
+			$link	= \gp\tool\Output::EditAreaLink(
+							$edit_index,
+							$this->title,
+							$langmessage['edit'],
+							'section='.$curr_section_num,$attrs
+						);
 
 			$section_data['attributes']['data-gp-area-id']		= $edit_index;
 
@@ -1284,12 +1697,12 @@ class Edit extends \gp\Page{
 				// msg("section_data:" . pre($section_data));
 				switch( $section_data['include_type'] ){
 					case false: // include is a page
-						$include_link = \gp\tool::Link($section_data['content'],$langmessage['view/edit_page']);
+						$include_link = \gp\tool::Link($section_data['content'], $langmessage['view/edit_page']);
 						break;
 					case 'extra':
 						$include_link = \gp\tool::Link(
 							'Admin/Extra',
-							$langmessage['edit']  . ' &raquo; ' . htmlspecialchars($section_data['content']), // $langmessage['theme_content']
+							$langmessage['edit'] . ' &raquo; ' . htmlspecialchars($section_data['content']), // $langmessage['theme_content']
 							'cmd=EditExtra&file=' . rawurlencode($section_data['content']) 
 						);
 						break;
@@ -1302,46 +1715,115 @@ class Edit extends \gp\Page{
 			//section control links
 			if( $section_data['type'] != 'wrapper_section' ){
 				ob_start();
-				echo '<span class="nodisplay" id="ExtraEditLnks'.$edit_index.'">';
+				echo '<span class="nodisplay" id="ExtraEditLnks' . $edit_index . '">';
 				echo $link;
 				echo $include_link;
-				echo \gp\tool::Link($this->title,$langmessage['Manage Sections'],'cmd=ManageSections',array('class'=>'manage_sections','data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+				echo \gp\tool::Link(
+						$this->title,
+						$langmessage['Manage Sections'],
+						'cmd=ManageSections',
+						array('class'=>'manage_sections', 'data-cmd'=>'inline_edit_generic', 'data-arg'=>'manage_sections')
+					);
 				echo '<span class="gp_separator"></span>';
-				echo \gp\tool::Link($this->title,$langmessage['rename/details'],'cmd=renameform&index='.urlencode($this->gp_index),'data-cmd="gpajax"');
-				echo \gp\tool::Link($this->title,$langmessage['Revision History'],'cmd=ViewHistory',array('data-cmd'=>'gpabox'));
+				echo \gp\tool::Link(
+						$this->title,
+						$langmessage['rename/details'],
+						'cmd=renameform&index=' . urlencode($this->gp_index),
+						'data-cmd="gpajax"'
+					);
+				echo \gp\tool::Link(
+						$this->title,
+						$langmessage['Revision History'],
+						'cmd=ViewHistory',
+						array('data-cmd'=>'gpabox')
+					);
 				echo '<span class="gp_separator"></span>';
 				echo \gp\tool::Link('Admin/Menu',$langmessage['file_manager']);
 				echo '</span>';
 				\gp\tool\Output::$editlinks .= ob_get_clean();
 			}
 
-			$section_data['attributes']['id']				= 'ExtraEditArea'.$edit_index;
+			$section_data['attributes']['id'] = 'ExtraEditArea' . $edit_index;
 		}
 
 
-		$content			.= $this->SectionNode($section_data, $orig_attrs);
+		$content 			.= $this->SectionNode($section_data, $orig_attrs);
 
 		if( $section_data['type'] == 'wrapper_section' ){
 
 			for( $cc=0; $cc < $section_data['contains_sections']; $cc++ ){
-				$content		.= $this->GetSection($section_num);
+				$content	.= $this->GetSection($section_num);
 			}
 
 		}else{
-			\gp\tool\Output::$nested_edit		= true;
-			$content			.= \gp\tool\Output\Sections::RenderSection($section_data,$curr_section_num,$this->title,$this->file_stats);
-			\gp\tool\Output::$nested_edit		= false;
+			\gp\tool\Output::$nested_edit 	= true;
+			$content .= \gp\tool\Output\Sections::RenderSection($section_data, $curr_section_num, $this->title, $this->file_stats);
+			\gp\tool\Output::$nested_edit 	= false;
 		}
 
 		if( !isset($section_data['nodeName']) ){
-			$content			.= '<div class="gpclear"></div>';
-			$content			.= '</div>';
+			$content		.= '<div class="gpclear"></div>';
+			$content		.= '</div>';
 		}else{
-			$content			.= \gp\tool\Output\Sections::EndTag($section_data['nodeName']);
+			$content		.= \gp\tool\Output\Sections::EndTag($section_data['nodeName']);
 		}
 
 		return $content;
 	}
+
+
+
+	public function GetSectionForClipboard(&$section_num){
+		global $langmessage;
+
+		if( !isset($this->file_sections[$section_num]) ){
+			trigger_error('invalid section number');
+			return;
+		}
+
+		$curr_section_num								= $section_num;
+		$section_num++;
+
+		$content										= '';
+		$section_data									= $this->file_sections[$curr_section_num];
+
+		//make sure section_data is an array
+		$type											= gettype($section_data);
+		if( $type !== 'array' ){
+			trigger_error('$section_data is ' . $type . '. Array expected');
+			return;
+		}
+
+		$section_data									+= array('attributes' => array(), 'type'=>'text');
+		$section_data['attributes']						+= array('class' => '');
+		// $section_data['attributes']['gp_type'] 			= $section_data['type'];
+		$section_data['gp_hidden']						= false;
+		$orig_attrs										= $section_data['attributes'];
+		$section_types									= \gp\tool\Output\Sections::GetTypes();
+
+		$content 			.= $this->SectionNode($section_data, $orig_attrs);
+
+		if( $section_data['type'] == 'wrapper_section' ){
+
+			for( $cc=0; $cc < $section_data['contains_sections']; $cc++ ){
+				$content	.= $this->GetSectionForClipboard($section_num);
+			}
+
+		}else{
+			\gp\tool\Output::$nested_edit 	= true;
+			$content .= \gp\tool\Output\Sections::RenderSection($section_data, $curr_section_num, $this->title, $this->file_stats);
+			\gp\tool\Output::$nested_edit 	= false;
+		}
+
+		if( !isset($section_data['nodeName']) ){
+			$content		.= '</div>';
+		}else{
+			$content		.= \gp\tool\Output\Sections::EndTag($section_data['nodeName']);
+		}
+
+		return $content;
+	}
+
 
 
 	public function GalleryImages(){
@@ -1362,14 +1844,14 @@ class Edit extends \gp\Page{
 	}
 
 
+
 	/**
 	 * Used by slideshow addons
 	 * @deprecated 3.6rc4
 	 *
 	 */
 	public function SaveSection_Text($section){
-		return \gp\tool\Editing::SectionFromPost_Text( $this->file_sections[$section] );
+		return \gp\tool\Editing::SectionFromPost_Text($this->file_sections[$section]);
 	}
-
 
 }

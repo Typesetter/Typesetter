@@ -280,6 +280,34 @@ namespace gp\tool{
 		}
 
 
+
+		/**
+		 * Get the Section Clipboard
+		 * @since 5.1-b1
+		 *
+		 */
+		public static function GetSectionClipboard(){
+			global $dataDir;
+			$clipboard_dir = $dataDir . '/data/_clipboard';
+			self::CheckDir($clipboard_dir);
+			$clipboard_data = self::Get($clipboard_dir . '/clipboard_data.php', 'clipboard_data');
+			return $clipboard_data;
+		}
+
+		/**
+		 * Save the Section Clipboard 
+		 * @since 5.1-b1
+		 *
+		 */
+		public static function SaveSectionClipboard($clipboard_data=array()){
+			global $dataDir;
+			$clipboard_dir = $dataDir . '/data/_clipboard';
+			self::CheckDir($clipboard_dir);
+			return self::SaveData($clipboard_dir . '/clipboard_data.php', 'clipboard_data', $clipboard_data);
+		}
+
+
+
 		/**
 		 * Clean a string for use as a page label (displayed title)
 		 * Similar to CleanTitle() but less restrictive

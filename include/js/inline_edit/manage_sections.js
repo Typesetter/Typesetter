@@ -1029,7 +1029,7 @@
 
 
 		//popup
-		html = '<div class="inline_box"><form id="section_attributes_form" data-gp-area-id="'+id+'">';
+		html = '<div class="inline_box"><form id="section_attributes_form" data-gp-area-id="' + id + '">';
 		html += '<h2>Section Attributes</h2>';
 		html += '<table class="bordered full_width">';
 		html += '<thead><tr><th>Attribute</th><th>Value</th></tr></thead><tbody>';
@@ -1057,9 +1057,9 @@
 
 
 			html += '<tr><td>';
-			html += '<input class="gpinput attr_name" value="'+$gp.htmlchars(name)+'" size="8" />';
+			html += '<input class="gpinput attr_name" value="' + $gp.htmlchars(name) + '" size="8" />';
 			html += '</td><td style="white-space:nowrap">';
-			html += '<input class="gpinput attr_value" value="'+$gp.htmlchars(value)+'" size="40" />';
+			html += '<input class="gpinput attr_value" value="' + $gp.htmlchars(value) + '" size="40" />';
 			if( name == 'class' ){
 				html += '<div class="class_only admin_note">Default: GPAREA filetype-*</div>';
 			}
@@ -1077,7 +1077,7 @@
 		//available classes
 		html += '<div id="gp_avail_classes">';
 		html += '<table class="bordered full_width">';
-		html += '<thead><tr><th colspan="2">Available Classes</th></tr></thead>';
+		html += '<thead><tr><th colspan="2">' + gplang.AvailableClasses + '</th></tr></thead>';
 		html += '<tbody>';
 		for( var i=0; i < gp_avail_classes.length; i++ ){
 			html += '<tr><td>';
@@ -1093,8 +1093,8 @@
 
 
 		html += '<p>';
-		html += '<input type="button" name="" value="'+gplang.up+'" class="gpsubmit" data-cmd="UpdateAttrs" /> ';
-		html += '<input type="button" name="" value="'+gplang.ca+'" class="gpcancel" data-cmd="admin_box_close" />';
+		html += '<input type="button" name="" value="' + gplang.up + '" class="gpsubmit" data-cmd="UpdateAttrs" /> ';
+		html += '<input type="button" name="" value="' + gplang.ca + '" class="gpcancel" data-cmd="admin_box_close" />';
 		html += '</p>';
 
 		html += '</form></div>';

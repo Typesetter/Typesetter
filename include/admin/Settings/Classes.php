@@ -139,7 +139,7 @@ class Classes extends \gp\special\Base{
 	function ClassesForm(){
 		global $dataDir, $langmessage;
 
-		echo '<h2 class="hmargin">Manage Classes</h2>';
+		echo '<h2 class="hmargin">' . $langmessage['Manage Classes'] . '</h2>';
 
 		$cmd = \gp\tool::GetCommand();
 		switch($cmd){

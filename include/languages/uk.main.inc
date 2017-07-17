@@ -8,11 +8,11 @@
 
 $langmessage = array (
 	'LOGGED_OUT'                     => 'Ви вийшли',
-	'configuration'                  => 'Настройки',
+	'configuration'                  => 'Налаштування',
 	'Current Configuration'          => 'Поточна конфігурація',
 	'Appearance'                     => 'Зовнішній вигляд',
 	'Content'                        => 'Зміст',
-	'Settings'                       => 'Установки',
+	'Settings'                       => 'Параметри',
 	'Tools'                          => 'Інструменти',
 	'administration'                 => 'Адміністрування',
 	'save'                           => 'Зберегти',

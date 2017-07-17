@@ -13,7 +13,13 @@
 
 		saved_data: '',
 
-		checkDirty:function(){
+		allowAutoSave: true,
+
+		CanAutoSave: function(){ 
+			return gp_editor.allowAutoSave || true; 
+		},
+
+		checkDirty: function(){
 			var curr_data	= this.SaveData();
 			if( this.saved_data != curr_data ){
 				return true;
@@ -25,7 +31,7 @@
 		 * Organize the section content to be saved
 		 *
 		 */
-		SaveData:function(){
+		SaveData: function(){
 
 			var mgr_object				= this;
 			var args					= {};
@@ -73,7 +79,7 @@
 				//collapse
 				args.gp_collapse[i]		= $this.data('gp_collapse');
 
-				//collapse
+				//hidden
 				args.gp_hidden[i]		= $this.data('gp_hidden');
 
 			});
@@ -83,12 +89,52 @@
 
 
 		/**
+		 * Object of enqueued functions to be executed after saving is done
+		 * called from gp_editor.resetDirty() which is called in the ck_saved Ajax response
+		 */
+		AfterSave: {
+			// testing 
+			/*
+			 test : { 
+				fnc : function(){ 
+					console.log( 'Function "gp_editor.AfterSave.' , this , '" executed with \n arguments = ', arguments ); 
+					return 'done';
+				},
+				arg : 'test argument',
+				callback : function(ret_val){ // called after fnc was executed with fnc's return as argument
+					console.log( 'Callback function executed with ret_val = ', ret_val,
+						', returned from main functionand passed as argument'); 
+				}, 
+				destroy : true // true will delete the enqueued function after execution
+			}
+			*/
+		},
+
+
+		/**
 		 * Called when saved
 		 *
 		 */
-		resetDirty:function(){
+		resetDirty: function(){
 			gp_editor.SectionNumbers();
 			this.saved_data	= this.SaveData();
+
+			// console.log('Start executing gp_editor.AfterSave = ', gp_editor.AfterSave);
+			$.each(gp_editor.AfterSave, function(i, v){
+				if( typeof(v.fnc) == 'function' ){
+					var return_val = v.fnc(v.arg);
+					// console.log('gp_editor.AfterSave.' , i , ' returns ', return_val);
+					if( typeof(v.callback) == 'function' ){
+						v.callback(return_val);
+					}
+				}
+				if( v.destroy ){
+					// console.log('gp_editor.AfterSave.' + i + ' deleted');
+					delete( gp_editor.AfterSave[i] );
+				}
+			});
+			// console.log('Done executing gp_editor.AfterSave = ', gp_editor.AfterSave);
+
 		},
 
 
@@ -96,7 +142,7 @@
 		 * Update Section #s
 		 *
 		 */
-		SectionNumbers:function(){
+		SectionNumbers: function(){
 
 			$('#gpx_content.gp_page_display').find('.editable_area').each( function(i){
 				var $this		= $(this);
@@ -116,6 +162,141 @@
 
 
 		/**
+		 * Save Section(s) to clipboard
+		 *
+		 */
+		SaveToClipboard: function(area_id){
+
+			// console.log("arguments = " , arguments);
+			// console.log("SaveToClipboard called with area_id = ", area_id);
+			var $li = $('#section_sorting li[data-gp-area-id="' + area_id + '"]');
+			if( !$li.length ){
+				console.log('SaveToClipboard Error: section_sorting li[data-gp-area-id="' + area_id + '"] does not exist!');
+				return;
+			}
+			var $area			= gp_editor.GetArea( $li );
+			var section_number	= $area.attr('data-gp-section');
+
+			var data = {
+				cmd				: 'SaveToClipboard',
+				section_number	: section_number
+			};
+			// console.log("SectionToClipboard", data);
+			data = jQuery.param(data);
+			$gp.postC(window.location.href, data);
+			loading();
+		},
+
+
+
+		/**
+		 * Append the clicked Clipboard Section(s) to the content
+		 *
+		 */
+		SectionFromClipboard: function(item_index){
+
+			// console.log("SectionFromClipboard: item_index = " + item_index);
+
+			var $link = $('#section-clipboard-items '
+				+ 'li[data-item_index="' + item_index + '"] '
+				+ 'a.preview_section');
+
+			// console.log("SectionFromClipboard: $link = " , $link);
+
+			//remove preview
+			$link.removeClass('previewing');
+			$('.temporary-section').remove();
+
+			// console.log("$section = " , $link.data('response'));
+
+			// append section(s) content client side
+			var $section = $($link.data('response'))
+				.appendTo('#gpx_content');
+
+			NewSectionIds($section);
+
+			$section.trigger('SectionAdded');
+
+			gp_editor.InitSorting();
+			$link.trigger('mousemove');
+
+			gp_editor.resetDirty(); 
+
+			// append section(s) server side
+			var data = {
+				cmd			: 'AddFromClipboard',
+				item_number	: item_index
+			};
+
+			// console.log("AddFromClipboard", data);
+			data = jQuery.param(data);
+			$gp.postC(window.location.href, data);
+			loading();
+
+		},
+
+
+
+
+
+		/**
+		 * Save new Clipboard Items order
+		 *
+		 */
+		ClipboardSorted: function(){
+
+			var $items = $('#section-clipboard-items > li');
+			if( !$items.length ){
+				return;
+			}
+			var new_order = [];
+			$items.each(function(i,v){
+				new_order[i] = $(this).attr("data-item_index");
+			});
+
+			var data = {
+				cmd		: 'ReorderClipboardItems',
+				order	: new_order
+			};
+			data = jQuery.param(data);
+			$gp.postC(window.location.href, data);
+			loading();
+		},
+
+
+		/**
+		 * Init Section Clipboard
+		 *
+		 */
+		InitClipboard: function(){
+
+			// Uninstall Plugin Warning
+			if( typeof(SectionClipboard_links) != 'undefined' ){
+				alert(
+					  'Warning \n\nThe SectionClipboard plugin seems to be installed.\n'
+					+ 'This feature is now built into Typesetter.\n\n'
+					+ 'Please uninstall the plugin now!'
+				);
+			}
+
+			var mgr_object	= this;
+
+			if( $('#section-clipboard-items li').length > 1 ){
+				$('#section-clipboard-items').sortable({
+					cancel:			'li.clipboard-empty-msg',
+					distance:		4,
+					tolerance:		'pointer', 
+					update:			mgr_object.ClipboardSorted,
+					cursorAt:		{ left: 6, top: 5 }
+				}).disableSelection();
+			}
+
+			$(document).trigger("section_clipboard:loaded");
+		},
+
+
+
+		/**
 		 * Init Editor
 		 *
 		 */
@@ -123,12 +304,15 @@
 
 			$('#ckeditor_top').append(section_types);
 			this.InitSorting();
+			this.InitClipboard();
 			this.resetDirty();
 
 
 			$gp.$win.on('resize', this.MaxHeight ).resize();
 
 			$('#ckeditor_area').on('dragstop',this.MaxHeight);
+
+			$gp.response.clipboard_init = this.InitClipboard;
 
 			$(document).trigger("section_sorting:loaded");
 		},
@@ -172,6 +356,7 @@
 			$list.html(html);
 
 			$('.section_drag_area').sortable({
+				distance:				4,
 				tolerance:				'pointer', /** otherwise sorting elements into collapsed area causes problems */
 				stop:					function(evt, ui){
 											mgr_object.DragStop(evt, ui);
@@ -184,6 +369,7 @@
 
 			this.HoverListener($list);
 		},
+
 
 		/**
 		 * Build sort html
@@ -202,8 +388,11 @@
 					this.id = mgr_object.GenerateId();
 				}
 
-
+				//type
 				var type	= gp_editing.TypeFromClass(this);
+
+				//area_id
+				var area_id = $gp.AreaId($this);
 
 				//label
 				var label	= gp_editing.SectionLabel($this);
@@ -226,8 +415,17 @@
 				//classes
 				var classes	= attrs.class || label;
 
-				html += '<li data-gp-area-id="'+$gp.AreaId($this)+'" '+style+' title="'+classes+'">';
-				html += '<div><a class="color_handle" data-cmd="SectionColor" style="background-color:'+color+'"></a>';
+
+				// highlight sections in editor
+				$this.on("mouseenter", function(){
+					$('li[data-gp-area-id="' + area_id + '"]').addClass('section-sorting-highlight');
+				}).on("mouseleave", function(){
+					$('li[data-gp-area-id="' + area_id + '"]').removeClass('section-sorting-highlight');
+				});
+
+
+				html += '<li data-gp-area-id="' + area_id + '" ' + style + ' title="' + classes + '">';
+				html += '<div><a class="color_handle" data-cmd="SectionColor" style="background-color:' + color + '"></a>';
 				html += '<span class="options">';
 
 				if( !$this.hasClass('filetype-wrapper_section') ){
@@ -236,6 +434,7 @@
 
 				html += '<a class="fa fa-sliders" data-cmd="SectionOptions" title="' + gplang.options + '"></a>';
 				html += '<a class="fa fa-files-o" data-cmd="CopySection" title="' + gplang.Copy + '"></a>';
+				html += '<a class="fa fa-clipboard" data-cmd="SectionToClipboard" title="' + gplang.CopyToClipboard + '"></a>';
 
 				var vis_icon_class = is_hidden ? 'fa-eye' : 'fa-eye-slash';
 				html += '<a class="fa ' + vis_icon_class + ' ShowHideSection" data-cmd="ShowHideSection" title="' + gplang.Visibility + '"></a>';
@@ -265,6 +464,7 @@
 			return html;
 		},
 
+
 		GenerateId: function(){
 
 			var uniqid;
@@ -284,26 +484,26 @@
 		 */
 		DragStop: function(event, ui){
 
-			var area		= this.GetArea( ui.item );
-			var prev_area	= this.GetArea( ui.item.prev() );
+			var $area		= this.GetArea(ui.item);
+			var $prev_area	= this.GetArea(ui.item.prev());
 
 			//moved after another section
-			if( prev_area.length ){
-				area.insertAfter(prev_area).trigger('SectionSorted');
+			if( $prev_area.length ){
+				$area.insertAfter($prev_area).trigger('SectionSorted');
 				return;
 			}
 
 			//move to beginning of gpx_content
 			var $ul			= ui.item.parent().closest('ul');
 			if( $ul.attr('id') == 'section_sorting' ){
-				area.prependTo('#gpx_content').trigger('SectionSorted');
+				$area.prependTo('#gpx_content').trigger('SectionSorted');
 				return;
 			}
 
 
 			//moved to beginning of wrapper
-			this.GetArea( $ul.parent() ).prepend(area);
-			area.trigger('SectionSorted');
+			this.GetArea($ul.parent()).prepend($area);
+			$area.trigger('SectionSorted');
 
 		},
 
@@ -316,24 +516,41 @@
 
 			var mgr_object = this;
 
-			$list.find('div').hover(function(){
+			$list.find('div').on('mouseenter', function(){ // get rid of jQ 1.9 deprecated 'hover' event
 
 				var $this = $(this).parent();
+				var $area = mgr_object.GetArea($this);
+
+				scrollto_section_timeout = setTimeout(function(){
+					//scroll the page
+					var top		= $area.offset().top - 200;
+					$('html,body').stop().animate({scrollTop: top});
+				}, 1200);
+
 
 				$('.section-item-hover').removeClass('section-item-hover');
 				$this.addClass('section-item-hover');
 
 				$('.section-highlight').removeClass('section-highlight');
-				mgr_object.GetArea( $this ).addClass('section-highlight');
+				$area.addClass('section-highlight');
 
-			},function(){
-				var $this = $(this).parent()
-				mgr_object.GetArea( $this ).removeClass('section-highlight');
+			}).on('mouseleave', function(){
+
+				var $this = $(this).parent();
+				var $area = mgr_object.GetArea($this);
+
+				if( scrollto_section_timeout ){
+					clearTimeout(scrollto_section_timeout);
+				}
+
+				$area.removeClass('section-highlight');
 				$this.removeClass('section-item-hover');
 
 			});
 
 		},
+
+
 
 		/**
 		 * Get an editable area from
@@ -343,14 +560,16 @@
 			var id		= $gp.AreaId( $li );
 			return $('#ExtraEditArea'+id);
 		},
-	}
+
+	}; /* /gp_editor */
+
 
 
 	/**
 	 * Preview new section
 	 *
 	 */
-	$(document).on('mousemove','.preview_section',function(){
+	$(document).on('mousemove', '.preview_section', function(){
 		var $this = $(this);
 
 		if( preview_timeout ){
@@ -424,6 +643,7 @@
 	 */
 	$gp.links.AddSection = function(evt){
 		var $this = $(this);
+
 		evt.preventDefault();
 
 		//remove preview
@@ -432,7 +652,7 @@
 
 
 		//new content
-		var $section	= $($this.data('response')).appendTo('#gpx_content');
+		var $section = $($this.data('response')).appendTo('#gpx_content');
 
 		NewSectionIds($section);
 
@@ -441,6 +661,38 @@
 		gp_editor.InitSorting();
 		$this.removeClass('previewing').trigger('mousemove');
 	};
+
+
+	/**
+	 * Handle Clipboard Item clicks
+	 *
+	 */
+	$gp.links.AddFromClipboard = function(evt){
+
+		var item_index	= $(this).closest('li').attr('data-item_index');
+		var is_dirty	= gp_editor.checkDirty();
+		if( is_dirty ){
+			// inhibit auto-save while doing instant saving to prevent timing conflicts
+			gp_editor.allowAutoSave = false;
+			// enqueue SectionFromClipboard after Save
+			gp_editor.AfterSave.SectionFromClipboardEnqueued = {
+				fnc: gp_editor.SectionFromClipboard,
+				arg: item_index,
+				callback: function(ret){
+					// re-enable auto-save in the callback
+					gp_editor.allowAutoSave = true; 
+				},
+				// destroy the enqueued function after execution
+				destroy: true 
+			};
+			// trigger save
+			gp_editing.SaveChanges();
+			return;
+		}
+		gp_editor.SectionFromClipboard(item_index);
+	};
+
+
 
 	/**
 	 * Set Section Visibility
@@ -477,6 +729,7 @@
 		}
 	};
 
+
 	/**
 	 * Confirm to delete a section
 	 *
@@ -489,8 +742,8 @@
 		html += '<h2>' + gplang.del + '</h2>';
 		html += '<p>';
 		html += gplang.generic_delete_confirm.replace(
-			'%s', '<strong>' + gplang.Section.replace('%s','') + $li.find(".section_label").text() + '</strong>' 
-		);
+			'%s', '<strong>' + $li.find(".section_label").first().text() + '</strong>' 
+		); // gplang.Section.replace('%s','') + 
 		html += '<br/><br/></p><p>';
 		html += '<a class="gpsubmit" onClick="$gp.DeleteSection(' + area_id + ')">' + gplang.del + '</a>';
 		html += '<a class="gpcancel" data-cmd="admin_box_close">' + gplang.ca + '</a>';
@@ -498,6 +751,7 @@
 		html += '</div>';
 		$gp.AdminBoxC(html);
 	};
+
 
 	/**
 	 * Delete a section
@@ -521,19 +775,20 @@
 
 	/**
 	 * Remove a section
-	 * Deletes a section without confirmation, deprecated as of v5.1.0
+	 * Deletes a section without confirmation, deprecated as of v5.1
 	 */
 	$gp.links.RemoveSection = function(evt){
 		//make sure there's at least one section
 		if( $('#gpx_content').find('.editable_area').length > 1 ){
 			var $li = $(this).closest('li');
-			var area = gp_editor.GetArea( $li );
+			var $area = gp_editor.GetArea( $li );
 
-			area.parent().trigger("SectionRemoved");
-			area.remove();
+			$area.parent().trigger("SectionRemoved");
+			$area.remove();
 			$li.remove();
 		}
 	};
+
 
 	/**
 	 * Copy selected section
@@ -549,6 +804,116 @@
 		gp_editor.InitSorting();
 	};
 
+
+	/**
+	 * Save selected section to the Section Clipboard
+	 * We need to make sure that sections are saved
+	 * Trigger SaveChanges() if required and enqueue SaveToClipboard to be executed in the ck_saved -> resetDity() callback 
+	 */
+	$gp.links.SectionToClipboard = function(evt){
+		var area_id		= $(this).closest('li').data('gp-area-id');
+		// console.log("SectionToClipboard: area_id = " + area_id);
+		var is_dirty	= gp_editor.checkDirty();
+		if( is_dirty ){
+			// inhibit auto-save while doing instant saving to prevent timing conflicts
+			gp_editor.allowAutoSave = false;
+			// enqueue SectionToClipboard after Save
+			gp_editor.AfterSave.SaveToClipboardEnqueued = {
+				fnc: gp_editor.SaveToClipboard,
+				arg: area_id,
+				callback: function(ret){
+					// re-enable auto-save in the callback
+					gp_editor.allowAutoSave = true; 
+				},
+				// destroy the enqueued function after execution
+				destroy: true 
+			};
+			// trigger save
+			gp_editing.SaveChanges();
+			return;
+		}
+		gp_editor.SaveToClipboard(area_id);
+	};
+
+
+	/**
+	 * Remove item from the Section Clipboard
+	 *
+	 */
+	$gp.links.RemoveSectionClipboardItem = function(evt){
+
+		var item_index = $(this).closest('li').attr("data-item_index");
+		if( !item_index ){
+			console.log('RemoveSectionClipboardItem Error: Atribute data_item_index missing');
+			return;
+		}
+
+		var data = {
+			cmd				: 'RemoveFromClipboard',
+			item_number		: item_index
+		};
+		data = jQuery.param(data);
+		$gp.postC(window.location.href, data);
+		loading();
+	};
+
+
+	/**
+	 * Relabel Section Clipboard Item
+	 *
+	 */
+	$gp.links.RelabelSectionClipboardItem = function(evt){
+
+		var item_index = $(this).closest('li').attr("data-item_index");
+		if( !item_index ){
+			console.log('RelabelClipboardItem Error: Atribute data_item_index missing');
+			return;
+		}
+
+		var $this	= $(this);
+		var $label	= $this.closest('li').find('.clipboard-item-label');
+
+		$label.hide();
+		$this.hide();
+
+		var tmpInput = $('<input type="text" value="' + $label.text() + '"/>')
+			.insertAfter($label)
+			.focus()
+			.select()
+			// when blurred, remove <input> and show hidden elements
+			// same when esc or enter key is entered
+			.on('keydown blur', function(evt){
+
+				// stop if not blur or enter key
+				if( evt.type != 'blur' && evt.which !== 13 && evt.which !== 27 ){
+				 return;
+				}
+
+				// $label.show();
+				$label.show();
+				$this.show();
+				var label = tmpInput.val();
+				tmpInput.remove();
+
+				// esc key or nothing changed -> don't save changes
+				if( evt.which === 27 || $label.text() === label ){
+					return;
+				}
+
+				$label.text(label);
+				var data = {
+					cmd				: 'RelabelClipboardItem',
+					item_number		: item_index,
+					new_label		: label,
+				};
+				data = jQuery.param(data);
+				$gp.postC(window.location.href, data);
+				loading();
+			});
+	};
+
+
+
 	/**
 	 * Section Color
 	 *
@@ -557,8 +922,12 @@
 
 		var $this	= $(this);
 		var $li		= $this.closest('li');
-		var colors	= [ '#1192D6','#3E5DE8','#8D3EE8','#C41FDD', '#ED2F94','#ED4B1E','#FF8C19','#FFD419','#C5E817','#5AC92A','#0DA570','#017C7C','#DDDDDD','#888888','#555555','#000000' ];
-
+		var colors	= [ 
+			'#1192D6', '#3E5DE8', '#8D3EE8', '#C41FDD',
+			'#ED2F94', '#ED4B1E', '#FF8C19', '#FFD419',
+			'#C5E817', '#5AC92A', '#0DA570', '#017C7C',
+			'#DDDDDD', '#888888', '#555555', '#000000' 
+		];
 
 		//build html
 		var html = '<span class="secsort_color_swatches">';
@@ -574,6 +943,7 @@
 			$li.children().show();
 		});
 	};
+
 
 	/**
 	 * Change section color
@@ -591,6 +961,7 @@
 		$li.find('.secsort_color_swatches').remove();
 		$li.children().show();
 	};
+
 
 	/**
 	 * Toggle wrapper display
@@ -915,14 +1286,14 @@
 		$area.data('gp-attrs',new_attrs);
 
 		$gp.CloseAdminBox();
-	}
+	};
 
 
 	/**
 	 * Init Label editing
 	 *
 	 */
-	$(document).on('dblclick','.section_label',function(){
+	$(document).on('dblclick', '.section_label', function(){
 
 		var $this			= $(this);
 		var $div			= $this.closest('div');
@@ -961,6 +1332,7 @@
 	});
 
 
+
 	/**
 	 * Assign new ids to a section and it's children
 	 *
@@ -975,6 +1347,7 @@
 		});
 
 	}
+
 
 	/**
 	 * Assign a new id to a section

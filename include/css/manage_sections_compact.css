@@ -18,10 +18,10 @@
 	}
 
 #section_sorting ul{
-    clear:both;
-    margin:1px 0 1px 3px;
-    padding-left:3px;
-    transition:all 0.7s ease 0s;
+	clear:both;
+	margin:1px 0 1px 3px;
+	padding-left:3px;
+	transition:all 0.7s ease 0s;
 	-webkit-transition:all 0.7s;
 	-moz-transition:all 0.7s;
 	-ms-transition:all 0.7s;
@@ -36,11 +36,16 @@
 	margin:2px 0;
 	}
 
+#section_sorting li.section-sorting-highlight {
+	outline:1px solid #bbb;
+	outline-offset:-1px;
+	}
+
 #section_sorting .color_handle{
 	position:absolute;
-	top:-1px;
-	left:-1px;
-	bottom:-1px;
+	top:0;
+	left:0;
+	bottom:0;
 	width:4px;
 	cursor:pointer;
 	background-color:#aabbcc;

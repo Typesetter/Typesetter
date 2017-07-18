@@ -577,7 +577,10 @@ namespace gp\admin{
 			echo '</li>';
 
 			//layout edit
-			$current_layout = $gp_titles[$page->gp_index]['gpLayout']; // $page->gpLAyout is not yet set
+			$current_layout = 
+				isset($gp_titles[$page->gp_index]['gpLayout']) 
+				? $gp_titles[$page->gp_index]['gpLayout'] 
+				: 'default'; // $page->gpLAyout is not yet set
 			echo '<li>';
 			echo \gp\tool::Link(
 				'Admin_Theme_Content/Edit/' . urlencode($current_layout),

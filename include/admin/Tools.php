@@ -232,7 +232,7 @@ namespace gp\admin{
 																);
 
 			$scripts['Admin/Classes']					= array(	'class'		=> '\\gp\\admin\\Settings\\Classes',
-																	'label'		=> $langmessage['Manage Classes'],
+																	'label'		=> $langmessage['Classes'],
 																	'group'		=> 'settings',
 																);
 

@@ -543,7 +543,7 @@ namespace gp\admin{
 		 *
 		 */
 		public static function ToolbarEditLinks(){
-			global $page, $langmessage;
+			global $page, $gp_titles, $langmessage;
 
 			if( !\gp\admin\Tools::CanEdit($page->gp_index) ){
 				return;
@@ -557,18 +557,33 @@ namespace gp\admin{
 			//page edit
 			if( $page->pagetype == 'display' ){
 				echo '<li>';
-				echo \gp\tool::Link($page->title,$langmessage['Page'],'cmd=ManageSections',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections'));
+				echo \gp\tool::Link(
+					$page->title,
+					$langmessage['Page'],
+					'cmd=ManageSections',
+					array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections')
+				);
 				echo '</li>';
 			}
 
 			//extra edut
 			echo '<li>';
-			echo \gp\tool::Link($page->title,$langmessage['theme_content'],'cmd=ManageSections&mode=extra',array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections','data-mode'=>'extra','class'=>'gp_extra_edit'));
+			echo \gp\tool::Link(
+				$page->title,
+				$langmessage['theme_content'],
+				'cmd=ManageSections&mode=extra',
+				array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections','data-mode'=>'extra','class'=>'gp_extra_edit')
+			);
 			echo '</li>';
 
 			//layout edit
+			$current_layout = $gp_titles[$page->gp_index]['gpLayout']; // $page->gpLAyout is not yet set
 			echo '<li>';
-			echo \gp\tool::Link('Admin_Theme_Content/Edit/'.urlencode($page->gpLayout),$langmessage['layout'],'redir='.rawurlencode($page->requested));
+			echo \gp\tool::Link(
+				'Admin_Theme_Content/Edit/' . urlencode($current_layout),
+				$langmessage['layout'],
+				'redir=' . rawurlencode($page->requested)
+			);
 			echo '</li>';
 			echo '</ul>';
 

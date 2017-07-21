@@ -947,7 +947,7 @@ class Menu{
 
 		// call template defined function
 		if( !empty($GP_MENU_ELEMENTS) && is_callable($GP_MENU_ELEMENTS) ){
-			$return = call_user_func($GP_MENU_ELEMENTS, $node, $attributes);
+			$return = call_user_func($GP_MENU_ELEMENTS, $node, $attributes, $this->curr_level);
 			if( is_string($return) ){
 				echo $return;
 				return;

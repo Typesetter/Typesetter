@@ -117,6 +117,7 @@ namespace gp\tool{
 
 		private static $edit_index			= 0;
 
+		private static $head_css			= '';
 		private static $head_content		= '';
 		private static $head_js				= '';
 
@@ -1240,7 +1241,10 @@ namespace gp\tool{
 			$scripts = \gp\tool\Output\Combine::ScriptInfo( self::$components );
 
 			self::GetHead_TKD();
+
+			ob_start();
 			self::GetHead_CSS($scripts['css']); //css before js so it's available to scripts
+			self::$head_css = ob_get_clean();
 
 			self::$head_content = ob_get_clean();
 
@@ -1817,6 +1821,11 @@ namespace gp\tool{
 				return $buffer;
 			}
 
+			//add css to bottom of <body>
+			if( defined('load_css_in_body') && load_css_in_body == true ){
+				$buffer = self::AddToBody($buffer, self::$head_css );
+			}
+
 			//add js to bottom of <body>
 			$buffer = self::AddToBody($buffer, self::$head_js );
 
@@ -1829,7 +1838,11 @@ namespace gp\tool{
 			}
 
 			//head content
-			$replacements[$placeholder]	= self::$head_content;
+			if( defined('load_css_in_body') && load_css_in_body == true  ){
+				$replacements[$placeholder]	= self::$head_content;
+			}else{
+				$replacements[$placeholder]	= self::$head_css . self::$head_content;
+			}
 
 
 			//add jquery if needed

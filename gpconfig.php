@@ -44,6 +44,17 @@ define('gp_default_theme','Three_point_5/Shore');
 
 
 /**
+ * load_css_in_body
+ * If defined true, stylesheet <link>s will be placed at then end of the <body> element (but before scripts) instead of in the <head> element.
+ * Defined false forces styleheets to the <head> even if a theme or addon defines it to true via gp_defined('load_css_in_body', true);
+ * Undefined loads stylesheets in the head but allows later changes by themes/addons.
+ * Defaults to undefined
+ *
+ */
+// define('load_css_in_body',true);
+
+
+/**
  * gp_browser_auth
  * Set to true to enable additional security by requiring a static browser identity for user session. Disabled by default since gpEasy 2.3.2
  * Enabling this feature may require administrators to log back in. If administrators report they are being logged out, then you may need to disable this feature

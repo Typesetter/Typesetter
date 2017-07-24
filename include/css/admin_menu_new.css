@@ -95,8 +95,18 @@ body #admin_menu li.ui-sortable-helper{
 	white-space:nowrap;
 	overflow:hidden;
 	padding:2px;
+	text-decoration:none;
 	}
 
+#admin_menu li div a.gp_label.extra:before{
+	font-family:FontAwesome;
+	display:inline-block;
+	content:"\f1b2"; /* fa-cube */
+	color:#888;
+	margin-right:0.33em;
+	font-size:11px;
+	vertical-align:top;
+	}
 
 
 

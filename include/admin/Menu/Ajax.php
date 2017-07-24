@@ -60,6 +60,19 @@ class Ajax extends \gp\admin\Menu{
 			break;
 
 
+			//extra area
+			case 'InsertExtra':
+				$this->InsertExtra();
+			break;
+
+
+			//edit classes
+			case 'ClassesForm':
+				$this->ClassesForm();
+			break;
+			case 'SaveClasses':
+				$this->SaveClasses();
+			break;
 
 
 			//menu editing
@@ -365,9 +378,11 @@ class Ajax extends \gp\admin\Menu{
 		echo '<form action="'.\gp\tool::GetUrl('Admin/Menu/Ajax').'" method="post">';
 		echo '<input type="hidden" name="insert_where" value="'.htmlspecialchars($_REQUEST['insert_where']).'" />';
 		echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($cmd).'" />';
-		echo '<table class="bordered full_width">';
-		echo '<thead><tr><th>&nbsp;</th></tr></thead>';
-		echo '</table>';
+
+		// echo '<table class="bordered full_width">';
+		// echo '<thead><tr><th>&nbsp;</th></tr></thead>';
+		// echo '</table>';
+
 		$format_top = ob_get_clean();
 
 		ob_start();
@@ -385,11 +400,12 @@ class Ajax extends \gp\admin\Menu{
 
 			//tabs
 			echo '<div class="layout_links">';
-			echo ' <a href="#gp_Insert_Copy" data-cmd="tabs" class="selected">'. $langmessage['Copy'] .'</a>';
-			echo ' <a href="#gp_Insert_New" data-cmd="tabs">'. $langmessage['new_file'] .'</a>';
-			echo ' <a href="#gp_Insert_Hidden" data-cmd="tabs">'. $langmessage['Available'] .'</a>';
-			echo ' <a href="#gp_Insert_External" data-cmd="tabs">'. $langmessage['External Link'] .'</a>';
-			echo ' <a href="#gp_Insert_Deleted" data-cmd="tabs">'. $langmessage['trash'] .'</a>';
+			echo   '<a href="#gp_Insert_Copy" data-cmd="tabs" class="selected">'. $langmessage['Copy'] .'</a> ';
+			echo   '<a href="#gp_Insert_New" data-cmd="tabs">'. $langmessage['new_file'] .'</a> ';
+			echo   '<a href="#gp_Insert_Hidden" data-cmd="tabs">'. $langmessage['Available'] .'</a> ';
+			echo   '<a href="#gp_Insert_External" data-cmd="tabs">'. $langmessage['External Link'] .'</a> ';
+			echo   '<a href="#gp_Insert_Deleted" data-cmd="tabs">'. $langmessage['trash'] .'</a> ';
+			echo   '<a href="#gp_Insert_Extra" data-cmd="tabs">'. $langmessage['theme_content'] .'</a> ';
 			echo '</div>';
 
 
@@ -467,9 +483,53 @@ class Ajax extends \gp\admin\Menu{
 			echo '</div>';
 
 
+			//Insert Extra
+			$areas = $this->GetExtraAreas();
+			// msg("Areas: " . pre($areas));
+			echo '<p style="padding:6px 10px; background:#f1f1f1;">';
+			echo '<i class="fa fa-warning" style="display:block; float:left; font-size:2em; line-height:1.33em; margin:0 0.5em 0 0.2em;"></i>';
+			echo 'Outputs an Extra Content Area at the current position <strong>in the menu</strong>. ';
+			echo 'This way you may add anything from simple separators to subheads or even images or forms.<br/> ';
+			echo 'This is an advanced feature and requires specific custom CSS to be useful.</p>';
+			if( !empty($areas) ){
+				echo sprintf($format_top,'gp_Insert_Extra','nodisplay');
+				\gp\admin\Menu\Tools::ScrollListExtra($areas);
+				echo sprintf($format_bottom, 'InsertExtra', $langmessage['insert']);
+			}
+
+
 		echo '</div>';
 
 	}
+
+
+	function GetExtraAreas(){
+		global $dataDir;
+		$areas			= array();
+		$folder 		= $dataDir . '/data/_extra';
+		$files			= scandir($folder);
+		foreach($files as $file){
+			$title	= \gp\admin\Content\Extra::AreaExists($file);
+			// msg("file = " . $file . " -> title = " . pre($title));
+			if( $title == false ){
+				continue;
+			}
+			$areas[$title] = str_replace('_', ' ', $title);
+			/* 
+			array(
+				'title'			=> $title,
+				'file_path'		=> $folder . '/' . $title . '/page.php',
+				'draft_path'	=> $folder . '/' . $title . '/draft.php',
+				'legacy_path'	=> $folder . '/' . $title . '.php',
+			);
+			*/
+		}
+		uksort($areas,'strnatcasecmp');
+		return $areas;
+	}
+
+
+
 
 	/**
 	 * Generate a scroll list selector for trash titles
@@ -638,10 +698,10 @@ class Ajax extends \gp\admin\Menu{
 
 		echo '<table class="bordered full_width">';
 
-		echo '<tr>';
-		echo '<th>&nbsp;</th>';
-		echo '<th>&nbsp;</th>';
-		echo '</tr>';
+		// echo '<tr>';
+		// echo '<th>&nbsp;</th>';
+		// echo '<th>&nbsp;</th>';
+		// echo '</tr>';
 
 		echo '<tr><td>';
 		echo $langmessage['Target URL'];
@@ -683,6 +743,204 @@ class Ajax extends \gp\admin\Menu{
 
 
 	/**
+	 * Form for adding/editing custom CSS class names a menu item
+	 *
+	 */
+	public function ClassesForm(){
+		global $langmessage; // msg('ma = ' .pre($this->curr_menu_array));
+
+		if( !isset($_REQUEST['index']) || !isset($this->curr_menu_array[$_REQUEST['index']]) ){
+			msg($langmessage['OOPS'] . ' (Invalid request or menu key)');
+			return;
+		}
+
+		$key = $_REQUEST['index'];
+
+		$classes_li = '';
+		if( isset($this->curr_menu_array[$key]['classes_li']) ){
+			$classes_li = $this->curr_menu_array[$key]['classes_li'];
+		}
+
+		if( !isset($_REQUEST['no_a_classes']) ){
+			$classes_a = '';
+			if( isset($this->curr_menu_array[$key]['classes_a']) ){
+				$classes_a = $this->curr_menu_array[$key]['classes_a'];
+			}
+		}
+
+		$classes_child_ul = '';
+		if( isset($this->curr_menu_array[$key]['classes_child_ul']) ){
+			$classes_child_ul = $this->curr_menu_array[$key]['classes_child_ul'];
+		}
+
+
+		echo '<div class="inline_box">';
+		echo '<form action="' . $this->GetUrl('Admin/Menu/Ajax') . '" method="post">';
+		echo '<input type="hidden" name="key" value="' . htmlspecialchars($key) . '" />';
+
+		echo '<h2>' . $langmessage['Menu Output'] . ' - ' . $langmessage['Classes'] . '</h2>';
+
+		echo '<table class="bordered full_width">';
+		echo '<tr><th style="width:20%;">Menu Element</th><th>' . $langmessage['Classes'] . '</th></tr>';
+
+		echo '<tr>';
+		echo '<td><strong>li</strong></td>';
+		echo '<td><input type="text" placeholder="some-custom-li-class another-custom-li-class" ';
+		echo 'name="classes_li" value="' . htmlspecialchars($classes_li) . '" class="gpinput" style="width:100%;" /></td>';
+		echo '</tr>';
+
+		if( !isset($_REQUEST['no_a_classes']) ){
+			echo '<tr>';
+			echo '<td>li &gt; <strong>a</strong></td>';
+			echo '<td><input type="text" placeholder="custom-a-class another-a-class" ';
+			echo 'name="classes_a" value="' . htmlspecialchars($classes_a) . '" class="gpinput" style="width:100%;" /></td>';
+			echo '</tr>';
+		}
+
+		echo '<tr>';
+		echo '<td>li &gt; <strong>ul</strong></td>';
+		echo '<td><input type="text" placeholder="custom-child-ul-class another-child-ul-class" ';
+		echo 'name="classes_child_ul" value="' . htmlspecialchars($classes_child_ul) . '" class="gpinput" style="width:100%;" /></td>';
+		echo '</tr>';
+
+		echo '</table>';
+
+		echo '<p>';
+		echo '<input type="hidden" name="cmd" value="SaveClasses" />';
+		echo '<input type="submit" name="" value="' . $langmessage['save'] . '" class="gpsubmit" data-cmd="gppost"/> ';
+		echo '<input type="submit" value="' . $langmessage['cancel'] . '" class="admin_box_close gpcancel" /> ';
+		echo '</p>';
+
+		echo '</form>';
+		echo '</div>';
+	}
+
+
+	/**
+	 * Save posted custom CSS class name(s) for menu item
+	 *
+	 */
+	public function SaveClasses(){
+		global $langmessage;
+
+		if( !isset($_POST['key']) || !isset($_POST['classes_li']) || !isset($_POST['classes_a']) || !isset($_POST['classes_child_ul']) ){
+			msg($langmessage['OOPS'] . ' (Invalid request)');
+			return;
+		}
+
+		$key = $_POST['key'];
+
+		if( !isset($this->curr_menu_array[$key]) ){
+			msg($langmessage['OOPS'] . ' (Invalid menu key)');
+			return;
+		}
+
+		$this->CacheSettings();
+
+		$this->curr_menu_array[$key]['classes_li']			= $this->ValidClasses($_POST['classes_li']);
+		$this->curr_menu_array[$key]['classes_a']			= $this->ValidClasses($_POST['classes_a']);
+		$this->curr_menu_array[$key]['classes_child_ul']	= $this->ValidClasses($_POST['classes_child_ul']);
+
+		if( !$this->SaveMenu(false) ){
+			msg($langmessage['OOPS'].' (Menu Not Saved)');
+			$this->RestoreSettings();
+			return false;
+		}
+
+	}
+
+
+
+	/**
+	 * Removes invalid CSS class names
+	 * Returns only valid CSS class names
+	 * Displays error/remove msg for invalid class names
+	 * @param classes (space separated string or array)
+	 * @return valid_classes (string or array, depending on passed argument type)
+	 *
+	 */
+	public function ValidClasses($classes){
+		global $langmessage;
+
+		$arg_type = gettype($classes);
+
+		if( $arg_type != 'string' && $arg_type != 'array' ){
+			msg($langmessage['OOPS'].' (Wrong type <em>' . $arg_type . '</em>, array or string expected)');
+			return false;
+		}
+		if( empty($classes) ){
+			return $classes;
+		}
+
+		if( $arg_type == 'string' ){
+			$classes = explode(' ', $classes);
+		}
+
+ 		$valid_classes = array();
+		foreach( $classes as $classname ){
+			if( $classname == ' ' || empty($classname) ){
+				// skip leftovers from multiple space chars
+				continue;
+			}
+			// $classname = trim($classname);
+			if( !preg_match("/^([a-z_]|-[a-z_-])[a-z\d_-]*$/i", $classname) ){
+				msg('<em>' . htmlspecialchars($classname) . '</em> is not a valid CSS class name and was removed.');
+				continue;
+			}
+			$valid_classes[] = $classname;
+		}
+
+		if( $arg_type == 'string' ){
+			$valid_classes = implode(' ', $valid_classes);
+		}
+
+		return $valid_classes;
+	}
+
+
+
+	/**
+	 * Place an Extra Content Area inside the current menu
+	 *
+	 */
+	public function InsertExtra(){
+		global $gp_menu, $langmessage;
+
+		$this->CacheSettings();
+		$area = $_POST['from_extra'];
+
+		if( !\gp\admin\Content\Extra::AreaExists($area) ){
+			msg($langmessage['OOPS'].' (Extra Area does not exist)');
+			return;
+		}
+
+		$key			= $this->NewExtraKey();
+		$insert			= array();
+		$insert[$key]	= array(
+			'area' 	=> $area,
+			'label'	=> str_replace('_', ' ', $area),
+		);
+
+		if( !$this->SaveNew($insert) ){ 
+			msg($langmessage['OOPS'].' (Adding Extra Content Area failed)');
+			$this->RestoreSettings();
+			return false;
+		}
+	}
+
+
+	public function NewExtraKey(){
+		$num_index = 0;
+		do{
+			$new_key = '_extra_' . base_convert($num_index, 10, 36);
+			$num_index++;
+		}while( isset($this->curr_menu_array[$new_key]) );
+
+		return $new_key;
+	}
+
+
+	/**
 	 * Save a new external link in the current menu
 	 *
 	 */
@@ -701,7 +959,7 @@ class Ajax extends \gp\admin\Menu{
 		$insert			= array();
 		$insert[$key]	= $array;
 
-		if( !$this->SaveNew($insert) ){
+		if( !$this->SaveNew($insert) ){ 
 			$this->RestoreSettings();
 			return false;
 		}
@@ -818,7 +1076,7 @@ class Ajax extends \gp\admin\Menu{
 		//menu modification
 		if( isset($_POST['insert_where']) && isset($_POST['insert_how']) ){
 
-			if( !$this->MenuInsert($titles,$_POST['insert_where'],$_POST['insert_how']) ){
+			if( !$this->MenuInsert($titles, $_POST['insert_where'], $_POST['insert_how']) ){
 				msg($langmessage['OOPS'].' (Insert Failed)');
 				return false;
 			}
@@ -844,16 +1102,16 @@ class Ajax extends \gp\admin\Menu{
 	 * Insert titles into the current menu if needed
 	 *
 	 */
-	public function MenuInsert($titles,$neighbor,$insert_how){
+	public function MenuInsert($titles, $neighbor, $insert_how){
 		switch($insert_how){
 			case 'insert_before':
-			return $this->MenuInsert_Before($titles,$neighbor);
+			return $this->MenuInsert_Before($titles, $neighbor);
 
 			case 'insert_after':
-			return $this->MenuInsert_After($titles,$neighbor);
+			return $this->MenuInsert_After($titles, $neighbor);
 
 			case 'insert_child':
-			return $this->MenuInsert_After($titles,$neighbor,1);
+			return $this->MenuInsert_After($titles, $neighbor, 1);
 		}
 
 		return false;

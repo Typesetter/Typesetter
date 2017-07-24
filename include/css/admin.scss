@@ -1504,21 +1504,36 @@ body #addon_about{
 
 /* tabs */
 .layout_links{
-	white-space: nowrap;
-	margin: 0 0 13px 0;
+	margin: 0 0 12px 0;
+	/*
+	text-align: justify;
+	position: relative;
+	width: 100%;
+	&:after { // create a line break to justify line
+		content: "";
+		display: inline-block;
+		width: 100%;
+		height: 1px;
+		}
+		*/
 	}
 .layout_links a,
 #gp_admin_html .layout_links a{
+	display: inline-block;
 	text-decoration: none;
 	font-weight: bold;
-	margin: 3px 7px 3px 0;
-	padding: 3px 7px;
+	margin: 3px 0;
+	padding: 3px 5px;
 	border-radius: 3px !important;
 	font-size: 13px;
 
 	background-color: #f1f1f1;
 	border: 1px solid #e1e1e1;
 	color: #777;
+	// max-width: 16%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	}
 
 .layout_links a.selected,

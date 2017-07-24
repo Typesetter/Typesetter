@@ -81,7 +81,7 @@ class Menu extends \gp\special\Base{
 	}
 
 
-	public function RunScript(){
+	public function RunScript(){ 
 
 		if( $this->cmd === 'return' ){
 			return;
@@ -350,6 +350,9 @@ class Menu extends \gp\special\Base{
 			$this->MenuSkeletonExtern();
 			echo '</div>';
 
+			echo '<div id="menu_info_extra" style="display:none">';
+			$this->MenuSkeletonExtra();
+			echo '</div>';
 		}else{
 			echo '<div id="gp_menu_available">';
 			echo $content;
@@ -572,7 +575,7 @@ class Menu extends \gp\special\Base{
 			}
 
 			//remove deleted titles
-			if( !isset($gp_titles[$key]) && !isset($info['url']) ){
+			if( !isset($gp_titles[$key]) && !isset($info['url']) && !isset($info['area']) ){
 				$menu_adjustments = true;
 				continue;
 			}
@@ -620,8 +623,62 @@ class Menu extends \gp\special\Base{
 			$this->ShowLevel_Title($menu_key,$menu_value,$layout_info);
 		}elseif( isset($menu_value['url']) ){
 			$this->ShowLevel_External($menu_key,$menu_value);
+		}elseif( isset($menu_value['area']) ){
+			$this->ShowLevel_Extra($menu_key,$menu_value);
 		}
 		echo '</div>';
+	}
+
+
+
+	/**
+	 * Show a menu entry if it's an Extra Content Area
+	 *
+	 */
+	public function ShowLevel_Extra($menu_key,$menu_value){
+		$data = array(
+				'key'		=>	$menu_key,
+				'area'		=>	$menu_value['area'],
+				'label'		=>	$menu_value['label'],
+				'level'		=>	$menu_value['level'],
+			);
+
+		if( strlen($data['label']) > 30 ){
+			$data['title'] = substr($data['title'],0,30).'...';
+		}
+
+		\gp\admin\Menu\Tools::MenuLink($data,'extra');
+		echo \gp\tool::LabelSpecialChars($data['label']);
+		echo '</a>';
+	}
+
+	public function MenuSkeletonExtra(){
+		global $langmessage;
+
+		echo '<b>'.$langmessage['options'].'</b>';
+		echo '<span>';
+
+		$img	= '<i class="menu_icon fa fa-css3"></i>';
+		$label = $langmessage['Menu Output'] . ' - ' . $langmessage['Classes'];
+		$attrs	= array('title'=>$label, 'data-cmd'=>'gpabox');
+		echo $this->Link(
+			'Admin/Menu/Ajax',
+			$img . $label,
+			'cmd=ClassesForm&index=[key]&no_a_classes=1',
+			$attrs
+		);
+
+		$img = '<i class="menu_icon fa fa-scissors"></i>';
+		echo $this->Link(
+			'Admin/Menu/Ajax',
+			$img . $langmessage['remove'],
+			'cmd=hide&index=[key]',
+			array('title'=>$langmessage['remove'],'data-cmd'=>'postlink','class'=>'gpconfirm')
+		);
+
+		echo '</span>';
+
+		$this->InsertLinks();
 	}
 
 
@@ -659,10 +716,30 @@ class Menu extends \gp\special\Base{
 		echo '<span>';
 
 		$img = '<i class="menu_icon fa fa-gears"></i>';
-		echo $this->Link('Admin/Menu/Ajax',$img.$langmessage['edit'],'cmd=EditExternal&key=[key]',array('title'=>$langmessage['edit'],'data-cmd'=>'gpabox'));
+		echo $this->Link(
+			'Admin/Menu/Ajax',
+			$img . $langmessage['edit'],
+			'cmd=EditExternal&key=[key]',
+			array('title'=>$langmessage['edit'],'data-cmd'=>'gpabox')
+		);
+
+		$img	= '<i class="menu_icon fa fa-css3"></i>';
+		$label = $langmessage['Menu Output'] . ' - ' . $langmessage['Classes'];
+		$attrs	= array('title'=>$label, 'data-cmd'=>'gpabox');
+		echo $this->Link(
+			'Admin/Menu/Ajax',
+			$img . $label,
+			'cmd=ClassesForm&index=[key]',
+			$attrs
+		);
 
 		$img = '<i class="menu_icon fa fa-scissors"></i>';
-		echo $this->Link('Admin/Menu/Ajax',$img.$langmessage['rm_from_menu'],'cmd=hide&index=[key]',array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'postlink','class'=>'gpconfirm'));
+		echo $this->Link(
+			'Admin/Menu/Ajax',
+			$img . $langmessage['rm_from_menu'],
+			'cmd=hide&index=[key]',
+			array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'postlink','class'=>'gpconfirm')
+		);
 
 		echo '</span>';
 
@@ -748,47 +825,101 @@ class Menu extends \gp\special\Base{
 		echo '<span>';
 
 		$img	= '<i class="menu_icon fa fa-pencil"></i>';
-		echo '<a href="[url]" class="view_edit_link not_multiple">'.$img.htmlspecialchars($langmessage['view/edit_page']).'</a>';
+		echo '<a href="[url]" class="view_edit_link not_multiple">';
+		echo  $img . htmlspecialchars($langmessage['view/edit_page']);
+		echo '</a>';
 
 		$img	= '<i class="menu_icon fa fa-gears"></i>';
-		$attrs	= array('title'=>$langmessage['rename/details'],'data-cmd'=>'gpajax','class'=>'not_multiple');
-		echo $this->Link('Admin/Menu/Ajax',$img.$langmessage['rename/details'],'cmd=renameform&index=[key]',$attrs);
+		$attrs	= array('title'=>$langmessage['rename/details'], 'data-cmd'=>'gpajax', 'class'=>'not_multiple');
+		echo $this->Link(
+			'Admin/Menu/Ajax',
+			$img . $langmessage['rename/details'],
+			'cmd=renameform&index=[key]',
+			$attrs
+		);
 
 
 		$img	= '<i class="fa fa-eye-slash menu_icon"></i>';
 		$q		= 'cmd=ToggleVisibility&index=[key]';
 		$label	= $langmessage['Visibility'].': '.$langmessage['Private'];
-		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax','class'=>'vis_private');
-		echo $this->Link('Admin/Menu/Ajax',$img.$label,$q,$attrs);
+		$attrs	= array('title'=>$label, 'data-cmd'=>'gpajax', 'class'=>'vis_private');
+		echo $this->Link(
+			'Admin/Menu/Ajax',
+			$img . $label,
+			$q,
+			$attrs
+		);
 
 		$img	= '<i class="fa fa-eye menu_icon"></i>';
 		$label	= $langmessage['Visibility'].': '.$langmessage['Public'];
 		$attrs	= array('title'=>$label,'data-cmd'=>'gpajax','class'=>'vis_public not_multiple');
 		$q		.= '&visibility=private';
-		echo $this->Link('Admin/Menu/Ajax',$img.$label,$q,$attrs);
+		echo $this->Link(
+			'Admin/Menu/Ajax',
+			$img . $label,
+			$q,
+			$attrs
+		);
 
 
-		echo '<a href="[url]?cmd=ViewHistory" class="view_edit_link not_multiple not_special" data-cmd="gpabox"><i class="fa fa-history menu_icon"></i>'.htmlspecialchars($langmessage['Revision History']).'</a>';
+		echo '<a href="[url]?cmd=ViewHistory" class="view_edit_link not_multiple not_special" ';
+		echo 'data-cmd="gpabox"><i class="fa fa-history menu_icon"></i>';
+		echo  htmlspecialchars($langmessage['Revision History']);
+		echo '</a>';
 
 
 		$img	= '<i class="menu_icon fa fa-files-o"></i>';
-		$attrs	= array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox','class'=>'not_multiple not_special');
-		echo $this->Link('Admin/Menu/Ajax',$img.$langmessage['Copy'],'cmd=CopyForm&index=[key]',$attrs);
+		$attrs	= array('title'=>$langmessage['Copy'], 'data-cmd'=>'gpabox', 'class'=>'not_multiple not_special');
+		echo $this->Link(
+			'Admin/Menu/Ajax',
+			$img . $langmessage['Copy'],
+			'cmd=CopyForm&index=[key]',
+			$attrs
+		);
 
 
 		if( \gp\admin\Tools::HasPermission('Admin_User') ){
 			$img	= '<i class="menu_icon fa fa-user"></i>';
 			$attrs	= array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox');
-			echo $this->Link('Admin/Users',$img.$langmessage['permissions'],'cmd=file_permissions&index=[key]',$attrs);
+			echo $this->Link(
+				'Admin/Users',
+				$img . $langmessage['permissions'],
+				'cmd=file_permissions&index=[key]',
+				$attrs
+			);
 		}
+
+
+		$img	= '<i class="menu_icon fa fa-css3"></i>';
+		$label = $langmessage['Menu Output'] . ' - ' . $langmessage['Classes'];
+		$attrs	= array('title'=>$label, 'data-cmd'=>'gpabox');
+		echo $this->Link(
+			'Admin/Menu/Ajax',
+			$img . $label,
+			'cmd=ClassesForm&index=[key]',
+			$attrs
+		);
+
 
 		$img	= '<i class="menu_icon fa fa-scissors"></i>';
 		$attrs	= array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'postlink','class'=>'gpconfirm');
-		echo $this->Link('Admin/Menu/Ajax',$img.$langmessage['rm_from_menu'],'cmd=hide&index=[key]',$attrs);
+		echo $this->Link(
+			'Admin/Menu/Ajax',
+			$img . $langmessage['rm_from_menu'],
+			'cmd=hide&index=[key]',
+			$attrs
+		);
+
 
 		$img	= '<i class="menu_icon fa fa-trash"></i>';
-		$attrs	= array('title'=>$langmessage['delete_page'],'data-cmd'=>'postlink','class'=>'gpconfirm not_special');
-		echo $this->Link('Admin/Menu/Ajax',$img.$langmessage['delete'],'cmd=MoveToTrash&index=[key]',$attrs);
+		$attrs	= array('title'=>$langmessage['delete_page'], 'data-cmd'=>'postlink', 'class'=>'gpconfirm not_special');
+		echo $this->Link(
+			'Admin/Menu/Ajax',
+			$img . $langmessage['delete'],
+			'cmd=MoveToTrash&index=[key]',
+			$attrs
+		);
+
 
 		echo '[opts]'; //replaced with the contents of \gp\tool\Plugins::Action('MenuPageOptions',array($title,$menu_key,$menu_value,$layout_info));
 
@@ -803,14 +934,30 @@ class Menu extends \gp\special\Base{
 
 			//has_layout
 			$img = '<span class="layout_icon"></span>';
-			echo $this->Link('Admin/Menu',$img.'[layout_label]','cmd=layout&index=[key]',' title="'.$langmessage['layout'].'" data-cmd="gpabox" class="has_layout"');
+			echo $this->Link(
+				'Admin/Menu',
+				$img . '[layout_label]',
+				'cmd=layout&index=[key]',
+				array('data-cmd'=>'gpabox', 'title'=>$langmessage['layout'], 'class'=>'has_layout')
+			);
 
 			$img = '<i class="menu_icon fa fa-undo"></i>';
-			echo $this->Link('Admin/Menu',$img.$langmessage['restore'],'cmd=restorelayout&index=[key]',array('data-cmd'=>'postlink','title'=>$langmessage['restore'],'class'=>'has_layout'),'restore');
+			echo $this->Link(
+				'Admin/Menu',
+				$img . $langmessage['restore'],
+				'cmd=restorelayout&index=[key]',
+				array('data-cmd'=>'postlink', 'title'=>$langmessage['restore'], 'class'=>'has_layout'),
+				'restore'
+			);
 
 			//no_layout
 			$img = '<span class="layout_icon"></span>';
-			echo $this->Link('Admin/Menu',$img.'[layout_label]','cmd=layout&index=[key]',' title="'.$langmessage['layout'].'" data-cmd="gpabox" class="no_layout"');
+			echo $this->Link(
+				'Admin/Menu',
+				$img . '[layout_label]',
+				'cmd=layout&index=[key]',
+				array('data-cmd'=>'gpabox', 'title'=>$langmessage['layout'], 'class'=>'no_layout')
+			);
 			echo '</span>';
 			echo '</div>';
 		}
@@ -1399,7 +1546,7 @@ class Menu extends \gp\special\Base{
 				$new_menu[$titles_key] = $titles_info;
 			}
 		}
-		$this->curr_menu_array = $new_menu;
+		$this->curr_menu_array = $new_menu; 
 
 		return true;
 	}

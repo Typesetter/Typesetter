@@ -144,7 +144,9 @@ class Tools{
 		$class	= 'gp_label sort '.$class;
 		$json	= \gp\tool::JsonEncode($data);
 
-		echo '<a class="'.$class.'" data-cmd="menu_info" data-arg="'.str_replace('&','&amp;',$data['key']).'" data-json=\''.htmlspecialchars($json,ENT_QUOTES & ~ENT_COMPAT).'\'>';
+		echo '<a class="' . $class . '" data-cmd="menu_info" ';
+		echo 	'data-arg="' . str_replace('&','&amp;',$data['key']) . '" ';
+		echo 	'data-json=\''.htmlspecialchars($json,ENT_QUOTES & ~ENT_COMPAT).'\'>';
 	}
 
 
@@ -203,6 +205,39 @@ class Tools{
 		echo implode('',$list_out);
 		echo '</div></div>';
 	}
+
+
+
+	/**
+	 * Create a scrollable list of Extra Content Areaas
+	 * @param array $list
+	 *
+	 */
+	public static function ScrollListExtra($list){
+		global $langmessage;
+
+		$list_out = array();
+		foreach($list as $slug => $label){
+			ob_start();
+			echo '<label>';
+			echo '<input type="radio" name="from_extra" value="' . htmlspecialchars($slug) . '" />';
+			echo '<span>' . $label;
+			echo '<span class="slug">';
+			echo '/data/_extra/' . $slug;
+			echo '</span>';
+			echo '</span>';
+			echo '</label>';
+
+			$list_out[$slug] = ob_get_clean();
+		}
+
+		uksort($list_out,'strnatcasecmp');
+		echo '<div class="gp_scrolllist"><div>';
+		echo '<input type="text" name="search" value="" class="gpsearch" placeholder="'.$langmessage['Search'].'" autocomplete="off" />';
+		echo implode('',$list_out);
+		echo '</div></div>';
+	}
+
 
 
 	/**

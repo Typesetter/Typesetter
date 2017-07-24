@@ -8,6 +8,7 @@
 		var original_parent			= false;
 		var info_html				= $('#menu_info').html();
 		var info_html_extern		= $('#menu_info_extern').html();
+		var info_html_extra			= $('#menu_info_extra').html();
 
 
 		$sortable_area.nestedSortable({
@@ -237,7 +238,12 @@
 			//external link
 			}else if( $current.find('.external').length ){
 				this_html = info_html_extern;
+
+			//extra area
+			}else if( $current.find('.extra').length ){
+				this_html = info_html_extra;
 			}
+
 
 			data = $.extend({}, {title:'',layout_color:'',layout_label:'',types:'',size:'',mtime:'',opts:''}, data);
 

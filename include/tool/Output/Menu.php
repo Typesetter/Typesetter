@@ -11,11 +11,14 @@ class Menu{
 	private $page_title;
 	private $parents				= array();
 
+	private $curr_menu;
 	private $curr_key;
 	private $curr_level;
 	private $curr_info;
 	private $prev_level;
 	private $hidden_level;
+
+	private $custom_child_ul_classes;
 
 
 	public function __construct(){
@@ -52,12 +55,14 @@ class Menu{
 
 
 	public function GetFullMenu($arg=''){
+		$this->curr_menu = $arg;
 		$source_menu_array = $this->GetMenuArray($arg);
 		$this->OutputMenu($source_menu_array,0,$source_menu_array);
 	}
 
 	public function GetExpandLastMenu($arg=''){
 		global $page;
+		$this->curr_menu = $arg;
 		$source_menu_array = $this->GetMenuArray($arg);
 
 		$menu = array();
@@ -90,6 +95,7 @@ class Menu{
 	}
 
 	public function GetMenu($arg=''){
+		$this->curr_menu = $arg;
 		$source_menu_array = $this->GetMenuArray($arg);
 
 		$sendMenu = array();
@@ -105,6 +111,7 @@ class Menu{
 
 	public function GetSubMenu($arg='',$info=false,$search_level=false){
 		global $page;
+		$this->curr_menu = $arg;
 		$source_menu_array = $this->GetMenuArray($arg);
 
 		$reset_level = 0;
@@ -152,7 +159,7 @@ class Menu{
 	}
 
 	public function GetTopTwoMenu($arg=''){
-
+		$this->curr_menu = $arg;
 		$source_menu_array = $this->GetMenuArray($arg);
 
 		$sendMenu = array();
@@ -167,6 +174,7 @@ class Menu{
 
 
 	public function GetBottomTwoMenu($arg=''){
+		$this->curr_menu = $arg;
 		$source_menu_array = $this->GetMenuArray($arg);
 
 		$sendMenu = array();
@@ -180,10 +188,12 @@ class Menu{
 		$this->OutputMenu($sendMenu,1,$source_menu_array);
 	}
 
-
+	/* alias */
 	public function GetSecondSubMenu($arg,$info){
 		$this->GetSubMenu($arg,$info,1);
 	}
+
+	/* alias */
 	public function GetThirdSubMenu($arg,$info){
 		$this->GetSubMenu($arg,$info,2);
 	}
@@ -191,6 +201,7 @@ class Menu{
 
 	public function GetExpandMenu($arg=''){
 		global $page;
+		$this->curr_menu = $arg;
 		$source_menu_array = $this->GetMenuArray($arg);
 
 		$menu = array();
@@ -272,7 +283,7 @@ class Menu{
 				$menu[$key]['title_attr'] = htmlspecialchars($menu[$key]['title_attr']);
 			}
 
-			//make sure url and label are escape
+			//make sure url and label are escaped
 			$menu[$key]['url'] = htmlspecialchars($menu[$key]['url']);
 			$menu[$key]['label'] = htmlspecialchars($menu[$key]['label']);
 		}
@@ -535,7 +546,7 @@ class Menu{
 	 * 		$source_menu (string)	Which menu to use
 	 *
 	 */
-	public function CustomMenu($arg,$title=false){
+	public function CustomMenu($arg, $title=false){
 		global $page, $gp_index;
 
 		//from output functions
@@ -621,7 +632,7 @@ class Menu{
 		// An empty <ul> is not valid
 		if( !count($menu) ){
 			$attr_ul['class']['empty_menu'] = 'empty_menu';
-			$this->FormatMenuElement('div',$attr_ul);
+			$this->FormatMenuElement('div', $attr_ul);
 			echo '</div>';
 			return;
 		}
@@ -630,11 +641,10 @@ class Menu{
 		$this->prev_level		= $start_level;
 		$open					= false;
 		$li_count				= array();
-		$this->parents			= \gp\tool::Parents($page->gp_index,$source_menu);
-
+		$this->parents			= \gp\tool::Parents($page->gp_index, $source_menu);
 
 		//output
-		$this->FormatMenuElement('ul',$attr_ul);
+		$this->FormatMenuElement('ul', $attr_ul);
 
 
 		$menu			= array_keys($menu);
@@ -658,7 +668,7 @@ class Menu{
 
 			//ordered or "indexed" classes
 			if( $page->menu_css_ordered && !empty($GP_MENU_CLASSES['li_']) ){
-				for($i = $this->prev_level;$i > $this->curr_level; $i--){
+				for($i = $this->prev_level; $i > $this->curr_level; $i--){
 					unset($li_count[$i]);
 				}
 
@@ -675,6 +685,17 @@ class Menu{
 				$attr_li['class']['li_title_'] = $GP_MENU_CLASSES['li_title_'].$this->curr_key;
 			}
 
+			if( isset($this->curr_info['classes_li']) ){
+				$attr_li['class']['custom'] = $this->curr_info['classes_li'];
+			}
+
+			if( isset($this->curr_info['classes_a']) ){
+				$attr_a['class']['custom'] = $this->curr_info['classes_a'];
+			}
+
+			if( isset($this->curr_info['classes_child_ul']) ){
+				$this->custom_child_ul_classes = $this->curr_info['classes_child_ul'];
+			}
 
 			//selected classes
 			$next_index			= $menu_ii+1;
@@ -683,14 +704,20 @@ class Menu{
 				if( $this->curr_level < $source_menu[$next_index]['level'] ){
 					$attr_a['class']['haschildren']			= $GP_MENU_CLASSES['haschildren'];
 					$attr_li['class']['haschildren_li']		= $GP_MENU_CLASSES['haschildren_li'];
+				}else{
+					$this->custom_child_ul_classes = '';
 				}
 			}
 
 
 			$this->Attrs($attr_a, $attr_li);
 			$this->FormatStart($menu_ii, $attr_li, $attr_ul, $open);
-			$this->FormatMenuElement('li',$attr_li);
-			$this->FormatMenuElement('a',$attr_a);
+			$this->FormatMenuElement('li', $attr_li);
+			if( isset($this->curr_info['area']) ){
+				\gp\tool\Output::Get('Extra', $this->curr_info['area']);
+			}else{
+				$this->FormatMenuElement('a', $attr_a);
+			}
 
 
 			$this->prev_level	= $this->curr_level;
@@ -758,7 +785,7 @@ class Menu{
 			$attr_ul['id'] = \gp\tool\Output::$edit_area_id;
 			$attr_ul['class']['editable_area'] = 'editable_area';
 		}
-		$this->FormatMenuElement('ul',$attr_ul);
+		$this->FormatMenuElement('ul', $attr_ul);
 
 
 		//
@@ -772,8 +799,8 @@ class Menu{
 			$attr_a				= $this->MenuAttributesA();
 
 			$this->Attrs($attr_a, $attr_li);
-			$this->FormatMenuElement('li',$attr_li);
-			$this->FormatMenuElement('a',$attr_a);
+			$this->FormatMenuElement('li', $attr_li);
+			$this->FormatMenuElement('a', $attr_a);
 			echo '</li>';
 		}
 
@@ -839,17 +866,21 @@ class Menu{
 		if( $this->curr_level > $this->prev_level ){
 
 			if( $menu_ii === 0 ){ //only needed if the menu starts below the start_level
-				$this->FormatMenuElement('li',$attr_li);
+				$this->FormatMenuElement('li', $attr_li);
 			}
 
 			if( !empty($GP_MENU_CLASSES['child_ul']) ){
 				$attr_ul['class'][] = $GP_MENU_CLASSES['child_ul'];
 			}
 
+			if( !empty($this->custom_child_ul_classes) ){
+				$attr_ul['class']['custom'] = $this->custom_child_ul_classes;
+			}
+
 			$open_loops = $this->curr_level - $this->prev_level;
 
 			for($i = 0; $i<$open_loops; $i++){
-				$this->FormatMenuElement('ul',$attr_ul);
+				$this->FormatMenuElement('ul', $attr_ul);
 				if( $i < $open_loops-1 ){
 					echo '<li>';
 				}
@@ -889,7 +920,13 @@ class Menu{
 	protected function MenuAttributesA(){
 		global $gp_titles;
 
-		$attributes = array('href' => '', 'attr' => '', 'value' => '', 'title' => '', 'class' =>array() );
+		$attributes = array(
+			'href'	=> '', 
+			'attr'	=> '', 
+			'value'	=> '', 
+			'title'	=> '', 
+			'class'	=> array(),
+		);
 
 		//external
 		if( isset($this->curr_info['url']) ){
@@ -916,7 +953,15 @@ class Menu{
 			//get valid rel attr
 			if( !empty($gp_titles[$this->curr_key]['rel']) ){
 				$rel = explode(',',$gp_titles[$this->curr_key]['rel']);
-				$attributes['rel'] = array_intersect( array('alternate','author','bookmark','help','icon','license','next','nofollow','noreferrer','prefetch','prev','search','stylesheet','tag'), $rel);
+				$attributes['rel'] = array_intersect( 
+					array(
+						'alternate', 'author', 'bookmark', 'help',
+						'icon','license', 'next', 'nofollow',
+						'noreferrer', 'prefetch', 'prev', 'search',
+						'stylesheet', 'tag',
+					), 
+					$rel
+				);
 			}
 		}
 
@@ -925,7 +970,7 @@ class Menu{
 
 
 
-	public function FormatMenuElement( $node, $attributes){
+	public function FormatMenuElement($node, $attributes){
 		global $GP_MENU_LINKS, $GP_MENU_ELEMENTS;
 
 
@@ -936,18 +981,18 @@ class Menu{
 			}
 			if( is_array($value) ){
 				$value = array_filter($value);
-				$value = implode(' ',$value);
+				$value = implode(' ', $value);
 			}
 			if( empty($value) ){
 				continue;
 			}
-			$attributes['attr'] .= ' '.$key.'="'.$value.'"';
+			$attributes['attr'] .= ' ' . $key . '="' . $value . '"';
 		}
 
 
 		// call template defined function
 		if( !empty($GP_MENU_ELEMENTS) && is_callable($GP_MENU_ELEMENTS) ){
-			$return = call_user_func($GP_MENU_ELEMENTS, $node, $attributes, $this->curr_level);
+			$return = call_user_func($GP_MENU_ELEMENTS, $node, $attributes, $this->curr_level, $this->curr_menu);
 			if( is_string($return) ){
 				echo $return;
 				return;
@@ -955,10 +1000,10 @@ class Menu{
 		}
 
 		if( $node == 'a' ){
-			$search = array('{$href_text}','{$attr}','{$label}','{$title}');
+			$search = array('{$href_text}', '{$attr}', '{$label}', '{$title}');
 			echo str_replace( $search, $attributes, $GP_MENU_LINKS );
 		}else{
-			echo '<'.$node.$attributes['attr'].'>';
+			echo '<' . $node . $attributes['attr'] . '>';
 		}
 	}
 

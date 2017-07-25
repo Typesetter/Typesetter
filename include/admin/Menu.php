@@ -671,9 +671,9 @@ class Menu extends \gp\special\Base{
 		$img = '<i class="menu_icon fa fa-scissors"></i>';
 		echo $this->Link(
 			'Admin/Menu/Ajax',
-			$img . $langmessage['remove'],
+			$img . $langmessage['rm_from_menu'],
 			'cmd=hide&index=[key]',
-			array('title'=>$langmessage['remove'],'data-cmd'=>'postlink','class'=>'gpconfirm')
+			array('title'=>$langmessage['rm_from_menu'],'data-cmd'=>'postlink','class'=>'gpconfirm')
 		);
 
 		echo '</span>';

@@ -145,7 +145,7 @@ $langmessage = array (
 	'Expand Menu...'                 => 'Развернуть меню',
 	'... Expand All'                 => 'Развернуть все',
 	'Source Menu'                    => 'Меню источника',
-	'Menu Output'                    => 'Итоговое меню',
+	'Menu Output'                    => 'Вывод меню',
 	'LOGIN_BLOCK'                    => 'Превышено количество попыток входа! Подождите %s минут и повторите.',
 	'incorrect_login'                => 'Неверные данные входа. Попробуйте еще.',
 	'forgotten_password'             => '<a href="%s">Забыли пароль</a>?',

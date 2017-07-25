@@ -486,13 +486,13 @@ class Ajax extends \gp\admin\Menu{
 			//Insert Extra
 			$areas = $this->GetExtraAreas();
 			// msg("Areas: " . pre($areas));
-			echo '<p style="padding:6px 10px; background:#f1f1f1;">';
-			echo '<i class="fa fa-warning" style="display:block; float:left; font-size:2em; line-height:1.33em; margin:0 0.5em 0 0.2em;"></i>';
-			echo 'Outputs an Extra Content Area at the current position <strong>in the menu</strong>. ';
-			echo 'This way you may add anything from simple separators to subheads or even images or forms.<br/> ';
-			echo 'This is an advanced feature and requires specific custom CSS to be useful.</p>';
 			if( !empty($areas) ){
 				echo sprintf($format_top,'gp_Insert_Extra','nodisplay');
+				echo '<p style="padding:6px 10px; background:#f1f1f1;">';
+				echo '<i class="fa fa-warning" style="display:block; float:left; font-size:2em; line-height:1.33em; margin:0 0.5em 0 0.2em;"></i>';
+				echo 'Outputs an Extra Content Area at the current position <strong>in the menu</strong>. ';
+				echo 'This way you may add anything from simple separators to subheads or even images or forms.<br/> ';
+				echo 'This is an advanced feature and requires specific custom CSS to be useful.</p>';
 				\gp\admin\Menu\Tools::ScrollListExtra($areas);
 				echo sprintf($format_bottom, 'InsertExtra', $langmessage['insert']);
 			}

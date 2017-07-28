@@ -313,8 +313,10 @@ html{
 	font-family:"Segoe UI", "San Francisco", "Helvetica Neue", "DejaVu Sans", "Arial", sans-serif!important;
 	}
 
-textarea.cke_source {
+.cke_reset_all textarea.cke_source {
 	font-family:"Consolas", "Menlo", "Andale Mono", "DejaVu Sans Mono", monospace!important;
+	min-width:800px;
+	width:100%!important;
 	}
 
 /**

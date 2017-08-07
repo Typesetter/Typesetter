@@ -101,6 +101,7 @@ class Galleries extends \gp\special\Base{
 
 		\gp\tool::ShowingGallery();
 
+		echo '<div class="GPAREA filetype-special_galleries">';
 		echo '<h2>';
 		echo \gp\tool\Output::ReturnText('galleries');
 		echo '</h2>';
@@ -174,6 +175,8 @@ class Galleries extends \gp\special\Base{
 			echo '</div>';
 		}
 		$this->PostSave();
+
+    echo '</div>';
 	}
 
 	/*

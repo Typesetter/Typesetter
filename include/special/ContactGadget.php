@@ -157,6 +157,7 @@ class ContactGadget extends \gp\special\Base{
 
 		$require_email =& $config['require_email'];
 
+		echo '<div class="GPAREA filetype-special_contactform">';
 		echo '<form class="contactform" action="'.\gp\tool::GetUrl($this->page->title).'" method="post">';
 
 		//nonce fields
@@ -229,5 +230,6 @@ class ContactGadget extends \gp\special\Base{
 
 
 		echo '</form>';
+		echo '</div>';
 	}
 }

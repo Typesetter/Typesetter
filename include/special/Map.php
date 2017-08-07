@@ -23,6 +23,7 @@ class Map extends \gp\special\Base{
 
 		$this->MultiSiteData();
 
+		echo '<div class="GPAREA filetype-special_sitemap">';
 		echo '<div class="sitemap_xml">';
 		echo \gp\tool::Link('Special_Site_Map','XML','xml');
 		echo '</div>';
@@ -30,8 +31,9 @@ class Map extends \gp\special\Base{
 		echo \gp\tool\Output::ReturnText('site_map');
 		echo '</h2>';
 
-
 		\gp\tool\Output::GetFullMenu();
+		
+		echo '</div>';
 
 	}
 

@@ -68,16 +68,16 @@ class Search extends \gp\special\Base{
 
 	public function Search(){
 
-		echo '<div class="search_results">';
+		echo '<div class="GPAREA filetype-special_search search_results">';
 		echo '<form action="'.\gp\tool::GetUrl('special_gpsearch').'" method="get">';
 
 		echo '<h2>';
 		echo \gp\tool\Output::GetAddonText('Search');
-		echo ' &nbsp; ';
-		echo '<input name="q" type="text" class="text" value="'.htmlspecialchars($_REQUEST['q']).'"/>';
+		echo '</h2>';
+		echo '<input name="q" type="text" class="text" value="'.htmlspecialchars($_REQUEST['q']).'"/> ';
 		$html = '<input type="submit" name="" class="submit" value="%s" />';
 		echo \gp\tool\Output::GetAddonText('Search',$html);
-		echo '</h2>';
+
 		echo '</form>';
 
 		if( \gp\tool::LoggedIn() ){

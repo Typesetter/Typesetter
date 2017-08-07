@@ -176,6 +176,7 @@ class Missing extends \gp\special\Base{
 			}
 		}
 
+		echo '<div class="GPAREA filetype-special_missing">';
 		//Contents of 404 page
 		$wrap = \gp\tool\Output::ShowEditLink('Admin/Missing');
 		if( $wrap ){
@@ -188,7 +189,7 @@ class Missing extends \gp\special\Base{
 		if( $wrap ){
 			echo '</div>';
 		}
-
+		echo '</div>';
 	}
 
 	/**
@@ -198,9 +199,9 @@ class Missing extends \gp\special\Base{
 	public function Get404Output(){
 
 		if( isset($this->error_data['404_TEXT']) ){
-			$text = $this->error_data['404_TEXT'];
+			$text .= $this->error_data['404_TEXT'];
 		}else{
-			$text = self::DefaultContent();
+			$text .= self::DefaultContent();
 		}
 
 		return str_replace('{{Similar_Titles}}',$this->SimilarTitles(),$text);

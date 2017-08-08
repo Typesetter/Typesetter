@@ -1,0 +1,41 @@
+@media (max-width:$screen-xs-max) {
+  .text-left-xs { text-align:left; }
+  .text-center-xs { text-align:center; }
+  .text-right-xs { text-align:right; }
+  .text-justify-xs { text-align:justify; }
+}
+
+@media (min-width:$screen-sm-min) and (max-width:$screen-sm-max) {
+  .text-left-sm { text-align:left; }
+  .text-center-sm { text-align:center; }
+  .text-right-sm { text-align:right; }
+  .text-justify-sm { text-align:justify; }
+}
+
+@media (min-width:$screen-md-min) and (max-width:$screen-md-max) {
+  .text-left-md { text-align:left; }
+  .text-center-md { text-align:center; }
+  .text-right-md { text-align:right; }
+  .text-justify-md { text-align:justify; }
+}
+
+@media (min-width:$screen-lg-min) {
+  .text-left-lg { text-align:left; }
+  .text-center-lg { text-align:center; }
+  .text-right-lg { text-align:right; }
+  .text-justify-lg { text-align:justify; }
+}
+
+@media (max-width:$grid-float-breakpoint-max) {
+  .text-left-grid-collapsed { text-align:left; }
+  .text-center-grid-collapsed { text-align:center; }
+  .text-right-grid-collapsed { text-align:right; }
+  .text-justify-grid-collapsed { text-align:justify; }
+}
+
+//* Add these to Settings->Classes */
+// text-left-grid-collapsed text-center-grid-collapsed text-right-grid-collapsed text-justify-grid-collapsed	Force text alignment if the grid is collapsed (below grid-float-breakpoint)
+// text-left-xs text-center-xs text-right-xs text-justify-xs	Force text alignment in the xs breakpoint
+// text-left-sm text-center-sm text-right-sm text-justify-sm	Force text alignment in the sm breakpoint
+// text-left-md text-center-md text-right-md text-justify-md	Force text alignment in the md breakpoint
+// text-left-lg text-center-lg text-right-lg text-justify-lg	Force text alignment in the lg breakpoint

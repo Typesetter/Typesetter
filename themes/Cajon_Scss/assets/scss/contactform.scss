@@ -1,0 +1,40 @@
+//* ######### CONTACT FORM ######## */
+
+form.contactform {
+  @extend .form-horizontal;
+  width:auto;
+  label:not([for="contact_message"]) {
+    width:auto;
+    float:none;
+    clear:both;
+    margin:0 0 0.6em 0;
+    @extend .clearfix;
+    > span {
+      margin:0;
+    }
+    > input, 
+    > select, 
+    > textarea {
+      @extend .form-control;
+    }
+  }
+  > label[for="contact_message"] {
+    width:auto;
+    float:none;
+    clear:both;
+    margin:0;
+  }
+  > textarea#contact_message {
+    @extend .form-control;
+    margin-bottom:0.6em;
+  }
+  > input.submit {
+    @extend .btn, .btn-success, .col-sm-6, .col-sm-offset-3;
+  }
+  > span.message_sent {
+    display:block;
+    text-align:center;
+    margin-top:20px;
+    @extend .alert, .alert-info;
+  }
+}

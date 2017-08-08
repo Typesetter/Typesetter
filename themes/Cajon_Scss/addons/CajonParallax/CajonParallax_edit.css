@@ -1,0 +1,159 @@
+/*
+######################################################################
+CSS for Typesetter CMS - Cajón Parallax - Editor Component
+Author: J. Krausz
+Date: 2017-05-16
+Version: 2.0
+######################################################################
+*/
+
+#ts_PI_options,
+#ts_PI_options * {
+-webkit-box-sizing:border-box;
+-moz-box-sizing:border-box;
+-ms-box-sizing:border-box;
+-o-box-sizing:border-box;
+box-sizing:border-box;
+}
+
+#ts_PI_preview_area {
+position:relative;
+width:100%;
+height:200px;
+text-align:center;
+margin:0 auto;
+background:url(img/transp_pat.png) center center repeat;
+overflow:hidden;
+outline:1px dotted #888;
+outline-offset:-1px;
+vertical-align:middle;
+}
+
+#ts_PI_preview_area:before {
+content:"";
+display:inline-block;
+width:0;
+height:100%;
+vertical-align:middle;
+}
+
+
+#ts_PI_preview_area img {
+display:inline-block;
+vertical-align:middle;
+max-width:100%;
+max-height:100%;
+width:auto;
+height:auto;
+cursor:pointer;
+}
+
+label.ts_PI_editor_control{
+display:block;
+overflow:hidden;
+padding:0;
+background:#fff;
+border:1px solid rgba(0,0,0,0.175);
+border-radius:4px;
+margin:4px 0 0;
+vertical-align:baseline;
+color:#555;
+}
+
+label.ts_PI_editor_control span.label-desc{
+display:block;
+margin:4px 8px 0 8px;
+text-align:center;
+}
+
+label.ts_PI_editor_control span.label-desc span{
+display:block;
+}
+
+
+#gp_admin_html .ts_PI_editor_control input[type="text"],
+#gp_admin_html .ts_PI_editor_control input[type="number"],
+#gp_admin_html .ts_PI_editor_control input[type="range"],
+#gp_admin_html .ts_PI_editor_control select,
+#gp_admin_html .ts_PI_editor_control button,
+#gp_admin_html .ts_PI_editor_control textarea {
+-webkit-box-sizing:border-box;
+-moz-box-sizing:border-box;
+-ms-box-sizing:border-box;
+-o-box-sizing:border-box;
+box-sizing:border-box;
+width:100%;
+background-color:transparent;
+border:none;
+-webkit-box-shadow:none!important;
+box-shadow:none!important;
+padding:4px 6px;
+margin:0;
+}
+
+#gp_admin_html .ts_PI_editor_control select {
+padding:5px 3px;
+}
+
+#gp_admin_html .ts_PI_editor_control input[type="range"] {
+padding:0;
+width:calc(100% - 16px);
+margin:10px 8px;
+cursor:pointer;
+}
+
+.ts_PI_editor_control select {
+-webkit-appearance:none;
+-moz-appearance:none;
+appearance:none;
+background:transparent url(img/select_arr.png) right center no-repeat;
+background-size:22px 16px;
+}
+
+.ts_PI_editor_control button {
+background:#f3f3f3;
+background:-moz-linear-gradient(top, #fff 0%, #f3f3f3 100%);
+background:-webkit-linear-gradient(top, #fff 0%,#f3f3f3 100%);
+background:linear-gradient(to bottom, #fff 0%,#f3f3f3 100%);
+}
+
+
+.ts_PI_editor_control input[type='checkbox'],
+.ts_PI_editor_control input[type='radio'] {
+margin:6px;
+}
+
+.ts_PI_editor_control input[type='checkbox'] {
+margin-left:-20px;
+}
+.ts_PI_editor_control input[type='checkbox'] + span {
+display:inline-block;
+margin:0 6px 0 10px;
+font-family:FontAwesome!important;
+font-size:120%!important;
+cursor:pointer;
+}
+.ts_PI_editor_control input[type='checkbox'] + span:before {
+content:"\f204";
+}
+.ts_PI_editor_control input[type='checkbox']:checked + span:before {
+content:"\f205";
+}
+
+.ts_PI_editor_control button,
+.ts_PI_editor_control input[type='checkbox'],
+.ts_PI_editor_control input[type='radio'] {
+cursor:pointer;
+}
+
+#ts_PI_options input#ts_PI_alt {
+width:85%;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+#ts_PI_options button#ts_PI_generateAlt {
+width:15%;
+border-left:1px solid rgba(0,0,0,0.125);
+}
+

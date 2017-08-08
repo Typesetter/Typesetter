@@ -1,0 +1,75 @@
+//* vertical alignment inside block-level elements with defined heights */
+
+.valign-children, 
+.valign-children-top, 
+.valign-children-middle, 
+.valign-children-baseline, 
+.valign-children-bottom {
+  position:relative;
+  &:before { //* the vertical-align with before-pseudo-content trick */
+    content:"";
+    display:inline-block;
+    position:relative;
+    width:0;
+    margin:0;
+    padding:0;
+    height:100%; //* 100% makes this pseudo-content element height the valign reference for adjacent siblings */
+    min-height:inherit; //* if the parent's height is only defined as min-height (wich is a non-explicit height css cannot derive 100% of) we simply inherit it */
+  }
+  > * {
+    display:inline-block;
+    float:none; /* vertical alingment won't work with float */
+    max-width:100%; //* constrain width to prevent initial line breaks in case of overflow */
+  }
+  > *:not[class*="-offset-"] { //* zero side margins for all children except ones using bootstrap offset */
+    margin-left:0;
+    margin-right:0;
+  }
+  > * > *:first-child,
+  > * > *:first-child {
+    margin-top:0; //* zero first-in-children elements' top margin */
+    > *:first-child {
+      margin-top:0; //* zero first-in-childrens-first-child elements' top margin (if section content is wrapped with an additional <div>) */
+    }
+  }
+  > .GPAREA > *:nth-last-child(2) { 
+    margin-bottom:0; //* zero bottom margin of a child-GPAREA's penultimate element (last is always div.gpclear) */
+    > *:last-child {
+      margin-bottom:0; //* zero bottom margin of a child-GPAREA's penultimate elements' last child (if section content is wrapped with an additional <div>) */
+    }
+  }
+}
+
+.valign-children-top {
+  > * { vertical-align:top; }
+  &:before { vertical-align:top; }
+}
+
+.valign-children-middle {
+  > * { vertical-align:middle; }
+  &:before { vertical-align:middle; }
+}
+
+.valign-children-baseline {
+  > * { vertical-align:baseline; }
+  &:before { vertical-align:baseline; }
+}
+
+.valign-children-baseline {
+  > * { vertical-align:bottom; }
+  &:before { vertical-align:bottom; }
+}
+
+
+//* GENERAL PURPOSE VALIGN CLASSES, may also overrule the parent's valign-children-* directive */
+.valign-top, 
+.valign-middle, 
+.valign-baseline, 
+.valign-bottom {
+  display:inline-block;
+}
+
+.valign-top       { vertical-align:top; } 
+.valign-middle    { vertical-align:middle; }
+.valign-baseline  { vertical-align:baseline; }
+.valign-bottom    { vertical-align:bottom; }

@@ -1,0 +1,282 @@
+//* ######### SIDE MENU ######## */
+
+$navbar-side-width:               282px;
+$navbar-side-padding-vertical:    ceil($navbar-padding-vertical * 0.333);
+$navbar-side-submenu-indent:      0.667; //* indentation factor for sub-links */
+
+
+//* EDITING: 'inherit' margin-left from html when editor pushes it to the left */
+@media (min-width:$grid-float-breakpoint){
+  html body.gpAdmin nav.navbar-theme-cajon.navbar-fixed-side-left {
+    -webkit-transition:left 0.5s;
+    -moz-transition:left 0.5s;
+    transition:left 0.5s;
+  }
+  html[style*="width"]:not([style*=" 0px"]) body.gpAdmin nav.navbar-theme-cajon.navbar-fixed-side-left {
+    left:-230px;
+    &:hover {
+      left:0;
+    }
+  }
+}
+
+.navbar-fixed-side {
+  z-index:$zindex-navbar;
+  margin-bottom:0;
+  li > a {
+    padding:$navbar-side-padding-vertical $navbar-padding-horizontal;
+  }
+  div.admin-links {
+     padding:0 ($navbar-padding-horizontal * 0.75);
+     border-top:1px solid rgba(128,128,128,0.1);
+     > span {
+      display:inline-block;
+      white-space:nowrap;
+      padding:($navbar-side-padding-vertical * 0.5) ($navbar-padding-horizontal  * 0.25);
+      line-height:$line-height-computed;
+      font-size:75%;
+      letter-spacing:0.075em;
+      a {
+        text-decoration:none;
+      }
+    }
+  }
+  .navbar-brand {
+    display:block;
+    max-height:$navbar-height;
+    position:relative;
+    > img {
+      display:inline-block;
+      width:auto;
+      margin:-75% 0.5em -75% 0;
+      &.logo-size-small {
+        height:150%;
+        margin:-25% 0.5em -25% 0;
+      }
+      &.logo-size-medium {
+        height:200%;
+        margin:-50% 0.5em -50% 0;
+      }
+      &.logo-size-large {
+        height:250%;
+        margin:-75% 0.5em -75% 0;
+      }
+      &.logo-shape-circle {
+        border-radius:50%;
+        overflow:hidden;
+      }
+      &.logo-collapsed-hide {
+        display:none;
+      }
+      &.logo-border-single {
+        border-width:1px;
+        border-style:solid;
+      }
+      &.logo-border-double {
+        border-width:3px;
+        border-style:double;
+      }
+      &.logo-border-offset {
+        border-width:1px;
+        border-style:solid;
+        padding:2px;
+      }
+    }
+  }
+  .navbar-collapse {
+    width:100%;
+    margin:0;
+    padding:0;
+    border-top:none transparent;
+    box-shadow:none;
+  }
+  ul.sublinks-menu {
+    // display:none; //* we collapse them in JS for the noscript folks */
+  }
+  li.active-parent-li > .sublinks-menu {
+    display:block;
+  }
+  a.sublinks-toggle {
+    cursor:pointer;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    user-select:none;
+    &:after {
+      font-family:FontAwesome;
+      display:inline-block;
+      float:right;
+      width:1.5em;
+      text-align:center;
+      content:"\f105";  //* fa-angle-right */
+      // content:"\f0da";  //* fa-caret-right */
+      // content:"\f196";  //* fa-plus-square-o */
+    }
+    &[aria-expanded="true"]:after {
+      content:"\f107";    //* fa-angle-down */
+      // content:"\f0d7";   //* fa-caret-down */
+      // content:"\f147";   //* fa-minus-square-o */
+    }
+  }
+
+  @media (max-width:$grid-float-breakpoint - 1){
+    margin-top:0!important; // neutralize gp-fixed-adjust class
+  }
+
+  @media (min-width:$grid-float-breakpoint) {
+    position:fixed;
+    top:0;
+    bottom:0;
+    width:$navbar-side-width;
+    overflow:auto;
+    border:none transparent;
+    border-radius:0;
+    .navbar-header, .navbar-brand {
+      display:block;
+      float:none;
+    }
+    .navbar-brand {
+      display:block;
+      height:auto;
+      max-height:none;
+      padding-left:$navbar-padding-horizontal;
+      padding-right:$navbar-padding-horizontal;
+      > img {
+        display:block;
+        height:auto;
+        margin:0 auto 0.6em auto;
+        &.logo-collapsed-hide {
+          display:block;
+        }
+        &.logo-size-small {
+          width:40%;
+          margin:0 auto 0.6em auto;
+        }
+        &.logo-size-medium {
+          width:65%;
+          margin:0 auto 0.6em auto;
+        }
+        &.logo-size-large {
+          width:90%;
+          margin:0 auto 0.6em auto;
+        }
+        &.logo-border-single {
+          border-width:2px;
+          border-style:solid;
+        }
+        &.logo-border-double {
+          border-width:6px;
+          border-style:double;
+        }
+        &.logo-border-offset {
+          border-width:2px;
+          border-style:solid;
+          padding:4px;
+        }
+        + span.site-title {
+          display:block;
+          text-align:center;
+        }
+      }
+    }
+    .navbar-form {
+      margin:0;
+      margin-left:-$navbar-padding-horizontal;
+      margin-right:-$navbar-padding-horizontal;
+      padding:$navbar-side-padding-vertical $navbar-padding-horizontal;
+    }
+    .navbar-text {
+      float:none;
+      margin-left:0;
+      margin-right:0;
+    }
+    .sidebar-nav, .sublinks-menu {
+      float:none;
+      li {
+        float:none;
+        > a {
+          line-height:$line-height-computed;
+          &:hover, &:focus {}
+        }
+      }
+    }
+    .sidebar-nav li li > a { padding-left:ceil($navbar-padding-horizontal + ($navbar-padding-horizontal * $navbar-side-submenu-indent * 1)) }
+    .sidebar-nav li li li > a { padding-left:ceil($navbar-padding-horizontal + ($navbar-padding-horizontal * $navbar-side-submenu-indent * 2)) }
+    .sidebar-nav li li li li > a { padding-left:ceil($navbar-padding-horizontal + ($navbar-padding-horizontal * $navbar-side-submenu-indent * 3)) }
+    .sidebar-nav li li li li li > a { padding-left:ceil($navbar-padding-horizontal + ($navbar-padding-horizontal * $navbar-side-submenu-indent * 4)) }
+    .sidebar-nav li li li li li li > a { padding-left:ceil($navbar-padding-horizontal + ($navbar-padding-horizontal * $navbar-side-submenu-indent * 5)) }
+  }
+}
+
+
+@media (min-width:$grid-float-breakpoint) {
+  .navbar-fixed-side-left {
+    left:0;
+  }
+  .navbar-fixed-side-right {
+    right:0;
+  }
+  .navbar-fixed-side-left + .page-content {
+    padding-left:$navbar-side-width;
+  }
+  .navbar-fixed-side-right + .page-content {
+    padding-right:$navbar-side-width;
+  }
+}
+
+
+//* ### COLORS ### */
+
+.navbar-default {
+  li, div.admin-links span {
+    color:$navbar-default-color;
+    > a {
+      color:$navbar-default-link-color;
+      &:hover, &:focus {
+        background-color:$navbar-default-link-hover-bg;
+        color:$navbar-default-link-hover-color;
+      }
+    }
+  }
+  a.active-link {
+    background-color:$navbar-default-link-active-bg;
+    color:$navbar-default-link-active-color;
+  }
+  ul.sublinks-menu {
+    background:rgba(0,0,0,0.05);
+  }
+  .navbar-brand > img {
+    &.logo-border-single, 
+    &.logo-border-double, 
+    &.logo-border-offset {
+      border-color:$navbar-default-link-color;
+    }
+  }
+}
+
+.navbar-inverse {
+  li, div.admin-links span {
+    color:$navbar-inverse-color;
+    > a {
+      color:$navbar-inverse-link-color;
+      &:hover, &:focus {
+        background-color:$navbar-inverse-link-hover-bg;
+        color:$navbar-inverse-link-hover-color;
+      }
+    }
+  }
+  a.active-link {
+    background-color:$navbar-inverse-link-active-bg;
+    color:$navbar-inverse-link-active-color;
+  }
+  ul.sublinks-menu {
+    background:rgba(0,0,0,0.075);
+  }
+  .navbar-brand > img {
+    &.logo-border-single,
+    &.logo-border-double,
+    &.logo-border-offset {
+      border-color:$navbar-inverse-link-color;
+    }
+  }
+}
+

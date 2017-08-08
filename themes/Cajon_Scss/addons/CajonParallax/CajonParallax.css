@@ -1,0 +1,140 @@
+/* 
+######################################################
+CSS for Typesetter CMS - Cajón Parallax - User runtime
+Author: J. Krausz
+Date: 2017-05-16
+Version: 2.0
+######################################################
+*/
+
+/* generic text-center for non-bootstrap themes */
+.text-center {
+text-align:center;
+}
+
+/* ### SECTION/CONTAINER ### */
+body.gpAdmin .GPAREA.editable_area.filetype-cajon_parallax,
+.filetype-cajon_parallax {
+-webkit-box-sizing:border-box;
+-moz-box-sizing:border-box;
+-ms-box-sizing:border-box;
+-o-box-sizing:border-box;
+box-sizing:border-box;
+position:relative;
+overflow:hidden;
+}
+
+.filetype-cajon_parallax .cajon-parallax-image {
+position:absolute;
+top:0;
+left:0;
+bottom:0;
+right:0;
+overflow:hidden;
+z-index:0;
+background-position:50% 50%;
+}
+
+body.gpAdmin *:not(.cajon-parallax-wrapper) > .GPAREA.editable_area.filetype-cajon_parallax,
+*:not(.cajon-parallax-wrapper) > .GPAREA.editable_area.filetype-cajon_parallax{
+min-height:33vh;
+}
+
+
+/* scaling-type */
+.filetype-cajon_parallax .cajon-parallax-image.scaling-tile {
+background-repeat:repeat;
+}
+.filetype-cajon_parallax .cajon-parallax-image.scaling-cover {
+-webkit-background-size:cover;
+-moz-background-size:cover;
+-o-background-size:cover;
+background-size:cover;
+}
+
+/* scrolling-type */
+.filetype-cajon_parallax .cajon-parallax-image.scroll-fixed:not(.scroll-static) {
+background-attachment:fixed;
+}
+
+
+/* we use the <img> only when scrolling=parallax & scaling=cover, background-image otherwise */
+.filetype-cajon_parallax .cajon-parallax-image img {
+display:none;
+}
+
+.filetype-cajon_parallax .cajon-parallax-image.scroll-parallax.scaling-cover:not(.scroll-static) {
+background-image:none!important;
+}
+
+.filetype-cajon_parallax .cajon-parallax-image.scroll-parallax.scaling-cover:not(.scroll-static) img {
+display:block;
+position:absolute;
+top:0; 
+left:0; 
+/* force 3D hardware acceleration */
+-webkit-backface-visibility:hidden!important;
+backface-visibility:hidden!important;
+}
+
+
+/* ### PARALLAX IMAGE WRAPPER COMBO ### */
+body.gpAdmin div.GPAREA.editable_area.filetype-wrapper_section.cajon-parallax-wrapper,
+div.GPAREA.filetype-wrapper_section.cajon-parallax-wrapper {
+position:relative;
+padding:0;
+min-height:33vh!important;
+}
+
+
+/* vertical align middle parallax-wrapper children */
+
+div.GPAREA.filetype-wrapper_section.cajon-parallax-wrapper:before {
+content:""!important;
+display:inline-block!important;
+position:relative;
+width:0;
+margin:0;
+height:100%;
+min-height:inherit;
+vertical-align:middle;
+}
+
+
+div.GPAREA.filetype-wrapper_section.cajon-parallax-wrapper > *:not(.filetype-cajon_parallax) {
+position:relative;
+display:inline-block;
+vertical-align:middle;
+}
+
+div.GPAREA.filetype-wrapper_section.cajon-parallax-wrapper div.filetype-cajon_parallax {
+position:absolute!important;
+top:0;
+left:0;
+width:100%;
+height:100%;
+min-height:inherit;
+}
+
+div.GPAREA.filetype-wrapper_section.cajon-parallax-wrapper div.gpclear {
+display:none;
+}
+
+
+/* neutralize top and bottom margins for better valign */
+div.GPAREA.filetype-wrapper_section.cajon-parallax-wrapper > .filetype-text > *:first-child { margin-top:0; }
+div.GPAREA.filetype-wrapper_section.cajon-parallax-wrapper > .filetype-text > *:nth-last-child(2) { margin-bottom:0; }
+
+div.cajon-parallax-caption {
+  text-shadow:0 1px 4px rgba(0,0,0,0.6), 0 0 16px rgba(0,0,0,0.3);
+  font-size:1.5em;
+}
+
+
+/* PRINT */
+
+@media print {
+  .filetype-cajon_parallax .cajon-parallax-image.scaling-cover img {
+  display:none;
+  }
+}

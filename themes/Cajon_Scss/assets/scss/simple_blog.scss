@@ -11,7 +11,9 @@
     height:auto!important;
   }
   .img-thumbnail {
-    max-width:20%;
+    width:25%;
+    max-width:200px;
+    min-width:100px;
     margin-left:-4px;
   }
   .simple_blog_subtitle,

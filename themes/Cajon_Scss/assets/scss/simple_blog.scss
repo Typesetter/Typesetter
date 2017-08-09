@@ -50,7 +50,7 @@
   text-align:left;
   padding-top:$padding-base-vertical;
   border-top:1px solid rgba(128,128,128,0.25);
-  > span {
+  > span, > a {
     margin-right:0.5em;
   }
 }

@@ -7,9 +7,15 @@ $(function(){
 	 */
 	var iframe	= document.getElementById('gp_layout_iframe');
 	if( iframe ){
+
+		if ( iframe.contentWindow.document.getElementById('gp_layout_iframe') ){
+			// prevent nested iframes
+			inner_iframe_src = iframe.contentWindow.document.getElementById('gp_layout_iframe').getAttribute("src");
+			iframe.src = inner_iframe_src;
+		}
+
 		var $wrap	= $('#gp_iframe_wrap');
 		window.setInterval(function(){
-
 			var iframe		= document.getElementById('gp_layout_iframe');
 			var body		= iframe.contentWindow.document.body;
 			if( body ){

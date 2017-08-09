@@ -52,6 +52,7 @@ h6, .h6 {
 //* ########## GPAREA Layout ########## */
 //* default paddings and subtle background-alpha-gradients for 1st-level sections */
 #gpx_content > .GPAREA:not(.gpSlideWrapper):not(.filetype-responsive_image):not(.filetype-parallax_image):not(.no-padding),
+#gpx_content > .blog_post, #gpx_content > .post_list_item,
 .gpAfterContent:not(:empty) {
   background: -moz-linear-gradient(top, rgba(92,92,92,0.05) 0%, rgba(92,92,92,0.02) 33%, rgba(255,255,255,0) 100%);
   background: -webkit-linear-gradient(top, rgba(92,92,92,0.05) 0%,rgba(92,92,92,0.02) 33%, rgba(255,255,255,0) 100%);
@@ -507,6 +508,7 @@ a.list-group-item {
 
 @import 'navbar.scss';
 @import '../assets/scss/contactform.scss';
+@import '../assets/scss/simple_blog.scss';
 @import '../assets/scss/responsive_align.scss';
 @import '../assets/scss/vertical_align.scss';
 

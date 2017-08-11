@@ -22,7 +22,7 @@ includeFile('tool/functions.php');
 
 
 
-class gptest_bootstrap extends PHPUnit_Framework_TestCase{
+class gptest_bootstrap extends \PHPUnit\Framework\TestCase{
 
 	function setUP(){
 		\gp\tool::GetLangFile();

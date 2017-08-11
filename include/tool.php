@@ -955,7 +955,7 @@ namespace gp{
 					'maxthumbheight'			=> '',			//5.1
 					'check_uploads'				=> false,
 					'colorbox_style'			=> 'example1',
-					'gallery_legacy_style'		=> false,
+					'gallery_legacy_style'		=> true,
 					'combinecss'				=> true,
 					'combinejs'					=> true,
 					'etag_headers'				=> true,

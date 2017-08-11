@@ -188,24 +188,25 @@ class Tools{
 		$gpLayouts['default']['color'] = '#93c47d';
 
 
-		$_config['toemail']			= $_POST['email'];
-		$_config['gpLayout']		= 'default';
-		$_config['title']			= self::Install_Title();
-		$_config['keywords']		= CMS_NAME.' , Easy CMS, Content Management, PHP, Free CMS, Website builder, Open Source';
-		$_config['desc']			= 'A new '.CMS_NAME.' installation. You can change your site\'s description in the configuration.';
-		$_config['timeoffset']		= '0';
-		$_config['langeditor']		= 'inherit';
-		$_config['dateformat']		= '%m/%d/%y - %I:%M %p';
-		$_config['gpversion']		= gpversion;
-		$_config['passhash']		= 'sha512';
-		$_config['gpuniq']			= \gp\tool::RandomString(20);
-		$_config['combinecss']		= self::BooleanValue('combinecss',true);
-		$_config['combinejs']		= self::BooleanValue('combinejs',true);
-		$_config['etag_headers'] 	= self::BooleanValue('etag_headers',true);
-		$_config['language']		= 'en';
-		$_config['addons']			= array();
+		$_config['toemail']					= $_POST['email'];
+		$_config['gpLayout']				= 'default';
+		$_config['title']					= self::Install_Title();
+		$_config['keywords']				= CMS_NAME.' , Easy CMS, Content Management, PHP, Free CMS, Website builder, Open Source';
+		$_config['desc']					= 'A new '.CMS_NAME.' installation. You can change your site\'s description in the configuration.';
+		$_config['timeoffset']				= '0';
+		$_config['langeditor']				= 'inherit';
+		$_config['dateformat']				= '%m/%d/%y - %I:%M %p';
+		$_config['gpversion']				= gpversion;
+		$_config['passhash']				= 'sha512';
+		$_config['gpuniq']					= \gp\tool::RandomString(20);
+		$_config['combinecss']				= self::BooleanValue('combinecss',true);
+		$_config['combinejs']				= self::BooleanValue('combinejs',true);
+		$_config['etag_headers'] 			= self::BooleanValue('etag_headers',true);
+		$_config['gallery_legacy_style']	= false;
+		$_config['language']				= 'en';
+		$_config['addons']					= array();
 
-		$config 					+= $_config;
+		$config 							+= $_config;
 
 		//directories
 		\gp\tool\Files::CheckDir($destination.'/data/_uploaded/image');

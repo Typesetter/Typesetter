@@ -306,8 +306,9 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	if( gpdebug === true ){
 		msg($mess);
 	}elseif( class_exists('\\gp\tool\\Emailer') && $report_error ){
-		$mailer = new \gp\tool\Emailer();
-		$mailer->SendEmail(gpdebug, 'debug ', $mess);
+		$mailer =		new \gp\tool\Emailer();
+		$subject =		\gp\tool::ServerName(true).' Debug';
+		$mailer->SendEmail(gpdebug, $subject, $mess);
 	}
 	return false;
 }

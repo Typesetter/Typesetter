@@ -21,8 +21,10 @@ includeFile('tool/functions.php');
 \gp\tool\Session::init();
 
 
+if (!class_exists('\PHPUnit_Framework_TestCase') && class_exists('\PHPUnit\Framework\TestCase'))
+    class_alias('\PHPUnit\Framework\TestCase', '\PHPUnit_Framework_TestCase');
 
-class gptest_bootstrap extends \PHPUnit\Framework\TestCase{
+class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 	function setUP(){
 		\gp\tool::GetLangFile();

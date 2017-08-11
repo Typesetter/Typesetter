@@ -8,15 +8,15 @@ namespace gp\tool{
 	class RemoteGet{
 
 		public static $redirected;
-		public static $maxlength = -1;	// The maximum bytes to read. eg: stream_get_contents($handle, $maxlength)
+		public static $maxlength =			-1;	// The maximum bytes to read. eg: stream_get_contents($handle, $maxlength)
 		public static $debug;
-		public static $methods	= array('stream','curl','fopen','fsockopen');
+		public static $methods =			array('stream','curl','fopen','fsockopen');
 
 
-		protected $url_array = array();
-		protected $body = '';
-		protected $headers = '';
-		protected $bytes_written_total = 0;
+		protected $url_array =				array();
+		protected $body =					'';
+		protected $headers =				'';
+		protected $bytes_written_total =	0;
 
 
 
@@ -34,8 +34,8 @@ namespace gp\tool{
 		 */
 		public static function Test(){
 
-			foreach(self::$methods as $method){
-				if( self::Supported($method) ){
+			foreach(static::$methods as $method){
+				if( static::Supported($method) ){
 					return $method;
 				}
 			}
@@ -91,21 +91,27 @@ namespace gp\tool{
 		 */
 		public function Get($url,$args=array()){
 
-			self::$debug					= array();
-			self::$debug['Redir']			= 0;
-			self::$debug['FailedMethods']	= '';
-			self::$debug['NotSupported']	= '';
-			self::$redirected				= null;
+			static::$debug					= array();
+			static::$debug['Redir']			= 0;
+			static::$debug['FailedMethods']	= '';
+			static::$debug['NotSupported']	= '';
+			static::$redirected				= null;
 
 			return $this->_get($url,$args);
 		}
 
 		protected function _get($url, $args = array()){
 
-			$url				= rawurldecode($url);
+			//reset body, headers, bytes_written. Important for redirection, multiple requests using same object
+			$this->body =					'';
+			$this->headers =				'';
+			$this->bytes_written_total =	0;
+
+
+			//$url				= rawurldecode($url);
 			$url				= str_replace(' ','%20',$url); //spaces in the url can make the request fail
-			$url				= self::FixScheme($url);
-			$this->url_array	= self::ParseUrl($url);
+			$url				= static::FixScheme($url);
+			$this->url_array	= static::ParseUrl($url);
 
 			if( $this->url_array === false ){
 				return false;
@@ -119,7 +125,8 @@ namespace gp\tool{
 				'redirection'		=> 5,
 				'httpversion'		=> '1.0',
 				'user-agent'		=> 'Mozilla/5.0 (Typesetter RemoteGet) ',
-				//'user-agent'		=> 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0',
+				'ignore_errors'		=> false,
+
 
 				//could be added
 				//'blocking' => true,
@@ -131,21 +138,21 @@ namespace gp\tool{
 			$args += $defaults;
 
 
-			foreach(self::$methods as $method){
+			foreach(static::$methods as $method){
 
-				if( !self::Supported($method) ){
-					self::$debug['NotSupported']	.= $method.',';
+				if( !static::Supported($method) ){
+					static::$debug['NotSupported']	.= $method.',';
 					continue;
 				}
 
-				$result = self::GetMethod($method,$url,$args);
+				$result = static::GetMethod($method,$url,$args);
 				if( $result === false ){
-					self::$debug['FailedMethods'] .= $method.',';
+					static::$debug['FailedMethods'] .= $method.',';
 					return false;
 				}
 
-				self::$debug['Method']	= $method;
-				self::$debug['Len']		= strlen($result['body']);
+				static::$debug['Method']	= $method;
+				static::$debug['Len']		= strlen($result['body']);
 
 				return $result;
 			}
@@ -172,6 +179,37 @@ namespace gp\tool{
 		 */
 		public function stream_request($url,$r){
 
+			$arrContext =	$this->stream_context($url,$r);
+
+			$context =		stream_context_create($arrContext);
+
+			$handle =		fopen($url, 'r', false, $context);
+
+			if( !$handle ){
+				static::$debug['stream']	= 'no handle';
+				return false;
+			}
+
+			static::stream_timeout($handle,$r['timeout']);
+
+			$strResponse = stream_get_contents($handle, static::$maxlength);
+			$theHeaders = static::StreamHeaders($handle);
+			fclose($handle);
+
+			$processedHeaders = static::processHeaders($theHeaders);
+
+			$this->body = static::chunkTransferDecode($strResponse,$processedHeaders);
+
+			return $this->ReturnRequest( $url, $r, $processedHeaders );
+		}
+
+
+		/**
+		 * Create context array
+		 *
+		 */
+		public function stream_context($url,$r){
+
 			//create context
 			$arrContext = array();
 			$arrContext['http'] = array(
@@ -180,6 +218,7 @@ namespace gp\tool{
 					'max_redirects'		=> $r['redirection'],
 					'protocol_version'	=> (float) $r['httpversion'],
 					'timeout'			=> $r['timeout'],
+					'ignore_errors'		=> $r['ignore_errors'],
 				);
 
 			if( isset($r['http']) ){
@@ -194,32 +233,9 @@ namespace gp\tool{
 				$arrContext['http']['header'] = trim($arrContext['http']['header']);
 			}
 
-			$context = stream_context_create($arrContext);
-
-			$handle = fopen($url, 'r', false, $context);
-
-			if( !$handle ){
-				self::$debug['stream']	= 'no handle';
-				return false;
-			}
-
-			self::stream_timeout($handle,$r['timeout']);
-
-			$strResponse = stream_get_contents($handle, self::$maxlength);
-			$theHeaders = self::StreamHeaders($handle);
-			fclose($handle);
-
-			$processedHeaders = self::processHeaders($theHeaders);
-
-			// If location is found, then assume redirect and redirect to location.
-			if( isset($processedHeaders['headers']['location']) ){
-				return $this->Redirect($processedHeaders,$r);
-			}
-
-			$strResponse = self::chunkTransferDecode($strResponse,$processedHeaders);
-
-			return array('headers' => $processedHeaders['headers'], 'body' => $strResponse, 'response' => $processedHeaders['response'], 'cookies' => $processedHeaders['cookies']);
+			return $arrContext;
 		}
+
 
 		/**
 		 * Fetch a url using php's fopen() function
@@ -230,27 +246,22 @@ namespace gp\tool{
 			$handle		= fopen($url, 'r');
 
 			if( !$handle ){
-				self::$debug['fopen']	= 'no handle';
+				static::$debug['fopen']	= 'no handle';
 				return false;
 			}
 
-			self::stream_timeout($handle,$r['timeout']);
+			static::stream_timeout($handle,$r['timeout']);
 
 			$strResponse	= $this->ReadHandle($handle);
-			$theHeaders		= self::StreamHeaders($handle);
+			$theHeaders		= static::StreamHeaders($handle);
 
 			fclose($handle);
 
-			$processedHeaders = self::processHeaders($theHeaders);
+			$processedHeaders = static::processHeaders($theHeaders);
 
-			// If location is found, then assume redirect and redirect to location.
-			if( isset($processedHeaders['headers']['location']) ){
-				return $this->Redirect($processedHeaders,$r);
-			}
+			$this->body = static::chunkTransferDecode($strResponse,$processedHeaders);
 
-			$strResponse = self::chunkTransferDecode($strResponse,$processedHeaders);
-
-			return array('headers' => $processedHeaders['headers'], 'body' => $strResponse, 'response' => $processedHeaders['response'], 'cookies' => $processedHeaders['cookies']);
+			return $this->ReturnRequest( $url, $r, $processedHeaders );
 		}
 
 
@@ -260,14 +271,18 @@ namespace gp\tool{
 		 */
 		public static function ParseUrl($url){
 
-			$arrURL = parse_url($url);
+			$arr_url = parse_url($url);
+			if( is_array($arr_url) ){
 
-			if( !isset($arrURL['port']) ){
-				$arrURL['port'] = 80;
+
+
+				$arr_url += array('path'=>'');
+			}elseif( \gp\tool::LoggedIn() ){
+				trigger_error('invalid url: '.$url.' '.pre($url));
 			}
-			$arrURL += array('path'=>'');
 
-			return $arrURL;
+
+			return $arr_url;
 		}
 
 
@@ -309,13 +324,17 @@ namespace gp\tool{
 			$iError = null; // Store error number
 			$strError = null; // Store error string
 
-			$handle = fsockopen( $fsockopen_host, $this->url_array['port'], $iError, $strError, $r['timeout'] );
+			$port = 80;
+			if( !empty($this->url_array['port']) ){
+				$port = 80;
+			}
+			$handle = fsockopen( $fsockopen_host, $port, $iError, $strError, $r['timeout'] );
 
 			if( $handle === false ){
-				self::$debug['fsock']	= 'no handle';
+				static::$debug['fsock']	= 'no handle';
 				return false;
 			}
-			self::stream_timeout($handle,$r['timeout']);
+			static::stream_timeout($handle,$r['timeout']);
 
 
 			$strHeaders = $this->ReqHeader($r);
@@ -326,17 +345,11 @@ namespace gp\tool{
 
 			fclose($handle);
 
-			$process = self::processResponse($strResponse);
-			$processedHeaders = self::processHeaders($process['headers']);
+			$process =				static::processResponse($strResponse);
+			$processedHeaders =		static::processHeaders($process['headers']);
+			$this->body =			static::chunkTransferDecode($process['body'],$processedHeaders);
 
-			// If location is found, then assume redirect and redirect to location.
-			if( isset($processedHeaders['headers']['location']) ){
-				return $this->Redirect($processedHeaders,$r);
-			}
-
-			$strResponse = self::chunkTransferDecode($strResponse,$processedHeaders);
-
-			return array('headers' => $processedHeaders['headers'], 'body' => $process['body'], 'response' => $processedHeaders['response'], 'cookies' => $processedHeaders['cookies']);
+			return $this->ReturnRequest( $url, $r, $processedHeaders );
 		}
 
 
@@ -370,6 +383,10 @@ namespace gp\tool{
 			$response = '';
 			while( !feof($handle) ){
 				$response .= fread($handle, 4096);
+
+				if( strlen($response) > static::$maxlength ){
+					break;
+				}
 			}
 
 			return $response;
@@ -424,22 +441,19 @@ namespace gp\tool{
 
 			curl_exec( $handle );
 
-			if( curl_errno( $handle ) ){
-				self::$debug['curl_error'] = curl_error( $handle );
+
+			if( !$r['ignore_errors'] && curl_errno( $handle ) ){
+				static::$debug['curl_error'] = curl_error( $handle );
 				curl_close( $handle );
 				return false;
 			}
+
 			curl_close( $handle );
 
 
-			$processedHeaders = self::processHeaders($this->headers);
+			$processedHeaders = static::processHeaders($this->headers);
 
-			// If location is found, then assume redirect and redirect to location.
-			if( isset($processedHeaders['headers']['location']) ){
-				return $this->Redirect($processedHeaders,$r);
-			}
-
-			return array('headers' => $processedHeaders['headers'], 'body' => $this->body, 'response' => $processedHeaders['response'], 'cookies' => $processedHeaders['cookies']);
+			return $this->ReturnRequest( $url, $r, $processedHeaders );
 		}
 
 
@@ -495,32 +509,124 @@ namespace gp\tool{
 			stream_set_timeout( $handle, $timeout, $utimeout );
 		}
 
+
+		/**
+		 * Return the response info or redirection
+		 *
+		 */
+		public function ReturnRequest( $url, $r, $processedHeaders ){
+
+			// If location is found, then assume redirect and redirect to location.
+			$redir_location = $this->RedirectLocation($processedHeaders);
+			if( $redir_location !== false ){
+				if( $redir_location == $url ){
+					// redirecting to the same url
+					// need cookies
+					if( \gp\tool::LoggedIn() ){
+						msg('infinite redirection: '.$redir_location);
+					}
+					return false;
+				}
+				return $this->Redirect($redir_location,$r);
+			}
+
+			return array('headers' => $processedHeaders['headers'], 'body' => $this->body, 'response' => $processedHeaders['response'], 'cookies' => $processedHeaders['cookies']);
+		}
+
+
 		/**
 		 * Handle a redirect response
 		 *
 		 */
-		public function Redirect($headers,$r){
+		public function Redirect($location,$r){
 
 			if( $r['redirection']-- < 0 ){
 				trigger_error('Too many redirects');
 				return false;
 			}
 
-			//check location for releative value
-			$location = $headers['headers']['location'];
-			if( is_array($location) ){
-				$location = array_pop($location);
-			}
-			if( $location{0} == '/' ){
-				$location = $this->url_array['scheme'].'://'.$this->url_array['host'].$location;
-			}
-
-			self::$redirected		= $location;
-			self::$debug['Redir']	= 1;
+			static::$redirected		= $location;
+			static::$debug['Redir']	= 1;
 
 			return $this->_get($location, $r);
 		}
 
+		/**
+		 * Get the redirect location
+		 *
+		 */
+		public function RedirectLocation($headers){
+
+			if( empty($headers['headers']['location']) ){
+				return false;
+			}
+
+			//check location for releative value
+			$location = $headers['headers']['location'];
+			if( is_array($headers['headers']['location']) ){
+				do{
+					$location =		array_pop($headers['headers']['location']);
+					$location =		trim($location);
+
+				}while( count($headers['headers']['location']) && empty($location) );
+			}
+
+			$location = trim($location);
+
+			if( empty($location) ){
+				return false;
+			}
+
+
+			//	//www.example.com
+			if( substr($location,0,2) == '//' ){
+				$location = $this->url_array['scheme'].':'.$location;
+
+			// ?page=test
+			}elseif( $location[0] == '?' ){
+				$location = $this->url_array['scheme'].'://'.rtrim($this->url_array['host'],'/').'/'.ltrim($this->url_array['path'],'/').$location;
+
+			// /page
+			}elseif( $location[0] == '/' ){
+				$location = $this->url_array['scheme'].'://'.rtrim($this->url_array['host'],'/').$location;
+
+			// http://www.example.com
+			}elseif( preg_match('#^[a-z]+:#i',$location) ){
+				// do nothing
+
+			// otherwise relative path
+			}else{
+				$urla = $this->url_array;
+				unset($urla['query'], $urla['fragment']);
+
+				if( empty($urla['path']) || $urla['path'] == '/' ){
+					$urla['path'] = $location;
+
+				}elseif( substr($urla['path'],-1) != '/' ){
+					$urla['path'] .= ltrim($location,'/');
+
+				}else{
+					$urla['path'] = rtrim(dirname($urla['path']),'/'). '/' . ltrim($location,'/');
+				}
+
+				$location = $this->unparse_url($urla);
+			}
+
+			return $location;
+		}
+
+		function unparse_url($parsed_url) {
+			$scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+			$host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+			$port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+			$user     = isset($parsed_url['user']) ? $parsed_url['user'] : '';
+			$pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
+			$pass     = ($user || $pass) ? "$pass@" : '';
+			$path     = isset($parsed_url['path']) ? '/'.ltrim($parsed_url['path'],'/') : '';
+			$query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
+			$fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
+			return "$scheme$user$pass$host$port$path$query$fragment";
+		}
 
 
 		/**
@@ -539,7 +645,7 @@ namespace gp\tool{
 		 */
 		public static function chunkTransferDecode($body,$headers){
 
-			if( !self::IsChunked($body,$headers) ){
+			if( !static::IsChunked($body,$headers) ){
 				return $body;
 			}
 
@@ -651,7 +757,7 @@ namespace gp\tool{
 		 */
 		public static function processHeaders($headers) {
 
-			$headers		= self::HeadersArray($headers);
+			$headers		= static::HeadersArray($headers);
 			$response		= array('code' => 0, 'message' => '');
 			$cookies		= array();
 			$newheaders		= array();
@@ -680,7 +786,7 @@ namespace gp\tool{
 			}
 
 
-			self::$debug['Headers'] = count($newheaders);
+			static::$debug['Headers'] = count($newheaders);
 
 			return array('response' => $response, 'headers' => $newheaders, 'cookies' => $cookies);
 		}
@@ -713,7 +819,7 @@ namespace gp\tool{
 		 */
 		public static function Debug($lang_key, $debug = array()){
 
-			$debug	= array_merge(self::$debug,$debug);
+			$debug	= array_merge(static::$debug,$debug);
 
 			return \gp\tool::Debug($lang_key, $debug);
 		}

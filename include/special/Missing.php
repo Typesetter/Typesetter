@@ -58,17 +58,27 @@ class Missing extends \gp\special\Base{
 			return;
 		}
 
-		if( !isset($this->error_data['redirects'][$this->requested]) ){
+		$parts =		explode('/',$this->requested);
+		$first_part	=	array_shift($parts);
+
+		if( !isset($this->error_data['redirects'][$first_part]) ){
 			return;
 		}
 
-		$target = $this->error_data['redirects'][$this->requested]['target'];
+
+		$target = $this->error_data['redirects'][$first_part]['target'];
+
 		$target = $this->GetTarget($target);
+
 		if( $target === false ){
 			return;
 		}
 
-		$code = $this->error_data['redirects'][$this->requested]['code'];
+		if( !empty($parts) && is_string($target) ){
+			$target .= '/'.implode('/',$parts);
+		}
+
+		$code = $this->error_data['redirects'][$first_part]['code'];
 		\gp\tool::Redirect($target,$code);
 	}
 

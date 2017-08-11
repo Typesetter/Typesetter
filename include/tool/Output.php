@@ -238,6 +238,7 @@ namespace gp\tool{
 		public static function Template(){
 			global $page, $GP_ARRANGE, $GP_STYLES, $get_all_gadgets_called, $addon_current_id, $GP_MENU_LINKS, $GP_MENU_CLASS, $GP_MENU_CLASSES, $GP_MENU_ELEMENTS;
 			$get_all_gadgets_called = false;
+			self::$template_included = true;
 
 			if( isset($page->theme_addon_id) ){
 				$addon_current_id = $page->theme_addon_id;
@@ -1525,7 +1526,7 @@ namespace gp\tool{
 				$files = array();
 
 				if( is_array($script) ){
-					// array of scripts 
+					// array of scripts
 					if( isset($script['file']) ){
 						// single script
 						$file = $script['file'];
@@ -1712,7 +1713,7 @@ namespace gp\tool{
 			//only need file paths
 			foreach($files as $key => $val){
 				if( is_array($val) ){
-					// array of scripts 
+					// array of scripts
 					if( isset($val['file']) ){
 						// single script
 						$files_flat[$key] = $val['file'];

@@ -779,10 +779,6 @@ namespace gp\tool{
 				return;
 			}
 
-			if( \gp\tool::RequestType() != 'template' ){
-				return;
-			}
-
 			$layout = $page->gpLayout;
 			if( !isset($gpLayouts[$layout]) ){
 				return;

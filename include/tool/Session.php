@@ -796,7 +796,7 @@ namespace gp\tool{
 			$contents = ob_get_contents();
 
 			//charset
-			if( strpos($contents,'charset=') !== false ){
+			if( strpos($contents,'charset=') === false ){
 				return;
 			}
 

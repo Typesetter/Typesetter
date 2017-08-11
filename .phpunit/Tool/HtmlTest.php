@@ -8,7 +8,7 @@ class phpunit_HTML extends gptest_bootstrap{
 
 	private $dir;
 
-	function __construct(){
+	function setUp(){
 		$this->dir = __DIR__ . '/HtmlFixtures';
 	}
 

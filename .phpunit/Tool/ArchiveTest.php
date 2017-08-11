@@ -23,7 +23,7 @@ class phpunit_Archive extends gptest_bootstrap{
 	 * Create the files and folders
 	 *
 	 */
-	function __construct(){
+	function setUp(){
 
 		// HHVM doesn't support writing with PHAR
 		// https://github.com/facebook/hhvm/issues/4899

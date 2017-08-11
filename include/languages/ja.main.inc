@@ -21,13 +21,13 @@ $langmessage = array (
 	'save_changes'                   => '変更を保存',
 	'back'                           => 'もどる',
 	'cancel'                         => 'キャンセル',
-	'Classes'                        => 'Classes', // ### NEW 5.1 ###
-	'Manage Classes'                 => 'Manage Classes', // ### NEW 5.1 ###
-	'Available Classes'              => 'Available Classes', // ### NEW 5.1 ###
+	'Classes'                        => 'Classes',
+	'Manage Classes'                 => 'Manage Classes',
+	'Available Classes'              => 'Available Classes',
 	'Close'                          => '閉じる',
 	'Copy'                           => 'コピー',
-	'Clipboard'                      => 'Clipboard', // ### NEW 5.1 ###
-	'Copy to Clipboard'              => 'Copy to Clipboard', // ### NEW 5.1 ###
+	'Clipboard'                      => 'Clipboard',
+	'Copy to Clipboard'              => 'Copy to Clipboard',
 	'Save & Close'                   => '保存して終了',
 	'OOPS'                           => '処理に失敗しました。再試行してください。',
 	'OOPS_Start_over'                => '<b>警告:</b> 直前のアクションは完了しませんでした。データを保存してからこのページを再読込して下さい。',
@@ -93,7 +93,7 @@ $langmessage = array (
 	'uploaded_files'                 => 'ファイル一覧',
 	'Image'                          => '画像',
 	'image'                          => '画像',
-	'Images'                         => '画像', // ### NEW 5.1 ###
+	'Images'                         => '画像',
 	'images'                         => '画像',
 	'delete_confirm'                 => '本当に完全に削除してもよろしいですか？ ',
 	'generic_delete_confirm'         => '%s を完全に削除してもよろしいですか？ ',
@@ -156,7 +156,7 @@ $langmessage = array (
 	'site_locked'                    => 'このサイトは現在、別のユーザーによる編集作業中であるため、ロックされています。ロックが解除されるか編集中のユーザーがログアウトするまでお待ち下さい。',
 	'lock_expires_in'                => 'ロックの解除期限は %s 分に設定されています。',
 	'passwordremindertext'           => '<p>%1$s (%2$s) についての新しいパスワード発行の要求がありました。ユーザー "%3$s" のために新しいパスワードを生成し、"%4$s" に送信しました。</p>
-
+	
 <p>この要求が第三者によるものである場合や、あなたが自分のパスワードを思い出すことができてパスワードの変更を中止する場合は、このメッセージを無視して元のパスワードを使い続けることができます。</p>',
 	'JAVASCRIPT_REQ'                 => 'サイト管理にアクセスするには javascript が有効になっている必要があります。',
 	'INCOMPAT_BROWSER'               => 'お使いのブラウザではうまく動作しない可能性があります。',
@@ -231,16 +231,16 @@ $langmessage = array (
 	array (
 	'recaptcha_public'               => 'コンタクトフォームで CAPTCHA 認証を行うには、<a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha キー</a> を取得してください。',
 	'maximgarea'                     => 'アップロードする画像の最大面積のピクセル数を設定。例)縦800ピクセルx横600ピクセルの画像ならば、面積は480,000ピクセル。',
-	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
-	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
-	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
+	'resize_images'                  => 'Create optimized versions of scaled down images.',
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.',
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.',
 	'maxthumbsize'                   => 'ギャラリーのサムネイルサイズを指定。デフォルトは300ピクセルx300ピクセル。',
-	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
-	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
+	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.',
+	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.',
 	'from_use_user'                  => 'チェックを入れたとき、上記のデフォルト設定ではなく、ユーザーが入力したメールアドレスをメールヘッダの From 欄に使用します。',
 	'smtp_hosts'                     => '例: ',
 	'auto_redir'                     => 'この割合の範囲内で似ている既存のページがある場合、リクエストを自動的にリダイレクトします。',
-	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
+	'gallery_legacy_style'           => 'Disable responsive gallery themes',
 	),
 	'desc'                           => '概要',
 	'keywords'                       => 'キーワード',
@@ -248,12 +248,12 @@ $langmessage = array (
 	'language'                       => '言語',
 	'langeditor'                     => 'GUIエディタの言語',
 	'maximgarea'                     => '画像の最大面積',
-	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
-	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles',
+	'preserve_image_metadata'        => 'Preserve Metadata',
 	'maxthumbsize'                   => 'ギャラリーのサムネイルサイズ',
-	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
-	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###
-	'recreate_all_thumbnails'        => 'Recreate All Thumbnails', // ### NEW 5.1 ###
+	'maxthumbheight'                 => 'Gallery Thumbnail Height',
+	'thumbskeepaspect'               => 'Keep Aspect Ratio',
+	'recreate_all_thumbnails'        => 'Recreate All Thumbnails',
 	'auto_redir'                     => '自動リダイレクト割合（パーセント）',
 	'restore_defaults'               => 'デフォルトを復元',
 	'Add your LESS and CSS here'     => 'LESS, CSS をここに追加します。',
@@ -263,8 +263,8 @@ $langmessage = array (
 	'Interface'                      => 'インターフェース',
 	'Performance'                    => 'パフォーマンス',
 	'require_email'                  => '入力必須にする項目',
+	'gallery_legacy_style'           => 'Legacy Gallery Style',
 	'colorbox_style'                 => 'Colorbox のスタイル',
-	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'コンタクトフォーム',
 	'contact_advanced'               => 'コンタクトフォーム(詳細設定)',
 	'toemail'                        => '受取用アドレス *',

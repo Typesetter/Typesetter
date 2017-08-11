@@ -21,13 +21,13 @@ $langmessage = array (
 	'save_changes'                   => 'Değişiklikleri Kaydet',
 	'back'                           => 'Geri',
 	'cancel'                         => 'Vazgeç',
-	'Classes'                        => 'Classes', // ### NEW 5.1 ###
-	'Manage Classes'                 => 'Manage Classes', // ### NEW 5.1 ###
-	'Available Classes'              => 'Available Classes', // ### NEW 5.1 ###
+	'Classes'                        => 'Classes',
+	'Manage Classes'                 => 'Manage Classes',
+	'Available Classes'              => 'Available Classes',
 	'Close'                          => 'Kapat',
 	'Copy'                           => 'Kopyala',
-	'Clipboard'                      => 'Clipboard', // ### NEW 5.1 ###
-	'Copy to Clipboard'              => 'Copy to Clipboard', // ### NEW 5.1 ###
+	'Clipboard'                      => 'Clipboard',
+	'Copy to Clipboard'              => 'Copy to Clipboard',
 	'Save & Close'                   => 'Save &amp; Close',
 	'OOPS'                           => 'Oops, isteğiniz yerine getirilemedi. Lütfen tekrar deneyin.',
 	'OOPS_Start_over'                => '<b>Warning:</b> The previous action didn\'t successfully complete. Please, save your data and reload this page to continue.',
@@ -93,7 +93,7 @@ $langmessage = array (
 	'uploaded_files'                 => 'Dosya Yükle',
 	'Image'                          => 'Resim',
 	'image'                          => 'resim',
-	'Images'                         => 'Resimler', // ### NEW 5.1 ###
+	'Images'                         => 'Resimler',
 	'images'                         => 'resimler',
 	'delete_confirm'                 => 'Bu dosyayi kalici olarak kaldirmak istediginizden emin misiniz? ',
 	'generic_delete_confirm'         => 'Are you sure you want to permanently remove %s? ',
@@ -235,16 +235,16 @@ continue using your old password.</p>',
 	array (
 	'recaptcha_public'               => 'Get a <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> to use CAPTCHA verification on the contact form.',
 	'maximgarea'                     => 'Maximum square pixels for uploaded images. A 600 x 800 pixel image has 480,000 sq/pixels.',
-	'resize_images'                  => 'Create optimized versions of scaled down images.',  // ### NEW 5.1 ###
-	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.', // ### NEW 5.1 ###
-	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.', // ### NEW 5.1 ###
+	'resize_images'                  => 'Create optimized versions of scaled down images.',
+	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.',
+	'preserve_image_metadata'        => 'JPEG images will retain embedded EXIF/IPTC metadata <em>credit, copyright, caption, title</em> and <em>creation date</em>.',
 	'maxthumbsize'                   => 'Gallery Thumbnail size, default is 300px by 300px.',
-	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.', // ### NEW 5.1 ###
-	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.', // ### NEW 5.1 ###
+	'maxthumbheight'                 => 'Optional height for gallery thumbnails. If empty, the <em>Gallery Thumbnail Size</em> value will be used for height as well.',
+	'thumbskeepaspect'               => 'Keep the original image aspect ratio for thumbnails.',
 	'from_use_user'                  => 'If selected, user supplied email addresses will be used for the "From" header instead of the above defaults.',
 	'smtp_hosts'                     => 'Example: ',
 	'auto_redir'                     => 'Automatically redirect a request if it is similar to an existing page within this percentage.',
-	'gallery_legacy_style'           => 'Disable responsive gallery themes', // ### NEW 5.1 ###
+	'gallery_legacy_style'           => 'Disable responsive gallery themes',
 	),
 	'desc'                           => 'Tanım',
 	'keywords'                       => 'Anahtar kelimeler',
@@ -252,12 +252,12 @@ continue using your old password.</p>',
 	'language'                       => 'Dil',
 	'langeditor'                     => 'WYSIWYG Dili',
 	'maximgarea'                     => 'Maksimum Resim Alani',
-	'preserve_icc_profiles'          => 'Preserve ICC Profiles', // ### NEW 5.1 ###
-	'preserve_image_metadata'        => 'Preserve Metadata', // ### NEW 5.1 ###
+	'preserve_icc_profiles'          => 'Preserve ICC Profiles',
+	'preserve_image_metadata'        => 'Preserve Metadata',
 	'maxthumbsize'                   => 'Gallery Thumbnail Size',
-	'maxthumbheight'                 => 'Gallery Thumbnail Height', // ### NEW 5.1 ###
-	'thumbskeepaspect'               => 'Keep Aspect Ratio', // ### NEW 5.1 ###
-	'recreate_all_thumbnails'        => 'Recreate All Thumbnails', // ### NEW 5.1 ###
+	'maxthumbheight'                 => 'Gallery Thumbnail Height',
+	'thumbskeepaspect'               => 'Keep Aspect Ratio',
+	'recreate_all_thumbnails'        => 'Recreate All Thumbnails',
 	'auto_redir'                     => 'Auto Redirect Percent',
 	'restore_defaults'               => 'Varsayılanları Geri Yükle',
 	'Add your LESS and CSS here'     => 'Add your LESS and CSS here',
@@ -267,8 +267,8 @@ continue using your old password.</p>',
 	'Interface'                      => 'Interface',
 	'Performance'                    => 'Performans',
 	'require_email'                  => 'İletişim İçin Alanlar Gerekli',
+	'gallery_legacy_style'           => 'Legacy Gallery Style',
 	'colorbox_style'                 => 'Renkkutu Stili',
-	'gallery_legacy_style'           => 'Legacy Gallery Style', // ### NEW 5.1 ###
 	'contact_config'                 => 'İletişim Formu',
 	'contact_advanced'               => 'Contact Form (Advanced)',
 	'toemail'                        => 'Alıcı Adresi *',

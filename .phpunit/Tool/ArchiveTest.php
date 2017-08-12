@@ -7,7 +7,7 @@
 class phpunit_Archive extends gptest_bootstrap{
 
 	private $dir;
-	private $types		= array('tbz','tgz','tar','zip');
+	private $types		= array('tbz','tgz','tar','zip','tar.bz','tar.gz');
 	private $files		= array(
 							'index.html'					=> '<html><body></body></html>',
 							'foo/text.txt'					=> 'lorem ipsum',
@@ -75,7 +75,9 @@ class phpunit_Archive extends gptest_bootstrap{
 	function testExtract(){
 
 		foreach($this->types as $type){
+
 			$archive	= $this->FromString($type);
+
 			foreach($this->files as $name => $content){
 				$extracted	= $archive->getFromName($name);
 				self::AssertEquals($content, $extracted );
@@ -117,6 +119,7 @@ class phpunit_Archive extends gptest_bootstrap{
 	 *
 	 */
 	function FromString($type){
+
 		$path = $this->ArchivePath($type);
 
 		try{
@@ -132,8 +135,12 @@ class phpunit_Archive extends gptest_bootstrap{
 		$archive->Compress();
 		self::AssertFileExists( $path );
 
+
 		//return a readable archive
-		return new \gp\tool\Archive($path);
+		$path2 = $this->ArchivePath($type);
+		copy($path,$path2);
+
+		return new \gp\tool\Archive($path2);
 	}
 
 
@@ -142,8 +149,6 @@ class phpunit_Archive extends gptest_bootstrap{
 	 *
 	 */
 	function FromFiles($type){
-		$path = $this->ArchivePath($type);
-
 
 		$path = $this->ArchivePath($type);
 

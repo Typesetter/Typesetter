@@ -40,6 +40,7 @@ class Archive{
 
 	}
 
+
 	/**
 	 * Return a list of available
 	 *
@@ -84,10 +85,13 @@ class Archive{
 			return;
 		}
 
+		//start with filename.tar so that when we call $archive->compress(), the .tbz and .tgz file can be created
 		switch( strtolower($this->extension) ){
 			case 'tbz':
 			case 'tgz':
-				$this->path			= preg_replace('#\.(tgz|tbz)$#','.tar',$this->path);
+			case 'tar.gz';
+			case 'tar.bz';
+				$this->path			= preg_replace('#\.(tgz|tbz|tar.bz|tar.gz)$#','.tar',$this->path);
 			break;
 		}
 
@@ -123,8 +127,21 @@ class Archive{
 	 */
 	protected function Extension($path){
 
-		$parts		= explode('.',$path);
-		return array_pop($parts);
+		$parts =		explode('.',$path);
+		$ext1 = 		array_pop($parts);
+		$ext2 = 		array_pop($parts);
+
+		if( strtolower($ext2) == 'tar' ){
+			switch(strtolower($ext1)){
+				case 'bz';
+				return 'tar.bz';
+
+				case 'gz';
+				return 'tar.gz';
+			}
+		}
+
+		return $ext1;
 	}
 
 
@@ -165,16 +182,19 @@ class Archive{
 
 		switch($this->extension){
 			case 'tbz':
-				$this->php_object->compress(\Phar::BZ2,'tbz');
+			case 'tar.bz':
+				$this->php_object->compress(\Phar::BZ2,$this->extension);
 				unlink($this->path);
 			break;
+
+			case 'tar.gz':
 			case 'tgz':
-				$this->php_object->compress(\Phar::GZ,'tgz');
+				$this->php_object->compress(\Phar::GZ,$this->extension);
 				unlink($this->path);
 			break;
 		}
-
 	}
+
 
 	/**
 	 * Count the number of files

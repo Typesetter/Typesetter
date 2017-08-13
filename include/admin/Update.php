@@ -576,7 +576,7 @@ class Update extends \gp\Page{
 
 		//delete old folders
 		if( isset($_POST['old_folder']) && is_array($_POST['old_folder']) ){
-			$this->CleanUpFolders($_POST['old_folders']);
+			$this->CleanUpFolders($_POST['old_folder']);
 		}
 
 
@@ -817,7 +817,6 @@ class Update extends \gp\Page{
 				return false;
 			}
 		}
-		pre($this->replace_dirs);
 
 		return true;
 	}

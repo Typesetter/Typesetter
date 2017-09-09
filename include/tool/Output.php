@@ -948,6 +948,10 @@ namespace gp\tool{
 			$extra_content	= self::ExtraContent( $name, $file_stats, $is_draft );
 			$wrap			= self::ShowEditLink('Admin_Extra');
 
+			if(!self::ExtraIsVisible($name)) {
+				return '';
+			}
+
 			if( !$wrap ){
 				echo '<div'.\gp\tool\Output\Sections::SectionAttributes($attrs,$extra_content[0]['type']).'>';
 				echo \gp\tool\Output\Sections::RenderSection($extra_content[0],0,'',$file_stats);
@@ -1022,6 +1026,38 @@ namespace gp\tool{
 
 			$extra_section 	+= array('type'=>'text','content'=>'');
 			return array($extra_section);
+		}
+
+		public function ExtraIsVisible($title){
+			global $page;
+			if(isset($page->pagetype) && $page->pagetype =="admin_display") {
+				return true;
+			}
+			$vis = \gp\tool\Files::Get('_extra/' . $title . '/visibility', 'data');
+			if(!$vis || !array_key_exists('visibility_type',$vis)) {
+				return true;
+			}
+			if($vis['visibility_type']==0) {
+				return true;
+			}
+			if($vis['visibility_type']==1) {
+				return false;
+			}
+			if($vis['visibility_type']==2){
+				if(is_array($vis['pages']) && in_array($page->gp_index,array_keys($vis['pages']))) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+			if($vis['visibility_type']==3){
+				if(is_array($vis['pages']) && in_array($page->gp_index,array_keys($vis['pages']))) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+			return true;
 		}
 
 		public static function GetImage($src,$attributes = array()){

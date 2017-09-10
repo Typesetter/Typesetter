@@ -530,6 +530,10 @@ namespace gp\tool{
 				return $this->Redirect($redir_location,$r);
 			}
 
+			if( isset($processedHeaders['headers']['content-encoding']) && $processedHeaders['headers']['content-encoding'] == 'gzip' ){
+				$this->body = gzdecode($this->body);
+			}
+
 			return array('headers' => $processedHeaders['headers'], 'body' => $this->body, 'response' => $processedHeaders['response'], 'cookies' => $processedHeaders['cookies']);
 		}
 

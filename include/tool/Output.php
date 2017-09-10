@@ -1355,7 +1355,7 @@ namespace gp\tool{
 
 			$meta_title = \gp\tool\Plugins::Filter('MetaTitle', array($meta_title, $page_title, $config['title']) );
 
-			echo "\n" . '<title>' . $meta_title . '</title>';
+			echo "\n" . '<title>' . strip_tags($meta_title) . '</title>';
 			return $page_title;
 		}
 

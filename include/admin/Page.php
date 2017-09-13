@@ -111,7 +111,7 @@ class Page extends \gp\Page{
 			$gp_admin_html .= '<div id="admincontainer">'.$admin_content.'</div>';
 			return;
 		}
-		echo $admin_content; 
+		echo $admin_content;
 	}
 
 
@@ -130,7 +130,7 @@ class Page extends \gp\Page{
 
 
 	private function BreadCrumbs(){
-		global $langmessage;
+		global $langmessage, $config;
 
 		echo '<div id="admin_breadcrumbs" class="cf">';
 
@@ -143,10 +143,15 @@ class Page extends \gp\Page{
 		$request_string		= str_replace('_','/',$this->requested);
 		$parts				= explode('/',$request_string);
 
+		$addon_key 			= false;
 		do{
 
 			$request_string		= implode('/',$parts);
 			$scriptinfo			= $this->GetScriptInfo($request_string);
+
+			if( isset($scriptinfo['addon']) ){
+				$addon_key = $scriptinfo['addon'];
+			}
 
 			if( is_array($scriptinfo) && isset($scriptinfo['label']) ){
 				$crumbs[$request_string] = $scriptinfo['label'];
@@ -154,9 +159,18 @@ class Page extends \gp\Page{
 		}while(array_pop($parts));
 
 
+		//add addon to crumbs
+		if( $addon_key && isset($config['addons'][$addon_key]) ){
+
+			$slug = 'Admin/Addons/'.\gp\admin\Tools::encode64($addon_key);
+			$crumbs[$slug] = $config['addons'][$addon_key]['name'];
+
+			$crumbs['Admin/Addons'] = $langmessage['plugins'];
+		}
+
+
 		//page label
 		$this->label = implode('  &#171; ', $crumbs);
-
 
 		//add to breadcrumbs
 		$crumbs = array_reverse($crumbs);

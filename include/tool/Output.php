@@ -532,9 +532,14 @@ namespace gp\tool{
 				}
 			}
 
-
 			$info += array('arg'=>'');
 			$args = array( $info['arg'],$info);
+
+			$info = \gp\tool\Plugins::Filter('ExecArea', array($info,$args) );
+			if( !$info ){
+				return;
+			}
+
 			self::ExecInfo($info,$args);
 		}
 
@@ -546,7 +551,6 @@ namespace gp\tool{
 			global $addonFolderName, $installed_addon, $page;
 
 			$args += array('page' => $page);
-
 
 			//addonDir is deprecated as of 2.0b3
 			$addon = false;

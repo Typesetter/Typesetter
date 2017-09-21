@@ -973,6 +973,7 @@ namespace gp{
 					'hooks'						=> array(),
 					'space_char'				=> '-',			//4.6
 					'cdn'						=> '',
+					'thumbskeepaspect'			=> false,
 					);
 
 

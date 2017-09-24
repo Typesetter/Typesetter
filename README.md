@@ -35,7 +35,7 @@ Submitting bug fixes and enhancements is easy:
   This can be done directly on GitHub.com at http://github.com/{your-username}/Typesetter
 
 4. Submit a Pull Request (tell Typesetter about your changes)
-  * Click "Pull Prequest"
+  * Click "Pull Request"
   * Enter a Message that will go with your commit to be reviewed by core committers
   * Click “Send Pull Request”
 

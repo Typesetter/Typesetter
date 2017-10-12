@@ -545,7 +545,7 @@ class Installer extends \gp\admin\Addon\Tools{
 		//admin links
 		$Admin_Links = $this->ExtractFromInstall($this->ini_contents,'Admin_Link:');
 		$Admin_Links = $this->CleanLinks($Admin_Links,'Admin_');
-		$this->PurgeExisting($config['admin_links'],$Admin_Links);
+		$this->PurgeExisting($config['admin_links']);
 		$this->AddToConfig($config['admin_links'],$Admin_Links);
 
 
@@ -1202,7 +1202,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Purge Links from $purgeFrom that were once defined for $this->config_key
 	 *
 	 */
-	public function PurgeExisting(&$purgeFrom,$NewLinks){
+	public function PurgeExisting(&$purgeFrom,$NewLinks = array()){
 
 		if( $this->config_key === false || !is_array($purgeFrom) ){
 			return;

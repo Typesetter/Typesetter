@@ -608,8 +608,7 @@ class Edit extends \gp\Page{
 		}
 
 
-		$file_sections = array();
-		$file_sections = self::ExtractSections($file_sections, $section_num);
+		$file_sections = self::ExtractSections($section_num);
 		// msg('SaveToClipboard: $file_sections = ' . pre($file_sections) );
 
 		$first_section = $file_sections[0];
@@ -827,26 +826,26 @@ class Edit extends \gp\Page{
 
 	/**
 	 * Extract sections from the current page to be stored in the Clipboard
-	 * recursive calls for wrappers
+	 * TS 5.1.1: fix nesting error, changing from recursion to while iteration + counter
 	 */
-	public function ExtractSections($sections=array(), $section_num){
-		$section_data = $this->file_sections[$section_num];
-		$type = gettype($section_data);
-		if( $type !== 'array' ){
-			trigger_error('$section_data is ' . $type . '. Array expected.');
-			return;
-		}
+	public function ExtractSections($section_num){
+		$counter = 0;
+		$sections = array();
+		while( $counter >= 0 ){
+			$section_data = $this->file_sections[$section_num];
 
-		// remove possible hidden state
-		$section_data['gp_hidden'] = false;
-
-		$sections[] = $section_data;
-		if( $section_data['type'] == 'wrapper_section' ){
-			if( isset($section_data['contains_sections']) ){
-				for( $cc=1; $cc <= $section_data['contains_sections']; $cc++ ){
-					$sections = self::ExtractSections($sections, $section_num + $cc);
-				}
+			if( $section_data['type'] == 'wrapper_section' && isset($section_data['contains_sections']) ){
+				$counter += $section_data['contains_sections'];
 			}
+
+			// remove possible hidden state
+			$section_data['gp_hidden'] = false;
+
+			// add section
+			$sections[] = $section_data;
+
+			$section_num++;
+			$counter--;
 		}
 
 		return $sections;

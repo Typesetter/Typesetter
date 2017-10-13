@@ -668,9 +668,9 @@ namespace gp\admin\Content{
 				}else{
 					$allowed_types = array(
 						/** Images **/		'bmp', 'gif', 'ico', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'svg', 'svgz',
-						/** Media **/		'aiff', 'asf', 'avi', 'fla', 'flac', 'flv', 'm4v', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ogg', 'oga', 'ogv', 'opus', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'wav', 'wma', 'webm', 'wmv', 
+						/** Media **/		'aiff', 'asf', 'avi', 'fla', 'flac', 'flv', 'm4v', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ogg', 'oga', 'ogv', 'opus', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'wav', 'wma', 'webm', 'wmv',
 						/** Archives **/	'7z', 'bz', 'gz', 'gzip', 'rar', 'tar', 'tgz', 'zip',
-						/** Text/Docs **/	'css', 'csv', 'doc', 'docx', 'htm', 'html', 'js', 'json', 'less', 'md', 'ods', 'odt', 'pages', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'scss', 'sxc', 'sxw', 'vsd', 'xls', 'xlsx', 'xml', 'xsl', 
+						/** Text/Docs **/	'css', 'csv', 'doc', 'docx', 'htm', 'html', 'js', 'json', 'less', 'md', 'ods', 'odt', 'pages', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'scss', 'sxc', 'sxw', 'vsd', 'xls', 'xlsx', 'xml', 'xsl',
 					);
 
 
@@ -925,7 +925,7 @@ namespace gp\admin\Content{
 		 * Make sure newly uploaded images are within the site's max-size setting
 		 *
 		 */
-		public function MaxSize($added){
+		public static function MaxSize($added){
 			global $config;
 
 			if( $config['maximgarea'] > 0 ){
@@ -939,7 +939,7 @@ namespace gp\admin\Content{
 		 * Move
 		 *
 		 */
-		public function MoveResized($removed,$added){
+		public static function MoveResized($removed,$added){
 			global $dataDir;
 
 
@@ -972,7 +972,7 @@ namespace gp\admin\Content{
 		 * Remove all of the resized images for an image that is deleted
 		 *
 		 */
-		public function RemoveResized($removed){
+		public static function RemoveResized($removed){
 			global $dataDir;
 
 			foreach($removed as $key => $info){
@@ -995,7 +995,7 @@ namespace gp\admin\Content{
 		 * Update the name of an image in the index when renamed
 		 *
 		 */
-		public function RenameResized($removed,$added){
+		public static function RenameResized($removed,$added){
 			$added_img = self::TrimBaseDir($added['realpath']);
 			$removed_img = self::TrimBaseDir($removed['realpath']);
 			$index = array_search($removed_img,\gp_resized::$index);
@@ -1010,7 +1010,7 @@ namespace gp\admin\Content{
 		 * Make sure the realpath value is set for finder arrays
 		 *
 		 */
-		public function SetRealPath(&$array,$finder){
+		public static function SetRealPath(&$array,$finder){
 			foreach($array as $type => $list){
 				if( !is_array($list) ){
 					continue;
@@ -1028,7 +1028,7 @@ namespace gp\admin\Content{
 		 * Get a relative file path by stripping the base dir off of a full path
 		 *
 		 */
-		public function TrimBaseDir($full_path){
+		public static function TrimBaseDir($full_path){
 			global $dataDir;
 
 			$base_dir = $dataDir.'/data/_uploaded';

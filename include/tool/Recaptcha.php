@@ -76,7 +76,7 @@ namespace gp\tool{
 			// if recaptcha inactive, stop
 			if( !self::hasRecaptcha() ) return true;
 
-			if( empty($_POST['g-recaptcha-response']) ){
+			if( empty($_REQUEST['g-recaptcha-response']) ){
 				return false;
 			}
 
@@ -98,7 +98,7 @@ namespace gp\tool{
 			} else {
 				$ip = $_SERVER['REMOTE_ADDR'];
 			}
-			$resp = $recaptcha->verify($_POST['g-recaptcha-response'], $ip);
+			$resp = $recaptcha->verify($_REQUEST['g-recaptcha-response'], $ip);
 			if (!$resp->isSuccess()) {
 				//$error_codes = $resp->getErrorCodes();
 				//error_log();

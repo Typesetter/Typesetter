@@ -527,6 +527,8 @@ class Combine{
 	 */
 	public static function GenerateFile($files,$type){
 		global $dataDir;
+		//include JShrink js minifier
+		includeFile('thirdparty/JShrink/Minifier.php');
 
 		//get etag
 		$modified = $content_length = 0;
@@ -585,6 +587,8 @@ class Combine{
 				echo ";\n";
 			}
 			$combined_content = ob_get_clean();
+			//compress js
+			$combined_content = \JShrink\Minifier::minify($combined_content, array('flaggedComments' => false));
 
 		}else{
 

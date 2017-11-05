@@ -172,6 +172,8 @@ class Css{
 
 		//compiler options
 		$options = array();
+		// set 'compressed' format for compiled css
+		$options['compress'] = 'true';
 
 		//prepare the compiler
 		includeFile('thirdparty/less.php/Less.php');

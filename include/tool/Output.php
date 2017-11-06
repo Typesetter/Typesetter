@@ -723,39 +723,26 @@ namespace gp\tool{
 			global $dataDir, $page;
 			static $notified = false;
 
-			$info = (array)$info;
-			$info['catchable_type'] = $type;
+			$info							= (array)$info;
+			$info['catchable_type']			= $type;
 
-			$hash = $type.'_'.\gp\tool::ArrayHash($info);
-			self::$catchable[$hash] = $info;
+			$hash_dir						= $dataDir.'/data/_site/fatal_'.$type.'_'.\gp\tool::ArrayHash($info);
+			$hash_request					= $hash_dir.'/'.\gp\tool::ArrayHash($_REQUEST);
 
-			//no file = no fatal error
-			$file = $dataDir.'/data/_site/fatal_'.$hash;
-			if( !file_exists($file) ){
+			self::$catchable[$hash_request]	= $info;
+
+			//no folder = no fatal error
+			if( !file_exists($hash_dir) ){
 				return false;
 			}
 
 
-			$error_info = $error_text = file_get_contents($file);
-
-			// if the file that caused the fatal error has been modified, treat as fixed
-			if( $error_text[0] == '{' && $error_info = json_decode($error_text,true) ){
-
-
-				if( !empty($error_info['file']) && file_exists($error_info['file']) ){
-
-					//compare modified time
-					if( array_key_exists('file_modified',$error_info) && filemtime($error_info['file']) != $error_info['file_modified'] ){
-						unlink($file);
-						return false;
-					}
-
-					//compare file size
-					if( array_key_exists('file_size',$error_info) && filesize($error_info['file']) != $error_info['file_size'] ){
-						unlink($file);
-						return false;
-					}
-
+			// if the error didn't occur for the exact request and it hasn't happend a lot, allow the code to keep working
+			$fatal_hashes = array();
+			if( !file_exists($hash_request) ){
+				$fatal_hashes					= scandir($hash_dir);
+				if( count($fatal_hashes) < (gp_allowed_fatal_errors + 3) ){ // add 3 for ".", ".." and "index.html" entries
+					return false;
 				}
 			}
 
@@ -1909,7 +1896,7 @@ namespace gp\tool{
 					$message .= '<p>If you are the site administrator, you can troubleshoot the problem by changing php\'s display_errors setting to 1 in the gpconfig.php file.</p>'
 							.'<p>If the problem is being caused by an addon, you may also be able to bypass the error by enabling '.CMS_NAME.'\'s safe mode in the gpconfig.php file.</p>'
 							.'<p>More information is available in the <a href="'.CMS_DOMAIN.'/Docs/Main/Troubleshooting">Documentation</a>.</p>'
-							.'<p><a href="">Reload this page to continue</a>.</p>';
+							.'<p><a href="?">Reload this page to continue</a>.</p>';
 				}
 
 				return $message;
@@ -1918,7 +1905,7 @@ namespace gp\tool{
 
 			$message .= '<h3>Error Details</h3>'
 					.pre($error_details)
-					.'<p><a href="">Reload this page</a></p>'
+					.'<p><a href="?">Reload this page</a></p>'
 					.'<p style="font-size:90%">Note: Error details are only displayed for logged in administrators</p>'
 					.\gp\tool::ErrorBuffer(true,false);
 
@@ -1951,7 +1938,7 @@ namespace gp\tool{
 		 *
 		 */
 		static function RecordFatal($last_error){
-			global $dataDir, $config, $addon_current_id, $addonFolderName;
+			global $config, $addon_current_id, $addonFolderName;
 
 			$last_error['request'] = $_SERVER['REQUEST_URI'];
 			if( $addon_current_id ){
@@ -1976,10 +1963,9 @@ namespace gp\tool{
 			$content	= json_encode($last_error);
 			$temp		= array_reverse(self::$catchable);
 
-			foreach($temp as $error_hash => $info){
+			foreach($temp as $filepath => $info){
 
-				$file = $dataDir.'/data/_site/fatal_'.$error_hash;
-				\gp\tool\Files::Save($file,$content);
+				\gp\tool\Files::Save($filepath,$content);
 
 				if( $info['catchable_type'] == 'exec' ){
 					break;

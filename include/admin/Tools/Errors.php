@@ -111,6 +111,7 @@ class Errors extends \gp\special\Base{
 	public static function DisplayFatalError($error_file){
 		global $langmessage;
 
+
 		$hash = substr(basename($error_file),6);
 
 		//modified time
@@ -124,6 +125,24 @@ class Errors extends \gp\special\Base{
 
 
 		//get info
+		if( is_dir($error_file) ){
+			$files = scandir($error_file);
+			foreach($files as $file){
+				if( $file == '.' || $file == '..' || $file == 'index.html' ){
+					continue;
+				}
+				$file = $error_file.'/'.$file;
+				self::_DisplayFatalError($file);
+			}
+		}else{
+			self::_DisplayFatalError($error_file);
+		}
+
+	}
+
+	public static function _DisplayFatalError($error_file){
+		global $langmessage;
+
 		$contents = file_get_contents($error_file);
 		if( $contents[0] == '{' && $error_info = json_decode($contents,true) ){
 			//continue below
@@ -137,6 +156,11 @@ class Errors extends \gp\special\Base{
 
 		//display details
 		$error_info = array_diff_key($error_info,array('file_modified'=>'','file_size'=>''));
+
+		if( isset($error_info['time']) ){
+			$error_info['elapsed'] = \gp\admin\Tools::Elapsed( time() - $error_info['time'] );
+			$error_info['elapsed'] = sprintf($langmessage['_ago'],$error_info['elapsed']);
+		}
 
 		echo '<pre style="font-family:monospace">';
 		foreach($error_info as $key => $value){
@@ -240,34 +264,25 @@ class Errors extends \gp\special\Base{
 		global $dataDir;
 
 		if( !preg_match('#^[a-zA-Z0-9_]+$#',$hash) ){
-			message('Invalid Request');
+			msg('Invalid Request');
 			return;
 		}
 
-		$dir = $dataDir.'/data/_site';
-		$file = $dir.'/fatal_'.$hash;
-		if( !file_exists($file) ){
+		$error_file = $dataDir.'/data/_site/fatal_'.$hash;
+		if( !file_exists($error_file) ){
 			return;
 		}
 
-		$hash = md5_file($file);
-		unlink($file);
 
-
-		//remove matching errors
-		$files = scandir($dir);
-		foreach($files as $file){
-			if( strpos($file,'fatal_') !== 0 ){
-				continue;
-			}
-
-			$full_path = $dir.'/'.$file;
-			if( $hash == md5_file($full_path) ){
-				unlink($full_path);
-			}
+		if( is_dir($error_file) ){
+			\gp\tool\Files::RmAll($error_file);
+		}else{
+			$hashes[] = md5_file($error_file);
+			unlink($error_file);
 		}
 
 	}
+
 
 	/**
 	 * Clear all fatal errors
@@ -293,7 +308,7 @@ class Errors extends \gp\special\Base{
 			}
 
 			$full_path = $dir.'/'.$file;
-			unlink($full_path);
+			\gp\tool\Files::RmAll($full_path);
 		}
 	}
 

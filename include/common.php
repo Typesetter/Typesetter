@@ -35,6 +35,7 @@ gp_defined('gp_unique_addons',false);
 gp_defined('gp_data_type','.php');
 gp_defined('gp_default_theme','Bootswatch_Scss/Flatly');
 gp_defined('gp_php53', version_compare( phpversion(), '5.4', '<' ) );
+gp_defined('gp_allowed_fatal_errors', 10 );		// number of fatal errors to allow before disabling a component
 
 
 //gp_defined('CMS_DOMAIN',			'http://gpeasy.loc');

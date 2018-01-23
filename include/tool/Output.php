@@ -1029,7 +1029,7 @@ namespace gp\tool{
 			return array($extra_section);
 		}
 
-		public function ExtraIsVisible($title){
+		public static function ExtraIsVisible($title){
 			global $page;
 			if(isset($page->pagetype) && $page->pagetype =="admin_display") {
 				return true;

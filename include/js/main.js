@@ -331,12 +331,12 @@ var $gp = {
 			$(selector).colorbox(
 				$gp.cboxSettings({
 					resize : true ,
-					rel : selector, 
+					rel : selector,
 					title : function(){
 						var a = $(this);
 						var caption =
-							a.closest('li').find('.caption').data("originalContent") 
-							|| a.closest('li').find('.caption').text() 
+							a.closest('li').find('.caption').data("originalContent")
+							|| a.closest('li').find('.caption').text()
 							|| a.attr('title') // backwards compat
 							|| '';
 						return caption;

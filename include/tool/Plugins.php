@@ -17,6 +17,8 @@ namespace gp\tool{
 
 		private static $stack = array();
 
+		public static $curr_page_calls = array();
+
 
 		/**
 		 * Aliases of gpPlugin_incl()
@@ -135,6 +137,8 @@ namespace gp\tool{
 		public static function Filter($hook, $args = array() ){
 			global $gp_hooks;
 
+			self::$curr_page_calls[] = 'Filter:'.$hook;
+
 			if( !self::HasHook($hook) ){
 				if( isset($args[0]) ){
 					return $args[0];
@@ -156,6 +160,8 @@ namespace gp\tool{
 		public static function OneFilter( $hook, $args=array(), $addon = false ){
 			global $gp_hooks;
 
+			self::$curr_page_calls[] = 'OneFilter:'.$hook;
+
 			if( !self::HasHook($hook) ){
 				return false;
 			}
@@ -176,6 +182,8 @@ namespace gp\tool{
 
 		public static function Action($hook, $args = array() ){
 			global $gp_hooks;
+
+			self::$curr_page_calls[] = 'Action:'.$hook;
 
 			if( !self::HasHook($hook) ){
 				return;

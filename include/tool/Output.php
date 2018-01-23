@@ -1468,6 +1468,7 @@ namespace gp\tool{
 			}
 
 
+
 			if( !$combine || $page->head_force_inline ){
 				echo "\n<script type=\"text/javascript\">\n";
 				\gp\tool::jsStart();

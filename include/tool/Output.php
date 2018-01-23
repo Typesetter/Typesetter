@@ -731,20 +731,10 @@ namespace gp\tool{
 
 			self::$catchable[$hash_request]	= $info;
 
-			//no folder = no fatal error
-			if( !file_exists($hash_dir) ){
+			if( !self::FatalLimit($hash_dir) ){
 				return false;
 			}
 
-
-			// if the error didn't occur for the exact request and it hasn't happend a lot, allow the code to keep working
-			$fatal_hashes = array();
-			if( !file_exists($hash_request) ){
-				$fatal_hashes					= scandir($hash_dir);
-				if( count($fatal_hashes) < (gp_allowed_fatal_errors + 3) ){ // add 3 for ".", ".." and "index.html" entries
-					return false;
-				}
-			}
 
 			if( !$notified ){
 				error_log( 'Warning: A component of this page has been disabled because it caused fatal errors' );
@@ -752,6 +742,26 @@ namespace gp\tool{
 			}
 
 			self::PopCatchable();
+
+			return true;
+		}
+
+		/**
+		 * Return true if the limit of fatal errors has been reached
+		 *
+		 */
+		public static function FatalLimit( $hash_dir ){
+
+			//no folder = no fatal error
+			if( !file_exists($hash_dir) ){
+				return false;
+			}
+
+			// if the error didn't occur for the exact request and it hasn't happend a lot, allow the code to keep working
+			$fatal_hashes = scandir($hash_dir);
+			if( $fatal_hashes !== false && count($fatal_hashes) < (gp_allowed_fatal_errors + 3) ){ // add 3 for ".", ".." and "index.html" entries
+				return false;
+			}
 
 			return true;
 		}

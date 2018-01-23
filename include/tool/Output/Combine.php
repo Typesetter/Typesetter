@@ -627,7 +627,7 @@ class Combine{
 	 * @static
 	 */
 	public static function CheckFile(&$file){
-		global $dataDir;
+		global $dataDir, $dirPrefix;
 		$comment_start = '<!--';
 		$comment_end = '-->';
 
@@ -653,10 +653,10 @@ class Combine{
 		//remove null charachters
 		$file = \gp\tool\Files::NoNull($file);
 
-		//require .js or .css
+		//require .js, or .css/.less/.scss
 		$ext	= \gp\tool::Ext($file);
 		if( $ext !== 'js' && $ext !== 'css' && $ext !== 'less' && $ext !== 'scss' ){
-			echo  "\n{$comment_start} File Not CSS, LESS or JS {$file} {$comment_end}\n";
+			echo  "\n{$comment_start} File Not css, less, scss or js {$file} {$comment_end}\n";
 			return false;
 		}
 
@@ -675,7 +675,8 @@ class Combine{
 		}
 
 
-		echo  "\n{$comment_start} File Not Found {$dataDir}{$file} {$comment_end}\n";
+		$full_path = $dataDir . substr($file, strlen($dirPrefix));
+		echo  "\n{$comment_start} File Not Found {$full_path} {$comment_end}\n";
 		return false;
 	}
 

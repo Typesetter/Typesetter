@@ -132,9 +132,8 @@
 			var options = $('#gp_gallery_options').find('input,select').serialize();
 
 			// attributes
-			args.attributes = { 
-				class : ('class' in section_object.attributes ? section_object.attributes.class : '')
-			};
+			section_object.attributes = section_object.attributes || {};
+			args.attributes['class'] = section_object.attributes['class'] || '';
 
 			//get content
 			var data = edit_div.clone();
@@ -243,10 +242,7 @@
 			var remove_classes = possible_classes.join(" ");
 			var selected_class = $select.val();
 
-			if( !'attributes' in section_object ){
-				section_object.attributes = {};
-			}
-			var current_classes = ( 'class' in section_object.attributes ) ? section_object.attributes.class : '';
+			var current_classes = section_object.attributes['class'] || '';
 			var tmp_div = $('<div class="">')
 				.addClass(current_classes)
 				.removeClass(remove_classes)

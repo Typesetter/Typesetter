@@ -186,6 +186,7 @@ class Port{
 		}
 		if( isset($_POST['themes']) ){
 			$add_dirs[] = $dataDir.'/data/_themes';
+			$add_dirs[] = $dataDir.'/data/_layouts';
 			$add_dirs[] = $dataDir.'/themes';
 		}
 		if( isset($_POST['trash']) ){

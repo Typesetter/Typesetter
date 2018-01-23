@@ -120,6 +120,8 @@ class Css{
 			}
 
 			$compiler->addImportPath($dataDir);
+			// set 'compressed' format for compiled css
+			$compiler->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
 
 			$compiled = $compiler->compile(implode("\n",$combined));
 
@@ -170,6 +172,8 @@ class Css{
 
 		//compiler options
 		$options = array();
+		// set 'compressed' format for compiled css
+		$options['compress'] = 'true';
 
 		//prepare the compiler
 		includeFile('thirdparty/less.php/Less.php');

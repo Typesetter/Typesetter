@@ -973,7 +973,6 @@ class Menu{
 	public function FormatMenuElement($node, $attributes){
 		global $GP_MENU_LINKS, $GP_MENU_ELEMENTS;
 
-
 		// build attr
 		foreach($attributes as $key => $value){
 			if( $key == 'title' || $key == 'href' || $key == 'value' ){
@@ -989,10 +988,12 @@ class Menu{
 			$attributes['attr'] .= ' ' . $key . '="' . $value . '"';
 		}
 
-
 		// call template defined function
 		if( !empty($GP_MENU_ELEMENTS) && is_callable($GP_MENU_ELEMENTS) ){
-			$return = call_user_func($GP_MENU_ELEMENTS, $node, $attributes, $this->curr_level, $this->curr_menu);
+			$source_menu_array 	= $this->GetMenuArray($this->curr_menu);
+			$item_index 		= $this->curr_level;
+			$level				= $source_menu_array[$this->curr_key]['level'];
+			$return 			= call_user_func($GP_MENU_ELEMENTS, $node, $attributes, $level, $this->curr_menu, $item_index);
 			if( is_string($return) ){
 				echo $return;
 				return;

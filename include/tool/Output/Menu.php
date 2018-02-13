@@ -992,7 +992,7 @@ class Menu{
 		if( !empty($GP_MENU_ELEMENTS) && is_callable($GP_MENU_ELEMENTS) ){
 			$source_menu_array 	= $this->GetMenuArray($this->curr_menu);
 			$item_index 		= $this->curr_level;
-			$level				= $source_menu_array[$this->curr_key]['level'];
+			$level				= $this->curr_key !== null ? $source_menu_array[$this->curr_key]['level'] : 0;
 			$return 			= call_user_func($GP_MENU_ELEMENTS, $node, $attributes, $level, $this->curr_menu, $item_index);
 			if( is_string($return) ){
 				echo $return;

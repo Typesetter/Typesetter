@@ -484,8 +484,85 @@ class Combine{
 									'package'		=> 'bootstrap3',
 									),
 
+			// Popper.js
+			'popper' => array(
+									'file'			=> '/include/thirdparty/Popper.js/popper.min.js',
+									),
 
-			//fontawesome
+			// Bootstrap4
+			'bootstrap4-js' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/bootstrap.bundle.min.js',
+									'package'		=> 'bootstrap4',
+									'exclude'		=> 'bootstrap4-alert,bootstrap4-button,bootstrap4-carousel,bootstrap4-collapse,bootstrap4-dropdown,bootstrap4-modal,bootstrap4-popover,bootstrap4-scrollspy,bootstrap4-tab,bootstrap4-tooltip,bootstrap4-util',
+									),
+
+
+			'bootstrap4-alert' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/alert.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'bootstrap4-util',
+									),
+
+			'bootstrap4-button' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/button.js',
+									'package'		=> 'bootstrap4',
+									),
+
+			'bootstrap4-carousel' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/carousel.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'bootstrap4-util',
+									),
+
+			'bootstrap4-collapse' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/collapse.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'bootstrap4-util',
+									),
+
+			'bootstrap4-dropdown' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/dropdown.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'popper,bootstrap4-util',
+									),
+
+			'bootstrap4-modal' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/modal.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'bootstrap4-util',
+									),
+
+			'bootstrap4-popover' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/popover.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'bootstrap4-tooltip',
+									),
+
+			'bootstrap4-scrollspy' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/scrollspy.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'bootstrap4-util',
+									),
+
+			'bootstrap4-tab' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/tab.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'bootstrap4-util',
+									),
+
+			'bootstrap4-tooltip' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/tooltip.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'popper,bootstrap4-util',
+									),
+
+			'bootstrap4-util' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/util.js',
+									'package'		=> 'bootstrap4',
+									),
+
+
+			// FontAwesome
 			'fontawesome'			=> array(
 									'file'			=> '/include/thirdparty/fontawesome/css/font-awesome.min.css',
 									'label'			=> 'Font Awesome',
@@ -495,7 +572,7 @@ class Combine{
 									),
 
 
-			//colorbox
+			// Colorbox
 			'colorbox'	=> array(
 									'file'			=> '/include/thirdparty/colorbox139/colorbox/jquery.colorbox.js',
 									'requires'		=> 'gp-main,colorbox-css',
@@ -511,7 +588,7 @@ class Combine{
 									),
 
 
-			//jQuery.dotdotdot (multi-line text truncation)
+			// jQuery.dotdotdot (multi-line text truncation)
 			'dotdotdot' => array(
 									//'file'			=> '/include/thirdparty/dotdotdot/jquery.dotdotdot.min.js',
 									'file'			=> '/include/thirdparty/dotdotdot/jquery.dotdotdot.js',

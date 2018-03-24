@@ -1,0 +1,96 @@
+@import '../_Bootstrap4/scss/bootstrap.scss';
+
+// Cerulean 4.0.0
+// Bootswatch
+
+$navbar-height: ($nav-link-height + $navbar-padding-y * 2);
+
+body {
+  padding-top: ($navbar-height + 2rem);
+}
+
+@mixin btn-shadow($color){
+  @include gradient-y-three-colors(lighten($color, 8%), $color, 60%, darken($color, 4%));
+}
+
+$text-shadow: 0 1px 0 rgba(0, 0, 0, 0.05) !default;
+
+// Navbar =======================================================================
+
+.navbar-collapse > .GPAREA {
+  //  Menu -> align right
+  margin-left: auto;
+}
+
+.bg-primary {
+  @include btn-shadow($primary);
+}
+
+.bg-dark {
+  @include btn-shadow($blue);
+}
+
+.bg-light {
+  @include gradient-y-three-colors(lighten($gray-200, 8%), $gray-200, 60%, darken($gray-200, 2%));
+}
+
+.navbar-brand,
+.nav-link {
+  text-shadow: $text-shadow
+}
+
+// Buttons =====================================================================
+
+.btn {
+  text-shadow: $text-shadow
+}
+
+.btn-primary {
+  @include btn-shadow($primary);
+}
+
+.btn-secondary {
+  @include btn-shadow($secondary);
+  color: $gray-700;
+}
+
+.btn-success {
+  @include btn-shadow($success);
+}
+
+.btn-info {
+  @include btn-shadow($info);
+}
+
+.btn-warning {
+  @include btn-shadow($warning);
+}
+
+.btn-danger {
+  @include btn-shadow($danger);
+}
+
+// Typography ==================================================================
+
+.bg-primary,
+.bg-success,
+.bg-info,
+.bg-warning,
+.bg-danger,
+.bg-dark {
+  h1, h2, h3, h4, h5, h6 {
+    color: $white;
+  }
+}
+
+// Tables ======================================================================
+
+// Forms =======================================================================
+
+// Navs ========================================================================
+
+// Indicators ==================================================================
+
+// Progress bars ===============================================================
+
+// Containers ==================================================================

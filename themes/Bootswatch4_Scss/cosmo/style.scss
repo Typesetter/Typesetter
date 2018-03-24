@@ -1,0 +1,49 @@
+@import '../_Bootstrap4/scss/bootstrap.scss';
+
+// Cosmo 4.0.0
+// Bootswatch
+
+
+// Variables ===================================================================
+
+$web-font-path: "https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700" !default;
+@import url($web-font-path);
+
+$navbar-height: ($nav-link-height + $navbar-padding-y * 2);
+
+// Navbar =======================================================================
+
+.navbar-collapse > .GPAREA {
+  //  Menu -> align right
+  margin-left: auto;
+}
+
+// Buttons =====================================================================
+
+// Typography ==================================================================
+
+
+body {
+  padding-top: ($navbar-height + 2rem);
+  -webkit-font-smoothing: antialiased;
+}
+
+// Tables ======================================================================
+
+// Forms =======================================================================
+
+// Navs ========================================================================
+
+// Indicators ==================================================================
+
+// Progress bars ===============================================================
+
+.progress {
+  @include box-shadow(none);
+  .progress-bar {
+    font-size: 8px;
+    line-height: 8px;
+  }
+}
+
+// Containers ==================================================================

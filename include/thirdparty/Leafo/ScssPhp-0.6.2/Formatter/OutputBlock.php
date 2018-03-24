@@ -2,7 +2,7 @@
 /**
  * SCSSPHP
  *
- * @copyright 2012-2018 Leaf Corcoran
+ * @copyright 2012-2015 Leaf Corcoran
  *
  * @license http://opensource.org/licenses/MIT MIT
  *
@@ -47,19 +47,4 @@ class OutputBlock
      * @var \Leafo\ScssPhp\Formatter\OutputBlock
      */
     public $parent;
-
-    /**
-     * @var string
-     */
-    public $sourceName;
-
-    /**
-     * @var integer
-     */
-    public $sourceLine;
-
-    /**
-     * @var integer
-     */
-    public $sourceColumn;
 }

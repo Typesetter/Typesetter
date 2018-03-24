@@ -2,7 +2,7 @@
 /**
  * SCSSPHP
  *
- * @copyright 2012-2018 Leaf Corcoran
+ * @copyright 2012-2015 Leaf Corcoran
  *
  * @license http://opensource.org/licenses/MIT MIT
  *
@@ -15,11 +15,11 @@ use Leafo\ScssPhp\Formatter;
 use Leafo\ScssPhp\Formatter\OutputBlock;
 
 /**
- * Compressed formatter
+ * Crunched formatter
  *
- * @author Leaf Corcoran <leafot@gmail.com>
+ * @author Anthon Pang <anthon.pang@gmail.com>
  */
-class Compressed extends Formatter
+class Crunched extends Formatter
 {
     /**
      * {@inheritdoc}
@@ -46,17 +46,15 @@ class Compressed extends Formatter
         $glue = $this->break . $inner;
 
         foreach ($block->lines as $index => $line) {
-            if (substr($line, 0, 2) === '/*' && substr($line, 2, 1) !== '!') {
+            if (substr($line, 0, 2) === '/*') {
                 unset($block->lines[$index]);
-            } elseif (substr($line, 0, 3) === '/*!') {
-                $block->lines[$index] = '/*' . substr($line, 3);
             }
         }
 
-        $this->write($inner . implode($glue, $block->lines));
+        echo $inner . implode($glue, $block->lines);
 
         if (! empty($block->children)) {
-            $this->write($this->break);
+            echo $this->break;
         }
     }
 }

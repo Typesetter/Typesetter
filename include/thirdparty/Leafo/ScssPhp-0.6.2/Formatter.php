@@ -2,7 +2,7 @@
 /**
  * SCSSPHP
  *
- * @copyright 2012-2018 Leaf Corcoran
+ * @copyright 2012-2015 Leaf Corcoran
  *
  * @license http://opensource.org/licenses/MIT MIT
  *
@@ -12,7 +12,6 @@
 namespace Leafo\ScssPhp;
 
 use Leafo\ScssPhp\Formatter\OutputBlock;
-use Leafo\ScssPhp\SourceMap\SourceMapGenerator;
 
 /**
  * Base formatter
@@ -57,29 +56,9 @@ abstract class Formatter
     public $assignSeparator;
 
     /**
-     * @var boolean
+     * @var boolea
      */
     public $keepSemicolons;
-
-    /**
-     * @var \Leafo\ScssPhp\Formatter\OutputBlock
-     */
-    protected $currentBlock;
-
-    /**
-     * @var integer
-     */
-    protected $currentLine;
-
-    /**
-     * @var integer
-     */
-    protected $currentColumn;
-
-    /**
-     * @var \Leafo\ScssPhp\SourceMap\SourceMapGenerator
-     */
-    protected $sourceMapGenerator;
 
     /**
      * Initialize formatter
@@ -144,10 +123,10 @@ abstract class Formatter
 
         $glue = $this->break . $inner;
 
-        $this->write($inner . implode($glue, $block->lines));
+        echo $inner . implode($glue, $block->lines);
 
         if (! empty($block->children)) {
-            $this->write($this->break);
+            echo $this->break;
         }
     }
 
@@ -160,9 +139,9 @@ abstract class Formatter
     {
         $inner = $this->indentStr();
 
-        $this->write($inner
+        echo $inner
             . implode($this->tagSeparator, $block->selectors)
-            . $this->open . $this->break);
+            . $this->open . $this->break;
     }
 
     /**
@@ -188,8 +167,6 @@ abstract class Formatter
             return;
         }
 
-        $this->currentBlock = $block;
-
         $pre = $this->indentStr();
 
         if (! empty($block->selectors)) {
@@ -210,10 +187,10 @@ abstract class Formatter
             $this->indentLevel--;
 
             if (empty($block->children)) {
-                $this->write($this->break);
+                echo $this->break;
             }
 
-            $this->write($pre . $this->close . $this->break);
+            echo $pre . $this->close . $this->break;
         }
     }
 
@@ -222,21 +199,12 @@ abstract class Formatter
      *
      * @api
      *
-     * @param \Leafo\ScssPhp\Formatter\OutputBlock             $block              An abstract syntax tree
-     * @param \Leafo\ScssPhp\SourceMap\SourceMapGenerator|null $sourceMapGenerator Optional source map generator
+     * @param \Leafo\ScssPhp\Formatter\OutputBlock $block An abstract syntax tree
      *
      * @return string
      */
-    public function format(OutputBlock $block, SourceMapGenerator $sourceMapGenerator = null)
+    public function format(OutputBlock $block)
     {
-        $this->sourceMapGenerator = null;
-
-        if ($sourceMapGenerator) {
-            $this->currentLine = 1;
-            $this->currentColumn = 0;
-            $this->sourceMapGenerator = $sourceMapGenerator;
-        }
-
         ob_start();
 
         $this->block($block);
@@ -244,31 +212,5 @@ abstract class Formatter
         $out = ob_get_clean();
 
         return $out;
-    }
-
-    /**
-     * @param string $str
-     */
-    protected function write($str)
-    {
-        if ($this->sourceMapGenerator) {
-            $this->sourceMapGenerator->addMapping(
-                $this->currentLine,
-                $this->currentColumn,
-                $this->currentBlock->sourceLine,
-                $this->currentBlock->sourceColumn - 1, //columns from parser are off by one
-                $this->currentBlock->sourceName
-            );
-
-            $lines = explode("\n", $str);
-            $lineCount = count($lines);
-            $this->currentLine += $lineCount-1;
-
-            $lastLine = array_pop($lines);
-
-            $this->currentColumn = ($lineCount === 1 ? $this->currentColumn : 0) + strlen($lastLine);
-        }
-
-        echo $str;
     }
 }

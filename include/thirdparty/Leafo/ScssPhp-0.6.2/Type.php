@@ -2,7 +2,7 @@
 /**
  * SCSSPHP
  *
- * @copyright 2012-2018 Leaf Corcoran
+ * @copyright 2012-2015 Leaf Corcoran
  *
  * @license http://opensource.org/licenses/MIT MIT
  *
@@ -44,7 +44,7 @@ class Type
     const T_INCLUDE = 'include';
     const T_INTERPOLATE = 'interpolate';
     const T_INTERPOLATED = 'interpolated';
-    const T_KEYWORD = 'keyword';
+    //const T_KEYWORD = 'keyword';
     const T_LIST = 'list';
     const T_MAP = 'map';
     const T_MEDIA = 'media';

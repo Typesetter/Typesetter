@@ -2,7 +2,7 @@
 /**
  * SCSSPHP
  *
- * @copyright 2012-2018 Leaf Corcoran
+ * @copyright 2012-2015 Leaf Corcoran
  *
  * @license http://opensource.org/licenses/MIT MIT
  *
@@ -53,10 +53,10 @@ class Compressed extends Formatter
             }
         }
 
-        $this->write($inner . implode($glue, $block->lines));
+        echo $inner . implode($glue, $block->lines);
 
         if (! empty($block->children)) {
-            $this->write($this->break);
+            echo $this->break;
         }
     }
 }

@@ -2,7 +2,7 @@
 /**
  * SCSSPHP
  *
- * @copyright 2012-2018 Leaf Corcoran
+ * @copyright 2012-2015 Leaf Corcoran
  *
  * @license http://opensource.org/licenses/MIT MIT
  *
@@ -12,10 +12,10 @@
 namespace Leafo\ScssPhp\Exception;
 
 /**
- * Parser Exception
+ * Server Exception
  *
- * @author Oleksandr Savchenko <traveltino@gmail.com>
+ * @author Anthon Pang <anthon.pang@gmail.com>
  */
-class ParserException extends \Exception
+class ServerException extends \Exception
 {
 }

@@ -2,7 +2,7 @@
 /**
  * SCSSPHP
  *
- * @copyright 2012-2018 Leaf Corcoran
+ * @copyright 2012-2015 Leaf Corcoran
  *
  * @license http://opensource.org/licenses/MIT MIT
  *
@@ -12,26 +12,16 @@
 namespace Leafo\ScssPhp;
 
 /**
- * Block
+ * Base node
  *
  * @author Anthon Pang <anthon.pang@gmail.com>
  */
-class Block
+abstract class Node
 {
     /**
      * @var string
      */
     public $type;
-
-    /**
-     * @var \Leafo\ScssPhp\Block
-     */
-    public $parent;
-
-    /**
-     * @var string
-     */
-    public $sourceName;
 
     /**
      * @var integer
@@ -47,19 +37,4 @@ class Block
      * @var integer
      */
     public $sourceColumn;
-
-    /**
-     * @var array
-     */
-    public $selectors;
-
-    /**
-     * @var array
-     */
-    public $comments;
-
-    /**
-     * @var array
-     */
-    public $children;
 }

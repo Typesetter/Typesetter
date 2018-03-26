@@ -60,8 +60,12 @@ namespace gp{
 
 
 		public function __construct($title, $type){
+			global $config, $languages;
+
 			$this->requested	= $title;
 			$this->title		= $title;
+			$this->lang			= $config['language'];
+			$this->language		= $languages[$this->lang];
 
 			$this->head			.= '<link rel="canonical" href="'.\gp\tool::GetUrl($title).'" />'."\n";
 		}

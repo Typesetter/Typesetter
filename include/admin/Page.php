@@ -18,15 +18,15 @@ class Page extends \gp\Page{
 
 
 	public function __construct($title){
-		global $langmessage;
-
+		global $langmessage, $config, $languages;
 
 		$this->requested	= str_replace(' ','_',$title);
 		$this->label		= $langmessage['administration'];
 		$this->scripts		= \gp\admin\Tools::AdminScripts();
 		$this->script_keys	= array_keys($this->scripts);
 		$this->script_keys	= array_combine( str_replace('_','/',$this->script_keys), $this->script_keys);
-
+		$this->lang			= $config['language'];
+		$this->language		= $languages[$this->lang];
 
 		$this->head .= "\n".'<meta name="robots" content="noindex,nofollow" />';
 		@header( 'X-Frame-Options: SAMEORIGIN' );

@@ -192,7 +192,7 @@ namespace gp\tool{
 
 			self::StandardHeaders();
 
-			echo '<!DOCTYPE html><html><head><meta charset="UTF-8" />';
+			echo '<!DOCTYPE html><html lang="' . $page->lang . '"><head><meta charset="UTF-8" />';
 			self::getHead();
 			echo '</head>';
 
@@ -214,7 +214,7 @@ namespace gp\tool{
 
 			self::StandardHeaders();
 
-			echo '<!DOCTYPE html><html class="admin_body"><head><meta charset="UTF-8" />';
+			echo '<!DOCTYPE html><html class="admin_body" lang="' . $page->lang . '"><head><meta charset="UTF-8" />';
 			self::getHead();
 			echo '</head>';
 

@@ -1,11 +1,12 @@
 <?php
 
-global $page;
+global $page, $config;
+$lang = isset($page->lang) ? $page->lang : $config['language'];
 $path = $page->theme_dir.'/drop_down_menu.php';
 include_once($path);
 
 ?><!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $lang; ?>">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />

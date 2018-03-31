@@ -902,7 +902,7 @@ namespace gp{
 				$page->css_user[] = '/include/css/default_gallery.css';
 				self::LoadComponents('dotdotdot');
 				$page->jQueryCode .= "\n".'$(".filetype-gallery .caption").dotdotdot({ watch : "window", callback : function(isTruncated,orgContent){ $(this).data("originalContent",orgContent); } });';
-				// $page->head_script .= "\n".'$(window).load( function(){ $(".filetype-gallery .caption").dotdotdot({ watch : "window", callback : function(isTruncated,orgContent){ $(this).data("originalContent",orgContent); } }); });';
+
 				if( \gp\tool::LoggedIn() ){
 					$page->head_script 	.= "\n".'var gallery_editing_options = { legacy_style : false };';
 					$page->jQueryCode 	.= "\n".'$(document).on("editor_area:loaded", function(){ $(".filetype-gallery .caption").trigger("destroy.dot") });';
@@ -913,12 +913,8 @@ namespace gp{
 			$page->head .= "\n".'<link type="text/css" media="screen" rel="stylesheet" href="'.$css.'" />';
 		}
 
-		/**
-		 * Add js and css elements to the <head> section of a page
-		 *
-		 */
 		public static function AddColorBox(){
-			global $langmessage;
+			global $page, $config, $dataDir;
 			static $init = false;
 
 			if( $init ){
@@ -926,7 +922,23 @@ namespace gp{
 			}
 			$init = true;
 
-			\gp\tool\Output::$inline_vars['colorbox_lang'] = array('previous'=>$langmessage['Previous'],'next'=>$langmessage['Next'],'close'=>$langmessage['Close'],'caption'=>$langmessage['caption'],'current'=>sprintf($langmessage['Image_of'],'{current}','{total}')); //'Start Slideshow'=>'slideshowStart','Stop Slideshow'=>'slideshowStop'
+			// use page->lang for colorbox
+			if( isset($page->lang) 
+				&& $page->lang != $config['language'] 
+				&& file_exists($dataDir . '/include/languages/' . $page->lang . '.main.inc')
+			){
+				include($dataDir . '/include/languages/' . $page->lang . '.main.inc');
+			}else{
+				global $langmessage;
+			}
+
+			\gp\tool\Output::$inline_vars['colorbox_lang'] = array(
+				'previous'	=> $langmessage['Previous'],
+				'next'		=> $langmessage['Next'],
+				'close'		=> $langmessage['Close'],
+				'caption'	=> $langmessage['caption'],
+				'current'	=> sprintf($langmessage['Image_of'],'{current}','{total}')
+			); //'Start Slideshow'=>'slideshowStart','Stop Slideshow'=>'slideshowStop'
 
 			self::LoadComponents( 'colorbox' );
 		}

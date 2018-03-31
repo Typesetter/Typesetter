@@ -14,7 +14,7 @@ html{
 	top:0;
 	z-index:10000; /* to be above full screen editing of ckeditor */
 	background:#eee;
-	font-family: "Segoe UI", "San Francisco", "Helvetica Neue", "DejaVu Sans", "Arial", sans-serif!important;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	-webkit-transition: right 0.5s;
 	-moz-transition: right 0.5s;
 	transition: right 0.5s;
@@ -310,11 +310,11 @@ html{
 .cke_reset_all *:not(.fa), 
 .cke_reset_all a, 
 .cke_reset_all textarea {
-	font-family:"Segoe UI", "San Francisco", "Helvetica Neue", "DejaVu Sans", "Arial", sans-serif!important;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	}
 
 .cke_reset_all textarea.cke_source {
-	font-family:"Consolas", "Menlo", "Andale Mono", "DejaVu Sans Mono", monospace!important;
+	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace !important;
 	min-width:800px;
 	width:100%!important;
 	}

@@ -11,7 +11,7 @@ global $page;
 
 body{
 	margin:5em !important;
-	font-family:"Segoe UI","San Francisco","DejaVu Sans","Helvetica Neue",Arial,sans-serif;
+	font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	background:#444;
 }
 div,p,td,th{

@@ -1189,6 +1189,19 @@ $(function(){
 		});
 	});
 
+	/**
+	 * Configuration -> Settings
+	 * Disable minifyjs when combinejs is unchecked
+	 *
+	 */
+	function CheckCombineJs(){
+		var checked = $('#admincontent_inner input[type="checkbox"][name="combinejs"]').prop("checked");
+		$('#admincontent_inner input[type="checkbox"][name="minifyjs"]').prop("disabled", !checked);
+	}
+
+	$('#admincontent_inner input[type="checkbox"][name="combinejs"]').on('change', CheckCombineJs);
+	CheckCombineJs();
+
 
 });
 

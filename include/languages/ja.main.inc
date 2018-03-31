@@ -282,6 +282,7 @@ $langmessage = array (
 	'resize_images'                  => '画像を自動的にリサイズする',
 	'space_char'                     => 'URLの空白文字',
 	'combinejs'                      => 'JS ファイルをまとめる',
+	'minifyjs'                       => '結合されたJSを縮小する',
 	'Editable Areas'                 => '編集可能領域',
 	'showlogin'                      => 'ログイン リンクを表示する',
 	'showsitemap'                    => 'サイトマップ リンクを表示する',

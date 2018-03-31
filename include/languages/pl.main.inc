@@ -280,6 +280,7 @@ $langmessage = array (
 	'resize_images'                  => 'Auto-Resize Images',
 	'space_char'                     => 'URL Space Character',
 	'combinejs'                      => 'Połącz pliki JS',
+	'minifyjs'                       => 'Minimalizuj połączone JS',
 	'Editable Areas'                 => 'Obaszary edytowalne',
 	'showlogin'                      => 'Pokaż odnośnik logowania',
 	'showsitemap'                    => 'Pokaż odnośnik Mapy Strony',

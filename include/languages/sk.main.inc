@@ -280,6 +280,7 @@ $langmessage = array (
 	'resize_images'                  => 'Automaticky rozšíriť obrázky',
 	'space_char'                     => 'URL Space Character',
 	'combinejs'                      => 'Skombinovať JS súbory',
+	'minifyjs'                       => 'Znížiť kombináciu JS',
 	'Editable Areas'                 => 'Editovateľné plochy',
 	'showlogin'                      => 'Ukázať linku pre prihlásenie',
 	'showsitemap'                    => 'Ukázať linku mapy stránok',

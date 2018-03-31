@@ -280,6 +280,7 @@ $langmessage = array (
 	'resize_images'                  => 'Outomaties Grootte aanpassen van Beelde',
 	'space_char'                     => 'URL Space Character',
 	'combinejs'                      => 'Kombineer JS-lêers',
+	'minifyjs'                       => 'Verminder die gekombineerde JS',
 	'Editable Areas'                 => 'Bewerkbaar Areas',
 	'showlogin'                      => 'Wys Aanmelding Skakel',
 	'showsitemap'                    => 'Wys Site Map Skakel',

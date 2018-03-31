@@ -52,15 +52,21 @@ class Tools{
 		self::BooleanForm('combinejs',true);
 		echo '</td></tr>';
 
+		//minifyjs
+		echo '<tr><td>';
+		echo $langmessage['minifyjs'];
+		echo '</td><td>';
+		self::BooleanForm('minifyjs',false);
+		echo '</td></tr>';
 
-		//combinejs
+		//combinecss
 		echo '<tr><td>';
 		echo $langmessage['combinecss'];
 		echo '</td><td>';
 		self::BooleanForm('combinecss',true);
 		echo '</td></tr>';
 
-		//combinejs
+		//etag_headers
 		echo '<tr><td>';
 		echo $langmessage['etag_headers'];
 		echo '</td><td>';
@@ -201,6 +207,7 @@ class Tools{
 		$_config['gpuniq']					= \gp\tool::RandomString(20);
 		$_config['combinecss']				= self::BooleanValue('combinecss',true);
 		$_config['combinejs']				= self::BooleanValue('combinejs',true);
+		$_config['minifyjs']				= self::BooleanValue('minifyjs',false);
 		$_config['etag_headers'] 			= self::BooleanValue('etag_headers',true);
 		$_config['gallery_legacy_style']	= false;
 		$_config['language']				= 'en';

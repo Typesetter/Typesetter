@@ -280,6 +280,7 @@ $langmessage = array (
 	'resize_images'                  => '自動縮放圖像',
 	'space_char'                     => 'URL Space Character',
 	'combinejs'                      => '合併 JS 檔',
+	'minifyjs'                       => '缩小组合的JS',
 	'Editable Areas'                 => '可編輯區',
 	'showlogin'                      => '顯示登入連結',
 	'showsitemap'                    => '顯示網站地圖連結',

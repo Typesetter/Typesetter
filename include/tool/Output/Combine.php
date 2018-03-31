@@ -4,6 +4,7 @@ namespace gp\tool\Output;
 
 defined('is_running') or die('Not an entry point...');
 
+includeFile('thirdparty/JShrink/autoload.php');
 
 class Combine{
 
@@ -603,9 +604,7 @@ class Combine{
 	 *
 	 */
 	public static function GenerateFile($files,$type){
-		global $dataDir;
-		//include JShrink js minifier
-		includeFile('thirdparty/JShrink/Minifier.php');
+		global $dataDir, $config;
 
 		//get etag
 		$modified = $content_length = 0;
@@ -664,8 +663,42 @@ class Combine{
 				echo ";\n";
 			}
 			$combined_content = ob_get_clean();
-			//compress js
-			$combined_content = \JShrink\Minifier::minify($combined_content, array('flaggedComments' => false));
+
+			//minify js
+			if( $config['minifyjs'] ){
+
+				$minify_stats = array( 
+					'date' 								=> date('Y-m-d H:i'), 
+					'errors' 							=> 'none',
+				);
+				$get_peak_mem 							= function_exists('memory_get_peak_usage');
+
+				$minify_stats['mem_before'] 			= $get_peak_mem ? memory_get_peak_usage(true) : false;
+				$minify_stats['size_before'] 			= strlen($combined_content);
+
+				try{
+					$combined_content 					= \JShrink\Minifier::minify($combined_content, array('flaggedComments' => false));
+				}catch( Exception $e ){
+					$minify_stats['errors'] 			= $e->getMessage();
+				}
+
+				$minify_stats['mem_after'] 				= $get_peak_mem ? memory_get_peak_usage(true) : false;
+				$minify_stats['size_after'] 			= strlen($combined_content);
+
+				$minify_stats['compression_rate'] 		= (round((1 - $minify_stats['size_after'] / $minify_stats['size_before']) * 1000) / 10) . '%';
+
+				$minify_stats['size_before'] 			= \gp\admin\Tools::FormatBytes($minify_stats['size_before']);
+				$minify_stats['size_after'] 			= \gp\admin\Tools::FormatBytes($minify_stats['size_after']);
+
+				if( $get_peak_mem ){
+					$minify_stats['allocated_memory'] 	= \gp\admin\Tools::FormatBytes( $minify_stats['mem_after'] - $minify_stats['mem_before'] );
+				}else{
+					$minify_stats['allocated_memory'] 	= 'not available';
+				}
+				unset($minify_stats['mem_before'], $minify_stats['mem_after']);
+
+				$combined_content 						= 'var minify_js_stats=' . json_encode($minify_stats) . ';' . $combined_content;
+			}
 
 		}else{
 

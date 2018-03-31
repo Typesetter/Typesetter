@@ -60,6 +60,7 @@ class Configuration extends \gp\special\Base{
 						'HTML_Tidy'					=> '',
 						'Report_Errors'				=> 'boolean',
 						'combinejs'					=> 'boolean',
+						'minifyjs'					=> 'boolean',
 						'combinecss'				=> 'boolean',
 						'etag_headers'				=> 'boolean',
 						'space_char'				=> array('_'=>'Undersorce "_"','-'=>'Dash "-"'),

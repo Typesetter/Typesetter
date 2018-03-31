@@ -281,6 +281,7 @@ $langmessage = array (
 	'resize_images'                  => 'Muuda automaatselt piltide mõõtmed',
 	'space_char'                     => 'URL-i tühik',
 	'combinejs'                      => 'Kombineeri JS failid',
+	'minifyjs'                       => 'Vähendage kombineeritud JS-i',
 	'Editable Areas'                 => 'Redigeeritavad alad',
 	'showlogin'                      => 'Näita sisselogimise link',
 	'showsitemap'                    => 'Näita sisukaardi link',

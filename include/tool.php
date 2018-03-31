@@ -958,6 +958,7 @@ namespace gp{
 					'gallery_legacy_style'		=> true,
 					'combinecss'				=> true,
 					'combinejs'					=> true,
+					'minifyjs'					=> false,			//5.1.1
 					'etag_headers'				=> true,
 					'customlang'				=> array(),
 					'showgplink'				=> true,

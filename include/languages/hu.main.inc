@@ -280,6 +280,7 @@ $langmessage = array (
 	'resize_images'                  => 'Képek automatikus átméretezése',
 	'space_char'                     => 'URL Space Character',
 	'combinejs'                      => 'JS állományok egyesítése',
+	'minifyjs'                       => 'Minify az összesített JS',
 	'Editable Areas'                 => 'Szerkeszthető területek',
 	'showlogin'                      => 'Jelenjen meg a "Bejelentkezés" hivatkozás',
 	'showsitemap'                    => 'Jelenjen meg az "Oldaltérkép" hivatkozás',

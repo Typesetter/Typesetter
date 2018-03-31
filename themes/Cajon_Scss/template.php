@@ -1,12 +1,18 @@
-<?php 
-/* Theme 'Cajón Scss' 3.3.6 */
+<?php
 
-global $page, $theme_cajon_config; 
+global $page, $config, $theme_cajon_config;
 include_once($page->theme_dir . '/assets/php/functions.php');
 
+/* If you are using Multi-Language Manager 1.2.3+
+ * and want to use localized $langmessage values in the template, 
+ * uncomment the following line */
+// common::GetLangFile('main.inc', $lang);
 
-// THEME INSTALLATION HELPER
-// custom $theme_cajon_config will be replaced via GetHead() plugin hook once the theme is installed.
+/* 
+ * THEME INSTALLATION HELPER
+ * custom $theme_cajon_config will be replaced via 
+ * GetHead() hook once the theme is installed.
+ */
 $default_logo_url = dirname($page->theme_path) . '/assets/img/default_logo.png';
 $theme_cajon_config = array(
   'logo_img_url'        =>  $default_logo_url,
@@ -21,7 +27,7 @@ $theme_cajon_config = array(
 
 
 ?><!DOCTYPE html>
-<html lang="<?php echo getPageLanguage(); ?>">
+<html lang="<?php echo $lang; ?>">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -55,7 +61,6 @@ $theme_cajon_config = array(
           <span class="icon-bar"></span>
         </button>
         <?php
-          global $config;
           $show_logo_image = !empty($theme_cajon_config['logo_img_url']);
           if( $show_logo_image ){
             $href = \gp\tool::GetUrl('');

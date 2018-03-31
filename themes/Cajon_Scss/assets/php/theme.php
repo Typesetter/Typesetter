@@ -17,7 +17,6 @@ class ThemeCajon{
     $page->css_user[] = $addonRelativeCode . '/addons/CajonParallax/CajonParallax.css';
     $page->head_js[]  = $addonRelativeCode . '/addons/CajonParallax/CajonParallax.js';
     $page->head_js[]  = $addonRelativeCode . '/addons/CajonParallax/jquery.scrollspeed/jQuery.scrollSpeed.js';
-
   }
 
 

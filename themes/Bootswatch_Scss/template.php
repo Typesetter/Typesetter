@@ -1,12 +1,18 @@
 <?php
 
-global $page;
+global $page, $config;
 $path = $page->theme_dir.'/drop_down_menu.php';
 include_once($path);
 
+$lang = isset($page->lang) ? $page->lang : $config['language'];
+
+/* If you are using Multi-Language Manager 1.2.3+
+ * and want to use localized $langmessage values in the template, 
+ * uncomment the following line */
+// common::GetLangFile('main.inc', $lang);
 
 ?><!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $lang; ?>">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

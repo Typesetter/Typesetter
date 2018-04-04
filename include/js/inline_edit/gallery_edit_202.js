@@ -114,7 +114,7 @@
 			var args = {
 				images: [],
 				captions: [],
-				attributes: []
+				attributes: {}
 			};
 
 
@@ -133,7 +133,7 @@
 
 			// attributes
 			section_object.attributes = section_object.attributes || {};
-			args.attributes['class'] = section_object.attributes['class'] || '';
+			args.attributes.class = section_object.attributes['class'] || '';
 
 			//get content
 			var data = edit_div.clone();

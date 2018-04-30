@@ -104,6 +104,9 @@ class Ajax extends \gp\admin\Menu{
 			case 'HomepageSave':
 				$this->HomepageSave();
 			return;
+			case 'HomepageAuto':
+				$this->HomepageAuto();
+			return;
 		}
 
 		parent::RunScript();
@@ -1292,6 +1295,29 @@ class Ajax extends \gp\admin\Menu{
 
 
 	/**
+	 * Set homepage to auto mode
+	 * homepage will be first item in main menu
+	 *
+	 */
+	public function HomepageAuto(){ 
+		global $config;
+
+		$config['homepath_auto'] = true;
+		if( !\gp\admin\Tools::SaveConfig(true) ){
+			return;
+		}
+
+		//update the display
+		ob_start();
+		$this->HomepageDisplay();
+		$content = ob_get_clean();
+
+		$this->page->ajaxReplace[] = array('inner', '.homepage_setting', $content);
+
+	}
+
+
+	/**
 	 * Save the posted page as the homepage
 	 *
 	 */
@@ -1317,8 +1343,10 @@ class Ajax extends \gp\admin\Menu{
 			}
 		}
 
-		$config['homepath_key'] = $homepage_key;
-		$config['homepath']		= \gp\tool::IndexToTitle($config['homepath_key']);
+		$config['homepath_key']		= $homepage_key;
+		$config['homepath']			= \gp\tool::IndexToTitle($config['homepath_key']);
+		// custom homepage from post --> disable auto mode
+		$config['homepath_auto']	= false;
 		if( !\gp\admin\Tools::SaveConfig(true) ){
 			return;
 		}

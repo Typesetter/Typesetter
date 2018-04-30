@@ -960,34 +960,35 @@ namespace gp{
 
 			//make sure defaults are set
 			$config += array(
-					'maximgarea'				=> '2073600',
-					'preserve_icc_profiles'		=> true,		//5.1
-					'preserve_image_metadata'	=> true,		//5.1
-					'maxthumbsize'				=> '300',
-					'maxthumbheight'			=> '',			//5.1
-					'check_uploads'				=> false,
-					'colorbox_style'			=> 'example1',
-					'gallery_legacy_style'		=> true,
-					'combinecss'				=> true,
-					'combinejs'					=> true,
-					'minifyjs'					=> false,			//5.1.1
-					'etag_headers'				=> true,
-					'customlang'				=> array(),
-					'showgplink'				=> true,
-					'showsitemap'				=> true,
-					'showlogin'					=> true,
-					'auto_redir'				=> 90,			//2.5
-					'history_limit'				=> min(gp_backup_limit,30),
-					'resize_images'				=> true,		//3.5
-					'addons'					=> array(),
-					'themes'					=> array(),
-					'gadgets'					=> array(),
-					'passhash'					=> 'sha1',
-					'hooks'						=> array(),
-					'space_char'				=> '-',			//4.6
-					'cdn'						=> '',
-					'thumbskeepaspect'			=> false,
-					);
+				'maximgarea'				=> '2073600',
+				'preserve_icc_profiles'		=> true,		//5.1
+				'preserve_image_metadata'	=> true,		//5.1
+				'maxthumbsize'				=> '300',
+				'maxthumbheight'			=> '',			//5.1
+				'check_uploads'				=> false,
+				'colorbox_style'			=> 'example1',
+				'gallery_legacy_style'		=> true,
+				'combinecss'				=> true,
+				'combinejs'					=> true,
+				'minifyjs'					=> false,		//5.1.1
+				'etag_headers'				=> true,
+				'customlang'				=> array(),
+				'showgplink'				=> true,
+				'showsitemap'				=> true,
+				'showlogin'					=> true,
+				'auto_redir'				=> 90,			//2.5
+				'history_limit'				=> min(gp_backup_limit,30),
+				'resize_images'				=> true,		//3.5
+				'addons'					=> array(),
+				'themes'					=> array(),
+				'gadgets'					=> array(),
+				'passhash'					=> 'sha1',
+				'hooks'						=> array(),
+				'space_char'				=> '-',			//4.6
+				'cdn'						=> '',
+				'thumbskeepaspect'			=> false,
+				'homepath_auto'				=> true,		//5.1.1
+			);
 
 
 			//cdn settings

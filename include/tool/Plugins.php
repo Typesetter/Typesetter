@@ -58,7 +58,10 @@ namespace gp\tool{
 			}
 
 			if( $path !== false ){
-				$page->head			.= "\n".'<link rel="stylesheet" type="text/css" href="'.\gp\tool::GetDir($path).'"/>';
+//				$page->head			.= "\n".'<link rel="stylesheet" type="text/css" href="'.\gp\tool::GetDir($path).'"/>';
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+				$page->head			.= "\n".'<link rel="preload" as="style" type="text/css" href="'.\gp\tool::GetDir($path).'" onload="this.rel=\'stylesheet\'"/>';
+//!!!!!!!!^^^^^^^^^^^^^^^^ asinchronous css loading
 			}
 
 			return $path;

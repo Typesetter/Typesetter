@@ -573,6 +573,15 @@ class Combine{
 									),
 
 
+			// FontAwesome5
+			'fontawesome5'			=> array(
+									'file'			=> '/include/thirdparty/fontawesome5/css/fontawesome-all.min.css',
+									'label'			=> 'Font Awesome 5',
+									'cdn'			=> array(
+														'FontAwesome'	=> '//use.fontawesome.com/releases/v5.0.9/css/all.css',
+														),
+									),
+
 			// Colorbox
 			'colorbox'	=> array(
 									'file'			=> '/include/thirdparty/colorbox139/colorbox/jquery.colorbox.js',

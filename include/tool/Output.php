@@ -1800,7 +1800,10 @@ namespace gp\tool{
 
 					$html = "\n".'<script type="text/javascript" src="%s"></script>';
 					if( $type == 'css' ){
-						$html = "\n".'<link type="text/css" href="%s" rel="stylesheet"/>';
+//						$html = "\n".'<link type="text/css" href="%s" rel="stylesheet"/>';
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+						$html = "\n".'<link rel="preload" as="style" type="text/css" href="%s" onload="this.rel=\'stylesheet\'"/>';
+//!!!!!!!!^^^^^^^^^^^^^^^^ asinchronous css loading
 					}
 
 					\gp\tool\Output\Combine::CheckFile($file);
@@ -1815,7 +1818,10 @@ namespace gp\tool{
 
 			$html = "\n".'<script type="text/javascript" src="%s"></script>';
 			if( $type == 'css' ){
-				$html = "\n".'<link rel="stylesheet" type="text/css" href="%s"/>';
+//				$html = "\n".'<link rel="stylesheet" type="text/css" href="%s"/>';
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+				$html = "\n".'<link rel="preload" as="style" type="text/css" href="%s" onload="this.rel=\'stylesheet\'"/>';
+//!!!!!!!!^^^^^^^^^^^^^^^^ asinchronous css loading
 			}
 
 			//create combine request

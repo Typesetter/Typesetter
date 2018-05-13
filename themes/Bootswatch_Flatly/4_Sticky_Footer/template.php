@@ -1,5 +1,10 @@
-<!DOCTYPE html>
-<html lang="<?php echo $lang; ?>">
+<?php
+
+global $page, $config;
+$lang = isset($page->lang) ? $page->lang : $config['language'];
+
+?><!DOCTYPE html>
+<html lang="<?php echo $lang; ?>" class="bootstrap-3">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,8 +24,8 @@
 
 	<body>
 
-	    <!-- Wrap all page content here -->
-	    <div id="wrap">
+		<!-- Wrap all page content here -->
+		<div id="wrap">
 			<div class="navbar navbar-default navbar-fixed-top gp-fixed-adjust">
 				<div class="container">
 					<div class="navbar-header">
@@ -30,7 +35,6 @@
 							<span class="icon-bar"></span>
 						</button>
 						<?php
-						global $config;
 						echo common::Link('',$config['title'],'','class="navbar-brand"');
 						?>
 					</div>

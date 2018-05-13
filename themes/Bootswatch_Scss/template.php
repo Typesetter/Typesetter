@@ -12,7 +12,7 @@ $lang = isset($page->lang) ? $page->lang : $config['language'];
 // common::GetLangFile('main.inc', $lang);
 
 ?><!DOCTYPE html>
-<html lang="<?php echo $lang; ?>">
+<html lang="<?php echo $lang; ?>" class="bootstrap-3">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -46,7 +46,6 @@ $lang = isset($page->lang) ? $page->lang : $config['language'];
 					<span class="icon-bar"></span>
 				</button>
 				<?php
-				global $config;
 				echo common::Link('',$config['title'],'','class="navbar-brand"');
 				?>
 			</div>

@@ -2,6 +2,7 @@
 
 global $page, $config, $theme_cajon_config;
 include_once($page->theme_dir . '/assets/php/functions.php');
+$lang = isset($page->lang) ? $page->lang : $config['language'];
 
 /* If you are using Multi-Language Manager 1.2.3+
  * and want to use localized $langmessage values in the template, 
@@ -27,7 +28,7 @@ $theme_cajon_config = array(
 
 
 ?><!DOCTYPE html>
-<html lang="<?php echo $lang; ?>">
+<html lang="<?php echo $lang; ?>" class="bootstrap-3">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

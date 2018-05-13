@@ -1,5 +1,10 @@
-<!DOCTYPE html>
-<html lang="<?php echo $lang; ?>">
+<?php
+
+global $page, $config;
+$lang = isset($page->lang) ? $page->lang : $config['language'];
+
+?><!DOCTYPE html>
+<html lang="<?php echo $lang; ?>" class="bootstrap-3">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">

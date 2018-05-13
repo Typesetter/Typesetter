@@ -12,7 +12,7 @@ $lang = isset($page->lang) ? $page->lang : $config['language'];
 // common::GetLangFile('main.inc', $lang);
 
 ?><!DOCTYPE html>
-<html lang="<?php echo $lang; ?>">
+<html lang="<?php echo $lang; ?>" class="bootstrap-4">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -38,12 +38,9 @@ $lang = isset($page->lang) ? $page->lang : $config['language'];
 
     <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary gp-fixed-adjust">
       <div class="container">
-
         <?php
-          global $config;
           echo common::Link('',$config['title'],'','class="navbar-brand"');
         ?>
-
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>

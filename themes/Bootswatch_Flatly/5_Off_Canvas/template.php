@@ -1,11 +1,15 @@
-<!DOCTYPE html>
-<html lang="<?php echo $lang; ?>">
+<?php
+
+global $page, $config;
+$lang = isset($page->lang) ? $page->lang : $config['language'];
+
+?><!DOCTYPE html>
+<html lang="<?php echo $lang; ?>" class="bootstrap-3">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<?php
-		global $page;
 		$page->head_js[] = rawurldecode($page->theme_path).'/script.js';
 
 		common::LoadComponents( 'bootstrap3-js' );
@@ -31,7 +35,6 @@
 						<span class="icon-bar"></span>
 					</button>
 					<?php
-					global $config;
 					echo common::Link('',$config['title'],'','class="navbar-brand"');
 					?>
 				</div>

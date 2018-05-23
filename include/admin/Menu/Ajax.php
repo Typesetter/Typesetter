@@ -155,10 +155,13 @@ class Ajax extends \gp\admin\Menu{
 		echo '<tr><th colspan="2">'.$langmessage['options'].'</th></tr>';
 
 		//title
+		$new_title = htmlspecialchars($_REQUEST['title']);
+		// prevent code injections
+		$new_title = str_replace(array('=', '/', '{', '}', ':', ',', ';'), '', $new_title);
 		echo '<tr><td>';
 		echo $langmessage['label'];
 		echo '</td><td>';
-		echo '<input type="text" name="title" maxlength="100" size="50" value="'.htmlspecialchars($_REQUEST['title']).'" class="gpinput full_width" required/>';
+		echo '<input type="text" name="title" maxlength="100" size="50" value="'. $new_title .'" class="gpinput full_width" required/>';
 		echo '</td></tr>';
 
 		//copy

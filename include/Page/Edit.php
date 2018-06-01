@@ -1081,7 +1081,7 @@ class Edit extends \gp\Page{
 		if( $is_wrapper && !$wrapper_data ){
 			// add default wrapper data if undefined
 			$wrapper_data = array(
-				'gp_label' => 'Section Wrapper',
+				'gp_label' => $langmessage['Section Wrapper'],
 				'gp_color' => '#555',
 				'attributes' => array(
 					'class' => 'gpRow',

@@ -716,6 +716,7 @@ namespace gp\tool{
 				break;
 
 				case 'gallery':
+					$section['gp_label']				= $langmessage['Image Gallery'];
 					$section['content']		= '<ul class="gp_gallery"><li class="gp_to_remove">'
 											.'<a class="gallery_gallery" data-cmd="gallery" href="'.\gp\tool::GetDir('/include/imgs/default_image.jpg').'" data-arg="gallery_gallery">'
 											.'<img alt="default image" src="'.\gp\tool::GetDir('/include/imgs/default_thumb.jpg').'" />'
@@ -725,13 +726,14 @@ namespace gp\tool{
 				break;
 
 				case 'wrapper_section':
+					$section['gp_label']				= $langmessage['Section Wrapper'];
 					$section['content']					= '';
-					$section['gp_label']				= 'Section Wrapper';
 					$section['gp_color']				= '#555';
 					$section['contains_sections']		= 0;
 				break;
 
 				case 'image':
+					$section['gp_label']				= $langmessage['Image'];
 					$section['nodeName']				= 'img';
 					$section['attributes']['src']		= '/include/imgs/default_image.jpg';
 					$section['attributes']['width']		= '400px';
@@ -740,6 +742,7 @@ namespace gp\tool{
 
 				case 'text':
 				default:
+					$section['gp_label']				= $langmessage['editable_text'];
 					$section['content']					= '<div><h2>'.strip_tags($heading).'</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div>';
 				break;
 			}

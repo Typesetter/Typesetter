@@ -720,8 +720,8 @@ namespace gp\tool{
 					$section['content']		= '<ul class="gp_gallery"><li class="gp_to_remove">'
 											.'<a class="gallery_gallery" data-cmd="gallery" href="'.\gp\tool::GetDir('/include/imgs/default_image.jpg').'" data-arg="gallery_gallery">'
 											.'<img alt="default image" src="'.\gp\tool::GetDir('/include/imgs/default_thumb.jpg').'" />'
-											.'<span class="caption">Image caption</span>'
 											.'</a>'
+											.'<span class="caption">Image caption</span>'
 											.'</li></ul>';
 				break;
 

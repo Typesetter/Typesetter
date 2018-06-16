@@ -534,4 +534,7 @@ continue using your old password.</p>',
 	'Uninstall Prep Description'     => '<p>For some installations, you won\'t be able to delete Typesetter\'s data files from your server untill the access permissions have been changed. This script will change file permissions for files and folders in the /data directory to 0777.<br/><em>You should not continue unless you plan on deleting all Typesetter files from your server.</em></p>',
 	'Uninstall Restore Heading'      => '<h2>Change Your Mind?</h2>',
 	'Uninstall Restore Description'  => 'You can restore the file permissions for added security here:',
+	'Empty Cache'                    => 'Empty Cache',
+	'Touched'                        => 'Touched',
+	'Section Attributes'             => 'Section Attributes',
 );

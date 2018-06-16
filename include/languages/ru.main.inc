@@ -528,4 +528,7 @@ $langmessage = array (
 	'Uninstall Prep Description'     => '<p>В некоторых случаях вы не сможете удалить файлы данных Typesetter с вашего сервера до тех пор, пока не будут изменены права доступа. Этот скрипт изменит права доступа к файлам и папкам в директории /data на 0777.<br/><em>Вы не должны продолжать дальше, если не планируете удалить все файлы Typesetter с вашего сервера.</em></p>',
 	'Uninstall Restore Heading'      => '<h2>Передумали?</h2>',
 	'Uninstall Restore Description'  => 'Для дополнительной безопасности вы можете восстановить права доступа к файлам здесь:',
+	'Empty Cache'                    => 'Empty Cache',
+	'Touched'                        => 'Touched',
+	'Section Attributes'             => 'Section Attributes',
 );

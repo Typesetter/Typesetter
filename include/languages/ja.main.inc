@@ -521,4 +521,13 @@ $langmessage = array (
 	'_characters'                    => '%s 文字',
 	'Theme_default_sizes'            => '既定のサイズ',
 	'context menu'                   => 'ブラウザのコンテキストメニュー',
+	'Name Based Menu Classes'        => 'Name Based Menu Classes',
+	'Ordered Menu Classes'           => 'Ordered Menu Classes',
+	'Manage Classes Description'     => 'CSS class names you set here will be easily selectable in the Section Attributes dialog.<ul><li>Single class names (like <em>gpRow</em>) will show as checkboxes</li><li>Multiple, space separated class names (like <em>gpCol-1 gpCol-2 gpCol-3 […]</em>) will show as checkable dropdown list.</li>The list is drag\'n\'drop sortable.</li></ul>', 
+	'Load the Bootstrap Preset'      => 'Load the Bootstrap Preset',
+	'Load the Default Preset'        => 'Load the Default Preset',
+	'Uninstall Prep Heading'         => '<h2>Uninstall Preparation</h2>',
+	'Uninstall Prep Description'     => '<p>For some installations, you won\'t be able to delete Typesetter\'s data files from your server untill the access permissions have been changed. This script will change file permissions for files and folders in the /data directory to 0777.<br/><em>You should not continue unless you plan on deleting all Typesetter files from your server.</em></p>',
+	'Uninstall Restore Heading'      => '<h2>Change Your Mind?</h2>',
+	'Uninstall Restore Description'  => 'You can restore the file permissions for added security here:',
 );

@@ -1856,6 +1856,24 @@ body #addon_about{
 	background: #f9f9f9;
 	border-radius: 3px;
 	margin-bottom: 20px;
+	}
+
+#gp_admin_html .classes-load-presets{
+	margin-top: 20px;
+			
+	ul{
+		margin:0.5em 0;
+		padding-left: 1.25em;
+
+		li{
+			list-style: circle outside none;
+		}
+	}
+
+	form{
+		border-top: 1px solid #ddd;
+		padding-top: 20px;
+	}
 }
 
 

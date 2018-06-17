@@ -22,22 +22,24 @@ class Uninstall{
 		}
 
 
-		echo '<h2>Uninstall Preparation</h2>';
+		echo '<h2>' . $langmessage['Uninstall Prep Heading'] . '</h2>';
 		echo '<form class="renameform" action="'.\gp\tool::GetUrl('Admin/Uninstall').'" method="post">';
 		echo '<p>';
-		echo 'For some installations, you won\'t be able to delete '.CMS_NAME.'\'s data files from your server untill the access permissions have been changed. ';
-		echo ' This script will change file permissions for files and folders in the /data directory to 0777.';
-		echo ' <br/><em>You should not continue unless you plan on deleting all '.CMS_NAME.' files from your server.</em>';
+		echo $langmessage['Uninstall Prep Description'];
+		//echo 'For some installations, you won\'t be able to delete '.CMS_NAME.'\'s data files from your server untill the access permissions have been changed. ';
+		//echo ' This script will change file permissions for files and folders in the /data directory to 0777.';
+		//echo ' <br/><em>You should not continue unless you plan on deleting all '.CMS_NAME.' files from your server.</em>';
 		echo '<input type="hidden" name="cmd" value="continue" />';
 		echo ' <input type="submit" name="aaa" value="'.$langmessage['continue'].'" class="gpsubmit"/>';
 		//echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" />';
 		echo '</p>';
 		echo '</form>';
 
-		echo '<h2>Change Your Mind?</h2>';
+		echo '<h2>' . $langmessage['Uninstall Restore Heading'] . '</h2>';
 		echo '<form class="renameform" action="'.\gp\tool::GetUrl('Admin/Uninstall').'" method="post">';
-		echo 'You can restore the file permissions for added security here: ';
-		echo '<input type="hidden" name="cmd" value="restore" />';
+		echo $langmessage['Uninstall Restore Description'];
+		// echo 'You can restore the file permissions for added security here: ';
+		echo ' <input type="hidden" name="cmd" value="restore" />';
 		echo '<input type="submit" name="aaa" value="'.$langmessage['restore'].'" class="gpsubmit"/>';
 		echo '</form>';
 

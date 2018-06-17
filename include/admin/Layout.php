@@ -1498,8 +1498,8 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 		echo '<input type="hidden" name="menu_css_ordered" value="'.$value.'" />';
 		echo '<label>';
-		echo '<input type="checkbox" name="none" value="" '.$checked.' class="gpajax" />';
-		echo ' Name Based Menu Classes';
+		echo '<input type="checkbox" name="none" value="" '.$checked.' class="gpajax" /> ';
+		echo $langmessage['Name Based Menu Classes'];
 		echo '</label>';
 		echo '</form>';
 		echo '</li>';
@@ -1517,8 +1517,8 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 		echo '<input type="hidden" name="menu_css_indexed" value="'.$value.'" />';
 		echo '<label>';
-		echo '<input type="checkbox" name="none" value="" '.$checked.' class="gpajax" />';
-		echo ' Ordered Menu Classes';
+		echo '<input type="checkbox" name="none" value="" '.$checked.' class="gpajax" /> ';
+		echo $langmessage['Ordered Menu Classes'];
 		echo '</label>';
 		echo '</form>';
 		echo '</li>';

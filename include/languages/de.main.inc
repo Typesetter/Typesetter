@@ -531,4 +531,5 @@ $langmessage = array (
 	'Empty Cache'                    => 'Zwischenspeicher leeren',
 	'Touched'                        => 'Geändert',
 	'Section Attributes'             => 'Abschnitts Attribute',
+	'Attribute'                      => 'Attribut',
 );

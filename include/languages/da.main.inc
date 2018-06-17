@@ -532,4 +532,5 @@ $langmessage = array (
 	'Empty Cache'                    => 'Empty Cache',
 	'Touched'                        => 'Touched',
 	'Section Attributes'             => 'Section Attributes',
+	'Attribute'                      => 'Attribute',
 );

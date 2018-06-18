@@ -83,7 +83,7 @@ $lang = isset($page->lang) ? $page->lang : $config['language'];
       </div><!-- /.container-->
     </div><!-- /.main-content -->
 
-    <footer class="main-footer pt-5 pb-5">
+    <footer class="main-footer pt-5 pb-5 mt-3">
       <div class="container">
         <div class="row">
           <div class="col-sm-6 col-lg-3 footer-column footer-column-1">

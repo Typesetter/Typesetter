@@ -203,4 +203,3 @@ var Popover = function ($) {
 
   return Popover;
 }($);
-//# sourceMappingURL=popover.js.map

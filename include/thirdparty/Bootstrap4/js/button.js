@@ -164,4 +164,3 @@ var Button = function ($) {
 
   return Button;
 }($);
-//# sourceMappingURL=button.js.map

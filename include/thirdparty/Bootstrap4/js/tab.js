@@ -248,4 +248,3 @@ var Tab = function ($) {
 
   return Tab;
 }($);
-//# sourceMappingURL=tab.js.map

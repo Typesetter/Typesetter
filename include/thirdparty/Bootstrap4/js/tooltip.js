@@ -671,4 +671,3 @@ var Tooltip = function ($) {
 
   return Tooltip;
 }($, Popper);
-//# sourceMappingURL=tooltip.js.map

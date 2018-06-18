@@ -1,6 +1,7 @@
 @import 'include/thirdparty/Bootstrap4/scss/_bootstrap.scss';
 // Spacelab 4.0.0
 // Bootswatch
+// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.1/migration/
 
 
 // Variables ===================================================================
@@ -14,18 +15,13 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400italic,700
   border: 1px solid darken($color, 10%);
 }
 
-$navbar-height: ($nav-link-height + $navbar-padding-y * 2);
 
-body {
-  padding-top: ($navbar-height + 2rem);
-}
+// Import Common Styles =========================================================
+
+@import '../_common/common_style.scss';
+
 
 // Navbar =======================================================================
-
-.navbar-collapse > .GPAREA {
-  //  Menu -> align right
-  margin-left: auto;
-}
 
 .navbar {
 
@@ -59,6 +55,11 @@ body {
       }
     }
   }
+}
+
+// Footer ==================================================================
+footer.main-footer {
+  background-color: $gray-300;
 }
 
 // Buttons =====================================================================

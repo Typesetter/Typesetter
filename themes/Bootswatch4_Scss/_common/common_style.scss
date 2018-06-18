@@ -1,0 +1,85 @@
+/* Bootswatch 4 Scss 
+ * common styles used in all layouts
+ */
+
+@import 'contactform.scss';
+
+// Page Flex Layout for Sticky Footer ==========================================
+html, body {
+  height: 100%;
+}
+ 
+body {
+  display: flex;
+  flex-direction: column; 
+}
+
+// Height fix for Admin Top Bar and active 'Hide Admin UI' plugin
+html:not(.override_admin_style) body.gpAdmin {
+  height:calc(100% - 29px);
+}
+
+.main-content {
+  flex: 1 0 auto;
+}
+footer.main-footer {
+  flex-shrink: 0;
+}
+
+
+// Navbar =======================================================================
+
+$navbar-height: ($nav-link-height + $navbar-padding-y * 2);
+
+// Fix for bad container paddings in navbars (as of Bootatrap 4.1.1)
+@include media-breakpoint-up(sm) {
+  .navbar-expand-lg > .container, 
+  .navbar-expand-lg > .container-fluid {
+    padding-right: ($grid-gutter-width / 2);
+    padding-left: ($grid-gutter-width / 2);
+  }
+}
+
+// when using fixed-top
+body {
+  padding-top: ($navbar-height + 2rem);
+}
+
+// Align menu right, fix dropdown alignment
+.navbar-right {
+  > .GPAREA {
+   margin-left: auto;
+  }
+  .dropdown-menu {
+    left: auto;
+    right: 0;
+  }
+}
+
+// Extra Content 'Dropdown Divider'
+.gpArea_Extra_Bootstrap_Dropdown_Divider {
+  @extend .dropdown-divider; 
+}
+
+// Admin Links
+.footer-admin-links {
+  > span {
+    margin-right: 0.75em;
+  }
+
+  .sitemap_link > a:before, 
+  .login_link > a:before {
+    display: inine-block;
+    font-family: FontAwesome;
+  }
+
+  .sitemap_link > a:before {
+    content: "\f0ca\a0";
+  }
+
+  .login_link > a:before {
+    content: "\f2bd\a0";
+  }
+}
+
+

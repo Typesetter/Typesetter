@@ -23,7 +23,8 @@ $(function(){
 				var html	= iframe.contentWindow.document.documentElement;
 				//shrink down to body size
 				height	= Math.max( body.scrollHeight, body.offsetHeight );
-				$wrap.height( height + 80); // 80 = grace extra space for near bottom elements
+				// $wrap.height( height + 80); // 80 = grace extra space for near bottom elements
+				$(body).css('padding-bottom', '80px'); // 80 = grace extra space for near bottom areas
 
 				//increase back up if needed
 				window.setTimeout(function(){

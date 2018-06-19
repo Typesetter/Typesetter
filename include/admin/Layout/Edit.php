@@ -122,7 +122,7 @@ class Edit extends \gp\admin\Layout{
 		\gp\admin\Tools::$show_toolbar		= false;
 
 		// <head>
-		$this->page->head .= '<script type="text/javascript">parent.$gp.iframeloaded();</script>';
+		// $this->page->head .= '<script type="text/javascript">parent.$gp.iframeloaded();</script>';
 		if( $cmd != 'PreviewCSS' ){
 			$this->page->head .= '<script type="text/javascript">var gpLayouts=true;</script>';
 		}

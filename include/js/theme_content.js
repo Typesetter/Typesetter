@@ -173,5 +173,19 @@ $(function(){
 		$gp.loaded();
 	}
 
+	/**
+	 * Trigger parent iframe handling
+	 * this function itself is called from the parent @domready
+	 */
+	$gp.iframe_ready_triggered = false;
+
+	$gp.iframe_ready = function(){
+		if( !$gp.iframe_ready_triggered && typeof(parent.$gp.editor_ready) != 'undefined' ){
+			parent.$gp.handle_iframe();
+			$gp.iframe_ready_triggered = true;
+		}
+	}
+
+	$gp.iframe_ready();
 
 });

@@ -1068,7 +1068,7 @@
 		});
 
 		html += '<tr><td colspan="3">';
-		html += '<a data-cmd="add_table_row">Add Attribute</a>';
+		html += '<a data-cmd="add_table_row">' + gplang.AddAttribute + '</a>';
 		html += '</td></tr>';
 		html += '</tbody></table>';
 

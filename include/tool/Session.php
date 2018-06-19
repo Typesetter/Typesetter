@@ -597,6 +597,7 @@ namespace gp\tool{
 				'Section Attributes'		=>	'SectionAttributes',
 				'Available Classes'			=>	'AvailableClasses',
 				'Attribute'					=>	'Attribute',
+				'Add Attribute'				=>	'AddAttribute',
 				'Value'						=>	'Value',
 				'Visibility'				=>	'Visibility',
 				'remove'					=>	'remove',

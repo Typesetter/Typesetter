@@ -287,7 +287,7 @@
 			//floating editor
 			var html	= ''; //<h4>Gallery Images</h4>'
 
-			if( typeof(gallery_editing_options) != 'undefined' ){ // TS 5.1+ and 'Use Gallery Legacy Style' disabled
+			if( typeof(gallery_editing_options) != 'undefined' && section_object.type == "gallery" ){ // TS 5.1+ and 'Use Gallery Legacy Style' disabled
 				html += '<div class="gallery-style-button-row">';
 				$.each(gp_editor.gallery_theme, function(i,v){
 					var checked = v.class_name.indexOf('-theme-default') !== -1 ? ' checked="checked"' : ''; 

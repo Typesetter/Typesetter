@@ -2,39 +2,23 @@
 $(function(){
 
 	/**
-	 * Seamless iframe
+	 * Layout preview iframe
 	 *
 	 */
 	var iframe	= document.getElementById('gp_layout_iframe');
+
 	if( iframe ){
-
-		var $wrap	= $('#gp_iframe_wrap');
-		window.setInterval(function(){
-			var iframe		= document.getElementById('gp_layout_iframe');
-
-			if ( iframe.contentWindow.document.getElementById('gp_layout_iframe') ){
-				// prevent nested iframes
-				inner_iframe_src = iframe.contentWindow.document.getElementById('gp_layout_iframe').getAttribute("src");
-				iframe.src = inner_iframe_src;
-			}
-
-			var body		= iframe.contentWindow.document.body;
-			if( body ){
-				var html	= iframe.contentWindow.document.documentElement;
-				//shrink down to body size
-				height	= Math.max( body.scrollHeight, body.offsetHeight );
-				// $wrap.height( height + 80); // 80 = grace extra space for near bottom elements
-				$(body).css('padding-bottom', '80px'); // 80 = grace extra space for near bottom areas
-
-				//increase back up if needed
-				window.setTimeout(function(){
-					height	= Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight, $gp.$win.height() );
-					$wrap.height( height );
-				},1000); 
-			}
-
-		},2000);
+		if ( iframe.contentWindow.document.getElementById('gp_layout_iframe') ){
+			// prevent nested iframes
+			inner_iframe_src = iframe.contentWindow.document.getElementById('gp_layout_iframe').getAttribute("src");
+			iframe.src = inner_iframe_src;
+		}
+		var body = iframe.contentWindow.document.body;
+		if( body ){
+			$(body).css('padding-bottom', '90px'); // 90px = grace extra space for near bottom areas
+		}
 	}
+
 
 	/**
 	 * Resizeable editor

@@ -169,6 +169,7 @@ class Edit extends \gp\admin\Layout{
 		}
 
 
+		echo '<style type="text/css"> body {overflow-y: hidden} </style>';
 
 		//Iframe
 		echo '<div id="gp_iframe_wrap">';

@@ -602,6 +602,7 @@ namespace gp\tool{
 				'Visibility'				=>	'Visibility',
 				'remove'					=>	'remove',
 				'delete'					=>	'del',
+				'Move Behind'				=>	'MoveBehind',
 				'Section %s'				=>	'Section',
 				'generic_delete_confirm'	=>	'generic_delete_confirm',
 			);

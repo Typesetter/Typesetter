@@ -133,7 +133,7 @@ $(function(){
 				$('<div class="draggable_element" style="position:absolute;min-height:20px;min-width:20px;"></div>')
 				.appendTo(drag_area)
 				.append(lnks) //.output_area_link
-				.append('<div class="decrease_z_index" title="move behind"><i class="fa fa-minus-square"></i></div>')
+				.append('<div class="decrease_z_index" title="' + gplang.MoveBehind + '"><i class="fa fa-minus-square"></i></div>')
 				.on('gp_position',function(){
 
 					var loc = $gp.Coords($this);

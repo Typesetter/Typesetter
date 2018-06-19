@@ -467,7 +467,7 @@ namespace gp\tool{
 
 				echo '<div class="output_area_label">';
 				if( $empty_container ){
-					echo 'Empty Container';
+					echo $langmessage['Empty Container'];
 				}else{
 					echo self::GpOutLabel($info);
 				}

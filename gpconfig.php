@@ -181,15 +181,6 @@ define('gpdebug',false);
 //define('gp_safe_mode',false);
 
 
-/**
- * gp_prefix_urls
- * Set to true will prefix internal content URLs (href, src, ..., starting with '/')
- * with $LinkPrefix or $dirPrefix variables when saving in order to make the 
- * content portable across different directory levels and hosts
- * Defaults to false
- */
-define('gp_prefix_urls',false);
-
 
 /**
  * Include clearfloats in Typesetter generated code

@@ -155,7 +155,13 @@ $langmessage = array (
 	'details'                        => 'Detalji',
 	'site_locked'                    => 'Žao nam je, ova stranica je trenutno zaključana za uređivanje sa strane drugog korisnika. Moraš pričekati dok se ovaj korisnik ne odjavi ili da blokada istječe.',
 	'lock_expires_in'                => 'Blokada je trenutno namještena da istječe za %s minuta.',
-	'passwordremindertext'           => '<p>Someone requested a new password for %1$s (%2$s). A new password for user "%3$s" has been created and was set to "%4$s".</p><p>If someone else made this request, or if you have remembered your password, and you no longer wish to change it, you may ignore this message and continue using your old password.</p>',
+	'passwordremindertext'           => '<p>Someone requested a new
+password for %1$s (%2$s). A new password for user
+"%3$s" has been created and was set to "%4$s".</p>
+
+<p>If someone else made this request, or if you have remembered your password,
+and you no longer wish to change it, you may ignore this message and
+continue using your old password.</p>',
 	'JAVASCRIPT_REQ'                 => 'Javascript je obavezan za dostup do web administracije.',
 	'INCOMPAT_BROWSER'               => 'Čini se, da koristiš nekompatibilan preglednik.',
 	'MODERN_BROWSER'                 => 'Proveri da koristiš neki moderan preglednik, kao Mozilla FireFox ili Google Chrome i da imaš omogučen JavaScript.',
@@ -548,7 +554,7 @@ $langmessage = array (
 	'No'                             => 'No', // general purpose for future/plugin use
 	'Always'                         => 'Always', // general purpose for future/plugin use
 	'Never'                          => 'Never', // general purpose for future/plugin use
-	'Dont ask again'                 => 'Don\'t ask this question again', // general purpose for future/plugin use
+	'Dont ask again'                 => 'Do\'t ask this question again', // general purpose for future/plugin use
 	'optional'                       => 'optional', // general purpose for future/plugin use
 	'required'                       => 'required', // general purpose for future/plugin use
 	'missing'                        => 'missing', // general purpose for future/plugin use

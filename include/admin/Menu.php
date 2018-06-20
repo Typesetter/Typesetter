@@ -1632,7 +1632,7 @@ class Menu extends \gp\special\Base{
 				'<i class="fa fa-unlock"></i>', 
 				'cmd=HomepageAuto', 
 				array(
-					'class'		=> 'gpbutton',
+					'class'		=> "gpbutton",
 					'title'		=> $langmessage['disable'],
 					'data-cmd'	=> 'gpajax',
 				)

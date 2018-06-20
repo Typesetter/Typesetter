@@ -27,7 +27,7 @@ gp_defined('gp_safe_mode',false);
 gp_defined('gp_backup_limit',30);
 gp_defined('gp_write_lock_time',5);
 gp_defined('gp_dir_index',true);
-gp_defined('gp_remote_addons',true); 			// deprecated 4.0.1
+gp_defined('gp_remote_addons',true); //deprecated 4.0.1
 gp_defined('gp_remote_plugins',gp_remote_addons);
 gp_defined('gp_remote_themes',gp_remote_addons);
 gp_defined('gp_remote_update',gp_remote_addons);
@@ -35,7 +35,6 @@ gp_defined('gp_unique_addons',false);
 gp_defined('gp_data_type','.php');
 gp_defined('gp_default_theme','Bootswatch_Scss/Flatly');
 gp_defined('gp_php53', version_compare( phpversion(), '5.4', '<' ) );
-gp_defined('gp_prefix_urls',false);				// Since 5.1.1
 
 
 //gp_defined('CMS_DOMAIN',			'http://gpeasy.loc');

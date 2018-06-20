@@ -236,10 +236,10 @@ class Edit extends \gp\admin\Layout{
 		echo '<div class="css_buttons">';
 
 		// preview
-		echo '<button name="cmd" type="submit" value="PreviewCSS" class="gpsubmit gpdisabled" disabled="disabled" data-cmd="preview_css" />'.$langmessage['preview'].'</button>';
+		echo '<button name="cmd" type="submit" value="PreviewCSS" class="gpsubmit gpdisabled" disabled="disabled" data-cmd="preview_css">'.$langmessage['preview'].'</button>';
 
 		// save
-		echo '<button name="cmd" type="submit" value="SaveCSS" class="gpsubmit gpdisabled" disabled="disabled" data-cmd="save_css" />'.$langmessage['save'].'</button>'; 
+		echo '<button name="cmd" type="submit" value="SaveCSS" class="gpsubmit gpdisabled" disabled="disabled" data-cmd="save_css">'.$langmessage['save'].'</button>'; 
 
 		// reset
 		echo '<input type="reset" class="gpcancel gpdisabled" disabled="disabled" data-cmd="reset_css" />';

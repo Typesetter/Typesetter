@@ -1,0 +1,231 @@
+@import "include/thirdparty/Bootstrap4/scss/bootstrap/functions";
+@import "include/thirdparty/Bootstrap4/scss/bootstrap/variables";
+@import "include/thirdparty/Bootstrap4/scss/bootstrap/mixins";
+@import "include/thirdparty/Bootstrap4/scss/bootstrap/grid";
+
+.gpclear{
+	clear:both;
+	}
+
+body .messages{
+	position:absolute;
+	position:fixed;
+	top:0;
+	left:0;
+	right:0;
+	z-index:11010;
+	height:0;
+	overflow:visible;
+	margin-top:-1px;
+}
+body .messages *{
+	text-align:left;
+	margin:0;
+	padding:0;
+	font-weight:normal;
+	color:#333 !important;
+	}
+body .messages > div{
+	position:relative;
+	width:700px;
+	margin:0 auto;
+	display:block;
+	background-color:#FEF9B0;
+	border:1px solid #f2e098;
+	border-top:0 none;
+	box-shadow: 0 0 7px rgba(0,0,0,0.1);
+	border-radius:0 0 7px 7px;
+	max-height:250px;
+	overflow:auto;
+	overflow-x:visible;
+	overflow-y:auto;
+}
+body .messages ul{
+	margin:0;
+	padding:4px 15px;
+	}
+body .messages li{
+	list-style:none;
+	padding:0;
+	margin:0;
+	font-size:14px;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+	line-height:normal;
+	line-height: 24px;
+	text-decoration:none;
+	float:none;
+	}
+body .messages li li{
+	list-style:disc;
+	margin-left:2em;
+	}
+body .messages a.close_message{
+	position:absolute;
+	top:1px;
+	right:1px;
+	text-decoration:none !important;
+	font-weight:bold !important;
+	color:#666 !important;
+	font-size:17px !important;
+	display:none;
+	border:0 none !important;
+	margin:0  !important;
+	height:24px;
+	width:24px;
+	background: url('../imgs/cancel.png') 50% 50% no-repeat;
+	box-sizing:border-box;
+	}
+body .messages a{
+	color:#111 !important;
+	text-decoration:underline !important;
+	}
+
+body .msg_buttons{
+	white-space:nowrap;
+	}
+
+body .msg_buttons a{
+	display:inline-block;
+	border-radius:3px;
+	padding:0 8px;
+	margin:6px 6px 4px;
+	text-decoration:none !important;
+	border:1px solid rgba(0,0,0,0.15);
+	background: rgba(0,0,0,0.075);
+	}
+
+.contactform{
+	margin:0;
+	width:50%;
+}
+.contactform div.captchaForm{
+	padding:0;
+	margin:0;
+}
+.contactform label{
+	width:98%;
+ 	display:block;
+	float:left;
+	clear:left;
+	margin:5px 0;
+}
+.contactform label span.title{
+	width:30%;
+	display:block;
+	float:left;
+    margin-right:10px;
+}
+.contactform input,.contactform textarea{
+	padding:5px;
+}
+.contactform input{
+	float:left;
+	width:60%;
+}
+.contactform textarea{
+	height:180px;
+	width:98%;
+}
+.contactform .submit{
+	width:50%;
+	cursor:pointer;
+	margin:12px 0;
+	float:right;
+}
+
+
+.STCLASS .req_script{
+	display:block !important; /* needs to be block and not inherit for IE */
+}
+
+.STCLASS .without_script{
+	display:none !important;
+}
+
+
+.siteinfo{
+	font-size:85%;
+}
+.siteinfo a{
+	text-decoration:none;
+	}
+.siteinfo li{
+	list-style:none;
+}
+
+.clear{clear:both;}
+
+.sitemap_xml{
+	float:right;
+	}
+
+.nodisplay{display:none;}
+
+
+/* CSS2... doesn't work for IE7 */
+div.GPAREA:after{
+	content: '.';
+	display: block;
+	height: 0 !important;
+	clear: both;
+	visibility: hidden;
+	overflow:hidden;
+}
+
+/* for IE7... does not validate */
+div.GPAREA{
+	zoom: 1;
+}
+
+.cf:before,.cf:after{content:'';display:table}
+.cf:after{clear:both}
+.cf{zoom:1}
+
+
+/**
+ *	gpEasy-SimpleGrid
+ *	12-columns, percent based widths, px-based paddings
+ *
+ *	CLASSES:
+ *	gpRow -> for wrappers
+ *	gpCol-1 - gpCol-12 -> for grid sections
+ *
+ *	all columns render full width below 768px screen width
+ */
+
+.gpRow img { max-width:100%; height:auto!important; }
+/* Prevents height distortion in IE<=8 */
+
+.gpRow {  @extend .row; }
+.gpCol-1 {  @extend .col-sm-1; }
+.gpCol-2 {  @extend .col-sm-2; }
+.gpCol-3 {  @extend .col-sm-3; }
+.gpCol-4 {  @extend .col-sm-4; }
+.gpCol-5 {  @extend .col-sm-5; }
+.gpCol-6 {  @extend .col-sm-6; }
+.gpCol-7 {  @extend .col-sm-7; }
+.gpCol-8 {  @extend .col-sm-8; }
+.gpCol-9 {  @extend .col-sm-9; }
+.gpCol-10 {  @extend .col-sm-10; }
+.gpCol-11 {  @extend .col-sm-11; }
+.gpCol-12 {  @extend .col-sm-12; }
+
+/**
+ * Make Bootstrap buttons selectable when editing the section
+ *
+ */
+.gp_editing .btn {
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
+}
+
+
+/**
+ * Search results
+ *
+ */
+ul.search_nav_bottom { list-style:none; }
+ul.search_nav_bottom li { display:inline; margin-right:0.5em; }
+

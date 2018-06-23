@@ -588,6 +588,12 @@ class Installer extends \gp\admin\Addon\Tools{
 			$this->new_layout['name'] = $this->ini_contents['Addon_Name'];
 		}
 
+		if( isset($this->ini_contents['FrontEndFramework_name']) ){
+			$this->new_layout['framework_name'] = $this->ini_contents['FrontEndFramework_name'];
+		}
+		if( isset($this->ini_contents['FrontEndFramework_version']) ){
+			$this->new_layout['framework_version'] = $this->ini_contents['FrontEndFramework_version'];
+		}
 
 		$temp					= $this->TempFile();
 		$layout_id				= basename($temp);

@@ -1276,7 +1276,17 @@ namespace gp\tool{
 				\gp\tool::LoadComponents('gp-main');
 			}
 			//defaults
-			\gp\tool::LoadComponents('jquery,gp-additional');
+
+			global $gpLayouts;
+			$layout_id = $page->gpLayout;
+			$current_layout = $gpLayouts[$layout_id];
+			if ($current_layout['framework_name'] == 'Bootstrap' &&
+				$current_layout['framework_version'] == '4.1.1')
+			{
+				\gp\tool::LoadComponents('jquery,gp-additional-bs4');
+			}else{
+				\gp\tool::LoadComponents('jquery,gp-additional');
+			};
 
 			//get css and js info
 			$scripts = \gp\tool\Output\Combine::ScriptInfo( self::$components );

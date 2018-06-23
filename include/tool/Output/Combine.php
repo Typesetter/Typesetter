@@ -33,6 +33,11 @@ class Combine{
 									),
 
 
+			'gp-additional-bs4'=> array(
+									'file'			=> '/include/css/additional_bs41.scss',
+									'type'			=> 'css',
+									),
+
 			'gp-theme-css'=> array(
 									'file'			=> '/include/css/theme_content.scss',
 									'type'			=> 'css',

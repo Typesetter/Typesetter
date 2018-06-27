@@ -1258,16 +1258,17 @@ namespace gp\tool{
 			ob_start();
 
 			//edit current image
-			echo '<div id="gp_current_image" class="inline_edit_area" title="'.$langmessage['edit'].'">';
+			echo '<div id="gp_current_image" class="inline_edit_area" title="'.$langmessage['edit'].'" style="position:relative;">';
 			echo '<span id="gp_image_wrap"><img/></span>';
-			echo '<table>';
+			echo '<table style="table-layout:fixed; width:100%;">';
 			echo '<tr><td>'.$langmessage['Width'].'</td><td><input type="text" name="width" class="ck_input"/></td>';
 			echo '<td>'.$langmessage['Height'].'</td><td><input type="text" name="height" class="ck_input"/></td>';
 			echo '</tr>';
 			echo '<tr><td>'.$langmessage['Left'].'</td><td><input type="text" name="left" class="ck_input" value="0"/></td>';
 			echo '<td>'.$langmessage['Top'].'</td><td><input type="text" name="top" class="ck_input" value="0"/></td>';
 			echo '</tr>';
-			echo '<tr><td colspan="2">'.$langmessage['Alternative Text'].'</td><td colspan="2"><input type="text" name="alt" style="width:70px; text-align:left;" class="ck_input" value=""/></td></tr>';
+			echo '<tr><td colspan="2" title="'.$langmessage['Alternative Text'].'" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">'.$langmessage['Alternative Text'].'</td>';
+			echo '<td colspan="2"><input type="text" name="alt" style="width:calc(100% - 6px); display:block; text-align:left;" class="ck_input" value="' . $langmessage['Image'] . '"/></td></tr>';
 			echo '<tr><td><a data-cmd="deafult_sizes" class="ckeditor_control ck_reset_size" title="'.$langmessage['Theme_default_sizes'].'">&#10226;</a></td></tr>';
 			echo '</table>';
 			echo '</div>';

@@ -178,14 +178,14 @@ div.GPAREA{
 
 
 /**
- *	gpEasy-SimpleGrid
- *	12-columns, percent based widths, px-based paddings
+ *	Typesetter Grid
+ *	12-columns, percent based widths, 15px side padding
  *
  *	CLASSES:
  *	gpRow -> for wrappers
  *	gpCol-1 - gpCol-12 -> for grid sections
  *
- *	all columns render full width below 768px screen width
+ *	all columns render full width below 768px viewport width
  */
 
 .gpRow img { max-width:100%; height:auto!important; }

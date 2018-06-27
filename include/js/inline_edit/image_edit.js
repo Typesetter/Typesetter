@@ -17,7 +17,7 @@
 			posy		: 0,
 			height		: 0,
 			width		: 0
-			};
+		};
 
 		var anim_freq		= 100;
 
@@ -109,7 +109,7 @@
 		 *
 		 */
 		this.wake = function(){
-			timeout = window.setInterval( Animate ,anim_freq); //constant animation
+			timeout = window.setInterval(Animate, anim_freq); //constant animation
 
 			$gp.response.image_options_loaded		= ImagesLoaded;
 			$gp.response.gp_gallery_images			= MultipleFileHandler;
@@ -276,7 +276,7 @@
 		 * Set the current image
 		 *
 		 */
-		function SetCurrentImage( src, alt, width, height){
+		function SetCurrentImage(src, alt, width, height){
 			delete save_obj.src;
 
 			save_obj.src = src;
@@ -284,7 +284,10 @@
 			save_obj.alt = alt;
 
 			$edit_img.css({'background-image':'url("'+$gp.htmlchars(save_obj.src)+'")'});
-			$('#gp_current_image img').attr('src', save_obj.src ).attr('alt', save_obj.alt );
+			$('#gp_current_image img').attr({
+				'src' : save_obj.src,
+				'alt' : save_obj.alt 
+			});
 
 			if( width > 0 && height > 0 ){
 				field_w.value	= width;
@@ -315,7 +318,8 @@
 			form.find('.file').auto_upload({
 
 				start: function(name, settings){
-					settings['bar'] = $('<a data-cmd="gp_file_uploading">'+name+'</a>').appendTo('#gp_upload_queue');
+					settings['bar'] = $('<a data-cmd="gp_file_uploading">'+name+'</a>')
+						.appendTo('#gp_upload_queue');
 					return true;
 				},
 
@@ -368,7 +372,8 @@
 
 			var width			= $this.data('width');
 			var height			= $this.data('height');
-			var alt				= $this.attr('href').split('/').pop();
+			var alt				= $this.attr('href').split('/').pop().split('_').join(' ');
+				alt				= alt.substring(0, alt.lastIndexOf('.'));
 
 			SetCurrentImage( $this.attr('href'), alt, width, height );
 
@@ -382,7 +387,12 @@
 		function ShowImages(){
 
 			//get original image size
-			var img = $('<img>').css({'height':'auto','width':'auto','padding':0}).attr('src',save_obj.src).attr('alt',save_obj.alt).appendTo('body');
+			var img = $('<img>').css({'height':'auto','width':'auto','padding':0})
+				.attr({
+					'src' : save_obj.src, 
+					'alt' : save_obj.alt
+				})
+				.appendTo('body');
 
 			field_w.value 		= img.width();
 			field_h.value		= img.height();
@@ -408,6 +418,5 @@
 
 		//create gp_editor object
 		gp_editor = new ImageEditor(area_id, section_object);
-
 	}
 

@@ -737,6 +737,7 @@ namespace gp\tool{
 					$section['gp_label']				= $langmessage['Image'];
 					$section['nodeName']				= 'img';
 					$section['attributes']['src']		= '/include/imgs/default_image.jpg';
+					$section['attributes']['alt']		= pathinfo( $section['attributes']['src'] , PATHINFO_FILENAME );
 					$section['attributes']['width']		= '400px';
 					$section['attributes']['height']	= '300px';
 				break;
@@ -988,6 +989,7 @@ namespace gp\tool{
 			//check to see if the image needs to be resized
 			if( $posx == 0 && $posy == 0 && $width == $orig_w && $height == $orig_h ){
 				$section['attributes']['src']		= $source_file_rel;
+				$section['attributes']['alt']		= $_REQUEST['alt'];
 				$section['attributes']['height']	= $height;
 				$section['attributes']['width']		= $width;
 				$section['orig_src']				= $_REQUEST['src'];
@@ -1030,6 +1032,7 @@ namespace gp\tool{
 			}
 
 			$section['attributes']['src']			= $dest_img_rel;
+			$section['attributes']['alt']			= $_REQUEST['alt'];
 			$section['attributes']['height']		= $height;
 			$section['attributes']['width']			= $width;
 			$section['orig_src']					= $_REQUEST['src'];
@@ -1264,7 +1267,7 @@ namespace gp\tool{
 			echo '<tr><td>'.$langmessage['Left'].'</td><td><input type="text" name="left" class="ck_input" value="0"/></td>';
 			echo '<td>'.$langmessage['Top'].'</td><td><input type="text" name="top" class="ck_input" value="0"/></td>';
 			echo '</tr>';
-			echo '<tr><td colspan="2">Alternative Text</td><td colspan="2"><input type="text" name="alt_text" style="width:70px; text-align:left;" class="ck_input" value=""/></td></tr>';
+			echo '<tr><td colspan="2">'.$langmessage['Alternative Text'].'</td><td colspan="2"><input type="text" name="alt" style="width:70px; text-align:left;" class="ck_input" value=""/></td></tr>';
 			echo '<tr><td><a data-cmd="deafult_sizes" class="ckeditor_control ck_reset_size" title="'.$langmessage['Theme_default_sizes'].'">&#10226;</a></td></tr>';
 			echo '</table>';
 			echo '</div>';

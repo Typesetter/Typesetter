@@ -1267,7 +1267,8 @@ namespace gp\tool{
 			echo '<tr><td>'.$langmessage['Left'].'</td><td><input type="text" name="left" class="ck_input" value="0"/></td>';
 			echo '<td>'.$langmessage['Top'].'</td><td><input type="text" name="top" class="ck_input" value="0"/></td>';
 			echo '</tr>';
-			echo '<tr><td colspan="2">'.$langmessage['Alternative Text'].'</td><td colspan="2"><input type="text" name="alt" style="width:70px; text-align:left;" class="ck_input" value=""/></td></tr>';
+			echo '<tr><td colspan="4">'.$langmessage['Alternative Text'].'</td></tr>';
+			echo '<tr><td colspan="4"><input type="text" name="alt" style="width:140px; text-align:left;" class="ck_input" value=""/></td></tr>';
 			echo '<tr><td><a data-cmd="deafult_sizes" class="ckeditor_control ck_reset_size" title="'.$langmessage['Theme_default_sizes'].'">&#10226;</a></td></tr>';
 			echo '</table>';
 			echo '</div>';

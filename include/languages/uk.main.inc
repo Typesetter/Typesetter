@@ -533,6 +533,7 @@ $langmessage = array (
 	'Section Attributes'             => 'Атрибути секції',
 	'Attribute'                      => 'Атрибут',
 	'Add Attribute'                  => 'Додати атрибут',
+	'Alternative Text'               => 'Альтернативний текст',
 	'Empty Container'                => 'Порожній контейнер',
 	'Move Behind'                    => 'Пересунути позад',
 	'File'                           => 'Файл',

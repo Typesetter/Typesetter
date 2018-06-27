@@ -155,9 +155,7 @@ $langmessage = array (
 	'details'                        => '詳細',
 	'site_locked'                    => 'このサイトは現在、別のユーザーによる編集作業中であるため、ロックされています。ロックが解除されるか編集中のユーザーがログアウトするまでお待ち下さい。',
 	'lock_expires_in'                => 'ロックの解除期限は %s 分に設定されています。',
-	'passwordremindertext'           => '<p>%1$s (%2$s) についての新しいパスワード発行の要求がありました。ユーザー "%3$s" のために新しいパスワードを生成し、"%4$s" に送信しました。</p>
-	
-<p>この要求が第三者によるものである場合や、あなたが自分のパスワードを思い出すことができてパスワードの変更を中止する場合は、このメッセージを無視して元のパスワードを使い続けることができます。</p>',
+	'passwordremindertext'           => '<p>%1$s (%2$s) についての新しいパスワード発行の要求がありました。ユーザー "%3$s" のために新しいパスワードを生成し、"%4$s" に送信しました。</p><p>この要求が第三者によるものである場合や、あなたが自分のパスワードを思い出すことができてパスワードの変更を中止する場合は、このメッセージを無視して元のパスワードを使い続けることができます。</p>',
 	'JAVASCRIPT_REQ'                 => 'サイト管理にアクセスするには javascript が有効になっている必要があります。',
 	'INCOMPAT_BROWSER'               => 'お使いのブラウザではうまく動作しない可能性があります。',
 	'MODERN_BROWSER'                 => 'Mozilla FireFox や Google Chrome など仕様が新しいブラウザを使用し、javascript を有効にしてください。',
@@ -534,6 +532,7 @@ $langmessage = array (
 	'Touched'                        => 'Touched',
 	'Section Attributes'             => 'Section Attributes',
 	'Attribute'                      => 'Attribute',
+	'Alternative Text'               => 'Alternative Text',
 	'Add Attribute'                  => 'Add Attribute',
 	'Empty Container'                => 'Empty Container', // Layout Editor title for empty areas
 	'Move Behind'                    => 'Move Behind', // the title of the small icon in Layout Editor areas to get a covering area out oif the way by moving it to the back (z-index)

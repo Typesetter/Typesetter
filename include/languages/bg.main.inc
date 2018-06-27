@@ -533,6 +533,7 @@ $langmessage = array (
 	'Section Attributes'             => 'Section Attributes',
 	'Attribute'                      => 'Attribute',
 	'Add Attribute'                  => 'Add Attribute',
+	'Alternative Text'               => 'Alternative Text',	
 	'Empty Container'                => 'Empty Container', // Layout Editor title for empty areas
 	'Move Behind'                    => 'Move Behind', // the title of the small icon in Layout Editor areas to get a covering area out oif the way by moving it to the back (z-index)
 	'File'                           => 'File', // general purpose for future/plugin use

@@ -532,6 +532,7 @@ $langmessage = array (
 	'Touched'                        => 'Geändert',
 	'Section Attributes'             => 'Abschnitts Attribute',
 	'Attribute'                      => 'Attribut',
+	'Alternative Text'               => 'Alternativer Text',
 	'Add Attribute'                  => 'Attribut hinzufügen',
 	'Empty Container'                => 'Leerer Bereich',
 	'Move Behind'                    => 'Nach hinten verschieben',

@@ -345,7 +345,6 @@
 
 body #gp_size_options td,
 body #gp_current_image td{
-	text-align:right;
 	vertical-align:middle;
 	padding:5px 3px;
 	font-size:11px;

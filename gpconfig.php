@@ -24,7 +24,7 @@
  *        'scss', 'svg', 'svgz', 'swf', 'sxc', 'sxw',
  *        'tar', 'tgz', 'tif', 'tiff', 'ttf', 'txt', 
  *        'vsd', 
- *        'wav', 'wma', 'webm', 'wmv', 'woff', 'woff2',
+ *        'wav', 'webmanifest', 'webm', 'wma', 'wmv', 'woff', 'woff2',
  *        'xls', 'xlsx', 'xml', 'xsl' 
  *        'zip',
  * )

@@ -271,7 +271,7 @@ class Search extends \gp\special\Base{
 		foreach($this->results as $key => $result){
 
 			$link	= isset($result['url']) ? $result['url'] : \gp\tool::GetUrl( $result['slug'], $result['query'] );
-			$link	= mb_strtolower($link);
+			// $link	= mb_strtolower($link);
 
 			if( in_array($link,$links) ){
 				unset($this->results[$key]);
@@ -288,7 +288,8 @@ class Search extends \gp\special\Base{
 
 
 	public function SearchPattern(){
-		$query = mb_strtolower($_REQUEST['q']);
+		// $query = mb_strtolower($_REQUEST['q']);
+		$query = $_REQUEST['q'];
 		// Search for the exact query when it is doubled quoted
 		if (substr($query, 0, 1) == '"' && substr($query, -1) == '"') {
 			$query = substr($query, 1, -1);
@@ -440,7 +441,7 @@ class Search extends \gp\special\Base{
 		$this->search_count++;
 
 		//search all of the content include html
-		$content= mb_strtolower($content);
+		// $content = mb_strtolower($content);
 		$content = $label.' '.$content;
 		$match_count = preg_match_all($this->search_pattern,$content,$matches,PREG_OFFSET_CAPTURE);
 		if( $match_count < 1 ){
@@ -489,7 +490,7 @@ class Search extends \gp\special\Base{
 		$result['label'] = $label;
 		$result['slug'] = $slug;
 		$result['query'] = $link_query;
-		$result['content'] = preg_replace($this->search_pattern,'<b>\1\2</b>',$content);
+		$result['content'] = preg_replace($this->search_pattern,'<strong>\1\2</strong>',$content);
 		$result['words'] = $words;
 		$result['matches'] = $match_count;
 		$result['strength'] = $strength;

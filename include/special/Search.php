@@ -67,6 +67,7 @@ class Search extends \gp\special\Base{
 	}
 
 	public function Search(){
+		global $langmessage;
 
 		echo '<div class="GPAREA filetype-special_search search_results">';
 		echo '<form action="'.\gp\tool::GetUrl('special_gpsearch').'" method="get">';
@@ -88,7 +89,7 @@ class Search extends \gp\special\Base{
 		$this->RunQuery();
 
 		if( \gp\tool::LoggedIn() ){
-			echo \gp\tool::Link('special_gpsearch','Configuration','cmd=config','data-cmd="gpabox"');
+			echo \gp\tool::Link('special_gpsearch', $langmessage['configuration'], 'cmd=config', 'data-cmd="gpabox"');
 		}
 
 		echo '</div>';
@@ -361,7 +362,7 @@ class Search extends \gp\special\Base{
 		global $langmessage, $addonFolderName, $gp_index;
 
 
-		echo '<h2>Search Configuration</h2>';
+		echo '<h2>' . $langmessage['Search'] . ' &raquo; ' . $langmessage['configuration'] . '</h2>';
 
 		echo '<form class="renameform" action="'.\gp\tool::GetUrl('special_gpsearch').'" method="post">';
 		echo '<table style="width:100%" class="bordered">';

@@ -176,9 +176,9 @@ class Search extends \gp\special\Base{
 		echo '</div>';
 
 
-		$attr = '';
+		$attr = 'class="page-link"';
 		if( $this->gpabox ){
-			$attr = 'data-cmd="gpabox"';
+			$attr .= ' data-cmd="gpabox"';
 		}
 
 		$query = 'q='.rawurlencode($_REQUEST['q']);
@@ -217,17 +217,20 @@ class Search extends \gp\special\Base{
 	public static function PaginationLinks($current_page, $total_pages, $slug, $query, $page_key = 'pg', $attr=''){
 		global $langmessage;
 
-		if( $total_pages < 1 ){
+		if( $total_pages < 2 ){
 			return;
 		}
+		
+		echo '<nav aria-label="' . $langmessage['All Pages'] . '">';
 		echo '<ul class="search_nav search_nav_bottom pagination">';
 
 		//previous
-		echo '<li>';
 		if( $current_page > 0 ){
+			echo '<li class="page-item">';
 			self::PaginationLink($slug, '&laquo;', $query, $page_key, $attr, ($current_page-1));
+			echo '</li>';
 		}else{
-			echo '<li class="disabled"><span>&laquo;</span></li>';
+			echo '<li class="page-item disabled"><span class="page-link">&laquo;</span></li>';
 		}
 
 		// i
@@ -236,20 +239,25 @@ class Search extends \gp\special\Base{
 		for($i=$min_page;$i<$max_page;$i++){
 
 			if( $i == $current_page ){
-				echo '<li class="active"><span>'.($i+1).'</span></li> ';
+				echo '<li class="page-item active"><span class="page-link">'.($i+1).'</span></li>';
 				continue;
 			}
+			echo '<li class="page-item">';
 			self::PaginationLink($slug, ($i+1), $query, $page_key, $attr, $i);
+			echo '</li>';
 		}
 
 		// next
 		if( ($current_page+1) < $total_pages ){
+			echo '<li class="page-item">';
 			self::PaginationLink($slug, '&raquo;', $query, $page_key, $attr, $current_page+1);
+			echo '</li>';
 		}else{
-			echo '<li class="disabled"><span>&raquo;</span></li>';
+			echo '<li class="page-item disabled"><span class="page-link">&raquo;</span></li>';
 		}
 
 		echo '</ul>';
+		echo '</nav>';
 	}
 
 	public static function PaginationLink($slug, $label, $query, $page_key, $attr, $page){

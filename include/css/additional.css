@@ -258,6 +258,16 @@ div.GPAREA{
  * Search results
  *
  */
-ul.search_nav_bottom { list-style:none; }
-ul.search_nav_bottom li { display:inline; margin-right:0.5em; }
+ul.search_nav_bottom { 
+	list-style:none; 
+}
+ul.search_nav_bottom li { 
+	display:inline; 
+}
+ul.search_nav_bottom li > * { 
+	display:inline-block; 
+	padding-left:0.5em;
+	padding-right:0.5em;
+}
+
 

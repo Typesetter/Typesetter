@@ -70,15 +70,11 @@ class Search extends \gp\special\Base{
 		global $langmessage;
 
 		echo '<div class="GPAREA filetype-special_search search_results">';
+		echo '<h2>' . \gp\tool\Output::GetAddonText('Search') . '</h2>';
 		echo '<form action="'.\gp\tool::GetUrl('special_gpsearch').'" method="get">';
-
-		echo '<h2>';
-		echo \gp\tool\Output::GetAddonText('Search');
-		echo '</h2>';
 		echo '<input name="q" type="text" class="text" value="'.htmlspecialchars($_REQUEST['q']).'"/> ';
 		$html = '<input type="submit" name="" class="submit" value="%s" />';
 		echo \gp\tool\Output::GetAddonText('Search',$html);
-
 		echo '</form>';
 
 		if( \gp\tool::LoggedIn() ){
@@ -217,7 +213,7 @@ class Search extends \gp\special\Base{
 	public static function PaginationLinks($current_page, $total_pages, $slug, $query, $page_key = 'pg', $attr=''){
 		global $langmessage;
 
-		if( $total_pages < 2 ){
+		if( $total_pages < 1 ){
 			return;
 		}
 		
@@ -239,7 +235,7 @@ class Search extends \gp\special\Base{
 		for($i=$min_page;$i<$max_page;$i++){
 
 			if( $i == $current_page ){
-				echo '<li class="page-item active"><span class="page-link">'.($i+1).'</span></li>';
+				echo '<li class="page-item active"><span class="page-link">'.($i+1).'</span></li> ';
 				continue;
 			}
 			echo '<li class="page-item">';

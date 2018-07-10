@@ -286,6 +286,7 @@ class Search extends \gp\special\Base{
 		return $resulta['strength'] < $resultb['strength'];
 	}
 
+
 	public function SearchPattern(){
 		$query = mb_strtolower($_REQUEST['q']);
 		// Search for the exact query when it is doubled quoted
@@ -305,6 +306,7 @@ class Search extends \gp\special\Base{
 
 		$this->search_pattern = '#(?:('.implode('|',$sub_pattern1).')|('.implode('|',$sub_pattern2).'))#Si';
 	}
+
 
 	public function Admin(){
 
@@ -335,6 +337,7 @@ class Search extends \gp\special\Base{
 		$this->search_config 	= \gp\tool\Files::Get($this->config_file,'search_config');
 		$this->search_config	+= array('search_hidden'=>false);
 	}
+
 
 	public function SaveConfig(){
 		global $langmessage;
@@ -386,8 +389,6 @@ class Search extends \gp\special\Base{
 		echo '</table>';
 
 		echo '</form>';
-
-		echo '<p>';
 	}
 
 

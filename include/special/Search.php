@@ -156,7 +156,6 @@ class Search extends \gp\special\Base{
 
 		echo '<div class="result_list">';
 		foreach($this->results as $result){
-			msg('result = ' . pre($result));
 			echo '<div><h4>';
 			echo isset($result['link']) ? $result['link'] : \gp\tool::Link($result['slug'], $result['label'], 'found='.rawurlencode($_REQUEST['q']) ); // $result['query']
 			echo ' <span class="search-matches-count">' .  $result['matches'] . '</span>' ;

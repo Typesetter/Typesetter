@@ -269,5 +269,13 @@ ul.search_nav_bottom li > * {
 	padding-left:0.5em;
 	padding-right:0.5em;
 }
-
-
+.search-matches-count {
+	font-size:82.5%;
+	font-weight:normal;
+}
+.search-matches-count:before {
+	content:"(";
+}
+.search-matches-count:after {
+	content:")";
+}

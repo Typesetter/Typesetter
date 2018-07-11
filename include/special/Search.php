@@ -148,16 +148,18 @@ class Search extends \gp\special\Base{
 		$start			= $current_page*$len;
 		$end			= min($start+$len,$total);
 
-		$this->results = array_slice($this->results,$start,$len,true);
+		$this->results = array_slice($this->results, $start, $len, true);
 		echo '<p class="search_nav search_nav_top">';
-		echo sprintf($langmessage['SHOWING'],($start+1),$end,$total);
+		echo sprintf($langmessage['SHOWING'], ($start+1), $end, $total);
 		echo '</p>';
 
 
 		echo '<div class="result_list">';
 		foreach($this->results as $result){
+			msg('result = ' . pre($result));
 			echo '<div><h4>';
-			echo isset($result['link']) ? $result['link'] : \gp\tool::Link($result['slug'],$result['label'],$result['query']);
+			echo isset($result['link']) ? $result['link'] : \gp\tool::Link($result['slug'], $result['label'], 'found='.rawurlencode($_REQUEST['q']) ); // $result['query']
+			echo ' <span class="search-matches-count">' .  $result['matches'] . '</span>' ;
 			echo '</h4>';
 
 			echo $result['content'];

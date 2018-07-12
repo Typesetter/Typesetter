@@ -1,0 +1,7 @@
+#gpx_content .text-highlighted {
+  background-color: rgba(240,255,64,0.667);
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+  border-radius: 2px;
+  font-weight: bold;
+}

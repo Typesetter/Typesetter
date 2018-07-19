@@ -177,6 +177,8 @@
   } @else {
     border-radius: 0;
   }
+  -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
 
   &:focus {
@@ -311,6 +313,8 @@
   width: 100%;
   padding-left: 0; // Firefox specific
   background-color: transparent;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
 
   &:focus {
@@ -330,6 +334,8 @@
     @include border-radius($custom-range-thumb-border-radius);
     @include box-shadow($custom-range-thumb-box-shadow);
     @include transition($custom-forms-transition);
+    -webit-appearance: none;
+    -moz-appearance: none;
     appearance: none;
 
     &:focus {
@@ -361,6 +367,8 @@
     @include border-radius($custom-range-thumb-border-radius);
     @include box-shadow($custom-range-thumb-box-shadow);
     @include transition($custom-forms-transition);
+    -webkit-appearance: none;
+    -moz-appearance: none;
     appearance: none;
 
     &:focus {
@@ -392,6 +400,8 @@
     @include border-radius($custom-range-thumb-border-radius);
     @include box-shadow($custom-range-thumb-box-shadow);
     @include transition($custom-forms-transition);
+    -webkit-appearance: none;
+    -moz-appearance: none;
     appearance: none;
 
     &:focus {

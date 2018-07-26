@@ -380,7 +380,7 @@ namespace gp\tool{
 		 * @since 3.6
 		 *
 		 */
-		function SaveConfig($config){
+		public static function SaveConfig($config){
 
 			$file = self::$current['data_folder_full'].'/_config.php';
 

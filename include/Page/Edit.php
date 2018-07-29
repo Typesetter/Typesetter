@@ -485,7 +485,39 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public function SaveSections(){
-		global $langmessage;
+		global $langmessage, $dataDir;
+
+		/*
+		 * FIX for too many sections issue -- start
+		 * 
+		 * with large amounts of sections, we may exceed max_post_values 
+		 * which causes an error and prevents further editing of the page.
+		 * 
+		 * sending all the section data in a single JSON string 
+		 * instead of parametrizing all values will address this issue.
+		 * 
+		 * the current implementation should be considered as a hot fix.
+		 * it should eventually be done more elegant.
+		 * 
+		 * See its client counterpart in /include/js/inline_edit/manage_sections.js line 87-129
+		 */
+		if( isset($_POST['sections_json']) ){
+			// section data is posted as JSON
+			$section_data = json_decode(rawurldecode($_POST['sections_json']), true);
+			$_POST['section_data_is'] = 'json';
+			/* DEBUG: SAVE SECTION DATA */
+			// $debug_file = $dataDir . '/data/_debug_json.php';
+			// \gp\tool\Files::SaveData($debug_file, 'section_data', $section_data);
+			$_POST += $section_data;
+			unset($_POST['sections_json']);
+		}
+		/* DEBUG: SAVE POST */
+		// $debug_file = $dataDir . '/data/_debug.php';
+		// \gp\tool\Files::SaveData($debug_file, 'post', $_POST);
+		/*
+		 * FIX for too many sections issue -- end
+		 */
+
 
 		$this->ajaxReplace		= array();
 		$original_sections		= $this->file_sections;

@@ -84,7 +84,52 @@
 
 			});
 
-			return $.param(args);
+			/*
+			 * FIX for too many sections issue
+			 *
+			 * with large amounts of sections, we may exceed max_post_values
+			 * which causes an error and prevents further editing of the page.
+			 *
+			 * sending all the section data in a single JSON string 
+			 * instead of parametrizing all values will address this issue.
+			 *
+			 * the current implementation should be considered as a hot fix.
+			 * it should eventually be done more elegant.
+			 *
+			 * See its server side counterpart in /include/Page/Edit.php line 490-519
+			 */
+
+			// console.log('manage_sections -> SaveData -> args = ', args);
+			var json_encoded = JSON.stringify(args, function(key, value){
+				// make sure every value is a string
+				switch( value ){
+					case null:
+					case undefined:
+						value = "";
+						break;
+					case true:
+						value = "true";
+						break;
+					case false:
+						value = "false";
+						break;
+					default:
+						if( $.isNumeric(value) ){
+							value = "" + value;
+						}
+						break;
+				}
+				return value;
+			});
+			// console.log('manage_sections -> SaveData -> json_encoded = ' + json_encoded);
+			return 'cmd=SaveSections&sections_json=' + encodeURIComponent(json_encoded);
+
+			/*
+			 * FIX for too many sections issue
+			 * 
+			 */
+			 // return $.param(args);
+
 		},
 
 

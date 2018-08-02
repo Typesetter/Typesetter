@@ -125,10 +125,10 @@ namespace gp\tool{
 		 * Create a resized image of the file at $src_relative
 		 *
 		 */
-		public static function CreateImage($src_relative,$width,$height){
+		public static function CreateImage($src_relative, $width, $height){
 			global $dataDir;
 
-			$src_path = $dataDir.'/data/_uploaded'.$src_relative;
+			$src_path = $dataDir . '/data/_uploaded' . $src_relative;
 			if( !file_exists($src_path) ){
 				return false;
 			}
@@ -156,7 +156,7 @@ namespace gp\tool{
 			if( !$dest_index ){
 				$dest_index = \gp_resized::NewIndex();
 			}
-			$dest_path = $dataDir.'/data/_resized/'.$dest_index.'/'.$info['name'];
+			$dest_path = $dataDir . '/data/_resized/' . $dest_index . '/' . $info['name'];
 			$exists_before = file_exists($dest_path);
 
 			//make sure the folder exists
@@ -165,7 +165,7 @@ namespace gp\tool{
 			}
 
 			//create new resized image
-			if( !\gp\tool\Image::createImg($src_img, $dest_path, 0, 0, 0, 0, $width, $height, $actual_w, $actual_h) ){
+			if( !\gp\tool\Image::createImg($src_img, $dest_path, 0, 0, 0, 0, $width, $height, $actual_w, $actual_h, false, false, $src_path) ){
 				return false;
 			}
 
@@ -1026,7 +1026,7 @@ namespace gp\tool{
 				return false;
 			}
 
-			if( !\gp\tool\Image::createImg($src_img, $dest_img_full, $posx, $posy, 0, 0, $orig_w, $orig_h, $orig_w, $orig_h, $width, $height) ){
+			if( !\gp\tool\Image::createImg($src_img, $dest_img_full, $posx, $posy, 0, 0, $orig_w, $orig_h, $orig_w, $orig_h, $width, $height, $source_file_full) ){
 				msg($langmessage['OOPS'].' (Couldn\'t create image [2])');
 				return false;
 			}

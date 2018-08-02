@@ -27,10 +27,6 @@ namespace gp\tool{
 				return false;
 			}
 
-			$img_type = self::getType($img_path);
-			$preserve_icc_profiles =	($img_type == 'jpg' || $img_type == 'jpeg') && !empty($config['preserve_icc_profiles']);
-			$preserve_image_metadata =	($img_type == 'jpg' || $img_type == 'jpeg') && !empty($config['preserve_image_metadata']);
-
 			//Original Size
 			$old_x = imagesx($src_img);
 			$old_y = imagesy($src_img);
@@ -54,44 +50,8 @@ namespace gp\tool{
 				return true;
 			}
 
-			if( $preserve_icc_profiles ){
-				$jpeg_icc = new \JPEG_ICC();
-				$has_icc = $jpeg_icc->LoadFromJPEG($img_path);
-				// msg("Image " . basename($source_path) . " has ICC profile : " . ($has_icc?"true":"false"));
-			}
-
-			if( $preserve_image_metadata ){
-				$meta = \gp\tool\ImageMeta::getMeta($img_path);
-				/* FOR DEBUGGING - write a text file with acquired metadata and/or possible errors to the same directory */
-				/*
-					$pi = pathinfo($img_path);
-					$debug_metadata_file = $pi['dirname'] . '/' . $pi['filename'] . '_meta.txt';
-					$debug_metadata = 'Metadata for image file "' . basename($img_path) . '"' . "\n\n";
-					foreach( $meta as $mk => $mv ){
-						if( is_array($mv) ){
-							$debug_metadata .= $mk . ' : ' . "\n";
-							foreach( $md as $errk => $errd ){
-								$debug_metadata .= '  ' . $errk . ' : ' . $errv . "\n";
-							}
-						}else{
-							$debug_metadata .= $mk . ' : ' . $mv . "\n";
-						}
-					}
-					\gp\tool\Files::Save($debug_metadata_file, $debug_metadata); 
-				*/
-			}
-
-
-			$result = self::createImg($src_img, $img_path, 0, 0, 0, 0, $new_x, $new_y, $old_x, $old_y);
-
-
-			if( $preserve_image_metadata ){
-				$iptc_embedded = \gp\tool\ImageMeta::saveMeta($img_path, $meta);
-			}
-
-			if( $preserve_icc_profiles && $has_icc){
-				$jpeg_icc->SaveToJPEG($img_path);
-			}
+			$src_path = $img_path;
+			$result = self::createImg($src_img, $img_path, 0, 0, 0, 0, $new_x, $new_y, $old_x, $old_y, false, false, $src_path);
 
 			@chmod($img_path, gp_chmod_file);
 
@@ -125,9 +85,6 @@ namespace gp\tool{
 				return false;
 			}
 
-			$preserve_icc_profiles =	($img_type == 'jpg' || $img_type == 'jpeg') && !empty($config['preserve_icc_profiles']);
-			$preserve_image_metadata =	($img_type == 'jpg' || $img_type == 'jpeg') && !empty($config['preserve_image_metadata']);
-
 			//Size
 			$old_x = imagesx($src_img);
 			$old_y = imagesy($src_img);
@@ -150,25 +107,7 @@ namespace gp\tool{
 				$new_w = $new_h = max($old_x,$old_y);
 			}
 
-			if( $preserve_icc_profiles ){
-				$jpeg_icc = new \JPEG_ICC();
-				$has_icc = $jpeg_icc->LoadFromJPEG($source_path);
-				// msg("Image " . basename($source_path) . " has ICC profile : " . ($has_icc?"true":"false"));
-			}
-
-			if( $preserve_image_metadata ){
-				$meta = \gp\tool\ImageMeta::getMeta($source_path);
-			}
-
-			$result = self::createImg($src_img, $dest_path, 0, 0, $off_w, $off_h, $new_w, $new_h, $old_x, $old_y);
-
-			if( $preserve_image_metadata ){
-				$iptc_embedded = \gp\tool\ImageMeta::saveMeta($dest_path, $meta);
-			}
-
-			if( $preserve_icc_profiles && $has_icc){
-				$jpeg_icc->SaveToJPEG($dest_path);
-			}
+			$result = self::createImg($src_img, $dest_path, 0, 0, $off_w, $off_h, $new_w, $new_h, $old_x, $old_y, false, false, $source_path);
 
 			@chmod($dest_path, gp_chmod_file);
 
@@ -199,9 +138,6 @@ namespace gp\tool{
 			if( !$src_img ){
 				return false;
 			}
-
-			$preserve_icc_profiles =	($img_type == 'jpg' || $img_type == 'jpeg') && !empty($config['preserve_icc_profiles']);
-			$preserve_image_metadata =	($img_type == 'jpg' || $img_type == 'jpeg') && !empty($config['preserve_image_metadata']);
 
 			// Size
 			$old_w = imagesx($src_img);
@@ -251,25 +187,7 @@ namespace gp\tool{
 			);
 			*/
 
-			if( $preserve_icc_profiles ){
-				$jpeg_icc = new \JPEG_ICC();
-				$has_icc = $jpeg_icc->LoadFromJPEG($source_path);
-				// msg("Image " . basename($source_path) . " has ICC profile : " . ($has_icc?"true":"false"));
-			}
-
-			if( $preserve_image_metadata ){
-				$meta = \gp\tool\ImageMeta::getMeta($source_path);
-			}
-
-			$result = self::createImg($src_img, $dest_path, 0, 0, $off_w, $off_h, $new_w, $new_h, $old_w, $old_h);
-
-			if( $preserve_image_metadata ){
-				$iptc_embedded = \gp\tool\ImageMeta::saveMeta($dest_path, $meta);
-			}
-
-			if( $preserve_icc_profiles && $has_icc){
-				$jpeg_icc->SaveToJPEG($dest_path);
-			}
+			$result = self::createImg($src_img, $dest_path, 0, 0, $off_w, $off_h, $new_w, $new_h, $old_w, $old_h, false, false, $source_path);
 
 			@chmod($dest_path, gp_chmod_file);
 
@@ -500,14 +418,67 @@ namespace gp\tool{
 		/**
 		 * Save the GD image ($src_img) to the desired location ($dest_path) with the sizing arguments
 		 *
+		 * $src_path is required for ICC/meta data 
+		 * The method will still work w/o it but will not retain ICC/meta data (for possible plugin calls)
+		 *
 		 */
-		static function createImg($src_img, $dest_path, $dst_x, $dst_y, $off_w, $off_h, $dst_w, $dst_h, $old_x, $old_y, $new_w = false, $new_h = false){
+		static function createImg($src_img, $dest_path, $dst_x, $dst_y, $off_w, $off_h, $dst_w, $dst_h, $old_x, $old_y, $new_w = false, $new_h = false, $src_path = false){
 			global $config;
 
-			if( !$new_w ) $new_w = $dst_w;
-			if( !$new_h ) $new_h = $dst_h;
+			$preserve_icc_profiles = false;
+			$preserve_image_metadata = false;
 
-			$dst_img = imagecreatetruecolor($new_w,$new_h);
+			if( $src_path ){
+				$img_type = self::getType($src_path);
+				$dest_type = self::getType($dest_path);
+				if( ($img_type == 'jpg' || $img_type == 'jpeg') && ($dest_type == 'jpg' || $dest_type == 'jpeg') ){
+					$preserve_icc_profiles		= !empty($config['preserve_icc_profiles']);
+					$preserve_image_metadata	= !empty($config['preserve_image_metadata']);
+
+					if( $preserve_icc_profiles ){
+						$jpeg_icc = new \JPEG_ICC();
+						$has_icc = $jpeg_icc->LoadFromJPEG($src_path);
+						if( !$has_icc ){
+							$preserve_icc_profiles = false;
+							unset($jpeg_icc);
+						}
+					}
+
+					if( $preserve_image_metadata ){
+						$image_meta = \gp\tool\ImageMeta::getMeta($src_path);
+
+						/* FOR DEBUGGING - write a text file with acquired metadata and/or possible errors to the source directory */
+						/*
+						$pi = pathinfo($src_path);
+						$debug_metadata_file = $pi['dirname'] . '/' . $pi['filename'] . '_meta.txt';
+						$debug_metadata = 'Metadata for image file "' . basename($src_path) . '"' . "\n\n";
+						foreach( $image_meta as $mk => $mv ){
+							if( is_array($mv) ){
+								$debug_metadata .= $mk . ' : ' . "\n";
+								foreach( $md as $errk => $errd ){
+									$debug_metadata .= '  ' . $errk . ' : ' . $errv . "\n";
+								}
+							}else{
+								$debug_metadata .= $mk . ' : ' . $mv . "\n";
+							}
+						}
+						\gp\tool\Files::Save($debug_metadata_file, $debug_metadata); 
+						*/
+					}
+				}
+			}
+
+
+			if( !$new_w ){
+				$new_w = $dst_w;
+			}
+
+			if( !$new_h ){
+				$new_h = $dst_h;
+			}
+
+
+			$dst_img = imagecreatetruecolor($new_w, $new_h);
 			if( !$dst_img ){
 				trigger_error('dst_img not created');
 				return false;
@@ -528,12 +499,26 @@ namespace gp\tool{
 				trigger_error('copyresample failed');
 				imagedestroy($dst_img);
 				imagedestroy($src_img);
+				if( $preserve_icc_profiles ){
+					unset($jpeg_icc);
+				}
 				return false;
 			}
 
 			imagedestroy($src_img);
 
-			return self::SrcToImage($dst_img,$dest_path,$img_type);
+			$saved = self::SrcToImage($dst_img,$dest_path,$img_type);
+
+			if( $preserve_image_metadata ){
+				$iptc_embedded = \gp\tool\ImageMeta::saveMeta($dest_path, $image_meta);
+			}
+
+			if( $preserve_icc_profiles ){
+				$jpeg_icc->SaveToJPEG($dest_path);
+				unset($jpeg_icc);
+			}
+
+			return $saved;
 		}
 
 

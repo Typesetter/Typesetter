@@ -231,7 +231,7 @@ $langmessage = array (
 	'maximgarea'                     => 'Maximale Größe für hochgeladene Bilder (in Pixel). Ein Bild mit einer Größe von 600x800 Pixeln hat 480.000 Pixel.',
 	'resize_images'                  => 'Erzeugt optimierte Versionen von verkleinerten Bildern im Seiteninhalt.',
 	'preserve_icc_profiles'          => 'Eingebettete <a href="https://de.wikipedia.org/wiki/ICC-Profil" target="_blank">ICC Farbprofile</a> in JPEG Bildern beibehalten.',
-	'preserve_image_metadata'        => 'Eingebettete EXIF/IPTC Metadaten <em>Autor, Copyright, Beschriftung, Titel</em> and <em>Aufnahmedatum</em> in JPEG Bildern beibehalten.',
+	'preserve_image_metadata'        => 'Eingebettete EXIF/IPTC Metadaten <em>Autor, Copyright, Beschriftung, Titel</em> und <em>Aufnahmedatum</em> in JPEG Bildern beibehalten.',
 	'maxthumbsize'                   => 'Galeriebildgröße, Standard ist 300px × 300px.',
 	'maxthumbheight'                 => 'Optionale Höhe für Galeriebilder. Bleibt das Feld leer, wird der Wert <em>Galeriebildgröße</em> auch für die Höhe verwendet.',
 	'thumbskeepaspect'               => 'Seitenverhältnis der Originalbilder für Galeriebilder verwenden.',

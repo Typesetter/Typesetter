@@ -104,6 +104,9 @@ class Ajax extends \gp\admin\Menu{
 			case 'HomepageSave':
 				$this->HomepageSave();
 			return;
+			case 'HomepageAuto':
+				$this->HomepageAuto();
+			return;
 		}
 
 		parent::RunScript();
@@ -152,10 +155,13 @@ class Ajax extends \gp\admin\Menu{
 		echo '<tr><th colspan="2">'.$langmessage['options'].'</th></tr>';
 
 		//title
+		$new_title = htmlspecialchars($_REQUEST['title']);
+		// prevent code injections
+		$new_title = str_replace(array('=', '/', '{', '}', ':', ',', ';'), '', $new_title);
 		echo '<tr><td>';
 		echo $langmessage['label'];
 		echo '</td><td>';
-		echo '<input type="text" name="title" maxlength="100" size="50" value="'.htmlspecialchars($_REQUEST['title']).'" class="gpinput full_width" required/>';
+		echo '<input type="text" name="title" maxlength="100" size="50" value="'. $new_title .'" class="gpinput full_width" required/>';
 		echo '</td></tr>';
 
 		//copy
@@ -1292,6 +1298,29 @@ class Ajax extends \gp\admin\Menu{
 
 
 	/**
+	 * Set homepage to auto mode
+	 * homepage will be first item in main menu
+	 *
+	 */
+	public function HomepageAuto(){ 
+		global $config;
+
+		$config['homepath_auto'] = true;
+		if( !\gp\admin\Tools::SaveConfig(true) ){
+			return;
+		}
+
+		//update the display
+		ob_start();
+		$this->HomepageDisplay();
+		$content = ob_get_clean();
+
+		$this->page->ajaxReplace[] = array('inner', '.homepage_setting', $content);
+
+	}
+
+
+	/**
 	 * Save the posted page as the homepage
 	 *
 	 */
@@ -1317,8 +1346,10 @@ class Ajax extends \gp\admin\Menu{
 			}
 		}
 
-		$config['homepath_key'] = $homepage_key;
-		$config['homepath']		= \gp\tool::IndexToTitle($config['homepath_key']);
+		$config['homepath_key']		= $homepage_key;
+		$config['homepath']			= \gp\tool::IndexToTitle($config['homepath_key']);
+		// custom homepage from post --> disable auto mode
+		$config['homepath_auto']	= false;
 		if( !\gp\admin\Tools::SaveConfig(true) ){
 			return;
 		}

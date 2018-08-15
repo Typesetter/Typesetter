@@ -1,5 +1,5 @@
 @import 'mixins.scss';
-@import 'include/thirdparty/Bootstrap3/scss/bootstrap/_mixins.scss';
+// @import 'include/thirdparty/Bootstrap3/scss/bootstrap/_mixins.scss';
 
 body{
 	padding:0;
@@ -7,10 +7,9 @@ body{
 	}
 
 #gp_layout_iframe{
-	height:100%;
+	height:calc(100vh - 4px);
 	width:100%;
 	border:0 none;
-	overflow:hidden;
 	}
 
 

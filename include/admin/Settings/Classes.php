@@ -161,13 +161,13 @@ class Classes extends \gp\special\Base{
 		// FORM
 		echo '<form action="' . $this->admin_link . '" method="post">';
 		echo '<table class="bordered full_width sortable_table">';
-		echo '<thead><tr><th>className(s)</th><th>Description (optional)</th></tr></thead>';
+		echo '<thead><tr><th>' . $langmessage['Classes'] . '</th><th>' . $langmessage['description'] . '</th></tr></thead>';
 		echo '<tbody>';
 
 		foreach( $classes as $key => $classArray ){
 			echo '<tr><td>';
 			echo '<img alt="" src="'.\gp\tool::GetDir('/include/imgs/drag_handle.gif').'" /> &nbsp; ';
-			echo '<input size="16" class="gpinput" type="text" name="class_names[]" value="' . $classArray['names'] . '"/>';
+			echo '<input size="32" class="gpinput" type="text" name="class_names[]" value="' . $classArray['names'] . '"/>';
 			echo '</td><td>';
 			echo '<input size="64" class="gpinput" type="text" name="class_desc[]" value="' . $classArray['desc'] . '"/> ';
 			echo '<a class="gpbutton rm_table_row" title="Remove Item" data-cmd="rm_table_row"><i class="fa fa-trash"></i></a>';
@@ -175,7 +175,7 @@ class Classes extends \gp\special\Base{
 		}
 
 		echo '<tr><td colspan="3">';
-		echo '<a data-cmd="add_table_row">Add Row</a>';
+		echo '<a data-cmd="add_table_row">' . $langmessage['add'] . '</a>';
 		echo '</td></tr>';
 		echo '</tbody>';
 		echo '</table>';
@@ -185,25 +185,14 @@ class Classes extends \gp\special\Base{
 		// SAVE / CANCEL BUTTONS
 		echo '<button type="submit" name="cmd" value="SaveClasses" class="gpsubmit">'.$langmessage['save'].'</button>';
 		echo '<button type="submit" name="cmd" value="" class="gpcancel">'.$langmessage['cancel'].'</button>';
-
-		echo '<div style="margin-top:2em; border:1px solid #ccc; background:#fafafa; border-radius:3px; padding:12px;">';
-		echo 'CSS classNames you set here will be easily selectable in the Section Attributes dialog.';
-		echo '<ul>';
-		echo '<li>Single classNames (like <em>gpRow</em>) will show as checkboxes</li>';
-		echo '<li>Multiple, space separated classNames (like <em>gpCol-1 gpCol-2 gpCol-3 [&hellip;]</em> will show as checkable dropdown list.</li>';
-		echo '<li>The list is drag&rsquo;n&rsquo;drop sortable.</li>';
-		echo '</ul><hr/>';
-
-
 		echo '</form>';
 
-
-		//$tooltip = $isBootswatchTheme ? ":-) Your current default theme is Bootstrap based - cleared for Take Off!" : ":-/ You will have to use a Bootstrap based theme for this preset!";
-		echo '<p>';
+		echo '<div class="classes-load-presets well">';
+		echo $langmessage['Manage Classes Description'];
 		echo '<form action="' . $this->admin_link . '" method="get">';
-		echo '<button class="gpbutton" name="cmd" value="LoadBootstrap">Load the Bootstrap Preset</button> ';
-		echo '<button class="gpbutton" name="cmd" value="LoadDefault">Load the Default Preset</button>';
-		echo '</p>';
+		echo '<button class="gpbutton" name="cmd" value="LoadBootstrap">' . $langmessage['Load the Bootstrap Preset'] . '</button> ';
+		echo '<button class="gpbutton" name="cmd" value="LoadDefault">' . $langmessage['Load the Default Preset'] . '</button>';
+		echo '</form>';
 		echo '</div>';
 
 

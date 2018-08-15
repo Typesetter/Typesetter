@@ -18,7 +18,7 @@ class Cache extends \gp\special\Base{
 		$this->AllFiles();
 
 
-		echo '<h2>'.$langmessage['Resource Cache'].'</h2>';
+		echo '<h2>' . $langmessage['Resource Cache'] . '</h2>';
 
 
 		$cmd = \gp\tool::GetCommand();
@@ -52,7 +52,7 @@ class Cache extends \gp\special\Base{
 	 *
 	 */
 	protected function ShowFiles(){
-		global $langmessage;
+		global $langmessage, $config;
 
 		$this->page->head_js[] = '/include/thirdparty/tablesorter/tablesorter.js';
 		$this->page->jQueryCode .= '$("table.tablesorter").tablesorter({cssHeader:"gp_header",cssAsc:"gp_header_asc",cssDesc:"gp_header_desc"});';
@@ -64,21 +64,16 @@ class Cache extends \gp\special\Base{
 
 
 		echo '<p>';
-		echo \gp\tool::Link('Admin/Cache','Empty Cache','cmd=EmptyResourceCache',array('data-cmd'=>'cnreq','class'=>'gpconfirm','title'=>'Empty the resource cache?'));
+		echo \gp\tool::Link('Admin/Cache',$langmessage['Empty Cache'],'cmd=EmptyResourceCache',array('data-cmd'=>'cnreq','class'=>'gpbutton gpconfirm','title'=>$langmessage['Empty Cache'].'?'));
 		echo '</p>';
 
 		echo '<table class="bordered tablesorter full_width">';
-		echo '<thead>';
-		echo '<tr><th>';
-		echo $langmessage['file_name'];
-		echo '</th><th>';
-		echo $langmessage['File Size'];
-		echo '</th><th>';
-		echo 'Touched';
-		echo '</th><th>';
-		echo $langmessage['options'];
-		echo '</th></tr>';
-		echo '</thead>';
+		echo '<thead><tr>';
+		echo '<th>' . $langmessage['file_name'] . '</th>';
+		echo '<th>' . $langmessage['File Size'] . '</th>';
+		echo '<th>' . $langmessage['Touched'] . '</th>';
+		echo '<th>' . $langmessage['options'] . '</th>';
+		echo '</tr></thead>';
 
 		$total_size = 0;
 		echo '<tbody>';
@@ -87,7 +82,7 @@ class Cache extends \gp\special\Base{
 
 			echo '<tr><td>';
 			echo '<a href="?cmd=ViewFile&amp;file='.rawurlencode($file).'">';
-			echo $file;
+			echo '<i class="fa fa-file-text-o"></i> ' . $file;
 			echo '</a>';
 			echo '</td><td>';
 			$size = filesize($full);
@@ -96,8 +91,12 @@ class Cache extends \gp\special\Base{
 			$total_size += $size;
 
 			echo '</td><td>';
-			$elapsed = \gp\admin\Tools::Elapsed( time() - filemtime($full) );
-			echo sprintf($langmessage['_ago'],$elapsed);
+			if( $config['language'] == 'en' ){
+				$elapsed = \gp\admin\Tools::Elapsed( time() - filemtime($full) );
+				echo sprintf($langmessage['_ago'],$elapsed);
+			 }else{
+			 	echo date('Y/m/d', filemtime($full));
+			 }
 			echo '</td><td>';
 
 			echo \gp\tool::Link('Admin/Cache',$langmessage['delete'],'cmd=DeleteFile&amp;file='.rawurlencode($file),array('data-cmd'=>'cnreq','class'=>'gpconfirm','title'=>$langmessage['delete_confirm']));
@@ -107,9 +106,9 @@ class Cache extends \gp\special\Base{
 		echo '</tbody>';
 		//totals
 		echo '<tfoot>';
-		echo '<tr><td>';
-		echo number_format(count($this->all_files)).' Files';
-		echo '</td><td>';
+		echo '<tr><td><strong>';
+		echo number_format(count($this->all_files)).' <i class="fa fa-file-text-o"></i> ' . $langmessage['Total'];
+		echo '</strong></td><td>';
 		echo \gp\admin\Tools::FormatBytes($total_size);
 
 		echo '</td><td>';

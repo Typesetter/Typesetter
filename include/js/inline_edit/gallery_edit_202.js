@@ -114,7 +114,7 @@
 			var args = {
 				images: [],
 				captions: [],
-				attributes: []
+				attributes: {}
 			};
 
 
@@ -133,7 +133,7 @@
 
 			// attributes
 			section_object.attributes = section_object.attributes || {};
-			args.attributes['class'] = section_object.attributes['class'] || '';
+			args.attributes.class = section_object.attributes['class'] || '';
 
 			//get content
 			var data = edit_div.clone();
@@ -218,14 +218,10 @@
 			var current_classes = gp_editor.edit_div.attr("class").split(" ");
 			$.each(current_classes, function(i,v){
 				var classname = v.trim();
-				if( classname.indexOf('gallery-theme-') === 0 ){
-					$("select.SelectGalleryTheme").val(classname);
-				}
-				if( classname.indexOf('gallery-size-') === 0 ){
-					$("select.SelectGallerySize").val(classname);
-				}
-				if( classname.indexOf('gallery-color-') === 0 ){
-					$("select.SelectGalleryColor").val(classname);
+				if( classname.indexOf('gallery-theme-') === 0 
+					|| classname.indexOf('gallery-size-') === 0
+					|| classname.indexOf('gallery-color-') === 0 ){
+					$('#' + classname).click();
 				}
 			});
 		};
@@ -236,11 +232,11 @@
 		 * triggered by select.SetGalleryStyles change event
 		 */
 		gp_editor.setSectionClasses = function(evt){
-			var $select = $(evt.target);
-			var options = $select.find("option");
-			var possible_classes = $.map(options, function(option){ return option.value; });
+			var $button_row = $(evt.target).closest('.gallery-style-button-row');
+			var $inputs = $button_row.find('input[type="radio"]');
+			var possible_classes = $.map($inputs, function(input){ return $(input).val(); });
 			var remove_classes = possible_classes.join(" ");
-			var selected_class = $select.val();
+			var selected_class = $(evt.target).val();
 
 			var current_classes = section_object.attributes['class'] || '';
 			var tmp_div = $('<div class="">')
@@ -291,31 +287,40 @@
 			//floating editor
 			var html	= ''; //<h4>Gallery Images</h4>'
 
-			if( typeof(gallery_editing_options) != 'undefined' ){ // TS 5.1+ and 'Use Gallery Legacy Style' disabled
-				html += '<select class="ckeditor_control full_width SelectGalleryStyle SelectGalleryTheme">';
+			if( typeof(gallery_editing_options) != 'undefined' && section_object.type == "gallery" ){ // TS 5.1+ and 'Use Gallery Legacy Style' disabled
+				html += '<div class="gallery-style-button-row">';
 				$.each(gp_editor.gallery_theme, function(i,v){
-					var selected = v.class_name.indexOf('-theme-default') !== -1 ? ' selected="selected"' : ''; 
-					html += '<option value="' + v.class_name + '"' + selected + '>' + v.label + '</option>';
+					var checked = v.class_name.indexOf('-theme-default') !== -1 ? ' checked="checked"' : ''; 
+					html += '<div class="gallery-style-button">';
+					html += '<input type="radio" id="' + v.class_name + '" name="gallery-theme" value="' + v.class_name + '"' + checked + '/>'; // title="' + v.label +  '"
+					html += '<label for="' + v.class_name + '"></label>';
+					html += '</div>';
 				});
-				html += '</select>';
+				html += '</div>';
 
-				html += '<select class="ckeditor_control full_width SelectGalleryStyle SelectGallerySize">';
+				html += '<div class="gallery-style-button-row">';
 				$.each(gp_editor.gallery_size, function(i,v){
-					var selected = v.class_name.indexOf('-size-md') !== -1 ? ' selected="selected"' : ''; 
-					html += '<option value="' + v.class_name + '"' + selected + '>' + v.label + '</option>';
+					var checked = v.class_name.indexOf('-size-md') !== -1 ? ' checked="checked"' : ''; 
+					html += '<div class="gallery-style-button">';
+					html += '<input type="radio" id="' + v.class_name + '" name="gallery-size" value="' + v.class_name + '"' + checked + '/>'; // title="' + v.label +  '"
+					html += '<label for="' + v.class_name + '"></label>';
+					html += '</div>';
 				});
-				html += '</select>';
+				html += '</div>';
 
-				html += '<select class="ckeditor_control full_width SelectGalleryStyle SelectGalleryColor">';
+				html += '<div class="gallery-style-button-row">';
 				$.each(gp_editor.gallery_color, function(i,v){
-					var selected = v.class_name.indexOf('-color-default') !== -1 ? ' selected="selected"' : ''; 
-					html += '<option value="' + v.class_name + '"' + selected + '>' + v.label + '</option>';
+					var checked = v.class_name.indexOf('-color-default') !== -1 ? ' checked="checked"' : ''; 
+					html += '<div class="gallery-style-button">';
+					html += '<input type="radio" id="' + v.class_name + '" name="gallery-color" value="' + v.class_name + '"' + checked + '/>'; // title="' + v.label +  '"
+					html += '<label for="' + v.class_name + '"></label>';
+					html += '</div>';
 				});
-				html += '</select>';
+				html += '</div>';
 			}
 
 			html += '<div id="gp_current_images"></div>'
-						+ '<a class="ckeditor_control full_width ShowImageSelect" data-cmd="ShowImageSelect"> '+gplang.SelectImage+'</a>'
+						+ '<a class="ckeditor_control full_width ShowImageSelect" data-cmd="ShowImageSelect"> ' + gplang.SelectImage + '</a>'
 						+ '<div id="gp_select_wrap">'
 						+ '<div id="gp_image_area"></div>'
 						+ '<div id="gp_upload_queue"></div>'
@@ -324,8 +329,8 @@
 
 			$('#ckeditor_top')
 				.html(html)
-				.find("select.SelectGalleryStyle")
-					.on("change", gp_editor.setSectionClasses );
+				.find('.gallery-style-button input[type="radio"]')
+					.on('change', gp_editor.setSectionClasses );
 
 			$('#ckeditor_wrap').addClass('multiple_images'); //indicate multiple images can be added
 

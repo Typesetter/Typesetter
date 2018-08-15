@@ -60,6 +60,7 @@ class Configuration extends \gp\special\Base{
 						'HTML_Tidy'					=> '',
 						'Report_Errors'				=> 'boolean',
 						'combinejs'					=> 'boolean',
+						'minifyjs'					=> 'boolean',
 						'combinecss'				=> 'boolean',
 						'etag_headers'				=> 'boolean',
 						'space_char'				=> array('_'=>'Undersorce "_"','-'=>'Dash "-"'),
@@ -427,9 +428,9 @@ class Configuration extends \gp\special\Base{
 		}
 
 		if( isset($_GET['gpreq']) && $_GET['gpreq'] == 'json' ){
-			echo '<input value="' . $langmessage['save'] . ' (' . $langmessage['All'] . ')" type="submit" name="aaa" accesskey="s" class="gppost gpsubmit" />';
+			echo '<input value="' . $langmessage['Save All'] . '" type="submit" name="aaa" accesskey="s" class="gppost gpsubmit" />';
 		}else{
-			echo '<input value="' . $langmessage['save'] . ' (' . $langmessage['All'] . ')" type="submit" name="aaa" accesskey="s" class="gpsubmit"/>';
+			echo '<input value="' . $langmessage['Save All'] . '" type="submit" name="aaa" accesskey="s" class="gpsubmit"/>';
 		}
 
  		echo '</div>';

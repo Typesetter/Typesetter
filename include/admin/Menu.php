@@ -440,6 +440,11 @@ class Menu extends \gp\special\Base{
 		$this->page->ajaxReplace[] = array('gp_menu_refresh','','');
 
 		ob_start();
+		$this->HomepageDisplay();
+		$content = ob_get_clean();
+		$this->page->ajaxReplace[] = array('inner','.homepage_setting',$content);
+
+		ob_start();
 		\gp\tool\Output::GetMenu();
 		$content = ob_get_clean();
 		$this->page->ajaxReplace[] = array('inner','#admin_menu_wrap',$content);
@@ -1606,17 +1611,33 @@ class Menu extends \gp\special\Base{
 	public function HomepageDisplay(){
 		global $langmessage, $config;
 
-
 		if( \gp\admin\Menu\Tools::ResetHomepage() ){
 			\gp\admin\Tools::SaveConfig();
 		}
 
 		$label = \gp\tool::GetLabelIndex($config['homepath_key']);
 
-
 		echo '<span class="fa fa-home"></span> ';
-		echo $langmessage['Homepage'].': ';
-		echo \gp\tool::Link('Admin/Menu/Ajax',$label,'cmd=HomepageSelect','data-cmd="gpabox"');
+		echo $langmessage['Homepage'] . ': ';
+		echo \gp\tool::Link(
+				'Admin/Menu/Ajax', 
+				$label, 
+				'cmd=HomepageSelect', 
+				'data-cmd="gpabox"'
+			);
+		if( empty($config['homepath_auto']) ){
+			echo '&nbsp;&nbsp;';
+			echo \gp\tool::Link(
+				'Admin/Menu/Ajax', 
+				'<i class="fa fa-unlock"></i>', 
+				'cmd=HomepageAuto', 
+				array(
+					'class'		=> 'gpbutton',
+					'title'		=> $langmessage['disable'],
+					'data-cmd'	=> 'gpajax',
+				)
+			);
+		}
 	}
 
 

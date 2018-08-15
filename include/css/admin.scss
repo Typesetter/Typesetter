@@ -32,16 +32,16 @@
 #gp_admin_html{
 	color: #333;
 	font-size: 13px;
-	font-family: "Segoe UI", "San Francisco", "Helvetica Neue", "DejaVu Sans", "Arial", sans-serif;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	line-height: 130%;
-	/* background:none; */
+	font-weight: normal;
 	}
-#gp_admin_html *{
 
+#gp_admin_html *{
 	text-shadow: none;
 	@include box-sizing( content-box );
 	/* background: none; prevents other backgrounds from showing. "inherit" wouldn't make sense */
-	font-family:inherit; font-size:inherit; line-height:inherit; // conflicts with fontawesome
+	font-family:inherit; font-size:inherit; line-height:inherit; //* conflicts with fontawesome */
 	}
 
 #gp_admin_html hr{
@@ -165,6 +165,7 @@
 	background-color: #f1f1f1;
 	border-radius: 6px;
 	border: 1px solid #ccc;
+	text-decoration: none !important;
 
 	color: #333 !important;
 	text-shadow: 1px 1px 0 #fff;
@@ -1855,6 +1856,24 @@ body #addon_about{
 	background: #f9f9f9;
 	border-radius: 3px;
 	margin-bottom: 20px;
+	}
+
+#gp_admin_html .classes-load-presets{
+	margin-top: 20px;
+			
+	ul{
+		margin:0.5em 0;
+		padding-left: 1.25em;
+
+		li{
+			list-style: circle outside none;
+		}
+	}
+
+	form{
+		border-top: 1px solid #ddd;
+		padding-top: 20px;
+	}
 }
 
 

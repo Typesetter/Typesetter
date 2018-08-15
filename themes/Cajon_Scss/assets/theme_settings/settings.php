@@ -14,18 +14,20 @@ class ThemeCajon_Settings{
    * Typesetter Filter hook 
    */
   static function PageRunScript($cmd) {
-    global $page, $langmessage, $addonRelativeCode;
-
+    global $page, $langmessage, $addonRelativeCode, $gpLayouts;
     if( !\gp\tool::LoggedIn() ){
-      return;
+      return $cmd;
     }
 
-    $page->admin_links[] = array(
-      $page->title, 
-      '<i class="fa fa-paint-brush"></i> ' . $langmessage['theme'] . ' Cajón ', 
-      'cmd=ThemeCajonSettingsForm', 
-      'class="theme-cajon-adminbar-button" data-cmd="gpabox" title="' . $langmessage['theme'] . ' ' . $langmessage['Settings'] . '"'
-    );
+    $layout = isset($page->TitleInfo['gpLayout']) ? $page->TitleInfo['gpLayout'] : 'default';
+    if( strpos($gpLayouts[$layout]['theme'], 'Cajon_Scss') !== false ){
+      $page->admin_links[] = array(
+        $page->title, 
+        '<i class="fa fa-paint-brush"></i> ' . $langmessage['theme'] . ' Cajón', 
+        'cmd=ThemeCajonSettingsForm', 
+        'class="theme-cajon-adminbar-button" data-cmd="gpabox" title="' . $langmessage['theme'] . ' ' . $langmessage['Settings'] . '"'
+      );
+    }
 
     self::LoadConfig();
     $page->head_js[] = $addonRelativeCode . '/assets/theme_settings/settings.js';

@@ -40,17 +40,19 @@ namespace gp\tool{
 		 * @static
 		 * @return string
 		 */
-		public static function GetForm($theme='light'){
+		public static function GetForm($theme='light', $size='', $lang=''){
 			global $config;
-
+			$custom_size	= !empty($size) ? ' data-size="' . htmlspecialchars($size) .'"' : ''; // conpact, normal
+			$custom_lang	= !empty($lang) ? '&hl='. htmlspecialchars($lang) : '';
 			$html = '';
 			if( self::hasRecaptcha() ){
 				includeFile('thirdparty/recaptcha/autoload.php');
-				$html = '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
-				$html .= '<div class="g-recaptcha" data-theme="'.$theme.'" data-sitekey="'.$config['recaptcha_public'].'"></div>'; //data-size="compact"
+				$html = '<script src="https://www.google.com/recaptcha/api.js' . $custom_lang . '" async defer></script>';
+				$html .= '<div class="g-recaptcha" data-theme="' . $theme . '" ';
+				$html .=   'data-sitekey="' . $config['recaptcha_public'] . '"' . $custom_size . '></div>';
 			}
 
-			return \gp\tool\Plugins::Filter('AntiSpam_Form',array($html));
+			return \gp\tool\Plugins::Filter('AntiSpam_Form', array($html));
 		}
 
 		/**

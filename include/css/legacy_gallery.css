@@ -1,6 +1,6 @@
 .gp_gallery{
 	clear:both;
-	overflow:auto !important; /* for gallery display in admin content */
+	/* overflow:auto!important; -- for gallery display in admin content */
 	}
 
 .gp_gallery li{

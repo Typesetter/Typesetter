@@ -9,6 +9,7 @@
  *        'bmp', 'bz', 
  *        'css', 'csv', 
  *        'doc', 'docx', 
+ *        'eot',
  *        'fla', 'flac', 'flv', 
  *        'gif', 'gz', 'gzip', 
  *        'htm', 'html', 
@@ -16,14 +17,14 @@
  *        'jpeg', 'jpg', 'js', 'json', 
  *        'less', 
  *        'm4v', 'md, 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 
- *        'ods', 'odt', 'ogg', 'oga', 'ogv', 'opus', 
+ *        'ods', 'odt', 'ogg', 'oga', 'ogv', 'opus', 'otf',
  *        'pages', 'pdf', 'png', 'ppt', 'pptx', 
  *        'qt', 
  *        'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 
  *        'scss', 'svg', 'svgz', 'swf', 'sxc', 'sxw',
- *        'tar', 'tgz', 'tif', 'tiff', 'txt', 
+ *        'tar', 'tgz', 'tif', 'tiff', 'ttf', 'txt', 
  *        'vsd', 
- *        'wav', 'wma', 'webm', 'wmv', 
+ *        'wav', 'webmanifest', 'webm', 'wma', 'wmv', 'woff', 'woff2',
  *        'xls', 'xlsx', 'xml', 'xsl' 
  *        'zip',
  * )
@@ -179,6 +180,15 @@ define('gpdebug',false);
  */
 //define('gp_safe_mode',false);
 
+
+/**
+ * gp_prefix_urls
+ * Set to true will prefix internal content URLs (href, src, ..., starting with '/')
+ * with $LinkPrefix or $dirPrefix variables when saving in order to make the 
+ * content portable across different directory levels and hosts
+ * Defaults to false
+ */
+define('gp_prefix_urls',false);
 
 
 /**

@@ -122,7 +122,7 @@ class Edit extends \gp\admin\Layout{
 		\gp\admin\Tools::$show_toolbar		= false;
 
 		// <head>
-		$this->page->head .= '<script type="text/javascript">parent.$gp.iframeloaded();</script>';
+		$this->page->head .= '<script type="text/javascript">if( typeof(parent.$gp) == "object" && typeof(parent.$gp.iframeloaded()) == "function" ){ parent.$gp.iframeloaded(); }</script>';
 		if( $cmd != 'PreviewCSS' ){
 			$this->page->head .= '<script type="text/javascript">var gpLayouts=true;</script>';
 		}
@@ -173,7 +173,7 @@ class Edit extends \gp\admin\Layout{
 		//Iframe
 		echo '<div id="gp_iframe_wrap">';
 		$url = \gp\tool::GetUrl('Admin_Theme_Content/Edit/'.rawurlencode($layout),'cmd=in_iframe');
-		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe" scrolling="no"></iframe>';
+		echo '<iframe src="'.$url.'" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';
 		echo '</div>';
 
 
@@ -236,10 +236,10 @@ class Edit extends \gp\admin\Layout{
 		echo '<div class="css_buttons">';
 
 		// preview
-		echo '<button name="cmd" type="submit" value="PreviewCSS" class="gpsubmit gpdisabled" disabled="disabled" data-cmd="preview_css" />'.$langmessage['preview'].'</button>';
+		echo '<button name="cmd" type="submit" value="PreviewCSS" class="gpsubmit gpdisabled" disabled="disabled" data-cmd="preview_css">'.$langmessage['preview'].'</button>';
 
 		// save
-		echo '<button name="cmd" type="submit" value="SaveCSS" class="gpsubmit gpdisabled" disabled="disabled" data-cmd="save_css" />'.$langmessage['save'].'</button>'; 
+		echo '<button name="cmd" type="submit" value="SaveCSS" class="gpsubmit gpdisabled" disabled="disabled" data-cmd="save_css">'.$langmessage['save'].'</button>'; 
 
 		// reset
 		echo '<input type="reset" class="gpcancel gpdisabled" disabled="disabled" data-cmd="reset_css" />';

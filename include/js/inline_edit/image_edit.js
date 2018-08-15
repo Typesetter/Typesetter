@@ -10,13 +10,14 @@
 		var field_h			= null;
 		var field_x			= null;
 		var field_y			= null;
+		var field_a			= null;
 
 		var anim_values	= {
 			posx		: 0,
 			posy		: 0,
 			height		: 0,
 			width		: 0
-			};
+		};
 
 		var anim_freq		= 100;
 
@@ -36,6 +37,7 @@
 
 		var save_obj	= {
 			src			: $edit_img.attr('src'),
+			alt			: $edit_img.attr('alt'),
 			posx		: 0,
 			posy		: 0,
 			width		: 0,
@@ -47,6 +49,7 @@
 		// use the original image
 		if( section_object.orig_src ){
 			save_obj.src		= section_object.orig_src;
+			save_obj.alt		= section_object.attributes.alt;
 			save_obj.posx		= section_object.posx;
 			save_obj.posy		= section_object.posy;
 			save_obj.width		= section_object.attributes.width;
@@ -74,6 +77,8 @@
 
 			save_obj.width		= field_w.value;
 			save_obj.height		= field_h.value;
+
+			save_obj.alt		= field_a.value;
 
 			return jQuery.param( save_obj )+'&cmd=save_inline';
 		}
@@ -104,7 +109,7 @@
 		 *
 		 */
 		this.wake = function(){
-			timeout = window.setInterval( Animate ,anim_freq); //constant animation
+			timeout = window.setInterval(Animate, anim_freq); //constant animation
 
 			$gp.response.image_options_loaded		= ImagesLoaded;
 			$gp.response.gp_gallery_images			= MultipleFileHandler;
@@ -180,12 +185,14 @@
 			field_h			= input('height');
 			field_x			= input('left');
 			field_y			= input('top');
+			field_a			= input('alt');
 
 
 			field_x.value		= save_obj.posx;
 			field_y.value		= save_obj.posy;
 			field_w.value		= save_obj.width;
 			field_h.value		= save_obj.height;
+			field_a.value		= save_obj.alt;
 
 
 
@@ -197,10 +204,12 @@
 			anim_values.width			= $edit_img.width();
 			anim_values.height			= $edit_img.height();
 
-			SetCurrentImage( save_obj.src, anim_values.width, anim_values.height );
+			SetCurrentImage( save_obj.src, save_obj.alt, anim_values.width, anim_values.height );
 			SetupDrag();
 
 			$edit_img.attr('src',gp_blank_img); //after getting size
+
+			$edit_img.attr('alt',gp_blank_img.split('/').pop());
 
 			saved_data					= SaveData();
 
@@ -267,18 +276,23 @@
 		 * Set the current image
 		 *
 		 */
-		function SetCurrentImage( src, width, height){
+		function SetCurrentImage(src, alt, width, height){
 			delete save_obj.src;
 
 			save_obj.src = src;
 
+			save_obj.alt = alt;
+
 			$edit_img.css({'background-image':'url("'+$gp.htmlchars(save_obj.src)+'")'});
-			$('#gp_current_image img').attr('src', save_obj.src );
+			$('#gp_current_image img').attr({
+				'src' : save_obj.src,
+				'alt' : save_obj.alt 
+			});
 
 			if( width > 0 && height > 0 ){
-
 				field_w.value	= width;
 				field_h.value	= height;
+				field_a.value	= alt;
 			}
 		}
 
@@ -304,7 +318,8 @@
 			form.find('.file').auto_upload({
 
 				start: function(name, settings){
-					settings['bar'] = $('<a data-cmd="gp_file_uploading">'+name+'</a>').appendTo('#gp_upload_queue');
+					settings['bar'] = $('<a data-cmd="gp_file_uploading">'+name+'</a>')
+						.appendTo('#gp_upload_queue');
 					return true;
 				},
 
@@ -357,8 +372,11 @@
 
 			var width			= $this.data('width');
 			var height			= $this.data('height');
+			var alt				= $this.attr('href').split('/').pop().split('_').join(' ');
+				alt				= alt.substring(0, alt.lastIndexOf('.'));
 
-			SetCurrentImage( $this.attr('href'), width, height );
+			SetCurrentImage( $this.attr('href'), alt, width, height );
+
 			SetPosition(0,0);
 		}
 
@@ -369,10 +387,16 @@
 		function ShowImages(){
 
 			//get original image size
-			var img = $('<img>').css({'height':'auto','width':'auto','padding':0}).attr('src',save_obj.src).appendTo('body');
+			var img = $('<img>').css({'height':'auto','width':'auto','padding':0})
+				.attr({
+					'src' : save_obj.src, 
+					'alt' : save_obj.alt
+				})
+				.appendTo('body');
 
 			field_w.value 		= img.width();
 			field_h.value		= img.height();
+			field_a.value 		= img.attr('alt');
 
 			SetPosition(0,0);
 
@@ -394,6 +418,5 @@
 
 		//create gp_editor object
 		gp_editor = new ImageEditor(area_id, section_object);
-
 	}
 

@@ -84,7 +84,52 @@
 
 			});
 
-			return $.param(args);
+			/*
+			 * FIX for too many sections issue
+			 *
+			 * with large amounts of sections, we may exceed max_post_values
+			 * which causes an error and prevents further editing of the page.
+			 *
+			 * sending all the section data in a single JSON string 
+			 * instead of parametrizing all values will address this issue.
+			 *
+			 * the current implementation should be considered as a hot fix.
+			 * it should eventually be done more elegant.
+			 *
+			 * See its server side counterpart in /include/Page/Edit.php line 490-519
+			 */
+
+			// console.log('manage_sections -> SaveData -> args = ', args);
+			var json_encoded = JSON.stringify(args, function(key, value){
+				// make sure every value is a string
+				switch( value ){
+					case null:
+					case undefined:
+						value = "";
+						break;
+					case true:
+						value = "true";
+						break;
+					case false:
+						value = "false";
+						break;
+					default:
+						if( $.isNumeric(value) ){
+							value = "" + value;
+						}
+						break;
+				}
+				return value;
+			});
+			// console.log('manage_sections -> SaveData -> json_encoded = ' + json_encoded);
+			return 'cmd=SaveSections&sections_json=' + encodeURIComponent(json_encoded);
+
+			/*
+			 * FIX for too many sections issue
+			 * 
+			 */
+			 // return $.param(args);
+
 		},
 
 
@@ -1030,9 +1075,10 @@
 
 		//popup
 		html = '<div class="inline_box"><form id="section_attributes_form" data-gp-area-id="' + id + '">';
-		html += '<h2>Section Attributes</h2>';
+		html = '<div class="inline_box"><form id="section_attributes_form" data-gp-area-id="' + id + '">';
+		html += '<h2>' + gplang.SectionAttributes + '</h2>';
 		html += '<table class="bordered full_width">';
-		html += '<thead><tr><th>Attribute</th><th>Value</th></tr></thead><tbody>';
+		html += '<thead><tr><th>' + gplang.Attribute + '</th><th>' + gplang.Value + '</th></tr></thead><tbody>';
 
 
 		$.each(attrs,function(name){
@@ -1067,7 +1113,7 @@
 		});
 
 		html += '<tr><td colspan="3">';
-		html += '<a data-cmd="add_table_row">Add Attribute</a>';
+		html += '<a data-cmd="add_table_row">' + gplang.AddAttribute + '</a>';
 		html += '</td></tr>';
 		html += '</tbody></table>';
 

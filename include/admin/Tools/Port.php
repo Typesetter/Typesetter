@@ -177,6 +177,9 @@ class Port{
 			$add_dirs[] = $dataDir.'/data/_addoncode';
 			$add_dirs[] = $dataDir.'/data/_addondata';
 			$add_dirs[] = $dataDir.'/addons';
+			$add_dirs[] = $dataDir.'/data/_ckeditor';  // CK Editor config and plugins, Typesetter v. 5.1.1
+			$add_dirs[] = $dataDir.'/data/_config';    // CSS classes, Typesetter v. 5.1.1
+			$add_dirs[] = $dataDir.'/data/_clipboard'; // Section Clipboard, Typesetter v. 5.1.1
 		}
 
 

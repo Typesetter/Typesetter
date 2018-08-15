@@ -9,11 +9,14 @@ class Login extends \gp\Page{
 	public $pagetype = 'admin_display';
 
 	public function __construct($title){
+		global $config, $languages;
 
 		\gp\tool::LoadComponents('gp-admin-css');
 
 		$this->requested		= str_replace(' ','_',$title);
 		$this->title			= $title;
+		$this->lang				= $config['language'];
+		$this->language			= $languages[$this->lang];
 		$this->get_theme_css 	= false;
 		$_REQUEST['gpreq']		= 'admin';
 

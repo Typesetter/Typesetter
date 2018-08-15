@@ -52,15 +52,21 @@ class Tools{
 		self::BooleanForm('combinejs',true);
 		echo '</td></tr>';
 
+		//minifyjs
+		echo '<tr><td>';
+		echo $langmessage['minifyjs'];
+		echo '</td><td>';
+		self::BooleanForm('minifyjs',false);
+		echo '</td></tr>';
 
-		//combinejs
+		//combinecss
 		echo '<tr><td>';
 		echo $langmessage['combinecss'];
 		echo '</td><td>';
 		self::BooleanForm('combinecss',true);
 		echo '</td></tr>';
 
-		//combinejs
+		//etag_headers
 		echo '<tr><td>';
 		echo $langmessage['etag_headers'];
 		echo '</td><td>';
@@ -201,6 +207,7 @@ class Tools{
 		$_config['gpuniq']					= \gp\tool::RandomString(20);
 		$_config['combinecss']				= self::BooleanValue('combinecss',true);
 		$_config['combinejs']				= self::BooleanValue('combinejs',true);
+		$_config['minifyjs']				= self::BooleanValue('minifyjs',false);
 		$_config['etag_headers'] 			= self::BooleanValue('etag_headers',true);
 		$_config['gallery_legacy_style']	= false;
 		$_config['language']				= 'en';
@@ -435,6 +442,30 @@ class Tools{
 		</p>';
 		self::NewExtra($file,$content);
 
+		//Footer Column 1
+		$file		= $destination.'/data/_extra/Footer_Column_1/page.php';
+		$content	= '<p>Footer Column 1</p>';
+		self::NewExtra($file,$content);
+
+		//Footer Column 2
+		$file		= $destination.'/data/_extra/Footer_Column_2/page.php';
+		$content	= '<p>Footer Column 2</p>';
+		self::NewExtra($file,$content);
+
+		//Footer Column 3
+		$file		= $destination.'/data/_extra/Footer_Column_3/page.php';
+		$content	= '<p>Footer Column 3</p>';
+		self::NewExtra($file,$content);
+
+		//Footer Column 4
+		$file		= $destination.'/data/_extra/Footer_Column_4/page.php';
+		$content	= '<p>Footer Column 4</p>';
+		self::NewExtra($file,$content);
+
+		//Dropdown Divider
+		$file		= $destination.'/data/_extra/Bootstrap_Dropdown_Divider/page.php';
+		$content	= '';
+		self::NewExtra($file,$content);
 
 		//Another example area
 		$file		= $destination.'/data/_extra/Lorem/page.php';
@@ -640,5 +671,3 @@ class Tools{
 	}
 
 }
-
-

@@ -2057,7 +2057,7 @@ namespace gp\tool{
 		 */
 		public static function DetectBot(){
 			$user_agent =& $_SERVER['HTTP_USER_AGENT'];
-			return preg_match('#bot|yahoo\! slurp|ask jeeves|ia_archiver|spider#i',$user_agent);
+			return preg_match('#bot|yahoo\! slurp|ask jeeves|ia_archiver|spider|crawler#i',$user_agent);
 		}
 
 		/**

@@ -555,7 +555,7 @@ namespace gp\tool{
 				return true;
 			}
 
-			trigger_error('RemoteGet::Iflate() failed. Content: '.substr($this->body,0,200));
+			trigger_error('RemoteGet::Inflate() failed. Content: '.substr($this->body,0,200));
 			return false;
 		}
 

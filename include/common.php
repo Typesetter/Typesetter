@@ -396,6 +396,13 @@ function msg(){
 	}
 }
 
+
+function debug(){
+	if( \gp\tool::LoggedIn() ){
+		call_user_func_array('msg',func_get_args());
+	}
+}
+
 /**
  * Output the message buffer
  *

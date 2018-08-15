@@ -737,7 +737,8 @@ $gp.inputs.check_all = function(){
 $gp.inputs.cnreq = function(evt){
 	evt.preventDefault();
 	var query = $(this.form).serialize();
-	$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
+	$gp.SetCookieCmd(query);
+	//$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
 	window.location = strip_from(strip_from(this.form.action,'#'),'?');
 };
 

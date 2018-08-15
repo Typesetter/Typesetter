@@ -923,8 +923,8 @@ namespace gp{
 			$init = true;
 
 			// use page->lang for colorbox
-			if( isset($page->lang) 
-				&& $page->lang != $config['language'] 
+			if( isset($page->lang)
+				&& $page->lang != $config['language']
 				&& file_exists($dataDir . '/include/languages/' . $page->lang . '.main.inc')
 			){
 				include($dataDir . '/include/languages/' . $page->lang . '.main.inc');

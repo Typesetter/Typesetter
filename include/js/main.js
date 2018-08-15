@@ -12,6 +12,7 @@ var $gp = {
 	inputs : {},
 	response : {},
 	error : 'There was an error processing the last request. Please reload this page to continue.',
+	cookie_cmd : false,
 
 	/**
 	 * Handler for loading json content
@@ -40,13 +41,14 @@ var $gp = {
 			query	+= '&verified='+encodeURIComponent(nonce);
 		}
 
-		$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
+		$gp.SetCookieCmd(query);
 
 		if( samepage ){
 			$gp.Reload();
 		}else{
 			window.location = strip_from(strip_from(a.href,'#'),'?');
 		}
+
 	},
 
 
@@ -155,6 +157,16 @@ var $gp = {
 			expires = "; expires="+date.toGMTString();
 		}
 		document.cookie = name+"="+value+expires+"; path=/";
+	},
+
+	/**
+	 * Remove cookie command
+	 *
+	 */
+	SetCookieCmd : function(query){
+
+		$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
+		$gp.cookie_cmd = true;
 	},
 
 
@@ -358,6 +370,8 @@ $gp.Cookie('cookie_cmd','',-1);
 
 
 
+
+
 /**
  * Onload
  *
@@ -371,6 +385,17 @@ $(function(){
 	//this also affects the display of elements using the req_script css class
 	$('body').addClass('STCLASS');
 
+
+	/**
+	 * Remove cookie_cmd before a new page is loaded
+	 * Prevents a cookie_cmd from another browser tab being sent along with a request in the current tab
+	 *
+	 */
+	$(window).on('beforeunload', function(evt) {
+		if( !$gp.cookie_cmd ){
+			$gp.Cookie('cookie_cmd','',-1);
+		}
+	});
 
 
 	/**

@@ -31,6 +31,9 @@ class Classes extends \gp\special\Base{
 
 		$classes		= \gp\tool\Files::Get('_config/classes');
 		if( $classes ){
+			array_walk_recursive($myArray, function($value){
+				return htmlspecialchars($value,ENT_COMPAT,'UTF-8');
+			});
 			return $classes;
 		}
 
@@ -167,9 +170,9 @@ class Classes extends \gp\special\Base{
 		foreach( $classes as $key => $classArray ){
 			echo '<tr><td>';
 			echo '<img alt="" src="'.\gp\tool::GetDir('/include/imgs/drag_handle.gif').'" /> &nbsp; ';
-			echo '<input size="32" class="gpinput" type="text" name="class_names[]" value="' . $classArray['names'] . '"/>';
+			echo '<input size="32" class="gpinput" type="text" name="class_names[]" value="' . htmlspecialchars($classArray['names'],ENT_COMPAT,'UTF-8') . '"/>';
 			echo '</td><td>';
-			echo '<input size="64" class="gpinput" type="text" name="class_desc[]" value="' . $classArray['desc'] . '"/> ';
+			echo '<input size="64" class="gpinput" type="text" name="class_desc[]" value="' . htmlspecialchars($classArray['desc'],ENT_COMPAT,'UTF-8') . '"/> ';
 			echo '<a class="gpbutton rm_table_row" title="Remove Item" data-cmd="rm_table_row"><i class="fa fa-trash"></i></a>';
 			echo '</td></tr>';
 		}

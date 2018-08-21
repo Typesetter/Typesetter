@@ -17,7 +17,7 @@ class Css{
 
 
 		//generage the name of the css file from the modified times and content length of each imported file
-		$file_array		= (array)$file_array; 
+		$file_array		= (array)$file_array;
 		$type			= strtolower($type);
 		$files_hash		= \gp\tool::ArrayHash($file_array);
 		$list_file		= $dataDir.'/data/_cache/'.$type.'_'.$files_hash.'.list';
@@ -132,7 +132,7 @@ class Css{
 			return false;
 		}
 
-		$scss_files = $compiler->allParsedFiles();
+		$scss_files = $compiler->getParsedFiles();
 		$scss_files = array_keys($scss_files);
 
 		return $compiled;

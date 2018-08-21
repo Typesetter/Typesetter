@@ -92,7 +92,7 @@ class SourceMapGenerator
      */
     private $options;
 
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
         $this->options = array_merge($this->defaultOptions, $options);
         $this->encoder = new Base64VLQEncoder();

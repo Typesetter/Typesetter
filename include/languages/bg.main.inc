@@ -536,6 +536,7 @@ $langmessage = array (
 	'Alternative Text'               => 'Alternative Text',	
 	'Empty Container'                => 'Empty Container', // Layout Editor title for empty areas
 	'Move Behind'                    => 'Move Behind', // the title of the small icon in Layout Editor areas to get a covering area out oif the way by moving it to the back (z-index)
+	'svg upload warning'             => 'Предупреждение: Файловете на SVG от ненадеждни източници може да съдържат зловреден код на скрипта и трябва да бъдат проверени, ако имате съмнения. Още на адрес <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	'File'                           => 'File', // general purpose for future/plugin use
 	'Files'                          => 'Files', // general purpose for future/plugin use
 	'Files_of'                       => 'File %1$s of %2$s', // general purpose for future/plugin use

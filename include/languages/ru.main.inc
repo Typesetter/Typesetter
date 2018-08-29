@@ -536,6 +536,7 @@ $langmessage = array (
 	'Alternative Text'               => 'Альтернативный текст',
 	'Empty Container'                => 'Пустой контейнер',
 	'Move Behind'                    => 'Переместить назад',
+	'svg upload warning'             => 'Предупреждение: файлы SVG из ненадежных источников могут содержать код вредоносного кода и должны быть проверены в случае сомнений. Подробнее о <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	'File'                           => 'Файл',
 	'Files'                          => 'Файлы',
 	'Files_of'                       => 'Файл %1$s из %2$s',

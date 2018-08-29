@@ -536,6 +536,7 @@ $langmessage = array (
 	'Add Attribute'                  => 'Attribut hinzufügen',
 	'Empty Container'                => 'Leerer Bereich',
 	'Move Behind'                    => 'Nach hinten verschieben',
+	'svg upload warning'             => 'Warnung: SVG Dateien von nicht vertrauenswürdigen Quellen können schädlichen Script Code enthalten und sollten im Zweifelsfall dahingehend überprüft werden. Mehr dazu unter <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	'File'                           => 'Datei',
 	'Files'                          => 'Dateien',
 	'Files_of'                       => 'Datei %1$s von %2$s', 

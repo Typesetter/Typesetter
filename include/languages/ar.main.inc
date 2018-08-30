@@ -422,8 +422,7 @@ $langmessage = array (
 	'User Details'                   => 'تفاصيل المستخدم',
 	'Changing_File_Permissions'      => 'تغيير تصريح الملف',
 	'REFRESH_AFTER_CHANGE'           => 'قد تحتاج إلى تغيير صلاحيات المجلدات التي فشلت في القسم سالف الذكر بعد ذلك <a href="">أعد تحميل الصفحة</a>.',
-	'MOST_FTP_CLIENTS'               => 'معظم عملاء رفع الملفات(ftp)تسمح لك بتغيير صلاحيات الملفات على الخادم.
-في عميل رفع الملفات <a href="http://fireftp.mozdev.org/">fireftp</a> تستطيع عمل ذلك عبر النقر  بالزر اليمين للفأرةعلى الملف،إختر "خصائص" من اللائحة ثم إعطاء الصلاحيات حسب الحاجة',
+	'MOST_FTP_CLIENTS'               => 'معظم عملاء رفع الملفات(ftp)تسمح لك بتغيير صلاحيات الملفات على الخادم. في عميل رفع الملفات <a href="http://fireftp.mozdev.org/">fireftp</a> تستطيع عمل ذلك عبر النقر  بالزر اليمين للفأرةعلى الملف،إختر "خصائص" من اللائحة ثم إعطاء الصلاحيات حسب الحاجة',
 	'FTP_CHMOD'                      => 'Enter your server\'s ftp information and the installer will handle the file permissions for you.',
 	'Installer'                      => 'Installer',
 	'LINUX_CHOWN'                    => 'If you are using Unix/Linux, you can use the "chown" function.',

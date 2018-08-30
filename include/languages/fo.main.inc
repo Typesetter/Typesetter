@@ -532,8 +532,8 @@ $langmessage = array (
 	'Touched'                        => 'Touched',
 	'Section Attributes'             => 'Section Attributes',
 	'Attribute'                      => 'Attribute',
-	'Alternative Text'               => 'Alternative Text',
 	'Add Attribute'                  => 'Add Attribute',
+	'Alternative Text'               => 'Alternative Text',
 	'Empty Container'                => 'Empty Container', // Layout Editor title for empty areas
 	'Move Behind'                    => 'Move Behind', // the title of the small icon in Layout Editor areas to get a covering area out oif the way by moving it to the back (z-index)
 	'svg upload warning'             => 'Ávaring: SVG fílur frá ókendum keldum kunnu møguliga innihalda óndsinnaða kotu, og skulu helst kannast, um ivi er um hetta. Meira fæst at vita hjá <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',

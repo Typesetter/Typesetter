@@ -65,7 +65,10 @@ namespace gp{
 			$this->requested	= $title;
 			$this->title		= $title;
 			$this->lang			= $config['language'];
-			$this->language		= $languages[$this->lang];
+
+			if( isset($languages[$this->lang]) ){
+				$this->language		= $languages[$this->lang];
+			}
 
 			$this->head			.= '<link rel="canonical" href="'.\gp\tool::GetUrl($title).'" />'."\n";
 		}

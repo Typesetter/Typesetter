@@ -623,6 +623,10 @@ namespace gp\tool{
 				unset($GLOBALS['gpAdmin']['message_buffer']);
 			}
 
+			if( !isset($GLOBALS['gpAdmin']['username']) ){
+				throw new \Exception('username not set');
+			}
+
 			//alias
 			if( isset($_COOKIE['gp_alias']) ){
 				$GLOBALS['gpAdmin']['useralias'] = $_COOKIE['gp_alias'];
@@ -762,8 +766,7 @@ namespace gp\tool{
 				return;
 			}
 			if( !isset($gpAdmin['username']) ){
-				trigger_error('username not set');
-				die();
+				throw new \Exception('username not set');
 			}
 
 			$gpAdmin['checksum'] = $checksum; //store the new checksum

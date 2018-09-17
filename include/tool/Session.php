@@ -545,6 +545,9 @@ namespace gp\tool{
 
 			$GLOBALS['gpAdmin'] = self::SessionData($session_file,$checksum);
 
+			if( !isset($GLOBALS['gpAdmin']['username']) ){
+				throw new \Exception('username not set '.pre($gpAdmin));
+			}
 
 			//lock to prevent conflicting edits
 			if( gp_lock_time > 0 && ( !empty($GLOBALS['gpAdmin']['editing']) || !empty($GLOBALS['gpAdmin']['granted']) ) ){
@@ -623,9 +626,6 @@ namespace gp\tool{
 				unset($GLOBALS['gpAdmin']['message_buffer']);
 			}
 
-			if( !isset($GLOBALS['gpAdmin']['username']) ){
-				throw new \Exception('username not set');
-			}
 
 			//alias
 			if( isset($_COOKIE['gp_alias']) ){
@@ -765,6 +765,7 @@ namespace gp\tool{
 			if( $checksum === $checksum_read ){
 				return;
 			}
+
 			if( !isset($gpAdmin['username']) ){
 				throw new \Exception('username not set');
 			}

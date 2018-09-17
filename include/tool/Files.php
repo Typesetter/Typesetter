@@ -97,11 +97,17 @@ namespace gp\tool{
 			}
 
 			if( !file_exists($file) ){
+				if( strpos($file,'gpsess_') !== false ){
+					trigger_error('file doesnt exist '.$file);
+				}
 				return array();
 			}
 
 			include($file);
 			if( !isset(${$var_name}) || !is_array(${$var_name}) ){
+				if( strpos($file,'gpsess_') !== false ){
+					trigger_error('variable doesnt exist ');
+				}
 				return array();
 			}
 
@@ -550,15 +556,14 @@ namespace gp\tool{
 				}
 			}
 
-
-			$fp = @fopen($file,'wb');
-			if( $fp === false ){
-				$gp_not_writable[] = $file;
+			// using file_put_contents and rename
+			$temp_file = $file.'-'.rand(0,100000);
+			if( file_put_contents( $temp_file, $contents, LOCK_EX) === false ){
 				return false;
 			}
 
-			if( !flock($fp, LOCK_EX) ){
-				trigger_error('flock could not be obtained.');
+			if( !rename($temp_file, $file) ){
+				unlink($temp_file);
 				return false;
 			}
 
@@ -566,6 +571,44 @@ namespace gp\tool{
 				@chmod($file,gp_chmod_file);
 			}elseif( function_exists('opcache_invalidate') && substr($file,-4) === '.php' ){
 				opcache_invalidate($file);
+			}
+
+			return true;
+
+
+			// fopen + flock .. a file can still
+			$fp = @fopen($file,'cb'); // 'c' mode so the file isn't truncated before lock
+			if( $fp === false ){
+				$gp_not_writable[] = $file;
+				return false;
+			}
+
+			if( !self::flock($fp) ){
+				trigger_error('flock could not be obtained.');
+				return false;
+			}
+
+
+			if( $exists ){
+
+				if( !ftruncate($fp,0) ){
+					flock($fp, LOCK_UN);
+					fclose($fp);
+					return false;
+				}
+
+				if( !rewind($fp) ){
+					flock($fp, LOCK_UN);
+					fclose($fp);
+					return false;
+				}
+
+				if( function_exists('opcache_invalidate') && substr($file,-4) === '.php' ){
+					opcache_invalidate($file);
+				}
+
+			}else{
+				@chmod($file,gp_chmod_file);
 			}
 
 			$return = fwrite($fp,$contents);
@@ -656,6 +699,30 @@ namespace gp\tool{
 			define('gp_has_lock',false);
 			return false;
 		}
+
+
+		/**
+		 * Get an exclusive lock on a file pointer
+		 * Per php's flock: "floc lock utilizes ADVISORY locking only; that is, other processes may ignore the lock completely; it only affects those that call the flock call."
+		 */
+		public static function flock($fp){
+
+			$tries = 0;
+			while( $tries < 100 ){
+
+				if( flock($fp, LOCK_EX | LOCK_NB, $wouldblock) ){
+					return true;
+				}
+
+				if( $wouldblock ){
+					usleep(100);
+					continue;
+				}
+			}
+
+			return false;
+		}
+
 
 		/**
 		 * Get a lock

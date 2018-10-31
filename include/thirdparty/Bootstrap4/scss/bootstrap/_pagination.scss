@@ -1,5 +1,7 @@
 .pagination {
-  display: flex;
+  // ########## use VP-mixins ##########
+  // display: flex;
+  @include vp-flexbox();
   @include list-unstyled();
   @include border-radius();
 }
@@ -25,7 +27,9 @@
   &:focus {
     z-index: 2;
     outline: $pagination-focus-outline;
-    box-shadow: $pagination-focus-box-shadow;
+    // ########## use VP-mixins ##########
+    // box-shadow: $pagination-focus-box-shadow;
+    @include vp-box-shadow($pagination-focus-box-shadow);
   }
 
   // Opinionated: add "hand" cursor to non-disabled .page-link elements

@@ -21,8 +21,11 @@
 }
 
 @mixin make-row() {
-  display: flex;
-  flex-wrap: wrap;
+  // ########## use VP-mixins ##########
+  // display: flex;
+  @include vp-flexbox();
+  // flex-wrap: wrap;
+  @include vp-flex-wrap(wrap);
   margin-right: ($grid-gutter-width / -2);
   margin-left: ($grid-gutter-width / -2);
 }
@@ -39,7 +42,10 @@
 }
 
 @mixin make-col($size, $columns: $grid-columns) {
-  flex: 0 0 percentage($size / $columns);
+  // ########## use VP-mixins ##########
+  // flex: 0 0 percentage($size / $columns);
+  // flex: 0 0 percentage($size / $columns);
+  @include vp-flex(0 0 percentage($size / $columns));
   // Add a `max-width` to ensure content within each column does not blow out
   // the width of the column. Applies to IE10+ and Firefox. Chrome and Safari
   // do not appear to require this.

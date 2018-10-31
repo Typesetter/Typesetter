@@ -17,20 +17,30 @@
 
 .navbar {
   position: relative;
-  display: flex;
-  flex-wrap: wrap; // allow us to do the line break for collapsing content
-  align-items: center;
-  justify-content: space-between; // space out brand from logo
+  // ########## use VP-mixins ##########
+  // display: flex;
+  @include vp-flexbox();
+  // flex-wrap: wrap; // allow us to do the line break for collapsing content
+  @include vp-flex-wrap(wrap);
+  // align-items: center;
+  @include vp-align-items(center);
+  // justify-content: space-between; // space out brand from logo
+  @include vp-justify-content(space-between);
   padding: $navbar-padding-y $navbar-padding-x;
 
   // Because flex properties aren't inherited, we need to redeclare these first
   // few properities so that content nested within behave properly.
   > .container,
   > .container-fluid {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
+    // ########## use VP-mixins ##########
+    // display: flex;
+    @include vp-flexbox();
+    // flex-wrap: wrap;
+    @include vp-flex-wrap(wrap);
+    // align-items: center;
+    @include vp-align-items(center);
+    // justify-content: space-between;
+    @include vp-justify-content(space-between);
   }
 }
 
@@ -59,8 +69,11 @@
 // Custom navbar navigation (doesn't require `.nav`, but does make use of `.nav-link`).
 
 .navbar-nav {
-  display: flex;
-  flex-direction: column; // cannot use `inherit` to get the `.navbar`s value
+  // ########## use VP-mixins ##########
+  // display: flex;
+  @include vp-flexbox();
+  // flex-direction: column; // cannot use `inherit` to get the `.navbar`s value
+  @include vp-flex-direction(column);
   padding-left: 0;
   margin-bottom: 0;
   list-style: none;
@@ -97,11 +110,15 @@
 // the default flexbox row orienation. Requires the use of `flex-wrap: wrap`
 // on the `.navbar` parent.
 .navbar-collapse {
-  flex-basis: 100%;
-  flex-grow: 1;
+  // ########## use VP-mixins ##########
+  // flex-basis: 100%;
+  @include vp-flex-basis(100%);
+  // flex-grow: 1;
+  @include vp-flex-grow(1);
   // For always expanded or extra full navbars, ensure content aligns itself
   // properly vertically. Can be easily overridden with flex utilities.
-  align-items: center;
+  // align-items: center;
+  @include vp-align-items(center);
 }
 
 // Button for toggling the navbar when in its collapsed state
@@ -132,7 +149,9 @@
   vertical-align: middle;
   content: "";
   background: no-repeat center center;
-  background-size: 100% 100%;
+  // ########## use VP-mixins ##########
+  // background-size: 100% 100%;
+  @include vp-background-size(100% 100%);
 }
 
 // Generate series of `.navbar-expand-*` responsive classes for configuring
@@ -152,11 +171,16 @@
       }
 
       @include media-breakpoint-up($next) {
-        flex-flow: row nowrap;
-        justify-content: flex-start;
+        // ########## use VP-mixins ##########
+        // flex-flow: row nowrap;
+        @include vp-flex-flow(row nowrap);
+        // justify-content: flex-start;
+        @include vp-justify-content(flex-start);
 
         .navbar-nav {
-          flex-direction: row;
+          // ########## use VP-mixins ##########
+          // flex-direction: row;
+          @include vp-flex-direction(row);
 
           .dropdown-menu {
             position: absolute;
@@ -171,14 +195,23 @@
         // For nesting containers, have to redeclare for alignment purposes
         > .container,
         > .container-fluid {
-          flex-wrap: nowrap;
+          // ########## use VP-mixins ##########
+          // flex-wrap: nowrap;
+          @include vp-flex-wrap(nowrap);
         }
 
         .navbar-collapse {
+          // ########## add vendor prefixes manually ##########
+          display: -webkit-box !important;  // stylelint-disable-line declaration-no-important
+          display: -webkit-flex !important;  // stylelint-disable-line declaration-no-important
+          display: -moz-flex !important;  // stylelint-disable-line declaration-no-important
+          display: -ms-flexbox !important;  // stylelint-disable-line declaration-no-important
           display: flex !important;  // stylelint-disable-line declaration-no-important
 
           // Changes flex-bases to auto because of an IE10 bug
-          flex-basis: auto;
+          // ########## use VP-mixins ##########
+          // flex-basis: auto;
+          @include vp-flex-basis(auto);
         }
 
         .navbar-toggler {

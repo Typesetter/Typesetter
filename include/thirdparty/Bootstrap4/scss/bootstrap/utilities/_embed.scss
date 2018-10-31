@@ -5,7 +5,9 @@
   display: block;
   width: 100%;
   padding: 0;
-  overflow: hidden;
+  // ########## use VP-mixins ##########
+  // overflow: hidden;
+  @include vp-overflow(hidden);
 
   &::before {
     display: block;

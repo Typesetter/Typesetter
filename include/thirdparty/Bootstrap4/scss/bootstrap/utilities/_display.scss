@@ -15,8 +15,22 @@
     .d#{$infix}-table        { display: table !important; }
     .d#{$infix}-table-row    { display: table-row !important; }
     .d#{$infix}-table-cell   { display: table-cell !important; }
-    .d#{$infix}-flex         { display: flex !important; }
-    .d#{$infix}-inline-flex  { display: inline-flex !important; }
+    .d#{$infix}-flex         {
+      // ########## add vendor-prefixes ##########
+      display: -webkit-box !important; 
+      display: -webkit-flex !important; 
+      display: -moz-flex !important; 
+      display: -ms-flexbox !important; 
+      display: flex !important; 
+    }
+    .d#{$infix}-inline-flex  {
+      // ########## add vendor-prefixes ##########
+      display: -webkit-inline-box !important; 
+      display: -webkit-inline-flex !important; 
+      display: -moz-inline-flex !important; 
+      display: -ms-inline-flexbox !important; 
+      display: inline-flex !important; 
+    }
   }
 }
 
@@ -33,6 +47,20 @@
   .d-print-table        { display: table !important; }
   .d-print-table-row    { display: table-row !important; }
   .d-print-table-cell   { display: table-cell !important; }
-  .d-print-flex         { display: flex !important; }
-  .d-print-inline-flex  { display: inline-flex !important; }
+  .d-print-flex         {
+    // ########## add vendor-prefixes ##########
+    display: -webkit-box !important; 
+    display: -webkit-flex !important; 
+    display: -moz-flex !important; 
+    display: -ms-flexbox !important; 
+    display: flex !important; 
+  }
+  .d-print-inline-flex  {
+    // ########## add vendor-prefixes ##########
+    display: -webkit-inline-box !important; 
+    display: -webkit-inline-flex !important; 
+    display: -moz-inline-flex !important; 
+    display: -ms-inline-flexbox !important; 
+    display: inline-flex !important; 
+  }
 }

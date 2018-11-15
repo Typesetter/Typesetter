@@ -1,8 +1,14 @@
 /* Bootswatch 4 Scss 
  * common styles used in all layouts
+ *
+ * as of commit https://github.com/Typesetter/Typesetter/commit/eac99656819f330f69d786927ad0dce75251d004
+ * we use vendor-prefix mixins, see /include/thirdparty/Bootstrap4/scss/bootstrap/vp-mixins
+ *
  */
 
+@import 'common_variables.scss';
 @import 'contactform.scss';
+@import 'compensate_fixed_navbar.scss'; // default, use only with 'fixed-top' class on navbar in template.php line 44
 
 // Page Flex Layout for Sticky Footer ==========================================
 html, body {
@@ -10,8 +16,9 @@ html, body {
 }
  
 body {
-  display: flex;
-  flex-direction: column; 
+  // use vendor-prefix mixins
+  @include vp-flexbox();
+  @include vp-flex-direction(column); 
 }
 
 // Height fix for Admin Top Bar and active 'Hide Admin UI' plugin
@@ -20,16 +27,19 @@ html:not(.override_admin_style) body.gpAdmin {
 }
 
 .main-content {
-  flex: 1 0 auto;
+  // use vendor-prefix mixins
+  @include vp-flex(1 0 auto);
 }
+
 footer.main-footer {
-  flex-shrink: 0;
+  // use vendor-prefix mixins
+  @include vp-flex-shrink(0);
 }
 
 
 // Navbar =======================================================================
 
-$navbar-height: ($nav-link-height + $navbar-padding-y * 2);
+// $navbar-height: ($nav-link-height + $navbar-padding-y * 2); // moved to common_variables.scss
 
 // Fix for bad container paddings in navbars (as of Bootatrap 4.1.1)
 @include media-breakpoint-up(sm) {
@@ -41,9 +51,10 @@ $navbar-height: ($nav-link-height + $navbar-padding-y * 2);
 }
 
 // when using fixed-top
-body {
-  padding-top: ($navbar-height + 2rem);
-}
+// moved to compensate_fixed_navbar.scss
+// body {
+//  padding-top: ($navbar-height + 2rem);
+// }
 
 // Align menu right, fix dropdown alignment
 .navbar-right {
@@ -81,5 +92,3 @@ body {
     content: "\f2bd\a0";
   }
 }
-
-

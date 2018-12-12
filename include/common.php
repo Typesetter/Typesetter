@@ -79,6 +79,7 @@ $languages = array(
 	'gl' => 'Galego',					# Galician
 	'hr' => 'hrvatski',					# Croatian
 	'hu' => 'Magyar',					# Hungarian
+	'is' => 'Íslenska',					# Icelandic
 	'it' => 'Italiano',					# Italian
 	'ja' => '日本語',					# Japanese
 	'lt' => 'Lietuvių',					# Lithuanian

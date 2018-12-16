@@ -489,16 +489,16 @@ class Edit extends \gp\Page{
 
 		/*
 		 * FIX for too many sections issue -- start
-		 * 
-		 * with large amounts of sections, we may exceed max_post_values 
+		 *
+		 * with large amounts of sections, we may exceed max_post_values
 		 * which causes an error and prevents further editing of the page.
-		 * 
-		 * sending all the section data in a single JSON string 
+		 *
+		 * sending all the section data in a single JSON string
 		 * instead of parametrizing all values will address this issue.
-		 * 
+		 *
 		 * the current implementation should be considered as a hot fix.
 		 * it should eventually be done more elegant.
-		 * 
+		 *
 		 * See its client counterpart in /include/js/inline_edit/manage_sections.js line 87-129
 		 */
 		if( isset($_POST['sections_json']) ){
@@ -1067,8 +1067,8 @@ class Edit extends \gp\Page{
 		}
 
 		//section combo: text & image
-		$links[] = array( 
-			array('text.gpCol-6', 'image.gpCol-6'), 
+		$links[] = array(
+			array('text.gpCol-6', 'image.gpCol-6'),
 			\gp\tool::GetDir('/include/imgs/section-combo-text-image.png'),
 			array(
 				// 'gp_label' => 'Text &amp; Image',
@@ -1080,11 +1080,11 @@ class Edit extends \gp\Page{
 		);
 
 		//section combo: text & gallery
-		$links[] = array( 
-			array('text.gpCol-6', 'gallery.gpCol-6'), 
-			\gp\tool::GetDir('/include/imgs/section-combo-text-gallery.png'), 
+		$links[] = array(
+			array('text.gpCol-6', 'gallery.gpCol-6'),
+			\gp\tool::GetDir('/include/imgs/section-combo-text-gallery.png'),
 			array(
-				// 'gp_label' => 'Text &amp; Gallery', 
+				// 'gp_label' => 'Text &amp; Gallery',
 				'gp_color' => '#555',
 				'attributes' => array(
 					'class' => 'gpRow',
@@ -1108,6 +1108,7 @@ class Edit extends \gp\Page{
 	public static function NewSectionLink($types, $img, $wrapper_data=false, $checkbox=false ){
 		global $dataDir, $page;
 
+		$types = (array)$types;
 		$is_wrapper = count($types) > 1 || is_array($types[0]);
 
 		if( $is_wrapper && !$wrapper_data ){
@@ -1123,7 +1124,6 @@ class Edit extends \gp\Page{
 
 		static $fi = 0;
 
-		$types = (array)$types;
 		$text_label = $is_wrapper && isset($wrapper_data['gp_label']) ? $wrapper_data['gp_label'] : self::SectionLabel($types);
 		$type_id = substr( base_convert( md5( json_encode( $types ) ), 16, 32 ), 0, 6);
 
@@ -1167,7 +1167,7 @@ class Edit extends \gp\Page{
 
 		//links used for new sections
 		$attrs = array(
-			'data-cmd' => 'AddSection', 
+			'data-cmd' => 'AddSection',
 			'class' => 'preview_section',
 		);
 		if( count($types) > 1 || is_array($types[0]) ){
@@ -1475,9 +1475,9 @@ class Edit extends \gp\Page{
 		switch($which){
 			case 'current':
 				echo \gp\tool::Link(
-					$this->title, 
-					$langmessage['View'], 
-					'cmd=ViewCurrent', 
+					$this->title,
+					$langmessage['View'],
+					'cmd=ViewCurrent',
 					array('data-cmd'=>'cnreq')
 				);
 				break;
@@ -1709,8 +1709,8 @@ class Edit extends \gp\Page{
 			}
 
 			$attrs	= array(
-							'title'=>$title_attr, 
-							'data-cmd' => 'inline_edit_generic', 
+							'title'=>$title_attr,
+							'data-cmd' => 'inline_edit_generic',
 							'data-arg' => $section_data['type'] . '_inline_edit'
 						);
 			$link	= \gp\tool\Output::EditAreaLink(
@@ -1734,7 +1734,7 @@ class Edit extends \gp\Page{
 						$include_link = \gp\tool::Link(
 							'Admin/Extra',
 							$langmessage['edit'] . ' &raquo; ' . htmlspecialchars($section_data['content']), // $langmessage['theme_content']
-							'cmd=EditExtra&file=' . rawurlencode($section_data['content']) 
+							'cmd=EditExtra&file=' . rawurlencode($section_data['content'])
 						);
 						break;
 					case 'gadget':

@@ -260,6 +260,8 @@ var $gp = {
 			var $selected = $(sel);
 			if( typeof($selected[func]) == 'function' ){
 				$selected[func](arg);
+			}else{
+				console.log('func not found for sel',sel,'func',func);
 			}
 		}
 

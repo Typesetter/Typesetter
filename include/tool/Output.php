@@ -1931,6 +1931,7 @@ namespace gp\tool{
 		 *
 		 */
 		public static function FatalMessage( $error_details ){
+			global $fatal_debug;
 
 			$message = '<p>Oops, an error occurred while generating this page.<p>';
 
@@ -1955,6 +1956,15 @@ namespace gp\tool{
 					.'<p><a href="?">Reload this page</a></p>'
 					.'<p style="font-size:90%">Note: Error details are only displayed for logged in administrators</p>'
 					.\gp\tool::ErrorBuffer(true,false);
+
+			if( !empty($fatal_debug) ){
+
+				if( isset($fatal_debug['microtime']) ){
+					$fatal_debug['seconds'] = microtime(true) - $fatal_debug['microtime'];
+				}
+
+				$message .= '<h3>Debug</h3>'.pre($fatal_debug);
+			}
 
 			return $message;
 		}

@@ -541,21 +541,25 @@ function IncludeScript($file, $include_variation = 'include_once', $globals = ar
 		global $$global;
 	}
 
-
-	switch($include_variation){
-		case 'include':
-			$return = include($file);
-		break;
-		case 'include_once':
-			$return = include_once($file);
-		break;
-		case 'require':
-			$return = require($file);
-		break;
-		case 'require_once':
-			$return = require_once($file);
-		break;
+	try{
+		switch($include_variation){
+			case 'include':
+				$return = include($file);
+			break;
+			case 'include_once':
+				$return = include_once($file);
+			break;
+			case 'require':
+				$return = require($file);
+			break;
+			case 'require_once':
+				$return = require_once($file);
+			break;
+		}
+	}catch(\Error $e){
+		trigger_error('IncludeScript() Fatal Error: '.$e->getMessage());
 	}
+
 
 	\gp\tool\Output::PopCatchable();
 

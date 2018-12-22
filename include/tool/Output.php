@@ -578,7 +578,12 @@ namespace gp\tool{
 				return $args;
 			}
 
-			$args = self::_ExecInfo($info,$args);
+			try{
+				$args = self::_ExecInfo($info,$args);
+			}catch(\Error $e){
+				trigger_error('ExecInfo() Fatal Error: '.$e->getMessage());
+			}
+
 
 			if( $addon !== false ){
 				\gp\tool\Plugins::ClearDataFolder();

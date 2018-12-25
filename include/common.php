@@ -556,7 +556,8 @@ function IncludeScript($file, $include_variation = 'include_once', $globals = ar
 				$return = require_once($file);
 			break;
 		}
-	}catch(\Error $e){
+	//}catch(\Error $e){
+	}catch(\Throwable $e){
 		trigger_error('IncludeScript() Fatal Error: '.$e->getMessage());
 	}
 

@@ -580,7 +580,8 @@ namespace gp\tool{
 
 			try{
 				$args = self::_ExecInfo($info,$args);
-			}catch(\Error $e){
+			//}catch(\Error $e){
+			}catch(\Throwable $e){
 				trigger_error('ExecInfo() Fatal Error: '.$e->getMessage());
 			}
 

@@ -275,7 +275,7 @@ class Tools{
 				$content	= self::GetComboContent($combo['types'], $combo['wrapper_data']);
 
 
-				$type = '';
+				$type = array();
 				// borrowed from \gp\Page\Edit::ResetFileTypes()
 				foreach($content as $section){
 					$type[] = $section['type'];

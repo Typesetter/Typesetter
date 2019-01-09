@@ -161,7 +161,7 @@ if ( function_exists( 'date_default_timezone_set' ) )
  * @return false Always returns false so the standard PHP error handler is also used
  *
  */
-function showError($errno, $errmsg, $filename, $linenum, $vars){
+function showError($errno, $errmsg, $filename, $linenum, $errcontext, $backtrace = []){
 	global $wbErrorBuffer, $addon_current_id, $page, $addon_current_version, $config, $addonFolderName;
 	static $reported = array();
 	$report_error = true;
@@ -200,13 +200,18 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 		return false;
 	}
 
+
+
 	// since we supported php 4.3+, there may be a lot of strict errors
 	if( $errno === E_STRICT ){
 		return;
 	}
 
+
 	//get the backtrace and function where the error was thrown
-	$backtrace = debug_backtrace();
+	if( !$backtrace ){
+		$backtrace = debug_backtrace();
+	}
 
 	//remove showError() from backtrace
 	if( strtolower($backtrace[0]['function']) == 'showerror' ){
@@ -227,12 +232,15 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	}
 	$reported[$uniq] = true;
 
+
+
 	//disable showError after 20 errors
 	if( count($reported) >= 1 ){
 		restore_error_handler();
 	}
 
 	if( gpdebug === false ){
+
 
 		if( !$report_error ){
 			return false;
@@ -275,12 +283,14 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	$mess .= '<legend>'.$errortype[$errno].' ('.$errno.')</legend> '.$errmsg;
 	$mess .= '<br/> &nbsp; &nbsp; <b>in:</b> '.$filename;
 	$mess .= '<br/> &nbsp; &nbsp; <b>on line:</b> '.$linenum;
+
 	if( isset($_SERVER['REQUEST_URI']) ){
 		$mess .= '<br/> &nbsp; &nbsp; <b>Request:</b> '.$_SERVER['REQUEST_URI'];
 	}
 	if( isset($_SERVER['REQUEST_METHOD']) ){
 		$mess .= '<br/> &nbsp; &nbsp; <b>Method:</b> '.$_SERVER['REQUEST_METHOD'];
 	}
+	$mess .= '<br/> &nbsp; &nbsp; <b>time:</b> '.date('Y-m-d H:i:s').' ('.time().')';
 
 
 	//mysql.. for some addons
@@ -541,6 +551,8 @@ function IncludeScript($file, $include_variation = 'include_once', $globals = ar
 		global $$global;
 	}
 
+	$return = null;
+
 	try{
 		switch($include_variation){
 			case 'include':
@@ -558,7 +570,7 @@ function IncludeScript($file, $include_variation = 'include_once', $globals = ar
 		}
 	//}catch(\Error $e){
 	}catch(\Throwable $e){
-		trigger_error('IncludeScript() Fatal Error: '.$e->getMessage());
+		\showError( E_ERROR ,'IncludeScript() Fatal Error: '.$e->getMessage(), $e->GetFile(), $e->GetLine(), [], $e->getTrace());
 	}
 
 

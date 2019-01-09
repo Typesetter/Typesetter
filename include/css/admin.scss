@@ -345,12 +345,12 @@
 	background: lighten($gp_panel_bg,10%);
 	}
 
-#admincontent_panel a[href$='ToggleVisibility'] { 
-	background:#C44830; 
+#admincontent_panel a[href$='ToggleVisibility'] {
+	background:#C44830;
 	}
 
-#admincontent_panel a[href$='ToggleVisibility']:hover { 
-	background:#DC5135; 
+#admincontent_panel a[href$='ToggleVisibility']:hover {
+	background:#DC5135;
 	}
 
 #admincontent_panel span > .fa,
@@ -610,13 +610,10 @@ body.edit_layout .GPAREA{
 	min-height: 1em;
 	}
 
-body.gpAdmin .GPAREA[data-gp_hidden="true"] { 
-	display: none!important; 
+body.gpAdmin .GPAREA[data-gp_hidden="true"] {
+	display: none!important;
 	}
 
-body.gpAdmin div.editable_area{
-	min-height: 1em;
-}
 
 
 /* general */
@@ -1860,7 +1857,7 @@ body #addon_about{
 
 #gp_admin_html .classes-load-presets{
 	margin-top: 20px;
-			
+
 	ul{
 		margin:0.5em 0;
 		padding-left: 1.25em;

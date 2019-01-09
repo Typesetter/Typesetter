@@ -582,7 +582,8 @@ namespace gp\tool{
 				$args = self::_ExecInfo($info,$args);
 			//}catch(\Error $e){
 			}catch(\Throwable $e){
-				trigger_error('ExecInfo() Fatal Error: '.$e->getMessage());
+				// this doesn't provide the corrent backtrace to trigger_error
+				\showError( E_ERROR ,'ExecInfo() Fatal Error: '.$e->getMessage(), $e->GetFile(), $e->GetLine(), [], $e->getTrace());
 			}
 
 

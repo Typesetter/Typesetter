@@ -610,7 +610,7 @@ body.edit_layout .GPAREA{
 	min-height: 1em;
 	}
 
-body.gpAdmin .GPAREA[data-gp_hidden="true"] {
+body.gpAdmin [data-gp_hidden="true"]{
 	display: none!important;
 	}
 
@@ -819,19 +819,24 @@ table.tablesorter th.gp_header_desc:before{
 
 /* simple panel */
 #simplepanel{
-	position: fixed;
-	z-index: 9002;
+	position:		fixed;
+	z-index:		9002;
+	top:			0;
+	width:			180px;
+	left:			0;
+	max-height:		100vh;
 	}
-#simplepanel > div{
-	padding: 0;
-	margin: 0 0 5px 0;
-	width: auto;
-	min-width: 130px;
 
-	display: block;
-	border: 1px solid #000;
-	border-radius: 5px;
-	background: $gp_panel_bg;
+#simplepanel > div{
+	padding:		0;
+	margin:			0 0 5px 0;
+	width:			180px;
+	display:		block;
+	border:			1px solid #000;
+	border-radius:	0 0 5px 0;
+	background:		$gp_panel_bg;
+	overflow:		auto;
+	max-height:		100vh;
 	@include box-shadow( 0 0 3px rgba(0,0,0,0.6) );
 	}
 
@@ -879,9 +884,11 @@ table.tablesorter th.gp_header_desc:before{
 #simplepanel .toolbar .toggle_panel{
 	@include gpimg( 'icons.png', 50%, -32px );
 	}
+
 #simplepanel.compact > div{
-	width: 32px;
-	min-width: 0;
+	width:			32px;
+	min-width:		0;
+	overflow:		visible;
 	}
 #simplepanel.compact .toolbar .toggle_panel{
 	@include gpimg( 'icons.png', 50%, -64px );
@@ -1081,7 +1088,6 @@ table.tablesorter th.gp_header_desc:before{
 #simplepanel.minb > div{
 	min-width: 0;
 	}
-#simplepanel.minb .toolbar a:nth-child(n+2),
 #simplepanel.minb .panelgroup{
 	display: none;
 	}
@@ -1091,8 +1097,7 @@ table.tablesorter th.gp_header_desc:before{
 #simplepanel.minb:hover .toolbar a:nth-child(n+2){
 	display: inline-block;
 	}
-#simplepanel.toggledmin .panelgroup,
-#simplepanel.toggledmin .toolbar a:nth-child(n+2){
+#simplepanel.toggledmin .panelgroup{
 	display: none !important;
 	}
 
@@ -1892,26 +1897,27 @@ body #addon_about{
 		}
 
 	#gp_admin_html{
-		position: relative;
-		text-transform: none;
-		box-sizing: border-box;
+		position:		relative;
+		text-transform:	none;
+		box-sizing:		border-box;
+		min-height:		100vh;
 	}
 
 
 
 	#simplepanel{
-		position: absolute;
-		width: 180px;
-		top: 0;
-		left: 0;
-		bottom: 0;
+		width:			180px;
+		top:			0;
+		left:			0;
+		max-height:		100vh;
+		bottom:			0;
 
 		> div{
-			border-radius: 0;
-			border: 0 none;
-			height: 100%;
-			width: 180px;
-			margin: 0;
+			border-radius:	0;
+			border:			0 none;
+			height:			100%;
+			width:			180px;
+			margin:			0;
 			@include box-shadow( none );
 		}
 

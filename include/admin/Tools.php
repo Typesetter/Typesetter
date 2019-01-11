@@ -465,10 +465,8 @@ namespace gp\admin{
 			}
 
 			$class = '';
-			$position = '';
 
 			if( \gp\tool::RequestType() != 'admin' ){
-				$position = ' style="top:'.max(-10,$gpAdmin['gpui_ty']).'px;left:'.max(-10,$gpAdmin['gpui_tx']).'px"';
 				if( isset($gpAdmin['gpui_cmpct']) && $gpAdmin['gpui_cmpct'] ){
 					$class = ' compact';
 					if( $gpAdmin['gpui_cmpct'] === 2 ){
@@ -483,7 +481,7 @@ namespace gp\admin{
 
 
 			echo "\n\n";
-			echo '<div id="simplepanel"'.$class.$position.'><div>';
+			echo '<div id="simplepanel"'.$class.'><div>';
 
 				//toolbar
 				echo '<div class="toolbar">';
@@ -577,9 +575,9 @@ namespace gp\admin{
 			echo '</li>';
 
 			//layout edit
-			$current_layout = 
-				isset($gp_titles[$page->gp_index]['gpLayout']) 
-				? $gp_titles[$page->gp_index]['gpLayout'] 
+			$current_layout =
+				isset($gp_titles[$page->gp_index]['gpLayout'])
+				? $gp_titles[$page->gp_index]['gpLayout']
 				: 'default'; // $page->gpLAyout is not yet set
 			echo '<li>';
 			echo \gp\tool::Link(
@@ -651,13 +649,13 @@ namespace gp\admin{
 
 
 			//add-ons
-			$addon_links = self::GetAddonLinks($in_panel); // now returns array( (string)links, (boolean)permissions )
-			$links = $addon_links[0];
-			$addon_permissions = $addon_links[1];
-			// msg("Any Addon Permisisons? " . pre($addon_permissions) );
-			if( $addon_permissions ){
-				self::_AdminPanelLinks($in_panel, $links, 'plugins', 'fa fa-plug', 'add');
-			}
+			self::GetAddonLinks($in_panel);
+			//$addon_links = self::GetAddonLinks($in_panel); // now returns array( (string)links, (boolean)permissions )
+			//$links = $addon_links[0];
+			//$addon_permissions = $addon_links[1];
+			//if( $addon_permissions ){
+			//	self::_AdminPanelLinks($in_panel, $links, 'plugins', 'fa fa-plug', 'add');
+			//}
 
 
 			//settings
@@ -1397,7 +1395,7 @@ namespace gp\admin{
 
 
 		/**
-		 * Returns an array 
+		 * Returns an array
 		 * 	0 => html of the addon section of the admin panel
 		 * 	1 => boolean indicating if the current user has any addon admin permissions or there are special links
 		 * @return array
@@ -1412,11 +1410,11 @@ namespace gp\admin{
 				$expand_class = 'expand_child_click';
 			}
 
-			ob_start();
 
 			$addon_permissions = self::HasPermission('Admin_Addons');
 
 			if( $addon_permissions ){
+				ob_start();
 				$any_permissions = true;
 				echo '<li>';
 				echo \gp\tool::Link('Admin/Addons',$langmessage['manage']);
@@ -1426,6 +1424,8 @@ namespace gp\admin{
 					echo \gp\tool::Link('Admin/Addons/Remote',$langmessage['Download Plugins']);
 					echo '</li>';
 				}
+				$links = ob_get_clean();
+				self::_AdminPanelLinks($in_panel, $links, 'plugins', 'fa fa-plug', 'add');
 			}
 
 
@@ -1433,6 +1433,7 @@ namespace gp\admin{
 			if( is_array($show) ){
 
 				foreach($show as $addon => $info){
+					ob_start();
 
 					//backwards compat
 					if( is_string($info) ){
@@ -1443,38 +1444,29 @@ namespace gp\admin{
 						$addonName = $addon;
 					}
 
-					$addon_sublinks = self::GetAddonSubLinks($addon);
-					$sublinks = $addon_sublinks[0];
-					$addon_permissions = $addon_sublinks[1];
-					$any_permissions = $addon_permissions ? true : $any_permissions;
+					$addon_sublinks			= self::GetAddonSubLinks($addon);
+					$sublinks				= $addon_sublinks[0];
+					$addon_permissions		= $addon_sublinks[1];
+					$any_permissions		= $addon_permissions ? true : $any_permissions;
 
 					if( $addon_permissions ){
-						if( !empty($sublinks) ){
-							echo '<li class="'.$expand_class.'">';
-							if( $in_panel ){
-								$sublinks = '<ul class="in_window">'.$sublinks.'</ul>';
-							}else{
-								$sublinks = '<ul>'.$sublinks.'</ul>';
-							}
-						}else{
-							echo '<li>';
-						}
 
+						echo '<li class="separator">';
 						echo \gp\tool::Link('Admin/Addons/'.self::encode64($addon),$addonName);
+						echo '</li>';
 
 						echo $sublinks;
 
-						echo '</li>';
 					}
+
+					$links = ob_get_clean();
+					self::_AdminPanelLinks($in_panel, $links, $addonName, 'fa fa-plug', md5($addonName));
 				}
+
+
 			}
-
-
-			$links = ob_get_clean();
-			$any_permissions = true;
-			return array($links, $any_permissions);
-
 		}
+
 
 		/**
 		* Determine if the installation should be allowed to process remote installations
@@ -1512,7 +1504,7 @@ namespace gp\admin{
 
 
 		/**
-		 * Returns an array 
+		 * Returns an array
 		 * 	0 => formatted list of links associated with $addon
 		 * 	1 => boolean indicating if the current user has addon admin permissions or if special pages exist
 		 * @return array

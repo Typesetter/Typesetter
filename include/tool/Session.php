@@ -958,7 +958,7 @@ namespace gp\tool{
 			$possible = array();
 
 			$possible['gpui_cmpct']	= 'integer';
-			$possible['gpui_vis']	= array('con'=>'con','cur'=>'cur','app'=>'app','add'=>'add','set'=>'set','upd'=>'upd','use'=>'use','cms'=>'cms','res'=>'res','tool'=>'tool','false'=>false);
+			$possible['gpui_vis']	= 'alnum';
 
 
 			$possible['gpui_tx']	= 'integer';
@@ -982,6 +982,13 @@ namespace gp\tool{
 					}
 				}elseif( $key_possible == 'integer' ){
 					$value = (int)$value;
+
+				}elseif( $key_possible == 'alnum' ){
+
+					if( !preg_match('#^[a-zA-Z0-9]+$#',$value) ){
+						continue;
+					}
+
 				}elseif( is_array($key_possible) ){
 					if( !isset($key_possible[$value]) ){
 						continue;

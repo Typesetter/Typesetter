@@ -2017,11 +2017,23 @@ namespace gp\tool{
 				return;
 			}
 
-			$last_error['time'] = time();
-			$last_error['request_method'] = $_SERVER['REQUEST_METHOD'];
+			$last_error['time']						= time();
+			$last_error['request_method']			= $_SERVER['REQUEST_METHOD'];
+			$last_error['memory_get_usage']			= memory_get_usage();
+			$last_error['memory_get_peak_usage']	= memory_get_peak_usage();
+
+
+			if( isset($_SERVER['REMOTE_ADDR']) ){
+				$last_error['REMOTE_ADDR']			= $_SERVER['REMOTE_ADDR'];
+			}
+
+			if( !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ){
+				$last_error['HTTP_X_FORWARDED_FOR'] = $_SERVER['HTTP_X_FORWARDED_FOR'];
+			}
+
 			if( !empty($last_error['file']) ){
-				$last_error['file_modified'] = filemtime($last_error['file']);
-				$last_error['file_size'] = filesize($last_error['file']);
+				$last_error['file_modified']		= filemtime($last_error['file']);
+				$last_error['file_size']			= filesize($last_error['file']);
 			}
 
 			$content	= json_encode($last_error);

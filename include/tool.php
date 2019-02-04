@@ -237,6 +237,7 @@ namespace gp{
 			//look for addon namespace
 			if( $part_0 === 'Addon' ){
 
+
 				$namespace = array_shift($parts);
 				if( !$parts ){
 					return;
@@ -311,9 +312,11 @@ namespace gp{
 
 			$rootDir = self::DirName( __FILE__, 2 );
 
+
 			// dataDir, make sure it contains $expecting. Some servers using cgi do not set this properly
 			// required for the Multi-Site plugin
 			$dataDir = self::GetEnv('SCRIPT_FILENAME',$expecting);
+
 			if( $dataDir !== false ){
 				$dataDir = self::ReduceGlobalPath($dataDir,$DirectoriesAway);
 			}else{
@@ -460,7 +463,11 @@ namespace gp{
 
 		//use dirPrefix to find requested level
 		public static function RequestLevel(){
-			global $dirPrefixRel,$dirPrefix;
+			global $dirPrefixRel, $dirPrefix;
+
+			if( !isset($_SERVER['REQUEST_URI']) ){
+				return;
+			}
 
 			$path = $_SERVER['REQUEST_URI'];
 

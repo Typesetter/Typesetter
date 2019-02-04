@@ -165,7 +165,7 @@ class Errors extends \gp\special\Base{
 		echo '<pre style="font-family:monospace">';
 		foreach($error_info as $key => $value){
 
-			echo "\n".str_pad($key,'20',' ');
+			echo "\n".str_pad($key,'25',' ');
 
 			switch($key){
 
@@ -178,7 +178,11 @@ class Errors extends \gp\special\Base{
 				break;
 
 				default:
-				echo $value;
+				if( ctype_digit($value) && $key != 'time' ){
+					echo number_format($value);
+				}else{
+					echo $value;
+				}
 				break;
 			}
 		}

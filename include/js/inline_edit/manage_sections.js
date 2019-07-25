@@ -1133,8 +1133,8 @@
 			html += '</td></tr>';
 		}
 
-		html += '</table>';
 		html += '</tbody>';
+		html += '</table>';
 		html += '</div>';
 
 

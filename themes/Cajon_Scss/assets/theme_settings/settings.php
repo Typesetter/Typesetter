@@ -14,13 +14,20 @@ class ThemeCajon_Settings{
    * Typesetter Filter hook 
    */
   static function PageRunScript($cmd) {
-    global $page, $langmessage, $addonRelativeCode, $gpLayouts;
+    global $page, $config, $langmessage, $addonRelativeCode, $gpLayouts;
     if( !\gp\tool::LoggedIn() ){
       return $cmd;
     }
 
-    $layout = isset($page->TitleInfo['gpLayout']) ? $page->TitleInfo['gpLayout'] : 'default';
-    if( strpos($gpLayouts[$layout]['theme'], 'Cajon_Scss') !== false ){
+    $layout           = isset($page->TitleInfo['gpLayout']) ? $page->TitleInfo['gpLayout'] : 'default';
+    $default_layout   = $config['gpLayout'];
+    $theme            = $layout == 'default' ? $gpLayouts[$default_layout]['theme'] : $gpLayouts[$layout]['theme'];
+
+    // msg('Layouts = ' . pre($gpLayouts) );
+    // msg('Layout = ' . $layout );
+    // msg('Theme = ' . $theme );
+
+    if( strpos($theme, 'Cajon_Scss') !== false ){
       $page->admin_links[] = array(
         $page->title, 
         '<i class="fa fa-paint-brush"></i> ' . $langmessage['theme'] . ' Cajón', 

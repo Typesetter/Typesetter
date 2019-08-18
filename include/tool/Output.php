@@ -1652,15 +1652,17 @@ namespace gp\tool{
 			$files			= array();
 			$dir			= $page->theme_dir . '/' . $page->theme_color;
 			$style_type		= self::StyleType($dir);
-			$custom_file	= self::CustomStyleFile($page->gpLayout, $style_type);
+			$custom_files	= self::CustomStyleFiles($page->gpLayout, $style_type); // 5.1.1+ returns array of (existing) custom file paths
 
 			//css file
 			if( $style_type == 'css' ){
 
-				$files[] = rawurldecode($page->theme_path).'/style.css';
+				$files[] = rawurldecode($page->theme_path) . '/style.css';
 
-				if( $page->gpLayout && file_exists($custom_file) ){
-					$files[] = \gp\tool\Output\Css::Cache( $custom_file, 'less' );
+				if( $page->gpLayout && !empty($custom_files) ){
+					foreach( $custom_files as $cf_path ){
+						$files[] = $cf_path;
+					}
 				}
 
 				return $files;
@@ -1668,14 +1670,16 @@ namespace gp\tool{
 
 
 			//less or scss file
-			$var_file	= $dir.'/variables.'.$style_type;
+			$var_file	= $dir .'/variables.' . $style_type;
 			if( file_exists($var_file) ){
 				$files[] = $var_file;
 			}
 
 
-			if( $page->gpLayout && file_exists($custom_file) ){
-				$files[] = $custom_file;
+			if( $page->gpLayout && !empty($custom_files) ){
+				foreach( $custom_files as $cf_path ){
+					$files[] = $cf_path;
+				}
 			}
 
 
@@ -1685,15 +1689,17 @@ namespace gp\tool{
 				return array( \gp\tool\Output\Css::Cache($files) );
 			}
 
-			array_unshift($files, $dir.'/style.less');
+			array_unshift($files, $dir . '/style.less');
 
-			return array( \gp\tool\Output\Css::Cache($files,'less') );
+			return array( \gp\tool\Output\Css::Cache($files, 'less') );
 		}
 
 
 		/**
 		 * Get the path for the custom css/scss/less file
 		 *
+		 * deprecated as of 5.1.1+
+		 * kept for backwards compatibility in case any addons use it
 		 */
 		public static function CustomStyleFile($layout, $style_type){
 			global $dataDir;
@@ -1703,6 +1709,30 @@ namespace gp\tool{
 			}
 
 			return $dataDir.'/data/_layouts/'.$layout.'/custom.css';
+		}
+
+
+		/**
+		 * Get an array of paths for custom css/scss/less files
+		 */
+		public static function CustomStyleFiles($layout, $style_type){
+			global $dataDir;
+			$file_ext = $style_type == 'scss' ? 'scss' : 'css';
+
+			$customizer_style_file 		= $dataDir . '/data/_layouts/' . $layout . '/customizer.' . $file_ext;
+			$layout_editor_style_file 	= $dataDir . '/data/_layouts/' . $layout . '/custom.' . $file_ext;
+
+			$custom_files = array();
+
+			if( file_exists($customizer_style_file) ){
+				$custom_files[] = $customizer_style_file;
+			}
+
+			if( file_exists($layout_editor_style_file) ){
+				$custom_files[] = $layout_editor_style_file;
+			}
+
+			return $custom_files;
 		}
 
 

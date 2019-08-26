@@ -374,6 +374,7 @@ class Edit extends \gp\Page{
 
 		//selectable classes
 		$avail_classes			= \gp\admin\Settings\Classes::GetClasses();
+		$avail_classes			= \gp\tool\Plugins::Filter('AvailableClasses', array($avail_classes));
 		$scripts[]				= array('code'=>'var gp_avail_classes = '.json_encode($avail_classes).';');
 
 		$scripts[]				= array('object'=>'gp_editing','file'=>'/include/js/inline_edit/inline_editing.js');

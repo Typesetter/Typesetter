@@ -69,6 +69,7 @@ class ThemeCajon_Settings{
     global $page, $gpLayouts, $config, $addonFolderName;
     $theme_name         = $config['addons'][$addonFolderName]['name'];
     $layout             = isset($page->TitleInfo['gpLayout']) ? $page->TitleInfo['gpLayout'] : 'default';
+    $layout             = isset($page->gpLayout) ? $page->gpLayout : $layout;
     $default_layout     = $config['gpLayout'];
     $current_theme_name = $layout == 'default' ? $gpLayouts[$default_layout]['name'] : $gpLayouts[$layout]['name'];
     $is_current_theme   = ($current_theme_name == $theme_name);

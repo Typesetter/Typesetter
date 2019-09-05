@@ -14,27 +14,23 @@ class ThemeCajon_Settings{
    * Typesetter Filter hook 
    */
   static function PageRunScript($cmd) {
-    global $page, $config, $langmessage, $addonRelativeCode, $gpLayouts;
+    global $page, $langmessage, $addonRelativeCode;
+
     if( !\gp\tool::LoggedIn() ){
       return $cmd;
     }
 
-    $layout           = isset($page->TitleInfo['gpLayout']) ? $page->TitleInfo['gpLayout'] : 'default';
-    $default_layout   = $config['gpLayout'];
-    $theme            = $layout == 'default' ? $gpLayouts[$default_layout]['theme'] : $gpLayouts[$layout]['theme'];
-
-    // msg('Layouts = ' . pre($gpLayouts) );
-    // msg('Layout = ' . $layout );
-    // msg('Theme = ' . $theme );
-
-    if( strpos($theme, 'Cajon_Scss') !== false ){
-      $page->admin_links[] = array(
-        $page->title, 
-        '<i class="fa fa-paint-brush"></i> ' . $langmessage['theme'] . ' Cajón', 
-        'cmd=ThemeCajonSettingsForm', 
-        'class="theme-cajon-adminbar-button" data-cmd="gpabox" title="' . $langmessage['theme'] . ' ' . $langmessage['Settings'] . '"'
-      );
+    if( !self::IsCurrentTheme() ){
+      return $cmd;
     }
+
+    $page->admin_links[] = array(
+      $page->title, 
+      '<i class="fa fa-paint-brush"></i> ' . $langmessage['theme'] . ' Cajón', 
+      'cmd=ThemeCajonSettingsForm', 
+      'class="theme-cajon-adminbar-button" data-cmd="gpabox" title="' . $langmessage['theme'] . ' ' . $langmessage['Settings'] . '"'
+    );
+
 
     self::LoadConfig();
     $page->head_js[] = $addonRelativeCode . '/assets/theme_settings/settings.js';
@@ -60,6 +56,23 @@ class ThemeCajon_Settings{
 
     return $cmd;
 
+  }
+
+
+
+  /**
+   *
+   * Custom method to check if current page uses our theme
+   * 
+   */
+  static function IsCurrentTheme(){
+    global $page, $gpLayouts, $config, $addonFolderName;
+    $theme_name         = $config['addons'][$addonFolderName]['name'];
+    $layout             = isset($page->TitleInfo['gpLayout']) ? $page->TitleInfo['gpLayout'] : 'default';
+    $default_layout     = $config['gpLayout'];
+    $current_theme_name = $layout == 'default' ? $gpLayouts[$default_layout]['name'] : $gpLayouts[$layout]['name'];
+    $is_current_theme   = ($current_theme_name == $theme_name);
+    return $is_current_theme;
   }
 
 
@@ -214,7 +227,4 @@ class ThemeCajon_Settings{
   }
 
 
-} /* class ThemeCajon_Settings --end */
-
-
-
+}

@@ -1156,7 +1156,8 @@
 
 		//$('#section_attributes_form input').on('input',function(){UpdateAttrs()});
 
-		$(document).trigger("section_options:loaded");
+		var $area = gp_editor.GetArea($li);
+		$area.trigger("section_options:loaded");
 	};
 
 
@@ -1332,6 +1333,7 @@
 		$area.data('gp-attrs',new_attrs);
 
 		$gp.CloseAdminBox();
+		$area.trigger('section_options:closed');
 	};
 
 

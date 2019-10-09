@@ -884,6 +884,8 @@ class Layout extends \gp\admin\Addon\Install{
 
 		echo '</div>'; // /.gpRow
 
+		echo '<div class="gpclear"></div>';
+
 		$this->page->non_admin_content = ob_get_clean();
 
 
@@ -995,6 +997,8 @@ class Layout extends \gp\admin\Addon\Install{
 		echo   '<a href="#" class="btn btn-warning">btn btn-warning</a> &nbsp;&nbsp; ';
 		echo   '<a href="#" class="btn btn-danger">btn btn-danger</a>';
 		echo '</p>';
+
+		echo '<div class="gpclear"></div>';
 
 		$this->page->non_admin_content_bootstrap = ob_get_clean();
 

@@ -845,6 +845,7 @@
 
 		NewSectionIds(new_area);
 		from_area.after(new_area);
+		new_area.trigger("SectionCopied");
 		new_area.trigger("SectionAdded");
 		gp_editor.InitSorting();
 	};
@@ -1133,8 +1134,8 @@
 			html += '</td></tr>';
 		}
 
-		html += '</tbody>';
 		html += '</table>';
+		html += '</tbody>';
 		html += '</div>';
 
 
@@ -1334,6 +1335,7 @@
 
 		$gp.CloseAdminBox();
 		$area.trigger('section_options:closed');
+
 	};
 
 

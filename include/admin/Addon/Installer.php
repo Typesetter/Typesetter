@@ -574,7 +574,6 @@ class Installer extends \gp\admin\Addon\Tools{
 			return true;
 		}
 
-
 		if( $this->has_hooks ){
 			$this->new_layout['addon_key'] = $this->config_key;
 		}
@@ -587,7 +586,9 @@ class Installer extends \gp\admin\Addon\Tools{
 		if( isset($this->ini_contents['Addon_Name']) ){
 			$this->new_layout['name'] = $this->ini_contents['Addon_Name'];
 		}
-
+		if( isset($this->ini_contents['FrontEndFramework']) && is_array($this->ini_contents['FrontEndFramework']) ){
+			$this->new_layout['framework'] = $this->ini_contents['FrontEndFramework'];
+		}
 
 		$temp					= $this->TempFile();
 		$layout_id				= basename($temp);
@@ -596,7 +597,6 @@ class Installer extends \gp\admin\Addon\Tools{
 		if( $this->default_layout ){
 			$config['gpLayout'] = $layout_id;
 		}
-
 
 		return true;
 	}

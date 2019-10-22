@@ -186,7 +186,10 @@ class Edit extends \gp\Page{
 				$this->title,
 				'<i class="fa fa-backward"></i> ' . $langmessage['Previous'],
 				'cmd=ViewRevision&time=' . array_pop($times),
-				array('data-cmd'=>'cnreq')
+				array(
+					'class'		=> 'admin-link admin-link-previous-revision',
+					'data-cmd'	=> 'cnreq',
+				)
 			);
 		}
 
@@ -194,7 +197,11 @@ class Edit extends \gp\Page{
 			$this->title,
 			'<i class="fa fa-history"></i> ' . $langmessage['Revision History'],
 			'cmd=ViewHistory',
-			array('title'=>$langmessage['Revision History'],'data-cmd'=>'gpabox')
+			array(
+				'title'		=> $langmessage['Revision History'],
+				'class'		=> 'admin-link admin-link-revision-history',
+				'data-cmd'	=> 'gpabox',
+			)
 		);
 
 
@@ -208,7 +215,10 @@ class Edit extends \gp\Page{
 				$label		= '<i class="fa fa-eye"></i> '.$langmessage['Visibility'].': '.$langmessage['Public'];
 				$q			.= '&visibility=private';
 			}
-			$attrs			= array('data-cmd'=>'creq');
+			$attrs			= array(
+				'class'		=> 'admin-link admin-link-toggle-visibility',
+				'data-cmd'	=> 'creq',
+			);
 			$admin_links[]	= \gp\tool::Link($this->title, $label, $q, $attrs);
 		}
 
@@ -220,19 +230,30 @@ class Edit extends \gp\Page{
 				$this->title,
 				$langmessage['rename/details'],
 				'cmd=renameform&index=' . urlencode($this->gp_index),
-				'data-cmd="gpajax"'
+				array(
+					'class'		=> 'admin-link admin-link-toggle-visibility',
+					'data-cmd'	=> 'gpajax',
+				)
 			);
 			$option_links[] = \gp\tool::Link(
 				'Admin/Menu',
 				$langmessage['current_layout'],
 				'cmd=layout&from=page&index=' . urlencode($this->gp_index),
-				array('title'=>$langmessage['current_layout'],'data-cmd'=>'gpabox'))
-			;
+				array(
+					'title'		=> $langmessage['current_layout'],
+					'class'		=> 'admin-link admin-link-current-laout',
+					'data-cmd'	=> 'gpabox',
+				)
+			);
 			$option_links[] = \gp\tool::Link(
 				'Admin/Menu/Ajax',
 				$langmessage['Copy'],
 				'cmd=CopyForm&redir=redir&index=' . urlencode($this->gp_index),
-				array('title'=>$langmessage['Copy'],'data-cmd'=>'gpabox')
+				array(
+					'title'		=> $langmessage['Copy'],
+					'class'		=> 'admin-link admin-link-copy-page',
+					'data-cmd'	=> 'gpabox'
+				)
 			);
 		}
 
@@ -241,7 +262,11 @@ class Edit extends \gp\Page{
 				'Admin/Users',
 				$langmessage['permissions'],
 				'cmd=file_permissions&index=' . urlencode($this->gp_index),
-				array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox')
+				array(
+					'title'		=> $langmessage['permissions'],
+					'class'		=> 'admin-link admin-link-permissions',
+					'data-cmd'	=> 'gpabox',
+				)
 			);
 		}
 
@@ -250,7 +275,11 @@ class Edit extends \gp\Page{
 				'Admin/Menu/Ajax',
 				$langmessage['delete_file'],
 				'cmd=MoveToTrash&index=' . urlencode($this->gp_index),
-				array('data-cmd'=>'postlink','title'=>$langmessage['delete_page'],'class'=>'gpconfirm')
+				array(
+					'title'		=> $langmessage['delete_page'],
+					'class'		=>'gpconfirm admin-link admin-link-delete-page',
+					'data-cmd'	=> 'postlink',
+				)
 			);
 		}
 
@@ -264,9 +293,17 @@ class Edit extends \gp\Page{
 				$this->title,
 				'<i class="fa fa-check"></i> ' . $langmessage['Publish Draft'],
 				'cmd=PublishDraft',
-				array('data-cmd'=>'creq', 'class'=>'msg_publish_draft')
-			) . '<a class="msg_publish_draft_disabled"><i class="fa fa-minus-circle"></i> '.$langmessage['Publish Draft'].'</a>'
-			  . '<a class="msg_saving_draft"><i class="fa fa-spinner fa-pulse"></i> '.$langmessage['Saving'].' &hellip;</a>';
+				array(
+					'class'		=> 'msg_publish_draft admin-link admin-link-publish-draft',
+					'data-cmd'	=> 'creq',
+				)
+			) 
+			. '<a class="msg_publish_draft_disabled admin-link admin-link-publish-draft-disabled">'
+			.   '<i class="fa fa-minus-circle"></i> ' . $langmessage['Publish Draft'] 
+			. '</a>'
+			. '<a class="msg_saving_draft admin-link admin-link-publish-draft-saving">'
+			.   '<i class="fa fa-spinner fa-pulse"></i> ' . $langmessage['Saving'] . ' &hellip;'
+			. '</a>';
 		}
 
 		return array_merge($admin_links, $this->admin_links);

@@ -51,6 +51,14 @@
 	background-color:#aabbcc;
 	}
 
+/* when ctrl key is pressed: */
+#section_sorting.warn-instant-section-removal div > .options a.RemoveSection{
+	color:#e94e0f;  
+}
+#section_sorting.warn-instant-section-removal div > .options a.RemoveSection:after{
+	content:'!';
+}
+
 #section_sorting > li:only-child > div .RemoveSection{
 	opacity: 0.3;
 	pointer-events: none;

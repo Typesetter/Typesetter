@@ -283,7 +283,6 @@
 
 
 
-
 		/**
 		 * Save new Clipboard Items order
 		 *
@@ -352,7 +351,6 @@
 			this.InitClipboard();
 			this.resetDirty();
 
-
 			$gp.$win.on('resize', this.MaxHeight ).resize();
 
 			$('#ckeditor_area').on('dragstop',this.MaxHeight);
@@ -401,16 +399,15 @@
 			$list.html(html);
 
 			$('.section_drag_area').sortable({
-				distance:				4,
-				tolerance:				'pointer', /** otherwise sorting elements into collapsed area causes problems */
-				stop:					function(evt, ui){
-											mgr_object.DragStop(evt, ui);
-										},
-				connectWith:			'.section_drag_area',
-				cursorAt:				{ left: 7, top: 7 }
+				distance :		4,
+				tolerance :		'pointer', /** otherwise sorting elements into collapsed area causes problems */
+				stop :			function(evt, ui){
+									mgr_object.DragStop(evt, ui);
+								},
+				connectWith :	'.section_drag_area',
+				cursorAt :		{ left: 7, top: 7 }
 
 			}).disableSelection();
-
 
 			this.HoverListener($list);
 		},
@@ -783,6 +780,12 @@
 		var $this = $(this);
 		var $li = $this.closest('li');
 		var area_id = $li.attr("data-gp-area-id");
+
+		if( evt.ctrlKey ){
+			$gp.DeleteSection(area_id);
+			return;
+		}
+
 		var html = '<div class="inline_box">';
 		html += '<h2>' + gplang.del + '</h2>';
 		html += '<p>';
@@ -978,7 +981,7 @@
 		//build html
 		var html = '<span class="secsort_color_swatches">';
 		for( var i=0; i<colors.length; i++ ){
-			html += '<a style="background:' + colors[i] + ';" data-color="' + colors[i] + '"	data-cmd="SelectColor"/>';
+			html += '<a style="background:' + colors[i] + ';" data-color="' + colors[i] + '" data-cmd="SelectColor"/>';
 		}
 
 		$li.children('div').hide();
@@ -1339,6 +1342,19 @@
 	};
 
 
+
+	/**
+	 * Highlight trash can icons when Ctrl key is down
+	 * which will bypass the delete section confirmation dialog
+	 */
+	$(document).on('keydown keyup', function(evt){
+		// console.log('keyboard event =', evt);
+		var ctrlKeyDowm = (evt.type == 'keydown' && evt.ctrlKey);
+		$('#section_sorting').toggleClass('warn-instant-section-removal', ctrlKeyDowm);
+	});
+
+
+
 	/**
 	 * Init Label editing
 	 *
@@ -1375,7 +1391,9 @@
 
 				$this.text( label );
 				var $li		= $div.closest('li');
-				gp_editor.GetArea( $li ).attr('data-gp_label',label).data('gp_label',label);
+				gp_editor.GetArea( $li )
+					.attr('data-gp_label', label)
+					.data('gp_label',label);
 
 			});
 

@@ -1146,7 +1146,7 @@ class Edit extends \gp\Page{
 	public static function NewSectionLink($types, $img, $wrapper_data=false, $checkbox=false ){
 		global $dataDir, $page;
 
-		$is_wrapper = count($types) > 1 || is_array($types[0]);
+		$is_wrapper = count(array($types)) > 1 || is_array($types[0]);
 
 		if( $is_wrapper && !$wrapper_data ){
 			// add default wrapper data if undefined

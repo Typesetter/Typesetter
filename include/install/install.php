@@ -619,7 +619,7 @@ class gp_install{
 		echo '</td>';
 		if( count($supported) > 0 ){
 
-			if( count($supported) == 5 ){
+			if( count($supported) >= 4 ){
 				$this->StatusRowFormat('passed',implode(', ',$supported),'');
 			}else{
 				$this->StatusRowFormat('passed_orange',implode(', ',$supported),'',$langmessage['partially_available'] );

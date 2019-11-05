@@ -6,8 +6,6 @@
 
 `scssphp` is a compiler for SCSS written in PHP.
 
-## Version 0.7.5 backported to PHP 5.3 by juek
-
 Checkout the homepage, <http://leafo.github.io/scssphp>, for directions on how to use.
 
 ## Running Tests

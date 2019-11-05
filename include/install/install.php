@@ -288,8 +288,6 @@ class gp_install{
 		$this->CheckDataFolder();
 		$this->CheckPHPVersion();
 		$this->CheckEnv();
-		$this->CheckSafeMode();
-		$this->CheckGlobals();
 		$this->CheckMagic();
 		$this->CheckMemory();
 
@@ -434,12 +432,12 @@ class gp_install{
 		echo $langmessage['PHP_Version'];
 		echo '</td>';
 
-		if( version_compare($version,'5.3','<') ){
+		if( version_compare($version,'5.4','<') ){
 			$class = 'failed';
 			$this->passed = false;
 		}
 
-		$this->StatusRowFormat($class,$version,'5.3+');
+		$this->StatusRowFormat($class,$version,'5.4+');
 	}
 
 
@@ -461,43 +459,6 @@ class gp_install{
 	}
 
 
-	/**
-	 * Check php's safe mode setting
-	 *
-	 */
-	private function CheckSafeMode(){
-		global $langmessage;
-
-		$checkValue = !\gp\tool::IniGet('safe_mode');
-		echo '<tr><td>';
-		echo '<a href="http://php.net/manual/features.safe-mode.php" target="_blank">';
-		echo 'Safe Mode';
-		echo '</a>';
-		echo '</td>';
-
-		$this->StatusRow($checkValue, $langmessage['Off'], $langmessage['On']);
-	}
-
-
-	/**
-	 * Check the register globals setting
-	 *
-	 */
-	private function CheckGlobals(){
-		global $langmessage;
-
-		$checkValue = \gp\tool::IniGet('register_globals');
-		echo '<tr><td>';
-		echo '<a href="http://php.net/manual/security.globals.php" target="_blank">';
-		echo 'Register Globals';
-		echo '</a>';
-		echo '</td>';
-		if( $checkValue ){
-			$this->StatusRowFormat('passed_orange',$langmessage['On'],$langmessage['Off']);
-		}else{
-			$this->StatusRowFormat('passed',$langmessage['Off'],$langmessage['Off']);
-		}
-	}
 
 
 	/**
@@ -506,15 +467,6 @@ class gp_install{
 	 */
 	private function CheckMagic(){
 		global $langmessage;
-
-		// magic_quotes_sybase
-		$checkValue = !\gp\tool::IniGet('magic_quotes_sybase');
-		echo '<tr><td>';
-		echo '<a href="http://php.net/manual/security.magicquotes.disabling.php" target="_blank">';
-		echo 'Magic Quotes Sybase';
-		echo '</a>';
-		echo '</td>';
-		$this->StatusRow($checkValue,$langmessage['Off'],$langmessage['On']);
 
 		//magic_quotes_runtime
 		$checkValue = !\gp\tool::IniGet('magic_quotes_runtime');

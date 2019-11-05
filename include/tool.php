@@ -1996,11 +1996,7 @@ namespace gp{
 				return $data;
 
 				case 'string':
-				if( gp_php53 ){
-					$data		= htmlspecialchars_decode(htmlspecialchars($data, ENT_IGNORE, 'UTF-8'));
-				}else{
-					$data		= htmlspecialchars_decode(htmlspecialchars($data, ENT_SUBSTITUTE, 'UTF-8'));
-				}
+				$data = htmlspecialchars_decode(htmlspecialchars($data, ENT_SUBSTITUTE, 'UTF-8'));
 				$data = json_encode($data);
 				return str_replace($search,$repl,$data);
 

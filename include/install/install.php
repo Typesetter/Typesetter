@@ -596,14 +596,17 @@ class gp_install{
 			if( $supported_types & IMG_JPG ){
 				$supported[] = 'jpg';
 			}
-			if( $supported_types & IMG_PNG) {
+			if( $supported_types & IMG_PNG){
 				$supported[] = 'png';
 			}
-			if( $supported_types & IMG_WBMP) {
+			if( $supported_types & IMG_WBMP){
 				$supported[] = 'bmp';
 			}
-			if( $supported_types & IMG_GIF) {
+			if( $supported_types & IMG_GIF){
 				$supported[] = 'gif';
+			}
+			if( $supported_types & IMG_WEBP ){
+				$supported[] = 'webp';
 			}
 		}
 
@@ -616,7 +619,7 @@ class gp_install{
 		echo '</td>';
 		if( count($supported) > 0 ){
 
-			if( count($supported) == 4 ){
+			if( count($supported) == 5 ){
 				$this->StatusRowFormat('passed',implode(', ',$supported),'');
 			}else{
 				$this->StatusRowFormat('passed_orange',implode(', ',$supported),'',$langmessage['partially_available'] );

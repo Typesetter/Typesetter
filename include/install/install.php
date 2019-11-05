@@ -303,6 +303,7 @@ class gp_install{
 		echo '<tbody>';
 		$this->CheckIndexHtml();
 		$this->CheckImages();
+		$this->CheckArchives();
 		$this->CheckPath();
 		echo '</tbody>';
 
@@ -624,6 +625,52 @@ class gp_install{
 		}else{
 			$this->StatusRowFormat('passed_orange',$langmessage['unavailable'],'');
 		}
+	}
+
+
+	/**
+	 * Check for archive processing capabilities
+	 *
+	 */
+	public function CheckArchives(){
+		global $langmessage;
+
+		$supported = array();
+
+		if( class_exists('\ZipArchive') ){
+			$supported['zip'] = 'zip';
+		}
+
+		if( class_exists('\PharData') ){
+			if( !defined('HHVM_VERSION') || !ini_get('phar.readonly') ){
+				if( function_exists('gzopen') ){
+					$supported['tgz'] = 'gzip';
+				}
+				if( function_exists('bzopen') ){
+					$supported['tbz'] = 'bzip';
+				}
+				$supported['tar'] = 'tar';
+			}
+		}
+
+		echo '<tr><td>';
+		echo '<a href="https://www.php.net/manual/en/refs.compression.php" target="_blank">';
+		echo 'Archive Extensions';
+		echo '</a>';
+		echo '</td>';
+
+		if( count($supported) > 0 ){
+
+			if( count($supported) == 4 ){
+				$this->StatusRowFormat('passed', implode(', ', $supported), '');
+			}else{
+				$this->StatusRowFormat('passed_orange', implode(', ', $supported), '', $langmessage['partially_available'] );
+			}
+
+		}else{
+			$this->StatusRowFormat('passed_orange', $langmessage['unavailable'], '');
+		}
+
 	}
 
 

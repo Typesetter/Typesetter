@@ -1728,10 +1728,15 @@ namespace gp{
 		 * @param int $loops The number of times to loop the $arg through the algorithm
 		 *
 		 */
-		public static function hash( $arg, $algo='sha512', $loops = 1000){
+		public static function hash($arg, $algo='sha512', $loops = 1000){
 			$arg = trim($arg);
 
 			switch($algo){
+
+				//password_hash
+				case 'password_hash':
+				$temp = self::hash($arg, 'sha512', 50); // 50 salted sha512, same as in /include/admin/Settings/Users.php -> SetUserPass
+				return password_hash($temp, PASSWORD_DEFAULT);
 
 				//md5
 				case 'md5':
@@ -1746,12 +1751,11 @@ namespace gp{
 
 			//sha512: looped with dynamic salt
 			for( $i=0; $i<$loops; $i++ ){
-
-				$ints			= preg_replace('#[a-f]#','',$arg);
-				$salt_start		= (int)substr($ints,0,1);
-				$salt_len		= (int)substr($ints,2,1);
-				$salt			= substr($arg,$salt_start,$salt_len);
-				$arg			= hash($algo,$arg.$salt);
+				$ints			= preg_replace('#[a-f]#', '', $arg);
+				$salt_start		= (int)substr($ints, 0, 1);
+				$salt_len		= (int)substr($ints, 2, 1);
+				$salt			= substr($arg, $salt_start, $salt_len);
+				$arg			= hash($algo, $arg . $salt);
 			}
 
 			return $arg;

@@ -239,7 +239,9 @@ $langmessage = array (
 	'smtp_hosts'                     => '範例： ',
 	'auto_redir'                     => '一旦某個網頁請求與既有頁面的相似度達到這個百分比，就自動將它轉往該頁面。',
 	'gallery_legacy_style'           => 'Disable responsive gallery themes',
+	'allow_svg_upload'               => '警告：来自不受信任来源的SVG文件可能包含恶意脚本代码，如果有疑问，应进行检查。更多信息，请访问 <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>',
 	),
+	'allow_svg_upload'               => '允许上传SVG文件',
 	'desc'                           => '說明',
 	'keywords'                       => '關鍵字',
 	'robots'                         => 'Robot 能見度',
@@ -536,7 +538,6 @@ $langmessage = array (
 	'Add Attribute'                  => 'Add Attribute',
 	'Empty Container'                => 'Empty Container', // Layout Editor title for empty areas
 	'Move Behind'                    => 'Move Behind', // the title of the small icon in Layout Editor areas to get a covering area out oif the way by moving it to the back (z-index)
-	'svg upload warning'             => '警告：来自不受信任来源的SVG文件可能包含恶意脚本代码，如果有疑问，应进行检查。更多信息，请访问 <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>',
 	'File'                           => 'File', // general purpose for future/plugin use
 	'Files'                          => 'Files', // general purpose for future/plugin use
 	'Files_of'                       => 'File %1$s of %2$s', // general purpose for future/plugin use

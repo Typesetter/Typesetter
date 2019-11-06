@@ -239,7 +239,9 @@ $langmessage = array (
 	'smtp_hosts'                     => 'Eksempel: ',
 	'auto_redir'                     => 'Omdiriger automatisk en anmodning, hvis det svarer til en eksisterende side indenfor denne procentsats.',
 	'gallery_legacy_style'           => 'Disable responsive gallery themes',
+	'allow_svg_upload'               => 'Advarsel: SVG-filer fra usikre kilder kan indeholde skadelig scriptkode og skal kontrolleres, hvis de er i tvivl. Mere på <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	),
+	'allow_svg_upload'               => 'Tillad SVG-upload',
 	'desc'                           => 'Beskrivelse',
 	'keywords'                       => 'Nøgleord',
 	'robots'                         => 'Synlig for Robotter',
@@ -537,7 +539,6 @@ $langmessage = array (
 	'Add Attribute'                  => 'Add Attribute',
 	'Empty Container'                => 'Empty Container', // Layout Editor title for empty areas
 	'Move Behind'                    => 'Move Behind', // the title of the small icon in Layout Editor areas to get a covering area out oif the way by moving it to the back (z-index)
-	'svg upload warning'              => 'Advarsel: SVG-filer fra usikre kilder kan indeholde skadelig scriptkode og skal kontrolleres, hvis de er i tvivl. Mere på <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	'File'                           => 'File', // general purpose for future/plugin use
 	'Files'                          => 'Files', // general purpose for future/plugin use
 	'Files_of'                       => 'File %1$s of %2$s', // general purpose for future/plugin use

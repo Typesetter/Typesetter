@@ -239,7 +239,9 @@ $langmessage = array (
 	'smtp_hosts'                     => 'Exemplu: ',
 	'auto_redir'                     => 'Refirecţionare automată a unei solicitări dacă este similară unei pagini existente în acest procentaj.',
 	'gallery_legacy_style'           => 'Disable responsive gallery themes',
+	'allow_svg_upload'               => 'Avertisment: fișierele SVG din surse neîncredințate pot conține cod script malware și ar trebui verificate dacă există îndoieli. Mai multe la <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	),
+	'allow_svg_upload'               => 'Permite încărcarea fișierelor SVG',
 	'desc'                           => 'Descriere',
 	'keywords'                       => 'Cuvinte cheie',
 	'robots'                         => 'Vizibilitate pt. roboţi',
@@ -536,7 +538,6 @@ $langmessage = array (
 	'Add Attribute'                  => 'Add Attribute',
 	'Empty Container'                => 'Empty Container', // Layout Editor title for empty areas
 	'Move Behind'                    => 'Move Behind', // the title of the small icon in Layout Editor areas to get a covering area out oif the way by moving it to the back (z-index)
-	'svg upload warning'             => 'Avertisment: fișierele SVG din surse neîncredințate pot conține cod script malware și ar trebui verificate dacă există îndoieli. Mai multe la <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	'File'                           => 'File', // general purpose for future/plugin use
 	'Files'                          => 'Files', // general purpose for future/plugin use
 	'Files_of'                       => 'File %1$s of %2$s', // general purpose for future/plugin use

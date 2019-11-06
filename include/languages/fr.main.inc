@@ -239,7 +239,9 @@ $langmessage = array (
 	'smtp_hosts'                     => 'Exemple: ',
 	'auto_redir'                     => 'Rediriger une requête automatiquement si elle est semblable à une page existante endéans ce pourcentage.',
 	'gallery_legacy_style'           => 'Disable responsive gallery themes',
+	'allow_svg_upload'               => 'Attention: les fichiers SVG provenant de sources non fiables peuvent contenir du code de script malveillant et doivent être vérifiés en cas de doute. Plus d\'informations sur <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	),
+	'allow_svg_upload'               => 'Autoriser le téléchargement de fichiers SVG',
 	'desc'                           => 'Description',
 	'keywords'                       => 'Mots clés',
 	'robots'                         => 'Robot Visibility',
@@ -535,7 +537,6 @@ $langmessage = array (
 	'Alternative Text'               => 'Alternative Text',
 	'Add Attribute'                  => 'Add Attribute',
 	'Empty Container'                => 'Empty Container', // Layout Editor title for empty areas
-	'svg upload warning'             => 'Attention: les fichiers SVG provenant de sources non fiables peuvent contenir du code de script malveillant et doivent être vérifiés en cas de doute. Plus d\'informations sur <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	'Move Behind'                    => 'Move Behind', // the title of the small icon in Layout Editor areas to get a covering area out oif the way by moving it to the back (z-index)
 	'File'                           => 'File', // general purpose for future/plugin use
 	'Files'                          => 'Files', // general purpose for future/plugin use

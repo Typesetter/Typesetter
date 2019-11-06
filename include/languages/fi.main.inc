@@ -239,7 +239,9 @@ $langmessage = array (
 	'smtp_hosts'                     => 'Esimerkki: ',
 	'auto_redir'                     => 'Ohjaa pyyntö automaattisesti uudelleen, jos se on olemassaolevan sivun kaltainen tämän prosenttiarvon rajoissa.',
 	'gallery_legacy_style'           => 'Disable responsive gallery themes',
+	'allow_svg_upload'               => 'Varoitus: Luottamattomista lähteistä peräisin olevat SVG-tiedostot saattavat sisältää haitallisia komentosarjoja, ja ne on tarkistettava, jos epäillään. Lisätietoja osoitteessa <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	),
+	'allow_svg_upload'               => 'Salli SVG-tiedostojen lataaminen',
 	'desc'                           => 'Kuvaus',
 	'keywords'                       => 'Avainsanat',
 	'robots'                         => 'Näkyvyys roboteille',
@@ -536,7 +538,6 @@ $langmessage = array (
 	'Add Attribute'                  => 'Add Attribute',
 	'Empty Container'                => 'Empty Container', // Layout Editor title for empty areas
 	'Move Behind'                    => 'Move Behind', // the title of the small icon in Layout Editor areas to get a covering area out oif the way by moving it to the back (z-index)
-	'svg upload warning'             => 'Varoitus: Luottamattomista lähteistä peräisin olevat SVG-tiedostot saattavat sisältää haitallisia komentosarjoja, ja ne on tarkistettava, jos epäillään. Lisätietoja osoitteessa <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	'File'                           => 'File', // general purpose for future/plugin use
 	'Files'                          => 'Files', // general purpose for future/plugin use
 	'Files_of'                       => 'File %1$s of %2$s', // general purpose for future/plugin use

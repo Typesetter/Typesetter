@@ -46,6 +46,7 @@ class Configuration extends \gp\special\Base{
 						'showgplink'				=> 'boolean',
 
 						'Images'					=> false,
+						'allow_svg_upload'		=> 'boolean',
 						'maximgarea'				=> 'integer',
 						'resize_images'				=> 'boolean',
 						'preserve_icc_profiles' 	=> 'boolean',
@@ -518,7 +519,8 @@ class Configuration extends \gp\special\Base{
 
 	/**
 	 * Recreate all of the thumbnails according to the size in the configuration
-	 *
+	 * TODO: With lots of images, this may easily exceed PHP script runtime or available memory
+	 * and should be broken up into consecutive AJAX calls
 	 */
 	function RecreateThumbs($dir_rel = ''){
 		global $dataDir;

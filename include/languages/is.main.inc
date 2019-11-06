@@ -239,7 +239,9 @@ $langmessage = array (
   'smtp_hosts' => 'Dæmi: ',
   'auto_redir' => 'Endurbeina sjálfkrafa beiðni ef hún líkist fyrirliggjandi síðu innan þessara marka.',
   'gallery_legacy_style' => 'Gera óvirk myndasafnsþemu með aðlaganlegri framsetningu',
+  'allow_svg_upload' => 'Aðvörun: SVG-skrár frá óþekktum aðilum geta innikaldið illvígan skriftukóða og ætti að yfirfara vel slíka hluti ef vafi leikur á uppruna þeirra. Sjá nánar á <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	),
+  'allow_svg_upload' => 'Leyfa að hlaða SVG skrám',
   'desc' => 'Lýsing',
   'keywords' => 'Stikkorð',
   'robots' => 'Sýnileikifyrir róbóta',
@@ -537,7 +539,6 @@ $langmessage = array (
   'Add Attribute' => 'Bæta við eigindi',
   'Empty Container' => 'Tómur gagnagámur', // Layout Editor title for empty areas
   'Move Behind' => 'Færa aftan við', // the title of the small icon in Layout Editor areas to get a covering area out oif the way by moving it to the back (z-index)
-  'svg upload warning' => 'Aðvörun: SVG-skrár frá óþekktum aðilum geta innikaldið illvígan skriftukóða og ætti að yfirfara vel slíka hluti ef vafi leikur á uppruna þeirra. Sjá nánar á <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
   'File' => 'Skrá', // general purpose for future/plugin use
   'Files' => 'Skrár', // general purpose for future/plugin use
   'Files_of' => 'Skrá %1$s af %2$s', // general purpose for future/plugin use

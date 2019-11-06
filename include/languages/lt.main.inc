@@ -239,7 +239,9 @@ $langmessage = array (
 	'smtp_hosts'                     => 'Pavyzdys: ',
 	'auto_redir'                     => 'Automatiškai nukreipti užklausą į nurodytu procentu panašų puslapį.',
 	'gallery_legacy_style'           => 'Disable responsive gallery themes',
+	'allow_svg_upload'               => 'Brīdinājums: SVG faili no neuzticamiem avotiem var saturēt ļaunprātīgu skripta kodu, un tie jāpārbauda, ja rodas šaubas. Vairāk vietnē <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	),
+	'allow_svg_upload'               => 'Leisti įkelti SVG failus',
 	'desc'                           => 'Aprašymas',
 	'keywords'                       => 'Raktažodžiai',
 	'robots'                         => 'Matomumas paiškos robotams',
@@ -536,7 +538,6 @@ $langmessage = array (
 	'Add Attribute'                  => 'Add Attribute',
 	'Empty Container'                => 'Empty Container', // Layout Editor title for empty areas
 	'Move Behind'                    => 'Move Behind', // the title of the small icon in Layout Editor areas to get a covering area out oif the way by moving it to the back (z-index)
-	'svg upload warning'             => 'Brīdinājums: SVG faili no neuzticamiem avotiem var saturēt ļaunprātīgu skripta kodu, un tie jāpārbauda, ja rodas šaubas. Vairāk vietnē <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	'File'                           => 'File', // general purpose for future/plugin use
 	'Files'                          => 'Files', // general purpose for future/plugin use
 	'Files_of'                       => 'File %1$s of %2$s', // general purpose for future/plugin use

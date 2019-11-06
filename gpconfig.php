@@ -21,7 +21,7 @@
  *        'pages', 'pdf', 'png', 'ppt', 'pptx', 
  *        'qt', 
  *        'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 
- *        'scss', 'svg', 'svgz', 'swf', 'sxc', 'sxw',
+ *        'scss', 'swf', 'sxc', 'sxw', // 'svg' and 'svgz' can be enabled via Settings -> Configuration
  *        'tar', 'tgz', 'tif', 'tiff', 'ttf', 'txt', 
  *        'vsd', 
  *        'wav', 'webmanifest', 'webm', 'wma', 'wmv', 'woff', 'woff2',

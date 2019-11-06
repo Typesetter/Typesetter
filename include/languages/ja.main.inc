@@ -239,7 +239,9 @@ $langmessage = array (
 	'smtp_hosts'                     => '例: ',
 	'auto_redir'                     => 'この割合の範囲内で似ている既存のページがある場合、リクエストを自動的にリダイレクトします。',
 	'gallery_legacy_style'           => 'ギャラリーのテーマをレスポンシブにしない',
+	'allow_svg_upload'               => '警告：信頼できないソースからのSVGファイルには悪質なスクリプトコードが含まれている可能性があります。 詳細は<a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>をご覧ください。',
 	),
+	'allow_svg_upload'               => 'SVGファイルのアップロードを許可する',
 	'desc'                           => '概要',
 	'keywords'                       => 'キーワード',
 	'robots'                         => 'ロボット可視化',
@@ -536,7 +538,6 @@ $langmessage = array (
 	'Add Attribute'                  => 'Add Attribute',
 	'Empty Container'                => 'Empty Container', // Layout Editor title for empty areas
 	'Move Behind'                    => 'Move Behind', // the title of the small icon in Layout Editor areas to get a covering area out oif the way by moving it to the back (z-index)
-	'svg upload warning'             => '警告：信頼できないソースからのSVGファイルには悪質なスクリプトコードが含まれている可能性があります。 詳細は<a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>をご覧ください。',
 	'File'                           => 'File', // general purpose for future/plugin use
 	'Files'                          => 'Files', // general purpose for future/plugin use
 	'Files_of'                       => 'File %1$s of %2$s', // general purpose for future/plugin use

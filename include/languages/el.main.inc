@@ -239,7 +239,9 @@ $langmessage = array (
 	'smtp_hosts'                     => 'Παράδειγμα: ',
 	'auto_redir'                     => 'Ανακατευθύνει αυτόματα μια αίτηση αν είναι όμοια με υπάρχουσα σελίδα κατά το ποσοστό αυτό.',
 	'gallery_legacy_style'           => 'Disable responsive gallery themes',
+	'allow_svg_upload'               => 'Προειδοποίηση: Τα αρχεία SVG από μη αξιόπιστες πηγές ενδέχεται να περιέχουν κακόβουλο κώδικα δέσμης ενεργειών και θα πρέπει να ελέγχονται σε περίπτωση αμφιβολίας. Περισσότερα στη διεύθυνση <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	),
+	'allow_svg_upload'               => 'Να επιτρέπεται η μεταφόρτωση του SVG',
 	'desc'                           => 'Περιγραφή',
 	'keywords'                       => 'Λέξεις Κλειδιά',
 	'robots'                         => 'Να φαίνονται στα ρομπότ.',
@@ -536,7 +538,6 @@ $langmessage = array (
 	'Add Attribute'                  => 'Add Attribute',
 	'Empty Container'                => 'Empty Container', // Layout Editor title for empty areas
 	'Move Behind'                    => 'Move Behind', // the title of the small icon in Layout Editor areas to get a covering area out oif the way by moving it to the back (z-index)
-	'svg upload warning'             => 'Προειδοποίηση: Τα αρχεία SVG από μη αξιόπιστες πηγές ενδέχεται να περιέχουν κακόβουλο κώδικα δέσμης ενεργειών και θα πρέπει να ελέγχονται σε περίπτωση αμφιβολίας. Περισσότερα στη διεύθυνση <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	'File'                           => 'File', // general purpose for future/plugin use
 	'Files'                          => 'Files', // general purpose for future/plugin use
 	'Files_of'                       => 'File %1$s of %2$s', // general purpose for future/plugin use

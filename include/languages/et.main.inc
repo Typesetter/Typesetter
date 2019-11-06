@@ -239,7 +239,9 @@ $langmessage = array (
 	'smtp_hosts'                     => 'Näide:  ',
 	'auto_redir'                     => 'Päring suunatakse automaatselt ümber, kui see on antud protsendi ulatuses sarnane olemasoleva lehega.',
 	'gallery_legacy_style'           => 'Disable responsive gallery themes',
+	'allow_svg_upload'               => 'Hoiatus: ebausaldusväärsetest allikatest pärinevad SVG-failid võivad sisaldada pahatahtlikku skriptikoodi ja tuleks kahtluse korral kontrollida. Veel veebisaidilt  <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	),
+	'allow_svg_upload'               => 'Luba SVG-failide üleslaadimine',
 	'desc'                           => 'Kirjeldus',
 	'keywords'                       => 'Märksõnad',
 	'robots'                         => 'Nähtavus robotitele',
@@ -536,7 +538,6 @@ $langmessage = array (
 	'Add Attribute'                  => 'Add Attribute',
 	'Empty Container'                => 'Empty Container', // Layout Editor title for empty areas
 	'Move Behind'                    => 'Move Behind', // the title of the small icon in Layout Editor areas to get a covering area out oif the way by moving it to the back (z-index)
-	'svg upload warning'             => 'Hoiatus: ebausaldusväärsetest allikatest pärinevad SVG-failid võivad sisaldada pahatahtlikku skriptikoodi ja tuleks kahtluse korral kontrollida. Veel veebisaidilt  <a target="_blank" href="https://www.w3.org/wiki/SVG_Security">www.w3.org/wiki/SVG_Security</a>.',
 	'File'                           => 'File', // general purpose for future/plugin use
 	'Files'                          => 'Files', // general purpose for future/plugin use
 	'Files_of'                       => 'File %1$s of %2$s', // general purpose for future/plugin use

@@ -1,4 +1,5 @@
-/* Bootswatch 4 Scss 
+/**
+ * Bootswatch 4 Scss 
  * common styles used in all layouts
  *
  * as of commit https://github.com/Typesetter/Typesetter/commit/eac99656819f330f69d786927ad0dce75251d004
@@ -66,6 +67,33 @@ footer.main-footer {
     right: 0;
   }
 }
+
+// convert Typesetter grid to become Bootstrap 4 (flex) grid =======================
+.gpRow    { @extend .row; }
+.gpCol-1  { @extend .col-md-1; }
+.gpCol-2  { @extend .col-md-2; }
+.gpCol-3  { @extend .col-md-3; }
+.gpCol-4  { @extend .col-md-4; }
+.gpCol-5  { @extend .col-md-5; }
+.gpCol-6  { @extend .col-md-6; }
+.gpCol-7  { @extend .col-md-7; }
+.gpCol-8  { @extend .col-md-8; }
+.gpCol-9  { @extend .col-md-9; }
+.gpCol-10 { @extend .col-md-10; }
+.gpCol-11 { @extend .col-md-11; }
+.gpCol-12 { @extend .col-12; }
+
+// fixes for flex grid
+.filetype-wrapper_section.row {
+  > .gpclear {
+    display: none;
+  }
+  &:after{
+    content: none;
+  }
+}
+
+
 
 // Extra Content 'Dropdown Divider'
 .gpArea_Extra_Bootstrap_Dropdown_Divider {

@@ -209,17 +209,19 @@ class Edit extends \gp\Page{
 		if( $this->permission_menu ){
 
 			//visibility
-			$q				= 'cmd=ToggleVisibility';
-			$label			= '<i class="fa fa-eye-slash"></i> '.$langmessage['Visibility'].': '.$langmessage['Private'];
-			if( !$this->visibility ){
-				$label		= '<i class="fa fa-eye"></i> '.$langmessage['Visibility'].': '.$langmessage['Public'];
-				$q			.= '&visibility=private';
-			}
+			$q				= 'cmd=ToggleVisibility&index=' . urlencode($this->gp_index);
+			$label			= '<i class="fa fa-eye-slash"></i> ' . $langmessage['Visibility'] . ': ' . $langmessage['Private'];
 			$attrs			= array(
 				'class'		=> 'admin-link admin-link-toggle-visibility',
-				'data-cmd'	=> 'creq',
+				'data-cmd'	=> 'postlink',
 			);
-			$admin_links[]	= \gp\tool::Link($this->title, $label, $q, $attrs);
+			if( !$this->visibility ){
+				$q			.= '&visibility=private';
+				$label		= '<i class="fa fa-eye"></i> ' . $langmessage['Visibility'] . ': ' . $langmessage['Public'];
+			}else{
+				$attrs['class'] .= ' admin-link-visibility-private';
+			}
+			$admin_links[]	= \gp\tool::Link('Admin/Menu/Ajax', $label, $q, $attrs);
 		}
 
 
@@ -231,7 +233,7 @@ class Edit extends \gp\Page{
 				$langmessage['rename/details'],
 				'cmd=renameform&index=' . urlencode($this->gp_index),
 				array(
-					'class'		=> 'admin-link admin-link-toggle-visibility',
+					'class'		=> 'admin-link admin-link-rename-details',
 					'data-cmd'	=> 'gpajax',
 				)
 			);
@@ -1587,6 +1589,7 @@ class Edit extends \gp\Page{
 
 		$this->file_sections = $file_sections;
 		$this->SaveThis();
+
 	}
 
 

@@ -1262,8 +1262,30 @@ class Ajax extends \gp\admin\Menu{
 	 *
 	 */
 	public function ToggleVisibility(){
-		$_REQUEST += array('index'=>'','visibility'=>'');
-		\gp\Page\Visibility::Toggle($_REQUEST['index'], $_REQUEST['visibility']);
+		global $langmessage;
+		if( isset($_POST['index']) ){
+			$_POST += array('visibility' => '');
+			\gp\Page\Visibility::Toggle($_POST['index'], $_POST['visibility']);
+
+			if( !isset($_POST['menu']) ){
+				// replace visibility admin link, see /include/Page/Edit.php line 211-224
+				$q				= 'cmd=ToggleVisibility&index=' . urlencode($_POST['index']);
+				$label			= '<i class="fa fa-eye-slash"></i> ' . $langmessage['Visibility'] . ': ' . $langmessage['Private'];
+				$attrs			= array(
+					'class'		=> 'admin-link admin-link-toggle-visibility',
+					'data-cmd'	=> 'postlink',
+				);
+				if( empty($_POST['visibility']) ){
+					$q			.= '&visibility=private';
+					$label		= '<i class="fa fa-eye"></i> ' . $langmessage['Visibility'] . ': ' . $langmessage['Public'];
+				}else{
+					$attrs['class'] .= ' admin-link-visibility-private';
+				}
+				$admin_link = \gp\tool::Link('Admin/Menu/Ajax', $label, $q, $attrs);
+
+				$this->page->ajaxReplace[] = array('replace', '.admin-link-toggle-visibility', $admin_link);
+			}
+		}
 	}
 
 

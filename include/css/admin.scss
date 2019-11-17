@@ -345,11 +345,11 @@
 	background: lighten($gp_panel_bg,10%);
 	}
 
-#admincontent_panel a[href$='ToggleVisibility'] { 
+#admincontent_panel .admin-link-visibility-private { 
 	background:#C44830; 
 	}
 
-#admincontent_panel a[href$='ToggleVisibility']:hover { 
+#admincontent_panel .admin-link-visibility-private:hover { 
 	background:#DC5135; 
 	}
 

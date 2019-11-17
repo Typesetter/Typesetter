@@ -6,8 +6,8 @@ Open source CMS written in PHP focused on ease of use with true WYSIWYG editing 
 * [Typesetter Demo](https://www.typesettercms.com/Demo)
 * [Typesetter Forum](https://www.typesettercms.com/Forum)
 
+
 ## Requirements ##
-* PHP 5.3+, with Safe Mode Off
 * PHP 5.4+ as of Typesetter 5.1.1-b1
 
 

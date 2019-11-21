@@ -6,6 +6,7 @@ namespace gp\admin{
 
 	class Tools{
 
+		public static $notifications	= array();
 		public static $new_versions		= array();
 		public static $update_status	= 'checklater';
 		public static $show_toolbar		= true;
@@ -31,7 +32,6 @@ namespace gp\admin{
 				}
 			}
 
-
 			//check addon versions
 			if( isset($config['addons']) && is_array($config['addons']) ){
 				self::CheckArray($config['addons'],$version_data);
@@ -44,7 +44,6 @@ namespace gp\admin{
 
 			//check layout versions
 			self::CheckArray($gpLayouts,$version_data);
-
 
 			// checked recently
 			$diff = time() - $data_timestamp;
@@ -61,6 +60,7 @@ namespace gp\admin{
 
 			self::$update_status = 'embedcheck';
 		}
+
 
 
 		/**
@@ -83,6 +83,7 @@ namespace gp\admin{
 
 			return \gp\tool\Files::$last_modified;
 		}
+
 
 
 		public static function CheckArray($array,$update_data){
@@ -121,6 +122,197 @@ namespace gp\admin{
 			}
 
 		}
+
+
+
+		/**
+		* Aggregate all sources of notifications
+		* @returns {array} of notifications
+		*
+		*/
+		public static function CheckNotifications(){
+
+			$notifications = array();
+
+			$drafts = \gp\tool\Files::GetDrafts();
+			if( count($drafts) > 0 ){
+				$notifications['drafts'] = array(
+					'title' 		=> 'Working Drafts',
+					'badge_bg' 		=> '#329880',
+					'badge_color' 	=> '#fff',
+					'priority'	=> '10',
+					'items' 	=> $drafts,
+				);
+			}
+
+			$private_pages = \gp\tool\Files::GetPrivatePages();
+			if( count($private_pages) > 0 ){
+				$notifications['private_pages'] = array(
+					'title'		=> 'Private Pages',
+					'badge_bg' 		=> '#ad5f45',
+					'badge_color' 	=> '#fff',
+					'items'		=> $private_pages,
+				);
+			}
+
+			if( count(self::$new_versions) > 0 ){
+				$notifications['updates'] = array(
+					'title'		=> 'updates',
+					'badge_bg' 		=> '#3153b7',
+					'badge_color' 	=> '#fff',
+					'items'		=> self::GetUpdatesNotifications(),
+				);
+			}
+
+			$notifications	= \gp\tool\Plugins::Filter('Notifications', array($notifications));
+
+			self::$notifications = $notifications;
+		}
+
+
+
+		/**
+		* Convert $new_versions to notification items array
+		* @returns {array} of notifications
+		*
+		*/
+		public static function GetUpdatesNotifications(){
+			global $langmessage;
+
+			$updates = array();
+
+			if( gp_remote_update && isset(self::$new_versions['core']) ){
+				$updates[] = array(
+					'label' 	=> CMS_NAME . ' ' . self::$new_versions['core'],
+					'action'	=> '<a href="' . \gp\tool::GetDir('/include/install/update.php') . '">' . $langmessage['upgrade'] . '</a>',
+				);
+			}
+
+			foreach(self::$new_versions as $addon_id => $new_addon_info){
+
+				if( !is_numeric($addon_id) ){
+					continue;
+				}
+
+				$label		= $new_addon_info['name'].':  '.$new_addon_info['version'];
+				$url		= self::RemoteUrl( $new_addon_info['type'] );
+
+				if( $url === false ){
+					continue;
+				}
+				$updates[] = array(
+					'label' 	=> $label,
+					'action'	=> '<a href="' . $url . '/' . $addon_id . '" data-cmd="remote">' . $langmessage['upgrade'] . '</a>',
+				);
+
+			}
+
+			return $updates;
+		}
+
+
+
+		/**
+		* Get Notifications
+		*
+		*/
+		public static function GetNotifications($in_panel=true){
+			global $langmessage;
+
+			self::CheckNotifications();
+			// debug('/include/admin/Tools.php, line 219 -- Notifications = ' . pre(self::$notifications));
+
+			if( count(self::$notifications) < 1 ){
+				return;
+			}
+
+			$total_count			= 0;
+			$main_badge_style_attr	= '';
+			$priority 				= 0;
+			$links 					= array();
+
+			foreach(self::$notifications as $type => $notification ){
+
+				$count	= count($notification['items']);
+				if( $count < 1 ){
+					continue;
+				}
+				$total_count += $count;
+
+				$title				= $notification['title'];
+
+				$badge_style		= '';
+				$badge_style		.= !empty($notification['badge_bg'])	? ('background-color:' . $notification['badge_bg'] . ';') : '';
+				$badge_style		.= !empty($notification['badge_color'])	? (' color:' . $notification['badge_color'] . ';') : '';
+				$badge_style_attr	=  !empty($badge_style) ? ' style="' . $badge_style . '"' : '';
+				$badge_html			= '<b class="admin-panel-badge"' . $badge_style_attr . '>' . $count . '</b>';
+
+				ob_start();
+				echo '<li>';
+				echo \gp\tool::Link(
+						'Admin/Notifications',
+						$title . ' ' . $badge_html, 
+						'cmd=ShowNotifications&type=' . rawurlencode($type),
+						array(
+							'title'		=> $count . ' ' . $title,
+							'class'		=>'admin-panel-notification', // . '-' . rawurlencode($type)',
+							'data-cmd'	=> 'gpabox',
+						)
+					);
+				echo '</li>';
+
+				if( !empty($notification['priority']) && (int)$notification['priority'] >= $priority ){
+					$priority = (int)$notification['priority'];
+					$main_badge_style_attr	= $badge_style_attr;
+					array_unshift($links, ob_get_clean());
+				}else{
+					$links[] = ob_get_clean();
+				}
+			}
+
+			$panel_label = $langmessage['Notifications'];
+
+			self::_AdminPanelLinks(
+				$in_panel,
+				implode('', $links),
+				$panel_label,
+				'fa fa-bell',
+				'notifications',
+				'admin-panel-notifications',  // new param 'class'
+				'<b class="admin-panel-badge"' . $main_badge_style_attr . '>' . $total_count . '</b>'  // new param 'badge'
+			);
+
+		}
+
+
+
+		/**
+		* Update Notifications
+		*
+		*/
+		public static function UpdateNotifications($ajax_include=false){
+			global $page;
+
+			ob_start();
+			self::GetNotifications();
+			$panelgroup = ob_get_clean();
+
+			if( $ajax_include ){
+				if( !is_array($page->ajaxReplace) ){
+					$page->ajaxReplace = array();
+				}
+				$page->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
+				return;
+			}
+
+			echo \gp\tool\Output\Ajax::Callback($_REQUEST['jsoncallback']);
+			echo '([';
+			echo '{DO:"replace",SELECTOR:".admin-panel-notifications",CONTENT:' . \gp\tool::JsonEncode($panelgroup) . '}';
+			echo ']);';
+			die();
+		}
+
+
 
 
 		public static function AdminScripts(){
@@ -298,11 +490,9 @@ namespace gp\admin{
 													);
 			}
 
-
 			$scripts['Admin/Errors']				= array(	'class'		=> '\\gp\\admin\\Tools\\Errors',
 																'label' 	=> 'Errors',
 													);
-
 
 			$scripts['Admin/About']					= array(	'class'		=> '\\gp\\admin\\About',
 																'label' 	=> 'About '.CMS_NAME,
@@ -312,13 +502,16 @@ namespace gp\admin{
 																'permission' => 'Admin_Uploaded',
 													);
 
-
 			$scripts['Admin/Preferences']			= array(	'class'		=> '\\gp\\admin\\Settings\\Preferences',
 																'label' 	=> $langmessage['Preferences'],
 													);
 
+			$scripts['Admin/Notifications']			= array(	'class'		=> '\\gp\\admin\\Notifications',
+																'method'	=> 'ShowNotifications',
+																'label' 	=> 'Notifications', // $langmessage['Notifications'],
+													);
 
-			gpSettingsOverride('admin_scripts',$scripts);
+			gpSettingsOverride('admin_scripts', $scripts);
 
 			return $scripts;
 		}
@@ -566,7 +759,7 @@ namespace gp\admin{
 				echo '</li>';
 			}
 
-			//extra edut
+			//extra edit
 			echo '<li>';
 			echo \gp\tool::Link(
 				$page->title,
@@ -670,6 +863,8 @@ namespace gp\admin{
 
 
 			//updates
+			/* hidden in favor of new notifications panelgroup
+
 			if( count(self::$new_versions) > 0 ){
 
 				ob_start();
@@ -701,6 +896,12 @@ namespace gp\admin{
 				self::_AdminPanelLinks($in_panel, $links, 'updates', 'fa fa-refresh', 'upd');
 			}
 
+			*/
+
+
+			//notifications
+			self::GetNotifications();
+
 
 			//username
 			ob_start();
@@ -711,7 +912,7 @@ namespace gp\admin{
 			echo '</li>';
 
 			echo '<li>';
-			echo \gp\tool::Link($page->title,$langmessage['logout'],'cmd=logout',array('data-cmd'=>'creq'));
+			echo \gp\tool::Link($page->title, $langmessage['logout'], 'cmd=logout', array('data-cmd' => 'postlink'));
 			echo '</li>';
 
 			echo '<li>';
@@ -785,10 +986,13 @@ namespace gp\admin{
 
 
 		/**
-		 * Helper function for outputing link groups in AdminPanelLinks()
+		 * Helper function for outputting link groups in AdminPanelLinks()
+		 * as of 5.1.1-b1 new params:
+		 * @param {string} $class, CSS class(es) for panelgroup, TODO: better make it $attrs?
+		 * @param {string} $badge, HTML for optional badge, TODO: should be better an array of separated class and content
 		 *
 		 */
-		private static function _AdminPanelLinks($in_panel, $links, $lang_key, $icon_class, $panel_arg){
+		private static function _AdminPanelLinks($in_panel, $links, $lang_key, $icon_class, $panel_arg, $class='', $badge=''){
 			global $langmessage;
 
 			if( empty($links) ){
@@ -797,10 +1001,10 @@ namespace gp\admin{
 
 			$label = isset($langmessage[$lang_key]) ? $langmessage[$lang_key] : $lang_key;
 
-			echo '<div class="panelgroup">';
-			self::PanelHeading($in_panel, $label, $icon_class, $panel_arg );
+			echo '<div class="panelgroup ' . $class . '">';
+			self::PanelHeading($in_panel, $label, $icon_class, $panel_arg, $badge);
 			echo '<ul class="submenu">';
-			echo '<li class="submenu_top"><a class="submenu_top">'.$label.'</a></li>';
+			echo '<li class="submenu_top"><a class="submenu_top">' . $label . '</a></li>';
 			echo $links;
 			echo '</ul>';
 			echo '</div>';
@@ -808,7 +1012,7 @@ namespace gp\admin{
 		}
 
 
-		public static function PanelHeading( $in_panel, $label, $icon, $arg ){
+		public static function PanelHeading($in_panel, $label, $icon, $arg, $badge){
 			global $gpAdmin;
 
 			if( !$in_panel ){
@@ -823,6 +1027,7 @@ namespace gp\admin{
 			echo '<a class="toplink" data-cmd="toplink" data-arg="'.$arg.'">';
 			echo '<i class="'.$icon.'"></i>';
 			echo '<span>'.$label.'</span>';
+			echo $badge;
 			echo '</a>';
 
 			if( $gpAdmin['gpui_vis'] == $arg ){

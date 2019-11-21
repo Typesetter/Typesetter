@@ -1284,7 +1284,17 @@ class Ajax extends \gp\admin\Menu{
 				$admin_link = \gp\tool::Link('Admin/Menu/Ajax', $label, $q, $attrs);
 
 				$this->page->ajaxReplace[] = array('replace', '.admin-link-toggle-visibility', $admin_link);
+
+				// update notifications
+				ob_start();
+				\gp\admin\Tools::GetNotifications();
+				$panelgroup = ob_get_clean();
+
+				$this->page->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
+				return;
 			}
+
+			\gp\admin\Tools::UpdateNotifications(true); // passing true = add to $page->ajaxReplace
 		}
 	}
 

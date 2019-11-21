@@ -1048,13 +1048,14 @@ class Edit extends \gp\Page{
 
 		$page->ajaxReplace[] = array('ck_saved', '', '');
 
-
 		//update gallery information
 		switch($this->file_sections[$section_num]['type']){
 			case 'gallery':
 				$this->GalleryEdited();
 			break;
 		}
+
+		\gp\admin\Tools::UpdateNotifications(true); // passing true = add to ajaxReplace
 
 		return true;
 	}
@@ -1294,6 +1295,13 @@ class Edit extends \gp\Page{
 		}
 
 		$this->draft_exists = true;
+
+		// update notifications
+		ob_start();
+		\gp\admin\Tools::GetNotifications();
+		$panelgroup = ob_get_clean();
+		$this->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
+
 		return true;
 	}
 
@@ -1402,6 +1410,8 @@ class Edit extends \gp\Page{
 
 		$page->ajaxReplace		= array();
 		$page->ajaxReplace[]	= array('DraftPublished');
+
+		\gp\admin\Tools::UpdateNotifications(true); // passing true = add to ajaxReplace
 
 		return true;
 	}

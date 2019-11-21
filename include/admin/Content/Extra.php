@@ -11,6 +11,7 @@ class Extra extends \gp\Page\Edit{
 	protected $page;
 	protected $area_info;
 
+
 	public function __construct($args){
 		global $dataDir;
 		$this->page = $args['page'];
@@ -21,42 +22,38 @@ class Extra extends \gp\Page\Edit{
 	}
 
 
+
 	public function RunScript(){
 
 		// area specific commands
 		if (!is_null($this->file)){
-			$this->cmds['DeleteArea'] = 'DefaultDisplay';
-			$this->cmds['EditExtra'] = '';
-			$this->cmds['PublishDraft'] = 'DefaultDisplay';
-			$this->cmds['PublishAjax'] = '';
-			$this->cmds['PreviewText'] = '';
-			$this->cmds['SaveText'] = 'EditExtra';
-			$this->cmds['EditVisibility'] = '';
-			$this->cmds['SaveVisibilityExtra'] = 'DefaultDisplay';
-
+			$this->cmds['DeleteArea']			= 'DefaultDisplay';
+			$this->cmds['EditExtra']			= '';
+			$this->cmds['PublishDraft']			= 'DefaultDisplay';
+			$this->cmds['PublishAjax']			= '';
+			$this->cmds['PreviewText']			= '';
+			$this->cmds['SaveText']				= 'EditExtra';
+			$this->cmds['EditVisibility']		= '';
+			$this->cmds['SaveVisibilityExtra'] 	= 'DefaultDisplay';
 
 			/* inline editing */
-			$this->cmds['save'] = 'SectionEdit';
-			$this->cmds['save_inline'] = 'SectionEdit';
-			$this->cmds['preview'] = 'SectionEdit';
-			$this->cmds['include_dialog'] = 'SectionEdit';
-			$this->cmds['InlineEdit'] = 'SectionEdit';
-
-
+			$this->cmds['save']					= 'SectionEdit';
+			$this->cmds['save_inline']			= 'SectionEdit';
+			$this->cmds['preview']				= 'SectionEdit';
+			$this->cmds['include_dialog']		= 'SectionEdit';
+			$this->cmds['InlineEdit']			= 'SectionEdit';
 		}
 
+		$this->cmds['gallery_folder']			= 'GalleryImages';
+		$this->cmds['gallery_images']			= 'GalleryImages';
+		$this->cmds['new_dir']					= '\\gp\\tool\\Editing::NewDirForm';
 
-		$this->cmds['gallery_folder'] = 'GalleryImages';
-		$this->cmds['gallery_images'] = 'GalleryImages';
-		$this->cmds['new_dir'] = '\\gp\\tool\\Editing::NewDirForm';
-
-
-		$this->cmds['NewSection'] = 'DefaultDisplay';
-
+		$this->cmds['NewSection'] 				= 'DefaultDisplay';
 
 		$cmd = \gp\tool::GetCommand();
 		$this->RunCommands($cmd);
 	}
+
 
 
 	/**
@@ -68,12 +65,10 @@ class Extra extends \gp\Page\Edit{
 
 		$this->GetAreas();
 
-
 		// is there a specific file being requested
 		if (!isset($_REQUEST['file'])){
 			return;
 		}
-
 
 		$area_info = $this->ExtraExists($_REQUEST['file']);
 
@@ -97,8 +92,9 @@ class Extra extends \gp\Page\Edit{
 			$this->draft_exists = true;
 		}
 
-
 	}
+
+
 
 	/**
 	 * Get a list of all extra edit areas
@@ -115,6 +111,7 @@ class Extra extends \gp\Page\Edit{
 
 		uksort($this->areas, 'strnatcasecmp');
 	}
+
 
 
 	/**
@@ -135,6 +132,8 @@ class Extra extends \gp\Page\Edit{
 		$this->areas[$title]['draft_path'] = $this->folder . '/' . $title . '/draft.php';
 		$this->areas[$title]['legacy_path'] = $this->folder . '/' . $title . '.php';
 	}
+
+
 
 	/**
 	 * Return the area name if valid
@@ -163,6 +162,7 @@ class Extra extends \gp\Page\Edit{
 	}
 
 
+
 	/**
 	 * Delete an extra content area
 	 *
@@ -173,27 +173,29 @@ class Extra extends \gp\Page\Edit{
 		if ($this->_DeleteArea()){
 			unset($this->areas[$this->title]);
 		} else {
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 		}
 
 	}
 
+
+
 	private function _DeleteArea(){
 
 		//legacy path
-		if (\gp\tool\Files::Exists($this->area_info['legacy_path']) && !unlink($this->area_info['legacy_path'])){
+		if( \gp\tool\Files::Exists($this->area_info['legacy_path']) && !unlink($this->area_info['legacy_path']) ){
 			return false;
 		}
 
 		//remove directory
 		$dir = dirname($this->area_info['draft_path']);
-		if (file_exists($dir) && !\gp\tool\Files::RmAll($dir)){
+		if( file_exists($dir) && !\gp\tool\Files::RmAll($dir) ){
 			return false;
 		}
 
-
 		return true;
 	}
+
 
 
 	/**
@@ -203,12 +205,13 @@ class Extra extends \gp\Page\Edit{
 	public function ExtraExists($file){
 		global $dataDir;
 
-		if (!isset($this->areas[$file])){
+		if( !isset($this->areas[$file]) ){
 			return;
 		}
 
 		return $this->areas[$file];
 	}
+
 
 
 	/**
@@ -242,6 +245,7 @@ class Extra extends \gp\Page\Edit{
 	}
 
 
+
 	/**
 	 * Display extra content row
 	 *
@@ -249,10 +253,8 @@ class Extra extends \gp\Page\Edit{
 	public function ExtraRow($info, $types){
 		global $langmessage;
 
-
 		$sections = \gp\tool\Output::ExtraContent($info['title']);
 		$section = $sections[0];
-
 
 		echo '<tr><td style="white-space:nowrap">';
 		echo str_replace('_', ' ', $info['title']);
@@ -271,7 +273,6 @@ class Extra extends \gp\Page\Edit{
 		echo \gp\tool::Link('Admin/Extra', $langmessage['preview'], 'cmd=PreviewText&file=' . rawurlencode($info['title']));
 		echo ' &nbsp; ';
 
-
 		//publish
 		if (\gp\tool\Files::Exists($info['draft_path'])){
 			echo \gp\tool::Link('Admin/Extra', $langmessage['Publish Draft'], 'cmd=PublishDraft&file=' . rawurlencode($info['title']), array('data-cmd' => 'creq'));
@@ -279,7 +280,6 @@ class Extra extends \gp\Page\Edit{
 			echo '<span class="text-muted">' . $langmessage['Publish Draft'] . '</span>';
 		}
 		echo ' &nbsp; ';
-
 
 		//edit
 		if ($section['type'] == 'text'){
@@ -300,6 +300,7 @@ class Extra extends \gp\Page\Edit{
 			'class' => 'gpconfirm'));
 		echo '</td></tr>';
 	}
+
 
 
 	/**

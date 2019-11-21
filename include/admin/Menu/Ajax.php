@@ -17,15 +17,15 @@ class Ajax extends \gp\admin\Menu{
 			//adding new files
 			case 'AddHidden':
 				$this->AddHidden();
-			return;
+				return;
 
 			case 'CopyForm':
 				$this->CopyForm();
-			return;
+				return;
 
 			case 'CopyPage':
 				$this->CopyPage();
-			break;
+				break;
 
 
 			// Page Insertion
@@ -33,80 +33,80 @@ class Ajax extends \gp\admin\Menu{
 			case 'insert_after':
 			case 'insert_child':
 				$this->InsertDialog();
-			return;
+				return;
 
 			case 'NewFile':
 				$this->NewFile();
-			break;
+				break;
 
 			case 'InsertFromHidden';
 				$this->InsertFromHidden();
-			break;
+				break;
 
 			case 'RestoreFromTrash':
 				$this->RestoreFromTrash();
-			break;
+				break;
 
 
 			//external links
 			case 'NewExternal':
 				$this->NewExternal();
-			break;
+				break;
 			case 'EditExternal':
 				$this->EditExternal();
-			return;
+				return;
 			case 'SaveExternal':
 				$this->SaveExternal();
-			break;
+				break;
 
 
 			//extra area
 			case 'InsertExtra':
 				$this->InsertExtra();
-			break;
+				break;
 
 
 			//edit classes
 			case 'ClassesForm':
 				$this->ClassesForm();
-			break;
+				break;
 			case 'SaveClasses':
 				$this->SaveClasses();
-			break;
+				break;
 
 
 			//menu editing
 			case 'hide':
 				$this->Hide();
-			break;
+				break;
 			case 'MoveToTrash':
 				$this->MoveToTrash();
-			break;
+				break;
 
 
 			//rename
 			case 'renameform':
 				$this->RenameForm(); //will die()
-			return;
+				return;
 			case 'RenameFile':
 				$this->RenameFile();
-			break;
+				break;
 
 			//visibility
 			case 'ToggleVisibility':
 				$this->ToggleVisibility();
-			break;
+				break;
 
 			//homepage
 			case 'HomepageSelect':
 				$this->HomepageSelect();
-			return;
+				return;
 			case 'HomepageSave':
 				$this->HomepageSave();
-			return;
+				return;
 			case 'HomepageAuto':
 				$this->HomepageAuto();
-			return;
+				return;
 		}
 
 		parent::RunScript();
@@ -120,14 +120,14 @@ class Ajax extends \gp\admin\Menu{
 	public function AddHidden(){
 		global $langmessage, $gp_index;
 
-		$_REQUEST += array('title'=>'');
+		$_REQUEST += array('title' => '');
 		$_REQUEST['gpx_content'] = 'gpabox';
 
 		//reusable format
 		ob_start();
 		echo '<p>';
 		echo '<button type="submit" name="cmd" value="%s" class="gpsubmit gpvalidate" data-cmd="gppost">%s</button>';
-		echo '<button class="admin_box_close gpcancel">'.$langmessage['cancel'].'</button>';
+		echo '<button class="admin_box_close gpcancel">' . $langmessage['cancel'] . '</button>';
 		echo '</p>';
 		echo '</td></tr>';
 		echo '</tbody>';
@@ -137,8 +137,8 @@ class Ajax extends \gp\admin\Menu{
 		echo '<div class="inline_box">';
 
 		echo '<div class="layout_links" style="float:right">';
-		echo '<a href="#gp_new_copy" data-cmd="tabs" class="selected">'. $langmessage['Copy'] .'</a>';
-		echo '<a href="#gp_new_type" data-cmd="tabs">'. $langmessage['Content Type'] .'</a>';
+		echo '<a href="#gp_new_copy" data-cmd="tabs" class="selected">' . $langmessage['Copy'] . '</a>';
+		echo '<a href="#gp_new_type" data-cmd="tabs">' . $langmessage['Content Type'] . '</a>';
 		echo '</div>';
 
 
@@ -152,7 +152,7 @@ class Ajax extends \gp\admin\Menu{
 
 
 		echo '<table class="bordered full_width">';
-		echo '<tr><th colspan="2">'.$langmessage['options'].'</th></tr>';
+		echo '<tr><th colspan="2">' . $langmessage['options'] . '</th></tr>';
 
 		//title
 		$new_title = htmlspecialchars($_REQUEST['title']);
@@ -161,7 +161,7 @@ class Ajax extends \gp\admin\Menu{
 		echo '<tr><td>';
 		echo $langmessage['label'];
 		echo '</td><td>';
-		echo '<input type="text" name="title" maxlength="100" size="50" value="'. $new_title .'" class="gpinput full_width" required/>';
+		echo '<input type="text" name="title" maxlength="100" size="50" value="' . $new_title . '" class="gpinput full_width" required/>';
 		echo '</td></tr>';
 
 		//copy
@@ -171,23 +171,23 @@ class Ajax extends \gp\admin\Menu{
 		echo '</td><td>';
 		$gp_index_no_special = array();
 		foreach( $gp_index as $title => $index ){
-			if( strpos(strtolower($index),'special_') !== 0 ){
+			if( strpos(strtolower($index), 'special_') !== 0 ){
 				$gp_index_no_special[$title] = $index;
 			}
 		}
 		\gp\admin\Menu\Tools::ScrollList($gp_index_no_special);
-		echo sprintf($format_bottom,'CopyPage',$langmessage['create_new_file']);
+		echo sprintf($format_bottom, 'CopyPage', $langmessage['create_new_file']);
 
 
 		//content type
 		echo '<tr id="gp_new_type" style="display:none"><td>';
-		echo str_replace(' ','&nbsp;',$langmessage['Content Type']);
+		echo str_replace(' ', '&nbsp;', $langmessage['Content Type']);
 		echo '</td><td>';
 		echo '<div id="new_section_links">';
 		\gp\Page\Edit::NewSections(true);
 		echo '</div>';
 
-		echo sprintf($format_bottom,'NewFile',$langmessage['create_new_file']);
+		echo sprintf($format_bottom, 'NewFile', $langmessage['create_new_file']);
 		echo '</form>';
 		echo '</div>';
 	}
@@ -204,9 +204,9 @@ class Ajax extends \gp\admin\Menu{
 
 		if( isset($_REQUEST['redir']) ){
 			$title	= \gp\tool::IndexToTitle($new_index);
-			$url	= \gp\tool::AbsoluteUrl($title,'',true,false,true);
-			msg(sprintf($langmessage['will_redirect'],\gp\tool::Link_Page($title)));
-			$this->page->ajaxReplace[] = array('location',$url,15000);
+			$url	= \gp\tool::AbsoluteUrl($title, '', true, false, true);
+			msg(sprintf($langmessage['will_redirect'], \gp\tool::Link_Page($title)));
+			$this->page->ajaxReplace[] = array('location', $url, 15000);
 		}else{
 			msg($langmessage['SAVED']);
 		}
@@ -234,11 +234,11 @@ class Ajax extends \gp\admin\Menu{
 		$from_label = \gp\tool::LabelSpecialChars($from_label);
 
 		echo '<div class="inline_box">';
-		echo '<form method="post" action="'.\gp\tool::GetUrl('Admin/Menu/Ajax').'">';
+		echo '<form method="post" action="' . \gp\tool::GetUrl('Admin/Menu/Ajax') . '">';
 		if( isset($_REQUEST['redir']) ){
 			echo '<input type="hidden" name="redir" value="redir"/> ';
 		}
-		echo '<input type="hidden" name="from_title" value="'.htmlspecialchars($from_title).'"/> ';
+		echo '<input type="hidden" name="from_title" value="' . htmlspecialchars($from_title) . '"/> ';
 		echo '<table class="bordered full_width" id="gp_rename_table">';
 
 		echo '<thead><tr><th colspan="2">';
@@ -254,15 +254,15 @@ class Ajax extends \gp\admin\Menu{
 		echo '<tr><td>';
 		echo $langmessage['to'];
 		echo '</td><td>';
-		echo '<input type="text" name="title" maxlength="100" size="50" value="'.$from_label.'" class="gpinput" />';
+		echo '<input type="text" name="title" maxlength="100" size="50" value="' . $from_label . '" class="gpinput" />';
 		echo '</td></tr>';
 
 		echo '</table>';
 
 		echo '<p>';
 		echo '<input type="hidden" name="cmd" value="CopyPage"/> ';
-		echo '<input type="submit" name="" value="'.$langmessage['continue'].'" class="gpsubmit" data-cmd="gppost"/>';
-		echo '<input type="button" class="admin_box_close gpcancel" name="" value="'.$langmessage['cancel'].'" />';
+		echo '<input type="submit" name="" value="' . $langmessage['continue'] . '" class="gpsubmit" data-cmd="gppost"/>';
+		echo '<input type="button" class="admin_box_close gpcancel" name="" value="' . $langmessage['cancel'] . '" />';
 		echo '</p>';
 
 		echo '</form>';
@@ -330,7 +330,7 @@ class Ajax extends \gp\admin\Menu{
 		$username = $gpAdmin['username'];
 		$user_file = $dataDir . '/data/_sessions/' . $users[$username]['file_name'];
 		$editing_values = $gpAdmin['editing'];
-		if( $editing_values != 'all' && strpos($editing_values, ','.$index.',') === false ){
+		if( $editing_values != 'all' && strpos($editing_values, ',' . $index . ',') === false ){
 			$editing_values .= $index.',';
 			$gpAdmin['editing'] = $editing_values;
 			// save to user session file
@@ -381,9 +381,9 @@ class Ajax extends \gp\admin\Menu{
 		//create format of each tab
 		ob_start();
 		echo '<div id="%s" class="%s">';
-		echo '<form action="'.\gp\tool::GetUrl('Admin/Menu/Ajax').'" method="post">';
-		echo '<input type="hidden" name="insert_where" value="'.htmlspecialchars($_REQUEST['insert_where']).'" />';
-		echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($cmd).'" />';
+		echo '<form action="' . \gp\tool::GetUrl('Admin/Menu/Ajax') . '" method="post">';
+		echo '<input type="hidden" name="insert_where" value="' . htmlspecialchars($_REQUEST['insert_where']) . '" />';
+		echo '<input type="hidden" name="insert_how" value="' . htmlspecialchars($cmd) . '" />';
 
 		// echo '<table class="bordered full_width">';
 		// echo '<thead><tr><th>&nbsp;</th></tr></thead>';
@@ -394,7 +394,7 @@ class Ajax extends \gp\admin\Menu{
 		ob_start();
 		echo '<p>';
 		echo '<button type="submit" name="cmd" value="%s" class="gpsubmit" data-cmd="gppost">%s</button>';
-		echo '<button class="admin_box_close gpcancel">'.$langmessage['cancel'].'</button>';
+		echo '<button class="admin_box_close gpcancel">' . $langmessage['cancel'] . '</button>';
 		echo '</p>';
 		echo '</form>';
 		echo '</div>';
@@ -406,12 +406,12 @@ class Ajax extends \gp\admin\Menu{
 
 			//tabs
 			echo '<div class="layout_links">';
-			echo   '<a href="#gp_Insert_Copy" data-cmd="tabs" class="selected">'. $langmessage['Copy'] .'</a> ';
-			echo   '<a href="#gp_Insert_New" data-cmd="tabs">'. $langmessage['new_file'] .'</a> ';
-			echo   '<a href="#gp_Insert_Hidden" data-cmd="tabs">'. $langmessage['Available'] .'</a> ';
-			echo   '<a href="#gp_Insert_External" data-cmd="tabs">'. $langmessage['External Link'] .'</a> ';
-			echo   '<a href="#gp_Insert_Deleted" data-cmd="tabs">'. $langmessage['trash'] .'</a> ';
-			echo   '<a href="#gp_Insert_Extra" data-cmd="tabs">'. $langmessage['theme_content'] .'</a> ';
+			echo   '<a href="#gp_Insert_Copy" data-cmd="tabs" class="selected">' . $langmessage['Copy'] . '</a> ';
+			echo   '<a href="#gp_Insert_New" data-cmd="tabs">' . $langmessage['new_file'] . '</a> ';
+			echo   '<a href="#gp_Insert_Hidden" data-cmd="tabs">' . $langmessage['Available'] . '</a> ';
+			echo   '<a href="#gp_Insert_External" data-cmd="tabs">' . $langmessage['External Link'] . '</a> ';
+			echo   '<a href="#gp_Insert_Deleted" data-cmd="tabs">' . $langmessage['trash'] . '</a> ';
+			echo   '<a href="#gp_Insert_Extra" data-cmd="tabs">' . $langmessage['theme_content'] . '</a> ';
 			echo '</div>';
 
 
@@ -456,17 +456,17 @@ class Ajax extends \gp\admin\Menu{
 			echo '</div>';
 			echo '</td></tr>';
 			echo '</table>';
-			echo sprintf($format_bottom,'NewFile',$langmessage['create_new_file']);
+			echo sprintf($format_bottom,'NewFile', $langmessage['create_new_file']);
 
 
 			// Insert Hidden
 			$avail = $this->GetAvail_Current();
 
 			if( !empty($avail) ){
-				echo sprintf($format_top,'gp_Insert_Hidden','nodisplay');
+				echo sprintf($format_top, 'gp_Insert_Hidden', 'nodisplay');
 				$avail = array_flip($avail);
-				\gp\admin\Menu\Tools::ScrollList($avail,'keys[]','checkbox',true);
-				echo sprintf($format_bottom,'InsertFromHidden',$langmessage['insert_into_menu']);
+				\gp\admin\Menu\Tools::ScrollList($avail, 'keys[]', 'checkbox', true);
+				echo sprintf($format_bottom, 'InsertFromHidden', $langmessage['insert_into_menu']);
 			}
 
 
@@ -474,9 +474,9 @@ class Ajax extends \gp\admin\Menu{
 			// Insert Deleted / Restore from trash
 			$scroll_list = $this->TrashScrolllist();
 			if( !empty($scroll_list) ){
-				echo sprintf($format_top,'gp_Insert_Deleted','nodisplay');
+				echo sprintf($format_top, 'gp_Insert_Deleted', 'nodisplay');
 				echo $scroll_list;
-				echo sprintf($format_bottom,'RestoreFromTrash',$langmessage['restore_from_trash']);
+				echo sprintf($format_bottom, 'RestoreFromTrash', $langmessage['restore_from_trash']);
 			}
 
 
@@ -485,7 +485,7 @@ class Ajax extends \gp\admin\Menu{
 			$args					= array();
 			$args['insert_how']		= $cmd;
 			$args['insert_where']	= $_REQUEST['insert_where'];
-			$this->ExternalForm('NewExternal',$langmessage['insert_into_menu'],$args);
+			$this->ExternalForm('NewExternal', $langmessage['insert_into_menu'], $args);
 			echo '</div>';
 
 
@@ -493,7 +493,7 @@ class Ajax extends \gp\admin\Menu{
 			$areas = $this->GetExtraAreas();
 			// msg("Areas: " . pre($areas));
 			if( !empty($areas) ){
-				echo sprintf($format_top,'gp_Insert_Extra','nodisplay');
+				echo sprintf($format_top, 'gp_Insert_Extra', 'nodisplay');
 				echo '<p style="padding:6px 10px; background:#f1f1f1;">';
 				echo '<i class="fa fa-warning" style="display:block; float:left; font-size:2em; line-height:1.33em; margin:0 0.5em 0 0.2em;"></i>';
 				echo 'Outputs an Extra Content Area at the current position <strong>in the menu</strong>. ';
@@ -551,13 +551,13 @@ class Ajax extends \gp\admin\Menu{
 
 		ob_start();
 		echo '<div class="gp_scrolllist"><div>';
-		echo '<input type="text" name="search" value="" class="gpsearch" placeholder="'.$langmessage['Search'].'" autocomplete="off" />';
+		echo '<input type="text" name="search" value="" class="gpsearch" placeholder="' . $langmessage['Search'] . '" autocomplete="off" />';
 		foreach($trashtitles as $title => $info){
 			if( empty($info['label']) ){
 				continue;
 			}
 			echo '<label>';
-			echo '<input type="checkbox" name="titles[]" value="'.htmlspecialchars($title).'" />';
+			echo '<input type="checkbox" name="titles[]" value="' . htmlspecialchars($title) . '" />';
 			echo '<span>';
 			echo $info['label'];
 			echo '<span class="slug">';
@@ -609,7 +609,7 @@ class Ajax extends \gp\admin\Menu{
 		global $langmessage, $gp_index;
 
 		if( is_null($this->curr_menu_array) ){
-			msg($langmessage['OOPS'].' (Menu not set)');
+			msg($langmessage['OOPS'] . ' (Menu not set)');
 			return false;
 		}
 
@@ -626,7 +626,7 @@ class Ajax extends \gp\admin\Menu{
 		}
 
 		if( count($titles) == 0 ){
-			msg($langmessage['OOPS'].' (Nothing selected)');
+			msg($langmessage['OOPS'] . ' (Nothing selected)');
 			$this->RestoreSettings();
 			return false;
 		}
@@ -653,7 +653,7 @@ class Ajax extends \gp\admin\Menu{
 		}
 
 		if( !isset($_POST['titles']) ){
-			msg($langmessage['OOPS'].' (Nothing Selected)');
+			msg($langmessage['OOPS'] . ' (Nothing Selected)');
 			return false;
 		}
 
@@ -675,7 +675,7 @@ class Ajax extends \gp\admin\Menu{
 			return false;
 		}
 
-		\gp\admin\Content\Trash::ModTrashData(null,$titles);
+		\gp\admin\Content\Trash::ModTrashData(null, $titles);
 	}
 
 
@@ -688,19 +688,19 @@ class Ajax extends \gp\admin\Menu{
 
 		//these aren't all required for each usage of ExternalForm()
 		$args += array(
-					'url'=>'http://',
-					'label'=>'',
-					'title_attr'=>'',
-					'insert_how'=>'',
-					'insert_where'=>'',
-					'key'=>''
-					);
+			'url'			=>'http://',
+			'label'			=> '',
+			'title_attr'	=> '',
+			'insert_how'	=> '',
+			'insert_where'	=> '',
+			'key'			=> '',
+		);
 
 
-		echo '<form action="'.$this->GetUrl('Admin/Menu/Ajax').'" method="post">';
-		echo '<input type="hidden" name="insert_how" value="'.htmlspecialchars($args['insert_how']).'" />';
-		echo '<input type="hidden" name="insert_where" value="'.htmlspecialchars($args['insert_where']).'" />';
-		echo '<input type="hidden" name="key" value="'.htmlspecialchars($args['key']).'" />';
+		echo '<form action="' . $this->GetUrl('Admin/Menu/Ajax') . '" method="post">';
+		echo '<input type="hidden" name="insert_how" value="' . htmlspecialchars($args['insert_how']) . '" />';
+		echo '<input type="hidden" name="insert_where" value="' . htmlspecialchars($args['insert_where']) . '" />';
+		echo '<input type="hidden" name="key" value="' . htmlspecialchars($args['key']) . '" />';
 
 		echo '<table class="bordered full_width">';
 
@@ -712,19 +712,19 @@ class Ajax extends \gp\admin\Menu{
 		echo '<tr><td>';
 		echo $langmessage['Target URL'];
 		echo '</td><td>';
-		echo '<input type="text" name="url" value="'.$args['url'].'" class="gpinput" required />';
+		echo '<input type="text" name="url" value="' . $args['url'] . '" class="gpinput" required />';
 		echo '</td></tr>';
 
 		echo '<tr><td>';
 		echo $langmessage['label'];
 		echo '</td><td>';
-		echo '<input type="text" name="label" value="'.\gp\tool::LabelSpecialChars($args['label']).'" class="gpinput" required />';
+		echo '<input type="text" name="label" value="' . \gp\tool::LabelSpecialChars($args['label']) . '" class="gpinput" required />';
 		echo '</td></tr>';
 
 		echo '<tr><td>';
 		echo $langmessage['title attribute'];
 		echo '</td><td>';
-		echo '<input type="text" name="title_attr" value="'.$args['title_attr'].'" class="gpinput"/>';
+		echo '<input type="text" name="title_attr" value="' . $args['title_attr'] . '" class="gpinput"/>';
 		echo '</td></tr>';
 
 		echo '<tr><td>';
@@ -739,9 +739,9 @@ class Ajax extends \gp\admin\Menu{
 		echo '</table>';
 
 		echo '<p>';
-		echo '<input type="hidden" name="cmd" value="'.htmlspecialchars($cmd).'" />';
-		echo '<input type="submit" name="" value="'.$submit.'" class="gpsubmit gpvalidate" data-cmd="gppost"/> ';
-		echo '<input type="submit" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
+		echo '<input type="hidden" name="cmd" value="' . htmlspecialchars($cmd) . '" />';
+		echo '<input type="submit" name="" value="' . $submit . '" class="gpsubmit gpvalidate" data-cmd="gppost"/> ';
+		echo '<input type="submit" value="' . $langmessage['cancel'] . '" class="admin_box_close gpcancel" /> ';
 		echo '</p>';
 
 		echo '</form>';
@@ -848,7 +848,7 @@ class Ajax extends \gp\admin\Menu{
 		$this->curr_menu_array[$key]['classes_child_ul']	= $this->ValidClasses($_POST['classes_child_ul']);
 
 		if( !$this->SaveMenu(false) ){
-			msg($langmessage['OOPS'].' (Menu Not Saved)');
+			msg($langmessage['OOPS'] . ' (Menu Not Saved)');
 			$this->RestoreSettings();
 			return false;
 		}
@@ -871,7 +871,7 @@ class Ajax extends \gp\admin\Menu{
 		$arg_type = gettype($classes);
 
 		if( $arg_type != 'string' && $arg_type != 'array' ){
-			msg($langmessage['OOPS'].' (Wrong type <em>' . $arg_type . '</em>, array or string expected)');
+			msg($langmessage['OOPS'] . ' (Wrong type <em>' . $arg_type . '</em>, array or string expected)');
 			return false;
 		}
 		if( empty($classes) ){
@@ -916,7 +916,7 @@ class Ajax extends \gp\admin\Menu{
 		$area = $_POST['from_extra'];
 
 		if( !\gp\admin\Content\Extra::AreaExists($area) ){
-			msg($langmessage['OOPS'].' (Extra Area does not exist)');
+			msg($langmessage['OOPS'] . ' (Extra Area does not exist)');
 			return;
 		}
 
@@ -928,7 +928,7 @@ class Ajax extends \gp\admin\Menu{
 		);
 
 		if( !$this->SaveNew($insert) ){ 
-			msg($langmessage['OOPS'].' (Adding Extra Content Area failed)');
+			msg($langmessage['OOPS'] . ' (Adding Extra Content Area failed)');
 			$this->RestoreSettings();
 			return false;
 		}
@@ -957,7 +957,7 @@ class Ajax extends \gp\admin\Menu{
 		$array = $this->ExternalPost();
 
 		if( !$array ){
-			msg($langmessage['OOPS'].' (Invalid Request)');
+			msg($langmessage['OOPS'] . ' (Invalid Request)');
 			return;
 		}
 
@@ -981,7 +981,7 @@ class Ajax extends \gp\admin\Menu{
 
 		$key =& $_REQUEST['key'];
 		if( !isset($this->curr_menu_array[$key]) ){
-			msg($langmessage['OOPS'].' (Current menu not set)');
+			msg($langmessage['OOPS'] . ' (Current menu not set)');
 			return false;
 		}
 
@@ -990,9 +990,9 @@ class Ajax extends \gp\admin\Menu{
 
 		echo '<div class="inline_box">';
 
-		echo '<h3>'.$langmessage['External Link'].'</h3>';
+		echo '<h3>' . $langmessage['External Link'] . '</h3>';
 
-		$this->ExternalForm('SaveExternal',$langmessage['save'],$info);
+		$this->ExternalForm('SaveExternal', $langmessage['save'], $info);
 
 		echo '</div>';
 	}
@@ -1007,14 +1007,14 @@ class Ajax extends \gp\admin\Menu{
 
 		$key =& $_POST['key'];
 		if( !isset($this->curr_menu_array[$key]) ){
-			msg($langmessage['OOPS'].' (Current menu not set)');
+			msg($langmessage['OOPS'] . ' (Current menu not set)');
 			return false;
 		}
 		$level = $this->curr_menu_array[$key]['level'];
 
 		$array = $this->ExternalPost();
 		if( !$array ){
-			msg($langmessage['OOPS'].' (1)');
+			msg($langmessage['OOPS'] . ' (1)');
 			return;
 		}
 
@@ -1024,7 +1024,7 @@ class Ajax extends \gp\admin\Menu{
 		$this->curr_menu_array[$key] = $array;
 
 		if( !$this->SaveMenu(false) ){
-			msg($langmessage['OOPS'].' (Menu Not Saved)');
+			msg($langmessage['OOPS'] . ' (Menu Not Saved)');
 			$this->RestoreSettings();
 			return false;
 		}
@@ -1062,7 +1062,7 @@ class Ajax extends \gp\admin\Menu{
 
 		$num_index = 0;
 		do{
-			$new_key = '_'.base_convert($num_index,10,36);
+			$new_key = '_' . base_convert($num_index,10,36);
 			$num_index++;
 		}while( isset($this->curr_menu_array[$new_key]) );
 
@@ -1083,12 +1083,12 @@ class Ajax extends \gp\admin\Menu{
 		if( isset($_POST['insert_where']) && isset($_POST['insert_how']) ){
 
 			if( !$this->MenuInsert($titles, $_POST['insert_where'], $_POST['insert_how']) ){
-				msg($langmessage['OOPS'].' (Insert Failed)');
+				msg($langmessage['OOPS'] . ' (Insert Failed)');
 				return false;
 			}
 
 			if( !$this->SaveMenu(true) ){
-				msg($langmessage['OOPS'].' (Menu Not Saved)');
+				msg($langmessage['OOPS'] . ' (Menu Not Saved)');
 				return false;
 			}
 
@@ -1132,14 +1132,14 @@ class Ajax extends \gp\admin\Menu{
 		global $langmessage;
 
 		if( is_null($this->curr_menu_array) ){
-			msg($langmessage['OOPS'].'(1)');
+			msg($langmessage['OOPS'] . '(1)');
 			return false;
 		}
 
 		$this->CacheSettings();
 
-		$_POST		+= array('index'=>'');
-		$indexes 	= explode(',',$_POST['index']);
+		$_POST		+= array('index' => '');
+		$indexes 	= explode(',', $_POST['index']);
 
 		foreach($indexes as $index ){
 
@@ -1148,12 +1148,12 @@ class Ajax extends \gp\admin\Menu{
 			}
 
 			if( !isset($this->curr_menu_array[$index]) ){
-				msg($langmessage['OOPS'].'(3)');
+				msg($langmessage['OOPS'] . '(3)');
 				return false;
 			}
 
 			if( !$this->RmFromMenu($index) ){
-				msg($langmessage['OOPS'].'(4)');
+				msg($langmessage['OOPS'] . '(4)');
 				$this->RestoreSettings();
 				return false;
 			}
@@ -1163,7 +1163,7 @@ class Ajax extends \gp\admin\Menu{
 			return true;
 		}
 
-		msg($langmessage['OOPS'].'(5)');
+		msg($langmessage['OOPS'] . '(5)');
 		$this->RestoreSettings();
 		return false;
 	}
@@ -1180,7 +1180,7 @@ class Ajax extends \gp\admin\Menu{
 		$this->CacheSettings();
 
 		$_POST			+= array('index'=>'');
-		$indexes		= explode(',',$_POST['index']);
+		$indexes		= explode(',', $_POST['index']);
 		$trash_data		= array();
 
 
@@ -1190,8 +1190,8 @@ class Ajax extends \gp\admin\Menu{
 
 			// Create file in trash
 			if( $title ){
-				if( !\gp\admin\Content\Trash::MoveToTrash_File($title,$index,$trash_data) ){
-					msg($langmessage['OOPS'].' (Not Moved)');
+				if( !\gp\admin\Content\Trash::MoveToTrash_File($title, $index, $trash_data) ){
+					msg($langmessage['OOPS'] . ' (Not Moved)');
 					$this->RestoreSettings();
 					return false;
 				}
@@ -1226,10 +1226,10 @@ class Ajax extends \gp\admin\Menu{
 		}
 
 		$link = \gp\tool::GetUrl('Admin/Trash');
-		msg(sprintf($langmessage['MOVED_TO_TRASH'],$link));
+		msg(sprintf($langmessage['MOVED_TO_TRASH'], $link));
 
 
-		\gp\tool\Plugins::Action('MenuPageTrashed',array($indexes));
+		\gp\tool\Plugins::Action('MenuPageTrashed', array($indexes));
 
 		return true;
 	}
@@ -1249,7 +1249,7 @@ class Ajax extends \gp\admin\Menu{
 		//prepare variables
 		$title =& $_REQUEST['title'];
 		if( !isset($gp_index[$title]) ){
-			msg($langmessage['OOPS'].' (R0)');
+			msg($langmessage['OOPS'] . ' (R0)');
 			return false;
 		}
 
@@ -1324,7 +1324,7 @@ class Ajax extends \gp\admin\Menu{
 	 * homepage will be first item in main menu
 	 *
 	 */
-	public function HomepageAuto(){ 
+	public function HomepageAuto(){
 		global $config;
 
 		$config['homepath_auto'] = true;
@@ -1381,10 +1381,8 @@ class Ajax extends \gp\admin\Menu{
 		$this->HomepageDisplay();
 		$content = ob_get_clean();
 
-		$this->page->ajaxReplace[] = array('inner','.homepage_setting',$content);
+		$this->page->ajaxReplace[] = array('inner', '.homepage_setting', $content);
 	}
-
-
 
 
 }

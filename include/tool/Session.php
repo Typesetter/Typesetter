@@ -1185,7 +1185,7 @@ namespace gp\tool{
 			$msg = 'Warning: One or more components have caused fatal errors. <br/>'
 					.\gp\tool::Link('Admin/Errors','More Information','','style="white-space:nowrap"')
 					.' &nbsp; '
-					.\gp\tool::Link($page->title,'Clear All Errors','cmd=ClearErrors','','ClearErrors'); //cannot be creq
+					.\gp\tool::Link(isset($page) ? $page->requested : '/Admin','Clear All Errors','cmd=ClearErrors','','ClearErrors'); //cannot be creq
 			msg($msg);
 		}
 

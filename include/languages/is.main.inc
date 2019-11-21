@@ -208,6 +208,11 @@ $langmessage = array (
   'email_address' => 'Tölvupóstfang',
   'frequently_used' => 'Oftast notað',
   'Current Page' => 'Núverandi síða',
+  'Notifications' => 'Tilkynningar',
+  'Notification' => 'Tilkynning',
+  'Private Pages' => 'Einkasíður',
+  'Private Page' => 'Einkasíða',
+  'Working Drafts' => 'Drög í vinnslu',
   'Working Draft' => 'Drög í vinnslu',
   'Publish Draft' => 'Gefa út drög',
   'Publish' => 'Gefa út',
@@ -222,14 +227,14 @@ $langmessage = array (
   'Section Wrapper' => 'Pökkun efnishluta',
   'Manage Sections' => 'Sýsla með efnishluta',
   'Section %s' => 'Efnishluti %s',
-	'Sections' => 'Efnishlutar',
-	'Section' => 'Efnishluti',
+  'Sections' => 'Efnishlutar',
+  'Section' => 'Efnishluti',
   'recaptcha_public' => 'Dreifilykill reCaptcha',
   'recaptcha_private' => 'Einkalykill reCaptcha',
   'recaptcha_language' => 'Tungumál reCaptcha',
-	'about_config' => 
-	array (
-	'recaptcha_public' => 'Náðu í <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha dulritunarlykil</a> til að nota CAPTCHA-staðfestingu í \'Hafa samband\' útfyllingarreitnum.',
+  'about_config' => 
+  array (
+  'recaptcha_public' => 'Náðu í <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha dulritunarlykil</a> til að nota CAPTCHA-staðfestingu í \'Hafa samband\' útfyllingarreitnum.',
   'maximgarea' => 'Hámarksfjöldi fermynddíla innsendra mynda. Mynd sem er 600 x 800 mynddílar reiknast sem 480.000 ferdílar.',
   'resize_images' => 'Útbúa bestaðar útgáfur af niðurkvörðuðum myndum.',
   'preserve_icc_profiles' => 'JPEG-myndir munu halda ívöfðum <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC-litasniðum</a>.',
@@ -426,8 +431,7 @@ $langmessage = array (
   'User Details' => 'Nánar um notanda',
   'Changing_File_Permissions' => 'Breyti skráarheimildum',
   'REFRESH_AFTER_CHANGE' => 'Þú gætir þurft að breyta heimildum á möppunum sem mistókust í hlutanum hér fyrir ofan og síðan <a href="">endurlesa þessa síðu</a>.',
-  'MOST_FTP_CLIENTS' => 'Flest FTP-forrit leyfa þér að breyta aðgangsheimildum skráa á þjóninum þínum.
- Með <a href="http://fireftp.mozdev.org/">fireftp</a> er þetta gert með því að hægrismella á skrána, velja síðan "eiginleikar/properties" úr samhengisvalmyndinni og stilla síðan heimildir eins og við á.',
+  'MOST_FTP_CLIENTS' => 'Flest FTP-forrit leyfa þér að breyta aðgangsheimildum skráa á þjóninum þínum. Með <a href="http://fireftp.mozdev.org/">fireftp</a> er þetta gert með því að hægrismella á skrána, velja síðan "eiginleikar/properties" úr samhengisvalmyndinni og stilla síðan heimildir eins og við á.',
   'FTP_CHMOD' => 'Settu inn FTP-upplýsingar þjónsins þíns og uppsetningarforritið mun sjá um skráaheimildirnar fyrir þig.',
   'Installer' => 'Uppsetningarforrit',
   'LINUX_CHOWN' => 'Ef þú ert á Unix/Linux, þá geturðu notað "chown" skipunina.',

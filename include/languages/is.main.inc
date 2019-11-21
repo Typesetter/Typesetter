@@ -202,7 +202,6 @@ $langmessage = array (
   'caption' => 'Yfirskrift',
   'remember_me' => 'Haldast skráð/ur inn',
   'send_encrypted' => 'Dulrita innskráningu',
-  'Manage Sections' => 'Sýsla með efnishluta',
   'hidden_galleries' => 'Falin myndasöfn',
   'visible_galleries' => 'Sýnileg myndasöfn',
   'hidden' => 'Falið',
@@ -221,13 +220,16 @@ $langmessage = array (
   'Image Gallery' => 'Myndasafn',
   'File Include' => 'Innihalda skrá',
   'Section Wrapper' => 'Pökkun efnishluta',
+  'Manage Sections' => 'Sýsla með efnishluta',
   'Section %s' => 'Efnishluti %s',
+	'Sections' => 'Efnishlutar',
+	'Section' => 'Efnishluti',
   'recaptcha_public' => 'Dreifilykill reCaptcha',
   'recaptcha_private' => 'Einkalykill reCaptcha',
   'recaptcha_language' => 'Tungumál reCaptcha',
-	'about_config'                   => 
+	'about_config' => 
 	array (
-	'recaptcha_public'               => 'Náðu í <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha dulritunarlykil</a> til að nota CAPTCHA-staðfestingu í \'Hafa samband\' útfyllingarreitnum.',
+	'recaptcha_public' => 'Náðu í <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha dulritunarlykil</a> til að nota CAPTCHA-staðfestingu í \'Hafa samband\' útfyllingarreitnum.',
   'maximgarea' => 'Hámarksfjöldi fermynddíla innsendra mynda. Mynd sem er 600 x 800 mynddílar reiknast sem 480.000 ferdílar.',
   'resize_images' => 'Útbúa bestaðar útgáfur af niðurkvörðuðum myndum.',
   'preserve_icc_profiles' => 'JPEG-myndir munu halda ívöfðum <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC-litasniðum</a>.',

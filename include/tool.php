@@ -877,7 +877,7 @@ namespace gp{
 		 */
 		public static function LoadComponents($names=''){
 			if( gettype($names) == 'array' ){
-				$name = implode(',', $names);
+				$names = implode(',', $names);
 			}
 			\gp\tool\Output::$components .= ',' . $names . ',';
 			\gp\tool\Output::$components = str_replace(',,', ',', \gp\tool\Output::$components);

@@ -867,17 +867,23 @@ namespace gp{
 		}
 
 
+
 		/**
 		 * Add js and css components to the current web page
 		 *
 		 * @static
 		 * @since 2.0b1
-		 * @param string $names A comma separated list of ui components to include. Avail since 3.5.
+		 * @param $names can be either a csv (with or without space characters) or an array. Since 5.1.1
 		 */
-		public static function LoadComponents( $names = ''){
-			\gp\tool\Output::$components .= ','.$names.',';
-			\gp\tool\Output::$components = str_replace(',,',',',\gp\tool\Output::$components);
+		public static function LoadComponents($names=''){
+			if( gettype($names) == 'array' ){
+				$name = implode(',', $names);
+			}
+			\gp\tool\Output::$components .= ',' . $names . ',';
+			\gp\tool\Output::$components = str_replace(',,', ',', \gp\tool\Output::$components);
+			\gp\tool\Output::$components = str_replace(' ', '', \gp\tool\Output::$components);
 		}
+
 
 
 		/**

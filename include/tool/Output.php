@@ -2160,8 +2160,15 @@ namespace gp\tool{
 
 		public static function RunOut(){
 			global $page;
+			global $langmessage, $page;
 
 			$page->RunScript();
+
+			$cmd = \gp\tool::GetCommand();
+			if( $cmd == 'logged_out' ){
+				\gp\tool\Plugins::Action('LoggedOut');
+				msg($langmessage['LOGGED_OUT']);
+			}
 
 			//prepare the admin content
 			if( \gp\tool::LoggedIn() ){

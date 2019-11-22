@@ -303,6 +303,8 @@ namespace gp\tool{
 			return $userinfo;
 		}
 
+
+
 		public static function LogOut(){
 			global $langmessage;
 
@@ -310,13 +312,44 @@ namespace gp\tool{
 				return false;
 			}
 
+			if( empty($_POST['verified']) ){
+				msg('Logout attempt via unverified link');
+				return false;
+			}
+
+			if( !\gp\tool::verify_nonce('post', $_POST['verified'], true) ){
+				msg('XSS Verification Parameter Mismatch');
+				return false;
+			}
+
+			/*
+			// abandoned in favor of Notifications
+			$on_before_logout = array();
+			$on_before_logout['drafts'] 			= \gp\tool\Files::GetDrafts();
+			$on_before_logout['private_pages'] 		= \gp\tool\Files::GetPrivatePages();
+			$on_before_logout['confirm_admin_box'] 	= false;
+			$on_before_logout = \gp\tool\Plugins::Filter('OnBeforeLogOut', array($on_before_logout));
+			//msg('$on_before_logout = ' . pre($on_before_logout));
+			*/
+
 			$session_id = $_COOKIE[gp_session_cookie];
 
 			self::Unlock($session_id);
 			self::cookie(gp_session_cookie);
 			self::CleanSession($session_id);
-			msg($langmessage['LOGGED_OUT']);
+
+			$messages = \gp\tool\Output\Ajax::Messages();
+			$messages .= !empty($messages) ? ',' : '';
+
+			echo \gp\tool\Output\Ajax::Callback($_REQUEST['jsoncallback']);
+			echo '([';
+			echo $messages;
+			echo '{DO:"logging_out",SELECTOR:"",CONTENT:""}';
+			echo ']);';
+			die();
 		}
+
+
 
 		/**
 		 * Remove the admin session lock

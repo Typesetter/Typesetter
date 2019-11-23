@@ -137,30 +137,30 @@ namespace gp\admin{
 			$drafts = \gp\tool\Files::GetDrafts();
 			if( count($drafts) > 0 ){
 				$notifications['drafts'] = array(
-					'title' 		=> 'Working Drafts',
-					'badge_bg' 		=> '#329880',
-					'badge_color' 	=> '#fff',
-					'priority'	=> '10',
-					'items' 	=> $drafts,
+					'title'			=> 'Working Drafts',
+					'badge_bg'		=> '#329880',
+					'badge_color'	=> '#fff',
+					'priority'		=> '10',
+					'items'			=> $drafts,
 				);
 			}
 
 			$private_pages = \gp\tool\Files::GetPrivatePages();
 			if( count($private_pages) > 0 ){
 				$notifications['private_pages'] = array(
-					'title'		=> 'Private Pages',
-					'badge_bg' 		=> '#ad5f45',
-					'badge_color' 	=> '#fff',
-					'items'		=> $private_pages,
+					'title'			=> 'Private Pages',
+					'badge_bg'		=> '#ad5f45',
+					'badge_color'	=> '#fff',
+					'items'			=> $private_pages,
 				);
 			}
 
 			if( count(self::$new_versions) > 0 ){
 				$notifications['updates'] = array(
-					'title'		=> 'updates',
-					'badge_bg' 		=> '#3153b7',
-					'badge_color' 	=> '#fff',
-					'items'		=> self::GetUpdatesNotifications(),
+					'title'			=> 'updates',
+					'badge_bg'		=> '#3153b7',
+					'badge_color'	=> '#fff',
+					'items'			=> self::GetUpdatesNotifications(),
 				);
 			}
 
@@ -183,7 +183,7 @@ namespace gp\admin{
 
 			if( gp_remote_update && isset(self::$new_versions['core']) ){
 				$updates[] = array(
-					'label' 	=> CMS_NAME . ' ' . self::$new_versions['core'],
+					'label'		=> CMS_NAME . ' ' . self::$new_versions['core'],
 					'action'	=> '<a href="' . \gp\tool::GetDir('/include/install/update.php') . '">' . $langmessage['upgrade'] . '</a>',
 				);
 			}
@@ -201,7 +201,7 @@ namespace gp\admin{
 					continue;
 				}
 				$updates[] = array(
-					'label' 	=> $label,
+					'label'		=> $label,
 					'action'	=> '<a href="' . $url . '/' . $addon_id . '" data-cmd="remote">' . $langmessage['upgrade'] . '</a>',
 				);
 
@@ -239,7 +239,9 @@ namespace gp\admin{
 				}
 				$total_count += $count;
 
-				$title				= $notification['title'];
+				$title				= isset($langmessage[$notification['title']]) ?
+										$langmessage[$notification['title']] :
+										htmlspecialchars($notification['title']);
 
 				$badge_style		= '';
 				$badge_style		.= !empty($notification['badge_bg'])	? ('background-color:' . $notification['badge_bg'] . ';') : '';

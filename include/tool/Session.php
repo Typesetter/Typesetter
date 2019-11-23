@@ -647,6 +647,8 @@ namespace gp\tool{
 				'options'					=>	'options',
 				'Copy'						=>	'Copy',
 				'Copy to Clipboard'			=>	'CopyToClipboard',
+				'Manage Sections'			=>	'ManageSections',
+				'Sections'					=>	'Sections',
 				'Section Attributes'		=>	'SectionAttributes',
 				'Available Classes'			=>	'AvailableClasses',
 				'Attribute'					=>	'Attribute',

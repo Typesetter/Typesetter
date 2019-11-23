@@ -271,6 +271,17 @@ gp_editing = {
 			return gp_editing.is_extra_mode;
 		}
 
+			//tabs
+			var $tabs			= $('#ckeditor_tabs').html('');
+			var extra_mode		= gp_editing.IsExtraMode();
+
+			if( extra_mode ){
+				$ckeditor_wrap.addClass('edit_mode_extra');
+				$tabs.append('<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" data-arg="manage_sections">'+gplang.Extra+'</a>');
+			}else{
+				$ckeditor_wrap.removeClass('edit_mode_extra');
+				$tabs.append('<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" data-arg="manage_sections">'+gplang.Sections+'</a>');
+			}
 
 		if( typeof($edit_area.data('gp-section')) == 'undefined' ){
 			gp_editing.is_extra_mode = true;
@@ -294,17 +305,7 @@ gp_editing = {
 
 
 
-		//tabs
-		var $tabs			= $('#ckeditor_tabs').html('');
-		var extra_mode		= gp_editing.IsExtraMode();
 
-		if( extra_mode ){
-			$ckeditor_wrap.addClass('edit_mode_extra');
-			$tabs.append('<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" data-arg="manage_sections">'+gplang.Extra+'</a>');
-		}else{
-			$ckeditor_wrap.removeClass('edit_mode_extra');
-			$tabs.append('<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" data-arg="manage_sections">'+gplang.Page+'</a>');
-		}
 
 		if( $edit_area.length != 0 ){
 			var label		= gp_editing.SectionLabel($edit_area);

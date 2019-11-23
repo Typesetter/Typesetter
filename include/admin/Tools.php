@@ -754,7 +754,7 @@ namespace gp\admin{
 				echo '<li>';
 				echo \gp\tool::Link(
 					$page->title,
-					$langmessage['Page'],
+					$langmessage['Sections'],
 					'cmd=ManageSections',
 					array('data-cmd'=>'inline_edit_generic','data-arg'=>'manage_sections')
 				);

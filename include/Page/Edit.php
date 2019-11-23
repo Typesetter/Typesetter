@@ -206,8 +206,8 @@ class Edit extends \gp\Page{
 
 
 
+		/*
 		if( $this->permission_menu ){
-
 			//visibility
 			$q				= 'cmd=ToggleVisibility&index=' . urlencode($this->gp_index);
 			$label			= '<i class="fa fa-eye-slash"></i> ' . $langmessage['Visibility'] . ': ' . $langmessage['Private'];
@@ -223,6 +223,7 @@ class Edit extends \gp\Page{
 			}
 			$admin_links[]	= \gp\tool::Link('Admin/Menu/Ajax', $label, $q, $attrs);
 		}
+		*/
 
 
 		// page options: less frequently used links that don't have to do with editing the content of the page
@@ -273,6 +274,10 @@ class Edit extends \gp\Page{
 		}
 
 		if( $this->permission_menu ){
+			$option_links[]	= self::ToggleVisibilityLink($this->gp_index, $this->visibility);
+		}
+
+		if( $this->permission_menu ){
 			$option_links[] = \gp\tool::Link(
 				'Admin/Menu/Ajax',
 				$langmessage['delete_file'],
@@ -310,6 +315,32 @@ class Edit extends \gp\Page{
 
 		return array_merge($admin_links, $this->admin_links);
 	}
+
+
+
+	/**
+	 * Return Toggle Page Visibility option link
+	 * @param string page index
+	 * @param bool $visisbility of current page
+	 * @return string formatted link
+	 */
+	public static function ToggleVisibilityLink($index, $visibility){
+		global $langmessage;
+		$q				= 'cmd=ToggleVisibility&index=' . urlencode($index);
+		$label			= $langmessage['Visibility'] . ': ' . $langmessage['Private'];
+		$attrs			= array(
+			'class'		=> 'admin-link admin-link-toggle-visibility',
+			'data-cmd'	=> 'postlink',
+		);
+		if( $visibility ){
+			$q			.= '&visibility=private';
+			$label		= $langmessage['Visibility'] . ': ' . $langmessage['Public'];
+		}else{
+			$attrs['class'] .= ' admin-link-visibility-private';
+		}
+		return \gp\tool::Link('Admin/Menu/Ajax', $label, $q, $attrs);
+	}
+
 
 
 	/**
@@ -370,7 +401,7 @@ class Edit extends \gp\Page{
 			$this->title,
 			'<i class="fa fa-save"></i> ' . $langmessage['Restore this revision'] . ' (' . $date . ')',
 			'cmd=UseRevision&time=' . $this->revision,
-			array('data-cmd'=>'cnreq','class'=>'msg_publish_draft')
+			array('data-cmd'=>'cnreq','class'=>'msg_publish_draft admin-link admin-link-publish-draft')
 		);
 
 		return $admin_links;

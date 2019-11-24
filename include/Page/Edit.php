@@ -274,7 +274,7 @@ class Edit extends \gp\Page{
 		}
 
 		if( $this->permission_menu ){
-			$option_links[]	= self::ToggleVisibilityLink($this->gp_index, $this->visibility);
+			$option_links[]	= self::ToggleVisibilityLink($this->gp_index, $this->visibility != 'private');
 		}
 
 		if( $this->permission_menu ){

@@ -1806,7 +1806,7 @@ class Edit extends \gp\Page{
 
 			//included page target
 			$include_link = '';
-			if( $section_data['type'] == 'include' ){
+			if( $section_data['type'] == 'include' && isset($section_data['include_type']) ){
 				// msg("section_data:" . pre($section_data));
 				switch( $section_data['include_type'] ){
 					case false: // include is a page

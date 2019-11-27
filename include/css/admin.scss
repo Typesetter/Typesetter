@@ -156,6 +156,8 @@
 	margin: 1em 0;
 }
 
+
+
 #gp_admin_html .gpselect,
 #gp_admin_html .gpcheckbox,
 #gp_admin_html .gpcancel,
@@ -203,6 +205,31 @@
 #gp_admin_html .gpbutton{
 	cursor: pointer;
 	@include gradient-vertical(#FBFBFB, #E9E9E9);
+}
+
+#gp_admin_html .gpselect{
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	appearance: none;
+	background-image: url('data:image/svg+xml;charset=US-ASCII,\
+	%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20\
+	width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20\
+	fill%3D%22%23333333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%20\
+	0-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%20\
+	82.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%20\
+	12.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%20\
+	0-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
+		linear-gradient(to bottom, #fbfbfb 0%,#e9e9e9 100%);
+	background-repeat: no-repeat, repeat-x;
+	background-position: right 10px top 50%, 0 0;
+	background-size: 7px auto, 100%;
+	padding-right: 17px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#gp_admin_html .gpselect::-ms-expand{
+	display: none;
 }
 
 #gp_admin_html .gpcheckbox,
@@ -348,12 +375,12 @@
 	background: lighten($gp_panel_bg,10%);
 }
 
-#admincontent_panel .admin-link-visibility-private { 
-	background:#C44830; 
+#admincontent_panel .admin-link-visibility-private{
+	background: $gp_panel_warning_color;
 }
 
-#admincontent_panel .admin-link-visibility-private:hover { 
-	background:#DC5135; 
+#admincontent_panel .admin-link-visibility-private:hover{
+	background: lighten($gp_panel_warning_color, 10);
 }
 
 #admincontent_panel span > .fa,
@@ -921,8 +948,11 @@ table.tablesorter th.gp_header_desc:before{
 #simplepanel .panelgroup{
 	position: relative;
 	display: block;
-	.admin-panel-notification {
-		padding-right: 1.5em; /* space for badge */
+	&.admin-panel-notifications{
+		span,
+		a {
+			padding-right: 0.75em; /* space for badge */
+		}
 	}
 	.admin-panel-badge{
 		font-size: 0.825em;
@@ -1148,7 +1178,7 @@ table.tablesorter th.gp_header_desc:before{
 	background-color: #eee;
 	@include opacity(.5);
 
-	border: 1px dashed red;
+	border: 1px dashed $gp_panel_warning_color;
 	border-radius: 3px;
 
 	-moz-border-image: url('../../include/imgs/editing.gif') 1 repeat;
@@ -1462,9 +1492,9 @@ div.inline_box label{
 }
 
 .gp_warning{
-	border-color: #cd0a0a;
+	border-color: $gp_panel_warning_color;
 	background: #fef1ec;
-	color: #cd0a0a;
+	color: darken($gp_panel_warning_color, 10%);
 }
 
 .gp_passed{
@@ -1986,11 +2016,11 @@ body #addon_about{
  * New section options
  */
 #new_section_links > div{
-	display: inline-block;
 	max-width: 100px;
 	width: 50%;
 	position: relative;
 	overflow: hidden;
+	float: left;
 }
 
 #new_section_links input{

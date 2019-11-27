@@ -1085,7 +1085,7 @@ namespace gp\tool{
 			);
 
 			$include_link = '';
-			if( $extra_content[0]['type'] == 'include' && $extra_content[0]['include_type'] == false ){
+			if( $extra_content[0]['type'] == 'include' && isset($extra_content[0]['include_type']) && $extra_content[0]['include_type'] == false ){
 				$include_link = \gp\tool::Link(
 					$extra_content[0]['content'],
 					$langmessage['view/edit_page']

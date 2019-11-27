@@ -1472,10 +1472,6 @@
 				var title		= this.title.replace(/_/g,' ');
 				title			= decodeURIComponent(title);
 
-				if( title.length > 15 ){
-					title = title.substr(0,14);
-				}
-
 
 				$b
 					//add to list

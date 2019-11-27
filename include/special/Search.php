@@ -91,7 +91,7 @@ class Search extends \gp\special\Base{
 		echo '</div>';
 	}
 
-	public function Gadget(){
+	public static function Gadget(){
 
 		$query = '';
 		if( isset($_GET['q']) ){

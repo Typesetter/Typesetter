@@ -3,15 +3,17 @@
 
 	gp_editing = {
 
-		is_extra_mode:	false,
+		autosave_interval:	5000, // in milliseconds
+		can_autosave:		true, // default value, editor components can still deny
 
-		is_dirty:		false,	// true if we know gp_editor has been edited
+		is_extra_mode:		false,
+		is_dirty:			false,	// true if we know gp_editor has been edited
 
 
 		get_path:function(id_num){
-			var lnk = $('a#ExtraEditLink'+id_num);
+			var lnk = $('a#ExtraEditLink' + id_num);
 			if( lnk.length == 0 ){
-				console.log('get_path() link not found',id_num,lnk.length);
+				console.log('get_path() link not found', id_num, lnk.length);
 				return false;
 			}
 			return lnk.attr('href');
@@ -20,9 +22,9 @@
 
 		get_edit_area:function(id_num){
 
-			var content = $('#ExtraEditArea'+id_num);
+			var content = $('#ExtraEditArea' + id_num);
 			if( content.length == 0 ){
-				console.log('no content found for get_edit_area()',id_num);
+				console.log('no content found for get_edit_area()', id_num);
 				return false;
 			}
 
@@ -58,9 +60,11 @@
 		 * Close after the save if 'Save & Close' was clicked
 		 *
 		 */
-		SaveChanges:function(callback){
+		SaveChanges:function(callback, create_draft){
 
-			if( !gp_editor ) return;
+			if( !gp_editor ){
+				return;
+			}
 
 			if( !gp_editing.IsDirty() ){
 				if( typeof(callback) == 'function' ){
@@ -69,6 +73,9 @@
 				return;
 			}
 
+			if( typeof(create_draft) == 'undefined' ){
+				var create_draft = true;
+			}
 
 			var $wrap = $('#ckeditor_wrap');
 
@@ -77,27 +84,37 @@
 			}
 
 			$wrap.addClass('ck_saving');
+			gp_editing.AutoSave.destroy(); // kill the autosave timer while saving to avoid timing conflicts
 
+			$("a.msg_publish_draft").hide();
+			$("a.msg_publish_draft_disabled").hide();
+			$("a.msg_saving_draft").css('display', 'block');
 
 			var $edit_div	= $gp.CurrentDiv();
-			var path		= strip_from(gp_editor.save_path,'#');
+			var path		= strip_from(gp_editor.save_path, '#');
 			var query		= '';
 			var save_data	= gp_editing.GetSaveData();
 
 			if( path.indexOf('?') > 0 ){
-				query = strip_to(path,'?')+'&';
-				path = strip_from(path,'?');
+				query		= strip_to(path, '?') + '&';
+				path		= strip_from(path, '?');
 			}
 
-			query			+= 'cmd=save_inline&section='+$edit_div.data('gp-section')+'&req_time='+req_time+'&';
-			query			+= save_data;
-			query			+= '&verified='+encodeURIComponent(post_nonce);
-			query			+= '&gpreq=json&jsoncallback=?';
-
+			query		+= 'cmd=save_inline';
+			query		+= '&section=' + $edit_div.data('gp-section');
+			query		+= '&req_time=' + req_time;
+			query		+= '&' + save_data;
+			query		+= '&verified=' + encodeURIComponent(post_nonce);
+			query		+= '&gpreq=json&jsoncallback=?';
 
 			// saving to same page as the current url
 			if( gp_editing.SamePath(path) ){
 				query += '&gpreq_toolbar=1';
+			}
+
+			// prevent draft
+			if( !create_draft ){
+				query += '&prevent_draft=1';
 			}
 
 			//the saved function
@@ -107,11 +124,9 @@
 				gp_editing.DraftStatus($edit_div, 1);
 				gp_editing.PublishButton($edit_div);
 
-
 				if( !gp_editor ){
 					return;
 				}
-
 
 				//if nothing has changed since saving
 				if( gp_editing.GetSaveData() == save_data ){
@@ -120,25 +135,28 @@
 					gp_editing.DisplayDirty();
 				}
 
-
 				if( typeof(callback) == 'function' ){
 					callback.call();
 				}
 			}
 
-
 			$.ajax({
-				type: 'POST',
-				url: path,
-				data: query,
-				success: $gp.Response,
-				dataType: 'json',
-				complete: function(jqXHR, textStatus){
+				type		: 'POST',
+				url			: path,
+				data		: query,
+				success		: $gp.Response,
+				dataType	: 'json',
+				complete	: function(jqXHR, textStatus){
 					$wrap.removeClass('ck_saving');
+					$("a.msg_publish_draft").css('display', 'block');
+					$("a.msg_publish_draft_disabled").hide();
+					$("a.msg_saving_draft").hide();
+					gp_editing.AutoSave.init(); // re-init autosave when saving completed
 				},
 			});
 
 		},
+
 
 		/**
 		 * Get the data to be saved from the gp_editor
@@ -229,11 +247,11 @@
 				html += '</div>';
 
 				html += '<div id="ckeditor_save">';
-				html += '<a data-cmd="ck_save" class="ckeditor_control ck_save">'+gplang.Save+'</a>';
-				html += '<span class="ck_saved">'+gplang.Saved+'</span>';
-				html += '<a data-cmd="Publish" class="ckeditor_control ck_publish">'+gplang.Publish+'</>';
-				html += '<span class="ck_saving">'+gplang.Saving+'</span>';
-				html += '<a data-cmd="ck_close" class="ckeditor_control">'+gplang.Close+'</a>';
+				html += '<a data-cmd="ck_save" class="ckeditor_control ck_save">' + gplang.Save + '</a>';
+				html += '<span class="ck_saved">' + gplang.Saved + '</span>';
+				html += '<a data-cmd="Publish" class="ckeditor_control ck_publish">' + gplang.Publish + '</>';
+				html += '<span class="ck_saving">' + gplang.Saving + '</span>';
+				html += '<a data-cmd="ck_close" class="ckeditor_control">' + gplang.Close + '</a>';
 				html += '</div>';
 
 				html += '</div>';
@@ -300,10 +318,12 @@
 
 			if( extra_mode ){
 				$ckeditor_wrap.addClass('edit_mode_extra');
-				$tabs.append('<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" data-arg="manage_sections">'+gplang.Extra+'</a>');
+				$tabs.append('<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" '
+					+ 'data-arg="manage_sections">' + gplang.Extra + '</a>');
 			}else{
 				$ckeditor_wrap.removeClass('edit_mode_extra');
-				$tabs.append('<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" data-arg="manage_sections">'+gplang.Sections+'</a>');
+				$tabs.append('<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" '
+					+ 'data-arg="manage_sections">' + gplang.Sections + '</a>');
 			}
 
 			if( $edit_area.length != 0 ){
@@ -377,7 +397,8 @@
 			var c = 'selected'
 			var h = '<div id="cktabs" class="cktabs">';
 			$areas.each(function(){
-				h += '<a class="ckeditor_control '+c+'" data-cmd="SwitchEditArea" data-arg="#'+this.id+'">'+this.title+'</a>';
+				h += '<a class="ckeditor_control ' + c + '" data-cmd="SwitchEditArea" '
+					+ 'data-arg="#' + this.id + '">' + this.title + '</a>';
 				c = '';
 			});
 			h += '</div>';
@@ -395,16 +416,17 @@
 		 */
 		AddTab: function(html, id){
 
-			var $area = $('#'+id);
+			var $area = $('#' + id);
 			if( !$area.length ){
 				$area = $(html).appendTo('#ckeditor_top');
 
-				$('<a class="ckeditor_control" data-cmd="SwitchEditArea" data-arg="#'+id+'">'+$area.attr('title')+'</a>')
+				$('<a class="ckeditor_control" data-cmd="SwitchEditArea" '
+					+ 'data-arg="#' + id + '">' + $area.attr('title') + '</a>')
 					.appendTo('#cktabs')
 					.click();
 			}else{
 				$area.replaceWith(html);
-				$('#cktabs .ckeditor_control[data-arg="#'+id+'"]').click();
+				$('#cktabs .ckeditor_control[data-arg="#' + id + '"]').click();
 
 			}
 		},
@@ -475,9 +497,13 @@
 			if( gp_editing.is_dirty || gp_editing.IsDirty() ){
 				$('#ckeditor_wrap').addClass('not_saved');
 				$("a.msg_publish_draft").hide();
+				$("a.msg_publish_draft_disabled").css('display', 'block');
+				// $("a.msg_saving_draft").css('display', 'block');
 			}else{
 				$('#ckeditor_wrap').removeClass('not_saved');
-				$("a.msg_publish_draft").show();
+				$("a.msg_publish_draft").css('display', 'block');
+				$("a.msg_publish_draft_disabled").hide();
+				// $("a.msg_saving_draft").hide();
 			}
 		},
 
@@ -492,7 +518,6 @@
 
 
 		// auto save
-		can_autosave: true,
 
 		AutoSave: {
 
@@ -500,12 +525,19 @@
 				if( !gp_editing.can_autosave ){
 					return;
 				}
-				gp_editing.autosave_interval = window.setInterval(function(){
-					if( (typeof(gp_editor.CanAutoSave) == 'function' && !gp_editor.CanAutoSave()) || !gp_editing.can_autosave ){
+				gp_editing.autosave_timer = window.setInterval(function(){
+					if( (typeof(gp_editor.CanAutoSave) == 'function' && 
+						!gp_editor.CanAutoSave()) || !gp_editing.can_autosave 
+						){
 						return;
 					}
 					gp_editing.SaveChanges();
-				}, 5000);
+				}, gp_editing.autosave_interval);
+			},
+
+			reset : function(){
+				gp_editing.AutoSave.destroy();
+				gp_editing.AutoSave.init();
 			},
 
 			suspend : function(){
@@ -517,8 +549,8 @@
 			},
 
 			destroy : function(){
-				if( typeof(gp_editing.autosave_interval) == 'number' ){
-					clearInterval(gp_editing.autosave_interval);
+				if( typeof(gp_editing.autosave_timer) == 'number' ){
+					clearInterval(gp_editing.autosave_timer);
 				}
 			}
 		}
@@ -578,7 +610,7 @@
 	 * Warn before closing a page if an inline edit area has been changed
 	 *
 	 */
-	$(window).on('beforeunload',function(){
+	$(window).on('beforeunload', function(){
 
 		//check current editor
 		if( typeof(gp_editor.checkDirty) !== 'undefined' && gp_editor.checkDirty() ){
@@ -596,7 +628,7 @@
 	 * Not using $('#ExtraEditLink'+area_id).click() to avoid triggering other click handlers
 	 *
 	 */
-	$gp.$doc.on('click','.editable_area:not(.filetype-wrapper_section)',function(evt){
+	$gp.$doc.on('click', '.editable_area:not(.filetype-wrapper_section)', function(evt){
 
 		//get the edit link
 		var area_id		= $gp.AreaId($(this));
@@ -606,7 +638,7 @@
 
 		evt.stopImmediatePropagation(); //don't check if we need to swith back to the section manager
 
-		var $lnk = $('#ExtraEditLink'+area_id);
+		var $lnk = $('#ExtraEditLink' + area_id);
 		var arg = $lnk.data('arg');
 		$gp.LoadEditor($lnk.get(0).href, area_id, arg);
 
@@ -642,7 +674,7 @@
 	 */
 	$gp.links.ToggleEditor = function(){
 		if( $('#ckeditor_wrap').hasClass('show_editor') ){
-			$('html').css({'margin-left':0});
+			$('html').css({'margin-left': 0});
 			$('#ckeditor_wrap').removeClass('show_editor');
 			$gp.$win.resize();
 		}else{
@@ -683,7 +715,10 @@
 
 		var adjust		= Math.min(min_adjust, max_adjust);
 
-		$('html').css({'margin-left':-adjust,'width':win_width});
+		$('html').css({
+			'margin-left'	: -adjust,
+			'width'			: win_width
+		});
 	}
 
 
@@ -698,7 +733,7 @@
 			maxHeight				-= $ckeditor_area.position().top;
 			maxHeight				-= $('#ckeditor_save').outerHeight();
 
-			$('#ckeditor_area').css({'max-height':maxHeight});
+			$('#ckeditor_area').css({'max-height': maxHeight});
 
 			AdjustForEditor();
 		}
@@ -715,9 +750,9 @@
 		var $edit_area		= $gp.CurrentDiv();
 		var id_num			= $gp.AreaId( $edit_area );
 		var href			= gp_editing.get_path( id_num );
-		href				= $gp.jPrep(href,'cmd=PublishDraft');
+		href				= $gp.jPrep(href, 'cmd=PublishDraft');
 
-		$(this).data('gp-area-id',id_num);
+		$(this).data('gp-area-id', id_num);
 
 		$gp.jGoTo(href,this);
 	};
@@ -730,7 +765,7 @@
 	$gp.response.DraftPublished = function(){
 		var $this		= $(this).hide();
 		var id_number	= $gp.AreaId( $this );
-		var $area		= $('#ExtraEditArea'+id_number);
+		var $area		= $('#ExtraEditArea' + id_number);
 
 		gp_editing.DraftStatus($area, 0);
 	};

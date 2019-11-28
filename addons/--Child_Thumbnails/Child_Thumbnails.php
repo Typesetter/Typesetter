@@ -67,7 +67,7 @@ class Child_Thumbnails{
 					$thumb_path = common::ThumbnailPath($src);
 				}
 			}
-		}else(
+		}else{
 			// uncomment tne next line if you don't want pages w/o images listed using the default thumbnail.
 			// return;
 			$thumb_path = $dirPrefix . '/include/imgs/default_thumb.jpg';

@@ -465,27 +465,39 @@ class Addons extends \gp\admin\Addon\Install{
 			echo $langmessage['description'];
 			echo '</th></tr>';
 
+			$avail_addons = $this->avail_addons;
+
+			// sort available addons by name
+			usort($avail_addons, function($a, $b) {
+				return strnatcmp($a['Addon_Name'], $b['Addon_Name']);
+			});
+
 			$i=0;
-			foreach($this->avail_addons as $folder => $info ){
+			foreach($avail_addons as $folder => $info ){
 
 				if( $info['upgrade_key'] ){
 					continue;
 				}
 
-				$info += array('About'=>'');
+				$info += array('About' => '');
 
-				echo '<tr class="'.($i % 2 ? 'even' : '').'"><td>';
-				echo str_replace(' ','&nbsp;',$info['Addon_Name']);
-				echo '<br/><em class="admin_note">/addons/'.$folder.'</em>';
+				echo '<tr class="' . ($i % 2 ? 'even' : '') . '"><td>';
+				echo str_replace(' ', '&nbsp;', $info['Addon_Name']);
+				echo '<br/><em class="admin_note">/addons/' . $folder . '</em>';
 				echo '</td><td>';
 				echo $info['Addon_Version'];
 				echo '</td><td>';
-				echo \gp\tool::Link('Admin/Addons',$langmessage['Install'],'cmd=LocalInstall&source='.$folder, array('data-cmd'=>'cnreq'));
+				echo \gp\tool::Link(
+					'Admin/Addons',
+					$langmessage['Install'],
+					'cmd=LocalInstall&source=' . $folder,
+					array('data-cmd' => 'cnreq')
+				);
 				echo '</td><td>';
 				echo $info['About'];
 				if( isset($info['Addon_Unique_ID']) && is_numeric($info['Addon_Unique_ID']) ){
 					echo '<br/>';
-					echo $this->DetailLink('plugins', $info['Addon_Unique_ID'],'More Info...');
+					echo $this->DetailLink('plugins', $info['Addon_Unique_ID'], 'More Info...');
 				}
 				echo '</td></tr>';
 				$i++;

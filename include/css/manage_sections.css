@@ -412,9 +412,9 @@ ul#section-clipboard-items li.clipboard-empty-msg{
 }
 
 #ck_editable_areas li:after{
-	display: block;
-	clear: both;
-	content: '';
+	display:block;
+	clear:both;
+	content:'';
 }
 
 #ck_editable_areas li a{

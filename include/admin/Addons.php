@@ -468,7 +468,7 @@ class Addons extends \gp\admin\Addon\Install{
 			$avail_addons = $this->avail_addons;
 
 			// sort available addons by name
-			usort($avail_addons, function($a, $b) {
+			uasort($avail_addons, function($a, $b) {
 				return strnatcmp($a['Addon_Name'], $b['Addon_Name']);
 			});
 

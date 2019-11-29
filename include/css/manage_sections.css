@@ -410,6 +410,7 @@ ul#section-clipboard-items li.clipboard-empty-msg{
 	border-bottom:1px solid #ddd;
 	box-sizing:border-box;
 }
+
 #ck_editable_areas li a{
 	display:block;
 	text-overflow:ellipsis;

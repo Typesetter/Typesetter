@@ -401,7 +401,6 @@ namespace gp\admin{
 			}
 
 
-
 			// Settings
 			$scripts['Admin/Configuration']				= array(	'class'		=> '\\gp\\admin\\Configuration',
 																	'method'	=> 'RunScript',
@@ -442,7 +441,15 @@ namespace gp\admin{
 																);
 
 
+			// Addon admin links
 			if( isset($config['admin_links']) && is_array($config['admin_links']) ){
+
+				foreach( $config['admin_links'] as $addonName => $addonInfo ){
+					$addonLabel = $addonInfo['label'];
+					$addonLabel	= \gp\tool\Plugins::Filter('AdminLinkLabel', array($addonName, $addonLabel));
+					$config['admin_links'][$addonName]['label'] = $addonLabel;
+				}
+
 				$scripts += $config['admin_links'];
 			}
 
@@ -1728,24 +1735,28 @@ namespace gp\admin{
 			global $config;
 			$any_permissions = false;
 
-			$special_links	= self::GetAddonTitles( $addon);
-			$admin_links	= self::GetAddonComponents( $config['admin_links'], $addon);
+			$special_links	= self::GetAddonTitles($addon);
+			$admin_links	= self::GetAddonComponents($config['admin_links'], $addon);
 
 
 			$result = '';
 			foreach($special_links as $linkName => $linkInfo){
 				$any_permissions = true;
-				$result .= '<li>';
-				$result .= \gp\tool::Link($linkName,$linkInfo['label']);
-				$result .= '</li>';
+				$result		.= '<li>';
+				$linkLabel	 = $linkInfo['label'];
+				// not needed // $linkLabel	 = \gp\tool\Plugins::Filter('SpecialLinkLabel', array($linkName, $linkLabel));
+				$result		.= \gp\tool::Link($linkName, $linkLabel);
+				$result		.= '</li>';
 			}
 
 			foreach($admin_links as $linkName => $linkInfo){
 				if( self::HasPermission($linkName) ){
 					$any_permissions = true;
-					$result .= '<li>';
-					$result .= \gp\tool::Link($linkName,$linkInfo['label']);
-					$result .= '</li>';
+					$result 	.= '<li>';
+					$linkLabel	 = $linkInfo['label'];
+					// not needed // $linkLabel	 = \gp\tool\Plugins::Filter('AdminLinkLabel', array($linkName, $linkLabel));
+					$result 	.= \gp\tool::Link($linkName, $linkLabel);
+					$result 	.= '</li>';
 				}
 			}
 			return array($result, $any_permissions);

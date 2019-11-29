@@ -634,13 +634,33 @@ class Tools extends \gp\special\Base{
 		}
 	}
 
+
+
 	public function AdminLinkList($links, $label, $format){
 		$_links = array();
 		foreach($links as $linkName => $linkInfo){
-			$_links[] = \gp\tool::Link($linkName,$linkInfo['label']);
+
+			$linkLabel	 = $linkInfo['label'];
+
+			// we don't need to call the filter hooks here anymore
+			// a single call seems sufficient in \gp\admin\Tools::AdminScripts() --> addon admin links
+			/*
+			switch( $label ){
+				case 'Admin Links':
+					$linkLabel	 = \gp\tool\Plugins::Filter('AdminLinkLabel', array($linkName, $linkLabel));
+					break;
+				case 'Special Links':
+					$linkLabel	 = \gp\tool\Plugins::Filter('SpecialLinkLabel', array($linkName, $linkLabel));
+					break;
+			}
+			*/
+
+			$_links[] 	 = \gp\tool::Link($linkName, $linkLabel);
 		}
-		$this->FormatList($_links,$label,$format);
+		$this->FormatList($_links, $label, $format);
 	}
+
+
 
 	public function FormatList($links, $label, $format = false){
 		if( empty($links) ){
@@ -666,22 +686,22 @@ class Tools extends \gp\special\Base{
 	//show Special Links
 	public function AddonPanel_Special($addon_key, $format){
 		$sublinks = \gp\admin\Tools::GetAddonTitles( $addon_key );
-		$this->AdminLinkList($sublinks,'Special Links',$format);
+		$this->AdminLinkList($sublinks, 'Special Links', $format);
 	}
 
 	//show Admin Links
-	public function AddonPanel_Admin($addon_key,$format){
+	public function AddonPanel_Admin($addon_key, $format){
 		global $langmessage, $config;
 
-		$sublinks = \gp\admin\Tools::GetAddonComponents($config['admin_links'],$addon_key);
-		$this->AdminLinkList($sublinks,'Admin Links',$format);
+		$sublinks = \gp\admin\Tools::GetAddonComponents($config['admin_links'], $addon_key);
+		$this->AdminLinkList($sublinks, 'Admin Links', $format);
 	}
 
 	//show Gadgets
 	public function AddonPanel_Gadget($addon_key, $format){
 		global $langmessage, $config;
 
-		$gadgets	= \gp\admin\Tools::GetAddonComponents($config['gadgets'],$addon_key);
+		$gadgets	= \gp\admin\Tools::GetAddonComponents($config['gadgets'], $addon_key);
 		$links		= array();
 		foreach($gadgets as $name => $value){
 			$links[] = $this->GadgetLink($name);

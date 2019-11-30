@@ -5,7 +5,6 @@ namespace gp\admin\Addon;
 defined('is_running') or die('Not an entry point...');
 
 
-
 class Tools extends \gp\special\Base{
 
 	public $rate_testing		= false; //for testing on local server
@@ -27,9 +26,11 @@ class Tools extends \gp\special\Base{
 
 
 
-	//
-	// Rating
-	//
+	/*
+	 *
+	 * Rating
+	 * 
+	 */
 
 	public function InitRating(){
 
@@ -38,6 +39,8 @@ class Tools extends \gp\special\Base{
 		//clear the data file ...
 		$this->GetAddonData();
 	}
+
+
 
 	/**
 	 * Get addon history and review data
@@ -56,6 +59,8 @@ class Tools extends \gp\special\Base{
 
 	}
 
+
+
 	public function SaveAddonData(){
 
 		if( !isset($this->dataFile) ){
@@ -71,8 +76,9 @@ class Tools extends \gp\special\Base{
 
 		$addonData['history'] = $this->addonHistory;
 		$addonData['reviews'] = $this->addonReviews;
-		return \gp\tool\Files::SaveData($this->dataFile,'addonData',$addonData);
+		return \gp\tool\Files::SaveData($this->dataFile, 'addonData', $addonData);
 	}
+
 
 
 	/**
@@ -85,19 +91,31 @@ class Tools extends \gp\special\Base{
 		ob_start();
 		echo '<span class="rating">';
 
-		for($i = 1;$i<6;$i++){
-			$class = '';
+		for($i = 1; $i < 6; $i++){
+
+			$attrs = array(
+				'data-rating'	=> $i,
+				'data-cmd'		=> 'gpabox',
+			);
+
 			if( $i > $rating ){
-				$class = ' class="unset"';
+				$attrs['class'] = 'unset';
 			}
-			echo \gp\tool::Link($this->scriptUrl,'','cmd=ReviewAddonForm&rating='.$i.'&arg='.rawurlencode($arg),' data-rating="'.$i.'" data-cmd="gpabox" '.$class);
+
+			echo \gp\tool::Link(
+				$this->scriptUrl, 
+				'', 
+				'cmd=ReviewAddonForm&rating=' . $i . '&arg=' . rawurlencode($arg),
+				$attrs
+			);
 		}
 
-		echo '<input type="hidden" name="rating" value="'.htmlspecialchars($rating).'" readonly="readonly"/>';
-
+		echo '<input type="hidden" name="rating" value="' . htmlspecialchars($rating) . '" readonly="readonly" />';
 		echo '</span> ';
+
 		return ob_get_clean();
 	}
+
 
 
 	/**
@@ -108,7 +126,7 @@ class Tools extends \gp\special\Base{
 	public function GetAvailInstall($dir){
 		global $langmessage;
 
-		$iniFile	= $dir.'/Addon.ini';
+		$iniFile	= $dir . '/Addon.ini';
 		$dirname	= basename($dir);
 
 		if( !file_exists($iniFile) ){
@@ -133,9 +151,10 @@ class Tools extends \gp\special\Base{
 			return false;
 		}
 
-		$array += array('Addon_Version'=>'');
+		$array += array('Addon_Version' => '');
 		return $array;
 	}
+
 
 
 	/**
@@ -156,6 +175,7 @@ class Tools extends \gp\special\Base{
 	}
 
 
+
 	public function ReviewAddonForm(){
 		global $config, $dirPrefix, $langmessage;
 
@@ -164,7 +184,6 @@ class Tools extends \gp\special\Base{
 		}
 
 		$this->page->head_js[]	= '/include/js/rate.js';
-
 
 		//get appropriate variables
 		$id = $this->addon_info['id'];
@@ -190,30 +209,27 @@ class Tools extends \gp\special\Base{
 		echo '</h2>';
 
 		if( isset($this->addonReviews[$id]) ){
-			echo 'You posted the following review on '.\gp\tool::date($langmessage['strftime_date'],$this->addonReviews[$id]['time']);
+			echo 'You posted the following review on ';
+			echo \gp\tool::date($langmessage['strftime_date'], $this->addonReviews[$id]['time']);
 		}
 
-
 		echo '<form action="'.\gp\tool::GetUrl($this->scriptUrl).'" method="post">';
-		echo '<input type="hidden" name="arg" value="'.htmlspecialchars($this->pass_arg).'"/>';
-
+		echo '<input type="hidden" name="arg" value="' . htmlspecialchars($this->pass_arg) . '"/>';
 
 		echo '<table class="rating_table">';
-
 		echo '<tr><td>Rating</td><td>';
 
 		echo '<span class="rating">';
-		for($i=1;$i<6;$i++){
+		for($i = 1; $i < 6; $i++){
 			$class = '';
 			if( $i > $rating ){
 				$class = ' class="unset"';
 			}
-			echo '<a data-rating="'.$i.'"'.$class.'></a>';
+			echo '<a data-rating="' . $i . '"' . $class . '></a>';
 		}
-		echo '<input type="hidden" name="rating" value="'.htmlspecialchars($rating).'" />';
+		echo '<input type="hidden" name="rating" value="' . htmlspecialchars($rating) . '" />';
 		echo '</span> ';
 		echo '</td></tr>';
-
 
 		echo '<tr><td>Review</td><td>';
 		echo '<textarea name="review" cols="50" rows="7" class="gptextarea">';
@@ -221,34 +237,37 @@ class Tools extends \gp\special\Base{
 		echo '</textarea>';
 		echo '</td></tr>';
 
-
 		$server		= \gp\tool::ServerName();
 		$host		= $server.$dirPrefix;
 
 		echo '<tr><td>From</td><td>';
-		echo '<input type="text" name="host"  size="50" value="'.htmlspecialchars($host).'" readonly="readonly" class="gpinput gpreadonly" />';
+		echo '<input type="text" name="host"  size="50" value="' . htmlspecialchars($host) . '" ';
+		echo 'readonly="readonly" class="gpinput gpreadonly" />';
 		echo '<br/>';
-		echo '<input type="checkbox" name="show_site" value="hidden" /> Click to hide your site information on '.CMS_READABLE_DOMAIN.'.';
+		echo '<input type="checkbox" name="show_site" value="hidden" /> ';
+		echo 'Click to hide your site information on ' . CMS_READABLE_DOMAIN . '.';
 		echo '</td></tr>';
 
 		echo '<tr><td></td><td>';
 
 		if( isset($this->addonReviews[$id]) ){
-			echo '<button type="submit" name="cmd" value="SendAddonReview" class="gppost gpsubmit">Update Review</button>';
+			echo '<button type="submit" name="cmd" value="SendAddonReview" class="gppost gpsubmit">';
+			echo 'Update Review</button>';
 		}else{
-			echo '<button type="submit" name="cmd" value="SendAddonReview" class="gppost gpsubmit">Send Review</button>';
+			echo '<button type="submit" name="cmd" value="SendAddonReview" class="gppost gpsubmit">';
+			echo 'Send Review</button>';
 		}
 
 		echo ' ';
 		echo '<input type="submit" name="cmd" value="Cancel" class="admin_box_close gpcancel"/>';
 		echo '</td></tr>';
 
-
 		echo '</table>';
 		echo '</form>';
 
 		return true;
 	}
+
 
 
 	/**
@@ -265,14 +284,13 @@ class Tools extends \gp\special\Base{
 		switch($this->config_index){
 			case 'themes':
 				$this->GetAddonRateInfoTheme($arg);
-			break;
+				break;
 			case 'addons':
 				$this->GetAddonRateInfoPlugin($arg);
-			break;
+				break;
 			default:
-			return false;
+				return false;
 		}
-
 
 		if( !\gp\tool::IniGet('allow_url_fopen') ){
 			$this->messages[] = 'Your installation of PHP does not support url fopen wrappers.';
@@ -281,7 +299,7 @@ class Tools extends \gp\special\Base{
 		if( count($this->messages) > 0 ){
 			$message = 'Oops, you are currently unable to rate this addon for the following reasons:';
 			$message .= '<ul>';
-			$message .= '<li>'.implode('</li><li>',$this->messages).'</li>';
+			$message .= '<li>' . implode('</li><li>', $this->messages) . '</li>';
 			$message .= '</ul>';
 			message($message);
 			$this->ShowRatingText = false;
@@ -291,15 +309,16 @@ class Tools extends \gp\special\Base{
 	}
 
 
+
 	public function GetAddonRateInfoTheme($dir){
 		global $dataDir, $langmessage;
 
-		$dir = str_replace('\\','/',$dir);
-		$dir = str_replace('../','./',$dir);
-		$full_dir = $dataDir.$dir;
+		$dir = str_replace('\\', '/', $dir);
+		$dir = str_replace('../', './', $dir);
+		$full_dir = $dataDir . $dir;
 
 		if( !file_exists($full_dir) ){
-			$this->messages[] = $langmessage['OOPS'].' (directory doesn\'t exist)';
+			$this->messages[] = $langmessage['OOPS'] . ' (directory doesn\'t exist)';
 			return false;
 		}
 
@@ -324,16 +343,15 @@ class Tools extends \gp\special\Base{
 	}
 
 
+
 	public function GetAddonRateInfoPlugin($arg){
 		global $config;
 
 		if( isset($config['addons'][$arg]) && isset($config['addons'][$arg]['id']) ){
-
 			$this->pass_arg					= $config['addons'][$arg]['id'];;
 			$this->addon_info['id']			= $config['addons'][$arg]['id'];
 			$this->addon_info['name']		= $config['addons'][$arg]['name'];
 			return true;
-
 		}
 
 		if( !is_numeric($arg) ){
@@ -341,12 +359,9 @@ class Tools extends \gp\special\Base{
 			return false;
 		}
 
-
 		foreach($config['addons'] as $addonDir => $data){
 			if( isset($data['id']) && ($data['id'] == $arg) ){
-
 				$this->pass_arg					= $arg;
-
 				$this->addon_info['id']			= $data['id'];
 				$this->addon_info['name']		= $data['name'];
 				return true;
@@ -355,7 +370,6 @@ class Tools extends \gp\special\Base{
 
 		foreach($this->addonHistory as $data ){
 			if( isset($data['id']) && ($data['id'] == $arg) ){
-
 				$this->pass_arg					= $arg;
 				$this->addon_info['id']			= $data['id'];
 				$this->addon_info['name']		= $data['name'];
@@ -365,6 +379,7 @@ class Tools extends \gp\special\Base{
 		$this->messages[] = 'The supplied add-on ID is not in your add-on history.';
 		return false;
 	}
+
 
 
 	/**
@@ -381,7 +396,7 @@ class Tools extends \gp\special\Base{
 		}
 
 		if( !is_numeric($_POST['rating']) || ($_POST['rating'] < 1) || ($_POST['rating'] > 5 ) ){
-			message($langmessage['OOPS'].' (Invalid Rating)');
+			message($langmessage['OOPS'] . ' (Invalid Rating)');
 			return false;
 		}
 
@@ -400,7 +415,6 @@ class Tools extends \gp\special\Base{
 			}
 		}
 
-
 		//send rating
 		$data['addon_id']		= $id;
 		$data['rating']			= (int)$_POST['rating'];
@@ -417,11 +431,10 @@ class Tools extends \gp\special\Base{
 			return false;
 		}
 
-
 		//save review information
 		$this->addonReviews[$id]				= array();
 		$this->addonReviews[$id]['rating']		= (int)$_POST['rating'];
-		$this->addonReviews[$id]['review']		= substr($_POST['review'],0,500);
+		$this->addonReviews[$id]['review']		= substr($_POST['review'], 0, 500);
 		$this->addonReviews[$id]['review_id']	= $review_id;
 		$this->addonReviews[$id]['time']		= time();
 		$this->SaveAddonData();
@@ -431,23 +444,27 @@ class Tools extends \gp\special\Base{
 		return true;
 	}
 
+
+
 	public function PingRating($data){
 
-		$path		= CMS_DOMAIN.'/index.php/Special_Addons?'.http_build_query($data,'','&');
+		$path		= CMS_DOMAIN . '/index.php/Special_Addons?' . http_build_query($data, '', '&');
 		$contents	= \gp\tool\RemoteGet::Get_Successful($path);
 
 		return $this->RatingResponse($contents);
 	}
 
+
+
 	public function RatingResponse($contents){
 		global $langmessage;
 		if( empty($contents) ){
-			message($langmessage['OOPS'].' (empty rating)');
+			message($langmessage['OOPS'] . ' (empty rating)');
 			return false;
 		}
 
 		//!! these responses should be more detailed
-		list($response,$detail) = explode(':',$contents);
+		list($response,$detail) = explode(':', $contents);
 		$response = trim($response);
 		$detail = trim($detail);
 		if( $response == 'successful_rating_request' ){
@@ -461,7 +478,7 @@ class Tools extends \gp\special\Base{
 			break;
 
 			default:
-				message($langmessage['OOPS'].' (Detail:'.htmlspecialchars($detail).')');
+				message($langmessage['OOPS'] . ' (Detail:' . htmlspecialchars($detail) . ')');
 				//message($contents);
 			break;
 		}
@@ -469,11 +486,12 @@ class Tools extends \gp\special\Base{
 	}
 
 
+
 	/**
 	 * Get a list of installed addons
 	 *
 	 */
-	public function GetInstalledComponents($from,$addon){
+	public function GetInstalledComponents($from, $addon){
 		$result = array();
 		if( !is_array($from) ){
 			return $result;
@@ -493,7 +511,6 @@ class Tools extends \gp\special\Base{
 
 
 
-
 	//remove gadgets from $gpLayouts
 	public function RemoveFromHandlers($gadgets){
 		global $gpLayouts;
@@ -501,7 +518,6 @@ class Tools extends \gp\special\Base{
 		if( !is_array($gpLayouts) || !is_array($gadgets) ){
 			return;
 		}
-
 
 		foreach($gpLayouts as $theme => $containers){
 			if( !is_array($containers) || !isset($containers['handlers']) || !is_array($containers['handlers']) ){
@@ -513,9 +529,9 @@ class Tools extends \gp\special\Base{
 				}
 
 				foreach($handlers as $index => $handle){
-					$pos = strpos($handle,':');
+					$pos = strpos($handle, ':');
 					if( $pos > 0 ){
-						$handle = substr($handle,0,$pos);
+						$handle = substr($handle, 0, $pos);
 					}
 
 					foreach($gadgets as $gadget){
@@ -534,7 +550,7 @@ class Tools extends \gp\special\Base{
 
 
 
-	public function CleanHooks($addon,$keep_hooks = array()){
+	public function CleanHooks($addon, $keep_hooks=array()){
 		global $config, $gp_hooks;
 
 		if( !isset($config['hooks']) ){
@@ -553,7 +569,7 @@ class Tools extends \gp\special\Base{
 				if( !isset($keep_hooks[$hook_name]) ){
 					unset($config['hooks'][$hook_name][$hook_dir]);
 					unset($gp_hooks[$hook_name][$hook_dir]);
-					//message('remove this hook: '.$hook_name);
+					//message('remove this hook: ' . $hook_name);
 				}
 			}
 		}
@@ -575,7 +591,7 @@ class Tools extends \gp\special\Base{
 	 *
 	 * @return mixed
 	 */
-	public function UpgradePath($ini_info,$config_key='addons'){
+	public function UpgradePath($ini_info, $config_key='addons'){
 		global $config, $dataDir;
 
 		if( !isset($config[$config_key]) ){
@@ -623,7 +639,7 @@ class Tools extends \gp\special\Base{
 
 
 
-	public function AddonPanelGroup($addon_key, $show_hooks = true, $format = false ){
+	public function AddonPanelGroup($addon_key, $show_hooks=true, $format=false){
 
 		$this->AddonPanel_Special($addon_key,$format);
 		$this->AddonPanel_Admin($addon_key,$format);
@@ -639,30 +655,14 @@ class Tools extends \gp\special\Base{
 	public function AdminLinkList($links, $label, $format){
 		$_links = array();
 		foreach($links as $linkName => $linkInfo){
-
-			$linkLabel	 = $linkInfo['label'];
-
-			// we don't need to call the filter hooks here anymore
-			// a single call seems sufficient in \gp\admin\Tools::AdminScripts() --> addon admin links
-			/*
-			switch( $label ){
-				case 'Admin Links':
-					$linkLabel	 = \gp\tool\Plugins::Filter('AdminLinkLabel', array($linkName, $linkLabel));
-					break;
-				case 'Special Links':
-					$linkLabel	 = \gp\tool\Plugins::Filter('SpecialLinkLabel', array($linkName, $linkLabel));
-					break;
-			}
-			*/
-
-			$_links[] 	 = \gp\tool::Link($linkName, $linkLabel);
+			$_links[] 	 = \gp\tool::Link($linkName, $linkInfo['label']);
 		}
 		$this->FormatList($_links, $label, $format);
 	}
 
 
 
-	public function FormatList($links, $label, $format = false){
+	public function FormatList($links, $label, $format=false){
 		if( empty($links) ){
 			return;
 		}
@@ -677,17 +677,21 @@ class Tools extends \gp\special\Base{
 
 		echo '<ul>';
 		foreach($links as $link){
-			echo '<li>'.$link.'</li>';
+			echo '<li>' . $link . '</li>';
 		}
 		echo '</ul>';
 		echo $format['end'];
 	}
 
+
+
 	//show Special Links
 	public function AddonPanel_Special($addon_key, $format){
-		$sublinks = \gp\admin\Tools::GetAddonTitles( $addon_key );
+		$sublinks = \gp\admin\Tools::GetAddonTitles($addon_key);
 		$this->AdminLinkList($sublinks, 'Special Links', $format);
 	}
+
+
 
 	//show Admin Links
 	public function AddonPanel_Admin($addon_key, $format){
@@ -696,6 +700,8 @@ class Tools extends \gp\special\Base{
 		$sublinks = \gp\admin\Tools::GetAddonComponents($config['admin_links'], $addon_key);
 		$this->AdminLinkList($sublinks, 'Admin Links', $format);
 	}
+
+
 
 	//show Gadgets
 	public function AddonPanel_Gadget($addon_key, $format){
@@ -706,8 +712,10 @@ class Tools extends \gp\special\Base{
 		foreach($gadgets as $name => $value){
 			$links[] = $this->GadgetLink($name);
 		}
-		$this->FormatList($links,$langmessage['gadgets'],$format);
+		$this->FormatList($links, $langmessage['gadgets'], $format);
 	}
+
+
 
 	//hooks
 	public function AddonPanel_Hooks($addon_key, $format){
@@ -716,10 +724,12 @@ class Tools extends \gp\special\Base{
 		$links = array();
 
 		foreach($hooks as $name => $hook_info){
-			$links[] = '<a href="'.CMS_DOMAIN.'/Plugin_Hooks?hook='.$name.'" target="_blank">'.str_replace('_',' ',$name).'</a>';
+			$links[] = '<a href="' . CMS_DOMAIN . '/Plugin_Hooks?hook=' . $name . '" target="_blank">'
+				. str_replace('_', ' ', $name) . '</a>';
 		}
 		$this->FormatList($links,'Hooks',$format);
 	}
+
 
 
 	/**
@@ -741,21 +751,23 @@ class Tools extends \gp\special\Base{
 		return $hooks;
 	}
 
-	public static function DetailLink( $type, $id, $label = 'Details', $q = '', $attr='' ){
-		return '<a href="'.self::DetailUrl($type,$id,$q).'" data-cmd="remote" '.$attr.'>'.$label.'</a>';
+
+
+	public static function DetailLink( $type, $id, $label='Details', $q='', $attr=''){
+		return '<a href="' . self::DetailUrl($type, $id, $q) . '" data-cmd="remote" ' . $attr . '>' . $label . '</a>';
 	}
 
-	public static function DetailUrl($type,$id,$q=''){
+
+
+	public static function DetailUrl($type , $id , $q=''){
 		$url = 'Themes';
 		if( $type == 'plugins' ){
 			$url = 'Plugins';
 		}
 		if( !empty($q) ){
-			$q = '?'.$q;
+			$q = '?' . $q;
 		}
-		return addon_browse_path.'/'.$url.'/'.$id.$q;
+		return addon_browse_path . '/' . $url . '/' . $id.$q;
 	}
+
 }
-
-
-

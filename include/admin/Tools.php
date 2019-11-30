@@ -247,17 +247,25 @@ namespace gp\admin{
 				$badge_style		.= !empty($notification['badge_bg'])	? ('background-color:' . $notification['badge_bg'] . ';') : '';
 				$badge_style		.= !empty($notification['badge_color'])	? (' color:' . $notification['badge_color'] . ';') : '';
 				$badge_style_attr	=  !empty($badge_style) ? ' style="' . $badge_style . '"' : '';
-				$badge_html			= '<b class="admin-panel-badge"' . $badge_style_attr . '>' . $count . '</b>';
+				if( $in_panel ){
+					$badge_html		= '<b class="admin-panel-badge"' . $badge_style_attr . '>' . $count . '</b>';
+				}else{
+					$badge_html		= ' <span class="dashboard-badge">(' . $count . ')</b>';
+				}
 
-				ob_start();
-				echo '<li>';
+				$expand_class = 'expand_child';
+				if( !$in_panel ){
+					$expand_class = ''; // expand_child_click
+				}
+				ob_start();	
+				echo '<li class="' . $expand_class . '">';
 				echo \gp\tool::Link(
 						'Admin/Notifications',
 						$title . ' ' . $badge_html, 
 						'cmd=ShowNotifications&type=' . rawurlencode($type),
 						array(
 							'title'		=> $count . ' ' . $title,
-							'class'		=>'admin-panel-notification', // . '-' . rawurlencode($type)',
+							'class'		=> 'admin-panel-notification', // . '-' . rawurlencode($type)',
 							'data-cmd'	=> 'gpabox',
 						)
 					);
@@ -272,7 +280,8 @@ namespace gp\admin{
 				}
 			}
 
-			$panel_label = $langmessage['Notifications'];
+			$panel_label 	= $langmessage['Notifications'];
+			$panel_class	= $in_panel ? 'admin-panel-notifications' : '';
 
 			self::_AdminPanelLinks(
 				$in_panel,
@@ -280,7 +289,7 @@ namespace gp\admin{
 				$panel_label,
 				'fa fa-bell',
 				'notifications',
-				'admin-panel-notifications',  // new param 'class'
+				$panel_class,  // new param 'class'
 				'<b class="admin-panel-badge"' . $main_badge_style_attr . '>' . $total_count . '</b>'  // new param 'badge'
 			);
 
@@ -691,7 +700,7 @@ namespace gp\admin{
 				echo '<div class="toolbar">';
 					echo '<a class="toggle_panel" data-cmd="toggle_panel"></a>';
 					echo \gp\tool::Link('','<i class="fa fa-home"></i>');
-					echo \gp\tool::Link('Admin','<i class="fa fa-cog"></i>');
+					echo \gp\tool::Link('Admin','<i class="fa fa-dashboard"></i>');
 					echo \gp\tool::Link('special_gpsearch','<i class="fa fa-search"></i>','',array('data-cmd'=>'gpabox'));
 				echo '</div>';
 
@@ -904,20 +913,17 @@ namespace gp\admin{
 
 				self::_AdminPanelLinks($in_panel, $links, 'updates', 'fa fa-refresh', 'upd');
 			}
-
 			*/
 
-
 			//notifications
-			self::GetNotifications();
-
+			self::GetNotifications($in_panel);
 
 			//username
 			ob_start();
 			self::GetFrequentlyUsed($in_panel);
 
 			echo '<li>';
-			echo \gp\tool::Link('Admin/Preferences',$langmessage['Preferences']);
+			echo \gp\tool::Link('Admin/Preferences', $langmessage['Preferences']);
 			echo '</li>';
 
 			echo '<li>';
@@ -925,12 +931,10 @@ namespace gp\admin{
 			echo '</li>';
 
 			echo '<li>';
-			echo \gp\tool::Link('Admin/About','About '.CMS_NAME);
+			echo \gp\tool::Link('Admin/About', 'About ' . CMS_NAME);
 			echo '</li>';
 			$links = ob_get_clean();
 			self::_AdminPanelLinks($in_panel, $links, $gpAdmin['useralias'], 'fa fa-user', 'use');
-
-
 
 			// stats
 			ob_start();
@@ -941,8 +945,6 @@ namespace gp\admin{
 			echo '<li><span>0 DB Queries</span></li>';
 			$links = ob_get_clean();
 			self::_AdminPanelLinks($in_panel, $links, 'Performance', 'fa fa-bar-chart', 'cms');
-
-
 
 			//resources
 			if( $page->pagetype === 'admin_display' ){
@@ -960,7 +962,6 @@ namespace gp\admin{
 
 				$links = ob_get_clean();
 				self::_AdminPanelLinks($in_panel, $links, 'resources', 'fa fa-globe', 'res');
-
 
 				if( $in_panel ){
 					echo '<div class="gpversion">';
@@ -1061,7 +1062,7 @@ namespace gp\admin{
 			}
 
 			//frequently used
-			echo '<li class="'.$expand_class.'">';
+			echo '<li class="' . $expand_class . '">';
 				echo '<a>';
 				echo $langmessage['frequently_used'];
 				echo '</a>';

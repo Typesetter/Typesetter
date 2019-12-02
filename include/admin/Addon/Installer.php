@@ -1063,30 +1063,34 @@ class Installer extends \gp\admin\Addon\Tools{
 				continue;
 			}
 
-			if( strpos($hook,'Gadget:') === 0
-				|| strpos($hook,'Admin_Link:') === 0
-				|| strpos($hook,'Special_Link:') === 0
+			if( strpos($hook, 'Gadget:') === 0
+				|| strpos($hook, 'Admin_Link:') === 0
+				|| strpos($hook, 'Special_Link:') === 0
+				|| strpos($hook, 'FrontEndFramework') === 0
 				){
 					continue;
 			}
 
-			if( $this->AddHook($hook,$hook_args) ){
+			if( $this->AddHook($hook, $hook_args) ){
 				$installed[$hook] = $hook;
 			}
 		}
 
-		$this->CleanHooks($this->config_key,$installed);
+		$this->CleanHooks($this->config_key, $installed);
 	}
 
-	public function AddHook($hook,$hook_args){
+
+
+	public function AddHook($hook, $hook_args){
 		global $config;
 
 		$add = array();
-		$this->UpdateLinkInfo($add,$hook_args);
+		$this->UpdateLinkInfo($add, $hook_args);
 		$config['hooks'][$hook][$this->config_key] = $add;
 
 		return true;
 	}
+
 
 
 	//extract the configuration type (extractArg) from $Install

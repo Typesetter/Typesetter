@@ -94,7 +94,9 @@ fieldset:disabled a.btn {
   &.focus {
     text-decoration: $link-hover-decoration;
     border-color: transparent;
-    box-shadow: none;
+    // ########## use VP-mixins ##########
+    // box-shadow: none;
+    @include vp-box-shadow(none);
   }
 
   &:disabled,

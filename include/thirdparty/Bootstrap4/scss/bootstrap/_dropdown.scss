@@ -27,7 +27,9 @@
   text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
   list-style: none;
   background-color: $dropdown-bg;
-  background-clip: padding-box;
+  // ########## use VP-mixins ##########
+  // background-clip: padding-box;
+  @include vp-background-clip(padding-box);
   border: $dropdown-border-width solid $dropdown-border-color;
   @include border-radius($dropdown-border-radius);
   @include box-shadow($dropdown-box-shadow);

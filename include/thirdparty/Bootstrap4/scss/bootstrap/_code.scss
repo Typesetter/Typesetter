@@ -44,5 +44,7 @@ pre {
 // Enable scrollable blocks of code
 .pre-scrollable {
   max-height: $pre-scrollable-max-height;
-  overflow-y: scroll;
+  // ########## use VP-mixins ##########
+  // overflow-y: scroll;
+  @include vp-overflow-y(scroll);
 }

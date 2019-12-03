@@ -1,0 +1,144 @@
+@mixin vp-background-clip($value) {
+  @if $enable-autoprefixer {
+    -webkit-background-clip: $value;
+  }
+  background-clip: $value;
+}
+
+@mixin vp-background-size($value...) {
+  @if $enable-autoprefixer {
+    -webkit-background-size: $value;
+  }
+  background-size: $value;
+}
+
+/// Test if `$value` is a valid direction
+/// @param {*} $value - Value to test
+/// @return {Bool}
+@function is-direction($value) {
+  $is-keyword: index((to top, to top right, to right top, to right, to bottom right, to right bottom, to bottom, to bottom left, to left bottom, to left, to left top, to top left), $value);
+  $is-angle: type-of($value) == 'number' and index('deg' 'grad' 'turn' 'rad', unit($value));
+
+  @return $is-keyword or $is-angle;
+}
+
+/// Convert a direction to legacy syntax
+/// @param {Keyword | Angle} $value - Value to convert
+/// @require {function} is-direction
+/// @require {function} convert-angle
+/// @throw Cannot convert `#{$value}` to legacy syntax because it doesn't seem to be a direction.;
+/// @see https://www.sitepoint.com/building-linear-gradient-mixin-sass/
+@function legacy-direction($value) {
+  @if is-direction($value) == false {
+    //@warn "Cannot convert `#{$value}` to legacy syntax because it doesn't seem to be a direction.";
+  }
+
+  // $conversion-map: (
+  //   to top          : bottom,
+  //   to top right    : bottom left,
+  //   to right top    : left bottom,
+  //   to right        : left,
+  //   to bottom right : top left,
+  //   to right bottom : left top,
+  //   to bottom       : top,
+  //   to bottom left  : top right,
+  //   to left bottom  : right top,
+  //   to left         : right,
+  //   to left top     : right bottom,
+  //   to top left     : bottom right
+  // );
+
+  // @if map-has-key($conversion-map, $value) {
+  //   @return map-get($conversion-map, $value);
+  // }
+
+  @if '#{$value}' == 'to top' {
+   @return bottom;
+  }
+
+  @if $value == 'to top right' {
+   @return bottom left;
+  }
+
+  @if $value == 'to right top' {
+   @return left bottom;
+  }
+
+  @if $value == 'to right' {
+   @return left bottom;
+  }
+
+  @if $value == 'to bottom right' {
+   @return top left;
+  }
+
+  @if $value == 'to right bottom' {
+   @return left top;
+  }
+
+  @if $value == 'to bottom' {
+   @return top;
+  }
+
+  @if $value == 'to bottom left' {
+   @return top right;
+  }
+
+  @if $value == 'to left bottom' {
+   @return right top;
+  }
+
+  @if $value == 'to left' {
+   @return right;
+  }
+
+  @if $value == 'to left top' {
+   @return right bottom;
+  }
+
+  @if $value == 'to top left' {
+   @return bottom right;
+  }
+
+  @return 90deg - $value;
+}
+
+/*
+ * Mixin printing a linear-gradient
+ * as well as a plain color fallback
+ * and the `-webkit-` prefixed declaration
+ * @access public
+ * @param {Keyword | Angle} $direction - Linear gradient direction
+ * @param {Arglist} $color-stops - List of color-stops composing the gradient
+ *
+ * @see https://www.sitepoint.com/building-linear-gradient-mixin-sass/
+ */
+@mixin vp-linear-gradient($direction, $color-stops...) {
+  @if $enable-autoprefixer {
+    // Direction has been omitted and happens to be a color-stop
+    @if is-direction($direction) == false {
+      $color-stops: $direction, $color-stops;
+      $direction: 180deg;
+    }
+
+    background: nth(nth($color-stops, 1), 1);
+    background: -webkit-linear-gradient(legacy-direction($direction), $color-stops);
+    background: -o-linear-gradient(legacy-direction($direction), $color-stops);
+  }
+  background: linear-gradient($direction, $color-stops);
+}
+
+@mixin vp-linear-gradient-img($direction, $color-stops...) {
+  @if $enable-autoprefixer {
+    // Direction has been omitted and happens to be a color-stop
+    @if is-direction($direction) == false {
+      $color-stops: $direction, $color-stops;
+      $direction: 180deg;
+    }
+    background-image: -webkit-linear-gradient(legacy-direction($direction), $color-stops);
+    background-image: -o-linear-gradient(legacy-direction($direction), $color-stops);
+  }
+  background-image: linear-gradient($direction, $color-stops);
+}
+
+

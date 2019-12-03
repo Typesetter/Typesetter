@@ -8,14 +8,13 @@
 
 @import 'admin_toolbar.scss';
 
-/*
+/**
  * Reset CSS
  * There are two admin content containers where we attempt to reset the css
  * so a user's theme does not interfere with the display of admin content
  *
  * #gp_admin_html
- * 		contain areas that are not inline in the users theme like the sidepanel, inline editing dialogs, admin_box
- *
+ *  contain areas that are not inline in the users theme like the sidepanel, inline editing dialogs, admin_box
  */
 #gp_admin_html,
 #gp_admin_fixed{
@@ -24,10 +23,10 @@
 	left: 0;
 	height: auto;
 	text-transform: none;
-	}
+}
 #gp_admin_fixed{
 	position: fixed;
-	}
+}
 
 #gp_admin_html{
 	color: #333;
@@ -35,54 +34,56 @@
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	line-height: 130%;
 	font-weight: normal;
-	}
+}
 
 #gp_admin_html *{
 	text-shadow: none;
 	@include box-sizing( content-box );
 	/* background: none; prevents other backgrounds from showing. "inherit" wouldn't make sense */
-	font-family:inherit; font-size:inherit; line-height:inherit; //* conflicts with fontawesome */
-	}
+	font-family: inherit;
+	font-size: inherit;
+	line-height: inherit; //* conflicts with fontawesome */
+}
 
 #gp_admin_html hr{
 	border: 0 none;
 	border-bottom: 1px solid #ddd;
-	}
+}
 
 #gp_admin_html label{
 	font-weight: normal;
-	}
+}
 
 #gp_admin_html li{
 	list-style: none;
 	background-image: none; /* ex: a bullet image for <li>, but it messes up ckeditor */
-	}
+}
 
 #gp_admin_html table,
 #gp_admin_html form{
 	background: none;
 	margin: 0;
 	padding: 0;
-	}
+}
 #gp_admin_html input,
 #gp_admin_html textarea{
 	width: auto;
-	}
+}
 #gp_admin_html table{
 	/* margin: 0; changes bordered display */
 	/* width: auto; /* this changes ckeditor display */
-	}
+}
 
 #gp_admin_html td,
 #gp_admin_html th{
 	vertical-align: top;
-	}
+}
 #gp_admin_html a{
 	cursor: pointer;
-	}
+}
 #gp_admin_html a img{
 	border: none;
-	}
+}
 
 
 #gp_admin_html a,
@@ -93,35 +94,35 @@
 }
 #gp_admin_html a:hover{
 	color: #CC4422;
-	}
+}
 
 #gp_admin_html a *{
 	color: inherit;
 	text-decoration: inherit;
-	}
+}
 
 
 #gp_admin_html h1,
 #gp_admin_html h2,
 #gp_admin_html h3{
 	margin: .8em 0;
-	}
+}
 
 #gp_admin_html h1{
 	font-size: $font-size-h1;
-	}
+}
 
 #gp_admin_html h2{
 	font-size: $font-size-h2;
-	}
+}
 
 #gp_admin_html h3{
 	font-size: $font-size-h3;
-	}
+}
 
 #gp_admin_html h4{
 	font-size: $font-size-h4;
-	}
+}
 
 #gp_admin_html h1,
 #gp_admin_html h1 a,
@@ -139,7 +140,7 @@
 	text-align: left;
 	text-shadow: none;
 	font-weight: normal;
-	}
+}
 
 #gp_admin_html h1:first-child,
 #gp_admin_html h2:first-child,
@@ -148,12 +149,14 @@
 #gp_admin_html h3:first-child{
 	margin-top: 0;
 	padding-top: 0;
-	}
+}
 
 
 #gp_admin_html p{
 	margin: 1em 0;
-	}
+}
+
+
 
 #gp_admin_html .gpselect,
 #gp_admin_html .gpcheckbox,
@@ -174,7 +177,7 @@
 	padding: 4px 8px;
 	height: auto;
 	@include box-sizing( border-box );
-	}
+}
 
 #gp_admin_html .gptextarea,
 #gp_admin_html .gp_scrolllist,
@@ -187,14 +190,14 @@
 	height: auto;
 	@include box-shadow( inset 0 0 1px rgba(0,0,0,0.2) );
 	@include box-sizing( border-box );
-	}
+}
 
 #gp_admin_html .gpinput,
 #gp_admin_html .gpselect,
 #gp_admin_html .gpsubmit,
 #gp_admin_html .gpcancel{
 	margin: 0 7px 0 0;
-	}
+}
 
 #gp_admin_html .gpcheckbox.checked,
 #gp_admin_html .gpselect,
@@ -202,47 +205,72 @@
 #gp_admin_html .gpbutton{
 	cursor: pointer;
 	@include gradient-vertical(#FBFBFB, #E9E9E9);
-	}
+}
+
+#gp_admin_html .gpselect{
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	appearance: none;
+	background-image: url('data:image/svg+xml;charset=US-ASCII,\
+	%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20\
+	width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20\
+	fill%3D%22%23333333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%20\
+	0-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%20\
+	82.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%20\
+	12.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%20\
+	0-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
+		linear-gradient(to bottom, #fbfbfb 0%,#e9e9e9 100%);
+	background-repeat: no-repeat, repeat-x;
+	background-position: right 10px top 50%, 0 0;
+	background-size: 7px auto, 100%;
+	padding-right: 17px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#gp_admin_html .gpselect::-ms-expand{
+	display: none;
+}
 
 #gp_admin_html .gpcheckbox,
 #gp_admin_html .gpcancel{
 	cursor: pointer;
 	border-color: #ddd;
 	@include gradient-vertical(#FFFFFF, #F7F7F7);
-	}
+}
 
 #gp_admin_html .gpdisabled{
 	background-color: #f7f7f7;
 	border: 1px solid #ddd;
 	color: #999;
-	}
+}
 
 #gp_admin_html .gpselect option{
 	text-shadow: none;
 	padding: 0 5px;
-	}
+}
 #gp_admin_html .gpcheckbox input{
 	margin: 0;
 	padding: 0;
 	vertical-align: middle;
-	}
+}
 #gp_admin_html .gpinput{
 	white-space: nowrap;
-	}
+}
 #gp_admin_html .gpinput_warning{
 	border-color: red;
-	}
+}
 #gp_admin_html .gpreadonly{
 	background: #f5f5f5;
-	}
+}
 
 #gp_admin_html .sync_label{
 	background: #f1f1f1;
-	}
+}
 
 #gp_admin_html .padded_table td{
 	padding: 5px;
-	}
+}
 
 #gp_admin_html pre{
     background:  #F7F7F7;
@@ -251,7 +279,7 @@
     padding: 10px;
     white-space: pre-wrap;
     word-wrap: break-word;
-	}
+}
 
 #gp_admin_html pre.inline{
     margin-right: 20px;
@@ -262,12 +290,12 @@
 	position: relative;
 	display: inline-block;
 	padding: 0;
-	}
+}
 #gp_admin_html .show_character_count textarea{
 	padding-bottom: 27px;
 	border: 0 none;
 	border-radius: 4px;
-	}
+}
 #gp_admin_html .character_count{
 	display: block;
 	border-top: 1px solid #eee;
@@ -277,13 +305,12 @@
 	padding: 0 6px;
 	color: #888;
 	text-align: right;
-	}
+}
+
 
 /**
  * Admin container
- *
  */
-
 #admincontainer{
 	margin-left: 180px;
 	position: relative;
@@ -294,29 +321,29 @@
 	padding: 0;
 	font-weight: normal;
 	background: $gp_panel_bg;
-	}
+}
 
 .gpbody #admincontent_panel{
 	padding: 0 40px 0 (40px - $gp_nav_link_padding_x);
-	}
+}
 
 #admincontent_panel,
 #admincontent_panel *{
 	@include box-sizing( border-box );
 	font-size: $gp_nav_font_size;
 	line-height: $gp_nav_font_size;
-	}
+}
 
 #admincontent_panel .GPAREA{
 	display: inline;
-	}
+}
 #admincontent_panel div.GPAREA:after{
 	display: none;
-	}
+}
 
 #admincontent_panel ul{
 	float: left;
-	}
+}
 #admincontent_panel ul,
 #admincontent_panel li,
 #admincontent_panel span,
@@ -328,35 +355,38 @@
 	color: $gp_nav_link_color !important;
 	position: relative;
 	white-space: nowrap;
-	}
+}
 
 #admincontent_panel ul a{
 	display:block;
-	}
+}
 
-/* #admincontent_panel b, */
+
+/**
+ * #admincontent_panel b
+ */
 #admincontent_panel span,
 #admincontent_panel a{
 	padding: $gp_nav_link_padding_y $gp_nav_link_padding_x;
-	}
+}
 
 #admincontent_panel a:hover{
 	color: $gp_nav_link_color_hover !important;
 	background: lighten($gp_panel_bg,10%);
-	}
+}
 
-#admincontent_panel a[href$='ToggleVisibility'] {
-	background:#C44830;
-	}
+#admincontent_panel .admin-link-visibility-private{
+	background: $gp_panel_warning_color;
+}
 
-#admincontent_panel a[href$='ToggleVisibility']:hover {
-	background:#DC5135;
-	}
+#admincontent_panel .admin-link-visibility-private:hover{
+	background: lighten($gp_panel_warning_color, 10);
+}
 
 #admincontent_panel span > .fa,
 #admincontent_panel a > .fa{
 	margin-right: 4px;
-	}
+}
 
 #admincontent_panel ul ul{
 	display: none;
@@ -364,23 +394,23 @@
 	top: 100%;
 	background: $gp_panel_bg;
 	min-width: 100%;
-	}
+}
 #admincontent_panel ul ul li{
 	display: block;
-	}
+}
 
 #admincontent_panel .panel_tab_label{
 	padding-right:8px;
-	}
+}
 #admincontent_panel .panel_tabs a{
 	border-right:1px solid lighten($gp_panel_bg,10%);
 	border-left:1px solid lighten($gp_panel_bg,10%);
 	font-weight:normal;
-	}
+}
+
 
 /**
  * Search
- *
  */
 #panel_search{
 	float: right;
@@ -391,7 +421,7 @@
 	display: inline-block;
 	height: $gp_nav_height;
 	padding:0;
-	}
+}
 
 #panel_search input{
 	border: 0 none;
@@ -404,7 +434,7 @@
 	margin: 4px 0;
 	background-color: lighten($gp_panel_bg, 10%);
 	@include transition( all .2s ease-out);
-	}
+}
 
 #panel_search span > i{
 	position: absolute;
@@ -415,38 +445,37 @@
 	color: lighten($gp_panel_bg,30%);
 	height: $gp_nav_height;
 	line-height: $gp_nav_height;
-	}
+}
 
 #panel_search input:focus{
 	background-color: #f1f1f1;
 	color: #333;
-	}
+}
 
 #panel_search button{
 	display: none;
-	}
+}
 
 #panel_search .tslogo{
 	vertical-align: top;
-	}
+}
 
 /**
  * Admin Breadcrumbs
- *
  */
 #admin_breadcrumbs{
 	background: $gp_bread_bg;
 	padding: 0 (40px- $gp_bread_link_padding_x);
 	font-size: $gp_bread_font_size;
-	}
+}
 #admin_breadcrumbs a{
 	color: $gp_bread_link_color !important;
 	padding: $gp_bread_link_padding_y $gp_bread_link_padding_x;
 	display: inline-block;
-	}
+}
 #admin_breadcrumbs a:hover{
 	color: $gp_bread_link_color_hover !important;
-	}
+}
 
 
 
@@ -463,8 +492,7 @@
 
 
 /**
- *  Admin Pages
- *
+ * Admin Pages
  */
 #admincontent{
 	position: relative;
@@ -476,9 +504,7 @@
 	padding-right: 0;
 	padding-bottom: 0;
 	@include box-sizing( border-box );
-
 }
-
 
 
 #admincontent_inner{
@@ -494,7 +520,7 @@
 
 	.bg-danger{
 		padding:15px;
-		}
+	}
 
 }
 
@@ -505,33 +531,32 @@
 
 #admincontent .nowrap{
 	white-space: nowrap;
-	}
+}
 
 #admincontent .formlabel{
 	text-align: right;
 	font-weight: bold;
-	}
+}
 
 #admincontent li a{
 	text-decoration: none;
-	}
-
+}
 
 #gp_admin_html .admin_note,
 #gp_admin_html .sm{
 	font-size: $font-size-small;
-	}
+}
 #gp_admin_html .admin_note a{
 	text-decoration: none;
-	}
+}
 #gp_admin_html .text-muted{
 	color: #666;
-	}
+}
 
 
-/*** admin_box ***/
-
-
+/**
+ * admin_box
+ */
 #gp_admin_box1{
 	position: fixed;
 	top: 0;
@@ -540,7 +565,7 @@
 	width: 100%;
 	height: 100%;
 	background: #000;
-	}
+}
 #gp_admin_box{
 	position: absolute;
 	top: 0;
@@ -550,10 +575,10 @@
 	background: #fff !important;
 	width: 640px;
 	padding: 20px !important;
-	}
+}
 #gp_admin_boxc.iframe{
 	padding: 25px 1px 20px 0 !important;
-	}
+}
 #gp_admin_boxc iframe{
 	width: 100%;
 	border: 0;
@@ -563,7 +588,7 @@
 #gp_admin_box h3{
 	margin-top: 0;
 	padding-top: 0;
-	}
+}
 a.gp_admin_box_close{
 	position: absolute;
 	top: 7px;
@@ -572,22 +597,21 @@ a.gp_admin_box_close{
 	height: 16px;
 	width: 16px;
 	@include gpimg( 'cancel.png', 50%, 50% );
-	}
+}
 #gp_admin_box h2 a,
 #gp_admin_box h3 a,
 #gp_admin_box h4 a{
 	text-decoration: none;
 	color: #444;
-	}
+}
 
 
 input.admin_box_close{
 	display: none;
-	}
+}
 #gp_admin_box input.admin_box_close{
 	display: inline;
-	}
-
+}
 
 
 .layout_color_id{
@@ -599,35 +623,42 @@ input.admin_box_close{
 	margin: 0;
 	cursor: pointer;
 	border-radius: 5px;
-	}
+}
 
 .layout_default{
 	@include opacity(.6);
 }
 
-/* For new content areas, empty areas and hidden areas */
+
+/**
+ * For new content areas, empty areas and hidden areas
+ */
 body.edit_layout .GPAREA{
 	min-height: 1em;
-	}
+}
 
-body.gpAdmin [data-gp_hidden="true"]{
+body.gpAdmin .GPAREA[data-gp_hidden="true"]{
 	display: none!important;
-	}
+}
+
+body.gpAdmin div.editable_area{
+	min-height: 1em;
+}
 
 
-
-/* general */
-
+/**
+ * general
+ */
 .bordered{
 	margin-top: 1em;
 	border-spacing: 0;
 	border-top: 1px solid #eee;
-	}
+}
 
 .full_width,
 #gp_admin_html .full_width{
 	width: 100%;
-	}
+}
 
 .bordered > tbody > tr > th,
 .bordered > thead > tr > th,
@@ -638,7 +669,7 @@ body.gpAdmin [data-gp_hidden="true"]{
 	text-align: left;
 	color: #444 !important;
 	background-color: #fff;
-	}
+}
 
 .bordered > tbody > tr > th,
 .bordered > thead > tr > th{
@@ -648,25 +679,26 @@ body.gpAdmin [data-gp_hidden="true"]{
 	text-shadow: 0 1px 0 #fff !important;
 	border-bottom: 1px solid #ddd;
 	font-weight: bold;
-	}
+}
 
 .bordered > tbody > tr.even > td,
 .bordered.striped tbody > tr:nth-child(2n) > td{
 	background: #f5f5f5;
 }
 
-
 #gp_admin_html .bordered.middle > tbody > tr > td{
 	vertical-align: middle;
-	}
+}
 
 
 
-/* collapsible */
+/**
+ * collapsible
+ */
 .collapsible h4{
 	margin: 0;
 	border: 0 none;
-	}
+}
 .collapsible h4 a{
 	display: block;
 	cursor:  pointer;
@@ -678,7 +710,7 @@ body.gpAdmin [data-gp_hidden="true"]{
 	border: 1px solid #ccc !important;
 	border-color: #ddd #ddd #ccc #ddd !important;
 	@include gradient-vertical(#f7f7f7, #ddd);
-	}
+}
 
 .collapsible h4 a:before{
 	display: inline-block;
@@ -687,32 +719,34 @@ body.gpAdmin [data-gp_hidden="true"]{
 	color: #666;
 	width: 1.2em;
 	text-align: center;
-	}
+}
 
 .collapsible h4.gp_collapsed a{
 	border-radius: 3px;
-	}
+}
 
 .collapsible h4.gp_collapsed a:before{
 	content: "\f0da"; // fa caret-right
 	color: #888 !important;
-	}
+}
 
 .collapsible h4 a:focus{
 	outline: 0; /* prevent dotted outline from click */
-	}
+}
 
 .collapsible > div{
 	border-radius: 0 0 3px 3px;
 	background: #fff;
 	padding: 5px;
-	}
+}
 
 
-/* configuration table */
+/**
+ * configuration table
+ */
 table.configuration{
 	width: 100%;
-	}
+}
 table.configuration select{
 	width: 15em;
 }
@@ -721,36 +755,34 @@ table.configuration textarea{
 	border: 1px solid #bbb;
 	border-radius: 3px;
 	padding: 3px;
-	}
+}
 table.configuration textarea{
 	width: 100%;
-	}
+}
 table.configuration td:first-child{
 	width: 20%;
-	}
+}
 
 
 table.tablesorter th.gp_header{
 	cursor: pointer;
-	}
+}
 table.tablesorter th.gp_header:before{
 	content: "\21C5";
 	float: right;
-	}
+}
 table.tablesorter th.gp_header_asc:before{
 	content: "\2193";
-	}
+}
 table.tablesorter th.gp_header_desc:before{
 	content: "\2191";
-	}
+}
 
 
 
-
-
-
-/* New Expandable Menu Control */
-
+/**
+ * New Expandable Menu Control
+ */
 .expand_child,
 .expand_child_click{
 	position: relative;
@@ -760,42 +792,44 @@ table.tablesorter th.gp_header_desc:before{
 .expand_child_click ul{
 	position: absolute;
 	display: none;
-	}
+}
 .expand ul{
 	display: block;
-	}
+}
 .expand .expand_child ul,
 .expand .expand_child_click ul{
 	display: none;
-	}
+}
 .expand .expand ul{
 	display: block;
-	}
+}
 
 
 .hidden_options{
 	visibility: hidden;
-	}
+}
 
 .expand .hidden_options{
 	visibility: visible;
-	}
+}
 
-/* don't show any drop down menus when dragging */
+/**
+ * don't show any drop down menus when dragging
+ */
 .drag_active ul{
 	display: none !important;
-	}
+}
 .drag_active .hidden_options{
 	visibility: hidden !important;
-	}
+}
 
 
-/*	 Drag 'n Drop   */
-
-
+/**
+ * Drag 'n Drop
+ */
 .draggable_element{
 	cursor: move;
-	}
+}
 .draggable_hidden{
 	@include opacity(.3);
 }
@@ -805,45 +839,45 @@ table.tablesorter th.gp_header_desc:before{
 	visibility: visible !important;
 	@include box-shadow( 5px 5px 5px #888 );
 	@include opacity(1);
-	}
+}
 
 
-
-
-
-/*
+/**
  * Admin Panel
- * This is the panel of admin links that is displayed across all pages when the user is logged in
- *
+ * This is the panel of admin links that is displayed
+ * across all pages when the user is logged in
  */
 
-/* simple panel */
-#simplepanel{
-	position:		fixed;
-	z-index:		9002;
-	top:			0;
-	width:			180px;
-	left:			0;
-	max-height:		100vh;
-	}
+
+ /**
+ * simple panel
+ */
+ #simplepanel{
+ 	position:		fixed;
+ 	z-index:		9002;
+ 	top:			0;
+ 	width:			180px;
+ 	left:			0;
+ 	max-height:		100vh;
+}
 
 #simplepanel > div{
-	padding:		0;
-	margin:			0 0 5px 0;
-	width:			180px;
-	display:		block;
-	border:			1px solid #000;
-	border-radius:	0 0 5px 0;
-	background:		$gp_panel_bg;
-	overflow:		auto;
-	max-height:		100vh;
+	padding: 0;
+	margin: 0 0 5px 0;
+	width: auto;
+	min-width: 130px;
+
+	display: block;
+	border: 1px solid #000;
+	border-radius: 5px;
+	background: $gp_panel_bg;
 	@include box-shadow( 0 0 3px rgba(0,0,0,0.6) );
-	}
+}
 
 #gp_admin_html ul,
 #simplepanel ul{
 	overflow: visible;
-	}
+}
 
 #simplepanel a,
 #simplepanel span,
@@ -851,23 +885,23 @@ table.tablesorter th.gp_header_desc:before{
 	line-height: 18px;
 	text-decoration: none;
 	color: $gp_panel_link_color !important;
-	}
+}
 #simplepanel img{
 	border: 0;
 	margin: 0;
 	padding: 0;
-	}
+}
 
 
-
-/* toolbar */
-
+/**
+ * toolbar
+ */
 #simplepanel .toolbar{
 	position: relative;
 	//border-bottom: 1px solid #111;
 	cursor: move;
 	line-height: 0;
-	}
+}
 #simplepanel .toolbar > a{
 	display: inline-block;
 	height: 32px;
@@ -876,53 +910,77 @@ table.tablesorter th.gp_header_desc:before{
 	vertical-align: top;
 	padding: 8px;
 	@include box-sizing( border-box );
-	}
+}
 #simplepanel .toolbar > a i{
 	margin: 0;
-	}
+}
 
 #simplepanel .toolbar .toggle_panel{
 	@include gpimg( 'icons.png', 50%, -32px );
-	}
-
+}
 #simplepanel.compact > div{
-	width:			32px;
-	min-width:		0;
-	overflow:		visible;
-	}
+	width: 32px;
+	min-width: 0;
+}
 #simplepanel.compact .toolbar .toggle_panel{
 	@include gpimg( 'icons.png', 50%, -64px );
-	}
+}
 #simplepanel.minb:hover > div{
 	margin: 0 0 200px 0; /* prevent the menu from disappearing if changing the display makes the user mouseout */
-	}
+}
 #simplepanel.toggledmin > div{
 	margin: 0 !important; /* don't add margin at bottom if the display was just changed */
-	}
+}
 #simplepanel.minb .toolbar .toggle_panel{
 	@include gpimg( 'icons.png', 50%, 0 );
-	}
+}
 
 #simplepanel .toolbar .extra{
 	float: right;
-	}
+}
 #simplepanel.compact .toolbar .extra,
 #simplepanel.minb .toolbar .extra{
 	display: none;
-	}
+}
 #simplepanel.minb:hover .toolbar .extra{
 	display: inline-block;
-	}
+}
 
 
-/* panelgroup */
+/**
+ * panelgroup
+ */
 #simplepanel .panelgroup{
 	position: relative;
 	display: block;
+	&.admin-panel-notifications{
+		span,
+		a {
+			padding-right: 0.75em; /* space for badge */
+		}
 	}
+	.admin-panel-badge{
+		font-size: 0.825em;
+		font-weight: bold;
+		text-align: center;
+		display: inline-block;
+		position: absolute;
+		right: 0.2em;
+		top: 0.2em;
+		z-index: 5;
+		padding: 0 0.25em;
+		line-height: 1.5em;
+		min-width: 1em;
+		border-radius: 0.825em;
+		background-color: #666;
+		color: #fff;
+	}
+}
 
 
-/* toplink */
+/**
+ * toplink
+ */
 #simplepanel .toplink{
 	text-decoration: none;
 	display: block;
@@ -930,7 +988,7 @@ table.tablesorter th.gp_header_desc:before{
 	margin: 0;
 	height: 16px;
 	padding: 8px;
-	}
+}
 
 #simplepanel .fa{
 	height: 16px;
@@ -941,16 +999,16 @@ table.tablesorter th.gp_header_desc:before{
 	vertical-align: top;
 	margin-right: 8px;
 	font-size:14px;
-	}
+}
 
 #simplepanel .toolbar .fa{
 	font-size:16px;
-	}
+}
 #simplepanel .gpversion{
 	color: #888 !important;
 	font-size: 11px;
 	padding: 10px;
-	}
+}
 
 #simplepanel .toplink span{
 	display: inline-block;
@@ -961,15 +1019,16 @@ table.tablesorter th.gp_header_desc:before{
 	text-overflow: ellipsis;
 	max-width: 130px;
 	color: #f5f5f5;
-	}
+}
 
 #simplepanel.compact .toplink span{
 	display: none;
-	}
+}
 
 
-
-/* panelgroup2 */
+/**
+ * panelgroup2
+ */
 #simplepanel.compact .panelgroup .panelgroup2{
 	position: absolute;
 	top: 0;
@@ -979,13 +1038,16 @@ table.tablesorter th.gp_header_desc:before{
 	padding-right: 5px;
 	margin-left: -3px; /* for IE */
 	background-image: url('../../include/imgs/blank.gif'); /* for IE */
-	}
+}
 
 #simplepanel.compact .panelgroup:hover .panelgroup2{
 	display: block !important;
-	}
+}
 
-/* submenu */
+
+/**
+ * submenu
+ */
 #simplepanel .submenu{
 	position: relative;
 	background-color: $gp_panel_bg_light;
@@ -993,31 +1055,32 @@ table.tablesorter th.gp_header_desc:before{
 	border-bottom: 1px solid #3f3f3f;
 	margin: 0;
 	padding: 0;
-	}
+}
 #simplepanel .submenu ul,
 #simplepanel .submenu li{
 	margin: 0;
 	padding: 0;
 	list-style: none;
-	}
+}
 
 
 #simplepanel .submenu ul{
 	z-index: 9010;
 	margin-left: -1px;
 	margin-right: -1px;
-	}
+}
 
 #simplepanel .submenu li > a,
 #simplepanel .submenu li > span{
 	display: block;
+	position: relative;
 	padding: 3px 14px;
 	white-space: nowrap;
 	overflow: hidden;
-	}
+}
 #simplepanel .submenu a.submenu_top{
 	display: none;
-	}
+}
 #simplepanel .submenu .expand_child > a:after{
 	font-size: 10px;
 	vertical-align: top;
@@ -1028,22 +1091,21 @@ table.tablesorter th.gp_header_desc:before{
 	right: 0px;
 	padding-right: 3px;
 	background-color: inherit;
-	}
+}
 
 #simplepanel .submenu a:hover{
 	background-color: #222;
-	}
+}
 #simplepanel .submenu li.selected a{
 	background-color: #222;
 	font-weight: bold;
-	}
-
+}
 
 
 #simplepanel.compact .submenu{
 	border: 1px solid #000;
 	border-radius: 5px;
-	}
+}
 
 #simplepanel.compact .submenu a.submenu_top{
 	display: block;
@@ -1053,22 +1115,19 @@ table.tablesorter th.gp_header_desc:before{
 	font-weight: bold;
 	background-color: #222;
 	border-bottom: 1px solid #000;
-	}
+}
 
 #simplepanel .submenu li.separator{
 	border-bottom: 1px solid #3f3f3f;
-	}
+}
 #simplepanel .submenu li:last-child{
 	border-bottom: 0 none;
-	}
+}
 
 
-
-
-
-
-/* third level */
-
+/**
+ * third level
+ */
 #simplepanel .expand ul{
 	position: absolute;
 	left: 100%;
@@ -1076,31 +1135,30 @@ table.tablesorter th.gp_header_desc:before{
 	background-color: $gp_panel_bg;
 	border: 1px solid rgba(0,0,0,0.4);
 	border-radius: 5px;
-	}
+}
 #simplepanel .expand ul a:hover{
 	background: $gp_panel_bg_light;
-	}
+}
 
 
-/*
+/**
  * Minimum display
  */
 #simplepanel.minb > div{
 	min-width: 0;
-	}
+}
 #simplepanel.minb .panelgroup{
 	display: none;
-	}
+}
 #simplepanel.minb:hover .panelgroup{
 	display: block;
-	}
+}
 #simplepanel.minb:hover .toolbar a:nth-child(n+2){
 	display: inline-block;
-	}
+}
 #simplepanel.toggledmin .panelgroup{
 	display: none !important;
-	}
-
+}
 
 
 #gp_edit_overlay{
@@ -1109,7 +1167,7 @@ table.tablesorter th.gp_header_desc:before{
 	width: 0;
 	overflow: visible;
 	z-index: 8999;
-	}
+}
 
 #gp_edit_overlay div,
 #gp_edit_box{
@@ -1123,7 +1181,7 @@ table.tablesorter th.gp_header_desc:before{
 	background-color: #eee;
 	@include opacity(.5);
 
-	border: 1px dashed red;
+	border: 1px dashed $gp_panel_warning_color;
 	border-radius: 3px;
 
 	-moz-border-image: url('../../include/imgs/editing.gif') 1 repeat;
@@ -1145,11 +1203,11 @@ table.tablesorter th.gp_header_desc:before{
 	border: 1px solid rgba(200,200,200,0.2);
 	@include box-shadow( 0 0 3px rgba(0,0,0,0.6) );
 
-	}
+}
 
 #gp_edit_overlay span > *{
 	display: none !important;
-	}
+}
 #gp_edit_overlay span a{
 	position: relative;
 	color: #444 !important;
@@ -1161,21 +1219,21 @@ table.tablesorter th.gp_header_desc:before{
 	white-space: nowrap;
 	line-height: 100%;
 	border-radius: 2px;
-	}
+}
 
 #gp_edit_overlay span a:hover{
 	background: rgba(200,200,200,0.5);
-	}
+}
 
 #gp_edit_overlay span.gp_hover *{
 	display: block !important;
-	}
+}
 #gp_edit_overlay .gp_separator{
 	margin: 2px 0;
 	border: 0 none;
 	border-top: 1px solid #ddd;
 	border-bottom: 1px solid #f5f5f5;
-	}
+}
 
 #gp_edit_overlay span a.gp_overlay_expand{
 	display: block !important;
@@ -1186,23 +1244,25 @@ table.tablesorter th.gp_header_desc:before{
 	text-align:right;
 	margin: 0;
 	font-size:16px !important;
-	}
+}
 
 #gp_edit_overlay span.gp_hover a.gp_overlay_expand{
 	float: right;
 	z-index: 9001;
 	text-align:center;
-	}
+}
 #gp_edit_overlay span.gp_hover a.gp_overlay_expand:before{
 	content:'\f00d';
-	}
+}
 
-/* adminlinks */
+/**
+ * adminlinks
+ */
 #adminlinks2{
 	position: relative;
 	z-index: 10;
 	margin-right: -30px;
-	}
+}
 
 
 #adminlinks2 .panelgroup{
@@ -1211,19 +1271,19 @@ table.tablesorter th.gp_header_desc:before{
 	padding: 10px 20px 10px 0;
 	width: 270px;
 	@include box-sizing( border-box );
-	}
+}
 
 .columns_3 #adminlinks2 .panelgroup{
 	width: 33%;
-	}
+}
 
 .columns_2 #adminlinks2 .panelgroup{
 	width: 49%;
-	}
+}
 
 .columns_1 #adminlinks2 .panelgroup{
 	width: 99%;
-	}
+}
 
 
 #adminlinks2 .panelgroup2{
@@ -1231,7 +1291,7 @@ table.tablesorter th.gp_header_desc:before{
 	border-radius: 3px;
 	overflow: hidden;
 	margin: 3px 0;
-	}
+}
 
 
 #adminlinks2 > div > a,
@@ -1244,11 +1304,11 @@ table.tablesorter th.gp_header_desc:before{
 	text-shadow: 0 1px 0 #fff;
 	font-size: 18px;
 	color: #333 !important;
-	}
+}
 
 #adminlinks2 > div > span.layout_label > a {
 	color: #333;
-	}
+}
 
 #adminlinks2 ul,
 #adminlinks2 li{
@@ -1256,14 +1316,14 @@ table.tablesorter th.gp_header_desc:before{
 	padding: 0;
 	margin: 0;
 	z-index: 10;
-	}
+}
 
 #adminlinks2 li{
 	position: relative;
 	margin-top: -1px;
 	border-top: 1px solid transparent;
 	border-bottom: 1px solid transparent;
-	}
+}
 
 
 #adminlinks2 li > a,
@@ -1275,25 +1335,26 @@ table.tablesorter th.gp_header_desc:before{
 	min-width: 170px;
 	outline: 0 none;
 	color: #333 !important;
-	}
+}
+
 #adminlinks2 li a:hover{
 	color: #226699 !important;
 	text-decoration: none;
-	}
+}
 
 #adminlinks2 li.submenu_top{
 	display: none;
-	}
+}
 
 #adminlinks2 li.separator{
 	border-bottom: 1px dotted #ccc;
-	}
+}
 
 #adminlinks2 li.expand_child_click{
 	border-top: 1px solid #f5f5f5;
 	border-bottom: 1px solid #f5f5f5;
 	background: #f9f9f9;
-	}
+}
 
 #adminlinks2 li.expand_child_click > a:before{
 	font-size: 10px;
@@ -1301,23 +1362,23 @@ table.tablesorter th.gp_header_desc:before{
 	color: #888;
 	content: "\25B6";
 	padding-right: 5px;
-	}
+}
 #adminlinks2 li.expand > a:before{
 	content: "\25BC";
-	}
+}
 
 #adminlinks2 li.expand,
 #adminlinks2 li:hover{
 	border-top: 1px solid #ddd;
 	border-bottom: 1px solid #ddd;
 	z-index: 11;
-	}
+}
 
 #adminlinks2 li.expand_child_click ul{
 	position: relative;
 	z-index: 11;
 	background: #fff;
-	}
+}
 
 #adminlinks2 li.expand_child_click li{
 	overflow: hidden;
@@ -1325,7 +1386,7 @@ table.tablesorter th.gp_header_desc:before{
 	border: 0 none;
 	border-radius: 0;
 	margin: 0;
-	}
+}
 
 #adminlinks2 li.expand_child_click li > a,
 #adminlinks2 li.expand_child_click li > span,
@@ -1334,21 +1395,19 @@ table.tablesorter th.gp_header_desc:before{
 	font-size: 13px;
 	display: block;
 	padding: 3px 25px;
-	}
+}
 #adminlinks2 li.expand_child_click li:hover{
 	background: #f7f7f7;
-	}
+}
 
 #adminlinks2 .gp_notice{
 	margin: 5px;
-	}
+}
 
-/*
- *
+
+/**
  * Overlay
  */
-
-
 #loading1{
 	position: fixed;
 	top: 0;
@@ -1358,57 +1417,55 @@ table.tablesorter th.gp_header_desc:before{
 	background: #fff;
 	background: rgba(255,255,255,0.3);
 	text-align: center;
-	}
+}
 
 #loading1 i{
 	position: absolute;
 	top: 40%;
-	}
+}
 
 
 div.inline_box{
 	padding: 2em;
-	}
+}
 
 div.inline_box h2{
 	margin-top: 0;
 	color: #333;
-	}
+}
 
 div.inline_box td{
 	padding: .5em;
-	}
+}
 div.inline_box .formlabel{
 	text-align: right;
 	font-size: 85%;
 	white-space: nowrap;
-	}
+}
 
 div.inline_box input, div.inline_box select, div.inline_box textarea{
 	padding: 3px 5px;
-	}
+}
 div.inline_box .cancel{
 	display: inline !important;
-	}
+}
 div.inline_box li{
 	list-style: none;
-	}
+}
 div.inline_box label{
 	display: block;
-	}
+}
 
 
-/*
+/**
  * Addon
  */
-
-
 #gp_admin_html .rating{
 	display: inline-block;
 	height: 16px;
 	position: relative;
 	vertical-align: top;
-	}
+}
 
 #gp_admin_html .rating a{
 	position: relative;
@@ -1417,10 +1474,10 @@ div.inline_box label{
 	width: 16px;
 	padding: 0;
 	@include gpimg( 'stars.png', 0, 0 );
-	}
+}
 #gp_admin_html .rating a.unset{
 	background-position: 0 -16px;
-	}
+}
 
 
 
@@ -1430,24 +1487,25 @@ div.inline_box label{
 	padding: 7px 9px;
 	border-radius: 5px;
 	background: #fffde6;
-	}
+}
+
 .gp_notice,
 .gp_warning b{
 	display: block;
-	}
+}
 
 .gp_warning{
-	border-color: #cd0a0a;
+	border-color: $gp_panel_warning_color;
 	background: #fef1ec;
-	color: #cd0a0a;
-	}
+	color: darken($gp_panel_warning_color, 10%);
+}
 
 .gp_passed{
 	border: 1px solid #6aa84f;
 	padding: 5px 7px;
 	background-color: #bdf5a4;
 	border-radius: 5px;
-	}
+}
 
 
 body #addon_about{
@@ -1457,16 +1515,15 @@ body #addon_about{
 	max-width: 600px;
 	border-radius: 5px;
 	line-height: 170%;
-	}
+}
 #addon_about h3{
 	margin-bottom: .5em;
-	}
+}
 
 
-/*
-	Admin_Users
-*/
-
+/**
+ *Admin_Users
+ */
 #gp_admin_html label.all_checkbox{
 	position: relative;
 	white-space: nowrap;
@@ -1476,6 +1533,7 @@ body #addon_about{
 	display: inline-block;
 	vertical-align: middle;
 }
+
 #gp_admin_html label.all_checkbox > span{
 	width: 140px;
 	overflow: hidden;
@@ -1487,25 +1545,29 @@ body #addon_about{
 	background-color: #f1f1f1;
 	padding: 4px 7px;
 	border-radius: 3px;
-	}
+}
+
 #gp_admin_html label.all_checkbox input:checked + span{
 	color: $btn-success-color;
 	background-color: $btn-success-bg;
 	border-color: $btn-success-border;
-	}
+}
 
 #gp_admin_html label.all_checkbox input{
 	position: absolute;
 	left: -20px;
 	z-index: -1;
-	}
+}
+
 #gp_admin_html label.select_all{
 	padding: 5px 0;
 	margin-bottom: 5px;
-	}
+}
 
 
-/* tabs */
+/**
+ * tabs
+ */
 .layout_links{
 	margin: 0 0 12px 0;
 	/*
@@ -1517,9 +1579,10 @@ body #addon_about{
 		display: inline-block;
 		width: 100%;
 		height: 1px;
-		}
-		*/
 	}
+ 	*/
+}
+
 .layout_links a,
 #gp_admin_html .layout_links a{
 	display: inline-block;
@@ -1537,26 +1600,28 @@ body #addon_about{
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	}
+}
 
 .layout_links a.selected,
 #gp_admin_html .layout_links a.selected{
 	border: 1px solid #444;
 	background-color: #777;
 	color: #fff;
-	}
+}
 
 #area_lists{
 	position: relative;
-	}
+}
 #area_lists table{
 	width: 100%;
-	}
+}
 #area_lists td.add{
 	text-align: right;
-	}
+}
 
-/* jquery ui autocomplete */
+/**
+ * jquery ui autocomplete
+ */
 #gp_admin_html{
 
 	.ui-autocomplete{
@@ -1565,12 +1630,12 @@ body #addon_about{
 		/* for auto-complete scrolling */
 		max-height: 250px;
 		overflow-y: auto;
-		}
+	}
 
 	.ui-autocomplete .ui-menu-item{
 		min-width: 200px !important;
 		padding-right: 30px !important;
-		}
+	}
 
 	.ui-menu .ui-menu-item{
 		font-size: 14px;
@@ -1580,10 +1645,10 @@ body #addon_about{
 		border: 1px solid transparent;
 		white-space: nowrap;
 		overflow: hidden;
-		}
+	}
 	.ui-menu-item a{
 		color: #333;
-		}
+	}
 
 	.ui-menu-item span{
 		font-size: 11px;
@@ -1591,16 +1656,14 @@ body #addon_about{
 		line-height: 11px;
 		display: block;
 		color: #777;
-		}
 	}
+}
 
 
-
-
-/* Upload form
+/**
+ * Upload form
  * Needed for inline editing and upload manager
  */
-
 .gp_upload_form{
 	position: relative;
 	display: block;
@@ -1608,23 +1671,25 @@ body #addon_about{
 	cursor: pointer;
 	overflow: hidden;
 	height: 100%;
-	}
+}
 #ckeditor_area .gp_upload_form{
 	padding: 0 0 5px 0 !important;
-	}
+}
 
 .gp_object_wrapper{
 	position: relative;
 	z-index: 10001;
 	@include opacity(0);
 	cursor: pointer;
-	}
+}
 .gp_upload_form *{
 	cursor: pointer;
-	}
+}
 
-/* floating areas */
 
+/**
+ * floating areas
+ */
 #gp_admin_box,
 .gp_floating_area{
 	border: 1px solid #fff;
@@ -1636,7 +1701,7 @@ body #addon_about{
 	background: #ededed -ms-linear-gradient(top, #fafafa 5px,#ededed 25px);
 	background: #ededed linear-gradient(top, #fafafa 5px,#ededed 25px);
 	@include box-shadow( 0 0 6px rgba(0, 0, 0, 0.4) );
-	}
+}
 
 #gp_admin_box > div,
 .gp_floating_area > div{
@@ -1654,25 +1719,25 @@ body #addon_about{
 	font-size: 13px;
 	position: relative;
 	color: #777 !important;
-	}
+}
 
 .gp_floating_area .gp_right{
 	float: right;
-	}
+}
 
 .gp_floating_area .gp_right a,
 .gp_floating_area .gp_right span{
 	display: inline-block;
 	margin: 0 0 0 8px;
-	}
+}
 
 .unavail{
 	visibility: hidden;
-	}
+}
+
 
 /**
  * drop down menus
- *
  */
 .dd_menu{
 	-webkit-touch-callout: none;
@@ -1682,7 +1747,7 @@ body #addon_about{
 	-ms-user-select: none;
 	user-select: none;
 	width: 150px;
-	}
+}
 .dd_menu ul,
 .dd_menu li,
 .dd_menu li a,
@@ -1694,16 +1759,16 @@ body #addon_about{
 	background: #fff;
 	white-space: nowrap;
 	width: auto;
-	}
+}
 .dd_menu a{
 	color: #333 !important;
 	position: relative;
-	}
+}
 .dd_menu{
 	position: relative;
 	line-height: 100% !important;
 	height: 26px;
-	}
+}
 .dd_menu > a{
 	border: 1px solid #ccc;
 	overflow: hidden;
@@ -1714,7 +1779,7 @@ body #addon_about{
 	line-height: 24px !important;
 	height: 24px;
 	white-space: nowrap;
-	}
+}
 .dd_menu > a input{
 	border: 0 none;
 	background: #fff;
@@ -1731,7 +1796,7 @@ body #addon_about{
 	content: "\25BC";
 	padding-left: 5px;
 	background: #fff;
-	}
+}
 
 .dd_menu .dd_list{
 	position: absolute;
@@ -1743,7 +1808,7 @@ body #addon_about{
 	margin-top: -1px;
 	z-index: 11020; /* place over messages */
 	overflow: hidden;
-	}
+}
 
 .dd_list > ul{
 	max-height: 300px;
@@ -1760,10 +1825,11 @@ body #addon_about{
 	border-top: 1px solid #ddd;
 	margin-bottom: 3px;
 	font-size: 15px;
-	}
+}
+
 .dd_list li:first-child .list_heading{
 	border-top: 0 none;
-	}
+}
 
 
 .dd_list li > span,
@@ -1773,43 +1839,44 @@ body #addon_about{
 	display: block;
 	min-width: 200px;
 	position: relative;
-	}
+}
 
 .dd_list li.selected > *{
 	font-weight: bold;
-	}
+}
 .dd_list li > *:hover{
 	background: #f5f5f5;
-	}
+}
 .dd_list li.selected > *:before{
 	content: "\25B6";
 	font-size: 8px;
 	color: #aaa;
 	margin-left: -10px;
 	position: absolute;
-	}
+}
 
 
 #admin_search .match_stats{
 	color: #666;
 	display: block;
-	}
+}
+
 #admin_search .result_list h4{
 	margin: 20px 0 0 0;
-	}
+}
+
 #admin_search .result_list h4 a{
 	font-weight: normal;
 	font-size: 17px;
 	margin: 0;
 	color: #226699 !important;
 	border-bottom: 0 none;
-	}
+}
 
 
 .ui-selectable-helper{
 	z-index: 10000 !important;
-	}
-
+}
 
 
 
@@ -1818,13 +1885,13 @@ body #addon_about{
 	margin-top: 0;
 	margin-bottom: 1em;
 	color: #333;
-	}
+}
 
 .hmargin a,
 .hmargin span{
 	display: inline-block;
 	white-space: nowrap;
-	}
+}
 .hmargin_tabs a,
 .hmargin_tabs span{
 	border-right: 2px solid #eee;
@@ -1832,25 +1899,25 @@ body #addon_about{
 	margin: 0;
 	display: inline-block;
 	white-space: nowrap;
-	}
+}
 
 .hmargin_tabs a,
 .hmargin a{
 	color: #888 !important;
 	border-bottom: 0 none  !important;
-	}
+}
 .hmargin_tabs a:hover,
 .hmargin a:hover{
 	color: #333 !important;
-	}
+}
 .hmargin span{
 	color: #bbb;
 	margin: 0 5px;
-	}
+}
 
 .hmargin_tabs *:last-child{
 	border: 0 none;
-	}
+}
 
 .well{
 	border: 1px solid #ddd;
@@ -1858,7 +1925,7 @@ body #addon_about{
 	background: #f9f9f9;
 	border-radius: 3px;
 	margin-bottom: 20px;
-	}
+}
 
 #gp_admin_html .classes-load-presets{
 	margin-top: 20px;
@@ -1881,7 +1948,6 @@ body #addon_about{
 
 /**
  * Full Size Admin Area
- *
  */
 .admin_body{
 	margin: 0;
@@ -1894,30 +1960,27 @@ body #addon_about{
 		padding: 0;
 		height: 100%;
 		box-sizing: border-box;
-		}
-
-	#gp_admin_html{
-		position:		relative;
-		text-transform:	none;
-		box-sizing:		border-box;
-		min-height:		100vh;
 	}
 
-
+	#gp_admin_html{
+		position: relative;
+		text-transform: none;
+		box-sizing: border-box;
+	}
 
 	#simplepanel{
-		width:			180px;
-		top:			0;
-		left:			0;
-		max-height:		100vh;
-		bottom:			0;
+		position: absolute;
+		width: 180px;
+		top: 0;
+		left: 0;
+		bottom: 0;
 
 		> div{
-			border-radius:	0;
-			border:			0 none;
-			height:			100%;
-			width:			180px;
-			margin:			0;
+			border-radius: 0;
+			border: 0 none;
+			height: 100%;
+			width: 180px;
+			margin: 0;
 			@include box-shadow( none );
 		}
 
@@ -1932,36 +1995,35 @@ body #addon_about{
 			background: $gp_panel_bg;
 			@include box-shadow( 0 0 3px rgba(0,0,0,0.6) );
 			z-index: -1;
-			}
+		}
 
 		.toggle_panel{
 			display: none;
 		}
-
 	}
 }
 
-/* ckeditor & autocomplete conflict */
+
+/**
+ * ckeditor & autocomplete conflict
+ */
 .cke_dialog_ui_input_text .ui-helper-hidden-accessible{
 	display: none;
-	}
+}
 #admincontent_inner .cke_reset *{
 	@include box-sizing( content-box );
-	}
-
-
+}
 
 
 /**
  * New section options
- *
  */
 #new_section_links > div{
-	display: inline-block;
 	max-width: 100px;
 	width: 50%;
 	position: relative;
 	overflow: hidden;
+	float: left;
 }
 
 #new_section_links input{
@@ -1987,12 +2049,12 @@ body #addon_about{
 	outline: none;
 	position: relative;
 	cursor: pointer;
-	}
+}
 
 #new_section_links a:hover
 #new_section_links input:checked + label{
 	border-color: #999;
-	}
+}
 
 #new_section_links a:hover:after,
 #new_section_links input:checked + label:after{
@@ -2004,7 +2066,7 @@ body #addon_about{
 	z-index:1;
 	background:rgba(0,0,0,0.1);
 	content:' ';
-	}
+}
 
 
 #new_section_links span{
@@ -2017,12 +2079,11 @@ body #addon_about{
 	transform:  translateY(-50%);
 	display: inline-block;
 	text-shadow: 0 1px 1px #fff;
-	}
+}
 
 
 /**
  * Scroll list
- *
  */
 #gp_admin_html .gp_scrolllist{
 	transform:translateZ(1px);
@@ -2051,7 +2112,7 @@ body #addon_about{
 	margin-bottom: 3px;
 	position:fixed;
 	top:0;
-	}
+}
 
 .gp_scrolllist label,
 .gp_scrolllist span{
@@ -2062,13 +2123,13 @@ body #addon_about{
 	margin:0;
 	white-space:nowrap;
 	text-overflow:ellipsis;
-	}
+}
 
 .gp_scrolllist label input{
 	position: absolute;
 	left: -20px;
 	z-index: -1;
-	}
+}
 
 .gp_scrolllist label > span{
 	border: 1px solid #fff;
@@ -2076,27 +2137,26 @@ body #addon_about{
 	padding: 3px 5px;
 	color: #666;
 	margin: 3px 6px;
-	}
+}
 
 .gp_scrolllist label.filtered > span{
 	display: none;
-	}
+}
 
 .gp_scrolllist input:checked + span{
 	display: block !important;
 	border-color: #ddd;
 	background-color: #eee;
-	}
+}
 
 .gp_scrolllist label span.slug{
 	color: #aaa;
 	font-size:11px !important;
-	}
+}
 
 
 /**
  * Fontawesome
- *
  */
 #gp_admin_html .fa{
 	font-family:FontAwesome;
@@ -2105,8 +2165,7 @@ body #addon_about{
 
 /**
  * Layout Editor/Codemirror
- *
  */
 .CodeMirror {
 	font-family:"Consolas", "Menlo", "Andale Mono", "DejaVu Sans Mono", monospace!important;
-	}
+}

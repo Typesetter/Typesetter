@@ -1,13 +1,18 @@
 @mixin transition($transition...) {
   @if $enable-transitions {
     @if length($transition) == 0 {
-      transition: $transition-base;
+      // ########## use VP-mixins ##########
+      // transition: $transition-base;
+      @include vp-transition($transition-base);
     } @else {
-      transition: $transition;
+      // transition: $transition;
+      @include vp-transition($transition);
     }
   }
 
   @media screen and (prefers-reduced-motion: reduce) {
-    transition: none;
+    // ########## use VP-mixins ##########
+    // transition: none;
+    @include vp-transition(none);
   }
 }

@@ -23,9 +23,16 @@ $(function(){
   $('#gpx_content')
     .highlight(decodeURIComponent(queries.highlight), {
       element         : 'span',               // default = 'span'
-      className       : 'text-highlighted',   // default = 'highlight'
+      className       : 'text-highlighted',   // default = 'text-highlighted'
       caseSensitive   : false,                // default = false
       wordsOnly       : false                 // default = false
     });
+
+  // unhighlight for editing
+  if( gpadmin ){
+    $(document).on('editor_area:loaded', function(){
+      $('#gpx_content').unhighlight();
+    });
+  }
 
 });

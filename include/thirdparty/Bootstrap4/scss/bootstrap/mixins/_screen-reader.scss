@@ -8,7 +8,9 @@
   width: 1px;
   height: 1px;
   padding: 0;
-  overflow: hidden;
+  // ########## use VP-mixins ##########
+  // overflow: hidden;
+  @include vp-overflow(hidden);
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
@@ -26,7 +28,9 @@
     position: static;
     width: auto;
     height: auto;
-    overflow: visible;
+    // ########## use VP-mixins ##########
+    // overflow: visible;
+    @include vp-overflow(visible);
     clip: auto;
     white-space: normal;
   }

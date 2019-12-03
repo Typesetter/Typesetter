@@ -1,12 +1,21 @@
-@keyframes progress-bar-stripes {
+// ########## use VP-mixins ##########
+// @keyframes progress-bar-stripes {
+//   from { background-position: $progress-height 0; }
+//   to { background-position: 0 0; }
+// }
+
+@include vp-keyframes(progress-bar-stripes) {
   from { background-position: $progress-height 0; }
   to { background-position: 0 0; }
 }
 
 .progress {
-  display: flex;
+  // ########## use VP-mixins ##########
+  // display: flex;
+  @include vp-flexbox();
   height: $progress-height;
-  overflow: hidden; // force rounded corners by cropping it
+  // overflow: hidden; // force rounded corners by cropping it
+  @include vp-overflow(hidden);
   font-size: $progress-font-size;
   background-color: $progress-bg;
   @include border-radius($progress-border-radius);
@@ -14,9 +23,13 @@
 }
 
 .progress-bar {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  // ########## use VP-mixins ##########
+  // display: flex;
+  @include vp-flexbox();
+  // flex-direction: column;
+  @include vp-flex-direction(column);
+  // justify-content: center;
+  @include vp-justify-content(center);
   color: $progress-bar-color;
   text-align: center;
   white-space: nowrap;
@@ -26,9 +39,13 @@
 
 .progress-bar-striped {
   @include gradient-striped();
-  background-size: $progress-height $progress-height;
+  // ########## use VP-mixins ##########
+  // background-size: $progress-height $progress-height;
+  @include vp-background-size($progress-height $progress-height);
 }
 
 .progress-bar-animated {
-  animation: progress-bar-stripes $progress-bar-animation-timing;
+  // ########## use VP-mixins ##########
+  // animation: progress-bar-stripes $progress-bar-animation-timing;
+  @include vp-animation(progress-bar-stripes $progress-bar-animation-timing);
 }

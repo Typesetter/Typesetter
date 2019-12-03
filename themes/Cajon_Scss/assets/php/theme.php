@@ -5,8 +5,8 @@
 defined('is_running') or die('Not an entry point...');
 
 class ThemeCajon{
- 
-  function GetHead(){
+
+  static function GetHead(){
     global $theme_cajon_config, $page, $addonRelativeCode;
     $theme_cajon_config = self::GetThemeConfig();
 
@@ -20,7 +20,7 @@ class ThemeCajon{
   }
 
 
-  function GetThemeConfig(){
+  static function GetThemeConfig(){
     global $addonPathCode, $addonPathData, $addonRelativeCode;
     $config_file = $addonPathData . '/config.php';
     if( file_exists($config_file) ){

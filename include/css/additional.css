@@ -157,14 +157,13 @@ body .msg_buttons a{
 .nodisplay{display:none;}
 
 
-/* CSS2... doesn't work for IE7 */
 div.GPAREA:after{
-	content: ".";
+	content: "";
 	display: block;
 	height: 0 !important;
 	clear: both;
 	visibility: hidden;
-	overflow:hidden;
+	overflow: hidden;
 }
 
 /* for IE7... does not validate */

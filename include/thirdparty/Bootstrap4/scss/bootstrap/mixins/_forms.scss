@@ -18,9 +18,13 @@
     outline: 0;
     // Avoid using mixin so we can pass custom focus shadow properly
     @if $enable-shadows {
-      box-shadow: $input-box-shadow, $input-focus-box-shadow;
+      // ########## use VP-mixins ##########
+      // box-shadow: $input-box-shadow, $input-focus-box-shadow;
+      @include vp-box-shadow($input-box-shadow, $input-focus-box-shadow);
     } @else {
-      box-shadow: $input-focus-box-shadow;
+      // ########## use VP-mixins ##########
+      // box-shadow: $input-focus-box-shadow;
+      @include vp-box-shadow($input-focus-box-shadow);
     }
   }
 }
@@ -58,7 +62,9 @@
 
       &:focus {
         border-color: $color;
-        box-shadow: 0 0 0 $input-focus-width rgba($color, .25);
+        // ########## use VP-mixins ##########
+        // box-shadow: 0 0 0 $input-focus-width rgba($color, .25);
+        @include vp-box-shadow(0 0 0 $input-focus-width rgba($color, .25));
       }
 
       ~ .#{$state}-feedback,
@@ -116,7 +122,9 @@
 
       &:focus {
         ~ .custom-control-label::before {
-          box-shadow: 0 0 0 1px $body-bg, 0 0 0 $input-focus-width rgba($color, .25);
+          // ########## use VP-mixins ##########
+          // box-shadow: 0 0 0 1px $body-bg, 0 0 0 $input-focus-width rgba($color, .25);
+          @include vp-box-shadow(0 0 0 1px $body-bg, 0 0 0 $input-focus-width rgba($color, .25));
         }
       }
     }
@@ -139,7 +147,9 @@
 
       &:focus {
         ~ .custom-file-label {
-          box-shadow: 0 0 0 $input-focus-width rgba($color, .25);
+          // ########## use VP-mixins ##########
+          // box-shadow: 0 0 0 $input-focus-width rgba($color, .25);
+          @include vp-box-shadow(0 0 0 $input-focus-width rgba($color, .25));
         }
       }
     }

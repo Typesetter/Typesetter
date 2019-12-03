@@ -4,8 +4,11 @@
 // `<nav>`s or `<ul>`s.
 
 .nav {
-  display: flex;
-  flex-wrap: wrap;
+  // ########## use VP-mixins ##########
+  // display: flex;
+  @include vp-flexbox();
+  // flex-wrap: wrap;
+  @include vp-flex-wrap(wrap);
   padding-left: 0;
   margin-bottom: 0;
   list-style: none;
@@ -90,15 +93,20 @@
 
 .nav-fill {
   .nav-item {
-    flex: 1 1 auto;
+    // ########## use VP-mixins ##########
+    // flex: 1 1 auto;
+    @include vp-flex(1 1 auto);
     text-align: center;
   }
 }
 
 .nav-justified {
   .nav-item {
-    flex-basis: 0;
-    flex-grow: 1;
+    // ########## use VP-mixins ##########
+    // flex-basis: 0;
+    @include vp-flex-basis(0);
+    // flex-grow: 1;
+    @include vp-flex-grow(1);
     text-align: center;
   }
 }

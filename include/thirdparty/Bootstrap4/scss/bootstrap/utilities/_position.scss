@@ -30,7 +30,9 @@ $positions: static, relative, absolute, fixed, sticky;
 
 .sticky-top {
   @supports (position: sticky) {
-    position: sticky;
+    // ########## use VP-mixins ##########
+    // position: sticky;
+    @include vp-position(sticky);
     top: 0;
     z-index: $zindex-sticky;
   }

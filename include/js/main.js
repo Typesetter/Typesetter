@@ -244,6 +244,11 @@ var $gp = {
 					$gp.Reload();
 				break;
 
+				case 'logging_out':
+					$gp.SetCookieCmd('cmd=logged_out');
+					$gp.Reload();
+				break;
+
 				//standard functions
 				default:
 					CallFunc( obj.SELECTOR, obj.DO, obj.CONTENT);

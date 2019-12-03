@@ -21,12 +21,12 @@ class Tools{
 
 		$_POST += array('username'=>'','site_title'=>'My '.CMS_NAME,'email'=>'');
 
-		echo '<tr><th colspan="2">'.$langmessage['configuration'].'</th></tr>';
-		echo '<tr><td>'.$langmessage['Website_Title'].'</td><td><input type="text" class="text" name="site_title" value="'.htmlspecialchars($_POST['site_title']).'" required /></td></tr>';
-		echo '<tr><td>'.$langmessage['email_address'].'</td><td><input type="email" class="text" name="email" value="'.htmlspecialchars($_POST['email']).'" required id="install_field_email" /></td></tr>';
-		echo '<tr><td>'.$langmessage['Admin_Username'].'</td><td><input type="text" class="text" name="username" value="'.htmlspecialchars($_POST['username']).'" required id="install_field_username" /></td></tr>';
-		echo '<tr><td>'.$langmessage['Admin_Password'].'</td><td><input type="password" class="text" name="password" value="" required /></td></tr>';
-		echo '<tr><td>'.$langmessage['repeat_password'].'</td><td><input type="password" class="text" name="password1" value="" required /></td></tr>';
+		echo '<tr><th colspan="3">'.$langmessage['configuration'].'</th></tr>';
+		echo '<tr><td>'.$langmessage['Website_Title'].'</td><td colspan="2"><input type="text" class="text" name="site_title" value="'.htmlspecialchars($_POST['site_title']).'" required /></td></tr>';
+		echo '<tr><td>'.$langmessage['email_address'].'</td><td colspan="2"><input type="email" class="text" name="email" value="'.htmlspecialchars($_POST['email']).'" required id="install_field_email" /></td></tr>';
+		echo '<tr><td>'.$langmessage['Admin_Username'].'</td><td colspan="2"><input type="text" class="text" name="username" value="'.htmlspecialchars($_POST['username']).'" required id="install_field_username" /></td></tr>';
+		echo '<tr><td>'.$langmessage['Admin_Password'].'</td><td colspan="2"><input type="password" class="text" name="password" value="" required /></td></tr>';
+		echo '<tr><td>'.$langmessage['repeat_password'].'</td><td colspan="2"><input type="password" class="text" name="password1" value="" required /></td></tr>';
 	}
 
 	/**
@@ -38,7 +38,7 @@ class Tools{
 	static function Form_Configuration(){
 		global $langmessage;
 
-		echo '<tr><th colspan="2">';
+		echo '<tr><th colspan="3">';
 		echo '<a href="javascript:toggleOptions()">'.$langmessage['more_options'].'...</a>';
 		echo '</th></tr>';
 
@@ -50,6 +50,7 @@ class Tools{
 		echo $langmessage['combinejs'];
 		echo '</td><td>';
 		self::BooleanForm('combinejs',true);
+		echo '</td><td>';
 		echo '</td></tr>';
 
 		//minifyjs
@@ -57,6 +58,7 @@ class Tools{
 		echo $langmessage['minifyjs'];
 		echo '</td><td>';
 		self::BooleanForm('minifyjs',false);
+		echo '</td><td>';
 		echo '</td></tr>';
 
 		//combinecss
@@ -64,6 +66,16 @@ class Tools{
 		echo $langmessage['combinecss'];
 		echo '</td><td>';
 		self::BooleanForm('combinecss',true);
+		echo '</td><td>';
+		echo '</td></tr>';
+
+		//allow svg upload
+		echo '<tr><td>';
+		echo $langmessage['allow_svg_upload'];
+		echo '</td><td>';
+		self::BooleanForm('allow_svg_upload',false);
+		echo '</td><td>';
+		echo $langmessage['about_config']['allow_svg_upload'];
 		echo '</td></tr>';
 
 		//etag_headers
@@ -71,6 +83,7 @@ class Tools{
 		echo $langmessage['etag_headers'];
 		echo '</td><td>';
 		self::BooleanForm('etag_headers',true);
+		echo '</td><td>';
 		echo '</td></tr>';
 
 		echo '</tbody>';
@@ -208,7 +221,8 @@ class Tools{
 		$_config['combinecss']				= self::BooleanValue('combinecss',true);
 		$_config['combinejs']				= self::BooleanValue('combinejs',true);
 		$_config['minifyjs']				= self::BooleanValue('minifyjs',false);
-		$_config['etag_headers'] 			= self::BooleanValue('etag_headers',true);
+		$_config['allow_svg_upload']		= self::BooleanValue('allow_svg_upload',false);
+		$_config['etag_headers']			= self::BooleanValue('etag_headers',true);
 		$_config['gallery_legacy_style']	= false;
 		$_config['language']				= 'en';
 		$_config['addons']					= array();

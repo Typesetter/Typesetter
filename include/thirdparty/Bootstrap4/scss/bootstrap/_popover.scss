@@ -12,7 +12,9 @@
   // Allow breaking very long words so they don't overflow the popover's bounds
   word-wrap: break-word;
   background-color: $popover-bg;
-  background-clip: padding-box;
+  // ########## use VP-mixins ##########
+  // background-clip: padding-box;
+  @include vp-background-clip(padding-box);
   border: $popover-border-width solid $popover-border-color;
   @include border-radius($popover-border-radius);
   @include box-shadow($popover-box-shadow);

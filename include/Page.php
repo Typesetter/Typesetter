@@ -110,6 +110,8 @@ namespace gp{
 			return true;
 		}
 
+
+
 		/**
 		 * Check the page's visibility
 		 *

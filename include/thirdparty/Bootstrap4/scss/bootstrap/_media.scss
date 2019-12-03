@@ -1,8 +1,13 @@
 .media {
-  display: flex;
-  align-items: flex-start;
+  // ########## use VP-mixins ##########
+  // display: flex;
+  @include vp-flexbox();
+  // align-items: flex-start;
+  @include vp-align-items(flex-start);
 }
 
 .media-body {
-  flex: 1;
+  // ########## use VP-mixins ##########
+  // flex: 1;
+  @include vp-flex(1);
 }

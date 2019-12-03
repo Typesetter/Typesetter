@@ -70,21 +70,22 @@ var CajonParallax = {
 }; /* /(obj)ParralaxImage */
 
 
+
 $(window).on("load", function(){
-  var uaStr = window.navigator.userAgent;
-  // webkit(Chrome/Safari/...):
-  if( 'WebkitAppearance' in document.documentElement.style ){ 
-    // Chrome 49+ has native smooth scrolling
-    if( uaStr.indexOf('Chrome/') !== -1 && parseInt(uaStr.substr(uaStr.indexOf('Chrome/') + 7, 2)) >= 49){
-      return;
+  if( !isadmin ){
+    var uaStr = window.navigator.userAgent;
+    if( uaStr.indexOf('AppleWebKit/') !== -1 && uaStr.indexOf('Safari/') !== -1 ){
+      $.scrollSpeed(80, 800);
     }
-    $.scrollSpeed(80, 800);
+    if( uaStr.indexOf('Chrome/') !== -1 && parseInt(uaStr.substr(uaStr.indexOf('Chrome/') + 7, 2)) <= 49){
+      $.scrollSpeed(80, 800);
+    }
+    // Internet Explorer + Edge:
+    if ( uaStr.indexOf('MSIE ') !== -1 || uaStr.indexOf('Trident/') !== -1 || uaStr.indexOf('Edge/') !== -1 ){ 
+      $.scrollSpeed(80, 800);
+    }
+    // Firefox doesn't need it, scrolls just fine
   }
-  // Internet Explorer + Edge:
-  if ( uaStr.indexOf('MSIE ')>0 || uaStr.indexOf('Trident/')>0 || uaStr.indexOf('Edge/')>0 ){ 
-    $.scrollSpeed(80, 800);
-  }
-  // Firefox doesn't need it, scrolls just fine
 });
 
 

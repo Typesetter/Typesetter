@@ -21,8 +21,8 @@ if( false ){
 	<?php
 }
 
-if( version_compare(phpversion(), '5.3.0', '<') ){
-	exit( 'Error: Typesetter CMS requires PHP 5.3+. This server is running PHP version ' . phpversion() );
+if( version_compare(phpversion(), '5.4.0', '<') ){
+	exit( 'Error: Typesetter CMS requires PHP 5.4+. This server is running PHP version ' . phpversion() );
 }
 
 /**

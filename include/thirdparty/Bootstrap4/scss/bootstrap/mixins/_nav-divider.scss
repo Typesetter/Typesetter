@@ -5,6 +5,8 @@
 @mixin nav-divider($color: $nav-divider-color, $margin-y: $nav-divider-margin-y) {
   height: 0;
   margin: $margin-y 0;
-  overflow: hidden;
+  // ########## use VP-mixins ##########
+  // overflow: hidden;
+  @include vp-overflow(hidden);
   border-top: 1px solid $color;
 }

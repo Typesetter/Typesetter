@@ -1,7 +1,7 @@
 <?php
 /**
  * PHPMailer SPL autoloader.
- * PHP Version 5.3+
+ * PHP Version 5.4+
  * @package PHPMailer
  * @link https://github.com/PHPMailer/PHPMailer/ The PHPMailer GitHub project
  * @author Marcus Bointon (Synchro/coolbru) <phpmailer@synchromedia.co.uk>
@@ -23,7 +23,7 @@
  */
 function PHPMailerAutoload($classname){
   $filename = __DIR__ . DIRECTORY_SEPARATOR . 'class.' . strtolower($classname) . '.php';
-  if( is_readable($filename) ){
+  if (is_readable($filename)) {
     require $filename;
   }
 }

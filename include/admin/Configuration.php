@@ -37,7 +37,13 @@ class Configuration extends \gp\special\Base{
 						'desc'						=> 'textarea',
 
 						'Interface'					=> false,
-						'colorbox_style'			=> array('example1'=>'Example 1', 'example2'=>'Example 2', 'example3'=>'Example 3', 'example4'=>'Example 4', 'example5'=>'Example 5' ),
+						'colorbox_style'			=> array(
+															'example1'=>'Example 1', 
+															'example2'=>'Example 2', 
+															'example3'=>'Example 3', 
+															'example4'=>'Example 4', 
+															'example5'=>'Example 5' 
+														),
 						'gallery_legacy_style'		=> 'boolean',
 						'language'					=> '',
 						'langeditor'				=> '',
@@ -46,6 +52,7 @@ class Configuration extends \gp\special\Base{
 						'showgplink'				=> 'boolean',
 
 						'Images'					=> false,
+						'allow_svg_upload'			=> 'boolean',
 						'maximgarea'				=> 'integer',
 						'resize_images'				=> 'boolean',
 						'preserve_icc_profiles' 	=> 'boolean',
@@ -518,7 +525,8 @@ class Configuration extends \gp\special\Base{
 
 	/**
 	 * Recreate all of the thumbnails according to the size in the configuration
-	 *
+	 * TODO: With lots of images, this may easily exceed PHP script runtime or available memory
+	 * and should be broken up into consecutive AJAX calls
 	 */
 	function RecreateThumbs($dir_rel = ''){
 		global $dataDir;

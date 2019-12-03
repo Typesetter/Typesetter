@@ -81,9 +81,12 @@ body {
 // 2. Show the overflow in Edge and IE.
 
 hr {
-  box-sizing: content-box; // 1
+  // ########## use VP-mixins ##########
+  // box-sizing: content-box; // 1
+  @include vp-box-sizing(content-box); 
   height: 0; // 1
-  overflow: visible; // 2
+  // overflow: visible; // 2
+  @include vp-overflow(visible); // 2
 }
 
 
@@ -246,7 +249,9 @@ pre {
   // Reset browser default of `1em` to use `rem`s
   margin-bottom: 1rem;
   // Don't allow content to break outside
-  overflow: auto;
+  // ########## use VP-mixins ##########
+  // overflow: auto;
+  @include vp-overflow(auto);
   // We have @viewport set which causes scrollbars to overlap content in IE11 and Edge, so
   // we force a non-overlapping, non-auto-hiding scrollbar to counteract.
   -ms-overflow-style: scrollbar;
@@ -273,7 +278,9 @@ img {
 }
 
 svg:not(:root) {
-  overflow: hidden; // Hide the overflow in IE
+  // ########## use VP-mixins ##########
+  // overflow: hidden; // Hide the overflow in IE
+  @include vp-overflow(hidden);
 }
 
 
@@ -339,7 +346,9 @@ textarea {
 
 button,
 input {
-  overflow: visible; // Show the overflow in Edge
+  // ########## use VP-mixins ##########
+  // overflow: visible; // Show the overflow in Edge
+  @include vp-overflow(visible);
 }
 
 button,
@@ -368,7 +377,9 @@ button::-moz-focus-inner,
 
 input[type="radio"],
 input[type="checkbox"] {
-  box-sizing: border-box; // 1. Add the correct box sizing in IE 10-
+  // ########## use VP-mixins ##########
+  // box-sizing: border-box; // 1. Add the correct box sizing in IE 10-
+  @include vp-box-sizing(border-box);
   padding: 0; // 2. Remove the padding in IE 10-
 }
 
@@ -386,7 +397,9 @@ input[type="month"] {
 }
 
 textarea {
-  overflow: auto; // Remove the default vertical scrollbar in IE.
+  // ########## use VP-mixins ##########
+  // overflow: auto; // Remove the default vertical scrollbar in IE.
+  @include vp-overflow(auto);
   // Textareas should really only resize vertically so they don't break their (horizontal) containers.
   resize: vertical;
 }

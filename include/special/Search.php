@@ -22,7 +22,7 @@ class Search extends \gp\special\Base{
 
 		parent::__construct($args);
 
-		$this->config_file = $dataDir.'/data/_site/config_search.php';
+		$this->config_file = $dataDir . '/data/_site/config_search.php';
 		$this->GetConfig();
 
 		if( $this->Admin() ){
@@ -30,13 +30,15 @@ class Search extends \gp\special\Base{
 		}
 
 		//admin popup or visitor
-		$_REQUEST += array('q'=>'');
+		$_REQUEST += array('q' => '');
 		if( \gp\tool::LoggedIn() && isset($_REQUEST['gpx_content']) && $_REQUEST['gpx_content'] == 'gpabox' ){
 			$this->AdminSearch();
 		}else{
 			$this->Search();
 		}
 	}
+
+
 
 	public function AdminSearch(){
 		global $langmessage;
@@ -45,12 +47,13 @@ class Search extends \gp\special\Base{
 		$this->show_stats = true;
 		$this->search_hidden = true;
 
+		echo '<div class="inline_box">';
 		echo '<div id="admin_search">';
-		echo '<form action="'.\gp\tool::GetUrl('special_gpsearch').'" method="get">';
-		echo '<h3>'.$langmessage['Search'].'</h3>';
-		echo '<input name="q" type="text" class="gpinput" value="'.htmlspecialchars($_REQUEST['q']).'" required />';
-		echo '<input type="submit" name="" value="'.$langmessage['Search'].'" class="gpabox gpsubmit gpvalidate" />';
-		echo '<input type="submit" name="" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
+		echo '<form action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
+		echo '<h3>' . $langmessage['Search'] . '</h3>';
+		echo '<input name="q" type="text" class="gpinput" value="' . htmlspecialchars($_REQUEST['q']) . '" required />';
+		echo '<input type="submit" name="" value="' . $langmessage['Search'] . '" class="gpabox gpsubmit gpvalidate" />';
+		echo '<input type="submit" name="" value="' . $langmessage['cancel'] . '" class="admin_box_close gpcancel" />';
 		echo '</form>';
 
 		echo '<p>';
@@ -60,21 +63,23 @@ class Search extends \gp\special\Base{
 		echo '</p>';
 
 		if( $this->search_count > 0 ){
-			echo '<p>'.$this->search_count.' files searched</p>';
+			echo '<p>' . $this->search_count . ' files searched</p>';
 		}
 		echo '</div>';
-
+		echo '</div>';
 	}
+
+
 
 	public function Search(){
 		global $langmessage;
 
 		echo '<div class="GPAREA filetype-special_search search_results">';
 		echo '<h2>' . \gp\tool\Output::GetAddonText('Search') . '</h2>';
-		echo '<form action="'.\gp\tool::GetUrl('special_gpsearch').'" method="get">';
-		echo '<input name="q" type="text" class="text" value="'.htmlspecialchars($_REQUEST['q']).'"/> ';
+		echo '<form action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
+		echo '<input name="q" type="text" class="text" value="' . htmlspecialchars($_REQUEST['q']) . '"/> ';
 		$html = '<input type="submit" name="" class="submit" value="%s" />';
-		echo \gp\tool\Output::GetAddonText('Search',$html);
+		echo \gp\tool\Output::GetAddonText('Search', $html);
 		echo '</form>';
 
 		if( \gp\tool::LoggedIn() ){
@@ -91,7 +96,9 @@ class Search extends \gp\special\Base{
 		echo '</div>';
 	}
 
-	public function Gadget(){
+
+
+	public static function Gadget(){
 
 		$query = '';
 		if( isset($_GET['q']) ){
@@ -101,18 +108,18 @@ class Search extends \gp\special\Base{
 		echo '<h3>';
 		echo \gp\tool\Output::GetAddonText('Search');
 		echo '</h3>';
-		echo '<form action="'.\gp\tool::GetUrl('special_gpsearch').'" method="get">';
+		echo '<form action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
 		echo '<div>';
-		echo '<input name="q" type="text" class="text" value="'.htmlspecialchars($query).'"/>';
+		echo '<input name="q" type="text" class="text" value="' . htmlspecialchars($query) . '"/>';
 		echo '<input type="hidden" name="src" value="gadget" />';
 
 		$html = '<input type="submit" class="submit" name="" value="%s" />';
-		echo \gp\tool\Output::GetAddonText('Search',$html);
+		echo \gp\tool\Output::GetAddonText('Search', $html);
 
 		echo '</div>';
 		echo '</form>';
-
 	}
+
 
 
 	public function RunQuery(){
@@ -120,11 +127,13 @@ class Search extends \gp\special\Base{
 		if( !empty($_REQUEST['q']) ){
 			$this->SearchPattern();
 			$this->SearchPages();
-			\gp\tool\Plugins::Action('Search',array($this));
+			\gp\tool\Plugins::Action('Search', array($this));
 		}
 
 		$this->ShowResults();
 	}
+
+
 
 	public function ShowResults(){
 		global $langmessage;
@@ -139,48 +148,54 @@ class Search extends \gp\special\Base{
 		$this->RemoveDups();
 		usort( $this->results, array($this, 'sort') );
 
-
 		$total			= count($this->results);
 		$len			= 20;
 		$total_pages	= ceil($total/$len);
 		$current_page	= self::ReqPage('pg', $total_pages );
 
-		$start			= $current_page*$len;
-		$end			= min($start+$len,$total);
+		$start			= $current_page * $len;
+		$end			= min($start+$len, $total);
 
 		$this->results = array_slice($this->results, $start, $len, true);
 		echo '<p class="search_nav search_nav_top">';
-		echo sprintf($langmessage['SHOWING'], ($start+1), $end, $total);
+		echo sprintf($langmessage['SHOWING'], ($start + 1), $end, $total);
 		echo '</p>';
-
 
 		echo '<div class="result_list">';
 		foreach($this->results as $result){
 			echo '<div><h4>';
-			echo isset($result['link']) ? $result['link'] : \gp\tool::Link($result['slug'], $result['label'], 'highlight='.rawurlencode($_REQUEST['q']) ); // $result['query']
-			echo ' <span class="search-matches-count">' .  $result['matches'] . '</span>' ;
+			echo isset($result['link']) ? $result['link'] : \gp\tool::Link(
+					$result['slug'], 
+					$result['label'], 
+					'highlight=' . rawurlencode($_REQUEST['q'])
+				); // $result['query']
+
+			if( $this->show_stats ){
+				echo ' <span class="search-matches-count">' .  $result['matches'] . '</span>' ;
+			}
 			echo '</h4>';
 
 			echo $result['content'];
 
 			if( $this->show_stats ){
 				echo ' <span class="match_stats">';
-				echo $result['matches'].' match(es) out of '.$result['words'].' words ';
+				echo $result['matches'] . ' match(es) out of ' . $result['words'] . ' words ';
 				echo ' </span>';
 			}
 			echo '</div>';
 		}
 		echo '</div>';
 
-
 		$attr = 'class="page-link"';
 		if( $this->gpabox ){
 			$attr .= ' data-cmd="gpabox"';
+			echo '<br/>';
 		}
 
-		$query = 'q='.rawurlencode($_REQUEST['q']);
+		$query = 'q=' . rawurlencode($_REQUEST['q']);
 		self::PaginationLinks($current_page, $total_pages, 'special_gpsearch', $query, 'pg', $attr);
 	}
+
 
 
 	/**
@@ -189,14 +204,14 @@ class Search extends \gp\special\Base{
 	 * @param string $key
 	 * @param int $total_pages
 	 */
-	public static function ReqPage($key = 'pg', $total_pages = null){
+	public static function ReqPage($key='pg', $total_pages=null){
 
 		if( isset($_REQUEST[$key]) ){
 
 			$pg = (int)$_REQUEST[$key];
 
 			if( !is_null($total_pages) && $total_pages > 0 ){
-				$pg	= min($pg, $total_pages-1 );
+				$pg	= min($pg, $total_pages - 1);
 			}
 
 			return max(0,$pg);
@@ -211,7 +226,7 @@ class Search extends \gp\special\Base{
 	 * Pagination links
 	 *
 	 */
-	public static function PaginationLinks($current_page, $total_pages, $slug, $query, $page_key = 'pg', $attr=''){
+	public static function PaginationLinks($current_page, $total_pages, $slug, $query, $page_key='pg', $attr=''){
 		global $langmessage;
 
 		if( $total_pages < 1 ){
@@ -224,30 +239,29 @@ class Search extends \gp\special\Base{
 		//previous
 		if( $current_page > 0 ){
 			echo '<li class="page-item">';
-			self::PaginationLink($slug, '&laquo;', $query, $page_key, $attr, ($current_page-1));
+			self::PaginationLink($slug, '&laquo;', $query, $page_key, $attr, ($current_page - 1));
 			echo '</li>';
 		}else{
 			echo '<li class="page-item disabled"><span class="page-link">&laquo;</span></li>';
 		}
 
 		// i
-		$min_page	= max(0, $current_page-3);
-		$max_page	= min($min_page+6, $total_pages);
-		for($i=$min_page;$i<$max_page;$i++){
-
+		$min_page	= max(0, $current_page - 3);
+		$max_page	= min($min_page + 6, $total_pages);
+		for($i = $min_page; $i < $max_page; $i++){
 			if( $i == $current_page ){
-				echo '<li class="page-item active"><span class="page-link">'.($i+1).'</span></li> ';
+				echo '<li class="page-item active"><span class="page-link">' . ($i + 1) . '</span></li> ';
 				continue;
 			}
 			echo '<li class="page-item">';
-			self::PaginationLink($slug, ($i+1), $query, $page_key, $attr, $i);
+			self::PaginationLink($slug, ($i + 1), $query, $page_key, $attr, $i);
 			echo '</li>';
 		}
 
 		// next
 		if( ($current_page+1) < $total_pages ){
 			echo '<li class="page-item">';
-			self::PaginationLink($slug, '&raquo;', $query, $page_key, $attr, $current_page+1);
+			self::PaginationLink($slug, '&raquo;', $query, $page_key, $attr, ($current_page + 1));
 			echo '</li>';
 		}else{
 			echo '<li class="page-item disabled"><span class="page-link">&raquo;</span></li>';
@@ -257,14 +271,17 @@ class Search extends \gp\special\Base{
 		echo '</nav>';
 	}
 
+
+
 	public static function PaginationLink($slug, $label, $query, $page_key, $attr, $page){
 
 		if( $page > 0){
-			$query .= '&'.$page_key.'='.$page;
+			$query .= '&' . $page_key . '=' . $page;
 		}
 
-		echo '<li>'.\gp\tool::Link($slug,$label,$query,$attr).'</li>';
+		echo '<li>' . \gp\tool::Link($slug, $label, $query, $attr) . '</li>';
 	}
+
 
 
 	/**
@@ -275,7 +292,7 @@ class Search extends \gp\special\Base{
 		$links = array();
 		foreach($this->results as $key => $result){
 
-			$link	= isset($result['url']) ? $result['url'] : \gp\tool::GetUrl( $result['slug'], $result['query'] );
+			$link	= isset($result['url']) ? $result['url'] : \gp\tool::GetUrl($result['slug'], $result['query']);
 			// $link	= mb_strtolower($link);
 
 			if( in_array($link,$links) ){
@@ -287,9 +304,11 @@ class Search extends \gp\special\Base{
 	}
 
 
+
 	public function Sort($resulta,$resultb){
 		return $resulta['strength'] < $resultb['strength'];
 	}
+
 
 
 	public function SearchPattern(){
@@ -306,12 +325,13 @@ class Search extends \gp\special\Base{
 
 		$sub_pattern1 = $sub_pattern2 = array();
 		foreach($words as $word){
-			$sub_pattern1[] = '\b'.preg_quote($word,'#').'\b';
-			$sub_pattern2[] = preg_quote($word,'#');
+			$sub_pattern1[] = '\b' . preg_quote($word, '#') . '\b';
+			$sub_pattern2[] = preg_quote($word, '#');
 		}
 
-		$this->search_pattern = '#(?:('.implode('|',$sub_pattern1).')|('.implode('|',$sub_pattern2).'))#Si';
+		$this->search_pattern = '#(?:(' . implode('|', $sub_pattern1) . ')|(' . implode('|', $sub_pattern2) . '))#Si';
 	}
+
 
 
 	public function Admin(){
@@ -319,30 +339,36 @@ class Search extends \gp\special\Base{
 		if( !\gp\tool::LoggedIn() ){
 			return false;
 		}
-		$this->page->admin_links[] = array('special_gpsearch','Configuration','cmd=config','data-cmd="gpabox"');
+		$this->page->admin_links[] = array('special_gpsearch', 'Configuration', 'cmd=config', 'data-cmd="gpabox"');
 		$cmd = \gp\tool::GetCommand();
 
 		switch($cmd){
+
 			case 'save_config':
 				if( $this->SaveConfig() ){
 					break;
 				}
-			return true;
+				return true;
+
 			case 'config':
 				$this->Config($this->search_config);
-			return true;
+				return true;
+
 		}
 		return false;
 	}
+
+
 
 	/**
 	 * Get the search configuration
 	 *
 	 */
 	public function GetConfig(){
-		$this->search_config 	= \gp\tool\Files::Get($this->config_file,'search_config');
-		$this->search_config	+= array('search_hidden'=>false);
+		$this->search_config 	= \gp\tool\Files::Get($this->config_file, 'search_config');
+		$this->search_config	+= array('search_hidden' => false);
 	}
+
 
 
 	public function SaveConfig(){
@@ -354,7 +380,7 @@ class Search extends \gp\special\Base{
 			$search_config['search_hidden'] = false;
 		}
 
-		if( \gp\tool\Files::SaveData($this->config_file,'search_config',$search_config) ){
+		if( \gp\tool\Files::SaveData($this->config_file, 'search_config', $search_config) ){
 			msg($langmessage['SAVED']);
 			$this->search_config = $search_config;
 			return true;
@@ -363,19 +389,19 @@ class Search extends \gp\special\Base{
 		msg($langmessage['OOPS']);
 		$this->Config($_POST);
 		return false;
-
 	}
+
 
 
 	public function Config($array=array()){
 		global $langmessage, $addonFolderName, $gp_index;
 
-
 		echo '<h2>' . $langmessage['Search'] . ' &raquo; ' . $langmessage['configuration'] . '</h2>';
 
-		echo '<form class="renameform" action="'.\gp\tool::GetUrl('special_gpsearch').'" method="post">';
+		echo '<form class="renameform" action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="post">';
 		echo '<table style="width:100%" class="bordered">';
-		echo '<tr><th>'.$langmessage['options'].'</th><th>'.$langmessage['Value'].'</th><th>'.$langmessage['default'].'</th></tr>';
+		echo '<tr><th>' . $langmessage['options'] . '</th><th>' . $langmessage['Value'] . '</th>';
+		echo '<th>' . $langmessage['default'] . '</th></tr>';
 
 		echo '<tr><td>'.$langmessage['Search Hidden Files'].'</td><td>';
 			if( isset($array['search_hidden']) && $array['search_hidden'] ){
@@ -383,19 +409,18 @@ class Search extends \gp\special\Base{
 			}else{
 				echo '<input type="checkbox" name="search_hidden" value="true" />';
 			}
-			echo '</td><td>'.$langmessage['False'].'</td></tr>';
-
+			echo '</td><td>' . $langmessage['False'] . '</td></tr>';
 
 		echo '<tr><td></td><td>';
 			echo '<input type="hidden" name="cmd" value="save_config" />';
-			echo '<input type="submit" name="" value="'.$langmessage['save'].'" class="gpsubmit" /> ';
-			echo '<input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" /> ';
+			echo '<input type="submit" name="" value="' . $langmessage['save'] . '" class="gpsubmit" /> ';
+			echo '<input type="submit" name="cmd" value="' . $langmessage['cancel'] . '" class="admin_box_close gpcancel" /> ';
 			echo '</td><td></td></tr>';
 
 		echo '</table>';
-
 		echo '</form>';
 	}
+
 
 
 	public function SearchPages(){
@@ -404,14 +429,15 @@ class Search extends \gp\special\Base{
 		ob_start();
 		foreach($gp_index as $title => $index){
 			if( \gp\tool::SpecialOrAdmin($title) === false ){
-				$this->SearchPage($title,$index);
+				$this->SearchPage($title, $index);
 			}
 		}
 		ob_get_clean();
 	}
 
 
-	public function SearchPage($title,$index){
+
+	public function SearchPage($title, $index){
 		global $gp_menu, $gp_titles;
 
 		//search hidden?
@@ -420,64 +446,57 @@ class Search extends \gp\special\Base{
 		}
 
 		//private pages
-		if( !\gp\tool::LoggedIn() ){
-
-			if( isset($gp_titles[$index]['vis']) ){
-				return;
-			}
+		if( !\gp\tool::LoggedIn() && isset($gp_titles[$index]['vis']) ){
+			return;
 		}
 
-
-		$full_path			= \gp\tool\Files::PageFile($title);
-		$file_sections		= \gp\tool\Files::Get($full_path,'file_sections');
+		$full_path		= \gp\tool\Files::PageFile($title);
+		$file_sections	= \gp\tool\Files::Get($full_path, 'file_sections');
 
 		if( !$file_sections ){
 			return;
 		}
 
-		$content			= \gp\tool\Output\Sections::Render($file_sections,$title,\gp\tool\Files::$last_stats);
-		$label				= \gp\tool::GetLabel($title);
+		$content		= \gp\tool\Output\Sections::Render($file_sections, $title, \gp\tool\Files::$last_stats);
+		$label			= \gp\tool::GetLabel($title);
 
 		$this->FindString($content, $label, $title);
 	}
 
 
-	public function FindString(&$content, $label, $slug, $link_query = ''){
+
+	public function FindString(&$content, $label, $slug, $link_query=''){
 		$this->search_count++;
 
 		//search all of the content include html
 		// $content = mb_strtolower($content);
-		$content = $label.' '.$content;
-		$match_count = preg_match_all($this->search_pattern,$content,$matches,PREG_OFFSET_CAPTURE);
+		$content		= $label . ' ' . $content;
+		$match_count	= preg_match_all($this->search_pattern, $content, $matches, PREG_OFFSET_CAPTURE);
 		if( $match_count < 1 ){
 			return;
 		}
-		$words = str_word_count($content);
-		$strength = $this->Strength($matches,$words);
-
+		$words 			= str_word_count($content);
+		$strength		= $this->Strength($matches,$words);
 
 		//format content, remove html
-		$label_len = strlen($label);
-		$content = substr($content,$label_len);
-		$content = str_replace('>','> ',$content);
-		$content = preg_replace('/\s+/', ' ', $content);
-		$content = strip_tags($content);
-		preg_match($this->search_pattern,$content,$matches,PREG_OFFSET_CAPTURE);
-		$start = 0;
-		if( isset($matches[0][1]) ){
-			$start = $matches[0][1];
-		}
+		$label_len		= strlen($label);
+		$content		= substr($content, $label_len);
+		$content		= str_replace('>', '> ', $content);
+		$content		= preg_replace('/\s+/', ' ', $content);
+		$content		= strip_tags($content);
+		preg_match($this->search_pattern, $content, $matches, PREG_OFFSET_CAPTURE);
+		$start			= isset($matches[0][1]) ? $matches[0][1] : 0;
 
 		//find a space at the beginning to start from
 		$i = 0;
 		do{
 			$i++;
-			$start_offset = $i*10;
-			$start = max(0,$start-$start_offset);
-			$trimmed = substr($content,$start,300);
-			$space = strpos($trimmed,' ');
+			$start_offset = $i * 10;
+			$start = max(0, $start - $start_offset);
+			$trimmed = substr($content, $start, 300);
+			$space = strpos($trimmed, ' ');
 			if( $space < $start_offset ){
-				$content = substr($trimmed,$space);
+				$content = substr($trimmed, $space);
 				break;
 			}
 		}while( ($start-$start_offset) > 0);
@@ -485,24 +504,26 @@ class Search extends \gp\special\Base{
 
 		//find a space at the end
 		if( strlen($content) > 250 ){
-			$space2 = strpos($content,' ',$space+220);
+			$space2 = strpos($content, ' ', $space + 220);
 			if( $space2 > 0 ){
-				$content = substr($content,0,$space2);
+				$content = substr($content, 0, $space2);
 			}
 		}
 
 		$result = array();
-		$result['label'] = $label;
-		$result['slug'] = $slug;
-		$result['query'] = $link_query;
-		$result['content'] = preg_replace($this->search_pattern,'<strong>\1\2</strong>',$content);
-		$result['words'] = $words;
-		$result['matches'] = $match_count;
-		$result['strength'] = $strength;
-		$this->results[] = $result;
+		$result['label']		= $label;
+		$result['slug']			= $slug;
+		$result['query']		= $link_query;
+		$result['content']		= preg_replace($this->search_pattern, '<strong>\1\2</strong>', $content);
+		$result['words']		= $words;
+		$result['matches']		= $match_count;
+		$result['strength']		= $strength;
+		$this->results[]		= $result;
 	}
 
-	function Strength($matches,$len){
+
+
+	function Strength($matches, $len){
 
 		//space around search terms
 		$factor = 0;
@@ -519,8 +540,8 @@ class Search extends \gp\special\Base{
 			}
 		}
 
-		$strength = $factor/$len;
-		return round($strength,8);
+		$strength = $factor / $len;
+		return round($strength, 8);
 	}
 
 }

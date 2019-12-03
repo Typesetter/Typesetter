@@ -832,7 +832,7 @@ namespace gp\admin\Content{
 			$thumb_dir = $dataDir.'/data/_uploaded/image/thumbnails';
 			self::SetRealPath($result,$finder);
 
-
+           if(isset($result['removed']) or isset($result['added']))
 			switch($cmd){
 
 				case 'rename':
@@ -945,7 +945,7 @@ namespace gp\admin\Content{
 			$moved = array();
 			$new_removed = array();
 			foreach($added as $akey => $ainfo){
-				$source = $ainfo['source'];
+				$source = isset($ainfo['source']) ? $ainfo['source'] : null;
 				foreach($removed as $rkey => $rinfo){
 					if( $source == $rinfo['realpath'] ){
 						$moved[$akey] = $rinfo;
@@ -961,7 +961,7 @@ namespace gp\admin\Content{
 
 			//rename files that were moved
 			foreach($added as $akey => $ainfo){
-				$rinfo = $moved[$akey];
+				$rinfo = isset($moved[$akey]) ? $moved[$akey] : null;
 				self::RenameResized($rinfo,$ainfo);
 			}
 		}

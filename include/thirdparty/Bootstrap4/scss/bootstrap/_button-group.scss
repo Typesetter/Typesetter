@@ -4,12 +4,19 @@
 .btn-group,
 .btn-group-vertical {
   position: relative;
-  display: inline-flex;
+
+  // ######## use VP-mixin ########
+  // display: inline-flex;
+  @include vp-inline-flex();
+
   vertical-align: middle; // match .btn alignment given font-size hack above
 
   > .btn {
     position: relative;
-    flex: 0 1 auto;
+
+    // ######## use VP-mixin ########
+    // flex: 0 1 auto;
+    @include vp-flex(0 1 auto);
 
     // Bring the hover, focused, and "active" buttons to the front to overlay
     // the borders properly
@@ -34,9 +41,15 @@
 
 // Optional: Group multiple button groups together for a toolbar
 .btn-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+
+  // ######## use VP-mixin ########
+  // display: flex;
+  @include vp-flexbox();
+  // flex-wrap: wrap;
+  @include vp-flex-wrap(wrap);
+  // justify-content: flex-start;
+  @include vp-justify-content(flex-start);
+
 
   .input-group {
     width: auto;
@@ -115,9 +128,13 @@
 //
 
 .btn-group-vertical {
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
+  // ######## use VP-mixin ########
+  // flex-direction: column;
+  @include vp-flex-direction(column);
+  // align-items: flex-start;
+  @include vp-align-items(flex-start);
+  // justify-content: center;
+  @include vp-justify-content(center);
 
   .btn,
   .btn-group {

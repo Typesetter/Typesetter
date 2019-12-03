@@ -423,7 +423,7 @@ $gp.CloseAdminBox = function(evt){
 		$.fn.colorbox.close();
 	}
 };
-$gp.links.admin_box_close = gpinputs.admin_box_close = $gp.CloseAdminBox;
+$gp.links.admin_box_close = $gp.inputs.admin_box_close = $gp.CloseAdminBox;
 
 
 /**

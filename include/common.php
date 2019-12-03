@@ -215,9 +215,9 @@ function showError($errno, $errmsg, $filename, $linenum, $errcontext, $backtrace
 
 	//remove showError() from backtrace
 	if( strtolower($backtrace[0]['function']) == 'showerror' ){
-		$backtrace = array_slice($backtrace,1,5);
+		$backtrace = array_slice($backtrace,1,7);
 	}else{
-		$backtrace = array_slice($backtrace,0,5);
+		$backtrace = array_slice($backtrace,0,7);
 	}
 
 
@@ -292,6 +292,13 @@ function showError($errno, $errmsg, $filename, $linenum, $errcontext, $backtrace
 	}
 	$mess .= '<br/> &nbsp; &nbsp; <b>time:</b> '.date('Y-m-d H:i:s').' ('.time().')';
 
+	if( isset($_SERVER['REMOTE_ADDR']) ){
+		$mess .= '<br/> &nbsp; &nbsp; <b>REMOTE_ADDR:</b> '.$_SERVER['REMOTE_ADDR'];
+	}
+
+	if( isset($_SERVER['HTTP_X_FORWARDED_FOR']) ){
+		$mess .= '<br/> &nbsp; &nbsp; <b>HTTP_X_FORWARDED_FOR:</b> '.$_SERVER['HTTP_X_FORWARDED_FOR'];
+	}
 
 	//mysql.. for some addons
 	if( function_exists('mysql_errno') && mysql_errno() ){

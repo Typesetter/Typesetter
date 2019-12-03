@@ -1,5 +1,8 @@
-AddType application/x-javascript .js
-AddType text/css .css
-AddType text/xml .xml
 
 AcceptPathInfo On
+
+# prevent access to configuration files
+<FilesMatch "\.gpjson$">
+Order allow,deny
+Deny from all
+</FilesMatch>

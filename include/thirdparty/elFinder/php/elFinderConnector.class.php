@@ -96,7 +96,7 @@ class elFinderConnector
                         $src[$key] = rawurldecode($value);
                     }
                 }
-                //$_POST = $this->input_filter($src);
+                $_POST = $this->input_filter($src);
                 $_REQUEST = $this->input_filter(array_merge_recursive($src, $_REQUEST));
             }
         }
@@ -365,4 +365,4 @@ class elFinderConnector
 
         flush();
     }
-}// END class
+}// END class 

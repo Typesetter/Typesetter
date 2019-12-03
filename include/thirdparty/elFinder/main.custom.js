@@ -129,6 +129,7 @@
 			// https://github.com/Studio-42/elFinder/wiki/Client-configuration-options
 			defaultOpts : {
 				url: finder_opts.url
+				,height:'90%'
 				,customData: finder_opts.customData
 				,commandsOptions : {
 					edit : {

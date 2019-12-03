@@ -4,15 +4,12 @@
  * Rename "main.default.js" to "main.js" and edit it if you need configure elFInder options or any things. And use that in elfinder.html.
  * e.g. `<script data-main="./main.js" src="./require.js"></script>`
  **/
-
-console.log('here');
-
 (function(){
 	"use strict";
 	var // jQuery and jQueryUI version
 		jqver = '3.3.1',
 		uiver = '1.12.1',
-
+		
 		// Detect language (optional)
 		lang = (function() {
 			var locq = window.location.search,
@@ -24,18 +21,18 @@ console.log('here');
 				// detection by browser language
 				fullLang = (navigator.browserLanguage || navigator.language || navigator.userLanguage);
 			}
-			lang = fullLang.substr(0,2);
+			lang = (fullLang || 'en').substr(0,2);
 			if (lang === 'pt') lang = 'pt_BR';
 			else if (lang === 'ug') lang = 'ug_CN';
 			else if (lang === 'zh') lang = (fullLang.substr(0,5).toLowerCase() === 'zh-tw')? 'zh_TW' : 'zh_CN';
 			return lang;
 		})(),
-
+		
 		// Start elFinder (REQUIRED)
 		start = function(elFinder, editors, config) {
 			// load jQueryUI CSS
 			elFinder.prototype.loadCss('//cdnjs.cloudflare.com/ajax/libs/jqueryui/'+uiver+'/themes/smoothness/jquery-ui.css');
-
+			
 			$(function() {
 				var optEditors = {
 						commandsOptions: {
@@ -45,7 +42,7 @@ console.log('here');
 						}
 					},
 					opts = {};
-
+				
 				// Interpretation of "elFinderConfig"
 				if (config && config.managers) {
 					$.each(config.managers, function(id, mOpts) {
@@ -86,7 +83,7 @@ console.log('here');
 				}
 			});
 		},
-
+		
 		// JavaScript loader (REQUIRED)
 		load = function() {
 			require(
@@ -102,7 +99,7 @@ console.log('here');
 				}
 			);
 		},
-
+		
 		// is IE8 or :? for determine the jQuery version to use (optional)
 		old = (typeof window.addEventListener === 'undefined' && typeof document.getElementsByClassName === 'undefined')
 		       ||

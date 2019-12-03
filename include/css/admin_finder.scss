@@ -1,0 +1,19 @@
+
+#admincontent_inner{
+	padding:0;
+	border:0 none !important;
+	background:#EDEDED !important;
+	overflow:visible !important;
+	}
+
+/**
+ * Undoing conflicts with typesetter css
+ * 
+ */
+#admincontent_inner .elfinder-button{
+	box-sizing: content-box;
+}
+
+#admincontent_inner .elfinder-button-search input[type="text"]{
+	width:100%;
+}

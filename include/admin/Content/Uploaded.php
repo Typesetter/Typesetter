@@ -31,7 +31,8 @@ namespace gp\admin\Content{
 		public function Finder(){
 			global $config, $dataDir;
 
-			$this->page->head .= "\n".'<script data-main="'.\gp\tool::GetDir('/include/thirdparty/elFinder/main.js').'" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>';
+			$this->page->head			.= "\n".'<script data-main="'.\gp\tool::GetDir('/include/thirdparty/elFinder/main.custom.js').'" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.min.js"></script>';
+			$this->page->css_admin[]	= '/include/css/admin_finder.scss';
 
 
 

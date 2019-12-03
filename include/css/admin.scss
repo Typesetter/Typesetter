@@ -613,6 +613,11 @@ input.admin_box_close{
 	display: inline;
 }
 
+#gp_admin_box tr.notification-item-muted > td {
+	background: #e6e6e6;
+	opacity: 0.5;
+}
+
 
 .layout_color_id{
 	display: inline-block;
@@ -953,6 +958,9 @@ table.tablesorter th.gp_header_desc:before{
 		a {
 			padding-right: 0.75em; /* space for badge */
 		}
+	}
+	.admin-panel-notification:after{
+		display: none;
 	}
 	.admin-panel-badge{
 		font-size: 0.825em;

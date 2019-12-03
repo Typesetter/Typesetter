@@ -666,8 +666,6 @@ namespace gp\tool{
 			\gp\tool::LoadComponents('sortable, autocomplete, gp-admin, gp-admin-css, fontawesome');
 			\gp\admin\Tools::VersionsAndCheckTime();
 
-			// \gp\admin\Tools::CheckNotifications();
-
 
 			\gp\tool\Output::$inline_vars += array(
 				'gpRem' => \gp\admin\Tools::CanRemoteInstall(),

@@ -7,45 +7,545 @@ namespace gp\admin{
 	class Notifications{
 
 		public static $notifications	= array();
+		public static $filters			= array();
+		private static $debug			= false;
 
-		public static function ShowNotifications(){
+
+		public static function ListNotifications(){
 			global $langmessage;
 
-			\gp\Admin\Tools::CheckNotifications();
+			self::CheckNotifications();
 
-			$notifications = \gp\Admin\Tools::$notifications;
+			$filter_list_by	= isset($_REQUEST['type']) ? rawurldecode($_REQUEST['type']) : false;
 
-			$filter	= !empty($_REQUEST['type']) ? rawurldecode($_REQUEST['type']) : false;
+			self::$debug && debug('$notifications = ' . pre(self::$notifications));
 
-			// debug('$notifications = ' . pre($notifications));
-
-			echo '<div class="inline_box">';
+			echo '<div class="inline_box show-notifications-box">';
 			// echo '<h3>' . $langmessage['Notifications']; . '</h3>';
 
-			foreach( $notifications as $type => $notification ){
-				if( $filter && $type != $filter){
+			$current_notification		= false;
+			$prev_notification_link		= false;
+			$next_notification_link		= false;
+
+			foreach( self::$notifications as $type => $notification ){
+
+				if( $filter_list_by && $type != $filter_list_by ){
+
+					if( !$current_notification ){
+						$prev_notification_link = \gp\tool::Link(
+							'Admin/Notifications',
+							'<i class="fa fa-angle-left"></i> ' . $langmessage['Previous'],
+							'cmd=ShowNotifications&type=' . rawurlencode($type),
+							array(
+								'title'		=> $langmessage['Previous'],
+								'class'		=> 'gpbutton',
+								'style'		=> 'margin-right:0.5em;',
+								'data-cmd'	=> 'gpabox',
+							)
+						);
+					}elseif( !$next_notification_link ){
+						$next_notification_link = \gp\tool::Link(
+							'Admin/Notifications',
+							$langmessage['Next'] . ' <i class="fa fa-angle-right"></i>',
+							'cmd=ShowNotifications&type=' . rawurlencode($type),
+							array(
+								'title'		=> $langmessage['Next'],
+								'class'		=> 'gpbutton',
+								'data-cmd'	=> 'gpabox',
+							)
+						);
+					}
 					continue;
 				}
+
+				$current_notification = $type;
+
 				$title = isset($langmessage[$notification['title']]) ?
 					$langmessage[$notification['title']] :
 					htmlspecialchars($notification['title']);
 				echo '<h3>' . $title . '</h3>'; 
 				echo '<table class="bordered full_width">';
 				echo '<tbody>';
-				echo '<tr><th>' . $langmessage['Item'] . '</th><th>' . $langmessage['options'] . '</th></tr>';
+				echo '<tr>';
+				echo '<th>' . $langmessage['Item'] . '</th>';
+				echo '<th>' . $langmessage['options'] . '</th>';
+				echo '<th style="text-align:right;">' . $langmessage['Visibility'] . '</th>';
+				echo '</tr>';
+
 				foreach( $notification['items'] as $item ){
-					echo '<tr>';
+
+					$muted = isset($item['priority']) && (int)$item['priority'] < 0;
+
+					echo '<tr' . ($muted ? ' class="notification-item-muted"' : '') . '>';
 					echo 	'<td>' . $item['label']  . '</td>';
 					echo 	'<td>' . $item['action'] . '</td>';
+
+					echo 	'<td style="text-align:right;">';
+
+					echo 	\gp\tool::Link(
+								'Admin/Notifications/Manage',
+								($muted ? '<i class="fa fa-bell-slash"></i>' : '<i class="fa fa-bell"></i>'),
+								'cmd=toggle_priority'
+									. '&id=' . rawurlencode($item['id'])
+									. (isset($_REQUEST['type']) ? '&type=' . rawurlencode($_REQUEST['type']) : ''),
+								array(
+									'title'		=> ($muted ? $langmessage['Show'] : $langmessage['Hide']),
+									'class'		=> 'toggle-notification',
+									'data-cmd'	=> 'gpabox',
+								)
+							);
+
+					echo	'</td>';
+
 					echo '</tr>';
 				}
 				echo '</table>';
 			}
 
-			echo '<p><button class="admin_box_close gpcancel">' . $langmessage['Close'] . '</button></p>';
+			echo '<p>';
+			echo '<button style="float:right;margin-right:0;" class="admin_box_close gpcancel">';
+			echo $langmessage['Close'];
+			echo '</button>';
+			if( $prev_notification_link ){
+				echo $prev_notification_link;
+			}
+			if( $next_notification_link ){
+				echo $next_notification_link;
+			}
+			echo '</p>';
 
 			echo '</div>';
 		}
+
+
+
+		public static function ManageNotifications(){
+
+			$cmd = \gp\tool::GetCommand();
+
+			switch( $cmd ){
+				case 'toggle_priority':
+					if( !empty($_REQUEST['id']) ){
+						self::SetFilter($_REQUEST['id'], 'toggle_priority');
+						self::UpdateNotifications(true);
+						self::ListNotifications();
+						return 'return';
+					}
+					break;
+
+				case 'set_priority':
+					if( !empty($_REQUEST['id']) &&
+						isset($_REQUEST['new_priority']) &&
+						is_numeric($_REQUEST['new_priority'])
+						){
+						self::SetFilter($_REQUEST['id'], 'set_priority', $_REQUEST['new_priority']);
+						self::UpdateNotifications(true);
+						self::ListNotifications();
+						return 'return';
+					}
+					break;
+			}
+
+			$page->ajaxReplace = array();
+			self::$debug && debug('Error: ManageNotifications - invalid command');
+
+			return false;
+		}
+
+
+
+		public static function GetFilters(){
+			global $gpAdmin;
+			if( !empty($gpAdmin['notifications']['filters']) ){
+				self::$filters = $gpAdmin['notifications']['filters'];
+				return count(self::$filters);
+			}
+			return false;
+		}
+
+
+
+		public static function SaveFilters(){
+			global $gpAdmin;
+			if( isset($gpAdmin['notifications']) && is_array($gpAdmin['notifications']) ){
+				$gpAdmin['notifications']['filters'] = self::$filters;
+			}else{
+				$gpAdmin['notifications'] = array( 'filters' => self::$filters );
+			}
+		}
+
+
+
+		public static function SetFilter($id, $do, $val=false){
+
+			self::CheckNotifications();
+			self::GetFilters();
+
+			// check if id exists in notifications
+			$id_exists = false;
+			foreach( self::$notifications as $type => $notification ){
+				foreach( $notification['items'] as $item ){
+					if( isset($item['id']) && $item['id'] == $id ){
+						$id_exists = true;
+						break 2;
+					}
+				}
+			}
+			
+			if( !$id_exists ){
+				// notification id no longer exists, purge possible stray filter
+				if( isset(self::$filters[$id]) ){
+					unset(self::$filters[$id]);
+					self::SaveFilters();
+				}
+				return;
+			}
+
+			switch( $do ){
+
+				case 'clear_filter':
+					unset(self::$filters[$id]);
+					self::SaveFilters();
+					return;
+
+				case 'toggle_priority':
+					if( isset(self::$filters[$id]['priority']) ){
+						unset(self::$filters[$id]['priority']);
+					}else{
+						self::$filters[$id]['priority'] = -1;
+					}
+					self::SaveFilters();
+					return;
+
+				case 'set_priority':
+					self::$filters[$id]['priority'] = (int)$val;
+					self::SaveFilters();
+					return;
+
+			}
+
+			self::$debug && debug(
+					'Notifications SetFilter Error: unknown command "' 
+					. htmlspecialchars($do) . '"'
+				);
+
+			return false;
+		}
+
+
+
+		public static function ApplyFilters(){
+
+			self::GetFilters();
+
+			foreach( self::$notifications as $notification_type => $notification ){
+				foreach( $notification['items'] as $itemkey => $item ){
+
+					// Remove items lacking user permissions and therefore cannot be dealt with anyway
+
+					// extra content draft
+					if( $notification_type == 'drafts' &&
+						$item['type'] == 'extra' &&
+						!\gp\admin\Tools::HasPermission('Admin/Extra')
+						){
+						unset(self::$notifications[$notification_type]['items'][$itemkey]);
+						continue;
+					}
+
+					// page draft
+					if( $notification_type == 'drafts' &&
+						$item['type'] == 'page' &&
+						!\gp\admin\Tools::CanEdit($item['title'])
+						){
+						unset(self::$notifications[$notification_type]['items'][$itemkey]);
+						continue;
+					}
+
+					// private page
+					if( $notification_type == 'private_pages' && !\gp\admin\Tools::CanEdit($item['title']) ){
+						unset(self::$notifications[$notification_type]['items'][$itemkey]);
+						continue;
+					}
+
+					// theme update
+					if( $notification_type == 'updates' &&
+						$item['type'] == 'theme' &&
+						!\gp\admin\Tools::HasPermission('Admin_Theme_Content/Remote')
+						){
+						unset(self::$notifications[$notification_type]['items'][$itemkey]);
+						continue;
+					}
+
+					// addon update
+					if( $notification_type == 'updates' &&
+						$item['type'] == 'plugin' &&
+						!\gp\admin\Tools::HasPermission('Admin/Addons/Remote')
+						){
+						unset(self::$notifications[$notification_type]['items'][$itemkey]);
+						continue;
+					}
+
+					// core update
+					if( $notification_type == 'updates' &&
+						$item['type'] == 'core' &&
+						!\gp\admin\Tools::HasPermission('Admin/Uninstall') // can't find a permission for core updates so I use Uninstall
+						){
+						unset(self::$notifications[$notification_type]['items'][$itemkey]);
+						continue;
+					}
+
+					// apply user filters
+					if( isset($item['id']) && isset(self::$filters[$item['id']]) ){
+						foreach( self::$filters[$item['id']] as $filter => $new_val ){
+							self::$notifications[$notification_type]['items'][$itemkey][$filter] = $new_val;
+						}
+					}
+				}
+				if( empty(self::$notifications[$notification_type]['items']) ){
+					unset(self::$notifications[$notification_type]);
+				}
+			}
+		}
+
+
+
+		/**
+		* Aggregate all sources of notifications
+		* @returns {array} of notifications
+		*
+		*/
+		public static function CheckNotifications(){
+
+			$notifications = array();
+
+			$drafts = \gp\tool\Files::GetDrafts();
+			if( count($drafts) > 0 ){
+				$notifications['drafts'] = array(
+					'title'			=> 'Working Drafts',
+					'badge_bg'		=> '#329880',
+					'badge_color'	=> '#fff',
+					'priority'		=> '10',
+					'items'			=> $drafts,
+				);
+			}
+
+			$private_pages = \gp\tool\Files::GetPrivatePages();
+			if( count($private_pages) > 0 ){
+				$notifications['private_pages'] = array(
+					'title'			=> 'Private Pages',
+					'badge_bg'		=> '#ad5f45',
+					'badge_color'	=> '#fff',
+					'items'			=> $private_pages,
+				);
+			}
+
+			if( count(\gp\Admin\Tools::$new_versions) > 0 ){
+				$notifications['updates'] = array(
+					'title'			=> 'updates',
+					'badge_bg'		=> '#3153b7',
+					'badge_color'	=> '#fff',
+					'items'			=> self::GetUpdatesNotifications(),
+				);
+			}
+
+			$notifications	= \gp\tool\Plugins::Filter('Notifications', array($notifications));
+
+			self::$notifications = $notifications;
+			self::ApplyFilters();
+		}
+
+
+
+
+		/**
+		* Get Notifications
+		*
+		*/
+		public static function GetNotifications($in_panel=true){
+			global $langmessage, $gpAdmin;
+
+			self::CheckNotifications();
+
+			if( count(self::$notifications) < 1 ){
+				return;
+			}
+
+			$total_count			= 0;
+			$main_badge_style_attr	= '';
+			$priority 				= 0;
+			$links 					= array();
+
+			foreach(self::$notifications as $type => $notification ){
+
+				if( empty($notification['items']) ){
+					self::$debug && debug('notification => items subarray mising or empty');
+					continue;
+				}
+
+				$count	= 0;
+
+				$notification_priority = $priority;
+				foreach( $notification['items'] as $item ){
+					if( isset($item['priority']) && is_numeric($item['priority']) ){
+						if( $item['priority'] < 0 ){
+							// muted item, won't count
+						}else{
+							$notification_priority = (int)$item['priority'] > $notification_priority ?
+								$item['priority'] :
+								$notification_priority;
+							$count++;
+							$total_count++;
+						}
+					}
+				}
+
+				$title				= isset($langmessage[$notification['title']]) ?
+										$langmessage[$notification['title']] :
+										htmlspecialchars($notification['title']);
+
+				$badge_html			= '';
+				$badge_style		= '';
+
+				if( $count > 0 ){
+					$badge_style		.= !empty($notification['badge_bg']) ?
+												('background-color:' . $notification['badge_bg'] . ';') : '';
+					$badge_style		.= !empty($notification['badge_color']) ?
+												(' color:' . $notification['badge_color'] . ';') : '';
+					$badge_style_attr	 = !empty($badge_style) ? ' style="' . $badge_style . '"' : '';
+					if( $in_panel ){
+						$badge_html		 = ' <b class="admin-panel-badge"' . $badge_style_attr . '>' . $count . '</b>';
+					}else{
+						$badge_html		 = ' <span class="dashboard-badge">(' . $count . ')</b>';
+					}
+				}
+
+				$expand_class = 'expand_child';
+				if( !$in_panel ){
+					$expand_class = ''; // expand_child_click
+				}
+
+				ob_start();
+				echo '<li class="' . $expand_class . '">';
+				echo \gp\tool::Link(
+						'Admin/Notifications',
+						$title . $badge_html,
+						'cmd=ShowNotifications&type=' . rawurlencode($type),
+						array(
+							'title'		=> $count . ' ' . $title,
+							'class'		=> 'admin-panel-notification', // . '-' . rawurlencode($type)',
+							'data-cmd'	=> 'gpabox',
+						)
+					);
+				echo '</li>';
+
+				if( $notification_priority > $priority ){
+					$priority = $notification_priority;
+					$main_badge_style_attr	= $badge_style_attr;
+					array_unshift($links, ob_get_clean());
+				}else{
+					$links[] = ob_get_clean();
+				}
+			}
+
+			$panel_label	= $langmessage['Notifications'];
+			$panel_class	= $in_panel ? 'admin-panel-notifications' : '';
+
+			$badge_html		= $total_count > 0 ?
+								'<b class="admin-panel-badge"' . $main_badge_style_attr . '>' . $total_count . '</b>' :
+								'';
+
+			\gp\Admin\Tools::_AdminPanelLinks(
+				$in_panel,
+				implode('', $links),
+				$panel_label,
+				'fa fa-bell',
+				'notifications',
+				$panel_class,	// new param 'class'
+				$badge_html		// new param 'badge'
+			);
+
+		}
+
+
+
+		/**
+		* Convert $new_versions to notification items array
+		* @returns {array} of notifications
+		*
+		*/
+		public static function GetUpdatesNotifications(){
+			global $langmessage;
+
+			$updates = array();
+
+			if( gp_remote_update && isset(\gp\Admin\Tools::$new_versions['core']) ){
+				$updates[] = array(
+					'type'		=> 'cms_core',
+					'label'		=> CMS_NAME . ' ' . \gp\Admin\Tools::$new_versions['core'],
+					'id'		=> hash('crc32b', $label),
+					'action'	=> '<a href="' . \gp\tool::GetDir('/include/install/update.php') . '">'
+										. $langmessage['upgrade'] . '</a>',
+				);
+			}
+
+			foreach(\gp\Admin\Tools::$new_versions as $addon_id => $new_addon_info){
+
+				if( !is_numeric($addon_id) ){
+					continue;
+				}
+
+				$label		= $new_addon_info['name'] . ':  ' . $new_addon_info['version'];
+				$url		= \gp\admin\Tools::RemoteUrl( $new_addon_info['type'] );
+
+				if( $url === false ){
+					continue;
+				}
+				$updates[] = array(
+					'type'		=> $new_addon_info['type'],
+					'label'		=> $label,
+					'id'		=> hash('crc32b', $label),
+					'priority'	=> 60,
+					'action'	=> '<a href="' . $url . '/' . $addon_id . '" data-cmd="remote">'
+										. $langmessage['upgrade'] . '</a>',
+				);
+
+			}
+
+			return $updates;
+		}
+
+
+
+		/**
+		* Update Notifications
+		*
+		*/
+		public static function UpdateNotifications($ajax_include=false){
+			global $page;
+
+			if( !\gp\admin\Tools::HasPermission('Admin/Notifications') ){
+				return;
+			}
+
+			ob_start();
+			self::GetNotifications();
+			$panelgroup = ob_get_clean();
+
+			if( $ajax_include ){
+				if( !is_array($page->ajaxReplace) ){
+					$page->ajaxReplace = array();
+				}
+				$page->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
+				return;
+			}
+
+			echo \gp\tool\Output\Ajax::Callback($_REQUEST['jsoncallback']);
+			echo '([';
+			echo '{DO:"replace",SELECTOR:".admin-panel-notifications",CONTENT:' . \gp\tool::JsonEncode($panelgroup) . '}';
+			echo ']);';
+			die();
+		}
+
 
 	}
 

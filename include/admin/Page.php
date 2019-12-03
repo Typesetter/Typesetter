@@ -258,7 +258,7 @@ class Page extends \gp\Page{
 			switch($request_string){
 				case 'Admin/Finder':
 					if( \gp\admin\Tools::HasPermission('Admin_Uploaded') ){
-						includeFile('thirdparty/finder/connector.php');
+						includeFile('thirdparty/elFinder/connector.php');
 						return;
 					}
 				break;

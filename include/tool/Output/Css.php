@@ -121,7 +121,7 @@ class Css{
 
 			$compiler->addImportPath($dataDir);
 			// set 'compressed' format for compiled css
-			$compiler->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
+			$compiler->setFormatter('ScssPhp\ScssPhp\Formatter\Compressed');
 
 			$compiled = $compiler->compile(implode("\n",$combined));
 

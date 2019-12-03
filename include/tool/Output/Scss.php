@@ -2,7 +2,7 @@
 
 namespace gp\tool\Output;
 
-class Scss extends \Leafo\ScssPhp\Compiler{
+class Scss extends \ScssPhp\ScssPhp\Compiler{
 
 	public $url_root = '';
 
@@ -14,7 +14,7 @@ class Scss extends \Leafo\ScssPhp\Compiler{
     public function compileValue($value){
 
 
-        if( !is_array($value) || $value[0] != \Leafo\ScssPhp\Type::T_FUNCTION || strtolower($value[1]) != 'url' ){
+        if( !is_array($value) || $value[0] != \ScssPhp\ScssPhp\Type::T_FUNCTION || strtolower($value[1]) != 'url' ){
 			return parent::compileValue($value);
 		}
 

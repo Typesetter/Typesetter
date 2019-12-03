@@ -38,11 +38,11 @@ class Configuration extends \gp\special\Base{
 
 						'Interface'					=> false,
 						'colorbox_style'			=> array(
-															'example1'=>'Example 1', 
-															'example2'=>'Example 2', 
-															'example3'=>'Example 3', 
-															'example4'=>'Example 4', 
-															'example5'=>'Example 5' 
+															'example1'=>'Example 1',
+															'example2'=>'Example 2',
+															'example3'=>'Example 3',
+															'example4'=>'Example 4',
+															'example5'=>'Example 5'
 														),
 						'gallery_legacy_style'		=> 'boolean',
 						'language'					=> '',
@@ -157,12 +157,12 @@ class Configuration extends \gp\special\Base{
 		}
 
 		//resize thumbnails
-		if( 
-			$config_before['preserve_icc_profiles'] !== $config['preserve_icc_profiles'] 
-			|| $config_before['preserve_image_metadata'] !== $config['preserve_image_metadata'] 
-			|| $config_before['maxthumbsize'] !== $config['maxthumbsize'] 
-			|| $config_before['maxthumbheight'] !== $config['maxthumbheight'] 
-			|| $config_before['thumbskeepaspect'] !== $config['thumbskeepaspect'] 
+		if(
+			$config_before['preserve_icc_profiles'] !== $config['preserve_icc_profiles']
+			|| $config_before['preserve_image_metadata'] !== $config['preserve_image_metadata']
+			|| $config_before['maxthumbsize'] !== $config['maxthumbsize']
+			|| $config_before['maxthumbheight'] !== $config['maxthumbheight']
+			|| $config_before['thumbskeepaspect'] !== $config['thumbskeepaspect']
 		){
 			msg(\gp\tool::Link('Admin/Configuration',$langmessage['recreate_all_thumbnails'],'cmd=recreate_thumbs','class="" data-cmd="creq"'));
 		}
@@ -213,7 +213,7 @@ class Configuration extends \gp\special\Base{
 
 		$possible = $this->variables;
 
-		$langDir = $dataDir.'/include/thirdparty/ckeditor_34/lang'; //ckeditor
+		$langDir = $dataDir.'/include/thirdparty/ckeditor/lang'; //ckeditor
 
 		$possible['langeditor'] = \gp\tool\Files::readDir($langDir,'js');
 		unset($possible['langeditor']['_languages']);

@@ -9,7 +9,7 @@ namespace gp\tool\Output{
 
 		static $script_objects	= array(
 									'/include/js/inline_edit/inline_editing.js'		=> 'gp_editing',
-									'/include/thirdparty/ckeditor_34/ckeditor.js'	=> 'CKEDITOR',
+									'/include/thirdparty/ckeditor/ckeditor.js'		=> 'CKEDITOR',
 									'/include/js/ckeditor_config.js'				=> 'CKEDITOR',
 									);
 
@@ -421,7 +421,7 @@ namespace gp\tool\Output{
 							'sharedSpaces' => array( 'top' => 'ckeditor_top', 'bottom' =>' ckeditor_bottom' )
 							);
 
-			$ckeditor_basepath = \gp\tool::GetDir('/include/thirdparty/ckeditor_34/');
+			$ckeditor_basepath = \gp\tool::GetDir('/include/thirdparty/ckeditor/');
 			echo 'CKEDITOR_BASEPATH = '.self::quote($ckeditor_basepath).';';
 
 			// config
@@ -440,7 +440,7 @@ namespace gp\tool\Output{
 
 			// CKEDITOR
 			$scripts[]		= array(
-								'file'		=> '/include/thirdparty/ckeditor_34/ckeditor.js',
+								'file'		=> '/include/thirdparty/ckeditor/ckeditor.js',
 								'object'	=> 'CKEDITOR',
 								);
 

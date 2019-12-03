@@ -194,7 +194,6 @@ var $gp = {
 	 */
 	Response : function(data,textStatus,jqXHR){
 
-		$('.messages').detach();
 
 		try{
 			if( typeof(gp_editing) == 'undefined' ){
@@ -237,6 +236,7 @@ var $gp = {
 				break;
 
 				case 'messages':
+					$('.messages').detach();
 					$(obj.CONTENT).appendTo('body').show().css({'top':0});
 				break;
 

@@ -234,7 +234,7 @@ $langmessage = array (
 	'recaptcha_language'             => 'reCaptcha kalba',
 	'about_config'                   => 
 	array (
-	'recaptcha_public'               => 'Gaukite <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Raktą</a> tam kad naudotis CAPTCHA patikros funkcija kontaktų formoje.',
+	'recaptcha_public'               => 'Gaukite <a target="_blank" href="https://www.google.com/recaptcha">reCaptcha Raktą</a> tam kad naudotis CAPTCHA patikros funkcija kontaktų formoje.',
 	'maximgarea'                     => 'Maksimalus kvadratinių pikselių skaičius įkeltiems vaizdams. Pvz. 600 x 800 pikselių vaizdas turi 480,000 kv./pikselių.',
 	'resize_images'                  => 'Create optimized versions of scaled down images.',
 	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.',

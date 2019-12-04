@@ -234,7 +234,7 @@ $langmessage = array (
 	'recaptcha_language'             => 'reCaptcha で使用する言語',
 	'about_config'                   => 
 	array (
-	'recaptcha_public'               => 'コンタクトフォームで CAPTCHA 認証を行うには、<a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha キー</a> を取得してください。',
+	'recaptcha_public'               => 'コンタクトフォームで CAPTCHA 認証を行うには、<a target="_blank" href="https://www.google.com/recaptcha">reCaptcha キー</a> を取得してください。',
 	'maximgarea'                     => 'アップロードする画像の最大面積のピクセル数を設定。例)縦800ピクセルx横600ピクセルの画像ならば、面積は480,000ピクセル。',
 	'resize_images'                  => '最適化された縮小画像を作成します。',
 	'preserve_icc_profiles'          => 'JPEG画像に<a href="https://www.wikiwand.com/ja/ICC%E3%83%97%E3%83%AD%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB" target="_blank">ICCカラープロファイル</a>が埋め込まれます。',

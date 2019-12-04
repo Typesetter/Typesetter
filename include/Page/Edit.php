@@ -1078,7 +1078,7 @@ class Edit extends \gp\Page{
 			break;
 		}
 
-		\gp\admin\Tools::UpdateNotifications(true); // passing true = add to ajaxReplace
+		\gp\admin\Notifications::UpdateNotifications(true); // passing true = add to ajaxReplace
 
 		return true;
 	}
@@ -1331,10 +1331,12 @@ class Edit extends \gp\Page{
 		}
 
 		// update notifications
-		ob_start();
-		\gp\admin\Tools::GetNotifications();
-		$panelgroup = ob_get_clean();
-		$this->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
+		if( \gp\admin\Tools::HasPermission('Admin/Notifications') ){
+			ob_start();
+			\gp\admin\Notifications::GetNotifications();
+			$panelgroup = ob_get_clean();
+			$this->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
+		}
 
 		return true;
 	}
@@ -1447,7 +1449,7 @@ class Edit extends \gp\Page{
 		$page->ajaxReplace		= array();
 		$page->ajaxReplace[]	= array('DraftPublished');
 
-		\gp\admin\Tools::UpdateNotifications(true); // passing true = add to ajaxReplace
+		\gp\admin\Notifications::UpdateNotifications(true); // passing true = add to ajaxReplace
 
 		return true;
 	}

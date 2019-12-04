@@ -309,6 +309,8 @@ namespace gp\tool{
 					if( file_exists($dir . '/' . $folder . '/draft.php') ){
 						$draft = array(
 							'type'		=> $type,
+							'id'		=> hash('crc32b', $folder),
+							'priority'	=> 100,
 						);
 
 						switch( $type ){
@@ -403,6 +405,8 @@ namespace gp\tool{
 					$private_page = array(
 						'index'		=> $index,
 						'title'		=> \gp\tool::IndexToTitle($index),
+						'id'		=> hash('crc32b', 'private_page' . $index),
+						'priority'	=> 40,
 					);
 					if( isset($title['label']) ){
 						$private_page['label']	= $title['label'];

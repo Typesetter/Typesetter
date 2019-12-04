@@ -1209,9 +1209,10 @@
 			html += '<span>' + classes[0] + '</span>';
 		}
 
-		html		=  '<label class="gpcheckbox"><input class="gpcheck" type="checkbox" ';
-		html 		+= 'data-cmd="ClassChecked" ' + checked + '/>' + html;
-		html		+= '</label>';
+		html		=  '<label class="gpcheckbox"><input class="gpcheck" '
+							+ 'type="checkbox" data-cmd="ClassChecked" '
+							+ checked + '/>' + html
+							+ '</label>';
 
 		return html;
 	}

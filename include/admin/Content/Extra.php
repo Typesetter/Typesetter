@@ -538,7 +538,7 @@ class Extra extends \gp\Page\Edit{
 		foreach ($gp_index as $title => $index) {
 			echo ' <tr> ';
 			echo '<td>';
-			if (in_array($index, array_keys($this->vis['pages']))){
+			if (isset($this->vis['pages']) && in_array($index, array_keys($this->vis['pages']))){
 				$check = 'checked';
 			} else {
 				$check = '';

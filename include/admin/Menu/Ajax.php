@@ -1235,6 +1235,7 @@ class Ajax extends \gp\admin\Menu{
 	}
 
 
+
 	/**
 	 * Rename
 	 *
@@ -1257,6 +1258,7 @@ class Ajax extends \gp\admin\Menu{
 	}
 
 
+
 	/**
 	 * Toggle Page Visibility
 	 *
@@ -1273,17 +1275,19 @@ class Ajax extends \gp\admin\Menu{
 				$this->page->ajaxReplace[] = array('replace', '.admin-link-toggle-visibility', $admin_link);
 
 				// update notifications
-				ob_start();
-				\gp\admin\Tools::GetNotifications();
-				$panelgroup = ob_get_clean();
-
-				$this->page->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
+				if( \gp\admin\Tools::HasPermission('Admin/Notifications') ){
+					ob_start();
+					\gp\admin\Notifications::GetNotifications();
+					$panelgroup = ob_get_clean();
+					$this->page->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
+				}
 				return;
 			}
 
-			\gp\admin\Tools::UpdateNotifications(true); // passing true = add to $page->ajaxReplace
+			\gp\admin\Notifications::UpdateNotifications(true); // passing true = add to $page->ajaxReplace
 		}
 	}
+
 
 
 	/**
@@ -1314,6 +1318,7 @@ class Ajax extends \gp\admin\Menu{
 		echo '</div>';
 
 	}
+
 
 
 	/**

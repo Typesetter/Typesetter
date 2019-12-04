@@ -122,7 +122,9 @@
 
 	// check elFinderConfig and fallback
 	// This part don't used if you are using elfinder.html, see elfinder.html
+	console.log('here');
 	if (! require.defined('elFinderConfig')) {
+		console.log('here');
 		define('elFinderConfig', {
 			// elFinder options (REQUIRED)
 			// Documentation for client options:
@@ -130,6 +132,20 @@
 			defaultOpts : {
 				url: finder_opts.url
 				,height:'100%'
+				,getFileCallback:function(file){
+
+					if( typeof(window.top.opener.gp_editor.FinderSelect) == 'function' ){
+						window.top.opener.gp_editor.FinderSelect( file.url );
+
+					}else{
+						var funcNum = getUrlParam('CKEditorFuncNum');
+						window.top.opener.CKEDITOR.tools.callFunction(funcNum, file.url);
+					}
+
+					window.top.close();
+					window.top.opener.focus() ;
+				}
+
 				,customData: finder_opts.customData
 				,commandsOptions : {
 					edit : {
@@ -163,3 +179,28 @@
 	load();
 
 })();
+
+/** check object keys  */
+function checkNested(obj) {
+  var args = Array.prototype.slice.call(arguments, 1);
+
+  for (var i = 0; i < args.length; i++) {
+    if (!obj || !obj.hasOwnProperty(args[i])) {
+      return false;
+    }
+    obj = obj[args[i]];
+  }
+  return true;
+}
+
+/**
+ * Helper function to get parameters from the query string.
+ *  Used by admin/browser & ckeditor
+ *
+ */
+function getUrlParam(paramName) {
+	var reParam = new RegExp('(?:[\?&]|&amp;)' + paramName + '=([^&]+)', 'i') ;
+	var match = window.top.location.search.match(reParam) ;
+
+	return (match && match.length > 1) ? match[1] : '' ;
+}

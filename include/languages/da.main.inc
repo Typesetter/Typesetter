@@ -234,7 +234,7 @@ $langmessage = array (
 	'recaptcha_language'             => 'reCAPTCHA Sprog',
 	'about_config'                   => 
 	array (
-	'recaptcha_public'               => 'Få en<a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Nøgle</a> for at bruge CAPTCHA kontrol på kontakt formular.',
+	'recaptcha_public'               => 'Få en<a target="_blank" href="https://www.google.com/recaptcha">reCaptcha Nøgle</a> for at bruge CAPTCHA kontrol på kontakt formular.',
 	'maximgarea'                     => 'Største kvadrat pixels for uploadede billeder. Et 600 x 800 pixels billed er på 480.000 kvadrat pixel.',
 	'resize_images'                  => 'Create optimized versions of scaled down images.',
 	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.',

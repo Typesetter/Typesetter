@@ -234,7 +234,7 @@ $langmessage = array (
 	'recaptcha_language'             => 'Выберите язык.',
 	'about_config'                   => 
 	array (
-	'recaptcha_public'               => 'Получите <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">ключ reCaptcha</a> чтобы использовать CAPTCHA в форме контактов.',
+	'recaptcha_public'               => 'Получите <a target="_blank" href="https://www.google.com/recaptcha">ключ reCaptcha</a> чтобы использовать CAPTCHA в форме контактов.',
 	'maximgarea'                     => 'Максимальны размер загружаемого изображения в кв. пикселях. Изображение размером 600х800 имеет площадь 480000 кв. пикселей.',
 	'resize_images'                  => 'Создавать оптимизированные версии уменьшенных изображений.',
 	'preserve_icc_profiles'          => 'JPEG изображения сохранят встроеные <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">цветовые профии ICC</a>.',

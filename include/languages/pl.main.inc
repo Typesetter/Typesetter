@@ -234,7 +234,7 @@ $langmessage = array (
 	'recaptcha_language'             => 'Język reCaptcha',
 	'about_config'                   => 
 	array (
-	'recaptcha_public'               => 'Pobierz <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">klucz reCaptcha </a> aby używać CAPTCHA do weryfikacji wpisów przez formularz kontaktowy.',
+	'recaptcha_public'               => 'Pobierz <a target="_blank" href="https://www.google.com/recaptcha">klucz reCaptcha </a> aby używać CAPTCHA do weryfikacji wpisów przez formularz kontaktowy.',
 	'maximgarea'                     => 'Maksymalna wielkość wysyłanego obrazka. Obrazek 600x800 pikseli to 480\'000 pikseli kwadratowych.',
 	'resize_images'                  => 'Create optimized versions of scaled down images.',
 	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.',

@@ -234,7 +234,7 @@ $langmessage = array (
 	'recaptcha_language'             => 'reCaptcha nyelv',
 	'about_config'                   => 
 	array (
-	'recaptcha_public'               => 'Igénylek egy <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha kulcsot</a> a CAPTCHA ellenőrzéshez a kapcsolati űrlapon.',
+	'recaptcha_public'               => 'Igénylek egy <a target="_blank" href="https://www.google.com/recaptcha">reCaptcha kulcsot</a> a CAPTCHA ellenőrzéshez a kapcsolati űrlapon.',
 	'maximgarea'                     => 'Legnagyobb feltölthető kép négyzetpixelben. Egy 600 x 800 pixeles kép 480 000 négyzetpixel.',
 	'resize_images'                  => 'Create optimized versions of scaled down images.',
 	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.',

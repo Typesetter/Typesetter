@@ -601,7 +601,11 @@ class Extra extends \gp\Page\Edit{
 		$data = array();
 		$data['visibility_type'] = $_REQUEST['visibility_type'];
 		if ($data['visibility_type'] > 1){
-			$data['pages'] = $_REQUEST['pages'];
+			if (isset($_REQUEST['pages'])){
+				$data['pages'] = $_REQUEST['pages'];
+			} else {
+				$data['visibility_type'] == 2 ? $data['visibility_type'] = 1 : $data['visibility_type'] = 0;
+			}
 		}
 		$file = '_extra/' . $this->title . '/visibility';
 		if (!\gp\tool\Files::SaveData($file, 'data', $data)){

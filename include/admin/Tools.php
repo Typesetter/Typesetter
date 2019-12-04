@@ -6,7 +6,7 @@ namespace gp\admin{
 
 	class Tools{
 
-		public static $notifications	= array();
+		// public static $notifications	= array();
 		public static $new_versions		= array();
 		public static $update_status	= 'checklater';
 		public static $show_toolbar		= true;
@@ -123,207 +123,6 @@ namespace gp\admin{
 
 
 
-		/**
-		* Aggregate all sources of notifications
-		* @returns {array} of notifications
-		*
-		*/
-		public static function CheckNotifications(){
-
-			$notifications = array();
-
-			$drafts = \gp\tool\Files::GetDrafts();
-			if( count($drafts) > 0 ){
-				$notifications['drafts'] = array(
-					'title'			=> 'Working Drafts',
-					'badge_bg'		=> '#329880',
-					'badge_color'	=> '#fff',
-					'priority'		=> '10',
-					'items'			=> $drafts,
-				);
-			}
-
-			$private_pages = \gp\tool\Files::GetPrivatePages();
-			if( count($private_pages) > 0 ){
-				$notifications['private_pages'] = array(
-					'title'			=> 'Private Pages',
-					'badge_bg'		=> '#ad5f45',
-					'badge_color'	=> '#fff',
-					'items'			=> $private_pages,
-				);
-			}
-
-			if( count(self::$new_versions) > 0 ){
-				$notifications['updates'] = array(
-					'title'			=> 'updates',
-					'badge_bg'		=> '#3153b7',
-					'badge_color'	=> '#fff',
-					'items'			=> self::GetUpdatesNotifications(),
-				);
-			}
-
-			$notifications	= \gp\tool\Plugins::Filter('Notifications', array($notifications));
-
-			self::$notifications = $notifications;
-		}
-
-
-
-		/**
-		* Convert $new_versions to notification items array
-		* @returns {array} of notifications
-		*
-		*/
-		public static function GetUpdatesNotifications(){
-			global $langmessage;
-
-			$updates = array();
-
-			if( gp_remote_update && isset(self::$new_versions['core']) ){
-				$updates[] = array(
-					'label'		=> CMS_NAME . ' ' . self::$new_versions['core'],
-					'action'	=> '<a href="' . \gp\tool::GetDir('/include/install/update.php') . '">' . $langmessage['upgrade'] . '</a>',
-				);
-			}
-
-			foreach(self::$new_versions as $addon_id => $new_addon_info){
-
-				if( !is_numeric($addon_id) ){
-					continue;
-				}
-
-				$label		= $new_addon_info['name'].':  '.$new_addon_info['version'];
-				$url		= self::RemoteUrl( $new_addon_info['type'] );
-
-				if( $url === false ){
-					continue;
-				}
-				$updates[] = array(
-					'label'		=> $label,
-					'action'	=> '<a href="' . $url . '/' . $addon_id . '" data-cmd="remote">' . $langmessage['upgrade'] . '</a>',
-				);
-
-			}
-
-			return $updates;
-		}
-
-
-
-		/**
-		* Get Notifications
-		*
-		*/
-		public static function GetNotifications($in_panel=true){
-			global $langmessage;
-
-			self::CheckNotifications();
-			// debug('/include/admin/Tools.php, line 219 -- Notifications = ' . pre(self::$notifications));
-
-			if( count(self::$notifications) < 1 ){
-				return;
-			}
-
-			$total_count			= 0;
-			$main_badge_style_attr	= '';
-			$priority 				= 0;
-			$links 					= array();
-
-			foreach(self::$notifications as $type => $notification ){
-
-				$count	= count($notification['items']);
-				if( $count < 1 ){
-					continue;
-				}
-				$total_count += $count;
-
-				$title				= isset($langmessage[$notification['title']]) ?
-										$langmessage[$notification['title']] :
-										htmlspecialchars($notification['title']);
-
-				$badge_style		= '';
-				$badge_style		.= !empty($notification['badge_bg'])	? ('background-color:' . $notification['badge_bg'] . ';') : '';
-				$badge_style		.= !empty($notification['badge_color'])	? (' color:' . $notification['badge_color'] . ';') : '';
-				$badge_style_attr	=  !empty($badge_style) ? ' style="' . $badge_style . '"' : '';
-				if( $in_panel ){
-					$badge_html		= '<b class="admin-panel-badge"' . $badge_style_attr . '>' . $count . '</b>';
-				}else{
-					$badge_html		= ' <span class="dashboard-badge">(' . $count . ')</b>';
-				}
-
-				$expand_class = 'expand_child';
-				if( !$in_panel ){
-					$expand_class = ''; // expand_child_click
-				}
-				ob_start();
-				echo '<li class="' . $expand_class . '">';
-				echo \gp\tool::Link(
-						'Admin/Notifications',
-						$title . ' ' . $badge_html,
-						'cmd=ShowNotifications&type=' . rawurlencode($type),
-						array(
-							'title'		=> $count . ' ' . $title,
-							'class'		=> 'admin-panel-notification', // . '-' . rawurlencode($type)',
-							'data-cmd'	=> 'gpabox',
-						)
-					);
-				echo '</li>';
-
-				if( !empty($notification['priority']) && (int)$notification['priority'] >= $priority ){
-					$priority = (int)$notification['priority'];
-					$main_badge_style_attr	= $badge_style_attr;
-					array_unshift($links, ob_get_clean());
-				}else{
-					$links[] = ob_get_clean();
-				}
-			}
-
-			$panel_label 	= $langmessage['Notifications'];
-			$panel_class	= $in_panel ? 'admin-panel-notifications' : '';
-
-			self::_AdminPanelLinks(
-				$in_panel,
-				implode('', $links),
-				$panel_label,
-				'fa fa-bell',
-				'notifications',
-				$panel_class,  // new param 'class'
-				'<b class="admin-panel-badge"' . $main_badge_style_attr . '>' . $total_count . '</b>'  // new param 'badge'
-			);
-
-		}
-
-
-
-		/**
-		* Update Notifications
-		*
-		*/
-		public static function UpdateNotifications($ajax_include=false){
-			global $page;
-
-			ob_start();
-			self::GetNotifications();
-			$panelgroup = ob_get_clean();
-
-			if( $ajax_include ){
-				if( !is_array($page->ajaxReplace) ){
-					$page->ajaxReplace = array();
-				}
-				$page->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
-				return;
-			}
-
-			echo \gp\tool\Output\Ajax::Callback($_REQUEST['jsoncallback']);
-			echo '([';
-			echo '{DO:"replace",SELECTOR:".admin-panel-notifications",CONTENT:' . \gp\tool::JsonEncode($panelgroup) . '}';
-			echo ']);';
-			die();
-		}
-
-
-
-
 		public static function AdminScripts(){
 			global $langmessage, $config;
 			$scripts = array();
@@ -375,12 +174,13 @@ namespace gp\admin{
 
 			$scripts['Admin_Theme_Content/Edit']		= array(	'class'		=> '\\gp\\admin\\Layout\\Edit',
 																	'method'	=> 'RunScript',
-																	'label'		=> $langmessage['Appearance'],
+																	'label'		=> $langmessage['layouts'],
 																	);
 
 			$scripts['Admin_Theme_Content/Available']	 = array(	'class'		=> '\\gp\\admin\\Layout\\Available',
 																	'method'	=> 'ShowAvailable',
-																	'label' 	=> $langmessage['Available'],
+																	'label' 	=> $langmessage['Available']
+																					. ' (' . $langmessage['layouts'] . ')',
 																	);
 
 			$scripts['Admin_Theme_Content/Text']		= array(	'class'		=> '\\gp\\admin\\Layout\\Text',
@@ -394,7 +194,8 @@ namespace gp\admin{
 			if( gp_remote_themes ){
 				$scripts['Admin_Theme_Content/Remote']	= array(	'class'		=> '\\gp\\admin\\Layout',
 																	'method'	=> 'RemoteBrowse',
-																	'label' 	=> $langmessage['Search'],
+																	'label' 	=> $langmessage['Search']
+																					. ' (' . $langmessage['layouts'] . ')',
 																	);
 			}
 
@@ -437,19 +238,6 @@ namespace gp\admin{
 																	'group'		=> 'settings',
 																);
 
-
-			// Addon admin links
-			if( isset($config['admin_links']) && is_array($config['admin_links']) ){
-
-				foreach( $config['admin_links'] as $addonName => $addonInfo ){
-					$addonLabel = $addonInfo['label'];
-					$addonLabel	= \gp\tool\Plugins::Filter('AdminLinkLabel', array($addonName, $addonLabel));
-					$config['admin_links'][$addonName]['label'] = $addonLabel;
-				}
-
-				$scripts += $config['admin_links'];
-			}
-
 			// Tools
 			$scripts['Admin/Port']		= array(	'class'		=> '\\gp\\admin\\Tools\\Port',
 													'label'		=> $langmessage['Export'],
@@ -480,13 +268,15 @@ namespace gp\admin{
 
 			$scripts['Admin/Addons/Available']		= array(	'class'		=> '\\gp\\admin\\Addons',
 																'method'	=> 'ShowAvailable',
-																'label' 	=> $langmessage['Available'],
+																'label' 	=> $langmessage['Available']
+																				. ' (' . $langmessage['plugins'] . ')',
 													);
 
 			if( gp_remote_plugins ){
 				$scripts['Admin/Addons/Remote']		= array(	'class'		=> '\\gp\\admin\\Addons',
 																'method'	=> 'RemoteBrowse',
-																'label' 	=> $langmessage['Search'],
+																'label'		=> $langmessage['Search']
+																				. ' (' . $langmessage['plugins'] . ')',
 													);
 			}
 
@@ -494,22 +284,45 @@ namespace gp\admin{
 																'label' 	=> 'Errors',
 													);
 
-			$scripts['Admin/About']					= array(	'class'		=> '\\gp\\admin\\About',
-																'label' 	=> 'About '.CMS_NAME,
+			$scripts['Admin/About']					= array(	'class'			=> '\\gp\\admin\\About',
+																'label'			=> 'About ' . CMS_NAME,
 													);
 
-			$scripts['Admin/Browser']				= array(	'class'		=> '\\gp\\admin\\Content\\Browser',
-																'permission' => 'Admin_Uploaded',
+			$scripts['Admin/Browser']				= array(	'class'			=> '\\gp\\admin\\Content\\Browser',
+																'permission'	=> 'Admin_Uploaded',
 													);
 
-			$scripts['Admin/Preferences']			= array(	'class'		=> '\\gp\\admin\\Settings\\Preferences',
-																'label' 	=> $langmessage['Preferences'],
+			$scripts['Admin/Preferences']			= array(	'class'			=> '\\gp\\admin\\Settings\\Preferences',
+																'label'			=> $langmessage['Preferences'],
 													);
 
-			$scripts['Admin/Notifications']			= array(	'class'		=> '\\gp\\admin\\Notifications',
-																'method'	=> 'ShowNotifications',
-																'label' 	=> 'Notifications', // $langmessage['Notifications'],
+			$scripts['Admin/Notifications']			= array(	'class'			=> '\\gp\\admin\\Notifications',
+																'method'		=> 'ListNotifications',
+																'label'			=> $langmessage['Notifications'],
 													);
+
+			$scripts['Admin/Notifications/Manage']	= array(	'class'			=> '\\gp\\admin\\Notifications',
+																'method'		=> 'ManageNotifications',
+																'permission'	=> 'Admin/Notifications',
+													);
+
+			// Addon admin links
+			if( isset($config['admin_links']) && is_array($config['admin_links']) ){
+
+				foreach( $config['admin_links'] as $addonName => $addonInfo ){
+					$addonLabel = $addonInfo['label'];
+					$addonLabel	= \gp\tool\Plugins::Filter('AdminLinkLabel', array($addonName, $addonLabel));
+					$config['admin_links'][$addonName]['label'] = $addonLabel;
+				}
+
+				//prefix admin link labels with plugin icon
+				$admin_links = $config['admin_links'];
+				foreach( $admin_links as $admin_link_key => $admin_link ){
+					$admin_links[$admin_link_key]['label'] = '<i class="fa fa-plug"></i> ' . $admin_link['label'];
+				}
+				$scripts += $admin_links;
+			}
+
 
 			gpSettingsOverride('admin_scripts', $scripts);
 
@@ -908,7 +721,9 @@ namespace gp\admin{
 			*/
 
 			//notifications
-			self::GetNotifications($in_panel);
+			if( \gp\admin\Tools::HasPermission('Admin/Notifications') ){
+				\gp\admin\Notifications::GetNotifications($in_panel);
+			}
 
 			//username
 			ob_start();
@@ -1006,7 +821,7 @@ namespace gp\admin{
 		 * @param string $badge, HTML for optional badge, TODO: should be better an array of separated class and content
 		 *
 		 */
-		private static function _AdminPanelLinks($in_panel, $links, $lang_key, $icon_class, $panel_arg, $class='', $badge=''){
+		public static function _AdminPanelLinks($in_panel, $links, $lang_key, $icon_class, $panel_arg, $class='', $badge=''){
 			global $langmessage;
 
 			if( empty($links) ){

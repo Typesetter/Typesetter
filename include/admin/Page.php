@@ -221,7 +221,7 @@ class Page extends \gp\Page{
 	 *
 	 */
 	private function RunAdminScript(){
-		global $dataDir,$langmessage;
+		global $dataDir, $langmessage;
 
 
 		if( strtolower($this->requested) == 'admin' ){
@@ -248,7 +248,7 @@ class Page extends \gp\Page{
 					return;
 				}
 
-				message($langmessage['not_permitted']);
+				msg($langmessage['not_permitted'] . ' (' . $request_string . ')');
 				$this->AdminPanel();
 				return;
 			}

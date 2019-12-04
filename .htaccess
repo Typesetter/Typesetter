@@ -1,8 +1,15 @@
 
 AcceptPathInfo On
 
-# prevent access to configuration files
+# Security
+# Prevent access to *.gpjson data files
 <FilesMatch "\.gpjson$">
-Order allow,deny
-Deny from all
+	Order allow,deny
+	Deny from all
 </FilesMatch>
+
+<IfModule mod_rewrite.c>
+	RewriteRule \.gpjson$ - [F,L,NC]
+</IfModule>
+
+Options -Indexes

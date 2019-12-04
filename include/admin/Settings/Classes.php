@@ -23,6 +23,7 @@ class Classes extends \gp\special\Base{
 		$this->ClassesForm();
 	}
 
+
 	/**
 	 * Get the current classes
 	 *
@@ -31,8 +32,8 @@ class Classes extends \gp\special\Base{
 
 		$classes		= \gp\tool\Files::Get('_config/classes');
 		if( $classes ){
-			array_walk_recursive($myArray, function($value){
-				return htmlspecialchars($value,ENT_COMPAT,'UTF-8');
+			array_walk_recursive($classes, function($value){
+				return htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
 			});
 			return $classes;
 		}
@@ -40,6 +41,8 @@ class Classes extends \gp\special\Base{
 		//defaults
 		return self::Defaults();
 	}
+
+
 
 	static function Defaults(){
 		return array(
@@ -53,6 +56,8 @@ class Classes extends \gp\special\Base{
 			),
 		);
 	}
+
+
 
 	static function Bootstrap(){
 		return array (

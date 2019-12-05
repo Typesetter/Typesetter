@@ -168,7 +168,7 @@ class phpunit_Archive extends gptest_bootstrap{
 			return;
 		}
 
-		self::assertInstanceOf($this->types[$type],$archive->GetObject(),'archive object is not PharData for type '.$type);
+		self::assertInstanceOf($this->types[$type],$archive->GetObject(),'Archive object is not '.$this->types[$type].' for type '.$type);
 
 		$archive->Add($this->dir);
 

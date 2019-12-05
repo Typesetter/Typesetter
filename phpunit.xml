@@ -6,6 +6,7 @@
     stopOnIncomplete	= "false"
     stopOnSkipped		= "false"
     bootstrap			= "phpunit/bootstrap.php"
+	verbose				= "true"
     >
 
     <testsuites>
@@ -26,4 +27,7 @@
 
     </testsuites>
 
+	<logging>
+	    <log type="testdox-text" target="php://stdout"/>
+	</logging>
 </phpunit>

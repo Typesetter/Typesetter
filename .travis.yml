@@ -18,4 +18,4 @@ jobs:
 # https://www.reddit.com/r/PHPhelp/comments/apipqs/travis_specifying_phpunit_version/
 before_script:
   - composer init -n
-  - composer require phpunit/phpunit ^7
+  - composer require phpunit/phpunit <8

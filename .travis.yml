@@ -7,6 +7,7 @@ jobs:
     - php: 5.5
       dist: trusty
     - php: 7.0
+      dist: trusty
     - php: 7.1
     - php: 7.2
     - php: 7.3

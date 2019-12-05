@@ -234,7 +234,7 @@ $langmessage = array (
 	'recaptcha_language'             => 'reCaptcha jezik',
 	'about_config'                   => 
 	array (
-	'recaptcha_public'               => 'Pridobite si <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha ključ</a> da boste lahko uporabljali CAPTCHA preverjanje pri uporabi kontakntega obrazca.',
+	'recaptcha_public'               => 'Pridobite si <a target="_blank" href="https://www.google.com/recaptcha">reCaptcha ključ</a> da boste lahko uporabljali CAPTCHA preverjanje pri uporabi kontakntega obrazca.',
 	'maximgarea'                     => 'Največje število pik za naložene slike. Slika velikosti 600 x 800 pik ima 480,000 sq/pik.',
 	'resize_images'                  => 'Create optimized versions of scaled down images.',
 	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.',

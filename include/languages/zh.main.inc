@@ -234,7 +234,7 @@ $langmessage = array (
 	'recaptcha_language'             => 'reCaptcha 語言',
 	'about_config'                   => 
 	array (
-	'recaptcha_public'               => '取得一個 <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha 金鑰</a>方可在聯絡表單上使用 CAPTCHA 驗證機制。',
+	'recaptcha_public'               => '取得一個 <a target="_blank" href="https://www.google.com/recaptcha">reCaptcha 金鑰</a>方可在聯絡表單上使用 CAPTCHA 驗證機制。',
 	'maximgarea'                     => '上傳圖片的最大平方像素。一個 600 x 800 像素的圖片有 480,000 平方像素。',
 	'resize_images'                  => 'Create optimized versions of scaled down images.',
 	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.',

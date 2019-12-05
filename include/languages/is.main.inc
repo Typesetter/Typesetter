@@ -234,7 +234,7 @@ $langmessage = array (
   'recaptcha_language' => 'Tungumál reCaptcha',
   'about_config' => 
   array (
-  'recaptcha_public' => 'Náðu í <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha dulritunarlykil</a> til að nota CAPTCHA-staðfestingu í \'Hafa samband\' útfyllingarreitnum.',
+  'recaptcha_public' => 'Náðu í <a target="_blank" href="https://www.google.com/recaptcha">reCaptcha dulritunarlykil</a> til að nota CAPTCHA-staðfestingu í \'Hafa samband\' útfyllingarreitnum.',
   'maximgarea' => 'Hámarksfjöldi fermynddíla innsendra mynda. Mynd sem er 600 x 800 mynddílar reiknast sem 480.000 ferdílar.',
   'resize_images' => 'Útbúa bestaðar útgáfur af niðurkvörðuðum myndum.',
   'preserve_icc_profiles' => 'JPEG-myndir munu halda ívöfðum <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC-litasniðum</a>.',

@@ -234,7 +234,7 @@ $langmessage = array (
 	'recaptcha_language'             => 'reCaptcha jazyk',
 	'about_config'                   => 
 	array (
-	'recaptcha_public'               => 'Zaobstarajte si <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha kľúč</a> pre použitie CAPTCHA overenia na kontaktnom formulári.',
+	'recaptcha_public'               => 'Zaobstarajte si <a target="_blank" href="https://www.google.com/recaptcha">reCaptcha kľúč</a> pre použitie CAPTCHA overenia na kontaktnom formulári.',
 	'maximgarea'                     => 'Maximum štvorcových pixelov pre nahraté obrázky. Obrázok 600 x 800 má 480,000 štv.pixelov.',
 	'resize_images'                  => 'Create optimized versions of scaled down images.',
 	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.',

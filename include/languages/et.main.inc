@@ -234,7 +234,7 @@ $langmessage = array (
 	'recaptcha_language'             => 'reCaptcha keel',
 	'about_config'                   => 
 	array (
-	'recaptcha_public'               => 'Taotle <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha võti</a>, et kasutada CAPTCHA kontrolli kontakti vormil.',
+	'recaptcha_public'               => 'Taotle <a target="_blank" href="https://www.google.com/recaptcha">reCaptcha võti</a>, et kasutada CAPTCHA kontrolli kontakti vormil.',
 	'maximgarea'                     => 'Üleslaaditud piltide maksimaalne ruutpikslite arv. 600 x 800 pikslisel pildil on 480 000 ruutpikslit.',
 	'resize_images'                  => 'Create optimized versions of scaled down images.',
 	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.',

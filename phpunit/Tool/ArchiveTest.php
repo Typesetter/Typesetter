@@ -7,8 +7,16 @@
 class phpunit_Archive extends gptest_bootstrap{
 
 	private $dir;
-	private $types		= array('tbz','tgz','tar','zip','tar.bz','tar.gz');
-	private $files		= array(
+	private $types		= [
+							'tbz'							=> 'PharData',
+							'tgz'							=> 'PharData',
+							'tar'							=> 'PharData',
+							'zip'							=> 'ZipArchive',
+							'tar.bz'						=> 'PharData',
+							'tar.gz'						=> 'PharData',
+						];
+
+	private $files		= [
 							'index.html'					=> '<html><body></body></html>',
 							'foo/text.txt'					=> 'lorem ipsum',
 							'foo/index.html'				=> '<html><body></body></html>',
@@ -17,7 +25,7 @@ class phpunit_Archive extends gptest_bootstrap{
 
 							// unicode isn't supported by pharData until php 5.4.29/5.5.13/5.6.0
 							//'foo/unicode/Kødpålæg.tst'		=> 'Die style.css hatte ich an dieser Stelle zuvor nicht überarbeitet.',
-							);
+						];
 
 	/**
 	 * Create the files and folders
@@ -28,7 +36,7 @@ class phpunit_Archive extends gptest_bootstrap{
 		// HHVM doesn't support writing with PHAR
 		// https://github.com/facebook/hhvm/issues/4899
 		if( defined('HHVM_VERSION') ){
-			$this->types = array('zip');
+			$this->types = ['zip'=>'ZipArchive'];
 		}
 
 
@@ -47,7 +55,7 @@ class phpunit_Archive extends gptest_bootstrap{
 	 */
 	function testCreate(){
 
-		foreach($this->types as $type){
+		foreach($this->types as $type => $expected_obj){
 			$archive = $this->FromFiles($type);
 			$list = $archive->ListFiles();
 			self::AssertEquals( count($this->files), $archive->Count() );
@@ -61,7 +69,7 @@ class phpunit_Archive extends gptest_bootstrap{
 	 *
 	 */
 	function testCreateString(){
-		foreach($this->types as $type){
+		foreach($this->types as $type => $expected_obj){
 			$archive = $this->FromString($type);
 			self::AssertEquals( count($this->files), $archive->Count() );
 		}
@@ -74,7 +82,7 @@ class phpunit_Archive extends gptest_bootstrap{
 	 */
 	function testExtract(){
 
-		foreach($this->types as $type){
+		foreach($this->types as $type => $expected_obj){
 
 			$archive	= $this->FromString($type);
 
@@ -92,7 +100,7 @@ class phpunit_Archive extends gptest_bootstrap{
 	 */
 	function testListFiles(){
 
-		foreach($this->types as $type){
+		foreach($this->types as $type => $expected_obj){
 			$archive	= $this->FromString($type);
 			$list		= $archive->ListFiles();
 			self::AssertEquals( count($list), count($this->files) );
@@ -106,7 +114,7 @@ class phpunit_Archive extends gptest_bootstrap{
 	 */
 	function testGetRoot(){
 
-		foreach($this->types as $type){
+		foreach($this->types as $type => $expected_obj){
 			$archive	= $this->FromString($type);
 			$root		= $archive->GetRoot('text.txt');
 			self::AssertEquals( 'foo', $root );
@@ -154,12 +162,15 @@ class phpunit_Archive extends gptest_bootstrap{
 
 		try{
 			$archive	= new \gp\tool\Archive($path);
-			$archive->Add($this->dir);
 
 		}catch( Exception $e){
 			self::AssertTrue( false, 'FromFiles('.$type.') Failed with message: '.$e->getMessage() );
 			return;
 		}
+
+		self::assertInstanceOf($this->types[$type],$archive->GetObject(),'archive object is not PharData for type '.$type);
+
+		$archive->Add($this->dir);
 
 		$archive->Compress();
 		self::AssertFileExists( $path );

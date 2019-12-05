@@ -20,6 +20,7 @@ class phpunit_Update extends gptest_bootstrap{
 
 	}
 
+	/*
 	static function AssertTrue($condition, $msg = '' ){
 		global $page;
 
@@ -28,6 +29,7 @@ class phpunit_Update extends gptest_bootstrap{
 		}
 		parent::assertTrue($condition,$msg);
 	}
+	*/
 
 
 	/**

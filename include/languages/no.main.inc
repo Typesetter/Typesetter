@@ -234,7 +234,7 @@ $langmessage = array (
 	'recaptcha_language'             => 'reCaptcha Language',
 	'about_config'                   => 
 	array (
-	'recaptcha_public'               => 'Hent en <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha-nøkkel</a> for å bruke verifiseringsbilde (CAPTCHA) på kontaktskjemaet.',
+	'recaptcha_public'               => 'Hent en <a target="_blank" href="https://www.google.com/recaptcha">reCaptcha-nøkkel</a> for å bruke verifiseringsbilde (CAPTCHA) på kontaktskjemaet.',
 	'maximgarea'                     => 'Maksimum antall kvadratpiksler for opplastede bilder. Et bilde på 600 x 800 piksler har 480,000 kv/piksler.',
 	'resize_images'                  => 'Create optimized versions of scaled down images.',
 	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.',

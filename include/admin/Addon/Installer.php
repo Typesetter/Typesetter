@@ -481,9 +481,8 @@ class Installer extends \gp\admin\Addon\Tools{
 	 *
 	 */
 	public function HasHooks(){
-
 		foreach($this->ini_contents as $key => $value){
-			if( is_array($value) ){
+			if( is_array($value) && $key != 'FrontEndFramework' ){
 				$this->has_hooks = true;
 				return;
 			}

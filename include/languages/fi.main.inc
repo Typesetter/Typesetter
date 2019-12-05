@@ -234,7 +234,7 @@ $langmessage = array (
 	'recaptcha_language'             => 'reCaptcha kieli',
 	'about_config'                   => 
 	array (
-	'recaptcha_public'               => 'Hae <a target="_blank" href="http://recaptcha.net/whyrecaptcha.html">reCaptcha Key</a> käyttääksesi CAPTCHA kuvavarmennusta yhteydenottolomakkeessa.',
+	'recaptcha_public'               => 'Hae <a target="_blank" href="https://www.google.com/recaptcha">reCaptcha Key</a> käyttääksesi CAPTCHA kuvavarmennusta yhteydenottolomakkeessa.',
 	'maximgarea'                     => 'Maksimi neliöpikselimäärä lähetettäville kuville. 600 x 800 pixelin kuvassa on 480,000 neliöpikseliä.',
 	'resize_images'                  => 'Create optimized versions of scaled down images.',
 	'preserve_icc_profiles'          => 'JPEG images will retain embedded <a href="https://en.wikipedia.org/wiki/ICC_profile" target="_blank">ICC color profiles</a>.',

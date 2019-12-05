@@ -1,13 +1,19 @@
 language: php
 
-dist: trusty
-
 jobs:
   include:
     - php: 5.4
+      dist: trusty
     - php: 5.5
+      dist: trusty
     - php: 7.0
+      dist: trusty
     - php: 7.1
+      dist: trusty
     - php: 7.2
     - php: 7.3
     - php: 7.4
+
+# phpunit 8 will result in an error
+# https://www.reddit.com/r/PHPhelp/comments/apipqs/travis_specifying_phpunit_version/
+before_script: composer require phpunit/phpunit ^7

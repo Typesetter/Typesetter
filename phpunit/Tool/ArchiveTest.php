@@ -55,7 +55,14 @@ class phpunit_Archive extends gptest_bootstrap{
 	 */
 	function testCreate(){
 
-		foreach($this->types as $type => $expected_obj){
+		foreach($this->types as $type => $expected_class){
+
+			if( !class_exists($expected_class) ){
+				$this->markTestIncomplete('missing archive class '.$expected_class);
+				continue;
+			}
+
+
 			$archive = $this->FromFiles($type);
 			$list = $archive->ListFiles();
 			self::AssertEquals( count($this->files), $archive->Count() );
@@ -69,7 +76,14 @@ class phpunit_Archive extends gptest_bootstrap{
 	 *
 	 */
 	function testCreateString(){
-		foreach($this->types as $type => $expected_obj){
+
+		foreach($this->types as $type => $expected_class){
+
+			if( !class_exists($expected_class) ){
+				$this->markTestIncomplete('missing archive class '.$expected_class);
+				continue;
+			}
+
 			$archive = $this->FromString($type);
 			self::AssertEquals( count($this->files), $archive->Count() );
 		}
@@ -82,7 +96,12 @@ class phpunit_Archive extends gptest_bootstrap{
 	 */
 	function testExtract(){
 
-		foreach($this->types as $type => $expected_obj){
+		foreach($this->types as $type => $expected_class){
+
+			if( !class_exists($expected_class) ){
+				$this->markTestIncomplete('missing archive class '.$expected_class);
+				continue;
+			}
 
 			$archive	= $this->FromString($type);
 
@@ -100,7 +119,13 @@ class phpunit_Archive extends gptest_bootstrap{
 	 */
 	function testListFiles(){
 
-		foreach($this->types as $type => $expected_obj){
+		foreach($this->types as $type => $expected_class){
+
+			if( !class_exists($expected_class) ){
+				$this->markTestIncomplete('missing archive class '.$expected_class);
+				continue;
+			}
+
 			$archive	= $this->FromString($type);
 			$list		= $archive->ListFiles();
 			self::AssertEquals( count($list), count($this->files) );
@@ -114,7 +139,13 @@ class phpunit_Archive extends gptest_bootstrap{
 	 */
 	function testGetRoot(){
 
-		foreach($this->types as $type => $expected_obj){
+		foreach($this->types as $type => $expected_class){
+
+			if( !class_exists($expected_class) ){
+				$this->markTestIncomplete('missing archive class '.$expected_class);
+				continue;
+			}
+
 			$archive	= $this->FromString($type);
 			$root		= $archive->GetRoot('text.txt');
 			self::AssertEquals( 'foo', $root );
@@ -160,12 +191,6 @@ class phpunit_Archive extends gptest_bootstrap{
 
 		$path			= $this->ArchivePath($type);
 		$expected_class = $this->types[$type];
-
-		if( !class_exists($expected_class) ){
-			$this->markTestIncomplete('missing archive class '.$expected_class);
-			return;
-		}
-
 
 		try{
 			$archive	= new \gp\tool\Archive($path);

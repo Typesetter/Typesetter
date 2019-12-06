@@ -36,6 +36,9 @@
 	<filter>
         <whitelist>
             <directory suffix=".php">./include</directory>
+			<exclude>
+			      <directory suffix=".php">./include/thirdparty</directory>
+		  	</exclude>
         </whitelist>
     </filter>
 </phpunit>

@@ -158,7 +158,14 @@ class phpunit_Archive extends gptest_bootstrap{
 	 */
 	function FromFiles($type){
 
-		$path = $this->ArchivePath($type);
+		$path			= $this->ArchivePath($type);
+		$expected_class = $this->types[$type];
+
+		if( !class_exists($expected_class) ){
+			$this->markTestIncomplete('missing archive class '.$expected_class);
+			return;
+		}
+
 
 		try{
 			$archive	= new \gp\tool\Archive($path);
@@ -168,7 +175,7 @@ class phpunit_Archive extends gptest_bootstrap{
 			return;
 		}
 
-		self::assertInstanceOf($this->types[$type],$archive->GetObject(),'Archive object is not '.$this->types[$type].' for type '.$type);
+		self::assertInstanceOf($expected_class,$archive->GetObject(),'Archive object is not '.$this->types[$type].' for type '.$type);
 
 		$archive->Add($this->dir);
 

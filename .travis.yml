@@ -19,4 +19,4 @@ jobs:
 before_script:
   - composer init -n
   - composer require phpunit/phpunit "<8 >=4"
-  - phpenv config-add phpunit/phpconfig.ini
+  #- phpenv config-add phpunit/phpconfig.ini

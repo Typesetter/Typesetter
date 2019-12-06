@@ -124,7 +124,6 @@ class gp_install{
 		$this->CheckDataFolder();
 		$this->CheckPHPVersion();
 		$this->CheckEnv();
-		$this->CheckMagic();
 		$this->CheckMemory();
 
 
@@ -295,25 +294,6 @@ class gp_install{
 		$this->StatusRow($checkValue,$langmessage['Set'],$langmessage['Not_Set']);
 	}
 
-
-
-
-	/**
-	 * Check magic_quotes_sybase and magic_quotes_runtime
-	 *
-	 */
-	private function CheckMagic(){
-		global $langmessage;
-
-		//magic_quotes_runtime
-		$checkValue = !\gp\tool::IniGet('magic_quotes_runtime');
-		echo '<tr><td>';
-		echo '<a href="http://php.net/manual/security.magicquotes.disabling.php" target="_blank">';
-		echo 'Magic Quotes Runtime';
-		echo '</a>';
-		echo '</td>';
-		$this->StatusRow($checkValue,$langmessage['Off'],$langmessage['On']);
-	}
 
 	/**
 	 * Check php's memory limit
@@ -972,4 +952,4 @@ class gp_install{
 	}
 
 
-}//end class
+}

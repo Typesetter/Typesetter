@@ -6,6 +6,7 @@ echo "\n************************************************************************
 echo "\nBegin gpEasy Tests\n\n";
 
 
+defined('gpdebug') or define('gpdebug',true);
 defined('is_running') or define('is_running',true);
 defined('gp_unit_testing') or define('gp_unit_testing',true);
 

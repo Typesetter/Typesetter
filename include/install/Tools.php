@@ -684,4 +684,17 @@ class Tools{
 		return '<a href="$linkPrefix/'.$href.$query.'">'.$label.'</a>';
 	}
 
+	static function AddCSs(){
+		global $dataDir;
+		
+		echo '<style type="text/css">';
+
+		$path = $dataDir.'/include/install/update.css';
+		if( file_exists($path) ){
+			echo file_get_contents($path);
+		}
+
+		echo '</style>';
+	}
+
 }

@@ -8,6 +8,6 @@ xx_
 XX_
 .easymin
 Boxfile
-.phpunit
+phpunit
 phpunit.xml
 .travis.yml

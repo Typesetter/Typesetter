@@ -6,3 +6,4 @@ lock_admin
 vendor
 composer.lock
 composer.json
+coverage.xml

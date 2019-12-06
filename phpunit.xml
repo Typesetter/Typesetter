@@ -29,5 +29,13 @@
 
 	<logging>
 	    <log type="testdox-text" target="php://stdout"/>
+		<log type="coverage-clover" target="coverage.xml"/>
 	</logging>
+
+
+	<filter>
+        <whitelist>
+            <directory suffix=".php">./include</directory>
+        </whitelist>
+    </filter>
 </phpunit>

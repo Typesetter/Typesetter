@@ -16,7 +16,7 @@ $dataDir = $_SERVER['PWD'];
 include('include/common.php');
 spl_autoload_register( array('\\gp\\tool','Autoload') );
 
-$config = ['gpuniq'=>'test'];
+$config = ['gpuniq'=>'test','language'=>'en'];
 
 \gp\tool::SetLinkPrefix();
 

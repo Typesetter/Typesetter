@@ -236,6 +236,10 @@ var $gp = {
 					$gp.AdminBoxC(obj.CONTENT);
 				break;
 
+				case 'admin_box_replace':
+					$gp.AdminBoxC(obj.CONTENT, {replaceBox : true});
+				break;
+
 				case 'messages':
 					$(obj.CONTENT).appendTo('body').show().css({'top':0});
 				break;

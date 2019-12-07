@@ -86,27 +86,30 @@ namespace gp\tool\Output{
 			if( !empty($_REQUEST['gpx_content']) ){
 				switch($_REQUEST['gpx_content']){
 					case 'gpabox':
-						self::JsonDo('admin_box_data','',$page->contentBuffer);
+						self::JsonDo('admin_box_data', '', $page->contentBuffer);
+					break;
+					case 'gprabox':
+						self::JsonDo('admin_box_replace', '', $page->contentBuffer);
 					break;
 				}
-			}elseif( in_array('#gpx_content',$page->ajaxReplace) ){
+			}elseif( in_array('#gpx_content', $page->ajaxReplace) ){
 				$replace_id = '#gpx_content';
 
 				if( isset($_GET['gpreqarea']) ){
-					$replace_id = '#'.$_GET['gpreqarea'];
+					$replace_id = '#' . $_GET['gpreqarea'];
 				}
 
 				ob_start();
 				$page->GetGpxContent(true);
 				$content = ob_get_clean();
-				self::JsonDo('replace',$replace_id,$content);
+				self::JsonDo('replace', $replace_id,$content);
 			}
 
 			//other areas
 			foreach($page->ajaxReplace as $arguments){
 				if( is_array($arguments) ){
-					$arguments += array(0=>'',1=>'',2=>'');
-					self::JsonDo($arguments[0],$arguments[1],$arguments[2]);
+					$arguments += array(0 => '', 1 => '', 2 => '');
+					self::JsonDo($arguments[0], $arguments[1], $arguments[2]);
 				}
 			}
 

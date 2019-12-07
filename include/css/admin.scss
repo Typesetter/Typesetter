@@ -1224,6 +1224,8 @@ table.tablesorter th.gp_header_desc:before{
 	white-space: nowrap;
 	line-height: 100%;
 	border-radius: 2px;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 #gp_edit_overlay span a:hover{

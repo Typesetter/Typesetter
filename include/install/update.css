@@ -17,27 +17,23 @@ h1, h2, h3, h4{
 }
 
 h1{
-	margin-top:0;
-	padding-top:0;
-	font-size:30px;
+	margin-top:		0;
+	padding-top:	0;
+	font-size:		40px;
 	}
 
 h2{
-	font-size:20px;
+	font-size:		30px;
 }
 
 
 .wrapper{
 	position:		relative;
-	width:			800px;
+	width:			960px;
 	background:		#fff;
-	margin:1em auto;
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	-o-border-radius: 10px;
-	border-radius: 10px;
-	padding: 23px;
-	border:1px solid #bbb;
+	margin:			1em auto;
+	border-radius:	5px;
+	padding:		40px;
 }
 
 .fullwidth{
@@ -87,9 +83,9 @@ h2{
 }
 
 .lang_select{
-	position:absolute;
-	top:23px;
-	right:23px;
+	position:	absolute;
+	top:		40px;
+	right:		40px;
 }
 
 .lang_select select,

@@ -15,6 +15,12 @@ class phpunit_Install extends gptest_bootstrap{
 		self::AssertFileNotExists($config_file,'Cannot test installation (Already Installed)');
 
 
+		// make the install checks passed
+		$installer		= new \gp\install\Installer();
+		$this->assertGreaterThan($installer->can_install, 1,'Cant install: '.pre($installer->statuses));
+
+
+
 		//mimic POST
 		$_POST				= array();
 		$_POST['email']		= 'test@example.com';

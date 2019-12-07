@@ -8,11 +8,10 @@ class phpunit_Install extends gptest_bootstrap{
 	 * @runInSeparateProcess
 	 */
 	function testInstall(){
-		global $dataDir;
 
 		//make sure it's not installed
-		$config_file = $dataDir.'/data/_site/config.php';
-		self::AssertFileNotExists($config_file,'Cannot test installation (Already Installed)');
+		$installed = \gp\tool::Installed();
+		self::AssertFalse($installed,'Cannot test installation (Already Installed)');
 
 
 		// make the install checks passed
@@ -37,7 +36,8 @@ class phpunit_Install extends gptest_bootstrap{
 
 
 		//double check
-		self::AssertFileExists($config_file);
+		$installed = \gp\tool::Installed();
+		self::AssertTrue($installed);
 	}
 
 }

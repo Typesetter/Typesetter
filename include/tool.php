@@ -1085,9 +1085,8 @@ namespace gp{
 		 *
 		 */
 		public static function stop(){
-			global $dataDir;
 
-			if( !\gp\tool\Files::Exists($dataDir . '/data/_site/config.php') ){
+			if( !\gp\tool::Installed() ){
 
 				if( file_exists($dataDir . '/include/install/install.php') ){
 					self::SetLinkPrefix();
@@ -1106,6 +1105,15 @@ namespace gp{
 			);
 		}
 
+		/**
+		 * Return true if
+		 *
+		 */
+		public static function Installed(){
+			global $dataDir;
+
+			return \gp\tool\Files::Exists($dataDir . '/data/_site/config.php');
+		}
 
 		/**
 		 * Set global variables ( $gp_index, $gp_titles, $gp_menu and $gpLayouts ) from _site/pages.php

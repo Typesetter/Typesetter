@@ -16,6 +16,10 @@ abstract class Base{
 	 */
 	protected function RunCommands($cmd){
 
+		if( !is_string($cmd) ){
+			$cmd = '';
+		}
+
 		$this->cmds	= array_change_key_case($this->cmds, CASE_LOWER);
 		$cmd		= strtolower($cmd);
 

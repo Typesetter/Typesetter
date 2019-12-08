@@ -460,7 +460,7 @@ namespace gp\tool{
 
 
 		/**
-		 * Save the Section Clipboard 
+		 * Save the Section Clipboard
 		 * @since 5.1-b1
 		 *
 		 */
@@ -717,10 +717,6 @@ namespace gp\tool{
 		public static function Save($file,$contents){
 			global $gp_not_writable;
 
-			if( !self::WriteLock() ){
-				return false;
-			}
-
 			$exists = self::Exists($file);
 
 			//make sure directory exists
@@ -737,6 +733,11 @@ namespace gp\tool{
 				return false;
 			}
 
+			if( !flock($fp, LOCK_EX) ){
+				trigger_error('flock could not be obtained.');
+				return false;
+			}
+
 			if( !$exists ){
 				@chmod($file, gp_chmod_file);
 			}elseif( function_exists('opcache_invalidate') && substr($file, -4) === '.php' ){
@@ -744,7 +745,10 @@ namespace gp\tool{
 			}
 
 			$return = fwrite($fp, $contents);
+
+			flock($fp, LOCK_UN);
 			fclose($fp);
+
 			return ($return !== false);
 		}
 

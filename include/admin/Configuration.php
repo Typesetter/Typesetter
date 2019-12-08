@@ -221,7 +221,7 @@ class Configuration extends \gp\special\Base{
 
 		$possible = $this->variables;
 
-		$langDir = $dataDir.'/include/thirdparty/ckeditor_34/lang'; //ckeditor
+		$langDir = $dataDir.'/include/thirdparty/ckeditor/lang'; //ckeditor
 
 		$possible['langeditor'] = \gp\tool\Files::readDir($langDir,'js');
 		unset($possible['langeditor']['_languages']);

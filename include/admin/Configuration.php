@@ -158,13 +158,21 @@ class Configuration extends \gp\special\Base{
 
 		//resize thumbnails
 		if( 
-			$config_before['preserve_icc_profiles'] !== $config['preserve_icc_profiles'] 
-			|| $config_before['preserve_image_metadata'] !== $config['preserve_image_metadata'] 
-			|| $config_before['maxthumbsize'] !== $config['maxthumbsize'] 
-			|| $config_before['maxthumbheight'] !== $config['maxthumbheight'] 
-			|| $config_before['thumbskeepaspect'] !== $config['thumbskeepaspect'] 
+			$config_before['preserve_icc_profiles'] !== $config['preserve_icc_profiles']
+			|| $config_before['preserve_image_metadata'] !== $config['preserve_image_metadata']
+			|| $config_before['maxthumbsize'] !== $config['maxthumbsize']
+			|| $config_before['maxthumbheight'] !== $config['maxthumbheight']
+			|| $config_before['thumbskeepaspect'] !== $config['thumbskeepaspect']
 		){
-			msg(\gp\tool::Link('Admin/Configuration',$langmessage['recreate_all_thumbnails'],'cmd=recreate_thumbs','class="" data-cmd="creq"'));
+			msg(\gp\tool::Link(
+				'Admin/Configuration',
+				$langmessage['recreate_all_thumbnails'],
+				'cmd=recreate_thumbs',
+				array(
+					'class'		=> '',
+					'data-cmd'	=>'creq',
+				)
+			));
 		}
 
 

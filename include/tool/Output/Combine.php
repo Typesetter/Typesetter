@@ -59,8 +59,8 @@ class Combine{
 									'package'		=> 'jquery',
 									'label'			=> 'jQuery',
 									'cdn'			=> array(
-														'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js',
-														'Google'		=> '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js',
+															'Google'		=> '//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js',
 														),
 									),
 
@@ -71,8 +71,8 @@ class Combine{
 									'type'			=> 'css',
 									'package'		=> 'jquery_ui',
 									'cdn'			=> array(
-														'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/css/jquery-ui.min.css',
-														'Google'		=> '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.min.css',
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css',
+															'Google'		=> '//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css',
 														),
 									),
 
@@ -81,8 +81,8 @@ class Combine{
 									'package'		=> 'jquery_ui',
 									'label'			=> 'jQuery UI',
 									'cdn'			=> array(
-														'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js',
-														'Google'		=> '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js',
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js',
+															'Google'		=> '//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js',
 														),
 									),
 
@@ -668,7 +668,7 @@ class Combine{
 			if( $config['minifyjs'] ){
 
 				$minify_stats = array( 
-					'date' 								=> date('Y-m-d H:i'), 
+					'date' 								=> date('Y-m-d H:i'),
 					'errors' 							=> 'none',
 				);
 				$get_peak_mem 							= function_exists('memory_get_peak_usage');

@@ -6,64 +6,49 @@ defined('is_running') or die('Not an entry point...');
 
 class FilePermissions{
 
-	static function GetExpectedPerms($file){
-
-		if( !self::HasFunctions() ){
-			return '777';
-		}
-
-		//if user id's match
-		$puid = posix_geteuid();
-		$suid = self::file_uid($file);
-		if( ($suid !== false) && ($puid == $suid) ){
-			return '755';
-		}
-
-		//if group id's match
-		$pgid = posix_getegid();
-		$sgid = self::file_group($file);
-		if( ($sgid !== false) && ($pgid == $sgid) ){
-			return '775';
-		}
-
-		//if user is a member of group
-		$snam = self::file_owner($file);
-		$pmem = self::process_members();
-		if (in_array($suid, $pmem) || in_array($snam, $pmem)) {
-			return '775';
-		}
-
-		return '777';
+	public static function GetExpectedPerms($file){
+		return static::_GetExpectedPerms($file, ['755','775','777']);
 	}
 
 	public static function GetExpectedPerms_file($file){
+		return static::_GetExpectedPerms($file, ['644','664','666']);
+	}
 
-		if( !self::HasFunctions() ){
-			return '666';
+	public static function _GetExpectedPerms($file, $expected = ['644','664','666'] ){
+
+		$file_info		= self::file_info($file);
+
+		if( !is_array($file_info) ){
+			return $expected[2];
 		}
 
 		//if user id's match
-		$puid = posix_geteuid();
-		$suid = self::file_uid($file);
-		if( ($suid !== false) && ($puid == $suid) ){
-			return '644';
+		if( isset($file_info['uid']) ){
+			$puid = posix_geteuid();
+			if( $puid == $file_info['uid'] ){
+				return $expected[0];
+			}
 		}
 
 		//if group id's match
-		$pgid = posix_getegid();
-		$sgid = self::file_group($file);
-		if( ($sgid !== false) && ($pgid == $sgid) ){
-			return '664';
+		if( isset($file_info['gid']) ){
+			$pgid = posix_getegid();
+			if( $pgid == $file_info['gid'] ){
+				return $expected[1];
+			}
 		}
 
 		//if user is a member of group
-		$snam = self::file_owner($file);
-		$pmem = self::process_members();
-		if (in_array($suid, $pmem) || in_array($snam, $pmem)) {
-			return '664';
+		$members = self::process_members();
+		if( isset($file_info['name']) && in_array($file_info['name'], $members) ){
+			return $expected[1];
 		}
 
-		return '666';
+		if( isset($file_info['uid']) && in_array($file_info['uid'], $members) ){
+			return $expected[1];
+		}
+
+		return $expected[2];
 	}
 
 	public static function HasFunctions(){
@@ -118,25 +103,6 @@ class FilePermissions{
 		return false;
 	}
 
-	/**
-	 * @description   Gets name of the file owner
-	 * @return string The name of the file owner
-	 *
-	 */
-	public static function file_owner($file) {
-		$info = self::file_info($file);
-
-		if (is_array($info)) {
-			if (isset($info['name'])) {
-				return $info['name'];
-			}
-			else if (isset($info['uid'])) {
-				return $info['uid'];
-			}
-		}
-		return false;
-	}
-
 
 	/**
 	 * @description  Gets Groups members of the PHP Engine
@@ -159,26 +125,11 @@ class FilePermissions{
 	 */
 	public static function file_uid($file) {
 		$info = self::file_info($file);
-		if (is_array($info)) {
-			if (isset($info['uid'])) {
-				return $info['uid'];
-			}
+		if( is_array($info) && isset($info['uid']) ){
+			return $info['uid'];
 		}
-		return false;
 	}
 
-	/**
-	 * @description Gets Group ID of the file owner
-	 * @return int  The user Group of the file owner
-	 *
-	 */
-	public static function file_group($file) {
-		$info = self::file_info($file);
-		if (is_array($info) && isset($info['gid'])) {
-			return $info['gid'];
-		}
-		return false;
-	}
 
 	/**
 	 * @description  Gets Info array of the file owner

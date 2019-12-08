@@ -41,4 +41,6 @@ switch($type){
 	break;
 }
 
+\gp\tool\Plugins::Action('PageCreated');
+
 \gp\tool\Output::RunOut();

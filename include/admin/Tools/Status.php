@@ -4,19 +4,18 @@ namespace gp\admin\Tools;
 
 defined('is_running') or die('Not an entry point...');
 
-class Status{
+class Status extends \gp\special\Base{
 
-	protected $check_dir_len = 0;
-	protected $failed_count = 0;
-	protected $passed_count = 0;
-	protected $show_failed_max = 50;
+	protected $check_dir_len	= 0;
+	protected $failed_count		= 0;
+	protected $passed_count		= 0;
+	protected $show_failed_max	= 50;
+	protected $failed_output	= '';
 
 	protected $euid;
 
 	public function __construct(){
-		global $dataDir, $langmessage;
-
-		echo '<h2>'.$langmessage['Site Status'].'</h2>';
+		global $dataDir;
 
 		$check_dir = $dataDir.'/data';
 		$this->check_dir_len = strlen($check_dir);
@@ -28,7 +27,14 @@ class Status{
 
 		ob_start();
 		$this->CheckDir($check_dir);
-		$failed_output = ob_get_clean();
+		$this->failed_output = ob_get_clean();
+	}
+
+	public function RunScript(){
+		global $langmessage;
+
+		echo '<h2>'.$langmessage['Site Status'].'</h2>';
+
 
 		$checked = $this->passed_count + $this->failed_count;
 
@@ -69,7 +75,7 @@ class Status{
 		echo '</td><td>';
 		echo $langmessage['Expected_Value'];
 		echo '</td></tr>';
-		echo $failed_output;
+		echo $this->failed_output;
 		echo '</table>';
 
 		$this->CheckPageFiles();
@@ -195,6 +201,5 @@ class Status{
 		echo '</td></tr>';
 
 	}
-
 
 }

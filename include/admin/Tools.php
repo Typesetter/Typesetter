@@ -247,7 +247,8 @@ namespace gp\admin{
 
 			$scripts['Admin/Status']	= array(	'class'		=> '\\gp\\admin\\Tools\\Status',
 													'label'		=> $langmessage['Site Status'],
-													'group'		=> 'tools'
+													'group'		=> 'tools',
+													'method'	=> 'RunScript'
 												);
 
 			$scripts['Admin/Uninstall']	= array(	'class'		=> '\\gp\\admin\\Tools\\Uninstall',

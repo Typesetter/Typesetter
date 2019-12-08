@@ -13,7 +13,7 @@ class Installer{
 	 *
 	 * @var int
 	 */
-	public $can_install			= 2;
+	private $can_install		= 2;
 
 	public $can_write_data		= true;
 	public $ftp_root			= false;
@@ -136,6 +136,7 @@ class Installer{
 		echo \gp\tool::Link('',$langmessage['Refresh']);
 		echo '</p>';
 		echo '<br/>';
+
 
 		if( $this->can_install > 0 ){
 			$this->Form_Entry();

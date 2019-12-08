@@ -9,11 +9,6 @@ class phpunit_Install extends gptest_bootstrap{
 	 */
 	function testInstall(){
 
-		// test rendering of the install template
-		ob_start();
-		includeFile('install/install.php');
-		$content = ob_get_clean();
-		$this->assertNotEmpty($content);
 
 
 		//make sure it's not installed
@@ -21,10 +16,23 @@ class phpunit_Install extends gptest_bootstrap{
 		self::AssertFalse($installed,'Cannot test installation (Already Installed)');
 
 
-		// make the install checks passed
+		// test install checks
+		// one of the checks actually fails
+		$values			= [1,1,-1,1,1,1];
 		$installer		= new \gp\install\Installer();
-		$this->assertGreaterThan($installer->can_install, 1,'Cant install: '.pre($installer->statuses));
 
+		foreach($values as $i => $val){
+			$this->assertGreaterThanOrEqual( $val, $installer->statuses[$i]['can_install'], 'Unexpected status ('.$i.') '.pre($installer->statuses[$i]) );
+		}
+
+
+
+		// test rendering of the install template
+		ob_start();
+		includeFile('install/install.php');
+		$installer->Form_Entry();
+		$content = ob_get_clean();
+		$this->assertNotEmpty($content);
 
 
 		//mimic POST

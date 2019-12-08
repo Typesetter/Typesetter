@@ -21,6 +21,9 @@ class Installer{
 	private $lang				= 'en';
 	public $statuses			= [];
 
+	private $ftp_connection = false;
+
+
 
 	public function __construct(){
 		global $languages;
@@ -28,11 +31,12 @@ class Installer{
 		//language preferences
 		if( isset($_GET['lang']) && isset($languages[$_GET['lang']]) ){
 			$this->lang = $_GET['lang'];
+			setcookie('lang',$this->lang);
 
 		}elseif( isset($_COOKIE['lang']) && isset($languages[$_COOKIE['lang']]) ){
 			$this->lang = $_COOKIE['lang'];
 		}
-		setcookie('lang',$this->lang);
+
 		\gp\tool::GetLangFile('main.inc',$this->lang);
 
 		// installation checks
@@ -48,13 +52,6 @@ class Installer{
 
 
 	public function Run(){
-		global $langmessage;
-
-		echo '<h1>';
-		echo $langmessage['Installation'];
-		echo ' - v'.gpversion;
-		echo '</h1>';
-
 
 		$installed	= false;
 		$cmd		= \gp\tool::GetCommand();
@@ -463,11 +460,11 @@ class Installer{
 	 *
 	 */
 	public function FTP_DataMode(){
-		global $langmessage, $install_ftp_connection, $dataDir;
+		global $langmessage, $dataDir;
 
 		//Change Mode of /data
 		$ftpData = $this->ftp_root.'/data';
-		$modDir = ftp_site($install_ftp_connection, 'CHMOD 0777 '. $ftpData );
+		$modDir = ftp_site($this->ftp_connection, 'CHMOD 0777 '. $ftpData );
 		if( !$modDir ){
 			echo '<li><span class="failed">';
 			echo sprintf($langmessage['Could_Not_'],'<em>CHMOD 0777 '. $ftpData.'</em>');
@@ -498,7 +495,7 @@ class Installer{
 	 *
 	 */
 	public function FTP_DataFolder(){
-		global $dataDir, $install_ftp_connection, $langmessage;
+		global $dataDir, $langmessage;
 
 		$this->root_mode = fileperms($dataDir);
 		if( !$this->root_mode ){
@@ -507,7 +504,7 @@ class Installer{
 
 
 		// (1)
-		$modDir = ftp_site($install_ftp_connection, 'CHMOD 0777 '. $this->ftp_root );
+		$modDir = ftp_site($this->ftp_connection, 'CHMOD 0777 '. $this->ftp_root );
 		if( !$modDir ){
 			echo '<li><span class="failed">';
 			echo sprintf($langmessage['Could_Not_'],'<em>CHMOD 0777 '. $this->ftp_root.'</em>');
@@ -526,7 +523,7 @@ class Installer{
 			$ftp_del	= rtrim($this->ftp_root,'/').$del_name;
 			$php_del	= $dataDir.$del_name;
 
-			$changed	= ftp_rename($install_ftp_connection, $ftp_dir , $ftp_del );
+			$changed	= ftp_rename($this->ftp_connection, $ftp_dir , $ftp_del );
 			if( !$changed ){
 				echo '<li><span class="failed">';
 				echo sprintf($langmessage['Could_Not_'],'<em>Remove '. $this->ftp_root.'/data</em>');
@@ -600,9 +597,9 @@ class Installer{
 	 *
 	 */
 	public function FTP_RestoreMode(){
-		global $install_ftp_connection, $langmessage;
+		global $langmessage;
 
-		if( !$this->root_mode || !$install_ftp_connection ){
+		if( !$this->root_mode || !$this->ftp_connection ){
 			return;
 		}
 
@@ -611,7 +608,7 @@ class Installer{
 		$mode		= '0'.decoct($mode);
 		$ftp_cmd	= 'CHMOD '.$mode.' '.$this->ftp_root;
 
-		if( !ftp_site($install_ftp_connection, $ftp_cmd ) ){
+		if( !ftp_site($this->ftp_connection, $ftp_cmd ) ){
 			echo '<li><span class="failed">';
 			echo sprintf($langmessage['Could_Not_'],'<em>Restore mode for '. $this->ftp_root.': '.$ftp_cmd.'</em>');
 			echo '</span></li>';
@@ -622,10 +619,10 @@ class Installer{
 
 	/**
 	 * Establish an FTP connection to be used by the installer
-	 * todo: remove $install_ftp_connection globabl
+	 *
 	 */
 	public function FTPConnection(){
-		global $dataDir, $langmessage, $install_ftp_connection;
+		global $dataDir, $langmessage;
 
 
 		//test for functions
@@ -641,8 +638,8 @@ class Installer{
 
 		//Try to connect
 		echo '<li>';
-		$install_ftp_connection = @ftp_connect($_POST['ftp_server'],21,6);
-		if( !$install_ftp_connection ){
+		$this->ftp_connection = @ftp_connect($_POST['ftp_server'],21,6);
+		if( !$this->ftp_connection ){
 			echo '<span class="failed">';
 			echo sprintf($langmessage['FAILED_TO_CONNECT'],'<em>'.htmlspecialchars($_POST['ftp_server']).'</em>');
 			echo '</span>';
@@ -657,7 +654,7 @@ class Installer{
 
 		//Log in
 		echo '<li>';
-		$login_result = @ftp_login($install_ftp_connection, $_POST['ftp_user'], $_POST['ftp_pass']);
+		$login_result = @ftp_login($this->ftp_connection, $_POST['ftp_user'], $_POST['ftp_pass']);
 		if( !$login_result ){
 			echo '<span class="failed">';
 			echo sprintf($langmessage['NOT_LOOGED_IN'],'<em>'.htmlspecialchars($_POST['ftp_user']).'</em>');
@@ -673,7 +670,7 @@ class Installer{
 		//Get FTP Root
 		echo '<li>';
 		if( $login_result ){
-			$this->ftp_root = \gp\tool\FileSystemFtp::GetFTPRoot($install_ftp_connection,$dataDir);
+			$this->ftp_root = \gp\tool\FileSystemFtp::GetFTPRoot($this->ftp_connection,$dataDir);
 		}
 		if( $this->ftp_root === false ){
 			echo '<span class="failed">';

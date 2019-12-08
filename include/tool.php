@@ -1085,6 +1085,7 @@ namespace gp{
 		 *
 		 */
 		public static function stop(){
+			global $dataDir;
 
 			if( !\gp\tool::Installed() ){
 

@@ -9,6 +9,13 @@ class phpunit_Install extends gptest_bootstrap{
 	 */
 	function testInstall(){
 
+		// test rendering of the install template
+		ob_start();
+		includeFile('install/install.php');
+		$content = ob_get_clean();
+		$this->assertNotEmpty($content);
+
+
 		//make sure it's not installed
 		$installed = \gp\tool::Installed();
 		self::AssertFalse($installed,'Cannot test installation (Already Installed)');

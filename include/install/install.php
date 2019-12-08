@@ -1,11 +1,6 @@
 <?php
 defined('is_running') or die('Not an entry point...');
 
-global $langmessage, $install_ftp_connection;
-$install_ftp_connection = false;
-ob_start();
-
-
 ?>
 
 <!DOCTYPE html>

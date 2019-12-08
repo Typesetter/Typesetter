@@ -18,10 +18,6 @@ class FilePermissions{
 
 		$file_info		= self::file_info($file);
 
-		if( !is_array($file_info) ){
-			return $expected[2];
-		}
-
 		//if user id's match
 		if( isset($file_info['uid']) ){
 			$puid = posix_geteuid();

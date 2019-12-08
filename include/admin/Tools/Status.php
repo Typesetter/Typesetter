@@ -121,7 +121,7 @@ class Status extends \gp\special\Base{
 		$this->CheckFile($dir);
 
 		$dh = @opendir($dir);
-		if( !$dh ){
+		if( $dh === false ){
 			echo '<tr><td colspan="3">';
 			echo '<p class="gp_notice">';
 			echo 'Could not open data directory: '.$dir;

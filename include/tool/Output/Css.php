@@ -176,7 +176,6 @@ class Css{
 		$options['compress'] = 'true';
 
 		//prepare the compiler
-		//includeFile('thirdparty/less.php/Less.php');
 		includeFile('thirdparty/Less/Autoloader.php');
 		\Less_Autoloader::register();
 		$parser = new \Less_Parser($options);

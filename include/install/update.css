@@ -1,0 +1,203 @@
+
+body{
+	font-family:	Arial,sans-serif;
+	background:		#333;
+	font-size:		14px;
+}
+
+a{
+	color:#4466aa;
+	text-decoration:none;
+	border-bottom:1px dotted #869ece;
+	}
+
+h1, h2, h3, h4{
+	font-weight:	normal;
+	color:			#333;
+}
+
+h1{
+	margin-top:		0;
+	padding-top:	0;
+	font-size:		40px;
+	}
+
+h2{
+	font-size:		30px;
+}
+
+
+.wrapper{
+	position:		relative;
+	width:			960px;
+	background:		#fff;
+	margin:			1em auto;
+	border-radius:	5px;
+	padding:		40px;
+}
+
+.fullwidth{
+	width:100%;
+	}
+
+.styledtable{
+	border-collapse:collapse;
+	border-bottom: 1px solid #ccc;
+	border-spacing:0;
+}
+
+.styledtable td, .styledtable th {
+	border-top:		1px solid #eee;
+	padding:		7px 20px;
+	text-align:		left;
+	vertical-align:	top;
+}
+
+.styledtable th{
+	border-top:1px solid #ccc;
+	border-bottom:1px solid #ccc;
+	background-color:#eee;
+	font-weight:normal;
+	white-space:nowrap;
+}
+
+.styledtable tr{
+	background: #fff;
+}
+
+.styledtable tbody tr:nth-child(odd){
+	background: #fbfbfb;
+}
+
+.styledtable table td{
+	padding:1px;
+	border:0 none;
+}
+
+.padded_table{
+	border-collapse:collapse;
+}
+
+.padded_table > tbody > tr > td{
+	padding:5px 8px;
+}
+
+.lang_select{
+	position:	absolute;
+	top:		40px;
+	right:		40px;
+}
+
+.lang_select select,
+.install_button{
+	font-size:130%;
+	padding:7px 9px;
+}
+
+.lang_select option{
+}
+
+.submit{
+	font-size:130%;
+	padding:7px 9px;
+	margin:7px 9px 7px 0;
+}
+
+
+.sm{
+	font-size:smaller;
+}
+
+input.text{
+	font-size:12px;
+	padding:4px 6px;
+	width:20em;
+	border:1px solid #aaa;
+	margin:3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
+}
+
+input.text:focus{
+	border-color:#333;
+}
+
+.failed{
+	color:#FF0000;
+}
+
+.passed{
+	color:#009900;
+}
+.passed_orange{
+	color:orange;
+}
+
+.code{
+	margin:4px 0;
+	padding:5px 7px;
+	white-space:nowrap;
+	background-color:#f5f5f5;
+	display:block;
+	}
+
+.inline_message{
+	margin:1em 0;
+	font-size:19px;
+	padding:7px 0;
+
+	border-top: 1px dashed #aaa;
+	border-bottom: 1px dashed #aaa;
+}
+.inline_message .green{
+	color:#009900;
+	font-weight:normal;
+}
+
+
+.steps li{
+	font-weight:bold;
+	font-size:13px;
+	color:#444;
+}
+.steps .current{
+	color:#009900;
+}
+.steps .done{
+	color:#aaa;
+}
+.progress li{
+	padding: 5px 20px 5px 0;
+}
+
+.formtable td, .formtable th{
+	padding: 5px 20px 5px 0;
+	text-align:left;
+	vertical-align:top;
+}
+
+.nowrap{
+	white-space:nowrap;
+}
+
+ul.install_status{
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+ul.install_status li{
+	margin:4px 0;
+	padding:4px 7px;
+}
+
+ul.install_status .failed{
+	border: 1px solid #e6da93;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-o-border-radius:5px;
+	border-radius:5px;
+	background:#fff2a3;
+	color:#4d4931;
+}

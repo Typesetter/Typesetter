@@ -60,4 +60,15 @@ abstract class Base{
 
 	}
 
+
+	/**
+	 * Get a property value
+	 * @param string $property Name of the object property to get
+	 */
+	public function GetValue($property) {
+		if( property_exists($this, $property) ){
+		    return $this->$property;
+		}
+    }
+
 }

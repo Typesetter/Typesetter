@@ -1,10 +1,26 @@
 language: php
 
-php:
-  - 7.1
-  - 7
-  - 5.6
-  - 5.5
-  - 5.4
+jobs:
+  include:
+    - php: 5.4
+      dist: trusty
+    - php: 5.5
+      dist: trusty
+    - php: 5.6
+    - php: 7.0
+    - php: 7.1
+    - php: 7.2
+    - php: 7.3
+    - php: 7.4
 
-sudo: false
+
+# phpunit 8 will result in an error
+# https://www.reddit.com/r/PHPhelp/comments/apipqs/travis_specifying_phpunit_version/
+before_script:
+  - composer init -n
+  - composer require phpunit/phpunit "<8 >=4"
+  #- phpenv config-add phpunit/phpconfig.ini
+
+# Submit coverage report to https://codecov.io
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

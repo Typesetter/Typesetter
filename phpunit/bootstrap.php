@@ -6,13 +6,17 @@ echo "\n************************************************************************
 echo "\nBegin gpEasy Tests\n\n";
 
 
+defined('gpdebug') or define('gpdebug',true);
 defined('is_running') or define('is_running',true);
 defined('gp_unit_testing') or define('gp_unit_testing',true);
 
-global $dataDir;
+global $dataDir, $config;
 $dataDir = $_SERVER['PWD'];
+
 include('include/common.php');
 spl_autoload_register( array('\\gp\\tool','Autoload') );
+
+$config = ['gpuniq'=>'test','language'=>'en'];
 
 \gp\tool::SetLinkPrefix();
 

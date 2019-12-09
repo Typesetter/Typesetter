@@ -663,15 +663,6 @@ class Tools{
 		}
 	}
 
-	function GetPathInfo(){
-		$UsePathInfo =
-			( strpos( php_sapi_name(), 'cgi' ) === false ) &&
-			( strpos( php_sapi_name(), 'apache2filter' ) === false ) &&
-			( strpos( php_sapi_name(), 'isapi' ) === false );
-
-		return $UsePathInfo;
-	}
-
 	static function Install_Link_Content($href,$label,$query='',$attr=''){
 
 		$query = str_replace('&','&amp;',$query);
@@ -682,6 +673,19 @@ class Tools{
 		}
 
 		return '<a href="$linkPrefix/'.$href.$query.'">'.$label.'</a>';
+	}
+
+	static function AddCSs(){
+		global $dataDir;
+
+		echo '<style type="text/css">';
+
+		$path = $dataDir.'/include/install/update.css';
+		if( file_exists($path) ){
+			echo file_get_contents($path);
+		}
+
+		echo '</style>';
 	}
 
 }

@@ -1,30 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
     processIsolation	= "false"
-    stopOnFailure		= "true"
+    stopOnFailure		= "false"
     stopOnError			= "false"
     stopOnIncomplete	= "false"
     stopOnSkipped		= "false"
-    bootstrap			= ".phpunit/bootstrap.php"
+    bootstrap			= "phpunit/bootstrap.php"
+	verbose				= "true"
     >
 
     <testsuites>
 
         <testsuite name="Tools">
-            <directory>.phpunit/Tool</directory>
-            <directory>.phpunit/Include</directory>
+            <directory>phpunit/Tool</directory>
+            <directory>phpunit/Include</directory>
         </testsuite>
 
         <testsuite name="Installation">
-            <directory>.phpunit/Install</directory>
-            <directory>.phpunit/Admin</directory>
+            <directory>phpunit/Install</directory>
+            <directory>phpunit/Admin</directory>
         </testsuite>
 
         <testsuite name="Admin">
-            <directory>.phpunit/Admin</directory>
+            <directory>phpunit/Admin</directory>
         </testsuite>
 
     </testsuites>
 
-</phpunit>
+	<logging>
+	    <log type="testdox-text" target="php://stdout"/>
+		<log type="coverage-clover" target="coverage.xml"/>
+	</logging>
 
+
+	<filter>
+        <whitelist>
+            <directory suffix=".php">./include</directory>
+			<exclude>
+			      <directory suffix=".php">./include/thirdparty</directory>
+		  	</exclude>
+        </whitelist>
+    </filter>
+</phpunit>

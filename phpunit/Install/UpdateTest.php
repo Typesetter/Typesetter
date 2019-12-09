@@ -20,6 +20,7 @@ class phpunit_Update extends gptest_bootstrap{
 
 	}
 
+	/*
 	static function AssertTrue($condition, $msg = '' ){
 		global $page;
 
@@ -28,6 +29,7 @@ class phpunit_Update extends gptest_bootstrap{
 		}
 		parent::assertTrue($condition,$msg);
 	}
+	*/
 
 
 	/**
@@ -42,7 +44,7 @@ class phpunit_Update extends gptest_bootstrap{
 		ob_start();
 		$page = new \gp\admin\Update();
 		\gp\tool\Output::HeadContent();
-		includeFile('install/template.php');
+		includeFile('install/update_template.php');
 		ob_get_clean();
 
 	}

@@ -65,14 +65,14 @@ class HTMLParse{
 			$new_element['tag'] = $tag_name;
 
 			//attributes
-			if( $tag_name{0} != '/' ){
+			if( $tag_name[0] != '/' ){
 				$new_element['attributes'] = $this->GetAttributes($offset);
 			}
 
 			//tag closing and self-closing?
 			$pos = strpos($this->doc,'>',$offset);
 			if( $pos !== false ){
-				if( $pos > 0 && $this->doc{$pos-1} == '/' ){
+				if( $pos > 0 && $this->doc[$pos-1] == '/' ){
 					$new_element['self_closing'] = true;
 				}
 				$offset = $pos+1;

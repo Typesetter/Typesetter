@@ -11,9 +11,8 @@ namespace gp\tool{
 
 
 		public static function Init(){
-			global $config;
 
-			gp_defined('gp_session_cookie', self::SessionCookie($config['gpuniq']));
+			self::SetConstants();
 
 			$cmd = \gp\tool::GetCommand();
 
@@ -40,6 +39,14 @@ namespace gp\tool{
 
 
 
+		public static function SetConstants(){
+			global $config;
+			gp_defined('gp_session_cookie',self::SessionCookie($config['gpuniq']));
+			gp_defined('gp_installation_cookie',self::SessionCookie('g-'.$config['gpuniq']));
+		}
+
+
+
 		public static function LogIn(){
 			global $langmessage;
 
@@ -51,7 +58,7 @@ namespace gp\tool{
 				return;
 			}
 
-			if( !isset($_COOKIE['g']) && !isset($_COOKIE[gp_session_cookie]) ){
+			if( !self::HasCookies() ){
 				msg($langmessage['COOKIES_REQUIRED']);
 				return false;
 			}
@@ -119,6 +126,28 @@ namespace gp\tool{
 
 			//redirect to prevent resubmission
 			self::Redirect($logged_in);
+		}
+
+
+
+		/**
+		 * Return true if we can confirm there are cookies
+		 * Return false and attempt to set a cookie otherwise
+		 *
+		 */
+		public static function HasCookies(){
+			global $config;
+
+			self::SetConstants();
+
+			if( array_key_exists(gp_session_cookie, $_COOKIE) || 
+				array_key_exists(gp_installation_cookie, $_COOKIE) 
+				){
+				return true;
+			}
+
+			\gp\tool\Session::cookie(gp_installation_cookie,'2');
+			return false;
 		}
 
 

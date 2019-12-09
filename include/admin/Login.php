@@ -38,8 +38,7 @@ class Login extends \gp\Page{
 		$_POST += array('username'=>'');
 
 		$this->admin_js = true;
-		\gp\tool\Session::cookie('g',2);
-
+		\gp\tool\Session::HasCookies();
 
 
 		$this->BrowserWarning();

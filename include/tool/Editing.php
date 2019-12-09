@@ -563,7 +563,7 @@ namespace gp\tool{
 			echo '</textarea><br/>';
 
 
-			$page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/ckeditor_34/ckeditor.js').'?'.rawurlencode(gpversion).'"></script>';
+			$page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/ckeditor/ckeditor.js').'?'.rawurlencode(gpversion).'"></script>';
 			$page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/js/ckeditor_config.js').'?'.rawurlencode(gpversion).'"></script>';
 
 			\gp\tool::LoadComponents('autocomplete');
@@ -622,7 +622,7 @@ namespace gp\tool{
 							//'customConfig'				=> \gp\tool::GetDir('/include/js/ckeditor_config.js'),
 							'skin'						=> 'kama',
 							'browser'					=> true, //not actually a ckeditor configuration value, but we're keeping it now for reverse compat
-							'smiley_path'				=> \gp\tool::GetDir('/include/thirdparty/ckeditor_34/plugins/smiley/images/'),
+							'smiley_path'				=> \gp\tool::GetDir('/include/thirdparty/ckeditor/plugins/smiley/images/'),
 							'height'					=> 300,
 							'contentsCss'				=> \gp\tool::GetDir('/include/css/ckeditor_contents.css'),
 							'fontSize_sizes'			=> 'Smaller/smaller;Normal/;Larger/larger;8/8px;9/9px;10/10px;11/11px;12/12px;14/14px;16/16px;18/18px;20/20px;22/22px;24/24px;26/26px;28/28px;36/36px;48/48px;72/72px',

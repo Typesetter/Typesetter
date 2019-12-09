@@ -15,7 +15,9 @@ class Page extends \gp\Page{
 		$this->requested	= $title;
 		$this->title		= $title;
 		$this->lang			= $config['language'];
-		$this->language		= $languages[$this->lang];
+		if( isset($languages[$this->lang]) ){
+			$this->language		= $languages[$this->lang];
+		}
 	}
 
 	public function RunScript(){

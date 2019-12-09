@@ -566,16 +566,12 @@ class Edit extends \gp\Page{
 
 		/*
 		 * FIX for too many sections issue -- start
-		 * 
-		 * with large amounts of sections, we may exceed max_post_values 
+		 * with large amounts of sections, we may exceed max_post_values
 		 * which causes an error and prevents further editing of the page.
-		 * 
-		 * sending all the section data in a single JSON string 
+		 * sending all the section data in a single JSON string
 		 * instead of parametrizing all values will address this issue.
-		 * 
 		 * the current implementation should be considered as a hot fix.
 		 * it should eventually be done more elegant.
-		 * 
 		 * See its client counterpart in /include/js/inline_edit/manage_sections.js line 87-129
 		 */
 		if( isset($_POST['sections_json']) ){
@@ -779,7 +775,6 @@ class Edit extends \gp\Page{
 		$this->ajaxReplace[] = array('loaded', '', '');
 		return;
 	}
-
 
 
 
@@ -1174,6 +1169,8 @@ class Edit extends \gp\Page{
 	public static function NewSectionLink($types, $img, $wrapper_data=false, $checkbox=false ){
 		global $dataDir, $page;
 
+		$types = (array)$types;
+
 		$is_wrapper = count(array($types)) > 1 || is_array($types[0]);
 
 		if( $is_wrapper && !$wrapper_data ){
@@ -1189,7 +1186,6 @@ class Edit extends \gp\Page{
 
 		static $fi = 0;
 
-		$types = (array)$types;
 		$text_label = $is_wrapper && isset($wrapper_data['gp_label']) ? $wrapper_data['gp_label'] : self::SectionLabel($types);
 		$type_id = substr( base_convert( md5( json_encode( $types ) ), 16, 32 ), 0, 6);
 
@@ -1232,7 +1228,7 @@ class Edit extends \gp\Page{
 
 		//links used for new sections
 		$attrs = array(
-			'data-cmd' => 'AddSection', 
+			'data-cmd' => 'AddSection',
 			'class' => 'preview_section',
 		);
 		if( count($types) > 1 || is_array($types[0]) ){
@@ -1810,9 +1806,9 @@ class Edit extends \gp\Page{
 			}
 
 			$attrs	= array(
-							'title'=>$title_attr, 
-							'data-cmd' => 'inline_edit_generic', 
-							'data-arg' => $section_data['type'] . '_inline_edit'
+							'title'=>$title_attr,
+							'data-cmd' => 'inline_edit_generic',
+							'data-arg' => $section_data['type'] . '_inline_edit',
 						);
 			$link	= \gp\tool\Output::EditAreaLink(
 							$edit_index,
@@ -1835,7 +1831,7 @@ class Edit extends \gp\Page{
 						$include_link = \gp\tool::Link(
 							'Admin/Extra',
 							$langmessage['edit'] . ' &raquo; ' . htmlspecialchars($section_data['content']), // $langmessage['theme_content']
-							'cmd=EditExtra&file=' . rawurlencode($section_data['content']) 
+							'cmd=EditExtra&file=' . rawurlencode($section_data['content'])
 						);
 						break;
 					case 'gadget':

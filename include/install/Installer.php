@@ -52,6 +52,12 @@ class Installer{
 
 
 	public function Run(){
+		global $langmessage;
+
+		echo '<h1>';
+		echo $langmessage['Installation'];
+		echo ' - v'.gpversion;
+		echo '</h1>';
 
 		$installed	= false;
 		$cmd		= \gp\tool::GetCommand();

@@ -21,7 +21,7 @@ class Installer{
 	private $lang				= 'en';
 	public $statuses			= [];
 
-	private $ftp_connection = false;
+	private $ftp_connection;
 
 
 
@@ -56,7 +56,7 @@ class Installer{
 
 		echo '<h1>';
 		echo $langmessage['Installation'];
-		echo ' - v'.gpversion;
+		echo ' - v'.\gpversion;
 		echo '</h1>';
 
 		$installed	= false;
@@ -165,7 +165,7 @@ class Installer{
 
 
 
-	function SetStatus($checking, $can_install, $curr_value, $expected = '', $status_label = ''){
+	public function SetStatus($checking, $can_install, $curr_value, $expected = '', $status_label = ''){
 
 		if( $can_install < $this->can_install ){
 			$this->can_install = $can_install;
@@ -204,12 +204,10 @@ class Installer{
 
 		if( !is_dir($folder)){
 			if( !@mkdir($folder) ){
-				$class					= 'passed_orange';
 				$status					= $langmessage['See_Below'].' (0)';
 				$this->can_write_data	= false;
 			}
 		}elseif( !gp_is_writable($folder) ){
-			$class						= 'passed_orange';
 			$status						= $langmessage['See_Below'].' (1)';
 			$this->can_write_data		= false;
 		}
@@ -274,7 +272,6 @@ class Installer{
 		$checkValue 	= ini_get('memory_limit');
 		$expected		= '16M+ or Adjustable';
 		$checking		= '<a href="http://php.net/manual/ini.core.php#ini.memory-limit" target="_blank">Memory Limit</a>';
-		$curr			= $checkValue;
 
 
 		// adjustable
@@ -634,60 +631,51 @@ class Installer{
 
 		//test for functions
 		if( !function_exists('ftp_connect') ){
-			echo '<li>';
-			echo '<span class="failed">';
+			echo '<li><span class="failed">';
 			echo $langmessage['FTP_UNAVAILABLE'];
-			echo '</span>';
-			echo '</li>';
+			echo '</span></li>';
 			return false;
 		}
 
 
 		//Try to connect
-		echo '<li>';
 		$this->ftp_connection = @ftp_connect($_POST['ftp_server'],21,6);
 		if( !$this->ftp_connection ){
-			echo '<span class="failed">';
+			echo '<li><span class="failed">';
 			echo sprintf($langmessage['FAILED_TO_CONNECT'],'<em>'.htmlspecialchars($_POST['ftp_server']).'</em>');
-			echo '</span>';
-			echo '</li>';
+			echo '</span></li>';
 			return false;
 		}
 
-		echo '<span class="passed">';
+		echo '<li><span class="passed">';
 		echo sprintf($langmessage['CONNECTED_TO'],'<em>'.htmlspecialchars($_POST['ftp_server']).'</em>');
 		echo '</span></li>';
 
 
 		//Log in
-		echo '<li>';
 		$login_result = @ftp_login($this->ftp_connection, $_POST['ftp_user'], $_POST['ftp_pass']);
 		if( !$login_result ){
-			echo '<span class="failed">';
+			echo '<li><span class="failed">';
 			echo sprintf($langmessage['NOT_LOOGED_IN'],'<em>'.htmlspecialchars($_POST['ftp_user']).'</em>');
 			echo '</span></li>';
 			return false;
 		}
 
-		echo '<span class="passed">';
+		echo '<li><span class="passed">';
 		echo sprintf($langmessage['LOGGED_IN'],'<em>'.htmlspecialchars($_POST['ftp_user']).'</em>');
 		echo '</span></li>';
 
 
 		//Get FTP Root
-		echo '<li>';
-		if( $login_result ){
-			$this->ftp_root = \gp\tool\FileSystemFtp::GetFTPRoot($this->ftp_connection,$dataDir);
-		}
+		$this->ftp_root = \gp\tool\FileSystemFtp::GetFTPRoot($this->ftp_connection,$dataDir);
 		if( $this->ftp_root === false ){
-			echo '<span class="failed">';
+			echo '<li><span class="failed">';
 			echo $langmessage['ROOT_DIRECTORY_NOT_FOUND'];
-			echo '</span>';
-			echo '</li>';
+			echo '</span></li>';
 			return false;
 		}
 
-		echo '<span class="passed">';
+		echo '<li><span class="passed">';
 		echo sprintf($langmessage['FTP_ROOT'],'<em>'.$this->ftp_root.'</em>');
 		echo '</span></li>';
 
@@ -715,12 +703,12 @@ class Installer{
 		echo '</p>';
 
 		$owner = $this->GetPHPOwner();
-		if( $owner ){
-			echo '<tt class="code">chown '.$owner.' "'.$dataDir.'/data"</tt>';
-			echo '<small>Note: "'.$owner.'" appears to be the owner uid of PHP on your server</small>';
-		}else{
+		if( is_null($owner) ){
 			echo '<tt class="code">chown ?? "'.$dataDir.'/data"</tt>';
 			echo '<small>Replace ?? with the owner uid of PHP on your server</small>';
+		}else{
+			echo '<tt class="code">chown '.$owner.' "'.$dataDir.'/data"</tt>';
+			echo '<small>Note: "'.$owner.'" appears to be the owner uid of PHP on your server</small>';
 		}
 
 		echo '<p><a href="">'.$langmessage['Refresh'].'</a></p>';
@@ -737,7 +725,7 @@ class Installer{
 		echo '<ol>';
 		echo '<li>Make "'.$dataDir.'" writable</li>';
 		echo '<li>Delete "'.$dataDir.'/data"</li>';
-		echo '<li>Run '.CMS_NAME.' Installer by refreshing this page</li>';
+		echo '<li>Run '.\CMS_NAME.' Installer by refreshing this page</li>';
 		echo '<li>Restore the permissions of "'.$dataDir.'"</li>';
 		echo '</ol>';
 
@@ -832,7 +820,7 @@ class Installer{
 
 		echo '</select>';
 		echo '<div class="sm">';
-		echo '<a href="https://github.com/Typesetter/Typesetter/tree/master/include/languages" target="_blank">Help translate '.CMS_NAME.'</a>';
+		echo '<a href="https://github.com/Typesetter/Typesetter/tree/master/include/languages" target="_blank">Help translate '.\CMS_NAME.'</a>';
 		echo '</div>';
 
 		echo '</form>';

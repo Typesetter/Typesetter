@@ -114,6 +114,34 @@ function access($attr, $path, $data, $volume, $isDir, $relpath) {
 		:  null;                                 // else elFinder decide it itself
 }
 
+/**
+ * Check files by extension if gp_restrict_uploads
+ *
+ */
+function upload_check($cmd, $args){
+	if(gp_restrict_uploads && !empty($args['FILES'])){
+		$files = empty($args['chunk']) ? $args['FILES']['upload']['name'] : array(preg_replace('/\.\d+_\d+.part$/', '', $args['chunk'], 1));
+		foreach($files as $i => $name){
+			if(!\gp\admin\Content\Uploaded::AllowedExtension($name)){
+				return array(
+					'preventexec' => true,
+					'results' => array('error' => 'errUploadMime')
+				);
+			}
+		}
+	}
+	return true;
+}
+
+function rename_check($cmd, $args){
+	if(gp_restrict_uploads && !\gp\admin\Content\Uploaded::AllowedExtension($args['name'])){
+		return array(
+			'preventexec' => true,
+			'results' => array('error' => 'errUploadMime')
+		);
+	}
+	return true;
+}
 
 // Documentation for connector options:
 // https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
@@ -128,9 +156,9 @@ $opts = array(
 			'URL'           	=> \gp\tool::GetDir('data/_uploaded'),
 			//'trashHash'     	=> 't1_Lw',                     // elFinder's hash of trash folder
 			'winHashFix'    	=> DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
-			'uploadDeny'    	=> array('all'),                // All Mimetypes not allowed to upload
-			'uploadAllow'   	=> array('image/x-ms-bmp', 'image/gif', 'image/jpeg', 'image/png', 'image/x-icon', 'text/plain'), // Mimetype `image` and `text/plain` allowed to upload
-			'uploadOrder'   	=> array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
+			// 'uploadDeny'    	=> array('all'),                // All Mimetypes not allowed to upload
+			// 'uploadAllow'   	=> array('image/x-ms-bmp', 'image/gif', 'image/jpeg', 'image/png', 'image/x-icon', 'text/plain'), // Mimetype `image` and `text/plain` allowed to upload
+			// 'uploadOrder'   	=> array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
 			'accessControl' 	=> 'access',                     // disable and hide dot starting files (OPTIONAL)
 			//'uploadMaxSize'	=>'55M',
 		),
@@ -149,6 +177,8 @@ $opts = array(
 	),
 	'bind' => array(
 		'duplicate upload rename rm paste resize' => array('\gp\admin\Content\Uploaded','FinderChange'),//drag+drop = cut+paste
+		'upload.pre' => array('upload_check'),
+		'rename.pre' => array('rename_check'),
 	)
 );
 

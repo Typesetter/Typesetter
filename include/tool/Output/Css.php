@@ -176,7 +176,7 @@ class Css{
 		$options['compress'] = 'true';
 
 		//prepare the compiler
-		includeFile('thirdparty/Less/Autoloader.php');
+		includeFile('thirdparty/less.php/Autoloader.php');
 		\Less_Autoloader::register();
 		$parser = new \Less_Parser($options);
 		$import_dirs[$dataDir] = \gp\tool::GetDir('/');

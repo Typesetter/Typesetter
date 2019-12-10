@@ -146,6 +146,9 @@ $opts = array(
 			'uploadOrder'   => array('deny', 'allow'),      // Same as above
 			'accessControl' => 'access',                    // Same as above
 		)
+	),
+	'bind' => array(
+		'duplicate upload rename rm paste resize' => array('\gp\admin\Content\Uploaded','FinderChange'),//drag+drop = cut+paste
 	)
 );
 

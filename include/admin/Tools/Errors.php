@@ -120,7 +120,7 @@ class Errors extends \gp\special\Base{
 		$elapsed	= \gp\admin\Tools::Elapsed( time() - $filemtime );
 		echo sprintf($langmessage['_ago'],$elapsed);
 		echo ' - ';
-		echo \gp\tool::Link('Admin/Errors','Clear Error','cmd=ClearError&hash='.$hash,array('data-cmd'=>'postlink'));
+		echo \gp\tool::Link('Admin/Errors','Clear Error','cmd=ClearError&hash='.$hash,['data-cmd'=>'cnreq']);
 		echo '</p>';
 
 
@@ -270,6 +270,7 @@ class Errors extends \gp\special\Base{
 
 		$error_file = $dataDir.'/data/_site/fatal_'.$hash;
 		if( !file_exists($error_file) ){
+			msg('Error doesn\'t exist');
 			return;
 		}
 
@@ -277,7 +278,6 @@ class Errors extends \gp\special\Base{
 		if( is_dir($error_file) ){
 			\gp\tool\Files::RmAll($error_file);
 		}else{
-			$hashes[] = md5_file($error_file);
 			unlink($error_file);
 		}
 
@@ -328,4 +328,3 @@ class Errors extends \gp\special\Base{
 
 
 }
-

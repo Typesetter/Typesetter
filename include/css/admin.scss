@@ -2030,7 +2030,8 @@ body #addon_about{
 	width: 50%;
 	position: relative;
 	overflow: hidden;
-	float: left;
+	display: inline-block;
+	vertical-align: top;
 }
 
 #new_section_links input{

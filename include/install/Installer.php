@@ -365,7 +365,7 @@ class Installer{
 			if( $supported_types & IMG_GIF){
 				$supported[] = 'gif';
 			}
-			if( defind('IMG_WEBP') && ($supported_types & IMG_WEBP) ){
+			if( defined('IMG_WEBP') && ($supported_types & IMG_WEBP) ){
 				$supported[] = 'webp';
 			}
 		}

@@ -140,8 +140,8 @@ namespace gp\tool{
 
 			self::SetConstants();
 
-			if( array_key_exists(gp_session_cookie, $_COOKIE) || 
-				array_key_exists(gp_installation_cookie, $_COOKIE) 
+			if( array_key_exists(gp_session_cookie, $_COOKIE) ||
+				array_key_exists(gp_installation_cookie, $_COOKIE)
 				){
 				return true;
 			}
@@ -475,7 +475,7 @@ namespace gp\tool{
 
 		/**
 		 * called when a user logs in
-		 * 
+		 *
 		 */
 		public static function create(&$user_info, $username, &$sessions){
 			global $dataDir, $langmessage;
@@ -492,9 +492,9 @@ namespace gp\tool{
 			$uid				= self::auth_browseruid();
 			$session_id			= false;
 			foreach($sessions as $sess_temp_id => $sess_temp_info){
-				if( isset($sess_temp_info['uid']) && 
-					$sess_temp_info['uid'] == $uid && 
-					$sess_temp_info['file_name'] == $user_file_name 
+				if( isset($sess_temp_info['uid']) &&
+					$sess_temp_info['uid'] == $uid &&
+					$sess_temp_info['file_name'] == $user_file_name
 					){
 					$session_id = $sess_temp_id;
 				}
@@ -628,8 +628,8 @@ namespace gp\tool{
 			$GLOBALS['gpAdmin'] = self::SessionData($session_file,$checksum);
 
 			//lock to prevent conflicting edits
-			if( gp_lock_time > 0 && 
-				( !empty($GLOBALS['gpAdmin']['editing']) || !empty($GLOBALS['gpAdmin']['granted']) ) 
+			if( gp_lock_time > 0 &&
+				( !empty($GLOBALS['gpAdmin']['editing']) || !empty($GLOBALS['gpAdmin']['granted']) )
 				){
 				$expires = gp_lock_time;
 				if( !\gp\tool\Files::Lock('admin', sha1(sha1($session_id)), $expires) ){
@@ -730,9 +730,9 @@ namespace gp\tool{
 			//add $gp_admin_html to the document
 			if( strpos($buffer, '<!-- get_head_placeholder ' . gp_random . ' -->') !== false ){
 				$buffer = \gp\tool\Output::AddToBody(
-					$buffer, 
-					'<div id="gp_admin_html">' 
-						. $gp_admin_html . \gp\tool\Output::$editlinks 
+					$buffer,
+					'<div id="gp_admin_html">'
+						. $gp_admin_html . \gp\tool\Output::$editlinks
 						. '</div><div id="gp_admin_fixed"></div>'
 				);
 			}
@@ -803,7 +803,7 @@ namespace gp\tool{
 
 
 		/**
-		 * Prevent XSS attacks for logged in users by 
+		 * Prevent XSS attacks for logged in users by
 		 * making sure the request contains a valid nonce
 		 *
 		 */
@@ -1288,9 +1288,9 @@ namespace gp\tool{
 				return;
 			}
 
-			if( is_object($page) 
-				&& property_exists($page, 'requested') 
-				&& strpos($page->requested, 'Admin/Errors') !== false 
+			if( is_object($page)
+				&& property_exists($page, 'requested')
+				&& strpos($page->requested, 'Admin/Errors') !== false
 				){
 				return;
 			}

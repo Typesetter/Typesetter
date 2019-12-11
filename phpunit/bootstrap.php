@@ -9,12 +9,16 @@ echo "\nBegin gpEasy Tests\n\n";
 defined('gpdebug') or define('gpdebug',true);
 defined('is_running') or define('is_running',true);
 defined('gp_unit_testing') or define('gp_unit_testing',true);
+defined('gp_nonce_algo') or define('gp_nonce_algo','sha512');
 
-global $dataDir, $config;
-$dataDir = $_SERVER['PWD'];
+
+
+/*
+global $config;
 
 include('include/common.php');
 spl_autoload_register( array('\\gp\\tool','Autoload') );
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 $config = ['gpuniq'=>'test','language'=>'en'];
 
@@ -23,12 +27,25 @@ $config = ['gpuniq'=>'test','language'=>'en'];
 includeFile('tool/functions.php');
 
 \gp\tool\Session::init();
-
+*/
 
 if (!class_exists('\PHPUnit_Framework_TestCase') && class_exists('\PHPUnit\Framework\TestCase'))
     class_alias('\PHPUnit\Framework\TestCase', '\PHPUnit_Framework_TestCase');
 
+
+
 class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
+
+	private static $process;
+	protected static $client;
+	protected static $logged_in		= false;
+	protected static $installed		= false;
+	protected static $requests		= 0;
+
+
+	const user_name		= 'phpunit_username';
+	const user_pass		= 'phpunit-test-password';
+
 
 	function setUP(){
 		\gp\tool::GetLangFile();
@@ -38,14 +55,13 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		\gp\tool::GetConfig();
 
-		$username		= 'phpunit-username';
 		$users			= gpFiles::Get('_site/users');
-		$userinfo		= $users[$username];
+		$userinfo		= $users[static::user_name];
 
-		$session_id		= \gp\tool\Session::create($userinfo, $username, $sessions);
+		$session_id		= \gp\tool\Session::create($userinfo, static::user_name, $sessions);
 		$logged_in		= \gp\tool\Session::start($session_id,$sessions);
 
-		self::AssertTrue($logged_in,'Not Logged In');
+		$this->AssertTrue($logged_in,'Not Logged In');
 
 	}
 
@@ -62,5 +78,231 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		}
 		fwrite($fp, "\n".print_r($msg, TRUE));
 	}
+
+	/**
+	 * Use php's built-in web server
+	 * https://medium.com/@peter.lafferty/start-phps-built-in-web-server-from-phpunit-9571f38c5045
+	 *
+	 */
+	public static function setUpBeforeClass(){
+		global $dataDir;
+
+		self::PrepInstall();
+
+        static::$process = new \Symfony\Component\Process\Process(['php','-S','localhost:8081','-t',$dataDir]);
+        static::$process->start();
+        usleep(100000); //wait for server to get going
+
+		static::$client = new \GuzzleHttp\Client(['http_errors' => false,'cookies' => true]);
+
+		self::Install();
+    }
+
+
+	/**
+	 * Stop web-server process
+	 */
+	public static function tearDownAfterClass(){
+        static::$process->stop();
+    }
+
+	/**
+	 * Fetch a url
+	 *
+	 */
+	public static function GetRequest($slug,$query=''){
+		$url		= 'http://localhost:8081' . \gp\tool::GetUrl($slug,$query);
+		return self::_GetRequest($url);
+	}
+
+	public static function _GetRequest($url){
+		$response	=  static::$client->request('GET', $url);
+
+		self::SaveResponse('get',$url,$response);
+
+		return $response;
+	}
+
+
+	/**
+	 * Send a POST request tot the test server
+	 *
+	 */
+	public static function PostRequest($slug, $params = []){
+
+		$url		= 'http://localhost:8081' . \gp\tool::GetUrl($slug);
+
+		$response	= static::$client->request('POST', $url, ['form_params' => $params]);
+
+		self::SaveResponse('post',$url,$response);
+
+		return $response;
+	}
+
+	public static function SaveResponse($type,$url,$response){
+		global $dataDir;
+		static::$requests++;
+
+		$debug_file		= $dataDir . '/data/response-' . static::$requests . '-' . $type . '-' . str_replace('/','_',$url);
+		$debug			= $response->getBody();
+		file_put_contents($debug_file, $debug);
+	}
+
+
+	/**
+	 * Log In
+	 *
+	 */
+	public function LogIn(){
+		global $config;
+
+		// load login page to set cookies
+		$response					= self::GetRequest('Admin');
+		$this->assertEquals(200, $response->getStatusCode());
+
+		$params						= [];
+		$params['cmd']				= 'login';
+		$params['username']			= static::user_name;
+		$params['password']			= static::user_pass;
+		$params['login_nonce']		= \gp\tool::new_nonce('login_nonce',true,300);
+		$response					= self::PostRequest('Admin',$params);
+
+		$this->assertEquals(200, $response->getStatusCode());
+	}
+
+
+	/**
+	 * Create an install folder in the temporary directory
+	 *
+	 */
+	public static function PrepInstall(){
+		global $dataDir, $languages, $config;
+
+		if( static::$installed ){
+			return;
+		}
+
+
+		/*
+		$dataDir = sys_get_temp_dir().'/typesetter-test';
+		if( !file_exists($dataDir) ){
+			mkdir($dataDir);
+		}
+
+		// create symlinks of include, addons, and themes
+		$symlinks = ['include','addons','themes','gpconfig.php','index.php','vendor'];
+		foreach($symlinks as $name){
+
+			$path		= $dataDir.'/'.$name;
+			$target		= $_SERVER['PWD'].'/'.$name;
+
+			if( !file_exists($target) ){
+				echo "\n\n symlink target does not exist: $target \n\n";
+				continue;
+			}
+
+			if( file_exists($path) ){
+				unlink($path);
+			}
+
+			symlink( $target, $path);
+		}
+		*/
+
+		$dataDir = $_SERVER['PWD'];
+
+
+		include('include/common.php');
+		spl_autoload_register( array('\\gp\\tool','Autoload') );
+		require dirname(__DIR__) . '/vendor/autoload.php';
+		includeFile('tool/functions.php');
+
+
+		// make sure we have a fresh /data directory
+
+		$dir = $dataDir.'/data';
+		if( file_exists($dir) ){
+			//\gp\tool\Files::RmAll($dir);
+			rename($dir,$dataDir.'/x_data');
+		}
+		mkdir($dir);
+
+
+
+
+
+
+		/*
+
+		\gp\tool::SetLinkPrefix();
+
+
+		\gp\tool\Session::init();
+		*/
+
+	}
+
+	/*
+	 * Create an installation
+	 *
+	 */
+	public static function Install(){
+		global $config;
+
+		// don't attempt to install twice
+		if( static::$installed ){
+			return;
+		}
+
+		static::$installed		= true;
+
+
+
+		//make sure it's not installed
+		$installed = \gp\tool::Installed();
+		self::AssertFalse($installed,'Cannot test installation (Already Installed)');
+
+
+		// test install checks
+		// one of the checks actually fails
+		$values			= [1,1,-1,1,1,1];
+		$installer		= new \gp\install\Installer();
+		foreach($values as $i => $val){
+			self::assertGreaterThanOrEqual( $val, $installer->statuses[$i]['can_install'], 'Unexpected status ('.$i.') '.pre($installer->statuses[$i]) );
+		}
+
+
+
+		// test rendering of the install template
+		$response = self::GetRequest('');
+		self::assertEquals(200, $response->getStatusCode());
+
+		//ob_start();
+		//includeFile('install/install.php');
+		//$installer->Form_Entry();
+		//$content = ob_get_clean();
+		//self::assertNotEmpty($content);
+
+
+
+		//attempt to install
+		$params					= [];
+		$params['site_title']	= 'unit tests';
+		$params['email']		= 'test@example.com';
+		$params['username']		= static::user_name;
+		$params['password']		= static::user_pass;
+		$params['password1']	= static::user_pass;
+		$params['cmd']			= 'Install';
+		$response				= self::PostRequest('',$params);
+
+
+
+		//double check
+		$installed			= \gp\tool::Installed();
+		self::AssertTrue($installed,'Not installed');
+
+		\gp\tool::GetConfig();
+	}
+
 
 }

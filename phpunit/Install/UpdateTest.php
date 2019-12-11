@@ -7,7 +7,6 @@ class phpunit_Update extends gptest_bootstrap{
 
 	/**
 	 *
-	 * @runInSeparateProcess
 	 */
 	function testUpdate(){
 
@@ -41,10 +40,15 @@ class phpunit_Update extends gptest_bootstrap{
 	function UpdateOutputTest(){
 		global $page;
 
+		$url		= 'http://localhost:8081/include/install/update.php';
+		$response	= $this->_GetRequest($url);
+		$this->assertEquals(200, $response->getStatusCode());
+
+
 		ob_start();
 		$page = new \gp\admin\Update();
-		\gp\tool\Output::HeadContent();
-		includeFile('install/update_template.php');
+		//\gp\tool\Output::HeadContent();
+		//includeFile('install/update_template.php');
 		ob_get_clean();
 
 	}

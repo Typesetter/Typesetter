@@ -19,6 +19,8 @@ jobs:
 before_script:
   - composer init -n
   - composer require phpunit/phpunit "<8 >=4"
+  - composer require symfony/process
+  - composer require guzzlehttp/guzzle
   #- phpenv config-add phpunit/phpconfig.ini
 
 # Submit coverage report to https://codecov.io

@@ -36,7 +36,7 @@ if (!class_exists('\PHPUnit_Framework_TestCase') && class_exists('\PHPUnit\Frame
 
 class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
-	private static $process;
+	protected static $process;
 	protected static $client;
 	protected static $logged_in		= false;
 	protected static $installed		= false;

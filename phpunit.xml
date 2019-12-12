@@ -29,7 +29,7 @@
 
 	<logging>
 	    <log type="testdox-text" target="php://stdout"/>
-		<log type="coverage-clover" target="x_coverage/unit-tests.xml"/>
+		<log type="coverage-clover" target="x_coverage/unit-tests.clover"/>
 	</logging>
 
 

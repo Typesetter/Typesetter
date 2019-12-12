@@ -28,6 +28,6 @@ foreach($files as $file){
 echo "\n - ".$file_count.' coverage files combined in '.$cov_dir;
 echo "\n";
 
-$cov_file	= $cov_dir.'/requests.xml';
+$cov_file	= $cov_dir.'/requests.clover';
 $writer		= new \SebastianBergmann\CodeCoverage\Report\Clover;
 $writer->process($cov_obj, $cov_file);

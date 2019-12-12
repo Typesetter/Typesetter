@@ -144,17 +144,9 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	 */
 	public static function ProcessOutput($type,$url){
 
-		$incr_output = static::$process->getIncrementalOutput();
-
 		echo "\n\n----------------------------------------------------------------";
 		static::Console('Begin Process Output: '.$type.' '.$url);
 		echo "\n";
-
-		if( $incr_output ){
-			static::Console('Incremental Proc Output');
-			echo $incr_output;
-		}
-
 
 		if( !empty(static::$proc_output) ){
 			static::Console('Proc Output');
@@ -224,6 +216,8 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		file_put_contents($debug_file, $body);
 		static::$requests++;
+
+		static::$process->getOutput(); # makes symfony/process populate our static::$proc_output
 
 
 		if( $expected_resonse !== $response->getStatusCode() ){

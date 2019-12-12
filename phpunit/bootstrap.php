@@ -264,7 +264,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 
 		// make sure we have a fresh /data directory
-
 		$dir = $dataDir.'/data';
 		if( file_exists($dir) ){
 			\gp\tool\Files::RmAll($dir);
@@ -357,12 +356,21 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		$params['password1']	= static::user_pass;
 		$params['cmd']			= 'Install';
 		$response				= self::PostRequest('',$params);
+		self::assertEquals(200, $response->getStatusCode());
 
 
 
 		//double check
 		$installed			= \gp\tool::Installed();
+
+		if( !$installed ){
+			$this->Console('Not installed');
+			echo $response->getBody();
+		}
+
 		self::AssertTrue($installed,'Not installed');
+
+
 
 		\gp\tool::GetConfig();
 	}

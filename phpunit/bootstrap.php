@@ -127,6 +127,31 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		static::$client = new \GuzzleHttp\Client(['http_errors' => false,'cookies' => true]);
 	}
 
+	/**
+	 * Print process output
+	 *
+	 */
+	public static function ProcessOutput($type,$url){
+
+		$incr_output = static::$process->getIncrementalOutput();
+
+		echo "\n\n----------------------------------------------------------------";
+		static::Console('Begin Process Output: '.$type.' '.$url);
+		echo "\n";
+
+		if( $incr_output ){
+			static::Console('Incremental Proc Output');
+			echo $incr_output;
+		}
+
+
+		if( !empty(static::$proc_output) ){
+			static::Console('Proc Output');
+			print_r(static::$proc_output);
+		}
+		echo "\nEnd Process Output\n----------------------------------------------------------------\n\n";
+	}
+
 
 	/**
 	 * Stop web-server process
@@ -160,10 +185,11 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 	/**
 	 * Send a request to the test server and check the response
-	 * 
+	 *
 	 */
 	public static function GuzzleRequest($type,$url,$expected_resonse = 200, $options = []){
 		global $dataDir;
+
 
 		static::$proc_output	= [];
 		$options['headers']		= ['X-REQ-ID' => static::$requests];
@@ -177,12 +203,14 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 
 		if( $expected_resonse !== $response->getStatusCode() ){
-			static::Console('Process Output for '.$type.' '.$url);
-			print_r(static::$proc_output);
+
 		}
+
+		static::ProcessOutput($type,$url);
 
 		static::ServerErrors($type,$url);
 		static::assertEquals($expected_resonse, $response->getStatusCode());
+
 
 		return $response;
 	}
@@ -205,8 +233,11 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 			return;
 		}
 
+		echo "\n\n----------------------------------------------------------------";
 		static::Console('Error Log for '.$type.' '.$url);
+		echo "\n";
 		echo $content;
+		echo "\n\nEnd Error Log\n----------------------------------------------------------------\n\n";
 
 		$fp = fopen($error_log, "r+");
 		ftruncate($fp, 0);

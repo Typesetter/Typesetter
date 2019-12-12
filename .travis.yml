@@ -21,7 +21,7 @@ before_script:
   - composer require phpunit/phpunit "<8 >=4"
   - composer require symfony/process
   - composer require guzzlehttp/guzzle
-  - composer require phpunit/php-code-coverage
+  - composer require phpunit/php-code-coverage "<7" # for phpunit compat
   #- phpenv config-add phpunit/phpconfig.ini
 
 script:

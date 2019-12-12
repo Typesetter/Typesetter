@@ -42,6 +42,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	protected static $installed		= false;
 	protected static $requests		= 0;
 	protected static $proc_output	= [];
+	protected static $phpinfo;
 
 
 	const user_name		= 'phpunit_username';
@@ -89,6 +90,18 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		self::PrepInstall();
 		self::StartServer();
+
+		if( empty(static::$phpinfo) ){
+			static::Console('set phpinfo');
+			$url				= 'http://localhost:8081/phpinfo.php';
+			$response			= self::GuzzleRequest('GET',$url);
+			$body				= $response->getBody();
+			$body->seek(0);
+			static::$phpinfo	= (string)$body;
+			print_r(static::$phpinfo);
+		}
+
+
 		self::Install();
     }
 
@@ -195,18 +208,19 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		$options['headers']		= ['X-REQ-ID' => static::$requests];
 		$response				= static::$client->request($type, $url, $options);
 		$debug_file				= $dataDir . '/data/response-' . static::$requests . '-' . $type . '-' . str_replace('/','_',$url);
-		$debug					= $response->getBody();
+		$body					= $response->getBody();
 
-		file_put_contents($debug_file, $debug);
+
+		file_put_contents($debug_file, $body);
+
 
 		static::$requests++;
 
 
 		if( $expected_resonse !== $response->getStatusCode() ){
-
+			static::ProcessOutput($type,$url);
 		}
-
-		static::ProcessOutput($type,$url);
+		echo (string)static::$phpinfo;
 
 		static::ServerErrors($type,$url);
 		static::assertEquals($expected_resonse, $response->getStatusCode());
@@ -302,6 +316,12 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 			symlink( $target, $path);
 		}
+
+
+		// create a phpinfo.php file
+		$file		= $dataDir.'/phpinfo.php';
+		$content	= '<?php phpinfo();';
+		file_put_contents($file,$content);
 
 
 		//$dataDir = $_SERVER['PWD'];

@@ -6,7 +6,7 @@ class ErrorTest extends \gptest_bootstrap{
 
 	/**
 	 * Test the export and import admin functionality
-	 * @runInSeparateProcess
+	 *
 	 */
 	function testError(){
 
@@ -14,7 +14,6 @@ class ErrorTest extends \gptest_bootstrap{
 		// create an exception
 		//$this->expectException('\Exception');
 		//\gp\tool\Output::InvalidMethod();
-		//\
 
 		$this->Login();
 

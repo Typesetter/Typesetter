@@ -96,9 +96,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 			$url				= 'http://localhost:8081/phpinfo.php';
 			$response			= self::GuzzleRequest('GET',$url);
 			$body				= $response->getBody();
-			$body->seek(0);
 			static::$phpinfo	= (string)$body;
-			print_r(static::$phpinfo);
 		}
 
 
@@ -210,7 +208,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		$debug_file				= $dataDir . '/data/response-' . static::$requests . '-' . $type . '-' . str_replace('/','_',$url);
 		$body					= $response->getBody();
 
-
 		file_put_contents($debug_file, $body);
 
 
@@ -219,8 +216,9 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		if( $expected_resonse !== $response->getStatusCode() ){
 			static::ProcessOutput($type,$url);
+			static::Console('PHPINFO()');
+			echo (string)static::$phpinfo;
 		}
-		echo (string)static::$phpinfo;
 
 		static::ServerErrors($type,$url);
 		static::assertEquals($expected_resonse, $response->getStatusCode());

@@ -18,4 +18,7 @@ function SaveXdebugCoverage(){
 }
 
 register_shutdown_function('SaveXdebugCoverage');
-ob_start('SaveXdebugCoverage');
+ob_start(function($buffer){
+	SaveXdebugCoverage();
+	return $buffer;
+});

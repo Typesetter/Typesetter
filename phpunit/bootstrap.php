@@ -129,24 +129,35 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	 * Stop web-server process
 	 */
 	public static function tearDownAfterClass(){
-		global $dataDir;
 
         static::$process->stop();
-
-		$error_log = $dataDir . '/data/request-errors.log';
-		if( file_exists($error_log) ){
-			$content = file_get_contents($error_log);
-			if( $content ){
-				static::Console('Request Error Log');
-				echo $content;
-
-				$fp = fopen($error_log, "r+");
-				ftruncate($fp, 0);
-				fclose($fp);
-			}
-		}
     }
 
+
+	/**
+	 * Output Error log
+	 *
+	 */
+	public static function ServerErrors($type,$url){
+		global $dataDir;
+
+		$error_log = $dataDir . '/data/request-errors.log';
+		if( !file_exists($error_log) ){
+			return;
+		}
+
+		$content = file_get_contents($error_log);
+		if( empty($content) ){
+			return;
+		}
+
+		static::Console('Error Log for '.$type.' '.$url);
+		echo $content;
+
+		$fp = fopen($error_log, "r+");
+		ftruncate($fp, 0);
+		fclose($fp);
+	}
 
 
 	/**
@@ -186,6 +197,8 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		file_put_contents($debug_file, $debug);
 
 		static::$requests++;
+
+		static::ServerErrors($type,$url);
 
 		return $response;
 	}
@@ -362,12 +375,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		//double check
 		$installed			= \gp\tool::Installed();
-
-		if( !$installed ){
-			$this->Console('Not installed');
-			echo $response->getBody();
-		}
-
 		self::AssertTrue($installed,'Not installed');
 
 

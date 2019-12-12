@@ -27,4 +27,4 @@ before_script:
 script:
   - vendor/bin/phpunit
   - php phpunit/ServerCombineCoverage.php
-  - bash <(curl -s https://codecov.io/bash) # Submit coverage report to https://codecov.io
+  - bash <(curl -s https://codecov.io/bash) -s ./x_coverage # Submit coverage report to https://codecov.io

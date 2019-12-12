@@ -41,6 +41,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	protected static $logged_in		= false;
 	protected static $installed		= false;
 	protected static $requests		= 0;
+	protected static $proc_output	= [];
 
 
 	const user_name		= 'phpunit_username';
@@ -118,7 +119,9 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 
 		static::$process = new \Symfony\Component\Process\Process($proc);
-        static::$process->start();
+        static::$process->start(function($type,$buffer){
+			static::$proc_output[] = ['type'=>$type,'buffer'=>(string)$buffer];
+		});
         usleep(100000); //wait for server to get going
 
 		static::$client = new \GuzzleHttp\Client(['http_errors' => false,'cookies' => true]);
@@ -129,9 +132,60 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	 * Stop web-server process
 	 */
 	public static function tearDownAfterClass(){
-
         static::$process->stop();
     }
+
+
+	/**
+	* Send a GET request to the test server
+	 *
+	 */
+	public static function GetRequest($slug,$query=''){
+		$url		= 'http://localhost:8081' . \gp\tool::GetUrl($slug,$query);
+		return self::GuzzleRequest('GET',$url);
+	}
+
+
+	/**
+	 * Send a POST request to the test server
+	 *
+	 */
+	public static function PostRequest($slug, $params = []){
+
+		$url		= 'http://localhost:8081' . \gp\tool::GetUrl($slug);
+		$options	= ['form_params' => $params];
+
+		return self::GuzzleRequest('POST',$url,200,$options);
+	}
+
+	/**
+	 * Send a request to the test server and check the response
+	 * 
+	 */
+	public static function GuzzleRequest($type,$url,$expected_resonse = 200, $options = []){
+		global $dataDir;
+
+		static::$proc_output	= [];
+		$options['headers']		= ['X-REQ-ID' => static::$requests];
+		$response				= static::$client->request($type, $url, $options);
+		$debug_file				= $dataDir . '/data/response-' . static::$requests . '-' . $type . '-' . str_replace('/','_',$url);
+		$debug					= $response->getBody();
+
+		file_put_contents($debug_file, $debug);
+
+		static::$requests++;
+
+
+		if( $expected_resonse !== $response->getStatusCode() ){
+			static::Console('Process Output for '.$type.' '.$url);
+			print_r(static::$proc_output);
+		}
+
+		static::ServerErrors($type,$url);
+		static::assertEquals($expected_resonse, $response->getStatusCode());
+
+		return $response;
+	}
 
 
 	/**
@@ -157,48 +211,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		$fp = fopen($error_log, "r+");
 		ftruncate($fp, 0);
 		fclose($fp);
-	}
-
-
-	/**
-	 * Fetch a url
-	 *
-	 */
-	public static function GetRequest($slug,$query=''){
-		$url		= 'http://localhost:8081' . \gp\tool::GetUrl($slug,$query);
-		return self::GuzzleRequest('GET',$url);
-	}
-
-
-	/**
-	 * Send a POST request tot the test server
-	 *
-	 */
-	public static function PostRequest($slug, $params = []){
-
-		$url		= 'http://localhost:8081' . \gp\tool::GetUrl($slug);
-		$options	= ['form_params' => $params];
-
-		return self::GuzzleRequest('POST',$url,200,$options);
-	}
-
-	public static function GuzzleRequest($type,$url,$expected_resonse = 200, $options = []){
-		global $dataDir;
-
-		$options['headers']		= ['X-REQ-ID' => static::$requests];
-		$response				= static::$client->request($type, $url, $options);
-		$debug_file				= $dataDir . '/data/response-' . static::$requests . '-' . $type . '-' . str_replace('/','_',$url);
-		$debug					= $response->getBody();
-
-		file_put_contents($debug_file, $debug);
-
-		static::$requests++;
-
-		static::ServerErrors($type,$url);
-
-		static::assertEquals($expected_resonse, $response->getStatusCode());
-
-		return $response;
 	}
 
 

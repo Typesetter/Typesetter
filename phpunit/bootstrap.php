@@ -216,11 +216,13 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		if( $expected_resonse !== $response->getStatusCode() ){
 			static::ProcessOutput($type,$url);
+			static::ServerErrors($type,$url,true);
 			static::Console('PHPINFO()');
 			echo (string)static::$phpinfo;
+		}else{
+			static::ServerErrors($type,$url);
 		}
 
-		static::ServerErrors($type,$url);
 		static::assertEquals($expected_resonse, $response->getStatusCode());
 
 
@@ -232,22 +234,27 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	 * Output Error log
 	 *
 	 */
-	public static function ServerErrors($type,$url){
+	public static function ServerErrors($type,$url,$force=false){
 		global $dataDir;
 
+
 		$error_log = $dataDir . '/data/request-errors.log';
-		if( !file_exists($error_log) ){
+		if( !$force && !file_exists($error_log) ){
 			return;
 		}
 
-		$content = file_get_contents($error_log);
+		$content = @file_get_contents($error_log);
 		if( empty($content) ){
-			return;
+			if( !$force ){
+				return;
+			}
+			$content = '--empty file '.$error_log.'--';
 		}
 
 		echo "\n\n----------------------------------------------------------------";
 		static::Console('Error Log for '.$type.' '.$url);
 		echo "\n";
+
 		echo $content;
 		echo "\n\nEnd Error Log\n----------------------------------------------------------------\n\n";
 

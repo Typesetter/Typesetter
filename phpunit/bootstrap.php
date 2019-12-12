@@ -203,14 +203,26 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 
 		static::$proc_output	= [];
-		$options['headers']		= ['X-REQ-ID' => static::$requests];
-		$response				= static::$client->request($type, $url, $options);
-		$debug_file				= $dataDir . '/data/response-' . static::$requests . '-' . $type . '-' . str_replace('/','_',$url);
+		$attempts				= 0;
+		do{
+
+			$options['headers']		= ['X-REQ-ID' => static::$requests];
+			$response				= static::$client->request($type, $url, $options);
+			$debug_file				= $dataDir . '/data/response-' . static::$requests . '-' . $type . '-' . str_replace('/','_',$url);
+
+			// only attempt again if we get a 503 response
+			if( $response->getStatusCode() !== 503 ){
+				break;
+			}
+
+			$attempts++;
+			usleep(100000);
+
+		}while( $attempts < 10 );
+
 		$body					= $response->getBody();
 
 		file_put_contents($debug_file, $body);
-
-
 		static::$requests++;
 
 

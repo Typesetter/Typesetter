@@ -85,19 +85,48 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	 *
 	 */
 	public static function setUpBeforeClass(){
-		global $dataDir;
 
 		self::PrepInstall();
+		self::StartServer();
+		self::Install();
+    }
 
-        static::$process = new \Symfony\Component\Process\Process(['php','-S','localhost:8081','-t',$dataDir]);
+	public static function StartServer(){
+		global $dataDir;
+
+		if( static::$process ){
+			static::$process->stop();
+		}
+
+
+		$proc		= ['php','-S','localhost:8081'];
+
+		// doc root
+		$proc[]		= '-t';
+		$proc[]		= $dataDir; // '.';
+
+		// error log
+		$proc[]		= '-d';
+		$proc[]		= 'error_log='.$dataDir . '/data/request-errors.log';
+
+		// xdebug configuration to collect code coverage
+		//$proc[]		= '-c';
+		//$proc[]		= __DIR__ . '/phpconfig.ini';
+
+		$proc[]		= '-d';
+		$proc[]		= 'auto_prepend_file='.__DIR__ . '/ServerPrepend.php';
+
+		$proc[]		= '-d';
+		$proc[]		= 'auto_append_file='.__DIR__ . '/ServerAppend.php';
+
+
+
+		static::$process = new \Symfony\Component\Process\Process($proc);
         static::$process->start();
         usleep(100000); //wait for server to get going
 
 		static::$client = new \GuzzleHttp\Client(['http_errors' => false,'cookies' => true]);
-
-		self::Install();
-    }
-
+	}
 
 	/**
 	 * Stop web-server process
@@ -178,12 +207,13 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	public static function PrepInstall(){
 		global $dataDir, $languages, $config;
 
-		if( static::$installed ){
+		if( function_exists('showError') ){
+			static::$installed		= true;
 			return;
 		}
 
 
-		/*
+
 		$dataDir = sys_get_temp_dir().'/typesetter-test';
 		if( !file_exists($dataDir) ){
 			mkdir($dataDir);
@@ -207,9 +237,11 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 			symlink( $target, $path);
 		}
-		*/
 
-		$dataDir = $_SERVER['PWD'];
+
+		//$dataDir = $_SERVER['PWD'];
+
+		echo "\n\ndatadir: $dataDir \n\n";
 
 
 		include('include/common.php');
@@ -222,14 +254,19 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		$dir = $dataDir.'/data';
 		if( file_exists($dir) ){
-			//\gp\tool\Files::RmAll($dir);
-			rename($dir,$dataDir.'/x_data');
+			\gp\tool\Files::RmAll($dir);
 		}
 		mkdir($dir);
 
 
 
 
+		// reset coverage folder
+		$cov_dir	= dirname(__DIR__).'/x_coverage';
+		if( file_exists($cov_dir) ){
+			\gp\tool\Files::RmAll($cov_dir);
+		}
+		mkdir($cov_dir);
 
 
 		/*

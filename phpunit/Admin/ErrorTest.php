@@ -6,7 +6,7 @@ class ErrorTest extends \gptest_bootstrap{
 
 	/**
 	 * Test the export and import admin functionality
-	 *
+	 * @runInSeparateProcess
 	 */
 	function testError(){
 

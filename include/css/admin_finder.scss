@@ -1,0 +1,56 @@
+html, 
+body,
+#gp_admin_html, 
+#admincontainer,
+#gpx_content, 
+#admincontent {
+  position: relative;
+  height: 100%;
+}
+
+#admincontent_inner{
+	padding: 0;
+	border: 0 none !important;
+	background: #EDEDED !important;
+	overflow: visible !important;
+	position: relative;
+	height: calc(100% - 54px);
+}
+
+
+#elfinder{
+	position: relative;
+	width: 100% !important;
+	height: 100% !important;
+	border: 0 none !important;
+	border-radius: 0 !important;
+	.ui-resizable-handle.ui-resizable-se {
+	  display: none !important;
+	}
+	.elfinder-navbar {
+		background: #f3f3f3;
+	}
+	.elfinder-toolbar {
+		background: #ededed;
+	}
+	.elfinder-statusbar {
+		background: #f3f3f3;
+		border-radius: 0 !important;
+	}
+	.elfinder-cwd-view-icons .elfinder-cwd-filename {
+		line-height: 1.2em !important;
+	}
+}
+
+
+/**
+ * Undoing conflicts with typesetter css
+ * 
+ */
+#admincontent_inner .elfinder-button{
+	box-sizing: content-box;
+}
+
+#admincontent_inner .elfinder-button-search input[type="text"]{
+	width: 100%;
+}

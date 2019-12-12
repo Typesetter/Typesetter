@@ -1,8 +1,14 @@
 <?php
 
-require 'ServerPrepend.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
-if( $cov_obj ){
+if( class_exists('\SebastianBergmann\CodeCoverage\CodeCoverage') ){
+
+	$include_dir	= dirname(__DIR__).'/include';
+	$cov_obj		= new \SebastianBergmann\CodeCoverage\CodeCoverage();
+	$cov_obj->filter()->addDirectoryToWhitelist($include_dir);
+	$cov_obj->filter()->removeDirectoryFromWhitelist($include_dir.'/thirdparty');
+
 
 	$cov_dir		= dirname(__DIR__).'/x_coverage';
 	$files			= scandir($cov_dir);

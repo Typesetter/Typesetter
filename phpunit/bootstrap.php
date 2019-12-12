@@ -117,7 +117,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		$proc[]		= 'auto_prepend_file='.__DIR__ . '/ServerPrepend.php';
 
 		$proc[]		= '-d';
-		$proc[]		= 'auto_append_file='.__DIR__ . '/ServerAppend.php';
+		$proc[]		= 'auto_append_file='.__DIR__ . '/ServerAppend.php'; // won't append if script ends with exit()
 
 
 
@@ -141,7 +141,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		if( file_exists($error_log) ){
 			$content = file_get_contents($error_log);
 			if( $content ){
-				echo "\n Error Log";
+				static::Console('Request Error Log');
 				echo $content;
 
 				$fp = fopen($error_log, "r+");
@@ -159,15 +159,11 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	 */
 	public static function GetRequest($slug,$query=''){
 		$url		= 'http://localhost:8081' . \gp\tool::GetUrl($slug,$query);
-		return self::_GetRequest($url);
+		return self::GuzzleRequest('GET',$url);
 	}
 
 	public static function _GetRequest($url){
-		$response	=  static::$client->request('GET', $url);
-
-		self::SaveResponse('get',$url,$response);
-
-		return $response;
+		return self::GuzzleRequest('GET',$url);
 	}
 
 
@@ -178,21 +174,24 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	public static function PostRequest($slug, $params = []){
 
 		$url		= 'http://localhost:8081' . \gp\tool::GetUrl($slug);
+		$options	= ['form_params' => $params];
 
-		$response	= static::$client->request('POST', $url, ['form_params' => $params]);
-
-		self::SaveResponse('post',$url,$response);
-
-		return $response;
+		return self::GuzzleRequest('POST',$url,$options);
 	}
 
-	public static function SaveResponse($type,$url,$response){
+	public static function GuzzleRequest($type,$url,$options = []){
 		global $dataDir;
+
+		$options['headers']		= ['X-REQ-ID' => static::$requests];
+		$response				= static::$client->request($type, $url, $options);
+		$debug_file				= $dataDir . '/data/response-' . static::$requests . '-' . $type . '-' . str_replace('/','_',$url);
+		$debug					= $response->getBody();
+
+		file_put_contents($debug_file, $debug);
+
 		static::$requests++;
 
-		$debug_file		= $dataDir . '/data/response-' . static::$requests . '-' . $type . '-' . str_replace('/','_',$url);
-		$debug			= $response->getBody();
-		file_put_contents($debug_file, $debug);
+		return $response;
 	}
 
 
@@ -245,7 +244,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 			$target		= $_SERVER['PWD'].'/'.$name;
 
 			if( !file_exists($target) ){
-				echo "\n\n symlink target does not exist: $target \n\n";
+				static::Console('symlink target does not exist: '. $target);
 				continue;
 			}
 
@@ -259,7 +258,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		//$dataDir = $_SERVER['PWD'];
 
-		echo "\n\ndatadir: $dataDir \n\n";
+		static::Console('datadir='.$dataDir);
 
 
 		include('include/common.php');
@@ -282,6 +281,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		// reset coverage folder
 		$cov_dir	= dirname(__DIR__).'/x_coverage';
 		if( file_exists($cov_dir) ){
+			static::Console('resetting coverage folder: '.$cov_dir);
 			\gp\tool\Files::RmAll($cov_dir);
 		}
 		mkdir($cov_dir);
@@ -295,6 +295,18 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		\gp\tool\Session::init();
 		*/
 
+	}
+
+	/**
+	 * Output a string to the console
+	 *
+	 */
+	public static function Console($msg){
+		echo "\n";
+		echo "\e[0;32m";
+		echo $msg;
+		echo "\e[0m";
+		echo "\n";
 	}
 
 	/*

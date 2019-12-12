@@ -2,32 +2,35 @@
 
 require 'ServerPrepend.php';
 
-$cov_dir		= dirname(__DIR__).'/x_coverage';
-$files			= scandir($cov_dir);
-$file_count		= 0;
+if( $cov_obj ){
 
-foreach($files as $file){
+	$cov_dir		= dirname(__DIR__).'/x_coverage';
+	$files			= scandir($cov_dir);
+	$file_count		= 0;
 
-	if( $file === '.' || $file === '..' ){
-		continue;
+	foreach($files as $file){
+
+		if( $file === '.' || $file === '..' ){
+			continue;
+		}
+
+		if( strpos($file,'request-') !== 0 ){
+			echo "\n - invalid coverage file: ".$file;
+			continue;
+		}
+
+		echo "\n - coverage file: ".$file;
+
+		$file	= $cov_dir.'/'.$file;
+		$data	= json_decode( file_get_contents($file),true );
+		$cov_obj->append($data, $file );
+		$file_count++;
 	}
 
-	if( strpos($file,'request-') !== 0 ){
-		echo "\n - invalid coverage file: ".$file;
-		continue;
-	}
+	echo "\n - ".$file_count.' coverage files combined in '.$cov_dir;
+	echo "\n";
 
-	echo "\n - coverage file: ".$file;
-
-	$file	= $cov_dir.'/'.$file;
-	$data	= json_decode( file_get_contents($file),true );
-	$cov_obj->append($data, $file );
-	$file_count++;
+	$cov_file	= $cov_dir.'/requests.clover';
+	$writer		= new \SebastianBergmann\CodeCoverage\Report\Clover;
+	$writer->process($cov_obj, $cov_file);
 }
-
-echo "\n - ".$file_count.' coverage files combined in '.$cov_dir;
-echo "\n";
-
-$cov_file	= $cov_dir.'/requests.clover';
-$writer		= new \SebastianBergmann\CodeCoverage\Report\Clover;
-$writer->process($cov_obj, $cov_file);

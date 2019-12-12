@@ -9,6 +9,8 @@
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $cov_dir	= dirname(__DIR__).'/include';
-$cov_obj	= new \SebastianBergmann\CodeCoverage\CodeCoverage();
-$cov_obj->filter()->addDirectoryToWhitelist($cov_dir);
-$cov_obj->filter()->removeDirectoryFromWhitelist($cov_dir.'/thirdparty');
+if( class_exists('\SebastianBergmann\CodeCoverage\CodeCoverage') ){
+	$cov_obj	= new \SebastianBergmann\CodeCoverage\CodeCoverage();
+	$cov_obj->filter()->addDirectoryToWhitelist($cov_dir);
+	$cov_obj->filter()->removeDirectoryFromWhitelist($cov_dir.'/thirdparty');
+}

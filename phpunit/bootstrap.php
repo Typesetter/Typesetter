@@ -116,10 +116,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		$proc[]		= '-d';
 		$proc[]		= 'auto_prepend_file='.__DIR__ . '/ServerPrepend.php';
 
-		$proc[]		= '-d';
-		$proc[]		= 'auto_append_file='.__DIR__ . '/ServerAppend.php'; // won't append if script ends with exit()
-
-
 
 		static::$process = new \Symfony\Component\Process\Process($proc);
         static::$process->start();

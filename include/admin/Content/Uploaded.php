@@ -644,7 +644,7 @@ namespace gp\admin\Content{
 		 *
 		 */
 		public static function AllowedExtension( &$file , $fix = true ){
-			global $upload_extensions_allow, $upload_extensions_deny;
+			global $upload_extensions_allow, $upload_extensions_deny, $config;
 			static $allowed_types = false;
 
 			$file = \gp\tool\Files::NoNull($file);
@@ -667,14 +667,16 @@ namespace gp\admin\Content{
 					$allowed_types = array();
 				}else{
 					$allowed_types = array(
-						/** Images **/		'bmp', 'gif', 'ico', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'svg', 'svgz',
+						/** Images **/		'bmp', 'gif', 'ico', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'webp',
 						/** Media **/		'aiff', 'asf', 'avi', 'fla', 'flac', 'flv', 'm4v', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ogg', 'oga', 'ogv', 'opus', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'wav', 'wma', 'webm', 'wmv',
 						/** Archives **/	'7z', 'bz', 'gz', 'gzip', 'rar', 'tar', 'tgz', 'zip',
 						/** Text/Docs **/	'css', 'csv', 'doc', 'docx', 'htm', 'html', 'js', 'json', 'less', 'md', 'ods', 'odt', 'pages', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'scss', 'sxc', 'sxw', 'vsd', 'webmanifest', 'xls', 'xlsx', 'xml', 'xsl',
 						/** Fonts **/		'eot', 'otf', 'ttf', 'woff', 'woff2',
 					);
-
-
+					if( !empty($config['allow_svg_upload']) ){
+						$allowed_types[] = 'svg';
+						$allowed_types[] = 'svgz';
+					}
 				}
 
 				if( is_array($upload_extensions_allow) ){

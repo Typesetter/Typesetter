@@ -128,12 +128,30 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		static::$client = new \GuzzleHttp\Client(['http_errors' => false,'cookies' => true]);
 	}
 
+
 	/**
 	 * Stop web-server process
 	 */
 	public static function tearDownAfterClass(){
+		global $dataDir;
+
         static::$process->stop();
+
+		$error_log = $dataDir . '/data/request-errors.log';
+		if( file_exists($error_log) ){
+			$content = file_get_contents($error_log);
+			if( $content ){
+				echo "\n Error Log";
+				echo $content;
+
+				$fp = fopen($error_log, "r+");
+				ftruncate($fp, 0);
+				fclose($fp);
+			}
+		}
     }
+
+
 
 	/**
 	 * Fetch a url

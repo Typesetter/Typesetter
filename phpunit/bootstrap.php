@@ -169,10 +169,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		return self::GuzzleRequest('GET',$url);
 	}
 
-	public static function _GetRequest($url){
-		return self::GuzzleRequest('GET',$url);
-	}
-
 
 	/**
 	 * Send a POST request tot the test server
@@ -183,10 +179,10 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		$url		= 'http://localhost:8081' . \gp\tool::GetUrl($slug);
 		$options	= ['form_params' => $params];
 
-		return self::GuzzleRequest('POST',$url,$options);
+		return self::GuzzleRequest('POST',$url,200,$options);
 	}
 
-	public static function GuzzleRequest($type,$url,$options = []){
+	public static function GuzzleRequest($type,$url,$expected_resonse = 200, $options = []){
 		global $dataDir;
 
 		$options['headers']		= ['X-REQ-ID' => static::$requests];
@@ -199,6 +195,8 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		static::$requests++;
 
 		static::ServerErrors($type,$url);
+
+		static::assertEquals($expected_resonse, $response->getStatusCode());
 
 		return $response;
 	}
@@ -213,7 +211,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		// load login page to set cookies
 		$response					= self::GetRequest('Admin');
-		$this->assertEquals(200, $response->getStatusCode());
 
 		$params						= [];
 		$params['cmd']				= 'login';
@@ -222,7 +219,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		$params['login_nonce']		= \gp\tool::new_nonce('login_nonce',true,300);
 		$response					= self::PostRequest('Admin',$params);
 
-		$this->assertEquals(200, $response->getStatusCode());
 	}
 
 
@@ -350,7 +346,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		// test rendering of the install template
 		$response = self::GetRequest('');
-		self::assertEquals(200, $response->getStatusCode());
 
 		//ob_start();
 		//includeFile('install/install.php');
@@ -369,7 +364,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		$params['password1']	= static::user_pass;
 		$params['cmd']			= 'Install';
 		$response				= self::PostRequest('',$params);
-		self::assertEquals(200, $response->getStatusCode());
 
 
 
@@ -381,6 +375,5 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		\gp\tool::GetConfig();
 	}
-
 
 }

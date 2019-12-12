@@ -41,8 +41,7 @@ class phpunit_Update extends gptest_bootstrap{
 		global $page;
 
 		$url		= 'http://localhost:8081/include/install/update.php';
-		$response	= $this->_GetRequest($url);
-		$this->assertEquals(200, $response->getStatusCode());
+		$response	= static::GuzzleRequest('GET',$url);
 
 
 		ob_start();

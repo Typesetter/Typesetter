@@ -543,7 +543,9 @@ class Permalinks{
 			return self::Rewrite_RulesIIS( $hide_index, $existing_contents );
 		}
 
-		return self::Rewrite_RulesApache($hide_index, $home_root, $existing_contents, $www);
+		if( self::Apache() ){
+			return self::Rewrite_RulesApache($hide_index, $home_root, $existing_contents, $www);
+		}
 	}
 
 
@@ -706,11 +708,25 @@ class Permalinks{
 			return false;
 		}
 
-		if( strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false || strpos($_SERVER['SERVER_SOFTWARE'], 'ExpressionDevServer') !== false ){
+		if( stripos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false || stripos($_SERVER['SERVER_SOFTWARE'], 'ExpressionDevServer') !== false ){
 			return true;
 		}
 		return false;
 	}
 
-}
+	/**
+	 * Determine if installed on an Apache Server
+	 *
+	 */
+	public static function Apache(){
 
+		if( !isset($_SERVER['SERVER_SOFTWARE']) ){
+			return false;
+		}
+
+		if( stripos($_SERVER['SERVER_SOFTWARE'], 'apache') !== false ){
+			return true;
+		}
+		return false;
+	}
+}

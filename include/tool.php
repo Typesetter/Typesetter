@@ -941,7 +941,7 @@ namespace gp{
 
 				$page->css_user[] = '/include/css/default_gallery.css';
 				self::LoadComponents('dotdotdot');
-				$page->jQueryCode .= "\n" 
+				$page->jQueryCode .= "\n"
 					.'$(".filetype-gallery .caption")'
 					. '.dotdotdot({ '
 					.   'watch : "window", '
@@ -951,7 +951,7 @@ namespace gp{
 					. '});';
 
 				if( \gp\tool::LoggedIn() ){
-					$page->head_script 	.= "\n" 
+					$page->head_script 	.= "\n"
 						. 'var gallery_editing_options = { legacy_style : false };';
 					$page->jQueryCode 	.= "\n"
 						. '$(document).on("editor_area:loaded", function(){ '
@@ -961,7 +961,7 @@ namespace gp{
 
 				return;
 			}
-			$page->head .= "\n" 
+			$page->head .= "\n"
 				. '<link type="text/css" media="screen" rel="stylesheet" href="' . $css . '" />';
 		}
 
@@ -1130,7 +1130,7 @@ namespace gp{
 			if( array_key_exists('gpmenu', $pages)
 				&& array_key_exists('gptitles', $pages)
 				&& !array_key_exists('gp_titles', $pages)
-				&& !array_key_exists('gp_menu', $pages) 
+				&& !array_key_exists('gp_menu', $pages)
 				){
 
 				foreach($pages['gptitles'] as $title => $info){
@@ -1739,7 +1739,7 @@ namespace gp{
 		/**
 		 * Fix the $_COOKIE array if RAW_HTTP_COOKIE is set
 		 * Some servers encrypt cookie values before sending them to the client
-		 * Since cookies set by the client (with JavaScript) are not encrypted, 
+		 * Since cookies set by the client (with JavaScript) are not encrypted,
 		 * the values won't be set in $_COOOKIE
 		 *
 		 */
@@ -1856,22 +1856,25 @@ namespace gp{
 			global $config, $dataDir, $gpLayouts;
 
 			//command
-			$args['cmd'] = $request_cmd;
+			$args				= [];
+			$args['cmd']		= $request_cmd;
 
 			$_SERVER += array('SERVER_SOFTWARE' => '');
 
 			//checkin
-			$args['mdu']		= substr(md5($config['gpuniq']), 0, 20);
+			if( isset($config['gpuniq']) ){
+				$args['mdu']		= substr(md5($config['gpuniq']), 0, 20); // gpuniq won't be set before installation
+			}
 			$args['site']		= self::AbsoluteUrl(''); //keep full path for backwards compat
-			$args['gpv']		= gpversion;
+			$args['gpv']		= \gpversion;
 			$args['php']		= phpversion();
 			$args['se']			= $_SERVER['SERVER_SOFTWARE'];
 			$args['data']		= $dataDir;
 			//$args['zlib'] = (int)function_exists('gzcompress');
 
 			//service provider
-			if( defined('service_provider_id') && is_numeric(service_provider_id) ){
-				$args['provider'] = service_provider_id;
+			if( defined('service_provider_id') && is_numeric(\service_provider_id) ){
+				$args['provider'] = \service_provider_id;
 			}
 
 			//testing
@@ -1903,7 +1906,7 @@ namespace gp{
 			$addon_ids		= array_unique($addon_ids);
 			$args['as']		= implode('-', $addon_ids);
 
-			return addon_browse_path . '/Resources?' . http_build_query($args, '', '&');
+			return \addon_browse_path . '/Resources?' . http_build_query($args, '', '&');
 		}
 
 
@@ -1933,7 +1936,7 @@ namespace gp{
 
 			//using jquery asynchronously doesn't affect page loading
 			//error function defined to prevent the default error function in main.js from firing
-			if( $jquery ){
+			if( $jquery && is_object($page) ){
 				$page->head_script .= '$.ajax(' . json_encode($img_path) . ', {error:function(){}, dataType: "jsonp"});';
 				return;
 			}

@@ -147,7 +147,7 @@ namespace gp\tool{
 					continue;
 				}
 
-				$result = static::GetMethod($method,$url,$args);
+				$result = $this->GetMethod($method,$url,$args);
 				if( $result === false ){
 					static::$debug['FailedMethods'] .= $method.',';
 					return false;
@@ -187,7 +187,7 @@ namespace gp\tool{
 
 			$handle =		fopen($url, 'r', false, $context);
 
-			if( !$handle ){
+			if( $handle === false ){
 				static::$debug['stream']	= 'no handle';
 				return false;
 			}
@@ -247,7 +247,7 @@ namespace gp\tool{
 
 			$handle		= fopen($url, 'r');
 
-			if( !$handle ){
+			if( $handle === false ){
 				static::$debug['fopen']	= 'no handle';
 				return false;
 			}
@@ -275,8 +275,6 @@ namespace gp\tool{
 
 			$arr_url = parse_url($url);
 			if( is_array($arr_url) ){
-
-
 
 				$arr_url += array('path'=>'');
 			}elseif( \gp\tool::LoggedIn() ){
@@ -402,6 +400,10 @@ namespace gp\tool{
 		protected function curl_request($url, $r){
 
 			$handle = curl_init();
+
+			if( $handle === false ){
+				return false;
+			}
 
 			/*
 			 * CURLOPT_TIMEOUT and CURLOPT_CONNECTTIMEOUT expect integers. Have to use ceil since.
@@ -643,7 +645,15 @@ namespace gp\tool{
 			return $location;
 		}
 
-		function unparse_url($parsed_url) {
+
+		/**
+		 * Convert a parsed url array to a url string
+		 * @param  array $parsed_url
+		 * @return string
+		 *
+		 */
+		public function unparse_url($parsed_url) {
+
 			$scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
 			$host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
 			$port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
@@ -653,6 +663,7 @@ namespace gp\tool{
 			$path     = isset($parsed_url['path']) ? '/'.ltrim($parsed_url['path'],'/') : '';
 			$query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
 			$fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
+
 			return "$scheme$user$pass$host$port$path$query$fragment";
 		}
 
@@ -687,7 +698,7 @@ namespace gp\tool{
 				if ( ! $has_chunk || empty( $match[1] ) )
 					return $body_original;
 
-				$length = hexdec( $match[1] );
+				$length = (int)hexdec( $match[1] );
 				$chunk_length = strlen( $match[0] );
 
 				// Parse out the chunk of data.

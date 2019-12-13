@@ -396,7 +396,7 @@ namespace gp\tool{
 		 *
 		 */
 		public static function Unlock($session_id){
-			\gp\tool\Files::Unlock('admin', sha1(sha1($session_id)));
+			return \gp\tool\Files::Unlock('admin', sha1(sha1($session_id)));
 		}
 
 

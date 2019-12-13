@@ -47,6 +47,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 	const user_name		= 'phpunit_username';
 	const user_pass		= 'phpunit-test-password';
+	const user_email	= 'test@typesettercms.com';
 
 
 	function setUP(){
@@ -135,8 +136,10 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		});
         usleep(100000); //wait for server to get going
 
-		static::$client = new \GuzzleHttp\Client(['http_errors' => false,'cookies' => true]);
+		static::$client				= new \GuzzleHttp\Client(['http_errors' => false,'cookies' => true]);
+		static::$logged_in			= false;
 	}
+
 
 	/**
 	 * Print process output
@@ -277,6 +280,11 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	public function LogIn(){
 		global $config;
 
+		if( static::$logged_in ){
+			return;
+		}
+
+
 		// load login page to set cookies
 		$response					= self::GetRequest('Admin');
 
@@ -286,6 +294,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		$params['password']			= static::user_pass;
 		$params['login_nonce']		= \gp\tool::new_nonce('login_nonce',true,300);
 		$response					= self::PostRequest('Admin',$params);
+		static::$logged_in			= true;
 
 	}
 
@@ -432,7 +441,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		//attempt to install
 		$params					= [];
 		$params['site_title']	= 'unit tests';
-		$params['email']		= 'test@example.com';
+		$params['email']		= static::user_email;
 		$params['username']		= static::user_name;
 		$params['password']		= static::user_pass;
 		$params['password1']	= static::user_pass;

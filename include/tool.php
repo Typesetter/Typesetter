@@ -1588,14 +1588,7 @@ namespace gp{
 
 
 		public static function new_nonce($action='none', $anon=false, $factor=43200){
-			global $gpAdmin;
-
-			$nonce = $action;
-			if( !$anon && !empty($gpAdmin['username']) ){
-				$nonce .= $gpAdmin['username'];
-			}
-
-			return self::nonce_hash($nonce, 0, $factor);
+			return \gp\tool\Nonce::Create($action, $anon, $factor);
 		}
 
 
@@ -1611,36 +1604,7 @@ namespace gp{
 		 *
 		 */
 		public static function verify_nonce($action='none', $check_nonce=false, $anon=false, $factor=43200 ){
-			global $gpAdmin;
-
-			if( $check_nonce === false ){
-				$check_nonce =& $_REQUEST['_gpnonce'];
-			}
-
-			if( empty($check_nonce) ){
-				return false;
-			}
-
-			$nonce = $action;
-			if( !$anon ){
-				if( empty($gpAdmin['username']) ){
-					return false;
-				}
-				$nonce .= $gpAdmin['username'];
-			}
-
-			// Nonce generated 0-12 hours ago
-			if( self::nonce_hash( $nonce, 0, $factor ) == $check_nonce ){
-				return 1;
-			}
-
-			// Nonce generated 12-24 hours ago
-			if( self::nonce_hash( $nonce, 1, $factor ) == $check_nonce ){
-				return 2;
-			}
-
-			// Invalid nonce
-			return false;
+			return \gp\tool\Nonce::Verify($action, $check_nonce, $anon, $factor );
 		}
 
 
@@ -1654,18 +1618,7 @@ namespace gp{
 		 *
 		 */
 		public static function nonce_hash($nonce, $tick_offset=0, $factor=43200){
-			global $config;
-
-			$nonce_tick		= ceil(time() / $factor) - $tick_offset;
-			$nonce			= $nonce . $config['gpuniq'] . $nonce_tick;
-
-
-			//nonces before version 5.0
-			if( gp_nonce_algo === 'legacy' ){
-				return substr( md5($nonce), -12, 10);
-			}
-
-			return \gp\tool::hash($nonce,gp_nonce_algo, 2);
+			return \gp\tool\Nonce::Hash($nonce, $tick_offset, $factor );
 		}
 
 

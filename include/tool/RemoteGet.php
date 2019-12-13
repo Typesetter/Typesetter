@@ -77,8 +77,10 @@ namespace gp\tool{
 			$getter	= new \gp\tool\RemoteGet();
 			$result = $getter->Get($url,$args);
 
-			if( (int)$result['response']['code'] >= 200 && (int)$result['response']['code'] < 300 ){
-				return $result['body'];
+			if( is_array($result) ){
+				if( (int)$result['response']['code'] >= 200 && (int)$result['response']['code'] < 300 ){
+					return $result['body'];
+				}
 			}
 
 			return false;

@@ -100,7 +100,6 @@ class Login extends \gp\Page{
 		$_REQUEST += array('file'=>'');
 
 
-
 		echo '<div id="loginform">';
 			echo '<div id="login_timeout" class="nodisplay">Log in Timeout: '.\gp\tool::Link('Admin','Reload to continue...').'</div>';
 
@@ -109,6 +108,7 @@ class Login extends \gp\Page{
 
 			echo '<div>';
 			echo '<input type="hidden" name="cmd" value="login" />';
+			echo '<input type="hidden" name="verified" value="'.htmlspecialchars(\gp\tool\Nonce::Create('post',true)).'" />';
 			echo '<input type="hidden" name="login_nonce" value="'.htmlspecialchars(\gp\tool::new_nonce('login_nonce',true,300)).'" />';
 			echo '</div>';
 
@@ -258,7 +258,7 @@ class Login extends \gp\Page{
 		msg($langmessage['OOPS'].' (Email not sent)');
 
 		if( $former_pass_hash ){
-			// although this will only help in the *very special* case, where the 
+			// although this will only help in the *very special* case, where the
 			// PHP version < 5.5 was changed to 5.5+ AFTER the (now failed) new password request
 			// we will restore the former password hash algorithm, so the old password (if recalled) will work again
 			$users[$username]['passhash'] = $former_pass_hash;

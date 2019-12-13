@@ -9,10 +9,16 @@ namespace gp\tool{
 
 	class Session{
 
+		private static $logged_in = false;
 
 		public static function Init(){
 
 			self::SetConstants();
+
+			if( isset($_COOKIE[gp_session_cookie]) ){
+				self::CheckPosts();
+				self::start($_COOKIE[gp_session_cookie]);
+			}
 
 			$cmd = \gp\tool::GetCommand();
 
@@ -24,11 +30,6 @@ namespace gp\tool{
 				case 'login':
 					self::LogIn();
 					return;
-			}
-
-			if( isset($_COOKIE[gp_session_cookie]) ){
-				self::CheckPosts();
-				self::start($_COOKIE[gp_session_cookie]);
 			}
 
 			if( $cmd === 'ClearErrors' ){
@@ -49,6 +50,11 @@ namespace gp\tool{
 
 		public static function LogIn(){
 			global $langmessage;
+
+
+			if( static::$logged_in ){
+				return;
+			}
 
 			// check nonce
 			// expire the nonce after 10 minutes
@@ -112,9 +118,9 @@ namespace gp\tool{
 				return false;
 			}
 
-			$logged_in = self::start($session_id, $sessions);
+			self::start($session_id, $sessions);
 
-			if( $logged_in === true ){
+			if( static::$logged_in === true ){
 				msg($langmessage['logged_in']);
 			}
 
@@ -125,7 +131,7 @@ namespace gp\tool{
 			self::UpdateAttempts($users, $username, true);
 
 			//redirect to prevent resubmission
-			self::Redirect($logged_in);
+			self::Redirect();
 		}
 
 
@@ -156,10 +162,10 @@ namespace gp\tool{
 		 * Redirect user after login
 		 *
 		 */
-		public static function Redirect($logged_in){
+		public static function Redirect(){
 			global $gp_index;
 
-			if( !$logged_in ){
+			if( !static::$logged_in ){
 				return;
 			}
 
@@ -435,12 +441,8 @@ namespace gp\tool{
 			// cookies are set with either www removed from the domain or with an empty string
 			if( empty($value) ){
 				$expires = time()-2592000;
-				if( $domain ){
-					setcookie($name, $value, $expires, $cookiePath, $domain, $secure, true);
-					setcookie($name, $value, $expires, $cookiePath, $domain, false, true);
-				}
-				setcookie($name, $value, $expires, $cookiePath, '', $secure, true);
-				setcookie($name, $value, $expires, $cookiePath, '', false, true);
+				setcookie($name, $value, $expires, $cookiePath, $domain, $secure, true);
+				setcookie($name, $value, $expires, $cookiePath, $domain, false, true);
 				return;
 			}
 
@@ -714,6 +716,8 @@ namespace gp\tool{
 				$GLOBALS['gpAdmin']['useralias'] = $GLOBALS['gpAdmin']['username'];
 			}
 
+			static::$logged_in = true;
+
 			return true;
 		}
 
@@ -741,7 +745,7 @@ namespace gp\tool{
 			// Admin nonces are also added with javascript if needed
 			$count = preg_match_all('#<form[^<>]*method=[\'"]post[\'"][^<>]*>#i', $buffer, $matches);
 			if( $count ){
-				$nonce = \gp\tool::new_nonce('post', true);
+				$nonce = \gp\tool\Nonce::Create('post',true);
 				$matches[0] = array_unique($matches[0]);
 				foreach($matches[0] as $match){
 

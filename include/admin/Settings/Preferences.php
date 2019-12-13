@@ -15,17 +15,13 @@ namespace gp\admin\Settings{
 			parent::__construct($args);
 
 			//only need to return messages if it's ajax request
-			$this->page->ajaxReplace = array();
-
-
-			$this->GetUsers();
-			$this->username = $gpAdmin['username'];
+			$this->username			= $gpAdmin['username'];
 			if( !isset($this->users[$this->username]) ){
 				msg($langmessage['OOPS']);
 				return;
 			}
 
-			$this->user_info		=  $this->users[$this->username];
+			$this->user_info		= $this->users[$this->username];
 			$cmd					= \gp\tool::GetCommand();
 
 
@@ -113,7 +109,7 @@ namespace gp\admin\Settings{
 				return false;
 			}
 
-			self::SetUserPass( $this->users[$this->username], $_POST['password']);
+			$this->SetUserPass( $this->username, $_POST['password']);
 		}
 
 

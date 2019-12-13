@@ -18,9 +18,12 @@ class Users extends \gp\special\Base{
 
 		$this->page->head_js[]			= '/include/js/admin_users.js';
 		$this->possible_permissions		= $this->PossiblePermissions();
-
-
 		$this->GetUsers();
+
+	}
+
+	public function RunScript(){
+
 		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 
@@ -166,6 +169,8 @@ class Users extends \gp\special\Base{
 			return false;
 		}
 
+		echo '<h2>'.$langmessage['user_permissions'].'</h2>';
+
 		$userinfo = $this->users[$username];
 
 		echo '<form action="'.\gp\tool::GetUrl('Admin/Users').'" method="post" id="permission_form">';
@@ -265,7 +270,7 @@ class Users extends \gp\special\Base{
 		$this->users[$newname]['granted']	= $this->GetPostedPermissions($newname);
 		$this->users[$newname]['editing']	= $this->GetEditingPermissions();
 
-		self::SetUserPass( $this->users[$newname], $_POST['password']);
+		$this->SetUserPass( $newname, $_POST['password']);
 
 		return $this->SaveUserFile();
 	}
@@ -275,7 +280,9 @@ class Users extends \gp\special\Base{
 	 * Set the user password and password hash algorithm
 	 *
 	 */
-	public static function SetUserPass( &$user_info, $password ){
+	public function SetUserPass( $username, $password ){
+
+		$user_info =& $this->users[$username];
 
 		if( function_exists('password_hash') && $_REQUEST['algo'] == 'password_hash' ){
 			$temp					= \gp\tool::hash($_POST['password'],'sha512',50);
@@ -497,6 +504,8 @@ class Users extends \gp\special\Base{
 	 */
 	public function NewUserForm(){
 		global $langmessage;
+
+		echo '<h2>'.$langmessage['user_permissions'].'</h2>';
 
 		$_POST += array('username'=>'','email'=>'','grant'=>array(),'grant_all'=>'all','editing_all'=>'all');
 
@@ -735,7 +744,7 @@ class Users extends \gp\special\Base{
 			return false;
 		}
 
-		self::SetUserPass( $this->users[$username], $_POST['password']);
+		$this->SetUserPass( $username, $_POST['password']);
 
 		return $this->SaveUserFile();
 	}
@@ -919,8 +928,3 @@ class Users extends \gp\special\Base{
 	}
 
 }
-
-
-
-
-

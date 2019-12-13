@@ -116,7 +116,7 @@ class Errors extends \gp\special\Base{
 		$elapsed	= \gp\admin\Tools::Elapsed( time() - $filemtime );
 		echo sprintf($langmessage['_ago'],$elapsed);
 		echo ' - ';
-		echo \gp\tool::Link('Admin/Errors','Clear Error','cmd=ClearError&hash='.$hash,array('data-cmd'=>'postlink'));
+		echo \gp\tool::Link('Admin/Errors','Clear Error','cmd=ClearError&hash='.$hash,array('data-cmd'=>'cnreq'));
 		echo '</p>';
 
 

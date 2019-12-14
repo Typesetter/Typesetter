@@ -132,7 +132,11 @@
 			defaultOpts : {
 				url: finder_opts.url
 				,height:'100%'
-				,getFileCallback:function(file){
+				,getFileCallback:function(file, finder){
+
+					if (!window.top.opener){
+						return finder.exec('quicklook');
+					}
 
 					if( typeof(window.top.opener.gp_editor.FinderSelect) == 'function' ){
 						window.top.opener.gp_editor.FinderSelect( file.url );

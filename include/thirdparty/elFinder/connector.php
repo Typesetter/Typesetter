@@ -161,6 +161,12 @@ $opts = array(
 			// 'uploadOrder'   	=> array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
 			'accessControl' 	=> 'access',                     // disable and hide dot starting files (OPTIONAL)
 			//'uploadMaxSize'	=>'55M',
+			'attributes' => array(
+				array(
+					'pattern' => '/\.php$/i',
+					'write'  => false,
+				)
+			),
 		),
 		// Trash volume
 		array(

@@ -24,7 +24,7 @@
  *        'scss', 'swf', 'sxc', 'sxw', // 'svg' and 'svgz' can be enabled via Settings -> Configuration
  *        'tar', 'tgz', 'tif', 'tiff', 'ttf', 'txt', 
  *        'vsd', 
- *        'wav', 'webmanifest', 'webm', 'wma', 'wmv', 'woff', 'woff2',
+ *        'wav', 'webmanifest', 'webm', 'webp', 'wma', 'wmv', 'woff', 'woff2',
  *        'xls', 'xlsx', 'xml', 'xsl' 
  *        'zip',
  * )

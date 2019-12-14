@@ -31,14 +31,13 @@ namespace gp\admin\Content{
 		public function Finder(){
 			global $config, $dataDir;
 
-			$this->page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.\gp\tool::GetDir('/include/thirdparty/finder/css/finder.css').'">';
-			$this->page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.\gp\tool::GetDir('/include/thirdparty/finder/style.css').'">';
-
-			$this->page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/finder/js/finder.js').'"></script>';
-			$this->page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/finder/config.js').'"></script>';
+			$this->page->head 			.= "\n".'<script data-main="'.\gp\tool::GetDir('/include/thirdparty/elFinder/main.custom.js').'"'
+											. ' src="'.\gp\tool::GetDir('/include/thirdparty/js/require.min.js').'"></script>';
+			$this->page->css_admin[]	= '/include/css/admin_finder.scss';
 
 
-			echo '<div id="finder"></div>';
+
+			echo '<div id="elfinder"></div>';
 
 			\gp\tool::LoadComponents('selectable,draggable,droppable,resizable,dialog,slider,button');
 
@@ -49,7 +48,7 @@ namespace gp\admin\Content{
 			if( $language == 'inherit' ){
 				$language = $config['language'];
 			}
-			$lang_file = '/include/thirdparty/finder/js/i18n/'.$language.'.js';
+			$lang_file = '/include/thirdparty/elFinder/js/i18n/elfinder.'.$language.'.js';
 			$lang_full = $dataDir.$lang_file;
 			if( file_exists($lang_full) ){
 				$this->page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir($lang_file).'"></script>';
@@ -639,12 +638,12 @@ namespace gp\admin\Content{
 		}
 
 
-		/**
+/**
 		 * Check the file extension agains $allowed_types
 		 *
 		 */
 		public static function AllowedExtension( &$file , $fix = true ){
-			global $upload_extensions_allow, $upload_extensions_deny;
+			global $upload_extensions_allow, $upload_extensions_deny, $config;
 			static $allowed_types = false;
 
 			$file = \gp\tool\Files::NoNull($file);
@@ -667,14 +666,16 @@ namespace gp\admin\Content{
 					$allowed_types = array();
 				}else{
 					$allowed_types = array(
-						/** Images **/		'bmp', 'gif', 'ico', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'svg', 'svgz',
+						/** Images **/		'bmp', 'gif', 'ico', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'webp',
 						/** Media **/		'aiff', 'asf', 'avi', 'fla', 'flac', 'flv', 'm4v', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ogg', 'oga', 'ogv', 'opus', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'wav', 'wma', 'webm', 'wmv',
 						/** Archives **/	'7z', 'bz', 'gz', 'gzip', 'rar', 'tar', 'tgz', 'zip',
 						/** Text/Docs **/	'css', 'csv', 'doc', 'docx', 'htm', 'html', 'js', 'json', 'less', 'md', 'ods', 'odt', 'pages', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'scss', 'sxc', 'sxw', 'vsd', 'webmanifest', 'xls', 'xlsx', 'xml', 'xsl',
 						/** Fonts **/		'eot', 'otf', 'ttf', 'woff', 'woff2',
 					);
-
-
+					if( !empty($config['allow_svg_upload']) ){
+						$allowed_types[] = 'svg';
+						$allowed_types[] = 'svgz';
+					}
 				}
 
 				if( is_array($upload_extensions_allow) ){
@@ -704,6 +705,7 @@ namespace gp\admin\Content{
 				return implode('.',$parts).'.'.$file_type;
 			}
 		}
+
 
 
 		/**

@@ -13,47 +13,82 @@ class PreferencesTest extends \gptest_bootstrap{
 		$this->Login();
 
 		// password_hash -> password_hash
-		$this->ChangePassword( self::user_pass, 'new-password', 'password_hash' );
+		$params = [
+			'oldpassword'	=> self::user_pass,
+			'password'		=> 'new-password',
+			'password1'		=> 'new-password',
+			'algo'			=> 'password_hash',
+		];
+		$user_info_1		= $this->GetUserInfo();
+		$this->ChangePreferences( $params );
+		$user_info_2		= $this->GetUserInfo();
+		$this->assertEquals($user_info_2['passhash'], 'password_hash');
+		$this->assertNotEquals($user_info_1['password'], $user_info_2['password']);
+
 
 		// password_hash -> sha512
-		$this->ChangePassword( 'new-password', 'new-password2', 'sha512' );
+		$params = [
+			'oldpassword'	=> 'new-password',
+			'password'		=> 'new-password2',
+			'password1'		=> 'new-password2',
+			'algo'			=> 'sha512',
+		];
+		$this->ChangePreferences( $params );
+		$user_info_3		= $this->GetUserInfo();
+		$this->assertEquals($user_info_3['passhash'], 'sha512');
+		$this->assertNotEquals($user_info_2['password'], $user_info_3['password']);
+
 
 		// sha512 -> password_hash
-		$this->ChangePassword( 'new-password2', self::user_pass, 'password_hash' );
+		$params = [
+			'oldpassword'	=> 'new-password2',
+			'password'		=> self::user_pass,
+			'password1'		=> self::user_pass,
+			'algo'			=> 'password_hash',
+		];
+		$this->ChangePreferences( $params );
+		$user_info_4		= $this->GetUserInfo();
+		$this->assertEquals($user_info_4['passhash'], 'password_hash');
+		$this->assertNotEquals($user_info_3['password'], $user_info_4['password']);
+
+
+		// sha512 -> password_hash
+		$params = [
+			'email'			=> 'test2@typesettercms.com',
+		];
+		$this->ChangePreferences( $params );
+		$user_info_5		= $this->GetUserInfo();
+		$this->assertEquals($user_info_5['email'], 'test2@typesettercms.com');
+
 	}
-	
+
 
 	/**
 	 * Helper function for changing password from old to new
 	 *
 	 */
-	function ChangePassword( $old_pass, $new_pass, $algo){
+	function ChangePreferences( $params, $check_field = 'password' ){
 
-		// get user info before changing password
-		$users				= \gp\tool\Files::Get('_site/users');
-		$this->assertArrayHasKey(static::user_name, $users);
-
-		$user_before		= $users[static::user_name];
-
-
-		$params = [
+		$params += [
 			'verified'		=> \gp\tool::new_nonce('post', true),
 			'email'			=> self::user_email,
-			'oldpassword'	=> $old_pass,
-			'password'		=> $new_pass,
-			'password1'		=> $new_pass,
-			'algo'			=> $algo,
+			'oldpassword'	=> self::user_pass,
+			'password'		=> self::user_pass,
+			'password1'		=> self::user_pass,
+			'algo'			=> 'password_hash',
 			'cmd'			=> 'changeprefs',
 		];
 
-		$response			= $this->PostRequest('Admin/Preferences',$params);
-
-		// password should be different
-		$users				= \gp\tool\Files::Get('_site/users');
-		$user_after			= $users[static::user_name];
-
-		$this->assertNotEquals($user_before['password'], $user_after['password']);
-
+		$this->PostRequest('Admin/Preferences',$params);
 	}
+
+	function GetUserInfo(){
+		$users				= \gp\tool\Files::Get('_site/users');
+		$this->assertArrayHasKey(static::user_name, $users);
+
+		return $users[static::user_name];
+	}
+
+
 
 }

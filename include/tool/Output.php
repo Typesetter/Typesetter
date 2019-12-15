@@ -1776,7 +1776,10 @@ namespace gp\tool{
 
 			}
 
-			self::CombineFiles($scripts, 'css', $config['combinecss']);
+			// disable 'combine css' if 'create_css_sourcemaps' is set to true in /gpconfig.php
+			$combinecss = (defined('create_css_sourcemaps') && create_css_sourcemaps) ? false : $config['combinecss'];
+
+			self::CombineFiles($scripts, 'css', $combinecss);
 		}
 
 

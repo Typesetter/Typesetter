@@ -45,12 +45,25 @@ define('gp_default_theme','Three_point_5/Shore');
 
 
 /**
+ * create Scss and LESS source maps
+ * Useful during design / development to see the original location of Scss / LESS rules in the web browser dev tools.
+ * Source maps take up some additional disk space and should ultimately be disabled on live sites.
+ *
+ * NOTE! Currently we do not create source maps for combined css files. 
+ *       Using this option will override config settings and 'combine css' OFF 
+ *
+ * Defaults to undefined (commented out)
+ */
+// define('create_css_sourcemaps',true);
+
+
+/**
  * load_css_in_body
  * If defined true, stylesheet <link>s will be placed at then end of the <body> element (but before scripts) instead of in the <head> element.
  * Defined false forces styleheets to the <head> even if a theme or addon defines it to true via gp_defined('load_css_in_body', true);
  * Undefined loads stylesheets in the head but allows later changes by themes/addons.
- * Defaults to undefined
  *
+ * Defaults to undefined (commented out)
  */
 // define('load_css_in_body',true);
 
@@ -126,7 +139,7 @@ define('service_provider_id',false);
 
 /**
  * Limit the number of revisions to store in the backup
- *
+ * Defaults to 30
  */
 define('gp_backup_limit',30);
 
@@ -195,5 +208,3 @@ define('gp_prefix_urls',false);
  * Include clearfloats in Typesetter generated code
  * define('clear_floats',false); experimental
  */
-
-

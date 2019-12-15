@@ -70,6 +70,12 @@ body,
 	}
 }
 
+/**
+ * add left margin to quicklook fullscreen when in #gp_admin_html context
+ */
+#gp_admin_html #elfinder .elfinder-quicklook-fullscreen {
+	left: 182px;
+}
 
 /**
  * Undoing conflicts with typesetter css

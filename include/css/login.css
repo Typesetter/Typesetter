@@ -1,7 +1,7 @@
 #login_container{
 	position:relative;
 	height:100%;
-	font-family: "Segoe UI", "San Francisco", "Helvetica Neue", "DejaVu Sans", "Arial", sans-serif;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	font-size:13px;
 
 	background: #222;

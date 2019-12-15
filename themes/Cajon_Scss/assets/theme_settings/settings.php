@@ -17,15 +17,20 @@ class ThemeCajon_Settings{
     global $page, $langmessage, $addonRelativeCode;
 
     if( !\gp\tool::LoggedIn() ){
-      return;
+      return $cmd;
+    }
+
+    if( !self::IsCurrentTheme() ){
+      return $cmd;
     }
 
     $page->admin_links[] = array(
       $page->title, 
-      '<i class="fa fa-paint-brush"></i> ' . $langmessage['theme'] . ' Cajón ', 
+      '<i class="fa fa-paint-brush"></i> ' . $langmessage['theme'] . ' Cajón', 
       'cmd=ThemeCajonSettingsForm', 
       'class="theme-cajon-adminbar-button" data-cmd="gpabox" title="' . $langmessage['theme'] . ' ' . $langmessage['Settings'] . '"'
     );
+
 
     self::LoadConfig();
     $page->head_js[] = $addonRelativeCode . '/assets/theme_settings/settings.js';
@@ -51,6 +56,24 @@ class ThemeCajon_Settings{
 
     return $cmd;
 
+  }
+
+
+
+  /**
+   *
+   * Custom method to check if current page uses our theme
+   * 
+   */
+  static function IsCurrentTheme(){
+    global $page, $gpLayouts, $config, $addonFolderName;
+    $theme_name         = $config['addons'][$addonFolderName]['name'];
+    $layout             = isset($page->TitleInfo['gpLayout']) ? $page->TitleInfo['gpLayout'] : 'default';
+    $layout             = isset($page->gpLayout) ? $page->gpLayout : $layout;
+    $default_layout     = $config['gpLayout'];
+    $current_theme_name = $layout == 'default' ? $gpLayouts[$default_layout]['name'] : $gpLayouts[$layout]['name'];
+    $is_current_theme   = ($current_theme_name == $theme_name);
+    return $is_current_theme;
   }
 
 
@@ -205,7 +228,4 @@ class ThemeCajon_Settings{
   }
 
 
-} /* class ThemeCajon_Settings --end */
-
-
-
+}

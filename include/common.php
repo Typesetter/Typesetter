@@ -27,14 +27,15 @@ gp_defined('gp_safe_mode',false);
 gp_defined('gp_backup_limit',30);
 gp_defined('gp_write_lock_time',5);
 gp_defined('gp_dir_index',true);
-gp_defined('gp_remote_addons',true); //deprecated 4.0.1
+gp_defined('gp_remote_addons',true); 			// deprecated 4.0.1
 gp_defined('gp_remote_plugins',gp_remote_addons);
 gp_defined('gp_remote_themes',gp_remote_addons);
 gp_defined('gp_remote_update',gp_remote_addons);
 gp_defined('gp_unique_addons',false);
 gp_defined('gp_data_type','.php');
 gp_defined('gp_default_theme','Bootswatch_Scss/Flatly');
-gp_defined('gp_php53', version_compare( phpversion(), '5.4', '<' ) );
+gp_defined('gp_allowed_fatal_errors', 10 );		// number of fatal errors to allow before disabling a component
+gp_defined('gp_prefix_urls',false);				// Since 5.1.1
 
 
 //gp_defined('CMS_DOMAIN',			'http://gpeasy.loc');
@@ -44,7 +45,7 @@ gp_defined('CMS_NAME',				'Typesetter');
 gp_defined('addon_browse_path',		CMS_DOMAIN.'/index.php');
 gp_defined('debug_path',			CMS_DOMAIN.'/index.php/Debug');
 
-gp_defined('gpversion','5.1');
+gp_defined('gpversion','5.1.1-b1');
 gp_defined('gp_random',\gp\tool::RandomString());
 
 
@@ -60,39 +61,40 @@ if( function_exists('mb_internal_encoding') ){
 
 //see mediawiki/languages/Names.php
 $languages = array(
-	'af' => 'Afrikaans',
-	'ar' => 'العربية',			# Arabic
-	'bg' => 'Български',		# Bulgarian
-	'ca' => 'Català',
-	'cs' => 'Česky',			# Czech
-	'da' => 'Dansk',
-	'de' => 'Deutsch',
-	'el' => 'Ελληνικά',			# Greek
-	'en' => 'English',
-	'es' => 'Español',
-	'et' => 'eesti',			# Estonian
-	'fi' => 'Suomi',			# Finnish
-	'fo' => 'Føroyskt',			# Faroese
-	'fr' => 'Français',
-	'gl' => 'Galego',			# Galician
-	'hr' => 'hrvatski',			# Croatian
-	'hu' => 'Magyar',			# Hungarian
-	'it' => 'Italiano',
-	'ja' => '日本語',			# Japanese
-	'lt' => 'Lietuvių',			# Lithuanian
-	'nl' => 'Nederlands',		# Dutch
-	'no' => 'Norsk',			# Norwegian
-	'pl' => 'Polski',			# Polish
-	'pt' => 'Português',
-	'pt-br' => 'Português do Brasil',
-	'ro' => 'Română',			# Romanian
-	'ru' => 'Русский',			# Russian
-	'sk' => 'Slovenčina',		# Slovak
-	'sl' => 'Slovenščina',		# Slovenian
-	'sv' => 'Svenska',			# Swedish
-	'tr' => 'Türkçe',			# Turkish
-	'uk' => 'Українська',		# Ukrainian
-	'zh' => '中文',				# (Zhōng Wén) - Chinese
+	'af' => 'Afrikaans',				# Afrikaans
+	'ar' => 'العربية',						# Arabic
+	'bg' => 'Български',				# Bulgarian
+	'ca' => 'Català',					# Catalan
+	'cs' => 'Česky',					# Czech
+	'da' => 'Dansk',					# Danish
+	'de' => 'Deutsch',					# German
+	'el' => 'Ελληνικά',					# Greek
+	'en' => 'English',					# English
+	'es' => 'Español',					# Spanish
+	'et' => 'eesti',					# Estonian
+	'fi' => 'Suomi',					# Finnish
+	'fo' => 'Føroyskt',					# Faroese
+	'fr' => 'Français',					# French
+	'gl' => 'Galego',					# Galician
+	'hr' => 'hrvatski',					# Croatian
+	'hu' => 'Magyar',					# Hungarian
+	'is' => 'Íslenska',					# Icelandic
+	'it' => 'Italiano',					# Italian
+	'ja' => '日本語',					# Japanese
+	'lt' => 'Lietuvių',					# Lithuanian
+	'nl' => 'Nederlands',				# Dutch
+	'no' => 'Norsk',					# Norwegian
+	'pl' => 'Polski',					# Polish
+	'pt' => 'Português',				# Portuguese
+	'pt-br' => 'Português do Brasil',	# Brazilian Portuguese
+	'ro' => 'Română',					# Romanian
+	'ru' => 'Русский',					# Russian
+	'sk' => 'Slovenčina',				# Slovak
+	'sl' => 'Slovenščina',				# Slovenian
+	'sv' => 'Svenska',					# Swedish
+	'tr' => 'Türkçe',					# Turkish
+	'uk' => 'Українська',				# Ukrainian
+	'zh' => '中文',						# (Zhōng Wén) - Chinese
 	);
 
 
@@ -208,9 +210,9 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 
 	//remove showError() from backtrace
 	if( strtolower($backtrace[0]['function']) == 'showerror' ){
-		$backtrace = array_slice($backtrace,1,5);
+		$backtrace = array_slice($backtrace,1,7);
 	}else{
-		$backtrace = array_slice($backtrace,0,5);
+		$backtrace = array_slice($backtrace,0,7);
 	}
 
 
@@ -279,7 +281,15 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	if( isset($_SERVER['REQUEST_METHOD']) ){
 		$mess .= '<br/> &nbsp; &nbsp; <b>Method:</b> '.$_SERVER['REQUEST_METHOD'];
 	}
+	$mess .= '<br/> &nbsp; &nbsp; <b>time:</b> '.date('Y-m-d H:i:s').' ('.time().')';
 
+	if( isset($_SERVER['REMOTE_ADDR']) ){
+		$mess .= '<br/> &nbsp; &nbsp; <b>REMOTE_ADDR:</b> '.$_SERVER['REMOTE_ADDR'];
+	}
+
+	if( isset($_SERVER['HTTP_X_FORWARDED_FOR']) ){
+		$mess .= '<br/> &nbsp; &nbsp; <b>HTTP_X_FORWARDED_FOR:</b> '.$_SERVER['HTTP_X_FORWARDED_FOR'];
+	}
 
 	//mysql.. for some addons
 	if( function_exists('mysql_errno') && mysql_errno() ){
@@ -391,6 +401,13 @@ function msg(){
 		$wbMessageBuffer[] = '<li>'.pre($args[0]).'</li>';
 	}else{
 		$wbMessageBuffer[] = '<li>'.$args[0].'</li>';
+	}
+}
+
+
+function debug(){
+	if( \gp\tool::LoggedIn() ){
+		call_user_func_array('msg',func_get_args());
 	}
 }
 

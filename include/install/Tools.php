@@ -21,12 +21,12 @@ class Tools{
 
 		$_POST += array('username'=>'','site_title'=>'My '.CMS_NAME,'email'=>'');
 
-		echo '<tr><th colspan="2">'.$langmessage['configuration'].'</th></tr>';
-		echo '<tr><td>'.$langmessage['Website_Title'].'</td><td><input type="text" class="text" name="site_title" value="'.htmlspecialchars($_POST['site_title']).'" required /></td></tr>';
-		echo '<tr><td>'.$langmessage['email_address'].'</td><td><input type="email" class="text" name="email" value="'.htmlspecialchars($_POST['email']).'" required id="install_field_email" /></td></tr>';
-		echo '<tr><td>'.$langmessage['Admin_Username'].'</td><td><input type="text" class="text" name="username" value="'.htmlspecialchars($_POST['username']).'" required id="install_field_username" /></td></tr>';
-		echo '<tr><td>'.$langmessage['Admin_Password'].'</td><td><input type="password" class="text" name="password" value="" required /></td></tr>';
-		echo '<tr><td>'.$langmessage['repeat_password'].'</td><td><input type="password" class="text" name="password1" value="" required /></td></tr>';
+		echo '<tr><th colspan="3">'.$langmessage['configuration'].'</th></tr>';
+		echo '<tr><td>'.$langmessage['Website_Title'].'</td><td colspan="2"><input type="text" class="text" name="site_title" value="'.htmlspecialchars($_POST['site_title']).'" required /></td></tr>';
+		echo '<tr><td>'.$langmessage['email_address'].'</td><td colspan="2"><input type="email" class="text" name="email" value="'.htmlspecialchars($_POST['email']).'" required id="install_field_email" /></td></tr>';
+		echo '<tr><td>'.$langmessage['Admin_Username'].'</td><td colspan="2"><input type="text" class="text" name="username" value="'.htmlspecialchars($_POST['username']).'" required id="install_field_username" /></td></tr>';
+		echo '<tr><td>'.$langmessage['Admin_Password'].'</td><td colspan="2"><input type="password" class="text" name="password" value="" required /></td></tr>';
+		echo '<tr><td>'.$langmessage['repeat_password'].'</td><td colspan="2"><input type="password" class="text" name="password1" value="" required /></td></tr>';
 	}
 
 	/**
@@ -38,7 +38,7 @@ class Tools{
 	static function Form_Configuration(){
 		global $langmessage;
 
-		echo '<tr><th colspan="2">';
+		echo '<tr><th colspan="3">';
 		echo '<a href="javascript:toggleOptions()">'.$langmessage['more_options'].'...</a>';
 		echo '</th></tr>';
 
@@ -50,21 +50,40 @@ class Tools{
 		echo $langmessage['combinejs'];
 		echo '</td><td>';
 		self::BooleanForm('combinejs',true);
+		echo '</td><td>';
 		echo '</td></tr>';
 
+		//minifyjs
+		echo '<tr><td>';
+		echo $langmessage['minifyjs'];
+		echo '</td><td>';
+		self::BooleanForm('minifyjs',false);
+		echo '</td><td>';
+		echo '</td></tr>';
 
-		//combinejs
+		//combinecss
 		echo '<tr><td>';
 		echo $langmessage['combinecss'];
 		echo '</td><td>';
 		self::BooleanForm('combinecss',true);
+		echo '</td><td>';
 		echo '</td></tr>';
 
-		//combinejs
+		//allow svg upload
+		echo '<tr><td>';
+		echo $langmessage['allow_svg_upload'];
+		echo '</td><td>';
+		self::BooleanForm('allow_svg_upload',false);
+		echo '</td><td>';
+		echo $langmessage['about_config']['allow_svg_upload'];
+		echo '</td></tr>';
+
+		//etag_headers
 		echo '<tr><td>';
 		echo $langmessage['etag_headers'];
 		echo '</td><td>';
 		self::BooleanForm('etag_headers',true);
+		echo '</td><td>';
 		echo '</td></tr>';
 
 		echo '</tbody>';
@@ -201,7 +220,9 @@ class Tools{
 		$_config['gpuniq']					= \gp\tool::RandomString(20);
 		$_config['combinecss']				= self::BooleanValue('combinecss',true);
 		$_config['combinejs']				= self::BooleanValue('combinejs',true);
-		$_config['etag_headers'] 			= self::BooleanValue('etag_headers',true);
+		$_config['minifyjs']				= self::BooleanValue('minifyjs',false);
+		$_config['allow_svg_upload']		= self::BooleanValue('allow_svg_upload',false);
+		$_config['etag_headers']			= self::BooleanValue('etag_headers',true);
 		$_config['gallery_legacy_style']	= false;
 		$_config['language']				= 'en';
 		$_config['addons']					= array();
@@ -435,6 +456,30 @@ class Tools{
 		</p>';
 		self::NewExtra($file,$content);
 
+		//Footer Column 1
+		$file		= $destination.'/data/_extra/Footer_Column_1/page.php';
+		$content	= '<p>Footer Column 1</p>';
+		self::NewExtra($file,$content);
+
+		//Footer Column 2
+		$file		= $destination.'/data/_extra/Footer_Column_2/page.php';
+		$content	= '<p>Footer Column 2</p>';
+		self::NewExtra($file,$content);
+
+		//Footer Column 3
+		$file		= $destination.'/data/_extra/Footer_Column_3/page.php';
+		$content	= '<p>Footer Column 3</p>';
+		self::NewExtra($file,$content);
+
+		//Footer Column 4
+		$file		= $destination.'/data/_extra/Footer_Column_4/page.php';
+		$content	= '<p>Footer Column 4</p>';
+		self::NewExtra($file,$content);
+
+		//Dropdown Divider
+		$file		= $destination.'/data/_extra/Bootstrap_Dropdown_Divider/page.php';
+		$content	= '';
+		self::NewExtra($file,$content);
 
 		//Another example area
 		$file		= $destination.'/data/_extra/Lorem/page.php';
@@ -618,15 +663,6 @@ class Tools{
 		}
 	}
 
-	function GetPathInfo(){
-		$UsePathInfo =
-			( strpos( php_sapi_name(), 'cgi' ) === false ) &&
-			( strpos( php_sapi_name(), 'apache2filter' ) === false ) &&
-			( strpos( php_sapi_name(), 'isapi' ) === false );
-
-		return $UsePathInfo;
-	}
-
 	static function Install_Link_Content($href,$label,$query='',$attr=''){
 
 		$query = str_replace('&','&amp;',$query);
@@ -639,6 +675,17 @@ class Tools{
 		return '<a href="$linkPrefix/'.$href.$query.'">'.$label.'</a>';
 	}
 
+	static function AddCSs(){
+		global $dataDir;
+
+		echo '<style type="text/css">';
+
+		$path = $dataDir.'/include/install/update.css';
+		if( file_exists($path) ){
+			echo file_get_contents($path);
+		}
+
+		echo '</style>';
+	}
+
 }
-
-

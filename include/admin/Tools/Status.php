@@ -4,17 +4,18 @@ namespace gp\admin\Tools;
 
 defined('is_running') or die('Not an entry point...');
 
-class Status{
+class Status extends \gp\special\Base{
 
-	protected $check_dir_len = 0;
-	protected $failed_count = 0;
-	protected $passed_count = 0;
-	protected $show_failed_max = 50;
+	protected $check_dir_len	= 0;
+	protected $failed_count		= 0;
+	protected $passed_count		= 0;
+	protected $show_failed_max	= 50;
+	protected $failed_output	= '';
+
+	protected $euid;
 
 	public function __construct(){
-		global $dataDir, $langmessage;
-
-		echo '<h2>'.$langmessage['Site Status'].'</h2>';
+		global $dataDir;
 
 		$check_dir = $dataDir.'/data';
 		$this->check_dir_len = strlen($check_dir);
@@ -26,16 +27,22 @@ class Status{
 
 		ob_start();
 		$this->CheckDir($check_dir);
-		$failed_output = ob_get_clean();
+		$this->failed_output = ob_get_clean();
+	}
+
+	public function RunScript(){
+		global $langmessage;
+
+		echo '<h2>'.$langmessage['Site Status'].'</h2>';
+
 
 		$checked = $this->passed_count + $this->failed_count;
 
-		if( $this->failed_count == 0 ){
+		if( $this->failed_count === 0 ){
 			echo '<p class="gp_passed">';
 			echo sprintf($langmessage['data_check_passed'],$checked,$checked);
 			echo '</p>';
 
-			//$this->CheckPageFiles();
 			return;
 		}
 
@@ -54,9 +61,9 @@ class Status{
 		echo '<tr><th>';
 		echo $langmessage['file_name'];
 		echo '</th><th colspan="2">';
-		echo $langmessage['permissions'];
-		echo '</th><th colspan="2">';
 		echo $langmessage['File Owner'];
+		echo '</th><th colspan="2">';
+		echo $langmessage['permissions'];
 		echo '</th></tr>';
 
 		echo '<tr><td>&nbsp;</td><td>';
@@ -68,7 +75,7 @@ class Status{
 		echo '</td><td>';
 		echo $langmessage['Expected_Value'];
 		echo '</td></tr>';
-		echo $failed_output;
+		echo $this->failed_output;
 		echo '</table>';
 
 		$this->CheckPageFiles();
@@ -114,17 +121,17 @@ class Status{
 		$this->CheckFile($dir);
 
 		$dh = @opendir($dir);
-		if( !$dh ){
+		if( $dh === false ){
 			echo '<tr><td colspan="3">';
 			echo '<p class="gp_notice">';
-			echo 'Could not open data directory: '.$check_dir;
+			echo 'Could not open data directory: '.$dir;
 			echo '</p>';
 			echo '</td></tr>';
 			return;
 		}
 
 		while( ($file = readdir($dh)) !== false){
-			if( $file == '.' || $file == '..' ){
+			if( $file === '.' || $file === '..' ){
 				continue;
 			}
 
@@ -134,7 +141,7 @@ class Status{
 			}
 
 			if( is_dir($full_path) ){
-				$this->CheckDir($full_path,'dir');
+				$this->CheckDir($full_path);
 			}else{
 				$this->CheckFile($full_path,'file');
 			}
@@ -143,13 +150,19 @@ class Status{
 
 	protected function CheckFile($path,$type='dir'){
 
-		$current = '?';
-		$expected = '777';
-		$euid = '?';
+		$current	= '?';
+		$euid		= '?';
+
+		if( $type === 'file' ){
+			$expected	= decoct(gp_chmod_file);
+		}else{
+			$expected	= decoct(gp_chmod_dir);
+		}
+
 		if( \gp\install\FilePermissions::HasFunctions() ){
 			$current = @substr(decoct( @fileperms($path)), -3);
 
-			if( $type == 'file' ){
+			if( $type === 'file' ){
 				$expected = \gp\install\FilePermissions::getExpectedPerms_file($path);
 			}else{
 				$expected = \gp\install\FilePermissions::getExpectedPerms($path);
@@ -177,17 +190,16 @@ class Status{
 		echo substr($path,$this->check_dir_len);
 		echo '</td><td>';
 
-		echo $current;
-		echo '</td><td>';
-		echo $expected;
-		echo '</td><td>';
 		echo $euid;
 		echo '</td><td>';
 		echo $this->euid;
+		echo '</td><td>';
+
+		echo $current;
+		echo '</td><td>';
+		echo $expected;
 		echo '</td></tr>';
 
 	}
 
-
 }
-

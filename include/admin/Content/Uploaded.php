@@ -31,14 +31,13 @@ namespace gp\admin\Content{
 		public function Finder(){
 			global $config, $dataDir;
 
-			$this->page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.\gp\tool::GetDir('/include/thirdparty/finder/css/finder.css').'">';
-			$this->page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.\gp\tool::GetDir('/include/thirdparty/finder/style.css').'">';
-
-			$this->page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/finder/js/finder.js').'"></script>';
-			$this->page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/finder/config.js').'"></script>';
+			$this->page->head 			.= "\n".'<script data-main="'.\gp\tool::GetDir('/include/thirdparty/elFinder/main.custom.js').'"'
+											. ' src="'.\gp\tool::GetDir('/include/thirdparty/js/require.min.js').'"></script>';
+			$this->page->css_admin[]	= '/include/css/admin_finder.scss';
 
 
-			echo '<div id="finder"></div>';
+
+			echo '<div id="elfinder"></div>';
 
 			\gp\tool::LoadComponents('selectable,draggable,droppable,resizable,dialog,slider,button');
 
@@ -49,7 +48,7 @@ namespace gp\admin\Content{
 			if( $language == 'inherit' ){
 				$language = $config['language'];
 			}
-			$lang_file = '/include/thirdparty/finder/js/i18n/'.$language.'.js';
+			$lang_file = '/include/thirdparty/elFinder/js/i18n/elfinder.'.$language.'.js';
 			$lang_full = $dataDir.$lang_file;
 			if( file_exists($lang_full) ){
 				$this->page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir($lang_file).'"></script>';
@@ -639,12 +638,12 @@ namespace gp\admin\Content{
 		}
 
 
-		/**
+/**
 		 * Check the file extension agains $allowed_types
 		 *
 		 */
 		public static function AllowedExtension( &$file , $fix = true ){
-			global $upload_extensions_allow, $upload_extensions_deny;
+			global $upload_extensions_allow, $upload_extensions_deny, $config;
 			static $allowed_types = false;
 
 			$file = \gp\tool\Files::NoNull($file);
@@ -667,13 +666,16 @@ namespace gp\admin\Content{
 					$allowed_types = array();
 				}else{
 					$allowed_types = array(
-						/** Images **/		'bmp', 'gif', 'ico', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'svg', 'svgz',
-						/** Media **/		'aiff', 'asf', 'avi', 'fla', 'flac', 'flv', 'm4v', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ogg', 'oga', 'ogv', 'opus', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'wav', 'wma', 'webm', 'wmv', 
+						/** Images **/		'bmp', 'gif', 'ico', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'webp',
+						/** Media **/		'aiff', 'asf', 'avi', 'fla', 'flac', 'flv', 'm4v', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ogg', 'oga', 'ogv', 'opus', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'wav', 'wma', 'webm', 'wmv',
 						/** Archives **/	'7z', 'bz', 'gz', 'gzip', 'rar', 'tar', 'tgz', 'zip',
-						/** Text/Docs **/	'css', 'csv', 'doc', 'docx', 'htm', 'html', 'js', 'json', 'less', 'md', 'ods', 'odt', 'pages', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'scss', 'sxc', 'sxw', 'vsd', 'xls', 'xlsx', 'xml', 'xsl', 
+						/** Text/Docs **/	'css', 'csv', 'doc', 'docx', 'htm', 'html', 'js', 'json', 'less', 'md', 'ods', 'odt', 'pages', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'scss', 'sxc', 'sxw', 'vsd', 'webmanifest', 'xls', 'xlsx', 'xml', 'xsl',
+						/** Fonts **/		'eot', 'otf', 'ttf', 'woff', 'woff2',
 					);
-
-
+					if( !empty($config['allow_svg_upload']) ){
+						$allowed_types[] = 'svg';
+						$allowed_types[] = 'svgz';
+					}
 				}
 
 				if( is_array($upload_extensions_allow) ){
@@ -703,6 +705,7 @@ namespace gp\admin\Content{
 				return implode('.',$parts).'.'.$file_type;
 			}
 		}
+
 
 
 		/**
@@ -834,7 +837,7 @@ namespace gp\admin\Content{
 			$thumb_dir = $dataDir.'/data/_uploaded/image/thumbnails';
 			self::SetRealPath($result,$finder);
 
-
+           if(isset($result['removed']) or isset($result['added']))
 			switch($cmd){
 
 				case 'rename':
@@ -925,7 +928,7 @@ namespace gp\admin\Content{
 		 * Make sure newly uploaded images are within the site's max-size setting
 		 *
 		 */
-		public function MaxSize($added){
+		public static function MaxSize($added){
 			global $config;
 
 			if( $config['maximgarea'] > 0 ){
@@ -939,7 +942,7 @@ namespace gp\admin\Content{
 		 * Move
 		 *
 		 */
-		public function MoveResized($removed,$added){
+		public static function MoveResized($removed,$added){
 			global $dataDir;
 
 
@@ -947,7 +950,7 @@ namespace gp\admin\Content{
 			$moved = array();
 			$new_removed = array();
 			foreach($added as $akey => $ainfo){
-				$source = $ainfo['source'];
+				$source = isset($ainfo['source']) ? $ainfo['source'] : null;
 				foreach($removed as $rkey => $rinfo){
 					if( $source == $rinfo['realpath'] ){
 						$moved[$akey] = $rinfo;
@@ -963,7 +966,7 @@ namespace gp\admin\Content{
 
 			//rename files that were moved
 			foreach($added as $akey => $ainfo){
-				$rinfo = $moved[$akey];
+				$rinfo = isset($moved[$akey]) ? $moved[$akey] : null;
 				self::RenameResized($rinfo,$ainfo);
 			}
 		}
@@ -972,7 +975,7 @@ namespace gp\admin\Content{
 		 * Remove all of the resized images for an image that is deleted
 		 *
 		 */
-		public function RemoveResized($removed){
+		public static function RemoveResized($removed){
 			global $dataDir;
 
 			foreach($removed as $key => $info){
@@ -995,7 +998,7 @@ namespace gp\admin\Content{
 		 * Update the name of an image in the index when renamed
 		 *
 		 */
-		public function RenameResized($removed,$added){
+		public static function RenameResized($removed,$added){
 			$added_img = self::TrimBaseDir($added['realpath']);
 			$removed_img = self::TrimBaseDir($removed['realpath']);
 			$index = array_search($removed_img,\gp_resized::$index);
@@ -1010,7 +1013,7 @@ namespace gp\admin\Content{
 		 * Make sure the realpath value is set for finder arrays
 		 *
 		 */
-		public function SetRealPath(&$array,$finder){
+		public static function SetRealPath(&$array,$finder){
 			foreach($array as $type => $list){
 				if( !is_array($list) ){
 					continue;
@@ -1028,7 +1031,7 @@ namespace gp\admin\Content{
 		 * Get a relative file path by stripping the base dir off of a full path
 		 *
 		 */
-		public function TrimBaseDir($full_path){
+		public static function TrimBaseDir($full_path){
 			global $dataDir;
 
 			$base_dir = $dataDir.'/data/_uploaded';

@@ -9,6 +9,7 @@
  *        'bmp', 'bz', 
  *        'css', 'csv', 
  *        'doc', 'docx', 
+ *        'eot',
  *        'fla', 'flac', 'flv', 
  *        'gif', 'gz', 'gzip', 
  *        'htm', 'html', 
@@ -16,14 +17,14 @@
  *        'jpeg', 'jpg', 'js', 'json', 
  *        'less', 
  *        'm4v', 'md, 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 
- *        'ods', 'odt', 'ogg', 'oga', 'ogv', 'opus', 
+ *        'ods', 'odt', 'ogg', 'oga', 'ogv', 'opus', 'otf',
  *        'pages', 'pdf', 'png', 'ppt', 'pptx', 
  *        'qt', 
  *        'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf', 
- *        'scss', 'svg', 'svgz', 'swf', 'sxc', 'sxw',
- *        'tar', 'tgz', 'tif', 'tiff', 'txt', 
+ *        'scss', 'swf', 'sxc', 'sxw', // 'svg' and 'svgz' can be enabled via Settings -> Configuration
+ *        'tar', 'tgz', 'tif', 'tiff', 'ttf', 'txt', 
  *        'vsd', 
- *        'wav', 'wma', 'webm', 'wmv', 
+ *        'wav', 'webmanifest', 'webm', 'webp', 'wma', 'wmv', 'woff', 'woff2',
  *        'xls', 'xlsx', 'xml', 'xsl' 
  *        'zip',
  * )
@@ -44,12 +45,25 @@ define('gp_default_theme','Three_point_5/Shore');
 
 
 /**
+ * create Scss and LESS source maps
+ * Useful during design / development to see the original location of Scss / LESS rules in the web browser dev tools.
+ * Source maps take up some additional disk space and should ultimately be disabled on live sites.
+ *
+ * NOTE! Currently we do not create source maps for combined css files. 
+ *       Using this option will override config settings and 'combine css' OFF 
+ *
+ * Defaults to undefined (commented out)
+ */
+// define('create_css_sourcemaps',true);
+
+
+/**
  * load_css_in_body
  * If defined true, stylesheet <link>s will be placed at then end of the <body> element (but before scripts) instead of in the <head> element.
  * Defined false forces styleheets to the <head> even if a theme or addon defines it to true via gp_defined('load_css_in_body', true);
  * Undefined loads stylesheets in the head but allows later changes by themes/addons.
- * Defaults to undefined
  *
+ * Defaults to undefined (commented out)
  */
 // define('load_css_in_body',true);
 
@@ -125,7 +139,7 @@ define('service_provider_id',false);
 
 /**
  * Limit the number of revisions to store in the backup
- *
+ * Defaults to 30
  */
 define('gp_backup_limit',30);
 
@@ -180,10 +194,17 @@ define('gpdebug',false);
 //define('gp_safe_mode',false);
 
 
+/**
+ * gp_prefix_urls
+ * Set to true will prefix internal content URLs (href, src, ..., starting with '/')
+ * with $LinkPrefix or $dirPrefix variables when saving in order to make the 
+ * content portable across different directory levels and hosts
+ * Defaults to false
+ */
+define('gp_prefix_urls',false);
+
 
 /**
  * Include clearfloats in Typesetter generated code
  * define('clear_floats',false); experimental
  */
-
-

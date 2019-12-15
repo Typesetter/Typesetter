@@ -344,43 +344,56 @@ $gp.LoadStyle = function(file, already_prefixed){
  *		- this box resizes without javascript calls (height)
  *		- less animation
  */
-$gp.AdminBoxC = function(data,options){
+$gp.AdminBoxC = function(data, options){
 	$gp.CloseAdminBox();
 	if( data === '' ){
 		return false;
 	}
 
 	if( typeof(options) == 'string' ){
-		options = {context:options}
+		options = {context:options};
 	}else if( typeof(options) == 'undefined' ){
 		options = {};
 	}
 
-	options = $.extend({context:'',width:640}, options);
+	options = $.extend({
+			context : '',
+			width : 640
+		},
+		options);
 
 	/*
 	var win_width = $gp.$win.width();
 	var box_width = Math.max(660, Math.round(win_width*0.70));
 	*/
 	var box_width = options.width;
-	var left = Math.round( ($gp.$win.width() - box_width - 40)/2);
+	var left = Math.round( ($gp.$win.width() - box_width - 40) / 2 );
 	var height = Math.max( $gp.$doc.height(), $('body').outerHeight(true) );
 
 	$gp.div('gp_admin_box1')
-		.css({'zIndex':11000,'min-height':height})
+		.css({
+			'zIndex' : 11000,
+			'min-height' : height
+		})
 		.stop(true,true)
 		.fadeTo(0,0) //fade in from transparent
-		.fadeTo(200,0.2);
+		.fadeTo((options.replaceBox ? 0 : 200), 0.2);
 
 	$gp.div('gp_admin_box')
-				.css({'zIndex':'11001','left':left,'top': $gp.$win.scrollTop() })
-				.stop(true,true)
-				.fadeIn(400)
-				.html('<a class="gp_admin_box_close" data-cmd="admin_box_close"></a><div id="gp_admin_boxc" class="'+(options.context||'')+'" style="width:'+box_width+'px"></div>')
-				.find('#gp_admin_boxc')
-				.html(data)
-				.find('input:visible:first')
-				.focus();
+		.css({
+			'zIndex' : '11001',
+			'left' : left,
+			'top' : $gp.$win.scrollTop()
+		})
+		.stop(true,true)
+		.fadeIn((options.replaceBox ? 0 : 400))
+		.html('<a class="gp_admin_box_close" data-cmd="admin_box_close"></a>'
+			+ '<div id="gp_admin_boxc" class="' + (options.context || '')
+			+ '" style="width:' + box_width + 'px"></div>')
+		.find('#gp_admin_boxc')
+		.html(data)
+		.find('input:visible:first')
+		.focus();
 
 	$('.messages').detach();
 
@@ -423,7 +436,7 @@ $gp.CloseAdminBox = function(evt){
 		$.fn.colorbox.close();
 	}
 };
-$gp.links.admin_box_close = gpinputs.admin_box_close = $gp.CloseAdminBox;
+$gp.links.admin_box_close = $gp.inputs.admin_box_close = $gp.CloseAdminBox;
 
 
 /**
@@ -676,6 +689,18 @@ $gp.links.gpabox = function(evt){
 
 
 /**
+ * Almost same as gpabox but used to replace an already open modal box with a new one,
+ * without showing the overlay and fadeIn effect.
+ * Should only be used for links inside a modal box to replace the same box
+ */
+$gp.links.gprabox = function(evt){
+	evt.preventDefault();
+	var href = $gp.jPrep(this.href)+'&gpx_content=gprabox';
+	$.getJSON(href, $gp.Response);
+};
+
+
+/**
  * Add a table row
  *
  */
@@ -737,7 +762,8 @@ $gp.inputs.check_all = function(){
 $gp.inputs.cnreq = function(evt){
 	evt.preventDefault();
 	var query = $(this.form).serialize();
-	$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
+	$gp.SetCookieCmd(query);
+	//$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
 	window.location = strip_from(strip_from(this.form.action,'#'),'?');
 };
 
@@ -1188,6 +1214,19 @@ $(function(){
 			}
 		});
 	});
+
+	/**
+	 * Configuration -> Settings
+	 * Disable minifyjs when combinejs is unchecked
+	 *
+	 */
+	function CheckCombineJs(){
+		var checked = $('#admincontent_inner input[type="checkbox"][name="combinejs"]').prop("checked");
+		$('#admincontent_inner input[type="checkbox"][name="minifyjs"]').prop("disabled", !checked);
+	}
+
+	$('#admincontent_inner input[type="checkbox"][name="combinejs"]').on('change', CheckCombineJs);
+	CheckCombineJs();
 
 
 });

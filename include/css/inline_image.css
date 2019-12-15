@@ -157,16 +157,73 @@
 	background-color:#f1f1f1;
 }
 .gp_gallery_edit a{
-    color: #888;
-    font-size: 16px;
-    cursor:pointer;
-    padding:0.2em 0.25em 0.15em;
+	color:#888;
+	font-size:16px;
+	cursor:pointer;
+	padding:0.2em 0.25em 0.15em;
 	}
 .gp_gallery_edit a:hover{
 	color:#111;
 	text-decoration:none;
 	}
 .gp_gallery_edit img{}
+
+.gallery-style-button-row{
+	position:relative;
+	height:30px;
+	margin-bottom:5px;
+}
+.gallery-style-button{
+	position:relative;
+	float:left;
+	height:30px;
+	width:20%;
+}
+.gallery-style-button:first-child{
+	left:0;
+}
+.gallery-style-button input[type="radio"]{
+	display:none;
+}
+.gallery-style-button label{
+	display:block;
+	position:absolute;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+	margin:0;
+	padding:0;
+	background:#fafafa url(../imgs/gallery-styles.png) 50% 0 no-repeat;
+	background-size:39px auto;
+	border:1px solid #ccc;
+	border-right-width:0;
+	cursor:pointer;
+}
+.gallery-style-button:first-child label{
+	border-radius:3px 0 0 3px;
+}
+.gallery-style-button:last-child label{
+	border-right-width:1px;
+	border-radius:0 3px 3px 0;
+}
+.gallery-style-button input[type="radio"]:checked + label{
+	background-color:#ccc;
+}
+.gallery-style-button label[for="gallery-theme-default"] { background-position:50% 0; }
+.gallery-style-button label[for="gallery-theme-tiles"] { background-position:50% -30px; }
+.gallery-style-button label[for="gallery-theme-circle-grid"] { background-position:50% -60px; }
+.gallery-style-button label[for="gallery-theme-circle-list"] { background-position:50% -90px; }
+
+.gallery-style-button label[for="gallery-size-xs"] { background-position:50% -120px; }
+.gallery-style-button label[for="gallery-size-sm"] { background-position:50% -150px; }
+.gallery-style-button label[for="gallery-size-md"] { background-position:50% -180px; }
+.gallery-style-button label[for="gallery-size-lg"] { background-position:50% -210px; }
+.gallery-style-button label[for="gallery-size-xl"] { background-position:50% -240px; }
+
+.gallery-style-button label[for="gallery-color-default"] { background-position:50% -270px; }
+.gallery-style-button label[for="gallery-color-dark"] { background-position:50% -300px; }
+
 
 
 /**

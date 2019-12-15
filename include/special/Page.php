@@ -10,9 +10,14 @@ class Page extends \gp\Page{
 	public $requested = false;
 
 	public function __construct($title){
+		global $config, $languages;
 
 		$this->requested	= $title;
 		$this->title		= $title;
+		$this->lang			= $config['language'];
+		if( isset($languages[$this->lang]) ){
+			$this->language		= $languages[$this->lang];
+		}
 	}
 
 	public function RunScript(){
@@ -34,7 +39,6 @@ class Page extends \gp\Page{
 
 		$this->gp_index			= $gp_index[$this->title];
 		$this->TitleInfo		= $scriptinfo;
-
 
 		if( !$this->CheckVisibility() ){
 			return false;

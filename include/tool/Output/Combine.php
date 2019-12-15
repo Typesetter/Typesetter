@@ -4,6 +4,7 @@ namespace gp\tool\Output;
 
 defined('is_running') or die('Not an entry point...');
 
+includeFile('thirdparty/JShrink/autoload.php');
 
 class Combine{
 
@@ -58,8 +59,8 @@ class Combine{
 									'package'		=> 'jquery',
 									'label'			=> 'jQuery',
 									'cdn'			=> array(
-														'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js',
-														'Google'		=> '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js',
+															'Google'		=> '//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js',
 														),
 									),
 
@@ -70,8 +71,8 @@ class Combine{
 									'type'			=> 'css',
 									'package'		=> 'jquery_ui',
 									'cdn'			=> array(
-														'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/css/jquery-ui.min.css',
-														'Google'		=> '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.min.css',
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css',
+															'Google'		=> '//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css',
 														),
 									),
 
@@ -80,8 +81,8 @@ class Combine{
 									'package'		=> 'jquery_ui',
 									'label'			=> 'jQuery UI',
 									'cdn'			=> array(
-														'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js',
-														'Google'		=> '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js',
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js',
+															'Google'		=> '//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js',
 														),
 									),
 
@@ -484,8 +485,85 @@ class Combine{
 									'package'		=> 'bootstrap3',
 									),
 
+			// Popper.js
+			'popper' => array(
+									'file'			=> '/include/thirdparty/Popper.js/popper.min.js',
+									),
 
-			//fontawesome
+			// Bootstrap4
+			'bootstrap4-js' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/bootstrap.bundle.min.js',
+									'package'		=> 'bootstrap4',
+									'exclude'		=> 'bootstrap4-alert,bootstrap4-button,bootstrap4-carousel,bootstrap4-collapse,bootstrap4-dropdown,bootstrap4-modal,bootstrap4-popover,bootstrap4-scrollspy,bootstrap4-tab,bootstrap4-tooltip,bootstrap4-util',
+									),
+
+
+			'bootstrap4-alert' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/alert.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'bootstrap4-util',
+									),
+
+			'bootstrap4-button' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/button.js',
+									'package'		=> 'bootstrap4',
+									),
+
+			'bootstrap4-carousel' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/carousel.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'bootstrap4-util',
+									),
+
+			'bootstrap4-collapse' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/collapse.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'bootstrap4-util',
+									),
+
+			'bootstrap4-dropdown' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/dropdown.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'popper,bootstrap4-util',
+									),
+
+			'bootstrap4-modal' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/modal.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'bootstrap4-util',
+									),
+
+			'bootstrap4-popover' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/popover.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'bootstrap4-tooltip',
+									),
+
+			'bootstrap4-scrollspy' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/scrollspy.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'bootstrap4-util',
+									),
+
+			'bootstrap4-tab' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/tab.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'bootstrap4-util',
+									),
+
+			'bootstrap4-tooltip' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/tooltip.js',
+									'package'		=> 'bootstrap4',
+									'requires'		=> 'popper,bootstrap4-util',
+									),
+
+			'bootstrap4-util' => array(
+									'file'			=> '/include/thirdparty/Bootstrap4/js/util.js',
+									'package'		=> 'bootstrap4',
+									),
+
+
+			// FontAwesome
 			'fontawesome'			=> array(
 									'file'			=> '/include/thirdparty/fontawesome/css/font-awesome.min.css',
 									'label'			=> 'Font Awesome',
@@ -495,7 +573,7 @@ class Combine{
 									),
 
 
-			//colorbox
+			// Colorbox
 			'colorbox'	=> array(
 									'file'			=> '/include/thirdparty/colorbox139/colorbox/jquery.colorbox.js',
 									'requires'		=> 'gp-main,colorbox-css',
@@ -511,7 +589,7 @@ class Combine{
 									),
 
 
-			//jQuery.dotdotdot (multi-line text truncation)
+			// jQuery.dotdotdot (multi-line text truncation)
 			'dotdotdot' => array(
 									//'file'			=> '/include/thirdparty/dotdotdot/jquery.dotdotdot.min.js',
 									'file'			=> '/include/thirdparty/dotdotdot/jquery.dotdotdot.js',
@@ -526,7 +604,7 @@ class Combine{
 	 *
 	 */
 	public static function GenerateFile($files,$type){
-		global $dataDir;
+		global $dataDir, $config;
 
 		//get etag
 		$modified = $content_length = 0;
@@ -586,6 +664,42 @@ class Combine{
 			}
 			$combined_content = ob_get_clean();
 
+			//minify js
+			if( $config['minifyjs'] ){
+
+				$minify_stats = array( 
+					'date' 								=> date('Y-m-d H:i'),
+					'errors' 							=> 'none',
+				);
+				$get_peak_mem 							= function_exists('memory_get_peak_usage');
+
+				$minify_stats['mem_before'] 			= $get_peak_mem ? memory_get_peak_usage(true) : false;
+				$minify_stats['size_before'] 			= strlen($combined_content);
+
+				try{
+					$combined_content 					= \JShrink\Minifier::minify($combined_content, array('flaggedComments' => false));
+				}catch( Exception $e ){
+					$minify_stats['errors'] 			= $e->getMessage();
+				}
+
+				$minify_stats['mem_after'] 				= $get_peak_mem ? memory_get_peak_usage(true) : false;
+				$minify_stats['size_after'] 			= strlen($combined_content);
+
+				$minify_stats['compression_rate'] 		= (round((1 - $minify_stats['size_after'] / $minify_stats['size_before']) * 1000) / 10) . '%';
+
+				$minify_stats['size_before'] 			= \gp\admin\Tools::FormatBytes($minify_stats['size_before']);
+				$minify_stats['size_after'] 			= \gp\admin\Tools::FormatBytes($minify_stats['size_after']);
+
+				if( $get_peak_mem ){
+					$minify_stats['allocated_memory'] 	= \gp\admin\Tools::FormatBytes( $minify_stats['mem_after'] - $minify_stats['mem_before'] );
+				}else{
+					$minify_stats['allocated_memory'] 	= 'not available';
+				}
+				unset($minify_stats['mem_before'], $minify_stats['mem_after']);
+
+				$combined_content 						= 'var minify_js_stats=' . json_encode($minify_stats) . ';' . $combined_content;
+			}
+
 		}else{
 
 			$imports = $combined_content = '';
@@ -627,7 +741,7 @@ class Combine{
 	 * @static
 	 */
 	public static function CheckFile(&$file){
-		global $dataDir;
+		global $dataDir, $dirPrefix;
 		$comment_start = '<!--';
 		$comment_end = '-->';
 
@@ -653,10 +767,10 @@ class Combine{
 		//remove null charachters
 		$file = \gp\tool\Files::NoNull($file);
 
-		//require .js or .css
+		//require .js, or .css/.less/.scss
 		$ext	= \gp\tool::Ext($file);
 		if( $ext !== 'js' && $ext !== 'css' && $ext !== 'less' && $ext !== 'scss' ){
-			echo  "\n{$comment_start} File Not CSS, LESS or JS {$file} {$comment_end}\n";
+			echo  "\n{$comment_start} File Not css, less, scss or js {$file} {$comment_end}\n";
 			return false;
 		}
 
@@ -675,7 +789,8 @@ class Combine{
 		}
 
 
-		echo  "\n{$comment_start} File Not Found {$dataDir}{$file} {$comment_end}\n";
+		$full_path = $dataDir . substr($file, strlen($dirPrefix));
+		echo  "\n{$comment_start} File Not Found {$full_path} {$comment_end}\n";
 		return false;
 	}
 

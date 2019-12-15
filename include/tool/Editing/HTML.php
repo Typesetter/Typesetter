@@ -95,7 +95,7 @@ class HTML extends \gp\tool\Editing\HTMLParse{
 
 				if( is_array($dom_element) && isset($dom_element['tag']) ){
 					$tag = $dom_element['tag'];
-					if( $tag{0} == '/' ){
+					if( $tag[0] == '/' ){
 						$tag_check = substr($tag,1);
 						if( $no_save_levels[$no_save_level] == $tag_check ){
 							array_pop($no_save_levels);

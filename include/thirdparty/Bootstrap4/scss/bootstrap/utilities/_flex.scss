@@ -1,0 +1,187 @@
+// stylelint-disable declaration-no-important
+
+// Flex variation
+//
+// Custom styles for additional flex alignment options.
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .flex#{$infix}-row { 
+      // ########## use VP-mixins ##########
+      // flex-direction: row !important;
+      @include vp-flex-direction(row !important);
+    }
+    .flex#{$infix}-column { 
+      // ########## use VP-mixins ##########
+      // flex-direction: column !important; 
+      @include vp-flex-direction(column !important); 
+     }
+    .flex#{$infix}-row-reverse {
+      // ########## use VP-mixins ##########
+      // flex-direction: row-reverse !important;
+      @include vp-flex-direction(row-reverse !important);
+    }
+    .flex#{$infix}-column-reverse {
+      // ########## use VP-mixins ##########
+      // flex-direction: column-reverse !important;
+      @include vp-flex-direction(column-reverse !important);
+    }
+
+    .flex#{$infix}-wrap {
+      // ########## use VP-mixins ##########
+      // flex-wrap: wrap !important;
+      @include vp-flex-wrap(wrap !important);
+    }
+    .flex#{$infix}-nowrap {
+      // ########## use VP-mixins ##########
+      // flex-wrap: nowrap !important;
+      @include vp-flex-wrap(nowrap !important);
+    }
+    .flex#{$infix}-wrap-reverse {
+      // ########## use VP-mixins ##########
+      // flex-wrap: wrap-reverse !important;
+      @include vp-flex-wrap(wrap-reverse !important);
+    }
+    .flex#{$infix}-fill {
+      // ########## use VP-mixins ##########
+      // flex: 1 1 auto !important;
+      @include vp-flex(1 1 auto !important);
+     }
+    .flex#{$infix}-grow-0 {
+      // ########## use VP-mixins ##########
+      // flex-grow: 0 !important;
+      @include vp-flex-grow(0 !important);
+    }
+    .flex#{$infix}-grow-1 {
+      // ########## use VP-mixins ##########
+      // flex-grow: 1 !important;
+      @include vp-flex-grow(1 !important);
+     }
+    .flex#{$infix}-shrink-0 {
+      // ########## use VP-mixins ##########
+      // flex-shrink: 0 !important;
+      @include vp-flex-shrink(0 !important);
+    }
+    .flex#{$infix}-shrink-1{
+      // ########## use VP-mixins ##########
+      // flex-shrink: 1 !important;
+      @include vp-flex-shrink(1 !important);
+    }
+
+    .justify-content#{$infix}-start {
+      // ########## use VP-mixins ##########
+      // justify-content: flex-start !important;
+      @include vp-justify-content(flex-start !important);
+    }
+    .justify-content#{$infix}-end {
+      // ########## use VP-mixins ##########
+      // justify-content: flex-end !important;
+      @include vp-justify-content(flex-end !important);
+    }
+    .justify-content#{$infix}-center {
+      // ########## use VP-mixins ##########
+      // justify-content: center !important;
+      @include vp-justify-content(center !important);
+    }
+    .justify-content#{$infix}-between {
+      // ########## use VP-mixins ##########
+      // justify-content: space-between !important;
+      @include vp-justify-content(space-between !important);
+    }
+    .justify-content#{$infix}-around {
+      // ########## use VP-mixins ##########
+      // justify-content: space-around !important;
+      @include vp-justify-content(space-around !important);
+    }
+
+    .align-items#{$infix}-start {
+      // ########## use VP-mixins ##########
+      // align-items: flex-start !important; 
+      @include vp-align-items(flex-start !important);
+     }
+    .align-items#{$infix}-end {
+      // ########## use VP-mixins ##########
+      // align-items: flex-end !important;
+      @include vp-align-items(flex-end !important);
+    }
+    .align-items#{$infix}-center {
+      // ########## use VP-mixins ##########
+      // align-items: center !important; 
+      @include vp-align-items(center !important);
+    }
+    .align-items#{$infix}-baseline {
+      // ########## use VP-mixins ##########
+      // align-items: baseline !important; 
+      @include vp-align-items(baseline !important);
+    }
+    .align-items#{$infix}-stretch {
+      // ########## use VP-mixins ##########
+      // align-items: stretch !important; 
+      @include vp-align-items(stretch !important);
+    }
+
+    .align-content#{$infix}-start {
+      // ########## use VP-mixins ##########
+      // align-content: flex-start !important;
+      @include vp-align-content(flex-start !important);
+    }
+    .align-content#{$infix}-end {
+      // ########## use VP-mixins ##########
+      // align-content: flex-end !important;
+      @include vp-align-content(flex-end !important);
+    }
+    .align-content#{$infix}-center {
+      // ########## use VP-mixins ##########
+      // align-content: center !important;
+      @include vp-align-content(center !important);
+    }
+    .align-content#{$infix}-between {
+      // ########## use VP-mixins ##########
+      // align-content: space-between !important;
+      @include vp-align-content(space-between !important);
+    }
+    .align-content#{$infix}-around {
+      // ########## use VP-mixins ##########
+      // align-content: space-around !important;
+      @include vp-align-content(space-around !important);
+    }
+    .align-content#{$infix}-stretch {
+      // ########## use VP-mixins ##########
+      // align-content: stretch !important;
+      @include vp-align-content(stretch !important);
+    }
+
+    .align-self#{$infix}-auto {
+      // ########## use VP-mixins ##########
+      // align-self: auto !important;
+      @include vp-align-self(auto !important);
+    }
+    .align-self#{$infix}-start {
+      // ########## use VP-mixins ##########
+      // align-self: flex-start !important;
+      @include vp-align-self(flex-start !important);
+    }
+    .align-self#{$infix}-end {
+      // ########## use VP-mixins ##########
+      // align-self: flex-end !important;
+      @include vp-align-self(flex-end !important);
+    }
+    .align-self#{$infix}-center {
+      // ########## use VP-mixins ##########
+      // align-self: center !important;
+      @include vp-align-self(center !important);
+    }
+    .align-self#{$infix}-baseline {
+      // ########## use VP-mixins ##########
+      // align-self: baseline !important;
+      @include vp-align-self(baseline !important);
+    }
+    .align-self#{$infix}-stretch {
+      // ########## use VP-mixins ##########
+      // align-self: stretch !important;
+      @include vp-align-self(stretch !important);
+    }
+  }
+}

@@ -12,6 +12,7 @@ var $gp = {
 	inputs : {},
 	response : {},
 	error : 'There was an error processing the last request. Please reload this page to continue.',
+	cookie_cmd : false,
 
 	/**
 	 * Handler for loading json content
@@ -40,13 +41,14 @@ var $gp = {
 			query	+= '&verified='+encodeURIComponent(nonce);
 		}
 
-		$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
+		$gp.SetCookieCmd(query);
 
 		if( samepage ){
 			$gp.Reload();
 		}else{
 			window.location = strip_from(strip_from(a.href,'#'),'?');
 		}
+
 	},
 
 
@@ -157,6 +159,16 @@ var $gp = {
 		document.cookie = name+"="+value+expires+"; path=/";
 	},
 
+	/**
+	 * Remove cookie command
+	 *
+	 */
+	SetCookieCmd : function(query){
+
+		$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
+		$gp.cookie_cmd = true;
+	},
+
 
 	/**
 	 * Prepare a query for an ajax request
@@ -181,8 +193,6 @@ var $gp = {
 	 *
 	 */
 	Response : function(data,textStatus,jqXHR){
-
-		$('.messages').detach();
 
 		try{
 			if( typeof(gp_editing) == 'undefined' ){
@@ -224,11 +234,21 @@ var $gp = {
 					$gp.AdminBoxC(obj.CONTENT);
 				break;
 
+				case 'admin_box_replace':
+					$gp.AdminBoxC(obj.CONTENT, {replaceBox : true});
+				break;
+
 				case 'messages':
+					$('.messages').detach();
 					$(obj.CONTENT).appendTo('body').show().css({'top':0});
 				break;
 
 				case 'reload':
+					$gp.Reload();
+				break;
+
+				case 'logging_out':
+					$gp.SetCookieCmd('cmd=logged_out');
 					$gp.Reload();
 				break;
 
@@ -248,6 +268,8 @@ var $gp = {
 			var $selected = $(sel);
 			if( typeof($selected[func]) == 'function' ){
 				$selected[func](arg);
+			}else{
+				console.log('func not found for sel',sel,'func',func);
 			}
 		}
 
@@ -331,12 +353,12 @@ var $gp = {
 			$(selector).colorbox(
 				$gp.cboxSettings({
 					resize : true ,
-					rel : selector, 
+					rel : selector,
 					title : function(){
 						var a = $(this);
 						var caption =
-							a.closest('li').find('.caption').data("originalContent") 
-							|| a.closest('li').find('.caption').text() 
+							a.closest('li').find('.caption').data("originalContent")
+							|| a.closest('li').find('.caption').text()
 							|| a.attr('title') // backwards compat
 							|| '';
 						return caption;
@@ -358,6 +380,8 @@ $gp.Cookie('cookie_cmd','',-1);
 
 
 
+
+
 /**
  * Onload
  *
@@ -371,6 +395,17 @@ $(function(){
 	//this also affects the display of elements using the req_script css class
 	$('body').addClass('STCLASS');
 
+
+	/**
+	 * Remove cookie_cmd before a new page is loaded
+	 * Prevents a cookie_cmd from another browser tab being sent along with a request in the current tab
+	 *
+	 */
+	$(window).on('beforeunload', function(evt) {
+		if( !$gp.cookie_cmd ){
+			$gp.Cookie('cookie_cmd','',-1);
+		}
+	});
 
 
 	/**

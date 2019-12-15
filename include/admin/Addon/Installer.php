@@ -481,9 +481,8 @@ class Installer extends \gp\admin\Addon\Tools{
 	 *
 	 */
 	public function HasHooks(){
-
 		foreach($this->ini_contents as $key => $value){
-			if( is_array($value) ){
+			if( is_array($value) && $key != 'FrontEndFramework' ){
 				$this->has_hooks = true;
 				return;
 			}
@@ -545,7 +544,7 @@ class Installer extends \gp\admin\Addon\Tools{
 		//admin links
 		$Admin_Links = $this->ExtractFromInstall($this->ini_contents,'Admin_Link:');
 		$Admin_Links = $this->CleanLinks($Admin_Links,'Admin_');
-		$this->PurgeExisting($config['admin_links'],$Admin_Links);
+		$this->PurgeExisting($config['admin_links']);
 		$this->AddToConfig($config['admin_links'],$Admin_Links);
 
 
@@ -574,7 +573,6 @@ class Installer extends \gp\admin\Addon\Tools{
 			return true;
 		}
 
-
 		if( $this->has_hooks ){
 			$this->new_layout['addon_key'] = $this->config_key;
 		}
@@ -587,7 +585,9 @@ class Installer extends \gp\admin\Addon\Tools{
 		if( isset($this->ini_contents['Addon_Name']) ){
 			$this->new_layout['name'] = $this->ini_contents['Addon_Name'];
 		}
-
+		if( isset($this->ini_contents['FrontEndFramework']) && is_array($this->ini_contents['FrontEndFramework']) ){
+			$this->new_layout['framework'] = $this->ini_contents['FrontEndFramework'];
+		}
 
 		$temp					= $this->TempFile();
 		$layout_id				= basename($temp);
@@ -596,7 +596,6 @@ class Installer extends \gp\admin\Addon\Tools{
 		if( $this->default_layout ){
 			$config['gpLayout'] = $layout_id;
 		}
-
 
 		return true;
 	}
@@ -1063,30 +1062,34 @@ class Installer extends \gp\admin\Addon\Tools{
 				continue;
 			}
 
-			if( strpos($hook,'Gadget:') === 0
-				|| strpos($hook,'Admin_Link:') === 0
-				|| strpos($hook,'Special_Link:') === 0
+			if( strpos($hook, 'Gadget:') === 0
+				|| strpos($hook, 'Admin_Link:') === 0
+				|| strpos($hook, 'Special_Link:') === 0
+				|| strpos($hook, 'FrontEndFramework') === 0
 				){
 					continue;
 			}
 
-			if( $this->AddHook($hook,$hook_args) ){
+			if( $this->AddHook($hook, $hook_args) ){
 				$installed[$hook] = $hook;
 			}
 		}
 
-		$this->CleanHooks($this->config_key,$installed);
+		$this->CleanHooks($this->config_key, $installed);
 	}
 
-	public function AddHook($hook,$hook_args){
+
+
+	public function AddHook($hook, $hook_args){
 		global $config;
 
 		$add = array();
-		$this->UpdateLinkInfo($add,$hook_args);
+		$this->UpdateLinkInfo($add, $hook_args);
 		$config['hooks'][$hook][$this->config_key] = $add;
 
 		return true;
 	}
+
 
 
 	//extract the configuration type (extractArg) from $Install
@@ -1202,7 +1205,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Purge Links from $purgeFrom that were once defined for $this->config_key
 	 *
 	 */
-	public function PurgeExisting(&$purgeFrom,$NewLinks){
+	public function PurgeExisting(&$purgeFrom,$NewLinks = array()){
 
 		if( $this->config_key === false || !is_array($purgeFrom) ){
 			return;

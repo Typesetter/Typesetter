@@ -1,0 +1,21 @@
+﻿CKEDITOR.plugins.setLang( 'syntaxhighlight', 'ja', {
+	title:'コードスニペットの追加または更新',
+	contextTitle:'ソースコードの編集',
+	sourceTab:'ソースコード',
+	langLbl:'ソースコードの言語',
+	sourceTextareaEmptyError:'空のソースコードは登録できません。',
+	advancedTab:'詳細',
+	hideGutter:'行番号',
+	hideGutterLbl:'行番号を非表示にする',
+	hideControls:'codeタグ',
+	hideControlsLbl:'コードブロックの先頭に置かれたcodeタグを非表示にする',
+	collapse:'折りたたみ',
+	collapseLbl:'デフォルトでコードブロックを折りたたむ（コントロールをONにする必要があります）',
+	showColumns:'列',
+	showColumnsLbl:'最初の行に行カラムを表示する',
+	lineWrap:'改行',
+	lineWrapLbl:'行が長くても改行しない',
+	lineCount:'デフォルトの行数',
+	highlight:'行のハイライト表示',
+	highlightLbl:'ハイライトで表示する行をカンマ区切りで指定します（例: <em style="font-style:italic">3,10,15</em>）'
+});

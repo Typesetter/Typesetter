@@ -479,7 +479,7 @@ class CKEditor extends \gp\special\Base{
 
 
 		//get data from build-config.js to determine which plugins are already included
-		$build_file				= $dataDir.'/include/thirdparty/ckeditor_34/build-config.js';
+		$build_file				= $dataDir.'/include/thirdparty/ckeditor/build-config.js';
 		$build_config			= file_get_contents($build_file);
 		if( !$build_config ){
 			return;

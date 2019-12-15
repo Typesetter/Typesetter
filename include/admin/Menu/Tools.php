@@ -157,8 +157,13 @@ class Tools{
 	public static function ResetHomepage(){
 		global $config, $gp_menu, $gp_titles;
 
-		if( !isset($gp_titles[$config['homepath_key']]) ){
-			$config['homepath_key'] = key($gp_menu);
+		if( !isset($gp_titles[$config['homepath_key']]) || !empty($config['homepath_auto']) ){
+			if( !isset($gp_titles[$config['homepath_key']]) ){ 
+				// former homepage doesn't exist anymore --> enable auto mode
+				$config['homepath_auto'] = true; 
+			}
+			reset($gp_menu); 
+			$config['homepath_key']	= key($gp_menu);
 			$config['homepath']		= \gp\tool::IndexToTitle($config['homepath_key']);
 			return true;
 		}
@@ -270,7 +275,7 @@ class Tools{
 				$content	= self::GetComboContent($combo['types'], $combo['wrapper_data']);
 
 
-				$type = '';
+				$type = array();
 				// borrowed from \gp\Page\Edit::ResetFileTypes()
 				foreach($content as $section){
 					$type[] = $section['type'];

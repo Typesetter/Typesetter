@@ -21,5 +21,4 @@ if( !isset($gpAdmin['granted']) || ($gpAdmin['granted'] !== 'all') ){
 $page = new \gp\admin\Update();
 
 \gp\tool\Output::HeadContent();
-includeFile('install/template.php');
-
+includeFile('install/update_template.php');

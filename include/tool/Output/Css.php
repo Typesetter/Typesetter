@@ -12,80 +12,112 @@ class Css{
 	 * @param string $type
 	 * @return bool
 	 */
-	public static function Cache( $file_array, $type = 'scss' ){
+	public static function Cache($file_array, $type='scss'){
 		global $dataDir;
 
-
 		//generage the name of the css file from the modified times and content length of each imported file
-		$file_array		= (array)$file_array; 
+		$file_array		= (array)$file_array;
 		$type			= strtolower($type);
 		$files_hash		= \gp\tool::ArrayHash($file_array);
-		$list_file		= $dataDir.'/data/_cache/'.$type.'_'.$files_hash.'.list';
-
+		$list_file		= $dataDir . '/data/_cache/' . $type . '_' . $files_hash . '.list';
 
 		if( file_exists($list_file) ){
 
-			$list = explode("\n",file_get_contents($list_file));
+			$list = explode("\n", file_get_contents($list_file));
 
 			//pop the etag
 			$etag = array_pop($list);
 
 			// generate an etag if needed or if logged in
 			if( \gp\tool::LoggedIn() ){
-				$etag = \gp\tool::FilesEtag( $list );
+				$etag = \gp\tool::FilesEtag($list);
 			}
 
-			$compiled_name = $type.'_'.$files_hash.'_'.$etag.'.css';
-			$compiled_file = '/data/_cache/'.$compiled_name;
+			$compiled_name = $type . '_' . $files_hash . '_' . $etag . '.css';
+			$compiled_file = '/data/_cache/' . $compiled_name;
 
-			if( file_exists($dataDir.$compiled_file) ){
+			if( file_exists($dataDir . $compiled_file) ){
 				return $compiled_file;
 			}
 
 		}
 
-
 		if( $type == 'less' ){
-			$compiled = self::ParseLess( $file_array );
+			$parsed_data			= self::ParseLess($file_array);
+			$compiled				= $parsed_data[0];
+			$temp_sourcemap_name	= $parsed_data[1];
 		}else{
-			$compiled = self::ParseScss( $file_array );
+			$parsed_data			= self::ParseScss($file_array);
+			$compiled				= $parsed_data[0];
+			$temp_sourcemap_name	= $parsed_data[1];
 		}
 
 		if( !$compiled ){
 			return false;
 		}
 
-
 		// generate the file name
-		$etag			= \gp\tool::FilesEtag( $file_array );
-		$compiled_name	= $type.'_'.$files_hash.'_'.$etag.'.css';
-		$compiled_file	= '/data/_cache/'.$compiled_name;
-
+		$etag			= \gp\tool::FilesEtag($file_array);
+		$compiled_name	= $type . '_' . $files_hash . '_' . $etag . '.css';
+		$compiled_file	= '/data/_cache/' . $compiled_name;
+		$sourcemap_name	= $type . '_' . $files_hash . '_' . $etag . '.map';
 
 		// save the cache
 		// use the last line for the etag
 		$list			= $file_array;
 		$list[]			= $etag;
-		$cache			= implode("\n",$list);
-		if( !\gp\tool\Files::Save( $list_file, $cache ) ){
+		$cache			= implode("\n", $list);
+		if( !\gp\tool\Files::Save($list_file, $cache) ){
 			return false;
 		}
 
+		//rename the temp source map, append the comment/URL to the compiled css file
+		if( self::RenameSourceMap($temp_sourcemap_name, $sourcemap_name) ){
+			$compiled = $compiled . "\n" . '/*# sourceMappingURL=' . $sourcemap_name . ' */' . "\n";
+		};
 
 		//save the css
-		if( \gp\tool\Files::Save( $dataDir.$compiled_file, $compiled ) ){
+		if( \gp\tool\Files::Save($dataDir . $compiled_file, $compiled) ){
 			return $compiled_file;
 		}
 
 		return false;
 	}
 
+
+
+	/**
+	 * Rename source map file and set permissions
+	 * 
+	 * @param string temporary sourcemap filename, created by parser
+	 * @param string target sourcemap filename to match compiled css
+	 * 
+	 */
+	private static function RenameSourceMap($temp_sourcemap_name, $sourcemap_name){
+		global $dataDir;
+		
+		// for debugging only! \gp\tool\Files::SaveData($dataDir . '/data/_cache/debug.php', 'debug', array($temp_sourcemap_name, $sourcemap_name));
+		if( $temp_sourcemap_name == false ){
+			return false;
+		}
+
+		if( file_exists($dataDir . '/data/_cache/' . $temp_sourcemap_name) ){
+			if( !rename( $dataDir . '/data/_cache/' . $temp_sourcemap_name,	$dataDir . '/data/_cache/' . $sourcemap_name) ){
+				return false;
+			}
+			@chmod($dataDir . '/data/_cache/' . $sourcemap_name, gp_chmod_file);
+		}
+		return true;
+	}
+
+
+
 	/**
 	 * Create a css file from one or more scss files
 	 *
 	 */
 	public static function ParseScss( &$scss_files ){
-		global $dataDir;
+		global $dataDir, $dirPrefix;
 
 		$first_file 		= current($scss_files);
 		$relative			= self::GetRelPath($first_file);
@@ -99,7 +131,6 @@ class Css{
 
 		//add variables for url paths
 		$combined[] = '$icon-font-path: "../../include/thirdparty/Bootstrap3/fonts/";';
-
 
  		try{
 			foreach($scss_files as $file){
@@ -120,20 +151,54 @@ class Css{
 			}
 
 			$compiler->addImportPath($dataDir);
+			// set 'compressed' format for compiled css
+			$compiler->setFormatter('ScssPhp\ScssPhp\Formatter\Compressed');
 
-			$compiled = $compiler->compile(implode("\n",$combined));
+
+			$temp_sourcemap_name = false;
+			// create sourcemaps, see gpconfig.php to enable it
+			if( defined('create_css_sourcemaps') && create_css_sourcemaps ){
+
+				\gp\tool\Files::CheckDir($dataDir . '/data/_cache');
+
+				$temp_sourcemap_name = 'tmp_' . \gp\tool::RandomString(12) . ".map";  // will be renamed later
+
+				// see https://github.com/leafo/scssphp/wiki/Source-Maps
+				$compiler->setSourceMap(Scss::SOURCE_MAP_FILE);
+	
+				$compiler->setSourceMapOptions(array(
+					// absolute path to write .map file
+					'sourceMapWriteTo'		=> $dataDir . '/data/_cache/' . $temp_sourcemap_name,
+
+					// relative or full url to the above .map file
+					'sourceMapURL'			=> $dirPrefix . '/data/_cache/' . $temp_sourcemap_name,
+
+					// (optional) relative or full url to the .css file
+					// 'sourceMapFilename' 	=> $css_fname,  // url location of .css file
+
+					// partial path (server root) removed (normalized) to create a relative url
+					// difference between file & url locations, removed from ALL source files in .map
+					'sourceMapBasepath'		=> strlen($dirPrefix) != 0 ? substr($dataDir, 0, strlen($dirPrefix) * -1) : $dataDir,  
+
+					// (optional) prepended to 'source' field entries for relocating source files
+					'sourceRoot'			=> '/',
+				));
+	
+			}
+
+			$compiled	= $compiler->compile(implode("\n", $combined));
 
 		}catch( \Exception $e){
 			if( \gp\tool::LoggedIn() ){
-				msg('SCSS Compile Failed: '.$e->getMessage());
+				msg('SCSS Compile Failed: ' . $e->getMessage());
 			}
 			return false;
 		}
 
-		$scss_files = $compiler->allParsedFiles();
+		$scss_files = $compiler->getParsedFiles();
 		$scss_files = array_keys($scss_files);
 
-		return $compiled;
+		return array($compiled, $temp_sourcemap_name);
 	}
 
 
@@ -145,7 +210,7 @@ class Css{
 	 *
 	 */
 	static function ParseLess( &$less_files ){
-		global $dataDir;
+		global $dataDir, $dirPrefix;
 
 		$compiled = false;
 
@@ -171,8 +236,22 @@ class Css{
 		//compiler options
 		$options = array();
 
+		$temp_sourcemap_name = false;
+		// create sourcemaps, see gpconfig.php to enable it
+		if( defined('create_css_sourcemaps') && create_css_sourcemaps ){
+			\gp\tool\Files::CheckDir($dataDir . '/data/_cache');
+			$temp_sourcemap_name 			= 'tmp_' . \gp\tool::RandomString(12) . ".map";  // will be renamed later
+			$options['sourceMap'] 			= true;
+			$options['sourceMapWriteTo']	= $dataDir . '/data/_cache/' . $temp_sourcemap_name;
+			$options['sourceMapURL']		= $dirPrefix . '/data/_cache/' . $temp_sourcemap_name;
+		}
+
+		// set 'compressed' format for compiled css
+		$options['compress'] = 'true';
+
 		//prepare the compiler
-		includeFile('thirdparty/less.php/Less.php');
+		includeFile('thirdparty/less.php/Autoloader.php');
+		\Less_Autoloader::register();
 		$parser = new \Less_Parser($options);
 		$import_dirs[$dataDir] = \gp\tool::GetDir('/');
 		$parser->SetImportDirs($import_dirs);
@@ -180,7 +259,6 @@ class Css{
 
 		$parser->cache_method = 'php';
 		$parser->SetCacheDir( $dataDir.'/data/_cache' );
-
 
 		// combine files
  		try{
@@ -208,16 +286,16 @@ class Css{
 			return false;
 		}
 
-
 		// significant difference in used memory 15,000,000 -> 6,000,000. Max still @ 15,000,000
 		if( function_exists('gc_collect_cycles') ){
 			gc_collect_cycles();
 		}
 
-
 		$less_files = $parser->allParsedFiles();
-		return $compiled;
+		return array($compiled, $temp_sourcemap_name);
 	}
+
+
 
 	/**
 	 * Return the relative path of a file
@@ -235,4 +313,3 @@ class Css{
 	}
 
 }
-

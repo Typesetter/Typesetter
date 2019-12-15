@@ -125,10 +125,10 @@ namespace gp\tool{
 		 * Create a resized image of the file at $src_relative
 		 *
 		 */
-		public static function CreateImage($src_relative,$width,$height){
+		public static function CreateImage($src_relative, $width, $height){
 			global $dataDir;
 
-			$src_path = $dataDir.'/data/_uploaded'.$src_relative;
+			$src_path = $dataDir . '/data/_uploaded' . $src_relative;
 			if( !file_exists($src_path) ){
 				return false;
 			}
@@ -156,7 +156,7 @@ namespace gp\tool{
 			if( !$dest_index ){
 				$dest_index = \gp_resized::NewIndex();
 			}
-			$dest_path = $dataDir.'/data/_resized/'.$dest_index.'/'.$info['name'];
+			$dest_path = $dataDir . '/data/_resized/' . $dest_index . '/' . $info['name'];
 			$exists_before = file_exists($dest_path);
 
 			//make sure the folder exists
@@ -165,7 +165,7 @@ namespace gp\tool{
 			}
 
 			//create new resized image
-			if( !\gp\tool\Image::createImg($src_img, $dest_path, 0, 0, 0, 0, $width, $height, $actual_w, $actual_h) ){
+			if( !\gp\tool\Image::createImg($src_img, $dest_path, 0, 0, 0, 0, $width, $height, $actual_w, $actual_h, false, false, $src_path) ){
 				return false;
 			}
 
@@ -563,7 +563,7 @@ namespace gp\tool{
 			echo '</textarea><br/>';
 
 
-			$page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/ckeditor_34/ckeditor.js').'?'.rawurlencode(gpversion).'"></script>';
+			$page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/ckeditor/ckeditor.js').'?'.rawurlencode(gpversion).'"></script>';
 			$page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/js/ckeditor_config.js').'?'.rawurlencode(gpversion).'"></script>';
 
 			\gp\tool::LoadComponents('autocomplete');
@@ -622,7 +622,7 @@ namespace gp\tool{
 							//'customConfig'				=> \gp\tool::GetDir('/include/js/ckeditor_config.js'),
 							'skin'						=> 'kama',
 							'browser'					=> true, //not actually a ckeditor configuration value, but we're keeping it now for reverse compat
-							'smiley_path'				=> \gp\tool::GetDir('/include/thirdparty/ckeditor_34/plugins/smiley/images/'),
+							'smiley_path'				=> \gp\tool::GetDir('/include/thirdparty/ckeditor/plugins/smiley/images/'),
 							'height'					=> 300,
 							'contentsCss'				=> \gp\tool::GetDir('/include/css/ckeditor_contents.css'),
 							'fontSize_sizes'			=> 'Smaller/smaller;Normal/;Larger/larger;8/8px;9/9px;10/10px;11/11px;12/12px;14/14px;16/16px;18/18px;20/20px;22/22px;24/24px;26/26px;28/28px;36/36px;48/48px;72/72px',
@@ -713,9 +713,11 @@ namespace gp\tool{
 
 			switch($type){
 				case 'include':
+					$section['gp_label']					= $langmessage['File Include'];
 				break;
 
 				case 'gallery':
+					$section['gp_label']				= $langmessage['Image Gallery'];
 					$section['content']		= '<ul class="gp_gallery"><li class="gp_to_remove">'
 											.'<a class="gallery_gallery" data-cmd="gallery" href="'.\gp\tool::GetDir('/include/imgs/default_image.jpg').'" data-arg="gallery_gallery">'
 											.'<img alt="default image" src="'.\gp\tool::GetDir('/include/imgs/default_thumb.jpg').'" />'
@@ -725,20 +727,26 @@ namespace gp\tool{
 				break;
 
 				case 'wrapper_section':
+					$section['gp_label']				= $langmessage['Section Wrapper'];
 					$section['content']					= '';
-					$section['gp_label']				= 'Section Wrapper';
 					$section['gp_color']				= '#555';
 					$section['contains_sections']		= 0;
 				break;
 
 				case 'image':
+					$section['gp_label']				= $langmessage['Image'];
 					$section['nodeName']				= 'img';
 					$section['attributes']['src']		= '/include/imgs/default_image.jpg';
+					$section['attributes']['alt']		= pathinfo( $section['attributes']['src'] , PATHINFO_FILENAME );
 					$section['attributes']['width']		= '400px';
 					$section['attributes']['height']	= '300px';
 				break;
 
 				case 'text':
+					$section['gp_label']				= $langmessage['editable_text'];
+					$section['content']					= '<div><h2>'.strip_tags($heading).'</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div>';
+				break;
+
 				default:
 					$section['content']					= '<div><h2>'.strip_tags($heading).'</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div>';
 				break;
@@ -981,6 +989,7 @@ namespace gp\tool{
 			//check to see if the image needs to be resized
 			if( $posx == 0 && $posy == 0 && $width == $orig_w && $height == $orig_h ){
 				$section['attributes']['src']		= $source_file_rel;
+				$section['attributes']['alt']		= $_REQUEST['alt'];
 				$section['attributes']['height']	= $height;
 				$section['attributes']['width']		= $width;
 				$section['orig_src']				= $_REQUEST['src'];
@@ -1017,12 +1026,13 @@ namespace gp\tool{
 				return false;
 			}
 
-			if( !\gp\tool\Image::createImg($src_img, $dest_img_full, $posx, $posy, 0, 0, $orig_w, $orig_h, $orig_w, $orig_h, $width, $height) ){
+			if( !\gp\tool\Image::createImg($src_img, $dest_img_full, $posx, $posy, 0, 0, $orig_w, $orig_h, $orig_w, $orig_h, $width, $height, $source_file_full) ){
 				msg($langmessage['OOPS'].' (Couldn\'t create image [2])');
 				return false;
 			}
 
 			$section['attributes']['src']			= $dest_img_rel;
+			$section['attributes']['alt']			= $_REQUEST['alt'];
 			$section['attributes']['height']		= $height;
 			$section['attributes']['width']			= $width;
 			$section['orig_src']					= $_REQUEST['src'];
@@ -1248,16 +1258,17 @@ namespace gp\tool{
 			ob_start();
 
 			//edit current image
-			echo '<div id="gp_current_image" class="inline_edit_area" title="'.$langmessage['edit'].'">';
+			echo '<div id="gp_current_image" class="inline_edit_area" title="'.$langmessage['edit'].'" style="position:relative;">';
 			echo '<span id="gp_image_wrap"><img/></span>';
-			echo '<table>';
+			echo '<table style="table-layout:fixed; width:100%;">';
 			echo '<tr><td>'.$langmessage['Width'].'</td><td><input type="text" name="width" class="ck_input"/></td>';
 			echo '<td>'.$langmessage['Height'].'</td><td><input type="text" name="height" class="ck_input"/></td>';
 			echo '</tr>';
 			echo '<tr><td>'.$langmessage['Left'].'</td><td><input type="text" name="left" class="ck_input" value="0"/></td>';
 			echo '<td>'.$langmessage['Top'].'</td><td><input type="text" name="top" class="ck_input" value="0"/></td>';
 			echo '</tr>';
-			echo '<tr><td colspan="2">Alternative Text</td><td colspan="2"><input type="text" name="alt_text" style="width:70px; text-align:left;" class="ck_input" value=""/></td></tr>';
+			echo '<tr><td colspan="2" title="'.$langmessage['Alternative Text'].'" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">'.$langmessage['Alternative Text'].'</td>';
+			echo '<td colspan="2"><input type="text" name="alt" style="width:calc(100% - 6px); display:block; text-align:left;" class="ck_input" value="' . $langmessage['Image'] . '"/></td></tr>';
 			echo '<tr><td><a data-cmd="deafult_sizes" class="ckeditor_control ck_reset_size" title="'.$langmessage['Theme_default_sizes'].'">&#10226;</a></td></tr>';
 			echo '</table>';
 			echo '</div>';

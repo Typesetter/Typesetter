@@ -44,7 +44,7 @@ body .messages li{
 	padding:0;
 	margin:0;
 	font-size:14px;
-	font-family: "Segoe UI", "San Francisco", "Helvetica Neue", "DejaVu Sans", "Arial", sans-serif;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	line-height:normal;
 	line-height: 24px;
 	text-decoration:none;
@@ -157,14 +157,13 @@ body .msg_buttons a{
 .nodisplay{display:none;}
 
 
-/* CSS2... doesn't work for IE7 */
 div.GPAREA:after{
-	content: ".";
+	content: "";
 	display: block;
 	height: 0 !important;
 	clear: both;
 	visibility: hidden;
-	overflow:hidden;
+	overflow: hidden;
 }
 
 /* for IE7... does not validate */
@@ -178,14 +177,14 @@ div.GPAREA{
 
 
 /**
- *	gpEasy-SimpleGrid
- *	12-columns, percent based widths, px-based paddings
+ *	Typesetter Grid
+ *	12-columns, percent based widths, 15px side padding
  *
  *	CLASSES:
  *	gpRow -> for wrappers
  *	gpCol-1 - gpCol-12 -> for grid sections
  *
- *	all columns render full width below 768px screen width
+ *	all columns render full width below 768px viewport width
  */
 
 .gpRow img { max-width:100%; height:auto!important; }
@@ -258,6 +257,24 @@ div.GPAREA{
  * Search results
  *
  */
-ul.search_nav_bottom { list-style:none; }
-ul.search_nav_bottom li { display:inline; margin-right:0.5em; }
-
+ul.search_nav_bottom { 
+	list-style:none; 
+}
+ul.search_nav_bottom li { 
+	display:inline; 
+}
+ul.search_nav_bottom li > * { 
+	display:inline-block; 
+	padding-left:0.5em;
+	padding-right:0.5em;
+}
+.search-matches-count {
+	font-size:82.5%;
+	font-weight:normal;
+}
+.search-matches-count:before {
+	content:"(";
+}
+.search-matches-count:after {
+	content:")";
+}

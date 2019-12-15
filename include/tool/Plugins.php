@@ -17,6 +17,8 @@ namespace gp\tool{
 
 		private static $stack = array();
 
+		public static $curr_page_calls = array();
+
 
 		/**
 		 * Aliases of gpPlugin_incl()
@@ -54,6 +56,7 @@ namespace gp\tool{
 				$full_path			= self::$current['code_folder_full'].'/'.ltrim($file,'/');
 				$path				= \gp\tool\Output\Css::Cache($full_path,$ext);
 			}else{
+				$file				= self::AddCacheBuster($file);
 				$path				= self::$current['code_folder_part'].'/'.ltrim($file,'/');
 			}
 
@@ -71,7 +74,7 @@ namespace gp\tool{
 		 * @param string $file The path of the js file relative to the addon folder
 		 * @param bool $combine Set to false to keep the file from being combined with other js files
 		 */
-		public static function js($file, $combine = true ){
+		public static function js($file, $combine=true){
 			global $page;
 
 			$file = \gp\tool::WinPath( $file );
@@ -79,10 +82,29 @@ namespace gp\tool{
 			if( $combine ){
 				$page->head_js[] = self::$current['code_folder_part'].'/'.ltrim($file,'/');
 			}else{
-				$url = self::$current['code_folder_rel'].'/'.ltrim($file,'/');
-				$page->head .= "\n".'<script type="text/javascript" src="'.$url.'"></script>';
+				$file			= self::AddCacheBuster($file);
+				$url			= self::$current['code_folder_rel'].'/'.ltrim($file,'/');
+				$page->head		.= "\n".'<script type="text/javascript" src="'.$url.'"></script>';
 			}
 		}
+
+
+
+		/**
+		 * Add a cache-busting query string to the end of the file if it doesn't already have a query string
+		 *
+		 */
+		public static function AddCacheBuster($file){
+			if( strpos('?',$file) == false ){
+				$full = self::$current['code_folder_full'].'/'.ltrim($file,'/');
+				if( file_exists($full) ){
+					$file .= '?'.filemtime($full);
+				}
+			}
+			return $file;
+		}
+
+
 
 		public static function GetDir($path='',$ampersands = false){
 			$path = self::$current['code_folder_part'].'/'.ltrim($path,'/');
@@ -135,6 +157,8 @@ namespace gp\tool{
 		public static function Filter($hook, $args = array() ){
 			global $gp_hooks;
 
+			self::$curr_page_calls[] = 'Filter:'.$hook;
+
 			if( !self::HasHook($hook) ){
 				if( isset($args[0]) ){
 					return $args[0];
@@ -156,6 +180,8 @@ namespace gp\tool{
 		public static function OneFilter( $hook, $args=array(), $addon = false ){
 			global $gp_hooks;
 
+			self::$curr_page_calls[] = 'OneFilter:'.$hook;
+
 			if( !self::HasHook($hook) ){
 				return false;
 			}
@@ -176,6 +202,8 @@ namespace gp\tool{
 
 		public static function Action($hook, $args = array() ){
 			global $gp_hooks;
+
+			self::$curr_page_calls[] = 'Action:'.$hook;
 
 			if( !self::HasHook($hook) ){
 				return;
@@ -380,7 +408,7 @@ namespace gp\tool{
 		 * @since 3.6
 		 *
 		 */
-		function SaveConfig($config){
+		public static function SaveConfig($config){
 
 			$file = self::$current['data_folder_full'].'/_config.php';
 

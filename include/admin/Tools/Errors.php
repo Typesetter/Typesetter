@@ -6,8 +6,6 @@ defined('is_running') or die('Not an entry point...');
 
 class Errors extends \gp\special\Base{
 
-	private $readable_log = false;
-
 	private static $types = array (
 				E_ERROR				=> 'Fatal Error',
 				E_WARNING			=> 'Warning',
@@ -26,7 +24,7 @@ class Errors extends \gp\special\Base{
 				E_USER_DEPRECATED	=> 'User Deprecated',
 			 );
 
-	function __construct($args){
+	public function __construct($args){
 
 		parent::__construct($args);
 
@@ -50,7 +48,7 @@ class Errors extends \gp\special\Base{
 	 * Display a list of fatal errors
 	 *
 	 */
-	function FatalErrors(){
+	public function FatalErrors(){
 		global $dataDir;
 
 		echo '<h2 class="hmargin">';
@@ -73,32 +71,30 @@ class Errors extends \gp\special\Base{
 
 
 		//get unique errors
-		$dir = $dataDir.'/data/_site';
-		$files = scandir($dir);
-		$errors = array();
+		$dir		= $dataDir.'/data/_site';
+		$files		= scandir($dir);
+		$errors		= [];
 		foreach($files as $file){
 			if( strpos($file,'fatal_') === false ){
 				continue;
 			}
-			$full_path = $dir.'/'.$file;
-
-			$md5 = md5_file($full_path);
-			$errors[$md5] = $full_path;
+			$full_path	= $dir.'/'.$file;
+			$errors[]	= $full_path;
 		}
 
 		echo '<p>';
-		if( count($errors) ){
-			echo 'Found '.count($errors).' Unique Error(s) - ';
-			echo \gp\tool::Link('Admin/Errors','Clear All Errors','cmd=ClearAll','data-cmd="cnreq"','ClearErrors');
+		if( empty($errors) ){
+			echo 'Hooray! No fatal errors found';
 
 		}else{
-			echo 'Hooray! No fatal errors found';
+			echo 'Found '.count($errors).' Unique Error(s) - ';
+			echo \gp\tool::Link('Admin/Errors','Clear All Errors','cmd=ClearAll','data-cmd="cnreq"','ClearErrors');
 		}
 		echo '</p>';
 		echo '<hr/>';
 
 		//display errors
-		foreach($errors as $md5 => $error_file){
+		foreach($errors as $error_file){
 			self::DisplayFatalError($error_file);
 		}
 	}
@@ -111,6 +107,7 @@ class Errors extends \gp\special\Base{
 	public static function DisplayFatalError($error_file){
 		global $langmessage;
 
+
 		$hash = substr(basename($error_file),6);
 
 		//modified time
@@ -119,11 +116,29 @@ class Errors extends \gp\special\Base{
 		$elapsed	= \gp\admin\Tools::Elapsed( time() - $filemtime );
 		echo sprintf($langmessage['_ago'],$elapsed);
 		echo ' - ';
-		echo \gp\tool::Link('Admin/Errors','Clear Error','cmd=ClearError&hash='.$hash,array('data-cmd'=>'postlink'));
+		echo \gp\tool::Link('Admin/Errors','Clear Error','cmd=ClearError&hash='.$hash,array('data-cmd'=>'cnreq'));
 		echo '</p>';
 
 
 		//get info
+		if( is_dir($error_file) ){
+			$files = scandir($error_file);
+			foreach($files as $file){
+				if( $file == '.' || $file == '..' || $file == 'index.html' ){
+					continue;
+				}
+				$file = $error_file.'/'.$file;
+				self::_DisplayFatalError($file);
+			}
+		}else{
+			self::_DisplayFatalError($error_file);
+		}
+
+	}
+
+	public static function _DisplayFatalError($error_file){
+		global $langmessage;
+
 		$contents = file_get_contents($error_file);
 		if( $contents[0] == '{' && $error_info = json_decode($contents,true) ){
 			//continue below
@@ -137,6 +152,11 @@ class Errors extends \gp\special\Base{
 
 		//display details
 		$error_info = array_diff_key($error_info,array('file_modified'=>'','file_size'=>''));
+
+		if( isset($error_info['time']) ){
+			$error_info['elapsed'] = \gp\admin\Tools::Elapsed( time() - $error_info['time'] );
+			$error_info['elapsed'] = sprintf($langmessage['_ago'],$error_info['elapsed']);
+		}
 
 		echo '<pre style="font-family:monospace">';
 		foreach($error_info as $key => $value){
@@ -166,7 +186,7 @@ class Errors extends \gp\special\Base{
 	 * Display the error log
 	 *
 	 */
-	function ErrorLog(){
+	public function ErrorLog(){
 		global $langmessage;
 
 		$error_log = ini_get('error_log');
@@ -183,14 +203,20 @@ class Errors extends \gp\special\Base{
 			return;
 		}
 
-		echo '<p><b>Please Note:</b> The following errors are not limited to your installation of '.CMS_NAME.'.';
+		echo '<p><b>Please Note:</b> The following errors are not limited to your installation of '.\CMS_NAME.'.';
 		echo '</p>';
 
-		$lines = file($error_log);
-		$lines = array_reverse($lines);
+		$lines			= file($error_log);
 
-		$time = null;
-		$displayed = array();
+		if( $lines === false ){
+			return;
+		}
+
+
+		$lines			= array_reverse($lines);
+		$time			= null;
+		$displayed		= [];
+
 		foreach($lines as $line){
 			$line = trim($line);
 			if( empty($line) ){
@@ -240,34 +266,25 @@ class Errors extends \gp\special\Base{
 		global $dataDir;
 
 		if( !preg_match('#^[a-zA-Z0-9_]+$#',$hash) ){
-			message('Invalid Request');
+			msg('Invalid Request');
 			return;
 		}
 
-		$dir = $dataDir.'/data/_site';
-		$file = $dir.'/fatal_'.$hash;
-		if( !file_exists($file) ){
+		$error_file = $dataDir.'/data/_site/fatal_'.$hash;
+		if( !file_exists($error_file) ){
 			return;
 		}
 
-		$hash = md5_file($file);
-		unlink($file);
 
-
-		//remove matching errors
-		$files = scandir($dir);
-		foreach($files as $file){
-			if( strpos($file,'fatal_') !== 0 ){
-				continue;
-			}
-
-			$full_path = $dir.'/'.$file;
-			if( $hash == md5_file($full_path) ){
-				unlink($full_path);
-			}
+		if( is_dir($error_file) ){
+			\gp\tool\Files::RmAll($error_file);
+		}else{
+			$hashes[] = md5_file($error_file);
+			unlink($error_file);
 		}
 
 	}
+
 
 	/**
 	 * Clear all fatal errors
@@ -293,7 +310,7 @@ class Errors extends \gp\special\Base{
 			}
 
 			$full_path = $dir.'/'.$file;
-			unlink($full_path);
+			\gp\tool\Files::RmAll($full_path);
 		}
 	}
 
@@ -313,4 +330,3 @@ class Errors extends \gp\special\Base{
 
 
 }
-

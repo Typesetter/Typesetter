@@ -37,7 +37,13 @@ class Configuration extends \gp\special\Base{
 						'desc'						=> 'textarea',
 
 						'Interface'					=> false,
-						'colorbox_style'			=> array('example1'=>'Example 1', 'example2'=>'Example 2', 'example3'=>'Example 3', 'example4'=>'Example 4', 'example5'=>'Example 5' ),
+						'colorbox_style'			=> array(
+															'example1' => 'Example 1',
+															'example2' => 'Example 2',
+															'example3' => 'Example 3',
+															'example4' => 'Example 4',
+															'example5' => 'Example 5',
+														),
 						'gallery_legacy_style'		=> 'boolean',
 						'language'					=> '',
 						'langeditor'				=> '',
@@ -46,6 +52,7 @@ class Configuration extends \gp\special\Base{
 						'showgplink'				=> 'boolean',
 
 						'Images'					=> false,
+						'allow_svg_upload'			=> 'boolean',
 						'maximgarea'				=> 'integer',
 						'resize_images'				=> 'boolean',
 						'preserve_icc_profiles' 	=> 'boolean',
@@ -60,6 +67,7 @@ class Configuration extends \gp\special\Base{
 						'HTML_Tidy'					=> '',
 						'Report_Errors'				=> 'boolean',
 						'combinejs'					=> 'boolean',
+						'minifyjs'					=> 'boolean',
 						'combinecss'				=> 'boolean',
 						'etag_headers'				=> 'boolean',
 						'space_char'				=> array('_'=>'Undersorce "_"','-'=>'Dash "-"'),
@@ -150,13 +158,21 @@ class Configuration extends \gp\special\Base{
 
 		//resize thumbnails
 		if( 
-			$config_before['preserve_icc_profiles'] !== $config['preserve_icc_profiles'] 
-			|| $config_before['preserve_image_metadata'] !== $config['preserve_image_metadata'] 
-			|| $config_before['maxthumbsize'] !== $config['maxthumbsize'] 
-			|| $config_before['maxthumbheight'] !== $config['maxthumbheight'] 
-			|| $config_before['thumbskeepaspect'] !== $config['thumbskeepaspect'] 
+			$config_before['preserve_icc_profiles'] !== $config['preserve_icc_profiles']
+			|| $config_before['preserve_image_metadata'] !== $config['preserve_image_metadata']
+			|| $config_before['maxthumbsize'] !== $config['maxthumbsize']
+			|| $config_before['maxthumbheight'] !== $config['maxthumbheight']
+			|| $config_before['thumbskeepaspect'] !== $config['thumbskeepaspect']
 		){
-			msg(\gp\tool::Link('Admin/Configuration',$langmessage['recreate_all_thumbnails'],'cmd=recreate_thumbs','class="" data-cmd="creq"'));
+			msg(\gp\tool::Link(
+				'Admin/Configuration',
+				$langmessage['recreate_all_thumbnails'],
+				'cmd=recreate_thumbs',
+				array(
+					'class'		=> '',
+					'data-cmd'	=>'creq',
+				)
+			));
 		}
 
 
@@ -205,7 +221,7 @@ class Configuration extends \gp\special\Base{
 
 		$possible = $this->variables;
 
-		$langDir = $dataDir.'/include/thirdparty/ckeditor_34/lang'; //ckeditor
+		$langDir = $dataDir.'/include/thirdparty/ckeditor/lang'; //ckeditor
 
 		$possible['langeditor'] = \gp\tool\Files::readDir($langDir,'js');
 		unset($possible['langeditor']['_languages']);
@@ -427,9 +443,9 @@ class Configuration extends \gp\special\Base{
 		}
 
 		if( isset($_GET['gpreq']) && $_GET['gpreq'] == 'json' ){
-			echo '<input value="' . $langmessage['save'] . ' (' . $langmessage['All'] . ')" type="submit" name="aaa" accesskey="s" class="gppost gpsubmit" />';
+			echo '<input value="' . $langmessage['Save All'] . '" type="submit" name="aaa" accesskey="s" class="gppost gpsubmit" />';
 		}else{
-			echo '<input value="' . $langmessage['save'] . ' (' . $langmessage['All'] . ')" type="submit" name="aaa" accesskey="s" class="gpsubmit"/>';
+			echo '<input value="' . $langmessage['Save All'] . '" type="submit" name="aaa" accesskey="s" class="gpsubmit"/>';
 		}
 
  		echo '</div>';
@@ -517,7 +533,8 @@ class Configuration extends \gp\special\Base{
 
 	/**
 	 * Recreate all of the thumbnails according to the size in the configuration
-	 *
+	 * TODO: With lots of images, this may easily exceed PHP script runtime or available memory
+	 * and should be broken up into consecutive AJAX calls
 	 */
 	function RecreateThumbs($dir_rel = ''){
 		global $dataDir;

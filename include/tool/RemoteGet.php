@@ -530,7 +530,33 @@ namespace gp\tool{
 				return $this->Redirect($redir_location,$r);
 			}
 
+			if( isset($processedHeaders['headers']['content-encoding']) && $processedHeaders['headers']['content-encoding'] == 'gzip' ){
+				$this->Inflate();
+			}
+
 			return array('headers' => $processedHeaders['headers'], 'body' => $this->body, 'response' => $processedHeaders['response'], 'cookies' => $processedHeaders['cookies']);
+		}
+
+		/**
+		 * Inflate the gzipped content
+		 *
+		 */
+		public function Inflate(){
+
+			$body = @gzdecode($this->body);
+			if( $body ){
+				$this->body = $body;
+				return true;
+			}
+
+			$body = @gzinflate(substr($this->body, 10));
+			if( $body ){
+				$this->body = $body;
+				return true;
+			}
+
+			trigger_error('RemoteGet::Inflate() failed. Content: '.substr($this->body,0,200));
+			return false;
 		}
 
 

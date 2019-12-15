@@ -884,6 +884,8 @@ class Layout extends \gp\admin\Addon\Install{
 
 		echo '</div>'; // /.gpRow
 
+		echo '<div class="gpclear"></div>';
+
 		$this->page->non_admin_content = ob_get_clean();
 
 
@@ -995,6 +997,8 @@ class Layout extends \gp\admin\Addon\Install{
 		echo   '<a href="#" class="btn btn-warning">btn btn-warning</a> &nbsp;&nbsp; ';
 		echo   '<a href="#" class="btn btn-danger">btn btn-danger</a>';
 		echo '</p>';
+
+		echo '<div class="gpclear"></div>';
 
 		$this->page->non_admin_content_bootstrap = ob_get_clean();
 
@@ -1498,8 +1502,8 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 		echo '<input type="hidden" name="menu_css_ordered" value="'.$value.'" />';
 		echo '<label>';
-		echo '<input type="checkbox" name="none" value="" '.$checked.' class="gpajax" />';
-		echo ' Name Based Menu Classes';
+		echo '<input type="checkbox" name="none" value="" '.$checked.' class="gpajax" /> ';
+		echo $langmessage['Name Based Menu Classes'];
 		echo '</label>';
 		echo '</form>';
 		echo '</li>';
@@ -1517,8 +1521,8 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 		echo '<input type="hidden" name="menu_css_indexed" value="'.$value.'" />';
 		echo '<label>';
-		echo '<input type="checkbox" name="none" value="" '.$checked.' class="gpajax" />';
-		echo ' Ordered Menu Classes';
+		echo '<input type="checkbox" name="none" value="" '.$checked.' class="gpajax" /> ';
+		echo $langmessage['Ordered Menu Classes'];
 		echo '</label>';
 		echo '</form>';
 		echo '</li>';

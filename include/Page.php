@@ -20,7 +20,7 @@ namespace gp{
 		public $contentBuffer;
 		public $TitleInfo;
 		public $fileType			= '';
-		public $ajaxReplace			= array('#gpx_content');
+		public $ajaxReplace			= array();
 		public $admin_links			= array();
 		public $visibility			= null;
 		public $file_sections		= array();
@@ -60,8 +60,15 @@ namespace gp{
 
 
 		public function __construct($title, $type){
+			global $config, $languages;
+
 			$this->requested	= $title;
 			$this->title		= $title;
+			$this->lang			= $config['language'];
+
+			if( isset($languages[$this->lang]) ){
+				$this->language		= $languages[$this->lang];
+			}
 
 			$this->head			.= '<link rel="canonical" href="'.\gp\tool::GetUrl($title).'" />'."\n";
 		}
@@ -102,6 +109,8 @@ namespace gp{
 
 			return true;
 		}
+
+
 
 		/**
 		 * Check the page's visibility

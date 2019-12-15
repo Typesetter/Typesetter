@@ -319,5 +319,11 @@ class Archive{
 		}
 	}
 
-
+	/**
+	 * Return the php object
+	 *
+	 */
+	public function GetObject(){
+		return $this->php_object;
+	}
 }

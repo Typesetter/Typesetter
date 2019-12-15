@@ -64,7 +64,7 @@ class phpunit_Archive extends gptest_bootstrap{
 
 
 			$archive = $this->FromFiles($type);
-			$list = $archive->ListFiles();
+			//$list = $archive->ListFiles();
 			self::AssertEquals( count($this->files), $archive->Count() );
 		}
 

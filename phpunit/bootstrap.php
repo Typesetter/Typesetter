@@ -54,24 +54,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		\gp\tool::GetLangFile();
 	}
 
-	public function SessionStart(){
-
-		\gp\tool::GetConfig();
-
-		$users			= gpFiles::Get('_site/users');
-		$userinfo		= $users[static::user_name];
-
-		$session_id		= \gp\tool\Session::create($userinfo, static::user_name, $sessions);
-		$logged_in		= \gp\tool\Session::start($session_id,$sessions);
-
-		$this->AssertTrue($logged_in,'Not Logged In');
-
-	}
-
-	public function SessionEnd(){
-		ob_get_clean();
-	}
-
 	static function log($msg){
 		static $fp;
 

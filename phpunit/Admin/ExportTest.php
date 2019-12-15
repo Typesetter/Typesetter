@@ -8,45 +8,82 @@ class phpunit_Export extends gptest_bootstrap{
 	 *
 	 */
 	function testExport(){
-		global $wbMessageBuffer;
+		global $wbMessageBuffer, $langmessage;
 
-		/*
-		$this->SessionStart();
+		$this->Login();
 
-		$admin_port = new \gp\admin\Tools\Port();
+		// load
+		$this->GetRequest('Admin/Port');
 
 
-		//create an export
-		$_POST = array();
-		foreach($admin_port->export_fields as $key => $info){
-			$_POST[$key] = 'on';
+		// generate an export
+		$params = [
+			'pca'			=> 'on',
+			'media'			=> 'on',
+			'themes'		=> 'on',
+			'trash'			=> 'on',
+			'compression'	=> 'zip',
+			'verified'		=> \gp\tool::new_nonce('post', true),
+			'cmd'			=> 'do_export',
+		];
+
+		$this->PostRequest('Admin/Port',$params);
+
+		$archive_path	= $this->GetNewExport();
+		$archive		= new \gp\tool\Archive($archive_path);
+		$list			= $archive->ListFiles();
+
+
+		$expected_files = [
+			'gpexport/data/_pages',
+			'gpexport/data/_extra',
+			'gpexport/data/_site',
+			'gpexport/data/_uploaded',
+			'gpexport/Export.ini',
+		];
+
+		foreach($expected_files as $expected){
+			foreach($list as $file){
+				if( strpos($file['name'],$expected) === false ){
+					continue;
+				}
+				continue 2;
+			}
+
+			echo 'Expected file not found in export. File = '.$expected;
+			print_r($list);
+			$this->fail('Expected file not found');
 		}
 
-		$_POST['compression'] = 'zip';
-		$exported = $admin_port->DoExport();
-		self::AssertTrue($exported,'Export Failed');
 
+		// revert
+		$params = [
+			'archive'		=> basename($archive_path),
+			'verified'		=> \gp\tool::new_nonce('post', true),
+			'cmd'			=> 'revert_confirmed',
+		];
 
-		//restore the archive
-		$admin_port->SetExported();
+		$response = $this->PostRequest('Admin/Port',$params);
 
-		$archive			= current($admin_port->exported);
-		$_REQUEST			= array('archive'=>$archive);
-		$_POST				= array('cmd'=>'revert_confirmed');
-		$reverted			= $admin_port->Revert('revert_confirmed');
+		$this->assertStringContainsString($langmessage['Revert_Finished'], $response->GetBody()); // "The selected archive has been successfully restored."
 
-		echo implode("\n\n",$wbMessageBuffer);
+	}
 
-		self::AssertTrue($reverted,'Revert Failed');
+	/**
+	 * Get the newest export
+	 *
+	 */
+	public function GetNewExport(){
+		global $dataDir;
 
+		$dir	= $dataDir . '/data/_exports';
+		$files	= scandir($dir, SCANDIR_SORT_DESCENDING);
+		foreach($files as $file){
+			if( $file != 'index.html' ){
+				return $dir.'/'.$file;
+			}
+		}
 
-		//clean up
-		$_POST = array('old_folder' => array_values($admin_port->extra_dirs));
-		$admin_port->RevertClean();
-
-
-		$this->SessionEnd();
-		*/
 	}
 
 }

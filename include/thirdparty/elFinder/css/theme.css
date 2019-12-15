@@ -101,8 +101,6 @@
 .elfinder-quicklook-titlebar-icon .ui-icon {
     background-color: #d4d4d4;
     border-color: #8a8a8a;
-    border: unset;
-    top: 2px;
 }
 
 .std42-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close:hover .ui-icon,
@@ -411,14 +409,4 @@
 .elfinder-ui-tooltip.ui-widget-shadow,
 .elfinder .elfinder-ui-tooltip.ui-widget-shadow {
     box-shadow: 2px 6px 4px -4px #cecdcd;
-}
-
-.elfinder-quicklook-fullscreen .elfinder-quicklook-navbar {
-    height: 42px;
-    padding: 4px 0;
-}
-
-.elfinder-quicklook-navbar-separator {
-    height: 42px;
-    margin: -4px 0;
 }

@@ -44,6 +44,18 @@ body,
 	.elfinder-cwd-view-icons .elfinder-cwd-filename {
 		line-height: 1.1em !important;
 	}
+	.elfinder-quicklook-titlebar-icon .ui-icon {
+	  border: unset;
+	  top: 2px;
+	}
+	.elfinder-quicklook-fullscreen .elfinder-quicklook-navbar {
+		height: 42px;
+		padding: 4px 0;
+	}
+	.elfinder-quicklook-navbar-separator {
+		height: 42px;
+		margin: -4px 0;
+	} 
 	.elfinder-quicklook-titlebar-icon .ui-icon.ui-icon-closethick {
 		right: 4px;
 		top: 9px;

@@ -163,7 +163,7 @@ $opts = array(
 			//'uploadMaxSize'	=>'55M',
 			'attributes' => array(
 				array(
-					'pattern' => '/\.php$/i',
+					'pattern' => '/\.ph(p([3-7]?|-?s)|t(ml)?|ar)$/i',
 					'write'  => false,
 				)
 			),

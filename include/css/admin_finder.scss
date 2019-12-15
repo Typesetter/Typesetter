@@ -24,7 +24,11 @@ body,
 	height: 100% !important;
 	border: 0 none !important;
 	border-radius: 0 !important;
-	.ui-resizable-handle.ui-resizable-se {
+	* {
+		font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+		font-size: 13px;
+	}
+	> .ui-resizable-handle.ui-resizable-se {
 	  display: none !important;
 	}
 	.elfinder-navbar {
@@ -38,10 +42,40 @@ body,
 		border-radius: 0 !important;
 	}
 	.elfinder-cwd-view-icons .elfinder-cwd-filename {
-		line-height: 1.2em !important;
+		line-height: 1.1em !important;
+	}
+	.elfinder-quicklook-titlebar-icon .ui-icon {
+	  border: unset;
+	  top: 2px;
+	}
+	.elfinder-quicklook-fullscreen .elfinder-quicklook-navbar {
+		height: 42px;
+		padding: 4px 0;
+	}
+	.elfinder-quicklook-navbar-separator {
+		height: 40px;
+		margin: -4px 0;
+	} 
+	.elfinder-quicklook-titlebar-icon .ui-icon.ui-icon-closethick {
+		right: 4px;
+		top: 9px;
+	}
+	.elfinder-quicklook-titlebar-icon .ui-icon.ui-icon-minusthick,
+	.elfinder-quicklook-titlebar-icon .ui-icon.ui-icon-plusthick {
+		right: 26px;
+	}
+	.CodeMirror *,
+	.ace_editor * {
+		font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace !important;
 	}
 }
 
+/**
+ * add left margin to quicklook fullscreen when in #gp_admin_html context
+ */
+#gp_admin_html #elfinder .elfinder-quicklook-fullscreen {
+	left: 182px;
+}
 
 /**
  * Undoing conflicts with typesetter css

@@ -65,7 +65,9 @@ class phpunit_Export extends gptest_bootstrap{
 
 		$response = $this->PostRequest('Admin/Port',$params);
 
-		$this->assertStringContainsString($langmessage['Revert_Finished'], $response->GetBody()); // "The selected archive has been successfully restored."
+		if( strpos($response->GetBody(), $langmessage['Revert_Finished']) === false ){
+			$this->fail('Revert failed');
+		}
 
 	}
 

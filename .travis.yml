@@ -12,15 +12,22 @@ jobs:
     - php: 7.2
     - php: 7.3
     - php: 7.4
-
+  allow_failures:
+    - php: 5.4
+    - php: 5.5
+    
 
 # phpunit 8 will result in an error
 # https://www.reddit.com/r/PHPhelp/comments/apipqs/travis_specifying_phpunit_version/
 before_script:
   - composer init -n
   - composer require phpunit/phpunit "<8 >=4"
+  - composer require symfony/process
+  - composer require guzzlehttp/guzzle
+  - composer require phpunit/php-code-coverage "<7" # for phpunit compat
   #- phpenv config-add phpunit/phpconfig.ini
 
-# Submit coverage report to https://codecov.io
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+script:
+  - vendor/bin/phpunit
+  - php phpunit/ServerCombineCoverage.php
+  - bash <(curl -s https://codecov.io/bash) -s ./x_coverage # Submit coverage report to https://codecov.io

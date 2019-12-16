@@ -322,7 +322,7 @@ class FileSystem{
 			if( $file == '.' || $file == '..' ){
 				continue;
 			}
-			if( !$show_hidden && $file{0} == '.' ){
+			if( !$show_hidden && $file[0] == '.' ){
 				continue;
 			}
 			$list[$file] = $file;
@@ -526,5 +526,3 @@ class FileSystem{
 	}
 
 }
-
-

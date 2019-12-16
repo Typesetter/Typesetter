@@ -598,6 +598,11 @@ class Tools{
 			return;
 		}
 
+		// only rewrite rules for IIS and Apache
+		if( !\gp\admin\Settings\Permalinks::IIS() && !\gp\admin\Settings\Permalinks::Apache() ){
+			return;
+		}
+
 		$GLOBALS['config']['homepath'] = false; //to prevent a warning from absoluteUrl()
 		$file = $destination.'/.htaccess';
 

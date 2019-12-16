@@ -158,7 +158,7 @@ class CombineCSS{
 		}
 
 		//relative url
-		if( $url{0} == '/' ){
+		if( $url[0] == '/' ){
 			return;
 		}elseif( strpos($url,'://') > 0 ){
 			return;
@@ -207,4 +207,3 @@ class CombineCSS{
 
 
 }
-

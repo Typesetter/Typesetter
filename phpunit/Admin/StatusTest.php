@@ -5,7 +5,7 @@ class phpunit_StatusTest extends gptest_bootstrap{
 
 	/**
 	 * Test the admin/status health check
-	 * @runInSeparateProcess
+	 * 
 	 */
 	function testStatus(){
 

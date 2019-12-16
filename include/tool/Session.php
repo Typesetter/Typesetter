@@ -9,10 +9,16 @@ namespace gp\tool{
 
 	class Session{
 
+		private static $logged_in = false;
 
 		public static function Init(){
 
 			self::SetConstants();
+
+			if( isset($_COOKIE[gp_session_cookie]) ){
+				self::CheckPosts();
+				self::start($_COOKIE[gp_session_cookie]);
+			}
 
 			$cmd = \gp\tool::GetCommand();
 
@@ -24,11 +30,6 @@ namespace gp\tool{
 				case 'login':
 					self::LogIn();
 					return;
-			}
-
-			if( isset($_COOKIE[gp_session_cookie]) ){
-				self::CheckPosts();
-				self::start($_COOKIE[gp_session_cookie]);
 			}
 
 			if( $cmd === 'ClearErrors' ){
@@ -49,6 +50,11 @@ namespace gp\tool{
 
 		public static function LogIn(){
 			global $langmessage;
+
+
+			if( static::$logged_in ){
+				return;
+			}
 
 			// check nonce
 			// expire the nonce after 10 minutes
@@ -112,9 +118,9 @@ namespace gp\tool{
 				return false;
 			}
 
-			$logged_in = self::start($session_id, $sessions);
+			self::start($session_id, $sessions);
 
-			if( $logged_in === true ){
+			if( static::$logged_in === true ){
 				msg($langmessage['logged_in']);
 			}
 
@@ -125,7 +131,7 @@ namespace gp\tool{
 			self::UpdateAttempts($users, $username, true);
 
 			//redirect to prevent resubmission
-			self::Redirect($logged_in);
+			self::Redirect();
 		}
 
 
@@ -140,8 +146,8 @@ namespace gp\tool{
 
 			self::SetConstants();
 
-			if( array_key_exists(gp_session_cookie, $_COOKIE) || 
-				array_key_exists(gp_installation_cookie, $_COOKIE) 
+			if( array_key_exists(gp_session_cookie, $_COOKIE) ||
+				array_key_exists(gp_installation_cookie, $_COOKIE)
 				){
 				return true;
 			}
@@ -156,10 +162,10 @@ namespace gp\tool{
 		 * Redirect user after login
 		 *
 		 */
-		public static function Redirect($logged_in){
+		public static function Redirect(){
 			global $gp_index;
 
-			if( !$logged_in ){
+			if( !static::$logged_in ){
 				return;
 			}
 
@@ -396,7 +402,7 @@ namespace gp\tool{
 		 *
 		 */
 		public static function Unlock($session_id){
-			\gp\tool\Files::Unlock('admin', sha1(sha1($session_id)));
+			return \gp\tool\Files::Unlock('admin', sha1(sha1($session_id)));
 		}
 
 
@@ -435,12 +441,8 @@ namespace gp\tool{
 			// cookies are set with either www removed from the domain or with an empty string
 			if( empty($value) ){
 				$expires = time()-2592000;
-				if( $domain ){
-					setcookie($name, $value, $expires, $cookiePath, $domain, $secure, true);
-					setcookie($name, $value, $expires, $cookiePath, $domain, false, true);
-				}
-				setcookie($name, $value, $expires, $cookiePath, '', $secure, true);
-				setcookie($name, $value, $expires, $cookiePath, '', false, true);
+				setcookie($name, $value, $expires, $cookiePath, $domain, $secure, true);
+				setcookie($name, $value, $expires, $cookiePath, $domain, false, true);
 				return;
 			}
 
@@ -475,7 +477,7 @@ namespace gp\tool{
 
 		/**
 		 * called when a user logs in
-		 * 
+		 *
 		 */
 		public static function create(&$user_info, $username, &$sessions){
 			global $dataDir, $langmessage;
@@ -492,9 +494,9 @@ namespace gp\tool{
 			$uid				= self::auth_browseruid();
 			$session_id			= false;
 			foreach($sessions as $sess_temp_id => $sess_temp_info){
-				if( isset($sess_temp_info['uid']) && 
-					$sess_temp_info['uid'] == $uid && 
-					$sess_temp_info['file_name'] == $user_file_name 
+				if( isset($sess_temp_info['uid']) &&
+					$sess_temp_info['uid'] == $uid &&
+					$sess_temp_info['file_name'] == $user_file_name
 					){
 					$session_id = $sess_temp_id;
 				}
@@ -628,8 +630,8 @@ namespace gp\tool{
 			$GLOBALS['gpAdmin'] = self::SessionData($session_file,$checksum);
 
 			//lock to prevent conflicting edits
-			if( gp_lock_time > 0 && 
-				( !empty($GLOBALS['gpAdmin']['editing']) || !empty($GLOBALS['gpAdmin']['granted']) ) 
+			if( gp_lock_time > 0 &&
+				( !empty($GLOBALS['gpAdmin']['editing']) || !empty($GLOBALS['gpAdmin']['granted']) )
 				){
 				$expires = gp_lock_time;
 				if( !\gp\tool\Files::Lock('admin', sha1(sha1($session_id)), $expires) ){
@@ -714,6 +716,8 @@ namespace gp\tool{
 				$GLOBALS['gpAdmin']['useralias'] = $GLOBALS['gpAdmin']['username'];
 			}
 
+			static::$logged_in = true;
+
 			return true;
 		}
 
@@ -730,9 +734,9 @@ namespace gp\tool{
 			//add $gp_admin_html to the document
 			if( strpos($buffer, '<!-- get_head_placeholder ' . gp_random . ' -->') !== false ){
 				$buffer = \gp\tool\Output::AddToBody(
-					$buffer, 
-					'<div id="gp_admin_html">' 
-						. $gp_admin_html . \gp\tool\Output::$editlinks 
+					$buffer,
+					'<div id="gp_admin_html">'
+						. $gp_admin_html . \gp\tool\Output::$editlinks
 						. '</div><div id="gp_admin_fixed"></div>'
 				);
 			}
@@ -741,7 +745,7 @@ namespace gp\tool{
 			// Admin nonces are also added with javascript if needed
 			$count = preg_match_all('#<form[^<>]*method=[\'"]post[\'"][^<>]*>#i', $buffer, $matches);
 			if( $count ){
-				$nonce = \gp\tool::new_nonce('post', true);
+				$nonce = \gp\tool\Nonce::Create('post',true);
 				$matches[0] = array_unique($matches[0]);
 				foreach($matches[0] as $match){
 
@@ -803,7 +807,7 @@ namespace gp\tool{
 
 
 		/**
-		 * Prevent XSS attacks for logged in users by 
+		 * Prevent XSS attacks for logged in users by
 		 * making sure the request contains a valid nonce
 		 *
 		 */
@@ -1288,9 +1292,9 @@ namespace gp\tool{
 				return;
 			}
 
-			if( is_object($page) 
-				&& property_exists($page, 'requested') 
-				&& strpos($page->requested, 'Admin/Errors') !== false 
+			if( is_object($page)
+				&& property_exists($page, 'requested')
+				&& strpos($page->requested, 'Admin/Errors') !== false
 				){
 				return;
 			}

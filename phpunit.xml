@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
     processIsolation	= "false"
-    stopOnFailure		= "false"
-    stopOnError			= "false"
-    stopOnIncomplete	= "false"
+    stopOnFailure		= "true"
+    stopOnError			= "true"
+    stopOnIncomplete	= "true"
     stopOnSkipped		= "false"
     bootstrap			= "phpunit/bootstrap.php"
 	verbose				= "true"
@@ -29,7 +29,7 @@
 
 	<logging>
 	    <log type="testdox-text" target="php://stdout"/>
-		<log type="coverage-clover" target="coverage.xml"/>
+		<log type="coverage-clover" target="x_coverage/unit-tests.clover"/>
 	</logging>
 
 

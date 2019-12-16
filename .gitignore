@@ -4,6 +4,5 @@ data/_*
 xx_*
 lock_admin
 vendor
-composer.lock
-composer.json
 coverage.xml
+composer.lock

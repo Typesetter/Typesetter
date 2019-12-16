@@ -649,4 +649,3 @@ function gp_is_writable( $path ){
 	if ( $should_delete_tmp_file ) unlink( $path );
 	return true;
 }
-

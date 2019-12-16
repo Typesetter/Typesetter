@@ -1,0 +1,17 @@
+{
+    "name": "typesetter/typesetter",
+    "type": "project",
+	"description":"Open source CMS written in PHP focused on ease of use with true WYSIWYG editing and flat-file storage.",
+	"hoempage":"http://www.typesettercms.com/",
+    "require": {},
+    "require-dev": {
+        "phpcompatibility/php-compatibility": "^9.3",
+        "symfony/process": "<4",
+        "guzzlehttp/guzzle": "^6.5",
+        "phpunit/php-code-coverage": "<7"
+    },
+	"scripts": {
+	    "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility",
+	    "post-update-cmd" : "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility"
+	}
+}

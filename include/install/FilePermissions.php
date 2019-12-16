@@ -71,15 +71,15 @@ class FilePermissions{
 			return false;
 		}
 
-		if (intval($perm1{0}) > intval($perm2{0})) {
+		if (intval($perm1[0]) > intval($perm2[0])) {
 			return false;
 		}
 
-		if (intval($perm1{1}) > intval($perm2{1})) {
+		if (intval($perm1[1]) > intval($perm2[1])) {
 			return false;
 		}
 
-		if (intval($perm1{2}) > intval($perm2{2})) {
+		if (intval($perm1[2]) > intval($perm2[2])) {
 			return false;
 		}
 
@@ -91,7 +91,7 @@ class FilePermissions{
 			return true;
 		}
 		if( strlen($permission) == 4 ){
-			if( intval($permission{0}) === 0 ){
+			if( intval($permission[0]) === 0 ){
 				$permission = substr($permission,1);
 				return true;
 			}

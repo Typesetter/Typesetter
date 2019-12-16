@@ -213,6 +213,7 @@ namespace gp\admin{
 																);
 
 			$scripts['Admin/Users']						= array(	'class'		=> '\\gp\\admin\\Settings\\Users',
+																	'method'	=> 'RunScript',
 																	'label'		=> $langmessage['user_permissions'],
 																	'group'		=> 'settings',
 																);

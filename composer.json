@@ -1,5 +1,5 @@
 {
-    "name": "Typesetter/Typesetter",
+    "name": "typesetter/typesetter",
     "type": "project",
 	"description":"Open source CMS written in PHP focused on ease of use with true WYSIWYG editing and flat-file storage.",
 	"hoempage":"http://www.typesettercms.com/",

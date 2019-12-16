@@ -13,7 +13,7 @@ class Permissions extends Users{
 
 		parent::__construct($args);
 
-+		$cmd = \gp\tool::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 
 		switch($cmd){
 

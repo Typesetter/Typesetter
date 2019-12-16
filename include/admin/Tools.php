@@ -217,6 +217,10 @@ namespace gp\admin{
 																	'group'		=> 'settings',
 																);
 
+			$scripts['Admin/Permissions']				= array(	'class'		=> '\\gp\\admin\\Settings\\Permissions',
+																	'method'	=> 'RunCommands',
+																);
+
 			$scripts['Admin/CKEditor']					= array(	'class'		=> '\\gp\\admin\\Settings\\CKEditor',
 																	'label'		=> 'CKEditor',
 																	'group'		=> 'settings',
@@ -499,7 +503,7 @@ namespace gp\admin{
 			echo '<a class="toggle_panel" data-cmd="toggle_panel"></a>';
 
 			echo \gp\tool::Link(
-					'', 
+					'',
 					'<i class="fa fa-home"></i>'
 				);
 
@@ -610,7 +614,7 @@ namespace gp\admin{
 			echo '</li>';
 
 			//layout edit
-			$current_layout = isset($gp_titles[$page->gp_index]['gpLayout']) ? 
+			$current_layout = isset($gp_titles[$page->gp_index]['gpLayout']) ?
 				$gp_titles[$page->gp_index]['gpLayout'] :
 				'default'; // $page->gpLAyout is not yet set
 			echo '<li>';
@@ -1052,7 +1056,7 @@ namespace gp\admin{
 						);
 				}else{
 					echo \gp\tool::Link(
-							$script, 
+							$script,
 							$info['label']
 						);
 				}
@@ -1510,7 +1514,7 @@ namespace gp\admin{
 
 
 		/**
-		 * Returns an array 
+		 * Returns an array
 		 * 	0 => html of the addon section of the admin panel
 		 * 	1 => boolean indicating if the current user has any addon admin permissions or there are special links
 		 * @return array
@@ -1625,7 +1629,7 @@ namespace gp\admin{
 
 
 		/**
-		 * Returns an array 
+		 * Returns an array
 		 * 	0 => formatted list of links associated with $addon
 		 * 	1 => boolean indicating if the current user has addon admin permissions or if special pages exist
 		 * @return array

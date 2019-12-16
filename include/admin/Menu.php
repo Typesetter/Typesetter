@@ -31,7 +31,7 @@ class Menu extends \gp\special\Base{
 		'search'	=> true,
 		'all'		=> true,
 		'hidden'	=> true,
-		'nomenus'	=> true 
+		'nomenus'	=> true
 	);
 
 	public $section_types;
@@ -87,7 +87,7 @@ class Menu extends \gp\special\Base{
 
 
 
-	public function RunScript(){ 
+	public function RunScript(){
 
 		if( $this->cmd === 'return' ){
 			return;
@@ -433,9 +433,9 @@ class Menu extends \gp\special\Base{
 			}else{
 				echo '<span>';
 				echo  \gp\tool::Link(
-					'Admin/Menu', 
-					$menu_label, 
-					'menu=' . $menu_id, 
+					'Admin/Menu',
+					$menu_label,
+					'menu=' . $menu_id,
 					array('data-cmd' => 'cnreq')
 				);
 				echo '</span>';
@@ -767,7 +767,7 @@ class Menu extends \gp\special\Base{
 		$img	= '<i class="menu_icon fa fa-css3"></i>';
 		$label	= $langmessage['Menu Output'] . ' - ' . $langmessage['Classes'];
 		$attrs	= array(
-			'title'		=> $label, 
+			'title'		=> $label,
 			'data-cmd'	=>'gpabox'
 		);
 		echo $this->Link(
@@ -882,8 +882,8 @@ class Menu extends \gp\special\Base{
 
 		$img	= '<i class="menu_icon fa fa-gears"></i>';
 		$attrs	= array(
-			'title' => $langmessage['rename/details'], 
-			'data-cmd' => 'gpajax', 
+			'title' => $langmessage['rename/details'],
+			'data-cmd' => 'gpajax',
 			'class' => 'not_multiple'
 		);
 		echo $this->Link(
@@ -898,7 +898,7 @@ class Menu extends \gp\special\Base{
 		$q		= 'cmd=ToggleVisibility&index=[key]';
 		$label	= $langmessage['Visibility'] . ': ' . $langmessage['Private'];
 		$attrs	= array(
-			'title'		=> $label, 
+			'title'		=> $label,
 			'data-cmd'	=> 'postlink',  // ####################### <<<<----- WORKS ###############################
 			'class'		=> 'vis_private'
 		);
@@ -934,8 +934,8 @@ class Menu extends \gp\special\Base{
 
 		$img	= '<i class="menu_icon fa fa-files-o"></i>';
 		$attrs	= array(
-			'title'		=> $langmessage['Copy'], 
-			'data-cmd'	=> 'gpabox', 
+			'title'		=> $langmessage['Copy'],
+			'data-cmd'	=> 'gpabox',
 			'class'		=> 'not_multiple not_special'
 		);
 		echo $this->Link(
@@ -953,9 +953,9 @@ class Menu extends \gp\special\Base{
 				'data-cmd'	=> 'gpabox'
 			);
 			echo $this->Link(
-				'Admin/Users',
+				'Admin/Permissions',
 				$img . $langmessage['permissions'],
-				'cmd=file_permissions&index=[key]',
+				'index=[key]',
 				$attrs
 			);
 		}
@@ -964,7 +964,7 @@ class Menu extends \gp\special\Base{
 		$img	= '<i class="menu_icon fa fa-css3"></i>';
 		$label	= $langmessage['Menu Output'] . ' - ' . $langmessage['Classes'];
 		$attrs	= array(
-			'title'		=> $label, 
+			'title'		=> $label,
 			'data-cmd'	=> 'gpabox'
 		);
 		echo $this->Link(
@@ -991,8 +991,8 @@ class Menu extends \gp\special\Base{
 
 		$img	= '<i class="menu_icon fa fa-trash"></i>';
 		$attrs	= array(
-			'title'		=> $langmessage['delete_page'], 
-			'data-cmd'	=> 'postlink', 
+			'title'		=> $langmessage['delete_page'],
+			'data-cmd'	=> 'postlink',
 			'class'		=> 'gpconfirm not_special'
 		);
 		echo $this->Link(
@@ -1003,9 +1003,9 @@ class Menu extends \gp\special\Base{
 		);
 
 
-		echo '[opts]';	// replaced with the contents of 
+		echo '[opts]';	// replaced with the contents of
 						// \gp\tool\Plugins::Action(
-						//		'MenuPageOptions', 
+						//		'MenuPageOptions',
 						//		array($title, $menu_key, $menu_value, $layout_info)
 						// );
 
@@ -1024,8 +1024,8 @@ class Menu extends \gp\special\Base{
 				$img . '[layout_label]',
 				'cmd=layout&index=[key]',
 				array(
-					'data-cmd'	=> 'gpabox', 
-					'title'		=> $langmessage['layout'], 
+					'data-cmd'	=> 'gpabox',
+					'title'		=> $langmessage['layout'],
 					'class'		=> 'has_layout'
 				)
 			);
@@ -1036,8 +1036,8 @@ class Menu extends \gp\special\Base{
 				$img . $langmessage['restore'],
 				'cmd=restorelayout&index=[key]',
 				array(
-					'data-cmd'	=> 'postlink', 
-					'title'		=> $langmessage['restore'], 
+					'data-cmd'	=> 'postlink',
+					'title'		=> $langmessage['restore'],
 					'class'		=> 'has_layout'
 				),
 				'restore'
@@ -1050,8 +1050,8 @@ class Menu extends \gp\special\Base{
 				$img . '[layout_label]',
 				'cmd=layout&index=[key]',
 				array(
-					'data-cmd'	=> 'gpabox', 
-					'title'		=> $langmessage['layout'], 
+					'data-cmd'	=> 'gpabox',
+					'title'		=> $langmessage['layout'],
 					'class'		=> 'no_layout'
 				)
 			);
@@ -1118,7 +1118,7 @@ class Menu extends \gp\special\Base{
 		$img	= '<span class="menu_icon insert_after_icon"></span>';
 		$query	= 'cmd=insert_child&insert_where=[key]';
 		echo $this->Link(
-			'Admin/Menu/Ajax', 
+			'Admin/Menu/Ajax',
 			$img . $langmessage['insert_child'],
 			$query,
 			array(
@@ -1342,13 +1342,13 @@ class Menu extends \gp\special\Base{
 			$q		.= '&visibility=private';
 		}
 		$attrs = array(
-			'title'		=> $label, 
+			'title'		=> $label,
 			'data-cmd'	=> 'postlink',   // ######################## <<<<---- ########################
 			// 'class'		=> 'vis_private'
 		);
 		echo $this->Link(
-			'Admin/Menu/Ajax', 
-			$label, 
+			'Admin/Menu/Ajax',
+			$label,
 			$q,
 			$attrs
 		);
@@ -1376,7 +1376,7 @@ class Menu extends \gp\special\Base{
 		echo '<span>';
 		echo $langmessage['layout'].': ';
 		echo $this->Link(
-			'Admin/Menu', 
+			'Admin/Menu',
 			$layout_info['label'],
 			'cmd=layout&index=' . urlencode($menu_key),
 			array(
@@ -1392,8 +1392,8 @@ class Menu extends \gp\special\Base{
 				$langmessage['delete'],
 				'cmd=MoveToTrash&index=' . urlencode($menu_key),
 				array(
-					'title' => $langmessage['delete_page'], 
-					'data-cmd' => 'postlink', 
+					'title' => $langmessage['delete_page'],
+					'data-cmd' => 'postlink',
 					'class' => 'gpconfirm'
 				)
 			  );
@@ -1728,7 +1728,7 @@ class Menu extends \gp\special\Base{
 				$new_menu[$titles_key] = $titles_info;
 			}
 		}
-		$this->curr_menu_array = $new_menu; 
+		$this->curr_menu_array = $new_menu;
 
 		return true;
 	}
@@ -1801,17 +1801,17 @@ class Menu extends \gp\special\Base{
 		echo '<span class="fa fa-home"></span> ';
 		echo $langmessage['Homepage'] . ': ';
 		echo \gp\tool::Link(
-				'Admin/Menu/Ajax', 
-				$label, 
-				'cmd=HomepageSelect', 
+				'Admin/Menu/Ajax',
+				$label,
+				'cmd=HomepageSelect',
 				'data-cmd="gpabox"'
 			);
 		if( empty($config['homepath_auto']) ){
 			echo '&nbsp;&nbsp;';
 			echo \gp\tool::Link(
-				'Admin/Menu/Ajax', 
-				'<i class="fa fa-unlock"></i>', 
-				'cmd=HomepageAuto', 
+				'Admin/Menu/Ajax',
+				'<i class="fa fa-unlock"></i>',
+				'cmd=HomepageAuto',
 				array(
 					'class'		=> 'gpbutton',
 					'title'		=> $langmessage['disable'],

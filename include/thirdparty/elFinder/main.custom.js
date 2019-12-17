@@ -5,15 +5,17 @@
  * e.g. `<script data-main="./main.js" src="./require.js"></script>`
  **/
 
-//console.log('finder_opts',finder_opts);
+// console.log('finder_opts',finder_opts);
 
 (function(){
 	"use strict";
 	var // jQuery and jQueryUI version
-		jqver = '3.3.1',
-		uiver = '1.12.1',
+		// jqver = '3.3.1',
+		jqver = '1.12.4', // current Typesetter version
+		uiver = '1.12.1', // current Typesetter version
 
 		// Detect language (optional)
+		// TODO: rather use CMS UI language?
 		lang = (function() {
 			var locq = window.location.search,
 				fullLang, locm, lang;
@@ -92,7 +94,8 @@
 			require(
 				[
 					'elfinder'
-					, 'js/extras/editors.default.min'               // load text, image editors
+					// , 'js/extras/editors.default.min'             // load text, image editors
+					, 'js/extras/editors.custom'             // load text, image editors TODO: use editors.custom.min for production
 					, 'elFinderConfig'
 				//	, 'extras/quicklook.googledocs.min'          // optional preview for GoogleApps contents on the GoogleDrive volume
 				],
@@ -112,10 +115,25 @@
 	require.config({
 		//baseUrl : 'js',
 		paths : {
-			'jquery'   : '//cdnjs.cloudflare.com/ajax/libs/jquery/'+(old? '1.12.4' : jqver)+'/jquery.min',
+
+			// 'jquery'   : '//cdnjs.cloudflare.com/ajax/libs/jquery/'+(old? '1.12.4' : jqver)+'/jquery.min',
+			'jquery'   : '../js/jquery', // loads our jQuery once again. 
+			// actually, all required jQuery and jQuery.ui components are already loaded by Typesetter 
+			// we have to tell require.js to look better after them (elfinder.full.js line 10-24?)
+
 			'jquery-ui': '//cdnjs.cloudflare.com/ajax/libs/jqueryui/'+uiver+'/jquery-ui.min',
-			'elfinder' : 'js/elfinder.min',
-			'encoding-japanese': '//cdn.rawgit.com/polygonplanet/encoding.js/1.0.26/encoding.min'
+			/*
+			// the followiong doesn't work, seems as elFinder wants all in a single file/package
+			'jquery-ui'				: '../jquery_ui/core',
+			'jquery-ui-selectable'	: '../jquery_ui/selectable',
+			'jquery-ui-draggable'	: '../jquery_ui/draggable',
+			'jquery-ui-droppable'	: '../jquery_ui/droppable',
+			*/
+
+			'elfinder' : 'js/elfinder.full', // TODO: for production use 'js/elfinder.full.min',
+
+			// 'encoding-japanese'		: '//cdn.rawgit.com/polygonplanet/encoding.js/1.0.26/encoding.min'
+			'encoding-japanese'		: '../encoding.js/encoding.min'
 		},
 		waitSeconds : 10 // optional
 	});

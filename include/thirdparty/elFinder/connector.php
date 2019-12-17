@@ -147,8 +147,8 @@ function rename_check($cmd, $args){
 // https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
 $opts = array(
 	// 'debug' => true,
-	'gpBase' => rtrim(\gp\tool::GetDir(''), '/'),
-	'roots' => array(
+
+	'roots'			=> array(
 		// Items volume
 		array(
 			'debug'				=> true,
@@ -186,32 +186,7 @@ $opts = array(
 		'duplicate upload rename rm paste resize' => array('\gp\admin\Content\Uploaded', 'FinderChange'), //drag+drop = cut+paste
 		'upload.pre'		=> array('upload_check'),
 		'rename.pre'		=> array('rename_check'),
-	),
-	'cdns' => array(
-		// for editor etc.
-		'ace'			=> null,	// or your location
-		'codemirror'	=> $dataDir . '/include/thirdparty/codemirror',
-		'ckeditor'		=> $dataDir . '/include/thirdparty/ckeditor/ckeditor.js',
-		'ckeditor5'		=> null,	// or your location
-		'tinymce'		=> null,	// or your location
-		'simplemde'		=> null,	// or your location
-		'fabric16'		=> null,	// or your location
-		'tui'			=> null,	// or your location
-		// for quicklook etc.
-		'hls'			=> null,	// or your location
-		'dash'			=> null,	// or your location
-		'flv'			=> null,	// or your location
-		'prettify'		=> null,	// or your location
-		'psd'			=> null,	// or your location
-		'rar'			=> null,	// or your location
-		'zlibUnzip'		=> null,	// or your location
-		'zlibGunzip'	=> null,	// or your location
-		'marked'		=> null,	// or your location
-		'sparkmd5'		=> null,	// or your location
-		'jssha'			=> null,	// or your location
-		'amr'			=> null,	// or your location
-	),
-
+	)
 );
 
 // run elFinder

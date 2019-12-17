@@ -24,6 +24,20 @@ body,
 	height: 100% !important;
 	border: 0 none !important;
 	border-radius: 0 !important;
+	.elfinder-button,
+	.elfinder-cwd,
+	.elfinder-cwd * {
+		-webkit-box-sizing: content-box;
+		-moz-box-sizing: content-box;
+		box-sizing: content-box;
+	}
+	.elfinder-button-search input[type="text"] {
+		width: 100%;
+	}
+	.elfinder-button-search.ui-state-active {
+		z-index: 10;
+		margin-left: -150px;
+	}
 	* {
 		font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
 		font-size: 13px;
@@ -40,13 +54,13 @@ body,
 	  display: none !important;
 	}
 	.elfinder-navbar {
-		background: #f3f3f3;
+		background: #dadada;
 	}
 	.elfinder-toolbar {
 		background: #ededed;
 	}
 	.elfinder-statusbar {
-		background: #f3f3f3;
+		background: #333;
 		border-radius: 0 !important;
 	}
 	.elfinder-cwd-view-icons .elfinder-cwd-filename {
@@ -86,25 +100,5 @@ body,
  */
 #gp_admin_html #elfinder .elfinder-quicklook-fullscreen {
 	left: 182px;
-}
-
-/**
- * Undoing conflicts with typesetter css
- * 
- */
-#admincontent_inner .elfinder-button{
-	box-sizing: content-box;
-}
-
-#admincontent_inner .elfinder-button-search input[type="text"]{
-	width: 100%;
-}
-
-/**
- * Make search input float over menu bar on expand
- * 
- */
-#gp_admin_html #elfinder .elfinder-button-search.ui-state-active{
-    z-index: 10;
-    margin-left: -150px;	
+	width: auto;
 }

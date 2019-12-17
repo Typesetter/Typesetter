@@ -99,3 +99,12 @@ body,
 #admincontent_inner .elfinder-button-search input[type="text"]{
 	width: 100%;
 }
+
+/**
+ * Make search input float over menu bar on expand
+ * 
+ */
+#gp_admin_html #elfinder .elfinder-button-search.ui-state-active{
+    z-index: 10;
+    margin-left: -150px;	
+}

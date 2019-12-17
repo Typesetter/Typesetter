@@ -178,41 +178,31 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	public static function GuzzleRequest($type,$url,$expected_resonse = 200, $options = []){
 		global $dataDir;
 
-
-		static::$proc_output	= [];
-		$attempts				= 0;
-		do{
-
+		try{
+			static::$proc_output	= [];
 			$options['headers']		= ['X-REQ-ID' => static::$requests];
 			$response				= static::$client->request($type, $url, $options);
 			$debug_file				= $dataDir . '/data/response-' . static::$requests . '-' . $type . '-' . str_replace('/','_',$url);
+			$body					= $response->getBody();
 
-			// only attempt again if we get a 503 response
-			if( $response->getStatusCode() !== 503 ){
-				break;
+			file_put_contents($debug_file, $body);
+			static::$requests++;
+
+			static::$process->getOutput(); # makes symfony/process populate our static::$proc_output
+
+
+			if( $expected_resonse !== $response->getStatusCode() ){
+				static::ProcessOutput($type,$url);
+				static::Console('PHPINFO()');
+				echo (string)static::$phpinfo;
 			}
+			static::assertEquals($expected_resonse, $response->getStatusCode());
 
-			$attempts++;
-			usleep(100000);
-
-		}while( $attempts < 10 );
-
-		$body					= $response->getBody();
-
-		file_put_contents($debug_file, $body);
-		static::$requests++;
-
-		static::$process->getOutput(); # makes symfony/process populate our static::$proc_output
-
-
-		if( $expected_resonse !== $response->getStatusCode() ){
-			static::ProcessOutput($type,$url);
-			static::Console('PHPINFO()');
-			echo (string)static::$phpinfo;
+		}catch( \Exception $e ){
+			static::ServerErrors($type,$url);
+			static::assertTrue(False,'Exception fetching url '.$url.$e->getMessage());
 		}
-		static::assertEquals($expected_resonse, $response->getStatusCode());
 
-		static::ServerErrors($type,$url);
 
 
 		return $response;

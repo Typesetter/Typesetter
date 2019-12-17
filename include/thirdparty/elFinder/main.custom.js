@@ -140,8 +140,33 @@ define('jquery-ui', [], function() {});
 			// Documentation for client options:
 			// https://github.com/Studio-42/elFinder/wiki/Client-configuration-options
 			defaultOpts : {
-				url: finder_opts.url
-				,height:'100%'
+				url: finder_opts.url,
+				cdns : {
+					// for editor etc.
+					ace        : null,
+					codemirror : null,
+					ckeditor   : gpBase + '/include/thirdparty/ckeditor',
+					ckeditor5  : null,
+					tinymce    : null,
+					simplemde  : null,
+					fabric16   : null,
+					tui        : null,
+					// for quicklook etc.
+					hls        : null,
+					dash       : null,
+					flv        : null,
+					prettify   : null,
+					psd        : null,
+					rar        : null,
+					zlibUnzip  : gpBase + '/include/thirdparty/zlib.js/gunzip.min.js',
+					zlibGunzip : gpBase + '/include/thirdparty/zlib.js/unzip.min.js',
+					marked     : null,
+					sparkmd5   : null,
+					jssha      : null,
+					amr        : null,
+
+				},
+				height:'100%'
 				,cssAutoLoad : [ '/themes/material/css/theme-custom.css' ]
 				,getFileCallback:function(file, finder){
 

@@ -7,11 +7,15 @@
 
 //console.log('finder_opts',finder_opts);
 
+define('jquery', [], function() {
+    return jQuery;
+});
+
+define('jquery-ui', [], function() {});
+
 (function(){
 	"use strict";
-	var // jQuery and jQueryUI version
-		jqver = '3.3.1',
-		uiver = '1.12.1',
+	var // jQuery and jQueryUI version		
 
 		// Detect language (optional)
 		lang = (function() {
@@ -33,8 +37,6 @@
 
 		// Start elFinder (REQUIRED)
 		start = function(elFinder, editors, config) {
-			// load jQueryUI CSS
-			//elFinder.prototype.loadCss('//cdnjs.cloudflare.com/ajax/libs/jqueryui/'+uiver+'/themes/smoothness/jquery-ui.css');
 
 			$(function() {
 				var optEditors = {
@@ -112,8 +114,6 @@
 	require.config({
 		//baseUrl : 'js',
 		paths : {
-			'jquery'   : '//cdnjs.cloudflare.com/ajax/libs/jquery/'+(old? '1.12.4' : jqver)+'/jquery.min',
-			'jquery-ui': '//cdnjs.cloudflare.com/ajax/libs/jqueryui/'+uiver+'/jquery-ui.min',
 			'elfinder' : 'js/elfinder.min',
 			'encoding-japanese': '//cdn.rawgit.com/polygonplanet/encoding.js/1.0.26/encoding.min'
 		},
@@ -122,9 +122,7 @@
 
 	// check elFinderConfig and fallback
 	// This part don't used if you are using elfinder.html, see elfinder.html
-	console.log('here');
 	if (! require.defined('elFinderConfig')) {
-		console.log('here');
 		define('elFinderConfig', {
 			// elFinder options (REQUIRED)
 			// Documentation for client options:

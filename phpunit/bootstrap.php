@@ -200,9 +200,8 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		}catch( \Exception $e ){
 			static::ServerErrors($type,$url);
-			static::assertTrue(False,'Exception fetching url '.$url.$e->getMessage());
+			static::Fail('Exception fetching url '.$url.$e->getMessage());
 		}
-
 
 
 		return $response;

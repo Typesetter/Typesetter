@@ -114,8 +114,3 @@ CKEDITOR.on( 'dialogDefinition', function( ev ){
 		});
 	}
 });
-
-
-
-
-

@@ -18,18 +18,8 @@ define('jquery-ui', [], function() {});
 	var // jQuery and jQueryUI version
 
 		// Detect language (optional)
-		// TODO: rather use CMS UI language?
 		lang = (function() {
-			var locq = window.location.search,
-				fullLang, locm, lang;
-			if (locq && (locm = locq.match(/lang=([a-zA-Z_-]+)/))) {
-				// detection by url query (?lang=xx)
-				fullLang = locm[1];
-			} else {
-				// detection by browser language
-				fullLang = (navigator.browserLanguage || navigator.language || navigator.userLanguage);
-			}
-			lang = fullLang.substr(0,2);
+			var lang = document.documentElement.lang.substr(0,2);
 			if (lang === 'pt') lang = 'pt_BR';
 			else if (lang === 'ug') lang = 'ug_CN';
 			else if (lang === 'zh') lang = (fullLang.substr(0,5).toLowerCase() === 'zh-tw')? 'zh_TW' : 'zh_CN';

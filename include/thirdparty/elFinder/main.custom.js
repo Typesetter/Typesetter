@@ -5,7 +5,7 @@
  * e.g. `<script data-main="./main.js" src="./require.js"></script>`
  **/
 
-//console.log('finder_opts',finder_opts);
+// console.log('finder_opts',finder_opts);
 
 define('jquery', [], function() {
     return jQuery;
@@ -15,9 +15,10 @@ define('jquery-ui', [], function() {});
 
 (function(){
 	"use strict";
-	var // jQuery and jQueryUI version		
+	var // jQuery and jQueryUI version
 
 		// Detect language (optional)
+		// TODO: rather use CMS UI language?
 		lang = (function() {
 			var locq = window.location.search,
 				fullLang, locm, lang;
@@ -94,7 +95,8 @@ define('jquery-ui', [], function() {});
 			require(
 				[
 					'elfinder'
-					, 'js/extras/editors.default.min'               // load text, image editors
+					// , 'js/extras/editors.default.min'             // load text, image editors
+					, 'js/extras/editors.custom'             // load text, image editors TODO: use editors.custom.min for production
 					, 'elFinderConfig'
 				//	, 'extras/quicklook.googledocs.min'          // optional preview for GoogleApps contents on the GoogleDrive volume
 				],
@@ -114,8 +116,11 @@ define('jquery-ui', [], function() {});
 	require.config({
 		//baseUrl : 'js',
 		paths : {
-			'elfinder' : 'js/elfinder.min',
-			'encoding-japanese': '//cdn.rawgit.com/polygonplanet/encoding.js/1.0.26/encoding.min'
+
+			'elfinder' : 'js/elfinder.full', // TODO: for production use 'js/elfinder.full.min',
+
+			// 'encoding-japanese'		: '//cdn.rawgit.com/polygonplanet/encoding.js/1.0.26/encoding.min'
+			'encoding-japanese'		: '../encoding.js/encoding.min'
 		},
 		waitSeconds : 10 // optional
 	});

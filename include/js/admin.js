@@ -447,13 +447,13 @@ $gp.SaveGPUI = function(){
 	if( !isadmin ){
 		return;
 	}
-	var data = 'do=savegpui';
+	var data = 'cmd=SaveGPUI';
 	$.each(gpui,function(i,value){
 		data += '&gpui_'+i+'='+value;
 	});
 
-	$gp.postC( window.location.href, data);
-	//for debugging, see \gp\tool\Session::SaveGPUI()
+	var url = gpBLink+'/Admin/Preferences';
+	$gp.postC( url, data);
 };
 
 

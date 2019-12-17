@@ -343,3 +343,16 @@ html{
 #ckeditor_wrap select.SelectGalleryStyle::-ms-expand { 
 	display:none; 
 	}
+
+
+/**
+ * Codemirror for ckEditor plugin style
+ */
+.searchCodeButton span, 
+.autoFormat span, 
+.CommentSelectedRange span, 
+.UncommentSelectedRange span {
+	margin: 3px!important;
+	min-width: unset!important;
+	background-position: center!important;	
+}

@@ -145,7 +145,7 @@ define('jquery-ui', [], function() {});
 					// for editor etc.
 					ace        : null,
 					codemirror : null,
-					ckeditor   : gpBase + '/include/thirdparty/ckeditor',
+					ckeditor   : null, // gpBase + '/include/thirdparty/ckeditor',
 					ckeditor5  : null,
 					tinymce    : null,
 					simplemde  : null,

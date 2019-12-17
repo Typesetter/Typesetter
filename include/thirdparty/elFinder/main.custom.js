@@ -18,12 +18,29 @@ define('jquery-ui', [], function() {});
 	var // jQuery and jQueryUI version
 
 		// Detect language (optional)
+		// TODO: rather use CMS UI language?
 		lang = (function() {
 			var lang = document.documentElement.lang.substr(0,2);
-			if (lang === 'pt') lang = 'pt_BR';
-			else if (lang === 'ug') lang = 'ug_CN';
-			else if (lang === 'zh') lang = (fullLang.substr(0,5).toLowerCase() === 'zh-tw')? 'zh_TW' : 'zh_CN';
-			return lang;
+
+			// (1) https://github.com/Typesetter/Typesetter/blob/master/include/common.php#L89
+			// (2) https://github.com/Typesetter/Multi-Language/blob/master/Languages.php
+
+			switch( lang ){
+				case 'pt-br':
+					lang = 'pt_BR'; // (1)
+					break;
+				case 'ug':
+					lang = 'ug_CN'; // (2)
+					break;
+				case 'zh-tw':
+					lang = 'zh_TW'; // (2)
+					break;
+				case 'zh-cn':
+					lang = 'zh_CN'; // (2)
+					break;
+				}
+
+				return lang;
 		})(),
 
 		// Start elFinder (REQUIRED)
@@ -125,6 +142,7 @@ define('jquery-ui', [], function() {});
 			defaultOpts : {
 				url: finder_opts.url
 				,height:'100%'
+				,cssAutoLoad : [ '/themes/material/css/theme-custom.css' ]
 				,getFileCallback:function(file, finder){
 
 					if (!window.top.opener){

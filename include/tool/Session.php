@@ -7,11 +7,13 @@ defined('is_running') or die('Not an entry point...');
 
 gp_defined('gp_lock_time',900); // = 15 minutes
 
+
 class Session{
 
 	private $logged_in			= false;
 	private $session_id;
 	private $session_file;
+	private $placeholder; // php7.0 exiting with segmentation fault when there were exactly 3 object variables
 
 	public static function Init(){
 		return new self();
@@ -203,7 +205,7 @@ class Session{
 		$_POST += array(
 			'user_sha'		=> '',
 			'username'		=> '',
-			'login_nonce'	=>'',
+			'login_nonce'	=> '',
 		);
 
 		if( gp_require_encrypt && empty($_POST['user_sha']) ){
@@ -719,8 +721,6 @@ class Session{
 			$GLOBALS['gpAdmin']['useralias'] = $GLOBALS['gpAdmin']['username'];
 		}
 
-
-		return true;
 	}
 
 

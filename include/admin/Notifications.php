@@ -575,7 +575,7 @@ namespace gp\admin{
 				$debug_note[] = array(
 					'type'		=> 'superuser',
 					'label'		=> $label,
-					'id'		=> hash('crc32b', $label, $label . \gp\tool::ServerName()),
+					'id'		=> hash('crc32b', $label . \gp\tool::ServerName()),
 					'priority'	=> 75,
 					'action'	=> 'edit gpconfig.php',
 				);
@@ -586,7 +586,7 @@ namespace gp\admin{
 				$debug_note[] = array(
 					'type'		=> 'superuser',
 					'label'		=> $label,
-					'id'		=> hash('crc32b', $label, $label . \gp\tool::ServerName()),
+					'id'		=> hash('crc32b', $label . \gp\tool::ServerName()),
 					'priority'	=> 75,
 					'action'	=> 'edit gpconfig.php',
 				);

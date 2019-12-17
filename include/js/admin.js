@@ -453,7 +453,7 @@ $gp.SaveGPUI = function(){
 	});
 
 	$gp.postC( window.location.href, data);
-	//for debugging, see gpsession::SaveGPUI()
+	//for debugging, see \gp\tool\Session::SaveGPUI()
 };
 
 
@@ -1533,6 +1533,3 @@ $gp.response.renameprep = function(){
 	}
 
 };
-
-
-

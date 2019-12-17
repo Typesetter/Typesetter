@@ -1232,11 +1232,10 @@ div.elfinder-cwd-wrapper-list .ui-icon-grip-dotted-vertical {
 .elfinder-cwd .elfinder-symlink {
   color: #4d4d4d;
 }
-.elfinder-cwd-view-icons {
-  padding: 4px;
-}
-.elfinder-cwd-view-icons .elfinder-cwd-file {
+
+.elfinder .elfinder-cwd-view-icons .elfinder-cwd-file {
   padding-top: 12px;
+  margin: 3px 0 0 3px;
 }
 .elfinder-cwd-view-icons .elfinder-lock {
   top: 0;

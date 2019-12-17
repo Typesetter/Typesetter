@@ -743,7 +743,7 @@ namespace gp\admin{
 					$page->title,
 					$langmessage['logout'],
 					'cmd=logout',
-					array('data-cmd' => 'postlink')
+					array('data-cmd' => 'cnreq')
 				);
 			echo '</li>';
 

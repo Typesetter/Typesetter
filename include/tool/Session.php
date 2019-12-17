@@ -9,27 +9,37 @@ namespace gp\tool{
 
 	class Session{
 
-		private static $logged_in = false;
+		private $logged_in			= false;
+		private $session_id;
+		private $session_file;
 
 		public static function Init(){
+			return new self();
+		}
+
+		public function __construct(){
 
 			self::SetConstants();
 
 			if( isset($_COOKIE[gp_session_cookie]) ){
 				self::CheckPosts();
-				self::start($_COOKIE[gp_session_cookie]);
+				$this->Start($_COOKIE[gp_session_cookie]);
 			}
 
 			$cmd = \gp\tool::GetCommand();
 
 			switch( $cmd ){
 				case 'logout':
-					self::LogOut();
+					$this->LogOut();
 					return;
 
 				case 'login':
-					self::LogIn();
+					$this->LogIn();
 					return;
+			}
+
+			if( $this->logged_in ){
+				$this->Prepare();
 			}
 
 			if( $cmd === 'ClearErrors' ){
@@ -37,7 +47,6 @@ namespace gp\tool{
 			}
 
 		}
-
 
 
 		public static function SetConstants(){
@@ -48,11 +57,11 @@ namespace gp\tool{
 
 
 
-		public static function LogIn(){
+		public function LogIn(){
 			global $langmessage;
 
 
-			if( static::$logged_in ){
+			if( $this->logged_in ){
 				return;
 			}
 
@@ -120,7 +129,7 @@ namespace gp\tool{
 
 			self::start($session_id, $sessions);
 
-			if( static::$logged_in === true ){
+			if( $this->logged_in === true ){
 				msg($langmessage['logged_in']);
 			}
 
@@ -131,7 +140,7 @@ namespace gp\tool{
 			self::UpdateAttempts($users, $username, true);
 
 			//redirect to prevent resubmission
-			self::Redirect();
+			$this->Redirect();
 		}
 
 
@@ -162,10 +171,10 @@ namespace gp\tool{
 		 * Redirect user after login
 		 *
 		 */
-		public static function Redirect(){
+		public function Redirect(){
 			global $gp_index;
 
-			if( !static::$logged_in ){
+			if( !$this->logged_in ){
 				return;
 			}
 
@@ -351,48 +360,34 @@ namespace gp\tool{
 
 
 
-		public static function LogOut(){
+		public function LogOut(){
 			global $langmessage;
+
+			if( empty($_GET['verified']) ){
+				return;
+			}
+
+			if( !\gp\tool\Nonce::Verify('post', $_GET['verified'], true) ){
+				return;
+			}
+
+			if( !$this->logged_in ){
+				return false;
+			}
 
 			if( !isset($_COOKIE[gp_session_cookie]) ){
 				return false;
 			}
 
-			if( empty($_POST['verified']) ){
-				msg('Logout attempt via unverified link');
-				return false;
-			}
-
-			if( !\gp\tool::verify_nonce('post', $_POST['verified'], true) ){
-				msg('XSS Verification Parameter Mismatch');
-				return false;
-			}
-
-			/*
-			// abandoned in favor of Notifications
-			$on_before_logout = array();
-			$on_before_logout['drafts'] 			= \gp\tool\Files::GetDrafts();
-			$on_before_logout['private_pages'] 		= \gp\tool\Files::GetPrivatePages();
-			$on_before_logout['confirm_admin_box'] 	= false;
-			$on_before_logout = \gp\tool\Plugins::Filter('OnBeforeLogOut', array($on_before_logout));
-			//msg('$on_before_logout = ' . pre($on_before_logout));
-			*/
 
 			$session_id = $_COOKIE[gp_session_cookie];
 
 			self::Unlock($session_id);
 			self::cookie(gp_session_cookie);
 			self::CleanSession($session_id);
+			$this->logged_in = false;
 
-			$messages = \gp\tool\Output\Ajax::Messages();
-			$messages .= !empty($messages) ? ',' : '';
-
-			echo \gp\tool\Output\Ajax::Callback($_REQUEST['jsoncallback']);
-			echo '([';
-			echo $messages;
-			echo '{DO:"logging_out",SELECTOR:"",CONTENT:""}';
-			echo ']);';
-			die();
+			msg($langmessage['LOGGED_OUT']);
 		}
 
 
@@ -584,9 +579,8 @@ namespace gp\tool{
 		 * Determine if $session_id represents a valid session and if so start the session
 		 *
 		 */
-		public static function start($session_id, $sessions = false ){
-			global $langmessage, $dataDir, $wbMessageBuffer;
-			static $locked_message = false;
+		public function Start($session_id, $sessions = false ){
+			global $langmessage, $dataDir;
 
 			//get the session file
 			if( !$sessions ){
@@ -604,9 +598,8 @@ namespace gp\tool{
 			if( gp_browser_auth && !empty($sess_info['uid']) ){
 
 				$auth_uid			= self::auth_browseruid();
-				$auth_uid_legacy	= self::auth_browseruid(true);//legacy option
 
-				if( ($sess_info['uid'] != $auth_uid) && ($sess_info['uid'] != $auth_uid_legacy) ){
+				if( $sess_info['uid'] != $auth_uid ){
 					self::cookie(gp_session_cookie); //make sure the cookie is deleted
 					msg($langmessage['Session Expired'] . ' (browser auth)');
 					return false;
@@ -620,6 +613,18 @@ namespace gp\tool{
 				return false;
 			}
 
+			$this->session_id		= $session_id;
+			$this->session_file		= $session_file;
+			$this->logged_in		= true;
+
+			return true;
+		}
+
+
+		public function Prepare(){
+			global $langmessage, $wbMessageBuffer;
+			static $locked_message = false;
+
 			//prevent browser caching when editing
 			Header( 'Last-Modified: ' . gmdate( 'D, j M Y H:i:s' ) . ' GMT' );
 			Header( 'Expires: ' . gmdate( 'D, j M Y H:i:s', time() ) . ' GMT' );
@@ -627,14 +632,14 @@ namespace gp\tool{
 			Header( 'Cache-Control: post-check=0, pre-check=0', false );
 			Header( 'Pragma: no-cache' ); // HTTP/1.0
 
-			$GLOBALS['gpAdmin'] = self::SessionData($session_file,$checksum);
+			$GLOBALS['gpAdmin'] = self::SessionData($this->session_file,$checksum);
 
 			//lock to prevent conflicting edits
 			if( gp_lock_time > 0 &&
 				( !empty($GLOBALS['gpAdmin']['editing']) || !empty($GLOBALS['gpAdmin']['granted']) )
 				){
 				$expires = gp_lock_time;
-				if( !\gp\tool\Files::Lock('admin', sha1(sha1($session_id)), $expires) ){
+				if( !\gp\tool\Files::Lock('admin', sha1(sha1($this->session_id)), $expires) ){
 					msg($langmessage['site_locked'] . ' ' . sprintf($langmessage['lock_expires_in'], ceil($expires / 60)));
 					$locked_message = true;
 					$GLOBALS['gpAdmin']['locked'] = true;
@@ -648,11 +653,11 @@ namespace gp\tool{
 				$elapsed = time() - $GLOBALS['gpAdmin']['remember'];
 				if( $elapsed > 604800 ){ //7 days
 					$GLOBALS['gpAdmin']['remember'] = time();
-					self::cookie(gp_session_cookie, $session_id);
+					self::cookie(gp_session_cookie, $this->session_id);
 				}
 			}
 
-			register_shutdown_function(array('\\gp\\tool\\Session', 'close'), $session_file, $checksum);
+			register_shutdown_function(array('\\gp\\tool\\Session', 'close'), $this->session_file, $checksum);
 
 			self::SaveSetting();
 
@@ -716,7 +721,6 @@ namespace gp\tool{
 				$GLOBALS['gpAdmin']['useralias'] = $GLOBALS['gpAdmin']['username'];
 			}
 
-			static::$logged_in = true;
 
 			return true;
 		}
@@ -851,7 +855,7 @@ namespace gp\tool{
 		 * @param string $checksum_read The original checksum of the $gpAdmin array
 		 *
 		 */
-		public static function close($file, $checksum_read){
+		public static function Close($file, $checksum_read){
 			global $gpAdmin;
 
 			self::FatalNotices();
@@ -1144,7 +1148,7 @@ namespace gp\tool{
 		 *
 		 * @return  string  a MD5 sum of various browser headers
 		 */
-		public static function auth_browseruid($legacy=false){
+		public static function auth_browseruid(){
 
 			$uid = '';
 			if( isset($_SERVER['HTTP_USER_AGENT']) ){
@@ -1154,28 +1158,12 @@ namespace gp\tool{
 				$uid .= $_SERVER['HTTP_ACCEPT_ENCODING'];
 			}
 
-			// IE does not report ACCEPT_LANGUAGE consistently
-			//if( $legacy && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ){
-			//	$uid .= $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-			//}
-
 			if( isset($_SERVER['HTTP_ACCEPT_CHARSET']) ){
 				$uid .= $_SERVER['HTTP_ACCEPT_CHARSET'];
 			}
 
-			if( $legacy ){
-				if( isset($_SERVER['REMOTE_ADDR']) ){
-					$ip = $_SERVER['REMOTE_ADDR'];
-					if( strpos($ip, '.') !== false ){
-						$uid .= substr($ip, 0, strpos($ip, '.'));
-					}elseif( strpos($ip, ':') !== false ){
-						$uid .= substr($ip, 0, strpos($ip, ':'));
-					}
-				}
-			}else{
-				$ip = self::clientIP(true);
-				$uid .= substr($ip, 0, strpos($ip, '.'));
-			}
+			$ip = self::clientIP(true);
+			$uid .= substr($ip, 0, strpos($ip, '.'));
 
 			//ie8 will report ACCEPT_LANGUAGE as en-us and en-US depending on the type of request (normal, ajax)
 			$uid = strtolower($uid);

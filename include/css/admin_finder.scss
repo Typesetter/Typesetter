@@ -112,7 +112,21 @@ body,
 	}
 	.elfinder-dialog-resize .ui-dialog-content {
 		padding: .5em 1.0em;
-    }	
+    }
+
+	.elfinder-bottomtray{
+		left: auto;
+		opacity: 1;
+		background: black;
+		bottom: 2px;
+	}
+	.elfinder-dialog-minimized{
+		margin-right: 5px;
+		.ui-dialog-titlebar .elfinder-titlebar-button{
+			top: 9px;
+			margin-right: 4px;
+		}
+	}
 }
 
 /**

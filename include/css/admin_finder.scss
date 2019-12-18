@@ -93,6 +93,39 @@ body,
 	.elfinder-file-edit {
 		width: 100% !important;
 	}
+	
+	.ui-button-text-only .ui-button-text{
+		padding: 0.1em 0.2em;
+	}
+	
+	.elfinder-button-search-menu div .ui-state-hover {
+		border-width: 0;
+		background-color: #03a9f4!important;
+	}
+	.std42-dialog .ui-dialog-titlebar .elfinder-titlebar-button{
+		top: 7px;
+		padding: 0;
+		.ui-icon {
+			padding: 0;
+		}		
+	}
+	.elfinder-dialog-resize .ui-dialog-content {
+		padding: .5em 1.0em;
+    }
+
+	.elfinder-bottomtray{
+		left: auto;
+		opacity: 1;
+		background: black;
+		bottom: 2px;
+	}
+	.elfinder-dialog-minimized{
+		margin-right: 5px;
+		.ui-dialog-titlebar .elfinder-titlebar-button{
+			top: 9px;
+			margin-right: 4px;
+		}
+	}	
 }
 
 /**

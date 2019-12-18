@@ -865,8 +865,7 @@ class SetupSite{
 		}
 
 		unset($this->siteData['destination']); //no longer used
-		unset($this->siteData['useftp']); //no longer used
-
+	
 		return \gp\tool\Files::SaveData( $this->dataFile,'siteData',$this->siteData );
 	}
 

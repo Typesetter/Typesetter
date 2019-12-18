@@ -196,8 +196,6 @@ class Tools{
 
 
 		//set config variables
-		//$config = array(); //because of ftp values
-
 		$gpLayouts = array();
 
 
@@ -591,7 +589,7 @@ class Tools{
 	 * @param array $config Current installation configuration
 	 */
 	static function InstallHtaccess($destination,$config){
-		global $install_ftp_connection, $dirPrefix;
+		global $dirPrefix;
 
 		//only proceed with save if we can test the results
 		if( \gp\tool\RemoteGet::Test() === false ){
@@ -613,59 +611,29 @@ class Tools{
 
 		$contents = \gp\admin\Settings\Permalinks::Rewrite_Rules(true, $dirPrefix, $original_contents );
 
-		if( !isset($config['useftp']) ){
-			//echo 'not using ftp';
-			$fp = @fopen($file,'wb');
-			if( !$fp ){
-				return;
-			}
 
-			@fwrite($fp,$contents);
-			fclose($fp);
-			@chmod($file,0666);
-
-			//return .htaccess to original state
-			if( !\gp\admin\Settings\Permalinks::TestResponse() ){
-				if( $original_contents === false ){
-					unlink($file);
-				}else{
-					$fp = @fopen($file,'wb');
-					if( $fp ){
-						@fwrite($fp,$original_contents);
-						fclose($fp);
-					}
-				}
-			}
+		$fp = @fopen($file,'wb');
+		if( !$fp ){
 			return;
 		}
 
-
-		//using ftp
-		$file = $config['ftp_root'].'/.htaccess';
-
-		$temp = tmpfile();
-		if( !$temp ){
-			return false;
-		}
-
-		fwrite($temp, $contents);
-		fseek($temp, 0); //Skip back to the start of the file being written to
-		@ftp_fput($install_ftp_connection, $file, $temp, FTP_ASCII );
-		fclose($temp);
-
+		@fwrite($fp,$contents);
+		fclose($fp);
+		@chmod($file,0666);
 
 		//return .htaccess to original state
 		if( !\gp\admin\Settings\Permalinks::TestResponse() ){
 			if( $original_contents === false ){
-				@ftp_delete($install_ftp_connection, $file);
+				unlink($file);
 			}else{
-				$temp = tmpfile();
-				fwrite($temp,$original_contents);
-				fseek($temp,0);
-				@ftp_fput($install_ftp_connection, $file, $temp, FTP_ASCII );
-				fclose($temp);
+				$fp = @fopen($file,'wb');
+				if( $fp ){
+					@fwrite($fp,$original_contents);
+					fclose($fp);
+				}
 			}
 		}
+
 	}
 
 	static function Install_Link_Content($href,$label,$query='',$attr=''){

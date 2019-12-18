@@ -10,13 +10,17 @@ gp_defined('gp_lock_time',900); // = 15 minutes
 
 class Session{
 
+	private static $singleton;
 	private $logged_in			= false;
 	private $session_id;
 	private $session_file;
-	private $placeholder; // php7.0 exiting with segmentation fault when there were exactly 3 object variables
+
 
 	public static function Init(){
-		return new self();
+		if( !static::$singleton ){
+			static::$singleton = new static();
+		}
+		return static::$singleton;
 	}
 
 	public function __construct(){

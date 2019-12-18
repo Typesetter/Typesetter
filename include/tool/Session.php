@@ -17,7 +17,7 @@ class Session{
 
 
 	public static function Init(){
-		return static::getInstance();
+		return self::getInstance();
 	}
 
 
@@ -26,10 +26,10 @@ class Session{
 	 * @return \gp\tool\Session
 	 */
 	public static function getInstance(){
-		if( !isset(static::$singleton) ){
-			static::$singleton = new static();
+		if( !isset(self::$singleton) ){
+			self::$singleton = new static();
 		}
-		return static::$singleton;
+		return self::$singleton;
 	}
 
 

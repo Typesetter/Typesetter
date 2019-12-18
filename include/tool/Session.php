@@ -17,11 +17,21 @@ class Session{
 
 
 	public static function Init(){
-		if( !static::$singleton ){
+		return static::getInstance();
+	}
+
+
+	/**
+	 * Get singleton instance
+	 * @return \gp\tool\Session
+	 */
+	public static function getInstance(){
+		if( !isset(static::$singleton) ){
 			static::$singleton = new static();
 		}
 		return static::$singleton;
 	}
+
 
 	public function __construct(){
 

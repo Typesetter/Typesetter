@@ -542,7 +542,7 @@ class Tools{
 
 
 		if( $base_install ){
-			self::InstallHtaccess($destination,$config);
+			self::InstallHtaccess($destination);
 		}
 
 		\gp\tool\Files::Unlock('write',gp_random);
@@ -588,7 +588,7 @@ class Tools{
 	 * @param string $destination The root path of the installation
 	 * @param array $config Current installation configuration
 	 */
-	static function InstallHtaccess($destination,$config){
+	static function InstallHtaccess($destination){
 		global $dirPrefix;
 
 		//only proceed with save if we can test the results

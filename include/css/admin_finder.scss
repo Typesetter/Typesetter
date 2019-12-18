@@ -102,3 +102,11 @@ body,
 	left: 182px;
 	width: auto;
 }
+
+#gp_admin_html #elfinder .elfinder-button-search.ui-state-active{
+	box-shadow: -2px 2px 5px #999;
+}
+#gp_admin_html #elfinder .elfinder-button-search.ui-state-active input{
+	background-color: white;
+}
+

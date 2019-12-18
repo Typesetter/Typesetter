@@ -1215,46 +1215,6 @@ namespace gp\tool{
 
 
 		/**
-		 * FTP Functions
-		 *
-		 */
-		public static function FTPConnect(){
-			global $config;
-
-			static $conn_id = false;
-
-			if( $conn_id ){
-				return $conn_id;
-			}
-
-			if( empty($config['ftp_server']) ){
-				return false;
-			}
-
-			$conn_id = @ftp_connect($config['ftp_server'], 21, 6);
-			if( !$conn_id ){
-				//trigger_error('ftp_connect() failed for server : '.$config['ftp_server']);
-				return false;
-			}
-
-			$login_result = @ftp_login($conn_id, $config['ftp_user'], $config['ftp_pass']);
-			if( !$login_result ){
-				//trigger_error('ftp_login() failed for server : '.$config['ftp_server'].' and user: '.$config['ftp_user']);
-				return false;
-			}
-			register_shutdown_function(array('\\gp\\tool\\Files', 'ftpClose'), $conn_id);
-			return $conn_id;
-		}
-
-
-		public static function ftpClose($connection=false){
-			if( $connection !== false ){
-				@ftp_quit($connection);
-			}
-		}
-
-
-		/**
 		 * @deprecated 3.0
 		 * Use \gp\tool\Editing::CleanTitle() instead
 		 * Used by Simple_Blog1

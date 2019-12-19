@@ -2002,7 +2002,7 @@ class SetupSite{
 			//trigger_error('ftp_login() failed for server : '.$config['ftp_server'].' and user: '.$config['ftp_user']);
 			return false;
 		}
-		register_shutdown_function(array('\\gp\\tool\\Files', 'ftpClose'), $conn_id);
+		register_shutdown_function(array('SetupSite', 'ftpClose'), $conn_id);
 		return $conn_id;
 	}
 

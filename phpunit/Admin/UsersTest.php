@@ -14,7 +14,7 @@ class UsersTest extends \gptest_bootstrap{
 
 		$this->GetRequest('Admin/Users');
 
-		$this->GetRequest('/Admin/Users?cmd=newuserform');
+		$this->GetRequest('/Admin/Users','cmd=newuserform');
 
 		$users				= \gp\tool\Files::Get('_site/users');
 		$this->assertEquals( count($users), 1);
@@ -53,6 +53,7 @@ class UsersTest extends \gptest_bootstrap{
 			'cmd'			=> 'SaveChanges',
 		];
 
+		$this->GetRequest('/Admin/Users','cmd=details&username=newuser');
 		$this->PostRequest('/Admin/Users',$params);
 
 		$users				= \gp\tool\Files::Get('_site/users');

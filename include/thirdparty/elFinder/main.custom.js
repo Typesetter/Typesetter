@@ -5,36 +5,46 @@
  * e.g. `<script data-main="./main.js" src="./require.js"></script>`
  **/
 
-//console.log('finder_opts',finder_opts);
+// console.log('finder_opts',finder_opts);
+
+define('jquery', [], function() {
+    return jQuery;
+});
+
+define('jquery-ui', [], function() {});
 
 (function(){
 	"use strict";
 	var // jQuery and jQueryUI version
-		jqver = '3.3.1',
-		uiver = '1.12.1',
 
 		// Detect language (optional)
+		// TODO: rather use CMS UI language?
 		lang = (function() {
-			var locq = window.location.search,
-				fullLang, locm, lang;
-			if (locq && (locm = locq.match(/lang=([a-zA-Z_-]+)/))) {
-				// detection by url query (?lang=xx)
-				fullLang = locm[1];
-			} else {
-				// detection by browser language
-				fullLang = (navigator.browserLanguage || navigator.language || navigator.userLanguage);
-			}
-			lang = fullLang.substr(0,2);
-			if (lang === 'pt') lang = 'pt_BR';
-			else if (lang === 'ug') lang = 'ug_CN';
-			else if (lang === 'zh') lang = (fullLang.substr(0,5).toLowerCase() === 'zh-tw')? 'zh_TW' : 'zh_CN';
-			return lang;
+			var lang = document.documentElement.lang.substr(0,2);
+
+			// (1) https://github.com/Typesetter/Typesetter/blob/master/include/common.php#L89
+			// (2) https://github.com/Typesetter/Multi-Language/blob/master/Languages.php
+
+			switch( lang ){
+				case 'pt-br':
+					lang = 'pt_BR'; // (1)
+					break;
+				case 'ug':
+					lang = 'ug_CN'; // (2)
+					break;
+				case 'zh-tw':
+					lang = 'zh_TW'; // (2)
+					break;
+				case 'zh-cn':
+					lang = 'zh_CN'; // (2)
+					break;
+				}
+
+				return lang;
 		})(),
 
 		// Start elFinder (REQUIRED)
 		start = function(elFinder, editors, config) {
-			// load jQueryUI CSS
-			//elFinder.prototype.loadCss('//cdnjs.cloudflare.com/ajax/libs/jqueryui/'+uiver+'/themes/smoothness/jquery-ui.css');
 
 			$(function() {
 				var optEditors = {
@@ -92,7 +102,8 @@
 			require(
 				[
 					'elfinder'
-					, 'js/extras/editors.default.min'               // load text, image editors
+					// , 'js/extras/editors.default.min'             // load text, image editors
+					, 'js/extras/editors.custom'             // load text, image editors TODO: use editors.custom.min for production
 					, 'elFinderConfig'
 				//	, 'extras/quicklook.googledocs.min'          // optional preview for GoogleApps contents on the GoogleDrive volume
 				],
@@ -112,26 +123,51 @@
 	require.config({
 		//baseUrl : 'js',
 		paths : {
-			'jquery'   : '//cdnjs.cloudflare.com/ajax/libs/jquery/'+(old? '1.12.4' : jqver)+'/jquery.min',
-			'jquery-ui': '//cdnjs.cloudflare.com/ajax/libs/jqueryui/'+uiver+'/jquery-ui.min',
-			'elfinder' : 'js/elfinder.min',
-			'encoding-japanese': '//cdn.rawgit.com/polygonplanet/encoding.js/1.0.26/encoding.min'
+
+			'elfinder' : 'js/elfinder.full', // TODO: for production use 'js/elfinder.full.min',
+
+			// 'encoding-japanese'		: '//cdn.rawgit.com/polygonplanet/encoding.js/1.0.26/encoding.min'
+			'encoding-japanese'		: '../encoding.js/encoding.min'
 		},
 		waitSeconds : 10 // optional
 	});
 
 	// check elFinderConfig and fallback
 	// This part don't used if you are using elfinder.html, see elfinder.html
-	console.log('here');
 	if (! require.defined('elFinderConfig')) {
-		console.log('here');
 		define('elFinderConfig', {
 			// elFinder options (REQUIRED)
 			// Documentation for client options:
 			// https://github.com/Studio-42/elFinder/wiki/Client-configuration-options
 			defaultOpts : {
-				url: finder_opts.url
-				,height:'100%'
+				url: finder_opts.url,
+				cdns : {
+					// for editor etc.
+					ace        : null,
+					codemirror : null,
+					ckeditor   : null, // gpBase + '/include/thirdparty/ckeditor',
+					ckeditor5  : null,
+					tinymce    : null,
+					simplemde  : null,
+					fabric16   : null,
+					tui        : null,
+					// for quicklook etc.
+					hls        : null,
+					dash       : null,
+					flv        : null,
+					prettify   : null,
+					psd        : null,
+					rar        : null,
+					zlibUnzip  : gpBase + '/include/thirdparty/zlib.js/gunzip.min.js',
+					zlibGunzip : gpBase + '/include/thirdparty/zlib.js/unzip.min.js',
+					marked     : null,
+					sparkmd5   : null,
+					jssha      : null,
+					amr        : null,
+
+				},
+				height:'100%'
+				,cssAutoLoad : [ '/themes/material/css/theme-custom.css' ]
 				,getFileCallback:function(file, finder){
 
 					if (!window.top.opener){

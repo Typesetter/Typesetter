@@ -6,6 +6,16 @@
 CKEDITOR.on( 'instanceCreated', function(e){
 	var editor = e.editor;
 
+	// disable plugin buttons
+	var hide_buttons		= ['source','searchCode','autoFormat','commentSelectedRange','uncommentSelectedRange','autoCompleteToggle']
+	editor.ui.addButton		= function(label,args){
+		if( hide_buttons.indexOf(args.command) > -1 ){
+			return;
+		}
+		return CKEDITOR.ui.prototype.addButton.call(editor.ui,label,args);
+	};
+
+
 	// add a row to the toolbar with plugin buttons
 	// using uiSpace for sharedSpaces
 	editor.on( 'uiSpace', function(){
@@ -114,8 +124,3 @@ CKEDITOR.on( 'dialogDefinition', function( ev ){
 		});
 	}
 });
-
-
-
-
-

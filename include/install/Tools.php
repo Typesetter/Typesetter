@@ -16,7 +16,7 @@ class Tools{
 	 *  - Password
 	 *
 	 */
-	static function Form_UserDetails(){
+	public static function Form_UserDetails(){
 		global $langmessage;
 
 		$_POST += array('username'=>'','site_title'=>'My '.CMS_NAME,'email'=>'');
@@ -35,7 +35,7 @@ class Tools{
 	 *  - hide gplink
 	 *
 	 */
-	static function Form_Configuration(){
+	public static function Form_Configuration(){
 		global $langmessage;
 
 		echo '<tr><th colspan="3">';
@@ -97,7 +97,7 @@ class Tools{
  	 * @param bool $default The default value if it hasn't already been set by the user
  	 *
 	 */
-	static function BooleanForm($key,$default=true){
+	public static function BooleanForm($key,$default=true){
 		$checked = '';
 		if( self::BooleanValue($key,$default) ){
 			$checked = 'checked="checked"';
@@ -112,7 +112,7 @@ class Tools{
  	 * @param string $key The configuration key
  	 * @param bool $default The default value if it hasn't already been set by the user
 	 */
-	static function BooleanValue($key,$default=true){
+	public static function BooleanValue($key,$default=true){
 		if( !isset($_POST[$key]) ){
 			return $default;
 		}
@@ -125,7 +125,7 @@ class Tools{
 
 	//based on the user supplied values, make sure we can go forward with the installation
 
-	static function gpInstall_Check(){
+	public static function gpInstall_Check(){
 		global $langmessage;
 
 		echo "\nInstall Check\n";
@@ -175,7 +175,7 @@ class Tools{
 		return true;
 	}
 
-	static function Install_Title(){
+	public static function Install_Title(){
 		$_POST += array( 'site_title' => '');
 		$title = $_POST['site_title'];
 		$title = htmlspecialchars($title);
@@ -186,7 +186,7 @@ class Tools{
 		return $title;
 	}
 
-	static function Install_DataFiles_New($destination = false, $config = array(), $base_install = true ){
+	public static function Install_DataFiles_New($destination = false, $config = array(), $base_install = true ){
 		global $langmessage;
 
 
@@ -205,6 +205,7 @@ class Tools{
 		$gpLayouts['default']['color'] = '#93c47d';
 
 
+		$_config							= [];
 		$_config['toemail']					= $_POST['email'];
 		$_config['gpLayout']				= 'default';
 		$_config['title']					= self::Install_Title();
@@ -551,7 +552,7 @@ class Tools{
 	}
 
 
-	static function NewTitle( $dataDir, $title, $content, $config, $index ){
+	public static function NewTitle( $dataDir, $title, $content, $config, $index ){
 
 		$file = $dataDir.'/data/_pages/'.substr($config['gpuniq'],0,7).'_'.$index[$title].'/page.php';
 		self::$file_count++;
@@ -570,7 +571,7 @@ class Tools{
 		return \gp\tool\Files::SaveData($file,'file_sections',$file_sections,$meta_data);
 	}
 
-	static function NewExtra($file, $content){
+	public static function NewExtra($file, $content){
 		$extra_content = array(array('type'=>'text','content'=>$content));
 		return \gp\tool\Files::SaveData($file,'file_sections',$extra_content);
 	}
@@ -588,7 +589,7 @@ class Tools{
 	 * @param string $destination The root path of the installation
 	 * @param array $config Current installation configuration
 	 */
-	static function InstallHtaccess($destination){
+	public static function InstallHtaccess($destination){
 		global $dirPrefix;
 
 		//only proceed with save if we can test the results
@@ -613,7 +614,7 @@ class Tools{
 
 
 		$fp = @fopen($file,'wb');
-		if( !$fp ){
+		if( $fp === false ){
 			return;
 		}
 
@@ -627,7 +628,7 @@ class Tools{
 				unlink($file);
 			}else{
 				$fp = @fopen($file,'wb');
-				if( $fp ){
+				if( $fp !== false ){
 					@fwrite($fp,$original_contents);
 					fclose($fp);
 				}
@@ -636,7 +637,7 @@ class Tools{
 
 	}
 
-	static function Install_Link_Content($href,$label,$query='',$attr=''){
+	public static function Install_Link_Content($href,$label,$query='',$attr=''){
 
 		$query = str_replace('&','&amp;',$query);
 		$href = str_replace('&','&amp;',$href);
@@ -648,7 +649,7 @@ class Tools{
 		return '<a href="$linkPrefix/'.$href.$query.'">'.$label.'</a>';
 	}
 
-	static function AddCSs(){
+	public static function AddCSs(){
 		global $dataDir;
 
 		echo '<style type="text/css">';

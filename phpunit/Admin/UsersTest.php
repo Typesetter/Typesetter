@@ -63,6 +63,25 @@ class UsersTest extends \gptest_bootstrap{
 		$this->assertEquals( $user_info['email'], 'test3@typesettercms.com');
 
 
+		// change password
+		$params = [
+			'verified'		=> \gp\tool::new_nonce('post', true),
+			'username'		=> 'newuser',
+			'password'		=> 'resetpass',
+			'password1'		=> 'resetpass',
+			'algo'			=> 'password_hash',
+			'cmd'			=> 'resetpass',
+		];
+
+		$this->GetRequest('/Admin/Users','cmd=changepass&username=newuser');
+		$this->PostRequest('/Admin/Users',$params);
+
+		$users				= \gp\tool\Files::Get('_site/users');
+		$user_info2			= $users['newuser'];
+		$this->assertNotEquals( $user_info2['password'],$user_info['password']);
+
+
+
 		// delete user
 		$params = [
 			'cmd'			=> 'rm',

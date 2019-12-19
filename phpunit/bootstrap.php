@@ -154,7 +154,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	 *
 	 */
 	public static function GetRequest($slug,$query=''){
-		$url		= 'http://localhost:8081' . \gp\tool::GetUrl($slug,$query);
+		$url		= 'http://localhost:8081' . \gp\tool::GetUrl($slug,$query,false);
 		return self::GuzzleRequest('GET',$url);
 	}
 

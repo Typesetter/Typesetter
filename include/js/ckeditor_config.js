@@ -39,6 +39,11 @@ CKEDITOR.on( 'instanceCreated', function(e){
 		editor.config.toolbar.push( plugin_buttons );
 	});
 
+	//Fix https://github.com/Typesetter/Typesetter/issues/379
+	editor.config.codemirror = {
+		enableCodeFolding: false
+	}
+
 });
 
 

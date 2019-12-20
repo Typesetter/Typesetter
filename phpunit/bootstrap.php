@@ -161,6 +161,8 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	public static function GuzzleRequest($type,$url,$expected_resonse = 200, $options = []){
 		global $dataDir;
 
+		$response = null;
+
 		try{
 			static::$proc_output	= [];
 			$options['headers']		= ['X-REQ-ID' => static::$requests];

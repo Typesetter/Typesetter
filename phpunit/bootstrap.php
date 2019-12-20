@@ -12,23 +12,6 @@ defined('gp_unit_testing') or define('gp_unit_testing',true);
 defined('gp_nonce_algo') or define('gp_nonce_algo','sha512');
 
 
-
-/*
-global $config;
-
-include('include/common.php');
-spl_autoload_register( array('\\gp\\tool','Autoload') );
-require dirname(__DIR__) . '/vendor/autoload.php';
-
-$config = ['gpuniq'=>'test','language'=>'en'];
-
-\gp\tool::SetLinkPrefix();
-
-includeFile('tool/functions.php');
-
-\gp\tool\Session::init();
-*/
-
 if (!class_exists('\PHPUnit_Framework_TestCase') && class_exists('\PHPUnit\Framework\TestCase'))
     class_alias('\PHPUnit\Framework\TestCase', '\PHPUnit_Framework_TestCase');
 
@@ -280,10 +263,17 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 
 
-		$dataDir = sys_get_temp_dir().'/typesetter-test';
-		if( !file_exists($dataDir) ){
-			mkdir($dataDir);
+		// get a clean temporary install folder
+		$dataDir	= sys_get_temp_dir().'/typesetter-test';
+		$old_dir	= sys_get_temp_dir().'/typesetter-test-old';
+		if( file_exists($dataDir) ){
+			rename($dataDir,$old_dir);
 		}
+		mkdir($dataDir);
+		mkdir($dataDir.'/data');
+
+
+
 
 		// create symlinks of include, addons, and themes
 		$symlinks = ['include','addons','themes','gpconfig.php','index.php','vendor'];
@@ -311,8 +301,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		file_put_contents($file,$content);
 
 
-		//$dataDir = $_SERVER['PWD'];
-
 		static::Console('datadir='.$dataDir);
 
 
@@ -322,14 +310,10 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		includeFile('tool/functions.php');
 
 
-		// make sure we have a fresh /data directory
-		$dir = $dataDir.'/data';
-		if( file_exists($dir) ){
-			\gp\tool\Files::RmAll($dir);
-		}
-		mkdir($dir);
 
 
+		// delete old installation
+		\gp\tool\Files::RmAll($old_dir);
 
 
 		// reset coverage folder
@@ -339,17 +323,8 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 			\gp\tool\Files::RmAll($cov_dir);
 		}
 		mkdir($cov_dir);
-
-
-		/*
-
-		\gp\tool::SetLinkPrefix();
-
-
-		\gp\tool\Session::init();
-		*/
-
 	}
+
 
 	/**
 	 * Output a string to the console

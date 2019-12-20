@@ -313,8 +313,12 @@ html{
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	}
 
-.cke_reset_all textarea.cke_source {
+.cke_reset_all textarea.cke_source,
+.cke_reset_all .CodeMirror .CodeMirror-scroll * {
 	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace !important;
+	}
+
+.cke_reset_all textarea.cke_source {
 	min-width:800px;
 	width:100%!important;
 	}
@@ -339,3 +343,16 @@ html{
 #ckeditor_wrap select.SelectGalleryStyle::-ms-expand { 
 	display:none; 
 	}
+
+
+/**
+ * Codemirror for ckEditor plugin style
+ */
+.searchCodeButton span, 
+.autoFormat span, 
+.CommentSelectedRange span, 
+.UncommentSelectedRange span {
+	margin: 3px!important;
+	min-width: unset!important;
+	background-position: center!important;	
+}

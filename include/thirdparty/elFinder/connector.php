@@ -28,7 +28,7 @@ elFinder::$netDrivers['ftp'] = 'FTP';
 // elFinder::$netDrivers['dropbox2'] = 'Dropbox2';
 // // Dropbox2 Netmount driver need next two settings. You can get at https://www.dropbox.com/developers/apps
 // // AND reuire regist redirect url to "YOUR_CONNECTOR_URL?cmd=netmount&protocol=dropbox2&host=1"
-// define('ELFINDER_DROPBOX_APPKEY',    '');
+// define('ELFINDER_DROPBOX_APPKEY',	'');
 // define('ELFINDER_DROPBOX_APPSECRET', '');
 // ===============================================
 
@@ -39,7 +39,7 @@ elFinder::$netDrivers['ftp'] = 'FTP';
 // elFinder::$netDrivers['googledrive'] = 'GoogleDrive';
 // // GoogleDrive Netmount driver need next two settings. You can get at https://console.developers.google.com
 // // AND reuire regist redirect url to "YOUR_CONNECTOR_URL?cmd=netmount&protocol=googledrive&host=1"
-// define('ELFINDER_GOOGLEDRIVE_CLIENTID',     '');
+// define('ELFINDER_GOOGLEDRIVE_CLIENTID',	 '');
 // define('ELFINDER_GOOGLEDRIVE_CLIENTSECRET', '');
 // // Required case of without composer
 // define('ELFINDER_GOOGLEDRIVE_GOOGLEAPICLIENT', '/path/to/google-api-php-client/vendor/autoload.php');
@@ -52,7 +52,7 @@ elFinder::$netDrivers['ftp'] = 'FTP';
 // elFinder::$netDrivers['googledrive'] = 'FlysystemGoogleDriveNetmount';
 // // GoogleDrive Netmount driver need next two settings. You can get at https://console.developers.google.com
 // // AND reuire regist redirect url to "YOUR_CONNECTOR_URL?cmd=netmount&protocol=googledrive&host=1"
-// define('ELFINDER_GOOGLEDRIVE_CLIENTID',     '');
+// define('ELFINDER_GOOGLEDRIVE_CLIENTID',	 '');
 // define('ELFINDER_GOOGLEDRIVE_CLIENTSECRET', '');
 // ===============================================
 
@@ -63,7 +63,7 @@ elFinder::$netDrivers['ftp'] = 'FTP';
 // elFinder::$netDrivers['onedrive'] = 'OneDrive';
 // // GoogleDrive Netmount driver need next two settings. You can get at https://dev.onedrive.com
 // // AND reuire regist redirect url to "YOUR_CONNECTOR_URL/netmount/onedrive/1"
-// define('ELFINDER_ONEDRIVE_CLIENTID',     '');
+// define('ELFINDER_ONEDRIVE_CLIENTID',	 '');
 // define('ELFINDER_ONEDRIVE_CLIENTSECRET', '');
 // ===============================================
 
@@ -73,7 +73,7 @@ elFinder::$netDrivers['ftp'] = 'FTP';
 // elFinder::$netDrivers['box'] = 'Box';
 // // Box Netmount driver need next two settings. You can get at https://developer.box.com
 // // AND reuire regist redirect url to "YOUR_CONNECTOR_URL"
-// define('ELFINDER_BOX_CLIENTID',     '');
+// define('ELFINDER_BOX_CLIENTID',	 '');
 // define('ELFINDER_BOX_CLIENTSECRET', '');
 // ===============================================
 
@@ -98,20 +98,20 @@ elFinder::$netDrivers['ftp'] = 'FTP';
  * Simple function to demonstrate how to control file access using "accessControl" callback.
  * This method will disable accessing files/folders starting from '.' (dot)
  *
- * @param  string    $attr    attribute name (read|write|locked|hidden)
- * @param  string    $path    absolute file path
- * @param  string    $data    value of volume option `accessControlData`
- * @param  object    $volume  elFinder volume driver object
+ * @param  string	$attr	attribute name (read|write|locked|hidden)
+ * @param  string	$path	absolute file path
+ * @param  string	$data	value of volume option `accessControlData`
+ * @param  object	$volume  elFinder volume driver object
  * @param  bool|null $isDir   path is directory (true: directory, false: file, null: unknown)
- * @param  string    $relpath file path relative to volume root directory started with directory separator
+ * @param  string	$relpath file path relative to volume root directory started with directory separator
  * @return bool|null
- **/
-function access($attr, $path, $data, $volume, $isDir, $relpath) {
+ */
+function access($attr, $path, $data, $volume, $isDir, $relpath){
 	$basename = basename($path);
-	return $basename[0] === '.'                  // if file/folder begins with '.' (dot)
-			 && strlen($relpath) !== 1           // but with out volume root
-		? !($attr == 'read' || $attr == 'write') // set read+write to false, other (locked+hidden) set to true
-		:  null;                                 // else elFinder decide it itself
+	return $basename[0] === '.'						// if file/folder begins with '.' (dot)
+			 && strlen($relpath) !== 1				// but with out volume root
+		? !($attr == 'read' || $attr == 'write')	// set read+write to false, other (locked+hidden) set to true
+		:  null;									// else elFinder decide it itself
 }
 
 /**
@@ -122,10 +122,10 @@ function upload_check($cmd, $args){
 	if(gp_restrict_uploads && !empty($args['FILES'])){
 		$files = empty($args['chunk']) ? $args['FILES']['upload']['name'] : array(preg_replace('/\.\d+_\d+.part$/', '', $args['chunk'], 1));
 		foreach($files as $i => $name){
-			if(!\gp\admin\Content\Uploaded::AllowedExtension($name)){
+			if( !\gp\admin\Content\Uploaded::AllowedExtension($name) ){
 				return array(
-					'preventexec' => true,
-					'results' => array('error' => 'errUploadMime')
+					'preventexec'	=> true,
+					'results'		=> array('error' => 'errUploadMime')
 				);
 			}
 		}
@@ -134,10 +134,10 @@ function upload_check($cmd, $args){
 }
 
 function rename_check($cmd, $args){
-	if(gp_restrict_uploads && !\gp\admin\Content\Uploaded::AllowedExtension($args['name'])){
+	if( gp_restrict_uploads && !\gp\admin\Content\Uploaded::AllowedExtension($args['name']) ){
 		return array(
-			'preventexec' => true,
-			'results' => array('error' => 'errUploadMime')
+			'preventexec'	=> true,
+			'results'		=> array('error' => 'errUploadMime')
 		);
 	}
 	return true;
@@ -147,21 +147,22 @@ function rename_check($cmd, $args){
 // https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
 $opts = array(
 	// 'debug' => true,
-	'roots' => array(
+
+	'roots'			=> array(
 		// Items volume
 		array(
 			'debug'				=> true,
-			'driver'        	=> 'LocalFileSystem',           // driver for accessing file system (REQUIRED)
-			'path'          	=> $dataDir.'/data/_uploaded/',
-			'URL'           	=> \gp\tool::GetDir('data/_uploaded'),
-			//'trashHash'     	=> 't1_Lw',                     // elFinder's hash of trash folder
-			'winHashFix'    	=> DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
-			// 'uploadDeny'    	=> array('all'),                // All Mimetypes not allowed to upload
-			// 'uploadAllow'   	=> array('image/x-ms-bmp', 'image/gif', 'image/jpeg', 'image/png', 'image/x-icon', 'text/plain'), // Mimetype `image` and `text/plain` allowed to upload
-			// 'uploadOrder'   	=> array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
-			'accessControl' 	=> 'access',                     // disable and hide dot starting files (OPTIONAL)
-			//'uploadMaxSize'	=>'55M',
-			'attributes' => array(
+			'driver'			=> 'LocalFileSystem',					// driver for accessing file system (REQUIRED)
+			'path'				=> $dataDir . '/data/_uploaded/',
+			'URL'				=> \gp\tool::GetDir('data/_uploaded'),
+			//'trashHash'		=> 't1_Lw',								// elFinder's hash of trash folder
+			'winHashFix'		=> DIRECTORY_SEPARATOR !== '/',			// to make hash same to Linux one on windows too
+			// 'uploadDeny'			=> array('all'),					// All Mimetypes not allowed to upload
+			// 'uploadAllow'		=> array('image/x-ms-bmp', 'image/gif', 'image/jpeg', 'image/png', 'image/x-icon', 'text/plain'), // Mimetype `image` and `text/plain` allowed to upload
+			// 'uploadOrder'		=> array('deny', 'allow'),			// allowed Mimetype `image` and `text/plain` only
+			'accessControl'		=> 'access',							// disable and hide dot starting files (OPTIONAL)
+			//'uploadMaxSize'		=>'55M',
+			'attributes'		=> array(
 				array(
 					'pattern' => '/\.ph(p([3-7]?|-?s)|t(ml)?|ar)$/i',
 					'write'  => false,
@@ -170,25 +171,24 @@ $opts = array(
 		),
 		// Trash volume
 		array(
-			'id'            => '1',
-			'driver'        => 'Trash',
-			'path'          => $dataDir.'/data/_uploaded/.trash/',
-			'tmbURL'        => \gp\tool::GetDir('data/_uploaded/.trash/.tmb/'),
-			'winHashFix'    => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
-			'uploadDeny'    => array('all'),                // Recomend the same settings as the original volume that uses the trash
-			'uploadAllow'   => array('image/x-ms-bmp', 'image/gif', 'image/jpeg', 'image/png', 'image/x-icon', 'text/plain'), // Same as above
-			'uploadOrder'   => array('deny', 'allow'),      // Same as above
-			'accessControl' => 'access',                    // Same as above
+			'id'			=> '1',
+			'driver'		=> 'Trash',
+			'path'			=> $dataDir . '/data/_uploaded/.trash/',
+			'tmbURL'		=> \gp\tool::GetDir('data/_uploaded/.trash/.tmb/'),
+			'winHashFix'	=> DIRECTORY_SEPARATOR !== '/',		// to make hash same to Linux one on windows too
+			'uploadDeny'	=> array('all'),					// Recomend the same settings as the original volume that uses the trash
+			'uploadAllow'	=> array('image/x-ms-bmp', 'image/gif', 'image/jpeg', 'image/png', 'image/x-icon', 'text/plain'), // Same as above
+			'uploadOrder'	=> array('deny', 'allow'),			// Same as above
+			'accessControl'	=> 'access',						// Same as above
 		)
 	),
 	'bind' => array(
-		'duplicate upload rename rm paste resize' => array('\gp\admin\Content\Uploaded','FinderChange'),//drag+drop = cut+paste
-		'upload.pre' => array('upload_check'),
-		'rename.pre' => array('rename_check'),
+		'duplicate upload rename rm paste resize' => array('\gp\admin\Content\Uploaded', 'FinderChange'), //drag+drop = cut+paste
+		'upload.pre'		=> array('upload_check'),
+		'rename.pre'		=> array('rename_check'),
 	)
 );
 
 // run elFinder
 $connector = new elFinderConnector(new elFinder($opts));
 $connector->run();
-

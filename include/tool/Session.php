@@ -143,9 +143,8 @@ class Session{
 			return false;
 		}
 
-		self::start($session_id, $sessions);
 
-		if( $this->logged_in === true ){
+		if( $this->Start($session_id, $sessions) ){
 			msg($langmessage['logged_in']);
 		}
 

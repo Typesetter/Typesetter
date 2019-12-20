@@ -34,7 +34,7 @@ class Nonce{
 	 * @param mixed $check_nonce The user submitted nonce or false if $_REQUEST['_gpnonce'] can be used
 	 * @param bool $anon True if the nonce is being used for anonymous users
 	 * @param int $factor Determines the length of time the generated nonce will be valid. The default 43200 will result in a 24hr period of time.
-	 * @return mixed Return false if the $check_nonce did not pass. 1 or 2 if it passes.
+	 * @return bool Return false if the $check_nonce did not pass. true if passed
 	 *
 	 */
 	public static function Verify($action='none', $check_nonce=false, $anon=false, $factor=43200 ){
@@ -58,12 +58,12 @@ class Nonce{
 
 		// Nonce generated 0-12 hours ago
 		if( self::Hash( $nonce, 0, $factor ) == $check_nonce ){
-			return 1;
+			return true;
 		}
 
 		// Nonce generated 12-24 hours ago
 		if( self::Hash( $nonce, 1, $factor ) == $check_nonce ){
-			return 2;
+			return true;
 		}
 
 		// Invalid nonce

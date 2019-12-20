@@ -16,6 +16,22 @@ CKEDITOR.on( 'instanceCreated', function(e){
 	};
 
 
+	//fix. CKEditor refuses to show Paste dialog 
+	//github.com/ckeditor/ckeditor4/issues/469
+	CKEDITOR.on("instanceReady", function(event) {
+		event.editor.on("beforeCommandExec", function(event) {
+			// Show the paste dialog for the paste buttons and right-click paste
+			if (event.data.name == "paste") {
+				event.editor._.forcePasteDialog = true;
+			}
+			// Don't show the paste dialog for Ctrl+Shift+V
+			if (event.data.name == "pastetext" && event.data.commandData.from == "keystrokeHandler") {
+				event.cancel();
+			}
+		})
+	});	
+
+	
 	// add a row to the toolbar with plugin buttons
 	// using uiSpace for sharedSpaces
 	editor.on( 'uiSpace', function(){

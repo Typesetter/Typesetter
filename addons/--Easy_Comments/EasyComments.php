@@ -46,7 +46,7 @@ class EasyComments{
 	 *
 	 */
 	var $index_file;
-	var $index = false;
+	var $index = [];
 
 
 
@@ -170,12 +170,8 @@ class EasyComments{
 
 	public function GetIndex(){
 
-		if( is_array($this->index) ){
-			return $this->index;
-		}
-
 		if( file_exists($this->index_file) ){
-			require($this->index_file);
+			$index = \gp\tool\Files::Get($this->index_file, 'index');
 		}
 
 		if( !isset($index['pages']) ){

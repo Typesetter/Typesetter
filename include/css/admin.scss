@@ -177,6 +177,11 @@
 	padding: 4px 8px;
 	height: auto;
 	@include box-sizing( border-box );
+
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: middle;
 }
 
 #gp_admin_html .gptextarea,
@@ -224,8 +229,6 @@
 	background-position: right 10px top 50%, 0 0;
 	background-size: 7px auto, 100%;
 	padding-right: 17px;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
 #gp_admin_html .gpselect::-ms-expand{
@@ -588,6 +591,7 @@
 #gp_admin_box h3{
 	margin-top: 0;
 	padding-top: 0;
+	line-height: 100%;
 }
 a.gp_admin_box_close{
 	position: absolute;
@@ -1765,7 +1769,7 @@ body #addon_about{
 	line-height: 130% !important;
 	background: #fff;
 	white-space: nowrap;
-	width: auto;
+	max-width: 100%;
 }
 .dd_menu a{
 	color: #333 !important;
@@ -1844,8 +1848,10 @@ body #addon_about{
 .dd_list li > a{
 	padding: 3px 17px !important;
 	display: block;
-	min-width: 200px;
 	position: relative;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .dd_list li.selected > *{

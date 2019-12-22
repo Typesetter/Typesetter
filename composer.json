@@ -8,7 +8,8 @@
         "phpcompatibility/php-compatibility": "^9.3",
         "symfony/process": "<4",
         "guzzlehttp/guzzle": "^6.5",
-        "phpunit/php-code-coverage": "<7"
+        "phpunit/php-code-coverage": "<7",
+        "phpunit/phpunit": "<8 >=4"
     },
 	"scripts": {
 	    "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility",

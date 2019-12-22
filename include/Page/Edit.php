@@ -259,9 +259,9 @@ class Edit extends \gp\Page{
 
 		if( \gp\admin\Tools::HasPermission('Admin_User') ){
 			$option_links[] = \gp\tool::Link(
-				'Admin/Users',
+				'Admin/Permissions',
 				$langmessage['permissions'],
-				'cmd=file_permissions&index=' . urlencode($this->gp_index),
+				'index=' . urlencode($this->gp_index),
 				array(
 					'title'		=> $langmessage['permissions'],
 					'class'		=> 'admin-link admin-link-permissions',
@@ -301,9 +301,9 @@ class Edit extends \gp\Page{
 					'class'		=> 'msg_publish_draft admin-link admin-link-publish-draft',
 					'data-cmd'	=> 'creq',
 				)
-			) 
+			)
 			. '<a class="msg_publish_draft_disabled admin-link admin-link-publish-draft-disabled">'
-			.   '<i class="fa fa-minus-circle"></i> ' . $langmessage['Publish Draft'] 
+			.   '<i class="fa fa-minus-circle"></i> ' . $langmessage['Publish Draft']
 			. '</a>'
 			. '<a class="msg_saving_draft admin-link admin-link-publish-draft-saving">'
 			.   '<i class="fa fa-spinner fa-pulse"></i> ' . $langmessage['Saving'] . ' &hellip;'
@@ -1127,7 +1127,7 @@ class Edit extends \gp\Page{
 		}
 
 		//section combo: text & image
-		$links[] = array( 
+		$links[] = array(
 			array('text.gpCol-6', 'image.gpCol-6'),
 			\gp\tool::GetDir('/include/imgs/section-combo-text-image.png'),
 			array(
@@ -1140,7 +1140,7 @@ class Edit extends \gp\Page{
 		);
 
 		//section combo: text & gallery
-		$links[] = array( 
+		$links[] = array(
 			array('text.gpCol-6', 'gallery.gpCol-6'),
 			\gp\tool::GetDir('/include/imgs/section-combo-text-gallery.png'),
 			array(

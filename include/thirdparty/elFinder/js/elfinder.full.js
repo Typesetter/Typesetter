@@ -17334,11 +17334,13 @@ $.fn.elfindercwd = function(fm, options) {
 				description : 'selectall',
 				callback    : selectAll
 			})
+			/*
 			.shortcut({
 				pattern     :'ctrl+shift+i', 
 				description : 'selectinvert',
 				callback    : selectInvert
 			})
+			*/
 			.shortcut({
 				pattern     : 'left right up down shift+left shift+right shift+up shift+down',
 				description : 'selectfiles',
@@ -30470,7 +30472,7 @@ elFinder.prototype.commands.quicklook.plugins = [
 	this.updateOnSelect = true;
 	
 	this.shortcuts = [{
-		pattern     : 'ctrl+shift+r f5'
+		// pattern     : 'ctrl+shift+r f5'
 	}];
 	
 	this.getstate = function() {

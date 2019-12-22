@@ -35,12 +35,9 @@ namespace gp\admin\Content{
 											. ' src="'.\gp\tool::GetDir('/include/thirdparty/js/require.min.js').'"></script>';
 			$this->page->css_admin[]	= '/include/css/admin_finder.scss';
 
-
-
 			echo '<div id="elfinder"></div>';
 
 			\gp\tool::LoadComponents('selectable,draggable,droppable,resizable,dialog,slider,button');
-
 
 
 			//get the finder language
@@ -56,7 +53,7 @@ namespace gp\admin\Content{
 				$language = 'en';
 			}
 			$this->finder_opts['lang'] = $language;
-			$this->finder_opts['customData']['verified'] = \gp\tool::new_nonce('post',true);
+			$this->finder_opts['customData']['verified'] = \gp\tool\Nonce::Create('post',true);
 
 
 			$this->finder_opts['uiOptions'] = array(
@@ -638,7 +635,8 @@ namespace gp\admin\Content{
 		}
 
 
-/**
+
+		/**
 		 * Check the file extension agains $allowed_types
 		 *
 		 */
@@ -736,7 +734,7 @@ namespace gp\admin\Content{
 				return false;
 			}
 
-			if( \gp\tool::verify_nonce('delete') === false ){
+			if( \gp\tool\Nonce::Verify('delete') === false ){
 				message($langmessage['OOPS'].' (Invalid Nonce)');
 				return;
 			}

@@ -187,14 +187,23 @@ html{
 
 /* format/font/font-size menus */
 #ckeditor_area .cke_combo__format .cke_combo_text{
-	width:48px;
+	width:50px;
 }
 #ckeditor_area .cke_combo__font .cke_combo_text{
 	width:38px;
 }
 #ckeditor_area .cke_combo__fontsize .cke_combo_text{
-	width: 28px;
+	width: 38px;
 }
+
+/* 'Source' dialog label */
+#ckeditor_area .cke_button__sourcedialog_label{
+	max-width: 42px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
 
 #ckeditor_wrap .ck_saving,
 #ckeditor_wrap .ck_saved,

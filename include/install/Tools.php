@@ -233,7 +233,7 @@ class Tools{
 		\gp\tool\Files::CheckDir($destination.'/data/_uploaded/image');
 		\gp\tool\Files::CheckDir($destination.'/data/_uploaded/media');
 		\gp\tool\Files::CheckDir($destination.'/data/_uploaded/file');
-		\gp\tool\Files::CheckDir($destination.'/data/_uploaded/flash');
+		// \gp\tool\Files::CheckDir($destination.'/data/_uploaded/flash');
 		\gp\tool\Files::CheckDir($destination.'/data/_sessions');
 
 

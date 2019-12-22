@@ -639,7 +639,7 @@ namespace gp\tool{
 																array('Sourcedialog','Templates','ShowBlocks','Undo','Redo','RemoveFormat'), //,'Maximize' does not work well
 																array('Cut','Copy','Paste','PasteText','PasteFromWord','SelectAll','Find','Replace'),
 																array('HorizontalRule','Smiley','SpecialChar','PageBreak','TextColor','BGColor'),
-																array('Link','Unlink','Anchor','Image','Flash','Table'),
+																array('Link','Unlink','Anchor','Image','Table'),
 																array('Format','Font','FontSize'),
 																array('JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','NumberedList','BulletedList','Outdent','Indent'),
 																array('Bold','Italic','Underline','Strike','Blockquote','Subscript','Superscript','About')

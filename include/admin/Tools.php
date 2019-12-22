@@ -588,7 +588,7 @@ namespace gp\admin{
 				echo '<li>';
 				echo \gp\tool::Link(
 					$page->title,
-					'<i class="fa fa-pencil"></i>'.$langmessage['Sections'],
+					'<i class="fa fa-pencil"></i> ' . $langmessage['Sections'],
 					'cmd=ManageSections',
 					array(
 						'data-cmd'	=> 'inline_edit_generic',
@@ -602,7 +602,7 @@ namespace gp\admin{
 			echo '<li>';
 			echo \gp\tool::Link(
 				$page->title,
-				'<i class="fa fa-pencil"></i>'.$langmessage['theme_content'],
+				'<i class="fa fa-pencil"></i> ' . $langmessage['theme_content'],
 				'cmd=ManageSections&mode=extra',
 				array(
 					'data-cmd'	=> 'inline_edit_generic',
@@ -620,7 +620,7 @@ namespace gp\admin{
 			echo '<li>';
 			echo \gp\tool::Link(
 				'Admin_Theme_Content/Edit/' . urlencode($current_layout),
-				'<i class="fa fa-pencil"></i>'.$langmessage['layout'],
+				'<i class="fa fa-pencil"></i> ' . $langmessage['layout'],
 				'redir=' . rawurlencode($page->requested)
 			);
 			echo '</li>';

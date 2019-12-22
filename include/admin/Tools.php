@@ -218,6 +218,10 @@ namespace gp\admin{
 																	'group'		=> 'settings',
 																);
 
+			$scripts['Admin/Permissions']				= array(	'class'		=> '\\gp\\admin\\Settings\\Permissions',
+																	'method'	=> 'RunCommands',
+																);
+
 			$scripts['Admin/CKEditor']					= array(	'class'		=> '\\gp\\admin\\Settings\\CKEditor',
 																	'label'		=> 'CKEditor',
 																	'group'		=> 'settings',

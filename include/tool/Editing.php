@@ -620,7 +620,7 @@ namespace gp\tool{
 			// 4) CMS defaults
 			$defaults = array(
 							//'customConfig'				=> \gp\tool::GetDir('/include/js/ckeditor_config.js'),
-							'skin'						=> 'kama',
+							'skin'						=> 'moono-lisa',
 							'browser'					=> true, //not actually a ckeditor configuration value, but we're keeping it now for reverse compat
 							'smiley_path'				=> \gp\tool::GetDir('/include/thirdparty/ckeditor/plugins/smiley/images/'),
 							'height'					=> 300,

@@ -408,3 +408,9 @@ html{
 	min-width: unset!important;
 	background-position: center!important;	
 }
+
+.cke_dialog_contents_body .cke_dialog_ui_text,
+.cke_dialog_contents_body .cke_dialog_ui_select,
+.cke_dialog_contents_body .cke_dialog_ui_hbox_last>a.cke_dialog_ui_button{
+	margin-top:0!important
+}

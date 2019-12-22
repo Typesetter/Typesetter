@@ -101,7 +101,6 @@ var $gp = {
 			);
 	},
 
-
 	/**
 	 * Post content with Typesetter's verified value
 	 * Arguments order is same as jQuery's $.post()
@@ -129,7 +128,6 @@ var $gp = {
 			datatype
 			);
 	},
-
 
 
 	/**
@@ -244,11 +242,6 @@ var $gp = {
 				break;
 
 				case 'reload':
-					$gp.Reload();
-				break;
-
-				case 'logging_out':
-					$gp.SetCookieCmd('cmd=logged_out');
 					$gp.Reload();
 				break;
 
@@ -698,5 +691,3 @@ function loading(){
 function loaded(){
 	$gp.loaded();
 }
-
-

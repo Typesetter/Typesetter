@@ -29,6 +29,9 @@ namespace gp\admin\Settings{
 				case 'changeprefs':
 					$this->DoChange();
 				break;
+				case 'SaveGPUI':
+					$this->SaveGPUI();
+				return;
 			}
 
 			$this->Form();
@@ -181,7 +184,77 @@ namespace gp\admin\Settings{
 
 		}
 
+
+
+		/**
+		 * Save UI values for the current user
+		 *
+		 */
+		public static function SaveGPUI(){
+			global $gpAdmin;
+
+			$possible = array();
+
+			$possible['gpui_cmpct']	= 'integer';
+			$possible['gpui_vis']	= array(
+				'con'=>'con',
+				'cur'=>'cur',
+				'app'=>'app',
+				'add'=>'add',
+				'set'=>'set',
+				'upd'=>'upd',
+				'use'=>'use',
+				'cms'=>'cms',
+				'res'=>'res',
+				'tool'=>'tool',
+				'false'=>false
+			);
+
+			$possible['gpui_tx']	= 'integer';
+			$possible['gpui_ty']	= 'integer';
+			$possible['gpui_ckx']	= 'integer';
+			$possible['gpui_cky']	= 'integer';
+			$possible['gpui_thw']	= 'integer';
+
+			foreach($possible as $key => $key_possible){
+
+				if( !isset($_POST[$key]) ){
+					continue;
+				}
+				$value = $_POST[$key];
+
+				if( $key_possible == 'boolean' ){
+					if( !$value || $value === 'false' ){
+						$value = false;
+					}else{
+						$value = true;
+					}
+				}elseif( $key_possible == 'integer' ){
+					$value = (int)$value;
+				}elseif( is_array($key_possible) ){
+					if( !isset($key_possible[$value]) ){
+						continue;
+					}
+				}
+
+				$gpAdmin[$key] = $value;
+			}
+
+			//remove gpui_ settings no longer in $possible
+			unset($gpAdmin['gpui_pdock']);
+			unset($gpAdmin['gpui_con']);
+			unset($gpAdmin['gpui_cur']);
+			unset($gpAdmin['gpui_app']);
+			unset($gpAdmin['gpui_add']);
+			unset($gpAdmin['gpui_set']);
+			unset($gpAdmin['gpui_upd']);
+			unset($gpAdmin['gpui_use']);
+			unset($gpAdmin['gpui_edb']);
+			unset($gpAdmin['gpui_brdis']);	//3.5
+			unset($gpAdmin['gpui_ctx']);	//5.0
+		}
 	}
+
 }
 
 namespace{

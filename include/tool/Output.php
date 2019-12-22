@@ -2382,8 +2382,6 @@ namespace gp\tool{
 
 			$page->RunScript();
 
-			$cmd = \gp\tool::GetCommand();
-
 			//prepare the admin content
 			if( \gp\tool::LoggedIn() ){
 				\gp\admin\Tools::AdminHtml();

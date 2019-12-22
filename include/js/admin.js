@@ -1408,7 +1408,7 @@ $gp.response.renameprep = function(){
 	$('input.title_label').bind('keyup change',SyncSlug).change();
 
 	$gp.links.showmore = function(){
-		$('#gp_rename_table tr').show(500);
+		$('#gp_rename_table tr').css('display','table-row');
 		$(this).parent().remove();
 	};
 

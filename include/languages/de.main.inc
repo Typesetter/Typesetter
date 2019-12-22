@@ -51,7 +51,7 @@ $langmessage = array (
 	'Public'                          => 'Öffentlich',
 	'from'                            => 'Von',
 	'to'                              => 'In',
-	'theme_content'                   => 'Weitere Inhaltsblöcke',
+	'theme_content'                   => 'Extra Inhalte',
 	'edit'                            => 'Bearbeiten',
 	'SAVED'                           => 'Ihre Änderungen wurden gespeichert.',
 	'REFRESH'                         => '<a href="" name="gp_refresh">Seite neu laden</a>, um die Änderungen anzuwenden.',

@@ -620,7 +620,7 @@ namespace gp\tool{
 			// 4) CMS defaults
 			$defaults = array(
 							//'customConfig'				=> \gp\tool::GetDir('/include/js/ckeditor_config.js'),
-							'skin'						=> 'kama',
+							'skin'						=> 'moono-lisa',
 							'browser'					=> true, //not actually a ckeditor configuration value, but we're keeping it now for reverse compat
 							'smiley_path'				=> \gp\tool::GetDir('/include/thirdparty/ckeditor/plugins/smiley/images/'),
 							'height'					=> 300,
@@ -639,7 +639,7 @@ namespace gp\tool{
 																array('Sourcedialog','Templates','ShowBlocks','Undo','Redo','RemoveFormat'), //,'Maximize' does not work well
 																array('Cut','Copy','Paste','PasteText','PasteFromWord','SelectAll','Find','Replace'),
 																array('HorizontalRule','Smiley','SpecialChar','PageBreak','TextColor','BGColor'),
-																array('Link','Unlink','Anchor','Image','Flash','Table'),
+																array('Link','Unlink','Anchor','Image','Table'),
 																array('Format','Font','FontSize'),
 																array('JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','NumberedList','BulletedList','Outdent','Indent'),
 																array('Bold','Italic','Underline','Strike','Blockquote','Subscript','Superscript','About')

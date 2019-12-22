@@ -143,9 +143,8 @@ class Session{
 			return false;
 		}
 
-		self::start($session_id, $sessions);
 
-		if( $this->logged_in === true ){
+		if( $this->Start($session_id, $sessions) ){
 			msg($langmessage['logged_in']);
 		}
 
@@ -1067,7 +1066,7 @@ class Session{
 			$uid .= $_SERVER['HTTP_ACCEPT_CHARSET'];
 		}
 
-		$ip = self::clientIP(true);
+		$ip = self::clientIP();
 		$uid .= substr($ip, 0, strpos($ip, '.'));
 
 		//ie8 will report ACCEPT_LANGUAGE as en-us and en-US depending on the type of request (normal, ajax)
@@ -1079,88 +1078,76 @@ class Session{
 
 
 	/**
-	 * Via Dokuwiki
 	 * Return the IP of the client
+	 * Modified from ClientIP method in Dokuwiki
 	 *
 	 * Honours X-Forwarded-For and X-Real-IP Proxy Headers
 	 *
-	 * It returns a comma separated list of IPs if the above mentioned
-	 * headers are set. If the single parameter is set, it tries to return
-	 * a routable public address, prefering the ones suplied in the X
-	 * headers
-	 *
-	 * @param  boolean $single If set only a single IP is returned
-	 * @author Andreas Gohr <andi@splitbrain.org>
+	 * Tries to return a routable public address, prefering the ones suplied in the X headers
 	 *
 	 */
-	public static function ClientIP($single=false){
-		$ip = array();
+	public static function ClientIP(){
+		$ips = [];
 
-		if( isset($_SERVER['REMOTE_ADDR']) ){
-			$ip[] = $_SERVER['REMOTE_ADDR'];
-		}
+		$add_ip = function($ips, $ip_key){
 
-		if( !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ){
-			$ip = array_merge($ip,explode(',',str_replace(' ','',$_SERVER['HTTP_X_FORWARDED_FOR'])));
-		}
-
-		if( !empty($_SERVER['HTTP_X_REAL_IP']) ){
-			$ip = array_merge($ip,explode(',',str_replace(' ','',$_SERVER['HTTP_X_REAL_IP'])));
-		}
-
-		// some IPv4/v6 regexps borrowed from Feyd
-		// see: http://forums.devnetwork.net/viewtopic.php?f=38&t=53479
-		$dec_octet = '(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|[0-9])';
-		$hex_digit = '[A-Fa-f0-9]';
-		$h16 = "{$hex_digit}{1,4}";
-		$IPv4Address = "$dec_octet\\.$dec_octet\\.$dec_octet\\.$dec_octet";
-		$ls32 = "(?:$h16:$h16|$IPv4Address)";
-		$IPv6Address =
-			"(?:(?:{$IPv4Address})|(?:".
-			"(?:$h16:){6}$ls32" .
-			"|::(?:$h16:){5}$ls32" .
-			"|(?:$h16)?::(?:$h16:){4}$ls32" .
-			"|(?:(?:$h16:){0,1}$h16)?::(?:$h16:){3}$ls32" .
-			"|(?:(?:$h16:){0,2}$h16)?::(?:$h16:){2}$ls32" .
-			"|(?:(?:$h16:){0,3}$h16)?::(?:$h16:){1}$ls32" .
-			"|(?:(?:$h16:){0,4}$h16)?::$ls32" .
-			"|(?:(?:$h16:){0,5}$h16)?::$h16" .
-			"|(?:(?:$h16:){0,6}$h16)?::" .
-			")(?:\\/(?:12[0-8]|1[0-1][0-9]|[1-9][0-9]|[0-9]))?)";
-
-		// remove any non-IP stuff
-		$cnt = count($ip);
-		$match = array();
-		for($i=0; $i<$cnt; $i++){
-			if(preg_match("/^$IPv4Address$/",$ip[$i],$match) || preg_match("/^$IPv6Address$/",$ip[$i],$match)) {
-				$ip[$i] = $match[0];
-			} else {
-				$ip[$i] = '';
+			if( !isset($_SERVER[$ip_key]) ){
+				return $ips;
 			}
-			if(empty($ip[$i])) unset($ip[$i]);
-		}
-		$ip = array_values(array_unique($ip));
+
+			// some IPv4/v6 regexps borrowed from Feyd
+			// see: http://forums.devnetwork.net/viewtopic.php?f=38&t=53479
+			$dec_octet = '(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|[0-9])';
+			$hex_digit = '[A-Fa-f0-9]';
+			$h16 = "{$hex_digit}{1,4}";
+			$IPv4Address = "$dec_octet\\.$dec_octet\\.$dec_octet\\.$dec_octet";
+			$ls32 = "(?:$h16:$h16|$IPv4Address)";
+			$IPv6Address =
+				"(?:(?:{$IPv4Address})|(?:".
+				"(?:$h16:){6}$ls32" .
+				"|::(?:$h16:){5}$ls32" .
+				"|(?:$h16)?::(?:$h16:){4}$ls32" .
+				"|(?:(?:$h16:){0,1}$h16)?::(?:$h16:){3}$ls32" .
+				"|(?:(?:$h16:){0,2}$h16)?::(?:$h16:){2}$ls32" .
+				"|(?:(?:$h16:){0,3}$h16)?::(?:$h16:){1}$ls32" .
+				"|(?:(?:$h16:){0,4}$h16)?::$ls32" .
+				"|(?:(?:$h16:){0,5}$h16)?::$h16" .
+				"|(?:(?:$h16:){0,6}$h16)?::" .
+				")(?:\\/(?:12[0-8]|1[0-1][0-9]|[1-9][0-9]|[0-9]))?)";
+
+			$new_ips = explode(',',str_replace(' ','',$_SERVER[$ip_key]));
+
+			// remove any non-IP stuff
+			foreach($new_ips as $ip){
+				if( preg_match("/^$IPv4Address$/",$ip,$match) || preg_match("/^$IPv6Address$/",$ip,$match)) {
+					$ips[] = $match[0];
+				}
+			}
+
+			return $ips;
+		};
+
+		$ips = $add_ip($ips,'REMOTE_ADDR');
+		$ips = $add_ip($ips,'HTTP_X_FORWARDED_FOR');
+		$ips = $add_ip($ips,'HTTP_X_REAL_IP');
+		$ips = array_values(array_unique($ips));
 
 		// for some strange reason we don't have a IP
-		if( empty($ip[0]) ){
-			 $ip[0] = '0.0.0.0';
-		 }
-
-		if(!$single) return join(',',$ip);
+		if( empty($ips) ){
+			return '0.0.0.0';
+		}
 
 		// decide which IP to use, trying to avoid local addresses
-		$ip = array_reverse($ip);
-		foreach($ip as $i){
-			if(preg_match('/^(::1|[fF][eE]80:|127\.|10\.|192\.168\.|172\.((1[6-9])|(2[0-9])|(3[0-1]))\.)/',$i)){
-				continue;
-			}else{
-				return $i;
+		$ips = array_reverse($ips);
+		foreach($ips as $ip){
+			if( !preg_match('/^(::1|[fF][eE]80:|127\.|10\.|192\.168\.|172\.((1[6-9])|(2[0-9])|(3[0-1]))\.)/',$ip) ){
+				return $ip;
 			}
 		}
-		// still here? just use the first (last) address
-		return $ip[0];
-	}
 
+		// use the first (last) address
+		return end($ips);
+	}
 
 
 	/**

@@ -1,0 +1,15 @@
+/*
+Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+*/
+
+@import url('editor.css');
+
+.cke_bottom {
+	padding-bottom: 3px
+}
+
+.cke_combo_text {
+	margin-bottom: -1px;
+	margin-top: 1px
+}

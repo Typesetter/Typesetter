@@ -1,0 +1,49 @@
+/*
+Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+*/
+
+@import url('dialog.css');
+
+
+.cke_rtl input.cke_dialog_ui_input_text,
+.cke_rtl input.cke_dialog_ui_input_password,
+.cke_rtl input.cke_dialog_ui_input_tel {
+	padding-right: 2px
+}
+
+.cke_rtl div.cke_dialog_ui_input_text,
+.cke_rtl div.cke_dialog_ui_input_password,
+.cke_rtl div.cke_dialog_ui_input_tel {
+	padding-left: 2px
+}
+
+.cke_rtl div.cke_dialog_ui_input_text {
+	padding-right: 1px
+}
+
+.cke_rtl .cke_dialog_ui_vbox_child,
+.cke_rtl .cke_dialog_ui_hbox_child,
+.cke_rtl .cke_dialog_ui_hbox_first,
+.cke_rtl .cke_dialog_ui_hbox_last {
+	padding-right: 2px!important
+}
+
+.cke_hc .cke_dialog_title,
+.cke_hc .cke_dialog_footer,
+.cke_hc a.cke_dialog_tab,
+.cke_hc a.cke_dialog_ui_button,
+.cke_hc a.cke_dialog_ui_button:hover,
+.cke_hc a.cke_dialog_ui_button_ok,
+.cke_hc a.cke_dialog_ui_button_ok:hover {
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled=false)
+}
+
+.cke_hc div.cke_dialog_ui_input_text,
+.cke_hc div.cke_dialog_ui_input_password,
+.cke_hc div.cke_dialog_ui_input_tel,
+.cke_hc div.cke_dialog_ui_input_textarea,
+.cke_hc div.cke_dialog_ui_input_select,
+.cke_hc div.cke_dialog_ui_input_file {
+	border: 0
+}

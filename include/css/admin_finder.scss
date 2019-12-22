@@ -72,3 +72,15 @@ body,
 		width: auto;
 	}
 }
+
+/**
+ * fix for long file names overlapping buttons in preview window header
+ */
+.elfinder-quicklook-title {
+	max-width: 100%;
+	text-overflow: ellipsis;
+}
+
+.elfinder-quicklook-titlebar {
+	padding: 0 40px;
+}

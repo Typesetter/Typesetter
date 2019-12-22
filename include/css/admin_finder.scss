@@ -5,38 +5,30 @@ body,
 #gpx_content, 
 #admincontent {
   position: relative;
-  height: 100%;
+  height: 100vh;
+  padding: 0 !important;
 }
 
 #admincontent_inner{
 	padding: 0;
+	position: relative;
+	height: calc(100vh - 54px);
 	border: 0 none !important;
 	background: #EDEDED !important;
 	overflow: visible !important;
-	position: relative;
-	height: calc(100% - 54px);
 }
 
-
 #elfinder{
-	position: relative;
-	width: 100% !important;
-	height: 100% !important;
+	position: absolute;
+	z-index: 25;
+	top: 0 !important;
+	left: 0 !important;
+	right: 0 !important;
+	height: 100%!important;
 	border: 0 none !important;
 	border-radius: 0 !important;
-	.elfinder-button,
-	.elfinder-cwd,
-	.elfinder-cwd * {
-		-webkit-box-sizing: content-box;
-		-moz-box-sizing: content-box;
-		box-sizing: content-box;
-	}
-	.elfinder-button-search input[type="text"] {
-		width: 100%;
-	}
-	.elfinder-button-search.ui-state-active {
-		z-index: 10;
-		margin-left: -150px;
+	+ #gp_admin_html {
+		display: none;
 	}
 	* {
 		font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
@@ -53,52 +45,30 @@ body,
 	> .ui-resizable-handle.ui-resizable-se {
 	  display: none !important;
 	}
-	.elfinder-navbar {
-		background: #dadada;
-	}
-	.elfinder-toolbar {
-		background: #ededed;
-	}
-	.elfinder-statusbar {
-		background: #333;
-		border-radius: 0 !important;
-	}
-	.elfinder-cwd-view-icons .elfinder-cwd-filename {
-		line-height: 1.1em !important;
-	}
-	.elfinder-quicklook-titlebar-icon .ui-icon {
-	  border: unset;
-	  top: 2px;
-	}
-	.elfinder-quicklook-fullscreen .elfinder-quicklook-navbar {
-		height: 42px;
-		padding: 4px 0;
-	}
-	.elfinder-quicklook-navbar-separator {
-		height: 40px;
-		margin: -4px 0;
-	} 
-	.elfinder-quicklook-titlebar-icon .ui-icon.ui-icon-closethick {
-		right: 4px;
-		top: 9px;
-	}
-	.elfinder-quicklook-titlebar-icon .ui-icon.ui-icon-minusthick,
-	.elfinder-quicklook-titlebar-icon .ui-icon.ui-icon-plusthick {
-		right: 26px;
-	}
-	.CodeMirror *,
-	.ace_editor * {
-		font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace !important;
-	}
 	.elfinder-file-edit {
+		font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace !important;
 		width: 100% !important;
+	}
+	.elfinder-dialog-minimized {
+		margin-right: 3px;
+	}
+	.elfinder-bottomtray {
+		left: auto;
+		right: 0;
+		bottom: 22px;
 	}
 }
 
 /**
  * add left margin to quicklook fullscreen when in #gp_admin_html context
  */
-#gp_admin_html #elfinder .elfinder-quicklook-fullscreen {
-	left: 182px;
-	width: auto;
+#gp_admin_html #elfinder {
+	position: relative;
+	.elfinder-bottomtray {
+		max-width: calc(100% - 180px);
+	}
+	.elfinder-quicklook-fullscreen {
+		left: 182px;
+		width: auto;
+	}
 }

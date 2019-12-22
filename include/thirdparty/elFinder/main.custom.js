@@ -123,10 +123,7 @@ define('jquery-ui', [], function() {});
 	require.config({
 		//baseUrl : 'js',
 		paths : {
-
-			'elfinder' : 'js/elfinder.full', // TODO: for production use 'js/elfinder.full.min',
-
-			// 'encoding-japanese'		: '//cdn.rawgit.com/polygonplanet/encoding.js/1.0.26/encoding.min'
+			'elfinder'				: 'js/elfinder.min',
 			'encoding-japanese'		: '../encoding.js/encoding.min'
 		},
 		waitSeconds : 10 // optional

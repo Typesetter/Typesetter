@@ -23822,7 +23822,8 @@ elFinder.prototype.commands.edit = function() {
 				});
 			
 			// care to viewport scale change with mobile devices
-			maxW = (fm.options.dialogContained? elfNode : $(window)).width();
+			// maxW = (fm.options.dialogContained? elfNode : $(window)).width();
+			maxW = (fm.options.dialogContained? $('#elfinder') : $(window)).width();
 			(dialogNode.width() > maxW) && dialogNode.width(maxW);
 			
 			return dfrd.promise();

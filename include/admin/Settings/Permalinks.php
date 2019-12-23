@@ -544,6 +544,8 @@ class Permalinks{
 		if( self::Apache() ){
 			return self::Rewrite_RulesApache($hide_index, $home_root, $existing_contents, $www);
 		}
+
+		return false;
 	}
 
 

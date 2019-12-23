@@ -612,6 +612,9 @@ class Tools{
 
 		$contents = \gp\admin\Settings\Permalinks::Rewrite_Rules(true, $dirPrefix, $original_contents );
 
+		if( $contents === false ){
+			return;
+		}
 
 		$fp = @fopen($file,'wb');
 		if( $fp === false ){

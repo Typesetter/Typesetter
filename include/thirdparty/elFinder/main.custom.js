@@ -15,10 +15,13 @@ define('jquery-ui', [], function() {});
 
 (function(){
 	"use strict";
+	
 	var // jQuery and jQueryUI version
-
 		// Detect language (optional)
-		// TODO: rather use CMS UI language?
+
+		lang = finder_opts.lang,
+
+		/*
 		lang = (function() {
 			var lang = document.documentElement.lang.substr(0,2);
 
@@ -42,6 +45,7 @@ define('jquery-ui', [], function() {});
 
 				return lang;
 		})(),
+		*/
 
 		// Start elFinder (REQUIRED)
 		start = function(elFinder, editors, config) {

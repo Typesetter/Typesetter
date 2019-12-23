@@ -27,6 +27,7 @@ body,
 	height: 100%!important;
 	border: 0 none !important;
 	border-radius: 0 !important;
+	overflow: hidden;
 	+ #gp_admin_html {
 		display: none;
 	}
@@ -71,4 +72,16 @@ body,
 		left: 182px;
 		width: auto;
 	}
+}
+
+/**
+ * fix for long file names overlapping buttons in preview window header
+ */
+.elfinder-quicklook-title {
+	max-width: 100%;
+	text-overflow: ellipsis;
+}
+
+.elfinder-quicklook-titlebar {
+	padding: 0 40px;
 }

@@ -29,11 +29,5 @@ function Install_Check(){
 		$passed = false;
 	}
 
-
-	if( isset($config['useftp']) ){
-		echo '<p style="color:red">Cannot install this addon. Your installation of PHP has safe_mode enabled.</p>';
-		$passed = false;
-	}
-
 	return $passed;
 }

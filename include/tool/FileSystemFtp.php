@@ -123,7 +123,7 @@ class FileSystemFtp extends FileSystem{
 		/*
 		 * Remove from $config if it's not a safe mode installation
 		 */
-		if( !isset($config['useftp']) && isset($config['ftp_user']) ){
+		if( isset($config['ftp_user']) ){
 			unset($config['ftp_user']);
 			unset($config['ftp_server']);
 			unset($config['ftp_pass']);

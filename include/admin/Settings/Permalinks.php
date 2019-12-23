@@ -532,11 +532,9 @@ class Permalinks{
 	 * add/remove cms rules from $original_contents to get new $contents
 	 *
 	 */
-	public static function Rewrite_Rules( $hide_index = true, $home_root, $existing_contents = null, $www = null ){
+	public static function Rewrite_Rules( $hide_index = true, $home_root, $existing_contents = '', $www = null ){
 
-		if( is_null($existing_contents) ){
-			$existing_contents = '';
-		}
+		$existing_contents = (string)$existing_contents;
 
 		// IIS
 		if( self::IIS() ){
@@ -546,6 +544,8 @@ class Permalinks{
 		if( self::Apache() ){
 			return self::Rewrite_RulesApache($hide_index, $home_root, $existing_contents, $www);
 		}
+
+		return false;
 	}
 
 

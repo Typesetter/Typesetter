@@ -161,7 +161,7 @@ namespace gp\Page{
 
 
 			$array = array();
-			$array[0] = 'admin_box_data';
+			$array[0] = 'gpabox';
 			$array[1] = '';
 			$array[2] = $content;
 			$page->ajaxReplace[] = $array;

@@ -684,19 +684,11 @@ $gp.links.gpabox = function(evt){
 	evt.preventDefault();
 	$gp.loading();
 	var href = $gp.jPrep(this.href)+'&gpx_content=gpabox';
-	$.getJSON(href,$gp.Response);
-};
+	var this_context = this;
+	$.getJSON(href,function(data,textStatus,jqXHR){
+		$gp.Response.call(this_context,data,textStatus,jqXHR);
+	});
 
-
-/**
- * Almost same as gpabox but used to replace an already open modal box with a new one,
- * without showing the overlay and fadeIn effect.
- * Should only be used for links inside a modal box to replace the same box
- */
-$gp.links.gprabox = function(evt){
-	evt.preventDefault();
-	var href = $gp.jPrep(this.href)+'&gpx_content=gprabox';
-	$.getJSON(href, $gp.Response);
 };
 
 

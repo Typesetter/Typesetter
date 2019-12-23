@@ -11,6 +11,7 @@ class Assets{
 	 *
 	 */
 	public static function MergeScripts($scripts, $to_add){
+		global $dataDir;
 
 		if( !is_array($to_add) ){
 			return $scripts;
@@ -71,7 +72,7 @@ class Assets{
 	 * Output the javascript or css assets inline with the html
 	 *
 	 */
-	 public static function Inline($type, $files_flat){
+	public static function Inline($type, $files_flat){
 
 		 if( $type == 'css' ){
 			 echo '<style type="text/css">';

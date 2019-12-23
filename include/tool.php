@@ -301,10 +301,6 @@ namespace gp{
 			}
 		}
 
-		/**
-		 * @deprectated
-		 */
-		public static function gpInstalled(){}
 
 		public static function SetGlobalPaths($DirectoriesAway, $expecting){
 			global $dataDir, $dirPrefix, $rootDir;

@@ -1733,7 +1733,7 @@ namespace gp\tool{
 
 			// add theme css
 			if( !empty($page->theme_name) && $page->get_theme_css === true ){
-				$scripts	= Output\Assets::MergeScripts($scripts,self::LayoutStyleFiles());
+				$scripts	= Output\Assets::MergeScripts($scripts,Output\Assets::LayoutStyleFiles());
 
 			}
 
@@ -1789,47 +1789,6 @@ namespace gp\tool{
 
 
 		/**
-		 * Return a list of css files used by the current layout
-		 *
-		 */
-		public static function LayoutStyleFiles(){
-			global $page, $dataDir;
-
-
-			$files			= array();
-			$dir			= $page->theme_dir . '/' . $page->theme_color;
-			$style_type		= self::StyleType($dir);
-
-
-			//css file
-			if( $style_type == 'css' ){
-
-				$files[]		= rawurldecode($page->theme_path) . '/style.css';
-				$files			= self::AddCustomStyleFiles($files, $style_type);
-				return $files;
-			}
-
-
-			//less or scss file
-			$var_file	= $dir .'/variables.' . $style_type;
-			if( file_exists($var_file) ){
-				$files[] = $var_file;
-			}
-
-			$files			= self::AddCustomStyleFiles($files, $style_type);
-
-			if( $style_type == 'scss' ){
-
-				$files[]		= $dir . '/style.scss';
-				return array( \gp\tool\Output\Css::Cache($files) );
-			}
-
-			array_unshift($files, $dir . '/style.less');
-
-			return array( \gp\tool\Output\Css::Cache($files, 'less') );
-		}
-
-		/**
 		 * Get the path for the custom css/scss/less file
 		 *
 		 * @deprecated as of 5.1.1+
@@ -1843,34 +1802,6 @@ namespace gp\tool{
 			}
 
 			return $dataDir . '/data/_layouts/' . $layout . '/custom.css';
-		}
-
-		/**
-		 * Add paths for custom css/scss/less files
-		 *
-		 */
-		public static function AddCustomStyleFiles($files, $style_type){
-			global $dataDir, $page;
-
-			if( $page->gpLayout === false ){
-				return $files;
-			}
-
-			$file_ext = $style_type == 'scss' ? 'scss' : 'css';
-
-			$customizer_style_file 		= $dataDir . '/data/_layouts/' . $page->gpLayout . '/customizer.' . $file_ext;
-			$layout_editor_style_file 	= $dataDir . '/data/_layouts/' . $page->gpLayout . '/custom.' . $file_ext;
-
-
-			if( file_exists($customizer_style_file) ){
-				$files[] = $customizer_style_file;
-			}
-
-			if( file_exists($layout_editor_style_file) ){
-				$files[] = $layout_editor_style_file;
-			}
-
-			return $files;
 		}
 
 

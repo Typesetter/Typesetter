@@ -1838,20 +1838,12 @@ namespace gp\tool{
 			$dir			= $page->theme_dir . '/' . $page->theme_color;
 			$style_type		= self::StyleType($dir);
 
-			/* 5.1.1+ returns array of (existing) custom file paths */
-			$custom_files	= self::CustomStyleFiles($page->gpLayout, $style_type);
 
 			//css file
 			if( $style_type == 'css' ){
 
-				$files[] = rawurldecode($page->theme_path) . '/style.css';
-
-				if( $page->gpLayout && !empty($custom_files) ){
-					foreach( $custom_files as $cf_path ){
-						$files[] = $cf_path;
-					}
-				}
-
+				$files[]		= rawurldecode($page->theme_path) . '/style.css';
+				$files			= self::AddCustomStyleFiles($files, $style_type);
 				return $files;
 			}
 
@@ -1862,13 +1854,7 @@ namespace gp\tool{
 				$files[] = $var_file;
 			}
 
-
-			if( $page->gpLayout && !empty($custom_files) ){
-				foreach( $custom_files as $cf_path ){
-					$files[] = $cf_path;
-				}
-			}
-
+			$files			= self::AddCustomStyleFiles($files, $style_type);
 
 			if( $style_type == 'scss' ){
 
@@ -1881,11 +1867,10 @@ namespace gp\tool{
 			return array( \gp\tool\Output\Css::Cache($files, 'less') );
 		}
 
-
 		/**
 		 * Get the path for the custom css/scss/less file
 		 *
-		 * deprecated as of 5.1.1+
+		 * @deprecated as of 5.1.1+
 		 * kept for backwards compatibility in case any addons use it
 		 */
 		public static function CustomStyleFile($layout, $style_type){
@@ -1898,54 +1883,51 @@ namespace gp\tool{
 			return $dataDir . '/data/_layouts/' . $layout . '/custom.css';
 		}
 
-
 		/**
-		 * Get an array of paths for custom css/scss/less files
+		 * Add paths for custom css/scss/less files
+		 *
 		 */
-		public static function CustomStyleFiles($layout, $style_type){
-			global $dataDir;
+		public static function AddCustomStyleFiles($files, $style_type){
+			global $dataDir, $page;
+
+			if( $page->gpLayout === false ){
+				return $files;
+			}
+
 			$file_ext = $style_type == 'scss' ? 'scss' : 'css';
 
 			$customizer_style_file 		= $dataDir . '/data/_layouts/' . $layout . '/customizer.' . $file_ext;
 			$layout_editor_style_file 	= $dataDir . '/data/_layouts/' . $layout . '/custom.' . $file_ext;
 
-			$custom_files = array();
 
 			if( file_exists($customizer_style_file) ){
-				$custom_files[] = $customizer_style_file;
+				$files[] = $customizer_style_file;
 			}
 
 			if( file_exists($layout_editor_style_file) ){
-				$custom_files[] = $layout_editor_style_file;
+				$files[] = $layout_editor_style_file;
 			}
 
-			return $custom_files;
+			return $files;
 		}
 
 
 		/**
 		 * Get the filetype of the style.* file
 		 *
-		 * @return string|false
+		 * @return string
 		 */
 		public static function StyleType($dir){
-			$css_path	= $dir . '/style.css';
-			$less_path	= $dir . '/style.less';
-			$scss_path	= $dir . '/style.scss';
 
-			if( file_exists($css_path) ){
-				return 'css';
+			$types = ['less','scss'];
+
+			foreach($types as $type){
+				$path = $dir . '/style.'.$type;
+				if( file_exists($path) ){
+					return $type;
+				}
 			}
-
-			if( file_exists($less_path) ){
-				return 'less';
-			}
-
-			if( file_exists($scss_path) ){
-				return 'scss';
-			}
-
-			return false;
+			return 'css';
 		}
 
 

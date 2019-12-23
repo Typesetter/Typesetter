@@ -1714,65 +1714,31 @@ namespace gp\tool{
 		}
 
 
-
 		/**
 		 * Prepare and output the css for the current page
 		 * @static
 		 */
-		public static function GetHead_CSS($scripts){
+		public static function GetHead_CSS($to_add){
 			global $page, $config, $dataDir;
 
-			$scripts = self::GetHead_CDN('css', $scripts);
+			$scripts	= [];
+			$to_add		= self::GetHead_CDN('css', $to_add);
+			$scripts	= Output\Assets::MergeScripts($scripts,$to_add);
 
-			if( isset($page->css_user) && is_array($page->css_user) ){
-				$scripts = array_merge( $scripts, $page->css_user );
+
+			if( isset($page->css_user) ){
+				$scripts	= Output\Assets::MergeScripts($scripts,$page->css_user);
 			}
 
 			// add theme css
 			if( !empty($page->theme_name) && $page->get_theme_css === true ){
-				$scripts = array_merge( $scripts, self::LayoutStyleFiles() );
+				$scripts	= Output\Assets::MergeScripts($scripts,self::LayoutStyleFiles());
+
 			}
 
 			//styles that need to override admin.css should be added to $page->css_admin;
-			if( isset($page->css_admin) && is_array($page->css_admin) ){
-				$scripts = array_merge( $scripts, $page->css_admin );
-			}
-
-
-			//convert .scss & .less files to .css
-			foreach($scripts as $key => $script){
-
-				// allow arrays of scripts
-				$files = [];
-
-				// single file path string
-				if( !is_array($script) ){
-					$file = $script;
-					$ext = \gp\tool::Ext($file);
-					$files[$ext] = [$dataDir . $file];
-
-				// single file array
-				}elseif( isset($script['file']) ){
-					$file = $script['file'];
-					$ext = \gp\tool::Ext($file);
-					$files[$ext] = [$dataDir . $file];
-
-				// multiple scripts
-				}else{
-					foreach( $script as $file ){
-						$file = is_array($file) ? $file['file'] : $file;
-						$ext = \gp\tool::Ext($file);
-						$files[$ext][] = $dataDir . $file;
-					}
-				}
-
-				foreach( $files as $ext => $files_same_ext ){
-					//less and scss
-					if( $ext == 'less' || $ext == 'scss' ){
-						$scripts[$key] = \gp\tool\Output\Css::Cache($files_same_ext, $ext);
-					}
-				}
-
+			if( isset($page->css_admin)  ){
+				$scripts	= Output\Assets::MergeScripts($scripts,$page->css_admin);
 			}
 
 			// disable 'combine css' if 'create_css_sourcemaps' is set to true in /gpconfig.php

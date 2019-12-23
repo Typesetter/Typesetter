@@ -66,4 +66,29 @@ class Assets{
 		}
 	}
 
+
+	/**
+	 * Output the javascript or css assets inline with the html
+	 *
+	 */
+	 public static function Inline($type, $files_flat){
+
+		 if( $type == 'css' ){
+			 echo '<style type="text/css">';
+		 }else{
+			 echo '<script type="text/javascript">';
+		 }
+		 foreach($files_flat as $file_key => $file){
+			 $full_path = \gp\tool\Output\Combine::CheckFile($file);
+			 if( $full_path === false ) continue;
+			 readfile($full_path);
+			 echo ";\n";
+		 }
+		 if( $type == 'css' ){
+			 echo '</style>';
+		 }else{
+			 echo '</script>';
+		 }
+	 }
+
 }

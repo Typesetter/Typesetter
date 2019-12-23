@@ -1932,22 +1932,7 @@ namespace gp\tool{
 			// Force resources to be included inline
 			// CheckFile will fix the $file path if needed
 			if( $page->head_force_inline ){
-				if( $type == 'css' ){
-					echo '<style type="text/css">';
-				}else{
-					echo '<script type="text/javascript">';
-				}
-				foreach($files_flat as $file_key => $file){
-					$full_path = \gp\tool\Output\Combine::CheckFile($file);
-					if( $full_path === false ) continue;
-					readfile($full_path);
-					echo ";\n";
-				}
-				if( $type == 'css' ){
-					echo '</style>';
-				}else{
-					echo '</script>';
-				}
+				Output\Assets::Inline($type, $files_flat );
 				return;
 			}
 

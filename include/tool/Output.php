@@ -1743,33 +1743,32 @@ namespace gp\tool{
 			foreach($scripts as $key => $script){
 
 				// allow arrays of scripts
-				$files = array();
+				$files = [];
 
-				if( is_array($script) ){
-					// array of scripts
-					if( isset($script['file']) ){
-						// single script
-						$file = $script['file'];
-						$ext = \gp\tool::Ext($file);
-						$files[$ext] = array($dataDir . $file);
-					}else{
-						// multiple scripts
-						foreach( $script as $file ){
-							$file = is_array($file) ? $file['file'] : $file;
-							$ext = \gp\tool::Ext($file);
-							//$files[$ext] += array();
-							$files[$ext][] = $dataDir . $file;
-						}
-					}
-				}else{
+				// single file path string
+				if( !is_array($script) ){
 					$file = $script;
 					$ext = \gp\tool::Ext($file);
-					$files[$ext] = array($dataDir . $file);
+					$files[$ext] = [$dataDir . $file];
+
+				// single file array
+				}elseif( isset($script['file']) ){
+					$file = $script['file'];
+					$ext = \gp\tool::Ext($file);
+					$files[$ext] = [$dataDir . $file];
+
+				// multiple scripts
+				}else{
+					foreach( $script as $file ){
+						$file = is_array($file) ? $file['file'] : $file;
+						$ext = \gp\tool::Ext($file);
+						$files[$ext][] = $dataDir . $file;
+					}
 				}
 
 				foreach( $files as $ext => $files_same_ext ){
 					//less and scss
-					if( $ext == 'less' || $ext == 'scss' ){ // msg("from GetHead_CSS");
+					if( $ext == 'less' || $ext == 'scss' ){
 						$scripts[$key] = \gp\tool\Output\Css::Cache($files_same_ext, $ext);
 					}
 				}
@@ -1943,26 +1942,25 @@ namespace gp\tool{
 		public static function CombineFiles($files,$type,$combine){
 			global $page;
 
-			//msg("files=" . pre($files));
-
 			// allow arrays of scripts
-			$files_flat = array();
+			$files_flat = [];
 
 			//only need file paths
 			foreach($files as $key => $val){
-				if( is_array($val) ){
-					// array of scripts
-					if( isset($val['file']) ){
-						// single script
-						$files_flat[$key] = $val['file'];
-					}else{
-						// multiple scripts
-						foreach( $val as $subkey => $file ){
-							$files_flat[$key . '-' . $subkey] = is_array($file) ? $file['file'] : $file;
-						}
-					}
-				}else{
+
+				// single file path string
+				if( !is_array($val) ){
 					$files_flat[$key] = $val;
+
+				// single script array
+				}elseif( isset($val['file']) ){
+					$files_flat[$key] = $val['file'];
+
+				// multiple scripts
+				}else{
+					foreach( $val as $subkey => $file ){
+						$files_flat[$key . '-' . $subkey] = is_array($file) ? $file['file'] : $file;
+					}
 				}
 			}
 

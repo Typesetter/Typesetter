@@ -1780,11 +1780,7 @@ namespace gp\tool{
 				}
 				unset($scripts[$key]);
 
-				if( $type == 'css' ){
-					echo "\n" . '<link rel="stylesheet" type="text/css" href="' . $cdn_url . '" />';
-				}else{
-					echo "\n" . '<script type="text/javascript" src="' . $cdn_url . '"></script>';
-				}
+				echo Output\Assets::FormatAsset($type,$cdn_url);
 			}
 
 			return $scripts;
@@ -1960,25 +1956,16 @@ namespace gp\tool{
 			if( !$combine || (isset($_REQUEST['no_combine']) && \gp\tool::LoggedIn()) ){
 				foreach($files_flat as $file_key => $file){
 
-					$html = "\n" . '<script type="text/javascript" src="%s"></script>';
-					if( $type == 'css' ){
-						$html = "\n" . '<link type="text/css" href="%s" rel="stylesheet"/>';
-					}
-
 					\gp\tool\Output\Combine::CheckFile($file);
 					if( \gp\tool::LoggedIn() ){
 						$file .= '?v=' . rawurlencode(gpversion);
 					}
-					echo sprintf($html, \gp\tool::GetDir($file, true));
+					echo Output\Assets::FormatAsset($type, \gp\tool::GetDir($file, true) );
+
 				}
 				return;
 			}
 
-
-			$html = "\n" . '<script type="text/javascript" src="%s"></script>';
-			if( $type == 'css' ){
-				$html = "\n" . '<link rel="stylesheet" type="text/css" href="%s"/>';
-			}
 
 			//create combine request
 			$combined_file = \gp\tool\Output\Combine::GenerateFile($files_flat,$type);
@@ -1986,8 +1973,7 @@ namespace gp\tool{
 				return;
 			}
 
-
-			echo sprintf($html, \gp\tool::GetDir($combined_file, true));
+			echo Output\Assets::FormatAsset($type, \gp\tool::GetDir($combined_file, true) );
 		}
 
 

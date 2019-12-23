@@ -10,7 +10,7 @@ class Assets{
 	 * Convert .scss & .less files to .css
 	 *
 	 */
-	public function MergeScripts($scripts, $to_add){
+	public static function MergeScripts($scripts, $to_add){
 
 		if( !is_array($to_add) ){
 			return $scripts;
@@ -54,5 +54,16 @@ class Assets{
 		return array_merge($scripts,$to_add);
 	}
 
+	/**
+	 * Format <script> and <link> tags for asset urls
+	 *
+	 */
+	public static function FormatAsset($type, $url){
+		if( $type == 'css' ){
+			return "\n" . '<link rel="stylesheet" type="text/css" href="' . $url . '" />';
+		}else{
+			return "\n" .'<script type="text/javascript" src="' . $url . '"></script>';
+		}
+	}
 
 }

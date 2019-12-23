@@ -1103,25 +1103,21 @@ namespace gp\tool{
 				$parent = \gp\tool::DirName($dir);
 				self::CheckDir($parent, $index);
 
+
 				//ftp mkdir
-				if( isset($config['useftp']) ){
-					if( !self::FTP_CheckDir($dir) ){
-						return false;
-					}
-				}else{
-					if( !@mkdir($dir,gp_chmod_dir) ){
-						return false;
-					}
-					@chmod($dir, gp_chmod_dir); //some systems need more than just the 0755 in the mkdir() function
+				if( !@mkdir($dir,gp_chmod_dir) ){
+					return false;
 				}
+				@chmod($dir, gp_chmod_dir); //some systems need more than just the 0755 in the mkdir() function
+
 
 				// make sure there's an index.html file
-				// only check if we just created the directory, we don't want to keep 
+				// only check if we just created the directory, we don't want to keep
 				// creating an index.html file if a user deletes it
 				if( $index && gp_dir_index ){
 					$indexFile = $dir . '/index.html';
 					if( !file_exists($indexFile) ){
-						//not using \gp\tool\Files::Save() so we can avoid infinite looping 
+						//not using \gp\tool\Files::Save() so we can avoid infinite looping
 						// (it's safe since we already know the directory exists and we're not concerned about the content)
 						file_put_contents($indexFile, '<html></html>');
 						@chmod($indexFile, gp_chmod_file);
@@ -1142,10 +1138,6 @@ namespace gp\tool{
 		public static function RmDir($dir){
 			global $config;
 
-			//ftp
-			if( isset($config['useftp']) ){
-				return self::FTP_RmDir($dir);
-			}
 			return @rmdir($dir);
 		}
 
@@ -1220,82 +1212,6 @@ namespace gp\tool{
 
 			return $path;
 		}
-
-
-
-		/*
-		 *
-		 * FTP Functions
-		 * 
-		 */
-
-		 public static function FTP_RmDir($dir){
-			$conn_id = self::FTPConnect();
-			$dir = self::ftpLocation($dir);
-
-			return ftp_rmdir($conn_id, $dir);
-		}
-
-
-
-		public static function FTP_CheckDir($dir){
-			$conn_id	= self::FTPConnect();
-			$dir		= self::ftpLocation($dir);
-
-			if( !ftp_mkdir($conn_id, $dir) ){
-				return false;
-			}
-			return ftp_site($conn_id, 'CHMOD 0777 '. $dir );
-		}
-
-
-
-		public static function FTPConnect(){
-			global $config;
-
-			static $conn_id = false;
-
-			if( $conn_id ){
-				return $conn_id;
-			}
-
-			if( empty($config['ftp_server']) ){
-				return false;
-			}
-
-			$conn_id = @ftp_connect($config['ftp_server'], 21, 6);
-			if( !$conn_id ){
-				//trigger_error('ftp_connect() failed for server : '.$config['ftp_server']);
-				return false;
-			}
-
-			$login_result = @ftp_login($conn_id, $config['ftp_user'], $config['ftp_pass']);
-			if( !$login_result ){
-				//trigger_error('ftp_login() failed for server : '.$config['ftp_server'].' and user: '.$config['ftp_user']);
-				return false;
-			}
-			register_shutdown_function(array('\\gp\\tool\\Files', 'ftpClose'), $conn_id);
-			return $conn_id;
-		}
-
-
-
-		public static function ftpClose($connection=false){
-			if( $connection !== false ){
-				@ftp_quit($connection);
-			}
-		}
-
-
-
-		public static function ftpLocation(&$location){
-			global $config,$dataDir;
-
-			$len = strlen($dataDir);
-			$temp = substr($location, $len);
-			return $config['ftp_root']. $temp;
-		}
-
 
 
 		/**

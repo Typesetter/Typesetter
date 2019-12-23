@@ -339,10 +339,8 @@ namespace gp\tool\Output{
 				$sent[$full_path] = true;
 
 				if( !file_exists($full_path) ){
-					if( \gp\tool::LoggedIn() ){
-						$msg = 'Admin Notice: The following file could not be found: \n\n'.$full_path;
-						echo 'if(isadmin){alert('.json_encode($msg).');}';
-					}
+					$msg = 'Admin Notice: The following file could not be found: \n\n'.$full_path;
+					echo ';if(isadmin){alert('.json_encode($msg).');}';
 					continue;
 				}
 

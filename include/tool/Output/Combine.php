@@ -667,7 +667,7 @@ class Combine{
 			//minify js
 			if( $config['minifyjs'] ){
 
-				$minify_stats = array( 
+				$minify_stats = array(
 					'date' 								=> date('Y-m-d H:i'),
 					'errors' 							=> 'none',
 				);
@@ -742,8 +742,7 @@ class Combine{
 	 */
 	public static function CheckFile(&$file){
 		global $dataDir, $dirPrefix;
-		$comment_start = '<!--';
-		$comment_end = '-->';
+		$comment = "\n<!-- %s -->\n";
 
 		$file = self::TrimQuery($file);
 
@@ -770,31 +769,33 @@ class Combine{
 		//require .js, or .css/.less/.scss
 		$ext	= \gp\tool::Ext($file);
 		if( $ext !== 'js' && $ext !== 'css' && $ext !== 'less' && $ext !== 'scss' ){
-			echo  "\n{$comment_start} File Not css, less, scss or js {$file} {$comment_end}\n";
+			echo sprintf($comment, 'File Not css, less, scss or js '.$file);
 			return false;
 		}
 
 		//paths that have been urlencoded
 		if( strpos($file,'%') !== false ){
 			$decoded_file = rawurldecode($file);
-			if( $full_path = self::CheckFileSub($decoded_file) ){
+			if( $full_path = self::FixFilePath($decoded_file) ){
 				$file = $decoded_file;
 				return $full_path;
 			}
 		}
 
 		//paths that have not been encoded
-		if( $full_path = self::CheckFileSub($file) ){
+		if( $full_path = self::FixFilePath($file) ){
 			return $full_path;
 		}
 
-
-		$full_path = $dataDir . substr($file, strlen($dirPrefix));
-		echo  "\n{$comment_start} File Not Found {$full_path} {$comment_end}\n";
+		echo sprintf($comment, 'File Not Found: '. $file);
 		return false;
 	}
 
-	public static function CheckFileSub(&$file){
+	/**
+	 * Change an incomplete path to a resolveable absolute file path
+	 *
+	 */
+	public static function FixFilePath(&$file){
 		global $dataDir, $dirPrefix;
 
 		//realpath returns false if file does not exist
@@ -808,6 +809,7 @@ class Combine{
 			return false;
 		}
 
+		// remove $dirPrefix from the file path before adding $dataDir
 		if( strpos($file,$dirPrefix) === 0 ){
 			$fixed = substr($file,strlen($dirPrefix));
 			$full_path = $dataDir.$fixed;

@@ -1794,3 +1794,10 @@ div.elfinder-cwd-wrapper-list .ui-icon-grip-dotted-vertical {
 .elfinder-mobile .elfinder-quicklook-titlebar-icon .ui-icon.elfinder-icon-full {
   background-image: none;
 }
+.elfinder-resize-preset {
+	padding: 0!important;
+}
+.elfinder-resize-container {
+	margin-left: 5px;
+	margin-right: 5px;
+}

@@ -13,26 +13,6 @@ namespace gp\tool\Output{
 									'/include/js/ckeditor_config.js'				=> 'CKEDITOR',
 									);
 
-		static function ReplaceContent($id,$content){
-			self::JavascriptCall('WBx.response','replace',$id,$content);
-		}
-
-		static function JavascriptCall(){
-			$args = func_get_args();
-			if( !isset($args[0]) ){
-				return;
-			}
-
-			echo array_shift($args);
-			echo '(';
-			$comma = '';
-			foreach($args as $arg){
-				echo $comma;
-				echo self::quote($arg);
-				$comma = ',';
-			}
-			echo ');';
-		}
 
 		static function quote($content){
 			return \gp\tool::JsonEncode($content);

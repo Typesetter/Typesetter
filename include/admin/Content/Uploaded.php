@@ -48,7 +48,8 @@ namespace gp\admin\Content{
 			$lang_file = '/include/thirdparty/elFinder/js/i18n/elfinder.'.$language.'.js';
 			$lang_full = $dataDir.$lang_file;
 			if( file_exists($lang_full) ){
-				$this->page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir($lang_file).'"></script>';
+				// elFinder 2.3.2 will liad the lang file via require.js
+				// $this->page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir($lang_file).'"></script>';
 			}else{
 				$language = 'en';
 			}

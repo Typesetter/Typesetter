@@ -16,7 +16,7 @@ class Tools{
 	 *  - Password
 	 *
 	 */
-	static function Form_UserDetails(){
+	public static function Form_UserDetails(){
 		global $langmessage;
 
 		$_POST += array('username'=>'','site_title'=>'My '.CMS_NAME,'email'=>'');
@@ -35,7 +35,7 @@ class Tools{
 	 *  - hide gplink
 	 *
 	 */
-	static function Form_Configuration(){
+	public static function Form_Configuration(){
 		global $langmessage;
 
 		echo '<tr><th colspan="3">';
@@ -97,7 +97,7 @@ class Tools{
  	 * @param bool $default The default value if it hasn't already been set by the user
  	 *
 	 */
-	static function BooleanForm($key,$default=true){
+	public static function BooleanForm($key,$default=true){
 		$checked = '';
 		if( self::BooleanValue($key,$default) ){
 			$checked = 'checked="checked"';
@@ -112,7 +112,7 @@ class Tools{
  	 * @param string $key The configuration key
  	 * @param bool $default The default value if it hasn't already been set by the user
 	 */
-	static function BooleanValue($key,$default=true){
+	public static function BooleanValue($key,$default=true){
 		if( !isset($_POST[$key]) ){
 			return $default;
 		}
@@ -125,7 +125,7 @@ class Tools{
 
 	//based on the user supplied values, make sure we can go forward with the installation
 
-	static function gpInstall_Check(){
+	public static function gpInstall_Check(){
 		global $langmessage;
 
 		echo "\nInstall Check\n";
@@ -175,7 +175,7 @@ class Tools{
 		return true;
 	}
 
-	static function Install_Title(){
+	public static function Install_Title(){
 		$_POST += array( 'site_title' => '');
 		$title = $_POST['site_title'];
 		$title = htmlspecialchars($title);
@@ -186,7 +186,7 @@ class Tools{
 		return $title;
 	}
 
-	static function Install_DataFiles_New($destination = false, $config = array(), $base_install = true ){
+	public static function Install_DataFiles_New($destination = false, $config = array(), $base_install = true ){
 		global $langmessage;
 
 
@@ -196,8 +196,6 @@ class Tools{
 
 
 		//set config variables
-		//$config = array(); //because of ftp values
-
 		$gpLayouts = array();
 
 
@@ -207,6 +205,7 @@ class Tools{
 		$gpLayouts['default']['color'] = '#93c47d';
 
 
+		$_config							= [];
 		$_config['toemail']					= $_POST['email'];
 		$_config['gpLayout']				= 'default';
 		$_config['title']					= self::Install_Title();
@@ -544,7 +543,7 @@ class Tools{
 
 
 		if( $base_install ){
-			self::InstallHtaccess($destination,$config);
+			self::InstallHtaccess($destination);
 		}
 
 		\gp\tool\Files::Unlock('write',gp_random);
@@ -553,7 +552,7 @@ class Tools{
 	}
 
 
-	static function NewTitle( $dataDir, $title, $content, $config, $index ){
+	public static function NewTitle( $dataDir, $title, $content, $config, $index ){
 
 		$file = $dataDir.'/data/_pages/'.substr($config['gpuniq'],0,7).'_'.$index[$title].'/page.php';
 		self::$file_count++;
@@ -572,7 +571,7 @@ class Tools{
 		return \gp\tool\Files::SaveData($file,'file_sections',$file_sections,$meta_data);
 	}
 
-	static function NewExtra($file, $content){
+	public static function NewExtra($file, $content){
 		$extra_content = array(array('type'=>'text','content'=>$content));
 		return \gp\tool\Files::SaveData($file,'file_sections',$extra_content);
 	}
@@ -590,8 +589,8 @@ class Tools{
 	 * @param string $destination The root path of the installation
 	 * @param array $config Current installation configuration
 	 */
-	static function InstallHtaccess($destination,$config){
-		global $install_ftp_connection, $dirPrefix;
+	public static function InstallHtaccess($destination){
+		global $dirPrefix;
 
 		//only proceed with save if we can test the results
 		if( \gp\tool\RemoteGet::Test() === false ){
@@ -606,69 +605,42 @@ class Tools{
 		$GLOBALS['config']['homepath'] = false; //to prevent a warning from absoluteUrl()
 		$file = $destination.'/.htaccess';
 
-		$original_contents = null;
+		$original_contents = false;
 		if( file_exists($file) ){
 			$original_contents = file_get_contents($file);
 		}
 
 		$contents = \gp\admin\Settings\Permalinks::Rewrite_Rules(true, $dirPrefix, $original_contents );
 
-		if( !isset($config['useftp']) ){
-			//echo 'not using ftp';
-			$fp = @fopen($file,'wb');
-			if( !$fp ){
-				return;
-			}
-
-			@fwrite($fp,$contents);
-			fclose($fp);
-			@chmod($file,0666);
-
-			//return .htaccess to original state
-			if( !\gp\admin\Settings\Permalinks::TestResponse() ){
-				if( $original_contents === false ){
-					unlink($file);
-				}else{
-					$fp = @fopen($file,'wb');
-					if( $fp ){
-						@fwrite($fp,$original_contents);
-						fclose($fp);
-					}
-				}
-			}
+		if( $contents === false ){
 			return;
 		}
 
-
-		//using ftp
-		$file = $config['ftp_root'].'/.htaccess';
-
-		$temp = tmpfile();
-		if( !$temp ){
-			return false;
+		$fp = @fopen($file,'wb');
+		if( $fp === false ){
+			return;
 		}
 
-		fwrite($temp, $contents);
-		fseek($temp, 0); //Skip back to the start of the file being written to
-		@ftp_fput($install_ftp_connection, $file, $temp, FTP_ASCII );
-		fclose($temp);
-
+		@fwrite($fp,$contents);
+		fclose($fp);
+		@chmod($file,0666);
 
 		//return .htaccess to original state
 		if( !\gp\admin\Settings\Permalinks::TestResponse() ){
 			if( $original_contents === false ){
-				@ftp_delete($install_ftp_connection, $file);
+				unlink($file);
 			}else{
-				$temp = tmpfile();
-				fwrite($temp,$original_contents);
-				fseek($temp,0);
-				@ftp_fput($install_ftp_connection, $file, $temp, FTP_ASCII );
-				fclose($temp);
+				$fp = @fopen($file,'wb');
+				if( $fp !== false ){
+					@fwrite($fp,$original_contents);
+					fclose($fp);
+				}
 			}
 		}
+
 	}
 
-	static function Install_Link_Content($href,$label,$query='',$attr=''){
+	public static function Install_Link_Content($href,$label,$query='',$attr=''){
 
 		$query = str_replace('&','&amp;',$query);
 		$href = str_replace('&','&amp;',$href);
@@ -680,7 +652,7 @@ class Tools{
 		return '<a href="$linkPrefix/'.$href.$query.'">'.$label.'</a>';
 	}
 
-	static function AddCSs(){
+	public static function AddCSs(){
 		global $dataDir;
 
 		echo '<style type="text/css">';

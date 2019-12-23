@@ -11715,7 +11715,7 @@ elFinder.prototype._options = {
 	 * @type Boolean
 	 * @default false
 	 */
-	dialogContained : false,
+	dialogContained : true,
 	
 	/**
 	 * Allow shortcuts
@@ -17510,7 +17510,7 @@ $.fn.elfinderdialog = function(opts, fm) {
 	}
 	
 	if (fm.options.dialogContained) {
-		syncSize.width = syncSize.height = syncSize.enabled = true;
+		syncSize.width = syncSize.height = syncSize.enabled = false;
 	} else {
 		syncSize.width = (opts.maxWidth === 'window');
 		syncSize.height = (opts.maxHeight === 'window');
@@ -23822,7 +23822,8 @@ elFinder.prototype.commands.edit = function() {
 				});
 			
 			// care to viewport scale change with mobile devices
-			maxW = (fm.options.dialogContained? elfNode : $(window)).width();
+			// maxW = (fm.options.dialogContained? elfNode : $(window)).width();
+			maxW = (fm.options.dialogContained? $('#elfinder') : $(window)).width();
 			(dialogNode.width() > maxW) && dialogNode.width(maxW);
 			
 			return dfrd.promise();

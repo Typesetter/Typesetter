@@ -6,6 +6,76 @@ class Assets{
 
 
 	/**
+	 * Combine the files in $files into a combine.php request
+	 * If $page->head_force_inline is true, resources will be
+	 * included inline in the document
+	 *
+	 * @param array $files Array of files relative to $dataDir
+	 * @param string $type The type of resource being combined
+	 *
+	 */
+	public static function CombineFiles($files,$type,$combine){
+		global $page;
+
+		// allow arrays of scripts
+		$files_flat = [];
+
+		//only need file paths
+		foreach($files as $key => $val){
+
+			// single file path string
+			if( !is_array($val) ){
+				$files_flat[$key] = $val;
+
+			// single script array
+			}elseif( isset($val['file']) ){
+				$files_flat[$key] = $val['file'];
+
+			// multiple scripts
+			}else{
+				foreach( $val as $subkey => $file ){
+					$files_flat[$key . '-' . $subkey] = is_array($file) ? $file['file'] : $file;
+				}
+			}
+		}
+
+		$files_flat = array_unique($files_flat);
+		$files_flat = array_filter($files_flat);//remove empty elements
+
+		// Force resources to be included inline
+		// CheckFile will fix the $file path if needed
+		if( $page->head_force_inline ){
+			self::Inline($type, $files_flat );
+			return;
+		}
+
+
+		//files not combined except for script components
+		if( !$combine || (isset($_REQUEST['no_combine']) && \gp\tool::LoggedIn()) ){
+			foreach($files_flat as $file_key => $file){
+
+				\gp\tool\Output\Combine::CheckFile($file);
+				if( \gp\tool::LoggedIn() ){
+					$file .= '?v=' . rawurlencode(gpversion);
+				}
+				echo self::FormatAsset($type, \gp\tool::GetDir($file, true) );
+
+			}
+			return;
+		}
+
+
+		//create combine request
+		$combined_file = \gp\tool\Output\Combine::GenerateFile($files_flat,$type);
+		if( $combined_file === false ){
+			return;
+		}
+
+		echo self::FormatAsset($type, \gp\tool::GetDir($combined_file, true) );
+	}
+
+
+	/**
 	 * Add CSS files to the array
 	 * Convert .scss & .less files to .css
 	 *

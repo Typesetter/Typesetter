@@ -1966,10 +1966,6 @@ namespace gp\tool{
 		 */
 		public static function LastFatal(){
 
-			if( !function_exists('error_get_last') ){
-				return;
-			}
-
 			$fatal_errors	= array( E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR );
 			$last_error		= error_get_last();
 			if( is_array($last_error) && in_array($last_error['type'], $fatal_errors) ){

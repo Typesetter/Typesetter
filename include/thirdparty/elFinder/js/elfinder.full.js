@@ -11715,7 +11715,7 @@ elFinder.prototype._options = {
 	 * @type Boolean
 	 * @default false
 	 */
-	dialogContained : false,
+	dialogContained : true,
 	
 	/**
 	 * Allow shortcuts

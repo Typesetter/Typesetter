@@ -1896,8 +1896,8 @@ namespace gp\tool{
 
 			$file_ext = $style_type == 'scss' ? 'scss' : 'css';
 
-			$customizer_style_file 		= $dataDir . '/data/_layouts/' . $layout . '/customizer.' . $file_ext;
-			$layout_editor_style_file 	= $dataDir . '/data/_layouts/' . $layout . '/custom.' . $file_ext;
+			$customizer_style_file 		= $dataDir . '/data/_layouts/' . $page->gpLayout . '/customizer.' . $file_ext;
+			$layout_editor_style_file 	= $dataDir . '/data/_layouts/' . $page->gpLayout . '/custom.' . $file_ext;
 
 
 			if( file_exists($customizer_style_file) ){

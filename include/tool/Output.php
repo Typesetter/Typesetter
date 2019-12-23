@@ -1438,7 +1438,6 @@ namespace gp\tool{
 			//before ob_start() so plugins can get buffer content
 			\gp\tool\Plugins::Action('HeadContent');
 
-			ob_start();
 
 			if( \gp\tool::LoggedIn() ){
 				\gp\tool::AddColorBox();
@@ -1454,13 +1453,14 @@ namespace gp\tool{
 			//get css and js info
 			$scripts = \gp\tool\Output\Combine::ScriptInfo( self::$components );
 
+			ob_start();
 			self::GetHead_TKD();
+			self::$head_content = ob_get_clean();
 
 			ob_start();
 			self::GetHead_CSS($scripts['css']); //css before js so it's available to scripts
 			self::$head_css = ob_get_clean();
 
-			self::$head_content = ob_get_clean();
 
 			//javascript
 			ob_start();

@@ -1950,9 +1950,7 @@ namespace gp\tool{
 			$placeholder = '<!-- jquery_placeholder ' . gp_random . ' -->';
 			$replacement = '';
 			if( !empty(self::$head_js) || stripos($buffer, '<script') !== false ){
-				$replacement = "\n<script type=\"text/javascript\" src=\""
-					. \gp\tool::GetDir('/include/thirdparty/js/jquery.js')
-					. "\"></script>";
+				$replacement = Output\Assets::FormatAsset('js',\gp\tool::GetDir('/include/thirdparty/js/jquery.js'));
 			}
 
 			$replacements[$placeholder]	= $replacement;

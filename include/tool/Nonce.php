@@ -57,12 +57,12 @@ class Nonce{
 		}
 
 		// Nonce generated 0-12 hours ago
-		if( self::Hash( $nonce, 0, $factor ) == $check_nonce ){
+		if( self::Hash( $nonce, 0, $factor ) === $check_nonce ){
 			return true;
 		}
 
 		// Nonce generated 12-24 hours ago
-		if( self::Hash( $nonce, 1, $factor ) == $check_nonce ){
+		if( self::Hash( $nonce, 1, $factor ) === $check_nonce ){
 			return true;
 		}
 

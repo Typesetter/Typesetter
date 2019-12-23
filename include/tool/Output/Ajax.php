@@ -129,9 +129,8 @@ namespace gp\tool\Output{
 		 */
 		public static function Messages(){
 
-			ob_start();
-			echo GetMessages(false);
-			$content = ob_get_clean();
+			$content = GetMessages(false);
+
 			if( !empty($content) ){
 				self::JsonDo('messages','',$content);
 			}

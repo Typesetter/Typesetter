@@ -337,7 +337,6 @@ namespace gp\tool\Output{
 				return self::IncludePage($requested);
 			}
 
-			return '';
 		}
 
 

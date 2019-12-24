@@ -302,7 +302,7 @@ namespace gp\tool\Output{
 		/**
 		 * Include the content of a page or gadget as specified in $data
 		 * @param array $data
-		 * @param string The included content
+		 * @return string The included content
 		 */
 		public static function IncludeContent($data){
 			global $langmessage, $gp_index;
@@ -321,7 +321,7 @@ namespace gp\tool\Output{
 				if( \gp\tool::LoggedIn() ){
 					msg('Infinite loop detected: '.htmlspecialchars($requested) );
 				}
-				return;
+				return '';
 			}
 
 			if( isset($data['include_type']) ){
@@ -343,6 +343,8 @@ namespace gp\tool\Output{
 				default:
 				return self::IncludePage($requested);
 			}
+			
+			return '';
 		}
 
 

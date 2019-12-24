@@ -18,13 +18,6 @@ namespace gp\tool\Output{
 			return \gp\tool::JsonEncode($content);
 		}
 
-		public static function JsonEval($content){
-			echo '{DO:"eval"';
-			echo ',CONTENT:';
-			echo self::quote($content);
-			echo '},';
-		}
-
 		public static function JsonDo($do,$selector,&$content){
 			static $comma = '';
 			echo $comma;

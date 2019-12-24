@@ -193,45 +193,38 @@ namespace gp\tool\Output{
 				);
 			$vars = \gp\tool\Plugins::Filter('ReplaceContentVars', array($vars));
 
-			$offset = 0;
-			$i = 0;
-			do{
-				$i++;
+			preg_match_all('#(\\\*)\$([a-zA-Z]+)#',$content,$matches,PREG_OFFSET_CAPTURE|PREG_SET_ORDER);
+			$matches = array_reverse($matches);
+			foreach($matches as $match){
 
-				$pos = strpos($content,'$',$offset);
-				if( $pos === false ){
-					break;
-				}
+				$match_start	= $match[0][1];
+				$match_len		= strlen($match[0][0]);
+				$var			= $match[2][0];
 
-				//escaped?
-				if( $pos > 0 ){
-					$prev_char = $content{$pos-1};
-					if( $prev_char == '\\' ){
-						$offset = $pos+1;
-						continue;
-					}
-				}
-
-				$len = strspn($content,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',$pos+1);
-				if( $len == 0 ){
-					$offset = $pos+1;
+				if( !isset($vars[$var]) ){
 					continue;
 				}
 
-				$var = substr($content,$pos+1,$len);
-				if( isset($vars[$var]) ){
-					$content = substr_replace($content,$vars[$var],$pos,$len+1);
+				// escaped ?
+				$escape_chars = strlen($match[1][0]);
+				if( $escape_chars % 2 == 1 ){
+					$escape_chars	= ($escape_chars-1)/2;
+					$replacement	= str_repeat('\\',$escape_chars) . '$' . $var;
+					$content		= substr_replace($content, $replacement, $match_start, $match_len);
+					continue;
 				}
 
-				$offset = $pos+$len;
+				$escape_chars	= ($escape_chars/2);
+				$replacement	= str_repeat('\\',$escape_chars) . $vars[$var];
+				$content		= substr_replace($content, $replacement, $match_start, $match_len);
 
-			}while(true);
+			}
 
-			/* Testing old includes system ... this breaks editing */
 			self::ReplaceContent($content);
 
 			return $content;
 		}
+
 
 		/**
 		 * Include the content of another page into the current content by replacing {{--page_name--}} with the content of page_name
@@ -343,7 +336,7 @@ namespace gp\tool\Output{
 				default:
 				return self::IncludePage($requested);
 			}
-			
+
 			return '';
 		}
 

@@ -44,6 +44,7 @@ namespace gp\tool\Output{
 			\gp\tool\Output::PrepGadgetContent();
 
 
+			self::Header();
 			$callback = self::Callback();
 
 			echo $callback;
@@ -167,36 +168,36 @@ namespace gp\tool\Output{
 		 */
 		public static function Header(){
 
-			$accept = self::RequestHeaders('accept');
-			$mime = 'application/javascript'; //default mime
-
-			if( $accept && preg_match_all('#([^,;\s]+)\s*;?\s*([^,;\s]+)?#',$accept,$matches,PREG_SET_ORDER) ){
-				$mimes = array('application/javascript','application/x-javascript','text/javascript');
+			$accept		= self::RequestHeaders('accept');
+			$accepts	= ['application/javascript'=>0.001,'application/x-javascript'=>0.0001,'text/javascript'=>0.0001];
 
 
-				//organize by importance
-				$accept = array();
-				$i = 1;
+			if( $accept && preg_match_all('#([^,;\s]+)\s*;?\s*(?:q=([^,;\s]+))?#',$accept,$matches,PREG_SET_ORDER) ){
+
+				// filter acceptable mimes, default qvalue = 1
 				foreach($matches as $match){
-					if( isset($match[2]) ){
-						$accept[$match[1]] = $match[2];
-					}else{
-						$accept[$match[1]] = $i++;
-					}
-				}
-				arsort($accept);
 
-				//get matching mime
-				foreach($accept as $part => $priority){
-					if( in_array(trim($part),$mimes) ){
-						$mime = $part;
-						break;
+					$_mime = trim($match[1]);
+
+					if( !array_key_exists($_mime, $accepts) ){
+						continue;
+					}
+
+					if( isset($match[2]) ){
+						$accepts[$_mime] = (float)$match[2];
+					}else{
+						$accepts[$_mime] += 1;
 					}
 				}
 			}
 
-			//add charset
+
+			// best mime will be first in the list after arsort()
+			arsort($accepts);
+			$mime = key($accepts);
+
 			header('Content-Type: '.$mime.'; charset=UTF-8');
+			Header('Vary: Accept,Accept-Encoding');// for proxies
 		}
 
 
@@ -292,7 +293,6 @@ namespace gp\tool\Output{
 			global $dataDir, $dirPrefix;
 
 			self::Header();
-			Header('Vary: Accept,Accept-Encoding');// for proxies
 
 			$sent				= array();
 			$scripts			= self::RemoveSent($scripts);

@@ -18,16 +18,12 @@ namespace gp\tool\Output{
 			return \gp\tool::JsonEncode($content);
 		}
 
-		public static function JsonDo($do,$selector,&$content){
+		public static function JsonDo($do,$selector,$content){
 			static $comma = '';
+
+			$json = ['DO'=>$do,'SELECTOR'=>$selector,'CONTENT'=>$content];
 			echo $comma;
-			echo '{DO:';
-			echo self::quote($do);
-			echo ',SELECTOR:';
-			echo self::quote($selector);
-			echo ',CONTENT:';
-			echo self::quote($content);
-			echo '}';
+			echo \gp\tool::JsonEncode($json);
 			$comma = ',';
 		}
 
@@ -40,10 +36,6 @@ namespace gp\tool\Output{
 		public static function Response(){
 			global $page;
 
-			if( !is_array($page->ajaxReplace) ){
-				die();
-			}
-
 			//admin toolbar
 			self::AdminToolbar();
 
@@ -52,7 +44,9 @@ namespace gp\tool\Output{
 			\gp\tool\Output::PrepGadgetContent();
 
 
-			echo self::Callback();
+			$callback = self::Callback();
+
+			echo $callback;
 			echo '([';
 
 			//output content
@@ -136,6 +130,11 @@ namespace gp\tool\Output{
 		 *
 		 */
 		public static function Callback(){
+			global $page;
+
+			if( !is_array($page->ajaxReplace) ){
+				self::InvalidCallback();
+			}
 
 			if( !isset($_REQUEST['jsoncallback']) ){
 				self::InvalidCallback();
@@ -147,13 +146,17 @@ namespace gp\tool\Output{
 			return $match[0];
 		}
 
+
+		/**
+		 * Send a response with message content only
+		 *
+		 */
 		public static function InvalidCallback(){
 
 			echo '$gp.Response([';
 			self::Messages();
 			echo ']);';
 			die();
-
 		}
 
 
@@ -250,7 +253,7 @@ namespace gp\tool\Output{
 				break;
 
 				case 'image';
-					echo 'var gp_blank_img = '.self::quote(\gp\tool::GetDir('/include/imgs/blank.gif')).';';
+					echo 'var gp_blank_img = ' . \gp\tool::JsonEncode(\gp\tool::GetDir('/include/imgs/blank.gif')) . ';';
 					$scripts[] = '/include/js/jquery.auto_upload.js';
 					$scripts[] = '/include/js/inline_edit/image_common.js';
 					$scripts[] = '/include/js/inline_edit/image_edit.js';
@@ -274,7 +277,7 @@ namespace gp\tool\Output{
 
 			echo ';if( typeof(gp_init_inline_edit) == "function" ){';
 			echo 'gp_init_inline_edit(';
-			echo self::quote($_GET['area_id']);
+			echo \gp\tool::JsonEncode($_GET['area_id']);
 			echo ','.$section_object;
 			echo ');';
 			echo '}else{alert("gp_init_inline_edit() is not defined");}';
@@ -395,7 +398,7 @@ namespace gp\tool\Output{
 							);
 
 			$ckeditor_basepath = \gp\tool::GetDir('/include/thirdparty/ckeditor/');
-			echo 'CKEDITOR_BASEPATH = '.self::quote($ckeditor_basepath).';';
+			echo 'CKEDITOR_BASEPATH = ' . \gp\tool::JsonEncode($ckeditor_basepath) . ';';
 
 			// config
 			$scripts[]		= array(

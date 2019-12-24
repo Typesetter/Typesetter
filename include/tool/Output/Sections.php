@@ -248,19 +248,20 @@ namespace gp\tool\Output{
 				return;
 			}
 
-			$pos = strpos($content,'{{',$offset);
-			if( $pos === false ){
-				return;
-			}
-			$pos2 = strpos($content,'}}',$pos);
-			if( $pos2 === false ){
+			if( !preg_match('#(<p>)?\s*{{(.*)}}\s*(</p>)?#',$content, $match, PREG_OFFSET_CAPTURE, $offset) ){
 				return;
 			}
 
-			$title = substr($content,$pos+2,$pos2-$pos-2);
-			$title = str_replace(' ','_',$title);
+
+			$matched_string		= $match[0][0];
+			$match_pos			= $match[0][1];
+			$next_offset		= $match_pos + 2;
+			$title				= $match[2][0];
+			$title				= str_replace(' ','_',$title);
+
+
 			if( !isset($gp_index[$title]) ){
-				self::ReplaceContent($content,$pos2);
+				self::ReplaceContent($content,$next_offset);
 				return;
 			}
 
@@ -269,7 +270,7 @@ namespace gp\tool\Output{
 			$file_sections	= \gp\tool\Files::Get($file,'file_sections');
 
 			if( !$file_sections ){
-				self::ReplaceContent($content,$pos2);
+				self::ReplaceContent($content,$next_offset);
 				return;
 			}
 
@@ -281,17 +282,20 @@ namespace gp\tool\Output{
 				$replacement .= '</div>';
 			}
 
-			//is {{...}} wrapped by <p>..</p>?
-			$pos3 = strpos($content,'</p>',$pos2);
-			if( $pos3 > 0 ){
-				$pieceAfter = substr($content,$pos2,($pos3-$pos2));
-				if( strpos($pieceAfter,'<') == false ){
-					$replacement = "</p>\n".$replacement."\n<p>";
-				}
+			//is {{...}} wrapped by <p>..</p>? ... replace the whole matched string
+			if( !empty($match[1][0]) && !empty($match[3][0]) ){
+				$start		= $match_pos;
+				$len		= strlen($matched_string);
+
+			// only replace the {{...}}
+			}else{
+				$start		= $match[2][1]-2;
+				$len		= strlen($match[2][0]) + 4;
 			}
 
-			$content = substr_replace($content,$replacement,$pos,$pos2-$pos+2);
-			self::ReplaceContent($content,$pos);
+			$content = substr_replace($content,$replacement,$start,$len);
+
+			self::ReplaceContent($content,$match_pos);
 		}
 
 

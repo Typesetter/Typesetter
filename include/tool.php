@@ -2033,8 +2033,8 @@ namespace gp{
 
 		/**
 		 * A more functional JSON Encode function
-		 * @param string $data
-		 *
+		 * @param mixed $data
+		 * @return string
 		 */
 		public static function JsonEncode($data){
 
@@ -2078,7 +2078,7 @@ namespace gp{
 					return '{' . implode(',', $output_associative) . '}';
 
 			}
-			
+
 			return ''; // Not supported
 		}
 

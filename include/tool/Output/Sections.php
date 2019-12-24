@@ -19,7 +19,7 @@ namespace gp\tool\Output{
 		 * @return string
 		 *
 		 */
-		static function Render($sections,$title,$meta = array()){
+		public static function Render($sections,$title,$meta = array()){
 			self::SetVars($title,$meta);
 
 
@@ -91,7 +91,7 @@ namespace gp\tool\Output{
 		 * Output an end tag if appropriate
 		 *
 		 */
-		static function EndTag($node_name){
+		public static function EndTag($node_name){
 
 			$empty_nodes = array('link','track','param','area','command','col','base','meta','hr','source','img','keygen','br','wbr','input');
 			if( in_array($node_name,$empty_nodes) ){
@@ -110,7 +110,7 @@ namespace gp\tool\Output{
 		 * @return string
 		 *
 		 */
-		static function RenderSection($section,$section_num,$title,$meta = array()){
+		public static function RenderSection($section,$section_num,$title,$meta = array()){
 			self::SetVars($title,$meta);
 			return self::SectionToContent($section,$section_num);
 		}
@@ -120,7 +120,7 @@ namespace gp\tool\Output{
 		 * Return the data types available for content areas
 		 * @since 3.6
 		 */
-		static function GetTypes(){
+		public static function GetTypes(){
 			global $langmessage;
 			static $types = false;
 
@@ -139,7 +139,7 @@ namespace gp\tool\Output{
 
 
 
-		static function SetVars($title,$meta){
+		public static function SetVars($title,$meta){
 			self::$title = $title;
 			self::$label = \gp\tool::GetLabel($title);
 			self::$meta = array();
@@ -154,7 +154,7 @@ namespace gp\tool\Output{
 		 * @return string
 		 *
 		 */
-		static function SectionToContent($section_data,$section_num){
+		public static function SectionToContent($section_data,$section_num){
 
 			$section_data = \gp\tool\Plugins::Filter('SectionToContent',array($section_data,$section_num));
 
@@ -176,7 +176,7 @@ namespace gp\tool\Output{
 		 * Replace content variables in $content
 		 *
 		 */
-		static function TextContent(&$content){
+		public static function TextContent(&$content){
 
 			self::$meta += array('modified'=>'');
 
@@ -239,7 +239,7 @@ namespace gp\tool\Output{
 		 * @param int $offset The current string position of the page parser
 		 *
 		 */
-		static function ReplaceContent(&$content,$offset=0){
+		public static function ReplaceContent(&$content,$offset=0){
 			global $gp_index;
 			static $includes = 0;
 
@@ -304,7 +304,7 @@ namespace gp\tool\Output{
 		 * @param array $data
 		 * @param string The included content
 		 */
-		static function IncludeContent($data){
+		public static function IncludeContent($data){
 			global $langmessage, $gp_index;
 
 			if( isset($data['index']) ){
@@ -351,7 +351,7 @@ namespace gp\tool\Output{
 		 * @param string $requested The name of the gadget to include
 		 *
 		 */
-		static function IncludeGadget($requested){
+		public static function IncludeGadget($requested){
 			global $config;
 
 			if( !isset($config['gadgets'][$requested]) ){
@@ -369,7 +369,7 @@ namespace gp\tool\Output{
 		 * @param string $requested The name of the special page to include
 		 *
 		 */
-		static function IncludeSpecial($requested){
+		public static function IncludeSpecial($requested){
 			global $langmessage;
 
 			$scriptinfo = \gp\special\Page::GetScriptInfo( $requested, false );
@@ -387,7 +387,7 @@ namespace gp\tool\Output{
 		 * @param string $requested The name of the extra content to include
 		 *
 		 */
-		static function IncludeExtra($requested){
+		public static function IncludeExtra($requested){
 			if( \gp\admin\Content\Extra::AreaExists($requested) === false && \gp\admin\Content\Extra::AreaExists($requested.'.php') === false ){
 				return '{{Extra Area Not Found: '.htmlspecialchars($requested).'}}';
 			}
@@ -403,7 +403,7 @@ namespace gp\tool\Output{
 		 * @param string $requested The name of the page to include
 		 *
 		 */
-		static function IncludePage($requested){
+		public static function IncludePage($requested){
 			global $gp_index;
 
 			$requested = str_replace(' ','_',$requested);
@@ -426,7 +426,7 @@ namespace gp\tool\Output{
 		 * Convert array of html attributes into a string for output
 		 *
 		 */
-		static function SectionAttributes($attrs,$type){
+		public static function SectionAttributes($attrs,$type){
 
 			switch($type){
 				case 'image':

@@ -168,64 +168,13 @@ namespace gp\tool\Output{
 		 */
 		public static function Header(){
 
-			$accept		= self::RequestHeaders('accept');
 			$accepts	= ['application/javascript'=>0.001,'application/x-javascript'=>0.0001,'text/javascript'=>0.0001];
-
-
-			if( $accept && preg_match_all('#([^,;\s]+)\s*;?\s*(?:q=([^,;\s]+))?#',$accept,$matches,PREG_SET_ORDER) ){
-
-				// filter acceptable mimes, default qvalue = 1
-				foreach($matches as $match){
-
-					$_mime = trim($match[1]);
-
-					if( !array_key_exists($_mime, $accepts) ){
-						continue;
-					}
-
-					if( isset($match[2]) ){
-						$accepts[$_mime] = (float)$match[2];
-					}else{
-						$accepts[$_mime] += 1;
-					}
-				}
-			}
-
-
-			// best mime will be first in the list after arsort()
-			arsort($accepts);
-			$mime = key($accepts);
+			$mime		= \gp\tool\Headers::AcceptMime($accepts);
 
 			header('Content-Type: '.$mime.'; charset=UTF-8');
 			Header('Vary: Accept,Accept-Encoding');// for proxies
 		}
 
-
-		/**
-		 * Return a list of all headers
-		 *
-		 */
-		public static function RequestHeaders($which = false){
-			$headers = array();
-			foreach($_SERVER as $key => $value) {
-				if( substr($key, 0, 5) <> 'HTTP_' ){
-					continue;
-				}
-
-				$header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
-
-				if( $which ){
-					if( strnatcasecmp($which,$header) === 0){
-						return $value;
-					}
-				}
-
-				$headers[$header] = $value;
-			}
-			if( !$which ){
-				return $headers;
-			}
-		}
 
 		public static function InlineEdit($section_data){
 

@@ -1731,7 +1731,7 @@ class SetupSite{
 
 		$content = ob_get_clean();
 
-		$page->ajaxReplace[] = array('admin_box_data','',$content);
+		$page->ajaxReplace[] = array('gpabox','',$content);
 	}
 
 	public function RemoveDir(){

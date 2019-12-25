@@ -46,7 +46,7 @@ namespace gp\admin{
 								'title'		=> $langmessage['Previous'],
 								'class'		=> 'gpbutton',
 								'style'		=> 'margin-right:0.5em;',
-								'data-cmd'	=> 'gprabox',
+								'data-cmd'	=> 'gpabox',
 							)
 						);
 					}elseif( !$next_notification_link ){
@@ -57,7 +57,7 @@ namespace gp\admin{
 							array(
 								'title'		=> $langmessage['Next'],
 								'class'		=> 'gpbutton',
-								'data-cmd'	=> 'gprabox',
+								'data-cmd'	=> 'gpabox',
 							)
 						);
 					}
@@ -97,7 +97,7 @@ namespace gp\admin{
 								array(
 									'title'		=> ($muted ? $langmessage['Show'] : $langmessage['Hide']),
 									'class'		=> 'toggle-notification',
-									'data-cmd'	=> 'gprabox',
+									'data-cmd'	=> 'gpabox',
 								)
 							);
 

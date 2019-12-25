@@ -642,8 +642,6 @@ namespace gp\admin\Content{
 		 *
 		 */
 		public static function AllowedExtension( &$file , $fix = true ){
-			global $upload_extensions_allow, $upload_extensions_deny, $config;
-			static $allowed_types = false;
 
 			$file = \gp\tool\Files::NoNull($file);
 
@@ -658,7 +656,29 @@ namespace gp\admin\Content{
 			}
 
 
-			//build list of allowed extensions once
+
+			//make sure the extension is allowed
+			$file_type = array_pop($parts);
+			if( !in_array( strtolower($file_type), self::AllowedExtensions() ) ){
+				return false;
+			}
+
+			if( $fix ){
+				return implode('_',$parts).'.'.$file_type;
+			}else{
+				return implode('.',$parts).'.'.$file_type;
+			}
+		}
+
+
+		/**
+		 * Build a list of allowed file extensions
+		 * 
+		 */
+		public static function AllowedExtensions(){
+			global $upload_extensions_allow, $upload_extensions_deny, $config;
+			static $allowed_types = false;
+
 			if( !$allowed_types ){
 
 				if( is_string($upload_extensions_deny) && strtolower($upload_extensions_deny) === 'all' ){
@@ -689,20 +709,7 @@ namespace gp\admin\Content{
 				}
 			}
 
-			$allowed_types = \gp\tool\Plugins::Filter('AllowedTypes',array($allowed_types));
-
-
-			//make sure the extension is allowed
-			$file_type = array_pop($parts);
-			if( !in_array( strtolower($file_type), $allowed_types ) ){
-				return false;
-			}
-
-			if( $fix ){
-				return implode('_',$parts).'.'.$file_type;
-			}else{
-				return implode('.',$parts).'.'.$file_type;
-			}
+			return \gp\tool\Plugins::Filter('AllowedTypes',array($allowed_types));
 		}
 
 

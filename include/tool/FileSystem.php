@@ -308,7 +308,7 @@ class FileSystem{
 	 * Get a list of files and folders in $dir
 	 *
 	 * @param string $dir
-	 * @param bool $show_hidden
+	 *
 	 */
 	public function dirlist($dir ){
 

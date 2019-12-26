@@ -46,7 +46,7 @@ class Status extends \gp\special\Base{
 
 
 		$check_dir				= $dataDir.'/data';
-		$this->ignore			= $check_dir.'/_deletable';
+		$this->ignore			= $check_dir.'/x-deletable';
 		$this->check_dir_len	= strlen($check_dir);
 		$this->euid				= '?';
 
@@ -87,21 +87,16 @@ class Status extends \gp\special\Base{
 		echo '<table class="bordered">';
 		echo '<tr><th>';
 		echo $langmessage['file_name'];
-		echo '</th><th colspan="2">';
+		echo '</th><th>';
 		echo $langmessage['File Owner'];
-		echo '</th><th colspan="2">';
-		echo $langmessage['permissions'];
+		echo '<br/>';
+		echo $langmessage['Current_Value'];
+		echo '</th><th>';
+		echo '<br/>';
+		echo $langmessage['Expected_Value'];
+		echo '</th><th> &nbsp;';
 		echo '</th></tr>';
 
-		echo '<tr><td>&nbsp;</td><td>';
-		echo $langmessage['Current_Value'];
-		echo '</td><td>';
-		echo $langmessage['Expected_Value'];
-		echo '</td><td>';
-		echo $langmessage['Current_Value'];
-		echo '</td><td>';
-		echo $langmessage['Expected_Value'];
-		echo '</td></tr>';
 		echo $this->failed_output;
 		echo '</table>';
 
@@ -181,14 +176,7 @@ class Status extends \gp\special\Base{
 
 	protected function CheckFile($path,$type='dir'){
 
-		$current	= '?';
 		$euid		= '?';
-
-		if( $type === 'file' ){
-			$expected	= decoct(gp_chmod_file);
-		}else{
-			$expected	= decoct(gp_chmod_dir);
-		}
 
 		if( \gp\install\FilePermissions::HasFunctions() ){
 			$current = @substr(decoct( @fileperms($path)), -3);
@@ -226,11 +214,6 @@ class Status extends \gp\special\Base{
 		echo '</td><td>';
 		echo $this->ShowUser($this->euid);
 		echo '</td><td>';
-
-		echo $current;
-		echo '</td><td>';
-		echo $expected;
-		echo '</td><td>';
 		echo \gp\tool::Link('Admin/Status','Fix','cmd=FixOwner&path='.rawurlencode($readable_path),'data-cmd="cnreq"');
 		echo '</td></tr>';
 
@@ -266,7 +249,7 @@ class Status extends \gp\special\Base{
 		$to_fix_full		= $dataDir . $to_fix;
 		$new_file			= \gp\tool\FileSystem::TempFile($to_fix);
 		$new_file_full		= $dataDir . $new_file;
-		$deletable			= \gp\tool\FileSystem::TempFile('/data/_deletable');
+		$deletable			= \gp\tool\FileSystem::TempFile('/data/x-deletable');
 		$deletable_full		= $dataDir . $deletable;
 
 		if( !\gp\tool\Files::CheckPath( $to_fix_full ) ){

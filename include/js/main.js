@@ -101,7 +101,6 @@ var $gp = {
 			);
 	},
 
-
 	/**
 	 * Post content with Typesetter's verified value
 	 * Arguments order is same as jQuery's $.post()
@@ -129,7 +128,6 @@ var $gp = {
 			datatype
 			);
 	},
-
 
 
 	/**
@@ -230,12 +228,13 @@ var $gp = {
 					CallFunc( obj.SELECTOR, 'html', obj.CONTENT);
 				break;
 
-				case 'admin_box_data':
-					$gp.AdminBoxC(obj.CONTENT);
-				break;
-
-				case 'admin_box_replace':
-					$gp.AdminBoxC(obj.CONTENT, {replaceBox : true});
+				case 'gpabox':
+				case 'admin_box_data': // @deprecated 5.2
+					var opts = {};
+					if( $(this_context).closest('#gp_admin_box') ){ // replace the content of the currently open admin box if the link the user clicked on was in the admin box
+						opts.replaceBox = true;
+					}
+					$gp.AdminBoxC(obj.CONTENT,opts);
 				break;
 
 				case 'messages':
@@ -244,11 +243,6 @@ var $gp = {
 				break;
 
 				case 'reload':
-					$gp.Reload();
-				break;
-
-				case 'logging_out':
-					$gp.SetCookieCmd('cmd=logged_out');
 					$gp.Reload();
 				break;
 
@@ -698,5 +692,3 @@ function loading(){
 function loaded(){
 	$gp.loaded();
 }
-
-

@@ -42,12 +42,12 @@ class Ini{
 			if( strlen($line) < 1 ){
 				continue;
 			}
-			if( $line{0} == ';' ){
+			if( $line[0] == ';' ){
 				continue;
 			}
 
 			//sections
-			if( $line{0} == '[' ){
+			if( $line[0] == '[' ){
 				$line = self::GetQuotedText($line,']');
 				if( $line == false ){
 					return false;
@@ -82,7 +82,7 @@ class Ini{
 		if( strlen($line) < 1 ){
 			return true;
 		}
-		if( $line{0} != '=' ){
+		if( $line[0] != '=' ){
 			return true;
 		}
 		$line = substr($line,1);
@@ -92,9 +92,9 @@ class Ini{
 		}
 
 		//get the value
-		if( $line{0} == '"' ){
+		if( $line[0] == '"' ){
 			$value = self::GetQuotedText($line,'"');
-		}elseif( $line{0} == "'" ){
+		}elseif( $line[0] == "'" ){
 			$value = self::GetQuotedText($line,"'");
 		}else{
 			$pos = strpos($line,';');

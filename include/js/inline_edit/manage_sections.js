@@ -528,6 +528,10 @@
 			//moved after another section
 			if( $prev_area.length ){
 				$area.insertAfter($prev_area).trigger('SectionSorted');
+
+				// trigger immediate save
+				// console.log('immediate save');
+				gp_editing.SaveChanges();
 				return;
 			}
 
@@ -535,6 +539,10 @@
 			var $ul			= ui.item.parent().closest('ul');
 			if( $ul.attr('id') == 'section_sorting' ){
 				$area.prependTo('#gpx_content').trigger('SectionSorted');
+
+				// trigger immediate save
+				// console.log('immediate save');
+				gp_editing.SaveChanges();
 				return;
 			}
 

@@ -11,3 +11,7 @@ Boxfile
 phpunit
 phpunit.xml
 .travis.yml
+codecov.yml
+composer.json
+composer.lock
+vendor

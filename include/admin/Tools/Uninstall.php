@@ -91,12 +91,9 @@ class Uninstall{
 
 
 			if( is_dir($fullPath) ){
-				if( !isset($config['useftp']) ){
 
-					//dirs will already be 0777 when using ftp
-					if( !@chmod($fullPath,$this->DirPermission) ){
-						continue;
-					}
+				if( !@chmod($fullPath,$this->DirPermission) ){
+					continue;
 				}
 
 				$this->chmoddir($fullPath);

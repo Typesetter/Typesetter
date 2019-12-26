@@ -1255,7 +1255,7 @@ class Layout extends \gp\admin\Addon\Install{
 			return;
 		}
 
-		if( !empty($_POST['color']) && (strlen($_POST['color']) == 7) && $_POST['color']{0} == '#' ){
+		if( !empty($_POST['color']) && (strlen($_POST['color']) == 7) && $_POST['color'][0] == '#' ){
 			$gpLayouts[$layout]['color'] = $_POST['color'];
 		}
 
@@ -1873,4 +1873,3 @@ class Layout extends \gp\admin\Addon\Install{
 	}
 
 }
-

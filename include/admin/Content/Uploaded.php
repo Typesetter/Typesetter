@@ -31,17 +31,13 @@ namespace gp\admin\Content{
 		public function Finder(){
 			global $config, $dataDir;
 
-			$this->page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.\gp\tool::GetDir('/include/thirdparty/finder/css/finder.css').'">';
-			$this->page->head .= "\n".'<link rel="stylesheet" type="text/css" media="screen" href="'.\gp\tool::GetDir('/include/thirdparty/finder/style.css').'">';
+			$this->page->head 			.= "\n".'<script data-main="'.\gp\tool::GetDir('/include/thirdparty/elFinder/main.custom.js').'"'
+											. ' src="'.\gp\tool::GetDir('/include/thirdparty/js/require.min.js').'"></script>';
+			$this->page->css_admin[]	= '/include/css/admin_finder.scss';
 
-			$this->page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/finder/js/finder.js').'"></script>';
-			$this->page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/finder/config.js').'"></script>';
-
-
-			echo '<div id="finder"></div>';
+			echo '<div id="elfinder"></div>';
 
 			\gp\tool::LoadComponents('selectable,draggable,droppable,resizable,dialog,slider,button');
-
 
 
 			//get the finder language
@@ -49,15 +45,16 @@ namespace gp\admin\Content{
 			if( $language == 'inherit' ){
 				$language = $config['language'];
 			}
-			$lang_file = '/include/thirdparty/finder/js/i18n/'.$language.'.js';
+			$lang_file = '/include/thirdparty/elFinder/js/i18n/elfinder.'.$language.'.js';
 			$lang_full = $dataDir.$lang_file;
 			if( file_exists($lang_full) ){
-				$this->page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir($lang_file).'"></script>';
+				// elFinder 2.3.2 will liad the lang file via require.js
+				// $this->page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir($lang_file).'"></script>';
 			}else{
 				$language = 'en';
 			}
 			$this->finder_opts['lang'] = $language;
-			$this->finder_opts['customData']['verified'] = \gp\tool::new_nonce('post',true);
+			$this->finder_opts['customData']['verified'] = \gp\tool\Nonce::Create('post',true);
 
 
 			$this->finder_opts['uiOptions'] = array(
@@ -639,13 +636,12 @@ namespace gp\admin\Content{
 		}
 
 
+
 		/**
 		 * Check the file extension agains $allowed_types
 		 *
 		 */
 		public static function AllowedExtension( &$file , $fix = true ){
-			global $upload_extensions_allow, $upload_extensions_deny;
-			static $allowed_types = false;
 
 			$file = \gp\tool\Files::NoNull($file);
 
@@ -660,21 +656,45 @@ namespace gp\admin\Content{
 			}
 
 
-			//build list of allowed extensions once
+
+			//make sure the extension is allowed
+			$file_type = array_pop($parts);
+			if( !in_array( strtolower($file_type), self::AllowedExtensions() ) ){
+				return false;
+			}
+
+			if( $fix ){
+				return implode('_',$parts).'.'.$file_type;
+			}else{
+				return implode('.',$parts).'.'.$file_type;
+			}
+		}
+
+
+		/**
+		 * Build a list of allowed file extensions
+		 * 
+		 */
+		public static function AllowedExtensions(){
+			global $upload_extensions_allow, $upload_extensions_deny, $config;
+			static $allowed_types = false;
+
 			if( !$allowed_types ){
 
 				if( is_string($upload_extensions_deny) && strtolower($upload_extensions_deny) === 'all' ){
 					$allowed_types = array();
 				}else{
 					$allowed_types = array(
-						/** Images **/		'bmp', 'gif', 'ico', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'svg', 'svgz',
+						/** Images **/		'bmp', 'gif', 'ico', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'webp',
 						/** Media **/		'aiff', 'asf', 'avi', 'fla', 'flac', 'flv', 'm4v', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ogg', 'oga', 'ogv', 'opus', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'wav', 'wma', 'webm', 'wmv',
 						/** Archives **/	'7z', 'bz', 'gz', 'gzip', 'rar', 'tar', 'tgz', 'zip',
 						/** Text/Docs **/	'css', 'csv', 'doc', 'docx', 'htm', 'html', 'js', 'json', 'less', 'md', 'ods', 'odt', 'pages', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'scss', 'sxc', 'sxw', 'vsd', 'webmanifest', 'xls', 'xlsx', 'xml', 'xsl',
 						/** Fonts **/		'eot', 'otf', 'ttf', 'woff', 'woff2',
 					);
-
-
+					if( !empty($config['allow_svg_upload']) ){
+						$allowed_types[] = 'svg';
+						$allowed_types[] = 'svgz';
+					}
 				}
 
 				if( is_array($upload_extensions_allow) ){
@@ -689,21 +709,9 @@ namespace gp\admin\Content{
 				}
 			}
 
-			$allowed_types = \gp\tool\Plugins::Filter('AllowedTypes',array($allowed_types));
-
-
-			//make sure the extension is allowed
-			$file_type = array_pop($parts);
-			if( !in_array( strtolower($file_type), $allowed_types ) ){
-				return false;
-			}
-
-			if( $fix ){
-				return implode('_',$parts).'.'.$file_type;
-			}else{
-				return implode('.',$parts).'.'.$file_type;
-			}
+			return \gp\tool\Plugins::Filter('AllowedTypes',array($allowed_types));
 		}
+
 
 
 		/**
@@ -734,7 +742,7 @@ namespace gp\admin\Content{
 				return false;
 			}
 
-			if( \gp\tool::verify_nonce('delete') === false ){
+			if( \gp\tool\Nonce::Verify('delete') === false ){
 				message($langmessage['OOPS'].' (Invalid Nonce)');
 				return;
 			}

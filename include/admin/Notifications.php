@@ -6,11 +6,17 @@ namespace gp\admin{
 
 	class Notifications{
 
-		public static $notifications	= array();
-		public static $filters			= array();
-		private static $debug			= false;
+		public static		$notifications	= array();
+		public static		$filters			= array();
+		private static		$debug			= false;
 
 
+		/**
+		 * Outputs a list of notifications
+		 * To be rendered in a gpabox
+		 * The list output can be filtered by optional $_REQUEST['type'] value
+		 * 
+		 */
 		public static function ListNotifications(){
 			global $langmessage;
 
@@ -40,7 +46,7 @@ namespace gp\admin{
 								'title'		=> $langmessage['Previous'],
 								'class'		=> 'gpbutton',
 								'style'		=> 'margin-right:0.5em;',
-								'data-cmd'	=> 'gprabox',
+								'data-cmd'	=> 'gpabox',
 							)
 						);
 					}elseif( !$next_notification_link ){
@@ -51,7 +57,7 @@ namespace gp\admin{
 							array(
 								'title'		=> $langmessage['Next'],
 								'class'		=> 'gpbutton',
-								'data-cmd'	=> 'gprabox',
+								'data-cmd'	=> 'gpabox',
 							)
 						);
 					}
@@ -91,7 +97,7 @@ namespace gp\admin{
 								array(
 									'title'		=> ($muted ? $langmessage['Show'] : $langmessage['Hide']),
 									'class'		=> 'toggle-notification',
-									'data-cmd'	=> 'gprabox',
+									'data-cmd'	=> 'gpabox',
 								)
 							);
 
@@ -119,6 +125,11 @@ namespace gp\admin{
 
 
 
+		/**
+		 * Manage Notifications
+		 * Set display filters and priority for notification items by $_REQUEST
+		 * 
+		 */
 		public static function ManageNotifications(){
 
 			$cmd = \gp\tool::GetCommand();
@@ -154,6 +165,10 @@ namespace gp\admin{
 
 
 
+		/**
+		 * Get active filters from the admin session
+		 * 
+		 */
 		public static function GetFilters(){
 			global $gpAdmin;
 			if( !empty($gpAdmin['notifications']['filters']) ){
@@ -165,6 +180,10 @@ namespace gp\admin{
 
 
 
+		/**
+		 * Save filters to the admin session
+		 * 
+		 */
 		public static function SaveFilters(){
 			global $gpAdmin;
 			if( isset($gpAdmin['notifications']) && is_array($gpAdmin['notifications']) ){
@@ -176,6 +195,13 @@ namespace gp\admin{
 
 
 
+		/**
+		 * Set a single filter
+		 * @param string $id of notification
+		 * @param string $do filter action
+		 * @param string $val filter value
+		 * 
+		 */
 		public static function SetFilter($id, $do, $val=false){
 
 			self::CheckNotifications();
@@ -234,14 +260,30 @@ namespace gp\admin{
 
 
 
+		/**
+		 * Apply filters to the notifications array
+		 * Remove inapropriate items for users lacking permissions to deal with them
+		 * Apply user defined (display) filters
+		 * 
+		 */
 		public static function ApplyFilters(){
-
+			global $gpAdmin; 
+			// debug('$gpAdmin= ' . pre($gpAdmin));
 			self::GetFilters();
 
 			foreach( self::$notifications as $notification_type => $notification ){
 				foreach( $notification['items'] as $itemkey => $item ){
 
 					// Remove items lacking user permissions and therefore cannot be dealt with anyway
+
+					// debug / development
+					if( $notification_type == 'debug' &&
+						$item['type'] == 'superuser' &&
+						($gpAdmin['granted'] != 'all' || $gpAdmin['editing'] != 'all' )
+						){
+						unset(self::$notifications[$notification_type]['items'][$itemkey]);
+						continue;
+					}
 
 					// extra content draft
 					if( $notification_type == 'drafts' &&
@@ -311,7 +353,7 @@ namespace gp\admin{
 
 		/**
 		* Aggregate all sources of notifications
-		* @returns {array} of notifications
+		* @return array array of notifications
 		*
 		*/
 		public static function CheckNotifications(){
@@ -324,7 +366,6 @@ namespace gp\admin{
 					'title'			=> 'Working Drafts',
 					'badge_bg'		=> '#329880',
 					'badge_color'	=> '#fff',
-					'priority'		=> '10',
 					'items'			=> $drafts,
 				);
 			}
@@ -348,6 +389,16 @@ namespace gp\admin{
 				);
 			}
 
+			if( count(self::GetDebugInfo()) > 0 ){
+				$notifications['debug'] = array(
+					'title'			=> 'Development',
+					'badge_bg'		=> '#ff8c00',
+					'badge_color'	=> '#000',
+					'items'			=> self::GetDebugNotifications(),
+				);
+			}
+
+
 			$notifications	= \gp\tool\Plugins::Filter('Notifications', array($notifications));
 
 			self::$notifications = $notifications;
@@ -356,9 +407,10 @@ namespace gp\admin{
 
 
 
-
 		/**
 		* Get Notifications
+		* Outputs a Notifications panelgroup
+		* @param boolean if panelgroup shall be rendered in admin menu
 		*
 		*/
 		public static function GetNotifications($in_panel=true){
@@ -469,8 +521,85 @@ namespace gp\admin{
 
 
 		/**
-		* Convert $new_versions to notification items array
-		* @returns {array} of notifications
+		* Get brief debugging / development-relevant information
+		* @return array containing brief messages
+		*
+		*/
+		public static function GetDebugInfo(){
+			$debug_info = array();
+
+			if( defined('display_errors') && display_errors ){
+				$debug_info['display_errors'] = 'display_errors is enabled in /gpconfig.pgp';
+			}
+
+			if( defined('gpdebug') && gpdebug ){
+				$debug_info['gpdebug'] = 'gpdebug is enabled in /gpconfig.pgp';
+			}
+
+			if( defined('create_css_sourcemaps') && create_css_sourcemaps ){
+				$debug_info['sourcemaps'] = 'create_css_sourcemaps is enabled in /gpconfig.php';
+			}
+
+			return $debug_info;
+		}
+
+
+
+		/**
+		* Get a Notification array for debugging / development relevant information
+		* @return array single notification containing items
+		*
+		*/
+		public static function GetDebugNotifications(){
+			global $langmessage;
+
+			$debug_note = array();
+
+			if( ini_get('display_errors') ){
+				$label = '<strong>ini_set(display_errors,' . htmlspecialchars(ini_get('display_errors')) . ')</em></strong>';
+				$debug_note[] = array(
+					'type'		=> 'any_user',
+					'label'		=> $label,
+
+					// Adding the server name to the hashed value makes sure the item id will change when moving the site (e.g. when going live)
+					// Thus possible set hide filters will invalidate and the warning will show up again.
+					'id'		=> hash('crc32b', $label . \gp\tool::ServerName()), 
+
+					'priority'	=> 500, // that's a high priority
+					'action'	=> 'edit gpconfig.php or notify administrator! <br/>This should only be enabled in exceptional cases.',
+				);
+			}
+
+			if( defined('gpdebug') && gpdebug ){
+				$label = 'gpdebug is enabled';
+				$debug_note[] = array(
+					'type'		=> 'superuser',
+					'label'		=> $label,
+					'id'		=> hash('crc32b', $label . \gp\tool::ServerName()),
+					'priority'	=> 75,
+					'action'	=> 'edit gpconfig.php',
+				);
+			}
+
+			if( defined('create_css_sourcemaps') && create_css_sourcemaps ){
+				$label = 'create_css_sourcemaps is enabled';
+				$debug_note[] = array(
+					'type'		=> 'superuser',
+					'label'		=> $label,
+					'id'		=> hash('crc32b', $label . \gp\tool::ServerName()),
+					'priority'	=> 75,
+					'action'	=> 'edit gpconfig.php',
+				);
+			}
+
+			return $debug_note;
+		}
+
+
+
+		/**
+		* Convert $new_versions to notification array
+		* @return array single notification containing items
 		*
 		*/
 		public static function GetUpdatesNotifications(){
@@ -479,10 +608,12 @@ namespace gp\admin{
 			$updates = array();
 
 			if( gp_remote_update && isset(\gp\Admin\Tools::$new_versions['core']) ){
+				$label = CMS_NAME . ' ' . \gp\Admin\Tools::$new_versions['core'];
 				$updates[] = array(
 					'type'		=> 'cms_core',
-					'label'		=> CMS_NAME . ' ' . \gp\Admin\Tools::$new_versions['core'],
+					'label'		=> $label,
 					'id'		=> hash('crc32b', $label),
+					'priority'	=> 60,
 					'action'	=> '<a href="' . \gp\tool::GetDir('/include/install/update.php') . '">'
 										. $langmessage['upgrade'] . '</a>',
 				);
@@ -518,6 +649,8 @@ namespace gp\admin{
 
 		/**
 		* Update Notifications
+		* update the Notifications panelgroup in Admin Menu via AJAX
+		* @param $ajax_include boolean if panelgroup shall be added to $page->ajaxReplace or die with a single js callback
 		*
 		*/
 		public static function UpdateNotifications($ajax_include=false){

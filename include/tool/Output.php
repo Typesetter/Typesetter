@@ -271,8 +271,8 @@ namespace gp\tool{
 				$path,
 				'require',
 				array(
-					'page',	'GP_ARRANGE', 
-					'GP_MENU_LINKS', 'GP_MENU_CLASS', 
+					'page',	'GP_ARRANGE',
+					'GP_MENU_LINKS', 'GP_MENU_CLASS',
 					'GP_MENU_CLASSES', 'GP_MENU_ELEMENTS'
 				)
 			);
@@ -765,9 +765,9 @@ namespace gp\tool{
 			if( is_string($callback) && strpos($callback, '->') !== false ){
 				$has_script = true;
 				list($object,$method) = explode('->', $callback);
-				if( isset($GLOBALS[$object]) 
-					&& is_object($GLOBALS[$object]) 
-					&& method_exists($GLOBALS[$object],$method) 
+				if( isset($GLOBALS[$object])
+					&& is_object($GLOBALS[$object])
+					&& method_exists($GLOBALS[$object],$method)
 					){
 					$callback = array($GLOBALS[$object],$method);
 				}
@@ -919,7 +919,7 @@ namespace gp\tool{
 		/**
 		 * Unless the gadget area is customized by the user, this function will output all active gadgets
 		 * If the area has been reorganized, it will output the customized areas
-		 * This function is not called from \gp\tool\Output::Get('GetAllGadgets') 
+		 * This function is not called from \gp\tool\Output::Get('GetAllGadgets')
 		 * so that each individual gadget area can be used as a drag area
 		 *
 		 */
@@ -974,7 +974,7 @@ namespace gp\tool{
 
 
 		/**
-		 * Prepare the gadget content before getting template.php 
+		 * Prepare the gadget content before getting template.php
 		 * so that gadget functions can add css and js to the head
 		 * @return null
 		 */
@@ -1216,11 +1216,11 @@ namespace gp\tool{
 				&& isset($gpLayouts[$page->gpLayout]['images'][$container_id])
 				&& is_array($gpLayouts[$page->gpLayout]['images'][$container_id])
 				){
-					//shuffle($gpLayouts[$page->gpLayout]['images'][$container_id]); 
+					//shuffle($gpLayouts[$page->gpLayout]['images'][$container_id]);
 					//Does not make sense ? There will always be only 1 entry in for this container as it is per img element
 					//call to current also not needed, there will only be 1 entry
 					$image = $gpLayouts[$page->gpLayout]['images'][$container_id][0];
-					
+
 					$img_full = $dataDir.$image['img_rel'];
 					if( file_exists($img_full) ){
 						$img_rel = $image['img_rel'];
@@ -1309,7 +1309,7 @@ namespace gp\tool{
 						'data-cmd'	=> 'gpabox',
 					)
 				);
-				echo '<div class="editable_area inner_size" id="ExtraEditArea' . $edit_index . '">'; 
+				echo '<div class="editable_area inner_size" id="ExtraEditArea' . $edit_index . '">';
 				// class="edit_area" added by javascript
 			}
 
@@ -1335,10 +1335,10 @@ namespace gp\tool{
 		 *
 		 *
 		 */
-		
+
 		/*
-		 * similar to ReturnText() but links to script for editing all addon texts 
-		 * the $html parameter should primarily be used when the text is to be placed 
+		 * similar to ReturnText() but links to script for editing all addon texts
+		 * the $html parameter should primarily be used when the text is to be placed
 		 * inside of a link or other element that cannot have a link and/or span as a child node
 		 */
 		public static function GetAddonText($key, $html='%s', $wrapper_class=''){
@@ -1381,7 +1381,7 @@ namespace gp\tool{
 					$langmessage['edit'],
 					$query,
 					array(
-						'title' => $title, 
+						'title' => $title,
 						'data-cmd' => 'gpabox',
 					)
 				);
@@ -1399,7 +1399,7 @@ namespace gp\tool{
 
 
 		/**
-		 * Returns the user translated string if it exists or 
+		 * Returns the user translated string if it exists or
 		 * $key (the untranslated string) if a translation doesn't exist
 		 *
 		 */
@@ -1669,10 +1669,10 @@ namespace gp\tool{
 			$comma = '';
 			foreach(self::$lang_values as $from_key => $to_key){
 				echo $comma;
-				echo $to_key . ':"' 
+				echo $to_key . ':"'
 					. str_replace(
-						array('\\', '"'), 
-						array('\\\\', '\"'), 
+						array('\\', '"'),
+						array('\\\\', '\"'),
 						$langmessage[$from_key]
 					) . '"';
 				$comma = ',';
@@ -1776,7 +1776,10 @@ namespace gp\tool{
 
 			}
 
-			self::CombineFiles($scripts, 'css', $config['combinecss']);
+			// disable 'combine css' if 'create_css_sourcemaps' is set to true in /gpconfig.php
+			$combinecss = (defined('create_css_sourcemaps') && create_css_sourcemaps) ? false : $config['combinecss'];
+
+			self::CombineFiles($scripts, 'css', $combinecss);
 		}
 
 
@@ -1836,7 +1839,7 @@ namespace gp\tool{
 			$style_type		= self::StyleType($dir);
 
 			/* 5.1.1+ returns array of (existing) custom file paths */
-			$custom_files	= self::CustomStyleFiles($page->gpLayout, $style_type); 
+			$custom_files	= self::CustomStyleFiles($page->gpLayout, $style_type);
 
 			//css file
 			if( $style_type == 'css' ){
@@ -1948,7 +1951,7 @@ namespace gp\tool{
 
 		/**
 		 * Combine the files in $files into a combine.php request
-		 * If $page->head_force_inline is true, resources will be 
+		 * If $page->head_force_inline is true, resources will be
 		 * included inline in the document
 		 *
 		 * @param array $files Array of files relative to $dataDir
@@ -2099,8 +2102,8 @@ namespace gp\tool{
 			$placeholder = '<!-- jquery_placeholder ' . gp_random . ' -->';
 			$replacement = '';
 			if( !empty(self::$head_js) || stripos($buffer, '<script') !== false ){
-				$replacement = "\n<script type=\"text/javascript\" src=\"" 
-					. \gp\tool::GetDir('/include/thirdparty/js/jquery.js') 
+				$replacement = "\n<script type=\"text/javascript\" src=\""
+					. \gp\tool::GetDir('/include/thirdparty/js/jquery.js')
 					. "\"></script>";
 			}
 
@@ -2215,10 +2218,10 @@ namespace gp\tool{
 
 			$last_error['file'] = realpath($last_error['file']);//may be redundant
 			showError(
-				$last_error['type'], 
-				$last_error['message'], 
-				$last_error['file'], 
-				$last_error['line'], 
+				$last_error['type'],
+				$last_error['message'],
+				$last_error['file'],
+				$last_error['line'],
 				false
 			); //send error to logger
 
@@ -2320,7 +2323,7 @@ namespace gp\tool{
 							$langmessage['logout'],
 							'cmd=logout',
 							array(
-								'data-cmd'	=> 'postlink',
+								'data-cmd'	=> 'cnreq',
 								'rel'		=> 'nofollow',
 							)
 						);
@@ -2354,9 +2357,9 @@ namespace gp\tool{
 
 
 		/**
-		 * Add punctuation to the end of a string if it isn't already punctuated. 
+		 * Add punctuation to the end of a string if it isn't already punctuated.
 		 * Looks for !?.,;: characters
-		 * 
+		 *
 		 * @static
 		 * @since 2.4RC1
 		 */
@@ -2378,15 +2381,6 @@ namespace gp\tool{
 			global $langmessage, $page;
 
 			$page->RunScript();
-
-			$cmd = \gp\tool::GetCommand();
-			if( $cmd == 'logged_out' ){
-				//if( isset($_COOKIE[gp_session_cookie]) ){
-				//	msg('logged_out command issued with active session cookie');
-				//}
-				\gp\tool\Plugins::Action('LoggedOut');
-				msg($langmessage['LOGGED_OUT']);
-			}
 
 			//prepare the admin content
 			if( \gp\tool::LoggedIn() ){
@@ -2445,10 +2439,10 @@ namespace gp\tool{
 				global $wbMessageBuffer;
 				$len	= ob_get_length();
 				$etag	= \gp\tool::GenEtag(
-					$page->fileModTime, 
-					$len, 
-					json_encode($wbMessageBuffer), 
-					self::$head_content, 
+					$page->fileModTime,
+					$len,
+					json_encode($wbMessageBuffer),
+					self::$head_content,
 					self::$head_js
 				);
 				\gp\tool::Send304($etag);

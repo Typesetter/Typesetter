@@ -213,8 +213,13 @@ namespace gp\admin{
 																);
 
 			$scripts['Admin/Users']						= array(	'class'		=> '\\gp\\admin\\Settings\\Users',
+																	'method'	=> 'RunScript',
 																	'label'		=> $langmessage['user_permissions'],
 																	'group'		=> 'settings',
+																);
+
+			$scripts['Admin/Permissions']				= array(	'class'		=> '\\gp\\admin\\Settings\\Permissions',
+																	'method'	=> 'RunCommands',
 																);
 
 			$scripts['Admin/CKEditor']					= array(	'class'		=> '\\gp\\admin\\Settings\\CKEditor',
@@ -499,7 +504,7 @@ namespace gp\admin{
 			echo '<a class="toggle_panel" data-cmd="toggle_panel"></a>';
 
 			echo \gp\tool::Link(
-					'', 
+					'',
 					'<i class="fa fa-home"></i>'
 				);
 
@@ -576,7 +581,6 @@ namespace gp\admin{
 
 			echo '<ul  class="panel_tabs" style="float:right">';
 			echo '<li class="panel_tab_label">';
-			echo ' <i class="fa fa-pencil"></i>';
 			echo '</li>';
 
 			//page edit
@@ -584,7 +588,7 @@ namespace gp\admin{
 				echo '<li>';
 				echo \gp\tool::Link(
 					$page->title,
-					$langmessage['Sections'],
+					'<i class="fa fa-pencil"></i> ' . $langmessage['Sections'],
 					'cmd=ManageSections',
 					array(
 						'data-cmd'	=> 'inline_edit_generic',
@@ -598,7 +602,7 @@ namespace gp\admin{
 			echo '<li>';
 			echo \gp\tool::Link(
 				$page->title,
-				$langmessage['theme_content'],
+				'<i class="fa fa-pencil"></i> ' . $langmessage['theme_content'],
 				'cmd=ManageSections&mode=extra',
 				array(
 					'data-cmd'	=> 'inline_edit_generic',
@@ -610,13 +614,13 @@ namespace gp\admin{
 			echo '</li>';
 
 			//layout edit
-			$current_layout = isset($gp_titles[$page->gp_index]['gpLayout']) ? 
+			$current_layout = isset($gp_titles[$page->gp_index]['gpLayout']) ?
 				$gp_titles[$page->gp_index]['gpLayout'] :
 				'default'; // $page->gpLAyout is not yet set
 			echo '<li>';
 			echo \gp\tool::Link(
 				'Admin_Theme_Content/Edit/' . urlencode($current_layout),
-				$langmessage['layout'],
+				'<i class="fa fa-pencil"></i> ' . $langmessage['layout'],
 				'redir=' . rawurlencode($page->requested)
 			);
 			echo '</li>';
@@ -742,7 +746,7 @@ namespace gp\admin{
 					$page->title,
 					$langmessage['logout'],
 					'cmd=logout',
-					array('data-cmd' => 'postlink')
+					array('data-cmd' => 'cnreq')
 				);
 			echo '</li>';
 
@@ -1052,7 +1056,7 @@ namespace gp\admin{
 						);
 				}else{
 					echo \gp\tool::Link(
-							$script, 
+							$script,
 							$info['label']
 						);
 				}
@@ -1510,7 +1514,7 @@ namespace gp\admin{
 
 
 		/**
-		 * Returns an array 
+		 * Returns an array
 		 * 	0 => html of the addon section of the admin panel
 		 * 	1 => boolean indicating if the current user has any addon admin permissions or there are special links
 		 * @return array
@@ -1625,7 +1629,7 @@ namespace gp\admin{
 
 
 		/**
-		 * Returns an array 
+		 * Returns an array
 		 * 	0 => formatted list of links associated with $addon
 		 * 	1 => boolean indicating if the current user has addon admin permissions or if special pages exist
 		 * @return array

@@ -6,13 +6,10 @@ require_once('EasyComments.php');
 
 class EasyComments_Config extends EasyComments{
 
+	public function __construct(){
+		parent::__construct();
 
-	function EasyComments_Config(){
-
-
-		$this->Init();
-		//$this->GetIndex();
-		$cmd = common::GetCommand();
+		$cmd = \gp\tool::GetCommand();
 
 		switch($cmd){
 
@@ -26,7 +23,11 @@ class EasyComments_Config extends EasyComments{
 	}
 
 
-	function SaveConfig(){
+	/**
+	 * Save posted configuration options
+	 *
+	 */
+	public function SaveConfig(){
 		global $langmessage;
 
 		$format = htmlspecialchars($_POST['date_format']);
@@ -43,7 +44,7 @@ class EasyComments_Config extends EasyComments{
 		}
 
 
-		if( !gpFiles::SaveArray($this->config_file,'config',$this->config) ){
+		if( !\gp\tool\Files::SaveData($this->config_file, 'config', $this->config) ){
 			message($langmessage['OOPS']);
 			return false;
 		}
@@ -52,7 +53,12 @@ class EasyComments_Config extends EasyComments{
 		return true;
 	}
 
-	function ShowConfig(){
+
+	/**
+	 * Show EasyComments configuration options
+	 *
+	 */
+	public function ShowConfig(){
 		global $langmessage;
 
 		$defaults = $this->Defaults();
@@ -61,38 +67,28 @@ class EasyComments_Config extends EasyComments{
 
 		echo '<h2>Easy Comments Configuration</h2>';
 
-		echo '<form class="renameform" action="'.common::GetUrl('Admin_Comments_Config').'" method="post">';
+		echo '<form class="renameform" action="'.\gp\tool::GetUrl('Admin_Comments_Config').'" method="post">';
 		echo '<table style="width:100%" class="bordered">';
-		echo '<tr>';
-			echo '<th>';
+		echo '<tr><th>';
 			echo 'Option';
-			echo '</th>';
-			echo '<th>';
+			echo '</th><th>';
 			echo 'Value';
-			echo '</th>';
-			echo '<th>';
+			echo '</th><th>';
 			echo 'Default';
-			echo '</th>';
-			echo '</tr>';
+			echo '</th></tr>';
 
-		echo '<tr>';
-			echo '<td>';
+		echo '<tr><td>';
 			echo 'Date Format';
 			echo ' (<a href="http://php.net/manual/en/function.date.php" target="_blank">About</a>)';
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo '<input type="text" name="date_format" size="30" value="'.htmlspecialchars($array['date_format']).'" />';
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo $defaults['date_format'];
-			echo '</td>';
-			echo '</tr>';
+			echo '</td></tr>';
 
-		echo '<tr>';
-			echo '<td>';
+		echo '<tr><td>';
 			echo 'Commenter Website';
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo '<select name="commenter_website">';
 				if( $array['commenter_website'] == 'nofollow' ){
 					echo '<option value="">Hide</option>';
@@ -108,19 +104,15 @@ class EasyComments_Config extends EasyComments{
 					echo '<option value="link">Follow Link</option>';
 				}
 			echo '</select>';
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo 'Hide';
-			echo '</td>';
-			echo '</tr>';
+			echo '</td></tr>';
 
-		echo '<tr>';
-			echo '<td>';
+		echo '<tr><td>';
 			echo 'reCaptcha';
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 
-			if( !gp_recaptcha::isActive() ){
+			if( !\gp\tool\Recaptcha::isActive() ){
 				$disabled = ' disabled="disabled" ';
 			}else{
 				$disabled = '';
@@ -131,23 +123,17 @@ class EasyComments_Config extends EasyComments{
 			}else{
 				echo '<input type="checkbox" name="comment_captcha" value="allow" '.$disabled.'/>';
 			}
-			echo '</td>';
-			echo '<td>';
+			echo '</td><td>';
 			echo '';
-			echo '</td>';
-			echo '</tr>';
+			echo '</td></tr>';
 
-		echo '<tr>';
-			echo '<td>';
-			echo '</td>';
-			echo '<td>';
+		echo '<tr><td>';
+			echo '</td><td>';
 			echo '<input type="hidden" name="cmd" value="save_config" />';
 			echo '<input type="submit" name="" value="'.$langmessage['save'].'" /> ';
 			echo '<input type="submit" name="cmd" value="'.$langmessage['cancel'].'" /> ';
-			echo '</td>';
-			echo '<td>';
-			echo '</td>';
-			echo '</tr>';
+			echo '</td><td>';
+			echo '</td></tr>';
 
 		echo '</table>';
 	}

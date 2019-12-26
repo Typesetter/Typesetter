@@ -32,6 +32,7 @@ class phpunit_Archive extends gptest_bootstrap{
 	 *
 	 */
 	function setUp(){
+		global $dataDir;
 
 		// HHVM doesn't support writing with PHAR
 		// https://github.com/facebook/hhvm/issues/4899
@@ -40,7 +41,7 @@ class phpunit_Archive extends gptest_bootstrap{
 		}
 
 
-		$this->dir		= sys_get_temp_dir().'/test-'.rand(1,10000000);
+		$this->dir		= $dataDir.'/data/test-'.rand(1,10000000);
 
 		foreach($this->files as $name => $content){
 			$full = $this->dir.'/'.$name;
@@ -64,7 +65,7 @@ class phpunit_Archive extends gptest_bootstrap{
 
 
 			$archive = $this->FromFiles($type);
-			$list = $archive->ListFiles();
+			//$list = $archive->ListFiles();
 			self::AssertEquals( count($this->files), $archive->Count() );
 		}
 
@@ -213,7 +214,8 @@ class phpunit_Archive extends gptest_bootstrap{
 
 
 	function ArchivePath($type){
-		return sys_get_temp_dir().'/archive-'.rand(0,100000).'.'.$type;
+		global $dataDir;
+		return $dataDir . '/data/archive-'.rand(0,100000).'.'.$type;
 	}
 
 

@@ -365,7 +365,7 @@ class Installer{
 			if( $supported_types & IMG_GIF){
 				$supported[] = 'gif';
 			}
-			if( $supported_types & IMG_WEBP ){
+			if( defined('IMG_WEBP') && ($supported_types & IMG_WEBP) ){
 				$supported[] = 'webp';
 			}
 		}
@@ -455,37 +455,6 @@ class Installer{
 			return;
 		}
 
-		$this->FTP_DataMode();
-	}
-
-	/**
-	 * If recreating the data folder with php doesn't work
-	 * Attempt to change the mode of the folder directly
-	 *
-	 */
-	public function FTP_DataMode(){
-		global $langmessage, $dataDir;
-
-		//Change Mode of /data
-		$ftpData = $this->ftp_root.'/data';
-		$modDir = ftp_site($this->ftp_connection, 'CHMOD 0777 '. $ftpData );
-		if( !$modDir ){
-			echo '<li><span class="failed">';
-			echo sprintf($langmessage['Could_Not_'],'<em>CHMOD 0777 '. $ftpData.'</em>');
-			echo '</span></li>';
-			return false;
-		}
-
-		echo '<li><span class="passed">';
-		echo sprintf($langmessage['FTP_PERMISSIONS_CHANGED'],'<em>'.$ftpData.'</em>');
-		echo '</span></li>';
-
-
-
-		//passed
-		echo '<li><span class="passed"><b>';
-		echo $langmessage['Success_continue_below'];
-		echo '</b></span></li>';
 	}
 
 

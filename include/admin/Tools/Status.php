@@ -190,9 +190,9 @@ class Status extends \gp\special\Base{
 		echo substr($path,$this->check_dir_len);
 		echo '</td><td>';
 
-		echo $euid;
+		echo $this->ShowUser($euid);
 		echo '</td><td>';
-		echo $this->euid;
+		echo $this->ShowUser($this->euid);
 		echo '</td><td>';
 
 		echo $current;
@@ -201,5 +201,19 @@ class Status extends \gp\special\Base{
 		echo '</td></tr>';
 
 	}
+
+	/**
+	 * Display a user name and uid
+	 * @param int $uid
+	 */
+	protected function ShowUser($uid){
+		$user_info = posix_getpwuid($uid);
+		if( $user_info ){
+			return $user_info['name'].' ('.$uid.')';
+		}
+
+		return $uid;
+	}
+
 
 }

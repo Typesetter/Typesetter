@@ -57,9 +57,10 @@ class Status extends \gp\special\Base{
 	}
 
 	public function DefaultDisplay(){
-		global $langmessage;
+		global $langmessage, $dataDir;
 
-		$checked = $this->passed_count + $this->failed_count;
+		$check_dir		= $dataDir.'/data';
+		$checked		= $this->passed_count + $this->failed_count;
 
 		if( $this->failed_count === 0 ){
 			echo '<p class="gp_passed">';
@@ -73,6 +74,16 @@ class Status extends \gp\special\Base{
 		echo '<p class="gp_notice">';
 		echo sprintf($langmessage['data_check_failed'],$this->failed_count,$checked);
 		echo '</p>';
+
+
+		// the /data directory isn't writable
+		if( count($this->failed) == 1 && in_array($check_dir,$this->failed) ){
+			echo '<p class="gp_notice">';
+			echo '<b>WARNING:</b> Your data directory at is no longer writable: '.$check_dir;
+			echo '</p>';
+			return;
+		}
+
 
 		if( $this->failed_count > $this->show_failed_max ){
 			echo '<p class="gp_notice">';

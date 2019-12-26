@@ -100,7 +100,11 @@ class Status extends \gp\special\Base{
 		    return strlen($a) - strlen($b);
 		});
 
-		foreach($this->failed as $path){
+		foreach($this->failed as $i => $path){
+
+			if( $i > $this->show_failed_max ){
+				break;
+			}
 
 			$readable_path		= substr($path,$this->check_dir_len);
 			$euid				= \gp\install\FilePermissions::file_uid($path);

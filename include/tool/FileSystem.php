@@ -310,7 +310,7 @@ class FileSystem{
 	 * @param string $dir
 	 * @param bool $show_hidden
 	 */
-	public function dirlist($dir, $show_hidden=true){
+	public function dirlist($dir ){
 
 		$dh = @opendir($dir);
 		if( !$dh ){
@@ -320,9 +320,6 @@ class FileSystem{
 		$list = array();
 		while( ($file = readdir($dh)) !== false){
 			if( $file == '.' || $file == '..' ){
-				continue;
-			}
-			if( !$show_hidden && $file[0] == '.' ){
 				continue;
 			}
 			$list[$file] = $file;

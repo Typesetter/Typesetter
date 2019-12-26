@@ -151,16 +151,6 @@ class Port{
 
 
 	/**
-	 *
-	 *
-	 */
-	protected function Warning(){
-
-
-	}
-
-
-	/**
 	 * Create an archive of the selected folders
 	 *
 	 */
@@ -476,7 +466,9 @@ class Port{
 		if( $merge ){
 			$source		= $dataDir.'/data/';
 			$new_full	= $dataDir.$new_relative;
-			$this->CopyDir( $source, $new_full );
+			if( !$this->CopyAll( $source, $new_full ) ){
+				message($langmessage['OOPS'].' Session file not copied (0)');
+			}
 		}
 
 
@@ -601,13 +593,27 @@ class Port{
 		return true;
 	}
 
-	public function CopyDir( $source, $dest ){
-		global $dataDir, $langmessage;
 
-		$data_files = \gp\tool\Files::ReadDir($source,false);
+	/**
+	 * Copy all of the files from source file/directory to $dest file/directory
+	 * @param string $source
+	 * @param string $dest
+	 * @return bool
+	 *
+	 */
+	public static function CopyAll( $source, $dest ){
+		global $dataDir;
 
-		foreach($data_files as $file){
-			if( $file == '.' || $file == '..' ){
+		if( !is_dir($source) ){
+			$contents = file_get_contents($source);
+			return \gp\tool\Files::Save($dest,$contents);
+		}
+
+		$files 		= scandir($source);
+
+		foreach($files as $file){
+
+			if( $file === '.' || $file === '..' ){
 				continue;
 			}
 			$source_full = $source.'/'.$file;
@@ -617,18 +623,10 @@ class Port{
 				continue;
 			}
 
-			if( is_dir($source_full) ){
-				if( !$this->CopyDir( $source_full, $dest_full ) ){
-					return false;
-				}
-				continue;
-			}
-
-			$contents = file_get_contents($source_full);
-			if( !\gp\tool\Files::Save($dest_full,$contents) ){
-				message($langmessage['OOPS'].' Session file not copied (0)');
+			if( !self::CopyAll( $source_full, $dest_full ) ){
 				return false;
 			}
+
 		}
 		return true;
 	}

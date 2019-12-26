@@ -415,7 +415,7 @@ class FileSystem{
 		clearstatcache();
 
 		if( is_null($rand_index) ){
-			$rand_index = rand(1000,9000);
+			$rand_index = rand(1000,9000000);
 		}
 
 		$i = 0;

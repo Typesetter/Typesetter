@@ -11,15 +11,45 @@ class Status extends \gp\special\Base{
 	protected $passed_count		= 0;
 	protected $show_failed_max	= 50;
 	protected $failed_output	= '';
+	protected $ignore;
 
 	protected $euid;
 
 	public function __construct(){
+
+	}
+
+	public function RunScript(){
+		global $langmessage;
+
+		echo '<h2>'.$langmessage['Site Status'].'</h2>';
+
+		$cmd = \gp\tool::GetCommand();
+		switch($cmd){
+			case 'FixOwner':
+				$this->FixOwner();
+			break;
+		}
+
+		$this->CheckDataDir();
+		$this->DefaultDisplay();
+	}
+
+	public function CheckDataDir(){
 		global $dataDir;
 
-		$check_dir = $dataDir.'/data';
-		$this->check_dir_len = strlen($check_dir);
-		$this->euid = '?';
+		$this->check_dir_len	= 0;
+		$this->failed_count		= 0;
+		$this->passed_count		= 0;
+		$this->show_failed_max	= 50;
+		$this->failed_output	= '';
+
+
+		$check_dir				= $dataDir.'/data';
+		$this->ignore			= $check_dir.'/_deletable';
+		$this->check_dir_len	= strlen($check_dir);
+		$this->euid				= '?';
+
 		if( function_exists('posix_geteuid') ){
 			$this->euid = posix_geteuid();
 		}
@@ -30,11 +60,8 @@ class Status extends \gp\special\Base{
 		$this->failed_output = ob_get_clean();
 	}
 
-	public function RunScript(){
+	public function DefaultDisplay(){
 		global $langmessage;
-
-		echo '<h2>'.$langmessage['Site Status'].'</h2>';
-
 
 		$checked = $this->passed_count + $this->failed_count;
 
@@ -140,6 +167,10 @@ class Status extends \gp\special\Base{
 				continue;
 			}
 
+			if( strpos($full_path, $this->ignore) === 0 ){
+				continue;
+			}
+
 			if( is_dir($full_path) ){
 				$this->CheckDir($full_path);
 			}else{
@@ -186,8 +217,9 @@ class Status extends \gp\special\Base{
 			return;
 		}
 
+		$readable_path = substr($path,$this->check_dir_len);
 		echo '<tr><td>';
-		echo substr($path,$this->check_dir_len);
+		echo $readable_path;
 		echo '</td><td>';
 
 		echo $this->ShowUser($euid);
@@ -198,6 +230,8 @@ class Status extends \gp\special\Base{
 		echo $current;
 		echo '</td><td>';
 		echo $expected;
+		echo '</td><td>';
+		echo \gp\tool::Link('Admin/Status','Fix','cmd=FixOwner&path='.rawurlencode($readable_path),'data-cmd="cnreq"');
 		echo '</td></tr>';
 
 	}
@@ -213,6 +247,74 @@ class Status extends \gp\special\Base{
 		}
 
 		return $uid;
+	}
+
+
+	/**
+	 * Attempt to fix the ownership issue of the posted file
+	 * 1) create a copy of the file
+	 * 2) move old to temp folder
+	 * 3) move new into original place of old
+	 * 4) attempt to delete temp folder
+	 *
+	 */
+	public function FixOwner(){
+		global $dataDir, $langmessage;
+
+
+		$to_fix				= '/data'.$_REQUEST['path'];
+		$to_fix_full		= $dataDir . $to_fix;
+		$new_file			= \gp\tool\FileSystem::TempFile($to_fix);
+		$new_file_full		= $dataDir . $new_file;
+		$deletable			= \gp\tool\FileSystem::TempFile('/data/_deletable');
+		$deletable_full		= $dataDir . $deletable;
+
+		if( !\gp\tool\Files::CheckPath( $to_fix_full ) ){
+			msg($langmessage['OOPS'].' Invalid Path');
+			return;
+		}
+
+
+		echo '<ol>';
+		echo '<li>Copy: '.$to_fix.' -&gt; ' . $new_file . '</li>';
+
+		if( !\gp\admin\Tools\Port::CopyAll($to_fix_full,$new_file_full) ){
+			echo '<li>Failed</li>';
+			echo '</ol>';
+			msg($langmessage['OOPS'].' Not Copied');
+			\gp\tool\Files::RmAll($new_file_full);
+			return;
+		}
+
+		// move old to deletable
+		echo '<li>Move: '.$to_fix.' -&gt; ' . $deletable . '</li>';
+		if( !rename($to_fix_full,$deletable_full) ){
+			echo '<li>Failed</li>';
+			echo '</ol>';
+			msg($langmessage['OOPS'].' Rename to deletable failed');
+			\gp\tool\Files::RmAll($new_file_full);
+			return;
+		}
+
+
+		// move
+		echo '<li>Move: '.$new_file.' -&gt; ' . $to_fix . '</li>';
+		if( !rename($new_file_full, $to_fix_full) ){
+			echo '<li>Failed</li>';
+			echo '</ol>';
+			msg($langmessage['OOPS'].' Rename to old failed');
+			return;
+		}
+
+		echo '<li>Success</li>';
+
+		// attempt to remove deletable
+		if( !\gp\tool\Files::RmAll($deletable_full) ){
+			echo '<li>Note: '.$deletable.' was not deleted</li>';
+		}
+
+		echo '</ol>';
+
 	}
 
 

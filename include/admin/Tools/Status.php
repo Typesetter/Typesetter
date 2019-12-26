@@ -8,10 +8,11 @@ class Status extends \gp\special\Base{
 
 	protected $check_dir_len	= 0;
 	protected $failed_count		= 0;
+	protected $failed			= [];
 	protected $passed_count		= 0;
 	protected $show_failed_max	= 50;
 	protected $failed_output	= '';
-	protected $ignore;
+	protected $deletable		= [];
 
 	protected $euid;
 
@@ -46,7 +47,6 @@ class Status extends \gp\special\Base{
 
 
 		$check_dir				= $dataDir.'/data';
-		$this->ignore			= $check_dir.'/x-deletable';
 		$this->check_dir_len	= strlen($check_dir);
 		$this->euid				= '?';
 
@@ -69,6 +69,7 @@ class Status extends \gp\special\Base{
 			echo '<p class="gp_passed">';
 			echo sprintf($langmessage['data_check_passed'],$checked,$checked);
 			echo '</p>';
+			$this->ShowDeletable();
 
 			return;
 		}
@@ -98,10 +99,55 @@ class Status extends \gp\special\Base{
 		echo '</th></tr>';
 
 		echo $this->failed_output;
+
+
+		// sort by strlen to get directories first
+		usort($this->failed, function($a, $b) {
+		    return strlen($a) - strlen($b);
+		});
+
+		foreach($this->failed as $path){
+
+			$readable_path		= substr($path,$this->check_dir_len);
+			$euid				= \gp\install\FilePermissions::file_uid($path);
+
+			echo '<tr><td>';
+			echo $readable_path;
+			echo '</td><td>';
+
+			echo $this->ShowUser($euid);
+			echo '</td><td>';
+			echo $this->ShowUser($this->euid);
+			echo '</td><td>';
+			echo \gp\tool::Link('Admin/Status','Fix','cmd=FixOwner&path='.rawurlencode($readable_path),'data-cmd="cnreq"');
+			echo '</td></tr>';
+		}
+
 		echo '</table>';
 
 		$this->CheckPageFiles();
+		$this->ShowDeletable();
+
 	}
+
+	/**
+	 * Show Deletable Files
+	 */
+	protected function ShowDeletable(){
+		if( empty($this->deletable) ){
+			return;
+		}
+
+		echo '<h3>Deletable Files</h3>';
+		echo '<ol>';
+		foreach($this->deletable as $file){
+			echo '<li>'.htmlspecialchars($file).'</li>';
+		}
+		echo '</ol>';
+
+	}
+
+
 
 	/**
 	 * Check page files for orphaned data files
@@ -140,7 +186,10 @@ class Status extends \gp\special\Base{
 
 
 	protected function CheckDir($dir){
-		$this->CheckFile($dir);
+
+		if( !$this->CheckFile($dir) ){
+			return;
+		}
 
 		$dh = @opendir($dir);
 		if( $dh === false ){
@@ -162,7 +211,8 @@ class Status extends \gp\special\Base{
 				continue;
 			}
 
-			if( strpos($full_path, $this->ignore) === 0 ){
+			if( preg_match('#x-deletable-[0-9]+#',$full_path) ){
+				$this->deletable[] = $full_path;
 				continue;
 			}
 
@@ -176,8 +226,6 @@ class Status extends \gp\special\Base{
 
 	protected function CheckFile($path,$type='dir'){
 
-		$euid		= '?';
-
 		if( \gp\install\FilePermissions::HasFunctions() ){
 			$current = @substr(decoct( @fileperms($path)), -3);
 
@@ -189,35 +237,20 @@ class Status extends \gp\special\Base{
 
 			if( \gp\install\FilePermissions::perm_compare($expected,$current) ){
 				$this->passed_count++;
-				return;
+				return true;
 			}
-
-			$euid = \gp\install\FilePermissions::file_uid($path);
 
 		}elseif( gp_is_writable($path) ){
 			$this->passed_count++;
-			return;
+			return true;
 		}
 
 		$this->failed_count++;
+		$this->failed[] = $path;
 
-		if( $this->failed_count > $this->show_failed_max ){
-			return;
-		}
-
-		$readable_path = substr($path,$this->check_dir_len);
-		echo '<tr><td>';
-		echo $readable_path;
-		echo '</td><td>';
-
-		echo $this->ShowUser($euid);
-		echo '</td><td>';
-		echo $this->ShowUser($this->euid);
-		echo '</td><td>';
-		echo \gp\tool::Link('Admin/Status','Fix','cmd=FixOwner&path='.rawurlencode($readable_path),'data-cmd="cnreq"');
-		echo '</td></tr>';
-
+		return false;
 	}
+
 
 	/**
 	 * Display a user name and uid
@@ -249,7 +282,7 @@ class Status extends \gp\special\Base{
 		$to_fix_full		= $dataDir . $to_fix;
 		$new_file			= \gp\tool\FileSystem::TempFile($to_fix);
 		$new_file_full		= $dataDir . $new_file;
-		$deletable			= \gp\tool\FileSystem::TempFile('/data/x-deletable');
+		$deletable			= \gp\tool\FileSystem::TempFile(dirname($to_fix).'/x-deletable');
 		$deletable_full		= $dataDir . $deletable;
 
 		if( !\gp\tool\Files::CheckPath( $to_fix_full ) ){

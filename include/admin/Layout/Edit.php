@@ -367,7 +367,6 @@ class Edit extends \gp\admin\Layout{
 
 			$parsed_data			= \gp\tool\Output\Css::ParseLess( $style_files );
 			$compiled				= $parsed_data[0];
-			$temp_sourcemap_name	= $parsed_data[1];
 
 
 			if( $compiled === false ){
@@ -409,7 +408,6 @@ class Edit extends \gp\admin\Layout{
 
 		$parsed_data			= \gp\tool\Output\Css::ParseScss($style_files);
 		$compiled				= $parsed_data[0];
-		$temp_sourcemap_name	= $parsed_data[1];
 
 		if( $compiled === false ){
 			message($langmessage['OOPS'].' (Invalid SCSS)');

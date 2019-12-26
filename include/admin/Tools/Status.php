@@ -11,7 +11,6 @@ class Status extends \gp\special\Base{
 	protected $failed			= [];
 	protected $passed_count		= 0;
 	protected $show_failed_max	= 50;
-	protected $failed_output	= '';
 	protected $deletable		= [];
 
 	protected $euid;
@@ -43,7 +42,6 @@ class Status extends \gp\special\Base{
 		$this->failed_count		= 0;
 		$this->passed_count		= 0;
 		$this->show_failed_max	= 50;
-		$this->failed_output	= '';
 
 
 		$check_dir				= $dataDir.'/data';
@@ -55,9 +53,7 @@ class Status extends \gp\special\Base{
 		}
 
 
-		ob_start();
 		$this->CheckDir($check_dir);
-		$this->failed_output = ob_get_clean();
 	}
 
 	public function DefaultDisplay(){
@@ -97,8 +93,6 @@ class Status extends \gp\special\Base{
 		echo $langmessage['Expected_Value'];
 		echo '</th><th> &nbsp;';
 		echo '</th></tr>';
-
-		echo $this->failed_output;
 
 
 		// sort by strlen to get directories first
@@ -184,7 +178,11 @@ class Status extends \gp\special\Base{
 		echo '</table>';
 	}
 
-
+	/**
+	 * Check the ownership of the directory and files within it
+	 * @param string $dir
+	 *
+	 */
 	protected function CheckDir($dir){
 
 		if( !$this->CheckFile($dir) ){
@@ -193,11 +191,8 @@ class Status extends \gp\special\Base{
 
 		$dh = @opendir($dir);
 		if( $dh === false ){
-			echo '<tr><td colspan="3">';
-			echo '<p class="gp_notice">';
-			echo 'Could not open data directory: '.$dir;
-			echo '</p>';
-			echo '</td></tr>';
+			$this->failed_count++;
+			$this->failed[] = $dir;
 			return;
 		}
 

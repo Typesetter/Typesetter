@@ -239,7 +239,7 @@ class Edit extends \gp\admin\Layout{
 		echo '<button name="cmd" type="submit" value="PreviewCSS" class="gpsubmit gpdisabled" disabled="disabled" data-cmd="preview_css">'.$langmessage['preview'].'</button>';
 
 		// save
-		echo '<button name="cmd" type="submit" value="SaveCSS" class="gpsubmit gpdisabled" disabled="disabled" data-cmd="save_css">'.$langmessage['save'].'</button>'; 
+		echo '<button name="cmd" type="submit" value="SaveCSS" class="gpsubmit gpdisabled" disabled="disabled" data-cmd="save_css">'.$langmessage['save'].'</button>';
 
 		// reset
 		echo '<input type="reset" class="gpcancel gpdisabled" disabled="disabled" data-cmd="reset_css" />';
@@ -365,7 +365,10 @@ class Edit extends \gp\admin\Layout{
 
 		if( count($style_files) ){
 
-			$compiled		= \gp\tool\Output\Css::ParseLess( $style_files );
+			$parsed_data			= \gp\tool\Output\Css::ParseLess( $style_files );
+			$compiled				= $parsed_data[0];
+			$temp_sourcemap_name	= $parsed_data[1];
+
 
 			if( $compiled === false ){
 				message($langmessage['OOPS'].' (Invalid LESS)');
@@ -404,7 +407,9 @@ class Edit extends \gp\admin\Layout{
 
 		$style_files[]		= $dir.'/style.scss';
 
-		$compiled			= \gp\tool\Output\Css::ParseScss($style_files);
+		$parsed_data			= \gp\tool\Output\Css::ParseScss($style_files);
+		$compiled				= $parsed_data[0];
+		$temp_sourcemap_name	= $parsed_data[1];
 
 		if( $compiled === false ){
 			message($langmessage['OOPS'].' (Invalid SCSS)');

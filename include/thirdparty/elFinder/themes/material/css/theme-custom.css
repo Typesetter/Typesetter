@@ -1654,7 +1654,7 @@ div.elfinder-cwd-wrapper-list .ui-icon-grip-dotted-vertical {
 }
 .elfinder-mobile .std42-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close .ui-icon,
 .std42-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close:hover .ui-icon {
-  background-color: #f44336;
+ /* background-color: #f44336;*/
 }
 .elfinder-mobile .std42-dialog .ui-dialog-titlebar .elfinder-titlebar-full .ui-icon,
 .std42-dialog .ui-dialog-titlebar .elfinder-titlebar-full:hover .ui-icon {
@@ -1662,7 +1662,7 @@ div.elfinder-cwd-wrapper-list .ui-icon-grip-dotted-vertical {
 }
 .elfinder-mobile .std42-dialog .ui-dialog-titlebar .elfinder-titlebar-minimize .ui-icon,
 .std42-dialog .ui-dialog-titlebar .elfinder-titlebar-minimize:hover .ui-icon {
-  background-color: #ff9800;
+  /*background-color: #ff9800;*/
 }
 .elfinder-dialog-title {
   color: #f1f1f1;

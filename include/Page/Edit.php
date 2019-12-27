@@ -944,20 +944,6 @@ class Edit extends \gp\Page{
 
 
 	/**
-	 * Update Section Clipboard links via AJAX
-	 *
-	 */
-	public static function UpdateSectionClipboard(){
-		$clipboard_links = self::SectionClipboardLinks();
-		$this->ajaxReplace = array();
-		$this->ajaxReplace[] = array('inner', '#section-clipboard-items', $clipboard_links);
-		$this->ajaxReplace[] = array('loaded', '', '');
-		return true;
-	}
-
-
-
-	/**
 	 * Get the Section Clipboard links
 	 *
 	 */

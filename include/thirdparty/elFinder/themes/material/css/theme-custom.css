@@ -1105,6 +1105,12 @@ div.elfinder-cwd-wrapper-list .ui-icon-grip-dotted-vertical {
   padding: 6px 19px;
 }
 .elfinder-button-menu-item.ui-state-hover {
+  background-image: none;
+}
+.elfinder-button-menu-item .ui-icon {
+  font-size: 16px !important;
+}
+.elfinder-button-menu-item.ui-state-hover {
   color: #141414;
   background-color: #f5f4f4;
 }

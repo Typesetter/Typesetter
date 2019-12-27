@@ -433,7 +433,7 @@ div.elfinder-cwd-wrapper-list .ui-icon-grip-dotted-vertical {
   position: relative;
   top: -10px !important;
   padding: 0;
-  display: contents !important;
+  /* display: contents !important; */ /* yet too buggy, only FF supports it and even there it causes issues */
 }
 .elfinder-cwd-view-list #elfinder-elfinder-cwd-thead tr {
   background: none transparent !important;

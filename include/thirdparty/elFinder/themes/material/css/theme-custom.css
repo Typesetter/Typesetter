@@ -1658,7 +1658,7 @@ div.elfinder-cwd-wrapper-list .ui-icon-grip-dotted-vertical {
 }
 .elfinder-mobile .std42-dialog .ui-dialog-titlebar .elfinder-titlebar-full .ui-icon,
 .std42-dialog .ui-dialog-titlebar .elfinder-titlebar-full:hover .ui-icon {
-  background-color: #4caf50;
+  /* background-color: #4caf50; */
 }
 .elfinder-mobile .std42-dialog .ui-dialog-titlebar .elfinder-titlebar-minimize .ui-icon,
 .std42-dialog .ui-dialog-titlebar .elfinder-titlebar-minimize:hover .ui-icon {

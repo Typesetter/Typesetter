@@ -259,7 +259,7 @@ class FileSystemFtp extends FileSystem{
 	 * @param string $dir
 	 * @param bool $show_hidden
 	 */
-	public function dirlist( $dir, $show_hidden=true ){
+	public function dirlist( $dir ){
 		$pwd = @ftp_pwd($this->conn_id);
 
 		// Cant change to folder = folder doesnt exist
@@ -279,9 +279,6 @@ class FileSystemFtp extends FileSystem{
 		$list = array();
 		foreach($ftp_list as $file){
 			if( $file == '.' || $file == '..' ){
-				continue;
-			}
-			if( !$show_hidden && $file[0] == '.' ){
 				continue;
 			}
 			$list[$file] = $file;

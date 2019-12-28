@@ -45,7 +45,7 @@ class Edit extends \gp\Page{
 	 * Run Commands
 	 *
 	 */
-	protected function RunCommands($cmd){
+	public function RunCommands($cmd){
 
 		//allow addons to effect page actions and how a page is displayed
 		$cmd = \gp\tool\Plugins::Filter('PageRunScript', array($cmd));

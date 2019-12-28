@@ -1,7 +1,0 @@
-@mixin box-shadow($shadow...) {
-  @if $enable-shadows {
-    // ########## use VP-mixins ##########
-    // box-shadow: $shadow;
-    @include vp-box-shadow($shadow);
-  }
-}

@@ -26,7 +26,6 @@ namespace gp{
 		public $file_sections		= array();
 		public $meta_data			= array();
 
-		public $fileModTime			= 0; /* @deprecated 3.0 */
 		public $file_stats			= array();
 
 		//layout & theme
@@ -37,7 +36,6 @@ namespace gp{
 		public $theme_path;
 		public $theme_rel;
 		public $theme_addon_id		= false;
-		public $theme_is_addon		= false;/* @deprecated 3.5 */
 		public $menu_css_ordered	= true;
 		public $menu_css_indexed	= true;
 		public $gpLayout;
@@ -57,6 +55,12 @@ namespace gp{
 		public $css_user			= array();
 		public $css_admin			= array();
 
+
+		/* @deprecated 3.0 */
+		public $fileModTime			= 0;
+
+		/* @deprecated 3.5 */
+		public $theme_is_addon		= false;
 
 
 		public function __construct($title, $type){
@@ -353,4 +357,3 @@ namespace gp{
 namespace{
 	class display extends \gp\Page{}
 }
-

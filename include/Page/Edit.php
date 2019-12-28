@@ -45,7 +45,7 @@ class Edit extends \gp\Page{
 	 * Run Commands
 	 *
 	 */
-	protected function RunCommands($cmd){
+	public function RunCommands($cmd){
 
 		//allow addons to effect page actions and how a page is displayed
 		$cmd = \gp\tool\Plugins::Filter('PageRunScript', array($cmd));
@@ -1153,7 +1153,7 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public static function NewSectionLink($types, $img, $wrapper_data=false, $checkbox=false ){
-		global $dataDir, $page;
+		global $dataDir, $page, $langmessage;
 
 		$types = (array)$types;
 
@@ -1282,10 +1282,6 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public function SaveThis($backup=true){
-
-		if( !is_array($this->meta_data) || !is_array($this->file_sections) ){
-			return false;
-		}
 
 		//return true if nothing has changed
 		if( $backup && $this->checksum === $this->Checksum() ){
@@ -1917,7 +1913,6 @@ class Edit extends \gp\Page{
 		// $section_data['attributes']['gp_type'] 			= $section_data['type'];
 		$section_data['gp_hidden']						= false;
 		$orig_attrs										= $section_data['attributes'];
-		$section_types									= \gp\tool\Output\Sections::GetTypes();
 
 		$content 			.= $this->SectionNode($section_data, $orig_attrs);
 

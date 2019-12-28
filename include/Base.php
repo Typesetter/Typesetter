@@ -14,7 +14,7 @@ abstract class Base{
 	 * Run Commands
 	 *
 	 */
-	protected function RunCommands($cmd){
+	public function RunCommands($cmd){
 
 		if( !is_string($cmd) ){
 			$cmd = '';

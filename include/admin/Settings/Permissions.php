@@ -9,23 +9,7 @@ class Permissions extends Users{
 	protected $cmds				= ['save_file_permissions'=>''];
 
 	public function __construct($args){
-		global $langmessage;
-
 		parent::__construct($args);
-
-		$cmd = \gp\tool::GetCommand();
-
-		switch($cmd){
-
-			case 'save_file_permissions':
-				if( $this->SaveFilePermissions() ){
-					return;
-				}
-
-		}
-
-		$this->DefaultDisplay();
-
 	}
 
 

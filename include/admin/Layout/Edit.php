@@ -525,7 +525,7 @@ class Edit extends \gp\admin\Layout{
 				echo '<tr><th colspan="2">&nbsp;</th></tr>';
 
 				$extrasFolder	= $dataDir.'/data/_extra';
-				$files			= scandir($extrasFolder);
+				$files			= scandir($extrasFolder) or [];
 				asort($files);
 				foreach($files as $file){
 
@@ -666,7 +666,7 @@ class Edit extends \gp\admin\Layout{
 
 		//figure out what we're inserting
 		$addtype =& $_REQUEST['addtype'];
-		switch($_REQUEST['addtype']){
+		switch($addtype){
 
 			case 'new_extra':
 				$extra_name = $this->NewExtraArea();
@@ -777,13 +777,14 @@ class Edit extends \gp\admin\Layout{
 	/**
 	 * Get the position of $gpOutCmd in $container_info
 	 *
+	 * @return int|false
 	 */
 	public function ContainerWhere( $gpOutCmd, &$container_info, $warn = true){
 		global $langmessage;
 
 		$where = array_search($gpOutCmd,$container_info);
 
-		if( ($where === null) || ($where === false) ){
+		if( !is_int($where) ){
 			if( $warn ){
 				message($langmessage['OOPS'].' (Not found in container)');
 			}

@@ -346,6 +346,10 @@
 
 #admincontent_panel ul{
 	float: left;
+
+	> li:nth-of-type(1){
+		border-left: 1px solid lighten($gp_panel_bg, 10%);
+	}
 }
 #admincontent_panel ul,
 #admincontent_panel li,
@@ -863,7 +867,10 @@ table.tablesorter th.gp_header_desc:before{
  */
 #simplepanel{
 	position: fixed;
-	z-index: 9002;
+	z-index: 999999;
+	top: 0;
+	left: 0;
+	width: 180px;
 }
 #simplepanel > div{
 	padding: 0;
@@ -872,10 +879,8 @@ table.tablesorter th.gp_header_desc:before{
 	min-width: 130px;
 
 	display: block;
-	border: 1px solid #000;
-	border-radius: 5px;
+	border-radius: 0 0 5px 0;
 	background: $gp_panel_bg;
-	@include box-shadow( 0 0 3px rgba(0,0,0,0.6) );
 }
 
 #gp_admin_html ul,
@@ -901,10 +906,26 @@ table.tablesorter th.gp_header_desc:before{
  * toolbar
  */
 #simplepanel .toolbar{
-	position: relative;
-	//border-bottom: 1px solid #111;
-	cursor: move;
+	height: $gp_nav_height;
 	line-height: 0;
+	min-width: 180px;
+
+	.admin-panel-badge{
+		font-size: 0.825em;
+		font-weight: bold;
+		text-align: center;
+		display: inline-block;
+		position: absolute;
+		right: 0.2em;
+		top: 0.2em;
+		z-index: 5;
+		padding: 0 0.25em;
+		line-height: 1.5em;
+		min-width: 1em;
+		border-radius: 0.825em;
+		background-color: #666;
+		color: #fff;
+	}
 }
 #simplepanel .toolbar > a{
 	display: inline-block;
@@ -957,31 +978,6 @@ table.tablesorter th.gp_header_desc:before{
 #simplepanel .panelgroup{
 	position: relative;
 	display: block;
-	&.admin-panel-notifications{
-		span,
-		a {
-			padding-right: 0.75em; /* space for badge */
-		}
-	}
-	.admin-panel-notification:after{
-		display: none;
-	}
-	.admin-panel-badge{
-		font-size: 0.825em;
-		font-weight: bold;
-		text-align: center;
-		display: inline-block;
-		position: absolute;
-		right: 0.2em;
-		top: 0.2em;
-		z-index: 5;
-		padding: 0 0.25em;
-		line-height: 1.5em;
-		min-width: 1em;
-		border-radius: 0.825em;
-		background-color: #666;
-		color: #fff;
-	}
 }
 
 
@@ -1084,6 +1080,7 @@ table.tablesorter th.gp_header_desc:before{
 	padding: 3px 14px;
 	white-space: nowrap;
 	overflow: hidden;
+	text-overflow: ellipsis;
 }
 #simplepanel .submenu a.submenu_top{
 	display: none;
@@ -1154,7 +1151,6 @@ table.tablesorter th.gp_header_desc:before{
 #simplepanel.minb > div{
 	min-width: 0;
 }
-#simplepanel.minb .toolbar a:nth-child(n+2),
 #simplepanel.minb .panelgroup{
 	display: none;
 }
@@ -1164,8 +1160,7 @@ table.tablesorter th.gp_header_desc:before{
 #simplepanel.minb:hover .toolbar a:nth-child(n+2){
 	display: inline-block;
 }
-#simplepanel.toggledmin .panelgroup,
-#simplepanel.toggledmin .toolbar a:nth-child(n+2){
+#simplepanel.toggledmin .panelgroup{
 	display: none !important;
 }
 
@@ -2013,6 +2008,14 @@ body #addon_about{
 		.toggle_panel{
 			display: none;
 		}
+
+		.admin-panel-badge{
+			right: 3.5em;
+		}
+	}
+
+	#admincontent_panel ul > li:nth-of-type(1){
+		border-left: none;
 	}
 }
 

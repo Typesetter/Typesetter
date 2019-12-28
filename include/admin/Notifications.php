@@ -467,17 +467,12 @@ namespace gp\admin{
 					if( $in_panel ){
 						$badge_html		 = ' <b class="admin-panel-badge"' . $badge_style_attr . '>' . $count . '</b>';
 					}else{
-						$badge_html		 = ' <span class="dashboard-badge">(' . $count . ')</b>';
+						$badge_html		 = ' <span class="dashboard-badge">(' . $count . ')</span>';
 					}
 				}
 
-				$expand_class = 'expand_child';
-				if( !$in_panel ){
-					$expand_class = ''; // expand_child_click
-				}
-
 				ob_start();
-				echo '<li class="' . $expand_class . '">';
+				echo '<li>';
 				echo \gp\tool::Link(
 						'Admin/Notifications',
 						$title . $badge_html,
@@ -500,22 +495,32 @@ namespace gp\admin{
 			}
 
 			$panel_label	= $langmessage['Notifications'];
-			$panel_class	= $in_panel ? 'admin-panel-notifications' : '';
 
 			$badge_html		= $total_count > 0 ?
 								'<b class="admin-panel-badge"' . $main_badge_style_attr . '>' . $total_count . '</b>' :
 								'';
-
-			\gp\Admin\Tools::_AdminPanelLinks(
-				$in_panel,
-				implode('', $links),
-				$panel_label,
-				'fa fa-bell',
-				'notifications',
-				$panel_class,	// new param 'class'
-				$badge_html		// new param 'badge'
-			);
-
+			if (!$in_panel){
+				\gp\Admin\Tools::_AdminPanelLinks(
+					$in_panel,
+					implode('', $links),
+					$panel_label,
+					'fa fa-bell',
+					'notifications',
+					'',				// new param 'class'
+					$badge_html		// new param 'badge'
+				);
+			}else{
+				echo \gp\tool::Link(
+					'Admin/Notifications',
+					'<i class="fa fa-bell"></i>'.$badge_html,
+					'cmd=ShowNotifications',
+					array(
+						'title'		=> '',
+						'class'		=> 'admin-panel-notifications',
+						'data-cmd'	=> 'gpabox',
+					)
+				);
+			}
 		}
 
 

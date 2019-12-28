@@ -810,8 +810,6 @@ class Session{
 	public static function gpui_defaults(){
 		return array(
 			'gpui_cmpct'	=> 0,
-			'gpui_tx'		=> 10,
-			'gpui_ty'		=> 39,
 			'gpui_ckx'		=> 20,
 			'gpui_cky'		=> 240,
 			'gpui_vis'		=> 'cur',

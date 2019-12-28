@@ -479,11 +479,8 @@ namespace gp\admin{
 			}
 
 			$class = '';
-			$position = '';
 
 			if( \gp\tool::RequestType() != 'admin' ){
-				$position = ' style="top:' . max(-10, $gpAdmin['gpui_ty']) . 'px;'
-					. 'left:' . max(-10, $gpAdmin['gpui_tx']) . 'px"';
 				if( isset($gpAdmin['gpui_cmpct']) && $gpAdmin['gpui_cmpct'] ){
 					$class = ' compact';
 					if( $gpAdmin['gpui_cmpct'] === 2 ){
@@ -497,7 +494,7 @@ namespace gp\admin{
 			$class = ' class="keep_viewable' . $class.'"';
 
 			echo "\n\n";
-			echo '<div id="simplepanel"'.$class.$position.'><div>';
+			echo '<div id="simplepanel"'.$class.'><div>';
 
 			//toolbar
 			echo '<div class="toolbar">';
@@ -519,6 +516,11 @@ namespace gp\admin{
 					'',
 					array('data-cmd' => 'gpabox')
 				);
+
+			//notifications
+			if( \gp\admin\Tools::HasPermission('Admin/Notifications') ){
+					\gp\admin\Notifications::GetNotifications(true);
+			}
 
 			echo '</div>';
 
@@ -729,7 +731,7 @@ namespace gp\admin{
 			*/
 
 			//notifications
-			if( \gp\admin\Tools::HasPermission('Admin/Notifications') ){
+			if( \gp\admin\Tools::HasPermission('Admin/Notifications') && !$in_panel){
 				\gp\admin\Notifications::GetNotifications($in_panel);
 			}
 

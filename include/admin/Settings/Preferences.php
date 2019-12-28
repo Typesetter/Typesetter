@@ -210,8 +210,6 @@ namespace gp\admin\Settings{
 				'false'=>false
 			);
 
-			$possible['gpui_tx']	= 'integer';
-			$possible['gpui_ty']	= 'integer';
 			$possible['gpui_ckx']	= 'integer';
 			$possible['gpui_cky']	= 'integer';
 			$possible['gpui_thw']	= 'integer';

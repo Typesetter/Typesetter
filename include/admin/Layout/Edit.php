@@ -666,7 +666,7 @@ class Edit extends \gp\admin\Layout{
 
 		//figure out what we're inserting
 		$addtype =& $_REQUEST['addtype'];
-		switch($_REQUEST['addtype']){
+		switch($addtype){
 
 			case 'new_extra':
 				$extra_name = $this->NewExtraArea();

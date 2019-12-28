@@ -1,0 +1,70 @@
+@mixin vp-transition($value...) {
+  @if $enable-autoprefixer {
+    -webkit-transition: $value;
+    -o-transition: $value;
+  }
+  transition: $value;
+}
+
+@mixin vp-transition-timing-function($value) {
+  @if $enable-autoprefixer {
+    -webkit-transition-timing-function: $value;
+    -o-transition-timing-function: $value;
+  }
+  transition-timing-function: $value;
+}
+
+@mixin vp-transition-duration($value) {
+  @if $enable-autoprefixer {
+    -webkit-transition-duration: $value;
+         -o-transition-duration: $value;
+  }
+  transition-duration: $value;
+}
+
+@mixin vp-transition-property($value) {
+  @if $enable-autoprefixer {
+    -webkit-transition-property: $value;
+         -o-transition-property: $value;
+  }
+  transition-property: $value;
+}
+
+// http://joshbroton.com/quick-fix-sass-mixins-for-css-keyframe-animations/
+@mixin vp-animation($animate...) {
+    $max: length($animate);
+    $animations: '';
+
+    @for $i from 1 through $max {
+        $animations: #{$animations + nth($animate, $i)};
+
+        @if $i < $max {
+            $animations: #{$animations + ", "};
+        }
+    }
+
+    @if $enable-autoprefixer {
+      -webkit-animation: $animations;
+      -moz-animation:    $animations;
+      -o-animation:      $animations;
+    }
+    animation:         $animations;
+}
+
+// http://joshbroton.com/quick-fix-sass-mixins-for-css-keyframe-animations/
+@mixin vp-keyframes($animationName) {
+  @if $enable-autoprefixer {
+    @-webkit-keyframes #{$animationName} {
+      @content;
+    }
+    @-moz-keyframes #{$animationName} {
+      @content;
+    }
+    @-o-keyframes #{$animationName} {
+      @content;
+    }
+  }
+  @keyframes #{$animationName} {
+    @content;
+  }
+}

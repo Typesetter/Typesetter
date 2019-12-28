@@ -1,0 +1,21 @@
+// stylelint-disable declaration-no-important
+
+.shadow-sm {
+  -webkit-box-shadow: $box-shadow-sm !important;
+  box-shadow: $box-shadow-sm !important;
+}
+
+.shadow {
+  -webkit-box-shadow: $box-shadow !important;
+  box-shadow: $box-shadow !important;
+}
+
+.shadow-lg {
+  -webkit-box-shadow: $box-shadow-lg !important;
+  box-shadow: $box-shadow-lg !important;
+}
+
+.shadow-none {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}

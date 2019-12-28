@@ -1,0 +1,11 @@
+.media {
+  // display: flex;
+  @include vp-flexbox();
+  // align-items: flex-start;
+  @include vp-align-items(flex-start);
+}
+
+.media-body {
+  // flex: 1;
+  @include vp-flex(1);
+}

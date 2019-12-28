@@ -1,0 +1,270 @@
+// stylelint-disable declaration-no-important
+
+// Flex variation
+//
+// Custom styles for additional flex alignment options.
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .flex#{$infix}-row {
+      -webkit-box-direction: normal !important;
+      -webkit-box-orient: horizontal !important;
+      -webkit-flex-direction: row !important;
+      -moz-flex-direction: row !important;
+      -ms-flex-direction: row !important;
+      flex-direction: row !important;
+    }
+
+    .flex#{$infix}-column {
+      -webkit-box-direction: normal !important;
+      -webkit-box-orient: vertical !important;
+      -webkit-flex-direction: column !important;
+      -moz-flex-direction: column !important;
+      -ms-flex-direction: column !important;
+      flex-direction: column !important;
+    }
+
+    .flex#{$infix}-row-reverse {
+      -webkit-box-direction: reverse !important;
+      -webkit-box-orient: horizontal !important;
+      -webkit-flex-direction: row-reverse !important;
+      -moz-flex-direction: row-reverse !important;
+      -ms-flex-direction: row-reverse !important;
+      flex-direction: row-reverse !important;
+    }
+
+    .flex#{$infix}-column-reverse {
+      -webkit-box-direction: reverse;
+      -webkit-box-orient: vertical;
+      -webkit-flex-direction: column-reverse !important;
+      -moz-flex-direction: column-reverse !important;
+      -ms-flex-direction: column-reverse !important;
+      flex-direction: column-reverse !important;
+    }
+
+    .flex#{$infix}-wrap {
+      -webkit-flex-wrap: wrap !important;
+      -moz-flex-wrap: wrap !important;
+      -ms-flex-wrap: wrap !important;
+      flex-wrap: wrap !important;
+    }
+
+    .flex#{$infix}-nowrap {
+      -webkit-flex-wrap: wrap !important;
+      -moz-flex-wrap: wrap !important;
+      -ms-flex-wrap: none !important;
+      flex-wrap: nowrap !important;
+    }
+
+    .flex#{$infix}-wrap-reverse {
+      -webkit-flex-wrap: wrap-reverse !important;
+      -moz-flex-wrap: wrap-reverse !important;
+      -ms-flex-wrap: wrap-reverse !important;
+      flex-wrap: wrap-reverse !important;
+    }
+
+    .flex#{$infix}-fill {
+      -webkit-flex: 1 1 auto !important;
+      -moz-box-flex: 1 !important;
+      -moz-flex: 1 1 auto !important;
+      -ms-flex: 1 1 auto !important;
+      flex: 1 1 auto !important;
+    }
+
+    .flex#{$infix}-grow-0 {
+      -webkit-box-flex: 0 !important;
+      -webkit-flex-grow: 0 !important;
+      -moz-flex-grow: 0 !important;
+      -ms-flex-positive: 0 !important;
+      flex-grow: 0 !important;
+    }
+
+    .flex#{$infix}-grow-1 {
+      -webkit-box-flex: 1 !important;
+      -webkit-flex-grow: 1 !important;
+      -moz-flex-grow: 1 !important;
+      -ms-flex-positive: 1 !important;
+      flex-grow: 1 !important;
+    }
+
+    .flex#{$infix}-shrink-0 {
+      -webkit-flex-shrink: 0 !important;
+      -moz-flex-shrink: 0 !important;
+      -ms-flex-negative: 0 !important;
+      flex-shrink: 0 !important;
+    }
+
+    .flex#{$infix}-shrink-1 {
+      -webkit-flex-shrink: 1 !important;
+      -moz-flex-shrink: 1 !important;
+      -ms-flex-negative: 1 !important;
+      flex-shrink: 1 !important;
+    }
+
+    .justify-content#{$infix}-start {
+      -webkit-box-pack: start !important;
+      -ms-flex-pack: start !important;
+      -webkit-justify-content: flex-start !important;
+      -moz-justify-content: flex-start !important;
+      justify-content: flex-start !important;
+    }
+
+    .justify-content#{$infix}-end {
+      -webkit-box-pack: end !important;
+      -ms-flex-pack: end !important;
+      -webkit-justify-content: flex-end !important;
+      -moz-justify-content: flex-end !important;
+      justify-content: flex-end !important;
+    }
+
+    .justify-content#{$infix}-center {
+      -webkit-box-pack: center !important;
+      -ms-flex-pack: center !important;
+      -webkit-justify-content: center !important;
+      -moz-justify-content: center !important;
+      justify-content: center !important;
+    }
+
+    .justify-content#{$infix}-between {
+      -webkit-box-pack: justify !important;
+      -ms-flex-pack: justify !important;
+      -webkit-justify-content: space-between !important;
+      -moz-justify-content: space-between !important;
+      justify-content: space-between !important;
+    }
+
+    .justify-content#{$infix}-around {
+      -webkit-box-pack: distribute !important;
+      -ms-flex-pack: distribute !important;
+      -webkit-justify-content: space-around !important;
+      -moz-justify-content: space-around !important;
+      justify-content: space-around !important;
+    }
+
+    .align-items#{$infix}-start {
+      -webkit-box-align: start !important;
+      -ms-flex-align: start !important;
+      -webkit-align-items: flex-start !important;
+      -moz-align-items: flex-start !important;
+      align-items: flex-start !important;
+    }
+
+    .align-items#{$infix}-end {
+      -webkit-box-align: end !important;
+      -ms-flex-align: end !important;
+      -webkit-align-items: flex-end !important;
+      -moz-align-items: flex-end !important;
+      align-items: flex-end !important;
+    }
+
+    .align-items#{$infix}-center {
+      -webkit-box-align: center !important;
+      -ms-flex-align: center !important;
+      -webkit-align-items: center !important;
+      -moz-align-items: center !important;
+      align-items: center !important;
+    }
+
+    .align-items#{$infix}-baseline {
+      -webkit-box-align: baseline !important;
+      -ms-flex-align: baseline !important;
+      -webkit-align-items: baseline !important;
+      -moz-align-items: baseline !important;
+      align-items: baseline !important;
+    }
+
+    .align-items#{$infix}-stretch {
+      -webkit-box-align: stretch !important;
+      -ms-flex-align: stretch !important;
+      -webkit-align-items: stretch !important;
+      -moz-align-items: stretch !important;
+      align-items: stretch !important;
+    }
+
+    .align-content#{$infix}-start {
+      -webkit-align-content: flex-start !important;
+      -moz-align-content: flex-start !important;
+      -ms-flex-line-pack: start !important;
+      align-content: flex-start !important;
+    }
+
+    .align-content#{$infix}-end {
+      -webkit-align-content: flex-end !important;
+      -moz-align-content: flex-end !important;
+      -ms-flex-line-pack: end !important;
+      align-content: flex-end !important;
+    }
+
+    .align-content#{$infix}-center {
+      -webkit-align-content: center !important;
+      -moz-align-content: center !important;
+      -ms-flex-line-pack: center !important;
+      align-content: center !important;
+    }
+
+    .align-content#{$infix}-between {
+      -webkit-align-content: space-between !important;
+      -moz-align-content: space-between !important;
+      -ms-flex-line-pack: space-between !important;
+      align-content: space-between !important;
+    }
+
+    .align-content#{$infix}-around {
+      -webkit-align-content: space-around !important;
+      -moz-align-content: space-around !important;
+      -ms-flex-line-pack: space-around !important;
+      align-content: space-around !important;
+    }
+
+    .align-content#{$infix}-stretch {
+      -webkit-align-content: stretch !important;
+      -moz-align-content: stretch !important;
+      -ms-flex-line-pack: stretch !important;
+      align-content: stretch !important;
+    }
+
+    .align-self#{$infix}-auto {
+      -webkit-align-self: auto !important;
+      -moz-align-self: auto !important;
+      -ms-flex-item-align: auto !important;
+      align-self: auto !important;
+    }
+
+    .align-self#{$infix}-start {
+      -webkit-align-self: flex-start !important;
+      -moz-align-self: flex-start !important;
+      -ms-flex-item-align: start !important;
+      align-self: flex-start !important;
+    }
+
+    .align-self#{$infix}-end {
+      -webkit-align-self: flex-end !important;
+      -moz-align-self: flex-end !important;
+      -ms-flex-item-align: end !important;
+      align-self: flex-end !important;
+    }
+
+    .align-self#{$infix}-center {
+      -webkit-align-self: center !important;
+      -moz-align-self: center !important;
+      -ms-flex-item-align: center !important;
+      align-self: center !important;
+    }
+
+    .align-self#{$infix}-baseline {
+      -webkit-align-self: baseline !important;
+      -moz-align-self: baseline !important;
+      -ms-flex-item-align: baseline !important;
+      align-self: baseline !important;
+    }
+
+    .align-self#{$infix}-stretch {
+      -webkit-align-self: stretch !important;
+      -moz-align-self: stretch !important;
+      -ms-flex-item-align: stretch !important;
+      align-self: stretch !important;
+    }
+  }
+}

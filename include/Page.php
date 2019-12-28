@@ -82,7 +82,7 @@ namespace gp{
 		 * Get page content or do redirect for non-existant titles
 		 * see special_missing.php and /Admin/Settings/Missing
 		 */
-		function Error_404(){
+		public function Error_404(){
 			ob_start();
 
 			$args		= array('page'=>$this);
@@ -92,7 +92,7 @@ namespace gp{
 			$this->contentBuffer = ob_get_clean();
 		}
 
-		function SetVars(){
+		public function SetVars(){
 			global $gp_index, $gp_titles, $gp_menu;
 
 			if( !isset($gp_index[$this->title]) ){
@@ -120,7 +120,7 @@ namespace gp{
 		 * Check the page's visibility
 		 *
 		 */
-		function CheckVisibility(){
+		public function CheckVisibility(){
 			global $gp_titles;
 
 			if( isset($gp_titles[$this->gp_index]['vis']) ){
@@ -135,7 +135,7 @@ namespace gp{
 		}
 
 
-		function RunScript(){
+		public function RunScript(){
 
 			if( !$this->SetVars() ){
 				return;
@@ -160,7 +160,7 @@ namespace gp{
 		 * Retreive the data file for the current title and update the data if necessary
 		 *
 		 */
-		function GetFile(){
+		public function GetFile(){
 
 			$this->file_sections	= \gp\tool\Files::Get($this->file,'file_sections');
 			$this->meta_data		= \gp\tool\Files::$last_meta;
@@ -181,7 +181,7 @@ namespace gp{
 		 * If $layout is not found, use the installation's default theme
 		 *
 		 */
-		function SetTheme($layout=false){
+		public function SetTheme($layout=false){
 			global $dataDir;
 
 			if( $layout === false ){
@@ -232,7 +232,7 @@ namespace gp{
 		 * @return mixed
 		 *
 		 */
-		static function OrConfig($id,$var){
+		public static function OrConfig($id,$var){
 			global $config, $gp_titles;
 
 			if( $id ){
@@ -259,7 +259,7 @@ namespace gp{
 		 *
 		 * @return bool
 		 */
-		static function ParentConfig($checkId,$var,&$value){
+		public static function ParentConfig($checkId,$var,&$value){
 			global $gp_titles,$gp_menu;
 
 			$parents = \gp\tool::Parents($checkId,$gp_menu);
@@ -283,19 +283,19 @@ namespace gp{
 		 *
 		 */
 
-		function GetSiteLabel(){
+		public function GetSiteLabel(){
 			global $config;
 			echo $config['title'];
 		}
-		function GetSiteLabelLink(){
+		public function GetSiteLabelLink(){
 			global $config;
 			echo \gp\tool::Link('',$config['title']);
 		}
-		function GetPageLabel(){
+		public function GetPageLabel(){
 			echo $this->label;
 		}
 
-		function GetContent(){
+		public function GetContent(){
 
 			$this->GetGpxContent();
 
@@ -305,7 +305,7 @@ namespace gp{
 			echo '</div>';
 		}
 
-		function GetGpxContent(){
+		public function GetGpxContent(){
 			$class = '';
 			if( isset($this->meta_data['file_number']) ){
 				$class = 'filenum-'.$this->meta_data['file_number'];
@@ -325,27 +325,27 @@ namespace gp{
 
 		/* Deprecated functions
 		 */
-		function GetHead(){
+		public function GetHead(){
 			trigger_error('deprecated functions');
 			\gp\tool\Output::GetHead();
 		}
-		function GetExtra($area,$info=array()){
+		public function GetExtra($area,$info=array()){
 			trigger_error('deprecated functions');
 			\gp\tool\Output::GetExtra($area,$info);
 		}
-		function GetMenu(){
+		public function GetMenu(){
 			trigger_error('deprecated functions');
 			\gp\tool\Output::GetMenu();
 		}
-		function GetFullMenu(){
+		public function GetFullMenu(){
 			trigger_error('deprecated functions');
 			\gp\tool\Output::GetFullMenu();
 		}
-		function GetAllGadgets(){
+		public function GetAllGadgets(){
 			trigger_error('deprecated functions');
 			\gp\tool\Output::GetAllGadgets();
 		}
-		function GetAdminLink(){
+		public function GetAdminLink(){
 			trigger_error('deprecated functions');
 			\gp\tool\Output::GetAdminLink();
 		}

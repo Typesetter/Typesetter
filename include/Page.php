@@ -25,6 +25,8 @@ namespace gp{
 		public $visibility			= null;
 		public $file_sections		= array();
 		public $meta_data			= array();
+		public $lang;
+		public $language;
 
 		public $file_stats			= array();
 

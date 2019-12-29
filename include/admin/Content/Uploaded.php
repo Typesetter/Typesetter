@@ -356,7 +356,8 @@ namespace gp\admin\Content{
 			if( $dir_piece != '/' ){
 				$temp = \gp\tool::DirName($dir_piece);
 				$return		.= '<a href="?cmd=new_dir&dir='.rawurlencode($dir_piece).'" class="gp_gallery_folder" data-cmd="gpabox"><i class="fa fa-plus"></i> '.$langmessage['create_dir'].'</a>';
-				$return		.= '<a class="gp_gallery_folder" data-cmd="gp_gallery_folder" data-arg="'.htmlspecialchars($temp).'"><i class="fa fa-folder-o"></i> .../</a>';
+				$return		.= '<a class="gp_gallery_folder" data-cmd="gp_gallery_folder" data-arg="'.htmlspecialchars($temp).'">';
+				$return		.= '<span class="fa-stack"><i class="fa fa-folder-o fa-stack-1x"></i><i class="fa fa-caret-up fa-stack-1x"></i></span> ../</a>';
 			}
 
 			foreach($folders as $folder){

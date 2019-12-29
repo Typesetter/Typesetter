@@ -2103,7 +2103,8 @@ namespace gp\tool{
 			$replacement = '';
 			if( !empty(self::$head_js) || stripos($buffer, '<script') !== false ){
 				$replacement = "\n<script type=\"text/javascript\" src=\""
-					. \gp\tool::GetDir('/include/thirdparty/js/jquery.js')
+					// . \gp\tool::GetDir('/include/thirdparty/js/jquery.js') // TODO: restore this line
+					. \gp\tool::GetDir('/include/thirdparty/js/jquery-2.2.4/jquery.js')
 					. "\"></script>";
 			}
 

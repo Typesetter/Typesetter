@@ -55,7 +55,8 @@ class Combine{
 
 			//jquery
 			'jquery'	=> array(
-									'file'			=> '/include/thirdparty/js/jquery.js',
+									// 'file'			=> '/include/thirdparty/js/jquery.js',  // TODO: restore this line
+									'file'			=> '/include/thirdparty/js/jquery-2.2.4/jquery.js',  // TODO: remove this line
 									'package'		=> 'jquery',
 									'label'			=> 'jQuery',
 									'cdn'			=> array(

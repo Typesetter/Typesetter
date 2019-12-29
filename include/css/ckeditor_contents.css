@@ -3,10 +3,12 @@ Copyright (c) 2003-2009, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.html or http://ckeditor.com/license
 */
 
-body
-{
+body {
 	/* Font */
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	font-family: -apple-system, BlinkMacSystemFont,
+		"Segoe UI", Roboto, "Helvetica Neue", Arial,
+		"Noto Sans", sans-serif,
+		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	font-size: 12px;
 	
 	/* Text color */
@@ -16,26 +18,23 @@ body
 	background-color: #fff;
 }
 
-html
-{
+html {
 	/* #3658: [IE6] Editor document has horizontal scrollbar on long lines
 	To prevent this misbehavior, we show the scrollbar always */
 	_overflow-y: scroll;
-
 }
 
-img:-moz-broken
-{
+img:-moz-broken {
 	-moz-force-broken-image-icon : 1;
-	width : 24px;
-	height : 24px;
+	width: 24px;
+	height: 24px;
 }
-img, input, textarea
-{
+img, input, textarea {
 	cursor: default;
 }
 
-table td,table th{
-	border:1px dotted #ccc;
-	vertical-align:top;
-	}
+table td,
+table th {
+	border: 1px dotted #ccc;
+	vertical-align: top;
+}

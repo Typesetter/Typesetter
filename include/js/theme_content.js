@@ -143,7 +143,8 @@ $(function(){
 
 					$(this).css({'top':loc.top,'left':loc.left,'width':loc.w,'height':loc.h});
 				})
-				.on("hover", function(){ $(this).css("z-index", "+=500"); }, function(){ $(this).css("z-index", "-=500"); })
+				.on("mouseenter", function(){ $(this).css("z-index", "+=500"); })
+				.on("mouseleave", function(){ $(this).css("z-index", "-=500"); })
 				.find(".decrease_z_index")
 					.on("click", function(){
 						$(this).closest(".draggable_element").trigger("mouseleave").css("z-index", "-=1");

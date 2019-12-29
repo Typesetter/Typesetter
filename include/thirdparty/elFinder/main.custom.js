@@ -168,6 +168,7 @@ define('jquery-ui', [], function() {});
 
 				},
 				height:'100%'
+				,dialogContained : true
 				,cssAutoLoad : [ '/themes/material/css/theme-custom.css' ]
 				,getFileCallback:function(file, finder){
 

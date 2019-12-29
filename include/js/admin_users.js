@@ -39,8 +39,8 @@ $(function(){
 		area
 			.closest('form')
 			.find('input[type="reset"]')
-			.unbind('click.checkboxes')
-			.bind('click.checkboxes',function(){
+			.off('click.checkboxes')
+			.on('click.checkboxes',function(){
 				window.setTimeout(function(){
 					Reset();
 				},50);

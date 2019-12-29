@@ -16,7 +16,7 @@
 			//}
 
 			var a = $('.draggable_droparea > .target');
-			if( a.size() < 1 ){
+			if( a.length < 1 ){
 				WBd.clean();
 				return;
 			}
@@ -28,7 +28,7 @@
 
 
 			var lnk = $(WBd.dragEl).find('a.dragdroplink:first');
-			if( lnk.size() < 1 ){
+			if( lnk.length < 1 ){
 				WBd.clean();
 				return;
 			}
@@ -51,8 +51,8 @@
 			$('.WB_DRAG_BOX').hide();
 
 			//remove listeners
-			$(document).unbind('mousemove.drag',WBd.DMM).unbind('mouseup.drag',WBd.DMU);
-			$('.draggable_droparea > *').unbind('mouseover.drag').unbind('mouseout.drag').removeClass('target');
+			$(document).off('mousemove.drag',WBd.DMM).off('mouseup.drag',WBd.DMU);
+			$('.draggable_droparea > *').off('mouseover.drag').off('mouseout.drag').removeClass('target');
 
 			WBd.VARS();
 
@@ -69,11 +69,11 @@
 			var b,c,l;
 
 			//don't drag when mousing down on a drop down menu (expandable areas can be children of draggable areas)
-			if( $(e.target).closest('.expand ul').size() > 0 ){
+			if( $(e.target).closest('.expand ul').length > 0 ){
 				return;
 			}
 
-			$(document).bind('mouseup.drag',WBd.DMU);
+			$(document).on('mouseup.drag',WBd.DMU);
 
 			var a = WBd.dragEl = this; //refers to draggable element in this situation
 
@@ -93,7 +93,7 @@
 
 
 			//position box
-			$(document).bind('mousemove.drag',WBd.DMM);
+			$(document).on('mousemove.drag',WBd.DMM);
 			//WBd.DMM(e);
 
 
@@ -109,9 +109,9 @@
 				WBd.started = true;
 
 				//setting the target
-				$('.draggable_droparea > *:not([class~=draggable_nodrop])').bind('mouseover.drag',function(){
+				$('.draggable_droparea > *:not([class~=draggable_nodrop])').on('mouseover.drag',function(){
 					$(this).addClass('target');
-				}).bind('mouseout.drag',function(){
+				}).on('mouseout.drag',function(){
 					$(this).removeClass('target');
 				});
 
@@ -127,7 +127,7 @@
 			y = (e.clientY + wn.scrollTop());
 
 			//move box
-			$('.WB_DRAG_BOX').css('left',x).css('top',y);
+			$('.WB_DRAG_BOX').css({'left':x,'top':y});
 
 
 			//scroll window if needed
@@ -195,10 +195,3 @@
 		a.clone().css('borderTop','2px dashed #bbb').attr('id','WB_DRAG_BOX_BOTTOM').appendTo('body');
 		a.clone().css('borderRight','2px dashed #bbb').attr('id','WB_DRAG_BOX_RIGHT').appendTo('body');
 	});
-
-
-
-
-
-
-

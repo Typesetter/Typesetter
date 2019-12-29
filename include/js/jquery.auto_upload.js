@@ -96,7 +96,7 @@
 			$form = $(this.form);
 
 			//when changed
-			$input.bind('change',function(){
+			$input.on('change',function(){
 				var filename = this.value.toString();
 				while(pos = filename.search('\\\\')){
 					if( pos == -1){
@@ -128,14 +128,14 @@
 
 			if( supports_multiple_files ){
 				$this.attr('multiple','multiple');
-				$this.bind('change.auto_upload', upload);
+				$this.on('change.auto_upload', upload);
 			}else{
 				init_legacy.call(this);
 			}
 
 
-			$this.bind('destroy.auto_upload', function() {
-				$this.unbind('.auto_upload');
+			$this.on('destroy.auto_upload', function() {
+				$this.off('.auto_upload');
 			});
 
 		});

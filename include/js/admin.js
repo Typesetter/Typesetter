@@ -599,7 +599,7 @@ $gp.links.toggle_panel = function(evt){
 		c = 1;
 	}
 	if( !panel.hasClass('toggledmin') ){
-		panel.unbind('mouseenter touchstart').bind('mouseenter touchstart',function(event){panel.unbind(event).removeClass('toggledmin');});
+		panel.off('mouseenter touchstart').on('mouseenter touchstart',function(event){panel.off(event).removeClass('toggledmin');});
 	}
 	panel.attr('class','keep_viewable '+classes);
 
@@ -1080,7 +1080,7 @@ $(function(){
 			lnk_span
 				.css({'left':'auto','top':0,'right':0,'position':'absolute'})
 				.removeClass('gp_hover')
-				.unbind('mouseenter touchstart')
+				.off('mouseenter touchstart')
 				.one('mouseenter touchstart',function(){
 					if( edit_area.hasClass('gp_no_overlay') ){
 						return;
@@ -1166,7 +1166,7 @@ $(function(){
 
 
 		//keep expanding areas within the viewable window
-		$('.in_window').parent().bind('mouseenter touchstart',function(){
+		$('.in_window').parent().on('mouseenter touchstart',function(){
 			var $this = $(this);
 			var panel = $this.children('.in_window').css({'right':'auto','left':'100%','top':0});
 			window.setTimeout(function(){
@@ -1258,7 +1258,7 @@ function SimpleDrag(selector, drag_area, positioning, callback_done){
 		}
 
 
-		$gp.$doc.bind('mousemove.sdrag',function(e){
+		$gp.$doc.on('mousemove.sdrag',function(e){
 
 			//initiate the box
 			if( !box ){
@@ -1277,9 +1277,9 @@ function SimpleDrag(selector, drag_area, positioning, callback_done){
 
 
 
-		$gp.$doc.unbind('mouseup.sdrag').bind('mouseup.sdrag',function(e){
+		$gp.$doc.off('mouseup.sdrag').on('mouseup.sdrag',function(e){
 			var newposleft,newpostop,pos_obj;
-			$gp.$doc.unbind('mousemove.sdrag mouseup.sdrag');
+			$gp.$doc.off('mousemove.sdrag mouseup.sdrag');
 
 			if( !box ){
 				return false;
@@ -1389,7 +1389,7 @@ $gp.response.renameprep = function(){
 
 	var $form			= $('#gp_rename_form');
 	var old_title		= $('#old_title').val().toLowerCase();
-	var $new_title		= $form.find('input.new_title').bind('keyup change',ShowRedirect);
+	var $new_title		= $form.find('input.new_title').on('keyup change',ShowRedirect);
 	var space_char		= $('#gp_space_char').val();
 
 
@@ -1397,7 +1397,7 @@ $gp.response.renameprep = function(){
 		$(b).fadeTo(400,0.6);
 	});
 
-	$('input.title_label').bind('keyup change',SyncSlug).change();
+	$('input.title_label').on('keyup change',SyncSlug).change();
 
 	$gp.links.showmore = function(){
 		$('#gp_rename_table tr').css('display','table-row');

@@ -76,7 +76,7 @@
 		 * Prepare for the menu to be refreshed
 		 *
 		 */
-		gpresponse.gp_menu_prep = function(){
+		$gp.Response.gp_menu_prep = function(){
 
 			//get id of .current
 			var $current	= $('.current:first');
@@ -92,7 +92,7 @@
 		 * Make sure new menu html sent from the server asynchronously is sortable
 		 *
 		 */
-		gpresponse.gp_menu_refresh = function(j){
+		$gp.Response.gp_menu_refresh = function(j){
 
 			$sortable_area.nestedSortable('refresh');
 

@@ -390,6 +390,10 @@
 	background: lighten($gp_panel_warning_color, 10);
 }
 
+#admincontent_panel .fa{
+	font-size: 14px;
+}
+
 #admincontent_panel span > .fa,
 #admincontent_panel a > .fa{
 	margin-right: 4px;

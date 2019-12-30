@@ -698,6 +698,10 @@
 
 		gp_editor.InitSorting();
 		$this.removeClass('previewing').trigger('mousemove');
+
+		// trigger immediate save
+		// console.log('immediate save');
+		gp_editing.SaveChanges();
 	};
 
 

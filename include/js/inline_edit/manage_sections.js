@@ -569,11 +569,13 @@
 				var $this = $(this).parent();
 				var $area = mgr_object.GetArea($this);
 
+				/*
 				scrollto_section_timeout = setTimeout(function(){
 					//scroll the page
 					var top		= $area.offset().top - 200;
 					$('html,body').stop().animate({scrollTop: top});
 				}, 1200);
+				*/
 
 
 				$('.section-item-hover').removeClass('section-item-hover');
@@ -587,9 +589,11 @@
 				var $this = $(this).parent();
 				var $area = mgr_object.GetArea($this);
 
+				/*
 				if( scrollto_section_timeout ){
 					clearTimeout(scrollto_section_timeout);
 				}
+				*/
 
 				$area.removeClass('section-highlight');
 				$this.removeClass('section-item-hover');
@@ -1363,6 +1367,18 @@
 		// console.log('keyboard event =', evt);
 		var ctrlKeyDowm = (evt.type == 'keydown' && evt.ctrlKey);
 		$('#section_sorting').toggleClass('warn-instant-section-removal', ctrlKeyDowm);
+	});
+
+
+	/**
+	 * Scroll to content section when list item is clicked
+	 *
+	 */
+	$(document).on('click', '#section_sorting li > div', function(){
+		var $li		= $(this).parent();
+		var $area	= gp_editor.GetArea($li);
+		var top		= $area.offset().top - 200;
+		$('html,body').stop().animate({scrollTop: top});
 	});
 
 

@@ -83,6 +83,8 @@
 				return;
 			}
 
+			loading(); // console.log('loading');
+
 			$wrap.addClass('ck_saving');
 			gp_editing.AutoSave.destroy(); // kill the autosave timer while saving to avoid timing conflicts
 
@@ -152,6 +154,7 @@
 					$("a.msg_publish_draft_disabled").hide();
 					$("a.msg_saving_draft").hide();
 					gp_editing.AutoSave.init(); // re-init autosave when saving completed
+					loaded(); // console.log('loaded');
 				},
 			});
 

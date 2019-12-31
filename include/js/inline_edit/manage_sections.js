@@ -750,34 +750,37 @@
 
 		if( is_hidden ){
 
-			$area
-				.attr('data-gp_hidden', false)
-				.data('gp_hidden', false)
-				.hide().slideDown(300);
-
 			$(this)
 				.removeClass("fa-eye")
 				.addClass("fa-eye-slash");
 			$li.removeClass("gp-section-hidden");
 
-		}else{
+			$area
+				.attr('data-gp_hidden', false)
+				.data('gp_hidden', false)
+				.hide().slideDown(150, function(){
+					// trigger immediate save
+					// console.log('immediate save');
+					gp_editing.SaveChanges();
+				});
 
-			$area.slideUp(300, function(){
-				$area
-					.attr('data-gp_hidden', true)
-					.data('gp_hidden', true);
-			});
+		}else{
 
 			$(this)
 				.removeClass("fa-eye-slash")
 				.addClass("fa-eye");
 			$li.addClass("gp-section-hidden");
 
-		}
+			$area.slideUp(150, function(){
+				$area
+					.attr('data-gp_hidden', true)
+					.data('gp_hidden', true);
 
-		// trigger immediate save
-		// console.log('immediate save');
-		gp_editing.SaveChanges();
+				// trigger immediate save
+				// console.log('immediate save');
+				gp_editing.SaveChanges();
+			});
+		}
 	};
 
 

@@ -629,7 +629,7 @@ class Users extends \gp\special\Base{
 
 			echo '<label class="all_checkbox">';
 			echo '<input type="checkbox" name="grant[]" value="'.$permission.'" '.$checked.'/>';
-			echo '<span>'.$label.'</span>';
+			echo '<span title="'.trim(strip_tags($label)).'">'.$label.'</span>';
 			echo '</label> ';
 		}
 
@@ -655,6 +655,7 @@ class Users extends \gp\special\Base{
 		uasort($ordered,'strnatcasecmp');
 
 		foreach($ordered as $index => $label){
+			$label = strip_tags($label);
 			$checked = '';
 			if( $all ){
 				$checked = ' checked="checked" ';
@@ -664,7 +665,7 @@ class Users extends \gp\special\Base{
 
 			echo '<label class="all_checkbox">';
 			echo '<input type="checkbox" name="titles[]" value="'.$index.'" '.$checked.'/>';
-			echo '<span>'.strip_tags($label).'</span>';
+			echo '<span title="'.$label.'">'.$label.'</span>';
 			echo '</label> ';
 		}
 

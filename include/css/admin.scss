@@ -330,10 +330,6 @@
 	background: $gp_panel_bg;
 }
 
-.isPrivate #admincontent_panel li a[data-cmd="expand"]{
-    background: #c44830;
-}
-
 .gpbody #admincontent_panel{
 	padding: 0 40px 0 (40px - $gp_nav_link_padding_x);
 }
@@ -386,11 +382,13 @@
 	background: lighten($gp_panel_bg,10%);
 }
 
-#admincontent_panel .admin-link-visibility-private{
+#admincontent_panel .admin-link-visibility-private,
+html.isPrivate #admincontent_panel .admin-link-dropdown-options{
 	background: $gp_panel_warning_color;
 }
 
-#admincontent_panel .admin-link-visibility-private:hover{
+#admincontent_panel .admin-link-visibility-private:hover,
+html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover{
 	background: lighten($gp_panel_warning_color, 10);
 }
 

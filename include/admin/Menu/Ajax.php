@@ -1281,6 +1281,8 @@ class Ajax extends \gp\admin\Menu{
 					$panelgroup = ob_get_clean();
 					$this->page->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
 				}
+				// toggle 'isPrivate' class on <html> element
+				$this->page->ajaxReplace[] = array('toggle_vis_class', !empty($_POST['visibility']), '');
 				return;
 			}
 

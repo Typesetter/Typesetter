@@ -1633,13 +1633,19 @@ namespace gp\tool{
 		 * @static
 		 */
 		public static function GetHead_InlineJS(){
-			global $page, $linkPrefix;
+			global $page, $linkPrefix, $gp_titles;
 
 			ob_start();
 			echo $page->head_script;
 
 			if( !empty($page->jQueryCode) ){
 				echo '$(function(){';
+				if( isset($page->gp_index) &&
+					isset($gp_titles[$page->gp_index]['vis']) &&
+					$gp_titles[$page->gp_index]['vis'] == 'private'
+					){
+					echo "\n" . '$("html").addClass("isPrivate");' . "\n";
+				}
 				echo $page->jQueryCode;
 				echo '});';
 			}

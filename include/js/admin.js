@@ -782,6 +782,16 @@ $gp.response.location = function(obj){
 
 
 /**
+ * toggle the isPrivate class for the <html> element
+ * obj.SELECTOR must evaluate as true or false
+ *
+ */
+$gp.response.toggle_vis_class = function(obj){
+	$('html').toggleClass('isPrivate', !!obj.SELECTOR);
+};
+
+
+/**
  * Get the edit area id
  *
  */
@@ -869,7 +879,7 @@ $(function(){
 		return;
 	}
 
-	$('body').addClass('gpAdmin');
+	$('body, html').addClass('gpAdmin');
 
 	$gp.IndicateDraft();
 

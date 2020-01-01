@@ -31,7 +31,7 @@
 			$('#edit_area_overlay_top').hide();
 
 			//use the div with the twysiwygr class for True WYSIWYG Replacement if it's found
-			var replace_content = content.find('.twysiwygr:first');
+			var replace_content = content.find('.twysiwygr').first();
 			if( replace_content.length ){
 				content = replace_content;
 			}

@@ -455,7 +455,7 @@
 
 				current_image	= GetCurrentImage(this);
 				var $li			= $(current_image);
-				var caption		= $li.find('.caption').html() || $li.find('a:first').attr('title'); //title attr for backwards compat
+				var caption		= $li.find('.caption').html() || $li.find('a').first().attr('title'); //title attr for backwards compat
 
 
 				var popup = '<div class="inline_box" id="gp_gallery_caption"><form><h3>'+gplang.cp+'</h3>'

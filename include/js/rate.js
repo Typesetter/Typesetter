@@ -25,7 +25,7 @@ $(function(){
 		}
 		show_value = show_value || $input.val();
 
-		var b = $span.find('a:eq('+(show_value-1)+')');
+		var b = $span.find('a').eq(show_value-1);
 
 		b.nextAll().addClass('unset');
 		b.removeClass('unset');
@@ -33,4 +33,3 @@ $(function(){
 	}
 
 });
-

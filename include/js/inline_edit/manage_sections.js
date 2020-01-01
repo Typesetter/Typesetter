@@ -638,7 +638,7 @@
 		preview_timeout = setTimeout(function(){
 
 			//scroll the page
-			var $last	= $('#gpx_content .editable_area:last');
+			var $last	= $('#gpx_content .editable_area').last();
 			var top		= $last.offset().top + $last.height() - 200;
 			$('html, body').stop().animate({scrollTop: top});
 
@@ -951,7 +951,7 @@
 
 		var tmpInput = $('<input type="text" value="' + $label.text() + '"/>')
 			.insertAfter($label)
-			.focus()
+			.trigger('focus')
 			.select()
 			// when blurred, remove <input> and show hidden elements
 			// same when esc or enter key is entered
@@ -1029,7 +1029,7 @@
 		var $area		= gp_editor.GetArea( $li );
 		var newColor 	= $this.attr('data-color');
 
-		$li.find('.color_handle:first').css('background-color', newColor);
+		$li.find('.color_handle').first().css('background-color', newColor);
 		$area.attr('data-gp_color',newColor).data('gp_color', newColor);
 		$li.find('.secsort_color_swatches').remove();
 		$li.children().show();
@@ -1396,7 +1396,7 @@
 		$div.hide();
 		var tmpInput	= $('<input type="text" value="' + $this.text() + '"/>')
 			.insertAfter($div)
-			.focus()
+			.trigger('focus')
 			.select()
 			// when blurred, remove <input> and show hidden elements
 			// same when esc or enter key is entered

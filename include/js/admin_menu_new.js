@@ -79,7 +79,7 @@
 		$gp.response.gp_menu_prep = function(){
 
 			//get id of .current
-			var $current	= $('.current:first');
+			var $current	= $('.current').first();
 			current_id		= $current.attr('id');
 
 			//get index of .current
@@ -107,7 +107,7 @@
 				}
 
 				if( !$current || !$current.length ){
-					$current = $('.gp_label:first').parent();
+					$current = $('.gp_label').first().parent();
 				}
 			}
 			ShowInfo($current);
@@ -406,7 +406,7 @@
 		 */
 
 		function init(){
-			var $new_current = $('#admin_menu').find('div:first');
+			var $new_current = $('#admin_menu').find('div').first();
 			ShowInfo($new_current);
 			SaveSettings();
 		}

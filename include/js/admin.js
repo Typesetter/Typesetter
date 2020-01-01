@@ -17,7 +17,7 @@ $gp.editors			= [];		// storage for editing objects
  */
 $gp.Coords = function(area){
 	if( area.hasClass('inner_size') ){
-		area = area.children(':first');
+		area = area.children().first();
 	}
 	var loc	= area.offset();
 	loc.w	= area.outerWidth();
@@ -392,8 +392,8 @@ $gp.AdminBoxC = function(data, options){
 			+ '" style="width:' + box_width + 'px"></div>')
 		.find('#gp_admin_boxc')
 		.html(data)
-		.find('input:visible:first')
-		.focus();
+		.find('input:visible').first()
+		.trigger('focus');
 
 	$('.messages').detach();
 
@@ -476,7 +476,7 @@ $gp.links.dd_menu = function(evt){
 	//scroll to show selected
 	var $selected = $list.find('.selected');
 	if( $selected.length ){
-		var $ul = $list.find('ul:first');
+		var $ul = $list.find('ul').first();
 		var pos = $list.find('.selected').prev().prev().prev().position();
 		if( pos ){
 			$ul.scrollTop( pos.top + $ul.scrollTop() );
@@ -698,7 +698,7 @@ $gp.links.gpabox = function(evt){
  */
 $gp.links.add_table_row = function(evt){
 	var $tr = $(this).closest('tr');
-	var $new_row = $tr.closest('tbody').find('tr:first').clone();
+	var $new_row = $tr.closest('tbody').find('tr').first().clone();
 	$new_row.find('.class_only').remove();
 	$new_row.find('input').val('').attr('value','');
 	$tr.before($new_row);

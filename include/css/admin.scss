@@ -330,6 +330,10 @@
 	background: $gp_panel_bg;
 }
 
+.isPrivate #admincontent_panel li a[data-cmd="expand"]{
+    background: #c44830;
+}
+
 .gpbody #admincontent_panel{
 	padding: 0 40px 0 (40px - $gp_nav_link_padding_x);
 }

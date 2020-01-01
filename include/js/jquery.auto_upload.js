@@ -119,7 +119,7 @@
 							$iframe.remove();
 						},10);
 					});
-				}).submit();
+				}).trigger('submit');
 			});
 		}
 

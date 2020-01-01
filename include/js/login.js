@@ -16,7 +16,7 @@ $(function(){
 
 	//don't send plaintext password if possible
 	//send instead md5 and sha1 encrypted strings
-	$('#login_form').submit(function(){
+	$('#login_form').on('submit', function(){
 		if( this.encrypted.checked ){
 			var pwd					= this.password.value;
 			var nonce				= this.login_nonce.value;

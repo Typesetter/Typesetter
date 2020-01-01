@@ -248,12 +248,12 @@ var $gp = {
 
 				//standard functions
 				default:
-					CallFunc( obj.SELECTOR, obj.DO, obj.CONTENT);
+					CallFunc(obj.SELECTOR, obj.DO, obj.CONTENT);
 				break;
 			}
 		});
 
-		function CallFunc( sel, func, arg){
+		function CallFunc(sel, func, arg){
 
 			if( sel == 'window' ){
 				sel = window;
@@ -559,17 +559,14 @@ $(function(){
 
 
 	//expanding menus
-	$document.delegate('.expand_child',{
-		'mouseenter': function(){
+	$document.on('mouseenter', '.expand_child', function(){
 			var $this = $(this).addClass('expand');
 			if( $this.hasClass('simple_top') ){
 				$this.addClass('simple_top_hover');
 			}
-		},
-		'mouseleave': function(){
+		}).on('mouseleave', '.expand_child', function(){
 			$(this).removeClass('expand simple_top_hover');
-		}
-	});
+		});
 
 
 	/**
@@ -577,7 +574,7 @@ $(function(){
 	 * Use of name and rel attributes is deprecated as of gpEasy 3.6
 	 *
 	 */
-	$document.on('click', 'a',function(evt){
+	$document.on('click', 'a', function(evt){
 
 
 		var $this = $(this);

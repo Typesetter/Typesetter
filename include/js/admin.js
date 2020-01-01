@@ -896,7 +896,7 @@ $(function(){
 		var timeout = false, overlay, lnk_span=false, edit_area, highlight_box, fixed_pos = false;
 
 		overlay = $gp.div('gp_edit_overlay');
-		overlay.click(function(evt){
+		overlay.on('click', function(evt){
 
 			//if a link is clicked, prevent the overlay from being shown right away
 			var target = $(evt.target);
@@ -957,7 +957,7 @@ $(function(){
 			rmNoOverlay(edit_area);
 		});
 
-		$gp.$win.scroll(function(){
+		$gp.$win.on('scroll', function(){
 			SpanPosition();
 		});
 

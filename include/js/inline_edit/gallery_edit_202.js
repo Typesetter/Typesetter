@@ -428,19 +428,13 @@
 			 * Show/Hide Edit Links
 			 *
 			 */
-			$(document).delegate('#gp_current_images span',{
-				'mousemove.gp_edit':function(){
+			$(document).on('mousemove.gp_edit', '#gp_current_images span', function(){
 					var offset = $(this).offset();
 					edit_links.show().css({'left':offset.left,'top':offset.top});
 					current_image = this;
-				},
-				'mouseleave.gp_edit':function(){
+				}).on('mouseleave.gp_edit mousedown.gp_edit', '#gp_current_images span', function(){
 					edit_links.hide();
-				},
-				'mousedown.gp_edit':function(){
-					edit_links.hide();
-				}
-			});
+				});
 
 
 			/**

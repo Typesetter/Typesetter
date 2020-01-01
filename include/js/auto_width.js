@@ -71,7 +71,7 @@ $(function(){
 		}
 
 		$.each(object,function(i,j){
-			$('#'+i).find('.expand_child_click').eq(j).click();
+			$('#'+i).find('.expand_child_click').eq(j).trigger('click');
 		});
 	}
 

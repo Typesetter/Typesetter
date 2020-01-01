@@ -221,7 +221,7 @@
 				if( classname.indexOf('gallery-theme-') === 0 
 					|| classname.indexOf('gallery-size-') === 0
 					|| classname.indexOf('gallery-color-') === 0 ){
-					$('#' + classname).click();
+					$('#' + classname).trigger('click');
 				}
 			});
 		};

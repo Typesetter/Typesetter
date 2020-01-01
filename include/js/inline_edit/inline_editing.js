@@ -426,10 +426,10 @@
 				$('<a class="ckeditor_control" data-cmd="SwitchEditArea" '
 					+ 'data-arg="#' + id + '">' + $area.attr('title') + '</a>')
 					.appendTo('#cktabs')
-					.click();
+					.trigger('click');
 			}else{
 				$area.replaceWith(html);
-				$('#cktabs .ckeditor_control[data-arg="#' + id + '"]').click();
+				$('#cktabs .ckeditor_control[data-arg="#' + id + '"]').trigger('click');
 
 			}
 		},
@@ -628,7 +628,7 @@
 	 *
 	 * Using $gp.$doc.on('click') so we can stopImmediatePropagation() for other clicks
 	 *
-	 * Not using $('#ExtraEditLink'+area_id).click() to avoid triggering other click handlers
+	 * Not using $('#ExtraEditLink'+area_id).on('click') to avoid triggering other click handlers
 	 *
 	 */
 	$gp.$doc.on('click', '.editable_area:not(.filetype-wrapper_section)', function(evt){

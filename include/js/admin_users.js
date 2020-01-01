@@ -4,7 +4,7 @@ $(function(){
 
 
 	//change to all or none checked
-	$('input.select_all').click(function(e){
+	$('input.select_all').on('click', function(e){
 		var checked = this.checked;
 
 		var container = contained(this);
@@ -25,7 +25,7 @@ $(function(){
 
 	});
 
-	$('label.all_checkbox').click(function(evt){
+	$('label.all_checkbox').on('click', function(evt){
 		var a = contained(this);
 		CheckBoxes(a);
 	});

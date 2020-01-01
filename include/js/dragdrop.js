@@ -37,7 +37,7 @@
 
 			var c = a.find('a.dragdroplink').first().html();
 			lnk.attr('href',lnk.attr('href').replace('%s',c).replace('%25s',c));
-			lnk.click();
+			lnk.trigger('click');
 
 			WBd.clean();
 		},

@@ -631,6 +631,8 @@ namespace gp\admin{
 
 
 		public static function FormatAdminLinks($links){
+			global $langmessage;
+
 			foreach($links as $label => $link){
 				echo '<li>';
 
@@ -649,7 +651,10 @@ namespace gp\admin{
 					echo $label;
 					echo '</span>';
 				}elseif( is_array($link) ){
-					echo '<a data-cmd="expand"><i class="fa fa-caret-down"></i> ' . $label . '</a>';
+					$add_class = ($label == $langmessage['options']) ? ' admin-link-dropdown-options' : '';
+					echo '<a data-cmd="expand" class="admin-link admin-link-dropdown' . $add_class . '">';
+					echo '<i class="fa fa-caret-down"></i> ' . $label;
+					echo '</a>';
 					echo '<ul>';
 					self::FormatAdminLinks($link);
 					echo '</ul>';

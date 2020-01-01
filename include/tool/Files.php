@@ -397,7 +397,7 @@ namespace gp\tool{
 		*
 		*/
 		public static function GetPrivatePages(){
-			global $gp_titles, $langmessage;
+			global $gp_titles, $langmessage, $page;
 
 			$private_pages = array();
 			foreach( $gp_titles as $index => $title ){
@@ -408,6 +408,10 @@ namespace gp\tool{
 						'id'		=> hash('crc32b', 'private_page' . $index),
 						'priority'	=> 40,
 					);
+					// increase priority by 100 when viewing the current page
+					if( isset($page->gp_index) && $page->gp_index == $index ){
+						$private_page['priority'] += 100;
+					}
 					if( isset($title['label']) ){
 						$private_page['label']	= $title['label'];
 					}else{

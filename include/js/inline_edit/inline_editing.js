@@ -313,7 +313,7 @@
 
 			var $edit_area		= $gp.CurrentDiv();
 			var $ckeditor_wrap	= $('#ckeditor_wrap').addClass('show_editor');
-			$gp.$win.resize();
+			$gp.$win.trigger('resize');
 
 			//tabs
 			var $tabs			= $('#ckeditor_tabs').html('');
@@ -679,7 +679,7 @@
 		if( $('#ckeditor_wrap').hasClass('show_editor') ){
 			$('html').css({'margin-left': 0});
 			$('#ckeditor_wrap').removeClass('show_editor');
-			$gp.$win.resize();
+			$gp.$win.trigger('resize');
 		}else{
 			gp_editing.ShowEditor();
 		}
@@ -729,7 +729,7 @@
 	 * Max height of #ckeditor_area
 	 *
 	 */
-	$gp.$win.resize(function(){
+	$gp.$win.on('resize', function(){
 		var $ckeditor_area		= $('#ckeditor_area');
 		if( $ckeditor_area.length ){
 			var maxHeight			= $gp.$win.height();
@@ -741,7 +741,7 @@
 			AdjustForEditor();
 		}
 
-	}).resize();
+	}).trigger('resize');
 
 
 	/**

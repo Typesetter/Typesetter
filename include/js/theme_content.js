@@ -89,7 +89,7 @@ $(function(){
 
 
 	//layout and theme select
-	$('.theme_select select').change(function(){
+	$('.theme_select select').on('change', function(){
 		if( this.value == '' ) return;
 		if( this.name == 'layout' ){
 			window.location = this.form.action+'/'+this.value;
@@ -159,7 +159,7 @@ $(function(){
 			drag_elements.trigger('gp_position');
 		},2000);
 
-		$gp.$win.resize(function(){
+		$gp.$win.on('resize', function(){
 			drag_elements.trigger('gp_position');
 		});
 	}

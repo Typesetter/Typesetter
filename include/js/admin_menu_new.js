@@ -374,7 +374,7 @@
 		/*
 		 * Menu Type Selector
 		 */
-		$('#gp_menu_select').change(function(){
+		$('#gp_menu_select').on('change', function(){
 			SaveSettings();
 
 			//similar to reload, but it doesn't initiate post resend

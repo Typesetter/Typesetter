@@ -347,7 +347,7 @@
 			this.InitClipboard();
 			this.resetDirty();
 
-			$gp.$win.on('resize', this.MaxHeight).resize();
+			$gp.$win.on('resize', this.MaxHeight).trigger('resize');
 
 			$('#ckeditor_area').on('dragstop', this.MaxHeight);
 

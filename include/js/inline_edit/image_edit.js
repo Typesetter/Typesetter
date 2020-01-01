@@ -121,7 +121,7 @@
 			$gp.links.gp_gallery_add	= UseImage;
 			$gp.links.deafult_sizes		= ShowImages;
 
-			$gp.$win.resize();
+			$gp.$win.trigger('resize');
 		}
 
 		this.sleep = function(){

@@ -1371,7 +1371,7 @@ function SimpleDrag(selector, drag_area, positioning, callback_done){
 		}
 	}
 
-	$gp.$win.resize(function(){
+	$gp.$win.on('resize', function(){
 		$('.keep_viewable').each(function(){
 			KeepViewable($(this),false);
 		});
@@ -1397,7 +1397,7 @@ $gp.response.renameprep = function(){
 		$(b).fadeTo(400,0.6);
 	});
 
-	$('input.title_label').on('keyup change',SyncSlug).change();
+	$('input.title_label').on('keyup change', SyncSlug).trigger('change');
 
 	$gp.links.showmore = function(){
 		$('#gp_rename_table tr').css('display','table-row');

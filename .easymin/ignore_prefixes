@@ -14,4 +14,4 @@ phpunit.xml
 codecov.yml
 composer.json
 composer.lock
-vendor
+vendor/

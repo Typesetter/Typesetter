@@ -55,13 +55,12 @@ class Combine{
 
 			//jquery
 			'jquery'	=> array(
-									// 'file'			=> '/include/thirdparty/js/jquery.js',  // TODO: restore this line
-									'file'			=> '/include/thirdparty/js/jquery-3.4.1/jquery.js',  // TODO: remove this line
+									'file'			=> '/include/thirdparty/js/jquery.js',
 									'package'		=> 'jquery',
 									'label'			=> 'jQuery',
 									'cdn'			=> array(
-															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js',
-															'Google'		=> '//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js',
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js',
+															'Google'		=> '//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js',
 														),
 									),
 

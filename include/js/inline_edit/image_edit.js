@@ -80,7 +80,7 @@
 
 			save_obj.alt		= field_a.value;
 
-			return jQuery.param( save_obj )+'&cmd=save_inline';
+			return $.param( save_obj )+'&cmd=save_inline';
 		}
 
 		this.SaveData = SaveData;

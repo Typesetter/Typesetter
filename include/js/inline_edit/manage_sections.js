@@ -227,7 +227,7 @@
 				section_number	: section_number
 			};
 			// console.log("SectionToClipboard", data);
-			data = jQuery.param(data);
+			data = $.param(data);
 			$gp.postC(window.location.href, data);
 			loading();
 		},
@@ -273,7 +273,7 @@
 			};
 
 			// console.log("AddFromClipboard", data);
-			data = jQuery.param(data);
+			data = $.param(data);
 			$gp.postC(window.location.href, data);
 			loading();
 		},
@@ -298,7 +298,7 @@
 				cmd		: 'ReorderClipboardItems',
 				order	: new_order
 			};
-			data = jQuery.param(data);
+			data = $.param(data);
 			$gp.postC(window.location.href, data);
 			loading();
 		},
@@ -925,7 +925,7 @@
 			cmd				: 'RemoveFromClipboard',
 			item_number		: item_index
 		};
-		data = jQuery.param(data);
+		data = $.param(data);
 		$gp.postC(window.location.href, data);
 		loading();
 	};
@@ -979,7 +979,7 @@
 					item_number		: item_index,
 					new_label		: label,
 				};
-				data = jQuery.param(data);
+				data = $.param(data);
 				$gp.postC(window.location.href, data);
 				loading();
 			});

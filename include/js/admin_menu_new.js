@@ -54,7 +54,7 @@
 				ShowInfo(div);
 				$gp.loading();
 
-				data = jQuery.param(data,true);
+				data = $.param(data,true);
 				$gp.postC( window.location.href , data);
 
 				return;
@@ -222,7 +222,7 @@
 		function InfoHtml($current){
 
 			var this_html			= info_html,
-				data				= jQuery.extend({}, $current.find('.gp_label').data('json')), //clone the json object
+				data				= $.extend({}, $current.find('.gp_label').data('json')), //clone the json object
 				multiple_selected	= ($current.length > 1),
 				$current_li			= $current.closest('li');
 

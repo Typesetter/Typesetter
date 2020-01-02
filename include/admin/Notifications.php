@@ -22,22 +22,32 @@ namespace gp\admin{
 
 			self::CheckNotifications();
 
-			$filter_list_by	= isset($_REQUEST['type']) ? rawurldecode($_REQUEST['type']) : false;
 
 			self::$debug && debug('$notifications = ' . pre(self::$notifications));
 
 			echo '<div class="inline_box show-notifications-box">';
-			// echo '<h3>' . $langmessage['Notifications']; . '</h3>';
+
+
+
+			$filter_list_by = false;
+			if( isset($_REQUEST['type']) ){
+				$filter_list_by = rawurldecode($_REQUEST['type']);
+				self::Tabs($filter_list_by);
+			}
 
 
 			foreach( self::$notifications as $type => $notification ){
 
-				if( $filter_list_by && $type != $filter_list_by ){
-					continue;
+				if( $filter_list_by ){
+					if( $type != $filter_list_by ){
+						continue;
+					}
+				}else{
+					$title = self::GetTitle($notification['title']);
+					echo '<h3>' . $title . '</h3>';
 				}
 
-				$title = self::GetTitle($notification['title']);
-				echo '<h3>' . $title . '</h3>';
+
 				echo '<table class="bordered full_width">';
 				echo '<tbody>';
 				echo '<tr>';
@@ -80,29 +90,43 @@ namespace gp\admin{
 			echo '<button style="float:right;margin-right:0;" class="admin_box_close gpcancel">';
 			echo $langmessage['Close'];
 			echo '</button>';
-
-			// notification links
-			foreach( self::$notifications as $type => $notification ){
-
-				if( $filter_list_by && $type != $filter_list_by ){
-					echo \gp\tool::Link(
-						'Admin/Notifications',
-						self::GetTitle($notification['title']),
-						'cmd=ShowNotifications&type=' . rawurlencode($type),
-						array(
-							'title'		=> self::GetTitle($notification['title']),
-							'class'		=> 'gpbutton',
-							'style'		=> 'margin-right:0.5em;',
-							'data-cmd'	=> 'gpabox',
-						)
-					);
-				}
-			}
-
 			echo '</p>';
 
 			echo '</div>';
 		}
+
+		/**
+		 * Tabs
+		 *
+		 */
+		public static function Tabs($filter_list_by){
+			echo '<div class="layout_links">';
+			foreach( self::$notifications as $type => $notification ){
+
+				$class = '';
+
+				if( $filter_list_by && $type == $filter_list_by ){
+					$class = 'selected';
+				}
+
+
+				echo \gp\tool::Link(
+					'Admin/Notifications',
+					self::GetTitle($notification['title']),
+					'cmd=ShowNotifications&type=' . rawurlencode($type),
+					array(
+						'title'		=> self::GetTitle($notification['title']),
+						'class'		=> $class,
+						'style'		=> 'margin-right:0.5em;',
+						'data-cmd'	=> 'gpabox',
+					)
+				);
+				
+
+			}
+			echo '</div>';
+		}
+
 
 		/**
 		 * Notification Title

@@ -1420,7 +1420,8 @@ class Edit extends \gp\Page{
 			return false;
 		}
 
-		unlink($this->draft_file);
+		$draft_file = \gp\tool\Files::FilePath($this->draft_file);
+		unlink($draft_file);
 		$this->ResetFileTypes();
 		$this->draft_exists = false;
 
@@ -1446,7 +1447,8 @@ class Edit extends \gp\Page{
 
 		//working draft
 		if( $this->draft_exists ){
-			$size = filesize($this->draft_file);
+			$draft_file = \gp\tool\Files::FilePath($this->draft_file);
+			$size = filesize($draft_file);
 			$time = $this->file_stats['modified'];
 			$rows[$time] = $this->HistoryRow($time, $size, $this->file_stats['username'], 'draft');
 		}
@@ -1458,7 +1460,8 @@ class Edit extends \gp\Page{
 
 		// current page
 		// this will overwrite one of the history entries if there is a draft
-		$rows[$this->fileModTime] = $this->HistoryRow($this->fileModTime, filesize($this->file), $this->file_stats['username'], 'current');
+		$page_file = \gp\tool\Files::FilePath($this->file);
+		$rows[$this->fileModTime] = $this->HistoryRow($this->fileModTime, filesize($page_file), $this->file_stats['username'], 'current');
 
 		echo '<h2>' . $langmessage['Revision History'] . '</h2>';
 		echo '<table class="bordered full_width striped"><tr>';
@@ -1647,6 +1650,7 @@ class Edit extends \gp\Page{
 			$contents		= ob_get_clean();
 
 			$full_path		= substr($full_path, 0, -3) . 'php';
+			$full_path		= \gp\tool\Files::FilePath($full_path);
 			\gp\tool\Files::Save($full_path, $contents);
 			$file_sections	= \gp\tool\Files::Get($full_path, 'file_sections');
 			unlink($full_path);

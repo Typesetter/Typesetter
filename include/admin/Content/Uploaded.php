@@ -1031,6 +1031,9 @@ namespace gp\admin\Content{
 					if( isset($info['hash']) && !isset($info['realpath']) ){
 						$array[$type][$key]['realpath'] = $finder->realpath($info['hash']);
 					}
+					if( isset($array[$type][$key]['realpath']) ){
+						$array[$type][$key]['realpath'] = \gp\tool::WinPath($array[$type][$key]['realpath']);
+					}
 				}
 			}
 		}

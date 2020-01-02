@@ -20,7 +20,7 @@ namespace gp{
 		public $contentBuffer;
 		public $TitleInfo;
 		public $fileType			= '';
-		public $ajaxReplace			= array();
+		public $ajaxReplace			= array('#gpx_content');
 		public $admin_links			= array();
 		public $visibility			= null;
 		public $file_sections		= array();

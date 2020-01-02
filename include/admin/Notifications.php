@@ -298,25 +298,25 @@ namespace gp\admin{
 				self::FilterType('updates','core');
 			}
 
+			// page draft
+			self::FilterCallback('drafts',function($item){
+				if( $item['type'] == 'page' && !\gp\admin\Tools::CanEdit($item['title']) ){
+					return true;
+				}
+				return false;
+			});
+
+			// private page
+			self::FilterCallback('private_pages',function($item){
+				if( !\gp\admin\Tools::CanEdit($item['title']) ){
+					return true;
+				}
+				return false;
+			});
+
 
 			foreach( self::$notifications as $notification_type => $notification ){
 				foreach( $notification['items'] as $itemkey => $item ){
-
-
-					// page draft
-					if( $notification_type == 'drafts' &&
-						$item['type'] == 'page' &&
-						!\gp\admin\Tools::CanEdit($item['title'])
-						){
-						unset(self::$notifications[$notification_type]['items'][$itemkey]);
-						continue;
-					}
-
-					// private page
-					if( $notification_type == 'private_pages' && !\gp\admin\Tools::CanEdit($item['title']) ){
-						unset(self::$notifications[$notification_type]['items'][$itemkey]);
-						continue;
-					}
 
 					// apply user filters
 					if( isset($item['id']) && isset(self::$filters[$item['id']]) ){
@@ -331,8 +331,9 @@ namespace gp\admin{
 			}
 		}
 
+
 		/**
-		 * Filter notificatiosn matching a notification type and item type
+		 * Filter notifications matching a notification type and item type
 		 *
 		 */
 		public static function FilterType( $notification_type, $item_type ){
@@ -348,6 +349,25 @@ namespace gp\admin{
 				}
 
 				unset(self::$notifications[$notification_type]['items'][$itemkey]);
+			}
+
+		}
+
+		/**
+		 * Filter notifications matching a notification type with a callback
+		 *
+		 */
+		public static function FilterCallback( $notification_type, $callback ){
+
+			if( !isset(self::$notifications[$notification_type]) ){
+				return;
+			}
+
+			foreach( self::$notifications[$notification_type] as $itemkey => $item ){
+
+				if( $callback($item) === true ){
+					unset(self::$notifications[$notification_type]['items'][$itemkey]);
+				}
 			}
 
 		}

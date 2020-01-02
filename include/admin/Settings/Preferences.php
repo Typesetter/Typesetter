@@ -15,6 +15,7 @@ namespace gp\admin\Settings{
 			parent::__construct($args);
 
 			//only need to return messages if it's ajax request
+			$this->page->ajaxReplace = [];
 			$this->username			= $gpAdmin['username'];
 			if( !isset($this->users[$this->username]) ){
 				msg($langmessage['OOPS']);

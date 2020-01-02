@@ -405,7 +405,7 @@ namespace gp\admin{
 
 			$notifications = array();
 
-			$drafts = \gp\tool\Files::GetDrafts();
+			$drafts = self::GetDrafts();
 			if( count($drafts) > 0 ){
 				$notifications['drafts'] = array(
 					'title'			=> 'Working Drafts',
@@ -415,7 +415,7 @@ namespace gp\admin{
 				);
 			}
 
-			$private_pages = \gp\tool\Files::GetPrivatePages();
+			$private_pages = self::GetPrivatePages();
 			if( count($private_pages) > 0 ){
 				$notifications['private_pages'] = array(
 					'title'			=> 'Private Pages',
@@ -695,6 +695,165 @@ namespace gp\admin{
 
 			$page->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
 		}
+
+
+
+		/**
+		* Get information about working drafts
+		* @returns {array} of current working drafts
+		*
+		*/
+		public static function GetDrafts(){
+			global $dataDir, $gp_index, $gp_titles, $langmessage;
+
+			$draft_types = array(
+				'page'	=> $dataDir . '/data/_pages',
+				'extra'	=> $dataDir . '/data/_extra',
+			);
+
+			$drafts = array();
+
+			foreach( $draft_types as $type => $dir ){
+
+				$folders	= \gp\tool\Files::readDir($dir,1);
+
+				foreach( $folders as $folder ){
+
+					$draft_path = $dir . '/' . $folder . '/draft.php';
+					if( !\gp\tool\Files::Exists($draft_path) ){
+						continue;
+					}
+
+					$draft = array(
+						'type'		=> $type,
+						'id'		=> hash('crc32b', $folder),
+						'priority'	=> 100,
+					);
+
+					switch( $type ){
+						case  'extra':
+							$draft['label']		= str_replace('_', ' ', $folder) . ' (' . $langmessage['theme_content'] . ')';
+							$draft['action']	= \gp\tool::Link(
+								'Admin/Extra',
+								$langmessage['theme_content'],
+								'',
+								array(
+									'class' => 'getdrafts-extra-content-link',
+									'title' => $langmessage['theme_content'],
+								)
+							);
+							$draft['preview_link']		= \gp\tool::Link(
+								'Admin/Extra',
+								$langmessage['preview'],
+								'cmd=PreviewText&file=' . $folder,
+								array(
+									'class' => 'getdrafts-extra-preview',
+									'title' => $langmessage['preview'],
+								)
+							);
+							$draft['publish_link']	= \gp\tool::Link(
+								'Admin/Extra',
+								$langmessage['Publish Draft'],
+								'cmd=PublishDraft&file=' . $folder,
+								array(
+									'data-cmd'	=> 'gpajax',
+									'class'		=> 'getdrafts-extra-publish',
+									'title'		=> $langmessage['Publish Draft'],
+								)
+							);
+							$draft['folder']	= $folder;
+							break;
+
+						case  'page':
+							$draft['index'] 	= substr($folder, strpos($folder, "_") + 1);
+							$draft['title'] 	= \gp\tool::IndexToTitle($draft['index']);
+							$draft['label'] 	= \gp\tool::GetLabel($draft['title']) . ' (' . $langmessage['Page'] . ')';
+							$draft['action']	= \gp\tool::Link(
+								$draft['title'],
+								$langmessage['view/edit_page'], //$draft['label'],
+								'',
+								array(
+									'class' => 'getdrafts-page-link',
+									'title' => $langmessage['view/edit_page'],
+								)
+							);
+							$draft['publish_link']	= \gp\tool::Link(
+								$draft['title'],
+								$langmessage['Publish Draft'],
+								'cmd=PublishDraft',
+								array(
+									'data-cmd'	=> 'creq',
+									'class'		=> 'getdrafts-page-publish',
+									'title'		=> $langmessage['Publish Draft'],
+								)
+							);
+							break;
+					}
+
+					$drafts[] = $draft;
+
+				}
+
+			}
+
+			return $drafts;
+		}
+
+
+		/**
+		* Get information of all private (invisible) pages
+		* @returns {array} of current private pages
+		*
+		*/
+		public static function GetPrivatePages(){
+			global $gp_titles, $langmessage, $page;
+
+			$private_pages = array();
+			foreach( $gp_titles as $index => $title ){
+				
+				if( !isset($title['vis']) || $title['vis'] !== 'private' ){
+					continue;
+				}
+
+				$private_page = array(
+					'index'		=> $index,
+					'title'		=> \gp\tool::IndexToTitle($index),
+					'id'		=> hash('crc32b', 'private_page' . $index),
+					'priority'	=> 40,
+					'label'		=> \gp\tool::GetLabelIndex($index),
+				);
+
+				// increase priority by 100 when viewing the current page
+				if( isset($page->gp_index) && $page->gp_index == $index ){
+					$private_page['priority'] += 100;
+				}
+
+				$private_page['action']	= \gp\tool::Link(
+					$private_page['title'],
+					$langmessage['view/edit_page'],
+					'',
+					array(
+						'class' => 'getprivate-page-link',
+						'title' => $langmessage['view/edit_page'],
+					)
+				);
+				$private_page['make_public_link']	= \gp\tool::Link(
+					'Admin/Menu/Ajax',
+					$langmessage['Visibility'] . '<i class="fa fa-long-arrow-right"></i> ' . $langmessage['Public'],
+					'cmd=ToggleVisibility&index=' . $index,
+					array(
+						'data-cmd'	=> 'postlink',
+						'class'		=> 'getprivate-make-public',
+						'title'		=> $langmessage['Publish Draft'],
+					)
+				);
+				$private_pages[] = $private_page;
+
+			}
+
+			return $private_pages;
+		}
+
 
 		public static function debug($msg){
 			self::$debug && debug($msg);

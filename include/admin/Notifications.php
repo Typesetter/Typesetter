@@ -606,7 +606,7 @@ namespace gp\admin{
 
 					// Adding the server name to the hashed value makes sure the item id will change when moving the site (e.g. when going live)
 					// Thus possible set hide filters will invalidate and the warning will show up again.
-					'id'		=> hash('crc32b', $label . \gp\tool::ServerName()),
+					'id'		=> $label . \gp\tool::ServerName(),
 
 					'priority'	=> 500, // that's a high priority
 					'action'	=> 'edit gpconfig.php or notify administrator! <br/>This should only be enabled in exceptional cases.',
@@ -618,7 +618,7 @@ namespace gp\admin{
 				$debug_note[] = array(
 					'type'		=> 'superuser',
 					'label'		=> $label,
-					'id'		=> hash('crc32b', $label . \gp\tool::ServerName()),
+					'id'		=> $label . \gp\tool::ServerName(),
 					'priority'	=> 75,
 					'action'	=> 'edit gpconfig.php',
 				);
@@ -629,7 +629,7 @@ namespace gp\admin{
 				$debug_note[] = array(
 					'type'		=> 'superuser',
 					'label'		=> $label,
-					'id'		=> hash('crc32b', $label . \gp\tool::ServerName()),
+					'id'		=> $label . \gp\tool::ServerName(),
 					'priority'	=> 75,
 					'action'	=> 'edit gpconfig.php',
 				);
@@ -655,7 +655,7 @@ namespace gp\admin{
 				$updates[] = array(
 					'type'		=> 'cms_core',
 					'label'		=> $label,
-					'id'		=> hash('crc32b', $label),
+					'id'		=> $label,
 					'priority'	=> 60,
 					'action'	=> '<a href="' . \gp\tool::GetDir('/include/install/update.php') . '">'
 										. $langmessage['upgrade'] . '</a>',
@@ -677,7 +677,7 @@ namespace gp\admin{
 				$updates[] = array(
 					'type'		=> $new_addon_info['type'],
 					'label'		=> $label,
-					'id'		=> hash('crc32b', $label),
+					'id'		=> $label,
 					'priority'	=> 60,
 					'action'	=> '<a href="' . $url . '/' . $addon_id . '" data-cmd="remote">'
 										. $langmessage['upgrade'] . '</a>',
@@ -738,7 +738,7 @@ namespace gp\admin{
 
 					$draft = array(
 						'type'		=> $type,
-						'id'		=> hash('crc32b', $folder),
+						'id'		=> $folder,
 						'priority'	=> 100,
 					);
 
@@ -830,7 +830,7 @@ namespace gp\admin{
 				$private_page = array(
 					'index'		=> $index,
 					'title'		=> \gp\tool::IndexToTitle($index),
-					'id'		=> hash('crc32b', 'private_page' . $index),
+					'id'		=> 'private_page' . $index,
 					'priority'	=> 40,
 					'label'		=> \gp\tool::GetLabelIndex($index),
 				);

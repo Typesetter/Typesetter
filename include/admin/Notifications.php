@@ -304,15 +304,22 @@ namespace gp\admin{
 			// private page
 			self::FilterPrivate();
 
+			// apply user filters
+			self::FilterUserDefined();
+		}
+
+		/**
+		 * Apply user defined (display) filters
+		 * 
+		 */
+		public function FilterUserDefined(){
 
 			foreach( self::$notifications as $notification_type => $notification ){
 				foreach( $notification['items'] as $itemkey => $item ){
 
 					// apply user filters
 					if( isset($item['id']) && isset(self::$filters[$item['id']]) ){
-						foreach( self::$filters[$item['id']] as $filter => $new_val ){
-							self::$notifications[$notification_type]['items'][$itemkey][$filter] = $new_val;
-						}
+						self::$notifications[$notification_type]['items'][$itemkey] = self::$filters[$item['id']] + $item;
 					}
 				}
 				if( empty(self::$notifications[$notification_type]['items']) ){

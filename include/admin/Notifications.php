@@ -22,7 +22,6 @@ namespace gp\admin{
 
 			self::CheckNotifications();
 
-
 			self::debug('$notifications = ' . pre(self::$notifications));
 
 			echo '<div class="inline_box show-notifications-box">';
@@ -118,7 +117,7 @@ namespace gp\admin{
 
 				echo \gp\tool::Link(
 					'Admin/Notifications',
-					self::GetTitle($notification['title']),
+					self::GetTitle($notification['title']) . ' ('.$notification['count'].')',
 					'cmd=ShowNotifications&type=' . rawurlencode($type),
 					array(
 						'title'		=> self::GetTitle($notification['title']),
@@ -356,9 +355,6 @@ namespace gp\admin{
 						self::$notifications[$notification_type]['items'][$itemkey] = self::$filters[$item['id']] + $item;
 					}
 				}
-				if( empty(self::$notifications[$notification_type]['items']) ){
-					unset(self::$notifications[$notification_type]);
-				}
 			}
 		}
 
@@ -454,6 +450,39 @@ namespace gp\admin{
 
 			self::$notifications = $notifications;
 			self::ApplyFilters();
+
+
+			// remove empty, count items, and get priority
+			foreach( self::$notifications as $notification_type => &$notification ){
+
+				if( empty(self::$notifications[$notification_type]['items']) ){
+					unset(self::$notifications[$notification_type]);
+					continue;
+				}
+
+
+				foreach( $notification['items'] as $itemkey => $item ){
+
+					$count		= 0;
+					$priority	= 0;
+					foreach( $notification['items'] as $item ){
+						if( isset($item['priority']) && is_numeric($item['priority']) && $item['priority'] > 0 ){
+							$priority = max( (int)$item['priority'], $priority );
+							$count++;
+						}
+					}
+				}
+
+				$notification['count']		= $count;
+				$notification['priority']	= $priority;
+
+			}
+
+			// sort by priority
+			uasort(self::$notifications,function($a,$b){
+				return strnatcmp($b['priority'],$a['priority']);
+			});
+
 		}
 
 
@@ -476,7 +505,6 @@ namespace gp\admin{
 
 			$total_count			= 0;
 			$main_badge_style		= '';
-			$priority 				= 0;
 			$links 					= array();
 			$expand_class			= ''; // expand_child_click
 			$badge_format			= ' <span class="dashboard-badge">(%2$d)</b>';
@@ -491,6 +519,7 @@ namespace gp\admin{
 
 
 
+			ob_start();
 			foreach(self::$notifications as $type => $notification ){
 
 				if( empty($notification['items']) ){
@@ -498,57 +527,39 @@ namespace gp\admin{
 					continue;
 				}
 
-				$count	= 0;
 
-				$notification_priority = $priority;
-				foreach( $notification['items'] as $item ){
-					if( isset($item['priority']) && is_numeric($item['priority']) ){
-						if( $item['priority'] < 0 ){
-							// muted item, won't count
-						}else{
-							$notification_priority = (int)$item['priority'] > $notification_priority ?
-								$item['priority'] :
-								$notification_priority;
-							$count++;
-							$total_count++;
-						}
-					}
-				}
-
+				$total_count		+= $notification['count'];
 				$title				= self::GetTitle($notification['title']);
 				$badge_html			= '';
 				$badge_style		= '';
 				$notification		+= $default_style;
 
 
-				if( $count > 0 ){
+				if( $notification['count'] > 0 ){
 					$badge_style		= 'background-color:'.$notification['badge_bg'].';color:'.$notification['badge_color'].';';
-					$badge_html			= sprintf($badge_format, $badge_style, $count);
+					$badge_html			= sprintf($badge_format, $badge_style, $notification['count']);
 				}
 
 
-				ob_start();
 				echo '<li class="' . $expand_class . '">';
 				echo \gp\tool::Link(
 						'Admin/Notifications',
 						$title . $badge_html,
 						'cmd=ShowNotifications&type=' . rawurlencode($type),
 						array(
-							'title'		=> $count . ' ' . $title,
+							'title'		=> $notification['count'] . ' ' . $title,
 							'class'		=> 'admin-panel-notification', // . '-' . rawurlencode($type)',
 							'data-cmd'	=> 'gpabox',
 						)
 					);
 				echo '</li>';
 
-				if( $notification_priority > $priority ){
-					$priority = $notification_priority;
+				if( empty($main_badge_style) ){
 					$main_badge_style	= $badge_style;
-					array_unshift($links, ob_get_clean());
-				}else{
-					$links[] = ob_get_clean();
 				}
 			}
+
+			$links = ob_get_clean();
 
 			$panel_label	= $langmessage['Notifications'];
 
@@ -558,7 +569,7 @@ namespace gp\admin{
 
 			\gp\Admin\Tools::_AdminPanelLinks(
 				$in_panel,
-				implode('', $links),
+				$links,
 				$panel_label,
 				'fa fa-bell',
 				'notifications',

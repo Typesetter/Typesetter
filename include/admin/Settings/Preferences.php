@@ -192,7 +192,7 @@ namespace gp\admin\Settings{
 		 *
 		 */
 		public static function SaveGPUI(){
-			global $gpAdmin, $dataDir;
+			global $gpAdmin;
 
 			$possible = array();
 
@@ -216,22 +216,6 @@ namespace gp\admin\Settings{
 			$possible['gpui_ckx']	= 'integer';
 			$possible['gpui_cky']	= 'integer';
 			$possible['gpui_thw']	= 'integer';
-
-			// make GPUI available to plugins
-			$plugin_values = [];
-			$plugin_values = \gp\tool\Plugins::Filter('Extend_GPUI', array($plugin_values));
-
-			if( !empty($plugin_values) && is_array($plugin_values) ){
-				foreach($plugin_values as $key => $val){
-					// deny overwriting existing keys
-					if( !array_key_exists('gpui_' . $key, $possible) ){
-						$possible['gpui_' . $key] = $val;
-					}
-				}
-			}
-			/* debug
-				\gp\tool\Files::SaveData($dataDir . '/data/_temp/debug_gpui.php', 'possible', $possible);
-			*/
 
 			foreach($possible as $key => $key_possible){
 

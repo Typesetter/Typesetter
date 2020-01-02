@@ -15,7 +15,7 @@ namespace gp\admin{
 		 * Outputs a list of notifications
 		 * To be rendered in a gpabox
 		 * The list output can be filtered by optional $_REQUEST['type'] value
-		 * 
+		 *
 		 */
 		public static function ListNotifications(){
 			global $langmessage;
@@ -69,7 +69,7 @@ namespace gp\admin{
 				$title = isset($langmessage[$notification['title']]) ?
 					$langmessage[$notification['title']] :
 					htmlspecialchars($notification['title']);
-				echo '<h3>' . $title . '</h3>'; 
+				echo '<h3>' . $title . '</h3>';
 				echo '<table class="bordered full_width">';
 				echo '<tbody>';
 				echo '<tr>';
@@ -128,7 +128,7 @@ namespace gp\admin{
 		/**
 		 * Manage Notifications
 		 * Set display filters and priority for notification items by $_REQUEST
-		 * 
+		 *
 		 */
 		public static function ManageNotifications(){
 
@@ -167,7 +167,7 @@ namespace gp\admin{
 
 		/**
 		 * Get active filters from the admin session
-		 * 
+		 *
 		 */
 		public static function GetFilters(){
 			global $gpAdmin;
@@ -182,7 +182,7 @@ namespace gp\admin{
 
 		/**
 		 * Save filters to the admin session
-		 * 
+		 *
 		 */
 		public static function SaveFilters(){
 			global $gpAdmin;
@@ -200,7 +200,7 @@ namespace gp\admin{
 		 * @param string $id of notification
 		 * @param string $do filter action
 		 * @param string $val filter value
-		 * 
+		 *
 		 */
 		public static function SetFilter($id, $do, $val=false){
 
@@ -217,7 +217,7 @@ namespace gp\admin{
 					}
 				}
 			}
-			
+
 			if( !$id_exists ){
 				// notification id no longer exists, purge possible stray filter
 				if( isset(self::$filters[$id]) ){
@@ -251,7 +251,7 @@ namespace gp\admin{
 			}
 
 			self::$debug && debug(
-					'Notifications SetFilter Error: unknown command "' 
+					'Notifications SetFilter Error: unknown command "'
 					. htmlspecialchars($do) . '"'
 				);
 
@@ -264,10 +264,10 @@ namespace gp\admin{
 		 * Apply filters to the notifications array
 		 * Remove inapropriate items for users lacking permissions to deal with them
 		 * Apply user defined (display) filters
-		 * 
+		 *
 		 */
 		public static function ApplyFilters(){
-			global $gpAdmin; 
+			global $gpAdmin;
 			// debug('$gpAdmin= ' . pre($gpAdmin));
 			self::GetFilters();
 
@@ -563,7 +563,7 @@ namespace gp\admin{
 
 					// Adding the server name to the hashed value makes sure the item id will change when moving the site (e.g. when going live)
 					// Thus possible set hide filters will invalidate and the warning will show up again.
-					'id'		=> hash('crc32b', $label . \gp\tool::ServerName()), 
+					'id'		=> hash('crc32b', $label . \gp\tool::ServerName()),
 
 					'priority'	=> 500, // that's a high priority
 					'action'	=> 'edit gpconfig.php or notify administrator! <br/>This should only be enabled in exceptional cases.',
@@ -672,7 +672,7 @@ namespace gp\admin{
 				return;
 			}
 
-			echo \gp\tool\Output\Ajax::Callback($_REQUEST['jsoncallback']);
+			echo \gp\tool\Output\Ajax::Callback();
 			echo '([';
 			echo '{DO:"replace",SELECTOR:".admin-panel-notifications",CONTENT:' . \gp\tool::JsonEncode($panelgroup) . '}';
 			echo ']);';

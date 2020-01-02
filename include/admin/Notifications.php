@@ -335,7 +335,7 @@ namespace gp\admin{
 		 * Filter notificatiosn matching a notification type and item type
 		 *
 		 */
-		public static FilterType( $notification_type, $item_type ){
+		public static function FilterType( $notification_type, $item_type ){
 
 			if( !isset(self::$notifications[$notification_type]) ){
 				return;
@@ -349,7 +349,7 @@ namespace gp\admin{
 
 				unset(self::$notifications[$notification_type]['items'][$itemkey]);
 			}
-			
+
 		}
 
 

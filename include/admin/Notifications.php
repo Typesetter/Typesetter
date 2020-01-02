@@ -22,54 +22,30 @@ namespace gp\admin{
 
 			self::CheckNotifications();
 
-			$filter_list_by	= isset($_REQUEST['type']) ? rawurldecode($_REQUEST['type']) : false;
-
-			self::$debug && debug('$notifications = ' . pre(self::$notifications));
+			self::debug('$notifications = ' . pre(self::$notifications));
 
 			echo '<div class="inline_box show-notifications-box">';
-			// echo '<h3>' . $langmessage['Notifications']; . '</h3>';
 
-			$current_notification		= false;
-			$prev_notification_link		= false;
-			$next_notification_link		= false;
+
+
+			$filter_list_by = '';
+			if( isset($_REQUEST['type']) ){
+				$filter_list_by = rawurldecode($_REQUEST['type']);
+				self::Tabs($filter_list_by);
+			}
+
 
 			foreach( self::$notifications as $type => $notification ){
 
-				if( $filter_list_by && $type != $filter_list_by ){
 
-					if( !$current_notification ){
-						$prev_notification_link = \gp\tool::Link(
-							'Admin/Notifications',
-							'<i class="fa fa-angle-left"></i> ' . $langmessage['Previous'],
-							'cmd=ShowNotifications&type=' . rawurlencode($type),
-							array(
-								'title'		=> $langmessage['Previous'],
-								'class'		=> 'gpbutton',
-								'style'		=> 'margin-right:0.5em;',
-								'data-cmd'	=> 'gpabox',
-							)
-						);
-					}elseif( !$next_notification_link ){
-						$next_notification_link = \gp\tool::Link(
-							'Admin/Notifications',
-							$langmessage['Next'] . ' <i class="fa fa-angle-right"></i>',
-							'cmd=ShowNotifications&type=' . rawurlencode($type),
-							array(
-								'title'		=> $langmessage['Next'],
-								'class'		=> 'gpbutton',
-								'data-cmd'	=> 'gpabox',
-							)
-						);
-					}
+				if( empty($filter_list_by) ){
+					$title = self::GetTitle($notification['title']);
+					echo '<h3>' . $title . '</h3>';
+				}elseif( $type != $filter_list_by ){
 					continue;
 				}
 
-				$current_notification = $type;
 
-				$title = isset($langmessage[$notification['title']]) ?
-					$langmessage[$notification['title']] :
-					htmlspecialchars($notification['title']);
-				echo '<h3>' . $title . '</h3>';
 				echo '<table class="bordered full_width">';
 				echo '<tbody>';
 				echo '<tr>';
@@ -80,9 +56,16 @@ namespace gp\admin{
 
 				foreach( $notification['items'] as $item ){
 
-					$muted = isset($item['priority']) && (int)$item['priority'] < 0;
+					$tr_class	= '';
+					$link_icon	= '<i class="fa fa-bell"></i>';
+					$link_title	= $langmessage['Hide'];
+					if( isset($item['priority']) && (int)$item['priority'] < 0 ){
+						$tr_class	= ' class="notification-item-muted"';
+						$link_icon	= '<i class="fa fa-bell-slash"></i>';
+						$link_title	= $langmessage['Show'];
+					}
 
-					echo '<tr' . ($muted ? ' class="notification-item-muted"' : '') . '>';
+					echo '<tr' . $tr_class . '>';
 					echo 	'<td>' . $item['label']  . '</td>';
 					echo 	'<td>' . $item['action'] . '</td>';
 
@@ -90,12 +73,12 @@ namespace gp\admin{
 
 					echo 	\gp\tool::Link(
 								'Admin/Notifications/Manage',
-								($muted ? '<i class="fa fa-bell-slash"></i>' : '<i class="fa fa-bell"></i>'),
+								$link_icon,
 								'cmd=toggle_priority'
 									. '&id=' . rawurlencode($item['id'])
-									. (isset($_REQUEST['type']) ? '&type=' . rawurlencode($_REQUEST['type']) : ''),
+									. '&type=' . rawurlencode($filter_list_by),
 								array(
-									'title'		=> ($muted ? $langmessage['Show'] : $langmessage['Hide']),
+									'title'		=> $link_title,
 									'class'		=> 'toggle-notification',
 									'data-cmd'	=> 'gpabox',
 								)
@@ -112,18 +95,55 @@ namespace gp\admin{
 			echo '<button style="float:right;margin-right:0;" class="admin_box_close gpcancel">';
 			echo $langmessage['Close'];
 			echo '</button>';
-			if( $prev_notification_link ){
-				echo $prev_notification_link;
-			}
-			if( $next_notification_link ){
-				echo $next_notification_link;
-			}
 			echo '</p>';
 
 			echo '</div>';
 		}
 
+		/**
+		 * Tabs
+		 *
+		 */
+		public static function Tabs($filter_list_by){
+			echo '<div class="layout_links">';
+			foreach( self::$notifications as $type => $notification ){
 
+				$class = '';
+
+				if( $filter_list_by && $type == $filter_list_by ){
+					$class = 'selected';
+				}
+
+
+				echo \gp\tool::Link(
+					'Admin/Notifications',
+					self::GetTitle($notification['title']) . ' ('.$notification['count'].')',
+					'cmd=ShowNotifications&type=' . rawurlencode($type),
+					array(
+						'title'		=> self::GetTitle($notification['title']),
+						'class'		=> $class,
+						'style'		=> 'margin-right:0.5em;',
+						'data-cmd'	=> 'gpabox',
+					)
+				);
+
+
+			}
+			echo '</div>';
+		}
+
+
+		/**
+		 * Notification Title
+		 */
+		public static function GetTitle($title){
+			global $langmessage;
+
+			if( isset($langmessage[$title]) ){
+				return $langmessage[$title];
+			}
+			return htmlspecialchars($title);
+		}
 
 		/**
 		 * Manage Notifications
@@ -131,6 +151,7 @@ namespace gp\admin{
 		 *
 		 */
 		public static function ManageNotifications(){
+			global $page;
 
 			$cmd = \gp\tool::GetCommand();
 
@@ -158,7 +179,7 @@ namespace gp\admin{
 			}
 
 			$page->ajaxReplace = array();
-			self::$debug && debug('Error: ManageNotifications - invalid command');
+			self::debug('Error: ManageNotifications - invalid command');
 
 			return false;
 		}
@@ -250,7 +271,7 @@ namespace gp\admin{
 
 			}
 
-			self::$debug && debug(
+			self::debug(
 					'Notifications SetFilter Error: unknown command "'
 					. htmlspecialchars($do) . '"'
 				);
@@ -268,87 +289,111 @@ namespace gp\admin{
 		 */
 		public static function ApplyFilters(){
 			global $gpAdmin;
-			// debug('$gpAdmin= ' . pre($gpAdmin));
+
 			self::GetFilters();
+
+
+			// Remove items lacking user permissions and therefore cannot be dealt with anyway
+
+			// debug / development
+			if( $gpAdmin['granted'] != 'all' || $gpAdmin['editing'] != 'all' ){
+				self::FilterType('debug','superuser');
+			}
+
+			// extra content draft
+			if( !\gp\admin\Tools::HasPermission('Admin/Extra') ){
+				self::FilterType('drafts','extra');
+			}
+
+			// theme update
+			if( !\gp\admin\Tools::HasPermission('Admin_Theme_Content/Remote') ){
+				self::FilterType('updates','theme');
+			}
+
+			// addon update
+			if( !\gp\admin\Tools::HasPermission('Admin/Addons/Remote') ){
+				self::FilterType('updates','plugin');
+			}
+
+			// core update
+			if( !\gp\admin\Tools::HasPermission('Admin/Uninstall') ){ // can't find a permission for core updates so I use Uninstall
+				self::FilterType('updates','core');
+			}
+
+			// page draft
+			self::FilterCallback('drafts',function($item){
+				if( $item['type'] == 'page' && !\gp\admin\Tools::CanEdit($item['title']) ){
+					return true;
+				}
+				return false;
+			});
+
+
+			// private page
+			self::FilterCallback('private_pages',function($item){
+				if( !\gp\admin\Tools::CanEdit($item['title']) ){
+					return true;
+				}
+				return false;
+			});
+
+			// apply user filters
+			self::FilterUserDefined();
+		}
+
+		/**
+		 * Apply user defined (display) filters
+		 *
+		 */
+		public static function FilterUserDefined(){
 
 			foreach( self::$notifications as $notification_type => $notification ){
 				foreach( $notification['items'] as $itemkey => $item ){
 
-					// Remove items lacking user permissions and therefore cannot be dealt with anyway
-
-					// debug / development
-					if( $notification_type == 'debug' &&
-						$item['type'] == 'superuser' &&
-						($gpAdmin['granted'] != 'all' || $gpAdmin['editing'] != 'all' )
-						){
-						unset(self::$notifications[$notification_type]['items'][$itemkey]);
-						continue;
-					}
-
-					// extra content draft
-					if( $notification_type == 'drafts' &&
-						$item['type'] == 'extra' &&
-						!\gp\admin\Tools::HasPermission('Admin/Extra')
-						){
-						unset(self::$notifications[$notification_type]['items'][$itemkey]);
-						continue;
-					}
-
-					// page draft
-					if( $notification_type == 'drafts' &&
-						$item['type'] == 'page' &&
-						!\gp\admin\Tools::CanEdit($item['title'])
-						){
-						unset(self::$notifications[$notification_type]['items'][$itemkey]);
-						continue;
-					}
-
-					// private page
-					if( $notification_type == 'private_pages' && !\gp\admin\Tools::CanEdit($item['title']) ){
-						unset(self::$notifications[$notification_type]['items'][$itemkey]);
-						continue;
-					}
-
-					// theme update
-					if( $notification_type == 'updates' &&
-						$item['type'] == 'theme' &&
-						!\gp\admin\Tools::HasPermission('Admin_Theme_Content/Remote')
-						){
-						unset(self::$notifications[$notification_type]['items'][$itemkey]);
-						continue;
-					}
-
-					// addon update
-					if( $notification_type == 'updates' &&
-						$item['type'] == 'plugin' &&
-						!\gp\admin\Tools::HasPermission('Admin/Addons/Remote')
-						){
-						unset(self::$notifications[$notification_type]['items'][$itemkey]);
-						continue;
-					}
-
-					// core update
-					if( $notification_type == 'updates' &&
-						$item['type'] == 'core' &&
-						!\gp\admin\Tools::HasPermission('Admin/Uninstall') // can't find a permission for core updates so I use Uninstall
-						){
-						unset(self::$notifications[$notification_type]['items'][$itemkey]);
-						continue;
-					}
-
 					// apply user filters
 					if( isset($item['id']) && isset(self::$filters[$item['id']]) ){
-						foreach( self::$filters[$item['id']] as $filter => $new_val ){
-							self::$notifications[$notification_type]['items'][$itemkey][$filter] = $new_val;
-						}
+						self::$notifications[$notification_type]['items'][$itemkey] = self::$filters[$item['id']] + $item;
 					}
-				}
-				if( empty(self::$notifications[$notification_type]['items']) ){
-					unset(self::$notifications[$notification_type]);
 				}
 			}
 		}
 
+
+		/**
+		 * Filter notifications matching a notification type and item type
+		 *
+		 */
+		public static function FilterType( $notification_type, $item_type ){
+
+			if( !isset(self::$notifications[$notification_type]) ){
+				return;
+			}
+
+			foreach( self::$notifications[$notification_type]['items'] as $itemkey => $item ){
+
+				if( $item['type'] !== $item_type ){
+					continue;
+				}
+
+				unset(self::$notifications[$notification_type]['items'][$itemkey]);
+			}
+
+		}
+
+		/**
+		 * Filter notifications matching a notification type with a callback
+		 *
+		 */
+		public static function FilterCallback( $notification_type, $callback ){
+			if( !isset(self::$notifications[$notification_type]) ){
+				return;
+			}
+			foreach( self::$notifications[$notification_type]['items'] as $itemkey => $item ){
+				if( $callback($item) === true ){
+					unset(self::$notifications[$notification_type]['items'][$itemkey]);
+				}
+			}
+		}
 
 
 		/**
@@ -389,12 +434,14 @@ namespace gp\admin{
 				);
 			}
 
-			if( count(self::GetDebugInfo()) > 0 ){
+
+			$debug_notices = self::GetDebugNotifications();
+			if( !empty($debug_notices) ){
 				$notifications['debug'] = array(
 					'title'			=> 'Development',
 					'badge_bg'		=> '#ff8c00',
 					'badge_color'	=> '#000',
-					'items'			=> self::GetDebugNotifications(),
+					'items'			=> $debug_notices,
 				);
 			}
 
@@ -403,14 +450,45 @@ namespace gp\admin{
 
 			self::$notifications = $notifications;
 			self::ApplyFilters();
+
+
+			// remove empty, count items, and get priority
+			foreach( self::$notifications as $notification_type => &$notification ){
+
+				if( empty(self::$notifications[$notification_type]['items']) ){
+					unset(self::$notifications[$notification_type]);
+					continue;
+				}
+
+
+				$count		= 0;
+				$priority	= 0;
+				foreach( $notification['items'] as $item ){
+					if( isset($item['priority']) && is_numeric($item['priority']) && $item['priority'] > 0 ){
+						$priority = max( (int)$item['priority'], $priority );
+						$count++;
+					}
+				}
+
+				$notification['count']		= $count;
+				$notification['priority']	= $priority;
+
+			}
+
+			// sort by priority
+			uasort(self::$notifications,function($a,$b){
+				return strnatcmp($b['priority'],$a['priority']);
+			});
+
 		}
+
 
 
 
 		/**
 		* Get Notifications
 		* Outputs a Notifications panelgroup
-		* @param boolean if panelgroup shall be rendered in admin menu
+		* @param boolean $in_panel if panelgroup shall be rendered in admin menu
 		*
 		*/
 		public static function GetNotifications($in_panel=true){
@@ -423,92 +501,71 @@ namespace gp\admin{
 			}
 
 			$total_count			= 0;
-			$main_badge_style_attr	= '';
-			$priority 				= 0;
-			$links 					= array();
+			$main_badge_style		= '';
+			$expand_class			= ''; // expand_child_click
+			$badge_format			= ' <span class="dashboard-badge">(%2$d)</b>';
+			$panel_class			= '';
+			$default_style			= ['badge_bg'=>'transparent','color'=>'#fff'];
 
+			if( $in_panel ){
+				$badge_format		= ' <b class="admin-panel-badge" style="%1$s">%2$d</b>';
+				$expand_class		= 'expand_child';
+				$panel_class		= 'admin-panel-notifications';
+			}
+
+
+
+			ob_start();
 			foreach(self::$notifications as $type => $notification ){
 
 				if( empty($notification['items']) ){
-					self::$debug && debug('notification => items subarray mising or empty');
+					self::debug('notification => items subarray mising or empty');
 					continue;
 				}
 
-				$count	= 0;
 
-				$notification_priority = $priority;
-				foreach( $notification['items'] as $item ){
-					if( isset($item['priority']) && is_numeric($item['priority']) ){
-						if( $item['priority'] < 0 ){
-							// muted item, won't count
-						}else{
-							$notification_priority = (int)$item['priority'] > $notification_priority ?
-								$item['priority'] :
-								$notification_priority;
-							$count++;
-							$total_count++;
-						}
-					}
-				}
-
-				$title				= isset($langmessage[$notification['title']]) ?
-										$langmessage[$notification['title']] :
-										htmlspecialchars($notification['title']);
-
+				$total_count		+= $notification['count'];
+				$title				= self::GetTitle($notification['title']);
 				$badge_html			= '';
 				$badge_style		= '';
+				$notification		+= $default_style;
 
-				if( $count > 0 ){
-					$badge_style		.= !empty($notification['badge_bg']) ?
-												('background-color:' . $notification['badge_bg'] . ';') : '';
-					$badge_style		.= !empty($notification['badge_color']) ?
-												(' color:' . $notification['badge_color'] . ';') : '';
-					$badge_style_attr	 = !empty($badge_style) ? ' style="' . $badge_style . '"' : '';
-					if( $in_panel ){
-						$badge_html		 = ' <b class="admin-panel-badge"' . $badge_style_attr . '>' . $count . '</b>';
-					}else{
-						$badge_html		 = ' <span class="dashboard-badge">(' . $count . ')</b>';
-					}
+
+				if( $notification['count'] > 0 ){
+					$badge_style		= 'background-color:'.$notification['badge_bg'].';color:'.$notification['badge_color'].';';
+					$badge_html			= sprintf($badge_format, $badge_style, $notification['count']);
 				}
 
-				$expand_class = 'expand_child';
-				if( !$in_panel ){
-					$expand_class = ''; // expand_child_click
-				}
 
-				ob_start();
 				echo '<li class="' . $expand_class . '">';
 				echo \gp\tool::Link(
 						'Admin/Notifications',
 						$title . $badge_html,
 						'cmd=ShowNotifications&type=' . rawurlencode($type),
 						array(
-							'title'		=> $count . ' ' . $title,
+							'title'		=> $notification['count'] . ' ' . $title,
 							'class'		=> 'admin-panel-notification', // . '-' . rawurlencode($type)',
 							'data-cmd'	=> 'gpabox',
 						)
 					);
 				echo '</li>';
 
-				if( $notification_priority > $priority ){
-					$priority = $notification_priority;
-					$main_badge_style_attr	= $badge_style_attr;
-					array_unshift($links, ob_get_clean());
-				}else{
-					$links[] = ob_get_clean();
+				if( empty($main_badge_style) ){
+					$main_badge_style	= $badge_style;
 				}
 			}
 
+			$links = ob_get_clean();
+
 			$panel_label	= $langmessage['Notifications'];
-			$panel_class	= $in_panel ? 'admin-panel-notifications' : '';
 
 			$badge_html		= $total_count > 0 ?
-								'<b class="admin-panel-badge"' . $main_badge_style_attr . '>' . $total_count . '</b>' :
+								'<b class="admin-panel-badge" style="' . $main_badge_style . '">' . $total_count . '</b>' :
 								'';
 
 			\gp\Admin\Tools::_AdminPanelLinks(
 				$in_panel,
-				implode('', $links),
+				$links,
 				$panel_label,
 				'fa fa-bell',
 				'notifications',
@@ -517,32 +574,6 @@ namespace gp\admin{
 			);
 
 		}
-
-
-
-		/**
-		* Get brief debugging / development-relevant information
-		* @return array containing brief messages
-		*
-		*/
-		public static function GetDebugInfo(){
-			$debug_info = array();
-
-			if( defined('display_errors') && display_errors ){
-				$debug_info['display_errors'] = 'display_errors is enabled in /gpconfig.pgp';
-			}
-
-			if( defined('gpdebug') && gpdebug ){
-				$debug_info['gpdebug'] = 'gpdebug is enabled in /gpconfig.pgp';
-			}
-
-			if( defined('create_css_sourcemaps') && create_css_sourcemaps ){
-				$debug_info['sourcemaps'] = 'create_css_sourcemaps is enabled in /gpconfig.php';
-			}
-
-			return $debug_info;
-		}
-
 
 
 		/**
@@ -570,7 +601,7 @@ namespace gp\admin{
 				);
 			}
 
-			if( defined('gpdebug') && gpdebug ){
+			if( defined('gpdebug') && \gpdebug ){
 				$label = 'gpdebug is enabled';
 				$debug_note[] = array(
 					'type'		=> 'superuser',
@@ -581,7 +612,7 @@ namespace gp\admin{
 				);
 			}
 
-			if( defined('create_css_sourcemaps') && create_css_sourcemaps ){
+			if( defined('create_css_sourcemaps') && \create_css_sourcemaps ){
 				$label = 'create_css_sourcemaps is enabled';
 				$debug_note[] = array(
 					'type'		=> 'superuser',
@@ -608,7 +639,7 @@ namespace gp\admin{
 			$updates = array();
 
 			if( gp_remote_update && isset(\gp\Admin\Tools::$new_versions['core']) ){
-				$label = CMS_NAME . ' ' . \gp\Admin\Tools::$new_versions['core'];
+				$label = \CMS_NAME . ' ' . \gp\Admin\Tools::$new_versions['core'];
 				$updates[] = array(
 					'type'		=> 'cms_core',
 					'label'		=> $label,
@@ -679,7 +710,10 @@ namespace gp\admin{
 			die();
 		}
 
+		public static function debug($msg){
+			self::$debug && debug($msg);
+		}
+
 
 	}
-
 }

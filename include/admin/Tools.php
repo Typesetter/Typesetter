@@ -703,35 +703,6 @@ namespace gp\admin{
 			$links = self::GetAdminGroup('tools');
 			self::_AdminPanelLinks($in_panel, $links, 'Tools', 'fa fa-wrench', 'tool');
 
-			//updates
-			// hidden in favor of new notifications panelgroup
-			/*
-			if( count(self::$new_versions) > 0 ){
-
-				ob_start();
-				if( gp_remote_update && isset(self::$new_versions['core']) ){
-					echo '<li>';
-					echo '<a href="'.\gp\tool::GetDir('/include/install/update.php').'">'.CMS_NAME.' '.self::$new_versions['core'].'</a>';
-					echo '</li>';
-				}
-
-				foreach(self::$new_versions as $addon_id => $new_addon_info){
-					if( !is_numeric($addon_id) ){
-						continue;
-					}
-					$label		= $new_addon_info['name'].':  '.$new_addon_info['version'];
-					$url		= self::RemoteUrl( $new_addon_info['type'] );
-					if( $url === false ){
-						continue;
-					}
-					echo '<li><a href="'.$url.'/'.$addon_id.'" data-cmd="remote">'.$label.'</a></li>';
-				}
-
-				$links = ob_get_clean();
-
-				self::_AdminPanelLinks($in_panel, $links, 'updates', 'fa fa-refresh', 'upd');
-			}
-			*/
 
 			//notifications
 			if( \gp\admin\Tools::HasPermission('Admin/Notifications') ){

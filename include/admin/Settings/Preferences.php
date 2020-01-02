@@ -203,11 +203,11 @@ namespace gp\admin\Settings{
 				'app'=>'app',
 				'add'=>'add',
 				'set'=>'set',
-				'upd'=>'upd',
 				'use'=>'use',
 				'cms'=>'cms',
 				'res'=>'res',
 				'tool'=>'tool',
+				'notifications'=>'notifications',
 				'false'=>false
 			);
 

@@ -407,12 +407,14 @@ namespace gp\admin{
 				);
 			}
 
-			if( count(self::GetDebugInfo()) > 0 ){
+
+			$debug_notices = self::GetDebugNotifications();
+			if( !empty($debug_notices) ){
 				$notifications['debug'] = array(
 					'title'			=> 'Development',
 					'badge_bg'		=> '#ff8c00',
 					'badge_color'	=> '#000',
-					'items'			=> self::GetDebugNotifications(),
+					'items'			=> $debug_notices,
 				);
 			}
 
@@ -519,7 +521,7 @@ namespace gp\admin{
 			}
 
 			$panel_label	= $langmessage['Notifications'];
-		
+
 			$badge_html		= $total_count > 0 ?
 								'<b class="admin-panel-badge"' . $main_badge_style_attr . '>' . $total_count . '</b>' :
 								'';
@@ -535,32 +537,6 @@ namespace gp\admin{
 			);
 
 		}
-
-
-
-		/**
-		* Get brief debugging / development-relevant information
-		* @return array containing brief messages
-		*
-		*/
-		public static function GetDebugInfo(){
-			$debug_info = array();
-
-			if( defined('display_errors') && display_errors ){
-				$debug_info['display_errors'] = 'display_errors is enabled in /gpconfig.pgp';
-			}
-
-			if( defined('gpdebug') && gpdebug ){
-				$debug_info['gpdebug'] = 'gpdebug is enabled in /gpconfig.pgp';
-			}
-
-			if( defined('create_css_sourcemaps') && create_css_sourcemaps ){
-				$debug_info['sourcemaps'] = 'create_css_sourcemaps is enabled in /gpconfig.php';
-			}
-
-			return $debug_info;
-		}
-
 
 
 		/**

@@ -1,0 +1,13 @@
+.gpui-poc-funky-widget {
+  position: fixed;
+  top: calc(50% - 128px);
+  left: calc(50% - 128px);
+  width: 256px;
+  height: 256px;
+  border: 1ps solid rgba(127,127,127,0.66);
+  border-radius: 3px;
+  background: rgba(127,127,127,0.33) url('bluestar.png') center center no-repeat;
+  background-size: contain;
+  cursor: move;
+  z-index: 12000;
+}

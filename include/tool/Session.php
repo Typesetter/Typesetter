@@ -808,7 +808,7 @@ class Session{
 
 
 	public static function gpui_defaults(){
-		return array(
+		$gpui_defaults = array(
 			'gpui_cmpct'	=> 0,
 			'gpui_tx'		=> 10,
 			'gpui_ty'		=> 39,
@@ -817,6 +817,20 @@ class Session{
 			'gpui_vis'		=> 'cur',
 			'gpui_thw'		=> 250,
 		);
+
+		$plugin_values = [];
+		$plugin_values = \gp\tool\Plugins::Filter('Extend_GPUI', array($plugin_values));
+
+		if( !empty($plugin_values) && is_array($plugin_values) ){
+			foreach($plugin_values as $key => $val){
+				// deny overwriting existing keys
+				if( !array_key_exists('gpui_' . $key, $gpui_defaults) ){
+					$gpui_defaults['gpui_' . $key] = $val;
+				}
+			}
+		}
+
+		return $gpui_defaults;
 	}
 
 

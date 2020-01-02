@@ -54,6 +54,7 @@ class EasyComments{
 		global $page, $addonPathData, $addonFolderName;
 
 		$this->current_title = $page->title;
+		$page->ajaxReplace = [];
 
 
 		$this->config_file = $addonPathData.'/config.php';

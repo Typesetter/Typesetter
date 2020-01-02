@@ -705,11 +705,10 @@ namespace gp\admin{
 			die();
 		}
 
+		public static function debug($msg){
+			self::$debug && debug($msg);
+		}
+
 
 	}
-
-	public static function debug($debug){
-		self::$debug && debug($debug);
-	}
-
 }

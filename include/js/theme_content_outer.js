@@ -17,7 +17,7 @@ $gp.handle_iframe = function(){
 $gp.check_iframe_ready = function(){
 	var iframe	= document.getElementById('gp_layout_iframe');
 
-	/* 
+	/*
 	console.log("iframe = " + typeof(iframe));
 	console.log("iframe.contentWindow = " + typeof(iframe.contentWindow));
 	console.log("iframe.contentWindow.document = " + typeof(iframe.contentWindow.document));
@@ -25,7 +25,7 @@ $gp.check_iframe_ready = function(){
 	console.log("iframe.contentWindow.document.$gp.iframe_ready = " + typeof(iframe.contentWindow.$gp.iframe_ready));
 	*/
 
-	if( iframe.contentWindow.document 
+	if( iframe.contentWindow.document
 		&& typeof(iframe.contentWindow.$gp) == 'object'
 		&& typeof(iframe.contentWindow.$gp.iframe_ready) == 'function' ){
 		iframe.contentWindow.$gp.iframe_ready();
@@ -54,9 +54,10 @@ $(function(){
 	$('#theme_editor').resizable({
 		handles : 'w',
 		minWidth : 172,
-		resize : function(event, ui) {
+		resize: function(event,ui){
 			$('#gp_iframe_wrap').css( 'margin-right', ui.size.width+1 );
-
+		},
+		stop : function(event, ui) {
 			gpui.thw = ui.size.width;
 			$gp.SaveGPUI();
 		}
@@ -171,4 +172,3 @@ $(function(){
 	$gp.editor_ready = true;
 
 });
-

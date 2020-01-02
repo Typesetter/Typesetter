@@ -29,7 +29,7 @@ namespace gp\admin{
 
 
 
-			$filter_list_by = false;
+			$filter_list_by = '';
 			if( isset($_REQUEST['type']) ){
 				$filter_list_by = rawurldecode($_REQUEST['type']);
 				self::Tabs($filter_list_by);
@@ -38,13 +38,12 @@ namespace gp\admin{
 
 			foreach( self::$notifications as $type => $notification ){
 
-				if( $filter_list_by ){
-					if( $type != $filter_list_by ){
-						continue;
-					}
-				}else{
+
+				if( empty($filter_list_by) ){
 					$title = self::GetTitle($notification['title']);
 					echo '<h3>' . $title . '</h3>';
+				}elseif( $type != $filter_list_by ){
+					continue;
 				}
 
 
@@ -58,9 +57,16 @@ namespace gp\admin{
 
 				foreach( $notification['items'] as $item ){
 
-					$muted = isset($item['priority']) && (int)$item['priority'] < 0;
+					$tr_class	= '';
+					$link_icon	= '<i class="fa fa-bell"></i>';
+					$link_title	= $langmessage['Hide'];
+					if( isset($item['priority']) && (int)$item['priority'] < 0 ){
+						$tr_class	= ' class="notification-item-muted"';
+						$link_icon	= '<i class="fa fa-bell-slash"></i>';
+						$link_title	= $langmessage['Show'];
+					}
 
-					echo '<tr' . ($muted ? ' class="notification-item-muted"' : '') . '>';
+					echo '<tr' . $tr_class . '>';
 					echo 	'<td>' . $item['label']  . '</td>';
 					echo 	'<td>' . $item['action'] . '</td>';
 
@@ -68,12 +74,12 @@ namespace gp\admin{
 
 					echo 	\gp\tool::Link(
 								'Admin/Notifications/Manage',
-								($muted ? '<i class="fa fa-bell-slash"></i>' : '<i class="fa fa-bell"></i>'),
+								$link_icon,
 								'cmd=toggle_priority'
 									. '&id=' . rawurlencode($item['id'])
-									. (isset($_REQUEST['type']) ? '&type=' . rawurlencode($_REQUEST['type']) : ''),
+									. '&type=' . rawurlencode($filter_list_by),
 								array(
-									'title'		=> ($muted ? $langmessage['Show'] : $langmessage['Hide']),
+									'title'		=> $link_title,
 									'class'		=> 'toggle-notification',
 									'data-cmd'	=> 'gpabox',
 								)
@@ -121,7 +127,7 @@ namespace gp\admin{
 						'data-cmd'	=> 'gpabox',
 					)
 				);
-				
+
 
 			}
 			echo '</div>';

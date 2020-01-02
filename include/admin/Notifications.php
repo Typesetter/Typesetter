@@ -708,7 +708,7 @@ namespace gp\admin{
 
 	}
 
-	public static debug($debug){
+	public static function debug($debug){
 		self::$debug && debug($debug);
 	}
 

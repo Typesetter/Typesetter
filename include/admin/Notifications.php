@@ -23,7 +23,7 @@ namespace gp\admin{
 			self::CheckNotifications();
 
 
-			self::$debug && debug('$notifications = ' . pre(self::$notifications));
+			self::debug('$notifications = ' . pre(self::$notifications));
 
 			echo '<div class="inline_box show-notifications-box">';
 
@@ -180,7 +180,7 @@ namespace gp\admin{
 			}
 
 			$page->ajaxReplace = array();
-			self::$debug && debug('Error: ManageNotifications - invalid command');
+			self::debug('Error: ManageNotifications - invalid command');
 
 			return false;
 		}
@@ -272,7 +272,7 @@ namespace gp\admin{
 
 			}
 
-			self::$debug && debug(
+			self::debug(
 					'Notifications SetFilter Error: unknown command "'
 					. htmlspecialchars($do) . '"'
 				);
@@ -493,7 +493,7 @@ namespace gp\admin{
 			foreach(self::$notifications as $type => $notification ){
 
 				if( empty($notification['items']) ){
-					self::$debug && debug('notification => items subarray mising or empty');
+					self::debug('notification => items subarray mising or empty');
 					continue;
 				}
 
@@ -706,6 +706,10 @@ namespace gp\admin{
 		}
 
 
+	}
+
+	public static debug($debug){
+		self::$debug && debug($debug);
 	}
 
 }

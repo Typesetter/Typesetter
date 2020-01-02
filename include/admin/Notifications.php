@@ -461,15 +461,12 @@ namespace gp\admin{
 				}
 
 
-				foreach( $notification['items'] as $itemkey => $item ){
-
-					$count		= 0;
-					$priority	= 0;
-					foreach( $notification['items'] as $item ){
-						if( isset($item['priority']) && is_numeric($item['priority']) && $item['priority'] > 0 ){
-							$priority = max( (int)$item['priority'], $priority );
-							$count++;
-						}
+				$count		= 0;
+				$priority	= 0;
+				foreach( $notification['items'] as $item ){
+					if( isset($item['priority']) && is_numeric($item['priority']) && $item['priority'] > 0 ){
+						$priority = max( (int)$item['priority'], $priority );
+						$count++;
 					}
 				}
 

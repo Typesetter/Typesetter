@@ -122,6 +122,7 @@ namespace gp\admin{
 		 *
 		 */
 		public static function ManageNotifications(){
+			global $page;
 
 			$cmd = \gp\tool::GetCommand();
 
@@ -427,10 +428,11 @@ namespace gp\admin{
 
 
 
+
 		/**
 		* Get Notifications
 		* Outputs a Notifications panelgroup
-		* @param boolean if panelgroup shall be rendered in admin menu
+		* @param boolean $in_panel if panelgroup shall be rendered in admin menu
 		*
 		*/
 		public static function GetNotifications($in_panel=true){
@@ -443,7 +445,7 @@ namespace gp\admin{
 			}
 
 			$total_count			= 0;
-			$main_badge_style_attr	= '';
+			$main_badge_style		= '';
 			$priority 				= 0;
 			$links 					= array();
 			$expand_class			= ''; // expand_child_click
@@ -451,7 +453,7 @@ namespace gp\admin{
 			$panel_class			= '';
 
 			if( $in_panel ){
-				$badge_format		= ' <b class="admin-panel-badge" %1$s>%2$d</b>';
+				$badge_format		= ' <b class="admin-panel-badge" style="%1$s">%2$d</b>';
 				$expand_class		= 'expand_child';
 				$panel_class		= 'admin-panel-notifications';
 			}
@@ -486,14 +488,14 @@ namespace gp\admin{
 				$badge_html			= '';
 				$badge_style		= '';
 
+
 				if( $count > 0 ){
 					$badge_style		.= !empty($notification['badge_bg']) ?
 												('background-color:' . $notification['badge_bg'] . ';') : '';
 					$badge_style		.= !empty($notification['badge_color']) ?
 												(' color:' . $notification['badge_color'] . ';') : '';
-					$badge_style_attr	 = !empty($badge_style) ? ' style="' . $badge_style . '"' : '';
 
-					$badge_html			= sprintf($badge_format, $badge_style_attr, $count);
+					$badge_html			= sprintf($badge_format, $badge_style, $count);
 				}
 
 
@@ -513,7 +515,7 @@ namespace gp\admin{
 
 				if( $notification_priority > $priority ){
 					$priority = $notification_priority;
-					$main_badge_style_attr	= $badge_style_attr;
+					$main_badge_style	= $badge_style;
 					array_unshift($links, ob_get_clean());
 				}else{
 					$links[] = ob_get_clean();
@@ -523,7 +525,7 @@ namespace gp\admin{
 			$panel_label	= $langmessage['Notifications'];
 
 			$badge_html		= $total_count > 0 ?
-								'<b class="admin-panel-badge"' . $main_badge_style_attr . '>' . $total_count . '</b>' :
+								'<b class="admin-panel-badge" style="' . $main_badge_style . '">' . $total_count . '</b>' :
 								'';
 
 			\gp\Admin\Tools::_AdminPanelLinks(
@@ -564,7 +566,7 @@ namespace gp\admin{
 				);
 			}
 
-			if( defined('gpdebug') && gpdebug ){
+			if( defined('gpdebug') && \gpdebug ){
 				$label = 'gpdebug is enabled';
 				$debug_note[] = array(
 					'type'		=> 'superuser',
@@ -575,7 +577,7 @@ namespace gp\admin{
 				);
 			}
 
-			if( defined('create_css_sourcemaps') && create_css_sourcemaps ){
+			if( defined('create_css_sourcemaps') && \create_css_sourcemaps ){
 				$label = 'create_css_sourcemaps is enabled';
 				$debug_note[] = array(
 					'type'		=> 'superuser',
@@ -602,7 +604,7 @@ namespace gp\admin{
 			$updates = array();
 
 			if( gp_remote_update && isset(\gp\Admin\Tools::$new_versions['core']) ){
-				$label = CMS_NAME . ' ' . \gp\Admin\Tools::$new_versions['core'];
+				$label = \CMS_NAME . ' ' . \gp\Admin\Tools::$new_versions['core'];
 				$updates[] = array(
 					'type'		=> 'cms_core',
 					'label'		=> $label,

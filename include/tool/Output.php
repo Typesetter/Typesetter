@@ -1438,7 +1438,6 @@ namespace gp\tool{
 			//before ob_start() so plugins can get buffer content
 			\gp\tool\Plugins::Action('HeadContent');
 
-			ob_start();
 
 			if( \gp\tool::LoggedIn() ){
 				\gp\tool::AddColorBox();
@@ -1454,13 +1453,14 @@ namespace gp\tool{
 			//get css and js info
 			$scripts = \gp\tool\Output\Combine::ScriptInfo( self::$components );
 
+			ob_start();
 			self::GetHead_TKD();
+			self::$head_content = ob_get_clean();
 
 			ob_start();
 			self::GetHead_CSS($scripts['css']); //css before js so it's available to scripts
 			self::$head_css = ob_get_clean();
 
-			self::$head_content = ob_get_clean();
 
 			//javascript
 			ob_start();
@@ -1716,76 +1716,42 @@ namespace gp\tool{
 				trigger_error('$page->head_js is not an array');
 			}
 
-			self::CombineFiles($scripts, 'js', $combine );
-		}
 
+			Output\Assets::CombineFiles($scripts, 'js', $combine );
+		}
 
 
 		/**
 		 * Prepare and output the css for the current page
 		 * @static
 		 */
-		public static function GetHead_CSS($scripts){
+		public static function GetHead_CSS($to_add){
 			global $page, $config, $dataDir;
 
-			$scripts = self::GetHead_CDN('css', $scripts);
+			$scripts	= [];
+			$to_add		= self::GetHead_CDN('css', $to_add);
+			$scripts	= Output\Assets::MergeScripts($scripts,$to_add);
 
-			if( isset($page->css_user) && is_array($page->css_user) ){
-				$scripts = array_merge( $scripts, $page->css_user );
+
+			if( isset($page->css_user) ){
+				$scripts	= Output\Assets::MergeScripts($scripts,$page->css_user);
 			}
 
 			// add theme css
 			if( !empty($page->theme_name) && $page->get_theme_css === true ){
-				$scripts = array_merge( $scripts, self::LayoutStyleFiles() );
+				$scripts	= Output\Assets::MergeScripts($scripts,Output\Assets::LayoutStyleFiles());
+
 			}
 
 			//styles that need to override admin.css should be added to $page->css_admin;
-			if( isset($page->css_admin) && is_array($page->css_admin) ){
-				$scripts = array_merge( $scripts, $page->css_admin );
-			}
-
-
-			//convert .scss & .less files to .css
-			foreach($scripts as $key => $script){
-
-				// allow arrays of scripts
-				$files = array();
-
-				if( is_array($script) ){
-					// array of scripts
-					if( isset($script['file']) ){
-						// single script
-						$file = $script['file'];
-						$ext = \gp\tool::Ext($file);
-						$files[$ext] = array($dataDir . $file);
-					}else{
-						// multiple scripts
-						foreach( $script as $file ){
-							$file = is_array($file) ? $file['file'] : $file;
-							$ext = \gp\tool::Ext($file);
-							//$files[$ext] += array();
-							$files[$ext][] = $dataDir . $file;
-						}
-					}
-				}else{
-					$file = $script;
-					$ext = \gp\tool::Ext($file);
-					$files[$ext] = array($dataDir . $file);
-				}
-
-				foreach( $files as $ext => $files_same_ext ){
-					//less and scss
-					if( $ext == 'less' || $ext == 'scss' ){ // msg("from GetHead_CSS");
-						$scripts[$key] = \gp\tool\Output\Css::Cache($files_same_ext, $ext);
-					}
-				}
-
+			if( isset($page->css_admin)  ){
+				$scripts	= Output\Assets::MergeScripts($scripts,$page->css_admin);
 			}
 
 			// disable 'combine css' if 'create_css_sourcemaps' is set to true in /gpconfig.php
 			$combinecss = (defined('create_css_sourcemaps') && create_css_sourcemaps) ? false : $config['combinecss'];
 
-			self::CombineFiles($scripts, 'css', $combinecss);
+			Output\Assets::CombineFiles($scripts, 'css', $combinecss);
 		}
 
 
@@ -1821,11 +1787,7 @@ namespace gp\tool{
 				}
 				unset($scripts[$key]);
 
-				if( $type == 'css' ){
-					echo "\n" . '<link rel="stylesheet" type="text/css" href="' . $cdn_url . '" />';
-				}else{
-					echo "\n" . '<script type="text/javascript" src="' . $cdn_url . '"></script>';
-				}
+				echo Output\Assets::FormatAsset($type,$cdn_url);
 			}
 
 			return $scripts;
@@ -1833,65 +1795,9 @@ namespace gp\tool{
 
 
 		/**
-		 * Return a list of css files used by the current layout
-		 *
-		 */
-		public static function LayoutStyleFiles(){
-			global $page, $dataDir;
-
-
-			$files			= array();
-			$dir			= $page->theme_dir . '/' . $page->theme_color;
-			$style_type		= self::StyleType($dir);
-
-			/* 5.1.1+ returns array of (existing) custom file paths */
-			$custom_files	= self::CustomStyleFiles($page->gpLayout, $style_type);
-
-			//css file
-			if( $style_type == 'css' ){
-
-				$files[] = rawurldecode($page->theme_path) . '/style.css';
-
-				if( $page->gpLayout && !empty($custom_files) ){
-					foreach( $custom_files as $cf_path ){
-						$files[] = $cf_path;
-					}
-				}
-
-				return $files;
-			}
-
-
-			//less or scss file
-			$var_file	= $dir .'/variables.' . $style_type;
-			if( file_exists($var_file) ){
-				$files[] = $var_file;
-			}
-
-
-			if( $page->gpLayout && !empty($custom_files) ){
-				foreach( $custom_files as $cf_path ){
-					$files[] = $cf_path;
-				}
-			}
-
-
-			if( $style_type == 'scss' ){
-
-				$files[]		= $dir . '/style.scss';
-				return array( \gp\tool\Output\Css::Cache($files) );
-			}
-
-			array_unshift($files, $dir . '/style.less');
-
-			return array( \gp\tool\Output\Css::Cache($files, 'less') );
-		}
-
-
-		/**
 		 * Get the path for the custom css/scss/less file
 		 *
-		 * deprecated as of 5.1.1+
+		 * @deprecated as of 5.1.1+
 		 * kept for backwards compatibility in case any addons use it
 		 */
 		public static function CustomStyleFile($layout, $style_type){
@@ -1906,148 +1812,21 @@ namespace gp\tool{
 
 
 		/**
-		 * Get an array of paths for custom css/scss/less files
-		 */
-		public static function CustomStyleFiles($layout, $style_type){
-			global $dataDir;
-			$file_ext = $style_type == 'scss' ? 'scss' : 'css';
-
-			$customizer_style_file 		= $dataDir . '/data/_layouts/' . $layout . '/customizer.' . $file_ext;
-			$layout_editor_style_file 	= $dataDir . '/data/_layouts/' . $layout . '/custom.' . $file_ext;
-
-			$custom_files = array();
-
-			if( file_exists($customizer_style_file) ){
-				$custom_files[] = $customizer_style_file;
-			}
-
-			if( file_exists($layout_editor_style_file) ){
-				$custom_files[] = $layout_editor_style_file;
-			}
-
-			return $custom_files;
-		}
-
-
-		/**
 		 * Get the filetype of the style.* file
 		 *
-		 * @return string|false
+		 * @return string
 		 */
 		public static function StyleType($dir){
-			$css_path	= $dir . '/style.css';
-			$less_path	= $dir . '/style.less';
-			$scss_path	= $dir . '/style.scss';
 
-			if( file_exists($css_path) ){
-				return 'css';
-			}
+			$types = ['less','scss'];
 
-			if( file_exists($less_path) ){
-				return 'less';
-			}
-
-			if( file_exists($scss_path) ){
-				return 'scss';
-			}
-
-			return false;
-		}
-
-
-		/**
-		 * Combine the files in $files into a combine.php request
-		 * If $page->head_force_inline is true, resources will be
-		 * included inline in the document
-		 *
-		 * @param array $files Array of files relative to $dataDir
-		 * @param string $type The type of resource being combined
-		 *
-		 */
-		public static function CombineFiles($files,$type,$combine){
-			global $page;
-
-			//msg("files=" . pre($files));
-
-			// allow arrays of scripts
-			$files_flat = array();
-
-			//only need file paths
-			foreach($files as $key => $val){
-				if( is_array($val) ){
-					// array of scripts
-					if( isset($val['file']) ){
-						// single script
-						$files_flat[$key] = $val['file'];
-					}else{
-						// multiple scripts
-						foreach( $val as $subkey => $file ){
-							$files_flat[$key . '-' . $subkey] = is_array($file) ? $file['file'] : $file;
-						}
-					}
-				}else{
-					$files_flat[$key] = $val;
+			foreach($types as $type){
+				$path = $dir . '/style.'.$type;
+				if( file_exists($path) ){
+					return $type;
 				}
 			}
-
-			$files_flat = array_unique($files_flat);
-			$files_flat = array_filter($files_flat);//remove empty elements
-
-			// Force resources to be included inline
-			// CheckFile will fix the $file path if needed
-			if( $page->head_force_inline ){
-				if( $type == 'css' ){
-					echo '<style type="text/css">';
-				}else{
-					echo '<script type="text/javascript">';
-				}
-				foreach($files_flat as $file_key => $file){
-					$full_path = \gp\tool\Output\Combine::CheckFile($file);
-					if( $full_path === false ) continue;
-					readfile($full_path);
-					echo ";\n";
-				}
-				if( $type == 'css' ){
-					echo '</style>';
-				}else{
-					echo '</script>';
-				}
-				return;
-			}
-
-
-			//files not combined except for script components
-			if( !$combine || (isset($_REQUEST['no_combine']) && \gp\tool::LoggedIn()) ){
-				foreach($files_flat as $file_key => $file){
-
-					$html = "\n" . '<script type="text/javascript" src="%s"></script>';
-					if( $type == 'css' ){
-						$html = "\n" . '<link type="text/css" href="%s" rel="stylesheet"/>';
-					}
-
-					\gp\tool\Output\Combine::CheckFile($file);
-					if( \gp\tool::LoggedIn() ){
-						$file .= '?v=' . rawurlencode(gpversion);
-					}
-					echo sprintf($html, \gp\tool::GetDir($file, true));
-				}
-				return;
-			}
-
-
-			$html = "\n" . '<script type="text/javascript" src="%s"></script>';
-			if( $type == 'css' ){
-				$html = "\n" . '<link rel="stylesheet" type="text/css" href="%s"/>';
-			}
-
-			//create combine request
-			$combined_file = \gp\tool\Output\Combine::GenerateFile($files_flat,$type);
-			if( $combined_file === false ){
-				return;
-			}
-
-
-			echo sprintf($html, \gp\tool::GetDir($combined_file, true));
+			return 'css';
 		}
 
 
@@ -2108,10 +1887,8 @@ namespace gp\tool{
 			$placeholder = '<!-- jquery_placeholder ' . gp_random . ' -->';
 			$replacement = '';
 			if( !empty(self::$head_js) || stripos($buffer, '<script') !== false ){
-				$replacement = "\n<script type=\"text/javascript\" src=\""
-					// . \gp\tool::GetDir('/include/thirdparty/js/jquery.js') // TODO: restore this line
-					. \gp\tool::GetDir('/include/thirdparty/js/jquery-3.4.1/jquery.js')
-					. "\"></script>";
+				//$replacement = Output\Assets::FormatAsset('js',\gp\tool::GetDir('/include/thirdparty/js/jquery.js')); // TODO: restore this line
+				$replacement = Output\Assets::FormatAsset('js',\gp\tool::GetDir('/include/thirdparty/js/jquery-3.4.1/jquery.js'));
 			}
 
 			$replacements[$placeholder]	= $replacement;
@@ -2195,10 +1972,6 @@ namespace gp\tool{
 		 * @return array
 		 */
 		public static function LastFatal(){
-
-			if( !function_exists('error_get_last') ){
-				return;
-			}
 
 			$fatal_errors	= array( E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR );
 			$last_error		= error_get_last();
@@ -2467,10 +2240,11 @@ namespace gp\tool{
 			$scripts = \gp\tool\Output\Combine::ScriptInfo( $names );
 
 			$scripts['css'] = self::GetHead_CDN('css', $scripts['css']);
-			self::CombineFiles($scripts['css'], 'css', false );
+			Output\Assets::CombineFiles($scripts['css'], 'css', false );
+
 
 			$scripts['js'] = self::GetHead_CDN('js', $scripts['js']);
-			self::CombineFiles($scripts['js'], 'js', false );
+			Output\Assets::CombineFiles($scripts['js'], 'js', false );
 		}
 
 	}

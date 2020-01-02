@@ -19,7 +19,7 @@ namespace gp\tool\Output{
 		 * @return string
 		 *
 		 */
-		static function Render($sections,$title,$meta = array()){
+		public static function Render($sections,$title,$meta = array()){
 			self::SetVars($title,$meta);
 
 
@@ -91,7 +91,7 @@ namespace gp\tool\Output{
 		 * Output an end tag if appropriate
 		 *
 		 */
-		static function EndTag($node_name){
+		public static function EndTag($node_name){
 
 			$empty_nodes = array('link','track','param','area','command','col','base','meta','hr','source','img','keygen','br','wbr','input');
 			if( in_array($node_name,$empty_nodes) ){
@@ -110,7 +110,7 @@ namespace gp\tool\Output{
 		 * @return string
 		 *
 		 */
-		static function RenderSection($section,$section_num,$title,$meta = array()){
+		public static function RenderSection($section,$section_num,$title,$meta = array()){
 			self::SetVars($title,$meta);
 			return self::SectionToContent($section,$section_num);
 		}
@@ -120,7 +120,7 @@ namespace gp\tool\Output{
 		 * Return the data types available for content areas
 		 * @since 3.6
 		 */
-		static function GetTypes(){
+		public static function GetTypes(){
 			global $langmessage;
 			static $types = false;
 
@@ -139,7 +139,7 @@ namespace gp\tool\Output{
 
 
 
-		static function SetVars($title,$meta){
+		public static function SetVars($title,$meta){
 			self::$title = $title;
 			self::$label = \gp\tool::GetLabel($title);
 			self::$meta = array();
@@ -154,7 +154,7 @@ namespace gp\tool\Output{
 		 * @return string
 		 *
 		 */
-		static function SectionToContent($section_data,$section_num){
+		public static function SectionToContent($section_data,$section_num){
 
 			$section_data = \gp\tool\Plugins::Filter('SectionToContent',array($section_data,$section_num));
 
@@ -176,7 +176,7 @@ namespace gp\tool\Output{
 		 * Replace content variables in $content
 		 *
 		 */
-		static function TextContent(&$content){
+		public static function TextContent(&$content){
 
 			self::$meta += array('modified'=>'');
 
@@ -193,45 +193,38 @@ namespace gp\tool\Output{
 				);
 			$vars = \gp\tool\Plugins::Filter('ReplaceContentVars', array($vars));
 
-			$offset = 0;
-			$i = 0;
-			do{
-				$i++;
+			preg_match_all('#(\\\*)\$([a-zA-Z]+)#',$content,$matches,PREG_OFFSET_CAPTURE|PREG_SET_ORDER);
+			$matches = array_reverse($matches);
+			foreach($matches as $match){
 
-				$pos = strpos($content,'$',$offset);
-				if( $pos === false ){
-					break;
-				}
+				$match_start	= $match[0][1];
+				$match_len		= strlen($match[0][0]);
+				$var			= $match[2][0];
 
-				//escaped?
-				if( $pos > 0 ){
-					$prev_char = $content{$pos-1};
-					if( $prev_char == '\\' ){
-						$offset = $pos+1;
-						continue;
-					}
-				}
-
-				$len = strspn($content,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',$pos+1);
-				if( $len == 0 ){
-					$offset = $pos+1;
+				if( !isset($vars[$var]) ){
 					continue;
 				}
 
-				$var = substr($content,$pos+1,$len);
-				if( isset($vars[$var]) ){
-					$content = substr_replace($content,$vars[$var],$pos,$len+1);
+				// escaped ?
+				$escape_chars = strlen($match[1][0]);
+				if( $escape_chars % 2 == 1 ){
+					$escape_chars	= ($escape_chars-1)/2;
+					$replacement	= str_repeat('\\',$escape_chars) . '$' . $var;
+					$content		= substr_replace($content, $replacement, $match_start, $match_len);
+					continue;
 				}
 
-				$offset = $pos+$len;
+				$escape_chars	= ($escape_chars/2);
+				$replacement	= str_repeat('\\',$escape_chars) . $vars[$var];
+				$content		= substr_replace($content, $replacement, $match_start, $match_len);
 
-			}while(true);
+			}
 
-			/* Testing old includes system ... this breaks editing */
 			self::ReplaceContent($content);
 
 			return $content;
 		}
+
 
 		/**
 		 * Include the content of another page into the current content by replacing {{--page_name--}} with the content of page_name
@@ -239,7 +232,7 @@ namespace gp\tool\Output{
 		 * @param int $offset The current string position of the page parser
 		 *
 		 */
-		static function ReplaceContent(&$content,$offset=0){
+		public static function ReplaceContent(&$content,$offset=0){
 			global $gp_index;
 			static $includes = 0;
 
@@ -248,19 +241,20 @@ namespace gp\tool\Output{
 				return;
 			}
 
-			$pos = strpos($content,'{{',$offset);
-			if( $pos === false ){
-				return;
-			}
-			$pos2 = strpos($content,'}}',$pos);
-			if( $pos2 === false ){
+			if( !preg_match('#(<p>)?\s*{{(.*)}}\s*(</p>)?#',$content, $match, PREG_OFFSET_CAPTURE, $offset) ){
 				return;
 			}
 
-			$title = substr($content,$pos+2,$pos2-$pos-2);
-			$title = str_replace(' ','_',$title);
+
+			$matched_string		= $match[0][0];
+			$match_pos			= $match[0][1];
+			$next_offset		= $match_pos + 2;
+			$title				= $match[2][0];
+			$title				= str_replace(' ','_',$title);
+
+
 			if( !isset($gp_index[$title]) ){
-				self::ReplaceContent($content,$pos2);
+				self::ReplaceContent($content,$next_offset);
 				return;
 			}
 
@@ -269,7 +263,7 @@ namespace gp\tool\Output{
 			$file_sections	= \gp\tool\Files::Get($file,'file_sections');
 
 			if( !$file_sections ){
-				self::ReplaceContent($content,$pos2);
+				self::ReplaceContent($content,$next_offset);
 				return;
 			}
 
@@ -281,26 +275,29 @@ namespace gp\tool\Output{
 				$replacement .= '</div>';
 			}
 
-			//is {{...}} wrapped by <p>..</p>?
-			$pos3 = strpos($content,'</p>',$pos2);
-			if( $pos3 > 0 ){
-				$pieceAfter = substr($content,$pos2,($pos3-$pos2));
-				if( strpos($pieceAfter,'<') == false ){
-					$replacement = "</p>\n".$replacement."\n<p>";
-				}
+			//is {{...}} wrapped by <p>..</p>? ... replace the whole matched string
+			if( !empty($match[1][0]) && !empty($match[3][0]) ){
+				$start		= $match_pos;
+				$len		= strlen($matched_string);
+
+			// only replace the {{...}}
+			}else{
+				$start		= $match[2][1]-2;
+				$len		= strlen($match[2][0]) + 4;
 			}
 
-			$content = substr_replace($content,$replacement,$pos,$pos2-$pos+2);
-			self::ReplaceContent($content,$pos);
+			$content = substr_replace($content,$replacement,$start,$len);
+
+			self::ReplaceContent($content,$match_pos);
 		}
 
 
 		/**
 		 * Include the content of a page or gadget as specified in $data
 		 * @param array $data
-		 * @param string The included content
+		 * @return string The included content
 		 */
-		static function IncludeContent($data){
+		public static function IncludeContent($data){
 			global $langmessage, $gp_index;
 
 			if( isset($data['index']) ){
@@ -317,7 +314,7 @@ namespace gp\tool\Output{
 				if( \gp\tool::LoggedIn() ){
 					msg('Infinite loop detected: '.htmlspecialchars($requested) );
 				}
-				return;
+				return '';
 			}
 
 			if( isset($data['include_type']) ){
@@ -339,6 +336,7 @@ namespace gp\tool\Output{
 				default:
 				return self::IncludePage($requested);
 			}
+
 		}
 
 
@@ -347,7 +345,7 @@ namespace gp\tool\Output{
 		 * @param string $requested The name of the gadget to include
 		 *
 		 */
-		static function IncludeGadget($requested){
+		public static function IncludeGadget($requested){
 			global $config;
 
 			if( !isset($config['gadgets'][$requested]) ){
@@ -365,7 +363,7 @@ namespace gp\tool\Output{
 		 * @param string $requested The name of the special page to include
 		 *
 		 */
-		static function IncludeSpecial($requested){
+		public static function IncludeSpecial($requested){
 			global $langmessage;
 
 			$scriptinfo = \gp\special\Page::GetScriptInfo( $requested, false );
@@ -383,7 +381,7 @@ namespace gp\tool\Output{
 		 * @param string $requested The name of the extra content to include
 		 *
 		 */
-		static function IncludeExtra($requested){
+		public static function IncludeExtra($requested){
 			if( \gp\admin\Content\Extra::AreaExists($requested) === false && \gp\admin\Content\Extra::AreaExists($requested.'.php') === false ){
 				return '{{Extra Area Not Found: '.htmlspecialchars($requested).'}}';
 			}
@@ -399,7 +397,7 @@ namespace gp\tool\Output{
 		 * @param string $requested The name of the page to include
 		 *
 		 */
-		static function IncludePage($requested){
+		public static function IncludePage($requested){
 			global $gp_index;
 
 			$requested = str_replace(' ','_',$requested);
@@ -422,7 +420,7 @@ namespace gp\tool\Output{
 		 * Convert array of html attributes into a string for output
 		 *
 		 */
-		static function SectionAttributes($attrs,$type){
+		public static function SectionAttributes($attrs,$type){
 
 			switch($type){
 				case 'image':

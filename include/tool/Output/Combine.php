@@ -604,45 +604,61 @@ class Combine{
 	 *
 	 */
 	public static function GenerateFile($files,$type){
-		global $dataDir, $config;
+
+		$obj = new self( $files, $type);
+		return $obj->Generate();
+	}
+
+	private $type;
+	private $files;
+	private $cache_relative;
+	private $modified			= 0;
+	private $content_len		= 0;
+	private $had_imports		= false;
+	private $import_data		= [];
+
+
+	public function __construct($files, $type){
+
+		$this->files	= $files;
+		$this->type		= $type;
+
+	}
+
+	public function Generate(){
+		global $dataDir;
 
 		//get etag
-		$modified = $content_length = 0;
 		$full_paths = array();
-		foreach($files as $file){
+		foreach($this->files as $file){
 			$full_path = self::CheckFile($file);
 			if( $full_path === false ){
 				continue;
 			}
-			self::FileStat_Static($full_path,$modified,$content_length);
 			$full_paths[$file] = $full_path;
 		}
 
+		$this->FileStats($full_paths);
+
 
 		//check css imports
-		if( $type == 'css' ){
-			$had_imported = false;
-			$import_data = array();
-			$imported_file = $dataDir.'/data/_cache/import_info.php';
-			if( file_exists($imported_file) ){
-				include_once($imported_file);
-			}
+		if( $this->type == 'css' ){
+			$this->import_data	= \gp\tool\Files::Get('_cache/import_info','import_data');
+
 			foreach($full_paths as $file => $full_path){
-				if( !isset($import_data[$full_path]) ){
+				if( !isset($this->import_data[$full_path]) ){
 					continue;
 				}
-				$had_imported = true;
-				foreach($import_data[$full_path] as $imported_full){
-					self::FileStat_Static($imported_full,$modified,$content_length);
-				}
-				unset($import_data[$full_path]);
+				$this->had_imported = true;
+				$this->FileStats($this->import_data[$full_path]);
+				unset($this->import_data[$full_path]);
 			}
 		}
 
 		//check to see if file exists
-		$etag = \gp\tool::GenEtag( json_encode($files), $modified, $content_length );
-		$cache_relative = '/data/_cache/combined_'.$etag.'.'.$type;
-		$cache_file = $dataDir.$cache_relative;
+		$etag				= \gp\tool::GenEtag( json_encode($this->files), $this->modified, $this->content_len );
+		$cache_relative		= '/data/_cache/combined_'.$etag.'.'.$this->type;
+		$cache_file			= $dataDir . $cache_relative;
 		if( file_exists($cache_file) ){
 
 			// change modified time to extend cache
@@ -654,81 +670,16 @@ class Combine{
 		}
 
 		//create file
-		if( $type == 'js' ){
-			ob_start();
-			\gp\tool::jsStart();
-
-			foreach($full_paths as $full_path){
-				readfile($full_path);
-				echo ";\n";
-			}
-			$combined_content = ob_get_clean();
-
-			//minify js
-			if( $config['minifyjs'] ){
-
-				$minify_stats = array( 
-					'date' 								=> date('Y-m-d H:i'),
-					'errors' 							=> 'none',
-				);
-				$get_peak_mem 							= function_exists('memory_get_peak_usage');
-
-				$minify_stats['mem_before'] 			= $get_peak_mem ? memory_get_peak_usage(true) : false;
-				$minify_stats['size_before'] 			= strlen($combined_content);
-
-				try{
-					$combined_content 					= \JShrink\Minifier::minify($combined_content, array('flaggedComments' => false));
-				}catch( Exception $e ){
-					$minify_stats['errors'] 			= $e->getMessage();
-				}
-
-				$minify_stats['mem_after'] 				= $get_peak_mem ? memory_get_peak_usage(true) : false;
-				$minify_stats['size_after'] 			= strlen($combined_content);
-
-				$minify_stats['compression_rate'] 		= (round((1 - $minify_stats['size_after'] / $minify_stats['size_before']) * 1000) / 10) . '%';
-
-				$minify_stats['size_before'] 			= \gp\admin\Tools::FormatBytes($minify_stats['size_before']);
-				$minify_stats['size_after'] 			= \gp\admin\Tools::FormatBytes($minify_stats['size_after']);
-
-				if( $get_peak_mem ){
-					$minify_stats['allocated_memory'] 	= \gp\admin\Tools::FormatBytes( $minify_stats['mem_after'] - $minify_stats['mem_before'] );
-				}else{
-					$minify_stats['allocated_memory'] 	= 'not available';
-				}
-				unset($minify_stats['mem_before'], $minify_stats['mem_after']);
-
-				$combined_content 						= 'var minify_js_stats=' . json_encode($minify_stats) . ';' . $combined_content;
-			}
+		if( $this->type == 'js' ){
+			$combined_content = $this->CombineJS($full_paths);
 
 		}else{
-
-			$imports = $combined_content = '';
-			$new_imported = array();
-			foreach($full_paths as $file => $full_path){
-				$temp = new \gp\tool\Output\CombineCss($file);
-
-				$combined_content .= "\n/* ".$file." */\n";
-				$combined_content .= $temp->content;
-				$imports .= $temp->imports;
-				if( count($temp->imported) ){
-					$new_imported[$full_path] = $temp->imported;
-				}
-			}
-			$combined_content = $imports . $combined_content;
-
-			//save imported data
-			if( count($new_imported) || $had_imported ){
-				if( count($new_imported) ){
-					$import_data = $new_imported + $import_data;
-				}
-				\gp\tool\Files::SaveData($imported_file,'import_data',$import_data);
-			}
+			$combined_content = $this->CombineCSS($full_paths);
 		}
 
 		if( !\gp\tool\Files::Save($cache_file,$combined_content) ){
 			return false;
 		}
-
 
 		\gp\admin\Tools::CleanCache();
 
@@ -737,13 +688,98 @@ class Combine{
 
 
 	/**
+	 * Combine CSS files
+	 */
+	public function CombineCSS($full_paths){
+
+		$imports			= '';
+		$combined_content	= '';
+		$new_imported		= [];
+
+		foreach($full_paths as $file => $full_path){
+			$temp = new \gp\tool\Output\CombineCss($file);
+
+			$combined_content .= "\n/* ".$file." */\n";
+			$combined_content .= $temp->content;
+			$imports .= $temp->imports;
+			if( count($temp->imported) ){
+				$new_imported[$full_path] = $temp->imported;
+			}
+		}
+		$combined_content = $imports . $combined_content;
+
+		//save imported data
+		if( count($new_imported) || $this->had_imports ){
+			if( count($new_imported) ){
+				$this->import_data = $new_imported + $this->import_data;
+			}
+			\gp\tool\Files::SaveData('_cache/import_info','import_data',$this->import_data);
+		}
+
+		return $combined_content;
+	}
+
+
+	/**
+	 * Combine JS files
+	 *
+	 */
+	public function CombineJS($full_paths){
+		global $config;
+
+		ob_start();
+		\gp\tool::jsStart();
+
+		foreach($full_paths as $full_path){
+			readfile($full_path);
+			echo ";\n";
+		}
+		$combined_content = ob_get_clean();
+
+		//minify js
+		if( $config['minifyjs'] ){
+
+			$minify_stats = array(
+				'date' 								=> date('Y-m-d H:i'),
+				'errors' 							=> 'none',
+			);
+
+
+			$minify_stats['mem_before'] 			= memory_get_peak_usage(true);
+			$minify_stats['size_before'] 			= strlen($combined_content);
+
+			try{
+				$combined_content 					= \JShrink\Minifier::minify($combined_content, array('flaggedComments' => false));
+			}catch( Exception $e ){
+				$minify_stats['errors'] 			= $e->getMessage();
+			}
+
+			$minify_stats['mem_after'] 				= memory_get_peak_usage(true);
+			$minify_stats['size_after'] 			= strlen($combined_content);
+
+			$minify_stats['compression_rate'] 		= (round((1 - $minify_stats['size_after'] / $minify_stats['size_before']) * 1000) / 10) . '%';
+
+			$minify_stats['size_before'] 			= \gp\admin\Tools::FormatBytes($minify_stats['size_before']);
+			$minify_stats['size_after'] 			= \gp\admin\Tools::FormatBytes($minify_stats['size_after']);
+
+			$minify_stats['allocated_memory']	 	= \gp\admin\Tools::FormatBytes( $minify_stats['mem_after'] - $minify_stats['mem_before'] );
+
+			unset($minify_stats['mem_before'], $minify_stats['mem_after']);
+
+			$combined_content 						= 'var minify_js_stats=' . json_encode($minify_stats) . ';' . $combined_content;
+		}
+
+		return $combined_content;
+	}
+
+
+	/**
 	 * Make sure the file is a css or js file and that it exists
-	 * @static
+	 *
 	 */
 	public static function CheckFile(&$file){
 		global $dataDir, $dirPrefix;
-		$comment_start = '<!--';
-		$comment_end = '-->';
+		$comment = "\n<!-- %s -->\n";
 
 		$file = self::TrimQuery($file);
 
@@ -770,31 +806,35 @@ class Combine{
 		//require .js, or .css/.less/.scss
 		$ext	= \gp\tool::Ext($file);
 		if( $ext !== 'js' && $ext !== 'css' && $ext !== 'less' && $ext !== 'scss' ){
-			echo  "\n{$comment_start} File Not css, less, scss or js {$file} {$comment_end}\n";
+			echo sprintf($comment, 'File Not css, less, scss or js '.$file);
 			return false;
 		}
 
 		//paths that have been urlencoded
 		if( strpos($file,'%') !== false ){
 			$decoded_file = rawurldecode($file);
-			if( $full_path = self::CheckFileSub($decoded_file) ){
+			if( $full_path = self::FixFilePath($decoded_file) ){
 				$file = $decoded_file;
 				return $full_path;
 			}
 		}
 
 		//paths that have not been encoded
-		if( $full_path = self::CheckFileSub($file) ){
+		if( $full_path = self::FixFilePath($file) ){
 			return $full_path;
 		}
 
 
-		$full_path = $dataDir . substr($file, strlen($dirPrefix));
-		echo  "\n{$comment_start} File Not Found {$full_path} {$comment_end}\n";
+		echo sprintf($comment, 'File Not Found: '. $file);
 		return false;
 	}
 
-	public static function CheckFileSub(&$file){
+
+	/**
+	 * Change an incomplete path to a resolveable absolute file path
+	 *
+	 */
+	public static function FixFilePath(&$file){
 		global $dataDir, $dirPrefix;
 
 		//realpath returns false if file does not exist
@@ -808,6 +848,7 @@ class Combine{
 			return false;
 		}
 
+		// remove $dirPrefix from the file path before adding $dataDir
 		if( strpos($file,$dirPrefix) === 0 ){
 			$fixed = substr($file,strlen($dirPrefix));
 			$full_path = $dataDir.$fixed;
@@ -820,13 +861,18 @@ class Combine{
 		return false;
 	}
 
+	/**
+	 * Get the max modified time and sum of the content length of all the files
+	 *
+	 */
+	public function FileStats( $files ){
 
-	public static function FileStat_Static( $file_path, &$modified, &$content_length ){
-		$content_length += @filesize($file_path);
-		if( strpos($file_path,'/data/_cache/') === false ){
-			$modified = max( $modified, @filemtime($file_path) );
+		foreach($files as $file_path){
+			$this->content_len += @filesize($file_path);
+			if( strpos($file_path,'/data/_cache/') === false ){
+				$this->modified = max( $this->modified, @filemtime($file_path) );
+			}
 		}
-		return $modified;
 	}
 
 	/**

@@ -2034,7 +2034,7 @@ namespace gp{
 		/**
 		 * A more functional JSON Encode function
 		 * @param mixed $data
-		 *
+		 * @return string
 		 */
 		public static function JsonEncode($data){
 
@@ -2052,7 +2052,7 @@ namespace gp{
 				case 'integer':
 				case 'double':
 				case 'float':
-					return $data;
+					return json_encode($data);
 
 				case 'string':
 					$data = htmlspecialchars_decode(htmlspecialchars($data, ENT_SUBSTITUTE, 'UTF-8'));
@@ -2074,12 +2074,12 @@ namespace gp{
 					}
 					if( $output_index_count !== NULL ){
 						return '[' . implode(',', $output_indexed) . ']';
-					}else{
-						return '{' . implode(',', $output_associative) . '}';
 					}
-				default:
-				return ''; // Not supported
+					return '{' . implode(',', $output_associative) . '}';
+
 			}
+
+			return ''; // Not supported
 		}
 
 

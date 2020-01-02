@@ -7,54 +7,23 @@ namespace gp\tool\Output{
 
 	class Ajax{
 
-		static $script_objects	= array(
+		public static $script_objects	= array(
 									'/include/js/inline_edit/inline_editing.js'		=> 'gp_editing',
 									'/include/thirdparty/ckeditor/ckeditor.js'	=> 'CKEDITOR',
 									'/include/js/ckeditor_config.js'				=> 'CKEDITOR',
 									);
 
-		static function ReplaceContent($id,$content){
-			self::JavascriptCall('WBx.response','replace',$id,$content);
-		}
 
-		static function JavascriptCall(){
-			$args = func_get_args();
-			if( !isset($args[0]) ){
-				return;
-			}
-
-			echo array_shift($args);
-			echo '(';
-			$comma = '';
-			foreach($args as $arg){
-				echo $comma;
-				echo self::quote($arg);
-				$comma = ',';
-			}
-			echo ');';
-		}
-
-		static function quote($content){
+		public static function quote($content){
 			return \gp\tool::JsonEncode($content);
 		}
 
-		static function JsonEval($content){
-			echo '{DO:"eval"';
-			echo ',CONTENT:';
-			echo self::quote($content);
-			echo '},';
-		}
-
-		static function JsonDo($do,$selector,&$content){
+		public static function JsonDo($do,$selector,$content){
 			static $comma = '';
+
+			$json = ['DO'=>$do,'SELECTOR'=>$selector,'CONTENT'=>$content];
 			echo $comma;
-			echo '{DO:';
-			echo self::quote($do);
-			echo ',SELECTOR:';
-			echo self::quote($selector);
-			echo ',CONTENT:';
-			echo self::quote($content);
-			echo '}';
+			echo \gp\tool::JsonEncode($json);
 			$comma = ',';
 		}
 
@@ -64,12 +33,8 @@ namespace gp\tool\Output{
 		 * Sends JSON object to client
 		 *
 		 */
-		static function Response(){
+		public static function Response(){
 			global $page;
-
-			if( !is_array($page->ajaxReplace) ){
-				die();
-			}
 
 			//admin toolbar
 			self::AdminToolbar();
@@ -79,7 +44,10 @@ namespace gp\tool\Output{
 			\gp\tool\Output::PrepGadgetContent();
 
 
-			echo self::Callback();
+			self::Header();
+			$callback = self::Callback();
+
+			echo $callback;
 			echo '([';
 
 			//output content
@@ -119,7 +87,7 @@ namespace gp\tool\Output{
 		 * Add the admin toolbar content to the ajax response
 		 *
 		 */
-		static function AdminToolbar(){
+		public static function AdminToolbar(){
 			global $page;
 
 			if( !isset($_REQUEST['gpreq_toolbar']) ){
@@ -141,11 +109,10 @@ namespace gp\tool\Output{
 		 * Add the messages to the response
 		 *
 		 */
-		static function Messages(){
+		public static function Messages(){
 
-			ob_start();
-			echo GetMessages(false);
-			$content = ob_get_clean();
+			$content = GetMessages(false);
+
 			if( !empty($content) ){
 				self::JsonDo('messages','',$content);
 			}
@@ -157,7 +124,12 @@ namespace gp\tool\Output{
 		 * Check the callback parameter, die with an alert if the test fails
 		 *
 		 */
-		static function Callback(){
+		public static function Callback(){
+			global $page;
+
+			if( !is_array($page->ajaxReplace) ){
+				self::InvalidCallback();
+			}
 
 			if( !isset($_REQUEST['jsoncallback']) ){
 				self::InvalidCallback();
@@ -169,13 +141,17 @@ namespace gp\tool\Output{
 			return $match[0];
 		}
 
-		static function InvalidCallback(){
+
+		/**
+		 * Send a response with message content only
+		 *
+		 */
+		public static function InvalidCallback(){
 
 			echo '$gp.Response([';
 			self::Messages();
 			echo ']);';
 			die();
-
 		}
 
 
@@ -184,68 +160,17 @@ namespace gp\tool\Output{
 		 * Attempt to find an appropriate type within the accept header
 		 *
 		 */
-		static function Header(){
+		public static function Header(){
 
-			$accept = self::RequestHeaders('accept');
-			$mime = 'application/javascript'; //default mime
+			$accepts	= ['application/javascript'=>0.001,'application/x-javascript'=>0.0001,'text/javascript'=>0.0001];
+			$mime		= \gp\tool\Headers::AcceptMime($accepts);
 
-			if( $accept && preg_match_all('#([^,;\s]+)\s*;?\s*([^,;\s]+)?#',$accept,$matches,PREG_SET_ORDER) ){
-				$mimes = array('application/javascript','application/x-javascript','text/javascript');
-
-
-				//organize by importance
-				$accept = array();
-				$i = 1;
-				foreach($matches as $match){
-					if( isset($match[2]) ){
-						$accept[$match[1]] = $match[2];
-					}else{
-						$accept[$match[1]] = $i++;
-					}
-				}
-				arsort($accept);
-
-				//get matching mime
-				foreach($accept as $part => $priority){
-					if( in_array(trim($part),$mimes) ){
-						$mime = $part;
-						break;
-					}
-				}
-			}
-
-			//add charset
 			header('Content-Type: '.$mime.'; charset=UTF-8');
+			Header('Vary: Accept,Accept-Encoding');// for proxies
 		}
 
 
-		/**
-		 * Return a list of all headers
-		 *
-		 */
-		static function RequestHeaders($which = false){
-			$headers = array();
-			foreach($_SERVER as $key => $value) {
-				if( substr($key, 0, 5) <> 'HTTP_' ){
-					continue;
-				}
-
-				$header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
-
-				if( $which ){
-					if( strnatcasecmp($which,$header) === 0){
-						return $value;
-					}
-				}
-
-				$headers[$header] = $value;
-			}
-			if( !$which ){
-				return $headers;
-			}
-		}
-
-		static function InlineEdit($section_data){
+		public static function InlineEdit($section_data){
 
 			$section_data			+= array('type'=>'','content'=>'');
 			$scripts				= array();
@@ -272,7 +197,7 @@ namespace gp\tool\Output{
 				break;
 
 				case 'image';
-					echo 'var gp_blank_img = '.self::quote(\gp\tool::GetDir('/include/imgs/blank.gif')).';';
+					echo 'var gp_blank_img = ' . \gp\tool::JsonEncode(\gp\tool::GetDir('/include/imgs/blank.gif')) . ';';
 					$scripts[] = '/include/js/jquery.auto_upload.js';
 					$scripts[] = '/include/js/inline_edit/image_common.js';
 					$scripts[] = '/include/js/inline_edit/image_edit.js';
@@ -296,7 +221,7 @@ namespace gp\tool\Output{
 
 			echo ';if( typeof(gp_init_inline_edit) == "function" ){';
 			echo 'gp_init_inline_edit(';
-			echo self::quote($_GET['area_id']);
+			echo \gp\tool::JsonEncode($_GET['area_id']);
 			echo ','.$section_object;
 			echo ');';
 			echo '}else{alert("gp_init_inline_edit() is not defined");}';
@@ -307,11 +232,10 @@ namespace gp\tool\Output{
 		 * Send content of all files in the $scripts array to the client
 		 *
 		 */
-		static function SendScripts($scripts){
+		public static function SendScripts($scripts){
 			global $dataDir, $dirPrefix;
 
 			self::Header();
-			Header('Vary: Accept,Accept-Encoding');// for proxies
 
 			$sent				= array();
 			$scripts			= self::RemoveSent($scripts);
@@ -353,10 +277,8 @@ namespace gp\tool\Output{
 				$sent[$full_path] = true;
 
 				if( !file_exists($full_path) ){
-					if( \gp\tool::LoggedIn() ){
-						$msg = 'Admin Notice: The following file could not be found: \n\n'.$full_path;
-						echo 'if(isadmin){alert('.json_encode($msg).');}';
-					}
+					$msg = 'Admin Notice: The following file could not be found: \n\n'.$full_path;
+					echo ';if(isadmin){alert('.json_encode($msg).');}';
 					continue;
 				}
 
@@ -370,7 +292,7 @@ namespace gp\tool\Output{
 		 * Remove scripts that have already been sent to the server
 		 *
 		 */
-		static function RemoveSent($scripts){
+		public static function RemoveSent($scripts){
 
 			$cleansed			= array();
 			$defined_objects	= explode(',',$_REQUEST['defined_objects']);
@@ -404,7 +326,7 @@ namespace gp\tool\Output{
 		 * Get scripts for editing inline text using ckeditor
 		 *
 		 */
-		static function InlineEdit_Text($scripts){
+		public static function InlineEdit_Text($scripts){
 
 			// autocomplete
 			$scripts[]		= array(
@@ -419,7 +341,7 @@ namespace gp\tool\Output{
 							);
 
 			$ckeditor_basepath = \gp\tool::GetDir('/include/thirdparty/ckeditor/');
-			echo 'CKEDITOR_BASEPATH = '.self::quote($ckeditor_basepath).';';
+			echo 'CKEDITOR_BASEPATH = ' . \gp\tool::JsonEncode($ckeditor_basepath) . ';';
 
 			// config
 			$scripts[]		= array(
@@ -451,12 +373,12 @@ namespace gp\tool\Output{
 			return $scripts;
 		}
 
-		static function InlineEdit_Include($scripts){
+		public static function InlineEdit_Include($scripts){
 			$scripts[] = '/include/js/inline_edit/include_edit.js';
 			return $scripts;
 		}
 
-		static function InlineEdit_Gallery($scripts){
+		public static function InlineEdit_Gallery($scripts){
 			$scripts[] = '/include/js/jquery.auto_upload.js';
 			$scripts[] = '/include/js/inline_edit/image_common.js';
 			$scripts[] = '/include/js/inline_edit/gallery_edit_202.js';

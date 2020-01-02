@@ -299,20 +299,10 @@ namespace gp\admin{
 			}
 
 			// page draft
-			self::FilterCallback('drafts',function($item){
-				if( $item['type'] == 'page' && !\gp\admin\Tools::CanEdit($item['title']) ){
-					return true;
-				}
-				return false;
-			});
+			self::FilterDrafts();
 
 			// private page
-			self::FilterCallback('private_pages',function($item){
-				if( !\gp\admin\Tools::CanEdit($item['title']) ){
-					return true;
-				}
-				return false;
-			});
+			self::FilterPrivate();
 
 
 			foreach( self::$notifications as $notification_type => $notification ){
@@ -353,23 +343,43 @@ namespace gp\admin{
 
 		}
 
+
 		/**
-		 * Filter notifications matching a notification type with a callback
+		 * Filter private page notifications if the logged in user can't edit the page
 		 *
 		 */
-		public static function FilterCallback( $notification_type, $callback ){
+		public static function FilterPrivate(){
 
-			if( !isset(self::$notifications[$notification_type]) ){
+			if( !isset(self::$notifications['private_pages']) ){
 				return;
 			}
 
-			foreach( self::$notifications[$notification_type] as $itemkey => $item ){
+			foreach( self::$notifications['private_pages'] as $itemkey => $item ){
 
-				if( $callback($item) === true ){
-					unset(self::$notifications[$notification_type]['items'][$itemkey]);
+				if( !\gp\admin\Tools::CanEdit($item['title']) ){
+					unset(self::$notifications['drafts']['items'][$itemkey]);
 				}
 			}
+		}
 
+
+		/**
+		 * Filter draft notifications if the logged in user can't edit the page
+		 *
+		 */
+		public static function FilterDrafts(){
+
+			if( !isset(self::$notifications['drafts']) ){
+				return;
+			}
+
+			foreach( self::$notifications['drafts'] as $itemkey => $item ){
+
+				if( $item['type'] == 'page' && !\gp\admin\Tools::CanEdit($item['title']) ){
+					unset(self::$notifications['drafts']['items'][$itemkey]);
+				}
+
+			}
 		}
 
 

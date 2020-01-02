@@ -231,11 +231,9 @@ namespace gp\admin{
 			// check if id exists in notifications
 			$id_exists = false;
 			foreach( self::$notifications as $type => $notification ){
-				foreach( $notification['items'] as $item ){
-					if( isset($item['id']) && $item['id'] == $id ){
-						$id_exists = true;
-						break 2;
-					}
+				if( array_key_exists($id,$notification['items']) ){
+					$id_exists = true;
+					break;
 				}
 			}
 
@@ -348,11 +346,10 @@ namespace gp\admin{
 		public static function FilterUserDefined(){
 
 			foreach( self::$notifications as $notification_type => $notification ){
-				foreach( $notification['items'] as $itemkey => $item ){
 
-					// apply user filters
-					if( isset($item['id']) && isset(self::$filters[$item['id']]) ){
-						self::$notifications[$notification_type]['items'][$itemkey] = self::$filters[$item['id']] + $item;
+				foreach( $notification['items'] as $id => $item ){
+					if( isset(self::$filters[$id]) ){
+						self::$notifications[$notification_type]['items'][$id] = self::$filters[$id] + $item;
 					}
 				}
 			}
@@ -369,13 +366,13 @@ namespace gp\admin{
 				return;
 			}
 
-			foreach( self::$notifications[$notification_type]['items'] as $itemkey => $item ){
+			foreach( self::$notifications[$notification_type]['items'] as $id => $item ){
 
 				if( $item['type'] !== $item_type ){
 					continue;
 				}
 
-				unset(self::$notifications[$notification_type]['items'][$itemkey]);
+				unset(self::$notifications[$notification_type]['items'][$id]);
 			}
 
 		}
@@ -388,9 +385,9 @@ namespace gp\admin{
 			if( !isset(self::$notifications[$notification_type]) ){
 				return;
 			}
-			foreach( self::$notifications[$notification_type]['items'] as $itemkey => $item ){
+			foreach( self::$notifications[$notification_type]['items'] as $id => $item ){
 				if( $callback($item) === true ){
-					unset(self::$notifications[$notification_type]['items'][$itemkey]);
+					unset(self::$notifications[$notification_type]['items'][$id]);
 				}
 			}
 		}
@@ -448,6 +445,21 @@ namespace gp\admin{
 
 			$notifications	= \gp\tool\Plugins::Filter('Notifications', array($notifications));
 
+
+			// reorganize items by id
+			foreach( $notifications as $notification_type => $notification ){
+				$items = [];
+				foreach( $notification['items'] as $item ){
+					if( !isset($item['id']) ){
+						trigger_error('id not set for notification '.pre($item)); // should we create an id?
+						continue;
+					}
+					$items[$item['id']] = $item;
+				}
+				$notifications[$notification_type]['items'] = $items;
+			}
+
+
 			self::$notifications = $notifications;
 			self::ApplyFilters();
 
@@ -460,10 +472,10 @@ namespace gp\admin{
 					continue;
 				}
 
-
-				$count		= 0;
-				$priority	= 0;
+				$count				= 0;
+				$priority			= 0;
 				foreach( $notification['items'] as $item ){
+
 					if( isset($item['priority']) && is_numeric($item['priority']) && $item['priority'] > 0 ){
 						$priority = max( (int)$item['priority'], $priority );
 						$count++;
@@ -810,7 +822,7 @@ namespace gp\admin{
 
 			$private_pages = array();
 			foreach( $gp_titles as $index => $title ){
-				
+
 				if( !isset($title['vis']) || $title['vis'] !== 'private' ){
 					continue;
 				}

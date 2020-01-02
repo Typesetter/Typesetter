@@ -521,7 +521,7 @@ class Ajax extends \gp\admin\Menu{
 				continue;
 			}
 			$areas[$title] = str_replace('_', ' ', $title);
-			/* 
+			/*
 			array(
 				'title'			=> $title,
 				'file_path'		=> $folder . '/' . $title . '/page.php',
@@ -927,7 +927,7 @@ class Ajax extends \gp\admin\Menu{
 			'label'	=> str_replace('_', ' ', $area),
 		);
 
-		if( !$this->SaveNew($insert) ){ 
+		if( !$this->SaveNew($insert) ){
 			msg($langmessage['OOPS'] . ' (Adding Extra Content Area failed)');
 			$this->RestoreSettings();
 			return false;
@@ -965,7 +965,7 @@ class Ajax extends \gp\admin\Menu{
 		$insert			= array();
 		$insert[$key]	= $array;
 
-		if( !$this->SaveNew($insert) ){ 
+		if( !$this->SaveNew($insert) ){
 			$this->RestoreSettings();
 			return false;
 		}
@@ -1286,7 +1286,7 @@ class Ajax extends \gp\admin\Menu{
 				return;
 			}
 
-			\gp\admin\Notifications::UpdateNotifications(true); // passing true = add to $page->ajaxReplace
+			\gp\admin\Notifications::UpdateNotifications();
 		}
 	}
 

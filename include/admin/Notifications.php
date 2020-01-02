@@ -159,7 +159,7 @@ namespace gp\admin{
 				case 'toggle_priority':
 					if( !empty($_REQUEST['id']) ){
 						self::SetFilter($_REQUEST['id'], 'toggle_priority');
-						self::UpdateNotifications(true);
+						self::UpdateNotifications();
 						self::ListNotifications();
 						return 'return';
 					}
@@ -171,7 +171,7 @@ namespace gp\admin{
 						is_numeric($_REQUEST['new_priority'])
 						){
 						self::SetFilter($_REQUEST['id'], 'set_priority', $_REQUEST['new_priority']);
-						self::UpdateNotifications(true);
+						self::UpdateNotifications();
 						self::ListNotifications();
 						return 'return';
 					}
@@ -679,12 +679,10 @@ namespace gp\admin{
 
 
 		/**
-		* Update Notifications
-		* update the Notifications panelgroup in Admin Menu via AJAX
-		* @param $ajax_include boolean if panelgroup shall be added to $page->ajaxReplace or die with a single js callback
+		* Update the Notifications panelgroup in Admin Menu via AJAX
 		*
 		*/
-		public static function UpdateNotifications($ajax_include=false){
+		public static function UpdateNotifications(){
 			global $page;
 
 			if( !\gp\admin\Tools::HasPermission('Admin/Notifications') ){
@@ -695,19 +693,7 @@ namespace gp\admin{
 			self::GetNotifications();
 			$panelgroup = ob_get_clean();
 
-			if( $ajax_include ){
-				if( !is_array($page->ajaxReplace) ){
-					$page->ajaxReplace = array();
-				}
-				$page->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
-				return;
-			}
-
-			echo \gp\tool\Output\Ajax::Callback();
-			echo '([';
-			echo '{DO:"replace",SELECTOR:".admin-panel-notifications",CONTENT:' . \gp\tool::JsonEncode($panelgroup) . '}';
-			echo ']);';
-			die();
+			$page->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
 		}
 
 		public static function debug($msg){

@@ -481,6 +481,7 @@ namespace gp\admin{
 			$expand_class			= ''; // expand_child_click
 			$badge_format			= ' <span class="dashboard-badge">(%2$d)</b>';
 			$panel_class			= '';
+			$default_style			= ['badge_bg'=>'transparent','color'=>'#fff'];
 
 			if( $in_panel ){
 				$badge_format		= ' <b class="admin-panel-badge" style="%1$s">%2$d</b>';
@@ -517,14 +518,11 @@ namespace gp\admin{
 				$title				= self::GetTitle($notification['title']);
 				$badge_html			= '';
 				$badge_style		= '';
+				$notification		+= $default_style;
 
 
 				if( $count > 0 ){
-					$badge_style		.= !empty($notification['badge_bg']) ?
-												('background-color:' . $notification['badge_bg'] . ';') : '';
-					$badge_style		.= !empty($notification['badge_color']) ?
-												(' color:' . $notification['badge_color'] . ';') : '';
-
+					$badge_style		= 'background-color:'.$notification['badge_bg'].';color:'.$notification['badge_color'].';';
 					$badge_html			= sprintf($badge_format, $badge_style, $count);
 				}
 

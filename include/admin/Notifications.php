@@ -444,6 +444,17 @@ namespace gp\admin{
 			$main_badge_style_attr	= '';
 			$priority 				= 0;
 			$links 					= array();
+			$expand_class			= ''; // expand_child_click
+			$badge_format			= ' <span class="dashboard-badge">(%2$d)</b>';
+			$panel_class			= '';
+
+			if( $in_panel ){
+				$badge_format		= ' <b class="admin-panel-badge" %1$s>%2$d</b>';
+				$expand_class		= 'expand_child';
+				$panel_class		= 'admin-panel-notifications';
+			}
+
+
 
 			foreach(self::$notifications as $type => $notification ){
 
@@ -479,17 +490,10 @@ namespace gp\admin{
 					$badge_style		.= !empty($notification['badge_color']) ?
 												(' color:' . $notification['badge_color'] . ';') : '';
 					$badge_style_attr	 = !empty($badge_style) ? ' style="' . $badge_style . '"' : '';
-					if( $in_panel ){
-						$badge_html		 = ' <b class="admin-panel-badge"' . $badge_style_attr . '>' . $count . '</b>';
-					}else{
-						$badge_html		 = ' <span class="dashboard-badge">(' . $count . ')</b>';
-					}
+
+					$badge_html			= sprintf($badge_format, $badge_style_attr, $count);
 				}
 
-				$expand_class = 'expand_child';
-				if( !$in_panel ){
-					$expand_class = ''; // expand_child_click
-				}
 
 				ob_start();
 				echo '<li class="' . $expand_class . '">';
@@ -515,8 +519,7 @@ namespace gp\admin{
 			}
 
 			$panel_label	= $langmessage['Notifications'];
-			$panel_class	= $in_panel ? 'admin-panel-notifications' : '';
-
+		
 			$badge_html		= $total_count > 0 ?
 								'<b class="admin-panel-badge"' . $main_badge_style_attr . '>' . $total_count . '</b>' :
 								'';

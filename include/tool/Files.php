@@ -1206,15 +1206,23 @@ namespace gp\tool{
 		public static function FilePath($path){
 			global $dataDir;
 
-			if( substr($path, -4) !== '.php' ){
-				$path = $dataDir . '/data/' . ltrim($path, '/') . '.php';
+			$ext = pathinfo($path, PATHINFO_EXTENSION);
+
+			if( $ext === 'gpjson' ){
+				$path = substr($path,0,-7);
+
+			}elseif( $ext === 'php' ){
+				$path = substr($path,0,-4);
+
+			}else{
+				$path = $dataDir . '/data/' . ltrim($path, '/');
 			}
 
 			if( gp_data_type === '.json' ){
-				$path		= substr($path, 0, -4) . '.gpjson';
+				return $path . '.gpjson';
 			}
 
-			return $path;
+			return $path . '.php';
 		}
 
 

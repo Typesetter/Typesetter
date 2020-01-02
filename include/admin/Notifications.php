@@ -299,10 +299,21 @@ namespace gp\admin{
 			}
 
 			// page draft
-			self::FilterDrafts();
+			self::FilterCallback('drafts',function($item){
+				if( $item['type'] == 'page' && !\gp\admin\Tools::CanEdit($item['title']) ){
+					return true;
+				}
+				return false;
+			});
+
 
 			// private page
-			self::FilterPrivate();
+			self::FilterCallback('private_pages',function($item){
+				if( !\gp\admin\Tools::CanEdit($item['title']) ){
+					return true;
+				}
+				return false;
+			});
 
 			// apply user filters
 			self::FilterUserDefined();
@@ -310,9 +321,9 @@ namespace gp\admin{
 
 		/**
 		 * Apply user defined (display) filters
-		 * 
+		 *
 		 */
-		public function FilterUserDefined(){
+		public static function FilterUserDefined(){
 
 			foreach( self::$notifications as $notification_type => $notification ){
 				foreach( $notification['items'] as $itemkey => $item ){
@@ -350,42 +361,18 @@ namespace gp\admin{
 
 		}
 
-
 		/**
-		 * Filter private page notifications if the logged in user can't edit the page
+		 * Filter notifications matching a notification type with a callback
 		 *
 		 */
-		public static function FilterPrivate(){
-
-			if( !isset(self::$notifications['private_pages']) ){
+		public static function FilterCallback( $notification_type, $callback ){
+			if( !isset(self::$notifications[$notification_type]) ){
 				return;
 			}
-
-			foreach( self::$notifications['private_pages'] as $itemkey => $item ){
-
-				if( !\gp\admin\Tools::CanEdit($item['title']) ){
-					unset(self::$notifications['drafts']['items'][$itemkey]);
+			foreach( self::$notifications[$notification_type] as $itemkey => $item ){
+				if( $callback($item) === true ){
+					unset(self::$notifications[$notification_type]['items'][$itemkey]);
 				}
-			}
-		}
-
-
-		/**
-		 * Filter draft notifications if the logged in user can't edit the page
-		 *
-		 */
-		public static function FilterDrafts(){
-
-			if( !isset(self::$notifications['drafts']) ){
-				return;
-			}
-
-			foreach( self::$notifications['drafts'] as $itemkey => $item ){
-
-				if( $item['type'] == 'page' && !\gp\admin\Tools::CanEdit($item['title']) ){
-					unset(self::$notifications['drafts']['items'][$itemkey]);
-				}
-
 			}
 		}
 

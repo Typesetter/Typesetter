@@ -24,8 +24,8 @@ class Notifications_Example{
 					'label'		=> 'Check back home!',
 					'priority'	=> 80,				// optional: an integer > 100 will overtake working drafts notifications
 					'id'		=> hash('crc32b', 'Example Note Check back home!'),	// needs to be unique amongst other notes for filtering
-																			// crc32 should be sufficient but you can use stronger hashing
-					'action'	=> '<a target="_blank" href="' . CMS_DOMAIN . '">' . CMS_READABLE_DOMAIN . '</a>',
+																					// crc32 should be sufficient but you can use stronger hashing
+					'action'	=> '<a target="_blank" href="' . \CMS_DOMAIN . '">' . \CMS_READABLE_DOMAIN . '</a>',
 				),
 
 				array(

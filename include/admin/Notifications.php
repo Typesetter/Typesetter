@@ -271,28 +271,37 @@ namespace gp\admin{
 			// debug('$gpAdmin= ' . pre($gpAdmin));
 			self::GetFilters();
 
+			// Remove items lacking user permissions and therefore cannot be dealt with anyway
+
+			// debug / development
+			if( $gpAdmin['granted'] != 'all' || $gpAdmin['editing'] != 'all' ){
+				self::FilterType('debug','superuser');
+			}
+
+			// extra content draft
+			if( !\gp\admin\Tools::HasPermission('Admin/Extra') ){
+				self::FilterType('drafts','extra');
+			}
+
+			// theme update
+			if( !\gp\admin\Tools::HasPermission('Admin_Theme_Content/Remote') ){
+				self::FilterType('updates','theme');
+			}
+
+			// addon update
+			if( !\gp\admin\Tools::HasPermission('Admin/Addons/Remote') ){
+				self::FilterType('updates','plugin');
+			}
+
+			// core update
+			if( !\gp\admin\Tools::HasPermission('Admin/Uninstall') ){ // can't find a permission for core updates so I use Uninstall
+				self::FilterType('updates','core');
+			}
+
+
 			foreach( self::$notifications as $notification_type => $notification ){
 				foreach( $notification['items'] as $itemkey => $item ){
 
-					// Remove items lacking user permissions and therefore cannot be dealt with anyway
-
-					// debug / development
-					if( $notification_type == 'debug' &&
-						$item['type'] == 'superuser' &&
-						($gpAdmin['granted'] != 'all' || $gpAdmin['editing'] != 'all' )
-						){
-						unset(self::$notifications[$notification_type]['items'][$itemkey]);
-						continue;
-					}
-
-					// extra content draft
-					if( $notification_type == 'drafts' &&
-						$item['type'] == 'extra' &&
-						!\gp\admin\Tools::HasPermission('Admin/Extra')
-						){
-						unset(self::$notifications[$notification_type]['items'][$itemkey]);
-						continue;
-					}
 
 					// page draft
 					if( $notification_type == 'drafts' &&
@@ -305,33 +314,6 @@ namespace gp\admin{
 
 					// private page
 					if( $notification_type == 'private_pages' && !\gp\admin\Tools::CanEdit($item['title']) ){
-						unset(self::$notifications[$notification_type]['items'][$itemkey]);
-						continue;
-					}
-
-					// theme update
-					if( $notification_type == 'updates' &&
-						$item['type'] == 'theme' &&
-						!\gp\admin\Tools::HasPermission('Admin_Theme_Content/Remote')
-						){
-						unset(self::$notifications[$notification_type]['items'][$itemkey]);
-						continue;
-					}
-
-					// addon update
-					if( $notification_type == 'updates' &&
-						$item['type'] == 'plugin' &&
-						!\gp\admin\Tools::HasPermission('Admin/Addons/Remote')
-						){
-						unset(self::$notifications[$notification_type]['items'][$itemkey]);
-						continue;
-					}
-
-					// core update
-					if( $notification_type == 'updates' &&
-						$item['type'] == 'core' &&
-						!\gp\admin\Tools::HasPermission('Admin/Uninstall') // can't find a permission for core updates so I use Uninstall
-						){
 						unset(self::$notifications[$notification_type]['items'][$itemkey]);
 						continue;
 					}
@@ -349,6 +331,26 @@ namespace gp\admin{
 			}
 		}
 
+		/**
+		 * Filter notificatiosn matching a notification type and item type
+		 *
+		 */
+		public static FilterType( $notification_type, $item_type ){
+
+			if( !isset(self::$notifications[$notification_type]) ){
+				return;
+			}
+
+			foreach( self::$notifications[$notification_type] as $itemkey => $item ){
+
+				if( $item['type'] !== $item_type ){
+					continue;
+				}
+
+				unset(self::$notifications[$notification_type]['items'][$itemkey]);
+			}
+			
+		}
 
 
 		/**

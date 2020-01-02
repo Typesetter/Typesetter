@@ -32,6 +32,10 @@ namespace gp\admin{
 
 			foreach( self::$notifications as $type => $notification ){
 
+				if( $filter_list_by && $type != $filter_list_by ){
+					continue;
+				}
+
 				$title = self::GetTitle($notification['title']);
 				echo '<h3>' . $title . '</h3>';
 				echo '<table class="bordered full_width">';

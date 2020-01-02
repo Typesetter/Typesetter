@@ -258,6 +258,7 @@ namespace gp\admin{
 
 			self::GetFilters();
 
+
 			// Remove items lacking user permissions and therefore cannot be dealt with anyway
 
 			// debug / development
@@ -337,7 +338,7 @@ namespace gp\admin{
 				return;
 			}
 
-			foreach( self::$notifications[$notification_type] as $itemkey => $item ){
+			foreach( self::$notifications[$notification_type]['items'] as $itemkey => $item ){
 
 				if( $item['type'] !== $item_type ){
 					continue;
@@ -356,7 +357,7 @@ namespace gp\admin{
 			if( !isset(self::$notifications[$notification_type]) ){
 				return;
 			}
-			foreach( self::$notifications[$notification_type] as $itemkey => $item ){
+			foreach( self::$notifications[$notification_type]['items'] as $itemkey => $item ){
 				if( $callback($item) === true ){
 					unset(self::$notifications[$notification_type]['items'][$itemkey]);
 				}

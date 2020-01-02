@@ -674,13 +674,15 @@ namespace gp\admin\Content{
 
 		/**
 		 * Build a list of allowed file extensions
-		 * 
+		 *
 		 */
 		public static function AllowedExtensions(){
 			global $upload_extensions_allow, $upload_extensions_deny, $config;
 			static $allowed_types = false;
 
-			if( !$allowed_types ){
+			if( $allowed_types === false ){
+
+				$allowed_types = array();
 
 				if( is_string($upload_extensions_deny) && strtolower($upload_extensions_deny) === 'all' ){
 					$allowed_types = array();

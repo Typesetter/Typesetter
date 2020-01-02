@@ -754,13 +754,19 @@ namespace gp\admin\Content{
 			if( !$file ){
 				return;
 			}
-			$full_path = $this->currentDir.'/'.$file;
-			$rel_path = '/data/_uploaded'.$this->subdir.'/'.$file;
+
+			$full_path		= $this->currentDir.'/'.$file;
+			$rel_path		= '/data/_uploaded'.$this->subdir.'/'.$file;
+			$thumb_path		= \gp\tool::ThumbnailPath($full_path);
+
 
 			if( !\gp\tool\Files::RmAll($full_path) ){
 				message($langmessage['OOPS']);
 				return;
 			}
+
+			\gp\tool\Files::RmAll($thumb_path);
+
 
 			$this->page->ajaxReplace[] = array('img_deleted','',$rel_path);
 			$this->page->ajaxReplace[] = array('img_deleted_id','',self::ImageId($rel_path));

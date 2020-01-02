@@ -221,7 +221,7 @@
 				if( classname.indexOf('gallery-theme-') === 0 
 					|| classname.indexOf('gallery-size-') === 0
 					|| classname.indexOf('gallery-color-') === 0 ){
-					$('#' + classname).click();
+					$('#' + classname).trigger('click');
 				}
 			});
 		};
@@ -428,19 +428,13 @@
 			 * Show/Hide Edit Links
 			 *
 			 */
-			$(document).delegate('#gp_current_images span',{
-				'mousemove.gp_edit':function(){
+			$(document).on('mousemove.gp_edit', '#gp_current_images span', function(){
 					var offset = $(this).offset();
 					edit_links.show().css({'left':offset.left,'top':offset.top});
 					current_image = this;
-				},
-				'mouseleave.gp_edit':function(){
+				}).on('mouseleave.gp_edit mousedown.gp_edit', '#gp_current_images span', function(){
 					edit_links.hide();
-				},
-				'mousedown.gp_edit':function(){
-					edit_links.hide();
-				}
-			});
+				});
 
 
 			/**
@@ -461,7 +455,7 @@
 
 				current_image	= GetCurrentImage(this);
 				var $li			= $(current_image);
-				var caption		= $li.find('.caption').html() || $li.find('a:first').attr('title'); //title attr for backwards compat
+				var caption		= $li.find('.caption').html() || $li.find('a').first().attr('title'); //title attr for backwards compat
 
 
 				var popup = '<div class="inline_box" id="gp_gallery_caption"><form><h3>'+gplang.cp+'</h3>'

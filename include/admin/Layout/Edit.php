@@ -239,7 +239,7 @@ class Edit extends \gp\admin\Layout{
 		echo '<button name="cmd" type="submit" value="PreviewCSS" class="gpsubmit gpdisabled" disabled="disabled" data-cmd="preview_css">'.$langmessage['preview'].'</button>';
 
 		// save
-		echo '<button name="cmd" type="submit" value="SaveCSS" class="gpsubmit gpdisabled" disabled="disabled" data-cmd="save_css">'.$langmessage['save'].'</button>'; 
+		echo '<button name="cmd" type="submit" value="SaveCSS" class="gpsubmit gpdisabled" disabled="disabled" data-cmd="save_css">'.$langmessage['save'].'</button>';
 
 		// reset
 		echo '<input type="reset" class="gpcancel gpdisabled" disabled="disabled" data-cmd="reset_css" />';
@@ -365,7 +365,9 @@ class Edit extends \gp\admin\Layout{
 
 		if( count($style_files) ){
 
-			$compiled		= \gp\tool\Output\Css::ParseLess( $style_files );
+			$parsed_data			= \gp\tool\Output\Css::ParseLess( $style_files );
+			$compiled				= $parsed_data[0];
+
 
 			if( $compiled === false ){
 				message($langmessage['OOPS'].' (Invalid LESS)');
@@ -404,7 +406,8 @@ class Edit extends \gp\admin\Layout{
 
 		$style_files[]		= $dir.'/style.scss';
 
-		$compiled			= \gp\tool\Output\Css::ParseScss($style_files);
+		$parsed_data			= \gp\tool\Output\Css::ParseScss($style_files);
+		$compiled				= $parsed_data[0];
 
 		if( $compiled === false ){
 			message($langmessage['OOPS'].' (Invalid SCSS)');
@@ -522,7 +525,7 @@ class Edit extends \gp\admin\Layout{
 				echo '<tr><th colspan="2">&nbsp;</th></tr>';
 
 				$extrasFolder	= $dataDir.'/data/_extra';
-				$files			= scandir($extrasFolder);
+				$files			= scandir($extrasFolder) or [];
 				asort($files);
 				foreach($files as $file){
 
@@ -663,7 +666,7 @@ class Edit extends \gp\admin\Layout{
 
 		//figure out what we're inserting
 		$addtype =& $_REQUEST['addtype'];
-		switch($_REQUEST['addtype']){
+		switch($addtype){
 
 			case 'new_extra':
 				$extra_name = $this->NewExtraArea();
@@ -774,13 +777,14 @@ class Edit extends \gp\admin\Layout{
 	/**
 	 * Get the position of $gpOutCmd in $container_info
 	 *
+	 * @return int|false
 	 */
 	public function ContainerWhere( $gpOutCmd, &$container_info, $warn = true){
 		global $langmessage;
 
 		$where = array_search($gpOutCmd,$container_info);
 
-		if( ($where === null) || ($where === false) ){
+		if( !is_int($where) ){
 			if( $warn ){
 				message($langmessage['OOPS'].' (Not found in container)');
 			}

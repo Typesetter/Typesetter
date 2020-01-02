@@ -8,7 +8,7 @@ if( typeof(gp_Image_Common) == 'undefined' ){
 		 * Folder drop down
 		 *
 		 */
-		$('body').click(function(evt){
+		$('body').on('click', function(evt){
 
 			var $area = false;
 			if( evt.target ){

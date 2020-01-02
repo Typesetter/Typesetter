@@ -54,7 +54,7 @@
 				ShowInfo(div);
 				$gp.loading();
 
-				data = jQuery.param(data,true);
+				data = $.param(data,true);
 				$gp.postC( window.location.href , data);
 
 				return;
@@ -76,10 +76,10 @@
 		 * Prepare for the menu to be refreshed
 		 *
 		 */
-		gpresponse.gp_menu_prep = function(){
+		$gp.response.gp_menu_prep = function(){
 
 			//get id of .current
-			var $current	= $('.current:first');
+			var $current	= $('.current').first();
 			current_id		= $current.attr('id');
 
 			//get index of .current
@@ -92,7 +92,7 @@
 		 * Make sure new menu html sent from the server asynchronously is sortable
 		 *
 		 */
-		gpresponse.gp_menu_refresh = function(j){
+		$gp.response.gp_menu_refresh = function(j){
 
 			$sortable_area.nestedSortable('refresh');
 
@@ -107,7 +107,7 @@
 				}
 
 				if( !$current || !$current.length ){
-					$current = $('.gp_label:first').parent();
+					$current = $('.gp_label').first().parent();
 				}
 			}
 			ShowInfo($current);
@@ -222,7 +222,7 @@
 		function InfoHtml($current){
 
 			var this_html			= info_html,
-				data				= jQuery.extend({}, $current.find('.gp_label').data('json')), //clone the json object
+				data				= $.extend({}, $current.find('.gp_label').data('json')), //clone the json object
 				multiple_selected	= ($current.length > 1),
 				$current_li			= $current.closest('li');
 
@@ -374,7 +374,7 @@
 		/*
 		 * Menu Type Selector
 		 */
-		$('#gp_menu_select').change(function(){
+		$('#gp_menu_select').on('change', function(){
 			SaveSettings();
 
 			//similar to reload, but it doesn't initiate post resend
@@ -406,7 +406,7 @@
 		 */
 
 		function init(){
-			var $new_current = $('#admin_menu').find('div:first');
+			var $new_current = $('#admin_menu').find('div').first();
 			ShowInfo($new_current);
 			SaveSettings();
 		}

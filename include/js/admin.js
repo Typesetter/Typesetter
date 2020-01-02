@@ -17,7 +17,7 @@ $gp.editors			= [];		// storage for editing objects
  */
 $gp.Coords = function(area){
 	if( area.hasClass('inner_size') ){
-		area = area.children(':first');
+		area = area.children().first();
 	}
 	var loc	= area.offset();
 	loc.w	= area.outerWidth();
@@ -392,8 +392,8 @@ $gp.AdminBoxC = function(data, options){
 			+ '" style="width:' + box_width + 'px"></div>')
 		.find('#gp_admin_boxc')
 		.html(data)
-		.find('input:visible:first')
-		.focus();
+		.find('input:visible').first()
+		.trigger('focus');
 
 	$('.messages').detach();
 
@@ -476,7 +476,7 @@ $gp.links.dd_menu = function(evt){
 	//scroll to show selected
 	var $selected = $list.find('.selected');
 	if( $selected.length ){
-		var $ul = $list.find('ul:first');
+		var $ul = $list.find('ul').first();
 		var pos = $list.find('.selected').prev().prev().prev().position();
 		if( pos ){
 			$ul.scrollTop( pos.top + $ul.scrollTop() );
@@ -599,7 +599,7 @@ $gp.links.toggle_panel = function(evt){
 		c = 1;
 	}
 	if( !panel.hasClass('toggledmin') ){
-		panel.unbind('mouseenter touchstart').bind('mouseenter touchstart',function(event){panel.unbind(event).removeClass('toggledmin');});
+		panel.off('mouseenter touchstart').on('mouseenter touchstart',function(event){panel.off(event).removeClass('toggledmin');});
 	}
 	panel.attr('class','keep_viewable '+classes);
 
@@ -684,19 +684,11 @@ $gp.links.gpabox = function(evt){
 	evt.preventDefault();
 	$gp.loading();
 	var href = $gp.jPrep(this.href)+'&gpx_content=gpabox';
-	$.getJSON(href,$gp.Response);
-};
+	var this_context = this;
+	$.getJSON(href,function(data,textStatus,jqXHR){
+		$gp.Response.call(this_context,data,textStatus,jqXHR);
+	});
 
-
-/**
- * Almost same as gpabox but used to replace an already open modal box with a new one,
- * without showing the overlay and fadeIn effect.
- * Should only be used for links inside a modal box to replace the same box
- */
-$gp.links.gprabox = function(evt){
-	evt.preventDefault();
-	var href = $gp.jPrep(this.href)+'&gpx_content=gprabox';
-	$.getJSON(href, $gp.Response);
 };
 
 
@@ -706,7 +698,7 @@ $gp.links.gprabox = function(evt){
  */
 $gp.links.add_table_row = function(evt){
 	var $tr = $(this).closest('tr');
-	var $new_row = $tr.closest('tbody').find('tr:first').clone();
+	var $new_row = $tr.closest('tbody').find('tr').first().clone();
 	$new_row.find('.class_only').remove();
 	$new_row.find('input').val('').attr('value','');
 	$tr.before($new_row);
@@ -786,6 +778,16 @@ $gp.response.location = function(obj){
 	window.setTimeout(function(){
 		window.location = obj.SELECTOR;
 	},obj.CONTENT);
+};
+
+
+/**
+ * toggle the isPrivate class for the <html> element
+ * obj.SELECTOR must evaluate as true or false
+ *
+ */
+$gp.response.toggle_vis_class = function(obj){
+	$('html').toggleClass('isPrivate', !!obj.SELECTOR);
 };
 
 
@@ -877,7 +879,7 @@ $(function(){
 		return;
 	}
 
-	$('body').addClass('gpAdmin');
+	$('body, html').addClass('gpAdmin');
 
 	$gp.IndicateDraft();
 
@@ -904,7 +906,7 @@ $(function(){
 		var timeout = false, overlay, lnk_span=false, edit_area, highlight_box, fixed_pos = false;
 
 		overlay = $gp.div('gp_edit_overlay');
-		overlay.click(function(evt){
+		overlay.on('click', function(evt){
 
 			//if a link is clicked, prevent the overlay from being shown right away
 			var target = $(evt.target);
@@ -965,7 +967,7 @@ $(function(){
 			rmNoOverlay(edit_area);
 		});
 
-		$gp.$win.scroll(function(){
+		$gp.$win.on('scroll', function(){
 			SpanPosition();
 		});
 
@@ -1088,7 +1090,7 @@ $(function(){
 			lnk_span
 				.css({'left':'auto','top':0,'right':0,'position':'absolute'})
 				.removeClass('gp_hover')
-				.unbind('mouseenter touchstart')
+				.off('mouseenter touchstart')
 				.one('mouseenter touchstart',function(){
 					if( edit_area.hasClass('gp_no_overlay') ){
 						return;
@@ -1174,7 +1176,7 @@ $(function(){
 
 
 		//keep expanding areas within the viewable window
-		$('.in_window').parent().bind('mouseenter touchstart',function(){
+		$('.in_window').parent().on('mouseenter touchstart',function(){
 			var $this = $(this);
 			var panel = $this.children('.in_window').css({'right':'auto','left':'100%','top':0});
 			window.setTimeout(function(){
@@ -1266,7 +1268,7 @@ function SimpleDrag(selector, drag_area, positioning, callback_done){
 		}
 
 
-		$gp.$doc.bind('mousemove.sdrag',function(e){
+		$gp.$doc.on('mousemove.sdrag',function(e){
 
 			//initiate the box
 			if( !box ){
@@ -1285,9 +1287,9 @@ function SimpleDrag(selector, drag_area, positioning, callback_done){
 
 
 
-		$gp.$doc.unbind('mouseup.sdrag').bind('mouseup.sdrag',function(e){
+		$gp.$doc.off('mouseup.sdrag').on('mouseup.sdrag',function(e){
 			var newposleft,newpostop,pos_obj;
-			$gp.$doc.unbind('mousemove.sdrag mouseup.sdrag');
+			$gp.$doc.off('mousemove.sdrag mouseup.sdrag');
 
 			if( !box ){
 				return false;
@@ -1379,7 +1381,7 @@ function SimpleDrag(selector, drag_area, positioning, callback_done){
 		}
 	}
 
-	$gp.$win.resize(function(){
+	$gp.$win.on('resize', function(){
 		$('.keep_viewable').each(function(){
 			KeepViewable($(this),false);
 		});
@@ -1397,7 +1399,7 @@ $gp.response.renameprep = function(){
 
 	var $form			= $('#gp_rename_form');
 	var old_title		= $('#old_title').val().toLowerCase();
-	var $new_title		= $form.find('input.new_title').bind('keyup change',ShowRedirect);
+	var $new_title		= $form.find('input.new_title').on('keyup change',ShowRedirect);
 	var space_char		= $('#gp_space_char').val();
 
 
@@ -1405,7 +1407,7 @@ $gp.response.renameprep = function(){
 		$(b).fadeTo(400,0.6);
 	});
 
-	$('input.title_label').bind('keyup change',SyncSlug).change();
+	$('input.title_label').on('keyup change', SyncSlug).trigger('change');
 
 	$gp.links.showmore = function(){
 		$('#gp_rename_table tr').css('display','table-row');

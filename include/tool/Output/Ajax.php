@@ -52,14 +52,8 @@ namespace gp\tool\Output{
 
 			//output content
 			if( !empty($_REQUEST['gpx_content']) ){
-				switch($_REQUEST['gpx_content']){
-					case 'gpabox':
-						self::JsonDo('admin_box_data', '', $page->contentBuffer);
-					break;
-					case 'gprabox':
-						self::JsonDo('admin_box_replace', '', $page->contentBuffer);
-					break;
-				}
+				self::JsonDo($_REQUEST['gpx_content'], '', $page->contentBuffer);
+				
 			}elseif( in_array('#gpx_content', $page->ajaxReplace) ){
 				$replace_id = '#gpx_content';
 

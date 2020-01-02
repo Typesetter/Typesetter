@@ -80,7 +80,7 @@
 
 			save_obj.alt		= field_a.value;
 
-			return jQuery.param( save_obj )+'&cmd=save_inline';
+			return $.param( save_obj )+'&cmd=save_inline';
 		}
 
 		this.SaveData = SaveData;
@@ -121,7 +121,7 @@
 			$gp.links.gp_gallery_add	= UseImage;
 			$gp.links.deafult_sizes		= ShowImages;
 
-			$gp.$win.resize();
+			$gp.$win.trigger('resize');
 		}
 
 		this.sleep = function(){

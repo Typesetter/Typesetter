@@ -8,9 +8,8 @@
   %grid-column {
     position: relative;
     width: 100%;
-    min-height: 1px; // Prevent columns from collapsing when empty
-    padding-right: ($gutter / 2);
-    padding-left: ($gutter / 2);
+    padding-right: $gutter / 2;
+    padding-left: $gutter / 2;
   }
 
   @each $breakpoint in map-keys($breakpoints) {
@@ -30,19 +29,21 @@
     @include media-breakpoint-up($breakpoint, $breakpoints) {
       // Provide basic `.col-{bp}` classes for equal-width flexbox columns
       .col#{$infix} {
-        // ########## use VP-mixins ##########
         // flex-basis: 0;
         @include vp-flex-basis(0);
         // flex-grow: 1;
         @include vp-flex-grow(1);
         max-width: 100%;
       }
+
+      @for $i from 1 through $grid-row-columns {
+        .row-cols#{$infix}-#{$i} {
+          @include row-cols($i);
+        }
+      }
+
       .col#{$infix}-auto {
-        // ########## use VP-mixins ##########
-        // flex: 0 0 auto;
-        @include vp-flex(0 0 auto);
-        width: auto;
-        max-width: none; // Reset earlier grid tiers
+        @include make-col-auto();
       }
 
       @for $i from 1 through $columns {
@@ -51,18 +52,21 @@
         }
       }
 
-      // ########## use VP-mixins ##########
-      // .order#{$infix}-first { order: -1; }
-      .order#{$infix}-first { @include vp-order(-1); }
+      .order#{$infix}-first {
+        // order: -1;
+        @include vp-order(-1);
+      }
 
-      // ########## use VP-mixins ##########
-      // .order#{$infix}-last { order: $columns + 1; }
-      .order#{$infix}-last { @include vp-order($columns + 1); }
+      .order#{$infix}-last {
+        // order: $columns + 1;
+        @include vp-order($columns + 1);
+      }
 
       @for $i from 0 through $columns {
-        // ########## use VP-mixins ##########
-        // .order#{$infix}-#{$i} { order: $i; }
-        .order#{$infix}-#{$i} { @include vp-order($i); }
+        .order#{$infix}-#{$i} {
+          // order: $i;
+          @include vp-order($i);
+        }
       }
 
       // `$columns - 1` because offsetting by the width of an entire row isn't possible

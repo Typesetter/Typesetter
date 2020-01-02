@@ -45,7 +45,7 @@ class Edit extends \gp\Page{
 	 * Run Commands
 	 *
 	 */
-	protected function RunCommands($cmd){
+	public function RunCommands($cmd){
 
 		//allow addons to effect page actions and how a page is displayed
 		$cmd = \gp\tool\Plugins::Filter('PageRunScript', array($cmd));
@@ -944,20 +944,6 @@ class Edit extends \gp\Page{
 
 
 	/**
-	 * Update Section Clipboard links via AJAX
-	 *
-	 */
-	public static function UpdateSectionClipboard(){
-		$clipboard_links = self::SectionClipboardLinks();
-		$this->ajaxReplace = array();
-		$this->ajaxReplace[] = array('inner', '#section-clipboard-items', $clipboard_links);
-		$this->ajaxReplace[] = array('loaded', '', '');
-		return true;
-	}
-
-
-
-	/**
 	 * Get the Section Clipboard links
 	 *
 	 */
@@ -1167,7 +1153,7 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public static function NewSectionLink($types, $img, $wrapper_data=false, $checkbox=false ){
-		global $dataDir, $page;
+		global $dataDir, $page, $langmessage;
 
 		$types = (array)$types;
 
@@ -1296,10 +1282,6 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public function SaveThis($backup=true){
-
-		if( !is_array($this->meta_data) || !is_array($this->file_sections) ){
-			return false;
-		}
 
 		//return true if nothing has changed
 		if( $backup && $this->checksum === $this->Checksum() ){
@@ -1438,7 +1420,8 @@ class Edit extends \gp\Page{
 			return false;
 		}
 
-		unlink($this->draft_file);
+		$draft_file = \gp\tool\Files::FilePath($this->draft_file);
+		unlink($draft_file);
 		$this->ResetFileTypes();
 		$this->draft_exists = false;
 
@@ -1464,7 +1447,8 @@ class Edit extends \gp\Page{
 
 		//working draft
 		if( $this->draft_exists ){
-			$size = filesize($this->draft_file);
+			$draft_file = \gp\tool\Files::FilePath($this->draft_file);
+			$size = filesize($draft_file);
 			$time = $this->file_stats['modified'];
 			$rows[$time] = $this->HistoryRow($time, $size, $this->file_stats['username'], 'draft');
 		}
@@ -1476,7 +1460,8 @@ class Edit extends \gp\Page{
 
 		// current page
 		// this will overwrite one of the history entries if there is a draft
-		$rows[$this->fileModTime] = $this->HistoryRow($this->fileModTime, filesize($this->file), $this->file_stats['username'], 'current');
+		$page_file = \gp\tool\Files::FilePath($this->file);
+		$rows[$this->fileModTime] = $this->HistoryRow($this->fileModTime, filesize($page_file), $this->file_stats['username'], 'current');
 
 		echo '<h2>' . $langmessage['Revision History'] . '</h2>';
 		echo '<table class="bordered full_width striped"><tr>';
@@ -1665,6 +1650,7 @@ class Edit extends \gp\Page{
 			$contents		= ob_get_clean();
 
 			$full_path		= substr($full_path, 0, -3) . 'php';
+			$full_path		= \gp\tool\Files::FilePath($full_path);
 			\gp\tool\Files::Save($full_path, $contents);
 			$file_sections	= \gp\tool\Files::Get($full_path, 'file_sections');
 			unlink($full_path);
@@ -1931,7 +1917,6 @@ class Edit extends \gp\Page{
 		// $section_data['attributes']['gp_type'] 			= $section_data['type'];
 		$section_data['gp_hidden']						= false;
 		$orig_attrs										= $section_data['attributes'];
-		$section_types									= \gp\tool\Output\Sections::GetTypes();
 
 		$content 			.= $this->SectionNode($section_data, $orig_attrs);
 

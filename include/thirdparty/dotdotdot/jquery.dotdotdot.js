@@ -44,7 +44,7 @@
         }
 
         $dot.bind_events = function() {
-            $dot.bind(
+            $dot.on(
                 'update.dot',
                 function(e, c) {
                     $dot.removeClass("is-truncated");
@@ -120,7 +120,7 @@
                     return trunc;
                 }
 
-            ).bind(
+            ).on(
                 'isTruncated.dot',
                 function(e, fn) {
                     e.preventDefault();
@@ -132,7 +132,7 @@
                     return conf.isTruncated;
                 }
 
-            ).bind(
+            ).on(
                 'originalContent.dot',
                 function(e, fn) {
                     e.preventDefault();
@@ -144,7 +144,7 @@
                     return orgContent;
                 }
 
-            ).bind(
+            ).on(
                 'destroy.dot',
                 function(e) {
                     e.preventDefault();
@@ -165,7 +165,7 @@
         }; //	/bind_events
 
         $dot.unbind_events = function() {
-            $dot.unbind('.dot');
+            $dot.off('.dot');
             return $dot;
         }; //	/unbind_events
 
@@ -176,7 +176,7 @@
                     _wWidth = $window.width(),
                     _wHeight = $window.height();
 
-                $window.bind(
+                $window.on(
                     'resize.dot' + conf.dotId,
                     function() {
                         if (_wWidth != $window.width() || _wHeight != $window.height() || !opts.windowResizeFix) {
@@ -212,7 +212,7 @@
             return $dot;
         };
         $dot.unwatch = function() {
-            $(window).unbind('resize.dot' + conf.dotId);
+            $(window).off('resize.dot' + conf.dotId);
             if (watchInt) {
                 clearInterval(watchInt);
             }

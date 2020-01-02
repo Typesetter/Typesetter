@@ -1,125 +1,114 @@
-#login_container{
-	position:relative;
-	height:100%;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-	font-size:13px;
-
+#login_container {
+	position: relative;
+	height: 100%;
+	font-family:
+		-apple-system, BlinkMacSystemFont,
+		"Segoe UI", Roboto, "Helvetica Neue", Arial,
+		"Noto Sans", sans-serif,
+		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	font-size: 13px;
 	background: #222;
-	/*
-	background: -moz-radial-gradient(center, ellipse cover, #666 0%, #111 85%);
-	background: -webkit-radial-gradient(center, ellipse cover, #666 0%, #111 85%);
-	background: -o-radial-gradient(center, ellipse cover, #666 0%, #111 85%);
-	background: -ms-radial-gradient(center, ellipse cover, #666 0%, #111 85%);
-	background: radial-gradient(ellipse at center, #666 0%, #111 85%);
-	*/
-	}
+}
 
-#login_container a{
-	color:#333;
-	}
+#login_container a {
+	color: #333;
+}
 
-#login_container table{
-	width:100%;
-	height:100%;
-	}
+#login_container table {
+	width: 100%;
+	height: 100%;
+}
 
-#login_container td{
-	vertical-align:middle;
-	}
+#login_container td {
+	vertical-align: middle;
+}
 
-
-#login_container *{
+#login_container * {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
-	}
+}
 
 #loginform,
-#browser_warning{
-	position:relative;
-	padding:20px;
-	width:320px;
-	color:#444;
-	border-radius:6px;
-	margin:0 auto;
-	}
-
-
-#loginform{
-	background-color: #ddd;
-	border:1px solid rgba(255,255,255,0.7);
-	box-shadow: 0 0 30px rgba(0,0,0,0.6);
-	position:relative;
-	z-index:1;
+#browser_warning {
+	position: relative;
+	padding: 20px;
+	width: 320px;
+	color: #444;
+	border-radius: 6px;
+	margin: 0 auto;
 }
+
+#loginform {
+	background-color: #ddd;
+	border: 1px solid rgba(255,255,255,0.7);
+	box-shadow: 0 0 30px rgba(0,0,0,0.6);
+	position: relative;
+	z-index: 1;
+}
+
 #loginform:before,
-#loginform:after{
-	content:'';
-	position:absolute;
-	top:6px;
-	left:7px;
-	background:rgba(255,255,255,0.2);
-	width:100%;
-	height:100%;
-	border-radius:9px;
-	z-index:-1;
-	}
+#loginform:after {
+	content: '';
+	position: absolute;
+	top: 6px;
+	left: 7px;
+	background: rgba(255,255,255,0.2);
+	width: 100%;
+	height: 100%;
+	border-radius: 9px;
+	z-index: -1;
+}
 
-#loginform:before{
-	top:-6px;
-	left:-7px;
-	}
+#loginform:before {
+	top: -6px;
+	left: -7px;
+}
 
+#loginform .login_submit {
+	border: 1px solid rgba(0,0,0,0.4);
+	background: #444;
+	background: linear-gradient(to bottom, #555, #333);
+	color: #fff;
+	font-size: 14px;
+	font-weight: normal;
+	text-shadow: 0 1px 1px #111;
+	padding: 5px 10px;
+	border-radius: 5px;
+	cursor: pointer;
+}
 
-#loginform .login_submit{
+#loginform .login_submit:focus {
+	background-color: #888;
+}
 
-	border:1px solid rgba(0,0,0,0.4);
-	background:#444;
-	background:linear-gradient(to bottom, #555, #333);
+#loginform p {
+	vertical-align: top;
+	padding: 0;
+	margin: 0 0 20px 0;
+}
 
-	color:#fff;
-	font-size:14px;
-	font-weight:normal;
-	text-shadow:0 1px 1px #111;
-
-	padding:5px 10px;
-	border-radius:5px;
-	cursor:pointer;
-	}
-#loginform .login_submit:focus{
-	background-color:#888;
-	}
-
-
-#loginform p{
-	vertical-align:top;
-	padding:0;
-	margin:0 0 20px 0;
-	}
-
-
-#loginform .login_text input{
-	display:block;
-	width:100%;
-	padding:8px;
-	font-size:14px;
-	color:#444;
-	border:1px solid #ccc;
+#loginform .login_text input {
+	display: block;
+	width: 100%;
+	padding: 8px;
+	font-size: 14px;
+	color: #444;
+	border: 1px solid #ccc;
 	background-color: #e5e5e5;
-	border-radius:3px;
-
+	border-radius: 3px;
 	-webkit-box-shadow: 0 0 2px #fff;
 	-moz-box-shadow: 0 0 2px #fff;
 	box-shadow: 0 0 2px #fff;
-	}
+}
 
-#loginform .login_text:focus{
-	border:1px solid #000;
+#loginform .login_text:focus {
+	border: 1px solid #000;
 	background-color: #fff;
-	color:#111;
-	}
+	color: #111;
+}
 
-#loginform label{
+#loginform label {
 	font-size:12px;
 	color:#555;
 	margin-right:15px;

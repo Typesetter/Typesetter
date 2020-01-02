@@ -31,7 +31,7 @@
 			$('#edit_area_overlay_top').hide();
 
 			//use the div with the twysiwygr class for True WYSIWYG Replacement if it's found
-			var replace_content = content.find('.twysiwygr:first');
+			var replace_content = content.find('.twysiwygr').first();
 			if( replace_content.length ){
 				content = replace_content;
 			}
@@ -82,6 +82,8 @@
 			if( $wrap.hasClass('ck_saving') ){
 				return;
 			}
+
+			loading(); // console.log('loading');
 
 			$wrap.addClass('ck_saving');
 			gp_editing.AutoSave.destroy(); // kill the autosave timer while saving to avoid timing conflicts
@@ -152,6 +154,7 @@
 					$("a.msg_publish_draft_disabled").hide();
 					$("a.msg_saving_draft").hide();
 					gp_editing.AutoSave.init(); // re-init autosave when saving completed
+					loaded(); // console.log('loaded');
 				},
 			});
 
@@ -310,7 +313,7 @@
 
 			var $edit_area		= $gp.CurrentDiv();
 			var $ckeditor_wrap	= $('#ckeditor_wrap').addClass('show_editor');
-			$gp.$win.resize();
+			$gp.$win.trigger('resize');
 
 			//tabs
 			var $tabs			= $('#ckeditor_tabs').html('');
@@ -423,10 +426,10 @@
 				$('<a class="ckeditor_control" data-cmd="SwitchEditArea" '
 					+ 'data-arg="#' + id + '">' + $area.attr('title') + '</a>')
 					.appendTo('#cktabs')
-					.click();
+					.trigger('click');
 			}else{
 				$area.replaceWith(html);
-				$('#cktabs .ckeditor_control[data-arg="#' + id + '"]').click();
+				$('#cktabs .ckeditor_control[data-arg="#' + id + '"]').trigger('click');
 
 			}
 		},
@@ -625,7 +628,7 @@
 	 *
 	 * Using $gp.$doc.on('click') so we can stopImmediatePropagation() for other clicks
 	 *
-	 * Not using $('#ExtraEditLink'+area_id).click() to avoid triggering other click handlers
+	 * Not using $('#ExtraEditLink'+area_id).on('click') to avoid triggering other click handlers
 	 *
 	 */
 	$gp.$doc.on('click', '.editable_area:not(.filetype-wrapper_section)', function(evt){
@@ -676,7 +679,7 @@
 		if( $('#ckeditor_wrap').hasClass('show_editor') ){
 			$('html').css({'margin-left': 0});
 			$('#ckeditor_wrap').removeClass('show_editor');
-			$gp.$win.resize();
+			$gp.$win.trigger('resize');
 		}else{
 			gp_editing.ShowEditor();
 		}
@@ -726,7 +729,7 @@
 	 * Max height of #ckeditor_area
 	 *
 	 */
-	$gp.$win.resize(function(){
+	$gp.$win.on('resize', function(){
 		var $ckeditor_area		= $('#ckeditor_area');
 		if( $ckeditor_area.length ){
 			var maxHeight			= $gp.$win.height();
@@ -738,7 +741,7 @@
 			AdjustForEditor();
 		}
 
-	}).resize();
+	}).trigger('resize');
 
 
 	/**

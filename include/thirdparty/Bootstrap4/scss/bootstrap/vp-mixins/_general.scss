@@ -32,7 +32,7 @@
   overflow: $value;
 }
 
-@mixin vp-overflow-x($fmt) {
+@mixin vp-overflow-x($value) {
   @if $enable-overflow-scrolling {
     -webkit-overflow-scrolling: touch;
   }

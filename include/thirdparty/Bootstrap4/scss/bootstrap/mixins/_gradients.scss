@@ -2,10 +2,8 @@
 
 @mixin gradient-bg($color) {
   @if $enable-gradients {
-    // ########## use VP-mixins ##########
-    // background: $color linear-gradient(180deg, mix($body-bg, $color, 15%), $color) repeat-x;
-    @include vp-linear-gradient(180deg, mix($body-bg, $color, 15%), $color);
-    background-repeat:  repeat-x;
+    background: $color -webkit-linear-gradient(180deg, mix($body-bg, $color, 15%), $color) repeat-x;
+    background: $color linear-gradient(180deg, mix($body-bg, $color, 15%), $color) repeat-x;
   } @else {
     background-color: $color;
   }
@@ -15,9 +13,8 @@
 //
 // Creates two color stops, start and end, by specifying a color and position for each color stop.
 @mixin gradient-x($start-color: $gray-700, $end-color: $gray-800, $start-percent: 0%, $end-percent: 100%) {
-  // ########## use VP-mixins ##########
-  // background-image: linear-gradient(to right, $start-color $start-percent, $end-color $end-percent);
-  @include vp-linear-gradient-img(to right, $start-color $start-percent, $end-color $end-percent);
+  background-image: -webkit-linear-gradient(to right, $start-color $start-percent, $end-color $end-percent);
+  background-image: linear-gradient(to right, $start-color $start-percent, $end-color $end-percent);
   background-repeat: repeat-x;
 }
 
@@ -25,37 +22,32 @@
 //
 // Creates two color stops, start and end, by specifying a color and position for each color stop.
 @mixin gradient-y($start-color: $gray-700, $end-color: $gray-800, $start-percent: 0%, $end-percent: 100%) {
-  // ########## use VP-mixins ##########
-  // background-image: linear-gradient(to bottom, $start-color $start-percent, $end-color $end-percent);
-  @include vp-linear-gradient-img(to bottom, $start-color $start-percent, $end-color $end-percent);
+  background-image: -webkit-linear-gradient(to bottom, $start-color $start-percent, $end-color $end-percent);
+  background-image: linear-gradient(to bottom, $start-color $start-percent, $end-color $end-percent);
   background-repeat: repeat-x;
 }
 
 @mixin gradient-directional($start-color: $gray-700, $end-color: $gray-800, $deg: 45deg) {
-  // ########## use VP-mixins ##########
-  //background-image: linear-gradient($deg, $start-color, $end-color);
-  @include vp-linear-gradient-img($deg, $start-color, $end-color);
+  background-image: -webkit-linear-gradient($deg, $start-color, $end-color);
+  background-image: linear-gradient($deg, $start-color, $end-color);
   background-repeat: repeat-x;
 }
 @mixin gradient-x-three-colors($start-color: $blue, $mid-color: $purple, $color-stop: 50%, $end-color: $red) {
-  // ########## use VP-mixins ##########
-  // background-image: linear-gradient(to right, $start-color, $mid-color $color-stop, $end-color);
-  @include vp-linear-gradient-img(to right, $start-color, $mid-color $color-stop, $end-color);
+  background-image: -webkit-linear-gradient(to right, $start-color, $mid-color $color-stop, $end-color);
+  background-image: linear-gradient(to right, $start-color, $mid-color $color-stop, $end-color);
   background-repeat: no-repeat;
 }
 @mixin gradient-y-three-colors($start-color: $blue, $mid-color: $purple, $color-stop: 50%, $end-color: $red) {
-  // ########## use VP-mixins ##########
-  // background-image: linear-gradient($start-color, $mid-color $color-stop, $end-color);
-  @include vp-linear-gradient-img($start-color, $mid-color $color-stop, $end-color);
+  background-image: -webkit-linear-gradient($start-color, $mid-color $color-stop, $end-color);
+  background-image: linear-gradient($start-color, $mid-color $color-stop, $end-color);
   background-repeat: no-repeat;
 }
 @mixin gradient-radial($inner-color: $gray-700, $outer-color: $gray-800) {
-  // ########## use VP-mixins ##########
+  background-image: -webkit-radial-gradient(circle, $inner-color, $outer-color);
   background-image: radial-gradient(circle, $inner-color, $outer-color);
   background-repeat: no-repeat;
 }
 @mixin gradient-striped($color: rgba($white, .15), $angle: 45deg) {
-  // ########## use VP-mixins ##########
-  // background-image: linear-gradient($angle, $color 25%, transparent 25%, transparent 50%, $color 50%, $color 75%, transparent 75%, transparent);
-  @include vp-linear-gradient-img($angle, $color 25%, transparent 25%, transparent 50%, $color 50%, $color 75%, transparent 75%, transparent);
+  background-image: -webkit-linear-gradient($angle, $color 25%, transparent 25%, transparent 50%, $color 50%, $color 75%, transparent 75%, transparent);
+  background-image: linear-gradient($angle, $color 25%, transparent 25%, transparent 50%, $color 50%, $color 75%, transparent 75%, transparent);
 }

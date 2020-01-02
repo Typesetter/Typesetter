@@ -2,21 +2,17 @@
 //
 $(function(){
 
-	$(document).delegate('span.rating a',
-		{
-			'mouseenter':function(){
-				var $this = $(this);
-				ResetStars( $this, $this.data('rating') );
-			},
-			'mouseleave':function(){
-				ResetStars($(this));
-			},
-			'click':function(){
-				var $this = $(this);
-				var rating = $this.data('rating');
-				ResetStars( $this, rating, rating );
-			}
+	$(document).on('mouseenter', 'span.rating a', function(){
+			var $this = $(this);
+			ResetStars( $this, $this.data('rating') );
+		}).on('mouseleave', 'span.rating a', function(){
+			ResetStars($(this));
+		}).on('click', 'span.rating a', function(){
+			var $this = $(this);
+			var rating = $this.data('rating');
+			ResetStars( $this, rating, rating );
 		});
+
 
 	function ResetStars($link, show_value, set_value ){
 
@@ -29,7 +25,7 @@ $(function(){
 		}
 		show_value = show_value || $input.val();
 
-		var b = $span.find('a:eq('+(show_value-1)+')');
+		var b = $span.find('a').eq(show_value-1);
 
 		b.nextAll().addClass('unset');
 		b.removeClass('unset');
@@ -37,4 +33,3 @@ $(function(){
 	}
 
 });
-

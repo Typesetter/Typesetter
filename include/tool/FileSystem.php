@@ -308,9 +308,9 @@ class FileSystem{
 	 * Get a list of files and folders in $dir
 	 *
 	 * @param string $dir
-	 * @param bool $show_hidden
+	 *
 	 */
-	public function dirlist($dir, $show_hidden=true){
+	public function dirlist($dir ){
 
 		$dh = @opendir($dir);
 		if( !$dh ){
@@ -320,9 +320,6 @@ class FileSystem{
 		$list = array();
 		while( ($file = readdir($dh)) !== false){
 			if( $file == '.' || $file == '..' ){
-				continue;
-			}
-			if( !$show_hidden && $file[0] == '.' ){
 				continue;
 			}
 			$list[$file] = $file;
@@ -415,7 +412,7 @@ class FileSystem{
 		clearstatcache();
 
 		if( is_null($rand_index) ){
-			$rand_index = rand(1000,9000);
+			$rand_index = rand(1000,9000000);
 		}
 
 		$i = 0;

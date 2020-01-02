@@ -42,13 +42,13 @@ class Combine{
 
 			//colorbox
 			'colorbox'	=> array(
-									'file'			=> '/include/thirdparty/colorbox139/colorbox/jquery.colorbox.js',
+									'file'			=> '/include/thirdparty/colorbox/colorbox/jquery.colorbox.js',
 									'requires'		=> 'gp-main,colorbox-css',
 									),
 
 
 			'colorbox-css' => array(
-									'file'			=> '/include/thirdparty/colorbox139/$config[colorbox_style]/colorbox.css',
+									'file'			=> '/include/thirdparty/colorbox/$config[colorbox_style]/colorbox.css',
 									'type'			=> 'css',
 									),
 
@@ -59,8 +59,8 @@ class Combine{
 									'package'		=> 'jquery',
 									'label'			=> 'jQuery',
 									'cdn'			=> array(
-															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js',
-															'Google'		=> '//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js',
+															'CloudFlare'	=> '//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js',
+															'Google'		=> '//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js',
 														),
 									),
 
@@ -575,7 +575,7 @@ class Combine{
 
 			// Colorbox
 			'colorbox'	=> array(
-									'file'			=> '/include/thirdparty/colorbox139/colorbox/jquery.colorbox.js',
+									'file'			=> '/include/thirdparty/colorbox/colorbox/jquery.colorbox.js',
 									'requires'		=> 'gp-main,colorbox-css',
 									'label'			=> 'Colorbox JS',
 									'cdn'			=> array(
@@ -584,7 +584,7 @@ class Combine{
 									),
 
 			'colorbox-css' => array(
-									'file'			=> '/include/thirdparty/colorbox139/$config[colorbox_style]/colorbox.css',
+									'file'			=> '/include/thirdparty/colorbox/$config[colorbox_style]/colorbox.css',
 									'type'			=> 'css',
 									),
 
@@ -895,7 +895,7 @@ class Combine{
 			$components = array_unique($components);
 		}
 
-		self::$scripts['colorbox-css']['file'] = '/include/thirdparty/colorbox139/'.$config['colorbox_style'].'/colorbox.css';
+		self::$scripts['colorbox-css']['file'] = '/include/thirdparty/colorbox/'.$config['colorbox_style'].'/colorbox.css';
 
 		$all_scripts = array();
 

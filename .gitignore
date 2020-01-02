@@ -3,6 +3,6 @@ X_*
 data/_*
 xx_*
 lock_admin
-vendor
 coverage.xml
 composer.lock
+/vendor/*

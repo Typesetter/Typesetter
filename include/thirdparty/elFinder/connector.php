@@ -133,16 +133,6 @@ function upload_check($cmd, $args){
 	return true;
 }
 
-function rename_check($cmd, $args){
-	if( gp_restrict_uploads && !\gp\admin\Content\Uploaded::AllowedExtension($args['name']) ){
-		return array(
-			'preventexec'	=> true,
-			'results'		=> array('error' => 'errUploadMime')
-		);
-	}
-	return true;
-}
-
 // Documentation for connector options:
 // https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
 $opts = array(
@@ -164,7 +154,7 @@ $opts = array(
 			//'uploadMaxSize'		=>'55M',
 			'attributes'		=> array(
 				array(
-					'pattern' => '/\.ph(p([3-7]?|-?s)|t(ml)?|ar)$/i',
+					'pattern' => gp_restrict_uploads ? '/\.(?!'.join('|', \gp\admin\Content\Uploaded::AllowedExtensions()).')\w+$/i' : null,
 					'write'  => false,
 				)
 			),
@@ -185,7 +175,6 @@ $opts = array(
 	'bind' => array(
 		'duplicate upload rename rm paste resize' => array('\gp\admin\Content\Uploaded', 'FinderChange'), //drag+drop = cut+paste
 		'upload.pre'		=> array('upload_check'),
-		'rename.pre'		=> array('rename_check'),
 	)
 );
 

@@ -573,9 +573,9 @@
 					// this is to big, perhaps break it out?
 					c.$headers
 					// http://stackoverflow.com/questions/5312849/jquery-find-self
-					.find('*').andSelf().filter(c.selectorSort)
-					.unbind('mousedown.tablesorter mouseup.tablesorter')
-					.bind('mousedown.tablesorter mouseup.tablesorter', function(e, external) {
+					.find('*').addBack().filter(c.selectorSort)
+					.off('mousedown.tablesorter mouseup.tablesorter')
+					.on('mousedown.tablesorter mouseup.tablesorter', function(e, external) {
 						// jQuery v1.2.6 doesn't have closest()
 						var $cell = this.tagName.match('TH|TD') ? $(this) : $(this).parents('th, td').filter(':last'), cell = $cell[0];
 						// only recognize left clicks
@@ -696,14 +696,14 @@
 					}
 					// apply easy methods that trigger binded events
 					$this
-					.unbind('sortReset update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave')
-					.bind("sortReset", function(){
+					.off('sortReset update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave')
+					.on("sortReset", function(){
 						c.sortList = [];
 						setHeadersCss($t0);
 						multisort($t0);
 						appendToTable($t0);
 					})
-					.bind("update", function(e, resort, callback) {
+					.on("update", function(e, resort, callback) {
 						// remove rows/elements before update
 						$(c.selectorRemove, $t0).remove();
 						// rebuild parsers
@@ -712,7 +712,7 @@
 						buildCache($t0);
 						checkResort($this, resort, callback);
 					})
-					.bind("updateCell", function(e, cell, resort, callback) {
+					.on("updateCell", function(e, cell, resort, callback) {
 						// get position from the dom
 						var l, row, icell,
 						$tb = $this.find('tbody'),
@@ -731,7 +731,7 @@
 							checkResort($this, resort, callback);
 						}
 					})
-					.bind("addRows", function(e, $row, resort, callback) {
+					.on("addRows", function(e, $row, resort, callback) {
 						var i, rows = $row.filter('tr').length,
 						dat = [], l = $row[0].cells.length,
 						tbdy = $this.find('tbody').index( $row.closest('tbody') );
@@ -755,7 +755,7 @@
 						// resort using current settings
 						checkResort($this, resort, callback);
 					})
-					.bind("sorton", function(e, list, callback, init) {
+					.on("sorton", function(e, list, callback, init) {
 						$this.trigger("sortStart", this);
 						// update header count index
 						updateHeaderSortCount($t0, list);
@@ -768,23 +768,23 @@
 							callback($t0);
 						}
 					})
-					.bind("appendCache", function(e, callback, init) {
+					.on("appendCache", function(e, callback, init) {
 						appendToTable($t0, init);
 						if (typeof callback === "function") {
 							callback($t0);
 						}
 					})
-					.bind("applyWidgetId", function(e, id) {
+					.on("applyWidgetId", function(e, id) {
 						ts.getWidgetById(id).format($t0, c, c.widgetOptions);
 					})
-					.bind("applyWidgets", function(e, init) {
+					.on("applyWidgets", function(e, init) {
 						// apply widgets
 						ts.applyWidget($t0, init);
 					})
-					.bind("refreshWidgets", function(e, all, dontapply){
+					.on("refreshWidgets", function(e, all, dontapply){
 						ts.refreshWidgets($t0, all, dontapply);
 					})
-					.bind("destroy", function(e, c, cb){
+					.on("destroy", function(e, c, cb){
 						ts.destroy($t0, c, cb);
 					});
 
@@ -812,8 +812,8 @@
 					// show processesing icon
 					if (c.showProcessing) {
 						$this
-						.unbind('sortBegin sortEnd')
-						.bind('sortBegin sortEnd', function(e) {
+						.off('sortBegin sortEnd')
+						.on('sortBegin sortEnd', function(e) {
 							ts.isProcessing($t0, e.type === 'sortBegin');
 						});
 					}
@@ -879,11 +879,11 @@
 				// disable tablesorter
 				$t
 					.removeData('tablesorter')
-					.unbind('sortReset update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave');
+					.off('sortReset update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave');
 				c.$headers.add($f)
 					.removeClass(c.cssHeader + ' ' + c.cssAsc + ' ' + c.cssDesc)
 					.removeAttr('data-column');
-				$r.find(c.selectorSort).unbind('mousedown.tablesorter mouseup.tablesorter');
+				$r.find(c.selectorSort).off('mousedown.tablesorter mouseup.tablesorter');
 				// restore headers
 				$r.children().each(function(i){
 					$(this).html( c.headerContent[i] );

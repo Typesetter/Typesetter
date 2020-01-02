@@ -1,0 +1,10 @@
+// stylelint-disable declaration-no-important
+
+@each $value in $overflows {
+  .overflow-#{$value} {
+    @if $enable-overflow-scrolling {
+      -webkit-overflow-scrolling: touch;
+    }
+    overflow: $value !important;
+  }
+}

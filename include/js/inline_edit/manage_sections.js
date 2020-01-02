@@ -227,7 +227,7 @@
 				section_number	: section_number
 			};
 			// console.log("SectionToClipboard", data);
-			data = jQuery.param(data);
+			data = $.param(data);
 			$gp.postC(window.location.href, data);
 			loading();
 		},
@@ -273,7 +273,7 @@
 			};
 
 			// console.log("AddFromClipboard", data);
-			data = jQuery.param(data);
+			data = $.param(data);
 			$gp.postC(window.location.href, data);
 			loading();
 		},
@@ -298,7 +298,7 @@
 				cmd		: 'ReorderClipboardItems',
 				order	: new_order
 			};
-			data = jQuery.param(data);
+			data = $.param(data);
 			$gp.postC(window.location.href, data);
 			loading();
 		},
@@ -347,7 +347,7 @@
 			this.InitClipboard();
 			this.resetDirty();
 
-			$gp.$win.on('resize', this.MaxHeight).resize();
+			$gp.$win.on('resize', this.MaxHeight).trigger('resize');
 
 			$('#ckeditor_area').on('dragstop', this.MaxHeight);
 
@@ -569,11 +569,13 @@
 				var $this = $(this).parent();
 				var $area = mgr_object.GetArea($this);
 
+				/*
 				scrollto_section_timeout = setTimeout(function(){
 					//scroll the page
 					var top		= $area.offset().top - 200;
 					$('html,body').stop().animate({scrollTop: top});
 				}, 1200);
+				*/
 
 
 				$('.section-item-hover').removeClass('section-item-hover');
@@ -587,9 +589,11 @@
 				var $this = $(this).parent();
 				var $area = mgr_object.GetArea($this);
 
+				/*
 				if( scrollto_section_timeout ){
 					clearTimeout(scrollto_section_timeout);
 				}
+				*/
 
 				$area.removeClass('section-highlight');
 				$this.removeClass('section-item-hover');
@@ -634,7 +638,7 @@
 		preview_timeout = setTimeout(function(){
 
 			//scroll the page
-			var $last	= $('#gpx_content .editable_area:last');
+			var $last	= $('#gpx_content .editable_area').last();
 			var top		= $last.offset().top + $last.height() - 200;
 			$('html, body').stop().animate({scrollTop: top});
 
@@ -698,6 +702,10 @@
 
 		gp_editor.InitSorting();
 		$this.removeClass('previewing').trigger('mousemove');
+
+		// trigger immediate save
+		// console.log('immediate save');
+		gp_editing.SaveChanges();
 	};
 
 
@@ -742,34 +750,37 @@
 
 		if( is_hidden ){
 
-			$area
-				.attr('data-gp_hidden', false)
-				.data('gp_hidden', false)
-				.hide().slideDown(300);
-
 			$(this)
 				.removeClass("fa-eye")
 				.addClass("fa-eye-slash");
 			$li.removeClass("gp-section-hidden");
 
-		}else{
+			$area
+				.attr('data-gp_hidden', false)
+				.data('gp_hidden', false)
+				.hide().slideDown(150, function(){
+					// trigger immediate save
+					// console.log('immediate save');
+					gp_editing.SaveChanges();
+				});
 
-			$area.slideUp(300, function(){
-				$area
-					.attr('data-gp_hidden', true)
-					.data('gp_hidden', true);
-			});
+		}else{
 
 			$(this)
 				.removeClass("fa-eye-slash")
 				.addClass("fa-eye");
 			$li.addClass("gp-section-hidden");
 
-		}
+			$area.slideUp(150, function(){
+				$area
+					.attr('data-gp_hidden', true)
+					.data('gp_hidden', true);
 
-		// trigger immediate save
-		// console.log('immediate save');
-		gp_editing.SaveChanges();
+				// trigger immediate save
+				// console.log('immediate save');
+				gp_editing.SaveChanges();
+			});
+		}
 	};
 
 
@@ -914,7 +925,7 @@
 			cmd				: 'RemoveFromClipboard',
 			item_number		: item_index
 		};
-		data = jQuery.param(data);
+		data = $.param(data);
 		$gp.postC(window.location.href, data);
 		loading();
 	};
@@ -940,7 +951,7 @@
 
 		var tmpInput = $('<input type="text" value="' + $label.text() + '"/>')
 			.insertAfter($label)
-			.focus()
+			.trigger('focus')
 			.select()
 			// when blurred, remove <input> and show hidden elements
 			// same when esc or enter key is entered
@@ -968,7 +979,7 @@
 					item_number		: item_index,
 					new_label		: label,
 				};
-				data = jQuery.param(data);
+				data = $.param(data);
 				$gp.postC(window.location.href, data);
 				loading();
 			});
@@ -1018,7 +1029,7 @@
 		var $area		= gp_editor.GetArea( $li );
 		var newColor 	= $this.attr('data-color');
 
-		$li.find('.color_handle:first').css('background-color', newColor);
+		$li.find('.color_handle').first().css('background-color', newColor);
 		$area.attr('data-gp_color',newColor).data('gp_color', newColor);
 		$li.find('.secsort_color_swatches').remove();
 		$li.children().show();
@@ -1363,6 +1374,18 @@
 
 
 	/**
+	 * Scroll to content section when list item is clicked
+	 *
+	 */
+	$(document).on('click', '#section_sorting li > div', function(){
+		var $li		= $(this).parent();
+		var $area	= gp_editor.GetArea($li);
+		var top		= $area.offset().top - 200;
+		$('html,body').stop().animate({scrollTop: top});
+	});
+
+
+	/**
 	 * Init Label editing
 	 *
 	 */
@@ -1373,7 +1396,7 @@
 		$div.hide();
 		var tmpInput	= $('<input type="text" value="' + $this.text() + '"/>')
 			.insertAfter($div)
-			.focus()
+			.trigger('focus')
 			.select()
 			// when blurred, remove <input> and show hidden elements
 			// same when esc or enter key is entered

@@ -6,7 +6,6 @@
 
 .input-group {
   position: relative;
-  // ########## use VP-mixins ##########
   // display: flex;
   @include vp-flexbox();
   // flex-wrap: wrap; // For form validation feedback
@@ -16,15 +15,13 @@
   width: 100%;
 
   > .form-control,
+  > .form-control-plaintext,
   > .custom-select,
   > .custom-file {
     position: relative; // For focus state's z-index
-    // ########## use VP-mixins ##########
-    // flex: 1 1 auto;
-    @include vp-flex(1 1 auto);
-    // Add width 1% and flex-basis auto to ensure that button will not wrap out
-    // the column. Applies to IE Edge+ and Firefox. Chrome does not require this.
-    width: 1%;
+    // flex: 1 1 0%;
+    @include vp-flex(1 1 0%);
+    min-width: 0; // https://stackoverflow.com/questions/36247140/why-dont-flex-items-shrink-past-content-size
     margin-bottom: 0;
 
     + .form-control,
@@ -41,6 +38,11 @@
     z-index: 3;
   }
 
+  // Bring the custom file input above the label
+  > .custom-file .custom-file-input:focus {
+    z-index: 4;
+  }
+
   > .form-control,
   > .custom-select {
     &:not(:last-child) { @include border-right-radius(0); }
@@ -50,7 +52,6 @@
   // Custom file inputs have more complex markup, thus requiring different
   // border-radius overrides.
   > .custom-file {
-    // ########## use VP-mixins ##########
     // display: flex;
     @include vp-flexbox();
     // align-items: center;
@@ -71,7 +72,8 @@
 
 .input-group-prepend,
 .input-group-append {
-  display: flex;
+  // display: flex;
+  @include vp-flexbox();
 
   // Ensure buttons are always above inputs for more visually pleasing borders.
   // This isn't needed for `.input-group-text` since it shares the same border-color
@@ -79,6 +81,10 @@
   .btn {
     position: relative;
     z-index: 2;
+
+    &:focus {
+      z-index: 3;
+    }
   }
 
   .btn + .btn,
@@ -99,14 +105,13 @@
 // to prepend or append to an input.
 
 .input-group-text {
-  // ########## use VP-mixins ##########
   // display: flex;
   @include vp-flexbox();
   // align-items: center;
   @include vp-align-items(center);
   padding: $input-padding-y $input-padding-x;
   margin-bottom: 0; // Allow use of <label> elements by overriding our default margin-bottom
-  font-size: $font-size-base; // Match inputs
+  @include font-size($input-font-size); // Match inputs
   font-weight: $font-weight-normal;
   line-height: $input-line-height;
   color: $input-group-addon-color;
@@ -129,20 +134,43 @@
 // Remix the default form control sizing classes into new ones for easier
 // manipulation.
 
+.input-group-lg > .form-control:not(textarea),
+.input-group-lg > .custom-select {
+  height: $input-height-lg;
+}
+
 .input-group-lg > .form-control,
+.input-group-lg > .custom-select,
 .input-group-lg > .input-group-prepend > .input-group-text,
 .input-group-lg > .input-group-append > .input-group-text,
 .input-group-lg > .input-group-prepend > .btn,
 .input-group-lg > .input-group-append > .btn {
-  @extend .form-control-lg;
+  padding: $input-padding-y-lg $input-padding-x-lg;
+  @include font-size($input-font-size-lg);
+  line-height: $input-line-height-lg;
+  @include border-radius($input-border-radius-lg);
+}
+
+.input-group-sm > .form-control:not(textarea),
+.input-group-sm > .custom-select {
+  height: $input-height-sm;
 }
 
 .input-group-sm > .form-control,
+.input-group-sm > .custom-select,
 .input-group-sm > .input-group-prepend > .input-group-text,
 .input-group-sm > .input-group-append > .input-group-text,
 .input-group-sm > .input-group-prepend > .btn,
 .input-group-sm > .input-group-append > .btn {
-  @extend .form-control-sm;
+  padding: $input-padding-y-sm $input-padding-x-sm;
+  @include font-size($input-font-size-sm);
+  line-height: $input-line-height-sm;
+  @include border-radius($input-border-radius-sm);
+}
+
+.input-group-lg > .custom-select,
+.input-group-sm > .custom-select {
+  padding-right: $custom-select-padding-x + $custom-select-indicator-padding;
 }
 
 

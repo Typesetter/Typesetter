@@ -31,7 +31,11 @@
 #gp_admin_html{
 	color: #333;
 	font-size: 13px;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	font-family:
+		-apple-system, BlinkMacSystemFont,
+		"Segoe UI", Roboto, "Helvetica Neue", Arial,
+		"Noto Sans", sans-serif,
+		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	line-height: 130%;
 	font-weight: normal;
 }
@@ -378,12 +382,18 @@
 	background: lighten($gp_panel_bg,10%);
 }
 
-#admincontent_panel .admin-link-visibility-private{
+#admincontent_panel .admin-link-visibility-private,
+html.isPrivate #admincontent_panel .admin-link-dropdown-options{
 	background: $gp_panel_warning_color;
 }
 
-#admincontent_panel .admin-link-visibility-private:hover{
+#admincontent_panel .admin-link-visibility-private:hover,
+html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover{
 	background: lighten($gp_panel_warning_color, 10);
+}
+
+#admincontent_panel .fa{
+	font-size: 14px;
 }
 
 #admincontent_panel span > .fa,

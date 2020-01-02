@@ -7,7 +7,7 @@ $(function(){
 	var $container = $('#admincontainer');
 	var container_class = $container.attr('class') || '';
 
-	$(window).resize(function(){
+	$(window).on('resize', function(){
 
 		var width = $container.width();
 		var cols = 1;
@@ -20,7 +20,7 @@ $(function(){
 
 		$container.attr('class',container_class+' columns_'+cols);
 
-	}).resize();
+	}).trigger('resize');
 
 
 
@@ -71,7 +71,7 @@ $(function(){
 		}
 
 		$.each(object,function(i,j){
-			$('#'+i).find('.expand_child_click').eq(j).click();
+			$('#'+i).find('.expand_child_click').eq(j).trigger('click');
 		});
 	}
 

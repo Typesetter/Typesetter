@@ -433,7 +433,7 @@ div.elfinder-cwd-wrapper-list .ui-icon-grip-dotted-vertical {
   position: relative;
   top: -10px !important;
   padding: 0;
-  display: contents !important;
+  /* display: contents !important; */ /* yet too buggy, only FF supports it and even there it causes issues */
 }
 .elfinder-cwd-view-list #elfinder-elfinder-cwd-thead tr {
   background: none transparent !important;
@@ -1082,7 +1082,7 @@ div.elfinder-cwd-wrapper-list .ui-icon-grip-dotted-vertical {
   -webkit-border-radius: 0;
   border-radius: 0;
   cursor: pointer;
-  color: #fff;
+  color: #666;
   height: 22px;
 }
 .elfinder .elfinder-button-text {
@@ -1103,6 +1103,12 @@ div.elfinder-cwd-wrapper-list .ui-icon-grip-dotted-vertical {
 .elfinder-button-menu-item {
   color: #666;
   padding: 6px 19px;
+}
+.elfinder-button-menu-item.ui-state-hover {
+  background-image: none;
+}
+.elfinder-button-menu-item .ui-icon {
+  font-size: 16px !important;
 }
 .elfinder-button-menu-item.ui-state-hover {
   color: #141414;
@@ -1654,15 +1660,15 @@ div.elfinder-cwd-wrapper-list .ui-icon-grip-dotted-vertical {
 }
 .elfinder-mobile .std42-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close .ui-icon,
 .std42-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close:hover .ui-icon {
-  background-color: #f44336;
+ /* background-color: #f44336;*/
 }
 .elfinder-mobile .std42-dialog .ui-dialog-titlebar .elfinder-titlebar-full .ui-icon,
 .std42-dialog .ui-dialog-titlebar .elfinder-titlebar-full:hover .ui-icon {
-  background-color: #4caf50;
+  /* background-color: #4caf50; */
 }
 .elfinder-mobile .std42-dialog .ui-dialog-titlebar .elfinder-titlebar-minimize .ui-icon,
 .std42-dialog .ui-dialog-titlebar .elfinder-titlebar-minimize:hover .ui-icon {
-  background-color: #ff9800;
+  /*background-color: #ff9800;*/
 }
 .elfinder-dialog-title {
   color: #f1f1f1;
@@ -1793,4 +1799,11 @@ div.elfinder-cwd-wrapper-list .ui-icon-grip-dotted-vertical {
 .elfinder-quicklook-titlebar-icon .ui-icon.elfinder-icon-full:hover,
 .elfinder-mobile .elfinder-quicklook-titlebar-icon .ui-icon.elfinder-icon-full {
   background-image: none;
+}
+.elfinder-resize-preset span{
+	padding: 0!important;
+}
+.elfinder-resize-container {
+	margin-left: 5px;
+	margin-right: 5px;
 }

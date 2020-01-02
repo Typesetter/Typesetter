@@ -2,23 +2,22 @@
 
 // Contextual backgrounds
 
-@mixin bg-variant($parent, $color) {
+@mixin bg-variant($parent, $color, $ignore-warning: false) {
   #{$parent} {
     background-color: $color !important;
   }
   a#{$parent},
   button#{$parent} {
-    @include hover-focus {
+    @include hover-focus() {
       background-color: darken($color, 10%) !important;
     }
   }
+  @include deprecate("The `bg-variant` mixin", "v4.4.0", "v5", $ignore-warning);
 }
 
 @mixin bg-gradient-variant($parent, $color) {
   #{$parent} {
-    // ########## use VP-mixins ##########
-    // background: $color linear-gradient(180deg, mix($body-bg, $color, 15%), $color) repeat-x !important;
-    @include vp-linear-gradient(180deg, mix($body-bg, $color, 15%), $color !important);
-    background-repeat: repeat-x !important;
+    background: $color -webkit-linear-gradient(180deg, mix($body-bg, $color, 15%), $color) repeat-x !important;
+    background: $color linear-gradient(180deg, mix($body-bg, $color, 15%), $color) repeat-x !important;
   }
 }

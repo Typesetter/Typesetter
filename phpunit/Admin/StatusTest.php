@@ -5,14 +5,15 @@ class phpunit_StatusTest extends gptest_bootstrap{
 
 	/**
 	 * Test the admin/status health check
-	 * 
+	 *
 	 */
-	function testStatus(){
+	public function testStatus(){
 
-		$admin_port = new \gp\admin\Tools\Status();
+		$admin_status = new \gp\admin\Tools\Status();
+		$admin_status->CheckDataDir();
 
-		$this->AssertGreaterThan(0,$admin_port->GetValue('passed_count'));
-		$this->AssertEquals(0,$admin_port->GetValue('failed_count'));
+		$this->AssertGreaterThan(0,$admin_status->GetValue('passed_count'));
+		$this->AssertEquals(0,$admin_status->GetValue('failed_count'));
 
 	}
 

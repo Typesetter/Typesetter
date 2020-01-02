@@ -17509,8 +17509,8 @@ $.fn.elfinderdialog = function(opts, fm) {
 		opts.allowMinimize = false;
 	}
 	
-	if (fm.options.dialogContained) {
-		syncSize.width = syncSize.height = syncSize.enabled = false;
+	if (fm.options.dialogContained && false) {
+		syncSize.width = syncSize.height = syncSize.enabled = true;
 	} else {
 		syncSize.width = (opts.maxWidth === 'window');
 		syncSize.height = (opts.maxHeight === 'window');

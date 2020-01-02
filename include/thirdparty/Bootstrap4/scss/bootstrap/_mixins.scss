@@ -10,6 +10,12 @@
 @import "vp-mixins/transitions";
 @import "vp-mixins/backgrounds";
 
+// Vendor
+@import "vendor/rfs";
+
+// Deprecate
+@import "mixins/deprecate";
+
 // Utilities
 @import "mixins/breakpoints";
 @import "mixins/hover";
@@ -47,4 +53,3 @@
 @import "mixins/grid-framework";
 @import "mixins/grid";
 @import "mixins/float";
-

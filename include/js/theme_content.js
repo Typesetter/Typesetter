@@ -89,7 +89,7 @@ $(function(){
 
 
 	//layout and theme select
-	$('.theme_select select').change(function(){
+	$('.theme_select select').on('change', function(){
 		if( this.value == '' ) return;
 		if( this.name == 'layout' ){
 			window.location = this.form.action+'/'+this.value;
@@ -143,7 +143,8 @@ $(function(){
 
 					$(this).css({'top':loc.top,'left':loc.left,'width':loc.w,'height':loc.h});
 				})
-				.on("hover", function(){ $(this).css("z-index", "+=500"); }, function(){ $(this).css("z-index", "-=500"); })
+				.on("mouseenter", function(){ $(this).css("z-index", "+=500"); })
+				.on("mouseleave", function(){ $(this).css("z-index", "-=500"); })
 				.find(".decrease_z_index")
 					.on("click", function(){
 						$(this).closest(".draggable_element").trigger("mouseleave").css("z-index", "-=1");
@@ -158,7 +159,7 @@ $(function(){
 			drag_elements.trigger('gp_position');
 		},2000);
 
-		$gp.$win.resize(function(){
+		$gp.$win.on('resize', function(){
 			drag_elements.trigger('gp_position');
 		});
 	}

@@ -1796,7 +1796,7 @@ namespace gp{
 
 		public static function AjaxWarning(){
 			global $page,$langmessage;
-			$page->ajaxReplace[] = array('admin_box_data', '', $langmessage['OOPS_Start_over']);
+			$page->ajaxReplace[] = array('gpabox', '', $langmessage['OOPS_Start_over']);
 		}
 
 

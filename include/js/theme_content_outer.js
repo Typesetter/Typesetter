@@ -78,12 +78,12 @@ $(function(){
 	var $available_wrap = $('#available_wrap');
 	if( $available_wrap.length ){
 
-		$gp.$win.resize(function(){
+		$gp.$win.on('resize', function(){
 			var top		= $available_wrap.offset().top;
 			var win_h	= $gp.$win.height();
 			$available_wrap.css('max-height', win_h -top);
 			console.log(top,win_h,win_h-top);
-		}).resize();
+		}).trigger('resize');
 
 	}
 
@@ -125,11 +125,11 @@ $(function(){
 				.prop("disabled", !cm_isDirty);
 		});
 
-		$(window).resize(function(){
+		$(window).on('resize', function(){
 			var parent = $textarea.parent();
 			editor.setSize(225, 100); //shrink the editor so we can get the container size
 			editor.setSize(225, parent.height()-5);
-		}).resize();
+		}).trigger('resize');
 
 		// preview button
 		$gp.inputs.preview_css = function(evt){

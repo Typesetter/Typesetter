@@ -37,7 +37,7 @@
 }
 
 #section_sorting li.section-sorting-highlight{
-	outline:1px solid #bbb;
+	outline:1px solid #333;
 	outline-offset:-1px;
 }
 

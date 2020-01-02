@@ -1,7 +1,6 @@
 // Resize anything
 
 @mixin resizable($direction) {
-  // ########## use VP-mixins ##########
   // overflow: auto; // Per CSS3 UI, `resize` only applies when `overflow` isn't `visible`
   @include vp-overflow(auto);
   resize: $direction; // Options: horizontal, vertical, both

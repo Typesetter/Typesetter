@@ -1,7 +1,7 @@
+// stylelint-disable property-blacklist
 @mixin transition($transition...) {
   @if $enable-transitions {
     @if length($transition) == 0 {
-      // ########## use VP-mixins ##########
       // transition: $transition-base;
       @include vp-transition($transition-base);
     } @else {
@@ -10,9 +10,10 @@
     }
   }
 
-  @media screen and (prefers-reduced-motion: reduce) {
-    // ########## use VP-mixins ##########
-    // transition: none;
-    @include vp-transition(none);
+  @if $enable-prefers-reduced-motion-media-query {
+    @media (prefers-reduced-motion: reduce) {
+      // transition: none;
+      @include vp-transition(none);
+    }
   }
 }

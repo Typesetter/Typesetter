@@ -15,6 +15,7 @@ namespace gp\admin\Settings{
 			parent::__construct($args);
 
 			//only need to return messages if it's ajax request
+			$this->page->ajaxReplace = [];
 			$this->username			= $gpAdmin['username'];
 			if( !isset($this->users[$this->username]) ){
 				msg($langmessage['OOPS']);
@@ -252,6 +253,10 @@ namespace gp\admin\Settings{
 			unset($gpAdmin['gpui_edb']);
 			unset($gpAdmin['gpui_brdis']);	//3.5
 			unset($gpAdmin['gpui_ctx']);	//5.0
+
+			//send response so an error is not thrown
+			echo \gp\tool\Output\Ajax::Callback($_REQUEST['jsoncallback']).'([]);';
+			die();
 		}
 	}
 

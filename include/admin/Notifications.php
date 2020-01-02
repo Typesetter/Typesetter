@@ -29,46 +29,10 @@ namespace gp\admin{
 			echo '<div class="inline_box show-notifications-box">';
 			// echo '<h3>' . $langmessage['Notifications']; . '</h3>';
 
-			$current_notification		= false;
-			$prev_notification_link		= false;
-			$next_notification_link		= false;
 
 			foreach( self::$notifications as $type => $notification ){
 
-				if( $filter_list_by && $type != $filter_list_by ){
-
-					if( !$current_notification ){
-						$prev_notification_link = \gp\tool::Link(
-							'Admin/Notifications',
-							'<i class="fa fa-angle-left"></i> ' . $langmessage['Previous'],
-							'cmd=ShowNotifications&type=' . rawurlencode($type),
-							array(
-								'title'		=> $langmessage['Previous'],
-								'class'		=> 'gpbutton',
-								'style'		=> 'margin-right:0.5em;',
-								'data-cmd'	=> 'gpabox',
-							)
-						);
-					}elseif( !$next_notification_link ){
-						$next_notification_link = \gp\tool::Link(
-							'Admin/Notifications',
-							$langmessage['Next'] . ' <i class="fa fa-angle-right"></i>',
-							'cmd=ShowNotifications&type=' . rawurlencode($type),
-							array(
-								'title'		=> $langmessage['Next'],
-								'class'		=> 'gpbutton',
-								'data-cmd'	=> 'gpabox',
-							)
-						);
-					}
-					continue;
-				}
-
-				$current_notification = $type;
-
-				$title = isset($langmessage[$notification['title']]) ?
-					$langmessage[$notification['title']] :
-					htmlspecialchars($notification['title']);
+				$title = self::GetTitle($notification['title']);
 				echo '<h3>' . $title . '</h3>';
 				echo '<table class="bordered full_width">';
 				echo '<tbody>';
@@ -112,18 +76,41 @@ namespace gp\admin{
 			echo '<button style="float:right;margin-right:0;" class="admin_box_close gpcancel">';
 			echo $langmessage['Close'];
 			echo '</button>';
-			if( $prev_notification_link ){
-				echo $prev_notification_link;
+
+			// notification links
+			foreach( self::$notifications as $type => $notification ){
+
+				if( $filter_list_by && $type != $filter_list_by ){
+					echo \gp\tool::Link(
+						'Admin/Notifications',
+						self::GetTitle($notification['title']),
+						'cmd=ShowNotifications&type=' . rawurlencode($type),
+						array(
+							'title'		=> self::GetTitle($notification['title']),
+							'class'		=> 'gpbutton',
+							'style'		=> 'margin-right:0.5em;',
+							'data-cmd'	=> 'gpabox',
+						)
+					);
+				}
 			}
-			if( $next_notification_link ){
-				echo $next_notification_link;
-			}
+
 			echo '</p>';
 
 			echo '</div>';
 		}
 
+		/**
+		 * Notification Title
+		 */
+		public static function GetTitle($title){
+			global $langmessage;
 
+			if( isset($langmessage[$title]) ){
+				return $langmessage[$title];
+			}
+			return htmlspecialchars($title);
+		}
 
 		/**
 		 * Manage Notifications
@@ -268,7 +255,7 @@ namespace gp\admin{
 		 */
 		public static function ApplyFilters(){
 			global $gpAdmin;
-			// debug('$gpAdmin= ' . pre($gpAdmin));
+
 			self::GetFilters();
 
 			// Remove items lacking user permissions and therefore cannot be dealt with anyway
@@ -477,10 +464,7 @@ namespace gp\admin{
 					}
 				}
 
-				$title				= isset($langmessage[$notification['title']]) ?
-										$langmessage[$notification['title']] :
-										htmlspecialchars($notification['title']);
-
+				$title				= self::GetTitle($notification['title']);
 				$badge_html			= '';
 				$badge_style		= '';
 

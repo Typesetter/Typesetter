@@ -502,7 +502,6 @@ namespace gp\admin{
 
 			$total_count			= 0;
 			$main_badge_style		= '';
-			$links 					= array();
 			$expand_class			= ''; // expand_child_click
 			$badge_format			= ' <span class="dashboard-badge">(%2$d)</b>';
 			$panel_class			= '';

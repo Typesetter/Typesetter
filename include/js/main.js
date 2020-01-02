@@ -343,7 +343,7 @@ var $gp = {
 				selector = 'a[rel='+selector+'],a.'+selector;
 			}
 
-			$.colorbox.remove();
+/*			$.colorbox.remove(); */
 			$(selector).colorbox(
 				$gp.cboxSettings({
 					resize : true ,

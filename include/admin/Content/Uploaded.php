@@ -925,8 +925,11 @@ namespace gp\admin\Content{
 
 			if( isset($result[$key]) && count($result[$key]) > 0 ){
 				foreach($result[$key] as $changed){
-					\gp\tool\Plugins::Action($action,$changed['realpath']);
-					self::CreateThumbnail($changed['realpath']);
+
+					$realpath = \gp\tool::WinPath($changed['realpath']); // TODO: that's rather a hotfix
+
+					\gp\tool\Plugins::Action($action, $realpath);
+					self::CreateThumbnail($realpath);
 				}
 			}
 		}

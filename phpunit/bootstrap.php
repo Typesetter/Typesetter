@@ -312,6 +312,8 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		static::Console('datadir = '.$dataDir);
 		static::Console('gp_data_type = '.gp_data_type);
 
+		print_r($_ENV);
+
 
 
 		// delete old installation

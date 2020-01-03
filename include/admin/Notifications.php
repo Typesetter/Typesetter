@@ -26,6 +26,7 @@ namespace gp\admin{
 
 			}elseif( isset($gpAdmin['notifications']['filters']) ){
 				$this->filters = $gpAdmin['notifications']['filters'];
+				unset($gpAdmin['notifications']);
 			}
 
 		}
@@ -86,7 +87,7 @@ namespace gp\admin{
 					$tr_class	= '';
 					$link_icon	= '<i class="fa fa-bell"></i>';
 					$link_title	= $langmessage['Hide'];
-					if( isset($item['priority']) && (int)$item['priority'] < 0 ){
+					if( $item['priority'] < 0 ){
 						$tr_class	= ' class="notification-item-muted"';
 						$link_icon	= '<i class="fa fa-bell-slash"></i>';
 						$link_title	= $langmessage['Show'];
@@ -314,8 +315,15 @@ namespace gp\admin{
 			// apply user filters
 			$this->FilterUserDefined();
 
+			$this->Sort();
+		}
 
-			// remove empty, count items, and get priority
+		/**
+		 * Remove empty, count items, and get priority
+		 *
+		 */
+		public function Sort(){
+
 			foreach( $this->notifications as $notification_type => &$notification ){
 
 				if( empty($this->notifications[$notification_type]['items']) ){
@@ -327,20 +335,25 @@ namespace gp\admin{
 				$priority			= 0;
 				foreach( $notification['items'] as $item ){
 
-					if( isset($item['priority']) && is_numeric($item['priority']) && $item['priority'] > 0 ){
-						$priority = max( (int)$item['priority'], $priority );
+					if( $item['priority'] > 0 ){
+						$priority			= max( $item['priority'], $priority );
 						$count++;
 					}
 
 				}
 
-				$notification['count']		= $count;
-				$notification['priority']	= $priority;
+				$notification['count']				= $count;
+				$notification['priority']			= $priority;
 			}
 
 			// sort by priority
 			uasort($this->notifications,function($a,$b){
-				return strnatcmp($b['priority'],$a['priority']);
+
+				if( $b['priority'] !== $a['priority'] ){
+					return strnatcmp($b['priority'],$a['priority']);
+				}
+
+				return strnatcmp($b['title'],$a['title']);
 			});
 		}
 
@@ -449,14 +462,18 @@ namespace gp\admin{
 				];
 			}
 
-			foreach( $items as &$item ){
+			foreach( $items as $item ){
 
 				if( !isset($item['id']) ){
 					trigger_error('id not set for notification '.pre($item)); // should we create an id?
 					continue;
 				}
 
-				$item['id']											= hash('crc32b', $item['id']);
+				$item				+= ['priority'=>0];
+				$item['priority']	= (int)$item['priority'];
+				$item['id']			= hash('crc32b', $item['id']);
+
+
 				$this->notifications[$title]['items'][$item['id']]	= $item;
 			}
 

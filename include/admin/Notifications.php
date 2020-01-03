@@ -51,7 +51,6 @@ namespace gp\admin{
 			global $langmessage;
 
 			$this->FilterUserDefined();
-			$this->Sort();
 
 			$this->debug('$notifications = ' . pre($this->notifications));
 
@@ -319,10 +318,11 @@ namespace gp\admin{
 
 
 		/**
+		 * Apply user defined (display) filters
 		 * Remove empty, count items, and get priority
 		 *
 		 */
-		public function Sort(){
+		public function FilterUserDefined(){
 
 			foreach( $this->notifications as $notification_type => &$notification ){
 
@@ -333,7 +333,14 @@ namespace gp\admin{
 
 				$count				= 0;
 				$priority			= 0;
-				foreach( $notification['items'] as $item ){
+				$total_priority		= 0;
+				foreach( $notification['items'] as $id => &$item ){
+
+					$total_priority	= max( $item['priority'], $total_priority );
+
+					if( isset($this->filters[$id]) ){
+						$item = $this->filters[$id] + $item;
+					}
 
 					if( $item['priority'] > 0 ){
 						$priority			= max( $item['priority'], $priority );
@@ -344,6 +351,8 @@ namespace gp\admin{
 
 				$notification['count']				= $count;
 				$notification['priority']			= $priority;
+				$notification['total_priority']		= $total_priority;
+
 			}
 
 			// sort by priority
@@ -353,27 +362,14 @@ namespace gp\admin{
 					return strnatcmp($b['priority'],$a['priority']);
 				}
 
+				if( $b['total_priority'] !== $a['total_priority'] ){
+					return strnatcmp($b['total_priority'],$a['total_priority']);
+				}
+
 				return strnatcmp($b['title'],$a['title']);
 			});
 		}
 
-
-		/**
-		 * Apply user defined (display) filters
-		 *
-		 */
-		public function FilterUserDefined(){
-
-			foreach( $this->notifications as $notification_type => $notification ){
-
-				foreach( $notification['items'] as $id => $item ){
-
-					if( isset($this->filters[$id]) ){
-						$this->notifications[$notification_type]['items'][$id] = $this->filters[$id] + $item;
-					}
-				}
-			}
-		}
 
 
 		/**
@@ -493,7 +489,6 @@ namespace gp\admin{
 			global $langmessage;
 
 			$this->FilterUserDefined();
-			$this->Sort();
 
 			if( count($this->notifications) < 1 ){
 				return;

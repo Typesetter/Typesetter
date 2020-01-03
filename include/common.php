@@ -331,7 +331,17 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
  * @since 2.4RC2
  */
 function gp_defined($var,$default){
-	defined($var) or define($var,$default);
+	
+	if( defined($var) ){
+		return;
+	}
+
+	if( array_key_exists($var,$_ENV) ){
+		define($var, $_ENV[$var]);
+
+	}else{
+		define($var,$default);
+	}
 }
 
 

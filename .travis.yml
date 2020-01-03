@@ -8,7 +8,9 @@ jobs:
     - php: 7.2
     - php: 7.3
     - php: 7.4
-    
+    - php: 7.4
+      env: gp_data_type=.json
+
 
 # phpunit 8 will result in an error
 # https://www.reddit.com/r/PHPhelp/comments/apipqs/travis_specifying_phpunit_version/

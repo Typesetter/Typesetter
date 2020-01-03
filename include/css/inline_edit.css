@@ -61,6 +61,7 @@ html{
 #ckeditor_tabs{
 	display:table;
 	width:100%;
+	table-layout:fixed;
 }
 
 #ckeditor_tabs a{
@@ -70,6 +71,7 @@ html{
 	color:#888 !important;
 	white-space:nowrap;
 	overflow:hidden;
+	text-overflow:ellipsis;
 }
 
 #ckeditor_tabs a:last-child{

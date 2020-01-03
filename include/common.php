@@ -331,14 +331,18 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
  * @since 2.4RC2
  */
 function gp_defined($var,$default){
-	
+
 	if( defined($var) ){
 		return;
 	}
 
-	if( array_key_exists($var,$_ENV) ){
-		define($var, $_ENV[$var]);
+	$env = getenv($var,true);
+	if( $env === false ){
+		$env = getenv($var);
+	}
 
+	if( $env !== false ){
+		define($var,$env);
 	}else{
 		define($var,$default);
 	}

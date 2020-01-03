@@ -295,12 +295,12 @@ namespace gp\admin{
 
 			// debug / development
 			if( $gpAdmin['granted'] != 'all' || $gpAdmin['editing'] != 'all' ){
-				self::FilterType('debug','superuser');
+				self::FilterType('Development','superuser');
 			}
 
 			// extra content draft
 			if( !\gp\admin\Tools::HasPermission('Admin/Extra') ){
-				self::FilterType('drafts','extra');
+				self::FilterType('Working Drafts','extra');
 			}
 
 			// theme update
@@ -319,7 +319,7 @@ namespace gp\admin{
 			}
 
 			// page draft
-			self::FilterCallback('drafts',function($item){
+			self::FilterCallback('Working Drafts',function($item){
 				if( $item['type'] == 'page' && !\gp\admin\Tools::CanEdit($item['title']) ){
 					return true;
 				}
@@ -328,7 +328,7 @@ namespace gp\admin{
 
 
 			// private page
-			self::FilterCallback('private_pages',function($item){
+			self::FilterCallback('Private Pages',function($item){
 				if( !\gp\admin\Tools::CanEdit($item['title']) ){
 					return true;
 				}
@@ -347,9 +347,9 @@ namespace gp\admin{
 
 			foreach( self::$notifications as $notification_type => $notification ){
 
-				foreach( $notification['items'] as $id => $item ){
-					if( isset(self::$filters[$id]) ){
-						self::$notifications[$notification_type]['items'][$id] = self::$filters[$id] + $item;
+				foreach( $notification['items'] as $item_key => $item ){
+					if( isset(self::$filters[$item['id']]) ){
+						self::$notifications[$notification_type]['items'][$item_key] = self::$filters[$item['id']] + $item;
 					}
 				}
 			}
@@ -366,13 +366,13 @@ namespace gp\admin{
 				return;
 			}
 
-			foreach( self::$notifications[$notification_type]['items'] as $id => $item ){
+			foreach( self::$notifications[$notification_type]['items'] as $item_key => $item ){
 
 				if( $item['type'] !== $item_type ){
 					continue;
 				}
 
-				unset(self::$notifications[$notification_type]['items'][$id]);
+				unset(self::$notifications[$notification_type]['items'][$item_key]);
 			}
 
 		}
@@ -385,9 +385,9 @@ namespace gp\admin{
 			if( !isset(self::$notifications[$notification_type]) ){
 				return;
 			}
-			foreach( self::$notifications[$notification_type]['items'] as $id => $item ){
+			foreach( self::$notifications[$notification_type]['items'] as $item_key => $item ){
 				if( $callback($item) === true ){
-					unset(self::$notifications[$notification_type]['items'][$id]);
+					unset(self::$notifications[$notification_type]['items'][$item_key]);
 				}
 			}
 		}
@@ -400,71 +400,32 @@ namespace gp\admin{
 		*/
 		public static function CheckNotifications(){
 
-			$notifications = array();
-
-			$drafts = self::GetDrafts();
-			if( count($drafts) > 0 ){
-				$notifications['drafts'] = array(
-					'title'			=> 'Working Drafts',
-					'badge_bg'		=> '#329880',
-					'badge_color'	=> '#fff',
-					'items'			=> $drafts,
-				);
-			}
-
-			$private_pages = self::GetPrivatePages();
-			if( count($private_pages) > 0 ){
-				$notifications['private_pages'] = array(
-					'title'			=> 'Private Pages',
-					'badge_bg'		=> '#ad5f45',
-					'badge_color'	=> '#fff',
-					'items'			=> $private_pages,
-				);
-			}
-
-			if( count(\gp\Admin\Tools::$new_versions) > 0 ){
-				$notifications['updates'] = array(
-					'title'			=> 'updates',
-					'badge_bg'		=> '#3153b7',
-					'badge_color'	=> '#fff',
-					'items'			=> self::GetUpdatesNotifications(),
-				);
-			}
+			self::$notifications = array();
 
 
-			$debug_notices = self::GetDebugNotifications();
-			if( !empty($debug_notices) ){
-				$notifications['debug'] = array(
-					'title'			=> 'Development',
-					'badge_bg'		=> '#ff8c00',
-					'badge_color'	=> '#000',
-					'items'			=> $debug_notices,
-				);
-			}
+			$items = self::GetDrafts();
+			self::Add('Working Drafts', $items, '#329880');
 
 
-			$notifications	= \gp\tool\Plugins::Filter('Notifications', array($notifications));
+			$items = self::GetPrivatePages();
+			self::Add('Private Pages', $items, '#ad5f45');
 
 
-			// reorganize items by id
-			foreach( $notifications as $notification_type => $notification ){
-				$items = [];
-				foreach( $notification['items'] as $item ){
-					if( !isset($item['id']) ){
-						trigger_error('id not set for notification '.pre($item)); // should we create an id?
-						continue;
-					}
-					$items[$item['id']] = $item;
-				}
-				$notifications[$notification_type]['items'] = $items;
-			}
+			$items = self::GetUpdatesNotifications();
+			self::Add('updates', $items, '#3153b7');
 
 
-			self::$notifications = $notifications;
+			$items = self::GetDebugNotifications();
+			self::Add('Development', $items, '#ff8c00', '#000');
+
+
+			self::$notifications	= \gp\tool\Plugins::Filter('Notifications', array(self::$notifications));
+
+
 			self::ApplyFilters();
 
 
-			// remove empty, count items, and get priority
+			// remove empty, count items, get priority, and
 			foreach( self::$notifications as $notification_type => &$notification ){
 
 				if( empty(self::$notifications[$notification_type]['items']) ){
@@ -472,18 +433,26 @@ namespace gp\admin{
 					continue;
 				}
 
+				$items				= [];
 				$count				= 0;
 				$priority			= 0;
 				foreach( $notification['items'] as $item ){
+
+					if( !isset($item['id']) ){
+						trigger_error('id not set for notification '.pre($item)); // should we create an id?
+						continue;
+					}
 
 					if( isset($item['priority']) && is_numeric($item['priority']) && $item['priority'] > 0 ){
 						$priority = max( (int)$item['priority'], $priority );
 						$count++;
 					}
+					$items[$item['id']] = $item;
 				}
 
 				$notification['count']		= $count;
 				$notification['priority']	= $priority;
+				$notification['items']		= $items;
 
 			}
 
@@ -494,7 +463,24 @@ namespace gp\admin{
 
 		}
 
+		/**
+		 * Add Notifications
+		 *
+		 */
+		public static function Add( $title, $items, $bg, $color = '#fff'){
 
+			if( empty($items) ){
+				return;
+			}
+
+
+			self::$notifications[$title] = array(
+				'title'			=> $title,
+				'badge_bg'		=> $bg,
+				'badge_color'	=> $color,
+				'items'			=> $items,
+				);
+		}
 
 
 		/**

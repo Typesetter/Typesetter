@@ -19,6 +19,8 @@ namespace gp\admin{
 
 			// get all notifications
 			$this->CheckNotifications();
+			$this->ApplyFilters();
+
 
 			// Get active filters from the admin sessio
 			if( !empty($gpAdmin['notification_filters']) ){
@@ -48,7 +50,8 @@ namespace gp\admin{
 		public function ListNotifications(){
 			global $langmessage;
 
-			$this->ApplyFilters();
+			$this->FilterUserDefined();
+			$this->Sort();
 
 			$this->debug('$notifications = ' . pre($this->notifications));
 
@@ -82,7 +85,7 @@ namespace gp\admin{
 				echo '<th style="text-align:right;">' . $langmessage['Visibility'] . '</th>';
 				echo '</tr>';
 
-				foreach( $notification['items'] as $item ){
+				foreach( $notification['items'] as $id => $item ){
 
 					$tr_class	= '';
 					$link_icon	= '<i class="fa fa-bell"></i>';
@@ -103,7 +106,7 @@ namespace gp\admin{
 								'Admin/Notifications/Manage',
 								$link_icon,
 								'cmd=toggle_priority'
-									. '&id=' . rawurlencode($item['id'])
+									. '&id=' . rawurlencode($id)
 									. '&type=' . rawurlencode($filter_list_by),
 								array(
 									'title'		=> $link_title,
@@ -312,11 +315,8 @@ namespace gp\admin{
 				return false;
 			});
 
-			// apply user filters
-			$this->FilterUserDefined();
-
-			$this->Sort();
 		}
+
 
 		/**
 		 * Remove empty, count items, and get priority
@@ -366,9 +366,10 @@ namespace gp\admin{
 
 			foreach( $this->notifications as $notification_type => $notification ){
 
-				foreach( $notification['items'] as $item_key => $item ){
-					if( isset($this->filters[$item['id']]) ){
-						$this->notifications[$notification_type]['items'][$item_key] = $this->filters[$item['id']] + $item;
+				foreach( $notification['items'] as $id => $item ){
+
+					if( isset($this->filters[$id]) ){
+						$this->notifications[$notification_type]['items'][$id] = $this->filters[$id] + $item;
 					}
 				}
 			}
@@ -385,13 +386,13 @@ namespace gp\admin{
 				return;
 			}
 
-			foreach( $this->notifications[$notification_type]['items'] as $item_key => $item ){
+			foreach( $this->notifications[$notification_type]['items'] as $id => $item ){
 
 				if( $item['type'] !== $item_type ){
 					continue;
 				}
 
-				unset($this->notifications[$notification_type]['items'][$item_key]);
+				unset($this->notifications[$notification_type]['items'][$id]);
 			}
 
 		}
@@ -404,9 +405,9 @@ namespace gp\admin{
 			if( !isset($this->notifications[$notification_type]) ){
 				return;
 			}
-			foreach( $this->notifications[$notification_type]['items'] as $item_key => $item ){
+			foreach( $this->notifications[$notification_type]['items'] as $id => $item ){
 				if( $callback($item) === true ){
-					unset($this->notifications[$notification_type]['items'][$item_key]);
+					unset($this->notifications[$notification_type]['items'][$id]);
 				}
 			}
 		}
@@ -471,10 +472,11 @@ namespace gp\admin{
 
 				$item				+= ['priority'=>0];
 				$item['priority']	= (int)$item['priority'];
-				$item['id']			= hash('crc32b', $item['id']);
+				$id					= hash('crc32b', $item['id']);
 
+				unset($item['id']);
 
-				$this->notifications[$title]['items'][$item['id']]	= $item;
+				$this->notifications[$title]['items'][$id]	= $item;
 			}
 
 
@@ -490,7 +492,8 @@ namespace gp\admin{
 		public function GetNotifications($in_panel=true){
 			global $langmessage;
 
-			$this->ApplyFilters();
+			$this->FilterUserDefined();
+			$this->Sort();
 
 			if( count($this->notifications) < 1 ){
 				return;

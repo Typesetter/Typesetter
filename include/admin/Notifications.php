@@ -6,9 +6,22 @@ namespace gp\admin{
 
 	class Notifications{
 
-		public static		$notifications	= array();
-		public static		$filters			= array();
-		private static		$debug			= false;
+		public 			$notifications	= [];
+		public 			$filters		= [];
+		private 		$debug			= false;
+		private static	$singleton;
+
+
+		public function __construct(){
+
+			self::$singleton = $this;
+		}
+
+		public function GetSingleton(){
+			if( !self::$singleton ){
+				new self();
+			}
+		}
 
 
 		/**
@@ -17,12 +30,12 @@ namespace gp\admin{
 		 * The list output can be filtered by optional $_REQUEST['type'] value
 		 *
 		 */
-		public static function ListNotifications(){
+		public function ListNotifications(){
 			global $langmessage;
 
-			self::CheckNotifications();
+			$this->CheckNotifications();
 
-			self::debug('$notifications = ' . pre(self::$notifications));
+			$this->debug('$notifications = ' . pre($this->notifications));
 
 			echo '<div class="inline_box show-notifications-box">';
 
@@ -31,15 +44,15 @@ namespace gp\admin{
 			$filter_list_by = '';
 			if( isset($_REQUEST['type']) ){
 				$filter_list_by = rawurldecode($_REQUEST['type']);
-				self::Tabs($filter_list_by);
+				$this->Tabs($filter_list_by);
 			}
 
 
-			foreach( self::$notifications as $type => $notification ){
+			foreach( $this->notifications as $type => $notification ){
 
 
 				if( empty($filter_list_by) ){
-					$title = self::GetTitle($notification['title']);
+					$title = $this->GetTitle($notification['title']);
 					echo '<h3>' . $title . '</h3>';
 				}elseif( $type != $filter_list_by ){
 					continue;
@@ -104,9 +117,9 @@ namespace gp\admin{
 		 * Tabs
 		 *
 		 */
-		public static function Tabs($filter_list_by){
+		public function Tabs($filter_list_by){
 			echo '<div class="layout_links">';
-			foreach( self::$notifications as $type => $notification ){
+			foreach( $this->notifications as $type => $notification ){
 
 				$class = '';
 
@@ -117,10 +130,10 @@ namespace gp\admin{
 
 				echo \gp\tool::Link(
 					'Admin/Notifications',
-					self::GetTitle($notification['title']) . ' ('.$notification['count'].')',
+					$this->GetTitle($notification['title']) . ' ('.$notification['count'].')',
 					'cmd=ShowNotifications&type=' . rawurlencode($type),
 					array(
-						'title'		=> self::GetTitle($notification['title']),
+						'title'		=> $this->GetTitle($notification['title']),
 						'class'		=> $class,
 						'style'		=> 'margin-right:0.5em;',
 						'data-cmd'	=> 'gpabox',
@@ -136,7 +149,7 @@ namespace gp\admin{
 		/**
 		 * Notification Title
 		 */
-		public static function GetTitle($title){
+		public function GetTitle($title){
 			global $langmessage;
 
 			if( isset($langmessage[$title]) ){
@@ -150,7 +163,7 @@ namespace gp\admin{
 		 * Set display filters and priority for notification items by $_REQUEST
 		 *
 		 */
-		public static function ManageNotifications(){
+		public function ManageNotifications(){
 			global $page;
 
 			$cmd = \gp\tool::GetCommand();
@@ -158,9 +171,8 @@ namespace gp\admin{
 			switch( $cmd ){
 				case 'toggle_priority':
 					if( !empty($_REQUEST['id']) ){
-						self::SetFilter($_REQUEST['id'], 'toggle_priority');
-						self::UpdateNotifications();
-						self::ListNotifications();
+						$this->SetFilter($_REQUEST['id'], 'toggle_priority');
+						$this->ListNotifications();
 						return 'return';
 					}
 					break;
@@ -170,16 +182,15 @@ namespace gp\admin{
 						isset($_REQUEST['new_priority']) &&
 						is_numeric($_REQUEST['new_priority'])
 						){
-						self::SetFilter($_REQUEST['id'], 'set_priority', $_REQUEST['new_priority']);
-						self::UpdateNotifications();
-						self::ListNotifications();
+						$this->SetFilter($_REQUEST['id'], 'set_priority', $_REQUEST['new_priority']);
+						$this->ListNotifications();
 						return 'return';
 					}
 					break;
 			}
 
 			$page->ajaxReplace = array();
-			self::debug('Error: ManageNotifications - invalid command');
+			$this->debug('Error: ManageNotifications - invalid command');
 
 			return false;
 		}
@@ -190,11 +201,11 @@ namespace gp\admin{
 		 * Get active filters from the admin session
 		 *
 		 */
-		public static function GetFilters(){
+		public function GetFilters(){
 			global $gpAdmin;
 			if( !empty($gpAdmin['notifications']['filters']) ){
-				self::$filters = $gpAdmin['notifications']['filters'];
-				return count(self::$filters);
+				$this->filters = $gpAdmin['notifications']['filters'];
+				return count($this->filters);
 			}
 			return false;
 		}
@@ -205,12 +216,12 @@ namespace gp\admin{
 		 * Save filters to the admin session
 		 *
 		 */
-		public static function SaveFilters(){
+		public function SaveFilters(){
 			global $gpAdmin;
 			if( isset($gpAdmin['notifications']) && is_array($gpAdmin['notifications']) ){
-				$gpAdmin['notifications']['filters'] = self::$filters;
+				$gpAdmin['notifications']['filters'] = $this->filters;
 			}else{
-				$gpAdmin['notifications'] = array( 'filters' => self::$filters );
+				$gpAdmin['notifications'] = array( 'filters' => $this->filters );
 			}
 		}
 
@@ -223,14 +234,15 @@ namespace gp\admin{
 		 * @param string $val filter value
 		 *
 		 */
-		public static function SetFilter($id, $do, $val=false){
+		public function SetFilter($id, $do, $val=false){
+			global $gpAdmin;
 
-			self::CheckNotifications();
-			self::GetFilters();
+			$this->CheckNotifications();
+			$this->GetFilters();
 
 			// check if id exists in notifications
 			$id_exists = false;
-			foreach( self::$notifications as $type => $notification ){
+			foreach( $this->notifications as $type => $notification ){
 				if( array_key_exists($id,$notification['items']) ){
 					$id_exists = true;
 					break;
@@ -239,9 +251,9 @@ namespace gp\admin{
 
 			if( !$id_exists ){
 				// notification id no longer exists, purge possible stray filter
-				if( isset(self::$filters[$id]) ){
-					unset(self::$filters[$id]);
-					self::SaveFilters();
+				if( isset($this->filters[$id]) ){
+					unset($this->filters[$id]);
+					$this->SaveFilters();
 				}
 				return;
 			}
@@ -249,27 +261,27 @@ namespace gp\admin{
 			switch( $do ){
 
 				case 'clear_filter':
-					unset(self::$filters[$id]);
-					self::SaveFilters();
+					unset($this->filters[$id]);
+					$this->SaveFilters();
 					return;
 
 				case 'toggle_priority':
-					if( isset(self::$filters[$id]['priority']) ){
-						unset(self::$filters[$id]['priority']);
+					if( isset($this->filters[$id]['priority']) ){
+						unset($this->filters[$id]['priority']);
 					}else{
-						self::$filters[$id]['priority'] = -1;
+						$this->filters[$id]['priority'] = -1;
 					}
-					self::SaveFilters();
+					$this->SaveFilters();
 					return;
 
 				case 'set_priority':
-					self::$filters[$id]['priority'] = (int)$val;
-					self::SaveFilters();
+					$this->filters[$id]['priority'] = (int)$val;
+					$this->SaveFilters();
 					return;
 
 			}
 
-			self::debug(
+			$this->debug(
 					'Notifications SetFilter Error: unknown command "'
 					. htmlspecialchars($do) . '"'
 				);
@@ -285,41 +297,41 @@ namespace gp\admin{
 		 * Apply user defined (display) filters
 		 *
 		 */
-		public static function ApplyFilters(){
+		public function ApplyFilters(){
 			global $gpAdmin;
 
-			self::GetFilters();
+			$this->GetFilters();
 
 
 			// Remove items lacking user permissions and therefore cannot be dealt with anyway
 
 			// debug / development
 			if( $gpAdmin['granted'] != 'all' || $gpAdmin['editing'] != 'all' ){
-				self::FilterType('Development','superuser');
+				$this->FilterType('Development','superuser');
 			}
 
 			// extra content draft
 			if( !\gp\admin\Tools::HasPermission('Admin/Extra') ){
-				self::FilterType('Working Drafts','extra');
+				$this->FilterType('Working Drafts','extra');
 			}
 
 			// theme update
 			if( !\gp\admin\Tools::HasPermission('Admin_Theme_Content/Remote') ){
-				self::FilterType('updates','theme');
+				$this->FilterType('updates','theme');
 			}
 
 			// addon update
 			if( !\gp\admin\Tools::HasPermission('Admin/Addons/Remote') ){
-				self::FilterType('updates','plugin');
+				$this->FilterType('updates','plugin');
 			}
 
 			// core update
 			if( !\gp\admin\Tools::HasPermission('Admin/Uninstall') ){ // can't find a permission for core updates so I use Uninstall
-				self::FilterType('updates','core');
+				$this->FilterType('updates','core');
 			}
 
 			// page draft
-			self::FilterCallback('Working Drafts',function($item){
+			$this->FilterCallback('Working Drafts',function($item){
 				if( $item['type'] == 'page' && !\gp\admin\Tools::CanEdit($item['title']) ){
 					return true;
 				}
@@ -328,7 +340,7 @@ namespace gp\admin{
 
 
 			// private page
-			self::FilterCallback('Private Pages',function($item){
+			$this->FilterCallback('Private Pages',function($item){
 				if( !\gp\admin\Tools::CanEdit($item['title']) ){
 					return true;
 				}
@@ -336,20 +348,20 @@ namespace gp\admin{
 			});
 
 			// apply user filters
-			self::FilterUserDefined();
+			$this->FilterUserDefined();
 		}
 
 		/**
 		 * Apply user defined (display) filters
 		 *
 		 */
-		public static function FilterUserDefined(){
+		public function FilterUserDefined(){
 
-			foreach( self::$notifications as $notification_type => $notification ){
+			foreach( $this->notifications as $notification_type => $notification ){
 
 				foreach( $notification['items'] as $item_key => $item ){
-					if( isset(self::$filters[$item['id']]) ){
-						self::$notifications[$notification_type]['items'][$item_key] = self::$filters[$item['id']] + $item;
+					if( isset($this->filters[$item['id']]) ){
+						$this->notifications[$notification_type]['items'][$item_key] = $this->filters[$item['id']] + $item;
 					}
 				}
 			}
@@ -360,19 +372,19 @@ namespace gp\admin{
 		 * Filter notifications matching a notification type and item type
 		 *
 		 */
-		public static function FilterType( $notification_type, $item_type ){
+		public function FilterType( $notification_type, $item_type ){
 
-			if( !isset(self::$notifications[$notification_type]) ){
+			if( !isset($this->notifications[$notification_type]) ){
 				return;
 			}
 
-			foreach( self::$notifications[$notification_type]['items'] as $item_key => $item ){
+			foreach( $this->notifications[$notification_type]['items'] as $item_key => $item ){
 
 				if( $item['type'] !== $item_type ){
 					continue;
 				}
 
-				unset(self::$notifications[$notification_type]['items'][$item_key]);
+				unset($this->notifications[$notification_type]['items'][$item_key]);
 			}
 
 		}
@@ -381,13 +393,13 @@ namespace gp\admin{
 		 * Filter notifications matching a notification type with a callback
 		 *
 		 */
-		public static function FilterCallback( $notification_type, $callback ){
-			if( !isset(self::$notifications[$notification_type]) ){
+		public function FilterCallback( $notification_type, $callback ){
+			if( !isset($this->notifications[$notification_type]) ){
 				return;
 			}
-			foreach( self::$notifications[$notification_type]['items'] as $item_key => $item ){
+			foreach( $this->notifications[$notification_type]['items'] as $item_key => $item ){
 				if( $callback($item) === true ){
-					unset(self::$notifications[$notification_type]['items'][$item_key]);
+					unset($this->notifications[$notification_type]['items'][$item_key]);
 				}
 			}
 		}
@@ -398,66 +410,58 @@ namespace gp\admin{
 		* @return array array of notifications
 		*
 		*/
-		public static function CheckNotifications(){
+		public function CheckNotifications(){
 
-			self::$notifications = array();
-
-
-			$items = self::GetDrafts();
-			self::Add('Working Drafts', $items, '#329880');
+			$this->notifications = array();
 
 
-			$items = self::GetPrivatePages();
-			self::Add('Private Pages', $items, '#ad5f45');
+			$items = $this->GetDrafts();
+			$this->Add('Working Drafts', $items, '#329880');
 
 
-			$items = self::GetUpdatesNotifications();
-			self::Add('updates', $items, '#3153b7');
+			$items = $this->GetPrivatePages();
+			$this->Add('Private Pages', $items, '#ad5f45');
 
 
-			$items = self::GetDebugNotifications();
-			self::Add('Development', $items, '#ff8c00', '#000');
+			$items = $this->GetUpdatesNotifications();
+			$this->Add('updates', $items, '#3153b7');
 
 
-			self::$notifications	= \gp\tool\Plugins::Filter('Notifications', array(self::$notifications));
+			$items = $this->GetDebugNotifications();
+			$this->Add('Development', $items, '#ff8c00', '#000');
 
 
-			self::ApplyFilters();
+			\gp\tool\Plugins::Action('Notifications',[$this]);
+
+
+			$this->ApplyFilters();
 
 
 			// remove empty, count items, get priority, and
-			foreach( self::$notifications as $notification_type => &$notification ){
+			foreach( $this->notifications as $notification_type => &$notification ){
 
-				if( empty(self::$notifications[$notification_type]['items']) ){
-					unset(self::$notifications[$notification_type]);
+				if( empty($this->notifications[$notification_type]['items']) ){
+					unset($this->notifications[$notification_type]);
 					continue;
 				}
 
-				$items				= [];
 				$count				= 0;
 				$priority			= 0;
 				foreach( $notification['items'] as $item ){
-
-					if( !isset($item['id']) ){
-						trigger_error('id not set for notification '.pre($item)); // should we create an id?
-						continue;
-					}
 
 					if( isset($item['priority']) && is_numeric($item['priority']) && $item['priority'] > 0 ){
 						$priority = max( (int)$item['priority'], $priority );
 						$count++;
 					}
-					$items[$item['id']] = $item;
+
 				}
 
 				$notification['count']		= $count;
 				$notification['priority']	= $priority;
-				$notification['items']		= $items;
-
 			}
 
 			// sort by priority
-			uasort(self::$notifications,function($a,$b){
+			uasort($this->notifications,function($a,$b){
 				return strnatcmp($b['priority'],$a['priority']);
 			});
 
@@ -467,19 +471,33 @@ namespace gp\admin{
 		 * Add Notifications
 		 *
 		 */
-		public static function Add( $title, $items, $bg, $color = '#fff'){
+		public function Add( $title, $items, $bg, $color = '#fff'){
 
 			if( empty($items) ){
 				return;
 			}
 
+			if( !isset($this->notifications[$title]) ){
+				$this->notifications[$title] = [
+					'title'			=> $title,
+					'badge_bg'		=> $bg,
+					'badge_color'	=> $color,
+					'items'			=> [],
+				];
+			}
 
-			self::$notifications[$title] = array(
-				'title'			=> $title,
-				'badge_bg'		=> $bg,
-				'badge_color'	=> $color,
-				'items'			=> $items,
-				);
+			foreach( $items as &$item ){
+
+				if( !isset($item['id']) ){
+					trigger_error('id not set for notification '.pre($item)); // should we create an id?
+					continue;
+				}
+
+				$item['id']											= hash('crc32b', $item['id']);
+				$this->notifications[$title]['items'][$item['id']]	= $item;
+			}
+
+
 		}
 
 
@@ -489,12 +507,12 @@ namespace gp\admin{
 		* @param boolean $in_panel if panelgroup shall be rendered in admin menu
 		*
 		*/
-		public static function GetNotifications($in_panel=true){
+		public function GetNotifications($in_panel=true){
 			global $langmessage, $gpAdmin;
 
-			self::CheckNotifications();
+			$this->CheckNotifications();
 
-			if( count(self::$notifications) < 1 ){
+			if( count($this->notifications) < 1 ){
 				return;
 			}
 
@@ -514,16 +532,16 @@ namespace gp\admin{
 
 
 			ob_start();
-			foreach(self::$notifications as $type => $notification ){
+			foreach($this->notifications as $type => $notification ){
 
 				if( empty($notification['items']) ){
-					self::debug('notification => items subarray mising or empty');
+					$this->debug('notification => items subarray mising or empty');
 					continue;
 				}
 
 
 				$total_count		+= $notification['count'];
-				$title				= self::GetTitle($notification['title']);
+				$title				= $this->GetTitle($notification['title']);
 				$badge_html			= '';
 				$badge_style		= '';
 				$notification		+= $default_style;
@@ -579,7 +597,7 @@ namespace gp\admin{
 		* @return array single notification containing items
 		*
 		*/
-		public static function GetDebugNotifications(){
+		public function GetDebugNotifications(){
 			global $langmessage;
 
 			$debug_note = array();
@@ -631,7 +649,7 @@ namespace gp\admin{
 		* @return array single notification containing items
 		*
 		*/
-		public static function GetUpdatesNotifications(){
+		public function GetUpdatesNotifications(){
 			global $langmessage;
 
 			$updates = array();
@@ -681,19 +699,20 @@ namespace gp\admin{
 		*
 		*/
 		public static function UpdateNotifications(){
-			global $page;
 
 			if( !\gp\admin\Tools::HasPermission('Admin/Notifications') ){
 				return;
 			}
 
+			self::GetSingleton();
+
 			ob_start();
-			self::GetNotifications();
+			self::$singleton->GetNotifications();
 			$panelgroup = ob_get_clean();
 
 			$page->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
-		}
 
+		}
 
 
 		/**
@@ -701,7 +720,7 @@ namespace gp\admin{
 		* @returns {array} of current working drafts
 		*
 		*/
-		public static function GetDrafts(){
+		public function GetDrafts(){
 			global $dataDir, $gp_index, $gp_titles, $langmessage;
 
 			$draft_types = array(
@@ -803,7 +822,7 @@ namespace gp\admin{
 		* @returns {array} of current private pages
 		*
 		*/
-		public static function GetPrivatePages(){
+		public function GetPrivatePages(){
 			global $gp_titles, $langmessage, $page;
 
 			$private_pages = array();
@@ -853,8 +872,8 @@ namespace gp\admin{
 		}
 
 
-		public static function debug($msg){
-			self::$debug && debug($msg);
+		public function debug($msg){
+			$this->debug && debug($msg);
 		}
 
 

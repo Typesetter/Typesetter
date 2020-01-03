@@ -30,7 +30,7 @@ if( version_compare(phpversion(), '5.4.0', '<') ){
  *
  */
 
-#if( file_exists('gpconfig.php') ) require_once('gpconfig.php');
-require_once('x_config.php');
+if( file_exists('gpconfig.php') ) require_once('gpconfig.php');
+//require_once('x_config.php');
 
 require_once('./include/main.php');

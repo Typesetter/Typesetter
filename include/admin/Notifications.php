@@ -418,9 +418,9 @@ namespace gp\admin{
 
 
 		/**
-		* Aggregate all sources of notifications
-		*
-		*/
+		 * Aggregate all sources of notifications
+		 *
+		 */
 		public function CheckNotifications(){
 
 			$this->notifications = array();
@@ -498,11 +498,11 @@ namespace gp\admin{
 
 
 		/**
-		* Get Notifications
-		* Outputs a Notifications panelgroup
-		* @param boolean $in_panel if panelgroup shall be rendered in admin menu
-		*
-		*/
+		 * Get Notifications
+		 * Outputs a Notifications panelgroup
+		 * @param boolean $in_panel if panelgroup shall be rendered in admin menu
+		 *
+		 */
 		public function GetNotifications($in_panel=true){
 			global $langmessage;
 
@@ -590,10 +590,10 @@ namespace gp\admin{
 
 
 		/**
-		* Get a Notification array for debugging / development relevant information
-		* @return array $debug_note single notification array
-		*
-		*/
+		 * Get a Notification array for debugging / development relevant information
+		 * @return array $debug_note single notification array
+		 *
+		 */
 		public function GetDebugNotifications(){
 			global $langmessage;
 
@@ -692,9 +692,9 @@ namespace gp\admin{
 
 
 		/**
-		* Update the Notifications panelgroup in Admin Menu via AJAX
-		*
-		*/
+		 * Update the Notifications panelgroup in Admin Menu via AJAX
+		 *
+		 */
 		public static function UpdateNotifications(){
 			global $page;
 
@@ -717,10 +717,10 @@ namespace gp\admin{
 
 
 		/**
-		* Get information about working drafts
-		* @return array $drafts single notification array of current working drafts
-		*
-		*/
+		 * Get information about working drafts
+		 * @return array $drafts single notification array of current working drafts
+		 *
+		 */
 		public function GetDrafts(){
 			global $dataDir, $gp_index, $gp_titles, $langmessage;
 
@@ -819,10 +819,10 @@ namespace gp\admin{
 
 
 		/**
-		* Get information of all private (invisible) pages
-		* @return array $private_pages single notification array of pages currently set as private
-		*
-		*/
+		 * Get information of all private (invisible) pages
+		 * @return array $private_pages single notification array of pages currently set as private
+		 *
+		 */
 		public function GetPrivatePages(){
 			global $gp_titles, $langmessage, $page;
 

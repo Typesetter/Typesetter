@@ -706,7 +706,8 @@ namespace gp\admin{
 
 			//notifications
 			if( \gp\admin\Tools::HasPermission('Admin/Notifications') ){
-				\gp\admin\Notifications::GetNotifications($in_panel);
+				$notifications = new \gp\admin\Notifications();
+				$notifications->GetNotifications($in_panel);
 			}
 
 			//username

@@ -1059,7 +1059,7 @@ class Edit extends \gp\Page{
 			break;
 		}
 
-		\gp\admin\Notifications::UpdateNotifications(true); // passing true = add to ajaxReplace
+		\gp\admin\Notifications::UpdateNotifications();
 
 		return true;
 	}
@@ -1309,12 +1309,7 @@ class Edit extends \gp\Page{
 		}
 
 		// update notifications
-		if( \gp\admin\Tools::HasPermission('Admin/Notifications') ){
-			ob_start();
-			\gp\admin\Notifications::GetNotifications();
-			$panelgroup = ob_get_clean();
-			$this->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
-		}
+		\gp\admin\Notifications::UpdateNotifications();
 
 		return true;
 	}
@@ -1428,7 +1423,7 @@ class Edit extends \gp\Page{
 		$page->ajaxReplace		= array();
 		$page->ajaxReplace[]	= array('DraftPublished');
 
-		\gp\admin\Notifications::UpdateNotifications(true); // passing true = add to ajaxReplace
+		\gp\admin\Notifications::UpdateNotifications();
 
 		return true;
 	}

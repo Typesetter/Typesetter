@@ -624,7 +624,8 @@
 			var src = $img.find('img').attr('src') || '';
 			var file_name = src.substring(src.lastIndexOf('/') + 1);
 			file_name = file_name.substr(0, file_name.lastIndexOf('.'));
-			var auto_caption = file_name.substring(0, file_name.lastIndexOf('.')).split("_").join(" ");
+			var auto_caption = decodeURI(file_name);
+			auto_caption = auto_caption.substring(0, auto_caption.lastIndexOf('.')).split("_").join(" ");
 			$img.append('<span class="caption">' + auto_caption + '</span>');
 			var li = $('<li>').append($img);
 			if( holder ){

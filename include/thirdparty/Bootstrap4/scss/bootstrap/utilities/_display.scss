@@ -8,8 +8,28 @@
   @include media-breakpoint-up($breakpoint) {
     $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
 
-    @each $value in $displays {
-      .d#{$infix}-#{$value} { display: $value !important; }
+    .d#{$infix}-none         { display: none !important; }
+    .d#{$infix}-inline       { display: inline !important; }
+    .d#{$infix}-inline-block { display: inline-block !important; }
+    .d#{$infix}-block        { display: block !important; }
+    .d#{$infix}-table        { display: table !important; }
+    .d#{$infix}-table-row    { display: table-row !important; }
+    .d#{$infix}-table-cell   { display: table-cell !important; }
+    .d#{$infix}-flex         {
+      // ########## add vendor-prefixes ##########
+      display: -webkit-box !important; 
+      display: -webkit-flex !important; 
+      display: -moz-flex !important; 
+      display: -ms-flexbox !important; 
+      display: flex !important; 
+    }
+    .d#{$infix}-inline-flex  {
+      // ########## add vendor-prefixes ##########
+      display: -webkit-inline-box !important; 
+      display: -webkit-inline-flex !important; 
+      display: -moz-inline-flex !important; 
+      display: -ms-inline-flexbox !important; 
+      display: inline-flex !important; 
     }
   }
 }
@@ -20,7 +40,27 @@
 //
 
 @media print {
-  @each $value in $displays {
-    .d-print-#{$value} { display: $value !important; }
+  .d-print-none         { display: none !important; }
+  .d-print-inline       { display: inline !important; }
+  .d-print-inline-block { display: inline-block !important; }
+  .d-print-block        { display: block !important; }
+  .d-print-table        { display: table !important; }
+  .d-print-table-row    { display: table-row !important; }
+  .d-print-table-cell   { display: table-cell !important; }
+  .d-print-flex         {
+    // ########## add vendor-prefixes ##########
+    display: -webkit-box !important; 
+    display: -webkit-flex !important; 
+    display: -moz-flex !important; 
+    display: -ms-flexbox !important; 
+    display: flex !important; 
+  }
+  .d-print-inline-flex  {
+    // ########## add vendor-prefixes ##########
+    display: -webkit-inline-box !important; 
+    display: -webkit-inline-flex !important; 
+    display: -moz-inline-flex !important; 
+    display: -ms-inline-flexbox !important; 
+    display: inline-flex !important; 
   }
 }

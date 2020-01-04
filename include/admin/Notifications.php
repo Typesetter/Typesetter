@@ -451,8 +451,8 @@ namespace gp\admin{
 		 * Add Notifications
 		 * @param string $title will sho up as panelgroup submenu item
 		 * @param array $items see below
-		 * @param string [$bg] number badge background color (any valid css color value)
-		 * @param string [$color] number badge text color (any valid color value), use a dark color on light $bg
+		 * @param string $bg (optional) badge background color (any valid css color value)
+		 * @param string $color (optional) badge text color (any valid color value), use a dark color on light $bg
 		 *
 		 * $items are associative arrays containing the following keys:
 		 * 		'label'		=> (string) text or html, first element of the item row

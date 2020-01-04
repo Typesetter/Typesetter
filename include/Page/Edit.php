@@ -1309,12 +1309,7 @@ class Edit extends \gp\Page{
 		}
 
 		// update notifications
-		if( \gp\admin\Tools::HasPermission('Admin/Notifications') ){
-			ob_start();
-			\gp\admin\Notifications::GetNotifications();
-			$panelgroup = ob_get_clean();
-			$this->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
-		}
+		\gp\admin\Notifications::UpdateNotifications();
 
 		return true;
 	}

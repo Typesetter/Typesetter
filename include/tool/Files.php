@@ -430,7 +430,7 @@ namespace gp\tool{
 		/**
 		 * Return the data file location for a title
 		 * Since v4.6, page files are within a subfolder
-		 * As of v2.3.4, it defaults to an index based file name but falls back on title based file name for installation and backwards compatibility
+		 * As of v2.3.4, it defaults to an index based file name but falls back on title based file name for backwards compatibility
 		 *
 		 *
 		 * @param string $title
@@ -440,40 +440,16 @@ namespace gp\tool{
 			global $dataDir, $config, $gp_index;
 
 			$index_path = false;
+
+			// filename based on title index
 			if( gp_index_filenames && isset($gp_index[$title]) && isset($config['gpuniq']) ){
-
-				// page.php
 				$index_path = $dataDir . '/data/_pages/' . substr($config['gpuniq'], 0, 7) . '_' . $gp_index[$title] . '/page.php';
-				if( file_exists($index_path) ){
-					return $index_path;
-				}
-
-				// without folder -> rename it
-				$old_index = $dataDir . '/data/_pages/' . substr($config['gpuniq'], 0, 7) . '_' . $gp_index[$title] . '.php';
-				if( file_exists($old_index) ){
-					if( self::Rename($old_index, $index_path) ){
-						return $index_path;
-					}
-					return $old_index;
-				}
 			}
 
-			//using file name instead of index
+			// using file name instead of index
 			$normal_path = $dataDir . '/data/_pages/' . str_replace('/', '_', $title) . '/page.php';
 			if( !$index_path || self::Exists($normal_path) ){
 				return $normal_path;
-			}
-
-			//without folder -> rename it
-			$old_path = $dataDir . '/data/_pages/' . str_replace('/', '_', $title) . '.php';
-			if( self::Exists($old_path) ){
-				if( $index_path && self::Rename($old_path, $index_path) ){
-					return $index_path;
-				}
-				if( self::Rename($old_path, $normal_path) ){
-					return $normal_path;
-				}
-				return $old_path;
 			}
 
 			return $index_path;

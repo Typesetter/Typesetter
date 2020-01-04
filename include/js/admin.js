@@ -701,6 +701,7 @@ $gp.links.add_table_row = function(evt){
 	var $new_row = $tr.closest('tbody').find('tr').first().clone();
 	$new_row.find('.class_only').remove();
 	$new_row.find('input').val('').attr('value','');
+	$new_row.find('textarea').val('').text('');
 	$tr.before($new_row);
 }
 

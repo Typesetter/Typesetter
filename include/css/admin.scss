@@ -201,6 +201,13 @@
 	@include box-sizing( border-box );
 }
 
+#gp_admin_html .gptextarea.attr_value{
+	height: 2.1em;
+	min-height: 2.1em;
+	width: 100%;
+	white-space: normal;
+}
+
 #gp_admin_html .gpinput,
 #gp_admin_html .gpselect,
 #gp_admin_html .gpsubmit,

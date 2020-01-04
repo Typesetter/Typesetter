@@ -1289,14 +1289,13 @@
 
 
 	/**
-	 * Section Attributes textarea auto height
+	 * Section Attributes textareas auto height
 	 *
 	 */
 	function textareaAutoHeight(){
 		$(this)
 			.css('height', '1px')
 			.css('height', (this.scrollHeight + 3) + 'px');
-		console.log('scrollHeight = ' + this.scrollHeight);
 	}
 
 	$(document).on('section_options:loaded', function(){
@@ -1407,7 +1406,7 @@
 	 * Observe textareas in Section Attribute dialog .attr_value and auto-resize to the required height
 	 *
 	 */
-	$(document).on('input', '.gptextarea.attr_value', textareaAutoHeight);
+	$(document).on('input change', '.gptextarea.attr_value', textareaAutoHeight);
 
 
 	/**

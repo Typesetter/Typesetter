@@ -642,10 +642,10 @@ namespace gp\admin{
 
 
 		/**
-		* Convert $new_versions to notification array
-		* @return array $updated single notification array containing possible updates
-		*
-		*/
+		 * Convert $new_versions to notification array
+		 * @return array $updated single notification array containing possible updates
+		 *
+		 */
 		public function GetUpdatesNotifications(){
 			global $langmessage;
 

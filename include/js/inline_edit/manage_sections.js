@@ -1110,7 +1110,6 @@
 
 		//popup
 		html = '<div class="inline_box"><form id="section_attributes_form" data-gp-area-id="' + id + '">';
-		html = '<div class="inline_box"><form id="section_attributes_form" data-gp-area-id="' + id + '">';
 		html += '<h2>' + gplang.SectionAttributes + '</h2>';
 		html += '<table class="bordered full_width">';
 		html += '<thead><tr><th>' + gplang.Attribute + '</th><th>' + gplang.Value + '</th></tr></thead><tbody>';

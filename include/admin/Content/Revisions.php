@@ -44,12 +44,18 @@ class Revisions extends \gp\Page\Edit{
 
 
 	public function DefaultDisplay(){
-		global $page;
+		global $page, $langmessage;
 
+
+		$page->head_js[]				= '/include/js/admin/revisions.js';
 
 		//show site in iframe
 		$url		= \gp\tool::GetUrl($this->title,'cmd=ViewCurrent');
-		$toolbar	= \gp\tool::Link_Page($this->title);
+		$toolbar	= '<br/><h2>' . $langmessage['Revision History'] . '</h2>';
+		$toolbar	.= \gp\tool::Link_Page($this->title);
+		$toolbar	.= ' &nbsp; <a data-cmd="PreviousRevision"><i class="fa fa-backward"></i> ' . $langmessage['Previous'] . '</a>';
+		$toolbar	.= ' &nbsp; <a data-cmd="NextRevision"><i class="fa fa-forward"></i> ' . $langmessage['Next'] . '</a>';
+
 
 
 		ob_start();
@@ -90,13 +96,12 @@ class Revisions extends \gp\Page\Edit{
 		$rows[$this->fileModTime] = $this->HistoryRow($this->fileModTime, filesize($page_file), $this->file_stats['username'], 'current');
 
 		echo '<br/>';
-		echo '<h2>' . $langmessage['Revision History'] . '</h2>';
-		echo '<table class="bordered full_width striped"><tr>';
+		echo '<table class="bordered full_width striped hover"><tr>';
 		echo '<th>' . $langmessage['Modified'] . '</th>';
 		echo '<th>' . $langmessage['File Size'] . '</th>';
 		echo '<th>' . $langmessage['username'] . '</th>';
 		echo '<th>&nbsp;</th>';
-		echo '</tr><tbody>';
+		echo '</tr><tbody id="revision_rows">';
 
 		krsort($rows);
 		echo implode('', $rows);

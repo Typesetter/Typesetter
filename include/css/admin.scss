@@ -710,6 +710,19 @@ body.gpAdmin div.editable_area{
 	&.middle > tbody > tr > td{
 		vertical-align: middle;
 	}
+
+	&.hover > tbody > tr:hover > td{
+		background-color: #ddd;
+	}
+
+ 	> tbody > tr.active > td{
+		background-color: #329880 !important;
+		&,
+		> a{
+			color: #fff !important;
+		}
+	}
+
 }
 
 

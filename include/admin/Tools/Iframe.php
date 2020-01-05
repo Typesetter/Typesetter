@@ -20,7 +20,6 @@ class Iframe{
 
 		\gp\admin\Tools::$show_toolbar	= false;
 		$page->get_theme_css			= false;
-		$page->head_js[]				= '/include/js/auto_width.js';
 		$page->head_js[]				= '/include/js/theme_content_outer.js';
 		$page->css_admin[]				= '/include/css/theme_content_outer.scss';
 

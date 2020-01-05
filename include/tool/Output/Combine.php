@@ -27,6 +27,11 @@ class Combine{
 									'requires'		=> 'ui-theme',
 									),
 
+			'gp-admin-toolbar' => array(
+									'file'			=> '/include/css/admin_toolbar.scss',
+									'type'			=> 'css',
+									),
+
 			'gp-additional'=> array(
 									'file'			=> '/include/css/additional.css',
 									'type'			=> 'css',

@@ -312,6 +312,10 @@ namespace gp\admin{
 																'permission'	=> 'Admin/Notifications',
 													);
 
+			$scripts['Admin/Revisions']				= array(	'class'		=> '\\gp\\admin\\Content\\Revisions',
+																'method'	=> 'RunCommands',
+													);
+
 			// Addon admin links
 			if( isset($config['admin_links']) && is_array($config['admin_links']) ){
 
@@ -472,6 +476,9 @@ namespace gp\admin{
 			if( !self::$show_toolbar ){
 				return;
 			}
+
+
+			\gp\tool::LoadComponents('gp-admin-toolbar');
 
 			$reqtype = \gp\tool::RequestType();
 			if( $reqtype != 'template' && $reqtype != 'admin' ){

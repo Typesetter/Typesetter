@@ -109,7 +109,7 @@ $(function(){
 	 */
 	function LayoutSetup(){
 
-		$('html').addClass('edit_layout'); //for .gp-fixed-adjust
+		$('html').addClass('edit_layout');
 
 		if( typeof(gpLayouts) == 'undefined' ){
 			return;

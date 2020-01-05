@@ -2,7 +2,12 @@
 
 namespace gp\admin\Content;
 
-//class Revisions extends \gp\special\Base{
+/**
+ * ToDo
+ * Restore version link see RevisionLinks()
+ *
+ */
+
 class Revisions extends \gp\Page\Edit{
 
 

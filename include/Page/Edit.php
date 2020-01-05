@@ -8,7 +8,6 @@ class Edit extends \gp\Page{
 
 	protected $draft_file;
 	protected $draft_exists = false;
-	protected $revision;
 
 	protected $permission_edit;
 	protected $permission_menu;
@@ -167,27 +166,8 @@ class Edit extends \gp\Page{
 	public function AdminLinks(){
 		global $langmessage;
 
-		//viewing revision
-		if( isset($this->revision) ){
-			return $this->RevisionLinks();
-		}
 
 		$admin_links		= array();
-
-		//history
-		$backup_files		= $this->BackupFiles();
-		if( count($backup_files) ){
-			$times			= array_keys($backup_files);
-			$admin_links[]	= \gp\tool::Link(
-				$this->title,
-				'<i class="fa fa-backward"></i> ' . $langmessage['Previous'],
-				'cmd=ViewRevision&time=' . array_pop($times),
-				array(
-					'class'		=> 'admin-link admin-link-previous-revision',
-					'data-cmd'	=> 'cnreq',
-				)
-			);
-		}
 
 		$admin_links[]	= \gp\tool::Link(
 			'/Admin/Revisions/'.$this->gp_index,
@@ -338,54 +318,14 @@ class Edit extends \gp\Page{
 
 
 
-	/**
+	/*
 	 * Return admin links when a revision is being displayed
 	 *
-	 */
 	protected function RevisionLinks(){
 		global $langmessage;
 
 		$admin_links		= array();
 
-		//previous && next revision
-		$files			= $this->BackupFiles();
-		$times			= array_keys($files);
-		$key_current	= array_search($this->revision, $times);
-
-		if( $key_current !== false ){
-			if( isset($times[$key_current-1]) ){
-				$admin_links[]	= \gp\tool::Link(
-					$this->title,
-					'<i class="fa fa-backward"></i> ' . $langmessage['Previous'],
-					'cmd=ViewRevision&time=' . $times[$key_current - 1],
-					array('data-cmd'=>'cnreq')
-				);
-			}
-
-			if( isset($times[$key_current+1]) ){
-				$admin_links[]	= \gp\tool::Link(
-					$this->title,
-					'<i class="fa fa-forward"></i> ' . $langmessage['Next'],
-					'cmd=ViewRevision&time=' . $times[$key_current + 1],
-					array('data-cmd'=>'cnreq')
-				);
-			}else{
-				$admin_links[]	= \gp\tool::Link(
-					$this->title,
-					'<i class="fa fa-forward"></i> ' . $langmessage['Working Draft']
-				);
-			}
-
-		}
-
-		$admin_links[] = \gp\tool::Link(
-			'/Admin/Revisions/'.$this->gp_index,
-			'<i class="fa fa-history"></i> ' . $langmessage['Revision History'],
-			'cmd=ViewHistory',
-			array(
-				'title'		=> $langmessage['Revision History'],
-			)
-		);
 
 		// restore this version
 		if( $this->revision == $this->fileModTime ){
@@ -406,6 +346,7 @@ class Edit extends \gp\Page{
 
 		return $admin_links;
 	}
+	*/
 
 
 
@@ -1473,7 +1414,6 @@ class Edit extends \gp\Page{
 		}
 
 
-		$this->revision			= $time;
 		echo \gp\tool\Output\Sections::Render($file_sections, $this->title, \gp\tool\Files::$last_stats);
 	}
 
@@ -1493,7 +1433,6 @@ class Edit extends \gp\Page{
 		}
 
 		$file_sections			= \gp\tool\Files::Get($this->file, 'file_sections');
-		$this->revision			= $this->fileModTime;
 		echo \gp\tool\Output\Sections::Render($file_sections, $this->title, $this->file_stats);
 	}
 

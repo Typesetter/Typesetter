@@ -97,7 +97,7 @@ class Edit extends \gp\Page{
 
 			$this->cmds['ViewRevision']				= '';
 			$this->cmds['UseRevision']				= 'DefaultDisplay';
-			$this->cmds['ViewHistory']				= '';
+			//$this->cmds['ViewHistory']				= '';
 			$this->cmds['ViewCurrent']				= '';
 			$this->cmds['PublishDraft']				= 'DefaultDisplay';
 
@@ -1465,6 +1465,7 @@ class Edit extends \gp\Page{
 		$time							=& $_REQUEST['time'];
 		$file_sections					= $this->GetRevision($time);
 
+		$this->head_js[]				= '/include/js/admin/revision.js';
 
 		if( $file_sections === false ){
 			$this->DefaultDisplay();
@@ -1476,6 +1477,25 @@ class Edit extends \gp\Page{
 		echo \gp\tool\Output\Sections::Render($file_sections, $this->title, \gp\tool\Files::$last_stats);
 	}
 
+
+	/**
+	 * View the current public facing version of the file
+	 *
+	 */
+	public function ViewCurrent(){
+
+		\gp\admin\Tools::$show_toolbar		= false;
+		$this->head_js[]					= '/include/js/admin/revision.js';
+
+		if( !$this->draft_exists ){
+			$this->DefaultDisplay();
+			return;
+		}
+
+		$file_sections			= \gp\tool\Files::Get($this->file, 'file_sections');
+		$this->revision			= $this->fileModTime;
+		echo \gp\tool\Output\Sections::Render($file_sections, $this->title, $this->file_stats);
+	}
 
 
 	/**
@@ -1528,26 +1548,6 @@ class Edit extends \gp\Page{
 		}
 
 		return $file_sections;
-	}
-
-
-
-	/**
-	 * View the current public facing version of the file
-	 *
-	 */
-	public function ViewCurrent(){
-
-		\gp\admin\Tools::$show_toolbar		= false;
-
-		if( !$this->draft_exists ){
-			$this->DefaultDisplay();
-			return;
-		}
-
-		$file_sections			= \gp\tool\Files::Get($this->file, 'file_sections');
-		$this->revision			= $this->fileModTime;
-		echo \gp\tool\Output\Sections::Render($file_sections, $this->title, $this->file_stats);
 	}
 
 

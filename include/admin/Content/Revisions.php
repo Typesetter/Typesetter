@@ -53,8 +53,8 @@ class Revisions extends \gp\Page\Edit{
 		$url		= \gp\tool::GetUrl($this->title,'cmd=ViewCurrent');
 		$toolbar	= '<br/><h2>' . $langmessage['Revision History'] . '</h2>';
 		$toolbar	.= \gp\tool::Link_Page($this->title);
-		$toolbar	.= ' &nbsp; <a data-cmd="PreviousRevision"><i class="fa fa-backward"></i> ' . $langmessage['Previous'] . '</a>';
-		$toolbar	.= ' &nbsp; <a data-cmd="NextRevision"><i class="fa fa-forward"></i> ' . $langmessage['Next'] . '</a>';
+		$toolbar	.= ' &nbsp; <a data-cmd="PreviousRevision"><i class="fa fa-backward fa-fw"></i> ' . $langmessage['Previous'] . '</a>';
+		$toolbar	.= ' &nbsp; <a data-cmd="NextRevision">' . $langmessage['Next'] . ' <i class="fa fa-forward fa-fw"></i></a>';
 
 
 

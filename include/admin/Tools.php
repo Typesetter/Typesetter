@@ -312,8 +312,8 @@ namespace gp\admin{
 																'permission'	=> 'Admin/Notifications',
 													);
 
-			$scripts['Admin/Revisions']				= array(	'class'		=> '\\gp\\admin\\Content\\Revisions',
-																'method'	=> 'RunCommands',
+			$scripts['Admin/Revisions']				= array(	'class'			=> '\\gp\\admin\\Content\\Revisions',
+																'method'		=> 'RunScript',
 													);
 
 			// Addon admin links

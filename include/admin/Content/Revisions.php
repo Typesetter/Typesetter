@@ -60,9 +60,9 @@ class Revisions extends \gp\Page\Edit{
 			'',
 			array('class' => 'gpcancel revision_history_close')
 		);
-		$toolbar	.= '<a data-cmd="PreviousRevision"><i class="fa fa-backward fa-fw"></i> ' . $langmessage['Previous'] . '</a>';
+		$toolbar	.= '<a class="gpbutton" data-cmd="OlderRevision"><i class="fa fa-fw fa-lg fa-chevron-down"></i></a>';
 		$toolbar	.= ' &nbsp; ';
-		$toolbar	.= '<a data-cmd="NextRevision">' . $langmessage['Next'] . ' <i class="fa fa-forward fa-fw"></i></a>';
+		$toolbar	.= '<a class="gpbutton" data-cmd="NewerRevision"><i class="fa fa-fw fa-lg fa-chevron-up"></i></a>';
 
 
 

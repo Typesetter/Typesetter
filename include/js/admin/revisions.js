@@ -45,8 +45,8 @@ $(function(){
 	 * Show previous revision
 	 *
 	 */
-	$gp.links.PreviousRevision = function(){
-		var $row = $rows.filter('.active').prev();
+	$gp.links.OlderRevision = function(){
+		var $row = $rows.filter('.active').next();
 		ShowRevision($row);
 	}
 
@@ -54,8 +54,8 @@ $(function(){
 	 * Show next revision
 	 *
 	 */
-	$gp.links.NextRevision = function(){
-		var $row = $rows.filter('.active').next();
+	$gp.links.NewerRevision = function(){
+		var $row = $rows.filter('.active').prev();
 		ShowRevision($row);
 	}
 

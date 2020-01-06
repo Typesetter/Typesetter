@@ -586,14 +586,11 @@ namespace gp\admin{
 				return;
 			}
 
-			echo '<ul class="panel_tabs" style="float:right">';
-			echo '<li class="panel_tab_label">';
-			echo '</li>';
+			$links = [];
 
 			//page edit
 			if( $page->pagetype == 'display' ){
-				echo '<li>';
-				echo \gp\tool::Link(
+				$links[] = \gp\tool::Link(
 					$page->title,
 					'<i class="fa fa-bars"></i> ' . $langmessage['Sections'],
 					'cmd=ManageSections',
@@ -602,12 +599,10 @@ namespace gp\admin{
 						'data-arg'	=> 'manage_sections'
 					)
 				);
-				echo '</li>';
 			}
 
 			//extra edit
-			echo '<li>';
-			echo \gp\tool::Link(
+			$links[] = \gp\tool::Link(
 				$page->title,
 				'<i class="fa fa-cube"></i> ' . $langmessage['theme_content'],
 				'cmd=ManageSections&mode=extra',
@@ -618,21 +613,35 @@ namespace gp\admin{
 					'class'		=> 'gp_extra_edit'
 				)
 			);
-			echo '</li>';
+
 
 			//layout edit
 			$current_layout = isset($gp_titles[$page->gp_index]['gpLayout']) ?
 				$gp_titles[$page->gp_index]['gpLayout'] :
 				'default'; // $page->gpLAyout is not yet set
-			echo '<li>';
-			echo \gp\tool::Link(
+
+			$links[] = \gp\tool::Link(
 				'Admin_Theme_Content/Edit/' . urlencode($current_layout),
 				'<i class="fa fa-trello fa-rotate-90"></i> ' . $langmessage['layout'],
 				'redir=' . rawurlencode($page->requested)
 			);
-			echo '</li>';
-			echo '</ul>';
 
+
+			$links[] = \gp\tool::Link(
+				'/Admin/Revisions/'.$page->gp_index,
+				'<i class="fa fa-history"></i> ' . $langmessage['Revision History'],
+				'',
+				array(
+					'title'		=> $langmessage['Revision History'],
+					'class'		=> 'admin-link admin-link-revision-history',
+				)
+			);
+
+			echo '<ul class="panel_tabs" style="float:right">';
+
+			self::FormatAdminLinks($links);
+
+			echo '</ul>';
 		}
 
 

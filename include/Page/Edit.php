@@ -167,16 +167,6 @@ class Edit extends \gp\Page{
 
 		$admin_links		= array();
 
-		$admin_links[]	= \gp\tool::Link(
-			'/Admin/Revisions/'.$this->gp_index,
-			'<i class="fa fa-history"></i> ' . $langmessage['Revision History'],
-			'',
-			array(
-				'title'		=> $langmessage['Revision History'],
-				'class'		=> 'admin-link admin-link-revision-history',
-			)
-		);
-
 
 
 		/*

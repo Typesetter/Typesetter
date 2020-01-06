@@ -41,12 +41,6 @@ body{
 		margin-top:-4px;
 	}
 
-	a[data-cmd="PreviousRevision"],
-	a[data-cmd="NextRevision"]{
-		display:inline-block;
-		white-space:nowrap;
-	}
-
 	.full_height{
 		height:100%;
 		@include box-sizing(border-box);

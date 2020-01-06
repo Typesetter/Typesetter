@@ -241,21 +241,22 @@ function showError($errno, $errmsg, $filename, $linenum, $vars, $backtrace = nul
 		}
 
 		//record the error
-		$i = count($wbErrorBuffer);
-		$args['en'.$i] = $errno;
-		$args['el'.$i] = $linenum;
-		$args['em'.$i] = substr($errmsg,0,255);
-		$args['ef'.$i] = $filename; //filename length checked later
+		$i						= count($wbErrorBuffer);
+		$args					= [];
+		$args['en'.$i]			= $errno;
+		$args['el'.$i]			= $linenum;
+		$args['em'.$i]			= substr($errmsg,0,255);
+		$args['ef'.$i]			= $filename; //filename length checked later
 		if( isset($addon_current_id) ){
-			$args['ea'.$i] = $addon_current_id;
+			$args['ea'.$i]		= $addon_current_id;
 		}
 		if( isset($addon_current_version) && $addon_current_version ){
-			$args['ev'.$i] = $addon_current_version;
+			$args['ev'.$i]		= $addon_current_version;
 		}
 		if( is_object($page) && !empty($page->title) ){
-			$args['ep'.$i] = $page->title;
+			$args['ep'.$i]		= $page->title;
 		}
-		$wbErrorBuffer[$uniq] = $args;
+		$wbErrorBuffer[$uniq]	= $args;
 		return false;
 	}
 

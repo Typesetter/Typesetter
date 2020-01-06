@@ -10,6 +10,19 @@ class Users extends \gp\special\Base{
 	public $possible_permissions	= array();
 	public $has_weak_pass			= false;
 
+	protected $cmds					= [
+										'NewUserForm'		=> '',
+										'ChangePass'		=> '',
+										'Details'			=> 'ChangeDetails',
+									];
+
+	protected $cmds_post			= [
+										'CreateNewUser'		=> 'NewUserForm',
+										'RemoveUser'		=> 'DefaultDisplay',
+										'ResetPass'			=> 'ChangePass',
+										'SaveChanges'		=> 'ChangeDetails',
+									];
+
 
 	public function __construct($args){
 		global $langmessage;
@@ -20,45 +33,6 @@ class Users extends \gp\special\Base{
 		$this->possible_permissions		= $this->PossiblePermissions();
 		$this->GetUsers();
 
-	}
-
-	public function RunScript(){
-
-		$cmd = \gp\tool::GetCommand();
-		switch($cmd){
-
-			case 'newuser':
-				if( $this->CreateNewUser() ){
-					break;
-				}
-			case 'newuserform';
-				$this->NewUserForm();
-			return;
-
-			case 'rm':
-				$this->RmUserConfirmed();
-			break;
-
-			case 'resetpass':
-				if( $this->ResetPass() ){
-					break;
-				}
-			case 'changepass':
-				$this->ChangePass();
-			return;
-
-
-			case 'SaveChanges':
-				if( $this->SaveChanges() ){
-					break;
-				}
-			case 'details':
-				$this->ChangeDetails();
-			return;
-
-		}
-
-		$this->ShowForm();
 	}
 
 
@@ -197,7 +171,7 @@ class Users extends \gp\special\Base{
 	 * Remove a user from the installation
 	 *
 	 */
-	public function RmUserConfirmed(){
+	public function RemoveUser(){
 		global $langmessage;
 		$username = $this->CheckUser();
 
@@ -264,7 +238,11 @@ class Users extends \gp\special\Base{
 
 		$this->SetUserPass( $newname, $_POST['password']);
 
-		return $this->SaveUserFile();
+		if( $this->SaveUserFile() ){
+			$url = \gp\tool::GetUrl('Admin/Users','',false);
+			\gp\tool::Redirect($url);
+		}
+
 	}
 
 
@@ -366,7 +344,7 @@ class Users extends \gp\special\Base{
 	 * Show all users and their permissions
 	 *
 	 */
-	public function ShowForm(){
+	public function DefaultDisplay(){
 		global $langmessage;
 
 
@@ -450,7 +428,7 @@ class Users extends \gp\special\Base{
 			echo ' &nbsp; ';
 
 			$title = sprintf($langmessage['generic_delete_confirm'],htmlspecialchars($username));
-			echo \gp\tool::Link('Admin/Users',$langmessage['delete'],'cmd=rm&username='.$username,array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
+			echo \gp\tool::Link('Admin/Users',$langmessage['delete'],'cmd=RemoveUser&username='.$username,array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
 			echo '</td>';
 			echo '</tr>';
 		}
@@ -531,7 +509,7 @@ class Users extends \gp\special\Base{
 
 		echo '<tr><td>';
 			echo '</td><td>';
-			echo '<input type="hidden" name="cmd" value="newuser" />';
+			echo '<input type="hidden" name="cmd" value="CreateNewUser" />';
 			echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit"/>';
 			echo ' <input type="reset" class="gpsubmit"/>';
 			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="gpcancel"/>';

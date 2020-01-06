@@ -6,7 +6,9 @@ defined('is_running') or die('Not an entry point...');
 
 class Permissions extends Users{
 
-	protected $cmds				= ['save_file_permissions'=>''];
+	protected $cmds				= [];
+	protected $cmds_post		= ['save_file_permissions'=>''];
+
 
 	public function __construct($args){
 		parent::__construct($args);

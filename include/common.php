@@ -292,7 +292,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars, $backtrace = nul
 	$mess .= '<div class="nodisplay">';
 	$mess .= pre($backtrace);
 	$mess .= '</div></div>';
-	$mess .= '</p></fieldset>';
+	$mess .= '</fieldset>';
 
 	if( gpdebug === true ){
 		msg($mess);

@@ -520,6 +520,11 @@ function includeFile( $file ){
 	require_once( $dataDir.'/include/'.$file );
 }
 
+if( !interface_exists('Throwable') ){
+	class Throwable extends Exception{}
+}
+
+
 /**
  * Include a script, unless it has caused a fatal error.
  * Using this function allows handling fatal errors that are thrown by the included php scripts
@@ -550,19 +555,23 @@ function IncludeScript($file, $include_variation = 'include_once', $globals = ar
 	}
 
 
-	switch($include_variation){
-		case 'include':
-			$return = include($file);
-		break;
-		case 'include_once':
-			$return = include_once($file);
-		break;
-		case 'require':
-			$return = require($file);
-		break;
-		case 'require_once':
-			$return = require_once($file);
-		break;
+	try{
+		switch($include_variation){
+			case 'include':
+				$return = include($file);
+			break;
+			case 'include_once':
+				$return = include_once($file);
+			break;
+			case 'require':
+				$return = require($file);
+			break;
+			case 'require_once':
+				$return = require_once($file);
+			break;
+		}
+	}catch( Throwable $e ){
+		\showError( E_ERROR ,'IncludeScript() Fatal Error: '.$e->getMessage(), $e->GetFile(), $e->GetLine(), [], $e->getTrace());
 	}
 
 	\gp\tool\Output::PopCatchable();

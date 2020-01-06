@@ -164,7 +164,6 @@ if ( function_exists( 'date_default_timezone_set' ) )
 function showError($errno, $errmsg, $filename, $linenum, $vars, $backtrace = null ){
 	global $wbErrorBuffer, $addon_current_id, $page, $addon_current_version, $config, $addonFolderName;
 	static $reported = array();
-	$report_error = true;
 
 
 	$errortype = array (
@@ -189,14 +188,6 @@ function showError($errno, $errmsg, $filename, $linenum, $vars, $backtrace = nul
 	// for functions prepended with @ symbol to suppress errors
 	$error_reporting = error_reporting();
 	if( $error_reporting === 0 ){
-		$report_error = false;
-
-		//make sure the error is logged
-		//error_log('PHP '.$errortype[$errno].':  '.$errmsg.' in '.$filename.' on line '.$linenum);
-
-		if( gpdebug === false ){
-			return false;
-		}
 		return false;
 	}
 
@@ -236,10 +227,6 @@ function showError($errno, $errmsg, $filename, $linenum, $vars, $backtrace = nul
 	}
 
 	if( gpdebug === false ){
-
-		if( !$report_error ){
-			return false;
-		}
 
 
 		//if it's an addon error, only report if the addon was installed remotely
@@ -308,7 +295,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars, $backtrace = nul
 
 	if( gpdebug === true ){
 		msg($mess);
-	}elseif( class_exists('\\gp\tool\\Emailer') && $report_error ){
+	}elseif( class_exists('\\gp\tool\\Emailer') ){
 		$mailer =		new \gp\tool\Emailer();
 		$subject =		\gp\tool::ServerName(true).' Debug';
 		$mailer->SendEmail(gpdebug, $subject, $mess);

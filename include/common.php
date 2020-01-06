@@ -191,7 +191,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars, $backtrace = nul
 		return false;
 	}
 
-	// since we supported php 4.3+, there may be a lot of strict errors
+	// since we supported older versions of php, there may be a lot of strict errors
 	if( $errno === E_STRICT ){
 		return;
 	}

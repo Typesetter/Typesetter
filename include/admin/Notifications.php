@@ -44,7 +44,6 @@ namespace gp\admin{
 		/**
 		 * Outputs a list of notifications
 		 * To be rendered in a gpabox
-		 * The list output can be filtered by optional $_REQUEST['type'] value
 		 *
 		 */
 		public function ListNotifications(){
@@ -132,6 +131,8 @@ namespace gp\admin{
 
 		/**
 		 * Tabs
+		 * Output tabs to navigate between notifications
+		 * @param string $filter_list_by tab type to be active
 		 *
 		 */
 		public function Tabs($filter_list_by){
@@ -165,6 +166,9 @@ namespace gp\admin{
 
 		/**
 		 * Notification Title
+		 * @param string $title
+		 * @return string $title translation if available
+		 *
 		 */
 		public function GetTitle($title){
 			global $langmessage;
@@ -212,9 +216,13 @@ namespace gp\admin{
 
 		/**
 		 * Set a single filter
-		 * @param string $id of notification
+		 * @param string $id of notification item to be modified
 		 * @param string $do filter action
 		 * @param string $val filter value
+		 *
+		 * currently implemented actions:
+		 *	'toggle_priority' will toggle priority between -1 (=muted) and it's initial value
+		 *	'set_priority' will set the priority value to $val
 		 *
 		 */
 		public function SetFilter($id, $do, $val=false){
@@ -410,10 +418,9 @@ namespace gp\admin{
 
 
 		/**
-		* Aggregate all sources of notifications
-		* @return array array of notifications
-		*
-		*/
+		 * Aggregate all sources of notifications
+		 *
+		 */
 		public function CheckNotifications(){
 
 			$this->notifications = array();
@@ -442,9 +449,20 @@ namespace gp\admin{
 
 		/**
 		 * Add Notifications
+		 * @param string $title will sho up as panelgroup submenu item
+		 * @param array $items see below
+		 * @param string $bg (optional) badge background color (any valid css color value)
+		 * @param string $color (optional) badge text color (any valid color value), use a dark color on light $bg
+		 *
+		 * $items are associative arrays containing the following keys:
+		 * 		'label'		=> (string) text or html, first element of the item row
+		 * 		'id'		=> (string) arbitrary but permanently unique string or number (required for user defined filtering)
+		 * 		'priority'	=> (integer) a number above 0, determines the ranking amongst other notifications. Anything above 100 is high-priority
+		 *		'action'	=> (string) plain text or html describing and/or linking to possible solutions
+		 * 		'type'		=> (string) optional, only relevant for automatic system-internal filters
 		 *
 		 */
-		public function Add( $title, $items, $bg, $color = '#fff'){
+		public function Add( $title, $items, $bg = '#555', $color = '#fff'){
 
 			if( empty($items) ){
 				return;
@@ -480,11 +498,11 @@ namespace gp\admin{
 
 
 		/**
-		* Get Notifications
-		* Outputs a Notifications panelgroup
-		* @param boolean $in_panel if panelgroup shall be rendered in admin menu
-		*
-		*/
+		 * Get Notifications
+		 * Outputs a Notifications panelgroup
+		 * @param boolean $in_panel if panelgroup shall be rendered in admin menu
+		 *
+		 */
 		public function GetNotifications($in_panel=true){
 			global $langmessage;
 
@@ -572,10 +590,10 @@ namespace gp\admin{
 
 
 		/**
-		* Get a Notification array for debugging / development relevant information
-		* @return array single notification containing items
-		*
-		*/
+		 * Get a Notification array for debugging / development relevant information
+		 * @return array $debug_note single notification array
+		 *
+		 */
 		public function GetDebugNotifications(){
 			global $langmessage;
 
@@ -587,8 +605,8 @@ namespace gp\admin{
 					'type'		=> 'any_user',
 					'label'		=> $label,
 
-					// Adding the server name to the hashed value makes sure the item id will change when moving the site (e.g. when going live)
-					// Thus possible set hide filters will invalidate and the warning will show up again.
+					// Adding the server name to the id makes sure that it will change when moving the site (e.g. when going live)
+					// Thus possible set hide-filters will invalidate and the warning will show up again.
 					'id'		=> $label . \gp\tool::ServerName(),
 
 					'priority'	=> 500, // that's a high priority
@@ -624,10 +642,10 @@ namespace gp\admin{
 
 
 		/**
-		* Convert $new_versions to notification array
-		* @return array single notification containing items
-		*
-		*/
+		 * Convert $new_versions to notification array
+		 * @return array $updated single notification array containing possible updates
+		 *
+		 */
 		public function GetUpdatesNotifications(){
 			global $langmessage;
 
@@ -674,9 +692,9 @@ namespace gp\admin{
 
 
 		/**
-		* Update the Notifications panelgroup in Admin Menu via AJAX
-		*
-		*/
+		 * Update the Notifications panelgroup in Admin Menu via AJAX
+		 *
+		 */
 		public static function UpdateNotifications(){
 			global $page;
 
@@ -699,10 +717,10 @@ namespace gp\admin{
 
 
 		/**
-		* Get information about working drafts
-		* @returns {array} of current working drafts
-		*
-		*/
+		 * Get information about working drafts
+		 * @return array $drafts single notification array of current working drafts
+		 *
+		 */
 		public function GetDrafts(){
 			global $dataDir, $gp_index, $gp_titles, $langmessage;
 
@@ -801,10 +819,10 @@ namespace gp\admin{
 
 
 		/**
-		* Get information of all private (invisible) pages
-		* @returns {array} of current private pages
-		*
-		*/
+		 * Get information of all private (invisible) pages
+		 * @return array $private_pages single notification array of pages currently set as private
+		 *
+		 */
 		public function GetPrivatePages(){
 			global $gp_titles, $langmessage, $page;
 

@@ -520,6 +520,7 @@ function includeFile( $file ){
 	require_once( $dataDir.'/include/'.$file );
 }
 
+// php < 7.0 doesn't have \Throwable
 if( !interface_exists('Throwable') ){
 	class Throwable extends Exception{}
 }
@@ -570,7 +571,12 @@ function IncludeScript($file, $include_variation = 'include_once', $globals = ar
 				$return = require_once($file);
 			break;
 		}
+		
 	}catch( Throwable $e ){
+		\showError( E_ERROR ,'IncludeScript() Fatal Error: '.$e->getMessage(), $e->GetFile(), $e->GetLine(), [], $e->getTrace());
+
+	// php < 7.0 doesn't have \Throwable
+	}catch( Exception $e ){
 		\showError( E_ERROR ,'IncludeScript() Fatal Error: '.$e->getMessage(), $e->GetFile(), $e->GetLine(), [], $e->getTrace());
 	}
 

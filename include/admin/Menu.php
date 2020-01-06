@@ -1356,10 +1356,10 @@ class Menu extends \gp\special\Base{
 
 		if( $data['special'] === false ){
 			echo \gp\tool::Link(
-				$title,
+				'Admin/Revisions/'.$menu_key,
 				$langmessage['Revision History'],
 				'cmd=ViewHistory',
-				'class="view_edit_link not_multiple" data-cmd="gpabox"'
+				'class="view_edit_link not_multiple"'
 			);
 			echo $this->Link(
 				'Admin/Menu/Ajax',

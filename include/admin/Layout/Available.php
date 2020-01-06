@@ -373,10 +373,11 @@ class Available extends \gp\admin\Layout{
 
 		$_REQUEST += array('gpreq' => 'body'); //force showing only the body as a complete html document
 
-		$this->page->get_theme_css	= false;
-		$this->page->head_js[]		= '/include/js/auto_width.js';
-		$this->page->head_js[]		= '/include/js/theme_content_outer.js';
-		$this->page->css_admin[]	= '/include/css/theme_content_outer.scss';
+		\gp\admin\Tools::$show_toolbar	= false;
+		$this->page->get_theme_css		= false;
+		$this->page->head_js[]			= '/include/js/auto_width.js';
+		$this->page->head_js[]			= '/include/js/theme_content_outer.js';
+		$this->page->css_admin[]		= '/include/css/theme_content_outer.scss';
 
 
 		//show site in iframe

@@ -1110,7 +1110,6 @@
 
 		//popup
 		html = '<div class="inline_box"><form id="section_attributes_form" data-gp-area-id="' + id + '">';
-		html = '<div class="inline_box"><form id="section_attributes_form" data-gp-area-id="' + id + '">';
 		html += '<h2>' + gplang.SectionAttributes + '</h2>';
 		html += '<table class="bordered full_width">';
 		html += '<thead><tr><th>' + gplang.Attribute + '</th><th>' + gplang.Value + '</th></tr></thead><tbody>';
@@ -1138,7 +1137,8 @@
 			html += '<tr><td>';
 			html += '<input class="gpinput attr_name" value="' + $gp.htmlchars(name) + '" size="8" />';
 			html += '</td><td style="white-space:nowrap">';
-			html += '<input class="gpinput attr_value" value="' + $gp.htmlchars(value) + '" size="40" />';
+			// html += '<input class="gpinput attr_value" value="' + $gp.htmlchars(value) + '" size="40" />';
+			html += '<textarea rows="1" class="gptextarea attr_value">' + $gp.htmlchars(value) + '</textarea>';
 			if( name == 'class' ){
 				html += '<div class="class_only admin_note">Default: GPAREA filetype-*</div>';
 			}
@@ -1289,6 +1289,23 @@
 
 
 	/**
+	 * Section Attributes textareas auto height
+	 *
+	 */
+	function textareaAutoHeight(){
+		$(this)
+			.css('height', '1px')
+			.css('height', (this.scrollHeight + 3) + 'px');
+	}
+
+	$(document).on('section_options:loaded', function(){
+		setTimeout(function(){
+			$('.gptextarea.attr_value').trigger('input');
+		}, 100);
+	});
+
+
+	/**
 	 * Update the attributes
 	 *
 	 */
@@ -1383,6 +1400,13 @@
 		var top		= $area.offset().top - 200;
 		$('html,body').stop().animate({scrollTop: top});
 	});
+
+
+	/**
+	 * Observe textareas in Section Attribute dialog .attr_value and auto-resize to the required height
+	 *
+	 */
+	$(document).on('input change', '.gptextarea.attr_value', textareaAutoHeight);
 
 
 	/**

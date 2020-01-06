@@ -59,17 +59,29 @@ html{
 
 
 #ckeditor_tabs{
-	display:table;
-	width:100%;
+	display:-webkit-box;
+	display:-webkit-flex;
+	display:-moz-flex;
+	display:-ms-flexbox;
+	display:flex;
 }
 
 #ckeditor_tabs a{
-	display:table-cell;
-	padding:0 10px;
+	-webkit-box-flex:1;
+	-webkit-flex-grow:1;
+	-moz-flex-grow:1;
+	-ms-flex-positive:1;
+	flex-grow:1;
+	-webkit-flex-shrink:1;
+	-moz-flex-shrink:1;
+	-ms-flex-negative:1;
+	flex-shrink:1;
+	padding:0 5px;
 	text-align:center;
 	color:#888 !important;
 	white-space:nowrap;
 	overflow:hidden;
+	text-overflow:ellipsis;
 }
 
 #ckeditor_tabs a:last-child{

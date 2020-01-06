@@ -521,7 +521,7 @@ class Ajax extends \gp\admin\Menu{
 				continue;
 			}
 			$areas[$title] = str_replace('_', ' ', $title);
-			/* 
+			/*
 			array(
 				'title'			=> $title,
 				'file_path'		=> $folder . '/' . $title . '/page.php',
@@ -927,7 +927,7 @@ class Ajax extends \gp\admin\Menu{
 			'label'	=> str_replace('_', ' ', $area),
 		);
 
-		if( !$this->SaveNew($insert) ){ 
+		if( !$this->SaveNew($insert) ){
 			msg($langmessage['OOPS'] . ' (Adding Extra Content Area failed)');
 			$this->RestoreSettings();
 			return false;
@@ -965,7 +965,7 @@ class Ajax extends \gp\admin\Menu{
 		$insert			= array();
 		$insert[$key]	= $array;
 
-		if( !$this->SaveNew($insert) ){ 
+		if( !$this->SaveNew($insert) ){
 			$this->RestoreSettings();
 			return false;
 		}
@@ -1274,19 +1274,11 @@ class Ajax extends \gp\admin\Menu{
 				$admin_link = \gp\Page\Edit::ToggleVisibilityLink($_POST['index'], empty($_POST['visibility']));
 				$this->page->ajaxReplace[] = array('replace', '.admin-link-toggle-visibility', $admin_link);
 
-				// update notifications
-				if( \gp\admin\Tools::HasPermission('Admin/Notifications') ){
-					ob_start();
-					\gp\admin\Notifications::GetNotifications();
-					$panelgroup = ob_get_clean();
-					$this->page->ajaxReplace[] = array('replace', '.admin-panel-notifications', $panelgroup);
-				}
 				// toggle 'isPrivate' class on <html> element
 				$this->page->ajaxReplace[] = array('toggle_vis_class', !empty($_POST['visibility']), '');
-				return;
 			}
 
-			\gp\admin\Notifications::UpdateNotifications(true); // passing true = add to $page->ajaxReplace
+			\gp\admin\Notifications::UpdateNotifications();
 		}
 	}
 

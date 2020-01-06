@@ -233,6 +233,7 @@ class Page extends \gp\Page{
 		//resolve request for /Admin_Theme_Content if the request is for /Admin_Theme_Conent/1234
 		$request_string		= str_replace('_','/',$this->requested);
 		$parts				= explode('/',$request_string);
+		$extra_parts		= [];
 
 		do{
 
@@ -243,7 +244,7 @@ class Page extends \gp\Page{
 				if( \gp\admin\Tools::HasPermission($request_string) ){
 
 					$this->OrganizeFrequentScripts($request_string);
-					\gp\tool\Output::ExecInfo($scriptinfo, array('page'=>$this) );
+					\gp\tool\Output::ExecInfo($scriptinfo, array('page'=>$this,'path_parts'=>$extra_parts) );
 
 					return;
 				}
@@ -264,7 +265,7 @@ class Page extends \gp\Page{
 				break;
 
 			}
-			array_pop($parts);
+			$extra_parts[] = array_pop($parts);
 
 		}while( count($parts) );
 

@@ -139,6 +139,7 @@ class Edit extends \gp\admin\Layout{
 
 		$_REQUEST					+= array('gpreq' => 'body'); //force showing only the body as a complete html document
 		$this->page->get_theme_css		= false;
+		\gp\admin\Tools::$show_toolbar	= false;
 
 		$this->page->css_user[]		= '/include/thirdparty/codemirror/lib/codemirror.css';
 		$this->page->head_js[]		= '/include/thirdparty/codemirror/lib/codemirror.js';

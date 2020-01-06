@@ -7,7 +7,9 @@ defined('is_running') or die('Not an entry point...');
 abstract class Base{
 
 	//executable commands
-	protected $cmds				= array();
+	protected $cmds				= [];
+	protected $cmds_post		= [];
+
 
 
 	/**
@@ -16,19 +18,36 @@ abstract class Base{
 	 */
 	public function RunCommands($cmd){
 
+		// POST commands
+		if( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cmd']) && $_POST['cmd'] === $cmd ){
+			if( $this->_RunCommands($cmd, $this->cmds_post) ){
+				return;
+			}
+		}
+
+		// All others
+		if( $this->_RunCommands($cmd, $this->cmds) ){
+			return;
+		}
+
+
+		$this->DefaultDisplay();
+	}
+
+	private function _RunCommands($cmd, $cmds){
+
 		if( !is_string($cmd) ){
 			$cmd = '';
 		}
 
-		$this->cmds	= array_change_key_case($this->cmds, CASE_LOWER);
+		$cmds		= array_change_key_case($cmds, CASE_LOWER);
 		$cmd		= strtolower($cmd);
 
-		if( !isset($this->cmds[$cmd]) ){
-			$this->DefaultDisplay();
-			return;
+		if( !isset($cmds[$cmd]) ){
+			return false;
 		}
 
-		$cmds = (array)$this->cmds[$cmd];
+		$cmds = (array)$cmds[$cmd];
 		array_unshift($cmds, $cmd);
 
 		foreach($cmds as $cmd){
@@ -39,7 +58,9 @@ abstract class Base{
 			}
 		}
 
+		return true;
 	}
+
 
 	/**
 	 * Set the executable commands

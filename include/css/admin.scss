@@ -6,7 +6,6 @@
 @import 'mixins.scss';
 @import 'variables.scss';
 
-@import 'admin_toolbar.scss';
 
 /**
  * Reset CSS
@@ -44,8 +43,8 @@
 	text-shadow: none;
 	@include box-sizing( content-box );
 	/* background: none; prevents other backgrounds from showing. "inherit" wouldn't make sense */
-	font-family: inherit; 
-	font-size: inherit; 
+	font-family: inherit;
+	font-size: inherit;
 	line-height: inherit; //* conflicts with fontawesome */
 }
 
@@ -664,7 +663,7 @@ body.edit_layout .GPAREA{
 }
 
 body.gpAdmin .GPAREA[data-gp_hidden="true"]{
-	display: none!important; 
+	display: none!important;
 }
 
 body.gpAdmin div.editable_area{
@@ -675,51 +674,69 @@ body.gpAdmin div.editable_area{
 /**
  * general
  */
+
+ .full_width,
+ #gp_admin_html .full_width{
+ 	width: 100%;
+ }
+
+
+#gp_admin_html .bordered,
 .bordered{
 	margin-top: 1em;
 	border-spacing: 0;
 	border-top: 1px solid #eee;
+
+
+	> tbody > tr > th,
+	> thead > tr > th,
+	> tbody > tr > td,
+	> tfoot > tr > td{
+		padding: 7px;
+		border-bottom: 1px solid #eee;
+		text-align: left;
+		color: #444 !important;
+		background-color: #fff;
+	}
+
+	> tbody > tr > th,
+	> thead > tr > th{
+		background-color: #eee;
+		white-space: nowrap;
+		color: #000;
+		text-shadow: 0 1px 0 #fff !important;
+		border-bottom: 1px solid #ddd;
+		font-weight: bold;
+	}
+
+	> tbody > tr.even > td,
+	&.striped tbody > tr:nth-child(2n) > td{
+		background: #f5f5f5;
+	}
+
+	&.middle > tbody > tr > td{
+		vertical-align: middle;
+	}
+
+	&.hover > tbody > tr:hover > td{
+		background-color: #ddd;
+	}
+
+ 	> tbody > tr.active > td{
+		background-color: #329880 !important;
+		&,
+		> a{
+			color: #fff !important;
+		}
+	}
+
 }
 
-.full_width,
-#gp_admin_html .full_width{
-	width: 100%;
-}
-
-.bordered > tbody > tr > th,
-.bordered > thead > tr > th,
-.bordered > tbody > tr > td,
-.bordered > tfoot > tr > td{
-	padding: 7px;
-	border-bottom: 1px solid #eee;
-	text-align: left;
-	color: #444 !important;
-	background-color: #fff;
-}
-
-.bordered > tbody > tr > th,
-.bordered > thead > tr > th{
-	background-color: #eee;
-	white-space: nowrap;
-	color: #000;
-	text-shadow: 0 1px 0 #fff !important;
-	border-bottom: 1px solid #ddd;
-	font-weight: bold;
-}
-
-.bordered > tbody > tr.even > td,
-.bordered.striped tbody > tr:nth-child(2n) > td{
-	background: #f5f5f5;
-}
-
-#gp_admin_html .bordered.middle > tbody > tr > td{
-	vertical-align: middle;
-}
 
 
 
 /**
- * collapsible 
+ * collapsible
  */
 .collapsible h4{
 	margin: 0;
@@ -807,7 +824,7 @@ table.tablesorter th.gp_header_desc:before{
 
 
 /**
- * New Expandable Menu Control 
+ * New Expandable Menu Control
  */
 .expand_child,
 .expand_child_click{
@@ -840,7 +857,7 @@ table.tablesorter th.gp_header_desc:before{
 }
 
 /**
- * don't show any drop down menus when dragging 
+ * don't show any drop down menus when dragging
  */
 .drag_active ul{
 	display: none !important;
@@ -870,13 +887,13 @@ table.tablesorter th.gp_header_desc:before{
 
 /**
  * Admin Panel
- * This is the panel of admin links that is displayed 
+ * This is the panel of admin links that is displayed
  * across all pages when the user is logged in
  */
 
 
  /**
- * simple panel 
+ * simple panel
  */
 #simplepanel{
 	position: fixed;
@@ -1648,7 +1665,7 @@ body #addon_about{
 }
 
 /**
- * jquery ui autocomplete 
+ * jquery ui autocomplete
  */
 #gp_admin_html{
 
@@ -1716,7 +1733,7 @@ body #addon_about{
 
 
 /**
- * floating areas 
+ * floating areas
  */
 #gp_admin_box,
 .gp_floating_area{
@@ -1959,7 +1976,7 @@ body #addon_about{
 
 #gp_admin_html .classes-load-presets{
 	margin-top: 20px;
-			
+
 	ul{
 		margin:0.5em 0;
 		padding-left: 1.25em;
@@ -2035,7 +2052,7 @@ body #addon_about{
 
 
 /**
- * ckeditor & autocomplete conflict 
+ * ckeditor & autocomplete conflict
  */
 .cke_dialog_ui_input_text .ui-helper-hidden-accessible{
 	display: none;

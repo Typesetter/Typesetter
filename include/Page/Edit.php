@@ -8,7 +8,6 @@ class Edit extends \gp\Page{
 
 	protected $draft_file;
 	protected $draft_exists = false;
-	protected $revision;
 
 	protected $permission_edit;
 	protected $permission_menu;
@@ -96,10 +95,7 @@ class Edit extends \gp\Page{
 			$this->cmds['AddFromClipboard']			= '';
 
 			$this->cmds['ViewRevision']				= '';
-			$this->cmds['UseRevision']				= 'DefaultDisplay';
-			$this->cmds['ViewHistory']				= '';
 			$this->cmds['ViewCurrent']				= '';
-			$this->cmds['DeleteRevision']			= 'ViewHistory';
 			$this->cmds['PublishDraft']				= 'DefaultDisplay';
 
 			/* inline editing */
@@ -168,36 +164,16 @@ class Edit extends \gp\Page{
 	public function AdminLinks(){
 		global $langmessage;
 
-		//viewing revision
-		if( isset($this->revision) ){
-			return $this->RevisionLinks();
-		}
 
 		$admin_links		= array();
 
-		//history
-		$backup_files		= $this->BackupFiles();
-		if( count($backup_files) ){
-			$times			= array_keys($backup_files);
-			$admin_links[]	= \gp\tool::Link(
-				$this->title,
-				'<i class="fa fa-backward"></i> ' . $langmessage['Previous'],
-				'cmd=ViewRevision&time=' . array_pop($times),
-				array(
-					'class'		=> 'admin-link admin-link-previous-revision',
-					'data-cmd'	=> 'cnreq',
-				)
-			);
-		}
-
 		$admin_links[]	= \gp\tool::Link(
-			$this->title,
+			'/Admin/Revisions/'.$this->gp_index,
 			'<i class="fa fa-history"></i> ' . $langmessage['Revision History'],
-			'cmd=ViewHistory',
+			'',
 			array(
 				'title'		=> $langmessage['Revision History'],
 				'class'		=> 'admin-link admin-link-revision-history',
-				'data-cmd'	=> 'gpabox',
 			)
 		);
 
@@ -337,79 +313,6 @@ class Edit extends \gp\Page{
 		}
 		return \gp\tool::Link('Admin/Menu/Ajax', $label, $q, $attrs);
 	}
-
-
-
-	/**
-	 * Return admin links when a revision is being displayed
-	 *
-	 */
-	protected function RevisionLinks(){
-		global $langmessage;
-
-		$admin_links		= array();
-
-		//previous && next revision
-		$files			= $this->BackupFiles();
-		$times			= array_keys($files);
-		$key_current	= array_search($this->revision, $times);
-
-		if( $key_current !== false ){
-			if( isset($times[$key_current-1]) ){
-				$admin_links[]	= \gp\tool::Link(
-					$this->title,
-					'<i class="fa fa-backward"></i> ' . $langmessage['Previous'],
-					'cmd=ViewRevision&time=' . $times[$key_current - 1],
-					array('data-cmd'=>'cnreq')
-				);
-			}
-
-			if( isset($times[$key_current+1]) ){
-				$admin_links[]	= \gp\tool::Link(
-					$this->title,
-					'<i class="fa fa-forward"></i> ' . $langmessage['Next'],
-					'cmd=ViewRevision&time=' . $times[$key_current + 1],
-					array('data-cmd'=>'cnreq')
-				);
-			}else{
-				$admin_links[]	= \gp\tool::Link(
-					$this->title,
-					'<i class="fa fa-forward"></i> ' . $langmessage['Working Draft']
-				);
-			}
-
-		}
-
-		$admin_links[] = \gp\tool::Link(
-			$this->title,
-			'<i class="fa fa-history"></i> ' . $langmessage['Revision History'],
-			'cmd=ViewHistory',
-			array(
-				'title'		=> $langmessage['Revision History'],
-				'data-cmd'	=> 'gpabox'
-			)
-		);
-
-		// restore this version
-		if( $this->revision == $this->fileModTime ){
-			$date	= $langmessage['Current Page'];
-		}else{
-			$date	= \gp\tool::date($langmessage['strftime_datetime'],$this->revision);
-		}
-
-		$admin_links[] = \gp\tool::Link(
-			$this->title,
-			'<i class="fa fa-save"></i> ' . $langmessage['Restore this revision'] . ' (' . $date . ')',
-			'cmd=UseRevision&time=' . $this->revision,
-			array(
-				'data-cmd'	=> 'cnreq',
-				'class'		=> 'msg_publish_draft admin-link admin-link-publish-draft'
-			)
-		);
-
-		return $admin_links;
-	}
-
 
 
 	/**
@@ -1429,198 +1332,44 @@ class Edit extends \gp\Page{
 	}
 
 
-
-	/**
-	 * Display the revision history of the current file
-	 *
-	 */
-	public function ViewHistory(){
-		global $langmessage, $config;
-
-		$files		= $this->BackupFiles();
-		$rows		= array();
-
-		//working draft
-		if( $this->draft_exists ){
-			$draft_file = \gp\tool\Files::FilePath($this->draft_file);
-			$size = filesize($draft_file);
-			$time = $this->file_stats['modified'];
-			$rows[$time] = $this->HistoryRow($time, $size, $this->file_stats['username'], 'draft');
-		}
-
-		foreach($files as $time => $file){
-			$info = $this->BackupInfo($file);
-			$rows[$time] = $this->HistoryRow($info['time'], $info['size'], $info['username']);
-		}
-
-		// current page
-		// this will overwrite one of the history entries if there is a draft
-		$page_file = \gp\tool\Files::FilePath($this->file);
-		$rows[$this->fileModTime] = $this->HistoryRow($this->fileModTime, filesize($page_file), $this->file_stats['username'], 'current');
-
-		echo '<h2>' . $langmessage['Revision History'] . '</h2>';
-		echo '<table class="bordered full_width striped"><tr>';
-		echo '<th>' . $langmessage['Modified'] . '</th>';
-		echo '<th>' . $langmessage['File Size'] . '</th>';
-		echo '<th>' . $langmessage['username'] . '</th>';
-		echo '<th>&nbsp;</th>';
-		echo '</tr><tbody>';
-
-		krsort($rows);
-		echo implode('', $rows);
-
-		echo '</tbody>';
-		echo '</table>';
-
-		echo '<p>' . $langmessage['history_limit'] . ': ' . $config['history_limit'] . '</p>';
-	}
-
-
-
-	/**
-	 * Get info about a backup from the filename
-	 *
-	 */
-	public function BackupInfo($file){
-
-		$info = array();
-
-		//remove .gze
-		if( strpos($file,'.gze') === (strlen($file)-4) ){
-			$file = substr($file, 0, -4);
-		}
-
-		$name				= basename($file);
-		$parts				= explode('.', $name, 3);
-
-		$info['time']		= array_shift($parts);
-		$info['size']		= array_shift($parts);
-		$info['username']	= '';
-
-		if( count($parts) ){
-			$info['username'] = array_shift($parts);
-		}
-
-		return $info;
-	}
-
-
-
-	/**
-	 * Return content for history row
-	 *
-	 */
-	protected function HistoryRow($time, $size, $username, $which='history'){
-		global $langmessage;
-
-		ob_start();
-		$date = \gp\tool::date($langmessage['strftime_datetime'], $time);
-		echo '<tr><td title="' . htmlspecialchars($date) . '">';
-		switch($which){
-			case 'current':
-				echo '<b>' . $langmessage['Current Page'] . '</b><br/>';
-				break;
-
-			case 'draft':
-				echo '<b>' . $langmessage['Working Draft'] . '</b><br/>';
-				break;
-		}
-
-		$elapsed = \gp\admin\Tools::Elapsed(time() - $time);
-		echo sprintf($langmessage['_ago'], $elapsed);
-		echo '</td><td>';
-		if( $size && is_numeric($size) ){
-			echo \gp\admin\Tools::FormatBytes($size);
-		}
-		echo '</td><td>';
-		if( !empty($username) ){
-			echo $username;
-		}
-		echo '</td><td>';
-
-		switch($which){
-			case 'current':
-				echo \gp\tool::Link(
-					$this->title,
-					$langmessage['View'],
-					'cmd=ViewCurrent',
-					array('data-cmd' => 'cnreq')
-				);
-				break;
-
-			case 'draft':
-				echo \gp\tool::Link($this->title, $langmessage['View']);
-				echo ' &nbsp; ' . \gp\tool::Link(
-					$this->title,
-					$langmessage['Publish Draft'],
-					'cmd=PublishDraft',
-					array('data-cmd' => 'cnreq')
-				);
-				break;
-
-			case 'history':
-				echo \gp\tool::Link(
-					$this->title,
-					$langmessage['View'],
-					'cmd=ViewRevision&time=' . $time,
-					array('data-cmd' => 'cnreq')
-				);
-				echo ' &nbsp; ';
-				echo \gp\tool::Link(
-					$this->title,
-					$langmessage['delete'],
-					'cmd=DeleteRevision&time=' . $time,
-					array(
-						'data-cmd'	=> 'gpabox',
-						'class'		=> 'gpconfirm'
-					)
-				);
-				break;
-		}
-
-		echo '</td></tr>';
-		return ob_get_clean();
-	}
-
-
-
 	/**
 	 * Display the contents of a past revision
 	 *
 	 */
 	protected function ViewRevision(){
-		global $langmessage;
 
-		$time			=& $_REQUEST['time'];
-		$file_sections	= $this->GetRevision($time);
+		\gp\admin\Tools::$show_toolbar	= false;
+		$revision						=& $_REQUEST['revision'];
+		$file_sections					= $this->GetRevision($revision);
+
+		$this->head_js[]				= '/include/js/admin/revision.js';
 
 		if( $file_sections === false ){
-			return false;
+			$this->DefaultDisplay();
+			return;
 		}
 
-		$this->revision			= $time;
+
 		echo \gp\tool\Output\Sections::Render($file_sections, $this->title, \gp\tool\Files::$last_stats);
 	}
 
 
-
 	/**
-	 * Revert the file data to a previous revision
+	 * View the current public facing version of the file
 	 *
 	 */
-	protected function UseRevision(){
-		global $langmessage;
+	public function ViewCurrent(){
 
-		$time			=& $_REQUEST['time'];
-		$file_sections	= $this->GetRevision($time);
+		\gp\admin\Tools::$show_toolbar		= false;
+		$this->head_js[]					= '/include/js/admin/revision.js';
 
-		if( $file_sections === false ){
-			return false;
+		if( !$this->draft_exists ){
+			$this->DefaultDisplay();
+			return;
 		}
 
-		$this->file_sections = $file_sections;
-		$this->SaveThis();
-
+		$file_sections			= \gp\tool\Files::Get($this->file, 'file_sections');
+		echo \gp\tool\Output\Sections::Render($file_sections, $this->title, $this->file_stats);
 	}
 
 
@@ -1658,41 +1407,6 @@ class Edit extends \gp\Page{
 	}
 
 
-
-	/**
-	 * View the current public facing version of the file
-	 *
-	 */
-	public function ViewCurrent(){
-
-		if( !$this->draft_exists ){
-			$this->DefaultDisplay();
-			return;
-		}
-
-		$file_sections			= \gp\tool\Files::Get($this->file, 'file_sections');
-		$this->revision			= $this->fileModTime;
-		echo \gp\tool\Output\Sections::Render($file_sections, $this->title, $this->file_stats);
-	}
-
-
-
-	/**
-	 * Delete a revision backup
-	 *
-	 */
-	public function DeleteRevision(){
-		global $langmessage;
-
-		$full_path	= $this->BackupFile($_REQUEST['time']);
-		if( is_null($full_path) ){
-			return false;
-		}
-		unlink($full_path);
-	}
-
-
-
 	/**
 	 * Return a list of the available backup for the current file
 	 *
@@ -1700,6 +1414,7 @@ class Edit extends \gp\Page{
 	public function BackupFiles(){
 		global $dataDir;
 		$dir = $dataDir . '/data/_backup/pages/' . $this->gp_index;
+
 		if( !file_exists($dir) ){
 			return array();
 		}
@@ -1845,10 +1560,9 @@ class Edit extends \gp\Page{
 						array('data-cmd' => 'gpajax')
 					);
 				echo \gp\tool::Link(
-						$this->title,
+						'/Admin/Revisions/'.$this->gp_index,
 						$langmessage['Revision History'],
-						'cmd=ViewHistory',
-						array( 'data-cmd' => 'gpabox')
+						''
 					);
 				echo '<span class="gp_separator"></span>';
 				echo \gp\tool::Link('Admin/Menu', $langmessage['file_manager']);

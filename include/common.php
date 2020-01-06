@@ -161,7 +161,7 @@ if ( function_exists( 'date_default_timezone_set' ) )
  * @return false Always returns false so the standard PHP error handler is also used
  *
  */
-function showError($errno, $errmsg, $filename, $linenum, $vars){
+function showError($errno, $errmsg, $filename, $linenum, $vars, $backtrace = null ){
 	global $wbErrorBuffer, $addon_current_id, $page, $addon_current_version, $config, $addonFolderName;
 	static $reported = array();
 	$report_error = true;
@@ -206,14 +206,16 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	}
 
 	//get the backtrace and function where the error was thrown
-	$backtrace = debug_backtrace();
+	if( !$backtrace ){
+		$backtrace = debug_backtrace();
+	}
 
 	//remove showError() from backtrace
 	if( strtolower($backtrace[0]['function']) == 'showerror' ){
-		$backtrace = array_slice($backtrace,1,7);
-	}else{
-		$backtrace = array_slice($backtrace,0,7);
+		$backtrace = array_slice($backtrace,1);
 	}
+	$backtrace = array_slice($backtrace,0,7);
+
 
 
 	//record one error per function and only record the error once per request
@@ -532,7 +534,7 @@ if( !interface_exists('Throwable') ){
  *
  * @param string $file The full path of the php file to include
  * @param string $include_variation Which variation or adaptation of php's include() function to use (include,include_once,include_if, include_once_if, require ...)
- * @param array List of global variables to set
+ * @param array $globals List of global variables to set
  */
 function IncludeScript($file, $include_variation = 'include_once', $globals = array() ){
 
@@ -555,6 +557,7 @@ function IncludeScript($file, $include_variation = 'include_once', $globals = ar
 		global $$global;
 	}
 
+	$return = null;
 
 	try{
 		switch($include_variation){
@@ -571,7 +574,7 @@ function IncludeScript($file, $include_variation = 'include_once', $globals = ar
 				$return = require_once($file);
 			break;
 		}
-		
+
 	}catch( Throwable $e ){
 		\showError( E_ERROR ,'IncludeScript() Fatal Error: '.$e->getMessage(), $e->GetFile(), $e->GetLine(), [], $e->getTrace());
 

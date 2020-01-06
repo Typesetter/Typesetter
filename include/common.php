@@ -229,8 +229,9 @@ function showError($errno, $errmsg, $filename, $linenum, $vars, $backtrace = nul
 	}
 	$reported[$uniq] = true;
 
+
 	//disable showError after 20 errors
-	if( count($reported) >= 1 ){
+	if( count($reported) >= 20 ){
 		restore_error_handler();
 	}
 

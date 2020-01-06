@@ -36,11 +36,6 @@ body{
 		user-select:none;
 	}
 
-	a.revision_history_close{
-		float:right;
-		margin-top:-4px;
-	}
-
 	.full_height{
 		height:100%;
 		@include box-sizing(border-box);

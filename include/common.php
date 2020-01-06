@@ -288,12 +288,7 @@ function showError($errno, $errmsg, $filename, $linenum, $vars, $backtrace = nul
 	}
 
 
-	//mysql.. for some addons
-	if( function_exists('mysql_errno') && mysql_errno() ){
-		$mess .= '<br/> &nbsp; &nbsp; Mysql Error ('.mysql_errno().')'. mysql_error();
-	}
-
-	//attempting to entire all data can result in a blank screen
+	//attempting to include all data can result in a blank screen
 	foreach($backtrace as $i => $trace){
 		foreach($trace as $tk => $tv){
 			if( is_array($tv) ){

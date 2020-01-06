@@ -95,8 +95,6 @@ class Edit extends \gp\Page{
 			$this->cmds['AddFromClipboard']			= '';
 
 			$this->cmds['ViewRevision']				= '';
-			$this->cmds['UseRevision']				= 'DefaultDisplay';
-			//$this->cmds['ViewHistory']				= '';
 			$this->cmds['ViewCurrent']				= '';
 			$this->cmds['PublishDraft']				= 'DefaultDisplay';
 
@@ -172,7 +170,7 @@ class Edit extends \gp\Page{
 		$admin_links[]	= \gp\tool::Link(
 			'/Admin/Revisions/'.$this->gp_index,
 			'<i class="fa fa-history"></i> ' . $langmessage['Revision History'],
-			'cmd=ViewHistory',
+			'',
 			array(
 				'title'		=> $langmessage['Revision History'],
 				'class'		=> 'admin-link admin-link-revision-history',
@@ -315,39 +313,6 @@ class Edit extends \gp\Page{
 		}
 		return \gp\tool::Link('Admin/Menu/Ajax', $label, $q, $attrs);
 	}
-
-
-
-	/*
-	 * Return admin links when a revision is being displayed
-	 *
-	protected function RevisionLinks(){
-		global $langmessage;
-
-		$admin_links		= array();
-
-
-		// restore this version
-		if( $this->revision == $this->fileModTime ){
-			$date	= $langmessage['Current Page'];
-		}else{
-			$date	= \gp\tool::date($langmessage['strftime_datetime'],$this->revision);
-		}
-
-		$admin_links[] = \gp\tool::Link(
-			$this->title,
-			'<i class="fa fa-save"></i> ' . $langmessage['Restore this revision'] . ' (' . $date . ')',
-			'cmd=UseRevision&time=' . $this->revision,
-			array(
-				'data-cmd'	=> 'cnreq',
-				'class'		=> 'msg_publish_draft admin-link admin-link-publish-draft'
-			)
-		);
-
-		return $admin_links;
-	}
-	*/
-
 
 
 	/**
@@ -1367,35 +1332,6 @@ class Edit extends \gp\Page{
 	}
 
 
-
-	/**
-	 * Get info about a backup from the filename
-	 *
-	 */
-	public function BackupInfo($file){
-
-		$info = array();
-
-		//remove .gze
-		if( strpos($file,'.gze') === (strlen($file)-4) ){
-			$file = substr($file, 0, -4);
-		}
-
-		$name				= basename($file);
-		$parts				= explode('.', $name, 3);
-
-		$info['time']		= array_shift($parts);
-		$info['size']		= array_shift($parts);
-		$info['username']	= '';
-
-		if( count($parts) ){
-			$info['username'] = array_shift($parts);
-		}
-
-		return $info;
-	}
-
-
 	/**
 	 * Display the contents of a past revision
 	 *
@@ -1403,8 +1339,8 @@ class Edit extends \gp\Page{
 	protected function ViewRevision(){
 
 		\gp\admin\Tools::$show_toolbar	= false;
-		$time							=& $_REQUEST['time'];
-		$file_sections					= $this->GetRevision($time);
+		$revision						=& $_REQUEST['revision'];
+		$file_sections					= $this->GetRevision($revision);
 
 		$this->head_js[]				= '/include/js/admin/revision.js';
 
@@ -1434,25 +1370,6 @@ class Edit extends \gp\Page{
 
 		$file_sections			= \gp\tool\Files::Get($this->file, 'file_sections');
 		echo \gp\tool\Output\Sections::Render($file_sections, $this->title, $this->file_stats);
-	}
-
-
-	/**
-	 * Revert the file data to a previous revision
-	 *
-	 */
-	protected function UseRevision(){
-
-		$time			=& $_REQUEST['time'];
-		$file_sections	= $this->GetRevision($time);
-
-		if( $file_sections === false ){
-			return false;
-		}
-
-		$this->file_sections = $file_sections;
-		$this->SaveThis();
-
 	}
 
 
@@ -1645,7 +1562,7 @@ class Edit extends \gp\Page{
 				echo \gp\tool::Link(
 						'/Admin/Revisions/'.$this->gp_index,
 						$langmessage['Revision History'],
-						'cmd=ViewHistory'
+						''
 					);
 				echo '<span class="gp_separator"></span>';
 				echo \gp\tool::Link('Admin/Menu', $langmessage['file_manager']);

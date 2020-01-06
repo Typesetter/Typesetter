@@ -277,21 +277,16 @@ function showError($errno, $errmsg, $filename, $linenum, $vars, $backtrace = nul
 	$mess .= '<legend>'.$errortype[$errno].' ('.$errno.')</legend> '.$errmsg;
 	$mess .= '<br/> &nbsp; &nbsp; <b>in:</b> '.$filename;
 	$mess .= '<br/> &nbsp; &nbsp; <b>on line:</b> '.$linenum;
-	if( isset($_SERVER['REQUEST_URI']) ){
-		$mess .= '<br/> &nbsp; &nbsp; <b>Request:</b> '.$_SERVER['REQUEST_URI'];
-	}
-	if( isset($_SERVER['REQUEST_METHOD']) ){
-		$mess .= '<br/> &nbsp; &nbsp; <b>Method:</b> '.$_SERVER['REQUEST_METHOD'];
-	}
 	$mess .= '<br/> &nbsp; &nbsp; <b>time:</b> '.date('Y-m-d H:i:s').' ('.time().')';
 
-	if( isset($_SERVER['REMOTE_ADDR']) ){
-		$mess .= '<br/> &nbsp; &nbsp; <b>REMOTE_ADDR:</b> '.$_SERVER['REMOTE_ADDR'];
+
+	$server_params = ['REQUEST_URI','REQUEST_METHOD','REMOTE_ADDR','HTTP_X_FORWARDED_FOR'];
+	foreach( $server_params as $param ){
+		if( array_key_exists( $param, $_SERVER) ){
+			$mess .= '<br/> &nbsp; &nbsp; <b>'.$param.':</b> '.$_SERVER[$param];
+		}
 	}
 
-	if( isset($_SERVER['HTTP_X_FORWARDED_FOR']) ){
-		$mess .= '<br/> &nbsp; &nbsp; <b>HTTP_X_FORWARDED_FOR:</b> '.$_SERVER['HTTP_X_FORWARDED_FOR'];
-	}
 
 	//mysql.. for some addons
 	if( function_exists('mysql_errno') && mysql_errno() ){

@@ -161,10 +161,9 @@ if ( function_exists( 'date_default_timezone_set' ) )
  * @return false Always returns false so the standard PHP error handler is also used
  *
  */
-function showError($errno, $errmsg, $filename, $linenum, $vars){
+function showError($errno, $errmsg, $filename, $linenum, $vars, $backtrace = null ){
 	global $wbErrorBuffer, $addon_current_id, $page, $addon_current_version, $config, $addonFolderName;
 	static $reported = array();
-	$report_error = true;
 
 
 	$errortype = array (
@@ -189,31 +188,25 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	// for functions prepended with @ symbol to suppress errors
 	$error_reporting = error_reporting();
 	if( $error_reporting === 0 ){
-		$report_error = false;
-
-		//make sure the error is logged
-		//error_log('PHP '.$errortype[$errno].':  '.$errmsg.' in '.$filename.' on line '.$linenum);
-
-		if( gpdebug === false ){
-			return false;
-		}
 		return false;
 	}
 
-	// since we supported php 4.3+, there may be a lot of strict errors
+	// since we supported older versions of php, there may be a lot of strict errors
 	if( $errno === E_STRICT ){
 		return;
 	}
 
 	//get the backtrace and function where the error was thrown
-	$backtrace = debug_backtrace();
+	if( !$backtrace ){
+		$backtrace = debug_backtrace();
+	}
 
 	//remove showError() from backtrace
 	if( strtolower($backtrace[0]['function']) == 'showerror' ){
-		$backtrace = array_slice($backtrace,1,7);
-	}else{
-		$backtrace = array_slice($backtrace,0,7);
+		$backtrace = array_slice($backtrace,1);
 	}
+	$backtrace = array_slice($backtrace,0,7);
+
 
 
 	//record one error per function and only record the error once per request
@@ -227,16 +220,13 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	}
 	$reported[$uniq] = true;
 
+
 	//disable showError after 20 errors
-	if( count($reported) >= 1 ){
+	if( count($reported) >= 20 ){
 		restore_error_handler();
 	}
 
 	if( gpdebug === false ){
-
-		if( !$report_error ){
-			return false;
-		}
 
 
 		//if it's an addon error, only report if the addon was installed remotely
@@ -251,21 +241,22 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 		}
 
 		//record the error
-		$i = count($wbErrorBuffer);
-		$args['en'.$i] = $errno;
-		$args['el'.$i] = $linenum;
-		$args['em'.$i] = substr($errmsg,0,255);
-		$args['ef'.$i] = $filename; //filename length checked later
+		$i						= count($wbErrorBuffer);
+		$args					= [];
+		$args['en'.$i]			= $errno;
+		$args['el'.$i]			= $linenum;
+		$args['em'.$i]			= substr($errmsg,0,255);
+		$args['ef'.$i]			= $filename; //filename length checked later
 		if( isset($addon_current_id) ){
-			$args['ea'.$i] = $addon_current_id;
+			$args['ea'.$i]		= $addon_current_id;
 		}
 		if( isset($addon_current_version) && $addon_current_version ){
-			$args['ev'.$i] = $addon_current_version;
+			$args['ev'.$i]		= $addon_current_version;
 		}
 		if( is_object($page) && !empty($page->title) ){
-			$args['ep'.$i] = $page->title;
+			$args['ep'.$i]		= $page->title;
 		}
-		$wbErrorBuffer[$uniq] = $args;
+		$wbErrorBuffer[$uniq]	= $args;
 		return false;
 	}
 
@@ -275,28 +266,18 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	$mess .= '<legend>'.$errortype[$errno].' ('.$errno.')</legend> '.$errmsg;
 	$mess .= '<br/> &nbsp; &nbsp; <b>in:</b> '.$filename;
 	$mess .= '<br/> &nbsp; &nbsp; <b>on line:</b> '.$linenum;
-	if( isset($_SERVER['REQUEST_URI']) ){
-		$mess .= '<br/> &nbsp; &nbsp; <b>Request:</b> '.$_SERVER['REQUEST_URI'];
-	}
-	if( isset($_SERVER['REQUEST_METHOD']) ){
-		$mess .= '<br/> &nbsp; &nbsp; <b>Method:</b> '.$_SERVER['REQUEST_METHOD'];
-	}
 	$mess .= '<br/> &nbsp; &nbsp; <b>time:</b> '.date('Y-m-d H:i:s').' ('.time().')';
 
-	if( isset($_SERVER['REMOTE_ADDR']) ){
-		$mess .= '<br/> &nbsp; &nbsp; <b>REMOTE_ADDR:</b> '.$_SERVER['REMOTE_ADDR'];
+
+	$server_params = ['REQUEST_URI','REQUEST_METHOD','REMOTE_ADDR','HTTP_X_FORWARDED_FOR'];
+	foreach( $server_params as $param ){
+		if( array_key_exists( $param, $_SERVER) ){
+			$mess .= '<br/> &nbsp; &nbsp; <b>'.$param.':</b> '.$_SERVER[$param];
+		}
 	}
 
-	if( isset($_SERVER['HTTP_X_FORWARDED_FOR']) ){
-		$mess .= '<br/> &nbsp; &nbsp; <b>HTTP_X_FORWARDED_FOR:</b> '.$_SERVER['HTTP_X_FORWARDED_FOR'];
-	}
 
-	//mysql.. for some addons
-	if( function_exists('mysql_errno') && mysql_errno() ){
-		$mess .= '<br/> &nbsp; &nbsp; Mysql Error ('.mysql_errno().')'. mysql_error();
-	}
-
-	//attempting to entire all data can result in a blank screen
+	//attempting to include all data can result in a blank screen
 	foreach($backtrace as $i => $trace){
 		foreach($trace as $tk => $tv){
 			if( is_array($tv) ){
@@ -311,11 +292,11 @@ function showError($errno, $errmsg, $filename, $linenum, $vars){
 	$mess .= '<div class="nodisplay">';
 	$mess .= pre($backtrace);
 	$mess .= '</div></div>';
-	$mess .= '</p></fieldset>';
+	$mess .= '</fieldset>';
 
 	if( gpdebug === true ){
 		msg($mess);
-	}elseif( class_exists('\\gp\tool\\Emailer') && $report_error ){
+	}elseif( class_exists('\\gp\tool\\Emailer') ){
 		$mailer =		new \gp\tool\Emailer();
 		$subject =		\gp\tool::ServerName(true).' Debug';
 		$mailer->SendEmail(gpdebug, $subject, $mess);
@@ -520,13 +501,19 @@ function includeFile( $file ){
 	require_once( $dataDir.'/include/'.$file );
 }
 
+// php < 7.0 doesn't have \Throwable
+if( !interface_exists('Throwable') ){
+	class Throwable extends Exception{}
+}
+
+
 /**
  * Include a script, unless it has caused a fatal error.
  * Using this function allows handling fatal errors that are thrown by the included php scripts
  *
  * @param string $file The full path of the php file to include
  * @param string $include_variation Which variation or adaptation of php's include() function to use (include,include_once,include_if, include_once_if, require ...)
- * @param array List of global variables to set
+ * @param array $globals List of global variables to set
  */
 function IncludeScript($file, $include_variation = 'include_once', $globals = array() ){
 
@@ -549,20 +536,30 @@ function IncludeScript($file, $include_variation = 'include_once', $globals = ar
 		global $$global;
 	}
 
+	$return = null;
 
-	switch($include_variation){
-		case 'include':
-			$return = include($file);
-		break;
-		case 'include_once':
-			$return = include_once($file);
-		break;
-		case 'require':
-			$return = require($file);
-		break;
-		case 'require_once':
-			$return = require_once($file);
-		break;
+	try{
+		switch($include_variation){
+			case 'include':
+				$return = include($file);
+			break;
+			case 'include_once':
+				$return = include_once($file);
+			break;
+			case 'require':
+				$return = require($file);
+			break;
+			case 'require_once':
+				$return = require_once($file);
+			break;
+		}
+
+	}catch( Throwable $e ){
+		\showError( E_ERROR ,'IncludeScript() Fatal Error: '.$e->getMessage(), $e->GetFile(), $e->GetLine(), [], $e->getTrace());
+
+	// php < 7.0 doesn't have \Throwable
+	}catch( Exception $e ){
+		\showError( E_ERROR ,'IncludeScript() Fatal Error: '.$e->getMessage(), $e->GetFile(), $e->GetLine(), [], $e->getTrace());
 	}
 
 	\gp\tool\Output::PopCatchable();

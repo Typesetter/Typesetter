@@ -8,9 +8,13 @@ class Iframe{
 
 
 	/**
+	 * Output iframe interface
+	 * 
+	 * @param /gp/Page $page
+	 * @param string $iframe_src
+	 * @param string $toolbar
+	 * @param string $content
 	 *
-	 * @param [type] $iframe_src
-	 * @param [type] $content
 	 */
 	public static function Output( $page, $iframe_src, $toolbar, $content){
 

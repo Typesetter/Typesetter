@@ -716,6 +716,47 @@ $gp.links.rm_table_row = function(evt){
 	$this.closest('tr').remove();
 }
 
+
+/**
+ * POST a link (without ajax)
+ *
+ */
+$gp.links.post = function(evt){
+	evt.preventDefault();
+
+	var query			= strip_to(this.search,'?');
+	var params			= ParseQuery(query);
+	params.verified		= post_nonce;
+
+	var form			= document.createElement('form');
+
+    form.method			= 'POST';
+    form.action			= this.pathname;
+
+
+	for( const [name, value] of Object.entries(params) ){
+		var element		= document.createElement('input');
+		element.name	= name;
+		element.value	= value;
+	    form.appendChild(element);
+	}
+
+    document.body.appendChild(form);
+
+    form.submit();
+}
+
+function ParseQuery(queryString) {
+    var query = {};
+    var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+    for (var i = 0; i < pairs.length; i++) {
+        var pair = pairs[i].split('=');
+        query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+    }
+    return query;
+}
+
+
 /**
  * Post a gpabox request
  *

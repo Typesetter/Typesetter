@@ -106,9 +106,13 @@
 
 
 #gp_admin_html h1,
+#gp_admin_html .h1,
 #gp_admin_html h2,
-#gp_admin_html h3{
+#gp_admin_html .h2,
+#gp_admin_html h3,
+#gp_admin_html .h3{
 	margin: .8em 0;
+	line-height: 1.1;
 }
 
 #gp_admin_html h1{

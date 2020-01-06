@@ -10,7 +10,7 @@ body{
 	height:calc(100vh - 4px);
 	width:100%;
 	border:0 none;
-	}
+}
 
 
 /**
@@ -29,24 +29,43 @@ body{
 	border-left:1px solid #aaa;
 	background:#eee;
 
+	*{
+		-webkit-user-select:none;
+		-moz-user-select:none;
+		-ms-user-select:none;
+		user-select:none;
+	}
+
+	a.revision_history_close{
+		float:right;
+		margin-top:-4px;
+	}
+
+	a[data-cmd="PreviousRevision"],
+	a[data-cmd="NextRevision"]{
+		display:inline-block;
+		white-space:nowrap;
+	}
+
 	.full_height{
 		height:100%;
 		@include box-sizing(border-box);
-		}
+	}
 
 	.gp_scroll_area{
 		overflow:auto;
 		height:100%;
-		}
+	}
 
 	.gp_scroll_area > div{
 		padding:10px;
-		}
+	}
+
 	#available_wrap{
 		position:relative;
 		overflow:auto;
 		box-sizing:border-box;
-		}
+	}
 
 	table{
 		table-layout:fixed;
@@ -56,6 +75,9 @@ body{
 		border:0 none;
 		height:100%;
 		width:100%;
+		tbody#revision_rows td{
+			cursor:pointer;
+		}
 	}
 	td{
 		padding:0;
@@ -74,7 +96,7 @@ body{
 		margin:0;
 		padding:0 !important;
 		border-bottom:1px solid #fff;
-		}
+	}
 
 	.separator:after{
 		content:"";
@@ -84,7 +106,7 @@ body{
 		bottom:0;
 		left:0;
 		right:0;
-		}
+	}
 
 	#gp_layout_css{
 		width:100% !important;
@@ -112,7 +134,7 @@ body{
 
 	.dd_menu{
 		width:100%;
-		}
+	}
 
 	select{
 		width:228px;
@@ -125,21 +147,21 @@ body{
 		height:auto;
 		@include box-shadow( inset 0 0 1px rgba(0,0,0,0.2) );
 		@include box-sizing( border-box );
-		}
+	}
 
 	#gp_avail_themes{
 		margin:0;
-		}
+	}
 	#gp_avail_themes > div{
 		padding: 20px 0;
 		width:auto;
 		display:block;
-		}
+	}
 
 
 	.search_pages{
 		float:none;
-		}
+	}
 
 	.gp_search_options{
 		padding:10px 0;
@@ -156,7 +178,7 @@ body{
 
 	div.ui-resizable-w{
 		position:absolute !important;
-		background: url('../../include/imgs/drag_handle.gif')  50% 50% no-repeat;
+		background:url('../../include/imgs/drag_handle.gif') 50% 50% no-repeat;
 		padding:0;
 		left:0;
 		width:10px;
@@ -168,19 +190,19 @@ body{
 	}
 
 	.css_buttons {
-	margin: -4px 0 5px -3%;
+	margin:-4px 0 5px -3%;
 	}
 
 	.css_buttons .gpsubmit,
 	.css_buttons .gpcancel{
-		box-sizing: border-box;
-		width: 47%;
-		text-align: center;
-		margin: 4px 0 0 3%;
-		}
+		box-sizing:border-box;
+		width:47%;
+		text-align:center;
+		margin:4px 0 0 3%;
+	}
 
 	.css_buttons .gpdisabled{
-		color: #999 !important;
+		color:#999 !important;
 	}
 
 }
@@ -189,7 +211,7 @@ body{
 #gp_admin_html .CodeMirror{
 
 	border:1px solid #ccc;
-	border-radius: 3px;
+	border-radius:3px;
 	width:auto!important;
 
 	pre{

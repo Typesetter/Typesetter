@@ -53,9 +53,17 @@ class Revisions extends \gp\Page\Edit{
 		//show site in iframe
 		$url		= \gp\tool::GetUrl($this->title,'cmd=ViewRevision&revision=draft');
 		$toolbar	= '<br/><h2>' . $langmessage['Revision History'] . '</h2>';
-		$toolbar	.= \gp\tool::Link_Page($this->title);
-		$toolbar	.= ' &nbsp; <a data-cmd="PreviousRevision"><i class="fa fa-backward fa-fw"></i> ' . $langmessage['Previous'] . '</a>';
-		$toolbar	.= ' &nbsp; <a data-cmd="NextRevision">' . $langmessage['Next'] . ' <i class="fa fa-forward fa-fw"></i></a>';
+		// $toolbar	.= \gp\tool::Link_Page($this->title);
+		$toolbar	.= \gp\tool::Link(
+			$this->title,
+			$langmessage['Close'],
+			'',
+			array('class' => 'gpcancel revision_history_close')
+		);
+		$toolbar	.= '<a data-cmd="PreviousRevision"><i class="fa fa-backward fa-fw"></i> ' . $langmessage['Previous'] . '</a>';
+		$toolbar	.= ' &nbsp; ';
+		$toolbar	.= '<a data-cmd="NextRevision">' . $langmessage['Next'] . ' <i class="fa fa-forward fa-fw"></i></a>';
+
 
 
 
@@ -103,13 +111,17 @@ class Revisions extends \gp\Page\Edit{
 		}
 
 
-		echo '<br/>';
-		echo '<table class="bordered full_width striped hover"><tr>';
+		// echo '<br/>';
+		echo '<table class="bordered full_width striped hover">';
+		echo '<thead>';
+		echo '<tr>';
 		echo '<th>' . $langmessage['Modified'] . '</th>';
 		echo '<th>' . $langmessage['File Size'] . '</th>';
 		echo '<th>' . $langmessage['username'] . '</th>';
-		echo '<th>&nbsp;</th>';
-		echo '</tr><tbody id="revision_rows">';
+		echo '<th>' . $langmessage['options'] . '</th>';
+		echo '</tr>';
+		echo '</thead>';
+		echo '<tbody id="revision_rows">';
 
 		foreach($rows as $row){
 			echo $row['row'];

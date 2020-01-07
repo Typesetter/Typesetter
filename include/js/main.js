@@ -347,7 +347,6 @@ var $gp = {
 			$(selector).colorbox(
 				$gp.cboxSettings({
 					resize : true ,
-					rel : selector,
 					title : function(){
 						var a = $(this);
 						var caption =

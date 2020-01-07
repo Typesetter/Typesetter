@@ -10,6 +10,7 @@ class Extra extends \gp\Page\Edit{
 	public $areas = array();
 	protected $page;
 	protected $area_info;
+	protected $vis;
 
 
 	public function __construct($args){
@@ -125,7 +126,7 @@ class Extra extends \gp\Page\Edit{
 
 		$title = self::AreaExists($title);
 
-		if ($title == false){
+		if( $title === false ){
 			return;
 		}
 

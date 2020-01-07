@@ -7,12 +7,12 @@ defined('is_running') or die('Not an entry point...');
 
 class Available extends \gp\admin\Addons{
 
-	function __construct( $args ){
+	public function __construct( $args ){
 		parent::__construct( $args );
 	}
 
 
-	function DefaultDisplay(){
+	public function DefaultDisplay(){
 		global $langmessage;
 
 		$this->ShowHeader();

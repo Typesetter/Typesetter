@@ -164,6 +164,27 @@ namespace gp{
 		}
 
 
+		/**
+		 * Return the layout id use by the current page
+		 * @return string $layout_id
+		 *
+		 */
+		public static function GetCurrentLayoutId(){
+			global $page, $config, $gpLayouts;
+
+			if( !is_object($page) || $page->pagetype === 'admin_display' ){
+				return false;
+			}
+		
+			if( isset($page->TitleInfo['gpLayout']) ){
+				// page uses a custom layout
+				return $page->TitleInfo['gpLayout'];
+			}
+
+			// page uses the default layout
+			return $config['gpLayout'];
+		}
+
 
 		/*
 		 *

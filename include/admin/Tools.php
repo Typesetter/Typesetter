@@ -272,8 +272,8 @@ namespace gp\admin{
 																'label' 	=> $langmessage['plugins'],
 													);
 
-			$scripts['Admin/Addons/Available']		= array(	'class'		=> '\\gp\\admin\\Addons',
-																'method'	=> 'ShowAvailable',
+			$scripts['Admin/Addons/Available']		= array(	'class'		=> '\\gp\\admin\\Addon\\Available',
+																'method'	=> 'DefaultDisplay',
 																'label' 	=> $langmessage['Available']
 																				. ' (' . $langmessage['plugins'] . ')',
 													);

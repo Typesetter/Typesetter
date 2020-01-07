@@ -14,7 +14,10 @@ class Extra extends \gp\Page\Edit{
 
 	public function __construct($args){
 		global $dataDir;
-		$this->page = $args['page'];
+
+		if( array_key_exists('page',$args) ){
+			$this->page = $args['page'];
+		}
 
 		$this->folder = $dataDir . '/data/_extra';
 		$this->SetVars();
@@ -472,7 +475,7 @@ class Extra extends \gp\Page\Edit{
 	}
 
 	public function EditVisibility(){
-		echo ' <style> 
+		echo ' <style>
 				.tablesorter-header-inner{
 				width:90%;
 				}
@@ -584,15 +587,15 @@ class Extra extends \gp\Page\Edit{
 			};
 		})
 		$("#check_all").click(function(){
-			
+
 			if($(this).prop("checked") == true) {
 				$(".check_page").prop("checked", true);
 			} else {
 				$(".check_page").prop("checked", false);
 			}
-			
+
 		})
-		
+
 		';
 	}
 

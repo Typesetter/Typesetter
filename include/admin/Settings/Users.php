@@ -399,9 +399,7 @@ class Users extends \gp\special\Base{
 
 			//file editing
 			echo '<td>';
-			if( !isset($userinfo['editing']) ){
-				$userinfo['editing'] = 'all';
-			}
+
 			if( $userinfo['editing'] == 'all' ){
 				echo $langmessage['All'];
 			}else{

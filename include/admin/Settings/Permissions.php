@@ -64,9 +64,9 @@ class Permissions extends Users{
 		echo '<div class="all_checkboxes">';
 		foreach($this->users as $username => $userinfo){
 			$attr = '';
-			if( $userinfo['editing'] == 'all'){
-				$attr = ' checked="checked" disabled="disabled"';
-			}elseif(strpos($userinfo['editing'],','.$first_index.',') !== false ){
+			if( $userinfo['editing'] == 'all' ){
+				$attr = ' checked="checked"';
+			}elseif( strpos($userinfo['editing'],','.$first_index.',') !== false ){
 				$attr = ' checked="checked"';
 			}
 			echo '<label class="all_checkbox">';
@@ -101,33 +101,43 @@ class Permissions extends Users{
 
 		foreach($this->users as $username => $userinfo){
 
+
+			// get array of editing indexes for the current user
+			$editing		= explode(',',$userinfo['editing']);
+
 			if( $userinfo['editing'] == 'all'){
+				$editing		= array_values($gp_index);
+			}
+
+			$editing			= array_intersect($gp_index,$editing);
+			$editing_before		= $editing;
+
+
+			// add page index to user
+			if( isset($_POST['users'][$username]) ){
+				$editing	= array_merge($editing,$indexes);
+
+			// remove page index from user
+			}else{
+				$editing	= array_diff($editing,$indexes);
+
+			}
+
+			$editing = array_intersect($gp_index,$editing);
+
+			// don't save if there haven't been any changes
+			// keeps editing = all from being changed to editing = [list of all indexes]
+			if( $editing_before === $editing ){
 				continue;
 			}
 
-			$editing = $userinfo['editing'];
 
-			foreach($indexes as $index){
-
-				// add page index to user
-				if( isset($_POST['users'][$username]) ){
-					$editing .= $index.',';
-
-				// remove page index to user
-				}else{
-					$editing = str_replace( ','.$index.',', ',', $editing);
-				}
-			}
-
-			$editing = explode(',',trim($editing,','));
-			$editing = array_intersect($editing,$gp_index);
+			$editing_str = '';
 			if( count($editing) ){
-				$editing = ','.implode(',',$editing).',';
-			}else{
-				$editing = '';
+				$editing_str = ','.implode(',',$editing).',';
 			}
 
-			$this->users[$username]['editing'] = $editing;
+			$this->users[$username]['editing'] = $editing_str;
 			$this->UserFileDetails($username);
 		}
 

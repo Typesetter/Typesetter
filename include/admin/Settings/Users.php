@@ -403,15 +403,12 @@ class Users extends \gp\special\Base{
 			if( $userinfo['editing'] == 'all' ){
 				echo $langmessage['All'];
 			}else{
-				$count = 0;
-				$counts = count_chars( $userinfo['editing'],1 ); //count the commas
-				if( !empty($userinfo['editing']) && isset($counts[44]) ){
-					$count = $counts[44]-1;
-				}
-				if( $count == 0 ){
-					echo $langmessage['None'];
-				}else{
+
+				$count = preg_match_all('#,#',$userinfo['editing']) - 1; //count the commas
+				if( $count > 0 ){
 					echo sprintf($langmessage['%s Pages'],$count);
+				}else{
+					echo $langmessage['None'];
 				}
 			}
 

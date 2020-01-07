@@ -17,7 +17,7 @@ class UsersTest extends \gptest_bootstrap{
 		$this->GetRequest('/Admin/Users','cmd=newuserform');
 
 		$users				= \gp\tool\Files::Get('_site/users');
-		$this->assertEquals( count($users), 1);
+		$this->assertEquals( count($users), 1, 'More than one user found');
 
 		// create the new user
 		$params = [
@@ -92,8 +92,8 @@ class UsersTest extends \gptest_bootstrap{
 		$this->PostRequest('/Admin/Users',$params);
 
 		$users				= \gp\tool\Files::Get('_site/users');
-		$this->assertEquals( count($users), 1);
-		$this->assertArrayHasKey(static::user_name, $users,'Failed removing user');
+		$this->assertEquals( count($users), 1,'Failed removing user');
+		$this->assertArrayHasKey(static::user_name, $users);
 
 	}
 

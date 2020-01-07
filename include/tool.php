@@ -165,12 +165,12 @@ namespace gp{
 
 
 		/**
-		 * Return the layout id use by the current page
+		 * Return the layout id used by the current page
 		 * @return string $layout_id
 		 *
 		 */
 		public static function GetCurrentLayoutId(){
-			global $page, $config, $gpLayouts;
+			global $page, $config;
 
 			if( !is_object($page) || $page->pagetype === 'admin_display' ){
 				return false;

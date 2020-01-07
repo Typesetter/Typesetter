@@ -1103,6 +1103,8 @@ namespace gp\tool{
 
 			ob_start();
 
+			$rel_id = Time();
+
 			echo '<ul class="gp_gallery">';
 
 			foreach($_POST['images'] as $i => $image ){
@@ -1113,7 +1115,7 @@ namespace gp\tool{
 				$img_alt = str_replace('_', ' ', basename(pathinfo($image, PATHINFO_FILENAME)));
 
 				echo '<li>';
-				echo '<a class="gallery_gallery" data-arg="gallery_gallery" href="'.$image.'" data-cmd="gallery">'; // title="'.htmlspecialchars($caption).'"
+				echo '<a class="gallery_gallery" data-arg="gallery_gallery" href="'.$image.'" data-cmd="gallery" rel="'.$rel_id.'">'; // title="'.htmlspecialchars($caption).'"
 				echo '<img src="'.$thumb_path.'" alt="'.$img_alt.'" />';
 				echo '<span class="caption">' . $caption . '</span>';
 				echo '</a>';

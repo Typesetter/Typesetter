@@ -7,7 +7,7 @@ class phpunit_Export extends gptest_bootstrap{
 	 * Test the export and import admin functionality
 	 *
 	 */
-	function testExport(){
+	public function testExport(){
 		global $wbMessageBuffer, $langmessage;
 
 		$this->Login();

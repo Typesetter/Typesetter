@@ -8,7 +8,7 @@ class ErrorTest extends \gptest_bootstrap{
 	 * Test the export and import admin functionality
 	 *
 	 */
-	function testError(){
+	public function testError(){
 
 
 		// create an exception

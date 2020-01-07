@@ -1101,9 +1101,10 @@ namespace gp\tool{
 				return;
 			}
 
-			ob_start();
 
-			$rel_id = Time();
+			$rel_id = 'gallery_'.time();
+
+			ob_start();
 
 			echo '<ul class="gp_gallery">';
 
@@ -1117,11 +1118,12 @@ namespace gp\tool{
 				echo '<li>';
 				echo '<a class="gallery_gallery" data-arg="gallery_gallery" href="'.$image.'" data-cmd="gallery" rel="'.$rel_id.'">'; // title="'.htmlspecialchars($caption).'"
 				echo '<img src="'.$thumb_path.'" alt="'.$img_alt.'" />';
-				echo '<span class="caption">' . $caption . '</span>';
+				echo '<span class="caption">'.$caption.'</span>';
 				echo '</a>';
 				echo '</li>';
 			}
 			echo '</ul>';
+
 			$section['content'] = ob_get_clean();
 			$section['images'] = $_POST['images'];
 			$section['captions'] = $_POST['captions'];

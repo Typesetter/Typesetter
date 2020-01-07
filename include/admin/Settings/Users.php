@@ -92,8 +92,7 @@ class Users extends \gp\special\Base{
 		}
 
 		// update the $user_file_name file
-		$is_curr_user = ($gpAdmin['username'] == $username);
-		$this->UserFileDetails($username,$is_curr_user);
+		$this->UserFileDetails($username);
 		return true;
 	}
 
@@ -101,25 +100,25 @@ class Users extends \gp\special\Base{
 	 * Update the users session file with new permission data
 	 *
 	 */
-	public function UserFileDetails($username,$is_curr_user){
-		global $dataDir;
+	public function UserFileDetails($username){
+		global $dataDir, $gpAdmin;
 
 		$user_info			= $this->users[$username];
 		$user_file			= $dataDir.'/data/_sessions/'.$user_info['file_name'];
 
-		if( $is_curr_user ){
-			global $gpAdmin;
+		if( $gpAdmin['username'] === $username ){
+			$new_info =& $gpAdmin;
 		}else{
-			$gpAdmin = \gp\tool\Files::Get($user_file,'gpAdmin');
+			$new_info = \gp\tool\Files::Get($user_file,'gpAdmin');
 		}
 
-		if( !$gpAdmin ){
+		if( !$new_info ){
 			return;
 		}
 
-		$gpAdmin['granted'] = $user_info['granted'];
-		$gpAdmin['editing'] = $user_info['editing'];
-		\gp\tool\Files::SaveData($user_file,'gpAdmin',$gpAdmin);
+		$new_info['granted'] = $user_info['granted'];
+		$new_info['editing'] = $user_info['editing'];
+		\gp\tool\Files::SaveData($user_file,'gpAdmin',$new_info);
 	}
 
 	/**

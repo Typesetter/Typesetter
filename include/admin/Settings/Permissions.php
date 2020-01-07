@@ -7,7 +7,7 @@ defined('is_running') or die('Not an entry point...');
 class Permissions extends Users{
 
 	protected $cmds				= [];
-	protected $cmds_post		= ['save_file_permissions'=>''];
+	protected $cmds_post		= ['SaveFilePermissions'=>''];
 
 
 	public function __construct($args){
@@ -21,7 +21,7 @@ class Permissions extends Users{
 	 *
 	 */
 	public function DefaultDisplay(){
-		global $gp_titles, $langmessage;
+		global $langmessage;
 
 		$indexes 		= $this->RequestedIndexes();
 		if( !$indexes ){
@@ -34,7 +34,7 @@ class Permissions extends Users{
 
 		echo '<div class="inline_box">';
 		echo '<form action="'.\gp\tool::GetUrl('Admin/Permissions').'" method="post">';
-		echo '<input type="hidden" name="cmd" value="save_file_permissions">';
+		echo '<input type="hidden" name="cmd" value="SaveFilePermissions">';
 		echo '<input type="hidden" name="index" value="'.htmlspecialchars($_REQUEST['index']).'">';
 
 
@@ -91,7 +91,7 @@ class Permissions extends Users{
 	 *
 	 */
 	public function SaveFilePermissions(){
-		global $gp_titles, $langmessage, $gp_index, $gpAdmin;
+		global $langmessage, $gp_index, $gpAdmin;
 
 		$indexes 		= $this->RequestedIndexes();
 		if( !$indexes ){
@@ -109,8 +109,11 @@ class Permissions extends Users{
 
 			foreach($indexes as $index){
 
+				// add page index to user
 				if( isset($_POST['users'][$username]) ){
 					$editing .= $index.',';
+
+				// remove page index to user
 				}else{
 					$editing = str_replace( ','.$index.',', ',', $editing);
 				}
@@ -125,8 +128,7 @@ class Permissions extends Users{
 			}
 
 			$this->users[$username]['editing'] = $editing;
-			$is_curr_user = ($gpAdmin['username'] == $username);
-			$this->UserFileDetails($username,$is_curr_user);
+			$this->UserFileDetails($username);
 		}
 
 		return $this->SaveUserFile(false);

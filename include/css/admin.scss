@@ -793,6 +793,8 @@ body.gpAdmin div.editable_area{
 	> thead > tr > th{
 		background-color: #eee;
 		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 		color: #000;
 		text-shadow: 0 1px 0 #fff !important;
 		border-bottom: 1px solid #ddd;

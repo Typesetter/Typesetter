@@ -303,13 +303,15 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		file_put_contents($file,$content);
 
 
-		static::Console('datadir='.$dataDir);
-
 
 		include('include/common.php');
 		spl_autoload_register( array('\\gp\\tool','Autoload') );
 		require dirname(__DIR__) . '/vendor/autoload.php';
 		includeFile('tool/functions.php');
+
+		static::Console('datadir = '.$dataDir);
+		static::Console('gp_data_type = '.gp_data_type);
+
 
 
 

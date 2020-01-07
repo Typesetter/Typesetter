@@ -11,6 +11,11 @@ abstract class Base{
 	protected $cmds_post		= [];
 
 
+	public function RunScript(){
+		$cmd = \gp\tool::GetCommand();
+		$this->RunCommands($cmd);
+	}
+
 
 	/**
 	 * Run Commands

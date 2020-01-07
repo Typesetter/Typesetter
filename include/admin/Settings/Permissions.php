@@ -6,7 +6,9 @@ defined('is_running') or die('Not an entry point...');
 
 class Permissions extends Users{
 
-	protected $cmds				= ['save_file_permissions'=>''];
+	protected $cmds				= [];
+	protected $cmds_post		= ['SaveFilePermissions'=>''];
+
 
 	public function __construct($args){
 		parent::__construct($args);
@@ -19,7 +21,7 @@ class Permissions extends Users{
 	 *
 	 */
 	public function DefaultDisplay(){
-		global $gp_titles, $langmessage;
+		global $langmessage;
 
 		$indexes 		= $this->RequestedIndexes();
 		if( !$indexes ){
@@ -32,7 +34,7 @@ class Permissions extends Users{
 
 		echo '<div class="inline_box">';
 		echo '<form action="'.\gp\tool::GetUrl('Admin/Permissions').'" method="post">';
-		echo '<input type="hidden" name="cmd" value="save_file_permissions">';
+		echo '<input type="hidden" name="cmd" value="SaveFilePermissions">';
 		echo '<input type="hidden" name="index" value="'.htmlspecialchars($_REQUEST['index']).'">';
 
 
@@ -62,9 +64,9 @@ class Permissions extends Users{
 		echo '<div class="all_checkboxes">';
 		foreach($this->users as $username => $userinfo){
 			$attr = '';
-			if( $userinfo['editing'] == 'all'){
-				$attr = ' checked="checked" disabled="disabled"';
-			}elseif(strpos($userinfo['editing'],','.$first_index.',') !== false ){
+			if( $userinfo['editing'] == 'all' ){
+				$attr = ' checked="checked"';
+			}elseif( strpos($userinfo['editing'],','.$first_index.',') !== false ){
 				$attr = ' checked="checked"';
 			}
 			echo '<label class="all_checkbox">';
@@ -89,7 +91,7 @@ class Permissions extends Users{
 	 *
 	 */
 	public function SaveFilePermissions(){
-		global $gp_titles, $langmessage, $gp_index, $gpAdmin;
+		global $langmessage, $gp_index, $gpAdmin;
 
 		$indexes 		= $this->RequestedIndexes();
 		if( !$indexes ){
@@ -99,32 +101,44 @@ class Permissions extends Users{
 
 		foreach($this->users as $username => $userinfo){
 
+
+			// get array of editing indexes for the current user
+			$editing		= explode(',',$userinfo['editing']);
+
 			if( $userinfo['editing'] == 'all'){
+				$editing		= array_values($gp_index);
+			}
+
+			$editing			= array_intersect($gp_index,$editing);
+			$editing_before		= $editing;
+
+
+			// add page index to user
+			if( isset($_POST['users'][$username]) ){
+				$editing	= array_merge($editing,$indexes);
+
+			// remove page index from user
+			}else{
+				$editing	= array_diff($editing,$indexes);
+
+			}
+
+			$editing = array_intersect($gp_index,$editing);
+
+			// don't save if there haven't been any changes
+			// keeps editing = all from being changed to editing = [list of all indexes]
+			if( $editing_before === $editing ){
 				continue;
 			}
 
-			$editing = $userinfo['editing'];
 
-			foreach($indexes as $index){
-
-				if( isset($_POST['users'][$username]) ){
-					$editing .= $index.',';
-				}else{
-					$editing = str_replace( ','.$index.',', ',', $editing);
-				}
-			}
-
-			$editing = explode(',',trim($editing,','));
-			$editing = array_intersect($editing,$gp_index);
+			$editing_str = '';
 			if( count($editing) ){
-				$editing = ','.implode(',',$editing).',';
-			}else{
-				$editing = '';
+				$editing_str = ','.implode(',',$editing).',';
 			}
 
-			$this->users[$username]['editing'] = $editing;
-			$is_curr_user = ($gpAdmin['username'] == $username);
-			$this->UserFileDetails($username,$is_curr_user);
+			$this->users[$username]['editing'] = $editing_str;
+			$this->UserFileDetails($username);
 		}
 
 		return $this->SaveUserFile(false);

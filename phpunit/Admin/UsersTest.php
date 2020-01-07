@@ -17,7 +17,7 @@ class UsersTest extends \gptest_bootstrap{
 		$this->GetRequest('/Admin/Users','cmd=newuserform');
 
 		$users				= \gp\tool\Files::Get('_site/users');
-		$this->assertEquals( count($users), 1);
+		$this->assertEquals( count($users), 1, 'More than one user found');
 
 		// create the new user
 		$params = [
@@ -29,7 +29,7 @@ class UsersTest extends \gptest_bootstrap{
 			'email'			=> 'test2@typesettercms.com',
 			'grant_all'		=> 'all',
 			'editing_all'	=> 'all',
-			'cmd'			=> 'newuser',
+			'cmd'			=> 'CreateNewUser',
 		];
 
 		$this->PostRequest('/Admin/Users',$params);
@@ -78,13 +78,13 @@ class UsersTest extends \gptest_bootstrap{
 
 		$users				= \gp\tool\Files::Get('_site/users');
 		$user_info2			= $users['newuser'];
-		$this->assertNotEquals( $user_info2['password'],$user_info['password']);
+		$this->assertNotEquals( $user_info2['password'],$user_info['password'],'Password reset failed');
 
 
 
 		// delete user
 		$params = [
-			'cmd'			=> 'rm',
+			'cmd'			=> 'RemoveUser',
 			'username'		=> 'newuser',
 			'verified'		=> \gp\tool::new_nonce('post', true),
 		];
@@ -92,7 +92,7 @@ class UsersTest extends \gptest_bootstrap{
 		$this->PostRequest('/Admin/Users',$params);
 
 		$users				= \gp\tool\Files::Get('_site/users');
-		$this->assertEquals( count($users), 1);
+		$this->assertEquals( count($users), 1,'Failed removing user');
 		$this->assertArrayHasKey(static::user_name, $users);
 
 	}

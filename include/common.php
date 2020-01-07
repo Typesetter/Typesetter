@@ -312,7 +312,21 @@ function showError($errno, $errmsg, $filename, $linenum, $vars, $backtrace = nul
  * @since 2.4RC2
  */
 function gp_defined($var,$default){
-	defined($var) or define($var,$default);
+
+	if( defined($var) ){
+		return;
+	}
+
+	$env = getenv($var,true);
+	if( $env === false ){
+		$env = getenv($var);
+	}
+
+	if( $env !== false ){
+		define($var,$env);
+	}else{
+		define($var,$default);
+	}
 }
 
 

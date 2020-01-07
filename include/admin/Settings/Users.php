@@ -10,6 +10,19 @@ class Users extends \gp\special\Base{
 	public $possible_permissions	= array();
 	public $has_weak_pass			= false;
 
+	protected $cmds					= [
+										'NewUserForm'		=> '',
+										'ChangePass'		=> '',
+										'Details'			=> 'ChangeDetails',
+									];
+
+	protected $cmds_post			= [
+										'CreateNewUser'		=> 'NewUserForm',
+										'RemoveUser'		=> 'DefaultDisplay',
+										'ResetPass'			=> 'ChangePass',
+										'SaveChanges'		=> 'ChangeDetails',
+									];
+
 
 	public function __construct($args){
 		global $langmessage;
@@ -20,45 +33,6 @@ class Users extends \gp\special\Base{
 		$this->possible_permissions		= $this->PossiblePermissions();
 		$this->GetUsers();
 
-	}
-
-	public function RunScript(){
-
-		$cmd = \gp\tool::GetCommand();
-		switch($cmd){
-
-			case 'newuser':
-				if( $this->CreateNewUser() ){
-					break;
-				}
-			case 'newuserform';
-				$this->NewUserForm();
-			return;
-
-			case 'rm':
-				$this->RmUserConfirmed();
-			break;
-
-			case 'resetpass':
-				if( $this->ResetPass() ){
-					break;
-				}
-			case 'changepass':
-				$this->ChangePass();
-			return;
-
-
-			case 'SaveChanges':
-				if( $this->SaveChanges() ){
-					break;
-				}
-			case 'details':
-				$this->ChangeDetails();
-			return;
-
-		}
-
-		$this->ShowForm();
 	}
 
 
@@ -118,8 +92,7 @@ class Users extends \gp\special\Base{
 		}
 
 		// update the $user_file_name file
-		$is_curr_user = ($gpAdmin['username'] == $username);
-		$this->UserFileDetails($username,$is_curr_user);
+		$this->UserFileDetails($username);
 		return true;
 	}
 
@@ -127,25 +100,25 @@ class Users extends \gp\special\Base{
 	 * Update the users session file with new permission data
 	 *
 	 */
-	public function UserFileDetails($username,$is_curr_user){
-		global $dataDir;
+	public function UserFileDetails($username){
+		global $dataDir, $gpAdmin;
 
 		$user_info			= $this->users[$username];
 		$user_file			= $dataDir.'/data/_sessions/'.$user_info['file_name'];
 
-		if( $is_curr_user ){
-			global $gpAdmin;
+		if( $gpAdmin['username'] === $username ){
+			$new_info =& $gpAdmin;
 		}else{
-			$gpAdmin = \gp\tool\Files::Get($user_file,'gpAdmin');
+			$new_info = \gp\tool\Files::Get($user_file,'gpAdmin');
 		}
 
-		if( !$gpAdmin ){
+		if( !$new_info ){
 			return;
 		}
 
-		$gpAdmin['granted'] = $user_info['granted'];
-		$gpAdmin['editing'] = $user_info['editing'];
-		\gp\tool\Files::SaveData($user_file,'gpAdmin',$gpAdmin);
+		$new_info['granted'] = $user_info['granted'];
+		$new_info['editing'] = $user_info['editing'];
+		\gp\tool\Files::SaveData($user_file,'gpAdmin',$new_info);
 	}
 
 	/**
@@ -178,7 +151,7 @@ class Users extends \gp\special\Base{
 			echo '</th>';
 			echo '</tr>';
 
-		$this->DetailsForm($userinfo,$username);
+		$this->DetailsForm($userinfo);
 
 		echo '<tr><td>';
 			echo '</td><td>';
@@ -197,7 +170,7 @@ class Users extends \gp\special\Base{
 	 * Remove a user from the installation
 	 *
 	 */
-	public function RmUserConfirmed(){
+	public function RemoveUser(){
 		global $langmessage;
 		$username = $this->CheckUser();
 
@@ -264,7 +237,11 @@ class Users extends \gp\special\Base{
 
 		$this->SetUserPass( $newname, $_POST['password']);
 
-		return $this->SaveUserFile();
+		if( $this->SaveUserFile() ){
+			$url = \gp\tool::GetUrl('Admin/Users','',false);
+			\gp\tool::Redirect($url);
+		}
+
 	}
 
 
@@ -277,12 +254,12 @@ class Users extends \gp\special\Base{
 		$user_info =& $this->users[$username];
 
 		if( function_exists('password_hash') && $_REQUEST['algo'] == 'password_hash' ){
-			$temp					= \gp\tool::hash($_POST['password'],'sha512',50);
+			$temp					= \gp\tool::hash($password,'sha512',50);
 			$user_info['password']	= password_hash($temp,PASSWORD_DEFAULT);
 			$user_info['passhash']	= 'password_hash';
 
 		}else{
-			$user_info['password']	= \gp\tool::hash($_POST['password'],'sha512');
+			$user_info['password']	= \gp\tool::hash($password,'sha512');
 			$user_info['passhash']	= 'sha512';
 		}
 
@@ -366,7 +343,7 @@ class Users extends \gp\special\Base{
 	 * Show all users and their permissions
 	 *
 	 */
-	public function ShowForm(){
+	public function DefaultDisplay(){
 		global $langmessage;
 
 
@@ -422,21 +399,16 @@ class Users extends \gp\special\Base{
 
 			//file editing
 			echo '<td>';
-			if( !isset($userinfo['editing']) ){
-				$userinfo['editing'] = 'all';
-			}
+
 			if( $userinfo['editing'] == 'all' ){
 				echo $langmessage['All'];
 			}else{
-				$count = 0;
-				$counts = count_chars( $userinfo['editing'],1 ); //count the commas
-				if( !empty($userinfo['editing']) && isset($counts[44]) ){
-					$count = $counts[44]-1;
-				}
-				if( $count == 0 ){
-					echo $langmessage['None'];
-				}else{
+
+				$count = preg_match_all('#,#',$userinfo['editing']) - 1; //count the commas
+				if( $count > 0 ){
 					echo sprintf($langmessage['%s Pages'],$count);
+				}else{
+					echo $langmessage['None'];
 				}
 			}
 
@@ -450,7 +422,7 @@ class Users extends \gp\special\Base{
 			echo ' &nbsp; ';
 
 			$title = sprintf($langmessage['generic_delete_confirm'],htmlspecialchars($username));
-			echo \gp\tool::Link('Admin/Users',$langmessage['delete'],'cmd=rm&username='.$username,array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
+			echo \gp\tool::Link('Admin/Users',$langmessage['delete'],'cmd=RemoveUser&username='.$username,array('data-cmd'=>'postlink','title'=>$title,'class'=>'gpconfirm'));
 			echo '</td>';
 			echo '</tr>';
 		}
@@ -531,7 +503,7 @@ class Users extends \gp\special\Base{
 
 		echo '<tr><td>';
 			echo '</td><td>';
-			echo '<input type="hidden" name="cmd" value="newuser" />';
+			echo '<input type="hidden" name="cmd" value="CreateNewUser" />';
 			echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit"/>';
 			echo ' <input type="reset" class="gpsubmit"/>';
 			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="gpcancel"/>';
@@ -586,7 +558,7 @@ class Users extends \gp\special\Base{
 	 * Display permission options
 	 *
 	 */
-	public function DetailsForm( $values=array(), $username=false ){
+	public function DetailsForm( $values=array() ){
 		global $langmessage, $gp_titles;
 
 		$values += array('granted'=>'','email'=>'');
@@ -781,7 +753,7 @@ class Users extends \gp\special\Base{
 		$_REQUEST		+= array('index'=>'');
 		$indexes		= explode(',',$_REQUEST['index']);
 
-		if( !$indexes ){
+		if( empty($indexes) ){
 			message($langmessage['OOPS'].' Invalid Title (1)');
 			return;
 		}
@@ -794,7 +766,7 @@ class Users extends \gp\special\Base{
 			$cleaned[] = $index;
 		}
 
-		if( !$cleaned ){
+		if( empty($cleaned) ){
 			message($langmessage['OOPS'].' Invalid Title (2)');
 			return;
 		}

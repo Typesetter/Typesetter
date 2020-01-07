@@ -219,7 +219,7 @@ namespace gp\admin{
 																);
 
 			$scripts['Admin/Permissions']				= array(	'class'		=> '\\gp\\admin\\Settings\\Permissions',
-																	'method'	=> 'RunCommands',
+																	'method'	=> 'RunScript',
 																);
 
 			$scripts['Admin/CKEditor']					= array(	'class'		=> '\\gp\\admin\\Settings\\CKEditor',

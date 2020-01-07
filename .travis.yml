@@ -2,20 +2,15 @@ language: php
 
 jobs:
   include:
-    - php: 5.4
-      dist: trusty
-    - php: 5.5
-      dist: trusty
     - php: 5.6
     - php: 7.0
     - php: 7.1
     - php: 7.2
     - php: 7.3
     - php: 7.4
-  allow_failures:
-    - php: 5.4
-    - php: 5.5
-    
+    - php: 7.2
+      env: gp_data_type=.json
+
 
 # phpunit 8 will result in an error
 # https://www.reddit.com/r/PHPhelp/comments/apipqs/travis_specifying_phpunit_version/

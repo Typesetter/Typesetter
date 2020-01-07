@@ -405,4 +405,12 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		\gp\tool::GetConfig();
 	}
 
+	public static function assertStrpos( $haystack, $needle , $msg = 'String not found' ){
+
+		if( strpos($haystack, $needle) === false ){
+			static::fail($msg);
+		}
+
+	}
+
 }

@@ -6,13 +6,18 @@ class ExtraTest extends \gptest_bootstrap{
 
 	private $admin_extra;
 
-	public function testChangePassword(){
+	public function setUp(){
+		parent::setUp();
 
 		$this->admin_extra = new \gp\admin\Content\Extra([]);
+	}
+
+
+	public function testChangePassword(){
+
 
 		$this->Login();
 		$this->GetRequest('Admin/Extra');
-		$this->GetRequest('Admin/Extra','cmd=EditExtra&file=Footer');
 
 
 		$types = \gp\tool\Output\Sections::GetTypes();
@@ -20,6 +25,44 @@ class ExtraTest extends \gptest_bootstrap{
 			$this->AddType($type);
 		}
 	}
+
+	public function testEditFooter(){
+
+		$this->GetRequest('Admin/Extra','cmd=EditExtra&file=Footer');
+
+		$text = '<p>New Text</p>';
+
+		$params = [
+			'cmd'			=> 'SaveText',
+			'verified'		=> \gp\tool::new_nonce('post', true),
+			'gpcontent'		=> $text,
+			'file'			=> 'Footer',
+		];
+		$this->PostRequest('Admin/Extra',$params);
+
+		// make sure the new text shows in the preview
+		$response	= $this->GetRequest('Admin/Extra','cmd=PreviewText&file=Footer');
+		$body		= $response->getBody();
+		$this->assertStrpos( $body, $text );
+
+
+		// make sure the draft exits
+		$this->admin_extra->GetAreas();
+		$area_info = $this->admin_extra->ExtraExists('Footer');
+		$this->assertFileExists($area_info['draft_path']);
+
+
+		// publish draft ... make sure the draft file no longer exists
+		$this->GetRequest('Admin/Extra','cmd=PublishDraft&file=Footer');
+		$this->assertFileNotExists($area_info['draft_path']);
+
+		// make sure the new text still shows
+		$response	= $this->GetRequest('Admin/Extra','cmd=PreviewText&file=Footer');
+		$body		= $response->getBody();
+		$this->assertStrpos( $body, $text );
+
+	}
+
 
 	/**
 	 * Add an extra area of $type
@@ -36,7 +79,7 @@ class ExtraTest extends \gptest_bootstrap{
 			'new_title'		=> $name,
 			'type'			=> $type,
 		];
-		$this->PostRequest('/Admin/Extra',$params);
+		$this->PostRequest('Admin/Extra',$params);
 
 		$this->admin_extra->GetAreas();
 		$this->assertEquals( count($this->admin_extra->areas), $area_count + 1 , 'Extra area not added');
@@ -52,7 +95,7 @@ class ExtraTest extends \gptest_bootstrap{
 			'verified'		=> \gp\tool::new_nonce('post', true),
 			'file'			=> $name,
 		];
-		$this->PostRequest('/Admin/Extra',$params);
+		$this->PostRequest('Admin/Extra',$params);
 
 		$this->admin_extra->GetAreas();
 		$this->assertEquals( count($this->admin_extra->areas), $area_count , 'Extra area not deleted');

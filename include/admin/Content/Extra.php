@@ -393,7 +393,7 @@ class Extra extends \gp\Page\Edit{
 
 		echo '<h2>';
 		echo \gp\tool::Link('Admin/Extra', $langmessage['theme_content']);
-		echo ' &#187; ' . str_replace('_', ' ', $this->title) . '</h2>';
+		echo ' &#187; ' . str_replace('_', ' ', $this->title);
 		echo '</h2>';
 		echo '<hr/>';
 

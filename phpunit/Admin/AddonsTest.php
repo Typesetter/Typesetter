@@ -40,6 +40,19 @@ class AddonsTest extends \gptest_bootstrap{
 		$installed = $this->admin_addons->GetDisplayInfo();
 		$this->assertArrayHasKey('Example',$installed);
 
+
+		// uninstall
+		$params = [
+			'cmd'			=> 'confirm_uninstall',
+			'verified'		=> \gp\tool::new_nonce('post', true),
+			'addon'			=> 'Example',
+		];
+		$this->PostRequest('Admin/Addons',$params);
+
+		\gp\tool::GetConfig();
+		$installed = $this->admin_addons->GetDisplayInfo();
+		$this->assertArrayNotHasKey('Example',$installed);
+
 	}
 
 

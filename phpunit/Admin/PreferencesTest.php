@@ -67,7 +67,7 @@ class PreferencesTest extends \gptest_bootstrap{
 	 * Helper function for changing password from old to new
 	 *
 	 */
-	public function ChangePreferences( $params, $check_field = 'password' ){
+	public function ChangePreferences( $params ){
 
 		$params += [
 			'verified'		=> \gp\tool::new_nonce('post', true),

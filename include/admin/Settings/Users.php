@@ -151,7 +151,7 @@ class Users extends \gp\special\Base{
 			echo '</th>';
 			echo '</tr>';
 
-		$this->DetailsForm($userinfo,$username);
+		$this->DetailsForm($userinfo);
 
 		echo '<tr><td>';
 			echo '</td><td>';
@@ -254,12 +254,12 @@ class Users extends \gp\special\Base{
 		$user_info =& $this->users[$username];
 
 		if( function_exists('password_hash') && $_REQUEST['algo'] == 'password_hash' ){
-			$temp					= \gp\tool::hash($_POST['password'],'sha512',50);
+			$temp					= \gp\tool::hash($password,'sha512',50);
 			$user_info['password']	= password_hash($temp,PASSWORD_DEFAULT);
 			$user_info['passhash']	= 'password_hash';
 
 		}else{
-			$user_info['password']	= \gp\tool::hash($_POST['password'],'sha512');
+			$user_info['password']	= \gp\tool::hash($password,'sha512');
 			$user_info['passhash']	= 'sha512';
 		}
 
@@ -561,7 +561,7 @@ class Users extends \gp\special\Base{
 	 * Display permission options
 	 *
 	 */
-	public function DetailsForm( $values=array(), $username=false ){
+	public function DetailsForm( $values=array() ){
 		global $langmessage, $gp_titles;
 
 		$values += array('granted'=>'','email'=>'');
@@ -756,7 +756,7 @@ class Users extends \gp\special\Base{
 		$_REQUEST		+= array('index'=>'');
 		$indexes		= explode(',',$_REQUEST['index']);
 
-		if( !$indexes ){
+		if( empty($indexes) ){
 			message($langmessage['OOPS'].' Invalid Title (1)');
 			return;
 		}
@@ -769,7 +769,7 @@ class Users extends \gp\special\Base{
 			$cleaned[] = $index;
 		}
 
-		if( !$cleaned ){
+		if( empty($cleaned) ){
 			message($langmessage['OOPS'].' Invalid Title (2)');
 			return;
 		}

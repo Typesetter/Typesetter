@@ -39,42 +39,33 @@ abstract class Base{
 		$this->DefaultDisplay();
 	}
 
-	private function _RunCommands($cmd, $cmds){
+	private function _RunCommands($cmd, $avail_cmds){
 
 		if( !is_string($cmd) ){
 			$cmd = '';
 		}
 
-		$cmds		= array_change_key_case($cmds, CASE_LOWER);
-		$cmd		= strtolower($cmd);
+		$avail_cmds		= array_change_key_case($avail_cmds, CASE_LOWER);
+		$cmd			= strtolower($cmd);
 
-		if( !isset($cmds[$cmd]) ){
+		if( !isset($avail_cmds[$cmd]) ){
 			return false;
 		}
 
-		$cmds = (array)$cmds[$cmd];
-		array_unshift($cmds, $cmd);
+		$methods = (array)$avail_cmds[$cmd];
+		array_unshift($methods, $cmd);
 
-		foreach($cmds as $cmd){
-			if( method_exists($this,$cmd) ){
-				$this->$cmd();
-			}elseif( is_callable($cmd) ){
-				call_user_func($cmd, $this);
+		foreach($methods as $method){
+			if( method_exists($this,$method) ){
+				$this->$method();
+			}elseif( is_callable($method) ){
+				call_user_func($method, $this);
 			}
 		}
 
 		return true;
 	}
 
-
-	/**
-	 * Set the executable commands
-	 *
-	 */
-	protected function SetCommands(){
-
-
-	}
 
 
 	/**

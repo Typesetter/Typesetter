@@ -191,6 +191,95 @@
 	vertical-align: middle;
 }
 
+#gp_admin_html .gpbuttongroup,
+#gp_admin_html .gpbuttongroup_vertical{
+	position: relative;
+	display: -webkit-inline-box;
+	display: -webkit-inline-flex;
+	display: -moz-inline-flex;
+	display: -ms-inline-flexbox;
+	display: inline-flex;
+	vertical-align: middle;
+}
+
+#gp_admin_html .gpbuttongroup{
+	.gpselect,
+	.gpcheckbox,
+	.gpcancel,
+	.gpsubmit,
+	.gpbutton,
+	.gpdisabled {
+		position: relative;
+		border-radius: 0;
+		border-right: none;
+		-webkit-box-flex: 1;
+		-webkit-flex: 1 1 auto;
+		-moz-box-flex: 1;
+		-moz-flex: 1 1 auto;
+		-ms-flex: 1 1 auto;
+		flex: 1 1 auto;
+
+		&:first-child{
+			border-radius: 6px 0 0 6px;
+		}
+
+		&:last-child{
+			border-right: 1px solid #ccc;
+			border-radius: 0 6px 6px 0;
+		}
+	}
+}
+
+#gp_admin_html .gpbuttongroup_vertical{
+	-webkit-box-direction: normal;
+	-webkit-box-orient: vertical;
+	-webkit-flex-direction: column;
+	-moz-flex-direction: column;
+	-ms-flex-direction: column;
+	flex-direction: column;
+
+	-webkit-box-align: start;
+	-ms-flex-align: start;
+	-webkit-align-items: flex-start;
+	-moz-align-items: flex-start;
+	align-items: flex-start;
+
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-justify-content: center;
+	-moz-justify-content: center;
+	justify-content: center;
+
+	.gpselect,
+	.gpcheckbox,
+	.gpcancel,
+	.gpsubmit,
+	.gpbutton,
+	.gpdisabled {
+		position: relative;
+		width: 100%;
+		text-align: center;
+		border-radius: 0;
+		border-bottom: none;
+		-webkit-box-flex: 1;
+		-webkit-flex: 1 1 auto;
+		-moz-box-flex: 1;
+		-moz-flex: 1 1 auto;
+		-ms-flex: 1 1 auto;
+		flex: 1 1 auto;
+
+		&:first-child{
+			border-radius: 6px 6px 0 0;
+		}
+
+		&:last-child{
+			border-bottom: 1px solid #ccc;
+			border-radius: 0 0 6px 6px;
+		}
+	}
+}
+
+
 #gp_admin_html .gptextarea,
 #gp_admin_html .gp_scrolllist,
 #gp_admin_html .gpinput{
@@ -704,6 +793,8 @@ body.gpAdmin div.editable_area{
 	> thead > tr > th{
 		background-color: #eee;
 		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 		color: #000;
 		text-shadow: 0 1px 0 #fff !important;
 		border-bottom: 1px solid #ddd;

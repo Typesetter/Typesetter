@@ -52,17 +52,23 @@ class Revisions extends \gp\Page\Edit{
 
 		//show site in iframe
 		$url		= \gp\tool::GetUrl($this->title,'cmd=ViewRevision&revision=draft');
-		$toolbar	= '<br/><h2>' . $langmessage['Revision History'] . '</h2>';
+		$toolbar	= '<br/><h3 style="float:left;margin:0 0.6em 0.4em 0;">' . $langmessage['Revision History'] . '</h3>';
 		// $toolbar	.= \gp\tool::Link_Page($this->title);
+
+		$toolbar	.= '<div class="gpbuttongroup">';
+
+		$toolbar	.= '<a class="gpbutton" data-cmd="OlderRevision"><i class="fa fa-chevron-down"></i></a>';
+		// $toolbar	.= ' &nbsp; ';
+		$toolbar	.= '<a class="gpbutton" data-cmd="NewerRevision"><i class="fa fa-chevron-up"></i></a>';
+
 		$toolbar	.= \gp\tool::Link(
 			$this->title,
 			$langmessage['Close'],
 			'',
-			array('class' => 'gpcancel revision_history_close')
+			array('class' => 'gpbutton revision_history_close')
 		);
-		$toolbar	.= '<a class="gpbutton" data-cmd="OlderRevision"><i class="fa fa-fw fa-lg fa-chevron-down"></i></a>';
-		$toolbar	.= ' &nbsp; ';
-		$toolbar	.= '<a class="gpbutton" data-cmd="NewerRevision"><i class="fa fa-fw fa-lg fa-chevron-up"></i></a>';
+
+		$toolbar	.= '</div>';
 
 
 

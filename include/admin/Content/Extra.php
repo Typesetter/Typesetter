@@ -117,7 +117,6 @@ class Extra extends \gp\Page\Edit{
 	}
 
 
-
 	/**
 	 * Add $file to the list of areas
 	 *
@@ -130,13 +129,13 @@ class Extra extends \gp\Page\Edit{
 			return;
 		}
 
-		$this->areas[$title] = array();
-		$this->areas[$title]['title'] = $title;
-		$this->areas[$title]['file_path'] = $this->folder . '/' . $title . '/page.php';
-		$this->areas[$title]['draft_path'] = $this->folder . '/' . $title . '/draft.php';
-		$this->areas[$title]['legacy_path'] = $this->folder . '/' . $title . '.php';
+		$this->areas[$title] = [
+								'title'			=> $title,
+								'file_path'		=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '/page.php'),
+								'draft_path'	=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '/draft.php'),
+								'legacy_path'	=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '.php'),
+							];
 	}
-
 
 
 	/**

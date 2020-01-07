@@ -608,7 +608,7 @@ class Addons extends \gp\admin\Addon\Install{
 				$list[] = '<span>'.$label. '</span>';
 			}
 
-			echo $this->FormatList($list,$langmessage['options'],$format);
+			$this->FormatList($list,$langmessage['options'],$format);
 			return;
 		}
 
@@ -627,7 +627,7 @@ class Addons extends \gp\admin\Addon\Install{
 			$list[] = $item;
 		}
 
-		echo $this->FormatList($list,$langmessage['layouts'],$format);
+		$this->FormatList($list,$langmessage['layouts'],$format);
 	}
 
 

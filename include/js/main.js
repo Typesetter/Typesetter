@@ -344,7 +344,7 @@ var $gp = {
 			if( selector === '' ){
 				selector = this;
 			}else if( rel ){
-				selector = 'a[rel='+rel+']';
+				selector = 'a[rel="'+rel+'"]';
 			}else{
 				selector = 'a.'+selector;
 			}

@@ -1485,8 +1485,7 @@ namespace gp{
 		 * Remove $dirPrefix and index.php from a path to get the page title
 		 *
 		 * @param string $path A full relative url like /install_dir/index.php/request_title
-		 * @param string The request_title portion of $path
-		 *
+		 * 
 		 */
 		public static function CleanRequest($path){
 			global $dirPrefix;

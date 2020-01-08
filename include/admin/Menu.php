@@ -823,7 +823,8 @@ class Menu extends \gp\special\Base{
 		//get the data for this title
 		$data = array(
 			'key'			=>	$menu_key,
-			'url'			=>	\gp\tool::GetUrl($title),
+			// 'url'			=>	\gp\tool::GetUrl($title),
+			'url'			=>	\gp\tool::GetUrl('Admin/Revisions').'/'.$menu_key,
 			'title'			=>	$title,
 			'special'		=>	$isSpecialLink,
 			'has_layout'	=>	!empty($gp_titles[$menu_key]['gpLayout']),
@@ -899,7 +900,7 @@ class Menu extends \gp\special\Base{
 		$label	= $langmessage['Visibility'] . ': ' . $langmessage['Private'];
 		$attrs	= array(
 			'title'		=> $label,
-			'data-cmd'	=> 'postlink',  // ####################### <<<<----- WORKS ###############################
+			'data-cmd'	=> 'postlink',
 			'class'		=> 'vis_private'
 		);
 		echo $this->Link(
@@ -913,7 +914,7 @@ class Menu extends \gp\special\Base{
 		$label	= $langmessage['Visibility'] . ': ' . $langmessage['Public'];
 		$attrs	= array(
 			'title'		=> $label,
-			'data-cmd'	=> 'postlink',  // ####################### <<<<----- WORKS ###############################
+			'data-cmd'	=> 'postlink',
 			'class'		=> 'vis_public not_multiple'
 		);
 		$q		.= '&visibility=private';
@@ -925,9 +926,16 @@ class Menu extends \gp\special\Base{
 		);
 
 
+		/* TODO: remove
 		echo '<a href="[url]?cmd=ViewHistory" ';
 		echo 'class="view_edit_link not_multiple not_special" ';
 		echo 'data-cmd="gpabox"><i class="fa fa-history menu_icon"></i>';
+		echo  htmlspecialchars($langmessage['Revision History']);
+		echo '</a>';
+		*/
+		echo '<a href="[url]" ';
+		echo 'class="view_edit_link not_multiple not_special">';
+		echo '<i class="fa fa-history menu_icon"></i>';
 		echo  htmlspecialchars($langmessage['Revision History']);
 		echo '</a>';
 

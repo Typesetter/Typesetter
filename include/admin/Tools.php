@@ -614,19 +614,14 @@ namespace gp\admin{
 				)
 			);
 
-
 			//layout edit
-			$current_layout = isset($gp_titles[$page->gp_index]['gpLayout']) ?
-				$gp_titles[$page->gp_index]['gpLayout'] :
-				'default'; // $page->gpLAyout is not yet set
-
 			$links[] = \gp\tool::Link(
-				'Admin_Theme_Content/Edit/' . urlencode($current_layout),
+				'Admin_Theme_Content/Edit/' . urlencode( \gp\tool::GetCurrentLayoutId() ),
 				'<i class="fa fa-trello fa-rotate-90"></i> ' . $langmessage['layout'],
 				'redir=' . rawurlencode($page->requested)
 			);
 
-
+			//revision history
 			$links[] = \gp\tool::Link(
 				'/Admin/Revisions/'.$page->gp_index,
 				'<i class="fa fa-history"></i> ' . $langmessage['Revision History'],

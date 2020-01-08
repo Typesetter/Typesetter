@@ -1,17 +1,49 @@
-$family:						-apple-system, BlinkMacSystemFont,
+$gp_teal:						#329880;
+$gp_red:						#C44830;
+$gp_blue:						#226699;
+$gp_green:						#6AA84F;
+
+$gp_gray_darkest:				#222;
+$gp_gray_darker:				#2b2b2b;
+$gp_gray_dark:					#333;
+$gp_gray_medium:				#777;
+$gp_gray_light:					#ddd;
+$gp_gray_lighter:				#ededed;
+$gp_gray_lightest:				#f5f5f5;
+
+
+$font_family_sans:				-apple-system, BlinkMacSystemFont,
 								"Segoe UI", Roboto, "Helvetica Neue", Arial,
 								"Noto Sans", sans-serif,
-								"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+								"Apple Color Emoji", "Segoe UI Emoji",
+								"Segoe UI Symbol", "Noto Color Emoji";
+
+$font_family_monospace:			SFMono-Regular, Consolas, "Liberation Mono", Menlo,
+								"Andale Mono", "DejaVu Sans Mono", monospace;
+
+$font-size-base:				13px;
+
+
+$gp_controls_radius:			4px;
+$gp_controls_bg:				4px;
+
+
+// Colors
+$link-color:					$gp_blue;
+$link-hover-color:				$gp_red;
+
+$brand-success:					$gp_green;
+
+$gp_heading_color:				#333;
 
 $gp_panel_bg:					#222;
 $gp_panel_bg_light:				#2b2b2b;
-$gp_panel_publish_color:		#329880;
+$gp_panel_publish_color:		$gp_teal;
 $gp_panel_link_color:			#f5f5f5;
-$gp_panel_warning_color:		#C44830;
-$link-color:					#226699;
-$link-hover-color:				#C44830;
+$gp_panel_warning_color:		$gp_red;
 
-$gp_nav_font_size:				13px;
+
+$gp_nav_font_size:				$font-size-base;
 $gp_nav_link_color:				#ddd;
 $gp_nav_link_color_hover:		#fff;
 $gp_nav_link_padding_x:			15px;
@@ -19,11 +51,10 @@ $gp_nav_link_padding_y:			8px;
 $gp_nav_height:					$gp_nav_font_size + $gp_nav_link_padding_y + $gp_nav_link_padding_y;
 
 $gp_bread_bg:					#ededed;	//matches elfinder
-$gp_bread_font_size:			13px;
+$gp_bread_font_size:			$font-size-base;
 $gp_bread_link_color:			#777;
-$gp_bread_link_color_hover: 	#333;
+$gp_bread_link_color_hover: 	#2b2b2b;
 $gp_bread_link_padding_x:		2px;
 $gp_bread_link_padding_y:		4px;
 
-$font-size-base:				13px;
-$brand-success:					#6AA84F;
+$simplepanel_width:				180px;

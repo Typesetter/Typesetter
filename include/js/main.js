@@ -336,28 +336,39 @@ var $gp = {
 		 *
 		 */
 		gallery : function(evt,selector){
+
 			evt.preventDefault();
+
+			var rel = $(this).attr('rel');
+
 			if( selector === '' ){
 				selector = this;
+			}else if( rel ){
+				selector = 'a[rel="'+rel+'"]';
 			}else{
-				selector = 'a[rel='+selector+'],a.'+selector;
+				selector = 'a.'+selector;
+			}
+
+			var settings = {
+				resize	: true,
+				title	: function(){
+					var a = $(this);
+					var caption =
+						a.closest('li').find('.caption').data("originalContent")
+						|| a.closest('li').find('.caption').text()
+						|| a.attr('title') // backwards compat
+						|| '';
+					return caption;
+				}
+			};
+
+			if( rel ){
+				settings.rel = rel;
 			}
 
 			$.colorbox.remove();
 			$(selector).colorbox(
-				$gp.cboxSettings({
-					resize : true ,
-					rel : selector,
-					title : function(){
-						var a = $(this);
-						var caption =
-							a.closest('li').find('.caption').data("originalContent")
-							|| a.closest('li').find('.caption').text()
-							|| a.attr('title') // backwards compat
-							|| '';
-						return caption;
-					}
-				})
+				$gp.cboxSettings(settings)
 			);
 
 			$(this).trigger('click.cbox');

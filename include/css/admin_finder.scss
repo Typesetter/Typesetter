@@ -1,8 +1,10 @@
-html, 
+@import 'variables.scss';
+
+html,
 body,
-#gp_admin_html, 
+#gp_admin_html,
 #admincontainer,
-#gpx_content, 
+#gpx_content,
 #admincontent {
   position: relative;
   height: 100vh;
@@ -14,7 +16,7 @@ body,
 	position: relative;
 	height: calc(100vh - 54px);
 	border: 0 none !important;
-	background: #EDEDED !important;
+	background: #ededed !important;
 	overflow: visible !important;
 }
 
@@ -32,12 +34,8 @@ body,
 		display: none;
 	}
 	* {
-		font-family: 
-			-apple-system, BlinkMacSystemFont, 
-			"Segoe UI", Roboto, "Helvetica Neue", Arial, 
-			"Noto Sans", sans-serif, 
-			"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-		font-size: 13px;
+		font-family: $font_family_sans;
+		font-size: $font-size-base;
 	}
 	pre {
 		background: none transparent;
@@ -51,7 +49,7 @@ body,
 	  display: none !important;
 	}
 	.elfinder-file-edit {
-		font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace !important;
+		font-family: $font_family_monospace;
 		width: 100% !important;
 	}
 	.elfinder-dialog-minimized {
@@ -70,15 +68,15 @@ body,
 #gp_admin_html #elfinder {
 	position: relative;
 	.elfinder-bottomtray {
-		max-width: calc(100% - 180px);
+		max-width: calc(100% - $simplepanel_width);
 	}
 	.elfinder-quicklook-fullscreen {
-		left: 182px;
+		left: $simplepanel_width;
 		width: auto;
 	}
 	.elfinder-maximized {
 		left: 182px !important;
-		width: calc(100% - 180px) !important;
+		width: calc(100% - $simplepanel_width) !important;
 	}
 }
 

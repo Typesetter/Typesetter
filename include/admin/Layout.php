@@ -1059,7 +1059,6 @@ class Layout extends \gp\admin\Addon\Install{
 			uksort($this->avail_addons,'strnatcasecmp');
 		}
 
-		$this->avail_count = count($this->avail_addons);
 	}
 
 

@@ -386,10 +386,6 @@ class Addons extends \gp\admin\Addon\Install{
 				}
 			}
 
-
-			if( !$info['upgrade_key'] ){
-				$this->avail_count++;
-			}
 		}
 
 		if( gp_unique_addons ){

@@ -173,9 +173,9 @@ namespace gp{
 			global $page, $config;
 
 			if( !is_object($page) || $page->pagetype === 'admin_display' ){
-				return false;
+				return '';
 			}
-		
+
 			if( isset($page->TitleInfo['gpLayout']) ){
 				// page uses a custom layout
 				return $page->TitleInfo['gpLayout'];

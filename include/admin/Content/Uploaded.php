@@ -514,7 +514,6 @@ namespace gp\admin\Content{
 			}
 
 
-			$upload_moved = false;
 			$fName = $this->SanitizeName($fName);
 			$from = $_FILES['userfiles']['tmp_name'][$key];
 
@@ -525,12 +524,7 @@ namespace gp\admin\Content{
 			$fName = $this->WindowsName($fName);
 			$to = $this->FixRepeatNames($fName);
 
-			if( $upload_moved ){
-				if( !rename($from,$to) ){
-					$this->errorMessages[] = sprintf($langmessage['UPLOAD_ERROR'].' (Rename Failed from '.$to.')', $fName);
-					return false;
-				}
-			}elseif( !move_uploaded_file($from,$to) ){
+			if( !move_uploaded_file($from,$to) ){
 				$this->errorMessages[] = sprintf($langmessage['UPLOAD_ERROR'].' (Move Upload Failed)', $fName);
 				return false;
 			}

@@ -1485,7 +1485,7 @@ namespace gp{
 		 * Remove $dirPrefix and index.php from a path to get the page title
 		 *
 		 * @param string $path A full relative url like /install_dir/index.php/request_title
-		 * 
+		 *
 		 */
 		public static function CleanRequest($path){
 			global $dirPrefix;
@@ -1703,8 +1703,8 @@ namespace gp{
 			\gp\tool\Output::$inline_vars['post_nonce']			= '';
 			\gp\tool\Output::$inline_vars['req_type']			= strtolower(htmlspecialchars($_SERVER['REQUEST_METHOD']));
 
-			if( gpdebugjs ){
-				if( is_string(gpdebugjs) ){
+			if( \gpdebugjs ){
+				if( is_string(\gpdebugjs) ){
 					\gp\tool\Output::$inline_vars['debugjs']	= 'send';
 				}else{
 					\gp\tool\Output::$inline_vars['debugjs']	= true;
@@ -1906,7 +1906,7 @@ namespace gp{
 			//add php and cms info
 			$debug['lang_key']		= $lang_key;
 			$debug['phpversion']	= phpversion();
-			$debug['gpversion']		= gpversion;
+			$debug['gpversion']		= \gpversion;
 			$debug['Rewrite']		= $_SERVER['gp_rewrite'];
 			$debug['Server']		= isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : '';
 
@@ -1918,7 +1918,7 @@ namespace gp{
 
 			$label	= isset($langmessage[$lang_key]) ? $langmessage[$lang_key] : $lang_key;
 
-			return ' <span>' . $label . ' <a href="' . debug_path . '?data=' . $debug . '" target="_blank">More Info...</a></span>';
+			return ' <span>' . $label . ' <a href="' . \debug_path . '?data=' . $debug . '" target="_blank">More Info...</a></span>';
 		}
 
 

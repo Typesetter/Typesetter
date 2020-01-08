@@ -766,7 +766,7 @@
 	 *
 	 */
 	$gp.response.DraftPublished = function(){
-		var $this		= $(this).hide();
+		var $this		= $(this).remove();
 		var id_number	= $gp.AreaId( $this );
 		var $area		= $('#ExtraEditArea' + id_number);
 

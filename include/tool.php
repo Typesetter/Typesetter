@@ -400,7 +400,7 @@ namespace gp{
 			// gp_indexphp is deprecated since 4.1
 			}elseif( defined('gp_indexphp') ){
 
-				if( gp_indexphp === false ){
+				if( \gp_indexphp === false ){
 					$_SERVER['gp_rewrite'] = true;
 				}
 
@@ -924,7 +924,7 @@ namespace gp{
 		 *
 		 * @static
 		 * @since 2.0b1
-		 * @param $names can be either a csv (with or without space characters) or an array. Since 5.1.1
+		 * @param array|string $names can be either a csv (with or without space characters) or an array. Since 5.1.1
 		 */
 		public static function LoadComponents($names=''){
 			if( gettype($names) == 'array' ){

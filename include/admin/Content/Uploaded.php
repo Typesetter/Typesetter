@@ -707,7 +707,9 @@ namespace gp\admin\Content{
 				$allowed_types				= array_diff($allowed_types,$upload_extensions_deny);
 			}
 
-			return \gp\tool\Plugins::Filter('AllowedTypes',array($allowed_types));
+			$allowed_types = \gp\tool\Plugins::Filter('AllowedTypes',array($allowed_types));
+
+			return $allowed_types;
 		}
 
 

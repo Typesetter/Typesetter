@@ -1274,7 +1274,7 @@
 	function setSectionClasses( classNames, action ){
 
 		var input	= $('#section_attributes_form td input.attr_name[value="class"]')
-						.closest('tr').find('input.attr_value');
+						.closest('tr').find('.attr_value');
 		var value	= input.val();
 		var tmp		= $("<div/>").addClass(value);
 

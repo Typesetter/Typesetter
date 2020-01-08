@@ -420,7 +420,7 @@ namespace gp\tool{
 
 		/**
 		 * Remove null and control characters from the string
-		 *
+		 * @return string
 		 */
 		public static function Sanitize($string){
 

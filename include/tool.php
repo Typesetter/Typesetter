@@ -1278,10 +1278,11 @@ namespace gp{
 				return $titles;
 			}
 
-			$start_level = $menu[$index]['level'];
-			$menu_ids = array_keys($menu);
-			$key = array_search($index,$menu_ids);
-			for($i = ($key+1); $i < count($menu); $i++){
+			$start_level	= $menu[$index]['level'];
+			$menu_ids		= array_keys($menu);
+			$key			= array_search($index,$menu_ids);
+			$count			= count($menu);
+			for($i = ($key+1); $i < $count; $i++){
 				$id = $menu_ids[$i];
 				$level = $menu[$id]['level'];
 

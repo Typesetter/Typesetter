@@ -1167,7 +1167,8 @@ namespace gp{
 		public static function NewFileIndex(){
 			global $gp_index, $gp_titles, $dataDir, $config;
 
-			$num_index = 0;
+			$last_index = 'a';
+			$num_index	= 0;
 
 			/*prevent reusing old indexes */
 			if( count($gp_index) > 0 ){

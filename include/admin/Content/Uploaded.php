@@ -458,10 +458,9 @@ namespace gp\admin\Content{
 						$query_string,
 						array(
 							'class'=>'delete fa fa-trash gpconfirm',
-							'data-cmd'=>'gpajax',
+							'data-cmd'=>'postlink',
 							'title'=>$langmessage['delete_confirm']
-						),
-						'delete'
+						)
 					)
 					. '</span>'
 					. '</div>';
@@ -745,8 +744,8 @@ namespace gp\admin\Content{
 				return false;
 			}
 
-			if( \gp\tool\Nonce::Verify('delete') === false ){
-				message($langmessage['OOPS'].' (Invalid Nonce)');
+			if( $_SERVER['REQUEST_METHOD'] != 'POST'){
+				msg($langmessage['OOPS'].' (Not POST)'); // using data-cmd="postlink" instead of gpajax
 				return;
 			}
 

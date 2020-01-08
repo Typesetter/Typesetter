@@ -636,7 +636,7 @@ namespace gp{
 			if( $nonce_action ){
 				$nonce = self::new_nonce($nonce_action);
 				if( !empty($query) ){
-					$query .= '&amp;'; //in the cases where $ampersands is false, nonces are not used
+					$query .= '&'; //in the cases where $ampersands is false, nonces are not used
 				}
 				$query .= '_gpnonce=' . $nonce;
 			}

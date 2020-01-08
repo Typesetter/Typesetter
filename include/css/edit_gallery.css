@@ -1,131 +1,134 @@
 
 /* used by special_galleries.php */
-#GalleryDivShade{
-	position:fixed;
-	top:0;
-	height:100%;
-	width:100%;
-	background-color:black;
-	z-index:200000;
-	filter:alpha(opacity=50);
+#GalleryDivShade {
+	position: fixed;
+	top: 0;
+	height: 100%;
+	width: 100%;
+	background-color: black;
+	z-index: 200000;
+	filter: alpha(opacity=50);
 	opacity: 0.5;
-	}
-
-#gp_upload{
-	height:20em;
-	overflow:auto;
 }
 
-#select_options{
-	padding:1px 0 3px;
-	white-space:nowrap;
-	}
+#gp_upload {
+	height: 20em;
+	overflow: auto;
+}
+
+#select_options {
+	padding: 1px 0 3px;
+	white-space: nowrap;
+}
 
 
-#select_options a{
-	display:inline-block;
-	margin:1px 3px 1px;
+#select_options a {
+	display: inline-block;
+	margin: 1px 3px 1px;
 	border-radius: 3px;
-	font-weight:bold;
-	color:#444 !important;
-	border:1px solid rgba(0,0,0,0.1);
-	outline:0 none;
-	background-color:#F1F1F1;
+	font-weight: bold;
+	color: #444 !important;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	outline: 0 none;
+	background-color: #F1F1F1;
+	background: -webkit-linear-gradient(top, #F5F5F5, #F1F1F1);
 	background: -moz-linear-gradient(top, #F5F5F5, #F1F1F1);
-	height:26px;
-	line-height:26px;
-	vertical-align:top;
-	}
-#select_options a{
-	padding:0 13px;
-	}
+	background: linear-gradient(to bottom, #F5F5F5, #F1F1F1);
+	height: 26px;
+	line-height: 26px;
+	vertical-align: top;
+}
 
+#select_options a {
+	padding: 0 13px;
+}
 
-
-#select_options a:hover{
-	filter:alpha(opacity=100);
+#select_options a:hover {
+	filter: alpha(opacity=100);
 	opacity: 1;
-	border-color:#c6c6c6;
-	box-shadow:0 1px 1px rgba(0,0,0,0.1);
+	border-color: #c6c6c6;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+	background: -webkit-linear-gradient(top, #F8F8F8, #F1F1F1);
 	background: -moz-linear-gradient(top, #F8F8F8, #F1F1F1);
-	}
+	background: linear-gradient(to bottom, #F8F8F8, #F1F1F1);
+}
 
-
-#select_options a.disabled{
-	filter:alpha(opacity=40);
+#select_options a.disabled {
+	filter: alpha(opacity=40);
 	opacity: 0.4;
-	}
+}
 
-/*
+
+/**
  * Hidden Uploader
  */
+.gp_upload_form {
+	position: relative;
+	padding: 0;
+	float: left;
+	width: 125px;
+	overflow: hidden;
+	/* border: 1px solid red; */
+}
 
-.gp_upload_form{
-	position:relative;
-	padding:0;
-	float:left;
-	width:125px;
-	overflow:hidden;
-	/* border:1px solid red; */
-	}
-
-.gp_object_wrapper{
-	position:relative;
-	z-index:9001;
-	filter:alpha(opacity: 0);
+.gp_object_wrapper {
+	position: relative;
+	z-index: 9001;
+	filter: alpha(opacity=0);
 	opacity: 0;
-	cursor:pointer;
-	}
-.gp_object_wrapper input{
-	height:17px;
-	}
-.gp_upload_form a{
-	position:absolute;
-	z-index:9000;
-	width:110px;
-	text-align:center;
-	}
+	cursor: pointer;
+}
 
+.gp_object_wrapper input {
+	height: 17px;
+}
+
+.gp_upload_form a {
+	position: absolute;
+	z-index: 9000;
+	width: 110px;
+	text-align: center;
+}
 
 
 /* gallery editing */
-.drag_galleries{
-	min-height:250px; /* give it some dimensions for dropping */
-	min-width:250px;
-	}
+.drag_galleries {
+	min-height: 250px; /* give it some dimensions for dropping */
+	min-width: 250px;
+}
 
-.drag_galleries > div{
-	display:inline-block;
-	width:120px;
-	padding:9px;
-	margin:5px;
-	height:135px;
-	background:#fff;
-	border:1px solid #f1f1f1;
-	overflow:hidden;
-	}
+.drag_galleries > div {
+	display: inline-block;
+	width: 120px;
+	padding: 9px;
+	margin: 5px;
+	height: 135px;
+	background: #fff;
+	border: 1px solid #f1f1f1;
+	overflow: hidden;
+}
 
-.drag_galleries > .draggable{
-	cursor:pointer;
-	}
+.drag_galleries > .draggable {
+	cursor: pointer;
+}
 
-.drag_galleries .caption{
-	white-space:nowrap;
-	width:100px;
-	overflow:hidden;
-	}
+.drag_galleries .caption {
+	white-space: nowrap;
+	width: 100px;
+	overflow: hidden;
+}
 
-#gp_galleries{
-	width:100%;
-	}
+#gp_galleries {
+	width: 100%;
+}
 
-#gp_galleries td{
-	width:50% !important;
-	vertical-align:top;
-	}
+#gp_galleries td {
+	width: 50% !important;
+	vertical-align: top;
+}
 
-#gp_galleries .drag_gal_td{
-	border:1px solid #ccc;
-	background:#f7f7f7;
-	padding:5px;
-	}
+#gp_galleries .drag_gal_td {
+	border: 1px solid #ccc;
+	background: #f7f7f7;
+	padding: 5px;
+}

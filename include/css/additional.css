@@ -1,164 +1,185 @@
-.gpclear{
-	clear:both;
-	}
+.gpclear {
+	clear: both;
+}
 
-body .messages{
-	position:absolute;
-	position:fixed;
-	top:0;
-	left:0;
-	right:0;
-	z-index:11010;
-	height:0;
-	overflow:visible;
-	margin-top:-1px;
+body .messages {
+	position: absolute;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 11010;
+	height: 0;
+	overflow: visible;
+	margin-top: -1px;
 }
-body .messages *{
-	text-align:left;
-	margin:0;
-	padding:0;
-	font-weight:normal;
-	color:#333 !important;
-	}
-body .messages > div{
-	position:relative;
-	width:700px;
-	margin:0 auto;
-	display:block;
-	background-color:#FEF9B0;
-	border:1px solid #f2e098;
-	border-top:0 none;
-	box-shadow: 0 0 7px rgba(0,0,0,0.1);
-	border-radius:0 0 7px 7px;
-	max-height:250px;
-	overflow:auto;
-	overflow-x:visible;
-	overflow-y:auto;
+
+body .messages * {
+	text-align: left;
+	margin: 0;
+	padding: 0;
+	font-weight: normal;
+	color: #333 !important;
 }
-body .messages ul{
-	margin:0;
-	padding:4px 15px;
-	}
-body .messages li{
-	list-style:none;
-	padding:0;
-	margin:0;
-	font-size:14px;
+
+body .messages > div {
+	position: relative;
+	width: 700px;
+	margin: 0 auto;
+	display: block;
+	background-color: #FEF9B0;
+	border: 1px solid  #f2e098;
+	border-top: 0 none;
+	box-shadow: 0 0 7px rgba(0, 0, 0, 0.1);
+	border-radius: 0 0 7px 7px;
+	max-height: 250px;
+	overflow: auto;
+	overflow-x: visible;
+	overflow-y: auto;
+}
+
+body .messages ul {
+	margin: 0;
+	padding: 4px 15px;
+}
+
+body .messages li {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	font-size: 14px;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-	line-height:normal;
+	line-height: normal;
 	line-height: 24px;
-	text-decoration:none;
-	float:none;
-	}
-body .messages li li{
-	list-style:disc;
-	margin-left:2em;
-	}
-body .messages a.close_message{
-	position:absolute;
-	top:1px;
-	right:1px;
-	text-decoration:none !important;
-	font-weight:bold !important;
-	color:#666 !important;
-	font-size:17px !important;
-	display:none;
-	border:0 none !important;
-	margin:0  !important;
-	height:24px;
-	width:24px;
+	text-decoration: none;
+	float: none;
+}
+
+body .messages li li {
+	list-style: disc;
+	margin-left: 2em;
+}
+
+body .messages a.close_message {
+	position: absolute;
+	top: 1px;
+	right: 1px;
+	text-decoration: none !important;
+	font-weight: bold !important;
+	color: #666 !important;
+	font-size: 17px !important;
+	display: none;
+	border: 0 none !important;
+	margin: 0  !important;
+	height: 24px;
+	width: 24px;
 	background: url('../imgs/cancel.png') 50% 50% no-repeat;
-	box-sizing:border-box;
-	}
-body .messages a{
-	color:#111 !important;
-	text-decoration:underline !important;
-	}
+	box-sizing: border-box;
+}
 
-body .msg_buttons{
-	white-space:nowrap;
-	}
+body .messages a {
+	color: #111 !important;
+	text-decoration: underline !important;
+}
 
-body .msg_buttons a{
-	display:inline-block;
-	border-radius:3px;
-	padding:0 8px;
-	margin:6px 6px 4px;
-	text-decoration:none !important;
-	border:1px solid rgba(0,0,0,0.15);
+body .msg_buttons {
+	white-space: nowrap;
+}
+
+body .msg_buttons a {
+	display: inline-block;
+	border-radius: 3px;
+	padding: 0 8px;
+	margin: 6px 6px 4px;
+	text-decoration: none !important;
+	border: 1px solid rgba(0,0,0,0.15);
 	background: rgba(0,0,0,0.075);
-	}
-
-.contactform{
-	margin:0;
-	width:50%;
-}
-.contactform div.captchaForm{
-	padding:0;
-	margin:0;
-}
-.contactform label{
-	width:98%;
- 	display:block;
-	float:left;
-	clear:left;
-	margin:5px 0;
-}
-.contactform label span.title{
-	width:30%;
-	display:block;
-	float:left;
-    margin-right:10px;
-}
-.contactform input,.contactform textarea{
-	padding:5px;
-}
-.contactform input{
-	float:left;
-	width:60%;
-}
-.contactform textarea{
-	height:180px;
-	width:98%;
-}
-.contactform .submit{
-	width:50%;
-	cursor:pointer;
-	margin:12px 0;
-	float:right;
 }
 
-
-.STCLASS .req_script{
-	display:block !important; /* needs to be block and not inherit for IE */
+.contactform {
+	margin: 0;
+	width: 50%;
 }
 
-.STCLASS .without_script{
-	display:none !important;
+.contactform div.captchaForm {
+	padding: 0;
+	margin: 0;
+}
+
+.contactform label {
+	width: 98%;
+	display: block;
+	float: left;
+	clear: left;
+	margin: 5px 0;
+}
+
+.contactform label span.title {
+	width: 30%;
+	display: block;
+	float: left;
+	margin-right: 10px;
+}
+
+.contactform input,.contactform textarea {
+	padding: 5px;
+}
+
+.contactform input {
+	float: left;
+	width: 60%;
+}
+
+.contactform textarea {
+	height: 180px;
+	width: 98%;
+}
+
+.contactform .submit {
+	width: 50%;
+	cursor: pointer;
+	margin: 12px 0;
+	float: right;
 }
 
 
-.siteinfo{
-	font-size:85%;
-}
-.siteinfo a{
-	text-decoration:none;
-	}
-.siteinfo li{
-	list-style:none;
+.STCLASS .req_script {
+	display: block !important; /* needs to be block and not inherit for IE */
 }
 
-.clear{clear:both;}
-
-.sitemap_xml{
-	float:right;
-	}
-
-.nodisplay{display:none;}
+.STCLASS .without_script {
+	display: none !important;
+}
 
 
-div.GPAREA:after{
-	content: "";
+.siteinfo {
+	font-size: 85%;
+}
+
+.siteinfo a {
+	text-decoration: none;
+}
+
+.siteinfo li {
+	list-style: none;
+}
+
+
+.clear {
+	clear: both;
+}
+
+.sitemap_xml {
+	float: right;
+}
+
+.nodisplay {
+	display: none;
+}
+
+
+div.GPAREA:after {
+	content: '';
 	display: block;
 	height: 0 !important;
 	clear: both;
@@ -167,17 +188,26 @@ div.GPAREA:after{
 }
 
 /* for IE7... does not validate */
-div.GPAREA{
+div.GPAREA {
 	zoom: 1;
 }
 
-.cf:before,.cf:after{content:"";display:table}
-.cf:after{clear:both}
-.cf{zoom:1}
+/* clearfix */
+.cf:before,
+.cf:after {
+	content: '';
+	display: table;
+}
+.cf:after {
+	clear:both;
+}
+.cf {
+	zoom:1
+}
 
 
 /**
- *	Typesetter Grid
+ *	Typesetter Grid (floating, like Bootstrap 3)
  *	12-columns, percent based widths, 15px side padding
  *
  *	CLASSES:
@@ -187,33 +217,42 @@ div.GPAREA{
  *	all columns render full width below 768px viewport width
  */
 
-.gpRow img { max-width:100%; height:auto!important; }
+.gpRow img {
+	max-width: 100%;
+	height: auto!important;
+}
+
 /* Prevents height distortion in IE<=8 */
-@media screen { .gpRow img { width:auto; } }
+@media screen {
+	.gpRow img {
+		width: auto;
+	}
+}
 
 /* MEDIA QUERIES / BREAKPOINTS */
 
-@media only screen and (min-width:768px) {
+@media (min-width: 768px) {
 
 	.gpRow {
-	margin-left: -15px;
-	margin-right: -15px;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
+		margin-left: -15px;
+		margin-right: -15px;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
 	}
 
-	.gpRow:before, .gpRow:after {
-		content: " ";
+	.gpRow:before,
+	.gpRow:after {
+		content: '';
 		display: table;
 		-webkit-box-sizing: border-box;
 		-moz-box-sizing: border-box;
 		box-sizing: border-box;
 	}
 
-	.gpCol-1, .gpCol-2, .gpCol-3,
-	.gpCol-4, .gpCol-5, .gpCol-6,
-	.gpCol-7, .gpCol-8, .gpCol-9,
+	.gpCol-1,  .gpCol-2,  .gpCol-3,
+	.gpCol-4,  .gpCol-5,  .gpCol-6,
+	.gpCol-7,  .gpCol-8,  .gpCol-9,
 	.gpCol-10, .gpCol-11, .gpCol-12 {
 		float: left;
 		min-height: 1px;
@@ -225,24 +264,24 @@ div.GPAREA{
 		box-sizing: border-box;
 	}
 
-	.gpCol-1  { width: 8.33333333%; }
-	.gpCol-2  { width: 16.66666667%; }
-	.gpCol-3  { width: 25%; }
-	.gpCol-4  { width: 33.33333333%; }
-	.gpCol-5  { width: 41.66666667%; }
-	.gpCol-6  { width: 50%; }
-	.gpCol-7  { width: 58.33333333%; }
-	.gpCol-8  { width: 66.66666667%; }
-	.gpCol-9  { width: 75%; }
-	.gpCol-10 { width: 83.33333333%; }
-	.gpCol-11 { width: 91.66666667%; }
-	.gpCol-12 { width: 100%; }
+	.gpCol-1   { width: 8.33333333%; }
+	.gpCol-2   { width: 16.66666667%; }
+	.gpCol-3   { width: 25%; }
+	.gpCol-4   { width: 33.33333333%; }
+	.gpCol-5   { width: 41.66666667%; }
+	.gpCol-6   { width: 50%; }
+	.gpCol-7   { width: 58.33333333%; }
+	.gpCol-8   { width: 66.66666667%; }
+	.gpCol-9   { width: 75%; }
+	.gpCol-10  { width: 83.33333333%; }
+	.gpCol-11  { width: 91.66666667%; }
+	.gpCol-12  { width: 100%; }
 
 }
 
 
 /**
- * Make Bootstrap buttons selectable when editing the section
+ * Make Bootstrap buttons selectable for editing
  *
  */
 .gp_editing .btn {
@@ -257,24 +296,29 @@ div.GPAREA{
  * Search results
  *
  */
-ul.search_nav_bottom { 
-	list-style:none; 
+ul.search_nav_bottom {
+	list-style: none;
 }
-ul.search_nav_bottom li { 
-	display:inline; 
+
+ul.search_nav_bottom li {
+	display: inline;
 }
-ul.search_nav_bottom li > * { 
-	display:inline-block; 
-	padding-left:0.5em;
-	padding-right:0.5em;
+
+ul.search_nav_bottom li > * {
+	display: inline-block;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
 }
+
 .search-matches-count {
-	font-size:82.5%;
-	font-weight:normal;
+	font-size: 82.5%;
+	font-weight: normal;
 }
+
 .search-matches-count:before {
-	content:"(";
+	content: '(';
 }
+
 .search-matches-count:after {
-	content:")";
+	content: ')';
 }

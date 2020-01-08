@@ -311,9 +311,7 @@ namespace gp\tool\Output{
 			}
 
 			if( self::$title == $requested ){
-				if( \gp\tool::LoggedIn() ){
-					msg('Infinite loop detected: '.htmlspecialchars($requested) );
-				}
+				debug('Infinite loop detected: '.htmlspecialchars($requested) );
 				return '';
 			}
 

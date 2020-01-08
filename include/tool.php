@@ -1333,7 +1333,7 @@ namespace gp{
 				$string .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 			}
 
-			$string = str_repeat($string, round($len / 2));
+			$string = str_repeat($string, (int)round($len / 2));
 			$string = str_shuffle($string);
 			$start = mt_rand(1, (strlen($string) - $len));
 

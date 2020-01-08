@@ -829,7 +829,7 @@ class Menu extends \gp\special\Base{
 			'has_layout'	=>	!empty($gp_titles[$menu_key]['gpLayout']),
 			'layout_color'	=>	$layout_info['color'],
 			'layout_label'	=>	$layout_info['label'],
-			'types'			=>	$gp_titles[$menu_key]['type'],
+			'types'			=>	implode(', ', explode(',', $gp_titles[$menu_key]['type'])),
 			'opts'			=>	'',
 			'size'			=>	'',
 			'mtime'			=>	'',

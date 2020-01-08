@@ -1,91 +1,92 @@
 
-html{
+html {
 	-webkit-transition: margin 0.5s;
 	-moz-transition: margin 0.5s;
 	transition: margin 0.5s;
 }
 
-#ckeditor_wrap{
-	display:block;
-	position:fixed;
-	bottom:0;
-	right:-220px;
-	width:220px;
-	top:0;
-	z-index:10000; /* to be above full screen editing of ckeditor */
-	background:#eee;
-	font-family:
+#ckeditor_wrap {
+	display: block;
+	position: fixed;
+	bottom: 0;
+	right: -220px;
+	width: 220px;
+	top: 0;
+	z-index: 10000; /* to be above full screen editing of ckeditor */
+	background: #eee;
+	font-family: 
 		-apple-system, BlinkMacSystemFont,
 		"Segoe UI", Roboto, "Helvetica Neue", Arial,
 		"Noto Sans", sans-serif,
-		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+		"Apple Color Emoji", "Segoe UI Emoji",
+		"Segoe UI Symbol", "Noto Color Emoji";
 	-webkit-transition: right 0.5s;
 	-moz-transition: right 0.5s;
 	transition: right 0.5s;
 }
 
-#ckeditor_wrap.show_editor{
-	right:0;
-	visibility:visible;
+#ckeditor_wrap.show_editor {
+	right: 0;
+	visibility: visible;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
-#ckeditor_wrap.show_editor #cktoggle .fa-angle-double-left{
-	display:none;
+#ckeditor_wrap.show_editor #cktoggle .fa-angle-double-left {
+	display: none;
 }
 
 
 #ckeditor_tabs a,
-#cktoggle{
-	height:29px;
-	line-height:29px;
-	color:#fff !important;
-	background:#444;
-	outline:none;
+#cktoggle {
+	height: 29px;
+	line-height: 29px;
+	color: #fff !important;
+	background: #444;
+	outline: none;
 }
 
-#cktoggle{
-	display:block;
-	position:absolute;
-	top:0;
-	left:-30px;
-	padding:0 5px;
-	width:20px;
-	font-size:20px;
-	line-height:29px;
-	text-align:center;
-	overflow:hidden;
+#cktoggle {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -30px;
+	padding: 0 5px;
+	width: 20px;
+	font-size: 20px;
+	line-height: 29px;
+	text-align: center;
+	overflow: hidden;
 }
 
 
-#ckeditor_tabs{
-	display:-webkit-box;
-	display:-webkit-flex;
-	display:-moz-flex;
-	display:-ms-flexbox;
-	display:flex;
+#ckeditor_tabs {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flexbox;
+	display: flex;
 }
 
-#ckeditor_tabs a{
-	-webkit-box-flex:1;
-	-webkit-flex-grow:1;
-	-moz-flex-grow:1;
-	-ms-flex-positive:1;
-	flex-grow:1;
-	-webkit-flex-shrink:1;
-	-moz-flex-shrink:1;
-	-ms-flex-negative:1;
-	flex-shrink:1;
-	padding:0 5px;
-	text-align:center;
-	color:#888 !important;
-	white-space:nowrap;
-	overflow:hidden;
-	text-overflow:ellipsis;
+#ckeditor_tabs a {
+	-webkit-box-flex: 1;
+	-webkit-flex-grow: 1;
+	-moz-flex-grow: 1;
+	-ms-flex-positive: 1;
+	flex-grow: 1;
+	-webkit-flex-shrink: 1;
+	-moz-flex-shrink: 1;
+	-ms-flex-negative: 1;
+	flex-shrink: 1;
+	padding: 0 5px;
+	text-align: center;
+	color: #888 !important;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
-#ckeditor_tabs a:last-child{
-	color:#fff !important;
+#ckeditor_tabs a:last-child {
+	color: #fff !important;
 }
 
 /**
@@ -93,15 +94,15 @@ html{
  *
  */
 
-#ck_editable_areas{
-	display:none;
+#ck_editable_areas {
+	display: none;
 }
 
-#ckeditor_wrap.edit_mode_extra #ck_editable_areas{
-	display:block;
+#ckeditor_wrap.edit_mode_extra #ck_editable_areas {
+	display: block;
 }
-#ckeditor_wrap.edit_mode_extra #section_sorting_wrap{
-	display:none;
+#ckeditor_wrap.edit_mode_extra #section_sorting_wrap {
+	display: none;
 }
 
 
@@ -110,110 +111,110 @@ html{
  * #ckeditor_area
  *
  */
-#ckeditor_area{
-	padding:10px 10px 0 10px;
-	overflow:auto;
-	box-sizing:border-box;
+#ckeditor_area {
+	padding: 10px 10px 0 10px;
+	overflow: auto;
+	box-sizing: border-box;
 }
 
 #ckeditor_area a,
 #ckeditor_area a:hover,
-#ckeditor_area a:focus{
-	color:inherit;
+#ckeditor_area a:focus {
+	color: inherit;
 }
 
-#ckeditor_bottom{
-	overflow:hidden;
+#ckeditor_bottom {
+	overflow: hidden;
 }
 
-#ckeditor_area .cke_chrome{
-	padding:0;
-	border:0 none;
+#ckeditor_area .cke_chrome {
+	padding: 0;
+	border: 0 none;
 }
-#ckeditor_area .cke_inner{
-	background:transparent !important;
-	padding:0 !important;
-	border:0 none !important;
-}
-
-#ckeditor_area .tools{
-	clear:both;
+#ckeditor_area .cke_inner {
+	background: transparent !important;
+	padding: 0 !important;
+	border: 0 none !important;
 }
 
-#ckeditor_area .cke_top{
-	margin-top:6px;
+#ckeditor_area .tools {
+	clear: both;
+}
+
+#ckeditor_area .cke_top {
+	margin-top: 6px;
 	border-bottom: none;
 	background: none;
 }
-#ckeditor_area .cke_toolbar{
-	width:100%;
-	padding:4px 0 !important;
-	margin:0;
+#ckeditor_area .cke_toolbar {
+	width: 100%;
+	padding: 4px 0 !important;
+	margin: 0;
 }
-#ckeditor_area .cke_toolgroup{
-	margin-right:0;
-	text-align:justify;
-	width:100%;
-	background:none;
-	border-radius:0;
+#ckeditor_area .cke_toolgroup {
+	margin-right: 0;
+	text-align: justify;
+	width: 100%;
+	background: none;
+	border-radius: 0;
 }
-#ckeditor_area .cke_toolgroup a.cke_button:last-child:after{
+#ckeditor_area .cke_toolgroup a.cke_button:last-child:after {
 	display: none;
 }
 
-#ckeditor_area a.cke_combo_button{
-	background:none;
+#ckeditor_area a.cke_combo_button {
+	background: none;
 }
-#ckeditor_area .cke_combo_open{
+#ckeditor_area .cke_combo_open {
 	height: 12px;
 	line-height: 12px;
 	margin: 1px 4px 1px;
 	width: 5px;
 }
-#ckeditor_area .cke_combo{
+#ckeditor_area .cke_combo {
 	padding: 0 2px;
 }
 
-#ckeditor_area .cke_combo .cke_combo_text{
+#ckeditor_area .cke_combo .cke_combo_text {
 	padding-left: 0;
 }
-#ckeditor_area .cke_combo_arrow{
+#ckeditor_area .cke_combo_arrow {
 	margin: 8px 0 0;
 }
-#ckeditor_area .cke_combo::after{
-	display:none;
+#ckeditor_area .cke_combo:after {
+	display: none;
 }
 
-#ckeditor_area .cke_button{
+#ckeditor_area .cke_button {
 	border: 1px solid transparent;
 	height: 16px;
 	padding: 2px;
 }
 #ckeditor_area a.cke_button_off:hover,
 #ckeditor_area a.cke_button_off:focus
-#ckeditor_area a.cke_button_off:active{
-	background:#ddd;
+#ckeditor_area a.cke_button_off:active {
+	background: #ddd;
 }
 
 #ckeditor_area .cke_toolbar_start,
-#ckeditor_area .cke_toolbar_end{
+#ckeditor_area .cke_toolbar_end {
 	display: none;
 }
 
 
 /* format/font/font-size menus */
-#ckeditor_area .cke_combo__format .cke_combo_text{
-	width:50px;
+#ckeditor_area .cke_combo__format .cke_combo_text {
+	width: 50px;
 }
-#ckeditor_area .cke_combo__font .cke_combo_text{
-	width:38px;
+#ckeditor_area .cke_combo__font .cke_combo_text {
+	width: 38px;
 }
-#ckeditor_area .cke_combo__fontsize .cke_combo_text{
+#ckeditor_area .cke_combo__fontsize .cke_combo_text {
 	width: 38px;
 }
 
 /* 'Source' dialog label */
-#ckeditor_area .cke_button__sourcedialog_label{
+#ckeditor_area .cke_button__sourcedialog_label {
 	max-width: 42px;
 	overflow: hidden;
 	white-space: nowrap;
@@ -223,82 +224,82 @@ html{
 
 #ckeditor_wrap .ck_saving,
 #ckeditor_wrap .ck_saved,
-#ckeditor_wrap .ckeditor_control{
-	font-size:12px !important;
-	text-decoration:none !important;
-	display:inline-block;
+#ckeditor_wrap .ckeditor_control {
+	font-size: 12px !important;
+	text-decoration: none !important;
+	display: inline-block;
 	margin: 0 4px 8px 0 !important;
 
-	white-space:nowrap;
-	text-overflow:ellipsis;
-	overflow:hidden;
-	vertical-align:top;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	vertical-align: top;
 
-	line-height:18px;
-	padding:3px 5px !important;
-	height:26px;
+	line-height: 18px;
+	padding: 3px 5px !important;
+	height: 26px;
 
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
-#ckeditor_wrap .ckeditor_control{
-	border:1px solid #fafafa;
-	border-color: #fafafa  #fafafa  #dad9d9 #dad9d9 !important;
+#ckeditor_wrap .ckeditor_control {
+	border: 1px solid #fafafa;
+	border-color: #fafafa #fafafa #dad9d9 #dad9d9 !important;
 
-	background-color:#fafafa;
+	background-color: #fafafa;
 	background: -moz-linear-gradient(top, #fff, #f7f7f7);
 	background: -webkit-linear-gradient(top, #fff, #f7f7f7);
 	background: -o-linear-gradient(top, #fff, #f7f7f7);
 	background: -ms-linear-gradient(top, #fff, #f7f7f7);
 	background: linear-gradient(top, #fff, #f7f7f7);
 
-	border-radius:5px;
-	color:#444 !important;
-	text-shadow:1px 1px 0 #fff;
+	border-radius: 5px;
+	color: #444 !important;
+	text-shadow: 1px 1px 0 #fff;
 }
 
-#ckeditor_wrap .ckeditor_control.nodisplay{
-	display:none;
+#ckeditor_wrap .ckeditor_control.nodisplay {
+	display: none;
 }
 
-#ckeditor_wrap .ckeditor_control.selected{
+#ckeditor_wrap .ckeditor_control.selected {
 	background: rgba(0,0,0,0.01);
 	border-color: #eee #f5f5f5 #f5f5f5 #eee !important;
-	font-weight:bold;
+	font-weight: bold;
 }
 
 
 #ckeditor_wrap .full_width,
-#ckeditor_wrap .half_width{
+#ckeditor_wrap .half_width {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
-	margin-bottom:4px;
-	min-height:21px;
-	display:inline-block;
-	padding:3px 5px;
-	font-size:12px !important;
+	margin-bottom: 4px;
+	min-height: 21px;
+	display: inline-block;
+	padding: 3px 5px;
+	font-size: 12px !important;
 }
 
 
 #ckeditor_wrap .full_width,
 #ckeditor_wrap .full_width:hover,
-#ckeditor_wrap .full_width:active{
-	width:100%;
+#ckeditor_wrap .full_width:active {
+	width: 100%;
 }
 
 #ckeditor_wrap .half_width,
 #ckeditor_wrap .half_width:hover,
-#ckeditor_wrap .half_width:active{
-	width:123px;
+#ckeditor_wrap .half_width:active {
+	width: 123px;
 }
 #ckeditor_wrap input.half_width,
 #ckeditor_wrap input.full_width,
 #ckeditor_wrap a.half_width,
-#ckeditor_wrap a.full_width{
-	text-align:center;
+#ckeditor_wrap a.full_width {
+	text-align: center;
 }
 
 
@@ -306,23 +307,23 @@ html{
  * border around area being editing
  */
 .editable_area,
-.gp_editing{
-	position:relative;
-	outline:none;
+.gp_editing {
+	position: relative;
+	outline: none;
 }
 
-.editable_area:not(.filetype-wrapper_section):hover{
-	outline:1px dotted #ccc !important;
+.editable_area:not(.filetype-wrapper_section):hover {
+	outline: 1px dotted #ccc !important;
 }
 
 .gp_edit_current,
-.gp_edit_current:hover{
-	z-index:9000;
-	outline:1px solid #ccc !important;
+.gp_edit_current:hover {
+	z-index: 9000;
+	outline: 1px solid #ccc !important;
 }
 
-#ckeditor_area .label{
-	margin-right:4px;
+#ckeditor_area .label {
+	margin-right: 4px;
 }
 
 
@@ -330,107 +331,120 @@ html{
  * Tabs
  *
  */
-#ckeditor_wrap .cktabs .ckeditor_control{
-	margin-right:-1px !important;
-	margin-left:0 !important;
-	border-radius:0;
+#ckeditor_wrap .cktabs .ckeditor_control {
+	margin-right: -1px !important;
+	margin-left: 0 !important;
+	border-radius: 0;
 }
-#ckeditor_wrap .cktabs .ckeditor_control:first-child{
-	border-radius:5px 0 0 5px;
+#ckeditor_wrap .cktabs .ckeditor_control:first-child {
+	border-radius: 5px 0 0 5px;
 }
-#ckeditor_wrap .cktabs .ckeditor_control:last-child{
-	border-radius:0 5px 5px 0;
+#ckeditor_wrap .cktabs .ckeditor_control:last-child {
+	border-radius: 0 5px 5px 0;
 }
 
 /**
  * Save
  */
 #ckeditor_save,
-#ckeditor_close{
-	text-align:right;
-	padding:10px 10px 0 10px;
-	box-sizing:border-box;
+#ckeditor_close {
+	text-align: right;
+	padding: 10px 10px 0 10px;
+	box-sizing: border-box;
 }
-#ckeditor_close{
-	display:none;
+#ckeditor_close {
+	display: none;
 }
 
 #ckeditor_wrap .ck_save,
 #ckeditor_wrap .ck_saving,
-#ckeditor_wrap.not_saved .ck_saved{
-	display:none;
+#ckeditor_wrap.not_saved .ck_saved {
+	display: none;
 }
 
 #ckeditor_wrap.not_saved .ck_save,
-#ckeditor_wrap .ck_saved{
-	display:inline-block;
+#ckeditor_wrap .ck_saved {
+	display: inline-block;
 }
 
 #ckeditor_wrap.ck_saving .ck_save,
-#ckeditor_wrap.ck_saving .ck_saved{
-	display:none;
+#ckeditor_wrap.ck_saving .ck_saved {
+	display: none;
 }
 
-#ckeditor_wrap.ck_saving .ck_saving{
-	display:inline-block;
+#ckeditor_wrap.ck_saving .ck_saving {
+	display: inline-block;
 }
 
 /**
  * Override CK Editor internal fonts
  */
-.cke_reset_all, 
-.cke_reset_all *:not(.fa), 
-.cke_reset_all a, 
+.cke_reset_all,
+.cke_reset_all *:not(.fa),
+.cke_reset_all a,
 .cke_reset_all textarea {
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	font-family: -apple-system, BlinkMacSystemFont,
+		"Segoe UI", Roboto, "Helvetica Neue", Arial,
+		"Noto Sans", sans-serif,
+		"Apple Color Emoji", "Segoe UI Emoji",
+		"Segoe UI Symbol", "Noto Color Emoji";
 }
 
 .cke_reset_all textarea.cke_source,
 .cke_reset_all .CodeMirror .CodeMirror-scroll * {
-	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace !important;
+	font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo,
+		"Andale Mono", "DejaVu Sans Mono", monospace !important;
 }
 
 .cke_reset_all textarea.cke_source {
-	min-width:800px;
-	width:100%!important;
+	min-width: 800px;
+	width: 100%!important;
 }
 
 /**
  * Select Gallery Style
  */
-#ckeditor_wrap select.SelectGalleryStyle{
-	-webkit-appearance:none;
-	-moz-appearance:none;
-	appearance:none;
-	background-color:#fff;
-	box-shadow:inset 0 -4px 4px #f7f7f7;
-	background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAgCAYAAABpRpp6AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAOdJREFUeNrs2O0JwjAQBuBWXMAVXMEVdAQzgh1BR3CFOkIcwRm6gis4QjyhhVLycRe8g8J78ELSH+VpG5KjbQihWVNtmpUVwAADDDDAAItqu7zgnJuGB8qR8qB8Ku59pbwpz9/Ee68DnmFflB3lTDkJ0T3lMo678aHVlsQcG5tLsLH538H3CI6LTuF6TfAt8flL6Nyb7DTBQ2bNptAlrOoalqLNsKV9mIM2xXIOjhLaFMs96QbhPqyGlRzNXLQqVtpLlNDq2JrmJ4U2wdZ2a0u0GTbX/HDR+6kbs6oWf34ABhjgbH0FGACGrUAyUqUWxgAAAABJRU5ErkJggg==');
-	background-position:100% 33%;
-	background-repeat:no-repeat;
-	background-size:22px 16px;
-	padding-right:26px;
-	outline:none!important;
+#ckeditor_wrap select.SelectGalleryStyle {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	background-color: #fff;
+	box-shadow: inset 0 -4px 4px #f7f7f7;
+	background-image: url('data: image/png;base64,iVBORw0KGgo\
+	AAAANSUhEUgAAACwAAAAgCAYAAABpRpp6AAAAGXRFWHRTb2Z0d2FyZQ\
+	BBZG9iZSBJbWFnZVJlYWR5ccllPAAAAOdJREFUeNrs2O0JwjAQBuBWX\
+	MAVXMEVdAQzgh1BR3CFOkIcwRm6gis4QjyhhVLycRe8g8J78ELSH+Vp\
+	G5KjbQihWVNtmpUVwAADDDDAAItqu7zgnJuGB8qR8qB8Ku59pbwpz9/\
+	Ee68DnmFflB3lTDkJ0T3lMo678aHVlsQcG5tLsLH538H3CI6LTuF6Tf\
+	At8flL6Nyb7DTBQ2bNptAlrOoalqLNsKV9mIM2xXIOjhLaFMs96QbhP\
+	qyGlRzNXLQqVtpLlNDq2JrmJ4U2wdZ2a0u0GTbX/HDR+6kbs6oWf34A\
+	BhjgbH0FGACGrUAyUqUWxgAAAABJRU5ErkJggg==');
+	background-position: 100% 33%;
+	background-repeat: no-repeat;
+	background-size: 22px 16px;
+	padding-right: 26px;
+	outline: none!important;
 }
 
-#ckeditor_wrap select.SelectGalleryStyle::-ms-expand { 
-	display:none; 
+#ckeditor_wrap select.SelectGalleryStyle::-ms-expand {
+	display: none;
 }
 
 
 /**
  * Codemirror for ckEditor plugin style
  */
-.searchCodeButton span, 
-.autoFormat span, 
-.CommentSelectedRange span, 
+.searchCodeButton span,
+.autoFormat span,
+.CommentSelectedRange span,
 .UncommentSelectedRange span {
-	margin: 3px!important;
-	min-width: unset!important;
-	background-position: center!important;	
+	margin: 3px !important;
+	min-width: unset !important;
+	background-position: center !important;
 }
 
 .cke_dialog_contents_body .cke_dialog_ui_text,
 .cke_dialog_contents_body .cke_dialog_ui_select,
-.cke_dialog_contents_body .cke_dialog_ui_hbox_last>a.cke_dialog_ui_button{
-	margin-top:0!important
+.cke_dialog_contents_body .cke_dialog_ui_hbox_last>a.cke_dialog_ui_button {
+	margin-top: 0 !important
 }

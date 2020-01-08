@@ -1116,9 +1116,9 @@ namespace gp{
 			die(
 				'<p>Notice: The site configuration did not load properly.</p>'
 				. '<p>If you are the site administrator, you can troubleshoot the problem turning '
-				. 'debugging "on" or bypass it by enabling ' . CMS_NAME . ' safe mode.</p>'
+				. 'debugging "on" or bypass it by enabling ' . \CMS_NAME . ' safe mode.</p>'
 				. '<p>More information is available in the '
-				. '<a href="' . CMS_DOMAIN . '/Docs/Main/Troubleshooting">Documentation</a>.</p>'
+				. '<a href="' . \CMS_DOMAIN . '/Docs/Main/Troubleshooting">Documentation</a>.</p>'
 				. self::ErrorBuffer(true, false)
 			);
 		}
@@ -1139,30 +1139,9 @@ namespace gp{
 		 */
 		public static function GetPagesPHP(){
 			global $gp_index, $gp_titles, $gp_menu, $gpLayouts, $config;
-			$gp_index = array();
 
-			$pages = \gp\tool\Files::Get('_site/pages');
 
-			//update for < 2.0a3
-			if( array_key_exists('gpmenu', $pages)
-				&& array_key_exists('gptitles', $pages)
-				&& !array_key_exists('gp_titles', $pages)
-				&& !array_key_exists('gp_menu', $pages)
-				){
-
-				foreach($pages['gptitles'] as $title => $info){
-					$index = self::NewFileIndex();
-					$gp_index[$title] = $index;
-					$gp_titles[$index] = $info;
-				}
-
-				foreach($pages['gpmenu'] as $title => $level){
-					$index = $gp_index[$title];
-					$gp_menu[$index] = array('level' => $level);
-				}
-				return;
-			}
-
+			$pages			= \gp\tool\Files::Get('_site/pages');
 			$gpLayouts		= $pages['gpLayouts'];
 			$gp_index		= $pages['gp_index'];
 			$gp_titles		= $pages['gp_titles'];
@@ -1172,27 +1151,6 @@ namespace gp{
 				self::stop();
 			}
 
-			//update for 3.5,
-			if( !isset($gp_titles['special_gpsearch']) ){
-				$gp_titles['special_gpsearch'] = array();
-				$gp_titles['special_gpsearch']['label'] = 'Search';
-				$gp_titles['special_gpsearch']['type'] = 'special';
-				$gp_index['Search'] = 'special_gpsearch'; //may overwrite special_search settings
-			}
-
-			//fix the gpmenu
-			if( version_compare(\gp\tool\Files::$last_version, '3.0b1', '<') ){
-				$gp_menu = \gp\tool\Output::FixMenu($gp_menu);
-
-				// fix gp_titles for 3.0+
-				// just make sure any ampersands in the label are escaped
-				foreach($gp_titles as $key => $value){
-					if( isset($gp_titles[$key]['label']) ){
-						$gp_titles[$key]['label'] = self::GetLabelIndex($key, true);
-					}
-				}
-			}
-
 			//title related configuration settings
 			if( empty($config['homepath_key']) ){
 				$config['homepath_key'] = key($gp_menu);
@@ -1200,7 +1158,6 @@ namespace gp{
 			$config['homepath'] = self::IndexToTitle($config['homepath_key']);
 
 		}
-
 
 
 		/**

@@ -926,13 +926,6 @@ class Menu extends \gp\special\Base{
 		);
 
 
-		/* TODO: remove
-		echo '<a href="[url]?cmd=ViewHistory" ';
-		echo 'class="view_edit_link not_multiple not_special" ';
-		echo 'data-cmd="gpabox"><i class="fa fa-history menu_icon"></i>';
-		echo  htmlspecialchars($langmessage['Revision History']);
-		echo '</a>';
-		*/
 		echo '<a href="[history]" ';
 		echo 'class="view_edit_link not_multiple not_special">';
 		echo '<i class="fa fa-history menu_icon"></i>';

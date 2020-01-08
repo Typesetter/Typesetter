@@ -1161,10 +1161,6 @@ namespace gp\tool{
 					msg($langmessage['OOPS'] .  ' Extra Content Area ' . $include_title . ' does not exist.');
 					return false;
 				}
-				// $existing_section['include_type']	= 'extra';
-				ob_start();
-				\gp\tool\Output::GetExtra($include_title);
-				$content	= ob_get_clean();
 
 				$existing_section['include_type']	= 'extra';
 				$existing_section['content']		= $include_title;

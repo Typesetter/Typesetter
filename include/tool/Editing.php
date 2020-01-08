@@ -681,7 +681,6 @@ namespace gp\tool{
 			if( $options['browser'] ){
 				$options['filebrowserBrowseUrl'] = \gp\tool::GetUrl('Admin/Browser').'?type=all';
 				$options['filebrowserImageBrowseUrl'] = \gp\tool::GetUrl('Admin/Browser').'?dir=%2Fimage';
-				$options['filebrowserFlashBrowseUrl'] = \gp\tool::GetUrl('Admin/Browser').'?dir=%2Fflash';
 				unset($options['browser']);
 			}
 

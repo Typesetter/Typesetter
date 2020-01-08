@@ -36,7 +36,7 @@ class Remote extends \gp\admin\Addon\Install{
 
 		//version specific search
 		if( !isset($config['search_version']) || $config['search_version'] ){
-			$this->searchQuery .= '&ug='.rawurlencode(gpversion);
+			$this->searchQuery .= '&ug='.rawurlencode(\gpversion);
 		}
 
 		if( !empty($_GET['q']) ){
@@ -49,7 +49,7 @@ class Remote extends \gp\admin\Addon\Install{
 		if( $this->config_index == 'themes' ){
 			$slug = 'Themes';
 		}
-		$src = addon_browse_path.'/'.$slug.'?cmd=remote&format=json&'.$this->searchQuery.'&page='.$this->searchPage; // format=json added 4.6b3
+		$src = \addon_browse_path.'/'.$slug.'?cmd=remote&format=json&'.$this->searchQuery.'&page='.$this->searchPage; // format=json added 4.6b3
 
 		$this->ShowHeader(); // \gp\Addon\Install
 
@@ -234,7 +234,7 @@ class Remote extends \gp\admin\Addon\Install{
 
 		echo '<h3>'.$langmessage['options'].'</h3>';
 		echo '<p>';
-		echo 'Limit results to addons that are compatible with your version of '.CMS_NAME.' ('.gpversion.') &nbsp; ';
+		echo 'Limit results to addons that are compatible with your version of '.\CMS_NAME.' ('.\gpversion.') &nbsp; ';
 
 		if( !isset($config['search_version']) || $config['search_version'] ){
 			echo '<b>'.$langmessage['On'].'</b> &nbsp; ';
@@ -292,7 +292,7 @@ class Remote extends \gp\admin\Addon\Install{
 		if( $this->config_index == 'themes' ){
 			$slug = 'Themes';
 		}
-		$url = addon_browse_path.'/'.$slug.'?'.$this->searchQuery.'&page='.$this->searchPage;
+		$url = \addon_browse_path.'/'.$slug.'?'.$this->searchQuery.'&page='.$this->searchPage;
 		echo '<p>View search results on <a href="'.$url.'" target="_blank">'.CMS_READABLE_DOMAIN.'</p>';
 	}
 }

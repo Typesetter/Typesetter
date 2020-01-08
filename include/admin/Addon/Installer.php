@@ -127,6 +127,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Remove an addon from the site configuration
 	 * Delete code folders if needed
 	 *
+	 * @return bool
 	 */
 	public function Uninstall( $addon ){
 		global $config, $langmessage, $gp_titles, $gp_menu, $gp_index;
@@ -136,7 +137,7 @@ class Installer extends \gp\admin\Addon\Tools{
 		$addon_config = \gp\tool\Plugins::GetAddonConfig($addon);
 		if( !$addon_config ){
 			$this->message($langmessage['OOPS'].' (Already uninstalled)');
-			return;
+			return false;
 		}
 
 		unset($config['addons'][$addon]);

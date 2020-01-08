@@ -400,7 +400,7 @@ class Addons extends \gp\admin\Addon\Install{
 	 * Filter the list of addons so we only have a list of the most recent versions
 	 *
 	 */
-	protected function FilterUnique($addons, $versions){
+	protected static function FilterUnique($addons, $versions){
 
 		$temp = array();
 		foreach($addons as $key => $info){
@@ -426,7 +426,7 @@ class Addons extends \gp\admin\Addon\Install{
 
 	public function Instructions(){
 		echo '<hr/>';
-		echo '<a href="'.CMS_DOMAIN.'/Docs/Plugins">Plugin Documentation</a>';
+		echo '<a href="' . \CMS_DOMAIN . '/Docs/Plugins">Plugin Documentation</a>';
 	}
 
 

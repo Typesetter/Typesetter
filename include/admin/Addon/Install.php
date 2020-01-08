@@ -15,7 +15,7 @@ class Install extends \gp\admin\Addon\Tools{
 	//remote browsing
 	public $path_remote			= 'Admin/Addons/Remote';
 	public $code_folder_name	= '_addoncode';
-	private $installed_ids		= array();
+	protected $installed_ids		= array();
 	public $config;
 
 
@@ -106,7 +106,7 @@ class Install extends \gp\admin\Addon\Tools{
 
 		$name = '<em>'.htmlspecialchars($_REQUEST['name']).'</em>';
 		echo '<p class="gp_notice">'.$langmessage['Addon_Install_Warning'].'</p>';
-		echo '<p>'.sprintf($langmessage['Selected_Install'],$name,CMS_READABLE_DOMAIN).'</p>';
+		echo '<p>'.sprintf($langmessage['Selected_Install'],$name,\CMS_READABLE_DOMAIN).'</p>';
 
 		$_REQUEST += array('order'=>'');
 

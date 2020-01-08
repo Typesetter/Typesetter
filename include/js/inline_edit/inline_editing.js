@@ -257,6 +257,10 @@
 				html += '<a data-cmd="ck_close" class="ckeditor_control">' + gplang.Close + '</a>';
 				html += '</div>';
 
+				html += '<div id="ckeditor_close">';
+				html += '<a data-cmd="ck_close" class="ckeditor_control">' + gplang.Close + '</a>';
+				html += '</div>';
+
 				html += '</div>';
 
 				$('#gp_admin_html').append(html);
@@ -337,8 +341,10 @@
 			// Hide save buttons for extra content list
 			if( $edit_area.length == 0 && extra_mode ){
 				$('#ckeditor_save').hide();
+				$('#ckeditor_close').show();
 			}else{
 				$('#ckeditor_save').show();
+				$('#ckeditor_close').hide();
 			}
 
 			gp_editing.PublishButton( $edit_area );
@@ -735,6 +741,7 @@
 			var maxHeight			= $gp.$win.height();
 			maxHeight				-= $ckeditor_area.position().top;
 			maxHeight				-= $('#ckeditor_save').outerHeight();
+			maxHeight				-= $('#ckeditor_close').outerHeight();
 
 			$('#ckeditor_area').css({'max-height': maxHeight});
 

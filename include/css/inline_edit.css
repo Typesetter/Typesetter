@@ -345,10 +345,14 @@ html{
 /**
  * Save
  */
-#ckeditor_save{
+#ckeditor_save,
+#ckeditor_close{
 	text-align:right;
 	padding:10px 10px 0 10px;
 	box-sizing:border-box;
+}
+#ckeditor_close{
+	display:none;
 }
 
 #ckeditor_wrap .ck_save,

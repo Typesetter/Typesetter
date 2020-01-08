@@ -1,26 +1,26 @@
 #admin_menu_div{
 	position:relative;
 	margin-top:2em;
-	}
+}
 #admin_menu{
 	padding:0;
 	margin:0;
 	list-style:none;
 	overflow:visible;
 	width:340px;
-	}
+}
 #admin_menu ul{
 	overflow:visible;
 	padding-left:30px;
 	margin:0;
-	}
+}
 body #admin_menu li{
 	list-style:none;
 	background-image: url('../imgs/menu_bg.gif');
-	}
+}
 body #admin_menu li.ui-sortable-helper{
 	background-image:none;
-	}
+}
 
 #admin_menu li div{
 	margin:2px 0;
@@ -28,36 +28,36 @@ body #admin_menu li.ui-sortable-helper{
 	border:1px solid #d1d1d5;
 	background: #f1f1f5 url('../imgs/blank.gif') 3px 50% no-repeat;
 	border-radius:4px;
-	}
+}
 
 
 #admin_menu li.private-list > div{
 	opacity:0.4;
 	background:#fff;
-	}
+}
 
 #admin_menu li.private-list > ul div{
 	opacity:0.8;
 	border-color:#f1f1f5;
-	}
+}
 
 #admin_menu li div.current{
 	border-color: #889888;
 	background-color:#DFF1DF;
 	width:110%;
-	}
+}
 
 
 
 #admin_menu li.hidechildren ul{
 	display:none;
-	}
+}
 
 #admin_menu li div a.expand_img{
 	float:left;
 	margin:4px 5px;
 	background:url('../imgs/blank.gif') 3px 3px no-repeat;
-	}
+}
 
 #admin_menu li div a.expand_img:before{
 	content:'';
@@ -70,20 +70,20 @@ body #admin_menu li.ui-sortable-helper{
 	line-height:12px;
 	color:#333;
 	text-align:center;
-	}
+}
 
 #admin_menu li.haschildren > div > a.expand_img:before{
 	content:"\f068";
-	}
+}
 #admin_menu li.hidechildren > div > a.expand_img:before{
 	content:"\f067";
-	}
+}
 
 
 #admin_menu li div a.haslayout{
 	border-radius: 3px;
 	vertical-align:middle;
-	}
+}
 
 
 #admin_menu li div a.gp_label,
@@ -96,7 +96,7 @@ body #admin_menu li.ui-sortable-helper{
 	overflow:hidden;
 	padding:2px;
 	text-decoration:none;
-	}
+}
 
 #admin_menu li div a.gp_label.extra:before{
 	font-family:FontAwesome;
@@ -106,16 +106,17 @@ body #admin_menu li.ui-sortable-helper{
 	margin-right:0.33em;
 	font-size:11px;
 	vertical-align:top;
-	}
+}
 
 
 
 #admin_menu li p{
 	display:none;
-	}
+}
 
 #admin_menu_tools{
 	position:absolute;
+	max-width:256px;
 	display:none;
 	top:0;
 	left:350px;
@@ -132,22 +133,22 @@ body #admin_menu li.ui-sortable-helper{
 	border-top:1px solid #fff;
 	display:block;
 	padding:4px 40px 4px 7px;
-	}
+}
 
 #admin_menu_tools b:first-child{
 	border-top:0 none;
 	margin-top:1px;
-	}
+}
 
 #admin_menu_tools span{
 	display:block;
 	background-color:#f9f9f9;
 	border-bottom:1px solid #ccc;
-	}
+}
 #admin_menu_tools span:last-child{
 	border-bottom:0 none;
 	margin-bottom:1px;
-	}
+}
 
 #admin_menu_tools a,
 #admin_menu_tools a:link,
@@ -157,11 +158,11 @@ body #admin_menu li.ui-sortable-helper{
 	display:block;
 	padding:5px 20px 6px 10px;
 	text-decoration:none;
-	}
+}
 #admin_menu_tools a:hover{
 	background-color:#fff;
 	color:#000 !important;
-	}
+}
 #admin_menu_tools a img,
 #admin_menu_tools a span,
 #admin_menu_div .menu_icon{
@@ -173,7 +174,7 @@ body #admin_menu li.ui-sortable-helper{
 	border:0 none;
 	text-align:center;
 	font-size:14px;
-	}
+}
 
 #admin_menu_div .layout_icon{
 	border-radius: 5px;
@@ -181,15 +182,15 @@ body #admin_menu li.ui-sortable-helper{
     height: 16px;
     margin-right: 7px;
     width: 16px;
-	}
+}
 
 #admin_menu_div .insert_before_icon{
 	background:url('../imgs/icons.png') no-repeat 50% -104px;
-	}
+}
 
 #admin_menu_div .insert_after_icon{
 	background:url('../imgs/icons.png') no-repeat 50% -136px;
-	}
+}
 
 
 
@@ -197,20 +198,20 @@ body #admin_menu li.ui-sortable-helper{
 	border:1px dashed #889888;
 	background:#DFF1DF !important;
 	border-radius:4px;
-	}
+}
 
 #menu_available{
 	width:330px;
-	}
+}
 
 #gp_menu_available table{
 	width:100%;
-	}
+}
 
 #gp_menu_available .gp_search_links{
 	text-align:right;
 	margin-bottom:20px;
-	}
+}
 #gp_menu_available .gp_search_links a,
 #gp_menu_available .gp_search_links a:link,
 #gp_menu_available .gp_search_links a:visited{
@@ -222,7 +223,7 @@ body #admin_menu li.ui-sortable-helper{
 	text-decoration:none;
 	color:#666;
 	background-color:#fff;
-	}
+}
 #gp_menu_available .gp_search_links a:first-child{
 	border-radius:4px 0 0 4px;
 	margin-left:7px;
@@ -233,36 +234,36 @@ body #admin_menu li.ui-sortable-helper{
 }
 #gp_menu_available .gp_search_links a:hover{
 	background:#ddd;
-	}
+}
 #gp_menu_available .gp_search_links a.current{
 	background:#226699;
 	border-color:rgba(0,0,0,0.3);
 	color:#fff;
-	}
+}
 #gp_menu_available .showing{
 	font-size:9px;
 	color:#666;
 	vertical-align:bottom;
-	}
+}
 
 #gp_menu_available img{
 	vertical-align:middle;
 	margin-right:4px;
-	}
+}
 
 #gp_menu_available td:nth-child(2){
 	white-space:nowrap;
-	}
+}
 #gp_menu_available td > a,
 #gp_menu_available td > a:link{
 	font-size:14px;
 	color:#333 !important;
-	}
+}
 
 #gp_menu_available td > div{
 	position:relative;
 	padding:10px 0 0;
-	}
+}
 #gp_menu_available td > div > div{
 	visibility:hidden;
 	padding:10px 0 0;
@@ -271,7 +272,7 @@ body #admin_menu li.ui-sortable-helper{
 	top:0;
 	left:0;
 	white-space:nowrap;
-	}
+}
 
 #gp_menu_available table div > span,
 #gp_menu_available table div > a{
@@ -281,49 +282,49 @@ body #admin_menu li.ui-sortable-helper{
 	padding-right:6px;
 	border-right:1px solid #ccc;
 	line-height:11px;
-	}
+}
 
 #gp_menu_available table div > *:last-child{
 	border-right:0 none;
-	}
+}
 
 #gp_menu_available tr:hover div > div{
 	visibility:visible;
-	}
+}
 #gp_menu_available .in_menu{
 	color:#119911;
-	}
+}
 #gp_menu_available .not_in_menu{
 	color:#991111;
-	}
+}
 
 
 
 #page_search{
 	float:right;
-	}
+}
 
 
 .admin_footnote{
 	margin:4em 0;
 	/* border-top:1px solid #ccc; */
 	padding:1em 0;
-	}
+}
 
 .admin_footnote div{
 	float:left;
 	width:160px;
 	margin-right:20px;
-	}
+}
 
 .admin_footnote div span,
 .admin_footnote div b{
 	display:block;
 	margin:5px;
-	}
+}
 .admin_footnote div b{
 	border-bottom:1px solid #ddd;
-	}
+}
 
 
 .inline_box .slug{
@@ -332,7 +333,7 @@ body #admin_menu li.ui-sortable-helper{
 	line-height:10px;
 	padding-top:2px;
 	color:#777;
-	}
+}
 
 
 
@@ -342,12 +343,12 @@ body #admin_menu li.ui-sortable-helper{
 body #gp_menu_select,
 body #gp_menu_select *{
 	font-size:13px;
-	}
+}
 
 .missing_title > div{
 	padding-left:24px;
-	}
+}
 .missing_title > div .gp_label {
 	font-weight:normal !important;
 	color:#990000 !important;
-	}
+}

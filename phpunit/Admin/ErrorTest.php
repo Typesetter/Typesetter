@@ -4,10 +4,7 @@ namespace phpunit\Admin;
 
 class ErrorTest extends \gptest_bootstrap{
 
-	/**
-	 * Test the export and import admin functionality
-	 *
-	 */
+
 	public function testError(){
 
 

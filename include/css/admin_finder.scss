@@ -11,7 +11,7 @@ body,
   padding: 0 !important;
 }
 
-#admincontent_inner{
+#admincontent_inner {
 	padding: 0;
 	position: relative;
 	height: calc(100vh - 54px);
@@ -20,13 +20,13 @@ body,
 	overflow: visible !important;
 }
 
-#elfinder{
+#elfinder {
 	position: absolute;
 	z-index: 25;
 	top: 0 !important;
 	left: 0 !important;
 	right: 0 !important;
-	height: 100%!important;
+	height: 100% !important;
 	border: 0 none !important;
 	border-radius: 0 !important;
 	overflow: hidden;

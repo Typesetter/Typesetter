@@ -245,11 +245,11 @@
 			}
 
 
-			data = $.extend({}, {title:'',layout_color:'',layout_label:'',types:'',size:'',mtime:'',opts:''}, data);
+			data = $.extend({}, {title:'', history:'', layout_color:'', layout_label:'', types:'', size:'', mtime:'', opts:''}, data);
 
 
 
-			var reg,parts = ['title','key','url','layout_label','types','size','mtime','opts','files'];
+			var reg,parts = ['title','key','url','history','layout_label','types','size','mtime','opts','files'];
 			$.each(parts,function(){
 				reg = new RegExp('(%5B'+this+'%5D|\\['+this+'\\])','gi');
 				this_html = this_html.replace(reg,data[this]);

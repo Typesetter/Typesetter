@@ -1,52 +1,57 @@
 
-.gp_find_form{
-	float:right;
+.gp_find_form {
+	float: right;
 }
 
-.gp_search_options{
-	padding-top:15px;
-	}
+.gp_search_options {
+	padding-top: 15px;
+}
 
-.search_pages{
-	float:right;
-	}
-.search_pages a, .search_pages span{
-	text-decoration:none;
-	font-size:14px;
-	display:inline-block;
-	padding:1px 5px;
-	margin:0 7px 0 0;
+.search_pages {
+	float: right;
+}
+
+.search_pages a,
+.search_pages span {
+	text-decoration: none;
+	font-size: 14px;
+	display: inline-block;
+	padding: 1px 5px;
+	margin: 0 7px 0 0;
 	border-radius: 3px;
-	}
-.search_pages a:hover, .search_pages span:hover{
-	background-color:#eee;
-	}
-.addon_rating{
-	position:relative;
-	width:80px;
-	height:16px;
-	}
-.addon_rating span{
+}
+
+.search_pages a:hover,
+.search_pages span:hover {
+	background-color: #eee;
+}
+
+.addon_rating {
+	position: relative;
+	width: 80px;
+	height: 16px;
+}
+
+.addon_rating span {
 	background: url(../imgs/stars.png);
-	height:16px;
-	display:inline-block;
-	}
-.search_order{
-	}
+	height: 16px;
+	display: inline-block;
+}
+
 .search_order a,
-.search_order span{
-	padding:5px 0;
-	font-size:15px !important;
-	display:inline-block;
-	margin-right:20px;
-	}
+.search_order span {
+	padding: 5px 0;
+	font-size: 15px !important;
+	display: inline-block;
+	margin-right: 20px;
+}
 
-.shot{
-    border: 1px solid #CCCCCC;
-    padding: 1px;
-    display:inline-block;
-    }
+.shot {
+	border: 1px solid #CCCCCC;
+	padding: 1px;
+	display: inline-block;
+}
 
-.rating_table td{
-	padding:7px;
-	}
+.rating_table td {
+	padding: 7px;
+}

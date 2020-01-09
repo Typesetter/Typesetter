@@ -11,6 +11,13 @@
 	box-sizing: $boxmodel;
 }
 
+@mixin user-select($allow) {
+	-webkit-user-select: $allow;
+	-moz-user-select: $allow;
+	-ms-user-select: $allow;
+	user-select: $allow;
+}
+
 @mixin gpimg( $name, $right, $top ){
 	background:url('../../include/imgs/' + $name) no-repeat $right $top;
 }

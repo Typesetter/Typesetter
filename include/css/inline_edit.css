@@ -35,7 +35,6 @@ html {
 	display: none;
 }
 
-
 #ckeditor_tabs a,
 #cktoggle {
 	height: 29px;
@@ -131,6 +130,7 @@ html {
 	padding: 0;
 	border: 0 none;
 }
+
 #ckeditor_area .cke_inner {
 	background: transparent !important;
 	padding: 0 !important;
@@ -146,11 +146,13 @@ html {
 	border-bottom: none;
 	background: none;
 }
+
 #ckeditor_area .cke_toolbar {
 	width: 100%;
 	padding: 4px 0 !important;
 	margin: 0;
 }
+
 #ckeditor_area .cke_toolgroup {
 	margin-right: 0;
 	text-align: justify;
@@ -158,6 +160,7 @@ html {
 	background: none;
 	border-radius: 0;
 }
+
 #ckeditor_area .cke_toolgroup a.cke_button:last-child:after {
 	display: none;
 }
@@ -165,12 +168,14 @@ html {
 #ckeditor_area a.cke_combo_button {
 	background: none;
 }
+
 #ckeditor_area .cke_combo_open {
 	height: 12px;
 	line-height: 12px;
 	margin: 1px 4px 1px;
 	width: 5px;
 }
+
 #ckeditor_area .cke_combo {
 	padding: 0 2px;
 }
@@ -178,9 +183,11 @@ html {
 #ckeditor_area .cke_combo .cke_combo_text {
 	padding-left: 0;
 }
+
 #ckeditor_area .cke_combo_arrow {
 	margin: 8px 0 0;
 }
+
 #ckeditor_area .cke_combo:after {
 	display: none;
 }
@@ -190,6 +197,7 @@ html {
 	height: 16px;
 	padding: 2px;
 }
+
 #ckeditor_area a.cke_button_off:hover,
 #ckeditor_area a.cke_button_off:focus
 #ckeditor_area a.cke_button_off:active {
@@ -206,9 +214,11 @@ html {
 #ckeditor_area .cke_combo__format .cke_combo_text {
 	width: 50px;
 }
+
 #ckeditor_area .cke_combo__font .cke_combo_text {
 	width: 38px;
 }
+
 #ckeditor_area .cke_combo__fontsize .cke_combo_text {
 	width: 38px;
 }
@@ -220,7 +230,6 @@ html {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
-
 
 #ckeditor_wrap .ck_saving,
 #ckeditor_wrap .ck_saved,
@@ -253,7 +262,7 @@ html {
 	background: -webkit-linear-gradient(top, #fff, #f7f7f7);
 	background: -o-linear-gradient(top, #fff, #f7f7f7);
 	background: -ms-linear-gradient(top, #fff, #f7f7f7);
-	background: linear-gradient(top, #fff, #f7f7f7);
+	background: linear-gradient(to bottom, #fff, #f7f7f7);
 
 	border-radius: 5px;
 	color: #444 !important;
@@ -265,7 +274,7 @@ html {
 }
 
 #ckeditor_wrap .ckeditor_control.selected {
-	background: rgba(0,0,0,0.01);
+	background: rgba(0, 0, 0, 0.01);
 	border-color: #eee #f5f5f5 #f5f5f5 #eee !important;
 	font-weight: bold;
 }
@@ -283,7 +292,6 @@ html {
 	font-size: 12px !important;
 }
 
-
 #ckeditor_wrap .full_width,
 #ckeditor_wrap .full_width:hover,
 #ckeditor_wrap .full_width:active {
@@ -295,6 +303,7 @@ html {
 #ckeditor_wrap .half_width:active {
 	width: 123px;
 }
+
 #ckeditor_wrap input.half_width,
 #ckeditor_wrap input.full_width,
 #ckeditor_wrap a.half_width,
@@ -352,6 +361,7 @@ html {
 	padding: 10px 10px 0 10px;
 	box-sizing: border-box;
 }
+
 #ckeditor_close {
 	display: none;
 }
@@ -398,7 +408,7 @@ html {
 
 .cke_reset_all textarea.cke_source {
 	min-width: 800px;
-	width: 100%!important;
+	width: 100% !important;
 }
 
 /**
@@ -423,7 +433,7 @@ html {
 	background-repeat: no-repeat;
 	background-size: 22px 16px;
 	padding-right: 26px;
-	outline: none!important;
+	outline: none !important;
 }
 
 #ckeditor_wrap select.SelectGalleryStyle::-ms-expand {

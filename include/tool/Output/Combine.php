@@ -596,8 +596,12 @@ class Combine{
 
 			// jQuery.dotdotdot (multi-line text truncation)
 			'dotdotdot' => array(
-									//'file'			=> '/include/thirdparty/dotdotdot/jquery.dotdotdot.min.js',
 									'file'			=> '/include/thirdparty/dotdotdot/jquery.dotdotdot.js',
+									),
+
+			// popper.js
+			'popper' => array(
+									'file'			=> '/include/thirdparty/Popper.js/popper.min.js',
 									),
 
 	);
